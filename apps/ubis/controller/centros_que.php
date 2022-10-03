@@ -1,31 +1,32 @@
 ﻿<?php
+
 use web\DesplegableArray;
 use web\Hash;
 
 /**
-* Esta página sirve para asignar una dirección a un determinado ubi.
-*
-*@package	delegacion
-*@subpackage	actividades
-*@author	Daniel Serrabou
-*@since		15/5/02.
-*		
-*/
+ * Esta página sirve para asignar una dirección a un determinado ubi.
+ *
+ * @package    delegacion
+ * @subpackage    actividades
+ * @author    Daniel Serrabou
+ * @since        15/5/02.
+ *
+ */
 // INICIO Cabecera global de URL de controlador *********************************
 
-require_once ("apps/core/global_header.inc");
-// Arxivos requeridos por esta url **********************************************
+require_once("apps/core/global_header.inc");
+// Archivos requeridos por esta url **********************************************
 
-// Crea los objectos de uso global **********************************************
-require_once ("apps/core/global_object.inc");
+// Crea los objetos de uso global **********************************************
+require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$aOpciones =  array(
-					'get_labor' => _("labor"),
-					'get_num'=>_("pi, cartas, nº buzón"),
-					'get_plazas'=>_("sede, plazas")
-					);
-$oDesplOpciones = new DesplegableArray('',$aOpciones,'');
+$aOpciones = array(
+    'get_labor' => _("labor"),
+    'get_num' => _("pi, cartas, nº buzón"),
+    'get_plazas' => _("sede, plazas")
+);
+$oDesplOpciones = new DesplegableArray('', $aOpciones, '');
 $oDesplOpciones->setBlanco('t');
 $oDesplOpciones->setNombre('que');
 
@@ -47,4 +48,4 @@ $a_campos = ['oPosicion' => $oPosicion,
 ];
 
 $oView = new core\ViewTwig('ubis/controller');
-echo $oView->render('centros_que.html.twig',$a_campos);
+echo $oView->render('centros_que.html.twig', $a_campos);

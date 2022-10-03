@@ -1,5 +1,6 @@
 <?php
 namespace notas\model\entity;
+
 /**
  * GestorPersonaNotaDl
  *
@@ -11,28 +12,30 @@ namespace notas\model\entity;
  * @version 1.0
  * @created 07/04/2014
  */
+class GestorPersonaNotaDl extends GestorPersonaNota
+{
+    /* ATRIBUTOS ----------------------------------------------------------------- */
 
-class GestorPersonaNotaDl Extends GestorPersonaNota {
-	/* ATRIBUTS ----------------------------------------------------------------- */
-
-	/* CONSTRUCTOR -------------------------------------------------------------- */
-
-
-	/**
-	 * Constructor de la classe.
-	 *
-	 * @return $gestor
-	 *
-	 */
-	function __construct() {
-		$oDbl = $GLOBALS['oDB'];
-		$this->setoDbl($oDbl);
-		$this->setNomTabla('e_notas_dl');
-	}
+    /* CONSTRUCTOR -------------------------------------------------------------- */
 
 
-	/* METODES PUBLICS -----------------------------------------------------------*/
-	/* METODES PROTECTED --------------------------------------------------------*/
-	/* METODES GET i SET --------------------------------------------------------*/
+    /**
+     * Constructor de la classe.
+     *
+     * @return $gestor
+     *
+     */
+    function __construct()
+    {
+        $oDbl = $GLOBALS['oDB'];
+        $this->setoDbl($oDbl);
+        $this->setNomTabla('e_notas_dl');
+    }
+
+
+    /* MÉTODOS PÚBLICOS -----------------------------------------------------------*/
+    /* METODES PROTECTED --------------------------------------------------------*/
+    /* MÉTODOS GET y SET --------------------------------------------------------*/
 }
+
 ?>

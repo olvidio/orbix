@@ -1,5 +1,7 @@
 <?php
+
 namespace actividadessacd\db;
+
 use core\ConfigGlobal;
 use devel\model\DBAbstract;
 
@@ -7,31 +9,36 @@ use devel\model\DBAbstract;
  * Crear las tablas necesaria a nivel de aplicación (global).
  * Cada esquema deberá crear las suyas, heredadas de estas.
  */
-class DB extends DBAbstract {
+class DB extends DBAbstract
+{
 
-    public function __construct(){
+    public function __construct()
+    {
         $esquema_sfsv = ConfigGlobal::mi_region_dl();
-        $role = substr($esquema_sfsv,0,-1); // quito la v o la f.
-        
-        $this->role = '"'. $role .'"';
-        $this->role_vf = '"'. $esquema_sfsv .'"';
-        
+        $role = substr($esquema_sfsv, 0, -1); // quito la v o la f.
+
+        $this->role = '"' . $role . '"';
+        $this->role_vf = '"' . $esquema_sfsv . '"';
+
         $this->esquema = 'global';
     }
-    
-    public function dropAll() {
+
+    public function dropAll()
+    {
         $this->eliminar_atn_sacd_textos();
-        
+
     }
-    
-    public function createAll() {
+
+    public function createAll()
+    {
         $this->create_atn_sacd_textos();
     }
-    
+
     /**
      * En la BD Sf/sv (global).
      */
-    public function create_atn_sacd_textos () {
+    public function create_atn_sacd_textos()
+    {
         $this->addPermisoGlobal('sfsv-e');
 
         $tabla = "a_sacd_textos";
@@ -45,19 +52,21 @@ class DB extends DBAbstract {
                     texto text
                     );";
         $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->user_orbix";
-        
+
         $this->executeSql($a_sql);
-        
+
         $this->delPermisoGlobal('sfsv-e');
     }
-    public function eliminar_atn_sacd_textos() {
+
+    public function eliminar_atn_sacd_textos()
+    {
         $this->addPermisoGlobal('sfsv-e');
 
         $tabla = "a_sacd_textos";
         $nom_tabla = $this->getNomTabla($tabla);
         $this->eliminar($nom_tabla);
-        
+
         $this->delPermisoGlobal('sfsv-e');
     }
-    
+
 }

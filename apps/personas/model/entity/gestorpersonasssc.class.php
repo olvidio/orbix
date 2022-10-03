@@ -1,4 +1,5 @@
 <?php
+
 namespace personas\model\entity;
 /**
  * GestorPersonaSSSC
@@ -11,31 +12,32 @@ namespace personas\model\entity;
  * @version 1.0
  * @created 11/03/2014
  */
+class GestorPersonaSSSC extends GestorPersonaDl
+{
+    /* ATRIBUTOS ----------------------------------------------------------------- */
 
-class GestorPersonaSSSC Extends GestorPersonaDl {
-	/* ATRIBUTS ----------------------------------------------------------------- */
-
-	/* CONSTRUCTOR -------------------------------------------------------------- */
-
-
-	/**
-	 * Constructor de la classe.
-	 *
-	 * @return $gestor
-	 *
-	 */
-	function __construct() {
-		$oDbl = $GLOBALS['oDB'];
-		$this->setoDbl($oDbl);
-		$this->setNomTabla('p_sssc');
-	}
+    /* CONSTRUCTOR -------------------------------------------------------------- */
 
 
-	/* METODES PUBLICS -----------------------------------------------------------*/
+    /**
+     * Constructor de la classe.
+     *
+     * @return $gestor
+     *
+     */
+    function __construct()
+    {
+        $oDbl = $GLOBALS['oDB'];
+        $this->setoDbl($oDbl);
+        $this->setNomTabla('p_sssc');
+    }
 
 
-	/* METODES PROTECTED --------------------------------------------------------*/
+    /* MÉTODOS PÚBLICOS -----------------------------------------------------------*/
 
-	/* METODES GET i SET --------------------------------------------------------*/
+
+    /* METODES PROTECTED --------------------------------------------------------*/
+
+    /* MÉTODOS GET y SET --------------------------------------------------------*/
 
 }

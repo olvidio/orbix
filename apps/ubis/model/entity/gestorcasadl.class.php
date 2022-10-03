@@ -1,7 +1,9 @@
 <?php
 namespace ubis\model\entity;
+
 use core;
 use web;
+
 /**
  * GestorCasaDl
  *
@@ -13,30 +15,32 @@ use web;
  * @version 1.0
  * @created 28/09/2010
  */
+class GestorCasaDl extends GestorCasa
+{
+    /* ATRIBUTOS ----------------------------------------------------------------- */
 
-class GestorCasaDl Extends  GestorCasa {
-	/* ATRIBUTS ----------------------------------------------------------------- */
+    /* CONSTRUCTOR -------------------------------------------------------------- */
 
-	/* CONSTRUCTOR -------------------------------------------------------------- */
-
-	/**
-	 * Constructor de la classe.
-	 *
-	 * @return GestorCasaDl
-	 *
-	 */
-	function __construct() {
-		$oDbl = $GLOBALS['oDBC'];
-		$this->setoDbl($oDbl);
-		$this->setNomTabla('u_cdc_dl');
-	}
+    /**
+     * Constructor de la classe.
+     *
+     * @return GestorCasaDl
+     *
+     */
+    function __construct()
+    {
+        $oDbl = $GLOBALS['oDBC'];
+        $this->setoDbl($oDbl);
+        $this->setNomTabla('u_cdc_dl');
+    }
 
 
-	/* METODES PUBLICS -----------------------------------------------------------*/
+    /* MÉTODOS PÚBLICOS -----------------------------------------------------------*/
 
-	/* METODES PROTECTED --------------------------------------------------------*/
+    /* METODES PROTECTED --------------------------------------------------------*/
 
-	/* METODES GET i SET --------------------------------------------------------*/
+    /* MÉTODOS GET y SET --------------------------------------------------------*/
 
 }
+
 ?>

@@ -1,4 +1,5 @@
-﻿<?php 
+﻿<?php
+
 use actividades\model\entity\Actividad;
 use asistentes\model\entity\GestorAsistente;
 use personas\model\entity\GestorPersonaS;
@@ -10,41 +11,41 @@ use actividades\model\entity\GestorActividadDl;
 use web\DateTimeLocal;
 
 /**
-* Esta página lista las personas que asistieron hace x años a
-* una actividad de periodicidad xx años. El próximo curso les corresponde
-* Servirá para: crt-cel y crt-cv-cel (para los cel), crt s interno (para todos los s)
-* También se usa para el seguimiento de asistencias durante el curso de cv-s anuales
-* y de crt
-*
-* 
-*
-*@package	delegacion
-*@subpackage actividades
-*@author	Josep Companys
-*@since		15/08/03
-*		
-*/
+ * Esta página lista las personas que asistieron hace x años a
+ * una actividad de periodicidad xx años. El próximo curso les corresponde
+ * Servirá para: crt-cel y crt-cv-cel (para los cel), crt s interno (para todos los s)
+ * También se usa para el seguimiento de asistencias durante el curso de cv-s anuales
+ * y de crt
+ *
+ *
+ *
+ * @package    delegacion
+ * @subpackage actividades
+ * @author    Josep Companys
+ * @since        15/08/03
+ *
+ */
 
 // INICIO Cabecera global de URL de controlador *********************************
-require_once ("apps/core/global_header.inc");
-// Arxivos requeridos por esta url **********************************************
+require_once("apps/core/global_header.inc");
+// Archivos requeridos por esta url **********************************************
 
-// Crea los objectos de uso global **********************************************
-require_once ("apps/core/global_object.inc");
+// Crea los objetos de uso global **********************************************
+require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
 $oPosicion->recordar();
 
-$Qque = (string) \filter_input(INPUT_POST, 'que');
-$Qcurso = (string) \filter_input(INPUT_POST, 'curso'); // actual, anterior
-$Qid_ubi = (string) \filter_input(INPUT_POST, 'id_ubi');
+$Qque = (string)\filter_input(INPUT_POST, 'que');
+$Qcurso = (string)\filter_input(INPUT_POST, 'curso'); // actual, anterior
+$Qid_ubi = (string)\filter_input(INPUT_POST, 'id_ubi');
 
-$any=date("Y");
+$any = date("Y");
 
 // Centros
 $aWhereP = [];
 $aOperadorP = [];
-if (!empty($Qid_ubi) && ($Qid_ubi != 999)){
+if (!empty($Qid_ubi) && ($Qid_ubi != 999)) {
     $oCentro = new CentroDl($Qid_ubi);
     $nombre_ubi = $oCentro->getNombre_ubi();
     $aWhereP['id_ctr'] = $Qid_ubi;
@@ -73,7 +74,7 @@ $aWhereA = [];
 $aOperadorA = [];
 
 // ctr:
-if (strstr($Qque,'crt')) {
+if (strstr($Qque, 'crt')) {
     $mes_ini = $_SESSION['oConfig']->getMesIniCrt();
     $dia_ini = $_SESSION['oConfig']->getDiaIniCrt();
     $mes_fin = $_SESSION['oConfig']->getMesFinCrt();
@@ -112,47 +113,47 @@ $QempiezaminIso = $oDateIni->getIso();
 $QfinIso = $oDateFin->getIso();
 $fecha_ini = $oDateIni->getFromLocal('-');
 $fecha_fin = $oDateFin->getFromLocal('-');
-$titulo_fecha = sprintf(_("entre %s y %s"),$fecha_ini,$fecha_fin);
+$titulo_fecha = sprintf(_("entre %s y %s"), $fecha_ini, $fecha_fin);
 
 //// Tipo Actvividad
 $alert = '';
 switch ($Qque) {
-	case "crt_s_sg":
-	    $aWhereA['id_tipo_activ'] = '^1[45]1';
-	    $aOperadorA['id_tipo_activ'] = '~';
-	    if (empty($nombre_ubi)) {
+    case "crt_s_sg":
+        $aWhereA['id_tipo_activ'] = '^1[45]1';
+        $aOperadorA['id_tipo_activ'] = '~';
+        if (empty($nombre_ubi)) {
             $titulo_actividad = _("s que todavía no han asistido a crt-s o crt-sg");
-	    } else {
-            $titulo_actividad = sprintf(_("s de %s que todavía no han asistido a crt-s o crt-sg"),$nombre_ubi);
-	    }
-		break;
+        } else {
+            $titulo_actividad = sprintf(_("s de %s que todavía no han asistido a crt-s o crt-sg"), $nombre_ubi);
+        }
+        break;
     case "crt_s":
-	    $aWhereA['id_tipo_activ'] = '^141';
-	    $aOperadorA['id_tipo_activ'] = '~';
-		$titulo_actividad = sprintf(_("s no celadores que NO han asistido al crt interno"));
-		$alert = '*' .sprintf(_("para indicar si es celador, el campo Eap debe contener algo tipo: 'C12'"));
+        $aWhereA['id_tipo_activ'] = '^141';
+        $aOperadorA['id_tipo_activ'] = '~';
+        $titulo_actividad = sprintf(_("s no celadores que NO han asistido al crt interno"));
+        $alert = '*' . sprintf(_("para indicar si es celador, el campo Eap debe contener algo tipo: 'C12'"));
         $aWhereP['eap'] = "COALESCE(eap,'x') !~* 'C\d\d'";
         $aOperadorP['eap'] = 'TXT';
-		break;
+        break;
     case "crt_cel":
-	    $aWhereA['id_tipo_activ'] = '^141';
-	    $aOperadorA['id_tipo_activ'] = '~';
-		$titulo_actividad = sprintf(_("s celadores que NO han asistido a un crt interno"));
-		$alert = '*' .sprintf(_("para indicar si es celador, el campo Eap debe contener algo tipo: 'C12'"));
+        $aWhereA['id_tipo_activ'] = '^141';
+        $aOperadorA['id_tipo_activ'] = '~';
+        $titulo_actividad = sprintf(_("s celadores que NO han asistido a un crt interno"));
+        $alert = '*' . sprintf(_("para indicar si es celador, el campo Eap debe contener algo tipo: 'C12'"));
         $aWhereP['eap'] = "COALESCE(eap,'x') ~* 'C\d\d'";
         $aOperadorP['eap'] = 'TXT';
         break;
     case "cv_s":
-	    $aWhereA['id_tipo_activ'] = '^143';
-	    $aOperadorA['id_tipo_activ'] = '~';
-	    if (empty($nombre_ubi)) {
+        $aWhereA['id_tipo_activ'] = '^143';
+        $aOperadorA['id_tipo_activ'] = '~';
+        if (empty($nombre_ubi)) {
             $titulo_actividad = _("s que no han asistido a cv de s");
-	    } else {
-            $titulo_actividad = sprintf(_("s de %s que todavía no han asistido a cv de s"),$nombre_ubi);
-	    }
+        } else {
+            $titulo_actividad = sprintf(_("s de %s que todavía no han asistido a cv de s"), $nombre_ubi);
+        }
         break;
     case "cv_s_ad":
-	    $aWhereA['id_tipo_activ'] = '1431';
+        $aWhereA['id_tipo_activ'] = '1431';
         $titulo_actividad = sprintf(_("s con ad reciente -entre 6 y 18 meses antes de la fecha última cv admisión del año- que todavía no han asistido a cv de ad"));
         // fecha última actividad:
         // final de curso:
@@ -160,15 +161,15 @@ switch ($Qque) {
         $fin_d = $_SESSION['oConfig']->getDiaFinCrt();
         $fin_m = $_SESSION['oConfig']->getMesFinCrt();
         $f_iso_final = "$any-$fin_m-$fin_d";
-        
+
         $aWhereUltima = ['id_tipo_activ' => '1431',
-                           'status' => 2,
-                            'f_ini' => $f_iso_final,
-                            '_ordre' => 'f_ini DESC',
+            'status' => 2,
+            'f_ini' => $f_iso_final,
+            '_ordre' => 'f_ini DESC',
         ];
         $aOperadorUltima = ['f_ini' => '<'];
         $gesActividades = new GestorActividadDl();
-        $cActividades = $gesActividades->getActividades($aWhereUltima,$aOperadorUltima);
+        $cActividades = $gesActividades->getActividades($aWhereUltima, $aOperadorUltima);
         if (is_array($cActividades) && !empty($cActividades)) {
             $oActividadU = $cActividades[0];
             $oFini = $oActividadU->getF_fin();
@@ -186,11 +187,11 @@ switch ($Qque) {
         $aWhereP['inc'] = 'ad';
         $aWhereP['f_inc'] = "'$iso_ini','$iso_fin'";
         $aOperadorP['f_inc'] = 'BETWEEN';
-		$alert = '*' .sprintf(_("última cv: %s"),$nom_activ);
+        $alert = '*' . sprintf(_("última cv: %s"), $nom_activ);
         break;
     case "cv_jovenes":
         $titulo_actividad = _("s jóvenes (<30) que no han asistido a cv de s");
-        $f_joven = date('Y-m-d', mktime(0,0,0,1,1,$any-30));
+        $f_joven = date('Y-m-d', mktime(0, 0, 0, 1, 1, $any - 30));
         //AND f_nacimiento > '$f_joven' AND ini_ce IS NULL AND fin_ce IS NULL
         $aWhereP['f_nacimiento'] = $f_joven;
         $aOperadorP['f_nacimiento'] = '>';
@@ -198,17 +199,17 @@ switch ($Qque) {
         $aOperadorP['ce_ini'] = 'IS NULL';
         $aWhereP['ce_fin'] = 'x';
         $aOperadorP['ce_fin'] = 'IS NULL';
-		break;
-	break;
-	default:
-	    exit (_("No sé en que tipo de actividad hay que mirar las asistencias"));
+        break;
+        break;
+    default:
+        exit (_("No sé en que tipo de actividad hay que mirar las asistencias"));
 }
 
-$titulo = $titulo_actividad.' '.$titulo_fecha;
+$titulo = $titulo_actividad . ' ' . $titulo_fecha;
 
 $aWhereP['situacion'] = 'A';
 $GesPersonasS = new GestorPersonaS();
-$cPersonas = $GesPersonasS->getPersonasDl($aWhereP,$aOperadorP);
+$cPersonas = $GesPersonasS->getPersonasDl($aWhereP, $aOperadorP);
 $i = 0;
 $falta = 0;
 $a_valores = [];
@@ -217,9 +218,9 @@ foreach ($cPersonas as $oPersona) {
     $i++;
     $id_nom = $oPersona->getId_nom();
     $ape_nom = $oPersona->getPrefApellidosNombre();
-    
+
     //Buscar el ctr (si no está en la seleccion)
-    if ($Qid_ubi == 999 || empty($Qid_ubi)){
+    if ($Qid_ubi == 999 || empty($Qid_ubi)) {
         $nombre_ubi = '';
         $id_ctr = $oPersona->getId_ctr();
         $cCentros = $gesCentros->getCentros(['id_ubi' => $id_ctr]);
@@ -227,11 +228,11 @@ foreach ($cPersonas as $oPersona) {
             $nombre_ubi = $cCentros[0]->getNombre_ubi();
         }
     }
-    
+
     $GesAsistente = new GestorAsistente();
-    $aWhereNom = ['id_nom'=>$id_nom];
+    $aWhereNom = ['id_nom' => $id_nom];
     $aOperadorNom = [];
-    $cAsistentes = $GesAsistente->getActividadesDeAsistente($aWhereNom,$aOperadorNom,$aWhereA,$aOperadorA,TRUE);
+    $cAsistentes = $GesAsistente->getActividadesDeAsistente($aWhereNom, $aOperadorNom, $aWhereA, $aOperadorA, TRUE);
     if (count($cAsistentes) > 0) {
         reset($cAsistentes);
         $oAsistente = current($cAsistentes);
@@ -264,11 +265,11 @@ foreach ($cPersonas as $oPersona) {
     $a_valores[$i][4] = $msg;
 }
 
-$a_cabeceras = [ ucfirst(_("apellidos, nombre")),
-                ucfirst(_("centro")),
-                ucfirst(_("fecha última asistencia")),
-                ucfirst(_("tipo actividad")),
-            ];
+$a_cabeceras = [ucfirst(_("apellidos, nombre")),
+    ucfirst(_("centro")),
+    ucfirst(_("fecha última asistencia")),
+    ucfirst(_("tipo actividad")),
+];
 
 $oTabla = new Lista();
 $oTabla->setCabeceras($a_cabeceras);
@@ -276,7 +277,7 @@ $oTabla->setDatos($a_valores);
 //-------------------------------------- html -------------------------------------------------
 ?>
 <?= $alert ?>
-<h3><?= $titulo ?></h3>
+    <h3><?= $titulo ?></h3>
 <?php
-printf(_('número de personas: %s de %s'),$falta,$i);
+printf(_('número de personas: %s de %s'), $falta, $i);
 echo $oTabla->lista();

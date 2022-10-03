@@ -1,20 +1,23 @@
 <?php
+
 namespace actividadessacd\model;
 
 use actividadessacd\model\entity\GestorAtnActivSacdTexto;
 use ubis\model\entity\GestorCentroDl;
 use core\ConfigGlobal;
 
-class ActividadesSacdFunciones {
-    
+class ActividadesSacdFunciones
+{
+
     /**
-     * 
+     *
      * @var array
      */
     private $a_txt = [];
-    
-    function getArrayTraducciones($idioma) {
-        $idioma = empty($idioma)? 'es' : $idioma;
+
+    function getArrayTraducciones($idioma)
+    {
+        $idioma = empty($idioma) ? 'es' : $idioma;
         if (empty($this->a_txt[$idioma])) {
             $oGesAtnActivSacdTextos = new GestorAtnActivSacdTexto();
             $cAtnActivSacdTextos = $oGesAtnActivSacdTextos->getAtnActivSacdTextos();
@@ -26,13 +29,15 @@ class ActividadesSacdFunciones {
             }
         }
         if (empty($this->a_txt[$idioma])) {
-            $str = sprintf(_("No existe el idoma: %s. Debe corregirlo en la ficha del sacd"),$idioma);
-            echo $str."<br>";
+            $str = sprintf(_("No existe el idoma: %s. Debe corregirlo en la ficha del sacd"), $idioma);
+            echo $str . "<br>";
             return FALSE;
         }
         return $this->a_txt[$idioma];
     }
-    function getTraduccion($clave,$idioma) {
+
+    function getTraduccion($clave, $idioma)
+    {
         $a_traduccion = $this->getArrayTraducciones($idioma);
         $txt_traduccion = '';
         if (!empty($a_traduccion[$clave])) {
@@ -43,15 +48,16 @@ class ActividadesSacdFunciones {
             if (!empty($a_traduccion[$clave])) {
                 $txt_traduccion = $a_traduccion[$clave];
             } else {
-                echo sprintf(_("falta definir el texto %s en este idioma: %s"),$clave,$idioma);
+                echo sprintf(_("falta definir el texto %s en este idioma: %s"), $clave, $idioma);
                 echo "<br>";
             }
         }
         return $txt_traduccion;
     }
-    
-    
-    function getLugar_dl() {
+
+
+    function getLugar_dl()
+    {
         if (ConfigGlobal::is_dmz()) {
             return "xxxx";
         }
@@ -79,7 +85,7 @@ class ActividadesSacdFunciones {
         }
         // Buscar la direccion
         $cDirecciones = $oCentro->getDirecciones();
-        
+
         $poblacion = '';
         if (is_array($cDirecciones) & !empty($cDirecciones)) {
             $d = 0;
@@ -93,6 +99,6 @@ class ActividadesSacdFunciones {
         } else {
             exit (_("falta poner la dirección a la dl"));
         }
-        return $poblacion; 
+        return $poblacion;
     }
 }

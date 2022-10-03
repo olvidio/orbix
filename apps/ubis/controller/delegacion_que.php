@@ -1,13 +1,14 @@
 <?php
+
 use ubis\model\entity\GestorDelegacion;
 
 // INICIO Cabecera global de URL de controlador *********************************
 
-require_once ("apps/core/global_header.inc");
-// Arxivos requeridos por esta url **********************************************
+require_once("apps/core/global_header.inc");
+// Archivos requeridos por esta url **********************************************
 
-// Crea los objectos de uso global **********************************************
-require_once ("apps/core/global_object.inc");
+// Crea los objetos de uso global **********************************************
+require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
 
@@ -22,4 +23,4 @@ $a_campos = [
 ];
 
 $oView = new core\ViewTwig('ubis/controller');
-echo $oView->render('delegaciones.html.twig',$a_campos);
+echo $oView->render('delegaciones.html.twig', $a_campos);

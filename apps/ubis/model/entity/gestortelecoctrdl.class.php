@@ -1,5 +1,6 @@
 <?php
 namespace ubis\model\entity;
+
 /**
  * GestorTelecoUbi
  *
@@ -11,25 +12,27 @@ namespace ubis\model\entity;
  * @version 1.0
  * @created 01/10/2010
  */
+class GestorTelecoCtrDl extends GestorTelecoCtr
+{
+    /* ATRIBUTOS ----------------------------------------------------------------- */
 
-class GestorTelecoCtrDl Extends GestorTelecoCtr {
-	/* ATRIBUTS ----------------------------------------------------------------- */
+    /* CONSTRUCTOR -------------------------------------------------------------- */
 
-	/* CONSTRUCTOR -------------------------------------------------------------- */
-
-	/**
-	 * Constructor de la classe.
-	 *
-	 * @return GestorTelecoUbi
-	 *
-	 */
-	function __construct() {
-		$oDbl = $GLOBALS['oDB'];
-		$this->setoDbl($oDbl);
-		$this->setNomTabla('d_teleco_ctr_dl');
-	}
-	/* METODES PUBLICS -----------------------------------------------------------*/
-	/* METODES PROTECTED --------------------------------------------------------*/
-	/* METODES GET i SET --------------------------------------------------------*/
+    /**
+     * Constructor de la classe.
+     *
+     * @return GestorTelecoUbi
+     *
+     */
+    function __construct()
+    {
+        $oDbl = $GLOBALS['oDB'];
+        $this->setoDbl($oDbl);
+        $this->setNomTabla('d_teleco_ctr_dl');
+    }
+    /* MÉTODOS PÚBLICOS -----------------------------------------------------------*/
+    /* METODES PROTECTED --------------------------------------------------------*/
+    /* MÉTODOS GET y SET --------------------------------------------------------*/
 }
+
 ?>

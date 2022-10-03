@@ -1,5 +1,6 @@
 <?php
 namespace ubis\model\entity;
+
 /**
  * GestorDireccion
  *
@@ -11,29 +12,31 @@ namespace ubis\model\entity;
  * @version 1.0
  * @created 01/10/2010
  */
+class GestorDireccionCdcDl extends GestorDireccionCdc
+{
+    /* ATRIBUTOS ----------------------------------------------------------------- */
 
-class GestorDireccionCdcDl Extends GestorDireccionCdc {
-	/* ATRIBUTS ----------------------------------------------------------------- */
+    /* CONSTRUCTOR -------------------------------------------------------------- */
 
-	/* CONSTRUCTOR -------------------------------------------------------------- */
-
-	/**
-	 * Constructor de la classe.
-	 *
-	 * @return GestorDireccion
-	 *
-	 */
-	function __construct() {
-		$oDbl = $GLOBALS['oDBC'];
-		$this->setoDbl($oDbl);
-		$this->setNomTabla('u_dir_cdc_dl');
-	}
+    /**
+     * Constructor de la classe.
+     *
+     * @return GestorDireccion
+     *
+     */
+    function __construct()
+    {
+        $oDbl = $GLOBALS['oDBC'];
+        $this->setoDbl($oDbl);
+        $this->setNomTabla('u_dir_cdc_dl');
+    }
 
 
-	/* METODES PUBLICS -----------------------------------------------------------*/
-	/* METODES PROTECTED --------------------------------------------------------*/
+    /* MÉTODOS PÚBLICOS -----------------------------------------------------------*/
+    /* METODES PROTECTED --------------------------------------------------------*/
 
-	/* METODES GET i SET --------------------------------------------------------*/
+    /* MÉTODOS GET y SET --------------------------------------------------------*/
 
 }
+
 ?>

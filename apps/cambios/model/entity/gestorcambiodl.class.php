@@ -1,4 +1,5 @@
 <?php
+
 namespace cambios\model\entity;
 /**
  * GestorCambio
@@ -11,29 +12,30 @@ namespace cambios\model\entity;
  * @version 1.0
  * @created 17/4/2019
  */
+class GestorCambioDl extends GestorCambio
+{
+    /* ATRIBUTOS ----------------------------------------------------------------- */
 
-class GestorCambioDl Extends GestorCambio {
-	/* ATRIBUTS ----------------------------------------------------------------- */
-
-	/* CONSTRUCTOR -------------------------------------------------------------- */
-
-
-	/**
-	 * Constructor de la classe.
-	 *
-	 * @return $gestor
-	 *
-	 */
-	function __construct() {
-		$oDbl = $GLOBALS['oDBC'];
-		$this->setoDbl($oDbl);
-		$this->setNomTabla('av_cambios_dl');
-	}
+    /* CONSTRUCTOR -------------------------------------------------------------- */
 
 
-	/* METODES PUBLICS -----------------------------------------------------------*/
+    /**
+     * Constructor de la classe.
+     *
+     * @return $gestor
+     *
+     */
+    function __construct()
+    {
+        $oDbl = $GLOBALS['oDBC'];
+        $this->setoDbl($oDbl);
+        $this->setNomTabla('av_cambios_dl');
+    }
 
-	/* METODES PROTECTED --------------------------------------------------------*/
 
-	/* METODES GET i SET --------------------------------------------------------*/
+    /* MÉTODOS PÚBLICOS -----------------------------------------------------------*/
+
+    /* METODES PROTECTED --------------------------------------------------------*/
+
+    /* MÉTODOS GET y SET --------------------------------------------------------*/
 }

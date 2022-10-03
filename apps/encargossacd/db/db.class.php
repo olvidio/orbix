@@ -1,5 +1,7 @@
 <?php
+
 namespace encargossacd\db;
+
 use core\ConfigGlobal;
 use devel\model\DBAbstract;
 
@@ -7,19 +9,22 @@ use devel\model\DBAbstract;
  * Crear las tablas necesaria a nivel de aplicación (global).
  * Cada esquema deberá crear las suyas, heredadas de estas.
  */
-class DB extends DBAbstract {
+class DB extends DBAbstract
+{
 
-    public function __construct(){
+    public function __construct()
+    {
         $esquema_sfsv = ConfigGlobal::mi_region_dl();
-        $role = substr($esquema_sfsv,0,-1); // quito la v o la f.
-        
-        $this->role = '"'. $role .'"';
-        $this->role_vf = '"'. $esquema_sfsv .'"';
-        
+        $role = substr($esquema_sfsv, 0, -1); // quito la v o la f.
+
+        $this->role = '"' . $role . '"';
+        $this->role_vf = '"' . $esquema_sfsv . '"';
+
         $this->esquema = 'global';
     }
-    
-    public function dropAll() {
+
+    public function dropAll()
+    {
         $this->eliminar_encargos_sacd();
         $this->eliminar_encargo_sacd_observ();
         $this->eliminar_encargo_sacd_horario_excepcion();
@@ -30,10 +35,11 @@ class DB extends DBAbstract {
         $this->eliminar_encargo_tipo();
         $this->eliminar_encargo_datos_cgi();
         $this->eliminar_encargo_textos();
-        
+
     }
-    
-    public function createAll() {
+
+    public function createAll()
+    {
         $this->create_encargo_tipo();
         $this->create_encargos();
         $this->create_encargo_horario();
@@ -45,11 +51,12 @@ class DB extends DBAbstract {
         $this->create_encargo_datos_cgi();
         $this->create_encargo_textos();
     }
-    
+
     /**
      * En la BD sf/sv (global).
      */
-    public function create_encargos_sacd() {
+    public function create_encargos_sacd()
+    {
         $this->addPermisoGlobal('sfsv-e');
 
         $tabla = "encargos_sacd";
@@ -64,24 +71,27 @@ class DB extends DBAbstract {
                     f_ini date NOT NULL,
                     f_fin date
                     );";
-        
+
         $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->user_orbix";
-        
+
         $this->executeSql($a_sql);
-        
+
         $this->delPermisoGlobal('sfsv-e');
     }
-    public function eliminar_encargos_sacd() {
+
+    public function eliminar_encargos_sacd()
+    {
         $this->addPermisoGlobal('sfsv-e');
 
         $tabla = "encargos_sacd";
         $nom_tabla = $this->getNomTabla($tabla);
         $this->eliminar($nom_tabla);
-        
+
         $this->delPermisoGlobal('sfsv-e');
     }
-    
-    public function create_encargo_tipo () {
+
+    public function create_encargo_tipo()
+    {
         $this->addPermisoGlobal('sfsv-e');
 
         $tabla = "encargo_tipo";
@@ -93,24 +103,27 @@ class DB extends DBAbstract {
                     tipo_enc text NOT NULL,
                     mod_horario smallint DEFAULT 1 NOT NULL
                     );";
-        
+
         $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->user_orbix";
-        
+
         $this->executeSql($a_sql);
-        
+
         $this->delPermisoGlobal('sfsv-e');
     }
-    public function eliminar_encargo_tipo() {
+
+    public function eliminar_encargo_tipo()
+    {
         $this->addPermisoGlobal('sfsv-e');
 
         $tabla = "encargo_tipo";
         $nom_tabla = $this->getNomTabla($tabla);
         $this->eliminar($nom_tabla);
-        
+
         $this->delPermisoGlobal('sfsv-e');
     }
-    
-    public function create_encargos () {
+
+    public function create_encargos()
+    {
         $this->addPermisoGlobal('sfsv-e');
 
         $tabla = "encargos";
@@ -129,22 +142,25 @@ class DB extends DBAbstract {
                     observ text
                     );";
         $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->user_orbix";
-        
+
         $this->executeSql($a_sql);
-        
+
         $this->delPermisoGlobal('sfsv-e');
     }
-    public function eliminar_encargos() {
+
+    public function eliminar_encargos()
+    {
         $this->addPermisoGlobal('sfsv-e');
 
         $tabla = "encargos";
         $nom_tabla = $this->getNomTabla($tabla);
         $this->eliminar($nom_tabla);
-        
+
         $this->delPermisoGlobal('sfsv-e');
     }
-    
-    public function create_encargo_horario () {
+
+    public function create_encargo_horario()
+    {
         $this->addPermisoGlobal('sfsv-e');
 
         $tabla = "encargo_horario";
@@ -166,22 +182,25 @@ class DB extends DBAbstract {
                     mes smallint
                     );";
         $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->user_orbix";
-        
+
         $this->executeSql($a_sql);
-        
+
         $this->delPermisoGlobal('sfsv-e');
     }
-    public function eliminar_encargo_horario() {
+
+    public function eliminar_encargo_horario()
+    {
         $this->addPermisoGlobal('sfsv-e');
 
         $tabla = "encargo_horario";
         $nom_tabla = $this->getNomTabla($tabla);
         $this->eliminar($nom_tabla);
-        
+
         $this->delPermisoGlobal('sfsv-e');
     }
-    
-    public function create_encargo_horario_excepcion () {
+
+    public function create_encargo_horario_excepcion()
+    {
         $this->addPermisoGlobal('sfsv-e');
 
         $tabla = "encargo_horario_excepcion";
@@ -206,22 +225,25 @@ class DB extends DBAbstract {
                     mes smallint
                     );";
         $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->user_orbix";
-        
+
         $this->executeSql($a_sql);
-        
+
         $this->delPermisoGlobal('sfsv-e');
     }
-    public function eliminar_encargo_horario_excepcion() {
+
+    public function eliminar_encargo_horario_excepcion()
+    {
         $this->addPermisoGlobal('sfsv-e');
 
         $tabla = "encargo_horario_excepcion";
         $nom_tabla = $this->getNomTabla($tabla);
         $this->eliminar($nom_tabla);
-        
+
         $this->delPermisoGlobal('sfsv-e');
     }
 
-    public function create_encargo_sacd_horario () {
+    public function create_encargo_sacd_horario()
+    {
         $this->addPermisoGlobal('sfsv-e');
 
         $tabla = "encargo_sacd_horario";
@@ -243,22 +265,25 @@ class DB extends DBAbstract {
                     id_item_tarea_sacd integer NOT NULL
                     );";
         $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->user_orbix";
-        
+
         $this->executeSql($a_sql);
-        
+
         $this->delPermisoGlobal('sfsv-e');
     }
-    public function eliminar_encargo_sacd_horario() {
+
+    public function eliminar_encargo_sacd_horario()
+    {
         $this->addPermisoGlobal('sfsv-e');
 
         $tabla = "encargo_sacd_horario";
         $nom_tabla = $this->getNomTabla($tabla);
         $this->eliminar($nom_tabla);
-        
+
         $this->delPermisoGlobal('sfsv-e');
     }
-    
-    public function create_encargo_sacd_horario_excepcion () {
+
+    public function create_encargo_sacd_horario_excepcion()
+    {
         $this->addPermisoGlobal('sfsv-e');
 
         $tabla = "encargo_sacd_horario_excepcion";
@@ -282,22 +307,25 @@ class DB extends DBAbstract {
                     mes smallint
                     );";
         $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->user_orbix";
-        
+
         $this->executeSql($a_sql);
-        
+
         $this->delPermisoGlobal('sfsv-e');
     }
-    public function eliminar_encargo_sacd_horario_excepcion() {
+
+    public function eliminar_encargo_sacd_horario_excepcion()
+    {
         $this->addPermisoGlobal('sfsv-e');
 
         $tabla = "encargo_sacd_horario_excepcion";
         $nom_tabla = $this->getNomTabla($tabla);
         $this->eliminar($nom_tabla);
-        
+
         $this->delPermisoGlobal('sfsv-e');
     }
-    
-    public function create_encargo_sacd_observ () {
+
+    public function create_encargo_sacd_observ()
+    {
         $this->addPermisoGlobal('sfsv-e');
 
         $tabla = "encargo_sacd_observ";
@@ -310,22 +338,25 @@ class DB extends DBAbstract {
                     observ text
                     );";
         $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->user_orbix";
-        
+
         $this->executeSql($a_sql);
-        
+
         $this->delPermisoGlobal('sfsv-e');
     }
-    public function eliminar_encargo_sacd_observ() {
+
+    public function eliminar_encargo_sacd_observ()
+    {
         $this->addPermisoGlobal('sfsv-e');
 
         $tabla = "encargo_sacd_observ";
         $nom_tabla = $this->getNomTabla($tabla);
         $this->eliminar($nom_tabla);
-        
+
         $this->delPermisoGlobal('sfsv-e');
     }
-    
-    public function create_encargo_datos_cgi () {
+
+    public function create_encargo_datos_cgi()
+    {
         $this->addPermisoGlobal('sfsv-e');
 
         $tabla = "encargo_datos_cgi";
@@ -340,22 +371,25 @@ class DB extends DBAbstract {
                     num_alum integer
                     );";
         $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->user_orbix";
-        
+
         $this->executeSql($a_sql);
-        
+
         $this->delPermisoGlobal('sfsv-e');
     }
-    public function eliminar_encargo_datos_cgi() {
+
+    public function eliminar_encargo_datos_cgi()
+    {
         $this->addPermisoGlobal('sfsv-e');
 
         $tabla = "encargo_datos_cgi";
         $nom_tabla = $this->getNomTabla($tabla);
         $this->eliminar($nom_tabla);
-        
+
         $this->delPermisoGlobal('sfsv-e');
     }
-    
-    public function create_encargo_textos () {
+
+    public function create_encargo_textos()
+    {
         $this->addPermisoGlobal('sfsv-e');
 
         $tabla = "encargo_textos";
@@ -369,19 +403,21 @@ class DB extends DBAbstract {
                     texto text
                     );";
         $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->user_orbix";
-        
+
         $this->executeSql($a_sql);
-        
+
         $this->delPermisoGlobal('sfsv-e');
     }
-    public function eliminar_encargo_textos() {
+
+    public function eliminar_encargo_textos()
+    {
         $this->addPermisoGlobal('sfsv-e');
 
         $tabla = "encargo_textos";
         $nom_tabla = $this->getNomTabla($tabla);
         $this->eliminar($nom_tabla);
-        
+
         $this->delPermisoGlobal('sfsv-e');
     }
-    
+
 }

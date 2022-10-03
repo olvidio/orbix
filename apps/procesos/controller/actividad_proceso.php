@@ -1,36 +1,39 @@
 <?php
+
 use actividades\model\entity\ActividadAll;
 
 // INICIO Cabecera global de URL de controlador *********************************
-require_once ("apps/core/global_header.inc");
-// Arxivos requeridos por esta url **********************************************
+require_once("apps/core/global_header.inc");
+// Archivos requeridos por esta url **********************************************
 
-// Crea los objectos de uso global **********************************************
-require_once ("apps/core/global_object.inc");
+// Crea los objetos de uso global **********************************************
+require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
 $oPosicion->recordar();
 
-$a_sel = (array)  \filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+$a_sel = (array)\filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 if (!empty($a_sel)) { //vengo de un checkbox
-    $Qid_activ = (integer) strtok($a_sel[0],"#");
+    $Qid_activ = (integer)strtok($a_sel[0], "#");
     // el scroll id es de la página anterior, hay que guardarlo allí
-    $oPosicion->addParametro('id_sel',$a_sel,1);
-    $scroll_id = (integer) \filter_input(INPUT_POST, 'scroll_id');
-    $oPosicion->addParametro('scroll_id',$scroll_id,1);
+    $oPosicion->addParametro('id_sel', $a_sel, 1);
+    $scroll_id = (integer)\filter_input(INPUT_POST, 'scroll_id');
+    $oPosicion->addParametro('scroll_id', $scroll_id, 1);
 } else {
-    $Qid_activ = (integer)  \filter_input(INPUT_POST, 'id_activ');
+    $Qid_activ = (integer)\filter_input(INPUT_POST, 'id_activ');
 }
 
-$aQuery = array ('pau'=>'a',
-    'id_pau'=>$Qid_activ,
-    'obj_pau'=>'Actividad');
+$aQuery = array('pau' => 'a',
+    'id_pau' => $Qid_activ,
+    'obj_pau' => 'Actividad');
 // el hppt_build_query no pasa los valores null
-if (is_array($aQuery)) { array_walk($aQuery, 'core\poner_empty_on_null'); }
-$godossiers = web\Hash::link('apps/dossiers/controller/dossiers_ver.php?'.http_build_query($aQuery));
+if (is_array($aQuery)) {
+    array_walk($aQuery, 'core\poner_empty_on_null');
+}
+$godossiers = web\Hash::link('apps/dossiers/controller/dossiers_ver.php?' . http_build_query($aQuery));
 
-$alt=_("ver dossiers");
-$dos=_("dossiers");
+$alt = _("ver dossiers");
+$dos = _("dossiers");
 
 $oActividad = new ActividadAll($Qid_activ);
 $nom_activ = $oActividad->getNom_activ();
@@ -57,7 +60,7 @@ $oHashActualizar->setArraycamposHidden($a_camposHiddenA);
 $param_actualizar = $oHashActualizar->getParamAjax();
 
 $oHash1 = new web\Hash();
-$oHash1->setUrl(core\ConfigGlobal::getWeb().'/apps/procesos/controller/actividad_proceso_ajax.php');
+$oHash1->setUrl(core\ConfigGlobal::getWeb() . '/apps/procesos/controller/actividad_proceso_ajax.php');
 $oHash1->setCamposForm('force!que!id_item!completado!observ');
 $h_update = $oHash1->linkSinVal();
 
@@ -69,7 +72,7 @@ $a_campos = ['oPosicion' => $oPosicion,
     'alt' => $alt,
     'dos' => $dos,
     'nom_activ' => $nom_activ,
-    'permiso_calendario'=> $permiso_calendario,
+    'permiso_calendario' => $permiso_calendario,
     'web_icons' => core\ConfigGlobal::getWeb_icons(),
     'url_ajax' => $url_ajax,
     'id_activ' => $Qid_activ,
@@ -80,4 +83,4 @@ $a_campos = ['oPosicion' => $oPosicion,
 ];
 
 $oView = new core\ViewTwig('procesos/controller');
-echo $oView->render('actividad_proceso.html.twig',$a_campos);
+echo $oView->render('actividad_proceso.html.twig', $a_campos);

@@ -1,21 +1,21 @@
 <?php
 // INICIO Cabecera global de URL de controlador *********************************
-	require_once ("apps/core/global_header.inc");
-// Arxivos requeridos por esta url **********************************************
+require_once("apps/core/global_header.inc");
+// Archivos requeridos por esta url **********************************************
 
-// Crea los objectos de uso global **********************************************
-	require_once ("apps/core/global_object.inc");
+// Crea los objetos de uso global **********************************************
+require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
-	
-$Qregion = (string) \filter_input(INPUT_POST, 'region');
-$Qdl = (string) \filter_input(INPUT_POST, 'dl');
-$Qcomun = (integer) \filter_input(INPUT_POST, 'comun');
-$Qsv = (integer) \filter_input(INPUT_POST, 'sv');
-$Qsf = (integer) \filter_input(INPUT_POST, 'sf');
+
+$Qregion = (string)\filter_input(INPUT_POST, 'region');
+$Qdl = (string)\filter_input(INPUT_POST, 'dl');
+$Qcomun = (integer)\filter_input(INPUT_POST, 'comun');
+$Qsv = (integer)\filter_input(INPUT_POST, 'sv');
+$Qsf = (integer)\filter_input(INPUT_POST, 'sf');
 
 $esquema = "$Qregion-$Qdl";
-$esquemav = $esquema.'v';
-$esquemaf = $esquema.'f';
+$esquemav = $esquema . 'v';
+$esquemaf = $esquema . 'f';
 
 $RegionNew = $Qregion;
 $DlNew = $Qdl;
@@ -27,78 +27,78 @@ if (!empty($Qcomun)) {
     $oTrasvase->setRegion($Qregion);
     $oTrasvase->setDl($Qdl);
     $oTrasvase->setDbName('comun');
-    
+
     $oTrasvase->actividades('dl2resto');
     $oTrasvase->cdc('dl2resto');
 }
 // SV
 if (!empty($Qsv)) {
     $config = $oConfigDB->getEsquema('publicv');
-    
+
     $oTrasvase = new core\DBTrasvase();
     $oTrasvase->setRegion($Qregion);
     $oTrasvase->setDl($Qdl);
     $oTrasvase->setDbName('sv');
 
-	$oTrasvase->ctr('dl2resto');
+    $oTrasvase->ctr('dl2resto');
 
-	$oDBEsquema = new core\DBEsquema();
-	$oDBEsquema->setConfig($config);
-	$oDBEsquema->setRegionNew($RegionNew);
-	$oDBEsquema->setDlNew($DlNew);
-	$oDBEsquema->eliminar();
-	
-	// exterior: sv-e
+    $oDBEsquema = new core\DBEsquema();
+    $oDBEsquema->setConfig($config);
+    $oDBEsquema->setRegionNew($RegionNew);
+    $oDBEsquema->setDlNew($DlNew);
+    $oDBEsquema->eliminar();
+
+    // exterior: sv-e
     $config = $oConfigDB->getEsquema('publicv-e');
-	$oDBEsquema->setConfig($config);
-	$oDBEsquema->eliminar();
+    $oDBEsquema->setConfig($config);
+    $oDBEsquema->eliminar();
 }
 // SF
 if (!empty($Qsf)) {
     $config = $oConfigDB->getEsquema('publicf');
 
-	/* desde dentro la db sf es inaccesible */
-	/*
+    /* desde dentro la db sf es inaccesible */
+    /*
     $oTrasvase = new core\DBTrasvase();
     $oTrasvase->setRegion($Qregion);
     $oTrasvase->setDl($Qdl);
     $oTrasvase->setDbName('sf');
     
-	$oTrasvase->ctr('dl2resto');
-	$oTrasvase->teleco_ctr('dl2resto');
+    $oTrasvase->ctr('dl2resto');
+    $oTrasvase->teleco_ctr('dl2resto');
 
-	$oDBEsquema = new core\DBEsquema();
-	$oDBEsquema->setConfig($config);
-	$oDBEsquema->setRegionNew($RegionNew);
-	$oDBEsquema->setDlNew($DlNew);
-	$oDBEsquema->eliminar();
-	*/
+    $oDBEsquema = new core\DBEsquema();
+    $oDBEsquema->setConfig($config);
+    $oDBEsquema->setRegionNew($RegionNew);
+    $oDBEsquema->setDlNew($DlNew);
+    $oDBEsquema->eliminar();
+    */
 }
 
 // Borrar esquema comun y usuarios.
 if (!empty($Qsv) && !empty($Qsf)) {
     $config = $oConfigDB->getEsquema('public');
-	$oDBEsquema = new core\DBEsquema();
-	$oDBEsquema->setConfig($config);
-	$oDBEsquema->setRegionNew($RegionNew);
-	$oDBEsquema->setDlNew($DlNew);
-	$oDBEsquema->eliminar();
-	// Eliminar usuarios
-	
-	$oConexion = new core\dbConnection($config);
-	$oDevelPC = $oConexion->getPDO();
-	
-	$oDBRol = new core\DBRol();
-	$oDBRol->setDbConexion($oDevelPC);
+    $oDBEsquema = new core\DBEsquema();
+    $oDBEsquema->setConfig($config);
+    $oDBEsquema->setRegionNew($RegionNew);
+    $oDBEsquema->setDlNew($DlNew);
+    $oDBEsquema->eliminar();
+    // Eliminar usuarios
 
-	$oDBRol->setUser($esquema);
-	$oDBRol->eliminarUsuario();
-	$esquemav = $esquema.'v';
-	$oDBRol->setUser($esquemav);
-	$oDBRol->eliminarUsuario();
-	$esquemaf = $esquema.'f';
-	$oDBRol->setUser($esquemaf);
-	$oDBRol->eliminarUsuario();
+    $oConexion = new core\dbConnection($config);
+    $oDevelPC = $oConexion->getPDO();
+
+    $oDBRol = new core\DBRol();
+    $oDBRol->setDbConexion($oDevelPC);
+
+    $oDBRol->setUser($esquema);
+    $oDBRol->eliminarUsuario();
+    $esquemav = $esquema . 'v';
+    $oDBRol->setUser($esquemav);
+    $oDBRol->eliminarUsuario();
+    $esquemaf = $esquema . 'f';
+    $oDBRol->setUser($esquemaf);
+    $oDBRol->eliminarUsuario();
 }
 
 echo _("datos pasados a resto y tablas vaciadas");

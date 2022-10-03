@@ -1,71 +1,93 @@
 <script>
-fnjs_left_side_hide();
+    fnjs_left_side_hide();
 </script>
-<?php 
+<?php
+
 use core\ConfigGlobal;
+
 if (ConfigGlobal::is_app_installed('cambios')) {
     ?>
     <h2><?= ucfirst(_("gestión de avisos para cambios en actividades")) ?><br></h2>
-    <table><tr><td>
-        <input type="button" onclick="fnjs_update_div('#main','<?= $avisos_lista ?>');" value="<?= _("ver lista") ?>" >
-        </td><td>
-        <input type="button" onclick="fnjs_update_div('#main','<?= $avisos_mails ?>');" value="<?= _("ver mails sin enviar") ?>" >
-        </td><td>
-        <input type="button" onclick="fnjs_update_div('#main','<?= $avisos ?>');" value="<?= _("gestionar avisos en cambios actividades") ?>" >
-        </td>
+    <table>
+        <tr>
+            <td>
+                <input type="button" onclick="fnjs_update_div('#main','<?= $avisos_lista ?>');"
+                       value="<?= _("ver lista") ?>">
+            </td>
+            <td>
+                <input type="button" onclick="fnjs_update_div('#main','<?= $avisos_mails ?>');"
+                       value="<?= _("ver mails sin enviar") ?>">
+            </td>
+            <td>
+                <input type="button" onclick="fnjs_update_div('#main','<?= $avisos ?>');"
+                       value="<?= _("gestionar avisos en cambios actividades") ?>">
+            </td>
     </table>
-    <?php 
+    <?php
 }
 ?>
 <h2><?= ucfirst(_("preferencias personales")) ?><br></h2>
 <form id=preferencias name=preferencias action="apps/usuarios/controller/personal_update.php" method="post">
-<?= $oHash->getCamposHtml(); ?>
-<table>
-<tr><td><?= ucfirst(_("página central de inicio")) ?>: </td>
-<td>
-<?= $oDesplInicio->desplegable(); ?>
-</td>
-</tr>
-<tr>
-<td><?= ucfirst(_("menú principal de la oficina")) ?>:</td><td>
-<select name=oficina>
-<option />
-<?= $posibles; ?>;
-</select>
-</td>
-</tr>
-<tr><td><?= ucfirst(_("estilo")) ?>:</td>
-<td>
-<select name=estilo_color>
-	<option value=azul <?= $estil_azul; ?>>Azul</option>
-	<option value=naranja <?= $estil_naranja; ?>>Naranja</option>
-	<option value=verde <?= $estil_verde; ?>>verde</option>
-</select></td></tr>
-<tr><td><?= ucfirst(_("disposición menú")) ?>:</td>
-<td>
-<select name=tipo_menu>
-	<option value=horizontal <?= $tipo_menu_h; ?>>Horizontal</option>
-	<option value=vertical <?= $tipo_menu_v; ?>>Vertical</option>
-</select></td></tr>
-<tr><td><?= ucfirst(_("presentación tablas")) ?>:</td>
-<td>
-<select name=tipo_tabla>
-	<option value="slickgrid" <?= $tipo_tabla_s; ?>>SlickGrid</option>	
-	<option value="html" <?= $tipo_tabla_h; ?>>Html</option>
-</select></td></tr>
-<tr><td><?= ucfirst(_("presentación nombre,Apellidos")) ?>:</td>
-<td>
-<select name=ordenApellidos>
-	<option value="ap_nom" <?= $tipo_apellidos_ap_nom; ?>>Apellidos, Nombre</option>	
-	<option value="nom_ap" <?= $tipo_apellidos_nom_ap; ?>>Nombre Apellidos</option>
-</select></td></tr>
-<tr><td><?= ucfirst(_("idioma")) ?>:</td>
-<td>
-<?= $oDesplLocales->desplegable() ?>
-</td></tr>
-</table>
-<br>
-<input type="button" onclick=fnjs_enviar_formulario('#preferencias') value="guardar preferencias">
+    <?= $oHash->getCamposHtml(); ?>
+    <table>
+        <tr>
+            <td><?= ucfirst(_("página central de inicio")) ?>:</td>
+            <td>
+                <?= $oDesplInicio->desplegable(); ?>
+            </td>
+        </tr>
+        <tr>
+            <td><?= ucfirst(_("menú principal de la oficina")) ?>:</td>
+            <td>
+                <select name=oficina>
+                    <option/>
+                    <?= $posibles; ?>;
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td><?= ucfirst(_("estilo")) ?>:</td>
+            <td>
+                <select name=estilo_color>
+                    <option value=azul <?= $estil_azul; ?>>Azul</option>
+                    <option value=naranja <?= $estil_naranja; ?>>Naranja</option>
+                    <option value=verde <?= $estil_verde; ?>>verde</option>
+                </select></td>
+        </tr>
+        <tr>
+            <td><?= ucfirst(_("disposición menú")) ?>:</td>
+            <td>
+                <select name=tipo_menu>
+                    <option value=horizontal <?= $tipo_menu_h; ?>>Horizontal</option>
+                    <option value=vertical <?= $tipo_menu_v; ?>>Vertical</option>
+                </select></td>
+        </tr>
+        <tr>
+            <td><?= ucfirst(_("presentación tablas")) ?>:</td>
+            <td>
+                <select name=tipo_tabla>
+                    <option value="slickgrid" <?= $tipo_tabla_s; ?>>SlickGrid</option>
+                    <option value="html" <?= $tipo_tabla_h; ?>>Html</option>
+                </select></td>
+        </tr>
+        <tr>
+            <td><?= ucfirst(_("presentación nombre,Apellidos")) ?>:</td>
+            <td>
+                <select name=ordenApellidos>
+                    <option value="ap_nom" <?= $tipo_apellidos_ap_nom; ?>>Apellidos, Nombre</option>
+                    <option value="nom_ap" <?= $tipo_apellidos_nom_ap; ?>>Nombre Apellidos</option>
+                </select></td>
+        </tr>
+        <tr>
+            <td><?= ucfirst(_("idioma")) ?>:</td>
+            <td>
+                <?= $oDesplLocales->desplegable() ?>
+            </td>
+        </tr>
+    </table>
+    <br>
+    <input type="button" onclick=fnjs_enviar_formulario('#preferencias') value="guardar preferencias">
 </form>
 <br><span class="link" onclick="fnjs_update_div('#main','<?= $cambio_mail ?>');"><?= _("cambiar el mail") ?></span><br>
-<br><span class="link" onclick="fnjs_update_div('#main','<?= $cambio_password ?>');"><?= _("cambiar el password") ?></span><br>
+<br><span class="link"
+          onclick="fnjs_update_div('#main','<?= $cambio_password ?>');"><?= _("cambiar el password") ?></span><br>

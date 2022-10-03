@@ -1,4 +1,5 @@
 <?php
+
 use encargossacd\model\entity\EncargoHorario;
 use web\Hash;
 use web\Desplegable;
@@ -6,68 +7,70 @@ use encargossacd\model\EncargoConstants;
 use encargossacd\model\entity\GestorEncargoHorarioExcepcion;
 
 /**
-* Esta página muestra un formulario para crear un horario
-*
-*
-*@package	delegacion
-*@subpackage	encargos
-*@author	Daniel Serrabou
-*@since		24/2/06.
-*		
-*/
+ * Esta página muestra un formulario para crear un horario
+ *
+ *
+ * @package    delegacion
+ * @subpackage    encargos
+ * @author    Daniel Serrabou
+ * @since        24/2/06.
+ *
+ */
 
 // INICIO Cabecera global de URL de controlador *********************************
-require_once ("apps/core/global_header.inc");
-// Arxivos requeridos por esta url **********************************************
+require_once("apps/core/global_header.inc");
+// Archivos requeridos por esta url **********************************************
 
-// Crea los objectos de uso global **********************************************
-require_once ("apps/core/global_object.inc");
+// Crea los objetos de uso global **********************************************
+require_once("apps/core/global_object.inc");
 
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$Qrefresh = (integer)  \filter_input(INPUT_POST, 'refresh');
+$Qrefresh = (integer)\filter_input(INPUT_POST, 'refresh');
 $oPosicion->recordar($Qrefresh);
 
-$Qmod = (string) \filter_input(INPUT_POST, 'mod');
-$Qid_enc = (integer) \filter_input(INPUT_POST, 'id_enc');
-$Qdesc_enc = (string) \filter_input(INPUT_POST, 'desc_enc');
+$Qmod = (string)\filter_input(INPUT_POST, 'mod');
+$Qid_enc = (integer)\filter_input(INPUT_POST, 'id_enc');
+$Qdesc_enc = (string)\filter_input(INPUT_POST, 'desc_enc');
 $Qdesc_enc = urldecode($Qdesc_enc);
 
 if ($Qmod != 'nuevo') { //significa que no es nuevo
-    $id_item_h = (integer) \filter_input(INPUT_POST, 'id_item_h');
+    $id_item_h = (integer)\filter_input(INPUT_POST, 'id_item_h');
     if (!empty($_POST['sel'])) { //vengo de un checkbox
-        $id_item_h=strtok($_POST['sel'][0],"#");
+        $id_item_h = strtok($_POST['sel'][0], "#");
     }
-	$EncargoHorario = new EncargoHorario($id_item_h);
-	$f_ini = $EncargoHorario->getF_ini()->getFromLocal();
-	$f_fin = $EncargoHorario->getF_fin()->getFromLocal();
-	$dia_ref = $EncargoHorario->getDia_ref();
-	$dia_num = $EncargoHorario->getDia_num();
-	$mas_menos = $EncargoHorario->getMas_menos();
-	$dia_inc = $EncargoHorario->getDia_inc();
-	$h_ini = $EncargoHorario->getH_ini();
-	$h_fin = $EncargoHorario->getH_fin();
-	$n_sacd = $EncargoHorario->getN_sacd();
-	$mes = $EncargoHorario->getMes();
+    $EncargoHorario = new EncargoHorario($id_item_h);
+    $f_ini = $EncargoHorario->getF_ini()->getFromLocal();
+    $f_fin = $EncargoHorario->getF_fin()->getFromLocal();
+    $dia_ref = $EncargoHorario->getDia_ref();
+    $dia_num = $EncargoHorario->getDia_num();
+    $mas_menos = $EncargoHorario->getMas_menos();
+    $dia_inc = $EncargoHorario->getDia_inc();
+    $h_ini = $EncargoHorario->getH_ini();
+    $h_fin = $EncargoHorario->getH_fin();
+    $n_sacd = $EncargoHorario->getN_sacd();
+    $mes = $EncargoHorario->getMes();
 } else {
     $id_item_h = '';
-	$f_ini = '';   
-	$f_fin = '';    
-	$dia_ref = '';  
-	$dia_num = '';  
-	$mas_menos = '';
-	$dia_inc = '';  
-	$h_ini = '';    
-	$h_fin = '';    
-	$n_sacd = '';   
-	$mes = '';      
+    $f_ini = '';
+    $f_fin = '';
+    $dia_ref = '';
+    $dia_num = '';
+    $mas_menos = '';
+    $dia_inc = '';
+    $h_ini = '';
+    $h_fin = '';
+    $n_sacd = '';
+    $mes = '';
 }
 
-if (empty($id_item_h)) { $titulo=_("nuevo")." "; }
-$titulo = _("horario de").": ".$Qdesc_enc;
+if (empty($id_item_h)) {
+    $titulo = _("nuevo") . " ";
+}
+$titulo = _("horario de") . ": " . $Qdesc_enc;
 
 $oGesEncagoTipo = new \encargossacd\model\entity\GestorEncargoTipo();
-$dia = $oGesEncagoTipo->calcular_dia($mas_menos,$dia_ref,$dia_inc);
+$dia = $oGesEncagoTipo->calcular_dia($mas_menos, $dia_ref, $dia_inc);
 $opciones_dia_semana = EncargoConstants::OPCIONES_DIA_SEMANA;
 $oDesplDia = new Desplegable();
 $oDesplDia->setNombre('dia');
@@ -79,9 +82,9 @@ $oDesplMas = new Desplegable();
 $oDesplMas->setNombre('mas_menos');
 $oDesplMas->setBlanco('t');
 $aOpciones = [
-        "-" => _("antes del"),
-        "+" => _("después del"),
-    ];
+    "-" => _("antes del"),
+    "+" => _("después del"),
+];
 $oDesplMas->setOpciones($aOpciones);
 $oDesplMas->setOpcion_sel($mas_menos);
 
@@ -152,4 +155,4 @@ $a_campos = ['oPosicion' => $oPosicion,
 ];
 
 $oView = new core\ViewTwig('encargossacd/controller');
-echo $oView->render('horario_ver.html.twig',$a_campos);
+echo $oView->render('horario_ver.html.twig', $a_campos);

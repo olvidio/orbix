@@ -1,8 +1,10 @@
 <?php
 namespace ubis\model\entity;
+
 use core;
+
 /**
- * Classe que implementa l'entitat u_direcciones_global
+ * Clase que implementa la entidad u_direcciones_global
  *
  * @package delegación
  * @subpackage model
@@ -10,30 +12,33 @@ use core;
  * @version 1.0
  * @created 01/10/2010
  */
+class Direccion extends core\ClasePropiedades
+{
+    /* ATRIBUTOS ----------------------------------------------------------------- */
+    /* ATRIBUTOS QUE NO SON CAMPOS------------------------------------------------- */
+    /* CONSTRUCTOR -------------------------------------------------------------- */
 
-class Direccion Extends core\ClasePropiedades {
-	/* ATRIBUTS ----------------------------------------------------------------- */
-	/* ATRIBUTS QUE NO SÓN CAMPS------------------------------------------------- */
-	/* CONSTRUCTOR -------------------------------------------------------------- */
+    /**
+     * Constructor de la classe vuit.
+     *
+     */
+    function __construct($a_id = '')
+    {
+    }
 
-	/**
-	 * Constructor de la classe vuit.
-	 *
-	 */
-	function __construct($a_id='') {
-	}
+    /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
-	/* METODES PUBLICS ----------------------------------------------------------*/
-	
-	public static function NewDireccion($id_direccion) { 
-		$gesDireccion = new GestorDireccionCtr;
-		$cDirecciones = $gesDireccion->getDirecciones(array('id_ubi'=>$id_direccion));
-		if (count($cDirecciones) > 0) {
-			$oDireccion = $cDirecciones[0];
-		} else {
-			$oDireccion = new DireccionCdc($id_direccion);
-		}
-		return $oDireccion;
-	}
+    public static function NewDireccion($id_direccion)
+    {
+        $gesDireccion = new GestorDireccionCtr;
+        $cDirecciones = $gesDireccion->getDirecciones(array('id_ubi' => $id_direccion));
+        if (count($cDirecciones) > 0) {
+            $oDireccion = $cDirecciones[0];
+        } else {
+            $oDireccion = new DireccionCdc($id_direccion);
+        }
+        return $oDireccion;
+    }
 }
+
 ?>

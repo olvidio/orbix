@@ -1,46 +1,50 @@
 <script>
-fnjs_db=function(que){
-	
-	id_app = $('#id_app').val();
-	app = $("#id_app option:selected").text();
-	if (id_app < 19) {
-		alert("<?= $alerta ?>");
-	} else {
-        esquema = $('#esquema').val();
-		if (que == 'crear_global' || que == 'eliminar_global') {
-			esquema = 'global';
-		}
-        txt = "<?= _("Esto cambiará la aplicación");?>: "+app+"\n<?= _("para el esquema"); ?>: "+esquema;
-		if (confirm(txt) ) {
-            $('#accion').val(que);
-            $('#frm').attr('action','apps/devel/controller/apptables_update.php');
-            fnjs_enviar_formulario('#frm','#main');
-		}
-	}
-}
+    fnjs_db = function (que) {
+
+        id_app = $('#id_app').val();
+        app = $("#id_app option:selected").text();
+        if (id_app < 19) {
+            alert("<?= $alerta ?>");
+        } else {
+            esquema = $('#esquema').val();
+            if (que == 'crear_global' || que == 'eliminar_global') {
+                esquema = 'global';
+            }
+            txt = "<?= _("Esto cambiará la aplicación");?>: " + app + "\n<?= _("para el esquema"); ?>: " + esquema;
+            if (confirm(txt)) {
+                $('#accion').val(que);
+                $('#frm').attr('action', 'apps/devel/controller/apptables_update.php');
+                fnjs_enviar_formulario('#frm', '#main');
+            }
+        }
+    }
 </script>
 <h1><?= _("aplicación") ?></h1>
-<p><?= _("si se acaba de crear la aplicación, hay que salir y volver a entrar para poder crear el esquema")?></p>
+<p><?= _("si se acaba de crear la aplicación, hay que salir y volver a entrar para poder crear el esquema") ?></p>
 <br>
 <form id="frm" action="" method=post>
-<?= $oHash->getCamposHtml(); ?>
-<table>
- <tr valign=top align=left>
-  <td><?= _("aplicación") ?>:</td>
-  <td><?= $oDesplApps->desplegable() ?></td>
-  </tr>
-  <tr>
-  <td><?= _("global") ?>:</td>
-  <td><input type="button" name="bcg" onclick="fnjs_db('crear_global')" value="<?= ("crear global") ?>"></td>
-  <td><input type="button" name="beg" onclick="fnjs_db('eliminar_global')" value="<?= ("eliminar global") ?>"></td>
- </tr>
- <tr>
-  <td><?= _("esquema") ?>:</td>
-  <td><?= $oDesplEsquemas ?></td>
-  <td><input type="button" name="bce" onclick="fnjs_db('crear_esquema')" value="<?= ("crear Esquema") ?>"></td>
-  <td><input type="button" name="bee" onclick="fnjs_db('eliminar_esquema')" value="<?= ("eliminar Esquema") ?>"></td>
-  <td><input type="button" name="bee" onclick="fnjs_db('llenar_esquema')" value="<?= ("llenar Esquema") ?>"></td>
- </tr>
-</table>
+    <?= $oHash->getCamposHtml(); ?>
+    <table>
+        <tr valign=top align=left>
+            <td><?= _("aplicación") ?>:</td>
+            <td><?= $oDesplApps->desplegable() ?></td>
+        </tr>
+        <tr>
+            <td><?= _("global") ?>:</td>
+            <td><input type="button" name="bcg" onclick="fnjs_db('crear_global')" value="<?= ("crear global") ?>"></td>
+            <td><input type="button" name="beg" onclick="fnjs_db('eliminar_global')" value="<?= ("eliminar global") ?>">
+            </td>
+        </tr>
+        <tr>
+            <td><?= _("esquema") ?>:</td>
+            <td><?= $oDesplEsquemas ?></td>
+            <td><input type="button" name="bce" onclick="fnjs_db('crear_esquema')" value="<?= ("crear Esquema") ?>">
+            </td>
+            <td><input type="button" name="bee" onclick="fnjs_db('eliminar_esquema')"
+                       value="<?= ("eliminar Esquema") ?>"></td>
+            <td><input type="button" name="bee" onclick="fnjs_db('llenar_esquema')" value="<?= ("llenar Esquema") ?>">
+            </td>
+        </tr>
+    </table>
 </form>
 <br><p><?= _("hay que hacer los dos pasos") ?></p>

@@ -1,12 +1,13 @@
-﻿<?php 
+﻿<?php
+
 use web\Hash;
 
 // INICIO Cabecera global de URL de controlador *********************************
-require_once ("apps/core/global_header.inc");
-// Arxivos requeridos por esta url **********************************************
+require_once("apps/core/global_header.inc");
+// Archivos requeridos por esta url **********************************************
 
-// Crea los objectos de uso global **********************************************
-require_once ("apps/core/global_object.inc");
+// Crea los objetos de uso global **********************************************
+require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
 $url_ajax = "apps/actividades/controller/tipo_activ_ajax.php";
@@ -33,8 +34,8 @@ $a_campos = ['oPosicion' => $oPosicion,
     'h_nuevo' => $h_nuevo,
     'h_lista' => $h_lista,
     'url_ajax' => $url_ajax,
-	'txt_eliminar' => $txt_eliminar,
+    'txt_eliminar' => $txt_eliminar,
 ];
 
 $oView = new core\ViewTwig('actividades/controller');
-echo $oView->render('tipo_activ.html.twig',$a_campos);
+echo $oView->render('tipo_activ.html.twig', $a_campos);

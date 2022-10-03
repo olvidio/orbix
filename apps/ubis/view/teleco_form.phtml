@@ -1,73 +1,81 @@
 <script>
-fnjs_guardar=function(formulario){
-	var rr=fnjs_comprobar_campos(formulario,'<?= addslashes($obj) ?>');
-	//alert ("EEE "+rr);
-	if (rr=='ok') {
-	   	$('#mod').val('teleco');
-	   	$(formulario).attr('action','apps/ubis/controller/teleco_update.php');
-		$(formulario).one("submit", function() {
-			$.ajax({
-				url: $(this).attr('action'),
-				type: 'post',
-				data: $(this).serialize()
-			})
-			.done(function (rta_txt) {
-				if (rta_txt != '' && rta_txt != '\\n') {
-					alert ('<?= _("respuesta") ?>: '+rta_txt);
-				} else {
-					<?= $oPosicion->js_atras(1); ?>
-				}
-			});
-			return false;
-		});
-		$(formulario).trigger("submit");
-		$(formulario).off();
-	}
-}
-fnjs_actualizar_descripcion=function() {
-	var tipo_teleco=$('#tipo_teleco').val();
+    fnjs_guardar = function (formulario) {
+        var rr = fnjs_comprobar_campos(formulario, '<?= addslashes($obj) ?>');
+        //alert ("EEE "+rr);
+        if (rr == 'ok') {
+            $('#mod').val('teleco');
+            $(formulario).attr('action', 'apps/ubis/controller/teleco_update.php');
+            $(formulario).one("submit", function () {
+                $.ajax({
+                    url: $(this).attr('action'),
+                    type: 'post',
+                    data: $(this).serialize()
+                })
+                    .done(function (rta_txt) {
+                        if (rta_txt != '' && rta_txt != '\\n') {
+                            alert('<?= _("respuesta") ?>: ' + rta_txt);
+                        } else {
+                            <?= $oPosicion->js_atras(1); ?>
+                        }
+                    });
+                return false;
+            });
+            $(formulario).trigger("submit");
+            $(formulario).off();
+        }
+    }
+    fnjs_actualizar_descripcion = function () {
+        var tipo_teleco = $('#tipo_teleco').val();
 
-	var url='<?= $url_actualizar ?>';
-	var parametros='tipo_teleco='+tipo_teleco+'<?= $h_actualizar ?>';
-	$.ajax({
-		url: url,
-		type: 'post',
-		data: parametros
-	})
-	.done(function (rta_txt) {
-            $('#span_descripcion').html(rta_txt);			
-	});
-}
+        var url = '<?= $url_actualizar ?>';
+        var parametros = 'tipo_teleco=' + tipo_teleco + '<?= $h_actualizar ?>';
+        $.ajax({
+            url: url,
+            type: 'post',
+            data: parametros
+        })
+            .done(function (rta_txt) {
+                $('#span_descripcion').html(rta_txt);
+            });
+    }
 </script>
 <?= $oPosicion->mostrar_left_slide(1); ?>
-<form id='frm2' >
-<?= $oHash->getCamposHtml(); ?>
-<input type="Hidden" id="mod"  name="mod" value="">
-<table>
-<tr><td class="etiqueta"><?= ucfirst(_("tipo teleco")) ?>
-	<?= $oDesplegableTiposTeleco->desplegable(); ?>
-</td></tr>
-<tr><td class="etiqueta"><?= ucfirst(_("descripción")) ?>
-	<span id='span_descripcion'>
+<form id='frm2'>
+    <?= $oHash->getCamposHtml(); ?>
+    <input type="Hidden" id="mod" name="mod" value="">
+    <table>
+        <tr>
+            <td class="etiqueta"><?= ucfirst(_("tipo teleco")) ?>
+                <?= $oDesplegableTiposTeleco->desplegable(); ?>
+            </td>
+        </tr>
+        <tr>
+            <td class="etiqueta"><?= ucfirst(_("descripción")) ?>
+                <span id='span_descripcion'>
         <?= $oDesplegableDescTeleco->desplegable(); ?>
 	</span>
-</td></tr>
-<tr><td class="etiqueta"><?= ucfirst(_("número")) ?>
-	<input class="contenido" id="num_teleco"  name="num_teleco" value="<?= $num_teleco ?>" size="30">
-</td></tr>
-<tr><td class="etiqueta"><?= ucfirst(_("observaciones")) ?>
-	<input class="contenido" id="observ"  name="observ" value="<?= $observ ?>" size="50">
-</td></tr>
-</table>
-<?php
-// -----------------------------------  Botones  ----------------------
-if (!empty($botones)) {
-	echo "<table><tr class=botones>";
-	$txt_g=ucwords(_("guardar cambios"));
-	echo "<th class='link_inv' onclick='fnjs_guardar(\"#frm2\")'>$txt_g</th>"; 
-	echo "</tr></table><br>";
-}
-// fin ----------------------------  Botones  ----------------------
-?>
+            </td>
+        </tr>
+        <tr>
+            <td class="etiqueta"><?= ucfirst(_("número")) ?>
+                <input class="contenido" id="num_teleco" name="num_teleco" value="<?= $num_teleco ?>" size="30">
+            </td>
+        </tr>
+        <tr>
+            <td class="etiqueta"><?= ucfirst(_("observaciones")) ?>
+                <input class="contenido" id="observ" name="observ" value="<?= $observ ?>" size="50">
+            </td>
+        </tr>
+    </table>
+    <?php
+    // -----------------------------------  Botones  ----------------------
+    if (!empty($botones)) {
+        echo "<table><tr class=botones>";
+        $txt_g = ucwords(_("guardar cambios"));
+        echo "<th class='link_inv' onclick='fnjs_guardar(\"#frm2\")'>$txt_g</th>";
+        echo "</tr></table><br>";
+    }
+    // fin ----------------------------  Botones  ----------------------
+    ?>
 </form>
 

@@ -1,20 +1,21 @@
 <?php
+
 use config\model\entity\ConfigSchema;
 use web\Hash;
 use usuarios\model\entity\GestorLocal;
 
 // INICIO Cabecera global de URL de controlador *********************************
-	require_once ("apps/core/global_header.inc");
-// Arxivos requeridos por esta url **********************************************
+require_once("apps/core/global_header.inc");
+// Archivos requeridos por esta url **********************************************
 //	require_once ("classes/personas/ext_web_preferencias_gestor.class");
 
-// Crea los objectos de uso global **********************************************
-	require_once ("apps/core/global_object.inc");
+// Crea los objetos de uso global **********************************************
+require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
 
 $url = 'apps/config/controller/parametros_update.php';
-$a_campos = [ 'url' => $url];
+$a_campos = ['url' => $url];
 
 // ----------- Periodo Curso crt -------------------
 $parametro = 'curso_crt';
@@ -25,12 +26,12 @@ $valor = $oConfigSchema->getValor();
 // ini_dia, ini_mes, fin_dia, fin_mes
 if (empty($valor)) {
     $aCursoCrt = [
-             'ini_dia' => 1,
-             'ini_mes' => 9,
-             'fin_dia' => 31,
-             'fin_mes' => 8,
+        'ini_dia' => 1,
+        'ini_mes' => 9,
+        'fin_dia' => 31,
+        'fin_mes' => 8,
     ];
-    $valor = json_encode($aCursoCrt); 
+    $valor = json_encode($aCursoCrt);
 }
 
 $aCursoCrt = json_decode($valor, TRUE);
@@ -52,12 +53,12 @@ $valor = $oConfigSchema->getValor();
 // ini_dia, ini_mes, fin_dia, fin_mes
 if (empty($valor)) {
     $aCursoStgr = [
-             'ini_dia' => 1,
-             'ini_mes' => 10,
-             'fin_dia' => 30,
-             'fin_mes' => 9,
+        'ini_dia' => 1,
+        'ini_mes' => 10,
+        'fin_dia' => 30,
+        'fin_mes' => 9,
     ];
-    $valor = json_encode($aCursoStgr); 
+    $valor = json_encode($aCursoStgr);
 }
 
 $aCursoStgr = json_decode($valor, TRUE);
@@ -245,9 +246,9 @@ $valor = $oConfigSchema->getValor();
 if (empty($valor)) {
     $valor = "dl";
 }
-$chk_dl = ($valor == 'dl')? 'checked' : ''; 
-$chk_r = ($valor == 'r')? 'checked' : ''; 
-$chk_rstgr = ($valor == 'rstgr')? 'checked' : ''; 
+$chk_dl = ($valor == 'dl') ? 'checked' : '';
+$chk_r = ($valor == 'r') ? 'checked' : '';
+$chk_rstgr = ($valor == 'rstgr') ? 'checked' : '';
 
 $oHashDLR = new Hash();
 $oHashDLR->setUrl($url);
@@ -267,8 +268,8 @@ $valor = $oConfigSchema->getValor();
 if (empty($valor)) {
     $valor = "central";
 }
-$chk_central = ($valor == 'central')? 'checked' : ''; 
-$chk_of = ($valor == 'oficinas')? 'checked' : ''; 
+$chk_central = ($valor == 'central') ? 'checked' : '';
+$chk_of = ($valor == 'oficinas') ? 'checked' : '';
 
 $oHashCal = new Hash();
 $oHashCal->setUrl($url);
@@ -281,4 +282,4 @@ $a_campos['chk_of'] = $chk_of;
 
 
 $oView = new core\ViewTwig('config/controller');
-echo $oView->render('parametros.html.twig',$a_campos);
+echo $oView->render('parametros.html.twig', $a_campos);

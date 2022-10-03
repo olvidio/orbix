@@ -1,68 +1,76 @@
 <?php
+
 use core\ConfigGlobal;
+
 ?>
 <script>
-fnjs_buscar=function(){
-	$('#frm_buscar').attr('action',"apps/usuarios/controller/grupo_lista.php");
-	fnjs_enviar_formulario('#frm_buscar');
-}
-fnjs_modificar=function(formulario){
-	rta=fnjs_solo_uno(formulario);
-	if (rta==1) {
-		$('#que').val('');
-  		$(formulario).attr('action',"apps/usuarios/controller/grupo_form.php");
-  		fnjs_enviar_formulario(formulario);
-  	}
-}
-fnjs_eliminar=function(formulario){
-	rta=fnjs_solo_uno('#seleccionados');
-	if (rta==1) {
-		if (confirm("<?= _("¿Está seguro que desea borrar este grupo?");?>") ) {
-			var url='<?= core\ConfigGlobal::getWeb() ?>/apps/usuarios/controller/usuario_ajax.php';
-			$('#seleccionados').one("submit", function() {
-				$.ajax({
-					url: url,
-					type: 'post',
-					data: $(this).serialize()
-				})
-				.done(function (rta_txt) {
-					if (rta_txt != '' && rta_txt != '\n') {
-						alert ('<?= _("respuesta") ?>: '+rta_txt);
-					} else {
-						fnjs_actualizar();
-				   	}
-				});
-				return false;
-			});
-			$('#seleccionados').trigger("submit");
-			$('#seleccionados').off();
-		}
-	}
-}
-fnjs_actualizar=function(){
-	var url='<?= web\Hash::link(core\ConfigGlobal::getWeb().'/apps/usuarios/controller/grupo_lista.php'); ?>';
-	fnjs_update_div('#main',url);
-}
-fnjs_left_side_hide();
+    fnjs_buscar = function () {
+        $('#frm_buscar').attr('action', "apps/usuarios/controller/grupo_lista.php");
+        fnjs_enviar_formulario('#frm_buscar');
+    }
+    fnjs_modificar = function (formulario) {
+        rta = fnjs_solo_uno(formulario);
+        if (rta == 1) {
+            $('#que').val('');
+            $(formulario).attr('action', "apps/usuarios/controller/grupo_form.php");
+            fnjs_enviar_formulario(formulario);
+        }
+    }
+    fnjs_eliminar = function (formulario) {
+        rta = fnjs_solo_uno('#seleccionados');
+        if (rta == 1) {
+            if (confirm("<?= _("¿Está seguro que desea borrar este grupo?");?>")) {
+                var url = '<?= core\ConfigGlobal::getWeb() ?>/apps/usuarios/controller/usuario_ajax.php';
+                $('#seleccionados').one("submit", function () {
+                    $.ajax({
+                        url: url,
+                        type: 'post',
+                        data: $(this).serialize()
+                    })
+                        .done(function (rta_txt) {
+                            if (rta_txt != '' && rta_txt != '\n') {
+                                alert('<?= _("respuesta") ?>: ' + rta_txt);
+                            } else {
+                                fnjs_actualizar();
+                            }
+                        });
+                    return false;
+                });
+                $('#seleccionados').trigger("submit");
+                $('#seleccionados').off();
+            }
+        }
+    }
+    fnjs_actualizar = function () {
+        var url = '<?= web\Hash::link(core\ConfigGlobal::getWeb() . '/apps/usuarios/controller/grupo_lista.php'); ?>';
+        fnjs_update_div('#main', url);
+    }
+    fnjs_left_side_hide();
 </script>
 <h3>Buscar grupo</h3>
-<form id=frm_buscar  name=frm_buscar action="" method="post" onkeypress="fnjs_enviar(event,this);" >
-<?= $oHashBuscar->getCamposHtml(); ?>
-<?= ucfirst(_("nombre")) ?>:<input type=text name=username value="<?= $username ?>">
-<input type="button" onclick="fnjs_buscar();" id="btn_ok" name="btn_ok" value="<?= ucfirst(_("buscar")); ?>" class="btn_ok">
+<form id=frm_buscar name=frm_buscar action="" method="post" onkeypress="fnjs_enviar(event,this);">
+    <?= $oHashBuscar->getCamposHtml(); ?>
+    <?= ucfirst(_("nombre")) ?>:<input type=text name=username value="<?= $username ?>">
+    <input type="button" onclick="fnjs_buscar();" id="btn_ok" name="btn_ok" value="<?= ucfirst(_("buscar")); ?>"
+           class="btn_ok">
 </form>
 <br>
 <?php if (ConfigGlobal::is_app_installed('procesos')) { ?>
-<?= _("Poner entre paréntesis si hace referencia a menus (m), permisos (p) o ambos (m+p)") ?>
-<br>
+    <?= _("Poner entre paréntesis si hace referencia a menus (m), permisos (p) o ambos (m+p)") ?>
+    <br>
 <?php } ?>
-<form id="seleccionados"  name="seleccionados" action="" method="post" >
-	<?= $oHashSelect->getCamposHtml(); ?>
-	<?= $oTabla->mostrar_tabla(); ?>
+<form id="seleccionados" name="seleccionados" action="" method="post">
+    <?= $oHashSelect->getCamposHtml(); ?>
+    <?= $oTabla->mostrar_tabla(); ?>
 </form>
 <br>
 <?php if ($permiso == 1) { ?>
-<table><tr><th class="no_print">
-	<span class="link_inv" onclick="fnjs_update_div('#main','<?= $url_nuevo ?>');"><?= core\strtoupper_dlb(_("nuevo grupo")) ?></span>
-</th></tr></table>
+    <table>
+        <tr>
+            <th class="no_print">
+                <span class="link_inv"
+                      onclick="fnjs_update_div('#main','<?= $url_nuevo ?>');"><?= core\strtoupper_dlb(_("nuevo grupo")) ?></span>
+            </th>
+        </tr>
+    </table>
 <?php } ?>

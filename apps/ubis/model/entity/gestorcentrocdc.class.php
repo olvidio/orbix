@@ -1,8 +1,10 @@
 <?php
 namespace ubis\model\entity;
+
 use core;
 use web;
 use core\ConfigGlobal;
+
 /**
  * GestorCentro
  *
@@ -14,63 +16,68 @@ use core\ConfigGlobal;
  * @version 1.0
  * @created 28/09/2010
  */
+class GestorCentroCdc extends core\ClaseGestor
+{
+    /* ATRIBUTOS ----------------------------------------------------------------- */
 
-class GestorCentroCdc Extends  core\ClaseGestor {
-	/* ATRIBUTS ----------------------------------------------------------------- */
+    /* CONSTRUCTOR -------------------------------------------------------------- */
 
-	/* CONSTRUCTOR -------------------------------------------------------------- */
-
-	/**
-	 * Constructor de la classe.
-	 *
-	 * @return GestorCentro
-	 *
-	 */
-	function __construct() {
+    /**
+     * Constructor de la classe.
+     *
+     * @return GestorCentro
+     *
+     */
+    function __construct()
+    {
         $oDbl = $GLOBALS['oDBP'];
         $this->setoDbl($oDbl);
         $this->setNomTabla('u_centros');
-	}
+    }
 
 
-	/* METODES PUBLICS -----------------------------------------------------------*/
+    /* MÉTODOS PÚBLICOS -----------------------------------------------------------*/
 
-	/**
-	 * retorna un objecte del tipus Desplegable
-	 * Els posibles centres
-	 *
-	 * @return array
-	 */
-	function getOpcionesCentrosCdc($sCondicion='') {
-		$oDbl = $this->getoDbl();
-		$nom_tabla = $this->getNomTabla();
-		//$orden = 'nombre_ubi';
+    /**
+     * retorna un objecte del tipus Desplegable
+     * Els posibles centres
+     *
+     * @return array
+     */
+    function getOpcionesCentrosCdc($sCondicion = '')
+    {
+        $oDbl = $this->getoDbl();
+        $nom_tabla = $this->getNomTabla();
+        //$orden = 'nombre_ubi';
 
-		$sWhere="WHERE status = 't' AND cdc='t' ";
-		if (!empty($sCondicion)) { $sWhere .= 'AND '.$sCondicion; }
-		$sQuery="SELECT id_ubi, nombre_ubi
+        $sWhere = "WHERE status = 't' AND cdc='t' ";
+        if (!empty($sCondicion)) {
+            $sWhere .= 'AND ' . $sCondicion;
+        }
+        $sQuery = "SELECT id_ubi, nombre_ubi
 				FROM $nom_tabla
 				$sWhere
 				";
-		if (($oDbl->query($sQuery)) === false) {
-			$sClauError = 'GestorCentroCdc.lista';
-			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
-			return false;
-		}
-		$a_ctr = [];
-		foreach ($oDbl->query($sQuery) as $row) {
-		    $id_ubi = $row['id_ubi'];
-		    $nombre_ubi = $row['nombre_ubi'];
-		    
-		    $a_ctr[$id_ubi] = $nombre_ubi;
-		}
-		
-		return $a_ctr;
-	}
+        if (($oDbl->query($sQuery)) === false) {
+            $sClauError = 'GestorCentroCdc.lista';
+            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+            return false;
+        }
+        $a_ctr = [];
+        foreach ($oDbl->query($sQuery) as $row) {
+            $id_ubi = $row['id_ubi'];
+            $nombre_ubi = $row['nombre_ubi'];
 
-	/* METODES PROTECTED --------------------------------------------------------*/
+            $a_ctr[$id_ubi] = $nombre_ubi;
+        }
 
-	/* METODES GET i SET --------------------------------------------------------*/
+        return $a_ctr;
+    }
+
+    /* METODES PROTECTED --------------------------------------------------------*/
+
+    /* MÉTODOS GET y SET --------------------------------------------------------*/
 
 }
+
 ?>

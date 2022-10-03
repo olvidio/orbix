@@ -10,14 +10,14 @@
  $private => pongo el mismo valor que ubicación. Se supone que el cron está en private.
  $DB_SERVER = 1 o 2; para indicar el servidor dede el que se ejecuta. (ver comentario en clase: CambioAnotado)
  */
-if(!empty($argv[1])) {
+if (!empty($argv[1])) {
     $_POST['username'] = $argv[1];
     $_POST['password'] = $argv[2];
     $_SERVER['DIRWEB'] = $argv[3];
     $_SERVER['DOCUMENT_ROOT'] = $argv[4];
     putenv("UBICACION=$argv[5]");
-	putenv("PRIVATE=$argv[5]");
-	putenv("DB_SERVER=$argv[6]");
+    putenv("PRIVATE=$argv[5]");
+    putenv("DB_SERVER=$argv[6]");
     putenv("ESQUEMA=$argv[7]");
 }
 $document_root = $_SERVER['DOCUMENT_ROOT'];
@@ -27,12 +27,12 @@ set_include_path(get_include_path() . PATH_SEPARATOR . $path);
 
 // INICIO Cabecera global de URL de controlador *********************************
 
-require_once ("apps/core/global_header.inc");
-// Arxivos requeridos por esta url **********************************************
+require_once("apps/core/global_header.inc");
+// Archivos requeridos por esta url **********************************************
 
-// Crea los objectos de uso global **********************************************
-require_once ("apps/core/global_object.inc");
-// Crea los objectos para esta url  **********************************************
+// Crea los objetos de uso global **********************************************
+require_once("apps/core/global_object.inc");
+// Crea los objetos para esta url  **********************************************
 // FIN de  Cabecera global de URL de controlador ********************************
 
 /* se ejecuta desde un cron (de momento) en el servidor exterior, que es el que tiene conexión al servidor de correo.
@@ -79,7 +79,7 @@ $minutos = $interval->format("%i");
 
 $error_txt = '';
 if ($minutos > 30) {
-    $error_txt .= "Ultima sicronización: ".$oUltimaSync->format("Y-m-d h:i:s");
+    $error_txt .= "Ultima sicronización: " . $oUltimaSync->format("Y-m-d h:i:s");
 }
 
 $pos1 = strpos($status_txt, 'Bad');
@@ -107,14 +107,13 @@ if ($pos1 !== false) {
 }
 
 
-
-
 $email = "dserrabou@gmail.com, salvagual@gmail.com";
 
-if (!empty($error_txt)) enviar_mail($email,$error_txt);
+if (!empty($error_txt)) enviar_mail($email, $error_txt);
 
-function enviar_mail($email,$error_txt){
-    
+function enviar_mail($email, $error_txt)
+{
+
     $asunto = _("Syncronización bucardo");
     $cuerpo = '
 	<html>
@@ -124,26 +123,27 @@ function enviar_mail($email,$error_txt){
 	<body>';
     $cuerpo .= $error_txt;
     $cuerpo .= '</body></html>';
-    
+
     //Envío en formato HTML
     $headers = "MIME-Version: 1.0\r\n";
     $headers .= "Content-type: text/html; charset=utf-8\r\n";
-    
+
     //Dirección del remitente
     $headers .= "From: Bucardo <no-Reply@moneders.net>\r\n";
     //Dirección de respuesta
     $headers .= "Reply-To: no-Reply@moneders.net\r\n";
     //Ruta del mensaje desde origen a destino
     $headers .= "Return-path: no-Reply@moneders.net\r\n";
-    
-    
+
+
     //echo "($email<br>$asunto<br>$cuerpo<br>$headers)<br>";
-    mail($email,$asunto,$cuerpo,$headers);
+    mail($email, $asunto, $cuerpo, $headers);
 }
 
-function makear($status_txt) {
+function makear($status_txt)
+{
     $html = str_replace('\s*<td>\|<\/td>\s*', '', $status_txt);
     $html2 = preg_replace('<tr>\s*<td>[\=\+]*<\/td>\s*<\/tr>', '', $html);
-    
+
     return $html2;
 }

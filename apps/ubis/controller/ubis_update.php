@@ -1,111 +1,113 @@
 ﻿<?php
+
 use function core\is_true;
 use ubis\model\entity as ubis;
 use usuarios\model\entity as usuarios;
-/**
-* Para asegurar que inicia la sesion, y poder acceder a los permisos
-*/
-// INICIO Cabecera global de URL de controlador *********************************
-	require_once ("apps/core/global_header.inc");
-// Arxivos requeridos por esta url **********************************************
 
-// Crea los objectos de uso global **********************************************
-	require_once ("apps/core/global_object.inc");
+/**
+ * Para asegurar que inicia la sesion, y poder acceder a los permisos
+ */
+// INICIO Cabecera global de URL de controlador *********************************
+require_once("apps/core/global_header.inc");
+// Archivos requeridos por esta url **********************************************
+
+// Crea los objetos de uso global **********************************************
+require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
 $oMiUsuario = new usuarios\Usuario(core\ConfigGlobal::mi_id_usuario());
 
-$Qque = (string) \filter_input(INPUT_POST, 'que');
-$Qobj_pau = (string) \filter_input(INPUT_POST, 'obj_pau');
-$Qid_ubi = (integer) \filter_input(INPUT_POST, 'id_ubi');
-$Qcampos_chk = (string) \filter_input(INPUT_POST, 'campos_chk');
+$Qque = (string)\filter_input(INPUT_POST, 'que');
+$Qobj_pau = (string)\filter_input(INPUT_POST, 'obj_pau');
+$Qid_ubi = (integer)\filter_input(INPUT_POST, 'id_ubi');
+$Qcampos_chk = (string)\filter_input(INPUT_POST, 'campos_chk');
 
-$campos_chk = empty($Qcampos_chk)? array() : explode('!',$Qcampos_chk);
+$campos_chk = empty($Qcampos_chk) ? array() : explode('!', $Qcampos_chk);
 
 switch ($Qque) {
-	case 'eliminar_ubi':
-		$obj = 'ubis\\model\\entity\\'.$Qobj_pau;
-		$oUbi = new $obj($Qid_ubi);
-		if ($oUbi->DBEliminar() === false) {
-			echo _("hay un error, no se ha eliminado");
-			echo "\n".$oUbi->getErrorTxt();
-		}
-		die();
-		break;
-	case 'ubi':
-		$obj = 'ubis\\model\\entity\\'.$Qobj_pau;
-		$oUbi = new $obj($Qid_ubi);
-		guardarObjeto($oUbi,$campos_chk);		
-		break;
-	case 'direccion':
-		$Qidx = (string) \filter_input(INPUT_POST, 'idx');
-		$Qobj_dir = (string) \filter_input(INPUT_POST, 'obj_dir');
-		$Qpropietario = (string) \filter_input(INPUT_POST, 'propietario');
-		$Qprincipal = (string) \filter_input(INPUT_POST, 'principal');
+    case 'eliminar_ubi':
+        $obj = 'ubis\\model\\entity\\' . $Qobj_pau;
+        $oUbi = new $obj($Qid_ubi);
+        if ($oUbi->DBEliminar() === false) {
+            echo _("hay un error, no se ha eliminado");
+            echo "\n" . $oUbi->getErrorTxt();
+        }
+        die();
+        break;
+    case 'ubi':
+        $obj = 'ubis\\model\\entity\\' . $Qobj_pau;
+        $oUbi = new $obj($Qid_ubi);
+        guardarObjeto($oUbi, $campos_chk);
+        break;
+    case 'direccion':
+        $Qidx = (string)\filter_input(INPUT_POST, 'idx');
+        $Qobj_dir = (string)\filter_input(INPUT_POST, 'obj_dir');
+        $Qpropietario = (string)\filter_input(INPUT_POST, 'propietario');
+        $Qprincipal = (string)\filter_input(INPUT_POST, 'principal');
 
-		if ($Qidx === 'nuevo') {
-			$obj = 'ubis\\model\\entity\\'.$Qobj_dir;
-			$oDireccion = new $obj();
-    		guardarObjeto($oDireccion,$campos_chk);		
-			
-    		$oDireccion->DBCarregar();
-			$id_direccion = $oDireccion->getId_direccion();
-			$a_pkey= array('id_ubi'=>$Qid_ubi,'id_direccion'=>$id_direccion);
-		} else {
-			// puede haber más de una dirección
-			$a_id_direccion = explode(',',$_POST['id_direccion']);
-			$obj = 'ubis\\model\\entity\\'.$Qobj_dir;
-			$oDireccion = new $obj($a_id_direccion[$Qidx]);
-			$a_pkey= array('id_ubi'=>$Qid_ubi,'id_direccion'=>$a_id_direccion[$Qidx]);
-    		guardarObjeto($oDireccion,$campos_chk);		
-		}
-		
-		switch ($Qobj_dir) {
-			case "DireccionCtrDl":
-				$xDireccion = new ubis\CtrDlxDireccion($a_pkey);
-				break;
-			case "DireccionCtrEx":
-				$xDireccion = new ubis\CtrExxDireccion($a_pkey);
-				break;
-			case "DireccionCdcDl":
-				$xDireccion = new ubis\CdcDlxDireccion($a_pkey);
-				break;
-			case "DireccionCdcEx":
-				$xDireccion = new ubis\CdcExxDireccion($a_pkey);
-				break;
-		}
-		if (!empty($Qpropietario)) {
-			$xDireccion->setPropietario('t');
-		} else {
-			$xDireccion->setPropietario('f');
-		}
-		if (!empty($Qprincipal)) {
-			$xDireccion->setPrincipal('t');
-		} else {
-			$xDireccion->setPrincipal('f');
-		}
-		$xDireccion->DBGuardar();
-		break;
+        if ($Qidx === 'nuevo') {
+            $obj = 'ubis\\model\\entity\\' . $Qobj_dir;
+            $oDireccion = new $obj();
+            guardarObjeto($oDireccion, $campos_chk);
+
+            $oDireccion->DBCarregar();
+            $id_direccion = $oDireccion->getId_direccion();
+            $a_pkey = array('id_ubi' => $Qid_ubi, 'id_direccion' => $id_direccion);
+        } else {
+            // puede haber más de una dirección
+            $a_id_direccion = explode(',', $_POST['id_direccion']);
+            $obj = 'ubis\\model\\entity\\' . $Qobj_dir;
+            $oDireccion = new $obj($a_id_direccion[$Qidx]);
+            $a_pkey = array('id_ubi' => $Qid_ubi, 'id_direccion' => $a_id_direccion[$Qidx]);
+            guardarObjeto($oDireccion, $campos_chk);
+        }
+
+        switch ($Qobj_dir) {
+            case "DireccionCtrDl":
+                $xDireccion = new ubis\CtrDlxDireccion($a_pkey);
+                break;
+            case "DireccionCtrEx":
+                $xDireccion = new ubis\CtrExxDireccion($a_pkey);
+                break;
+            case "DireccionCdcDl":
+                $xDireccion = new ubis\CdcDlxDireccion($a_pkey);
+                break;
+            case "DireccionCdcEx":
+                $xDireccion = new ubis\CdcExxDireccion($a_pkey);
+                break;
+        }
+        if (!empty($Qpropietario)) {
+            $xDireccion->setPropietario('t');
+        } else {
+            $xDireccion->setPropietario('f');
+        }
+        if (!empty($Qprincipal)) {
+            $xDireccion->setPrincipal('t');
+        } else {
+            $xDireccion->setPrincipal('f');
+        }
+        $xDireccion->DBGuardar();
+        break;
 }
 
 
-
-function guardarObjeto($oObjeto,$campos_chk) {
+function guardarObjeto($oObjeto, $campos_chk)
+{
     $oObjeto->DBCarregar();
     $oDbl = $oObjeto->getoDbl();
     $cDatosCampo = $oObjeto->getDatosCampos();
     $a_values_o = [];
     foreach ($cDatosCampo as $oDatosCampo) {
         $camp = $oDatosCampo->getNom_camp();
-        $valor = empty($_POST[$camp])? '' : $_POST[$camp];
-        if ($oDatosCampo->datos_campo($oDbl,'tipo') == "bool") { //si es un campo boolean, cambio los valores on, off... por true, false...
-            if ($valor=="on") {
-                $valor='t';
+        $valor = empty($_POST[$camp]) ? '' : $_POST[$camp];
+        if ($oDatosCampo->datos_campo($oDbl, 'tipo') == "bool") { //si es un campo boolean, cambio los valores on, off... por true, false...
+            if ($valor == "on") {
+                $valor = 't';
                 $a_values_o[$camp] = $valor;
             } else {
                 // compruebo que esté en la lista de campos enviados
-                if (in_array($camp,$campos_chk)) {
-                    $valor='f';
+                if (in_array($camp, $campos_chk)) {
+                    $valor = 'f';
                     $a_values_o[$camp] = $valor;
                 }
             }
@@ -123,20 +125,22 @@ function guardarObjeto($oObjeto,$campos_chk) {
                 }
             }
         } else {
-            if (!isset($_POST[$camp])) { continue; }
+            if (!isset($_POST[$camp])) {
+                continue;
+            }
             //cuando el campo es tipo_labor, se pasa un array que hay que convertirlo en número.
-            if ($camp=="tipo_labor"){
-                $byte=0;
-                foreach($_POST[$camp] as $bit) {
-                    $byte=$byte+$bit;
+            if ($camp == "tipo_labor") {
+                $byte = 0;
+                foreach ($_POST[$camp] as $bit) {
+                    $byte = $byte + $bit;
                 }
-                $valor=$byte;
+                $valor = $byte;
             }
             //pongo el valor nulo, sobretodo para las fechas.
-            if (!is_array($_POST[$camp]) && (empty($_POST[$camp]) || trim($_POST[$camp])=="")) {
+            if (!is_array($_POST[$camp]) && (empty($_POST[$camp]) || trim($_POST[$camp]) == "")) {
                 //si es un campo not null (y es null), pongo el valor por defecto
-                if ( is_true($oDatosCampo->datos_campo($oDbl,'nulo')) ) {
-                    $valor_predeterminado=$oDatosCampo->datos_campo($oDbl,'valor');
+                if (is_true($oDatosCampo->datos_campo($oDbl, 'nulo'))) {
+                    $valor_predeterminado = $oDatosCampo->datos_campo($oDbl, 'valor');
                     $a_values_o[$camp] = $valor_predeterminado;
                 } else {
                     $a_values_o[$camp] = NULL;
@@ -146,13 +150,13 @@ function guardarObjeto($oObjeto,$campos_chk) {
             }
         }
     }
-    $oObjeto->setAllAtributes($a_values_o,TRUE);
+    $oObjeto->setAllAtributes($a_values_o, TRUE);
 
     if ($oObjeto->DBGuardar() === false) {
         $msg_err = _("hay un error, no se ha guardado");
     }
-            
-    if (!empty($msg_err)) { 
+
+    if (!empty($msg_err)) {
         echo $msg_err;
-    }	
+    }
 }

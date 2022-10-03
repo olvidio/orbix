@@ -4,10 +4,10 @@ use usuarios\model\entity as usuarios;
 if (empty($estilo_color)) {
 	// INICIO Cabecera global de URL de controlador *********************************
 		require_once ("apps/core/global_header.inc");
-	// Arxivos requeridos por esta url **********************************************
+	// Archivos requeridos por esta url **********************************************
 		//require_once ("classes/personas/ext_web_preferencias_gestor.class");
 
-	// Crea los objectos de uso global **********************************************
+	// Crea los objetos de uso global **********************************************
 		require_once ("apps/core/global_object.inc");
 	// FIN de  Cabecera global de URL de controlador ********************************
 	$oGesPref = new usuarios\GestorPreferencia();

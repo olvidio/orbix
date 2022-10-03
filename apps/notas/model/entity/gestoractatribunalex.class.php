@@ -1,6 +1,8 @@
 <?php
 namespace notas\model\entity;
+
 use core;
+
 /**
  * GestorActaTribunalEx
  *
@@ -12,25 +14,27 @@ use core;
  * @version 1.0
  * @created 07/04/2014
  */
+class GestorActaTribunalEx extends GestorActaTribunal
+{
+    /* ATRIBUTOS ----------------------------------------------------------------- */
 
-class GestorActaTribunalEx Extends GestorActaTribunal {
-	/* ATRIBUTS ----------------------------------------------------------------- */
-
-	/* CONSTRUCTOR -------------------------------------------------------------- */
+    /* CONSTRUCTOR -------------------------------------------------------------- */
 
 
-	/**
-	 * Constructor de la classe.
-	 *
-	 * @return $gestor
-	 *
-	 */
-	function __construct() {
-		$oDbl = $GLOBALS['oDBR'];
-		$this->setoDbl($oDbl);
-		$this->setNomTabla('e_actas_tribunal_ex');
-	}
+    /**
+     * Constructor de la classe.
+     *
+     * @return $gestor
+     *
+     */
+    function __construct()
+    {
+        $oDbl = $GLOBALS['oDBR'];
+        $this->setoDbl($oDbl);
+        $this->setNomTabla('e_actas_tribunal_ex');
+    }
 
 
 }
+
 ?>

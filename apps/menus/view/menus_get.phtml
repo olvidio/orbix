@@ -1,64 +1,90 @@
 <script>
-fnjs_guardar=function(formulario){
-	$(formulario).attr('action', "apps/menus/controller/menus_update.php");
-	$(formulario).one("submit", function() {
-		$.ajax({
-			url: $(this).attr('action'),
-			type: 'post',
-			data: $(this).serialize()
-		})
-		.done(function (rta_txt) {
-			if (rta_txt != '' && rta_txt != '\\n') {
-				alert ('<?= _("respuesta") ?>: '+rta_txt);
-			} else {
-				<?= $oPosicion->js_atras(1); ?>
-				fnjs_lista_menus();
-			}
-		});
-		return false;
-	});
-	$(formulario).trigger("submit");
-	$(formulario).off();
-}
+    fnjs_guardar = function (formulario) {
+        $(formulario).attr('action', "apps/menus/controller/menus_update.php");
+        $(formulario).one("submit", function () {
+            $.ajax({
+                url: $(this).attr('action'),
+                type: 'post',
+                data: $(this).serialize()
+            })
+                .done(function (rta_txt) {
+                    if (rta_txt != '' && rta_txt != '\\n') {
+                        alert('<?= _("respuesta") ?>: ' + rta_txt);
+                    } else {
+                        <?= $oPosicion->js_atras(1); ?>
+                        fnjs_lista_menus();
+                    }
+                });
+            return false;
+        });
+        $(formulario).trigger("submit");
+        $(formulario).off();
+    }
 </script>
 <form id="frm_menus" name="frm_menus" action="apps/menus/controller/menus_update.php">
-	<?= $oHash->getCamposHtml(); ?>
-	<table>
-	<tr><td><?= _("orden") ?></td><td><input type="text" name="orden" value="<?= $orden ?>"><?= $txt_ok ?></td></tr>
-	<tr><td><?= _("texto menu") ?></td><td><input type="text" name="txt_menu" value="<?= htmlspecialchars($menu) ?>" size="30"></td></tr>
-	<tr><td><?= _("meta") ?></td><td><?=  $oDesplMeta->desplegable(); ?></td></tr>
-	<tr><td><?= _("parametros") ?></td><td><input type="text" name="parametros" value="<?= htmlspecialchars($parametros) ?>" size="70"></td></tr>
-	<tr><td><?= _("marcar") ?></td><td>
-			<input type="button" name="btodo" onClick="fnjs_selectAll('#frm_menus','perm_menu[]','all',0)" value="<?= _("todos") ?>">
-			<input type="button" name="bnada" onClick="fnjs_selectAll('#frm_menus','perm_menu[]','none',0)" value="<?= _("ninguno") ?>">
-	</td></tr>
+    <?= $oHash->getCamposHtml(); ?>
+    <table>
+        <tr>
+            <td><?= _("orden") ?></td>
+            <td><input type="text" name="orden" value="<?= $orden ?>"><?= $txt_ok ?></td>
+        </tr>
+        <tr>
+            <td><?= _("texto menu") ?></td>
+            <td><input type="text" name="txt_menu" value="<?= htmlspecialchars($menu) ?>" size="30"></td>
+        </tr>
+        <tr>
+            <td><?= _("meta") ?></td>
+            <td><?= $oDesplMeta->desplegable(); ?></td>
+        </tr>
+        <tr>
+            <td><?= _("parametros") ?></td>
+            <td><input type="text" name="parametros" value="<?= htmlspecialchars($parametros) ?>" size="70"></td>
+        </tr>
+        <tr>
+            <td><?= _("marcar") ?></td>
+            <td>
+                <input type="button" name="btodo" onClick="fnjs_selectAll('#frm_menus','perm_menu[]','all',0)"
+                       value="<?= _("todos") ?>">
+                <input type="button" name="bnada" onClick="fnjs_selectAll('#frm_menus','perm_menu[]','none',0)"
+                       value="<?= _("ninguno") ?>">
+            </td>
+        </tr>
 
-	<tr><td><?= _("permisos") ?></td><td><?= $oCuadros->cuadros_check('perm_menu',$menu_perm); ?></td></tr>
-	</table>
-	<input type="button" onclick="fnjs_guardar('#frm_menus');" value="<?= _("guardar") ?>">
+        <tr>
+            <td><?= _("permisos") ?></td>
+            <td><?= $oCuadros->cuadros_check('perm_menu', $menu_perm); ?></td>
+        </tr>
+    </table>
+    <input type="button" onclick="fnjs_guardar('#frm_menus');" value="<?= _("guardar") ?>">
 </form>
 
 <form id="frm_menus_4" action="apps/menus/controller/menus_get.php">
-	<?= $oHash4->getCamposHtml(); ?>
-	<input type="button" onclick="fnjs_enviar_formulario('#frm_menus_4','#ficha');" value="<?= _("cancelar") ?>">
+    <?= $oHash4->getCamposHtml(); ?>
+    <input type="button" onclick="fnjs_enviar_formulario('#frm_menus_4','#ficha');" value="<?= _("cancelar") ?>">
 </form>
 <?php if (empty($Qnuevo)) { ?>
-	<form id="frm_menus_2" action="apps/menus/controller/menus_update.php">
-		<?= $oHash2->getCamposHtml(); ?>
-		<input type="button" onclick="if (confirm('<?= addslashes(_("¿Está seguro?")) ?>')) { fnjs_guardar('#frm_menus_2'); }" value="<?= _("eliminar") ?>">
-	</form>
-	<form id="frm_menus_3" action="apps/menus/controller/menus_get.php">
-		<?= $oHash3->getCamposHtml(); ?>
-		<input type="button" onclick="fnjs_enviar_formulario('#frm_menus_3','#ficha');" value="<?= _("nuevo") ?>">
-	</form>
-	<form id="frm_menus_5" action="apps/menus/controller/menus_update.php">
-		<?= $oHash5->getCamposHtml(); ?>
-		<input type="button" onclick="if (confirm('<?= addslashes(_("no se guardan los cambios, sólo se cambia el grupo.")) ?>')) { fnjs_guardar('#frm_menus_5'); }" value="<?= _("mover a") ?>">
-		<?= $oDesplGM->desplegable(); ?>
-	</form>
-	<form id="frm_menus_6" action="apps/menus/controller/menus_update.php">
-		<?= $oHash6->getCamposHtml(); ?>
-		<input type="button" onclick="if (confirm('<?= addslashes(_("no se guardan los cambios, sólo se cambia el grupo.")) ?>')) { fnjs_guardar('#frm_menus_6'); }" value="<?= _("copiar en") ?>">
-		<?= $oDesplGM->desplegable(); ?>
-	</form>
+    <form id="frm_menus_2" action="apps/menus/controller/menus_update.php">
+        <?= $oHash2->getCamposHtml(); ?>
+        <input type="button"
+               onclick="if (confirm('<?= addslashes(_("¿Está seguro?")) ?>')) { fnjs_guardar('#frm_menus_2'); }"
+               value="<?= _("eliminar") ?>">
+    </form>
+    <form id="frm_menus_3" action="apps/menus/controller/menus_get.php">
+        <?= $oHash3->getCamposHtml(); ?>
+        <input type="button" onclick="fnjs_enviar_formulario('#frm_menus_3','#ficha');" value="<?= _("nuevo") ?>">
+    </form>
+    <form id="frm_menus_5" action="apps/menus/controller/menus_update.php">
+        <?= $oHash5->getCamposHtml(); ?>
+        <input type="button"
+               onclick="if (confirm('<?= addslashes(_("no se guardan los cambios, sólo se cambia el grupo.")) ?>')) { fnjs_guardar('#frm_menus_5'); }"
+               value="<?= _("mover a") ?>">
+        <?= $oDesplGM->desplegable(); ?>
+    </form>
+    <form id="frm_menus_6" action="apps/menus/controller/menus_update.php">
+        <?= $oHash6->getCamposHtml(); ?>
+        <input type="button"
+               onclick="if (confirm('<?= addslashes(_("no se guardan los cambios, sólo se cambia el grupo.")) ?>')) { fnjs_guardar('#frm_menus_6'); }"
+               value="<?= _("copiar en") ?>">
+        <?= $oDesplGM->desplegable(); ?>
+    </form>
 <?php } ?>

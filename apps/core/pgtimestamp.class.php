@@ -1,4 +1,5 @@
 <?php
+
 namespace core;
 
 use web;
@@ -7,21 +8,23 @@ use web;
  * @author dani
  *
  */
-class PgTimestamp {
-    
+class PgTimestamp
+{
+
     const TS_FORMAT = 'Y-m-d H:i:s.uP';
     const DATE_FORMAT = 'Y-m-d';
     const TIME_FORMAT = 'H:i:s';
-    
-   /**
-    * @var $data
-    */ 
+
+    /**
+     * @var $data
+     */
     var $data;
-    
-    public function __construct($data)  {
+
+    public function __construct($data)
+    {
         $this->data = $data;
     }
-    
+
     /**
      * fromPg
      *
@@ -30,9 +33,10 @@ class PgTimestamp {
      *
      * @return mixed   PHP representation of the data.
      */
-    public function fromPg() {
+    public function fromPg()
+    {
         $data = trim($this->data);
-        if($data !== '') {
+        if ($data !== '') {
             $oFecha = new web\DateTimeLocal($data);
             //$fecha = $oFecha->createFromLocal($data);
         } else {
@@ -40,16 +44,17 @@ class PgTimestamp {
         }
         return $oFecha;
     }
-    
+
     /**
      * toPg
      *
      * Convert a PHP representation into the according Pg formatted string.
      *
-     * @param  string  $type
+     * @param string $type
      * @return string  Pg converted string for input.
      */
-    public function toPg($type) {
+    public function toPg($type)
+    {
         $rta = null;
         if ($this->data !== null) {
             switch ($type) {
@@ -69,6 +74,7 @@ class PgTimestamp {
         }
         return $rta;
     }
+
     /**
      * toPgStandardFormat
      *
@@ -77,21 +83,22 @@ class PgTimestamp {
      *
      * @return string   PostgreSQL standard representation.
      */
-    public function toPgStandardFormat() {
+    public function toPgStandardFormat()
+    {
         return
-        $this->data !== null
-        ? $this->checkData($this->data)->format(static::TS_FORMAT)
-        : null
-        ;
+            $this->data !== null
+                ? $this->checkData($this->data)->format(static::TS_FORMAT)
+                : null;
     }
+
     /**
      * checkData
      *
      * Ensure a DateTime instance.
      *
-     * @param  mixed $data
-     * @throws \Exception
+     * @param mixed $data
      * @return web\DateTimeLocal
+     * @throws \Exception
      */
     protected function checkData($data)
     {
@@ -103,10 +110,10 @@ class PgTimestamp {
                     sprintf(
                         "Cannot convert data from invalid datetime representation '%s'.",
                         $data
-                        ),
+                    ),
                     null,
                     $e
-                    );
+                );
             }
         }
         return $data;

@@ -1,4 +1,5 @@
 <?php
+
 namespace actividadestudios\model\entity;
 /**
  * GestorActividadAsignatura
@@ -11,26 +12,27 @@ namespace actividadestudios\model\entity;
  * @version 1.0
  * @created 14/11/2014
  */
+class GestorActividadAsignaturaDl extends GestorActividadAsignatura
+{
+    /* ATRIBUTOS ----------------------------------------------------------------- */
 
-class GestorActividadAsignaturaDl Extends GestorActividadAsignatura {
-	/* ATRIBUTS ----------------------------------------------------------------- */
-
-	/* CONSTRUCTOR -------------------------------------------------------------- */
+    /* CONSTRUCTOR -------------------------------------------------------------- */
 
 
-	/**
-	 * Constructor de la classe.
-	 *
-	 * @return $gestor
-	 *
-	 */
-	function __construct() {
-		$oDbl = $GLOBALS['oDB'];
-		$this->setoDbl($oDbl);
-		$this->setNomTabla('d_asignaturas_activ_dl');
-	}
+    /**
+     * Constructor de la classe.
+     *
+     * @return $gestor
+     *
+     */
+    function __construct()
+    {
+        $oDbl = $GLOBALS['oDB'];
+        $this->setoDbl($oDbl);
+        $this->setNomTabla('d_asignaturas_activ_dl');
+    }
 
-	/* METODES PUBLICS -----------------------------------------------------------*/
-	/* METODES PROTECTED --------------------------------------------------------*/
-	/* METODES GET i SET --------------------------------------------------------*/
+    /* MÉTODOS PÚBLICOS -----------------------------------------------------------*/
+    /* METODES PROTECTED --------------------------------------------------------*/
+    /* MÉTODOS GET y SET --------------------------------------------------------*/
 }

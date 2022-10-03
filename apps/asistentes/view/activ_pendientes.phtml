@@ -1,33 +1,34 @@
-
-<form id="que_pdte" action="<?= core\ConfigGlobal::getWeb() ?>/apps/asistentes/controller/activ_pendientes_select.php" method="post"  onkeypress="fnjs_enviar(event,this);" >
-<?= $oHash->getCamposHtml(); ?>
-<table>
-<thead>
-<th class=titulo_inv colspan=4><?= ucfirst(_("personas")); ?>
-&nbsp;&nbsp;&nbsp;
-<select name="tipo_personas" size="1">
-	<option value="n" label="n" <?= $chk_n; ?>>n</option>
-	<option value="agd" label="agd" <?= $chk_agd; ?>>agd</option>
-	<option value="sacd" label="sacd" <?= $chk_sacd; ?>>sacd</option>
-</select>
-</th>
-<th class=titulo_inv colspan=4><?= ucfirst(_("actividad")); ?>
-&nbsp;&nbsp;&nbsp;
-<select name="sactividad" size="1">
-	<option value="ca" label="ca" <?= $chk_ca; ?>>ca</option>
-	<option value="crt" label="crt" <?= $chk_crt; ?>>crt</option>
-</select>
-</th>
-<th class=titulo_inv colspan=4><?= ucfirst(_("curso")); ?>
-&nbsp;&nbsp;&nbsp;
-<select name="any" size="1">
-	<option value='<?= $any_real ?>' <?= $chk_any_1 ?>><?= $txt_curso_1 ?></option>
-	<option value='<?= ($any_real+1) ?>' <?= $chk_any_2 ?>><?= $txt_curso_2 ?></option>
-</select>
-</th>
-<th colspan=4><input type="button" onclick="fnjs_enviar_formulario('#que_pdte')" name="ok" value="<?= ucfirst(_("buscar")); ?>" class="btn_ok"></th>
-</thead>
-</TABLE>
+<form id="que_pdte" action="<?= core\ConfigGlobal::getWeb() ?>/apps/asistentes/controller/activ_pendientes_select.php"
+      method="post" onkeypress="fnjs_enviar(event,this);">
+    <?= $oHash->getCamposHtml(); ?>
+    <table>
+        <thead>
+        <th class=titulo_inv colspan=4><?= ucfirst(_("personas")); ?>
+            &nbsp;&nbsp;&nbsp;
+            <select name="tipo_personas" size="1">
+                <option value="n" label="n" <?= $chk_n; ?>>n</option>
+                <option value="agd" label="agd" <?= $chk_agd; ?>>agd</option>
+                <option value="sacd" label="sacd" <?= $chk_sacd; ?>>sacd</option>
+            </select>
+        </th>
+        <th class=titulo_inv colspan=4><?= ucfirst(_("actividad")); ?>
+            &nbsp;&nbsp;&nbsp;
+            <select name="sactividad" size="1">
+                <option value="ca" label="ca" <?= $chk_ca; ?>>ca</option>
+                <option value="crt" label="crt" <?= $chk_crt; ?>>crt</option>
+            </select>
+        </th>
+        <th class=titulo_inv colspan=4><?= ucfirst(_("curso")); ?>
+            &nbsp;&nbsp;&nbsp;
+            <select name="any" size="1">
+                <option value='<?= $any_real ?>' <?= $chk_any_1 ?>><?= $txt_curso_1 ?></option>
+                <option value='<?= ($any_real + 1) ?>' <?= $chk_any_2 ?>><?= $txt_curso_2 ?></option>
+            </select>
+        </th>
+        <th colspan=4><input type="button" onclick="fnjs_enviar_formulario('#que_pdte')" name="ok"
+                             value="<?= ucfirst(_("buscar")); ?>" class="btn_ok"></th>
+        </thead>
+    </TABLE>
 </FORM>
 <!--  *********************  Listado   *********************     -->
 <h2 class=subtitulo><?= $titulo ?></h2>

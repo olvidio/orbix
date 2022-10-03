@@ -1,27 +1,28 @@
 ﻿<?php
+
 use core\ConfigGlobal;
 use web\DesplegableArray;
 use web\Hash;
 
 /**
-* Esta página sirve para asignar una dirección a un determinado ubi.
-*
-*@package	delegacion
-*@subpackage	actividades
-*@author	Daniel Serrabou
-*@since		15/5/02.
-*		
-*/
+ * Esta página sirve para asignar una dirección a un determinado ubi.
+ *
+ * @package    delegacion
+ * @subpackage    actividades
+ * @author    Daniel Serrabou
+ * @since        15/5/02.
+ *
+ */
 
 // INICIO Cabecera global de URL de controlador *********************************
-require_once ("apps/core/global_header.inc");
-// Arxivos requeridos por esta url **********************************************
+require_once("apps/core/global_header.inc");
+// Archivos requeridos por esta url **********************************************
 
-// Crea los objectos de uso global **********************************************
-require_once ("apps/core/global_object.inc");
+// Crea los objetos de uso global **********************************************
+require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$Qtipo_lista = (string)  \filter_input(INPUT_POST, 'tipo_lista');
+$Qtipo_lista = (string)\filter_input(INPUT_POST, 'tipo_lista');
 
 $mi_dele = ConfigGlobal::mi_delef();
 /*
@@ -39,13 +40,13 @@ $oSelects->setAction('fnjs_poblacion()');
 // OJO el parametro 'que' puede interferir con el de las presentaciones de ubis. 
 // Lo llamo 'que_mod'.
 // Posibles Ciudades
-$aOpcionesCiudad =  array(
-					'get_dl' => $mi_dele,
-					'get_r'=>_("regiones")
-					);
-$oSelCiudades = new DesplegableArray('',$aOpcionesCiudad,'');
-$oSelCiudades ->setBlanco('t');
-$oSelCiudades ->setNombre('que_mod');
+$aOpcionesCiudad = array(
+    'get_dl' => $mi_dele,
+    'get_r' => _("regiones")
+);
+$oSelCiudades = new DesplegableArray('', $aOpcionesCiudad, '');
+$oSelCiudades->setBlanco('t');
+$oSelCiudades->setNombre('que_mod');
 $oSelCiudades->setAction('fnjs_poblacion()');
 
 $url_ctr = 'apps/ubis/controller/home_ubis.php';
@@ -88,4 +89,4 @@ $a_campos = [
 ];
 
 $oView = new core\ViewTwig('cartaspresentacion/controller');
-echo $oView->render('cartas_presentacion_que.html.twig',$a_campos);
+echo $oView->render('cartas_presentacion_que.html.twig', $a_campos);

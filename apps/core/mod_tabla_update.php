@@ -1,30 +1,30 @@
 ﻿<?php
 // INICIO Cabecera global de URL de controlador *********************************
-	require_once ("apps/core/global_header.inc");
-// Arxivos requeridos por esta url **********************************************
+require_once("apps/core/global_header.inc");
+// Archivos requeridos por esta url **********************************************
 
-// Crea los objectos de uso global **********************************************
-	require_once ("apps/core/global_object.inc");
+// Crea los objetos de uso global **********************************************
+require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$Qclase_info = (string) \filter_input(INPUT_POST,'clase_info');
-$Qs_pkey = (string) \filter_input(INPUT_POST,'s_pkey');
-$Qid_pau = (string) \filter_input(INPUT_POST,'id_pau');
-$Qmod = (string) \filter_input(INPUT_POST,'mod');
-$Qobj_pau = (string) \filter_input(INPUT_POST,'obj_pau');
-$Qgo_to = (string) \filter_input(INPUT_POST,'go_to');
+$Qclase_info = (string)\filter_input(INPUT_POST, 'clase_info');
+$Qs_pkey = (string)\filter_input(INPUT_POST, 's_pkey');
+$Qid_pau = (string)\filter_input(INPUT_POST, 'id_pau');
+$Qmod = (string)\filter_input(INPUT_POST, 'mod');
+$Qobj_pau = (string)\filter_input(INPUT_POST, 'obj_pau');
+$Qgo_to = (string)\filter_input(INPUT_POST, 'go_to');
 
 // Cuando es eliminar, viene directamente de la tabla (mod_tabla_sql)
 // Como es borrar, no hace falta mantener el scroll
-$a_sel = (array)  \filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+$a_sel = (array)\filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 $stack = '';
 if (!empty($a_sel)) { //vengo de un checkbox
-	$Qs_pkey=explode('#',$a_sel[0]);
-	// he cambiado las comillas dobles por simples. Deshago el cambio.
-	$Qs_pkey = str_replace("'",'"',$Qs_pkey[0]);
+    $Qs_pkey = explode('#', $a_sel[0]);
+    // he cambiado las comillas dobles por simples. Deshago el cambio.
+    $Qs_pkey = str_replace("'", '"', $Qs_pkey[0]);
 }
 
-$a_pkey=unserialize(core\urlsafe_b64decode($Qs_pkey));
+$a_pkey = unserialize(core\urlsafe_b64decode($Qs_pkey));
 
 // Tiene que ser en dos pasos.
 $obj = $Qclase_info;
@@ -43,18 +43,18 @@ $oDatosUpdate->setCampos($_POST);
 
 $rta = _("no se ha ejecutado la acción");
 switch ($Qmod) {
-	case 'eliminar':
-		$rta = $oDatosUpdate->eliminar();
-		break;
-	case 'editar':
-		$rta = $oDatosUpdate->editar();
-		break;
-	case 'nuevo':
-		$rta = $oDatosUpdate->nuevo();
-		break;
+    case 'eliminar':
+        $rta = $oDatosUpdate->eliminar();
+        break;
+    case 'editar':
+        $rta = $oDatosUpdate->editar();
+        break;
+    case 'nuevo':
+        $rta = $oDatosUpdate->nuevo();
+        break;
 }
 
 if ($rta !== true) {
-	$msg_err = "$rta";
-	echo $msg_err;
+    $msg_err = "$rta";
+    echo $msg_err;
 }

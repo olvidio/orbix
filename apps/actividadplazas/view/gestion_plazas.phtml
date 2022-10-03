@@ -1,15 +1,15 @@
 <script>
-fnjs_buscar=function(){
-	var campo = '<input type="hidden" name="refresh" value=1>';
-	$('#periodo_form').attr('action',"apps/actividadplazas/controller/gestion_plazas.php");
-	$('#periodo_form').append(campo);
-	fnjs_enviar_formulario('#periodo_form','#main');
-}
-fnjs_left_side_hide();
+    fnjs_buscar = function () {
+        var campo = '<input type="hidden" name="refresh" value=1>';
+        $('#periodo_form').attr('action', "apps/actividadplazas/controller/gestion_plazas.php");
+        $('#periodo_form').append(campo);
+        fnjs_enviar_formulario('#periodo_form', '#main');
+    }
+    fnjs_left_side_hide();
 </script>
 <form id='periodo_form' action=''>
-	<?= $oHash->getCamposHtml(); ?>
-	<?= $oFormP->getHtml(); ?>
+    <?= $oHash->getCamposHtml(); ?>
+    <?= $oFormP->getHtml(); ?>
 </form>
 <!--
 <br>

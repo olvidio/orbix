@@ -1,46 +1,48 @@
 <table border="1" aria-describedby="relación de dossiers">
-<tr><th  scope="col" colspan=2>
-<h2 class="titulo_inv"><?= ucfirst(_("relación de dossiers")); ?></h2>
-</th>
-</tr>
-<?php
-$pencil=core\ConfigGlobal::getWeb_icons().'/pencil.png';
-$eye=core\ConfigGlobal::getWeb_icons().'/eye.png';
-$deny=core\ConfigGlobal::getWeb_icons().'/deny.png';
-foreach ($a_filas as $fila) {
-    ?>
-	<tr class="<?= $fila['clase'] ?>" >
-	 <?php
-	 switch ($fila['perm_a']) { 
-		case 1: //no tiene permisos
-			?>
-			<td><img class="dossier" src='<?= $fila['imagen'] ?>' alt="<?= _("dossier sin permisos") ?>" ></td>
-			<td><?= $fila['descripcion']; ?>
-			    <img class="dossier" src='<?= $deny ?>' alt="<?= _("dossier sin permisos") ?>" >
-			</td>
-			<?php break;
-		case 2: // sólo lectura
-			?>
-			<td><img class="dossier" src='<?= $fila['imagen'] ?>' alt="<?= _("dossier de sólo lectura") ?>" ></td>
-			<td><span class="link" onclick="fnjs_update_div('#main','<?= $fila['href_ver'] ?>');">
+    <tr>
+        <th scope="col" colspan=2>
+            <h2 class="titulo_inv"><?= ucfirst(_("relación de dossiers")); ?></h2>
+        </th>
+    </tr>
+    <?php
+    $pencil = core\ConfigGlobal::getWeb_icons() . '/pencil.png';
+    $eye = core\ConfigGlobal::getWeb_icons() . '/eye.png';
+    $deny = core\ConfigGlobal::getWeb_icons() . '/deny.png';
+    foreach ($a_filas as $fila) {
+        ?>
+        <tr class="<?= $fila['clase'] ?>">
+            <?php
+            switch ($fila['perm_a']) {
+                case 1: //no tiene permisos
+                    ?>
+                    <td><img class="dossier" src='<?= $fila['imagen'] ?>' alt="<?= _("dossier sin permisos") ?>"></td>
+                    <td><?= $fila['descripcion']; ?>
+                        <img class="dossier" src='<?= $deny ?>' alt="<?= _("dossier sin permisos") ?>">
+                    </td>
+                    <?php break;
+                case 2: // sólo lectura
+                    ?>
+                    <td><img class="dossier" src='<?= $fila['imagen'] ?>' alt="<?= _("dossier de sólo lectura") ?>">
+                    </td>
+                    <td><span class="link" onclick="fnjs_update_div('#main','<?= $fila['href_ver'] ?>');">
 				<span style="color:green"><?= $fila['descripcion'] ?></span>
-			    <img class="dossier" src='<?= $eye ?>' alt="<?= _("dossier de sólo lectura") ?>" >
+			    <img class="dossier" src='<?= $eye ?>' alt="<?= _("dossier de sólo lectura") ?>">
 			</span></td>
-			<?php break;
-		case 3: //lectura y escritura
-			?>
-			<td><img class="dossier" src='<?= $fila['imagen'] ?>' alt="<?= _("dossier modificable") ?>" ></td>
-			<td><span class="link" onclick="fnjs_update_div('#main','<?= $fila['href_ver'] ?>');">
+                    <?php break;
+                case 3: //lectura y escritura
+                    ?>
+                    <td><img class="dossier" src='<?= $fila['imagen'] ?>' alt="<?= _("dossier modificable") ?>"></td>
+                    <td><span class="link" onclick="fnjs_update_div('#main','<?= $fila['href_ver'] ?>');">
 				<?= $fila['descripcion'] ?>
-			    <img class="dossier" src='<?= $pencil ?>' alt="<?= _("dossier modificable") ?>" >
+			    <img class="dossier" src='<?= $pencil ?>' alt="<?= _("dossier modificable") ?>">
 			</span></td>
-			<?php break;
-        default:
-            exit (_("No sé que permiso tiene"));
-	 }
-	 ?>
-	 </tr>
-	 <?php
- }
- ?>
- </table>
+                    <?php break;
+                default:
+                    exit (_("No sé que permiso tiene"));
+            }
+            ?>
+        </tr>
+        <?php
+    }
+    ?>
+</table>

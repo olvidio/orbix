@@ -1,40 +1,59 @@
 <?= $oPosicion->mostrar_left_slide(1); ?>
 
-<table><thead>
-<tr>
-	<td colspan=4><h3><?= $nom_activ ?></h3></td></tr>
-<tr><td></td>
-	<td class='contenido' colspan=2><?= ucfirst(_("director de estudios")) ?>:</td>
-	<td><?= $nom_director_est ?></td></tr>
-<tr></tr>
-</thead>
-</table>
+    <table>
+        <thead>
+        <tr>
+            <td colspan=4><h3><?= $nom_activ ?></h3></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td class='contenido' colspan=2><?= ucfirst(_("director de estudios")) ?>:</td>
+            <td><?= $nom_director_est ?></td>
+        </tr>
+        <tr></tr>
+        </thead>
+    </table>
 <?php
 foreach ($datos_asignatura as $datos) {
-	$nombre_corto = $datos['nombre_corto'];
-	$tipo_profesor = $datos['tipo_profesor'];
-	$nom_profesor = $datos['nom_profesor'];
-	$aMatriculados = $datos['alumnos'];
-	?>
-<table>
-	<colgroup>
-    <col span="1" style="width: 10%;">
-    <col span="1" style="width: 15%;">
-    <col span="1" style="width: 30%;">
-    <col span="1" style="width: 35%;">
-	</colgroup>
-	<tbody>
-		<tr><td><br></td><td></td><td></td><td></td></tr>
-		<tr><td></td><td colspan=2 class='contenido'><h2><?= $nombre_corto ?></h2></td><td></td><td></td></tr>
-		<tr><td></td><td align=right><?= $tipo_profesor ?>:</td><td><?= $nom_profesor ?></td><td></td></tr>
-		<tr></tr>
-		<?php
-		$i=0;
-		foreach ($aMatriculados as $nom_persona => $ctr) {
-			$i++;
-			echo "<tr><td></td><td align=right>$i.- </td><td colspan=2>$nom_persona ($ctr)</td><td></td></tr>";
-		}
-		?>
-	</tbody>
-</table>
+    $nombre_corto = $datos['nombre_corto'];
+    $tipo_profesor = $datos['tipo_profesor'];
+    $nom_profesor = $datos['nom_profesor'];
+    $aMatriculados = $datos['alumnos'];
+    ?>
+    <table>
+        <colgroup>
+            <col span="1" style="width: 10%;">
+            <col span="1" style="width: 15%;">
+            <col span="1" style="width: 30%;">
+            <col span="1" style="width: 35%;">
+        </colgroup>
+        <tbody>
+        <tr>
+            <td><br></td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td colspan=2 class='contenido'><h2><?= $nombre_corto ?></h2></td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td align=right><?= $tipo_profesor ?>:</td>
+            <td><?= $nom_profesor ?></td>
+            <td></td>
+        </tr>
+        <tr></tr>
+        <?php
+        $i = 0;
+        foreach ($aMatriculados as $nom_persona => $ctr) {
+            $i++;
+            echo "<tr><td></td><td align=right>$i.- </td><td colspan=2>$nom_persona ($ctr)</td><td></td></tr>";
+        }
+        ?>
+        </tbody>
+    </table>
 <?php } ?>

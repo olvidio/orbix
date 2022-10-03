@@ -10,14 +10,14 @@
  $private => pongo el mismo valor que ubicación. Se supone que el cron está en private.
  $DB_SERVER = 1 o 2; para indicar el servidor dede el que se ejecuta. (ver comentario en clase: CambioAnotado)
  */
-if(!empty($argv[1])) {
+if (!empty($argv[1])) {
     $_POST['username'] = $argv[1];
     $_POST['password'] = $argv[2];
     $_SERVER['DIRWEB'] = $argv[3];
     $_SERVER['DOCUMENT_ROOT'] = $argv[4];
     putenv("UBICACION=$argv[5]");
-	putenv("PRIVATE=$argv[5]");
-	putenv("DB_SERVER=$argv[6]");
+    putenv("PRIVATE=$argv[5]");
+    putenv("DB_SERVER=$argv[6]");
     putenv("ESQUEMA=$argv[7]");
 }
 $document_root = $_SERVER['DOCUMENT_ROOT'];
@@ -35,12 +35,12 @@ use web\Lista;
 
 // INICIO Cabecera global de URL de controlador *********************************
 
-require_once ("apps/core/global_header.inc");
-// Arxivos requeridos por esta url **********************************************
+require_once("apps/core/global_header.inc");
+// Archivos requeridos por esta url **********************************************
 
-// Crea los objectos de uso global **********************************************
-require_once ("apps/core/global_object.inc");
-// Crea los objectos para esta url  **********************************************
+// Crea los objetos de uso global **********************************************
+require_once("apps/core/global_object.inc");
+// Crea los objetos para esta url  **********************************************
 // FIN de  Cabecera global de URL de controlador ********************************
 
 /* se ejecuta desde un cron (de momento) en el servidor exterior, que es el que tiene conexión al servidor de correo.
@@ -56,8 +56,8 @@ sleep(60); // 1 minutos para asegurar que ha terminado el proceso que lanza el g
 
 
 $dele = ConfigGlobal::mi_dele();
-$delef = $dele.'f';
-$aSecciones = array(1=>$dele,2=>$delef);
+$delef = $dele . 'f';
+$aSecciones = array(1 => $dele, 2 => $delef);
 
 $aviso_tipo = CambioUsuario::TIPO_MAIL; //e-mail
 $mi_sfsv = ConfigGlobal::mi_sfsv();
@@ -76,11 +76,11 @@ $a_datos = array();
 $a_id = array();
 foreach ($cCambiosUsuario as $oCambioUsuario) {
     $id_usuario = $oCambioUsuario->getId_usuario();
-    
+
     if ($id_usuario != $id_usuario_anterior) {
         // solo en el primer caso no lo hago
         if (!empty($id_usuario_anterior)) {
-            enviar_mail($email,$a_datos,$a_id);
+            enviar_mail($email, $a_datos, $a_id);
             $a_datos = array();
             $a_id = array();
         }
@@ -89,8 +89,8 @@ foreach ($cCambiosUsuario as $oCambioUsuario) {
         $id_usuario_anterior = $id_usuario;
     }
     if (empty($email)) continue;
-    
-    
+
+
     $id_item_cmb = $oCambioUsuario->getId_item_cambio();
     $id_schema_cmb = $oCambioUsuario->getId_schema_cambio();
     if ($id_schema_cmb == 3000) {
@@ -103,7 +103,7 @@ foreach ($cCambiosUsuario as $oCambioUsuario) {
     $timestamp_cambio = $oCambio->getTimestamp_cambio()->getFromLocalHora();
     $aviso_txt = $oCambio->getAvisoTxt();
     if ($aviso_txt === false) continue;
-    
+
     $i++;
     // Quien cambia
     if ($id_schema_cmb == 3000) {
@@ -113,7 +113,7 @@ foreach ($cCambiosUsuario as $oCambioUsuario) {
             $oUsuarioCmb = new Usuario($quien_cambia);
             $quien = $oUsuarioCmb->getUsuario();
         } else {
-            $quien = $aSecciones[$sfsv_quien_cambia] ;
+            $quien = $aSecciones[$sfsv_quien_cambia];
         }
     }
 
@@ -123,23 +123,24 @@ foreach ($cCambiosUsuario as $oCambioUsuario) {
     $a_id[$i] = "$id_item_cmb,$id_usuario,$mi_sfsv,$aviso_tipo";
 }
 // El último de la lista no se envia.
-if (!empty($email)) enviar_mail($email,$a_datos,$a_id);
+if (!empty($email)) enviar_mail($email, $a_datos, $a_id);
 
-function enviar_mail($email,$a_datos,$a_id){
+function enviar_mail($email, $a_datos, $a_id)
+{
     //Evitar mails vacios o sin dirección.
     if (empty($a_datos) || empty($email)) {
         eliminar_enviado($a_id);
-        return;    
+        return;
     }
-    
-    $a_cabeceras=array( ucfirst(_("fecha cambio")),
-                        ucfirst(_("quien")),
-                        ucfirst(_("cambio"))
-                    );
+
+    $a_cabeceras = array(ucfirst(_("fecha cambio")),
+        ucfirst(_("quien")),
+        ucfirst(_("cambio"))
+    );
     $oTabla = new Lista();
     $oTabla->setCabeceras($a_cabeceras);
     $oTabla->setDatos($a_datos);
-    
+
     $asunto = _("Avisos de cambios en actividades");
     $cuerpo = '
 	<html>
@@ -149,43 +150,44 @@ function enviar_mail($email,$a_datos,$a_id){
 	<body>';
     $cuerpo .= $oTabla->lista();
     $cuerpo .= '</body></html>';
-    
+
     //Envío en formato HTML
     $headers = "MIME-Version: 1.0\r\n";
     $headers .= "Content-type: text/html; charset=utf-8\r\n";
-    
+
     //Dirección del remitente
     $headers .= "From: Aquinate <no-Reply@moneders.net>\r\n";
     //Dirección de respuesta
     $headers .= "Reply-To: no-Reply@moneders.net\r\n";
     //Ruta del mensaje desde origen a destino
     $headers .= "Return-path: no-Reply@moneders.net\r\n";
-    
-    
+
+
     //echo "($email<br>$asunto<br>$cuerpo<br>$headers)<br>";
-    mail($email,$asunto,$cuerpo,$headers);
+    mail($email, $asunto, $cuerpo, $headers);
     eliminar_enviado($a_id);
 }
 
-function eliminar_enviado($a_id){
+function eliminar_enviado($a_id)
+{
     foreach ($a_id as $id) {
-        $ids = explode(',',$id);
+        $ids = explode(',', $id);
         $id_item_cmb = $ids[0];
         $id_usuario = $ids[1];
         $sfsv = $ids[2];
         $aviso_tipo = $ids[3];
         $GesCambioUsuario = new GestorCambioUsuario();
-        $aWhere = ['id_item_cambio'=>$id_item_cmb,
-                    'id_usuario'=>$id_usuario,
-                    'sfsv'=>$sfsv,
-                    'aviso_tipo'=>$aviso_tipo,
-                    ];
-        
+        $aWhere = ['id_item_cambio' => $id_item_cmb,
+            'id_usuario' => $id_usuario,
+            'sfsv' => $sfsv,
+            'aviso_tipo' => $aviso_tipo,
+        ];
+
         $cCambiosUsuario = $GesCambioUsuario->getCambiosUsuario($aWhere);
-        foreach($cCambiosUsuario as $oCambioUsuario) {
+        foreach ($cCambiosUsuario as $oCambioUsuario) {
             if ($oCambioUsuario->DBEliminar() === false) {
                 echo _("Hay un error, no se ha eliminado");
-                echo "\n".$oCambioUsuario->getErrorTxt();
+                echo "\n" . $oCambioUsuario->getErrorTxt();
             }
         }
     }

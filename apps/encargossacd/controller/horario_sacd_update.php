@@ -1,30 +1,30 @@
 <?php
 /**
-* Esta página actualiza la base de datos de los encargos.
-*
-* Se le puede pasar la varaible $mod.
-*	Si es 1 >> inserta un nuevo encargo.
-*	Si es 2 >> sólo cambia el tipo de encargo. Antes utiliza la función comprobar_cambio_tipo($id_activ,$valor)
-* que está en func_tablas.
-*   Si es 3 >> elimina.
-* Existe otra variable: $que. Si vale "actualizar", el $go_to se cambia para volver a ver_ficha_cos.
-*
-*@package	delegacion
-*@subpackage	encargos
-*@author	Daniel Serrabou
-*@since		3/1/06.
-*		
-*/
+ * Esta página actualiza la base de datos de los encargos.
+ *
+ * Se le puede pasar la varaible $mod.
+ *    Si es 1 >> inserta un nuevo encargo.
+ *    Si es 2 >> sólo cambia el tipo de encargo. Antes utiliza la función comprobar_cambio_tipo($id_activ,$valor)
+ * que está en func_tablas.
+ *   Si es 3 >> elimina.
+ * Existe otra variable: $que. Si vale "actualizar", el $go_to se cambia para volver a ver_ficha_cos.
+ *
+ * @package    delegacion
+ * @subpackage    encargos
+ * @author    Daniel Serrabou
+ * @since        3/1/06.
+ *
+ */
 
 /**
-* Funciones más comunes de la aplicación
-*/
+ * Funciones más comunes de la aplicación
+ */
 // INICIO Cabecera global de URL de controlador *********************************
-	require_once ("global_header.inc");
-// Arxivos requeridos por esta url **********************************************
+require_once("global_header.inc");
+// Archivos requeridos por esta url **********************************************
 
-// Crea los objectos de uso global **********************************************
-	require_once ("global_object.inc");
+// Crea los objetos de uso global **********************************************
+require_once("global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
 /*

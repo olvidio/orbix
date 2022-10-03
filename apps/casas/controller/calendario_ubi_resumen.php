@@ -7,18 +7,18 @@ use ubis\model\entity\GestorCasaDl;
 use usuarios\model\entity\Usuario;
 use web\Desplegable;
 
-require_once ("apps/core/global_header.inc");
-// Arxivos requeridos por esta url **********************************************
+require_once("apps/core/global_header.inc");
+// Archivos requeridos por esta url **********************************************
 
-// Crea los objectos de uso global **********************************************
-require_once ("apps/core/global_object.inc");
+// Crea los objetos de uso global **********************************************
+require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
 $oPosicion->recordar();
 
-$QG = (integer) \filter_input(INPUT_POST, 'G');
-$Qinc_t = (integer) \filter_input(INPUT_POST, 'inc_t');
-$Qid_ubi = (integer) \filter_input(INPUT_POST, 'id_ubi');
+$QG = (integer)\filter_input(INPUT_POST, 'G');
+$Qinc_t = (integer)\filter_input(INPUT_POST, 'inc_t');
+$Qid_ubi = (integer)\filter_input(INPUT_POST, 'id_ubi');
 
 // miro que rol tengo.
 $oMiUsuario = new Usuario(ConfigGlobal::mi_id_usuario());
@@ -27,13 +27,13 @@ $oMiUsuario = new Usuario(ConfigGlobal::mi_id_usuario());
 $GesCasas = new GestorCasaDl();
 
 if ($_SESSION['oPerm']->have_perm_oficina('des') || $_SESSION['oPerm']->have_perm_oficina('vcsd')) {
-	$donde="WHERE status='t'";
+    $donde = "WHERE status='t'";
 } else {
-	if (ConfigGlobal::mi_sfsv() == 1) {
-		$donde="WHERE status='t' AND sv='t'";
-	} elseif (ConfigGlobal::mi_sfsv() == 2) {
-		$donde="WHERE status='t' AND sf='t'";
-	}
+    if (ConfigGlobal::mi_sfsv() == 1) {
+        $donde = "WHERE status='t' AND sv='t'";
+    } elseif (ConfigGlobal::mi_sfsv() == 2) {
+        $donde = "WHERE status='t' AND sf='t'";
+    }
 }
 
 $cCasas = $GesCasas->getPosiblesCasas($donde);
@@ -61,4 +61,4 @@ $a_campos = ['oPosicion' => $oPosicion,
 ];
 
 $oView = new core\ViewTwig('casas/controller');
-echo $oView->render('ubi_resumen.html.twig',$a_campos);
+echo $oView->render('ubi_resumen.html.twig', $a_campos);

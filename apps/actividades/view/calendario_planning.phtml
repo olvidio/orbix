@@ -1,59 +1,59 @@
 <script>
-fnjs_nueva_activ=function(id_ubi){
-	$('#div_modificar').addClass('ventana');
-	$('#div_modificar').width('auto');
-	$('#div_modificar').height('auto');
-	document.getElementById("overlay").style.display = "block";
-	
-	var url='<?= core\ConfigGlobal::getWeb() ?>/apps/actividades/controller/calendario_ajax.php';
-	var parametros='id_ubi='+id_ubi+"&<?= $param_new ?>";
+    fnjs_nueva_activ = function (id_ubi) {
+        $('#div_modificar').addClass('ventana');
+        $('#div_modificar').width('auto');
+        $('#div_modificar').height('auto');
+        document.getElementById("overlay").style.display = "block";
 
-	fnjs_update_div('#div_modificar',url+'?'+parametros);
-	//calendario_activ_nueva.php
-}
-fnjs_cambiar_activ=function(id_activ,m){
-	$('#div_modificar').addClass('ventana');
-	$('#div_modificar').width('auto');
-	$('#div_modificar').height('auto');
-	document.getElementById("overlay").style.display = "block";
-	
-	var url='<?= core\ConfigGlobal::getWeb() ?>/apps/actividades/controller/calendario_ajax.php';
-	var parametros='id_activ='+id_activ+"&<?= $param_mod ?>";
+        var url = '<?= core\ConfigGlobal::getWeb() ?>/apps/actividades/controller/calendario_ajax.php';
+        var parametros = 'id_ubi=' + id_ubi + "&<?= $param_new ?>";
 
-	fnjs_update_div('#div_modificar',url+'?'+parametros);
-}
-fnjs_cerrar=function(){
-	$('#div_modificar').html('');
-	$('#div_modificar').width('0');
-	$('#div_modificar').height('0');
-	$('#div_modificar').removeClass('ventana');
-	document.getElementById("overlay").style.display = "none";
-}
+        fnjs_update_div('#div_modificar', url + '?' + parametros);
+        //calendario_activ_nueva.php
+    }
+    fnjs_cambiar_activ = function (id_activ, m) {
+        $('#div_modificar').addClass('ventana');
+        $('#div_modificar').width('auto');
+        $('#div_modificar').height('auto');
+        document.getElementById("overlay").style.display = "block";
 
-fnjs_volver=function() {
-	<?= $oPosicion->js_atras(0) ?>;
-}
+        var url = '<?= core\ConfigGlobal::getWeb() ?>/apps/actividades/controller/calendario_ajax.php';
+        var parametros = 'id_activ=' + id_activ + "&<?= $param_mod ?>";
 
-fnjs_ver=function(){
-	/* obtener el listado */
-	var url='<?= core\ConfigGlobal::getWeb() ?>/apps/actividades/controller/calendario_ajax.php';
-	var parametros="<?= $param_ver ?>";
+        fnjs_update_div('#div_modificar', url + '?' + parametros);
+    }
+    fnjs_cerrar = function () {
+        $('#div_modificar').html('');
+        $('#div_modificar').width('0');
+        $('#div_modificar').height('0');
+        $('#div_modificar').removeClass('ventana');
+        document.getElementById("overlay").style.display = "none";
+    }
 
-    $('#ficha').html('');
-	$.ajax({
-		url: url,
-		type: 'post',
-		data: parametros
-	})
-	.done(function (rta_txt) {
-		if (rta_txt) {
-			$('#ficha').html(rta_txt);
-		}
-	});
-	document.getElementById("overlay").style.display = "none";
-}
+    fnjs_volver = function () {
+        <?= $oPosicion->js_atras(0) ?>;
+    }
 
-$(document).ready(fnjs_ver());
+    fnjs_ver = function () {
+        /* obtener el listado */
+        var url = '<?= core\ConfigGlobal::getWeb() ?>/apps/actividades/controller/calendario_ajax.php';
+        var parametros = "<?= $param_ver ?>";
+
+        $('#ficha').html('');
+        $.ajax({
+            url: url,
+            type: 'post',
+            data: parametros
+        })
+            .done(function (rta_txt) {
+                if (rta_txt) {
+                    $('#ficha').html(rta_txt);
+                }
+            });
+        document.getElementById("overlay").style.display = "none";
+    }
+
+    $(document).ready(fnjs_ver());
 </script>
 <div id='ficha'></div>
 <div id='div_modificar'></div>

@@ -1,5 +1,6 @@
 <?php
 namespace personas\model\entity;
+
 /**
  * GestorPersonaDl
  *
@@ -11,42 +12,45 @@ namespace personas\model\entity;
  * @version 1.0
  * @created 11/03/2014
  */
-
-class GestorPersonaDl Extends GestorPersonaGlobal {
-	/* ATRIBUTS ----------------------------------------------------------------- */
-
-
-	/* CONSTRUCTOR -------------------------------------------------------------- */
+class GestorPersonaDl extends GestorPersonaGlobal
+{
+    /* ATRIBUTOS ----------------------------------------------------------------- */
 
 
-	/**
-	 * Constructor de la classe.
-	 *
-	 * @return $gestor
-	 *
-	 */
-	function __construct() {
-		$oDbl = $GLOBALS['oDB'];
-		$this->setoDbl($oDbl);
-		$this->setNomTabla('personas_dl');
-	}
+    /* CONSTRUCTOR -------------------------------------------------------------- */
 
 
-	/* METODES PUBLICS -----------------------------------------------------------*/
+    /**
+     * Constructor de la classe.
+     *
+     * @return $gestor
+     *
+     */
+    function __construct()
+    {
+        $oDbl = $GLOBALS['oDB'];
+        $this->setoDbl($oDbl);
+        $this->setNomTabla('personas_dl');
+    }
 
-	/**
-	 * retorna l'array d'objectes de tipus PersonaDl
-	 *
-	 * @param array aWhere associatiu amb els valors de les variables amb les quals farem la query
-	 * @param array aOperators associatiu amb els valors dels operadors que cal aplicar a cada variable
-	 * @return array Una col·lecció d'objectes de tipus PersonaDl
-	 */
-	function getPersonasDl($aWhere=array(),$aOperators=array()) {
-		return parent::getPersonasObj($aWhere,$aOperators,'personas\\model\entity\\PersonaDl');
-	}
 
-	/* METODES PROTECTED --------------------------------------------------------*/
+    /* MÉTODOS PÚBLICOS -----------------------------------------------------------*/
 
-	/* METODES GET i SET --------------------------------------------------------*/
+    /**
+     * retorna l'array d'objectes de tipus PersonaDl
+     *
+     * @param array aWhere associatiu amb els valors de les variables amb les quals farem la query
+     * @param array aOperators associatiu amb els valors dels operadors que cal aplicar a cada variable
+     * @return array Una col·lecció d'objectes de tipus PersonaDl
+     */
+    function getPersonasDl($aWhere = array(), $aOperators = array())
+    {
+        return parent::getPersonasObj($aWhere, $aOperators, 'personas\\model\entity\\PersonaDl');
+    }
+
+    /* METODES PROTECTED --------------------------------------------------------*/
+
+    /* MÉTODOS GET y SET --------------------------------------------------------*/
 }
+
 ?>

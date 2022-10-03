@@ -1,94 +1,100 @@
 <script>
-fnjs_cerrar=function(){
-	$('#div_modificar').html('');
-	$('#div_modificar').width('0');
-	$('#div_modificar').height('0');
-	$('#div_modificar').removeClass('ventana');
-	document.getElementById("overlay").style.display = "none";
-}
+    fnjs_cerrar = function () {
+        $('#div_modificar').html('');
+        $('#div_modificar').width('0');
+        $('#div_modificar').height('0');
+        $('#div_modificar').removeClass('ventana');
+        document.getElementById("overlay").style.display = "none";
+    }
 
-fnjs_ver=function(){
-	/* obtener el listado */
-	var url='<?= core\ConfigGlobal::getWeb() ?>/apps/actividadtarifas/controller/tarifa_tipo_actividad_ajax.php';
-	var parametros='que=get<?= $h_ver ?>';
-		 
-	$.ajax({
-		url: url,
-		type: 'post',
-		data: parametros
-	})
-	.done(function (rta_html) {
-		if (rta_html) { 
-			$('#ficha').html(rta_html);
-		}
-	});
-	document.getElementById("overlay").style.display = "none";
-}
+    fnjs_ver = function () {
+        /* obtener el listado */
+        var url = '<?= core\ConfigGlobal::getWeb() ?>/apps/actividadtarifas/controller/tarifa_tipo_actividad_ajax.php';
+        var parametros = 'que=get<?= $h_ver ?>';
 
-fnjs_modificar=function(id_item){
-	$('#div_modificar').addClass('ventana');
-	$('#div_modificar').width('auto');
-	$('#div_modificar').height('auto');
-	document.getElementById("overlay").style.display = "block";
+        $.ajax({
+            url: url,
+            type: 'post',
+            data: parametros
+        })
+            .done(function (rta_html) {
+                if (rta_html) {
+                    $('#ficha').html(rta_html);
+                }
+            });
+        document.getElementById("overlay").style.display = "none";
+    }
 
-	var url='<?= core\ConfigGlobal::getWeb() ?>/apps/actividadtarifas/controller/tarifa_tipo_actividad_form.php';
-	var parametros='id_item='+id_item+'<?= $h_modificar ?>';
-	fnjs_update_div('#div_modificar',url+'?'+parametros);
-}
+    fnjs_modificar = function (id_item) {
+        $('#div_modificar').addClass('ventana');
+        $('#div_modificar').width('auto');
+        $('#div_modificar').height('auto');
+        document.getElementById("overlay").style.display = "block";
 
-fnjs_guardar=function(formulario,que){
-	if (que=="eliminar") {
-		seguro=confirm("<?= $txt_eliminar ?>");
-		if (seguro) { 
-			err=0;
-		} else {
-			err=1;
-		}
-	}
-	var err=0;
-	var tar=$('#id_tarifa').val();
-	var id_tipo_activ=$('#id_tipo_activ').val();
-	if (!id_tipo_activ) {
-		var isfsv=$('#isfsv_val').val();
-		var iasistentes=$('#iasistentes_val').val();
-		var iactividad=$('#iactividad_val').val();
-		var inom_tipo=$('#inom_tipo_val').val();
-		//alert ("s: "+sfsv+", as: "+asistentes+", act: "+actividad+", tip: "+id_tipo_activ);
-		if (!isfsv || !iasistentes || !iactividad ) { alert ("<?= _("debe indicar el tipo de actividad") ?>"); err=1; }
-		if (!inom_tipo && !err) {
-		   id_tipo_activ=isfsv+iasistentes+iactividad+"000";
-	   	} else {
-		   id_tipo_activ=isfsv+iasistentes+iactividad+inom_tipo;
-		}
-		//alert ("tipo: "+id_tipo_activ +" err: "+err);
-	}
-	if (!tar) { alert ("<?= _("debe indicar la tarifa") ?>"); err=1; }
-	if (!err) {
-		$('#id_tipo_activ').val(id_tipo_activ);
-		$('#que').val(que);
-		$(formulario).attr('action','<?= core\ConfigGlobal::getWeb() ?>/apps/actividadtarifas/controller/tarifa_tipo_actividad_ajax.php');
-		$(formulario).one("submit", function() {
-			$.ajax({
-				url: $(this).attr('action'),
-				type: 'post',
-				data: $(this).serialize()
-			})
-			.done(function (rta_txt) {
-				if (rta_txt != '' && rta_txt != '\n') {
-					alert (rta_txt);
-				} else {
-					fnjs_ver();
-					fnjs_cerrar();
-				}
-			});
-			return false;
-		});
-		$(formulario).trigger("submit");
-		$(formulario).off();
-	}
-}
+        var url = '<?= core\ConfigGlobal::getWeb() ?>/apps/actividadtarifas/controller/tarifa_tipo_actividad_form.php';
+        var parametros = 'id_item=' + id_item + '<?= $h_modificar ?>';
+        fnjs_update_div('#div_modificar', url + '?' + parametros);
+    }
 
-$(document).ready(fnjs_ver());
+    fnjs_guardar = function (formulario, que) {
+        if (que == "eliminar") {
+            seguro = confirm("<?= $txt_eliminar ?>");
+            if (seguro) {
+                err = 0;
+            } else {
+                err = 1;
+            }
+        }
+        var err = 0;
+        var tar = $('#id_tarifa').val();
+        var id_tipo_activ = $('#id_tipo_activ').val();
+        if (!id_tipo_activ) {
+            var isfsv = $('#isfsv_val').val();
+            var iasistentes = $('#iasistentes_val').val();
+            var iactividad = $('#iactividad_val').val();
+            var inom_tipo = $('#inom_tipo_val').val();
+            //alert ("s: "+sfsv+", as: "+asistentes+", act: "+actividad+", tip: "+id_tipo_activ);
+            if (!isfsv || !iasistentes || !iactividad) {
+                alert("<?= _("debe indicar el tipo de actividad") ?>");
+                err = 1;
+            }
+            if (!inom_tipo && !err) {
+                id_tipo_activ = isfsv + iasistentes + iactividad + "000";
+            } else {
+                id_tipo_activ = isfsv + iasistentes + iactividad + inom_tipo;
+            }
+            //alert ("tipo: "+id_tipo_activ +" err: "+err);
+        }
+        if (!tar) {
+            alert("<?= _("debe indicar la tarifa") ?>");
+            err = 1;
+        }
+        if (!err) {
+            $('#id_tipo_activ').val(id_tipo_activ);
+            $('#que').val(que);
+            $(formulario).attr('action', '<?= core\ConfigGlobal::getWeb() ?>/apps/actividadtarifas/controller/tarifa_tipo_actividad_ajax.php');
+            $(formulario).one("submit", function () {
+                $.ajax({
+                    url: $(this).attr('action'),
+                    type: 'post',
+                    data: $(this).serialize()
+                })
+                    .done(function (rta_txt) {
+                        if (rta_txt != '' && rta_txt != '\n') {
+                            alert(rta_txt);
+                        } else {
+                            fnjs_ver();
+                            fnjs_cerrar();
+                        }
+                    });
+                return false;
+            });
+            $(formulario).trigger("submit");
+            $(formulario).off();
+        }
+    }
+
+    $(document).ready(fnjs_ver());
 </script>
 <div id='ficha'></div>
 <div id='div_modificar'></div>

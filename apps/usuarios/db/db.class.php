@@ -1,5 +1,7 @@
 <?php
+
 namespace usuarios\db;
+
 use core\ConfigGlobal;
 use devel\model\DBAbstract;
 
@@ -7,33 +9,38 @@ use devel\model\DBAbstract;
  * Crear las tablas necesaria a nivel de aplicación (global).
  * Cada esquema deberá crear las suyas, heredadas de estas.
  */
-class DB extends DBAbstract {
+class DB extends DBAbstract
+{
 
-    public function __construct(){
+    public function __construct()
+    {
         $esquema_sfsv = ConfigGlobal::mi_region_dl();
-        $role = substr($esquema_sfsv,0,-1); // quito la v o la f.
-        
-        $this->role = '"'. $role .'"';
-        $this->role_vf = '"'. $esquema_sfsv .'"';
-        
+        $role = substr($esquema_sfsv, 0, -1); // quito la v o la f.
+
+        $this->role = '"' . $role . '"';
+        $this->role_vf = '"' . $esquema_sfsv . '"';
+
         $this->esquema = 'global';
     }
-    
-    public function dropAll() {
+
+    public function dropAll()
+    {
         $this->eliminar_aux_usuarios_ctr_perm();
     }
-    
-    public function createAll() {
+
+    public function createAll()
+    {
         $this->create_aux_usuarios_ctr_perm();
     }
-    
+
     /**
      * En la BD sf-e/sv-e [exterior] (global).
      */
-    public function create_aux_usuarios_ctr_perm() {
+    public function create_aux_usuarios_ctr_perm()
+    {
         // OJO Corresponde al esquema sf-e/sv-e, no al comun.
         $this->addPermisoGlobal('sfsv-e');
-        
+
         $tabla = "aux_usuarios_ctr_perm";
         $nom_tabla = $this->getNomTabla($tabla);
         $a_sql = [];
@@ -45,20 +52,22 @@ class DB extends DBAbstract {
                 perm_ctr integer
             );";
         $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->user_orbix";
-        
+
         $this->executeSql($a_sql);
-        
+
         $this->delPermisoGlobal('sfsv-e');
     }
-    public function eliminar_aux_usuarios_ctr_perm() {
+
+    public function eliminar_aux_usuarios_ctr_perm()
+    {
         // OJO Corresponde al esquema sf-e/sv-e, no al comun.
         $this->addPermisoGlobal('sfsv-e');
-        
+
         $tabla = "aux_usuarios_ctr_perm";
         $nom_tabla = $this->getNomTabla($tabla);
         $this->eliminar($nom_tabla);
-        
+
         $this->delPermisoGlobal('sfsv-e');
     }
-    
+
 }

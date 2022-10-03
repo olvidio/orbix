@@ -1,26 +1,27 @@
 ﻿<?php
+
 use core\ConfigGlobal;
 use notas\model as notas;
 use ubis\model\entity\GestorDelegacion;
 
 /**
-* Esta página sirve para comprobar las notas de la tabla e_notas.
-*
-*
-*@package	delegacion
-*@subpackage	estudios
-*@author	Daniel Serrabou
-*@since		22/11/02.
-*@version september 2018
-*		
-*/
+ * Esta página sirve para comprobar las notas de la tabla e_notas.
+ *
+ *
+ * @package    delegacion
+ * @subpackage    estudios
+ * @author    Daniel Serrabou
+ * @since        22/11/02.
+ * @version september 2018
+ *
+ */
 
 // INICIO Cabecera global de URL de controlador *********************************
-	require_once ("apps/core/global_header.inc");
-// Arxivos requeridos por esta url **********************************************
+require_once("apps/core/global_header.inc");
+// Archivos requeridos por esta url **********************************************
 
-// Crea los objectos de uso global **********************************************
-	require_once ("apps/core/global_object.inc");
+// Crea los objetos de uso global **********************************************
+require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
 
@@ -35,34 +36,34 @@ use ubis\model\entity\GestorDelegacion;
 */
 
 /* Pongo en la variable $curs el periodo del curso */
-$any=date("Y");
-$mes=date("m");
-if ($mes>3) {
-	$any1=$any-1; 
-	$curso_txt="$any1-$any";
-	$any_ini_curs = $any1;
-} else { 
-	$any1=$any-2;
-	$any--;
-	$curso_txt="$any1-$any";
-	$any_ini_curs = $any1;
+$any = date("Y");
+$mes = date("m");
+if ($mes > 3) {
+    $any1 = $any - 1;
+    $curso_txt = "$any1-$any";
+    $any_ini_curs = $any1;
+} else {
+    $any1 = $any - 2;
+    $any--;
+    $curso_txt = "$any1-$any";
+    $any_ini_curs = $any1;
 }
 
-$Qdl = (array)  \filter_input(INPUT_POST, 'dl', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+$Qdl = (array)\filter_input(INPUT_POST, 'dl', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 //crear la tabla temporal de agregados y notas
-$Qlista = (string) \filter_input(INPUT_POST, 'lista');
-$lista = empty($Qlista)? false : true;
+$Qlista = (string)\filter_input(INPUT_POST, 'lista');
+$lista = empty($Qlista) ? false : true;
 
 $Resumen = new notas\Resumen('agregados');
 if (!empty($Qdl)) {
-	$region_stgr = ConfigGlobal::mi_dele();
-	$gesDelegacion = new GestorDelegacion();
-	$a_delegacionesStgr = $gesDelegacion->getArrayDlRegionStgr([$region_stgr]);
-	$a_dl = [];
-	foreach ($Qdl as $id_dl) {
-		$a_dl[] = $a_delegacionesStgr[$id_dl];
-	}
-	$Resumen->setArrayDl($a_dl);
+    $region_stgr = ConfigGlobal::mi_dele();
+    $gesDelegacion = new GestorDelegacion();
+    $a_delegacionesStgr = $gesDelegacion->getArrayDlRegionStgr([$region_stgr]);
+    $a_dl = [];
+    foreach ($Qdl as $id_dl) {
+        $a_dl[] = $a_delegacionesStgr[$id_dl];
+    }
+    $Resumen->setArrayDl($a_dl);
 }
 $Resumen->setAnyIniCurs($any_ini_curs);
 $Resumen->setLista($lista);
@@ -76,10 +77,14 @@ $res[21] = $Resumen->enBienio();
 $a_textos[21] = ucfirst(_("número de agregados en Bienio"));
 //22. Media de asignaturas superadas por alumno en bienio
 $nBienio = $res[21]['num'];
-SetType($nBienio,"double");
+SetType($nBienio, "double");
 $a_aprobadas = $Resumen->aprobadasBienio();
 $aprobadas = $a_aprobadas['num'];
-if (!empty($nBienio)) { $nf=number_format(($aprobadas/$nBienio),2,',','.'); } else { $nf=0; }
+if (!empty($nBienio)) {
+    $nf = number_format(($aprobadas / $nBienio), 2, ',', '.');
+} else {
+    $nf = 0;
+}
 $res[22]['num'] = $nf;
 $res[22]['lista'] = $a_aprobadas['lista'];
 $a_textos[22] = ucfirst(_("media de asignaturas superadas por alumno en bienio"));
@@ -98,16 +103,20 @@ $a_textos[24] = ucfirst(_("número de agregados Cuadrienio"));
 //25. Media de asignaturas superadas por alumno en cuadrienio
 $a_aprobadas = $Resumen->aprobadasCuadrienio();
 if (!isset($a_aprobadas['error'])) {
-	$aprobadas = $a_aprobadas['num'];
-	$numC = $res[24]['num'];
-	SetType($numC,"double");
-	if (!empty($numC)) { $nf=number_format(($aprobadas/$numC),2,',','.'); } else { $nf=0; }
-	$res[25]['num'] = $nf;
+    $aprobadas = $a_aprobadas['num'];
+    $numC = $res[24]['num'];
+    SetType($numC, "double");
+    if (!empty($numC)) {
+        $nf = number_format(($aprobadas / $numC), 2, ',', '.');
+    } else {
+        $nf = 0;
+    }
+    $res[25]['num'] = $nf;
     $res[25]['lista'] = $a_aprobadas['lista'];
-	$a_textos[25] = ucfirst(_("media de asignaturas superadas por alumno en cuadrienio"));
+    $a_textos[25] = ucfirst(_("media de asignaturas superadas por alumno en cuadrienio"));
 } else {
-	$res[25] = $a_aprobadas;
-	$a_textos[25] = sprintf(_("hay %s agregados que ya estaban en Repaso y han cursado asignaturas. Arreglarlo a mano"),$a_aprobadas['num']);
+    $res[25] = $a_aprobadas;
+    $a_textos[25] = sprintf(_("hay %s agregados que ya estaban en Repaso y han cursado asignaturas. Arreglarlo a mano"), $a_aprobadas['num']);
 }
 //26. Número de agregados de cuadrienio que han superado 1 curso (28.75 Creditos) 
 $res[26] = $Resumen->masAsignaturasQue(10);
@@ -139,33 +148,37 @@ $res[33] = $Resumen->laicosConCuadrienio();
 $a_textos[33] = ucfirst(_("número de agregados laicos con el cuadrienio terminado"));
 
 if ($lista) {
-	//x. Número de numerarios de repaso
-	$res['x'] = $Resumen->enRepaso();
-	$a_textos['x'] = ucfirst(_("número de agregados de repaso"));
+    //x. Número de numerarios de repaso
+    $res['x'] = $Resumen->enRepaso();
+    $a_textos['x'] = ucfirst(_("número de agregados de repaso"));
 }
 
 // ---------------------------------- html ----------------------------------------------------
 ?>
 <script>
-	fnjs_left_side_hide();
+    fnjs_left_side_hide();
 </script>
 <p><?= \core\strtoupper_dlb(_("alumnos agregados")) ?>   <?= $curso_txt ?></p>
 <table border=1>
-<?php
-foreach ($res as $n => $datos) {
-	$pos = strpos($n, ".");
-	if ($pos !== false) {
-		$tab = "<td></td><td>$n. ";
-	} else {
-		$tab = "<th>$n. </th><td>";
-	}
-	?>
-	<tr><?= $tab ?><?= $a_textos[$n] ?></td><td><?= $datos['num'] ?></td></tr>
-	<?php if (!empty($datos['lista'])){ ?>
-	   <tr><td colspan=3>
-		<?= $datos['lista']; ?>
-	   </td></tr>
-	<?php }
-}
-?>
+    <?php
+    foreach ($res as $n => $datos) {
+        $pos = strpos($n, ".");
+        if ($pos !== false) {
+            $tab = "<td></td><td>$n. ";
+        } else {
+            $tab = "<th>$n. </th><td>";
+        }
+        ?>
+        <tr><?= $tab ?><?= $a_textos[$n] ?></td>
+            <td><?= $datos['num'] ?></td>
+        </tr>
+        <?php if (!empty($datos['lista'])) { ?>
+            <tr>
+                <td colspan=3>
+                    <?= $datos['lista']; ?>
+                </td>
+            </tr>
+        <?php }
+    }
+    ?>
 </table>

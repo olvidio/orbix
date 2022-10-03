@@ -1,52 +1,72 @@
 <script>
-fnjs_ver_planning = function(formulario,n) {
-	var err = 0;
-	var f=$('#periodo').val();	
-	if (!f) {
-		err=1;
-	}
-	if (f=='otro') {
-		if (!fnjs_comprobar_fecha('#empiezamin')) { err=1; }
-		if (!fnjs_comprobar_fecha('#empiezamax')) { err=1; }
-	}
-	
-	if (err == 1) {
-		if (!f) {
-			alert("<?= _("falta definir un periodo") ?>");
-		} else {
-			alert("<?= _("debe inrtoducir las fechas inicio-fin del periodo") ?>"); 
-		}
-	} else {
-		$('#modelo').val(n);
-		fnjs_enviar_formulario(formulario);
-	}
-}
-fnjs_left_side_hide();
+    fnjs_ver_planning = function (formulario, n) {
+        var err = 0;
+        var f = $('#periodo').val();
+        if (!f) {
+            err = 1;
+        }
+        if (f == 'otro') {
+            if (!fnjs_comprobar_fecha('#empiezamin')) {
+                err = 1;
+            }
+            if (!fnjs_comprobar_fecha('#empiezamax')) {
+                err = 1;
+            }
+        }
+
+        if (err == 1) {
+            if (!f) {
+                alert("<?= _("falta definir un periodo") ?>");
+            } else {
+                alert("<?= _("debe inrtoducir las fechas inicio-fin del periodo") ?>");
+            }
+        } else {
+            $('#modelo').val(n);
+            fnjs_enviar_formulario(formulario);
+        }
+    }
+    fnjs_left_side_hide();
 </script>
 <form id="que" name="que" action="apps/asistentes/controller/planning_crida_calendari.php" method="post">
-<input type="hidden" id="modelo" name="modelo" value="">
-<?= $oHash1->getCamposHtml(); ?>
-<table>
-	<tr><th class=titulo_inv colspan="4">
-	<?= strtoupper(_("actividades de las personas de un centro")); ?></th></tr>
-	<tr>
-	<td class=etiqueta><?= ucfirst(_("centro")); ?></td>
-	<td><input class=contenido id="ctr" name="ctr"></td><td class=etiqueta colspan="1"><?= ucfirst(_("(por defecto saldrán todos los n ordenados por ctr)")); ?></td>
-	</tr>
-	<tr><td class=etiqueta colspan=9>
-	<input type="Checkbox" id="todos_n" name="todos_n" value="t" ><?= _("todos los ctr con n"); ?>
-	<input type="Checkbox" id="todos_agd" name="todos_agd" value="t" ><?= _("todos los ctr con agd"); ?>	
-	<input type="Checkbox" id="todos_s" name="todos_s" value="t" ><?= _("todos los ctr con s"); ?>	
-	</td></tr>
-	<tr><td class=etiqueta colspan=9><?= _("incluir sacd"); ?>:<input type="Radio" id="sacd" name="sacd" value=0 checked><?= _("no"); ?><input type="Radio" name="sacd" value=1><?= _("sí"); ?></td></tr>	
-</table>
-<?= $oFormP->getHtml(); ?>
-<table>
-<tfoot>
-<tr class=botones>
-<td><input TYPE="button" onclick="fnjs_ver_planning(this.form,1)" value="<?= ucfirst(_("planning vista tabla")); ?>" ></td>
-<td><input TYPE="button" onclick="fnjs_ver_planning(this.form,3)" value="<?= ucfirst(_("planning vista grid")); ?>" ></td>
-<td colspan=2><input TYPE="button" onclick="fnjs_ver_planning(this.form,2)" value="<?= _("vista para imprimir"); ?>"></td>
-</tr></tfoot>
-</table>
+    <input type="hidden" id="modelo" name="modelo" value="">
+    <?= $oHash1->getCamposHtml(); ?>
+    <table>
+        <tr>
+            <th class=titulo_inv colspan="4">
+                <?= strtoupper(_("actividades de las personas de un centro")); ?></th>
+        </tr>
+        <tr>
+            <td class=etiqueta><?= ucfirst(_("centro")); ?></td>
+            <td><input class=contenido id="ctr" name="ctr"></td>
+            <td class=etiqueta
+                colspan="1"><?= ucfirst(_("(por defecto saldrán todos los n ordenados por ctr)")); ?></td>
+        </tr>
+        <tr>
+            <td class=etiqueta colspan=9>
+                <input type="Checkbox" id="todos_n" name="todos_n" value="t"><?= _("todos los ctr con n"); ?>
+                <input type="Checkbox" id="todos_agd" name="todos_agd" value="t"><?= _("todos los ctr con agd"); ?>
+                <input type="Checkbox" id="todos_s" name="todos_s" value="t"><?= _("todos los ctr con s"); ?>
+            </td>
+        </tr>
+        <tr>
+            <td class=etiqueta colspan=9><?= _("incluir sacd"); ?>:<input type="Radio" id="sacd" name="sacd" value=0
+                                                                          checked><?= _("no"); ?><input type="Radio"
+                                                                                                        name="sacd"
+                                                                                                        value=1><?= _("sí"); ?>
+            </td>
+        </tr>
+    </table>
+    <?= $oFormP->getHtml(); ?>
+    <table>
+        <tfoot>
+        <tr class=botones>
+            <td><input TYPE="button" onclick="fnjs_ver_planning(this.form,1)"
+                       value="<?= ucfirst(_("planning vista tabla")); ?>"></td>
+            <td><input TYPE="button" onclick="fnjs_ver_planning(this.form,3)"
+                       value="<?= ucfirst(_("planning vista grid")); ?>"></td>
+            <td colspan=2><input TYPE="button" onclick="fnjs_ver_planning(this.form,2)"
+                                 value="<?= _("vista para imprimir"); ?>"></td>
+        </tr>
+        </tfoot>
+    </table>
 </form>

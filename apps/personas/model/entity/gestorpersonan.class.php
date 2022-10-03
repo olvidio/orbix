@@ -1,4 +1,5 @@
 <?php
+
 namespace personas\model\entity;
 /**
  * GestorPersonaN
@@ -11,31 +12,32 @@ namespace personas\model\entity;
  * @version 1.0
  * @created 11/03/2014
  */
+class GestorPersonaN extends GestorPersonaDl
+{
+    /* ATRIBUTOS ----------------------------------------------------------------- */
 
-class GestorPersonaN Extends GestorPersonaDl {
-	/* ATRIBUTS ----------------------------------------------------------------- */
-
-	/* CONSTRUCTOR -------------------------------------------------------------- */
-
-
-	/**
-	 * Constructor de la classe.
-	 *
-	 * @return $gestor
-	 *
-	 */
-	function __construct() {
-		$oDbl = $GLOBALS['oDB'];
-		$this->setoDbl($oDbl);
-		$this->setNomTabla('p_numerarios');
-	}
+    /* CONSTRUCTOR -------------------------------------------------------------- */
 
 
-	/* METODES PUBLICS -----------------------------------------------------------*/
+    /**
+     * Constructor de la classe.
+     *
+     * @return $gestor
+     *
+     */
+    function __construct()
+    {
+        $oDbl = $GLOBALS['oDB'];
+        $this->setoDbl($oDbl);
+        $this->setNomTabla('p_numerarios');
+    }
 
 
-	/* METODES PROTECTED --------------------------------------------------------*/
+    /* MÉTODOS PÚBLICOS -----------------------------------------------------------*/
 
-	/* METODES GET i SET --------------------------------------------------------*/
+
+    /* METODES PROTECTED --------------------------------------------------------*/
+
+    /* MÉTODOS GET y SET --------------------------------------------------------*/
 
 }

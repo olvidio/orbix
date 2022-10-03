@@ -1,5 +1,7 @@
 <?php
+
 namespace cartaspresentacion\db;
+
 use core\ConfigGlobal;
 use devel\model\DBAbstract;
 
@@ -8,40 +10,45 @@ use devel\model\DBAbstract;
  * En este caso public(v/f) porque se debe tener acceso de consulta.
  * Cada esquema deberá crear las suyas, heredadas de estas.
  */
-class DB extends DBAbstract {
+class DB extends DBAbstract
+{
 
-    public function __construct(){
+    public function __construct()
+    {
         $esquema_sfsv = ConfigGlobal::mi_region_dl();
-        $role = substr($esquema_sfsv,0,-1); // quito la v o la f.
-        $this->vf = substr($esquema_sfsv,-1); // solo la v o la f.
-        
-        $this->role = '"'. $role .'"';
-        $this->role_vf = '"'. $esquema_sfsv .'"';
-        
+        $role = substr($esquema_sfsv, 0, -1); // quito la v o la f.
+        $this->vf = substr($esquema_sfsv, -1); // solo la v o la f.
+
+        $this->role = '"' . $role . '"';
+        $this->role_vf = '"' . $esquema_sfsv . '"';
+
         $this->esquema = 'public';
     }
-    
-    public function dropAll() {
+
+    public function dropAll()
+    {
         $this->eliminar_presentacion();
     }
-    
-    public function createAll() {
+
+    public function createAll()
+    {
         $this->create_presentacion();
         $this->create_presentacion_resto();
     }
-    
+
     /**
      * En el esquema sv
      *  // OJO Corresponde al esquema sf/sv, no al comun.
      *  // OJO Corresponde al esquema public, no al global.
      */
-    
-    public function create_presentacion() {
+
+    public function create_presentacion()
+    {
         $this->addPermisoGlobal('sfsv');
         $tabla = "du_presentacion";
         $nom_tabla = $this->getNomTabla($tabla);
         $a_sql = [];
-        
+
         $a_sql[] = "CREATE TABLE IF NOT EXISTS $nom_tabla (
             id_schema integer NOT NULL,
             id_direccion integer NOT NULL,
@@ -55,22 +62,23 @@ class DB extends DBAbstract {
         $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->user_orbix";
 
         $this->executeSql($a_sql);
-        
+
         $this->delPermisoGlobal('sfsv');
     }
 
-    public function create_presentacion_resto() {
+    public function create_presentacion_resto()
+    {
         // OJO Corresponde al esquema sf/sv, no al comun.
         $esquema_org = $this->esquema;
         $role_org = $this->role;
-        $this->esquema = 'resto'.$this->vf;
-        $this->role = 'orbix'.$this->vf;
+        $this->esquema = 'resto' . $this->vf;
+        $this->role = 'orbix' . $this->vf;
         // (debe estar después de fijar el role)
         $this->addPermisoGlobal('sfsv');
-        
+
         $tabla = "du_presentacion";
-        
-        $nom_tabla = $this->esquema.'.'."du_presentacion_ex";
+
+        $nom_tabla = $this->esquema . '.' . "du_presentacion_ex";
         $nom_tabla_parent = 'public';
         if ($this->vf == 'v') {
             $nom_tabla_parent = 'publicv';
@@ -79,36 +87,38 @@ class DB extends DBAbstract {
             $nom_tabla_parent = 'publicf';
         }
         $campo_seq = '';
-        $id_seq = $nom_tabla."_".$campo_seq."_seq";
-        
+        $id_seq = $nom_tabla . "_" . $campo_seq . "_seq";
+
         $a_sql = [];
         $a_sql[] = "CREATE TABLE IF NOT EXISTS $nom_tabla (
                 )
             INHERITS ($nom_tabla_parent.$tabla);";
-        
+
         $a_sql[] = "ALTER TABLE $nom_tabla ALTER id_schema SET DEFAULT public.idschema('$this->esquema'::text)";
-        
+
         $a_sql[] = "ALTER TABLE $nom_tabla ADD PRIMARY KEY (id_ubi,id_direccion); ";
-        
+
         $a_sql[] = "ALTER TABLE $nom_tabla ADD CONSTRAINT du_presentacion_ex_ukey
                     UNIQUE (id_ubi, id_direccion); ";
-        
+
         $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->role; ";
-        
+
         $this->executeSql($a_sql);
-        
+
         $this->delPermisoGlobal('sfsv');
         // Devolver los valores al estado original
         $this->esquema = $esquema_org;
         $this->role = $role_org;
     }
-    public function eliminar_presentacion() {
+
+    public function eliminar_presentacion()
+    {
         $this->addPermisoGlobal('sfsv');
         $tabla = "du_presentacion";
         $nom_tabla = $this->getNomTabla($tabla);
-        
+
         $this->eliminar($nom_tabla);
-        
+
         $this->delPermisoGlobal('sfsv');
     }
 

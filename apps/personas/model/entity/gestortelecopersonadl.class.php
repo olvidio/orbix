@@ -1,5 +1,6 @@
 <?php
 namespace personas\model\entity;
+
 /**
  * GestorTelecoPersona
  *
@@ -11,25 +12,27 @@ namespace personas\model\entity;
  * @version 1.0
  * @created 01/10/2010
  */
+class GestorTelecoPersonaDl extends GestorTelecoPersona
+{
+    /* ATRIBUTOS ----------------------------------------------------------------- */
 
-class GestorTelecoPersonaDl Extends GestorTelecoPersona {
-	/* ATRIBUTS ----------------------------------------------------------------- */
+    /* CONSTRUCTOR -------------------------------------------------------------- */
 
-	/* CONSTRUCTOR -------------------------------------------------------------- */
-
-	/**
-	 * Constructor de la classe.
-	 *
-	 * @return GestorTelecoPersona
-	 *
-	 */
-	function __construct() {
-		$oDbl = $GLOBALS['oDB'];
-		$this->setoDbl($oDbl);
-		$this->setNomTabla('d_teleco_personas_dl');
-	}
-	/* METODES PUBLICS -----------------------------------------------------------*/
-	/* METODES PROTECTED --------------------------------------------------------*/
-	/* METODES GET i SET --------------------------------------------------------*/
+    /**
+     * Constructor de la classe.
+     *
+     * @return GestorTelecoPersona
+     *
+     */
+    function __construct()
+    {
+        $oDbl = $GLOBALS['oDB'];
+        $this->setoDbl($oDbl);
+        $this->setNomTabla('d_teleco_personas_dl');
+    }
+    /* MÉTODOS PÚBLICOS -----------------------------------------------------------*/
+    /* METODES PROTECTED --------------------------------------------------------*/
+    /* MÉTODOS GET y SET --------------------------------------------------------*/
 }
+
 ?>

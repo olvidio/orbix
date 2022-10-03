@@ -1,5 +1,6 @@
 <?php
 namespace personas\model\entity;
+
 /**
  * GestorPersonaEx
  *
@@ -11,41 +12,44 @@ namespace personas\model\entity;
  * @version 1.0
  * @created 11/03/2014
  */
+class GestorPersonaEx extends GestorPersonaGlobal
+{
+    /* ATRIBUTOS ----------------------------------------------------------------- */
 
-class GestorPersonaEx Extends GestorPersonaGlobal {
-	/* ATRIBUTS ----------------------------------------------------------------- */
+    /* CONSTRUCTOR -------------------------------------------------------------- */
 
-	/* CONSTRUCTOR -------------------------------------------------------------- */
-
-	/**
-	 * Constructor de la classe.
-	 *
-	 * @return $gestor
-	 *
-	 */
-	function __construct() {
-		$oDbl = $GLOBALS['oDBR'];
-		$this->setoDbl($oDbl);
-		$this->setNomTabla('p_de_paso_ex');
-	}
+    /**
+     * Constructor de la classe.
+     *
+     * @return $gestor
+     *
+     */
+    function __construct()
+    {
+        $oDbl = $GLOBALS['oDBR'];
+        $this->setoDbl($oDbl);
+        $this->setNomTabla('p_de_paso_ex');
+    }
 
 
-	/* METODES PUBLICS -----------------------------------------------------------*/
+    /* MÉTODOS PÚBLICOS -----------------------------------------------------------*/
 
-	
-	/**
-	 * retorna l'array d'objectes de tipus PersonaEx
-	 *
-	 * @param array aWhere associatiu amb els valors de les variables amb les quals farem la query
-	 * @param array aOperators associatiu amb els valors dels operadors que cal aplicar a cada variable
-	 * @return array Una col·lecció d'objectes de tipus PersonaEx
-	 */
-	function getPersonasEx($aWhere=array(),$aOperators=array()) {
-		return parent::getPersonasObj($aWhere,$aOperators,'personas\\model\entity\\PersonaEx');
-	}
 
-	/* METODES PROTECTED --------------------------------------------------------*/
+    /**
+     * retorna l'array d'objectes de tipus PersonaEx
+     *
+     * @param array aWhere associatiu amb els valors de les variables amb les quals farem la query
+     * @param array aOperators associatiu amb els valors dels operadors que cal aplicar a cada variable
+     * @return array Una col·lecció d'objectes de tipus PersonaEx
+     */
+    function getPersonasEx($aWhere = array(), $aOperators = array())
+    {
+        return parent::getPersonasObj($aWhere, $aOperators, 'personas\\model\entity\\PersonaEx');
+    }
 
-	/* METODES GET i SET --------------------------------------------------------*/
+    /* METODES PROTECTED --------------------------------------------------------*/
+
+    /* MÉTODOS GET y SET --------------------------------------------------------*/
 }
+
 ?>

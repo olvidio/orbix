@@ -1,4 +1,5 @@
 <?php
+
 use ubis\model\entity\GestorDelegacion;
 use ubis\model\entity\GestorDireccion;
 use ubis\model\entity\GestorRegion;
@@ -6,23 +7,23 @@ use web\Hash;
 use ubis\model\entity\GestorDireccionCtr;
 
 /**
-* Es un formulario para introducir las condiciones de búsqueda de los ubis.
-*
-*
-*@package	delegacion
-*@subpackage	ubis
-*@author	Daniel Serrabou
-*@since		15/5/02.
-*		
-*/
+ * Es un formulario para introducir las condiciones de búsqueda de los ubis.
+ *
+ *
+ * @package    delegacion
+ * @subpackage    ubis
+ * @author    Daniel Serrabou
+ * @since        15/5/02.
+ *
+ */
 
 // INICIO Cabecera global de URL de controlador *********************************
 
-require_once ("apps/core/global_header.inc");
-// Arxivos requeridos por esta url **********************************************
+require_once("apps/core/global_header.inc");
+// Archivos requeridos por esta url **********************************************
 
-// Crea los objectos de uso global **********************************************
-require_once ("apps/core/global_object.inc");
+// Crea los objetos de uso global **********************************************
+require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
 
@@ -55,4 +56,4 @@ $a_campos = ['oPosicion' => $oPosicion,
 ];
 
 $oView = new core\ViewTwig('cartaspresentacion/controller');
-echo $oView->render('cartas_presentacion_buscar.html.twig',$a_campos);
+echo $oView->render('cartas_presentacion_buscar.html.twig', $a_campos);

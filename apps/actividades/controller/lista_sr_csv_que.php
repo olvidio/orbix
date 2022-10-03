@@ -1,45 +1,45 @@
-<?php 
+<?php
 /**
-* Página del formulario para listados particulares de sr 
-*		
-*/
+ * Página del formulario para listados particulares de sr
+ *
+ */
 
 use core\ConfigGlobal;
 use usuarios\model\entity\Preferencia;
 use web\Hash;
 
 // INICIO Cabecera global de URL de controlador *********************************
-require_once ("apps/core/global_header.inc");
-// Arxivos requeridos por esta url **********************************************
+require_once("apps/core/global_header.inc");
+// Archivos requeridos por esta url **********************************************
 
-// Crea los objectos de uso global **********************************************
-require_once ("apps/core/global_object.inc");
+// Crea los objetos de uso global **********************************************
+require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
 $oPosicion->recordar();
 
-$Qperiodo = (string) \filter_input(INPUT_POST, 'periodo');
-$Qyear = (string) \filter_input(INPUT_POST, 'year');
-$Qempiezamax = (string) \filter_input(INPUT_POST, 'empiezamax');
-$Qempiezamin = (string) \filter_input(INPUT_POST, 'empiezamin');
+$Qperiodo = (string)\filter_input(INPUT_POST, 'periodo');
+$Qyear = (string)\filter_input(INPUT_POST, 'year');
+$Qempiezamax = (string)\filter_input(INPUT_POST, 'empiezamax');
+$Qempiezamin = (string)\filter_input(INPUT_POST, 'empiezamin');
 
-$aOpciones =  array(
+$aOpciones = array(
     'tot_any' => _("todo el año"),
-    'trimestre_1'=>_("primer trimestre"),
-    'trimestre_2'=>_("segundo trimestre"),
-    'trimestre_3'=>_("tercer trimestre"),
-    'trimestre_4'=>_("cuarto trimestre"),
-    'separador'=>'---------',
-    'curso_ca'=>_("curso ca"),
-    'curso_crt'=>_("curso crt"),
-    'separador1'=>'---------',
-    'otro'=>_("otro")
+    'trimestre_1' => _("primer trimestre"),
+    'trimestre_2' => _("segundo trimestre"),
+    'trimestre_3' => _("tercer trimestre"),
+    'trimestre_4' => _("cuarto trimestre"),
+    'separador' => '---------',
+    'curso_ca' => _("curso ca"),
+    'curso_crt' => _("curso crt"),
+    'separador1' => '---------',
+    'otro' => _("otro")
 );
 
 // por defecto
-$id_usuario= core\ConfigGlobal::mi_id_usuario();
+$id_usuario = core\ConfigGlobal::mi_id_usuario();
 $tipo = 'busqueda_activ_sr';
-$oPref = new Preferencia(array('id_usuario'=>$id_usuario,'tipo'=>$tipo));
+$oPref = new Preferencia(array('id_usuario' => $id_usuario, 'tipo' => $tipo));
 $json_busqueda = $oPref->getPreferencia();
 $oBusqueda = json_decode($json_busqueda);
 if (is_object($oBusqueda)) {
@@ -49,9 +49,9 @@ if (is_object($oBusqueda)) {
     $a_ubis = json_decode($oBusqueda->ubis_compartidos);
     $sel_ubis = implode(',', $a_ubis);
 } else {
-    $a_status = [1,2];
+    $a_status = [1, 2];
     $Qperiodo = 'curso_ca';
-    $a_tipo_activ = [1,3]; 
+    $a_tipo_activ = [1, 3];
     $a_ubis = [];
     $sel_ubis = '';
 }
@@ -77,7 +77,7 @@ foreach ($a_tipo_activ as $tipo_activ) {
         $chk_activ_cv = 'checked';
     }
 }
-    
+
 $oFormP = new web\PeriodoQue();
 $oFormP->setFormName('modifica');
 $oFormP->setAntes('Periodo');
@@ -91,9 +91,9 @@ $oFormP->setEmpiezaMax($Qempiezamax);
 $oForm = new web\CasasQue();
 $oForm->setTitulo(core\strtoupper_dlb(_("ocupación de casas compartidas")));
 // miro que rol tengo. Si soy casa, sólo veo la mía
-$sDonde='';
+$sDonde = '';
 //formulario para casas cuyo calendario de actividades interesa
-$donde="WHERE status='t' $sDonde";
+$donde = "WHERE status='t' $sDonde";
 $oForm->setCasas('casa');
 $oForm->setPosiblesCasas($donde);
 $oForm->setSeleccionados($sel_ubis);
@@ -109,7 +109,7 @@ $a_camposHidden = array(
 $oHash->setArraycamposHidden($a_camposHidden);
 
 $titulo = _("selección de actividades de san rafael");
-$fullUrl = ConfigGlobal::getWeb().'/apps/actividades/controller/lista_sr_csv.php';
+$fullUrl = ConfigGlobal::getWeb() . '/apps/actividades/controller/lista_sr_csv.php';
 
 $a_campos = ['oPosicion' => $oPosicion,
     'oHash' => $oHash,
@@ -121,8 +121,8 @@ $a_campos = ['oPosicion' => $oPosicion,
     'chk_activ_crt' => $chk_activ_crt,
     'chk_activ_cv' => $chk_activ_cv,
     // para el download
-    'fullUrl' => $fullUrl, 
+    'fullUrl' => $fullUrl,
 ];
 
 $oView = new core\ViewTwig('actividades/controller');
-echo $oView->render('lista_sr_csv_que.html.twig',$a_campos);
+echo $oView->render('lista_sr_csv_que.html.twig', $a_campos);

@@ -1,4 +1,5 @@
 <?php
+
 use encargossacd\model\entity\GestorEncargo;
 use ubis\model\entity\Ubi;
 use web\Hash;
@@ -6,11 +7,11 @@ use web\Lista;
 use encargossacd\model\entity\GestorEncargoTipo;
 
 // INICIO Cabecera global de URL de controlador *********************************
-require_once ("apps/core/global_header.inc");
-// Arxivos requeridos por esta url **********************************************
+require_once("apps/core/global_header.inc");
+// Archivos requeridos por esta url **********************************************
 
-// Crea los objectos de uso global **********************************************
-require_once ("apps/core/global_object.inc");
+// Crea los objetos de uso global **********************************************
+require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
 $oPosicion->recordar();
@@ -23,28 +24,28 @@ if (isset($_POST['stack'])) {
         $oPosicion2 = new web\Posicion();
         if ($oPosicion2->goStack($stack)) { // devuelve false si no puede ir
             //$id_ubi = $oPosicion2->getParametro('id_ubi');
-            $Qid_sel=$oPosicion2->getParametro('id_sel');
+            $Qid_sel = $oPosicion2->getParametro('id_sel');
             $Qscroll_id = $oPosicion2->getParametro('scroll_id');
             $oPosicion2->olvidar($stack);
         }
     }
-} 
+}
 
-$Qtitulo = (string) \filter_input(INPUT_POST, 'titulo');
-$Qid_tipo_enc = (integer) \filter_input(INPUT_POST, 'id_tipo_enc');
-$Qdesc_enc = (string) \filter_input(INPUT_POST, 'desc_enc');
+$Qtitulo = (string)\filter_input(INPUT_POST, 'titulo');
+$Qid_tipo_enc = (integer)\filter_input(INPUT_POST, 'id_tipo_enc');
+$Qdesc_enc = (string)\filter_input(INPUT_POST, 'desc_enc');
 
 /*miro las condiciones. Si es la primera vez muestro las de este año */
 $aWhere = array();
 $aOperador = array();
 $aWhere['_ordre'] = 'desc_enc';
 if (!empty($Qdesc_enc)) {
-	$aWhere['desc_enc'] = $Qdesc_enc;
-	$aOperador['desc_enc'] = 'sin_acentos';
+    $aWhere['desc_enc'] = $Qdesc_enc;
+    $aOperador['desc_enc'] = 'sin_acentos';
 }
 // si busco un tipo determinado de encargo (collatios)
 if (!empty($Qid_tipo_enc)) {
-	$aWhere['id_tipo_enc'] = $Qid_tipo_enc;
+    $aWhere['id_tipo_enc'] = $Qid_tipo_enc;
 }
 /*
 //si vengo por un go_to:
@@ -61,7 +62,7 @@ if ($go=="session" && isset($_SESSION['session_go_to']) ) {
 
 
 $GesEncargos = new GestorEncargo();
-$cEncargos = $GesEncargos->getEncargos($aWhere,$aOperador);
+$cEncargos = $GesEncargos->getEncargos($aWhere, $aOperador);
 
 /*
 * Defino un array con los datos actuales, para saber volver después de navegar un rato
@@ -82,81 +83,89 @@ $go_to="session@sel";
 */
 
 
-$a_botones=array( array( 'txt' => _("horario"), 'click' =>"fnjs_horario(\"#seleccionados\")" ) ,
-				array( 'txt' => _("modificar"), 'click' =>"fnjs_modificar(\"#seleccionados\")" ) ,
-				array( 'txt' => _("eliminar"), 'click' =>"fnjs_borrar(\"#seleccionados\")" ) 
-				);
+$a_botones = array(array('txt' => _("horario"), 'click' => "fnjs_horario(\"#seleccionados\")"),
+    array('txt' => _("modificar"), 'click' => "fnjs_modificar(\"#seleccionados\")"),
+    array('txt' => _("eliminar"), 'click' => "fnjs_borrar(\"#seleccionados\")")
+);
 
-$a_cabeceras=array( _("sección"),array('name'=>_("descripción"),'formatter'=>'clickFormatter'), _("lugar"), _("descripción lugar"), _("idioma") );
+$a_cabeceras = array(_("sección"), array('name' => _("descripción"), 'formatter' => 'clickFormatter'), _("lugar"), _("descripción lugar"), _("idioma"));
 
-$i=0;
+$i = 0;
 $a_valores = array();
-if (isset($Qid_sel) && !empty($Qid_sel)) { $a_valores['select'] = $Qid_sel; }
-if (isset($Qscroll_id) && !empty($Qscroll_id)) { $a_valores['scroll_id'] = $Qscroll_id; }
+if (isset($Qid_sel) && !empty($Qid_sel)) {
+    $a_valores['select'] = $Qid_sel;
+}
+if (isset($Qscroll_id) && !empty($Qscroll_id)) {
+    $a_valores['scroll_id'] = $Qscroll_id;
+}
 foreach ($cEncargos as $oEncargo) {
-	$i++;
-	$id_enc=$oEncargo->getId_enc();
-	$sf_sv=$oEncargo->getSf_sv();
-	$idioma_enc=$oEncargo->getIdioma_enc();
-	$id_ubi=$oEncargo->getId_ubi();
-	$desc_enc=$oEncargo->getDesc_enc();
-	$desc_lugar=$oEncargo->getDesc_lugar();
-	
-	$idioma_enc=empty($idioma_enc)? 'ca_ES' : $idioma_enc;
-	
-    $aQuery = [ 'que'       =>'editar',
-            'id_enc'=>$id_enc,
-            ];
-    if (is_array($aQuery)) { array_walk($aQuery, 'core\poner_empty_on_null'); }
-    $pagina = Hash::link('apps/encargossacd/controller/encargo_ver.php?'.http_build_query($aQuery));
+    $i++;
+    $id_enc = $oEncargo->getId_enc();
+    $sf_sv = $oEncargo->getSf_sv();
+    $idioma_enc = $oEncargo->getIdioma_enc();
+    $id_ubi = $oEncargo->getId_ubi();
+    $desc_enc = $oEncargo->getDesc_enc();
+    $desc_lugar = $oEncargo->getDesc_lugar();
 
-	$seccion = '';
-	if (!empty($sf_sv)) {
+    $idioma_enc = empty($idioma_enc) ? 'ca_ES' : $idioma_enc;
+
+    $aQuery = ['que' => 'editar',
+        'id_enc' => $id_enc,
+    ];
+    if (is_array($aQuery)) {
+        array_walk($aQuery, 'core\poner_empty_on_null');
+    }
+    $pagina = Hash::link('apps/encargossacd/controller/encargo_ver.php?' . http_build_query($aQuery));
+
+    $seccion = '';
+    if (!empty($sf_sv)) {
         $oGesEncargoTipo = new GestorEncargoTipo();
         $a_seccion = $oGesEncargoTipo->getArraySeccion();
         $seccion = $a_seccion[$sf_sv];
-	}
+    }
 
-	$idioma = '';
-	$GesLocales = new usuarios\model\entity\GestorLocal();
-	$cIdiomas = $GesLocales->getLocales(['idioma' => $idioma_enc]);
-	if (is_array($cIdiomas) && count($cIdiomas) > 0) {
-	   $idioma = $cIdiomas[0]->getNom_idioma();
-	}
-	
-	if ($sf_sv==2) $a_valores[$i]['clase']="tono2";
-	
-	if (!empty($id_ubi)) {
-		$oUbi = Ubi::newUbi($id_ubi);
-		$nombre_ubi=$oUbi->getNombre_ubi();
-	} else {
-		$nombre_ubi='';
-	}
+    $idioma = '';
+    $GesLocales = new usuarios\model\entity\GestorLocal();
+    $cIdiomas = $GesLocales->getLocales(['idioma' => $idioma_enc]);
+    if (is_array($cIdiomas) && count($cIdiomas) > 0) {
+        $idioma = $cIdiomas[0]->getNom_idioma();
+    }
 
-	$a_valores[$i]['sel']=$id_enc;
-	$a_valores[$i][1]=$seccion;
-	$a_valores[$i][2]=array( 'ira'=>$pagina, 'valor'=>$desc_enc);
-	$a_valores[$i][3]=$nombre_ubi;
-	$a_valores[$i][4]=$desc_lugar;
-	$a_valores[$i][5]=$idioma;
+    if ($sf_sv == 2) $a_valores[$i]['clase'] = "tono2";
+
+    if (!empty($id_ubi)) {
+        $oUbi = Ubi::newUbi($id_ubi);
+        $nombre_ubi = $oUbi->getNombre_ubi();
+    } else {
+        $nombre_ubi = '';
+    }
+
+    $a_valores[$i]['sel'] = $id_enc;
+    $a_valores[$i][1] = $seccion;
+    $a_valores[$i][2] = array('ira' => $pagina, 'valor' => $desc_enc);
+    $a_valores[$i][3] = $nombre_ubi;
+    $a_valores[$i][4] = $desc_lugar;
+    $a_valores[$i][5] = $idioma;
 }
 
-$aQuery = [ 'que'       =>'nuevo',
-            'id_tipo_enc'=>$Qid_tipo_enc,
-            ];
+$aQuery = ['que' => 'nuevo',
+    'id_tipo_enc' => $Qid_tipo_enc,
+];
 // el hppt_build_query no pasa los valores null
-if (is_array($aQuery)) { array_walk($aQuery, 'core\poner_empty_on_null'); }
-$pagina_nuevo = Hash::link('apps/encargossacd/controller/encargo_ver.php?'.http_build_query($aQuery));
+if (is_array($aQuery)) {
+    array_walk($aQuery, 'core\poner_empty_on_null');
+}
+$pagina_nuevo = Hash::link('apps/encargossacd/controller/encargo_ver.php?' . http_build_query($aQuery));
 
 $txt_eliminar = _("¿Esta Seguro que desea borrar este encargo?");
-    
+
 $oTabla = new Lista();
 $oTabla->setId_tabla('encargo_select');
 $oTabla->setCabeceras($a_cabeceras);
 $oTabla->setBotones($a_botones);
 $oTabla->setDatos($a_valores);
 
-$no_tipo_enc = empty($Qid_tipo_enc)? TRUE : FALSE;
+$no_tipo_enc = empty($Qid_tipo_enc) ? TRUE : FALSE;
 
 $url_horario = "apps/encargossacd/controller/encargo_horario_select.php";
 $oHashHorario = new Hash();
@@ -202,4 +211,4 @@ $a_campos = ['oPosicion' => $oPosicion,
 ];
 
 $oView = new core\ViewTwig('encargossacd/controller');
-echo $oView->render('encargo_select.html.twig',$a_campos);
+echo $oView->render('encargo_select.html.twig', $a_campos);

@@ -1,27 +1,27 @@
 <script>
-fnjs_buscar=function(){
-	var campo = '<input type="hidden" name="refresh" value=1>';
-	$('#periodo_form').attr('action',"apps/notas/controller/acta_listado_anual.php");
-	$('#periodo_form').append(campo);
-	fnjs_enviar_formulario('#periodo_form','#main');
-}
-fnjs_left_side_hide();
+    fnjs_buscar = function () {
+        var campo = '<input type="hidden" name="refresh" value=1>';
+        $('#periodo_form').attr('action', "apps/notas/controller/acta_listado_anual.php");
+        $('#periodo_form').append(campo);
+        fnjs_enviar_formulario('#periodo_form', '#main');
+    }
+    fnjs_left_side_hide();
 </script>
 <form id='periodo_form' action=''>
-	<?= $oHashPeriodo->getCamposHtml(); ?>
-	<?= $oFormP->getHtml(); ?>
+    <?= $oHashPeriodo->getCamposHtml(); ?>
+    <?= $oFormP->getHtml(); ?>
 </form>
 <h3><?= $titulo ?></h3>
 <table>
-<?php
-foreach($aActas as $acta) {
-	?>
-	<tr>
-		<td> <?= $acta['nombre_corto'] ?> </td>
-		<td> <?= $acta['acta'] ?> </td>
-		<td> <?= $acta['f_acta'] ?> </td>
-	</tr>
-	<?php
-}
-?>
+    <?php
+    foreach ($aActas as $acta) {
+        ?>
+        <tr>
+            <td> <?= $acta['nombre_corto'] ?> </td>
+            <td> <?= $acta['acta'] ?> </td>
+            <td> <?= $acta['f_acta'] ?> </td>
+        </tr>
+        <?php
+    }
+    ?>
 </table>

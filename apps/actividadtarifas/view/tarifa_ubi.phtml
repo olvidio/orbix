@@ -1,94 +1,94 @@
 ﻿<script>
-fnjs_cerrar=function(){
-	$('#div_modificar').html('');
-	$('#div_modificar').width('0');
-	$('#div_modificar').height('0');
-	$('#div_modificar').removeClass('ventana');
-	document.getElementById("overlay").style.display = "none";
-}
+    fnjs_cerrar = function () {
+        $('#div_modificar').html('');
+        $('#div_modificar').width('0');
+        $('#div_modificar').height('0');
+        $('#div_modificar').removeClass('ventana');
+        document.getElementById("overlay").style.display = "none";
+    }
 
-fnjs_guardar=function(formulario,que){
-	var err=0;
-	if (que=="tar_ubi_eliminar") {
-		seguro=confirm("EEE");
-		if (seguro) { 
-			err=0;
-		} else {
-			err=1;
-		}
-	}
-	if (err!=1) {
-		$(formulario+' input[name="que"]').val(que)
-        $(formulario).attr('action',"apps/actividadtarifas/controller/tarifa_ajax.php")
-        $(formulario).one("submit", function() {
-            $.ajax({
-                url: $(this).attr('action'),
-                type: 'post',
-                data: $(this).serialize()
-			})
-			.done(function (rta_txt) {
-				if (rta_txt != '' && rta_txt != '\n') {
-					alert (rta_txt);
-				} else {
-					$('#div_modificar').html('');
-					$('#div_modificar').width('0');
-					$('#div_modificar').height('0');
-					$('#div_modificar').removeClass('ventana');
-				}
-				fnjs_ver();
+    fnjs_guardar = function (formulario, que) {
+        var err = 0;
+        if (que == "tar_ubi_eliminar") {
+            seguro = confirm("EEE");
+            if (seguro) {
+                err = 0;
+            } else {
+                err = 1;
+            }
+        }
+        if (err != 1) {
+            $(formulario + ' input[name="que"]').val(que)
+            $(formulario).attr('action', "apps/actividadtarifas/controller/tarifa_ajax.php")
+            $(formulario).one("submit", function () {
+                $.ajax({
+                    url: $(this).attr('action'),
+                    type: 'post',
+                    data: $(this).serialize()
+                })
+                    .done(function (rta_txt) {
+                        if (rta_txt != '' && rta_txt != '\n') {
+                            alert(rta_txt);
+                        } else {
+                            $('#div_modificar').html('');
+                            $('#div_modificar').width('0');
+                            $('#div_modificar').height('0');
+                            $('#div_modificar').removeClass('ventana');
+                        }
+                        fnjs_ver();
+                    });
+                return false;
             });
-            return false;
-        });
-        $(formulario).trigger("submit");
-        $(formulario).off();
-	}
-}
+            $(formulario).trigger("submit");
+            $(formulario).off();
+        }
+    }
 
-fnjs_modificar=function(id_item,letra){
-	$('#div_modificar').addClass('ventana');
-	$('#div_modificar').width('auto');
-	$('#div_modificar').height('auto');
-	document.getElementById("overlay").style.display = "block";
-	
+    fnjs_modificar = function (id_item, letra) {
+        $('#div_modificar').addClass('ventana');
+        $('#div_modificar').width('auto');
+        $('#div_modificar').height('auto');
+        document.getElementById("overlay").style.display = "block";
 
-	var url='<?= core\ConfigGlobal::getWeb() ?>/apps/actividadtarifas/controller/tarifa_ajax.php';
-	if (id_item == 'nuevo') {
-		id_ubi =$('#id_cdc').val();
-		year =$('#year').val();
-		var parametros='que=form_tarifa_ubi&id_ubi='+id_ubi+'&year='+year+'<?= $h_nuevo ?>';
-	} else {
-		var parametros='que=form_tarifa_ubi&id_item='+id_item+'&letra='+letra+'<?= $h_modificar ?>';
-	}
-	fnjs_update_div('#div_modificar',url+'?'+parametros);
-}
 
-fnjs_ver=function(){
-	id_ubi =$('#id_cdc').val();
-	year =$('#year').val();
-	// obtener el listado de periodos 
-	var url='<?= core\ConfigGlobal::getWeb() ?>/apps/actividadtarifas/controller/tarifa_ajax.php';
-	var parametros='que=get&id_ubi='+id_ubi+'&year='+year+'<?= $h_ver ?>';
-		 
-	$.ajax({
-		url: url,
-		type: 'post',
-		data: parametros
-	})
-	.done(function (rta_txt) {
-		if (rta_txt) {
-			// añadir debajo de la casa 
-			$('#ficha').html(rta_txt);
-		}
-	});
-	document.getElementById("overlay").style.display = "none";
-}
+        var url = '<?= core\ConfigGlobal::getWeb() ?>/apps/actividadtarifas/controller/tarifa_ajax.php';
+        if (id_item == 'nuevo') {
+            id_ubi = $('#id_cdc').val();
+            year = $('#year').val();
+            var parametros = 'que=form_tarifa_ubi&id_ubi=' + id_ubi + '&year=' + year + '<?= $h_nuevo ?>';
+        } else {
+            var parametros = 'que=form_tarifa_ubi&id_item=' + id_item + '&letra=' + letra + '<?= $h_modificar ?>';
+        }
+        fnjs_update_div('#div_modificar', url + '?' + parametros);
+    }
 
-$(document).ready(fnjs_ver());
+    fnjs_ver = function () {
+        id_ubi = $('#id_cdc').val();
+        year = $('#year').val();
+        // obtener el listado de periodos
+        var url = '<?= core\ConfigGlobal::getWeb() ?>/apps/actividadtarifas/controller/tarifa_ajax.php';
+        var parametros = 'que=get&id_ubi=' + id_ubi + '&year=' + year + '<?= $h_ver ?>';
+
+        $.ajax({
+            url: url,
+            type: 'post',
+            data: parametros
+        })
+            .done(function (rta_txt) {
+                if (rta_txt) {
+                    // añadir debajo de la casa
+                    $('#ficha').html(rta_txt);
+                }
+            });
+        document.getElementById("overlay").style.display = "none";
+    }
+
+    $(document).ready(fnjs_ver());
 </script>
 <form name=seleccion action="">
-<?= $oForm->getDesplCasas()->desplegable(); ?>
-<?= $oFormAny->getDesplAnys()->desplegable(); ?>
-<input type=button name="buscar" value="<?= _("buscar") ?>" onclick="fnjs_ver()">
+    <?= $oForm->getDesplCasas()->desplegable(); ?>
+    <?= $oFormAny->getDesplAnys()->desplegable(); ?>
+    <input type=button name="buscar" value="<?= _("buscar") ?>" onclick="fnjs_ver()">
 </form>
 <div id='ficha'></div>
 <div id='div_modificar'></div>

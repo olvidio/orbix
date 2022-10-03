@@ -1,80 +1,85 @@
 <script>
-fnjs_nuevo=function(formulario){
-	$('#mod').val("nuevo");
-	$(formulario).attr('action',"apps/devel/controller/modulos_ver.php");
-  	fnjs_enviar_formulario(formulario);
-}
-fnjs_eliminar=function(formulario){
-	rta=fnjs_solo_uno(formulario);
-	if (rta==1) {
-		if (confirm("<?= $txt_eliminar ?>") ) {
-			$('#mod').val("eliminar");
-  			$(formulario).attr('action',"apps/devel/controller/modulos_update.php");
-			$(formulario).one("submit", function() {
-				$.ajax({
-					url: $(this).attr('action'),
-					type: 'post',
-					data: $(this).serialize()
-				})
-				.done(function (rta_txt) {
-					if (rta_txt != '' && rta_txt != '\\n') {
-						alert ('<?= _("respuesta") ?>: '+rta_txt);
-					} else {
-						fnjs_actualizar(formulario);
-				   	}
-				});
-				return false;
-			});
-			$(formulario).trigger("submit");
-			$(formulario).off();
-		}
-	}
-}
-fnjs_modificar=function(formulario){
-	rta=fnjs_solo_uno(formulario);
-	if (rta==1) {
-  		$(formulario).attr('action',"apps/devel/controller/modulos_ver.php");
-  		fnjs_enviar_formulario(formulario);
-  	}
-}
-fnjs_sql=function(formulario){
-	rta=fnjs_solo_uno(formulario);
-	if (rta==1) {
-		$('#mod').val("global");
-  		$(formulario).attr('action',"apps/devel/controller/modulos_sql.php");
-        $(formulario).one("submit", function() {
-            $.ajax({
-                url: $(this).attr('action'),
-                type: 'post',
-                data: $(this).serialize()
-			})
-			.done(function (rta_txt) {
-				if (rta_txt != '' && rta_txt != '\\n') {
-					alert ('<?= _("respuesta") ?>: '+rta_txt);
-				} else {
-					fnjs_actualizar(formulario);
-			   	}
+    fnjs_nuevo = function (formulario) {
+        $('#mod').val("nuevo");
+        $(formulario).attr('action', "apps/devel/controller/modulos_ver.php");
+        fnjs_enviar_formulario(formulario);
+    }
+    fnjs_eliminar = function (formulario) {
+        rta = fnjs_solo_uno(formulario);
+        if (rta == 1) {
+            if (confirm("<?= $txt_eliminar ?>")) {
+                $('#mod').val("eliminar");
+                $(formulario).attr('action', "apps/devel/controller/modulos_update.php");
+                $(formulario).one("submit", function () {
+                    $.ajax({
+                        url: $(this).attr('action'),
+                        type: 'post',
+                        data: $(this).serialize()
+                    })
+                        .done(function (rta_txt) {
+                            if (rta_txt != '' && rta_txt != '\\n') {
+                                alert('<?= _("respuesta") ?>: ' + rta_txt);
+                            } else {
+                                fnjs_actualizar(formulario);
+                            }
+                        });
+                    return false;
+                });
+                $(formulario).trigger("submit");
+                $(formulario).off();
+            }
+        }
+    }
+    fnjs_modificar = function (formulario) {
+        rta = fnjs_solo_uno(formulario);
+        if (rta == 1) {
+            $(formulario).attr('action', "apps/devel/controller/modulos_ver.php");
+            fnjs_enviar_formulario(formulario);
+        }
+    }
+    fnjs_sql = function (formulario) {
+        rta = fnjs_solo_uno(formulario);
+        if (rta == 1) {
+            $('#mod').val("global");
+            $(formulario).attr('action', "apps/devel/controller/modulos_sql.php");
+            $(formulario).one("submit", function () {
+                $.ajax({
+                    url: $(this).attr('action'),
+                    type: 'post',
+                    data: $(this).serialize()
+                })
+                    .done(function (rta_txt) {
+                        if (rta_txt != '' && rta_txt != '\\n') {
+                            alert('<?= _("respuesta") ?>: ' + rta_txt);
+                        } else {
+                            fnjs_actualizar(formulario);
+                        }
+                    });
+                return false;
             });
-            return false;
-        });
-        $(formulario).trigger("submit");
-        $(formulario).off();
-  	}
-}
-fnjs_actualizar=function(formulario){
-	var campo = '<input type="hidden" name="refresh" value=1>';
-	$(formulario).attr('action',"apps/devel/controller/modulos_select.php");
-	$(formulario).append(campo);
-	fnjs_enviar_formulario(formulario,'#main');
-}
+            $(formulario).trigger("submit");
+            $(formulario).off();
+        }
+    }
+    fnjs_actualizar = function (formulario) {
+        var campo = '<input type="hidden" name="refresh" value=1>';
+        $(formulario).attr('action', "apps/devel/controller/modulos_select.php");
+        $(formulario).append(campo);
+        fnjs_enviar_formulario(formulario, '#main');
+    }
 </script>
 <h3>Modulos</h3>
 <form id='seleccionados' name='seleccionados' action='' method='post'>
-	<?= $oHash->getCamposHtml(); ?>
-	<input type='hidden' id='mod' name='mod' value=''>
-	<?= $oTabla->mostrar_tabla(); ?>
+    <?= $oHash->getCamposHtml(); ?>
+    <input type='hidden' id='mod' name='mod' value=''>
+    <?= $oTabla->mostrar_tabla(); ?>
 </form>
 <br>
-<table><tr><th class="no_print">
-	<span class="link_inv" onclick="fnjs_nuevo('#seleccionados');"><?= core\strtoupper_dlb(_("añadir módulo")) ?></span>
-</th></tr></table>
+<table>
+    <tr>
+        <th class="no_print">
+            <span class="link_inv"
+                  onclick="fnjs_nuevo('#seleccionados');"><?= core\strtoupper_dlb(_("añadir módulo")) ?></span>
+        </th>
+    </tr>
+</table>

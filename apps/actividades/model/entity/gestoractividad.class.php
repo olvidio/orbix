@@ -1,4 +1,5 @@
 <?php
+
 namespace actividades\model\entity;
 /**
  * GestorActividad
@@ -11,25 +12,26 @@ namespace actividades\model\entity;
  * @version 1.0
  * @created 01/10/2010
  */
+class GestorActividad extends GestorActividadAll
+{
+    /* ATRIBUTOS ----------------------------------------------------------------- */
 
-class GestorActividad extends GestorActividadAll {
-	/* ATRIBUTS ----------------------------------------------------------------- */
+    /* CONSTRUCTOR -------------------------------------------------------------- */
 
-	/* CONSTRUCTOR -------------------------------------------------------------- */
-
-	/**
-	 * Constructor de la classe.
-	 *
-	 * @return GestorActividad
-	 *
-	 */
-	function __construct() {
-		$oDbl = $GLOBALS['oDBC'];
-		$this->setoDbl($oDbl);
-		$this->setNomTabla('av_actividades');
-	}
+    /**
+     * Constructor de la classe.
+     *
+     * @return GestorActividad
+     *
+     */
+    function __construct()
+    {
+        $oDbl = $GLOBALS['oDBC'];
+        $this->setoDbl($oDbl);
+        $this->setNomTabla('av_actividades');
+    }
 
 
-	/* METODES PUBLICS -----------------------------------------------------------*/
+    /* MÉTODOS PÚBLICOS -----------------------------------------------------------*/
 
 }

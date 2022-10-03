@@ -1,5 +1,6 @@
 <?php
 namespace ubis\model\entity;
+
 /**
  * GestorDireccionCtrEx
  *
@@ -11,29 +12,31 @@ namespace ubis\model\entity;
  * @version 1.0
  * @created 01/10/2010
  */
+class GestorDireccionCtrEx extends GestorDireccionCtr
+{
+    /* ATRIBUTOS ----------------------------------------------------------------- */
 
-class GestorDireccionCtrEx Extends GestorDireccionCtr {
-	/* ATRIBUTS ----------------------------------------------------------------- */
+    /* CONSTRUCTOR -------------------------------------------------------------- */
 
-	/* CONSTRUCTOR -------------------------------------------------------------- */
+    /**
+     * Constructor de la classe.
+     *
+     * @return GestorDireccionCtrEx
+     *
+     */
+    function __construct()
+    {
+        $oDbl = $GLOBALS['oDBR'];
+        $this->setoDbl($oDbl);
+        $this->setNomTabla('u_dir_ctr_ex');
+    }
 
-	/**
-	 * Constructor de la classe.
-	 *
-	 * @return GestorDireccionCtrEx
-	 *
-	 */
-	function __construct() {
-		$oDbl = $GLOBALS['oDBR'];
-		$this->setoDbl($oDbl);
-		$this->setNomTabla('u_dir_ctr_ex');
-	}
+    /* MÉTODOS PÚBLICOS -----------------------------------------------------------*/
 
-	/* METODES PUBLICS -----------------------------------------------------------*/
+    /* METODES PROTECTED --------------------------------------------------------*/
 
-	/* METODES PROTECTED --------------------------------------------------------*/
-
-	/* METODES GET i SET --------------------------------------------------------*/
+    /* MÉTODOS GET y SET --------------------------------------------------------*/
 
 }
+
 ?>

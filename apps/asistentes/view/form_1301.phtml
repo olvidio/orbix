@@ -1,92 +1,110 @@
 <script>
-<?php
-if (core\configGlobal::is_app_installed('actividadplazas')) {
-?>
-fnjs_cmb_propietario=function(){
-	var id_activ=$('#id_activ').val();
-	var url='<?= $url_ajax ?>';
-	var parametros='que=lst_propietarios&id_nom=<?= $id_nom ?>&id_activ='+id_activ+'<?= $h1 ?>';
-		 
-	$.ajax({
-		url: url,
-		type: 'post',
-		data: parametros
-	})
-	.done(function (rta_txt) {
-		$('#lst_propietarios').html(rta_txt);
-	});
-}
+    <?php
+    if (core\configGlobal::is_app_installed('actividadplazas')) {
+    ?>
+    fnjs_cmb_propietario = function () {
+        var id_activ = $('#id_activ').val();
+        var url = '<?= $url_ajax ?>';
+        var parametros = 'que=lst_propietarios&id_nom=<?= $id_nom ?>&id_activ=' + id_activ + '<?= $h1 ?>';
 
-<?php	
-}
-?>
-fnjs_guardar=function(formulario){
-	id_activ = $('#id_activ').val();
-	if (!id_activ) {
-		alert("<?= _("debe indicar una actividad") ?>");
-		return; 
-	}
-	var rr=fnjs_comprobar_campos(formulario,'<?= addslashes($obj) ?>');
-	//alert ("EEE "+rr);
-	if (rr=='ok') {
-		$(formulario).attr('action',"apps/asistentes/controller/update_3101.php");
-		$(formulario).one("submit", function() {
-			$.ajax({
-				url: $(this).attr('action'),
-				type: 'post',
-				data: $(this).serialize()
-			})
-			.done(function (rta_txt) {
-				if (rta_txt != '' && rta_txt != '\\n') {
-					alert ('<?= _("respuesta") ?>: '+rta_txt);
-				} else {
-					<?= $oPosicion->js_atras(1); ?>
-				}
-			});
-			return false;
-		});
-		$(formulario).trigger("submit");
-		$(formulario).off();
-	}
-}
+        $.ajax({
+            url: url,
+            type: 'post',
+            data: parametros
+        })
+            .done(function (rta_txt) {
+                $('#lst_propietarios').html(rta_txt);
+            });
+    }
+
+    <?php
+    }
+    ?>
+    fnjs_guardar = function (formulario) {
+        id_activ = $('#id_activ').val();
+        if (!id_activ) {
+            alert("<?= _("debe indicar una actividad") ?>");
+            return;
+        }
+        var rr = fnjs_comprobar_campos(formulario, '<?= addslashes($obj) ?>');
+        //alert ("EEE "+rr);
+        if (rr == 'ok') {
+            $(formulario).attr('action', "apps/asistentes/controller/update_3101.php");
+            $(formulario).one("submit", function () {
+                $.ajax({
+                    url: $(this).attr('action'),
+                    type: 'post',
+                    data: $(this).serialize()
+                })
+                    .done(function (rta_txt) {
+                        if (rta_txt != '' && rta_txt != '\\n') {
+                            alert('<?= _("respuesta") ?>: ' + rta_txt);
+                        } else {
+                            <?= $oPosicion->js_atras(1); ?>
+                        }
+                    });
+                return false;
+            });
+            $(formulario).trigger("submit");
+            $(formulario).off();
+        }
+    }
 </script>
 <?= $oPosicion->mostrar_left_slide(1); ?>
 <form id="frm_1301" name="frm_1301" action="" method="POST">
-<?= $oHash->getCamposHtml(); ?>
-<table>
-<tr class=tab><th class=titulo_inv colspan=4><?= ucfirst(_("asistencia a una actividad")); ?></th></tr>
-<tr><td class=etiqueta><?= ucfirst(_("actividad")) ?>:</td>
-<?php
-if (!empty($id_activ_real)) {
-	echo "<td class=contenido colspan=3 >$nom_activ</td>";
-} else {
-	echo "<td colspan=3>";
-	echo $oDesplActividades->desplegable();
-	echo "</td>";
-}
-?>	
-<tr><td class=etiqueta><?= _("propio") ?></td>
-<td><input type="Checkbox" id="propio" name="propio" value="true" <?= $propio_chk ?>></td></tr>
-<tr><td class=etiqueta><?= _("falta") ?></td>
-<td><input type="Checkbox" id="falta" name="falta" value="true" <?= $falta_chk ?>></td></tr>
-<tr><td class=etiqueta><?= _("estudios confirmados") ?></td>
-<td><input type="Checkbox" id="est_ok" name="est_ok" value="true" <?= $est_chk ?>></td></tr>
-<tr><td class=etiqueta><?= ucfirst(_("observaciones")); ?></td><td class=contenido colspan="3">
-<textarea id="observ" name="observ" cols="40" rows="5"><?= htmlspecialchars($observ) ?></textarea></td></tr>
-<?php
-if (core\configGlobal::is_app_installed('actividadplazas')) {
-?>
-	<tr><td class=etiqueta><?= _("plaza") ?></td><td><?= $oDesplegablePlaza->desplegable(); ?></td>
-	</tr><tr>
-	<td class=etiqueta><?= _("propiedad de") ?></td><td>
-	<div id='lst_propietarios'>
-	<?= $oDesplPosiblesPropietarios->desplegable(); ?>
-	</div></td>
-	</tr>
-<?php
-}
-?>
-</table>
-<br>
-<input type="button" id="guardar" name="guardar" onclick="fnjs_guardar(this.form);" value="<?= ucfirst(_("guardar")); ?>" align="MIDDLE">
+    <?= $oHash->getCamposHtml(); ?>
+    <table>
+        <tr class=tab>
+            <th class=titulo_inv colspan=4><?= ucfirst(_("asistencia a una actividad")); ?></th>
+        </tr>
+        <tr>
+            <td class=etiqueta><?= ucfirst(_("actividad")) ?>:</td>
+            <?php
+            if (!empty($id_activ_real)) {
+                echo "<td class=contenido colspan=3 >$nom_activ</td>";
+            } else {
+                echo "<td colspan=3>";
+                echo $oDesplActividades->desplegable();
+                echo "</td>";
+            }
+            ?>
+        <tr>
+            <td class=etiqueta><?= _("propio") ?></td>
+            <td><input type="Checkbox" id="propio" name="propio" value="true" <?= $propio_chk ?>></td>
+        </tr>
+        <tr>
+            <td class=etiqueta><?= _("falta") ?></td>
+            <td><input type="Checkbox" id="falta" name="falta" value="true" <?= $falta_chk ?>></td>
+        </tr>
+        <tr>
+            <td class=etiqueta><?= _("estudios confirmados") ?></td>
+            <td><input type="Checkbox" id="est_ok" name="est_ok" value="true" <?= $est_chk ?>></td>
+        </tr>
+        <tr>
+            <td class=etiqueta><?= ucfirst(_("observaciones")); ?></td>
+            <td class=contenido colspan="3">
+                <textarea id="observ" name="observ" cols="40" rows="5"><?= htmlspecialchars($observ) ?></textarea></td>
+        </tr>
+        <?php
+        if (core\configGlobal::is_app_installed('actividadplazas')) {
+            ?>
+            <tr>
+                <td class=etiqueta><?= _("plaza") ?></td>
+                <td><?= $oDesplegablePlaza->desplegable(); ?></td>
+            </tr>
+            <tr>
+                <td class=etiqueta><?= _("propiedad de") ?></td>
+                <td>
+                    <div id='lst_propietarios'>
+                        <?= $oDesplPosiblesPropietarios->desplegable(); ?>
+                    </div>
+                </td>
+            </tr>
+            <?php
+        }
+        ?>
+    </table>
+    <br>
+    <input type="button" id="guardar" name="guardar" onclick="fnjs_guardar(this.form);"
+           value="<?= ucfirst(_("guardar")); ?>" align="MIDDLE">
 </form>

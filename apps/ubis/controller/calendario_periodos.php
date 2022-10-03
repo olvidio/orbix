@@ -1,35 +1,35 @@
 ﻿<?php
 /**
-* Esta página sirve para asignar una dirección a un determinado ubi.
-*
-*@package	orbix
-*@author	Daniel Serrabou
-*@since		15/5/02.
-*		
-*/
+ * Esta página sirve para asignar una dirección a un determinado ubi.
+ *
+ * @package    orbix
+ * @author    Daniel Serrabou
+ * @since        15/5/02.
+ *
+ */
 // INICIO Cabecera global de URL de controlador *********************************
-require_once ("apps/core/global_header.inc");
-// Arxivos requeridos por esta url **********************************************
+require_once("apps/core/global_header.inc");
+// Archivos requeridos por esta url **********************************************
 
-// Crea los objectos de uso global **********************************************
-require_once ("apps/core/global_object.inc");
+// Crea los objetos de uso global **********************************************
+require_once("apps/core/global_object.inc");
 
 // FIN de  Cabecera global de URL de controlador ********************************
 
 // Sólo quiero ver las casas comunes.
-$donde="WHERE status='t' AND sf='t' AND sv='t'";
+$donde = "WHERE status='t' AND sf='t' AND sv='t'";
 $oForm = new web\CasasQue();
 $oForm->setPosiblesCasas($donde);
 if ($_SESSION['oPerm']->have_perm_oficina('des') || $_SESSION['oPerm']->have_perm_oficina('vcsd')) {
-	$oForm->setCasas('all');
+    $oForm->setCasas('all');
 } else {
-	$oForm->setCasas('sv');
+    $oForm->setCasas('sv');
 }
 $oForm->setAction('');
 
 $oFormAny = new web\PeriodoQue();
 
-$url_ajax = core\ConfigGlobal::getWeb().'/apps/ubis/controller/calendario_periodos_ajax.php';
+$url_ajax = core\ConfigGlobal::getWeb() . '/apps/ubis/controller/calendario_periodos_ajax.php';
 
 $oHash = new web\Hash();
 $oHash->setUrl($url_ajax);
@@ -55,4 +55,4 @@ $a_campos = ['oPosicion' => $oPosicion,
 ];
 
 $oView = new core\View('ubis/controller');
-echo $oView->render('calendario_periodos.phtml',$a_campos);
+echo $oView->render('calendario_periodos.phtml', $a_campos);

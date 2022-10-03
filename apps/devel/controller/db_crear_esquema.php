@@ -1,69 +1,70 @@
 <?php
+
 use devel\model\entity\GestorDbSchema;
 
 // INICIO Cabecera global de URL de controlador *********************************
-	require_once ("apps/core/global_header.inc");
-// Arxivos requeridos por esta url **********************************************
+require_once("apps/core/global_header.inc");
+// Archivos requeridos por esta url **********************************************
 
-// Crea los objectos de uso global **********************************************
-	require_once ("apps/core/global_object.inc");
+// Crea los objetos de uso global **********************************************
+require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$QEsquemaRef = (string) \filter_input(INPUT_POST, 'esquema');
-$Qregion = (string) \filter_input(INPUT_POST, 'region');
-$Qdl = (string) \filter_input(INPUT_POST, 'dl');
-$Qcomun = (integer) \filter_input(INPUT_POST, 'comun');
-$Qsv = (integer) \filter_input(INPUT_POST, 'sv');
-$Qsf = (integer) \filter_input(INPUT_POST, 'sf');
+$QEsquemaRef = (string)\filter_input(INPUT_POST, 'esquema');
+$Qregion = (string)\filter_input(INPUT_POST, 'region');
+$Qdl = (string)\filter_input(INPUT_POST, 'dl');
+$Qcomun = (integer)\filter_input(INPUT_POST, 'comun');
+$Qsv = (integer)\filter_input(INPUT_POST, 'sv');
+$Qsf = (integer)\filter_input(INPUT_POST, 'sf');
 
 $esquema = "$Qregion-$Qdl";
-$esquemav = $esquema.'v';
-$esquemaf = $esquema.'f';
+$esquemav = $esquema . 'v';
+$esquemaf = $esquema . 'f';
 
 $oDBRol = new core\DBRol();
 
 // ESQUEMAS 
 // Copiar esquema de...
-$a_reg = explode('-',$QEsquemaRef);
+$a_reg = explode('-', $QEsquemaRef);
 $RegionRef = $a_reg[0];
-$DlRef = substr($a_reg[1],0,-1); // quito la v o la f.
+$DlRef = substr($a_reg[1], 0, -1); // quito la v o la f.
 
 $RegionNew = $Qregion;
 $DlNew = $Qdl;
-	
+
 // comun
 if (!empty($Qcomun)) {
     $oConfigDB = new core\ConfigDB('importar'); //de la database comun
     $config = $oConfigDB->getEsquema('public'); //de la database comun
-    
+
     $oConexion = new core\dbConnection($config);
     $oDevelPC = $oConexion->getPDO();
 
-	// CREAR Esquema 
+    // CREAR Esquema
     $oDBRol->setDbConexion($oDevelPC);
     $oDBRol->setUser($esquema);
-    
+
     // Necesito tener los permisos del usuario que tiene las tablas padre para poder crear las heredadas.
     // Despues hay que quitarlo para que no tenga permisos para la tabla padre.
     $oDBRol->addGrupo('orbix');
-    
-	$oDBRol->crearSchema();
 
-	$oDBEsquema = new core\DBEsquema();
-	$oDBEsquema->setConfig($config);
-	$oDBEsquema->setRegionRef($RegionRef);
-	$oDBEsquema->setDlRef($DlRef);
-	$oDBEsquema->setRegionNew($RegionNew);
-	$oDBEsquema->setDlNew($DlNew);
-	$oDBEsquema->crear();
-	
+    $oDBRol->crearSchema();
+
+    $oDBEsquema = new core\DBEsquema();
+    $oDBEsquema->setConfig($config);
+    $oDBEsquema->setRegionRef($RegionRef);
+    $oDBEsquema->setDlRef($DlRef);
+    $oDBEsquema->setRegionNew($RegionNew);
+    $oDBEsquema->setDlNew($DlNew);
+    $oDBEsquema->crear();
+
     // Hay que quitar a los usuarios del grupo para que no tenga permisos para la tabla padre.
-	$oDBRol->delGrupo('orbix');
+    $oDBRol->delGrupo('orbix');
 
     // Llenar la tabla db_idschema (todos, aunque de momento no exista sv o sf).
-    $schema = $RegionNew.'-'.$DlNew;
+    $schema = $RegionNew . '-' . $DlNew;
     $oGesDbSchema = new GestorDbSchema();
-    $oGesDbSchema->llenarNuevo($schema,'comun');
+    $oGesDbSchema->llenarNuevo($schema, 'comun');
 }
 
 // sv
@@ -73,14 +74,14 @@ if (!empty($Qsv)) {
     $oConexion = new core\dbConnection($config);
     $oDevelPC = $oConexion->getPDO();
 
-	// CREAR Esquema sv 
+    // CREAR Esquema sv
     $oDBRol = new core\DBRol();
     $oDBRol->setDbConexion($oDevelPC);
     $oDBRol->setUser($esquemav);
     // Necesito tener los permisos del usuario que tiene las tablas padre para poder crear las heredadas.
     // Despues hay que quitarlo para que no tenga permisos para la tabla padre.
     $oDBRol->addGrupo('orbixv');
-	$oDBRol->crearSchema();
+    $oDBRol->crearSchema();
     $oDBEsquema = new core\DBEsquema();
     $oDBEsquema->setConfig($config);
     $oDBEsquema->setRegionRef($RegionRef);
@@ -89,14 +90,14 @@ if (!empty($Qsv)) {
     $oDBEsquema->setDlNew($DlNew);
     $oDBEsquema->crear();
     // Hay que quitar a los usuarios del grupo para que no tenga permisos para la tabla padre.
-	$oDBRol->delGrupo('orbixv');
-	
+    $oDBRol->delGrupo('orbixv');
+
     // Llenar la tabla db_idschema (todos, aunque de momento no exista sv o sf).
-    $schema = $RegionNew.'-'.$DlNew;
+    $schema = $RegionNew . '-' . $DlNew;
     $oGesDbSchema = new GestorDbSchema();
-    $oGesDbSchema->llenarNuevo($schema,'sv');
-    
-	// CREAR Esquema sv-e 
+    $oGesDbSchema->llenarNuevo($schema, 'sv');
+
+    // CREAR Esquema sv-e
     $config = $oConfigDB->getEsquema('publicv-e');
     $oConexion = new core\dbConnection($config);
     $oDevelPC = $oConexion->getPDO();
@@ -107,7 +108,7 @@ if (!empty($Qsv)) {
     // Necesito tener los permisos del usuario que tiene las tablas padre para poder crear las heredadas.
     // Despues hay que quitarlo para que no tenga permisos para la tabla padre.
     $oDBRol->addGrupo('orbixv');
-	$oDBRol->crearSchema();
+    $oDBRol->crearSchema();
     $oDBEsquema = new core\DBEsquema();
     $oDBEsquema->setConfig($config);
     $oDBEsquema->setRegionRef($RegionRef);
@@ -116,12 +117,12 @@ if (!empty($Qsv)) {
     $oDBEsquema->setDlNew($DlNew);
     $oDBEsquema->crear();
     // Hay que quitar a los usuarios del grupo para que no tenga permisos para la tabla padre.
-	$oDBRol->delGrupo('orbixv');
-	
+    $oDBRol->delGrupo('orbixv');
+
     // Llenar la tabla db_idschema (todos, aunque de momento no exista sv o sf).
-    $schema = $RegionNew.'-'.$DlNew;
+    $schema = $RegionNew . '-' . $DlNew;
     $oGesDbSchema = new GestorDbSchema();
-    $oGesDbSchema->llenarNuevo($schema,'sv-e');
+    $oGesDbSchema->llenarNuevo($schema, 'sv-e');
 }
 // sf
 if (!empty($Qsf)) {
@@ -130,14 +131,14 @@ if (!empty($Qsf)) {
     $oConexion = new core\dbConnection($config);
     $oDevelPC = $oConexion->getPDO();
 
-	// CREAR Esquema sf
+    // CREAR Esquema sf
     $oDBRol->setDbConexion($oDevelPC);
     $oDBRol->setUser($esquemaf);
     // Necesito tener los permisos del usuario que tiene las tablas padre para poder crear las heredadas.
     // Despues hay que quitarlo para que no tenga permisos para la tabla padre.
     $oDBRol->addGrupo('orbixf');
-	$oDBRol->crearSchema();
-	// Copiar esquema
+    $oDBRol->crearSchema();
+    // Copiar esquema
     $oDBEsquema = new core\DBEsquema();
     $oDBEsquema->setConfig($config);
     $oDBEsquema->setRegionRef($RegionRef);
@@ -147,12 +148,12 @@ if (!empty($Qsf)) {
     $oDBEsquema->crear();
 
     // Hay que quitar a los usuarios del grupo para que no tenga permisos para la tabla padre.
-	$oDBRol->delGrupo('orbixf');
+    $oDBRol->delGrupo('orbixf');
 
     // Llenar la tabla db_idschema (todos, aunque de momento no exista sv o sf).
-    $schema = $RegionNew.'-'.$DlNew;
+    $schema = $RegionNew . '-' . $DlNew;
     $oGesDbSchema = new GestorDbSchema();
-    $oGesDbSchema->llenarNuevo($schema,'sf');
+    $oGesDbSchema->llenarNuevo($schema, 'sf');
 
     /*
 	// CREAR Esquema sf-e 

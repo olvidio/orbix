@@ -9,8 +9,9 @@ namespace asistentes\model\entity;
  * @version 1.0
  * @created 11/03/2014
  */
+
 /**
- * Classe que implementa l'entitat av_asistentes
+ * Clase que implementa la entidad av_asistentes
  *
  * @package delegación
  * @subpackage model
@@ -18,20 +19,21 @@ namespace asistentes\model\entity;
  * @version 1.0
  * @created 11/03/2014
  */
-class Asistente Extends AsistentePub {
-	// tipo plaza constantes.
-	//1:pedida, 2:en espera, 3: denegada, 4:asignada, 5:confirmada
-    const PLAZA_PEDIDA     = 1; // Pedida
-    const PLAZA_EN_ESPERA   = 2; // En espera.
-    const PLAZA_DENEGADA    = 3; // Denegada. De hecho ahora no se usa, pero sirve como frontera (menor que, mayor que)
-    const PLAZA_ASIGNADA    = 4; // Asignada.
-    const PLAZA_CONFIRMADA  = 5; // Confirmada.
-	
-	/* ATRIBUTS ----------------------------------------------------------------- */
-	/* CONSTRUCTOR -------------------------------------------------------------- */
+class Asistente extends AsistentePub
+{
+    // tipo plaza constantes.
+    //1:pedida, 2:en espera, 3: denegada, 4:asignada, 5:confirmada
+    const PLAZA_PEDIDA = 1; // Pedida
+    const PLAZA_EN_ESPERA = 2; // En espera.
+    const PLAZA_DENEGADA = 3; // Denegada. De hecho ahora no se usa, pero sirve como frontera (menor que, mayor que)
+    const PLAZA_ASIGNADA = 4; // Asignada.
+    const PLAZA_CONFIRMADA = 5; // Confirmada.
+
+    /* ATRIBUTOS ----------------------------------------------------------------- */
+    /* CONSTRUCTOR -------------------------------------------------------------- */
 
 
-	/* METODES PUBLICS ----------------------------------------------------------*/
+    /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
     /* Ahora lo hago con:
      * 		$oAsistentePub = new AsistentePub();
@@ -40,7 +42,7 @@ class Asistente Extends AsistentePub {
 	 *		$oAsistente->DBCarregar();
      * 
      */
-    
+
     /*
 	public function DBGuardar($quiet=0) {
 		$aDades = $this->getAllAtributes();
@@ -71,11 +73,11 @@ class Asistente Extends AsistentePub {
 		}
 	}
 	*/
-	
-	/**
-	 * Elimina el registre de la base de dades corresponent a l'objecte.
-	 *
-	 */
+
+    /**
+     * Elimina la fila de la base de datos que corresponde a la clase.
+     *
+     */
     /*
 	public function DBEliminar() {
 		$id_tabla = $this->getId_tabla();
@@ -99,8 +101,9 @@ class Asistente Extends AsistentePub {
 	}
 	*/
 
-	/* METODES ALTRES  ----------------------------------------------------------*/
-	/* METODES PRIVATS ----------------------------------------------------------*/
+    /* OTROS MÉTODOS  ----------------------------------------------------------*/
+    /* MÉTODOS PRIVADOS ----------------------------------------------------------*/
 
 }
+
 ?>

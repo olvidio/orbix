@@ -1,94 +1,108 @@
 <?= $oPosicion->mostrar_left_slide(1); ?>
 <?php
-if (!empty($msg_txt)) { 
-	echo "<div class='no_print'>$msg_txt</div>"; 
-} 
+if (!empty($msg_txt)) {
+    echo "<div class='no_print'>$msg_txt</div>";
+}
 ?>
 <div class='salta_pag'>
-<table><tr><th align='LEFT'><?= $ctr ?></th><th align='RIGHT'><?= $ref ?></th></tr></table>
-<table class='ca_posibles' rules='groups' CELLSPACING=0>
-	<colgroup span=1 width=200></colgruoup>
-    <!--  <colgroup span=$num_cols width=$gruix></colgruoup>
-	<colgroup span=$num_cols width=$gruix></colgruoup>  -->
-	<tbody>
-	<tr>
-	 	<td></td>
-		<?php if ($nc_bienio > 0) { ?>
-		<th class='ca_posibles' colspan=<?= $nc_bienio ?> style="border-color: black; border-style: solid; border-width: thin;"><?= _("bienio") ?></th>
-		<?php } ?>
-		<?php if ($nc_cuadrienio > 0) { ?>
-		<th class='ca_posibles' colspan=<?= $nc_cuadrienio ?> style='border-color: black; border-style: solid; border-width: thin;'><?= _("cuadrienio") ?></th>
-		<?php } ?>
-		<?php if ($nc_repaso > 0) { ?>
-		<th class='ca_posibles' colspan=<?= $nc_repaso ?> style='border-color: black; border-style: solid; border-width: thin;'><?= _("repaso") ?></th>
-		<?php } ?>
-		<?php if ($nc_ce > 0) { ?>
-		<th class='ca_posibles' colspan=<?= $nc_ce ?> style='border-color: black; border-style: solid; border-width: thin;'><?= _("ce") ?></th>
-		<?php } ?>
-		<?php if ($nc_otros > 0) { ?>
-		<th class='ca_posibles' colspan=<?= $nc_otros ?> style='border-color: black; border-style: solid; border-width: thin;'><?= _("otros") ?></th>
-		<?php } ?>
-	</tr>
-	<tr><td></td>
-		<?php if ($nc_bienio > 0) { ?>
-		<td></td>
-		<?php } ?>
-		<?php if ($nc_cuadrienio1 > 0) { ?>
-		<th class='ca_posibles' colspan=<?= $nc_cuadrienio1 ?> ><?= _("año I") ?></th>
-		<?php } ?>
-		<?php if ($nc_cuadrienio2 > 0) { ?>
-		<th class='ca_posibles' colspan=<?= $nc_cuadrienio2 ?> ><?= _("años II-IV") ?></th>
-		<?php } ?>
-		<?php if ($nc_repaso > 0) { ?>
-		<td></td>
-		<?php } ?>
-		<?php if ($nc_ce > 0) { ?>
-		<td></td>
-		<?php } ?>
-		<?php if ($nc_otros > 0) { ?>
-		<td></td>
-		<?php } ?>
-	</tr>
-	<tr>
-		<td></td>
-		<?php
-		switch ($texto) {
-			case "text":
-				foreach ($aActividades as $aActividad) {
-					$nom_activ = $aActividad['nom_activ'];
-					echo "<th class='ca_posibles' >".ucfirst($nom_activ)."</th>";
-				}
-				break;
-			case "image":
-				foreach ($aActividades as $aActividad) {
-					$nom_activ = $aActividad['nom_activ'];
-					echo "<th class='centrado' height=$height ><span class='vertical'>".ucfirst($nom_activ)."</span></th>";
-				}
-				break;
-		}
-		?>
-	</tr></tbody>
-	<tbody>
+    <table>
+        <tr>
+            <th align='LEFT'><?= $ctr ?></th>
+            <th align='RIGHT'><?= $ref ?></th>
+        </tr>
+    </table>
+    <table class='ca_posibles' rules='groups' CELLSPACING=0>
+        <colgroup span=1 width=200></colgruoup>
+            <!--  <colgroup span=$num_cols width=$gruix></colgruoup>
+            <colgroup span=$num_cols width=$gruix></colgruoup>  -->
+        <tbody>
+        <tr>
+            <td></td>
+            <?php if ($nc_bienio > 0) { ?>
+                <th class='ca_posibles' colspan=<?= $nc_bienio ?> style="border-color: black; border-style: solid;
+                    border-width: thin;"><?= _("bienio") ?></th>
+            <?php } ?>
+            <?php if ($nc_cuadrienio > 0) { ?>
+                <th class='ca_posibles' colspan=<?= $nc_cuadrienio ?> style='border-color: black; border-style: solid;
+                    border-width: thin;'><?= _("cuadrienio") ?></th>
+            <?php } ?>
+            <?php if ($nc_repaso > 0) { ?>
+                <th class='ca_posibles' colspan=<?= $nc_repaso ?> style='border-color: black; border-style: solid;
+                    border-width: thin;'><?= _("repaso") ?></th>
+            <?php } ?>
+            <?php if ($nc_ce > 0) { ?>
+                <th class='ca_posibles' colspan=<?= $nc_ce ?> style='border-color: black; border-style: solid;
+                    border-width: thin;'><?= _("ce") ?></th>
+            <?php } ?>
+            <?php if ($nc_otros > 0) { ?>
+                <th class='ca_posibles' colspan=<?= $nc_otros ?> style='border-color: black; border-style: solid;
+                    border-width: thin;'><?= _("otros") ?></th>
+            <?php } ?>
+        </tr>
+        <tr>
+            <td></td>
+            <?php if ($nc_bienio > 0) { ?>
+                <td></td>
+            <?php } ?>
+            <?php if ($nc_cuadrienio1 > 0) { ?>
+                <th class='ca_posibles' colspan=<?= $nc_cuadrienio1 ?>><?= _("año I") ?></th>
+            <?php } ?>
+            <?php if ($nc_cuadrienio2 > 0) { ?>
+                <th class='ca_posibles' colspan=<?= $nc_cuadrienio2 ?>><?= _("años II-IV") ?></th>
+            <?php } ?>
+            <?php if ($nc_repaso > 0) { ?>
+                <td></td>
+            <?php } ?>
+            <?php if ($nc_ce > 0) { ?>
+                <td></td>
+            <?php } ?>
+            <?php if ($nc_otros > 0) { ?>
+                <td></td>
+            <?php } ?>
+        </tr>
+        <tr>
+            <td></td>
+            <?php
+            switch ($texto) {
+                case "text":
+                    foreach ($aActividades as $aActividad) {
+                        $nom_activ = $aActividad['nom_activ'];
+                        echo "<th class='ca_posibles' >" . ucfirst($nom_activ) . "</th>";
+                    }
+                    break;
+                case "image":
+                    foreach ($aActividades as $aActividad) {
+                        $nom_activ = $aActividad['nom_activ'];
+                        echo "<th class='centrado' height=$height ><span class='vertical'>" . ucfirst($nom_activ) . "</span></th>";
+                    }
+                    break;
+            }
+            ?>
+        </tr>
+        </tbody>
+        <tbody>
 
-	<?php
-	foreach ($cPersonas as $nom_persona => $aDatos) {
-		$aActividades = $aDatos['aActividades'];
-		echo "<tr><td class='ca_posibles_nom'>$nom_persona</td>";
-		foreach($aActividades as $a3) {
-		   $creditos=$a3["creditos"];
-		   echo "<td class='ca_posibles'>$creditos</td>";
-		}
-		echo "</tr>";
-	}
-	?>
-	</tbody>
-</table>
-<br>
-<table>
-<tr><td></td></tr>
-  <tr>
-    <td valign=top class=observ><?= _("observaciones").":"; ?></td>
-    <td class=observ><textarea class=observ name="observ" cols="110" rows="5">gg</textarea></td>
-  </tr>
-</table>
+        <?php
+        foreach ($cPersonas as $nom_persona => $aDatos) {
+            $aActividades = $aDatos['aActividades'];
+            echo "<tr><td class='ca_posibles_nom'>$nom_persona</td>";
+            foreach ($aActividades as $a3) {
+                $creditos = $a3["creditos"];
+                echo "<td class='ca_posibles'>$creditos</td>";
+            }
+            echo "</tr>";
+        }
+        ?>
+        </tbody>
+    </table>
+    <br>
+    <table>
+        <tr>
+            <td></td>
+        </tr>
+        <tr>
+            <td valign=top class=observ><?= _("observaciones") . ":"; ?></td>
+            <td class=observ><textarea class=observ name="observ" cols="110" rows="5">gg</textarea></td>
+        </tr>
+    </table>
 </div>

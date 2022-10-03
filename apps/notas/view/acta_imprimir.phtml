@@ -1,108 +1,115 @@
-<table class="no_print"><tr>
-<td><?= $oPosicion->mostrar_back_arrow(1) ?></td>
-<td align="center">
+<table class="no_print">
+    <tr>
+        <td><?= $oPosicion->mostrar_back_arrow(1) ?></td>
+        <td align="center">
 	<span class=link onclick="fnjs_update_div('#main','<?= $caraA ?>')">
 		<?= _("Cara A (delante)"); ?></span></td>
-<td align="center">
+        <td align="center">
 	<span class=link onclick="fnjs_update_div('#main','<?= $caraB ?>')">
 		<?= _("Cara B (detrás)"); ?></span></td>
-<td align="center">
-	<span class=link onclick='window.open("<?= core\ConfigGlobal::getWeb() ?>/apps/notas/controller/acta_2_mpdf.php?acta=<?= urlencode($acta) ?><?= $h ?>&PHPSESSID=<?= session_id(); ?>", "sele");' >
+        <td align="center">
+	<span class=link
+          onclick='window.open("<?= core\ConfigGlobal::getWeb() ?>/apps/notas/controller/acta_2_mpdf.php?acta=<?= urlencode($acta) ?><?= $h ?>&PHPSESSID=<?= session_id(); ?>", "sele");'>
 		<?= _("PDF"); ?></span></td>
-</tr>
-<?php if (!empty($errores)) { echo "<tr><td colspan=4>$errores</td></tr>"; } ?>
+    </tr>
+    <?php if (!empty($errores)) {
+        echo "<tr><td colspan=4>$errores</td></tr>";
+    } ?>
 </table>
 
-<div class="A4" >
-<?php if ($cara=="A") { ?>
-   <cabecera><?= $nombre_prelatura ?></cabecera>
-   <region>STUDIUM GENERALE REGIONIS: <?= $region_latin ?></region>
-   <curso><?= sprintf("CURSUS INSTITUTIONALES:&nbsp;&nbsp;  %s &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ANNUS: %s",$curso,$any); ?></curso>
-   <curso>DISCIPLINA: &nbsp;&nbsp;&nbsp;&nbsp;<?= $nombre_asignatura ?></curso>
-   <intro>Hisce litteris, quas propria uniuscuiusque subsignatione firmamus, fidem facimus hodierna die, coram infrascriptis Iudicibus, periculum de hac disciplina sequentes alumnos rite superasse:</intro>
-<table class="alumni" height="<?= $alum_cara_A ?>">
-<tr>
-	<td width=65% class=alumni>ALUMNI</td>
-	<td  width=10%>&nbsp;</td>
-	<td width=25% class=alumni>CUM NOTA</td></tr>
-<?php
-	$i=0;
-	foreach ($aPersonasNotas as $nom => $nota) {
-		$i++;
-		if ($i > $alum_cara_A) continue;
-		?>
-		<tr class=alumno>
-		<td class=alumno><?= $nom; ?>
-		</td>
-		<td>&nbsp;</td>
-		<td class=nota><?= $nota; ?></td>
-		</tr>
-		<?php
-	}
-	// linea final y linea de salto
-	if ($num_alumnos>$alum_cara_A) {
-		echo "<tr><td colspan=2 class=linea ><hr></td><td>(.../...)</td></tr>";
-	} else {
-		echo "<tr><td colspan=3 class=linea ><hr></td></tr>";
-	}
-	echo "</table>";
-}
-if ($cara=="B" && $alum_cara_B > 0 ) {
-	echo "<tbody><tr height=$alum_cara_B% ><td colspan=3 >";
-	echo "<table class=alumni>";
-	echo "<tr><td width=65% class=alumni></td><td  width=10%></td><td width=25%></td></tr>";
-	echo "<tr><td colspan=3>(.../...)<hr></td></tr>";
-	$i = 0;
-	foreach ($aPersonasNotas as $nom => $nota) {
-		$i++;
-		if ($i <= $lin_max_cara_A) continue;
-		?>
-		<tr class=alumno>
-		<td class=alumno><?= $nom; ?>
-		</td>
-		<td>&nbsp;</td>
-		<td class=nota><?= $nota; ?></td>
-		</tr>
-		<?php
-	}
-	// linea final y linea de salto
-	echo "<tr><td colspan=3 class=linea ><hr></td></tr>";
-	echo "</tbody></table>";
-}
+<div class="A4">
+    <?php if ($cara == "A") { ?>
+    <cabecera><?= $nombre_prelatura ?></cabecera>
+    <region>STUDIUM GENERALE REGIONIS: <?= $region_latin ?></region>
+    <curso><?= sprintf("CURSUS INSTITUTIONALES:&nbsp;&nbsp;  %s &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ANNUS: %s", $curso, $any); ?></curso>
+    <curso>DISCIPLINA: &nbsp;&nbsp;&nbsp;&nbsp;<?= $nombre_asignatura ?></curso>
+    <intro>Hisce litteris, quas propria uniuscuiusque subsignatione firmamus, fidem facimus hodierna die, coram
+        infrascriptis Iudicibus, periculum de hac disciplina sequentes alumnos rite superasse:
+    </intro>
+    <table class="alumni" height="<?= $alum_cara_A ?>">
+        <tr>
+            <td width=65% class=alumni>ALUMNI</td>
+            <td width=10%>&nbsp;</td>
+            <td width=25% class=alumni>CUM NOTA</td>
+        </tr>
+        <?php
+        $i = 0;
+        foreach ($aPersonasNotas as $nom => $nota) {
+            $i++;
+            if ($i > $alum_cara_A) continue;
+            ?>
+            <tr class=alumno>
+                <td class=alumno><?= $nom; ?>
+                </td>
+                <td>&nbsp;</td>
+                <td class=nota><?= $nota; ?></td>
+            </tr>
+            <?php
+        }
+        // linea final y linea de salto
+        if ($num_alumnos > $alum_cara_A) {
+            echo "<tr><td colspan=2 class=linea ><hr></td><td>(.../...)</td></tr>";
+        } else {
+            echo "<tr><td colspan=3 class=linea ><hr></td></tr>";
+        }
+        echo "</table>";
+        }
+        if ($cara == "B" && $alum_cara_B > 0) {
+            echo "<tbody><tr height=$alum_cara_B% ><td colspan=3 >";
+            echo "<table class=alumni>";
+            echo "<tr><td width=65% class=alumni></td><td  width=10%></td><td width=25%></td></tr>";
+            echo "<tr><td colspan=3>(.../...)<hr></td></tr>";
+            $i = 0;
+            foreach ($aPersonasNotas as $nom => $nota) {
+                $i++;
+                if ($i <= $lin_max_cara_A) continue;
+                ?>
+                <tr class=alumno>
+                    <td class=alumno><?= $nom; ?>
+                    </td>
+                    <td>&nbsp;</td>
+                    <td class=nota><?= $nota; ?></td>
+                </tr>
+                <?php
+            }
+            // linea final y linea de salto
+            echo "<tr><td colspan=3 class=linea ><hr></td></tr>";
+            echo "</tbody></table>";
+        }
 
-// tribunal -----------------
-if ($cara=="A" && $num_alumnos+$lin_tribunal<$lin_max_cara_A) $tribunal=1;
-if ($cara=="A" && $num_alumnos+$lin_tribunal>$lin_max_cara_A) $tribunal=0;
-if ($cara=="B" && $num_alumnos+$lin_tribunal>=$lin_max_cara_A) $tribunal=1;
+        // tribunal -----------------
+        if ($cara == "A" && $num_alumnos + $lin_tribunal < $lin_max_cara_A) $tribunal = 1;
+        if ($cara == "A" && $num_alumnos + $lin_tribunal > $lin_max_cara_A) $tribunal = 0;
+        if ($cara == "B" && $num_alumnos + $lin_tribunal >= $lin_max_cara_A) $tribunal = 1;
 
-if (!empty($tribunal)){
-?>
-	<tribunal>TRIBUNAL:</tribunal>
-	<?php
-	$i=0;
-foreach ($cTribunal as $oTribunal) {
-		$i++;
+        if (!empty($tribunal)) {
+            ?>
+            <tribunal>TRIBUNAL:</tribunal>
+            <?php
+            $i = 0;
+            foreach ($cTribunal as $oTribunal) {
+                $i++;
 
-		$examinador=$oTribunal->getExaminador();
-		echo "<examinador>$examinador</examinador>";
-	}
-	echo "<fecha>$lugar_fecha</fecha>";
-	echo "<sello>L.S.<br>Studii Generalis</sello>";
-}
-if ($cara=="A") {
-?>
+                $examinador = $oTribunal->getExaminador();
+                echo "<examinador>$examinador</examinador>";
+            }
+            echo "<fecha>$lugar_fecha</fecha>";
+            echo "<sello>L.S.<br>Studii Generalis</sello>";
+        }
+        if ($cara == "A") {
+        ?>
 </div>
 <pie>
-<libro>
-<b>Reg.</b> <?= $reg_stgr ?> &nbsp;
-<b>lib.</b> <?= $libro; ?> &nbsp;
-<b>pág.</b>  <?= $pagina; ?>
-<b> n.</b> <?= $linea; ?>
-</libro>
-<acta>(N. <?= $acta; ?>)</acta>
+    <libro>
+        <b>Reg.</b> <?= $reg_stgr ?> &nbsp;
+        <b>lib.</b> <?= $libro; ?> &nbsp;
+        <b>pág.</b> <?= $pagina; ?>
+        <b> n.</b> <?= $linea; ?>
+    </libro>
+    <acta>(N. <?= $acta; ?>)</acta>
 </pie>
 <f7>F7</f7>
 <?php
 } else {
-	echo "</div>";
+    echo "</div>";
 }

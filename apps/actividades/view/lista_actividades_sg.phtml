@@ -1,61 +1,63 @@
 <div id="condiciones" class="no_print">
-	<form id="modifica" name="modifica" action="">
-	    <?= $oHash->getCamposHtml() ?>
-	<table><tr>
-	    <?= $oFormP->getTd(); ?>
-		<td>
-			<input id="b_buscar" name="b_buscar" TYPE="button" VALUE="<?php echo _("buscar"); ?>" onclick="fnjs_buscar()" >
-        </td>
-	</tr>
-	</table>
-	</form>
+    <form id="modifica" name="modifica" action="">
+        <?= $oHash->getCamposHtml() ?>
+        <table>
+            <tr>
+                <?= $oFormP->getTd(); ?>
+                <td>
+                    <input id="b_buscar" name="b_buscar" TYPE="button" VALUE="<?php echo _("buscar"); ?>"
+                           onclick="fnjs_buscar()">
+                </td>
+            </tr>
+        </table>
+    </form>
 </div>
-<div id="resultados" >
-<h3><?= $result_busqueda ?></h3>
-<form id='seleccionados' name='seleccionados' action='' method='post'>
-	<input type='hidden' id='mod' name='mod' value="">
-	<?= $oHashSel->getCamposHtml() ?>
-    <?= $oTabla->mostrar_tabla(); ?>
-</form>
+<div id="resultados">
+    <h3><?= $result_busqueda ?></h3>
+    <form id='seleccionados' name='seleccionados' action='' method='post'>
+        <input type='hidden' id='mod' name='mod' value="">
+        <?= $oHashSel->getCamposHtml() ?>
+        <?= $oTabla->mostrar_tabla(); ?>
+    </form>
 </div>
 
-<script type="text/javascript" src="<?= 'apps/actividades/controller/actividades.js?'.rand(); ?>"></script>
+<script type="text/javascript" src="<?= 'apps/actividades/controller/actividades.js?' . rand(); ?>"></script>
 <script>
-fnjs_borrar=function(formulario,que_val){
-	rta=fnjs_solo_uno(formulario);
-	if (rta==1) {
-		if (confirm("<?php echo _("¿Esta seguro que desea borrar esta actividad?");?>") ) {
-			$('#mod').val(que_val);
-			$(formulario).attr('action',"programas/actividad_update.php");
-			$(formulario).one("submit", function() {
-				$.ajax({
-					data: $(this).serialize(),
-					url: $(this).attr('action'),
-					type: 'post',
-					complete: function (rta) {
-						rta_txt = rta.responseText;
-						if (rta_txt != '' && rta_txt != '\n') {
-							alert (rta_txt);
-						}
-					}
-				});
-				return false;
-			});
-			$(formulario).trigger("submit");
-			$(formulario).off();
-			// tacho los marcados
-			$(formulario+' input.sel').each(function(i){
-				if($(this).prop('checked')== true){
-					$(this).parent().siblings().addClass('tachado');
-					$(this).prop('checked',false);
-				}
-			});
-		}
-	}
-}
+    fnjs_borrar = function (formulario, que_val) {
+        rta = fnjs_solo_uno(formulario);
+        if (rta == 1) {
+            if (confirm("<?php echo _("¿Esta seguro que desea borrar esta actividad?");?>")) {
+                $('#mod').val(que_val);
+                $(formulario).attr('action', "programas/actividad_update.php");
+                $(formulario).one("submit", function () {
+                    $.ajax({
+                        data: $(this).serialize(),
+                        url: $(this).attr('action'),
+                        type: 'post',
+                        complete: function (rta) {
+                            rta_txt = rta.responseText;
+                            if (rta_txt != '' && rta_txt != '\n') {
+                                alert(rta_txt);
+                            }
+                        }
+                    });
+                    return false;
+                });
+                $(formulario).trigger("submit");
+                $(formulario).off();
+                // tacho los marcados
+                $(formulario + ' input.sel').each(function (i) {
+                    if ($(this).prop('checked') == true) {
+                        $(this).parent().siblings().addClass('tachado');
+                        $(this).prop('checked', false);
+                    }
+                });
+            }
+        }
+    }
 
-fnjs_buscar=function(){
-	$('#modifica').attr('action','apps/actividades/controller/lista_actividades_sg.php');
-	fnjs_enviar_formulario('#modifica','#main');
-}
+    fnjs_buscar = function () {
+        $('#modifica').attr('action', 'apps/actividades/controller/lista_actividades_sg.php');
+        fnjs_enviar_formulario('#modifica', '#main');
+    }
 </script>

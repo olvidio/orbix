@@ -3,9 +3,9 @@
  * Incorpora la primera petición como asistencia con plaza:
  *  'asignada' en el caso de actividades de la dl.
  *  'pedida' en actividades de otras dl.
- * No debe actualizar a las personas que ya tienen una aistencia a una actividad 
+ * No debe actualizar a las personas que ya tienen una aistencia a una actividad
  * marcada como propia en el curso.
- * 
+ *
  * @param string $sactividad
  * @param string $sasistentes
  */
@@ -15,17 +15,18 @@ use asistentes\model\entity as asistentes;
 use personas\model\entity as personas;
 
 // INICIO Cabecera global de URL de controlador *********************************
-	require_once ("apps/core/global_header.inc");
-// Arxivos requeridos por esta url **********************************************
+require_once("apps/core/global_header.inc");
+// Archivos requeridos por esta url **********************************************
 
-// Crea los objectos de uso global **********************************************
-	require_once ("apps/core/global_object.inc");
+// Crea los objetos de uso global **********************************************
+require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-function tieneAistencia($id_nom,$aId_activ) {
-	// Comprobar que no tienen alguna actividad ya asignada como propia
+function tieneAistencia($id_nom, $aId_activ)
+{
+    // Comprobar que no tienen alguna actividad ya asignada como propia
     $GesAsistentes = new asistentes\GestorAsistenteDl();
-    $cAsistentes = $GesAsistentes->getAsistentesDl(array('id_nom'=>$id_nom,'propio'=>'t'));
+    $cAsistentes = $GesAsistentes->getAsistentesDl(array('id_nom' => $id_nom, 'propio' => 't'));
     foreach ($cAsistentes as $oAsistente) {
         $id_activ = $oAsistente->getId_activ();
         if (array_key_exists($id_activ, $aId_activ)) {
@@ -33,7 +34,7 @@ function tieneAistencia($id_nom,$aId_activ) {
         }
     }
     $GesAsistentesOut = new asistentes\GestorAsistenteOut();
-    $cAsistentesOut = $GesAsistentesOut->getAsistentesOut(array('id_nom'=>$id_nom,'propio'=>'t'));
+    $cAsistentesOut = $GesAsistentesOut->getAsistentesOut(array('id_nom' => $id_nom, 'propio' => 't'));
     foreach ($cAsistentesOut as $oAsistente) {
         $id_activ = $oAsistente->getId_activ();
         if (array_key_exists($id_activ, $aId_activ)) {
@@ -43,41 +44,45 @@ function tieneAistencia($id_nom,$aId_activ) {
     return FALSE;
 }
 
-$Qsactividad = (string)  filter_input(INPUT_POST, 'sactividad');
-$Qsasistentes = (string)  filter_input(INPUT_POST, 'sasistentes');
+$Qsactividad = (string)filter_input(INPUT_POST, 'sactividad');
+$Qsasistentes = (string)filter_input(INPUT_POST, 'sasistentes');
 
 $mi_sfsv = core\ConfigGlobal::mi_sfsv();
-if ($mi_sfsv == 1) { $ssfsv = 'sv'; }
-if ($mi_sfsv == 2) { $ssfsv = 'sf'; }
+if ($mi_sfsv == 1) {
+    $ssfsv = 'sv';
+}
+if ($mi_sfsv == 2) {
+    $ssfsv = 'sf';
+}
 
-$oTipoActiv= new web\TiposActividades();
+$oTipoActiv = new web\TiposActividades();
 $oTipoActiv->setSfsvText($ssfsv);
 $oTipoActiv->setAsistentesText($Qsasistentes);
 $oTipoActiv->setActividadText($Qsactividad);
-$Qid_tipo_activ=$oTipoActiv->getId_tipo_activ();
-$Qid_tipo_activ = '^'.$Qid_tipo_activ;
+$Qid_tipo_activ = $oTipoActiv->getId_tipo_activ();
+$Qid_tipo_activ = '^' . $Qid_tipo_activ;
 // En caso de n que atienden una cv/crt de agd y les cuenta como propio
 if ($Qsasistentes == 'n') {
-	$oTipoActiv->setAsistentesText('agd');
-	$Qid_tipo_activ_sup = $oTipoActiv->getId_tipo_activ();
-	$Qid_tipo_activ_sup = '^'.$Qid_tipo_activ_sup;
+    $oTipoActiv->setAsistentesText('agd');
+    $Qid_tipo_activ_sup = $oTipoActiv->getId_tipo_activ();
+    $Qid_tipo_activ_sup = '^' . $Qid_tipo_activ_sup;
 } else {
-	$Qid_tipo_activ_sup = '';
+    $Qid_tipo_activ_sup = '';
 }
 
 /* Pongo en la variable $curso el periodo del curso */
 switch ($Qsactividad) {
-	case 'ca':
-	case 'cv':
-		$any=  $_SESSION['oConfig']->any_final_curs('est');
-		$inicurs=core\curso_est("inicio",$any,"est")->format('Y-m-d');
-		$fincurs=core\curso_est("fin",$any,"est")->format('Y-m-d');
-		break;
-	case 'crt':
-		$any=  $_SESSION['oConfig']->any_final_curs('crt');
-		$inicurs=core\curso_est("inicio",$any,"crt")->format('Y-m-d');
-		$fincurs=core\curso_est("fin",$any,"crt")->format('Y-m-d');
-		break;
+    case 'ca':
+    case 'cv':
+        $any = $_SESSION['oConfig']->any_final_curs('est');
+        $inicurs = core\curso_est("inicio", $any, "est")->format('Y-m-d');
+        $fincurs = core\curso_est("fin", $any, "est")->format('Y-m-d');
+        break;
+    case 'crt':
+        $any = $_SESSION['oConfig']->any_final_curs('crt');
+        $inicurs = core\curso_est("inicio", $any, "crt")->format('Y-m-d');
+        $fincurs = core\curso_est("fin", $any, "crt")->format('Y-m-d');
+        break;
 }
 
 $mi_dele = core\ConfigGlobal::mi_delef();
@@ -87,45 +92,45 @@ $aWhereA['status'] = actividades\ActividadAll::STATUS_ACTUAL;
 $aWhereA['f_ini'] = "'$inicurs','$fincurs'";
 $aOperadorA['f_ini'] = 'BETWEEN';
 switch ($Qsasistentes) {
-	case "agd":
-	case "a":
-		//caso de agd
-		$aWhereA['id_tipo_activ'] = $Qid_tipo_activ;
-		$aOperadorA['id_tipo_activ'] = '~';
+    case "agd":
+    case "a":
+        //caso de agd
+        $aWhereA['id_tipo_activ'] = $Qid_tipo_activ;
+        $aOperadorA['id_tipo_activ'] = '~';
 
-		//inicialmente estaba sólo con las activiades publicadas. 
-		//Ahora añado las no publicadas de midl.
-		$GesActividadesDl = new actividades\GestorActividadDl();
-		$cActividadesDl = $GesActividadesDl->getActividades($aWhereA,$aOperadorA);
-		// Añado la condición para que no duplique las de midele:
-		$aWhereA['dl_org'] = $mi_dele;
-		$aOperadorA['dl_org'] = '!=';
-		$GesActividadesPub = new actividades\GestorActividadPub();
-		$cActividadesPub = $GesActividadesPub->getActividades($aWhereA,$aOperadorA);
-		
-		$cActividades = array_merge($cActividadesDl,$cActividadesPub);
-		$filtro_id_nom = 2;
-		break;
-	case "n":
-		// caso de n
-		$aWhereA['id_tipo_activ'] = $Qid_tipo_activ;
-		$aOperadorA['id_tipo_activ'] = '~';
-		// las de la dl + las importadas
-		$GesActividades = new actividades\GestorActividad();
-		$cActividades1 = $GesActividades->getActividades($aWhereA,$aOperadorA);
-		// Añadir las actividades de agd (puede hacer el propio al atender una actividad de agd).
-		if (!empty($Qid_tipo_activ_sup)) {
-			$aWhereA['id_tipo_activ'] = $Qid_tipo_activ_sup;
-			$aOperadorA['id_tipo_activ'] = '~';
-			// las de la dl + las importadas
-			$cActividades_sup = $GesActividades->getActividades($aWhereA,$aOperadorA);
-			$cActividades = array_merge($cActividades1,$cActividades_sup);
-		} else {
-			$cActividades = $cActividades1;
-		}
+        //inicialmente estaba sólo con las activiades publicadas.
+        //Ahora añado las no publicadas de midl.
+        $GesActividadesDl = new actividades\GestorActividadDl();
+        $cActividadesDl = $GesActividadesDl->getActividades($aWhereA, $aOperadorA);
+        // Añado la condición para que no duplique las de midele:
+        $aWhereA['dl_org'] = $mi_dele;
+        $aOperadorA['dl_org'] = '!=';
+        $GesActividadesPub = new actividades\GestorActividadPub();
+        $cActividadesPub = $GesActividadesPub->getActividades($aWhereA, $aOperadorA);
 
-		$filtro_id_nom = 1;
-	break;
+        $cActividades = array_merge($cActividadesDl, $cActividadesPub);
+        $filtro_id_nom = 2;
+        break;
+    case "n":
+        // caso de n
+        $aWhereA['id_tipo_activ'] = $Qid_tipo_activ;
+        $aOperadorA['id_tipo_activ'] = '~';
+        // las de la dl + las importadas
+        $GesActividades = new actividades\GestorActividad();
+        $cActividades1 = $GesActividades->getActividades($aWhereA, $aOperadorA);
+        // Añadir las actividades de agd (puede hacer el propio al atender una actividad de agd).
+        if (!empty($Qid_tipo_activ_sup)) {
+            $aWhereA['id_tipo_activ'] = $Qid_tipo_activ_sup;
+            $aOperadorA['id_tipo_activ'] = '~';
+            // las de la dl + las importadas
+            $cActividades_sup = $GesActividades->getActividades($aWhereA, $aOperadorA);
+            $cActividades = array_merge($cActividades1, $cActividades_sup);
+        } else {
+            $cActividades = $cActividades1;
+        }
+
+        $filtro_id_nom = 1;
+        break;
 }
 
 $aId_activ = [];
@@ -136,24 +141,26 @@ foreach ($cActividades as $oActividad) {
 }
 //Miro las peticiones actuales
 $gesPlazasPeticion = new \actividadplazas\model\entity\GestorPlazaPeticion();
-$aWhereP = ['orden' => 1, 'tipo' => $Qsactividad ];
-$aWhereP['id_nom'] = '^\d{4}'.$filtro_id_nom;
+$aWhereP = ['orden' => 1, 'tipo' => $Qsactividad];
+$aWhereP['id_nom'] = '^\d{4}' . $filtro_id_nom;
 $aOperadorP = ['id_nom' => '~'];
-$cPlazasPeticion = $gesPlazasPeticion->getPlazasPeticion($aWhereP,$aOperadorP);
+$cPlazasPeticion = $gesPlazasPeticion->getPlazasPeticion($aWhereP, $aOperadorP);
 $msg_err = '';
 foreach ($cPlazasPeticion as $oPlazaPeticion) {
-	// solo apunto la primera (segun orden)
-	$id_nom = $oPlazaPeticion->getId_nom();
-	$id_activ_new = $oPlazaPeticion->getId_activ();
+    // solo apunto la primera (segun orden)
+    $id_nom = $oPlazaPeticion->getId_nom();
+    $id_activ_new = $oPlazaPeticion->getId_activ();
     // Comprobar que la actividad está en la lista
     if (!array_key_exists($id_activ_new, $aId_activ)) {
         continue;
     }
-    
-	// Comprobar si ya tiene asignada una actividad
-	if (tieneAistencia($id_nom,$aId_activ)) { continue; }
-	
-	// Solo para personas de la dl
+
+    // Comprobar si ya tiene asignada una actividad
+    if (tieneAistencia($id_nom, $aId_activ)) {
+        continue;
+    }
+
+    // Solo para personas de la dl
     $dl_org = $aId_activ[$id_activ_new];
     $dl = preg_replace('/f$/', '', $dl_org);
     if ($dl == $mi_dele) {
@@ -177,10 +184,12 @@ foreach ($cPlazasPeticion as $oPlazaPeticion) {
     }
 }
 
-$txt = sprintf(_("no se incorporán las peticiones si la persona ya tiene una actividad como propia en el periodo: %s - %s."),$inicurs,$fincurs);
-if (!empty($msg_err)) { echo $msg_err; }
+$txt = sprintf(_("no se incorporán las peticiones si la persona ya tiene una actividad como propia en el periodo: %s - %s."), $inicurs, $fincurs);
+if (!empty($msg_err)) {
+    echo $msg_err;
+}
 ?>
-<script>
-	fnjs_left_side_hide(); 
-</script>
+    <script>
+        fnjs_left_side_hide();
+    </script>
 <?= $txt; ?>

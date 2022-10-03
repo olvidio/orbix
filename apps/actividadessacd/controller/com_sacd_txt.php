@@ -1,38 +1,40 @@
 <?php
+
 use actividadessacd\model\entity\GestorAtnActivSacdTexto;
 use web\Desplegable;
 use web\Hash;
+
 /**
-* Esta es para cambiar los textos de comunicación de las actividades a los sacd. 
-*
-*@package	delegacion
-*@subpackage	des
-*@author	Daniel Serrabou
-*@since		12/12/06.
-*		
-*/
+ * Esta es para cambiar los textos de comunicación de las actividades a los sacd.
+ *
+ * @package    delegacion
+ * @subpackage    des
+ * @author    Daniel Serrabou
+ * @since        12/12/06.
+ *
+ */
 
 // INICIO Cabecera global de URL de controlador *********************************
-require_once ("apps/core/global_header.inc");
-// Arxivos requeridos por esta url **********************************************
+require_once("apps/core/global_header.inc");
+// Archivos requeridos por esta url **********************************************
 
-// Crea los objectos de uso global **********************************************
-require_once ("apps/core/global_object.inc");
+// Crea los objetos de uso global **********************************************
+require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
 
 // claves:
-$a_Claves = [ "com_sacd" => _("comunicación a los sacerdotes"),
-	't_propio' => _("titulo: propio"),
-	't_f_ini' => _("titulo: f_ini"),
-	't_f_fin' => _("titulo: f_fin"),
-	't_nombre_ubi' => _("titulo: nombre ubi"),
-	't_sfsv' => _("titulo: sfsv"),
-	't_actividad' => _("titulo: actividad"),
-	't_asistentes' => _("titulo: asistentes"),
-	't_encargado' => _("titulo: encargado"),
-	't_observ' => _("titulo: observaciones"),
-	't_nom_tipo' => _("titulo: nom_tipo"),
+$a_Claves = ["com_sacd" => _("comunicación a los sacerdotes"),
+    't_propio' => _("titulo: propio"),
+    't_f_ini' => _("titulo: f_ini"),
+    't_f_fin' => _("titulo: f_fin"),
+    't_nombre_ubi' => _("titulo: nombre ubi"),
+    't_sfsv' => _("titulo: sfsv"),
+    't_actividad' => _("titulo: actividad"),
+    't_asistentes' => _("titulo: asistentes"),
+    't_encargado' => _("titulo: encargado"),
+    't_observ' => _("titulo: observaciones"),
+    't_nom_tipo' => _("titulo: nom_tipo"),
 ];
 $oDesplClaves = new Desplegable();
 $oDesplClaves->setNombre('clave');
@@ -82,4 +84,4 @@ $a_campos = ['oPosicion' => $oPosicion,
 ];
 
 $oView = new core\ViewTwig('actividadessacd/controller');
-echo $oView->render('com_sacd_txt.html.twig',$a_campos);
+echo $oView->render('com_sacd_txt.html.twig', $a_campos);

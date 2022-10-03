@@ -1,29 +1,30 @@
 <?php
+
 use devel\model\DBAlterSchema;
 use devel\model\entity\GestorDbSchema;
 
 // INICIO Cabecera global de URL de controlador *********************************
-	require_once ("apps/core/global_header.inc");
-// Arxivos requeridos por esta url **********************************************
+require_once("apps/core/global_header.inc");
+// Archivos requeridos por esta url **********************************************
 
-// Crea los objectos de uso global **********************************************
-	require_once ("apps/core/global_object.inc");
+// Crea los objetos de uso global **********************************************
+require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$QEsquemaRef = (string) \filter_input(INPUT_POST, 'esquema');
-$Qregion = (string) \filter_input(INPUT_POST, 'region');
-$Qdl = (string) \filter_input(INPUT_POST, 'dl');
-$Qcomun = (integer) \filter_input(INPUT_POST, 'comun');
-$Qsv = (integer) \filter_input(INPUT_POST, 'sv');
+$QEsquemaRef = (string)\filter_input(INPUT_POST, 'esquema');
+$Qregion = (string)\filter_input(INPUT_POST, 'region');
+$Qdl = (string)\filter_input(INPUT_POST, 'dl');
+$Qcomun = (integer)\filter_input(INPUT_POST, 'comun');
+$Qsv = (integer)\filter_input(INPUT_POST, 'sv');
 //$Qsf = (integer) \filter_input(INPUT_POST, 'sf');
 
-$esquema_old = substr($QEsquemaRef,0,-1); // quito la v o la f.
+$esquema_old = substr($QEsquemaRef, 0, -1); // quito la v o la f.
 
-$esquema_oldv = $esquema_old.'v';
+$esquema_oldv = $esquema_old . 'v';
 //$esquema_oldf = $esquema_old.'f';
 
 $esquema = "$Qregion-$Qdl";
-$esquemav = $esquema.'v';
+$esquemav = $esquema . 'v';
 //$esquemaf = $esquema.'f';
 
 $oDBRol = new core\DBRol();
@@ -56,7 +57,7 @@ $oConfigDBComun->renombrarListaEsquema('comun', $esquema_old, $esquema);
 
 // Cambiar la tabla db_idschema. (pone el nombre de los tres esquemas, pero sólo en una base de datos)
 $oGesDbSchema = new GestorDbSchema();
-$oGesDbSchema->cambiarNombre($esquema_old,$esquema,'comun');
+$oGesDbSchema->cambiarNombre($esquema_old, $esquema, 'comun');
 
 // sv
 $configSvP = $oConfigDB->getEsquema('publicv');
@@ -76,7 +77,7 @@ $oConfigDBSv->renombrarListaEsquema('sv', $esquema_oldv, $esquemav);
 
 // Cambiar la tabla db_idschema. (pone el nombre de los tres esquemas, pero sólo en una base de datos)
 $oGesDbSchema = new GestorDbSchema();
-$oGesDbSchema->cambiarNombre($esquema_old,$esquema,'sv');
+$oGesDbSchema->cambiarNombre($esquema_old, $esquema, 'sv');
 
 //sv-e
 $configSveP = $oConfigDB->getEsquema('publicv-e');
@@ -97,7 +98,7 @@ $oConfigDBSve->renombrarListaEsquema('sv-e', $esquema_oldv, $esquemav);
 
 // Cambiar la tabla db_idschema. (pone el nombre de los tres esquemas, pero sólo en una base de datos)
 $oGesDbSchema = new GestorDbSchema();
-$oGesDbSchema->cambiarNombre($esquema_old,$esquema,'sv-e');
+$oGesDbSchema->cambiarNombre($esquema_old, $esquema, 'sv-e');
 
 // sf
 /*
@@ -124,19 +125,19 @@ $oGesDbSchema->cambiarNombre($esquema_old,$esquema,'sf');
 
 $RegionNew = $Qregion;
 $DlNew = $Qdl;
-	
+
 // comun
 if (!empty($Qcomun)) {
     $oConfigDB = new core\ConfigDB('importar'); //de la database comun
     $config = $oConfigDB->getEsquema('public'); //de la database comun
-    
+
     $oConexion = new core\dbConnection($config);
     $oDevelPC = $oConexion->getPDO();
 
     $oAlterSchema = new DBAlterSchema();
     $oAlterSchema->setDbConexion($oDevelPC);
     $oAlterSchema->setSchema($esquema);
-    
+
     // Valores Default:
     $aDefaults = [
         ['tabla' => 'a_actividad_proceso_sf', 'campo' => 'id_schema', 'valor' => "idschema('$esquema'::text)"],
@@ -151,7 +152,7 @@ if (!empty($Qcomun)) {
         ['tabla' => 'av_cambios_anotados_dl', 'campo' => 'id_schema', 'valor' => "idschema('$esquema'::text)"],
         ['tabla' => 'av_cambios_anotados_dl_sf', 'campo' => 'id_schema', 'valor' => "idschema('$esquema'::text)"],
         ['tabla' => 'av_cambios_dl', 'campo' => 'id_schema', 'valor' => "idschema('$esquema'::text)"],
-        
+
         ['tabla' => 'av_cambios_usuario', 'campo' => 'id_schema', 'valor' => "idschema('$esquema'::text)"],
         ['tabla' => 'cd_cargos_activ_dl', 'campo' => 'id_schema', 'valor' => "idschema('$esquema'::text)"],
         ['tabla' => 'cp_sacd', 'campo' => 'id_schema', 'valor' => "idschema('$esquema'::text)"],
@@ -164,24 +165,24 @@ if (!empty($Qcomun)) {
         ['tabla' => 'du_grupos_dl', 'campo' => 'id_schema', 'valor' => "idschema('$esquema'::text)"],
         ['tabla' => 'du_periodos', 'campo' => 'id_schema', 'valor' => "idschema('$esquema'::text)"],
         ['tabla' => 'du_tarifas', 'campo' => 'id_schema', 'valor' => "idschema('$esquema'::text)"],
-        
+
         ['tabla' => 'u_cdc_dl', 'campo' => 'id_ubi', 'valor' => "idglobal('$esquema'::text, 'u_cdc_dl'::text)"],
         ['tabla' => 'u_cdc_dl', 'campo' => 'dl', 'valor' => "'$DlNew'::character varying"],
         ['tabla' => 'u_cdc_dl', 'campo' => 'region', 'valor' => "'$RegionNew'::character varying"],
         ['tabla' => 'u_dir_cdc_dl', 'campo' => 'id_direccion', 'valor' => "idglobal('$esquema'::text, 'u_dir_cdc_dl'::text)"],
-        
+
         ['tabla' => 'x_config_schema', 'campo' => 'id_schema', 'valor' => "idschema('$esquema'::text)"],
         ['tabla' => 'xa_tipo_activ_tarifa', 'campo' => 'id_schema', 'valor' => "idschema('$esquema'::text)"],
         ['tabla' => 'xa_tipo_tarifa', 'campo' => 'id_schema', 'valor' => "idschema('$esquema'::text)"],
     ];
     $oAlterSchema->setDefaults($aDefaults);
-    
+
     // datos
     // REGEXP_REPLACE(source, pattern, replacement_string,[, flags])
-    
-    $region_old = strtok($esquema_old,'-');
+
+    $region_old = strtok($esquema_old, '-');
     $dl_old = strtok('-');
-    
+
     $aDatos = [
         ['tabla' => 'a_actividades_dl', 'campo' => 'dl_org', 'pattern' => "\m$dl_old(f?)\M", 'replacement' => "$DlNew\\1"],
         ['tabla' => 'av_cambios_dl', 'campo' => 'dl_org', 'pattern' => "\m$dl_old(f?)\M", 'replacement' => "$DlNew\\1"],
@@ -191,9 +192,9 @@ if (!empty($Qcomun)) {
         ['tabla' => 'cu_centros_dlf', 'campo' => 'dl', 'pattern' => "\m$dl_old(f?)\M", 'replacement' => "$DlNew\\1"],
         ['tabla' => 'cu_centros_dlf', 'campo' => 'region', 'pattern' => "\m$region_old\M", 'replacement' => "$RegionNew"],
     ];
-    
+
     $oAlterSchema->updateDatosRegexp($aDatos);
-    
+
 }
 
 // sv
@@ -207,7 +208,7 @@ if (!empty($Qsv)) {
     $oAlterSchema = new DBAlterSchema();
     $oAlterSchema->setDbConexion($oDevelPC);
     $oAlterSchema->setSchema($esquemav);
-    
+
     // Valores Default:
     $aDefaults = [
         ['tabla' => 'd_asignaturas_activ_dl', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
@@ -217,11 +218,11 @@ if (!empty($Qsv)) {
         ['tabla' => 'd_matriculas_activ_dl', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
         ['tabla' => 'd_profesor_ampliacion', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
         ['tabla' => 'd_profesor_director', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
-        
+
         ['tabla' => 'd_profesor_juramento', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
         ['tabla' => 'd_profesor_latin', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
         ['tabla' => 'd_profesor_stgr', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
-        
+
         ['tabla' => 'd_publicaciones', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
         ['tabla' => 'd_teleco_ctr_dl', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
         ['tabla' => 'd_teleco_personas_dl', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
@@ -249,7 +250,7 @@ if (!empty($Qsv)) {
         ['tabla' => 'p_supernumerarios', 'campo' => 'id_nom', 'valor' => "public.idglobal('$esquemav'::text, 'p_supernumerarios'::text)"],
         ['tabla' => 'p_supernumerarios', 'campo' => 'dl', 'valor' => "'$DlNew'::character varying"],
         ['tabla' => 'personas_dl', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
-        
+
         ['tabla' => 'u_centros_dl', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
         ['tabla' => 'u_centros_dl', 'campo' => 'id_ubi', 'valor' => "public.idglobal('$esquemav'::text, 'u_centros_dl'::text)"],
         ['tabla' => 'u_centros_dl', 'campo' => 'dl', 'valor' => "'$DlNew'::character varying"],
@@ -259,13 +260,13 @@ if (!empty($Qsv)) {
         ['tabla' => 'u_dir_ctr_dl', 'campo' => 'id_direccion', 'valor' => "public.idglobal('$esquemav'::text, 'u_dir_ctr_dl'::text)"],
     ];
     $oAlterSchema->setDefaults($aDefaults);
-    
+
     // datos
     // REGEXP_REPLACE(source, pattern, replacement_string,[, flags])
-    
-    $region_old = strtok($esquema_old,'-');
+
+    $region_old = strtok($esquema_old, '-');
     $dl_old = strtok('-');
-    
+
     $aDatos = [
         ['tabla' => 'p_agregados', 'campo' => 'dl', 'pattern' => "\m$dl_old\M", 'replacement' => "$DlNew"],
         ['tabla' => 'p_de_paso_out', 'campo' => 'dl', 'pattern' => "\m$dl_old\M", 'replacement' => "$DlNew"],
@@ -278,15 +279,15 @@ if (!empty($Qsv)) {
         ['tabla' => 'd_traslados', 'campo' => 'ctr_destino', 'pattern' => "\m$dl_old\M", 'replacement' => "$DlNew"],
         ['tabla' => 'da_plazas_dl', 'campo' => 'dl_tabla', 'pattern' => "\m$dl_old(f?)\M", 'replacement' => "$DlNew\\1"],
     ];
-    
+
     $oAlterSchema->updateDatosRegexp($aDatos);
-    
+
     // borrar
     $aDatos = [
         ['tabla' => 'u_centros_dl', 'campo' => 'id_zona'],
     ];
     $oAlterSchema->setNullDatos($aDatos);
-    
+
     // Todos los esquemas:
     $aDatos = [
         ['tabla' => 'global.d_traslados', 'campo' => 'ctr_origen', 'pattern' => "\m$dl_old\M", 'replacement' => "$DlNew"],
@@ -298,9 +299,9 @@ if (!empty($Qsv)) {
     * da_plazas_dl       
     cedidas {"dlb": 2, "dlp": 3, "dlv": 1, "dlmE": 1, "dlmO": 1, "dlst": 1}
     */
-    $oAlterSchema->updateCedidasAll($dl_old,$DlNew);
-    
-	// Esquema sv-e 
+    $oAlterSchema->updateCedidasAll($dl_old, $DlNew);
+
+    // Esquema sv-e
     $oConfigDB = new core\ConfigDB('importar'); //de la database sv
     $config = $oConfigDB->getEsquema('publicv-e');
 
@@ -310,7 +311,7 @@ if (!empty($Qsv)) {
     $oAlterSchema = new DBAlterSchema();
     $oAlterSchema->setDbConexion($oDevelPC);
     $oAlterSchema->setSchema($esquemav);
-    
+
     // Valores Default:
     $aDefaults = [
         ['tabla' => 'a_sacd_textos', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
@@ -348,7 +349,7 @@ if (!empty($Qsv)) {
         ['tabla' => 'zonas_sacd', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
     ];
     $oAlterSchema->setDefaults($aDefaults);
-    
+
     // datos
     // Todos los esquemas:
     $aDatos = [
@@ -356,7 +357,7 @@ if (!empty($Qsv)) {
         ['tabla' => 'publicv.d_asistentes_de_paso', 'campo' => 'dl_responsable', 'pattern' => "\m$dl_old\M", 'replacement' => "$DlNew"],
     ];
     $oAlterSchema->updateDatosRegexpTodos($aDatos);
-    
+
     $oAlterSchema->updatePropietarioAll($dl_old, $DlNew);
 }
 

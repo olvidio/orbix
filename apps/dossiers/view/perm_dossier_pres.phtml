@@ -1,86 +1,102 @@
 <script>
-fnjs_eliminar=function(){
-    var url = "<?= $url_update ?>";
-	if (confirm("<?= $txt_eliminar ?>") ) {
-		alert ("mejor de momento NO");
-		/*
-        $('#que').val('eliminar');
-        $('#frm2').attr('action',url);
-        fnjs_enviar_formulario('#frm2');
-        */
-	}
-}
-fnjs_guardar=function(){
-   	$('#que').val("guardar");
-	$('#frm2').attr('action',"<?= $url_update ?>");
-	$('#frm2').one("submit", function() {
-		$.ajax({
-			url: $(this).attr('action'),
-			type: 'post',
-			data: $(this).serialize()
-		})
-		.done(function (rta_txt) {
-			if (rta_txt != '' && rta_txt != '\n') {
-				alert (rta_txt);
-			}
-		});
-		return false;
-	});
-	$('#frm2').trigger("submit");
-	$('#frm2').off();
-}
+    fnjs_eliminar = function () {
+        var url = "<?= $url_update ?>";
+        if (confirm("<?= $txt_eliminar ?>")) {
+            alert("mejor de momento NO");
+            /*
+            $('#que').val('eliminar');
+            $('#frm2').attr('action',url);
+            fnjs_enviar_formulario('#frm2');
+            */
+        }
+    }
+    fnjs_guardar = function () {
+        $('#que').val("guardar");
+        $('#frm2').attr('action', "<?= $url_update ?>");
+        $('#frm2').one("submit", function () {
+            $.ajax({
+                url: $(this).attr('action'),
+                type: 'post',
+                data: $(this).serialize()
+            })
+                .done(function (rta_txt) {
+                    if (rta_txt != '' && rta_txt != '\n') {
+                        alert(rta_txt);
+                    }
+                });
+            return false;
+        });
+        $('#frm2').trigger("submit");
+        $('#frm2').off();
+    }
 </script>
-<form id='frm2' >
-<?= $oHash->getCamposHtml(); ?>
-<input type="Hidden" id="que"  name="que" value="">
+<form id='frm2'>
+    <?= $oHash->getCamposHtml(); ?>
+    <input type="Hidden" id="que" name="que" value="">
 
-<table>
-<th align="left" colspan="5"><?= ucfirst(_("permisos de acceso a dossier seleccionado")); ?></th>
+    <table>
+        <th align="left" colspan="5"><?= ucfirst(_("permisos de acceso a dossier seleccionado")); ?></th>
 
-<?php if ($perm_admin) { ?> 
-<tr>
-   	<td colspan=2><font ><?= _("id_tipo_dossier"); ?></font><input name="id_tipo_dossier" value="<?= $id_tipo_dossier; ?>"size="5"> </td>
-	<td><font ><?= _("id_tipo_dossier_rel"); ?></font><input name="id_tipo_dossier_rel"  value="<?= $id_tipo_dossier_rel ; ?>" size="5"></td>
-</tr>
-<tr>
-	<td><font ><?= _("tabla_from"); ?> </font><input name="tabla_from"  value="<?= $tabla_from; ?>" size="2"> </td>
-	<td><font ><?= _("tabla_to"); ?> </font><input name="tabla_to"  value="<?= $tabla_to; ?>" size="15"> </td>
-	<td><font ><?= _("campo_to"); ?> </font><input name="campo_to"  value="<?= $campo_to; ?>" size="10"> </td>
-</tr>
-<tr>
-	<td colspan=2><font ><?= _("app"); ?> </font><input name="app"  value="<?= $app; ?>" size="20"> </td>
-	<td colspan=2><font ><?= _("clase"); ?> </font><input name="class"  value="<?= $class; ?>" size="20"> </td>
-</tr>
-<?php } 
-?>
-<tr>	
-	<td colspan=3><font ><?= _("descripción"); ?> </font><input name="descripcion"  value="<?= $descripcion; ?>" size="40"> </td>
-</tr>
-<tr>
-<td><?= _("depende_modificar"); ?><input type=checkbox name="depende_modificar" value="on" <?= $chk ?>> </td>
-<td colspan="3"><?= ucfirst(_("depende_modificar activo implica que sólo podrá modificar la oficina correspondiente: agd para los agd, sm para los n, sg para los s, en dossiers que afectan a varios tipos de personas")); ?></td>
-</tr>
-<tr><td colspan=2><?= _("permisos de lectura")." ($permiso_lectura)" ?></td></tr>
-<tr><td colspan=3><?= $oCuadros->cuadros_check('permiso_lectura',$permiso_lectura); ?></td></tr>
-<tr><td colspan=2><?= _("permisos de escritura")." ($permiso_escritura)" ?></td></tr>
-<tr><td colspan=3><?= $oCuadros->cuadros_check('permiso_escritura',$permiso_escritura); ?></td></tr>
-</table>
-<?php
-// -----------------------------------  Botones  ----------------------
-if (!empty($botones)) {
-	echo "<table><tr class=botones>";
-	$b=strtok($botones,",");
-	while ($b) {
-		if ($b==1){
-			$txt_g=ucwords(_("guardar cambios"));
-			echo "<th class='link_inv' onclick='fnjs_guardar()'>$txt_g</th>"; }
-		if ($b==2){
-			$txt_e=ucwords(_("eliminar"));
-			echo "<th class='link_inv' onclick='fnjs_eliminar()'>$txt_e</th>"; }
-		$b=strtok(",");
-	} 
-	echo "</tr></table><br>";
-}
-// fin ----------------------------  Botones  ----------------------
-?>
+        <?php if ($perm_admin) { ?>
+            <tr>
+                <td colspan=2><font><?= _("id_tipo_dossier"); ?></font><input name="id_tipo_dossier"
+                                                                              value="<?= $id_tipo_dossier; ?>" size="5">
+                </td>
+                <td><font><?= _("id_tipo_dossier_rel"); ?></font><input name="id_tipo_dossier_rel"
+                                                                        value="<?= $id_tipo_dossier_rel; ?>" size="5">
+                </td>
+            </tr>
+            <tr>
+                <td><font><?= _("tabla_from"); ?> </font><input name="tabla_from" value="<?= $tabla_from; ?>" size="2">
+                </td>
+                <td><font><?= _("tabla_to"); ?> </font><input name="tabla_to" value="<?= $tabla_to; ?>" size="15"></td>
+                <td><font><?= _("campo_to"); ?> </font><input name="campo_to" value="<?= $campo_to; ?>" size="10"></td>
+            </tr>
+            <tr>
+                <td colspan=2><font><?= _("app"); ?> </font><input name="app" value="<?= $app; ?>" size="20"></td>
+                <td colspan=2><font><?= _("clase"); ?> </font><input name="class" value="<?= $class; ?>" size="20"></td>
+            </tr>
+        <?php }
+        ?>
+        <tr>
+            <td colspan=3><font><?= _("descripción"); ?> </font><input name="descripcion" value="<?= $descripcion; ?>"
+                                                                       size="40"></td>
+        </tr>
+        <tr>
+            <td><?= _("depende_modificar"); ?><input type=checkbox name="depende_modificar" value="on" <?= $chk ?>></td>
+            <td colspan="3"><?= ucfirst(_("depende_modificar activo implica que sólo podrá modificar la oficina correspondiente: agd para los agd, sm para los n, sg para los s, en dossiers que afectan a varios tipos de personas")); ?></td>
+        </tr>
+        <tr>
+            <td colspan=2><?= _("permisos de lectura") . " ($permiso_lectura)" ?></td>
+        </tr>
+        <tr>
+            <td colspan=3><?= $oCuadros->cuadros_check('permiso_lectura', $permiso_lectura); ?></td>
+        </tr>
+        <tr>
+            <td colspan=2><?= _("permisos de escritura") . " ($permiso_escritura)" ?></td>
+        </tr>
+        <tr>
+            <td colspan=3><?= $oCuadros->cuadros_check('permiso_escritura', $permiso_escritura); ?></td>
+        </tr>
+    </table>
+    <?php
+    // -----------------------------------  Botones  ----------------------
+    if (!empty($botones)) {
+        echo "<table><tr class=botones>";
+        $b = strtok($botones, ",");
+        while ($b) {
+            if ($b == 1) {
+                $txt_g = ucwords(_("guardar cambios"));
+                echo "<th class='link_inv' onclick='fnjs_guardar()'>$txt_g</th>";
+            }
+            if ($b == 2) {
+                $txt_e = ucwords(_("eliminar"));
+                echo "<th class='link_inv' onclick='fnjs_eliminar()'>$txt_e</th>";
+            }
+            $b = strtok(",");
+        }
+        echo "</tr></table><br>";
+    }
+    // fin ----------------------------  Botones  ----------------------
+    ?>
 </form>

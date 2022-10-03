@@ -1,4 +1,5 @@
 <?php
+
 namespace actividadestudios\model\entity;
 /**
  * GestorMatriculaDl
@@ -11,29 +12,30 @@ namespace actividadestudios\model\entity;
  * @version 1.0
  * @created 07/04/2014
  */
+class GestorMatriculaDl extends GestorMatricula
+{
+    /* ATRIBUTOS ----------------------------------------------------------------- */
 
-class GestorMatriculaDl Extends GestorMatricula {
-	/* ATRIBUTS ----------------------------------------------------------------- */
-
-	/* CONSTRUCTOR -------------------------------------------------------------- */
-
-
-	/**
-	 * Constructor de la classe.
-	 *
-	 * @return $gestor
-	 *
-	 */
-	function __construct() {
-		$oDbl = $GLOBALS['oDB'];
-		$this->setoDbl($oDbl);
-		$this->setNomTabla('d_matriculas_activ_dl');
-	}
+    /* CONSTRUCTOR -------------------------------------------------------------- */
 
 
-	/* METODES PUBLICS -----------------------------------------------------------*/
+    /**
+     * Constructor de la classe.
+     *
+     * @return $gestor
+     *
+     */
+    function __construct()
+    {
+        $oDbl = $GLOBALS['oDB'];
+        $this->setoDbl($oDbl);
+        $this->setNomTabla('d_matriculas_activ_dl');
+    }
 
-	/* METODES PROTECTED --------------------------------------------------------*/
 
-	/* METODES GET i SET --------------------------------------------------------*/
+    /* MÉTODOS PÚBLICOS -----------------------------------------------------------*/
+
+    /* METODES PROTECTED --------------------------------------------------------*/
+
+    /* MÉTODOS GET y SET --------------------------------------------------------*/
 }

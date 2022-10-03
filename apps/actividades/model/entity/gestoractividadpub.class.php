@@ -1,5 +1,6 @@
 <?php
 namespace actividades\model\entity;
+
 /**
  * GestorActividadPub
  *
@@ -11,25 +12,27 @@ namespace actividades\model\entity;
  * @version 1.0
  * @created 01/10/2010
  */
+class GestorActividadPub extends GestorActividadAll
+{
+    /* ATRIBUTOS ----------------------------------------------------------------- */
 
-class GestorActividadPub extends GestorActividadAll {
-	/* ATRIBUTS ----------------------------------------------------------------- */
+    /* CONSTRUCTOR -------------------------------------------------------------- */
 
-	/* CONSTRUCTOR -------------------------------------------------------------- */
-
-	/**
-	 * Constructor de la classe.
-	 *
-	 * @return GestorActividadPub
-	 *
-	 */
-	function __construct() {
-		$oDbl = $GLOBALS['oDBPC'];
-		$this->setoDbl($oDbl);
-		$this->setNomTabla('av_actividades_pub');
-	}
+    /**
+     * Constructor de la classe.
+     *
+     * @return GestorActividadPub
+     *
+     */
+    function __construct()
+    {
+        $oDbl = $GLOBALS['oDBPC'];
+        $this->setoDbl($oDbl);
+        $this->setNomTabla('av_actividades_pub');
+    }
 
 
-	/* METODES PUBLICS -----------------------------------------------------------*/
+    /* MÉTODOS PÚBLICOS -----------------------------------------------------------*/
 }
+
 ?>

@@ -1,22 +1,23 @@
 <?php
+
 use devel\model\entity\GestorApp;
 use core\DBPropiedades;
 
 /**
- * La idea de esta página es poder crear y eliminar 
+ * La idea de esta página es poder crear y eliminar
  * las tablas correspondientes a cada app.
  * Al activar un módulo, se debería crear las tablas en el esquema correspondiente,
  * pero por aqui se pueden grear en el esquema global y en otros.
- * 
- */ 
+ *
+ */
 
 
 // INICIO Cabecera global de URL de controlador *********************************
-require_once ("apps/core/global_header.inc");
-// Arxivos requeridos por esta url **********************************************
+require_once("apps/core/global_header.inc");
+// Archivos requeridos por esta url **********************************************
 
-// Crea los objectos de uso global **********************************************
-require_once ("apps/core/global_object.inc");
+// Crea los objetos de uso global **********************************************
+require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
 $oGesApps = new GestorApp();
@@ -28,7 +29,7 @@ foreach ($cApps as $oApp) {
     $a_apps[$id_app] = $nom_app;
 }
 
-$oDeslpApps = new web\Desplegable([],['_ordre' => 'id_app']);
+$oDeslpApps = new web\Desplegable([], ['_ordre' => 'id_app']);
 $oDeslpApps->setNombre('id_app');
 $oDeslpApps->setOpciones($a_apps);
 
@@ -50,4 +51,4 @@ $a_campos['oDesplEsquemas'] = $oDBPropiedades->posibles_esquemas($esquema);
 
 
 $oView = new core\View('devel\controller');
-echo $oView->render('apptables.phtml',$a_campos);
+echo $oView->render('apptables.phtml', $a_campos);

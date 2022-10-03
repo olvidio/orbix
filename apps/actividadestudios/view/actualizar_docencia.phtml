@@ -1,24 +1,24 @@
 <script>
-fnjs_buscar=function(){
-	var campo = '<input type="hidden" name="refresh" value=1>';
-	$('#periodo_form').attr('action',"apps/actividadestudios/controller/actualizar_docencia.php");
-	$('#periodo_form').append(campo);
-	fnjs_enviar_formulario('#periodo_form','#main');
-}
-fnjs_left_side_hide();
+    fnjs_buscar = function () {
+        var campo = '<input type="hidden" name="refresh" value=1>';
+        $('#periodo_form').attr('action', "apps/actividadestudios/controller/actualizar_docencia.php");
+        $('#periodo_form').append(campo);
+        fnjs_enviar_formulario('#periodo_form', '#main');
+    }
+    fnjs_left_side_hide();
 </script>
 <br><h3><?= _("actualización de los datos de docencia") ?></h3>
-<?php if($mod == 'inicio') { ?>
-	<p>
-	<?= _("esta acción llenará el dossier de actividad docente con los datos de los cursos anuales. Sólo se tendrán en cuenta los ca que se han marcado como terminados. Así nos aseguramos de copiar todos los datos (actas...)"); ?>
-	</p>
-	<form id='periodo_form' action=''>
-		<?= $oHashPeriodo->getCamposHtml(); ?>
-		<?= $oFormP->getHtml(); ?>
-	</form>
-	<br>
+<?php if ($mod == 'inicio') { ?>
+    <p>
+        <?= _("esta acción llenará el dossier de actividad docente con los datos de los cursos anuales. Sólo se tendrán en cuenta los ca que se han marcado como terminados. Así nos aseguramos de copiar todos los datos (actas...)"); ?>
+    </p>
+    <form id='periodo_form' action=''>
+        <?= $oHashPeriodo->getCamposHtml(); ?>
+        <?= $oFormP->getHtml(); ?>
+    </form>
+    <br>
 <?php } else { ?>
-	<p>
-	<?= $txt_rta ?>
-	</p>
+    <p>
+        <?= $txt_rta ?>
+    </p>
 <?php } ?>

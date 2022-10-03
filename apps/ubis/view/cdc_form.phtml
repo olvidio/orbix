@@ -1,111 +1,121 @@
 <script>
-fnjs_guardar=function(formulario){
-   var error=0;
-   var tipo_ubi=$("#tipo_ubi").val();
-   if (tipo_ubi=="cdcdl" || tipo_ubi=="cdcex") {
-	   var camp_sf="#sf:checked";
-	   var camp_sv="#sv:checked";
-	   var val_sf=$(camp_sf).length;
-	   var val_sv=$(camp_sv).length;
-	   if (!val_sf && !val_sv) {
-	   		alert ("<?= _("debe indicar si es sf o sv") ?>");
-			error=1;
-		}
-   } 
-   if (!error) {
-		$('#que').val('ubi');
-		$(formulario).attr('action',"apps/ubis/controller/ubis_update.php");
-		$(formulario).one("submit", function() {
-			$.ajax({
-				url: $(this).attr('action'),
-				type: 'post',
-				data: $(this).serialize()
-			})
-			.done(function (rta_txt) {
-				if (rta_txt != '' && rta_txt != '\\n') {
-					alert ('<?= _("respuesta") ?>: '+rta_txt);
-				} else {
-					<?= $oPosicion->js_atras(1); ?>
-				}
-			});
-			return false;
-		});
-		$(formulario).trigger("submit");
-		$(formulario).off();
-	}
-}
-fnjs_eliminar=function(formulario){
-	if (confirm("<?= _("¿Está seguro que desea borrar esta casa?");?>") ) {
-	   	$('#que').val('eliminar_ubi');
-	   	$(formulario).attr('action','apps/ubis/controller/ubis_update.php');
-		$(formulario).one("submit", function() {
-			$.ajax({
-				url: $(this).attr('action'),
-				type: 'post',
-				data: $(this).serialize()
-			})
-			.done(function (rta_txt) {
-				if (rta_txt != '' && rta_txt != '\\n') {
-					alert ('<?= _("respuesta") ?>: '+rta_txt);
-				} else {
-					<?= $oPosicion->js_atras(2); ?>
-				}
-			});
-			return false;
-		});
-		$(formulario).trigger("submit");
-		$(formulario).off();
-	}
-}
+    fnjs_guardar = function (formulario) {
+        var error = 0;
+        var tipo_ubi = $("#tipo_ubi").val();
+        if (tipo_ubi == "cdcdl" || tipo_ubi == "cdcex") {
+            var camp_sf = "#sf:checked";
+            var camp_sv = "#sv:checked";
+            var val_sf = $(camp_sf).length;
+            var val_sv = $(camp_sv).length;
+            if (!val_sf && !val_sv) {
+                alert("<?= _("debe indicar si es sf o sv") ?>");
+                error = 1;
+            }
+        }
+        if (!error) {
+            $('#que').val('ubi');
+            $(formulario).attr('action', "apps/ubis/controller/ubis_update.php");
+            $(formulario).one("submit", function () {
+                $.ajax({
+                    url: $(this).attr('action'),
+                    type: 'post',
+                    data: $(this).serialize()
+                })
+                    .done(function (rta_txt) {
+                        if (rta_txt != '' && rta_txt != '\\n') {
+                            alert('<?= _("respuesta") ?>: ' + rta_txt);
+                        } else {
+                            <?= $oPosicion->js_atras(1); ?>
+                        }
+                    });
+                return false;
+            });
+            $(formulario).trigger("submit");
+            $(formulario).off();
+        }
+    }
+    fnjs_eliminar = function (formulario) {
+        if (confirm("<?= _("¿Está seguro que desea borrar esta casa?");?>")) {
+            $('#que').val('eliminar_ubi');
+            $(formulario).attr('action', 'apps/ubis/controller/ubis_update.php');
+            $(formulario).one("submit", function () {
+                $.ajax({
+                    url: $(this).attr('action'),
+                    type: 'post',
+                    data: $(this).serialize()
+                })
+                    .done(function (rta_txt) {
+                        if (rta_txt != '' && rta_txt != '\\n') {
+                            alert('<?= _("respuesta") ?>: ' + rta_txt);
+                        } else {
+                            <?= $oPosicion->js_atras(2); ?>
+                        }
+                    });
+                return false;
+            });
+            $(formulario).trigger("submit");
+            $(formulario).off();
+        }
+    }
 </script>
 <?= $oPosicion->mostrar_left_slide(1); ?>
-<form id='frm2' >
-<?= $oHash->getCamposHtml(); ?>
-<input type="Hidden" id="que"  name="que" value="">
-<table>
-<tr><td class="etiqueta">
-	<!-- <?= ucfirst(_("tipo de ubi")) ?> -->
-	<input type="hidden" class="contenido" id="tipo_ubi"  name="tipo_ubi" value="<?= $tipo_ubi ?>" size="5">
-	<?= ucfirst(_("región o delegación")) ?>
-	<?= $oDesplDelegaciones->desplegable() ?>
-	<?= ucfirst(_("en uso")) ?><input class="contenido" type="Checkbox" name="status" <?= $chk ?>>
-	<?= ucfirst(_("región")) ?>
-	<?= $oDesplRegiones->desplegable() ?>
-</td></tr>
-<tr><td class="etiqueta">
-	<?=  ucfirst(_("nombre del centro")) ?>
-		<input class="contenido" name="nombre_ubi" size="35" value="<?= $nombre_ubi ?>">
-	</td></tr>
-<tr><td>
-	<?= ucfirst(_("plazas")) ?>
-		<input class="contenido" name="plazas" value="<?= $plazas ?>" size="3">
-	<?= ucfirst(_("minimo asistentes")) ?>
-		<input class="contenido" name="plazas_min" value="<?= $plazas_min ?>" size="3">
-	<?= ucfirst(_("nº máximo de sacd")) ?>
-		<input class="contenido" name="num_sacd" value="<?= $num_sacd ?>" size="3">
-	<?= _("sv") ?><input type="checkbox" id="sv" name="sv" <?= $sv_chk ?>>
-	<?= _("sf") ?><input type="checkbox" id="sf" name="sf" <?= $sf_chk ?>>
-</td></tr>
-<tr><td>
-	<?= ucfirst(_("tipo de casa")) ?>
-	<?=  $oDesplegableTiposCasa->desplegable(); ?>
-</tr></td>
-<?php
-// -----------------------------------  Botones  ----------------------
-if (!empty($botones)) {
-	echo "<table><tr class=botones>";
-	$b=strtok($botones,",");
-	while ($b) {
-		if ($b==1){
-			$txt_g=ucwords(_("guardar cambios"));
-			echo "<th class='link_inv' onclick=\"fnjs_guardar('#frm2');\">$txt_g</th>"; }
-		if ($b==2){
-			$txt_e=ucwords(_("eliminar"));
-			echo "<th class='link_inv' onclick=\"fnjs_eliminar('#frm2');\">$txt_e</th>"; }
-		$b=strtok(",");
-	} 
-	echo "</tr></table><br>";
-}
-// fin ----------------------------  Botones  ----------------------
-?>
+<form id='frm2'>
+    <?= $oHash->getCamposHtml(); ?>
+    <input type="Hidden" id="que" name="que" value="">
+    <table>
+        <tr>
+            <td class="etiqueta">
+                <!-- <?= ucfirst(_("tipo de ubi")) ?> -->
+                <input type="hidden" class="contenido" id="tipo_ubi" name="tipo_ubi" value="<?= $tipo_ubi ?>" size="5">
+                <?= ucfirst(_("región o delegación")) ?>
+                <?= $oDesplDelegaciones->desplegable() ?>
+                <?= ucfirst(_("en uso")) ?><input class="contenido" type="Checkbox" name="status" <?= $chk ?>>
+                <?= ucfirst(_("región")) ?>
+                <?= $oDesplRegiones->desplegable() ?>
+            </td>
+        </tr>
+        <tr>
+            <td class="etiqueta">
+                <?= ucfirst(_("nombre del centro")) ?>
+                <input class="contenido" name="nombre_ubi" size="35" value="<?= $nombre_ubi ?>">
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <?= ucfirst(_("plazas")) ?>
+                <input class="contenido" name="plazas" value="<?= $plazas ?>" size="3">
+                <?= ucfirst(_("minimo asistentes")) ?>
+                <input class="contenido" name="plazas_min" value="<?= $plazas_min ?>" size="3">
+                <?= ucfirst(_("nº máximo de sacd")) ?>
+                <input class="contenido" name="num_sacd" value="<?= $num_sacd ?>" size="3">
+                <?= _("sv") ?><input type="checkbox" id="sv" name="sv" <?= $sv_chk ?>>
+                <?= _("sf") ?><input type="checkbox" id="sf" name="sf" <?= $sf_chk ?>>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <?= ucfirst(_("tipo de casa")) ?>
+                <?= $oDesplegableTiposCasa->desplegable(); ?>
+        </tr>
+        </td>
+        <?php
+        // -----------------------------------  Botones  ----------------------
+        if (!empty($botones)) {
+            echo "<table><tr class=botones>";
+            $b = strtok($botones, ",");
+            while ($b) {
+                if ($b == 1) {
+                    $txt_g = ucwords(_("guardar cambios"));
+                    echo "<th class='link_inv' onclick=\"fnjs_guardar('#frm2');\">$txt_g</th>";
+                }
+                if ($b == 2) {
+                    $txt_e = ucwords(_("eliminar"));
+                    echo "<th class='link_inv' onclick=\"fnjs_eliminar('#frm2');\">$txt_e</th>";
+                }
+                $b = strtok(",");
+            }
+            echo "</tr></table><br>";
+        }
+        // fin ----------------------------  Botones  ----------------------
+        ?>
 </form>

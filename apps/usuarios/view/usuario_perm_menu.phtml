@@ -1,39 +1,40 @@
 <script>
-fnjs_grabar=function(formulario){
-	$(formulario).attr('action',"apps/usuarios/controller/usuario_update.php");
-	$(formulario).one("submit", function() {
-		$.ajax({
-			url: $(this).attr('action'),
-			type: 'post',
-			data: $(this).serialize()
-		})
-		.done(function (rta_txt) {
-			if (rta_txt != '' && rta_txt != '\\n') {
-				alert ('<?= _("respuesta") ?>: '+rta_txt);
-			} else {
-				<?= $oPosicion->js_atras(1); ?>
-			}
-		});
-		return false;
-	});
-	$(formulario).trigger("submit");
-	$(formulario).off();
-}
+    fnjs_grabar = function (formulario) {
+        $(formulario).attr('action', "apps/usuarios/controller/usuario_update.php");
+        $(formulario).one("submit", function () {
+            $.ajax({
+                url: $(this).attr('action'),
+                type: 'post',
+                data: $(this).serialize()
+            })
+                .done(function (rta_txt) {
+                    if (rta_txt != '' && rta_txt != '\\n') {
+                        alert('<?= _("respuesta") ?>: ' + rta_txt);
+                    } else {
+                        <?= $oPosicion->js_atras(1); ?>
+                    }
+                });
+            return false;
+        });
+        $(formulario).trigger("submit");
+        $(formulario).off();
+    }
 </script>
 <?= $oPosicion->mostrar_left_slide(1); ?>
 <h1>Añadir nuevo permiso a <?= $nombre ?></h1>
-<form id=pem_usuario  name=perm_usuario action="" method="post" >
-<?= $oHash->getCamposHtml(); ?>
-<br>
-<table>
-<tr>
-<td class=etiqueta><?= ucfirst(_("oficina o grupo")); ?>:</td>
-<td colspan=5>
-<?php
-echo $oCuadros->cuadros_radio('menu_perm',$menu_perm);
-?>
-</td></tr>
-</table>
-<br>
-<input type=button onclick="fnjs_grabar(this.form);" value=<?= _("guardar") ?>>
+<form id=pem_usuario name=perm_usuario action="" method="post">
+    <?= $oHash->getCamposHtml(); ?>
+    <br>
+    <table>
+        <tr>
+            <td class=etiqueta><?= ucfirst(_("oficina o grupo")); ?>:</td>
+            <td colspan=5>
+                <?php
+                echo $oCuadros->cuadros_radio('menu_perm', $menu_perm);
+                ?>
+            </td>
+        </tr>
+    </table>
+    <br>
+    <input type=button onclick="fnjs_grabar(this.form);" value=<?= _("guardar") ?>>
 </form>

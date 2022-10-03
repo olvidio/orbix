@@ -1,5 +1,6 @@
 <?php
 namespace ubis\model\entity;
+
 /**
  * GestorCentroEx
  *
@@ -11,28 +12,30 @@ namespace ubis\model\entity;
  * @version 1.0
  * @created 28/09/2010
  */
+class GestorCentroEx extends GestorCentro
+{
+    /* ATRIBUTOS ----------------------------------------------------------------- */
 
-class GestorCentroEx Extends GestorCentro {
-	/* ATRIBUTS ----------------------------------------------------------------- */
+    /* CONSTRUCTOR -------------------------------------------------------------- */
 
-	/* CONSTRUCTOR -------------------------------------------------------------- */
+    /**
+     * Constructor de la classe.
+     *
+     * @return GestorCentroEx
+     *
+     */
+    function __construct()
+    {
+        $oDbl = $GLOBALS['oDBR'];
+        $this->setoDbl($oDbl);
+        $this->setNomTabla('u_centros_ex');
+    }
 
-	/**
-	 * Constructor de la classe.
-	 *
-	 * @return GestorCentroEx
-	 *
-	 */
-	function __construct() {
-		$oDbl = $GLOBALS['oDBR'];
-		$this->setoDbl($oDbl);
-		$this->setNomTabla('u_centros_ex');
-	}
+    /* MÉTODOS PÚBLICOS -----------------------------------------------------------*/
+    /* METODES PROTECTED --------------------------------------------------------*/
 
-	/* METODES PUBLICS -----------------------------------------------------------*/
-	/* METODES PROTECTED --------------------------------------------------------*/
-
-	/* METODES GET i SET --------------------------------------------------------*/
+    /* MÉTODOS GET y SET --------------------------------------------------------*/
 
 }
+
 ?>

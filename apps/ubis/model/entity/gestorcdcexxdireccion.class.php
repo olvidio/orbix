@@ -1,6 +1,8 @@
 <?php
 namespace ubis\model\entity;
+
 use core;
+
 /**
  * GestorUbixDireccion
  *
@@ -12,26 +14,28 @@ use core;
  * @version 1.0
  * @created 11/02/2014
  */
+class GestorCdcExxDireccion extends GestorCdcxDireccion
+{
+    /* ATRIBUTOS ----------------------------------------------------------------- */
 
-class GestorCdcExxDireccion Extends GestorCdcxDireccion {
-	/* ATRIBUTS ----------------------------------------------------------------- */
+    /* CONSTRUCTOR -------------------------------------------------------------- */
 
-	/* CONSTRUCTOR -------------------------------------------------------------- */
+    /**
+     * Constructor de la classe.
+     *
+     * @return GestorCdcxDireccion
+     *
+     */
+    function __construct()
+    {
+        $oDbl = $GLOBALS['oDBRC'];
+        $this->setoDbl($oDbl);
+        $this->setNomTabla('u_cross_cdc_ex_dir');
+    }
 
-	/**
-	 * Constructor de la classe.
-	 *
-	 * @return GestorCdcxDireccion
-	 *
-	 */
-	function __construct() {
-		$oDbl = $GLOBALS['oDBRC'];
-		$this->setoDbl($oDbl);
-		$this->setNomTabla('u_cross_cdc_ex_dir');
-	}
-
-	/* METODES PUBLICS -----------------------------------------------------------*/
-	/* METODES PROTECTED --------------------------------------------------------*/
-	/* METODES GET i SET --------------------------------------------------------*/
+    /* MÉTODOS PÚBLICOS -----------------------------------------------------------*/
+    /* METODES PROTECTED --------------------------------------------------------*/
+    /* MÉTODOS GET y SET --------------------------------------------------------*/
 }
+
 ?>

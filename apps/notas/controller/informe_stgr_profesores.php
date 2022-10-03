@@ -1,41 +1,43 @@
 <?php
+
 use notas\model as notas;
+
 /**
-* Esta página sirve para el resumen anual de los profesores
-*
-*
-*@package	delegacion
-*@subpackage	estudios
-*@author	Daniel Serrabou
-*@since		23/3/2007
+ * Esta página sirve para el resumen anual de los profesores
+ *
+ *
+ * @package    delegacion
+ * @subpackage    estudios
+ * @author    Daniel Serrabou
+ * @since        23/3/2007
  * @version september 2018
-*		
-*/
+ *
+ */
 
 // INICIO Cabecera global de URL de controlador *********************************
-	require_once ("apps/core/global_header.inc");
-// Arxivos requeridos por esta url **********************************************
+require_once("apps/core/global_header.inc");
+// Archivos requeridos por esta url **********************************************
 
-// Crea los objectos de uso global **********************************************
-	require_once ("apps/core/global_object.inc");
+// Crea los objetos de uso global **********************************************
+require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
-	
+
 /* Pongo en la variable $curs el periodo del curso */
-$any=date("Y");
-$mes=date("m");
-if ($mes>3) {
-	$any1=$any-1; 
-	$curso_txt="$any1-$any";
-	$any_ini_curs = $any1;
-} else { 
-	$any1=$any-2;
-	$any--;
-	$curso_txt="$any1-$any";
-	$any_ini_curs = $any1;
+$any = date("Y");
+$mes = date("m");
+if ($mes > 3) {
+    $any1 = $any - 1;
+    $curso_txt = "$any1-$any";
+    $any_ini_curs = $any1;
+} else {
+    $any1 = $any - 2;
+    $any--;
+    $curso_txt = "$any1-$any";
+    $any_ini_curs = $any1;
 }
 
-$Qlista = (string) \filter_input(INPUT_POST, 'lista');
-$lista = empty($Qlista)? false : true;
+$Qlista = (string)\filter_input(INPUT_POST, 'lista');
+$lista = empty($Qlista) ? false : true;
 
 /* tipos de profesor:
 	1 Ordinario
@@ -95,25 +97,29 @@ $a_textos[47] = ucfirst(_("nº de departamentos"));
 // ---------------------------------- html ----------------------------------------------------
 ?>
 <script>
-	fnjs_left_side_hide();
+    fnjs_left_side_hide();
 </script>
 <p><?= \core\strtoupper_dlb(_("profesores stgr")) ?>   <?= $curso_txt ?></p>
 <table border=1>
-<?php
-foreach ($res as $n => $datos) {
-	$pos = strpos($n, ".");
-	if ($pos !== false) {
-		$tab = "<td></td><td>$n. ";
-	} else {
-		$tab = "<th>$n. </th><td>";
-	}
-	?>
-	<tr><?= $tab ?><?= $a_textos[$n] ?></td><td><?= $datos['num'] ?></td></tr>
-	<?php if (!empty($datos['lista'])){ ?>
-	   <tr><td colspan=3>
-		<?= $datos['lista']; ?>
-	   </td></tr>
-	<?php }
-}
-?>
+    <?php
+    foreach ($res as $n => $datos) {
+        $pos = strpos($n, ".");
+        if ($pos !== false) {
+            $tab = "<td></td><td>$n. ";
+        } else {
+            $tab = "<th>$n. </th><td>";
+        }
+        ?>
+        <tr><?= $tab ?><?= $a_textos[$n] ?></td>
+            <td><?= $datos['num'] ?></td>
+        </tr>
+        <?php if (!empty($datos['lista'])) { ?>
+            <tr>
+                <td colspan=3>
+                    <?= $datos['lista']; ?>
+                </td>
+            </tr>
+        <?php }
+    }
+    ?>
 </table>

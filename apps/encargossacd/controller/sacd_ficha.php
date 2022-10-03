@@ -1,37 +1,38 @@
 <?php
+
 use web\Desplegable;
 use web\Hash;
 
 /**
-* Esta página muestra la ficha de encargos de un sacd.
-*
-*@package	delegacion
-*@subpackage	des
-*@author	Daniel Serrabou
-*@since		12/12/06.
-*		
-*/
+ * Esta página muestra la ficha de encargos de un sacd.
+ *
+ * @package    delegacion
+ * @subpackage    des
+ * @author    Daniel Serrabou
+ * @since        12/12/06.
+ *
+ */
 
 // INICIO Cabecera global de URL de controlador *********************************
-require_once ("apps/core/global_header.inc");
-// Arxivos requeridos por esta url **********************************************
+require_once("apps/core/global_header.inc");
+// Archivos requeridos por esta url **********************************************
 
-// Crea los objectos de uso global **********************************************
-require_once ("apps/core/global_object.inc");
+// Crea los objetos de uso global **********************************************
+require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$Qfiltro_sacd = (string) \filter_input(INPUT_POST, 'filtro_sacd');
+$Qfiltro_sacd = (string)\filter_input(INPUT_POST, 'filtro_sacd');
 
 // Tipos de sacd
-$aFiltroSacd = array( "n" => "n",
-						"a" => "agd",
-						"sssc" => "sss+",
-						"cp_sss" => "cp" );
+$aFiltroSacd = array("n" => "n",
+    "a" => "agd",
+    "sssc" => "sss+",
+    "cp_sss" => "cp");
 
 $oDesplFiltroSacd = new Desplegable();
 $oDesplFiltroSacd->setNombre('filtro_sacd');
 $oDesplFiltroSacd->setBlanco('false');
-$oDesplFiltroSacd->setOpciones($aFiltroSacd );
+$oDesplFiltroSacd->setOpciones($aFiltroSacd);
 $oDesplFiltroSacd->setAction("fnjs_lista_sacd()");
 $oDesplFiltroSacd->setOpcion_sel($Qfiltro_sacd);
 
@@ -58,4 +59,4 @@ $a_campos = ['oPosicion' => $oPosicion,
 ];
 
 $oView = new core\ViewTwig('encargossacd/controller');
-echo $oView->render('sacd_ficha.html.twig',$a_campos);
+echo $oView->render('sacd_ficha.html.twig', $a_campos);

@@ -1,51 +1,52 @@
-﻿<?php 
+﻿<?php
+
 use web\Hash;
 use web\PeriodoQue;
 use core\ConfigGlobal;
 
 /**
-* Esta página lista las actividades de s y sg con los centros encargados.
-* Permite cambiar el orden de los centros, eliminar y añadir.
-*
-*@package	delegacion
-*@subpackage actividades
-*@author	Daniel Serrabou
-*@since		15/3/09.
-*		
-*/
+ * Esta página lista las actividades de s y sg con los centros encargados.
+ * Permite cambiar el orden de los centros, eliminar y añadir.
+ *
+ * @package    delegacion
+ * @subpackage actividades
+ * @author    Daniel Serrabou
+ * @since        15/3/09.
+ *
+ */
 // INICIO Cabecera global de URL de controlador *********************************
-require_once ("apps/core/global_header.inc");
-// Arxivos requeridos por esta url **********************************************
+require_once("apps/core/global_header.inc");
+// Archivos requeridos por esta url **********************************************
 
-// Crea los objectos de uso global **********************************************
-require_once ("apps/core/global_object.inc");
+// Crea los objetos de uso global **********************************************
+require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
 
-$Qrefresh = (integer)  \filter_input(INPUT_POST, 'refresh');
+$Qrefresh = (integer)\filter_input(INPUT_POST, 'refresh');
 
-$Qtipo = (string)  \filter_input(INPUT_POST, 'tipo');
+$Qtipo = (string)\filter_input(INPUT_POST, 'tipo');
 
-$Qyear = (string) \filter_input(INPUT_POST, 'year');
-$Qperiodo = (string) \filter_input(INPUT_POST, 'periodo');
+$Qyear = (string)\filter_input(INPUT_POST, 'year');
+$Qperiodo = (string)\filter_input(INPUT_POST, 'periodo');
 
 $titulo = core\strtoupper_dlb(_("periodo del listado del año próximo"));
-$aOpciones =  array(
-					'tot_any' => _("todo el año"),
-					'trimestre_1'=>_("primer trimestre"),
-					'trimestre_2'=>_("segundo trimestre"),
-					'trimestre_3'=>_("tercer trimestre"),
-					'trimestre_4'=>_("cuarto trimestre"),
-					'separador'=>'---------',
-					'otro'=>_("otro")
-					);
+$aOpciones = array(
+    'tot_any' => _("todo el año"),
+    'trimestre_1' => _("primer trimestre"),
+    'trimestre_2' => _("segundo trimestre"),
+    'trimestre_3' => _("tercer trimestre"),
+    'trimestre_4' => _("cuarto trimestre"),
+    'separador' => '---------',
+    'otro' => _("otro")
+);
 $oFormP = new PeriodoQue();
 $oFormP->setTitulo($titulo);
 $oFormP->setFormName('modifica');
 $oFormP->setPosiblesPeriodos($aOpciones);
 $oFormP->setDesplPeriodosOpcion_sel($Qperiodo);
 $oFormP->setDesplAnysOpcion_sel($Qyear);
-$oFormP->setBoton("<input type=button name=\"buscar\" value=\""._("buscar")."\" onclick=\"fnjs_ver();\">");
+$oFormP->setBoton("<input type=button name=\"buscar\" value=\"" . _("buscar") . "\" onclick=\"fnjs_ver();\">");
 
 
 $url_ajax = "apps/actividadescentro/controller/activ_ctr_ajax.php";
@@ -75,7 +76,7 @@ $oHash->setCamposForm('empiezamax!empiezamin!iactividad_val!iasistentes_val!peri
 
 // $Qtipo viene por menú. Para la sf, debería ser sfsg pero en el menu está sólo sg:
 if (ConfigGlobal::mi_sfsv() == 2) {
-    switch ($Qtipo){
+    switch ($Qtipo) {
         case 'sg':
             $Qtipo = 'sfsg';
             break;
@@ -106,4 +107,4 @@ $a_campos = ['oPosicion' => $oPosicion,
 ];
 
 $oView = new core\ViewTwig('actividadescentro/controller');
-echo $oView->render('activ_ctr.html.twig',$a_campos);
+echo $oView->render('activ_ctr.html.twig', $a_campos);

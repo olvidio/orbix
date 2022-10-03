@@ -1,5 +1,7 @@
 <?php
+
 namespace actividadescentro\db;
+
 use core\ConfigGlobal;
 use devel\model\DBAbstract;
 
@@ -7,29 +9,34 @@ use devel\model\DBAbstract;
  * Crear las tablas necesaria a nivel de aplicación (global).
  * Cada esquema deberá crear las suyas, heredadas de estas.
  */
-class DB extends DBAbstract {
+class DB extends DBAbstract
+{
 
-    public function __construct(){
+    public function __construct()
+    {
         $esquema_sfsv = ConfigGlobal::mi_region_dl();
-        $role = substr($esquema_sfsv,0,-1); // quito la v o la f.
-        $this->role = '"'. $role .'"';
-        $this->role_vf = '"'. $esquema_sfsv .'"';
-        
+        $role = substr($esquema_sfsv, 0, -1); // quito la v o la f.
+        $this->role = '"' . $role . '"';
+        $this->role_vf = '"' . $esquema_sfsv . '"';
+
         $this->esquema = 'global';
     }
-    
-    public function dropAll() {
+
+    public function dropAll()
+    {
         $this->eliminar_da_ctr_encargados();
     }
-    
-    public function createAll() {
+
+    public function createAll()
+    {
         $this->create_da_ctr_encargados();
     }
-    
+
     /**
      * En la BD Comun (global).
      */
-    public function create_da_ctr_encargados() {
+    public function create_da_ctr_encargados()
+    {
         $this->addPermisoGlobal('comun');
 
         $tabla = "da_ctr_encargados";
@@ -42,21 +49,23 @@ class DB extends DBAbstract {
                     num_orden smallint,
                     encargo text
                     );";
-        
+
         $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->user_orbix";
-        
+
         $this->executeSql($a_sql);
-        
+
         $this->delPermisoGlobal('comun');
     }
-    public function eliminar_da_ctr_encargados() {
+
+    public function eliminar_da_ctr_encargados()
+    {
         $this->addPermisoGlobal('comun');
 
         $tabla = "da_ctr_encargados";
         $nom_tabla = $this->getNomTabla($tabla);
         $this->eliminar($nom_tabla);
-        
+
         $this->delPermisoGlobal('comun');
     }
-    
+
 }

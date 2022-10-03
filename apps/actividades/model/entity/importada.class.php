@@ -1,6 +1,8 @@
 <?php
 namespace actividades\model\entity;
+
 use core;
+
 /**
  * Fitxer amb la Classe que accedeix a la taula $nom_tabla
  *
@@ -10,8 +12,9 @@ use core;
  * @version 1.0
  * @created 04/02/2011
  */
+
 /**
- * Classe que implementa l'entitat $nom_tabla
+ * Clase que implementa la entidad $nom_tabla
  *
  * @package delegación
  * @subpackage model
@@ -19,243 +22,260 @@ use core;
  * @version 1.0
  * @created 04/02/2011
  */
-class Importada Extends core\ClasePropiedades {
-	/* ATRIBUTS ----------------------------------------------------------------- */
+class Importada extends core\ClasePropiedades
+{
+    /* ATRIBUTOS ----------------------------------------------------------------- */
 
-	/**
-	 * aPrimary_key de Importada
-	 *
-	 * @var array
-	 */
-	 private $aPrimary_key;
+    /**
+     * aPrimary_key de Importada
+     *
+     * @var array
+     */
+    private $aPrimary_key;
 
-	/**
-	 * aDades de Importada
-	 *
-	 * @var array
-	 */
-	 private $aDades;
+    /**
+     * aDades de Importada
+     *
+     * @var array
+     */
+    private $aDades;
 
-	/**
-	 * bLoaded
-	 *
-	 * @var boolean
-	 */
-	 private $bLoaded = FALSE;
+    /**
+     * bLoaded
+     *
+     * @var boolean
+     */
+    private $bLoaded = FALSE;
 
-	/**
-	 * Id_activ de Importada
-	 *
-	 * @var integer
-	 */
-	 private $iid_activ;
-	/* ATRIBUTS QUE NO SÓN CAMPS------------------------------------------------- */
- 
-	/* CONSTRUCTOR -------------------------------------------------------------- */
+    /**
+     * Id_activ de Importada
+     *
+     * @var integer
+     */
+    private $iid_activ;
+    /* ATRIBUTOS QUE NO SON CAMPOS------------------------------------------------- */
 
-	/**
-	 * Constructor de la classe.
-	 * Si només necessita un valor, se li pot passar un integer.
-	 * En general se li passa un array amb les claus primàries.
-	 *
-	 * @param integer|array iid_activ
-	 * 						$a_id. Un array con los nombres=>valores de las claves primarias.
-	 */
-	function __construct($a_id='') {
-		$oDbl = $GLOBALS['oDBC'];
-		if (is_array($a_id)) { 
-			$this->aPrimary_key = $a_id;
-			foreach($a_id as $nom_id=>$val_id) {
-				if (($nom_id == 'id_activ') && $val_id !== '') $this->iid_activ = (int)$val_id; // evitem SQL injection fent cast a integer
-			}
-		} else {
-			if (isset($a_id) && $a_id !== '') {
-				$this->iid_activ = (integer) $a_id; // evitem SQL injection fent cast a integer
-				$this->aPrimary_key = array('id_activ' => $this->iid_activ);
-			}
-		}
-		$this->setoDbl($oDbl);
-		$this->setNomTabla('a_importadas');
-	}
+    /* CONSTRUCTOR -------------------------------------------------------------- */
 
-	/* METODES PUBLICS ----------------------------------------------------------*/
+    /**
+     * Constructor de la classe.
+     * Si només necessita un valor, se li pot passar un integer.
+     * En general se li passa un array amb les claus primàries.
+     *
+     * @param integer|array iid_activ
+     *                        $a_id. Un array con los nombres=>valores de las claves primarias.
+     */
+    function __construct($a_id = '')
+    {
+        $oDbl = $GLOBALS['oDBC'];
+        if (is_array($a_id)) {
+            $this->aPrimary_key = $a_id;
+            foreach ($a_id as $nom_id => $val_id) {
+                if (($nom_id == 'id_activ') && $val_id !== '') $this->iid_activ = (int)$val_id; // evitem SQL injection fent cast a integer
+            }
+        } else {
+            if (isset($a_id) && $a_id !== '') {
+                $this->iid_activ = (integer)$a_id; // evitem SQL injection fent cast a integer
+                $this->aPrimary_key = array('id_activ' => $this->iid_activ);
+            }
+        }
+        $this->setoDbl($oDbl);
+        $this->setNomTabla('a_importadas');
+    }
 
-	/**
-	 * Desa els atributs de l'objecte a la base de dades.
-	 * Si no hi ha el registre, fa el insert, si hi es fa el update.
-	 *
-	 */
-	public function DBGuardar() {
-		$oDbl = $this->getoDbl();
-		$nom_tabla = $this->getNomTabla();
-		if ($this->DBCarregar('guardar') === false) { $bInsert=true; } else { $bInsert=false; }
-		$aDades=array();
-		$aDades['id_activ'] = $this->iid_activ;
+    /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
-		if ($bInsert === false) { // ya está importada
-			//UPDATE
-		} else {
-			// INSERT
-			$campos="(id_activ)";
-			$valores="(:id_activ)";		
-			if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {
-				$sClauError = 'Importada.insertar.prepare';
-				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
-				return false;
-			} else {
-				try {
-					$oDblSt->execute($aDades);
-				}
-				catch ( \PDOException $e) {
-					$err_txt=$e->errorInfo[2];
-					$this->setErrorTxt($err_txt);
-					$sClauError = 'Importada.insertar.execute';
-					$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
-					return false;
-				}
-			}
-		}
-		$this->setAllAtributes($aDades);
-		return true;
-	}
+    /**
+     * Desa els atributs de l'objecte a la base de dades.
+     * Si no hi ha el registre, fa el insert, si hi es fa el update.
+     *
+     */
+    public function DBGuardar()
+    {
+        $oDbl = $this->getoDbl();
+        $nom_tabla = $this->getNomTabla();
+        if ($this->DBCarregar('guardar') === false) {
+            $bInsert = true;
+        } else {
+            $bInsert = false;
+        }
+        $aDades = array();
+        $aDades['id_activ'] = $this->iid_activ;
 
-	/**
-	 * Carrega els camps de la base de dades com atributs de l'objecte.
-	 *
-	 */
-	public function DBCarregar($que=null) {
-		$oDbl = $this->getoDbl();
-		$nom_tabla = $this->getNomTabla();
-		if (isset($this->iid_activ)) {
-			if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_activ='$this->iid_activ'")) === false) {
-				$sClauError = 'Importada.carregar';
-				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
-				return false;
-			}
-			$aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);
-			// Para evitar posteriores cargas
-			$this->bLoaded = TRUE;
-			switch ($que) {
-				case 'tot':
-					$this->aDades=$aDades;
-					break;
-				case 'guardar':
-					if (!$oDblSt->rowCount()) return false;
-					break;
-				default:
-					// En el caso de no existir esta fila, $aDades = FALSE:
-					if ($aDades === FALSE) {
-						$this->setNullAllAtributes();
-					} else {
-						$this->setAllAtributes($aDades);
-					}
-			}
-			return true;
-		} else {
-		   	return false;
-		}
-	}
+        if ($bInsert === false) { // ya está importada
+            //UPDATE
+        } else {
+            // INSERT
+            $campos = "(id_activ)";
+            $valores = "(:id_activ)";
+            if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {
+                $sClauError = 'Importada.insertar.prepare';
+                $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+                return false;
+            } else {
+                try {
+                    $oDblSt->execute($aDades);
+                } catch (\PDOException $e) {
+                    $err_txt = $e->errorInfo[2];
+                    $this->setErrorTxt($err_txt);
+                    $sClauError = 'Importada.insertar.execute';
+                    $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
+                    return false;
+                }
+            }
+        }
+        $this->setAllAtributes($aDades);
+        return true;
+    }
 
-	/**
-	 * Elimina el registre de la base de dades corresponent a l'objecte.
-	 *
-	 */
-	public function DBEliminar() {
-		$oDbl = $this->getoDbl();
-		$nom_tabla = $this->getNomTabla();
-		if (($oDbl->exec("DELETE FROM $nom_tabla WHERE id_activ='$this->iid_activ'")) === false) {
-			$sClauError = 'Importada.eliminar';
-			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
-			return false;
-		}
-		return true;
-	}
-	
-	/* METODES ALTRES  ----------------------------------------------------------*/
-	/* METODES PRIVATS ----------------------------------------------------------*/
+    /**
+     * Carga los campos de la base de datos como atributos de la clase.
+     *
+     */
+    public function DBCarregar($que = null)
+    {
+        $oDbl = $this->getoDbl();
+        $nom_tabla = $this->getNomTabla();
+        if (isset($this->iid_activ)) {
+            if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_activ='$this->iid_activ'")) === false) {
+                $sClauError = 'Importada.carregar';
+                $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+                return false;
+            }
+            $aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);
+            // Para evitar posteriores cargas
+            $this->bLoaded = TRUE;
+            switch ($que) {
+                case 'tot':
+                    $this->aDades = $aDades;
+                    break;
+                case 'guardar':
+                    if (!$oDblSt->rowCount()) return false;
+                    break;
+                default:
+                    // En el caso de no existir esta fila, $aDades = FALSE:
+                    if ($aDades === FALSE) {
+                        $this->setNullAllAtributes();
+                    } else {
+                        $this->setAllAtributes($aDades);
+                    }
+            }
+            return true;
+        } else {
+            return false;
+        }
+    }
 
-	/**
-	 * Estableix el valor de tots els atributs
-	 *
-	 * @param array $aDades
-	 */
-	function setAllAtributes($aDades) {
-		if (!is_array($aDades)) return;
-		if (array_key_exists('id_schema',$aDades)) $this->setId_schema($aDades['id_schema']);
-		if (array_key_exists('id_activ',$aDades)) $this->setId_activ($aDades['id_activ']);
-	}
+    /**
+     * Elimina la fila de la base de datos que corresponde a la clase.
+     *
+     */
+    public function DBEliminar()
+    {
+        $oDbl = $this->getoDbl();
+        $nom_tabla = $this->getNomTabla();
+        if (($oDbl->exec("DELETE FROM $nom_tabla WHERE id_activ='$this->iid_activ'")) === false) {
+            $sClauError = 'Importada.eliminar';
+            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+            return false;
+        }
+        return true;
+    }
 
-	/**
-	 * Estableix a empty el valor de tots els atributs
-	 *
-	 */
-	function setNullAllAtributes() {
-		$aPK = $this->getPrimary_key();
-		$this->setId_schema('');
-		$this->setId_activ('');
-		$this->setPrimary_key($aPK);
-	}
+    /* OTROS MÉTODOS  ----------------------------------------------------------*/
+    /* MÉTODOS PRIVADOS ----------------------------------------------------------*/
+
+    /**
+     * Establece el valor de todos los atributos
+     *
+     * @param array $aDades
+     */
+    function setAllAtributes($aDades)
+    {
+        if (!is_array($aDades)) return;
+        if (array_key_exists('id_schema', $aDades)) $this->setId_schema($aDades['id_schema']);
+        if (array_key_exists('id_activ', $aDades)) $this->setId_activ($aDades['id_activ']);
+    }
+
+    /**
+     * Establece a 'empty' el valor de todos los atributos
+     *
+     */
+    function setNullAllAtributes()
+    {
+        $aPK = $this->getPrimary_key();
+        $this->setId_schema('');
+        $this->setId_activ('');
+        $this->setPrimary_key($aPK);
+    }
 
 
-	/* METODES GET i SET --------------------------------------------------------*/
-	/**
-	 * Recupera tots els atributs de Importada en un array
-	 *
-	 * @return array aDades
-	 */
-	function getTot() {
-		if (!is_array($this->aDades)) {
-			$this->DBCarregar('tot');
-		}
-		return $this->aDades;
-	}
+    /* MÉTODOS GET y SET --------------------------------------------------------*/
+    /**
+     * Recupera todos los atributos de Importada en un array
+     *
+     * @return array aDades
+     */
+    function getTot()
+    {
+        if (!is_array($this->aDades)) {
+            $this->DBCarregar('tot');
+        }
+        return $this->aDades;
+    }
 
-	/**
-	 * Recupera las claus primàries de Importada en un array
-	 *
-	 * @return array aPrimary_key
-	 */
-	function getPrimary_key() {
-		if (!isset($this->aPrimary_key )) {
-			$this->aPrimary_key = array('id_activ' => $this->iid_activ);
-		}
-		return $this->aPrimary_key;
-	}
-	
-	/**
-	 * Estableix las claus primàries de Importada en un array
-	 *
-	 * @return array aPrimary_key
-	 */
-	public function setPrimary_key($a_id='') {
-	    if (is_array($a_id)) {
-	        $this->aPrimary_key = $a_id;
-	        foreach($a_id as $nom_id=>$val_id) {
-	            if (($nom_id == 'id_activ') && $val_id !== '') $this->iid_activ = (int)$val_id; // evitem SQL injection fent cast a integer
-	        }
-	    }
-	}
-	
-	/**
-	 * Recupera l'atribut iid_activ de Importada
-	 *
-	 * @return integer iid_activ
-	 */
-	function getId_activ() {
-		if (!isset($this->iid_activ) && !$this->bLoaded) {
-			$this->DBCarregar();
-		}
-		return $this->iid_activ;
-	}
-	/**
-	 * estableix el valor de l'atribut iid_activ de Importada
-	 *
-	 * @param integer iid_activ
-	 */
-	function setId_activ($iid_activ) {
-		$this->iid_activ = $iid_activ;
-	}
-	/* METODES GET i SET D'ATRIBUTS QUE NO SÓN CAMPS -----------------------------*/
+    /**
+     * Recupera la clave primaria de Importada en un array
+     *
+     * @return array aPrimary_key
+     */
+    function getPrimary_key()
+    {
+        if (!isset($this->aPrimary_key)) {
+            $this->aPrimary_key = array('id_activ' => $this->iid_activ);
+        }
+        return $this->aPrimary_key;
+    }
+
+    /**
+     * Establece la clave primaria de Importada en un array
+     *
+     * @return array aPrimary_key
+     */
+    public function setPrimary_key($a_id = '')
+    {
+        if (is_array($a_id)) {
+            $this->aPrimary_key = $a_id;
+            foreach ($a_id as $nom_id => $val_id) {
+                if (($nom_id == 'id_activ') && $val_id !== '') $this->iid_activ = (int)$val_id; // evitem SQL injection fent cast a integer
+            }
+        }
+    }
+
+    /**
+     * Recupera el atributo iid_activ de Importada
+     *
+     * @return integer iid_activ
+     */
+    function getId_activ()
+    {
+        if (!isset($this->iid_activ) && !$this->bLoaded) {
+            $this->DBCarregar();
+        }
+        return $this->iid_activ;
+    }
+
+    /**
+     * Establece el valor del atributo iid_activ de Importada
+     *
+     * @param integer iid_activ
+     */
+    function setId_activ($iid_activ)
+    {
+        $this->iid_activ = $iid_activ;
+    }
+    /* MÉTODOS GET y SET D'ATRIBUTOS QUE NO SON CAMPOS -----------------------------*/
 
 }
+
 ?>

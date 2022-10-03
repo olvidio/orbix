@@ -1,22 +1,22 @@
 <?php
 /**
-* Esta página muestra un formulario con las opciones para escoger a una persona.
-*
-*@package	delegacion
-*@subpackage	fichas
-*@author	Daniel Serrabou
-*@since		15/5/02.
-*		
-*/
+ * Esta página muestra un formulario con las opciones para escoger a una persona.
+ *
+ * @package    delegacion
+ * @subpackage    fichas
+ * @author    Daniel Serrabou
+ * @since        15/5/02.
+ *
+ */
 
 // INICIO Cabecera global de URL de controlador *********************************
-	require_once ("apps/core/global_header.inc");
-// Arxivos requeridos por esta url **********************************************
+require_once("apps/core/global_header.inc");
+// Archivos requeridos por esta url **********************************************
 
-// Crea los objectos de uso global **********************************************
-	require_once ("apps/core/global_object.inc");
+// Crea los objetos de uso global **********************************************
+require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
-	
+
 $oPosicion->recordar();
 //Si vengo de vuelta y le paso la referecia del stack donde está la información.
 if (isset($_POST['stack'])) {
@@ -25,15 +25,15 @@ if (isset($_POST['stack'])) {
         // No me sirve el de global_object, sino el de la session
         $oPosicion2 = new web\Posicion();
         if ($oPosicion2->goStack($stack)) { // devuelve false si no puede ir
-            $Qid_sel=$oPosicion2->getParametro('id_sel');
+            $Qid_sel = $oPosicion2->getParametro('id_sel');
             $Qscroll_id = $oPosicion2->getParametro('scroll_id');
             $oPosicion2->olvidar($stack);
         }
     }
 }
 
-$Qnumero = (string) \filter_input(INPUT_POST, 'numero');
-$Qb_c = (string) \filter_input(INPUT_POST, 'b_c');
+$Qnumero = (string)\filter_input(INPUT_POST, 'numero');
+$Qb_c = (string)\filter_input(INPUT_POST, 'b_c');
 if ($Qb_c == 'b') {
     $chk_b = 'checked';
     $chk_c = '';
@@ -41,20 +41,20 @@ if ($Qb_c == 'b') {
     $chk_b = '';
     $chk_c = 'checked';
 }
-$Qc1 = (string) \filter_input(INPUT_POST, 'c1');
-$chk_c1 = empty($Qc1)? '' : 'checked';
-$Qc2 = (string) \filter_input(INPUT_POST, 'c2');
-$chk_c2 = empty($Qc2)? '' : 'checked';
-$Qpersonas_n = (string) \filter_input(INPUT_POST, 'personas_n');
-$chk_n = empty($Qpersonas_n)? '' : 'checked';
-$Qpersonas_agd = (string) \filter_input(INPUT_POST, 'personas_agd');
-$chk_agd = empty($Qpersonas_agd)? '' : 'checked';
+$Qc1 = (string)\filter_input(INPUT_POST, 'c1');
+$chk_c1 = empty($Qc1) ? '' : 'checked';
+$Qc2 = (string)\filter_input(INPUT_POST, 'c2');
+$chk_c2 = empty($Qc2) ? '' : 'checked';
+$Qpersonas_n = (string)\filter_input(INPUT_POST, 'personas_n');
+$chk_n = empty($Qpersonas_n) ? '' : 'checked';
+$Qpersonas_agd = (string)\filter_input(INPUT_POST, 'personas_agd');
+$chk_agd = empty($Qpersonas_agd) ? '' : 'checked';
 
-$Qtitulo = (string) \filter_input(INPUT_POST, 'titulo');
-$Qid_asignatura = (string) \filter_input(INPUT_POST, 'id_asignatura');
+$Qtitulo = (string)\filter_input(INPUT_POST, 'titulo');
+$Qid_asignatura = (string)\filter_input(INPUT_POST, 'id_asignatura');
 
-$Qlista = (string) \filter_input(INPUT_POST, 'lista');
-$chk_lista = empty($Qlista)? '' : 'checked';
+$Qlista = (string)\filter_input(INPUT_POST, 'lista');
+$chk_lista = empty($Qlista) ? '' : 'checked';
 
 
 $GesAsignaturas = new asignaturas\model\entity\GestorAsignatura();
@@ -72,18 +72,18 @@ $oHash1->setcamposForm('id_asignatura!b_c');
 
 
 $a_campos = ['oPosicion' => $oPosicion,
-			'oHash' => $oHash,
-			'oHash1' => $oHash1,
-			'oDesplAsignaturas' => $oDesplAsignaturas,
-            'numero' => $Qnumero,
-            'chk_n' => $chk_n,
-            'chk_agd' => $chk_agd,
-            'chk_b' => $chk_b,
-            'chk_c' => $chk_c,
-            'chk_c1' => $chk_c1,
-            'chk_c2' => $chk_c2,
-            'chk_lista' => $chk_lista,
-			];
+    'oHash' => $oHash,
+    'oHash1' => $oHash1,
+    'oDesplAsignaturas' => $oDesplAsignaturas,
+    'numero' => $Qnumero,
+    'chk_n' => $chk_n,
+    'chk_agd' => $chk_agd,
+    'chk_b' => $chk_b,
+    'chk_c' => $chk_c,
+    'chk_c1' => $chk_c1,
+    'chk_c2' => $chk_c2,
+    'chk_lista' => $chk_lista,
+];
 
 $oView = new core\View('notas/controller');
-echo $oView->render('asig_faltan_que.phtml',$a_campos);
+echo $oView->render('asig_faltan_que.phtml', $a_campos);

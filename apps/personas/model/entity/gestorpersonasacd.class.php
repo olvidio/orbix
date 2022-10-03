@@ -1,4 +1,5 @@
 <?php
+
 namespace personas\model\entity;
 /**
  * GestorPersonaSacd
@@ -11,28 +12,29 @@ namespace personas\model\entity;
  * @version 1.0
  * @created 11/03/2019
  */
+class GestorPersonaSacd extends GestorPersonaGlobal
+{
+    /* ATRIBUTOS ----------------------------------------------------------------- */
 
-class GestorPersonaSacd Extends GestorPersonaGlobal {
-	/* ATRIBUTS ----------------------------------------------------------------- */
+    /* CONSTRUCTOR -------------------------------------------------------------- */
 
-	/* CONSTRUCTOR -------------------------------------------------------------- */
-
-	/**
-	 * Constructor de la classe.
-	 *
-	 * @return $gestor
-	 *
-	 */
-	function __construct() {
-		$oDbl = $GLOBALS['oDBC'];
-		$this->setoDbl($oDbl);
-		$this->setNomTabla('cp_sacd');
-	}
+    /**
+     * Constructor de la classe.
+     *
+     * @return $gestor
+     *
+     */
+    function __construct()
+    {
+        $oDbl = $GLOBALS['oDBC'];
+        $this->setoDbl($oDbl);
+        $this->setNomTabla('cp_sacd');
+    }
 
 
-	/* METODES PUBLICS -----------------------------------------------------------*/
+    /* MÉTODOS PÚBLICOS -----------------------------------------------------------*/
 
-	/* METODES PROTECTED --------------------------------------------------------*/
+    /* METODES PROTECTED --------------------------------------------------------*/
 
-	/* METODES GET i SET --------------------------------------------------------*/
+    /* MÉTODOS GET y SET --------------------------------------------------------*/
 }

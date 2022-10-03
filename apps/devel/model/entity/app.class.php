@@ -1,6 +1,8 @@
 <?php
 namespace devel\model\entity;
+
 use core;
+
 /**
  * Fitxer amb la Classe que accedeix a la taula m0_apps
  *
@@ -10,8 +12,9 @@ use core;
  * @version 1.0
  * @created 15/12/2014
  */
+
 /**
- * Classe que implementa l'entitat m0_apps
+ * Clase que implementa la entidad m0_apps
  *
  * @package delegación
  * @subpackage model
@@ -19,373 +22,400 @@ use core;
  * @version 1.0
  * @created 15/12/2014
  */
-class App Extends core\ClasePropiedades {
-	/* ATRIBUTS ----------------------------------------------------------------- */
+class App extends core\ClasePropiedades
+{
+    /* ATRIBUTOS ----------------------------------------------------------------- */
 
-	/**
-	 * aPrimary_key de App
-	 *
-	 * @var array
-	 */
-	 private $aPrimary_key;
+    /**
+     * aPrimary_key de App
+     *
+     * @var array
+     */
+    private $aPrimary_key;
 
-	/**
-	 * aDades de App
-	 *
-	 * @var array
-	 */
-	 private $aDades;
+    /**
+     * aDades de App
+     *
+     * @var array
+     */
+    private $aDades;
 
-	/**
-	 * bLoaded
-	 *
-	 * @var boolean
-	 */
-	 private $bLoaded = FALSE;
+    /**
+     * bLoaded
+     *
+     * @var boolean
+     */
+    private $bLoaded = FALSE;
 
-	/**
-	 * Id_app de App
-	 *
-	 * @var integer
-	 */
-	 private $iid_app;
-	/**
-	 * Nom de App
-	 *
-	 * @var string
-	 */
-	 private $snom;
-	/**
-	 * Db_prefix de App
-	 *
-	 * @var string
-	 */
-	 private $sdb_prefix;
-	/* ATRIBUTS QUE NO SÓN CAMPS------------------------------------------------- */
-	/**
-	 * oDbl de App
-	 *
-	 * @var object
-	 */
-	 protected $oDbl;
-	/**
-	 * NomTabla de App
-	 *
-	 * @var string
-	 */
-	 protected $sNomTabla;
-	/* CONSTRUCTOR -------------------------------------------------------------- */
+    /**
+     * Id_app de App
+     *
+     * @var integer
+     */
+    private $iid_app;
+    /**
+     * Nom de App
+     *
+     * @var string
+     */
+    private $snom;
+    /**
+     * Db_prefix de App
+     *
+     * @var string
+     */
+    private $sdb_prefix;
+    /* ATRIBUTOS QUE NO SON CAMPOS------------------------------------------------- */
+    /**
+     * oDbl de App
+     *
+     * @var object
+     */
+    protected $oDbl;
+    /**
+     * NomTabla de App
+     *
+     * @var string
+     */
+    protected $sNomTabla;
+    /* CONSTRUCTOR -------------------------------------------------------------- */
 
-	/**
-	 * Constructor de la classe.
-	 * Si només necessita un valor, se li pot passar un integer.
-	 * En general se li passa un array amb les claus primàries.
-	 *
-	 * @param integer|array iid_app
-	 * 						$a_id. Un array con los nombres=>valores de las claves primarias.
-	 */
-	function __construct($a_id='') {
-		$oDbl = $GLOBALS['oDBPC'];
-		if (is_array($a_id)) { 
-			$this->aPrimary_key = $a_id;
-			foreach($a_id as $nom_id=>$val_id) {
-				if (($nom_id == 'id_app') && $val_id !== '') $this->iid_app = (int)$val_id; // evitem SQL injection fent cast a integer
-			}
-		} else {
-			if (isset($a_id) && $a_id !== '') {
-				$this->iid_app = (integer) $a_id; // evitem SQL injection fent cast a integer
-				$this->aPrimary_key = array('id_app' => $this->iid_app);
-			}
-		}
-		$this->setoDbl($oDbl);
-		$this->setNomTabla('m0_apps');
-	}
+    /**
+     * Constructor de la classe.
+     * Si només necessita un valor, se li pot passar un integer.
+     * En general se li passa un array amb les claus primàries.
+     *
+     * @param integer|array iid_app
+     *                        $a_id. Un array con los nombres=>valores de las claves primarias.
+     */
+    function __construct($a_id = '')
+    {
+        $oDbl = $GLOBALS['oDBPC'];
+        if (is_array($a_id)) {
+            $this->aPrimary_key = $a_id;
+            foreach ($a_id as $nom_id => $val_id) {
+                if (($nom_id == 'id_app') && $val_id !== '') $this->iid_app = (int)$val_id; // evitem SQL injection fent cast a integer
+            }
+        } else {
+            if (isset($a_id) && $a_id !== '') {
+                $this->iid_app = (integer)$a_id; // evitem SQL injection fent cast a integer
+                $this->aPrimary_key = array('id_app' => $this->iid_app);
+            }
+        }
+        $this->setoDbl($oDbl);
+        $this->setNomTabla('m0_apps');
+    }
 
-	/* METODES PUBLICS ----------------------------------------------------------*/
+    /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
-	/**
-	 * Desa els atributs de l'objecte a la base de dades.
-	 * Si no hi ha el registre, fa el insert, si hi es fa el update.
-	 *
-	 */
-	public function DBGuardar() {
-		$oDbl = $this->getoDbl();
-		$nom_tabla = $this->getNomTabla();
-		if ($this->DBCarregar('guardar') === false) { $bInsert=true; } else { $bInsert=false; }
-		$aDades=array();
-		$aDades['nom'] = $this->snom;
-		$aDades['db_prefix'] = $this->sdb_prefix;
-		array_walk($aDades, 'core\poner_null');
+    /**
+     * Desa els atributs de l'objecte a la base de dades.
+     * Si no hi ha el registre, fa el insert, si hi es fa el update.
+     *
+     */
+    public function DBGuardar()
+    {
+        $oDbl = $this->getoDbl();
+        $nom_tabla = $this->getNomTabla();
+        if ($this->DBCarregar('guardar') === false) {
+            $bInsert = true;
+        } else {
+            $bInsert = false;
+        }
+        $aDades = array();
+        $aDades['nom'] = $this->snom;
+        $aDades['db_prefix'] = $this->sdb_prefix;
+        array_walk($aDades, 'core\poner_null');
 
-		if ($bInsert === false) {
-			//UPDATE
-			$update="
+        if ($bInsert === false) {
+            //UPDATE
+            $update = "
 					nom                      = :nom,
 					db_prefix                = :db_prefix";
-			if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_app='$this->iid_app'")) === false) {
-				$sClauError = 'App.update.prepare';
-				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
-				return false;
-			} else {
-				try {
-					$oDblSt->execute($aDades);
-				}
-				catch ( \PDOException $e) {
-					$err_txt=$e->errorInfo[2];
-					$this->setErrorTxt($err_txt);
-					$sClauError = 'App.update.execute';
-					$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
-					return false;
-				}
-			}
-		} else {
-			// INSERT
-			$campos="(nom,db_prefix)";
-			$valores="(:nom,:db_prefix)";		
-			if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {
-				$sClauError = 'App.insertar.prepare';
-				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
-				return false;
-			} else {
-				try {
-					$oDblSt->execute($aDades);
-				}
-				catch ( \PDOException $e) {
-					$err_txt=$e->errorInfo[2];
-					$this->setErrorTxt($err_txt);
-					$sClauError = 'App.insertar.execute';
-					$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
-					return false;
-				}
-			}
-			$this->id_app = $oDbl->lastInsertId('m0_apps_id_app_seq');
-		}
-		$this->setAllAtributes($aDades);
-		return true;
-	}
+            if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_app='$this->iid_app'")) === false) {
+                $sClauError = 'App.update.prepare';
+                $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+                return false;
+            } else {
+                try {
+                    $oDblSt->execute($aDades);
+                } catch (\PDOException $e) {
+                    $err_txt = $e->errorInfo[2];
+                    $this->setErrorTxt($err_txt);
+                    $sClauError = 'App.update.execute';
+                    $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
+                    return false;
+                }
+            }
+        } else {
+            // INSERT
+            $campos = "(nom,db_prefix)";
+            $valores = "(:nom,:db_prefix)";
+            if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {
+                $sClauError = 'App.insertar.prepare';
+                $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+                return false;
+            } else {
+                try {
+                    $oDblSt->execute($aDades);
+                } catch (\PDOException $e) {
+                    $err_txt = $e->errorInfo[2];
+                    $this->setErrorTxt($err_txt);
+                    $sClauError = 'App.insertar.execute';
+                    $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
+                    return false;
+                }
+            }
+            $this->id_app = $oDbl->lastInsertId('m0_apps_id_app_seq');
+        }
+        $this->setAllAtributes($aDades);
+        return true;
+    }
 
-	/**
-	 * Carrega els camps de la base de dades com atributs de l'objecte.
-	 *
-	 */
-	public function DBCarregar($que=null) {
-		$oDbl = $this->getoDbl();
-		$nom_tabla = $this->getNomTabla();
-		if (isset($this->iid_app)) {
-			if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_app='$this->iid_app'")) === false) {
-				$sClauError = 'App.carregar';
-				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
-				return false;
-			}
-			$aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);
-			// Para evitar posteriores cargas
-			$this->bLoaded = TRUE;
-			switch ($que) {
-				case 'tot':
-					$this->aDades=$aDades;
-					break;
-				case 'guardar':
-					if (!$oDblSt->rowCount()) return false;
-					break;
-				default:
-					// En el caso de no existir esta fila, $aDades = FALSE:
-					if ($aDades === FALSE) {
-						$this->setNullAllAtributes();
-					} else {
-						$this->setAllAtributes($aDades);
-					}
-			}
-			return true;
-		} else {
-		   	return false;
-		}
-	}
+    /**
+     * Carga los campos de la base de datos como atributos de la clase.
+     *
+     */
+    public function DBCarregar($que = null)
+    {
+        $oDbl = $this->getoDbl();
+        $nom_tabla = $this->getNomTabla();
+        if (isset($this->iid_app)) {
+            if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_app='$this->iid_app'")) === false) {
+                $sClauError = 'App.carregar';
+                $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+                return false;
+            }
+            $aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);
+            // Para evitar posteriores cargas
+            $this->bLoaded = TRUE;
+            switch ($que) {
+                case 'tot':
+                    $this->aDades = $aDades;
+                    break;
+                case 'guardar':
+                    if (!$oDblSt->rowCount()) return false;
+                    break;
+                default:
+                    // En el caso de no existir esta fila, $aDades = FALSE:
+                    if ($aDades === FALSE) {
+                        $this->setNullAllAtributes();
+                    } else {
+                        $this->setAllAtributes($aDades);
+                    }
+            }
+            return true;
+        } else {
+            return false;
+        }
+    }
 
-	/**
-	 * Elimina el registre de la base de dades corresponent a l'objecte.
-	 *
-	 */
-	public function DBEliminar() {
-		$oDbl = $this->getoDbl();
-		$nom_tabla = $this->getNomTabla();
-		if (($oDblSt = $oDbl->exec("DELETE FROM $nom_tabla WHERE id_app='$this->iid_app'")) === false) {
-			$sClauError = 'App.eliminar';
-			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
-			return false;
-		}
-		return true;
-	}
-	
-	/* METODES ALTRES  ----------------------------------------------------------*/
-	/* METODES PRIVATS ----------------------------------------------------------*/
+    /**
+     * Elimina la fila de la base de datos que corresponde a la clase.
+     *
+     */
+    public function DBEliminar()
+    {
+        $oDbl = $this->getoDbl();
+        $nom_tabla = $this->getNomTabla();
+        if (($oDblSt = $oDbl->exec("DELETE FROM $nom_tabla WHERE id_app='$this->iid_app'")) === false) {
+            $sClauError = 'App.eliminar';
+            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+            return false;
+        }
+        return true;
+    }
 
-	/**
-	 * Estableix el valor de tots els atributs
-	 *
-	 * @param array $aDades
-	 */
-	function setAllAtributes($aDades) {
-		if (!is_array($aDades)) return;
-		if (array_key_exists('id_schema',$aDades)) $this->setId_schema($aDades['id_schema']);
-		if (array_key_exists('id_app',$aDades)) $this->setId_app($aDades['id_app']);
-		if (array_key_exists('nom',$aDades)) $this->setNom($aDades['nom']);
-		if (array_key_exists('db_prefix',$aDades)) $this->setDb_prefix($aDades['db_prefix']);
-	}
+    /* OTROS MÉTODOS  ----------------------------------------------------------*/
+    /* MÉTODOS PRIVADOS ----------------------------------------------------------*/
 
-	/**
-	 * Estableix a empty el valor de tots els atributs
-	 *
-	 */
-	function setNullAllAtributes() {
-		$aPK = $this->getPrimary_key();
-		$this->setId_schema('');
-		$this->setId_app('');
-		$this->setNom('');
-		$this->setDb_prefix('');
-		$this->setPrimary_key($aPK);
-	}
+    /**
+     * Establece el valor de todos los atributos
+     *
+     * @param array $aDades
+     */
+    function setAllAtributes($aDades)
+    {
+        if (!is_array($aDades)) return;
+        if (array_key_exists('id_schema', $aDades)) $this->setId_schema($aDades['id_schema']);
+        if (array_key_exists('id_app', $aDades)) $this->setId_app($aDades['id_app']);
+        if (array_key_exists('nom', $aDades)) $this->setNom($aDades['nom']);
+        if (array_key_exists('db_prefix', $aDades)) $this->setDb_prefix($aDades['db_prefix']);
+    }
 
-
-	/* METODES GET i SET --------------------------------------------------------*/
-
-	/**
-	 * Recupera tots els atributs de App en un array
-	 *
-	 * @return array aDades
-	 */
-	function getTot() {
-		if (!is_array($this->aDades)) {
-			$this->DBCarregar('tot');
-		}
-		return $this->aDades;
-	}
-
-	/**
-	 * Recupera las claus primàries de App en un array
-	 *
-	 * @return array aPrimary_key
-	 */
-	function getPrimary_key() {
-		if (!isset($this->aPrimary_key )) {
-			$this->aPrimary_key = array('id_app' => $this->iid_app);
-		}
-		return $this->aPrimary_key;
-	}
-	
-	/**
-	 * Estableix las claus primàries de App en un array
-	 *
-	 * @return array aPrimary_key
-	 */
-	public function setPrimary_key($a_id='') {
-	    if (is_array($a_id)) {
-	        $this->aPrimary_key = $a_id;
-	        foreach($a_id as $nom_id=>$val_id) {
-	            if (($nom_id == 'id_app') && $val_id !== '') $this->iid_app = (int)$val_id; // evitem SQL injection fent cast a integer
-	        }
-	    }
-	}
-
-	/**
-	 * Recupera l'atribut iid_app de App
-	 *
-	 * @return integer iid_app
-	 */
-	function getId_app() {
-		if (!isset($this->iid_app) && !$this->bLoaded) {
-			$this->DBCarregar();
-		}
-		return $this->iid_app;
-	}
-	/**
-	 * estableix el valor de l'atribut iid_app de App
-	 *
-	 * @param integer iid_app
-	 */
-	function setId_app($iid_app) {
-		$this->iid_app = $iid_app;
-	}
-	/**
-	 * Recupera l'atribut snom de App
-	 *
-	 * @return string snom
-	 */
-	function getNom() {
-		if (!isset($this->snom) && !$this->bLoaded) {
-			$this->DBCarregar();
-		}
-		return $this->snom;
-	}
-	/**
-	 * estableix el valor de l'atribut snom de App
-	 *
-	 * @param string snom='' optional
-	 */
-	function setNom($snom='') {
-		$this->snom = $snom;
-	}
-	/**
-	 * Recupera l'atribut sdb_prefix de App
-	 *
-	 * @return string sdb_prefix
-	 */
-	function getDb_prefix() {
-		if (!isset($this->sdb_prefix) && !$this->bLoaded) {
-			$this->DBCarregar();
-		}
-		return $this->sdb_prefix;
-	}
-	/**
-	 * estableix el valor de l'atribut sdb_prefix de App
-	 *
-	 * @param string sdb_prefix='' optional
-	 */
-	function setDb_prefix($sdb_prefix='') {
-		$this->sdb_prefix = $sdb_prefix;
-	}
-	/* METODES GET i SET D'ATRIBUTS QUE NO SÓN CAMPS -----------------------------*/
-
-	/**
-	 * Retorna una col·lecció d'objectes del tipus DatosCampo
-	 *
-	 */
-	function getDatosCampos() {
-		$oAppSet = new core\Set();
-
-		$oAppSet->add($this->getDatosNom());
-		$oAppSet->add($this->getDatosDb_prefix());
-		return $oAppSet->getTot();
-	}
+    /**
+     * Establece a 'empty' el valor de todos los atributos
+     *
+     */
+    function setNullAllAtributes()
+    {
+        $aPK = $this->getPrimary_key();
+        $this->setId_schema('');
+        $this->setId_app('');
+        $this->setNom('');
+        $this->setDb_prefix('');
+        $this->setPrimary_key($aPK);
+    }
 
 
+    /* MÉTODOS GET y SET --------------------------------------------------------*/
 
-	/**
-	 * Recupera les propietats de l'atribut snom de App
-	 * en una clase del tipus DatosCampo
-	 *
-	 * @return core\DatosCampo
-	 */
-	function getDatosNom() {
-		$nom_tabla = $this->getNomTabla();
-		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'nom'));
-		$oDatosCampo->setEtiqueta(_("nombre"));
-		$oDatosCampo->setTipo('texto');
-		$oDatosCampo->setArgument(30);
-		return $oDatosCampo;
-	}
-	/**
-	 * Recupera les propietats de l'atribut sdb_prefix de App
-	 * en una clase del tipus DatosCampo
-	 *
-	 * @return core\DatosCampo
-	 */
-	function getDatosDb_prefix() {
-		$nom_tabla = $this->getNomTabla();
-		$oDatosCampo = new core\DatosCampo(array('nom_tabla'=>$nom_tabla,'nom_camp'=>'db_prefix'));
-		$oDatosCampo->setEtiqueta(_("db prefix"));
-		$oDatosCampo->setTipo('texto');
-		$oDatosCampo->setArgument(30);
-		return $oDatosCampo;
-	}
+    /**
+     * Recupera todos los atributos de App en un array
+     *
+     * @return array aDades
+     */
+    function getTot()
+    {
+        if (!is_array($this->aDades)) {
+            $this->DBCarregar('tot');
+        }
+        return $this->aDades;
+    }
+
+    /**
+     * Recupera la clave primaria de App en un array
+     *
+     * @return array aPrimary_key
+     */
+    function getPrimary_key()
+    {
+        if (!isset($this->aPrimary_key)) {
+            $this->aPrimary_key = array('id_app' => $this->iid_app);
+        }
+        return $this->aPrimary_key;
+    }
+
+    /**
+     * Establece la clave primaria de App en un array
+     *
+     * @return array aPrimary_key
+     */
+    public function setPrimary_key($a_id = '')
+    {
+        if (is_array($a_id)) {
+            $this->aPrimary_key = $a_id;
+            foreach ($a_id as $nom_id => $val_id) {
+                if (($nom_id == 'id_app') && $val_id !== '') $this->iid_app = (int)$val_id; // evitem SQL injection fent cast a integer
+            }
+        }
+    }
+
+    /**
+     * Recupera el atributo iid_app de App
+     *
+     * @return integer iid_app
+     */
+    function getId_app()
+    {
+        if (!isset($this->iid_app) && !$this->bLoaded) {
+            $this->DBCarregar();
+        }
+        return $this->iid_app;
+    }
+
+    /**
+     * Establece el valor del atributo iid_app de App
+     *
+     * @param integer iid_app
+     */
+    function setId_app($iid_app)
+    {
+        $this->iid_app = $iid_app;
+    }
+
+    /**
+     * Recupera el atributo snom de App
+     *
+     * @return string snom
+     */
+    function getNom()
+    {
+        if (!isset($this->snom) && !$this->bLoaded) {
+            $this->DBCarregar();
+        }
+        return $this->snom;
+    }
+
+    /**
+     * Establece el valor del atributo snom de App
+     *
+     * @param string snom='' optional
+     */
+    function setNom($snom = '')
+    {
+        $this->snom = $snom;
+    }
+
+    /**
+     * Recupera el atributo sdb_prefix de App
+     *
+     * @return string sdb_prefix
+     */
+    function getDb_prefix()
+    {
+        if (!isset($this->sdb_prefix) && !$this->bLoaded) {
+            $this->DBCarregar();
+        }
+        return $this->sdb_prefix;
+    }
+
+    /**
+     * Establece el valor del atributo sdb_prefix de App
+     *
+     * @param string sdb_prefix='' optional
+     */
+    function setDb_prefix($sdb_prefix = '')
+    {
+        $this->sdb_prefix = $sdb_prefix;
+    }
+    /* MÉTODOS GET y SET D'ATRIBUTOS QUE NO SON CAMPOS -----------------------------*/
+
+    /**
+     * Retorna una col·lecció d'objectes del tipus DatosCampo
+     *
+     */
+    function getDatosCampos()
+    {
+        $oAppSet = new core\Set();
+
+        $oAppSet->add($this->getDatosNom());
+        $oAppSet->add($this->getDatosDb_prefix());
+        return $oAppSet->getTot();
+    }
+
+
+    /**
+     * Recupera les propietats de l'atribut snom de App
+     * en una clase del tipus DatosCampo
+     *
+     * @return core\DatosCampo
+     */
+    function getDatosNom()
+    {
+        $nom_tabla = $this->getNomTabla();
+        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'nom'));
+        $oDatosCampo->setEtiqueta(_("nombre"));
+        $oDatosCampo->setTipo('texto');
+        $oDatosCampo->setArgument(30);
+        return $oDatosCampo;
+    }
+
+    /**
+     * Recupera les propietats de l'atribut sdb_prefix de App
+     * en una clase del tipus DatosCampo
+     *
+     * @return core\DatosCampo
+     */
+    function getDatosDb_prefix()
+    {
+        $nom_tabla = $this->getNomTabla();
+        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'db_prefix'));
+        $oDatosCampo->setEtiqueta(_("db prefix"));
+        $oDatosCampo->setTipo('texto');
+        $oDatosCampo->setArgument(30);
+        return $oDatosCampo;
+    }
 }
+
 ?>

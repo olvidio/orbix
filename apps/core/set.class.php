@@ -1,7 +1,9 @@
 <?php
+
 namespace core;
 
 use actividades\model\entity\GestorActividad;
+
 /**
  * Set
  *
@@ -9,46 +11,54 @@ use actividades\model\entity\GestorActividad;
  *
  * @package delegación
  * @subpackage model
- * @author 
+ * @author
  * @version 1.0
  * @created 22/9/2010
  */
-class Set {
-	/* ATRIBUTS ----------------------------------------------------------------- */
+class Set
+{
+    /* ATRIBUTOS ----------------------------------------------------------------- */
 
-	/**
-	 * getTot() Array de objetos
-	 *
-	 * @var array
-	 */
-	 private $aCollection = array();
-	 private $count = 0;
+    /**
+     * getTot() Array de objetos
+     *
+     * @var array
+     */
+    private $aCollection = array();
+    private $count = 0;
 
-	/* CONSTRUCTOR -------------------------------------------------------------- */
-	/**
-	 * Constructor de la classe.
-	 *
-	 * @return GestorActividad
-	 *
-	 */
-	function __construct() {
-		// constructor buit
-	}
+    /* CONSTRUCTOR -------------------------------------------------------------- */
+    /**
+     * Constructor de la classe.
+     *
+     * @return GestorActividad
+     *
+     */
+    function __construct()
+    {
+        // constructor buit
+    }
 
 
-	/* METODES PUBLICS -----------------------------------------------------------*/
-	function add($oElement) {
-		$this->aCollection[$this->count++]=$oElement;
-	}
+    /* MÉTODOS PÚBLICOS -----------------------------------------------------------*/
+    function add($oElement)
+    {
+        $this->aCollection[$this->count++] = $oElement;
+    }
 
-	function getTot() {
-		return $this->aCollection;
-	}
-	function getElement($count) {
-		return $this->aCollection[$count];
-	}
-	function setElement($count,$oElement) {
-		$this->aCollection[$count]=$oElement;
-	}
+    function getTot()
+    {
+        return $this->aCollection;
+    }
+
+    function getElement($count)
+    {
+        return $this->aCollection[$count];
+    }
+
+    function setElement($count, $oElement)
+    {
+        $this->aCollection[$count] = $oElement;
+    }
 
 }

@@ -2,6 +2,7 @@
 namespace ubis\model\entity;
 
 use core\ConfigGlobal;
+
 /**
  * GestorCentroDl
  *
@@ -13,32 +14,35 @@ use core\ConfigGlobal;
  * @version 1.0
  * @created 28/09/2010
  */
-class GestorCentroDl Extends  GestorCentro {
-	/* ATRIBUTS ----------------------------------------------------------------- */
+class GestorCentroDl extends GestorCentro
+{
+    /* ATRIBUTOS ----------------------------------------------------------------- */
 
-	/* CONSTRUCTOR -------------------------------------------------------------- */
+    /* CONSTRUCTOR -------------------------------------------------------------- */
 
-	/**
-	 * Constructor de la classe.
-	 *
-	 * @return GestorCentroDl
-	 *
-	 */
-	function __construct() {
-	    if (ConfigGlobal::is_dmz()) {
-	        $oDbl = $GLOBALS['oDBC'];
-	        $this->setoDbl($oDbl);
-	        $this->setNomTabla('cu_centros_dl');
-	    } else {
-	        $oDbl = $GLOBALS['oDB'];
-	        $this->setoDbl($oDbl);
-	        $this->setNomTabla('u_centros_dl');
-	    }
-	}
-	/* METODES PUBLICS -----------------------------------------------------------*/
-	/* METODES PROTECTED --------------------------------------------------------*/
+    /**
+     * Constructor de la classe.
+     *
+     * @return GestorCentroDl
+     *
+     */
+    function __construct()
+    {
+        if (ConfigGlobal::is_dmz()) {
+            $oDbl = $GLOBALS['oDBC'];
+            $this->setoDbl($oDbl);
+            $this->setNomTabla('cu_centros_dl');
+        } else {
+            $oDbl = $GLOBALS['oDB'];
+            $this->setoDbl($oDbl);
+            $this->setNomTabla('u_centros_dl');
+        }
+    }
+    /* MÉTODOS PÚBLICOS -----------------------------------------------------------*/
+    /* METODES PROTECTED --------------------------------------------------------*/
 
-	/* METODES GET i SET --------------------------------------------------------*/
+    /* MÉTODOS GET y SET --------------------------------------------------------*/
 
 }
+
 ?>

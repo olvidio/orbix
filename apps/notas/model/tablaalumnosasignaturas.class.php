@@ -1,5 +1,7 @@
 <?php
+
 namespace notas\model;
+
 use asignaturas\model\entity\GestorAsignatura;
 use notas\model\entity\GestorNota;
 use notas\model\entity\GestorPersonaNota;
@@ -10,7 +12,7 @@ use web\Lista;
 use ubis\model\entity\GestorDelegacion;
 
 /**
- * Classe que 
+ * Classe que
  *
  * @package delegación
  * @subpackage model
@@ -18,69 +20,71 @@ use ubis\model\entity\GestorDelegacion;
  * @version 1.0
  * @created 07/04/2014
  */
-class TablaAlumnosAsignaturas {
-	/* ATRIBUTS ----------------------------------------------------------------- */
+class TablaAlumnosAsignaturas
+{
+    /* ATRIBUTOS ----------------------------------------------------------------- */
     private $a_delegacionesStgr = [];
-    
-    
-    public function getTablaCr($a_dl) {
-        
+
+
+    public function getTablaCr($a_dl)
+    {
+
         // Asignaturas posibles:
         $GesAsignaturas = new GestorAsignatura();
-        $aWhere=array();
-        $aOperador=array();
+        $aWhere = array();
+        $aOperador = array();
         $aWhere['status'] = 't';
         $aWhere['id_nivel'] = '1100,2500';
-        $aOperador['id_nivel']='BETWEEN';
+        $aOperador['id_nivel'] = 'BETWEEN';
         $aWhere['_ordre'] = 'id_nivel';
-        $cAsignaturas = $GesAsignaturas->getAsignaturas($aWhere,$aOperador);
-        
+        $cAsignaturas = $GesAsignaturas->getAsignaturas($aWhere, $aOperador);
+
         $a_cabeceras = array();
         $a_cabeceras[0] = _("n/a");
         $a_cabeceras[1] = _("stgr");
         $a_cabeceras[2] = _("centro");
         $a_cabeceras[3] = _("apellidos, nombre");
-        $a=3;
+        $a = 3;
         foreach ($cAsignaturas as $oAsignatura) {
             $a++;
             $a_cabeceras[$a] = $oAsignatura->getNombre_corto();
         }
         //todas
-        $cAsignaturasTodas = $GesAsignaturas->getAsignaturas(array('_ordre'=>'id_asignatura'));
+        $cAsignaturasTodas = $GesAsignaturas->getAsignaturas(array('_ordre' => 'id_asignatura'));
         foreach ($cAsignaturasTodas as $oAsignatura) {
             $id_asignatura = $oAsignatura->getId_asignatura();
             $a_Asig_nivel[$id_asignatura] = $oAsignatura->getId_nivel();
         }
-        
+
         // array de id_situacion que corresponde a superada
         $GesNotas = new GestorNota();
-        $cNotas = $GesNotas->getNotas(['superada'=>'t']);
-        $a_notas_superada =array();
+        $cNotas = $GesNotas->getNotas(['superada' => 't']);
+        $a_notas_superada = array();
         foreach ($cNotas as $oNota) {
             $a_notas_superada[] = $oNota->getId_situacion();
         }
-        
-        $aWhere=array();
-        $aOperador=array();
+
+        $aWhere = array();
+        $aOperador = array();
         $aWhere['situacion'] = 'A';
         $aWhere['stgr'] = 'b|c1|c2';
         $aWhere['_ordre'] = 'dl,stgr,apellido1,nom';
-        
+
         $aOperador['stgr'] = '~';
 
         $dl_txt = '';
         foreach ($a_dl as $id_dl) {
-            $dl_txt .= empty($dl_txt)? '' : ',';
-            $dl_txt .= "'". $this->a_delegacionesStgr[$id_dl] . "'";
+            $dl_txt .= empty($dl_txt) ? '' : ',';
+            $dl_txt .= "'" . $this->a_delegacionesStgr[$id_dl] . "'";
         }
         $aWhere['dl'] = $dl_txt;
         $aOperador['dl'] = 'IN';
-        
-        
+
+
         $GesPersonas = new GestorPersonaDl();
-        $cPersonas = $GesPersonas->getPersonasDl($aWhere,$aOperador);
+        $cPersonas = $GesPersonas->getPersonasDl($aWhere, $aOperador);
         $GesPersonaNotas = new GestorPersonaNota();
-        $p=0;
+        $p = 0;
         $a_valores = [];
         foreach ($cPersonas as $oPersona) {
             $p++;
@@ -90,15 +94,15 @@ class TablaAlumnosAsignaturas {
             $stgr = $oPersona->getStgr();
             $centro = $oPersona->getCentro_o_dl();
             $dl = $oPersona->getDl();
-            
+
             $a_valores[$p][1] = $id_tabla;
             $a_valores[$p][2] = $stgr;
             $a_valores[$p][3] = $dl;
             $a_valores[$p][4] = $ap_nom;
-            
+
             // Asignaturas cursadas:
             // Busco fin_bienio, cuadrienio
-            $cFin = $GesPersonaNotas->getPersonaNotas(array('id_nom'=>$id_nom, 'id_nivel'=>9990),array('id_nivel' => '>'));
+            $cFin = $GesPersonaNotas->getPersonaNotas(array('id_nom' => $id_nom, 'id_nivel' => 9990), array('id_nivel' => '>'));
             $fin_bienio = false;
             $fin_cuadrienio = false;
             foreach ($cFin as $oPersonaNota) {
@@ -110,31 +114,31 @@ class TablaAlumnosAsignaturas {
                     $fin_cuadrienio = true;
                 }
             }
-            
+
             //$cPersonaNotas = $GesPersonaNotas->getPersonaNotasSuperadas($id_nom,'t');
             $cPersonaNotas = $GesPersonaNotas->getPersonaNotas(['id_nom' => $id_nom]);
-            $aAprobadas=array();
+            $aAprobadas = array();
             foreach ($cPersonaNotas as $oPersonaNota) {
                 $id_asignatura = $oPersonaNota->getId_asignatura();
                 $id_nivel = $oPersonaNota->getId_nivel();
                 $id_situacion = $oPersonaNota->getId_situacion();
-                
+
                 if ($id_asignatura > 3000) {
                     $id_nivel_asig = $id_nivel;
                 } else {
                     $id_nivel_asig = $a_Asig_nivel[$id_asignatura];
                 }
-                
+
                 // En el caso de las cursadas (id_situacion = 2) pongo 2.
                 if ($id_situacion == Nota::CURSADA) {
                     $aAprobadas[$id_nivel_asig]['nota'] = 2;
-                } elseif ( in_array($id_situacion, $a_notas_superada)) {
+                } elseif (in_array($id_situacion, $a_notas_superada)) {
                     $aAprobadas[$id_nivel_asig]['nota'] = '';
                 }
             }
-            
 
-            $a=4; // 1: id_tabla, 2: stgr, 3: centro, 4: ap_nom.
+
+            $a = 4; // 1: id_tabla, 2: stgr, 3: centro, 4: ap_nom.
             foreach ($cAsignaturas as $oAsignatura) {
                 $a++;
                 $id_nivel = $oAsignatura->getId_nivel();
@@ -161,55 +165,56 @@ class TablaAlumnosAsignaturas {
         return $oTabla;
     }
 
-    public function getTablaDl() {
+    public function getTablaDl()
+    {
         // Asignaturas posibles:
         $GesAsignaturas = new GestorAsignatura();
-        $aWhere=array();
-        $aOperador=array();
+        $aWhere = array();
+        $aOperador = array();
         $aWhere['status'] = 't';
         $aWhere['id_nivel'] = '1100,2500';
-        $aOperador['id_nivel']='BETWEEN';
+        $aOperador['id_nivel'] = 'BETWEEN';
         $aWhere['_ordre'] = 'id_nivel';
-        $cAsignaturas = $GesAsignaturas->getAsignaturas($aWhere,$aOperador);
-        
+        $cAsignaturas = $GesAsignaturas->getAsignaturas($aWhere, $aOperador);
+
         $a_cabeceras = array();
         $a_cabeceras[0] = _("n/a");
         $a_cabeceras[1] = _("stgr");
         $a_cabeceras[2] = _("centro");
         $a_cabeceras[3] = _("apellidos, nombre");
-        $a=3;
+        $a = 3;
         foreach ($cAsignaturas as $oAsignatura) {
             $a++;
             $a_cabeceras[$a] = $oAsignatura->getNombre_corto();
         }
         //todas
-        $cAsignaturasTodas = $GesAsignaturas->getAsignaturas(array('_ordre'=>'id_asignatura'));
+        $cAsignaturasTodas = $GesAsignaturas->getAsignaturas(array('_ordre' => 'id_asignatura'));
         foreach ($cAsignaturasTodas as $oAsignatura) {
             $id_asignatura = $oAsignatura->getId_asignatura();
             $a_Asig_status[$id_asignatura] = $oAsignatura->getStatus();
             $a_Asig_nivel[$id_asignatura] = $oAsignatura->getId_nivel();
         }
-        
+
         // array de id_situacion que corresponde a superada
         $GesNotas = new GestorNota();
-        $cNotas = $GesNotas->getNotas(['superada'=>'t']);
-        $a_notas_superada =array();
+        $cNotas = $GesNotas->getNotas(['superada' => 't']);
+        $a_notas_superada = array();
         foreach ($cNotas as $oNota) {
             $a_notas_superada[] = $oNota->getId_situacion();
         }
-        
-        $aWhere=array();
-        $aOperador=array();
+
+        $aWhere = array();
+        $aOperador = array();
         $aWhere['situacion'] = 'A';
         $aWhere['stgr'] = 'b|c1|c2';
         $aWhere['_ordre'] = 'stgr,apellido1,nom';
-        
+
         $aOperador['stgr'] = '~';
-        
+
         $GesPersonas = new GestorPersonaDl();
-        $cPersonas = $GesPersonas->getPersonasDl($aWhere,$aOperador);
+        $cPersonas = $GesPersonas->getPersonasDl($aWhere, $aOperador);
         $GesPersonaNotas = new GestorPersonaNotaDl();
-        $p=0;
+        $p = 0;
         $a_valores = [];
         foreach ($cPersonas as $oPersona) {
             $p++;
@@ -218,15 +223,15 @@ class TablaAlumnosAsignaturas {
             $ap_nom = $oPersona->getPrefApellidosNombre();
             $stgr = $oPersona->getStgr();
             $centro = $oPersona->getCentro_o_dl();
-            
+
             $a_valores[$p][1] = $id_tabla;
             $a_valores[$p][2] = $stgr;
             $a_valores[$p][3] = $centro;
             $a_valores[$p][4] = $ap_nom;
-            
+
             // Asignaturas cursadas:
             // Busco fin_bienio, cuadrienio
-            $cFin = $GesPersonaNotas->getPersonaNotas(array('id_nom'=>$id_nom, 'id_nivel'=>9990),array('id_nivel' => '>'));
+            $cFin = $GesPersonaNotas->getPersonaNotas(array('id_nom' => $id_nom, 'id_nivel' => 9990), array('id_nivel' => '>'));
             $fin_bienio = false;
             $fin_cuadrienio = false;
             foreach ($cFin as $oPersonaNota) {
@@ -238,31 +243,31 @@ class TablaAlumnosAsignaturas {
                     $fin_cuadrienio = true;
                 }
             }
-            
+
             //$cPersonaNotas = $GesPersonaNotas->getPersonaNotasSuperadas($id_nom,'t');
             $cPersonaNotas = $GesPersonaNotas->getPersonaNotas(['id_nom' => $id_nom]);
-            $aAprobadas=array();
+            $aAprobadas = array();
             foreach ($cPersonaNotas as $oPersonaNota) {
                 $id_asignatura = $oPersonaNota->getId_asignatura();
                 $id_nivel = $oPersonaNota->getId_nivel();
                 $id_situacion = $oPersonaNota->getId_situacion();
-                
+
                 if ($id_asignatura > 3000) {
                     $id_nivel_asig = $id_nivel;
                 } else {
                     $id_nivel_asig = $a_Asig_nivel[$id_asignatura];
                 }
-                
+
                 // En el caso de las cursadas (id_situacion = 2) pongo 2.
                 if ($id_situacion == Nota::CURSADA) {
                     $aAprobadas[$id_nivel_asig]['nota'] = 2;
-                } elseif ( in_array($id_situacion, $a_notas_superada)) {
+                } elseif (in_array($id_situacion, $a_notas_superada)) {
                     $aAprobadas[$id_nivel_asig]['nota'] = '';
                 }
             }
-            
 
-            $a=4; // 1: id_tabla, 2: stgr, 3: centro, 4: ap_nom.
+
+            $a = 4; // 1: id_tabla, 2: stgr, 3: centro, 4: ap_nom.
             foreach ($cAsignaturas as $oAsignatura) {
                 $a++;
                 $id_nivel = $oAsignatura->getId_nivel();
@@ -288,6 +293,7 @@ class TablaAlumnosAsignaturas {
 
         return $oTabla;
     }
+
     /**
      * @return multitype:
      */

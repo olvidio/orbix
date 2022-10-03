@@ -1,4 +1,5 @@
 <?php
+
 namespace core;
 
 /**
@@ -12,32 +13,37 @@ namespace core;
  * @license   X11 {@link http://opensource.org/licenses/mit-license.php}
  * @see       ConverterInterface
  */
-class Converter {
+class Converter
+{
 
     var $Converter;
     var $type;
 
-    public function __construct($type, $data) {
-       $this->type = $type; 
+    public function __construct($type, $data)
+    {
+        $this->type = $type;
         switch ($type) {
             case 'date':
             case 'datetime':
                 $this->Converter = new PgTimestamp($data);
-            break;
+                break;
             case 'timestamp':
                 $this->Converter = new PgTimestamp($data);
-            break;
-            
+                break;
+
             default:
                 ;
-            break;
+                break;
         };
     }
-    
-    public function fromPg() {
+
+    public function fromPg()
+    {
         return $this->Converter->fromPg();
     }
-    public function toPg() {
+
+    public function toPg()
+    {
         return $this->Converter->toPg($this->type);
     }
 }

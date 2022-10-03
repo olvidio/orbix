@@ -1,86 +1,95 @@
 <script>
-fnjs_guardar=function(formulario){
-	var err = 0;
-	var new_ctr = $('#new_ctr').val();
-	var new_dl = $('#new_dl').val();
-	var situacion = $('#situacion').val();
-	if (!new_dl && !new_ctr) {
-		err=1;
-		alert ("<?= _("debería llenar el campo ctr o dl") ?>");
-	}
-	if (new_dl && !situacion) {
-		err=1;
-		alert ("<?= _("debería llenar el campo situación") ?>");
-	}
+    fnjs_guardar = function (formulario) {
+        var err = 0;
+        var new_ctr = $('#new_ctr').val();
+        var new_dl = $('#new_dl').val();
+        var situacion = $('#situacion').val();
+        if (!new_dl && !new_ctr) {
+            err = 1;
+            alert("<?= _("debería llenar el campo ctr o dl") ?>");
+        }
+        if (new_dl && !situacion) {
+            err = 1;
+            alert("<?= _("debería llenar el campo situación") ?>");
+        }
 
-	if (err== 0) {
-		$(formulario).attr('action',"apps/personas/controller/traslado_update.php");
-		$(formulario).one("submit", function() {
-			$.ajax({
-				url: $(this).attr('action'),
-				type: 'post',
-				data: $(this).serialize()
-			})
-			.done(function (rta_txt) {
-				if (rta_txt != '' && rta_txt != '\\n') {
-					alert ('<?= _("respuesta") ?>: '+rta_txt);
-				} else {
-					<?= $oPosicion->js_atras(1); ?>
-				}
-			});
-			return false;
-		});
-		$(formulario).trigger("submit");
-		$(formulario).off();
-	}
-}
-$(function() { $( "#f_ctr" ).datepicker(); });
-$(function() { $( "#f_dl" ).datepicker(); });
+        if (err == 0) {
+            $(formulario).attr('action', "apps/personas/controller/traslado_update.php");
+            $(formulario).one("submit", function () {
+                $.ajax({
+                    url: $(this).attr('action'),
+                    type: 'post',
+                    data: $(this).serialize()
+                })
+                    .done(function (rta_txt) {
+                        if (rta_txt != '' && rta_txt != '\\n') {
+                            alert('<?= _("respuesta") ?>: ' + rta_txt);
+                        } else {
+                            <?= $oPosicion->js_atras(1); ?>
+                        }
+                    });
+                return false;
+            });
+            $(formulario).trigger("submit");
+            $(formulario).off();
+        }
+    }
+    $(function () {
+        $("#f_ctr").datepicker();
+    });
+    $(function () {
+        $("#f_dl").datepicker();
+    });
 </script>
 <! --si viene de la página de dossiers, no hace falta la cabecera -->
 <!-- ======================== cabecera ============================= -->
 <?php
-if (empty($Qcabecera) || $Qcabecera!="no") {
-	?>
-	<?= $oPosicion->mostrar_left_slide(1); ?>
-	<table><tr>
-	<td class=esquerra nowrap>
-	</td>
-	<td>
-	<span class=link onclick="fnjs_update_div('#main','<?= $godossiers ?>')" >
-		<img src=<?= core\ConfigGlobal::getWeb_icons() ?>/dossiers.gif border=0 width=40 height=40 alt='<?= _("ver dossiers") ?>'>(<?= _("dossiers") ?>)
+if (empty($Qcabecera) || $Qcabecera != "no") {
+    ?>
+    <?= $oPosicion->mostrar_left_slide(1); ?>
+    <table>
+        <tr>
+            <td class=esquerra nowrap>
+            </td>
+            <td>
+	<span class=link onclick="fnjs_update_div('#main','<?= $godossiers ?>')">
+		<img src=<?= core\ConfigGlobal::getWeb_icons() ?>/dossiers.gif border=0 width=40 height=40
+             alt='<?= _("ver dossiers") ?>'>(<?= _("dossiers") ?>)
 	</span>
-	<td class=titulo><span class=link onclick="fnjs_update_div('#main','<?= $gohome ?>')" ><?= $titulo ?></span></td>
-	</table>
-	<?php
+            <td class=titulo><span class=link onclick="fnjs_update_div('#main','<?= $gohome ?>')"><?= $titulo ?></span>
+            </td>
+    </table>
+    <?php
 } //fin if cabecera
 ?>
 <!-- ============================== Ficha ============================= -->
 <form id="frm_traslado" name="frm_traslado" action="">
-	<?= $oHash->getCamposHtml(); ?>
-<table border=1>
-<tr> 
-   <th><?= ucfirst(_("tipo"));?></th>
-   <th><?= ucfirst(_("origen")); ?></th>
-   <th><?= ucfirst(_("destino")); ?></th>
-   <th><?= ucfirst(_("fecha")); ?></th>
-   </tr>
-   <tr> 
-	 <td class=etiqueta><?= ucfirst(_("centro")); ?></td>    
-	 <td><?= $nombre_ctr; ?>&nbsp;</td>
-	 <td><?= $oDesplCentros->desplegable(); ?></td>
-	 <td width="15"><input class="fecha" type="Text" id="f_ctr" name="f_ctr" size="10" value="<?= $hoy ?>" >&nbsp;</td>
-</tr>
-<tr>     
-	 <td class=etiqueta><?= ucfirst(_("delegación")); ?></td>
-	 <td><?= $dl; ?>&nbsp;</td>
-	 <td><?= $oDesplDlyR->desplegable(); ?></td>
-	 <td><input class="fecha" type="Text" id="f_dl" name="f_dl" size="10" value="<?= $hoy ?>" >&nbsp;</td>
-</tr>
-<tr>
- 	<td class=etiqueta colspan="2" align="RIGHT"><?= ucfirst(_("situación")); ?>:</td>
-	<td colspan=2><?= $oDesplSituacion->desplegable() ?></td>
-</tr>
-</table>
-<br><br>
-<input type="button" onclick="fnjs_guardar('#frm_traslado');" value="<?= ucfirst(_("actualizar cambios")); ?>" align="ABSBOTTOM">
+    <?= $oHash->getCamposHtml(); ?>
+    <table border=1>
+        <tr>
+            <th><?= ucfirst(_("tipo")); ?></th>
+            <th><?= ucfirst(_("origen")); ?></th>
+            <th><?= ucfirst(_("destino")); ?></th>
+            <th><?= ucfirst(_("fecha")); ?></th>
+        </tr>
+        <tr>
+            <td class=etiqueta><?= ucfirst(_("centro")); ?></td>
+            <td><?= $nombre_ctr; ?>&nbsp;</td>
+            <td><?= $oDesplCentros->desplegable(); ?></td>
+            <td width="15"><input class="fecha" type="Text" id="f_ctr" name="f_ctr" size="10" value="<?= $hoy ?>">&nbsp;
+            </td>
+        </tr>
+        <tr>
+            <td class=etiqueta><?= ucfirst(_("delegación")); ?></td>
+            <td><?= $dl; ?>&nbsp;</td>
+            <td><?= $oDesplDlyR->desplegable(); ?></td>
+            <td><input class="fecha" type="Text" id="f_dl" name="f_dl" size="10" value="<?= $hoy ?>">&nbsp;</td>
+        </tr>
+        <tr>
+            <td class=etiqueta colspan="2" align="RIGHT"><?= ucfirst(_("situación")); ?>:</td>
+            <td colspan=2><?= $oDesplSituacion->desplegable() ?></td>
+        </tr>
+    </table>
+    <br><br>
+    <input type="button" onclick="fnjs_guardar('#frm_traslado');" value="<?= ucfirst(_("actualizar cambios")); ?>"
+           align="ABSBOTTOM">

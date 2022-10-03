@@ -1,4 +1,5 @@
 <?php
+
 use encargossacd\model\DesplCentros;
 use encargossacd\model\EncargoConstants;
 use encargossacd\model\entity\GestorEncargoTipo;
@@ -8,65 +9,65 @@ use web\Desplegable;
 use web\Hash;
 
 /**
-* Esta página muestra la atención sacerdotal de un centro.
-*
-*@package	delegacion
-*@subpackage	des
-*@author	Daniel Serrabou
-*@since		12/12/06.
-*		
-*/
+ * Esta página muestra la atención sacerdotal de un centro.
+ *
+ * @package    delegacion
+ * @subpackage    des
+ * @author    Daniel Serrabou
+ * @since        12/12/06.
+ *
+ */
 
 // INICIO Cabecera global de URL de controlador *********************************
-require_once ("apps/core/global_header.inc");
-// Arxivos requeridos por esta url **********************************************
+require_once("apps/core/global_header.inc");
+// Archivos requeridos por esta url **********************************************
 
-// Crea los objectos de uso global **********************************************
-require_once ("apps/core/global_object.inc");
+// Crea los objetos de uso global **********************************************
+require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$Qid_ubi = (integer) \filter_input(INPUT_POST, 'id_ubi');
-$Qfiltro_ctr = (string) \filter_input(INPUT_POST, 'filtro_ctr');
+$Qid_ubi = (integer)\filter_input(INPUT_POST, 'id_ubi');
+$Qfiltro_ctr = (string)\filter_input(INPUT_POST, 'filtro_ctr');
 
 
 if (!empty($Qid_ubi)) {
-	// si empieza por 2 es de la sf.
-	$Qid_ubi_txt = (string) $Qid_ubi;
-	if ($Qid_ubi_txt[0] == 2) {
-		$oCentro = new CentroEllas($Qid_ubi);
-	} else {
-		$oCentro = new CentroDl($Qid_ubi);
-	}
-	$tipo_ubi = $oCentro->getTipo_ubi();
-	$tipo_ctr = $oCentro->getTipo_ctr();
+    // si empieza por 2 es de la sf.
+    $Qid_ubi_txt = (string)$Qid_ubi;
+    if ($Qid_ubi_txt[0] == 2) {
+        $oCentro = new CentroEllas($Qid_ubi);
+    } else {
+        $oCentro = new CentroDl($Qid_ubi);
+    }
+    $tipo_ubi = $oCentro->getTipo_ubi();
+    $tipo_ctr = $oCentro->getTipo_ctr();
 
-	if ($tipo_ubi == 'ctrsf') {
-		$Qfiltro_ctr = 2;
-	} else {
-		switch ($tipo_ctr) {
-			case 'a':
-			case 'n':
-			case 's':
-			case 'aj':
-			case 'am':
-			case 'nj':
-			case 'nm':
-			case 'sj':
-			case 'sm':
-				$Qfiltro_ctr = 1;
-				break;
-			case 'ss':
-				$Qfiltro_ctr = 3;
-				break;
-			case 'igloc':
-				$Qfiltro_ctr = 4;
-				break;
-			case 'cgioc':
-			case 'oc':
-				$Qfiltro_ctr = 5;
-				break;
-		}
-	}
+    if ($tipo_ubi == 'ctrsf') {
+        $Qfiltro_ctr = 2;
+    } else {
+        switch ($tipo_ctr) {
+            case 'a':
+            case 'n':
+            case 's':
+            case 'aj':
+            case 'am':
+            case 'nj':
+            case 'nm':
+            case 'sj':
+            case 'sm':
+                $Qfiltro_ctr = 1;
+                break;
+            case 'ss':
+                $Qfiltro_ctr = 3;
+                break;
+            case 'igloc':
+                $Qfiltro_ctr = 4;
+                break;
+            case 'cgioc':
+            case 'oc':
+                $Qfiltro_ctr = 5;
+                break;
+        }
+    }
 }
 
 $oGesEncargoTipo = new GestorEncargoTipo();
@@ -115,4 +116,4 @@ $a_campos = ['oPosicion' => $oPosicion,
 ];
 
 $oView = new core\ViewTwig('encargossacd/controller');
-echo $oView->render('ctr_ficha.html.twig',$a_campos);
+echo $oView->render('ctr_ficha.html.twig', $a_campos);

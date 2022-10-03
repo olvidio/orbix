@@ -1,4 +1,5 @@
 <?php
+
 namespace cartaspresentacion\model\entity;
 
 /**
@@ -12,22 +13,23 @@ namespace cartaspresentacion\model\entity;
  * @version 1.0
  * @created 12/3/2019
  */
+class GestorCartaPresentacionDl extends GestorCartaPresentacion
+{
+    /* ATRIBUTOS ----------------------------------------------------------------- */
 
-class GestorCartaPresentacionDl Extends  GestorCartaPresentacion {
-	/* ATRIBUTS ----------------------------------------------------------------- */
-
-	/* CONSTRUCTOR -------------------------------------------------------------- */
+    /* CONSTRUCTOR -------------------------------------------------------------- */
 
 
-	/**
-	 * Constructor de la classe.
-	 *
-	 * @return $gestor
-	 *
-	 */
-	function __construct() {
-		$oDbl = $GLOBALS['oDB'];
-		$this->setoDbl($oDbl);
-		$this->setNomTabla('du_presentacion_dl');
-	}
+    /**
+     * Constructor de la classe.
+     *
+     * @return $gestor
+     *
+     */
+    function __construct()
+    {
+        $oDbl = $GLOBALS['oDB'];
+        $this->setoDbl($oDbl);
+        $this->setNomTabla('du_presentacion_dl');
+    }
 }

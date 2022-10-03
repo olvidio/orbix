@@ -1,10 +1,10 @@
 ﻿<?php
 // INICIO Cabecera global de URL de controlador *********************************
-require_once ("apps/core/global_header.inc");
-// Arxivos requeridos por esta url **********************************************
+require_once("apps/core/global_header.inc");
+// Archivos requeridos por esta url **********************************************
 
-// Crea los objectos de uso global **********************************************
-require_once ("apps/core/global_object.inc");
+// Crea los objetos de uso global **********************************************
+require_once("apps/core/global_object.inc");
 
 // FIN de  Cabecera global de URL de controlador ********************************
 
@@ -15,16 +15,16 @@ $miSfsv = core\ConfigGlobal::mi_sfsv();
 //$donde="WHERE status='t' AND sf='t' AND sv='t'";
 // o (ara) no:
 if ($_SESSION['oPerm']->have_perm_oficina('des') || $_SESSION['oPerm']->have_perm_oficina('vcsd')) {
-	$oForm->setCasas('all');
-	$donde="WHERE status='t'";
+    $oForm->setCasas('all');
+    $donde = "WHERE status='t'";
 } else {
-	if ($miSfsv == 1) {
-		$oForm->setCasas('sv');
-		$donde="WHERE status='t' AND sv='t'";
-	} elseif ($miSfsv == 2) {
-		$oForm->setCasas('sf');
-		$donde="WHERE status='t' AND sf='t'";
-	}
+    if ($miSfsv == 1) {
+        $oForm->setCasas('sv');
+        $donde = "WHERE status='t' AND sv='t'";
+    } elseif ($miSfsv == 2) {
+        $oForm->setCasas('sf');
+        $donde = "WHERE status='t' AND sf='t'";
+    }
 }
 $oForm->setPosiblesCasas($donde);
 $oForm->setAction('');
@@ -32,17 +32,17 @@ $oForm->setAction('');
 $oFormAny = new web\PeriodoQue();
 
 $oHash = new web\Hash();
-$oHash->setUrl(core\ConfigGlobal::getWeb().'/apps/actividadtarifas/controller/tarifa_ajax.php');
+$oHash->setUrl(core\ConfigGlobal::getWeb() . '/apps/actividadtarifas/controller/tarifa_ajax.php');
 $oHash->setCamposForm('que!id_ubi!year');
 $h_ver = $oHash->linkSinVal();
 
 $oHashNew = new web\Hash();
-$oHashNew->setUrl(core\ConfigGlobal::getWeb().'/apps/actividadtarifas/controller/tarifa_ajax.php');
+$oHashNew->setUrl(core\ConfigGlobal::getWeb() . '/apps/actividadtarifas/controller/tarifa_ajax.php');
 $oHashNew->setCamposForm('que!id_ubi!year');
 $h_nuevo = $oHashNew->linkSinVal();
 
 $oHashMod = new web\Hash();
-$oHashMod->setUrl(core\ConfigGlobal::getWeb().'/apps/actividadtarifas/controller/tarifa_ajax.php');
+$oHashMod->setUrl(core\ConfigGlobal::getWeb() . '/apps/actividadtarifas/controller/tarifa_ajax.php');
 $oHashMod->setCamposForm('que!id_item!letra');
 $h_modificar = $oHashMod->linkSinVal();
 
@@ -55,4 +55,4 @@ $a_campos = ['oPosicion' => $oPosicion,
 ];
 
 $oView = new core\View('actividadtarifas/controller');
-echo $oView->render('tarifa_ubi.phtml',$a_campos);
+echo $oView->render('tarifa_ubi.phtml', $a_campos);

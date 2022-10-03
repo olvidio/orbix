@@ -1,4 +1,5 @@
-<?php 
+<?php
+
 use encargossacd\model\entity\Encargo;
 use ubis\model\entity\CentroEllas;
 use ubis\model\entity\CentroDl;
@@ -9,128 +10,130 @@ use web\Hash;
 use encargossacd\model\EncargoConstants;
 
 // INICIO Cabecera global de URL de controlador *********************************
-require_once ("apps/core/global_header.inc");
-// Arxivos requeridos por esta url **********************************************
+require_once("apps/core/global_header.inc");
+// Archivos requeridos por esta url **********************************************
 
-// Crea los objectos de uso global **********************************************
-require_once ("apps/core/global_object.inc");
+// Crea los objetos de uso global **********************************************
+require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$Qrefresh = (integer)  \filter_input(INPUT_POST, 'refresh');
+$Qrefresh = (integer)\filter_input(INPUT_POST, 'refresh');
 $oPosicion->recordar($Qrefresh);
 
-$a_sel = (array)  \filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+$a_sel = (array)\filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 if (!empty($a_sel)) { //vengo de un checkbox
-    $Qid_enc = (integer) strtok($a_sel[0],"#");
+    $Qid_enc = (integer)strtok($a_sel[0], "#");
     // el scroll id es de la página anterior, hay que guardarlo allí
-    $oPosicion->addParametro('id_sel',$a_sel,1);
-    $scroll_id = (integer) \filter_input(INPUT_POST, 'scroll_id');
-    $oPosicion->addParametro('scroll_id',$scroll_id,1);
+    $oPosicion->addParametro('id_sel', $a_sel, 1);
+    $scroll_id = (integer)\filter_input(INPUT_POST, 'scroll_id');
+    $oPosicion->addParametro('scroll_id', $scroll_id, 1);
 } else {
-    $Qid_enc = (integer)  \filter_input(INPUT_POST, 'id_enc');
+    $Qid_enc = (integer)\filter_input(INPUT_POST, 'id_enc');
 }
 
 
 /**
-* Funciones más comunes de la aplicación
-include_once(ConfigGlobal::$dir_programas.'/func_web.php');  
-include_once("func_tareas.php");
-*/
+ * Funciones más comunes de la aplicación
+ * include_once(ConfigGlobal::$dir_programas.'/func_web.php');
+ * include_once("func_tareas.php");
+ */
 
 
-function filtro($id_ubi) {
-	$id_ubi_str = (string)$id_ubi; 
-	if ($id_ubi_str[0] == 2) {
-		$oCentro = new CentroEllas($id_ubi);
-	} else {
-		$oCentro = new CentroDl($id_ubi);
-	}
-	$tipo_ubi = $oCentro->getTipo_ubi();
-	$tipo_ctr = $oCentro->getTipo_ctr();
+function filtro($id_ubi)
+{
+    $id_ubi_str = (string)$id_ubi;
+    if ($id_ubi_str[0] == 2) {
+        $oCentro = new CentroEllas($id_ubi);
+    } else {
+        $oCentro = new CentroDl($id_ubi);
+    }
+    $tipo_ubi = $oCentro->getTipo_ubi();
+    $tipo_ctr = $oCentro->getTipo_ctr();
 
-	if ($tipo_ubi=="ctrsf") {
-		$filtro_ctr=2;
-	} else {
-		switch ($tipo_ctr) {
-			case "aj":
-			case "am":
-			case "nj":
-			case "njce":
-			case "nm":
-			case "sj":
-			case "sm":
-			case "sjce":
-				$filtro_ctr=1;
-				break;
-			case "ss":
-				$filtro_ctr=3;
-				break;
-			case "igloc":
-			case "igl":
-				$filtro_ctr=4;
-				break;
-			case "cgioc":
-			case "oc":
-				$filtro_ctr=5;
-				break;
-			default:
-				$filtro_ctr = 0;
-				echo "tipo_ctr: $tipo_ctr<br>";
-		}
-	}
-	return $filtro_ctr;
+    if ($tipo_ubi == "ctrsf") {
+        $filtro_ctr = 2;
+    } else {
+        switch ($tipo_ctr) {
+            case "aj":
+            case "am":
+            case "nj":
+            case "njce":
+            case "nm":
+            case "sj":
+            case "sm":
+            case "sjce":
+                $filtro_ctr = 1;
+                break;
+            case "ss":
+                $filtro_ctr = 3;
+                break;
+            case "igloc":
+            case "igl":
+                $filtro_ctr = 4;
+                break;
+            case "cgioc":
+            case "oc":
+                $filtro_ctr = 5;
+                break;
+            default:
+                $filtro_ctr = 0;
+                echo "tipo_ctr: $tipo_ctr<br>";
+        }
+    }
+    return $filtro_ctr;
 }
+
 // -------------------------------------------------------------
 
-$Qque = (string) \filter_input(INPUT_POST, 'que');
-$Qid_enc = (integer) \filter_input(INPUT_POST, 'id_enc');
-$Qid_tipo_enc = (integer) \filter_input(INPUT_POST, 'id_tipo_enc');
+$Qque = (string)\filter_input(INPUT_POST, 'que');
+$Qid_enc = (integer)\filter_input(INPUT_POST, 'id_enc');
+$Qid_tipo_enc = (integer)\filter_input(INPUT_POST, 'id_tipo_enc');
 
-$Qgrupo = (string) \filter_input(INPUT_POST, 'grupo');
-$Qfiltro_ctr = (string) \filter_input(INPUT_POST, 'filtro_ctr');
-$Qdesc_enc = (string) \filter_input(INPUT_POST, 'desc_enc');
-$Qdesc_lugar = (string) \filter_input(INPUT_POST, 'desc_lugar');
+$Qgrupo = (string)\filter_input(INPUT_POST, 'grupo');
+$Qfiltro_ctr = (string)\filter_input(INPUT_POST, 'filtro_ctr');
+$Qdesc_enc = (string)\filter_input(INPUT_POST, 'desc_enc');
+$Qdesc_lugar = (string)\filter_input(INPUT_POST, 'desc_lugar');
 
 $idioma_enc = '';
 if (empty($Qque) || $Qque === 'editar') { //significa que no es nuevo
     if (!empty($_POST['sel'])) { //vengo de un checkbox
-		$Qid_enc=strtok($_POST['sel'][0],"#");
-	}
+        $Qid_enc = strtok($_POST['sel'][0], "#");
+    }
 
-	$oEncargo = new Encargo($Qid_enc);
-	$Qid_ubi = $oEncargo->getId_ubi();
-	$Qid_tipo_enc = $oEncargo->getId_tipo_enc();
-	$Qdesc_enc = $oEncargo->getDesc_enc();
-	$Qdesc_lugar = $oEncargo->getDesc_lugar();
-	$idioma_enc = $oEncargo->getIdioma_enc();
-	
+    $oEncargo = new Encargo($Qid_enc);
+    $Qid_ubi = $oEncargo->getId_ubi();
+    $Qid_tipo_enc = $oEncargo->getId_tipo_enc();
+    $Qdesc_enc = $oEncargo->getDesc_enc();
+    $Qdesc_lugar = $oEncargo->getDesc_lugar();
+    $idioma_enc = $oEncargo->getIdioma_enc();
 
-	if (!empty($Qid_ubi)) {
-		$Qfiltro_ctr = filtro($Qid_ubi);
-	}
-	if (empty($Qfiltro_ctr)) {
-	    $Qfiltro_ctr = $oEncargo->getSf_sv();
-	}
+
+    if (!empty($Qid_ubi)) {
+        $Qfiltro_ctr = filtro($Qid_ubi);
+    }
+    if (empty($Qfiltro_ctr)) {
+        $Qfiltro_ctr = $oEncargo->getSf_sv();
+    }
 }
 
 $oGesEncargoTipo = new GestorEncargoTipo();
-if (!empty($Qid_tipo_enc))  {
-	$tipo=$oGesEncargoTipo->encargo_de_tipo($Qid_tipo_enc);
-	$Qgrupo=$tipo['grupo'];
-	//$nom_tipo=$tipo['nom_tipo'];
+if (!empty($Qid_tipo_enc)) {
+    $tipo = $oGesEncargoTipo->encargo_de_tipo($Qid_tipo_enc);
+    $Qgrupo = $tipo['grupo'];
+    //$nom_tipo=$tipo['nom_tipo'];
 } else {
-	$Qid_tipo_enc=$oGesEncargoTipo->id_tipo_encargo($Qgrupo,'...');
+    $Qid_tipo_enc = $oGesEncargoTipo->id_tipo_encargo($Qgrupo, '...');
 }
 
 $ee = $oGesEncargoTipo->encargo_de_tipo($Qid_tipo_enc);
 // desplegable de grupos
-if (substr($Qid_tipo_enc,0,1)=='.') {
-	$grupo_posibles=$ee['grupo'];
-} else { 
-	$Qgrupo=substr($Qid_tipo_enc,0,1);
-	$aux='....'; //Que siempre salgan todas las opciones
-	$ee_grupo=$oGesEncargoTipo->encargo_de_tipo($aux);
-	$grupo_posibles=$ee_grupo['grupo'];
+if (substr($Qid_tipo_enc, 0, 1) == '.') {
+    $grupo_posibles = $ee['grupo'];
+} else {
+    $Qgrupo = substr($Qid_tipo_enc, 0, 1);
+    $aux = '....'; //Que siempre salgan todas las opciones
+    $ee_grupo = $oGesEncargoTipo->encargo_de_tipo($aux);
+    $grupo_posibles = $ee_grupo['grupo'];
 }
 $oDesplGrupos = new Desplegable();
 $oDesplGrupos->setNombre('grupo');
@@ -142,10 +145,10 @@ $oDesplGrupos->setAction("fnjs_lst_tipo_enc();");
 if (!empty($Qgrupo)) {
     $aWhere = [];
     $aOperador = [];
-    $aWhere['id_tipo_enc'] = '^'.$Qgrupo;
+    $aWhere['id_tipo_enc'] = '^' . $Qgrupo;
     $aOperador['id_tipo_enc'] = '~';
     $oGesEncargoTipo = new GestorEncargoTipo();
-    $cEncargoTipos = $oGesEncargoTipo->getEncargoTipos($aWhere,$aOperador);
+    $cEncargoTipos = $oGesEncargoTipo->getEncargoTipos($aWhere, $aOperador);
 
     // desplegable de nom_tipo
     $posibles_encargo_tipo = [];
@@ -240,4 +243,4 @@ $a_campos = ['oPosicion' => $oPosicion,
 ];
 
 $oView = new core\ViewTwig('encargossacd/controller');
-echo $oView->render('encargo_ver.html.twig',$a_campos);
+echo $oView->render('encargo_ver.html.twig', $a_campos);

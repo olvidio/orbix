@@ -1,16 +1,17 @@
-<?php 
+<?php
+
 use encargossacd\model\DesplCentros;
 
 // INICIO Cabecera global de URL de controlador *********************************
-require_once ("apps/core/global_header.inc");
-// Arxivos requeridos por esta url **********************************************
+require_once("apps/core/global_header.inc");
+// Archivos requeridos por esta url **********************************************
 
-// Crea los objectos de uso global **********************************************
-require_once ("apps/core/global_object.inc");
+// Crea los objetos de uso global **********************************************
+require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$Qid_ubi = (integer) \filter_input(INPUT_POST, 'id_ubi');
-$Qfiltro_ctr = (string) \filter_input(INPUT_POST, 'filtro_ctr');
+$Qid_ubi = (integer)\filter_input(INPUT_POST, 'id_ubi');
+$Qfiltro_ctr = (string)\filter_input(INPUT_POST, 'filtro_ctr');
 
 $oGrupoCtr = new DesplCentros();
 

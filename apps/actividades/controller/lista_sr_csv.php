@@ -1,13 +1,13 @@
 <?php
 /**
-* listado de actividades de sr para exportar como csv
-* 
-*@package	delegacion
-*@subpackage	actividades
-*@author	Daniel Serrabou
-*@since		08/09/20
-*		
-*/
+ * listado de actividades de sr para exportar como csv
+ *
+ * @package    delegacion
+ * @subpackage    actividades
+ * @author    Daniel Serrabou
+ * @since        08/09/20
+ *
+ */
 
 // Si vengo para descargar, es via GET, por tanto empleo REQUEST
 
@@ -21,22 +21,22 @@ use web\Lista;
 use web\Periodo;
 use web\TiposActividades;
 
-require_once ("apps/core/global_header.inc");
-// Arxivos requeridos por esta url **********************************************
+require_once("apps/core/global_header.inc");
+// Archivos requeridos por esta url **********************************************
 
-// Crea los objectos de uso global **********************************************
-require_once ("apps/core/global_object.inc");
+// Crea los objetos de uso global **********************************************
+require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
 $mi_sfsv = ConfigGlobal::mi_sfsv();
 
-$Qque = (string) \filter_input(INPUT_POST, 'que');
+$Qque = (string)\filter_input(INPUT_POST, 'que');
 
-$Qperiodo = (string) \filter_input(INPUT_POST, 'periodo');
-$Qyear = (string) \filter_input(INPUT_POST, 'year');
-$Qdl_org = (string) \filter_input(INPUT_POST, 'dl_org');
-$Qempiezamin = (string) \filter_input(INPUT_POST, 'empiezamin');
-$Qempiezamax = (string) \filter_input(INPUT_POST, 'empiezamax');
+$Qperiodo = (string)\filter_input(INPUT_POST, 'periodo');
+$Qyear = (string)\filter_input(INPUT_POST, 'year');
+$Qdl_org = (string)\filter_input(INPUT_POST, 'dl_org');
+$Qempiezamin = (string)\filter_input(INPUT_POST, 'empiezamin');
+$Qempiezamax = (string)\filter_input(INPUT_POST, 'empiezamax');
 
 // valores por defecto
 if (empty($Qperiodo)) {
@@ -45,29 +45,29 @@ if (empty($Qperiodo)) {
 
 // son arrays
 // en este caso status también puede ser un array.
-$Qa_activ = (array)  \filter_input(INPUT_POST, 'c_activ', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-$Qa_status = (array)  \filter_input(INPUT_POST, 'status', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-$Qa_id_cdc = (array)  \filter_input(INPUT_POST, 'id_cdc', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+$Qa_activ = (array)\filter_input(INPUT_POST, 'c_activ', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+$Qa_status = (array)\filter_input(INPUT_POST, 'status', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+$Qa_id_cdc = (array)\filter_input(INPUT_POST, 'id_cdc', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 // json
 $json_status = json_encode($Qa_status);
 $json_activ = json_encode($Qa_activ);
 $json_cdc = json_encode($Qa_id_cdc);
-$aPref = [ 'status' => $json_status,
-            'periodo' => $Qperiodo,
-            'tipo_activ' => $json_activ,
-            'ubis_compartidos' => $json_cdc,
-        ];
+$aPref = ['status' => $json_status,
+    'periodo' => $Qperiodo,
+    'tipo_activ' => $json_activ,
+    'ubis_compartidos' => $json_cdc,
+];
 
 // Guardar Preferencia
 //$json_busqueda = "{ 'status': $json_status, 'periodo': '$Qperiodo', 'tipo_activ': $json_activ, 'ubis_compartidos': $json_cdc}";
 $json_busqueda = json_encode($aPref);
-$id_usuario= core\ConfigGlobal::mi_id_usuario();
+$id_usuario = core\ConfigGlobal::mi_id_usuario();
 $tipo = 'busqueda_activ_sr';
-$oPref = new Preferencia(array('id_usuario'=>$id_usuario,'tipo'=>$tipo));
+$oPref = new Preferencia(array('id_usuario' => $id_usuario, 'tipo' => $tipo));
 $oPref->setPreferencia($json_busqueda);
 if ($oPref->DBGuardar() === false) {
     echo _("hay un error, no se ha guardado la preferencia");
-    echo "\n".$oPref->getErrorTxt();
+    echo "\n" . $oPref->getErrorTxt();
 }
 
 // Condiciones de búsqueda.
@@ -75,17 +75,17 @@ $aWhere = [];
 $aOperador = [];
 // Status
 if (is_array($Qa_status)) {
-	$cond_status='';
-	if (count($Qa_status) > 1) {
+    $cond_status = '';
+    if (count($Qa_status) > 1) {
         foreach ($Qa_status as $status) {
-            $cond_status .= $status;	
+            $cond_status .= $status;
         }
         $aWhere['status'] = "[$cond_status]";
-	} else {
+    } else {
         $aWhere['status'] = $Qa_status[0];
-	}
+    }
 } else {
-	$aWhere['status'] = '.';
+    $aWhere['status'] = '.';
 }
 $aOperador['status'] = '~';
 
@@ -108,9 +108,9 @@ if (is_array($Qa_activ)) {
 // sf sr-nax => 28
 // sf sr-agd => 29
 if ($mi_sfsv == 1) {
-    $condicion = '^17'.$cond_act;
+    $condicion = '^17' . $cond_act;
 } else {
-    $condicion = '^2[789]'.$cond_act;
+    $condicion = '^2[789]' . $cond_act;
 }
 $aWhere['id_tipo_activ'] = $condicion;
 $aOperador['id_tipo_activ'] = '~';
@@ -138,33 +138,33 @@ if (!empty($Qdl_org)) {
     $aWhere['dl_org'] = $Qdl_org;
 }
 
-$aWhere['_ordre']='f_ini';
-$GesActividades=new GestorActividad();
-$cActividades_1 = $GesActividades->getActividades($aWhere,$aOperador);
+$aWhere['_ordre'] = 'f_ini';
+$GesActividades = new GestorActividad();
+$cActividades_1 = $GesActividades->getActividades($aWhere, $aOperador);
 // genero un nuevo array con clave el id_activ (como text: precedo 's') para
 // poder utilizar array_merge y que me quite los duplicados.
 $cActividadesxTipo = [];
 foreach ($cActividades_1 as $oActividad) {
-    $key = 's'.$oActividad->getId_activ();
+    $key = 's' . $oActividad->getId_activ();
     $cActividadesxTipo[$key] = $oActividad;
 }
 
 // Añadir ocupación de casas compartidas (con n, sg, agd, etc.)
 if (is_array($Qa_id_cdc) && count($Qa_id_cdc) > 0) {
-   // borra la condicin del tipo de actividad
-   unset($aWhere['id_tipo_activ']);
-   unset($aOperador['id_tipo_activ']);
-   // añadir la condicion del ubi
-   $cond_ubis = "{".implode(', ',$Qa_id_cdc)."}";
-   $aWhere['id_ubi'] = $cond_ubis;
-   $aOperador['id_ubi'] = 'ANY';
+    // borra la condicin del tipo de actividad
+    unset($aWhere['id_tipo_activ']);
+    unset($aOperador['id_tipo_activ']);
+    // añadir la condicion del ubi
+    $cond_ubis = "{" . implode(', ', $Qa_id_cdc) . "}";
+    $aWhere['id_ubi'] = $cond_ubis;
+    $aOperador['id_ubi'] = 'ANY';
 }
-$cActividades_2 = $GesActividades->getActividades($aWhere,$aOperador);
+$cActividades_2 = $GesActividades->getActividades($aWhere, $aOperador);
 // genero un nuevo array con clave el id_activ (como text: precedo 's') para
 // poder utilizar array_merge y que me quite los duplicados.
 $cActividadesxUbi = [];
 foreach ($cActividades_2 as $oActividad) {
-    $key = 's'.$oActividad->getId_activ();
+    $key = 's' . $oActividad->getId_activ();
     $cActividadesxUbi[$key] = $oActividad;
 }
 
@@ -172,82 +172,89 @@ foreach ($cActividades_2 as $oActividad) {
 $cActividades = array_merge($cActividadesxTipo, $cActividadesxUbi);
 
 
-$titulo=ucfirst(_("listado de actividades"));
-	
-$a_cabeceras=array();
-$a_cabeceras[]=ucfirst(_("status"));
-$a_cabeceras[]= array('name'=>ucfirst(_("empieza")),'class'=>'fecha');
-$a_cabeceras[]= array('name'=>ucfirst(_("termina")),'class'=>'fecha');
-$a_cabeceras[]=ucfirst(_("nom activ."));
-$a_cabeceras[]=ucfirst(_("asist."));
-$a_cabeceras[]=ucfirst(_("actividad"));
-$a_cabeceras[]=ucfirst(_("tipo actividad"));
-$a_cabeceras[]=ucfirst(_("lugar"));
-$a_cabeceras[]=ucfirst(_("centro"));
+$titulo = ucfirst(_("listado de actividades"));
 
-$a_valores=array();
-$i=0;
+$a_cabeceras = array();
+$a_cabeceras[] = ucfirst(_("status"));
+$a_cabeceras[] = array('name' => ucfirst(_("empieza")), 'class' => 'fecha');
+$a_cabeceras[] = array('name' => ucfirst(_("termina")), 'class' => 'fecha');
+$a_cabeceras[] = ucfirst(_("nom activ."));
+$a_cabeceras[] = ucfirst(_("asist."));
+$a_cabeceras[] = ucfirst(_("actividad"));
+$a_cabeceras[] = ucfirst(_("tipo actividad"));
+$a_cabeceras[] = ucfirst(_("lugar"));
+$a_cabeceras[] = ucfirst(_("centro"));
+
+$a_valores = array();
+$i = 0;
 foreach ($cActividades as $oActividad) {
-	$i++;
-	$id_activ = $oActividad->getId_activ();
-	$id_tipo_activ = $oActividad->getId_tipo_activ();
-	$status = $oActividad->getStatus();
-	$id_ubi = $oActividad->getId_ubi();
-	$nom_activ = $oActividad->getNom_activ();
-	$f_ini = $oActividad->getF_ini()->getFromLocal();
-	$f_fin = $oActividad->getF_fin()->getFromLocal();
-	
-	$oUbi = new Casa($id_ubi);
-	
-	$nombre_ubi = $oUbi->getNombre_ubi();
-	if ($oUbi->getSv()=="t") {$comun="sv"; }
-	if ($oUbi->getSf()=="t") {$comun="sf"; }
-	if (($oUbi->getSv()=="t") and ($oUbi->getSf()=="t")) {$comun="comun"; }
+    $i++;
+    $id_activ = $oActividad->getId_activ();
+    $id_tipo_activ = $oActividad->getId_tipo_activ();
+    $status = $oActividad->getStatus();
+    $id_ubi = $oActividad->getId_ubi();
+    $nom_activ = $oActividad->getNom_activ();
+    $f_ini = $oActividad->getF_ini()->getFromLocal();
+    $f_fin = $oActividad->getF_fin()->getFromLocal();
 
-	
-	$oTipoActiv= new TiposActividades($id_tipo_activ);
-	$ssfsv=$oTipoActiv->getSfsvText();
-	$sasistentes=$oTipoActiv->getAsistentesText();
-	$sactividad=$oTipoActiv->getActividadText();
-	$snom_tipo=$oTipoActiv->getNom_tipoText();
+    $oUbi = new Casa($id_ubi);
 
-	if ((($_SESSION['oPerm']->have_perm_oficina('sg')) 
-	   || ($_SESSION['oPerm']->have_perm_oficina('vcsd')) 
-	   || ($_SESSION['oPerm']->have_perm_oficina('des'))) AND !($_SESSION['oPerm']->have_perm_oficina('admin'))
-	  ) {
-		if ($snom_tipo=="(sin especificar)") {	
-			$snom_tipo="";
-		}
-	}
+    $nombre_ubi = $oUbi->getNombre_ubi();
+    if ($oUbi->getSv() == "t") {
+        $comun = "sv";
+    }
+    if ($oUbi->getSf() == "t") {
+        $comun = "sf";
+    }
+    if (($oUbi->getSv() == "t") and ($oUbi->getSf() == "t")) {
+        $comun = "comun";
+    }
 
-	$a_valores[$i][1]=$status;
-	$a_valores[$i][2]=$f_ini;
-	$a_valores[$i][4]=$f_fin;
-	$a_valores[$i][7]=$nom_activ;
-	$a_valores[$i][8]=$sasistentes;
-	$a_valores[$i][9]=$sactividad;
-	$a_valores[$i][10]=$snom_tipo;
-	$a_valores[$i][11]=$nombre_ubi;
 
-	$oEnc=new GestorCentroEncargado();
-	$ctrs='';
-	foreach($oEnc->getCentrosEncargadosActividad($id_activ) as $oEncargado) {;
-		$ctrs.=$oEncargado->getNombre_ubi().', ';
-	}
-	$ctrs=substr($ctrs,0,-2);
-	$a_valores[$i][12]=$ctrs;
-	/*
-	if ($ver_sacd == 1) {
-		$oCargosActividad=new GestorActividadCargo();
-		$sacds='';
-		foreach($oCargosActividad->getActividadSacds($id_activ) as $oPersona) {;
-			$sacds.=$oPersona->getPrefApellidosNombre()."# "; // la coma la utilizo como separador de apellidos, nombre.
-		}
-		$sacds=substr($sacds,0,-2);
-		$a_valores[$i][13]=$sacds;
-		$a_valores[$i][14]=$observ;
-	}
-	*/
+    $oTipoActiv = new TiposActividades($id_tipo_activ);
+    $ssfsv = $oTipoActiv->getSfsvText();
+    $sasistentes = $oTipoActiv->getAsistentesText();
+    $sactividad = $oTipoActiv->getActividadText();
+    $snom_tipo = $oTipoActiv->getNom_tipoText();
+
+    if ((($_SESSION['oPerm']->have_perm_oficina('sg'))
+            || ($_SESSION['oPerm']->have_perm_oficina('vcsd'))
+            || ($_SESSION['oPerm']->have_perm_oficina('des'))) and !($_SESSION['oPerm']->have_perm_oficina('admin'))
+    ) {
+        if ($snom_tipo == "(sin especificar)") {
+            $snom_tipo = "";
+        }
+    }
+
+    $a_valores[$i][1] = $status;
+    $a_valores[$i][2] = $f_ini;
+    $a_valores[$i][4] = $f_fin;
+    $a_valores[$i][7] = $nom_activ;
+    $a_valores[$i][8] = $sasistentes;
+    $a_valores[$i][9] = $sactividad;
+    $a_valores[$i][10] = $snom_tipo;
+    $a_valores[$i][11] = $nombre_ubi;
+
+    $oEnc = new GestorCentroEncargado();
+    $ctrs = '';
+    foreach ($oEnc->getCentrosEncargadosActividad($id_activ) as $oEncargado) {
+        ;
+        $ctrs .= $oEncargado->getNombre_ubi() . ', ';
+    }
+    $ctrs = substr($ctrs, 0, -2);
+    $a_valores[$i][12] = $ctrs;
+    /*
+    if ($ver_sacd == 1) {
+        $oCargosActividad=new GestorActividadCargo();
+        $sacds='';
+        foreach($oCargosActividad->getActividadSacds($id_activ) as $oPersona) {;
+            $sacds.=$oPersona->getPrefApellidosNombre()."# "; // la coma la utilizo como separador de apellidos, nombre.
+        }
+        $sacds=substr($sacds,0,-2);
+        $a_valores[$i][13]=$sacds;
+        $a_valores[$i][14]=$observ;
+    }
+    */
 }
 
 $oTabla = new Lista();

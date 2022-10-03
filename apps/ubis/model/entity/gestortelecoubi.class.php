@@ -1,6 +1,8 @@
 <?php
 namespace ubis\model\entity;
+
 use core;
+
 /**
  * GestorTelecoUbi
  *
@@ -12,46 +14,49 @@ use core;
  * @version 1.0
  * @created 01/10/2010
  */
+abstract class GestorTelecoUbi extends core\ClaseGestor
+{
+    /* ATRIBUTOS ----------------------------------------------------------------- */
 
-Abstract class GestorTelecoUbi Extends  core\ClaseGestor {
-	/* ATRIBUTS ----------------------------------------------------------------- */
+    /* CONSTRUCTOR -------------------------------------------------------------- */
 
-	/* CONSTRUCTOR -------------------------------------------------------------- */
-
-	/**
-	 * Constructor de la classe.
-	 *
-	 * @return GestorTelecoUbi
-	 *
-	 */
-	function __construct() {
-		/*
-		$oDbl = $GLOBALS['oDBPC'];
-		$this->setoDbl($oDbl);
-		$this->setNomTabla('d_teleco_ubis');
-		*/
-	}
+    /**
+     * Constructor de la classe.
+     *
+     * @return GestorTelecoUbi
+     *
+     */
+    function __construct()
+    {
+        /*
+        $oDbl = $GLOBALS['oDBPC'];
+        $this->setoDbl($oDbl);
+        $this->setNomTabla('d_teleco_ubis');
+        */
+    }
 
 
-	/* METODES PUBLICS -----------------------------------------------------------*/
+    /* MÉTODOS PÚBLICOS -----------------------------------------------------------*/
 
-	/**
-	 * retorna l'array d'objectes de tipus TelecoUbi
-	 *
-	 * @param array aWhere associatiu amb els valors de les variables amb les quals farem la query
-	 * @param array aOperators associatiu amb els valors dels operadors que cal aplicar a cada variable
-	 * @return array Una col·lecció d'objectes de tipus TelecoUbi
-	 */
-	function getTelecos($aWhere=array(),$aOperators=array()) {
-		$a_Clases[] = array('clase'=>'TelecoCtr','get'=>'getTelecos');
-		$a_Clases[] = array('clase'=>'TelecoCdc','get'=>'getTelecos');
+    /**
+     * retorna l'array d'objectes de tipus TelecoUbi
+     *
+     * @param array aWhere associatiu amb els valors de les variables amb les quals farem la query
+     * @param array aOperators associatiu amb els valors dels operadors que cal aplicar a cada variable
+     * @return array Una col·lecció d'objectes de tipus TelecoUbi
+     */
+    function getTelecos($aWhere = array(), $aOperators = array())
+    {
+        $a_Clases[] = array('clase' => 'TelecoCtr', 'get' => 'getTelecos');
+        $a_Clases[] = array('clase' => 'TelecoCdc', 'get' => 'getTelecos');
 
-		$namespace = __NAMESPACE__;
-		return $this->getConjunt($a_Clases,$namespace,$aWhere,$aOperators);
-	}	
-	/* METODES PROTECTED --------------------------------------------------------*/
+        $namespace = __NAMESPACE__;
+        return $this->getConjunt($a_Clases, $namespace, $aWhere, $aOperators);
+    }
+    /* METODES PROTECTED --------------------------------------------------------*/
 
-	/* METODES GET i SET --------------------------------------------------------*/
+    /* MÉTODOS GET y SET --------------------------------------------------------*/
 
 }
+
 ?>

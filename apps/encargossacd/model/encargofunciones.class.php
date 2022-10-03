@@ -1,4 +1,5 @@
 <?php
+
 namespace encargossacd\model;
 
 use encargossacd\model\EncargoFuncionesTrait;
@@ -14,7 +15,7 @@ use encargossacd\model\EncargoFuncionesTrait;
  * @version 1.0
  * @created 11/01/2019
  */
-
-class EncargoFunciones {
+class EncargoFunciones
+{
     use EncargoFuncionesTrait;
 }
