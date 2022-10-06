@@ -23,8 +23,8 @@ require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
 
-$Qque = (string)\filter_input(INPUT_POST, 'que');
-$sQuery = (string)\filter_input(INPUT_POST, 'search');
+$Qque = (string)filter_input(INPUT_POST, 'que');
+$sQuery = (string)filter_input(INPUT_POST, 'search');
 
 switch ($Qque) {
     case 'examinadores':

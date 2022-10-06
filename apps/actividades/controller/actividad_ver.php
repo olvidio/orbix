@@ -24,22 +24,22 @@ require_once("apps/core/global_object.inc");
 
 //Necesario cuando tengo que buscar el desplegable dl_org según permisos en procesos
 // (Como también afecta al status de la actividad, mejor rehacer toda la página).
-$Qrefresh = (integer)\filter_input(INPUT_POST, 'refresh');
+$Qrefresh = (integer)filter_input(INPUT_POST, 'refresh');
 $oPosicion->recordar($Qrefresh);
 
-$a_sel = (array)\filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+$a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 if (!empty($a_sel)) { //vengo de un checkbox
     $Qid_activ = (integer)strtok($a_sel[0], "#");
     // el scroll id es de la página anterior, hay que guardarlo allí
     $oPosicion->addParametro('id_sel', $a_sel, 1);
-    $scroll_id = (integer)\filter_input(INPUT_POST, 'scroll_id');
+    $scroll_id = (integer)filter_input(INPUT_POST, 'scroll_id');
     $oPosicion->addParametro('scroll_id', $scroll_id, 1);
 } else {
-    $Qid_activ = (integer)\filter_input(INPUT_POST, 'id_activ');
+    $Qid_activ = (integer)filter_input(INPUT_POST, 'id_activ');
 }
 
-$Qmod = (string)\filter_input(INPUT_POST, 'mod');
-$Qobj_pau = (string)\filter_input(INPUT_POST, 'obj_pau');
+$Qmod = (string)filter_input(INPUT_POST, 'mod');
+$Qobj_pau = (string)filter_input(INPUT_POST, 'obj_pau');
 
 $obj = 'actividades\\model\\entity\\ActividadAll';
 
@@ -129,7 +129,7 @@ if (!empty($Qid_activ)) { // caso de modificar
     $tarifa = '';
     $nivel_stgr = 'r';
     $id_repeticion = 0;
-    $id_tipo_activ = (string)\filter_input(INPUT_POST, 'id_tipo_activ');
+    $id_tipo_activ = (string)filter_input(INPUT_POST, 'id_tipo_activ');
     $id_tipo_activ = urldecode($id_tipo_activ); // En el caso de sr, sg, se pasa la cadena tipo 2[789]... (con [, que se encodan).
     $id_activ = '';
 
@@ -171,8 +171,8 @@ if (!empty($Qid_activ)) { // caso de modificar
     }
 
 
-    $sasistentes = (string)\filter_input(INPUT_POST, 'sasistentes');
-    $sactividad = (string)\filter_input(INPUT_POST, 'sactividad');
+    $sasistentes = (string)filter_input(INPUT_POST, 'sasistentes');
+    $sactividad = (string)filter_input(INPUT_POST, 'sactividad');
     $snom_tipo = '';
 
     $nom_activ = '';

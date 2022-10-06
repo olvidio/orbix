@@ -12,12 +12,12 @@ require_once("apps/core/global_object.inc");
 
 $id_usuario = core\ConfigGlobal::mi_id_usuario();
 
-$Qque = (string)\filter_input(INPUT_POST, 'que');
+$Qque = (string)filter_input(INPUT_POST, 'que');
 
 switch ($Qque) {
     case "slickGrid":
-        $Qtabla = (string)\filter_input(INPUT_POST, 'tabla');
-        $QsPrefs = (string)\filter_input(INPUT_POST, 'sPrefs');
+        $Qtabla = (string)filter_input(INPUT_POST, 'tabla');
+        $QsPrefs = (string)filter_input(INPUT_POST, 'sPrefs');
         $idioma = core\ConfigGlobal::mi_Idioma();
         $tipo = 'slickGrid_' . $Qtabla . '_' . $idioma;
         $oPref = new usuarios\Preferencia(array('id_usuario' => $id_usuario, 'tipo' => $tipo));
@@ -37,8 +37,8 @@ switch ($Qque) {
         }
         break;
     default:
-        $Qoficina = (string)\filter_input(INPUT_POST, 'oficina');
-        $Qinicio = (string)\filter_input(INPUT_POST, 'inicio');
+        $Qoficina = (string)filter_input(INPUT_POST, 'oficina');
+        $Qinicio = (string)filter_input(INPUT_POST, 'inicio');
 
         $Qoficina = empty($Qoficina) ? 'exterior' : $Qoficina;
         $Qinicio = empty($Qinicio) ? 'exterior' : $Qinicio;
@@ -52,8 +52,8 @@ switch ($Qque) {
         }
 
         // Guardar estilo:
-        $Qestilo_color = (string)\filter_input(INPUT_POST, 'estilo_color');
-        $Qtipo_menu = (string)\filter_input(INPUT_POST, 'tipo_menu');
+        $Qestilo_color = (string)filter_input(INPUT_POST, 'estilo_color');
+        $Qtipo_menu = (string)filter_input(INPUT_POST, 'tipo_menu');
         $estilo = $Qestilo_color . "#" . $Qtipo_menu;
         $oPref = new usuarios\Preferencia(array('id_usuario' => $id_usuario, 'tipo' => 'estilo'));
         $oPref->setPreferencia($estilo);
@@ -63,7 +63,7 @@ switch ($Qque) {
         }
 
         // Guardar presentacion tablas:
-        $Qtipo_tabla = (string)\filter_input(INPUT_POST, 'tipo_tabla');
+        $Qtipo_tabla = (string)filter_input(INPUT_POST, 'tipo_tabla');
         $oPref = new usuarios\Preferencia(array('id_usuario' => $id_usuario, 'tipo' => 'tabla_presentacion'));
         $oPref->setPreferencia($Qtipo_tabla);
         if ($oPref->DBGuardar() === false) {
@@ -72,7 +72,7 @@ switch ($Qque) {
         }
 
         // Guardar presentacion nombre Apellidos:
-        $QordenApellidos = (string)\filter_input(INPUT_POST, 'ordenApellidos');
+        $QordenApellidos = (string)filter_input(INPUT_POST, 'ordenApellidos');
         $oPref = new usuarios\Preferencia(array('id_usuario' => $id_usuario, 'tipo' => 'ordenApellidos'));
         $oPref->setPreferencia($QordenApellidos);
         if ($oPref->DBGuardar() === false) {
@@ -82,7 +82,7 @@ switch ($Qque) {
         $_SESSION['session_auth']['ordenApellidos'] = $QordenApellidos;
 
         // Guardar idioma:
-        $Qidioma_nou = (string)\filter_input(INPUT_POST, 'idioma_nou');
+        $Qidioma_nou = (string)filter_input(INPUT_POST, 'idioma_nou');
         $oPref = new usuarios\Preferencia(array('id_usuario' => $id_usuario, 'tipo' => 'idioma'));
         $oPref->setPreferencia($Qidioma_nou);
         if ($oPref->DBGuardar() === false) {

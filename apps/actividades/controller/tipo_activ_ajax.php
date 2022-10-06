@@ -15,7 +15,7 @@ require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
 
-$Qque = (string)\filter_input(INPUT_POST, 'que');
+$Qque = (string)filter_input(INPUT_POST, 'que');
 
 switch ($Qque) {
     case 'lista':
@@ -76,7 +76,7 @@ switch ($Qque) {
         break;
 
     case 'form_modificar':
-        $Qid_tipo_activ = (integer)\filter_input(INPUT_POST, 'id_tipo_activ');
+        $Qid_tipo_activ = (integer)filter_input(INPUT_POST, 'id_tipo_activ');
         $oTiposActividades = new TiposActividades($Qid_tipo_activ);
 
         $nom_actividad = $oTiposActividades->getSfsvText();
@@ -108,11 +108,11 @@ switch ($Qque) {
         break;
 
     case "nuevo":
-        $Qsfsv = (string)\filter_input(INPUT_POST, 'isfsv_val');
-        $Qasistentes = (string)\filter_input(INPUT_POST, 'iasistentes_val');
-        $Qactividad = (string)\filter_input(INPUT_POST, 'iactividad_val');
-        $Qid_nom_tipo_activ = (string)\filter_input(INPUT_POST, 'id_nom_tipo_activ');
-        $Qnom_tipo_activ = (string)\filter_input(INPUT_POST, 'nom_tipo_activ');
+        $Qsfsv = (string)filter_input(INPUT_POST, 'isfsv_val');
+        $Qasistentes = (string)filter_input(INPUT_POST, 'iasistentes_val');
+        $Qactividad = (string)filter_input(INPUT_POST, 'iactividad_val');
+        $Qid_nom_tipo_activ = (string)filter_input(INPUT_POST, 'id_nom_tipo_activ');
+        $Qnom_tipo_activ = (string)filter_input(INPUT_POST, 'nom_tipo_activ');
 
         $id_tipo_activ = "$Qsfsv$Qasistentes$Qactividad$Qid_nom_tipo_activ";
 
@@ -131,8 +131,8 @@ switch ($Qque) {
 
         break;
     case "update":
-        $Qid_tipo_activ = (integer)\filter_input(INPUT_POST, 'id_tipo_activ');
-        $Qnom_tipo_activ = (string)\filter_input(INPUT_POST, 'nom_tipo_activ');
+        $Qid_tipo_activ = (integer)filter_input(INPUT_POST, 'id_tipo_activ');
+        $Qnom_tipo_activ = (string)filter_input(INPUT_POST, 'nom_tipo_activ');
 
         $oTipoActividad = new TipoDeActividad($Qid_tipo_activ);
         $oTipoActividad->DBCarregar();
@@ -142,7 +142,7 @@ switch ($Qque) {
         }
         break;
     case "eliminar":
-        $Qid_tipo_activ = (integer)\filter_input(INPUT_POST, 'id_tipo_activ');
+        $Qid_tipo_activ = (integer)filter_input(INPUT_POST, 'id_tipo_activ');
 
         $oTipoActividad = new TipoDeActividad($Qid_tipo_activ);
         if ($oTipoActividad->DBEliminar() === false) {

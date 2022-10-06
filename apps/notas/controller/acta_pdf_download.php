@@ -14,7 +14,7 @@ require_once("apps/core/global_object.inc");
 
 // El download es via GET!!!";
 
-$Qacta = (string)\filter_input(INPUT_GET, 'key');
+$Qacta = (string)filter_input(INPUT_GET, 'key');
 
 if (!empty($Qacta)) {
     $oActa = new Acta($Qacta);

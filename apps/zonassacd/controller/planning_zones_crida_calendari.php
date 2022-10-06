@@ -51,7 +51,7 @@ $oPosicion->recordar();
 
 echo "<button class='no_print' onclick=\"fnjs_exportar('html');\" >Descargar html</button>";
 echo "<div id=\"exportar\">";
-$Qmodelo = (integer)\filter_input(INPUT_POST, 'modelo');
+$Qmodelo = (integer)filter_input(INPUT_POST, 'modelo');
 switch ($Qmodelo) {
     case 2:
         $print = 1;
@@ -70,13 +70,13 @@ $oPlanning->setColorColumnaUno($colorColumnaUno);
 $oPlanning->setColorColumnaDos($colorColumnaDos);
 $oPlanning->setTable_border($table_border);
 
-$Qyear = (integer)\filter_input(INPUT_POST, 'year');
+$Qyear = (integer)filter_input(INPUT_POST, 'year');
 $year = empty($Qyear) ? date('Y') + 1 : $Qyear;
-$Qtrimestre = (integer)\filter_input(INPUT_POST, 'trimestre');
+$Qtrimestre = (integer)filter_input(INPUT_POST, 'trimestre');
 
-$Qid_zona = (string)\filter_input(INPUT_POST, 'id_zona');
-$Qactividad = (string)\filter_input(INPUT_POST, 'actividad');
-$Qpropuesta = (string)\filter_input(INPUT_POST, 'propuesta');
+$Qid_zona = (string)filter_input(INPUT_POST, 'id_zona');
+$Qactividad = (string)filter_input(INPUT_POST, 'actividad');
+$Qpropuesta = (string)filter_input(INPUT_POST, 'propuesta');
 
 // ISO: mes/dia
 switch ($Qtrimestre) {

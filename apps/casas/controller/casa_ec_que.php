@@ -28,10 +28,10 @@ require_once("apps/core/global_object.inc");
 
 $oPosicion->recordar();
 
-$Qtipo_lista = (string)\filter_input(INPUT_POST, 'tipo_lista');
+$Qtipo_lista = (string)filter_input(INPUT_POST, 'tipo_lista');
 
-$Qperiodo = (string)\filter_input(INPUT_POST, 'periodo');
-$Qyear = (string)\filter_input(INPUT_POST, 'year');
+$Qperiodo = (string)filter_input(INPUT_POST, 'periodo');
+$Qyear = (string)filter_input(INPUT_POST, 'year');
 
 
 $oForm = new CasasQue();

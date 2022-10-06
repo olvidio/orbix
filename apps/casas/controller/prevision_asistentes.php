@@ -33,12 +33,12 @@ require_once("apps/core/global_object.inc");
 $oPosicion->recordar();
 
 
-$Qmi_of = (string)\filter_input(INPUT_POST, 'mi_of');
+$Qmi_of = (string)filter_input(INPUT_POST, 'mi_of');
 
-$Qperiodo = (string)\filter_input(INPUT_POST, 'periodo');
-$Qyear = (integer)\filter_input(INPUT_POST, 'year');
-$Qempiezamin = (string)\filter_input(INPUT_POST, 'empiezamin');
-$Qempiezamax = (string)\filter_input(INPUT_POST, 'empiezamax');
+$Qperiodo = (string)filter_input(INPUT_POST, 'periodo');
+$Qyear = (integer)filter_input(INPUT_POST, 'year');
+$Qempiezamin = (string)filter_input(INPUT_POST, 'empiezamin');
+$Qempiezamax = (string)filter_input(INPUT_POST, 'empiezamax');
 
 $aWhere = [];
 $aOperador = [];

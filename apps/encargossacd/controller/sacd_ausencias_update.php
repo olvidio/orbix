@@ -85,13 +85,13 @@ function insert_sacd_ausencias($id_enc, $id_nom, $modo, $f_ini, $f_fin)
 }
 
 
-$Qenc_num = (integer)\filter_input(INPUT_POST, 'enc_num');
-$Qid_nom = (integer)\filter_input(INPUT_POST, 'id_nom');
+$Qenc_num = (integer)filter_input(INPUT_POST, 'enc_num');
+$Qid_nom = (integer)filter_input(INPUT_POST, 'id_nom');
 
-$Qa_inicio = (array)\filter_input(INPUT_POST, 'inicio', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-$Qa_fin = (array)\filter_input(INPUT_POST, 'fin', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-$Qa_id_enc = (array)\filter_input(INPUT_POST, 'id_enc', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-$Qa_id_item = (array)\filter_input(INPUT_POST, 'id_item', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+$Qa_inicio = (array)filter_input(INPUT_POST, 'inicio', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+$Qa_fin = (array)filter_input(INPUT_POST, 'fin', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+$Qa_id_enc = (array)filter_input(INPUT_POST, 'id_enc', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+$Qa_id_item = (array)filter_input(INPUT_POST, 'id_item', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 
 //modificar 
 for ($i = 0; $i < $Qenc_num; $i++) {

@@ -24,7 +24,7 @@ require_once("apps/core/global_object.inc");
 
 //Si vengo por medio de Posicion, borro la última
 if (isset($_POST['stack'])) {
-    $stack = \filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
+    $stack = filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
     if ($stack != '') {
         // No me sirve el de global_object, sino el de la session
         $oPosicion2 = new Posicion();
@@ -40,11 +40,11 @@ $oPosicion->recordar();
 $aviso = '';
 $form = '';
 $traslados = '';
-$Qmod = (string)\filter_input(INPUT_POST, 'mod');
-$Qyear = (string)\filter_input(INPUT_POST, 'year');
-$Qperiodo = (string)\filter_input(INPUT_POST, 'periodo');
-$Qempiezamin = (string)\filter_input(INPUT_POST, 'empiezamin');
-$Qempiezamax = (string)\filter_input(INPUT_POST, 'empiezamax');
+$Qmod = (string)filter_input(INPUT_POST, 'mod');
+$Qyear = (string)filter_input(INPUT_POST, 'year');
+$Qperiodo = (string)filter_input(INPUT_POST, 'periodo');
+$Qempiezamin = (string)filter_input(INPUT_POST, 'empiezamin');
+$Qempiezamax = (string)filter_input(INPUT_POST, 'empiezamax');
 
 //periodo
 if (empty($Qperiodo)) {

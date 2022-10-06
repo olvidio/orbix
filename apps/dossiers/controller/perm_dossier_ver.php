@@ -26,8 +26,8 @@ require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
 
-$Qtipo = (string)\filter_input(INPUT_POST, 'tipo');
-$Qid_tipo_dossier = (integer)\filter_input(INPUT_POST, 'id_tipo_dossier');
+$Qtipo = (string)filter_input(INPUT_POST, 'tipo');
+$Qid_tipo_dossier = (integer)filter_input(INPUT_POST, 'id_tipo_dossier');
 
 $a_dataUrl = array('tipo' => $Qtipo);
 $go_to = web\Hash::link(core\ConfigGlobal::getWeb() . '/apps/dossiers/controller/perm_dossiers.php?' . http_build_query($a_dataUrl));

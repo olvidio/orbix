@@ -25,14 +25,14 @@ require_once("apps/core/global_object.inc");
 
 $oPosicion->recordar();
 
-$Qtipo_ctr = (string)\filter_input(INPUT_POST, 'tipo_ctr');
-$Qtipo_lista = (string)\filter_input(INPUT_POST, 'tipo_lista');
-$Qver_ctr = (string)\filter_input(INPUT_POST, 'ver_ctr');
+$Qtipo_ctr = (string)filter_input(INPUT_POST, 'tipo_ctr');
+$Qtipo_lista = (string)filter_input(INPUT_POST, 'tipo_lista');
+$Qver_ctr = (string)filter_input(INPUT_POST, 'ver_ctr');
 
-$Qperiodo = (string)\filter_input(INPUT_POST, 'periodo');
-$Qyear = (string)\filter_input(INPUT_POST, 'year');
-$Qempiezamax = (string)\filter_input(INPUT_POST, 'empiezamax');
-$Qempiezamin = (string)\filter_input(INPUT_POST, 'empiezamin');
+$Qperiodo = (string)filter_input(INPUT_POST, 'periodo');
+$Qyear = (string)filter_input(INPUT_POST, 'year');
+$Qempiezamax = (string)filter_input(INPUT_POST, 'empiezamax');
+$Qempiezamin = (string)filter_input(INPUT_POST, 'empiezamin');
 
 $oForm = new CentrosQue();
 // miro que rol tengo. Si soy centro, sólo veo la mía

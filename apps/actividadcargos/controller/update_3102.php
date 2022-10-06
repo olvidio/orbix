@@ -32,28 +32,28 @@ require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
 $msg_err = '';
-$Qmod = (string)\filter_input(INPUT_POST, 'mod');
-$Qpau = (string)\filter_input(INPUT_POST, 'pau');
-$Qid_item = (integer)\filter_input(INPUT_POST, 'id_item');
-$Qobserv = (string)\filter_input(INPUT_POST, 'observ');
-$Qpuede_agd = (string)\filter_input(INPUT_POST, 'puede_agd');
-$Qasis = (string)\filter_input(INPUT_POST, 'asis');
-$Qelim_asis = (string)\filter_input(INPUT_POST, 'elim_asis');
-$Qid_dossier = (integer)\filter_input(INPUT_POST, 'id_dossier');
+$Qmod = (string)filter_input(INPUT_POST, 'mod');
+$Qpau = (string)filter_input(INPUT_POST, 'pau');
+$Qid_item = (integer)filter_input(INPUT_POST, 'id_item');
+$Qobserv = (string)filter_input(INPUT_POST, 'observ');
+$Qpuede_agd = (string)filter_input(INPUT_POST, 'puede_agd');
+$Qasis = (string)filter_input(INPUT_POST, 'asis');
+$Qelim_asis = (string)filter_input(INPUT_POST, 'elim_asis');
+$Qid_dossier = (integer)filter_input(INPUT_POST, 'id_dossier');
 
 
 //En el caso de eliminar desde la lista de cargos
-$a_sel = (array)\filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+$a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 if (!empty($a_sel)) { //vengo de un checkbox
     if ($Qpau == "p") {
         $Qid_item = (integer)strtok($a_sel[0], "#");
         $Qelim_asis = strtok("#");
-        $Qid_nom = (integer)\filter_input(INPUT_POST, 'id_pau');
+        $Qid_nom = (integer)filter_input(INPUT_POST, 'id_pau');
     }
     if ($Qpau == "a") {
         $Qid_item = (integer)strtok($a_sel[0], "#");
         $Qelim_asis = strtok("#");
-        $Qid_activ = (integer)\filter_input(INPUT_POST, 'id_pau');
+        $Qid_activ = (integer)filter_input(INPUT_POST, 'id_pau');
     }
     // sobre escribo...
     if ($Qid_dossier == 3101) {  // vengo del listado de asistencias
@@ -67,9 +67,9 @@ if (!empty($a_sel)) { //vengo de un checkbox
         $Qelim_asis = strtok("#");
     }
 } else { // desde el formulario
-    $Qid_activ = (integer)\filter_input(INPUT_POST, 'id_activ');
-    $Qid_nom = (integer)\filter_input(INPUT_POST, 'id_nom');
-    $Qid_cargo = (integer)\filter_input(INPUT_POST, 'id_cargo');
+    $Qid_activ = (integer)filter_input(INPUT_POST, 'id_activ');
+    $Qid_nom = (integer)filter_input(INPUT_POST, 'id_nom');
+    $Qid_cargo = (integer)filter_input(INPUT_POST, 'id_cargo');
 }
 
 switch ($Qmod) {

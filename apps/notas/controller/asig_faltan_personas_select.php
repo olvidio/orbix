@@ -30,16 +30,16 @@ require_once("apps/core/global_object.inc");
 
 $oPosicion->recordar();
 
-$Qid_asignatura = (string)\filter_input(INPUT_POST, 'id_asignatura');
-$Qpersonas_n = (string)\filter_input(INPUT_POST, 'personas_n');
-$Qpersonas_agd = (string)\filter_input(INPUT_POST, 'personas_agd');
-$Qb_c = (string)\filter_input(INPUT_POST, 'b_c');
-$Qc1 = (string)\filter_input(INPUT_POST, 'c1');
-$Qc2 = (string)\filter_input(INPUT_POST, 'c2');
+$Qid_asignatura = (string)filter_input(INPUT_POST, 'id_asignatura');
+$Qpersonas_n = (string)filter_input(INPUT_POST, 'personas_n');
+$Qpersonas_agd = (string)filter_input(INPUT_POST, 'personas_agd');
+$Qb_c = (string)filter_input(INPUT_POST, 'b_c');
+$Qc1 = (string)filter_input(INPUT_POST, 'c1');
+$Qc2 = (string)filter_input(INPUT_POST, 'c2');
 
 //Si vengo por medio de Posicion, borro la última
 if (isset($_POST['stack'])) {
-    $stack = \filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
+    $stack = filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
     if ($stack != '') {
         // No me sirve el de global_object, sino el de la session
         $oPosicion2 = new Posicion();

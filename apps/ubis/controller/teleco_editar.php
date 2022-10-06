@@ -23,11 +23,11 @@ require_once("apps/core/global_header.inc");
 require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$Qobj_pau = (string)\filter_input(INPUT_POST, 'obj_pau');
-$Qmod = (string)\filter_input(INPUT_POST, 'mod');
-$Qid_ubi = (integer)\filter_input(INPUT_POST, 'id_ubi');
+$Qobj_pau = (string)filter_input(INPUT_POST, 'obj_pau');
+$Qmod = (string)filter_input(INPUT_POST, 'mod');
+$Qid_ubi = (integer)filter_input(INPUT_POST, 'id_ubi');
 
-$a_sel = (array)\filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+$a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 if (!empty($a_sel)) { //vengo de un checkbox
     $s_pkey = explode('#', $a_sel[0]);
     // he cambiado las comillas dobles por simples. Deshago el cambio.
@@ -35,7 +35,7 @@ if (!empty($a_sel)) { //vengo de un checkbox
     $a_pkey = unserialize(core\urlsafe_b64decode($s_pkey));
     // el scroll id es de la página anterior, hay que guardarlo allí
     $oPosicion->addParametro('id_sel', $a_sel, 1);
-    $scroll_id = (integer)\filter_input(INPUT_POST, 'scroll_id');
+    $scroll_id = (integer)filter_input(INPUT_POST, 'scroll_id');
     $oPosicion->addParametro('scroll_id', $scroll_id, 1);
 } else { // si es nuevo
     $s_pkey = '';

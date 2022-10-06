@@ -75,11 +75,11 @@ function llenar_dtor($oCartaPresentacion,$id_ubi) {
 */
 
 
-$Qque_mod = (string)\filter_input(INPUT_POST, 'que_mod');
+$Qque_mod = (string)filter_input(INPUT_POST, 'que_mod');
 
 switch ($Qque_mod) {
     case 'poblaciones':
-        $Qfiltro = (string)\filter_input(INPUT_POST, 'filtro');
+        $Qfiltro = (string)filter_input(INPUT_POST, 'filtro');
         switch ($Qfiltro) {
             case 'get_H':
                 $sCondicion = "WHERE pais ILIKE 'españa'";
@@ -129,8 +129,8 @@ switch ($Qque_mod) {
         break;
     case 'form_pres':
         $msg_exit = '';
-        $Qid_direccion = (integer)\filter_input(INPUT_POST, 'id_direccion');
-        $Qid_ubi = (integer)\filter_input(INPUT_POST, 'id_ubi');
+        $Qid_direccion = (integer)filter_input(INPUT_POST, 'id_direccion');
+        $Qid_ubi = (integer)filter_input(INPUT_POST, 'id_ubi');
 
         $oDireccion = new DireccionCtr($Qid_direccion);
         $nom_sede = $oDireccion->getNom_sede();
@@ -207,8 +207,8 @@ switch ($Qque_mod) {
         echo $txt;
         break;
     case "eliminar":
-        $Qid_direccion = (integer)\filter_input(INPUT_POST, 'id_direccion');
-        $Qid_ubi = (integer)\filter_input(INPUT_POST, 'id_ubi');
+        $Qid_direccion = (integer)filter_input(INPUT_POST, 'id_direccion');
+        $Qid_ubi = (integer)filter_input(INPUT_POST, 'id_ubi');
 
         if (!empty($Qid_direccion) && !empty($Qid_ubi)) {
             $a_pkey = array('id_direccion' => $Qid_direccion,
@@ -221,8 +221,8 @@ switch ($Qque_mod) {
         }
         break;
     case "update":
-        $Qid_direccion = (integer)\filter_input(INPUT_POST, 'id_direccion');
-        $Qid_ubi = (integer)\filter_input(INPUT_POST, 'id_ubi');
+        $Qid_direccion = (integer)filter_input(INPUT_POST, 'id_direccion');
+        $Qid_ubi = (integer)filter_input(INPUT_POST, 'id_ubi');
 
         if (!empty($Qid_direccion) && !empty($Qid_ubi)) {
             $oGesCartasPresentacion = new GestorCartaPresentacion();
@@ -249,11 +249,11 @@ switch ($Qque_mod) {
                 $oCartaPresentacion->setId_ubi($Qid_ubi);
             }
 
-            $Qpres_nom = (string)\filter_input(INPUT_POST, 'pres_nom');
-            $Qpres_telf = (string)\filter_input(INPUT_POST, 'pres_telf');
-            $Qpres_mail = (string)\filter_input(INPUT_POST, 'pres_mail');
-            $Qzona = (string)\filter_input(INPUT_POST, 'zona');
-            $Qobserv = (string)\filter_input(INPUT_POST, 'observ');
+            $Qpres_nom = (string)filter_input(INPUT_POST, 'pres_nom');
+            $Qpres_telf = (string)filter_input(INPUT_POST, 'pres_telf');
+            $Qpres_mail = (string)filter_input(INPUT_POST, 'pres_mail');
+            $Qzona = (string)filter_input(INPUT_POST, 'zona');
+            $Qobserv = (string)filter_input(INPUT_POST, 'observ');
 
             $oCartaPresentacion->setPres_nom($Qpres_nom);
             $oCartaPresentacion->setPres_telf($Qpres_telf);
@@ -284,7 +284,7 @@ switch ($Qque_mod) {
         //$oPosicion->addParametro('bloque', 'ficha2');
         $oPosicion->recordar();
 
-        $Qpoblacion_sel = (string)\filter_input(INPUT_POST, 'poblacion_sel');
+        $Qpoblacion_sel = (string)filter_input(INPUT_POST, 'poblacion_sel');
         // listado de centros.
         $oGesCentros = new GestorCentroDl();
         $permiso = 'modificar';

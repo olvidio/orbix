@@ -23,8 +23,8 @@ require_once("apps/core/global_header.inc");
 require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$Qdl = (array)\filter_input(INPUT_POST, 'dl', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-$Qfiltro = (integer)\filter_input(INPUT_POST, 'filtro', FILTER_DEFAULT);
+$Qdl = (array)filter_input(INPUT_POST, 'dl', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+$Qfiltro = (integer)filter_input(INPUT_POST, 'filtro', FILTER_DEFAULT);
 
 
 $rstgr = FALSE;

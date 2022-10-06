@@ -16,8 +16,8 @@ require_once("apps/core/global_header.inc");
 require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$Qsalida = (string)\filter_input(INPUT_POST, 'salida');
-$Qentrada = (string)\filter_input(INPUT_POST, 'entrada');
+$Qsalida = (string)filter_input(INPUT_POST, 'salida');
+$Qentrada = (string)filter_input(INPUT_POST, 'entrada');
 switch ($Qsalida) {
     case "lugar":
         if (empty($Qentrada)) die();

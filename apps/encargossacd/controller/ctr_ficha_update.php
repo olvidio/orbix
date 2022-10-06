@@ -30,26 +30,26 @@ require_once("apps/core/global_header.inc");
 require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$Qe = (integer)\filter_input(INPUT_POST, 'e');
-$Qmod = (string)\filter_input(INPUT_POST, "mod_$Qe");
-$Qid_enc = (integer)\filter_input(INPUT_POST, "id_enc_$Qe");
-$Qsacd_num = (integer)\filter_input(INPUT_POST, "sacd_num");
-$Qid_ubi = (integer)\filter_input(INPUT_POST, "id_ubi_$Qe");
-$Qtipo_centro = (string)\filter_input(INPUT_POST, "tipo_centro_$Qe");
+$Qe = (integer)filter_input(INPUT_POST, 'e');
+$Qmod = (string)filter_input(INPUT_POST, "mod_$Qe");
+$Qid_enc = (integer)filter_input(INPUT_POST, "id_enc_$Qe");
+$Qsacd_num = (integer)filter_input(INPUT_POST, "sacd_num");
+$Qid_ubi = (integer)filter_input(INPUT_POST, "id_ubi_$Qe");
+$Qtipo_centro = (string)filter_input(INPUT_POST, "tipo_centro_$Qe");
 // Ahora mismo todo es por modulos
-//$Qmod_horario = (string)  \filter_input(INPUT_POST, "mod_horario $Qe");
+//$Qmod_horario = (string)  filter_input(INPUT_POST, "mod_horario $Qe");
 
-$Qn_sacd = (integer)\filter_input(INPUT_POST, 'n_sacd');
+$Qn_sacd = (integer)filter_input(INPUT_POST, 'n_sacd');
 $Qn_sacd = empty($Qn_sacd) ? 1 : $Qn_sacd;
 
-$Qid_sacd_titular = (integer)\filter_input(INPUT_POST, 'id_sacd_titular');
-$Qid_sacd_suplente = (integer)\filter_input(INPUT_POST, 'id_sacd_suplente');
-$Qobserv = (string)\filter_input(INPUT_POST, 'observ');
-$Qcl = (bool)\filter_input(INPUT_POST, 'cl');
-$Qnum_alum = (integer)\filter_input(INPUT_POST, 'num_alum');
-$Qdedic_ctr_m = (string)\filter_input(INPUT_POST, 'dedic_ctr_m');
-$Qdedic_ctr_t = (string)\filter_input(INPUT_POST, 'dedic_ctr_t');
-$Qdedic_ctr_v = (string)\filter_input(INPUT_POST, 'dedic_ctr_v');
+$Qid_sacd_titular = (integer)filter_input(INPUT_POST, 'id_sacd_titular');
+$Qid_sacd_suplente = (integer)filter_input(INPUT_POST, 'id_sacd_suplente');
+$Qobserv = (string)filter_input(INPUT_POST, 'observ');
+$Qcl = (bool)filter_input(INPUT_POST, 'cl');
+$Qnum_alum = (integer)filter_input(INPUT_POST, 'num_alum');
+$Qdedic_ctr_m = (string)filter_input(INPUT_POST, 'dedic_ctr_m');
+$Qdedic_ctr_t = (string)filter_input(INPUT_POST, 'dedic_ctr_t');
+$Qdedic_ctr_v = (string)filter_input(INPUT_POST, 'dedic_ctr_v');
 
 $QAid_sacd = filter_input(INPUT_POST, 'id_sacd', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 $QAdedic_m = filter_input(INPUT_POST, 'dedic_m', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);

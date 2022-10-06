@@ -13,16 +13,16 @@ require_once("apps/core/global_object.inc");
 $mi_dele = core\ConfigGlobal::mi_delef();
 $mi_region = core\ConfigGlobal::mi_region();
 
-$a_sel = (array)\filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+$a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 if (!empty($a_sel)) { //vengo de un checkbox
     // el scroll id es de la página anterior, hay que guardarlo allí
     $oPosicion->addParametro('id_sel', $a_sel, 1);
-    $scroll_id = (integer)\filter_input(INPUT_POST, 'scroll_id');
+    $scroll_id = (integer)filter_input(INPUT_POST, 'scroll_id');
     $oPosicion->addParametro('scroll_id', $scroll_id, 1);
 }
 
-$Qacta = (string)\filter_input(INPUT_POST, 'acta');
-$Qmod = (string)\filter_input(INPUT_POST, 'mod');
+$Qacta = (string)filter_input(INPUT_POST, 'acta');
+$Qmod = (string)filter_input(INPUT_POST, 'mod');
 
 if (!empty($a_sel)) { //vengo de un checkbox (caso de eliminar)
     $Qacta = urldecode(strtok($a_sel[0], "#"));
@@ -52,14 +52,14 @@ if ($dl_acta == $mi_dele || $dl_acta == "?") {
     exit($msg);
 }
 
-$Qid_asignatura = (integer)\filter_input(INPUT_POST, 'id_asignatura');
-$Qid_activ = (integer)\filter_input(INPUT_POST, 'id_activ');
-$Qf_acta = (string)\filter_input(INPUT_POST, 'f_acta');
-$Qlibro = (integer)\filter_input(INPUT_POST, 'libro');
-$Qpagina = (integer)\filter_input(INPUT_POST, 'pagina');
-$Qlinea = (integer)\filter_input(INPUT_POST, 'linea');
-$Qlugar = (string)\filter_input(INPUT_POST, 'lugar');
-$Qobserv = (string)\filter_input(INPUT_POST, 'observ');
+$Qid_asignatura = (integer)filter_input(INPUT_POST, 'id_asignatura');
+$Qid_activ = (integer)filter_input(INPUT_POST, 'id_activ');
+$Qf_acta = (string)filter_input(INPUT_POST, 'f_acta');
+$Qlibro = (integer)filter_input(INPUT_POST, 'libro');
+$Qpagina = (integer)filter_input(INPUT_POST, 'pagina');
+$Qlinea = (integer)filter_input(INPUT_POST, 'linea');
+$Qlugar = (string)filter_input(INPUT_POST, 'lugar');
+$Qobserv = (string)filter_input(INPUT_POST, 'observ');
 
 switch ($Qmod) {
     case 'nueva':
@@ -103,14 +103,14 @@ switch ($Qmod) {
         break;
     case 'modificar':
     default :
-        $Qid_asignatura = (integer)\filter_input(INPUT_POST, 'id_asignatura');
-        $Qid_activ = (integer)\filter_input(INPUT_POST, 'id_activ');
-        $Qf_acta = (string)\filter_input(INPUT_POST, 'f_acta');
-        $Qlibro = (integer)\filter_input(INPUT_POST, 'libro');
-        $Qpagina = (integer)\filter_input(INPUT_POST, 'pagina');
-        $Qlinea = (integer)\filter_input(INPUT_POST, 'linea');
-        $Qlugar = (string)\filter_input(INPUT_POST, 'lugar');
-        $Qobserv = (string)\filter_input(INPUT_POST, 'observ');
+        $Qid_asignatura = (integer)filter_input(INPUT_POST, 'id_asignatura');
+        $Qid_activ = (integer)filter_input(INPUT_POST, 'id_activ');
+        $Qf_acta = (string)filter_input(INPUT_POST, 'f_acta');
+        $Qlibro = (integer)filter_input(INPUT_POST, 'libro');
+        $Qpagina = (integer)filter_input(INPUT_POST, 'pagina');
+        $Qlinea = (integer)filter_input(INPUT_POST, 'linea');
+        $Qlugar = (string)filter_input(INPUT_POST, 'lugar');
+        $Qobserv = (string)filter_input(INPUT_POST, 'observ');
 
         $oActa->setActa($Qacta);
         $oActa->DBCarregar();
@@ -140,7 +140,7 @@ foreach ($cActaTribunal as $oActaTribunal) {
     }
 }
 
-$Qexaminadores = (array)\filter_input(INPUT_POST, 'examinadores', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+$Qexaminadores = (array)filter_input(INPUT_POST, 'examinadores', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 if (!empty($Qexaminadores)) {
     $i = 0;
     foreach ($Qexaminadores as $examinador) {

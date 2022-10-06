@@ -12,7 +12,7 @@ require_once("apps/core/global_object.inc");
 
 $oPosicion->recordar();
 
-$Qtipo_teleco = (string)\filter_input(INPUT_POST, 'tipo_teleco');
+$Qtipo_teleco = (string)filter_input(INPUT_POST, 'tipo_teleco');
 
 
 $oDescTeleco = new ubis\model\entity\GestorDescTeleco();

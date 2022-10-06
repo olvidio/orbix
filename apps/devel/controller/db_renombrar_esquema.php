@@ -11,12 +11,12 @@ require_once("apps/core/global_header.inc");
 require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$QEsquemaRef = (string)\filter_input(INPUT_POST, 'esquema');
-$Qregion = (string)\filter_input(INPUT_POST, 'region');
-$Qdl = (string)\filter_input(INPUT_POST, 'dl');
-$Qcomun = (integer)\filter_input(INPUT_POST, 'comun');
-$Qsv = (integer)\filter_input(INPUT_POST, 'sv');
-//$Qsf = (integer) \filter_input(INPUT_POST, 'sf');
+$QEsquemaRef = (string)filter_input(INPUT_POST, 'esquema');
+$Qregion = (string)filter_input(INPUT_POST, 'region');
+$Qdl = (string)filter_input(INPUT_POST, 'dl');
+$Qcomun = (integer)filter_input(INPUT_POST, 'comun');
+$Qsv = (integer)filter_input(INPUT_POST, 'sv');
+//$Qsf = (integer) filter_input(INPUT_POST, 'sf');
 
 $esquema_old = substr($QEsquemaRef, 0, -1); // quito la v o la f.
 
@@ -41,7 +41,7 @@ $oDBRol = new core\DBRol();
 
 // comun
 $configComunP = $oConfigDB->getEsquema('public');
-$oConexion = new core\dbConnection($configComunP);
+$oConexion = new core\DBConnection($configComunP);
 $oConComun = $oConexion->getPDO();
 $oDBRol->setDbConexion($oConComun);
 // mantener el password:
@@ -61,7 +61,7 @@ $oGesDbSchema->cambiarNombre($esquema_old, $esquema, 'comun');
 
 // sv
 $configSvP = $oConfigDB->getEsquema('publicv');
-$oConexion = new core\dbConnection($configSvP);
+$oConexion = new core\DBConnection($configSvP);
 $oConSv = $oConexion->getPDO();
 $oDBRol->setDbConexion($oConSv);
 // mantener el password:
@@ -81,7 +81,7 @@ $oGesDbSchema->cambiarNombre($esquema_old, $esquema, 'sv');
 
 //sv-e
 $configSveP = $oConfigDB->getEsquema('publicv-e');
-$oConexion = new core\dbConnection($configSveP);
+$oConexion = new core\DBConnection($configSveP);
 $oConSve = $oConexion->getPDO();
 $oDBRol->setDbConexion($oConSve);
 // mantener el password:
@@ -131,7 +131,7 @@ if (!empty($Qcomun)) {
     $oConfigDB = new core\ConfigDB('importar'); //de la database comun
     $config = $oConfigDB->getEsquema('public'); //de la database comun
 
-    $oConexion = new core\dbConnection($config);
+    $oConexion = new core\DBConnection($config);
     $oDevelPC = $oConexion->getPDO();
 
     $oAlterSchema = new DBAlterSchema();
@@ -202,7 +202,7 @@ if (!empty($Qsv)) {
     $oConfigDB = new core\ConfigDB('importar'); //de la database sv
     $config = $oConfigDB->getEsquema('publicv');
 
-    $oConexion = new core\dbConnection($config);
+    $oConexion = new core\DBConnection($config);
     $oDevelPC = $oConexion->getPDO();
 
     $oAlterSchema = new DBAlterSchema();
@@ -305,7 +305,7 @@ if (!empty($Qsv)) {
     $oConfigDB = new core\ConfigDB('importar'); //de la database sv
     $config = $oConfigDB->getEsquema('publicv-e');
 
-    $oConexion = new core\dbConnection($config);
+    $oConexion = new core\DBConnection($config);
     $oDevelPC = $oConexion->getPDO();
 
     $oAlterSchema = new DBAlterSchema();

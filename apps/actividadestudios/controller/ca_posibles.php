@@ -32,7 +32,7 @@ $oPosiblesCa = new actividadestudios\PosiblesCa();
 $oPosicion->recordar();
 //Si vengo por medio de Posicion, borro la última
 if (isset($_POST['stack'])) {
-    $stack = \filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
+    $stack = filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
     if ($stack != '') {
         $oPosicion2 = new web\Posicion();
         if ($oPosicion2->goStack($stack)) { // devuelve false si no puede ir
@@ -43,16 +43,16 @@ if (isset($_POST['stack'])) {
     }
 }
 
-$obj_pau = (string)\filter_input(INPUT_POST, 'obj_pau');
-$Qgrupo_estudios = (string)\filter_input(INPUT_POST, 'grupo_estudios');
-$Qtexto = (string)\filter_input(INPUT_POST, 'texto');
-$Qref = (string)\filter_input(INPUT_POST, 'ref');
-$Qidca = (string)\filter_input(INPUT_POST, 'idca');
-$Qca_estudios = (string)\filter_input(INPUT_POST, 'ca_estudios');
-$Qca_repaso = (string)\filter_input(INPUT_POST, 'ca_repaso');
-$Qca_todos = (string)\filter_input(INPUT_POST, 'ca_todos');
+$obj_pau = (string)filter_input(INPUT_POST, 'obj_pau');
+$Qgrupo_estudios = (string)filter_input(INPUT_POST, 'grupo_estudios');
+$Qtexto = (string)filter_input(INPUT_POST, 'texto');
+$Qref = (string)filter_input(INPUT_POST, 'ref');
+$Qidca = (string)filter_input(INPUT_POST, 'idca');
+$Qca_estudios = (string)filter_input(INPUT_POST, 'ca_estudios');
+$Qca_repaso = (string)filter_input(INPUT_POST, 'ca_repaso');
+$Qca_todos = (string)filter_input(INPUT_POST, 'ca_todos');
 
-$a_sel = (array)\filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+$a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 // vengo directamente con un id:
 if (!empty($a_sel)) { //vengo de un checkbox
     $Qid_nom = (integer)strtok($a_sel[0], "#");
@@ -70,18 +70,18 @@ if (!empty($a_sel)) { //vengo de un checkbox
     }
     // el scroll id es de la página anterior, hay que guardarlo allí
     $oPosicion->addParametro('id_sel', $a_sel, 1);
-    $scroll_id = (integer)\filter_input(INPUT_POST, 'scroll_id');
+    $scroll_id = (integer)filter_input(INPUT_POST, 'scroll_id');
     $oPosicion->addParametro('scroll_id', $scroll_id, 1);
     $Qid_ctr_agd = 0;
     $Qid_ctr_n = 0;
 } else {
-    $Qid_ctr_agd = (integer)\filter_input(INPUT_POST, 'id_ctr_agd');
-    $Qid_ctr_n = (integer)\filter_input(INPUT_POST, 'id_ctr_n');
-    $Qna = (string)\filter_input(INPUT_POST, 'na');
-    $Qyear = (integer)\filter_input(INPUT_POST, 'year');
-    $Qperiodo = (string)\filter_input(INPUT_POST, 'periodo');
-    $Qempiezamin = (string)\filter_input(INPUT_POST, 'empiezamin');
-    $Qempiezamax = (string)\filter_input(INPUT_POST, 'empiezamax');
+    $Qid_ctr_agd = (integer)filter_input(INPUT_POST, 'id_ctr_agd');
+    $Qid_ctr_n = (integer)filter_input(INPUT_POST, 'id_ctr_n');
+    $Qna = (string)filter_input(INPUT_POST, 'na');
+    $Qyear = (integer)filter_input(INPUT_POST, 'year');
+    $Qperiodo = (string)filter_input(INPUT_POST, 'periodo');
+    $Qempiezamin = (string)filter_input(INPUT_POST, 'empiezamin');
+    $Qempiezamax = (string)filter_input(INPUT_POST, 'empiezamax');
 
     if (empty($Qid_ctr_agd) && empty($Qid_ctr_n)) {
         $msg_txt = _("debe seleccionar un centro o grupo de centros");

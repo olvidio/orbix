@@ -24,13 +24,13 @@ require_once("apps/core/global_object.inc");
 
 $oPosicion->recordar();
 
-$Qid_ctr_num = (integer)\filter_input(INPUT_POST, 'id_ctr_num');
-$Qa_id_ctr = (array)\filter_input(INPUT_POST, 'id_ctr', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+$Qid_ctr_num = (integer)filter_input(INPUT_POST, 'id_ctr_num');
+$Qa_id_ctr = (array)filter_input(INPUT_POST, 'id_ctr', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 
-$Qperiodo = (string)\filter_input(INPUT_POST, 'periodo');
-$Qyear = (string)\filter_input(INPUT_POST, 'year');
-$Qempiezamin = (string)\filter_input(INPUT_POST, 'empiezamin');
-$Qempiezamax = (string)\filter_input(INPUT_POST, 'empiezamax');
+$Qperiodo = (string)filter_input(INPUT_POST, 'periodo');
+$Qyear = (string)filter_input(INPUT_POST, 'year');
+$Qempiezamin = (string)filter_input(INPUT_POST, 'empiezamin');
+$Qempiezamax = (string)filter_input(INPUT_POST, 'empiezamax');
 
 // valores por defeccto
 if (empty($Qperiodo)) {

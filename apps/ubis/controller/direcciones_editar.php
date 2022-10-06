@@ -23,14 +23,14 @@ require_once("apps/core/global_header.inc");
 require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$Qrefresh = (integer)\filter_input(INPUT_POST, 'refresh');
+$Qrefresh = (integer)filter_input(INPUT_POST, 'refresh');
 $oPosicion->recordar($Qrefresh);
 
-$Qid_ubi = (integer)\filter_input(INPUT_POST, 'id_ubi');
-$Qmod = (string)\filter_input(INPUT_POST, 'mod');
-$Qobj_dir = (string)\filter_input(INPUT_POST, 'obj_dir');
+$Qid_ubi = (integer)filter_input(INPUT_POST, 'id_ubi');
+$Qmod = (string)filter_input(INPUT_POST, 'mod');
+$Qobj_dir = (string)filter_input(INPUT_POST, 'obj_dir');
 // id_direccion es string, porque puede ser una lista de varios separados por coma
-$Qid_direccion = (string)\filter_input(INPUT_POST, 'id_direccion');
+$Qid_direccion = (string)filter_input(INPUT_POST, 'id_direccion');
 $Qid_direccion = urldecode($Qid_direccion);
 
 switch ($Qobj_dir) {
@@ -99,8 +99,8 @@ if ($Qmod == 'nuevo') {
     // puede haber más de una dirección
     $a_id_direccion = explode(',', $Qid_direccion);
     $num_dir = count($a_id_direccion);
-    $idx = (integer)\filter_input(INPUT_POST, 'idx');
-    $inc = (string)\filter_input(INPUT_POST, 'inc');
+    $idx = (integer)filter_input(INPUT_POST, 'idx');
+    $inc = (string)filter_input(INPUT_POST, 'inc');
 
     if ($inc == 'mas' & $idx < $num_dir - 1) $idx++;
     if ($inc == 'menos' & $idx > 0) $idx--;

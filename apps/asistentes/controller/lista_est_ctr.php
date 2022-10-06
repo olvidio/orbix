@@ -39,12 +39,12 @@ $oPosicion->recordar();
 //en función de las condiciones que tengamos:
 $oHoy = new web\DateTimeLocal();
 
-$Qn_agd = (string)\filter_input(INPUT_POST, 'n_agd');
-$Qid_ubi = (integer)\filter_input(INPUT_POST, 'id_ubi');
-$Qperiodo = (string)\filter_input(INPUT_POST, 'periodo');
-$Qyear = (string)\filter_input(INPUT_POST, 'year');
-$Qempiezamax = (string)\filter_input(INPUT_POST, 'empiezamax');
-$Qempiezamin = (string)\filter_input(INPUT_POST, 'empiezamin');
+$Qn_agd = (string)filter_input(INPUT_POST, 'n_agd');
+$Qid_ubi = (integer)filter_input(INPUT_POST, 'id_ubi');
+$Qperiodo = (string)filter_input(INPUT_POST, 'periodo');
+$Qyear = (string)filter_input(INPUT_POST, 'year');
+$Qempiezamax = (string)filter_input(INPUT_POST, 'empiezamax');
+$Qempiezamin = (string)filter_input(INPUT_POST, 'empiezamin');
 
 
 // periodo.

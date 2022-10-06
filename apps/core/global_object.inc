@@ -14,7 +14,7 @@ if (session_id() == "") {
 
 require_once('apps/permisos/controller/login_obj.php');
 
-$_SESSION['oGestorErrores'] = new gestorErrores();
+$_SESSION['oGestorErrores'] = new GestorErrores();
 
 /*
  * Definir Conexiones
@@ -36,11 +36,11 @@ $oDBT = $oConexion->getPDO();
 $oConfigDB = new ConfigDB('comun'); //de la database comun 
 
 $config = $oConfigDB->getEsquema('public');
-$oConexion = new dbConnection($config);
+$oConexion = new DBConnection($config);
 $oDBPC = $oConexion->getPDO();
 
 $config = $oConfigDB->getEsquema('resto');
-$oConexion = new dbConnection($config);
+$oConexion = new DBConnection($config);
 $oDBRC = $oConexion->getPDO();
 
 $user_sfsv = $_SESSION['session_auth']['sfsv'];
@@ -52,7 +52,7 @@ switch ($user_sfsv) {
         //comun
         $oConfigDB->setDataBase('comun');
         $config = $oConfigDB->getEsquema($esquema);
-        $oConexion = new dbConnection($config);
+        $oConexion = new DBConnection($config);
         $oDBC = $oConexion->getPDO();
         //sv
         if (ConfigGlobal::is_dmz()) {
@@ -73,29 +73,29 @@ switch ($user_sfsv) {
         } else {
             $oConfigDB->setDataBase('sv');
             $config = $oConfigDB->getEsquema($esquemav);
-            $oConexion = new dbConnection($config);
+            $oConexion = new DBConnection($config);
             $oDB = $oConexion->getPDO();
 
             $config = $oConfigDB->getEsquema('publicv');
-            $oConexion = new dbConnection($config);
+            $oConexion = new DBConnection($config);
             $oDBP = $oConexion->getPDO();
 
             $config = $oConfigDB->getEsquema('restov');
-            $oConexion = new dbConnection($config);
+            $oConexion = new DBConnection($config);
             $oDBR = $oConexion->getPDO();
         }
         //sv exterior
         $oConfigDB->setDataBase('sv-e');
         $config = $oConfigDB->getEsquema($esquemav);
-        $oConexion = new dbConnection($config);
+        $oConexion = new DBConnection($config);
         $oDBE = $oConexion->getPDO();
 
         $config = $oConfigDB->getEsquema('publicv');
-        $oConexion = new dbConnection($config);
+        $oConexion = new DBConnection($config);
         $oDBEP = $oConexion->getPDO();
 
         $config = $oConfigDB->getEsquema('restov');
-        $oConexion = new dbConnection($config);
+        $oConexion = new DBConnection($config);
         $oDBER = $oConexion->getPDO();
         break;
     case 2: //sf
@@ -105,23 +105,23 @@ switch ($user_sfsv) {
         //comun
         $oConfigDB->setDataBase('comun');
         $config = $oConfigDB->getEsquema($esquema);
-        $oConexion = new dbConnection($config);
+        $oConexion = new DBConnection($config);
         $oDBC = $oConexion->getPDO();
 
         //sf
         $oConfigDB->setDataBase('sf');
         $config = $oConfigDB->getEsquema($esquemaf);
-        $oConexion = new dbConnection($config);
+        $oConexion = new DBConnection($config);
         $oDB = $oConexion->getPDO();
         $oDBE = $oConexion->getPDO();
 
         $config = $oConfigDB->getEsquema('publicf');
-        $oConexion = new dbConnection($config);
+        $oConexion = new DBConnection($config);
         $oDBP = $oConexion->getPDO();
         $oDBEP = $oConexion->getPDO();
 
         $config = $oConfigDB->getEsquema('restof');
-        $oConexion = new dbConnection($config);
+        $oConexion = new DBConnection($config);
         $oDBR = $oConexion->getPDO();
 
         //sf exterior
@@ -146,7 +146,7 @@ if (configGlobal::is_app_installed('dbextern') && !ConfigGlobal::is_dmz()) {
         try {
             $oConfigDB = new ConfigDB('listas');
             $config = $oConfigDB->getEsquema('public');
-            $oConexion = new dbConnection($config);
+            $oConexion = new DBConnection($config);
             $oDBListas = $oConexion->getPDOListas();
         } catch (\PDOException $e) {
             //Hay que poner el mensaje entre /* ... */ para que el script que carga a continuación lo interprete como un comentario.

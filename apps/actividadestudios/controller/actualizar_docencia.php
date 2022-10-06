@@ -21,10 +21,10 @@ require_once("apps/core/global_object.inc");
  * Se cogen los ca marcados como terminados (así se copia el acta...)
  */
 
-$Qyear = (string)\filter_input(INPUT_POST, 'year');
-$Qperiodo = (string)\filter_input(INPUT_POST, 'periodo');
-$Qempiezamin = (string)\filter_input(INPUT_POST, 'empiezamin');
-$Qempiezamax = (string)\filter_input(INPUT_POST, 'empiezamax');
+$Qyear = (string)filter_input(INPUT_POST, 'year');
+$Qperiodo = (string)filter_input(INPUT_POST, 'periodo');
+$Qempiezamin = (string)filter_input(INPUT_POST, 'empiezamin');
+$Qempiezamax = (string)filter_input(INPUT_POST, 'empiezamax');
 $continuar = (integer)filter_input(INPUT_POST, 'continuar');
 
 if (empty($continuar)) {

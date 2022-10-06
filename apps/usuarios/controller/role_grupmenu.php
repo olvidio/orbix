@@ -15,14 +15,14 @@ require_once("apps/core/global_object.inc");
 
 $oPosicion->recordar();
 
-$Qid_role = (string)\filter_input(INPUT_POST, 'id_role');
+$Qid_role = (string)filter_input(INPUT_POST, 'id_role');
 
-$a_sel = (array)\filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+$a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 if (!empty($a_sel)) { //vengo de un checkbox
     $Qid_role = (integer)strtok($a_sel[0], "#");
     // el scroll id es de la página anterior, hay que guardarlo allí
     $oPosicion->addParametro('id_sel', $a_sel, 1);
-    $scroll_id = (integer)\filter_input(INPUT_POST, 'scroll_id');
+    $scroll_id = (integer)filter_input(INPUT_POST, 'scroll_id');
     $oPosicion->addParametro('scroll_id', $scroll_id, 1);
 }
 

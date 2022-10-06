@@ -24,7 +24,7 @@ $inicurs_des = $oF_inicurs_des->getFromLocal();
 $inicurs_des_iso = $oF_inicurs_des->format('Y-m-d');
 
 
-$Qconfirm = (string)\filter_input(INPUT_POST, 'confirm');
+$Qconfirm = (string)filter_input(INPUT_POST, 'confirm');
 
 if ($Qconfirm == 'yes') {
     $oAsigSacd = new AsignarSacd();

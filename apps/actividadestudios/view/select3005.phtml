@@ -10,8 +10,8 @@
         rta = fnjs_solo_uno(formulario);
         if (rta == 1) {
             /* selecciono los elementos con class="sel" de las tablas del id=formulario */
-            $('#seleccionados' + ' input.sel').each(function (i) {
-                if ($(this).prop('checked') == true) {
+            $('#seleccionados' + ' input.sel').each(function () {
+                if ($(this).prop('checked') === true) {
                     // como ya he comprobado que sólo está uno seleccionado, es este.
                     var array_dir = $(this).val().split('#');
                     permiso = array_dir[2];
@@ -30,8 +30,8 @@
         rta = fnjs_solo_uno(formulario);
         if (rta == 1) {
             /* selecciono los elementos con class="sel" de las tablas del id=formulario */
-            $('#seleccionados' + ' input.sel').each(function (i) {
-                if ($(this).prop('checked') == true) {
+            $('#seleccionados' + ' input.sel').each(function () {
+                if ($(this).prop('checked') === true) {
                     // como ya he comprobado que sólo está uno seleccionado, es este.
                     var array_dir = $(this).val().split('#');
                     permiso = array_dir[2];

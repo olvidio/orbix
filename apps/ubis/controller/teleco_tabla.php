@@ -14,16 +14,16 @@ require_once("apps/core/global_object.inc");
 
 // dossier="1001";
 
-$Qrefresh = (integer)\filter_input(INPUT_POST, 'refresh');
+$Qrefresh = (integer)filter_input(INPUT_POST, 'refresh');
 $oPosicion->setBloque('#ficha');
 $oPosicion->recordar();
 
-$Qobj_pau = (string)\filter_input(INPUT_POST, 'obj_pau');
-$Qid_ubi = (integer)\filter_input(INPUT_POST, 'id_ubi');
+$Qobj_pau = (string)filter_input(INPUT_POST, 'obj_pau');
+$Qid_ubi = (integer)filter_input(INPUT_POST, 'id_ubi');
 
 //Si vengo por medio de Posicion, borro la última
 if (isset($_POST['stack'])) {
-    $stack = \filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
+    $stack = filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
     if ($stack != '') {
         $oPosicion2 = new web\Posicion();
         if ($oPosicion2->goStack($stack)) { // devuelve false si no puede ir

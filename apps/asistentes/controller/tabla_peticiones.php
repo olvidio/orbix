@@ -27,23 +27,23 @@ require_once("apps/core/global_object.inc");
 
 $oPosicion->recordar();
 
-$a_sel = (array)\filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+$a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 if (!empty($a_sel)) { //vengo de un checkbox
     $id_activ_old = (integer)strtok($a_sel[0], "#");
     $nom_activ = strtok("#");
     // el scroll id es de la página anterior, hay que guardarlo allí
     $oPosicion->addParametro('id_sel', $a_sel, 1);
-    $scroll_id = (integer)\filter_input(INPUT_POST, 'scroll_id');
+    $scroll_id = (integer)filter_input(INPUT_POST, 'scroll_id');
     $oPosicion->addParametro('scroll_id', $scroll_id, 1);
 } else {
-    $id_activ_old = (integer)\filter_input(INPUT_POST, 'id_activ_old');
+    $id_activ_old = (integer)filter_input(INPUT_POST, 'id_activ_old');
     $oActividad = new Actividad($id_activ_old);
     $nom_activ = $oActividad->getNom_activ();
 }
 
 //Si vengo por medio de Posicion, borro la última
 if (isset($_POST['stack'])) {
-    $stack = \filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
+    $stack = filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
     if ($stack != '') {
         $oPosicion2 = new web\Posicion();
         if ($oPosicion2->goStack($stack)) { // devuelve false si no puede ir
@@ -63,7 +63,7 @@ $aGoBack = array(
 $oPosicion->setParametros($aGoBack, 1);
 
 
-$queSel = (string)\filter_input(INPUT_POST, 'queSel');
+$queSel = (string)filter_input(INPUT_POST, 'queSel');
 
 $a_cabeceras = [_("nombre"),
     _("peticiones (libres/concedidas)"),

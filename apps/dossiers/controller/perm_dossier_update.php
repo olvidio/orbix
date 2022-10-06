@@ -14,9 +14,9 @@ require_once("apps/core/global_header.inc");
 require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$Qque = (string)\filter_input(INPUT_POST, 'que');
-$Qid_tipo_dossier = (integer)\filter_input(INPUT_POST, 'id_tipo_dossier');
-$Qcampos_chk = (string)\filter_input(INPUT_POST, 'campos_chk');
+$Qque = (string)filter_input(INPUT_POST, 'que');
+$Qid_tipo_dossier = (integer)filter_input(INPUT_POST, 'id_tipo_dossier');
+$Qcampos_chk = (string)filter_input(INPUT_POST, 'campos_chk');
 
 switch ($Qque) {
     case 'eliminar':

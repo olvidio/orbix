@@ -13,20 +13,20 @@ require_once("apps/core/global_object.inc");
 
 $oPosicion->recordar();
 
-$pau = (string)\filter_input(INPUT_POST, 'pau');
-$Qcabecera = (string)\filter_input(INPUT_POST, 'cabecera');
-$Qobj_pau = (string)\filter_input(INPUT_POST, 'obj_pau');
+$pau = (string)filter_input(INPUT_POST, 'pau');
+$Qcabecera = (string)filter_input(INPUT_POST, 'cabecera');
+$Qobj_pau = (string)filter_input(INPUT_POST, 'obj_pau');
 
-$a_sel = (array)\filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+$a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 if (!empty($a_sel)) { //vengo de un checkbox
     $id_pau = (integer)strtok($a_sel[0], "#");
     $id_tabla = (string)strtok("#");
     // el scroll id es de la página anterior, hay que guardarlo allí
     $oPosicion->addParametro('id_sel', $a_sel, 1);
-    $scroll_id = (integer)\filter_input(INPUT_POST, 'scroll_id');
+    $scroll_id = (integer)filter_input(INPUT_POST, 'scroll_id');
     $oPosicion->addParametro('scroll_id', $scroll_id, 1);
 } else {
-    $id_pau = (integer)\filter_input(INPUT_POST, 'id_pau');
+    $id_pau = (integer)filter_input(INPUT_POST, 'id_pau');
 }
 
 if (empty($Qobj_pau)) {

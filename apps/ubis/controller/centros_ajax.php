@@ -14,8 +14,8 @@ require_once("apps/core/global_header.inc");
 require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$Qque = (string)\filter_input(INPUT_POST, 'que');
-$Qid_ubi = (integer)\filter_input(INPUT_POST, 'id_ubi');
+$Qque = (string)filter_input(INPUT_POST, 'que');
+$Qid_ubi = (integer)filter_input(INPUT_POST, 'id_ubi');
 
 // Esta misma página:
 $url_ajax = 'apps/ubis/controller/centros_ajax.php';
@@ -135,7 +135,7 @@ switch ($Qque) {
     case "update":
         // también los datos en la actividad.
         if (!empty($Qid_ubi)) {
-            $Qtipo_ctr = (string)\filter_input(INPUT_POST, 'tipo_ctr');
+            $Qtipo_ctr = (string)filter_input(INPUT_POST, 'tipo_ctr');
 
             $oCentro = new CentroDl($Qid_ubi);
             $oCentro->DBCarregar();

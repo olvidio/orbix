@@ -2,8 +2,8 @@
 // get the HTML
 $_POST = $_GET;
 
-$id_nom = (integer)\filter_input(INPUT_POST, 'id_nom');
-$id_tabla = (string)\filter_input(INPUT_POST, 'id_tabla');
+$id_nom = (integer)filter_input(INPUT_POST, 'id_nom');
+$id_tabla = (string)filter_input(INPUT_POST, 'id_tabla');
 
 ob_start();
 include(dirname(__FILE__) . '/certificado_imprimir_mpdf.php');

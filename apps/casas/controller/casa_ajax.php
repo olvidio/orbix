@@ -28,15 +28,15 @@ require_once("apps/core/global_object.inc");
 
 $oPosicion->recordar();
 
-$Qque = (string)\filter_input(INPUT_POST, 'que');
+$Qque = (string)filter_input(INPUT_POST, 'que');
 
-$Qperiodo = (string)\filter_input(INPUT_POST, 'periodo');
-$Qyear = (string)\filter_input(INPUT_POST, 'year');
+$Qperiodo = (string)filter_input(INPUT_POST, 'periodo');
+$Qyear = (string)filter_input(INPUT_POST, 'year');
 
 
 switch ($Qque) {
     case 'nuevo':
-        $Qid_ubi = (integer)\filter_input(INPUT_POST, 'id_ubi');
+        $Qid_ubi = (integer)filter_input(INPUT_POST, 'id_ubi');
         $txt = "<form id='frm_periodo'>";
         $txt .= '<h3>' . _("Periodo") . '</h3>';
         $txt .= "<input type=hidden name=que value=\"update\" > ";
@@ -52,7 +52,7 @@ switch ($Qque) {
         echo $txt;
         break;
     case 'form_ingreso':
-        $Qid_activ = (integer)\filter_input(INPUT_POST, 'id_activ');
+        $Qid_activ = (integer)filter_input(INPUT_POST, 'id_activ');
         $oActividad = new Actividad($Qid_activ);
         $nom_activ = $oActividad->getNom_activ();
         $id_tipo_activ = $oActividad->getId_tipo_activ();
@@ -124,11 +124,11 @@ switch ($Qque) {
         $tot_ing_acu[1] = 0;
         $tot_ing_acu[2] = 0;
 
-        $Qid_ubi = (integer)\filter_input(INPUT_POST, 'id_ubi');
-        $Qperiodo = (string)\filter_input(INPUT_POST, 'periodo');
-        $Qyear = (string)\filter_input(INPUT_POST, 'year');
-        $Qempiezamin = (string)\filter_input(INPUT_POST, 'empiezamin');
-        $Qempiezamax = (string)\filter_input(INPUT_POST, 'empiezamax');
+        $Qid_ubi = (integer)filter_input(INPUT_POST, 'id_ubi');
+        $Qperiodo = (string)filter_input(INPUT_POST, 'periodo');
+        $Qyear = (string)filter_input(INPUT_POST, 'year');
+        $Qempiezamin = (string)filter_input(INPUT_POST, 'empiezamin');
+        $Qempiezamax = (string)filter_input(INPUT_POST, 'empiezamax');
 
         // permisos:
         // miro que rol tengo. Si soy casa, sólo veo la mía
@@ -163,7 +163,7 @@ switch ($Qque) {
         }
 
         // posible selección múltiple de casas
-        $Qaid_cdc = (array)\filter_input(INPUT_POST, 'id_cdc', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+        $Qaid_cdc = (array)filter_input(INPUT_POST, 'id_cdc', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
         // una lista de casas (id_ubi).
         $aGrupos = [];
         if (!empty($Qaid_cdc)) {
@@ -383,13 +383,13 @@ switch ($Qque) {
         }
         break;
     case "guardar":
-        $Qid_activ = (integer)\filter_input(INPUT_POST, 'id_activ');
-        $Qprecio = (integer)\filter_input(INPUT_POST, 'precio');
-        $Qtarifa = (string)\filter_input(INPUT_POST, 'tarifa');
+        $Qid_activ = (integer)filter_input(INPUT_POST, 'id_activ');
+        $Qprecio = (integer)filter_input(INPUT_POST, 'precio');
+        $Qtarifa = (string)filter_input(INPUT_POST, 'tarifa');
 
-        $Qingresos = (integer)\filter_input(INPUT_POST, 'ingresos');
-        $Qnum_asistentes = (integer)\filter_input(INPUT_POST, 'num_asistentes');
-        $Qobserv = (string)\filter_input(INPUT_POST, 'observ');
+        $Qingresos = (integer)filter_input(INPUT_POST, 'ingresos');
+        $Qnum_asistentes = (integer)filter_input(INPUT_POST, 'num_asistentes');
+        $Qobserv = (string)filter_input(INPUT_POST, 'observ');
         // también los datos en la actividad.
         if (!empty($Qid_activ)) {
             $oActividad = new Actividad($Qid_activ);
@@ -418,7 +418,7 @@ switch ($Qque) {
         }
         break;
     case "eliminar":
-        $Qid_activ = (integer)\filter_input(INPUT_POST, 'id_activ');
+        $Qid_activ = (integer)filter_input(INPUT_POST, 'id_activ');
         if (!empty($Qid_activ)) {
             $oIngreso = new Ingreso(array('id_activ' => $Qid_activ));
             if ($oIngreso->DBEliminar() === false) {
@@ -430,11 +430,11 @@ switch ($Qque) {
         }
         break;
     case "lista_activ":
-        $Qid_ubi = (integer)\filter_input(INPUT_POST, 'id_ubi');
-        $Qperiodo = (string)\filter_input(INPUT_POST, 'periodo');
-        $Qyear = (string)\filter_input(INPUT_POST, 'year');
-        $Qempiezamin = (string)\filter_input(INPUT_POST, 'empiezamin');
-        $Qempiezamax = (string)\filter_input(INPUT_POST, 'empiezamax');
+        $Qid_ubi = (integer)filter_input(INPUT_POST, 'id_ubi');
+        $Qperiodo = (string)filter_input(INPUT_POST, 'periodo');
+        $Qyear = (string)filter_input(INPUT_POST, 'year');
+        $Qempiezamin = (string)filter_input(INPUT_POST, 'empiezamin');
+        $Qempiezamax = (string)filter_input(INPUT_POST, 'empiezamax');
 
         // periodo.
         $oPeriodo = new Periodo();

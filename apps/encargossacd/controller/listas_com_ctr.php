@@ -29,7 +29,7 @@ require_once("apps/core/global_header.inc");
 require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$Qsfsv = (string)\filter_input(INPUT_POST, 'sfsv');
+$Qsfsv = (string)filter_input(INPUT_POST, 'sfsv');
 
 /* claves:
  *       "com_ctr";

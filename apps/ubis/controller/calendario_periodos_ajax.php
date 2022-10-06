@@ -13,12 +13,12 @@ require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
 
-$Qque = (string)\filter_input(INPUT_POST, 'que');
+$Qque = (string)filter_input(INPUT_POST, 'que');
 
 switch ($Qque) {
     case 'nuevo':
-        $Qid_ubi = (integer)\filter_input(INPUT_POST, 'id_ubi');
-        $Qyear = (integer)\filter_input(INPUT_POST, 'year');
+        $Qid_ubi = (integer)filter_input(INPUT_POST, 'id_ubi');
+        $Qyear = (integer)filter_input(INPUT_POST, 'year');
 
         //Buscar el último
         $f_next = '';
@@ -80,7 +80,7 @@ switch ($Qque) {
         echo $txt;
         break;
     case 'form_periodo':
-        $Qid_item = (integer)\filter_input(INPUT_POST, 'id_item');
+        $Qid_item = (integer)filter_input(INPUT_POST, 'id_item');
         $oCasaPeriodo = new CasaPeriodo(array('id_item' => $Qid_item));
         $f_ini = $oCasaPeriodo->getF_ini()->getFromLocal();
         $f_fin = $oCasaPeriodo->getF_fin()->getFromLocal();
@@ -127,8 +127,8 @@ switch ($Qque) {
         echo $txt;
         break;
     case "get2":
-        $Qid_ubi = (integer)\filter_input(INPUT_POST, 'id_ubi');
-        $Qyear = (integer)\filter_input(INPUT_POST, 'year');
+        $Qid_ubi = (integer)filter_input(INPUT_POST, 'id_ubi');
+        $Qyear = (integer)filter_input(INPUT_POST, 'year');
         // permisos:
         if ($_SESSION['oConfig']->is_jefeCalendario()) {
             $permiso = 'modificar';
@@ -210,7 +210,7 @@ switch ($Qque) {
         /* sirve para calendario_ubi_resumen.php
          * en el modulo economics...
          */
-        $Qid_ubi = (integer)\filter_input(INPUT_POST, 'id_ubi');
+        $Qid_ubi = (integer)filter_input(INPUT_POST, 'id_ubi');
         // listado de periodos por casa
         $GesCasaPeriodos = new GestorCasaPeriodo();
         $cCasaPeriodos = $GesCasaPeriodos->getCasaPeriodos(array('id_ubi' => $Qid_ubi, '_ordre' => 'f_ini'));
@@ -270,11 +270,11 @@ switch ($Qque) {
         echo "{ que: '" . $Qque . "', txt: '$txt' }";
         break;
     case "guardar":
-        $Qid_item = (integer)\filter_input(INPUT_POST, 'id_item');
-        $Qid_ubi = (integer)\filter_input(INPUT_POST, 'id_ubi');
-        $Qf_ini = (string)\filter_input(INPUT_POST, 'f_ini');
-        $Qf_fin = (string)\filter_input(INPUT_POST, 'f_fin');
-        $Qsfsv = (integer)\filter_input(INPUT_POST, 'sfsv');
+        $Qid_item = (integer)filter_input(INPUT_POST, 'id_item');
+        $Qid_ubi = (integer)filter_input(INPUT_POST, 'id_ubi');
+        $Qf_ini = (string)filter_input(INPUT_POST, 'f_ini');
+        $Qf_fin = (string)filter_input(INPUT_POST, 'f_fin');
+        $Qsfsv = (integer)filter_input(INPUT_POST, 'sfsv');
         if (!empty($Qid_item)) {
             $oCasaPeriodo = new CasaPeriodo($Qid_item);
             $oCasaPeriodo->DBCarregar(); //perque agafi els valor que ja té.
@@ -291,7 +291,7 @@ switch ($Qque) {
         }
         break;
     case "eliminar":
-        $Qid_item = (integer)\filter_input(INPUT_POST, 'id_item');
+        $Qid_item = (integer)filter_input(INPUT_POST, 'id_item');
         if (!empty($Qid_item)) {
             $oCasaPeriodo = new CasaPeriodo($Qid_item);
             if ($oCasaPeriodo->DBEliminar() === false) {

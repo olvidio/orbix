@@ -22,14 +22,14 @@ require_once("apps/core/global_object.inc");
 
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$Qque = (string)\filter_input(INPUT_POST, 'que');
+$Qque = (string)filter_input(INPUT_POST, 'que');
 
 switch ($Qque) {
     case 'perm_ctr_update':
-        $Qid_item = (integer)\filter_input(INPUT_POST, 'id_item');
-        $Qid_usuario = (integer)\filter_input(INPUT_POST, 'id_usuario');
-        $Qid_ctr = (integer)\filter_input(INPUT_POST, 'id_ctr');
-        $Qperm_ctr = (integer)\filter_input(INPUT_POST, 'perm_ctr');
+        $Qid_item = (integer)filter_input(INPUT_POST, 'id_item');
+        $Qid_usuario = (integer)filter_input(INPUT_POST, 'id_usuario');
+        $Qid_ctr = (integer)filter_input(INPUT_POST, 'id_ctr');
+        $Qperm_ctr = (integer)filter_input(INPUT_POST, 'perm_ctr');
 
         $oUsuarioPermCtr = new PermUsuarioCentro(array('id_item' => $Qid_item));
         $oUsuarioPermCtr->setId_usuario($Qid_usuario);
@@ -41,7 +41,7 @@ switch ($Qque) {
         }
         break;
     case 'perm_ctr_eliminar':
-        $a_sel = (array)\filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+        $a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
         if (!empty($a_sel)) { //vengo de un checkbox
             $Qid_usuario = (integer)strtok($a_sel[0], "#");
             $Qid_item = (integer)strtok("#");
@@ -53,9 +53,9 @@ switch ($Qque) {
         }
         break;
     case 'perm_menu_update':
-        $Qid_item = (integer)\filter_input(INPUT_POST, 'id_item');
-        $Qid_usuario = (integer)\filter_input(INPUT_POST, 'id_usuario');
-        $Qmenu_perm = (array)\filter_input(INPUT_POST, 'menu_perm', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+        $Qid_item = (integer)filter_input(INPUT_POST, 'id_item');
+        $Qid_usuario = (integer)filter_input(INPUT_POST, 'id_usuario');
+        $Qmenu_perm = (array)filter_input(INPUT_POST, 'menu_perm', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 
         $oUsuarioPerm = new PermMenu(array('id_item' => $Qid_item));
         $oUsuarioPerm->setId_usuario($Qid_usuario);
@@ -73,7 +73,7 @@ switch ($Qque) {
         }
         break;
     case 'perm_menu_eliminar':
-        $a_sel = (array)\filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+        $a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
         if (!empty($a_sel)) { //vengo de un checkbox
             $Qid_usuario = (integer)strtok($a_sel[0], "#");
             $Qid_item = (integer)strtok("#");
@@ -85,7 +85,7 @@ switch ($Qque) {
         }
         break;
     case 'perm_eliminar':
-        $a_sel = (array)\filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+        $a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
         if (!empty($a_sel)) { //vengo de un checkbox
             $Qid_usuario = (integer)strtok($a_sel[0], "#");
             $Qid_item = (integer)strtok("#");
@@ -98,20 +98,20 @@ switch ($Qque) {
         }
         break;
     case 'perm_update':
-        $Qid_usuario = (integer)\filter_input(INPUT_POST, 'id_usuario');
-        $Qid_tipo_activ = (integer)\filter_input(INPUT_POST, 'id_tipo_activ');
-        $Qid_item = (integer)\filter_input(INPUT_POST, 'id_item');
-        $Qdl_propia = (string)\filter_input(INPUT_POST, 'dl_propia');
-        $QaFase_ref = (array)\filter_input(INPUT_POST, 'fase_ref', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-        $QaPerm_on = (array)\filter_input(INPUT_POST, 'perm_on', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-        $QaPerm_off = (array)\filter_input(INPUT_POST, 'perm_off', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-        $QaAfecta_a = (array)\filter_input(INPUT_POST, 'afecta_a', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+        $Qid_usuario = (integer)filter_input(INPUT_POST, 'id_usuario');
+        $Qid_tipo_activ = (integer)filter_input(INPUT_POST, 'id_tipo_activ');
+        $Qid_item = (integer)filter_input(INPUT_POST, 'id_item');
+        $Qdl_propia = (string)filter_input(INPUT_POST, 'dl_propia');
+        $QaFase_ref = (array)filter_input(INPUT_POST, 'fase_ref', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+        $QaPerm_on = (array)filter_input(INPUT_POST, 'perm_on', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+        $QaPerm_off = (array)filter_input(INPUT_POST, 'perm_off', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+        $QaAfecta_a = (array)filter_input(INPUT_POST, 'afecta_a', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 
         if (empty($Qid_tipo_activ)) {
-            $Qisfsv_val = (string)\filter_input(INPUT_POST, 'isfsv_val');
-            $Qiasistentes_val = (string)\filter_input(INPUT_POST, 'iasistentes_val');
-            $Qiactividad_val = (string)\filter_input(INPUT_POST, 'iactividad_val');
-            $Qinom_tipo_val = (string)\filter_input(INPUT_POST, 'inom_tipo_val');
+            $Qisfsv_val = (string)filter_input(INPUT_POST, 'isfsv_val');
+            $Qiasistentes_val = (string)filter_input(INPUT_POST, 'iasistentes_val');
+            $Qiactividad_val = (string)filter_input(INPUT_POST, 'iactividad_val');
+            $Qinom_tipo_val = (string)filter_input(INPUT_POST, 'inom_tipo_val');
 
             $sfsv_val = empty($Qisfsv_val) ? '.' : $Qisfsv_val;
             $asistentes_val = empty($Qiasistentes_val) ? '.' : $Qiasistentes_val;
@@ -182,16 +182,16 @@ switch ($Qque) {
         }
         break;
     case "buscar":
-        $Qusuario = (string)\filter_input(INPUT_POST, 'usuario');
+        $Qusuario = (string)filter_input(INPUT_POST, 'usuario');
 
         $oUsuarios = new GestorUsuario();
         $oUser = $oUsuarios->getUsuarios(array('usuario' => $Qusuario));
         $oUsuario = $oUser[0];
         break;
     case "check_pwd":
-        $Qid_usuario = (integer)\filter_input(INPUT_POST, 'id_usuario');
-        $Qusuario = (string)\filter_input(INPUT_POST, 'usuario');
-        $Qpassword = (string)\filter_input(INPUT_POST, 'password');
+        $Qid_usuario = (integer)filter_input(INPUT_POST, 'id_usuario');
+        $Qusuario = (string)filter_input(INPUT_POST, 'usuario');
+        $Qpassword = (string)filter_input(INPUT_POST, 'password');
 
         /*
         $Qusuario = rawUrlDecode($Qusuario_encoded);
@@ -217,9 +217,9 @@ switch ($Qque) {
         }
         break;
     case "guardar_pwd":
-        $Qid_usuario = (integer)\filter_input(INPUT_POST, 'id_usuario');
-        $Qpassword = (string)\filter_input(INPUT_POST, 'password');
-        $Qpass = (string)\filter_input(INPUT_POST, 'pass');
+        $Qid_usuario = (integer)filter_input(INPUT_POST, 'id_usuario');
+        $Qpassword = (string)filter_input(INPUT_POST, 'password');
+        $Qpass = (string)filter_input(INPUT_POST, 'pass');
 
         $oUsuario = new Usuario(array('id_usuario' => $Qid_usuario));
         $oUsuario->DBCarregar();
@@ -248,8 +248,8 @@ switch ($Qque) {
         }
         break;
     case "guardar_mail":
-        $Qid_usuario = (integer)\filter_input(INPUT_POST, 'id_usuario');
-        $Qemail = (string)\filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL);
+        $Qid_usuario = (integer)filter_input(INPUT_POST, 'id_usuario');
+        $Qemail = (string)filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL);
 
         $oUsuario = new Usuario(array('id_usuario' => $Qid_usuario));
         $oUsuario->DBCarregar();
@@ -262,25 +262,25 @@ switch ($Qque) {
         }
         break;
     case "guardar":
-        $Qusuario = (string)\filter_input(INPUT_POST, 'usuario');
-        $Qquien = (string)\filter_input(INPUT_POST, 'quien');
+        $Qusuario = (string)filter_input(INPUT_POST, 'usuario');
+        $Qquien = (string)filter_input(INPUT_POST, 'quien');
 
         if (empty($Qusuario)) {
             echo _("debe poner un nombre");
         }
         switch ($Qquien) {
             case 'usuario':
-                $Qid_usuario = (integer)\filter_input(INPUT_POST, 'id_usuario');
-                $Qperm_activ = (array)\filter_input(INPUT_POST, 'perm_activ', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-                $Qid_role = (integer)\filter_input(INPUT_POST, 'id_role');
-                $Qemail = (string)\filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL);
+                $Qid_usuario = (integer)filter_input(INPUT_POST, 'id_usuario');
+                $Qperm_activ = (array)filter_input(INPUT_POST, 'perm_activ', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+                $Qid_role = (integer)filter_input(INPUT_POST, 'id_role');
+                $Qemail = (string)filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL);
 
-                $Qnom_usuario = (string)\filter_input(INPUT_POST, 'nom_usuario');
-                $Qpassword = (string)\filter_input(INPUT_POST, 'password');
-                $Qpass = (string)\filter_input(INPUT_POST, 'pass');
-                $Qid_nom = (integer)\filter_input(INPUT_POST, 'id_nom');
-                $Qid_ctr = (integer)\filter_input(INPUT_POST, 'id_ctr');
-                $Qcasas = (array)\filter_input(INPUT_POST, 'casas', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+                $Qnom_usuario = (string)filter_input(INPUT_POST, 'nom_usuario');
+                $Qpassword = (string)filter_input(INPUT_POST, 'password');
+                $Qpass = (string)filter_input(INPUT_POST, 'pass');
+                $Qid_nom = (integer)filter_input(INPUT_POST, 'id_nom');
+                $Qid_ctr = (integer)filter_input(INPUT_POST, 'id_ctr');
+                $Qcasas = (array)filter_input(INPUT_POST, 'casas', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 
                 $oUsuario = new Usuario(array('id_usuario' => $Qid_usuario));
                 $oUsuario->setUsuario($Qusuario);
@@ -326,8 +326,8 @@ switch ($Qque) {
                 }
                 break;
             case 'grupo':
-                $Qid_role = (integer)\filter_input(INPUT_POST, 'id_role');
-                $Qid_usuario = (integer)\filter_input(INPUT_POST, 'id_usuario');
+                $Qid_role = (integer)filter_input(INPUT_POST, 'id_role');
+                $Qid_usuario = (integer)filter_input(INPUT_POST, 'id_usuario');
 
                 $oUsuario = new Grupo(array('id_usuario' => $Qid_usuario));
                 $oUsuario->setUsuario($Qusuario);
@@ -340,15 +340,15 @@ switch ($Qque) {
         }
         break;
     case "nuevo":
-        $Qquien = (string)\filter_input(INPUT_POST, 'quien');
+        $Qquien = (string)filter_input(INPUT_POST, 'quien');
         switch ($Qquien) {
             case 'usuario':
-                $Qperm_activ = (array)\filter_input(INPUT_POST, 'perm_activ', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-                $Qusuario = (string)\filter_input(INPUT_POST, 'usuario');
-                $Qemail = (string)\filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL);
-                $Qid_role = (integer)\filter_input(INPUT_POST, 'id_role');
-                $Qnom_usuario = (string)\filter_input(INPUT_POST, 'nom_usuario');
-                $Qpassword = (string)\filter_input(INPUT_POST, 'password');
+                $Qperm_activ = (array)filter_input(INPUT_POST, 'perm_activ', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+                $Qusuario = (string)filter_input(INPUT_POST, 'usuario');
+                $Qemail = (string)filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL);
+                $Qid_role = (integer)filter_input(INPUT_POST, 'id_role');
+                $Qnom_usuario = (string)filter_input(INPUT_POST, 'nom_usuario');
+                $Qpassword = (string)filter_input(INPUT_POST, 'password');
 
                 if ($Qusuario && $Qpassword) {
                     $oUsuario = new Usuario();
@@ -378,8 +378,8 @@ switch ($Qque) {
                 }
                 break;
             case "grupo":
-                $Qusuario = (string)\filter_input(INPUT_POST, 'usuario');
-                $Qid_role = (integer)\filter_input(INPUT_POST, 'id_role');
+                $Qusuario = (string)filter_input(INPUT_POST, 'usuario');
+                $Qid_role = (integer)filter_input(INPUT_POST, 'id_role');
 
                 if ($Qusuario) {
                     $oUsuario = new Grupo();

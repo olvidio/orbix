@@ -46,7 +46,7 @@ use menus\model\PermisoMenu;
 use menus\model\entity\GestorGrupMenuRole;
 use menus\model\entity\GestorMenuDb;
 use menus\model\entity\GrupMenu;
-use menus\model\entity\Metamenu;
+use menus\model\entity\MetaMenu;
 use usuarios\model\entity\GestorPreferencia;
 use usuarios\model\entity\Role;
 use usuarios\model\entity\Usuario;
@@ -189,7 +189,7 @@ foreach ($oMenuDbs as $oMenuDb) {
     $id_grupmenu = $oMenuDb->getId_grupmenu();
     //$ok = $oMenuDb->getOk ();
     
-    $oMetamenu = new Metamenu($id_metamenu);
+    $oMetamenu = new MetaMenu($id_metamenu);
     $url = $oMetamenu ->getUrl();
     //echo "m: $perm_menu,l: $perm_login, ".visible($perm_menu,$perm_login) ;
     // primero si el módulo està instalado:

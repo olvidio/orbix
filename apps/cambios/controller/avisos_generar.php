@@ -21,7 +21,7 @@ require_once("apps/core/global_header.inc");
 require_once("apps/core/global_object.inc");
 // Crea los objetos para esta url  **********************************************
 
-$Qrefresh = (integer)\filter_input(INPUT_POST, 'refresh');
+$Qrefresh = (integer)filter_input(INPUT_POST, 'refresh');
 $oPosicion->recordar($Qrefresh);
 $QGstack = (integer)filter_input(INPUT_POST, 'Gstack');
 
@@ -51,8 +51,8 @@ if ($_SESSION['oPerm']->only_perm('admin_sf') || $_SESSION['oPerm']->only_perm('
         $Qid_usuario = $oPosicion->getParametro('id_usuario');
         $Qaviso_tipo = $oPosicion->getParametro('aviso_tipo');
     } else {
-        $Qid_usuario = (integer)\filter_input(INPUT_POST, 'id_usuario');
-        $Qaviso_tipo = (integer)\filter_input(INPUT_POST, 'aviso_tipo');
+        $Qid_usuario = (integer)filter_input(INPUT_POST, 'id_usuario');
+        $Qaviso_tipo = (integer)filter_input(INPUT_POST, 'aviso_tipo');
     }
 } else {
     $Qid_usuario = ConfigGlobal::mi_id_usuario();

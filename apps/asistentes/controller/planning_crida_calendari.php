@@ -34,7 +34,7 @@ require_once("apps/core/global_object.inc");
 
 $oPosicion->recordar();
 
-$a_sel = (array)\filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+$a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 $aid_nom = array();
 if (!empty($a_sel)) { //vengo de un checkbox
     // puede ser más de uno
@@ -46,14 +46,14 @@ if (!empty($a_sel)) { //vengo de un checkbox
         $aid_nom[] = $a_sel[0];
         // el scroll id es de la página anterior, hay que guardarlo allí
         $oPosicion->addParametro('id_sel', $a_sel, 1);
-        $scroll_id = (integer)\filter_input(INPUT_POST, 'scroll_id');
+        $scroll_id = (integer)filter_input(INPUT_POST, 'scroll_id');
         $oPosicion->addParametro('scroll_id', $scroll_id, 1);
     }
 }
 
 echo "<button class='no_print' onclick=\"fnjs_exportar('html');\" >Descargar html</button>";
 echo "<div id=\"exportar\">";
-$Qmodelo = (integer)\filter_input(INPUT_POST, 'modelo');
+$Qmodelo = (integer)filter_input(INPUT_POST, 'modelo');
 switch ($Qmodelo) {
     case 2:
         $print = 1;
@@ -72,13 +72,13 @@ $oPlanning->setColorColumnaUno($colorColumnaUno);
 $oPlanning->setColorColumnaDos($colorColumnaDos);
 $oPlanning->setTable_border($table_border);
 
-$Qcdc_sel = (integer)\filter_input(INPUT_POST, 'cdc_sel');
-$Qtipo = (string)\filter_input(INPUT_POST, 'tipo');
-$Qdd = (integer)\filter_input(INPUT_POST, 'dd');
-$Qyear = (integer)\filter_input(INPUT_POST, 'year');
-$Qperiodo = (string)\filter_input(INPUT_POST, 'periodo');
-$Qempiezamin = (string)\filter_input(INPUT_POST, 'empiezamin');
-$Qempiezamax = (string)\filter_input(INPUT_POST, 'empiezamax');
+$Qcdc_sel = (integer)filter_input(INPUT_POST, 'cdc_sel');
+$Qtipo = (string)filter_input(INPUT_POST, 'tipo');
+$Qdd = (integer)filter_input(INPUT_POST, 'dd');
+$Qyear = (integer)filter_input(INPUT_POST, 'year');
+$Qperiodo = (string)filter_input(INPUT_POST, 'periodo');
+$Qempiezamin = (string)filter_input(INPUT_POST, 'empiezamin');
+$Qempiezamax = (string)filter_input(INPUT_POST, 'empiezamax');
 
 // periodo.
 $oPeriodo = new Periodo();
@@ -124,7 +124,7 @@ switch ($Qtipo) {
         break;
     case 'ctr':
         $aWhereP = [];
-        $Qid_ubi = (string)\filter_input(INPUT_POST, 'id_ubi');
+        $Qid_ubi = (string)filter_input(INPUT_POST, 'id_ubi');
         if (!empty($Qid_ubi)) {
             $id_ubi = (integer)strtok($Qid_ubi, '#');
             $nombre_ubi = (string)strtok('#');
@@ -137,8 +137,8 @@ switch ($Qtipo) {
     case 'planning_ctr':
         $aWhere = [];
         $aWhereP = array('situacion' => 'A');
-        $Qsacd = (string)\filter_input(INPUT_POST, 'sacd');
-        $Qctr = (string)\filter_input(INPUT_POST, 'ctr');
+        $Qsacd = (string)filter_input(INPUT_POST, 'sacd');
+        $Qctr = (string)filter_input(INPUT_POST, 'ctr');
         if (empty($Qsacd)) {
             $aWhereP['sacd'] = 'f';
         }
@@ -167,9 +167,9 @@ switch ($Qtipo) {
             }
         } else {
             $cabecera = ucfirst(_("centros"));
-            $Qtodos_n = (string)\filter_input(INPUT_POST, 'todos_n');
-            $Qtodos_agd = (string)\filter_input(INPUT_POST, 'todos_agd');
-            $Qtodos_s = (string)\filter_input(INPUT_POST, 'todos_s');
+            $Qtodos_n = (string)filter_input(INPUT_POST, 'todos_n');
+            $Qtodos_agd = (string)filter_input(INPUT_POST, 'todos_agd');
+            $Qtodos_s = (string)filter_input(INPUT_POST, 'todos_s');
             // Pro defecto los 'n':
             $aWhereP['id_tabla'] = 'n';
             if (!empty($Qtodos_n)) $aWhereP['id_tabla'] = 'n';
@@ -193,7 +193,7 @@ switch ($Qtipo) {
 $GesActividades = new actividades\GestorActividad();
 
 if ($Qtipo == 'planning_cdc' || $Qtipo == 'casa') {
-    $Qsin_activ = (string)\filter_input(INPUT_POST, 'sin_activ');
+    $Qsin_activ = (string)filter_input(INPUT_POST, 'sin_activ');
     if (!empty($Qsin_activ) && $Qsin_activ == 1) {
         $sin_activ = 1;
     } else {
@@ -232,7 +232,7 @@ if ($Qtipo == 'planning_cdc' || $Qtipo == 'casa') {
                 break;
             case 9:
                 // posible selección múltiple de casas
-                $a_id_cdc = (array)\filter_input(INPUT_POST, 'id_cdc', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+                $a_id_cdc = (array)filter_input(INPUT_POST, 'id_cdc', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
                 if (!empty($a_id_cdc)) {
                     $aWhere['id_ubi'] = '^' . implode('$|^', $a_id_cdc) . '$';
                     $aOperador['id_ubi'] = '~';

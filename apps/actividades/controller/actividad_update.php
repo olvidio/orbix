@@ -90,12 +90,12 @@ function borrar_actividad($id_activ)
     }
 }
 
-$Qid_activ = (integer)\filter_input(INPUT_POST, 'id_activ');
-$Qmod = (string)\filter_input(INPUT_POST, 'mod');
+$Qid_activ = (integer)filter_input(INPUT_POST, 'id_activ');
+$Qmod = (string)filter_input(INPUT_POST, 'mod');
 
 switch ($Qmod) {
     case 'publicar':
-        $a_sel = (array)\filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+        $a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
         if (!empty($a_sel)) { // puedo seleccionar más de uno.
             foreach ($a_sel as $id) {
                 $id_activ = (integer)strtok($id, '#');
@@ -111,7 +111,7 @@ switch ($Qmod) {
         }
         break;
     case 'importar':
-        $a_sel = (array)\filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+        $a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
         if (!empty($a_sel)) { // puedo seleccionar más de uno.
             foreach ($a_sel as $id) {
                 $id_activ = (integer)strtok($id, '#');
@@ -129,28 +129,28 @@ switch ($Qmod) {
         }
         break;
     case "nuevo":
-        $Qid_tipo_activ = (integer)\filter_input(INPUT_POST, 'id_tipo_activ');
-        $Qid_ubi = (integer)\filter_input(INPUT_POST, 'id_ubi');
-        $Qnum_asistentes = (integer)\filter_input(INPUT_POST, 'num_asistentes');
-        $Qstatus = (integer)\filter_input(INPUT_POST, 'status');
-        $Qid_repeticion = (integer)\filter_input(INPUT_POST, 'id_repeticion');
-        $Qplazas = (integer)\filter_input(INPUT_POST, 'plazas');
-        $Qtarifa = (integer)\filter_input(INPUT_POST, 'tarifa');
-        $Qprecio = \filter_input(INPUT_POST, 'precio', FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
+        $Qid_tipo_activ = (integer)filter_input(INPUT_POST, 'id_tipo_activ');
+        $Qid_ubi = (integer)filter_input(INPUT_POST, 'id_ubi');
+        $Qnum_asistentes = (integer)filter_input(INPUT_POST, 'num_asistentes');
+        $Qstatus = (integer)filter_input(INPUT_POST, 'status');
+        $Qid_repeticion = (integer)filter_input(INPUT_POST, 'id_repeticion');
+        $Qplazas = (integer)filter_input(INPUT_POST, 'plazas');
+        $Qtarifa = (integer)filter_input(INPUT_POST, 'tarifa');
+        $Qprecio = filter_input(INPUT_POST, 'precio', FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
 
-        $Qdl_org = (string)\filter_input(INPUT_POST, 'dl_org');
-        $Qnom_activ = (string)\filter_input(INPUT_POST, 'nom_activ');
-        $Qlugar_esp = (string)\filter_input(INPUT_POST, 'lugar_esp');
-        $Qdesc_activ = (string)\filter_input(INPUT_POST, 'desc_activ');
-        $Qf_ini = (string)\filter_input(INPUT_POST, 'f_ini');
-        $Qf_fin = (string)\filter_input(INPUT_POST, 'f_fin');
-        $Qtipo_horario = (string)\filter_input(INPUT_POST, 'tipo_horario');
-        $Qobserv = (string)\filter_input(INPUT_POST, 'observ');
-        $Qnivel_stgr = (string)\filter_input(INPUT_POST, 'nivel_stgr');
-        $Qobserv_material = (string)\filter_input(INPUT_POST, 'observ_material');
-        $Qh_ini = (string)\filter_input(INPUT_POST, 'h_ini');
-        $Qh_fin = (string)\filter_input(INPUT_POST, 'h_fin');
-        $Qpublicado = (string)\filter_input(INPUT_POST, 'publicado');
+        $Qdl_org = (string)filter_input(INPUT_POST, 'dl_org');
+        $Qnom_activ = (string)filter_input(INPUT_POST, 'nom_activ');
+        $Qlugar_esp = (string)filter_input(INPUT_POST, 'lugar_esp');
+        $Qdesc_activ = (string)filter_input(INPUT_POST, 'desc_activ');
+        $Qf_ini = (string)filter_input(INPUT_POST, 'f_ini');
+        $Qf_fin = (string)filter_input(INPUT_POST, 'f_fin');
+        $Qtipo_horario = (string)filter_input(INPUT_POST, 'tipo_horario');
+        $Qobserv = (string)filter_input(INPUT_POST, 'observ');
+        $Qnivel_stgr = (string)filter_input(INPUT_POST, 'nivel_stgr');
+        $Qobserv_material = (string)filter_input(INPUT_POST, 'observ_material');
+        $Qh_ini = (string)filter_input(INPUT_POST, 'h_ini');
+        $Qh_fin = (string)filter_input(INPUT_POST, 'h_fin');
+        $Qpublicado = (string)filter_input(INPUT_POST, 'publicado');
         // si estoy creando una actividad de otra dl es porque la quiero importar y por tanto debe estar publicada.
         if ($Qdl_org != ConfigGlobal::mi_delef()) {
             $Qpublicado = 't';
@@ -173,7 +173,7 @@ switch ($Qmod) {
         }
 
         // Puede ser '000' > sin especificar
-        $Qinom_tipo_val = (string)\filter_input(INPUT_POST, 'inom_tipo_val');
+        $Qinom_tipo_val = (string)filter_input(INPUT_POST, 'inom_tipo_val');
 
         // permiso
         $_SESSION['oPermActividades']->setActividad($Qid_activ, $Qid_tipo_activ, $Qdl_org);
@@ -279,7 +279,7 @@ switch ($Qmod) {
         }
         break;
     case "duplicar": // duplicar la actividad.
-        $a_sel = (array)\filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+        $a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
         if (!empty($a_sel)) {
             $id_activ = (integer)strtok($a_sel[0], '#');
             $oActividadAll = new Actividad($id_activ);
@@ -306,7 +306,7 @@ switch ($Qmod) {
         break;
     case "eliminar": // Eliminar la actividad.
         $error_txt = '';
-        $a_sel = (array)\filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+        $a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
         if (!empty($a_sel)) { // puedo seleccionar más de uno.
             foreach ($a_sel as $id) {
                 $id_activ = (integer)strtok($id, '#');
@@ -358,36 +358,36 @@ switch ($Qmod) {
         exit();
         break;
     case "cmb_tipo": // sólo cambio el tipo a una actividad existente //____________________________
-        $Qid_tipo_activ = (integer)\filter_input(INPUT_POST, 'id_tipo_activ');
-        $Qisfsv_val = (integer)\filter_input(INPUT_POST, 'isfsv_val');
-        $Qiasistentes_val = (integer)\filter_input(INPUT_POST, 'iasistentes_val');
-        $Qiactividad_val = (integer)\filter_input(INPUT_POST, 'iactividad_val');
+        $Qid_tipo_activ = (integer)filter_input(INPUT_POST, 'id_tipo_activ');
+        $Qisfsv_val = (integer)filter_input(INPUT_POST, 'isfsv_val');
+        $Qiasistentes_val = (integer)filter_input(INPUT_POST, 'iasistentes_val');
+        $Qiactividad_val = (integer)filter_input(INPUT_POST, 'iactividad_val');
         // Puede ser '000' > sin especificar
-        $Qinom_tipo_val = (string)\filter_input(INPUT_POST, 'inom_tipo_val');
+        $Qinom_tipo_val = (string)filter_input(INPUT_POST, 'inom_tipo_val');
 
-        $Qdl_org = (string)\filter_input(INPUT_POST, 'dl_org');
+        $Qdl_org = (string)filter_input(INPUT_POST, 'dl_org');
 
 
-        $Qnum_asistentes = (integer)\filter_input(INPUT_POST, 'num_asistentes');
-        $Qstatus = (integer)\filter_input(INPUT_POST, 'status');
-        $Qid_repeticion = (integer)\filter_input(INPUT_POST, 'id_repeticion');
-        $Qplazas = (integer)\filter_input(INPUT_POST, 'plazas');
-        $Qtarifa = (integer)\filter_input(INPUT_POST, 'tarifa');
-        $Qprecio = \filter_input(INPUT_POST, 'precio', FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
+        $Qnum_asistentes = (integer)filter_input(INPUT_POST, 'num_asistentes');
+        $Qstatus = (integer)filter_input(INPUT_POST, 'status');
+        $Qid_repeticion = (integer)filter_input(INPUT_POST, 'id_repeticion');
+        $Qplazas = (integer)filter_input(INPUT_POST, 'plazas');
+        $Qtarifa = (integer)filter_input(INPUT_POST, 'tarifa');
+        $Qprecio = filter_input(INPUT_POST, 'precio', FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
 
-        $Qnom_activ = (string)\filter_input(INPUT_POST, 'nom_activ');
-        $Qid_ubi = (integer)\filter_input(INPUT_POST, 'id_ubi');
-        $Qlugar_esp = (string)\filter_input(INPUT_POST, 'lugar_esp');
-        $Qdesc_activ = (string)\filter_input(INPUT_POST, 'desc_activ');
-        $Qf_ini = (string)\filter_input(INPUT_POST, 'f_ini');
-        $Qf_fin = (string)\filter_input(INPUT_POST, 'f_fin');
-        $Qtipo_horario = (string)\filter_input(INPUT_POST, 'tipo_horario');
-        $Qobserv = (string)\filter_input(INPUT_POST, 'observ');
-        $Qnivel_stgr = (string)\filter_input(INPUT_POST, 'nivel_stgr');
-        $Qobserv_material = (string)\filter_input(INPUT_POST, 'observ_material');
-        $Qh_ini = (string)\filter_input(INPUT_POST, 'h_ini');
-        $Qh_fin = (string)\filter_input(INPUT_POST, 'h_fin');
-        $Qpublicado = (string)\filter_input(INPUT_POST, 'publicado');
+        $Qnom_activ = (string)filter_input(INPUT_POST, 'nom_activ');
+        $Qid_ubi = (integer)filter_input(INPUT_POST, 'id_ubi');
+        $Qlugar_esp = (string)filter_input(INPUT_POST, 'lugar_esp');
+        $Qdesc_activ = (string)filter_input(INPUT_POST, 'desc_activ');
+        $Qf_ini = (string)filter_input(INPUT_POST, 'f_ini');
+        $Qf_fin = (string)filter_input(INPUT_POST, 'f_fin');
+        $Qtipo_horario = (string)filter_input(INPUT_POST, 'tipo_horario');
+        $Qobserv = (string)filter_input(INPUT_POST, 'observ');
+        $Qnivel_stgr = (string)filter_input(INPUT_POST, 'nivel_stgr');
+        $Qobserv_material = (string)filter_input(INPUT_POST, 'observ_material');
+        $Qh_ini = (string)filter_input(INPUT_POST, 'h_ini');
+        $Qh_fin = (string)filter_input(INPUT_POST, 'h_fin');
+        $Qpublicado = (string)filter_input(INPUT_POST, 'publicado');
 
         //echo "id_tipo de actividad: $id_tipo_activ<br>";
         if (!empty($Qid_tipo_activ) and !strstr($Qid_tipo_activ, '.')) {
@@ -434,39 +434,39 @@ switch ($Qmod) {
         }
         break;
     case "editar": // editar la actividad.
-        $Qid_tipo_activ = (integer)\filter_input(INPUT_POST, 'id_tipo_activ');
-        $Qid_ubi = (integer)\filter_input(INPUT_POST, 'id_ubi');
-        $Qnum_asistentes = (integer)\filter_input(INPUT_POST, 'num_asistentes');
-        $Qstatus = (integer)\filter_input(INPUT_POST, 'status');
-        $Qid_repeticion = (integer)\filter_input(INPUT_POST, 'id_repeticion');
-        $Qplazas = (integer)\filter_input(INPUT_POST, 'plazas');
-        $Qtarifa = (integer)\filter_input(INPUT_POST, 'tarifa');
-        $Qprecio = \filter_input(INPUT_POST, 'precio', FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
+        $Qid_tipo_activ = (integer)filter_input(INPUT_POST, 'id_tipo_activ');
+        $Qid_ubi = (integer)filter_input(INPUT_POST, 'id_ubi');
+        $Qnum_asistentes = (integer)filter_input(INPUT_POST, 'num_asistentes');
+        $Qstatus = (integer)filter_input(INPUT_POST, 'status');
+        $Qid_repeticion = (integer)filter_input(INPUT_POST, 'id_repeticion');
+        $Qplazas = (integer)filter_input(INPUT_POST, 'plazas');
+        $Qtarifa = (integer)filter_input(INPUT_POST, 'tarifa');
+        $Qprecio = filter_input(INPUT_POST, 'precio', FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
 
-        $Qdl_org = (string)\filter_input(INPUT_POST, 'dl_org');
-        $Qnom_activ = (string)\filter_input(INPUT_POST, 'nom_activ');
-        $Qlugar_esp = (string)\filter_input(INPUT_POST, 'lugar_esp');
-        $Qdesc_activ = (string)\filter_input(INPUT_POST, 'desc_activ');
-        $Qf_ini = (string)\filter_input(INPUT_POST, 'f_ini');
-        $Qf_fin = (string)\filter_input(INPUT_POST, 'f_fin');
-        $Qtipo_horario = (string)\filter_input(INPUT_POST, 'tipo_horario');
-        $Qobserv = (string)\filter_input(INPUT_POST, 'observ');
-        $Qnivel_stgr = (string)\filter_input(INPUT_POST, 'nivel_stgr');
-        $Qobserv_material = (string)\filter_input(INPUT_POST, 'observ_material');
-        $Qh_ini = (string)\filter_input(INPUT_POST, 'h_ini');
-        $Qh_fin = (string)\filter_input(INPUT_POST, 'h_fin');
-        $Qpublicado = (string)\filter_input(INPUT_POST, 'publicado');
+        $Qdl_org = (string)filter_input(INPUT_POST, 'dl_org');
+        $Qnom_activ = (string)filter_input(INPUT_POST, 'nom_activ');
+        $Qlugar_esp = (string)filter_input(INPUT_POST, 'lugar_esp');
+        $Qdesc_activ = (string)filter_input(INPUT_POST, 'desc_activ');
+        $Qf_ini = (string)filter_input(INPUT_POST, 'f_ini');
+        $Qf_fin = (string)filter_input(INPUT_POST, 'f_fin');
+        $Qtipo_horario = (string)filter_input(INPUT_POST, 'tipo_horario');
+        $Qobserv = (string)filter_input(INPUT_POST, 'observ');
+        $Qnivel_stgr = (string)filter_input(INPUT_POST, 'nivel_stgr');
+        $Qobserv_material = (string)filter_input(INPUT_POST, 'observ_material');
+        $Qh_ini = (string)filter_input(INPUT_POST, 'h_ini');
+        $Qh_fin = (string)filter_input(INPUT_POST, 'h_fin');
+        $Qpublicado = (string)filter_input(INPUT_POST, 'publicado');
 
         // Mirar si puedo cambiar el tipo de actividad:
         // permiso
         $_SESSION['oPermActividades']->setActividad($Qid_activ, $Qid_tipo_activ, $Qdl_org);
         $oPermActiv = $_SESSION['oPermActividades']->getPermisoActual('datos');
         if (empty($Qid_tipo_activ) && ConfigGlobal::is_app_installed('procesos') && $oPermActiv->have_perm_activ('crear') === TRUE) {
-            $Qisfsv_val = (integer)\filter_input(INPUT_POST, 'isfsv_val');
-            $Qiasistentes_val = (integer)\filter_input(INPUT_POST, 'iasistentes_val');
-            $Qiactividad_val = (integer)\filter_input(INPUT_POST, 'iactividad_val');
+            $Qisfsv_val = (integer)filter_input(INPUT_POST, 'isfsv_val');
+            $Qiasistentes_val = (integer)filter_input(INPUT_POST, 'iasistentes_val');
+            $Qiactividad_val = (integer)filter_input(INPUT_POST, 'iactividad_val');
             // Puede ser '000' > sin especificar
-            $Qinom_tipo_val = (string)\filter_input(INPUT_POST, 'inom_tipo_val');
+            $Qinom_tipo_val = (string)filter_input(INPUT_POST, 'inom_tipo_val');
             $condta = $Qisfsv_val . $Qiasistentes_val . $Qiactividad_val . $Qinom_tipo_val;
             if (!strstr($condta, '.')) {
                 $valor_id_tipo_activ = $condta;

@@ -66,15 +66,15 @@ function ordena($id_activ, $id_ubi, $num_orden)
     }
 }
 
-$Qque = (string)\filter_input(INPUT_POST, 'que');
-$Qid_activ = (integer)\filter_input(INPUT_POST, 'id_activ');
+$Qque = (string)filter_input(INPUT_POST, 'que');
+$Qid_activ = (integer)filter_input(INPUT_POST, 'id_activ');
 
 $aWhere = [];
 $aOperador = [];
 switch ($Qque) {
     case "orden":
-        $Qnum_orden = (string)\filter_input(INPUT_POST, 'num_orden');
-        $Qid_ubi = (integer)\filter_input(INPUT_POST, 'id_ubi');
+        $Qnum_orden = (string)filter_input(INPUT_POST, 'num_orden');
+        $Qid_ubi = (integer)filter_input(INPUT_POST, 'id_ubi');
         $error_txt = '';
         if ($Qnum_orden == "borrar") { //entonces es borrar:
             if ($Qid_activ && $Qid_ubi) {
@@ -93,8 +93,8 @@ switch ($Qque) {
         break;
     case "get":
         // mirar permisos.
-        $Qid_tipo_activ = (integer)\filter_input(INPUT_POST, 'id_tipo_activ');
-        $Qdl_org = (string)\filter_input(INPUT_POST, 'dl_org');
+        $Qid_tipo_activ = (integer)filter_input(INPUT_POST, 'id_tipo_activ');
+        $Qdl_org = (string)filter_input(INPUT_POST, 'dl_org');
         $_SESSION['oPermActividades']->setActividad($Qid_activ, $Qid_tipo_activ, $Qdl_org);
         $oPermCtr = $_SESSION['oPermActividades']->getPermisoActual('ctr');
 
@@ -122,9 +122,9 @@ switch ($Qque) {
         echo $txt;
         break;
     case "nuevo_sg":
-        $Qinicio = (string)\filter_input(INPUT_POST, 'inicio');
-        $Qfin = (string)\filter_input(INPUT_POST, 'fin');
-        $Qf_ini_act = (string)\filter_input(INPUT_POST, 'f_ini_act');
+        $Qinicio = (string)filter_input(INPUT_POST, 'inicio');
+        $Qfin = (string)filter_input(INPUT_POST, 'fin');
+        $Qf_ini_act = (string)filter_input(INPUT_POST, 'f_ini_act');
 
         $oDateIniAct = DateTimeLocal::createFromLocal($Qf_ini_act);
         $f_ini_act_iso = $oDateIniAct->getIso();
@@ -251,7 +251,7 @@ switch ($Qque) {
         echo $txt;
         break;
     case "asignar":
-        $Qid_ubi = (integer)\filter_input(INPUT_POST, 'id_ubi');
+        $Qid_ubi = (integer)filter_input(INPUT_POST, 'id_ubi');
         // miro si hay centros encargados, para poner num orden después.
         $aWhere['id_activ'] = $Qid_activ;
         $aWhere['_ordre'] = 'num_orden DESC';
@@ -271,11 +271,11 @@ switch ($Qque) {
         break;
     case 'lista_activ':
 
-        $Qtipo = (string)\filter_input(INPUT_POST, 'tipo');
-        $Qyear = (integer)\filter_input(INPUT_POST, 'year');
-        $Qperiodo = (string)\filter_input(INPUT_POST, 'periodo');
-        $Qempiezamin = (string)\filter_input(INPUT_POST, 'empiezamin');
-        $Qempiezamax = (string)\filter_input(INPUT_POST, 'empiezamax');
+        $Qtipo = (string)filter_input(INPUT_POST, 'tipo');
+        $Qyear = (integer)filter_input(INPUT_POST, 'year');
+        $Qperiodo = (string)filter_input(INPUT_POST, 'periodo');
+        $Qempiezamin = (string)filter_input(INPUT_POST, 'empiezamin');
+        $Qempiezamax = (string)filter_input(INPUT_POST, 'empiezamax');
 
         // valores por defeccto
         if (empty($Qperiodo)) {

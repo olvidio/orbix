@@ -32,28 +32,28 @@ require_once("apps/core/global_object.inc");
 $oPosicion->recordar();
 
 //Si vengo de vuelta de un go_to:
-$tabla = (string)\filter_input(INPUT_POST, 'tabla');
-$Qna = (string)\filter_input(INPUT_POST, 'na');
-$tipo = (string)\filter_input(INPUT_POST, 'tipo');
-$Qes_sacd = (integer)\filter_input(INPUT_POST, 'es_sacd');
-$sWhere = (string)\filter_input(INPUT_POST, 'sWhere');
-$sOperador = (string)\filter_input(INPUT_POST, 'sOperador');
-$sWhereCtr = (string)\filter_input(INPUT_POST, 'sWhereCtr');
-$sOperadorCtr = (string)\filter_input(INPUT_POST, 'sOperadorCtr');
+$tabla = (string)filter_input(INPUT_POST, 'tabla');
+$Qna = (string)filter_input(INPUT_POST, 'na');
+$tipo = (string)filter_input(INPUT_POST, 'tipo');
+$Qes_sacd = (integer)filter_input(INPUT_POST, 'es_sacd');
+$sWhere = (string)filter_input(INPUT_POST, 'sWhere');
+$sOperador = (string)filter_input(INPUT_POST, 'sOperador');
+$sWhereCtr = (string)filter_input(INPUT_POST, 'sWhereCtr');
+$sOperadorCtr = (string)filter_input(INPUT_POST, 'sOperadorCtr');
 
-$Qid_sel = (string)\filter_input(INPUT_POST, 'id_sel');
-$Qscroll_id = (string)\filter_input(INPUT_POST, 'scroll_id');
-$Qque = (string)\filter_input(INPUT_POST, 'que');
-$Qexacto = (string)\filter_input(INPUT_POST, 'exacto');
-$Qcmb = (string)\filter_input(INPUT_POST, 'cmb');
-$Qnombre = (string)\filter_input(INPUT_POST, 'nombre');
-$Qapellido1 = (string)\filter_input(INPUT_POST, 'apellido1');
-$Qapellido2 = (string)\filter_input(INPUT_POST, 'apellido2');
-$Qcentro = (string)\filter_input(INPUT_POST, 'centro');
+$Qid_sel = (string)filter_input(INPUT_POST, 'id_sel');
+$Qscroll_id = (string)filter_input(INPUT_POST, 'scroll_id');
+$Qque = (string)filter_input(INPUT_POST, 'que');
+$Qexacto = (string)filter_input(INPUT_POST, 'exacto');
+$Qcmb = (string)filter_input(INPUT_POST, 'cmb');
+$Qnombre = (string)filter_input(INPUT_POST, 'nombre');
+$Qapellido1 = (string)filter_input(INPUT_POST, 'apellido1');
+$Qapellido2 = (string)filter_input(INPUT_POST, 'apellido2');
+$Qcentro = (string)filter_input(INPUT_POST, 'centro');
 
 //Si vengo por medio de Posicion, borro la última
 if (isset($_POST['stack'])) {
-    $stack = \filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
+    $stack = filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
     if ($stack != '') {
         $oPosicion2 = new web\Posicion();
         if ($oPosicion2->goStack($stack)) { // devuelve false si no puede ir

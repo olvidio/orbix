@@ -41,9 +41,9 @@ require_once("apps/core/global_object.inc");
 
 $oPosicion->recordar();
 
-$Qtipo = (string)\filter_input(INPUT_POST, 'tipo');
-$Qsfsv = (string)\filter_input(INPUT_POST, 'sfsv');
-$Qque = (string)\filter_input(INPUT_POST, 'que');
+$Qtipo = (string)filter_input(INPUT_POST, 'tipo');
+$Qsfsv = (string)filter_input(INPUT_POST, 'sfsv');
+$Qque = (string)filter_input(INPUT_POST, 'que');
 
 /**
  * devuelve el dia anterior a las 20:00 de una fecha.
@@ -284,10 +284,10 @@ if ($_POST['cdc_sel'] == 6) { //añado los ctr de sf
 }
 
 if (empty($Qque)) {
-    $Qperiodo = (string)\filter_input(INPUT_POST, 'periodo');
-    $Qyear = (string)\filter_input(INPUT_POST, 'year');
-    $Qempiezamin = (string)\filter_input(INPUT_POST, 'empiezamin');
-    $Qempiezamax = (string)\filter_input(INPUT_POST, 'empiezamax');
+    $Qperiodo = (string)filter_input(INPUT_POST, 'periodo');
+    $Qyear = (string)filter_input(INPUT_POST, 'year');
+    $Qempiezamin = (string)filter_input(INPUT_POST, 'empiezamin');
+    $Qempiezamax = (string)filter_input(INPUT_POST, 'empiezamax');
 
     // periodo.
     $oPeriodo = new Periodo();

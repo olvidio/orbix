@@ -17,10 +17,10 @@ require_once("apps/core/global_object.inc");
 $oMiUsuario = new usuarios\Usuario(core\ConfigGlobal::mi_id_usuario());
 $miSfsv = core\ConfigGlobal::mi_sfsv();
 
-$Qobj_pau = (string)\filter_input(INPUT_POST, 'obj_pau');
-$Qmod = (string)\filter_input(INPUT_POST, 'mod');
-$Qid_ubi = (integer)\filter_input(INPUT_POST, 'id_ubi');
-$Qcampos_chk = (string)\filter_input(INPUT_POST, 'campos_chk');
+$Qobj_pau = (string)filter_input(INPUT_POST, 'obj_pau');
+$Qmod = (string)filter_input(INPUT_POST, 'mod');
+$Qid_ubi = (integer)filter_input(INPUT_POST, 'id_ubi');
+$Qcampos_chk = (string)filter_input(INPUT_POST, 'campos_chk');
 
 switch ($Qobj_pau) {
     case 'CentroDl':
@@ -37,14 +37,14 @@ switch ($Qobj_pau) {
         break;
 }
 
-$a_sel = (array)\filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+$a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 if (!empty($a_sel)) { //vengo de un checkbox
     $s_pkey = explode('#', $a_sel[0]);
     // he cambiado las comillas dobles por simples. Deshago el cambio.
     $s_pkey = str_replace("'", '"', $s_pkey[0]);
     $a_pkey = unserialize(core\urlsafe_b64decode($s_pkey));
 } else {
-    $s_pkey = (string)\filter_input(INPUT_POST, 's_pkey');
+    $s_pkey = (string)filter_input(INPUT_POST, 's_pkey');
     $a_pkey = unserialize(core\urlsafe_b64decode($s_pkey));
 
 }

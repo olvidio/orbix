@@ -32,23 +32,23 @@ require_once("apps/core/global_object.inc");
 
 $oPosicion->recordar();
 
-$a_sel = (array)\filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+$a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 if (!empty($a_sel)) { //vengo de un checkbox
     $id_nom = (integer)strtok($a_sel[0], "#");
     $Qid_tabla = (string)strtok("#");
     $oPosicion->addParametro('id_sel', $a_sel, 1);
-    $scroll_id = (integer)\filter_input(INPUT_POST, 'scroll_id');
+    $scroll_id = (integer)filter_input(INPUT_POST, 'scroll_id');
     $oPosicion->addParametro('scroll_id', $scroll_id, 1);
 } else {
-    $Qid_pau = (integer)\filter_input(INPUT_POST, 'id_pau');
-    $Qid_nom = (integer)\filter_input(INPUT_POST, 'id_nom');
+    $Qid_pau = (integer)filter_input(INPUT_POST, 'id_pau');
+    $Qid_nom = (integer)filter_input(INPUT_POST, 'id_nom');
     $id_nom = empty($Qid_nom) ? $Qid_pau : $Qid_nom;
-    $Qid_tabla = (string)\filter_input(INPUT_POST, 'id_tabla');
+    $Qid_tabla = (string)filter_input(INPUT_POST, 'id_tabla');
 }
 
 // Sobre-escribe el scroll_id que se pueda tener
 if (isset($_POST['stack'])) {
-    $stack = \filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
+    $stack = filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
 } else {
     $stack = '';
 }
@@ -63,10 +63,10 @@ if ($stack != '') {
     }
 }
 
-$Qpermiso = (string)\filter_input(INPUT_POST, 'permiso');
-$Qdepende = (string)\filter_input(INPUT_POST, 'depende');
-$Qobj_pau = (string)\filter_input(INPUT_POST, 'obj_pau');
-$Qprint = (integer)\filter_input(INPUT_POST, 'print');
+$Qpermiso = (string)filter_input(INPUT_POST, 'permiso');
+$Qdepende = (string)filter_input(INPUT_POST, 'depende');
+$Qobj_pau = (string)filter_input(INPUT_POST, 'obj_pau');
+$Qprint = (integer)filter_input(INPUT_POST, 'print');
 
 // No uso el que viene por POST porque en la lista de personas si se 
 // cambia el permiso también afecta a otros botones.
@@ -220,7 +220,7 @@ if (empty($Qprint)) { // si no es para imprimir muestro todos los datos
 
         $a_director[] = array('departamento' => $departamento, 'f_nombramiento' => $f_nombramiento, 'escrito_nombramiento' => $escrito_nombramiento, 'f_cese' => $f_cese, 'escrito_cese' => $escrito_cese);
     }
-    $a_cosas['clase_info'] = 'profesores\model\info1020';
+    $a_cosas['clase_info'] = 'profesores\model\Info1020';
     $go_cosas['director'] = web\Hash::link(core\ConfigGlobal::getWeb() . '/apps/core/mod_tabla_sql.php?' . http_build_query($a_cosas));
 
     // juramento //////////////////////////

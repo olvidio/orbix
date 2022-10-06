@@ -26,7 +26,7 @@ $oPosicion->recordar();
 
 //Si vengo de vuelta y le paso la referecia del stack donde está la información.
 if (isset($_POST['stack'])) {
-    $stack = \filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
+    $stack = filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
     if ($stack != '') {
         // No me sirve el de global_object, sino el de la session
         $oPosicion2 = new web\Posicion();
@@ -38,20 +38,21 @@ if (isset($_POST['stack'])) {
     }
 }
 
-$Qdl_propia = (string)\filter_input(INPUT_POST, 'dl_propia');
-$Qid_fase_nueva = (string)\filter_input(INPUT_POST, 'id_fase_nueva');
-$Qid_tipo_activ = (string)\filter_input(INPUT_POST, 'id_tipo_activ');
-$Qsasistentes = (string)\filter_input(INPUT_POST, 'sasistentes');
-$Qsactividad = (string)\filter_input(INPUT_POST, 'sactividad');
-$Qperiodo = (string)\filter_input(INPUT_POST, 'periodo');
-$Qinicio = (string)\filter_input(INPUT_POST, 'inicio');
-$Qfin = (string)\filter_input(INPUT_POST, 'fin');
-$Qempiezamin = (string)\filter_input(INPUT_POST, 'empiezamin');
-$Qempiezamax = (string)\filter_input(INPUT_POST, 'empiezamax');
-$Qyear = (string)\filter_input(INPUT_POST, 'year');
+$Qdl_propia = (string)filter_input(INPUT_POST, 'dl_propia');
+$Qid_fase_nueva = (string)filter_input(INPUT_POST, 'id_fase_nueva');
+$Qid_tipo_activ = (string)filter_input(INPUT_POST, 'id_tipo_activ');
+$Qsasistentes = (string)filter_input(INPUT_POST, 'sasistentes');
+$Qsactividad = (string)filter_input(INPUT_POST, 'sactividad');
+$Qperiodo = (string)filter_input(INPUT_POST, 'periodo');
+$Qinicio = (string)filter_input(INPUT_POST, 'inicio');
+$Qfin = (string)filter_input(INPUT_POST, 'fin');
+$Qempiezamin = (string)filter_input(INPUT_POST, 'empiezamin');
+$Qempiezamax = (string)filter_input(INPUT_POST, 'empiezamax');
+$Qyear = (string)filter_input(INPUT_POST, 'year');
 
-$Qsactividad2 = (string)\filter_input(INPUT_POST, 'sactividad2');
+$Qsactividad2 = (string)filter_input(INPUT_POST, 'sactividad2');
 
+$extendida = FALSE;
 if (!empty($Qsactividad2)) {
     $extendida = TRUE;
 }

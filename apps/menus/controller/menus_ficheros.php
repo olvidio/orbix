@@ -26,10 +26,10 @@ require_once("apps/core/global_object.inc");
 $oConfigDB = new core\ConfigDB('importar'); //de la database comun 
 $config = $oConfigDB->getEsquema('public'); //de la database comun 
 
-$oConexion = new core\dbConnection($config);
+$oConexion = new core\DBConnection($config);
 $oDevelPC = $oConexion->getPDO();
 
-$Qaccion = (string)\filter_input(INPUT_POST, 'accion');
+$Qaccion = (string)filter_input(INPUT_POST, 'accion');
 
 //$dir_base = "/var/www/orbix";
 $dir_base = core\ConfigGlobal::DIR;

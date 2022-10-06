@@ -20,12 +20,12 @@ require_once("apps/core/global_object.inc");
 require_once("apps/devel/controller/func_factory.php");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$Qdb = (string)\filter_input(INPUT_POST, 'db');
-$Qtabla = (string)\filter_input(INPUT_POST, 'tabla');
-$Qclase = (string)\filter_input(INPUT_POST, 'clase');
-$Qclase_plural = (string)\filter_input(INPUT_POST, 'clase_plural');
-$Qgrupo = (string)\filter_input(INPUT_POST, 'grupo');
-$Qaplicacion = (string)\filter_input(INPUT_POST, 'aplicacion');
+$Qdb = (string)filter_input(INPUT_POST, 'db');
+$Qtabla = (string)filter_input(INPUT_POST, 'tabla');
+$Qclase = (string)filter_input(INPUT_POST, 'clase');
+$Qclase_plural = (string)filter_input(INPUT_POST, 'clase_plural');
+$Qgrupo = (string)filter_input(INPUT_POST, 'grupo');
+$Qaplicacion = (string)filter_input(INPUT_POST, 'aplicacion');
 
 if (empty($Qtabla)) {
     exit("Ha de dir quina taula");
@@ -725,7 +725,7 @@ $txt .= "\n\t" . '}';
 
 $txt .= '	
 	/**
-	 * Establece a 'empty' el valor de todos los atributos
+	 * Establece a empty el valor de todos los atributos
 	 *
 	 */
 	function setNullAllAtributes() {
@@ -941,7 +941,7 @@ $txt2 .= '
 	}
 ';
 $txt2 .= '
-	/* METODES PROTECTED --------------------------------------------------------*/
+	/* MÉTODOS PROTECTED --------------------------------------------------------*/
 
 	/* MÉTODOS GET y SET --------------------------------------------------------*/
 }

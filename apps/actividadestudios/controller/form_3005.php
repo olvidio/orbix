@@ -17,22 +17,22 @@ $obj = 'actividadestudios\\model\\entity\\ActividadAsignatura';
 
 $oPosicion->recordar();
 
-$Qpau = (string)\filter_input(INPUT_POST, 'pau');
+$Qpau = (string)filter_input(INPUT_POST, 'pau');
 
-$a_sel = (array)\filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+$a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 if (!empty($a_sel)) { //vengo de un checkbox
     $Qid_activ = (integer)strtok($a_sel[0], "#");
     $Qid_asignatura = (integer)strtok("#");
     // el scroll id es de la página anterior, hay que guardarlo allí
     $oPosicion->addParametro('id_sel', $a_sel, 1);
-    $scroll_id = (integer)\filter_input(INPUT_POST, 'scroll_id');
+    $scroll_id = (integer)filter_input(INPUT_POST, 'scroll_id');
     $oPosicion->addParametro('scroll_id', $scroll_id, 1);
 } else {
     if ($Qpau == 'a') {
-        $Qid_activ = (integer)\filter_input(INPUT_POST, 'id_pau');
+        $Qid_activ = (integer)filter_input(INPUT_POST, 'id_pau');
     }
-    $Qid_asignatura = (integer)\filter_input(INPUT_POST, 'id_asignatura');
-//	$Qid_activ = (integer) \filter_input(INPUT_POST, 'id_activ');
+    $Qid_asignatura = (integer)filter_input(INPUT_POST, 'id_asignatura');
+//	$Qid_activ = (integer) filter_input(INPUT_POST, 'id_activ');
 }
 
 $chk_avisado = '';
@@ -84,8 +84,8 @@ if (!empty($Qid_asignatura)) { //caso de modificar
         $oDesplAsignaturas->setAction("fnjs_mas_profes('asignatura')");
     } else {
         exit (_("debería haber un nombre de asignatura"));
-        $id_dossier = (integer)\filter_input(INPUT_POST, 'id_dossier');
-        $tabla_pau = (string)\filter_input(INPUT_POST, 'tabla_pau');
+        $id_dossier = (integer)filter_input(INPUT_POST, 'id_dossier');
+        $tabla_pau = (string)filter_input(INPUT_POST, 'tabla_pau');
         $go_to = urlencode(core\ConfigGlobal::getWeb() . "/apps/dossiers/controller/dossiers_ver.php?pau=a&id_pau=$Qid_activ&id_dossier=$id_dossier&tabla_pau=$tabla_pau&permiso=3");
         $oPosicion2 = new web\Posicion();
         echo $oPosicion2->ir_a($go_to);

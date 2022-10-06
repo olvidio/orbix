@@ -37,7 +37,7 @@ $miSfsv = ConfigGlobal::mi_sfsv();
 
 //Si vengo por medio de Posicion, borro la última
 if (isset($_POST['stack'])) {
-    $stack = \filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
+    $stack = filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
     if ($stack != '') {
         // No me sirve el de global_object, sino el de la session
         $oPosicion2 = new Posicion();
@@ -49,22 +49,22 @@ if (isset($_POST['stack'])) {
     }
 }
 
-$Qloc = (string)\filter_input(INPUT_POST, 'loc');
-$Qtipo = (string)\filter_input(INPUT_POST, 'tipo');
-$Qsimple = (integer)\filter_input(INPUT_POST, 'simple');
+$Qloc = (string)filter_input(INPUT_POST, 'loc');
+$Qtipo = (string)filter_input(INPUT_POST, 'tipo');
+$Qsimple = (integer)filter_input(INPUT_POST, 'simple');
 if ($Qsimple == 1) {
     $Qtipo = 'tot';
     $Qloc = 'tot';
 }
-$sWhere = (string)\filter_input(INPUT_POST, 'sWhere');
-$sOperador = (string)\filter_input(INPUT_POST, 'sOperador');
-$sGestor = (string)\filter_input(INPUT_POST, 'sGestor');
-$sWhereD = (string)\filter_input(INPUT_POST, 'sWhereD');
-$sOperadorD = (string)\filter_input(INPUT_POST, 'sOperadorD');
-$sGestorDir = (string)\filter_input(INPUT_POST, 'sGestorDir');
-$metodo = (string)\filter_input(INPUT_POST, 'metodo');
-$titulo = (string)\filter_input(INPUT_POST, 'titulo');
-$Qcmb = (string)\filter_input(INPUT_POST, 'cmb');
+$sWhere = (string)filter_input(INPUT_POST, 'sWhere');
+$sOperador = (string)filter_input(INPUT_POST, 'sOperador');
+$sGestor = (string)filter_input(INPUT_POST, 'sGestor');
+$sWhereD = (string)filter_input(INPUT_POST, 'sWhereD');
+$sOperadorD = (string)filter_input(INPUT_POST, 'sOperadorD');
+$sGestorDir = (string)filter_input(INPUT_POST, 'sGestorDir');
+$metodo = (string)filter_input(INPUT_POST, 'metodo');
+$titulo = (string)filter_input(INPUT_POST, 'titulo');
+$Qcmb = (string)filter_input(INPUT_POST, 'cmb');
 
 $tipo_ubi = $Qtipo . $Qloc;
 // si es sf, el tipi_ubi = ctrsf
@@ -81,7 +81,7 @@ if (empty($sWhere)) {
     $aOperador = array();
     $aWhereD = array();
     $aOperadorD = array();
-    $Qnombre_ubi = (string)\filter_input(INPUT_POST, 'nombre_ubi');
+    $Qnombre_ubi = (string)filter_input(INPUT_POST, 'nombre_ubi');
     if (!empty($Qnombre_ubi)) {
         $nom_ubi = str_replace("+", "\+", $Qnombre_ubi); // para los centros de la sss+
         $aWhere['nombre_ubi'] = $nom_ubi;
@@ -89,24 +89,24 @@ if (empty($sWhere)) {
         //$aWhere['_ordre'] = 'nombre_ubi';
         $aWhere['_ordre'] = 'tipo_ubi,nombre_ubi';
     }
-    $Qregion = (string)\filter_input(INPUT_POST, 'region');
+    $Qregion = (string)filter_input(INPUT_POST, 'region');
     if (!empty($Qregion)) {
         $aWhere['region'] = $Qregion;
         $aWhere['_ordre'] = 'nombre_ubi';
     }
-    $Qdl = (string)\filter_input(INPUT_POST, 'dl');
+    $Qdl = (string)filter_input(INPUT_POST, 'dl');
     if (!empty($Qdl)) {
         $aWhere['dl'] = $Qdl;
         $aOperador['dl'] = 'sin_acentos';
         $aWhere['_ordre'] = 'dl';
     }
-    $Qtipo_ctr = (string)\filter_input(INPUT_POST, 'tipo_ctr');
+    $Qtipo_ctr = (string)filter_input(INPUT_POST, 'tipo_ctr');
     if (!empty($Qtipo_ctr)) {
         $aWhere['tipo_ctr'] = $Qtipo_ctr;
         $aOperador['tipo_ctr'] = 'sin_acentos';
         $aWhere['_ordre'] = 'tipo_ctr';
     }
-    $Qtipo_casa = (string)\filter_input(INPUT_POST, 'tipo_casa');
+    $Qtipo_casa = (string)filter_input(INPUT_POST, 'tipo_casa');
     if (!empty($Qtipo_casa)) {
         $aWhere['tipo_casa'] = $Qtipo_casa;
         $aOperador['tipo_casa'] = 'sin_acentos';
@@ -114,13 +114,13 @@ if (empty($sWhere)) {
     }
 
 
-    $Qciudad = (string)\filter_input(INPUT_POST, 'ciudad');
+    $Qciudad = (string)filter_input(INPUT_POST, 'ciudad');
     if (!empty($Qciudad)) {
         $aWhereD['poblacion'] = $Qciudad;
         $aOperadorD['poblacion'] = 'sin_acentos';
         $aWhereD['_ordre'] = 'poblacion';
     }
-    $Qpais = (string)\filter_input(INPUT_POST, 'pais');
+    $Qpais = (string)filter_input(INPUT_POST, 'pais');
     if (!empty($Qpais)) {
         $aWhereD['pais'] = $Qpais;
         $aOperadorD['pais'] = 'sin_acentos';

@@ -7,11 +7,11 @@ require_once("apps/core/global_header.inc");
 require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$Qregion = (string)\filter_input(INPUT_POST, 'region');
-$Qdl = (string)\filter_input(INPUT_POST, 'dl');
-$Qcomun = (integer)\filter_input(INPUT_POST, 'comun');
-$Qsv = (integer)\filter_input(INPUT_POST, 'sv');
-$Qsf = (integer)\filter_input(INPUT_POST, 'sf');
+$Qregion = (string)filter_input(INPUT_POST, 'region');
+$Qdl = (string)filter_input(INPUT_POST, 'dl');
+$Qcomun = (integer)filter_input(INPUT_POST, 'comun');
+$Qsv = (integer)filter_input(INPUT_POST, 'sv');
+$Qsf = (integer)filter_input(INPUT_POST, 'sf');
 
 $esquema = "$Qregion-$Qdl";
 $esquemav = $esquema . 'v';
@@ -85,7 +85,7 @@ if (!empty($Qsv) && !empty($Qsf)) {
     $oDBEsquema->eliminar();
     // Eliminar usuarios
 
-    $oConexion = new core\dbConnection($config);
+    $oConexion = new core\DBConnection($config);
     $oDevelPC = $oConexion->getPDO();
 
     $oDBRol = new core\DBRol();

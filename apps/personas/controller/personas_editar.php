@@ -49,13 +49,13 @@ if (!empty($Qnuevo)) {
     $ir_a_traslado = '';
     $titulo = '';
 } else {
-    $a_sel = (array)\filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+    $a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
     if (!empty($a_sel)) { //vengo de un checkbox
         $Qid_nom = (integer)strtok($a_sel[0], "#");
         $id_tabla = (string)strtok("#");
         // el scroll id es de la página anterior, hay que guardarlo allí
         $oPosicion->addParametro('id_sel', $a_sel, 1);
-        $scroll_id = (integer)\filter_input(INPUT_POST, 'scroll_id');
+        $scroll_id = (integer)filter_input(INPUT_POST, 'scroll_id');
         $oPosicion->addParametro('scroll_id', $scroll_id, 1);
     } else {
         $Qid_nom = (integer)filter_input(INPUT_POST, 'id_nom');
@@ -63,7 +63,7 @@ if (!empty($Qnuevo)) {
     }
     // Sobre-escribe el scroll_id que se pueda tener
     if (isset($_POST['stack'])) {
-        $stack = \filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
+        $stack = filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
     } else {
         $stack = '';
     }

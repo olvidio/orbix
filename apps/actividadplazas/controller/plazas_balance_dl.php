@@ -17,9 +17,9 @@ require_once("apps/core/global_header.inc");
 require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$Qdl = (string)\filter_input(INPUT_POST, 'dl');
+$Qdl = (string)filter_input(INPUT_POST, 'dl');
 // Sólo las del tipo...
-$Qid_tipo_activ = (integer)\filter_input(INPUT_POST, 'id_tipo_activ');
+$Qid_tipo_activ = (integer)filter_input(INPUT_POST, 'id_tipo_activ');
 
 $oTipoActiv = new web\TiposActividades($Qid_tipo_activ);
 $sactividad = $oTipoActiv->getActividadText();

@@ -1,9 +1,9 @@
 <?php
 
-use actividades\model\entity as actividades;
+use actividades\model\entity\Actividad;
 use core\ConfigGlobal;
-use dossiers\model\entity as dossiers;
-use personas\model\entity as personas;
+use dossiers\model\entity\TipoDossier;
+use personas\model\entity\Persona;
 use web\Hash;
 use web\Posicion;
 
@@ -18,23 +18,23 @@ require_once("apps/core/global_header.inc");
 require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$Qrefresh = (integer)\filter_input(INPUT_POST, 'refresh');
+$Qrefresh = (integer)filter_input(INPUT_POST, 'refresh');
 $oPosicion->recordar($Qrefresh);
 
-$a_sel = (array)\filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+$a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 // Si vengo de eliminar, hay que borrar el 'sel' que ha identificado el registro,
 //  pues ya no existe
-$Qmod = (string)\filter_input(INPUT_POST, 'mod');
-if (isset($a_sel) && ($Qmod == 'eliminar' || $Qmod == 'nuevo')) {
+$Qmod = (string)filter_input(INPUT_POST, 'mod');
+if (isset($a_sel) && ($Qmod === 'eliminar' || $Qmod === 'nuevo')) {
     unset($a_sel);
 }
 
 $Qid_sel = '';
-$Qscroll_id = (integer)\filter_input(INPUT_POST, 'scroll_id');
+$Qscroll_id = (integer)filter_input(INPUT_POST, 'scroll_id');
 // Hay que usar isset y empty porque puede tener el valor =0.
 // Si vengo por medio de Posicion, borro la última
 if (isset($_POST['stack'])) {
-    $stack = \filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
+    $stack = filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
     if ($stack != '') {
         // No me sirve el de global_object, sino el de la session
         $oPosicion2 = new Posicion();
@@ -48,20 +48,20 @@ if (isset($_POST['stack'])) {
     // el scroll id es de la página anterior, hay que guardarlo allí
     $Qid_sel = $a_sel;
     $oPosicion->addParametro('id_sel', $a_sel, 1);
-    $Qscroll_id = (integer)\filter_input(INPUT_POST, 'scroll_id');
+    $Qscroll_id = (integer)filter_input(INPUT_POST, 'scroll_id');
     $oPosicion->addParametro('scroll_id', $Qscroll_id, 1);
 }
 
-$Qid_pau = (integer)\filter_input(INPUT_POST, 'id_pau');
-$pau = (string)\filter_input(INPUT_POST, 'pau');
-$Qobj_pau = (string)\filter_input(INPUT_POST, 'obj_pau');
-$Qid_dossier = (string)\filter_input(INPUT_POST, 'id_dossier');
-$Qpermiso = (string)\filter_input(INPUT_POST, 'permiso');
-$QqueSel = (string)\filter_input(INPUT_POST, 'queSel');
+$Qid_pau = (integer)filter_input(INPUT_POST, 'id_pau');
+$pau = (string)filter_input(INPUT_POST, 'pau');
+$Qobj_pau = (string)filter_input(INPUT_POST, 'obj_pau');
+$Qid_dossier = (string)filter_input(INPUT_POST, 'id_dossier');
+$Qpermiso = (string)filter_input(INPUT_POST, 'permiso');
+$QqueSel = (string)filter_input(INPUT_POST, 'queSel');
 
 // si vengo de modificar el dossier, 
 //			$clase_info = "$app\\model\\entity\\datos$id_dossier";
-$Qclase_info = (string)\filter_input(INPUT_POST, 'clase_info');
+$Qclase_info = (string)filter_input(INPUT_POST, 'clase_info');
 if (empty($Qid_dossier) && !empty($Qclase_info)) {
     // Tiene que ser en dos pasos.
     $obj = urldecode($Qclase_info);
@@ -90,10 +90,10 @@ switch ($QqueSel) {
         $Qpermiso = 3;
         break;
     case "matriculas": // actividades de un asistente
-        $Qid_activ = (integer)\filter_input(INPUT_POST, 'id_activ');
+        $Qid_activ = (integer)filter_input(INPUT_POST, 'id_activ');
         $pau = "p";
         $Qpermiso = 3;
-        if ($Qmod == "sel_es_asistente") {
+        if ($Qmod === "sel_es_asistente") {
             $id_pau = (integer)strtok($a_sel[0], "#");
         }
         break;
@@ -122,8 +122,8 @@ $godossiers = Hash::link(ConfigGlobal::getWeb() . "/apps/dossiers/controller/dos
 switch ($pau) {
     case 'p':
         //Hay que aclararse si la persona es de la dl o no
-        if (empty($Qobj_pau) || $Qobj_pau == 'Persona') {
-            $oPersona = personas\Persona::NewPersona($id_pau);
+        if (empty($Qobj_pau) || $Qobj_pau === 'Persona') {
+            $oPersona = Persona::NewPersona($id_pau);
             if (!is_object($oPersona)) {
                 $msg_err = "<br>$oPersona con id_nom: $id_pau en  " . __FILE__ . ": line " . __LINE__;
                 exit($msg_err);
@@ -149,7 +149,7 @@ switch ($pau) {
         $goHome = Hash::link(ConfigGlobal::getWeb() . "/apps/ubis/controller/home_ubis.php?$sQuery");
         break;
     case 'a':
-        $oActividad = new actividades\Actividad($id_pau);
+        $oActividad = new Actividad($id_pau);
         $nom_cabecera = $oActividad->getNom_activ();
 
         $sQuery = http_build_query(array('id_activ' => $id_pau, 'obj_pau' => $Qobj_pau));
@@ -202,11 +202,11 @@ if (empty($Qid_dossier)) { // enseña la lista de dossiers.
         $nom_bloque = 'ficha' . $id_dossier;
         $bloque = '#ficha' . $id_dossier;
         echo "<div id=\"$nom_bloque\">";
-        $oTipoDossier = new dossiers\TipoDossier($id_dossier);
+        $oTipoDossier = new TipoDossier($id_dossier);
         $app = $oTipoDossier->getApp();
 
         // Para presentaciones particulares
-        $nameFile = "../../$app/model/select" . $id_dossier . ".class.php";
+        $nameFile = "../../$app/model/Select" . $id_dossier . ".php";
         if (realpath($nameFile)) { //como file_exists
             $nameClaseSelect = "$app\\model\\Select" . $id_dossier;
             $claseSelect = new $nameClaseSelect();
@@ -229,7 +229,7 @@ if (empty($Qid_dossier)) { // enseña la lista de dossiers.
                 case 1301:
                 case 1302:
                     // propio del 1302
-                    $Qmodo_curso = (integer)\filter_input(INPUT_POST, 'modo_curso');
+                    $Qmodo_curso = (integer)filter_input(INPUT_POST, 'modo_curso');
                     $claseSelect->setModo_curso($Qmodo_curso);
                     break;
                 case 1303:
@@ -241,12 +241,12 @@ if (empty($Qid_dossier)) { // enseña la lista de dossiers.
             }
             echo $claseSelect->getHtml();
         } else {
-            // para presentacion genérica, con la info tipo info1012.class.php
+            // para presentacion genérica, con la info tipo Info1012.php
             // datos del dossier:
-            $oTipoDossier = new dossiers\TipoDossier($id_dossier);
+            $oTipoDossier = new TipoDossier($id_dossier);
             $app = $oTipoDossier->getApp();
             // No sé porque no acepa aqui el '_' en el nombre de la clase.
-            $clase_info = "$app\\model\\info$id_dossier";
+            $clase_info = "$app\\model\\Info$id_dossier";
             // Tiene que ser en dos pasos.
             $obj = $clase_info;
             $oInfoClase = new $obj();
@@ -307,8 +307,7 @@ if (empty($Qid_dossier)) { // enseña la lista de dossiers.
             // Poner o no el botón de inserta. En algunos casos ya está en la presentación particular.
             if ($Qpermiso == 3) {
                 $html .= "<br><table cellspacing=3  class=botones><tr class=botones>
-					<td class=botones><input name=\"btn_new\" type=\"button\" value=\"\"
-					";
+					<td class=botones><input name=\"btn_new\" type=\"button\" value=\"";
                 $html .= _("nuevo");
                 // caso especial para traslados:
                 if ($id_dossier == 1004) {

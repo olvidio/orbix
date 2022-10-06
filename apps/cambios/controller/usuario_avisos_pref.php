@@ -2,7 +2,7 @@
 
 use actividades\model\entity\ActividadAll;
 use actividades\model\entity\GestorTipoDeActividad;
-use cambios\model\gestorAvisoCambios;
+use cambios\model\GestorAvisoCambios;
 use cambios\model\entity\CambioUsuarioObjetoPref;
 use core\ConfigGlobal;
 use function core\is_true;
@@ -27,21 +27,21 @@ require_once("apps/core/global_object.inc");
 
 $oPosicion->recordar();
 
-$a_sel = (array)\filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+$a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 if (!empty($a_sel)) { //vengo de un checkbox
     $Qid_usuario = (integer)strtok($a_sel[0], "#");
     $Qid_item_usuario_objeto = (string)strtok("#");
     // el scroll id es de la página anterior, hay que guardarlo allí
     $oPosicion->addParametro('id_sel', $a_sel, 1);
-    $scroll_id = (integer)\filter_input(INPUT_POST, 'scroll_id');
+    $scroll_id = (integer)filter_input(INPUT_POST, 'scroll_id');
     $oPosicion->addParametro('scroll_id', $scroll_id, 1);
 } else {
-    $Qid_usuario = (integer)\filter_input(INPUT_POST, 'id_usuario');
-    $Qid_item_usuario_objeto = (integer)\filter_input(INPUT_POST, 'id_item_usuario_objeto');
+    $Qid_usuario = (integer)filter_input(INPUT_POST, 'id_usuario');
+    $Qid_item_usuario_objeto = (integer)filter_input(INPUT_POST, 'id_item_usuario_objeto');
 }
 
-$Qquien = (string)\filter_input(INPUT_POST, 'quien');
-$Qsalida = (string)\filter_input(INPUT_POST, 'salida');
+$Qquien = (string)filter_input(INPUT_POST, 'quien');
+$Qsalida = (string)filter_input(INPUT_POST, 'salida');
 
 // Si empieza por 4 es usuario, por 5 es grupo
 if (substr($Qid_usuario, 0, 1) == 4) {
@@ -64,7 +64,7 @@ $oDesplTiposAviso->setBlanco('false');
 $oDesplTiposAviso->setOpciones($aTipos_aviso);
 
 // Nombre de los possibles objetos (que manejan la tablas) susceptibles de avisar.
-$aObjetos = gestorAvisoCambios::getArrayObjetosPosibles();
+$aObjetos = GestorAvisoCambios::getArrayObjetosPosibles();
 
 $oDesplObjetos = new Desplegable();
 $oDesplObjetos->setNombre('objeto');

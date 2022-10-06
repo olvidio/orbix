@@ -7,16 +7,16 @@ require_once("apps/core/global_header.inc");
 require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$Qclase_info = (string)\filter_input(INPUT_POST, 'clase_info');
-$Qs_pkey = (string)\filter_input(INPUT_POST, 's_pkey');
-$Qid_pau = (string)\filter_input(INPUT_POST, 'id_pau');
-$Qmod = (string)\filter_input(INPUT_POST, 'mod');
-$Qobj_pau = (string)\filter_input(INPUT_POST, 'obj_pau');
-$Qgo_to = (string)\filter_input(INPUT_POST, 'go_to');
+$Qclase_info = (string)filter_input(INPUT_POST, 'clase_info');
+$Qs_pkey = (string)filter_input(INPUT_POST, 's_pkey');
+$Qid_pau = (string)filter_input(INPUT_POST, 'id_pau');
+$Qmod = (string)filter_input(INPUT_POST, 'mod');
+$Qobj_pau = (string)filter_input(INPUT_POST, 'obj_pau');
+$Qgo_to = (string)filter_input(INPUT_POST, 'go_to');
 
 // Cuando es eliminar, viene directamente de la tabla (mod_tabla_sql)
 // Como es borrar, no hace falta mantener el scroll
-$a_sel = (array)\filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+$a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 $stack = '';
 if (!empty($a_sel)) { //vengo de un checkbox
     $Qs_pkey = explode('#', $a_sel[0]);

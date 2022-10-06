@@ -12,22 +12,22 @@ require_once("apps/core/global_header.inc");
 require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$Qrefresh = (integer)\filter_input(INPUT_POST, 'refresh');
+$Qrefresh = (integer)filter_input(INPUT_POST, 'refresh');
 $oPosicion->recordar($Qrefresh);
 
-$a_sel = (array)\filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+$a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 // Si vengo de eliminar, hay que borrar el 'sel' que ha identificado el registro,
 //  pues ya no existe
-$Qmod = (string)\filter_input(INPUT_POST, 'mod');
+$Qmod = (string)filter_input(INPUT_POST, 'mod');
 if ($Qmod == 'eliminar' && isset($a_sel)) {
     unset($a_sel);
 }
 
 //Si vengo por medio de Posicion, borro la última
-$Qid_sel = (string)\filter_input(INPUT_POST, 'id_sel');
-$Qscroll_id = (integer)\filter_input(INPUT_POST, 'scroll_id');
+$Qid_sel = (string)filter_input(INPUT_POST, 'id_sel');
+$Qscroll_id = (integer)filter_input(INPUT_POST, 'scroll_id');
 if (isset($_POST['stack'])) {
-    $stack = \filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
+    $stack = filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
     if ($stack != '') {
         // No me sirve el de global_object, sino el de la session
         $oPosicion2 = new web\Posicion();
@@ -40,15 +40,15 @@ if (isset($_POST['stack'])) {
 } elseif (!empty($a_sel)) { //vengo de un checkbox
     // el scroll id es de la página anterior, hay que guardarlo allí
     $oPosicion->addParametro('id_sel', $a_sel, 1);
-    $Qscroll_id = (integer)\filter_input(INPUT_POST, 'scroll_id');
+    $Qscroll_id = (integer)filter_input(INPUT_POST, 'scroll_id');
     $oPosicion->addParametro('scroll_id', $Qscroll_id, 1);
 }
 
-$Qclase_info = (string)\filter_input(INPUT_POST, 'clase_info');
-$Qdatos_buscar = (string)\filter_input(INPUT_POST, 'datos_buscar');
-$QaSerieBuscar = (string)\filter_input(INPUT_POST, 'aSerieBuscar');
-$Qk_buscar = (string)\filter_input(INPUT_POST, 'k_buscar');
-$Qpermiso = (integer)\filter_input(INPUT_POST, 'permiso');
+$Qclase_info = (string)filter_input(INPUT_POST, 'clase_info');
+$Qdatos_buscar = (string)filter_input(INPUT_POST, 'datos_buscar');
+$QaSerieBuscar = (string)filter_input(INPUT_POST, 'aSerieBuscar');
+$Qk_buscar = (string)filter_input(INPUT_POST, 'k_buscar');
+$Qpermiso = (integer)filter_input(INPUT_POST, 'permiso');
 if (empty($Qpermiso)) $Qpermiso = 3;
 
 $Qclase_info = urldecode($Qclase_info);
@@ -61,9 +61,9 @@ $obj = $Qclase_info;
 $oInfoClase = new $obj();
 
 // si paso parametros, definir la colección
-$Qpau = (string)\filter_input(INPUT_POST, 'pau');
-$Qid_pau = (integer)\filter_input(INPUT_POST, 'id_pau');
-$Qobj_pau = (string)\filter_input(INPUT_POST, 'obj_pau');
+$Qpau = (string)filter_input(INPUT_POST, 'pau');
+$Qid_pau = (integer)filter_input(INPUT_POST, 'id_pau');
+$Qobj_pau = (string)filter_input(INPUT_POST, 'obj_pau');
 $oInfoClase->setPau($Qpau);
 $oInfoClase->setId_pau($Qid_pau);
 $oInfoClase->setObj_pau($Qobj_pau);

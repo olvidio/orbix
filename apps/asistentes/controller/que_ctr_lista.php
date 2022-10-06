@@ -24,15 +24,15 @@ require_once("apps/core/global_object.inc");
 
 $oPosicion->recordar();
 
-$tipo = (string)\filter_input(INPUT_POST, 'tipo');
-$ssfsv = (string)\filter_input(INPUT_POST, 'ssfsv');
-$Qlista = (string)\filter_input(INPUT_POST, 'lista');
-$Qsasistentes = (string)\filter_input(INPUT_POST, 'sasistentes');
-$Qsactividad = (string)\filter_input(INPUT_POST, 'sactividad');
-$Qn_agd = (string)\filter_input(INPUT_POST, 'n_agd');
-$Qid_ubi = (integer)\filter_input(INPUT_POST, 'id_ubi');
-$Qyear = (integer)\filter_input(INPUT_POST, 'year');
-$Qperiodo = (string)\filter_input(INPUT_POST, 'periodo');
+$tipo = (string)filter_input(INPUT_POST, 'tipo');
+$ssfsv = (string)filter_input(INPUT_POST, 'ssfsv');
+$Qlista = (string)filter_input(INPUT_POST, 'lista');
+$Qsasistentes = (string)filter_input(INPUT_POST, 'sasistentes');
+$Qsactividad = (string)filter_input(INPUT_POST, 'sactividad');
+$Qn_agd = (string)filter_input(INPUT_POST, 'n_agd');
+$Qid_ubi = (integer)filter_input(INPUT_POST, 'id_ubi');
+$Qyear = (integer)filter_input(INPUT_POST, 'year');
+$Qperiodo = (string)filter_input(INPUT_POST, 'periodo');
 
 switch ($Qlista) {
     case "profesion" :

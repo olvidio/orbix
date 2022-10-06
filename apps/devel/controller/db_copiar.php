@@ -7,12 +7,12 @@ require_once("apps/core/global_header.inc");
 require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$QEsquemaRef = (string)\filter_input(INPUT_POST, 'esquema');
-$Qregion = (string)\filter_input(INPUT_POST, 'region');
-$Qdl = (string)\filter_input(INPUT_POST, 'dl');
-$Qcomun = (integer)\filter_input(INPUT_POST, 'comun');
-$Qsv = (integer)\filter_input(INPUT_POST, 'sv');
-$Qsf = (integer)\filter_input(INPUT_POST, 'sf');
+$QEsquemaRef = (string)filter_input(INPUT_POST, 'esquema');
+$Qregion = (string)filter_input(INPUT_POST, 'region');
+$Qdl = (string)filter_input(INPUT_POST, 'dl');
+$Qcomun = (integer)filter_input(INPUT_POST, 'comun');
+$Qsv = (integer)filter_input(INPUT_POST, 'sv');
+$Qsf = (integer)filter_input(INPUT_POST, 'sf');
 
 $esquema = "$Qregion-$Qdl";
 $esquemav = $esquema . 'v';

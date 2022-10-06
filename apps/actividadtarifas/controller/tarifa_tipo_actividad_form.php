@@ -32,7 +32,7 @@ $oDesplPosiblesSeries->setNombre('serie');
 $oDesplPosiblesSeries->setOpciones($aTipoSerie);
 $oDesplPosiblesSeries->setOpcion_sel(1);
 
-$Qid_item = (string)\filter_input(INPUT_POST, 'id_item');
+$Qid_item = (string)filter_input(INPUT_POST, 'id_item');
 
 $miSfsv = 0;
 // -------------- MODIFICAR TARIFA --------------------
@@ -91,11 +91,11 @@ if ($Qid_item != 'nuevo') {
 
     $txt_eliminar = _("¿Está seguro que desea quitar esta tarifa?");
 
-    $Qid_tipo_activ = (integer)\filter_input(INPUT_POST, 'id_tipo_activ');
-    //$Qisfsv = (integer) \filter_input(INPUT_POST, 'isfsv');
-    $Qsasistentes = (string)\filter_input(INPUT_POST, 'sasistentes');
-    $Qsactividad = (string)\filter_input(INPUT_POST, 'sactividad');
-    $Qsnom_tipo = (string)\filter_input(INPUT_POST, 'snom_tipo');
+    $Qid_tipo_activ = (integer)filter_input(INPUT_POST, 'id_tipo_activ');
+    //$Qisfsv = (integer) filter_input(INPUT_POST, 'isfsv');
+    $Qsasistentes = (string)filter_input(INPUT_POST, 'sasistentes');
+    $Qsactividad = (string)filter_input(INPUT_POST, 'sactividad');
+    $Qsnom_tipo = (string)filter_input(INPUT_POST, 'snom_tipo');
 
     $oActividadTipo = new actividades\model\ActividadTipo();
     $oActividadTipo->setId_tipo_activ($Qid_tipo_activ);

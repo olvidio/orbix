@@ -16,8 +16,8 @@ require_once("apps/core/global_object.inc");
 
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$Qdl_propia = (string)\filter_input(INPUT_POST, 'dl_propia');
-$Qid_tipo_activ = (string)\filter_input(INPUT_POST, 'id_tipo_activ');
+$Qdl_propia = (string)filter_input(INPUT_POST, 'dl_propia');
+$Qid_tipo_activ = (string)filter_input(INPUT_POST, 'id_tipo_activ');
 
 $GesTiposActiv = new GestorTipoDeActividad();
 $aTiposDeProcesos = $GesTiposActiv->getTiposDeProcesos($Qid_tipo_activ, $Qdl_propia);

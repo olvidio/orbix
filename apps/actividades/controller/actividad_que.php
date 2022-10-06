@@ -31,7 +31,7 @@ $oPosicion->recordar();
 
 //Si vengo de vuelta y le paso la referecia del stack donde está la información.
 if (isset($_POST['stack'])) {
-    $stack = \filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
+    $stack = filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
     if ($stack != '') {
         // No me sirve el de global_object, sino el de la session
         $oPosicion2 = new web\Posicion();
@@ -43,22 +43,22 @@ if (isset($_POST['stack'])) {
     }
 }
 
-$Qmodo = (string)\filter_input(INPUT_POST, 'modo');
+$Qmodo = (string)filter_input(INPUT_POST, 'modo');
 $Qmodo = empty($Qmodo) ? 'buscar' : $Qmodo;
-$Qque = (string)\filter_input(INPUT_POST, 'que');
-$Qstatus = (integer)\filter_input(INPUT_POST, 'status');
-$Qid_tipo_activ = (integer)\filter_input(INPUT_POST, 'id_tipo_activ');
-$Qfiltro_lugar = (string)\filter_input(INPUT_POST, 'filtro_lugar');
-$Qid_ubi = (integer)\filter_input(INPUT_POST, 'id_ubi');
-$Qnom_activ = (string)\filter_input(INPUT_POST, 'nom_activ');
-$Qperiodo = (string)\filter_input(INPUT_POST, 'periodo');
-$Qyear = (string)\filter_input(INPUT_POST, 'year');
-$Qdl_org = (string)\filter_input(INPUT_POST, 'dl_org');
-$Qempiezamax = (string)\filter_input(INPUT_POST, 'empiezamax');
-$Qempiezamin = (string)\filter_input(INPUT_POST, 'empiezamin');
-$Qfases_on = (array)\filter_input(INPUT_POST, 'fases_on', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-$Qfases_off = (array)\filter_input(INPUT_POST, 'fases_off', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-$Qlistar_asistentes = (string)\filter_input(INPUT_POST, 'listar_asistentes');
+$Qque = (string)filter_input(INPUT_POST, 'que');
+$Qstatus = (integer)filter_input(INPUT_POST, 'status');
+$Qid_tipo_activ = (integer)filter_input(INPUT_POST, 'id_tipo_activ');
+$Qfiltro_lugar = (string)filter_input(INPUT_POST, 'filtro_lugar');
+$Qid_ubi = (integer)filter_input(INPUT_POST, 'id_ubi');
+$Qnom_activ = (string)filter_input(INPUT_POST, 'nom_activ');
+$Qperiodo = (string)filter_input(INPUT_POST, 'periodo');
+$Qyear = (string)filter_input(INPUT_POST, 'year');
+$Qdl_org = (string)filter_input(INPUT_POST, 'dl_org');
+$Qempiezamax = (string)filter_input(INPUT_POST, 'empiezamax');
+$Qempiezamin = (string)filter_input(INPUT_POST, 'empiezamin');
+$Qfases_on = (array)filter_input(INPUT_POST, 'fases_on', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+$Qfases_off = (array)filter_input(INPUT_POST, 'fases_off', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+$Qlistar_asistentes = (string)filter_input(INPUT_POST, 'listar_asistentes');
 
 $isfsv = core\ConfigGlobal::mi_sfsv();
 $permiso_des = FALSE;
@@ -70,12 +70,12 @@ if (($_SESSION['oPerm']->have_perm_oficina('vcsd')) || ($_SESSION['oPerm']->have
     if ($isfsv == 2) $ssfsv = 'sf';
 }
 
-$Qsasistentes = (string)\filter_input(INPUT_POST, 'sasistentes');
-$Qsactividad = (string)\filter_input(INPUT_POST, 'sactividad');
-$Qsnom_tipo = (string)\filter_input(INPUT_POST, 'snom_tipo');
-$Qextendida = (string)\filter_input(INPUT_POST, 'extendida');
+$Qsasistentes = (string)filter_input(INPUT_POST, 'sasistentes');
+$Qsactividad = (string)filter_input(INPUT_POST, 'sactividad');
+$Qsnom_tipo = (string)filter_input(INPUT_POST, 'snom_tipo');
+$Qextendida = (string)filter_input(INPUT_POST, 'extendida');
 
-$Qsactividad2 = (string)\filter_input(INPUT_POST, 'sactividad2');
+$Qsactividad2 = (string)filter_input(INPUT_POST, 'sactividad2');
 if (!empty($Qsactividad2)) {
     $Qextendida = TRUE;
 }

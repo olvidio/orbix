@@ -14,8 +14,8 @@ require_once("apps/core/global_object.inc");
 $oDB = $GLOBALS['oDBE'];
 $oDBPC = $GLOBALS['oDBPC'];
 
-$Qseguro = (integer)\filter_input(INPUT_POST, 'seguro');
-$Qtodos = (integer)\filter_input(INPUT_POST, 'todos');
+$Qseguro = (integer)filter_input(INPUT_POST, 'seguro');
+$Qtodos = (integer)filter_input(INPUT_POST, 'todos');
 
 $Qseguro = empty($Qseguro) ? 2 : $Qseguro;
 $Qtodos = empty($Qtodos) ? 2 : $Qtodos;
@@ -72,7 +72,7 @@ if ($Qseguro == 1) {
 
         }
         $config = $oConfigDB->getEsquema($esquema);
-        $oConexion = new core\dbConnection($config);
+        $oConexion = new core\DBConnection($config);
         $oDB = $oConexion->getPDO();
 
         echo "actualizando menus para $esquema<br>";

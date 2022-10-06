@@ -12,7 +12,7 @@ require_once("apps/core/global_header.inc");
 require_once("apps/core/global_object.inc");
 //
 
-$Qfiltro_ctr = (string)\filter_input(INPUT_POST, 'filtro_ctr');
+$Qfiltro_ctr = (string)filter_input(INPUT_POST, 'filtro_ctr');
 
 $oGesEncargoTipo = new GestorEncargoTipo();
 

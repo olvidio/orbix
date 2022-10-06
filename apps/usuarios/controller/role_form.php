@@ -15,19 +15,19 @@ require_once("apps/core/global_object.inc");
 
 $obj = 'usuarios\\model\\entity\\Role';
 
-$Qrefresh = (integer)\filter_input(INPUT_POST, 'refresh');
+$Qrefresh = (integer)filter_input(INPUT_POST, 'refresh');
 $oPosicion->recordar($Qrefresh);
 
-$Qid_role = (string)\filter_input(INPUT_POST, 'id_role');
-$Qnuevo = (string)\filter_input(INPUT_POST, 'nuevo');
+$Qid_role = (string)filter_input(INPUT_POST, 'id_role');
+$Qnuevo = (string)filter_input(INPUT_POST, 'nuevo');
 
 $Qid_sel = '';
-$Qscroll_id = (integer)\filter_input(INPUT_POST, 'scroll_id');
-$a_sel = (array)\filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+$Qscroll_id = (integer)filter_input(INPUT_POST, 'scroll_id');
+$a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 // Hay que usar isset y empty porque puede tener el valor =0.
 // Si vengo por medio de Posicion, borro la última
 if (isset($_POST['stack'])) {
-    $stack = \filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
+    $stack = filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
     if ($stack != '') {
         // No me sirve el de global_object, sino el de la session
         $oPosicion2 = new web\Posicion();
@@ -40,12 +40,12 @@ if (isset($_POST['stack'])) {
         }
     }
 } elseif (!empty($a_sel)) { //vengo de un checkbox
-    $Qque = (string)\filter_input(INPUT_POST, 'que');
+    $Qque = (string)filter_input(INPUT_POST, 'que');
     if ($Qque != 'del_grupmenu') { //En el caso de venir de borrar un grupmenu, no hago nada
         $Qid_role = (integer)strtok($a_sel[0], "#");
         // el scroll id es de la página anterior, hay que guardarlo allí
         $oPosicion->addParametro('id_sel', $a_sel, 1);
-        $Qscroll_id = (integer)\filter_input(INPUT_POST, 'scroll_id');
+        $Qscroll_id = (integer)filter_input(INPUT_POST, 'scroll_id');
         $oPosicion->addParametro('scroll_id', $Qscroll_id, 1);
     }
 }

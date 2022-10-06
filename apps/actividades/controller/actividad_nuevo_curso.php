@@ -28,12 +28,12 @@ require_once("apps/core/global_header.inc");
 require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$Qok = (integer)\filter_input(INPUT_POST, 'ok');
-$Qver_lista = (string)\filter_input(INPUT_POST, 'ver_lista');
+$Qok = (integer)filter_input(INPUT_POST, 'ok');
+$Qver_lista = (string)filter_input(INPUT_POST, 'ver_lista');
 
 if ($Qok == 1) {
-    $Qyear_ref = (integer)\filter_input(INPUT_POST, 'year_ref');
-    $Qyear = (integer)\filter_input(INPUT_POST, 'year');
+    $Qyear_ref = (integer)filter_input(INPUT_POST, 'year_ref');
+    $Qyear = (integer)filter_input(INPUT_POST, 'year');
     $oNuevoCurso = new ActividadNuevoCurso();
     $oNuevoCurso->setQuiet(TRUE); // para que no anote los cambios.
     if (!empty($Qver_lista)) {

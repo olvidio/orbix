@@ -18,7 +18,7 @@ $oPosicion->recordar();
 
 //Si vengo por medio de Posicion, borro la última
 if (isset($_POST['stack'])) {
-    $stack = \filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
+    $stack = filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
     if ($stack != '') {
         // No me sirve el de global_object, sino el de la session
         $oPosicion2 = new web\Posicion();
@@ -31,9 +31,9 @@ if (isset($_POST['stack'])) {
     }
 }
 
-$Qtitulo = (string)\filter_input(INPUT_POST, 'titulo');
-$Qid_tipo_enc = (integer)\filter_input(INPUT_POST, 'id_tipo_enc');
-$Qdesc_enc = (string)\filter_input(INPUT_POST, 'desc_enc');
+$Qtitulo = (string)filter_input(INPUT_POST, 'titulo');
+$Qid_tipo_enc = (integer)filter_input(INPUT_POST, 'id_tipo_enc');
+$Qdesc_enc = (string)filter_input(INPUT_POST, 'desc_enc');
 
 /*miro las condiciones. Si es la primera vez muestro las de este año */
 $aWhere = array();

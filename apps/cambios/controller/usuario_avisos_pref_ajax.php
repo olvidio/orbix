@@ -2,7 +2,7 @@
 
 use actividades\model\entity\ActividadAll;
 use actividades\model\entity\GestorTipoDeActividad;
-use cambios\model\gestorAvisoCambios;
+use cambios\model\GestorAvisoCambios;
 use cambios\model\entity\CambioUsuarioObjetoPref;
 use cambios\model\entity\CambioUsuarioPropiedadPref;
 use cambios\model\entity\GestorCambioUsuarioPropiedadPref;
@@ -28,18 +28,18 @@ require_once("apps/core/global_object.inc");
 $oMiUsuario = new Usuario(ConfigGlobal::mi_id_usuario());
 $miSfsv = ConfigGlobal::mi_sfsv();
 
-$Qsalida = (string)\filter_input(INPUT_POST, 'salida');
+$Qsalida = (string)filter_input(INPUT_POST, 'salida');
 
 // buscar las fases para estos procesos
 switch ($Qsalida) {
     case 'guardar_cond':
-        $Qobjeto = (string)\filter_input(INPUT_POST, 'objeto');
-        $Qpropiedad = (string)\filter_input(INPUT_POST, 'propiedad');
-        $Qid_item = (integer)\filter_input(INPUT_POST, 'id_item');
-        $Qoperador = (string)\filter_input(INPUT_POST, 'operador');
-        $Qvalor = (string)\filter_input(INPUT_POST, 'valor');
-        $Qvalor_old = (string)\filter_input(INPUT_POST, 'valor_old');
-        $Qvalor_new = (string)\filter_input(INPUT_POST, 'valor_new');
+        $Qobjeto = (string)filter_input(INPUT_POST, 'objeto');
+        $Qpropiedad = (string)filter_input(INPUT_POST, 'propiedad');
+        $Qid_item = (integer)filter_input(INPUT_POST, 'id_item');
+        $Qoperador = (string)filter_input(INPUT_POST, 'operador');
+        $Qvalor = (string)filter_input(INPUT_POST, 'valor');
+        $Qvalor_old = (string)filter_input(INPUT_POST, 'valor_old');
+        $Qvalor_new = (string)filter_input(INPUT_POST, 'valor_new');
 
 
         $id_cond = $Qobjeto . "_" . $Qpropiedad . "_cond";
@@ -86,9 +86,9 @@ switch ($Qsalida) {
         echo $rta;
         break;
     case 'condicion':
-        $Qobjeto = (string)\filter_input(INPUT_POST, 'objeto');
-        $Qpropiedad = (string)\filter_input(INPUT_POST, 'propiedad');
-        $Qid_item = (integer)\filter_input(INPUT_POST, 'id_item');
+        $Qobjeto = (string)filter_input(INPUT_POST, 'objeto');
+        $Qpropiedad = (string)filter_input(INPUT_POST, 'propiedad');
+        $Qid_item = (integer)filter_input(INPUT_POST, 'id_item');
 
         $a_operadores = array("=" => _("igual"),
             "<" => _("menor"),
@@ -214,8 +214,8 @@ switch ($Qsalida) {
 
         break;
     case 'propiedades':
-        $Qid_item_usuario_objeto = (string)\filter_input(INPUT_POST, 'id_item_usuario_objeto');
-        $Qobjeto = (string)\filter_input(INPUT_POST, 'objeto');
+        $Qid_item_usuario_objeto = (string)filter_input(INPUT_POST, 'id_item_usuario_objeto');
+        $Qobjeto = (string)filter_input(INPUT_POST, 'objeto');
 
         $a_item_sel = array();
         $a_propiedades_sel = array();
@@ -246,7 +246,7 @@ switch ($Qsalida) {
             }
         }
         if (!empty($Qobjeto)) {
-            $ObjetoFullPath = gestorAvisoCambios::getFullPathObj($Qobjeto);
+            $ObjetoFullPath = GestorAvisoCambios::getFullPathObj($Qobjeto);
             $oObject = new $ObjetoFullPath();
             $cDatosCampos = $oObject->getDatosCampos();
             $html = "<td><table><tr><th>";
@@ -323,12 +323,12 @@ switch ($Qsalida) {
         echo $html;
         break;
     case 'av_fases':
-        $Qobjeto = (string)\filter_input(INPUT_POST, 'objeto');
+        $Qobjeto = (string)filter_input(INPUT_POST, 'objeto');
 
         if (!empty($Qobjeto)) {
-            $Qid_tipo_activ = (string)\filter_input(INPUT_POST, 'id_tipo_activ');
-            $Qid_usuario = (string)\filter_input(INPUT_POST, 'id_usuario');
-            $Qdl_propia = (string)\filter_input(INPUT_POST, 'dl_propia');
+            $Qid_tipo_activ = (string)filter_input(INPUT_POST, 'id_tipo_activ');
+            $Qid_usuario = (string)filter_input(INPUT_POST, 'id_usuario');
+            $Qdl_propia = (string)filter_input(INPUT_POST, 'dl_propia');
             if (is_true($Qdl_propia)) {
                 $dl_propia = TRUE;
             } else {
@@ -366,17 +366,17 @@ switch ($Qsalida) {
         }
         break;
     case "eliminar":
-        $a_sel = (array)\filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+        $a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
         if (!empty($a_sel)) { //vengo de un checkbox
             $Qid_usuario = (integer)strtok($a_sel[0], "#");
             $Qid_item_usuario_objeto = (string)strtok("#");
             // el scroll id es de la página anterior, hay que guardarlo allí
             $oPosicion->addParametro('id_sel', $a_sel, 1);
-            $scroll_id = (integer)\filter_input(INPUT_POST, 'scroll_id');
+            $scroll_id = (integer)filter_input(INPUT_POST, 'scroll_id');
             $oPosicion->addParametro('scroll_id', $scroll_id, 1);
         } else {
-            $Qid_usuario = (integer)\filter_input(INPUT_POST, 'id_usuario');
-            $Qid_item_usuario_objeto = (integer)\filter_input(INPUT_POST, 'id_item_usuario_objeto');
+            $Qid_usuario = (integer)filter_input(INPUT_POST, 'id_usuario');
+            $Qid_item_usuario_objeto = (integer)filter_input(INPUT_POST, 'id_item_usuario_objeto');
         }
 
         $oCambioUsuarioObjeto = new CambioUsuarioObjetoPref(array('id_item_usuario_objeto' => $Qid_item_usuario_objeto));
@@ -386,17 +386,17 @@ switch ($Qsalida) {
         }
         break;
     case "guardar_objeto":
-        $Qid_item_usuario_objeto = (integer)\filter_input(INPUT_POST, 'id_item_usuario_objeto');
-        $Qid_usuario = (integer)\filter_input(INPUT_POST, 'id_usuario');
-        $Qid_tipo_activ = (string)\filter_input(INPUT_POST, 'id_tipo_activ');
-        $Qdl_propia = (string)\filter_input(INPUT_POST, 'dl_propia');
-        $Qobjeto = (string)\filter_input(INPUT_POST, 'objeto');
-        $Qaviso_tipo = (string)\filter_input(INPUT_POST, 'aviso_tipo');
-        $Qid_fase_ref = (integer)\filter_input(INPUT_POST, 'id_fase_ref');
-        $Qaviso_off = (string)\filter_input(INPUT_POST, 'aviso_off');
-        $Qaviso_on = (string)\filter_input(INPUT_POST, 'aviso_on');
-        $Qaviso_outdate = (string)\filter_input(INPUT_POST, 'aviso_outdate');
-        $Qa_casas = (array)\filter_input(INPUT_POST, 'casas', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+        $Qid_item_usuario_objeto = (integer)filter_input(INPUT_POST, 'id_item_usuario_objeto');
+        $Qid_usuario = (integer)filter_input(INPUT_POST, 'id_usuario');
+        $Qid_tipo_activ = (string)filter_input(INPUT_POST, 'id_tipo_activ');
+        $Qdl_propia = (string)filter_input(INPUT_POST, 'dl_propia');
+        $Qobjeto = (string)filter_input(INPUT_POST, 'objeto');
+        $Qaviso_tipo = (string)filter_input(INPUT_POST, 'aviso_tipo');
+        $Qid_fase_ref = (integer)filter_input(INPUT_POST, 'id_fase_ref');
+        $Qaviso_off = (string)filter_input(INPUT_POST, 'aviso_off');
+        $Qaviso_on = (string)filter_input(INPUT_POST, 'aviso_on');
+        $Qaviso_outdate = (string)filter_input(INPUT_POST, 'aviso_outdate');
+        $Qa_casas = (array)filter_input(INPUT_POST, 'casas', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 
         $a_relleno = array(1 => '.', 2 => '..', 3 => '...', 4 => '....', 5 => '.....');
         if (!empty($Qid_item_usuario_objeto)) {
@@ -447,8 +447,8 @@ switch ($Qsalida) {
         echo $id_item_usuario_objeto;
         break;
     case "guardar_propiedades":
-        $Qid_item_usuario_objeto = (integer)\filter_input(INPUT_POST, 'id_item_usuario_objeto_prop');
-        $Qobjeto = (string)\filter_input(INPUT_POST, 'objeto_prop');
+        $Qid_item_usuario_objeto = (integer)filter_input(INPUT_POST, 'id_item_usuario_objeto_prop');
+        $Qobjeto = (string)filter_input(INPUT_POST, 'objeto_prop');
 
         $a_propiedades_sel = array();
         // Si es empty, no hay ninguna propiedad seleccionada, hay que borrar todas.

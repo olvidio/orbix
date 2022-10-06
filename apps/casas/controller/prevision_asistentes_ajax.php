@@ -11,7 +11,7 @@ require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ****
 
 
-$Qque = (string)\filter_input(INPUT_POST, 'que');
+$Qque = (string)filter_input(INPUT_POST, 'que');
 
 switch ($Qque) {
     case "update":

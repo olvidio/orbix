@@ -18,18 +18,18 @@ require_once("apps/core/global_object.inc");
 
 //En el caso de modificar cartas de presentación, quiero que quede dentro del bloque.
 $oPosicion->recordar();
-$bloque = (string)\filter_input(INPUT_POST, 'bloque');
+$bloque = (string)filter_input(INPUT_POST, 'bloque');
 if (!empty($bloque)) {
     $oPosicion->setBloque("#$bloque");
     $oPosicion->addParametro('bloque', $bloque);
 }
 $bloque = 'ficha';
 
-$a_sel = (array)\filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+$a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 
 //Si vengo por medio de Posicion, borro la última
 if (isset($_POST['stack'])) {
-    $stack = \filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
+    $stack = filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
     if ($stack != '') {
         // No me sirve el de global_object, sino el de la session
         $oPosicion2 = new Posicion();
@@ -47,10 +47,10 @@ if (isset($_POST['stack'])) {
 if (!empty($a_sel)) { //vengo de un checkbox
     $id_ubi = (integer)strtok($a_sel[0], "#");
     $oPosicion->addParametro('id_sel', $a_sel, 1);
-    $scroll_id = (integer)\filter_input(INPUT_POST, 'scroll_id');
+    $scroll_id = (integer)filter_input(INPUT_POST, 'scroll_id');
     $oPosicion->addParametro('scroll_id', $scroll_id, 1);
 } else {
-    $id_ubi = (integer)\filter_input(INPUT_POST, 'id_ubi');
+    $id_ubi = (integer)filter_input(INPUT_POST, 'id_ubi');
 }
 
 $oUbi = ubis\Ubi::NewUbi($id_ubi);

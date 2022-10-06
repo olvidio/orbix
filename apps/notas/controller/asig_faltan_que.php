@@ -20,7 +20,7 @@ require_once("apps/core/global_object.inc");
 $oPosicion->recordar();
 //Si vengo de vuelta y le paso la referecia del stack donde está la información.
 if (isset($_POST['stack'])) {
-    $stack = \filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
+    $stack = filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
     if ($stack != '') {
         // No me sirve el de global_object, sino el de la session
         $oPosicion2 = new web\Posicion();
@@ -32,8 +32,8 @@ if (isset($_POST['stack'])) {
     }
 }
 
-$Qnumero = (string)\filter_input(INPUT_POST, 'numero');
-$Qb_c = (string)\filter_input(INPUT_POST, 'b_c');
+$Qnumero = (string)filter_input(INPUT_POST, 'numero');
+$Qb_c = (string)filter_input(INPUT_POST, 'b_c');
 if ($Qb_c == 'b') {
     $chk_b = 'checked';
     $chk_c = '';
@@ -41,19 +41,19 @@ if ($Qb_c == 'b') {
     $chk_b = '';
     $chk_c = 'checked';
 }
-$Qc1 = (string)\filter_input(INPUT_POST, 'c1');
+$Qc1 = (string)filter_input(INPUT_POST, 'c1');
 $chk_c1 = empty($Qc1) ? '' : 'checked';
-$Qc2 = (string)\filter_input(INPUT_POST, 'c2');
+$Qc2 = (string)filter_input(INPUT_POST, 'c2');
 $chk_c2 = empty($Qc2) ? '' : 'checked';
-$Qpersonas_n = (string)\filter_input(INPUT_POST, 'personas_n');
+$Qpersonas_n = (string)filter_input(INPUT_POST, 'personas_n');
 $chk_n = empty($Qpersonas_n) ? '' : 'checked';
-$Qpersonas_agd = (string)\filter_input(INPUT_POST, 'personas_agd');
+$Qpersonas_agd = (string)filter_input(INPUT_POST, 'personas_agd');
 $chk_agd = empty($Qpersonas_agd) ? '' : 'checked';
 
-$Qtitulo = (string)\filter_input(INPUT_POST, 'titulo');
-$Qid_asignatura = (string)\filter_input(INPUT_POST, 'id_asignatura');
+$Qtitulo = (string)filter_input(INPUT_POST, 'titulo');
+$Qid_asignatura = (string)filter_input(INPUT_POST, 'id_asignatura');
 
-$Qlista = (string)\filter_input(INPUT_POST, 'lista');
+$Qlista = (string)filter_input(INPUT_POST, 'lista');
 $chk_lista = empty($Qlista) ? '' : 'checked';
 
 

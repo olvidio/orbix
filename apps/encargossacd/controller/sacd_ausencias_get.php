@@ -25,9 +25,9 @@ require_once("apps/core/global_object.inc");
 //
 $oPosicion->recordar();
 
-$Qhistorial = (integer)\filter_input(INPUT_POST, 'historial');
-$Qid_nom = (integer)\filter_input(INPUT_POST, 'id_nom');
-$Qfiltro_sacd = (integer)\filter_input(INPUT_POST, 'filtro_sacd');
+$Qhistorial = (integer)filter_input(INPUT_POST, 'historial');
+$Qid_nom = (integer)filter_input(INPUT_POST, 'id_nom');
+$Qfiltro_sacd = (integer)filter_input(INPUT_POST, 'filtro_sacd');
 
 $hoy = date('Y-m-d');
 // tipos de actividades personales y stgr:

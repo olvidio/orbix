@@ -17,7 +17,7 @@ require_once("apps/core/global_object.inc");
 
 $oPosicion->recordar();
 
-$Qid_item = (integer)\filter_input(INPUT_POST, 'id_item');
+$Qid_item = (integer)filter_input(INPUT_POST, 'id_item');
 
 if (!empty($Qid_item)) {
     $oGrupoCasa = new GrupoCasa($Qid_item);

@@ -23,9 +23,9 @@ require_once("apps/core/global_header.inc");
 require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$Qque = (string)\filter_input(INPUT_POST, 'que');
-$Qid_asignatura = (integer)\filter_input(INPUT_POST, 'id_asignatura');
-$Qid_activ = (integer)\filter_input(INPUT_POST, 'id_activ');
+$Qque = (string)filter_input(INPUT_POST, 'que');
+$Qid_asignatura = (integer)filter_input(INPUT_POST, 'id_asignatura');
+$Qid_activ = (integer)filter_input(INPUT_POST, 'id_activ');
 
 $nota_corte = $_SESSION['oConfig']->getNota_corte();
 $nota_max_default = $_SESSION['oConfig']->getNota_max();
@@ -253,11 +253,11 @@ if ($Qque == 3) { //paso las matrículas a notas definitivas (Grabar e imprimir)
 }
 
 if ($Qque == 1) { // Grabar las notas en la matricula
-    $Qform_preceptor = (array)\filter_input(INPUT_POST, 'form_preceptor', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-    $Qid_nom = (array)\filter_input(INPUT_POST, 'id_nom', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-    $Qnota_num = (array)\filter_input(INPUT_POST, 'nota_num', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-    $Qnota_max = (array)\filter_input(INPUT_POST, 'nota_max', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-    $Qacta = (array)\filter_input(INPUT_POST, 'acta_nota', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+    $Qform_preceptor = (array)filter_input(INPUT_POST, 'form_preceptor', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+    $Qid_nom = (array)filter_input(INPUT_POST, 'id_nom', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+    $Qnota_num = (array)filter_input(INPUT_POST, 'nota_num', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+    $Qnota_max = (array)filter_input(INPUT_POST, 'nota_max', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+    $Qacta = (array)filter_input(INPUT_POST, 'acta_nota', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 
     $num_alumnos = count($Qid_nom);
     $num_alumnos = empty($num_alumnos) ? 0 : $num_alumnos;

@@ -14,10 +14,10 @@ require_once("apps/core/global_header.inc");
 require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$Qid_nom = (integer)\filter_input(INPUT_POST, 'id_nom');
-$Qobj_pau = (string)\filter_input(INPUT_POST, 'obj_pau');
-$Qque = (string)\filter_input(INPUT_POST, 'que');
-$Qcampos_chk = (string)\filter_input(INPUT_POST, 'campos_chk');
+$Qid_nom = (integer)filter_input(INPUT_POST, 'id_nom');
+$Qobj_pau = (string)filter_input(INPUT_POST, 'obj_pau');
+$Qque = (string)filter_input(INPUT_POST, 'que');
+$Qcampos_chk = (string)filter_input(INPUT_POST, 'campos_chk');
 
 $oMiUsuario = new usuarios\Usuario(core\ConfigGlobal::mi_id_usuario());
 $miSfsv = core\ConfigGlobal::mi_sfsv();

@@ -36,7 +36,7 @@ $oPosicion->recordar();
 
 //Si vengo por medio de Posicion, borro la última
 if (isset($_POST['stack'])) {
-    $stack = \filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
+    $stack = filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
     if ($stack != '') {
         $oPosicion->goStack($stack);
         $Qtipo = $oPosicion->getParametro('tipo');
@@ -60,20 +60,20 @@ if (isset($_POST['stack'])) {
         $aOperadorCtr = unserialize(base64_decode($QsaOperadorCtr));
     }
 } else { //si no vengo por goto.
-    $Qtipo = (string)\filter_input(INPUT_POST, 'tipo');
-    $Qobj_pau = (string)\filter_input(INPUT_POST, 'obj_pau');
-    $Qna = (string)\filter_input(INPUT_POST, 'na');
-    $Qyear = (string)\filter_input(INPUT_POST, 'year');
-    $Qperiodo = (string)\filter_input(INPUT_POST, 'periodo');
-    $Qempiezamin = (string)\filter_input(INPUT_POST, 'empiezamin');
-    $Qempiezamax = (string)\filter_input(INPUT_POST, 'empiezamax');
+    $Qtipo = (string)filter_input(INPUT_POST, 'tipo');
+    $Qobj_pau = (string)filter_input(INPUT_POST, 'obj_pau');
+    $Qna = (string)filter_input(INPUT_POST, 'na');
+    $Qyear = (string)filter_input(INPUT_POST, 'year');
+    $Qperiodo = (string)filter_input(INPUT_POST, 'periodo');
+    $Qempiezamin = (string)filter_input(INPUT_POST, 'empiezamin');
+    $Qempiezamax = (string)filter_input(INPUT_POST, 'empiezamax');
 
     /*miro las condiciones. las variables son: num, agd, sup, nombre, apellido1, apellido2 */
-    $Qapellido1 = (string)\filter_input(INPUT_POST, 'apellido1');
-    $Qapellido2 = (string)\filter_input(INPUT_POST, 'apellido2');
-    $Qnombre = (string)\filter_input(INPUT_POST, 'nombre');
-    $Qcentro = (string)\filter_input(INPUT_POST, 'centro');
-    $Qna = (string)\filter_input(INPUT_POST, 'na');
+    $Qapellido1 = (string)filter_input(INPUT_POST, 'apellido1');
+    $Qapellido2 = (string)filter_input(INPUT_POST, 'apellido2');
+    $Qnombre = (string)filter_input(INPUT_POST, 'nombre');
+    $Qcentro = (string)filter_input(INPUT_POST, 'centro');
+    $Qna = (string)filter_input(INPUT_POST, 'na');
 
     $aWhere = array();
     $aOperador = array();

@@ -29,7 +29,7 @@ require_once("apps/core/global_object.inc");
 
 $oPosicion->recordar();
 
-$Qssfsv = (string)\filter_input(INPUT_POST, 'ssfsv');
+$Qssfsv = (string)filter_input(INPUT_POST, 'ssfsv');
 
 if (core\ConfigGlobal::mi_sfsv() == 1) {
     if ($Qssfsv == 'sf' && (($_SESSION['oPerm']->have_perm_oficina('vcsd')) || ($_SESSION['oPerm']->have_perm_oficina('des')))) {
@@ -42,13 +42,13 @@ if (core\ConfigGlobal::mi_sfsv() == 2) {
     $ssfsv = 'sf';
 }
 
-$Qsasistentes = (string)\filter_input(INPUT_POST, 'sasistentes');
-$Qsactividad = (string)\filter_input(INPUT_POST, 'sactividad');
-$Qn_agd = (string)\filter_input(INPUT_POST, 'n_agd');
-$Qyear = (integer)\filter_input(INPUT_POST, 'year');
-$Qperiodo = (string)\filter_input(INPUT_POST, 'periodo');
-$Qempiezamin = (string)\filter_input(INPUT_POST, 'empiezamin');
-$Qempiezamax = (string)\filter_input(INPUT_POST, 'empiezamax');
+$Qsasistentes = (string)filter_input(INPUT_POST, 'sasistentes');
+$Qsactividad = (string)filter_input(INPUT_POST, 'sactividad');
+$Qn_agd = (string)filter_input(INPUT_POST, 'n_agd');
+$Qyear = (integer)filter_input(INPUT_POST, 'year');
+$Qperiodo = (string)filter_input(INPUT_POST, 'periodo');
+$Qempiezamin = (string)filter_input(INPUT_POST, 'empiezamin');
+$Qempiezamax = (string)filter_input(INPUT_POST, 'empiezamax');
 
 //no me cabe el valor en el menú en sss+ (pasa de 100 caracteres), por tanto se lo damos por programa
 if ($Qn_agd == "sss") {

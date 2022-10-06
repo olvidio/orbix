@@ -12,14 +12,14 @@ require_once("apps/core/global_object.inc");
 
 $sfsv = core\ConfigGlobal::mi_sfsv();
 
-$Qque = (string)\filter_input(INPUT_POST, 'que');
+$Qque = (string)filter_input(INPUT_POST, 'que');
 
 switch ($Qque) {
     case "orden":
-        $Qnum_orden = (string)\filter_input(INPUT_POST, 'num_orden');
+        $Qnum_orden = (string)filter_input(INPUT_POST, 'num_orden');
         if ($Qnum_orden == "b") { //entonces es borrar:
-            $Qid_activ = (integer)\filter_input(INPUT_POST, 'id_activ');
-            $Qid_nom = (integer)\filter_input(INPUT_POST, 'id_nom');
+            $Qid_activ = (integer)filter_input(INPUT_POST, 'id_activ');
+            $Qid_nom = (integer)filter_input(INPUT_POST, 'id_nom');
             if (!empty($Qid_activ) && !empty($Qid_nom)) {
                 // también la asistencia
                 //echo "sql: $sql<br>";
@@ -33,7 +33,7 @@ switch ($Qque) {
         echo "{ que: '" . $Qque . "', txt: '$txt', error: '$error_txt' }";
         break;
     case "grupo_lst":
-        $Qid_usuario = (integer)\filter_input(INPUT_POST, 'id_usuario');
+        $Qid_usuario = (integer)filter_input(INPUT_POST, 'id_usuario');
         $oUsuario = new usuarios\Usuario(array('id_usuario' => $Qid_usuario));
         $id_role = $oUsuario->getId_role();
         $aWhere = array();
@@ -81,7 +81,7 @@ switch ($Qque) {
         echo $oTabla->mostrar_tabla();
         break;
     case "grupo_del_lst":
-        $Qid_usuario = (integer)\filter_input(INPUT_POST, 'id_usuario');
+        $Qid_usuario = (integer)filter_input(INPUT_POST, 'id_usuario');
         // listado de grupos posibles
         $oGesGrupos = new usuarios\GestorGrupo();
         $oGrupoColeccion = $oGesGrupos->getGrupos();
@@ -119,8 +119,8 @@ switch ($Qque) {
         echo $oTabla->mostrar_tabla();
         break;
     case "grupo_add":
-        $Qid_usuario = (integer)\filter_input(INPUT_POST, 'id_usuario');
-        $Qid_grupo = (integer)\filter_input(INPUT_POST, 'id_grupo');
+        $Qid_usuario = (integer)filter_input(INPUT_POST, 'id_usuario');
+        $Qid_grupo = (integer)filter_input(INPUT_POST, 'id_grupo');
         // añado el grupo de permisos al usuario.
         $oUsuarioGrupo = new usuarios\UsuarioGrupo(array('id_usuario' => $Qid_usuario, 'id_grupo' => $Qid_grupo));
         if ($oUsuarioGrupo->DBGuardar() === false) {
@@ -133,8 +133,8 @@ switch ($Qque) {
         echo $oPosicion->ir_a($pagina);
         break;
     case "grupo_del":
-        $Qid_usuario = (integer)\filter_input(INPUT_POST, 'id_usuario');
-        $Qid_grupo = (integer)\filter_input(INPUT_POST, 'id_grupo');
+        $Qid_usuario = (integer)filter_input(INPUT_POST, 'id_usuario');
+        $Qid_grupo = (integer)filter_input(INPUT_POST, 'id_grupo');
         // elimino el grupo de permisos al usuario.
         $oUsuarioGrupo = new usuarios\UsuarioGrupo(array('id_usuario' => $Qid_usuario, 'id_grupo' => $Qid_grupo));
         if ($oUsuarioGrupo->DBEliminar() === false) {
@@ -148,7 +148,7 @@ switch ($Qque) {
         break;
     case "eliminar":
         // elimna al usuario.
-        $a_sel = (array)\filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+        $a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
         if (!empty($a_sel)) { //vengo de un checkbox
             $id_usuario = (integer)strtok($a_sel[0], "#");
         }
@@ -159,7 +159,7 @@ switch ($Qque) {
         }
     case "eliminar_grupo":
         // elimna el grupo.
-        $a_sel = (array)\filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+        $a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
         if (!empty($a_sel)) { //vengo de un checkbox
             $id_usuario = (integer)strtok($a_sel[0], "#");
         }
@@ -171,7 +171,7 @@ switch ($Qque) {
         break;
     case "eliminar_role":
         // elimna el role.
-        $a_sel = (array)\filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+        $a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
         if (!empty($a_sel)) { //vengo de un checkbox
             $id_role = (integer)strtok($a_sel[0], "#");
         }

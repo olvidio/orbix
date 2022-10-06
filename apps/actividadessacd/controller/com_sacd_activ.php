@@ -45,14 +45,14 @@ require_once("apps/core/global_object.inc");
  *
  */
 
-$Qque = (string)\filter_input(INPUT_POST, 'que');
-$Qid_nom = (integer)\filter_input(INPUT_POST, 'id_nom');
-$Qpropuesta = (string)\filter_input(INPUT_POST, 'propuesta');
+$Qque = (string)filter_input(INPUT_POST, 'que');
+$Qid_nom = (integer)filter_input(INPUT_POST, 'id_nom');
+$Qpropuesta = (string)filter_input(INPUT_POST, 'propuesta');
 
-$Qperiodo = (string)\filter_input(INPUT_POST, 'periodo');
-$Qyear = (string)\filter_input(INPUT_POST, 'year');
-$Qempiezamin = (string)\filter_input(INPUT_POST, 'empiezamin');
-$Qempiezamax = (string)\filter_input(INPUT_POST, 'empiezamax');
+$Qperiodo = (string)filter_input(INPUT_POST, 'periodo');
+$Qyear = (string)filter_input(INPUT_POST, 'year');
+$Qempiezamin = (string)filter_input(INPUT_POST, 'empiezamin');
+$Qempiezamax = (string)filter_input(INPUT_POST, 'empiezamax');
 
 $oPosicion->recordar();
 
@@ -71,19 +71,19 @@ if ($oMiUsuario->isRole('p-sacd')) {
 
 // Si vengo de la página personas_select.php, sólo quiero ver la lista de un sacd.
 if ($Qque == "un_sacd") {
-    $a_sel = (array)\filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+    $a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
     if (!empty($a_sel)) { //vengo de un checkbox
         $Qid_nom = (integer)strtok($a_sel[0], "#");
         $Qid_tabla = strtok("#");
         // el scroll id es de la página anterior, hay que guardarlo allí
         $oPosicion->addParametro('id_sel', $a_sel, 1);
-        $scroll_id = (integer)\filter_input(INPUT_POST, 'scroll_id');
+        $scroll_id = (integer)filter_input(INPUT_POST, 'scroll_id');
         $oPosicion->addParametro('scroll_id', $scroll_id, 1);
     } else {
         if (empty($Qid_nom)) {
-            $Qid_nom = (integer)\filter_input(INPUT_POST, 'id_nom');
+            $Qid_nom = (integer)filter_input(INPUT_POST, 'id_nom');
         }
-        $Qid_tabla = (integer)\filter_input(INPUT_POST, 'id_tabla');
+        $Qid_tabla = (integer)filter_input(INPUT_POST, 'id_tabla');
     }
     // periodo por defecto:
     if (empty($Qperiodo)) {

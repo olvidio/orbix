@@ -10,8 +10,8 @@ require_once("apps/core/global_header.inc");
 require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$Qid_ubi = (integer)\filter_input(INPUT_POST, 'id_ubi');
-$Qobj_dir = (string)\filter_input(INPUT_POST, 'obj_dir');
+$Qid_ubi = (integer)filter_input(INPUT_POST, 'id_ubi');
+$Qobj_dir = (string)filter_input(INPUT_POST, 'obj_dir');
 
 $oUbi = ubis\Ubi::newUbi($Qid_ubi);
 $nombre_ubi = $oUbi->getNombre_ubi();

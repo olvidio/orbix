@@ -20,14 +20,14 @@ require_once("apps/core/global_header.inc");
 require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$Qrefresh = (integer)\filter_input(INPUT_POST, 'refresh');
+$Qrefresh = (integer)filter_input(INPUT_POST, 'refresh');
 $oPosicion->recordar($Qrefresh);
 
 $Qid_tipo_activ = (string)filter_input(INPUT_POST, 'id_tipo_activ');
-$Qyear = (string)\filter_input(INPUT_POST, 'year');
-$Qperiodo = (string)\filter_input(INPUT_POST, 'periodo');
-$Qempiezamin = (string)\filter_input(INPUT_POST, 'empiezamin');
-$Qempiezamax = (string)\filter_input(INPUT_POST, 'empiezamax');
+$Qyear = (string)filter_input(INPUT_POST, 'year');
+$Qperiodo = (string)filter_input(INPUT_POST, 'periodo');
+$Qempiezamin = (string)filter_input(INPUT_POST, 'empiezamin');
+$Qempiezamax = (string)filter_input(INPUT_POST, 'empiezamax');
 
 // Id tipo actividad
 $extendida = FALSE;
@@ -40,9 +40,9 @@ if (empty($Qid_tipo_activ)) {
         if ($mi_sfsv == 1) $Qssfsv = 'sv';
         if ($mi_sfsv == 2) $Qssfsv = 'sf';
     }
-    $Qsasistentes = (string)\filter_input(INPUT_POST, 'sasistentes');
-    $Qsactividad = (string)\filter_input(INPUT_POST, 'sactividad');
-    $Qsactividad2 = (string)\filter_input(INPUT_POST, 'sactividad2');
+    $Qsasistentes = (string)filter_input(INPUT_POST, 'sasistentes');
+    $Qsactividad = (string)filter_input(INPUT_POST, 'sactividad');
+    $Qsactividad2 = (string)filter_input(INPUT_POST, 'sactividad2');
 
     if (!empty($Qsactividad2)) {
         $extendida = TRUE;

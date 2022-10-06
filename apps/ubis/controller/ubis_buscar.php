@@ -46,9 +46,9 @@ $GesPais = new ubis\GestorDireccionCtr();
 $oDesplPais = $GesPais->getListaPaises();
 $oDesplPais->setNombre('pais');
 
-$Qsimple = (integer)\filter_input(INPUT_POST, 'simple');
-$Qtipo = (string)\filter_input(INPUT_POST, 'tipo');
-$Qloc = (string)\filter_input(INPUT_POST, 'loc');
+$Qsimple = (integer)filter_input(INPUT_POST, 'simple');
+$Qtipo = (string)filter_input(INPUT_POST, 'tipo');
+$Qloc = (string)filter_input(INPUT_POST, 'loc');
 
 $simple = empty($Qsimple) ? 1 : $Qsimple;
 $tipo = empty($Qtipo) ? "tot" : $Qtipo;

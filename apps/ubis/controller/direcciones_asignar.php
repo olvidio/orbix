@@ -20,9 +20,9 @@ require_once("apps/core/global_header.inc");
 require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$Qid_ubi = (integer)\filter_input(INPUT_POST, 'id_ubi');
-$Qobj_dir = (string)\filter_input(INPUT_POST, 'obj_dir');
-$Qid_direccion = (integer)\filter_input(INPUT_POST, 'id_direccion');
+$Qid_ubi = (integer)filter_input(INPUT_POST, 'id_ubi');
+$Qobj_dir = (string)filter_input(INPUT_POST, 'obj_dir');
+$Qid_direccion = (integer)filter_input(INPUT_POST, 'id_direccion');
 
 $a_pkey = array('id_ubi' => $Qid_ubi, 'id_direccion' => $Qid_direccion);
 switch ($Qobj_dir) {

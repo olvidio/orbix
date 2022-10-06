@@ -35,11 +35,11 @@ require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
 
-$Qque = (string)\filter_input(INPUT_POST, 'que');
+$Qque = (string)filter_input(INPUT_POST, 'que');
 //id_zona es string, porque admite los valores "no" y "no_sf"
-$Qid_zona = (string)\filter_input(INPUT_POST, 'id_zona');
+$Qid_zona = (string)filter_input(INPUT_POST, 'id_zona');
 //id_zona_new es string, porque admite los valores "no"
-$Qid_zona_new = (string)\filter_input(INPUT_POST, 'id_zona_new');
+$Qid_zona_new = (string)filter_input(INPUT_POST, 'id_zona_new');
 
 $QAsel = filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 $QAsel = empty($QAsel) ? [] : $QAsel;

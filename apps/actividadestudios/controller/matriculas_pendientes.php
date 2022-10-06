@@ -21,7 +21,7 @@ require_once("apps/core/global_object.inc");
 
 //Si vengo por medio de Posicion, borro la última
 if (isset($_POST['stack'])) {
-    $stack = \filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
+    $stack = filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
     if ($stack != '') {
         // No me sirve el de global_object, sino el de la session
         $oPosicion2 = new Posicion();
@@ -42,7 +42,7 @@ if (!empty($traslados)) {
     // Periodo??
 
 } else {
-    $gesMatriculasDl = new actividadestudios\gestorMatriculaDl();
+    $gesMatriculasDl = new actividadestudios\GestorMatriculaDl();
     $cMatriculasPendientes = $gesMatriculasDl->getMatriculasPendientes();
 }
 

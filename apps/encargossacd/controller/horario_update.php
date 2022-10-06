@@ -27,20 +27,20 @@ require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
 
-$Qmod = (string)\filter_input(INPUT_POST, 'mod');
-$Qdia = (string)\filter_input(INPUT_POST, 'dia');
-$Qid_item_h = (integer)\filter_input(INPUT_POST, 'id_item_h');
-$Qid_enc = (integer)\filter_input(INPUT_POST, 'id_enc');
-$Qf_ini = (string)\filter_input(INPUT_POST, 'f_ini');
-$Qf_fin = (string)\filter_input(INPUT_POST, 'f_fin');
-$Qdia_ref = (integer)\filter_input(INPUT_POST, 'dia_ref');
-$Qdia_num = (integer)\filter_input(INPUT_POST, 'dia_num');
-$Qmas_menos = (string)\filter_input(INPUT_POST, 'mas_menos');
-$Qdia_inc = (integer)\filter_input(INPUT_POST, 'dia_inc');
-$Qh_ini = (string)\filter_input(INPUT_POST, 'h_ini');
-$Qh_fin = (string)\filter_input(INPUT_POST, 'h_fin');
-$Qn_sacd = (integer)\filter_input(INPUT_POST, 'n_sacd');
-$Qmes = (string)\filter_input(INPUT_POST, 'mes');
+$Qmod = (string)filter_input(INPUT_POST, 'mod');
+$Qdia = (string)filter_input(INPUT_POST, 'dia');
+$Qid_item_h = (integer)filter_input(INPUT_POST, 'id_item_h');
+$Qid_enc = (integer)filter_input(INPUT_POST, 'id_enc');
+$Qf_ini = (string)filter_input(INPUT_POST, 'f_ini');
+$Qf_fin = (string)filter_input(INPUT_POST, 'f_fin');
+$Qdia_ref = (integer)filter_input(INPUT_POST, 'dia_ref');
+$Qdia_num = (integer)filter_input(INPUT_POST, 'dia_num');
+$Qmas_menos = (string)filter_input(INPUT_POST, 'mas_menos');
+$Qdia_inc = (integer)filter_input(INPUT_POST, 'dia_inc');
+$Qh_ini = (string)filter_input(INPUT_POST, 'h_ini');
+$Qh_fin = (string)filter_input(INPUT_POST, 'h_fin');
+$Qn_sacd = (integer)filter_input(INPUT_POST, 'n_sacd');
+$Qmes = (string)filter_input(INPUT_POST, 'mes');
 
 if (empty($Qmas_menos)) $Qdia_ref = $Qdia;
 

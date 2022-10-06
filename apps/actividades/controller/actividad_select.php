@@ -59,7 +59,7 @@ $Qcontinuar = (string)filter_input(INPUT_POST, 'continuar');
 // Sólo sirve para esta pagina: importar, publicar, duplicar
 $QGstack = (integer)filter_input(INPUT_POST, 'Gstack');
 if (isset($_POST['stack'])) {
-    $stack = \filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
+    $stack = filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
 } else {
     $stack = '';
 }
@@ -92,8 +92,8 @@ if (!empty($Qcontinuar) && $Qcontinuar == 'si' && ($QGstack != '')) {
     }
 
 } else { //si vengo de vuelta y tengo los parametros en el $_POST
-    $Qid_sel = (array)\filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-    $Qscroll_id = (string)\filter_input(INPUT_POST, 'scroll_id');
+    $Qid_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+    $Qscroll_id = (string)filter_input(INPUT_POST, 'scroll_id');
     //Si vengo por medio de Posicion, borro la última
     if ($stack != '') {
         // No me sirve el de global_object, sino el de la session
@@ -104,19 +104,19 @@ if (!empty($Qcontinuar) && $Qcontinuar == 'si' && ($QGstack != '')) {
             $oPosicion2->olvidar($stack);
         }
     }
-    $Qmodo = (string)\filter_input(INPUT_POST, 'modo');
-    $Qstatus = (integer)\filter_input(INPUT_POST, 'status');
-    $Qid_tipo_activ = (string)\filter_input(INPUT_POST, 'id_tipo_activ');
-    $Qfiltro_lugar = (string)\filter_input(INPUT_POST, 'filtro_lugar');
-    $Qid_ubi = (integer)\filter_input(INPUT_POST, 'id_ubi');
-    $Qnom_activ = (string)\filter_input(INPUT_POST, 'nom_activ');
-    $Qperiodo = (string)\filter_input(INPUT_POST, 'periodo');
-    $Qyear = (string)\filter_input(INPUT_POST, 'year');
-    $Qdl_org = (string)\filter_input(INPUT_POST, 'dl_org');
-    $Qempiezamin = (string)\filter_input(INPUT_POST, 'empiezamin');
-    $Qempiezamax = (string)\filter_input(INPUT_POST, 'empiezamax');
-    $Qfases_on = (array)\filter_input(INPUT_POST, 'fases_on', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-    $Qfases_off = (array)\filter_input(INPUT_POST, 'fases_off', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+    $Qmodo = (string)filter_input(INPUT_POST, 'modo');
+    $Qstatus = (integer)filter_input(INPUT_POST, 'status');
+    $Qid_tipo_activ = (string)filter_input(INPUT_POST, 'id_tipo_activ');
+    $Qfiltro_lugar = (string)filter_input(INPUT_POST, 'filtro_lugar');
+    $Qid_ubi = (integer)filter_input(INPUT_POST, 'id_ubi');
+    $Qnom_activ = (string)filter_input(INPUT_POST, 'nom_activ');
+    $Qperiodo = (string)filter_input(INPUT_POST, 'periodo');
+    $Qyear = (string)filter_input(INPUT_POST, 'year');
+    $Qdl_org = (string)filter_input(INPUT_POST, 'dl_org');
+    $Qempiezamin = (string)filter_input(INPUT_POST, 'empiezamin');
+    $Qempiezamax = (string)filter_input(INPUT_POST, 'empiezamax');
+    $Qfases_on = (array)filter_input(INPUT_POST, 'fases_on', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+    $Qfases_off = (array)filter_input(INPUT_POST, 'fases_off', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 
     // valores por defeccto
     if (empty($Qperiodo)) {
@@ -153,10 +153,10 @@ if ($Qstatus != 9) {
 // Id tipo actividad
 $extendida = FALSE;
 if (empty($Qid_tipo_activ)) {
-    $Qssfsv = (string)\filter_input(INPUT_POST, 'ssfsv');
-    $Qsasistentes = (string)\filter_input(INPUT_POST, 'sasistentes');
-    $Qsactividad = (string)\filter_input(INPUT_POST, 'sactividad');
-    $Qsactividad2 = (string)\filter_input(INPUT_POST, 'sactividad2');
+    $Qssfsv = (string)filter_input(INPUT_POST, 'ssfsv');
+    $Qsasistentes = (string)filter_input(INPUT_POST, 'sasistentes');
+    $Qsactividad = (string)filter_input(INPUT_POST, 'sactividad');
+    $Qsactividad2 = (string)filter_input(INPUT_POST, 'sactividad2');
 
     if (!empty($Qsactividad2)) {
         $extendida = TRUE;

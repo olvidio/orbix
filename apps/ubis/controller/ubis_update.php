@@ -17,10 +17,10 @@ require_once("apps/core/global_object.inc");
 
 $oMiUsuario = new usuarios\Usuario(core\ConfigGlobal::mi_id_usuario());
 
-$Qque = (string)\filter_input(INPUT_POST, 'que');
-$Qobj_pau = (string)\filter_input(INPUT_POST, 'obj_pau');
-$Qid_ubi = (integer)\filter_input(INPUT_POST, 'id_ubi');
-$Qcampos_chk = (string)\filter_input(INPUT_POST, 'campos_chk');
+$Qque = (string)filter_input(INPUT_POST, 'que');
+$Qobj_pau = (string)filter_input(INPUT_POST, 'obj_pau');
+$Qid_ubi = (integer)filter_input(INPUT_POST, 'id_ubi');
+$Qcampos_chk = (string)filter_input(INPUT_POST, 'campos_chk');
 
 $campos_chk = empty($Qcampos_chk) ? array() : explode('!', $Qcampos_chk);
 
@@ -40,10 +40,10 @@ switch ($Qque) {
         guardarObjeto($oUbi, $campos_chk);
         break;
     case 'direccion':
-        $Qidx = (string)\filter_input(INPUT_POST, 'idx');
-        $Qobj_dir = (string)\filter_input(INPUT_POST, 'obj_dir');
-        $Qpropietario = (string)\filter_input(INPUT_POST, 'propietario');
-        $Qprincipal = (string)\filter_input(INPUT_POST, 'principal');
+        $Qidx = (string)filter_input(INPUT_POST, 'idx');
+        $Qobj_dir = (string)filter_input(INPUT_POST, 'obj_dir');
+        $Qpropietario = (string)filter_input(INPUT_POST, 'propietario');
+        $Qprincipal = (string)filter_input(INPUT_POST, 'principal');
 
         if ($Qidx === 'nuevo') {
             $obj = 'ubis\\model\\entity\\' . $Qobj_dir;

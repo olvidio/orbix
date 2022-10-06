@@ -43,14 +43,14 @@ function nomUbi($id_ubi)
 
 $oPosicion->recordar();
 
-$Qque = (string)\filter_input(INPUT_POST, 'que');
-$Qver_ctr = (string)\filter_input(INPUT_POST, 'ver_ctr');
+$Qque = (string)filter_input(INPUT_POST, 'que');
+$Qver_ctr = (string)filter_input(INPUT_POST, 'ver_ctr');
 
-$Qperiodo = (string)\filter_input(INPUT_POST, 'periodo');
-$Qyear = (string)\filter_input(INPUT_POST, 'year');
-$Qyeardefault = (string)\filter_input(INPUT_POST, 'yeardefault');
-$Qempiezamin = (string)\filter_input(INPUT_POST, 'empiezamin');
-$Qempiezamax = (string)\filter_input(INPUT_POST, 'empiezamax');
+$Qperiodo = (string)filter_input(INPUT_POST, 'periodo');
+$Qyear = (string)filter_input(INPUT_POST, 'year');
+$Qyeardefault = (string)filter_input(INPUT_POST, 'yeardefault');
+$Qempiezamin = (string)filter_input(INPUT_POST, 'empiezamin');
+$Qempiezamax = (string)filter_input(INPUT_POST, 'empiezamax');
 
 
 $miSfsv = ConfigGlobal::mi_sfsv();
@@ -77,7 +77,7 @@ $aOperadorCasa = [];
 switch ($Qque) {
     case "lista_cdc":
         // Esta viene de apps/casas/controller/casa_que.php
-        $Qaid_cdc = (array)\filter_input(INPUT_POST, 'id_cdc', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+        $Qaid_cdc = (array)filter_input(INPUT_POST, 'id_cdc', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
         $tipo = "casa";
         // una lista de casas (id_ubi).
         if (!empty($Qaid_cdc)) {
@@ -151,7 +151,7 @@ switch ($tipo) {
     case "oficina": // tipo asistentes
         $oTiposActividades = new TiposActividades();
         $oTiposActividades->setSfSvId($miSfsv);
-        if ($mi_of == 'all') {
+        if ($mi_of === 'all') {
             $aGrupos = $oTiposActividades->getAsistentesPosibles();
         } else {
             $oPermisoOficinas = new PermisoDossier();

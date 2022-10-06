@@ -26,16 +26,16 @@ require_once("apps/core/global_object.inc");
 
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$Qrefresh = (integer)\filter_input(INPUT_POST, 'refresh');
+$Qrefresh = (integer)filter_input(INPUT_POST, 'refresh');
 $oPosicion->recordar($Qrefresh);
 
-$Qmod = (string)\filter_input(INPUT_POST, 'mod');
-$Qid_enc = (integer)\filter_input(INPUT_POST, 'id_enc');
-$Qdesc_enc = (string)\filter_input(INPUT_POST, 'desc_enc');
+$Qmod = (string)filter_input(INPUT_POST, 'mod');
+$Qid_enc = (integer)filter_input(INPUT_POST, 'id_enc');
+$Qdesc_enc = (string)filter_input(INPUT_POST, 'desc_enc');
 $Qdesc_enc = urldecode($Qdesc_enc);
 
 if ($Qmod != 'nuevo') { //significa que no es nuevo
-    $id_item_h = (integer)\filter_input(INPUT_POST, 'id_item_h');
+    $id_item_h = (integer)filter_input(INPUT_POST, 'id_item_h');
     if (!empty($_POST['sel'])) { //vengo de un checkbox
         $id_item_h = strtok($_POST['sel'][0], "#");
     }

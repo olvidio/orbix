@@ -59,7 +59,7 @@ $Qcontinuar = (string)filter_input(INPUT_POST, 'continuar');
 // Sólo sirve para esta pagina: importar, publicar, duplicar
 $QGstack = (integer)filter_input(INPUT_POST, 'Gstack');
 if (isset($_POST['stack'])) {
-    $stack = \filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
+    $stack = filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
 } else {
     $stack = '';
 }
@@ -82,8 +82,8 @@ if (!empty($Qcontinuar) && $Qcontinuar == 'si' && ($QGstack != '')) {
     $Qscroll_id = $oPosicion->getParametro('scroll_id');
     $oPosicion->olvidar($QGstack); //limpio todos los estados hacia delante.
 } else { //si vengo de vuelta y tengo los parametros en el $_POST
-    $Qid_sel = (array)\filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-    $Qscroll_id = (string)\filter_input(INPUT_POST, 'scroll_id');
+    $Qid_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+    $Qscroll_id = (string)filter_input(INPUT_POST, 'scroll_id');
     //Si vengo por medio de Posicion, borro la última
     if ($stack != '') {
         // No me sirve el de global_object, sino el de la session
@@ -94,16 +94,16 @@ if (!empty($Qcontinuar) && $Qcontinuar == 'si' && ($QGstack != '')) {
             $oPosicion2->olvidar($stack);
         }
     }
-    $Qque = (string)\filter_input(INPUT_POST, 'que');
-    $Qstatus = (integer)\filter_input(INPUT_POST, 'status');
-    $Qtipo_activ_sg = (string)\filter_input(INPUT_POST, 'tipo_activ_sg');
-    $Qfiltro_lugar = (string)\filter_input(INPUT_POST, 'filtro_lugar');
-    $Qid_ubi = (integer)\filter_input(INPUT_POST, 'id_ubi');
-    $Qperiodo = (string)\filter_input(INPUT_POST, 'periodo');
-    $Qyear = (string)\filter_input(INPUT_POST, 'year');
-    $Qdl_org = (string)\filter_input(INPUT_POST, 'dl_org');
-    $Qempiezamin = (string)\filter_input(INPUT_POST, 'empiezamin');
-    $Qempiezamax = (string)\filter_input(INPUT_POST, 'empiezamax');
+    $Qque = (string)filter_input(INPUT_POST, 'que');
+    $Qstatus = (integer)filter_input(INPUT_POST, 'status');
+    $Qtipo_activ_sg = (string)filter_input(INPUT_POST, 'tipo_activ_sg');
+    $Qfiltro_lugar = (string)filter_input(INPUT_POST, 'filtro_lugar');
+    $Qid_ubi = (integer)filter_input(INPUT_POST, 'id_ubi');
+    $Qperiodo = (string)filter_input(INPUT_POST, 'periodo');
+    $Qyear = (string)filter_input(INPUT_POST, 'year');
+    $Qdl_org = (string)filter_input(INPUT_POST, 'dl_org');
+    $Qempiezamin = (string)filter_input(INPUT_POST, 'empiezamin');
+    $Qempiezamax = (string)filter_input(INPUT_POST, 'empiezamax');
 
     // valores por defecto
     if (empty($Qperiodo)) {

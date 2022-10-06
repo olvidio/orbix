@@ -10,7 +10,7 @@ require_once("apps/core/global_header.inc");
 require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$Qfiltro_mod = (string)\filter_input(INPUT_POST, 'filtro_mod');
+$Qfiltro_mod = (string)filter_input(INPUT_POST, 'filtro_mod');
 
 $oLista = new menus\GestorMetamenu();
 

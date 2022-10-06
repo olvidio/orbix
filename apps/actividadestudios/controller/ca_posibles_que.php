@@ -16,7 +16,7 @@ $oPosicion->recordar();
 
 //Si vengo de vuelta y le paso la referecia del stack donde está la información.
 if (isset($_POST['stack'])) {
-    $stack = \filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
+    $stack = filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
     if ($stack != '') {
         // No me sirve el de global_object, sino el de la session
         $oPosicion2 = new web\Posicion();
@@ -30,20 +30,20 @@ if (isset($_POST['stack'])) {
     $stack = '';
 }
 
-$Qna = (string)\filter_input(INPUT_POST, 'na');
-$Qid_ctr_n = (string)\filter_input(INPUT_POST, 'id_ctr_n');
-$Qid_ctr_agd = (string)\filter_input(INPUT_POST, 'id_ctr_agd');
-$Qiasistentes_val = (string)\filter_input(INPUT_POST, 'iasistentes_val');
-$Qiactividad_val = (string)\filter_input(INPUT_POST, 'actividad_val');
-$Qperiodo = (string)\filter_input(INPUT_POST, 'periodo');
-$Qyear = (string)\filter_input(INPUT_POST, 'year');
-$Qempiezamax = (string)\filter_input(INPUT_POST, 'empiezamax');
-$Qempiezamin = (string)\filter_input(INPUT_POST, 'empiezamin');
-$Qref = (string)\filter_input(INPUT_POST, 'ref');
-$Qgrupo_estudios = (string)\filter_input(INPUT_POST, 'grupo_estudios');
-$Qca_estudios = (string)\filter_input(INPUT_POST, 'ca_estudios');
-$Qca_repaso = (string)\filter_input(INPUT_POST, 'ca_repaso');
-$Qca_todos = (string)\filter_input(INPUT_POST, 'ca_todos');
+$Qna = (string)filter_input(INPUT_POST, 'na');
+$Qid_ctr_n = (string)filter_input(INPUT_POST, 'id_ctr_n');
+$Qid_ctr_agd = (string)filter_input(INPUT_POST, 'id_ctr_agd');
+$Qiasistentes_val = (string)filter_input(INPUT_POST, 'iasistentes_val');
+$Qiactividad_val = (string)filter_input(INPUT_POST, 'actividad_val');
+$Qperiodo = (string)filter_input(INPUT_POST, 'periodo');
+$Qyear = (string)filter_input(INPUT_POST, 'year');
+$Qempiezamax = (string)filter_input(INPUT_POST, 'empiezamax');
+$Qempiezamin = (string)filter_input(INPUT_POST, 'empiezamin');
+$Qref = (string)filter_input(INPUT_POST, 'ref');
+$Qgrupo_estudios = (string)filter_input(INPUT_POST, 'grupo_estudios');
+$Qca_estudios = (string)filter_input(INPUT_POST, 'ca_estudios');
+$Qca_repaso = (string)filter_input(INPUT_POST, 'ca_repaso');
+$Qca_todos = (string)filter_input(INPUT_POST, 'ca_todos');
 
 
 // Grupo de estudios

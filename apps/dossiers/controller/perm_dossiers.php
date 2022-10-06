@@ -27,7 +27,7 @@ require_once("apps/core/global_object.inc");
 listado de todos los dossiers de un tipo, según sea $tipo="p", "a" ó "u"
 en caso de no pasarla, por defecto lista los de personas:
 */
-$Qtipo = (string)\filter_input(INPUT_POST, 'tipo');
+$Qtipo = (string)filter_input(INPUT_POST, 'tipo');
 $tipo = empty($Qtipo) ? 'p' : $Qtipo;
 
 $GesTipoDossiers = new dossiers\GestorTipoDossier();

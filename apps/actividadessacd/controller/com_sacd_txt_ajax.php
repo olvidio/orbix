@@ -12,9 +12,9 @@ require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
 
-$Qque = (string)\filter_input(INPUT_POST, 'que');
-$Qclave = (string)\filter_input(INPUT_POST, 'clave');
-$Qidioma = (string)\filter_input(INPUT_POST, 'idioma');
+$Qque = (string)filter_input(INPUT_POST, 'que');
+$Qclave = (string)filter_input(INPUT_POST, 'clave');
+$Qidioma = (string)filter_input(INPUT_POST, 'idioma');
 
 switch ($Qque) {
     case 'get_texto':
@@ -30,7 +30,7 @@ switch ($Qque) {
         echo $txt;
         break;
     case 'update':
-        $Qcomunicacion = (string)\filter_input(INPUT_POST, 'comunicacion');
+        $Qcomunicacion = (string)filter_input(INPUT_POST, 'comunicacion');
 
         $aWhere = [];
         $aWhere['clave'] = $Qclave;

@@ -16,34 +16,34 @@ require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
 $msg_err = '';
-$Qmod = (string)\filter_input(INPUT_POST, 'mod');
-$Qpau = (string)\filter_input(INPUT_POST, 'pau');
-$Qest_ok = (string)\filter_input(INPUT_POST, 'est_ok');
-$Qobserv = (string)\filter_input(INPUT_POST, 'observ');
-$Qobserv_est = (string)\filter_input(INPUT_POST, 'observ_est');
+$Qmod = (string)filter_input(INPUT_POST, 'mod');
+$Qpau = (string)filter_input(INPUT_POST, 'pau');
+$Qest_ok = (string)filter_input(INPUT_POST, 'est_ok');
+$Qobserv = (string)filter_input(INPUT_POST, 'observ');
+$Qobserv_est = (string)filter_input(INPUT_POST, 'observ_est');
 
 //En el caso de eliminar desde la lista de cargos
-$a_sel = (array)\filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+$a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 if (!empty($a_sel)) { //vengo de un checkbox
     if ($Qpau == "p") {
         $Qid_activ = (integer)strtok($a_sel[0], "#");
         $Qid_asignatura = (integer)strtok("#");
-        $Qid_nom = (integer)\filter_input(INPUT_POST, 'id_pau');
+        $Qid_nom = (integer)filter_input(INPUT_POST, 'id_pau');
     }
     if ($Qpau == "a") {
         $Qid_nom = (integer)strtok($a_sel[0], "#");
         $Qid_asignatura = (integer)strtok("#");
-        $Qid_activ = (integer)\filter_input(INPUT_POST, 'id_pau');
+        $Qid_activ = (integer)filter_input(INPUT_POST, 'id_pau');
     }
 } else { // desde el formulario
-    $Qid_activ = (integer)\filter_input(INPUT_POST, 'id_activ');
-    $Qid_nom = (integer)\filter_input(INPUT_POST, 'id_nom');
-    $Qid_nom = (integer)\filter_input(INPUT_POST, 'id_pau');
-    $Qid_asignatura = (integer)\filter_input(INPUT_POST, 'id_asignatura');
-    $Qid_nivel = (integer)\filter_input(INPUT_POST, 'id_nivel');
-    $Qid_situacion = (integer)\filter_input(INPUT_POST, 'id_situacion');
-    $Qpreceptor = (string)\filter_input(INPUT_POST, 'preceptor');
-    $Qid_preceptor = (integer)\filter_input(INPUT_POST, 'id_preceptor');
+    $Qid_activ = (integer)filter_input(INPUT_POST, 'id_activ');
+    $Qid_nom = (integer)filter_input(INPUT_POST, 'id_nom');
+    $Qid_nom = (integer)filter_input(INPUT_POST, 'id_pau');
+    $Qid_asignatura = (integer)filter_input(INPUT_POST, 'id_asignatura');
+    $Qid_nivel = (integer)filter_input(INPUT_POST, 'id_nivel');
+    $Qid_situacion = (integer)filter_input(INPUT_POST, 'id_situacion');
+    $Qpreceptor = (string)filter_input(INPUT_POST, 'preceptor');
+    $Qid_preceptor = (integer)filter_input(INPUT_POST, 'id_preceptor');
 }
 
 switch ($Qmod) {

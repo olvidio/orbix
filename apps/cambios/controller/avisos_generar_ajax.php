@@ -11,11 +11,11 @@ require_once("apps/core/global_object.inc");
 // Crea los objetos para esta url  **********************************************
 
 
-$Qque = (string)\filter_input(INPUT_POST, 'que');
+$Qque = (string)filter_input(INPUT_POST, 'que');
 
 switch ($Qque) {
     case 'eliminar_fecha':
-        $Qf_fin = (string)\filter_input(INPUT_POST, 'f_fin');
+        $Qf_fin = (string)filter_input(INPUT_POST, 'f_fin');
 
         $GesCambioUsuario = new GestorCambioUsuario();
         $GesCambioUsuario->eliminarHastaFecha($Qf_fin);
@@ -23,7 +23,7 @@ switch ($Qque) {
         break;
     case 'eliminar':
 
-        $a_sel = (array)\filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+        $a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 
         foreach ($a_sel as $id) {
             $id_item_cmb = strtok($id, '#');

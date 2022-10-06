@@ -30,13 +30,13 @@ require_once("apps/core/global_object.inc");
 
 $mi_sfsv = ConfigGlobal::mi_sfsv();
 
-$Qque = (string)\filter_input(INPUT_POST, 'que');
+$Qque = (string)filter_input(INPUT_POST, 'que');
 
-$Qperiodo = (string)\filter_input(INPUT_POST, 'periodo');
-$Qyear = (string)\filter_input(INPUT_POST, 'year');
-$Qdl_org = (string)\filter_input(INPUT_POST, 'dl_org');
-$Qempiezamin = (string)\filter_input(INPUT_POST, 'empiezamin');
-$Qempiezamax = (string)\filter_input(INPUT_POST, 'empiezamax');
+$Qperiodo = (string)filter_input(INPUT_POST, 'periodo');
+$Qyear = (string)filter_input(INPUT_POST, 'year');
+$Qdl_org = (string)filter_input(INPUT_POST, 'dl_org');
+$Qempiezamin = (string)filter_input(INPUT_POST, 'empiezamin');
+$Qempiezamax = (string)filter_input(INPUT_POST, 'empiezamax');
 
 // valores por defecto
 if (empty($Qperiodo)) {
@@ -45,9 +45,9 @@ if (empty($Qperiodo)) {
 
 // son arrays
 // en este caso status también puede ser un array.
-$Qa_activ = (array)\filter_input(INPUT_POST, 'c_activ', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-$Qa_status = (array)\filter_input(INPUT_POST, 'status', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-$Qa_id_cdc = (array)\filter_input(INPUT_POST, 'id_cdc', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+$Qa_activ = (array)filter_input(INPUT_POST, 'c_activ', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+$Qa_status = (array)filter_input(INPUT_POST, 'status', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+$Qa_id_cdc = (array)filter_input(INPUT_POST, 'id_cdc', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 // json
 $json_status = json_encode($Qa_status);
 $json_activ = json_encode($Qa_activ);

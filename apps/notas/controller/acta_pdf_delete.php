@@ -13,7 +13,7 @@ require_once("apps/core/global_object.inc");
 
 // El delete es via POST!!!";
 
-$Qacta = (string)\filter_input(INPUT_POST, 'acta_num');
+$Qacta = (string)filter_input(INPUT_POST, 'acta_num');
 
 if (!empty($Qacta)) {
     $oActa = new Acta($Qacta);

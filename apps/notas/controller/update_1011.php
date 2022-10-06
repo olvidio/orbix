@@ -18,13 +18,13 @@ require_once("apps/core/global_object.inc");
 
 $msg_err = '';
 
-$Qid_nom = (integer)\filter_input(INPUT_POST, 'id_nom');
-$Qpau = (string)\filter_input(INPUT_POST, 'pau');
-$Qid_pau = (integer)\filter_input(INPUT_POST, 'id_pau');
-$Qmod = (string)\filter_input(INPUT_POST, 'mod');
+$Qid_nom = (integer)filter_input(INPUT_POST, 'id_nom');
+$Qpau = (string)filter_input(INPUT_POST, 'pau');
+$Qid_pau = (integer)filter_input(INPUT_POST, 'id_pau');
+$Qmod = (string)filter_input(INPUT_POST, 'mod');
 
 
-$a_sel = (array)\filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+$a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 if (!empty($a_sel)) { //vengo de un checkbox
     if ($Qpau == "p") {
         $id_nivel = (integer)strtok($a_sel[0], "#");
@@ -48,8 +48,8 @@ switch ($Qmod) {
         }
         break;
     case 'nuevo': //------------ NUEVO --------
-        $Qid_asignatura = (integer)\filter_input(INPUT_POST, 'id_asignatura');
-        $Qid_nivel = (integer)\filter_input(INPUT_POST, 'id_nivel');
+        $Qid_asignatura = (integer)filter_input(INPUT_POST, 'id_asignatura');
+        $Qid_nivel = (integer)filter_input(INPUT_POST, 'id_nivel');
         //No es una opcional
         if ($Qid_asignatura == '1') {
             $oGesAsignaturas = new asignaturas\GestorAsignatura();
@@ -72,17 +72,17 @@ switch ($Qmod) {
         $id_schema = $oPersona->getId_schema();
         $oPersonaNota->setId_schema($id_schema);
 
-        $Qid_situacion = (integer)\filter_input(INPUT_POST, 'id_situacion');
-        $Qacta = (string)\filter_input(INPUT_POST, 'acta');
-        $Qf_acta = (string)\filter_input(INPUT_POST, 'f_acta');
-        $Qtipo_acta = (integer)\filter_input(INPUT_POST, 'tipo_acta');
-        $Qpreceptor = (string)\filter_input(INPUT_POST, 'preceptor');
-        $Qid_preceptor = (integer)\filter_input(INPUT_POST, 'id_preceptor');
-        $Qdetalle = (string)\filter_input(INPUT_POST, 'detalle');
-        $Qepoca = (integer)\filter_input(INPUT_POST, 'epoca');
-        $Qid_activ = (integer)\filter_input(INPUT_POST, 'id_activ');
-        $Qnota_num = (float)\filter_input(INPUT_POST, 'nota_num', FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
-        $Qnota_max = (integer)\filter_input(INPUT_POST, 'nota_max');
+        $Qid_situacion = (integer)filter_input(INPUT_POST, 'id_situacion');
+        $Qacta = (string)filter_input(INPUT_POST, 'acta');
+        $Qf_acta = (string)filter_input(INPUT_POST, 'f_acta');
+        $Qtipo_acta = (integer)filter_input(INPUT_POST, 'tipo_acta');
+        $Qpreceptor = (string)filter_input(INPUT_POST, 'preceptor');
+        $Qid_preceptor = (integer)filter_input(INPUT_POST, 'id_preceptor');
+        $Qdetalle = (string)filter_input(INPUT_POST, 'detalle');
+        $Qepoca = (integer)filter_input(INPUT_POST, 'epoca');
+        $Qid_activ = (integer)filter_input(INPUT_POST, 'id_activ');
+        $Qnota_num = (float)filter_input(INPUT_POST, 'nota_num', FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
+        $Qnota_max = (integer)filter_input(INPUT_POST, 'nota_max');
 
         $oPersonaNota->setId_situacion($Qid_situacion);
         $oPersonaNota->setF_acta($Qf_acta);
@@ -122,8 +122,8 @@ switch ($Qmod) {
 
         break;
     case 'editar':  //------------ EDITAR --------
-        $Qid_nivel = (integer)\filter_input(INPUT_POST, 'id_nivel');
-        $Qid_asignatura_real = (integer)\filter_input(INPUT_POST, 'id_asignatura_real');
+        $Qid_nivel = (integer)filter_input(INPUT_POST, 'id_nivel');
+        $Qid_asignatura_real = (integer)filter_input(INPUT_POST, 'id_asignatura_real');
         if (!empty($Qid_pau) && !empty($Qid_asignatura_real)) {
             $oPersonaNota = new notas\PersonaNota();
             $oPersonaNota->setId_nom($Qid_pau);
@@ -132,17 +132,17 @@ switch ($Qmod) {
         } else {
             $oPersonaNota = new notas\PersonaNota();
         }
-        $Qid_situacion = (integer)\filter_input(INPUT_POST, 'id_situacion');
-        $Qacta = (string)\filter_input(INPUT_POST, 'acta');
-        $Qf_acta = (string)\filter_input(INPUT_POST, 'f_acta');
-        $Qtipo_acta = (integer)\filter_input(INPUT_POST, 'tipo_acta');
-        $Qpreceptor = (string)\filter_input(INPUT_POST, 'preceptor');
-        $Qid_preceptor = (integer)\filter_input(INPUT_POST, 'id_preceptor');
-        $Qdetalle = (string)\filter_input(INPUT_POST, 'detalle');
-        $Qepoca = (integer)\filter_input(INPUT_POST, 'epoca');
-        $Qid_activ = (integer)\filter_input(INPUT_POST, 'id_activ');
-        $Qnota_num = (float)\filter_input(INPUT_POST, 'nota_num', FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
-        $Qnota_max = (integer)\filter_input(INPUT_POST, 'nota_max');
+        $Qid_situacion = (integer)filter_input(INPUT_POST, 'id_situacion');
+        $Qacta = (string)filter_input(INPUT_POST, 'acta');
+        $Qf_acta = (string)filter_input(INPUT_POST, 'f_acta');
+        $Qtipo_acta = (integer)filter_input(INPUT_POST, 'tipo_acta');
+        $Qpreceptor = (string)filter_input(INPUT_POST, 'preceptor');
+        $Qid_preceptor = (integer)filter_input(INPUT_POST, 'id_preceptor');
+        $Qdetalle = (string)filter_input(INPUT_POST, 'detalle');
+        $Qepoca = (integer)filter_input(INPUT_POST, 'epoca');
+        $Qid_activ = (integer)filter_input(INPUT_POST, 'id_activ');
+        $Qnota_num = (float)filter_input(INPUT_POST, 'nota_num', FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
+        $Qnota_max = (integer)filter_input(INPUT_POST, 'nota_max');
 
         $oPersonaNota->setId_situacion($Qid_situacion);
         $oPersonaNota->setF_acta($Qf_acta);

@@ -38,8 +38,8 @@ function generar_password($largo)
     return $password;
 }
 
-$Qregion = (string)\filter_input(INPUT_POST, 'region');
-$Qdl = (string)\filter_input(INPUT_POST, 'dl');
+$Qregion = (string)filter_input(INPUT_POST, 'region');
+$Qdl = (string)filter_input(INPUT_POST, 'dl');
 
 $esquema = "$Qregion-$Qdl";
 $esquema_pwd = generar_password(11);
@@ -55,7 +55,7 @@ $oConfigDB = new core\ConfigDB('importar');
 //coge los valores de public: 1.la database comun; 2.nombre superusuario; 3.pasword superusuario;
 $config = $oConfigDB->getEsquema('public');
 
-$oConexion = new core\dbConnection($config);
+$oConexion = new core\DBConnection($config);
 $oDevelPC = $oConexion->getPDO();
 
 $oDBRol = new core\DBRol();
@@ -72,7 +72,7 @@ $oConfigDB->addEsquema('comun', $esquema, $esquema_pwd);
 $oConfigDB = new core\ConfigDB('importar');
 //coge los valores de public: 1.la database sv; 2.nombre superusuario; 3.pasword superusuario;
 $config = $oConfigDB->getEsquema('publicv');
-$oConexion = new core\dbConnection($config);
+$oConexion = new core\DBConnection($config);
 $oDevelPC = $oConexion->getPDO();
 
 $oDBRol = new core\DBRol();
@@ -91,7 +91,7 @@ $port_sv = $config['port'];
 $oConfigDB = new core\ConfigDB('importar');
 //coge los valores de public: 1.la database sv-e; 2.nombre superusuario; 3.pasword superusuario;
 $config = $oConfigDB->getEsquema('publicv-e');
-$oConexion = new core\dbConnection($config);
+$oConexion = new core\DBConnection($config);
 $oDevelPC = $oConexion->getPDO();
 $host_sve = $config['host'];
 $port_sve = $config['port'];
@@ -116,7 +116,7 @@ $oConfigDB->addEsquema('sv-e', $esquemav, $esquemav_pwd);
 // desde sv y sf:
 $oConfigDB = new core\ConfigDB('importar');
 $config = $oConfigDB->getEsquema('public'); //de la database comun
-$oConexion = new core\dbConnection($config);
+$oConexion = new core\DBConnection($config);
 $oDevelPC = $oConexion->getPDO();
 
 $oDBRol = new core\DBRol();
@@ -131,7 +131,7 @@ if ($_SESSION['sfsv'] == 'sf') {
     $oConfigDB = new core\ConfigDB('importar');
     //coge los valores de public: 1.la database sv-e; 2.nombre superusuario; 3.pasword superusuario;
     $config = $oConfigDB->getEsquema('publicv-e');
-    $oConexion = new core\dbConnection($config);
+    $oConexion = new core\DBConnection($config);
     $oDevelPC = $oConexion->getPDO();
 
     $oDBRol = new core\DBRol();

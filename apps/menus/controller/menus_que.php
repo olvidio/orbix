@@ -12,7 +12,7 @@ require_once("apps/core/global_object.inc");
 
 $oPosicion->recordar();
 
-$Qfiltro_grupo = (string)\filter_input(INPUT_POST, 'filtro_grupo');
+$Qfiltro_grupo = (string)filter_input(INPUT_POST, 'filtro_grupo');
 
 $oLista = new menus\GestorGrupMenu();
 

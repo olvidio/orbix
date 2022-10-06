@@ -35,9 +35,9 @@ if ($mes > $fin_m) {
 } else {
     $periodo_txt = sprintf(_("(por defecto: periodo desde 1/6 hasta 30/%s)"), $fin_m + 1);
 }
-$Qtipo = (string)\filter_input(INPUT_POST, 'tipo');
-$Qobj_pau = (string)\filter_input(INPUT_POST, 'obj_pau');
-$Qna = (string)\filter_input(INPUT_POST, 'na');
+$Qtipo = (string)filter_input(INPUT_POST, 'tipo');
+$Qobj_pau = (string)filter_input(INPUT_POST, 'obj_pau');
+$Qna = (string)filter_input(INPUT_POST, 'na');
 
 //personas
 $oHash = new web\Hash();

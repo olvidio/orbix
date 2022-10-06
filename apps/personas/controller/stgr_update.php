@@ -8,9 +8,9 @@ require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
 
-$Qid_nom = (integer)\filter_input(INPUT_POST, 'id_nom');
-$Qobj_pau = (string)\filter_input(INPUT_POST, 'obj_pau');
-$Qstgr = (string)\filter_input(INPUT_POST, 'stgr');
+$Qid_nom = (integer)filter_input(INPUT_POST, 'id_nom');
+$Qobj_pau = (string)filter_input(INPUT_POST, 'obj_pau');
+$Qstgr = (string)filter_input(INPUT_POST, 'stgr');
 
 // según sean numerarios...
 $obj = 'personas\\model\\entity\\' . $Qobj_pau;

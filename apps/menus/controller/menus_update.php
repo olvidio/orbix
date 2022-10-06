@@ -12,10 +12,10 @@ require_once("apps/core/global_header.inc");
 require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$Qid_grupmenu = (integer)\filter_input(INPUT_POST, 'filtro_grupo');
-$Qid_menu = (integer)\filter_input(INPUT_POST, 'id_menu');
-$Qque = (string)\filter_input(INPUT_POST, 'que');
-$Qgm_new = (string)\filter_input(INPUT_POST, 'gm_new');
+$Qid_grupmenu = (integer)filter_input(INPUT_POST, 'filtro_grupo');
+$Qid_menu = (integer)filter_input(INPUT_POST, 'id_menu');
+$Qque = (string)filter_input(INPUT_POST, 'que');
+$Qgm_new = (string)filter_input(INPUT_POST, 'gm_new');
 
 $oMenuDb = new menusEntity\MenuDb();
 $oCuadros = new menus\model\PermisoMenu;
@@ -29,12 +29,12 @@ switch ($Qque) {
         }
         break;
     case 'guardar':
-        $Qok = (string)\filter_input(INPUT_POST, 'ok');
-        $Qorden = (string)\filter_input(INPUT_POST, 'orden');
-        $Qtxt_menu = (string)\filter_input(INPUT_POST, 'txt_menu');
-        $Qparametros = (string)\filter_input(INPUT_POST, 'parametros');
-        $Qid_metamenu = (integer)\filter_input(INPUT_POST, 'id_metamenu');
-        $Qperm_menu = (array)\filter_input(INPUT_POST, 'perm_menu', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+        $Qok = (string)filter_input(INPUT_POST, 'ok');
+        $Qorden = (string)filter_input(INPUT_POST, 'orden');
+        $Qtxt_menu = (string)filter_input(INPUT_POST, 'txt_menu');
+        $Qparametros = (string)filter_input(INPUT_POST, 'parametros');
+        $Qid_metamenu = (integer)filter_input(INPUT_POST, 'id_metamenu');
+        $Qperm_menu = (array)filter_input(INPUT_POST, 'perm_menu', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
         $oMenuDb->DBCarregar(); // si no paso el ok, que coja el valor que tiene
 
         $oMiusuario = new Usuario(ConfigGlobal::mi_id_usuario());

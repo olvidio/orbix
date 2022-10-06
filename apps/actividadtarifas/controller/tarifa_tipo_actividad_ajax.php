@@ -25,7 +25,7 @@ require_once("apps/core/global_header.inc");
 require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$Qque = (string)\filter_input(INPUT_POST, 'que');
+$Qque = (string)filter_input(INPUT_POST, 'que');
 
 switch ($Qque) {
     case "get":
@@ -80,10 +80,10 @@ switch ($Qque) {
         }
         break;
     case "update":
-        $Qid_item = (string)\filter_input(INPUT_POST, 'id_item');
-        $Qid_tarifa = (string)\filter_input(INPUT_POST, 'id_tarifa');
-        $Qserie = (string)\filter_input(INPUT_POST, 'serie');
-        $Qid_tipo_activ = (string)\filter_input(INPUT_POST, 'id_tipo_activ');
+        $Qid_item = (string)filter_input(INPUT_POST, 'id_item');
+        $Qid_tarifa = (string)filter_input(INPUT_POST, 'id_tarifa');
+        $Qserie = (string)filter_input(INPUT_POST, 'serie');
+        $Qid_tipo_activ = (string)filter_input(INPUT_POST, 'id_tipo_activ');
 
         if ($Qid_item == 'nuevo') {
             $oTipoActivTarifa = new TipoActivTarifa();
@@ -100,7 +100,7 @@ switch ($Qque) {
         }
         break;
     case "eliminar":
-        $Qid_item = (string)\filter_input(INPUT_POST, 'id_item');
+        $Qid_item = (string)filter_input(INPUT_POST, 'id_item');
         $oTipoActivTarifa = new TipoActivTarifa();
         $oTipoActivTarifa->setId_item($Qid_item);
         if ($oTipoActivTarifa->DBEliminar() === false) {

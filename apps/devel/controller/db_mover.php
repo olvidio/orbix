@@ -11,7 +11,7 @@ require_once("apps/core/global_header.inc");
 require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$Qtabla = (string)\filter_input(INPUT_POST, 'tabla');
+$Qtabla = (string)filter_input(INPUT_POST, 'tabla');
 
 // copiar definicion y datos de sv
 // las definiciones de tablas padre ya las tengo: todas las global y public de sv las pongo en vs-e.

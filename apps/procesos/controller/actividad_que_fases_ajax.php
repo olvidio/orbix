@@ -15,9 +15,9 @@ require_once("apps/core/global_object.inc");
 
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$Qsalida = (string)\filter_input(INPUT_POST, 'salida');
-$Qid_tipo_activ = (string)\filter_input(INPUT_POST, 'id_tipo_activ');
-$Qdl_propia = (string)\filter_input(INPUT_POST, 'dl_propia');
+$Qsalida = (string)filter_input(INPUT_POST, 'salida');
+$Qid_tipo_activ = (string)filter_input(INPUT_POST, 'id_tipo_activ');
+$Qdl_propia = (string)filter_input(INPUT_POST, 'dl_propia');
 if (is_true($Qdl_propia)) {
     $dl_propia = TRUE;
 } else {

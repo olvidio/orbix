@@ -14,13 +14,13 @@ require_once("apps/core/global_header.inc");
 require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$Qfiltro_mod = (string)\filter_input(INPUT_POST, 'filtro_mod');
-$Qnuevo = (integer)\filter_input(INPUT_POST, 'nuevo');
-$Qid_menu = (integer)\filter_input(INPUT_POST, 'id_menu');
+$Qfiltro_mod = (string)filter_input(INPUT_POST, 'filtro_mod');
+$Qnuevo = (integer)filter_input(INPUT_POST, 'nuevo');
+$Qid_menu = (integer)filter_input(INPUT_POST, 'id_menu');
 
 if (!empty($Qid_menu) || !empty($Qnuevo)) {
     if (!empty($Qid_menu)) {
-        $oMetamenu = new menus\Metamenu();
+        $oMetamenu = new menus\MetaMenu();
         // para modificar los valores de un menu.
         $oMetamenu->setId_menu($Qid_menu);
     } else {

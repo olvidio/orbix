@@ -38,7 +38,7 @@ $miSfsv = ConfigGlobal::mi_sfsv();
 
 //Si vengo por medio de Posicion, borro la última
 if (isset($_POST['stack'])) {
-    $stack = \filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
+    $stack = filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
     if ($stack != '') {
         // No me sirve el de global_object, sino el de la session
         $oPosicion2 = new Posicion();
@@ -52,8 +52,8 @@ if (isset($_POST['stack'])) {
     }
 }
 
-$Qque_lista = (string)\filter_input(INPUT_POST, 'que_lista');
-$Qloc = (string)\filter_input(INPUT_POST, 'loc');
+$Qque_lista = (string)filter_input(INPUT_POST, 'que_lista');
+$Qloc = (string)filter_input(INPUT_POST, 'loc');
 
 if (empty($Qloc)) $Qloc = ConfigGlobal::mi_region_dl();
 if (empty($Qque_lista)) $Qque_lista = 'ctr_n';
@@ -207,27 +207,27 @@ if ($Qloc == 'ex') {
 
 switch ($obj) {
     case 'Centro':
-        $oGesCentros = new ubis\gestorCentro();
+        $oGesCentros = new ubis\GestorCentro();
         $cUbis = $oGesCentros->getCentros($aWhere, $aOperador);
         break;
     case 'CentroDl':
-        $oGesCentros = new ubis\gestorCentroDl();
+        $oGesCentros = new ubis\GestorCentroDl();
         $cUbis = $oGesCentros->getCentros($aWhere, $aOperador);
         break;
     case 'CentroEx':
-        $oGesCentros = new ubis\gestorCentroEx();
+        $oGesCentros = new ubis\GestorCentroEx();
         $cUbis = $oGesCentros->getCentros($aWhere, $aOperador);
         break;
     case 'Casa':
-        $oGesCasas = new ubis\gestorCasa();
+        $oGesCasas = new ubis\GestorCasa();
         $cUbis = $oGesCasas->getCasas($aWhere, $aOperador);
         break;
     case 'CasaDl':
-        $oGesCasas = new ubis\gestorCasaDl();
+        $oGesCasas = new ubis\GestorCasaDl();
         $cUbis = $oGesCasas->getCasas($aWhere, $aOperador);
         break;
     case 'CasaEx':
-        $oGesCasas = new ubis\gestorCasaEx();
+        $oGesCasas = new ubis\GestorCasaEx();
         $cUbis = $oGesCasas->getCasas($aWhere, $aOperador);
         break;
     case 'none':

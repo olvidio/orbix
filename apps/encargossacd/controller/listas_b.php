@@ -28,7 +28,7 @@ require_once("apps/core/global_object.inc");
 
 $oEncargoFunciones = new EncargoFunciones();
 
-$Qsf = (integer)\filter_input(INPUT_POST, 'sf');
+$Qsf = (integer)filter_input(INPUT_POST, 'sf');
 
 $any = $_SESSION['oConfig']->any_final_curs('crt');
 $inicurs = core\curso_est("inicio", $any, "crt")->getFromLocal();

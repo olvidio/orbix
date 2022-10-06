@@ -18,19 +18,19 @@ require_once("apps/core/global_header.inc");
 require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$Qrefresh = (integer)\filter_input(INPUT_POST, 'refresh');
+$Qrefresh = (integer)filter_input(INPUT_POST, 'refresh');
 $oPosicion->recordar($Qrefresh);
 
 $notas = 1; // para indicar a la página de actas que está dentro de ésta.
 
-$a_sel = (array)\filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+$a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 
 $Qid_sel = '';
-$Qscroll_id = (string)\filter_input(INPUT_POST, 'scroll_id');
+$Qscroll_id = (string)filter_input(INPUT_POST, 'scroll_id');
 // Hay que usar isset y empty porque puede tener el valor =0.
 // Si vengo por medio de Posicion, borro la última
 if (isset($_POST['stack'])) {
-    $stack = \filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
+    $stack = filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
     if ($stack != '') {
         // No me sirve el de global_object, sino el de la session
         $oPosicion2 = new Posicion();
@@ -47,16 +47,16 @@ if (!empty($a_sel)) { //vengo de un checkbox
     $id_asignatura = (integer)strtok("#");
     // el scroll id es de la página anterior, hay que guardarlo allí
     $oPosicion->addParametro('id_sel', $a_sel, 1);
-    $scroll_id = (integer)\filter_input(INPUT_POST, 'scroll_id');
+    $scroll_id = (integer)filter_input(INPUT_POST, 'scroll_id');
     $oPosicion->addParametro('scroll_id', $scroll_id, 1);
 } else {
-    $id_asignatura = (integer)\filter_input(INPUT_POST, 'id_asignatura');
-    $id_activ = (integer)\filter_input(INPUT_POST, 'id_activ');
+    $id_asignatura = (integer)filter_input(INPUT_POST, 'id_asignatura');
+    $id_activ = (integer)filter_input(INPUT_POST, 'id_activ');
 }
 
 // los permisos depende de cada asignatura
 $mi_dele = ConfigGlobal::mi_delef();
-$permiso = (integer)\filter_input(INPUT_POST, 'permiso');
+$permiso = (integer)filter_input(INPUT_POST, 'permiso');
 $GesActivAsignaturas = new GestorActividadAsignatura();
 $cActivAsignaturas = $GesActivAsignaturas->getActividadAsignaturas(array('id_activ' => $id_activ, 'id_asignatura' => $id_asignatura));
 $oActividadAsignatura = $cActivAsignaturas[0];
@@ -100,11 +100,11 @@ if ($matriculados > 0) {
     echo _("no hay ninguna persona matriculada de esta asignatura");
 }
 
-$Qque = (string)\filter_input(INPUT_POST, 'que');
-$Qid_pau = (integer)\filter_input(INPUT_POST, 'id_pau');
-$Qopcional = (string)\filter_input(INPUT_POST, 'opcional');
-$Qprimary_key_s = (string)\filter_input(INPUT_POST, 'primary_key_s');
-$Qid_nivel = (integer)\filter_input(INPUT_POST, 'id_nivel');
+$Qque = (string)filter_input(INPUT_POST, 'que');
+$Qid_pau = (integer)filter_input(INPUT_POST, 'id_pau');
+$Qopcional = (string)filter_input(INPUT_POST, 'opcional');
+$Qprimary_key_s = (string)filter_input(INPUT_POST, 'primary_key_s');
+$Qid_nivel = (integer)filter_input(INPUT_POST, 'id_nivel');
 
 $GesActas = new notas\GestorActa();
 $cActas = $GesActas->getActas(array('id_activ' => $id_activ, 'id_asignatura' => $id_asignatura, '_ordre' => 'f_acta'));

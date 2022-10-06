@@ -46,10 +46,10 @@ $oPosicion->recordar();
 $Qid_item = '';
 $Qid_cargo = '';
 
-$Qpermiso = (string)\filter_input(INPUT_POST, 'permiso');
-$Qid_dossier = (integer)\filter_input(INPUT_POST, 'id_dossier');
+$Qpermiso = (string)filter_input(INPUT_POST, 'permiso');
+$Qid_dossier = (integer)filter_input(INPUT_POST, 'id_dossier');
 
-$a_sel = (array)\filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+$a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 if (!empty($a_sel)) { //vengo de un checkbox
     if ($Qid_dossier == 3101) {  // vengo del listado de asistencias
         $Qid_nom = (integer)strtok($a_sel[0], "#");
@@ -64,16 +64,16 @@ if (!empty($a_sel)) { //vengo de un checkbox
     }
     // el scroll id es de la página anterior, hay que guardarlo allí
     $oPosicion->addParametro('id_sel', $a_sel, 1);
-    $scroll_id = (integer)\filter_input(INPUT_POST, 'scroll_id');
+    $scroll_id = (integer)filter_input(INPUT_POST, 'scroll_id');
     $oPosicion->addParametro('scroll_id', $scroll_id, 1);
 } else {
-    $Qid_nom = (integer)\filter_input(INPUT_POST, 'id_nom');
+    $Qid_nom = (integer)filter_input(INPUT_POST, 'id_nom');
     $Qid_schema = '';
 }
-$Qmod = (string)\filter_input(INPUT_POST, 'mod');
-$pau = (string)\filter_input(INPUT_POST, 'pau');
-$Qid_pau = (integer)\filter_input(INPUT_POST, 'id_pau');
-$Qobj_pau = (string)\filter_input(INPUT_POST, 'obj_pau');
+$Qmod = (string)filter_input(INPUT_POST, 'mod');
+$pau = (string)filter_input(INPUT_POST, 'pau');
+$Qid_pau = (integer)filter_input(INPUT_POST, 'id_pau');
+$Qobj_pau = (string)filter_input(INPUT_POST, 'obj_pau');
 
 $obj = 'actividadcargos\\model\\entity\\ActividadCargo';
 

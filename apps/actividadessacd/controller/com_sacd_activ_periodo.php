@@ -25,9 +25,9 @@ require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
 
-$Qsacd = (string)\filter_input(INPUT_POST, 'sacd');
-$Qid_nom = (integer)\filter_input(INPUT_POST, 'id_nom');
-$Qpropuesta = (string)\filter_input(INPUT_POST, 'propuesta');
+$Qsacd = (string)filter_input(INPUT_POST, 'sacd');
+$Qid_nom = (integer)filter_input(INPUT_POST, 'id_nom');
+$Qpropuesta = (string)filter_input(INPUT_POST, 'propuesta');
 
 
 $aOpciones = array(

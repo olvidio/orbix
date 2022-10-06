@@ -12,8 +12,8 @@ require_once("apps/core/global_header.inc");
 require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$QEsquemaMatriz = (string)\filter_input(INPUT_POST, 'esquema_matriz');
-$QEsquemaDel = (string)\filter_input(INPUT_POST, 'esquema_del');
+$QEsquemaMatriz = (string)filter_input(INPUT_POST, 'esquema_matriz');
+$QEsquemaDel = (string)filter_input(INPUT_POST, 'esquema_del');
 
 $esquemaMatrizv = $QEsquemaMatriz . 'v';
 //$esquemaMatrizf = $QEsquemaMatriz.'f';
@@ -58,7 +58,7 @@ $aInserts[] = ['tabla' => $tabla, 'campos' => $campos];
 $oConfigDB = new core\ConfigDB('importar'); //de la database comun
 $config = $oConfigDB->getEsquema('public'); //de la database comun
 
-$oConexion = new core\dbConnection($config);
+$oConexion = new core\DBConnection($config);
 $oDevelPC = $oConexion->getPDO();
 
 $oAlterSchema = new DBAlterSchema();
@@ -121,7 +121,7 @@ $oAlterSchema->setInserts($aInserts);
 
 $config = $oConfigDB->getEsquema('publicv'); //de la database sv
 
-$oConexion = new core\dbConnection($config);
+$oConexion = new core\DBConnection($config);
 $oDevelPC = $oConexion->getPDO();
 
 $oAlterSchema = new DBAlterSchema();
@@ -265,7 +265,7 @@ $oAlterSchema->updateCedidasAll($dl_old, $dl_new);
 // sv-e 
 $config = $oConfigDB->getEsquema('publicv-e'); //de la database sv
 
-$oConexion = new core\dbConnection($config);
+$oConexion = new core\DBConnection($config);
 $oDevelPC = $oConexion->getPDO();
 
 $oAlterSchema = new DBAlterSchema();
@@ -324,7 +324,7 @@ $esquemav_zz = 'zz' . $esquemaDelv;
 
 // comun
 $configComunP = $oConfigDB->getEsquema('public');
-$oConexion = new core\dbConnection($configComunP);
+$oConexion = new core\DBConnection($configComunP);
 $oConComun = $oConexion->getPDO();
 $oDBRol->setDbConexion($oConComun);
 $oDBRol->setUser($esquema_zz);
@@ -334,7 +334,7 @@ $oAlterSchema->quitarHerencias($oConComun, $esquema_zz);
 
 // sv
 $configSv = $oConfigDB->getEsquema('publicv');
-$oConexion = new core\dbConnection($configSv);
+$oConexion = new core\DBConnection($configSv);
 $oConSv = $oConexion->getPDO();
 $oDBRol->setDbConexion($oConSv);
 $oDBRol->setUser($esquemav_zz);
@@ -344,7 +344,7 @@ $oAlterSchema->quitarHerencias($oConSv, $esquemav_zz);
 
 // sv-e
 $configSve = $oConfigDB->getEsquema('publicv-e');
-$oConexion = new core\dbConnection($configSve);
+$oConexion = new core\DBConnection($configSve);
 $oConSve = $oConexion->getPDO();
 $oDBRol->setDbConexion($oConSve);
 $oDBRol->setUser($esquemav_zz);

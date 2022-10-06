@@ -36,7 +36,7 @@ if ($mes > 3) {
     $any_ini_curs = $any1;
 }
 
-$Qlista = (string)\filter_input(INPUT_POST, 'lista');
+$Qlista = (string)filter_input(INPUT_POST, 'lista');
 $lista = empty($Qlista) ? false : true;
 
 /* tipos de profesor:

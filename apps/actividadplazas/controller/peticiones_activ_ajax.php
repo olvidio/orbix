@@ -15,9 +15,9 @@ require_once("apps/core/global_header.inc");
 require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$Qid_nom = (integer)\filter_input(INPUT_POST, 'id_nom');
-$Qsactividad = (string)\filter_input(INPUT_POST, 'sactividad');
-$Qque = (string)\filter_input(INPUT_POST, 'que');
+$Qid_nom = (integer)filter_input(INPUT_POST, 'id_nom');
+$Qsactividad = (string)filter_input(INPUT_POST, 'sactividad');
+$Qque = (string)filter_input(INPUT_POST, 'que');
 
 switch ($Qque) {
     case "update":
@@ -29,7 +29,7 @@ switch ($Qque) {
         }
         // grabar
         $i = 0;
-        $a_actividades = (array)\filter_input(INPUT_POST, 'actividades', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+        $a_actividades = (array)filter_input(INPUT_POST, 'actividades', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
         foreach ($a_actividades as $id_activ) {
             if (empty($id_activ)) {
                 continue;

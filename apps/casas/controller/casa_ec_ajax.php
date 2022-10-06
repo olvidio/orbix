@@ -33,17 +33,17 @@ require_once("apps/core/global_object.inc");
 
 $oPosicion->recordar();
 
-$Qque = (string)\filter_input(INPUT_POST, 'que');
+$Qque = (string)filter_input(INPUT_POST, 'que');
 
 
 switch ($Qque) {
     case "guardarGasto":
-        $Qyear = (integer)\filter_input(INPUT_POST, 'year');
-        $Qid_ubi = (integer)\filter_input(INPUT_POST, 'id_ubi');
+        $Qyear = (integer)filter_input(INPUT_POST, 'year');
+        $Qid_ubi = (integer)filter_input(INPUT_POST, 'id_ubi');
         for ($m = 1; $m < 13; $m++) {
-            $Qg = (string)\filter_input(INPUT_POST, "g$m");
-            $Qap_sv = (string)\filter_input(INPUT_POST, "ap_sv$m");
-            $Qap_sf = (string)\filter_input(INPUT_POST, "ap_sf$m");
+            $Qg = (string)filter_input(INPUT_POST, "g$m");
+            $Qap_sv = (string)filter_input(INPUT_POST, "ap_sv$m");
+            $Qap_sf = (string)filter_input(INPUT_POST, "ap_sf$m");
 
             // cambio las comas por puntos decimales.
             $g = empty($Qg) ? 0 : str_replace(',', '.', $Qg);
@@ -83,9 +83,9 @@ switch ($Qque) {
         }
         break;
     case 'getGastos':
-        $Qyear = (integer)\filter_input(INPUT_POST, 'year');
+        $Qyear = (integer)filter_input(INPUT_POST, 'year');
         // posible selección múltiple de casas
-        $Qaid_cdc = (array)\filter_input(INPUT_POST, 'id_cdc', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+        $Qaid_cdc = (array)filter_input(INPUT_POST, 'id_cdc', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
         // una lista de casas (id_ubi).
         $aGrupos = [];
         if (!empty($Qaid_cdc)) {

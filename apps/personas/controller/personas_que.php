@@ -21,7 +21,7 @@ require_once("apps/core/global_object.inc");
 $oPosicion->recordar();
 //Si vengo de vuelta y le paso la referecia del stack donde está la información.
 if (isset($_POST['stack'])) {
-    $stack = \filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
+    $stack = filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
     if ($stack != '') {
         // No me sirve el de global_object, sino el de la session
         $oPosicion2 = new web\Posicion();
@@ -32,20 +32,20 @@ if (isset($_POST['stack'])) {
         }
     }
 }
-$Qmodo = (string)\filter_input(INPUT_POST, 'modo');
+$Qmodo = (string)filter_input(INPUT_POST, 'modo');
 
-$Qna = (string)\filter_input(INPUT_POST, 'na');
-$Qque = (string)\filter_input(INPUT_POST, 'que');
-$Qtipo = (string)\filter_input(INPUT_POST, 'tipo');
-$Qtabla = (string)\filter_input(INPUT_POST, 'tabla');
-$Qes_sacd = (integer)\filter_input(INPUT_POST, 'es_sacd');
+$Qna = (string)filter_input(INPUT_POST, 'na');
+$Qque = (string)filter_input(INPUT_POST, 'que');
+$Qtipo = (string)filter_input(INPUT_POST, 'tipo');
+$Qtabla = (string)filter_input(INPUT_POST, 'tabla');
+$Qes_sacd = (integer)filter_input(INPUT_POST, 'es_sacd');
 
-$Qexacto = (string)\filter_input(INPUT_POST, 'exacto');
-$Qcmb = (string)\filter_input(INPUT_POST, 'cmb');
-$Qnombre = (string)\filter_input(INPUT_POST, 'nombre');
-$Qapellido1 = (string)\filter_input(INPUT_POST, 'apellido1');
-$Qapellido2 = (string)\filter_input(INPUT_POST, 'apellido2');
-$Qcentro = (string)\filter_input(INPUT_POST, 'centro');
+$Qexacto = (string)filter_input(INPUT_POST, 'exacto');
+$Qcmb = (string)filter_input(INPUT_POST, 'cmb');
+$Qnombre = (string)filter_input(INPUT_POST, 'nombre');
+$Qapellido1 = (string)filter_input(INPUT_POST, 'apellido1');
+$Qapellido2 = (string)filter_input(INPUT_POST, 'apellido2');
+$Qcentro = (string)filter_input(INPUT_POST, 'centro');
 
 if (!empty($Qtabla)) {
     $nom_tabla = substr($Qtabla, 2);

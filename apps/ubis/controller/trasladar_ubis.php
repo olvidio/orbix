@@ -18,8 +18,8 @@ require_once("apps/core/global_object.inc");
 //En el caso de modificar cartas de presentación, quiero que quede dentro del bloque.
 $oPosicion->recordar();
 
-$dl_dst = (string)\filter_input(INPUT_POST, 'dl_dst');
-$a_sel = (array)\filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+$dl_dst = (string)filter_input(INPUT_POST, 'dl_dst');
+$a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 
 if (empty($a_sel)) {
     exit ("No se...");

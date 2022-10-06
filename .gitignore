@@ -1,5 +1,5 @@
 # Dani #
-apps/web/hash.class.php
+apps/web/hash.php
 *.sh
 
 # Compiled source #

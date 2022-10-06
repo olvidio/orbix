@@ -18,13 +18,13 @@ require_once("apps/core/global_header.inc");
 require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$Qque = (string)\filter_input(INPUT_POST, 'que');
+$Qque = (string)filter_input(INPUT_POST, 'que');
 
 switch ($Qque) {
     case 'regenerar':
         // para cada fase del proceso
         // mirar que actividades les falta y añadir.
-        $Qid_tipo_proceso = (integer)\filter_input(INPUT_POST, 'id_tipo_proceso');
+        $Qid_tipo_proceso = (integer)filter_input(INPUT_POST, 'id_tipo_proceso');
         $GesTareaPorceso = new GestorTareaProceso();
         $cTareasProceso = $GesTareaPorceso->getTareasProceso(['id_tipo_proceso' => $Qid_tipo_proceso]);
         $i = 0;
@@ -41,8 +41,8 @@ switch ($Qque) {
 
         break;
     case 'clonar':
-        $Qid_tipo_proceso = (integer)\filter_input(INPUT_POST, 'id_tipo_proceso');
-        $Qid_tipo_proceso_ref = (integer)\filter_input(INPUT_POST, 'id_tipo_proceso_ref');
+        $Qid_tipo_proceso = (integer)filter_input(INPUT_POST, 'id_tipo_proceso');
+        $Qid_tipo_proceso_ref = (integer)filter_input(INPUT_POST, 'id_tipo_proceso_ref');
 
         // borrar lo anterior:
         $GesTareaPorceso = new GestorTareaProceso();
@@ -72,7 +72,7 @@ switch ($Qque) {
         }
     // Omito el break, para que a haga el get.
     case 'get':
-        $Qid_tipo_proceso = (integer)\filter_input(INPUT_POST, 'id_tipo_proceso');
+        $Qid_tipo_proceso = (integer)filter_input(INPUT_POST, 'id_tipo_proceso');
         $oActividad = new ActividadAll();
         $a_status = $oActividad->getArrayStatus();
 
@@ -163,7 +163,7 @@ switch ($Qque) {
         echo $txt2;
         break;
     case 'get_listado':
-        $Qid_tipo_proceso = (integer)\filter_input(INPUT_POST, 'id_tipo_proceso');
+        $Qid_tipo_proceso = (integer)filter_input(INPUT_POST, 'id_tipo_proceso');
         $oActividad = new ActividadAll();
         $a_status = $oActividad->getArrayStatus();
 
@@ -239,8 +239,8 @@ switch ($Qque) {
         echo $txt;
         break;
     case 'depende':
-        $Qacc = (string)\filter_input(INPUT_POST, 'acc');
-        $Qvalor_depende = (string)\filter_input(INPUT_POST, 'valor_depende');
+        $Qacc = (string)filter_input(INPUT_POST, 'acc');
+        $Qvalor_depende = (string)filter_input(INPUT_POST, 'valor_depende');
         //caso de actualizar el campo depende
         if ($Qacc == '#id_tarea') {
             $oDepende = new GestorActividadTarea();
@@ -260,16 +260,16 @@ switch ($Qque) {
         }
         break;
     case 'update':
-        $Qid_item = (integer)\filter_input(INPUT_POST, 'id_item');
-        $Qid_tipo_proceso = (integer)\filter_input(INPUT_POST, 'id_tipo_proceso');
-        $Qstatus = (integer)\filter_input(INPUT_POST, 'status');
-        $Qid_of_responsable = (integer)\filter_input(INPUT_POST, 'id_of_responsable');
-        $Qid_fase = (integer)\filter_input(INPUT_POST, 'id_fase');
-        $Qid_tarea = (integer)\filter_input(INPUT_POST, 'id_tarea');
+        $Qid_item = (integer)filter_input(INPUT_POST, 'id_item');
+        $Qid_tipo_proceso = (integer)filter_input(INPUT_POST, 'id_tipo_proceso');
+        $Qstatus = (integer)filter_input(INPUT_POST, 'status');
+        $Qid_of_responsable = (integer)filter_input(INPUT_POST, 'id_of_responsable');
+        $Qid_fase = (integer)filter_input(INPUT_POST, 'id_fase');
+        $Qid_tarea = (integer)filter_input(INPUT_POST, 'id_tarea');
         // arrays
-        $Qid_fase_previa = (array)\filter_input(INPUT_POST, 'id_fase_previa', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-        $Qid_tarea_previa = (array)\filter_input(INPUT_POST, 'id_tarea_previa', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-        $Qmensaje_requisito = (array)\filter_input(INPUT_POST, 'mensaje_requisito', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+        $Qid_fase_previa = (array)filter_input(INPUT_POST, 'id_fase_previa', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+        $Qid_tarea_previa = (array)filter_input(INPUT_POST, 'id_tarea_previa', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+        $Qmensaje_requisito = (array)filter_input(INPUT_POST, 'mensaje_requisito', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 
         $aFases_previas = [];
         $num_fases_previas = count($Qid_fase_previa);
@@ -296,7 +296,7 @@ switch ($Qque) {
         }
         break;
     case 'eliminar':
-        $Qid_item = (integer)\filter_input(INPUT_POST, 'id_item');
+        $Qid_item = (integer)filter_input(INPUT_POST, 'id_item');
         $oTareaProceso = new TareaProceso(array('id_item' => $Qid_item));
         if ($oTareaProceso->DBEliminar() === false) {
             echo _("hay un error, no se ha eliminado");

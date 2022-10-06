@@ -25,11 +25,11 @@ require_once("apps/core/global_header.inc");
 require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$Qmodelo = (integer)\filter_input(INPUT_POST, 'modelo');
+$Qmodelo = (integer)filter_input(INPUT_POST, 'modelo');
 
 $oPosicion->recordar();
 
-$a_sel = (array)\filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+$a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 if (!empty($a_sel)) { //vengo de un checkbox
     // puede ser más de uno
     if (is_array($a_sel) && count($a_sel) > 1) {
@@ -41,23 +41,23 @@ if (!empty($a_sel)) { //vengo de un checkbox
         $aid_nom[] = $a_sel[0];
         // el scroll id es de la página anterior, hay que guardarlo allí
         $oPosicion->addParametro('id_sel', $a_sel, 1);
-        $scroll_id = (integer)\filter_input(INPUT_POST, 'scroll_id');
+        $scroll_id = (integer)filter_input(INPUT_POST, 'scroll_id');
         $oPosicion->addParametro('scroll_id', $scroll_id, 1);
     }
 }
 
-$Qcdc_sel = (integer)\filter_input(INPUT_POST, 'cdc_sel');
-$Qtipo = (string)\filter_input(INPUT_POST, 'tipo');
-$Qdd = (integer)\filter_input(INPUT_POST, 'dd');
-$Qyear = (integer)\filter_input(INPUT_POST, 'year');
-$Qperiodo = (string)\filter_input(INPUT_POST, 'periodo');
-$Qempiezamin = (string)\filter_input(INPUT_POST, 'empiezamin');
-$Qempiezamax = (string)\filter_input(INPUT_POST, 'empiezamax');
+$Qcdc_sel = (integer)filter_input(INPUT_POST, 'cdc_sel');
+$Qtipo = (string)filter_input(INPUT_POST, 'tipo');
+$Qdd = (integer)filter_input(INPUT_POST, 'dd');
+$Qyear = (integer)filter_input(INPUT_POST, 'year');
+$Qperiodo = (string)filter_input(INPUT_POST, 'periodo');
+$Qempiezamin = (string)filter_input(INPUT_POST, 'empiezamin');
+$Qempiezamax = (string)filter_input(INPUT_POST, 'empiezamax');
 
-$Qid_cdc_mas = (string)\filter_input(INPUT_POST, 'id_cdc_mas');
-$Qid_cdc_num = (string)\filter_input(INPUT_POST, 'id_cdc_num');
-$Qiasistentes_val = (string)\filter_input(INPUT_POST, 'iasistentes_val');
-$Qiactividad_val = (string)\filter_input(INPUT_POST, 'iactividad_val');
+$Qid_cdc_mas = (string)filter_input(INPUT_POST, 'id_cdc_mas');
+$Qid_cdc_num = (string)filter_input(INPUT_POST, 'id_cdc_num');
+$Qiasistentes_val = (string)filter_input(INPUT_POST, 'iasistentes_val');
+$Qiactividad_val = (string)filter_input(INPUT_POST, 'iactividad_val');
 
 
 // periodo.
@@ -153,7 +153,7 @@ if ($Qcdc_sel < 10) { //Para buscar por casas.
             break;
         case 9:
             // posible selección múltiple de casas
-            $a_id_cdc = (array)\filter_input(INPUT_POST, 'id_cdc', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+            $a_id_cdc = (array)filter_input(INPUT_POST, 'id_cdc', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
             if (!empty($a_id_cdc)) {
                 $aWhere['id_ubi'] = '^' . implode('$|^', $a_id_cdc) . '$';
                 $aOperador['id_ubi'] = '~';

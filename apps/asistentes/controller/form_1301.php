@@ -44,18 +44,18 @@ require_once("apps/core/global_object.inc");
 
 $oPosicion->recordar();
 
-$Qid_nom = (integer)\filter_input(INPUT_POST, 'id_pau');
-$obj_pau = (string)\filter_input(INPUT_POST, 'obj_pau');
-$id_tipo = (string)\filter_input(INPUT_POST, 'id_tipo');
-$que_dl = (string)\filter_input(INPUT_POST, 'que_dl');
+$Qid_nom = (integer)filter_input(INPUT_POST, 'id_pau');
+$obj_pau = (string)filter_input(INPUT_POST, 'obj_pau');
+$id_tipo = (string)filter_input(INPUT_POST, 'id_tipo');
+$que_dl = (string)filter_input(INPUT_POST, 'que_dl');
 
-$a_sel = (array)\filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+$a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 if (!empty($a_sel)) { //vengo de un checkbox
     $id_activ = (integer)strtok($a_sel[0], "#");
     $id_asignatura = (integer)strtok("#");
     // el scroll id es de la página anterior, hay que guardarlo allí
     $oPosicion->addParametro('id_sel', $a_sel, 1);
-    $scroll_id = (integer)\filter_input(INPUT_POST, 'scroll_id');
+    $scroll_id = (integer)filter_input(INPUT_POST, 'scroll_id');
     $oPosicion->addParametro('scroll_id', $scroll_id, 1);
 } else {
     $id_activ = '';

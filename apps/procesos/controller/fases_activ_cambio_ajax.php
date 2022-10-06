@@ -24,23 +24,23 @@ require_once("apps/core/global_header.inc");
 require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$Qque = (string)\filter_input(INPUT_POST, 'que');
-$Qid_tipo_activ = (string)\filter_input(INPUT_POST, 'id_tipo_activ');
-$Qdl_propia = (string)\filter_input(INPUT_POST, 'dl_propia');
-//$Qid_tipo_proceso = (integer) \filter_input(INPUT_POST, 'id_tipo_proceso');
+$Qque = (string)filter_input(INPUT_POST, 'que');
+$Qid_tipo_activ = (string)filter_input(INPUT_POST, 'id_tipo_activ');
+$Qdl_propia = (string)filter_input(INPUT_POST, 'dl_propia');
+//$Qid_tipo_proceso = (integer) filter_input(INPUT_POST, 'id_tipo_proceso');
 
 switch ($Qque) {
     case 'lista':
-        $Qid_fase_nueva = (string)\filter_input(INPUT_POST, 'id_fase_nueva');
+        $Qid_fase_nueva = (string)filter_input(INPUT_POST, 'id_fase_nueva');
         if (empty($Qid_fase_nueva)) {
             exit('<h2>' . _("Debe poner la fase nueva") . '</h2>');
         }
 
-        $Qperiodo = (string)\filter_input(INPUT_POST, 'periodo');
-        $Qyear = (string)\filter_input(INPUT_POST, 'year');
-        $Qempiezamin = (string)\filter_input(INPUT_POST, 'empiezamin');
-        $Qempiezamax = (string)\filter_input(INPUT_POST, 'empiezamax');
-        $Qaccion = (string)\filter_input(INPUT_POST, 'accion');
+        $Qperiodo = (string)filter_input(INPUT_POST, 'periodo');
+        $Qyear = (string)filter_input(INPUT_POST, 'year');
+        $Qempiezamin = (string)filter_input(INPUT_POST, 'empiezamin');
+        $Qempiezamax = (string)filter_input(INPUT_POST, 'empiezamax');
+        $Qaccion = (string)filter_input(INPUT_POST, 'accion');
 
         // valores por defeccto
         if (empty($Qperiodo)) {
@@ -244,9 +244,9 @@ switch ($Qque) {
         echo $txt;
         break;
     case 'update':
-        $Qid_fase_nueva = (string)\filter_input(INPUT_POST, 'id_fase_nueva');
-        $a_sel = (array)\filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-        $Qaccion = (string)\filter_input(INPUT_POST, 'accion');
+        $Qid_fase_nueva = (string)filter_input(INPUT_POST, 'id_fase_nueva');
+        $a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+        $Qaccion = (string)filter_input(INPUT_POST, 'accion');
 
         foreach ($a_sel as $id_activ) {
             $id_activ = strtok($id_activ, "#");
@@ -297,7 +297,7 @@ switch ($Qque) {
         }
         break;
     case 'get':
-        $Qid_fase_sel = (string)\filter_input(INPUT_POST, 'id_fase_sel');
+        $Qid_fase_sel = (string)filter_input(INPUT_POST, 'id_fase_sel');
         // buscar los procesos posibles para estos tipos de actividad
         $GesTiposActiv = new GestorTipoDeActividad();
         $aTiposDeProcesos = $GesTiposActiv->getTiposDeProcesos($Qid_tipo_activ, $Qdl_propia);

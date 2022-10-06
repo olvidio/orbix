@@ -19,14 +19,14 @@ require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
 
-$Qact = (string)\filter_input(INPUT_POST, 'act');
-$Qid_direccion = (integer)\filter_input(INPUT_POST, 'id_direccion');
-$Qobj_dir = (string)\filter_input(INPUT_POST, 'obj_dir');
+$Qact = (string)filter_input(INPUT_POST, 'act');
+$Qid_direccion = (integer)filter_input(INPUT_POST, 'id_direccion');
+$Qobj_dir = (string)filter_input(INPUT_POST, 'obj_dir');
 // Cuando abro una nueva ventana, los parametros están en $_GET
 if (empty($Qact)) {
-    $Qact = (string)\filter_input(INPUT_GET, 'act');
-    $Qid_direccion = (integer)\filter_input(INPUT_GET, 'id_direccion');
-    $Qobj_dir = (string)\filter_input(INPUT_GET, 'obj_dir');
+    $Qact = (string)filter_input(INPUT_GET, 'act');
+    $Qid_direccion = (integer)filter_input(INPUT_GET, 'id_direccion');
+    $Qobj_dir = (string)filter_input(INPUT_GET, 'obj_dir');
 }
 $obj = 'ubis\\model\\entity\\' . $Qobj_dir;
 

@@ -17,17 +17,17 @@ require_once("apps/core/global_object.inc");
 
 $error = '';
 
-$Qid_pau = (integer)\filter_input(INPUT_POST, 'id_pau');
+$Qid_pau = (integer)filter_input(INPUT_POST, 'id_pau');
 $oPersonaDl = new personas\PersonaDl($Qid_pau);
 $oPersonaDl->DBCarregar();
 
 //centro
-$Qnew_ctr = (string)\filter_input(INPUT_POST, 'new_ctr');
-$Qf_ctr = (string)\filter_input(INPUT_POST, 'f_ctr');
+$Qnew_ctr = (string)filter_input(INPUT_POST, 'new_ctr');
+$Qf_ctr = (string)filter_input(INPUT_POST, 'f_ctr');
 
 if (!empty($Qnew_ctr) && !empty($Qf_ctr)) {
-    $Qid_ctr_o = (string)\filter_input(INPUT_POST, 'id_ctr_o');
-    $Qctr_o = (string)\filter_input(INPUT_POST, 'ctr_o');
+    $Qid_ctr_o = (string)filter_input(INPUT_POST, 'id_ctr_o');
+    $Qctr_o = (string)filter_input(INPUT_POST, 'ctr_o');
 
     $id_new_ctr = strtok($Qnew_ctr, "#");
     $oCentro = new \ubis\model\entity\Centro($id_new_ctr);
@@ -55,10 +55,10 @@ if (!empty($Qnew_ctr) && !empty($Qf_ctr)) {
 
 //cambio de dl
 $old_dl = $oPersonaDl->getDl();
-$Qnew_dl = (string)\filter_input(INPUT_POST, 'new_dl');
-$Qf_dl = (string)\filter_input(INPUT_POST, 'f_dl');
-$Qsituacion = (string)\filter_input(INPUT_POST, 'situacion');
-$Qdl = (string)\filter_input(INPUT_POST, 'dl');
+$Qnew_dl = (string)filter_input(INPUT_POST, 'new_dl');
+$Qf_dl = (string)filter_input(INPUT_POST, 'f_dl');
+$Qsituacion = (string)filter_input(INPUT_POST, 'situacion');
+$Qdl = (string)filter_input(INPUT_POST, 'dl');
 $reg_dl_org = empty($Qdl) ? '' : ConfigGlobal::mi_region() . '-' . $Qdl;
 $sfsv_txt = (configGlobal::mi_sfsv() == 1) ? 'v' : 'f';
 

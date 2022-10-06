@@ -18,10 +18,10 @@ require_once("apps/core/global_object.inc");
 
 $oPosicion->recordar();
 
-$Qperiodo = (string)\filter_input(INPUT_POST, 'periodo');
-$Qyear = (string)\filter_input(INPUT_POST, 'year');
-$Qempiezamax = (string)\filter_input(INPUT_POST, 'empiezamax');
-$Qempiezamin = (string)\filter_input(INPUT_POST, 'empiezamin');
+$Qperiodo = (string)filter_input(INPUT_POST, 'periodo');
+$Qyear = (string)filter_input(INPUT_POST, 'year');
+$Qempiezamax = (string)filter_input(INPUT_POST, 'empiezamax');
+$Qempiezamin = (string)filter_input(INPUT_POST, 'empiezamin');
 
 $aOpciones = array(
     'tot_any' => _("todo el año"),

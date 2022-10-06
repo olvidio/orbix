@@ -22,7 +22,7 @@ require_once("apps/core/global_header.inc");
 require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$Qtipo_lista = (string)\filter_input(INPUT_POST, 'tipo_lista');
+$Qtipo_lista = (string)filter_input(INPUT_POST, 'tipo_lista');
 
 $mi_dele = ConfigGlobal::mi_delef();
 /*

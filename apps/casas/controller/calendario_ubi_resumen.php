@@ -16,9 +16,9 @@ require_once("apps/core/global_object.inc");
 
 $oPosicion->recordar();
 
-$QG = (integer)\filter_input(INPUT_POST, 'G');
-$Qinc_t = (integer)\filter_input(INPUT_POST, 'inc_t');
-$Qid_ubi = (integer)\filter_input(INPUT_POST, 'id_ubi');
+$QG = (integer)filter_input(INPUT_POST, 'G');
+$Qinc_t = (integer)filter_input(INPUT_POST, 'inc_t');
+$Qid_ubi = (integer)filter_input(INPUT_POST, 'id_ubi');
 
 // miro que rol tengo.
 $oMiUsuario = new Usuario(ConfigGlobal::mi_id_usuario());

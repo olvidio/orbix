@@ -8,9 +8,9 @@ require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
 
-$Qclase_info = (string)\filter_input(INPUT_POST, 'clase_info');
-$Qaccion = (string)\filter_input(INPUT_POST, 'accion');
-$Qvalor_depende = (string)\filter_input(INPUT_POST, 'valor_depende');
+$Qclase_info = (string)filter_input(INPUT_POST, 'clase_info');
+$Qaccion = (string)filter_input(INPUT_POST, 'accion');
+$Qvalor_depende = (string)filter_input(INPUT_POST, 'valor_depende');
 
 /***************  datos  **********************************/
 

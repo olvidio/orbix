@@ -7,7 +7,7 @@ namespace orbix\apps\core {
     {
         $dir_apps = '/orbix/apps';
         $className = ltrim($className, '\\');
-        $className = strtolower($className);
+        //$className = strtolower($className);
         $fileName = '';
         $namespace = '';
         if ($lastNsPos = strrpos($className, '\\')) {
@@ -15,7 +15,8 @@ namespace orbix\apps\core {
             $className = substr($className, $lastNsPos + 1);
             $fileName = str_replace('\\', DIRECTORY_SEPARATOR, $namespace) . DIRECTORY_SEPARATOR;
         }
-        $fileName .= str_replace('_', DIRECTORY_SEPARATOR, $className) . '.class.php';
+        //$fileName .= str_replace('_', DIRECTORY_SEPARATOR, $className) . '.class.php';
+        $fileName .= str_replace('_', DIRECTORY_SEPARATOR, $className) . '.php';
         $base_dir = $_SERVER['DOCUMENT_ROOT'] . $dir_apps;
         $fileName = $base_dir . DIRECTORY_SEPARATOR . $fileName;
         //echo "inc: ". $fileName."<br>";
@@ -24,7 +25,7 @@ namespace orbix\apps\core {
         if (file_exists($fileName) && include($fileName)) {
             return TRUE;
         } else {
-            // si hago esto no veo de donde venen el error!!
+            // si hago esto no veo de donde viene el error!!
             //trigger_error("The class '$className' or the file '$fileName' failed to spl_autoload  ", E_USER_WARNING);
             return FALSE;
         }
@@ -44,5 +45,5 @@ namespace orbix\apps {
     use core\set;
 
     use core\configglobal;
-    use core\gestorerrores;
+    use core\GestorErrores;
 }

@@ -8,11 +8,11 @@ require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
 
-$Qid_ubi = (integer)\filter_input(INPUT_POST, 'id_ubi');
-$Qobj_dir = (string)\filter_input(INPUT_POST, 'obj_dir');
-$Qc_p = (string)\filter_input(INPUT_POST, 'c_p');
-$Qciudad = (string)\filter_input(INPUT_POST, 'ciudad');
-$Qpais = (string)\filter_input(INPUT_POST, 'pais');
+$Qid_ubi = (integer)filter_input(INPUT_POST, 'id_ubi');
+$Qobj_dir = (string)filter_input(INPUT_POST, 'obj_dir');
+$Qc_p = (string)filter_input(INPUT_POST, 'c_p');
+$Qciudad = (string)filter_input(INPUT_POST, 'ciudad');
+$Qpais = (string)filter_input(INPUT_POST, 'pais');
 
 $obj = 'ubis\\model\\entity\\Gestor' . $Qobj_dir;
 $oGesDir = new $obj();

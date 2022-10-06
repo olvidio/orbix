@@ -35,8 +35,8 @@ require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
 
-$Qque = (string)\filter_input(INPUT_POST, 'que');
-$Qid_nom = (integer)\filter_input(INPUT_POST, 'id_nom');
+$Qque = (string)filter_input(INPUT_POST, 'que');
+$Qid_nom = (integer)filter_input(INPUT_POST, 'id_nom');
 
 $oEncargoTipo = new EncargoTipo();
 
@@ -48,7 +48,7 @@ $GesEncargoTipo = new GestorEncargoTipo();
 
 switch ($Qque) {
     case 'get_select':
-        $Qfiltro_sacd = (string)\filter_input(INPUT_POST, 'filtro_sacd');
+        $Qfiltro_sacd = (string)filter_input(INPUT_POST, 'filtro_sacd');
 
         $sdonde = "AND id_tabla='$Qfiltro_sacd' ";
         $GesPersonas = new GestorPersonaDl();
@@ -431,8 +431,8 @@ switch ($Qque) {
         break;
     case 'update':
         //modificar
-        $Qenc_num = (integer)\filter_input(INPUT_POST, 'enc_num');
-        $Qobserv = (string)\filter_input(INPUT_POST, 'observ');
+        $Qenc_num = (integer)filter_input(INPUT_POST, 'enc_num');
+        $Qobserv = (string)filter_input(INPUT_POST, 'observ');
 
         $QAid_tipo_enc = filter_input(INPUT_POST, 'id_tipo_enc', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
         $QAid_enc = filter_input(INPUT_POST, 'id_enc', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);

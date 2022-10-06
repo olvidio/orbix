@@ -19,9 +19,9 @@ require_once("apps/core/global_header.inc");
 require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$Qentrada = (string)\filter_input(INPUT_POST, 'entrada');
-$Qsalida = (string)\filter_input(INPUT_POST, 'salida');
-$Qmodo = (string)\filter_input(INPUT_POST, 'modo');
+$Qentrada = (string)filter_input(INPUT_POST, 'entrada');
+$Qsalida = (string)filter_input(INPUT_POST, 'salida');
+$Qmodo = (string)filter_input(INPUT_POST, 'modo');
 $Qmodo = empty($Qmodo) ? 'buscar' : $Qmodo;
 
 switch ($Qsalida) {
@@ -97,9 +97,9 @@ switch ($Qsalida) {
         echo $oTabla->mostrar_tabla();
         break;
     case "lugar":
-        $Qisfsv = (integer)\filter_input(INPUT_POST, 'isfsv');
-        $Qssfsv = (string)\filter_input(INPUT_POST, 'ssfsv');
-        $Qopcion_sel = (string)\filter_input(INPUT_POST, 'opcion_sel');
+        $Qisfsv = (integer)filter_input(INPUT_POST, 'isfsv');
+        $Qssfsv = (string)filter_input(INPUT_POST, 'ssfsv');
+        $Qopcion_sel = (string)filter_input(INPUT_POST, 'opcion_sel');
 
         $oActividadLugar = new \actividades\model\ActividadLugar();
         $oActividadLugar->setIsfsv($Qisfsv);

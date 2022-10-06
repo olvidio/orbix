@@ -44,5 +44,5 @@ namespace pruebas\apps {
     use core\set;
 
     use core\configglobal;
-    use core\gestorerrores;
+    use core\GestorErrores;
 }

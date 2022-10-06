@@ -24,13 +24,13 @@ require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
 
-$Qrefresh = (integer)\filter_input(INPUT_POST, 'refresh');
+$Qrefresh = (integer)filter_input(INPUT_POST, 'refresh');
 
-$Qtipo = (string)\filter_input(INPUT_POST, 'tipo');
+$Qtipo = (string)filter_input(INPUT_POST, 'tipo');
 
 
-$Qyear = (string)\filter_input(INPUT_POST, 'year');
-$Qperiodo = (string)\filter_input(INPUT_POST, 'periodo');
+$Qyear = (string)filter_input(INPUT_POST, 'year');
+$Qperiodo = (string)filter_input(INPUT_POST, 'periodo');
 
 $titulo = core\strtoupper_dlb(_("periodo del listado del año próximo"));
 $titulo .= '. ';

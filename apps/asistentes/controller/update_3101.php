@@ -38,24 +38,24 @@ require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
 $msg_err = '';
-$Qmod = (string)\filter_input(INPUT_POST, 'mod');
-$Qpau = (string)\filter_input(INPUT_POST, 'pau');
+$Qmod = (string)filter_input(INPUT_POST, 'mod');
+$Qpau = (string)filter_input(INPUT_POST, 'pau');
 
 //En el caso de eliminar desde la lista de cargos
-$a_sel = (array)\filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+$a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 if (!empty($a_sel)) { //vengo de un checkbox
     if ($Qpau === "p") {
         $Qid_activ = (integer)strtok($a_sel[0], "#");
-        $Qid_nom = (integer)\filter_input(INPUT_POST, 'id_pau');
+        $Qid_nom = (integer)filter_input(INPUT_POST, 'id_pau');
     }
     if ($Qpau === "a") {
         $Qid_nom = (integer)strtok($a_sel[0], "#");
-        $Qid_activ = (integer)\filter_input(INPUT_POST, 'id_pau');
+        $Qid_activ = (integer)filter_input(INPUT_POST, 'id_pau');
     }
 } else { // desde el formulario
-    $Qid_activ = (integer)\filter_input(INPUT_POST, 'id_activ');
-    $Qid_activ_old = (integer)\filter_input(INPUT_POST, 'id_activ_old');
-    $Qid_nom = (integer)\filter_input(INPUT_POST, 'id_nom');
+    $Qid_activ = (integer)filter_input(INPUT_POST, 'id_activ');
+    $Qid_activ_old = (integer)filter_input(INPUT_POST, 'id_activ_old');
+    $Qid_nom = (integer)filter_input(INPUT_POST, 'id_nom');
 }
 
 // -------------- funciones -----------------------
@@ -125,16 +125,16 @@ function editar($id_activ, $id_nom, $mod)
     if ($mod != 'nuevo' && $oAsistente->perm_modificar() === FALSE) {
         $msg_err = _("los datos de asistencia los modifica la dl del asistente");
     } else {
-        $Qencargo = (string)\filter_input(INPUT_POST, 'encargo');
-        $Qobserv = (string)\filter_input(INPUT_POST, 'observ');
-        $Qobserv_est = (string)\filter_input(INPUT_POST, 'observ_est');
-        $Qplaza = (integer)\filter_input(INPUT_POST, 'plaza');
-        $Qpropio = (string)\filter_input(INPUT_POST, 'propio');
-        $Qest_ok = (string)\filter_input(INPUT_POST, 'est_ok');
-        $Qcfi = (string)\filter_input(INPUT_POST, 'cfi');
-        $Qfalta = (string)\filter_input(INPUT_POST, 'falta');
-        $Qcfi_con = (string)\filter_input(INPUT_POST, 'cfi_con');
-        $Qpropietario = (string)\filter_input(INPUT_POST, 'propietario');
+        $Qencargo = (string)filter_input(INPUT_POST, 'encargo');
+        $Qobserv = (string)filter_input(INPUT_POST, 'observ');
+        $Qobserv_est = (string)filter_input(INPUT_POST, 'observ_est');
+        $Qplaza = (integer)filter_input(INPUT_POST, 'plaza');
+        $Qpropio = (string)filter_input(INPUT_POST, 'propio');
+        $Qest_ok = (string)filter_input(INPUT_POST, 'est_ok');
+        $Qcfi = (string)filter_input(INPUT_POST, 'cfi');
+        $Qfalta = (string)filter_input(INPUT_POST, 'falta');
+        $Qcfi_con = (string)filter_input(INPUT_POST, 'cfi_con');
+        $Qpropietario = (string)filter_input(INPUT_POST, 'propietario');
         if ($Qpropietario === 'xxx') {
             $Qpropietario = '';
         }
@@ -164,7 +164,7 @@ switch ($Qmod) {
     //------------ cambiar PLAZA --------
     case "plaza":
         $msg_err = '';
-        $Qlista_json = (string)\filter_input(INPUT_POST, 'lista_json');
+        $Qlista_json = (string)filter_input(INPUT_POST, 'lista_json');
         $arr = json_decode($Qlista_json);
         foreach ($arr as $obj) {
             $id_nom = $obj->value;

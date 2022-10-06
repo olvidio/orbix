@@ -25,7 +25,7 @@ require_once("apps/core/global_object.inc");
 // para mostrar todos los errores juntos:
 $msgError = '';
 
-$Qque = (string)\filter_input(INPUT_POST, 'que');
+$Qque = (string)filter_input(INPUT_POST, 'que');
 
 $solo_dl = 0;
 switch ($Qque) {
@@ -51,10 +51,10 @@ switch ($Qque) {
         break;
     case "get":
         $ordenar_dl = 1;
-        $Qpoblacion = (string)\filter_input(INPUT_POST, 'poblacion');
-        $Qpais = (string)\filter_input(INPUT_POST, 'pais');
-        $Qregion = (string)\filter_input(INPUT_POST, 'region');
-        $Qdl = (string)\filter_input(INPUT_POST, 'dl');
+        $Qpoblacion = (string)filter_input(INPUT_POST, 'poblacion');
+        $Qpais = (string)filter_input(INPUT_POST, 'pais');
+        $Qregion = (string)filter_input(INPUT_POST, 'region');
+        $Qdl = (string)filter_input(INPUT_POST, 'dl');
         // buscar los ctr y de allí mirar los que tienen cartas de presentacion.
         $aWhere = array();
         $aOperador = array();

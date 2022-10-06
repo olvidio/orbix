@@ -25,19 +25,19 @@ require_once("apps/core/global_header.inc");
 require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$Qque = (string)\filter_input(INPUT_POST, 'que');
+$Qque = (string)filter_input(INPUT_POST, 'que');
 
-$Qstatus = (integer)\filter_input(INPUT_POST, 'status');
+$Qstatus = (integer)filter_input(INPUT_POST, 'status');
 $Qstatus = empty($Qstatus) ? actividades\ActividadAll::STATUS_ACTUAL : $Qstatus;
-$Qid_tipo_activ = (string)\filter_input(INPUT_POST, 'id_tipo_activ');
-$Qid_ubi = (integer)\filter_input(INPUT_POST, 'id_ubi');
-$Qnom_activ = (string)\filter_input(INPUT_POST, 'nom_activ');
-$Qperiodo = (string)\filter_input(INPUT_POST, 'periodo');
-$Qyear = (integer)\filter_input(INPUT_POST, 'year');
+$Qid_tipo_activ = (string)filter_input(INPUT_POST, 'id_tipo_activ');
+$Qid_ubi = (integer)filter_input(INPUT_POST, 'id_ubi');
+$Qnom_activ = (string)filter_input(INPUT_POST, 'nom_activ');
+$Qperiodo = (string)filter_input(INPUT_POST, 'periodo');
+$Qyear = (integer)filter_input(INPUT_POST, 'year');
 $Qyear = empty($Qyear) ? date('Y') : $Qyear;
-$Qdl_org = (string)\filter_input(INPUT_POST, 'dl_org');
-$Qempiezamin = (string)\filter_input(INPUT_POST, 'empiezamin');
-$Qempiezamax = (string)\filter_input(INPUT_POST, 'empiezamax');
+$Qdl_org = (string)filter_input(INPUT_POST, 'dl_org');
+$Qempiezamin = (string)filter_input(INPUT_POST, 'empiezamin');
+$Qempiezamax = (string)filter_input(INPUT_POST, 'empiezamax');
 
 // valores por defeccto
 if (empty($Qperiodo)) {
@@ -54,10 +54,10 @@ if ($Qstatus != actividades\ActividadAll::STATUS_ALL) {
 }
 // Id tipo actividad
 if (empty($Qid_tipo_activ)) {
-    $Qsfsv = (string)\filter_input(INPUT_POST, 'sfsv');
-    $Qsasistentes = (string)\filter_input(INPUT_POST, 'sasistentes');
-    $Qsactividad = (string)\filter_input(INPUT_POST, 'sactividad');
-    $Qsnom_tipo = (string)\filter_input(INPUT_POST, 'snom_tipo');
+    $Qsfsv = (string)filter_input(INPUT_POST, 'sfsv');
+    $Qsasistentes = (string)filter_input(INPUT_POST, 'sasistentes');
+    $Qsactividad = (string)filter_input(INPUT_POST, 'sactividad');
+    $Qsnom_tipo = (string)filter_input(INPUT_POST, 'snom_tipo');
 
     if (empty($Qssfsv)) {
         if ($mi_sfsv == 1) $Qssfsv = 'sv';

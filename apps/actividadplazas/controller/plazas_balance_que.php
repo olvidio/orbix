@@ -28,8 +28,8 @@ if (empty($Qid_tipo_activ)) {
         if ($mi_sfsv == 1) $Qssfsv = 'sv';
         if ($mi_sfsv == 2) $Qssfsv = 'sf';
     }
-    $Qsasistentes = (string)\filter_input(INPUT_POST, 'sasistentes');
-    $Qsactividad = (string)\filter_input(INPUT_POST, 'sactividad');
+    $Qsasistentes = (string)filter_input(INPUT_POST, 'sasistentes');
+    $Qsactividad = (string)filter_input(INPUT_POST, 'sactividad');
     $oTipoActiv = new web\TiposActividades();
     $oTipoActiv->setSfsvText($Qssfsv);
     $oTipoActiv->setAsistentesText($Qsasistentes);

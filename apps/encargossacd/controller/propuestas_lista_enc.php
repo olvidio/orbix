@@ -13,7 +13,7 @@ require_once("apps/core/global_header.inc");
 require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$Qfiltro_ctr = (integer)\filter_input(INPUT_POST, 'filtro_ctr');
+$Qfiltro_ctr = (integer)filter_input(INPUT_POST, 'filtro_ctr');
 
 $error_txt = '';
 $gesPropuestaEncargoSacdHorario = new GestorPropuestaEncargoSacdHorario();

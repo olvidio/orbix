@@ -30,12 +30,12 @@ require_once("apps/core/global_object.inc");
 $mi_dele = ConfigGlobal::mi_delef();
 $mi_region = ConfigGlobal::mi_region();
 
-$Qrefresh = (integer)\filter_input(INPUT_POST, 'refresh');
+$Qrefresh = (integer)filter_input(INPUT_POST, 'refresh');
 $oPosicion->recordar($Qrefresh);
 
 //Si vengo por medio de Posicion, borro la última
 if (isset($_POST['stack'])) {
-    $stack = \filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
+    $stack = filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
     if ($stack != '') {
         $oPosicion2 = new web\Posicion();
         if ($oPosicion2->goStack($stack)) { // devuelve false si no puede ir
@@ -46,8 +46,8 @@ if (isset($_POST['stack'])) {
     }
 }
 
-$Qtitulo = (string)\filter_input(INPUT_POST, 'titulo');
-$Qacta = (string)\filter_input(INPUT_POST, 'acta');
+$Qtitulo = (string)filter_input(INPUT_POST, 'titulo');
+$Qacta = (string)filter_input(INPUT_POST, 'acta');
 
 /*
 * Defino un array con los datos actuales, para saber volver después de navegar un rato

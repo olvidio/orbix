@@ -21,7 +21,7 @@ exit(); // terminate
 
 function upload()
 {
-    $Qacta = (string)\filter_input(INPUT_POST, 'acta_num');
+    $Qacta = (string)filter_input(INPUT_POST, 'acta_num');
 
     $error_txt = '';
     $input = 'acta_pdf'; // the input name for the fileinput plugin

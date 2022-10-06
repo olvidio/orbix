@@ -22,16 +22,16 @@ require_once("apps/core/global_header.inc");
 require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$Qque = (string)\filter_input(INPUT_POST, 'que');
-$Qfiltro_ctr = (integer)\filter_input(INPUT_POST, 'filtro_ctr');
+$Qque = (string)filter_input(INPUT_POST, 'que');
+$Qfiltro_ctr = (integer)filter_input(INPUT_POST, 'filtro_ctr');
 
 $error_txt = '';
 switch ($Qque) {
     case "lista_sacd":
-        $Qid_sacd = (integer)\filter_input(INPUT_POST, 'id_sacd');
-        $Qid_item = (integer)\filter_input(INPUT_POST, 'id_item');
-        $Qid_enc = (integer)\filter_input(INPUT_POST, 'id_enc');
-        $Qtipo = (string)\filter_input(INPUT_POST, 'tipo');
+        $Qid_sacd = (integer)filter_input(INPUT_POST, 'id_sacd');
+        $Qid_item = (integer)filter_input(INPUT_POST, 'id_item');
+        $Qid_enc = (integer)filter_input(INPUT_POST, 'id_enc');
+        $Qtipo = (string)filter_input(INPUT_POST, 'tipo');
         /* lista sacd posibles */
         $GesPersonas = new GestorPersonaSacd();
         $oDesplSacd = $GesPersonas->getListaSacd("AND id_tabla ~ '^(a|n|sss)$'");
@@ -60,12 +60,12 @@ switch ($Qque) {
         exit();
         break;
     case "dedicacion_update":
-        $Qid_sacd = (integer)\filter_input(INPUT_POST, 'id_sacd');
-        $Qid_item = (integer)\filter_input(INPUT_POST, 'id_item');
-        $Qid_enc = (integer)\filter_input(INPUT_POST, 'id_enc');
-        $Qdedic_m = (integer)\filter_input(INPUT_POST, 'dedic_m');
-        $Qdedic_t = (integer)\filter_input(INPUT_POST, 'dedic_t');
-        $Qdedic_v = (integer)\filter_input(INPUT_POST, 'dedic_v');
+        $Qid_sacd = (integer)filter_input(INPUT_POST, 'id_sacd');
+        $Qid_item = (integer)filter_input(INPUT_POST, 'id_item');
+        $Qid_enc = (integer)filter_input(INPUT_POST, 'id_enc');
+        $Qdedic_m = (integer)filter_input(INPUT_POST, 'dedic_m');
+        $Qdedic_t = (integer)filter_input(INPUT_POST, 'dedic_t');
+        $Qdedic_v = (integer)filter_input(INPUT_POST, 'dedic_v');
 
         // si id_item=$id_enc es nuevo: Hay que buscar su id:
         if ($Qid_item == $Qid_enc) {
@@ -128,9 +128,9 @@ switch ($Qque) {
         exit();
         break;
     case "dedicacion":
-        $Qid_sacd = (integer)\filter_input(INPUT_POST, 'id_sacd');
-        $Qid_item = (integer)\filter_input(INPUT_POST, 'id_item');
-        $Qid_enc = (integer)\filter_input(INPUT_POST, 'id_enc');
+        $Qid_sacd = (integer)filter_input(INPUT_POST, 'id_sacd');
+        $Qid_item = (integer)filter_input(INPUT_POST, 'id_item');
+        $Qid_enc = (integer)filter_input(INPUT_POST, 'id_enc');
 
         $oPersonaSacd = new PersonaSacd($Qid_sacd);
         $apellidos_nombre = $oPersonaSacd->getApellidosNombre();
@@ -201,7 +201,7 @@ switch ($Qque) {
         exit();
         break;
     case "info":
-        $Qid_sacd = (integer)\filter_input(INPUT_POST, 'id_sacd');
+        $Qid_sacd = (integer)filter_input(INPUT_POST, 'id_sacd');
 
         $oPersonaSacd = new PersonaSacd($Qid_sacd);
         $apellidos_nombre = $oPersonaSacd->getApellidosNombre();
@@ -236,10 +236,10 @@ switch ($Qque) {
         exit();
         break;
     case "cmb_sacd":
-        $Qtipo = (string)\filter_input(INPUT_POST, 'tipo');
-        $Qid_item = (integer)\filter_input(INPUT_POST, 'id_item');
-        $Qid_enc = (integer)\filter_input(INPUT_POST, 'id_enc');
-        $Qid_sacd = (integer)\filter_input(INPUT_POST, 'id_sacd');
+        $Qtipo = (string)filter_input(INPUT_POST, 'tipo');
+        $Qid_item = (integer)filter_input(INPUT_POST, 'id_item');
+        $Qid_enc = (integer)filter_input(INPUT_POST, 'id_enc');
+        $Qid_sacd = (integer)filter_input(INPUT_POST, 'id_sacd');
 
         $html = '';
         if ($Qid_item == $Qid_enc) { // generar una fila nueva

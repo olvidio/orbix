@@ -25,8 +25,8 @@ require_once("apps/core/global_object.inc");
 
 //include ("./funciones_est.php");
 
-$Qactualizar = (string)\filter_input(INPUT_POST, 'actualizar');
-$Qid_tabla = (string)\filter_input(INPUT_POST, 'id_tabla');
+$Qactualizar = (string)filter_input(INPUT_POST, 'actualizar');
+$Qid_tabla = (string)filter_input(INPUT_POST, 'id_tabla');
 
 if ($Qid_tabla == 'n') {
     $tabla = 'p_numerarios';
@@ -104,8 +104,8 @@ if ($Qactualizar == 'r') {
 }
 if ($Qactualizar == 'borrar_cursada') {
 
-    $Qid_nom = (string)\filter_input(INPUT_POST, 'id_nom');
-    $Qid_asignatura = (string)\filter_input(INPUT_POST, 'id_asignatura');
+    $Qid_nom = (string)filter_input(INPUT_POST, 'id_nom');
+    $Qid_asignatura = (string)filter_input(INPUT_POST, 'id_asignatura');
 
     $ssql = "DELETE FROM e_notas_dl n 
 		WHERE n.id_situacion = " . Nota::CURSADA . "

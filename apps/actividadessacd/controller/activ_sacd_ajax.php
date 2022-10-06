@@ -112,11 +112,11 @@ function ordena($id_activ, $id_nom, $num_orden)
     }
 }
 
-$Qque = (string)\filter_input(INPUT_POST, 'que');
-$Qid_activ = (integer)\filter_input(INPUT_POST, 'id_activ');
+$Qque = (string)filter_input(INPUT_POST, 'que');
+$Qid_activ = (integer)filter_input(INPUT_POST, 'id_activ');
 
 if ($Qque == 'lista_activ') {
-    $Qtipo = (string)\filter_input(INPUT_POST, 'tipo');
+    $Qtipo = (string)filter_input(INPUT_POST, 'tipo');
     if ($Qtipo == 'solape') {
         $Qque = $Qtipo;
     }
@@ -126,9 +126,9 @@ $aWhere = [];
 $aOperador = [];
 switch ($Qque) {
     case "orden":
-        $Qnum_orden = (string)\filter_input(INPUT_POST, 'num_orden');
-        $Qid_cargo = (integer)\filter_input(INPUT_POST, 'id_cargo');
-        $Qid_nom = (integer)\filter_input(INPUT_POST, 'id_nom');
+        $Qnum_orden = (string)filter_input(INPUT_POST, 'num_orden');
+        $Qid_cargo = (integer)filter_input(INPUT_POST, 'id_cargo');
+        $Qid_nom = (integer)filter_input(INPUT_POST, 'id_nom');
         $error_txt = '';
         if ($Qnum_orden == "borrar") { //entonces es borrar:
             if ($Qid_activ && $Qid_cargo) {
@@ -190,7 +190,7 @@ switch ($Qque) {
         echo $txt;
         break;
     case "nuevo":
-        $Qseleccion = (string)\filter_input(INPUT_POST, 'seleccion');
+        $Qseleccion = (string)filter_input(INPUT_POST, 'seleccion');
         // una lista con los sacd posibles.
         // Primero el sacd del centro encargado [añado (*)] y después el resto.
         // ctr encargado:
@@ -258,7 +258,7 @@ switch ($Qque) {
         echo $txt;
         break;
     case "asignar":
-        $Qid_nom = (integer)\filter_input(INPUT_POST, 'id_nom');
+        $Qid_nom = (integer)filter_input(INPUT_POST, 'id_nom');
         // miro si hay sacds encargados
         $aWhere['id_activ'] = $Qid_activ;
         $aWhere['id_cargo'] = $txt_where_cargos;
@@ -307,11 +307,11 @@ switch ($Qque) {
         }
         break;
     case 'lista_activ':
-        $Qtipo = (string)\filter_input(INPUT_POST, 'tipo');
-        $Qyear = (integer)\filter_input(INPUT_POST, 'year');
-        $Qperiodo = (string)\filter_input(INPUT_POST, 'periodo');
-        $Qempiezamin = (string)\filter_input(INPUT_POST, 'empiezamin');
-        $Qempiezamax = (string)\filter_input(INPUT_POST, 'empiezamax');
+        $Qtipo = (string)filter_input(INPUT_POST, 'tipo');
+        $Qyear = (integer)filter_input(INPUT_POST, 'year');
+        $Qperiodo = (string)filter_input(INPUT_POST, 'periodo');
+        $Qempiezamin = (string)filter_input(INPUT_POST, 'empiezamin');
+        $Qempiezamax = (string)filter_input(INPUT_POST, 'empiezamax');
 
         // periodo.
         $oPeriodo = new Periodo();
@@ -562,11 +562,11 @@ switch ($Qque) {
         <?php
         break;
     case 'solape':
-        $Qtipo = (string)\filter_input(INPUT_POST, 'tipo');
-        $Qyear = (integer)\filter_input(INPUT_POST, 'year');
-        $Qperiodo = (string)\filter_input(INPUT_POST, 'periodo');
-        $Qempiezamin = (string)\filter_input(INPUT_POST, 'empiezamin');
-        $Qempiezamax = (string)\filter_input(INPUT_POST, 'empiezamax');
+        $Qtipo = (string)filter_input(INPUT_POST, 'tipo');
+        $Qyear = (integer)filter_input(INPUT_POST, 'year');
+        $Qperiodo = (string)filter_input(INPUT_POST, 'periodo');
+        $Qempiezamin = (string)filter_input(INPUT_POST, 'empiezamin');
+        $Qempiezamax = (string)filter_input(INPUT_POST, 'empiezamax');
 
         $oActividadFase = new ActividadFase(ActividadFase::FASE_OK_SACD);
         $txt_fase_ok_sacd = $oActividadFase->getDesc_fase();

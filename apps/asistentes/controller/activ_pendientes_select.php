@@ -25,9 +25,9 @@ require_once("apps/core/global_header.inc");
 require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$Qany = (integer)\filter_input(INPUT_POST, 'any');
-$Qtipo_personas = (string)\filter_input(INPUT_POST, 'tipo_personas');
-$Qsactividad = (string)\filter_input(INPUT_POST, 'sactividad');
+$Qany = (integer)filter_input(INPUT_POST, 'any');
+$Qtipo_personas = (string)filter_input(INPUT_POST, 'tipo_personas');
+$Qsactividad = (string)filter_input(INPUT_POST, 'sactividad');
 
 /*miro las condiciones. Si es la primera vez muestro las de este año */
 if (empty($Qany)) {

@@ -39,27 +39,27 @@ require_once("apps/core/global_header.inc");
 require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$Qactualizar = (integer)\filter_input(INPUT_POST, 'actualizar');
+$Qactualizar = (integer)filter_input(INPUT_POST, 'actualizar');
 if (empty($Qactualizar)) {
     $oPosicion->recordar();
 }
 
-$Qpermiso = (string)\filter_input(INPUT_POST, 'permiso');
+$Qpermiso = (string)filter_input(INPUT_POST, 'permiso');
 
-$a_sel = (array)\filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+$a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 if (!empty($a_sel)) { //vengo de un checkbox
     $Qid_nom = (integer)strtok($a_sel[0], "#");
     // el scroll id es de la página anterior, hay que guardarlo allí
     $oPosicion->addParametro('id_sel', $a_sel, 1);
-    $scroll_id = (integer)\filter_input(INPUT_POST, 'scroll_id');
+    $scroll_id = (integer)filter_input(INPUT_POST, 'scroll_id');
     $oPosicion->addParametro('scroll_id', $scroll_id, 1);
 } else {
-    $Qid_nom = (integer)\filter_input(INPUT_POST, 'id_nom');
+    $Qid_nom = (integer)filter_input(INPUT_POST, 'id_nom');
 }
 
-$Qid_activ = (integer)\filter_input(INPUT_POST, 'id_activ');
-$Qid_pau = (integer)\filter_input(INPUT_POST, 'id_pau');
-$Qobj_pau = (string)\filter_input(INPUT_POST, 'obj_pau');
+$Qid_activ = (integer)filter_input(INPUT_POST, 'id_activ');
+$Qid_pau = (integer)filter_input(INPUT_POST, 'id_pau');
+$Qobj_pau = (string)filter_input(INPUT_POST, 'obj_pau');
 
 if (empty($Qid_activ)) {
     $Qid_activ = $Qid_pau;
@@ -140,7 +140,7 @@ if (!empty($Qid_nom)) { //caso de modificar
     $propietario = ''; //valor por defecto
     $Qobj_pau = !empty($Qobj_pau) ? urldecode($Qobj_pau) : '';
     $obj_pau = $Qobj_pau;
-    $Qna = (string)\filter_input(INPUT_POST, 'na');
+    $Qna = (string)filter_input(INPUT_POST, 'na');
     $na_val = 'p' . $Qna;
     switch ($obj_pau) {
         case 'PersonaN':

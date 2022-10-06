@@ -18,8 +18,8 @@ require_once("apps/core/global_header.inc");
 require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$Qque = (string)\filter_input(INPUT_POST, 'que');
-$Qid_activ = (integer)\filter_input(INPUT_POST, 'id_activ');
+$Qque = (string)filter_input(INPUT_POST, 'que');
+$Qid_activ = (integer)filter_input(INPUT_POST, 'id_activ');
 
 switch ($Qque) {
     case 'generar':
@@ -98,10 +98,10 @@ switch ($Qque) {
         echo $txt;
         break;
     case 'update':
-        $Qid_item = (integer)\filter_input(INPUT_POST, 'id_item');
-        $Qcompletado = (string)\filter_input(INPUT_POST, 'completado');
-        $Qobserv = (string)\filter_input(INPUT_POST, 'observ');
-        $Qforce = (string)\filter_input(INPUT_POST, 'force');
+        $Qid_item = (integer)filter_input(INPUT_POST, 'id_item');
+        $Qcompletado = (string)filter_input(INPUT_POST, 'completado');
+        $Qobserv = (string)filter_input(INPUT_POST, 'observ');
+        $Qforce = (string)filter_input(INPUT_POST, 'force');
 
         $oFicha = new ActividadProcesoTarea(array('id_item' => $Qid_item));
         $oFicha->DBCarregar(); // perque tingui tots els valors, y no esbori al grabar.

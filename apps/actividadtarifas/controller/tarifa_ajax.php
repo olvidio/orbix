@@ -19,16 +19,16 @@ require_once("apps/core/global_header.inc");
 require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$Qque = (string)\filter_input(INPUT_POST, 'que');
-$Qid_activ = (string)\filter_input(INPUT_POST, 'id_activ');
-$Qid_tarifa = (string)\filter_input(INPUT_POST, 'id_tarifa');
+$Qque = (string)filter_input(INPUT_POST, 'que');
+$Qid_activ = (string)filter_input(INPUT_POST, 'id_activ');
+$Qid_tarifa = (string)filter_input(INPUT_POST, 'id_tarifa');
 
 switch ($Qque) {
     case 'form_tarifa_ubi':
-        $Qid_item = (string)\filter_input(INPUT_POST, 'id_item');
-        $Qid_ubi = (string)\filter_input(INPUT_POST, 'id_ubi');
-        $Qyear = (string)\filter_input(INPUT_POST, 'year');
-        $Qletra = (string)\filter_input(INPUT_POST, 'letra');
+        $Qid_item = (string)filter_input(INPUT_POST, 'id_item');
+        $Qid_ubi = (string)filter_input(INPUT_POST, 'id_ubi');
+        $Qyear = (string)filter_input(INPUT_POST, 'year');
+        $Qletra = (string)filter_input(INPUT_POST, 'letra');
         $letra = empty($Qletra) ? _("nueva") : $Qletra;
 
         $oHash = new web\Hash();
@@ -72,8 +72,8 @@ switch ($Qque) {
         echo $txt;
         break;
     case "get":
-        $Qid_ubi = (string)\filter_input(INPUT_POST, 'id_ubi');
-        $Qyear = (string)\filter_input(INPUT_POST, 'year');
+        $Qid_ubi = (string)filter_input(INPUT_POST, 'id_ubi');
+        $Qyear = (string)filter_input(INPUT_POST, 'year');
 
         $miSfsv = ConfigGlobal::mi_sfsv();
         $a_seccion = array(1 => _("sv"), 2 => _("sf"));
@@ -169,12 +169,12 @@ switch ($Qque) {
         }
         break;
     case "update":
-        $Qid_item = (integer)\filter_input(INPUT_POST, 'id_item');
-        $Qid_ubi = (integer)\filter_input(INPUT_POST, 'id_ubi');
-        $Qyear = (integer)\filter_input(INPUT_POST, 'year');
-        $Qid_tarifa = (integer)\filter_input(INPUT_POST, 'id_tarifa');
-        $Qcantidad = (string)\filter_input(INPUT_POST, 'cantidad');
-        $Qobserv = (string)\filter_input(INPUT_POST, 'observ');
+        $Qid_item = (integer)filter_input(INPUT_POST, 'id_item');
+        $Qid_ubi = (integer)filter_input(INPUT_POST, 'id_ubi');
+        $Qyear = (integer)filter_input(INPUT_POST, 'year');
+        $Qid_tarifa = (integer)filter_input(INPUT_POST, 'id_tarifa');
+        $Qcantidad = (string)filter_input(INPUT_POST, 'cantidad');
+        $Qobserv = (string)filter_input(INPUT_POST, 'observ');
 
         if (!empty($Qid_item)) {
             $oTarifa = new Tarifa();
@@ -194,7 +194,7 @@ switch ($Qque) {
         }
         break;
     case "borrar":
-        $Qid_item = (integer)\filter_input(INPUT_POST, 'id_item');
+        $Qid_item = (integer)filter_input(INPUT_POST, 'id_item');
         if (!empty($Qid_item)) {
             $oTarifa = new Tarifa();
             $oTarifa->setId_item($Qid_item);
@@ -203,14 +203,14 @@ switch ($Qque) {
                 echo "\n" . $oTarifa->getErrorTxt();
             }
         } else {
-            $Qque = (string)\filter_input(INPUT_POST, 'que');
+            $Qque = (string)filter_input(INPUT_POST, 'que');
             $error_txt = _("no sé cuál he de borar");
             echo "{ que: '" . $Qque . "', error: '$error_txt' }";
         }
         break;
     case "update_inc":
-        $Qid_ubi = (integer)\filter_input(INPUT_POST, 'id_ubi');
-        $Qyear = (integer)\filter_input(INPUT_POST, 'year');
+        $Qid_ubi = (integer)filter_input(INPUT_POST, 'id_ubi');
+        $Qyear = (integer)filter_input(INPUT_POST, 'year');
         foreach ($_POST['inc_cantidad'] as $key => $cantidad) {
             $tarifa = strtok($key, '#');
             $id_item = (integer)strtok('#');
@@ -276,7 +276,7 @@ switch ($Qque) {
         }
         break;
     case 'tar_form':
-        $Qid_tarifa = (string)\filter_input(INPUT_POST, 'id_tarifa');
+        $Qid_tarifa = (string)filter_input(INPUT_POST, 'id_tarifa');
         if ($Qid_tarifa == 'nuevo') {
             $letra = '';
             $modo = 0;
@@ -317,10 +317,10 @@ switch ($Qque) {
         echo $txt;
         break;
     case "tar_update":
-        $Qid_tarifa = (string)\filter_input(INPUT_POST, 'id_tarifa');
-        $Qletra = (string)\filter_input(INPUT_POST, 'letra');
-        $Qmodo = (string)\filter_input(INPUT_POST, 'modo');
-        $Qobserv = (string)\filter_input(INPUT_POST, 'observ');
+        $Qid_tarifa = (string)filter_input(INPUT_POST, 'id_tarifa');
+        $Qletra = (string)filter_input(INPUT_POST, 'letra');
+        $Qmodo = (string)filter_input(INPUT_POST, 'modo');
+        $Qobserv = (string)filter_input(INPUT_POST, 'observ');
         if ($Qid_tarifa == 'nuevo') {
             $oTipoTarifa = new TipoTarifa();
             // miro si soy sf/sv.
@@ -345,7 +345,7 @@ switch ($Qque) {
         }
         break;
     case "tar_ubi_eliminar":
-        $Qid_item = (string)\filter_input(INPUT_POST, 'id_item');
+        $Qid_item = (string)filter_input(INPUT_POST, 'id_item');
         $oTarifa = new Tarifa($Qid_item);
         $oTarifa->DBCarregar();
         if ($oTarifa->DBEliminar() === false) {

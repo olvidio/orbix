@@ -23,8 +23,8 @@ require_once("apps/core/global_object.inc");
 
 $oPosicion->recordar();
 
-$Qque = (string)\filter_input(INPUT_POST, 'que');
-$Qcurso = (string)\filter_input(INPUT_POST, 'curso'); // actual, anterior
+$Qque = (string)filter_input(INPUT_POST, 'que');
+$Qcurso = (string)filter_input(INPUT_POST, 'curso'); // actual, anterior
 
 // centros con s
 $GesPersonasS = new GestorPersonaS();

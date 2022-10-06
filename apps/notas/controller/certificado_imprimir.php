@@ -31,12 +31,12 @@ echo "<script>fnjs_left_side_hide()</script>";
 include_once(core\ConfigGlobal::$dir_estilos . '/certificado.css.php');
 
 // En el caso de actualizar la misma página (cara A-B) solo me quedo con la última.
-$Qrefresh = (integer)\filter_input(INPUT_POST, 'refresh');
+$Qrefresh = (integer)filter_input(INPUT_POST, 'refresh');
 $oPosicion->recordar($Qrefresh);
 
 //Si vengo por medio de Posicion, borro la última
 if (isset($_POST['stack'])) {
-    $stack2 = \filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
+    $stack2 = filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
     if ($stack2 != '') {
         $oPosicion2 = new web\Posicion();
         if ($oPosicion2->goStack($stack2)) { // devuelve false si no puede ir
@@ -47,20 +47,20 @@ if (isset($_POST['stack'])) {
     }
 }
 
-$a_sel = (array)\filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+$a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 if (!empty($a_sel)) { //vengo de un checkbox
     $id_nom = (integer)strtok($a_sel[0], "#");
     $id_tabla = (string)strtok("#");
     // el scroll id es de la página anterior, hay que guardarlo allí
     $oPosicion->addParametro('id_sel', $a_sel, 1);
-    $scroll_id = (integer)\filter_input(INPUT_POST, 'scroll_id');
+    $scroll_id = (integer)filter_input(INPUT_POST, 'scroll_id');
     $oPosicion->addParametro('scroll_id', $scroll_id, 1);
 } else {
-    $id_nom = (integer)\filter_input(INPUT_POST, 'id_nom');
-    $id_tabla = (string)\filter_input(INPUT_POST, 'id_tabla');
+    $id_nom = (integer)filter_input(INPUT_POST, 'id_nom');
+    $id_tabla = (string)filter_input(INPUT_POST, 'id_tabla');
 }
 
-$Qcara = (string)\filter_input(INPUT_POST, 'cara');
+$Qcara = (string)filter_input(INPUT_POST, 'cara');
 $Qcara = empty($Qcara) ? "A" : $Qcara;
 
 $oPersona = personas\Persona::NewPersona($id_nom);

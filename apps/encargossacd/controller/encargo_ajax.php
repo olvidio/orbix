@@ -30,14 +30,14 @@ require_once("apps/core/global_header.inc");
 require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$Qque = (string)\filter_input(INPUT_POST, 'que');
-$Qfiltro_ctr = (integer)\filter_input(INPUT_POST, 'filtro_ctr');
+$Qque = (string)filter_input(INPUT_POST, 'que');
+$Qfiltro_ctr = (integer)filter_input(INPUT_POST, 'filtro_ctr');
 
 
 switch ($Qque) {
     case "lst_tipo_enc":
-        $Qid_tipo_enc = (integer)\filter_input(INPUT_POST, 'id_tipo_enc');
-        $Qgrupo = (integer)\filter_input(INPUT_POST, 'grupo');
+        $Qid_tipo_enc = (integer)filter_input(INPUT_POST, 'id_tipo_enc');
+        $Qgrupo = (integer)filter_input(INPUT_POST, 'grupo');
 
         $aWhere = [];
         $aOperador = [];
@@ -62,16 +62,16 @@ switch ($Qque) {
     case "nuevo": //nuevo
         $Qsf_sv = empty($Qfiltro_ctr) ? 1 : $Qfiltro_ctr; // sv
 
-        $Qid_ubi = (integer)\filter_input(INPUT_POST, 'lst_ctrs');
-        $Qid_zona = (integer)\filter_input(INPUT_POST, 'id_zona');
-        $Qdesc_enc = (string)\filter_input(INPUT_POST, 'desc_enc');
-        $Qidioma_enc = (string)\filter_input(INPUT_POST, 'idioma_enc');
-        $Qdesc_lugar = (string)\filter_input(INPUT_POST, 'desc_lugar');
-        $Qobserv = (string)\filter_input(INPUT_POST, 'observ');
+        $Qid_ubi = (integer)filter_input(INPUT_POST, 'lst_ctrs');
+        $Qid_zona = (integer)filter_input(INPUT_POST, 'id_zona');
+        $Qdesc_enc = (string)filter_input(INPUT_POST, 'desc_enc');
+        $Qidioma_enc = (string)filter_input(INPUT_POST, 'idioma_enc');
+        $Qdesc_lugar = (string)filter_input(INPUT_POST, 'desc_lugar');
+        $Qobserv = (string)filter_input(INPUT_POST, 'observ');
 
-        $Qid_tipo_enc = (string)\filter_input(INPUT_POST, 'id_tipo_enc');
-        $Qgrupo = (string)\filter_input(INPUT_POST, 'grupo');
-        $Qnom_tipo = (string)\filter_input(INPUT_POST, 'nom_tipo');
+        $Qid_tipo_enc = (string)filter_input(INPUT_POST, 'id_tipo_enc');
+        $Qgrupo = (string)filter_input(INPUT_POST, 'grupo');
+        $Qnom_tipo = (string)filter_input(INPUT_POST, 'nom_tipo');
 
         if (!empty($Qid_tipo_enc) and !strstr($Qid_tipo_enc, '.')) {
             $id_tipo_enc = $Qid_tipo_enc;
@@ -111,17 +111,17 @@ switch ($Qque) {
         break;
     case "editar": // modificar 
         $Qsf_sv = empty($Qfiltro_ctr) ? 1 : $Qfiltro_ctr;
-        $Qid_enc = (integer)\filter_input(INPUT_POST, 'id_enc');
+        $Qid_enc = (integer)filter_input(INPUT_POST, 'id_enc');
 
-        $Qid_ubi = (integer)\filter_input(INPUT_POST, 'lst_ctrs');
-        $Qid_zona = (integer)\filter_input(INPUT_POST, 'id_zona');
-        $Qdesc_enc = (string)\filter_input(INPUT_POST, 'desc_enc');
-        $Qidioma_enc = (string)\filter_input(INPUT_POST, 'idioma_enc');
-        $Qdesc_lugar = (string)\filter_input(INPUT_POST, 'desc_lugar');
-        $Qobserv = (string)\filter_input(INPUT_POST, 'observ');
+        $Qid_ubi = (integer)filter_input(INPUT_POST, 'lst_ctrs');
+        $Qid_zona = (integer)filter_input(INPUT_POST, 'id_zona');
+        $Qdesc_enc = (string)filter_input(INPUT_POST, 'desc_enc');
+        $Qidioma_enc = (string)filter_input(INPUT_POST, 'idioma_enc');
+        $Qdesc_lugar = (string)filter_input(INPUT_POST, 'desc_lugar');
+        $Qobserv = (string)filter_input(INPUT_POST, 'observ');
 
-        $Qid_tipo_enc = (string)\filter_input(INPUT_POST, 'id_tipo_enc');
-        $Qgrupo = (string)\filter_input(INPUT_POST, 'grupo');
+        $Qid_tipo_enc = (string)filter_input(INPUT_POST, 'id_tipo_enc');
+        $Qgrupo = (string)filter_input(INPUT_POST, 'grupo');
 
         //Compruebo que estén todos los campos necesasrios
         if (empty($Qdesc_enc)) {

@@ -24,7 +24,7 @@ require_once("apps/core/global_object.inc");
 
 $oPosicion->recordar();
 
-$Qque = (string)\filter_input(INPUT_POST, 'que');
+$Qque = (string)filter_input(INPUT_POST, 'que');
 /*
 que=list_activ_sr
 que=list_activ_inv_sg

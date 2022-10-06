@@ -27,14 +27,14 @@ require_once("apps/core/global_header.inc");
 require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$Qid_ubi = (integer)\filter_input(INPUT_POST, 'id_ubi');
-$Qobj_pau = (string)\filter_input(INPUT_POST, 'obj_pau');
-$Qnuevo = (string)\filter_input(INPUT_POST, 'nuevo');
+$Qid_ubi = (integer)filter_input(INPUT_POST, 'id_ubi');
+$Qobj_pau = (string)filter_input(INPUT_POST, 'obj_pau');
+$Qnuevo = (string)filter_input(INPUT_POST, 'nuevo');
 
 $es_de_dl = FALSE;
 if (!empty($Qnuevo)) {
-    $tipo_ubi = (string)\filter_input(INPUT_POST, 'tipo_ubi');
-    $QsGestor = (string)\filter_input(INPUT_POST, 'sGestor');
+    $tipo_ubi = (string)filter_input(INPUT_POST, 'tipo_ubi');
+    $QsGestor = (string)filter_input(INPUT_POST, 'sGestor');
     $Gestor = unserialize(core\urlsafe_b64decode($QsGestor));
     $obj = str_replace('Gestor', '', $Gestor);
     $oUbi = new $obj();
@@ -47,9 +47,9 @@ if (!empty($Qnuevo)) {
         $valor_predeterminado = $oDatosCampo->datos_campo($oDbl, 'valor');
         $a_campos[$camp] = $valor_predeterminado;
     }
-    $dl = (string)\filter_input(INPUT_POST, 'dl');
-    $region = (string)\filter_input(INPUT_POST, 'region');
-    $nombre_ubi = (string)\filter_input(INPUT_POST, 'nombre_ubi');
+    $dl = (string)filter_input(INPUT_POST, 'dl');
+    $region = (string)filter_input(INPUT_POST, 'region');
+    $nombre_ubi = (string)filter_input(INPUT_POST, 'nombre_ubi');
 
     if (empty($dl) && strstr($Qobj_pau, 'Dl')) {
         if (strstr($tipo_ubi, 'ctr')) {

@@ -29,19 +29,19 @@ require_once("apps/core/global_object.inc");
 
 $oPosicion->recordar();
 
-$Qnumero = (string)\filter_input(INPUT_POST, 'numero');
-$Qb_c = (string)\filter_input(INPUT_POST, 'b_c');
-$Qc1 = (string)\filter_input(INPUT_POST, 'c1');
-$Qc2 = (string)\filter_input(INPUT_POST, 'c2');
-$Qpersonas_n = (string)\filter_input(INPUT_POST, 'personas_n');
-$Qpersonas_agd = (string)\filter_input(INPUT_POST, 'personas_agd');
+$Qnumero = (string)filter_input(INPUT_POST, 'numero');
+$Qb_c = (string)filter_input(INPUT_POST, 'b_c');
+$Qc1 = (string)filter_input(INPUT_POST, 'c1');
+$Qc2 = (string)filter_input(INPUT_POST, 'c2');
+$Qpersonas_n = (string)filter_input(INPUT_POST, 'personas_n');
+$Qpersonas_agd = (string)filter_input(INPUT_POST, 'personas_agd');
 
-$Qlista = (string)\filter_input(INPUT_POST, 'lista');
+$Qlista = (string)filter_input(INPUT_POST, 'lista');
 $Qlista = empty($Qlista) ? FALSE : TRUE;
 
 //Si vengo por medio de Posicion, borro la última
 if (isset($_POST['stack'])) {
-    $stack = \filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
+    $stack = filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
     if ($stack != '') {
         $oPosicion2 = new web\Posicion();
         if ($oPosicion2->goStack($stack)) { // devuelve false si no puede ir

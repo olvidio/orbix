@@ -60,7 +60,7 @@ if ($oMiUsuario->isRole('p-sacd')) { //sacd
     }
 }
 
-$Qpropuesta = (string)\filter_input(INPUT_POST, 'propuesta');
+$Qpropuesta = (string)filter_input(INPUT_POST, 'propuesta');
 
 $GesZonas = new GestorZona();
 $oDesplZonas = $GesZonas->getListaZonas($id_nom_jefe);

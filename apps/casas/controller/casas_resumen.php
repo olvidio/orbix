@@ -29,8 +29,8 @@ require_once("apps/core/global_object.inc");
 
 $oPosicion->recordar();
 
-$Qtipo = (string)\filter_input(INPUT_POST, 'tipo');
-$Qsfsv = (string)\filter_input(INPUT_POST, 'sfsv');
+$Qtipo = (string)filter_input(INPUT_POST, 'tipo');
+$Qsfsv = (string)filter_input(INPUT_POST, 'sfsv');
 
 
 $oMiUsuario = new Usuario(ConfigGlobal::mi_id_usuario());

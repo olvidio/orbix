@@ -12,12 +12,12 @@ require_once("apps/core/global_header.inc");
 require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$Qtodos = (string)\filter_input(INPUT_POST, 'todos');
+$Qtodos = (string)filter_input(INPUT_POST, 'todos');
 
 $oPosicion->recordar();
 //Si vengo de actualizar borro la ultima posicion
 if (isset($_POST['stack'])) {
-    $stack2 = \filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
+    $stack2 = filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
     if ($stack2 != '') {
         $oPosicion2 = new web\Posicion();
         if ($oPosicion2->goStack($stack2)) { // devuelve false si no puede ir
@@ -28,20 +28,20 @@ if (isset($_POST['stack'])) {
     }
 }
 
-$a_sel = (array)\filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+$a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 if (!empty($a_sel)) { //vengo de un checkbox
     $Qid_nom = (integer)strtok($a_sel[0], "#");
     $Qna = strtok("#");
     // el scroll id es de la página anterior, hay que guardarlo allí
     $oPosicion->addParametro('id_sel', $a_sel, 1);
-    $scroll_id = (integer)\filter_input(INPUT_POST, 'scroll_id');
+    $scroll_id = (integer)filter_input(INPUT_POST, 'scroll_id');
     $oPosicion->addParametro('scroll_id', $scroll_id, 1);
-    $Qsactividad = (string)\filter_input(INPUT_POST, 'que');
+    $Qsactividad = (string)filter_input(INPUT_POST, 'que');
     $Qtodos = empty($Qtodos) ? 1 : $Qtodos;
 } else { // vengo de actualizar
-    $Qid_nom = (integer)\filter_input(INPUT_POST, 'id_nom');
-    $Qna = (string)\filter_input(INPUT_POST, 'na');
-    $Qsactividad = (string)\filter_input(INPUT_POST, 'sactividad');
+    $Qid_nom = (integer)filter_input(INPUT_POST, 'id_nom');
+    $Qna = (string)filter_input(INPUT_POST, 'na');
+    $Qsactividad = (string)filter_input(INPUT_POST, 'sactividad');
 
 }
 
@@ -92,7 +92,7 @@ switch ($Qna) {
     case "agd":
     case "a":
         //caso de agd
-        $id_ctr = (integer)\filter_input(INPUT_POST, 'id_ctr_agd');
+        $id_ctr = (integer)filter_input(INPUT_POST, 'id_ctr_agd');
         if ($id_ctr == 1) $id_ctr = ''; //es todos los ctr.
         $id_tabla_persona = 'a'; //el id_tabla entra en conflicto con el de actividad
         $tabla_pau = 'p_agregados';
@@ -122,7 +122,7 @@ switch ($Qna) {
         break;
     case "n":
         // caso de n
-        $id_ctr = (integer)\filter_input(INPUT_POST, 'id_ctr_n');
+        $id_ctr = (integer)filter_input(INPUT_POST, 'id_ctr_n');
         if ($id_ctr == 1) $id_ctr = ''; //es todos los ctr.
         $id_tabla_persona = 'n';
         $tabla_pau = 'p_numerarios';

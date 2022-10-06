@@ -13,11 +13,11 @@ require_once("apps/core/global_object.inc");
 
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$Qque = (string)\filter_input(INPUT_POST, 'que');
+$Qque = (string)filter_input(INPUT_POST, 'que');
 
 switch ($Qque) {
     case 'del_grupmenu':
-        $a_sel = (array)\filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+        $a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
         if (!empty($a_sel)) { //vengo de un checkbox
             foreach ($a_sel as $sel) {
                 //$id_nom=$sel[0];
@@ -31,7 +31,7 @@ switch ($Qque) {
         }
         break;
     case 'add_grupmenu':
-        $a_sel = (array)\filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+        $a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
         if (!empty($a_sel)) { //vengo de un checkbox
             foreach ($a_sel as $sel) {
                 //$id_nom=$sel[0];
@@ -48,12 +48,12 @@ switch ($Qque) {
         }
         break;
     case "guardar":
-        $Qrole = (string)\filter_input(INPUT_POST, 'role');
-        $Qid_role = (integer)\filter_input(INPUT_POST, 'id_role');
-        $Qsf = (integer)\filter_input(INPUT_POST, 'sf');
-        $Qsv = (integer)\filter_input(INPUT_POST, 'sv');
-        $Qpau = (string)\filter_input(INPUT_POST, 'pau');
-        $Qdmz = (integer)\filter_input(INPUT_POST, 'dmz');
+        $Qrole = (string)filter_input(INPUT_POST, 'role');
+        $Qid_role = (integer)filter_input(INPUT_POST, 'id_role');
+        $Qsf = (integer)filter_input(INPUT_POST, 'sf');
+        $Qsv = (integer)filter_input(INPUT_POST, 'sv');
+        $Qpau = (string)filter_input(INPUT_POST, 'pau');
+        $Qdmz = (integer)filter_input(INPUT_POST, 'dmz');
         if ($Qrole) {
             $oRole = new usuarios\Role(array('id_role' => $Qid_role));
             $oRole->setRole($Qrole);
@@ -73,11 +73,11 @@ switch ($Qque) {
         }
         break;
     case "nuevo":
-        $Qrole = (string)\filter_input(INPUT_POST, 'role');
-        $Qsf = (integer)\filter_input(INPUT_POST, 'sf');
-        $Qsv = (integer)\filter_input(INPUT_POST, 'sv');
-        $Qpau = (string)\filter_input(INPUT_POST, 'pau');
-        $Qdmz = (integer)\filter_input(INPUT_POST, 'dmz');
+        $Qrole = (string)filter_input(INPUT_POST, 'role');
+        $Qsf = (integer)filter_input(INPUT_POST, 'sf');
+        $Qsv = (integer)filter_input(INPUT_POST, 'sv');
+        $Qpau = (string)filter_input(INPUT_POST, 'pau');
+        $Qdmz = (integer)filter_input(INPUT_POST, 'dmz');
         if ($Qrole) {
             $oRole = new usuarios\Role();
             $oRole->setRole($Qrole);

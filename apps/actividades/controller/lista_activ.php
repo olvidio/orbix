@@ -53,7 +53,7 @@ $Qcontinuar = (string)filter_input(INPUT_POST, 'continuar');
 // Sólo sirve para esta pagina: importar, publicar, duplicar
 $QGstack = (integer)filter_input(INPUT_POST, 'Gstack');
 if (isset($_POST['stack'])) {
-    $stack = \filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
+    $stack = filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
 } else {
     $stack = '';
 }
@@ -86,8 +86,8 @@ if (!empty($Qcontinuar) && $Qcontinuar == 'si' && ($QGstack != '')) {
     $oPosicion->olvidar($QGstack); //limpio todos los estados hacia delante.
 
 } else { //si no vengo por goto.
-    $Qid_sel = (array)\filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-    $Qscroll_id = (string)\filter_input(INPUT_POST, 'scroll_id');
+    $Qid_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+    $Qscroll_id = (string)filter_input(INPUT_POST, 'scroll_id');
     //Si vengo por medio de Posicion, borro la última
     if ($stack != '') {
         // No me sirve el de global_object, sino el de la session
@@ -98,16 +98,16 @@ if (!empty($Qcontinuar) && $Qcontinuar == 'si' && ($QGstack != '')) {
             $oPosicion2->olvidar($stack);
         }
     }
-    $Qque = (string)\filter_input(INPUT_POST, 'que');
-    $Qstatus = (integer)\filter_input(INPUT_POST, 'status');
-    $Qid_tipo_activ = (string)\filter_input(INPUT_POST, 'id_tipo_activ');
-    $Qfiltro_lugar = (string)\filter_input(INPUT_POST, 'filtro_lugar');
-    $Qid_ubi = (integer)\filter_input(INPUT_POST, 'id_ubi');
-    $Qperiodo = (string)\filter_input(INPUT_POST, 'periodo');
-    $Qyear = (string)\filter_input(INPUT_POST, 'year');
-    $Qdl_org = (string)\filter_input(INPUT_POST, 'dl_org');
-    $Qempiezamin = (string)\filter_input(INPUT_POST, 'empiezamin');
-    $Qempiezamax = (string)\filter_input(INPUT_POST, 'empiezamax');
+    $Qque = (string)filter_input(INPUT_POST, 'que');
+    $Qstatus = (integer)filter_input(INPUT_POST, 'status');
+    $Qid_tipo_activ = (string)filter_input(INPUT_POST, 'id_tipo_activ');
+    $Qfiltro_lugar = (string)filter_input(INPUT_POST, 'filtro_lugar');
+    $Qid_ubi = (integer)filter_input(INPUT_POST, 'id_ubi');
+    $Qperiodo = (string)filter_input(INPUT_POST, 'periodo');
+    $Qyear = (string)filter_input(INPUT_POST, 'year');
+    $Qdl_org = (string)filter_input(INPUT_POST, 'dl_org');
+    $Qempiezamin = (string)filter_input(INPUT_POST, 'empiezamin');
+    $Qempiezamax = (string)filter_input(INPUT_POST, 'empiezamax');
 
     // valores por defecto
     if (empty($Qperiodo)) {
@@ -117,11 +117,11 @@ if (!empty($Qcontinuar) && $Qcontinuar == 'si' && ($QGstack != '')) {
     // se usan cuando se viene de lista_activ_sr_que.php y lista_activ_sg_que.php
     // son arrays
     // en este caso status también puede ser un array.
-    $Qc_activ = (array)\filter_input(INPUT_POST, 'c_activ', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-    $Qasist = (array)\filter_input(INPUT_POST, 'asist', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-    $Qseccion = (array)\filter_input(INPUT_POST, 'seccion', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+    $Qc_activ = (array)filter_input(INPUT_POST, 'c_activ', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+    $Qasist = (array)filter_input(INPUT_POST, 'asist', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+    $Qseccion = (array)filter_input(INPUT_POST, 'seccion', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
     if (empty($Qstatus)) {
-        $Qa_status = (array)\filter_input(INPUT_POST, 'status', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+        $Qa_status = (array)filter_input(INPUT_POST, 'status', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
         $Qstatus = empty($Qa_status) ? ActividadAll::STATUS_ACTUAL : $Qa_status;
     }
 
@@ -174,10 +174,10 @@ if (empty($Qid_tipo_activ)) {
         $aWhere['id_tipo_activ'] = "^($condicion)";
         $aOperador['id_tipo_activ'] = '~';
     } else {
-        $Qssfsv = (string)\filter_input(INPUT_POST, 'ssfsv');
-        $Qsasistentes = (string)\filter_input(INPUT_POST, 'sasistentes');
-        $Qsactividad = (string)\filter_input(INPUT_POST, 'sactividad');
-        $Qsnom_tipo = (string)\filter_input(INPUT_POST, 'snom_tipo');
+        $Qssfsv = (string)filter_input(INPUT_POST, 'ssfsv');
+        $Qsasistentes = (string)filter_input(INPUT_POST, 'sasistentes');
+        $Qsactividad = (string)filter_input(INPUT_POST, 'sactividad');
+        $Qsnom_tipo = (string)filter_input(INPUT_POST, 'snom_tipo');
 
         if (empty($Qssfsv)) {
             if ($mi_sfsv == 1) $Qssfsv = 'sv';
@@ -242,7 +242,7 @@ $cActividades = $GesActividades->getActividades($aWhere, $aOperador);
 if (($Qque == 'list_activ_inv_sg') || ($Qque == 'list_activ_sr')) {
     /*dicho paràmetro le viene del formulario que_lista_activ_sg.php
     o del que_lista_activ_sr*/
-    $titulo = (string)\filter_input(INPUT_POST, 'titulo');
+    $titulo = (string)filter_input(INPUT_POST, 'titulo');
     $titulo = ucfirst($titulo);
 } else {
     $titulo = ucfirst(_("listado de actividades"));

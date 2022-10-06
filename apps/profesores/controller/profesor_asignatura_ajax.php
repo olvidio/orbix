@@ -13,7 +13,7 @@ require_once("apps/core/global_header.inc");
 require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$Qid_asignatura = (integer)\filter_input(INPUT_POST, 'id_asignatura');
+$Qid_asignatura = (integer)filter_input(INPUT_POST, 'id_asignatura');
 
 $GesProfesores = new profesores\GestorProfesor();
 $cProfesores = $GesProfesores->getListaProfesoresAsignatura($Qid_asignatura);

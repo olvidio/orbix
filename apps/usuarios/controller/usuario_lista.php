@@ -14,11 +14,11 @@ require_once("apps/core/global_object.inc");
 $oPosicion->recordar();
 
 
-$Qid_sel = (string)\filter_input(INPUT_POST, 'id_sel');
-$Qscroll_id = (string)\filter_input(INPUT_POST, 'scroll_id');
+$Qid_sel = (string)filter_input(INPUT_POST, 'id_sel');
+$Qscroll_id = (string)filter_input(INPUT_POST, 'scroll_id');
 //Si vengo por medio de Posicion, borro la última
 if (isset($_POST['stack'])) {
-    $stack = \filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
+    $stack = filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
     if ($stack != '') {
         $oPosicion2 = new web\Posicion();
         if ($oPosicion2->goStack($stack)) { // devuelve false si no puede ir
@@ -30,7 +30,7 @@ if (isset($_POST['stack'])) {
 }
 
 // Se usa al buscar:
-$Qusername = (string)\filter_input(INPUT_POST, 'username');
+$Qusername = (string)filter_input(INPUT_POST, 'username');
 
 $oPosicion->setParametros(array('username' => $Qusername), 1);
 

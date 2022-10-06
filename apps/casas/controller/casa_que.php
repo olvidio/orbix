@@ -28,12 +28,12 @@ require_once("apps/core/global_object.inc");
 
 $oPosicion->recordar();
 
-$Qtipo_lista = (string)\filter_input(INPUT_POST, 'tipo_lista');
+$Qtipo_lista = (string)filter_input(INPUT_POST, 'tipo_lista');
 
-$Qperiodo = (string)\filter_input(INPUT_POST, 'periodo');
-$Qyear = (integer)\filter_input(INPUT_POST, 'year');
+$Qperiodo = (string)filter_input(INPUT_POST, 'periodo');
+$Qyear = (integer)filter_input(INPUT_POST, 'year');
 // Cuando vengo de la página del resumen, tengo el id de la casa.
-$Qid_ubi = (integer)\filter_input(INPUT_POST, 'id_ubi');
+$Qid_ubi = (integer)filter_input(INPUT_POST, 'id_ubi');
 
 $tipo_lista = empty($Qtipo_lista) ? '' : $Qtipo_lista;
 if ($tipo_lista == 'datosEcGastos') {
@@ -120,7 +120,7 @@ switch ($tipo_lista) {
         echo "var parametros=pata+'&que=get&PHPSESSID=" . session_id() . "';\n";
         break;
     case 'ctrsEncargados':
-        $Qver_ctr = (string)\filter_input(INPUT_POST, 'ver_ctr');
+        $Qver_ctr = (string)filter_input(INPUT_POST, 'ver_ctr');
         $url_ajax = 'apps/actividades/controller/calendario_listas.php';
         $param = "que=lista_cdc&ver_ctr=$Qver_ctr";
         $sCamposForm .= '!periodo!ver_ctr';

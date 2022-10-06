@@ -36,9 +36,9 @@ require_once("apps/core/global_object.inc");
 
 $oPosicion->recordar();
 
-$Qque = (string)\filter_input(INPUT_POST, 'que');
-$Qcurso = (string)\filter_input(INPUT_POST, 'curso'); // actual, anterior
-$Qid_ubi = (string)\filter_input(INPUT_POST, 'id_ubi');
+$Qque = (string)filter_input(INPUT_POST, 'que');
+$Qcurso = (string)filter_input(INPUT_POST, 'curso'); // actual, anterior
+$Qid_ubi = (string)filter_input(INPUT_POST, 'id_ubi');
 
 $any = date("Y");
 

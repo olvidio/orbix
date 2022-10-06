@@ -9,14 +9,14 @@ require_once("apps/core/global_object.inc");
 
 $oPosicion->recordar();
 
-$Qclase_info = (string)\filter_input(INPUT_POST, 'clase_info');
-$Qdatos_buscar = (string)\filter_input(INPUT_POST, 'datos_buscar');
-$QaSerieBuscar = (string)\filter_input(INPUT_POST, 'aSerieBuscar');
-$Qk_buscar = (string)\filter_input(INPUT_POST, 'k_buscar');
-$Qmod = (string)\filter_input(INPUT_POST, 'mod');
-$Qobj_pau = (string)\filter_input(INPUT_POST, 'obj_pau');
-$Qpermiso = (string)\filter_input(INPUT_POST, 'permiso');
-$Qid_pau = (string)\filter_input(INPUT_POST, 'id_pau'); // necesario para nuevo.
+$Qclase_info = (string)filter_input(INPUT_POST, 'clase_info');
+$Qdatos_buscar = (string)filter_input(INPUT_POST, 'datos_buscar');
+$QaSerieBuscar = (string)filter_input(INPUT_POST, 'aSerieBuscar');
+$Qk_buscar = (string)filter_input(INPUT_POST, 'k_buscar');
+$Qmod = (string)filter_input(INPUT_POST, 'mod');
+$Qobj_pau = (string)filter_input(INPUT_POST, 'obj_pau');
+$Qpermiso = (string)filter_input(INPUT_POST, 'permiso');
+$Qid_pau = (string)filter_input(INPUT_POST, 'id_pau'); // necesario para nuevo.
 
 $aQuery = array(
     'clase_info' => $Qclase_info,
@@ -29,7 +29,7 @@ $aQuery = array(
 );
 // las claves primarias se usan para crear el objeto en el include $dir_datos.
 // También se pasan por formulario al update.
-$a_sel = (array)\filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+$a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 $stack = '';
 if (!empty($a_sel) && ($Qmod != 'nuevo')) { //vengo de un checkbox (para el caso de nuevo no hay que guardar el check)
     $Qs_pkey = explode('#', $a_sel[0]);
@@ -38,7 +38,7 @@ if (!empty($a_sel) && ($Qmod != 'nuevo')) { //vengo de un checkbox (para el caso
     $a_pkey = unserialize(core\urlsafe_b64decode($Qs_pkey));
     // el scroll id es de la página anterior, hay que guardarlo allí
     $oPosicion->addParametro('id_sel', $a_sel, 1);
-    $scroll_id = (integer)\filter_input(INPUT_POST, 'scroll_id');
+    $scroll_id = (integer)filter_input(INPUT_POST, 'scroll_id');
     $oPosicion->addParametro('scroll_id', $scroll_id, 1);
     $aQuery['sel'] = $a_sel;
     $aQuery['scroll_id'] = $scroll_id;

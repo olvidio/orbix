@@ -49,9 +49,9 @@ if ($mes > 3) {
     $any_ini_curs = $any1;
 }
 
-$Qdl = (array)\filter_input(INPUT_POST, 'dl', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+$Qdl = (array)filter_input(INPUT_POST, 'dl', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 //crear la tabla temporal de agregados y notas
-$Qlista = (string)\filter_input(INPUT_POST, 'lista');
+$Qlista = (string)filter_input(INPUT_POST, 'lista');
 $lista = empty($Qlista) ? false : true;
 
 $Resumen = new notas\Resumen('agregados');

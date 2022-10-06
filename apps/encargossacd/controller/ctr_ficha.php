@@ -26,8 +26,8 @@ require_once("apps/core/global_header.inc");
 require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$Qid_ubi = (integer)\filter_input(INPUT_POST, 'id_ubi');
-$Qfiltro_ctr = (string)\filter_input(INPUT_POST, 'filtro_ctr');
+$Qid_ubi = (integer)filter_input(INPUT_POST, 'id_ubi');
+$Qfiltro_ctr = (string)filter_input(INPUT_POST, 'filtro_ctr');
 
 
 if (!empty($Qid_ubi)) {

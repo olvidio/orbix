@@ -25,7 +25,7 @@ require_once("apps/core/global_object.inc");
 
 $cDatosCampos = false;
 
-$Qcc_obj = (string)\filter_input(INPUT_POST, 'cc_obj');
+$Qcc_obj = (string)filter_input(INPUT_POST, 'cc_obj');
 if (!empty($Qcc_obj)) {
     $Object = new $Qcc_obj;
     $oDbl = $Object->getoDbl();
@@ -35,7 +35,7 @@ if (!empty($Qcc_obj)) {
 }
 
 $errores = [];
-$Qcc_pau = (integer)\filter_input(INPUT_POST, 'cc_pau');
+$Qcc_pau = (integer)filter_input(INPUT_POST, 'cc_pau');
 foreach ($cDatosCampos as $oDatosCampo) {
     $reg_exp = $oDatosCampo->getRegExp();
     $nomcamp = $oDatosCampo->getNom_camp();

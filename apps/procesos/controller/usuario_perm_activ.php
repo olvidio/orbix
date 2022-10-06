@@ -24,7 +24,7 @@ $oAcciones = new PermAccion();
 
 $oPosicion->recordar();
 
-$a_sel = (array)\filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+$a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 if (!empty($a_sel)) { //vengo de un checkbox
     $Qid_usuario = (integer)strtok($a_sel[0], "#");
     $Qid_item = (string)strtok("#");
@@ -32,17 +32,17 @@ if (!empty($a_sel)) { //vengo de un checkbox
     $Qdl_propia = (string)strtok("#");
     // el scroll id es de la página anterior, hay que guardarlo allí
     $oPosicion->addParametro('id_sel', $a_sel, 1);
-    $scroll_id = (integer)\filter_input(INPUT_POST, 'scroll_id');
+    $scroll_id = (integer)filter_input(INPUT_POST, 'scroll_id');
     $oPosicion->addParametro('scroll_id', $scroll_id, 1);
 } else {
-    $Qid_usuario = (integer)\filter_input(INPUT_POST, 'id_usuario');
-    $Qid_tipo_activ_txt = (integer)\filter_input(INPUT_POST, 'id_tipo_activ_txt');
-    $Qdl_propia = (integer)\filter_input(INPUT_POST, 'dl_propia');
+    $Qid_usuario = (integer)filter_input(INPUT_POST, 'id_usuario');
+    $Qid_tipo_activ_txt = (integer)filter_input(INPUT_POST, 'id_tipo_activ_txt');
+    $Qdl_propia = (integer)filter_input(INPUT_POST, 'dl_propia');
 }
 $Qdl_propia = is_true($Qdl_propia) ? 't' : 'f';
 
-$Qquien = (string)\filter_input(INPUT_POST, 'quien');
-$Qque = (string)\filter_input(INPUT_POST, 'que');
+$Qquien = (string)filter_input(INPUT_POST, 'quien');
+$Qque = (string)filter_input(INPUT_POST, 'que');
 
 $oUsuario = new GrupoOUsuario(array('id_usuario' => $Qid_usuario)); // La tabla y su heredada
 $nombre = $oUsuario->getUsuario();

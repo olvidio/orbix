@@ -43,20 +43,20 @@ if (ConfigGlobal::mi_ambito() == 'rstgr') {
     $permiso = 0;
 }
 
-$a_sel = (array)\filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+$a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 if (!empty($a_sel)) { //vengo de un checkbox
     // el scroll id es de la página anterior, hay que guardarlo allí
     $oPosicion->addParametro('id_sel', $a_sel, 1);
-    $scroll_id = (integer)\filter_input(INPUT_POST, 'scroll_id');
+    $scroll_id = (integer)filter_input(INPUT_POST, 'scroll_id');
     $oPosicion->addParametro('scroll_id', $scroll_id, 1);
 }
 
-$Qmod = (string)\filter_input(INPUT_POST, 'mod');
+$Qmod = (string)filter_input(INPUT_POST, 'mod');
 
-$Qsa_actas = (string)\filter_input(INPUT_POST, 'sa_actas');
+$Qsa_actas = (string)filter_input(INPUT_POST, 'sa_actas');
 $Qa_actas = unserialize(base64_decode($Qsa_actas));
-$Qacta = (string)\filter_input(INPUT_POST, 'acta');
-$Qnotas = (string)\filter_input(INPUT_POST, 'notas');
+$Qacta = (string)filter_input(INPUT_POST, 'acta');
+$Qnotas = (string)filter_input(INPUT_POST, 'notas');
 
 if (empty($notas) && empty($Qnotas)) {
     echo $oPosicion->recordar();
@@ -115,15 +115,15 @@ if (empty($notas) && empty($Qnotas)) {
 if ($notas != 'nuevo' && $Qmod != 'nueva' && !empty($acta_actual)) { //significa que no es nuevo
     if (false && !empty($Qacta) && !empty($notas)) { // vengo de actualizar esta pág.
         // estoy actualizando la página
-        $id_asignatura_actual = (integer)\filter_input(INPUT_POST, 'id_asignatura_actual');
-        $id_activ = (integer)\filter_input(INPUT_POST, 'id_activ');
-        $f_acta = (string)\filter_input(INPUT_POST, 'f_acta');
-        $libro = (string)\filter_input(INPUT_POST, 'libro');
-        $pagina = (integer)\filter_input(INPUT_POST, 'pagina');
-        $linea = (integer)\filter_input(INPUT_POST, 'linea');
-        $lugar = (string)\filter_input(INPUT_POST, 'lugar');
-        $observ = (string)\filter_input(INPUT_POST, 'observ');
-        $permiso = (integer)\filter_input(INPUT_POST, 'permiso');
+        $id_asignatura_actual = (integer)filter_input(INPUT_POST, 'id_asignatura_actual');
+        $id_activ = (integer)filter_input(INPUT_POST, 'id_activ');
+        $f_acta = (string)filter_input(INPUT_POST, 'f_acta');
+        $libro = (string)filter_input(INPUT_POST, 'libro');
+        $pagina = (integer)filter_input(INPUT_POST, 'pagina');
+        $linea = (integer)filter_input(INPUT_POST, 'linea');
+        $lugar = (string)filter_input(INPUT_POST, 'lugar');
+        $observ = (string)filter_input(INPUT_POST, 'observ');
+        $permiso = (integer)filter_input(INPUT_POST, 'permiso');
     } else {
         $oActa = new notas\Acta($acta_actual);
         $id_asignatura = $oActa->getId_asignatura();
@@ -146,9 +146,9 @@ if ($notas != 'nuevo' && $Qmod != 'nueva' && !empty($acta_actual)) { //significa
     $acta_new = "$dl {$num_acta}/{$any}";
 
     if ($notas == "nuevo") { //vengo de un ca
-        $Qid_activ = (integer)\filter_input(INPUT_POST, 'id_activ');
+        $Qid_activ = (integer)filter_input(INPUT_POST, 'id_activ');
         $id_activ = empty($id_activ) ? $Qid_activ : $id_activ;
-        $Qid_asignatura = (string)\filter_input(INPUT_POST, 'id_asignatura');
+        $Qid_asignatura = (string)filter_input(INPUT_POST, 'id_asignatura');
         $id_asignatura_actual = empty($id_asignatura) ? $Qid_asignatura : $id_asignatura;
         // Busco al profesor como examinador principal.
         $oActividadAsignatura = new actividadestudios\ActividadAsignaturaDl();

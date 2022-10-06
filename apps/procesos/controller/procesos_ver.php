@@ -17,9 +17,9 @@ require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
 
-$Qmod = (string)\filter_input(INPUT_POST, 'mod');
-$Qid_item = (integer)\filter_input(INPUT_POST, 'id_item');
-$Qid_tipo_proceso = (integer)\filter_input(INPUT_POST, 'id_tipo_proceso');
+$Qmod = (string)filter_input(INPUT_POST, 'mod');
+$Qid_item = (integer)filter_input(INPUT_POST, 'id_item');
+$Qid_tipo_proceso = (integer)filter_input(INPUT_POST, 'id_tipo_proceso');
 
 // para crear un desplegable de oficinas. Uso los de los menus
 $oPermMenus = new PermisoMenu;

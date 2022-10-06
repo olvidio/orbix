@@ -43,17 +43,17 @@ $oPosicion->recordar();
 
 $obj = 'notas\\model\\entity\\PersonaNota';
 
-$Qpau = (string)\filter_input(INPUT_POST, 'pau');
-$Qid_pau = (integer)\filter_input(INPUT_POST, 'id_pau');
-$Qobj_pau = (string)\filter_input(INPUT_POST, 'obj_pau');
-$Qpermiso = (integer)\filter_input(INPUT_POST, 'permiso');
-$Qmod = (string)\filter_input(INPUT_POST, 'mod');
+$Qpau = (string)filter_input(INPUT_POST, 'pau');
+$Qid_pau = (integer)filter_input(INPUT_POST, 'id_pau');
+$Qobj_pau = (string)filter_input(INPUT_POST, 'obj_pau');
+$Qpermiso = (integer)filter_input(INPUT_POST, 'permiso');
+$Qmod = (string)filter_input(INPUT_POST, 'mod');
 
-$sel = (array)\filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+$sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 if (!empty($sel)) { //vengo de un checkbox
     // el scroll id es de la página anterior, hay que guardarlo allí
     $oPosicion->addParametro('id_sel', $sel, 1);
-    $scroll_id = (integer)\filter_input(INPUT_POST, 'scroll_id');
+    $scroll_id = (integer)filter_input(INPUT_POST, 'scroll_id');
     $oPosicion->addParametro('scroll_id', $scroll_id, 1);
     if ($Qpau == "p") {
         $id_nivel_real = strtok($sel[0], "#");
@@ -61,7 +61,7 @@ if (!empty($sel)) { //vengo de un checkbox
     }
 } else {
     if (!empty($Qmod) && $Qmod != 'nuevo') {
-        $Qid_asignatura_real = (string)\filter_input(INPUT_POST, 'id_asignatura_real');
+        $Qid_asignatura_real = (string)filter_input(INPUT_POST, 'id_asignatura_real');
     } else {
         $Qid_asignatura_real = '';
     }

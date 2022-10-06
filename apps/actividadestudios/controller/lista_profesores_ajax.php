@@ -15,11 +15,11 @@ require_once("apps/core/global_header.inc");
 require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$Qsalida = (string)\filter_input(INPUT_POST, 'salida');
+$Qsalida = (string)filter_input(INPUT_POST, 'salida');
 
 switch ($Qsalida) {
     case "asignatura":
-        $Qid_asignatura = (integer)\filter_input(INPUT_POST, 'id_asignatura');
+        $Qid_asignatura = (integer)filter_input(INPUT_POST, 'id_asignatura');
         $GesProfesores = new profesores\GestorProfesor();
         $oDesplProfesores = $GesProfesores->getDesplProfesoresAsignatura($Qid_asignatura);
 
@@ -30,7 +30,7 @@ switch ($Qsalida) {
         echo $oDesplProfesores->desplegable();
         break;
     case "dl":
-        $Qid_activ = (integer)\filter_input(INPUT_POST, 'id_activ');
+        $Qid_activ = (integer)filter_input(INPUT_POST, 'id_activ');
         $GesProfesores = new profesores\GestorProfesorActividad();
         $oDesplProfesores = $GesProfesores->getListaProfesoresActividad(array($Qid_activ));
 

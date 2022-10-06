@@ -27,7 +27,7 @@ require_once("apps/core/global_header.inc");
 require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$Qid_ubi = (integer)\filter_input(INPUT_POST, 'id_ubi');
+$Qid_ubi = (integer)filter_input(INPUT_POST, 'id_ubi');
 
 $f_hoy = date('Y-m-d');
 

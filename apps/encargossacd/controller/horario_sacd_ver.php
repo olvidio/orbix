@@ -27,12 +27,12 @@ $oDbl = $GLOBALS['oDBE'];
 
 $oEncargoFunciones = new EncargoFunciones();
 
-$Qid_nom = (integer)\filter_input(INPUT_POST, 'id_nom');
-$Qid_enc = (integer)\filter_input(INPUT_POST, 'id_enc');
-$Qmod = (integer)\filter_input(INPUT_POST, 'mod');
-$Qfiltro_sacd = (string)\filter_input(INPUT_POST, 'filtro_sacd');
-$Qid_item = (integer)\filter_input(INPUT_POST, 'id_item');
-$Qdesc_enc = (string)\filter_input(INPUT_POST, 'desc_enc');
+$Qid_nom = (integer)filter_input(INPUT_POST, 'id_nom');
+$Qid_enc = (integer)filter_input(INPUT_POST, 'id_enc');
+$Qmod = (integer)filter_input(INPUT_POST, 'mod');
+$Qfiltro_sacd = (string)filter_input(INPUT_POST, 'filtro_sacd');
+$Qid_item = (integer)filter_input(INPUT_POST, 'id_item');
+$Qdesc_enc = (string)filter_input(INPUT_POST, 'desc_enc');
 
 
 $oPersona = new PersonaDl($Qid_nom);

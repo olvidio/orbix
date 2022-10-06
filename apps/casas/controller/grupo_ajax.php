@@ -12,13 +12,13 @@ require_once("apps/core/global_object.inc");
 
 $oPosicion->recordar();
 
-$Qque = (string)\filter_input(INPUT_POST, 'que');
+$Qque = (string)filter_input(INPUT_POST, 'que');
 
 switch ($Qque) {
     case "update":
-        $Qid_item = (integer)\filter_input(INPUT_POST, 'id_item');
-        $Qid_ubi_padre = (integer)\filter_input(INPUT_POST, 'id_ubi_padre');
-        $Qid_ubi_hijo = (integer)\filter_input(INPUT_POST, 'id_ubi_hijo');
+        $Qid_item = (integer)filter_input(INPUT_POST, 'id_item');
+        $Qid_ubi_padre = (integer)filter_input(INPUT_POST, 'id_ubi_padre');
+        $Qid_ubi_hijo = (integer)filter_input(INPUT_POST, 'id_ubi_hijo');
 
         $oGrupoCasa = new GrupoCasa($Qid_item);
         $oGrupoCasa->setId_ubi_padre($Qid_ubi_padre);
@@ -28,7 +28,7 @@ switch ($Qque) {
         }
         break;
     case "eliminar":
-        $a_sel = (array)\filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+        $a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
         $Qid_item = urldecode(strtok($a_sel[0], "#"));
 
         $oGrupoCasa = new GrupoCasa($Qid_item);

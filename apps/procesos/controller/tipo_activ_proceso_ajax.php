@@ -17,7 +17,7 @@ require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
 
-$Qque = (string)\filter_input(INPUT_POST, 'que');
+$Qque = (string)filter_input(INPUT_POST, 'que');
 
 switch ($Qque) {
     case 'lista':
@@ -78,8 +78,8 @@ switch ($Qque) {
         echo $oLista->lista();
         break;
     case "lst_posibles_procesos":
-        $Qid_tipo_activ = (integer)\filter_input(INPUT_POST, 'id_tipo_activ');
-        $Qpropio = (string)\filter_input(INPUT_POST, 'propio');
+        $Qid_tipo_activ = (integer)filter_input(INPUT_POST, 'id_tipo_activ');
+        $Qpropio = (string)filter_input(INPUT_POST, 'propio');
         $mi_sfsv = ConfigGlobal::mi_sfsv();
         $aWhere = ['sfsv' => $mi_sfsv, '_ordre' => 'nom_proceso'];
         $GesProcesoTipo = new GestorProcesoTipo();
@@ -95,9 +95,9 @@ switch ($Qque) {
         echo $txt;
         break;
     case "asignar":
-        $Qid_tipo_activ = (integer)\filter_input(INPUT_POST, 'id_tipo_activ');
-        $Qpropio = (string)\filter_input(INPUT_POST, 'propio');
-        $Qid_tipo_proceso = (integer)\filter_input(INPUT_POST, 'id_tipo_proceso');
+        $Qid_tipo_activ = (integer)filter_input(INPUT_POST, 'id_tipo_activ');
+        $Qpropio = (string)filter_input(INPUT_POST, 'propio');
+        $Qid_tipo_proceso = (integer)filter_input(INPUT_POST, 'id_tipo_proceso');
 
         $oTipoActividad = new TipoDeActividad($Qid_tipo_activ);
         $oTipoActividad->DBCarregar();

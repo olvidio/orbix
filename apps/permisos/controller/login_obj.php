@@ -6,7 +6,7 @@ use core\ConfigDB;
 use core\ConfigGlobal;
 use core\DBPropiedades;
 use core\View;
-use core\dbConnection;
+use core\DBConnection;
 use permisos\model\MyCrypt;
 
 
@@ -79,7 +79,7 @@ function getAppsPosibles()
 {
     $oConfigDB = new ConfigDB('comun');
     $config = $oConfigDB->getEsquema('public');
-    $oConexion = new dbConnection($config);
+    $oConexion = new DBConnection($config);
     $oDBP = $oConexion->getPDO();
     $sQuery = "SELECT * FROM m0_apps";
     $a_apps = array();
@@ -95,7 +95,7 @@ function getModsPosibles()
 {
     $oConfigDB = new ConfigDB('comun');
     $config = $oConfigDB->getEsquema('public');
-    $oConexion = new dbConnection($config);
+    $oConexion = new DBConnection($config);
     $oDBP = $oConexion->getPDO();
     $sQuery = "SELECT * FROM m0_modulos";
     $a_mods = array();
@@ -203,7 +203,7 @@ if (!isset($_SESSION['session_auth'])) {
                     $sfsv = 1;
                     $oConfigDB = new ConfigDB('sv-e');
                     $config = $oConfigDB->getEsquema($esquema);
-                    $oConexion = new dbConnection($config);
+                    $oConexion = new DBConnection($config);
                     $oDB = $oConexion->getPDO();
 
                 }
@@ -211,7 +211,7 @@ if (!isset($_SESSION['session_auth'])) {
                     $sfsv = 2;
                     $oConfigDB = new ConfigDB('sf-e');
                     $config = $oConfigDB->getEsquema($esquema);
-                    $oConexion = new dbConnection($config);
+                    $oConexion = new DBConnection($config);
                     $oDB = $oConexion->getPDO();
                 }
                 $query = "SELECT * FROM aux_usuarios WHERE usuario = :usuario";
@@ -237,7 +237,7 @@ if (!isset($_SESSION['session_auth'])) {
                         $id_role = $row['id_role'];
                         $oConfigDB = new ConfigDB('comun');
                         $config = $oConfigDB->getEsquema('public');
-                        $oConexion = new dbConnection($config);
+                        $oConexion = new DBConnection($config);
                         $oDBP = $oConexion->getPDO();
                         $queryr = "SELECT * FROM aux_roles WHERE id_role = $id_role";
                         if (($oDBPSt = $oDBP->query($queryr)) === false) {
