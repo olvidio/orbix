@@ -42,6 +42,6 @@ namespace orbix\apps {
     use core\Condicion;
     use core\Set;
 
-    use core\configglobal;
+    use core\ConfigGlobal;
     use core\GestorErrores;
 }
