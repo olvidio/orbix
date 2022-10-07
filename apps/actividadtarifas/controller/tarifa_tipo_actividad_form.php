@@ -28,7 +28,7 @@ $oTipoActivTarifa = new TipoActivTarifa();
 $aTipoSerie = $oTipoActivTarifa->getArraySerie();
 
 $oDesplPosiblesSeries = new Desplegable();
-$oDesplPosiblesSeries->setNombre('serie');
+$oDesplPosiblesSeries->setNombre('id_serie');
 $oDesplPosiblesSeries->setOpciones($aTipoSerie);
 $oDesplPosiblesSeries->setOpcion_sel(1);
 
@@ -41,7 +41,7 @@ if ($Qid_item != 'nuevo') {
 
     $oTipoActivTarifa = new TipoActivTarifa(array('id_item' => $Qid_item));
     $id_tarifa = $oTipoActivTarifa->getId_tarifa();
-    $serie = $oTipoActivTarifa->getSerie();
+    $id_serie = $oTipoActivTarifa->getId_serie();
     $aTipoSerie = $oTipoActivTarifa->getArraySerie();
 
     $id_tipo_activ = $oTipoActivTarifa->getId_tipo_activ();
@@ -59,7 +59,7 @@ if ($Qid_item != 'nuevo') {
     $a_camposHidden = array(
         'id_tipo_activ' => $id_tipo_activ,
         'id_item' => $Qid_item,
-        'serie' => $serie,
+        'id_serie' => $id_serie,
     );
     $oHash->setArraycamposHidden($a_camposHidden);
 
@@ -75,7 +75,7 @@ if ($Qid_item != 'nuevo') {
         'h' => $h,
         'oTipoActiv' => $oTipoActiv,
         'extendida' => FALSE,
-        'txt_serie' => $aTipoSerie[$serie],
+        'txt_serie' => $aTipoSerie[$id_serie],
         'oDesplPosiblesTipoTarifas' => $oDesplPosiblesTipoTarifas,
         'txt_eliminar' => $txt_eliminar,
         'url_ajax' => $url_ajax,
@@ -110,7 +110,7 @@ if ($Qid_item != 'nuevo') {
 
     $oHash = new web\Hash();
     $oHash->setUrl(core\ConfigGlobal::getWeb() . '/apps/actividadtarifas/controller/tarifa_ajax.php');
-    $oHash->setcamposForm('iactividad_val!iasistentes_val!id_tipo_activ!inom_tipo_val!isfsv_val!serie!id_tarifa');
+    $oHash->setcamposForm('iactividad_val!iasistentes_val!id_tipo_activ!inom_tipo_val!isfsv_val!id_serie!id_tarifa');
     $oHash->setCamposNo('id_tipo_activ!que');
     $a_camposHidden = array(
         'id_tipo_activ' => '',

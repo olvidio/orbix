@@ -13,7 +13,7 @@ use permisos\model\PermisosActividadesTrue;
 use procesos\model\entity\GestorActividadProcesoTarea;
 use ubis\model\entity\CasaDl;
 use ubis\model\entity\CentroDl;
-use ubis\model\entity\Tarifa;
+use ubis\model\entity\TarifaUbi;
 use usuarios\model\entity\Role;
 use web\Lista;
 use web\Periodo;
@@ -228,7 +228,7 @@ switch ($Qque) {
 
                 $oTipoTarifa = new TipoTarifa(array('tarifa' => $tarifa));
                 $modo = $oTipoTarifa->getModo();
-                $oTarifa = new Tarifa(array('id_ubi' => $id_ubi, 'tarifa' => $tarifa, 'year' => $Qyear));
+                $oTarifa = new TarifaUbi(array('id_ubi' => $id_ubi, 'tarifa' => $tarifa, 'year' => $Qyear));
                 $cantidad = $oTarifa->getCantidad();
                 if (empty($precio)) {
                     $flag = ($factor_dias != 1) ? '*' : '';

@@ -41,27 +41,30 @@ switch ($Qque) {
             $id_item = $oTipoActivTarifa->getId_item();
             $id_tarifa = $oTipoActivTarifa->getId_tarifa();
             $id_tipo_activ = $oTipoActivTarifa->getId_tipo_activ();
-            $serie = $oTipoActivTarifa->getSerie();
+            $id_serie = $oTipoActivTarifa->getId_serie();
 
             $oTipoActividad = new TiposActividades($id_tipo_activ);
-            $nom_tipo = $oTipoActividad->getNom();
-            if ($serie !== TipoActivTarifa::S_GENERAL) {
-                $aTipoSerie = $oTipoActivTarifa->getArraySerie();
-                $nom_tipo .= " (" . $aTipoSerie[$serie] . ")";
-            }
             $isfsv = $oTipoActividad->getSfsvId();
             $oTipoTarifa = new TipoTarifa(array('id_tarifa' => $id_tarifa));
 
+            $nom_tipo = $oTipoActividad->getNom();
             $modo = $oTipoTarifa->getModo();
             if (!empty($modo)) {
                 $modo_txt = _("total");
             } else {
                 $modo_txt = _("por dia");
             }
-            $tar = $oTipoTarifa->getLetra() . "  ($modo_txt)";
+
+            $nombre_tarifa = $oTipoTarifa->getLetra();
+            if ($id_serie !== TipoActivTarifa::S_GENERAL) {
+                $aTipoSerie = $oTipoActivTarifa->getArraySerie();
+                $nombre_tarifa .= " (" . $aTipoSerie[$id_serie] . ")";
+            }
+
+            $nombre_tarifa .= "  ($modo_txt)";
 
             $a_valores[$i][1] = $nom_tipo;
-            $a_valores[$i][2] = $tar;
+            $a_valores[$i][2] = $nombre_tarifa;
             // permiso
             if ($miSfsv == $isfsv && $_SESSION['oPerm']->have_perm_oficina('adl')) {
                 $script = "fnjs_modificar($id_item)";
@@ -82,17 +85,17 @@ switch ($Qque) {
     case "update":
         $Qid_item = (string)filter_input(INPUT_POST, 'id_item');
         $Qid_tarifa = (string)filter_input(INPUT_POST, 'id_tarifa');
-        $Qserie = (string)filter_input(INPUT_POST, 'serie');
+        $Qid_serie = (string)filter_input(INPUT_POST, 'id_serie');
         $Qid_tipo_activ = (string)filter_input(INPUT_POST, 'id_tipo_activ');
 
-        if ($Qid_item == 'nuevo') {
+        if ($Qid_item === 'nuevo') {
             $oTipoActivTarifa = new TipoActivTarifa();
         } else {
             $oTipoActivTarifa = new TipoActivTarifa($Qid_item);
             $oTipoActivTarifa->DBCarregar();
         }
         $oTipoActivTarifa->setId_tarifa($Qid_tarifa);
-        $oTipoActivTarifa->setSerie($Qserie);
+        $oTipoActivTarifa->setId_serie($Qid_serie);
         $oTipoActivTarifa->setId_tipo_activ($Qid_tipo_activ);
         if ($oTipoActivTarifa->DBGuardar() === false) {
             echo _("hay un error, no se ha guardado");

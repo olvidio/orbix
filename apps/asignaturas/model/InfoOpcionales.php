@@ -6,7 +6,7 @@ use core;
 
 /* No vale el underscore en el nombre */
 
-class InfoOpcionales extends core\datosInfo
+class InfoOpcionales extends core\DatosInfo
 {
 
     public function __construct()

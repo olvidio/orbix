@@ -10,7 +10,7 @@ use ubis\model\entity as ubis;
 
 /* No vale el underscore en el nombre */
 
-class Info1001 extends core\datosInfo
+class Info1001 extends core\DatosInfo
 {
 
     public function __construct()

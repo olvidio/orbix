@@ -4,8 +4,8 @@ use actividadtarifas\model\entity\GestorTipoActivTarifa;
 use actividadtarifas\model\entity\GestorTipoTarifa;
 use actividadtarifas\model\entity\TipoTarifa;
 use core\ConfigGlobal;
-use ubis\model\entity\GestorTarifa;
-use ubis\model\entity\Tarifa;
+use ubis\model\entity\GestorTarifaUbi;
+use ubis\model\entity\TarifaUbi;
 use web\Desplegable;
 use web\Lista;
 use web\TiposActividades;
@@ -31,6 +31,14 @@ switch ($Qque) {
         $Qletra = (string)filter_input(INPUT_POST, 'letra');
         $letra = empty($Qletra) ? _("nueva") : $Qletra;
 
+        $oTipoActivTarifa = new TipoActivTarifa();
+        $aTipoSerie = $oTipoActivTarifa->getArraySerie();
+
+        $oDesplPosiblesSeries = new Desplegable();
+        $oDesplPosiblesSeries->setNombre('id_serie');
+        $oDesplPosiblesSeries->setOpciones($aTipoSerie);
+        $oDesplPosiblesSeries->setOpcion_sel(1);
+
         $oHash = new web\Hash();
         $a_camposHidden = array(
             'que' => 'update',
@@ -40,17 +48,19 @@ switch ($Qque) {
         if (!empty($Qid_item)) {
             $a_camposHidden['id_item'] = $Qid_item;
             $camposForm = 'cantidad';
-            $oTarifa = new Tarifa();
-            $oTarifa->setId_item($Qid_item);
-            $cantidad = $oTarifa->getCantidad();
+            $oTarifaUbi = new TarifaUbi();
+            $oTarifaUbi->setId_item($Qid_item);
+            $cantidad = $oTarifaUbi->getCantidad();
         } else {
-            $camposForm = 'cantidad!id_tarifa';
+            $camposForm = 'cantidad!id_tarifa!id_serie';
             $cantidad = '';
         }
         $oHash->setCamposNo('que');
         $oHash->setcamposForm($camposForm);
         $oHash->setArraycamposHidden($a_camposHidden);
 
+
+        $oGesTarifa = new GestorTarifaUbi();
         $txt = "<form id='frm_tarifa_ubi'>";
         $txt .= $oHash->getCamposHtml();
         $txt .= '<h3>' . sprintf(_("tarifa %s"), $letra) . '</h3>';
@@ -61,6 +71,9 @@ switch ($Qque) {
             $oTipoTarifas->setNombre('id_tarifa');
             $txt .= _("tarifa");
             $txt .= $oTipoTarifas->desplegable();
+            $txt .= '<br>';
+            $txt .= _("serie");
+            $txt .= $oDesplPosiblesSeries->desplegable();
             $txt .= '<br>';
         }
         $txt .= _("nuevo importe") . ": <input type=text size=6 id='cantidad' name='cantidad' value=\"$cantidad\" onblur=\"fnjs_comprobar_dinero('#cantidad');\"> " . _("€") . "<br>";
@@ -79,7 +92,7 @@ switch ($Qque) {
         $a_seccion = array(1 => _("sv"), 2 => _("sf"));
         // listado de tarifas por casa y año
         if (!empty($Qid_ubi) && !empty($Qyear)) {
-            $oGesTarifa = new GestorTarifa();
+            $oGesTarifa = new GestorTarifaUbi();
             $cTarifas = $oGesTarifa->getTarifas(array('id_ubi' => $Qid_ubi, 'year' => $Qyear, '_ordre' => 'year,id_tarifa'));
         } else {
             $cTarifas = [];
@@ -97,11 +110,11 @@ switch ($Qque) {
         $txt = '';
         $error_txt = '';
         $a_valores = array();
-        foreach ($cTarifas as $oTarifa) {
+        foreach ($cTarifas as $oTarifaUbi) {
             $i++;
-            $id_item = $oTarifa->getId_item();
-            $id_tarifa = $oTarifa->getId_tarifa();
-            $cantidad = $oTarifa->getCantidad();
+            $id_item = $oTarifaUbi->getId_item();
+            $id_tarifa = $oTarifaUbi->getId_tarifa();
+            $cantidad = $oTarifaUbi->getCantidad();
 
             $cantidad = "$cantidad " . _("€");
 
@@ -112,15 +125,15 @@ switch ($Qque) {
             foreach ($cTipoActivTarifas as $oTipoActivTarifa) {
                 $t++;
                 $id_tipo_activ = $oTipoActivTarifa->getId_tipo_activ();
-                $serie = $oTipoActivTarifa->getSerie();
+                $id_serie = $oTipoActivTarifa->getId_serie();
                 $oTipoActividad = new TiposActividades($id_tipo_activ);
                 if ($t > 1) {
                     $txt .= ', ';
                 }
                 $txt .= $oTipoActividad->getNomGral();
-                if ($serie !== TipoActivTarifa::S_GENERAL) {
+                if ($id_serie !== TipoActivTarifa::S_GENERAL) {
                     $aTipoSerie = $oTipoActivTarifa->getArraySerie();
-                    $txt .= " (" . $aTipoSerie[$serie] . ")";
+                    $txt .= " (" . $aTipoSerie[$id_serie] . ")";
                 }
             }
 
@@ -173,34 +186,36 @@ switch ($Qque) {
         $Qid_ubi = (integer)filter_input(INPUT_POST, 'id_ubi');
         $Qyear = (integer)filter_input(INPUT_POST, 'year');
         $Qid_tarifa = (integer)filter_input(INPUT_POST, 'id_tarifa');
+        $Qid_serie = (integer)filter_input(INPUT_POST, 'id_serie');
         $Qcantidad = (string)filter_input(INPUT_POST, 'cantidad');
         $Qobserv = (string)filter_input(INPUT_POST, 'observ');
 
         if (!empty($Qid_item)) {
-            $oTarifa = new Tarifa();
-            $oTarifa->setId_item($Qid_item);
-            $oTarifa->DBCarregar(); //perque agafi els valors que ja té.
+            $oTarifaUbi = new TarifaUbi();
+            $oTarifaUbi->setId_item($Qid_item);
+            $oTarifaUbi->DBCarregar(); // para que coja los valores que ya tiene
         } else {
-            $oTarifa = new Tarifa();
+            $oTarifaUbi = new TarifaUbi();
         }
-        if (!empty($Qid_ubi)) $oTarifa->setId_ubi($Qid_ubi);
-        if (!empty($Qyear)) $oTarifa->setYear($Qyear);
-        if (!empty($Qid_tarifa)) $oTarifa->setId_tarifa($Qid_tarifa);
-        if (!empty($Qcantidad)) $oTarifa->setCantidad($Qcantidad);
-        if (!empty($Qobserv)) $oTarifa->setObserv($Qobserv);
-        if ($oTarifa->DBGuardar() === false) {
+        if (!empty($Qid_ubi)) $oTarifaUbi->setId_ubi($Qid_ubi);
+        if (!empty($Qyear)) $oTarifaUbi->setYear($Qyear);
+        if (!empty($Qid_tarifa)) $oTarifaUbi->setId_tarifa($Qid_tarifa);
+        if (!empty($Qid_serie)) $oTarifaUbi->setId_serie($Qid_serie);
+        if (!empty($Qcantidad)) $oTarifaUbi->setCantidad($Qcantidad);
+        if (!empty($Qobserv)) $oTarifaUbi->setObserv($Qobserv);
+        if ($oTarifaUbi->DBGuardar() === false) {
             echo _("hay un error, no se ha guardado");
-            echo "\n" . $oTarifa->getErrorTxt();
+            echo "\n" . $oTarifaUbi->getErrorTxt();
         }
         break;
     case "borrar":
         $Qid_item = (integer)filter_input(INPUT_POST, 'id_item');
         if (!empty($Qid_item)) {
-            $oTarifa = new Tarifa();
-            $oTarifa->setId_item($Qid_item);
-            if ($oTarifa->DBEliminar() === false) {
+            $oTarifaUbi = new TarifaUbi();
+            $oTarifaUbi->setId_item($Qid_item);
+            if ($oTarifaUbi->DBEliminar() === false) {
                 echo _("hay un error, no se ha eliminado");
-                echo "\n" . $oTarifa->getErrorTxt();
+                echo "\n" . $oTarifaUbi->getErrorTxt();
             }
         } else {
             $Qque = (string)filter_input(INPUT_POST, 'que');
@@ -216,12 +231,12 @@ switch ($Qque) {
             $id_item = (integer)strtok('#');
             $cantidad = round($cantidad);
             if (empty($id_item) && empty($cantidad)) continue; // no hay ni habia nada.
-            $oTarifa = new Tarifa(array('id_tarifa' => $id_tarifa, 'id_ubi' => $Qid_ubi, 'year' => $Qyear));
-            $oTarifa->DBCarregar();
-            if (isset($cantidad)) $oTarifa->setCantidad($cantidad);
-            if ($oTarifa->DBGuardar() === false) {
+            $oTarifaUbi = new TarifaUbi(array('id_tarifa' => $id_tarifa, 'id_ubi' => $Qid_ubi, 'year' => $Qyear));
+            $oTarifaUbi->DBCarregar();
+            if (isset($cantidad)) $oTarifaUbi->setCantidad($cantidad);
+            if ($oTarifaUbi->DBGuardar() === false) {
                 echo _("hay un error, no se ha guardado");
-                echo "\n" . $oTarifa->getErrorTxt();
+                echo "\n" . $oTarifaUbi->getErrorTxt();
             }
         }
         break;
@@ -346,9 +361,9 @@ switch ($Qque) {
         break;
     case "tar_ubi_eliminar":
         $Qid_item = (string)filter_input(INPUT_POST, 'id_item');
-        $oTarifa = new Tarifa($Qid_item);
-        $oTarifa->DBCarregar();
-        if ($oTarifa->DBEliminar() === false) {
+        $oTarifaUbi = new TarifaUbi($Qid_item);
+        $oTarifaUbi->DBCarregar();
+        if ($oTarifaUbi->DBEliminar() === false) {
             echo _("hay un error, no se ha borrado");
         }
         break;

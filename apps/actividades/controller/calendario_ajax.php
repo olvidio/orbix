@@ -7,7 +7,7 @@ use actividadtarifas\model\entity\GestorTipoTarifa;
 use actividadtarifas\model\entity\TipoTarifa;
 use core\ConfigGlobal;
 use ubis\model\entity\GestorDelegacion;
-use ubis\model\entity\Tarifa;
+use ubis\model\entity\TarifaUbi;
 use ubis\model\entity\Ubi;
 use web\Desplegable;
 
@@ -391,11 +391,11 @@ switch ($Qque) {
         $Qobserv = (string)filter_input(INPUT_POST, 'observ');
 
         if (!empty($Qid_item)) {
-            $oTarifa = new Tarifa();
+            $oTarifa = new TarifaUbi();
             $oTarifa->setId_item($Qid_item);
             $oTarifa->DBCarregar(); //perque agafi els valors que ja té.
         } else {
-            $oTarifa = new Tarifa();
+            $oTarifa = new TarifaUbi();
         }
         if (!empty($Qid_ubi)) $oTarifa->setId_ubi($Qid_ubi);
         if (!empty($Qyear)) $oTarifa->setYear($Qyear);
@@ -410,7 +410,7 @@ switch ($Qque) {
     case "borrar":
         $Qid_item = (integer)filter_input(INPUT_POST, 'id_item');
         if (!empty($Qid_item)) {
-            $oTarifa = new Tarifa();
+            $oTarifa = new TarifaUbi();
             $oTarifa->setId_item($Qid_item);
             if ($oTarifa->DBEliminar() === false) {
                 echo _("hay un error, no se ha eliminado");
@@ -430,7 +430,7 @@ switch ($Qque) {
             $id_item = (integer)strtok('#');
             $cantidad = round($cantidad);
             if (empty($id_item) && empty($cantidad)) continue; // no hay ni habia nada.
-            $oTarifa = new Tarifa(array('id_tarifa' => $id_tarifa, 'id_ubi' => $Qid_ubi, 'year' => $Qyear));
+            $oTarifa = new TarifaUbi(array('id_tarifa' => $id_tarifa, 'id_ubi' => $Qid_ubi, 'year' => $Qyear));
             $oTarifa->DBCarregar();
             if (isset($cantidad)) $oTarifa->setCantidad($cantidad);
             if ($oTarifa->DBGuardar() === false) {

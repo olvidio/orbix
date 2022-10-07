@@ -1,13 +1,12 @@
 <?php
 
 namespace orbix\apps\core {
-    spl_autoload_extensions('.class.php');
+    spl_autoload_extensions('.php');
     spl_autoload_register(__NAMESPACE__ . '\autoload');
     function autoload($className)
     {
         $dir_apps = '/orbix/apps';
         $className = ltrim($className, '\\');
-        //$className = strtolower($className);
         $fileName = '';
         $namespace = '';
         if ($lastNsPos = strrpos($className, '\\')) {
@@ -15,7 +14,6 @@ namespace orbix\apps\core {
             $className = substr($className, $lastNsPos + 1);
             $fileName = str_replace('\\', DIRECTORY_SEPARATOR, $namespace) . DIRECTORY_SEPARATOR;
         }
-        //$fileName .= str_replace('_', DIRECTORY_SEPARATOR, $className) . '.class.php';
         $fileName .= str_replace('_', DIRECTORY_SEPARATOR, $className) . '.php';
         $base_dir = $_SERVER['DOCUMENT_ROOT'] . $dir_apps;
         $fileName = $base_dir . DIRECTORY_SEPARATOR . $fileName;
@@ -35,14 +33,14 @@ namespace orbix\apps\core {
 namespace orbix\apps {
 
     //permisos/login_inc
-    use permisos\model\mycrypt;
+    use permisos\model\MyCrypt;
 
-    //use permisos\model\perm;
+    //use permisos\model\Perm;
 
-    use core\clasepropiedades;
-    use core\datoscampo;
-    use core\condicion;
-    use core\set;
+    use core\ClasePropiedades;
+    use core\DatosCampo;
+    use core\Condicion;
+    use core\Set;
 
     use core\configglobal;
     use core\GestorErrores;

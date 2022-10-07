@@ -115,7 +115,7 @@ switch ($Qsalida) {
         $id_tipo_activ = $Qentrada;
         $aWhere = [];
         $aWhere['id_tipo_activ'] = $id_tipo_activ;
-        $aWhere['_ordre'] = 'serie';
+        $aWhere['_ordre'] = 'id_serie';
         $GesActiTipoTarifa = new GestorTipoActivTarifa();
         $cActiTipoTarifa = $GesActiTipoTarifa->getTipoActivTarifas($aWhere);
         if (!empty($cActiTipoTarifa) && $cActiTipoTarifa > 0) {

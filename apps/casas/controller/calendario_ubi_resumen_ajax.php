@@ -6,7 +6,7 @@ use casas\model\entity\GestorUbiGasto;
 use casas\model\entity\Ingreso;
 use ubis\model\entity\CasaDl;
 use ubis\model\entity\GestorCasaPeriodo;
-use ubis\model\entity\Tarifa;
+use ubis\model\entity\TarifaUbi;
 use web\TiposActividades;
 use web\DateTimeLocal;
 
@@ -50,13 +50,13 @@ foreach ($cTipoTarifas as $oTipoTarifa) {
     $a_tarifas_actual[$id_tarifa]['modo'] = $oTipoTarifa->getModo();
     $a_tarifas_actual[$id_tarifa]['letra'] = $oTipoTarifa->getLetra();
 
-    $oTarifa = new Tarifa();
+    $oTarifa = new TarifaUbi();
     $oTarifa->setId_tarifa($id_tarifa);
     $oTarifa->setId_ubi($Qid_ubi);
     $oTarifa->setYear($any_actual);
 
     $a_tarifas_actual[$id_tarifa]['cantidad'] = $oTarifa->getCantidad();
-    $oTarifaPrevision = new Tarifa();
+    $oTarifaPrevision = new TarifaUbi();
     $oTarifaPrevision->setId_tarifa($id_tarifa);
     $oTarifaPrevision->setId_ubi($Qid_ubi);
     $oTarifaPrevision->setYear($any_prev);

@@ -10,13 +10,13 @@ td { border:none; }
 {{ oHash.getCamposHtml()|raw }}
 <div class="flex-container">
     <div>
-    {{ "serie"|trans }}:
-    {{ oDesplPosiblesSeries.desplegable()|raw }}
-   </div> 
-    <div>
     {{ "tarifa"|trans }}:
     {{ oDesplPosiblesTipoTarifas.desplegable()|raw }}
    </div> 
+    <div>
+    {{ "serie"|trans }}:
+    {{ oDesplPosiblesSeries.desplegable()|raw }}
+   </div>
 </div>
 <br><br>
 <input type="button" value="{{ "guardar"|trans }}" onclick="fnjs_guardar('#nuevo','update');">

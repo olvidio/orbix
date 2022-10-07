@@ -6,7 +6,7 @@ use core;
 
 /* No vale el underscore en el nombre */
 
-class InfoModsInstalled extends core\datosInfo
+class InfoModsInstalled extends core\DatosInfo
 {
 
     public function __construct()

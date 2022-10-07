@@ -6,7 +6,7 @@ use web;
 
 /* No vale el underscore en el nombre */
 
-abstract class datosInfo
+abstract class DatosInfo
 {
 
     protected $accion;

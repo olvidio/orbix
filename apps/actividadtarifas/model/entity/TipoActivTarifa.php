@@ -80,11 +80,11 @@ class TipoActivTarifa extends core\ClasePropiedades
      */
     private $iid_tipo_activ;
     /**
-     * Serie de TipoActivTarifa
+     * Id_serie de TipoActivTarifa
      *
      * @var integer
      */
-    private $iserie;
+    private $iid_serie;
     /* ATRIBUTOS QUE NO SON CAMPOS------------------------------------------------- */
     /**
      * oDbl de TipoActivTarifa
@@ -145,7 +145,7 @@ class TipoActivTarifa extends core\ClasePropiedades
         $aDades = array();
         $aDades['id_tarifa'] = $this->iid_tarifa;
         $aDades['id_tipo_activ'] = $this->iid_tipo_activ;
-        $aDades['serie'] = $this->iserie;
+        $aDades['id_serie'] = $this->iid_serie;
         array_walk($aDades, 'core\poner_null');
 
         if ($bInsert === false) {
@@ -153,7 +153,7 @@ class TipoActivTarifa extends core\ClasePropiedades
             $update = "
 					id_tarifa                = :id_tarifa,
 					id_tipo_activ            = :id_tipo_activ,
-					serie                    = :serie";
+					id_serie                 = :id_serie";
             if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_item='$this->iid_item'")) === false) {
                 $sClauError = 'TipoActivTarifa.update.prepare';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
@@ -171,8 +171,8 @@ class TipoActivTarifa extends core\ClasePropiedades
             }
         } else {
             // INSERT
-            $campos = "(id_tarifa,id_tipo_activ,serie)";
-            $valores = "(:id_tarifa,:id_tipo_activ,:serie)";
+            $campos = "(id_tarifa,id_tipo_activ,id_serie)";
+            $valores = "(:id_tarifa,:id_tipo_activ,:id_serie)";
             if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {
                 $sClauError = 'TipoActivTarifa.insertar.prepare';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
@@ -262,7 +262,7 @@ class TipoActivTarifa extends core\ClasePropiedades
         if (array_key_exists('id_item', $aDades)) $this->setId_item($aDades['id_item']);
         if (array_key_exists('id_tarifa', $aDades)) $this->setId_tarifa($aDades['id_tarifa']);
         if (array_key_exists('id_tipo_activ', $aDades)) $this->setId_tipo_activ($aDades['id_tipo_activ']);
-        if (array_key_exists('serie', $aDades)) $this->setSerie($aDades['serie']);
+        if (array_key_exists('id_serie', $aDades)) $this->setId_serie($aDades['id_serie']);
     }
 
     /**
@@ -275,7 +275,7 @@ class TipoActivTarifa extends core\ClasePropiedades
         $this->setId_item('');
         $this->setId_tarifa('');
         $this->setId_tipo_activ('');
-        $this->setSerie('');
+        $this->setId_serie('');
         $this->setPrimary_key($aPK);
     }
 
@@ -420,12 +420,12 @@ class TipoActivTarifa extends core\ClasePropiedades
      *
      * @return integer iserie
      */
-    function getSerie()
+    function getId_serie()
     {
-        if (!isset($this->iserie) && !$this->bLoaded) {
+        if (!isset($this->iid_serie) && !$this->bLoaded) {
             $this->DBCarregar();
         }
-        return $this->iserie;
+        return $this->iid_serie;
     }
 
     /**
@@ -433,9 +433,9 @@ class TipoActivTarifa extends core\ClasePropiedades
      *
      * @param integer iserie='' optional
      */
-    function setSerie($iserie = '')
+    function setId_serie($iserie = '')
     {
-        $this->iserie = $iserie;
+        $this->iid_serie = $iserie;
     }
 
     public function getArraySerie()
@@ -459,7 +459,7 @@ class TipoActivTarifa extends core\ClasePropiedades
         $oTipoActivTarifaSet->add($this->getDatosId_schema());
         $oTipoActivTarifaSet->add($this->getDatosTarifa());
         $oTipoActivTarifaSet->add($this->getDatosId_tipo_activ());
-        $oTipoActivTarifaSet->add($this->getDatosSerie());
+        $oTipoActivTarifaSet->add($this->getDatosId_serie());
         return $oTipoActivTarifaSet->getTot();
     }
 
@@ -512,10 +512,10 @@ class TipoActivTarifa extends core\ClasePropiedades
      *
      * @return core\DatosCampo
      */
-    function getDatosSerie()
+    function getDatosId_serie()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'serie'));
+        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_serie'));
         $oDatosCampo->setEtiqueta(_("serie"));
         return $oDatosCampo;
     }

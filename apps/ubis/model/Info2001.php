@@ -10,7 +10,7 @@ use web;
 
 /* No vale el underscore en el nombre */
 
-class Info2001 extends core\datosInfo
+class Info2001 extends core\DatosInfo
 {
 
     public function __construct()

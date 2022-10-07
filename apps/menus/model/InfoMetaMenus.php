@@ -6,7 +6,7 @@ use core;
 
 /* No vale el underscore en el nombre */
 
-class InfoMetaMenus extends core\datosInfo
+class InfoMetaMenus extends core\DatosInfo
 {
 
     public function __construct()

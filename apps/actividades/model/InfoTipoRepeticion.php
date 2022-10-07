@@ -6,7 +6,7 @@ use core;
 
 /* No vale el underscore en el nombre */
 
-class InfoTipoRepeticion extends core\datosInfo
+class InfoTipoRepeticion extends core\DatosInfo
 {
 
     public function __construct()
@@ -28,10 +28,9 @@ class InfoTipoRepeticion extends core\datosInfo
         // Si se quiere listar una selección, $this->k_buscar
         if (!empty($this->k_buscar)) {
             $aWhere['repeticion'] = $this->k_buscar;
-            $aOperador['repeticion'] = $this->k_buscar;
             $aOperador['repeticion'] = 'sin_acentos';
         }
-        $aWhere['_ordre'] = 'serie';
+        $aWhere['_ordre'] = 'id_serie';
         $oLista = new entity\GestorRepeticion();
         $Coleccion = $oLista->getRepeticiones($aWhere, $aOperador);
 

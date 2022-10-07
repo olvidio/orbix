@@ -7,7 +7,7 @@ use encargossacd\model\entity\GestorEncargoTipo;
 
 /* No vale el underscore en el nombre */
 
-class InfoEncargoTipo extends core\datosInfo
+class InfoEncargoTipo extends core\DatosInfo
 {
 
     public function __construct()

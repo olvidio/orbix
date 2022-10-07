@@ -139,7 +139,7 @@ if (!empty($Qid_activ)) { // caso de modificar
         // También prodria buscar la tarifa:
         $aWhereT = [];
         $aWhereT['id_tipo_activ'] = $id_tipo_activ;
-        $aWhereT['_ordre'] = 'serie';
+        $aWhereT['_ordre'] = 'id_serie';
         $GesActiTipoTarifa = new GestorTipoActivTarifa();
         $cActiTipoTarifa = $GesActiTipoTarifa->getTipoActivTarifas($aWhereT);
         if (!empty($cActiTipoTarifa) && $cActiTipoTarifa > 0) {

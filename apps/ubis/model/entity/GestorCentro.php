@@ -45,6 +45,37 @@ class GestorCentro extends core\ClaseGestor
     /* MÉTODOS PÚBLICOS -----------------------------------------------------------*/
 
     /**
+     * retorna un array Els posibles centres
+     *
+     * @return array
+     */
+    function getArrayCentros()
+    {
+        $oDbl = $this->getoDbl();
+        $nom_tabla = $this->getNomTabla();
+        $orden = 'nombre_ubi';
+        $sCondicion = "WHERE status = 't'";
+        $sQuery = "SELECT id_ubi, nombre_ubi
+				FROM $nom_tabla
+				$sCondicion
+				ORDER BY $orden";
+        if (($oDblSt = $oDbl->query($sQuery)) === false) {
+            $sClauError = 'GestorCentro.lista';
+            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+            return false;
+        }
+        $aCentros = [];
+        foreach ($oDbl->query($sQuery) as $row) {
+            $id_ubi = $row['id_ubi'];
+            $nombre_ubi = $row['nombre_ubi'];
+
+            $aCentros[$id_ubi] = $nombre_ubi;
+        }
+
+        return $aCentros;
+    }
+
+    /**
      * retorna un objecte del tipus Desplegable
      * Els posibles centres
      *
