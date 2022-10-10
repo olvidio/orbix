@@ -10,7 +10,7 @@ require_once("apps/core/global_object.inc");
 
 $Qid_app = (integer)filter_input(INPUT_POST, 'id_app');
 $Qesquema = (string)filter_input(INPUT_POST, 'esquema'); // esquema con la v o f.
-$Qaccion = (string)filter_input(\INPUT_POST, 'accion');
+$Qaccion = (string)filter_input(INPUT_POST, 'accion');
 
 $a_todasApps = $_SESSION['config']['a_apps'];
 $nom_app = array_search($Qid_app, $a_todasApps);
