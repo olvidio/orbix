@@ -31,7 +31,7 @@ class InfoMetaMenus extends core\DatosInfo
             $aWhere = array('descripcion' => $this->k_buscar);
             $aOperador = array('descripcion' => 'sin_acentos');
         }
-        $oLista = new entity\GestorMetamenu();
+        $oLista = new entity\GestorMetaMenu();
         $Coleccion = $oLista->getMetamenus($aWhere, $aOperador);
 
         return $Coleccion;

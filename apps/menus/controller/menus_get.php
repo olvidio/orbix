@@ -23,7 +23,7 @@ $Qfiltro_grupo = (string)filter_input(INPUT_POST, 'filtro_grupo');
 $Qnuevo = (string)filter_input(INPUT_POST, 'nuevo');
 $Qid_menu = (string)filter_input(INPUT_POST, 'id_menu');
 
-$oGesMetamenu = new menusEntity\GestorMetamenu();
+$oGesMetamenu = new menusEntity\GestorMetaMenu();
 $oDesplMeta = $oGesMetamenu->getListaMetamenus();
 $oDesplMeta->setNombre('id_metamenu');
 

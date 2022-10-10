@@ -12,7 +12,7 @@ require_once("apps/core/global_object.inc");
 
 $Qfiltro_mod = (string)filter_input(INPUT_POST, 'filtro_mod');
 
-$oLista = new menus\GestorMetamenu();
+$oLista = new menus\GestorMetaMenu();
 
 $oDespl = $oLista->getListaMetamenus();
 $oDespl->setOpcion_sel($Qfiltro_mod);

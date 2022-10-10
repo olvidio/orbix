@@ -86,10 +86,10 @@ if (!empty($Qid_menu) || !empty($Qnuevo)) {
     // para ver el listado de todos los menus de un módulo
     if (!empty($Qfiltro_mod)) {
         $aWhere = array('modulo' => $Qfiltro_mod, '_ordre' => 'modulo,url');
-        $oLista = new menus\GestorMetamenu();
+        $oLista = new menus\GestorMetaMenu();
         $oMetamenus = $oLista->getMetamenus($aWhere);
     } else {
-        $oLista = new menus\GestorMetamenu();
+        $oLista = new menus\GestorMetaMenu();
         $oMetamenus = $oLista->getMetamenus();
     }
     $txt = "";

@@ -15,7 +15,7 @@ use web;
  * @version 1.0
  * @created 23/12/2013
  */
-class GestorMetamenu extends core\ClaseGestor
+class GestorMetaMenu extends core\ClaseGestor
 {
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
@@ -24,7 +24,7 @@ class GestorMetamenu extends core\ClaseGestor
     /**
      * Constructor de la classe.
      *
-     * @return GestorMetamenu
+     * @return GestorMetaMenu
      *
      */
     function __construct()
