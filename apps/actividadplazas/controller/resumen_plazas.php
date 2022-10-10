@@ -72,7 +72,7 @@ $a_camposHidden = array(
     'id_activ' => $id_activ,
     'que' => 'ceder'
 );
-$oHash->setcamposForm($camposForm);
+$oHash->setCamposForm($camposForm);
 $oHash->setArraycamposHidden($a_camposHidden);
 
 $oHashActualizar = new web\Hash();

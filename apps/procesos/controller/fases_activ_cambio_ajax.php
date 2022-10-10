@@ -220,7 +220,7 @@ switch ($Qque) {
         $oTabla->setDatos($a_valores);
 
         $oHash = new web\Hash();
-        $oHash->setcamposForm('sel');
+        $oHash->setCamposForm('sel');
         $oHash->setcamposNo('scroll_id');
         $a_camposHidden = array(
             'id_fase_nueva' => $Qid_fase_nueva,

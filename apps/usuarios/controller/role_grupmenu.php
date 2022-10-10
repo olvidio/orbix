@@ -63,7 +63,7 @@ $oTabla->setBotones($a_botones);
 $oTabla->setDatos($a_valores);
 
 $oHash = new web\Hash();
-$oHash->setcamposForm('sel');
+$oHash->setCamposForm('sel');
 $oHash->setcamposNo('scroll_id');
 $a_camposHidden = array(
     'id_role' => $Qid_role,

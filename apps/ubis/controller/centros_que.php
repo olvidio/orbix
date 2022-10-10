@@ -33,12 +33,12 @@ $oDesplOpciones->setNombre('que');
 $url_ajax = 'apps/ubis/controller/centros_ajax.php';
 $oHashMod = new Hash();
 $oHashMod->setUrl($url_ajax);
-$oHashMod->setcamposForm('que!id_ubi');
+$oHashMod->setCamposForm('que!id_ubi');
 $h_mod = $oHashMod->linkSinVal();
 
 $oHash = new Hash();
 $oHash->setUrl($url_ajax);
-$oHash->setcamposForm('que');
+$oHash->setCamposForm('que');
 
 $a_campos = ['oPosicion' => $oPosicion,
     'oHash' => $oHash,

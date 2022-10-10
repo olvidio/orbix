@@ -190,7 +190,7 @@ if ($_SESSION['oConfig']->is_jefeCalendario()
 $oActividadTipo->setPerm_jefe($perm_jefe);
 
 $oHash = new web\Hash();
-$oHash->setcamposForm('id_fase_ref!salida!aviso_tipo!objeto!dl_propia!iactividad_val!iasistentes_val!inom_tipo_val!isfsv_val');
+$oHash->setCamposForm('id_fase_ref!salida!aviso_tipo!objeto!dl_propia!iactividad_val!iasistentes_val!inom_tipo_val!isfsv_val');
 $oHash->setcamposNo('casas!casas_mas!casas_num!id_tipo_activ!inom_tipo_val');
 $oHash->setCamposChk('aviso_off!aviso_on!aviso_outdate');
 $a_camposHidden = array(

@@ -140,7 +140,7 @@ $aCamposHidden = [
 ];
 $oHash->setUrl($url_update);
 $campos_form = 'id_item!id_enc!fin!inicio';
-$oHash->setcamposForm($campos_form);
+$oHash->setCamposForm($campos_form);
 $oHash->setcamposNo('enc_num!id_item!refresh!mas');
 $oHash->setArrayCamposHidden($aCamposHidden);
 

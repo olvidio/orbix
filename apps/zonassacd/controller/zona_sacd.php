@@ -33,14 +33,14 @@ $url_ajax = 'apps/zonassacd/controller/zona_sacd_ajax.php';
 
 $oHashSacd = new Hash();
 $oHashSacd->setUrl($url_ajax);
-$oHashSacd->setcamposForm('que!id_zona');
+$oHashSacd->setCamposForm('que!id_zona');
 $h_sacd = $oHashSacd->linkSinVal();
 
 $oHash = new Hash();
 $oHash->setUrl($url_ajax);
 $a_camposHidden = ['acumular' => 0, 'que' => 'update'];
 $oHash->setArraycamposHidden($a_camposHidden);
-$oHash->setcamposForm('id_zona!id_zona_new');
+$oHash->setCamposForm('id_zona!id_zona_new');
 $oHash->setCamposNo('acumular!scroll_id!sel');
 
 $perm_des = FALSE;

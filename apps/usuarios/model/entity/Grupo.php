@@ -75,11 +75,11 @@ class Grupo extends core\ClasePropiedades
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
                 $nom_id = 'i' . $nom_id; //imagino que es un integer
-                if ($val_id !== '') $this->$nom_id = (integer)$val_id; // evitem SQL injection fent cast a integer
+                if ($val_id !== '') $this->$nom_id = (integer)$val_id;
             }
         } else {
             if (isset($a_id) && $a_id !== '') {
-                $this->iid_usuario = (integer)$a_id; // evitem SQL injection fent cast a integer
+                $this->iid_usuario = (integer)$a_id;
                 $this->aPrimary_key = array('id_usuario' => $this->iid_usuario);
             }
         }
@@ -90,8 +90,8 @@ class Grupo extends core\ClasePropiedades
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
     /**
-     * Desa els atributs de l'objecte a la base de dades.
-     * Si no hi ha el registre, fa el insert, si hi es fa el update.
+     * Guarda los atributos de la clase en la base de datos.
+     * Si no existe el registro, hace el insert; Si existe hace el update.
      *
      */
     public function DBGuardar()
@@ -278,7 +278,7 @@ class Grupo extends core\ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'id_usuario') && $val_id !== '') $this->iid_usuario = (int)$val_id; // evitem SQL injection fent cast a integer
+                if (($nom_id == 'id_usuario') && $val_id !== '') $this->iid_usuario = (int)$val_id;
             }
         }
     }

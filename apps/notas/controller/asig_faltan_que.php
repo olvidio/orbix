@@ -64,11 +64,11 @@ $oDesplAsignaturas->setOpcion_sel($Qid_asignatura);
 
 $oHash = new web\Hash();
 $oHash->setcamposChk('personas_n!personas_agd!c1!c2!lista');
-$oHash->setcamposForm('numero!b_c');
+$oHash->setCamposForm('numero!b_c');
 
 $oHash1 = new web\Hash();
 $oHash1->setcamposChk('personas_n!personas_agd!c1!c2');
-$oHash1->setcamposForm('id_asignatura!b_c');
+$oHash1->setCamposForm('id_asignatura!b_c');
 
 
 $a_campos = ['oPosicion' => $oPosicion,

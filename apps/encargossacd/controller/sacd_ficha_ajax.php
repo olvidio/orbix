@@ -287,7 +287,7 @@ switch ($Qque) {
             'id_nom' => $Qid_nom,
         ];
         $campos_form = 'enc_num!mas!observ!dedic_m!dedic_t!dedic_v!id_tipo_enc';
-        $oHash->setcamposForm($campos_form);
+        $oHash->setCamposForm($campos_form);
         $oHash->setcamposNo('id_enc!mas!refresh');
         $oHash->setArrayCamposHidden($aCamposHidden);
 

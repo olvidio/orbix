@@ -53,22 +53,22 @@ $url_ajax = "apps/actividadescentro/controller/activ_ctr_ajax.php";
 
 $oHashAsig = new Hash();
 $oHashAsig->setUrl($url_ajax);
-$oHashAsig->setcamposForm('que!id_activ!id_ubi');
+$oHashAsig->setCamposForm('que!id_activ!id_ubi');
 $h_asignar = $oHashAsig->linkSinVal();
 
 $oHashAct = new Hash();
 $oHashAct->setUrl($url_ajax);
-$oHashAct->setcamposForm('que!id_activ');
+$oHashAct->setCamposForm('que!id_activ');
 $h_actualizar = $oHashAct->linkSinVal();
 
 $oHashNew = new Hash();
 $oHashNew->setUrl($url_ajax);
-$oHashNew->setcamposForm('que!id_activ!inicio!fin!f_ini_act!f_fin_act');
+$oHashNew->setCamposForm('que!id_activ!inicio!fin!f_ini_act!f_fin_act');
 $h_nuevo = $oHashNew->linkSinVal();
 
 $oHashOrden = new Hash();
 $oHashOrden->setUrl($url_ajax);
-$oHashOrden->setcamposForm('que!id_activ!id_ubi!num_orden');
+$oHashOrden->setCamposForm('que!id_activ!id_ubi!num_orden');
 $h_orden = $oHashOrden->linkSinVal();
 
 $oHash = new Hash();

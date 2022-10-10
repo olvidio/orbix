@@ -159,7 +159,7 @@ class Select1303
         $oTabla->setDatos($a_valores);
 
         $oHashCa = new web\Hash();
-        $oHashCa->setcamposForm('est_ok!observ_est');
+        $oHashCa->setCamposForm('est_ok!observ_est');
         $oHashCa->setCamposNo('sel!mod!scroll_id!refresh');
         $a_camposHiddenCa = array(
             'pau' => $this->pau,
@@ -258,7 +258,7 @@ class Select1303
             $n = count($cAsistencias);
             if ($n == 0 && empty($this->todos)) {
                 $oHashA = new web\Hash();
-//				$oHashA->setcamposForm('sel');
+//				$oHashA->setCamposForm('sel');
                 $oHashA->setcamposNo('scroll_id');
                 $a_camposHiddenA = array(
                     'pau' => 'p',

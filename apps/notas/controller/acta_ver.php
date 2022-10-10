@@ -225,7 +225,7 @@ if (!empty($cTribunal)) {
     //$sCamposForm .= '!item';
     $sCamposForm .= '!examinadores';
 }
-$oHashActa->setcamposForm($sCamposForm);
+$oHashActa->setCamposForm($sCamposForm);
 $oHashActa->setCamposNo('go_to!examinadores!notas!refresh');
 $a_camposHidden = array();
 if ($Qmod == 'nueva' || $notas == "nuevo") {
@@ -245,7 +245,7 @@ if ($Qmod == 'nueva' || $notas == "nuevo") {
 $oHashActa->setArraycamposHidden($a_camposHidden);
 
 $oHashActaPdf = new Hash();
-$oHashActaPdf->setcamposForm('acta_pdf');
+$oHashActaPdf->setCamposForm('acta_pdf');
 $oHashActaPdf->setCamposNo('acta_pdf');
 //cambio el nombre, porque tiene el mismo id en el otro formnulario
 $oHashActaPdf->setArrayCamposHidden(['acta_num' => $acta_actual]);

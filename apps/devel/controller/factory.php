@@ -506,7 +506,7 @@ foreach ($aClaus2 as $clau => $nom_clau) {
     if ($i > 0) $claus_if .= "\n";
     switch (substr($nom_clau, 0, 1)) {
         case 'i':
-            $claus_if .= "\t\t\t\t" . 'if (($nom_id == \'' . $clau . '\') && $val_id !== \'\') $this->' . $nom_clau . ' = (int)$val_id; // evitem SQL injection fent cast a integer';
+            $claus_if .= "\t\t\t\t" . 'if (($nom_id == \'' . $clau . '\') && $val_id !== \'\') $this->' . $nom_clau . ' = (int)$val_id; ';
             break;
         case 's':
             $claus_if .= "\t\t\t\t" . 'if (($nom_id == \'' . $clau . '\') && $val_id !== \'\') $this->' . $nom_clau . ' = (string)$val_id; // evitem SQL injection fent cast a string';
@@ -551,7 +551,7 @@ if (count($aClaus2) > 1) { // per el cas de només una clau.
 } else {
     $sForPrimaryK .= "\n\t\t" . '} else {
 			if (isset($a_id) && $a_id !== \'\') {
-				$this->' . $claus_txt . ' = (integer) $a_id; // evitem SQL injection fent cast a integer
+				$this->' . $claus_txt . ' = (integer) $a_id; 
 				$this->aPrimary_key = array(\'' . $claus_txt . '\' => $this->' . $claus_txt . ');
 			}
 		}';

@@ -133,7 +133,7 @@ if (is_array($cActas) && !empty($cActas)) {
 $nota_max_default = $_SESSION['oConfig']->getNota_max();
 
 $oHashNotas = new web\Hash();
-$oHashNotas->setcamposForm('id_nom!nota_num!nota_max!form_preceptor!acta_nota');
+$oHashNotas->setCamposForm('id_nom!nota_num!nota_max!form_preceptor!acta_nota');
 $oHashNotas->setCamposNo('que');
 $a_camposHidden1 = array(
     'id_pau' => $Qid_pau,

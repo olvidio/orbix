@@ -478,7 +478,7 @@ $pagina = web\Hash::link(core\ConfigGlobal::getWeb() . '/apps/personas/controlle
 $resultado = sprintf(_("%s personas encontradas"), $i);
 
 $oHash = new web\Hash();
-$oHash->setcamposForm('sel!que!id_dossier');
+$oHash->setCamposForm('sel!que!id_dossier');
 $oHash->setcamposNo('que!id_dossier!scroll_id');
 $a_camposHidden = array(
     'pau' => 'p',

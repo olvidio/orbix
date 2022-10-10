@@ -62,7 +62,7 @@ $oDesplAccion->setOpcion_sel($perm_ctr);
 
 
 $oHash = new web\Hash();
-$oHash->setcamposForm('perm_ctr!id_ctr');
+$oHash->setCamposForm('perm_ctr!id_ctr');
 $a_camposHidden = array(
     'id_usuario' => $Qid_usuario,
     'id_item' => $Qid_item,

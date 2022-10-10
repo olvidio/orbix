@@ -97,12 +97,12 @@ $oTabla->setBotones($a_botones);
 $oTabla->setDatos($a_valores);
 
 $oHashBuscar = new web\Hash();
-$oHashBuscar->setcamposForm('username');
+$oHashBuscar->setCamposForm('username');
 $oHashBuscar->setcamposNo('scroll_id');
 $oHashBuscar->setArraycamposHidden(array('quien' => 'grupo'));
 
 $oHashSelect = new web\Hash();
-$oHashSelect->setcamposForm('sel');
+$oHashSelect->setCamposForm('sel');
 $oHashSelect->setcamposNo('scroll_id');
 $oHashSelect->setArraycamposHidden(array('que' => 'eliminar_grupo'));
 

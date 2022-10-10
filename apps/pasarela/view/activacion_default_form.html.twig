@@ -1,0 +1,32 @@
+<style>
+    table {
+        width: 600px;
+    }
+
+    .contenido {
+        font-weight: bold;
+    }
+
+    .link {
+        text-decoration: none;
+        color: blue;
+        cursor: pointer;
+    }
+</style>
+<form id="modifica">
+    {{ oHash.getCamposHtml()|raw }}
+    <div class="flex-container">
+        <div>
+            <h3>
+                {{ "Valor por defecto"|trans }}:
+            </h3>
+        </div>
+        <div>
+            <input id="default" name="default" value="{{ default }}" \>
+        </div>
+    </div>
+    <br><br>
+    <br><br>
+    <input type="button" value="{{ "guardar"|trans }}" onclick="fnjs_guardar_default('#modifica');">
+    <input type="button" value="{{ "cancel"|trans }}" onclick="fnjs_cerrar();">
+</form>

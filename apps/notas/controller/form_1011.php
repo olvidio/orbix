@@ -317,7 +317,7 @@ if (!empty($Qid_asignatura_real)) { //caso de modificar
     $camposForm .= '!id_nivel!id_asignatura';
     $camposNo .= '!id_nivel!id_asignatura';
 }
-$oHash->setcamposForm($camposForm);
+$oHash->setCamposForm($camposForm);
 $oHash->setcamposNo($camposNo);
 $oHash->setArraycamposHidden($a_camposHidden);
 
@@ -335,12 +335,12 @@ $h2 = $oHash2->linkSinVal();
 
 $oHashMod = new Hash();
 $oHashMod->setUrl($url_ajax);
-$oHashMod->setcamposForm('dl_org!f_acta_iso!que');
+$oHashMod->setCamposForm('dl_org!f_acta_iso!que');
 $h_modificar = $oHashMod->linkSinVal();
 
 $oHashActa = new Hash();
 $oHashActa->setUrl($url_ajax);
-$oHashActa->setcamposForm('acta!que');
+$oHashActa->setCamposForm('acta!que');
 $h_acta = $oHashActa->linkSinVal();
 
 $op_genericas = $GesAsignaturas->getListaOpGenericas('json');

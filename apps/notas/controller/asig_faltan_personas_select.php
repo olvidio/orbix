@@ -187,7 +187,7 @@ if (!empty($a_valores)) {
 $titulo = sprintf(_("lista de %s de %s a los que falta la asignatura %s (%s)"), $gente, $curso_txt, $nom_asignatura, $i);
 
 $oHash = new Hash();
-$oHash->setcamposForm('sel!scroll_id');
+$oHash->setCamposForm('sel!scroll_id');
 $a_camposHidden = array(
     'pau' => 'p',
     'obj_pau' => $obj_pau

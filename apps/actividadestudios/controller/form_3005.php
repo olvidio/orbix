@@ -107,7 +107,7 @@ if (!empty($Qid_asignatura)) {
 } else {
     $camposForm .= '!id_asignatura';
 }
-$oHash->setcamposForm($camposForm);
+$oHash->setCamposForm($camposForm);
 $oHash->setArraycamposHidden($a_camposHidden);
 
 

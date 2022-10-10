@@ -78,11 +78,11 @@ $url_resumen = 'apps/casas/controller/casas_resumen_ajax.php';
 
 $oHash = new web\Hash();
 $sCamposForm = 'cdc_sel!id_cdc!id_cdc_mas!id_cdc_num!que';
-$oHash->setcamposForm($sCamposForm);
+$oHash->setCamposForm($sCamposForm);
 
 $oHashEdit = new web\Hash();
 $oHashEdit->setUrl($url_ajax);
-$oHashEdit->setcamposForm('que!id_activ');
+$oHashEdit->setCamposForm('que!id_activ');
 $h_edit = $oHashEdit->linkSinVal();
 
 $param = '';

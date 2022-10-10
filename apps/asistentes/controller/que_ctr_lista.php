@@ -113,7 +113,7 @@ $oDesplCentros->setOpcion_sel($Qid_ubi);
 $oDesplCentros->setAction('fnjs_otro(1)');
 
 $oHash = new web\Hash();
-$oHash->setcamposForm('n_agd!empiezamax!empiezamin!periodo!year!iactividad_val!iasistentes_val');
+$oHash->setCamposForm('n_agd!empiezamax!empiezamin!periodo!year!iactividad_val!iasistentes_val');
 $oHash->setcamposNo('id_ubi');
 $oHash->setArraycamposHidden($a_camposHidden);
 

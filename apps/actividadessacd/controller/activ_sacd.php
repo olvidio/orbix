@@ -56,22 +56,22 @@ $url_ajax = "apps/actividadessacd/controller/activ_sacd_ajax.php";
 
 $oHashAsig = new Hash();
 $oHashAsig->setUrl($url_ajax);
-$oHashAsig->setcamposForm('que!id_activ!id_nom');
+$oHashAsig->setCamposForm('que!id_activ!id_nom');
 $h_asignar = $oHashAsig->linkSinVal();
 
 $oHashNew = new Hash();
 $oHashNew->setUrl($url_ajax);
-$oHashNew->setcamposForm('que!seleccion!id_activ!f_ini_act!f_fin_act');
+$oHashNew->setCamposForm('que!seleccion!id_activ!f_ini_act!f_fin_act');
 $h_nuevo = $oHashNew->linkSinVal();
 
 $oHashOrden = new Hash();
 $oHashOrden->setUrl($url_ajax);
-$oHashOrden->setcamposForm('que!id_activ!id_nom!id_cargo!num_orden');
+$oHashOrden->setCamposForm('que!id_activ!id_nom!id_cargo!num_orden');
 $h_orden = $oHashOrden->linkSinVal();
 
 $oHashAct = new Hash();
 $oHashAct->setUrl($url_ajax);
-$oHashAct->setcamposForm('que!id_activ');
+$oHashAct->setCamposForm('que!id_activ');
 $h_actualizar = $oHashAct->linkSinVal();
 
 $oHash = new Hash();

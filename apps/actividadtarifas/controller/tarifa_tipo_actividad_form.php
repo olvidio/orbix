@@ -110,7 +110,7 @@ if ($Qid_item != 'nuevo') {
 
     $oHash = new web\Hash();
     $oHash->setUrl(core\ConfigGlobal::getWeb() . '/apps/actividadtarifas/controller/tarifa_ajax.php');
-    $oHash->setcamposForm('iactividad_val!iasistentes_val!id_tipo_activ!inom_tipo_val!isfsv_val!id_serie!id_tarifa');
+    $oHash->setCamposForm('iactividad_val!iasistentes_val!id_tipo_activ!inom_tipo_val!isfsv_val!id_serie!id_tarifa');
     $oHash->setCamposNo('id_tipo_activ!que');
     $a_camposHidden = array(
         'id_tipo_activ' => '',

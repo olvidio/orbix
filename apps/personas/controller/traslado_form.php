@@ -69,7 +69,7 @@ $oHoy = new web\DateTimeLocal();
 $hoy = $oHoy->getFromLocal();
 
 $oHash = new web\Hash();
-$oHash->setcamposForm('new_ctr!f_ctr!new_dl!f_dl!situacion');
+$oHash->setCamposForm('new_ctr!f_ctr!new_dl!f_dl!situacion');
 $a_camposHidden = array(
     'id_pau' => $id_pau,
     'id_ctr_o' => $id_ctr,

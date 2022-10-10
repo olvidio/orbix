@@ -380,10 +380,10 @@ $oTabla->setBotones($a_botones);
 $oTabla->setDatos($a_valores);
 
 $oHash = new Hash();
-$oHash->setcamposForm('loc!que_lista');
+$oHash->setCamposForm('loc!que_lista');
 
 $oHash1 = new Hash();
-$oHash1->setcamposForm('sel');
+$oHash1->setCamposForm('sel');
 $oHash1->setcamposNo('scroll_id!dl_dst');
 $a_camposHidden1 = array(
     'que_lista' => $Qque_lista,

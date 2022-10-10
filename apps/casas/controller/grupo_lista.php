@@ -81,7 +81,7 @@ $oTabla->setBotones($a_botones);
 $oTabla->setDatos($a_valores);
 
 $oHash = new Hash();
-$oHash->setcamposForm('sel');
+$oHash->setCamposForm('sel');
 $oHash->setCamposNo('sel!scroll_id!refresh');
 $oHash->setArraycamposHidden(array('que' => 'eliminar'));
 

@@ -189,7 +189,7 @@ $stack = $oPosicion->getStack(0);
 
 $oHash = new web\Hash();
 $camposForm = 'actividades!actividades_mas!actividades_num';
-$oHash->setcamposForm($camposForm);
+$oHash->setCamposForm($camposForm);
 $oHash->setcamposNo('que!actividades');
 $a_camposHidden = array(
     'id_nom' => $Qid_nom,

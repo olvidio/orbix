@@ -80,7 +80,7 @@ if (!empty($Qid_menu) || !empty($Qnuevo)) {
     }
 
     $oHash = new web\Hash();
-    $oHash->setcamposForm("$campos_chk!orden!txt_menu!id_metamenu!parametros!perm_menu");
+    $oHash->setCamposForm("$campos_chk!orden!txt_menu!id_metamenu!parametros!perm_menu");
     $oHash->setcamposNo($campos_chk);
     $a_camposHidden = array(
         'id_menu' => $Qid_menu,
@@ -104,7 +104,7 @@ if (!empty($Qid_menu) || !empty($Qnuevo)) {
     $oHash4->setArraycamposHidden($a_camposHidden);
 
     $oHash5 = new web\Hash();
-    $oHash5->setcamposForm("gm_new");
+    $oHash5->setCamposForm("gm_new");
     $a_camposHidden = array(
         'id_menu' => $Qid_menu,
         'filtro_grupo' => $Qfiltro_grupo,
@@ -113,7 +113,7 @@ if (!empty($Qid_menu) || !empty($Qnuevo)) {
     $oHash5->setArraycamposHidden($a_camposHidden);
 
     $oHash6 = new web\Hash();
-    $oHash6->setcamposForm("gm_new");
+    $oHash6->setCamposForm("gm_new");
     $a_camposHidden = array(
         'id_menu' => $Qid_menu,
         'filtro_grupo' => $Qfiltro_grupo,

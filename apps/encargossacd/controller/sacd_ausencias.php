@@ -44,24 +44,24 @@ $oDesplFiltroSacd->setOpcion_sel($Qfiltro_sacd);
 $url_get = 'apps/encargossacd/controller/sacd_ausencias_get.php';
 $oHashGet = new Hash();
 $oHashGet->setUrl($url_get);
-$oHashGet->setcamposForm('filtro_sacd!id_nom!historial');
+$oHashGet->setCamposForm('filtro_sacd!id_nom!historial');
 $h_get = $oHashGet->linkSinVal();
 
 $url_ajax = 'apps/encargossacd/controller/sacd_ficha_ajax.php';
 $oHashFicha = new Hash();
 $oHashFicha->setUrl($url_ajax);
-$oHashFicha->setcamposForm('que!id_nom');
+$oHashFicha->setCamposForm('que!id_nom');
 $h_ficha = $oHashFicha->linkSinVal();
 
 $oHashLst = new Hash();
 $oHashLst->setUrl($url_ajax);
-$oHashLst->setcamposForm('que!id_nom!filtro_sacd');
+$oHashLst->setCamposForm('que!id_nom!filtro_sacd');
 $h_lista = $oHashLst->linkSinVal();
 
 $url_horario = 'apps/encargossacd/controller/horario_sacd_ver.php';
 $oHashHorario = new Hash();
 $oHashHorario->setUrl($url_horario);
-$oHashHorario->setcamposForm('filtro_sacd!id_enc!id_nom');
+$oHashHorario->setCamposForm('filtro_sacd!id_enc!id_nom');
 $h_horario = $oHashHorario->linkSinVal();
 
 $a_campos = ['oPosicion' => $oPosicion,

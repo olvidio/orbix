@@ -51,7 +51,7 @@ switch ($Qque) {
             'id_ubi' => $Qid_ubi,
         ];
         $oHash->setArrayCamposHidden($aCamposHidden);
-        $oHash->setcamposForm('tipo_ctr!tipo_labor');
+        $oHash->setCamposForm('tipo_ctr!tipo_labor');
 
 
         $txt = "<form id='frm_labor' action='$url_ajax'>";
@@ -82,7 +82,7 @@ switch ($Qque) {
             'id_ubi' => $Qid_ubi,
         ];
         $oHash->setArrayCamposHidden($aCamposHidden);
-        $oHash->setcamposForm('n_buzon!num_pi!num_cartas');
+        $oHash->setCamposForm('n_buzon!num_pi!num_cartas');
 
         $txt = "<form id='frm_num'>";
         $txt .= $oHash->getCamposHtml();
@@ -114,7 +114,7 @@ switch ($Qque) {
             'id_ubi' => $Qid_ubi,
         ];
         $oHash->setArrayCamposHidden($aCamposHidden);
-        $oHash->setcamposForm('num_habit_indiv!plazas');
+        $oHash->setCamposForm('num_habit_indiv!plazas');
         $oHash->setCamposChk('sede');
 
         $txt = "<form id='frm_plazas'>";

@@ -142,7 +142,7 @@ $oTabla->setBotones($a_botones);
 $oTabla->setDatos($a_valores);
 
 $oHash = new web\Hash();
-$oHash->setcamposForm('sel!mod');
+$oHash->setCamposForm('sel!mod');
 $oHash->setcamposNo('scroll_id!sel!refresh');
 
 $txt_eliminar = _("¿Está seguro?");

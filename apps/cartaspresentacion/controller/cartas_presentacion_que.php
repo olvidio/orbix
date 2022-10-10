@@ -52,29 +52,29 @@ $oSelCiudades->setAction('fnjs_poblacion()');
 $url_ctr = 'apps/ubis/controller/home_ubis.php';
 $oHashCtr = new Hash();
 $oHashCtr->setUrl($url_ctr);
-$oHashCtr->setcamposForm('bloque!pau!id_ubi');
+$oHashCtr->setCamposForm('bloque!pau!id_ubi');
 $h_ctr = $oHashCtr->linkSinVal();
 
 $url_ajax = 'apps/cartaspresentacion/controller/cartas_presentacion_ajax.php';
 $oHashPob = new Hash();
 $oHashPob->setUrl($url_ajax);
-$oHashPob->setcamposForm('que_mod!filtro');
+$oHashPob->setCamposForm('que_mod!filtro');
 $h_pob = $oHashPob->linkSinVal();
 
 $oHashEdit = new Hash();
 $oHashEdit->setUrl($url_ajax);
-$oHashEdit->setcamposForm('id_direccion!id_ubi!que_mod');
+$oHashEdit->setCamposForm('id_direccion!id_ubi!que_mod');
 $h_update = $oHashEdit->linkSinVal();
 
 $oHashDel = new Hash();
 $oHashDel->setUrl($url_ajax);
-$oHashDel->setcamposForm('id_direccion!id_ubi!que_mod');
+$oHashDel->setCamposForm('id_direccion!id_ubi!que_mod');
 $h_del = $oHashDel->linkSinVal();
 
 
 $oHash = new Hash();
 $oHash->setUrl($url_ajax);
-$oHash->setcamposForm('que_mod');
+$oHash->setCamposForm('que_mod');
 $oHash->setCamposNo('scroll_id!sel!poblacion_sel');
 
 $a_campos = [

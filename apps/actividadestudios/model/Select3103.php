@@ -181,7 +181,7 @@ class Select3103
         $this->txt_eliminar = _("¿Está seguro que desea quitar esta matrícula?");
 
         $oHashSelect = new web\Hash();
-        $oHashSelect->setcamposForm('');
+        $oHashSelect->setCamposForm('');
         $oHashSelect->setCamposNo('sel!mod!scroll_id!refresh');
         $a_camposHidden = array(
             'pau' => $this->pau,

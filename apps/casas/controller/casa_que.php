@@ -134,16 +134,16 @@ switch ($tipo_lista) {
         $param = 'que=get';
         $sCamposForm .= '!periodo';
 }
-$oHash->setcamposForm($sCamposForm);
+$oHash->setCamposForm($sCamposForm);
 
 $oHashEdit = new web\Hash();
 $oHashEdit->setUrl($url_ajax);
-$oHashEdit->setcamposForm('que!id_activ');
+$oHashEdit->setCamposForm('que!id_activ');
 $h_edit_a = $oHashEdit->linkSinVal();
 
 $oHashEditU = new web\Hash();
 $oHashEditU->setUrl($url_ajax);
-$oHashEditU->setcamposForm('que!id_ubi');
+$oHashEditU->setCamposForm('que!id_ubi');
 $h_edit_u = $oHashEditU->linkSinVal();
 
 $a_campos = ['oPosicion' => $oPosicion,

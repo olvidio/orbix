@@ -35,7 +35,7 @@ $email = $oUsuario->getEmail();
 //$id_role=$oUsuario->getId_role();
 
 $oHash = new web\Hash();
-$oHash->setcamposForm('que!email');
+$oHash->setCamposForm('que!email');
 $oHash->setcamposNo('que');
 $a_camposHidden = array(
     'pass' => $pass,

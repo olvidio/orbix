@@ -190,7 +190,7 @@ if (!empty($a_valores)) {
 
 
 $oHash = new web\Hash();
-$oHash->setcamposForm('sel!scroll_id');
+$oHash->setCamposForm('sel!scroll_id');
 $a_camposHidden = array(
     'pau' => 'p',
     'obj_pau' => $obj_pau,

@@ -180,7 +180,7 @@ if (!empty($id_activ_real)) {
 } else {
     $camposForm .= '!id_activ';
 }
-$oHash->setcamposForm($camposForm);
+$oHash->setCamposForm($camposForm);
 $oHash->setArraycamposHidden($a_camposHidden);
 
 

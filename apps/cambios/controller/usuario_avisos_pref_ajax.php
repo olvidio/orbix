@@ -199,7 +199,7 @@ switch ($Qsalida) {
         $txt .= "<input type='button' value='" . _("cancel") . "' onclick=\"fnjs_cerrar();\" >";
 
         $oHash = new web\Hash();
-        $oHash->setcamposForm("salida!objeto!propiedad!operador!valor");
+        $oHash->setCamposForm("salida!objeto!propiedad!operador!valor");
         $oHash->setCamposChk("valor_old!valor_new");
         $oHash->setCamposNo("id_ubi!id_ubi_mas!id_ubi_num");
         $aCamposHidden = [
@@ -306,7 +306,7 @@ switch ($Qsalida) {
             $html .= '</table></td>';
 
             $oHash = new web\Hash();
-            $oHash->setcamposForm($scamposForm . "!salida!id_item_usuario_objeto_prop");
+            $oHash->setCamposForm($scamposForm . "!salida!id_item_usuario_objeto_prop");
             $aCamposHidden = [
                 'objeto_prop' => $Qobjeto,
             ];

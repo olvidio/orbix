@@ -54,7 +54,7 @@ $chk = (is_true($depende_modificar)) ? 'checked' : '';
 $campos_chk = 'depende_modificar!permiso_lectura!permiso_escritura';
 
 $oHash = new web\Hash();
-$oHash->setcamposForm('id_tipo_dossier!id_tipo_dossier_rel!tabla_from!tabla_to!campo_to!descripcion!app!class');
+$oHash->setCamposForm('id_tipo_dossier!id_tipo_dossier_rel!tabla_from!tabla_to!campo_to!descripcion!app!class');
 $oHash->setcamposNo('que!' . $campos_chk);
 $a_camposHidden = array(
     'go_to' => $go_to,

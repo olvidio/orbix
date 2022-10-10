@@ -90,7 +90,7 @@ $oHash = new web\Hash();
 $campos_chk = 'sel_mods!sel_apps';
 $camposForm = 'nom!descripcion!';
 
-$oHash->setcamposForm($camposForm);
+$oHash->setCamposForm($camposForm);
 $oHash->setcamposNo($campos_chk);
 $a_camposHidden = array(
     'campos_chk' => $campos_chk,

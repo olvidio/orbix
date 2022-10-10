@@ -62,7 +62,7 @@ switch ($Qque) {
             'year' => $Qyear,
         );
         $camposForm = 'f_ini!f_fin!sfsv';
-        $oHash->setcamposForm($camposForm);
+        $oHash->setCamposForm($camposForm);
         $oHash->setArraycamposHidden($a_camposHidden);
 
         $txt = "<form id='frm_periodo'>";
@@ -109,7 +109,7 @@ switch ($Qque) {
         $camposForm = 'f_ini!f_fin!sfsv';
         $camposNo = 'que';
         $oHash->setCamposNo($camposNo);
-        $oHash->setcamposForm($camposForm);
+        $oHash->setCamposForm($camposForm);
         $oHash->setArraycamposHidden($a_camposHidden);
 
         $txt = "<form id='frm_periodo'>";
@@ -252,7 +252,7 @@ switch ($Qque) {
             $camposForm = 'f_ini!f_fin!sfsv';
             $camposNo = 'que!id_ubi';
             $oHash->setCamposNo($camposNo);
-            $oHash->setcamposForm($camposForm);
+            $oHash->setCamposForm($camposForm);
             $oHash->setArraycamposHidden($a_camposHidden);
 
             $txt .= "<form id=\"$form\"> ";

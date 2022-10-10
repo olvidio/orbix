@@ -38,7 +38,7 @@ $aCursoCrt = json_decode($valor, TRUE);
 
 $oHashCrt = new Hash();
 $oHashCrt->setUrl($url);
-$oHashCrt->setcamposForm('ini_dia!ini_mes!fin_dia!fin_mes');
+$oHashCrt->setCamposForm('ini_dia!ini_mes!fin_dia!fin_mes');
 $oHashCrt->setArrayCamposHidden(['parametro' => $parametro]);
 
 $a_campos['oHashCrt'] = $oHashCrt;
@@ -65,7 +65,7 @@ $aCursoStgr = json_decode($valor, TRUE);
 
 $oHashStgr = new Hash();
 $oHashStgr->setUrl($url);
-$oHashStgr->setcamposForm('ini_dia!ini_mes!fin_dia!fin_mes');
+$oHashStgr->setCamposForm('ini_dia!ini_mes!fin_dia!fin_mes');
 $oHashStgr->setArrayCamposHidden(['parametro' => $parametro]);
 
 $a_campos['oHashStgr'] = $oHashStgr;
@@ -83,7 +83,7 @@ $val_jefe_calendario = $valor;
 
 $oHashJC = new Hash();
 $oHashJC->setUrl($url);
-$oHashJC->setcamposForm('valor');
+$oHashJC->setCamposForm('valor');
 $oHashJC->setArrayCamposHidden(['parametro' => $parametro]);
 
 $a_campos['oHashJC'] = $oHashJC;
@@ -101,7 +101,7 @@ $val_region_latin = $valor;
 
 $oHashRL = new Hash();
 $oHashRL->setUrl($url);
-$oHashRL->setcamposForm('valor');
+$oHashRL->setCamposForm('valor');
 $oHashRL->setArrayCamposHidden(['parametro' => $parametro]);
 
 $a_campos['oHashRL'] = $oHashRL;
@@ -119,7 +119,7 @@ $val_vstgr = $valor;
 
 $oHashVE = new Hash();
 $oHashVE->setUrl($url);
-$oHashVE->setcamposForm('valor');
+$oHashVE->setCamposForm('valor');
 $oHashVE->setArrayCamposHidden(['parametro' => $parametro]);
 
 $a_campos['oHashVE'] = $oHashVE;
@@ -136,7 +136,7 @@ if (empty($valor)) {
 
 $oHashLF = new Hash();
 $oHashLF->setUrl($url);
-$oHashLF->setcamposForm('valor');
+$oHashLF->setCamposForm('valor');
 $oHashLF->setArrayCamposHidden(['parametro' => $parametro]);
 
 $a_campos['oHashLF'] = $oHashLF;
@@ -153,7 +153,7 @@ if (empty($valor)) {
 
 $oHashDir = new Hash();
 $oHashDir->setUrl($url);
-$oHashDir->setcamposForm('valor');
+$oHashDir->setCamposForm('valor');
 $oHashDir->setArrayCamposHidden(['parametro' => $parametro]);
 
 $a_campos['oHashDir'] = $oHashDir;
@@ -171,7 +171,7 @@ $val_nota_corte = $valor;
 
 $oHashNC = new Hash();
 $oHashNC->setUrl($url);
-$oHashNC->setcamposForm('valor');
+$oHashNC->setCamposForm('valor');
 $oHashNC->setArrayCamposHidden(['parametro' => $parametro]);
 
 $a_campos['oHashNC'] = $oHashNC;
@@ -190,7 +190,7 @@ $val_nota_max = $valor;
 
 $oHashN = new Hash();
 $oHashN->setUrl($url);
-$oHashN->setcamposForm('valor');
+$oHashN->setCamposForm('valor');
 $oHashN->setArrayCamposHidden(['parametro' => $parametro]);
 
 $a_campos['oHashN'] = $oHashN;
@@ -208,7 +208,7 @@ $val_caduca_cursada = $valor;
 
 $oHashC = new Hash();
 $oHashC->setUrl($url);
-$oHashC->setcamposForm('valor');
+$oHashC->setCamposForm('valor');
 $oHashC->setArrayCamposHidden(['parametro' => $parametro]);
 
 $a_campos['oHashC'] = $oHashC;
@@ -232,7 +232,7 @@ $val_idioma_default = $oDeplIdiomas;
 
 $oHashI = new Hash();
 $oHashI->setUrl($url);
-$oHashI->setcamposForm('valor');
+$oHashI->setCamposForm('valor');
 $oHashI->setArrayCamposHidden(['parametro' => $parametro]);
 
 $a_campos['oHashI'] = $oHashI;
@@ -252,7 +252,7 @@ $chk_rstgr = ($valor == 'rstgr') ? 'checked' : '';
 
 $oHashDLR = new Hash();
 $oHashDLR->setUrl($url);
-$oHashDLR->setcamposForm('valor');
+$oHashDLR->setCamposForm('valor');
 $oHashDLR->setArrayCamposHidden(['parametro' => $parametro]);
 
 $a_campos['oHashDLR'] = $oHashDLR;
@@ -273,7 +273,7 @@ $chk_of = ($valor == 'oficinas') ? 'checked' : '';
 
 $oHashCal = new Hash();
 $oHashCal->setUrl($url);
-$oHashCal->setcamposForm('valor');
+$oHashCal->setCamposForm('valor');
 $oHashCal->setArrayCamposHidden(['parametro' => $parametro]);
 
 $a_campos['oHashCal'] = $oHashCal;

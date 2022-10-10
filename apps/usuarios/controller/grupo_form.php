@@ -133,7 +133,7 @@ if (!empty($Qid_usuario)) { // si no hay usuario, no puedo poner permisos.
     }
 
     $oHashPermisos = new web\Hash();
-    $oHashPermisos->setcamposForm('que!sel');
+    $oHashPermisos->setCamposForm('que!sel');
     $oHashPermisos->setcamposNo('scroll_id!refresh');
     $a_camposHidden = array(
         'id_usuario' => $Qid_usuario,
@@ -150,7 +150,7 @@ if (!empty($Qid_usuario)) { // si no hay usuario, no puedo poner permisos.
 
 
 $oHashG = new web\Hash();
-$oHashG->setcamposForm('que!usuario');
+$oHashG->setCamposForm('que!usuario');
 $oHashG->setcamposNo('id_ctr!id_sacd!casas!refresh');
 $a_camposHidden = array(
     'id_usuario' => $Qid_usuario,

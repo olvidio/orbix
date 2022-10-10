@@ -1,0 +1,44 @@
+<ul>
+    <h3>
+        <li><span class=link onclick="fnjs_update_div('#main','{{ url_activacion|raw }}')">
+    {{ "fecha de activación"|trans|raw }}
+    </span></li>
+    </h3>
+
+    <h3>
+        <li><span class=link onclick="fnjs_update_div('#main','{{ url_nombre|raw }}')">
+    {{ "nombres de actividades particulares"|trans|raw }}
+    </span></li>
+    </h3>
+
+    <h3>
+        <li><span class=link onclick="fnjs_update_div('#main','{{ url_contribucion_no_duerme|raw }}')">
+    {{ "Contribución no duerme"|trans|raw }}
+    </span></li>
+    </h3>
+
+</ul>
+
+
+<script>
+    fnjs_guardar = function (formulario) {
+        if (typeof event !== 'undefined') {
+            event.preventDefault();
+        }
+        datos = $(formulario).serialize();
+        request = $.ajax({
+            data: datos,
+            url: '{{ url }}',
+            method: 'POST',
+            dataType: 'json'
+        });
+        request.done(function (json) {
+            let rta_txt;
+            if (json.success !== true) {
+                rta_txt = json.responseText;
+                alert('error: ' + rta_txt);
+            }
+        });
+    }
+</script>
+

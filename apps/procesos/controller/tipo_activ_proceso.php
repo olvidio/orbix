@@ -24,17 +24,17 @@ $url_ajax = "apps/procesos/controller/tipo_activ_proceso_ajax.php";
 
 $oHashAsig = new Hash();
 $oHashAsig->setUrl($url_ajax);
-$oHashAsig->setcamposForm('que!id_tipo_activ!propio!id_tipo_proceso');
+$oHashAsig->setCamposForm('que!id_tipo_activ!propio!id_tipo_proceso');
 $h_asignar = $oHashAsig->linkSinVal();
 
 $oHashNew = new Hash();
 $oHashNew->setUrl($url_ajax);
-$oHashNew->setcamposForm('que!id_tipo_activ!propio');
+$oHashNew->setCamposForm('que!id_tipo_activ!propio');
 $h_nuevo = $oHashNew->linkSinVal();
 
 $oHashLista = new Hash();
 $oHashLista->setUrl($url_ajax);
-$oHashLista->setcamposForm('que');
+$oHashLista->setCamposForm('que');
 $h_lista = $oHashLista->linkSinVal();
 
 

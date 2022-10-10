@@ -44,7 +44,7 @@ $url_lista = 'apps/cartaspresentacion/controller/cartas_presentacion_lista.php';
 $oHash = new Hash();
 $oHash->setUrl($url_lista);
 $oHash->setArrayCamposHidden(['que' => 'get']);
-$oHash->setcamposForm('que!poblacion!region!pais!dl');
+$oHash->setCamposForm('que!poblacion!region!pais!dl');
 $oHash->setCamposNo('scroll_id!sel');
 
 $a_campos = ['oPosicion' => $oPosicion,

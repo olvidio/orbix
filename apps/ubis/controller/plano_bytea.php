@@ -151,7 +151,7 @@ switch ($Qact) {
                 );
         $oHashComprobar->setArraycamposHidden($a_camposHidden);
         */
-        $oHashComprobar->setcamposForm('id_direccion!obj_dir!act');
+        $oHashComprobar->setCamposForm('id_direccion!obj_dir!act');
         $h = $oHashComprobar->linkSinVal();
 
         $oHash = new web\Hash();
@@ -161,7 +161,7 @@ switch ($Qact) {
             'act' => 'upload',
         );
         $camposForm = 'name_file!userfile';
-        $oHash->setcamposForm($camposForm);
+        $oHash->setCamposForm($camposForm);
         $oHash->setCamposNo('userfile');
         $oHash->setArraycamposHidden($a_camposHidden);
 

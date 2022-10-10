@@ -75,7 +75,7 @@ $oDespl->setOpcion_sel($stgr);
 $oDespl->setBlanco(true);
 
 $oHash = new web\Hash();
-$oHash->setcamposForm('stgr');
+$oHash->setCamposForm('stgr');
 $a_camposHidden = array(
     'obj_pau' => $obj_pau,
     'id_nom' => $id_nom

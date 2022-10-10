@@ -171,7 +171,7 @@ switch ($Qque) {
             'ssfsv' => $ssfsv,
         );
         $oHash->setArraycamposHidden($a_camposHidden);
-        $oHash->setcamposForm($camposForm);
+        $oHash->setCamposForm($camposForm);
         $oHash->setCamposNo($camposNo);
 
         $oHash1 = new web\Hash();
@@ -324,7 +324,7 @@ switch ($Qque) {
             'ssfsv' => $ssfsv,
         );
         $oHash->setArraycamposHidden($a_camposHidden);
-        $oHash->setcamposForm($camposForm);
+        $oHash->setCamposForm($camposForm);
         $oHash->setCamposNo($camposNo);
 
         $oHash1 = new web\Hash();
@@ -462,7 +462,7 @@ switch ($Qque) {
             'que' => 'tar_update',
             'id_tarifa' => $Qid_tarifa,
         );
-        $oHash->setcamposForm($camposForm);
+        $oHash->setCamposForm($camposForm);
         $oHash->setArraycamposHidden($a_camposHidden);
 
         $txt = "<form id='frm_tarifa'>";

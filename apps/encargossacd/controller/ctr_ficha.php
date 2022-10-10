@@ -93,13 +93,13 @@ if (!empty($Qid_ubi)) {
 $url_ctr = 'apps/encargossacd/controller/ctr_get_select.php';
 $oHashCtr = new Hash();
 $oHashCtr->setUrl($url_ctr);
-$oHashCtr->setcamposForm('filtro_ctr!id_ubi');
+$oHashCtr->setCamposForm('filtro_ctr!id_ubi');
 $h_ctr = $oHashCtr->linkSinVal();
 
 $url_ficha = 'apps/encargossacd/controller/ctr_get_ficha.php';
 $oHashFicha = new Hash();
 $oHashFicha->setUrl($url_ficha);
-$oHashFicha->setcamposForm('id_ubi');
+$oHashFicha->setCamposForm('id_ubi');
 $h_ficha = $oHashFicha->linkSinVal();
 
 $fase = 'fase real';

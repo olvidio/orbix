@@ -85,7 +85,7 @@ $camposForm = $oDatosForm->getCamposForm();
 $camposNo = $oDatosForm->getCamposNo();
 
 $oHashSelect = new web\Hash();
-$oHashSelect->setcamposForm($camposForm);
+$oHashSelect->setCamposForm($camposForm);
 $oHashSelect->setCamposNo('sel!' . $camposNo);
 $a_camposHidden = array(
     'clase_info' => $Qclase_info,

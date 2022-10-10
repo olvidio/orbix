@@ -39,12 +39,12 @@ $oDesplFiltroSacd->setOpcion_sel($Qfiltro_sacd);
 $url_ajax = 'apps/encargossacd/controller/sacd_ficha_ajax.php';
 $oHashFicha = new Hash();
 $oHashFicha->setUrl($url_ajax);
-$oHashFicha->setcamposForm('que!id_nom');
+$oHashFicha->setCamposForm('que!id_nom');
 $h_ficha = $oHashFicha->linkSinVal();
 
 $oHashLst = new Hash();
 $oHashLst->setUrl($url_ajax);
-$oHashLst->setcamposForm('que!id_nom!filtro_sacd');
+$oHashLst->setCamposForm('que!id_nom!filtro_sacd');
 $h_lista = $oHashLst->linkSinVal();
 
 $fase = 'fase real';

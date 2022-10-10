@@ -43,7 +43,7 @@ if (!empty($Qid_item)) {
 }
 
 $oHash = new web\Hash();
-$oHash->setcamposForm('menu_perm');
+$oHash->setCamposForm('menu_perm');
 $aCamposHidden = array(
     'id_usuario' => $Qid_usuario,
     'id_item' => $Qid_item,

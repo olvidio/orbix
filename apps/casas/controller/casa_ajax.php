@@ -84,7 +84,7 @@ switch ($Qque) {
         $observ = $oIngreso->getObserv();
 
         $oHash = new web\Hash();
-        $oHash->setcamposForm('tarifa!precio!ingresos!num_asistentes!observ');
+        $oHash->setCamposForm('tarifa!precio!ingresos!num_asistentes!observ');
         $oHash->setCamposNo('que');
         $a_camposHidden = array(
             'que' => '',

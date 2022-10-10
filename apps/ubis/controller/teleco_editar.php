@@ -141,7 +141,7 @@ $oHash1->setCamposForm('tipo_teleco');
 $h_actualizar = $oHash1->linkSinVal();
 
 $oHash = new web\Hash();
-$oHash->setcamposForm('mod!tipo_teleco!desc_teleco!num_teleco!observ');
+$oHash->setCamposForm('mod!tipo_teleco!desc_teleco!num_teleco!observ');
 $oHash->setcamposNo('mod!' . $campos_chk);
 $a_camposHidden = array(
     'campos_chk' => $campos_chk,

@@ -28,7 +28,7 @@ foreach ($cUsuarioPermCtr as $oUsuarioPermCtr) {
     $a_valores[$i][2] = $a_perm_ctr[$perm_ctr];
 }
 $oHash3 = new web\Hash();
-$oHash3->setcamposForm('que!sel');
+$oHash3->setCamposForm('que!sel');
 $oHash3->setcamposNo('refresh!scroll_id');
 $a_camposHidden = array(
     'id_usuario' => $id_usuario,

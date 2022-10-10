@@ -42,8 +42,8 @@ class CdcExxDireccion extends CdcxDireccion
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'id_ubi') && $val_id !== '') $this->iid_ubi = (int)$val_id; // evitem SQL injection fent cast a integer
-                if (($nom_id == 'id_direccion') && $val_id !== '') $this->iid_direccion = (int)$val_id; // evitem SQL injection fent cast a integer
+                if (($nom_id == 'id_ubi') && $val_id !== '') $this->iid_ubi = (int)$val_id;
+                if (($nom_id == 'id_direccion') && $val_id !== '') $this->iid_direccion = (int)$val_id;
             }
         }
         $this->setoDbl($oDbl);

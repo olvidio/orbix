@@ -333,7 +333,7 @@ for ($e = 1; $e <= $num_enc; $e++) {
     ];
     //$oHash->setUrl($url_actualizar);
     $campos_form = 'dedic_ctr_m!dedic_ctr_t!dedic_ctr_v!dedic_m!dedic_t!dedic_v!id_sacd_suplente!id_sacd_titular!observ';
-    $oHash->setcamposForm($campos_form);
+    $oHash->setCamposForm($campos_form);
     $oHash->setcamposNo('id_sacd!sacd_num!cl!refresh');
     $oHash->setArrayCamposHidden($aCamposHidden);
 

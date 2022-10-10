@@ -128,7 +128,7 @@ $oTabla->setBotones($a_botones);
 $oTabla->setDatos($a_valores);
 
 $oHash = new web\Hash();
-$oHash->setcamposForm('');
+$oHash->setCamposForm('');
 $oHash->setCamposNo('sel!scroll_id!que');
 
 

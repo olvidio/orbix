@@ -142,7 +142,7 @@ $oFormP->setEmpiezaMin($Qempiezamin);
 $oFormP->setEmpiezaMax($Qempiezamax);
 
 $oHash = new web\Hash();
-$oHash->setcamposForm('id_ctr_agd!id_ctr_n!texto!empiezamax!empiezamin!periodo!ref!iactividad_val!iasistentes_val!year');
+$oHash->setCamposForm('id_ctr_agd!id_ctr_n!texto!empiezamax!empiezamin!periodo!ref!iactividad_val!iasistentes_val!year');
 $oHash->setCamposNo('na!grupo_estudios!ca_estudios!ca_repaso!ca_todos');
 $a_camposHidden = array(
     'asistentes_val' => 1,

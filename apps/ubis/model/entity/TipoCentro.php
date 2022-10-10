@@ -76,8 +76,8 @@ class TipoCentro extends core\ClasePropiedades
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
     /**
-     * Desa els atributs de l'objecte a la base de dades.
-     * Si no hi ha el registre, fa el insert, si hi es fa el update.
+     * Guarda los atributos de la clase en la base de datos.
+     * Si no existe el registro, hace el insert; Si existe hace el update.
      *
      */
     public function DBGuardar()

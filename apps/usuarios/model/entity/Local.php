@@ -110,7 +110,7 @@ class Local extends core\ClasePropiedades
             }
         } else {
             if (isset($a_id) && $a_id !== '') {
-                $this->sid_locale = (integer)$a_id; // evitem SQL injection fent cast a integer
+                $this->sid_locale = (integer)$a_id; 
                 $this->aPrimary_key = array('id_locale' => $this->sid_locale);
             }
         }
@@ -121,8 +121,8 @@ class Local extends core\ClasePropiedades
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
     /**
-     * Desa els atributs de l'objecte a la base de dades.
-     * Si no hi ha el registre, fa el insert, si hi es fa el update.
+     * Guarda los atributos de la clase en la base de datos.
+     * Si no existe el registro, hace el insert; Si existe hace el update.
      *
      */
     public function DBGuardar()

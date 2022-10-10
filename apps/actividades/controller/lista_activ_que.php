@@ -36,7 +36,7 @@ if (($_SESSION['oPerm']->have_perm_oficina('vcsd')) || ($_SESSION['oPerm']->have
 }
 
 $oHash = new Hash();
-$oHash->setcamposForm('seccion!status!empiezamin!empiezamax!asist!c_activ!tit_list_grupo');
+$oHash->setCamposForm('seccion!status!empiezamin!empiezamax!asist!c_activ!tit_list_grupo');
 $a_camposHidden = array(
     'que' => $Qque,
 );

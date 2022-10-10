@@ -179,7 +179,7 @@ switch ($Qque_mod) {
                 'id_ubi' => $Qid_ubi,
             ]);
 
-            $oHash->setcamposForm('pres_nom!pres_telf!pres_mail!zona!observ');
+            $oHash->setCamposForm('pres_nom!pres_telf!pres_mail!zona!observ');
             $oHash->setCamposNo('scroll_id!sel');
 
             $txt = "<form id='frm_pres'>";

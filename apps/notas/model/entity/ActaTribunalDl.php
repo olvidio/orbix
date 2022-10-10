@@ -45,14 +45,14 @@ class ActaTribunalDl extends ActaTribunal
             foreach ($a_id as $nom_id => $val_id) {
                 if (($nom_id == 'id_schema') && $val_id !== '') {
                     $this->iid_schema = (int)$val_id;
-                } // evitem SQL injection fent cast a integer
+                } 
                 if (($nom_id == 'id_item') && $val_id !== '') {
                     $this->iid_item = (int)$val_id;
-                } // evitem SQL injection fent cast a integer
+                } 
             }
         } else {
             if (isset($a_id) && $a_id !== '') {
-                $this->iid_item = (integer)$a_id; // evitem SQL injection fent cast a integer
+                $this->iid_item = (integer)$a_id; 
                 $this->aPrimary_key = array('id_item' => $this->iid_item);
             }
         }

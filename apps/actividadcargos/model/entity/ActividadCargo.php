@@ -24,8 +24,8 @@ class ActividadCargo extends ActividadCargoAbstract
 {
 
     /**
-     * Desa els atributs de l'objecte a la base de dades.
-     * Si no hi ha el registre, fa el insert, si hi es fa el update.
+     * Guarda los atributos de la clase en la base de datos.
+     * Si no existe el registro, hace el insert; Si existe hace el update.
      *
      * @param bool optional $quiet : true per que no apunti els canvis. 0 (per defecte) apunta els canvis.
      */

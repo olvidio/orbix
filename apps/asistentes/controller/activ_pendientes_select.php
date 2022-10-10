@@ -228,7 +228,7 @@ foreach ($aFaltanOtras as $ap_nom => $aDatos) {
 
 
 $oHash = new web\Hash();
-$oHash->setcamposForm('tipo_personas!sactividad!any');
+$oHash->setCamposForm('tipo_personas!sactividad!any');
 
 $oTablaDl = new web\Lista();
 $oTablaDl->setId_tabla('activ_pendientes_select');

@@ -85,7 +85,7 @@ $a_camposHidden = [
     'propuesta' => $Qpropuesta,
 ];
 $oHash->setArraycamposHidden($a_camposHidden);
-$oHash->setcamposForm('actividad!year!id_zona!trimestre');
+$oHash->setCamposForm('actividad!year!id_zona!trimestre');
 $oHash->setCamposNo('modelo');
 
 $a_campos = ['oPosicion' => $oPosicion,

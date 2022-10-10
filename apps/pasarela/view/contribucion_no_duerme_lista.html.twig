@@ -1,0 +1,200 @@
+<script>
+    fnjs_guardar_default = function (formulario) {
+        var contribucion = $('#default').val();
+        if (isNaN(contribucion) || contribucion < 0 || contribucion > 100) {
+            alert("{{ "Debe ser un numero entero del 1 al 100"|trans|raw }}");
+            return;
+        }
+        $('#que').val('update_default');
+        $(formulario).attr('action', '{{ url_ajax }}');
+        $(formulario).one("submit", function () {
+            $.ajax({
+                url: $(this).attr('action'),
+                type: 'post',
+                data: $(this).serialize()
+            })
+                .done(function (rta_txt) {
+                    if (rta_txt !== '' && rta_txt !== '\n') {
+                        alert(rta_txt);
+                    }
+                    fnjs_lista();
+                    fnjs_cerrar();
+                });
+            return false;
+        });
+        $(formulario).trigger("submit");
+        $(formulario).off();
+    }
+
+    fnjs_guardar_nuevo = function (formulario) {
+        var err = 0;
+        var id_tipo_activ = $('#id_tipo_activ').val();
+        var contribucion = $('#contribucion').val();
+        if (!id_tipo_activ) {
+            alert("{{ "Tipo no válido"|trans|raw }}");
+            err = 1;
+        }
+        if (!contribucion) {
+            alert("{{ "debe indicar un tanto por ciento"|trans|raw }}");
+            err = 1;
+        }
+        if (isNaN(contribucion) || contribucion < 0 || contribucion > 100) {
+            alert("{{ "Debe ser un numero entero del 1 al 100"|trans|raw }}");
+            err = 1;
+        }
+        if (!err) {
+            $('#que').val('nuevo');
+            $(formulario).attr('action', '{{ url_ajax }}');
+            $(formulario).one("submit", function () {
+                $.ajax({
+                    url: $(this).attr('action'),
+                    type: 'post',
+                    data: $(this).serialize()
+                })
+                    .done(function (rta_txt) {
+                        if (rta_txt != '' && rta_txt != '\n') {
+                            alert(rta_txt);
+                        }
+                        fnjs_lista();
+                        fnjs_cerrar();
+                    });
+                return false;
+            });
+            $(formulario).trigger("submit");
+            $(formulario).off();
+        }
+    }
+
+    fnjs_guardar = function (formulario, que) {
+        if (que == "eliminar") {
+            seguro = confirm("{{ txt_eliminar }}");
+            if (seguro) {
+                err = 0;
+            } else {
+                err = 1;
+            }
+        }
+        var err = 0;
+        var contribucion = $('#contribucion').val();
+        var id_tipo_activ = $('#id_tipo_activ').val();
+        if (!id_tipo_activ) {
+            alert("{{ "Tipo no válido"|trans|raw }}");
+            err = 1;
+        }
+        if (!contribucion) {
+            alert("{{ "debe indicar un tanto por ciento"|trans|raw }}");
+            err = 1;
+        }
+        if (isNaN(contribucion) || contribucion < 0 || contribucion > 100) {
+            alert("{{ "Debe ser un numero entero del 1 al 100"|trans|raw }}");
+            err = 1;
+        }
+        if (!err) {
+            $('#que').val(que);
+            $(formulario).attr('action', '{{ url_ajax }}');
+            $(formulario).one("submit", function () {
+                $.ajax({
+                    url: $(this).attr('action'),
+                    type: 'post',
+                    data: $(this).serialize()
+                })
+                    .done(function (rta_txt) {
+                        if (rta_txt != '' && rta_txt != '\n') {
+                            alert(rta_txt);
+                        } else {
+                            fnjs_lista();
+                            fnjs_cerrar();
+                        }
+                    });
+                return false;
+            });
+            $(formulario).trigger("submit");
+            $(formulario).off();
+        }
+    }
+
+    fnjs_nuevo = function (id_tipo_activ) {
+        document.getElementById("div_modificar").style.display = "block";
+        $('#div_modificar').addClass('ventana');
+        $('#div_modificar').width('auto');
+        $('#div_modificar').height('auto');
+        document.getElementById("overlay").style.display = "block";
+
+
+        var url = '{{ url_ajax|raw }}';
+        var parametros = 'que=form_nuevo' + '{{ h_nuevo|raw }}';
+        fnjs_update_div('#div_modificar', url + '?' + parametros);
+    }
+
+    fnjs_modificar = function (id_tipo_activ, contribucion) {
+        document.getElementById("div_modificar").style.display = "block";
+        $('#div_modificar').addClass('ventana');
+        $('#div_modificar').width('auto');
+        $('#div_modificar').height('auto');
+        document.getElementById("overlay").style.display = "block";
+
+
+        var url = '{{ url_ajax|raw }}';
+        var parametros = 'que=form_modificar&id_tipo_activ=' + id_tipo_activ + '&contribucion=' + contribucion + '{{ h_modificar|raw }}';
+        fnjs_update_div('#div_modificar', url + '?' + parametros);
+    }
+
+    fnjs_modificar_default = function () {
+        document.getElementById("div_modificar").style.display = "block";
+        $('#div_modificar').addClass('ventana');
+        $('#div_modificar').width('auto');
+        $('#div_modificar').height('auto');
+        document.getElementById("overlay").style.display = "block";
+
+
+        var url = '{{ url_ajax|raw }}';
+        var parametros = 'que=form_default' + '{{ h_default|raw }}';
+        fnjs_update_div('#div_modificar', url + '?' + parametros);
+    }
+
+    fnjs_lista = function () {
+        /* obtener el listado */
+        var url = '{{ url_ajax|raw }}';
+        var parametros = 'que=lista' + '{{ h_lista|raw }}';
+
+        $.ajax({
+            url: url,
+            type: 'post',
+            data: parametros
+        })
+            .done(function (rta_txt) {
+                if (rta_txt) {
+                    $('#div_tabla').html(rta_txt);
+                }
+                fnjs_cerrar();
+            });
+    }
+
+    fnjs_cerrar = function () {
+        $('#div_modificar').html('');
+        document.getElementById("div_modificar").style.display = "none";
+        document.getElementById("overlay").style.display = "none";
+    }
+
+    fnjs_id_activ = function () {
+        let isfsv = $('#isfsv_val').val();
+        let iasistentes = $('#iasistentes_val').val();
+        let iactividad = $('#iactividad_val').val();
+        let inom_tipo = $('#inom_tipo_val').val();
+        let id_tipo_activ = isfsv + iasistentes + iactividad + inom_tipo;
+
+        $('#id_tipo_activ').val(id_tipo_activ);
+    }
+
+    $(document).ready(function () {
+        fnjs_lista();
+    });
+
+    fnjs_left_side_hide();
+</script>
+<div id='div_botones'>
+    <input type="button" value="{{ "nuevo"|trans }}" onclick="fnjs_nuevo();">
+</div>
+<div id='div_tabla'></div>
+<div id='div_modificar'></div>
+<div id='overlay'></div>

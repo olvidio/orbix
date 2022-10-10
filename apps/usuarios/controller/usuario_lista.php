@@ -129,12 +129,12 @@ $oTabla->setBotones($a_botones);
 $oTabla->setDatos($a_valores);
 
 $oHash = new web\Hash();
-$oHash->setcamposForm('username');
+$oHash->setCamposForm('username');
 $oHash->setcamposNo('scroll_id');
 $oHash->setArraycamposHidden(array('quien' => 'usuario'));
 
 $oHash1 = new web\Hash();
-$oHash1->setcamposForm('sel');
+$oHash1->setCamposForm('sel');
 $oHash1->setcamposNo('scroll_id');
 $oHash1->setArraycamposHidden(array('que' => 'eliminar'));
 

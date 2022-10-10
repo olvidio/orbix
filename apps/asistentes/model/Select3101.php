@@ -831,7 +831,7 @@ class Select3101
 
 
         $oHash = new web\Hash();
-        $oHash->setcamposForm('');
+        $oHash->setCamposForm('');
         $oHash->setCamposNo('sel!scroll_id!mod!que!refresh');
         $a_camposHidden = array(
             'pau' => $this->pau,
@@ -846,7 +846,7 @@ class Select3101
 
         // para el hash de las matrículas. Hago otro formulario, pues cambio demasiadas cosas
         $oHash1 = new web\Hash();
-        $oHash1->setcamposForm('');
+        $oHash1->setCamposForm('');
         $oHash1->setCamposNo('sel!scroll_id!mod');
         $a_camposHidden = array(
             'queSel' => 'matriculas',

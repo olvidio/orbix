@@ -22,7 +22,7 @@ $tipo_ubi = $oUbi->getTipo_ubi();
 $tituloGros = ucfirst(_("introduzca un valor para buscar una dirección existente"));
 
 $oHash = new web\Hash();
-$oHash->setcamposForm('c_p!ciudad!id_ubi!obj_dir!pais');
+$oHash->setCamposForm('c_p!ciudad!id_ubi!obj_dir!pais');
 $a_camposHidden = array(
     'obj_dir' => $Qobj_dir,
     'id_ubi' => $Qid_ubi

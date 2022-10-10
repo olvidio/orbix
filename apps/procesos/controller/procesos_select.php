@@ -48,12 +48,12 @@ $url_ver = "apps/procesos/controller/procesos_ver.php";
 
 $oHashAct = new Hash();
 $oHashAct->setUrl($url_ajax);
-$oHashAct->setcamposForm('que!id_tipo_proceso');
+$oHashAct->setCamposForm('que!id_tipo_proceso');
 $h_actualizar = $oHashAct->linkSinVal();
 
 $oHashClone = new Hash();
 $oHashClone->setUrl($url_ajax);
-$oHashClone->setcamposForm('que!id_tipo_proceso!id_tipo_proceso_ref');
+$oHashClone->setCamposForm('que!id_tipo_proceso!id_tipo_proceso_ref');
 $h_clonar = $oHashClone->linkSinVal();
 
 $oHashDel = new web\Hash();

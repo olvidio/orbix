@@ -55,7 +55,7 @@ if (ConfigGlobal::mi_ambito() === 'rstgr' && $Qfiltro == 1) {
     $oCuadros->setOpciones($a_delegacionesStgr);
 
     $oHash = new Hash();
-    $oHash->setcamposForm('dl');
+    $oHash->setCamposForm('dl');
     $camposNo = 'dl';
     $oHash->setcamposNo($camposNo);
     $oHash->setArrayCamposHidden(['filtro' => 1]);

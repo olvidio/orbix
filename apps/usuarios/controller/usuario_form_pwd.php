@@ -32,7 +32,7 @@ $usuario = $oUsuario->getUsuario();
 $pass = $oUsuario->getPassword();
 
 $oHash = new web\Hash();
-$oHash->setcamposForm('que!password!password1');
+$oHash->setCamposForm('que!password!password1');
 $oHash->setcamposNo('que');
 $a_camposHidden = array(
     'pass' => $pass,

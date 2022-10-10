@@ -134,7 +134,7 @@ if (!empty($id_activ_real)) {
     $camposForm .= '!id_activ';
 }
 $oHash->setCamposNo($camposNo);
-$oHash->setcamposForm($camposForm);
+$oHash->setCamposForm($camposForm);
 $oHash->setArraycamposHidden($a_camposHidden);
 
 $a_campos = ['obj' => $obj,

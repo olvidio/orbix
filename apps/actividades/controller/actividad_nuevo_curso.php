@@ -104,7 +104,7 @@ if ($Qok == 1) {
         'ok' => 1,
     );
     $camposForm = 'year_ref!year';
-    $oHash->setcamposForm($camposForm);
+    $oHash->setCamposForm($camposForm);
     $oHash->setcamposNo('ver_lista');
     $oHash->setArraycamposHidden($a_camposHidden);
 

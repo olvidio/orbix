@@ -56,7 +56,7 @@ switch ($Qque) {
             $cantidad = '';
         }
         $oHash->setCamposNo('que');
-        $oHash->setcamposForm($camposForm);
+        $oHash->setCamposForm($camposForm);
         $oHash->setArraycamposHidden($a_camposHidden);
 
 
@@ -313,7 +313,7 @@ switch ($Qque) {
             'que' => 'tar_update',
             'id_tarifa' => $Qid_tarifa,
         );
-        $oHash->setcamposForm($camposForm);
+        $oHash->setCamposForm($camposForm);
         $oHash->setArraycamposHidden($a_camposHidden);
 
         $txt = "<form id='frm_tarifa'>";

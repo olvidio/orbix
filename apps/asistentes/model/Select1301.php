@@ -192,7 +192,7 @@ class Select1301
         $stack = $oPosicion->getStack(0);
 
         $oHashSelect = new web\Hash();
-        $oHashSelect->setcamposForm('modo_curso');
+        $oHashSelect->setCamposForm('modo_curso');
         $oHashSelect->setCamposNo('sel!mod!scroll_id!refresh');
         $a_camposHidden = array(
             'pau' => $this->pau,

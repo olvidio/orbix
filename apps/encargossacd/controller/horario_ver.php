@@ -126,7 +126,7 @@ $aCamposHidden = [
 
 $oHash->setUrl($url_actualizar);
 $campos_form = 'desc_enc!dia!dia_inc!dia_num!dia_ref!f_fin!f_ini!h_fin!h_ini!id_enc!id_item_h!mas_menos!mod!n_sacd';
-$oHash->setcamposForm($campos_form);
+$oHash->setCamposForm($campos_form);
 $oHash->setcamposNo('lst_ctrs!refresh');
 $oHash->setArrayCamposHidden($aCamposHidden);
 

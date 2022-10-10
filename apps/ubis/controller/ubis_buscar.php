@@ -117,7 +117,7 @@ if ($simple == 2) {
         $s_camposForm .= '!dl!region!pais';
     }
 }
-$oHash->setcamposForm($s_camposForm);
+$oHash->setCamposForm($s_camposForm);
 
 
 if ($simple == 1) {

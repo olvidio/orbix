@@ -46,7 +46,7 @@ if (ConfigGlobal::mi_ambito() === 'rstgr') {
     $oCuadros->setOpciones($a_delegacionesStgr);
 
     $oHash = new Hash();
-    $oHash->setcamposForm('dl');
+    $oHash->setCamposForm('dl');
     $camposNo = 'dl';
     $oHash->setcamposNo($camposNo);
 

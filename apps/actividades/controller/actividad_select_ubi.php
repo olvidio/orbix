@@ -73,11 +73,11 @@ $oHash->setCamposForm('modo!salida!entrada!isfsv');
 $h = $oHash->linkSinVal();
 
 $oHash1 = new web\Hash();
-$oHash1->setcamposForm('id_ubi_1');
+$oHash1->setCamposForm('id_ubi_1');
 $oHash2 = new web\Hash();
-$oHash2->setcamposForm('filtro_lugar!lst_lugar');
+$oHash2->setCamposForm('filtro_lugar!lst_lugar');
 $oHash3 = new web\Hash();
-$oHash3->setcamposForm('nombre_ubi');
+$oHash3->setCamposForm('nombre_ubi');
 $a_camposHidden = array(
     'tipo' => 'tot',
     'loc' => 'tot'
@@ -85,7 +85,7 @@ $a_camposHidden = array(
 $oHash3->setArraycamposHidden($a_camposHidden);
 
 $oHash4 = new web\Hash();
-$oHash4->setcamposForm('frm_4_nombre_ubi');
+$oHash4->setCamposForm('frm_4_nombre_ubi');
 
 $txt_alert = _("no olvides ajustar el nombre de la actividad");
 

@@ -333,7 +333,7 @@ if ($miRole < 4) {
     $camposForm = 'que!usuario!nom_usuario!password!email!id_role';
     $camposForm = !empty($camposMas) ? $camposForm . '!' . $camposMas : $camposForm;
     $oHash = new web\Hash();
-    $oHash->setcamposForm($camposForm);
+    $oHash->setCamposForm($camposForm);
     $oHash->setcamposNo('pass!password!id_ctr!id_nom!casas');
     $a_camposHidden = array(
         'id_usuario' => $Qid_usuario,

@@ -142,7 +142,7 @@ $oTabla->setBotones($a_botones);
 $oTabla->setDatos($a_valores);
 
 $oHash = new web\Hash();
-$oHash->setcamposForm('mod!sel');
+$oHash->setCamposForm('mod!sel');
 $oHash->setcamposNo('mod!sel!scroll_id!refresh');
 $a_camposHidden = array(
     'id_ubi' => $Qid_ubi,

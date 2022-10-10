@@ -44,7 +44,7 @@ $a_camposHidden = [
     'id_item' => $Qid_item,
 ];
 $oHash->setArraycamposHidden($a_camposHidden);
-$oHash->setcamposForm('id_ubi_padre!id_ubi_hijo');
+$oHash->setCamposForm('id_ubi_padre!id_ubi_hijo');
 
 $a_campos = [
     'oPosicion' => $oPosicion,

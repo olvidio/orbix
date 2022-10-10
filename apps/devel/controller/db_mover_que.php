@@ -28,7 +28,7 @@ $desplTablas = $oDBPropiedades->posibles_tablas();
 
 
 $oHash = new web\Hash();
-$oHash->setcamposForm('tabla');
+$oHash->setCamposForm('tabla');
 
 $msg_falta_tabla = _("debe poner la tabla");
 

@@ -154,7 +154,7 @@ if (!empty($Qid_usuario)) {
     $stack = $oPosicion->getStack();
     $oHashCond = new web\Hash();
     $oHashCond->setArrayCamposHidden(['Gstack' => $stack]);
-    $oHashCond->setcamposForm("id_usuario!aviso_tipo");
+    $oHashCond->setCamposForm("id_usuario!aviso_tipo");
 
     $a_camposCond = [
         'oPosicion' => $oPosicion,

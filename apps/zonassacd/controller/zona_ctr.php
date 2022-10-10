@@ -32,14 +32,14 @@ $oDesplZonas->setBlanco(0);
 $url_ajax = 'apps/zonassacd/controller/zona_ctr_ajax.php';
 $oHashCtr = new Hash();
 $oHashCtr->setUrl($url_ajax);
-$oHashCtr->setcamposForm('que!id_zona');
+$oHashCtr->setCamposForm('que!id_zona');
 $h_ctr = $oHashCtr->linkSinVal();
 
 $oHash = new Hash();
 $oHash->setUrl($url_ajax);
 $a_camposHidden = ['que' => 'update'];
 $oHash->setArraycamposHidden($a_camposHidden);
-$oHash->setcamposForm('id_zona_new');
+$oHash->setCamposForm('id_zona_new');
 $oHash->setCamposNo('scroll_id!sel');
 
 $perm_des = FALSE;

@@ -76,10 +76,10 @@ class CargoOAsistente
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
                 $nom_id = 'i' . $nom_id; //imagino que es un integer
-                if ($val_id !== '') $this->$nom_id = (integer)$val_id; // evitem SQL injection fent cast a integer
+                if ($val_id !== '') $this->$nom_id = (integer)$val_id;
             }
         } else {
-            if ($a_id !== '') $this->iid_activ = (integer)$a_id; // evitem SQL injection fent cast a integer
+            if ($a_id !== '') $this->iid_activ = (integer)$a_id;
         }
     }
 

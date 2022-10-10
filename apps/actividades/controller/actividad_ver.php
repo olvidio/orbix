@@ -278,7 +278,7 @@ if ($Qmod == 'nuevo') {
     $camposForm .= '!sactividad!sasistentes!snom_tipo';
 
 }
-$oHash->setcamposForm($camposForm);
+$oHash->setCamposForm($camposForm);
 $oHash->setCamposNo($camposNo);
 $a_camposHidden = array(
     'id_tipo_activ' => $id_tipo_activ,

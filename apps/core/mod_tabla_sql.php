@@ -79,7 +79,7 @@ $oDatosTabla->setId_sel($Qid_sel);
 $oDatosTabla->setScroll_id($Qscroll_id);
 
 $oHashBuscar = new web\Hash();
-$oHashBuscar->setcamposForm('k_buscar');
+$oHashBuscar->setCamposForm('k_buscar');
 $a_camposHiddenBuscar = array(
     'clase_info' => $Qclase_info,
     'datos_buscar' => $Qdatos_buscar,
@@ -89,7 +89,7 @@ $a_camposHiddenBuscar = array(
 $oHashBuscar->setArraycamposHidden($a_camposHiddenBuscar);
 
 $oHashSelect = new web\Hash();
-$oHashSelect->setcamposForm('sel');
+$oHashSelect->setCamposForm('sel');
 $oHashSelect->setCamposNo('mod!sel!scroll_id!refresh');
 $a_camposHiddenSelect = array(
     'clase_info' => $Qclase_info,

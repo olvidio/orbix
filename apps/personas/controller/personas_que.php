@@ -62,7 +62,7 @@ if ($Qque == "telf") {
     $action = core\ConfigGlobal::getWeb() . '/apps/personas/controller/personas_select.php';
 }
 $oHash = new web\Hash();
-$oHash->setcamposForm('nombre!apellido1!apellido2!centro!exacto!cmb');
+$oHash->setCamposForm('nombre!apellido1!apellido2!centro!exacto!cmb');
 $oHash->setcamposNo('exacto!cmb');
 $a_camposHidden = array(
     'tipo' => $Qtipo,

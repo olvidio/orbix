@@ -185,7 +185,7 @@ class Select3005
         $this->permiso = 3;
 
         $oHashSelect = new web\Hash();
-        $oHashSelect->setcamposForm('');
+        $oHashSelect->setCamposForm('');
         $oHashSelect->setCamposNo('sel!mod!scroll_id!refresh');
         $a_camposHidden = array(
             'pau' => $this->pau,

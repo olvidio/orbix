@@ -200,20 +200,20 @@ if ($Qque === 'nuevo') {
 } else {
     $campos_form = 'desc_enc!desc_lugar!filtro_ctr!grupo!id_tipo_enc!idioma_enc';
 }
-$oHashAct->setcamposForm($campos_form);
+$oHashAct->setCamposForm($campos_form);
 $oHashAct->setcamposNo('lst_ctrs!refresh');
 $oHashAct->setArrayCamposHidden($aCamposHidden);
 
 $url_ctr = 'apps/encargossacd/controller/ctr_get_select.php';
 $oHashCtr = new Hash();
 $oHashCtr->setUrl($url_ctr);
-$oHashCtr->setcamposForm('filtro_ctr!id_ubi');
+$oHashCtr->setCamposForm('filtro_ctr!id_ubi');
 $h_ctr = $oHashCtr->linkSinVal();
 
 $url_lst = 'apps/encargossacd/controller/encargo_ajax.php';
 $oHashLst = new Hash();
 $oHashLst->setUrl($url_lst);
-$oHashLst->setcamposForm('que!grupo');
+$oHashLst->setCamposForm('que!grupo');
 $h_lst = $oHashLst->linkSinVal();
 
 if ($Qque === 'nuevo') {

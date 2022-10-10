@@ -9,7 +9,7 @@ require_once("apps/core/global_object.inc");
 
 
 $oHash = new web\Hash();
-$oHash->setcamposForm('db!tabla!clase!clase_plural!grupo!aplicacion');
+$oHash->setCamposForm('db!tabla!clase!clase_plural!grupo!aplicacion');
 
 ?>
 <form name="frm" action="apps/devel/controller/factory.php">

@@ -174,7 +174,7 @@ if (!empty($id_asignatura_real)) {
 } else {
     $camposForm .= 'id_asignatura!id_nivel';
 }
-$oHash->setcamposForm($camposForm);
+$oHash->setCamposForm($camposForm);
 $oHash->setArraycamposHidden($a_camposHidden);
 
 $url_ajax = core\ConfigGlobal::getWeb() . '/apps/notas/controller/notas_ajax.php';

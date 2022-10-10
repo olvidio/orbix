@@ -200,7 +200,7 @@ if ($oAsistente->perm_modificar() === FALSE) {
         'plaza' => asistentes\Asistente::PLAZA_ASIGNADA,
         'propietario' => $propietario,
     );
-    $oHash->setcamposForm($camposForm);
+    $oHash->setCamposForm($camposForm);
     $oHash->setArraycamposHidden($a_camposHidden);
 
 

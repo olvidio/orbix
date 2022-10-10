@@ -39,9 +39,9 @@ class PropuestaEncargoSacdHorario extends EncargoSacdHorario
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'id_item') && $val_id !== '') $this->iid_item = (int)$val_id; // evitem SQL injection fent cast a integer
-                if (($nom_id == 'id_enc') && $val_id !== '') $this->iid_enc = (int)$val_id; // evitem SQL injection fent cast a integer
-                if (($nom_id == 'id_nom') && $val_id !== '') $this->iid_nom = (int)$val_id; // evitem SQL injection fent cast a integer
+                if (($nom_id == 'id_item') && $val_id !== '') $this->iid_item = (int)$val_id; 
+                if (($nom_id == 'id_enc') && $val_id !== '') $this->iid_enc = (int)$val_id; 
+                if (($nom_id == 'id_nom') && $val_id !== '') $this->iid_nom = (int)$val_id; 
             }
         }
         $this->setoDbl($oDbl);

@@ -14,17 +14,17 @@ $url_ajax = "apps/actividades/controller/tipo_activ_ajax.php";
 
 $oHashMod = new Hash();
 $oHashMod->setUrl($url_ajax);
-$oHashMod->setcamposForm('que!id_tipo_activ');
+$oHashMod->setCamposForm('que!id_tipo_activ');
 $h_modificar = $oHashMod->linkSinVal();
 
 $oHashNew = new Hash();
 $oHashNew->setUrl($url_ajax);
-$oHashNew->setcamposForm('que');
+$oHashNew->setCamposForm('que');
 $h_nuevo = $oHashNew->linkSinVal();
 
 $oHashLista = new Hash();
 $oHashLista->setUrl($url_ajax);
-$oHashLista->setcamposForm('que');
+$oHashLista->setCamposForm('que');
 $h_lista = $oHashLista->linkSinVal();
 
 $txt_eliminar = _("¿Está seguro que quiere eliminar este tipo de actividad?");

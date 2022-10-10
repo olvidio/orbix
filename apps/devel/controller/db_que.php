@@ -22,7 +22,7 @@ $oDesplRegiones->setNombre('region');
 $oDesplRegiones->setAction('fnjs_dl()');
 
 $oHash = new web\Hash();
-$oHash->setcamposForm('esquema!region!dl!comun!sv!sf');
+$oHash->setCamposForm('esquema!region!dl!comun!sv!sf');
 $oHash->setcamposNo('comun!sv!sf');
 
 $oHash1 = new web\Hash();

@@ -520,7 +520,7 @@ $oTabla->setBotones($a_botones);
 $oTabla->setDatos($a_valores);
 
 $oHash = new Hash();
-$oHash->setcamposForm('!sel');
+$oHash->setCamposForm('!sel');
 $oHash->setcamposNo('!scroll_id');
 $a_camposHidden = array(
     'tipo' => $Qtipo,

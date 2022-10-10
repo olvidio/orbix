@@ -139,7 +139,7 @@ if (!empty($Qid_role)) { // si no hay usuario, no puedo poner permisos.
 }
 
 $oHash = new web\Hash();
-$oHash->setcamposForm('que!role!sf!sv!pau!dmz');
+$oHash->setCamposForm('que!role!sf!sv!pau!dmz');
 $oHash->setcamposNo('sf!sv!dmz!refresh');
 $a_camposHidden = array(
     'id_role' => $Qid_role,
@@ -147,7 +147,7 @@ $a_camposHidden = array(
 $oHash->setArraycamposHidden($a_camposHidden);
 
 $oHash1 = new web\Hash();
-$oHash1->setcamposForm('que!sel');
+$oHash1->setCamposForm('que!sel');
 $oHash1->setcamposNo('scroll_id!refresh');
 $a_camposHidden = array(
     'id_role' => $Qid_role,

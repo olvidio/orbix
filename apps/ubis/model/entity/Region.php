@@ -85,7 +85,7 @@ class Region extends core\ClasePropiedades
             }
         } else {
             if (isset($a_id) && $a_id !== '') {
-                $this->iid_region = (integer)$a_id; // evitem SQL injection fent cast a integer
+                $this->iid_region = (integer)$a_id;
                 $this->aPrimary_key = array('id_region' => $this->iid_region);
             }
         }
@@ -96,8 +96,8 @@ class Region extends core\ClasePropiedades
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
     /**
-     * Desa els atributs de l'objecte a la base de dades.
-     * Si no hi ha el registre, fa el insert, si hi es fa el update.
+     * Guarda los atributos de la clase en la base de datos.
+     * Si no existe el registro, hace el insert; Si existe hace el update.
      *
      */
     public function DBGuardar()
@@ -292,7 +292,7 @@ class Region extends core\ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'id_region') && $val_id !== '') $this->iid_region = (int)$val_id; // evitem SQL injection fent cast a integer
+                if (($nom_id == 'id_region') && $val_id !== '') $this->iid_region = (int)$val_id;
             }
         }
     }

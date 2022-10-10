@@ -13,7 +13,7 @@ require_once("apps/core/global_object.inc");
 $url = 'apps/encargossacd/controller/comprobaciones.php';
 $oHash = new Hash();
 $oHash->setUrl($url);
-$oHash->setcamposForm('que');
+$oHash->setCamposForm('que');
 $h = $oHash->linkSinVal();
 
 $aQuery = ['sf' => 0];

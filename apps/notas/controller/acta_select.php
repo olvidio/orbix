@@ -190,10 +190,10 @@ if (isset($Qscroll_id) && !empty($Qscroll_id)) {
 }
 
 $oHash = new Hash();
-$oHash->setcamposForm('acta');
+$oHash->setCamposForm('acta');
 
 $oHash1 = new Hash();
-$oHash1->setcamposForm('sel!mod');
+$oHash1->setCamposForm('sel!mod');
 $oHash1->setCamposNo('sel!scroll_id!mod!refresh');
 
 $oTabla = new Lista();

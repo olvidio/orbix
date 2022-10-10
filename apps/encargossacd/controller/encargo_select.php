@@ -170,19 +170,19 @@ $no_tipo_enc = empty($Qid_tipo_enc) ? TRUE : FALSE;
 $url_horario = "apps/encargossacd/controller/encargo_horario_select.php";
 $oHashHorario = new Hash();
 $oHashHorario->setUrl($url_horario);
-$oHashHorario->setcamposForm('que!id_activ!id_nom');
+$oHashHorario->setCamposForm('que!id_activ!id_nom');
 $h_horario = $oHashHorario->linkSinVal();
 
 $url_modificar = "apps/encargossacd/controller/encargo_ver.php";
 $oHashMod = new Hash();
 $oHashMod->setUrl($url_modificar);
-$oHashMod->setcamposForm('que!scroll_id!sel');
+$oHashMod->setCamposForm('que!scroll_id!sel');
 $h_modificar = $oHashMod->linkSinVal();
 
 $url_borrar = "apps/encargossacd/controller/encargo_ajax.php";
 $oHashBorrar = new Hash();
 $oHashBorrar->setUrl($url_borrar);
-$oHashBorrar->setcamposForm('que!id_activ!id_nom');
+$oHashBorrar->setCamposForm('que!id_activ!id_nom');
 $h_borrar = $oHashBorrar->linkSinVal();
 
 $oHash = new Hash();

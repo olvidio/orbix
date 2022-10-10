@@ -42,7 +42,7 @@ $aOpciones['999'] = _("todos");
 $oDeplCentros = new web\Desplegable('id_ubi', $aOpciones, '', true);
 
 $oHash = new web\Hash();
-$oHash->setcamposForm('id_ubi');
+$oHash->setCamposForm('id_ubi');
 $a_camposHidden = array(
     'que' => $Qque,
     'curso' => $Qcurso,

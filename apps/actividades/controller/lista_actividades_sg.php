@@ -376,7 +376,7 @@ $oHash->setArraycamposHidden($a_camposHidden);
 $oHash->setCamposNo('modo!id_tipo_activ!id_ubi!periodo!year!dl_org!status!empiezamin!empiezamax!filtro_lugar');
 
 $oHashSel = new web\Hash();
-$oHashSel->setcamposForm('!sel!mod!queSel');
+$oHashSel->setCamposForm('!sel!mod!queSel');
 $oHashSel->setcamposNo('continuar!scroll_id');
 $a_camposHiddenSel = array(
     'pau' => 'a',

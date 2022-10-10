@@ -99,7 +99,7 @@ $oForm->setPosiblesCasas($donde);
 $oForm->setSeleccionados($sel_ubis);
 
 $oHash = new Hash();
-$oHash->setcamposForm('empiezamin!empiezamax!c_activ!id_cdc_mas!id_cdc_num!periodo!status!year');
+$oHash->setCamposForm('empiezamin!empiezamax!c_activ!id_cdc_mas!id_cdc_num!periodo!status!year');
 $oHash->setcamposNo('que!id_cdc!cdc_sel');
 
 $Qque = '';

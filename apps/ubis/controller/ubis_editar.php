@@ -191,7 +191,7 @@ if ($tipo_ubi == "cdcdl" || $tipo_ubi == "cdcex") {
 }
 $oHash = new web\Hash();
 $oHash->setcamposNo('que!' . $campos_chk);
-$oHash->setcamposForm($camposForm);
+$oHash->setCamposForm($camposForm);
 $a_camposHidden = array(
     'campos_chk' => $campos_chk,
     'obj_pau' => $Qobj_pau,

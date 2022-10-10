@@ -121,7 +121,7 @@ $cambio_password = web\Hash::link(core\ConfigGlobal::getWeb() . '/apps/usuarios/
 $cambio_mail = web\Hash::link(core\ConfigGlobal::getWeb() . '/apps/usuarios/controller/usuario_form_mail.php');
 
 $oHash = new web\Hash();
-$oHash->setcamposForm('inicio!oficina!estilo_color!tipo_menu!tipo_tabla!ordenApellidos!idioma_nou');
+$oHash->setCamposForm('inicio!oficina!estilo_color!tipo_menu!tipo_tabla!ordenApellidos!idioma_nou');
 
 $a_campos = [
     'aniversarios' => $aniversarios,

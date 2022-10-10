@@ -48,7 +48,7 @@ $param = 'que=get';
 
 $oHash = new web\Hash();
 $sCamposForm = 'id_ubi!que!G!inc_t!seccion';
-$oHash->setcamposForm($sCamposForm);
+$oHash->setCamposForm($sCamposForm);
 
 $a_campos = ['oPosicion' => $oPosicion,
     'oHash' => $oHash,

@@ -41,7 +41,7 @@ $Qna = (string)filter_input(INPUT_POST, 'na');
 
 //personas
 $oHash = new web\Hash();
-$oHash->setcamposForm('nombre!apellido1!apellido2!centro!empiezamax!empiezamin!iactividad_val!iasistentes_val!periodo!year');
+$oHash->setCamposForm('nombre!apellido1!apellido2!centro!empiezamax!empiezamin!iactividad_val!iasistentes_val!periodo!year');
 $oHash->setcamposNo('modelo');
 $a_camposHidden = array(
     'tipo' => $Qtipo,
@@ -51,7 +51,7 @@ $a_camposHidden = array(
 $oHash->setArraycamposHidden($a_camposHidden);
 // centros
 $oHash1 = new web\Hash();
-$oHash1->setcamposForm('sacd!ctr!empiezamax!empiezamin!iactividad_val!iasistentes_val!periodo!year');
+$oHash1->setCamposForm('sacd!ctr!empiezamax!empiezamin!iactividad_val!iasistentes_val!periodo!year');
 $oHash1->setcamposNo('todos_n!todos_agd!todos_s!modelo');
 $a_camposHidden1 = array(
     'tipo' => $Qtipo,
@@ -60,7 +60,7 @@ $a_camposHidden1 = array(
 $oHash1->setArraycamposHidden($a_camposHidden1);
 //casas
 $oHash2 = new web\Hash();
-$oHash2->setcamposForm('cdc_sel!id_cdc_mas!id_cdc_num!empiezamax!empiezamin!iactividad_val!iasistentes_val!periodo!year');
+$oHash2->setCamposForm('cdc_sel!id_cdc_mas!id_cdc_num!empiezamax!empiezamin!iactividad_val!iasistentes_val!periodo!year');
 $oHash2->setcamposNo('id_cdc!sin_activ!modelo');
 $a_camposHidden2 = array(
     'tipo' => $Qtipo,

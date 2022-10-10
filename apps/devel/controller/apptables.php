@@ -34,7 +34,7 @@ $oDeslpApps->setNombre('id_app');
 $oDeslpApps->setOpciones($a_apps);
 
 $oHash = new web\Hash();
-$oHash->setcamposForm('id_app!esquema');
+$oHash->setCamposForm('id_app!esquema');
 $oHash->setcamposNo('accion');
 $oHash->setArraycamposHidden(['accion' => 'x']);
 

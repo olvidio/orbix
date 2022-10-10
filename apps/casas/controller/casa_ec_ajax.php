@@ -136,7 +136,7 @@ switch ($Qque) {
             }
 
             $oHash = new web\Hash();
-            $oHash->setcamposForm($sCamposForm);
+            $oHash->setCamposForm($sCamposForm);
             $oHash->setCamposNo('que');
             $a_camposHidden = array(
                 'que' => '',

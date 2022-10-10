@@ -262,7 +262,7 @@ if ($Qobj_pau == 'PersonaEx') {
     $camposForm = 'que!id_tabla!apel_fam!apellido1!apellido2!dl!eap!f_inc!f_nacimiento!lugar_nacimiento!edad!f_situacion!inc!lengua!nom!nx1!nx2!observ!profesion!situacion!stgr!trato';
 }
 
-$oHash->setcamposForm($camposForm);
+$oHash->setCamposForm($camposForm);
 $oHash->setcamposNo($campos_chk);
 $a_camposHidden = array(
     'campos_chk' => $campos_chk,

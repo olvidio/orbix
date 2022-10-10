@@ -22,7 +22,7 @@ $oDesplRegiones->setNombre('region');
 $oDesplRegiones->setAction('fnjs_dl()');
 
 $oHash = new web\Hash();
-$oHash->setcamposForm('esquema!region!dl!comun!sv!sf');
+$oHash->setCamposForm('esquema!region!dl!comun!sv!sf');
 $oHash->setcamposNo('comun!sv!sf');
 
 $oHash1 = new web\Hash();
@@ -47,7 +47,7 @@ $oDesplDel->setBlanco(TRUE);
 $oDesplDel->setOpciones($a_posibles_esquemas);
 
 $oHashAbsorber = new web\Hash();
-$oHashAbsorber->setcamposForm('esquema_matriz!esquema_del');
+$oHashAbsorber->setCamposForm('esquema_matriz!esquema_del');
 
 $a_campos = [
     'oHash' => $oHash,
