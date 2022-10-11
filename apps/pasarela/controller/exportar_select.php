@@ -241,7 +241,7 @@ foreach ($cActividades as $oActividad) {
     $a_valores[$i][12] = $aCentrosEncargados[0];
     $a_valores[$i][13] = $aCentrosEncargados[1];
     $a_valores[$i][14] = $aCentrosEncargados[2];
-    $a_valores[$i][15] = $nombre_ubi;
+    $a_valores[$i][15] = ''; //aviso
     $a_valores[$i][16] = $contribucion_obligatoria;
     $a_valores[$i][17] = $aContribucion_reserva[$id_tipo_activ];
     $a_valores[$i][18] = $contribucion_general;
