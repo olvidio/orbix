@@ -25,12 +25,7 @@ class GestorActaTribunal extends ClaseGestor
     /* CONSTRUCTOR -------------------------------------------------------------- */
 
 
-    /**
-     * Constructor de la classe.
-     *
-     * @return $gestor
-     *
-     */
+    
     function __construct()
     {
         // Si es cr, se mira en todas:

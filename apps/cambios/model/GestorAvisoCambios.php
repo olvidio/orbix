@@ -22,7 +22,7 @@ use web\DateTimeLocal;
  */
 class GestorAvisoCambios
 {
-    /* METODES ESTATICS ----------------------------------------------------------*/
+    /* MÉTODOS ESTÁTICOS ----------------------------------------------------------*/
 
     /**
      * Recupera un array amb els objectes (de taula) dels que es pot avisar i els seus noms.

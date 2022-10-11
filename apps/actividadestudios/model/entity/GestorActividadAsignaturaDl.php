@@ -19,12 +19,7 @@ class GestorActividadAsignaturaDl extends GestorActividadAsignatura
     /* CONSTRUCTOR -------------------------------------------------------------- */
 
 
-    /**
-     * Constructor de la classe.
-     *
-     * @return $gestor
-     *
-     */
+    
     function __construct()
     {
         $oDbl = $GLOBALS['oDB'];

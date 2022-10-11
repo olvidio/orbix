@@ -25,12 +25,7 @@ class GestorAsistente extends core\ClaseGestor
     /* CONSTRUCTOR -------------------------------------------------------------- */
 
 
-    /**
-     * Constructor de la classe.
-     *
-     * @return $gestor
-     *
-     */
+
     function __construct()
     {
         //$oDbl = $GLOBALS['oDB'];

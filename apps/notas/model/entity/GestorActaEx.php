@@ -21,12 +21,7 @@ class GestorActaEx extends GestorActa
     /* CONSTRUCTOR -------------------------------------------------------------- */
 
 
-    /**
-     * Constructor de la classe.
-     *
-     * @return $gestor
-     *
-     */
+    
     function __construct()
     {
         $oDbl = $GLOBALS['oDBR'];

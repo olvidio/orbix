@@ -20,12 +20,7 @@ class GestorCartaPresentacionEx extends GestorCartaPresentacion
     /* CONSTRUCTOR -------------------------------------------------------------- */
 
 
-    /**
-     * Constructor de la classe.
-     *
-     * @return $gestor
-     *
-     */
+    
     function __construct()
     {
         $oDbl = $GLOBALS['oDBR'];

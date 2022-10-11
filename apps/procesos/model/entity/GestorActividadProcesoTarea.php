@@ -41,12 +41,7 @@ class GestorActividadProcesoTarea extends ClaseGestor
         $this->sNomTabla = $sNomTabla;
     }
 
-    /**
-     * Constructor de la classe.
-     *
-     * @return $gestor
-     *
-     */
+    
     function __construct()
     {
         $oDbl = $GLOBALS['oDBC'];

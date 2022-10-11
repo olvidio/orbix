@@ -21,12 +21,7 @@ class GestorAsistenteOut extends GestorAsistentePub
     /* CONSTRUCTOR -------------------------------------------------------------- */
 
 
-    /**
-     * Constructor de la classe.
-     *
-     * @return $gestor
-     *
-     */
+    
     function __construct()
     {
         $oDbl = $GLOBALS['oDBE'];
