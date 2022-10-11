@@ -1,6 +1,6 @@
 <?php
 
-use pasarela\model\ContribucionNoDuerme;
+use pasarela\model\ContribucionReserva;
 use web\Hash;
 
 // INICIO Cabecera global de URL de controlador *********************************
@@ -14,34 +14,34 @@ require_once("apps/core/global_object.inc");
 
 $Qque = (string)filter_input(INPUT_POST, 'que');
 
-$url_ajax = "apps/pasarela/controller/contribucion_no_duerme_ajax.php";
+$url_ajax = "apps/pasarela/controller/contribucion_reserva_ajax.php";
 
 switch ($Qque) {
     case 'eliminar':
         $Qid_tipo_activ = (string)filter_input(INPUT_POST, 'id_tipo_activ');
-        $oContribucionNoDuerme = new ContribucionNoDuerme();
-        $oContribucionNoDuerme->delContribucionNoDuerme($Qid_tipo_activ);
+        $oContribucionReserva = new ContribucionReserva();
+        $oContribucionReserva->delContribucionReserva($Qid_tipo_activ);
         break;
     case 'update':
     case 'nuevo':
         $Qid_tipo_activ = (string)filter_input(INPUT_POST, 'id_tipo_activ');
         $Qcontribucion = (string)filter_input(INPUT_POST, 'contribucion');
-        $oContribucionNoDuerme = new ContribucionNoDuerme();
-        $oContribucionNoDuerme->addContribucionNoDuerme($Qid_tipo_activ, $Qcontribucion);
+        $oContribucionReserva = new ContribucionReserva();
+        $oContribucionReserva->addContribucionReserva($Qid_tipo_activ, $Qcontribucion);
         break;
     case 'update_default':
         $Qdefault = (string)filter_input(INPUT_POST, 'default');
-        $oContribucionNoDuerme = new ContribucionNoDuerme();
-        $oContribucionNoDuerme->setDefault($Qdefault);
+        $oContribucionReserva = new ContribucionReserva();
+        $oContribucionReserva->setDefault($Qdefault);
         break;
     case 'lista':
-        $oContribucionNoDuerme = new ContribucionNoDuerme();
-        echo $oContribucionNoDuerme->getLista();
+        $oContribucionReserva = new ContribucionReserva();
+        echo $oContribucionReserva->getLista();
         break;
     case 'form_default':
-        $txt = _("Valor por defecto en %");
-        $oContribucionNoDuerme = new ContribucionNoDuerme();
-        $default = $oContribucionNoDuerme->getDefault();
+        $txt = _("Valor por defecto en €");
+        $oContribucionReserva = new ContribucionReserva();
+        $default = $oContribucionReserva->getDefault();
         $oHash = new Hash();
         $oHash->setUrl($url_ajax);
         $oHash->setCamposForm('default');
@@ -57,7 +57,7 @@ switch ($Qque) {
         echo $oView->render('contribucion_x_default_form.html.twig', $a_campos);
         break;
     case 'form_modificar':
-        $txt = _("Contribución si no duerme en % para");
+        $txt = _("Contribución en concepto de reserva");
         $Qid_tipo_activ = (integer)filter_input(INPUT_POST, 'id_tipo_activ');
         $Qcontribucion = (string)filter_input(INPUT_POST, 'contribucion');
 
@@ -89,7 +89,7 @@ switch ($Qque) {
         echo $oView->render('contribucion_x_form.html.twig', $a_campos);
         break;
     case 'form_nuevo':
-        $txt = _("Contribución si no duerme en %");
+        $txt = _("Contribución en concepto de reserva");
         $Qid_tipo_activ = (integer)filter_input(INPUT_POST, 'id_tipo_activ');
         $Qsasistentes = (string)filter_input(INPUT_POST, 'sasistentes');
         $Qsactividad = (string)filter_input(INPUT_POST, 'sactividad');

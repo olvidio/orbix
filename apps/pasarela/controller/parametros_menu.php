@@ -24,17 +24,25 @@ $aQuery = ['que' => 'nombre'];
 array_walk($aQuery, 'core\poner_empty_on_null');
 $url_nombre = web\Hash::link($url . '?' . http_build_query($aQuery));
 
-// ----------- contribucion no duerme -------------------
+// ----------- contribución no duerme -------------------
 $url = 'apps/pasarela/controller/contribucion_no_duerme_lista.php';
 $aQuery = ['que' => 'contribucion_no_duerme'];
 // el hppt_build_query no pasa los valores null
 array_walk($aQuery, 'core\poner_empty_on_null');
 $url_contribucion_no_duerme = web\Hash::link($url . '?' . http_build_query($aQuery));
 
+// ----------- contribución reserva -------------------
+$url = 'apps/pasarela/controller/contribucion_reserva_lista.php';
+$aQuery = ['que' => 'contribucion_reserva'];
+// el hppt_build_query no pasa los valores null
+array_walk($aQuery, 'core\poner_empty_on_null');
+$url_contribucion_reserva = web\Hash::link($url . '?' . http_build_query($aQuery));
+
 $a_campos = ['oPosicion' => $oPosicion,
     'url_activacion' => $url_activacion,
     'url_nombre' => $url_nombre,
     'url_contribucion_no_duerme' => $url_contribucion_no_duerme,
+    'url_contribucion_reserva' => $url_contribucion_reserva,
 ];
 
 $oView = new core\ViewTwig('pasarela/controller');

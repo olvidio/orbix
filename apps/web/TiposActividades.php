@@ -295,6 +295,54 @@ class TiposActividades
     }
 
     /**
+     * Recupera el nombre de actividad para pasarela
+     *
+     * @return string
+     */
+    public function getNomPasarela()
+    {
+        $txt_svsf = $this->getSfsvText();
+        // asistentes
+        $txt_asistentes = ''; // valor por defecto
+        if ($this->getAsistentesText() === 'n') {
+            if ($txt_svsf === 'sv') {
+                $txt_asistentes = _("numerarios");
+            } else {
+                $txt_asistentes = _("numerarias");
+            }
+        }
+        if ($this->getAsistentesText() === 'nax') {
+            $txt_asistentes = _("numerarias auxiliares");
+        }
+        if ($this->getAsistentesText() === 'agd') {
+            if ($txt_svsf === 'sv') {
+                $txt_asistentes = _("agregados");
+            } else {
+                $txt_asistentes = _("agregadas");
+            }
+        }
+        if ($this->getAsistentesText() === 'sg') {
+            if ($txt_svsf === 'sv') {
+                $txt_asistentes = _("coperadores");
+            } else {
+                $txt_asistentes = _("coperadoras");
+            }
+        }
+        // actividad
+        $txt_actividad = 'Actividad'; // valor por defecto
+        if ($this->getActividadText() === 'crt') {
+            $txt_actividad = _("curso de retiro");
+        }
+        if ($this->getActividadText() === 'ca') {
+            $txt_actividad = _("curso anual");
+        }
+        if ($this->getActividadText() === 'cv' || $this->getActividadText() === 'cve') {
+            $txt_actividad = _("convivencia");
+        }
+        return $txt_actividad . ' ' . $txt_asistentes;
+    }
+
+    /**
      * Recupera el atributo nom en format de text
      * sin el (sin especificar)
      *

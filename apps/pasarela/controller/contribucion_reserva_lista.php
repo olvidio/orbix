@@ -10,7 +10,7 @@ require_once("apps/core/global_object.inc");
 
 $Qque = (string)filter_input(INPUT_POST, 'que');
 
-$url_ajax = "apps/pasarela/controller/contribucion_no_duerme_ajax.php";
+$url_ajax = "apps/pasarela/controller/contribucion_reserva_ajax.php";
 
 $oHashDefault = new Hash();
 $oHashDefault->setUrl($url_ajax);

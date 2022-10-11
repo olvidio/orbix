@@ -127,6 +127,8 @@ $aConversion_nombre = $oConversiones->getArrayNombre();
 $aConversion_tipo = $oConversiones->getArrayTipo();
 $aConversion_perfil = $oConversiones->getArrayPerfil();
 $aConversion_activacion = $oConversiones->getArrayActivacion();
+$contribucion_obligatoria = _("NO");
+$aContribucion_reserva =  $oConversiones->getArrayContribucionReserva();
 $aTanto_por_cien_contribucion_no_duerme = $oConversiones->getArrayContribucionNoDuerme();
 
 $a_botones = [];
@@ -234,8 +236,8 @@ foreach ($cActividades as $oActividad) {
     $a_valores[$i][13] = $aCentrosEncargados[1];
     $a_valores[$i][14] = $aCentrosEncargados[2];
     $a_valores[$i][15] = $nombre_ubi;
-    $a_valores[$i][16] = $nombre_ubi;
-    $a_valores[$i][17] = $nombre_ubi;
+    $a_valores[$i][16] = $contribucion_obligatoria;
+    $a_valores[$i][17] = $aContribucion_reserva[$id_tipo_activ];
     $a_valores[$i][18] = $contribucion_general;
     $a_valores[$i][19] = $contribucion_estudiante;
     $a_valores[$i][20] = $contribucion_no_duerme;

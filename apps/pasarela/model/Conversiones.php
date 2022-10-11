@@ -43,10 +43,21 @@ class Conversiones
     private $a_tipos_asistentes = [];
     private $a_tipos_activacion = [];
     private $a_tipos_contribucion_no_duerme = [];
+    private $a_tipos_contribucion_reserva = [];
+
+    public function getArrayContribucionReserva(): array
+    {
+        $oContribucionReserva = new ContribucionReserva();
+        $default = $oContribucionReserva->getDefault();
+        $a_excepciones = $oContribucionReserva->getExcepciones();
+        $a_tipos = $this->getArrayTipos_contribucion_reserva($default);
+
+        return array_replace($a_tipos, $a_excepciones);
+    }
 
     public function getArrayContribucionNoDuerme(): array
     {
-        $oContribucionNoDuerme = new ContribucionNoDuerme();
+        $oContribucionNoDuerme = new ContribucionReserva();
         $default = $oContribucionNoDuerme->getDefault();
         $a_excepciones = $oContribucionNoDuerme->getExcepciones();
         $a_tipos = $this->getArrayTipos_contribucion_no_duerme($default);
@@ -54,7 +65,7 @@ class Conversiones
         return array_replace($a_tipos, $a_excepciones);
     }
 
-    public function getArrayActivacion()
+    public function getArrayActivacion(): array
     {
         $oActivacion = new Activacion();
         $default = $oActivacion->getDefault();
@@ -64,34 +75,42 @@ class Conversiones
         return array_replace($a_tipos, $a_excepciones);
     }
 
-    public function getArrayPerfil()
+    public function getArrayPerfil(): array
     {
-        $a_tipos = $this->getArrayTipos_asistentes();
-        $oParametros = new Parametros();
-        $a_excepciones = $oParametros->getExcepcionesPerfil();
+        // no hay excepciones
+        return $this->getArrayTipos_asistentes();
+    }
+
+    public function getArrayNombre(): array
+    {
+        $a_tipos = $this->getArrayTipos_nombre();
+        $oNombre = new Nombre();
+        $a_excepciones = $oNombre->getExcepciones();
 
         return array_replace($a_tipos, $a_excepciones);
     }
 
-    public function getArrayNombre()
+    public function getArrayTipo(): array
     {
-        $a_tipos = $this->getArrayTipos_nom();
-        $oParametros = new Parametros();
-        $a_excepciones = $oParametros->getExcepcionesNombre();
-
-        return array_replace($a_tipos, $a_excepciones);
+        // no hay excepciones
+        return $this->getArrayTipos_actividad();
     }
 
-    public function getArrayTipo()
+    private function getArrayTipos_contribucion_reserva($default): array
     {
-        $a_tipos = $this->getArrayTipos_actividad();
-        $oParametros = new Parametros();
-        $a_excepciones = $oParametros->getExcepcionesTipo();
-
-        return array_replace($a_tipos, $a_excepciones);
+        $this->getcTiposDeActividades();
+        if (empty($this->a_tipos_contribucion_reserva)) {
+            $a_tipos = [];
+            foreach ($this->c_tipos_activ as $oTipo) {
+                $id_tipo_activ = $oTipo->getId_tipo_activ();
+                $a_tipos[$id_tipo_activ] = $default;
+            }
+            $this->a_tipos_contribucion_reserva = $a_tipos;
+        }
+        return $this->a_tipos_contribucion_reserva;
     }
 
-    private function getArrayTipos_contribucion_no_duerme($default)
+    private function getArrayTipos_contribucion_no_duerme($default): array
     {
         $this->getcTiposDeActividades();
         if (empty($this->a_tipos_contribucion_no_duerme)) {
@@ -105,7 +124,7 @@ class Conversiones
         return $this->a_tipos_contribucion_no_duerme;
     }
 
-    private function getArrayTipos_activacion($default)
+    private function getArrayTipos_activacion($default): array
     {
         $this->getcTiposDeActividades();
         if (empty($this->a_tipos_activacion)) {
@@ -120,7 +139,7 @@ class Conversiones
     }
 
 
-    private function getArrayTipos_asistentes()
+    private function getArrayTipos_asistentes(): array
     {
         $this->getcTiposDeActividades();
         if (empty($this->a_tipos_asistentes)) {
@@ -156,7 +175,7 @@ class Conversiones
         return $this->a_tipos_asistentes;
     }
 
-    private function getArrayTipos_actividad()
+    private function getArrayTipos_actividad(): array
     {
         $this->getcTiposDeActividades();
         if (empty($this->a_tipos_activ1)) {
@@ -175,7 +194,7 @@ class Conversiones
         return $this->a_tipos_activ1;
     }
 
-    private function getArrayTipos_nom()
+    private function getArrayTipos_nombre(): array
     {
         $this->getcTiposDeActividades();
         if (empty($this->a_tipos_nom)) {
@@ -183,14 +202,15 @@ class Conversiones
             foreach ($this->c_tipos_activ as $oTipo) {
                 $id_tipo_activ = $oTipo->getId_tipo_activ();
                 $oTiposActividades = new TiposActividades($id_tipo_activ);
-                $a_tipos[$id_tipo_activ] = $oTiposActividades->getNom_tipoText();
+
+                $a_tipos[$id_tipo_activ] = $oTiposActividades->getNomPasarela();
             }
             $this->a_tipos_nom = $a_tipos;
         }
         return $this->a_tipos_nom;
     }
 
-    private function getcTiposDeActividades()
+    private function getcTiposDeActividades(): array
     {
         if (empty($this->c_tipos_activ)) {
             $aWhere = ['_ordre' => 'id_tipo_activ'];

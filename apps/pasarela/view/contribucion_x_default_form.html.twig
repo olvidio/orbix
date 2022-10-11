@@ -13,16 +13,20 @@
         cursor: pointer;
     }
 </style>
-<form id="nuevo">
-    {{ oActividadTipo.getHtml()|raw }}
+<form id="modifica">
     {{ oHash.getCamposHtml()|raw }}
     <div class="flex-container">
         <div>
-            {{ "Contribución si no duerme en %"|trans }}:
-            <input id="contribucion" name="contribucion" \>
+            <h3>
+                {{ txt }}:
+            </h3>
+        </div>
+        <div>
+            <input id="default" name="default" value="{{ default }}" \>
         </div>
     </div>
     <br><br>
-    <input type="button" value="{{ "guardar"|trans }}" onclick="fnjs_guardar_nuevo('#nuevo','update');">
+    <br><br>
+    <input type="button" value="{{ "guardar"|trans }}" onclick="fnjs_guardar_default('#modifica');">
     <input type="button" value="{{ "cancel"|trans }}" onclick="fnjs_cerrar();">
 </form>
