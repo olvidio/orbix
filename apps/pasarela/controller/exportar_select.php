@@ -95,6 +95,12 @@ if (!empty($Qaid_cdc)) {
 // Posibles centros encargados
 $gesCentrosDl = new GestorCentroDl();
 $aCentrosPosibles = $gesCentrosDl->getArrayCentros();
+// Quitar el sg o agd del inicio del nombre del ctr
+$aCentrosPosiblesSinSgAgd = [];
+foreach ($aCentrosPosibles as $id_ubi => $nombre_ubi) {
+    $nombre_ubi_sin = preg_replace(array('/^agd/', '/^sg/'), '', $nombre_ubi, 1 );
+    $aCentrosPosiblesSinSgAgd[$id_ubi] = $nombre_ubi_sin;
+}
 
 $gesActividades = new GestorActividadDl();
 $cActividades = $gesActividades->getActividades($aWhere, $aOperador);
@@ -168,7 +174,7 @@ foreach ($cActividades as $oActividad) {
         for ($n = 0; $n < 4; $n++) {
             if (!empty($cCentrosEncargados[$n])) {
                 $id_ubi = $cCentrosEncargados[$n]->getId_ubi();
-                $aCentrosEncargados[$n] = empty($aCentrosPosibles[$id_ubi]) ? '?' : $aCentrosPosibles[$id_ubi];
+                $aCentrosEncargados[$n] = empty($aCentrosPosiblesSinSgAgd[$id_ubi]) ? '?' : $aCentrosPosiblesSinSgAgd[$id_ubi];
             }
         }
     }
