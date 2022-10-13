@@ -69,15 +69,15 @@ switch ($Qque) {
             $oGesTipoTarifa = new GestorTipoTarifa();
             $oTipoTarifas = $oGesTipoTarifa->getListaTipoTarifas($miSfsv);
             $oTipoTarifas->setNombre('id_tarifa');
-            $txt .= _("tarifa");
+            $txt .= _("tarifa").": ";
             $txt .= $oTipoTarifas->desplegable();
-            $txt .= '<br>';
-            $txt .= _("serie");
+            $txt .= '<br><br>';
+            $txt .= _("serie").": ";
             $txt .= $oDesplPosiblesSeries->desplegable();
-            $txt .= '<br>';
+            $txt .= '<br><br>';
         }
-        $txt .= _("nuevo importe") . ": <input type=text size=6 id='cantidad' name='cantidad' value=\"$cantidad\" onblur=\"fnjs_comprobar_dinero('#cantidad');\"> " . _("€") . "<br>";
-        $txt .= "<br>";
+        $txt .= _("nuevo importe") . ": <input type=text size=6 id='cantidad' name='cantidad' value=\"$cantidad\" onblur=\"fnjs_comprobar_dinero('#cantidad');\"> " . _("€");
+        $txt .= "<br><br>";
         $txt .= "<input type='button' value='" . _("guardar") . "' onclick=\"fnjs_guardar('#frm_tarifa_ubi','update');\" >";
         $txt .= "<input type='button' value='" . _("eliminar") . "' onclick=\"fnjs_guardar('#frm_tarifa_ubi','tar_ubi_eliminar');\" >";
         $txt .= "<input type='button' value='" . _("cancel") . "' onclick='fnjs_cerrar();' >";
@@ -185,7 +185,6 @@ switch ($Qque) {
         $Qid_item = (integer)filter_input(INPUT_POST, 'id_item');
         $Qid_ubi = (integer)filter_input(INPUT_POST, 'id_ubi');
         $Qyear = (integer)filter_input(INPUT_POST, 'year');
-        $Qid_tarifa = (integer)filter_input(INPUT_POST, 'id_tarifa');
         $Qid_serie = (integer)filter_input(INPUT_POST, 'id_serie');
         $Qcantidad = (string)filter_input(INPUT_POST, 'cantidad');
         $Qobserv = (string)filter_input(INPUT_POST, 'observ');
@@ -291,8 +290,7 @@ switch ($Qque) {
         }
         break;
     case 'tar_form':
-        $Qid_tarifa = (string)filter_input(INPUT_POST, 'id_tarifa');
-        if ($Qid_tarifa == 'nuevo') {
+        if ($Qid_tarifa === 'nuevo') {
             $letra = '';
             $modo = 0;
             $observ = '';
@@ -322,7 +320,7 @@ switch ($Qque) {
         $txt .= _("letra") . " <input type=text size=3 name=letra value=\"$letra\">";
         $txt .= '&nbsp;&nbsp;';
         $txt .= _("modo") . $oDespl->desplegable();
-        $txt .= '<br>';
+        $txt .= '<br><br>';
         $txt .= _("observaciones") . " <input type=text size=25 name=observ value=\"$observ\">";
         $txt .= '<br><br>';
         $txt .= "<input type='button' value='" . _("guardar") . "' onclick=\"fnjs_guardar('#frm_tarifa','tar_update');\" >";
@@ -332,11 +330,10 @@ switch ($Qque) {
         echo $txt;
         break;
     case "tar_update":
-        $Qid_tarifa = (string)filter_input(INPUT_POST, 'id_tarifa');
         $Qletra = (string)filter_input(INPUT_POST, 'letra');
         $Qmodo = (string)filter_input(INPUT_POST, 'modo');
         $Qobserv = (string)filter_input(INPUT_POST, 'observ');
-        if ($Qid_tarifa == 'nuevo') {
+        if ($Qid_tarifa === 'nuevo') {
             $oTipoTarifa = new TipoTarifa();
             // miro si soy sf/sv.
             $oTipoTarifa->setSfsv(ConfigGlobal::mi_sfsv());

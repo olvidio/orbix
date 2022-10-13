@@ -710,7 +710,7 @@ class TiposActividades
     }
 
     /**
-     * Recupera el atributo nom_tipo posibles en format de array
+     * Recupera el atributo nom_tipo posibles en formato de array
      *
      * @return array
      */

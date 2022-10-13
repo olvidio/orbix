@@ -38,7 +38,7 @@
 
     fnjs_guardar = function (formulario, que) {
         var err = 0;
-        if (que == "tar_eliminar") {
+        if (que === "tar_eliminar") {
             seguro = confirm("<?= $txt_eliminar ?>");
             if (seguro) {
                 err = 0;
@@ -46,7 +46,7 @@
                 err = 1;
             }
         }
-        if (err != 1) {
+        if (err !== 1) {
             $(formulario + ' input[name="que"]').val(que);
             $(formulario).attr('action', "apps/actividadtarifas/controller/tarifa_ajax.php")
             $(formulario).one("submit", function () {
@@ -76,6 +76,6 @@
 
     $(document).ready(fnjs_ver());
 </script>
-<div id='ficha'></div>
-<div id='div_modificar'></div>
-<div id='overlay'></div>
+<div id="ficha"></div>
+<div id="div_modificar"></div>
+<div id="overlay"></div>

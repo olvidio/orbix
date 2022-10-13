@@ -94,6 +94,16 @@
         }
     }
 
+    fnjs_id_activ = function () {
+        let isfsv = $('#isfsv_val').val();
+        let iasistentes = $('#iasistentes_val').val();
+        let iactividad = $('#iactividad_val').val();
+        let inom_tipo = $('#inom_tipo_val').val();
+        let id_tipo_activ = isfsv + iasistentes + iactividad + inom_tipo;
+
+        $('#id_tipo_activ').val(id_tipo_activ);
+    }
+
     $(document).ready(fnjs_ver());
 </script>
 <div id='ficha'></div>
