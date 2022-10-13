@@ -9,6 +9,7 @@ use pasarela\model\Conversiones;
 use ubis\model\entity\GestorCasaDl;
 use ubis\model\entity\GestorCentroDl;
 use ubis\model\entity\GestorTarifaUbi;
+use web\DateTimeLocal;
 use web\Periodo;
 use web\TiposActividades;
 
@@ -46,13 +47,13 @@ if (empty($Qid_tipo_activ)) {
     }
     $sasistentes = empty($Qsasistentes) ? '.' : $Qsasistentes;
     $sactividad = empty($Qsactividad) ? '.' : $Qsactividad;
-    $oTipoActiv = new web\TiposActividades();
+    $oTipoActiv = new TiposActividades();
     $oTipoActiv->setSfsvId($Qssfsv);
     $oTipoActiv->setAsistentesId($sasistentes);
     $oTipoActiv->setActividadId($sactividad);
     $Qid_tipo_activ = $oTipoActiv->getId_tipo_activ();
 } else {
-    $oTipoActiv = new web\TiposActividades($Qid_tipo_activ);
+    $oTipoActiv = new TiposActividades($Qid_tipo_activ);
     $ssfsv = $oTipoActiv->getSfsvText();
     $sasistentes = $oTipoActiv->getAsistentesText();
     $sactividad = $oTipoActiv->getActividadText();
@@ -98,7 +99,7 @@ $aCentrosPosibles = $gesCentrosDl->getArrayCentros();
 // Quitar el sg o agd del inicio del nombre del ctr
 $aCentrosPosiblesSinSgAgd = [];
 foreach ($aCentrosPosibles as $id_ubi => $nombre_ubi) {
-    $nombre_ubi_sin = preg_replace(array('/^agd/', '/^sg/'), '', $nombre_ubi, 1 );
+    $nombre_ubi_sin = preg_replace(array('/^agd/', '/^sg/'), '', $nombre_ubi, 1);
     $aCentrosPosiblesSinSgAgd[$id_ubi] = $nombre_ubi_sin;
 }
 
@@ -114,7 +115,7 @@ $a_cabeceras = [_("activada"),
     _("hora inicio"),
     _("fecha fin"),
     _("hora fin"),
-    _("activiación"),
+    _("activación"),
     _("plazas max."),
     _("organizador 1"),
     _("organizador 2"),
@@ -133,13 +134,13 @@ $aConversion_nombre = $oConversiones->getArrayNombre();
 $aConversion_tipo = $oConversiones->getArrayTipo();
 $aConversion_perfil = $oConversiones->getArrayPerfil();
 $aConversion_activacion = $oConversiones->getArrayActivacion();
-$contribucion_obligatoria = _("NO");
-$aContribucion_reserva =  $oConversiones->getArrayContribucionReserva();
+$aContribucion_reserva = $oConversiones->getArrayContribucionReserva();
 $aTanto_por_cien_contribucion_no_duerme = $oConversiones->getArrayContribucionNoDuerme();
 
 $a_botones = [];
 $a_valores = [];
 $i = 0;
+$oHoy = new DateTimeLocal();
 foreach ($cActividades as $oActividad) {
     $i++;
     $id_tipo_activ = $oActividad->getId_tipo_activ();
@@ -150,7 +151,28 @@ foreach ($cActividades as $oActividad) {
     $h_ini = $oActividad->getH_ini;
     $f_fin = $oActividad->getF_fin()->getFromLocal();
     $h_fin = $oActividad->getH_fin;
-
+    // calcular fecha activación
+    $activacion = $aConversion_activacion[$id_tipo_activ];
+    $oF_ini_dup = clone $oF_ini;
+    if ($activacion === 'upload') {
+        $f_activacion = $oHoy->getFromLocal();
+    } else {
+        $num_dias_activacion = (int)$activacion;
+        if (is_numeric($activacion)) {
+            $interval = new DateInterval("P$num_dias_activacion" . 'D');
+            $oF_ini_dup->sub($interval);
+            $f_activacion = $oF_ini_dup->getFromLocal();
+        } else {
+            $oTipoActividad = new TiposActividades($id_tipo_activ);
+            $svsf = $oTipoActividad->getSfsvText();
+            $asistentes = $oTipoActividad->getAsistentesText();
+            $actividad = $oTipoActividad->getActividadText();
+            $tipo_txt = "$svsf $asistentes $actividad";
+            $err .= sprintf(_("valor no válido para la activación del tipo de actividad %s"), $tipo_txt);
+            $err .= '<br>';
+            $f_activacion = '?';
+        }
+    }
     $nombre_ubi = empty($aCasasDl[$id_ubi]) ? '??' : $aCasasDl[$id_ubi];
     // plazas
     $plazas_totales = $oActividad->getPlazas();
@@ -179,6 +201,7 @@ foreach ($cActividades as $oActividad) {
         }
     }
     // contribuciones
+    $contribucion_obligatoria = ($id_tipo_activ < 200000) ? _("NO") : _("SÍ"); // sv o sf
     $numero_de_dias = $oActividad->getDuracion();
     $id_tarifa = $oActividad->getTarifa();
     if (empty($id_tarifa)) {
@@ -230,13 +253,13 @@ foreach ($cActividades as $oActividad) {
     $a_valores[$i][1] = _("Sí");
     $a_valores[$i][2] = $nombre_ubi;
     $a_valores[$i][3] = $aConversion_perfil[$id_tipo_activ];
-    $a_valores[$i][4] = $aConversion_nombre[$id_tipo_activ];
+    $a_valores[$i][4] = ucfirst($aConversion_nombre[$id_tipo_activ]);
     $a_valores[$i][5] = $aConversion_tipo[$id_tipo_activ];
     $a_valores[$i][6] = $f_ini;
     $a_valores[$i][7] = $h_ini;
     $a_valores[$i][8] = $f_fin;
     $a_valores[$i][9] = $h_fin;
-    $a_valores[$i][10] = $aConversion_activacion[$id_tipo_activ];
+    $a_valores[$i][10] = $f_activacion;
     $a_valores[$i][11] = $plazas_totales;
     $a_valores[$i][12] = $aCentrosEncargados[0];
     $a_valores[$i][13] = $aCentrosEncargados[1];

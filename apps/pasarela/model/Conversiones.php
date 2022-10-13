@@ -186,7 +186,7 @@ class Conversiones
                 if ($oTiposActividades->getActividadText() === 'crt') {
                     $a_tipos[$id_tipo_activ] = _("curso retiro");
                 } else {
-                    $a_tipos[$id_tipo_activ] = _("convicencia");
+                    $a_tipos[$id_tipo_activ] = _("convivencia");
                 }
             }
             $this->a_tipos_activ1 = $a_tipos;
