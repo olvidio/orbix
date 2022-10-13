@@ -25,7 +25,7 @@ use web\TiposActividades;
  * @since        15/5/02.
  *
  */
-class listaPlazas
+class ListaPlazas
 {
     public function getMi_dele()
     {

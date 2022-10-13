@@ -1,6 +1,7 @@
 <?php
 
 use actividades\model\entity as actividades;
+use asistentes\model\ListaPlazas;
 use web\Periodo;
 
 /**
@@ -129,7 +130,7 @@ $mi_dele = core\ConfigGlobal::mi_delef();
 if (empty($Qdl_org) || $Qdl_org == $mi_dele) {
     $aWhere['dl_org'] = $mi_dele;
 
-    $oListaPlazasDl = new \asistentes\model\listaplazas();
+    $oListaPlazasDl = new ListaPlazas();
     $oListaPlazasDl->setMi_dele($mi_dele);
     $oListaPlazasDl->setWhere($aWhere);
     $oListaPlazasDl->setOperador($aOperador);
@@ -151,7 +152,7 @@ if (empty($Qdl_org) || $Qdl_org != $mi_dele) {
         $aOperador['dl_org'] = '!=';
     }
 
-    $oListaPlazasOtras = new \asistentes\model\listaplazas();
+    $oListaPlazasOtras = new ListaPlazas();
     $oListaPlazasOtras->setMi_dele($mi_dele);
     $oListaPlazasOtras->setWhere($aWhere);
     $oListaPlazasOtras->setOperador($aOperador);
