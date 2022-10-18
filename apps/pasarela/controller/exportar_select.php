@@ -224,10 +224,10 @@ foreach ($cActividades as $oActividad) {
     $cantidad = 0;
     $cantidad_estudiante = 0;
     if (empty($cTarifas)) {
-        // buscar el nombre de la tarifa
+        // buscar el nombre de la id_tarifa
         $oTipoTarifa = new TipoTarifa($id_tarifa);
         $nombre_tarifa = $oTipoTarifa->getLetra();
-        $err .= sprintf(_("No está definida la tarifa %s para la casa %s"), $nombre_tarifa, $nombre_ubi);
+        $err .= sprintf(_("No está definida la id_tarifa %s para la casa %s"), $nombre_tarifa, $nombre_ubi);
         $err .= '<br>';
     } else {
         foreach ($cTarifas as $oTarifa) {

@@ -952,7 +952,7 @@ msgstr ""
 #: actividades/view/_actividad_form_body.html.twig:55
 #: actividadtarifas/view/tarifa_tipo_actividad_form.html.twig:79
 #: actividadtarifas/view/tarifa_tipo_actividad_form_nuevo.html.twig:17
-msgid "tarifa"
+msgid "id_tarifa"
 msgstr ""
 
 #: actividades/controller/calendario_ajax.php:449
@@ -2240,8 +2240,8 @@ msgstr ""
 msgid "no disponibles"
 msgstr ""
 
-#: actividadtarifas/controller/tarifa.php:11
-msgid "¿Está seguro de borrar esta tarifa?"
+#: actividadtarifas/controller/id_tarifa.php:11
+msgid "¿Está seguro de borrar esta id_tarifa?"
 msgstr ""
 
 #: actividadtarifas/controller/tarifa_ajax.php:29
@@ -2250,7 +2250,7 @@ msgstr ""
 
 #: actividadtarifas/controller/tarifa_ajax.php:53
 #, php-format
-msgid "tarifa %s"
+msgid "id_tarifa %s"
 msgstr ""
 
 #: actividadtarifas/controller/tarifa_ajax.php:63
@@ -2291,7 +2291,7 @@ msgid "método"
 msgstr ""
 
 #: actividadtarifas/controller/tarifa_ajax.php:163
-msgid "añadir tarifa"
+msgid "añadir id_tarifa"
 msgstr ""
 
 #: actividadtarifas/controller/tarifa_ajax.php:233
@@ -2300,22 +2300,22 @@ msgstr ""
 #: encargossacd/model/entity/encargo.class.php:577
 #: encargossacd/model/entity/encargosacdobserv.class.php:330
 #: procesos/model/entity/actividadprocesotarea.class.php:689
-#: ubis/model/entity/tarifa.class.php:444
+#: ubis/model/entity/id_tarifa.class.php:444
 msgid "observ"
 msgstr ""
 
 #: actividadtarifas/controller/tarifa_ajax.php:261
-msgid "nueva tarifa"
+msgid "nueva id_tarifa"
 msgstr ""
 
 #: actividadtarifas/controller/tarifa_tipo_actividad.php:31
 #: actividadtarifas/controller/tarifa_tipo_actividad_form.php:35
 #: actividadtarifas/controller/tarifa_tipo_actividad_form.php:86
-msgid "¿Está seguro que desea quitar esta tarifa?"
+msgid "¿Está seguro que desea quitar esta id_tarifa?"
 msgstr ""
 
 #: actividadtarifas/controller/tarifa_tipo_actividad_ajax.php:74
-msgid "añadir tarifa tipo"
+msgid "añadir id_tarifa tipo"
 msgstr ""
 
 #: actividadtarifas/controller/tarifa_tipo_actividad_form.php:27
@@ -3456,7 +3456,7 @@ msgstr ""
 
 #: casas/controller/calendario_ubi_resumen_ajax.php:309
 msgid ""
-"tarifa media ponderada: prev.ing.actividades/prev.asistencias: [p_tia]/[p_ta]"
+"id_tarifa media ponderada: prev.ing.actividades/prev.asistencias: [p_tia]/[p_ta]"
 msgstr ""
 
 #: casas/controller/calendario_ubi_resumen_ajax.php:313
@@ -3870,7 +3870,7 @@ msgid "f_gasto"
 msgstr ""
 
 #: casas/model/entity/ubigasto.class.php:428
-#: ubis/model/entity/tarifa.class.php:432
+#: ubis/model/entity/id_tarifa.class.php:432
 msgid "cantidad"
 msgstr ""
 
@@ -7222,7 +7222,7 @@ msgstr ""
 msgid "id_region"
 msgstr ""
 
-#: ubis/model/entity/tarifa.class.php:420
+#: ubis/model/entity/id_tarifa.class.php:420
 msgid "id_item"
 msgstr ""
 
@@ -8148,7 +8148,7 @@ msgstr ""
 
 #: actividadtarifas/view/tarifa_tipo_actividad.phtml:65
 #: actividadtarifas/view/tarifa_tipo_actividad_form.html.twig:41
-msgid "debe indicar la tarifa"
+msgid "debe indicar la id_tarifa"
 msgstr ""
 
 #: asistentes/view/activ_pendientes.phtml:6 menus/view/traducir_menu.phtml:111
@@ -8739,11 +8739,11 @@ msgid "Tarifas"
 msgstr ""
 
 #: menus/view/traducir_menu.phtml:107 menus/view/traducir_menu.phtml:185
-msgid "definir tarifa"
+msgid "definir id_tarifa"
 msgstr ""
 
 #: menus/view/traducir_menu.phtml:108
-msgid "tarifa <-> tipus dactivitat"
+msgid "id_tarifa <-> tipus dactivitat"
 msgstr ""
 
 #: menus/view/traducir_menu.phtml:109
@@ -8751,7 +8751,7 @@ msgid "tarifes per casa i any"
 msgstr ""
 
 #: menus/view/traducir_menu.phtml:110
-msgid "activ -> tarifa"
+msgid "activ -> id_tarifa"
 msgstr ""
 
 #: menus/view/traducir_menu.phtml:112
@@ -8973,7 +8973,7 @@ msgid "nuevo curso"
 msgstr ""
 
 #: menus/view/traducir_menu.phtml:186
-msgid "tarifa <-> tipo actividad"
+msgid "id_tarifa <-> tipo actividad"
 msgstr ""
 
 #: menus/view/traducir_menu.phtml:187
@@ -10166,7 +10166,7 @@ msgid "grupos de casas"
 msgstr ""
 
 #: casas/view/ubi_resumen.html.twig:45
-msgid "incremeto tarifa"
+msgid "incremeto id_tarifa"
 msgstr ""
 
 #: casas/view/ubi_resumen.html.twig:46

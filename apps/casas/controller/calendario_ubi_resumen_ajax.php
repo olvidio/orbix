@@ -6,6 +6,7 @@ use casas\model\entity\GestorUbiGasto;
 use casas\model\entity\Ingreso;
 use ubis\model\entity\CasaDl;
 use ubis\model\entity\GestorCasaPeriodo;
+use ubis\model\entity\GestorTarifaUbi;
 use ubis\model\entity\TarifaUbi;
 use web\TiposActividades;
 use web\DateTimeLocal;
@@ -45,21 +46,18 @@ $plazas_min = $oCasa->getPlazas_min();
 
 $GesTipoTarifa = new GestorTipoTarifa();
 $cTipoTarifas = $GesTipoTarifa->getTipoTarifas(array('sfsv' => $isfsv));
+$gesTarifaUbi = new GestorTarifaUbi();
 foreach ($cTipoTarifas as $oTipoTarifa) {
     $id_tarifa = $oTipoTarifa->getId_tarifa();
     $a_tarifas_actual[$id_tarifa]['modo'] = $oTipoTarifa->getModo();
     $a_tarifas_actual[$id_tarifa]['letra'] = $oTipoTarifa->getLetra();
 
-    $oTarifa = new TarifaUbi();
-    $oTarifa->setId_tarifa($id_tarifa);
-    $oTarifa->setId_ubi($Qid_ubi);
-    $oTarifa->setYear($any_actual);
-
+    $cTarifasUbi = $gesTarifaUbi->getTarifas(['id_tarifa' => $id_tarifa, 'id_ubi' => $Qid_ubi, 'year' => $any_actual]);
+    $oTarifa = $cTarifasUbi[0];
     $a_tarifas_actual[$id_tarifa]['cantidad'] = $oTarifa->getCantidad();
-    $oTarifaPrevision = new TarifaUbi();
-    $oTarifaPrevision->setId_tarifa($id_tarifa);
-    $oTarifaPrevision->setId_ubi($Qid_ubi);
-    $oTarifaPrevision->setYear($any_prev);
+
+    $cTarifasUbi = $gesTarifaUbi->getTarifas(['id_tarifa' => $id_tarifa, 'id_ubi' => $Qid_ubi, 'year' => $any_prev]);
+    $oTarifaPrevision = $cTarifasUbi[0];
 
     if (is_object($oTarifaPrevision)) {
         $a_tarifas_prev[$id_tarifa]['id_item'] = $oTarifaPrevision->getId_item();
@@ -193,7 +191,7 @@ foreach ($cActividades as $oActividad) {
         $num_asistentes = $oIngreso->getNum_asistentes();
         if (empty($num_asistentes)) $num_asistentes = $plazas_min;
         $asistencias = $num_dias * $num_asistentes;
-        // si la tarifa es modo 1 no tiene en cuenta los dias de la actividad
+        // si la id_tarifa es modo 1 no tiene en cuenta los dias de la actividad
         if ($a_tarifas_prev[$id_tarifa]['modo'] == 1) {
             $ingresos = round($num_asistentes * $a_tarifas_prev[$id_tarifa]['cantidad'], 2);
             $ingresos_actual = round($num_asistentes * $a_tarifas_actual[$id_tarifa]['cantidad'], 2);
@@ -210,7 +208,7 @@ foreach ($cActividades as $oActividad) {
     }
     //$p_ia=number_format($ingresos, 2, ',', '.');
     $a_actividades[] = array('nom' => $nom, 'dias' => $num_dias, 'asistentes' => $num_asistentes, 'asistencias' => $asistencias,
-        'tarifa' => $letra_tarifa, 'ingresos' => $ingresos);
+        'id_tarifa' => $letra_tarifa, 'ingresos' => $ingresos);
     //totales
     $p_tac = $i;
     $p_tda += $num_dias;
@@ -223,7 +221,7 @@ foreach ($cActividades as $oActividad) {
 if ($i < 1) {
     $p_tac = 1;
 }
-// tarifa media ponderada
+// id_tarifa media ponderada
 $p_tarifa = empty($p_ta) ? 0 : round($p_tia / $p_ta, 2);
 $p_ti_min = round($p_ta_min * $p_tarifa, 2);
 
@@ -264,7 +262,7 @@ if (!empty($Qseccion)) {
     <input type="hidden" name="que" value="update_inc">
     <table>
         <tr>
-            <td><?= _("tarifa"); ?></td>
+            <td><?= _("id_tarifa"); ?></td>
             <?php
             $tar_txt = '';
             $cantidad_txt = '';
@@ -320,7 +318,7 @@ if (!empty($Qseccion)) {
     <li><span class=contenido><?= $p_ip ?></span> [p_ip] <?= $p_ip_txt ?></li>
     <li><span class=contenido><?= $p_ta_min ?></span> [p_ta_min] <?= $p_ta_min_txt ?></li>
     <li><span class=contenido><?= $p_tarifa ?> €</span>
-        [p_tarifa] <?= _("tarifa media ponderada: prev.ing.actividades/prev.asistencias: [p_tia]/[p_ta]") ?></li>
+        [p_tarifa] <?= _("id_tarifa media ponderada: prev.ing.actividades/prev.asistencias: [p_tia]/[p_ta]") ?></li>
 </ul>
 <table border=1>
     <tr>
@@ -331,7 +329,7 @@ if (!empty($Qseccion)) {
         <td><?= _("nº de días") ?></td>
         <td><?= _("previsión de asistentes") ?></td>
         <td><?= _("nº total de asistencias") ?></td>
-        <td><?= _("tarifa") ?></td>
+        <td><?= _("id_tarifa") ?></td>
         <td><?= _("ingresos previstos de asistentes") ?></td>
     </tr>
     <?php
@@ -342,7 +340,7 @@ if (!empty($Qseccion)) {
             <td><?= $actividad['dias'] ?></td>
             <td><?= $actividad['asistentes'] ?></td>
             <td><?= $actividad['asistencias'] ?></td>
-            <td><?= $actividad['tarifa'] ?></td>
+            <td><?= $actividad['id_tarifa'] ?></td>
             <td><?= $actividad['ingresos'] ?></td>
         </tr>
         <?php

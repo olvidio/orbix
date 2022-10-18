@@ -51,7 +51,7 @@ class PermisosActividades
         'economic' => 2,
         'sacd' => 4,
         'ctr' => 8,
-        'tarifa' => 16,
+        'id_tarifa' => 16,
         'cargos' => 32,
         'asistentes' => 64,
         'asistentesSacd' => 128,

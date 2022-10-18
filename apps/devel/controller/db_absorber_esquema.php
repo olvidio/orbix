@@ -47,7 +47,7 @@ av_cambios_anotados_dl_sf
 av_cambios_dl
 av_cambios_usuario
 x_config_schema
-// OJO revisar si el tipo tarifa es ok
+// OJO revisar si el tipo id_tarifa es ok
 $tabla = 'du_tarifas';
 $campos = 'id_ubi, id_tarifa, year, cantidad, observ';
 $aInserts[] = ['tabla' => $tabla, 'campos' => $campos];
@@ -71,7 +71,7 @@ $oAlterSchema->setSchemaDel($QEsquemaDel);
 $aInserts = [];
 
 $tabla = 'a_actividades_dl';
-// quito los campos: tarifa y tipo_horario(posible discordancia), dl_org (para que se llenen con el default de la dl destino).
+// quito los campos: id_tarifa y tipo_horario(posible discordancia), dl_org (para que se llenen con el default de la dl destino).
 $campos = 'id_activ, id_tipo_activ, nom_activ, id_ubi, desc_activ, f_ini, h_ini, f_fin, h_fin, precio, num_asistentes, status, observ, nivel_stgr, observ_material, lugar_esp, id_repeticion, publicado, id_tabla, plazas';
 $aInserts[] = ['tabla' => $tabla, 'campos' => $campos];
 $tabla = 'da_ingresos_dl'; // importa el orden: después de a_actividades_dl(id_activ)

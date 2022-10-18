@@ -111,7 +111,7 @@ switch ($Qsalida) {
         break;
     // Si se tiene instalado el modulo de procesos, no se usa, porque se va
     // a la página de nuevo para poder manejar mejor los permisos.
-    case 'tarifa':
+    case 'id_tarifa':
         $id_tipo_activ = $Qentrada;
         $aWhere = [];
         $aWhere['id_tipo_activ'] = $id_tipo_activ;

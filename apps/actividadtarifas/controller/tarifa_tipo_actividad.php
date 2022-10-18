@@ -28,7 +28,7 @@ $oHashMod->setUrl(core\ConfigGlobal::getWeb() . '/apps/actividadtarifas/controll
 $oHashMod->setCamposForm('id_item');
 $h_modificar = $oHashMod->linkSinVal();
 
-$txt_eliminar = _("¿Está seguro que desea quitar esta tarifa?");
+$txt_eliminar = _("¿Está seguro que desea quitar esta id_tarifa?");
 
 $a_campos = ['oPosicion' => $oPosicion,
     'h_ver' => $h_ver,

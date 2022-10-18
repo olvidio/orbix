@@ -488,7 +488,7 @@ class TipoActivTarifa extends core\ClasePropiedades
     {
         $nom_tabla = $this->getNomTabla();
         $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_tarifa'));
-        $oDatosCampo->setEtiqueta(_("tarifa"));
+        $oDatosCampo->setEtiqueta(_("id_tarifa"));
         return $oDatosCampo;
     }
 

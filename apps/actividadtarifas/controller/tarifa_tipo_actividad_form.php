@@ -6,9 +6,9 @@ use core\ConfigGlobal;
 use web\Desplegable;
 
 /**
- * Esta página muestra un formulario para asociar la tarifa a un tipo de actividad.
+ * Esta página muestra un formulario para asociar la id_tarifa a un tipo de actividad.
  * Si es nueva se puede escojer el tipo de actividad.
- * Si ya existe, sólo se puede modificar la tarifa.
+ * Si ya existe, sólo se puede modificar la id_tarifa.
  *
  * @package    delegacion
  * @subpackage    actividades

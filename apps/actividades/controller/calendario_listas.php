@@ -271,7 +271,7 @@ foreach (array_keys($aGrupos) as $key) {
                 $a_ubi_activ[$key][$a]['h_ini'] = $h_ini;
                 $a_ubi_activ[$key][$a]['h_fin'] = $h_fin;
                 $a_ubi_activ[$key][$a]['num_asistentes'] = '';
-                $a_ubi_activ[$key][$a]['tarifa'] = '';
+                $a_ubi_activ[$key][$a]['id_tarifa'] = '';
             } else {
                 $a_ubi_activ[$key][$a]['sfsv'] = $ssfsv;
                 $a_ubi_activ[$key][$a]['tipo_activ'] = "$sasistentes $sactividad $snom_tipo";
@@ -283,7 +283,7 @@ foreach (array_keys($aGrupos) as $key) {
                 $a_ubi_activ[$key][$a]['h_fin'] = $h_fin;
                 $a_ubi_activ[$key][$a]['num_asistentes'] = $num_asistentes;
                 $oTipoTarifa = new TipoTarifa($tarifa);
-                $a_ubi_activ[$key][$a]['tarifa'] = $oTipoTarifa->getLetra();
+                $a_ubi_activ[$key][$a]['id_tarifa'] = $oTipoTarifa->getLetra();
             }
 
             $a_ubi_activ[$key][$a]['ctr_encargados'] = ''; //inicializar
@@ -320,7 +320,7 @@ switch ($tipo) {
             _("hora inicio"),
             _("hora fin"),
             _("asistentes"),
-            _("tarifa"),
+            _("id_tarifa"),
             _("centros encargados"),
         ];
         break;
@@ -332,7 +332,7 @@ switch ($tipo) {
             _("hora inicio"),
             _("hora fin"),
             _("asistentes"),
-            _("tarifa"),
+            _("id_tarifa"),
             _("centros encargados"),
         ];
         break;

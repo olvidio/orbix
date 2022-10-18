@@ -227,8 +227,8 @@
 1080	{40,40}	por centro	tipo=planning_ctr	61	32768	20	t
 1074	{40,30}	lista por casas	periodo=any_actual&tipo_lista=ctrsEncargados&ver_ctr=si	45	65536	9	t
 1028	{30}	Tarifas	\N	0	2049	7	t
-1033	{30,10}	definir tarifa	\N	100	2049	7	t
-1040	{30,40}	activ -> tarifa	\N	128	2049	7	t
+1033	{30,10}	definir id_tarifa	\N	100	2049	7	t
+1040	{30,40}	activ -> id_tarifa	\N	128	2049	7	t
 1035	{30,20}	buscar crt	sasistentes=sr&sactividad=crt	71	2560	15	t
 1042	{35}	listas actividades	\N	0	2560	15	t
 1047	{35,20}	actividades-centros	tipo=sr	43	512	15	t
@@ -310,7 +310,7 @@
 1252	{90}	cve	\N	183	2050	3	t
 1255	{90,10}	buscar cve agd	sasistentes=agd&sactividad=cve	71	2050	3	t
 1241	{80}	ausencias	\N	186	8	8	t
-1293	{90,90,20}	tarifa <-> tipo actividad	\N	108	8	8	t
+1293	{90,90,20}	id_tarifa <-> tipo actividad	\N	108	8	8	t
 1247	{82,30}	lista por ctr	lista=list_activ&n_agd=n&sasistentes=n&sactividad=cve	147	2178	2	t
 1225	{110,40}	de cada ctr	tipo_ctr=sg&tipo_lista=cv	12	64	10	t
 1228	{110,50}	s que no han ido a la cv	\N	0	64	10	t
@@ -340,7 +340,7 @@
 1163	{50,110}	cambiar de fase	\N	130	8	8	t
 1258	{90,10}	Definir periodos	\N	7	8	8	t
 1263	{90,30}	nuevo planing	\N	141	34078719	8	t
-1292	{90,90,10}	definir tarifa	\N	100	8	8	t
+1292	{90,90,10}	definir id_tarifa	\N	100	8	8	t
 143	{40}	planning	\N	183	2064	12	t
 1396	{70,140}	cambiar de fase	id_tipo_activ=131	130	2	3	t
 1238	{70,50}	tipo encargo	clase_info=encargossacd\\model\\infoencargotipo	160	8	8	t
@@ -387,13 +387,13 @@
 1404	{30,50}	gastos casa	tipo_lista=datosEcGastos	45	1048576	9	t
 1403	{30,60}	Gestión económica	\N	45	1048576	9	t
 1409	{35}	Tarifas	\N	0	1048576	9	t
-1410	{35,10}	definir tarifa	\N	100	1048576	9	t
-1413	{35,40}	activ -> tarifa	\N	100	1048576	9	t
+1410	{35,10}	definir id_tarifa	\N	100	1048576	9	t
+1413	{35,40}	activ -> id_tarifa	\N	100	1048576	9	t
 503	{40}	actividades	\N	0	65536	9	t
 863	{50,10,80}	sf s y sg	id_tipo_activ=2[45]....&status=2&periodo=desdeHoy	71	32768	20	t
 1145	{50,100}	asignar centros	\N	43	32768	20	t
 1253	{90}	Nuevo calendario	\N	0	32768	20	t
-1291	{90,90,10}	definir tarifa	\N	128	32768	20	t
+1291	{90,90,10}	definir id_tarifa	\N	128	32768	20	t
 1233	{70,30}	instalar módulos	clase_info=permisos\\model\\infomodsinstalled	160	35651584	13	t
 1398	{70,50}	config esquema	\N	90	35651584	13	t
 1412	{35,30}	tarifas por casa y año	\N	73	1048576	9	t
@@ -419,11 +419,11 @@
 1422	{120,110}	Gestión de plazas	sasistentes=s,sg&sactividad=crt	169	64	10	t
 1426	{110,120}	Balance de plazas	sasistentes=s&sactividad=cv	170	64	10	t
 1200	{70,10}	propuestas	\N	87	8	8	t
-1037	{30,20}	tarifa <-> tipo de actividad	\N	108	2049	7	t
-1294	{90,90,20}	tarifa <-> tipo de actividad	\N	108	32768	20	t
+1037	{30,20}	id_tarifa <-> tipo de actividad	\N	108	2049	7	t
+1294	{90,90,20}	id_tarifa <-> tipo de actividad	\N	108	32768	20	t
 34	{10,40}	exportar	\N	92	33554432	13	t
 35	{10,50}	exportar a ficheros	accion=exportar	64	33554432	13	t
-1411	{35,20}	tarifa <-> tipo de actividad	\N	108	1048576	9	t
+1411	{35,20}	id_tarifa <-> tipo de actividad	\N	108	1048576	9	t
 1034	{20,20}	mover tabla a otra DB	\N	54	33554432	13	t
 1428	{20,30}	mover y cambiar nombre dl		192	33554432	13	t
 125	{30}	posibles ca	\N	1	2194	12	t

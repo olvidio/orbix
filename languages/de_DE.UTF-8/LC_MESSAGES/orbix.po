@@ -1015,7 +1015,7 @@ msgstr "gesamt"
 #: casas/controller/calendario_ubi_resumen_ajax.php:262
 #: casas/controller/calendario_ubi_resumen_ajax.php:320
 #: casas/controller/casa_ajax.php:98
-msgid "tarifa"
+msgid "id_tarifa"
 msgstr "Preisstufe"
 
 #: actividades/controller/calendario_ajax.php:463
@@ -2406,8 +2406,8 @@ msgstr "cl"
 msgid "no disponibles"
 msgstr "nicht verfügbar"
 
-#: actividadtarifas/controller/tarifa.php:11
-msgid "¿Está seguro de borrar esta tarifa?"
+#: actividadtarifas/controller/id_tarifa.php:11
+msgid "¿Está seguro de borrar esta id_tarifa?"
 msgstr "Sind Sie sicher, dass Sie diese Preisstufe löschen können?"
 
 #: actividadtarifas/controller/tarifa_ajax.php:29
@@ -2416,7 +2416,7 @@ msgstr "neu"
 
 #: actividadtarifas/controller/tarifa_ajax.php:53
 #, php-format
-msgid "tarifa %s"
+msgid "id_tarifa %s"
 msgstr "Preisstufe %s"
 
 #: actividadtarifas/controller/tarifa_ajax.php:63
@@ -2440,7 +2440,7 @@ msgstr "Abschnitt"
 #: actividadtarifas/controller/tarifa_ajax.php:87
 #: actividadtarifas/controller/tarifa_ajax.php:232
 msgid "id_tarifa"
-msgstr "id _ tarifa"
+msgstr "id _ id_tarifa"
 
 #: actividadtarifas/controller/tarifa_ajax.php:88
 msgid "se aplica a"
@@ -2455,7 +2455,7 @@ msgid "método"
 msgstr "Methode"
 
 #: actividadtarifas/controller/tarifa_ajax.php:163
-msgid "añadir tarifa"
+msgid "añadir id_tarifa"
 msgstr "Preisstufe hinzufügen"
 
 #: actividadtarifas/controller/tarifa_ajax.php:236
@@ -2464,22 +2464,22 @@ msgstr "Preisstufe hinzufügen"
 #: encargossacd/model/entity/encargo.class.php:678
 #: encargossacd/model/entity/encargosacdobserv.class.php:381
 #: procesos/model/entity/actividadprocesotarea.class.php:1079
-#: ubis/model/entity/tarifa.class.php:500
+#: ubis/model/entity/id_tarifa.class.php:500
 msgid "observ"
 msgstr "Anm."
 
 #: actividadtarifas/controller/tarifa_ajax.php:264
-msgid "nueva tarifa"
+msgid "nueva id_tarifa"
 msgstr "Neue Preisstufe"
 
 #: actividadtarifas/controller/tarifa_tipo_actividad.php:31
 #: actividadtarifas/controller/tarifa_tipo_actividad_form.php:35
 #: actividadtarifas/controller/tarifa_tipo_actividad_form.php:86
-msgid "¿Está seguro que desea quitar esta tarifa?"
+msgid "¿Está seguro que desea quitar esta id_tarifa?"
 msgstr "Sind Sie sicher, dass Sie diese Gebühr abschaffen wollen?"
 
 #: actividadtarifas/controller/tarifa_tipo_actividad_ajax.php:74
-msgid "añadir tarifa tipo"
+msgid "añadir id_tarifa tipo"
 msgstr "Preisstufeklasse hinzufügen"
 
 #: actividadtarifas/controller/tarifa_tipo_actividad_form.php:27
@@ -3952,7 +3952,7 @@ msgstr ""
 
 #: casas/controller/calendario_ubi_resumen_ajax.php:309
 msgid ""
-"tarifa media ponderada: prev.ing.actividades/prev.asistencias: [p_tia]/[p_ta]"
+"id_tarifa media ponderada: prev.ing.actividades/prev.asistencias: [p_tia]/[p_ta]"
 msgstr ""
 
 #: casas/controller/calendario_ubi_resumen_ajax.php:313
@@ -4499,7 +4499,7 @@ msgid "f_gasto"
 msgstr ""
 
 #: casas/model/entity/ubigasto.class.php:481
-#: ubis/model/entity/tarifa.class.php:488
+#: ubis/model/entity/id_tarifa.class.php:488
 msgid "cantidad"
 msgstr "Menge"
 
@@ -8579,7 +8579,7 @@ msgstr "Sitzname"
 msgid "id_region"
 msgstr "id _ region"
 
-#: ubis/model/entity/tarifa.class.php:476
+#: ubis/model/entity/id_tarifa.class.php:476
 msgid "id_item"
 msgstr "id _ item"
 
@@ -9562,7 +9562,7 @@ msgid "debe indicar el tipo de actividad"
 msgstr "Sie müssen die Art der Aktivität definieren"
 
 #: actividadtarifas/view/tarifa_tipo_actividad.phtml:65
-msgid "debe indicar la tarifa"
+msgid "debe indicar la id_tarifa"
 msgstr "Sie müssen die Preisstufe angeben"
 
 #: asistentes/view/activ_pendientes.phtml:6 menus/view/traducir_menu.phtml:117
@@ -10239,12 +10239,12 @@ msgstr "Preise"
 
 #: menus/view/traducir_menu.phtml:113 menus/view/traducir_menu.phtml:204
 #: menus/view/traducir_menu.phtml:218 menus/view/traducir_menu.phtml:422
-msgid "definir tarifa"
+msgid "definir id_tarifa"
 msgstr "Preise definieren"
 
 #: menus/view/traducir_menu.phtml:114 menus/view/traducir_menu.phtml:219
 #: menus/view/traducir_menu.phtml:423
-msgid "tarifa <-> tipo de actividad"
+msgid "id_tarifa <-> tipo de actividad"
 msgstr ""
 
 #: menus/view/traducir_menu.phtml:115 menus/view/traducir_menu.phtml:206
@@ -10256,8 +10256,8 @@ msgstr "Preise nach Haus und Jahr"
 
 #: menus/view/traducir_menu.phtml:116 menus/view/traducir_menu.phtml:221
 #, fuzzy
-#| msgid "añadir tarifa"
-msgid "activ -> tarifa"
+#| msgid "añadir id_tarifa"
+msgid "activ -> id_tarifa"
 msgstr "Preisstufe hinzufügen"
 
 #: menus/view/traducir_menu.phtml:118
@@ -10550,8 +10550,8 @@ msgstr "Auflistung Akten"
 
 #: menus/view/traducir_menu.phtml:205
 #, fuzzy
-#| msgid "tarifa <-> tipus dactivitat"
-msgid "tarifa <-> tipo actividad"
+#| msgid "id_tarifa <-> tipus dactivitat"
+msgid "id_tarifa <-> tipo actividad"
 msgstr "Preis <-> tipus dactivitat"
 
 #: menus/view/traducir_menu.phtml:208
@@ -11830,7 +11830,7 @@ msgstr "Neuer Nutzer"
 #~ msgstr ""
 #~ "Es scheint, dass %s kein ctr in \\\"Listen\\\" eingegeben worden ist"
 
-#~ msgid "tarifa <-> tipus dactivitat"
+#~ msgid "id_tarifa <-> tipus dactivitat"
 #~ msgstr "Preis <-> tipus dactivitat"
 
 #~ msgid "tarifes per casa i any"
@@ -11934,7 +11934,7 @@ msgstr "Neuer Nutzer"
 #~ msgstr "Sie müssen die Art der Aktivität definieren"
 
 #, fuzzy
-#~| msgid "debe indicar la tarifa"
+#~| msgid "debe indicar la id_tarifa"
 #~ msgid "Debe indicar el estado"
 #~ msgstr "Sie müssen die Preisstufe angeben"
 
@@ -12039,7 +12039,7 @@ msgstr "Neuer Nutzer"
 #~ msgstr "Sie müssen eingeben, ob es sich um sf oder sv handelt"
 
 #, fuzzy
-#~| msgid "debe indicar la tarifa"
+#~| msgid "debe indicar la id_tarifa"
 #~ msgid "debe indicar la fase de referencia"
 #~ msgstr "Sie müssen die Preisstufe angeben"
 
@@ -12049,7 +12049,7 @@ msgstr "Neuer Nutzer"
 #~ msgstr "Sie müssen die Art der Aktivität definieren"
 
 #, fuzzy
-#~| msgid "¿Está seguro de borrar esta tarifa?"
+#~| msgid "¿Está seguro de borrar esta id_tarifa?"
 #~ msgid "¿Está seguro de borrar esta condición?"
 #~ msgstr "Sind Sie sicher, dass Sie diese Preisstufe löschen können?"
 
@@ -12137,8 +12137,8 @@ msgstr "Neuer Nutzer"
 #~ msgstr "Haustypen"
 
 #, fuzzy
-#~| msgid "definir tarifa"
-#~ msgid "incremeto tarifa"
+#~| msgid "definir id_tarifa"
+#~ msgid "incremeto id_tarifa"
 #~ msgstr "Preise definieren"
 
 #, fuzzy
@@ -12350,12 +12350,12 @@ msgstr "Neuer Nutzer"
 #~ msgstr "Person hinzufügen"
 
 #, fuzzy
-#~| msgid "debe indicar la tarifa"
+#~| msgid "debe indicar la id_tarifa"
 #~ msgid "debe indicar a qué afecta"
 #~ msgstr "Sie müssen die Preisstufe angeben"
 
 #, fuzzy
-#~| msgid "debe indicar la tarifa"
+#~| msgid "debe indicar la id_tarifa"
 #~ msgid "debe indicar las fases"
 #~ msgstr "Sie müssen die Preisstufe angeben"
 

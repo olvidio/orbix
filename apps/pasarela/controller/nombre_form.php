@@ -29,7 +29,7 @@ $Qid_item = (string)filter_input(INPUT_POST, 'id_item');
 $miSfsv = 0;
 // -------------- MODIFICAR  --------------------
 if ($Qid_item !== 'nuevo') {
-    $txt_eliminar = _("¿Está seguro que desea quitar esta tarifa?");
+    $txt_eliminar = _("¿Está seguro que desea quitar esta id_tarifa?");
 
     $Qid_tipo_activ = (string)filter_input(INPUT_POST, 'id_tipo_activ');
     $oTipoActiv = new web\TiposActividades($id_tipo_activ);

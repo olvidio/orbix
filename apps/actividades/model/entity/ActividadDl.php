@@ -84,7 +84,7 @@ class ActividadDl extends ActividadAll
         $aDades['nivel_stgr'] = $this->inivel_stgr;
         $aDades['observ_material'] = $this->sobserv_material;
         $aDades['lugar_esp'] = $this->slugar_esp;
-        $aDades['tarifa'] = $this->itarifa;
+        $aDades['id_tarifa'] = $this->itarifa;
         $aDades['id_repeticion'] = $this->iid_repeticion;
         $aDades['publicado'] = $this->bpublicado;
         //$aDades['id_tabla'] = $this->sid_tabla;
@@ -117,7 +117,7 @@ class ActividadDl extends ActividadAll
 					nivel_stgr               = :nivel_stgr,
 					observ_material          = :observ_material,
 					lugar_esp                = :lugar_esp,
-					tarifa                   = :tarifa,
+					id_tarifa                   = :id_tarifa,
 					id_repeticion            = :id_repeticion,
 					publicado   	         = :publicado,
 					plazas                 	 = :plazas";
@@ -147,10 +147,10 @@ class ActividadDl extends ActividadAll
             $this->setAllAtributes($aDades);
         } else {
             // INSERT
-            //$campos="(id_tipo_activ,dl_org,nom_activ,id_ubi,desc_activ,f_ini,h_ini,f_fin,h_fin,tipo_horario,precio,num_asistentes,status,observ,nivel_stgr,observ_material,lugar_esp,tarifa,id_repeticion,publicado,id_tabla,plazas)";
-            $campos = "(id_tipo_activ,dl_org,nom_activ,id_ubi,desc_activ,f_ini,h_ini,f_fin,h_fin,tipo_horario,precio,num_asistentes,status,observ,nivel_stgr,observ_material,lugar_esp,tarifa,id_repeticion,publicado,plazas)";
-            //$valores="(:id_tipo_activ,:dl_org,:nom_activ,:id_ubi,:desc_activ,:f_ini,:h_ini,:f_fin,:h_fin,:tipo_horario,:precio,:num_asistentes,:status,:observ,:nivel_stgr,:observ_material,:lugar_esp,:tarifa,:id_repeticion,:publicado,:id_tabla,:plazas)";
-            $valores = "(:id_tipo_activ,:dl_org,:nom_activ,:id_ubi,:desc_activ,:f_ini,:h_ini,:f_fin,:h_fin,:tipo_horario,:precio,:num_asistentes,:status,:observ,:nivel_stgr,:observ_material,:lugar_esp,:tarifa,:id_repeticion,:publicado,:plazas)";
+            //$campos="(id_tipo_activ,dl_org,nom_activ,id_ubi,desc_activ,f_ini,h_ini,f_fin,h_fin,tipo_horario,precio,num_asistentes,status,observ,nivel_stgr,observ_material,lugar_esp,id_tarifa,id_repeticion,publicado,id_tabla,plazas)";
+            $campos = "(id_tipo_activ,dl_org,nom_activ,id_ubi,desc_activ,f_ini,h_ini,f_fin,h_fin,tipo_horario,precio,num_asistentes,status,observ,nivel_stgr,observ_material,lugar_esp,id_tarifa,id_repeticion,publicado,plazas)";
+            //$valores="(:id_tipo_activ,:dl_org,:nom_activ,:id_ubi,:desc_activ,:f_ini,:h_ini,:f_fin,:h_fin,:tipo_horario,:precio,:num_asistentes,:status,:observ,:nivel_stgr,:observ_material,:lugar_esp,:id_tarifa,:id_repeticion,:publicado,:id_tabla,:plazas)";
+            $valores = "(:id_tipo_activ,:dl_org,:nom_activ,:id_ubi,:desc_activ,:f_ini,:h_ini,:f_fin,:h_fin,:tipo_horario,:precio,:num_asistentes,:status,:observ,:nivel_stgr,:observ_material,:lugar_esp,:id_tarifa,:id_repeticion,:publicado,:plazas)";
             if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {
                 $sClauError = 'ActividadDl.insertar.prepare';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
@@ -317,7 +317,7 @@ class ActividadDl extends ActividadAll
         if (array_key_exists('nivel_stgr', $aDades)) $this->setNivel_stgr($aDades['nivel_stgr']);
         if (array_key_exists('observ_material', $aDades)) $this->setObserv_material($aDades['observ_material']);
         if (array_key_exists('lugar_esp', $aDades)) $this->setLugar_esp($aDades['lugar_esp']);
-        if (array_key_exists('tarifa', $aDades)) $this->setTarifa($aDades['tarifa']);
+        if (array_key_exists('id_tarifa', $aDades)) $this->setTarifa($aDades['id_tarifa']);
         if (array_key_exists('id_repeticion', $aDades)) $this->setId_repeticion($aDades['id_repeticion']);
         if (array_key_exists('publicado', $aDades)) $this->setPublicado($aDades['publicado']);
         if (array_key_exists('id_tabla', $aDades)) $this->setId_tabla($aDades['id_tabla']);

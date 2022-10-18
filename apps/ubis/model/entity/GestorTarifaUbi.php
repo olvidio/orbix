@@ -37,32 +37,6 @@ class GestorTarifaUbi Extends core\ClaseGestor {
 	/**
 	 * retorna l'array d'objectes de tipus Tarifa
 	 *
-	 * @param string sQuery la query a executar.
-	 * @return array Una col·lecció d'objectes de tipus Tarifa
-	 */
-	function getTarifasQuery($sQuery='') {
-		$oDbl = $this->getoDbl();
-		$oTarifaSet = new core\Set();
-		if (($oDbl->query($sQuery)) === FALSE) {
-			$sClauError = 'GestorTarifa.query';
-			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
-			return FALSE;
-		}
-		foreach ($oDbl->query($sQuery) as $aDades) {
-			$a_pkey = array('id_ubi' => $aDades['id_ubi'],
-							'id_tarifa' => $aDades['id_tarifa'],
-							'year' => $aDades['year'],
-							'id_serie' => $aDades['id_serie']);
-			$oTarifa= new TarifaUbi($a_pkey);
-			$oTarifa->setAllAtributes($aDades);
-			$oTarifaSet->add($oTarifa);
-		}
-		return $oTarifaSet->getTot();
-	}
-
-	/**
-	 * retorna l'array d'objectes de tipus Tarifa
-	 *
 	 * @param array aWhere associatiu amb els valors de les variables amb les quals farem la query
 	 * @param array aOperators associatiu amb els valors dels operadors que cal aplicar a cada variable
 	 * @return array Una col·lecció d'objectes de tipus Tarifa
@@ -105,11 +79,8 @@ class GestorTarifaUbi Extends core\ClaseGestor {
 			return FALSE;
 		}
 		foreach ($oDblSt as $aDades) {
-			$a_pkey = array('id_ubi' => $aDades['id_ubi'],
-							'id_tarifa' => $aDades['id_tarifa'],
-							'year' => $aDades['year'],
-							'id_serie' => $aDades['id_serie']);
-			$oTarifa= new TarifaUbi($a_pkey);
+			$id_item = $aDades['id_item'];
+			$oTarifa= new TarifaUbi($id_item);
 			$oTarifa->setAllAtributes($aDades);
 			$oTarifaSet->add($oTarifa);
 		}

@@ -46,12 +46,14 @@ $oHashMod->setUrl(core\ConfigGlobal::getWeb() . '/apps/actividadtarifas/controll
 $oHashMod->setCamposForm('que!id_item!letra');
 $h_modificar = $oHashMod->linkSinVal();
 
+$txt_eliminar = _("¿Está seguro que quiere eliminar esta tarifa?");
 $a_campos = ['oPosicion' => $oPosicion,
     'h_ver' => $h_ver,
     'h_nuevo' => $h_nuevo,
     'h_modificar' => $h_modificar,
     'oForm' => $oForm,
     'oFormAny' => $oFormAny,
+    'txt_eliminar' => $txt_eliminar,
 ];
 
 $oView = new core\View('actividadtarifas/controller');

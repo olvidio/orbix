@@ -260,7 +260,7 @@ if (($Qque == "list_activ_compl")
 } else {
     $ver_hora = 0;
 }
-// ver tarifa y sacd si...
+// ver id_tarifa y sacd si...
 if (!(($_SESSION['oPerm']->have_perm_oficina('sg'))
     and ($Qque == "list_activ_inv_sg")
     and !($_SESSION['oPerm']->have_perm_oficina('admin')))) {

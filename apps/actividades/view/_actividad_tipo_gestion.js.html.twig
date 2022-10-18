@@ -1,0 +1,161 @@
+<script>
+    fnjs_asistentes=function(){
+    var url='{{ url }}';
+    var isfsv=$('#isfsv_val').val();
+    if (isfsv==3) {
+    $('#iasistentes_val').hide();
+    $('#iactividad_val').hide();
+    fnjs_nom_tipo();
+} else {
+    var parametros='modo=buscar&salida=asistentes&entrada='+isfsv+'{{ h|raw }}';
+
+    $.ajax({
+    url: url,
+    type: 'post',
+    data: parametros,
+    dataType: 'html'
+})
+    .done(function (rta_txt) {
+    $('#lst_asistentes').html(rta_txt);
+    {% if procesos_installed %}
+    fnjs_actualizar_fases();
+    {% endif %}
+});
+    // borrar el resto.
+    $('#iasistentes_val').val(".");
+    $('#iactividad_val').val(".");
+    $('#inom_tipo_val').val("...");
+}
+    // Si está el campo dl_org, Al cambiar sf/sv, también debe
+    // cambiarse el deplegable de dl_org.
+    var dl_org=$('#dl_org').val
+    if (dl_org) {
+    var parametros='modo=buscar&salida=dl_org&entrada='+isfsv+'{{ h|raw }}';
+
+    $.ajax({
+    url: url,
+    type: 'post',
+    data: parametros,
+    dataType: 'html'
+})
+    .done(function (rta_txt) {
+    $('#dl_org').html(rta_txt);
+});
+}
+    // y ya puestos el del filtro lugar:
+    var filtro_lugar=$('#filtro_lugar').val
+    if (filtro_lugar) {
+    var parametros='modo=buscar&salida=filtro_lugar&entrada='+isfsv+'{{ h|raw }}';
+
+    $.ajax({
+    url: url,
+    type: 'post',
+    data: parametros,
+    dataType: 'html'
+})
+    .done(function (rta_txt) {
+    $('#filtro_lugar').html(rta_txt);
+});
+}
+}
+    fnjs_actividad=function(){
+    var url='{{ url }}';
+    var isfsv=$('#isfsv_val').val();
+    var iasistentes=$('#iasistentes_val').val();
+    var parametros='modo=buscar&salida=actividad_extendida&entrada='+isfsv+iasistentes+'{{ h|raw }}';
+    $.ajax({
+    url: url,
+    type: 'post',
+    data: parametros,
+    dataType: 'html'
+})
+    .done(function (rta_txt) {
+    $('#lst_actividad').html(rta_txt);
+    {% if procesos_installed %}
+    fnjs_actualizar_fases();
+    {% endif %}
+});
+}
+    fnjs_nom_tipo=function(){
+    var url='{{ url }}';
+    var isfsv=$('#isfsv_val').val();
+    var iasistentes=$('#iasistentes_val').val();
+    var iactividad=$('#iactividad_val').val();
+    var parametros='modo=buscar&salida=nom_tipo_tabla&entrada='+isfsv+iasistentes+iactividad+'{{ h|raw }}';
+    $.ajax({
+    url: url,
+    type: 'post',
+    data: parametros,
+    dataType: 'html'
+})
+    .done(function (rta_txt) {
+    $('#lst_nom_tipo').html(rta_txt);
+    {% if procesos_installed %}
+    fnjs_actualizar_fases();
+    {% endif %}
+});
+}
+    fnjs_id_activ=function(){
+    var url='{{ url }}';
+    var que=$('#que').val();
+    var isfsv=$('#isfsv_val').val();
+    var iasistentes=$('#iasistentes_val').val();
+    var iactividad=$('#iactividad_val').val();
+    var inom_tipo=$('#inom_tipo_val').val();
+    var id_tipo_activ=isfsv+iasistentes+iactividad+inom_tipo;
+
+    $('#id_tipo_activ').val(id_tipo_activ);
+    // buscar la id_tarifa para este tipo de actividad
+    var parametros='modo=buscar&salida=id_tarifa&entrada='+id_tipo_activ+'{{ h|raw }}';
+    $.ajax({
+    url: url,
+    type: 'post',
+    data: parametros
+})
+    .done(function (rta_txt) {
+    $('#id_tarifa').val(rta_txt);
+    {% if procesos_installed %}
+    fnjs_actualizar_fases();
+    {% endif %}
+});
+}
+    fnjs_act_id_activ=function(){
+    var url='{{ url }}';
+    var que=$('#que').val();
+    var isfsv=$('#isfsv_val').val();
+    var iasistentes=$('#iasistentes_val').val();
+    var iactividad=$('#iactividad_val').val();
+    var inom_tipo=$('#inom_tipo_val').val();
+    var id_tipo_activ=isfsv+iasistentes+iactividad+inom_tipo;
+
+    $('#id_tipo_activ').val(id_tipo_activ);
+    // buscar la id_tarifa para este tipo de actividad
+    var parametros='modo=buscar&salida=id_tarifa&entrada='+id_tipo_activ+'{{ h|raw }}';
+    $.ajax({
+    url: url,
+    type: 'post',
+    data: parametros
+})
+    .done(function (rta_txt) {
+    $('#id_tarifa').val(rta_txt);
+});
+    // buscar el desplegable dl_org segun permisos en procesos
+    // Como también afecta al status de la actividad, mejor rehacer toda la página.
+    {% if procesos_installed %}
+    url = '{{ url_act }}';
+    var parametros='refresh=1&id_tipo_activ='+id_tipo_activ+'{{ h_act|raw }}';
+    $.ajax({
+    url: url,
+    type: 'post',
+    data: parametros
+})
+    .done(function (rta_txt) {
+    $('#main').html(rta_txt);
+});
+    {% endif %}
+
+    if ( que=="cambiar_tipo" && confirm ("{{ "¿Quiere cambiar el nombre de la actividad?"|trans }}") ) {
+    fnjs_generarNomActiv('#modifica');
+}
+}
+</script>

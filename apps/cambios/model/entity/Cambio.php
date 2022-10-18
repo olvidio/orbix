@@ -455,7 +455,7 @@ class Cambio extends core\ClasePropiedades
                 $oFNew = new DateTimeLocal($sValor_new);
                 $sValor_new = $oFNew->getFromLocal();
             }
-            if ($sPropiedad == 'tarifa') {
+            if ($sPropiedad == 'id_tarifa') {
                 $gesTarifas = new GestorTipoTarifa();
                 $aTarifas = $gesTarifas->getArrayTipoTarifas();
                 $sValor_old = empty($sValor_old) ? $sValor_old : $aTarifas[$sValor_old];

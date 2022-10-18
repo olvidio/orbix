@@ -136,7 +136,7 @@ if (!empty($Qid_activ)) { // caso de modificar
     // si ya le digo un tipo de actividad, sobre-escribo el parametro isfsv:
     if (!empty($id_tipo_activ)) {
         $isfsv = (integer)substr($id_tipo_activ, 0, 1);
-        // También prodria buscar la tarifa:
+        // También prodria buscar la id_tarifa:
         $aWhereT = [];
         $aWhereT['id_tipo_activ'] = $id_tipo_activ;
         $aWhereT['_ordre'] = 'id_serie';
@@ -255,7 +255,7 @@ $oDesplDelegacionesOrg->setOpcion_sel($dl_org);
 
 $oGesTipoTarifa = new GestorTipoTarifa();
 $oDesplPosiblesTipoTarifas = $oGesTipoTarifa->getListaTipoTarifas($isfsv);
-$oDesplPosiblesTipoTarifas->setNombre('tarifa');
+$oDesplPosiblesTipoTarifas->setNombre('id_tarifa');
 $oDesplPosiblesTipoTarifas->setOpcion_sel($tarifa);
 
 $oGesNivelStgr = new GestorNivelStgr();
@@ -269,7 +269,7 @@ $oDesplRepeticion->setNombre('id_repeticion');
 $oDesplRepeticion->setOpcion_sel($id_repeticion);
 
 $oHash = new web\Hash();
-$camposForm = 'status!dl_org!f_fin!f_ini!h_fin!h_ini!id_repeticion!id_ubi!lugar_esp!mod!nivel_stgr!nom_activ!nombre_ubi!observ!precio!tarifa!publicado!plazas';
+$camposForm = 'status!dl_org!f_fin!f_ini!h_fin!h_ini!id_repeticion!id_ubi!lugar_esp!mod!nivel_stgr!nom_activ!nombre_ubi!observ!precio!id_tarifa!publicado!plazas';
 $camposNo = 'mod';
 if ($Qmod == 'nuevo') {
     $camposForm .= '!iactividad_val!iasistentes_val!inom_tipo_val!isfsv_val';

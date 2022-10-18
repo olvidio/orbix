@@ -13,7 +13,7 @@
 350	49	status	\N	\N	f	f
 351	49	observ	\N	\N	f	f
 352	49	nivel_stgr	\N	\N	f	f
-353	49	tarifa	\N	\N	f	f
+353	49	id_tarifa	\N	\N	f	f
 354	50	id_nom	\N	\N	f	f
 355	50	puede_agd	\N	\N	f	f
 356	50	observ	\N	\N	f	f
@@ -87,7 +87,7 @@
 467	64	nivel_stgr	\N	\N	f	f
 468	64	observ_material	\N	\N	f	f
 469	64	lugar_esp	\N	\N	f	f
-470	64	tarifa	\N	\N	f	f
+470	64	id_tarifa	\N	\N	f	f
 471	64	id_repeticion	\N	\N	f	f
 472	64	id_tabla	\N	\N	f	f
 473	64	plazas	\N	\N	f	f
@@ -109,7 +109,7 @@
 486	65	nivel_stgr	\N	\N	f	f
 487	65	observ_material	\N	\N	f	f
 488	65	lugar_esp	\N	\N	f	f
-489	65	tarifa	\N	\N	f	f
+489	65	id_tarifa	\N	\N	f	f
 490	65	id_repeticion	\N	\N	f	f
 491	65	id_tabla	\N	\N	f	f
 492	65	plazas	\N	\N	f	f

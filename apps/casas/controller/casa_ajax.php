@@ -57,12 +57,12 @@ switch ($Qque) {
         $nom_activ = $oActividad->getNom_activ();
         $id_tipo_activ = $oActividad->getId_tipo_activ();
         $dl_org = $oActividad->getDl_org();
-        $tarifa = $oActividad->getTarifa();
+        $id_tarifa = $oActividad->getTarifa();
         $precio = $oActividad->getPrecio();
 
         // permiso para tarifas
         $_SESSION['oPermActividades']->setActividad($Qid_activ, $id_tipo_activ, $dl_org);
-        $oPermTar = $_SESSION['oPermActividades']->getPermisoActual('tarifa'); //tarifas
+        $oPermTar = $_SESSION['oPermActividades']->getPermisoActual('id_tarifa'); //tarifas
 
         $oTipoActiv = new TiposActividades($id_tipo_activ);
         $oGesTipoTarifa = new GestorTipoTarifa();
@@ -70,11 +70,11 @@ switch ($Qque) {
 
         if ($oPermTar->have_perm_action('modificar')) {
             $oDesplPosiblesTipoTarifas = $oGesTipoTarifa->getListaTipoTarifas($isfsv);
-            $oDesplPosiblesTipoTarifas->setNombre('tarifa');
-            $oDesplPosiblesTipoTarifas->setOpcion_sel($tarifa);
+            $oDesplPosiblesTipoTarifas->setNombre('id_tarifa');
+            $oDesplPosiblesTipoTarifas->setOpcion_sel($id_tarifa);
             $tarifa_html = $oDesplPosiblesTipoTarifas->desplegable();
         } else {
-            $oTipoTarifa = new TipoTarifa($tarifa);
+            $oTipoTarifa = new TipoTarifa($id_tarifa);
             $tarifa_html = $oTipoTarifa->getLetra();
         }
 
@@ -84,7 +84,7 @@ switch ($Qque) {
         $observ = $oIngreso->getObserv();
 
         $oHash = new web\Hash();
-        $oHash->setCamposForm('tarifa!precio!ingresos!num_asistentes!observ');
+        $oHash->setCamposForm('id_tarifa!precio!ingresos!num_asistentes!observ');
         $oHash->setCamposNo('que');
         $a_camposHidden = array(
             'que' => '',
@@ -95,7 +95,7 @@ switch ($Qque) {
         $txt = "<form id='frm_ingreso'>";
         $txt .= '<h3>' . _("Actividad") . ':</h3>';
         $txt .= '<h5>' . $nom_activ . '</h5>';
-        $txt .= _("tarifa") . ": $tarifa_html<br>" . _("precio") . " <input type=text size=8 name=precio value=\"$precio\">";
+        $txt .= _("id_tarifa") . ": $tarifa_html<br>" . _("precio") . " <input type=text size=8 name=precio value=\"$precio\">";
         $txt .= '<h3>' . _("Ingreso") . ':</h3>';
         $txt .= $oHash->getCamposHtml();
         $txt .= _("ingresos reales") . "<input type=text size=12 name=ingresos value=\"$ingresos\">   " . _("asistentes") . " <input type=text size=12 name=num_asistentes value=\"$num_asistentes\">";
@@ -197,7 +197,7 @@ switch ($Qque) {
                 $id_tipo_activ = $oActividad->getId_tipo_activ();
                 $nom_activ = $oActividad->getNom_activ();
                 $dl_org = $oActividad->getDl_org();
-                $tarifa = $oActividad->getTarifa();
+                $id_tarifa = $oActividad->getTarifa();
                 $precio = $oActividad->getPrecio();
                 $oF_ini = $oActividad->getF_ini();
                 $oF_fin = $oActividad->getF_fin();
@@ -226,9 +226,11 @@ switch ($Qque) {
                     $permiso = '';
                 }
 
-                $oTipoTarifa = new TipoTarifa(array('tarifa' => $tarifa));
+                $oTipoTarifa = new TipoTarifa(array('id_tarifa' => $id_tarifa));
                 $modo = $oTipoTarifa->getModo();
-                $oTarifa = new TarifaUbi(array('id_ubi' => $id_ubi, 'tarifa' => $tarifa, 'year' => $Qyear));
+
+                $cTarifasUbi = $gesTarifaUbi->getTarifas(['id_tarifa' => $id_tarifa, 'id_ubi' => $id_ubi, 'year' => $Qyear]);
+                $oTarifa = $cTarifasUbi[0];
                 $cantidad = $oTarifa->getCantidad();
                 if (empty($precio)) {
                     $flag = ($factor_dias != 1) ? '*' : '';
@@ -244,11 +246,11 @@ switch ($Qque) {
                 }
                 $a_valores[$id_ubi][$a][1] = $oF_ini->getFromLocal();
                 $a_valores[$id_ubi][$a][2] = $oF_fin->getFromLocal();
-                // trec les dates del nom perque ocupi menys.
+                // Quito las fechas del nombre para que ocupe menos.
                 //$nom_activ = preg_replace('/\(.*\)(.*)/','\1',$nom_activ);
                 $oTipoActiv = new TiposActividades($id_tipo_activ);
                 $nom_activ = $oTipoActiv->getNomGral();
-                if ($permiso == 'modificar') {
+                if ($permiso === 'modificar') {
                     $script = "fnjs_modificar($id_activ)";
                     $a_valores[$id_ubi][$a][3] = array('script' => $script, 'valor' => $nom_activ);
                 } else {
@@ -385,7 +387,7 @@ switch ($Qque) {
     case "guardar":
         $Qid_activ = (integer)filter_input(INPUT_POST, 'id_activ');
         $Qprecio = (integer)filter_input(INPUT_POST, 'precio');
-        $Qtarifa = (string)filter_input(INPUT_POST, 'tarifa');
+        $Q_id_tarifa = (string)filter_input(INPUT_POST, 'id_tarifa');
 
         $Qingresos = (integer)filter_input(INPUT_POST, 'ingresos');
         $Qnum_asistentes = (integer)filter_input(INPUT_POST, 'num_asistentes');
@@ -394,7 +396,7 @@ switch ($Qque) {
         if (!empty($Qid_activ)) {
             $oActividad = new Actividad($Qid_activ);
             $oActividad->DBCarregar();
-            isset($Qtarifa) ? $oActividad->setTarifa($Qtarifa) : '';
+            isset($Q_id_tarifa) ? $oActividad->setTarifa($Q_id_tarifa) : '';
             if (isset($Qprecio)) {
                 $Qprecio = str_replace(',', '.', $Qprecio);
                 $oActividad->setPrecio($Qprecio);
@@ -483,7 +485,7 @@ switch ($Qque) {
                 $h_ini = $oActividad->getH_ini();
                 $f_fin = $oActividad->getF_fin()->getFromLocal();
                 $h_fin = $oActividad->getH_fin();
-                $tarifa = $oActividad->getTarifa();
+                $id_tarifa = $oActividad->getTarifa();
                 $observ = $oActividad->getObserv();
 
                 if (strlen($h_ini)) {
@@ -557,7 +559,7 @@ switch ($Qque) {
                     }
                 }
 
-                $oTipoTarifa = new TipoTarifa(array('tarifa' => $tarifa));
+                $oTipoTarifa = new TipoTarifa(array('id_tarifa' => $id_tarifa));
                 $letra_tarifa = $oTipoTarifa->getLetra();
 
                 $a_valores[$id_ubi][$a][1] = $f_ini;

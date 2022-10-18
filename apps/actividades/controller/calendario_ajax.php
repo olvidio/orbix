@@ -149,7 +149,7 @@ switch ($Qque) {
 
         $oGesTipoTarifa = new GestorTipoTarifa();
         $oDesplPosiblesTipoTarifas = $oGesTipoTarifa->getListaTipoTarifas($isfsv);
-        $oDesplPosiblesTipoTarifas->setNombre('tarifa');
+        $oDesplPosiblesTipoTarifas->setNombre('id_tarifa');
         $oDesplPosiblesTipoTarifas->setOpcion_sel($tarifa);
 
         $oGesNivelStgr = new GestorNivelStgr();
@@ -163,7 +163,7 @@ switch ($Qque) {
         $oDesplRepeticion->setOpcion_sel($id_repeticion);
 
         $oHash = new web\Hash();
-        $camposForm = 'dl_org!f_fin!f_ini!h_fin!h_ini!iactividad_val!iasistentes_val!id_repeticion!id_ubi!inom_tipo_val!isfsv_val!lugar_esp!nivel_stgr!nom_activ!nombre_ubi!observ!plazas!precio!publicado!status!tarifa';
+        $camposForm = 'dl_org!f_fin!f_ini!h_fin!h_ini!iactividad_val!iasistentes_val!id_repeticion!id_ubi!inom_tipo_val!isfsv_val!lugar_esp!nivel_stgr!nom_activ!nombre_ubi!observ!plazas!precio!publicado!status!id_tarifa';
         $camposNo = 'id_tipo_activ!mod';
         $a_camposHidden = array(
             'id_tipo_activ' => $id_tipo_activ,
@@ -302,7 +302,7 @@ switch ($Qque) {
 
         $oGesTipoTarifa = new GestorTipoTarifa();
         $oDesplPosiblesTipoTarifas = $oGesTipoTarifa->getListaTipoTarifas($isfsv);
-        $oDesplPosiblesTipoTarifas->setNombre('tarifa');
+        $oDesplPosiblesTipoTarifas->setNombre('id_tarifa');
         $oDesplPosiblesTipoTarifas->setOpcion_sel($tarifa);
 
         $oGesNivelStgr = new GestorNivelStgr();
@@ -316,7 +316,7 @@ switch ($Qque) {
         $oDesplRepeticion->setOpcion_sel($id_repeticion);
 
         $oHash = new web\Hash();
-        $camposForm = 'dl_org!f_fin!f_ini!h_fin!h_ini!iactividad_val!iasistentes_val!id_repeticion!id_ubi!inom_tipo_val!isfsv_val!lugar_esp!nivel_stgr!nom_activ!nombre_ubi!observ!plazas!precio!publicado!status!tarifa';
+        $camposForm = 'dl_org!f_fin!f_ini!h_fin!h_ini!iactividad_val!iasistentes_val!id_repeticion!id_ubi!inom_tipo_val!isfsv_val!lugar_esp!nivel_stgr!nom_activ!nombre_ubi!observ!plazas!precio!publicado!status!id_tarifa';
         $camposNo = 'id_tipo_activ!mod';
         $a_camposHidden = array(
             'id_tipo_activ' => $id_tipo_activ,
@@ -391,8 +391,7 @@ switch ($Qque) {
         $Qobserv = (string)filter_input(INPUT_POST, 'observ');
 
         if (!empty($Qid_item)) {
-            $oTarifa = new TarifaUbi();
-            $oTarifa->setId_item($Qid_item);
+            $oTarifa = new TarifaUbi($Qid_item);
             $oTarifa->DBCarregar(); //perque agafi els valors que ja té.
         } else {
             $oTarifa = new TarifaUbi();
@@ -410,8 +409,7 @@ switch ($Qque) {
     case "borrar":
         $Qid_item = (integer)filter_input(INPUT_POST, 'id_item');
         if (!empty($Qid_item)) {
-            $oTarifa = new TarifaUbi();
-            $oTarifa->setId_item($Qid_item);
+            $oTarifa = new TarifaUbi($Qid_item);
             if ($oTarifa->DBEliminar() === false) {
                 echo _("hay un error, no se ha eliminado");
                 echo "\n" . $oTarifa->getErrorTxt();
@@ -430,7 +428,7 @@ switch ($Qque) {
             $id_item = (integer)strtok('#');
             $cantidad = round($cantidad);
             if (empty($id_item) && empty($cantidad)) continue; // no hay ni habia nada.
-            $oTarifa = new TarifaUbi(array('id_tarifa' => $id_tarifa, 'id_ubi' => $Qid_ubi, 'year' => $Qyear));
+            $oTarifa = new TarifaUbi($id_item);
             $oTarifa->DBCarregar();
             if (isset($cantidad)) $oTarifa->setCantidad($cantidad);
             if ($oTarifa->DBGuardar() === false) {
@@ -467,7 +465,7 @@ switch ($Qque) {
 
         $txt = "<form id='frm_tarifa'>";
         $txt .= $oHash->getCamposHtml();
-        $txt .= '<h3>' . _("tarifa") . '</h3>';
+        $txt .= '<h3>' . _("id_tarifa") . '</h3>';
         $txt .= _("letra") . " <input type=text size=3 name=letra value=\"$letra\">";
         $txt .= '&nbsp;&nbsp;';
         $txt .= _("modo") . $oDespl->desplegable();

@@ -48,8 +48,7 @@ switch ($Qque) {
         if (!empty($Qid_item)) {
             $a_camposHidden['id_item'] = $Qid_item;
             $camposForm = 'cantidad';
-            $oTarifaUbi = new TarifaUbi();
-            $oTarifaUbi->setId_item($Qid_item);
+            $oTarifaUbi = new TarifaUbi($Qid_item);
             $cantidad = $oTarifaUbi->getCantidad();
         } else {
             $camposForm = 'cantidad!id_tarifa!id_serie';
@@ -100,7 +99,7 @@ switch ($Qque) {
 
         $a_cabeceras = [];
         $a_cabeceras[] = _("sección");
-        $a_cabeceras[] = _("id_tarifa");
+        $a_cabeceras[] = _("tarifa");
         $a_cabeceras[] = _("se aplica a");
         $a_cabeceras[] = _("minimo");
         $a_cabeceras[] = _("precio");
@@ -190,8 +189,7 @@ switch ($Qque) {
         $Qobserv = (string)filter_input(INPUT_POST, 'observ');
 
         if (!empty($Qid_item)) {
-            $oTarifaUbi = new TarifaUbi();
-            $oTarifaUbi->setId_item($Qid_item);
+            $oTarifaUbi = new TarifaUbi($Qid_item);
             $oTarifaUbi->DBCarregar(); // para que coja los valores que ya tiene
         } else {
             $oTarifaUbi = new TarifaUbi();
@@ -210,8 +208,7 @@ switch ($Qque) {
     case "borrar":
         $Qid_item = (integer)filter_input(INPUT_POST, 'id_item');
         if (!empty($Qid_item)) {
-            $oTarifaUbi = new TarifaUbi();
-            $oTarifaUbi->setId_item($Qid_item);
+            $oTarifaUbi = new TarifaUbi($Qid_item);
             if ($oTarifaUbi->DBEliminar() === false) {
                 echo _("hay un error, no se ha eliminado");
                 echo "\n" . $oTarifaUbi->getErrorTxt();
@@ -229,8 +226,8 @@ switch ($Qque) {
             $tarifa = strtok($key, '#');
             $id_item = (integer)strtok('#');
             $cantidad = round($cantidad);
-            if (empty($id_item) && empty($cantidad)) continue; // no hay ni habia nada.
-            $oTarifaUbi = new TarifaUbi(array('id_tarifa' => $id_tarifa, 'id_ubi' => $Qid_ubi, 'year' => $Qyear));
+            if (empty($id_item) && empty($cantidad)) continue; // no hay ni había nada.
+            $oTarifaUbi = new TarifaUbi($id_item);
             $oTarifaUbi->DBCarregar();
             if (isset($cantidad)) $oTarifaUbi->setCantidad($cantidad);
             if ($oTarifaUbi->DBGuardar() === false) {

@@ -74,7 +74,7 @@ class ActividadPub extends ActividadAll
         $aDades['nivel_stgr'] = $this->inivel_stgr;
         $aDades['observ_material'] = $this->sobserv_material;
         $aDades['lugar_esp'] = $this->slugar_esp;
-        $aDades['tarifa'] = $this->itarifa;
+        $aDades['id_tarifa'] = $this->itarifa;
         $aDades['id_repeticion'] = $this->iid_repeticion;
         $aDades['publicado'] = $this->bpublicado;
         $aDades['id_tabla'] = $this->sid_tabla;
