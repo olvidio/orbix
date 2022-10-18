@@ -358,7 +358,7 @@ class Ingreso extends core\ClasePropiedades
      *
      * @return float iingresos
      */
-    function getIngresos()
+    function getIngresos(): float
     {
         if (!isset($this->iingresos) && !$this->bLoaded) {
             $this->DBCarregar();
@@ -371,22 +371,22 @@ class Ingreso extends core\ClasePropiedades
      *
      * @param float iingresos='' optional
      */
-    function setIngresos($iingresos = '')
+    function setIngresos($iingresos = 0)
     {
-        $this->iingresos = $iingresos;
+        $this->iingresos = (float)$iingresos;
     }
 
     /**
      * Recupera el atributo inum_asistentes de Ingreso
      *
-     * @return integer inum_asistentes
+     * @return integer|null inum_asistentes
      */
-    function getNum_asistentes()
+    function getNum_asistentes(): ?int
     {
         if (!isset($this->inum_asistentes) && !$this->bLoaded) {
             $this->DBCarregar();
         }
-        return $this->inum_asistentes;
+        return (int)$this->inum_asistentes;
     }
 
     /**
@@ -404,7 +404,7 @@ class Ingreso extends core\ClasePropiedades
      *
      * @return float iingresos_previstos
      */
-    function getIngresos_previstos()
+    public function getIngresos_previstos(): float
     {
         if (!isset($this->iingresos_previstos) && !$this->bLoaded) {
             $this->DBCarregar();
@@ -417,9 +417,9 @@ class Ingreso extends core\ClasePropiedades
      *
      * @param float iingresos_previstos='' optional
      */
-    function setIngresos_previstos($iingresos_previstos = '')
+    function setIngresos_previstos($iingresos_previstos = 0)
     {
-        $this->iingresos_previstos = $iingresos_previstos;
+        $this->iingresos_previstos = (float) $iingresos_previstos;
     }
 
     /**
@@ -427,12 +427,12 @@ class Ingreso extends core\ClasePropiedades
      *
      * @return integer inum_asistentes_previstos
      */
-    function getNum_asistentes_previstos()
+    public function getNum_asistentes_previstos(): int
     {
         if (!isset($this->inum_asistentes_previstos) && !$this->bLoaded) {
             $this->DBCarregar();
         }
-        return $this->inum_asistentes_previstos;
+        return (int)$this->inum_asistentes_previstos;
     }
 
     /**
@@ -442,7 +442,7 @@ class Ingreso extends core\ClasePropiedades
      */
     function setNum_asistentes_previstos($inum_asistentes_previstos = '')
     {
-        $this->inum_asistentes_previstos = $inum_asistentes_previstos;
+        $this->inum_asistentes_previstos = (int)$inum_asistentes_previstos;
     }
 
     /**

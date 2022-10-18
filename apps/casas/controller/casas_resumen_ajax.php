@@ -72,7 +72,7 @@ function fin_periodo($iso_fin, $delta_h = 10)
 {
     $oFin = DateTimeLocal::createFromFormat('Ymd', $iso_fin);
     // dia siguiente a las 10:00h
-    $interval = 'PT1DT' . $delta_h . 'H';
+    $interval = 'P1DT' . $delta_h . 'H';
     $oFin->add(new DateInterval($interval));
     return $oFin->getIsoTime();
 }
