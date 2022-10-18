@@ -46,7 +46,7 @@ class GestorAvisoCambios
     /**
      * Retorna el nombre completo del objeto, para poder crear una nueva instancia.
      *
-     * @param string nombre corto del objeto.
+     * @param string $obj_txt nombre corto del objeto.
      * @return string
      */
     public static function getFullPathObj($obj_txt)
@@ -85,20 +85,6 @@ class GestorAvisoCambios
 
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
-    /**
-     * aDades de GestorCanvis
-     *
-     * @var array
-     */
-    private $aDades;
-
-    /**
-     * bLoaded
-     *
-     * @var boolean
-     */
-    private $bLoaded = FALSE;
-
 
     /* CONSTRUCTOR -------------------------------------------------------------- */
 
@@ -121,8 +107,6 @@ class GestorAvisoCambios
         $oAhora = new DateTimeLocal();
         $ahora_iso = $oAhora->format('Y-m-d H:i:s');
 
-        $id_status = '';
-
         // per saber el tipus d'activitat.
         switch ($sObjeto) {
             case 'Actividad': //si el canvi és a l'activitat, ja el tinc.
@@ -130,7 +114,7 @@ class GestorAvisoCambios
             case 'ActividadEx': //si el canvi és a l'activitat, ja el tinc.
                 $iId_tipo_activ = empty($aDadesNew['id_tipo_activ']) ? $aDadesActuals['id_tipo_activ'] : $aDadesNew['id_tipo_activ'];
                 $dl_org = empty($aDadesActuals['dl_org']) ? $aDadesNew['dl_org'] : $aDadesActuals['dl_org'];
-                $status = $aDadesNew['status'] ?? $aDadesActuals['status'];
+                $id_status = $aDadesNew['status'] ?? $aDadesActuals['status'];
                 break;
             default:
                 // Si se genera al crear una actividad Ex. El objeto Actividad no la encuentra
@@ -144,7 +128,7 @@ class GestorAvisoCambios
                 }
                 $iId_tipo_activ = $oActividad->getId_tipo_activ();
                 $dl_org = $oActividad->getDl_org();
-                $status = $oActividad->getStatus();
+                $id_status = $oActividad->getStatus();
         }
 
         if (ConfigGlobal::is_app_installed('cambios')) {
@@ -155,29 +139,16 @@ class GestorAvisoCambios
                 // para sv:
                 $oGestorActividadProcesoTarea->setNomTabla('a_actividad_proceso_sv');
                 $aFases_sv = $oGestorActividadProcesoTarea->getFasesCompletadas($iid_activ);
-                /*
-                $oFases_sv = new stdClass;
-                foreach($aFases_sv as $id_fase) {
-                    $oFases_sv->$id_fase = 'ok';
-                }
-                */
                 // para sf
                 $oGestorActividadProcesoTarea->setNomTabla('a_actividad_proceso_sf');
                 $aFases_sf = $oGestorActividadProcesoTarea->getFasesCompletadas($iid_activ);
-                /*
-                $oFases_sf = new stdClass;
-                foreach($aFases_sf as $id_fase) {
-                    $oFases_sf->$id_fase = 'ok';
-                }
-                */
-                $id_status = $status;
             } else {
-                $id_status = $status;
+                $aFases_sv = [$id_status];
+                $aFases_sf = [$id_status];
             }
         } else {
             // Si no tengo instalado el módulo de 'cambios', no tengo la tabla en mi esquema.
             // Lo anoto en public. Como fase anoto el estado de la actividad.
-            $id_status = $status;
             $oActividadCambio = new Cambio();
             $aFases_sv = [$id_status];
             $aFases_sf = [$id_status];
@@ -305,7 +276,7 @@ class GestorAvisoCambios
 
                 // En vez del nombre del valor_old, pongo el id de la fase que se marca.
 
-                if ($boolCompletadoNew != $boolCompletadoActual) {
+                if ($boolCompletadoNew !== $boolCompletadoActual) {
                     $oActividadCambio->setId_tipo_cambio(Cambio::TIPO_CMB_FASE);
                     $oActividadCambio->setId_activ($iid_activ);
                     $oActividadCambio->setId_tipo_activ($iId_tipo_activ);
