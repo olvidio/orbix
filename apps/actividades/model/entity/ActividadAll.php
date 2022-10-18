@@ -1555,7 +1555,7 @@ class ActividadAll extends core\ClasePropiedades
     function getDatosTarifa()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_tarifa'));
+        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'tarifa'));
         $oDatosCampo->setEtiqueta(_("tarifa"));
         return $oDatosCampo;
     }

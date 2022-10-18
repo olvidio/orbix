@@ -166,6 +166,10 @@ class DatosCampo
                 return false;
             }
             $row = $oDBSt_res_fields->fetch(\PDO::FETCH_ASSOC);
+            if ($row === FALSE) {
+                $err_txt = sprintf(_("No está definido el campo %s en DatosCampo para la tabla %s"),$camp, $tabla);
+                exit($err_txt);
+            }
             if ($row['length'] > 0) {
                 $llarg = $row['length'];
             } else if ($row['lengthvar'] > 0) {
