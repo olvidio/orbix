@@ -82,7 +82,7 @@ class ActividadEx extends ActividadAll
         $aDades['nivel_stgr'] = $this->inivel_stgr;
         $aDades['observ_material'] = $this->sobserv_material;
         $aDades['lugar_esp'] = $this->slugar_esp;
-        $aDades['id_tarifa'] = $this->itarifa;
+        $aDades['tarifa'] = $this->itarifa;
         $aDades['id_repeticion'] = $this->iid_repeticion;
         $aDades['publicado'] = $this->bpublicado;
         //$aDades['id_tabla'] = $this->sid_tabla;
@@ -112,7 +112,7 @@ class ActividadEx extends ActividadAll
 					nivel_stgr               = :nivel_stgr,
 					observ_material          = :observ_material,
 					lugar_esp                = :lugar_esp,
-					id_tarifa                   = :id_tarifa,
+					tarifa                   = :tarifa,
 					id_repeticion            = :id_repeticion,
 					publicado   	         = :publicado,
 					plazas   	        	 = :plazas";
@@ -142,10 +142,10 @@ class ActividadEx extends ActividadAll
             $this->setAllAtributes($aDades);
         } else {
             // INSERT
-            //$campos="(id_tipo_activ,dl_org,nom_activ,id_ubi,desc_activ,f_ini,h_ini,f_fin,h_fin,tipo_horario,precio,num_asistentes,status,observ,nivel_stgr,observ_material,lugar_esp,id_tarifa,id_repeticion,publicado,id_tabla,plazas)";
-            $campos = "(id_tipo_activ,dl_org,nom_activ,id_ubi,desc_activ,f_ini,h_ini,f_fin,h_fin,tipo_horario,precio,num_asistentes,status,observ,nivel_stgr,observ_material,lugar_esp,id_tarifa,id_repeticion,publicado,plazas)";
-            //$valores="(:id_tipo_activ,:dl_org,:nom_activ,:id_ubi,:desc_activ,:f_ini,:h_ini,:f_fin,:h_fin,:tipo_horario,:precio,:num_asistentes,:status,:observ,:nivel_stgr,:observ_material,:lugar_esp,:id_tarifa,:id_repeticion,:publicado,:id_tabla,:plazas)";
-            $valores = "(:id_tipo_activ,:dl_org,:nom_activ,:id_ubi,:desc_activ,:f_ini,:h_ini,:f_fin,:h_fin,:tipo_horario,:precio,:num_asistentes,:status,:observ,:nivel_stgr,:observ_material,:lugar_esp,:id_tarifa,:id_repeticion,:publicado,:plazas)";
+            //$campos="(id_tipo_activ,dl_org,nom_activ,id_ubi,desc_activ,f_ini,h_ini,f_fin,h_fin,tipo_horario,precio,num_asistentes,status,observ,nivel_stgr,observ_material,lugar_esp,tarifa,id_repeticion,publicado,id_tabla,plazas)";
+            $campos = "(id_tipo_activ,dl_org,nom_activ,id_ubi,desc_activ,f_ini,h_ini,f_fin,h_fin,tipo_horario,precio,num_asistentes,status,observ,nivel_stgr,observ_material,lugar_esp,tarifa,id_repeticion,publicado,plazas)";
+            //$valores="(:id_tipo_activ,:dl_org,:nom_activ,:id_ubi,:desc_activ,:f_ini,:h_ini,:f_fin,:h_fin,:tipo_horario,:precio,:num_asistentes,:status,:observ,:nivel_stgr,:observ_material,:lugar_esp,:tarifa,:id_repeticion,:publicado,:id_tabla,:plazas)";
+            $valores = "(:id_tipo_activ,:dl_org,:nom_activ,:id_ubi,:desc_activ,:f_ini,:h_ini,:f_fin,:h_fin,:tipo_horario,:precio,:num_asistentes,:status,:observ,:nivel_stgr,:observ_material,:lugar_esp,:tarifa,:id_repeticion,:publicado,:plazas)";
             if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {
                 $sClauError = 'ActividadEx.insertar.prepare';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);

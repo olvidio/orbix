@@ -270,7 +270,7 @@ class ActividadAll extends core\ClasePropiedades
         $aDades['nivel_stgr'] = $this->inivel_stgr;
         $aDades['observ_material'] = $this->sobserv_material;
         $aDades['lugar_esp'] = $this->slugar_esp;
-        $aDades['id_tarifa'] = $this->itarifa;
+        $aDades['tarifa'] = $this->itarifa;
         $aDades['id_repeticion'] = $this->iid_repeticion;
         $aDades['publicado'] = $this->bpublicado;
         $aDades['id_tabla'] = $this->sid_tabla;
@@ -418,7 +418,7 @@ class ActividadAll extends core\ClasePropiedades
         if (array_key_exists('nivel_stgr', $aDades)) $this->setNivel_stgr($aDades['nivel_stgr']);
         if (array_key_exists('observ_material', $aDades)) $this->setObserv_material($aDades['observ_material']);
         if (array_key_exists('lugar_esp', $aDades)) $this->setLugar_esp($aDades['lugar_esp']);
-        if (array_key_exists('id_tarifa', $aDades)) $this->setTarifa($aDades['id_tarifa']);
+        if (array_key_exists('tarifa', $aDades)) $this->setTarifa($aDades['tarifa']);
         if (array_key_exists('id_repeticion', $aDades)) $this->setId_repeticion($aDades['id_repeticion']);
         if (array_key_exists('publicado', $aDades)) $this->setPublicado($aDades['publicado']);
         if (array_key_exists('id_tabla', $aDades)) $this->setId_tabla($aDades['id_tabla']);
@@ -489,7 +489,7 @@ class ActividadAll extends core\ClasePropiedades
         $aDades['nivel_stgr'] = $this->getNivel_stgr();
         $aDades['observ_material'] = $this->getObserv_material();
         $aDades['lugar_esp'] = $this->getLugar_esp();
-        $aDades['id_tarifa'] = $this->getTarifa();
+        $aDades['tarifa'] = $this->getTarifa();
         $aDades['id_repeticion'] = $this->getId_repeticion();
         $aDades['publicado'] = $this->getPublicado();
         $aDades['id_tabla'] = $this->getId_tabla();
@@ -1556,7 +1556,7 @@ class ActividadAll extends core\ClasePropiedades
     {
         $nom_tabla = $this->getNomTabla();
         $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_tarifa'));
-        $oDatosCampo->setEtiqueta(_("id_tarifa"));
+        $oDatosCampo->setEtiqueta(_("tarifa"));
         return $oDatosCampo;
     }
 
