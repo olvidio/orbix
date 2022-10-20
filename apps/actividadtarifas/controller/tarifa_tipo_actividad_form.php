@@ -27,16 +27,18 @@ require_once("apps/core/global_object.inc");
 $oTipoActivTarifa = new TipoActivTarifa();
 $aTipoSerie = $oTipoActivTarifa->getArraySerie();
 
+/*
 $oDesplPosiblesSeries = new Desplegable();
 $oDesplPosiblesSeries->setNombre('id_serie');
 $oDesplPosiblesSeries->setOpciones($aTipoSerie);
 $oDesplPosiblesSeries->setOpcion_sel(1);
+*/
 
 $Qid_item = (string)filter_input(INPUT_POST, 'id_item');
 
 $miSfsv = 0;
 // -------------- MODIFICAR TARIFA --------------------
-if ($Qid_item != 'nuevo') {
+if ($Qid_item !== 'nuevo') {
     $txt_eliminar = _("¿Está seguro que desea quitar esta tarifa?");
 
     $oTipoActivTarifa = new TipoActivTarifa(array('id_item' => $Qid_item));
@@ -59,7 +61,7 @@ if ($Qid_item != 'nuevo') {
     $a_camposHidden = array(
         'id_tipo_activ' => $id_tipo_activ,
         'id_item' => $Qid_item,
-        'id_serie' => $id_serie,
+        //'id_serie' => $id_serie,
     );
     $oHash->setArraycamposHidden($a_camposHidden);
 
@@ -75,7 +77,7 @@ if ($Qid_item != 'nuevo') {
         'h' => $h,
         'oTipoActiv' => $oTipoActiv,
         'extendida' => FALSE,
-        'txt_serie' => $aTipoSerie[$id_serie],
+        //'txt_serie' => $aTipoSerie[$id_serie],
         'oDesplPosiblesTipoTarifas' => $oDesplPosiblesTipoTarifas,
         'txt_eliminar' => $txt_eliminar,
         'url_ajax' => $url_ajax,
@@ -110,7 +112,8 @@ if ($Qid_item != 'nuevo') {
 
     $oHash = new web\Hash();
     $oHash->setUrl(core\ConfigGlobal::getWeb() . '/apps/actividadtarifas/controller/tarifa_ajax.php');
-    $oHash->setCamposForm('iactividad_val!iasistentes_val!id_tipo_activ!inom_tipo_val!isfsv_val!id_serie!id_tarifa');
+    //$oHash->setCamposForm('iactividad_val!iasistentes_val!id_tipo_activ!inom_tipo_val!isfsv_val!id_serie!id_tarifa');
+    $oHash->setCamposForm('iactividad_val!iasistentes_val!id_tipo_activ!inom_tipo_val!isfsv_val!id_tarifa');
     $oHash->setCamposNo('id_tipo_activ!que');
     $a_camposHidden = array(
         'id_tipo_activ' => '',
@@ -127,7 +130,7 @@ if ($Qid_item != 'nuevo') {
     $a_campos = ['oPosicion' => $oPosicion,
         'oHash' => $oHash,
         'h' => $h,
-        'oDesplPosiblesSeries' => $oDesplPosiblesSeries,
+        //'oDesplPosiblesSeries' => $oDesplPosiblesSeries,
         'oDesplPosiblesTipoTarifas' => $oDesplPosiblesTipoTarifas,
         'oActividadTipo' => $oActividadTipo,
     ];

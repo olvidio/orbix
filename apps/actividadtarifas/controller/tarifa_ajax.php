@@ -113,6 +113,7 @@ switch ($Qque) {
             $i++;
             $id_item = $oTarifaUbi->getId_item();
             $id_tarifa = $oTarifaUbi->getId_tarifa();
+            $id_serie = $oTarifaUbi->getId_serie();
             $cantidad = $oTarifaUbi->getCantidad();
 
             $cantidad = "$cantidad " . _("€");
@@ -124,29 +125,26 @@ switch ($Qque) {
             foreach ($cTipoActivTarifas as $oTipoActivTarifa) {
                 $t++;
                 $id_tipo_activ = $oTipoActivTarifa->getId_tipo_activ();
-                $id_serie = $oTipoActivTarifa->getId_serie();
                 $oTipoActividad = new TiposActividades($id_tipo_activ);
                 if ($t > 1) {
                     $txt .= ', ';
                 }
                 $txt .= $oTipoActividad->getNomGral();
-                if ($id_serie !== TipoActivTarifa::S_GENERAL) {
-                    $aTipoSerie = $oTipoActivTarifa->getArraySerie();
-                    $txt .= " (" . $aTipoSerie[$id_serie] . ")";
-                }
             }
 
             $oTipoTarifa = new TipoTarifa($id_tarifa);
             $seccion = $oTipoTarifa->getSfsv();
             $letra = $oTipoTarifa->getLetra();
             $script = "fnjs_modificar($id_item,'$letra')";
+            $aTipoSerie = $oTipoActivTarifa->getArraySerie();
+            $letra_serie = $letra . " (" . $aTipoSerie[$id_serie] . ")";
 
             $a_valores[$i][1] = $a_seccion[$seccion];
             // permiso
             if ($miSfsv == $seccion && $_SESSION['oPerm']->have_perm_oficina('adl')) {
-                $a_valores[$i][2] = array('script' => $script, 'valor' => $letra);
+                $a_valores[$i][2] = array('script' => $script, 'valor' => $letra_serie);
             } else {
-                $a_valores[$i][2] = $letra;
+                $a_valores[$i][2] = $letra_serie;
             }
             $a_valores[$i][3] = $txt;
             $a_valores[$i][4] = '0';

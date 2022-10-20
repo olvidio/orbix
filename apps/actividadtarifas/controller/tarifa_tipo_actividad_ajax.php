@@ -56,10 +56,12 @@ switch ($Qque) {
             }
 
             $nombre_tarifa = $oTipoTarifa->getLetra();
+            /*
             if ($id_serie !== TipoActivTarifa::S_GENERAL) {
                 $aTipoSerie = $oTipoActivTarifa->getArraySerie();
                 $nombre_tarifa .= " (" . $aTipoSerie[$id_serie] . ")";
             }
+            */
 
             $nombre_tarifa .= "  ($modo_txt)";
 
@@ -85,7 +87,7 @@ switch ($Qque) {
     case "update":
         $Qid_item = (string)filter_input(INPUT_POST, 'id_item');
         $Qid_tarifa = (string)filter_input(INPUT_POST, 'id_tarifa');
-        $Qid_serie = (string)filter_input(INPUT_POST, 'id_serie');
+        //$Qid_serie = (string)filter_input(INPUT_POST, 'id_serie');
         $Qid_tipo_activ = (string)filter_input(INPUT_POST, 'id_tipo_activ');
 
         if ($Qid_item === 'nuevo') {
@@ -95,7 +97,7 @@ switch ($Qque) {
             $oTipoActivTarifa->DBCarregar();
         }
         $oTipoActivTarifa->setId_tarifa($Qid_tarifa);
-        $oTipoActivTarifa->setId_serie($Qid_serie);
+        $oTipoActivTarifa->setId_serie(TipoActivTarifa::S_GENERAL);
         $oTipoActivTarifa->setId_tipo_activ($Qid_tipo_activ);
         if ($oTipoActivTarifa->DBGuardar() === false) {
             echo _("hay un error, no se ha guardado");
