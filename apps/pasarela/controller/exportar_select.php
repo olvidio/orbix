@@ -186,17 +186,17 @@ foreach ($cActividades as $oActividad) {
         $plazas_totales = $plazas_max;
     }
     // centros encargados
-    $aWhere = [];
-    $aWhere['id_activ'] = $id_activ;
-    $aWhere['_ordre'] = 'num_orden DESC';
+    $aWhereCentros = [];
+    $aWhereCentros['id_activ'] = $id_activ;
+    $aWhereCentros['_ordre'] = 'num_orden DESC';
     $GesCentrosEncargados = new GestorCentroEncargado();
-    $cCentrosEncargados = $GesCentrosEncargados->getCentrosEncargados($aWhere);
+    $cCentrosEncargados = $GesCentrosEncargados->getCentrosEncargados($aWhereCentros);
     $aCentrosEncargados = [0 => '', 1 => '', 2 => ''];
     if (!empty($cCentrosEncargados)) {
         for ($n = 0; $n < 4; $n++) {
             if (!empty($cCentrosEncargados[$n])) {
-                $id_ubi = $cCentrosEncargados[$n]->getId_ubi();
-                $aCentrosEncargados[$n] = empty($aCentrosPosiblesSinSgAgd[$id_ubi]) ? '?' : $aCentrosPosiblesSinSgAgd[$id_ubi];
+                $id_ctr = $cCentrosEncargados[$n]->getId_ubi();
+                $aCentrosEncargados[$n] = empty($aCentrosPosiblesSinSgAgd[$id_ctr]) ? '?' : $aCentrosPosiblesSinSgAgd[$id_ctr];
             }
         }
     }
