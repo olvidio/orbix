@@ -57,7 +57,7 @@ class Conversiones
 
     public function getArrayContribucionNoDuerme(): array
     {
-        $oContribucionNoDuerme = new ContribucionReserva();
+        $oContribucionNoDuerme = new ContribucionNoDuerme();
         $default = $oContribucionNoDuerme->getDefault();
         $a_excepciones = $oContribucionNoDuerme->getExcepciones();
         $a_tipos = $this->getArrayTipos_contribucion_no_duerme($default);

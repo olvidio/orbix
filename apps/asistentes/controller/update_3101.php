@@ -121,8 +121,8 @@ function editar($id_activ, $id_nom, $mod)
     $oAsistente->setPrimary_key(array('id_activ' => $id_activ, 'id_nom' => $id_nom));
     $oAsistente->DBCarregar();
 
-    // comprobar si puedo (si es nuevo, SI):
-    if ($mod != 'nuevo' && $oAsistente->perm_modificar() === FALSE) {
+    // comprobar si puedo (si es nuevo o mover, SI):
+    if ($mod === 'editar' && $oAsistente->perm_modificar() === FALSE) {
         $msg_err = _("los datos de asistencia los modifica la dl del asistente");
     } else {
         $Qencargo = (string)filter_input(INPUT_POST, 'encargo');
@@ -148,10 +148,16 @@ function editar($id_activ, $id_nom, $mod)
         empty($Qcfi) ? $oAsistente->setCfi('f') : $oAsistente->setCfi('t');
         empty($Qfalta) ? $oAsistente->setFalta('f') : $oAsistente->setFalta('t');
         isset($Qcfi_con) ? $oAsistente->setCfi_con($Qcfi_con) : $oAsistente->setCfi_con();
+        // si es mover, poner propio
+        if ($mod === 'mover'){
+            $oAsistente->setPropio('t');
+        }
         // siempre soy la dl
         $oAsistente->setDl_responsable(ConfigGlobal::mi_delef());
-        // Si no es epecificado, al poner la plaza ya se pone al propietario
-        !empty($Qpropietario) ? $oAsistente->setPropietario($Qpropietario) : FALSE;
+        // Si no es especificado, al poner la plaza ya se pone al propietario
+        if (!empty($Qpropietario)) {
+            $oAsistente->setPropietario($Qpropietario);
+        }
         if ($oAsistente->DBGuardar() === false) {
             $msg_err = _("hay un error, no se ha guardado");
         }
@@ -175,7 +181,7 @@ switch ($Qmod) {
     //------------ MOVER --------
     case "mover":
         $msg_err = eliminar($Qid_activ_old, $Qid_nom);
-        $msg_err .= editar($Qid_activ, $Qid_nom, "nuevo");
+        $msg_err .= editar($Qid_activ, $Qid_nom, "mover");
         break;
     //------------ BORRAR --------
     case "eliminar":
