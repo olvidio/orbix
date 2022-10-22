@@ -203,7 +203,7 @@ case 2201:
                     <td class="titulo1" colspan="5">PRÆLATURA SANCTÆ CRUCIS ET OPERIS DEI</td>
                 </tr>
                 <tr>
-                    <td class="titulo2" colspan="5">STUDIUM GENERALE REGIONIS: <?= $region_latin ?></td>
+                    <td class="titulo2" colspan="5">STUDIUM GENERALE REGIONIS <?= $region_latin ?></td>
                 </tr>
                 <tr>
                     <td class="subtitulo1" colspan="5">CURRICULUM STUDIORUM</td>
