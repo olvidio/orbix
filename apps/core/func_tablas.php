@@ -101,7 +101,7 @@ function poner_empty_on_null(&$valor)
  * Función para corregir la del php strnatcasecmp. Compara sin tener en cuenta los acentos. La uso para ordenar arrays.
  *
  */
-function strsinacentocmp($str1, $str2)
+function strsinacentocmp($str1, $str2): int
 {
     $acentos = array('Á', 'É', 'Í', 'Ó', 'Ú', 'À', 'È', 'Ì', 'Ò', 'Ù', 'Ä', 'Ë', 'Ï', 'Ö', 'Ü', 'Â', 'Ê', 'Î', 'Ô', 'Û', 'Ñ',
         'á', 'é', 'í', 'ó', 'ú', 'à', 'è', 'ì', 'ò', 'ù', 'ä', 'ë', 'ï', 'ö', 'ü', 'â', 'ê', 'î', 'ô', 'û', 'ñ'
@@ -165,10 +165,8 @@ function curso_est($que, $any, $tipo = "est")
     switch ($que) {
         case "inicio":
             return $inicurs;
-            break;
         case "fin":
             return $fincurs;
-            break;
         default:
             $err_switch = sprintf(_("opción no definida en switch en %s, linea %s"), __FILE__, __LINE__);
             exit ($err_switch);

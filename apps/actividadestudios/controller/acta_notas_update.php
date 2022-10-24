@@ -23,14 +23,14 @@ require_once("apps/core/global_header.inc");
 require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$Qque = (string)filter_input(INPUT_POST, 'que');
+$Qque = (integer)filter_input(INPUT_POST, 'que');
 $Qid_asignatura = (integer)filter_input(INPUT_POST, 'id_asignatura');
 $Qid_activ = (integer)filter_input(INPUT_POST, 'id_activ');
 
 $nota_corte = $_SESSION['oConfig']->getNota_corte();
 $nota_max_default = $_SESSION['oConfig']->getNota_max();
 
-if ($Qque == 3) { //paso las matrículas a notas definitivas (Grabar e imprimir)
+if ($Qque === 3) { //paso las matrículas a notas definitivas (Grabar e imprimir)
     $aNivelOpcionales = array(1230, 1231, 1232, 2430, 2431, 2432, 2433, 2434);
     $error = '';
     //$aIdSuperadas = $GesNotas->getArrayNotasSuperadas();
@@ -44,7 +44,7 @@ if ($Qque == 3) { //paso las matrículas a notas definitivas (Grabar e imprimir)
     $oTipoActividad = new TiposActividades($id_tipo_activ);
     $asistentes = $oTipoActividad->getAsistentesText();
     $actividad = $oTipoActividad->getActividadText();
-    if ($asistentes == 'agd' && $actividad == 'ca') {
+    if ($asistentes === 'agd' && $actividad === 'ca') {
         $iepoca = PersonaNota::EPOCA_INVIERNO;
     }
 
@@ -68,7 +68,7 @@ if ($Qque == 3) { //paso las matrículas a notas definitivas (Grabar e imprimir)
         if (empty($nota_max)) {
             $nota_max = $nota_max_default;
         }
-        // Si es con precptor no se acepta cursado o examinado.
+        // Si es con preceptor no se acepta cursado o examinado.
         if ($preceptor) {
             // Acepto nota_num=0 para borrar.
             if (!empty($nota_num) && $nota_num / $nota_max < $nota_corte) {
@@ -83,30 +83,30 @@ if ($Qque == 3) { //paso las matrículas a notas definitivas (Grabar e imprimir)
                 continue;
             }
             if ($acta == Nota::CURSADA) {
-                $error .= sprintf(_("no se puede definir cursada con preceptor") . "\n");
+                $error .= _("no se puede definir cursada con preceptor") . "\n";
                 exit($error);
-            } else {
-                $oActa = new Acta($acta);
-                $f_acta = $oActa->getF_acta()->getFromLocal();
-                if (empty($acta) || empty($f_acta)) {
-                    $error .= sprintf(_("debe introducir los datos del acta. No se ha guardado nada.") . "\n");
-                    exit($error);
-                }
+            }
+
+            $oActa = new Acta($acta);
+            $f_acta = $oActa->getF_acta()->getFromLocal();
+            if (empty($acta) || empty($f_acta)) {
+                $error .= _("debe introducir los datos del acta. No se ha guardado nada.") . "\n";
+                exit($error);
             }
         } else {
             // para las cursadas o examinadas no aprobadas
-            if ($id_situacion == NOTA::CURSADA || $id_situacion == NOTA::EXAMINADO || empty($id_situacion)) {
+            if ($id_situacion === NOTA::CURSADA || $id_situacion === NOTA::EXAMINADO || empty($id_situacion)) {
                 //conseguir una fecha para poner como fecha acta. las cursadas se guardan durante 2 años
                 $f_acta = $cActas[0]->getF_acta()->getFromLocal();
             } else {
                 if (empty($acta)) {
-                    $error .= sprintf(_("falta definir el acta para alguna nota") . "\n");
+                    $error .= _("falta definir el acta para alguna nota") . "\n";
                     exit($error);
                 }
                 $oActa = new Acta($acta);
                 $f_acta = $oActa->getF_acta()->getFromLocal();
-                if (empty($acta) || empty($f_acta)) {
-                    $error .= sprintf(_("debe introducir los datos del acta. No se ha guardado nada.") . "\n");
+                if (empty($f_acta)) {
+                    $error .= _("debe introducir los datos del acta. No se ha guardado nada.") . "\n";
                     exit($error);
                 }
             }
@@ -117,7 +117,7 @@ if ($Qque == 3) { //paso las matrículas a notas definitivas (Grabar e imprimir)
             $id_situacion = NOTA::EXAMINADO; // examinado
         }
 
-        if (!empty($preceptor)) { //miro cuál
+        if ($preceptor) { //miro cuál
             $oActividadAsignatura = new ActividadAsignaturaDl(array('id_activ' => $Qid_activ, 'id_asignatura' => $Qid_asignatura));
             $id_preceptor = $oActividadAsignatura->getId_profesor();
         } else {
@@ -159,7 +159,7 @@ if ($Qque == 3) { //paso las matrículas a notas definitivas (Grabar e imprimir)
                 $j++;
                 $id_op = $oPersonaNota1->getId_nivel();
                 $id_asignatura = $oPersonaNota1->getId_asignatura();
-                if ($id_asignatura == $Qid_asignatura) { // ya está la que intento meter => actualizar
+                if ($id_asignatura === $Qid_asignatura) { // ya está la que intento meter => actualizar
                     $id_nivel = $id_op;
                     break;
                 }
@@ -172,7 +172,9 @@ if ($Qque == 3) { //paso las matrículas a notas definitivas (Grabar e imprimir)
             if (empty($id_nivel)) {
                 for ($op = $op_min; $op <= $op_max; $op++) {
                     $id_nivel = $aNivelOpcionales[$op];
-                    if (!in_array($id_nivel, $aOpSuperadas)) break;
+                    if (!in_array($id_nivel, $aOpSuperadas, true)) {
+                        break;
+                    }
                 }
             }
             if ($id_nivel > $aNivelOpcionales[$op_max]) {
@@ -197,10 +199,17 @@ if ($Qque == 3) { //paso las matrículas a notas definitivas (Grabar e imprimir)
             $id_activ_old = $oPersonaNotaAnterior->getId_activ();
         }
 
-        if (!empty($id_activ_old) && ($Qid_activ != $id_activ_old)) {
+        if (!empty($id_activ_old) && ($Qid_activ !== $id_activ_old)) {
             //aviso
-            $error .= sprintf(_("está intentando poner una nota que ya existe (id_nom=%s)") . "\n", $id_nom);
-            continue;
+            $oAlumno = Persona::NewPersona($id_nom);
+            if (!is_object($oPersona)) {
+                $msg_err .= "<br>$oPersona con id_nom: $id_nom en  " . __FILE__ . ": line " . __LINE__;
+            } else {
+                $apellidos_nombre = $oPersona->getApellidosNombre();
+                $dl_persona = $oPersona->getDl();
+                $apellidos_nombre_dl = "$apellidos_nombre ($apellidos_nombre_dl)";
+            }
+            $error .= sprintf(_("está intentando poner una nota que ya existe para: %s") . "\n", $apellidos_nombre_dl);
         } else {
             switch ($acta) {
                 case '':
@@ -208,7 +217,6 @@ if ($Qque == 3) { //paso las matrículas a notas definitivas (Grabar e imprimir)
                         $oPersonaNotaAnterior->DBEliminar();
                     }
                     continue 2;
-                    break;
                 case Nota::CURSADA:
                     $id_situacion = NOTA::CURSADA;
                     break;
@@ -252,7 +260,7 @@ if ($Qque == 3) { //paso las matrículas a notas definitivas (Grabar e imprimir)
     $go_to = ConfigGlobal::getWeb() . "/apps/notas/controller/acta_imprimir.php?acta=$acta|main";
 }
 
-if ($Qque == 1) { // Grabar las notas en la matricula
+if ($Qque === 1) { // Grabar las notas en la matricula
     $Qform_preceptor = (array)filter_input(INPUT_POST, 'form_preceptor', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
     $Qid_nom = (array)filter_input(INPUT_POST, 'id_nom', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
     $Qnota_num = (array)filter_input(INPUT_POST, 'nota_num', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
@@ -263,10 +271,10 @@ if ($Qque == 1) { // Grabar las notas en la matricula
     $num_alumnos = empty($num_alumnos) ? 0 : $num_alumnos;
 
     for ($n = 0; $n < $num_alumnos; $n++) {
-        if (!empty($Qform_preceptor[$n]) && $Qform_preceptor[$n] == "p") {
-            $preceptor = "t";
+        if (!empty($Qform_preceptor[$n]) && $Qform_preceptor[$n] === "p") {
+            $preceptor = TRUE;
         } else {
-            $preceptor = "f";
+            $preceptor = FALSE;
         }
         $oMatricula = new Matricula(array('id_asignatura' => $Qid_asignatura, 'id_activ' => $Qid_activ, 'id_nom' => $Qid_nom[$n]));
         $oMatricula->setPreceptor($preceptor);
@@ -274,18 +282,20 @@ if ($Qque == 1) { // Grabar las notas en la matricula
         $nn = str_replace(',', '.', $Qnota_num[$n]);
         // ERROR
         if (!empty($Qnota_num[$n]) && $Qnota_num[$n] / $Qnota_max[$n] > 1) {
-            $error = sprintf(_("Hay una nota mayor que el máximo") . "\n");
+            $error = _("Hay una nota mayor que el máximo") . "\n";
             exit($error);
         }
         $oMatricula->setNota_num($nn);
         $oMatricula->setNota_max($Qnota_max[$n]);
         $oMatricula->setActa($Qacta[$n]);
         // cursada o examinada para el caso sin preceptor
-        if ($preceptor == 'f') {
+        if ($preceptor === FALSE) {
             if ($Qacta[$n] == 2) {
                 $oMatricula->setId_situacion(2);
                 // examinada
-                if ($Qnota_num[$n] > 1) $oMatricula->setId_situacion(12);
+                if ($Qnota_num[$n] > 1) {
+                    $oMatricula->setId_situacion(12);
+                }
             } elseif ($Qnota_num[$n] > 1) {
                 if (!empty($Qnota_num[$n]) && $Qnota_num[$n] / $Qnota_max[$n] < $nota_corte) {
                     // examinado
@@ -296,8 +306,8 @@ if ($Qque == 1) { // Grabar las notas en la matricula
                 }
             }
         } else {
-            if ($Qacta[$n] == Nota::CURSADA && $preceptor == true) {
-                $error = sprintf(_("no se puede definir cursada con preceptor") . "\n");
+            if ($Qacta[$n] == Nota::CURSADA && $preceptor === TRUE) {
+                $error = _("no se puede definir cursada con preceptor") . "\n";
                 exit($error);
             }
             if (empty($Qnota_num[$n])) {
