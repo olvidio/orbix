@@ -202,11 +202,11 @@ if ($Qque === 3) { //paso las matrículas a notas definitivas (Grabar e imprimir
         if (!empty($id_activ_old) && ($Qid_activ !== $id_activ_old)) {
             //aviso
             $oAlumno = Persona::NewPersona($id_nom);
-            if (!is_object($oPersona)) {
-                $msg_err .= "<br>$oPersona con id_nom: $id_nom en  " . __FILE__ . ": line " . __LINE__;
+            if (!is_object($oAlumno)) {
+                $msg_err .= "<br>$oAlumno con id_nom: $id_nom en  " . __FILE__ . ": line " . __LINE__;
             } else {
-                $apellidos_nombre = $oPersona->getApellidosNombre();
-                $dl_persona = $oPersona->getDl();
+                $apellidos_nombre = $oAlumno->getApellidosNombre();
+                $dl_persona = $oAlumno->getDl();
                 $apellidos_nombre_dl = "$apellidos_nombre ($apellidos_nombre_dl)";
             }
             $error .= sprintf(_("está intentando poner una nota que ya existe para: %s") . "\n", $apellidos_nombre_dl);
