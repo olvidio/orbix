@@ -375,7 +375,7 @@ if ($Qcara == "B") {
         <div class="libro">
             <b>Reg. &nbsp&nbsp&nbsp&nbsp</b>
             <b>lib. &nbsp&nbsp&nbsp</b>
-            <b>pág.</b>
+            <b>Pag.</b>
             <b> n. &nbsp</b>
         </div>
         <div class="secretario"><?= $vstgr ?></div>

@@ -69,7 +69,7 @@ case 1101:
     </tr>
     <tr>
         <td></td>
-        <td colspan="7" class="curso">CURSUS INSTITUTIONALES FILOSOFI&#198;</td>
+        <td colspan="7" class="curso">CURSUS INSTITUTIONALES PHILOSOPHI&#198;</td>
     </tr>
     <tr>
         <td class="space"></td>
@@ -77,7 +77,7 @@ case 1101:
     <tr>
         <td></td>
         <td class="any">ANNUS I</td>
-        <td class="cabecera">ETCS<sup>1</sup></td>
+        <td class="cabecera">ECTS<sup>1</sup></td>
         <td class="cabecera">Iudicium</td>
     </tr>
     <?php
@@ -90,7 +90,7 @@ case 1201:
     <tr>
         <td></td>
         <td class="any">ANNUS II</td>
-        <td class="cabecera">ETCS<sup>1</sup></td>
+        <td class="cabecera">ECTS<sup>1</sup></td>
         <td class="cabecera">Iudicium</td>
     </tr>
     <?php
@@ -102,7 +102,7 @@ case 2101:
     </tr>
     <tr>
         <td></td>
-        <td colspan="7" class="curso">CURSUS INSTITUTIONALES S THEOLOGI&#198;</td>
+        <td colspan="7" class="curso">CURSUS INSTITUTIONALES S. THEOLOGI&#198;</td>
     </tr>
     <tr>
         <td class="space"></td>
@@ -110,7 +110,7 @@ case 2101:
     <tr>
         <td></td>
         <td class="any">ANNUS I</td>
-        <td class="cabecera">ETCS<sup>1</sup></td>
+        <td class="cabecera">ECTS<sup>1</sup></td>
         <td class="cabecera">Iudicium</td>
     </tr>
     <?php
@@ -136,7 +136,7 @@ case 2201:
         <tr>
             <td></td>
             <td class="any">ANNUS II</td>
-            <td class="cabecera">ETCS<sup>1</sup></td>
+            <td class="cabecera">ECTS<sup>1</sup></td>
             <td class="cabecera">Iudicium</td>
         </tr>
         <?php
@@ -149,7 +149,7 @@ case 2201:
             <tr>
                 <td></td>
                 <td class="any">ANNUS III</td>
-                <td class="cabecera">ETCS<sup>1</sup></td>
+                <td class="cabecera">ECTS<sup>1</sup></td>
                 <td class="cabecera">Iudicium</td>
             </tr>
             <?php
@@ -162,7 +162,7 @@ case 2201:
             <tr>
                 <td></td>
                 <td class="any">ANNUS IV</td>
-                <td class="cabecera">ETCS<sup>1</sup></td>
+                <td class="cabecera">ECTS<sup>1</sup></td>
                 <td class="cabecera">Iudicium</td>
             </tr>
             <?php
@@ -206,7 +206,7 @@ case 2201:
                     <td class="titulo2" colspan="5">STUDIUM GENERALE REGIONIS: <?= $region_latin ?></td>
                 </tr>
                 <tr>
-                    <td class="subtitulo1" colspan="5">CURRICULORUM STUDIORUM</td>
+                    <td class="subtitulo1" colspan="5">CURRICULUM STUDIORUM</td>
                 </tr>
                 <tr>
                     <td class="subtitulo2" colspan="5">
@@ -360,8 +360,8 @@ case 2201:
             <table>
                 <tr>
                     <td class="libro">Reg.</td>
-                    <td class="libro">Lib.</td>
-                    <td class="libro">Pág.</td>
+                    <td class="libro">lib.</td>
+                    <td class="libro">Pag.</td>
                     <td class="libro">n.</td>
 
                     <td class="secretario"><?= $vstgr ?></td>
