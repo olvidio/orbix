@@ -207,7 +207,7 @@ if ($Qque === 3) { //paso las matrículas a notas definitivas (Grabar e imprimir
             } else {
                 $apellidos_nombre = $oAlumno->getApellidosNombre();
                 $dl_persona = $oAlumno->getDl();
-                $apellidos_nombre_dl = "$apellidos_nombre ($apellidos_nombre_dl)";
+                $apellidos_nombre_dl = "$apellidos_nombre ($dl_persona)";
             }
             $error .= sprintf(_("está intentando poner una nota que ya existe para: %s") . "\n", $apellidos_nombre_dl);
         } else {
