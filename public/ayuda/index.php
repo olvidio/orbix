@@ -14,18 +14,21 @@ include_once(ConfigGlobal::$dir_estilos.'/menu_horizontal.css.php');
 
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html>
+<html lang="es">
   <head>
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">
     <title>index</title>
-	<script>
+	<script type="application/javascript">
 	function fnjs_windowopen(url) { //para poder hacerlo por el menu
-		var parametros='';
-		window.open(url+'?'+parametros);
+        let parametros = '';
+        window.open(url+'?'+parametros);
 	}
 	</script>
   </head>
   <body class="otro">
+  <p>OCTUBRE 2022: se ha añadido una dl fantasma ('Otra dl de aquinate') para poder introducir actividades que organiza
+      otra dl que si está en aquinate, pero que no las va a introducir en su dl
+      (por ejemplo actividades de sg, cuando no se usa para sg)</p>
     <h1>Tutoriales</h1>
     <br>
     <h2><a href="#uso_general">1. Uso en general</a></h2>
@@ -55,18 +58,18 @@ include_once(ConfigGlobal::$dir_estilos.'/menu_horizontal.css.php');
     - guardar la configuración (para cada página web es distinta)<br>
     - Selección multiple: En algunos casos se puede seleccionar más de una fila para hacer 
     alguna operación.<br>
-    Ctr + Click. Si se mantiene apretada la tecla 'Control' se puede hacer click en más de una fila.<br>
-    Mays + Click. Si se mantiene apretada la tecla 'Mays' al hacer click se selecciona todas las filas entre el primer y segundo click.<br> 
+    Ctr + Clic. Si se mantiene apretada la tecla 'Control' se puede hacer clic en más de una fila.<br>
+    Mays + Clic. Si se mantiene apretada la tecla 'Mays' al hacer clic se selecciona todas las filas entre el primer y segundo click.<br>
     ATENCIÓN:<br>
     * para exportar (y quizá alguna otra cosa),&nbsp; primero hay que
     visualizar todas las filas. Explicación: si la lista es larga, el
     navegador no tiene todas las filas, las va pidiendo conforme las
-    necesita visualizar. Una vez se ha visualizado todas, ya estan en la memoria del navegador y
+    necesita visualizar. Una vez se ha visualizado todas, ya están en la memoria del navegador y
     se pueden exportar.<br>
     * Al ordenar tiene algún problema con los acentos.<br>
     <br>
     <h4> 1.3. Desplegables</h4>
-    Recordar que apretando una tecla (o esribiendo más de una pero sin
+    Recordar que apretando una tecla (o escribiendo más de una, pero sin
     pausa) va al item de la lista que empieza por la letra que tecleamos.<br>
     <h4> 1.4. Buscar en la página</h4>
     Para buscar en toda la página, Ctrl+f permite buscar una cadena, con
@@ -82,13 +85,13 @@ include_once(ConfigGlobal::$dir_estilos.'/menu_horizontal.css.php');
     Afectan a dos cosas: menús y procesos.<br>
     En el caso de los menús se pueden adaptar a cada caso, aunque
     entiendo que lo mejor de momento es dejarlo como viene por defecto.<br>
-    En el caso de los procesos es más rigido. En las actividades, quien
+    En el caso de los procesos es más rígido. En las actividades, quien
     tiene el control es dre. Sólo entrando como dre se pueden borrar
     actividades.<br>
     <h4> 1.8. Salir</h4>
-    Es importante usar el boton de "Salir" para cerrar la sessión. El
+    Es importante usar el botón de "Salir" para cerrar la sesión. El
     servidor provoca un error cuando se excede un número determinado de
-    sessiones abiertas y apagando el navegador no se cierra la session.<br>
+    sesiones abiertas y apagando el navegador no se cierra la session.<br>
     
    <br><br><br> 
     <h2><a name="gestion_de_ca"></a>2. Gestión de ca<br>
@@ -101,7 +104,7 @@ include_once(ConfigGlobal::$dir_estilos.'/menu_horizontal.css.php');
         <h4>Asignaturas de ca <span class="link" onClick="fnjs_windowopen('<?= ConfigGlobal::getWeb_public() ?>/ayuda/02-asignaturas.mp4')">(video)</span></h4>
       </li>
       <li>
-        <h4>asistentes dl a ca <span class="link" onClick="fnjs_windowopen('<?= ConfigGlobal::getWeb_public() ?>/ayuda/03-asitentesDl.mp4')">(video)</span></h4>
+        <h4>asistentes dl a ca <span class="link" onClick="fnjs_windowopen('<?= ConfigGlobal::getWeb_public() ?>/ayuda/03-asistentesDl.mp4')">(video)</span></h4>
       </li>
       <li>
         <h4>asistentes otras dl a ca <span class="link" onClick="fnjs_windowopen('<?= ConfigGlobal::getWeb_public() ?>/ayuda/04-asistentesOtrDl.mp4')">(video)</span></h4>

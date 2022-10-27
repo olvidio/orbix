@@ -317,7 +317,7 @@ class GrupMenuRole extends core\ClasePropiedades
      *
      * @return integer iid_grupmenu
      */
-    function getId_grupmenu()
+    public function getId_grupmenu(): int
     {
         if (!isset($this->iid_grupmenu) && !$this->bLoaded) {
             $this->DBCarregar();
@@ -330,7 +330,7 @@ class GrupMenuRole extends core\ClasePropiedades
      *
      * @param integer iid_grupmenu='' optional
      */
-    function setId_grupmenu($iid_grupmenu = '')
+    public function setId_grupmenu($iid_grupmenu = '')
     {
         $this->iid_grupmenu = $iid_grupmenu;
     }
