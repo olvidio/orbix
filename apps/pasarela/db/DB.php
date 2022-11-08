@@ -34,7 +34,7 @@ class DB extends DBAbstract
     }
 
     /**
-     * En la BD Comun (global).
+     * En la BD Común (global).
      */
     public function create_pasarela()
     {
@@ -56,7 +56,7 @@ class DB extends DBAbstract
         $this->delPermisoGlobal('comun');
     }
 
-    public function eliminar_pasarela()
+    public function eliminar_pasarela(): void
     {
         $this->addPermisoGlobal('comun');
 
