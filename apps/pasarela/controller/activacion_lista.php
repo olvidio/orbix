@@ -46,4 +46,4 @@ $a_campos = ['oPosicion' => $oPosicion,
 ];
 
 $oView = new ViewTwig('pasarela/controller');
-$oView->render('activacion_lista.html.twig', $a_campos);
+$oView->renderizar('activacion_lista.html.twig', $a_campos);

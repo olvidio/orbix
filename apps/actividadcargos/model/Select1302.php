@@ -230,7 +230,7 @@ class Select1302
 
         $oView = new core\View(__NAMESPACE__);
 
-        return $oView->render('select1302.phtml', $a_campos);
+        return $oView->renderizar('select1302.phtml', $a_campos);
     }
 
     private function setLinksInsert()

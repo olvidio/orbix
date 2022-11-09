@@ -250,7 +250,7 @@ class Select1011
         ];
 
         $oView = new View(__NAMESPACE__);
-        return $oView->render('select1011.phtml', $a_campos);
+        return $oView->renderizar('select1011.phtml', $a_campos);
     }
 
     public function setLinksInsert()

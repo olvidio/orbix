@@ -221,33 +221,33 @@ class ActividadTipo
             case 'tipoactiv-tarifas':
                 $aditionalPaths = ['actividades' => 'actividades/view'];
                 $oView = new ViewTwig('actividadtarifas/controller', $aditionalPaths);
-                return $oView->render('actividad_tipo_que.html.twig', $a_campos);
+                return $oView->renderizar('actividad_tipo_que.html.twig', $a_campos);
                 break;
             case 'tipoactiv-procesos':
                 $aditionalPaths = ['actividades' => 'actividades/view'];
                 $oView = new ViewTwig('procesos/controller', $aditionalPaths);
-                return $oView->render('actividad_tipo_proceso.html.twig', $a_campos);
+                return $oView->renderizar('actividad_tipo_proceso.html.twig', $a_campos);
                 break;
             case 'procesos':
                 $aditionalPaths = ['actividades' => 'actividades/view'];
                 $oView = new ViewTwig('procesos/controller', $aditionalPaths);
-                return $oView->render('actividad_tipo_que_perm.html.twig', $a_campos);
+                return $oView->renderizar('actividad_tipo_que_perm.html.twig', $a_campos);
                 break;
             case 'cambios':
                 $aditionalPaths = ['actividades' => 'actividades/view'];
                 $oView = new ViewTwig('cambios/controller', $aditionalPaths);
-                return $oView->render('actividad_tipo_que_perm.html.twig', $a_campos);
+                return $oView->renderizar('actividad_tipo_que_perm.html.twig', $a_campos);
                 break;
             case 'gestion':
                 $aditionalPaths = ['actividades' => 'actividades/view'];
                 $oView = new ViewTwig('actividades/controller', $aditionalPaths);
-                return $oView->render('actividad_tipo_que_gestion.html.twig', $a_campos);
+                return $oView->renderizar('actividad_tipo_que_gestion.html.twig', $a_campos);
                 break;
             case 'actividades':
             default:
                 $aditionalPaths = ['actividades' => 'actividades/view'];
                 $oView = new ViewTwig('actividades/controller', $aditionalPaths);
-                return $oView->render('actividad_tipo_que.html.twig', $a_campos);
+                return $oView->renderizar('actividad_tipo_que.html.twig', $a_campos);
         }
     }
 
