@@ -187,4 +187,4 @@ $a_campos = [
 ];
 
 $oView = new core\View('actividadestudios/controller');
-echo $oView->render('ca_posibles_que.phtml', $a_campos);
+$oView->renderizar('ca_posibles_que.phtml', $a_campos);

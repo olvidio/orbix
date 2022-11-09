@@ -252,4 +252,4 @@ $a_campos = [
 ];
 
 $oView = new core\ViewTwig('cambios/controller');
-echo $oView->render('usuario_avisos_pref.html.twig', $a_campos);
+$oView->renderizar('usuario_avisos_pref.html.twig', $a_campos);

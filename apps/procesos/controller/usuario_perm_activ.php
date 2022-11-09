@@ -169,4 +169,4 @@ $a_campos = [
 ];
 
 $oView = new core\ViewTwig('procesos/controller');
-echo $oView->render('usuario_perm_activ.html.twig', $a_campos);
+$oView->renderizar('usuario_perm_activ.html.twig', $a_campos);

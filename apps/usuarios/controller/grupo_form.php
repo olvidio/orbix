@@ -169,7 +169,7 @@ $a_camposG = [
 ];
 
 $oView = new core\View('usuarios/controller');
-echo $oView->render('grupo_form.phtml', $a_camposG);
+$oView->renderizar('grupo_form.phtml', $a_camposG);
 
 //////////// Permisos de grupos ////////////
 if (!empty($Qid_usuario)) { // si no hay usuario, no puedo poner permisos.
@@ -180,7 +180,7 @@ if (!empty($Qid_usuario)) { // si no hay usuario, no puedo poner permisos.
     ];
 
     $oView = new core\View('usuarios/controller');
-    echo $oView->render('perm_menu_form.phtml', $a_camposP);
+    $oView->renderizar('perm_menu_form.phtml', $a_camposP);
 }
 
 //////////// Permisos en actividades ////////////
@@ -197,5 +197,5 @@ if ((core\ConfigGlobal::is_app_installed('procesos')) && !empty($Qid_usuario)) {
     ];
 
     $oView = new core\View('usuarios/controller');
-    echo $oView->render('perm_activ_form.phtml', $a_campos);
+    $oView->renderizar('perm_activ_form.phtml', $a_campos);
 }

@@ -359,4 +359,4 @@ $a_campos = ['oPosicion' => $oPosicion,
 ];
 
 $oView = new ViewTwig('actividades/controller');
-echo $oView->render('actividad_form.html.twig', $a_campos);
+$oView->renderizar('actividad_form.html.twig', $a_campos);

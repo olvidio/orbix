@@ -408,4 +408,4 @@ $a_campos = ['oPosicion' => $oPosicion,
 ];
 
 $oView = new core\View('ubis/controller');
-echo $oView->render('list_ctr.phtml', $a_campos);
+$oView->renderizar('list_ctr.phtml', $a_campos);

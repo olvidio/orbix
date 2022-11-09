@@ -229,7 +229,7 @@ switch ($Qque) {
         ];
 
         $oView = new core\ViewTwig('actividades/controller');
-        echo $oView->render('calendario_form_actividad.html.twig', $a_campos);
+        $oView->renderizar('calendario_form_actividad.html.twig', $a_campos);
         break;
     case 'nueva':
         $obj = 'actividades\\\\model\\\\entity\\\\ActividadDl';
@@ -380,7 +380,7 @@ switch ($Qque) {
         ];
 
         $oView = new core\ViewTwig('actividades/controller');
-        echo $oView->render('calendario_form_actividad.html.twig', $a_campos);
+        $oView->renderizar('calendario_form_actividad.html.twig', $a_campos);
         break;
     case "update":
         $Qid_item = (integer)filter_input(INPUT_POST, 'id_item');

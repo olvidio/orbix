@@ -160,4 +160,4 @@ $a_campos = ['botones' => $botones,
 ];
 
 $oView = new core\View('ubis/controller');
-echo $oView->render('teleco_tabla.phtml', $a_campos);
+$oView->renderizar('teleco_tabla.phtml', $a_campos);

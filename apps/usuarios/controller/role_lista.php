@@ -142,4 +142,4 @@ $a_campos = ['oPosicion' => $oPosicion,
 ];
 
 $oView = new core\View('usuarios/controller');
-echo $oView->render('role_lista.phtml', $a_campos);
+$oView->renderizar('role_lista.phtml', $a_campos);

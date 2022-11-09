@@ -33,4 +33,4 @@ $a_campos = ['url' => $url,
 ];
 
 $oView = new core\View('menus/controller');
-echo $oView->render('menus_que.phtml', $a_campos);
+$oView->renderizar('menus_que.phtml', $a_campos);

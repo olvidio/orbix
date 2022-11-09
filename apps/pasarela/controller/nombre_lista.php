@@ -43,4 +43,4 @@ $a_campos = ['oPosicion' => $oPosicion,
 ];
 
 $oView = new ViewTwig('pasarela/controller');
-echo $oView->render('nombre_lista.html.twig', $a_campos);
+$oView->renderizar('nombre_lista.html.twig', $a_campos);

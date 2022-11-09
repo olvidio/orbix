@@ -86,4 +86,4 @@ $a_campos = [
 ];
 
 $oView = new core\View('dossiers\controller');
-echo $oView->render('perm_dossier_pres.phtml', $a_campos);
+$oView->renderizar('perm_dossier_pres.phtml', $a_campos);

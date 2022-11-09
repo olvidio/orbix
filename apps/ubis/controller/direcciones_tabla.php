@@ -76,4 +76,4 @@ $a_campos = [
 ];
 
 $oView = new core\View('ubis\controller');
-echo $oView->render('direcciones_tabla.phtml', $a_campos);
+$oView->renderizar('direcciones_tabla.phtml', $a_campos);

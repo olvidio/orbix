@@ -105,4 +105,4 @@ $a_campos = ['oPosicion' => $oPosicion,
 ];
 
 $oView = new core\View('actividadestudios/controller');
-echo $oView->render('e43.phtml', $a_campos);
+$oView->renderizar('e43.phtml', $a_campos);

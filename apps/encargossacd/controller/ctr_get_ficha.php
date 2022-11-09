@@ -380,4 +380,4 @@ $a_campos = [
 ];
 
 $oView = new core\ViewTwig('encargossacd/controller');
-echo $oView->render('ctr_get_ficha.html.twig', $a_campos);
+$oView->renderizar('ctr_get_ficha.html.twig', $a_campos);

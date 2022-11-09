@@ -103,4 +103,4 @@ $a_campos = ['oPosicion' => $oPosicion,
 ];
 
 $oView = new core\View('actividades/controller');
-echo $oView->render('actividad_select_ubi.phtml', $a_campos);
+$oView->renderizar('actividad_select_ubi.phtml', $a_campos);

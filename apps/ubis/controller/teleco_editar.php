@@ -165,4 +165,4 @@ $a_campos = ['obj' => $obj,
 ];
 
 $oView = new core\View('ubis\controller');
-echo $oView->render('teleco_form.phtml', $a_campos);
+$oView->renderizar('teleco_form.phtml', $a_campos);

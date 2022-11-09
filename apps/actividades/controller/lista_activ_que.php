@@ -71,4 +71,4 @@ $a_campos = ['oPosicion' => $oPosicion,
 ];
 
 $oView = new core\ViewTwig('actividades/controller');
-echo $oView->render('lista_activ_que.html.twig', $a_campos);
+$oView->renderizar('lista_activ_que.html.twig', $a_campos);

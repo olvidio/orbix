@@ -203,4 +203,4 @@ $a_campos = [
 ];
 
 $oView = new core\View('asistentes/model');
-echo $oView->render('form_1301.phtml', $a_campos);
+$oView->renderizar('form_1301.phtml', $a_campos);

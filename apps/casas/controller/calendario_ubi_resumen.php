@@ -61,4 +61,4 @@ $a_campos = ['oPosicion' => $oPosicion,
 ];
 
 $oView = new core\ViewTwig('casas/controller');
-echo $oView->render('ubi_resumen.html.twig', $a_campos);
+$oView->renderizar('ubi_resumen.html.twig', $a_campos);

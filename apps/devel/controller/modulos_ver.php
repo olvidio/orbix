@@ -123,4 +123,4 @@ $a_campos = [
 ];
 
 $oView = new core\View('devel\controller');
-echo $oView->render('modulos_form.phtml', $a_campos);
+$oView->renderizar('modulos_form.phtml', $a_campos);

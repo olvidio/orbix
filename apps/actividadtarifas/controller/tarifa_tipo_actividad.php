@@ -37,4 +37,4 @@ $a_campos = ['oPosicion' => $oPosicion,
 ];
 
 $oView = new core\View('actividadtarifas/controller');
-echo $oView->render('tarifa_tipo_actividad.phtml', $a_campos);
+$oView->renderizar('tarifa_tipo_actividad.phtml', $a_campos);

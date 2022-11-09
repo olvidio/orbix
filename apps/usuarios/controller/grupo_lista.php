@@ -119,4 +119,4 @@ $a_campos = [
 ];
 
 $oView = new core\View('usuarios/controller');
-echo $oView->render('grupo_lista.phtml', $a_campos);
+$oView->renderizar('grupo_lista.phtml', $a_campos);

@@ -99,4 +99,4 @@ $a_campos = ['oPosicion' => $oPosicion,
 ];
 
 $oView = new core\ViewTwig('casas/controller');
-echo $oView->render('grupo_lista.html.twig', $a_campos);
+$oView->renderizar('grupo_lista.html.twig', $a_campos);

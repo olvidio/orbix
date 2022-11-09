@@ -499,4 +499,4 @@ $a_campos = ['oPosicion' => $oPosicion,
 ];
 
 $oView = new core\View('personas/controller');
-echo $oView->render('personas_select.phtml', $a_campos);
+$oView->renderizar('personas_select.phtml', $a_campos);

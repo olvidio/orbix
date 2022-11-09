@@ -116,7 +116,7 @@ switch ($Qtipo) {
         ];
 
         $oView = new core\View('asistentes/controller');
-        echo $oView->render('planning_persona_que.phtml', $a_campos);
+        $oView->renderizar('planning_persona_que.phtml', $a_campos);
         break;
     case 'planning_ctr':
         //cuando queramos visualizar el calendario de actividades de
@@ -127,7 +127,7 @@ switch ($Qtipo) {
         ];
 
         $oView = new core\View('asistentes/controller');
-        echo $oView->render('planning_ctr_que.phtml', $a_campos);
+        $oView->renderizar('planning_ctr_que.phtml', $a_campos);
         break;
     default:
         $err_switch = sprintf(_("opción no definida en switch en %s, linea %s"), __FILE__, __LINE__);

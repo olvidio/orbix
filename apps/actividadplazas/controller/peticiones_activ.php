@@ -212,4 +212,4 @@ $a_campos = [
 ];
 
 $oView = new core\View('actividadplazas/controller');
-echo $oView->render('peticiones_activ.phtml', $a_campos);
+$oView->renderizar('peticiones_activ.phtml', $a_campos);

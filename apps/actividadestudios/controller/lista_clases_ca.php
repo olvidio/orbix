@@ -130,4 +130,4 @@ $a_campos = ['oPosicion' => $oPosicion,
 ];
 
 $oView = new core\View('actividadestudios/controller');
-echo $oView->render('lista_clases_ca.phtml', $a_campos);
+$oView->renderizar('lista_clases_ca.phtml', $a_campos);

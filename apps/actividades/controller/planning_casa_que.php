@@ -117,7 +117,7 @@ if ($Qtipo == 'planning_cdc') {
     ];
 
     $oView = new core\View('actividades/controller');
-    echo $oView->render('planning_casa_que.phtml', $a_campos);
+    $oView->renderizar('planning_casa_que.phtml', $a_campos);
 } else {
     $err_switch = sprintf(_("opción no definida en %s, linea %s"), __FILE__, __LINE__);
     exit ($err_switch);

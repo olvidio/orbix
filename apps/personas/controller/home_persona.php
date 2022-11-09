@@ -151,4 +151,4 @@ $a_campos = [
 ];
 
 $oView = new core\View('personas/controller');
-echo $oView->render('home_persona.phtml', $a_campos);
+$oView->renderizar('home_persona.phtml', $a_campos);

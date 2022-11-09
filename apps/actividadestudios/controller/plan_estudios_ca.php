@@ -179,4 +179,4 @@ $a_campos = ['oPosicion' => $oPosicion,
 ];
 
 $oView = new core\View('actividadestudios/controller');
-echo $oView->render('plan_estudios_ca.phtml', $a_campos);
+$oView->renderizar('plan_estudios_ca.phtml', $a_campos);

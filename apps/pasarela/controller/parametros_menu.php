@@ -48,4 +48,4 @@ $a_campos = ['oPosicion' => $oPosicion,
 ];
 
 $oView = new ViewTwig('pasarela/controller');
-echo $oView->render('parametros_menu.html.twig', $a_campos);
+$oView->renderizar('parametros_menu.html.twig', $a_campos);

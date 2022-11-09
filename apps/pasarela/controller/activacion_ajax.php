@@ -51,7 +51,7 @@ switch ($Qque) {
         ];
 
         $oView = new core\ViewTwig('pasarela/controller');
-        echo $oView->render('activacion_default_form.html.twig', $a_campos);
+        $oView->renderizar('activacion_default_form.html.twig', $a_campos);
         break;
     case 'form_modificar':
         $Qid_tipo_activ = (integer)filter_input(INPUT_POST, 'id_tipo_activ');
@@ -81,7 +81,7 @@ switch ($Qque) {
         ];
 
         $oView = new core\ViewTwig('pasarela/controller');
-        echo $oView->render('activacion_form.html.twig', $a_campos);
+        $oView->renderizar('activacion_form.html.twig', $a_campos);
         break;
     case 'form_nuevo':
         $Qid_tipo_activ = (integer)filter_input(INPUT_POST, 'id_tipo_activ');
@@ -115,6 +115,6 @@ switch ($Qque) {
         ];
 
         $oView = new core\ViewTwig('pasarela/controller');
-        echo $oView->render('activacion_form_nuevo.html.twig', $a_campos);
+        $oView->renderizar('activacion_form_nuevo.html.twig', $a_campos);
         break;
 }

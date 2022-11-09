@@ -228,4 +228,4 @@ $a_campos = [
 ];
 
 $oView = new core\View('actividadplazas/controller');
-echo $oView->render('plazas_balance_dl.phtml', $a_campos);
+$oView->renderizar('plazas_balance_dl.phtml', $a_campos);

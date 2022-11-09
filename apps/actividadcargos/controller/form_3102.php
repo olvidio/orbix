@@ -189,4 +189,4 @@ $a_campos = ['obj' => $obj,
 ];
 
 $oView = new core\View('actividadcargos/model');
-echo $oView->render('form_3102.phtml', $a_campos);
+$oView->renderizar('form_3102.phtml', $a_campos);

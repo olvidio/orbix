@@ -86,4 +86,4 @@ $a_campos = ['oPosicion' => $oPosicion,
 ];
 
 $oView = new core\ViewTwig('encargossacd/controller');
-echo $oView->render('listas_com_txt.html.twig', $a_campos);
+$oView->renderizar('listas_com_txt.html.twig', $a_campos);

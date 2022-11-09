@@ -57,4 +57,4 @@ $a_campos = ['oPosicion' => $oPosicion,
 ];
 
 $oView = new core\View('actividadtarifas/controller');
-echo $oView->render('tarifa_ubi.phtml', $a_campos);
+$oView->renderizar('tarifa_ubi.phtml', $a_campos);

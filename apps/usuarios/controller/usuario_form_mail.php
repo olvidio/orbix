@@ -56,4 +56,4 @@ $a_campos = [
 ];
 
 $oView = new core\View('usuarios/controller');
-echo $oView->render('usuario_form_mail.phtml', $a_campos);
+$oView->renderizar('usuario_form_mail.phtml', $a_campos);

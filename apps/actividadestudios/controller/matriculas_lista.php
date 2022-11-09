@@ -245,4 +245,4 @@ $a_campos = ['oPosicion' => $oPosicion,
 ];
 
 $oView = new core\View('actividadestudios/controller');
-echo $oView->render('matriculas.phtml', $a_campos);
+$oView->renderizar('matriculas.phtml', $a_campos);

@@ -40,7 +40,7 @@ class View
 
     /* MÉTODOS PÚBLICOS -----------------------------------------------------------*/
 
-    function render($file, $variables = array())
+    function renderizar($file, $variables = array())
     {
 
         extract($variables);

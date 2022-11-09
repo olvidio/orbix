@@ -244,4 +244,4 @@ $a_campos = ['oPosicion' => $oPosicion,
 ];
 
 $oView = new core\View('asistentes/controller');
-echo $oView->render('planning_select.phtml', $a_campos);
+$oView->renderizar('planning_select.phtml', $a_campos);

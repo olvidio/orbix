@@ -137,4 +137,4 @@ $a_campos = ['oPosicion' => $oPosicion,
 ];
 
 $oView = new core\ViewTwig('actividadestudios/controller');
-echo $oView->render('posibles_asignaturas_ca.html.twig', $a_campos);
+$oView->renderizar('posibles_asignaturas_ca.html.twig', $a_campos);

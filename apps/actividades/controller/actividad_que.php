@@ -317,4 +317,4 @@ $a_campos = ['oPosicion' => $oPosicion,
 ];
 
 $oView = new core\ViewTwig('actividades/controller');
-echo $oView->render('actividad_que.html.twig', $a_campos);
+$oView->renderizar('actividad_que.html.twig', $a_campos);

@@ -305,4 +305,4 @@ $a_campos = ['obj_txt' => $obj,
 ];
 
 $oView = new core\View('personas\controller');
-echo $oView->render($presentacion, $a_campos);
+$oView->renderizar($presentacion, $a_campos);

@@ -155,4 +155,4 @@ $a_campos = ['oPosicion' => $oPosicion,
 ];
 
 $oView = new core\ViewTwig('encargossacd/controller');
-echo $oView->render('horario_ver.html.twig', $a_campos);
+$oView->renderizar('horario_ver.html.twig', $a_campos);

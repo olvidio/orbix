@@ -51,4 +51,4 @@ foreach ($cTipoDossier as $oTipoDossier) {
 }
 
 $oView = new core\View('dossiers\controller');
-echo $oView->render('lista_dossiers.phtml', array('a_filas' => $a_filas));
+$oView->renderizar('lista_dossiers.phtml', array('a_filas' => $a_filas));

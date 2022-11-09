@@ -55,4 +55,4 @@ $a_campos = [
 ];
 
 $oView = new core\ViewTwig('casas/controller');
-echo $oView->render('grupo_form.html.twig', $a_campos);
+$oView->renderizar('grupo_form.html.twig', $a_campos);

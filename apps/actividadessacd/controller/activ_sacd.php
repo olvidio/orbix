@@ -100,4 +100,4 @@ $a_campos = ['oPosicion' => $oPosicion,
 ];
 
 $oView = new core\ViewTwig('actividadessacd/controller');
-echo $oView->render('activ_sacd.html.twig', $a_campos);
+$oView->renderizar('activ_sacd.html.twig', $a_campos);

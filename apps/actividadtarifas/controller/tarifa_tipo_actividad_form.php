@@ -87,7 +87,7 @@ if ($Qid_item !== 'nuevo') {
     ];
 
     $oView = new ViewTwig('actividadtarifas/controller');
-    echo $oView->render('tarifa_tipo_actividad_form.html.twig', $a_campos);
+    $oView->renderizar('tarifa_tipo_actividad_form.html.twig', $a_campos);
 
 } else {
     // -------------- NUEVA TARIFA --------------------
@@ -139,5 +139,5 @@ if ($Qid_item !== 'nuevo') {
     ];
 
     $oView = new ViewTwig('actividadtarifas/controller');
-    echo $oView->render('tarifa_tipo_actividad_form_nuevo.html.twig', $a_campos);
+    $oView->renderizar('tarifa_tipo_actividad_form_nuevo.html.twig', $a_campos);
 }

@@ -94,4 +94,4 @@ $a_campos = [
 ];
 
 $oView = new core\View('personas/controller');
-echo $oView->render('personas_que.phtml', $a_campos);
+$oView->renderizar('personas_que.phtml', $a_campos);

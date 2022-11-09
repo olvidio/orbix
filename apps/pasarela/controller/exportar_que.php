@@ -140,4 +140,4 @@ $a_campos = ['oPosicion' => $oPosicion,
 ];
 
 $oView = new ViewTwig('pasarela/controller');
-echo $oView->render('exportar_que.html.twig', $a_campos);
+$oView->renderizar('exportar_que.html.twig', $a_campos);

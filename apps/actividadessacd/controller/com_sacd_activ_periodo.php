@@ -75,4 +75,4 @@ $a_campos = ['oPosicion' => $oPosicion,
 ];
 
 $oView = new core\ViewTwig('actividadessacd/controller');
-echo $oView->render('com_sacd_activ_periodo.html.twig', $a_campos);
+$oView->renderizar('com_sacd_activ_periodo.html.twig', $a_campos);
