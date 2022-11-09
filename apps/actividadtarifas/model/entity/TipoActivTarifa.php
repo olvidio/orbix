@@ -2,7 +2,9 @@
 
 namespace actividadtarifas\model\entity;
 
-use core;
+use core\ClasePropiedades;
+use core\DatosCampo;
+use core\Set;
 
 /**
  * Fitxer amb la Classe que accedeix a la taula xa_tipo_activ_tarifa
@@ -23,7 +25,7 @@ use core;
  * @version 1.0
  * @created 08/11/2018
  */
-class TipoActivTarifa extends core\ClasePropiedades
+class TipoActivTarifa extends ClasePropiedades
 {
 
     /* CONST -------------------------------------------------------------- */
@@ -454,7 +456,7 @@ class TipoActivTarifa extends core\ClasePropiedades
      */
     function getDatosCampos()
     {
-        $oTipoActivTarifaSet = new core\Set();
+        $oTipoActivTarifaSet = new Set();
 
         $oTipoActivTarifaSet->add($this->getDatosId_schema());
         $oTipoActivTarifaSet->add($this->getDatosTarifa());
@@ -468,12 +470,12 @@ class TipoActivTarifa extends core\ClasePropiedades
      * Recupera les propietats de l'atribut iid_schema de TipoActivTarifa
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosId_schema()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_schema'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_schema'));
         $oDatosCampo->setEtiqueta(_("id_schema"));
         return $oDatosCampo;
     }
@@ -482,12 +484,12 @@ class TipoActivTarifa extends core\ClasePropiedades
      * Recupera les propietats de l'atribut iid_tarifa de TipoActivTarifa
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosId_tarifa()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_tarifa'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_tarifa'));
         $oDatosCampo->setEtiqueta(_("id_tarifa"));
         return $oDatosCampo;
     }
@@ -496,12 +498,12 @@ class TipoActivTarifa extends core\ClasePropiedades
      * Recupera les propietats de l'atribut iid_tipo_activ de TipoActivTarifa
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosId_tipo_activ()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_tipo_activ'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_tipo_activ'));
         $oDatosCampo->setEtiqueta(_("id_tipo_activ"));
         return $oDatosCampo;
     }
@@ -510,12 +512,12 @@ class TipoActivTarifa extends core\ClasePropiedades
      * Recupera les propietats de l'atribut iserie de TipoActivTarifa
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosId_serie()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_serie'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_serie'));
         $oDatosCampo->setEtiqueta(_("serie"));
         return $oDatosCampo;
     }

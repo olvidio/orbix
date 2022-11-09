@@ -1,9 +1,12 @@
 <?php
 
+use actividades\model\ActividadTipo;
+use core\ViewTwig;
 use web\Hash;
 use web\PeriodoQue;
 use core\ConfigGlobal;
 use ubis\model\entity\GestorCasaDl;
+use web\Posicion;
 
 /**
  * Página para cambiar la fase a un grupo de actividades.
@@ -25,12 +28,12 @@ require_once("apps/core/global_object.inc");
 
 $oPosicion->recordar();
 
-//Si vengo de vuelta y le paso la referecia del stack donde está la información.
+//Si vengo de vuelta y le paso la referencia del stack donde está la información.
 if (isset($_POST['stack'])) {
     $stack = filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
     if ($stack != '') {
         // No me sirve el de global_object, sino el de la session
-        $oPosicion2 = new web\Posicion();
+        $oPosicion2 = new Posicion();
         if ($oPosicion2->goStack($stack)) { // devuelve false si no puede ir
             $Qid_sel = $oPosicion2->getParametro('id_sel');
             $Qscroll_id = $oPosicion2->getParametro('scroll_id');
@@ -72,7 +75,7 @@ if ($_SESSION['oPerm']->have_perm_oficina('vcsd')
     }
 }
 
-$oActividadTipo = new actividades\model\ActividadTipo();
+$oActividadTipo = new ActividadTipo();
 $oActividadTipo->setPerm_jefe($permiso_des);
 $oActividadTipo->setId_tipo_activ($Qid_tipo_activ);
 $oActividadTipo->setSfsv($ssfsv);
@@ -108,7 +111,7 @@ $oFormP->setDesplPeriodosOpcion_sel($Qperiodo);
 $oFormP->setDesplAnysOpcion_sel($Qyear);
 
 //formulario para casas cuyo calendario de actividades interesa
-$oForm = new web\CasasQue();
+$oForm = new CasasQue();
 $oForm->setTitulo('');
 
 // posible selección múltiple de casas
@@ -136,5 +139,5 @@ $a_campos = ['oPosicion' => $oPosicion,
     'url_ajax' => $url_ajax,
 ];
 
-$oView = new core\ViewTwig('pasarela/controller');
+$oView = new ViewTwig('pasarela/controller');
 echo $oView->render('exportar_que.html.twig', $a_campos);

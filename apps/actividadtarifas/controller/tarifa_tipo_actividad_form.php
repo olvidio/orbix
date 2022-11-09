@@ -1,9 +1,12 @@
 <?php
 
+use actividades\model\ActividadTipo;
 use actividadtarifas\model\entity\GestorTipoTarifa;
 use actividadtarifas\model\entity\TipoActivTarifa;
 use core\ConfigGlobal;
-use web\Desplegable;
+use core\ViewTwig;
+use web\Hash;
+use web\TiposActividades;
 
 /**
  * Esta página muestra un formulario para asociar la id_tarifa a un tipo de actividad.
@@ -47,7 +50,7 @@ if ($Qid_item !== 'nuevo') {
     $aTipoSerie = $oTipoActivTarifa->getArraySerie();
 
     $id_tipo_activ = $oTipoActivTarifa->getId_tipo_activ();
-    $oTipoActiv = new web\TiposActividades($id_tipo_activ);
+    $oTipoActiv = new TiposActividades($id_tipo_activ);
     $isfsv = $oTipoActiv->getSfsvId();
 
     $oGesTipoTarifa = new GestorTipoTarifa();
@@ -55,8 +58,8 @@ if ($Qid_item !== 'nuevo') {
     $oDesplPosiblesTipoTarifas->setNombre('id_tarifa');
     $oDesplPosiblesTipoTarifas->setOpcion_sel($id_tarifa);
 
-    $oHash = new web\Hash();
-    $oHash->setUrl(core\ConfigGlobal::getWeb() . '/apps/actividadtarifas/controller/tarifa_ajax.php');
+    $oHash = new Hash();
+    $oHash->setUrl(ConfigGlobal::getWeb() . '/apps/actividadtarifas/controller/tarifa_ajax.php');
     $oHash->setCamposForm('que!id_tarifa');
     $a_camposHidden = array(
         'id_tipo_activ' => $id_tipo_activ,
@@ -65,8 +68,8 @@ if ($Qid_item !== 'nuevo') {
     );
     $oHash->setArraycamposHidden($a_camposHidden);
 
-    $oHash1 = new web\Hash();
-    $oHash1->setUrl(core\ConfigGlobal::getWeb() . '/apps/actividadtarifas/controller/actividad_tipo_get.php');
+    $oHash1 = new Hash();
+    $oHash1->setUrl(ConfigGlobal::getWeb() . '/apps/actividadtarifas/controller/actividad_tipo_get.php');
     $oHash1->setCamposForm('modo!salida!entrada!opcion_sel!isfsv');
     $h = $oHash1->linkSinVal();
 
@@ -83,7 +86,7 @@ if ($Qid_item !== 'nuevo') {
         'url_ajax' => $url_ajax,
     ];
 
-    $oView = new core\ViewTwig('actividadtarifas/controller');
+    $oView = new ViewTwig('actividadtarifas/controller');
     echo $oView->render('tarifa_tipo_actividad_form.html.twig', $a_campos);
 
 } else {
@@ -99,7 +102,7 @@ if ($Qid_item !== 'nuevo') {
     $Qsactividad = (string)filter_input(INPUT_POST, 'sactividad');
     $Qsnom_tipo = (string)filter_input(INPUT_POST, 'snom_tipo');
 
-    $oActividadTipo = new actividades\model\ActividadTipo();
+    $oActividadTipo = new ActividadTipo();
     $oActividadTipo->setId_tipo_activ($Qid_tipo_activ);
     $oActividadTipo->setAsistentes($Qsasistentes);
     $oActividadTipo->setActividad($Qsactividad);
@@ -110,8 +113,8 @@ if ($Qid_item !== 'nuevo') {
     $oDesplPosiblesTipoTarifas = $oGesTipoTarifa->getListaTipoTarifas($miSfsv);
     $oDesplPosiblesTipoTarifas->setNombre('id_tarifa');
 
-    $oHash = new web\Hash();
-    $oHash->setUrl(core\ConfigGlobal::getWeb() . '/apps/actividadtarifas/controller/tarifa_ajax.php');
+    $oHash = new Hash();
+    $oHash->setUrl(ConfigGlobal::getWeb() . '/apps/actividadtarifas/controller/tarifa_ajax.php');
     //$oHash->setCamposForm('iactividad_val!iasistentes_val!id_tipo_activ!inom_tipo_val!isfsv_val!id_serie!id_tarifa');
     $oHash->setCamposForm('iactividad_val!iasistentes_val!id_tipo_activ!inom_tipo_val!isfsv_val!id_tarifa');
     $oHash->setCamposNo('id_tipo_activ!que');
@@ -121,8 +124,8 @@ if ($Qid_item !== 'nuevo') {
     );
     $oHash->setArraycamposHidden($a_camposHidden);
 
-    $oHash1 = new web\Hash();
-    $oHash1->setUrl(core\ConfigGlobal::getWeb() . '/apps/actividadtarifas/controller/actividad_tipo_get.php');
+    $oHash1 = new Hash();
+    $oHash1->setUrl(ConfigGlobal::getWeb() . '/apps/actividadtarifas/controller/actividad_tipo_get.php');
     $oHash1->setCamposForm('modo!salida!entrada!opcion_sel!isfsv');
     $h = $oHash1->linkSinVal();
 
@@ -135,6 +138,6 @@ if ($Qid_item !== 'nuevo') {
         'oActividadTipo' => $oActividadTipo,
     ];
 
-    $oView = new core\ViewTwig('actividadtarifas/controller');
+    $oView = new ViewTwig('actividadtarifas/controller');
     echo $oView->render('tarifa_tipo_actividad_form_nuevo.html.twig', $a_campos);
 }

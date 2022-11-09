@@ -10,6 +10,7 @@ use ubis\model\entity\GestorCasaDl;
 use ubis\model\entity\GestorCentroDl;
 use ubis\model\entity\GestorTarifaUbi;
 use web\DateTimeLocal;
+use web\Lista;
 use web\Periodo;
 use web\TiposActividades;
 
@@ -273,7 +274,7 @@ foreach ($cActividades as $oActividad) {
 }
 
 
-$oTabla = new web\Lista();
+$oTabla = new Lista();
 $oTabla->setId_tabla('actividad_select');
 $oTabla->setCabeceras($a_cabeceras);
 $oTabla->setBotones($a_botones);

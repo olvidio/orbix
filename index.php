@@ -50,6 +50,7 @@ use menus\model\PermisoMenu;
 use usuarios\model\entity\GestorPreferencia;
 use usuarios\model\entity\Role;
 use usuarios\model\entity\Usuario;
+use web\Hash;
 
 $oGesPref = new GestorPreferencia();
 
@@ -294,7 +295,7 @@ if ($gm < 2) {
 }
 $li_submenus .= "</ul>";
 
-$oHash = new web\Hash();
+$oHash = new Hash();
 $oHash->setUrl(ConfigGlobal::getWeb() . '/apps/usuarios/controller/personal_update.php');
 $oHash->setCamposForm('que!tabla!sPrefs');
 $h = $oHash->linkSinVal();

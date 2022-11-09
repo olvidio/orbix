@@ -7,6 +7,7 @@ use core\ConfigGlobal;
 use ubis\model\entity\GestorTarifaUbi;
 use ubis\model\entity\TarifaUbi;
 use web\Desplegable;
+use web\Hash;
 use web\Lista;
 use web\TiposActividades;
 use actividadtarifas\model\entity\TipoActivTarifa;
@@ -39,7 +40,7 @@ switch ($Qque) {
         $oDesplPosiblesSeries->setOpciones($aTipoSerie);
         $oDesplPosiblesSeries->setOpcion_sel(1);
 
-        $oHash = new web\Hash();
+        $oHash = new Hash();
         $a_camposHidden = array(
             'que' => 'update',
             'id_ubi' => $Qid_ubi,
@@ -299,7 +300,7 @@ switch ($Qque) {
         $a_opciones = array(0 => _("por dia"), 1 => _("total"));
         $oDespl = new Desplegable('modo', $a_opciones, $modo, 0);
 
-        $oHash = new web\Hash();
+        $oHash = new Hash();
         $camposForm = 'letra!modo!observ';
         $oHash->setCamposNo('que');
         $a_camposHidden = array(

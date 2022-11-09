@@ -1,6 +1,8 @@
 <?php
 
 // INICIO Cabecera global de URL de controlador *********************************
+use core\ViewTwig;
+
 require_once("apps/core/global_header.inc");
 // Archivos requeridos por esta url **********************************************
 
@@ -45,5 +47,5 @@ $a_campos = ['oPosicion' => $oPosicion,
     'url_contribucion_reserva' => $url_contribucion_reserva,
 ];
 
-$oView = new core\ViewTwig('pasarela/controller');
+$oView = new ViewTwig('pasarela/controller');
 echo $oView->render('parametros_menu.html.twig', $a_campos);

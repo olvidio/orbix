@@ -2,6 +2,7 @@
 
 namespace actividades\model;
 
+use actividades\model\entity\GestorRepeticion;
 use core;
 
 /* No vale el underscore en el nombre */
@@ -31,7 +32,7 @@ class InfoTipoRepeticion extends core\DatosInfo
             $aOperador['repeticion'] = 'sin_acentos';
         }
         $aWhere['_ordre'] = 'id_serie';
-        $oLista = new entity\GestorRepeticion();
+        $oLista = new GestorRepeticion();
         $Coleccion = $oLista->getRepeticiones($aWhere, $aOperador);
 
         return $Coleccion;

@@ -3,6 +3,8 @@
 namespace pasarela\model\entity;
 
 use core;
+use core\DatosCampo;
+use core\Set;
 use stdClass;
 
 /**
@@ -373,7 +375,7 @@ class PasarelaConfig extends core\ClasePropiedades
      */
     function getDatosCampos()
     {
-        $oPasarelaConfigSet = new core\Set();
+        $oPasarelaConfigSet = new Set();
 
         $oPasarelaConfigSet->add($this->getDatosValor());
         return $oPasarelaConfigSet->getTot();
@@ -384,12 +386,12 @@ class PasarelaConfig extends core\ClasePropiedades
      * Recupera les propietats de l'atribut json_valor de PasarelaConfig
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosValor()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'json_valor'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'json_valor'));
         $oDatosCampo->setEtiqueta(_("valor"));
         return $oDatosCampo;
     }
