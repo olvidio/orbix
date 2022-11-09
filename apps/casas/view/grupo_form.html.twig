@@ -8,7 +8,7 @@ fnjs_guardar=function(formulario){
 	hija=$("#id_ubi_hijo").val();
 
 	if (madre==hija){
-		alert("{{ "No puede ser la misma casa"|trans }}");
+		alert("{{ "No puede ser la misma casa"|trans|raw }}");
 	} else {
 		$(formulario).attr('action','{{ url_ajax }}');
 		$(formulario).one("submit", function() {
@@ -19,7 +19,7 @@ fnjs_guardar=function(formulario){
 			})
 			.done(function (rta_txt) {
 				if (rta_txt != '' && rta_txt != '\n') {
-					alert ('{{ "respuesta"|trans }}: '+rta_txt);
+					alert ('{{ "respuesta"|trans|raw }}: '+rta_txt);
 				} else {
                     {{ oPosicion.js_atras(1)|raw }}
                 }
@@ -34,13 +34,13 @@ fnjs_guardar=function(formulario){
 <form id="frm_grupo_casa" name="frm_grupo_casa" action="" method="post">
 {{ oHash.getCamposHtml|raw }}
 
-{{ "Casa Madre"|trans }}
+{{ "Casa Madre"|trans|raw }}
 {{ oDesplCasaMadre.desplegable()|raw }}
 
 <br>
-{{ "Casa dependiente"|trans }}
+{{ "Casa dependiente"|trans|raw }}
 {{ oDesplCasaHija.desplegable()|raw }}
 <br>
 <br>
-<input type="button" id="ok" name="ok" onclick="fnjs_guardar(this.form);" value="{{ "guardar"|trans }}">
+<input type="button" id="ok" name="ok" onclick="fnjs_guardar(this.form);" value="{{ "guardar"|trans|raw }}">
 </form>

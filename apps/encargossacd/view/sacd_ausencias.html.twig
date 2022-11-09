@@ -53,12 +53,12 @@ fnjs_horario=function(id_enc){
 
 <table>
 <thead>
-<tr><th colspan=4>{{ "otros encargos y ausencias"|trans }}</th></tr>
+<tr><th colspan=4>{{ "otros encargos y ausencias"|trans|raw }}</th></tr>
 <tr>
-<th>{{ "tipo"|trans }}:&nbsp;&nbsp;&nbsp;
+<th>{{ "tipo"|trans|raw }}:&nbsp;&nbsp;&nbsp;
 {{ oDesplFiltroSacd.desplegable()|raw }}
 </th>
-<th colspan=3 id="sacds">{{ "sacd"|trans }}:&nbsp;&nbsp;&nbsp;
+<th colspan=3 id="sacds">{{ "sacd"|trans|raw }}:&nbsp;&nbsp;&nbsp;
 	<select class=contenido id="lst_sacds" onchange="fnjs_ver_ficha();">
 	</select>
 </th></tr>

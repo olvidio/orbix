@@ -108,23 +108,23 @@ $(document).ready(fnjs_actualizar_fases ({{ id_fase_nueva }}));
 <table>
 <tr>
 	<td class=etiqueta>{{ "para actividades que organiza"|trans|capitalize }}:
-    <input onchange="fnjs_actualizar_fases();" type="radio" name="dl_propia" value="t" {{ chk_propia }}>{{ "la propia dl"|trans }}
-    <input onchange="fnjs_actualizar_fases();" type="radio" name="dl_propia" value="f" {{ chk_no_propia }}>{{ "otras dl"|trans }}
+    <input onchange="fnjs_actualizar_fases();" type="radio" name="dl_propia" value="t" {{ chk_propia }}>{{ "la propia dl"|trans|raw }}
+    <input onchange="fnjs_actualizar_fases();" type="radio" name="dl_propia" value="f" {{ chk_no_propia }}>{{ "otras dl"|trans|raw }}
 	</td>
 </tr>
 </table>
 
 <input type="hidden" id="id_tipo_activ" name="id_tipo_activ" value="">
 <table>
-<tr><td class=etiqueta>{{ "periodo"|trans }}:</td>
+<tr><td class=etiqueta>{{ "periodo"|trans|raw }}:</td>
 {{ oFormP.getTd()|raw }}
 </tr>
-<tr><td class=etiqueta>{{ "fase"|trans }}:</td>
+<tr><td class=etiqueta>{{ "fase"|trans|raw }}:</td>
 <td></td>
 <td><span id=div_proceso "></td>
 <td>
-<input type="radio" value="marcar" checked="true" name="accion" onchange="fnjs_lista();"> {{ "marcar"|trans }}
-<input type="radio" value="desmarcar" name="accion" onchange="fnjs_lista();"> {{ "desmarcar"|trans }}
+<input type="radio" value="marcar" checked="true" name="accion" onchange="fnjs_lista();"> {{ "marcar"|trans|raw }}
+<input type="radio" value="desmarcar" name="accion" onchange="fnjs_lista();"> {{ "desmarcar"|trans|raw }}
 </td>
 
 </tr>
@@ -133,7 +133,7 @@ $(document).ready(fnjs_actualizar_fases ({{ id_fase_nueva }}));
 <table>
 <tfoot>
 <tr class=botones>
-<td><input TYPE="button" onclick="fnjs_lista();"  id="ok" name="ok" value="{{ "ver selección"|trans }}" class="btn_ok"></td>
+<td><input TYPE="button" onclick="fnjs_lista();"  id="ok" name="ok" value="{{ "ver selección"|trans|raw }}" class="btn_ok"></td>
 </tr></tfoot>
 </table>
 <div id='div_resultado'></div>

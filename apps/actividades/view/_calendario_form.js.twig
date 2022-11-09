@@ -74,14 +74,14 @@ fnjs_guardar=function(tipo=''){
 	var id_actividad_val=$('#iactividad_val').val();
 	var id_nom_tipo_val=$('#inom_tipo_val').val();
 
-	if (id_sfsv_val == '.') { alert("{{ "debe concretar la sección en el tipo de actividad"|trans }}"); err=1; }
-	if (id_asistentes_val == '.') { alert("{{ "debe concretar los asistentes en el tipo de actividad"|trans }}"); err=1; }
-	if (id_actividad_val == '.') { alert("{{ "debe concretar la actividad en el tipo de actividad"|trans }}"); err=1; }
-	if (id_nom_tipo_val == '...') { alert("{{ "debe concretar el tipo de actividad"|trans }}"); err=1; }
+	if (id_sfsv_val == '.') { alert("{{ "debe concretar la sección en el tipo de actividad"|trans|raw }}"); err=1; }
+	if (id_asistentes_val == '.') { alert("{{ "debe concretar los asistentes en el tipo de actividad"|trans|raw }}"); err=1; }
+	if (id_actividad_val == '.') { alert("{{ "debe concretar la actividad en el tipo de actividad"|trans|raw }}"); err=1; }
+	if (id_nom_tipo_val == '...') { alert("{{ "debe concretar el tipo de actividad"|trans|raw }}"); err=1; }
 	/* fin de tipo */
 	
 	if (!dl_org) { 
-		alert("{{ "debe llenar el campo de Organiza"|trans }}"); err=1;
+		alert("{{ "debe llenar el campo de Organiza"|trans|raw }}"); err=1;
 	}
 
 	var rr=fnjs_comprobar_campos('#modifica','{{ obj|raw }}');
@@ -97,7 +97,7 @@ fnjs_guardar=function(tipo=''){
             })
             .done(function( rta_txt ) {
                 if (rta_txt != '' && rta_txt != '\\n') {
-                    alert ('{{ "respuesta"|trans }}: '+rta_txt);
+                    alert ('{{ "respuesta"|trans|raw }}: '+rta_txt);
                 }
                 // Esta función está en calendario_planning.phtml 
                 fnjs_cerrar();

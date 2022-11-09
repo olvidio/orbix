@@ -25,7 +25,7 @@ fnjs_guardar=function(formulario){
 		})
 		.done(function (rta_txt) {
 			if (rta_txt != '' && rta_txt != '\n') {
-				alert ('{{ "respuesta"|trans }}: '+rta_txt);
+				alert ('{{ "respuesta"|trans|raw }}: '+rta_txt);
 			}
 		});
 		return false;
@@ -43,9 +43,9 @@ fnjs_left_side_hide();
 <th class=titulo_inv colspan=4>{{ "lista de centros de la zona"|trans|capitalize }}:&nbsp;&nbsp;&nbsp;
 <select class=contenido id="lst_zonas" onchange="fnjs_busca_ctrs()">
     <option></option>
-    <option value="no">{{ "sin asignar zona"|trans }}</option>
+    <option value="no">{{ "sin asignar zona"|trans|raw }}</option>
     {% if perm_des %}
-        <option value="no_sf">{{ "sin asignar zona sf"|trans }}</option>
+        <option value="no_sf">{{ "sin asignar zona sf"|trans|raw }}</option>
     {% endif %}
     {{ oDesplZonas.options|raw }}
 </select></th></tr>
@@ -56,14 +56,14 @@ fnjs_left_side_hide();
 </tr>
 {% if perm_des %}
 	<tr>
-	<th class=titulo_inv colspan=3>{{ "asignar los centros marcados a la zona"|trans }}:&nbsp;&nbsp;&nbsp;
+	<th class=titulo_inv colspan=3>{{ "asignar los centros marcados a la zona"|trans|raw }}:&nbsp;&nbsp;&nbsp;
 	<select class=contenido id="id_zona_new" name="id_zona_new" >
 	<option></option>
     {{ oDesplZonas.options|raw }}
-	<option value="no">{{ "sin asignar zona"|trans }}</option>
+	<option value="no">{{ "sin asignar zona"|trans|raw }}</option>
 	</th>
 	<th>
-		<input type="button" id="ok" name="ok" onclick="fnjs_guardar(this.form);" value="{{ "asignar"|trans }}">
+		<input type="button" id="ok" name="ok" onclick="fnjs_guardar(this.form);" value="{{ "asignar"|trans|raw }}">
 	</th>
 	</tr>
 {% endif %}

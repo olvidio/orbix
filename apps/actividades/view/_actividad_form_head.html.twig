@@ -24,7 +24,7 @@
 	<tr>
 		<td class=etiqueta>{{ "tipo de actividad"|trans|capitalize }} </td>
 		{% if permiso_des %}
-			<td>{{ "sf/sv"|trans }}:
+			<td>{{ "sf/sv"|trans|raw }}:
 			<span class=contenido>{{ ssfsv }}</span></td>
         {% endif %}
 		<td class=etiqueta>{{ "asistentes"|trans|capitalize }}: 

@@ -2,8 +2,11 @@
 
 namespace core;
 
-use phpDocumentor\Reflection\DocBlock\Tags\Return_;
-use phpDocumentor\Reflection\Types\Parent_;
+use Exception;
+use jblond\TwigTrans\Translation;
+use Twig\Environment;
+use Twig\Loader\FilesystemLoader;
+use Twig\TwigFilter;
 
 require_once(ConfigGlobal::$dir_libs . '/vendor/autoload.php');
 
@@ -14,16 +17,16 @@ require_once(ConfigGlobal::$dir_libs . '/vendor/autoload.php');
  * @subpackage model
  * @author
  * @version 1.0
- * @created 22/9/2010
+ * @created 22/6/2020
  */
-class ViewTwig extends \Twig_Environment
+class ViewTwig extends Environment
 {
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
     /**
      * Namespace
      *
-     * @var \Twig_Loader_Filesystem
+     * @var Twig\Loader\FilesystemLoader
      */
     private $loader;
 
@@ -32,36 +35,48 @@ class ViewTwig extends \Twig_Environment
     /**
      * Constructor de la classe.
      *
-     * param string  $dirname Es el directorio donde est´an las plantillas de twig
+     * param string  $dirname Es el directorio donde están las plantillas de twig
      * param array $paths $namespace => $path los possibles directorios donde buscar plantillas, son el namespace. (se antepone @).
      *
-     * return \Twig_Environment
+     * return \Twig\Environment
      */
     function __construct($dirname, array $paths = [])
     {
 
         $abs_dir = $this->setAbsolutePath($dirname);
 
-        $loader = new \Twig_Loader_Filesystem($abs_dir);
+        $loader = new FilesystemLoader($abs_dir);
 
         foreach ($paths as $namespace => $path) {
             $abs_dir = $this->setAbsolutePath($path);
             $loader->addPath($abs_dir, $namespace);
         }
 
+        $dir_js = $this->getJsPath();
+        $loader->addPath($dir_js, 'global_js');
+
         $options = [
-            'cache' => '/path/to/compilation_cache',
+            //'cache' => '/path/to/compilation_cache',
+            'cache' => false,
+            'debug' => true,
+            'auto_reload' => true,
         ];
-        $options = [];
+        $filter = new TwigFilter('trans', function (Environment $env, $context, $string) {
+            return Translation::TransGetText($string, []);
+        }, ['needs_context' => true, 'needs_environment' => true]);
 
         parent::__construct($loader, $options);
-        parent::addExtension(new \Twig_Extensions_Extension_I18n());
+        // load the i18n extension for using the translation tag for twig
+        // {% trans %}my string{% endtrans %}
+        parent::addFilter($filter);
+        parent::addExtension(new Translation());
+
     }
 
     private function setAbsolutePath($dirname)
     {
-        $dir_apps = ConfigGlobal::$web_path . '/apps';
-        $base_dir = $_SERVER['DOCUMENT_ROOT'] . $dir_apps;
+        $dir_apps = '/apps';
+        $base_dir = ServerConf::DIR . $dir_apps;
 
         // reemplazo controller o model por view
         $patterns = array();
@@ -73,10 +88,35 @@ class ViewTwig extends \Twig_Environment
 
         $new_dir = preg_replace($patterns, $replacements, $dirname);
         $new_dir = str_replace('\\', DIRECTORY_SEPARATOR, $new_dir);
-        $dir_templates = $base_dir . DIRECTORY_SEPARATOR . $new_dir;
 
-        return $dir_templates;
+        // dir_templates
+        return $base_dir . DIRECTORY_SEPARATOR . $new_dir;
     }
+
+    private function getJsPath()
+    {
+        //$dir_apps = ConfigGlobal::$web_path.'/apps';
+        // en este caso ya esta en document_root
+        $dir_apps = '';
+        $base_dir = ServerConf::DIR . $dir_apps;
+        $new_dir = 'scripts';
+
+        // dir_templates
+        return $base_dir . DIRECTORY_SEPARATOR . $new_dir;
+    }
+
     /* MÉTODOS PÚBLICOS -----------------------------------------------------------*/
+
+    public function renderizar($name, $context): void
+    {
+        try {
+            $tpl = $this->load($name);
+        } catch (Exception $exception) {
+            echo $exception->getMessage();
+            die();
+        }
+
+        echo $tpl->render($context);
+    }
 
 }

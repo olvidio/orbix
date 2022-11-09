@@ -21,7 +21,7 @@ fnjs_borrar=function(formulario){
 <table>
 <thead>
 <tr>
-<th class=titulo_inv colspan=1>{{ "horario de"|trans }}:</th>
+<th class=titulo_inv colspan=1>{{ "horario de"|trans|raw }}:</th>
 <th class=titulo_inv colspan=4>{{ desc_enc }}</th>
 <tr>
 </thead>
@@ -38,6 +38,6 @@ fnjs_borrar=function(formulario){
 <tr class=botones>
 <td class=botones>
 	<span class=cabecera class=link onclick="fnjs_update_div('#main','{{ pagina_nuevo|raw }}')" >
-	    {{ "añadir horario"|trans }}
+	    {{ "añadir horario"|trans|raw }}
 	</span></td>
 </tr></table>

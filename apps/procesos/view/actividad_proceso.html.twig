@@ -82,14 +82,14 @@ fnjs_actualizar();
 <input type='Hidden' id='que' name='que' value=''>
 <tr><th colspan='5' class=titulo_inv>{{ "fases de la actividad"|trans|capitalize }}</th>
 {% if permiso_calendario %}
-	<td><input type="Button" value="{{ "regenerar"|trans }}" onclick="fnjs_generar_proceso()"></td>
+	<td><input type="Button" value="{{ "regenerar"|trans|raw }}" onclick="fnjs_generar_proceso()"></td>
 {% endif %}
-<td style="text-align: right;">{{ "forzar"|trans }}<input type="checkbox" name=force id=force></td>
+<td style="text-align: right;">{{ "forzar"|trans|raw }}<input type="checkbox" name=force id=force></td>
 </tr>
 </table>
 
 <div id='div_proceso'></div>
-<input type='button' name='b_nuevo' value='{{ "actualizar"|trans }}' onclick='fnjs_actualizar();'>
+<input type='button' name='b_nuevo' value='{{ "actualizar"|trans|raw }}' onclick='fnjs_actualizar();'>
 <div id='div_modificar'></div>
 <div id='resto'></div>
 {% endblock %}

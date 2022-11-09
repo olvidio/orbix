@@ -21,21 +21,21 @@ fnjs_grabar=function(formulario){
 }
 </script>
 {{  oPosicion.mostrar_left_slide(1)|raw }}
-<h1>{{  "Añadir nuevo permiso para centro a"|trans }} {{ nombre }}</h1>
+<h1>{{  "Añadir nuevo permiso para centro a"|trans|raw }} {{ nombre }}</h1>
 <form id=perm_usuario  name=perm_usuario action="" method="post" >
 {{ oHash.getCamposHtml()|raw }}
 <table>
 <tr>
-<td>{{ "seleccionar un centro"|trans }}:</td>
+<td>{{ "seleccionar un centro"|trans|raw }}:</td>
 <td>
 {{ oDesplCentros.desplegable|raw }}
 </td>
 </tr>
 
 <tr>
-<td class=etiqueta>{{ "permiso tipo"|trans }}:</td>
+<td class=etiqueta>{{ "permiso tipo"|trans|raw }}:</td>
 <td colspan=5> {{ oDesplAccion.desplegable|raw }} </td></tr>
 </table>
 <br>
-<input type=button onclick="fnjs_grabar(this.form);" value="{{ "guardar"|trans }}">
+<input type=button onclick="fnjs_grabar(this.form);" value="{{ "guardar"|trans|raw }}">
 </form>

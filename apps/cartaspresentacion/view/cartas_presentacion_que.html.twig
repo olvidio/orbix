@@ -76,7 +76,7 @@ fnjs_ver=function(){
 }
 
 fnjs_eliminar_cp=function(id_direccion,id_ubi){
-    seguro=confirm("{{ "¿Está seguro que quiere quitar los datos de presentación de este centro?"|trans }}");
+    seguro=confirm("{{ "¿Está seguro que quiere quitar los datos de presentación de este centro?"|trans|raw }}");
     if (seguro) { 
         var url='{{ url_ajax }}';
         var parametros='que_mod=eliminar&id_direccion='+id_direccion+'&id_ubi='+id_ubi+'{{ h_del|raw }}';
@@ -145,17 +145,17 @@ fnjs_left_side_hide();
 <form id=seleccion name=seleccion action="">
 {{ oHash.getCamposHtml|raw }}
 <table>
-<tr><th colspan=7 class=titulo_inv>{{ "seleccionar centros con cartas de presentación"|trans }}</th></tr>
+<tr><th colspan=7 class=titulo_inv>{{ "seleccionar centros con cartas de presentación"|trans|raw }}</th></tr>
 <tr>
-	<td class=etiqueta>{{ "según dl"|trans }}:</td>
+	<td class=etiqueta>{{ "según dl"|trans|raw }}:</td>
 	<td colspan=3>
 	{{ oSelCiudades.desplegable|raw }}
 	</td>
-	<td class=etiqueta id="td_poblacion" >{{ "población"|trans }}</td>
+	<td class=etiqueta id="td_poblacion" >{{ "población"|trans|raw }}</td>
 	<td id='lst_lugar' colspan=1>
 	</td>
 	<td>
-<input type=button name="buscar" value="{{ "buscar"|trans }}" onclick="fnjs_ver();">
+<input type=button name="buscar" value="{{ "buscar"|trans|raw }}" onclick="fnjs_ver();">
 </td>
 </tr>
 </table>

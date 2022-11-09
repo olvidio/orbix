@@ -70,7 +70,7 @@ fnjs_guardar=function(formulario) {
 <form id=seleccion name=seleccion action="">
 {{ oHash.getCamposHtml|raw }}
 {{ oDesplOpciones.desplegable|raw }}
-<input type=button name="buscar" value="{{ "buscar"|trans }}" onclick="fnjs_ver();">
+<input type=button name="buscar" value="{{ "buscar"|trans|raw }}" onclick="fnjs_ver();">
 </form>
 <div id='exportar'></div>
 <div id='div_modificar'></div>
