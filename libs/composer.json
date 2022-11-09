@@ -1,4 +1,8 @@
 {
+   "config": {
+
+        "platform-check": false
+    },
     "require": {
       "twig/twig": "^3.0",
       "jblond/twig-trans": "^1.0",
