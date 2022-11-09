@@ -1,7 +1,4 @@
 {
-  "platform": {
-        "php": "7.2"
-    },
     "require": {
       "twig/twig": "^3.0",
       "jblond/twig-trans": "^1.0",
@@ -13,5 +10,10 @@
     },
     "require-dev": {
       "roave/security-advisories": "dev-latest"
+    },
+  "config": {
+    "platform": {
+      "php": "7.2.34"
     }
+  }
 }
