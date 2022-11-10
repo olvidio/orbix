@@ -45,18 +45,18 @@ $Qid_dossier = (integer)filter_input(INPUT_POST, 'id_dossier');
 //En el caso de eliminar desde la lista de cargos
 $a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 if (!empty($a_sel)) { //vengo de un checkbox
-    if ($Qpau == "p") {
+    if ($Qpau === "p") {
         $Qid_item = (integer)strtok($a_sel[0], "#");
         $Qelim_asis = strtok("#");
         $Qid_nom = (integer)filter_input(INPUT_POST, 'id_pau');
     }
-    if ($Qpau == "a") {
+    if ($Qpau === "a") {
         $Qid_item = (integer)strtok($a_sel[0], "#");
         $Qelim_asis = strtok("#");
         $Qid_activ = (integer)filter_input(INPUT_POST, 'id_pau');
     }
     // sobre escribo...
-    if ($Qid_dossier == 3101) {  // vengo del listado de asistencias
+    if ($Qid_dossier === 3101) {  // vengo del listado de asistencias
         $Qid_nom = (integer)strtok($a_sel[0], "#");
         $Qid_item = (integer)strtok("#"); // si no hay devuelve false
         $Qid_item = empty($Qid_item) ? '' : $Qid_item; // cambiar el false a ''.
@@ -99,7 +99,7 @@ switch ($Qmod) {
         $sactividad = $oTipoActiv->getActividadText();
         $snom_tipo = $oTipoActiv->getNom_tipoText();
 
-        if ($Qelim_asis == 2 && ($sasistentes == 's' || $sasistentes == 'sg')) {
+        if ($Qelim_asis == 2 && ($sasistentes === 's' || $sasistentes === 'sg')) {
             $oAsistentePub = new AsistentePub();
             $oAsistente = $oAsistentePub->getClaseAsistente($Qid_nom, $Qid_activ);
             $oAsistente->setPrimary_key(array('id_activ' => $Qid_activ, 'id_nom' => $Qid_nom));
@@ -127,7 +127,7 @@ switch ($Qmod) {
         if (($oActividadCargo->DBGuardar()) === false) {
             // intentar recuperar el error
             $error = end($_SESSION['errores']);
-            if (strstr($error, 'duplicate key')) {
+            if (strpos($error, 'duplicate key') !== false) {
                 $msg_err = _("ya existe este cargo para esta actividad");
             } else {
                 $msg_err = $error;
@@ -184,7 +184,7 @@ switch ($Qmod) {
         if ($oActividadCargo->DBGuardar() === false) {
             // intentar recuperar el error
             $error = end($_SESSION['errores']);
-            if (strstr($error, 'duplicate key')) {
+            if (strpos($error, 'duplicate key') !== false) {
                 $msg_err = _("ya existe este cargo para esta actividad");
             } else {
                 $msg_err = _("hay un error, no se ha guardado");
