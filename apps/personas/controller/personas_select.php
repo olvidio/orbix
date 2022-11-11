@@ -6,7 +6,6 @@ use ubis\model\entity as ubis;
 use usuarios\model\entity as usuarios;
 use usuarios\model\entity\Role;
 use usuarios\model\entity\Usuario;
-use personas\model\entity\Persona;
 use personas\model\entity\PersonaDl;
 
 /**
@@ -289,13 +288,13 @@ $a_botones[] = array('txt' => _("ficha"),
     'click' => "fnjs_ficha(\"#seleccionados\")");
 $script['fnjs_ficha'] = 1;
 
-if (core\configGlobal::is_app_installed('asistentes')) {
+if (configGlobal::is_app_installed('asistentes')) {
     $a_botones[] = array('txt' => _("ver actividades"),
         'click' => "fnjs_actividades(\"#seleccionados\")");
     $script['fnjs_actividades'] = 1;
 }
 
-if (core\configGlobal::is_app_installed('notas')) {
+if (configGlobal::is_app_installed('notas')) {
     if (($tabla == "p_numerarios") || ($tabla == "p_agregados") || ($tabla == "p_de_paso_ex")) {
         $a_botones[] = array('txt' => _("ver tessera"),
             'click' => "fnjs_tessera(\"#seleccionados\")");
@@ -309,9 +308,12 @@ if (core\configGlobal::is_app_installed('notas')) {
         $a_botones[] = array('txt' => _("imprimir tessera"),
             'click' => "fnjs_imp_tessera(\"#seleccionados\")");
         $script['fnjs_imp_tessera'] = 1;
+        $a_botones[] = array('txt' => _("ver notas"),
+            'click' => "fnjs_notas(\"#seleccionados\")");
+        $script['fnjs_notas'] = 1;
     }
 }
-if (core\configGlobal::is_app_installed('actividadestudios')) {
+if (configGlobal::is_app_installed('actividadestudios')) {
     if ($_SESSION['oPerm']->have_perm_oficina('sm') || $_SESSION['oPerm']->have_perm_oficina('est')) {
         if (($tabla == "p_numerarios") || ($tabla == "p_agregados") || ($tabla == "p_de_paso_ex")) {
             $a_botones[] = array('txt' => _("posibles ca"),
@@ -320,7 +322,7 @@ if (core\configGlobal::is_app_installed('actividadestudios')) {
         }
     }
 }
-if (core\configGlobal::is_app_installed('actividadplazas')) {
+if (configGlobal::is_app_installed('actividadplazas')) {
     if (($tabla == "p_numerarios") || ($tabla == "p_agregados") || ($tabla == "p_de_paso_ex")) {
         $sactividad = 'ca'; //ca
         $a_botones[] = array('txt' => _("petición ca"),
@@ -332,13 +334,13 @@ if (core\configGlobal::is_app_installed('actividadplazas')) {
     }
 }
 if ($_SESSION['oPerm']->have_perm_oficina('est')) {
-    if (core\configGlobal::is_app_installed('actividadestudios')) {
+    if (configGlobal::is_app_installed('actividadestudios')) {
         $a_botones[] = array('txt' => _("plan estudios"),
             'click' => "fnjs_matriculas(\"#seleccionados\")");
         $script['fnjs_matriculas'] = 1;
         //$permiso = 3;
     }
-    if (core\configGlobal::is_app_installed('profesores')) {
+    if (configGlobal::is_app_installed('profesores')) {
         $a_botones[] = array('txt' => _("ficha profesor stgr"),
             'click' => "fnjs_ficha_profe(\"#seleccionados\")");
         $script['fnjs_ficha_profe'] = 1;
@@ -346,14 +348,14 @@ if ($_SESSION['oPerm']->have_perm_oficina('est')) {
 }
 
 // Añadir certificados
-if (ConfigGlobal::mi_ambito() == 'r') {
+if (ConfigGlobal::mi_ambito() === 'r') {
     $a_botones[] = array('txt' => _("imprimir certificado"),
         'click' => "fnjs_imp_certificado(\"#seleccionados\")");
     $script['fnjs_imp_certificado'] = 1;
 }
 
 // Solo ver e imprimir tessera + certificados
-if (ConfigGlobal::mi_ambito() == 'rstgr') {
+if (ConfigGlobal::mi_ambito() === 'rstgr') {
     $a_botones = [];
     $a_botones[] = array('txt' => _("ver tessera"),
         'click' => "fnjs_tessera(\"#seleccionados\")");
@@ -370,7 +372,7 @@ if (ConfigGlobal::mi_ambito() == 'rstgr') {
 }
 
 // en el caso de los de dre añado la posibilidad de listar la atencion a las actividades
-if (core\configGlobal::is_app_installed('actividadessacd')) {
+if (configGlobal::is_app_installed('actividadessacd')) {
     if ($_SESSION['oPerm']->have_perm_oficina('des')) {
         $a_botones[] = array('txt' => _("atención actividades"),
             'click' => "fnjs_lista_activ(\"#seleccionados\")");
@@ -401,7 +403,7 @@ $a_valores = array();
 $a_personas = array();
 
 $sPrefs = '';
-$id_usuario = core\ConfigGlobal::mi_id_usuario();
+$id_usuario = ConfigGlobal::mi_id_usuario();
 $tipo = 'tabla_presentacion';
 $oPref = new usuarios\Preferencia(array('id_usuario' => $id_usuario, 'tipo' => $tipo));
 $sPrefs = $oPref->getPreferencia();
@@ -431,7 +433,7 @@ foreach ($cPersonas as $oPersona) {
     $a_val['sel'] = "$id_nom#$id_tabla";
     $a_val[1] = $id_tabla;
     if ($sPrefs == 'html') {
-        $pagina = web\Hash::link(core\ConfigGlobal::getWeb() . '/apps/personas/controller/home_persona.php?' . http_build_query(array('id_nom' => $id_nom, 'id_tabla' => $id_tabla, 'obj_pau' => $obj_pau)));
+        $pagina = web\Hash::link(ConfigGlobal::getWeb() . '/apps/personas/controller/home_persona.php?' . http_build_query(array('id_nom' => $id_nom, 'id_tabla' => $id_tabla, 'obj_pau' => $obj_pau)));
         $a_val[2] = array('ira' => $pagina, 'valor' => $nom);
     } else {
         $pagina = 'fnjs_home("#seleccionados")';
@@ -473,7 +475,7 @@ $oTabla->setCabeceras($a_cabeceras);
 $oTabla->setBotones($a_botones);
 $oTabla->setDatos($a_valores);
 
-$pagina = web\Hash::link(core\ConfigGlobal::getWeb() . '/apps/personas/controller/personas_editar.php?' . http_build_query(array('obj_pau' => $obj_pau, 'id_tabla' => $id_tabla, 'nuevo' => 1, 'apellido1' => $Qapellido1)));
+$pagina = web\Hash::link(ConfigGlobal::getWeb() . '/apps/personas/controller/personas_editar.php?' . http_build_query(array('obj_pau' => $obj_pau, 'id_tabla' => $id_tabla, 'nuevo' => 1, 'apellido1' => $Qapellido1)));
 
 $resultado = sprintf(_("%s personas encontradas"), $i);
 

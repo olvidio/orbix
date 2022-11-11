@@ -350,7 +350,7 @@ $a_casas = $a_OpcionesCasas + $a_OpcionesCentros;
 
 $i = 0;
 $sin = 0;
-$a_valores = array();
+$a_valores = [];
 $a_NombreCasa = [];
 $a_FechaIni = [];
 $sPrefs = '';

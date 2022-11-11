@@ -895,7 +895,7 @@ class Select3101
 
         $oView = new View(__NAMESPACE__);
 
-        return $oView->renderizar('select3101.phtml', $a_campos);
+        $oView->renderizar('select3101.phtml', $a_campos);
 
     }
 
