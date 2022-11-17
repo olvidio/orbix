@@ -2,6 +2,7 @@
 
 use actividades\model\ActividadTipo;
 use core\ViewTwig;
+use web\CasasQue;
 use web\Hash;
 use web\PeriodoQue;
 use core\ConfigGlobal;
