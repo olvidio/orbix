@@ -541,7 +541,7 @@ class PersonaNota extends core\ClasePropiedades
      *
      * @return integer iid_asignatura
      */
-    function getId_asignatura()
+    function getId_asignatura(): int
     {
         if (!isset($this->iid_asignatura) && !$this->bLoaded) {
             $this->DBCarregar();

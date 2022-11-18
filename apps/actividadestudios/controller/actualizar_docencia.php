@@ -172,4 +172,4 @@ if (empty($continuar)) {
 }
 
 $oView = new core\View('actividadestudios/controller');
-echo $oView->render('actualizar_docencia.phtml', $a_campos);
+$oView->renderizar('actualizar_docencia.phtml', $a_campos);

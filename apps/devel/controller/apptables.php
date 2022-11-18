@@ -51,4 +51,4 @@ $a_campos['oDesplEsquemas'] = $oDBPropiedades->posibles_esquemas($esquema);
 
 
 $oView = new core\View('devel\controller');
-echo $oView->render('apptables.phtml', $a_campos);
+$oView->renderizar('apptables.phtml', $a_campos);

@@ -8,50 +8,50 @@ fnjs_ver_planning = function(n) {
 <form name="que" id="sel" action="" method="post">
 {{ oHash.getCamposHtml|raw }}
 <table>
-	<tr><th class=titulo_inv colspan=5>{{ "trimestre o mes que interesa"|trans }}</th></tr>
-	<tr><td></td><td><input type="radio" name="trimestre" value=1 {{ chk_trim1 }}>{{ "enero-marzo"|trans }}</td>
-	<td><input type="radio" name="trimestre" value=101>{{ "enero"|trans }}</td>
-	<td><input type="radio" name="trimestre" value=102>{{ "febero"|trans }}</td>
-	<td><input type="radio" name="trimestre" value=103>{{ "marzo"|trans }}</td>
+	<tr><th class=titulo_inv colspan=5>{{ "trimestre o mes que interesa"|trans|raw }}</th></tr>
+	<tr><td></td><td><input type="radio" name="trimestre" value=1 {{ chk_trim1 }}>{{ "enero-marzo"|trans|raw }}</td>
+	<td><input type="radio" name="trimestre" value=101>{{ "enero"|trans|raw }}</td>
+	<td><input type="radio" name="trimestre" value=102>{{ "febero"|trans|raw }}</td>
+	<td><input type="radio" name="trimestre" value=103>{{ "marzo"|trans|raw }}</td>
 	</tr>
-	<tr><td></td><td><input type="radio" name="trimestre" value=2 {{ chk_trim2 }}>{{ "abril-junio"|trans }}</td>
-	<td><input type="radio" name="trimestre" value=104>{{ "abril"|trans }}</td>
-	<td><input type="radio" name="trimestre" value=105>{{ "mayo"|trans }}</td>
-	<td><input type="radio" name="trimestre" value=106>{{ "junio"|trans }}</td>
+	<tr><td></td><td><input type="radio" name="trimestre" value=2 {{ chk_trim2 }}>{{ "abril-junio"|trans|raw }}</td>
+	<td><input type="radio" name="trimestre" value=104>{{ "abril"|trans|raw }}</td>
+	<td><input type="radio" name="trimestre" value=105>{{ "mayo"|trans|raw }}</td>
+	<td><input type="radio" name="trimestre" value=106>{{ "junio"|trans|raw }}</td>
 	</tr>
-	<tr><td></td><td><input type="radio" name="trimestre" value=3 {{ chk_trim3 }}>{{ "julio-septiembre"|trans }}</td>
-	<td><input type="radio" name="trimestre" value=107>{{ "julio"|trans }}</td>
-	<td><input type="radio" name="trimestre" value=108>{{ "agosto"|trans }}</td>
-	<td><input type="radio" name="trimestre" value=109>{{ "septiembre"|trans }}</td>
+	<tr><td></td><td><input type="radio" name="trimestre" value=3 {{ chk_trim3 }}>{{ "julio-septiembre"|trans|raw }}</td>
+	<td><input type="radio" name="trimestre" value=107>{{ "julio"|trans|raw }}</td>
+	<td><input type="radio" name="trimestre" value=108>{{ "agosto"|trans|raw }}</td>
+	<td><input type="radio" name="trimestre" value=109>{{ "septiembre"|trans|raw }}</td>
 	</tr>
-	<tr><td></td><td><input type="radio" name="trimestre" value=4 {{ chk_trim4 }}>{{ "octubre-diciembre"|trans }}</td>
-	<td><input type="radio" name="trimestre" value=110>{{ "octubre"|trans }}</td>
-	<td><input type="radio" name="trimestre" value=111>{{ "noviembre"|trans }}</td>
-	<td><input type="radio" name="trimestre" value=112>{{ "diciembre"|trans }}</td>
+	<tr><td></td><td><input type="radio" name="trimestre" value=4 {{ chk_trim4 }}>{{ "octubre-diciembre"|trans|raw }}</td>
+	<td><input type="radio" name="trimestre" value=110>{{ "octubre"|trans|raw }}</td>
+	<td><input type="radio" name="trimestre" value=111>{{ "noviembre"|trans|raw }}</td>
+	<td><input type="radio" name="trimestre" value=112>{{ "diciembre"|trans|raw }}</td>
 	</tr>
-	<tr><td></td><td><input type="radio" name="trimestre" value=5 {{ chk_trim5 }}>{{ "navidad: diciembre-enero"|trans }}</td>
+	<tr><td></td><td><input type="radio" name="trimestre" value=5 {{ chk_trim5 }}>{{ "navidad: diciembre-enero"|trans|raw }}</td>
 	</tr>
-	<tr><td class=etiqueta>{{ "año"|trans }}:</td>
+	<tr><td class=etiqueta>{{ "año"|trans|raw }}:</td>
 	    <td><input class=contenido name="year" size="5" value="{{ year }}"></td></tr>
-	<tr><th class=titulo_inv colspan=5>{{ "zonas o subzona"|trans }}</th></tr>
+	<tr><th class=titulo_inv colspan=5>{{ "zonas o subzona"|trans|raw }}</th></tr>
 	<tr><td></td><td>
 	<select name='id_zona' class=contenido>
         {%  if is_jefeCalendario %}
-            <option value="todo_propias" selected>{{ "todas las zonas de misas"|trans }} (30s)</option>
-            <option value="todo" >{{ "todas las zonas"|trans }} (80s)</option>
+            <option value="todo_propias" selected>{{ "todas las zonas de misas"|trans|raw }} (30s)</option>
+            <option value="todo" >{{ "todas las zonas"|trans|raw }} (80s)</option>
 		{% endif %}
 		{{ oDesplZonas.options|raw }}
 	</select>
 	</tr>
-	<tr><th class=titulo_inv colspan=5>{{ "¿con activitades?"|trans }}</th></tr>
-	<tr><td></td><td><input type="radio" name="actividad" value="si" checked>{{ "con actividades"|trans }}</td></tr>
-	<tr><td></td><td><input type="radio" name="actividad" value="no" >{{ "sin actividades"|trans }}</td></tr>
+	<tr><th class=titulo_inv colspan=5>{{ "¿con activitades?"|trans|raw }}</th></tr>
+	<tr><td></td><td><input type="radio" name="actividad" value="si" checked>{{ "con actividades"|trans|raw }}</td></tr>
+	<tr><td></td><td><input type="radio" name="actividad" value="no" >{{ "sin actividades"|trans|raw }}</td></tr>
 </table>
 <br>
 <table>
 <tr class=botones>
-<td><input TYPE="button" onclick="fnjs_ver_planning(1)" VALUE="{{ "planning vista tabla"|trans }}"></td>
-<td><input TYPE="button" onclick="fnjs_ver_planning(3)" VALUE="{{ "planning vista grid"|trans }}"></td>
+<td><input TYPE="button" onclick="fnjs_ver_planning(1)" VALUE="{{ "planning vista tabla"|trans|raw }}"></td>
+<td><input TYPE="button" onclick="fnjs_ver_planning(3)" VALUE="{{ "planning vista grid"|trans|raw }}"></td>
 </tr>
 </table>
 </form>

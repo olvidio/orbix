@@ -78,4 +78,4 @@ $a_campos = ['oPosicion' => $oPosicion,
 ];
 
 $oView = new core\View('usuarios/controller');
-echo $oView->render('role_grupmenu.phtml', $a_campos);
+$oView->renderizar('role_grupmenu.phtml', $a_campos);

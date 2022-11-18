@@ -48,4 +48,4 @@ $a_campos = ['oPosicion' => $oPosicion,
 ];
 
 $oView = new core\ViewTwig('ubis/controller');
-echo $oView->render('centros_que.html.twig', $a_campos);
+$oView->renderizar('centros_que.html.twig', $a_campos);

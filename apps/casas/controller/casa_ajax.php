@@ -202,7 +202,7 @@ switch ($Qque) {
                 $oF_ini = $oActividad->getF_ini();
                 $oF_fin = $oActividad->getF_fin();
 
-                $num_dias_act = $oActividad->getDuracion();
+                $num_dias_act = $oActividad->getDuracionAumentada();
                 $num_dias = $oActividad->getDuracionEnPeriodo($oF_ini, $oF_fin);
                 $num_dias_real = $oActividad->getDuracionReal();
                 $factor_dias = ($num_dias / $num_dias_real);

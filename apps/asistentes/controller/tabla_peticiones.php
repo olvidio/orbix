@@ -179,4 +179,4 @@ $a_campos = ['oPosicion' => $oPosicion,
 ];
 
 $oView = new core\ViewTwig('asistentes/controller');
-echo $oView->render('tabla_peticiones.html.twig', $a_campos);
+$oView->renderizar('tabla_peticiones.html.twig', $a_campos);

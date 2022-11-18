@@ -18,7 +18,7 @@ fnjs_borrar_hasta_fecha=function(formulario){
         })
         .done(function (rta_txt) {
             if (rta_txt != '' && rta_txt != '\\n') {
-                alert ('{{ "respuesta"|trans }}: '+rta_txt);
+                alert ('{{ "respuesta"|trans|raw }}: '+rta_txt);
             } else {
             	fnjs_actualizar(formulario);
             }
@@ -66,14 +66,14 @@ fnjs_borrar=function(formulario){
 </script>
 {{ oPosicion.mostrar_left_slide(1)|raw }}
 <div id="exportar" >
-<span class="comentario">{{ "Sólo se seleccionan las filas que se ven"|trans }}</span>
+<span class="comentario">{{ "Sólo se seleccionan las filas que se ven"|trans|raw }}</span>
 <br>
 <br>
 <form id='seleccionados' name='seleccionados' action='' method='post'>
 	{{ oHash.getCamposHtml()|raw }}
 	{{ oTabla.mostrar_tabla()|raw }}
 	<br>
-	{{ "borrar avisos anteriores a"|trans }}: 
+	{{ "borrar avisos anteriores a"|trans|raw }}:
 	<input class=fecha size="11" id="f_fin" name="f_fin" >
 	<input TYPE="button" VALUE="{{ "eliminar"|trans|capitalize }}" onclick="javascript:fnjs_borrar_hasta_fecha(this.form);">
 	

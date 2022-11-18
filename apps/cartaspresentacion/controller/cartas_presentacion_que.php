@@ -89,4 +89,4 @@ $a_campos = [
 ];
 
 $oView = new core\ViewTwig('cartaspresentacion/controller');
-echo $oView->render('cartas_presentacion_que.html.twig', $a_campos);
+$oView->renderizar('cartas_presentacion_que.html.twig', $a_campos);

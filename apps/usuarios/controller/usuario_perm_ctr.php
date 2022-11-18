@@ -81,4 +81,4 @@ $a_campos = [
 ];
 
 $oView = new core\ViewTwig('usuarios/controller');
-echo $oView->render('usuario_perm_ctr.html.twig', $a_campos);
+$oView->renderizar('usuario_perm_ctr.html.twig', $a_campos);

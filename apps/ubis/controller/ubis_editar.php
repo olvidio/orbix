@@ -266,7 +266,7 @@ switch ($tipo_ubi) {
             'oDesplRegiones' => $oDesplRegiones,
         ];
 
-        echo $oView->render('ctrdl_form.phtml', $a_campos);
+        $oView->renderizar('ctrdl_form.phtml', $a_campos);
         break;
     case "ctrex":
         $cdc = $oUbi->getCdc();
@@ -311,7 +311,7 @@ switch ($tipo_ubi) {
             'oDesplRegiones' => $oDesplRegiones,
         ];
 
-        echo $oView->render('ctrex_form.phtml', $a_campos);
+        $oView->renderizar('ctrex_form.phtml', $a_campos);
         break;
     case "cdcdl":
     case "cdcex":
@@ -353,6 +353,6 @@ switch ($tipo_ubi) {
             'oDesplRegiones' => $oDesplRegiones,
         ];
 
-        echo $oView->render('cdc_form.phtml', $a_campos);
+        $oView->renderizar('cdc_form.phtml', $a_campos);
         break;
 }

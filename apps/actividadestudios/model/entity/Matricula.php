@@ -487,7 +487,7 @@ class Matricula extends core\ClasePropiedades
      *
      * @return integer iid_situacion
      */
-    function getId_situacion()
+    function getId_situacion(): int
     {
         if (!isset($this->iid_situacion) && !$this->bLoaded) {
             $this->DBCarregar();
@@ -502,7 +502,7 @@ class Matricula extends core\ClasePropiedades
      */
     function setId_situacion($iid_situacion = '')
     {
-        $this->iid_situacion = $iid_situacion;
+        $this->iid_situacion = (int)$iid_situacion;
     }
 
     /**
@@ -510,12 +510,12 @@ class Matricula extends core\ClasePropiedades
      *
      * @return boolean bpreceptor
      */
-    function getPreceptor()
+    function getPreceptor(): bool
     {
         if (!isset($this->bpreceptor) && !$this->bLoaded) {
             $this->DBCarregar();
         }
-        return $this->bpreceptor;
+        return core\is_true($this->bpreceptor);
     }
 
     /**

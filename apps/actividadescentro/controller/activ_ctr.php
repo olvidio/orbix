@@ -107,4 +107,4 @@ $a_campos = ['oPosicion' => $oPosicion,
 ];
 
 $oView = new core\ViewTwig('actividadescentro/controller');
-echo $oView->render('activ_ctr.html.twig', $a_campos);
+$oView->renderizar('activ_ctr.html.twig', $a_campos);

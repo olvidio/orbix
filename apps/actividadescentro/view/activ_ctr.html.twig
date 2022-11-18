@@ -111,9 +111,9 @@ fnjs_cambiar_ctr=function(evt,id_activ,id_ubi){
 	if ($('#div_orden').length) { $('#div_orden').remove(); }
 	if (id_activ && id_ubi) {
 		var txt="<div id=div_orden class=orden>";
-			txt+="<p class=tres onclick=fnjs_orden('"+id_activ+"','"+id_ubi+"','mas')>{{ "+ prioridad"|trans }}</p>";
-			txt+="<p class=tres onclick=fnjs_orden('"+id_activ+"','"+id_ubi+"','menos')>{{ "- prioridad"|trans }}</p>";
-			txt+="<p class=tres onclick=fnjs_orden('"+id_activ+"','"+id_ubi+"','borrar')>{{ "borrar"|trans }}</p>";
+			txt+="<p class=tres onclick=fnjs_orden('"+id_activ+"','"+id_ubi+"','mas')>{{ "+ prioridad"|trans|raw }}</p>";
+			txt+="<p class=tres onclick=fnjs_orden('"+id_activ+"','"+id_ubi+"','menos')>{{ "- prioridad"|trans|raw }}</p>";
+			txt+="<p class=tres onclick=fnjs_orden('"+id_activ+"','"+id_ubi+"','borrar')>{{ "borrar"|trans|raw }}</p>";
 			txt+="</div>";
 		var txt_id_ubi='#'+id_activ+'_'+id_ubi;
 		$(txt_id_ubi).append(txt);

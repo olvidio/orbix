@@ -194,13 +194,19 @@ class ActividadAll extends core\ClasePropiedades
     protected $iplazas;
     /* ATRIBUTOS QUE NO SON CAMPOS------------------------------------------------- */
     /**
-     * duracion de ActividadAllrequire_once('classes/gestorCanvis.class');
+     * duración Aumentada en medio día de ActividadAll
      *
-     * @var integer
+     * @var float
+     */
+    protected $iduracionAumentada;
+    /**
+     * duración de ActividadAll
+     *
+     * @var float
      */
     protected $iduracion;
     /**
-     * duracion Real (horas/24) de ActividadAll
+     * duración Real (horas/24) de ActividadAll
      *
      * @var integer
      */
@@ -1167,7 +1173,9 @@ class ActividadAll extends core\ClasePropiedades
     }
 
     /**
-     * Recupera el atributo iduracionR de ActividadAll
+    /**
+     * Devuelve el número de días de duración de una actividad.
+     * con dos decimales
      *
      * @return integer iduracionR
      */
@@ -1183,18 +1191,16 @@ class ActividadAll extends core\ClasePropiedades
             $hFin = empty($this->th_fin) ? '10:00:00' : $this->th_fin;
             list($h, $m, $s) = explode(':', $hFin);
             $oF_fin_ca = $this->getF_fin()->setTime($h, $m, $s);
-            $interval = $oF_ini_ca->diff($oF_fin_ca);
-            $horas = $interval->format('%a') * 24 + $interval->format('%h') + $interval->format('%i') / 60 + $interval->format('%s') / 3600;
-            $dias = round($horas / 24, 2);
-            $this->iduracionR = $dias;
+            $this->iduracionR = $oF_ini_ca->duracion($oF_fin_ca);
         }
         return $this->iduracionR;
     }
 
     /**
-     * Recupera el atributo iduracion de ActividadAll
+     * Devuelve el número de días de duración de una actividad.
+     * con un decimal ajustado a 0 ó 5 (p.ej. 2 ó 2,5)
      *
-     * @return integer iduracion
+     * @return float iduracion
      */
     function getDuracion()
     {
@@ -1214,14 +1220,40 @@ class ActividadAll extends core\ClasePropiedades
         return $this->iduracion;
     }
 
+
     /**
-     * Retorna el nivel_sgtr calculat a partir del id_tipo_activ
+     * Devuelve el número de días de duración de una actividad.
+     * Aumentado en medio día (12h)
+     * con un decimal ajustado a 0 ó 5 (p.ej. 2 ó 2,5)
+     *
+     * @return float
+     */
+    function getDuracionAumentada()
+    {
+        if (!isset($this->iduracion)) {
+            if (!isset($this->df_ini) || !isset($this->df_fin)) {
+                $this->DBCarregar();
+            }
+            $hIni = empty($this->th_ini) ? '21:00:00' : $this->th_ini;
+            list($h, $m, $s) = explode(':', $hIni);
+            $oF_ini_ca = $this->getF_ini()->setTime($h, $m, $s);
+            $hFin = empty($this->th_fin) ? '10:00:00' : $this->th_fin;
+            list($h, $m, $s) = explode(':', $hFin);
+            $oF_fin_ca = $this->getF_fin()->setTime($h, $m, $s);
+
+            $this->iduracionAumentada = $oF_ini_ca->duracionAjustada($oF_fin_ca);
+        }
+        return $this->iduracionAumentada;
+    }
+
+    /**
+     * Devuelve el nivel_sgtr calculado a partir del id_tipo_activ
      *
      * @return integer nivel_stgr
      */
     function generarNivelStgr()
     {
-        //segun la tabla comun: public.xa_nivel_stgr
+        //según la tabla común: public.xa_nivel_stgr
         $id_tipo_activ = $this->getId_tipo_activ();
         $nivel_stgr = '';
         switch ($id_tipo_activ) {

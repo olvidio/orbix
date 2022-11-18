@@ -266,4 +266,4 @@ $a_campos = ['oPosicion' => $oPosicion,
 ];
 
 $oView = new core\View('actividadplazas/controller');
-echo $oView->render('gestion_plazas.phtml', $a_campos);
+$oView->renderizar('gestion_plazas.phtml', $a_campos);

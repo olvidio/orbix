@@ -176,4 +176,4 @@ $a_campos = [
 ];
 
 $oView = new core\View('usuarios/controller');
-echo $oView->render('role_form.phtml', $a_campos);
+$oView->renderizar('role_form.phtml', $a_campos);

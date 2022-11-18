@@ -168,4 +168,4 @@ $a_campos = [
 ];
 
 $oView = new core\View('asistentes/controller');
-echo $oView->render('que_ctr_lista.phtml', $a_campos);
+$oView->renderizar('que_ctr_lista.phtml', $a_campos);

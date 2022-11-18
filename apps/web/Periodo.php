@@ -26,15 +26,15 @@ class Periodo
     /**
      * df_ini de Periodo
      *
-     * @var DateTimeLocal
+     * @var string
      */
-    private $df_ini;
+    private $sf_ini;
     /**
      * df_fin de Periodo
      *
-     * @var DateTimeLocal
+     * @var string
      */
-    private $df_fin;
+    private $sf_fin;
 
     /**
      *
@@ -122,22 +122,22 @@ class Periodo
 
     function getF_ini_iso()
     {
-        return $this->df_ini;
+        return $this->sf_ini;
     }
 
     function getF_fin_iso()
     {
-        return $this->df_fin;
+        return $this->sf_fin;
     }
 
     function getF_ini()
     {
-        return new DateTimeLocal($this->df_ini);
+        return new DateTimeLocal($this->sf_ini);
     }
 
     function getF_fin()
     {
-        return new DateTimeLocal($this->df_fin);
+        return new DateTimeLocal($this->sf_fin);
     }
 
     function getTxt_cusro()
@@ -281,8 +281,8 @@ class Periodo
                     $fin = $any . "/12/31";
                 }
         }
-        $this->df_ini = $inicio;
-        $this->df_fin = $fin;
+        $this->sf_ini = $inicio;
+        $this->sf_fin = $fin;
     }
 
 }

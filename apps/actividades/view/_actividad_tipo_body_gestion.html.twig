@@ -1,15 +1,15 @@
 <table><tr>
 {% if perm_jefe %}
-	<td class="etiqueta">{{ "sf/sv"|trans }}</td>
+	<td class="etiqueta">{{ "sf/sv"|trans|raw }}</td>
 	<td> {{ oDesplSfsv.desplegable()|raw }}</td>
 {% else %}
 	<input type="hidden" id="isfsv_val" name="isfsv_val" value="{{ isfsv }}" >
 {% endif %}
-<td class="etiqueta">{{ "asistentes"|trans }}</td>
+<td class="etiqueta">{{ "asistentes"|trans|raw }}</td>
 	<td id="lst_asistentes">
 		{{ oDesplAsistentes.desplegable()|raw }}
 	</td>
-<td class="etiqueta">{{ "actividad"|trans }}</td>
+<td class="etiqueta">{{ "actividad"|trans|raw }}</td>
 	<td id="lst_actividad">
 		{{ oDesplActividad.desplegable()|raw }}
 	</td>

@@ -173,18 +173,18 @@ fnjs_left_side_hide();
 <select id="k_buscar" name="k_buscar" onchange='fnjs_actualizar();'>
 {{ oDespl.options()|raw }}
 </select>
-<th class=titulo_inv style="text-align: right;">{{ "clonar de"|trans }}
+<th class=titulo_inv style="text-align: right;">{{ "clonar de"|trans|raw }}
 <select id="k_clonar" name="k_clonar">
 {{ oDespl.options()|raw }}
 </select>
-<input type='button' name='b_clonar' value='{{ "clonar"|trans }}' onclick='fnjs_clonar();'>
+<input type='button' name='b_clonar' value='{{ "clonar"|trans|raw }}' onclick='fnjs_clonar();'>
 </th>
 </thead>
 </table>
 </div>
 <div id='div_proceso' style="{widht: 800px;}"></div>
-<input type='button' name='b_nuevo' value='{{ "nuevo"|trans }}' onclick='fnjs_modificar();'>
-<input type='button' name='b_listado' value='{{ "ver listado"|trans }}' onclick='fnjs_listado();'>
+<input type='button' name='b_nuevo' value='{{ "nuevo"|trans|raw }}' onclick='fnjs_modificar();'>
+<input type='button' name='b_listado' value='{{ "ver listado"|trans|raw }}' onclick='fnjs_listado();'>
 <br>
 <br>
-<input type='button' name='b_regenrear' value='{{ "rehacer los procesos de las actividades"|trans }}' onclick='fnjs_regenerar();'>
+<input type='button' name='b_regenrear' value='{{ "rehacer los procesos de las actividades"|trans|raw }}' onclick='fnjs_regenerar();'>

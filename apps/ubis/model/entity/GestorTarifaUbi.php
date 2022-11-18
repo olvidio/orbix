@@ -1,6 +1,9 @@
 <?php
 namespace ubis\model\entity;
 use core;
+use core\Condicion;
+use core\Set;
+
 /**
  * GestorTarifa
  *
@@ -44,8 +47,8 @@ class GestorTarifaUbi Extends core\ClaseGestor {
 	function getTarifas($aWhere=array(),$aOperators=array()) {
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
-		$oTarifaSet = new core\Set();
-		$oCondicion = new core\Condicion();
+		$oTarifaSet = new Set();
+		$oCondicion = new Condicion();
 		$aCondi = array();
 		foreach ($aWhere as $camp => $val) {
 			if ($camp == '_ordre') continue;

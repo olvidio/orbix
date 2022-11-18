@@ -154,7 +154,7 @@
 });
     {% endif %}
 
-    if ( que=="cambiar_tipo" && confirm ("{{ "¿Quiere cambiar el nombre de la actividad?"|trans }}") ) {
+    if ( que=="cambiar_tipo" && confirm ("{{ "¿Quiere cambiar el nombre de la actividad?"|trans|raw }}") ) {
     fnjs_generarNomActiv('#modifica');
 }
 }

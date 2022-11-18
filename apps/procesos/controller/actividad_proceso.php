@@ -83,4 +83,4 @@ $a_campos = ['oPosicion' => $oPosicion,
 ];
 
 $oView = new core\ViewTwig('procesos/controller');
-echo $oView->render('actividad_proceso.html.twig', $a_campos);
+$oView->renderizar('actividad_proceso.html.twig', $a_campos);

@@ -110,9 +110,8 @@ switch ($Qque) {
             $aOperador['f_gasto'] = 'BETWEEN';
             $aWhere['_ordre'] = 'f_gasto';
             $GesGastos = new GestorUbiGasto();
-            $cGastos = array();
             $cGastos = $GesGastos->getUbiGastos($aWhere, $aOperador);
-            $aGastos = array();
+            $aGastos = [];
             foreach ($cGastos as $oUbiGasto) {
                 $oFecha = $oUbiGasto->getF_gasto();
                 $mes = $oFecha->format('n'); //sin el 0 delante.
@@ -273,7 +272,7 @@ case "get":
         $oActividades = $oGesActividades->getActividades($aWhere,$aOperador);
         foreach ($oActividades as $oActividad) {
             $id_activ = $oActividad->getId_activ();
-            $num_dias_act = $oActividad->getDuracion(); // no se carga con getTot() porque no es un campo de la base de datos.
+            $num_dias_act = $oActividad->getDuracionAumentada(); // no se carga con getTot() porque no es un campo de la base de datos.
             $num_dias = $oActividad->getDuracionEnPeriodo($inicio,$fin); // no se carga con getTot() porque no es un campo de la base de datos.
             $num_dias_real = $oActividad->getDuracionReal(); // no se carga con getTot() porque no es un campo de la base de datos.
             $factor_dias = ($num_dias/$num_dias_real);

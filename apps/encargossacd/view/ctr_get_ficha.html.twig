@@ -24,11 +24,11 @@ fnjs_añadir_sacd=function(enc){
 	var lista_sacd='{{ oDesplSacd.options()|raw }}';
 	
 	/* dedicacion */
-	dedicacion='<tr><td class=etiqueta >{{ "dedicación"|trans }}</td>';
+	dedicacion='<tr><td class=etiqueta >{{ "dedicación"|trans|raw }}</td>';
 	if (horario == 3) {
-		dedicacion+='<td><span class="link" onclick="fnjs_crear_horario({{ e }});">{{ "crear horario"|trans }}</span></td></tr><tr>';
+		dedicacion+='<td><span class="link" onclick="fnjs_crear_horario({{ e }});">{{ "crear horario"|trans|raw }}</span></td></tr><tr>';
 	} else {
-		dedicacion+='<td><input type=text size=1 name=dedic_m['+n+']> {{ "mañanas"|trans }}</td><td><input type=text size=1 name=dedic_t['+n+']> {{ "tarde 1ª hora"|trans }}</td><td><input type=text size=1 name=dedic_v['+n+']> {{ "tarde 2ª hora"|trans }}</td></tr><tr>';
+		dedicacion+='<td><input type=text size=1 name=dedic_m['+n+']> {{ "mañanas"|trans|raw }}</td><td><input type=text size=1 name=dedic_t['+n+']> {{ "tarde 1ª hora"|trans|raw }}</td><td><input type=text size=1 name=dedic_v['+n+']> {{ "tarde 2ª hora"|trans|raw }}</td></tr><tr>';
 	}
 
 	/* antes de sacd suplente colocar nuevo sacd, y dedicación para cada uno */
@@ -45,25 +45,25 @@ fnjs_añadir_sacd=function(enc){
 	<tr><td class=titulo colspan=5>{{ a_desc_enc[e] }}</td></tr>
 	<tr id="sacd_titular">
     {%  if tipo_centro != 'of' %} 
-		<td>{{ "sacd titular"|trans }}:</td>
+		<td>{{ "sacd titular"|trans|raw }}:</td>
 		<td colspan=3>
 		<select name=id_sacd_titular id=id_sacd_titular_{{ e }} class=contenido>
 		{{ a_despl_titular[e].options()|raw }}
 		</select>
 		</td>
-		<td><input type=checkbox name=cl value=1 {{ cl_checked[e] }}>{{ "cl"|trans }}</td>
+		<td><input type=checkbox name=cl value=1 {{ cl_checked[e] }}>{{ "cl"|trans|raw }}</td>
 		</tr>
-		<tr><td class=etiqueta >{{ "dedicación"|trans }}</td>
+		<tr><td class=etiqueta >{{ "dedicación"|trans|raw }}</td>
 		{%  if mod_horario[e] == 3 %} 
 			<td colspan=3><span class="link" onclick="fnjs_crear_horario({{ e }});">{{ dedic_sacd[e][0] }}</span></td>
         {% else %}
-            <td><input type=text size=1 name=dedic_m[0] value={{ dedic_m[e][0] }}> {{ "mañanas"|trans }}</td>
-            <td><input type=text size=1 name=dedic_t[0] value={{ dedic_t[e][0] }}> {{ "tarde 1ª hora"|trans }}</td>
-            <td><input type=text size=1 name=dedic_v[0] value={{ dedic_v[e][0] }}> {{ "tarde 2ª hora"|trans }}</td></tr>
+            <td><input type=text size=1 name=dedic_m[0] value={{ dedic_m[e][0] }}> {{ "mañanas"|trans|raw }}</td>
+            <td><input type=text size=1 name=dedic_t[0] value={{ dedic_t[e][0] }}> {{ "tarde 1ª hora"|trans|raw }}</td>
+            <td><input type=text size=1 name=dedic_v[0] value={{ dedic_v[e][0] }}> {{ "tarde 2ª hora"|trans|raw }}</td></tr>
 		{% endif %}
 		</tr>
         <tr id="sacd_suplente">
-        <td>{{ "Suplente"|trans }}</td>
+        <td>{{ "Suplente"|trans|raw }}</td>
         <td colspan=3>
         <select name=id_sacd_suplente id=id_sacd_suplente_{{ e }} class=contenido>
 		{{ a_despl_suplente[e].options()|raw }}
@@ -72,17 +72,17 @@ fnjs_añadir_sacd=function(enc){
     {% endif %}
 	{{ otros_sacd[e]|raw }}
 	<tr id="fin_sacd_{{ e }}"></tr>
-	<tr><td><span class="link" onclick="fnjs_añadir_sacd({{ e }});">{{ "añadir sacd colaborador"|trans }}</span></td></tr>
+	<tr><td><span class="link" onclick="fnjs_añadir_sacd({{ e }});">{{ "añadir sacd colaborador"|trans|raw }}</span></td></tr>
 	<tr>
-	<td colspan=4>{{ "observaciones"|trans }}: <textarea rows=3 cols=50 name=observ >{{ a_observ[e] }}</textarea></td></tr>
+	<td colspan=4>{{ "observaciones"|trans|raw }}: <textarea rows=3 cols=50 name=observ >{{ a_observ[e] }}</textarea></td></tr>
 	<tr>
-	<td class=etiqueta >{{ "exigencias del ctr"|trans }}</td>
+	<td class=etiqueta >{{ "exigencias del ctr"|trans|raw }}</td>
 	{% if mod_horario[e] == 3 %}
 		<td colspan=3><span class="link" onclick="fnjs_crear_horario({{ e }});">{{ dedic_ctr[e] }}</span></td>
 	{% else %}
-		<td><input type=text size=1 name=dedic_ctr_m value={{ dedic_ctr_m[e] }}> {{ "mañanas"|trans }}</td>
-		<td><input type=text size=1 name=dedic_ctr_t value={{ dedic_ctr_t[e] }}> {{ "tarde 1ª hora"|trans }}</td>
-		<td><input type=text size=1 name=dedic_ctr_v value={{ dedic_ctr_v[e] }}> {{ "tarde 2ª hora"|trans }}</td></tr>
+		<td><input type=text size=1 name=dedic_ctr_m value={{ dedic_ctr_m[e] }}> {{ "mañanas"|trans|raw }}</td>
+		<td><input type=text size=1 name=dedic_ctr_t value={{ dedic_ctr_t[e] }}> {{ "tarde 1ª hora"|trans|raw }}</td>
+		<td><input type=text size=1 name=dedic_ctr_v value={{ dedic_ctr_v[e] }}> {{ "tarde 2ª hora"|trans|raw }}</td></tr>
     {% endif %}
     
 	{#
@@ -92,14 +92,14 @@ fnjs_añadir_sacd=function(enc){
 		$oDatosCgi = new DatosCgi(array('id_ubi'=>$Qid_ubi,'curso_ini_any'=>$GLOBALS['any1']));
 		$num_alum = $oDatosCgi->getNum_alum($num_alum);
 		?>
-		<tr><td>{{ "nº de alumnos"|trans }}:</td>
+		<tr><td>{{ "nº de alumnos"|trans|raw }}:</td>
 		<td colspan=2><input type=text name=num_alum value={{ num_alum }}></td></tr>
 		<?php
 	}
 	#}
 
 	{% if perm_des %}
-	<tr><td colspan=5><input type="button" name="ok" onclick="fnjs_guardar({{ e }});" value="{{ "guardar"|trans }}"></td></tr>
+	<tr><td colspan=5><input type="button" name="ok" onclick="fnjs_guardar({{ e }});" value="{{ "guardar"|trans|raw }}"></td></tr>
 	{% endif %}
 	</tbody>
 	</table>

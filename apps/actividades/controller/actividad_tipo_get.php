@@ -3,7 +3,9 @@
 use actividadtarifas\model\entity\GestorTipoActivTarifa;
 use core\ConfigGlobal;
 use ubis\model\entity\GestorDelegacion;
+use web\Desplegable;
 use web\Lista;
+use web\TiposActividades;
 
 /**
  * Devuelvo un desplegable con los valores posibles del tipo de actividad
@@ -27,7 +29,7 @@ $Qmodo = empty($Qmodo) ? 'buscar' : $Qmodo;
 switch ($Qsalida) {
     case "asistentes":
         $aux = $Qentrada . '.....';
-        $oTipoActiv = new web\TiposActividades($aux);
+        $oTipoActiv = new TiposActividades($aux);
         $a_asistentes_posibles = $oTipoActiv->getAsistentesPosibles();
         // la opción en blanco sólo es válida para des o calendario
         if (($_SESSION['oPerm']->have_perm_oficina('des'))
@@ -37,7 +39,7 @@ switch ($Qsalida) {
         } else {
             $blanco = FALSE;
         }
-        $oDespl = new web\Desplegable('iasistentes_val', $a_asistentes_posibles, '', $blanco);
+        $oDespl = new Desplegable('iasistentes_val', $a_asistentes_posibles, '', $blanco);
         $oDespl->setAction('fnjs_actividad()');
         $oDespl->setValBlanco('.');
         $oDespl->setOpcion_sel('.');
@@ -45,9 +47,9 @@ switch ($Qsalida) {
         break;
     case "actividad":
         $aux = $Qentrada . '....';
-        $oTipoActiv = new web\TiposActividades($aux);
+        $oTipoActiv = new TiposActividades($aux);
         $a_actividades_posibles = $oTipoActiv->getActividadesPosibles1Digito();
-        $oDespl = new web\Desplegable('iactividad_val', $a_actividades_posibles, '', true);
+        $oDespl = new Desplegable('iactividad_val', $a_actividades_posibles, '', true);
         $oDespl->setAction('fnjs_nom_tipo()');
         $oDespl->setValBlanco('.');
         $oDespl->setOpcion_sel('.');
@@ -55,9 +57,9 @@ switch ($Qsalida) {
         break;
     case "actividad_extendida":
         $aux = $Qentrada . '....';
-        $oTipoActiv = new web\TiposActividades($aux);
+        $oTipoActiv = new TiposActividades($aux);
         $a_actividades_posibles = $oTipoActiv->getActividadesPosibles2Digitos();
-        $oDespl = new web\Desplegable('iactividad_val', $a_actividades_posibles, '', true);
+        $oDespl = new Desplegable('iactividad_val', $a_actividades_posibles, '', true);
         $oDespl->setAction('fnjs_nom_tipo()');
         $oDespl->setValBlanco('.');
         $oDespl->setOpcion_sel('.');
@@ -65,12 +67,12 @@ switch ($Qsalida) {
         break;
     case "nom_tipo":
         $aux = $Qentrada . '...';
-        $oTipoActiv = new web\TiposActividades($aux);
+        $oTipoActiv = new TiposActividades($aux);
         $a_nom_tipo_posibles = $oTipoActiv->getNom_tipoPosibles3Digitos();
-        $oDespl = new web\Desplegable('inom_tipo_val', $a_nom_tipo_posibles, '', true);
+        $oDespl = new Desplegable('inom_tipo_val', $a_nom_tipo_posibles, '', true);
         $oDespl->setValBlanco('...');
         $oDespl->setOpcion_sel('...');
-        if ($Qmodo == 'buscar') {
+        if ($Qmodo === 'buscar') {
             $oDespl->setAction('fnjs_id_activ()');
         } else {
             $oDespl->setAction('fnjs_act_id_activ()');
@@ -79,7 +81,7 @@ switch ($Qsalida) {
         break;
     case "nom_tipo_tabla":
         $aux = $Qentrada . '..';
-        $oTipoActiv = new web\TiposActividades($aux, TRUE);
+        $oTipoActiv = new TiposActividades($aux, TRUE);
         $a_nom_tipo_posibles = $oTipoActiv->getNom_tipoPosibles2Digitos();
         $a_cabeceras = [_("id"), _("nombre")];
         $a_valores = [];
@@ -119,8 +121,7 @@ switch ($Qsalida) {
         $GesActiTipoTarifa = new GestorTipoActivTarifa();
         $cActiTipoTarifa = $GesActiTipoTarifa->getTipoActivTarifas($aWhere);
         if (!empty($cActiTipoTarifa) && $cActiTipoTarifa > 0) {
-            $tarifa = $cActiTipoTarifa[0]->getId_tarifa();
-            return $tarifa;
+            return $cActiTipoTarifa[0]->getId_tarifa();
         }
         break;
     case "dl_org";

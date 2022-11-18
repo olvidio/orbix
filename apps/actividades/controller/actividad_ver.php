@@ -4,13 +4,18 @@
  *
  */
 
+use actividades\model\ActividadTipo;
 use actividades\model\entity\Actividad;
 use actividades\model\entity\GestorNivelStgr;
 use actividades\model\entity\GestorRepeticion;
 use actividadtarifas\model\entity\GestorTipoActivTarifa;
 use actividadtarifas\model\entity\GestorTipoTarifa;
+use core\ConfigGlobal;
+use core\ViewTwig;
 use ubis\model\entity\GestorDelegacion;
 use ubis\model\entity\Ubi;
+use web\Hash;
+use web\TiposActividades;
 use function core\is_true;
 
 // INICIO Cabecera global de URL de controlador *********************************
@@ -50,7 +55,7 @@ $aQuery = array('pau' => 'a',
 if (is_array($aQuery)) {
     array_walk($aQuery, 'core\poner_empty_on_null');
 }
-$godossiers = web\Hash::link('apps/dossiers/controller/dossiers_ver.php?' . http_build_query($aQuery));
+$godossiers = Hash::link('apps/dossiers/controller/dossiers_ver.php?' . http_build_query($aQuery));
 
 $permiso_des = FALSE;
 if (($_SESSION['oPerm']->have_perm_oficina('vcsd')) || ($_SESSION['oPerm']->have_perm_oficina('des'))) {
@@ -97,7 +102,7 @@ if (!empty($Qid_activ)) { // caso de modificar
         die();
     }
 
-    $oTipoActiv = new web\TiposActividades($id_tipo_activ);
+    $oTipoActiv = new TiposActividades($id_tipo_activ);
     $ssfsv = $oTipoActiv->getSfsvText();
     $sasistentes = $oTipoActiv->getAsistentesText();
     $sactividad = $oTipoActiv->getActividadText();
@@ -268,7 +273,7 @@ $oDesplRepeticion = $oGesRepeticion->getListaRepeticion();
 $oDesplRepeticion->setNombre('id_repeticion');
 $oDesplRepeticion->setOpcion_sel($id_repeticion);
 
-$oHash = new web\Hash();
+$oHash = new Hash();
 $camposForm = 'status!dl_org!f_fin!f_ini!h_fin!h_ini!id_repeticion!id_ubi!lugar_esp!mod!nivel_stgr!nom_activ!nombre_ubi!observ!precio!id_tarifa!publicado!plazas';
 $camposNo = 'mod';
 if ($Qmod == 'nuevo') {
@@ -288,12 +293,12 @@ $a_camposHidden = array(
 );
 $oHash->setArraycamposHidden($a_camposHidden);
 
-$oHash1 = new web\Hash();
+$oHash1 = new Hash();
 $oHash1->setUrl(core\ConfigGlobal::getWeb() . '/apps/actividades/controller/actividad_select_ubi.php');
 $oHash1->setCamposForm('dl_org!ssfsv!isfsv');
 $h = $oHash1->linkSinVal();
 
-$oActividadTipo = new actividades\model\ActividadTipo();
+$oActividadTipo = new ActividadTipo();
 $oActividadTipo->setPerm_jefe($permiso_des);
 $oActividadTipo->setSfsvAll(TRUE);
 $oActividadTipo->setQue('buscar');
@@ -348,12 +353,10 @@ $a_campos = ['oPosicion' => $oPosicion,
     'oActividadTipo' => $oActividadTipo,
     'extendida' => $extendida,
     'id_tipo_activ' => $id_tipo_activ,
-    'web' => core\ConfigGlobal::getWeb(),
-    'web_icons' => core\ConfigGlobal::getWeb_icons(),
+    'web' => ConfigGlobal::getWeb(),
+    'web_icons' => ConfigGlobal::getWeb_icons(),
     'procesos_installed' => $procesos_installed,
 ];
 
-$oView = new core\ViewTwig('actividades/controller');
-echo $oView->render('actividad_form.html.twig', $a_campos);
-//$oView = new core\View('actividades/controller');
-//echo $oView->render('actividad_form.phtml',$a_campos);
+$oView = new ViewTwig('actividades/controller');
+$oView->renderizar('actividad_form.html.twig', $a_campos);

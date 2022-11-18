@@ -36,7 +36,7 @@ $Qyear = (integer)filter_input(INPUT_POST, 'year');
 $Qid_ubi = (integer)filter_input(INPUT_POST, 'id_ubi');
 
 $tipo_lista = empty($Qtipo_lista) ? '' : $Qtipo_lista;
-if ($tipo_lista == 'datosEcGastos') {
+if ($tipo_lista === 'datosEcGastos') {
     $Qperiodo = 'ninguno';
 }
 
@@ -44,7 +44,7 @@ $oForm = new CasasQue();
 // miro que rol tengo. Si soy casa, sólo veo la mía
 $oMiUsuario = new Usuario(ConfigGlobal::mi_id_usuario());
 $miRolePau = ConfigGlobal::mi_role_pau();
-if ($miRolePau == Role::PAU_CDC) { //casa
+if ($miRolePau === Role::PAU_CDC) { //casa
     $id_pau = $oMiUsuario->getId_pau();
     $sDonde = str_replace(",", " OR id_ubi=", $id_pau);
     //formulario para casas cuyo calendario de actividades interesa
@@ -75,11 +75,11 @@ $oSelects = new DesplegableArray('', $aOpcionesCasas, 'id_cdc');
 $oSelects->setBlanco('t');
 $oSelects->setAccionConjunto('fnjs_mas_casas(event)');
 
-if ($Qperiodo == 'no') {
-    if ($tipo_lista == 'datosEc') $oForm->setTitulo(strtoupper_dlb(_("resumen económico")));
+if ($Qperiodo === 'no') {
+    if ($tipo_lista === 'datosEc') $oForm->setTitulo(strtoupper_dlb(_("resumen económico")));
     $oForm->setBoton("<input type=button name=\"buscar\" value=\"" . _('buscar') . "\" onclick=\"fnjs_ver();\">");
 } else {
-    if ($Qperiodo == 'ninguno') { // sólo el año
+    if ($Qperiodo === 'ninguno') { // sólo el año
         $aOpciones = array('ninguno' => _('ninguno'));
     } else {
         $aOpciones = array(
@@ -160,4 +160,4 @@ $a_campos = ['oPosicion' => $oPosicion,
 ];
 
 $oView = new core\ViewTwig('casas/controller');
-echo $oView->render('casa_que.html.twig', $a_campos);
+$oView->renderizar('casa_que.html.twig', $a_campos);

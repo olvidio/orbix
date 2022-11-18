@@ -59,4 +59,4 @@ $a_campos = ['oPosicion' => $oPosicion,
 ];
 
 $oView = new core\ViewTwig('encargossacd/controller');
-echo $oView->render('sacd_ficha.html.twig', $a_campos);
+$oView->renderizar('sacd_ficha.html.twig', $a_campos);

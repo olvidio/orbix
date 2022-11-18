@@ -8,7 +8,7 @@ fnjs_left_side_hide();
 </script>
 <form id="modifica"name="modifica" action="" method="post" onkeypress="fnjs_enviar(event,this);" >
 {{ oHash.getCamposHtml()|raw }}
-<h3>{{ "seleccionar un tipo de actividad"|trans }}:</h3>
+<h3>{{ "seleccionar un tipo de actividad"|trans|raw }}:</h3>
 
 <div>
     {{ oActividadTipo.getHtml|raw }}
@@ -16,7 +16,7 @@ fnjs_left_side_hide();
 
 <input type="hidden" id="id_tipo_activ" name="id_tipo_activ" value="">
 <table>
-<tr><td class=etiqueta>{{ "periodo"|trans }}:</td>
+<tr><td class=etiqueta>{{ "periodo"|trans|raw }}:</td>
 {{ oFormP.getTd()|raw }}
 </tr>
 </table>
@@ -28,7 +28,7 @@ fnjs_left_side_hide();
 <table>
 <tfoot>
 <tr class=botones>
-<td><input TYPE="button" onclick="fnjs_lista();"  id="ok" name="ok" value="{{ "ver selección"|trans }}" class="btn_ok"></td>
+<td><input TYPE="button" onclick="fnjs_lista();"  id="ok" name="ok" value="{{ "ver selección"|trans|raw }}" class="btn_ok"></td>
 </tr></tfoot>
 </table>
 <div id='div_resultado'></div>

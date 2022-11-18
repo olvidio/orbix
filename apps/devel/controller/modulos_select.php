@@ -154,4 +154,4 @@ $a_campos = ['oPosicion' => $oPosicion,
 ];
 
 $oView = new core\View('devel/controller');
-echo $oView->render('modulos_select.phtml', $a_campos);
+$oView->renderizar('modulos_select.phtml', $a_campos);

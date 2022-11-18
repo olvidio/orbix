@@ -145,4 +145,4 @@ $a_campos = ['oPosicion' => $oPosicion,
 ];
 
 $oView = new core\ViewTwig('procesos/controller');
-echo $oView->render('fases_activ_cambio.html.twig', $a_campos);
+$oView->renderizar('fases_activ_cambio.html.twig', $a_campos);

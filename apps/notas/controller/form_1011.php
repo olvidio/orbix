@@ -381,4 +381,4 @@ $a_campos = [
 ];
 
 $oView = new core\View('notas/model');
-echo $oView->render('form_1011.phtml', $a_campos);
+$oView->renderizar('form_1011.phtml', $a_campos);

@@ -68,15 +68,15 @@ fnjs_ver=function(){
 
 fnjs_guardar=function(formulario,que){
 	var err=0;
-	if (que=="eliminar") {
-		seguro=confirm("{{ "¿Está seguro de borrar los datos económicos de esta actividad?"|trans }}");
+	if (que==="eliminar") {
+		seguro=confirm("{{ "¿Está seguro de borrar los datos económicos de esta actividad?"|trans|raw }}");
 		if (seguro) { 
 			err=0;
 		} else {
 			err=1;
 		}
 	}
-	if (err!=1) {
+	if (err!==1) {
 		$(formulario+' input[name="que"]').val(que);
 		$(formulario).attr('action','{{ url_ajax }}');
 		$(formulario).one("submit", function() {
@@ -86,7 +86,7 @@ fnjs_guardar=function(formulario,que){
 				data: $(this).serialize()
 			})
 			.done(function (rta_txt) {
-                if (rta_txt != '' && rta_txt != '\n') {
+                if (rta_txt !== '' && rta_txt !== '\n') {
                     alert (rta_txt);
                 } else {
                     $('#div_modificar').html('');

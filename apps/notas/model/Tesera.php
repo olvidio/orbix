@@ -295,6 +295,6 @@ class Tesera
         ];
 
         $oView = new core\View(__NAMESPACE__);
-        return $oView->render('tesera_ver.phtml', $a_campos);
+        $oView->renderizar('tesera_ver.phtml', $a_campos);
     }
 }

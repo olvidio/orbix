@@ -216,4 +216,4 @@ if ($oAsistente->perm_modificar() === FALSE) {
 
 $oView = new core\View('asistentes/model');
 
-echo $oView->render('form_mover.phtml', $a_campos);
+$oView->renderizar('form_mover.phtml', $a_campos);

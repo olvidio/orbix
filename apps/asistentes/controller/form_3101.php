@@ -250,4 +250,4 @@ $a_campos = ['obj' => $obj,
 ];
 
 $oView = new core\View('asistentes/controller');
-echo $oView->render('form_3101.phtml', $a_campos);
+$oView->renderizar('form_3101.phtml', $a_campos);

@@ -32,12 +32,12 @@ fnjs_grabar=function(formulario){
 
 	var afecta = $("input:checkbox[name^='afecta_a']:checked").map(function(){return $(this).val()}).get()
 	if (afecta.length == 0) { 
-		alert("{{ "debe indicar a qué afecta"|trans }}"); err=1;
+		alert("{{ "debe indicar a qué afecta"|trans|raw }}"); err=1;
 	}
 	/*
 	var afases = $("select[name^='fases'] option:selected").map(function(){return $(this).val()}).get()
 	if (afases.length == 0) { 
-		alert("{{ "debe indicar las fases"|trans }}"); err=1;
+		alert("{{ "debe indicar las fases"|trans|raw }}"); err=1;
 	}
 	*/
 	
@@ -64,17 +64,17 @@ fnjs_grabar=function(formulario){
 }
 </script>
 {{  oPosicion.mostrar_left_slide(1)|raw }}
-<h1>{{  "Añadir nuevo permiso a"|trans }} {{ nombre }}</h1>
+<h1>{{  "Añadir nuevo permiso a"|trans|raw }} {{ nombre }}</h1>
 <form id=perm_usuario  name=perm_usuario action="" method="post" >
 {{ oHash.getCamposHtml()|raw }}
 <input type='hidden' id='id_tipo_activ' name='id_tipo_activ'> </td>
-<h3>{{ "seleccionar un tipo de actividad"|trans }}:</h3>
+<h3>{{ "seleccionar un tipo de actividad"|trans|raw }}:</h3>
 <table>
 <tr>
-<td class=etiqueta>{{ "para actividades que organiza"|trans }}:</td>
+<td class=etiqueta>{{ "para actividades que organiza"|trans|raw }}:</td>
 <td colspan=5>
-	<input type=radio name=dl_propia value='t' {{ chk_propia }} onchange='fnjs_actualizar_fases();' > {{ "la propia dl"|trans }}
-	<input type=radio name=dl_propia value='f' {{ chk_otra }} onchange='fnjs_actualizar_fases();' > {{ "otras dl"|trans }}
+	<input type=radio name=dl_propia value='t' {{ chk_propia }} onchange='fnjs_actualizar_fases();' > {{ "la propia dl"|trans|raw }}
+	<input type=radio name=dl_propia value='f' {{ chk_otra }} onchange='fnjs_actualizar_fases();' > {{ "otras dl"|trans|raw }}
 </td></tr>
 <tr>
 </table>
@@ -85,10 +85,10 @@ fnjs_grabar=function(formulario){
 <br>
 <table>
 <tr>
-	<th>{{ "afecta a"|trans }}:</th>
-	<th>{{ "fase de referencia"|trans }}:</th>
-    <th>{{ "permiso off (sin marcar)"|trans }}:</th>
-    <th>{{ "permiso on (marcado)"|trans }}:</th>
+	<th>{{ "afecta a"|trans|raw }}:</th>
+	<th>{{ "fase de referencia"|trans|raw }}:</th>
+    <th>{{ "permiso off (sin marcar)"|trans|raw }}:</th>
+    <th>{{ "permiso on (marcado)"|trans|raw }}:</th>
 	</tr>
 {% for oPerm in aPerm %}
 <tr>
@@ -101,5 +101,5 @@ fnjs_grabar=function(formulario){
 {% endfor %}
 </table>
 <br>
-<input type=button onclick="fnjs_grabar(this.form);" value="{{ "guardar"|trans }}">
+<input type=button onclick="fnjs_grabar(this.form);" value="{{ "guardar"|trans|raw }}">
 </form>

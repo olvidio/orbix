@@ -19,7 +19,7 @@ $a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_A
 // Si vengo de eliminar, hay que borrar el 'sel' que ha identificado el registro,
 //  pues ya no existe
 $Qmod = (string)filter_input(INPUT_POST, 'mod');
-if ($Qmod == 'eliminar' && isset($a_sel)) {
+if ($Qmod === 'eliminar' && isset($a_sel)) {
     unset($a_sel);
 }
 
@@ -60,7 +60,7 @@ $Qk_buscar = urldecode($Qk_buscar);
 $obj = $Qclase_info;
 $oInfoClase = new $obj();
 
-// si paso parametros, definir la colección
+// si paso parámetros, definir la colección
 $Qpau = (string)filter_input(INPUT_POST, 'pau');
 $Qid_pau = (integer)filter_input(INPUT_POST, 'id_pau');
 $Qobj_pau = (string)filter_input(INPUT_POST, 'obj_pau');
@@ -128,10 +128,10 @@ $html .= $oHashSelect->getCamposHtml();
 $html .= "<input type='hidden' id='mod' name='mod' value=''>";
 
 $oTabla = new web\Lista();
-// para el id_tabla, convierto los posibles '/' y '\' en '_' i tambien quito '.php'
+// para el id_tabla, convierto los posibles '/' y '\' en '_' i también quito '.php'
 //$oTabla->setId_tabla('datos_sql'.  $this->id_dossier);
 $id_tabla = str_replace('/', '_', $Qclase_info);
-$id_tabla = str_replace('\\', '_', $Qclase_info);
+$id_tabla = str_replace('\\', '_', $id_tabla);
 $id_tabla = str_replace('.php', '', $id_tabla);
 $id_tabla = 'mod_tabla_sql_' . $id_tabla;
 $oTabla->setId_tabla($id_tabla);

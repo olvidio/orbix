@@ -164,8 +164,8 @@ if (!empty($Qid_usuario)) {
     ];
 
     $oView = new core\ViewTwig('cambios/controller');
-    echo $oView->render('avisos_generar_condicion.html.twig', $a_camposCond);
+    $oView->renderizar('avisos_generar_condicion.html.twig', $a_camposCond);
 }
 
 $oView = new core\ViewTwig('cambios/controller');
-echo $oView->render('avisos_generar_lista.html.twig', $a_campos);
+$oView->renderizar('avisos_generar_lista.html.twig', $a_campos);

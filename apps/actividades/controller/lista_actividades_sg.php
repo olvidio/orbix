@@ -413,4 +413,4 @@ $a_campos = ['oPosicion' => $oPosicion,
 
 
 $oView = new core\View('actividades/controller');
-echo $oView->render('lista_actividades_sg.phtml', $a_campos);
+$oView->renderizar('lista_actividades_sg.phtml', $a_campos);

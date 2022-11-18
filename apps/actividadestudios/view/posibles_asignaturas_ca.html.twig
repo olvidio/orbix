@@ -13,9 +13,9 @@ fnjs_detalles=function(id_asignatura){
 <h3>{{ nom_activ }}</h3>
 <table>
 <tr>
-<th>{{ "asignatura"|trans }}</th>
-<th>{{ "posibles alumnos"|trans }}</th>
-<th>{{ "nombres"|trans }}</th>
+<th>{{ "asignatura"|trans|raw }}</th>
+<th>{{ "posibles alumnos"|trans|raw }}</th>
+<th>{{ "nombres"|trans|raw }}</th>
 <tr>
 
 {% for asignatura_alumno in aAsignaturas_alumnos %}
@@ -28,7 +28,7 @@ fnjs_detalles=function(id_asignatura){
     <td>
     <span id='span_detalles_{{ asignatura_alumno.id_asignatura }}' 
     	class=link onclick="fnjs_detalles({{ asignatura_alumno.id_asignatura }})" >
-        <p>{{ "ver"|trans }}</p>
+        <p>{{ "ver"|trans|raw }}</p>
         <p style="display: none"><br>
         {% for nombre_alumno in asignatura_alumno.aNombresAlumnos %}
         	{{ nombre_alumno }}<br>

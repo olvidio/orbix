@@ -115,7 +115,7 @@ $oDesplegableCargos = $oCargos->getListaCargos();
 $oDesplegableCargos->setNombre('id_cargo');
 $oDesplegableCargos->setBlanco(false);
 $oDesplegableCargos->setOpcion_sel($id_cargo);
-$chk = (!empty($puede_agd) && $puede_agd == 't') ? 'checked' : '';
+$chk = (!empty($puede_agd) && $puede_agd === 't') ? 'checked' : '';
 
 $oHash = new Hash();
 $camposForm = 'id_cargo!observ';
@@ -128,7 +128,7 @@ $a_camposHidden = array(
 if (!empty($id_activ_real)) {
     $a_camposHidden['id_activ'] = $id_activ_real;
 } else {
-    if ($Qmod == "nuevo") {
+    if ($Qmod === "nuevo") {
         $camposNo .= '!asis';
     }
     $camposForm .= '!id_activ';
@@ -150,4 +150,4 @@ $a_campos = ['obj' => $obj,
 ];
 
 $oView = new core\View('actividadcargos/model');
-echo $oView->render('form_1302.phtml', $a_campos);
+$oView->renderizar('form_1302.phtml', $a_campos);

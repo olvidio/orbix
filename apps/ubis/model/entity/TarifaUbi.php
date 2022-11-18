@@ -3,6 +3,8 @@
 namespace ubis\model\entity;
 
 use core;
+use core\DatosCampo;
+use core\Set;
 
 /**
  * Fitxer amb la Classe que accedeix a la taula du_tarifas
@@ -521,7 +523,7 @@ class TarifaUbi extends core\ClasePropiedades
      */
     function getDatosCampos()
     {
-        $oTarifaSet = new core\Set();
+        $oTarifaSet = new Set();
 
         $oTarifaSet->add($this->getDatosId_item());
         $oTarifaSet->add($this->getDatosCantidad());
@@ -534,12 +536,12 @@ class TarifaUbi extends core\ClasePropiedades
      * Recupera les propietats de l'atribut iid_item de Tarifa
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosId_item()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_item'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_item'));
         $oDatosCampo->setEtiqueta(_("id_item"));
         return $oDatosCampo;
     }
@@ -548,12 +550,12 @@ class TarifaUbi extends core\ClasePropiedades
      * Recupera les propietats de l'atribut icantidad de Tarifa
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosCantidad()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'cantidad'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'cantidad'));
         $oDatosCampo->setEtiqueta(_("cantidad"));
         return $oDatosCampo;
     }
@@ -562,12 +564,12 @@ class TarifaUbi extends core\ClasePropiedades
      * Recupera les propietats de l'atribut sobserv de Tarifa
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosObserv()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'observ'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'observ'));
         $oDatosCampo->setEtiqueta(_("observ"));
         return $oDatosCampo;
     }

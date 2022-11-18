@@ -44,4 +44,4 @@ $a_campos = ['oPosicion' => $oPosicion,
 ];
 
 $oView = new core\ViewTwig('pasarela/controller');
-echo $oView->render('contribucion_x_lista.html.twig', $a_campos);
+$oView->renderizar('contribucion_x_lista.html.twig', $a_campos);

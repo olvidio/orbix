@@ -54,7 +54,7 @@ switch ($Qque) {
         ];
 
         $oView = new core\ViewTwig('pasarela/controller');
-        echo $oView->render('contribucion_x_default_form.html.twig', $a_campos);
+        $oView->renderizar('contribucion_x_default_form.html.twig', $a_campos);
         break;
     case 'form_modificar':
         $txt = _("Contribución en concepto de reserva");
@@ -86,7 +86,7 @@ switch ($Qque) {
         ];
 
         $oView = new core\ViewTwig('pasarela/controller');
-        echo $oView->render('contribucion_x_form.html.twig', $a_campos);
+        $oView->renderizar('contribucion_x_form.html.twig', $a_campos);
         break;
     case 'form_nuevo':
         $txt = _("Contribución en concepto de reserva");
@@ -121,6 +121,6 @@ switch ($Qque) {
         ];
 
         $oView = new core\ViewTwig('pasarela/controller');
-        echo $oView->render('contribucion_x_form_nuevo.html.twig', $a_campos);
+        $oView->renderizar('contribucion_x_form_nuevo.html.twig', $a_campos);
         break;
 }

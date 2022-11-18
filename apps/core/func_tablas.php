@@ -2,9 +2,11 @@
 
 namespace core;
 
-use web;
-use personas\model\entity\GestorTelecoPersonaDl;
-use ubis\model\entity\DescTeleco;
+use web\DateTimeLocal;
+use function base64_decode;
+use function mb_strtoupper;
+use function str_replace;
+use function strnatcasecmp;
 
 /**
  * Esta página sólo contiene funciones. Es para incluir en otras.
@@ -53,7 +55,7 @@ function urlsafe_b64decode($string)
 function is_true($val)
 {
     if (is_string($val)) {
-        $val = ($val == 't') ? 'true' : $val;
+        $val = ($val === 't') ? 'true' : $val;
         $boolval = filter_var($val, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
     } else {
         $boolval = $val;
@@ -63,7 +65,7 @@ function is_true($val)
 }
 
 /**
- * Para poner null en los valores vacios de un array
+ * Para poner null en los valores vacíos de un array
  *
  *
  * @author    Daniel Serrabou
@@ -80,7 +82,7 @@ function poner_null(&$valor)
 /**
  * Para poner string empty en los valores null de un array,
  * necesario para la función http_build_query, que no pone
- * los parametros con valor null
+ * los parámetros con valor null
  *
  * @author    Daniel Serrabou
  * @since        26/10/18.
@@ -99,7 +101,7 @@ function poner_empty_on_null(&$valor)
  * Función para corregir la del php strnatcasecmp. Compara sin tener en cuenta los acentos. La uso para ordenar arrays.
  *
  */
-function strsinacentocmp($str1, $str2)
+function strsinacentocmp($str1, $str2): int
 {
     $acentos = array('Á', 'É', 'Í', 'Ó', 'Ú', 'À', 'È', 'Ì', 'Ò', 'Ù', 'Ä', 'Ë', 'Ï', 'Ö', 'Ü', 'Â', 'Ê', 'Î', 'Ô', 'Û', 'Ñ',
         'á', 'é', 'í', 'ó', 'ú', 'à', 'è', 'ì', 'ò', 'ù', 'ä', 'ë', 'ï', 'ö', 'ü', 'â', 'ê', 'î', 'ô', 'û', 'ñ'
@@ -157,16 +159,14 @@ function curso_est($que, $any, $tipo = "est")
     $any0 = $any - 1;
     //ConfigGlobal::mes_actual()=date("m");
     //if (ConfigGlobal::mes_actual()>$fin_m) ConfigGlobal::any_final_curs()++; // debe estar antes de llamar a la función.
-    $inicurs = new web\DateTimeLocal("$any0-$ini_m-$ini_d");
-    $fincurs = new web\DateTimeLocal("$any-$fin_m-$fin_d");
+    $inicurs = new DateTimeLocal("$any0-$ini_m-$ini_d");
+    $fincurs = new DateTimeLocal("$any-$fin_m-$fin_d");
 
     switch ($que) {
         case "inicio":
             return $inicurs;
-            break;
         case "fin":
             return $fincurs;
-            break;
         default:
             $err_switch = sprintf(_("opción no definida en switch en %s, linea %s"), __FILE__, __LINE__);
             exit ($err_switch);

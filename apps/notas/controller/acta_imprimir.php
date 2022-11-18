@@ -212,4 +212,4 @@ $a_campos = [
 ];
 
 $oView = new core\View('notas/controller');
-echo $oView->render('acta_imprimir.phtml', $a_campos);
+$oView->renderizar('acta_imprimir.phtml', $a_campos);

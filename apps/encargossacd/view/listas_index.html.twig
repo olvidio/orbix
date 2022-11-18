@@ -15,34 +15,34 @@ fnjs_comprobaciones=function(){
 
 }
 </script>
-<p>{{ "comprobaciones"|trans }}</p>
+<p>{{ "comprobaciones"|trans|raw }}</p>
 
 <ol>
-<li><span class=link onclick="fnjs_comprobaciones()">{{ "Eliminar encargos de centros inexistentes"|trans }}</span></li>
+<li><span class=link onclick="fnjs_comprobaciones()">{{ "Eliminar encargos de centros inexistentes"|trans|raw }}</span></li>
 </ol>
 
-<p>{{ "listados de encargos para cr"|trans }}</p>
+<p>{{ "listados de encargos para cr"|trans|raw }}</p>
 <ol>
 <!-- NO se puede por que hace referencia a los cargos, que no se tienen.
-<li><span class=link onclick="fnjs_update_div('#main','apps/encargossacd/controller/listas_cl.php')">{{ "cl sss+ (cr 1/14, 10,c)"|trans }}</span></li>
+<li><span class=link onclick="fnjs_update_div('#main','apps/encargossacd/controller/listas_cl.php')">{{ "cl sss+ (cr 1/14, 10,c)"|trans|raw }}</span></li>
  -->
-<li><span class=link onclick="fnjs_update_div('#main','{{ url_lista_af|raw }}')">{{ "atención ctr sf (cr 1/14, 10,a)"|trans }}</span></li>
-<li><span class=link onclick="fnjs_update_div('#main','{{ url_lista_a|raw }}')">{{ "atención ctr sv (cr 1/14, 10,a)"|trans }}</span></li>
-<li><span class=link onclick="fnjs_update_div('#main','{{ url_lista_b|raw }}')">{{ "atención iglesias, oc y lp (cr 1/14, 10,b)"|trans }}</span></li>
-<li><span class=link onclick="fnjs_update_div('#main','{{ url_lista_bf|raw }}')">{{ "oc y lp sf (cr 1/14, 10,b)"|trans }}</span></li>
-<li><span class=link onclick="fnjs_update_div('#main','{{ url_lista_c|raw }}')">{{ "por sacd (cr 1/14, 10,d)"|trans }}</span></li>
-<li><span class=link onclick="fnjs_update_div('#main','{{ url_lista_d|raw }}')">{{ "tabla por sacd (cr 9/20, 10)"|trans }}</span></li>
-<li><span class=link onclick="fnjs_update_div('#main','{{ url_lista_df|raw }}')">{{ "tabla por sacd sf (cr 9/20, 10)"|trans }}</span></li>
+<li><span class=link onclick="fnjs_update_div('#main','{{ url_lista_af|raw }}')">{{ "atención ctr sf (cr 1/14, 10,a)"|trans|raw }}</span></li>
+<li><span class=link onclick="fnjs_update_div('#main','{{ url_lista_a|raw }}')">{{ "atención ctr sv (cr 1/14, 10,a)"|trans|raw }}</span></li>
+<li><span class=link onclick="fnjs_update_div('#main','{{ url_lista_b|raw }}')">{{ "atención iglesias, oc y lp (cr 1/14, 10,b)"|trans|raw }}</span></li>
+<li><span class=link onclick="fnjs_update_div('#main','{{ url_lista_bf|raw }}')">{{ "oc y lp sf (cr 1/14, 10,b)"|trans|raw }}</span></li>
+<li><span class=link onclick="fnjs_update_div('#main','{{ url_lista_c|raw }}')">{{ "por sacd (cr 1/14, 10,d)"|trans|raw }}</span></li>
+<li><span class=link onclick="fnjs_update_div('#main','{{ url_lista_d|raw }}')">{{ "tabla por sacd (cr 9/20, 10)"|trans|raw }}</span></li>
+<li><span class=link onclick="fnjs_update_div('#main','{{ url_lista_df|raw }}')">{{ "tabla por sacd sf (cr 9/20, 10)"|trans|raw }}</span></li>
 </ol>
 
-<p>{{ "listados comunicaciones"|trans }}</p>
+<p>{{ "listados comunicaciones"|trans|raw }}</p>
 <ol>
-<li><span class=link onclick="fnjs_update_div('#main','{{ url_lista_ctr|raw }}')">{{ "exigencias ctr sv"|trans }}</span></li>
-<li><span class=link onclick="fnjs_update_div('#main','{{ url_lista_ctrf|raw }}')">{{ "exigencias ctr sf"|trans }}</span></li>
-<li><span class=link onclick="fnjs_update_div('#main','{{ url_lista_igl|raw }}')">{{ "exigencias igl, oc..."|trans }}</span></li>
-<li><span class=link onclick="fnjs_update_div('#main','{{ url_lista_com_sacd_na|raw }}')">{{ "comunicación a sacd Prelatura"|trans }}</span></li>
-<li><span class=link onclick="fnjs_update_div('#main','{{ url_lista_com_sacd_sss|raw }}')">{{ "comunicación a sacd sss+"|trans }}</span></li>
-<li><span class=link onclick="fnjs_update_div('#main','{{ url_lista_com_ctr_sv|raw }}')">{{ "comunicación a los centros sv"|trans }}</span></li>
-<li><span class=link onclick="fnjs_update_div('#main','{{ url_lista_com_ctr_sf|raw }}')">{{ "comunicación a los centros sf"|trans }}</span></li>
-<li><span class=link onclick="fnjs_update_div('#main','{{ url_lista_com_txt|raw }}')">{{ "modificar los textos de las comunicaciones"|trans }}</span></li>
+<li><span class=link onclick="fnjs_update_div('#main','{{ url_lista_ctr|raw }}')">{{ "exigencias ctr sv"|trans|raw }}</span></li>
+<li><span class=link onclick="fnjs_update_div('#main','{{ url_lista_ctrf|raw }}')">{{ "exigencias ctr sf"|trans|raw }}</span></li>
+<li><span class=link onclick="fnjs_update_div('#main','{{ url_lista_igl|raw }}')">{{ "exigencias igl, oc..."|trans|raw }}</span></li>
+<li><span class=link onclick="fnjs_update_div('#main','{{ url_lista_com_sacd_na|raw }}')">{{ "comunicación a sacd Prelatura"|trans|raw }}</span></li>
+<li><span class=link onclick="fnjs_update_div('#main','{{ url_lista_com_sacd_sss|raw }}')">{{ "comunicación a sacd sss+"|trans|raw }}</span></li>
+<li><span class=link onclick="fnjs_update_div('#main','{{ url_lista_com_ctr_sv|raw }}')">{{ "comunicación a los centros sv"|trans|raw }}</span></li>
+<li><span class=link onclick="fnjs_update_div('#main','{{ url_lista_com_ctr_sf|raw }}')">{{ "comunicación a los centros sf"|trans|raw }}</span></li>
+<li><span class=link onclick="fnjs_update_div('#main','{{ url_lista_com_txt|raw }}')">{{ "modificar los textos de las comunicaciones"|trans|raw }}</span></li>
 </ol>

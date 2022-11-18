@@ -27,4 +27,4 @@ $a_campos = ['oPosicion' => $oPosicion,
 ];
 
 $oView = new core\View('actividadtarifas/controller');
-echo $oView->render('tarifa.phtml', $a_campos);
+$oView->renderizar('tarifa.phtml', $a_campos);

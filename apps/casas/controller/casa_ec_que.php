@@ -101,4 +101,4 @@ $a_campos = ['oPosicion' => $oPosicion,
 ];
 
 $oView = new core\ViewTwig('casas/controller');
-echo $oView->render('casa_ec_que.html.twig', $a_campos);
+$oView->renderizar('casa_ec_que.html.twig', $a_campos);

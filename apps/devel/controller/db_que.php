@@ -43,4 +43,4 @@ $a_campos = [
 ];
 
 $oView = new core\View('devel/controller');
-echo $oView->render('db_que.phtml', $a_campos);
+$oView->renderizar('db_que.phtml', $a_campos);

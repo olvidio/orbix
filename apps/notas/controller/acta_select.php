@@ -214,4 +214,4 @@ $a_campos = ['oPosicion' => $oPosicion,
 ];
 
 $oView = new core\View('notas/controller');
-echo $oView->render('acta_select.phtml', $a_campos);
+$oView->renderizar('acta_select.phtml', $a_campos);

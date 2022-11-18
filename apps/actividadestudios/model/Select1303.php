@@ -193,7 +193,7 @@ class Select1303
             echo $msg_err;
         }
         $oView = new core\View(__NAMESPACE__);
-        return $oView->render('selectUnCa.phtml', $a_campos);
+        $oView->renderizar('selectUnCa.phtml', $a_campos);
     }
 
     public function setLinksInsert()
@@ -314,7 +314,7 @@ class Select1303
         ];
 
         $oView = new core\View(__NAMESPACE__);
-        $html_script = $oView->render('select1303.phtml', $a_campos);
+        $html_script = $oView->renderizar('select1303.phtml', $a_campos);
 
         // para más de un ca
         $ca_num = 0;

@@ -86,4 +86,4 @@ $a_campos = ['oPosicion' => $oPosicion,
 ];
 
 $oView = new core\View('notas/controller');
-echo $oView->render('asig_faltan_que.phtml', $a_campos);
+$oView->renderizar('asig_faltan_que.phtml', $a_campos);

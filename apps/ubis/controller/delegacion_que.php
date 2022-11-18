@@ -23,4 +23,4 @@ $a_campos = [
 ];
 
 $oView = new core\ViewTwig('ubis/controller');
-echo $oView->render('delegaciones.html.twig', $a_campos);
+$oView->renderizar('delegaciones.html.twig', $a_campos);

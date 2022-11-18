@@ -60,7 +60,7 @@ if ($Qid_item !== 'nuevo') {
     ];
 
     $oView = new core\ViewTwig('pasarela/controller');
-    echo $oView->render('nombre_form.html.twig', $a_campos);
+    $oView->renderizar('nombre_form.html.twig', $a_campos);
 
 } else {
     // -------------- NUEVA  --------------------
@@ -106,5 +106,5 @@ if ($Qid_item !== 'nuevo') {
     ];
 
     $oView = new core\ViewTwig('pasarela/controller');
-    echo $oView->render('nombre_form_nuevo.html.twig', $a_campos);
+    $oView->renderizar('nombre_form_nuevo.html.twig', $a_campos);
 }

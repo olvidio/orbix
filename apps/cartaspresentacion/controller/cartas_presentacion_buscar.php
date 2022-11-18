@@ -56,4 +56,4 @@ $a_campos = ['oPosicion' => $oPosicion,
 ];
 
 $oView = new core\ViewTwig('cartaspresentacion/controller');
-echo $oView->render('cartas_presentacion_buscar.html.twig', $a_campos);
+$oView->renderizar('cartas_presentacion_buscar.html.twig', $a_campos);
