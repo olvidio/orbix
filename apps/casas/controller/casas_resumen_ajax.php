@@ -379,7 +379,7 @@ if (empty($Qque)) {
             $oFin = $oActividad->getF_fin();
             $nom_activ = $oActividad->getNom_activ();
 
-            $num_dias_act = $oActividad->getDuracion();
+            $num_dias_act = $oActividad->getDuracionAumentada();
             $num_dias = $oActividad->getDuracionEnPeriodo($oInicio, $oFin);
             $num_dias_real = $oActividad->getDuracionReal();
             $factor_dias = ($num_dias / $num_dias_real);
@@ -805,7 +805,7 @@ if (empty($Qque)) {
                 $oFin = $oActividad->getF_fin();
                 $nom_activ = $oActividad->getNom_activ();
 
-                $num_dias_act = $oActividad->getDuracion();
+                $num_dias_act = $oActividad->getDuracionAumentada();
                 $num_dias = $oActividad->getDuracionEnPeriodo($oInicio, $oFin);
                 $num_dias_real = $oActividad->getDuracionReal();
                 $factor_dias = ($num_dias / $num_dias_real);

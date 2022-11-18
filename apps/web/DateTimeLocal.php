@@ -2,6 +2,8 @@
 
 namespace web;
 
+use DateTimeZone;
+
 /**
  * Classe per les dates. Afageix a la clase del php la vista amn num. romans.
  *
@@ -55,14 +57,13 @@ class DateTimeLocal extends \DateTime
 
     public function getFechaLatin()
     {
-        $mes_latin = $this->Meses_latin();
+        $mes_latin = self::Meses_latin();
 
         $dia = parent::format('j'); //sin ceros iniciales
         $mes = parent::format('n'); //sin ceros iniciales
         $any = parent::format('Y');
 
-        $fecha_latin = "die " . $dia . " mense  " . $mes_latin[$mes] . "  anno  " . $any;
-        return $fecha_latin;
+        return "die " . $dia . " mense  " . $mes_latin[$mes] . "  anno  " . $any;
     }
 
     /**
@@ -138,7 +139,7 @@ class DateTimeLocal extends \DateTime
      */
     public function getFromLocalHora($separador = '/')
     {
-        $format = $this->getFormat($separador);
+        $format = self::getFormat($separador);
         $format .= ' H:i:s';
         return parent::format($format);
     }
@@ -151,11 +152,11 @@ class DateTimeLocal extends \DateTime
      */
     public function getFromLocal($separador = '/')
     {
-        $format = $this->getFormat($separador);
+        $format = self::getFormat($separador);
         return parent::format($format);
     }
 
-    static public function createFromFormat($format, $data, \DateTimeZone $TimeZone = NULL)
+    public static function createFromFormat($format, $data, DateTimeZone $TimeZone = NULL)
     {
         $extnd_dt = new static();
         $parent_dt = parent::createFromFormat($format, $data, $TimeZone);
@@ -184,38 +185,87 @@ class DateTimeLocal extends \DateTime
         return "$dia." . $a_num_romanos[$mes] . ".$any";
     }
 
-    public function duracion($oDateDiff)
+    /**
+     * Calcula la diferencia (expresada en días) con la fecha que se le pasa como parámetro
+     * Devuelve un número con dos decimales (p.ej. 2,43)
+     *
+     * @param $oDateOtra
+     * @return float
+     */
+    public function duracion($oDateOtra)
     {
-        $interval = $this->diff($oDateDiff);
-        $horas = $interval->format('%a') * 24 + $interval->format('%h') + $interval->format('%i') / 60 + $interval->format('%s') / 3600;
-        /*
-         $dias=$horas/24;
-         $e_dias=($dias % $horas);
-         $dec=round(($dias-$e_dias),1);
-         if ($dec > 0.1) { $dec=0.5; } else { $dec=0; }
-         return ($e_dias+$dec);
+        /* Formato de DateInterval:
+         * a 	Total number of days as a result of a DateTime::diff() or (unknown) otherwise
+         * h 	Hours, numeric 	1, 3, 23
+         * i 	Minutes, numeric 	1, 3, 59
+         * s 	Seconds, numeric
          */
-        $dias = round($horas / 24, 2);
-        return $dias;
-    }
-
-    public function duracionAjustada($oDateDiff)
-    {
-        $interval = $this->diff($oDateDiff);
-        $horas = $interval->format('%a') * 24 + $interval->format('%h') + $interval->format('%i') / 60 + $interval->format('%s') / 3600 + 12;
-        $dias = $horas / 24;
-        $e_dias = ($dias % $horas);
-        $dec = round(($dias - $e_dias), 1);
-        if ($dec > 0.1) {
-            $dec = 0.5;
-        } else {
-            $dec = 0;
-        }
-        return ($e_dias + $dec);
+        $interval = $this->diff($oDateOtra);
+        $horas = (int)$interval->format('%a') * 24 + (int)$interval->format('%h') + (int)$interval->format('%i') / 60 + (int)$interval->format('%s') / 3600;
+        return round($horas / 24, 2);
     }
 
     /**
-     * comprueba que no exista solape o vacios entre periodos.
+     * Calcula la diferencia (expresada en días) con la fecha que se le pasa como parámetro
+     * Devuelve el número con un decimal redondeado a 0 o 0,5 (p.ej. 2,0 ó 2,5)
+     *
+     * @param $oDateOtra
+     * @return float|int
+     */
+    public function duracionAjustada($oDateOtra)
+    {
+        /* Formato de DateInterval:
+         * a 	Total number of days as a result of a DateTime::diff() or (unknown) otherwise
+         * h 	Hours, numeric 	1, 3, 23
+         * i 	Minutes, numeric 	1, 3, 59
+         * s 	Seconds, numeric
+         */
+        $interval = $this->diff($oDateOtra);
+        $horas = (int)$interval->format('%a') * 24 + (int)$interval->format('%h') + $interval->format('%i') / 60 + $interval->format('%s') / 3600;
+        $dias_con_decimales = $horas / 24;
+        $dias_enteros = ($dias_con_decimales % $horas);
+        $decimales = round(($dias_con_decimales - $dias_enteros), 1);
+        if ($decimales > 0.1) {
+            $decimal_redondeado = 0.5;
+        } else {
+            $decimal_redondeado = 0;
+        }
+        return ($dias_enteros + $decimal_redondeado);
+    }
+
+    /**
+     * IMPORTANTE: esta función suma medio dia (12h) a la función duracionAjustada . NO SË PORQUË!!!
+     *
+     * Calcula la diferencia (expresada en días) con la fecha que se le pasa como parámetro
+     * Devuelve el número con un decimal redondeado a 0 o 0,5 (p.ej. 2,0 ó 2,5)
+     *
+     * @param $oDateOtra
+     * @return float|int
+     */
+    public function duracionAjustadaAumentada($oDateOtra)
+    {
+        /* Formato de DateInterval:
+         * a 	Total number of days as a result of a DateTime::diff() or (unknown) otherwise
+         * h 	Hours, numeric 	1, 3, 23
+         * i 	Minutes, numeric 	1, 3, 59
+         * s 	Seconds, numeric
+         */
+        $interval = $this->diff($oDateOtra);
+        $horas = (int)$interval->format('%a') * 24 + (int)$interval->format('%h') + $interval->format('%i') / 60 + $interval->format('%s') / 3600;
+        $horas = $horas + 12;
+        $dias_con_decimales = $horas / 24;
+        $dias_enteros = ($dias_con_decimales % $horas);
+        $decimales = round(($dias_con_decimales - $dias_enteros), 1);
+        if ($decimales > 0.1) {
+            $decimal_redondeado = 0.5;
+        } else {
+            $decimal_redondeado = 0;
+        }
+        return ($dias_enteros + $decimal_redondeado);
+    }
+
+    /**
+     * comprueba que no exista solape o vacíos entre periodos.
      * oInicio y oFin deben ser objetos DatetimeLocal.
      *
      * @param array $cPeriodos ['oInicio','oFin','Descripcion']
@@ -231,10 +281,10 @@ class DateTimeLocal extends \DateTime
             $oF_fin = $aPeriodo['fin'];
 
             //Fecha fin periodo debe ser posterior a fecha inicio
-            if ($oF_fin == $oF_ini) {
+            if ($oF_fin === $oF_ini) {
                 $fecha = $oF_fin->getFromLocal();
                 $error_txt .= empty($error_txt) ? '' : '<br>';
-                $error_txt .= sprinitf(_("la fecha fin es igual a la fecha inicio en el periodo %s: %s"), $i);
+                $error_txt .= sprintf(_("la fecha fin es igual a la fecha inicio en el periodo %s: %s"), $i, $fecha);
             }
             if ($oF_fin < $oF_ini) {
                 $fecha = $oF_ini->getFromLocal();
@@ -260,9 +310,9 @@ class DateTimeLocal extends \DateTime
         }
         if (empty($error_txt)) {
             return FALSE;
-        } else {
-            return $error_txt;
         }
+
+        return $error_txt;
 
     }
 }
