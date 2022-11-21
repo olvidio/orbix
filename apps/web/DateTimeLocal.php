@@ -2,6 +2,7 @@
 
 namespace web;
 
+use DateTime;
 use DateTimeZone;
 
 /**
@@ -13,7 +14,7 @@ use DateTimeZone;
  * @version 1.0
  * @created 26/11/2010
  */
-class DateTimeLocal extends \DateTime
+class DateTimeLocal extends DateTime
 {
     private $oData;
 
@@ -156,10 +157,16 @@ class DateTimeLocal extends \DateTime
         return parent::format($format);
     }
 
-    public static function createFromFormat(string $format, string $data, DateTimeZone $TimeZone = NULL): DateTime
+    /**
+     * @param string $format
+     * @param string $data
+     * @param DateTimeZone|NULL $timezone
+     * @return DateTime|false
+     */
+    public static function createFromFormat(string $format='', string $data='', DateTimeZone $timezone = NULL): DateTime
     {
         $extnd_dt = new static();
-        $parent_dt = parent::createFromFormat($format, $data, $TimeZone);
+        $parent_dt = parent::createFromFormat($format, $data, $timezone);
 
         if (!$parent_dt) {
             return false;
@@ -168,7 +175,7 @@ class DateTimeLocal extends \DateTime
         return $extnd_dt;
     }
 
-    public function format($format)
+    public function format(string $format=''): array|string
     {
         $english = array('Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday');
         $local = array(_("lunes"), _("martes"), _("miércoles"), _("jueves"), _("viernes"), _("sábado"), _("domingo"));
