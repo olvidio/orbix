@@ -156,7 +156,7 @@ class DateTimeLocal extends \DateTime
         return parent::format($format);
     }
 
-    public static function createFromFormat($format, $data, DateTimeZone $TimeZone = NULL)
+    public static function createFromFormat(string $format, string $data, DateTimeZone $TimeZone = NULL): DateTime
     {
         $extnd_dt = new static();
         $parent_dt = parent::createFromFormat($format, $data, $TimeZone);
@@ -210,9 +210,9 @@ class DateTimeLocal extends \DateTime
      * Devuelve el número con un decimal redondeado a 0 o 0,5 (p.ej. 2,0 ó 2,5)
      *
      * @param $oDateOtra
-     * @return float|int
+     * @return int
      */
-    public function duracionAjustada($oDateOtra)
+    public function duracionAjustada($oDateOtra): int
     {
         /* Formato de DateInterval:
          * a 	Total number of days as a result of a DateTime::diff() or (unknown) otherwise
@@ -221,20 +221,14 @@ class DateTimeLocal extends \DateTime
          * s 	Seconds, numeric
          */
         $interval = $this->diff($oDateOtra);
-        $horas = (int)$interval->format('%a') * 24 + (int)$interval->format('%h') + $interval->format('%i') / 60 + $interval->format('%s') / 3600;
+        $horas = (int)$interval->format('%a') * 24 + (int)$interval->format('%h') + (int)$interval->format('%i') / 60 + (int)$interval->format('%s') / 3600;
         $dias_con_decimales = $horas / 24;
-        $dias_enteros = ($dias_con_decimales % $horas);
-        $decimales = round(($dias_con_decimales - $dias_enteros), 1);
-        if ($decimales > 0.1) {
-            $decimal_redondeado = 0.5;
-        } else {
-            $decimal_redondeado = 0;
-        }
-        return ($dias_enteros + $decimal_redondeado);
+        // si existe un decimal, redondea al entero superior.
+        return round(($dias_con_decimales));
     }
 
     /**
-     * IMPORTANTE: esta función suma medio dia (12h) a la función duracionAjustada . NO SË PORQUË!!!
+     * IMPORTANTE: esta función suma medio dia (12h) a la función duracionAjustada . NO SÉ PORQUÉ!!!
      *
      * Calcula la diferencia (expresada en días) con la fecha que se le pasa como parámetro
      * Devuelve el número con un decimal redondeado a 0 o 0,5 (p.ej. 2,0 ó 2,5)
