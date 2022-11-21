@@ -163,7 +163,7 @@ class DateTimeLocal extends DateTime
      * @param DateTimeZone|NULL $timezone
      * @return DateTime|false
      */
-    public static function createFromFormat(string $format='', string $data='', DateTimeZone $timezone = NULL)
+    public static function createFromFormat(string $format='', string $data='', DateTimeZone $timezone = NULL): DateTime
     {
         $extnd_dt = new static();
         $parent_dt = parent::createFromFormat($format, $data, $timezone);
@@ -175,7 +175,7 @@ class DateTimeLocal extends DateTime
         return $extnd_dt;
     }
 
-    public function format(string $format='')
+    public function format(string $format=''): string
     {
         $english = array('Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday');
         $local = array(_("lunes"), _("martes"), _("miércoles"), _("jueves"), _("viernes"), _("sábado"), _("domingo"));
