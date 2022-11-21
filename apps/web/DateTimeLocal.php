@@ -187,7 +187,7 @@ class DateTimeLocal extends DateTime
         return str_replace($english, $local, parent::format($format));
     }
 
-    public function formatRoman()
+    public function formatRoman(): string
     {
         $a_num_romanos = array('1' => "I", '2' => "II", '3' => "III", '4' => "IV", '5' => "V", '6' => "VI", '7' => "VII", '8' => "VIII", '9' => "IX",
             '10' => "X", '11' => "XI", '12' => "XII");
@@ -204,7 +204,7 @@ class DateTimeLocal extends DateTime
      * @param $oDateOtra
      * @return float
      */
-    public function duracion($oDateOtra)
+    public function duracion($oDateOtra): float
     {
         /* Formato de DateInterval:
          * a 	Total number of days as a result of a DateTime::diff() or (unknown) otherwise
