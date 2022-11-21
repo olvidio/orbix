@@ -2,6 +2,7 @@
 
 namespace web;
 
+use DateInterval;
 use DateTime;
 use DateTimeZone;
 
@@ -116,7 +117,7 @@ class DateTimeLocal extends DateTime
             $currentY2 = date('y');
             $currentMilenium = $currentY4 - $currentY2;
 
-            $extnd_dt->add(new \DateInterval('P' . $currentMilenium . 'Y'));
+            $extnd_dt->add(new DateInterval('P' . $currentMilenium . 'Y'));
         }
 
         return $extnd_dt;
@@ -163,7 +164,7 @@ class DateTimeLocal extends DateTime
      * @param DateTimeZone|NULL $timezone
      * @return DateTime|false
      */
-    public static function createFromFormat(string $format='', string $datetime='', DateTimeZone $timezone = NULL): DateTime
+    public static function createFromFormat(string $format='', string $datetime='', DateTimeZone $timezone = NULL)
     {
         $extnd_dt = new static();
         $parent_dt = parent::createFromFormat($format, $datetime, $timezone);
@@ -175,7 +176,11 @@ class DateTimeLocal extends DateTime
         return $extnd_dt;
     }
 
-    public function format(string $format=''): string
+    /**
+     * @param string $format
+     * @return string|array
+     */
+    public function format(string $format='')
     {
         $english = array('Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday');
         $local = array(_("lunes"), _("martes"), _("miércoles"), _("jueves"), _("viernes"), _("sábado"), _("domingo"));
