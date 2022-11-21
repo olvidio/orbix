@@ -159,14 +159,14 @@ class DateTimeLocal extends DateTime
 
     /**
      * @param string $format
-     * @param string $data
+     * @param string $datetime
      * @param DateTimeZone|NULL $timezone
      * @return DateTime|false
      */
-    public static function createFromFormat(string $format='', string $data='', DateTimeZone $timezone = NULL): DateTime
+    public static function createFromFormat(string $format='', string $datetime='', DateTimeZone $timezone = NULL): DateTime
     {
         $extnd_dt = new static();
-        $parent_dt = parent::createFromFormat($format, $data, $timezone);
+        $parent_dt = parent::createFromFormat($format, $datetime, $timezone);
 
         if (!$parent_dt) {
             return false;

@@ -65,7 +65,7 @@ class NullDateTimeLocal extends \DateTime
         return '';
     }
 
-    static public function createFromFormat($format, $data, \DateTimeZone $timezone = NULL)
+    static public function createFromFormat($format, $datetime, \DateTimeZone $timezone = NULL)
     {
         return '';
     }
