@@ -149,9 +149,9 @@ foreach ($cActividades as $oActividad) {
     $id_ubi = $oActividad->getId_ubi();
     $oF_ini = $oActividad->getF_ini();
     $f_ini = $oActividad->getF_ini()->getFromLocal();
-    $h_ini = $oActividad->getH_ini;
+    $h_ini = $oActividad->getH_ini();
     $f_fin = $oActividad->getF_fin()->getFromLocal();
-    $h_fin = $oActividad->getH_fin;
+    $h_fin = $oActividad->getH_fin();
     // calcular fecha activación
     $activacion = $aConversion_activacion[$id_tipo_activ];
     $oF_ini_dup = clone $oF_ini;
