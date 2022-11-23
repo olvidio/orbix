@@ -1241,7 +1241,7 @@ class ActividadAll extends core\ClasePropiedades
             list($h, $m, $s) = explode(':', $hFin);
             $oF_fin_ca = $this->getF_fin()->setTime($h, $m, $s);
 
-            $this->iduracionAumentada = $oF_ini_ca->duracionAjustada($oF_fin_ca);
+            $this->iduracionAumentada = $oF_ini_ca->duracionAjustadaAumentada($oF_fin_ca);
         }
         return $this->iduracionAumentada;
     }

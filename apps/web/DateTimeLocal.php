@@ -2,6 +2,8 @@
 
 namespace web;
 
+use DateInterval;
+use DateTime;
 use DateTimeZone;
 
 /**
@@ -13,7 +15,7 @@ use DateTimeZone;
  * @version 1.0
  * @created 26/11/2010
  */
-class DateTimeLocal extends \DateTime
+class DateTimeLocal extends DateTime
 {
     private $oData;
 
@@ -115,7 +117,7 @@ class DateTimeLocal extends \DateTime
             $currentY2 = date('y');
             $currentMilenium = $currentY4 - $currentY2;
 
-            $extnd_dt->add(new \DateInterval('P' . $currentMilenium . 'Y'));
+            $extnd_dt->add(new DateInterval('P' . $currentMilenium . 'Y'));
         }
 
         return $extnd_dt;
@@ -156,10 +158,16 @@ class DateTimeLocal extends \DateTime
         return parent::format($format);
     }
 
-    public static function createFromFormat($format, $data, DateTimeZone $TimeZone = NULL)
+    /**
+     * @param string $format
+     * @param string $datetime
+     * @param DateTimeZone|NULL $timezone
+     * @return DateTime|false
+     */
+    public static function createFromFormat($format='', $datetime='', $timezone = NULL)
     {
         $extnd_dt = new static();
-        $parent_dt = parent::createFromFormat($format, $data, $TimeZone);
+        $parent_dt = parent::createFromFormat($format, $datetime, $timezone);
 
         if (!$parent_dt) {
             return false;
@@ -168,14 +176,18 @@ class DateTimeLocal extends \DateTime
         return $extnd_dt;
     }
 
-    public function format($format)
+    /**
+     * @param string $format
+     * @return string|array
+     */
+    public function format($format='')
     {
         $english = array('Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday');
         $local = array(_("lunes"), _("martes"), _("miércoles"), _("jueves"), _("viernes"), _("sábado"), _("domingo"));
         return str_replace($english, $local, parent::format($format));
     }
 
-    public function formatRoman()
+    public function formatRoman(): string
     {
         $a_num_romanos = array('1' => "I", '2' => "II", '3' => "III", '4' => "IV", '5' => "V", '6' => "VI", '7' => "VII", '8' => "VIII", '9' => "IX",
             '10' => "X", '11' => "XI", '12' => "XII");
@@ -192,7 +204,7 @@ class DateTimeLocal extends \DateTime
      * @param $oDateOtra
      * @return float
      */
-    public function duracion($oDateOtra)
+    public function duracion($oDateOtra): float
     {
         /* Formato de DateInterval:
          * a 	Total number of days as a result of a DateTime::diff() or (unknown) otherwise
@@ -210,9 +222,9 @@ class DateTimeLocal extends \DateTime
      * Devuelve el número con un decimal redondeado a 0 o 0,5 (p.ej. 2,0 ó 2,5)
      *
      * @param $oDateOtra
-     * @return float|int
+     * @return int
      */
-    public function duracionAjustada($oDateOtra)
+    public function duracionAjustada($oDateOtra): int
     {
         /* Formato de DateInterval:
          * a 	Total number of days as a result of a DateTime::diff() or (unknown) otherwise
@@ -221,20 +233,14 @@ class DateTimeLocal extends \DateTime
          * s 	Seconds, numeric
          */
         $interval = $this->diff($oDateOtra);
-        $horas = (int)$interval->format('%a') * 24 + (int)$interval->format('%h') + $interval->format('%i') / 60 + $interval->format('%s') / 3600;
+        $horas = (int)$interval->format('%a') * 24 + (int)$interval->format('%h') + (int)$interval->format('%i') / 60 + (int)$interval->format('%s') / 3600;
         $dias_con_decimales = $horas / 24;
-        $dias_enteros = ($dias_con_decimales % $horas);
-        $decimales = round(($dias_con_decimales - $dias_enteros), 1);
-        if ($decimales > 0.1) {
-            $decimal_redondeado = 0.5;
-        } else {
-            $decimal_redondeado = 0;
-        }
-        return ($dias_enteros + $decimal_redondeado);
+        // si existe un decimal, redondea al entero superior.
+        return round(($dias_con_decimales));
     }
 
     /**
-     * IMPORTANTE: esta función suma medio dia (12h) a la función duracionAjustada . NO SË PORQUË!!!
+     * IMPORTANTE: esta función suma medio dia (12h) a la función duracionAjustada . NO SÉ PORQUÉ!!!
      *
      * Calcula la diferencia (expresada en días) con la fecha que se le pasa como parámetro
      * Devuelve el número con un decimal redondeado a 0 o 0,5 (p.ej. 2,0 ó 2,5)
