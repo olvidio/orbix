@@ -63,7 +63,7 @@
 339	{20,60}	lista cargos	sasistentes=sr&sactividad=cv&que=list_cjto	119	2560	15	t
 133	{37,75}	estudios x ctr	lista=list_est&n_agd=a&sasistentes=n&sactividad=cv	147	2064	12	t
 232	{120}	crt	\N	\N	2112	10	t
-53	{5,40}	agd de paso	tabla=p_de_paso&na=a&tipo=persona&es_sacd=1	76	8	8	t
+53	{5,40}	agd de paso	tabla=p_de_paso&na=a&tipo=persona&es_sacd=2	76	8	8	t
 619	{20,20}	tabla alumnos-asignaturas	\N	88	16	12	t
 151	{90}	estudios	\N	\N	16	19	t
 242	{140,20}	n de paso	tabla=p_de_paso&na=n&tipo=persona	76	64	10	t
