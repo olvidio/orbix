@@ -17,13 +17,6 @@ use web;
 class PermDossier
 {
 
-    function chek($r)
-    {
-        if (eregi("1|t|true|y|yes|s|si", $r)) $rta = "checked";
-        if (eregi("0|f|false|n|no", $r)) $rta = "";
-        return $rta;
-    }
-
     function permiso($r, $rw, $depende, $pau, $id_pau)
     {
         /*	$r = número referente al bit de lectura en decimal
@@ -283,12 +276,12 @@ class PermDossier
             case "pa":
                 if ($_SESSION['oPerm']->have_perm_oficina('sm')) {
                     $ref_perm = array(
-                        $sv . "11" => array('nom' => "crt n", 'perm' => 0),
+                        $sv . "11" => array('nom' => "crt n", 'perm' => 1),
                         $sv . "21" => array('nom' => "crt nax", 'perm' => 0),
                         $sv . "31" => array('nom' => "crt agd", 'perm' => 0),
                         $sv . "41" => array('nom' => "crt s", 'perm' => 0),
                         $sv . "71" => array('nom' => "crt sr", 'perm' => 0),
-                        $sv . "12" => array('nom' => "ca n", 'perm' => 0),
+                        $sv . "12" => array('nom' => "ca n", 'perm' => 1),
                         $sv . "22" => array('nom' => "ca nax", 'perm' => 0),
                         $sv . "32" => array('nom' => "sem inv", 'perm' => 0),
                         $sv . "33" => array('nom' => "cv agd", 'perm' => 0),
@@ -337,12 +330,12 @@ class PermDossier
                 }
                 if ($_SESSION['oPerm']->have_perm_oficina('est')) {
                     $ref_perm = array(
-                        $sv . "11" => array('nom' => "crt n", 'perm' => 0),
+                        $sv . "11" => array('nom' => "crt n", 'perm' => 1),
                         $sv . "21" => array('nom' => "crt nax", 'perm' => 0),
                         $sv . "31" => array('nom' => "crt agd", 'perm' => 0),
                         $sv . "41" => array('nom' => "crt s", 'perm' => 0),
                         $sv . "71" => array('nom' => "crt sr", 'perm' => 0),
-                        $sv . "12" => array('nom' => "ca n", 'perm' => 0),
+                        $sv . "12" => array('nom' => "ca n", 'perm' => 1),
                         $sv . "22" => array('nom' => "ca nax", 'perm' => 0),
                         $sv . "32" => array('nom' => "sem inv", 'perm' => 1),
                         $sv . "33" => array('nom' => "cv agd", 'perm' => 1),
