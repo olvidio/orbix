@@ -276,7 +276,7 @@ if (empty($pdf)) {
     $url_delete = 'apps/notas/controller/acta_pdf_delete.php';
 }
 $oHashActaDelete = new Hash();
-//cambio el nombre, porque tiene el mismo id en el otro formnulario
+//cambio el nombre, porque tiene el mismo id en el otro formulario
 $oHashActaDelete->setArrayCamposHidden(['acta_num' => $acta_actual]);
 $h_delete = $oHashActaDelete->getParamAjax();
 
