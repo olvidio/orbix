@@ -1,8 +1,331 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="f178a244-4024-41f6-8417-4831ab0bb057" name="Changes" comment="redondeo duracion acttividades pasarela">
-      <change beforePath="$PROJECT_DIR$/log/menus/refmenus.sql" beforeDir="false" afterPath="$PROJECT_DIR$/log/menus/refmenus.sql" afterDir="false" />
+    <list default="true" id="f178a244-4024-41f6-8417-4831ab0bb057" name="Changes" comment="permisos. poner agd en ca, crt de n">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/actividadcargos/model/CargoOAsistente.php" beforeDir="false" afterPath="$PROJECT_DIR$/apps/actividadcargos/model/CargoOAsistente.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/actividadcargos/model/GestorCargoOAsistente.php" beforeDir="false" afterPath="$PROJECT_DIR$/apps/actividadcargos/model/GestorCargoOAsistente.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/actividadcargos/model/entity/ActividadCargoNoSacd.php" beforeDir="false" afterPath="$PROJECT_DIR$/apps/actividadcargos/model/entity/ActividadCargoNoSacd.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/actividadcargos/model/entity/ActividadCargoSacd.php" beforeDir="false" afterPath="$PROJECT_DIR$/apps/actividadcargos/model/entity/ActividadCargoSacd.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/actividadcargos/view/form_1302.phtml" beforeDir="false" afterPath="$PROJECT_DIR$/apps/actividadcargos/view/form_1302.phtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/actividadcargos/view/form_3102.phtml" beforeDir="false" afterPath="$PROJECT_DIR$/apps/actividadcargos/view/form_3102.phtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/actividadcargos/view/select1302.phtml" beforeDir="false" afterPath="$PROJECT_DIR$/apps/actividadcargos/view/select1302.phtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/actividadcargos/view/select3102.phtml" beforeDir="false" afterPath="$PROJECT_DIR$/apps/actividadcargos/view/select3102.phtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/actividades/controller/calendario_ajax.php" beforeDir="false" afterPath="$PROJECT_DIR$/apps/actividades/controller/calendario_ajax.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/actividades/model/ActividadLugar.php" beforeDir="false" afterPath="$PROJECT_DIR$/apps/actividades/model/ActividadLugar.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/actividades/model/ActividadTipo.php" beforeDir="false" afterPath="$PROJECT_DIR$/apps/actividades/model/ActividadTipo.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/actividades/model/InfoTipoRepeticion.php" beforeDir="false" afterPath="$PROJECT_DIR$/apps/actividades/model/InfoTipoRepeticion.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/actividades/view/_actividad_form.js.twig" beforeDir="false" afterPath="$PROJECT_DIR$/apps/actividades/view/_actividad_form.js.twig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/actividades/view/_actividad_form_body.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/apps/actividades/view/_actividad_form_body.html.twig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/actividades/view/_actividad_form_botones.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/apps/actividades/view/_actividad_form_botones.html.twig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/actividades/view/_actividad_form_head.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/apps/actividades/view/_actividad_form_head.html.twig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/actividades/view/_actividad_form_layout.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/apps/actividades/view/_actividad_form_layout.html.twig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/actividades/view/_actividad_tipo.js.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/apps/actividades/view/_actividad_tipo.js.html.twig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/actividades/view/_actividad_tipo_body.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/apps/actividades/view/_actividad_tipo_body.html.twig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/actividades/view/_actividad_tipo_body_gestion.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/apps/actividades/view/_actividad_tipo_body_gestion.html.twig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/actividades/view/_actividad_tipo_gestion.js.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/apps/actividades/view/_actividad_tipo_gestion.js.html.twig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/actividades/view/_calendario_form.js.twig" beforeDir="false" afterPath="$PROJECT_DIR$/apps/actividades/view/_calendario_form.js.twig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/actividades/view/_calendario_form_botones.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/apps/actividades/view/_calendario_form_botones.html.twig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/actividades/view/_calendario_form_head.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/apps/actividades/view/_calendario_form_head.html.twig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/actividades/view/actividad_form.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/apps/actividades/view/actividad_form.html.twig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/actividades/view/actividad_que.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/apps/actividades/view/actividad_que.html.twig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/actividades/view/actividad_select.phtml" beforeDir="false" afterPath="$PROJECT_DIR$/apps/actividades/view/actividad_select.phtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/actividades/view/actividad_select_ubi.phtml" beforeDir="false" afterPath="$PROJECT_DIR$/apps/actividades/view/actividad_select_ubi.phtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/actividades/view/actividad_tipo_que.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/apps/actividades/view/actividad_tipo_que.html.twig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/actividades/view/actividad_tipo_que_gestion.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/apps/actividades/view/actividad_tipo_que_gestion.html.twig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/actividades/view/actividades_centro_que.phtml" beforeDir="false" afterPath="$PROJECT_DIR$/apps/actividades/view/actividades_centro_que.phtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/actividades/view/calendario_form_actividad.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/apps/actividades/view/calendario_form_actividad.html.twig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/actividades/view/calendario_planning.phtml" beforeDir="false" afterPath="$PROJECT_DIR$/apps/actividades/view/calendario_planning.phtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/actividades/view/calendario_que.phtml" beforeDir="false" afterPath="$PROJECT_DIR$/apps/actividades/view/calendario_que.phtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/actividades/view/lista_activ_que.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/apps/actividades/view/lista_activ_que.html.twig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/actividades/view/lista_actividades_sg.phtml" beforeDir="false" afterPath="$PROJECT_DIR$/apps/actividades/view/lista_actividades_sg.phtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/actividades/view/lista_sr_csv_que.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/apps/actividades/view/lista_sr_csv_que.html.twig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/actividades/view/planning_casa_que.phtml" beforeDir="false" afterPath="$PROJECT_DIR$/apps/actividades/view/planning_casa_que.phtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/actividades/view/tipo_activ.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/apps/actividades/view/tipo_activ.html.twig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/actividadescentro/db/db.class.php" beforeDir="false" afterPath="$PROJECT_DIR$/apps/actividadescentro/db/db.class.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/actividadescentro/db/dbesquema.class.php" beforeDir="false" afterPath="$PROJECT_DIR$/apps/actividadescentro/db/dbesquema.class.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/actividadescentro/model/entity/CentroEncargado.php" beforeDir="false" afterPath="$PROJECT_DIR$/apps/actividadescentro/model/entity/CentroEncargado.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/actividadescentro/model/entity/GestorCentroEncargado.php" beforeDir="false" afterPath="$PROJECT_DIR$/apps/actividadescentro/model/entity/GestorCentroEncargado.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/actividadescentro/view/activ_ctr.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/apps/actividadescentro/view/activ_ctr.html.twig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/actividadessacd/controller/com_sacd_txt_ajax.php" beforeDir="false" afterPath="$PROJECT_DIR$/apps/actividadessacd/controller/com_sacd_txt_ajax.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/actividadessacd/db/a_sacd_textos.csv" beforeDir="false" afterPath="$PROJECT_DIR$/apps/actividadessacd/db/a_sacd_textos.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/actividadessacd/model/ActividadesSacdFunciones.php" beforeDir="false" afterPath="$PROJECT_DIR$/apps/actividadessacd/model/ActividadesSacdFunciones.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/actividadessacd/model/AsignarSacd.php" beforeDir="false" afterPath="$PROJECT_DIR$/apps/actividadessacd/model/AsignarSacd.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/actividadessacd/view/activ_sacd.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/apps/actividadessacd/view/activ_sacd.html.twig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/actividadessacd/view/com_sacd_activ_periodo.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/apps/actividadessacd/view/com_sacd_activ_periodo.html.twig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/actividadessacd/view/com_sacd_txt.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/apps/actividadessacd/view/com_sacd_txt.html.twig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/actividadestudios/view/acta_notas.phtml" beforeDir="false" afterPath="$PROJECT_DIR$/apps/actividadestudios/view/acta_notas.phtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/actividadestudios/view/actualizar_docencia.phtml" beforeDir="false" afterPath="$PROJECT_DIR$/apps/actividadestudios/view/actualizar_docencia.phtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/actividadestudios/view/ca_posibles_cuadro.phtml" beforeDir="false" afterPath="$PROJECT_DIR$/apps/actividadestudios/view/ca_posibles_cuadro.phtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/actividadestudios/view/ca_posibles_lista.phtml" beforeDir="false" afterPath="$PROJECT_DIR$/apps/actividadestudios/view/ca_posibles_lista.phtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/actividadestudios/view/ca_posibles_que.phtml" beforeDir="false" afterPath="$PROJECT_DIR$/apps/actividadestudios/view/ca_posibles_que.phtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/actividadestudios/view/e43.phtml" beforeDir="false" afterPath="$PROJECT_DIR$/apps/actividadestudios/view/e43.phtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/actividadestudios/view/form_1303.phtml" beforeDir="false" afterPath="$PROJECT_DIR$/apps/actividadestudios/view/form_1303.phtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/actividadestudios/view/form_3005.phtml" beforeDir="false" afterPath="$PROJECT_DIR$/apps/actividadestudios/view/form_3005.phtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/actividadestudios/view/lista_clases_ca.phtml" beforeDir="false" afterPath="$PROJECT_DIR$/apps/actividadestudios/view/lista_clases_ca.phtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/actividadestudios/view/matriculas.phtml" beforeDir="false" afterPath="$PROJECT_DIR$/apps/actividadestudios/view/matriculas.phtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/actividadestudios/view/plan_estudios_ca.phtml" beforeDir="false" afterPath="$PROJECT_DIR$/apps/actividadestudios/view/plan_estudios_ca.phtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/actividadestudios/view/posibles_asignaturas_ca.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/apps/actividadestudios/view/posibles_asignaturas_ca.html.twig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/actividadestudios/view/select1303.phtml" beforeDir="false" afterPath="$PROJECT_DIR$/apps/actividadestudios/view/select1303.phtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/actividadestudios/view/select3005.phtml" beforeDir="false" afterPath="$PROJECT_DIR$/apps/actividadestudios/view/select3005.phtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/actividadestudios/view/select3103.phtml" beforeDir="false" afterPath="$PROJECT_DIR$/apps/actividadestudios/view/select3103.phtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/actividadestudios/view/selectUnCa.phtml" beforeDir="false" afterPath="$PROJECT_DIR$/apps/actividadestudios/view/selectUnCa.phtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/actividadplazas/view/gestion_plazas.phtml" beforeDir="false" afterPath="$PROJECT_DIR$/apps/actividadplazas/view/gestion_plazas.phtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/actividadplazas/view/peticiones_activ.phtml" beforeDir="false" afterPath="$PROJECT_DIR$/apps/actividadplazas/view/peticiones_activ.phtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/actividadplazas/view/plazas_balance_dl.phtml" beforeDir="false" afterPath="$PROJECT_DIR$/apps/actividadplazas/view/plazas_balance_dl.phtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/actividadplazas/view/plazas_balance_que.phtml" beforeDir="false" afterPath="$PROJECT_DIR$/apps/actividadplazas/view/plazas_balance_que.phtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/actividadplazas/view/resumen_plazas.phtml" beforeDir="false" afterPath="$PROJECT_DIR$/apps/actividadplazas/view/resumen_plazas.phtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/actividadtarifas/controller/tarifa.php" beforeDir="false" afterPath="$PROJECT_DIR$/apps/actividadtarifas/controller/tarifa.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/actividadtarifas/controller/tarifa_ajax.php" beforeDir="false" afterPath="$PROJECT_DIR$/apps/actividadtarifas/controller/tarifa_ajax.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/actividadtarifas/view/_actividad_tipo.js.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/apps/actividadtarifas/view/_actividad_tipo.js.html.twig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/actividadtarifas/view/actividad_tipo_que.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/apps/actividadtarifas/view/actividad_tipo_que.html.twig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/actividadtarifas/view/tarifa.phtml" beforeDir="false" afterPath="$PROJECT_DIR$/apps/actividadtarifas/view/tarifa.phtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/actividadtarifas/view/tarifa_tipo_actividad.phtml" beforeDir="false" afterPath="$PROJECT_DIR$/apps/actividadtarifas/view/tarifa_tipo_actividad.phtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/asistentes/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/apps/asistentes/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/asistentes/controller/tabla_peticiones.php" beforeDir="false" afterPath="$PROJECT_DIR$/apps/asistentes/controller/tabla_peticiones.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/asistentes/view/activ_pendientes.phtml" beforeDir="false" afterPath="$PROJECT_DIR$/apps/asistentes/view/activ_pendientes.phtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/asistentes/view/form_1301.phtml" beforeDir="false" afterPath="$PROJECT_DIR$/apps/asistentes/view/form_1301.phtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/asistentes/view/form_3101.phtml" beforeDir="false" afterPath="$PROJECT_DIR$/apps/asistentes/view/form_3101.phtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/asistentes/view/form_mover.phtml" beforeDir="false" afterPath="$PROJECT_DIR$/apps/asistentes/view/form_mover.phtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/asistentes/view/lista_activ_ctr.phtml" beforeDir="false" afterPath="$PROJECT_DIR$/apps/asistentes/view/lista_activ_ctr.phtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/asistentes/view/lista_asistentes.phtml" beforeDir="false" afterPath="$PROJECT_DIR$/apps/asistentes/view/lista_asistentes.phtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/asistentes/view/planning_casa_que.phtml" beforeDir="false" afterPath="$PROJECT_DIR$/apps/asistentes/view/planning_casa_que.phtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/asistentes/view/planning_ctr_que.phtml" beforeDir="false" afterPath="$PROJECT_DIR$/apps/asistentes/view/planning_ctr_que.phtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/asistentes/view/planning_persona_que.phtml" beforeDir="false" afterPath="$PROJECT_DIR$/apps/asistentes/view/planning_persona_que.phtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/asistentes/view/planning_select.phtml" beforeDir="false" afterPath="$PROJECT_DIR$/apps/asistentes/view/planning_select.phtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/asistentes/view/que_ctr_lista.phtml" beforeDir="false" afterPath="$PROJECT_DIR$/apps/asistentes/view/que_ctr_lista.phtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/asistentes/view/select1301.phtml" beforeDir="false" afterPath="$PROJECT_DIR$/apps/asistentes/view/select1301.phtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/asistentes/view/select3101.phtml" beforeDir="false" afterPath="$PROJECT_DIR$/apps/asistentes/view/select3101.phtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/asistentes/view/tabla_peticiones.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/apps/asistentes/view/tabla_peticiones.html.twig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/cambios/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/apps/cambios/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/cambios/controller/usuario_avisos_pref_ajax.php" beforeDir="false" afterPath="$PROJECT_DIR$/apps/cambios/controller/usuario_avisos_pref_ajax.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/cambios/db/av_cambios_usuario_objeto_pref.csv" beforeDir="false" afterPath="$PROJECT_DIR$/apps/cambios/db/av_cambios_usuario_objeto_pref.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/cambios/db/av_cambios_usuario_propiedades_pref.csv" beforeDir="false" afterPath="$PROJECT_DIR$/apps/cambios/db/av_cambios_usuario_propiedades_pref.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/cambios/db/db.class.php" beforeDir="false" afterPath="$PROJECT_DIR$/apps/cambios/db/db.class.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/cambios/db/dbesquema.class.php" beforeDir="false" afterPath="$PROJECT_DIR$/apps/cambios/db/dbesquema.class.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/cambios/model/Avisos.php" beforeDir="false" afterPath="$PROJECT_DIR$/apps/cambios/model/Avisos.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/cambios/view/_actividad_tipo.js.twig" beforeDir="false" afterPath="$PROJECT_DIR$/apps/cambios/view/_actividad_tipo.js.twig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/cambios/view/actividad_tipo_que_perm.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/apps/cambios/view/actividad_tipo_que_perm.html.twig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/cambios/view/avisos_generar_condicion.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/apps/cambios/view/avisos_generar_condicion.html.twig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/cambios/view/avisos_generar_lista.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/apps/cambios/view/avisos_generar_lista.html.twig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/cambios/view/usuario_avisos_pref.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/apps/cambios/view/usuario_avisos_pref.html.twig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/cambios/view/usuario_form_avisos.phtml" beforeDir="false" afterPath="$PROJECT_DIR$/apps/cambios/view/usuario_form_avisos.phtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/cartaspresentacion/db/db.class.php" beforeDir="false" afterPath="$PROJECT_DIR$/apps/cartaspresentacion/db/db.class.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/cartaspresentacion/db/dbesquema.class.php" beforeDir="false" afterPath="$PROJECT_DIR$/apps/cartaspresentacion/db/dbesquema.class.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/cartaspresentacion/view/cartas_presentacion_buscar.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/apps/cartaspresentacion/view/cartas_presentacion_buscar.html.twig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/cartaspresentacion/view/cartas_presentacion_que.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/apps/cartaspresentacion/view/cartas_presentacion_que.html.twig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/casas/controller/grupo_ajax.php" beforeDir="false" afterPath="$PROJECT_DIR$/apps/casas/controller/grupo_ajax.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/casas/controller/grupo_form.php" beforeDir="false" afterPath="$PROJECT_DIR$/apps/casas/controller/grupo_form.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/casas/controller/grupo_lista.php" beforeDir="false" afterPath="$PROJECT_DIR$/apps/casas/controller/grupo_lista.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/casas/db/db.class.php" beforeDir="false" afterPath="$PROJECT_DIR$/apps/casas/db/db.class.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/casas/db/dbesquema.class.php" beforeDir="false" afterPath="$PROJECT_DIR$/apps/casas/db/dbesquema.class.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/casas/view/casa_ec_que.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/apps/casas/view/casa_ec_que.html.twig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/casas/view/casa_que.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/apps/casas/view/casa_que.html.twig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/casas/view/casa_resumen_que.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/apps/casas/view/casa_resumen_que.html.twig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/casas/view/grupo_form.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/apps/casas/view/grupo_form.html.twig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/casas/view/grupo_lista.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/apps/casas/view/grupo_lista.html.twig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/casas/view/prevision_asistentes.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/apps/casas/view/prevision_asistentes.html.twig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/casas/view/ubi_resumen.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/apps/casas/view/ubi_resumen.html.twig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/config/controller/parametros.php" beforeDir="false" afterPath="$PROJECT_DIR$/apps/config/controller/parametros.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/config/controller/parametros_update.php" beforeDir="false" afterPath="$PROJECT_DIR$/apps/config/controller/parametros_update.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/config/db/db.class.php" beforeDir="false" afterPath="$PROJECT_DIR$/apps/config/db/db.class.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/config/db/dbesquema.class.php" beforeDir="false" afterPath="$PROJECT_DIR$/apps/config/db/dbesquema.class.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/config/db/x_config_schema.csv" beforeDir="false" afterPath="$PROJECT_DIR$/apps/config/db/x_config_schema.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/config/model/Config.php" beforeDir="false" afterPath="$PROJECT_DIR$/apps/config/model/Config.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/config/view/parametros.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/apps/config/view/parametros.html.twig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/core/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/apps/core/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/core/ConfigDB.php" beforeDir="false" afterPath="$PROJECT_DIR$/apps/core/ConfigDB.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/core/Converter.php" beforeDir="false" afterPath="$PROJECT_DIR$/apps/core/Converter.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/core/DBConnection.php" beforeDir="false" afterPath="$PROJECT_DIR$/apps/core/DBConnection.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/core/DBPropiedades.php" beforeDir="false" afterPath="$PROJECT_DIR$/apps/core/DBPropiedades.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/core/PgTimestamp.php" beforeDir="false" afterPath="$PROJECT_DIR$/apps/core/PgTimestamp.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/dbextern/model/SincroDB.php" beforeDir="false" afterPath="$PROJECT_DIR$/apps/dbextern/model/SincroDB.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/devel/controller/apptables.php" beforeDir="false" afterPath="$PROJECT_DIR$/apps/devel/controller/apptables.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/devel/controller/apptables_update.php" beforeDir="false" afterPath="$PROJECT_DIR$/apps/devel/controller/apptables_update.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/devel/controller/db_crear_usuarios.php" beforeDir="false" afterPath="$PROJECT_DIR$/apps/devel/controller/db_crear_usuarios.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/devel/controller/db_mover.php" beforeDir="false" afterPath="$PROJECT_DIR$/apps/devel/controller/db_mover.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/devel/controller/db_mover_que.php" beforeDir="false" afterPath="$PROJECT_DIR$/apps/devel/controller/db_mover_que.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/devel/controller/func_factory.php" beforeDir="false" afterPath="$PROJECT_DIR$/apps/devel/controller/func_factory.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/devel/controller/modulos_select.php" beforeDir="false" afterPath="$PROJECT_DIR$/apps/devel/controller/modulos_select.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/devel/controller/modulos_sql.php" beforeDir="false" afterPath="$PROJECT_DIR$/apps/devel/controller/modulos_sql.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/devel/controller/modulos_update.php" beforeDir="false" afterPath="$PROJECT_DIR$/apps/devel/controller/modulos_update.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/devel/controller/modulos_ver.php" beforeDir="false" afterPath="$PROJECT_DIR$/apps/devel/controller/modulos_ver.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/devel/model/AppDB.php" beforeDir="false" afterPath="$PROJECT_DIR$/apps/devel/model/AppDB.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/devel/model/DBAbstract.php" beforeDir="false" afterPath="$PROJECT_DIR$/apps/devel/model/DBAbstract.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/devel/model/InfoApps.php" beforeDir="false" afterPath="$PROJECT_DIR$/apps/devel/model/InfoApps.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/devel/model/ModulosConfig.php" beforeDir="false" afterPath="$PROJECT_DIR$/apps/devel/model/ModulosConfig.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/devel/model/entity/DbSchema.php" beforeDir="false" afterPath="$PROJECT_DIR$/apps/devel/model/entity/DbSchema.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/devel/model/entity/GestorDbSchema.php" beforeDir="false" afterPath="$PROJECT_DIR$/apps/devel/model/entity/GestorDbSchema.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/devel/view/apptables.phtml" beforeDir="false" afterPath="$PROJECT_DIR$/apps/devel/view/apptables.phtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/devel/view/db_cambiar_nombre_que.phtml" beforeDir="false" afterPath="$PROJECT_DIR$/apps/devel/view/db_cambiar_nombre_que.phtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/devel/view/db_mover_que.phtml" beforeDir="false" afterPath="$PROJECT_DIR$/apps/devel/view/db_mover_que.phtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/devel/view/db_que.phtml" beforeDir="false" afterPath="$PROJECT_DIR$/apps/devel/view/db_que.phtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/devel/view/modulos_form.phtml" beforeDir="false" afterPath="$PROJECT_DIR$/apps/devel/view/modulos_form.phtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/devel/view/modulos_select.phtml" beforeDir="false" afterPath="$PROJECT_DIR$/apps/devel/view/modulos_select.phtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/dossiers/model/PermDossier.php" beforeDir="false" afterPath="$PROJECT_DIR$/apps/dossiers/model/PermDossier.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/encargossacd/controller/ctr_get_select.php" beforeDir="false" afterPath="$PROJECT_DIR$/apps/encargossacd/controller/ctr_get_select.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/encargossacd/controller/horario_update.php" beforeDir="false" afterPath="$PROJECT_DIR$/apps/encargossacd/controller/horario_update.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/encargossacd/controller/horario_ver.php" beforeDir="false" afterPath="$PROJECT_DIR$/apps/encargossacd/controller/horario_ver.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/encargossacd/controller/listas_com_txt_ajax.php" beforeDir="false" afterPath="$PROJECT_DIR$/apps/encargossacd/controller/listas_com_txt_ajax.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/encargossacd/controller/propuestas_ajax.php" beforeDir="false" afterPath="$PROJECT_DIR$/apps/encargossacd/controller/propuestas_ajax.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/encargossacd/controller/propuestas_aprobar.php" beforeDir="false" afterPath="$PROJECT_DIR$/apps/encargossacd/controller/propuestas_aprobar.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/encargossacd/controller/propuestas_lista.php" beforeDir="false" afterPath="$PROJECT_DIR$/apps/encargossacd/controller/propuestas_lista.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/encargossacd/controller/propuestas_lista_enc.php" beforeDir="false" afterPath="$PROJECT_DIR$/apps/encargossacd/controller/propuestas_lista_enc.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/encargossacd/controller/propuestas_menu.php" beforeDir="false" afterPath="$PROJECT_DIR$/apps/encargossacd/controller/propuestas_menu.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/encargossacd/db/encargo_textos.csv" beforeDir="false" afterPath="$PROJECT_DIR$/apps/encargossacd/db/encargo_textos.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/encargossacd/model/DesplCentros.php" beforeDir="false" afterPath="$PROJECT_DIR$/apps/encargossacd/model/DesplCentros.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/encargossacd/model/EncargoConstants.php" beforeDir="false" afterPath="$PROJECT_DIR$/apps/encargossacd/model/EncargoConstants.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/encargossacd/model/EncargoFunciones.php" beforeDir="false" afterPath="$PROJECT_DIR$/apps/encargossacd/model/EncargoFunciones.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/encargossacd/model/GestorPropuestas.php" beforeDir="false" afterPath="$PROJECT_DIR$/apps/encargossacd/model/GestorPropuestas.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/encargossacd/model/entity/GestorPropuestaEncargosSacd.php" beforeDir="false" afterPath="$PROJECT_DIR$/apps/encargossacd/model/entity/GestorPropuestaEncargosSacd.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/encargossacd/view/ctr_ficha.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/apps/encargossacd/view/ctr_ficha.html.twig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/encargossacd/view/ctr_get_ficha.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/apps/encargossacd/view/ctr_get_ficha.html.twig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/encargossacd/view/encargo_horario_select.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/apps/encargossacd/view/encargo_horario_select.html.twig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/encargossacd/view/encargo_select.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/apps/encargossacd/view/encargo_select.html.twig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/encargossacd/view/encargo_ver.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/apps/encargossacd/view/encargo_ver.html.twig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/encargossacd/view/horario_ver.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/apps/encargossacd/view/horario_ver.html.twig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/encargossacd/view/listas.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/apps/encargossacd/view/listas.html.twig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/encargossacd/view/listas_com_txt.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/apps/encargossacd/view/listas_com_txt.html.twig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/encargossacd/view/listas_index.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/apps/encargossacd/view/listas_index.html.twig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/encargossacd/view/propuestas_lista.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/apps/encargossacd/view/propuestas_lista.html.twig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/encargossacd/view/propuestas_menu.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/apps/encargossacd/view/propuestas_menu.html.twig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/encargossacd/view/sacd_ausencias.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/apps/encargossacd/view/sacd_ausencias.html.twig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/encargossacd/view/sacd_ausencias_get.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/apps/encargossacd/view/sacd_ausencias_get.html.twig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/encargossacd/view/sacd_ficha.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/apps/encargossacd/view/sacd_ficha.html.twig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/menus/view/como.phtml" beforeDir="false" afterPath="$PROJECT_DIR$/apps/menus/view/como.phtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/menus/view/menus_get.phtml" beforeDir="false" afterPath="$PROJECT_DIR$/apps/menus/view/menus_get.phtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/menus/view/menus_get_lista.phtml" beforeDir="false" afterPath="$PROJECT_DIR$/apps/menus/view/menus_get_lista.phtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/menus/view/menus_que.phtml" beforeDir="false" afterPath="$PROJECT_DIR$/apps/menus/view/menus_que.phtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/menus/view/traducir_menu.phtml" beforeDir="false" afterPath="$PROJECT_DIR$/apps/menus/view/traducir_menu.phtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/misas/controller/misas_index.php" beforeDir="false" afterPath="$PROJECT_DIR$/apps/misas/controller/misas_index.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/misas/view/misas_index.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/apps/misas/view/misas_index.html.twig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/notas/controller/acta_listado_anual.php" beforeDir="false" afterPath="$PROJECT_DIR$/apps/notas/controller/acta_listado_anual.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/notas/controller/acta_pdf_delete.php" beforeDir="false" afterPath="$PROJECT_DIR$/apps/notas/controller/acta_pdf_delete.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/notas/controller/acta_pdf_download.php" beforeDir="false" afterPath="$PROJECT_DIR$/apps/notas/controller/acta_pdf_download.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/notas/controller/acta_pdf_upload.php" beforeDir="false" afterPath="$PROJECT_DIR$/apps/notas/controller/acta_pdf_upload.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/notas/controller/notas_ajax.php" beforeDir="false" afterPath="$PROJECT_DIR$/apps/notas/controller/notas_ajax.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/notas/model/TablaAlumnosAsignaturas.php" beforeDir="false" afterPath="$PROJECT_DIR$/apps/notas/model/TablaAlumnosAsignaturas.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/notas/model/Tesera.php" beforeDir="false" afterPath="$PROJECT_DIR$/apps/notas/model/Tesera.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/notas/view/acta_imprimir.phtml" beforeDir="false" afterPath="$PROJECT_DIR$/apps/notas/view/acta_imprimir.phtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/notas/view/acta_listado_anual.phtml" beforeDir="false" afterPath="$PROJECT_DIR$/apps/notas/view/acta_listado_anual.phtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/notas/view/acta_select.phtml" beforeDir="false" afterPath="$PROJECT_DIR$/apps/notas/view/acta_select.phtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/notas/view/acta_ver.phtml" beforeDir="false" afterPath="$PROJECT_DIR$/apps/notas/view/acta_ver.phtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/notas/view/asig_faltan_que.phtml" beforeDir="false" afterPath="$PROJECT_DIR$/apps/notas/view/asig_faltan_que.phtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/notas/view/form_1011.phtml" beforeDir="false" afterPath="$PROJECT_DIR$/apps/notas/view/form_1011.phtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/notas/view/resumen_anual.phtml" beforeDir="false" afterPath="$PROJECT_DIR$/apps/notas/view/resumen_anual.phtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/notas/view/select1011.phtml" beforeDir="false" afterPath="$PROJECT_DIR$/apps/notas/view/select1011.phtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/notas/view/tesera_ver.phtml" beforeDir="false" afterPath="$PROJECT_DIR$/apps/notas/view/tesera_ver.phtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/pasarela/controller/activacion_ajax.php" beforeDir="false" afterPath="$PROJECT_DIR$/apps/pasarela/controller/activacion_ajax.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/pasarela/controller/activacion_lista.php" beforeDir="false" afterPath="$PROJECT_DIR$/apps/pasarela/controller/activacion_lista.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/pasarela/controller/contribucion_no_duerme_ajax.php" beforeDir="false" afterPath="$PROJECT_DIR$/apps/pasarela/controller/contribucion_no_duerme_ajax.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/pasarela/controller/contribucion_no_duerme_lista.php" beforeDir="false" afterPath="$PROJECT_DIR$/apps/pasarela/controller/contribucion_no_duerme_lista.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/pasarela/controller/contribucion_reserva_ajax.php" beforeDir="false" afterPath="$PROJECT_DIR$/apps/pasarela/controller/contribucion_reserva_ajax.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/pasarela/controller/contribucion_reserva_lista.php" beforeDir="false" afterPath="$PROJECT_DIR$/apps/pasarela/controller/contribucion_reserva_lista.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/pasarela/controller/exportar_select.php" beforeDir="false" afterPath="$PROJECT_DIR$/apps/pasarela/controller/exportar_select.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/pasarela/controller/nombre_ajax.php" beforeDir="false" afterPath="$PROJECT_DIR$/apps/pasarela/controller/nombre_ajax.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/pasarela/controller/nombre_lista.php" beforeDir="false" afterPath="$PROJECT_DIR$/apps/pasarela/controller/nombre_lista.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/pasarela/controller/parametros_menu.php" beforeDir="false" afterPath="$PROJECT_DIR$/apps/pasarela/controller/parametros_menu.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/pasarela/db/DBEsquema.php" beforeDir="false" afterPath="$PROJECT_DIR$/apps/pasarela/db/DBEsquema.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/pasarela/model/Activacion.php" beforeDir="false" afterPath="$PROJECT_DIR$/apps/pasarela/model/Activacion.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/pasarela/model/ContribucionNoDuerme.php" beforeDir="false" afterPath="$PROJECT_DIR$/apps/pasarela/model/ContribucionNoDuerme.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/pasarela/model/ContribucionReserva.php" beforeDir="false" afterPath="$PROJECT_DIR$/apps/pasarela/model/ContribucionReserva.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/pasarela/model/Conversiones.php" beforeDir="false" afterPath="$PROJECT_DIR$/apps/pasarela/model/Conversiones.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/pasarela/model/Nombre.php" beforeDir="false" afterPath="$PROJECT_DIR$/apps/pasarela/model/Nombre.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/pasarela/view/activacion_lista.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/apps/pasarela/view/activacion_lista.html.twig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/pasarela/view/contribucion_x_lista.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/apps/pasarela/view/contribucion_x_lista.html.twig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/pasarela/view/exportar_que.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/apps/pasarela/view/exportar_que.html.twig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/pasarela/view/nombre_lista.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/apps/pasarela/view/nombre_lista.html.twig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/pasarela/view/parametros_menu.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/apps/pasarela/view/parametros_menu.html.twig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/permisos/model/InfoModsInstalled.php" beforeDir="false" afterPath="$PROJECT_DIR$/apps/permisos/model/InfoModsInstalled.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/permisos/view/login_form2.phtml" beforeDir="false" afterPath="$PROJECT_DIR$/apps/permisos/view/login_form2.phtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/personas/model/Info1006.php" beforeDir="false" afterPath="$PROJECT_DIR$/apps/personas/model/Info1006.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/personas/view/personas_que.phtml" beforeDir="false" afterPath="$PROJECT_DIR$/apps/personas/view/personas_que.phtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/personas/view/personas_select.phtml" beforeDir="false" afterPath="$PROJECT_DIR$/apps/personas/view/personas_select.phtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/personas/view/stgr_cambio.phtml" beforeDir="false" afterPath="$PROJECT_DIR$/apps/personas/view/stgr_cambio.phtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/personas/view/traslado_form.phtml" beforeDir="false" afterPath="$PROJECT_DIR$/apps/personas/view/traslado_form.phtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/procesos/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/apps/procesos/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/procesos/controller/actividad_que_fases_ajax.php" beforeDir="false" afterPath="$PROJECT_DIR$/apps/procesos/controller/actividad_que_fases_ajax.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/procesos/controller/procesos_ajax.php" beforeDir="false" afterPath="$PROJECT_DIR$/apps/procesos/controller/procesos_ajax.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/procesos/controller/procesos_select.php" beforeDir="false" afterPath="$PROJECT_DIR$/apps/procesos/controller/procesos_select.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/procesos/controller/procesos_ver.php" beforeDir="false" afterPath="$PROJECT_DIR$/apps/procesos/controller/procesos_ver.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/procesos/db/a_fases.csv" beforeDir="false" afterPath="$PROJECT_DIR$/apps/procesos/db/a_fases.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/procesos/db/a_tareas.csv" beforeDir="false" afterPath="$PROJECT_DIR$/apps/procesos/db/a_tareas.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/procesos/db/a_tareas_proceso.csv" beforeDir="false" afterPath="$PROJECT_DIR$/apps/procesos/db/a_tareas_proceso.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/procesos/db/a_tipos_actividad.csv" beforeDir="false" afterPath="$PROJECT_DIR$/apps/procesos/db/a_tipos_actividad.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/procesos/db/a_tipos_proceso.csv" beforeDir="false" afterPath="$PROJECT_DIR$/apps/procesos/db/a_tipos_proceso.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/procesos/db/aux_usuarios_perm.csv_sf" beforeDir="false" afterPath="$PROJECT_DIR$/apps/procesos/db/aux_usuarios_perm.csv_sf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/procesos/db/aux_usuarios_perm.csv_sv" beforeDir="false" afterPath="$PROJECT_DIR$/apps/procesos/db/aux_usuarios_perm.csv_sv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/procesos/db/db.class.php" beforeDir="false" afterPath="$PROJECT_DIR$/apps/procesos/db/db.class.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/procesos/db/dbesquema.class.php" beforeDir="false" afterPath="$PROJECT_DIR$/apps/procesos/db/dbesquema.class.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/procesos/model/CuadrosFases.php" beforeDir="false" afterPath="$PROJECT_DIR$/apps/procesos/model/CuadrosFases.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/procesos/model/InfoFases.php" beforeDir="false" afterPath="$PROJECT_DIR$/apps/procesos/model/InfoFases.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/procesos/model/InfoProcesoTipo.php" beforeDir="false" afterPath="$PROJECT_DIR$/apps/procesos/model/InfoProcesoTipo.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/procesos/model/InfoTareas.php" beforeDir="false" afterPath="$PROJECT_DIR$/apps/procesos/model/InfoTareas.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/procesos/view/_actividad_tipo.js.twig" beforeDir="false" afterPath="$PROJECT_DIR$/apps/procesos/view/_actividad_tipo.js.twig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/procesos/view/_actividad_tipo_proceso.js.twig" beforeDir="false" afterPath="$PROJECT_DIR$/apps/procesos/view/_actividad_tipo_proceso.js.twig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/procesos/view/actividad_proceso.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/apps/procesos/view/actividad_proceso.html.twig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/procesos/view/actividad_tipo_proceso.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/apps/procesos/view/actividad_tipo_proceso.html.twig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/procesos/view/actividad_tipo_que_perm.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/apps/procesos/view/actividad_tipo_que_perm.html.twig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/procesos/view/fases_activ_cambio.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/apps/procesos/view/fases_activ_cambio.html.twig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/procesos/view/procesos_select.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/apps/procesos/view/procesos_select.html.twig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/procesos/view/procesos_ver.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/apps/procesos/view/procesos_ver.html.twig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/procesos/view/tipo_activ_proceso.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/apps/procesos/view/tipo_activ_proceso.html.twig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/procesos/view/usuario_perm_activ.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/apps/procesos/view/usuario_perm_activ.html.twig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/profesores/controller/congresos.php" beforeDir="false" afterPath="$PROJECT_DIR$/apps/profesores/controller/congresos.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/profesores/controller/docencia.php" beforeDir="false" afterPath="$PROJECT_DIR$/apps/profesores/controller/docencia.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/profesores/view/lista_por_departamentos.phtml" beforeDir="false" afterPath="$PROJECT_DIR$/apps/profesores/view/lista_por_departamentos.phtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/ubis/controller/delegacion_que.php" beforeDir="false" afterPath="$PROJECT_DIR$/apps/ubis/controller/delegacion_que.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/ubis/controller/teleco_ajax.php" beforeDir="false" afterPath="$PROJECT_DIR$/apps/ubis/controller/teleco_ajax.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/ubis/controller/trasladar_ubis.php" beforeDir="false" afterPath="$PROJECT_DIR$/apps/ubis/controller/trasladar_ubis.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/ubis/model/TrasladoUbi.php" beforeDir="false" afterPath="$PROJECT_DIR$/apps/ubis/model/TrasladoUbi.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/ubis/view/calendario_periodos.phtml" beforeDir="false" afterPath="$PROJECT_DIR$/apps/ubis/view/calendario_periodos.phtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/ubis/view/cdc_form.phtml" beforeDir="false" afterPath="$PROJECT_DIR$/apps/ubis/view/cdc_form.phtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/ubis/view/centros_que.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/apps/ubis/view/centros_que.html.twig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/ubis/view/ctrdl_form.phtml" beforeDir="false" afterPath="$PROJECT_DIR$/apps/ubis/view/ctrdl_form.phtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/ubis/view/ctrex_form.phtml" beforeDir="false" afterPath="$PROJECT_DIR$/apps/ubis/view/ctrex_form.phtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/ubis/view/delegaciones.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/apps/ubis/view/delegaciones.html.twig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/ubis/view/direcciones_que.phtml" beforeDir="false" afterPath="$PROJECT_DIR$/apps/ubis/view/direcciones_que.phtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/ubis/view/direcciones_tabla.phtml" beforeDir="false" afterPath="$PROJECT_DIR$/apps/ubis/view/direcciones_tabla.phtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/ubis/view/dl_rstgr_que.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/apps/ubis/view/dl_rstgr_que.html.twig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/ubis/view/home_ubis.phtml" beforeDir="false" afterPath="$PROJECT_DIR$/apps/ubis/view/home_ubis.phtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/ubis/view/list_ctr.phtml" beforeDir="false" afterPath="$PROJECT_DIR$/apps/ubis/view/list_ctr.phtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/ubis/view/teleco_tabla.phtml" beforeDir="false" afterPath="$PROJECT_DIR$/apps/ubis/view/teleco_tabla.phtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/ubis/view/ubis_buscar.phtml" beforeDir="false" afterPath="$PROJECT_DIR$/apps/ubis/view/ubis_buscar.phtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/ubis/view/ubis_tabla.phtml" beforeDir="false" afterPath="$PROJECT_DIR$/apps/ubis/view/ubis_tabla.phtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/usuarios/controller/grupo_form.php" beforeDir="false" afterPath="$PROJECT_DIR$/apps/usuarios/controller/grupo_form.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/usuarios/db/db.class.php" beforeDir="false" afterPath="$PROJECT_DIR$/apps/usuarios/db/db.class.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/usuarios/db/dbesquema.class.php" beforeDir="false" afterPath="$PROJECT_DIR$/apps/usuarios/db/dbesquema.class.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/usuarios/view/grupo_form.phtml" beforeDir="false" afterPath="$PROJECT_DIR$/apps/usuarios/view/grupo_form.phtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/usuarios/view/grupo_lista.phtml" beforeDir="false" afterPath="$PROJECT_DIR$/apps/usuarios/view/grupo_lista.phtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/usuarios/view/perm_activ_form.phtml" beforeDir="false" afterPath="$PROJECT_DIR$/apps/usuarios/view/perm_activ_form.phtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/usuarios/view/perm_ctr_form.phtml" beforeDir="false" afterPath="$PROJECT_DIR$/apps/usuarios/view/perm_ctr_form.phtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/usuarios/view/perm_menu_form.phtml" beforeDir="false" afterPath="$PROJECT_DIR$/apps/usuarios/view/perm_menu_form.phtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/usuarios/view/personal.phtml" beforeDir="false" afterPath="$PROJECT_DIR$/apps/usuarios/view/personal.phtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/usuarios/view/role_form.phtml" beforeDir="false" afterPath="$PROJECT_DIR$/apps/usuarios/view/role_form.phtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/usuarios/view/role_grupmenu.phtml" beforeDir="false" afterPath="$PROJECT_DIR$/apps/usuarios/view/role_grupmenu.phtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/usuarios/view/role_lista.phtml" beforeDir="false" afterPath="$PROJECT_DIR$/apps/usuarios/view/role_lista.phtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/usuarios/view/usuario_form.phtml" beforeDir="false" afterPath="$PROJECT_DIR$/apps/usuarios/view/usuario_form.phtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/usuarios/view/usuario_form_mail.phtml" beforeDir="false" afterPath="$PROJECT_DIR$/apps/usuarios/view/usuario_form_mail.phtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/usuarios/view/usuario_form_pwd.phtml" beforeDir="false" afterPath="$PROJECT_DIR$/apps/usuarios/view/usuario_form_pwd.phtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/usuarios/view/usuario_lista.phtml" beforeDir="false" afterPath="$PROJECT_DIR$/apps/usuarios/view/usuario_lista.phtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/usuarios/view/usuario_perm_ctr.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/apps/usuarios/view/usuario_perm_ctr.html.twig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/usuarios/view/usuario_perm_menu.phtml" beforeDir="false" afterPath="$PROJECT_DIR$/apps/usuarios/view/usuario_perm_menu.phtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/web/BotonesCurso.php" beforeDir="false" afterPath="$PROJECT_DIR$/apps/web/BotonesCurso.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/zonassacd/db/db.class.php" beforeDir="false" afterPath="$PROJECT_DIR$/apps/zonassacd/db/db.class.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/zonassacd/db/dbesquema.class.php" beforeDir="false" afterPath="$PROJECT_DIR$/apps/zonassacd/db/dbesquema.class.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/zonassacd/db/zonas.csv" beforeDir="false" afterPath="$PROJECT_DIR$/apps/zonassacd/db/zonas.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/zonassacd/db/zonas_grupos.csv" beforeDir="false" afterPath="$PROJECT_DIR$/apps/zonassacd/db/zonas_grupos.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/zonassacd/db/zonas_sacd.csv" beforeDir="false" afterPath="$PROJECT_DIR$/apps/zonassacd/db/zonas_sacd.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/zonassacd/model/InfoZona.php" beforeDir="false" afterPath="$PROJECT_DIR$/apps/zonassacd/model/InfoZona.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/zonassacd/model/InfoZonaGrupo.php" beforeDir="false" afterPath="$PROJECT_DIR$/apps/zonassacd/model/InfoZonaGrupo.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/zonassacd/view/planning_zones.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/apps/zonassacd/view/planning_zones.html.twig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/zonassacd/view/zona_ctr.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/apps/zonassacd/view/zona_ctr.html.twig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/zonassacd/view/zona_sacd.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/apps/zonassacd/view/zona_sacd.html.twig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/orbix/.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/orbix/.idea/misc.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/orbix/.idea/modules.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/orbix/.idea/vcs.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/orbix/orbix.iml" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -93,21 +416,23 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;codeWithMe.voiceChat.enabledByDefault&quot;: &quot;false&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/home/dani/orbix_local/orbix/apps/pasarela/controller&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Problems&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.17356321&quot;,
-    &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;reference.webide.settings.project.settings.php&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "codeWithMe.voiceChat.enabledByDefault": "false",
+    "last_opened_file_path": "/home/dani/orbix_local/orbix",
+    "node.js.detected.package.eslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "Modules",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.17356321",
+    "run.code.analysis.last.selected.profile": "pProject Default",
+    "settings.editor.selected.configurable": "configurable.group.editor"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/apps/pasarela/controller" />
@@ -203,13 +528,9 @@
       <workItem from="1669044804114" duration="4360000" />
       <workItem from="1669281637687" duration="721000" />
       <workItem from="1669662183578" duration="1777000" />
-    </task>
-    <task id="LOCAL-00009" summary="pasarela rename class db">
-      <created>1665408037648</created>
-      <option name="number" value="00009" />
-      <option name="presentableId" value="LOCAL-00009" />
-      <option name="project" value="LOCAL" />
-      <updated>1665408037648</updated>
+      <workItem from="1670241645314" duration="237000" />
+      <workItem from="1671033345993" duration="1259000" />
+      <workItem from="1671034686141" duration="799000" />
     </task>
     <task id="LOCAL-00010" summary="o nombres class metamenus">
       <created>1665408472233</created>
@@ -547,7 +868,14 @@
       <option name="project" value="LOCAL" />
       <updated>1669049156862</updated>
     </task>
-    <option name="localTasksCounter" value="58" />
+    <task id="LOCAL-00058" summary="permisos. poner agd en ca, crt de n">
+      <created>1671035480808</created>
+      <option name="number" value="00058" />
+      <option name="presentableId" value="LOCAL-00058" />
+      <option name="project" value="LOCAL" />
+      <updated>1671035480808</updated>
+    </task>
+    <option name="localTasksCounter" value="59" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -565,7 +893,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="falta una funcion gesTarifasUbi" />
     <MESSAGE value="tarifas: error contribucion no duerme" />
     <MESSAGE value="quitar la serie en tarifa tipo activ" />
     <MESSAGE value="Error al exportar pasarela. confusión id_ubi y id_ctr" />
@@ -590,7 +917,8 @@
     <MESSAGE value="error al exportar pasarela" />
     <MESSAGE value="recalcular las duraciones de actividades" />
     <MESSAGE value="redondeo duracion acttividades pasarela" />
-    <option name="LAST_COMMIT_MESSAGE" value="redondeo duracion acttividades pasarela" />
+    <MESSAGE value="permisos. poner agd en ca, crt de n" />
+    <option name="LAST_COMMIT_MESSAGE" value="permisos. poner agd en ca, crt de n" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
