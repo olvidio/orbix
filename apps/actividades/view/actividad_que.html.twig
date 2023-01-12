@@ -73,13 +73,13 @@ fnjs_buscar=function(act){
 	var err = 0;
 	var f=$('#periodo').val();	
 	if (f=='otro') {
-		if (!fnjs_comprobar_fecha('#empiezamin')) {
+		if (!fnjs_comprobar_fecha('#empiezamin',{{ locale_us }})) {
 			 err=1;
              alert("{{ "debe inrtoducir la fecha inicio del periodo"|trans|raw }}");
          }
-		if (!fnjs_comprobar_fecha('#empiezamax')) {
+		if (!fnjs_comprobar_fecha('#empiezamax',{{ locale_us }})) {
 			 err=1;
-             alert("{{ "debe inrtoducir la fecha fin del periodo"|trans|raw }}");
+             alert("{{ "debe introducir la fecha fin del periodo"|trans|raw }}");
 		}
 	}
 	// coprobar que no exista la misma fase en condición 'on' y 'off'

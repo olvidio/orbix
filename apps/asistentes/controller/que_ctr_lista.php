@@ -1,5 +1,6 @@
 <?php
 
+use core\ConfigGlobal;
 use ubis\model\entity as ubis;
 
 /**
@@ -165,6 +166,7 @@ $a_campos = [
     'c' => $c,
     'oDesplCentros' => $oDesplCentros,
     'oFormP' => $oFormP,
+    'locale_us' => ConfigGlobal::is_locale_us(),
 ];
 
 $oView = new core\View('asistentes/controller');

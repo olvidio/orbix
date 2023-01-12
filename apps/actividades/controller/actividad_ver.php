@@ -356,6 +356,7 @@ $a_campos = ['oPosicion' => $oPosicion,
     'web' => ConfigGlobal::getWeb(),
     'web_icons' => ConfigGlobal::getWeb_icons(),
     'procesos_installed' => $procesos_installed,
+    'locale_us' => ConfigGlobal::is_locale_us(),
 ];
 
 $oView = new ViewTwig('actividades/controller');

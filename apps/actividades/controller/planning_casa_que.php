@@ -1,5 +1,6 @@
 <?php
 
+use core\ConfigGlobal;
 use usuarios\model\entity as usuarios;
 
 /**
@@ -114,6 +115,7 @@ if ($Qtipo == 'planning_cdc') {
         'oHash2' => $oHash2,
         'oFormP' => $oFormP,
         'oForm' => $oForm,
+        'locale_us' => ConfigGlobal::is_locale_us(),
     ];
 
     $oView = new core\View('actividades/controller');

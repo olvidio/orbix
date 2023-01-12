@@ -1,5 +1,6 @@
 <?php
 
+use actividades\model\ActividadLugar;
 use actividadtarifas\model\entity\GestorTipoActivTarifa;
 use core\ConfigGlobal;
 use ubis\model\entity\GestorDelegacion;
@@ -103,7 +104,7 @@ switch ($Qsalida) {
         $Qssfsv = (string)filter_input(INPUT_POST, 'ssfsv');
         $Qopcion_sel = (string)filter_input(INPUT_POST, 'opcion_sel');
 
-        $oActividadLugar = new \actividades\model\ActividadLugar();
+        $oActividadLugar = new ActividadLugar();
         $oActividadLugar->setIsfsv($Qisfsv);
         $oActividadLugar->setSsfsv($Qssfsv);
         $oActividadLugar->setOpcion_sel($Qopcion_sel);

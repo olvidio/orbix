@@ -5,7 +5,6 @@
             /* selecciono los elementos con class="sel" de las tablas del id=formulario */
             $(formulario + ' input.sel').each(function (i) {
                 if ($(this).prop('checked') == true) {
-                    debugger;
                     key = $(this).prop('value');
                     url = "apps/notas/controller/acta_pdf_download.php";
                     url_download = url+'?key='+key+'<?= $h_download ?>';

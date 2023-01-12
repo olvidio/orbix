@@ -134,10 +134,16 @@ foreach ($cDatosCampos as $oDatosCampo) {
                     }
                     break;
                 case 'date':
+                    $locale_us = ConfigGlobal::is_locale_us();
                     if (preg_match("/^([0-9]{1,2})[\/-]([0-9]{1,2})[\/-]([0-9]{2}|[0-9]{4})$/", $valor, $parts) == 1) {
-                        //check weather the date is valid of not
-                        if (checkdate($parts[2], $parts[1], $parts[3])) {
+                        if ($locale_us) {
+                            //check weather the date is valid of not
+                            $valid_date = checkdate($parts[1], $parts[2], $parts[3]);
                         } else {
+                            $valid_date = checkdate($parts[2], $parts[1], $parts[3]);
+                        }
+
+                        if (!$valid_date) {
                             $errores[] = array('txt' => _("el campo \"%1\$s\" debe ser una fecha, y es: \"%2\$s\""),
                                 'camp' => $nomcamp,
                                 'etiqueta' => $etiqueta,
@@ -150,7 +156,8 @@ foreach ($cDatosCampos as $oDatosCampo) {
                             'val' => array($valor));
                     }
                     break;
-                case 'time':
+                case
+                'time':
                     $err = 0;
                     if (!empty($valor)) {
                         $parts = [];

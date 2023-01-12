@@ -403,12 +403,12 @@ $h = $oHash->linkSinVal();
 <script type='text/javascript' src='<?= ConfigGlobal::getWeb_scripts() . '/SlickGrid/plugins/slick.autocolumnsize.js'; ?>'></script>
 -->
 
-    <!--  para  procesos -->
+    <!--  para procesos -->
     <script type='text/javascript'
-            src='<?= ConfigGlobal::getWeb_NodeScripts() . '/svg.js/dist/svg.min.js'; ?>'></script>
+            src='<?= ConfigGlobal::getWeb_NodeScripts() . '/svg.js/dist/svg.min.js' ?>'></script>
 
-    <script type="text/javascript" src="<?= ConfigGlobal::getWeb_scripts() . '/formatos.js.php?' . rand(); ?>"></script>
-    <script type="text/javascript" src="<?= ConfigGlobal::getWeb_scripts() . '/selects.js.php?' . rand(); ?>"></script>
+    <script type="text/javascript" src="<?= ConfigGlobal::getWeb_scripts() . '/formatos.js.php?' . rand() ?>"></script>
+    <script type="text/javascript" src="<?= ConfigGlobal::getWeb_scripts() . '/selects.js.php?' . rand() ?>"></script>
     <?php
     include_once(ConfigGlobal::$dir_scripts . '/exportar.js.php');
     ?>

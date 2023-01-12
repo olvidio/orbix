@@ -4,8 +4,8 @@ fnjs_listar=function(formulario) {
 	var f_ini=0;
 	var f_fin=0;
     
-    if (!fnjs_comprobar_fecha('#empiezamin')) { err=1; }
-    if (!fnjs_comprobar_fecha('#empiezamax')) { err=1; }
+    if (!fnjs_comprobar_fecha('#empiezamin',{{ locale_us }})) { err=1; }
+    if (!fnjs_comprobar_fecha('#empiezamax',{{ locale_us }})) { err=1; }
     
     f_ini=$('#empiezamin').val();
     f_fin=$('#empiezamax').val();

@@ -230,6 +230,18 @@ class ConfigGlobal extends ServerConf
         return substr($_SESSION['session_auth']['idioma'], 0, 2);
     }
 
+    public static function is_locale_us()
+    {
+        $idioma = $_SESSION['session_auth']['idioma'];
+        # Si no hemos encontrado ningún idioma que nos convenga, mostramos la web en el idioma por defecto
+        if (!isset($idioma)) {
+            $idioma = $_SESSION['oConfig']->getIdioma_default();
+        }
+        $a_idioma = explode('.', $idioma);
+        $code_lng = $a_idioma[0];
+        return $code_lng === 'en_US';
+    }
+
     // ----------- ordenApellidos -------------------
     public static function mi_ordenApellidos()
     {

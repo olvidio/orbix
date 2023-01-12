@@ -3,6 +3,7 @@
 use actividades\model\entity as actividades;
 use asignaturas\model\entity as asignaturas;
 use actividadestudios\model\entity as actividadestudios;
+use core\ConfigGlobal;
 use profesores\model\entity as profesores;
 
 // INICIO Cabecera global de URL de controlador *********************************
@@ -139,6 +140,7 @@ $a_campos = ['obj' => $obj,
     'chk_confirmado' => $chk_confirmado,
     'f_ini' => $f_ini,
     'f_fin' => $f_fin,
+    'locale_us' => ConfigGlobal::is_locale_us(),
 ];
 
 $oView = new core\View('actividadestudios/controller');

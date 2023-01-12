@@ -1,5 +1,6 @@
 <?php
 
+use core\ConfigGlobal;
 use function core\is_true;
 use personas\model\entity as personas;
 use ubis\model\entity as ubis;
@@ -184,6 +185,7 @@ $a_campos = [
     'chk_estudios' => $chk_estudios,
     'chk_repaso' => $chk_repaso,
     'chk_ca_todos' => $chk_ca_todos,
+    'locale_us' => ConfigGlobal::is_locale_us(),
 ];
 
 $oView = new core\View('actividadestudios/controller');

@@ -61,8 +61,8 @@ fnjs_cambiar_ubi=function(){
 };
 fnjs_guardar=function(tipo=''){
 	var err = 0;
-	if (!fnjs_comprobar_fecha('#f_ini')) { err=1; }
-	if (!fnjs_comprobar_fecha('#f_fin')) { err=1; }
+	if (!fnjs_comprobar_fecha('#f_ini',{{ locale_us }})) { err=1; }
+	if (!fnjs_comprobar_fecha('#f_fin',{{ locale_us }})) { err=1; }
 	if (!fnjs_comprobar_hora('#h_ini')) { err=1; }
 	if (!fnjs_comprobar_hora('#h_fin')) { err=1; }
 	var dl_org=$('#dl_org').val();

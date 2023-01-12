@@ -325,6 +325,7 @@ $a_campos = ['oPosicion' => $oPosicion,
     'CuadrosFasesOn' => $CuadrosFasesOn,
     'CuadrosFasesOff' => $CuadrosFasesOff,
     'mi_dele' => $mi_dele,
+    'locale_us' => ConfigGlobal::is_locale_us(),
 ];
 
 $oView = new ViewTwig('actividades/controller');

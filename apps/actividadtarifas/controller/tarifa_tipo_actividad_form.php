@@ -84,6 +84,7 @@ if ($Qid_item !== 'nuevo') {
         'oDesplPosiblesTipoTarifas' => $oDesplPosiblesTipoTarifas,
         'txt_eliminar' => $txt_eliminar,
         'url_ajax' => $url_ajax,
+        'locale_us' => ConfigGlobal::is_locale_us(),
     ];
 
     $oView = new ViewTwig('actividadtarifas/controller');
