@@ -1063,7 +1063,7 @@ abstract class PersonaGlobal extends core\ClasePropiedades
             $nom_ap .= !empty($this->sapel_fam) ? $this->sapel_fam : $this->snom;
             $nom_ap .= !empty($this->snx1) ? ' ' . $this->snx1 : '';
             $nom_ap .= ' ' . $this->sapellido1;
-            $nom_ap .= !empty($this->snx2) ? ' ' . $this->snx2 : ' ';
+            $nom_ap .= !empty($this->snx2) ? ' ' . $this->snx2 : '';
             $nom_ap .= !empty($this->sapellido2) ? ' ' . $this->sapellido2 : '';
 
             $this->sNombreApellidos = $nom_ap;
