@@ -77,7 +77,7 @@ $a_id = array();
 foreach ($cCambiosUsuario as $oCambioUsuario) {
     $id_usuario = $oCambioUsuario->getId_usuario();
 
-    if ($id_usuario != $id_usuario_anterior) {
+    if ($id_usuario !== $id_usuario_anterior) {
         // solo en el primer caso no lo hago
         if (!empty($id_usuario_anterior)) {
             enviar_mail($email, $a_datos, $a_id);
@@ -88,12 +88,14 @@ foreach ($cCambiosUsuario as $oCambioUsuario) {
         $email = $oMiUsuario->getEmail();
         $id_usuario_anterior = $id_usuario;
     }
-    if (empty($email)) continue;
+    if (empty($email)) {
+        continue;
+    }
 
 
     $id_item_cmb = $oCambioUsuario->getId_item_cambio();
     $id_schema_cmb = $oCambioUsuario->getId_schema_cambio();
-    if ($id_schema_cmb == 3000) {
+    if ($id_schema_cmb === 3000) {
         $oCambio = new Cambio($id_item_cmb);
     } else {
         $oCambio = new CambioDl($id_item_cmb);
@@ -106,10 +108,10 @@ foreach ($cCambiosUsuario as $oCambioUsuario) {
 
     $i++;
     // Quien cambia
-    if ($id_schema_cmb == 3000) {
+    if ($id_schema_cmb === 3000) {
         $quien = $oCambio->getDl_org();
     } else {
-        if ($sfsv_quien_cambia == $mi_sfsv) {
+        if ($sfsv_quien_cambia === $mi_sfsv) {
             $oUsuarioCmb = new Usuario($quien_cambia);
             $quien = $oUsuarioCmb->getUsuario();
         } else {
@@ -122,12 +124,14 @@ foreach ($cCambiosUsuario as $oCambioUsuario) {
     $a_datos[$i][3] = $aviso_txt;
     $a_id[$i] = "$id_item_cmb,$id_usuario,$mi_sfsv,$aviso_tipo";
 }
-// El último de la lista no se envia.
-if (!empty($email)) enviar_mail($email, $a_datos, $a_id);
+// El último de la lista no se envía.
+if (!empty($email)) {
+    enviar_mail($email, $a_datos, $a_id);
+}
 
 function enviar_mail($email, $a_datos, $a_id)
 {
-    //Evitar mails vacios o sin dirección.
+    //Evitar mails vacíos o sin dirección.
     if (empty($a_datos) || empty($email)) {
         eliminar_enviado($a_id);
         return;

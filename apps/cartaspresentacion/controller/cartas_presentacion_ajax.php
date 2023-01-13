@@ -349,7 +349,7 @@ switch ($Qque_mod) {
                     $pres = _("si");
                 }
 
-                if ($permiso == 'modificar') {
+                if ($permiso === 'modificar') {
                     $script = '';
                     $ctr_txt = $nombre_ubi;
                     $script = "fnjs_modificar($id_direccion,$id_ubi)";
@@ -382,12 +382,16 @@ switch ($Qque_mod) {
         $a_cabeceras[] = array('name' => ucfirst(_("nombre")), 'width' => 20, 'formatter' => 'clickFormatter');
         $a_cabeceras[] = array('name' => ucfirst(_("centro")), 'width' => 80, 'formatter' => 'clickFormatter2');
         $a_cabeceras[] = array('name' => ucfirst(_("carta de presentación")), 'width' => 20, 'formatter' => 'clickFormatter3');
-        $a_cabeceras[] = array('name' => ucfirst(_("direccion")), 'width' => 100);
+        $a_cabeceras[] = array('name' => ucfirst(_("dirección")), 'width' => 100);
+
+        $explicacion_txt = "<br>";
+        $explicacion_txt .= _("para añadir un centro como carta de presentación, basta con poner el nombre del director.");
 
         $oLista = new Lista();
         $oLista->setId_tabla('cartas_presentacion_ajax_dl');
         $oLista->setCabeceras($a_cabeceras);
         $oLista->setDatos($a_valores);
+        echo $explicacion_txt;
         echo $oLista->mostrar_tabla();
         /* DESACTIVADO por no tener acceso a las tablas de cargos
         echo "<br><input type=button name=\"actualizar\" value=\"". _("actualizar director") ."\" onclick=\"fnjs_actualizar_dtor();\">";
