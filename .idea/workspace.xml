@@ -1,7 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="f178a244-4024-41f6-8417-4831ab0bb057" name="Changes" comment="muchos cambios por subir, no sé de que" />
+    <list default="true" id="f178a244-4024-41f6-8417-4831ab0bb057" name="Changes" comment="muchos cambios por subir, no sé de que">
+      <change afterPath="$PROJECT_DIR$/apps/misas/controller/lista_sacd.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/apps/misas/view/lista_sacd.html.twig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/php.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/php.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/misas/controller/misas_index.php" beforeDir="false" afterPath="$PROJECT_DIR$/apps/misas/controller/misas_index.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/misas/view/misas_index.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/apps/misas/view/misas_index.html.twig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/ayuda/index.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/ayuda/index.php" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -14,7 +22,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="misas" />
+        <entry key="$PROJECT_DIR$" value="master" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -78,7 +86,6 @@
       <path value="$PROJECT_DIR$/libs/vendor/composer" />
       <path value="$PROJECT_DIR$/libs/vendor/sebastian/type" />
       <path value="$PROJECT_DIR$/libs/vendor/jblond/twig-trans" />
-      <path value="$PROJECT_DIR$/libs/vendor/psr/http-message" />
       <path value="$PROJECT_DIR$/libs/vendor/php-http/message-factory" />
     </include_path>
   </component>
@@ -91,23 +98,23 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "codeWithMe.voiceChat.enabledByDefault": "false",
-    "last_opened_file_path": "/home/dani/orbix_local/orbix",
-    "node.js.detected.package.eslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "project.structure.last.edited": "Modules",
-    "project.structure.proportion": "0.15",
-    "project.structure.side.proportion": "0.17356321",
-    "run.code.analysis.last.selected.profile": "pProject Default",
-    "settings.editor.selected.configurable": "configurable.group.editor"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;codeWithMe.voiceChat.enabledByDefault&quot;: &quot;false&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/home/dani/orbix_local/orbix&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.17356321&quot;,
+    &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;configurable.group.editor&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/apps/pasarela/controller" />
@@ -121,6 +128,7 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="JavaScript Debug.TarifaUbi.php" />
         <item itemvalue="JavaScript Debug.TarifaUbi.php" />
       </list>
     </recent_temporary>
@@ -206,6 +214,7 @@
       <workItem from="1670241645314" duration="237000" />
       <workItem from="1671033345993" duration="1259000" />
       <workItem from="1671034686141" duration="1118000" />
+      <workItem from="1674138764360" duration="4000" />
     </task>
     <task id="LOCAL-00011" summary="pasarela parametros contribucion">
       <created>1665476340157</created>

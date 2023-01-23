@@ -40,7 +40,6 @@
       <path value="$PROJECT_DIR$/libs/vendor/composer" />
       <path value="$PROJECT_DIR$/libs/vendor/sebastian/type" />
       <path value="$PROJECT_DIR$/libs/vendor/jblond/twig-trans" />
-      <path value="$PROJECT_DIR$/libs/vendor/psr/http-message" />
       <path value="$PROJECT_DIR$/libs/vendor/php-http/message-factory" />
     </include_path>
   </component>
