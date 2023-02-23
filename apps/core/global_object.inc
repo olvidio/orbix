@@ -142,7 +142,7 @@ switch ($user_sfsv) {
 if (configGlobal::is_app_installed('dbextern') && !ConfigGlobal::is_dmz()) {
     // Para sincronizar con listas Madrid (SQLSERVER)
     // No en el caso de cr (H-Hv)
-    if ((\core\ConfigGlobal::mi_region() != \core\ConfigGlobal::mi_delef()) && !isset($_SESSION['oDBListas'])) {
+    if ((ConfigGlobal::mi_region() != ConfigGlobal::mi_delef()) && !isset($_SESSION['oDBListas'])) {
         try {
             $oConfigDB = new ConfigDB('listas');
             $config = $oConfigDB->getEsquema('public');
@@ -160,7 +160,7 @@ if (configGlobal::is_app_installed('dbextern') && !ConfigGlobal::is_dmz()) {
 }
 
 /********* En el caso cr-stgr, refrescar las vistas **********************/
-if ((\core\ConfigGlobal::mi_region() === \core\ConfigGlobal::mi_delef()) && !isset($_SESSION['Refresh'])) {
+if ((ConfigGlobal::mi_region() === ConfigGlobal::mi_delef()) && !isset($_SESSION['Refresh'])) {
     try {
         // para el esquema sv
         $views = [
@@ -173,8 +173,8 @@ if ((\core\ConfigGlobal::mi_region() === \core\ConfigGlobal::mi_delef()) && !iss
             'd_congresos',
             'd_docencia_stgr',
             'd_titulo_est',
-            'p_agregados_dl',
-            'p_numerarios_dl',
+            'p_agregados',
+            'p_numerarios',
             'personas_dl',
             'd_teleco_personas_dl',
             'u_centros_dl',
@@ -189,7 +189,7 @@ if ((\core\ConfigGlobal::mi_region() === \core\ConfigGlobal::mi_delef()) && !iss
         $oMatView = new DBView($schema_vf, $user_sfsv, 'interior');
         foreach ($views as $view) {
             $oMatView->setView($view);
-            if ($oMatView->Existe()) {
+            if ($oMatView->ExisteYEsIgual()) {
                 //true
                 $oMatView->Refresh();
             } else {
@@ -213,7 +213,7 @@ if ((\core\ConfigGlobal::mi_region() === \core\ConfigGlobal::mi_delef()) && !iss
         $oMatView = new DBView($schema_vf, $user_sfsv, 'exterior');
         foreach ($views as $view) {
             $oMatView->setView($view);
-            if ($oMatView->Existe()) {
+            if ($oMatView->ExisteYEsIgual()) {
                 //true
                 $oMatView->Refresh();
             } else {
@@ -232,7 +232,7 @@ if ((\core\ConfigGlobal::mi_region() === \core\ConfigGlobal::mi_delef()) && !iss
         $oMatView = new DBView($schema, NULL, 'comun');
         foreach ($views as $view) {
             $oMatView->setView($view);
-            if ($oMatView->Existe(TRUE)) {
+            if ($oMatView->ExisteYEsIgual(TRUE)) {
                 //true
                 $oMatView->Refresh();
             } else {
