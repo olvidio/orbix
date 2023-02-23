@@ -228,7 +228,7 @@ class Select1303
         $fincurs_ca = core\curso_est("fin", $any)->format('Y-m-d');
 
         $aviso = '';
-        // Compruebo si està de repaso...
+        // Compruebo si está de repaso...
         $oPersona = new personas\PersonaDl(array('id_nom' => $this->id_pau));
         $stgr = $oPersona->getStgr();
         if ($stgr == 'r') $aviso .= _("está de repaso") . "<br>";

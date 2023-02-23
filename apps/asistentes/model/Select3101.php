@@ -854,6 +854,7 @@ class Select3101
             'obj_pau' => 'Persona',
             'id_dossier' => 1303,
             'permiso' => 3,
+            'id_activ' => $this->id_pau,
         );
         $oHash1->setArraycamposHidden($a_camposHidden);
 
@@ -876,12 +877,12 @@ class Select3101
         $this->setLinksInsert();
 
         /* ---------------------------------- html --------------------------------------- */
-        $a_campos = ['oTabla' => $oTabla,
+        $a_campos = [
+            'oTabla' => $oTabla,
             'oHash' => $oHash,
             'id_pau' => $this->id_pau,
             'h4' => $h4,
             'h3' => $h3,
-            'oTabla' => $oTabla,
             'oHash1' => $oHash1,
             'plazas_txt' => $this->plazas_txt,
             'resumen_plazas' => $this->resumen_plazas,
