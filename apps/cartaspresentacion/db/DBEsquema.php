@@ -37,7 +37,6 @@ class DBEsquema extends DBAbstract
 
     public function llenarAll()
     {
-        $this->llenar_presentacion();
     }
 
     private function infoTable($tabla)

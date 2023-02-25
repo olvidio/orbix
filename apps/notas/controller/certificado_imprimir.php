@@ -30,6 +30,8 @@ require_once("apps/core/global_object.inc");
 echo "<script>fnjs_left_side_hide()</script>";
 include_once(core\ConfigGlobal::$dir_estilos . '/certificado.css.php');
 
+const LENGTH_ASIGNATURA = 55;
+
 // En el caso de actualizar la misma página (cara A-B) solo me quedo con la última.
 $Qrefresh = (integer)filter_input(INPUT_POST, 'refresh');
 $oPosicion->recordar($Qrefresh);
@@ -82,7 +84,7 @@ $lugar_firma = $_SESSION['oConfig']->getLugarFirma();
 // conversion 
 $replace = config\model\Config::$replace;
 
-if ($nivel_stgr == 'r') {
+if ($nivel_stgr === 'r') {
     $txt_superavit = "Alumnus superavit studiorum portiones (ECTS) requisitas ad implendum academicum";
     $txt_superavit .= " curriculum quod statutum est Ordinatione Studiorum Praelaturae Santae Crucis et Operis Dei.";
     $txt_superavit = strtr($txt_superavit, $replace);
@@ -172,13 +174,13 @@ $h = $oHash->linkSinVal();
     <table class="no_print">
         <tr>
             <td class="atras">
-                <?= $oPosicion->mostrar_back_arrow(1); ?>
+                <?= $oPosicion->mostrar_back_arrow(1) ?>
             </td>
             <td align="center"><span class=link
-                                     onclick="fnjs_update_div('#main','<?= $caraA ?>')"><?= _("Cara A (delante)"); ?></span>
+                                     onclick="fnjs_update_div('#main','<?= $caraA ?>')"><?= _("Cara A (delante)") ?></span>
             </td>
             <td align="center"><span class=link
-                                     onclick="fnjs_update_div('#main','<?= $caraB ?>')"><?= _("Cara B (detrás)"); ?></span>
+                                     onclick="fnjs_update_div('#main','<?= $caraB ?>')"><?= _("Cara B (detrás)") ?></span>
             </td>
             <td align="center"><span class=link
                                      onclick='window.open("<?= core\ConfigGlobal::getWeb() ?>/apps/notas/controller/certificado_2_mpdf.php?id_nom=<?= $id_nom ?>&id_tabla=<?= $id_tabla ?><?= $h ?>&PHPSESSID=<?= session_id(); ?>", "sele");'>
@@ -186,7 +188,7 @@ $h = $oHash->linkSinVal();
         </tr>
     </table>
 <?php
-if ($Qcara == "A") {
+if ($Qcara === "A") {
     ?>
     <div class="A4">
     <table>
@@ -270,11 +272,11 @@ while ($a < count($cAsignaturas)) {
 
     // para imprimir sólo una cara:
     // cara A hasta la asignatura 2200
-    if ($Qcara == "A" && $oAsignatura->getId_nivel() > 2200) {
+    if ($Qcara === "A" && $oAsignatura->getId_nivel() > 2200) {
         $row = current($aAprobadas);
         continue;
     }
-    if ($Qcara == "B" && $oAsignatura->getId_nivel() < 2200) {
+    if ($Qcara === "B" && $oAsignatura->getId_nivel() < 2200) {
         while (($row["id_nivel"] < 2200) && ($j < $num_asig)) {
             $row = current($aAprobadas);
             next($aAprobadas);
@@ -283,7 +285,10 @@ while ($a < count($cAsignaturas)) {
         continue;
         prev($aAprobadas);
     }
-    while (($row['id_nivel_asig'] < $oAsignatura->getId_nivel()) && ($j < $num_asig)) {
+    while (($j < $num_asig) && ($row['id_nivel_asig'] < $oAsignatura->getId_nivel())) {
+        if (key($aAprobadas) === null) { // ha llegado al final
+            break;
+        }
         $row = current($aAprobadas);
         next($aAprobadas);
         $j++;
@@ -293,17 +298,22 @@ while ($a < count($cAsignaturas)) {
         $nombre_asignatura = strtr($oAsignatura->getNombre_asignatura(), $replace);
         $creditos = $oAsignatura->getCreditos();
         $ects = number_format(($creditos * 2), 0);
+        if (strlen($nombre_asignatura) > LENGTH_ASIGNATURA) {
+            $style = '';
+        } else {
+            $style = 'style="line-height: 1px"';
+        }
         ?>
-        <tr>
+        <tr <?= $style ?> >
             <td></td>
-            <td><?= $nombre_asignatura; ?>&nbsp;</td>
-            <td class="dato"><?= $ects; ?>&nbsp;</td>
+            <td><?= $nombre_asignatura ?>&nbsp;</td>
+            <td class="dato"><?= $ects ?>&nbsp;</td>
             <td class="dato">-----------</td>
             <td></td>
         </tr>
         <?php
         $oAsignatura = $cAsignaturas[$a++];
-        if ($Qcara == "A" && $oAsignatura->getId_nivel() >= 2200) {
+        if ($Qcara === "A" && $oAsignatura->getId_nivel() >= 2200) {
             continue 2;
         }
     }
@@ -318,20 +328,25 @@ while ($a < count($cAsignaturas)) {
             ?>
             <tr class="opcional" valign="bottom">
                 <td></td>
-                <td><?= $algo; ?>&nbsp;</td>
-                <td class="dato"><?= $row["creditos"]; ?>&nbsp;</td>
-                <td class="dato"><?= $row["nota_txt"]; ?>&nbsp;</td>
+                <td><?= $algo ?>&nbsp;</td>
+                <td class="dato"><?= $row["creditos"] ?>&nbsp;</td>
+                <td class="dato"><?= $row["nota_txt"] ?>&nbsp;</td>
                 <td></td>
             </tr>
             <?php
         } else {
             $nombre_asignatura = strtr($oAsignatura->getNombre_asignatura(), $replace);
+            if (strlen($nombre_asignatura) > LENGTH_ASIGNATURA) {
+                $style = '';
+            } else {
+                $style = 'style="line-height: 1px"';
+            }
             ?>
-            <tr>
+            <tr <?= $style ?> >
                 <td></td>
-                <td><?= $nombre_asignatura; ?>&nbsp;</td>
-                <td class="dato"><?= $row["creditos"]; ?>&nbsp;</td>
-                <td class="dato"><?= $row["nota_txt"]; ?>&nbsp;</td>
+                <td><?= $nombre_asignatura ?>&nbsp;</td>
+                <td class="dato"><?= $row["creditos"] ?>&nbsp;</td>
+                <td class="dato"><?= $row["nota_txt"] ?>&nbsp;</td>
                 <td></td>
             </tr>
             <?php
@@ -343,11 +358,16 @@ while ($a < count($cAsignaturas)) {
             $nombre_asignatura = strtr($oAsignatura->getNombre_asignatura(), $replace);
             $creditos = $oAsignatura->getCreditos();
             $ects = number_format(($creditos * 2), 0);
+            if (strlen($nombre_asignatura) > LENGTH_ASIGNATURA) {
+                $style = '';
+            } else {
+                $style = 'style="line-height: 1px"';
+            }
             ?>
-            <tr>
+            <tr <?= $style ?> >
                 <td></td>
-                <td><?= $nombre_asignatura; ?>&nbsp;</td>
-                <td class="dato"><?= $ects; ?>&nbsp;</td>
+                <td><?= $nombre_asignatura ?>&nbsp;</td>
+                <td class="dato"><?= $ects ?>&nbsp;</td>
                 <td class="dato">----------</td>
                 <td></td>
             </tr>
@@ -356,7 +376,7 @@ while ($a < count($cAsignaturas)) {
     }
 }
 
-if ($Qcara == "B") {
+if ($Qcara === "B") {
     ?>
     </table>
     <table style="padding-top: 5pt;">
