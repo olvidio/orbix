@@ -18,6 +18,7 @@ use ubis\model\entity\GestorDelegacion;
 use web\Hash;
 use web\Lista;
 use function core\curso_est;
+use function core\is_true;
 
 // INICIO Cabecera global de URL de controlador *********************************
 require_once("apps/core/global_header.inc");
@@ -137,6 +138,7 @@ $a_botones[] = ['txt' => _("descargar pdf"), 'click' => "fnjs_descargar_pdf(\"#s
 $a_cabeceras = [['name' => ucfirst(_("certificado")), 'formatter' => 'clickFormatter'],
     ['name' => ucfirst(_("fecha")), 'class' => 'fecha'],
     _("alumno"),
+    _("copia"),
     _("adjunto"),
 ];
 
@@ -148,6 +150,7 @@ foreach ($cCertificados as $oCertificado) {
     $certificado = $oCertificado->getCertificado();
     $f_certificado = $oCertificado->getF_certificado()->getFromLocal();
     $id_nom = $oCertificado->getId_nom();
+    $copia = $oCertificado->isCopia();
     $pdf = $oCertificado->getDocumento();
 
     $oPersona = Persona::NewPersona($id_nom);
@@ -159,14 +162,18 @@ foreach ($cCertificados as $oCertificado) {
 
     $pagina = Hash::link('apps/certificados/controller/certificado_ver.php?' . http_build_query(array('certificado' => $certificado)));
     $a_valores[$i]['sel'] = $id_item;
+    /*
     if ($_SESSION['oPerm']->have_perm_oficina('est')) {
         $a_valores[$i][1] = array('ira' => $pagina, 'valor' => $certificado);
     } else {
         $a_valores[$i][1] = $certificado;
     }
+    */
+    $a_valores[$i][1] = $certificado;
     $a_valores[$i][2] = $f_certificado;
     $a_valores[$i][3] = $nom_alumno;
-    $a_valores[$i][4] = empty($pdf) ? '' : _("Sí");
+    $a_valores[$i][4] = is_true($copia)? _("Sí") : _("No");
+    $a_valores[$i][5] = empty($pdf) ? '' : _("Sí");
 }
 if (isset($Qid_sel) && !empty($Qid_sel)) {
     $a_valores['select'] = $Qid_sel;
