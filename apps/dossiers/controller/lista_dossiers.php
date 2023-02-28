@@ -6,7 +6,9 @@
 use core\ConfigGlobal;
 use dossiers\model\entity as dossiersEntity;
 
-$aWhere = array('tabla_from' => $pau);
+$aWhere = ['tabla_from' => $pau,
+        '_ordre' => 'descripcion',
+];
 $GesTipoDossier = new dossiersEntity\GestorTipoDossier();
 $cTipoDossier = $GesTipoDossier->getTiposDossiers($aWhere);
 $i = 0;

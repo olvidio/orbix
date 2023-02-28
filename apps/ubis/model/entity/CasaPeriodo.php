@@ -386,7 +386,7 @@ class CasaPeriodo extends core\ClasePropiedades
         if (empty($this->df_ini)) {
             return new web\NullDateTimeLocal();
         }
-        $oConverter = new core\Converter('date', $this->df_ini);
+        $oConverter = new core\ConverterDate('date', $this->df_ini);
         return $oConverter->fromPg();
     }
 
@@ -399,7 +399,7 @@ class CasaPeriodo extends core\ClasePropiedades
     function setF_ini($df_ini = '', $convert = true)
     {
         if ($convert === true && !empty($df_ini)) {
-            $oConverter = new core\Converter('date', $df_ini);
+            $oConverter = new core\ConverterDate('date', $df_ini);
             $this->df_ini = $oConverter->toPg();
         } else {
             $this->df_ini = $df_ini;
@@ -419,7 +419,7 @@ class CasaPeriodo extends core\ClasePropiedades
         if (empty($this->df_fin)) {
             return new web\NullDateTimeLocal();
         }
-        $oConverter = new core\Converter('date', $this->df_fin);
+        $oConverter = new core\ConverterDate('date', $this->df_fin);
         return $oConverter->fromPg();
     }
 
@@ -432,7 +432,7 @@ class CasaPeriodo extends core\ClasePropiedades
     function setF_fin($df_fin = '', $convert = true)
     {
         if ($convert === true && !empty($df_fin)) {
-            $oConverter = new core\Converter('date', $df_fin);
+            $oConverter = new core\ConverterDate('date', $df_fin);
             $this->df_fin = $oConverter->toPg();
         } else {
             $this->df_fin = $df_fin;

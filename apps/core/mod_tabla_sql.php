@@ -123,7 +123,7 @@ $html .= "</form>";
 
 $html .= "<h3 class=subtitulo>" . $oInfoClase->getTxtTitulo() . "</h3>";
 $html .= "<p class=comentario>" . ucfirst($oInfoClase->getTxtExplicacion()) . "</p>";
-$html .= "<form id='seleccionados' id='seleccionados' name='seleccionados' action='' method='post'>";
+$html .= "<form id='seleccionados' name='seleccionados' action='' method='post'>";
 $html .= $oHashSelect->getCamposHtml();
 $html .= "<input type='hidden' id='mod' name='mod' value=''>";
 

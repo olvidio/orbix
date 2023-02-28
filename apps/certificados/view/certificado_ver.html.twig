@@ -1,0 +1,70 @@
+{{ oPosicion.mostrar_left_slide()|raw }}
+<div style="display:flex">
+    <div style="width:40%">
+        {{ "Certificado para"|trans|raw }}: {{ ApellidosNombre }}
+        <br>
+        <br>
+        <form id='frm_upload' action="" method="post">
+            {{ oHashCertificadoPdf.getCamposHtml()|raw }}
+            <br>
+            <label>
+                {{ "Número de certificado"|trans|raw }}:
+                <input type="text" name="certificado_num" value="{{ certificado }}"/>
+            </label>
+            <br>
+            <label>
+                {{ "Fecha del certificado"|trans|raw }}:
+                <input type="text" id="f_certificado" name="f_certificado" value="{{ f_certificado }}"/>
+            </label>
+            <br>
+            <label>
+                {{ "Es copia"|trans|raw }}:
+                <input type="checkbox" name="copia" {{ chk_copia }}/>
+            </label>
+            <br>
+            <br>
+            <input type="button" onclick="fnjs_guardar();" value="{{ "Guardar"|trans|raw }}">
+        </form>
+    </div>
+    <div style="width:60%; height:500px;">
+        <embed type="application/pdf" src="{{ filename_pdf }}" width='100%' height='100%'>
+        </embed>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+    fnjs_guardar = function () {
+        if (!fnjs_comprobar_fecha('#f_certificado', '{{ locale_us }}')) {
+            return;
+        }
+
+        if (typeof event !== 'undefined') {
+            event.preventDefault();
+        }
+
+        datos = $('#frm_upload').serialize();
+        request = $.ajax({
+            data: datos,
+            url: 'apps/certificados/controller/certificado_update.php',
+            method: 'POST',
+            dataType: 'json'
+        });
+        request.done(function (json) {
+            if (json.success !== true) {
+                alert("{{ "respuesta"|trans|raw }}: " + json.mensaje);
+            } else {
+                {{ oPosicion.js_atras(0)|raw }}
+            }
+        });
+    }
+
+
+    $(function () {
+        $("#f_certificado").datepicker({
+            numberOfMonths: 3,
+            showButtonPanel: true
+        });
+
+    });
+</script>

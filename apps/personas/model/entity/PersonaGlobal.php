@@ -624,7 +624,7 @@ abstract class PersonaGlobal extends core\ClasePropiedades
         if (empty($this->df_nacimiento)) {
             return new web\NullDateTimeLocal();
         }
-        $oConverter = new core\Converter('date', $this->df_nacimiento);
+        $oConverter = new core\ConverterDate('date', $this->df_nacimiento);
         return $oConverter->fromPg();
     }
 
@@ -639,7 +639,7 @@ abstract class PersonaGlobal extends core\ClasePropiedades
     function setF_nacimiento($df_nacimiento = '', $convert = true)
     {
         if ($convert === true && !empty($df_nacimiento)) {
-            $oConverter = new core\Converter('date', $df_nacimiento);
+            $oConverter = new core\ConverterDate('date', $df_nacimiento);
             $this->df_nacimiento = $oConverter->toPg();
         } else {
             $this->df_nacimiento = $df_nacimiento;
@@ -705,7 +705,7 @@ abstract class PersonaGlobal extends core\ClasePropiedades
         if (empty($this->df_situacion)) {
             return new web\NullDateTimeLocal();
         }
-        $oConverter = new core\Converter('date', $this->df_situacion);
+        $oConverter = new core\ConverterDate('date', $this->df_situacion);
         return $oConverter->fromPg();
     }
 
@@ -720,7 +720,7 @@ abstract class PersonaGlobal extends core\ClasePropiedades
     function setF_situacion($df_situacion = '', $convert = true)
     {
         if ($convert === true && !empty($df_situacion)) {
-            $oConverter = new core\Converter('date', $df_situacion);
+            $oConverter = new core\ConverterDate('date', $df_situacion);
             $this->df_situacion = $oConverter->toPg();
         } else {
             $this->df_situacion = $df_situacion;
@@ -786,7 +786,7 @@ abstract class PersonaGlobal extends core\ClasePropiedades
         if (empty($this->df_inc)) {
             return new web\NullDateTimeLocal();
         }
-        $oConverter = new core\Converter('date', $this->df_inc);
+        $oConverter = new core\ConverterDate('date', $this->df_inc);
         return $oConverter->fromPg();
     }
 
@@ -801,7 +801,7 @@ abstract class PersonaGlobal extends core\ClasePropiedades
     function setF_inc($df_inc = '', $convert = true)
     {
         if ($convert === true && !empty($df_inc)) {
-            $oConverter = new core\Converter('date', $df_inc);
+            $oConverter = new core\ConverterDate('date', $df_inc);
             $this->df_inc = $oConverter->toPg();
         } else {
             $this->df_inc = $df_inc;

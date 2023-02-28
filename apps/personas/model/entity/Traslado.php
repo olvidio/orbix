@@ -417,7 +417,7 @@ class Traslado extends core\ClasePropiedades
         if (empty($this->df_traslado)) {
             return new web\NullDateTimeLocal();
         }
-        $oConverter = new core\Converter('date', $this->df_traslado);
+        $oConverter = new core\ConverterDate('date', $this->df_traslado);
         return $oConverter->fromPg();
     }
 
@@ -432,7 +432,7 @@ class Traslado extends core\ClasePropiedades
     function setF_traslado($df_traslado = '', $convert = true)
     {
         if ($convert === true && !empty($df_traslado)) {
-            $oConverter = new core\Converter('date', $df_traslado);
+            $oConverter = new core\ConverterDate('date', $df_traslado);
             $this->df_traslado = $oConverter->toPg();
         } else {
             $this->df_traslado = $df_traslado;

@@ -417,7 +417,7 @@ abstract class DireccionGlobal extends core\ClasePropiedades
         if (empty($this->df_direccion)) {
             return new web\NullDateTimeLocal();
         }
-        $oConverter = new core\Converter('date', $this->df_direccion);
+        $oConverter = new core\ConverterDate('date', $this->df_direccion);
         return $oConverter->fromPg();
     }
 
@@ -432,7 +432,7 @@ abstract class DireccionGlobal extends core\ClasePropiedades
     function setF_direccion($df_direccion = '', $convert = true)
     {
         if ($convert === true && !empty($df_direccion)) {
-            $oConverter = new core\Converter('date', $df_direccion);
+            $oConverter = new core\ConverterDate('date', $df_direccion);
             $this->df_direccion = $oConverter->toPg();
         } else {
             $this->df_direccion = $df_direccion;

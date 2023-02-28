@@ -358,7 +358,7 @@ class ProfesorJuramento extends core\ClasePropiedades
         if (empty($this->df_juramento)) {
             return new web\NullDateTimeLocal();
         }
-        $oConverter = new core\Converter('date', $this->df_juramento);
+        $oConverter = new core\ConverterDate('date', $this->df_juramento);
         return $oConverter->fromPg();
     }
 
@@ -373,7 +373,7 @@ class ProfesorJuramento extends core\ClasePropiedades
     function setF_juramento($df_juramento = '', $convert = true)
     {
         if ($convert === true && !empty($df_juramento)) {
-            $oConverter = new core\Converter('date', $df_juramento);
+            $oConverter = new core\ConverterDate('date', $df_juramento);
             $this->df_juramento = $oConverter->toPg();
         } else {
             $this->df_juramento = $df_juramento;

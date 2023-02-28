@@ -46,7 +46,7 @@ class GestorCambioUsuario extends core\ClaseGestor
         $nom_tabla = $this->getNomTabla();
         $nom_tabla_cambios = 'public.av_cambios';
 
-        $oConverter = new core\Converter('date', $df_fin);
+        $oConverter = new core\ConverterDate('date', $df_fin);
         $sf_fin = $oConverter->toPg();
 
         $sql = "DELETE FROM $nom_tabla u USING $nom_tabla_cambios c 

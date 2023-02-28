@@ -2,7 +2,7 @@
 
 namespace core;
 
-/**
+/*
  * PgTimestamp
  *
  * Date and timestamp converter
@@ -13,7 +13,8 @@ namespace core;
  * @license   X11 {@link http://opensource.org/licenses/mit-license.php}
  * @see       ConverterInterface
  */
-class Converter
+
+class ConverterDate
 {
 
     var $Converter;
@@ -25,21 +26,27 @@ class Converter
         switch ($type) {
             case 'date':
             case 'datetime':
-                $this->Converter = new PgTimestamp($data);
+                $this->Converter = new PgTimestamp($data, $type);
                 break;
             case 'timestamp':
-                $this->Converter = new PgTimestamp($data);
+            case 'timestamptz':
+                $this->Converter = new PgTimestamp($data, $type);
                 break;
-
             default:
-                ;
-                break;
-        };
+                $err_switch = sprintf(_("opción no definida en switch en %s, linea %s"), __FILE__, __LINE__);
+                exit ($err_switch);
+        }
     }
 
     public function fromPg()
     {
         return $this->Converter->fromPg();
+    }
+
+    public function toCal()
+    {
+        $f_iso = $this->Converter->toPg($this->type);
+        return str_replace('-', '', $f_iso);
     }
 
     public function toPg()

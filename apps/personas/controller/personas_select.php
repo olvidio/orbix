@@ -366,6 +366,9 @@ if (ConfigGlobal::mi_ambito() === 'rstgr') {
     $a_botones[] = array('txt' => _("imprimir certificado"),
         'click' => "fnjs_imp_certificado(\"#seleccionados\")");
     $script['fnjs_imp_certificado'] = 1;
+    $a_botones[] = array('txt' => _("adjuntar certificado"),
+        'click' => "fnjs_upload_certificado(\"#seleccionados\")");
+    $script['fnjs_upload_certificado'] = 1;
     $a_botones[] = array('txt' => _("ficha profesor stgr"),
         'click' => "fnjs_ficha_profe(\"#seleccionados\")");
     $script['fnjs_ficha_profe'] = 1;
