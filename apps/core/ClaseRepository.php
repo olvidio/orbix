@@ -11,28 +11,28 @@ abstract class ClaseRepository
      *
      * @var PDO
      */
-    protected PDO $oDbl;
+    protected $oDbl;
     /**
      * NomTabla de ClasePropiedades
      *
      * @var string
      */
-    protected string $sNomTabla = '';
+    protected $sNomTabla = '';
     /**
      * ErrorTxt de ClasePropiedades
      *
      * @var string
      */
-    protected string $sErrorTxt;
+    protected $sErrorTxt;
 
-    protected int $iid_schema;
+    protected $iid_schema;
 
     /**
      *
      *
      * @param integer $iid_schema
      */
-    public function setId_schema(int $iid_schema): void
+    public function setId_schema(int $iid_schema)
     {
         $this->iid_schema = $iid_schema;
     }
@@ -42,7 +42,7 @@ abstract class ClaseRepository
      *
      * @return PDO $oDbl
      */
-    public function getoDbl(): PDO
+    public function getoDbl()
     {
         return $this->oDbl;
     }
@@ -52,7 +52,7 @@ abstract class ClaseRepository
      *
      * @param PDO $oDbl
      */
-    public function setoDbl(PDO $oDbl): void
+    public function setoDbl(PDO $oDbl)
     {
         $this->oDbl = $oDbl;
     }
@@ -61,7 +61,7 @@ abstract class ClaseRepository
      *
      * @return string $sNomTabla
      */
-    public function getNomTabla(): string
+    public function getNomTabla()
     {
         return $this->sNomTabla;
     }
@@ -69,7 +69,7 @@ abstract class ClaseRepository
     /**
      * @param string $sNomTabla
      */
-    public function setNomTabla(string $sNomTabla): void
+    public function setNomTabla(string $sNomTabla)
     {
         $this->sNomTabla = $sNomTabla;
     }
@@ -78,7 +78,7 @@ abstract class ClaseRepository
      * sErrorTxt
      * @return string
      */
-    public function getErrorTxt(): string
+    public function getErrorTxt()
     {
         return $this->sErrorTxt;
     }
@@ -106,7 +106,7 @@ abstract class ClaseRepository
      *
      * @return integer $iid_schema
      */
-    protected function getId_schema(): int
+    protected function getId_schema()
     {
         return $this->iid_schema;
     }
@@ -116,7 +116,7 @@ abstract class ClaseRepository
      * @param string $sErrorTxt
      * @return ClaseRepository
      */
-    protected function setErrorTxt(string $sErrorTxt): static
+    protected function setErrorTxt(string $sErrorTxt)
     {
         $this->sErrorTxt = $sErrorTxt;
         return $this;
