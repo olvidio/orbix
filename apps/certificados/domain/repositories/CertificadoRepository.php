@@ -25,10 +25,10 @@ use function core\is_true;
 class CertificadoRepository implements CertificadoRepositoryInterface
 {
 
-    /**$
+    /**
      * @var CertificadoRepositoryInterface
      */
-    private CertificadoRepositoryInterface $repository;
+    private $repository;
 
     public function __construct()
     {
