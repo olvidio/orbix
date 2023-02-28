@@ -22,43 +22,43 @@ class Certificado {
 	 *
 	 * @var int
 	 */
-	 private int $iid_item;
+	 private $iid_item;
 	/**
 	 * Id_nom de Certificado
 	 *
 	 * @var int|null
 	 */
-	 private int|null $iid_nom = null;
+	 private $iid_nom = null;
 	/**
 	 * Certificado de Certificado
 	 *
 	 * @var string|null
 	 */
-	 private string|null $scertificado = null;
+	 private $scertificado = null;
 	/**
 	 * F_certificado de Certificado
 	 *
 	 * @var DateTimeLocal|null
 	 */
-	 private DateTimeLocal|null $df_certificado = null;
+	 private $df_certificado = null;
 	/**
 	 * Propio de Certificado
 	 *
 	 * @var bool|null
 	 */
-	 private bool|null $bpropio = null;
+	 private $bpropio = null;
 	/**
 	 * Copia de Certificado
 	 *
 	 * @var bool|null
 	 */
-	 private bool|null $bcopia = null;
+	 private $bcopia = null;
 	/**
 	 * Documento de Certificado
 	 *
 	 * @var string|null
 	 */
-	 private string|null $sdocumento = null;
+	 private $sdocumento = null;
 
 	/* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
@@ -68,7 +68,7 @@ class Certificado {
 	 * @param array $aDatos
 	 * @return Certificado
 	 */
-	public function setAllAttributes(array $aDatos): Certificado
+	public function setAllAttributes(array $aDatos)
 	{
 		if (array_key_exists('id_item',$aDatos))
 		{
@@ -104,7 +104,7 @@ class Certificado {
 	 *
 	 * @return int $iid_item
 	 */
-	public function getId_item(): int
+	public function getId_item()
 	{
 		return $this->iid_item;
 	}
@@ -112,7 +112,7 @@ class Certificado {
 	 *
 	 * @param int $iid_item
 	 */
-	public function setId_item(int $iid_item): void
+	public function setId_item(int $iid_item)
 	{
 		$this->iid_item = $iid_item;
 	}
@@ -120,7 +120,7 @@ class Certificado {
 	 *
 	 * @return int|null $iid_nom
 	 */
-	public function getId_nom(): ?int
+	public function getId_nom()
 	{
 		return $this->iid_nom;
 	}
@@ -128,7 +128,7 @@ class Certificado {
 	 *
 	 * @param int|null $iid_nom
 	 */
-	public function setId_nom(?int $iid_nom = null): void
+	public function setId_nom(?int $iid_nom = null)
 	{
 		$this->iid_nom = $iid_nom;
 	}
@@ -136,7 +136,7 @@ class Certificado {
 	 *
 	 * @return string|null $scertificado
 	 */
-	public function getCertificado(): ?string
+	public function getCertificado()
 	{
 		return $this->scertificado;
 	}
@@ -144,7 +144,7 @@ class Certificado {
 	 *
 	 * @param string|null $scertificado
 	 */
-	public function setCertificado(?string $scertificado = null): void
+	public function setCertificado(?string $scertificado = null)
 	{
 		$this->scertificado = $scertificado;
 	}
@@ -152,7 +152,7 @@ class Certificado {
 	 *
 	 * @return DateTimeLocal|NullDateTimeLocal|null $df_certificado
 	 */
-	public function getF_certificado(): DateTimeLocal|NullDateTimeLocal|null
+	public function getF_certificado()
 	{
         return $this->df_certificado?? new NullDateTimeLocal;
 	}
@@ -160,7 +160,7 @@ class Certificado {
 	 * 
 	 * @param DateTimeLocal|null $df_certificado
 	 */
-	public function setF_certificado(DateTimeLocal|null $df_certificado = null): void
+	public function setF_certificado($df_certificado = null)
 	{
         $this->df_certificado = $df_certificado;
 	}
@@ -168,7 +168,7 @@ class Certificado {
 	 *
 	 * @return bool|null $bpropio
 	 */
-	public function isPropio(): ?bool
+	public function isPropio()
 	{
 		return $this->bpropio;
 	}
@@ -176,7 +176,7 @@ class Certificado {
 	 *
 	 * @param bool|null $bpropio
 	 */
-	public function setPropio(?bool $bpropio = null): void
+	public function setPropio(?bool $bpropio = null)
 	{
 		$this->bpropio = $bpropio;
 	}
@@ -184,7 +184,7 @@ class Certificado {
 	 *
 	 * @return bool|null $bcopia
 	 */
-	public function isCopia(): ?bool
+	public function isCopia()
 	{
 		return $this->bcopia;
 	}
@@ -192,7 +192,7 @@ class Certificado {
 	 *
 	 * @param bool|null $bcopia
 	 */
-	public function setCopia(?bool $bcopia = null): void
+	public function setCopia(?bool $bcopia = null)
 	{
 		$this->bcopia = $bcopia;
 	}
@@ -200,7 +200,7 @@ class Certificado {
 	 *
 	 * @return string|null $sdocumento
 	 */
-	public function getDocumento(): ?string
+	public function getDocumento()
 	{
 		return $this->sdocumento;
 	}
@@ -208,7 +208,7 @@ class Certificado {
 	 *
 	 * @param string|null $sdocumento
 	 */
-	public function setDocumento(?string $sdocumento = null): void
+	public function setDocumento(?string $sdocumento = null)
 	{
 		$this->sdocumento = $sdocumento;
 	}

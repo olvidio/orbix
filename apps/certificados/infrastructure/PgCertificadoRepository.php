@@ -40,7 +40,7 @@ class PgCertificadoRepository extends ClaseRepository implements CertificadoRepo
      * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
      * @return array|FALSE Una colección de objetos de tipo Certificado
      */
-    public function getCertificados(array $aWhere = [], array $aOperators = []): array|FALSE
+    public function getCertificados(array $aWhere = [], array $aOperators = [])
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
@@ -120,7 +120,7 @@ class PgCertificadoRepository extends ClaseRepository implements CertificadoRepo
 
     /* -------------------- ENTIDAD --------------------------------------------- */
 
-    public function Eliminar(Certificado $Certificado): bool
+    public function Eliminar(Certificado $Certificado)
     {
         $id_item = $Certificado->getId_item();
         $oDbl = $this->getoDbl();
@@ -137,7 +137,7 @@ class PgCertificadoRepository extends ClaseRepository implements CertificadoRepo
     /**
      * Si no existe el registro, hace un insert, si existe, se hace el update.
      */
-    public function Guardar(Certificado $Certificado): bool
+    public function Guardar(Certificado $Certificado)
     {
         $id_item = $Certificado->getId_item();
         $oDbl = $this->getoDbl();
@@ -213,7 +213,7 @@ class PgCertificadoRepository extends ClaseRepository implements CertificadoRepo
         return TRUE;
     }
 
-    private function isNew(int $id_item): bool
+    private function isNew(int $id_item)
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
@@ -235,7 +235,7 @@ class PgCertificadoRepository extends ClaseRepository implements CertificadoRepo
      * @param int $id_item
      * @return array|bool
      */
-    public function datosById(int $id_item): array|bool
+    public function datosById(int $id_item)
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
@@ -262,7 +262,7 @@ class PgCertificadoRepository extends ClaseRepository implements CertificadoRepo
     /**
      * Busca la clase con id_item en la base de datos .
      */
-    public function findById(int $id_item): ?Certificado
+    public function findById(int $id_item)
     {
         $aDatos = $this->datosById($id_item);
         if (empty($aDatos)) {

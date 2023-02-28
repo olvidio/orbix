@@ -33,21 +33,21 @@ interface CertificadoRepositoryInterface
 	 * @return array|FALSE Una colección de objetos de tipo Certificado
 	
 	 */
-	public function getCertificados(array $aWhere=[], array $aOperators=[]): array|FALSE;
+	public function getCertificados(array $aWhere=[], array $aOperators=[]);
 	
 /* -------------------- ENTIDAD --------------------------------------------- */
 
-	public function Eliminar(Certificado $Certificado): bool;
+	public function Eliminar(Certificado $Certificado);
 
-	public function Guardar(Certificado $Certificado): bool;
+	public function Guardar(Certificado $Certificado);
 
-	public function getErrorTxt(): string;
+	public function getErrorTxt();
 
-	public function getoDbl(): PDO;
+	public function getoDbl();
 
-	public function setoDbl(PDO $oDbl): void;
+	public function setoDbl(PDO $oDbl);
 
-	public function getNomTabla(): string;
+	public function getNomTabla();
 	
     /**
      * Devuelve los campos de la base de datos en un array asociativo.
@@ -57,13 +57,13 @@ interface CertificadoRepositoryInterface
      * @return array|bool
 	
      */
-    public function datosById(int $id_item): array|bool;
+    public function datosById(int $id_item);
 	
     /**
      * Busca la clase con id_item en el repositorio.
 	
      */
-    public function findById(int $id_item): ?Certificado;
+    public function findById(int $id_item);
 	
     public function getNewId_item();
 }
