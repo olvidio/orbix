@@ -1,6 +1,6 @@
 <?php
 
-namespace certificados\model;
+namespace notas\model;
 
 use certificados\domain\repositories\CertificadoPublicRepository;
 use core;
