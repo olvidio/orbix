@@ -24,6 +24,7 @@ class DatosForm
 
     private $oFicha;
     private $despl_depende;
+    private $mod = '';
 
     public function getFormulario()
     {
@@ -41,23 +42,23 @@ class DatosForm
             $valor_camp = $oFicha->$nom_camp;
             $var_1 = $oDatosCampo->getArgument();
             $eti = $oDatosCampo->getEtiqueta();
-            $formulario .= "<tr><td class=etiqueta>" . ucfirst($eti) . "</td>";
             switch ($oDatosCampo->getTipo()) {
                 case "ver":
-                    if ($Qmod == 'nuevo') { // si es nuevo lo muestro como texto
-                        $size = isset($var_1) ? $var_1 : '';
-                        $formulario .= "<td class=contenido><input type='text' name='$nom_camp' value=\"" . htmlspecialchars($valor_camp) . "\" size='$size'></td></tr>";
-                    } else {
+                    if ($this->mod !== 'nuevo') {
+                        $formulario .= "<tr><td class=etiqueta>" . ucfirst($eti) . "</td>";
                         $formulario .= "<td class=contenido>" . htmlspecialchars($valor_camp) . "</td></tr>";
                         $formulario .= "<input type='hidden' name='$nom_camp' value=\"" . htmlspecialchars($valor_camp) . "\"></td></tr>";
                     }
+                    $camposNo .= empty($camposNo) ? $nom_camp : '!' . $nom_camp;
                     break;
                 case "decimal":
                 case "texto":
+                    $formulario .= "<tr><td class=etiqueta>" . ucfirst($eti) . "</td>";
                     $size = $var_1;
                     $formulario .= "<td class=contenido><input type='text' name='$nom_camp' value=\"" . htmlspecialchars($valor_camp) . "\" size='$size'></td></tr>";
                     break;
                 case "fecha":
+                    $formulario .= "<tr><td class=etiqueta>" . ucfirst($eti) . "</td>";
                     $locale_us = ConfigGlobal::is_locale_us();
                     // el valor_camp debe ser un objeto web\DateTimeLocal
                     $valor_camp_txt = $valor_camp->getFromLocal();
@@ -65,6 +66,7 @@ class DatosForm
 									onchange='fnjs_comprobar_fecha(\"#$nom_camp\",$locale_us)'>";
                     break;
                 case "opciones":
+                    $formulario .= "<tr><td class=etiqueta>" . ucfirst($eti) . "</td>";
                     $acc = $oDatosCampo->getAccion();
                     $var_3 = $oDatosCampo->getArgument3();
                     $gestor = preg_replace('/\\\(\w*)$/', '\Gestor\1', $var_1);
@@ -78,11 +80,13 @@ class DatosForm
                     $formulario .= "</select></td></tr>";
                     break;
                 case "depende":
+                    $formulario .= "<tr><td class=etiqueta>" . ucfirst($eti) . "</td>";
                     $formulario .= "<td class=contenido><select id=\"$nom_camp\" name=\"$nom_camp\">";
                     $formulario .= $this->despl_depende;  // solo útil en el caso de nuevo. En el resto se actualiza desde el campo del que depende.
                     $formulario .= "</select></td></tr>";
                     break;
                 case "array":
+                    $formulario .= "<tr><td class=etiqueta>" . ucfirst($eti) . "</td>";
 //					$oDespl = new web\Desplegable();
 //					$oDespl->setOpciones($var_1);
 //					$oDespl->setOpcion_sel($valor_camp);
@@ -93,6 +97,7 @@ class DatosForm
                     $formulario .= "</select></td></tr>";
                     break;
                 case "check":
+                    $formulario .= "<tr><td class=etiqueta>" . ucfirst($eti) . "</td>";
                     if ($valor_camp == "t") {
                         $chk = "checked";
                     } else {
@@ -139,5 +144,21 @@ class DatosForm
     public function setDespl_depende($despl_depende)
     {
         $this->despl_depende = $despl_depende;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMod()
+    {
+        return $this->mod;
+    }
+
+    /**
+     * @param mixed $mod
+     */
+    public function setMod($mod): void
+    {
+        $this->mod = $mod;
     }
 }

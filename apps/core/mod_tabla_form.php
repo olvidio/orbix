@@ -31,7 +31,7 @@ $aQuery = array(
 // También se pasan por formulario al update.
 $a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 $stack = '';
-if (!empty($a_sel) && ($Qmod != 'nuevo')) { //vengo de un checkbox (para el caso de nuevo no hay que guardar el check)
+if (!empty($a_sel) && ($Qmod !== 'nuevo')) { //vengo de un checkbox (para el caso de nuevo no hay que guardar el check)
     $Qs_pkey = explode('#', $a_sel[0]);
     // he cambiado las comillas dobles por simples. Deshago el cambio.
     $Qs_pkey = str_replace("'", '"', $Qs_pkey[0]);
@@ -77,6 +77,7 @@ $clasname = get_class($oFicha);
 $oDatosForm = new core\DatosForm();
 $oDatosForm->setFicha($oFicha);
 $oDatosForm->setDespl_depende($despl_depende);
+$oDatosForm->setMod($Qmod);
 
 $tit_txt = $oInfoClase->getTxtTitulo();
 $explicacion_txt = $oInfoClase->getTxtExplicacion();

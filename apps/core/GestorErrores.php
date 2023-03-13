@@ -151,7 +151,7 @@ class GestorErrores
 
     function addError($err = '', $sClauError, $line, $file)
     {
-        // Cuando ejecuto algun controlador desde la linea de comandos, no existe la ip:
+        // Cuando ejecuto algún controlador desde la linea de comandos, no existe la ip:
         $ip = empty($_SERVER['REMOTE_ADDR']) ? 'localhost' : $_SERVER['REMOTE_ADDR'];
         $user = ConfigGlobal::mi_usuario();
         $esquema = ConfigGlobal::mi_region_dl();

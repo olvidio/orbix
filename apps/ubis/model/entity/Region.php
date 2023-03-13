@@ -110,7 +110,7 @@ class Region extends core\ClasePropiedades
             $bInsert = false;
         }
         $aDades = array();
-        $aDades['id_region'] = $this->iid_region;
+        //$aDades['id_region'] = $this->iid_region;
         $aDades['region'] = $this->sregion;
         $aDades['nombre_region'] = $this->snombre_region;
         $aDades['status'] = $this->bstatus;
@@ -125,7 +125,6 @@ class Region extends core\ClasePropiedades
         if ($bInsert === false) {
             //UPDATE
             $update = "
-					id_region                = :id_region,
 					region                	 = :region,
 					nombre_region            = :nombre_region,
 					status                   = :status";
@@ -146,9 +145,9 @@ class Region extends core\ClasePropiedades
             }
         } else {
             // INSERT
-            array_unshift($aDades, $this->iid_region);
-            $campos = "(id_region,region,nombre_region,status)";
-            $valores = "(:id_region,:region,:nombre_region,:status)";
+            //array_unshift($aDades, $this->iid_region);
+            $campos = "(region,nombre_region,status)";
+            $valores = "(:region,:nombre_region,:status)";
             if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {
                 $sClauError = 'Region.insertar.prepare';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
@@ -398,7 +397,7 @@ class Region extends core\ClasePropiedades
     {
         $oRegionSet = new core\Set();
 
-        $oRegionSet->add($this->getDatosId_region());
+        //$oRegionSet->add($this->getDatosId_region());
         $oRegionSet->add($this->getDatosRegion());
         $oRegionSet->add($this->getDatosNombre_region());
         $oRegionSet->add($this->getDatosStatus());
@@ -417,8 +416,7 @@ class Region extends core\ClasePropiedades
         $nom_tabla = $this->getNomTabla();
         $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_region'));
         $oDatosCampo->setEtiqueta(_("id_region"));
-        $oDatosCampo->setTipo('texto');
-        $oDatosCampo->setArgument(3);
+        $oDatosCampo->setTipo('ver');
         return $oDatosCampo;
     }
 
