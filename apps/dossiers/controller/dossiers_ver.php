@@ -290,7 +290,7 @@ if (empty($Qid_dossier)) { // enseña la lista de dossiers.
             $html .= $oDatosTabla->getScript();
             $html .= '</script>';
             $html .= "<h3 class=subtitulo>" . $oInfoClase->getTxtTitulo() . "</h3>
-				<form id='seleccionados' id='seleccionados' name='seleccionados' action='' method='post'>";
+				<form id='seleccionados' name='seleccionados' action='' method='post'>";
             $html .= $oHashSelect->getCamposHtml();
             $html .= "<input type='hidden' id='mod' name='mod' value=''>";
 

@@ -18,7 +18,7 @@ fnjs_left_side_hide();
 </script>
 <div id='condiciones' class='no_print'>
 <form id="seleccion" name="seleccion" action="{{ url }}" method="post">
-<h3 class=subtitulo>{{ "lista con la atención de actividades para mandar a los sacd"|trans }}</h3>
+<h3 class=subtitulo>{{ "lista con la atención de actividades para mandar a los sacd"|trans|raw }}</h3>
 {{ oHash.getCamposHtml()|raw }}
 {{ oFormP.getHtml()|raw }}
 </form>
@@ -26,7 +26,7 @@ fnjs_left_side_hide();
 {%  if perm_mod_txt %}
 <li>
 <span class=link onclick="fnjs_update_div('#main','{{ url_com_txt|raw }}')">
-    {{ "modificar los textos de las comunicaciones"|trans }}
+    {{ "modificar los textos de las comunicaciones"|trans|raw }}
 	</span></li>
 {% endif %}
 </div>

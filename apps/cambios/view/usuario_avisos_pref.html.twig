@@ -63,18 +63,18 @@ fnjs_grabar_todo=function(formulario){
 	// Comprobaciones
 	var obj=$('#objeto').val();
 	if (!obj) { 
-		alert("{{ "debe indicar dónde mirar los cambios"|trans }}");
+		alert("{{ "debe indicar dónde mirar los cambios"|trans|raw }}");
 		$('#objeto').trigger("focus");
 		err=1;
 	}
 	var id_fase_ref=$('#id_fase_ref').val();
 	if (!id_fase_ref) { 
-		alert("{{ "debe indicar la fase de referencia"|trans }}"); err=1;
+		alert("{{ "debe indicar la fase de referencia"|trans|raw }}"); err=1;
 	}
 
 	var tipo=$('#aviso_tipo').val();
 	if (!tipo) { 
-		alert("{{ "debe indicar por dónde avisar"|trans }}");
+		alert("{{ "debe indicar por dónde avisar"|trans|raw }}");
 		$('#aviso_tipo').trigger("focus");
 		err=1;
 	}
@@ -140,7 +140,7 @@ fnjs_guardar_cond=function(que){
 	var err=0;
 	$('#salida_cond').val(que);
 	if (que=="eliminar_cond") {
-		seguro=confirm("{{ "¿Está seguro de borrar esta condición?"|trans }}");
+		seguro=confirm("{{ "¿Está seguro de borrar esta condición?"|trans|raw }}");
 		if (seguro) { 
 			err=0;
 		} else {
@@ -198,15 +198,15 @@ fnjs_mas_casas=function(e){
 
 <h1>Avisos para {{ nombre }}</h1>
 
-<h3>{{ "cambios en"|trans }}:
+<h3>{{ "cambios en"|trans|raw }}:
 {{ oDesplObjetos.desplegable()|raw }}
 </h3>
 <table>
 <tr>
-<td class=etiqueta>{{ "para actividades que organiza"|trans }}:</td>
+<td class=etiqueta>{{ "para actividades que organiza"|trans|raw }}:</td>
 <td colspan=5>
-	<input type=radio name=dl_propia value='t' {{ chk_propia }} onchange='fnjs_actualizar_fases();' > {{ "la propia dl"|trans }}
-	<input type=radio name=dl_propia value='f' {{ chk_otra }} onchange='fnjs_actualizar_fases();' > {{ "otras dl"|trans }}
+	<input type=radio name=dl_propia value='t' {{ chk_propia }} onchange='fnjs_actualizar_fases();' > {{ "la propia dl"|trans|raw }}
+	<input type=radio name=dl_propia value='f' {{ chk_otra }} onchange='fnjs_actualizar_fases();' > {{ "otras dl"|trans|raw }}
 </td></tr>
 </table>
 <table>
@@ -218,13 +218,13 @@ fnjs_mas_casas=function(e){
 </table>
 <br>
 
-<h3>{{ "fase de referencia"|trans }}:</h3>
+<h3>{{ "fase de referencia"|trans|raw }}:</h3>
 <span class="comentario">
 {{ "NOTA: Salen todas las fases posibles, aunque en algún proceso no existan.
-Para ver menos fases, debe limitar el tipo de actividad."|trans }}
+Para ver menos fases, debe limitar el tipo de actividad."|trans|raw }}
 <br>
 {{ "NOTA: Salen todas las fases, aunque no se tenga permiso.
-El permiso se comprueba cuando se genera el aviso."|trans }}
+El permiso se comprueba cuando se genera el aviso."|trans|raw }}
 </span>
 <br>
 <span id=fases>
@@ -232,20 +232,20 @@ El permiso se comprueba cuando se genera el aviso."|trans }}
 </span>
 <br>
 <br>
-<input type="checkbox" {{ chk_off }} name="aviso_off"> {{ "avisar antes de que esté marcada (off)"|trans }}
+<input type="checkbox" {{ chk_off }} name="aviso_off"> {{ "avisar antes de que esté marcada (off)"|trans|raw }}
 <br>
-<input type="checkbox" {{ chk_on }} name="aviso_on">  {{ "avisar si está marcada (on)"|trans }}
+<input type="checkbox" {{ chk_on }} name="aviso_on">  {{ "avisar si está marcada (on)"|trans|raw }}
 <br>
-<input type="checkbox" {{ chk_outdate }} name="aviso_outdate">  {{ "avisar aunque la actividad haya finalizado (fecha cambio  > fecha fin actividad)"|trans }}
+<input type="checkbox" {{ chk_outdate }} name="aviso_outdate">  {{ "avisar aunque la actividad haya finalizado (fecha cambio  > fecha fin actividad)"|trans|raw }}
 <br>
 <br>
-<h3>{{ "opciones"|trans }}:</h3>
+<h3>{{ "opciones"|trans|raw }}:</h3>
 <table>
-<tr><td colspan="2" class="subtitulo">{{ "ver cambios sólo de las casas"|trans }}:</td>
+<tr><td colspan="2" class="subtitulo">{{ "ver cambios sólo de las casas"|trans|raw }}:</td>
     <td id="col_casas" colspan=2>
         {{ oDesplArrayCasas.ListaSelects|raw }}
     </td></tr>
-<tr><td class="subtitulo">{{ "avisar por"|trans }}:</td>
+<tr><td class="subtitulo">{{ "avisar por"|trans|raw }}:</td>
     <td>{{ oDesplTiposAviso.desplegable|raw }}</td>
 </tr>
 </table>
@@ -253,14 +253,14 @@ El permiso se comprueba cuando se genera el aviso."|trans }}
 
 
 <form id="propiedades_obj"  name="propiedades_obj" action="" method="post" >
-<h3>{{ "campos o propiedades"|trans }}:</h3>
+<h3>{{ "campos o propiedades"|trans|raw }}:</h3>
 <table class="tono3">
     <tr id="tr_tabla"> </tr>
 </table>
 </form>
 
 <br>
-<input type=button onclick="fnjs_grabar_todo('#usuario_pref');" value="{{ "guardar"|trans }}">
+<input type=button onclick="fnjs_grabar_todo('#usuario_pref');" value="{{ "guardar"|trans|raw }}">
 </div>
 
 <hr>

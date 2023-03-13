@@ -209,7 +209,7 @@ class Select3103
         ];
 
         $oView = new core\View('actividadestudios/model');
-        echo $oView->render('select3103.phtml', $a_campos);
+        $oView->renderizar('select3103.phtml', $a_campos);
     }
 
     public function getId_dossier()

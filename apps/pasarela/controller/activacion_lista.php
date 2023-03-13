@@ -1,4 +1,6 @@
 <?php
+
+use core\ViewTwig;
 use web\Hash;
 
 // INICIO Cabecera global de URL de controlador *********************************
@@ -43,5 +45,5 @@ $a_campos = ['oPosicion' => $oPosicion,
     'txt_eliminar' => $txt_eliminar,
 ];
 
-$oView = new core\ViewTwig('pasarela/controller');
-echo $oView->render('activacion_lista.html.twig', $a_campos);
+$oView = new ViewTwig('pasarela/controller');
+$oView->renderizar('activacion_lista.html.twig', $a_campos);

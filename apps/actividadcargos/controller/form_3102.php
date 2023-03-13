@@ -51,7 +51,7 @@ $Qid_dossier = (integer)filter_input(INPUT_POST, 'id_dossier');
 
 $a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 if (!empty($a_sel)) { //vengo de un checkbox
-    if ($Qid_dossier == 3101) {  // vengo del listado de asistencias
+    if ($Qid_dossier === 3101) {  // vengo del listado de asistencias
         $Qid_nom = (integer)strtok($a_sel[0], "#");
         $Qid_item = (integer)strtok("#"); // si no hay devuelve false
         $Qid_item = empty($Qid_item) ? '' : $Qid_item; // cambiar el false a ''.
@@ -151,7 +151,7 @@ $oDesplegableCargos = $oCargos->getListaCargos();
 $oDesplegableCargos->setNombre('id_cargo');
 $oDesplegableCargos->setBlanco(false);
 $oDesplegableCargos->setOpcion_sel($Qid_cargo);
-$chk = (!empty($puede_agd) && $puede_agd == 't') ? 'checked' : '';
+$chk = (!empty($puede_agd) && $puede_agd === 't') ? 'checked' : '';
 
 
 $oHash = new Hash();
@@ -167,7 +167,7 @@ $a_camposHidden = array(
 if (!empty($id_nom_real)) {
     $a_camposHidden['id_nom'] = $id_nom_real;
 } else {
-    if ($Qmod == "nuevo") {
+    if ($Qmod === "nuevo") {
         $camposNo .= '!asis';
     }
     $camposForm .= '!id_nom';
@@ -189,4 +189,4 @@ $a_campos = ['obj' => $obj,
 ];
 
 $oView = new core\View('actividadcargos/model');
-echo $oView->render('form_3102.phtml', $a_campos);
+$oView->renderizar('form_3102.phtml', $a_campos);

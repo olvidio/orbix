@@ -100,4 +100,4 @@ $a_campos = ['oPosicion' => $oPosicion,
 ];
 
 $oView = new core\View('personas\controller');
-echo $oView->render("traslado_form.phtml", $a_campos);
+$oView->renderizar("traslado_form.phtml", $a_campos);

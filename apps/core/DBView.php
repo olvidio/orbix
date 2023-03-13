@@ -133,19 +133,22 @@ class DBView
         return $string;
     }
 
-    public function Existe($comun = FALSE)
+    public function ExisteYEsIgual($comun = FALSE)
     {
-        // definicion teórica
+        // definición teórica
         $defNew = $this->getDefView($this->sView, $comun);
         // quitar espacios, tabuladores, returns...
         $defNew = $this->normalizarTexto($defNew);
-        // definicion real
+        // definición real
         $defActual = $this->getSqlView($this->sView);
         $defActual = $this->normalizarTexto($defActual);
 
         if ($defActual == $defNew) {
             return TRUE;
         } else {
+            if (!empty($defActual)) { // SI existe, pero es distinta: la borro
+                $this->Drop();
+            }
             return FALSE;
         }
     }
@@ -157,8 +160,6 @@ class DBView
          */
         $oDbl = $this->getoDbl();
         $nameView = " \"$this->sSchema\".$this->sView";
-
-        $this->Drop();
 
         $sql = "CREATE MATERIALIZED VIEW $nameView AS ";
         $sql .= $this->getDefView($this->sView, $comun);

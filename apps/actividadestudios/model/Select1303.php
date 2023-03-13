@@ -193,7 +193,7 @@ class Select1303
             echo $msg_err;
         }
         $oView = new core\View(__NAMESPACE__);
-        return $oView->render('selectUnCa.phtml', $a_campos);
+        $oView->renderizar('selectUnCa.phtml', $a_campos);
     }
 
     public function setLinksInsert()
@@ -228,7 +228,7 @@ class Select1303
         $fincurs_ca = core\curso_est("fin", $any)->format('Y-m-d');
 
         $aviso = '';
-        // Compruebo si està de repaso...
+        // Compruebo si está de repaso...
         $oPersona = new personas\PersonaDl(array('id_nom' => $this->id_pau));
         $stgr = $oPersona->getStgr();
         if ($stgr == 'r') $aviso .= _("está de repaso") . "<br>";
@@ -314,7 +314,7 @@ class Select1303
         ];
 
         $oView = new core\View(__NAMESPACE__);
-        $html_script = $oView->render('select1303.phtml', $a_campos);
+        $html_script = $oView->renderizar('select1303.phtml', $a_campos);
 
         // para más de un ca
         $ca_num = 0;

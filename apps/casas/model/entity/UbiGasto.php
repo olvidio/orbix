@@ -383,7 +383,7 @@ class UbiGasto extends core\ClasePropiedades
         if (!isset($this->df_gasto) && !$this->bLoaded) {
             $this->DBCarregar();
         }
-        $oConverter = new core\Converter('date', $this->df_gasto);
+        $oConverter = new core\ConverterDate('date', $this->df_gasto);
         return $oConverter->fromPg();
     }
 
@@ -398,7 +398,7 @@ class UbiGasto extends core\ClasePropiedades
     function setF_gasto($df_gasto = '', $convert = TRUE)
     {
         if ($convert === TRUE && !empty($df_gasto)) {
-            $oConverter = new core\Converter('date', $df_gasto);
+            $oConverter = new core\ConverterDate('date', $df_gasto);
             $this->df_gasto = $oConverter->toPg();
         } else {
             $this->df_gasto = $df_gasto;

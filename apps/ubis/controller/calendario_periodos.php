@@ -55,4 +55,4 @@ $a_campos = ['oPosicion' => $oPosicion,
 ];
 
 $oView = new core\View('ubis/controller');
-echo $oView->render('calendario_periodos.phtml', $a_campos);
+$oView->renderizar('calendario_periodos.phtml', $a_campos);

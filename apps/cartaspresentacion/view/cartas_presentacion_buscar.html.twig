@@ -12,28 +12,28 @@ fnjs_buscar=function(formulario){
 <form id="frm_buscar_1" name="frm_buscar_1" action="" onkeypress="fnjs_enviar(event,this);" >
 {{ oHash.getCamposHtml|raw }}
 <table border=1>
-<thead><th class=titulo_inv colspan=4>{{ "Cartas de presentación"|trans }}</th>
+<thead><th class=titulo_inv colspan=4>{{ "Cartas de presentación"|trans|raw }}</th>
 </thead>
 <tfoot>
 <tr><td colspan=5 style="text-align:right;">
-	<input TYPE="button" onclick="fnjs_buscar('#frm_buscar_1')" id="btn_ok" name="btn_ok" value="{{ "buscar"|trans }}" class="btn_ok">
+	<input TYPE="button" onclick="fnjs_buscar('#frm_buscar_1')" id="btn_ok" name="btn_ok" value="{{ "buscar"|trans|raw }}" class="btn_ok">
 </td></tr>
 </tfoot>
 <tbody>
 <tr>
-	<td class=etiqueta>{{ "población"|trans }}</td>
+	<td class=etiqueta>{{ "población"|trans|raw }}</td>
 	<td colspan="4"><input class=contenido id=poblacion name=poblacion size="60"></td>	
 </tr>
 <tr>
-	<td class=etiqueta>{{ "región"|trans }}</td>
+	<td class=etiqueta>{{ "región"|trans|raw }}</td>
 	<td>{{ oDesplRegion.desplegable|raw }}</td>
 </tr>
 <tr>
-	<td class=etiqueta>{{ "país"|trans }}</td>
+	<td class=etiqueta>{{ "país"|trans|raw }}</td>
 	<td>{{ oDesplPais.desplegable|raw }}</td>
 </tr>
 <tr>
-	<td class=etiqueta>{{ "delegación (H)"|trans }}</td>
+	<td class=etiqueta>{{ "delegación (H)"|trans|raw }}</td>
 	<td>{{ oDesplDelegacion.desplegable|raw }}</td>
 </tr>
 </tbody></table>

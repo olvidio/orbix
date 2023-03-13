@@ -278,4 +278,4 @@ $a_campos = [
 ];
 
 $oView = new core\View('asistentes/controller');
-echo $oView->render('lista_asistentes.phtml', $a_campos);
+$oView->renderizar('lista_asistentes.phtml', $a_campos);

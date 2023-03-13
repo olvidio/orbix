@@ -536,7 +536,7 @@ class Publicacion extends core\ClasePropiedades
         if (empty($this->df_publicacion)) {
             return new web\NullDateTimeLocal();
         }
-        $oConverter = new core\Converter('date', $this->df_publicacion);
+        $oConverter = new core\ConverterDate('date', $this->df_publicacion);
         return $oConverter->fromPg();
     }
 
@@ -551,7 +551,7 @@ class Publicacion extends core\ClasePropiedades
     function setF_publicacion($df_publicacion = '', $convert = true)
     {
         if ($convert === true && !empty($df_publicacion)) {
-            $oConverter = new core\Converter('date', $df_publicacion);
+            $oConverter = new core\ConverterDate('date', $df_publicacion);
             $this->df_publicacion = $oConverter->toPg();
         } else {
             $this->df_publicacion = $df_publicacion;

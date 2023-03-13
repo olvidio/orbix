@@ -490,7 +490,7 @@ if (!empty($a_sel) && $alum == 1) { //vengo de un 'checkbox' => sólo una person
     ];
 
     $oView = new core\View('actividadestudios/controller');
-    echo $oView->render('ca_posibles_lista.phtml', $a_campos);
+    $oView->renderizar('ca_posibles_lista.phtml', $a_campos);
 } else {
     // -------------------------- si es para el centro/s saco una tabla -------------------------
     foreach ($cuadro as $ctr => $datos_persona) {
@@ -514,6 +514,6 @@ if (!empty($a_sel) && $alum == 1) { //vengo de un 'checkbox' => sólo una person
         ];
 
         $oView = new core\View('actividadestudios/controller');
-        echo $oView->render('ca_posibles_cuadro.phtml', $a_campos);
+        $oView->renderizar('ca_posibles_cuadro.phtml', $a_campos);
     }
 } 

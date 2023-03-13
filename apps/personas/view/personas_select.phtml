@@ -1,8 +1,8 @@
-<?= $oPosicion->mostrar_left_slide(1); ?>
+<?= $oPosicion->mostrar_left_slide(1) ?>
     <script>
         fnjs_home = function (formulario) {
             rta = fnjs_solo_uno(formulario);
-            if (rta == 1) {
+            if (rta === 1) {
                 $(formulario).attr('action', 'apps/personas/controller/home_persona.php');
                 fnjs_enviar_formulario(formulario);
             }
@@ -10,7 +10,7 @@
         <?php if (!empty($script['fnjs_modificar_ctr'])) { ?>
         fnjs_modificar_ctr = function (formulario) {
             rta = fnjs_solo_uno(formulario);
-            if (rta == 1) {
+            if (rta === 1) {
                 $(formulario).attr('action', "apps/personas/controller/traslado_form.php");
                 fnjs_enviar_formulario(formulario);
             }
@@ -19,7 +19,7 @@
         <?php if (!empty($script['fnjs_dossiers'])) { ?>
         fnjs_dossiers = function (formulario) {
             rta = fnjs_solo_uno(formulario);
-            if (rta == 1) {
+            if (rta === 1) {
                 $(formulario).attr('action', "apps/dossiers/controller/dossiers_ver.php");
                 fnjs_enviar_formulario(formulario);
             }
@@ -28,7 +28,7 @@
         <?php if (!empty($script['fnjs_ficha'])) { ?>
         fnjs_ficha = function (formulario) {
             rta = fnjs_solo_uno(formulario);
-            if (rta == 1) {
+            if (rta === 1) {
                 $('#que').val("titulo");
                 $(formulario).attr('action', 'apps/personas/controller/personas_editar.php');
                 fnjs_enviar_formulario(formulario);
@@ -38,7 +38,7 @@
         <?php if (!empty($script['fnjs_actividades'])) { ?>
         fnjs_actividades = function (formulario) {
             rta = fnjs_solo_uno(formulario);
-            if (rta == 1) {
+            if (rta === 1) {
                 $('#que').val("activ");
                 $('#id_dossier').val("1301y1302");
                 $(formulario).attr('action', "apps/dossiers/controller/dossiers_ver.php");
@@ -58,7 +58,7 @@
         <?php if (!empty($script['fnjs_lista_activ'])) { ?>
         fnjs_lista_activ = function (formulario) {
             rta = fnjs_solo_uno(formulario);
-            if (rta == 1) {
+            if (rta === 1) {
                 $('#que').val("un_sacd");
                 $(formulario).attr('action', "apps/actividadessacd/controller/com_sacd_activ.php");
                 fnjs_enviar_formulario(formulario);
@@ -68,7 +68,7 @@
         <?php if (!empty($script['fnjs_matriculas'])) { ?>
         fnjs_matriculas = function (formulario) {
             rta = fnjs_solo_uno(formulario);
-            if (rta == 1) {
+            if (rta === 1) {
                 $('#que').val("matriculas");
                 $('#id_dossier').val("1303");
                 $(formulario).attr('action', "apps/dossiers/controller/dossiers_ver.php");
@@ -79,7 +79,7 @@
         <?php if (!empty($script['fnjs_posibles_ca'])) { ?>
         fnjs_posibles_ca = function (formulario) {
             rta = fnjs_solo_uno(formulario);
-            if (rta == 1) {
+            if (rta === 1) {
                 $(formulario).attr('action', "apps/actividadestudios/controller/ca_posibles.php");
                 fnjs_enviar_formulario(formulario);
             }
@@ -88,7 +88,7 @@
         <?php if (!empty($script['fnjs_posibles_activ'])) { ?>
         fnjs_peticion_activ = function (formulario, sactividad) {
             rta = fnjs_solo_uno(formulario);
-            if (rta == 1) {
+            if (rta === 1) {
                 $('#que').val(sactividad);
                 $(formulario).attr('action', "apps/actividadplazas/controller/peticiones_activ.php");
                 fnjs_enviar_formulario(formulario);
@@ -98,9 +98,19 @@
         <?php if (!empty($script['fnjs_imp_tessera'])) { ?>
         fnjs_imp_tessera = function (formulario) {
             rta = fnjs_solo_uno(formulario);
-            if (rta == 1) {
+            if (rta === 1) {
                 $(formulario).attr('action', "apps/notas/controller/tessera_imprimir.php");
                 $(formulario).target = "print";
+                fnjs_enviar_formulario(formulario);
+            }
+        }
+        <?php } ?>
+        <?php if (!empty($script['fnjs_notas'])) { ?>
+        fnjs_notas = function (formulario) {
+            rta = fnjs_solo_uno(formulario);
+            if (rta === 1) {
+                $('#id_dossier').val("1011");
+                $(formulario).attr('action', "apps/dossiers/controller/dossiers_ver.php");
                 fnjs_enviar_formulario(formulario);
             }
         }
@@ -108,8 +118,18 @@
         <?php if (!empty($script['fnjs_imp_certificado'])) { ?>
         fnjs_imp_certificado = function (formulario) {
             rta = fnjs_solo_uno(formulario);
-            if (rta == 1) {
+            if (rta === 1) {
                 $(formulario).attr('action', "apps/notas/controller/certificado_imprimir.php");
+                $(formulario).target = "print";
+                fnjs_enviar_formulario(formulario);
+            }
+        }
+        <?php } ?>
+        <?php if (!empty($script['fnjs_upload_certificado'])) { ?>
+        fnjs_upload_certificado = function (formulario) {
+            rta = fnjs_solo_uno(formulario);
+            if (rta === 1) {
+                $(formulario).attr('action', "apps/certificados/controller/certificado_browse.php");
                 $(formulario).target = "print";
                 fnjs_enviar_formulario(formulario);
             }
@@ -118,7 +138,7 @@
         <?php if (!empty($script['fnjs_ficha_profe'])) { ?>
         fnjs_ficha_profe = function (formulario) {
             rta = fnjs_solo_uno(formulario);
-            if (rta == 1) {
+            if (rta === 1) {
                 $(formulario).attr('action', "apps/profesores/controller/ficha_profesor_stgr.php");
                 fnjs_enviar_formulario(formulario);
             }
@@ -127,7 +147,7 @@
         <?php if (!empty($script['fnjs_modificar'])) { ?>
         fnjs_modificar = function (formulario) {
             rta = fnjs_solo_uno(formulario);
-            if (rta == 1) {
+            if (rta === 1) {
                 $(formulario).attr('action', "apps/personas/controller/stgr_cambio.php");
                 fnjs_enviar_formulario(formulario);
             }

@@ -12,7 +12,7 @@ fnjs_eliminar=function(formulario){
 				})
 				.done(function (rta_txt) {
 					if (rta_txt != '' && rta_txt != '\\n') {
-						alert ("{{ "respuesta"|trans }}: "+rta_txt);
+						alert ("{{ "respuesta"|trans|raw }}: "+rta_txt);
 					} else {
 						fnjs_actualizar(formulario);
 				   	}
@@ -33,13 +33,13 @@ fnjs_actualizar=function(formulario){
 fnjs_left_side_hide();
 </script>
 
-<h1>{{ "grupos de casas"|trans }}</h1>
-<form id='seleccionados' id='seleccionados' name='seleccionados' action='' method='post'>
+<h1>{{ "grupos de casas"|trans|raw }}</h1>
+<form id='seleccionados' name='seleccionados' action='' method='post'>
 {{ oHash.getCamposHtml()|raw }}
 
 {{ oTabla.mostrar_tabla()|raw }}
 </form>
 
 <table><tr><th class="no_print">
-	<span class="link_inv" onclick="fnjs_update_div('#main','{{ url_nuevo|raw }}');">{{ "nuevo"|trans }}</span>
+	<span class="link_inv" onclick="fnjs_update_div('#main','{{ url_nuevo|raw }}');">{{ "nuevo"|trans|raw }}</span>
 </th></tr></table>

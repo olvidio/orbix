@@ -35,4 +35,4 @@ $a_campos = ['oPosicion' => $oPosicion,
 ];
 
 $oView = new core\View('ubis\controller');
-echo $oView->render('direcciones_que.phtml', $a_campos);
+$oView->renderizar('direcciones_que.phtml', $a_campos);

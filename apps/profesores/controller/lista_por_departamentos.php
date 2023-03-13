@@ -59,7 +59,7 @@ if (ConfigGlobal::mi_ambito() === 'rstgr' && $Qfiltro != 1) {
     ];
 
     $oView = new core\ViewTwig('ubis/controller');
-    echo $oView->render('dl_rstgr_que.html.twig', $a_campos);
+    $oView->renderizar('dl_rstgr_que.html.twig', $a_campos);
     exit();
 }
 
@@ -155,4 +155,4 @@ $a_campos = [
 ];
 
 $oView = new core\View('profesores/controller');
-echo $oView->render('lista_por_departamentos.phtml', $a_campos);
+$oView->renderizar('lista_por_departamentos.phtml', $a_campos);

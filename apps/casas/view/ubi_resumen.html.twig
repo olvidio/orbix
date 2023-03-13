@@ -42,8 +42,8 @@ fnjs_guardar=function(formulario){
 
 {{ oDesplCasas.desplegable()|raw }}
 
-{{ "incremeto id_tarifa"|trans }} <input type=text size=2 name=inc_t value="{{ Qinc_t }}" >%
-{{ "incremento gasto"|trans }} <input type=text size=2 name=G value="{{ QG }}" >%
+{{ "incremeto id_tarifa"|trans|raw }} <input type=text size=2 name=inc_t value="{{ Qinc_t }}" >%
+{{ "incremento gasto"|trans|raw }} <input type=text size=2 name=G value="{{ QG }}" >%
 	<input type=hidden id=seccion name=seccion >
 	<br>
 	<input type="button" onclick="fnjs_ver('sf');" value="resumen sf">

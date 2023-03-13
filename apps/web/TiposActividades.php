@@ -14,7 +14,7 @@ use actividades\model\entity\GestorTipoDeActividad;
  * @created 18/10/2010
  */
 /*
-Inicialmete e pensó un tipo de actividad de 6 dígitos con la siguiente estructura:
+Inicialmente se pensó un tipo de actividad de 6 dígitos con la siguiente estructura:
 
 (1 dígito para sv/sf, 1 dígito para el tipo de asistentes, 1 dígito para actividad, 3 dígitos para nombre)
 

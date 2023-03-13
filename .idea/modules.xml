@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/orbix.iml" filepath="$PROJECT_DIR$/orbix.iml" />
+      <module fileurl="file://$USER_HOME$/tramity_local/tramity/orbix.iml" filepath="$USER_HOME$/tramity_local/tramity/orbix.iml" />
     </modules>
   </component>
 </project>

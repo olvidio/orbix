@@ -175,7 +175,7 @@ foreach ($cActividades as $oActividad) {
     $f_ini_local = $oActividad->getF_ini()->getFromLocal();
     $f_fin_local = $oActividad->getF_fin()->getFromLocal();
 
-    $num_dias_act = $oActividad->getDuracion();
+    $num_dias_act = $oActividad->getDuracionAumentada();
     $num_dias = $oActividad->getDuracionEnPeriodo($oInicio, $oFin);
     $num_dias_real = $oActividad->getDuracionReal();
     $factor_dias = ($num_dias / $num_dias_real);

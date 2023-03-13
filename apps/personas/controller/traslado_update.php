@@ -1,11 +1,14 @@
 ﻿<?php
 
 use core\ConfigGlobal;
-use dossiers\model\entity as dossiers;
-use personas\model\entity as personas;
+use dossiers\model\entity\Dossier;
+use personas\model\entity\PersonaDl;
+use personas\model\entity\Traslado;
+use personas\model\entity\TrasladoDl;
+use ubis\model\entity\Centro;
 
 /**
- * Para asegurar que inicia la sesion, y poder acceder a los permisos
+ * Para asegurar que inicia la sesión, y poder acceder a los permisos
  */
 // INICIO Cabecera global de URL de controlador *********************************
 require_once("apps/core/global_header.inc");
@@ -18,7 +21,7 @@ require_once("apps/core/global_object.inc");
 $error = '';
 
 $Qid_pau = (integer)filter_input(INPUT_POST, 'id_pau');
-$oPersonaDl = new personas\PersonaDl($Qid_pau);
+$oPersonaDl = new PersonaDl($Qid_pau);
 $oPersonaDl->DBCarregar();
 
 //centro
@@ -30,7 +33,7 @@ if (!empty($Qnew_ctr) && !empty($Qf_ctr)) {
     $Qctr_o = (string)filter_input(INPUT_POST, 'ctr_o');
 
     $id_new_ctr = strtok($Qnew_ctr, "#");
-    $oCentro = new \ubis\model\entity\Centro($id_new_ctr);
+    $oCentro = new Centro($id_new_ctr);
     $nom_new_ctr = $oCentro->getNombre_ubi();
 
     $oPersonaDl->setId_ctr($id_new_ctr);
@@ -40,7 +43,7 @@ if (!empty($Qnew_ctr) && !empty($Qf_ctr)) {
     }
 
     //para el dossier de traslados
-    $oTraslado = new personas\Traslado();
+    $oTraslado = new Traslado();
     $oTraslado->setId_nom($Qid_pau);
     $oTraslado->setF_traslado($Qf_ctr);
     $oTraslado->setTipo_cmb('sede');
@@ -60,12 +63,12 @@ $Qf_dl = (string)filter_input(INPUT_POST, 'f_dl');
 $Qsituacion = (string)filter_input(INPUT_POST, 'situacion');
 $Qdl = (string)filter_input(INPUT_POST, 'dl');
 $reg_dl_org = empty($Qdl) ? '' : ConfigGlobal::mi_region() . '-' . $Qdl;
-$sfsv_txt = (configGlobal::mi_sfsv() == 1) ? 'v' : 'f';
+$sfsv_txt = (configGlobal::mi_sfsv() === 1) ? 'v' : 'f';
 
 if (!empty($Qnew_dl) && !empty($Qf_dl)) {
     $reg_dl_org .= $sfsv_txt;
     $Qnew_dl .= $sfsv_txt;
-    $oTrasladoDl = new personas\trasladoDl();
+    $oTrasladoDl = new TrasladoDl();
     $oTrasladoDl->setId_nom($Qid_pau);
     $oTrasladoDl->setDl_persona($old_dl);
     $oTrasladoDl->setReg_dl_org($reg_dl_org);
@@ -79,7 +82,7 @@ if (!empty($Qnew_dl) && !empty($Qf_dl)) {
 
 
 // hay que abrir el dossier para esta persona/actividad/ubi, si no tiene.
-$oDossier = new dossiers\Dossier(array('tabla' => 'p', 'id_pau' => $Qid_pau, 'id_tipo_dossier' => 1004));
+$oDossier = new Dossier(array('tabla' => 'p', 'id_pau' => $Qid_pau, 'id_tipo_dossier' => 1004));
 $oDossier->abrir(); // ya pone la fecha de hoy.
 $oDossier->DBGuardar();
 

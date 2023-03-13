@@ -127,4 +127,4 @@ $a_campos = ['aActas' => $aActas,
 ];
 
 $oView = new core\View('notas/controller');
-echo $oView->render('acta_listado_anual.phtml', $a_campos);
+$oView->renderizar('acta_listado_anual.phtml', $a_campos);

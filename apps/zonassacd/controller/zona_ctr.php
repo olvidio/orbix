@@ -56,4 +56,4 @@ $a_campos = ['oPosicion' => $oPosicion,
 ];
 
 $oView = new core\ViewTwig('zonassacd/controller');
-echo $oView->render('zona_ctr.html.twig', $a_campos);
+$oView->renderizar('zona_ctr.html.twig', $a_campos);

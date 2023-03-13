@@ -89,4 +89,4 @@ $a_campos = ['oPosicion' => $oPosicion,
 ];
 
 $oView = new core\View('personas/controller');
-echo $oView->render('stgr_cambio.phtml', $a_campos);
+$oView->renderizar('stgr_cambio.phtml', $a_campos);

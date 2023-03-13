@@ -1,6 +1,6 @@
 <?php
 
-use usuarios\model\entity as usuarios;
+use core\ConfigGlobal;use usuarios\model\entity as usuarios;
 
 /**
  * Página que presentará los formularios de los distintos plannings
@@ -38,6 +38,9 @@ if ($mes > $fin_m) {
 $Qtipo = (string)filter_input(INPUT_POST, 'tipo');
 $Qobj_pau = (string)filter_input(INPUT_POST, 'obj_pau');
 $Qna = (string)filter_input(INPUT_POST, 'na');
+
+// para formato fecha del javascript:
+$locale_us = ConfigGlobal::is_locale_us();
 
 //personas
 $oHash = new web\Hash();
@@ -113,10 +116,11 @@ switch ($Qtipo) {
             'oHash' => $oHash,
             'oFormP' => $oFormP,
             'personas_txt' => $personas_txt,
+            'locale_us' => $locale_us,
         ];
 
         $oView = new core\View('asistentes/controller');
-        echo $oView->render('planning_persona_que.phtml', $a_campos);
+        $oView->renderizar('planning_persona_que.phtml', $a_campos);
         break;
     case 'planning_ctr':
         //cuando queramos visualizar el calendario de actividades de
@@ -124,10 +128,11 @@ switch ($Qtipo) {
         $a_campos = ['oPosicion' => $oPosicion,
             'oHash1' => $oHash1,
             'oFormP' => $oFormP,
+            'locale_us' => $locale_us,
         ];
 
         $oView = new core\View('asistentes/controller');
-        echo $oView->render('planning_ctr_que.phtml', $a_campos);
+        $oView->renderizar('planning_ctr_que.phtml', $a_campos);
         break;
     default:
         $err_switch = sprintf(_("opción no definida en switch en %s, linea %s"), __FILE__, __LINE__);

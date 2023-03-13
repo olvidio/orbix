@@ -12,6 +12,8 @@
  */
 
 // INICIO Cabecera global de URL de controlador *********************************
+use core\ConfigGlobal;
+
 require_once('apps/core/global_header.inc');
 // Archivos requeridos por esta url **********************************************
 
@@ -78,7 +80,8 @@ $a_campos = ['oPosicion' => $oPosicion,
     'oHash' => $oHash,
     'oFormP' => $oFormP,
     'oForm' => $oForm,
+    'locale_us' => ConfigGlobal::is_locale_us(),
 ];
 
 $oView = new core\View('actividades/controller');
-echo $oView->render('calendario_que.phtml', $a_campos);
+$oView->renderizar('calendario_que.phtml', $a_campos);

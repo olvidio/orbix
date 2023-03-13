@@ -4,46 +4,19 @@
     <include_path>
       <path value="$PROJECT_DIR$/libs/vendor/psr/log" />
       <path value="$PROJECT_DIR$/libs/vendor/mpdf/mpdf" />
-      <path value="$PROJECT_DIR$/libs/vendor/twig/extensions" />
       <path value="$PROJECT_DIR$/libs/vendor/twig/twig" />
       <path value="$PROJECT_DIR$/libs/vendor/myclabs/deep-copy" />
-      <path value="$PROJECT_DIR$/libs/vendor/phar-io/manifest" />
-      <path value="$PROJECT_DIR$/libs/vendor/phar-io/version" />
-      <path value="$PROJECT_DIR$/libs/vendor/phpspec/prophecy" />
-      <path value="$PROJECT_DIR$/libs/vendor/phpunit/php-file-iterator" />
-      <path value="$PROJECT_DIR$/libs/vendor/phpunit/php-timer" />
-      <path value="$PROJECT_DIR$/libs/vendor/phpunit/php-text-template" />
-      <path value="$PROJECT_DIR$/libs/vendor/phpunit/php-token-stream" />
-      <path value="$PROJECT_DIR$/libs/vendor/phpunit/php-code-coverage" />
-      <path value="$PROJECT_DIR$/libs/vendor/phpunit/phpunit" />
       <path value="$PROJECT_DIR$/libs/vendor/symfony/polyfill-ctype" />
       <path value="$PROJECT_DIR$/libs/vendor/symfony/polyfill-mbstring" />
-      <path value="$PROJECT_DIR$/libs/vendor/theseer/tokenizer" />
-      <path value="$PROJECT_DIR$/libs/vendor/doctrine/instantiator" />
       <path value="$PROJECT_DIR$/libs/vendor/setasign/fpdi" />
       <path value="$PROJECT_DIR$/libs/vendor/paragonie/random_compat" />
-      <path value="$PROJECT_DIR$/libs/vendor/sebastian/global-state" />
-      <path value="$PROJECT_DIR$/libs/vendor/sebastian/comparator" />
-      <path value="$PROJECT_DIR$/libs/vendor/sebastian/exporter" />
-      <path value="$PROJECT_DIR$/libs/vendor/sebastian/environment" />
-      <path value="$PROJECT_DIR$/libs/vendor/sebastian/recursion-context" />
-      <path value="$PROJECT_DIR$/libs/vendor/sebastian/object-enumerator" />
-      <path value="$PROJECT_DIR$/libs/vendor/sebastian/object-reflector" />
-      <path value="$PROJECT_DIR$/libs/vendor/sebastian/resource-operations" />
-      <path value="$PROJECT_DIR$/libs/vendor/sebastian/code-unit-reverse-lookup" />
-      <path value="$PROJECT_DIR$/libs/vendor/sebastian/diff" />
-      <path value="$PROJECT_DIR$/libs/vendor/sebastian/version" />
-      <path value="$PROJECT_DIR$/libs/vendor/webmozart/assert" />
-      <path value="$PROJECT_DIR$/libs/vendor/phpdocumentor/reflection-docblock" />
-      <path value="$PROJECT_DIR$/libs/vendor/phpdocumentor/type-resolver" />
-      <path value="$PROJECT_DIR$/libs/vendor/phpdocumentor/reflection-common" />
       <path value="$PROJECT_DIR$/libs/vendor/composer" />
-      <path value="$PROJECT_DIR$/libs/vendor/sebastian/type" />
       <path value="$PROJECT_DIR$/libs/vendor/jblond/twig-trans" />
+      <path value="$PROJECT_DIR$/libs/vendor/psr/http-message" />
       <path value="$PROJECT_DIR$/libs/vendor/php-http/message-factory" />
     </include_path>
   </component>
-  <component name="PhpProjectSharedConfiguration" php_language_level="7.1">
+  <component name="PhpProjectSharedConfiguration" php_language_level="7.2">
     <option name="suggestChangeDefaultLanguageLevel" value="false" />
   </component>
   <component name="PhpUnit">

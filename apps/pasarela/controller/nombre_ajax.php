@@ -66,7 +66,7 @@ switch ($Qque) {
         ];
 
         $oView = new core\ViewTwig('pasarela/controller');
-        echo $oView->render('nombre_form.html.twig', $a_campos);
+        $oView->renderizar('nombre_form.html.twig', $a_campos);
         break;
     case 'form_nuevo':
         $Qid_tipo_activ = (integer)filter_input(INPUT_POST, 'id_tipo_activ');
@@ -100,6 +100,6 @@ switch ($Qque) {
         ];
 
         $oView = new core\ViewTwig('pasarela/controller');
-        echo $oView->render('nombre_form_nuevo.html.twig', $a_campos);
+        $oView->renderizar('nombre_form_nuevo.html.twig', $a_campos);
         break;
 }

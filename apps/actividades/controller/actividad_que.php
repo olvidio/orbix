@@ -12,11 +12,18 @@
  *
  */
 
+use actividades\model\ActividadLugar;
+use actividades\model\ActividadTipo;
+use actividades\model\entity\ActividadAll;
 use actividades\model\entity\GestorTipoDeActividad;
 use core\ConfigGlobal;
+use core\ViewTwig;
 use procesos\model\entity\GestorActividadFase;
-use ubis\model\entity as ubis;
+use ubis\model\entity\GestorDelegacion;
 use usuarios\model\entity\Usuario;
+use web\Hash;
+use web\PeriodoQue;
+use web\Posicion;
 use function core\is_true;
 
 // INICIO Cabecera global de URL de controlador *********************************
@@ -29,12 +36,12 @@ require_once("apps/core/global_object.inc");
 
 $oPosicion->recordar();
 
-//Si vengo de vuelta y le paso la referecia del stack donde está la información.
+//Si vengo de vuelta y le paso la referencia del stack donde está la información.
 if (isset($_POST['stack'])) {
     $stack = filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
-    if ($stack != '') {
+    if ($stack !== '') {
         // No me sirve el de global_object, sino el de la session
-        $oPosicion2 = new web\Posicion();
+        $oPosicion2 = new Posicion();
         if ($oPosicion2->goStack($stack)) { // devuelve false si no puede ir
             $Qid_sel = $oPosicion2->getParametro('id_sel');
             $Qscroll_id = $oPosicion2->getParametro('scroll_id');
@@ -66,8 +73,12 @@ if (($_SESSION['oPerm']->have_perm_oficina('vcsd')) || ($_SESSION['oPerm']->have
     $permiso_des = TRUE;
     $ssfsv = '';
 } else {
-    if ($isfsv == 1) $ssfsv = 'sv';
-    if ($isfsv == 2) $ssfsv = 'sf';
+    if ($isfsv === 1) {
+        $ssfsv = 'sv';
+    }
+    if ($isfsv === 2) {
+        $ssfsv = 'sf';
+    }
 }
 
 $Qsasistentes = (string)filter_input(INPUT_POST, 'sasistentes');
@@ -81,7 +92,7 @@ if (!empty($Qsactividad2)) {
 }
 $extendida = is_true($Qextendida) ? TRUE : FALSE;
 
-$oActividadTipo = new actividades\model\ActividadTipo();
+$oActividadTipo = new ActividadTipo();
 $oActividadTipo->setPerm_jefe($permiso_des);
 $oActividadTipo->setId_tipo_activ($Qid_tipo_activ);
 $oActividadTipo->setSfsv($ssfsv);
@@ -95,19 +106,19 @@ $oActividadTipo->setNom_tipo($Qsnom_tipo);
 
 
 if (empty($Qstatus)) {
-    $Qstatus = actividades\model\entity\ActividadAll::STATUS_ACTUAL;
+    $Qstatus = ActividadAll::STATUS_ACTUAL;
 }
 
 $Qisfsv = substr($Qid_tipo_activ, 0, 1);
-$mi_dele = core\ConfigGlobal::mi_delef($Qisfsv);
-$oGesDl = new ubis\GestorDelegacion();
+$mi_dele = ConfigGlobal::mi_delef($Qisfsv);
+$oGesDl = new GestorDelegacion();
 $oDesplDelegacionesOrg = $oGesDl->getListaDelegacionesURegiones($Qisfsv);
 $oDesplDelegacionesOrg->setNombre('dl_org');
 $oDesplDelegacionesOrg->setOpcion_sel($Qdl_org);
-if ($Qmodo == 'importar') {
+if ($Qmodo === 'importar') {
     $oDesplDelegacionesOrg->setOpcion_no(array($mi_dele));
 }
-if ($Qmodo == 'publicar') {
+if ($Qmodo === 'publicar') {
     $oDesplDelegacionesOrg->setOpciones(array($mi_dele => $mi_dele));
     $oDesplDelegacionesOrg->setBlanco(false);
 }
@@ -124,7 +135,7 @@ $oDesplFiltroLugar->setOpcion_sel($Qfiltro_lugar);
 
 $oDesplegableCasas = array();
 if (!empty($Qfiltro_lugar)) {
-    $oActividadLugar = new \actividades\model\ActividadLugar();
+    $oActividadLugar = new ActividadLugar();
     $oDesplegableCasas = $oActividadLugar->getLugaresPosibles($Qfiltro_lugar);
     if (!empty($Qid_ubi)) {
         $oDesplegableCasas->setOpcion_sel($Qid_ubi);
@@ -143,7 +154,7 @@ $aOpciones = array(
     'separador1' => '---------',
     'otro' => _("otro")
 );
-$oFormP = new web\PeriodoQue();
+$oFormP = new PeriodoQue();
 $oFormP->setFormName('modifica');
 $oFormP->setPosiblesPeriodos($aOpciones);
 $oFormP->setDesplPeriodosOpcion_sel($Qperiodo);
@@ -152,7 +163,7 @@ $oFormP->setDesplAnysOpcion_sel($Qyear);
 $oFormP->setEmpiezaMin($Qempiezamin);
 $oFormP->setEmpiezaMax($Qempiezamax);
 
-$oHash = new web\Hash();
+$oHash = new Hash();
 $oHash->setCamposForm('dl_org!empiezamax!empiezamin!filtro_lugar!iactividad_val!iasistentes_val!id_tipo_activ!inom_tipo_val!isfsv_val!id_ubi!nom_activ!periodo!status!year');
 $camposNo = 'id_ubi!nom_activ';
 if (core\configGlobal::is_app_installed('procesos')) {
@@ -166,7 +177,7 @@ $a_camposHidden = array(
 );
 $oHash->setArraycamposHidden($a_camposHidden);
 
-$oHash1 = new web\Hash();
+$oHash1 = new Hash();
 $oHash1->setUrl(core\ConfigGlobal::getWeb() . '/apps/actividades/controller/actividad_tipo_get.php');
 $oHash1->setCamposForm('modo!salida!entrada!opcion_sel!isfsv');
 $h = $oHash1->linkSinVal();
@@ -218,8 +229,8 @@ switch ($Qque) {
 
 $perm_jefe = FALSE;
 if ($_SESSION['oConfig']->is_jefeCalendario()
-    || (($_SESSION['oPerm']->have_perm_oficina('des') || $_SESSION['oPerm']->have_perm_oficina('vcsd')) && ConfigGlobal::mi_sfsv() == 1)
-    || ($_SESSION['oPerm']->have_perm_oficina('admin_sf') && ConfigGlobal::mi_sfsv() == 2)
+    || (($_SESSION['oPerm']->have_perm_oficina('des') || $_SESSION['oPerm']->have_perm_oficina('vcsd')) && ConfigGlobal::mi_sfsv() === 1)
+    || ($_SESSION['oPerm']->have_perm_oficina('admin_sf') && ConfigGlobal::mi_sfsv() === 2)
 ) {
     $perm_jefe = TRUE;
 }
@@ -233,16 +244,16 @@ if (!$oUsuario->isRolePau('ctr')) {
     $perm_ctr = TRUE;
 }
 
-$val_status_1 = actividades\model\entity\ActividadAll::STATUS_PROYECTO;
-$chk_status_1 = ($Qstatus == $val_status_1) ? "checked='true'" : '';
-$val_status_2 = actividades\model\entity\ActividadAll::STATUS_ACTUAL;
-$chk_status_2 = ($Qstatus == $val_status_2) ? "checked='true'" : '';
-$val_status_3 = actividades\model\entity\ActividadAll::STATUS_TERMINADA;
-$chk_status_3 = ($Qstatus == $val_status_3) ? "checked='true'" : '';
-$val_status_4 = actividades\model\entity\ActividadAll::STATUS_BORRABLE;
-$chk_status_4 = ($Qstatus == $val_status_4) ? "checked='true'" : '';
-$val_status_9 = actividades\model\entity\ActividadAll::STATUS_ALL;
-$chk_status_9 = ($Qstatus == $val_status_9) ? "checked='true'" : '';
+$val_status_1 = ActividadAll::STATUS_PROYECTO;
+$chk_status_1 = ($Qstatus === $val_status_1) ? "checked='true'" : '';
+$val_status_2 = ActividadAll::STATUS_ACTUAL;
+$chk_status_2 = ($Qstatus === $val_status_2) ? "checked='true'" : '';
+$val_status_3 = ActividadAll::STATUS_TERMINADA;
+$chk_status_3 = ($Qstatus === $val_status_3) ? "checked='true'" : '';
+$val_status_4 = ActividadAll::STATUS_BORRABLE;
+$chk_status_4 = ($Qstatus === $val_status_4) ? "checked='true'" : '';
+$val_status_9 = ActividadAll::STATUS_ALL;
+$chk_status_9 = ($Qstatus === $val_status_9) ? "checked='true'" : '';
 
 //////////// PROCESOS /////////////////
 $proceso_installed = FALSE;
@@ -253,12 +264,12 @@ $CuadrosFasesOff = '';
 if (core\configGlobal::is_app_installed('procesos')) {
     $proceso_installed = TRUE;
     $url_actualizar_fases = ConfigGlobal::getWeb() . '/apps/procesos/controller/actividad_que_fases_ajax.php';
-    $oHash1 = new web\Hash();
+    $oHash1 = new Hash();
     $oHash1->setUrl($url_actualizar_fases);
     $oHash1->setCamposForm('salida!dl_propia!id_tipo_activ');
     $h_actualizar_fases = $oHash1->linkSinVal();
 
-    $dl_propia = ($Qdl_org == $mi_dele) ? 't' : 'f';
+    $dl_propia = ($Qdl_org === $mi_dele) ? 't' : 'f';
     $GesTiposActiv = new GestorTipoDeActividad();
     // Para limitar las opciones:
     if (empty($Qid_tipo_activ)) {
@@ -268,13 +279,13 @@ if (core\configGlobal::is_app_installed('procesos')) {
     $oGesFases = new GestorActividadFase();
     $aFases = $oGesFases->getArrayFasesProcesos($aTiposDeProcesos);
     foreach ($aFases as $descripcion => $id_fase) {
-        if (in_array($id_fase, $Qfases_on)) {
+        if (in_array($id_fase, $Qfases_on, true)) {
             $chk = 'checked';
         } else {
             $chk = '';
         }
         $CuadrosFasesOn .= "<input type='checkbox' name='fases_on[]' value='$id_fase' $chk /> $descripcion";
-        if (in_array($id_fase, $Qfases_off)) {
+        if (in_array($id_fase, $Qfases_off, true)) {
             $chk = 'checked';
         } else {
             $chk = '';
@@ -314,7 +325,8 @@ $a_campos = ['oPosicion' => $oPosicion,
     'CuadrosFasesOn' => $CuadrosFasesOn,
     'CuadrosFasesOff' => $CuadrosFasesOff,
     'mi_dele' => $mi_dele,
+    'locale_us' => ConfigGlobal::is_locale_us(),
 ];
 
-$oView = new core\ViewTwig('actividades/controller');
-echo $oView->render('actividad_que.html.twig', $a_campos);
+$oView = new ViewTwig('actividades/controller');
+$oView->renderizar('actividad_que.html.twig', $a_campos);

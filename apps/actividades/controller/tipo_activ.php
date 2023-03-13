@@ -38,4 +38,4 @@ $a_campos = ['oPosicion' => $oPosicion,
 ];
 
 $oView = new core\ViewTwig('actividades/controller');
-echo $oView->render('tipo_activ.html.twig', $a_campos);
+$oView->renderizar('tipo_activ.html.twig', $a_campos);

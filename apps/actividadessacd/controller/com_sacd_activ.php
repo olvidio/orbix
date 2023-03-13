@@ -156,7 +156,7 @@ $a_campos = ['oPosicion' => $oPosicion,
 ];
 
 $oView = new core\View('actividadessacd/controller');
-echo $oView->render('com_sacd_activ_print.phtml', $a_campos);
+$oView->renderizar('com_sacd_activ_print.phtml', $a_campos);
 
 // Añado la lista de los sacd de paso:
 if ($Qque != "un_sacd") {
@@ -191,6 +191,6 @@ if ($Qque != "un_sacd") {
         echo "<br><br><hr>";
         echo "<h3>" . _("Sacd de paso") . "</h3>";
         echo "<hr>";
-        echo $oView->render('com_sacd_activ_print.phtml', $a_campos);
+        $oView->renderizar('com_sacd_activ_print.phtml', $a_campos);
     }
 }

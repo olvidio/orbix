@@ -101,4 +101,4 @@ $a_campos = [
 ];
 
 $oView = new core\View('actividadplazas/controller');
-echo $oView->render('resumen_plazas.phtml', $a_campos);
+$oView->renderizar('resumen_plazas.phtml', $a_campos);

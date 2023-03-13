@@ -1,6 +1,6 @@
 <?php
 /**
- * Esta página muestra una tabla con las actividades que cumplen con la condicion.
+ * Esta página muestra una tabla con las actividades que cumplen con la condición.
  * He quitado la posibilidad de buscar por sacd i por ctr. Quedan las opciones:
  *
  * @param    $que
@@ -47,7 +47,7 @@ require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
 
-// Declarción de variables ******************************************************
+// Declaración de variables ******************************************************
 $num_max_actividades = 200;
 
 $mi_dele = core\ConfigGlobal::mi_delef();
@@ -65,7 +65,7 @@ if (isset($_POST['stack'])) {
 }
 
 //Si vengo de vuelta con el parámetro 'continuar', los datos no están en el POST,
-// sino en $Posicion. Le paso la referecia del stack donde está la información.
+// sino en $Posicion. Le paso la referencia del stack donde está la información.
 if (!empty($Qcontinuar) && $Qcontinuar == 'si' && ($QGstack != '')) {
     $oPosicion->goStack($QGstack);
     $Qmodo = $oPosicion->getParametro('modo');
@@ -86,7 +86,7 @@ if (!empty($Qcontinuar) && $Qcontinuar == 'si' && ($QGstack != '')) {
     $Qscroll_id = $oPosicion->getParametro('scroll_id');
     $oPosicion->olvidar($QGstack); //limpio todos los estados hacia delante.
 
-    // valores por defeccto
+    // valores por defecto
     if (empty($Qperiodo)) {
         $Qperiodo = 'actual';
     }
@@ -118,7 +118,7 @@ if (!empty($Qcontinuar) && $Qcontinuar == 'si' && ($QGstack != '')) {
     $Qfases_on = (array)filter_input(INPUT_POST, 'fases_on', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
     $Qfases_off = (array)filter_input(INPUT_POST, 'fases_off', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 
-    // valores por defeccto
+    // valores por defecto
     if (empty($Qperiodo)) {
         $Qperiodo = 'actual';
     }
@@ -350,7 +350,7 @@ $a_casas = $a_OpcionesCasas + $a_OpcionesCentros;
 
 $i = 0;
 $sin = 0;
-$a_valores = array();
+$a_valores = [];
 $a_NombreCasa = [];
 $a_FechaIni = [];
 $sPrefs = '';
@@ -415,9 +415,9 @@ foreach ($cActividades as $oActividad) {
 
     $oTipoActividad = new web\TiposActividades($id_tipo_activ);
     $isfsv = $oTipoActividad->getSfsvId();
+    $ssfsv = $oTipoActividad->getSfsvText();
     // para ver el nombre en caso de la otra sección
     if ($mi_sfsv != $isfsv && !($_SESSION['oPerm']->have_perm_oficina('des'))) {
-        $ssfsv = $oTipoActividad->getSfsvText();
         $sactividad = $oTipoActividad->getActividadText();
         $nom_activ = "$ssfsv $sactividad";
     }
@@ -658,4 +658,4 @@ $a_campos = ['oPosicion' => $oPosicion,
 ];
 
 $oView = new core\View('actividades/controller');
-echo $oView->render('actividad_select.phtml', $a_campos);
+$oView->renderizar('actividad_select.phtml', $a_campos);

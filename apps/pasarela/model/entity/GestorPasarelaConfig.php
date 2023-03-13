@@ -3,6 +3,8 @@
 namespace pasarela\model\entity;
 
 use core;
+use core\Condicion;
+use core\Set;
 
 /**
  * GestorPasarelaConfig
@@ -42,7 +44,7 @@ class GestorPasarelaConfig extends core\ClaseGestor
     function getPasarelaConfigesQuery($sQuery = '')
     {
         $oDbl = $this->getoDbl();
-        $oPasarelaConfigSet = new core\Set();
+        $oPasarelaConfigSet = new Set();
         if (($oDbl->query($sQuery)) === FALSE) {
             $sClauError = 'GestorPasarelaConfig.query';
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
@@ -68,8 +70,8 @@ class GestorPasarelaConfig extends core\ClaseGestor
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        $oPasarelaConfigSet = new core\Set();
-        $oCondicion = new core\Condicion();
+        $oPasarelaConfigSet = new Set();
+        $oCondicion = new Condicion();
         $aCondi = array();
         foreach ($aWhere as $camp => $val) {
             if ($camp == '_ordre') continue;

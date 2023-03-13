@@ -251,4 +251,4 @@ $a_campos = ['oPosicion' => $oPosicion,
 ];
 
 $oView = new core\View('ubis\controller');
-echo $oView->render('direccion_form.phtml', $a_campos);
+$oView->renderizar('direccion_form.phtml', $a_campos);

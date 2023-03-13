@@ -147,7 +147,8 @@ if (ConfigGlobal::mi_ambito() == 'rstgr') {
     }
 }
 
-$a_botones[] = array('txt' => _("imprimir"), 'click' => "fnjs_imprimir(\"#seleccionados\")");
+$a_botones[] =  ['txt' => _("imprimir"), 'click' => "fnjs_imprimir(\"#seleccionados\")"];
+$a_botones[] =  ['txt' => _("descargar pdf"), 'click' => "fnjs_descargar_pdf(\"#seleccionados\")"];
 
 $a_cabeceras = [['name' => ucfirst(_("acta")), 'formatter' => 'clickFormatter'],
     ['name' => ucfirst(_("fecha")), 'class' => 'fecha'],
@@ -196,6 +197,11 @@ $oHash1 = new Hash();
 $oHash1->setCamposForm('sel!mod');
 $oHash1->setCamposNo('sel!scroll_id!mod!refresh');
 
+$oHashDown = new Hash();
+$oHashDown->setUrl('apps/notas/controller/acta_pdf_download.php');
+$oHashDown->setCamposForm('key');
+$h_download = $oHashDown->linkSinVal();
+
 $oTabla = new Lista();
 $oTabla->setId_tabla('acta_select');
 $oTabla->setCabeceras($a_cabeceras);
@@ -211,7 +217,8 @@ $a_campos = ['oPosicion' => $oPosicion,
     'oTabla' => $oTabla,
     'botones' => $botones,
     'txt_eliminar' => $txt_eliminar,
+    'h_download' => $h_download,
 ];
 
 $oView = new core\View('notas/controller');
-echo $oView->render('acta_select.phtml', $a_campos);
+$oView->renderizar('acta_select.phtml', $a_campos);

@@ -5,13 +5,13 @@ fnjs_listar=function(formulario) {
     $('[name="status[]"]:checked').each(function () {
         status++;
     });
-    if (!status) { alert("{{ "Debe indicar el estado"|trans }}"); err=1; }
+    if (!status) { alert("{{ "Debe indicar el estado"|trans|raw }}"); err=1; }
     
     var activ=0;
     $('[name="c_activ[]"]:checked').each(function () {
         activ++;
     });
-    if (!activ) { alert("{{ "Debe indicar el tipo de actividad"|trans }}"); err=1; }
+    if (!activ) { alert("{{ "Debe indicar el tipo de actividad"|trans|raw }}"); err=1; }
     
 	if (err==0) {
 		$('#que').val('lista');
@@ -37,19 +37,19 @@ fnjs_download=function(formulario){
 	<table border=1>
 	<tr><th class=titulo_inv colspan="6">
 	{{ titulo }}</th></tr>
-	<tr><td class=etiqueta>{{ "estado"|trans }}:</td>
+	<tr><td class=etiqueta>{{ "estado"|trans|raw }}:</td>
 	<td>
-    <input type="Checkbox" name="status[]" value="1" {{ chk_status_1 }}>{{ "proyecto"|trans }}
-    <input type="Checkbox" name="status[]" value="2" {{ chk_status_2 }}>{{ "actual"|trans }}
+    <input type="Checkbox" name="status[]" value="1" {{ chk_status_1 }}>{{ "proyecto"|trans|raw }}
+    <input type="Checkbox" name="status[]" value="2" {{ chk_status_2 }}>{{ "actual"|trans|raw }}
     </td></tr>
 	<tr>
         {{ oFormP.getTd()|raw }}
     </tr>
-	<tr><td class=etiqueta>{{ "tipo de actividad"|trans }}:</td>
-    <td><input type="Checkbox" name="c_activ[]" value="1" {{ chk_activ_crt }}>{{ "cursos retiro"|trans }}</td>
-    <td><input type="Checkbox" name="c_activ[]" value="3" {{ chk_activ_cv }}>{{ "convivencias"|trans }}</td></tr>
+	<tr><td class=etiqueta>{{ "tipo de actividad"|trans|raw }}:</td>
+    <td><input type="Checkbox" name="c_activ[]" value="1" {{ chk_activ_crt }}>{{ "cursos retiro"|trans|raw }}</td>
+    <td><input type="Checkbox" name="c_activ[]" value="3" {{ chk_activ_cv }}>{{ "convivencias"|trans|raw }}</td></tr>
 </table>
    {{ oForm.getHtmlTabla2()|raw }}
 <br>
-<input TYPE="button" onclick=fnjs_listar('#modifica') VALUE="{{ "listar"|trans }}">
-<input TYPE="button" onclick=fnjs_download('#modifica') VALUE="{{ "descargar"|trans }}">
+<input TYPE="button" onclick=fnjs_listar('#modifica') VALUE="{{ "listar"|trans|raw }}">
+<input TYPE="button" onclick=fnjs_download('#modifica') VALUE="{{ "descargar"|trans|raw }}">

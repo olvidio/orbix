@@ -1,131 +1,131 @@
 {% block scripts %}
 <script>
-// Para que no de error al crear una nueva. Al cambiar tipo sv/sf, cambia la dl_org y dispara 
+// Para que no de error al crear una nueva. Al cambiar tipo sv/sf, cambia la dl_org y dispara
 // esta función y no la encuentra.
 fnjs_actualizar_fases=function(){
-	
+
 }
 
 $(function() {
-	$( "#f_ini" ).datepicker( {
-		numberOfMonths: 3,
-		showButtonPanel: true
-		});
+    $("#f_ini").datepicker({
+        numberOfMonths: 3,
+        showButtonPanel: true
+    });
 
 });
 
 $(function() {
-	$( "#f_fin" ).datepicker( {
-		numberOfMonths: 3,
-		showButtonPanel: true
-		});
+    $("#f_fin").datepicker({
+        numberOfMonths: 3,
+        showButtonPanel: true
+    });
 
 });
 
 // Para poner por defecto en el mismo dia que el inicio de actividad
 $("#f_fin").on("click", function() {
-	var fin = '';
+    var fin = '';
     var ini = $( "#f_ini" ).val();
 
     fin = $( "#f_fin" ).val();
     if (ini && !fin) {
-    	$(this).datepicker('setDate',ini);
+        $(this).datepicker('setDate',ini);
     }
 });
 
 /*
- * Para enviar los parametros por POST
- * @type jQuery
- */
+* Para enviar los parametros por POST
+* @type jQuery
+*/
 fnjs_cambiar_ubi=function(){
-	var dl_org=$('#dl_org').val();
-	var ssfsv=$('#ssfsv').val();
-	var isfsv=$('#isfsv_val option:selected').val();
-	if (!isfsv) isfsv='';
-	var array_org=dl_org.split('#');
-	var winPrefs="dependent=yes,width=950,height=700,screenX=200,screenY=200,titlebar=yes,scrollbars=yes";
-	var url = "{{ web }}/apps/actividades/controller/actividad_select_ubi.php";
-	var param_json = { dl_org : array_org[0], ssfsv: ssfsv, isfsv: isfsv };
-	var h_param = "{{ h|raw }}";
-	var params = h_param.split('&');
-	for (var i = 0; i < params.length; i++) {       
-		var sParameterName = params[i].split('=');      
-		param_json[sParameterName[0]] = sParameterName[1];
-	}
-	$.post(url,param_json, function(result){
-		WinId = window.open('', 'sele', winPrefs);
+    var dl_org=$('#dl_org').val();
+    var ssfsv=$('#ssfsv').val();
+    var isfsv=$('#isfsv_val option:selected').val();
+    if (!isfsv) isfsv='';
+    var array_org=dl_org.split('#');
+    var winPrefs="dependent=yes,width=950,height=700,screenX=200,screenY=200,titlebar=yes,scrollbars=yes";
+    var url = "{{ web }}/apps/actividades/controller/actividad_select_ubi.php";
+    var param_json = {dl_org : array_org[0], ssfsv: ssfsv, isfsv: isfsv};
+    var h_param = "{{ h|raw }}";
+    var params = h_param.split('&');
+    for (var i = 0; i < params.length; i++) {
+        var sParameterName = params[i].split('=');
+        param_json[sParameterName[0]] = sParameterName[1];
+    }
+    $.post(url,param_json, function(result){
+        WinId = window.open('', 'sele', winPrefs);
         WinId.document.open();
         WinId.document.write(result);
         WinId.document.close();
         WinId.focus();
-	});
+    });
 };
 
-fnjs_guardar=function(tipo='') {
-	var err = 0;
-	if (!fnjs_comprobar_fecha('#f_ini')) { err=1; }
-	if (!fnjs_comprobar_fecha('#f_fin')) { err=1; }
-	if (!fnjs_comprobar_hora('#h_ini')) { err=1; }
-	if (!fnjs_comprobar_hora('#h_fin')) { err=1; }
-	var dl_org=$('#dl_org').val();
-	var estado = $('#status').val();
+    fnjs_guardar=function(tipo='') {
+    var err = 0;
+    if (!fnjs_comprobar_fecha('#f_ini','{{ locale_us }}')) {err=1;}
+    if (!fnjs_comprobar_fecha('#f_fin','{{ locale_us }}')) {err=1;}
+    if (!fnjs_comprobar_hora('#h_ini')) {err=1;}
+    if (!fnjs_comprobar_hora('#h_fin')) {err=1;}
+    var dl_org=$('#dl_org').val();
+    var estado = $('#status').val();
 
-	// comprobar si el id_tipo_actividad está completo 
-	var id_sfsv_val=$('#isfsv_val').val();
-	var id_asistentes_val=$('#iasistentes_val').val();
-	var id_actividad_val=$('#iactividad_val').val();
-	var id_nom_tipo_val=$('#inom_tipo_val').val();
+    // comprobar si el id_tipo_actividad está completo
+    var id_sfsv_val=$('#isfsv_val').val();
+    var id_asistentes_val=$('#iasistentes_val').val();
+    var id_actividad_val=$('#iactividad_val').val();
+    var id_nom_tipo_val=$('#inom_tipo_val').val();
 
-	if (id_sfsv_val == '.') { alert("{{ "debe concretar la sección en el tipo de actividad"|trans }}"); err=1; }
-	if (id_asistentes_val == '.') { alert("{{ "debe concretar los asistentes en el tipo de actividad"|trans }}"); err=1; }
-	if (id_actividad_val == '.') { alert("{{ "debe concretar la actividad en el tipo de actividad"|trans }}"); err=1; }
-	if (id_nom_tipo_val == '...') { alert("{{ "debe concretar el tipo de actividad"|trans }}"); err=1; }
-	// fin de tipo 
-	
-	if (!dl_org) { 
-		alert("{{ "debe llenar el campo de Organiza"|trans }}"); err=1;
-	}
+    if (id_sfsv_val == '.') {alert("{{ "debe concretar la sección en el tipo de actividad"|trans|raw }}"); err=1;}
+    if (id_asistentes_val == '.') {alert("{{ "debe concretar los asistentes en el tipo de actividad"|trans|raw }}"); err=1;}
+    if (id_actividad_val == '.') {alert("{{ "debe concretar la actividad en el tipo de actividad"|trans|raw }}"); err=1;}
+    if (id_nom_tipo_val == '...') {alert("{{ "debe concretar el tipo de actividad"|trans|raw }}"); err=1;}
+    // fin de tipo
 
-	var rr=fnjs_comprobar_campos('#modifica','{{ obj|raw }}');
-	//alert ("EEE "+rr);
-	if (rr=='ok' && err==0) {
-		$('#mod').val(tipo);
-		$('#modifica').attr('action','apps/actividades/controller/actividad_update.php');
-		$('#modifica').one( "submit", function( event ) {
+    if (!dl_org) {
+        alert("{{ "debe llenar el campo de Organiza"|trans|raw }}"); err=1;
+    }
+
+    var rr=fnjs_comprobar_campos('#modifica','{{ obj|raw }}');
+    //alert ("EEE "+rr);
+    if (rr=='ok' && err==0) {
+        $('#mod').val(tipo);
+        $('#modifica').attr('action','apps/actividades/controller/actividad_update.php');
+        $('#modifica').one( "submit", function( event ) {
             event.preventDefault();
-			$.ajax({
-				url: $(this).attr('action'),
-				type: 'post',
-				data: $(this).serialize()
-			})
-			.done(function (rta_txt) {
-				if (rta_txt != '' && rta_txt != '\\n') {
-					alert ('{{ "respuesta"|trans }}: '+rta_txt);
-				} else {
-                    if (tipo!='nuevo') { // En el caso de nuevo, me quedo en el formulario.
-                        {{ oPosicion.js_atras(1)|raw }}
-                    }
-				}
-				// OJO hay que actualizar el formulario de la lista, no el actual.
-				// Esta función está en calendario_planning.phtml 
-				//fnjs_ver();
-            });
-            return false;
-		});
-		$('#modifica').trigger("submit");
-		// para borra el formulario y no repetir si se vuelve a hacer click
-		if (tipo=='nuevo') {
-			//Syntax to convert jQuery element to a JavaScript object.
-			$('#modifica')[0].reset();
-			fnjs_asistentes();
-			// borrar ubi:
-			var txt="{{ "sin determinar"|trans }}";
-		  	$('#id_ubi').val("");
-			$('#span_nom_ubi').html(txt);
-			$('#lugar_esp').val("");
-		}
-		//$('#modifica').off(); -->si está, parece que no vuelve al js_atras(1)
-	}
+            $.ajax({
+                url: $(this).attr('action'),
+                type: 'post',
+                data: $(this).serialize()
+        })
+        .done(function (rta_txt) {
+            if (rta_txt != '' && rta_txt != '\\n') {
+                alert ('{{ "respuesta"|trans|raw }}: '+rta_txt);
+            } else {
+                if (tipo!='nuevo') { // En el caso de nuevo, me quedo en el formulario.
+                {{ oPosicion.js_atras(1)|raw }}
+            }
+        }
+        // OJO hay que actualizar el formulario de la lista, no el actual.
+        // Esta función está en calendario_planning.phtml
+        //fnjs_ver();
+        });
+        return false;
+    });
+    $('#modifica').trigger("submit");
+    // para borra el formulario y no repetir si se vuelve a hacer click
+    if (tipo=='nuevo') {
+        //Syntax to convert jQuery element to a JavaScript object.
+        $('#modifica')[0].reset();
+        fnjs_asistentes();
+        // borrar ubi:
+        var txt="{{ "sin determinar"|trans|raw }}";
+        $('#id_ubi').val("");
+        $('#span_nom_ubi').html(txt);
+        $('#lugar_esp').val("");
+    }
+    //$('#modifica').off(); -->si está, parece que no vuelve al js_atras(1)
+    }
 };
 
 </script>

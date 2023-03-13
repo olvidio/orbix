@@ -443,7 +443,7 @@ class ProfesorDirector extends core\ClasePropiedades
         if (empty($this->df_nombramiento)) {
             return new web\NullDateTimeLocal();
         }
-        $oConverter = new core\Converter('date', $this->df_nombramiento);
+        $oConverter = new core\ConverterDate('date', $this->df_nombramiento);
         return $oConverter->fromPg();
     }
 
@@ -458,7 +458,7 @@ class ProfesorDirector extends core\ClasePropiedades
     function setF_nombramiento($df_nombramiento = '', $convert = true)
     {
         if ($convert === true && !empty($df_nombramiento)) {
-            $oConverter = new core\Converter('date', $df_nombramiento);
+            $oConverter = new core\ConverterDate('date', $df_nombramiento);
             $this->df_nombramiento = $oConverter->toPg();
         } else {
             $this->df_nombramiento = $df_nombramiento;
@@ -501,7 +501,7 @@ class ProfesorDirector extends core\ClasePropiedades
         if (empty($this->df_cese)) {
             return new web\NullDateTimeLocal();
         }
-        $oConverter = new core\Converter('date', $this->df_cese);
+        $oConverter = new core\ConverterDate('date', $this->df_cese);
         return $oConverter->fromPg();
     }
 
@@ -516,7 +516,7 @@ class ProfesorDirector extends core\ClasePropiedades
     function setF_cese($df_cese = '', $convert = true)
     {
         if ($convert === true && !empty($df_cese)) {
-            $oConverter = new core\Converter('date', $df_cese);
+            $oConverter = new core\ConverterDate('date', $df_cese);
             $this->df_cese = $oConverter->toPg();
         } else {
             $this->df_cese = $df_cese;

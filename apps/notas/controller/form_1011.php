@@ -24,6 +24,7 @@
 
 use actividades\model\entity as actividades;
 use asignaturas\model\entity as asignaturas;
+use core\ConfigGlobal;
 use notas\model\entity as notas;
 use personas\model\entity as personas;
 use profesores\model\entity as profesores;
@@ -378,7 +379,8 @@ $a_campos = [
     'nom_activ' => $nom_activ,
     'detalle' => $detalle,
     'lista_situacion_no_acta' => $lista_situacion_no_acta,
+    'locale_us' => ConfigGlobal::is_locale_us(),
 ];
 
 $oView = new core\View('notas/model');
-echo $oView->render('form_1011.phtml', $a_campos);
+$oView->renderizar('form_1011.phtml', $a_campos);

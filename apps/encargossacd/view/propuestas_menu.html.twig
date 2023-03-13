@@ -1,14 +1,14 @@
 
-<p>{{ "Acciones para propuestas"|trans }}</p>
+<p>{{ "Acciones para propuestas"|trans|raw }}</p>
 <ol>
-<li><span class=link onclick="fnjs_new_tabla()">{{ "generar nueva tabla propuestas"|trans }}</span></li>
-<li><span class=link onclick="fnjs_aprobar_propuestas()">{{ "aprobar las propuestas"|trans }}</span></li>
+<li><span class=link onclick="fnjs_new_tabla()">{{ "generar nueva tabla propuestas"|trans|raw }}</span></li>
+<li><span class=link onclick="fnjs_aprobar_propuestas()">{{ "aprobar las propuestas"|trans|raw }}</span></li>
 </ol>
-<p>{{ "Propuestas encargos para nuevo curso"|trans }}</p>
+<p>{{ "Propuestas encargos para nuevo curso"|trans|raw }}</p>
 <ol>
-<li><span class=link onclick="fnjs_update_div('#main','{{ url_propuestas|raw }}')">{{ "modificar propuestas"|trans }}</span></li>
-<li><span class=link onclick="fnjs_update_div('#main','{{ url_lista_sacd|raw }}')">{{ "listado propuestas por sacd"|trans }}</span></li>
-<li><span class=link onclick="fnjs_update_div('#main','{{ url_lista_enc|raw }}')">{{ "listado propuestas por encargos"|trans }}</span></li>
+<li><span class=link onclick="fnjs_update_div('#main','{{ url_propuestas|raw }}')">{{ "modificar propuestas"|trans|raw }}</span></li>
+<li><span class=link onclick="fnjs_update_div('#main','{{ url_lista_sacd|raw }}')">{{ "listado propuestas por sacd"|trans|raw }}</span></li>
+<li><span class=link onclick="fnjs_update_div('#main','{{ url_lista_enc|raw }}')">{{ "listado propuestas por encargos"|trans|raw }}</span></li>
 </ol>
 <script>
 fnjs_aprobar_propuestas=function(){

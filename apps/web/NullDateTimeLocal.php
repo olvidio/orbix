@@ -55,32 +55,9 @@ class NullDateTimeLocal extends \DateTime
         return $format;
     }
 
-    static public function createFromLocal($data)
+    public static function createFromLocal($data = ''): string
     {
         return '';
-        $format = self::getFormat();
-
-        $extnd_dt = new static();
-        $parent_dt = parent::createFromFormat($format, $data);
-
-        if (!$parent_dt) {
-            return false;
-        }
-
-        $extnd_dt->setTimestamp($parent_dt->getTimestamp());
-        /* corregir en el caso que el año tenga dos digitos
-         * No sirve para el siglo I (0-99) ;-) */
-        $yy = $extnd_dt->format('y');
-        $yyyy = $extnd_dt->format('Y');
-        if (($yyyy - $yy) == 0) {
-            $currentY4 = date('Y');
-            $currentY2 = date('y');
-            $currentMilenium = $currentY4 - $currentY2;
-
-            $extnd_dt->add(new \DateInterval('P' . $currentMilenium . 'Y'));
-        }
-
-        return $extnd_dt;
     }
 
     public function getFromLocal()
@@ -88,17 +65,9 @@ class NullDateTimeLocal extends \DateTime
         return '';
     }
 
-    static public function createFromFormat($format, $data, \DateTimeZone $TimeZone = NULL)
+    static public function createFromFormat($format, $datetime, \DateTimeZone $timezone = NULL)
     {
         return '';
-        $extnd_dt = new static();
-        $parent_dt = parent::createFromFormat($format, $data, $TimeZone);
-
-        if (!$parent_dt) {
-            return false;
-        }
-        $extnd_dt->setTimestamp($parent_dt->getTimestamp());
-        return $extnd_dt;
     }
 
     public function format($format)

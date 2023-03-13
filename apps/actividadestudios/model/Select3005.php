@@ -215,7 +215,8 @@ class Select3005
             'bloque' => $this->bloque,
         ];
 
-        return (new core\View(__NAMESPACE__))->render('select3005.phtml', $a_campos);
+        $oView = new core\View(__NAMESPACE__);
+        $oView->renderizar('select3005.phtml', $a_campos);
     }
 
     public function setLinksInsert()

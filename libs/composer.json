@@ -1,15 +1,19 @@
 {
     "require": {
-        "mpdf/mpdf": "^8.0",
-        "twig/twig": "^2.0",
-        "twig/extensions": "^1.5",
-        "setasign/fpdi": "^2.2",
+      "twig/twig": "^3.0",
+      "jblond/twig-trans": "^1.0",
+      "mpdf/mpdf": "^8.0",
+      "setasign/fpdi": "^2.2",
       "ext-gettext": "*",
       "ext-pdo": "*",
       "ext-json": "*"
     },
     "require-dev": {
-      "roave/security-advisories": "dev-latest",
-      "phpunit/phpunit": "^7"
+      "roave/security-advisories": "dev-latest"
+    },
+  "config": {
+    "platform": {
+      "php": "7.2.34"
     }
+  }
 }

@@ -12,7 +12,7 @@ use asistentes\model\entity\GestorAsistenteDl;
 use asistentes\model\entity\GestorAsistenteOut;
 use core\ConfigDB;
 use core\ConfigGlobal;
-use core\Converter;
+use core\ConverterDate;
 use core\DBPropiedades;
 use core\DBConnection;
 use dossiers\model\entity\GestorDossier;
@@ -206,7 +206,7 @@ class TrasladoDl
         if (empty($this->df_dl)) {
             return new web\NullDateTimeLocal();
         }
-        $oConverter = new Converter('date', $this->df_dl);
+        $oConverter = new ConverterDate('date', $this->df_dl);
         return $oConverter->fromPg();
     }
 
@@ -221,7 +221,7 @@ class TrasladoDl
     function setF_dl($df_dl = '', $convert = true)
     {
         if ($convert === true && !empty($df_dl)) {
-            $oConverter = new Converter('date', $df_dl);
+            $oConverter = new ConverterDate('date', $df_dl);
             $this->df_dl = $oConverter->toPg();
         } else {
             $this->df_dl = $df_dl;

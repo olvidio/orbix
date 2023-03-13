@@ -125,4 +125,4 @@ $a_campos = ['oPosicion' => $oPosicion,
 ];
 
 $oView = new core\ViewTwig('actividades/controller');
-echo $oView->render('lista_sr_csv_que.html.twig', $a_campos);
+$oView->renderizar('lista_sr_csv_que.html.twig', $a_campos);

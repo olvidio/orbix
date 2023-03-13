@@ -3,24 +3,24 @@
         var err = 0;
         var cdc_sel = $('input[name="cdc_sel"]:checked').val();
 
-        // comprobar seleccion periodo
+        // comprobar selección periodo
         var f = $('#periodo').val();
         if (f == 'otro') {
-            if (!fnjs_comprobar_fecha('#empiezamin')) {
+            if (!fnjs_comprobar_fecha('#empiezamin',<?= $locale_us ?>)) {
                 err = 1;
                 alert("<?= _("debe inrtoducir la fecha inicio del periodo") ?>");
             }
-            if (!fnjs_comprobar_fecha('#empiezamax')) {
+            if (!fnjs_comprobar_fecha('#empiezamax',<?= $locale_us ?>)) {
                 err = 1;
-                alert("<?= _("debe inrtoducir la fecha fin del periodo") ?>");
+                alert("<?= _("debe introducir la fecha fin del periodo") ?>");
             }
         } else {
             if (f == 0) {
                 err = 1;
-                alert("<?= _("debe inrtoducir el periodo") ?>");
+                alert("<?= _("debe introducir el periodo") ?>");
             }
         }
-        // comprobar seleccion casa
+        // comprobar selección casa
         if (!cdc_sel) {
             alert("<?= _("Debe seleccionar una casa") ?>");
             err = 1;

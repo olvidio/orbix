@@ -2,7 +2,7 @@
 
 namespace notas\model\entity;
 
-use core\Converter;
+use core\ConverterDate;
 use core;
 use web;
 
@@ -567,7 +567,7 @@ class Acta extends core\ClasePropiedades
         if (empty($this->df_acta)) {
             return new web\NullDateTimeLocal();
         }
-        $oConverter = new core\Converter('date', $this->df_acta);
+        $oConverter = new core\ConverterDate('date', $this->df_acta);
         return $oConverter->fromPg();
     }
 
@@ -582,7 +582,7 @@ class Acta extends core\ClasePropiedades
     function setF_acta($df_acta = '', $convert = true)
     {
         if ($convert === true && !empty($df_acta)) {
-            $oConverter = new core\Converter('date', $df_acta);
+            $oConverter = new core\ConverterDate('date', $df_acta);
             $this->df_acta = $oConverter->toPg();
         } else {
             $this->df_acta = $df_acta;

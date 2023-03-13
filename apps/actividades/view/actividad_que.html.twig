@@ -73,13 +73,13 @@ fnjs_buscar=function(act){
 	var err = 0;
 	var f=$('#periodo').val();	
 	if (f=='otro') {
-		if (!fnjs_comprobar_fecha('#empiezamin')) {
+		if (!fnjs_comprobar_fecha('#empiezamin',{{ locale_us }})) {
 			 err=1;
-             alert("{{ "debe inrtoducir la fecha inicio del periodo"|trans }}"); 
+             alert("{{ "debe inrtoducir la fecha inicio del periodo"|trans|raw }}");
          }
-		if (!fnjs_comprobar_fecha('#empiezamax')) {
+		if (!fnjs_comprobar_fecha('#empiezamax',{{ locale_us }})) {
 			 err=1;
-             alert("{{ "debe inrtoducir la fecha fin del periodo"|trans }}"); 
+             alert("{{ "debe introducir la fecha fin del periodo"|trans|raw }}");
 		}
 	}
 	// coprobar que no exista la misma fase en condición 'on' y 'off'
@@ -132,30 +132,30 @@ fnjs_left_side_hide();
 {{ oHash.getCamposHtml()|raw }}
 <h3 class=subtitulo>{{ titulo }}</h3>
 <table>
-<tr><th colspan=3 class=titulo_inv>{{ "escoger el tipo de actividad"|trans }}</th></tr>
+<tr><th colspan=3 class=titulo_inv>{{ "escoger el tipo de actividad"|trans|raw }}</th></tr>
 </table>
 {{ oActividadTipo.getHtml(extendida)|raw }}
 <table>
 <tr>
-<td class=etiqueta>{{ "estado"|trans }}:</td>
-	<td><input type="Radio" id="status_1" name="status" value="{{ val_status_1 }}"{{ chk_status_1 }}>{{ "proyecto"|trans }}</td>
-	<td><input type="Radio" id="status_2" name="status" value="{{ val_status_2 }}"{{ chk_status_2 }}>{{ "actual"|trans }}</td>
-	<td><input type="Radio" id="status_3" name="status" value="{{ val_status_3 }}"{{ chk_status_3 }}>{{ "terminada"|trans }}</td>
-	<td><input type="Radio" id="status_4" name="status" value="{{ val_status_4 }}"{{ chk_status_4 }}>{{ "borrable"|trans }}</td>
-	<td><input type="Radio" id="status_0" name="status" value="{{ val_status_9 }}"{{ chk_status_9 }}>{{ "cualquiera"|trans }}</td>
+<td class=etiqueta>{{ "estado"|trans|raw }}:</td>
+	<td><input type="Radio" id="status_1" name="status" value="{{ val_status_1 }}"{{ chk_status_1 }}>{{ "proyecto"|trans|raw }}</td>
+	<td><input type="Radio" id="status_2" name="status" value="{{ val_status_2 }}"{{ chk_status_2 }}>{{ "actual"|trans|raw }}</td>
+	<td><input type="Radio" id="status_3" name="status" value="{{ val_status_3 }}"{{ chk_status_3 }}>{{ "terminada"|trans|raw }}</td>
+	<td><input type="Radio" id="status_4" name="status" value="{{ val_status_4 }}"{{ chk_status_4 }}>{{ "borrable"|trans|raw }}</td>
+	<td><input type="Radio" id="status_0" name="status" value="{{ val_status_9 }}"{{ chk_status_9 }}>{{ "cualquiera"|trans|raw }}</td>
 <td><input type='hidden' id='id_tipo_activ' name='id_tipo_activ'> </td>
 </tr>
 </table>
 <br>
 {% if proceso_installed %}
 <table>
-<tr><th colspan=6 class=titulo_inv>{{ "según fases (depende del tipo de actividad y de organiza)"|trans }}</th></tr>
-    <tr class="tono2" ><td class="etiqueta">{{ "marcadas"|trans }}:</td>
+<tr><th colspan=6 class=titulo_inv>{{ "según fases (depende del tipo de actividad y de organiza)"|trans|raw }}</th></tr>
+    <tr class="tono2" ><td class="etiqueta">{{ "marcadas"|trans|raw }}:</td>
     	<td id=td_fases_on>
             {{ CuadrosFasesOn|raw }}
         </td>
     	</tr>
-    <tr class="tono3" ><td class="etiqueta">{{ "sin marcar"|trans }}:</td>
+    <tr class="tono3" ><td class="etiqueta">{{ "sin marcar"|trans|raw }}:</td>
     	<td id=td_fases_off>
             {{ CuadrosFasesOff|raw }}
         </td>
@@ -163,20 +163,20 @@ fnjs_left_side_hide();
 </table>
 {% endif %}
 <table>
-<tr><th colspan=6 class=titulo_inv>{{ "escoger la actividad"|trans }}</th></tr>
+<tr><th colspan=6 class=titulo_inv>{{ "escoger la actividad"|trans|raw }}</th></tr>
 <tr>
-    <td class=etiqueta>{{ "el nombre contiene"|trans }}:</td>
+    <td class=etiqueta>{{ "el nombre contiene"|trans|raw }}:</td>
     <td colspan=6><input name="nom_activ" type="text" size="80" value="{{ Qnom_activ|raw }}"></td>
 </tr>
 {% if perm_ctr %}
     <tr>
-        <td class=etiqueta>{{ "lugar según país o dl"|trans }}:</td>
+        <td class=etiqueta>{{ "lugar según país o dl"|trans|raw }}:</td>
         <td colspan=3>{{ oDesplFiltroLugar.desplegable()|raw }}</td>
-        <td class=etiqueta>{{ "lugar"|trans }}</td>
+        <td class=etiqueta>{{ "lugar"|trans|raw }}</td>
         <td id='lst_lugar' colspan=1>{{ oDesplegableCasas.desplegable()|raw }}</td>
     </tr>
     <tr>
-        <td class=etiqueta>{{ "organiza"|trans }}:</td>
+        <td class=etiqueta>{{ "organiza"|trans|raw }}:</td>
         <td colspan=3>{{ oDesplDelegacionesOrg.desplegable()|raw }}</td>
     </tr>
 {% endif %}
@@ -185,7 +185,7 @@ fnjs_left_side_hide();
 </tr>
 </table>
 <br>
-<input TYPE="button" onclick="fnjs_buscar('{{ accion }}')" id="btn_ok" name="btn_ok" value="{{ "buscar"|trans }}" class="btn_ok">
+<input TYPE="button" onclick="fnjs_buscar('{{ accion }}')" id="btn_ok" name="btn_ok" value="{{ "buscar"|trans|raw }}" class="btn_ok">
 <input TYPE="reset" VALUE="borrar" onclick="fnjs_update_div('#main','{{ Link_borrar|raw }}')" >
 </form>
 <script>

@@ -141,7 +141,7 @@ if (!empty($Qid_menu) || !empty($Qnuevo)) {
     ];
 
     $oView = new core\View('menus/controller');
-    echo $oView->render('menus_get.phtml', $a_campos);
+    $oView->renderizar('menus_get.phtml', $a_campos);
 } else {
     // para ver el listado de todos los menus de un grupo
     $oMenuDbs = array();
@@ -167,5 +167,5 @@ if (!empty($Qid_menu) || !empty($Qnuevo)) {
     ];
 
     $oView = new core\View('menus/controller');
-    echo $oView->render('menus_get_lista.phtml', $a_campos);
+    $oView->renderizar('menus_get_lista.phtml', $a_campos);
 }

@@ -432,7 +432,7 @@ class UltimaAsistencia extends core\ClasePropiedades
         if (empty($this->df_ini)) {
             return new web\NullDateTimeLocal();
         }
-        $oConverter = new core\Converter('date', $this->df_ini);
+        $oConverter = new core\ConverterDate('date', $this->df_ini);
         return $oConverter->fromPg();
     }
 
@@ -447,7 +447,7 @@ class UltimaAsistencia extends core\ClasePropiedades
     function setF_ini($df_ini = '', $convert = TRUE)
     {
         if ($convert === TRUE && !empty($df_ini)) {
-            $oConverter = new core\Converter('date', $df_ini);
+            $oConverter = new core\ConverterDate('date', $df_ini);
             $this->df_ini = $oConverter->toPg();
         } else {
             $this->df_ini = $df_ini;

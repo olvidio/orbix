@@ -5,6 +5,7 @@ use actividades\model\entity\GestorNivelStgr;
 use actividades\model\entity\GestorRepeticion;
 use actividadtarifas\model\entity\GestorTipoTarifa;
 use actividadtarifas\model\entity\TipoTarifa;
+use config\model\Config;
 use core\ConfigGlobal;
 use ubis\model\entity\GestorDelegacion;
 use ubis\model\entity\TarifaUbi;
@@ -226,10 +227,11 @@ switch ($Qque) {
             'web' => core\ConfigGlobal::getWeb(),
             'web_icons' => core\ConfigGlobal::getWeb_icons(),
             'procesos_installed' => $procesos_installed,
+            'locale_us' => ConfigGlobal::is_locale_us(),
         ];
 
         $oView = new core\ViewTwig('actividades/controller');
-        echo $oView->render('calendario_form_actividad.html.twig', $a_campos);
+        $oView->renderizar('calendario_form_actividad.html.twig', $a_campos);
         break;
     case 'nueva':
         $obj = 'actividades\\\\model\\\\entity\\\\ActividadDl';
@@ -377,10 +379,11 @@ switch ($Qque) {
             'web' => core\ConfigGlobal::getWeb(),
             'web_icons' => core\ConfigGlobal::getWeb_icons(),
             'procesos_installed' => $procesos_installed,
+            'locale_us' => ConfigGlobal::is_locale_us(),
         ];
 
         $oView = new core\ViewTwig('actividades/controller');
-        echo $oView->render('calendario_form_actividad.html.twig', $a_campos);
+        $oView->renderizar('calendario_form_actividad.html.twig', $a_campos);
         break;
     case "update":
         $Qid_item = (integer)filter_input(INPUT_POST, 'id_item');

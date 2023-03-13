@@ -2,7 +2,6 @@
 
 namespace core;
 
-use actividades\model\entity\GestorActividad;
 
 /**
  * Set
@@ -41,7 +40,7 @@ class View
 
     /* MÉTODOS PÚBLICOS -----------------------------------------------------------*/
 
-    function render($file, $variables = array())
+    function renderizar($file, $variables = array())
     {
 
         extract($variables);

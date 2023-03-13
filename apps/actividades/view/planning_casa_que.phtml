@@ -19,10 +19,10 @@
             err = 1;
         }
         if (f == 'otro') {
-            if (!fnjs_comprobar_fecha('#empiezamin')) {
+            if (!fnjs_comprobar_fecha('#empiezamin',<?= $locale_us ?>)) {
                 err = 1;
             }
-            if (!fnjs_comprobar_fecha('#empiezamax')) {
+            if (!fnjs_comprobar_fecha('#empiezamax',<?= $locale_us ?>)) {
                 err = 1;
             }
         }

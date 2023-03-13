@@ -77,7 +77,7 @@ if (ConfigGlobal::mi_ambito() === 'rstgr') {
     ];
 
     $oView = new core\ViewTwig('ubis/controller');
-    echo $oView->render('dl_rstgr_que.html.twig', $a_campos);
+    $oView->renderizar('dl_rstgr_que.html.twig', $a_campos);
 }
 ?>
 <p><?= _("relación de asignaturas por alumno") ?></p>

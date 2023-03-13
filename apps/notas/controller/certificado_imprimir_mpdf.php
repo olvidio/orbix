@@ -49,7 +49,7 @@ $lugar_firma = $_SESSION['oConfig']->getLugarFirma();
 // conversion 
 $replace = config\model\Config::$replace;
 
-if ($nivel_stgr == 'r') {
+if ($nivel_stgr === 'r') {
     $txt_superavit = "Alumnus superavit studiorum portiones (ECTS) requisitas ad implendum academicum";
     $txt_superavit .= " curriculum quod statutum est Ordinatione Studiorum Praelaturae Santae Crucis et Operis Dei.";
     $txt_superavit = strtr($txt_superavit, $replace);
@@ -203,7 +203,7 @@ case 2201:
                     <td class="titulo1" colspan="5">PRÆLATURA SANCTÆ CRUCIS ET OPERIS DEI</td>
                 </tr>
                 <tr>
-                    <td class="titulo2" colspan="5">STUDIUM GENERALE REGIONIS: <?= $region_latin ?></td>
+                    <td class="titulo2" colspan="5">STUDIUM GENERALE REGIONIS <?= $region_latin ?></td>
                 </tr>
                 <tr>
                     <td class="subtitulo1" colspan="5">CURRICULUM STUDIORUM</td>
@@ -264,8 +264,14 @@ case 2201:
                 reset($aAprobadas);
                 while ($a < count($cAsignaturas)) {
                     $oAsignatura = $cAsignaturas[$a++];
+                    if (key($aAprobadas) === null) { // ha llegado al final
+                        break;
+                    }
                     $row = current($aAprobadas);
                     while (($row['id_nivel_asig'] < $oAsignatura->getId_nivel()) && ($j < $num_asig)) {
+                        if (key($aAprobadas) === null) { // ha llegado al final
+                            break;
+                        }
                         $row = current($aAprobadas);
                         next($aAprobadas);
                         $j++;
@@ -278,8 +284,8 @@ case 2201:
                         ?>
                         <tr valign="bottom">
                             <td></td>
-                            <td><?= $nombre_asignatura; ?>&nbsp;</td>
-                            <td class="dato"><?= $etcs; ?>&nbsp;</td>
+                            <td><?= $nombre_asignatura ?>&nbsp;</td>
+                            <td class="dato"><?= $etcs ?>&nbsp;</td>
                             <td class="dato">-----------</td>
                             <td></td>
                         </tr>
@@ -296,9 +302,9 @@ case 2201:
                             ?>
                             <tr class="opcional" valign="bottom">
                                 <td></td>
-                                <td><?= $algo; ?>&nbsp;</td>
-                                <td class="dato"><?= $row["creditos"]; ?>&nbsp;</td>
-                                <td class="dato"><?= $row["nota_txt"]; ?>&nbsp;</td>
+                                <td><?= $algo ?>&nbsp;</td>
+                                <td class="dato"><?= $row["creditos"] ?>&nbsp;</td>
+                                <td class="dato"><?= $row["nota_txt"] ?>&nbsp;</td>
                                 <td></td>
                             </tr>
                             <?php
@@ -307,9 +313,9 @@ case 2201:
                             ?>
                             <tr>
                                 <td></td>
-                                <td><?= $nombre_asignatura; ?>&nbsp;</td>
-                                <td class="dato"><?= $row["creditos"]; ?>&nbsp;</td>
-                                <td class="dato"><?= $row["nota_txt"]; ?>&nbsp;</td>
+                                <td><?= $nombre_asignatura ?>&nbsp;</td>
+                                <td class="dato"><?= $row["creditos"] ?>&nbsp;</td>
+                                <td class="dato"><?= $row["nota_txt"] ?>&nbsp;</td>
                                 <td></td>
                             </tr>
                             <?php
@@ -324,8 +330,8 @@ case 2201:
                             ?>
                             <tr>
                                 <td></td>
-                                <td><?= $nombre_asignatura; ?>&nbsp;</td>
-                                <td class="dato"><?= $etcs; ?>&nbsp;</td>
+                                <td><?= $nombre_asignatura ?>&nbsp;</td>
+                                <td class="dato"><?= $etcs ?>&nbsp;</td>
                                 <td class="dato">----------</td>
                                 <td></td>
                             </tr>

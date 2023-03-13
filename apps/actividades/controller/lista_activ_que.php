@@ -12,6 +12,7 @@
  *
  */
 
+use core\ConfigGlobal;
 use web\Hash;
 
 // INICIO Cabecera global de URL de controlador *********************************
@@ -68,7 +69,8 @@ $a_campos = ['oPosicion' => $oPosicion,
     'sr_sg' => $sr_sg,
     'chk_sr_sf' => $chk_sr_sf,
     'chk_sr_sv' => $chk_sr_sv,
+    'locale_us' => ConfigGlobal::is_locale_us(),
 ];
 
 $oView = new core\ViewTwig('actividades/controller');
-echo $oView->render('lista_activ_que.html.twig', $a_campos);
+$oView->renderizar('lista_activ_que.html.twig', $a_campos);

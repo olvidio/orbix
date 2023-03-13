@@ -157,4 +157,4 @@ $a_campos = ['oPosicion' => $oPosicion,
 ];
 
 $oView = new core\ViewTwig('encargossacd/controller');
-echo $oView->render('encargo_horario_select.html.twig', $a_campos);
+$oView->renderizar('encargo_horario_select.html.twig', $a_campos);

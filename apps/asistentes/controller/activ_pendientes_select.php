@@ -258,4 +258,4 @@ $a_campos = [
 ];
 
 $oView = new core\View('asistentes/controller');
-echo $oView->render('activ_pendientes.phtml', $a_campos);
+$oView->renderizar('activ_pendientes.phtml', $a_campos);

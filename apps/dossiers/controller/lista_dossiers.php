@@ -6,7 +6,9 @@
 use core\ConfigGlobal;
 use dossiers\model\entity as dossiersEntity;
 
-$aWhere = array('tabla_from' => $pau);
+$aWhere = ['tabla_from' => $pau,
+        '_ordre' => 'descripcion',
+];
 $GesTipoDossier = new dossiersEntity\GestorTipoDossier();
 $cTipoDossier = $GesTipoDossier->getTiposDossiers($aWhere);
 $i = 0;
@@ -51,4 +53,4 @@ foreach ($cTipoDossier as $oTipoDossier) {
 }
 
 $oView = new core\View('dossiers\controller');
-echo $oView->render('lista_dossiers.phtml', array('a_filas' => $a_filas));
+$oView->renderizar('lista_dossiers.phtml', array('a_filas' => $a_filas));

@@ -160,4 +160,4 @@ $a_campos = ['oPosicion' => $oPosicion,
 ];
 
 $oView = new core\View('actividades/controller');
-echo $oView->render('actividades_centro_que.phtml', $a_campos);
+$oView->renderizar('actividades_centro_que.phtml', $a_campos);

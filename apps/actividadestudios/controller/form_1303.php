@@ -205,4 +205,4 @@ $a_campos = ['obj' => $obj,
 ];
 
 $oView = new core\View('actividadestudios/controller');
-echo $oView->render('form_1303.phtml', $a_campos);
+$oView->renderizar('form_1303.phtml', $a_campos);

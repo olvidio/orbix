@@ -168,7 +168,7 @@ function logout($ubicacion, $idioma, $esquema, $error, $esquema_web = '')
     $a_campos['idioma'] = $idioma;
     $a_campos['url'] = ConfigGlobal::getWeb();
     $oView = new View(__NAMESPACE__);
-    echo $oView->render('login_form2.phtml', $a_campos);
+    $oView->renderizar('login_form2.phtml', $a_campos);
 }
 
 // ara a global_obj. $GLOBALS['oPerm'] = new permisos\PermDl();

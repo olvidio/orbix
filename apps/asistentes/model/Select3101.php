@@ -96,7 +96,7 @@ class Select3101
      */
     private $permiso;
 
-    // ------ Variables para mantener la selección de la grid al volver atras
+    // ------ Variables para mantener la selección de la grid al volver atrás
     private $Qid_sel;
     private $Qscroll_id;
 
@@ -492,7 +492,7 @@ class Select3101
                 // no muestro ni cuento las que esten en estado distinto al asignado o confirmado (>3)
                 if ($padre != $this->mi_dele) {
                     if ($plaza > asistentes\Asistente::PLAZA_DENEGADA) {
-                        $this->incrementa($this->a_plazas_resumen[$padre][$dl]['ocupadas']);
+                        $this->incrementa($this->a_plazas_resumen[$padre][$dl]['ocupadas'][$plaza]);
                         if (!empty($child) && $child != $padre) {
                             $this->incrementa($this->a_plazas_conseguidas[$child][$padre]['ocupadas'][$dl][$plaza]);
                         }
@@ -510,10 +510,10 @@ class Select3101
                             continue;
                         } else {
                             $this->incrementa($this->a_plazas_conseguidas[$child][$padre]['ocupadas'][$dl][$plaza]);
-                            $this->incrementa($this->a_plazas_resumen[$padre][$dl]['ocupadas']);
+                            $this->incrementa($this->a_plazas_resumen[$padre][$dl]['ocupadas'][$plaza]);
                         }
                     } else {
-                        $this->incrementa($this->a_plazas_resumen[$padre][$dl]['ocupadas']);
+                        $this->incrementa($this->a_plazas_resumen[$padre][$dl]['ocupadas'][$plaza]);
                     }
                 }
             }
@@ -854,6 +854,7 @@ class Select3101
             'obj_pau' => 'Persona',
             'id_dossier' => 1303,
             'permiso' => 3,
+            'id_activ' => $this->id_pau,
         );
         $oHash1->setArraycamposHidden($a_camposHidden);
 
@@ -876,12 +877,12 @@ class Select3101
         $this->setLinksInsert();
 
         /* ---------------------------------- html --------------------------------------- */
-        $a_campos = ['oTabla' => $oTabla,
+        $a_campos = [
+            'oTabla' => $oTabla,
             'oHash' => $oHash,
             'id_pau' => $this->id_pau,
             'h4' => $h4,
             'h3' => $h3,
-            'oTabla' => $oTabla,
             'oHash1' => $oHash1,
             'plazas_txt' => $this->plazas_txt,
             'resumen_plazas' => $this->resumen_plazas,
@@ -895,7 +896,7 @@ class Select3101
 
         $oView = new View(__NAMESPACE__);
 
-        return $oView->render('select3101.phtml', $a_campos);
+        $oView->renderizar('select3101.phtml', $a_campos);
 
     }
 

@@ -38,7 +38,7 @@ fnjs_asignar_sacd=function(id_activ,id_nom){
 	var url='{{ url_ajax|raw }}';
 	var parametros='que=asignar&id_activ='+id_activ+'&id_nom='+id_nom+'{{ h_asignar|raw }}';
 
-	//evt.preventDefault(); // que no siga pasanmdo el evento a submit.
+	//evt.preventDefault(); // que no siga pasando el evento a submit.
 	//evt.stopPropagation();
 	$.ajax({
 		url: url,
@@ -52,10 +52,10 @@ fnjs_asignar_sacd=function(id_activ,id_nom){
 }
 
 fnjs_nuevo_sacd=function(evt,id_activ,f_ini,f_fin){
-	evt.preventDefault(); // que no siga pasanmdo el evento.
+	evt.preventDefault(); // que no siga pasando el evento.
 	evt.stopPropagation();
 	//alert("nuevo"+id_activ);
-	// para reritngir la lista de sacd.
+	// para restringir la lista de sacd.
 	var na=$('#sacd_na').prop('checked');
 	var p=$('#sacd_p').prop('checked');
 	var sss=$('#sacd_sss').prop('checked');
@@ -122,9 +122,9 @@ fnjs_cambiar_sacd=function(evt,id_activ,id_cargo,id_nom){
 	if ($('#div_orden').length) { $('#div_orden').remove(); }
 	if (id_activ && id_nom) {
 		var txt="<div id=div_orden class=orden>";
-		txt+="<p class=tres onclick=fnjs_orden('"+id_activ+"','"+id_cargo+"','"+id_nom+"','mas')>{{ "+ prioridad"|trans }}</p>";
-		txt+="<p class=tres onclick=fnjs_orden('"+id_activ+"','"+id_cargo+"','"+id_nom+"','menos')>{{ "- prioridad"|trans }}</p>";
-		txt+="<p class=tres onclick=fnjs_orden('"+id_activ+"','"+id_cargo+"','"+id_nom+"','borrar')>{{ "borrar"|trans }}</p>";
+		txt+="<p class=tres onclick=fnjs_orden('"+id_activ+"','"+id_cargo+"','"+id_nom+"','mas')>{{ "+ prioridad"|trans|raw }}</p>";
+		txt+="<p class=tres onclick=fnjs_orden('"+id_activ+"','"+id_cargo+"','"+id_nom+"','menos')>{{ "- prioridad"|trans|raw }}</p>";
+		txt+="<p class=tres onclick=fnjs_orden('"+id_activ+"','"+id_cargo+"','"+id_nom+"','borrar')>{{ "borrar"|trans|raw }}</p>";
 		txt+="</div>";
 		$(txt_id_nom).append(txt);
 	}
@@ -166,11 +166,11 @@ fnjs_left_side_hide();
 {{ oFormP.getHtml()|raw }}
 </form>
 {% if perm_des %}
-	<p>{{ "Selección de sacd"|trans }}: 
-		<input id="sacd_na"type="checkbox" value="2" checked>{{ "prelatura"|trans }}
-		<input id="sacd_p" type="checkbox" value="4" >{{ "de paso"|trans }}
-		<input id="sacd_sss" type="checkbox" value="8" >{{ "sss+"|trans }}
-		<input id="sacd_cp" type="checkbox" value="16" >{{ "cp"|trans }}
+	<p>{{ "Selección de sacd"|trans|raw }}:
+		<input id="sacd_na"type="checkbox" value="2" checked>{{ "prelatura"|trans|raw }}
+		<input id="sacd_p" type="checkbox" value="4" >{{ "de paso"|trans|raw }}
+		<input id="sacd_sss" type="checkbox" value="8" >{{ "sss+"|trans|raw }}
+		<input id="sacd_cp" type="checkbox" value="16" >{{ "cp"|trans|raw }}
 	</p>
 {% endif %}
 </div>

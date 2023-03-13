@@ -35,7 +35,7 @@ fnjs_guardar=function(formulario){
 }
 
 </script>
-<h1>{{ "textos para las comunicaciones"|trans }}</h1>
+<h1>{{ "textos para las comunicaciones"|trans|raw }}</h1>
 <form id=textos name=textos action="{{ url_ajax|raw }}" >
 {{ oHash.getCamposHtml|raw }}
 <table>
@@ -48,7 +48,7 @@ fnjs_guardar=function(formulario){
 <textarea id="comunicacion" name="comunicacion" cols=100 rows=5>{{ comunicacion }}</textarea>
 </td></tr>
 <tr><td>
-<input type=button onclick="fnjs_guardar(this.form);" value="{{ "guardar"|trans }}">
+<input type=button onclick="fnjs_guardar(this.form);" value="{{ "guardar"|trans|raw }}">
 </td></tr>
 </table>
 </form>

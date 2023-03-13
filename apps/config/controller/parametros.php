@@ -282,4 +282,4 @@ $a_campos['chk_of'] = $chk_of;
 
 
 $oView = new core\ViewTwig('config/controller');
-echo $oView->render('parametros.html.twig', $a_campos);
+$oView->renderizar('parametros.html.twig', $a_campos);

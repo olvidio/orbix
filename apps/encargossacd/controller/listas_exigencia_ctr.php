@@ -249,4 +249,4 @@ $a_campos = ['oPosicion' => $oPosicion,
 ];
 
 $oView = new core\ViewTwig('encargossacd/controller');
-echo $oView->render('listas.html.twig', $a_campos);
+$oView->renderizar('listas.html.twig', $a_campos);

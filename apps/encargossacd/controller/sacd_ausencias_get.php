@@ -159,4 +159,4 @@ $a_campos = ['oPosicion' => $oPosicion,
 ];
 
 $oView = new core\ViewTwig('encargossacd/controller');
-echo $oView->render('sacd_ausencias_get.html.twig', $a_campos);
+$oView->renderizar('sacd_ausencias_get.html.twig', $a_campos);

@@ -116,4 +116,4 @@ $a_campos = ['oPosicion' => $oPosicion,
 ];
 
 $oView = new core\ViewTwig('encargossacd/controller');
-echo $oView->render('ctr_ficha.html.twig', $a_campos);
+$oView->renderizar('ctr_ficha.html.twig', $a_campos);

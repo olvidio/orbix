@@ -102,4 +102,4 @@ $a_campos = ['oPosicion' => $oPosicion,
 ];
 
 $oView = new core\ViewTwig('zonassacd/controller');
-echo $oView->render('planning_zones.html.twig', $a_campos);
+$oView->renderizar('planning_zones.html.twig', $a_campos);

@@ -15,7 +15,7 @@ fnjs_guardar=function(formulario){
 			})
 			.done(function (rta_txt) {
 				if (rta_txt != '' && rta_txt != '\\n') {
-					alert ('{{ "respuesta"|trans }}: '+rta_txt);
+					alert ('{{ "respuesta"|trans|raw }}: '+rta_txt);
 				} else {
 					{{ oPosicion.js_atras(1)|raw }}
 				}
@@ -39,8 +39,8 @@ fnjs_mas_enc=function(){
 	
 	/* dedicacion */
 	dedicacion='<tr><td class=etiqueta>'+encargo+':<input type=hidden id=id_enc_'+n+' name=id_enc['+n+'] value='+id_enc+'></td>';
-	dedicacion+='<td>{{ "inicio"|trans }} <input type=text size=12 id=inicio_'+n+' name=inicio['+n+'] class=fecha></td>';
-	dedicacion+='<td>{{ "fin"|trans }}<input type=text size=12 id=fin_'+n+' name=fin['+n+'] class=fecha></td>';
+	dedicacion+='<td>{{ "inicio"|trans|raw }} <input type=text size=12 id=inicio_'+n+' name=inicio['+n+'] class=fecha></td>';
+	dedicacion+='<td>{{ "fin"|trans|raw }}<input type=text size=12 id=fin_'+n+' name=fin['+n+'] class=fecha></td>';
 	
 	/* antes del desplegable de añadir */
 	$('#pie').before(dedicacion);
@@ -78,7 +78,7 @@ $('#frm_ausencias').ready(function(){
 {{ oHash.getCamposHtml()|raw }}
 {{ historia|raw }}
 <table border=1>
-<tr><th>{{ "ausencias/tareas"|trans }}</th><th colspan=2>{{ "fechas"|trans }}</th><th>{{ "horario"|trans }}</th></tr>
+<tr><th>{{ "ausencias/tareas"|trans|raw }}</th><th colspan=2>{{ "fechas"|trans|raw }}</th><th>{{ "horario"|trans|raw }}</th></tr>
 {% if enc_num > 0 %}
 	{% for j in 0..(enc_num-1) %}
 		<tr>
@@ -86,15 +86,15 @@ $('#frm_ausencias').ready(function(){
 		<input type=hidden name=id_enc[{{ j }}] value="{{ id_enc[j] }}">
 		<input type=hidden name=id_item[{{ j }}] value="{{ id_item[j] }}">
 		{{ desc_enc[j] }}</td>
-		<td>{{ "inicio"|trans }} 
+		<td>{{ "inicio"|trans|raw }}
 		<input class=fecha type=text size=12 name=inicio[{{ j }}] value="{{ inicio[j] }}" >
-		<td>{{ "fin"|trans }}
+		<td>{{ "fin"|trans|raw }}
 		<input class=fecha type=text size=12 name=fin[{{ j }}] value="{{ fin[j] }}"></td>
-		<td><span class="link" onclick="fnjs_horario({{ id_enc[j] }})">{{ "crear horario"|trans }}</span></td>
+		<td><span class="link" onclick="fnjs_horario({{ id_enc[j] }})">{{ "crear horario"|trans|raw }}</span></td>
     {% endfor %}
 {% endif %}
 <tr id=pie><td colspan=4>
-	{{ "añadir actividades personales"|trans }}  
+	{{ "añadir actividades personales"|trans|raw }}
 	<select id=mas name=mas onchange="fnjs_mas_enc();">
 		<option></option>
 		{%  for id,desc in array_tipo_ausencias %}
@@ -105,4 +105,4 @@ $('#frm_ausencias').ready(function(){
 
 <th colspan=4><input type="button" onclick="fnjs_guardar(this.form);" name="ok" value="{{ "guardar"|trans|capitalize }}"></th>
 </table>
-<p>{{ "Para borrar basta dejar en blanco la fecha inicio y la fecha fin"|trans }}</p>
+<p>{{ "Para borrar basta dejar en blanco la fecha inicio y la fecha fin"|trans|raw }}</p>

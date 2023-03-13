@@ -381,7 +381,7 @@ if ($miRole < 4) {
     ];
 
     $oView = new core\View('usuarios/controller');
-    echo $oView->render('usuario_form.phtml', $a_campos);
+    $oView->renderizar('usuario_form.phtml', $a_campos);
 
     //////////// Permisos de grupos ////////////
     if (!empty($Qid_usuario)) { // si no hay usuario, no puedo poner permisos.
@@ -429,7 +429,7 @@ if ($miRole < 4) {
                 ];
 
                 $oView = new core\View('usuarios/controller');
-                echo $oView->render('perm_ctr_form.phtml', $a_campos);
+                $oView->renderizar('perm_ctr_form.phtml', $a_campos);
             }
         }
         //////////// Permisos en actividades ////////////
@@ -446,7 +446,7 @@ if ($miRole < 4) {
             ];
 
             $oView = new core\View('usuarios/controller');
-            echo $oView->render('perm_activ_form.phtml', $a_campos);
+            $oView->renderizar('perm_activ_form.phtml', $a_campos);
         }
     }
 } // fin solo administradores. 
@@ -475,5 +475,5 @@ if ((ConfigGlobal::is_app_installed('cambios')) && (!empty($Qid_usuario)) && ($Q
     ];
 
     $oView = new core\View('cambios/controller');
-    echo $oView->render('usuario_form_avisos.phtml', $a_camposAvisos);
+    $oView->renderizar('usuario_form_avisos.phtml', $a_camposAvisos);
 }

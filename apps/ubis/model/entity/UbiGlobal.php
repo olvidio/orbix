@@ -441,7 +441,7 @@ abstract class UbiGlobal extends core\ClasePropiedades
         if (empty($this->df_status)) {
             return new web\NullDateTimeLocal();
         }
-        $oConverter = new core\Converter('date', $this->df_status);
+        $oConverter = new core\ConverterDate('date', $this->df_status);
         return $oConverter->fromPg();
     }
 
@@ -456,7 +456,7 @@ abstract class UbiGlobal extends core\ClasePropiedades
     function setF_status($df_status = '', $convert = true)
     {
         if ($convert === true && !empty($df_status)) {
-            $oConverter = new core\Converter('date', $df_status);
+            $oConverter = new core\ConverterDate('date', $df_status);
             $this->df_status = $oConverter->toPg();
         } else {
             $this->df_status = $df_status;

@@ -140,4 +140,4 @@ $a_campos = [
 ];
 
 $oView = new core\View('ubis/controller');
-echo $oView->render('ubis_buscar.phtml', $a_campos);
+$oView->renderizar('ubis_buscar.phtml', $a_campos);

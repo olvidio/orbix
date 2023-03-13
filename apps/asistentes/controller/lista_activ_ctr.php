@@ -206,4 +206,4 @@ $a_campos = [
 ];
 
 $oView = new core\View('asistentes/controller');
-echo $oView->render('lista_activ_ctr.phtml', $a_campos);
+$oView->renderizar('lista_activ_ctr.phtml', $a_campos);

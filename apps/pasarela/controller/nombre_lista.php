@@ -1,5 +1,6 @@
 <?php
 
+use core\ViewTwig;
 use pasarela\model\entity\PasarelaConfig;
 use web\Hash;
 
@@ -41,5 +42,5 @@ $a_campos = ['oPosicion' => $oPosicion,
     'txt_eliminar' => $txt_eliminar,
 ];
 
-$oView = new core\ViewTwig('pasarela/controller');
-echo $oView->render('nombre_lista.html.twig', $a_campos);
+$oView = new ViewTwig('pasarela/controller');
+$oView->renderizar('nombre_lista.html.twig', $a_campos);

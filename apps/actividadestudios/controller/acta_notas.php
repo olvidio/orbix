@@ -167,4 +167,4 @@ $a_campos = ['oPosicion' => $oPosicion,
 ];
 
 $oView = new core\View('actividadestudios/controller');
-echo $oView->render('acta_notas.phtml', $a_campos);
+$oView->renderizar('acta_notas.phtml', $a_campos);

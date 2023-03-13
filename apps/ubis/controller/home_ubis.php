@@ -168,4 +168,4 @@ $a_campos = ['oPosicion' => $oPosicion,
 ];
 
 $oView = new core\View('ubis/controller');
-echo $oView->render('home_ubis.phtml', $a_campos);
+$oView->renderizar('home_ubis.phtml', $a_campos);

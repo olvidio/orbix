@@ -460,7 +460,7 @@ class Dossier extends core\ClasePropiedades
         if (empty($this->df_ini)) {
             return new web\NullDateTimeLocal();
         }
-        $oConverter = new core\Converter('date', $this->df_ini);
+        $oConverter = new core\ConverterDate('date', $this->df_ini);
         return $oConverter->fromPg();
     }
 
@@ -475,7 +475,7 @@ class Dossier extends core\ClasePropiedades
     function setF_ini($df_ini = '', $convert = true)
     {
         if ($convert === true && !empty($df_ini)) {
-            $oConverter = new core\Converter('date', $df_ini);
+            $oConverter = new core\ConverterDate('date', $df_ini);
             $this->df_ini = $oConverter->toPg();
         } else {
             $this->df_ini = $df_ini;
@@ -495,7 +495,7 @@ class Dossier extends core\ClasePropiedades
         if (empty($this->df_camb_dossier)) {
             return new web\NullDateTimeLocal();
         }
-        $oConverter = new core\Converter('date', $this->df_camb_dossier);
+        $oConverter = new core\ConverterDate('date', $this->df_camb_dossier);
         return $oConverter->fromPg();
     }
 
@@ -510,7 +510,7 @@ class Dossier extends core\ClasePropiedades
     function setF_camb_dossier($df_camb_dossier = '', $convert = true)
     {
         if ($convert === true && !empty($df_camb_dossier)) {
-            $oConverter = new core\Converter('date', $df_camb_dossier);
+            $oConverter = new core\ConverterDate('date', $df_camb_dossier);
             $this->df_camb_dossier = $oConverter->toPg();
         } else {
             $this->df_camb_dossier = $df_camb_dossier;
@@ -553,7 +553,7 @@ class Dossier extends core\ClasePropiedades
         if (empty($this->df_status)) {
             return new web\NullDateTimeLocal();
         }
-        $oConverter = new core\Converter('date', $this->df_status);
+        $oConverter = new core\ConverterDate('date', $this->df_status);
         return $oConverter->fromPg();
     }
 
@@ -568,7 +568,7 @@ class Dossier extends core\ClasePropiedades
     function setF_status($df_status = '', $convert = true)
     {
         if ($convert === true && !empty($df_status)) {
-            $oConverter = new core\Converter('date', $df_status);
+            $oConverter = new core\ConverterDate('date', $df_status);
             $this->df_status = $oConverter->toPg();
         } else {
             $this->df_status = $df_status;

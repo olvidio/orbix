@@ -95,7 +95,7 @@ if (ConfigGlobal::mi_ambito() === 'rstgr' && $Qfiltro == 1) {
     ];
 
     $oView = new core\ViewTwig('ubis/controller');
-    echo $oView->render('dl_rstgr_que.html.twig', $a_campos);
+    $oView->renderizar('dl_rstgr_que.html.twig', $a_campos);
 }
 
 if (ConfigGlobal::mi_ambito() !== 'rstgr' ||
@@ -107,5 +107,5 @@ if (ConfigGlobal::mi_ambito() !== 'rstgr' ||
     ];
 
     $oView = new core\View('notas/model');
-    echo $oView->render('resumen_anual.phtml', $a_campos);
+    $oView->renderizar('resumen_anual.phtml', $a_campos);
 }

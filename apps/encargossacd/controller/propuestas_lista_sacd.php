@@ -244,4 +244,4 @@ $a_campos = ['oPosicion' => $oPosicion,
 ];
 
 $oView = new core\View('encargossacd/controller');
-echo $oView->render('propuestas_lista_sacd.phtml', $a_campos);
+$oView->renderizar('propuestas_lista_sacd.phtml', $a_campos);

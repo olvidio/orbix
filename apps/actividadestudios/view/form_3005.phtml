@@ -111,14 +111,14 @@
             <td class=etiqueta><?= _("inicio clases") ?></td>
             <td>
                 <input id='f_ini' name='f_ini' type="text" class="fecha" size="11" value="<?= $f_ini ?>"
-                       onchange="fnjs_comprobar_fecha('#f_ini')">
+                       onchange="fnjs_comprobar_fecha('#f_ini',<?= $locale_us ?>)">
             </td>
         </tr>
         <tr>
             <td class=etiqueta><?= _("fin clases") ?></td>
             <td>
                 <input id='f_fin' name='f_fin' type="text" class="fecha" size="11" value="<?= $f_fin ?>"
-                       onchange="fnjs_comprobar_fecha('#f_ini')">
+                       onchange="fnjs_comprobar_fecha('#f_ini',<?= $locale_us ?>)">
             </td>
         </tr>
     </table>

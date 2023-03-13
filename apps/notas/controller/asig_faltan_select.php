@@ -219,7 +219,7 @@ $oHash->setArraycamposHidden($a_camposHidden);
 </script>
 <?= $oPosicion->mostrar_left_slide(1) ?>
 <h2 class=titulo><?= $titulo ?></h2>
-<form id='seleccionados' id='seleccionados' name='seleccionados' action='' method='post'>
+<form id='seleccionados' name='seleccionados' action='' method='post'>
     <?= $oHash->getCamposHtml(); ?>
     <?php
     $oTabla = new web\Lista();

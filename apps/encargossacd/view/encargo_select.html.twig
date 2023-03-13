@@ -33,7 +33,7 @@ fnjs_borrar=function(formulario){
 					  })
 				.done(function (rta_txt) {
 					   if (rta_txt != '' && rta_txt != '\\n') {
-						   alert ('{{ "respuesta"|trans }}: '+rta_txt);
+						   alert ('{{ "respuesta"|trans|raw }}: '+rta_txt);
 					   } else {
 						   {{ oPosicion.js_atras()|raw }}
 					   }
@@ -54,7 +54,7 @@ fnjs_borrar=function(formulario){
 		<input class=contenido name="desc_enc" size="25"></th>
 	<th colspan=4>
 		<input type="button" id="ok" name="ok" onclick="fnjs_enviar_formulario('#frm_encargo_que');" 
-				value="{{ "buscar"|trans }}"  class="btn_ok"></th>
+				value="{{ "buscar"|trans|raw }}"  class="btn_ok"></th>
 	</thead>
 	</table>
 	</form>
@@ -66,4 +66,4 @@ fnjs_borrar=function(formulario){
 {{ oTabla.mostrar_tabla()|raw }}
 </form>
 <br><table cellspacing=3  class=botones><tr class=botones>
-<td class=botones><span class=cabecera class=link onclick="fnjs_update_div('#main','{{ pagina_nuevo|raw }}')">{{ "añadir encargo"|trans }}</span></td>
+<td class=botones><span class=cabecera class=link onclick="fnjs_update_div('#main','{{ pagina_nuevo|raw }}')">{{ "añadir encargo"|trans|raw }}</span></td>

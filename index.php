@@ -50,6 +50,7 @@ use menus\model\PermisoMenu;
 use usuarios\model\entity\GestorPreferencia;
 use usuarios\model\entity\Role;
 use usuarios\model\entity\Usuario;
+use web\Hash;
 
 $oGesPref = new GestorPreferencia();
 
@@ -294,7 +295,7 @@ if ($gm < 2) {
 }
 $li_submenus .= "</ul>";
 
-$oHash = new web\Hash();
+$oHash = new Hash();
 $oHash->setUrl(ConfigGlobal::getWeb() . '/apps/usuarios/controller/personal_update.php');
 $oHash->setCamposForm('que!tabla!sPrefs');
 $h = $oHash->linkSinVal();
@@ -402,12 +403,12 @@ $h = $oHash->linkSinVal();
 <script type='text/javascript' src='<?= ConfigGlobal::getWeb_scripts() . '/SlickGrid/plugins/slick.autocolumnsize.js'; ?>'></script>
 -->
 
-    <!--  para  procesos -->
+    <!--  para procesos -->
     <script type='text/javascript'
-            src='<?= ConfigGlobal::getWeb_NodeScripts() . '/svg.js/dist/svg.min.js'; ?>'></script>
+            src='<?= ConfigGlobal::getWeb_NodeScripts() . '/svg.js/dist/svg.min.js' ?>'></script>
 
-    <script type="text/javascript" src="<?= ConfigGlobal::getWeb_scripts() . '/formatos.js.php?' . rand(); ?>"></script>
-    <script type="text/javascript" src="<?= ConfigGlobal::getWeb_scripts() . '/selects.js.php?' . rand(); ?>"></script>
+    <script type="text/javascript" src="<?= ConfigGlobal::getWeb_scripts() . '/formatos.js.php?' . rand() ?>"></script>
+    <script type="text/javascript" src="<?= ConfigGlobal::getWeb_scripts() . '/selects.js.php?' . rand() ?>"></script>
     <?php
     include_once(ConfigGlobal::$dir_scripts . '/exportar.js.php');
     ?>
