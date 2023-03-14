@@ -2297,7 +2297,7 @@ class TTFontFile
 											$key = $vs['match'][1];
 											$tag = $v['tag'];
 											if (isset($loclsubs[$key])) {
-												${$tag[$loclsubs[$key]]} = $sub;
+												{$$tag[$loclsubs[$key]]} = $sub;
 											}
 											$tmp = &$$tag;
 											$tmp[hexdec($key)] = hexdec($sub);
@@ -2307,7 +2307,7 @@ class TTFontFile
 											$key = $vs['match'][0];
 											$tag = $v['tag'];
 											if (isset($loclsubs[$key])) {
-												${$tag[$loclsubs[$key]]} = $sub;
+												{$$tag[$loclsubs[$key]]} = $sub;
 											}
 											$tmp = &$$tag;
 											$tmp[hexdec($key)] = hexdec($sub);
@@ -2326,7 +2326,7 @@ class TTFontFile
 										$key = substr($key, 6, 5);
 										$tag = $v['tag'];
 										if (isset($loclsubs[$key])) {
-											${$tag[$loclsubs[$key]]} = $sub;
+											{$$tag[$loclsubs[$key]]} = $sub;
 										}
 										$tmp = &$$tag;
 										$tmp[hexdec($key)] = hexdec($sub);
@@ -2334,7 +2334,7 @@ class TTFontFile
 										$key = substr($key, 0, 5);
 										$tag = $v['tag'];
 										if (isset($loclsubs[$key])) {
-											${$tag[$loclsubs[$key]]} = $sub;
+											{$$tag[$loclsubs[$key]]} = $sub;
 										}
 										$tmp = &$$tag;
 										$tmp[hexdec($key)] = hexdec($sub);
@@ -2575,7 +2575,7 @@ class TTFontFile
 												// Returns e.g. ¦(0612)¦(ignore) (0613)¦(ignore) (0614)¦
 												$contextInputMatch = $this->_makeGSUBcontextInputMatch($inputGlyphs, $ignore, $lookupGlyphs, $seqIndex);
 												$REPL = implode(" ", $luss['substitute']);
-												// Returns e.g. "REPL\${6}\${8}" or "\${1}\${2} \${3} REPL\${4}\${6}\${8} \${9}"
+												// Returns e.g. "REPL\{$6}\{$8}" or "\{$1}\{$2} \{$3} REPL\{$4}\{$6}\{$8} \{$9}"
 
 												if (strpos("isol fina fin2 fin3 medi med2 init ", $tag) !== false && $scripttag == 'arab') {
 													$volt[] = ['match' => $lookupGlyphs[0], 'replace' => $REPL, 'tag' => $tag, 'prel' => $backtrackGlyphs, 'postl' => $lookaheadGlyphs, 'ignore' => $ignore];
@@ -2838,7 +2838,7 @@ class TTFontFile
 												// Returns e.g. ¦(0612)¦(ignore) (0613)¦(ignore) (0614)¦
 												$contextInputMatch = $this->_makeGSUBcontextInputMatch($inputGlyphs, $ignore, $lookupGlyphs, $seqIndex);
 												$REPL = implode(" ", $luss['substitute']);
-												// Returns e.g. "REPL\${6}\${8}" or "\${1}\${2} \${3} REPL\${4}\${6}\${8} \${9}"
+												// Returns e.g. "REPL\{$6}\{$8}" or "\{$1}\{$2} \{$3} REPL\{$4}\{$6}\{$8} \${9}"
 
 												if (strpos("isol fina fin2 fin3 medi med2 init ", $tag) !== false && $scripttag == 'arab') {
 													$volt[] = ['match' => $lookupGlyphs[0], 'replace' => $REPL, 'tag' => $tag, 'prel' => $backtrackGlyphs, 'postl' => $lookaheadGlyphs, 'ignore' => $ignore];

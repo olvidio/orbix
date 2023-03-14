@@ -434,9 +434,9 @@ switch ($Qque) {
                         $id_ubi = $a_centro['id_ubi'];
                         $id_txt_ubi = $id_activ . "_" . $id_ubi;
                         if ($oPermCtr->have_perm_activ('modificar') === true) { // sólo si tiene permiso para modificar
-                            $txt_ctr .= "<span class=link id=$id_txt_ubi onclick=fnjs_cambiar_ctr(event,'$id_activ','$id_ubi')> ${a_centro['nombre_ubi']};</span>";
+                            $txt_ctr .= "<span class=link id=$id_txt_ubi onclick=fnjs_cambiar_ctr(event,'$id_activ','$id_ubi')> {$a_centro['nombre_ubi']};</span>";
                         } else { // permiso para ver (si no tiene permisos el valor($valores[2]) ya está en blanco)
-                            $txt_ctr .= "<span> ${a_centro['nombre_ubi']};</span>";
+                            $txt_ctr .= "<span> {$a_centro['nombre_ubi']};</span>";
                         }
                     }
                 }
