@@ -527,9 +527,9 @@ switch ($Qque) {
                         $id_cargo = $a_sacd['id_cargo'];
                         $id_txt_nom = $id_activ . "_" . $id_nom;
                         if ($oPermSacd->have_perm_activ('modificar') === true) { // sólo si tiene permiso para modificar
-                            $txt_sacd .= "<span class=link id=$id_txt_nom onclick=fnjs_cambiar_sacd(event,'$id_activ','$id_cargo','$id_nom')> ${a_sacd['ap_nom']};</span>";
+                            $txt_sacd .= "<span class=link id=$id_txt_nom onclick=fnjs_cambiar_sacd(event,'$id_activ','$id_cargo','$id_nom')> {$a_sacd['ap_nom']};</span>";
                         } else { // permiso para ver (si no tiene permisos el valor($valores[2]) ya está en blanco)
-                            $txt_sacd .= "<span> ${a_sacd['ap_nom']};</span>";
+                            $txt_sacd .= "<span> {$a_sacd['ap_nom']};</span>";
                         }
                     }
                 }

@@ -266,7 +266,7 @@ foreach ($oDbl->query($sql) as $row) {
             }
         }
     }
-    //echo "${_POST['ficha']}\n$nomcamp_post\n";
+    //echo "{$_POST['ficha']}\n$nomcamp_post\n";
 
     switch ($tipo) {
         case 'int8':

@@ -784,8 +784,8 @@ class TablaEditable
                 $id = !empty($Cabecera['id']) ? $Cabecera['id'] : str_replace(' ', '', $name); // quito posibles espacios en el indice
                 //$field = !empty($Cabecera['field'])? $Cabecera['field'] :  str_replace(' ','',$name); // quito posibles espacios en el indice
                 $field = !empty($Cabecera['field']) ? $Cabecera['field'] : '';
-                $toolTip = !empty($Cabecera['title']) ? ", toolTip: \"${Cabecera['title']}\"" : ", toolTip: \"${Cabecera['name']}\"";
-                $class = !empty($Cabecera['class']) ? ", cssClass: \"${Cabecera['class']}\"" : '';
+                $toolTip = !empty($Cabecera['title']) ? ", toolTip: \"{$Cabecera['title']}\"" : ", toolTip: \"{$Cabecera['name']}\"";
+                $class = !empty($Cabecera['class']) ? ", cssClass: \"{$Cabecera['class']}\"" : '';
                 $sortable = !empty($Cabecera['sortable']) ? $Cabecera['sortable'] : 'true';
                 $width = !empty($Cabecera['width']) ? $Cabecera['width'] : '';
                 $formatter = !empty($Cabecera['formatter']) ? $Cabecera['formatter'] : '';

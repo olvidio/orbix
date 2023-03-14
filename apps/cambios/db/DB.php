@@ -89,10 +89,10 @@ class DB extends DBAbstract
 
         $a_sql[] = "ALTER TABLE $nom_tabla ALTER $campo_seq SET DEFAULT nextval('$id_seq'::regclass); ";
 
-        $a_sql[] = "CREATE INDEX ${tabla}_${campo_seq}_idx ON $nom_tabla USING btree ($campo_seq); ";
-        $a_sql[] = "CREATE INDEX ${tabla}_dl_org_idx ON $nom_tabla USING btree (dl_org); ";
+        $a_sql[] = "CREATE INDEX {$tabla}_{$campo_seq}_idx ON $nom_tabla USING btree ($campo_seq); ";
+        $a_sql[] = "CREATE INDEX {$tabla}_dl_org_idx ON $nom_tabla USING btree (dl_org); ";
 
-        $a_sql[] = "CREATE UNIQUE INDEX ${tabla}_udx ON $nom_tabla USING btree (id_schema,id_item_cambio); ";
+        $a_sql[] = "CREATE UNIQUE INDEX {$tabla}_udx ON $nom_tabla USING btree (id_schema,id_item_cambio); ";
 
         $a_sql[] = "ALTER TABLE $nom_tabla ALTER id_schema SET DEFAULT 3000";
         $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->user_orbix";

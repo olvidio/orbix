@@ -211,7 +211,7 @@ $oDBSt_q_nacionalidad = $oDB->query($query_nacionalidad);
                 <?php
                 $i = 0;
                 foreach ($oDBSt_q_dl_es->fetchAll() as $row_dl) {
-                    echo "<option value=\"${row_dl['nom']}\" >  ${row_dl['nom']} </option>";
+                    echo "<option value=\"{$row_dl['nom']}\" >  {$row_dl['nom']} </option>";
                     $i++;
                 }
                 ?>
@@ -219,7 +219,7 @@ $oDBSt_q_nacionalidad = $oDB->query($query_nacionalidad);
                 <?php
                 $i = 0;
                 foreach ($oDBSt_q_dl_ex->fetchAll() as $row_dl) {
-                    echo "<option value=\"${row_dl['nom']}\" >  ${row_dl['nom']} </option>";
+                    echo "<option value=\"{$row_dl['nom']}\" >  {$row_dl['nom']} </option>";
                     $i++;
                 }
                 ?>
@@ -227,7 +227,7 @@ $oDBSt_q_nacionalidad = $oDB->query($query_nacionalidad);
                 <?php
                 $i = 0;
                 foreach ($oDBSt_q_r->fetchAll() as $row_dl) {
-                    echo "<option value=\"{$row_dl['nom']}\" >  ${row_dl['nom']} </option>";
+                    echo "<option value=\"{$row_dl['nom']}\" >  {$row_dl['nom']} </option>";
                     $i++;
                 }
                 ?>
@@ -236,7 +236,7 @@ $oDBSt_q_nacionalidad = $oDB->query($query_nacionalidad);
         } else {
             echo "<span class=link onclick=\"fnjs_update_div('#main','$ir_a_traslado');\">&nbsp;" . ucfirst($dl_etiqueta) . ":&nbsp;</span>";
             echo "<b class=contenido >$dl</b>";
-            echo "<input type=\"hidden\" name=\"dl_${tabla[$f]}$r\" value=\"$dl\"> ";
+            echo "<input type=\"hidden\" name=\"dl_{$tabla[$f]}$r\" value=\"$dl\"> ";
         }
         echo "</td>";
         echo dibujar_campo("lengua", 3, 1, 1);
@@ -312,7 +312,7 @@ $oDBSt_q_nacionalidad = $oDB->query($query_nacionalidad);
                     } else {
                         $sel = "";
                     }
-                    echo "<option value=\"{$row_fichero['fichero']}\" $sel>  ${row_fichero['fichero']} </option>";
+                    echo "<option value=\"{$row_fichero['fichero']}\" $sel>  {$row_fichero['fichero']} </option>";
                     $i++;
                 }
                 ?>
@@ -509,7 +509,7 @@ echo "</tr><tr><td>&nbsp;&nbsp;&nbsp;</td>";
                         <?php
                         $i = 0;
                         foreach ($oDBSt_q_ctrs->fetchAll() as $row) {
-                            echo "<option value=\"{$row['id_ubi']}\" >  ${row['nom']} </option>";
+                            echo "<option value=\"{$row['id_ubi']}\" >  {$row['nom']} </option>";
                             $i++;
                         }
                         $a_valores_campo = $GLOBALS['a_campos']["f_ctr"];
@@ -541,7 +541,7 @@ echo "</tr><tr><td>&nbsp;&nbsp;&nbsp;</td>";
                         <?php
                         $i = 0;
                         foreach ($oDBSt_q_ctrs->fetchAll() as $row) {
-                            echo "<option value=\"${row['id_ubi']}\" >  ${row['nom']} </option>";
+                            echo "<option value=\"{$row['id_ubi']}\" >  {$row['nom']} </option>";
                             $i++;
                         }
                         $a_valores_campo = $GLOBALS['a_campos']["f_ctr_cr"];
