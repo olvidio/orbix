@@ -37,9 +37,9 @@ class CheckSecurityNode extends Node
         foreach (['tags', 'filters', 'functions'] as $type) {
             foreach ($this->{'used'.ucfirst($type)} as $name => $node) {
                 if ($node instanceof Node) {
-                    {$$type}[$name] = $node->getTemplateLine();
+                    ${$type}[$name] = $node->getTemplateLine();
                 } else {
-                    {$$type}[$node] = null;
+                    ${$type}[$node] = null;
                 }
             }
         }
