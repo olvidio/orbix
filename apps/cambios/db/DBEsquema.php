@@ -144,7 +144,7 @@ class DBEsquema extends DBAbstract
 
         $a_sql[] = "ALTER TABLE $nom_tabla ADD PRIMARY KEY ($campo_seq); ";
 
-        $a_sql[] = "CREATE INDEX IF NOT EXISTS {$tabla}_{$campo_seq}_idx ON $nom_tabla USING btree ($campo_seq); ";
+        $a_sql[] = "CREATE INDEX IF NOT EXISTS ${tabla}_${campo_seq}_idx ON $nom_tabla USING btree ($campo_seq); ";
         $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->role";
 
         $this->executeSql($a_sql);
@@ -218,18 +218,18 @@ class DBEsquema extends DBAbstract
 
         $a_sql[] = "ALTER TABLE $nom_tabla ADD PRIMARY KEY ($campo_seq); ";
 
-        $a_sql[] = "CREATE UNIQUE INDEX IF NOT EXISTS {$tabla}_udx ON $nom_tabla USING btree (server,id_schema_cambio,id_item_cambio); ";
+        $a_sql[] = "CREATE UNIQUE INDEX IF NOT EXISTS ${tabla}_udx ON $nom_tabla USING btree (server,id_schema_cambio,id_item_cambio); ";
         /* No sirve con tablas heredadas
         $tabla1 = 'public.av_cambios'; //la de public
         $a_sql[] = "ALTER TABLE $nom_tabla ADD CONSTRAINT av_cambios_anotados_id_item_cambio_fk
                     FOREIGN KEY (id_schema_cambio,id_item_cambio) REFERENCES $tabla1(id_schema,id_item_cambio) ON DELETE CASCADE; ";
         */
 
-        $a_sql[] = "CREATE INDEX IF NOT EXISTS {$tabla}_{$campo_seq}_idx ON $nom_tabla USING btree ($campo_seq); ";
-        $a_sql[] = "CREATE INDEX IF NOT EXISTS {$tabla}_id_schema_cambio_idx ON $nom_tabla USING btree (id_schema_cambio); ";
-        $a_sql[] = "CREATE INDEX IF NOT EXISTS {$tabla}_id_item_cambio_idx ON $nom_tabla USING btree (id_item_cambio); ";
-        $a_sql[] = "CREATE INDEX IF NOT EXISTS {$tabla}_anotado_idx ON $nom_tabla USING btree (anotado); ";
-        $a_sql[] = "CREATE INDEX IF NOT EXISTS {$tabla}_server_idx ON $nom_tabla USING btree (server); ";
+        $a_sql[] = "CREATE INDEX IF NOT EXISTS ${tabla}_${campo_seq}_idx ON $nom_tabla USING btree ($campo_seq); ";
+        $a_sql[] = "CREATE INDEX IF NOT EXISTS ${tabla}_id_schema_cambio_idx ON $nom_tabla USING btree (id_schema_cambio); ";
+        $a_sql[] = "CREATE INDEX IF NOT EXISTS ${tabla}_id_item_cambio_idx ON $nom_tabla USING btree (id_item_cambio); ";
+        $a_sql[] = "CREATE INDEX IF NOT EXISTS ${tabla}_anotado_idx ON $nom_tabla USING btree (anotado); ";
+        $a_sql[] = "CREATE INDEX IF NOT EXISTS ${tabla}_server_idx ON $nom_tabla USING btree (server); ";
         $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->role";
 
         $this->executeSql($a_sql);
@@ -302,18 +302,18 @@ class DBEsquema extends DBAbstract
 
         $a_sql[] = "ALTER TABLE $nom_tabla ADD PRIMARY KEY ($campo_seq); ";
 
-        $a_sql[] = "CREATE UNIQUE INDEX IF NOT EXISTS {$tabla}_udx ON $nom_tabla USING btree (server,id_schema_cambio,id_item_cambio); ";
+        $a_sql[] = "CREATE UNIQUE INDEX IF NOT EXISTS ${tabla}_udx ON $nom_tabla USING btree (server,id_schema_cambio,id_item_cambio); ";
         /* No sirve con tablas heredadas
         $tabla1 = 'public.av_cambios'; //la de public
         $a_sql[] = "ALTER TABLE $nom_tabla ADD CONSTRAINT av_cambios_anotados_id_item_cambio_fk
                     FOREIGN KEY (id_schema_cambio,id_item_cambio) REFERENCES $tabla1(id_schema,id_item_cambio) ON DELETE CASCADE; ";
         */
 
-        $a_sql[] = "CREATE INDEX IF NOT EXISTS {$tabla}_{$campo_seq}_idx ON $nom_tabla USING btree ($campo_seq); ";
-        $a_sql[] = "CREATE INDEX IF NOT EXISTS {$tabla}_id_schema_cambio_idx ON $nom_tabla USING btree (id_schema_cambio); ";
-        $a_sql[] = "CREATE INDEX IF NOT EXISTS {$tabla}_id_item_cambio_idx ON $nom_tabla USING btree (id_item_cambio); ";
-        $a_sql[] = "CREATE INDEX IF NOT EXISTS {$tabla}_anotado_idx ON $nom_tabla USING btree (anotado); ";
-        $a_sql[] = "CREATE INDEX IF NOT EXISTS {$tabla}_server_idx ON $nom_tabla USING btree (server); ";
+        $a_sql[] = "CREATE INDEX IF NOT EXISTS ${tabla}_${campo_seq}_idx ON $nom_tabla USING btree ($campo_seq); ";
+        $a_sql[] = "CREATE INDEX IF NOT EXISTS ${tabla}_id_schema_cambio_idx ON $nom_tabla USING btree (id_schema_cambio); ";
+        $a_sql[] = "CREATE INDEX IF NOT EXISTS ${tabla}_id_item_cambio_idx ON $nom_tabla USING btree (id_item_cambio); ";
+        $a_sql[] = "CREATE INDEX IF NOT EXISTS ${tabla}_anotado_idx ON $nom_tabla USING btree (anotado); ";
+        $a_sql[] = "CREATE INDEX IF NOT EXISTS ${tabla}_server_idx ON $nom_tabla USING btree (server); ";
         $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->role";
 
         $this->executeSql($a_sql);
@@ -386,7 +386,7 @@ class DBEsquema extends DBAbstract
 
         $a_sql[] = "ALTER TABLE $nom_tabla ADD PRIMARY KEY ($campo_seq); ";
 
-        $a_sql[] = "CREATE UNIQUE INDEX IF NOT EXISTS {$tabla}_udx ON $nom_tabla USING btree (id_schema_cambio,id_item_cambio,id_usuario,sfsv,aviso_tipo); ";
+        $a_sql[] = "CREATE UNIQUE INDEX IF NOT EXISTS ${tabla}_udx ON $nom_tabla USING btree (id_schema_cambio,id_item_cambio,id_usuario,sfsv,aviso_tipo); ";
         // FOREIGN KEYS
         /* No sirve con tablas heredadas
         $tabla1 = 'public.av_cambios'; // la de public.
@@ -394,7 +394,7 @@ class DBEsquema extends DBAbstract
                     FOREIGN KEY (id_schema_cambio,id_item_cambio) REFERENCES $tabla1(id_schema,id_item_cambio) ON DELETE CASCADE; ";
         */
 
-        $a_sql[] = "CREATE INDEX IF NOT EXISTS {$tabla}_{$campo_seq}_idx ON $nom_tabla USING btree ($campo_seq); ";
+        $a_sql[] = "CREATE INDEX IF NOT EXISTS ${tabla}_${campo_seq}_idx ON $nom_tabla USING btree ($campo_seq); ";
         $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->role";
 
         $this->executeSql($a_sql);
@@ -474,7 +474,7 @@ class DBEsquema extends DBAbstract
         // FOREIGN KEYS
         // con los usuarios no va porque estan en otra base de datos (sv). 
 
-        $a_sql[] = "CREATE INDEX IF NOT EXISTS {$tabla}_{$campo_seq}_idx ON $nom_tabla USING btree ($campo_seq); ";
+        $a_sql[] = "CREATE INDEX IF NOT EXISTS ${tabla}_${campo_seq}_idx ON $nom_tabla USING btree ($campo_seq); ";
         $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->role";
 
         $this->executeSql($a_sql);
@@ -558,7 +558,7 @@ class DBEsquema extends DBAbstract
                     FOREIGN KEY (id_item_usuario_objeto) REFERENCES $tabla1(id_item_usuario_objeto) ON DELETE CASCADE; ";
          */
 
-        $a_sql[] = "CREATE INDEX IF NOT EXISTS {$tabla}_{$campo_seq}_idx ON $nom_tabla USING btree ($campo_seq); ";
+        $a_sql[] = "CREATE INDEX IF NOT EXISTS ${tabla}_${campo_seq}_idx ON $nom_tabla USING btree ($campo_seq); ";
         $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->role";
 
         $this->executeSql($a_sql);

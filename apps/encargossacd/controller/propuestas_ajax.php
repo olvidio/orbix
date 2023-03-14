@@ -289,7 +289,7 @@ switch ($Qque) {
                         $html .= '</td><td>';
                         $html .= '-';
                         $html .= "</td><td>";
-                        $html .= "<span class=\"link\" id=\"{$Qtipo}_$Qid_item\" title=\"$Qid_sacd\" onClick=\"fnjs_ver_sacd_posibles('$Qtipo',$Qid_item,$Qid_enc)\">";
+                        $html .= "<span class=\"link\" id=\"${Qtipo}_$Qid_item\" title=\"$Qid_sacd\" onClick=\"fnjs_ver_sacd_posibles('$Qtipo',$Qid_item,$Qid_enc)\">";
                         $html .= "$nombre</span>";
                         $html .= '</td><td>';
                         $html .= "<span class=\"link\" onClick=\"fnjs_info('$Qtipo',$Qid_item)\">" . _("+ info") . "</span>";
@@ -333,7 +333,7 @@ switch ($Qque) {
         $nombre = empty($nombre) ? _("nuevo") : $nombre;
         if (empty($html) && $Qid_item == $Qid_enc) { // generar una fila nueva
             // si es nuevo deuelvo todo el html
-            $html = "<tr id=\"tr_{$Qtipo}$id_item_new\" class=\"sf\" title=\"$Qid_sacd\"><td>";
+            $html = "<tr id=\"tr_${Qtipo}$id_item_new\" class=\"sf\" title=\"$Qid_sacd\"><td>";
             $html .= _("colaborador");
             $html .= '</td><td>';
             $html .= '-';

@@ -196,19 +196,19 @@ $oDBSt_q_nacionalidad = $oDB->query($query_nacionalidad);
                 <option></option>
                 <?php
                 foreach ($oDBSt_q_dl_es->fetchAll() as $row_dl) {
-                    echo "<option value=\"{$row_dl['nom']}\" >  {$row_dl['nom']} </option>";
+                    echo "<option value=\"${row_dl['nom']}\" >  ${row_dl['nom']} </option>";
                 }
                 ?>
                 <option> --------</option>
                 <?php
                 foreach ($oDBSt_q_dl_ex->fetchAll() as $row_dl) {
-                    echo "<option value=\"{$row_dl['nom']}\" >  {$row_dl['nom']} </option>";
+                    echo "<option value=\"${row_dl['nom']}\" >  ${row_dl['nom']} </option>";
                 }
                 ?>
                 <option> --------</option>
                 <?php
                 foreach ($oDBSt_q_r->fetchAll() as $row_dl) {
-                    echo "<option value=\"{$row_dl['nom']}\" >  {$row_dl['nom']} </option>";
+                    echo "<option value=\"${row_dl['nom']}\" >  ${row_dl['nom']} </option>";
                 }
                 ?>
             </select></td>
@@ -216,7 +216,7 @@ $oDBSt_q_nacionalidad = $oDB->query($query_nacionalidad);
         } else {
             echo "<span class=link onclick=\"fnjs_update_div('#main','$ir_a_traslado');\">&nbsp;" . ucfirst($dl_etiqueta) . ":&nbsp;</span>";
             echo "<b class=contenido >$dl</b>";
-            echo "<input type=\"hidden\" name=\"dl_{$tabla[$f]}$r\" value=\"$dl\"> ";
+            echo "<input type=\"hidden\" name=\"dl_${tabla[$f]}$r\" value=\"$dl\"> ";
         }
         echo "</td>";
         echo dibujar_campo("lengua", 3, 1, 1);
@@ -288,7 +288,7 @@ echo dibujar_campo("f_fichero", 11, 1, 1);
             } else {
                 $sel = "";
             }
-            echo "<option value=\"{$row_fichero['fichero']}\" $sel>  {$row_fichero['fichero']} </option>";
+            echo "<option value=\"${row_fichero['fichero']}\" $sel>  {$row_fichero['fichero']} </option>";
         }
         ?>
     </select></td>
@@ -386,7 +386,7 @@ echo dibujar_campo("f_procede", 11, 1, 2);
                         <option></option>
                         <?php
                         foreach ($oDBSt_q_ctrs->fetchAll() as $row) {
-                            echo "<option value=\"{$row['id_ubi']}\" >  {$row['nom']} </option>";
+                            echo "<option value=\"${row['id_ubi']}\" >  ${row['nom']} </option>";
                         }
                         $a_valores_campo = $GLOBALS['a_campos']["f_ctr"];
                         ?>
@@ -418,7 +418,7 @@ echo dibujar_campo("f_procede", 11, 1, 2);
                         <option></option>
                         <?php
                         foreach ($oDBSt_q_ctrs->fetchAll() as $row) {
-                            echo "<option value=\"{$row['id_ubi']}\" >  {$row['nom']} </option>";
+                            echo "<option value=\"{$row['id_ubi']}\" >  ${row['nom']} </option>";
                         }
                         $a_valores_campo = $GLOBALS['a_campos']["f_ctr_cr"];
                         ?>
@@ -437,7 +437,7 @@ echo dibujar_campo("f_procede", 11, 1, 2);
                 echo "</tr><tr>";
                 $a_valores_campo = $GLOBALS['a_campos']["ce"];
                 echo "<td colspan='4'><span class=etiqueta ondblclick=\"fnjs_help('$ce_help_ref')\" >" . ucfirst($a_valores_campo["etiqueta"]) . "&nbsp;</span>";
-                echo "<select class=contenido name=\"ce_{$tabla[$f]}$r\" title=\"$ce_help\">";
+                echo "<select class=contenido name=\"ce_${tabla[$f]}$r\" title=\"$ce_help\">";
                 ?>
                 <option value="0" <?php if ($ce == "0") {
                     echo "selected";
@@ -472,7 +472,7 @@ echo dibujar_campo("f_procede", 11, 1, 2);
                 echo "</tr><tr>";
                 $a_valores_campo = $GLOBALS['a_campos']["cel"];
                 echo "<td><span class=etiqueta ondblclick=\"fnjs_help('$cel_help_ref')\" >" . ucfirst($a_valores_campo["etiqueta"]) . "&nbsp;</span>";
-                echo "<select class=contenido name=\"cel_{$tabla[$f]}$r\" title=\"$cel_help\" >";
+                echo "<select class=contenido name=\"cel_${tabla[$f]}$r\" title=\"$cel_help\" >";
                 ?>
                 <option></option>
                 <option value="s" <?php if ($cel == "s") {

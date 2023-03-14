@@ -111,14 +111,14 @@
                         if (node.parent != prevCircle.id) { return true; } 
                         
                         if (node.optional || prevCircle.optional) {
-                            draw.path(`M{$x1} {$y1} L {$x1 + (x2 - x1) / 2} {$y1 + (y2 - y1) / 2} {$x2} {$y2}`).fill('none').stroke({
+                            draw.path(`M${x1} ${y1} L ${x1 + (x2 - x1) / 2} ${y1 + (y2 - y1) / 2} ${x2} ${y2}`).fill('none').stroke({
                                 width: 1,
                                 color: settings.chartColor,
                                 linecap: "round",
                                 dasharray: '5, 5'
                             }).marker('mid', optionalMarker)
                         } else {
-                            draw.path(`M{$x1} {$y1} L {$x1 + (x2 - x1) / 2} {$y1 + (y2 - y1) / 2} {$x2} {$y2}`).fill('none').stroke({
+                            draw.path(`M${x1} ${y1} L ${x1 + (x2 - x1) / 2} ${y1 + (y2 - y1) / 2} ${x2} ${y2}`).fill('none').stroke({
                                 width: 1,
                                 color: settings.chartColor
                             }).marker('mid', marker)

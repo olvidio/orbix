@@ -14,11 +14,11 @@ permissions:
 
 jobs:
     tests:
-        name: "PHP {${ matrix.php-version }}"
+        name: "PHP ${{ matrix.php-version }}"
 
         runs-on: 'ubuntu-latest'
 
-        continue-on-error: {${ matrix.experimental }}
+        continue-on-error: ${{ matrix.experimental }}
 
         strategy:
             matrix:
@@ -38,11 +38,11 @@ jobs:
               uses: shivammathur/setup-php@v2
               with:
                   coverage: "none"
-                  php-version: {${ matrix.php-version }}
+                  php-version: ${{ matrix.php-version }}
                   ini-values: memory_limit=-1
 
             - name: "Add PHPUnit matcher"
-              run: echo "::add-matcher::{${ runner.tool_cache }}/phpunit.json"
+              run: echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
 
             - run: composer install
 
@@ -59,7 +59,7 @@ jobs:
         needs:
             - 'tests'
 
-        name: "{${ matrix.extension }} with PHP {${ matrix.php-version }}"
+        name: "${{ matrix.extension }} with PHP ${{ matrix.php-version }}"
 
         runs-on: 'ubuntu-latest'
 
@@ -92,11 +92,11 @@ jobs:
               uses: shivammathur/setup-php@v2
               with:
                   coverage: "none"
-                  php-version: {${ matrix.php-version }}
+                  php-version: ${{ matrix.php-version }}
                   ini-values: memory_limit=-1
 
             - name: "Add PHPUnit matcher"
-              run: echo "::add-matcher::{${ runner.tool_cache }}/phpunit.json"
+              run: echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
 
             - run: composer install
 
@@ -107,11 +107,11 @@ jobs:
               run: vendor/bin/simple-phpunit --version
 
             - name: "Composer install"
-              working-directory: {${ matrix.extension}}
+              working-directory: ${{ matrix.extension}}
               run: composer install
 
             - name: "Run tests"
-              working-directory: {${ matrix.extension}}
+              working-directory: ${{ matrix.extension}}
               run: ../../vendor/bin/simple-phpunit
 
 #
@@ -121,7 +121,7 @@ jobs:
 #        needs:
 #            - 'tests'
 #
-#        name: "Integration tests with PHP {${ matrix.php-version }}"
+#        name: "Integration tests with PHP ${{ matrix.php-version }}"
 #
 #        runs-on: 'ubuntu-20.04'
 #
@@ -141,7 +141,7 @@ jobs:
 #              with:
 #                  coverage: "none"
 #                  extensions: "gd, pdo_sqlite"
-#                  php-version: {${ matrix.php-version }}
+#                  php-version: ${{ matrix.php-version }}
 #                  ini-values: memory_limit=-1
 #                  tools: composer:v2
 #

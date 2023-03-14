@@ -103,11 +103,11 @@ class DBEsquema extends DBAbstract
 
         $a_sql[] = "ALTER TABLE $nom_tabla ALTER id_schema SET DEFAULT public.idschema('$this->esquema'::text)";
         $a_sql[] = "ALTER TABLE $nom_tabla ADD PRIMARY KEY (id_activ); ";
-        $a_sql[] = "CREATE INDEX {$tabla}_id_activ ON $nom_tabla USING btree (id_activ); ";
+        $a_sql[] = "CREATE INDEX ${tabla}_id_activ ON $nom_tabla USING btree (id_activ); ";
 
         $datosTablaA = $this->infoTable('a_actividades_dl');
         $nom_tabla_activ = $datosTablaA['nom_tabla'];
-        $a_sql[] = "ALTER TABLE $nom_tabla ADD CONSTRAINT {$tabla}_id_activ_fk
+        $a_sql[] = "ALTER TABLE $nom_tabla ADD CONSTRAINT ${tabla}_id_activ_fk
                     FOREIGN KEY (id_activ) REFERENCES $nom_tabla_activ(id_activ) ON DELETE CASCADE; ";
 
         $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->role";
@@ -166,12 +166,12 @@ class DBEsquema extends DBAbstract
 
         $datosTablaA = $this->infoTable('u_cdc_dl');
         $nom_tabla_activ = $datosTablaA['nom_tabla'];
-        $a_sql[] = "ALTER TABLE $nom_tabla ADD CONSTRAINT {$tabla}_id_ubi_fk
+        $a_sql[] = "ALTER TABLE $nom_tabla ADD CONSTRAINT ${tabla}_id_ubi_fk
                     FOREIGN KEY (id_ubi) REFERENCES $nom_tabla_activ(id_ubi) ON DELETE CASCADE; ";
 
         // No va con tablas heredadas
-        $a_sql[] = "CREATE INDEX {$tabla}_id_ubi ON $nom_tabla USING btree (id_ubi); ";
-        $a_sql[] = "CREATE INDEX {$tabla}_f_gasto ON $nom_tabla USING btree (f_gasto); ";
+        $a_sql[] = "CREATE INDEX ${tabla}_id_ubi ON $nom_tabla USING btree (id_ubi); ";
+        $a_sql[] = "CREATE INDEX ${tabla}_f_gasto ON $nom_tabla USING btree (f_gasto); ";
         $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->role";
 
         $this->executeSql($a_sql);
@@ -232,14 +232,14 @@ class DBEsquema extends DBAbstract
 
         $datosTablaA = $this->infoTable('u_cdc_dl');
         $nom_tabla_activ = $datosTablaA['nom_tabla'];
-        $a_sql[] = "ALTER TABLE $nom_tabla ADD CONSTRAINT {$tabla}_id_ubi_padre_fk
+        $a_sql[] = "ALTER TABLE $nom_tabla ADD CONSTRAINT ${tabla}_id_ubi_padre_fk
                     FOREIGN KEY (id_ubi_padre) REFERENCES $nom_tabla_activ(id_ubi) ON DELETE CASCADE; ";
-        $a_sql[] = "ALTER TABLE $nom_tabla ADD CONSTRAINT {$tabla}_id_ubi_hijo_fk
+        $a_sql[] = "ALTER TABLE $nom_tabla ADD CONSTRAINT ${tabla}_id_ubi_hijo_fk
                     FOREIGN KEY (id_ubi_hijo) REFERENCES $nom_tabla_activ(id_ubi) ON DELETE CASCADE; ";
 
         // No va con tablas heredadas
-        $a_sql[] = "CREATE INDEX {$tabla}_id_ubi_padre ON $nom_tabla USING btree (id_ubi_padre); ";
-        $a_sql[] = "CREATE INDEX {$tabla}_id_ubi_hijo ON $nom_tabla USING btree (id_ubi_hijo); ";
+        $a_sql[] = "CREATE INDEX ${tabla}_id_ubi_padre ON $nom_tabla USING btree (id_ubi_padre); ";
+        $a_sql[] = "CREATE INDEX ${tabla}_id_ubi_hijo ON $nom_tabla USING btree (id_ubi_hijo); ";
         $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->role";
 
         $this->executeSql($a_sql);

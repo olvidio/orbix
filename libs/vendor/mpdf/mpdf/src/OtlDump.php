@@ -2775,21 +2775,21 @@ $MarkAttachmentType = ' . var_export($this->MarkAttachmentType, true) . ';
 	  ----------------  ----------------  -----  ------------  ---------------   ---------------
 	  Backtrack 1       Backtrack 2     Input 1   Input 2       Lookahead 1      Lookahead 2
 	  --------   ---    ---------  ---    ----   ---   ----   ---   ---------   ---    -------
-	  \{$1}  \{$2}     \{$3}   \{$4}                      \{$5+}  \{$6+}    \{$7+}  \{$8+}
+	  \${1}  \${2}     \${3}   \${4}                      \${5+}  \${6+}    \${7+}  \${8+}
 
 	  nBacktrack = 2               nInput = 2                 nLookahead = 2
 
 	  nBsubs = 2xnBack          nIsubs = (nBsubs+)    nLsubs = (nBsubs+nIsubs+) 2xnLookahead
-	  "\{$1}\{$2} "                 (nInput*2)-1               "\{$5+} \{$6+}"
+	  "\${1}\${2} "                 (nInput*2)-1               "\${5+} \${6+}"
 	  "REPL"
 
-	  ¦\{$1}\{$2} ¦\{$3}\{$4} ¦REPL¦\{$5+} \{$6+}¦\{$7+} \{$8+}¦
+	  ¦\${1}\${2} ¦\${3}\${4} ¦REPL¦\${5+} \${6+}¦\${7+} \${8+}¦
 
 
 	  INPUT nInput = 5
 	  ============================================================
 	  ¦(0612)¦(ign) (0613)¦(ign) (0614)¦(ign) (0615)¦(ign) (0615)¦
-	  \{$1}  \{$2}  \{$3}  \{$4} \{$5} \{$6}  \{$7} \{$8}  \{$9} (All backreference numbers are + nBsubs)
+	  \${1}  \${2}  \${3}  \${4} \${5} \${6}  \${7} \${8}  \${9} (All backreference numbers are + nBsubs)
 	  -----  ------------ ------------ ------------ ------------
 	  Input 1   Input 2      Input 3      Input 4      Input 5
 
@@ -2801,12 +2801,12 @@ $MarkAttachmentType = ' . var_export($this->MarkAttachmentType, true) . ';
 	  F======================  SequenceIndex=4 ; Lookup match nGlyphs=2
 
 	  All backreference numbers are + nBsubs
-	  A - "REPL\{$2} \{$3}\{$4} \{$5}\{$6} \{$7}\{$8} \{$9}"
-	  B - "REPL\{$2}\{$4} \{$5}\{$6} \{$7}\{$8} \{$9}"
-	  C - "REPL\{$2}\{$4}\{$6} \{$7}\{$8} \{$9}"
-	  D - "\{$1} REPL\{$2}\{$4}\{$6} \{$7}\{$8} \{$9}"
-	  E - "\{$1} REPL\{$2}\{$4}\{$6}\{$8} \{$9}"
-	  F - "\{$1}\{$2} \{$3}\{$4} \{$5} REPL\{$6}\{$8}"
+	  A - "REPL\${2} \${3}\${4} \${5}\${6} \${7}\${8} \${9}"
+	  B - "REPL\${2}\${4} \${5}\${6} \${7}\${8} \${9}"
+	  C - "REPL\${2}\${4}\${6} \${7}\${8} \${9}"
+	  D - "\${1} REPL\${2}\${4}\${6} \${7}\${8} \${9}"
+	  E - "\${1} REPL\${2}\${4}\${6}\${8} \${9}"
+	  F - "\${1}\${2} \${3}\${4} \${5} REPL\${6}\${8}"
 	 */
 
 	function _makeGSUBcontextInputMatch($inputGlyphs, $ignore, $lookupGlyphs, $seqIndex)
@@ -2881,7 +2881,7 @@ $MarkAttachmentType = ' . var_export($this->MarkAttachmentType, true) . ';
 
 	function _makeGSUBinputReplacement($nInput, $REPL, $ignore, $nBsubs, $mLen, $seqIndex)
 	{
-		// Returns e.g. "REPL\{$6}\{$8}" or "\{$1}\{$2} \{$3} REPL\{$4}\{$6}\{$8} \{$9}"
+		// Returns e.g. "REPL\${6}\${8}" or "\${1}\${2} \${3} REPL\${4}\${6}\${8} \${9}"
 		// $nInput	nGlyphs in the Primary Input sequence
 		// $REPL 	replacement glyphs from secondary lookup
 		// $ignore = "((?:(?: FBA1| FBA2| FBA3))*)" or "()"

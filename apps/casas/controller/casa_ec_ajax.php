@@ -194,9 +194,9 @@ case 'form':
     $txt="<form id='frm_ingresos'>";
     $txt.='<h3>'.sprintf(_("presupuesto %s %s"),$_POST['seccion'],$_POST['year']).'</h3>';
     $txt.="<input type=hidden name=que value=\"update\" > ";
-    $txt.="<input type=hidden name=seccion value=\"{$_POST['seccion']}\" > ";
-    $txt.="<input type=hidden name=id_ubi value=\"{$_POST['id_ubi']}\" > ";
-    $txt.="<input type=hidden name=year value=\"{$_POST['year']}\" > ";
+    $txt.="<input type=hidden name=seccion value=\"${_POST['seccion']}\" > ";
+    $txt.="<input type=hidden name=id_ubi value=\"${_POST['id_ubi']}\" > ";
+    $txt.="<input type=hidden name=year value=\"${_POST['year']}\" > ";
     $txt.="<table style=\"width:690\">";
     $txt.=$txt2;
     $txt.='</table>';

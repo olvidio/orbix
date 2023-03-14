@@ -212,7 +212,7 @@ class ActividadNuevoCurso
         $nom_activ = $oActividadOrigen->getNom_activ();
 
         $patrón = '/^(.*)(\(.*?\-.*?\))(.*)/';
-        $sustitución = '{$1}(' . $fechas_new . ')$3';
+        $sustitución = '${1}(' . $fechas_new . ')$3';
         $nom_activ_new = preg_replace($patrón, $sustitución, $nom_activ);
 
         if ($this->bVer_lista) {
