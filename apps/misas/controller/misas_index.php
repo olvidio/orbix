@@ -17,9 +17,11 @@ if (is_array($aQuery)) {
     array_walk($aQuery, 'core\poner_empty_on_null');
 }
 $goListaSacd = Hash::link('apps/misas/controller/lista_sacd.php?' . http_build_query($aQuery));
+$goCrearPlantilla = Hash::link('apps/misas/controller/crear_plantilla.php?' . http_build_query($aQuery));
 
 $a_campos = ['oPosicion' => $oPosicion,
 		'goListaSacd' => $goListaSacd,
+    'goCrearPlantilla' => $goCrearPlantilla,
 ];
 
 $oView = new core\ViewTwig('misas/controller');

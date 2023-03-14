@@ -1,14 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
   <component name="ChangeListManager">
-    <list default="true" id="f178a244-4024-41f6-8417-4831ab0bb057" name="Changes" comment="muchos cambios por subir, no sé de que">
-      <change afterPath="$PROJECT_DIR$/apps/misas/controller/lista_sacd.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/misas/view/lista_sacd.html.twig" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/php.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/php.xml" afterDir="false" />
+    <list default="true" id="f178a244-4024-41f6-8417-4831ab0bb057" name="Changes" comment="Autonumérico para regiones">
+      <change afterPath="$PROJECT_DIR$/apps/misas/controller/crear_plantilla.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/apps/misas/db/DB.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/apps/misas/db/DBEsquema.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/apps/misas/domain/entity/Plantilla.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/apps/misas/domain/repositories/PlantillaRepository.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/apps/misas/domain/repositories/PlantillaRepositoryInterface.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/apps/misas/infrastructure/PgPlantillaRepository.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/apps/misas/view/crear_plantilla.html.twig" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/misas/controller/lista_sacd.php" beforeDir="false" afterPath="$PROJECT_DIR$/apps/misas/controller/lista_sacd_zona.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/apps/misas/controller/misas_index.php" beforeDir="false" afterPath="$PROJECT_DIR$/apps/misas/controller/misas_index.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/misas/view/lista_sacd.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/apps/misas/view/lista_sacd.html.twig" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/apps/misas/view/misas_index.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/apps/misas/view/misas_index.html.twig" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/ayuda/index.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/ayuda/index.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/exportar.js.php" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/exportar.js.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -26,6 +36,12 @@
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/apps/core/ConfigGlobal.php" root0="FORCE_HIGHLIGHTING" root1="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/apps/core/ServerConf.php" root0="FORCE_HIGHLIGHTING" root1="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/apps/devel/controller/factory.php" root0="FORCE_HIGHLIGHTING" root1="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/apps/notas/controller/tessera_imprimir.php" root0="FORCE_HIGHLIGHTING" root1="FORCE_HIGHLIGHTING" />
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
@@ -50,42 +66,15 @@
     <include_path>
       <path value="$PROJECT_DIR$/libs/vendor/psr/log" />
       <path value="$PROJECT_DIR$/libs/vendor/mpdf/mpdf" />
-      <path value="$PROJECT_DIR$/libs/vendor/twig/extensions" />
       <path value="$PROJECT_DIR$/libs/vendor/twig/twig" />
       <path value="$PROJECT_DIR$/libs/vendor/myclabs/deep-copy" />
-      <path value="$PROJECT_DIR$/libs/vendor/phar-io/manifest" />
-      <path value="$PROJECT_DIR$/libs/vendor/phar-io/version" />
-      <path value="$PROJECT_DIR$/libs/vendor/phpspec/prophecy" />
-      <path value="$PROJECT_DIR$/libs/vendor/phpunit/php-file-iterator" />
-      <path value="$PROJECT_DIR$/libs/vendor/phpunit/php-timer" />
-      <path value="$PROJECT_DIR$/libs/vendor/phpunit/php-text-template" />
-      <path value="$PROJECT_DIR$/libs/vendor/phpunit/php-token-stream" />
-      <path value="$PROJECT_DIR$/libs/vendor/phpunit/php-code-coverage" />
-      <path value="$PROJECT_DIR$/libs/vendor/phpunit/phpunit" />
       <path value="$PROJECT_DIR$/libs/vendor/symfony/polyfill-ctype" />
       <path value="$PROJECT_DIR$/libs/vendor/symfony/polyfill-mbstring" />
-      <path value="$PROJECT_DIR$/libs/vendor/theseer/tokenizer" />
-      <path value="$PROJECT_DIR$/libs/vendor/doctrine/instantiator" />
       <path value="$PROJECT_DIR$/libs/vendor/setasign/fpdi" />
       <path value="$PROJECT_DIR$/libs/vendor/paragonie/random_compat" />
-      <path value="$PROJECT_DIR$/libs/vendor/sebastian/global-state" />
-      <path value="$PROJECT_DIR$/libs/vendor/sebastian/comparator" />
-      <path value="$PROJECT_DIR$/libs/vendor/sebastian/exporter" />
-      <path value="$PROJECT_DIR$/libs/vendor/sebastian/environment" />
-      <path value="$PROJECT_DIR$/libs/vendor/sebastian/recursion-context" />
-      <path value="$PROJECT_DIR$/libs/vendor/sebastian/object-enumerator" />
-      <path value="$PROJECT_DIR$/libs/vendor/sebastian/object-reflector" />
-      <path value="$PROJECT_DIR$/libs/vendor/sebastian/resource-operations" />
-      <path value="$PROJECT_DIR$/libs/vendor/sebastian/code-unit-reverse-lookup" />
-      <path value="$PROJECT_DIR$/libs/vendor/sebastian/diff" />
-      <path value="$PROJECT_DIR$/libs/vendor/sebastian/version" />
-      <path value="$PROJECT_DIR$/libs/vendor/webmozart/assert" />
-      <path value="$PROJECT_DIR$/libs/vendor/phpdocumentor/reflection-docblock" />
-      <path value="$PROJECT_DIR$/libs/vendor/phpdocumentor/type-resolver" />
-      <path value="$PROJECT_DIR$/libs/vendor/phpdocumentor/reflection-common" />
       <path value="$PROJECT_DIR$/libs/vendor/composer" />
-      <path value="$PROJECT_DIR$/libs/vendor/sebastian/type" />
       <path value="$PROJECT_DIR$/libs/vendor/jblond/twig-trans" />
+      <path value="$PROJECT_DIR$/libs/vendor/psr/http-message" />
       <path value="$PROJECT_DIR$/libs/vendor/php-http/message-factory" />
     </include_path>
   </component>
@@ -106,13 +95,16 @@
     &quot;codeWithMe.voiceChat.enabledByDefault&quot;: &quot;false&quot;,
     &quot;last_opened_file_path&quot;: &quot;/home/dani/orbix_local/orbix&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
     &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
     &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
     &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
     &quot;project.structure.side.proportion&quot;: &quot;0.17356321&quot;,
     &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;configurable.group.editor&quot;
+    &quot;settings.editor.selected.configurable&quot;: &quot;configurable.group.editor&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
   <component name="RecentsManager">
@@ -215,6 +207,8 @@
       <workItem from="1671033345993" duration="1259000" />
       <workItem from="1671034686141" duration="1118000" />
       <workItem from="1674138764360" duration="4000" />
+      <workItem from="1678724060248" duration="8858000" />
+      <workItem from="1678781795393" duration="4576000" />
     </task>
     <task id="LOCAL-00011" summary="pasarela parametros contribucion">
       <created>1665476340157</created>
@@ -608,13 +602,8 @@
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="php">
-          <url>file://$PROJECT_DIR$/apps/devel/controller/apptables_update.php</url>
-          <line>20</line>
-          <option name="timeStamp" value="8" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="php">
           <url>file://$PROJECT_DIR$/apps/actividadtarifas/controller/tarifa_ajax.php</url>
-          <line>223</line>
+          <line>224</line>
           <option name="timeStamp" value="11" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="php">

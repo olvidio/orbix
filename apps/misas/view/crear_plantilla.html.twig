@@ -1,0 +1,32 @@
+<h2>Plantilla per a l'Hospitalet</h2>
+<br>
+{{ oTabla.mostrar_tabla_html()|raw }}
+
+<div id='div_modificar'></div>
+<div id='overlay'></div>
+
+<script>
+
+    fnjs_asignar_sacd = function (url) {
+        alert('asignando');
+    }
+
+
+    fnjs_cerrar = function () {
+        $('#div_modificar').html('');
+        $('#div_modificar').width('0');
+        $('#div_modificar').height('0');
+        $('#div_modificar').removeClass('ventana');
+        document.getElementById("overlay").style.display = "none";
+    }
+
+    fnjs_modificar = function (url) {
+        $('#div_modificar').addClass('ventana');
+        $('#div_modificar').width('auto');
+        $('#div_modificar').height('auto');
+        document.getElementById("overlay").style.display = "block";
+
+        fnjs_update_div('#div_modificar', url);
+    }
+
+</script>
