@@ -105,7 +105,10 @@ class DBConnection
     {
         $config = $this->config;
 
-        $str_conexio = $config['driver'] . ":" . $config['dbname'];
+        // con odbc:
+        //$str_conexio = $config['driver'] . ":" . $config['dbname'];
+        // con sqlsrv
+        $str_conexio = $config['driver'] . $config['dbname'];
         /* No se porque no va todo en una variable...
         $str_conexio .= ", user='".$config['user']."'";
         $str_conexio .= ", password='".$config['password']."'";
