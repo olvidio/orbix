@@ -450,7 +450,7 @@ class Lista
         foreach ($a_valores as $num_fila => $fila) {
             $f++;
             $id_fila = $f . $ahora;
-            ksort($fila);
+            uksort($fila,[$this, 'text_first']);
             $icol = 0;
             $aFilas[$num_fila]["id"] = $id_fila;
             foreach ($fila as $col => $valor) {
@@ -1028,7 +1028,7 @@ class Lista
             $f % 2 ? 0 : $clase = "par";
             $f++;
             $id_fila = $f . $ahora;
-            ksort($fila);
+            uksort($fila,[$this, 'text_first']);
             if (!empty($fila['clase'])) {
                 $clase .= " " . $fila['clase'];
             }
@@ -1137,6 +1137,15 @@ class Lista
         return $tt;
     }
 
+    public function text_first($a, $b) {
+        if (is_numeric($a)) {
+            $a = 'zzzz'.$a;
+        }
+        if (is_numeric($b)) {
+            $b = 'zzzz'.$b;
+        }
+        return strcasecmp($a, $b);
+    }
 
 
     /**
@@ -1301,7 +1310,7 @@ class Lista
         $fp = fopen('php://output', 'w');
         foreach ($a_valores as $num_fila => $fila) {
             $a_valores_simple = [];
-            ksort($fila);
+            uksort($fila,[$this, 'text_first']);
             //$tbody.="<tr id='$id_fila' class='$clase'>";
             foreach ($fila as $col => $valor) {
                 if ($col == "clase") {
