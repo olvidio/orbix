@@ -19,6 +19,14 @@ $Qque =  (integer)filter_input(INPUT_POST, 'que');
 $Qcolumn = (integer)filter_input(INPUT_POST, 'column');
 $Qid_item = (integer)filter_input(INPUT_POST, 'id_item');
 
+$dao_plantilla = new stdClass();
+$dao_plantilla->id_zona = $Qid_zona;
+$dao_plantilla->id_ubi = $Qid_ubi;
+$dao_plantilla->que = $Qque;
+$dao_plantilla->column = $Qcolumn;
+$dao_plantilla->id_item = $Qid_item;
+
+
 $gesZonaSacd = new GestorZonaSacd();
 $a_Id_nom = $gesZonaSacd->getSacdsZona($Qid_zona);
 
@@ -27,9 +35,11 @@ $a_valores = [];
 $i = 0;
 foreach ($a_Id_nom as $id_nom) {
     $i++;
+    $dao_plantilla->id_nom = $id_nom;
+    $data = json_encode((array)$dao_plantilla);
     $PersonaSacd = new PersonaSacd($id_nom);
     $sacd = $PersonaSacd->getNombreApellidos();
-    $a_valores[$i][0] = "<span class=link onclick=\"fnjs_asignar_sacd('$Qid_zona');\">$sacd</span>";
+    $a_valores[$i][0] = "<span class=link onclick=\"fnjs_asignar_sacd('$data');\">$sacd</span>";
 }
 
 $oTabla = new Lista();

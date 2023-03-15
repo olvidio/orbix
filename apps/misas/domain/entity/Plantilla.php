@@ -53,15 +53,15 @@ class Plantilla {
 	/**
 	 * T_start de Plantilla
 	 *
-	 * @var string time
+	 * @var string $tt_start
 	 */
-	 private string time $tt_start;
+	 private string $tt_start;
 	/**
 	 * T_end de Plantilla
 	 *
-	 * @var string time
+	 * @var string $tt_end
 	 */
-	 private string time $tt_end;
+	 private string $tt_end;
 	/**
 	 * Observ de Plantilla
 	 *
@@ -217,7 +217,7 @@ class Plantilla {
 	 *
 	 * @return string time $tt_start
 	 */
-	public function getT_start(): string time
+	public function getT_start(): string
 	{
 		return $this->tt_start;
 	}
@@ -225,7 +225,7 @@ class Plantilla {
 	 *
 	 * @param string time $tt_start
 	 */
-	public function setT_start(string time $tt_start): void
+	public function setT_start(string $tt_start): void
 	{
 		$this->tt_start = $tt_start;
 	}
@@ -233,7 +233,7 @@ class Plantilla {
 	 *
 	 * @return string time $tt_end
 	 */
-	public function getT_end(): string time
+	public function getT_end(): string
 	{
 		return $this->tt_end;
 	}
@@ -241,7 +241,7 @@ class Plantilla {
 	 *
 	 * @param string time $tt_end
 	 */
-	public function setT_end(string time $tt_end): void
+	public function setT_end(string $tt_end): void
 	{
 		$this->tt_end = $tt_end;
 	}

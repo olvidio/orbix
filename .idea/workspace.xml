@@ -4,21 +4,19 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f178a244-4024-41f6-8417-4831ab0bb057" name="Changes" comment="Autonumérico para regiones">
-      <change afterPath="$PROJECT_DIR$/apps/misas/controller/crear_plantilla.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/misas/db/DB.php" afterDir="false" />
+    <list default="true" id="f178a244-4024-41f6-8417-4831ab0bb057" name="Changes" comment="cambio conexión listas">
       <change afterPath="$PROJECT_DIR$/apps/misas/db/DBEsquema.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/misas/domain/entity/Plantilla.php" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/apps/misas/domain/repositories/PlantillaRepository.php" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/apps/misas/domain/repositories/PlantillaRepositoryInterface.php" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/apps/misas/infrastructure/PgPlantillaRepository.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/misas/view/crear_plantilla.html.twig" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/misas/controller/lista_sacd.php" beforeDir="false" afterPath="$PROJECT_DIR$/apps/misas/controller/lista_sacd_zona.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/misas/controller/lista_sacd_zona.php" beforeDir="false" afterPath="$PROJECT_DIR$/apps/misas/controller/lista_sacd_zona.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/apps/misas/controller/misas_index.php" beforeDir="false" afterPath="$PROJECT_DIR$/apps/misas/controller/misas_index.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/misas/domain/entity/Plantilla.php" beforeDir="false" afterPath="$PROJECT_DIR$/apps/misas/domain/entity/Plantilla.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/misas/view/crear_plantilla.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/apps/misas/view/crear_plantilla.html.twig" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/apps/misas/view/lista_sacd.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/apps/misas/view/lista_sacd.html.twig" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/apps/misas/view/misas_index.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/apps/misas/view/misas_index.html.twig" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/exportar.js.php" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/exportar.js.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/web/Lista.php" beforeDir="false" afterPath="$PROJECT_DIR$/apps/web/Lista.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -87,26 +85,26 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;codeWithMe.voiceChat.enabledByDefault&quot;: &quot;false&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/home/dani/orbix_local/orbix&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.17356321&quot;,
-    &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;configurable.group.editor&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "codeWithMe.voiceChat.enabledByDefault": "false",
+    "last_opened_file_path": "/home/dani/orbix_local/orbix",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "Modules",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.17356321",
+    "run.code.analysis.last.selected.profile": "pProject Default",
+    "settings.editor.selected.configurable": "reference.webide.settings.project.settings.php",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/apps/pasarela/controller" />
@@ -610,6 +608,11 @@
           <url>file://$PROJECT_DIR$/apps/personas/controller/personas_select.php</url>
           <line>2</line>
           <option name="timeStamp" value="12" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="php">
+          <url>file://$PROJECT_DIR$/apps/misas/controller/lista_sacd_zona.php</url>
+          <line>39</line>
+          <option name="timeStamp" value="15" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

@@ -134,6 +134,7 @@ class Lista
         $aDatos = $this->aDatos;
         $key = $this->ikey;
         $clase = 'lista';
+        $id_tabla = $this->sid_tabla;
         //------------------------------------ html ------------------------------
         $Html = "<table class=\"$clase\"><tr>";
         foreach ($aCabeceras as $cabecera) {
@@ -157,16 +158,16 @@ class Lista
                 $clase .= " " . $aFila['clase'];
             }
             foreach ($aFila as $col => $valor) {
-                if ($col == "clase") {
+                if ($col === "clase") {
                     continue;
                 }
-                if ($col == "order") {
+                if ($col === "order") {
                     continue;
                 }
-                if ($col == "select") {
+                if ($col === "select") {
                     continue;
                 }
-                if ($col == "sel") {
+                if ($col === "sel") {
                     continue;
                 }
                 if (is_array($valor)) {
@@ -260,7 +261,7 @@ class Lista
         } else {
             $sPrefs = $this->formato_tabla;
         }
-        if ($sPrefs == 'html') {
+        if ($sPrefs === 'html') {
             return $this->mostrar_tabla_html();
         } else {
             return $this->mostrar_tabla_slickgrid();
@@ -324,7 +325,7 @@ class Lista
             return _("no hay ninguna fila");
         }
         if (!empty($a_botones)) {
-            if ($a_botones == "ninguno") {
+            if ($a_botones === "ninguno") {
                 $b = "x";
             } else {
                 foreach ($a_botones as $a_boton) {
@@ -353,7 +354,7 @@ class Lista
                     //$aColsVisible = empty($aPrefs['colVisible'])? '*' : $aPrefs['colVisible'];
                     //$aColsVisible = explode(',',$aPrefs['colVisible']);
                 }
-                $bPanelVis = ($aPrefs['panelVis'] == "si") ? true : false;
+                $bPanelVis = $aPrefs['panelVis'] === "si";
                 if (!empty($aPrefs['colWidths'])) {
                     $aColsWidth = $aPrefs['colWidths'];
                 }
@@ -377,7 +378,7 @@ class Lista
             $c++;
             $width = isset($aColsWidth['sel']) ? $aColsWidth['sel'] : 30;
             $sColumns .= "{id: \"sel\", name: \"sel\", field: \"sel\", width:$width, sortable: false, formatter: checkboxSelectionFormatter}";
-            if (!is_array($aColsVisible) || $aColsVisible['sel'] == "true") {
+            if (!is_array($aColsVisible) || $aColsVisible['sel'] === "true") {
                 $sColumnsVisible .= "{id: \"sel\", name: \"sel\", field: \"sel\", width:$width, sortable: false, formatter: checkboxSelectionFormatter},";
             }
         }
@@ -396,7 +397,7 @@ class Lista
                 $width = filter_var($width, FILTER_SANITIZE_NUMBER_INT);
                 $formatter = !empty($Cabecera['formatter']) ? $Cabecera['formatter'] : '';
                 if (!empty($Cabecera['visible'])) {
-                    if ($Cabecera['visible'] == 'No' || $Cabecera['visible'] == 'no') {
+                    if ($Cabecera['visible'] === 'No' || $Cabecera['visible'] === 'no') {
                         $visible = FALSE;
                     }
                 }
@@ -423,7 +424,7 @@ class Lista
                 $sDefCol .= "}";
                 $aFields[] = $name_idx;
             }
-            if ((is_array($aColsVisible) && !empty($aColsVisible[$name_idx]) && ($aColsVisible[$name_idx] == "true")) || !is_array($aColsVisible)) {
+            if ((is_array($aColsVisible) && !empty($aColsVisible[$name_idx]) && ($aColsVisible[$name_idx] === "true")) || !is_array($aColsVisible)) {
                 if (!$visible) continue;
                 if ($cv > 0) {
                     $sColumnsVisible .= ',';
@@ -454,18 +455,18 @@ class Lista
             $icol = 0;
             $aFilas[$num_fila]["id"] = $id_fila;
             foreach ($fila as $col => $valor) {
-                if ($col == "clase") {
+                if ($col === "clase") {
                     $id = $valor;
                     $aFilas[$num_fila]["clase"] = addslashes($id);
                     continue;
                 }
-                if ($col == "order") {
+                if ($col === "order") {
                     continue;
                 }
-                if ($col == "select") {
+                if ($col === "select") {
                     continue;
                 }
-                if ($col == "sel") {
+                if ($col === "sel") {
                     if (empty($b)) {
                         continue;
                     } // si no hay botones (por permisos...) no tiene sentido el checkbox
@@ -974,7 +975,7 @@ class Lista
             return _("no hay ninguna fila");
         }
         if (!empty($a_botones)) {
-            if ($a_botones == "ninguno") {
+            if ($a_botones === "ninguno") {
                 $b = "x";
             } else {
                 $b = 0;
@@ -1034,16 +1035,16 @@ class Lista
             }
             $tbody .= "<tr id='$id_fila' class='$clase'>";
             foreach ($fila as $col => $valor) {
-                if ($col == "clase") {
+                if ($col === "clase") {
                     continue;
                 }
-                if ($col == "order") {
+                if ($col === "order") {
                     continue;
                 }
-                if ($col == "select") {
+                if ($col === "select") {
                     continue;
                 }
-                if ($col == "sel") {
+                if ($col === "sel") {
                     if (empty($b)) continue; // si no hay botones (por permisos...) no tiene sentido el checkbox
                     $col = "";
                     if (is_array($valor)) {
@@ -1304,16 +1305,16 @@ class Lista
             ksort($fila);
             //$tbody.="<tr id='$id_fila' class='$clase'>";
             foreach ($fila as $col => $valor) {
-                if ($col == "clase") {
+                if ($col === "clase") {
                     continue;
                 }
-                if ($col == "order") {
+                if ($col === "order") {
                     continue;
                 }
-                if ($col == "select") {
+                if ($col === "select") {
                     continue;
                 }
-                if ($col == "sel") {
+                if ($col === "sel") {
                     if (empty($b)) continue; // si no hay botones (por permisos...) no tiene sentido el checkbox
                     $col = "";
                     if (is_array($valor)) {
