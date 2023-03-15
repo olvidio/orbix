@@ -107,15 +107,11 @@ class DBConnection
 
         // con odbc:
         //$str_conexio = $config['driver'] . ":" . $config['dbname'];
+        //$oDB = new \PDO($str_conexio, $config['user'], $config['password'], array(\PDO::ATTR_ERRMODE => \PDO::ERRMODE_WARNING, \PDO::ATTR_TIMEOUT => 3));
+
         // con sqlsrv
-        $str_conexio = $config['driver'] . $config['dbname'];
-        /* No se porque no va todo en una variable...
-        $str_conexio .= ", user='".$config['user']."'";
-        $str_conexio .= ", password='".$config['password']."'";
-        $str_conexio .= ", array(\PDO::ATTR_ERRMODE => \PDO::ERRMODE_WARNING)";
-        $oDB = new \PDO($str_conexio);
-        */
-        $oDB = new \PDO($str_conexio, $config['user'], $config['password'], array(\PDO::ATTR_ERRMODE => \PDO::ERRMODE_WARNING, \PDO::ATTR_TIMEOUT => 3));
+        $options = ['LoginTimeout' => 3];
+        $oDB = new \PDO("sqlsrv:server = " . $config['host'] . "; Database = " . $config['dbname'] . ";", $config['user'], $config['password'], $options);
 
         return $oDB;
     }
