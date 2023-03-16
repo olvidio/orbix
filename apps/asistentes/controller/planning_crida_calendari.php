@@ -5,6 +5,7 @@ use actividades\model\entity as actividades;
 use actividadestudios\model\entity as actividadestudios;
 use personas\model\entity as personas;
 use ubis\model\entity as ubis;
+use web\Hash;
 use web\Periodo;
 
 /**
@@ -52,6 +53,10 @@ if (!empty($a_sel)) { //vengo de un checkbox
 }
 
 echo "<button class='no_print' onclick=\"fnjs_exportar('html');\" >Descargar html</button>";
+
+$goLeyenda = Hash::link(core\ConfigGlobal::getWeb() . '/apps/zonassacd/controller/leyenda.php?' . http_build_query(array('id_item' => 1)));
+echo "<button class='no_print' onclick=\"window.open('$goLeyenda','leyenda','width=400,height=500,screenX=200,screenY=200,titlebar=yes');\" >Ver leyenda</button>";
+
 echo "<div id=\"exportar\">";
 $Qmodelo = (integer)filter_input(INPUT_POST, 'modelo');
 switch ($Qmodelo) {
