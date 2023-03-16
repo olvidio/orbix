@@ -324,7 +324,7 @@ class Lista
             return _("no hay ninguna fila");
         }
         if (!empty($a_botones)) {
-            if ($a_botones == "ninguno") {
+            if ($a_botones === "ninguno") {
                 $b = "x";
             } else {
                 foreach ($a_botones as $a_boton) {
@@ -450,22 +450,23 @@ class Lista
         foreach ($a_valores as $num_fila => $fila) {
             $f++;
             $id_fila = $f . $ahora;
-            uksort($fila,[$this, 'text_first']);
+            //uksort($fila,[$this, 'text_first']);
+            ksort($fila);
             $icol = 0;
             $aFilas[$num_fila]["id"] = $id_fila;
             foreach ($fila as $col => $valor) {
-                if ($col == "clase") {
+                if ($col === "clase") {
                     $id = $valor;
                     $aFilas[$num_fila]["clase"] = addslashes($id);
                     continue;
                 }
-                if ($col == "order") {
+                if ($col === "order") {
                     continue;
                 }
-                if ($col == "select") {
+                if ($col === "select") {
                     continue;
                 }
-                if ($col == "sel") {
+                if ($col === "sel") {
                     if (empty($b)) {
                         continue;
                     } // si no hay botones (por permisos...) no tiene sentido el checkbox

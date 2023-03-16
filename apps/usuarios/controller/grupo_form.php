@@ -65,7 +65,7 @@ $oMiUsuario = new usuarios\Usuario(core\ConfigGlobal::mi_id_usuario());
 $miRole = $oMiUsuario->getId_role();
 $miSfsv = core\ConfigGlobal::mi_sfsv();
 
-if ($Qquien == 'grupo') $obj = 'usuarios\\model\\entity\\Grupo';
+if ($Qquien === 'grupo') $obj = 'usuarios\\model\\entity\\Grupo';
 
 // a los usuarios normales (no administrador) sólo dejo ver la parte de los avisos.
 if ($miRole > 3) exit(_("no tiene permisos para ver esto")); // no es administrador
