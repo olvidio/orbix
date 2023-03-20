@@ -13,6 +13,9 @@ use misas\domain\repositories\PlantillaRepositoryInterface;
 use web\Desplegable;
 
 
+use web\TimeLocal;
+use web\NullTimeLocal;
+use core\ConverterDate;
 /**
  * Clase que adapta la tabla misa_plantillas_dl a la interfaz del repositorio
  *
@@ -20,7 +23,7 @@ use web\Desplegable;
  * @subpackage model
  * @author Daniel Serrabou
  * @version 2.0
- * @created 13/3/2023
+ * @created 20/3/2023
  */
 class PgPlantillaRepository extends ClaseRepository implements PlantillaRepositoryInterface
 {
@@ -80,6 +83,9 @@ class PgPlantillaRepository extends ClaseRepository implements PlantillaReposito
 		
 		$filas = $oDblSt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
+			// para las fechas del postgres (texto iso)
+			$aDatos['t_start'] = (new ConverterDate('time', $aDatos['t_start']))->fromPg();
+			$aDatos['t_end'] = (new ConverterDate('time', $aDatos['t_end']))->fromPg();
             $Plantilla = new Plantilla();
             $Plantilla->setAllAttributes($aDatos);
 			$PlantillaSet->add($Plantilla);
@@ -116,25 +122,27 @@ class PgPlantillaRepository extends ClaseRepository implements PlantillaReposito
 
 		$aDatos = [];
 		$aDatos['id_ctr'] = $Plantilla->getId_ctr();
-		$aDatos['que'] = $Plantilla->getQue();
+		$aDatos['tarea'] = $Plantilla->getTarea();
 		$aDatos['dia'] = $Plantilla->getDia();
 		$aDatos['semana'] = $Plantilla->getSemana();
 		$aDatos['id_nom'] = $Plantilla->getId_nom();
-		$aDatos['t_start'] = $Plantilla->getT_start();
-		$aDatos['t_end'] = $Plantilla->getT_end();
 		$aDatos['observ'] = $Plantilla->getObserv();
+        // para las fechas
+        $aDatos['t_start'] = (new ConverterDate('time', $Plantilla->getT_start()))->toPg();
+        $aDatos['t_end'] = (new ConverterDate('time', $Plantilla->getT_end()))->toPg();
+
 		array_walk($aDatos, 'core\poner_null');
 
 		if ($bInsert === FALSE) {
 			//UPDATE
 			$update="
 					id_ctr                   = :id_ctr,
-					que                      = :que,
+					tarea                    = :tarea,
 					dia                      = :dia,
 					semana                   = :semana,
-					id_nom                   = :id_nom,
 					t_start                  = :t_start,
 					t_end                    = :t_end,
+					id_nom                   = :id_nom,
 					observ                   = :observ";
 			if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_item = $id_item")) === FALSE) {
 				$sClaveError = 'PgPlantillaRepository.update.prepare';
@@ -154,8 +162,8 @@ class PgPlantillaRepository extends ClaseRepository implements PlantillaReposito
 		} else {
 			// INSERT
 			$aDatos['id_item'] = $Plantilla->getId_item();
-			$campos="(id_item,id_ctr,que,dia,semana,id_nom,t_start,t_end,observ)";
-			$valores="(:id_item,:id_ctr,:que,:dia,:semana,:id_nom,:t_start,:t_end,:observ)";		
+			$campos="(id_item,id_ctr,tarea,dia,semana,t_start,t_end,id_nom,observ)";
+			$valores="(:id_item,:id_ctr,:tarea,:dia,:semana,:t_start,:t_end,:id_nom,:observ)";		
 			if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === FALSE) {
 				$sClaveError = 'PgPlantillaRepository.insertar.prepare';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
@@ -207,6 +215,11 @@ class PgPlantillaRepository extends ClaseRepository implements PlantillaReposito
             return FALSE;
         }
 		$aDatos = $oDblSt->fetch(PDO::FETCH_ASSOC);
+		// para las fechas del postgres (texto iso)
+		if ($aDatos !== FALSE) {
+			$aDatos['t_start'] = (new ConverterDate('time', $aDatos['t_start']))->fromPg();
+			$aDatos['t_end'] = (new ConverterDate('time', $aDatos['t_end']))->fromPg();
+		}
         return $aDatos;
     }
     

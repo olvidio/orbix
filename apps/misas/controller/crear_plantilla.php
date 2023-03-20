@@ -2,12 +2,12 @@
 
 // INICIO Cabecera global de URL de controlador *********************************
 
-use core\ConfigGlobal;
+use misas\domain\repositories\PlantillaRepository;
+use personas\model\entity\PersonaSacd;
 use ubis\model\entity\GestorCentroDl;
 use ubis\model\entity\GestorCentroEllas;
 use web\Hash;
 use web\Lista;
-use web\TablaEditable;
 
 require_once("apps/core/global_header.inc");
 // Archivos requeridos por esta url **********************************************
@@ -74,6 +74,8 @@ $oTabla->setBotones($a_botones);
 $oTabla->setDatos($a_valores);
 */
 
+$reloj = core\ConfigGlobal::getWeb_icons() . '/reloj.png';
+
 /* tabla html */
 $a_cabeceras = [
     "id_ubi",
@@ -87,27 +89,76 @@ $a_cabeceras = [
     'D',
 ];
 
+$PlantillaRepository = new PlantillaRepository();
 $i = 0;
 $a_valores = [];
 foreach ($cCentros as $oCentro) {
     $i++;
     $id_ubi = "{$oCentro->getId_ubi()}"; // Para que lo coja como un string.
     $nombre_ubi = $oCentro->getNombre_ubi();
-    $que = 1; // 1:Misa, 2: bendicion
+    $tarea = 1; // 1:Misa, 2: bendición
     $a_valores[$i]['clase'] = 'tono2';
     $a_valores[$i][0] = $id_ubi;
     $a_valores[$i][1] = $nombre_ubi;
     $c = 1;
-    foreach ($a_cabeceras as $column ) {
+    foreach ($a_cabeceras as $column) {
         $c++;
         if ($column === 'id_ubi' || $column === _("Centro")) {
             continue;
         }
-        $sacd = '??';
+        switch ($column) {
+            case 'L':
+                $dia = 'MON';
+                break;
+            case 'M':
+                $dia = 'TUE';
+                break;
+            case 'X':
+                $dia = 'WED';
+                break;
+            case 'J':
+                $dia ='THU';
+                break;
+            case 'V':
+                $dia = 'FRI';
+                break;
+            case 'S':
+                $dia = 'SAT';
+                break;
+            case 'D':
+                $dia = 'SUN';
+                break;
+        }
+        $semana = 0;
         $id_item = '';
-        $a_cosas = ['id_zona' => $Qid_zona, 'id_ubi' => $id_ubi, 'que' => $que, 'column' => $column, 'id_item' => $id_item];
+        $aWhere = [
+                'id_ctr' => $id_ubi,
+                'tarea' => $tarea,
+                'dia' => $dia,
+                'semana' => $semana,
+        ];
+        $cPlantillas = $PlantillaRepository->getPlantillas($aWhere);
+        if (is_array($cPlantillas) && count($cPlantillas) > 0) {
+            $oPlantilla = $cPlantillas[0];
+            $id_item = $oPlantilla->getId_item();
+            $id_nom = $oPlantilla->getId_nom();
+            $oPersonaSacd = new PersonaSacd($id_nom);
+            $sacd = $oPersonaSacd->getNombreApellidos();
+        } else {
+            $sacd = '??';
+        }
+        $a_cosas = ['id_zona' => $Qid_zona,
+            'id_ubi' => $id_ubi,
+            'tarea' => $tarea,
+            'dia' => $dia,
+            'semana' => $semana,
+            'id_item' => $id_item,
+        ];
         $pagina = Hash::link(core\ConfigGlobal::getWeb() . '/apps/misas/controller/lista_sacd_zona.php?' . http_build_query($a_cosas));
-        $a_valores[$i][$c] = "<span class=link onclick=\"fnjs_modificar('$pagina');\">$sacd</span>";
+        $texto_nombre = "<span class=link onclick=\"fnjs_modificar('$pagina');\">$sacd</span>";
+        $pagina_horario = Hash::link(core\ConfigGlobal::getWeb() . '/apps/misas/controller/horario_tarea.php?' . http_build_query($a_cosas));
+        $icono_horario = "<span class=link onclick=\"fnjs_modificar('$pagina_horario');\"><img src=\"$reloj\" width=\"12\" height=\"12\" style=\"float: right; margin: 0px 0px 15px 15px;\" alt=\"" . _("horario") . "\"></span>";
+        $a_valores[$i][$c] = $texto_nombre . $icono_horario;
     }
 }
 
@@ -118,8 +169,17 @@ $oTabla->setBotones($a_botones);
 $oTabla->setDatos($a_valores);
 
 
+// ----------- contribución no duerme -------------------
+$url = 'apps/misas/controller/crear_plantilla.php';
+$aQuery = ['id_zona' => $Qid_zona];
+// el hppt_build_query no pasa los valores null
+array_walk($aQuery, 'core\poner_empty_on_null');
+$url_crear_plantilla = web\Hash::link($url . '?' . http_build_query($aQuery));
+
+
 $a_campos = ['oPosicion' => $oPosicion,
     'oTabla' => $oTabla,
+    'url_crear_plantilla' => $url_crear_plantilla,
 ];
 
 $oView = new core\ViewTwig('misas/controller');

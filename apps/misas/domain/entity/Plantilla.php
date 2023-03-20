@@ -1,6 +1,8 @@
 <?php
 
 namespace misas\domain\entity;
+	use web\TimeLocal;
+	use web\NullTimeLocal;
 /**
  * Clase que implementa la entidad misa_plantillas_dl
  *
@@ -8,7 +10,7 @@ namespace misas\domain\entity;
  * @subpackage model
  * @author Daniel Serrabou
  * @version 2.0
- * @created 13/3/2023
+ * @created 20/3/2023
  */
 class Plantilla {
 
@@ -27,17 +29,17 @@ class Plantilla {
 	 */
 	 private int $iid_ctr;
 	/**
-	 * Que de Plantilla
+	 * Tarea de Plantilla
 	 *
 	 * @var int
 	 */
-	 private int $ique;
+	 private int $itarea;
 	/**
 	 * Dia de Plantilla
 	 *
-	 * @var int
+	 * @var string
 	 */
-	 private int $idia;
+	 private string $sdia;
 	/**
 	 * Semana de Plantilla
 	 *
@@ -45,23 +47,23 @@ class Plantilla {
 	 */
 	 private int|null $isemana = null;
 	/**
+	 * T_start de Plantilla
+	 *
+	 * @var TimeLocal|null
+	 */
+	 private TimeLocal|null $tt_start = null;
+	/**
+	 * T_end de Plantilla
+	 *
+	 * @var TimeLocal|null
+	 */
+	 private TimeLocal|null $tt_end = null;
+	/**
 	 * Id_nom de Plantilla
 	 *
 	 * @var int|null
 	 */
 	 private int|null $iid_nom = null;
-	/**
-	 * T_start de Plantilla
-	 *
-	 * @var string $tt_start
-	 */
-	 private string $tt_start;
-	/**
-	 * T_end de Plantilla
-	 *
-	 * @var string $tt_end
-	 */
-	 private string $tt_end;
 	/**
 	 * Observ de Plantilla
 	 *
@@ -87,9 +89,9 @@ class Plantilla {
 		{
 			$this->setId_ctr($aDatos['id_ctr']);
 		}
-		if (array_key_exists('que',$aDatos))
+		if (array_key_exists('tarea',$aDatos))
 		{
-			$this->setQue($aDatos['que']);
+			$this->setTarea($aDatos['tarea']);
 		}
 		if (array_key_exists('dia',$aDatos))
 		{
@@ -99,10 +101,6 @@ class Plantilla {
 		{
 			$this->setSemana($aDatos['semana']);
 		}
-		if (array_key_exists('id_nom',$aDatos))
-		{
-			$this->setId_nom($aDatos['id_nom']);
-		}
 		if (array_key_exists('t_start',$aDatos))
 		{
 			$this->setT_start($aDatos['t_start']);
@@ -110,6 +108,10 @@ class Plantilla {
 		if (array_key_exists('t_end',$aDatos))
 		{
 			$this->setT_end($aDatos['t_end']);
+		}
+		if (array_key_exists('id_nom',$aDatos))
+		{
+			$this->setId_nom($aDatos['id_nom']);
 		}
 		if (array_key_exists('observ',$aDatos))
 		{
@@ -151,35 +153,35 @@ class Plantilla {
 	}
 	/**
 	 *
-	 * @return int $ique
+	 * @return int $itarea
 	 */
-	public function getQue(): int
+	public function getTarea(): int
 	{
-		return $this->ique;
+		return $this->itarea;
 	}
 	/**
 	 *
-	 * @param int $ique
+	 * @param int $itarea
 	 */
-	public function setQue(int $ique): void
+	public function setTarea(int $itarea): void
 	{
-		$this->ique = $ique;
+		$this->itarea = $itarea;
 	}
 	/**
 	 *
-	 * @return int $idia
+	 * @return string $sdia
 	 */
-	public function getDia(): int
+	public function getDia(): string
 	{
-		return $this->idia;
+		return $this->sdia;
 	}
 	/**
 	 *
-	 * @param int $idia
+	 * @param string $sdia
 	 */
-	public function setDia(int $idia): void
+	public function setDia(string $sdia): void
 	{
-		$this->idia = $idia;
+		$this->sdia = $sdia;
 	}
 	/**
 	 *
@@ -199,6 +201,38 @@ class Plantilla {
 	}
 	/**
 	 *
+	 * @return TimeLocal|NullTimeLocal|null $tt_start
+	 */
+	public function getT_start(): TimeLocal|NullTimeLocal|null
+	{
+        return $this->tt_start?? new NullTimeLocal;
+	}
+	/**
+	 * 
+	 * @param TimeLocal|null $tt_start
+	 */
+	public function setT_start(TimeLocal|null $tt_start = null): void
+	{
+        $this->tt_start = $tt_start;
+	}
+	/**
+	 *
+	 * @return TimeLocal|NullTimeLocal|null $tt_end
+	 */
+	public function getT_end(): TimeLocal|NullTimeLocal|null
+	{
+        return $this->tt_end?? new NullTimeLocal;
+	}
+	/**
+	 * 
+	 * @param TimeLocal|null $tt_end
+	 */
+	public function setT_end(TimeLocal|null $tt_end = null): void
+	{
+        $this->tt_end = $tt_end;
+	}
+	/**
+	 *
 	 * @return int|null $iid_nom
 	 */
 	public function getId_nom(): ?int
@@ -212,38 +246,6 @@ class Plantilla {
 	public function setId_nom(?int $iid_nom = null): void
 	{
 		$this->iid_nom = $iid_nom;
-	}
-	/**
-	 *
-	 * @return string time $tt_start
-	 */
-	public function getT_start(): string
-	{
-		return $this->tt_start;
-	}
-	/**
-	 *
-	 * @param string time $tt_start
-	 */
-	public function setT_start(string $tt_start): void
-	{
-		$this->tt_start = $tt_start;
-	}
-	/**
-	 *
-	 * @return string time $tt_end
-	 */
-	public function getT_end(): string
-	{
-		return $this->tt_end;
-	}
-	/**
-	 *
-	 * @param string time $tt_end
-	 */
-	public function setT_end(string $tt_end): void
-	{
-		$this->tt_end = $tt_end;
 	}
 	/**
 	 *

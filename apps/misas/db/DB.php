@@ -52,12 +52,12 @@ class DB extends DBAbstract
             id_schema integer NOT NULL,
             id_item integer NOT NULL,
             id_ctr integer NOT NULL,
-            que smallint NOT NULL,
-            dia smallint NOT NULL,
+            tarea smallint NOT NULL,
+            dia varchar(3) NOT NULL,
             semana smallint,
+            t_start TIME,
+            t_end TIME,
             id_nom integer,
-            t_start TIME NOT NULL,
-            t_end TIME NOT NULL,
             observ text
             );";
         $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->user_orbix";

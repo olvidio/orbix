@@ -4,19 +4,30 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f178a244-4024-41f6-8417-4831ab0bb057" name="Changes" comment="cambio conexión listas">
-      <change afterPath="$PROJECT_DIR$/apps/misas/db/DBEsquema.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/misas/domain/repositories/PlantillaRepository.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/misas/domain/repositories/PlantillaRepositoryInterface.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/misas/infrastructure/PgPlantillaRepository.php" afterDir="false" />
+    <list default="true" id="f178a244-4024-41f6-8417-4831ab0bb057" name="Changes" comment="antes de reconstruir packages.json (npm)">
+      <change afterPath="$PROJECT_DIR$/apps/misas/controller/asignar_sacd.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/apps/misas/controller/horario_tarea.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/apps/misas/view/horario_tarea.html.twig" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/apps/web/NullTimeLocal.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/apps/web/TimeLocal.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/images/reloj.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/core/ClaseRepository.php" beforeDir="false" afterPath="$PROJECT_DIR$/apps/core/ClaseRepository.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/core/ConverterDate.php" beforeDir="false" afterPath="$PROJECT_DIR$/apps/core/ConverterDate.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/devel/controller/factory.php" beforeDir="false" afterPath="$PROJECT_DIR$/apps/devel/controller/factory.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/misas/controller/crear_plantilla.php" beforeDir="false" afterPath="$PROJECT_DIR$/apps/misas/controller/crear_plantilla.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/apps/misas/controller/lista_sacd_zona.php" beforeDir="false" afterPath="$PROJECT_DIR$/apps/misas/controller/lista_sacd_zona.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/misas/controller/misas_index.php" beforeDir="false" afterPath="$PROJECT_DIR$/apps/misas/controller/misas_index.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/misas/db/DB.php" beforeDir="false" afterPath="$PROJECT_DIR$/apps/misas/db/DB.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/misas/db/DBEsquema.php" beforeDir="false" afterPath="$PROJECT_DIR$/apps/misas/db/DBEsquema.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/apps/misas/domain/entity/Plantilla.php" beforeDir="false" afterPath="$PROJECT_DIR$/apps/misas/domain/entity/Plantilla.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/misas/domain/repositories/PlantillaRepository.php" beforeDir="false" afterPath="$PROJECT_DIR$/apps/misas/domain/repositories/PlantillaRepository.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/misas/domain/repositories/PlantillaRepositoryInterface.php" beforeDir="false" afterPath="$PROJECT_DIR$/apps/misas/domain/repositories/PlantillaRepositoryInterface.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/misas/infrastructure/PgPlantillaRepository.php" beforeDir="false" afterPath="$PROJECT_DIR$/apps/misas/infrastructure/PgPlantillaRepository.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/apps/misas/view/crear_plantilla.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/apps/misas/view/crear_plantilla.html.twig" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/apps/misas/view/lista_sacd.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/apps/misas/view/lista_sacd.html.twig" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/misas/view/misas_index.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/apps/misas/view/misas_index.html.twig" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/web/Lista.php" beforeDir="false" afterPath="$PROJECT_DIR$/apps/web/Lista.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/libs/vendor/mpdf/mpdf/src/Mpdf.php" beforeDir="false" afterPath="$PROJECT_DIR$/libs/vendor/mpdf/mpdf/src/Mpdf.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/libs/vendor/mpdf/mpdf/src/TTFontFile.php" beforeDir="false" afterPath="$PROJECT_DIR$/libs/vendor/mpdf/mpdf/src/TTFontFile.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/libs/vendor/twig/twig/src/Node/CheckSecurityNode.php" beforeDir="false" afterPath="$PROJECT_DIR$/libs/vendor/twig/twig/src/Node/CheckSecurityNode.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -91,7 +102,7 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "false",
     "codeWithMe.voiceChat.enabledByDefault": "false",
-    "last_opened_file_path": "/home/dani/orbix_local/orbix",
+    "last_opened_file_path": "/home/dani/orbix_local/orbix/apps/misas/view",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -107,6 +118,8 @@
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/apps/misas/view" />
+      <recent name="$PROJECT_DIR$/apps/misas/controller" />
       <recent name="$PROJECT_DIR$/apps/pasarela/controller" />
       <recent name="$PROJECT_DIR$/apps/pasarela/model" />
       <recent name="$PROJECT_DIR$/apps/pasarela/view" />
@@ -207,6 +220,9 @@
       <workItem from="1674138764360" duration="4000" />
       <workItem from="1678724060248" duration="8858000" />
       <workItem from="1678781795393" duration="4576000" />
+      <workItem from="1678980819666" duration="3903000" />
+      <workItem from="1679049406925" duration="613000" />
+      <workItem from="1679297364785" duration="24229000" />
     </task>
     <task id="LOCAL-00011" summary="pasarela parametros contribucion">
       <created>1665476340157</created>
@@ -569,7 +585,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="quitar la serie en tarifa tipo activ" />
     <MESSAGE value="Error al exportar pasarela. confusión id_ubi y id_ctr" />
     <MESSAGE value="error al entrar como casa (func_tablas)" />
     <MESSAGE value="poner nombre en vez de id_nom al grabar notas acta" />
@@ -594,7 +609,8 @@
     <MESSAGE value="redondeo duracion acttividades pasarela" />
     <MESSAGE value="permisos. poner agd en ca, crt de n" />
     <MESSAGE value="muchos cambios por subir, no sé de que" />
-    <option name="LAST_COMMIT_MESSAGE" value="muchos cambios por subir, no sé de que" />
+    <MESSAGE value="antes de reconstruir packages.json (npm)" />
+    <option name="LAST_COMMIT_MESSAGE" value="antes de reconstruir packages.json (npm)" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -608,11 +624,6 @@
           <url>file://$PROJECT_DIR$/apps/personas/controller/personas_select.php</url>
           <line>2</line>
           <option name="timeStamp" value="12" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="php">
-          <url>file://$PROJECT_DIR$/apps/misas/controller/lista_sacd_zona.php</url>
-          <line>39</line>
-          <option name="timeStamp" value="15" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

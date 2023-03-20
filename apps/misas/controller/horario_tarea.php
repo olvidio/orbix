@@ -31,6 +31,7 @@ $dao_plantilla->semana = $Qsemana;
 $dao_plantilla->id_item = $Qid_item;
 
 
+/*
 $gesZonaSacd = new GestorZonaSacd();
 $a_Id_nom = $gesZonaSacd->getSacdsZona($Qid_zona);
 
@@ -64,6 +65,9 @@ $a_campos = ['oPosicion' => $oPosicion,
 		'oTabla' => $oTabla,
     'param_quitar' => $param_quitar,
 ];
+*/
+
+$a_campos = [];
 
 $oView = new core\ViewTwig('misas/controller');
-echo $oView->render('lista_sacd.html.twig', $a_campos);
+echo $oView->render('horario_tarea.html.twig', $a_campos);

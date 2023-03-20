@@ -5619,7 +5619,7 @@ class Mpdf implements \Psr\Log\LoggerAwareInterface
 			} else {
 				$tx = UtfString::code2utf($c);
 				if ($this->usingCoreFont) {
-					$tx = utf8_decode($tx);
+					$tx = mb_convert_encoding($tx, 'ISO-8859-1');
 				} else {
 					$tx = $this->writer->utf8ToUtf16BigEndian($tx, false);
 				}

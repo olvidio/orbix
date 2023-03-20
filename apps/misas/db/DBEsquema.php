@@ -99,7 +99,7 @@ class DBEsquema extends DBAbstract
         $a_sql[] = "ALTER TABLE $nom_tabla ADD PRIMARY KEY (id_item); ";
 
         $a_sql[] = "ALTER TABLE $nom_tabla ADD CONSTRAINT misa_plantillas_dl_ukey
-                    UNIQUE (id_ctr, que, dia, semana); ";
+                    UNIQUE (id_ctr, tarea, dia, semana); ";
 
         $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->role; ";
 

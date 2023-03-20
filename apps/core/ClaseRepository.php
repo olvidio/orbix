@@ -32,7 +32,7 @@ abstract class ClaseRepository
      *
      * @param integer $iid_schema
      */
-    public function setId_schema(int $iid_schema)
+    public function setId_schema(int $iid_schema): void
     {
         $this->iid_schema = $iid_schema;
     }
@@ -42,7 +42,7 @@ abstract class ClaseRepository
      *
      * @return PDO $oDbl
      */
-    public function getoDbl()
+    public function getoDbl(): PDO
     {
         return $this->oDbl;
     }
@@ -52,7 +52,7 @@ abstract class ClaseRepository
      *
      * @param PDO $oDbl
      */
-    public function setoDbl(PDO $oDbl)
+    public function setoDbl(PDO $oDbl): void
     {
         $this->oDbl = $oDbl;
     }
@@ -61,7 +61,7 @@ abstract class ClaseRepository
      *
      * @return string $sNomTabla
      */
-    public function getNomTabla()
+    public function getNomTabla(): string
     {
         return $this->sNomTabla;
     }
@@ -69,7 +69,7 @@ abstract class ClaseRepository
     /**
      * @param string $sNomTabla
      */
-    public function setNomTabla(string $sNomTabla)
+    public function setNomTabla(string $sNomTabla): void
     {
         $this->sNomTabla = $sNomTabla;
     }
@@ -78,7 +78,7 @@ abstract class ClaseRepository
      * sErrorTxt
      * @return string
      */
-    public function getErrorTxt()
+    public function getErrorTxt(): string
     {
         return $this->sErrorTxt;
     }
@@ -106,7 +106,7 @@ abstract class ClaseRepository
      *
      * @return integer $iid_schema
      */
-    protected function getId_schema()
+    protected function getId_schema(): int
     {
         return $this->iid_schema;
     }
@@ -116,7 +116,7 @@ abstract class ClaseRepository
      * @param string $sErrorTxt
      * @return ClaseRepository
      */
-    protected function setErrorTxt(string $sErrorTxt)
+    protected function setErrorTxt(string $sErrorTxt): ClaseRepository
     {
         $this->sErrorTxt = $sErrorTxt;
         return $this;

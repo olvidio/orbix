@@ -216,6 +216,7 @@ $altres_gets_set = "";
 $query_if = "";
 $guardar_array = "";
 $guardar_bytea = "";
+$guardar_time = "";
 $guardar_fechas = "";
 $guardar_json = "";
 $err_bool = "";
@@ -254,6 +255,9 @@ foreach ($oDbl->query($sql) as $row) {
             $a_use_txt['ConverterDate'] = "use core\ConverterDate";
             break;
         case 'time':
+            $a_use_txt['TimeLocal'] = "use web\TimeLocal";
+            $a_use_txt['NullTimeLocal'] = "use web\NullTimeLocal";
+            $a_use_txt['ConverterDate'] = "use core\ConverterDate";
             break;
         case 'bool':
             $a_use_txt['is_true'] = "use function core\is_true";
@@ -354,9 +358,11 @@ foreach ($oDbl->query($sql) as $row) {
             $fechas_dades .= '$aDatos[\'' . $nomcamp . '\'] = (new ConverterDate(\'' . $tipo . '\', $aDatos[\'' . $nomcamp . '\']))->fromPg();';
             break;
         case 'time':
-            $tipo_db = 'string time';
+            $tipo_db = 'TimeLocal';
             $tip = 't';
             $tip_val = '';
+            $fechas_dades .= "\n\t\t\t";
+            $fechas_dades .= '$aDatos[\'' . $nomcamp . '\'] = (new ConverterDate(\'' . $tipo . '\', $aDatos[\'' . $nomcamp . '\']))->fromPg();';
             break;
         case 'bool':
             $tipo_db = 'bool';
@@ -475,6 +481,18 @@ foreach ($oDbl->query($sql) as $row) {
         return $this->' . $tip . $nomcamp . '?? new NullDateTimeLocal;
 	}';
             break;
+        case 'time':
+            $metodo_get = 'get' . $NomCamp . '()';
+            $gets .= '
+	/**
+	 *
+	 * @return TimeLocal|NullTimeLocal|null' . ' $' . $tip . $nomcamp;
+            $gets .= "\n\t" . ' */
+	public function get' . $NomCamp . '(): TimeLocal|NullTimeLocal|null
+	{
+        return $this->' . $tip . $nomcamp . '?? new NullTimeLocal;
+	}';
+            break;
         default:
             $metodo_get = 'get' . $NomCamp . '()';
             $gets .= '
@@ -540,6 +558,17 @@ foreach ($oDbl->query($sql) as $row) {
         $this->' . $tip . $nomcamp . ' = $' . $tip . $nomcamp . ';
 	}';
                 break;
+            case 'time':
+                $gets .= '
+	/**
+	 * 
+	 * @param TimeLocal|null $' . $tip . $nomcamp . '
+	 */
+	public function set' . $NomCamp . '(TimeLocal|null $' . $tip . $nomcamp . ' = null): void
+	{
+        $this->' . $tip . $nomcamp . ' = $' . $tip . $nomcamp . ';
+	}';
+                break;
             default:
                 $gets .= '
 	/**
@@ -591,6 +620,7 @@ foreach ($oDbl->query($sql) as $row) {
         case 'date':
         case 'timestamp':
         case 'timestamptz';
+        case 'time';
             $exists .= "\n\t\t" . 'if (array_key_exists(\'' . $nomcamp . '\',$aDatos))';
             $exists .= "\n\t\t{";
             $exists .= "\n\t\t\t" . '$this->set' . $NomCamp . '($aDatos[\'' . $nomcamp . '\']);';
@@ -615,6 +645,9 @@ foreach ($oDbl->query($sql) as $row) {
             }
             if ($tipo === 'bytea') {
                 $guardar_bytea .= "\n\t\t" . '$aDatos[\'' . $nomcamp . '\'] = bin2hex($' . $Q_clase . '->' . $metodo_get . ');';
+            }
+            if ($tipo_db === 'TimeLocal') {
+                $guardar_time .= "\n\t\t" . '$aDatos[\'' . $nomcamp . '\'] = (new ConverterDate(\'' . $tipo . '\', $' . $Q_clase . '->' . $metodo_get . '))->toPg();';
             }
             if ($tipo_db === 'DateTimeLocal') {
                 $guardar_fechas .= "\n\t\t" . '$aDatos[\'' . $nomcamp . '\'] = (new ConverterDate(\'' . $tipo . '\', $' . $Q_clase . '->' . $metodo_get . '))->toPg();';
@@ -660,6 +693,12 @@ if (!empty($a_use_txt['DateTimeLocal'])) {
 }
 if (!empty($a_use_txt['NullDateTimeLocal'])) {
     $txt_entidad .= "\n\t" . 'use web\NullDateTimeLocal;';
+}
+if (!empty($a_use_txt['TimeLocal'])) {
+    $txt_entidad .= "\n\t" . 'use web\TimeLocal;';
+}
+if (!empty($a_use_txt['NullTimeLocal'])) {
+    $txt_entidad .= "\n\t" . 'use web\NullTimeLocal;';
 }
 if (!empty($a_use_txt['stdClass'])) {
     $txt_entidad .= "\n\t" . 'use stdClass;';
@@ -1117,6 +1156,10 @@ if ($guardar_array) {
 if ($guardar_bytea) {
     $txt_pgRepositorio .= "\n\t\t// para los bytea";
     $txt_pgRepositorio .= $guardar_bytea;
+}
+if ($guardar_time) {
+    $txt_pgRepositorio .= "\n\t\t// para las horas";
+    $txt_pgRepositorio .= $guardar_time;
 }
 if ($guardar_fechas) {
     $txt_pgRepositorio .= "\n\t\t// para las fechas";
