@@ -1,19 +1,33 @@
-<input type='button' value="{{ "quitar el actual"|trans|raw }}" onclick="fnjs_quitar_sacd('{{ param_quitar|raw }}');">
+<input type='button' value="{{ "quitar el actual"|trans|raw }}"
+       onclick="fnjs_quitar_horario('{{ param_quitar|raw }}');">
+<input type='button' value="{{ "guardar"|trans|raw }}" onclick="fnjs_guardar_horario('{{ param_guardar|raw }}');">
 <hr>
 
-<label for="t_start">{{ "Inicio"|trans|raw }}</label><input id="t_start" type="text">
-<label for="t_end">{{ "Fin"|trans|raw }}</label><input id="t_end" type="text">
-
-
+<div class="input-group clockpicker">
+    <label for="t_start">{{ "Inicio"|trans|raw }}</label>
+    <input id="t_start" type="text" class="form-control" size="3" value="09:32" style="float: right;">
+    <span class="input-group-addon">
+        <span class="glyphicon glyphicon-time"></span>
+    </span>
+</div>
+<div class="input-group clockpicker" style="margin-top: 10px;">
+    <label for="t_end">{{ "Fin"|trans|raw }}</label>
+    <input id="t_end" type="text" class="form-control" size="3" value="09:32" style="float: right;">
+    <span class="input-group-addon">
+        <span class="glyphicon glyphicon-time"></span>
+    </span>
+</div>
 <hr>
+
 <input type='button' value="{{ "cancel"|trans|raw }}" onclick="fnjs_cerrar();">
-<script>
-    $(function () {
-        $("#t_start").datepicker({
-            controls: ['time'],
-    select: 'range',
-    touchUi: true
-        })
-    });
 
+
+<script type="text/javascript">
+    $('.clockpicker').clockpicker({
+            placement: 'bottom',
+            align: 'right',
+            donetext: 'Correcto!'
+        }
+    );
 </script>
+

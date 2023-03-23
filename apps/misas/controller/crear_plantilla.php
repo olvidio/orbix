@@ -169,7 +169,6 @@ $oTabla->setBotones($a_botones);
 $oTabla->setDatos($a_valores);
 
 
-// ----------- contribución no duerme -------------------
 $url = 'apps/misas/controller/crear_plantilla.php';
 $aQuery = ['id_zona' => $Qid_zona];
 // el hppt_build_query no pasa los valores null
