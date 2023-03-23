@@ -182,7 +182,15 @@ case 2201:
         }
 
         // -----------------------------
-
+        $rowEmpty = [
+            'id_nivel_asig' => '',
+            'id_nivel' => '',
+            'id_asignatura' => '',
+            'nombre_asignatura' => '',
+            'acta' => '',
+            'fecha' => '',
+            'nota' => '',
+        ];
         // -----------------------------  cabecera ---------------------------------
         ?>
         <head>
@@ -264,19 +272,18 @@ case 2201:
                 reset($aAprobadas);
                 while ($a < count($cAsignaturas)) {
                     $oAsignatura = $cAsignaturas[$a++];
-                    if (key($aAprobadas) === null) { // ha llegado al final
-                        break;
-                    }
                     $row = current($aAprobadas);
+                    if (key($aAprobadas) === null) { // ha llegado al final
+                        $row = $rowEmpty;
+                    }
                     while (($row['id_nivel_asig'] < $oAsignatura->getId_nivel()) && ($j < $num_asig)) {
                         if (key($aAprobadas) === null) { // ha llegado al final
-                            break;
-                        }
-                        $row = current($aAprobadas);
-                        if ($row === FALSE) {
-                            break;
+                            $row = $rowEmpty;
+                        } else {
+                            $row = current($aAprobadas);
                         }
                         if (next($aAprobadas) === FALSE) {
+                            $row = $rowEmpty;
                             break;
                         }
                         $j++;

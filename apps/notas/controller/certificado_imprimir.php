@@ -161,6 +161,16 @@ function titulo($id_asignatura)
     return $html;
 }
 
+// -----------------------------
+$rowEmpty = [
+    'id_nivel_asig' => '',
+    'id_nivel' => '',
+    'id_asignatura' => '',
+    'nombre_asignatura' => '',
+    'acta' => '',
+    'fecha' => '',
+    'nota' => '',
+];
 // -----------------------------  cabecera ---------------------------------
 $caraA = web\Hash::link('apps/notas/controller/certificado_imprimir.php?' . http_build_query(array('cara' => 'A', 'id_nom' => $id_nom, 'id_tabla' => $id_tabla, 'refresh' => 1)));
 $caraB = web\Hash::link('apps/notas/controller/certificado_imprimir.php?' . http_build_query(array('cara' => 'B', 'id_nom' => $id_nom, 'id_tabla' => $id_tabla, 'refresh' => 1)));
@@ -267,6 +277,10 @@ $j = 0;
 $i = 0;
 reset($aAprobadas);
 $row = current($aAprobadas);
+ if (key($aAprobadas) === null) { // ha llegado al final
+        $row = $rowEmpty;
+    }
+
 while ($a < count($cAsignaturas)) {
     $oAsignatura = $cAsignaturas[$a++];
 
@@ -277,27 +291,29 @@ while ($a < count($cAsignaturas)) {
         continue;
     }
     if ($Qcara === "B" && $oAsignatura->getId_nivel() < 2200) {
-        while (($row["id_nivel"] < 2200) && ($j < $num_asig)) {
-            $row = current($aAprobadas);
-            if ($row === FALSE) {
-                break;
+        if (key($aAprobadas) === null) { // ha llegado al final
+                $row = $rowEmpty;
             }
+        while (($row["id_nivel"] < 2200) && ($j < $num_asig)) {
+            if (key($aAprobadas) === null) { // ha llegado al final
+                    $row = $rowEmpty;
+                } else {
+                    $row = current($aAprobadas);
+                }
             if (next($aAprobadas) === FALSE) {
+                $row = $rowEmpty;
                 break;
             }
             $j++;
         }
         continue;
-        prev($aAprobadas);
     }
     while (($j < $num_asig) && ($row['id_nivel_asig'] < $oAsignatura->getId_nivel())) {
         if (key($aAprobadas) === null) { // ha llegado al final
+             $row = $rowEmpty;
             break;
         }
         $row = current($aAprobadas);
-        if ($row === FALSE) {
-            break;
-        }
         if (next($aAprobadas) === FALSE) {
             break;
         }
