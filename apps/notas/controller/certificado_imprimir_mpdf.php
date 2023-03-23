@@ -273,7 +273,10 @@ case 2201:
                             break;
                         }
                         $row = current($aAprobadas);
-                        if ($row !== FALSE && next($aAprobadas) === FALSE) {
+                        if ($row === FALSE) {
+                            break;
+                        }
+                        if (next($aAprobadas) === FALSE) {
                             break;
                         }
                         $j++;
