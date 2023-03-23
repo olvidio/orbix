@@ -273,7 +273,9 @@ case 2201:
                             break;
                         }
                         $row = current($aAprobadas);
-                        next($aAprobadas);
+                        if ($row !== FALSE && next($aAprobadas) === FALSE) {
+                            break;
+                        }
                         $j++;
                     }
                     while (($oAsignatura->getId_nivel() < $row["id_nivel_asig"]) && ($row["id_nivel"] < 2434)) {

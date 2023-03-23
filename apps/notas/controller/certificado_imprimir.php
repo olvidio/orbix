@@ -279,7 +279,9 @@ while ($a < count($cAsignaturas)) {
     if ($Qcara === "B" && $oAsignatura->getId_nivel() < 2200) {
         while (($row["id_nivel"] < 2200) && ($j < $num_asig)) {
             $row = current($aAprobadas);
-            next($aAprobadas);
+            if ($row !== FALSE && next($aAprobadas) === FALSE) {
+                break;
+            }
             $j++;
         }
         continue;
@@ -290,7 +292,9 @@ while ($a < count($cAsignaturas)) {
             break;
         }
         $row = current($aAprobadas);
-        next($aAprobadas);
+        if ($row !== FALSE && next($aAprobadas) === FALSE) {
+            break;
+        }
         $j++;
     }
     while (($oAsignatura->getId_nivel() < $row["id_nivel_asig"]) && ($row["id_nivel"] < 2434)) {

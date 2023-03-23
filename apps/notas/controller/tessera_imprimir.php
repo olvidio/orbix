@@ -295,7 +295,9 @@ $h = $oHash->linkSinVal();
         if ($Qcara == "B" && $oAsignatura->getId_nivel() < 2108) {
             while (($row["id_nivel"] < 2107) && ($j < $num_asig)) {
                 $row = current($aAprobadas);
-                next($aAprobadas);
+                if ($row !== FALSE && next($aAprobadas) === FALSE) {
+                    break;
+                }
                 $j++;
             }
             continue;
@@ -303,7 +305,9 @@ $h = $oHash->linkSinVal();
         }
         while (($row['id_nivel_asig'] < $oAsignatura->getId_nivel()) && ($j < $num_asig)) {
             $row = current($aAprobadas);
-            next($aAprobadas);
+            if ($row !== FALSE && next($aAprobadas) === FALSE) {
+                break;
+            }
             $j++;
         }
         while (($oAsignatura->getId_nivel() < $row["id_nivel_asig"]) && ($row["id_nivel"] < 2434)) {

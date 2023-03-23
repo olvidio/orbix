@@ -282,7 +282,9 @@ case 2108:
                     $row = current($aAprobadas);
                     while (($row['id_nivel_asig'] < $oAsignatura->getId_nivel()) && ($j < $num_asig)) {
                         $row = current($aAprobadas);
-                        next($aAprobadas);
+                        if ($row !== FALSE && next($aAprobadas) === FALSE) {
+                            break;
+                        }
                         $j++;
                     }
                     while (($oAsignatura->getId_nivel() < $row["id_nivel_asig"]) && ($row["id_nivel"] < 2434)) {
