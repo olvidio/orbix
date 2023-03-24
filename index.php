@@ -121,7 +121,8 @@ if (ConfigGlobal::mi_usuario() === 'auxiliar') {
     $pag_ini = '';
 }
 
-$id_grupmenu = $_GET['id_grupmenu'] ?? $mi_id_grupmenu;
+$Qid_grupmenu = (integer)filter_input(INPUT_GET, 'id_grupmenu');
+$id_grupmenu = $Qid_grupmenu ?? $mi_id_grupmenu;
 
 $aPref = $oGesPref->getPreferencias(array('id_usuario' => $id_usuario, 'tipo' => 'estilo'));
 if (is_array(($aPref)) && count($aPref) > 0) {
