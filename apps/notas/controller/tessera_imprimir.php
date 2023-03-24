@@ -99,7 +99,7 @@ function titulo($id_asignatura)
         case 1101:
             $html = " 
 				<tr><td class=\"space\"></td></tr>
-				<tr><td></td><td colspan=\"7\" class=\"curso\">CURSUS INSTITUTIONALES FILOSOFI&#198;</td></tr>
+				<tr><td></td><td colspan=\"7\" class=\"curso\">CURSUS INSTITUTIONALES PHILOSOPHI&#198;</td></tr>
 				$cabecera
 				<tr><td class=\"space\"></td></tr>
 				<tr><td></td><td colspan=\"7\" class=\"any\">ANNUS I</td></tr>

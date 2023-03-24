@@ -71,7 +71,7 @@ case 1101:
     </tr>
     <tr>
         <td></td>
-        <td colspan="7" class="curso">CURSUS INSTITUTIONALES FILOSOFI&#198;</td>
+        <td colspan="7" class="curso">CURSUS INSTITUTIONALES PHILOSOPHI&#198;</td>
     </tr>
     <?= $cabecera; ?>
     <tr>
