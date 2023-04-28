@@ -9,6 +9,10 @@ namespace core;
 	require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
+if (ConfigGlobal::$web_path === '/pruebas' || ConfigGlobal::$web_path === '/pruebassf') {
+  $fondo_claro="aquamarine";
+}
+
 include_once(ConfigGlobal::$dir_estilos.'/todo_en_uno.css.php');
 include_once(ConfigGlobal::$dir_estilos.'/menu_horizontal.css.php');
 
