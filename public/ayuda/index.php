@@ -9,8 +9,10 @@ namespace core;
 	require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
+$pruebas = 0;
 if (ConfigGlobal::$web_path === '/pruebas' || ConfigGlobal::$web_path === '/pruebassf') {
   $fondo_claro="aquamarine";
+  $pruebas = 1;
 }
 
 include_once(ConfigGlobal::$dir_estilos.'/todo_en_uno.css.php');
@@ -30,6 +32,9 @@ include_once(ConfigGlobal::$dir_estilos.'/menu_horizontal.css.php');
 	</script>
   </head>
   <body class="otro">
+  <?php if ($pruebas === 1) { ?>
+      <h1>Entorno de pruebas</h1>
+  <?php } ?>
   <p>OCTUBRE 2022: se ha añadido una dl fantasma ('Otra dl de aquinate') para poder introducir actividades que organiza
       otra dl que si está en aquinate, pero que no las va a introducir en su dl
       (por ejemplo actividades de sg, cuando no se usa para sg)</p>
@@ -39,7 +44,7 @@ include_once(ConfigGlobal::$dir_estilos.'/menu_horizontal.css.php');
     <h2><a href="#gestion_de_ca">2. Gestión de ca</a></h2>
     <h2><a href="#gestion_de_ca">3. Gestión de personas</a></h2>
     <h2><a href="#gestion_de_ctr">4. Gestión de centros</a></h2>
-    <h2><a href="public/ayuda/traducciones.php">x. Traducciones</a></h2>
+    <h2><a href="traducciones.php">x. Traducciones</a></h2>
 	<br> 
 	<br> 
 	<br> 
