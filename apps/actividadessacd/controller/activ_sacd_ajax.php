@@ -199,7 +199,7 @@ switch ($Qque) {
         foreach ($oEnc->getCentrosEncargados(array('id_activ' => $Qid_activ, '_ordre' => 'num_orden')) as $oEncargado) {
             $id_ctr = $oEncargado->getId_ubi();
             $num_orden = $oEncargado->getNum_orden();
-            if (configGlobal::is_app_installed('encargossacd')) {
+            if (ConfigGlobal::is_app_installed('encargossacd')) {
                 $GesEncargos = new GestorEncargo();
                 // Tipos de encargo que son atención centro. No los rt.
                 // 1000,1100,1200,1300

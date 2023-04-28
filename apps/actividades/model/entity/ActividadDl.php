@@ -177,7 +177,7 @@ class ActividadDl extends ActividadAll
             $this->setAllAtributes($aDadesLast);
 
             // generar proceso.
-            if (core\configGlobal::is_app_installed('procesos') && $this->NoGenerarProceso === FALSE) {
+            if (core\ConfigGlobal::is_app_installed('procesos') && $this->NoGenerarProceso === FALSE) {
                 $oGestorActividadProcesoTarea = new GestorActividadProcesoTarea();
                 $oGestorActividadProcesoTarea->generarProceso($aDadesLast['id_activ']);
             }

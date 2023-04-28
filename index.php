@@ -161,7 +161,7 @@ foreach ($cGrupMenuRoles as $oGrupMenuRole) {
 ksort($html_gm);
 $html_barra .= implode($html_gm);
 $html_exit = "<li onclick=\"fnjs_logout();\" >| " . ucfirst(_("salir")) . "</li>";
-$html_exit .= "<li> (login as: " . $oUsuario->getUsuario() . '[' . configGlobal::mi_region_dl() . "])</li>";
+$html_exit .= "<li> (login as: " . $oUsuario->getUsuario() . '[' . ConfigGlobal::mi_region_dl() . "])</li>";
 
 $html_barra .= $html_exit;
 $html_barra .= "</ul>";
@@ -290,7 +290,7 @@ for ($n = 1; $n < $indice_old; $n++) {
 $li_submenus .= "</li>";
 if ($gm < 2) {
     $html_exit = "<li><a class=\"nohref\" onclick=\"fnjs_logout();\" >| " . ucfirst(_("salir")) . "</a></li>";
-    $html_exit .= "<li><a class=\"nohref\"> (login as: " . $oUsuario->getUsuario() . '[' . configGlobal::mi_region_dl() . "])</a></li>";
+    $html_exit .= "<li><a class=\"nohref\"> (login as: " . $oUsuario->getUsuario() . '[' . ConfigGlobal::mi_region_dl() . "])</a></li>";
 
     $li_submenus .= $html_exit;
 }

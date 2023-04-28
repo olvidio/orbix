@@ -63,7 +63,7 @@ $Qf_dl = (string)filter_input(INPUT_POST, 'f_dl');
 $Qsituacion = (string)filter_input(INPUT_POST, 'situacion');
 $Qdl = (string)filter_input(INPUT_POST, 'dl');
 $reg_dl_org = empty($Qdl) ? '' : ConfigGlobal::mi_region() . '-' . $Qdl;
-$sfsv_txt = (configGlobal::mi_sfsv() === 1) ? 'v' : 'f';
+$sfsv_txt = (ConfigGlobal::mi_sfsv() === 1) ? 'v' : 'f';
 
 if (!empty($Qnew_dl) && !empty($Qf_dl)) {
     $reg_dl_org .= $sfsv_txt;

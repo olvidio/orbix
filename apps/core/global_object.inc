@@ -139,7 +139,7 @@ switch ($user_sfsv) {
         break;
 }
 
-if (configGlobal::is_app_installed('dbextern') && !ConfigGlobal::is_dmz()) {
+if (ConfigGlobal::is_app_installed('dbextern') && !ConfigGlobal::is_dmz()) {
     // Para sincronizar con listas Madrid (SQLSERVER)
     // No en el caso de cr (H-Hv)
     if ((ConfigGlobal::mi_region() != ConfigGlobal::mi_delef()) && !isset($_SESSION['oDBListas'])) {

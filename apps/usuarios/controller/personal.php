@@ -37,7 +37,7 @@ $aOpciones = ['exterior' => ucfirst(_("home")),
     'personal' => ucfirst(_("personal")),
     'aniversarios' => ucfirst(_("aniversarios")),
 ];
-if (core\configGlobal::is_app_installed('cambios')) {
+if (core\ConfigGlobal::is_app_installed('cambios')) {
     $aOpciones['avisos'] = ucfirst(_("avisos cambios actividades"));
 }
 

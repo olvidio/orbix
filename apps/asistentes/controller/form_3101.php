@@ -119,7 +119,7 @@ if (!empty($Qid_nom)) { //caso de modificar
     $plaza = $oAsistente->getPlaza();
     $propietario = $oAsistente->getPropietario();
 
-    if (core\configGlobal::is_app_installed('actividadplazas')) {
+    if (core\ConfigGlobal::is_app_installed('actividadplazas')) {
         if (!empty($propietario)) {
             $padre = strtok($propietario, '>');
             $child = strtok('>');
@@ -175,7 +175,7 @@ if (!empty($Qid_nom)) { //caso de modificar
             $obj_pau = 'PersonaEx';
             break;
     }
-    if (core\configGlobal::is_app_installed('actividadplazas')) {
+    if (core\ConfigGlobal::is_app_installed('actividadplazas')) {
         $oDesplegablePersonas->setAction('fnjs_cmb_propietario()');
     }
 }
@@ -183,7 +183,7 @@ $propio_chk = (!empty($propio) && $propio == 't') ? 'checked' : '';
 $falta_chk = (!empty($falta) && $falta == 't') ? 'checked' : '';
 $est_chk = (!empty($est_ok) && $est_ok == 't') ? 'checked' : '';
 
-if (core\configGlobal::is_app_installed('actividadplazas')) {
+if (core\ConfigGlobal::is_app_installed('actividadplazas')) {
     $oDesplegablePlaza = $gesAsistentes->getPosiblesPlaza();
     $oDesplegablePlaza->setNombre('plaza');
     $oDesplegablePlaza->setOpcion_sel($plaza);
@@ -209,7 +209,7 @@ if (core\configGlobal::is_app_installed('actividadplazas')) {
 
 $oHash = new web\Hash();
 $camposForm = 'observ!observ_est';
-if (core\configGlobal::is_app_installed('actividadplazas')) {
+if (core\ConfigGlobal::is_app_installed('actividadplazas')) {
     $camposForm .= '!plaza!propietario';
 }
 $a_camposHidden = array(
