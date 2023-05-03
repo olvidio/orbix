@@ -6,17 +6,19 @@
   <component name="ChangeListManager">
     <list default="true" id="f178a244-4024-41f6-8417-4831ab0bb057" name="Changes" comment="actualizar npm package.json. Añadir clockpiker">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/misas/controller/crear_plantilla.php" beforeDir="false" afterPath="$PROJECT_DIR$/apps/misas/controller/crear_plantilla.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/misas/view/horario_tarea.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/apps/misas/view/horario_tarea.html.twig" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/index.php" beforeDir="false" afterPath="$PROJECT_DIR$/index.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="ComposerConfigs">
+    <option name="configs">
+      <option value="$PROJECT_DIR$/libs/composer.json" />
+    </option>
+  </component>
   <component name="ComposerSettings" doNotAsk="true" synchronizationState="SYNCHRONIZE">
-    <pharConfigPath>$PROJECT_DIR$/libs/composer.json</pharConfigPath>
+    <pharConfigPath>$PROJECT_DIR$/composer.json</pharConfigPath>
     <execution />
   </component>
   <component name="Git.Settings">
@@ -52,7 +54,7 @@
       </server>
     </servers>
   </component>
-  <component name="PhpWorkspaceProjectConfiguration">
+  <component name="PhpWorkspaceProjectConfiguration" interpreter_name="PHP 8.1">
     <include_path>
       <path value="$PROJECT_DIR$/libs/vendor/psr/log" />
       <path value="$PROJECT_DIR$/libs/vendor/mpdf/mpdf" />
@@ -112,6 +114,7 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="JavaScript Debug.TarifaUbi.php" />
         <item itemvalue="JavaScript Debug.TarifaUbi.php" />
         <item itemvalue="JavaScript Debug.TarifaUbi.php" />
       </list>
@@ -206,6 +209,7 @@
       <workItem from="1679297364785" duration="27442000" />
       <workItem from="1679383712530" duration="1430000" />
       <workItem from="1679391584274" duration="7336000" />
+      <workItem from="1683097177335" duration="18000" />
     </task>
     <task id="LOCAL-00013" summary="sintaxis">
       <created>1665478367349</created>
