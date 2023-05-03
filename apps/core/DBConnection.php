@@ -110,8 +110,9 @@ class DBConnection
         //$oDB = new \PDO($str_conexio, $config['user'], $config['password'], array(\PDO::ATTR_ERRMODE => \PDO::ERRMODE_WARNING, \PDO::ATTR_TIMEOUT => 3));
 
         // con sqlsrv
+        // A partir del driver 18, poner: Encrypt = no;
         $options = ['LoginTimeout' => 3];
-        $oDB = new \PDO("sqlsrv:server = " . $config['host'] . "; Database = " . $config['dbname'] . ";", $config['user'], $config['password'], $options);
+        $oDB = new \PDO("sqlsrv:server = " . $config['host'] . "; Database = " . $config['dbname'] . "; Encrypt = no;", $config['user'], $config['password'],  $options);
 
         return $oDB;
     }
