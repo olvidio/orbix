@@ -231,7 +231,7 @@ class Config
         $oConfigSchema = new ConfigSchema($parametro);
         $valor_actual = $oConfigSchema->getValor();
         $valor_actual = empty($valor_actual) ? $this->getIni_contador_certificados() : $valor_actual;
-        $valor_nuevo = $valor_actual + 1;
+        $valor_nuevo = (int) $valor_actual + 1;
 
         $oConfigSchema->setValor($valor_nuevo);
         $oConfigSchema->DBGuardar();
