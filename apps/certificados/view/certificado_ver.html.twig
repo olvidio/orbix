@@ -8,8 +8,24 @@
             {{ oHashCertificadoPdf.getCamposHtml()|raw }}
             <br>
             <label>
+                {{ "Nombre del alumno"|trans|raw }}:
+                <input type="text" name="nom" value="{{ nom }}"/>
+            </label>
+            <br>
+            <label>
+                {{ "idioma"|trans|raw }}:
+                {{ oDesplIdiomas.desplegable|raw }}
+                ({{ "blanco = latín"|trans|raw }})
+            </label>
+            <br>
+            <label>
+                {{ "destino"|trans|raw }}:
+                <input type="text" name="destino" value="{{ destino }}"/>
+            </label>
+            <br>
+            <label>
                 {{ "Número de certificado"|trans|raw }}:
-                <input type="text" name="certificado_num" value="{{ certificado }}"/>
+                <input type="text" name="certificado" value="{{ certificado }}"/>
             </label>
             <br>
             <label>

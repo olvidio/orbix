@@ -110,7 +110,7 @@ class Local extends core\ClasePropiedades
             }
         } else {
             if (isset($a_id) && $a_id !== '') {
-                $this->sid_locale = (integer)$a_id; 
+                $this->sid_locale = (string)$a_id;
                 $this->aPrimary_key = array('id_locale' => $this->sid_locale);
             }
         }

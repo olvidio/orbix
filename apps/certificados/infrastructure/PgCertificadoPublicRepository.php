@@ -103,7 +103,7 @@ class PgCertificadoPublicRepository extends ClaseRepository implements Certifica
         foreach ($filas as $aDatos) {
             // para los bytea: (resources)
             $handle = $aDatos['documento'];
-            if ($handle !== null) {
+            if ($handle !== NULL) {
                 $contents = stream_get_contents($handle);
                 fclose($handle);
                 $documento = $contents;
@@ -146,6 +146,9 @@ class PgCertificadoPublicRepository extends ClaseRepository implements Certifica
 
         $aDatos = [];
         $aDatos['id_nom'] = $Certificado->getId_nom();
+        $aDatos['nom'] = $Certificado->getNom();
+        $aDatos['idioma'] = $Certificado->getIdioma();
+        $aDatos['destino'] = $Certificado->getDestino();
         $aDatos['certificado'] = $Certificado->getCertificado();
         $aDatos['propio'] = $Certificado->isPropio();
         $aDatos['copia'] = $Certificado->isCopia();
@@ -170,6 +173,9 @@ class PgCertificadoPublicRepository extends ClaseRepository implements Certifica
             //UPDATE
             $update = "
 					id_nom                   = :id_nom,
+					nom                      = :nom,
+					idioma                   = :idioma,
+					destino                   = :destino,
 					certificado              = :certificado,
 					f_certificado            = :f_certificado,
 					propio                   = :propio,
@@ -193,8 +199,8 @@ class PgCertificadoPublicRepository extends ClaseRepository implements Certifica
         } else {
             // INSERT
             $aDatos['id_item'] = $Certificado->getId_item();
-            $campos = "(id_item,id_nom,certificado,f_certificado,propio,copia,documento)";
-            $valores = "(:id_item,:id_nom,:certificado,:f_certificado,:propio,:copia,:documento)";
+            $campos = "(id_item,id_nom,nom,idioma,destino,certificado,f_certificado,propio,copia,documento)";
+            $valores = "(:id_item,:id_nom,:nom,:idioma,:destino,:certificado,:f_certificado,:propio,:copia,:documento)";
             if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === FALSE) {
                 $sClaveError = 'PgCertificadoRepository.insertar.prepare';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
@@ -266,7 +272,7 @@ class PgCertificadoPublicRepository extends ClaseRepository implements Certifica
     {
         $aDatos = $this->datosById($id_item);
         if (empty($aDatos)) {
-            return null;
+            return NULL;
         }
         return (new Certificado())->setAllAttributes($aDatos);
     }

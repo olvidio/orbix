@@ -71,7 +71,7 @@ if (!empty($Qacta)) {
     preg_match("/^(\d*)(\/)?(\d*)/", $Qacta, $matches);
     if (!empty($matches[1])) {
         // Si es cr, se mira en todas (las suyas):
-        if (ConfigGlobal::mi_ambito() == 'rstgr') {
+        if (ConfigGlobal::mi_ambito() === 'rstgr') {
             $oGesDelegaciones = new GestorDelegacion();
             $aDl = $oGesDelegaciones->getArrayDlRegionStgr([$mi_dele]);
             $Qacta_dl = '';
@@ -88,7 +88,7 @@ if (!empty($Qacta)) {
         $cActas = $GesActas->getActas($aWhere, $aOperador);
     } else {
         // busca en la tabla de la dl, sin mirar el nombre:
-        if (ConfigGlobal::mi_ambito() == 'rstgr') {
+        if (ConfigGlobal::mi_ambito() === 'rstgr') {
             $GesActas = new notas\GestorActa();
             $cActas = $GesActas->getActas($aWhere, $aOperador);
         } else {
@@ -105,9 +105,9 @@ if (!empty($Qacta)) {
     $mes = date('m');
     $fin_m = $_SESSION['oConfig']->getMesFinStgr();
     if ($mes > $fin_m) {
-        $any = date('Y') + 1;
+        $any = (int) date('Y') + 1;
     } else {
-        $any = date('Y');
+        $any = (int) date('Y');
     }
     $inicurs_ca = curso_est("inicio", $any)->format('Y-m-d');
     $fincurs_ca = curso_est("fin", $any)->format('Y-m-d');
@@ -119,7 +119,7 @@ if (!empty($Qacta)) {
 
     $titulo = ucfirst(sprintf(_("lista de actas del curso %s"), $txt_curso));
     // Si es cr, se mira en todas:
-    if (ConfigGlobal::mi_ambito() == 'rstgr') {
+    if (ConfigGlobal::mi_ambito() === 'rstgr') {
         $oGesDelegaciones = new GestorDelegacion();
         $aDl = $oGesDelegaciones->getArrayDlRegionStgr([$mi_dele]);
         $sReg = implode("|", $aDl);
@@ -136,7 +136,7 @@ if (!empty($Qacta)) {
 $botones = 0; // para 'añadir acta'
 $a_botones = [];
 // Si soy region del stgr, no puedo modificar actas: que lo hagan las dl.
-if (ConfigGlobal::mi_ambito() == 'rstgr') {
+if (ConfigGlobal::mi_ambito() === 'rstgr') {
     $a_botones[] = array('txt' => _("modificar"), 'click' => "fnjs_modificar(\"#seleccionados\")");
     $botones = 0;
 } else {

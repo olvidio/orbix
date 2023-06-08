@@ -29,6 +29,24 @@ class Certificado {
 	 * @var int|null
 	 */
 	 private $iid_nom = null;
+    /**
+     * Nombre de Certificado
+     *
+     * @var string|null
+     */
+    private $snom = null;
+    /**
+     * idioma de Certificado
+     *
+     * @var string|null
+     */
+    private $sidioma = null;
+    /**
+     * destino de Certificado
+     *
+     * @var string|null
+     */
+    private $sdestino = null;
 	/**
 	 * Certificado de Certificado
 	 *
@@ -78,6 +96,18 @@ class Certificado {
 		{
 			$this->setId_nom($aDatos['id_nom']);
 		}
+        if (array_key_exists('nom',$aDatos))
+        {
+            $this->setNom($aDatos['nom']);
+        }
+        if (array_key_exists('idioma',$aDatos))
+        {
+            $this->setIdioma($aDatos['idioma']);
+        }
+        if (array_key_exists('destino',$aDatos))
+        {
+            $this->setDestino($aDatos['destino']);
+        }
 		if (array_key_exists('certificado',$aDatos))
 		{
 			$this->setCertificado($aDatos['certificado']);
@@ -132,6 +162,55 @@ class Certificado {
 	{
 		$this->iid_nom = $iid_nom;
 	}
+
+    /**
+     * @return string|null
+     */
+    public function getNom(): ?string
+    {
+        return $this->snom;
+    }
+
+    /**
+     * @param string|null $nom
+     */
+    public function setNom(?string $nom): void
+    {
+        $this->snom = $nom;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getIdioma(): ?string
+    {
+        return $this->sidioma;
+    }
+
+    /**
+     * @param string|null $idioma
+     */
+    public function setIdioma(?string $idioma): void
+    {
+        $this->sidioma = $idioma;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getDestino(): ?string
+    {
+        return $this->sdestino;
+    }
+
+    /**
+     * @param string|null $destino
+     */
+    public function setDestino(?string $destino): void
+    {
+        $this->sdestino = $destino;
+    }
+
 	/**
 	 *
 	 * @return string|null $scertificado

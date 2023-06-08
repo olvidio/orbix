@@ -280,6 +280,19 @@ $a_campos['oHashCal'] = $oHashCal;
 $a_campos['chk_central'] = $chk_central;
 $a_campos['chk_of'] = $chk_of;
 
+// ----------- Inicio Contador Certificados -------------------
+$parametro = 'ini_contador_certificados';
+$oConfigSchema = new ConfigSchema($parametro);
+$valor = $oConfigSchema->getValor();
+
+$oHashC1 = new Hash();
+$oHashC1->setUrl($url);
+$oHashC1->setcamposForm('valor');
+$oHashC1->setArrayCamposHidden(['parametro' => $parametro]);
+
+$a_campos['oHashC1'] = $oHashC1;
+$a_campos['ini_contador_certificados'] = $valor;
+
 
 $oView = new core\ViewTwig('config/controller');
 $oView->renderizar('parametros.html.twig', $a_campos);

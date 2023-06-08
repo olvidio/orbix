@@ -1,9 +1,11 @@
 <?php
 
 use asignaturas\model\entity as asignaturas;
+use certificados\domain\repositories\CertificadoRepository;
 use notas\model\entity as notas;
-use personas\model\entity as personas;
+use personas\model\entity\Persona;
 use web\DateTimeLocal;
+use function core\is_true;
 
 /**
  * Esta página sirve para la certificado para una persona.
@@ -28,15 +30,36 @@ require_once("apps/core/global_header.inc");
 require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$id_nom = empty($_GET['id_nom']) ? '' : $_GET['id_nom'];
-$id_tabla = empty($_GET['id_tabla']) ? '' : $_GET['id_tabla'];
+// Ya no tengo el id_nom, porque lo primero es guardar el certificado, y tengo el id_item,
+// con el idioma etc.
+// $id_nom = empty($_GET['id_nom']) ? '' : $_GET['id_nom'];
+$Qid_item = empty($_GET['id_item']) ? '' : $_GET['id_item'];
 
-$oPersona = personas\Persona::NewPersona($id_nom);
+
+$CertificadoRepository = new CertificadoRepository();
+$oCertificado = $CertificadoRepository->findById($Qid_item);
+
+$id_nom = $oCertificado->getId_nom();
+$nom = $oCertificado->getNom();
+$idioma = $oCertificado->getIdioma();
+$destino = $oCertificado->getDestino();
+$certificado = $oCertificado->getCertificado();
+$f_certificado = $oCertificado->getF_certificado()->getFromLocal();
+$copia = $oCertificado->isCopia();
+if (is_true($copia)) {
+    $chk_copia = 'checked';
+} else {
+    $chk_copia = '';
+}
+$propio = $oCertificado->isPropio();
+
+$oPersona = Persona::NewPersona($id_nom);
 if (!is_object($oPersona)) {
     $msg_err = "<br>$oPersona con id_nom: $id_nom en  " . __FILE__ . ": line " . __LINE__;
     exit($msg_err);
 }
-$nom = $oPersona->getNombreApellidos();
+$apellidos_nombre = $oPersona->getApellidosNombre();
+$nom = empty($nom) ? $apellidos_nombre : $nom;
 $lugar_nacimiento = $oPersona->getLugar_nacimiento();
 $f_nacimiento = $oPersona->getF_nacimiento()->getFechaLatin();
 $nivel_stgr = $oPersona->getStgr();
@@ -45,6 +68,19 @@ $region_latin = $_SESSION['oConfig']->getNomRegionLatin();
 $vstgr = $_SESSION['oConfig']->getNomVstgr();
 $dir_stgr = $_SESSION['oConfig']->getDirStgr();
 $lugar_firma = $_SESSION['oConfig']->getLugarFirma();
+
+////
+
+$CertificadoRepository = new CertificadoRepository();
+$oCertificado = $CertificadoRepository->findById($Qid_item);
+
+$id_nom = $oCertificado->getId_nom();
+$nom = $oCertificado->getNom();
+$idioma = $oCertificado->getIdioma();
+$destino = $oCertificado->getDestino();
+$certificado = $oCertificado->getCertificado();
+$f_certificado = $oCertificado->getF_certificado()->getFromLocal();
+
 
 // conversion 
 $replace = config\model\Config::$replace;
@@ -273,11 +309,11 @@ case 2201:
                 while ($a < count($cAsignaturas)) {
                     $oAsignatura = $cAsignaturas[$a++];
                     $row = current($aAprobadas);
-                    if (key($aAprobadas) === null) { // ha llegado al final
+                    if (key($aAprobadas) === NULL) { // ha llegado al final
                         $row = $rowEmpty;
                     }
                     while (($row['id_nivel_asig'] < $oAsignatura->getId_nivel()) && ($j < $num_asig)) {
-                        if (key($aAprobadas) === null) { // ha llegado al final
+                        if (key($aAprobadas) === NULL) { // ha llegado al final
                             $row = $rowEmpty;
                         } else {
                             $row = current($aAprobadas);

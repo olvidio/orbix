@@ -15,6 +15,7 @@ use core\ConfigGlobal;
 use notas\model\entity as notas;
 use personas\model\entity\Persona;
 use ubis\model\entity\GestorDelegacion;
+use usuarios\model\entity\Local;
 use web\Hash;
 use web\Lista;
 use function core\curso_est;
@@ -140,6 +141,8 @@ $a_cabeceras = [['name' => ucfirst(_("certificado")), 'formatter' => 'clickForma
     _("alumno"),
     _("copia"),
     _("adjunto"),
+    _("idioma"),
+    _("destino"),
 ];
 
 $i = 0;
@@ -151,14 +154,23 @@ foreach ($cCertificados as $oCertificado) {
     $f_certificado = $oCertificado->getF_certificado()->getFromLocal();
     $id_nom = $oCertificado->getId_nom();
     $copia = $oCertificado->isCopia();
+    $nom = $oCertificado->getNom();
+    $idioma = $oCertificado->getIdioma();
+    $destino = $oCertificado->getDestino();
     $pdf = $oCertificado->getDocumento();
+
+    if (!empty($idioma)) {
+        $oLocal = new Local($idioma);
+        $idioma = $oLocal->getNom_idioma();
+    }
 
     $oPersona = Persona::NewPersona($id_nom);
     if (!is_object($oPersona)) {
-        $msg_err = "<br>$oPersona con id_nom: $id_nom en  " . __FILE__ . ": line " . __LINE__;
-        exit($msg_err);
+        $nom_db = '';
+    } else {
+        $nom_db = $oPersona->getNombreApellidos();
     }
-    $nom_alumno = $oPersona->getNombreApellidos();
+    $nom_alumno = empty($nom)? $nom_db : $nom;
 
     $pagina = Hash::link('apps/certificados/controller/certificado_ver.php?' . http_build_query(array('certificado' => $certificado)));
     $a_valores[$i]['sel'] = $id_item;
@@ -174,6 +186,8 @@ foreach ($cCertificados as $oCertificado) {
     $a_valores[$i][3] = $nom_alumno;
     $a_valores[$i][4] = is_true($copia)? _("Sí") : _("No");
     $a_valores[$i][5] = empty($pdf) ? '' : _("Sí");
+    $a_valores[$i][6] = $idioma;
+    $a_valores[$i][7] = $destino;
 }
 if (isset($Qid_sel) && !empty($Qid_sel)) {
     $a_valores['select'] = $Qid_sel;

@@ -224,6 +224,49 @@ class Config
         return $oConfigSchema->getValor();
     }
 
+ public function getContador_certificados()
+    {
+        $this->resetContador();
+        $parametro = 'contador_certificados';
+        $oConfigSchema = new ConfigSchema($parametro);
+        $valor_actual = $oConfigSchema->getValor();
+        $valor_actual = empty($valor_actual) ? $this->getIni_contador_certificados() : $valor_actual;
+        $valor_nuevo = $valor_actual + 1;
+
+        $oConfigSchema->setValor($valor_nuevo);
+        $oConfigSchema->DBGuardar();
+
+        return $valor_actual;
+    }
+    public function getIni_contador_certificados()
+    {
+        $parametro = 'ini_contador_certificados';
+        $oConfigSchema = new ConfigSchema($parametro);
+        return $oConfigSchema->getValor();
+    }
+
+    private function resetContador()
+    {
+        $any_actual = date('Y');
+        $parametro = 'contador_any';
+        $oConfigSchema = new ConfigSchema($parametro);
+        $any_contador = $oConfigSchema->getValor();
+        if ($any_actual > $any_contador) {
+            $oConfigSchema->setValor($any_actual);
+            $oConfigSchema->DBGuardar();
+            // poner al inicio
+            $valor = $this->getIni_contador_certificados();
+            $oConfigSchemaContador = new ConfigSchema('contador');
+            $oConfigSchemaContador->setValor($valor);
+            $oConfigSchemaContador->DBGuardar();
+
+            // actualizar el contador_any
+            $oConfigSchemaContador = new ConfigSchema('contador_any');
+            $oConfigSchemaContador->setValor($any_actual);
+            $oConfigSchemaContador->DBGuardar();
+        }
+    }
+
     public function mes_actual()
     {
         return date("m");
@@ -374,6 +417,5 @@ class Config
             return $aCursoCrt['fin_mes'];
         }
     }
-
 
 }
