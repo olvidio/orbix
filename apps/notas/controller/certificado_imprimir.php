@@ -87,7 +87,7 @@ $oHashCertificadoPdf->setArrayCamposHidden(['id_nom' => $id_nom, 'nuevo' => 1]);
 
 $oHash = new Hash();
 $oHash->setUrl(ConfigGlobal::getWeb() . '/apps/notas/controller/certificado_2_mpdf.php');
-$oHash->setCamposForm('id_nom!id_item');
+$oHash->setCamposForm('id_item!guardar');
 $h = $oHash->linkSinVal();
 
 $pag_certificado_2_pdf = ConfigGlobal::getWeb() . '/apps/notas/controller/certificado_2_mpdf.php';

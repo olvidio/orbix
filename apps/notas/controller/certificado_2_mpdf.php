@@ -6,6 +6,8 @@ $_POST = $_GET;
 $id_item = (string)filter_input(INPUT_POST, 'id_item');
 */
 
+$Qguardar = empty($_GET['guardar']) ? '' : $_GET['guardar'];
+
 ob_start();
 include(__DIR__ . '/certificado_imprimir_mpdf.php');
 $content = ob_get_clean();
@@ -33,3 +35,11 @@ $mpdf->list_indent_first_level = 0;    // 1 or 0 - whether to indent the first l
 $mpdf->setHTMLFooter($footer);
 $mpdf->WriteHTML($content);
 $mpdf->Output("certificado($nom).pdf", 'D');
+
+// grabar en la DB
+if (!empty($Qguardar)) {
+    $pdf = $mpdf->Output("certificado($nom).pdf", 'S'); // as string
+    $oCertificado->setDocumento($pdf);
+    $CertificadoRepository->Guardar($oCertificado);
+}
+

@@ -69,19 +69,6 @@ $vstgr = $_SESSION['oConfig']->getNomVstgr();
 $dir_stgr = $_SESSION['oConfig']->getDirStgr();
 $lugar_firma = $_SESSION['oConfig']->getLugarFirma();
 
-////
-
-$CertificadoRepository = new CertificadoRepository();
-$oCertificado = $CertificadoRepository->findById($Qid_item);
-
-$id_nom = $oCertificado->getId_nom();
-$nom = $oCertificado->getNom();
-$idioma = $oCertificado->getIdioma();
-$destino = $oCertificado->getDestino();
-$certificado = $oCertificado->getCertificado();
-$f_certificado = $oCertificado->getF_certificado()->getFromLocal();
-
-
 // conversion 
 $replace = config\model\Config::$replace;
 

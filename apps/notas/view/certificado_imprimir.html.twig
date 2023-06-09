@@ -58,7 +58,7 @@
                 alert("{{ "respuesta"|trans|raw }}: " + json.mensaje);
             } else {
                 var item = json.item;
-                var url = "{{ pag_certificado_2_pdf }}" + '?id_item=' + item + '{{ h }}';
+                var url = "{{ pag_certificado_2_pdf }}" + '?guardar=1&id_item=' + item + '{{ h }}';
                 window.open(url, "sele");
                 {{ oPosicion.js_atras(1)|raw }}
             }
