@@ -2,6 +2,7 @@
 
 use asignaturas\model\entity as asignaturas;
 use certificados\domain\repositories\CertificadoRepository;
+use core\ConfigGlobal;
 use notas\model\entity as notas;
 use personas\model\entity\Persona;
 use web\DateTimeLocal;
@@ -69,21 +70,49 @@ $vstgr = $_SESSION['oConfig']->getNomVstgr();
 $dir_stgr = $_SESSION['oConfig']->getDirStgr();
 $lugar_firma = $_SESSION['oConfig']->getLugarFirma();
 
-// conversion 
+// conversion
 $replace = config\model\Config::$replace;
 
-if ($nivel_stgr === 'r') {
-    $txt_superavit = "Alumnus superavit studiorum portiones (ECTS) requisitas ad implendum academicum";
-    $txt_superavit .= " curriculum quod statutum est Ordinatione Studiorum Praelaturae Santae Crucis et Operis Dei.";
-    $txt_superavit = strtr($txt_superavit, $replace);
+// para los distintos idiomas. Cargar el fichero:
+if (!empty($idioma)) {
+    $dir = ConfigGlobal::$dir_languages . '/' . $idioma;
+    $filename_textos = $dir . '/' . "textos_certificados.php";
+    if (!file_exists($filename_textos)) {
+        $msg = sprintf(_("No existe un fichero con las traducciones para %s"), $idioma);
+        exit ($msg);
+    } else {
+        include($filename_textos);
+    }
+
+    if ($nivel_stgr === 'r') {
+        $txt_superavit = $txt_superavit_1;
+        $txt_superavit .= ' ' . $txt_superavit_2;
+    } else {
+        $txt_superavit = '';
+    }
+    $oHoy = new DateTimeLocal();
+    $lugar_fecha = $lugar_firma . ",  " . $oHoy->getFechaLatin();
+    $region = $region_latin;
+
 } else {
-    $txt_superavit = '';
+    $filename_textos = "textos_certificados.php";
+    include(__DIR__ . '/' . $filename_textos);
+    if ($nivel_stgr === 'r') {
+        $txt_superavit = $txt_superavit_1;
+        $txt_superavit .= ' ' . $txt_superavit_2;
+        $txt_superavit = strtr($txt_superavit, $replace);
+    } else {
+        $txt_superavit = '';
+    }
+
+    $oHoy = new DateTimeLocal();
+    $lugar_fecha = $lugar_firma . ",  " . $oHoy->getFechaLatin();
+
+    $region = $region_latin;
 }
 
-$oHoy = new DateTimeLocal();
-$lugar_fecha = $lugar_firma . ",  " . $oHoy->getFechaLatin();
-
 function titulo($id_asignatura){
+global $curso_filosofia, $curso_teologia, $ECTS, $iudicium, $any_I, $any_II, $any_III, $any_IV, $pie_ects;
 switch ($id_asignatura){
 case 1101:
     ?>
@@ -92,16 +121,16 @@ case 1101:
     </tr>
     <tr>
         <td></td>
-        <td colspan="7" class="curso">CURSUS INSTITUTIONALES PHILOSOPHI&#198;</td>
+        <td colspan="7" class="curso"><?= $curso_filosofia ?></td>
     </tr>
     <tr>
         <td class="space"></td>
     </tr>
     <tr>
         <td></td>
-        <td class="any">ANNUS I</td>
-        <td class="cabecera">ECTS<sup>1</sup></td>
-        <td class="cabecera">Iudicium</td>
+        <td class="any"><?= $any_I ?></td>
+        <td class="cabecera"><?= $ECTS ?><sup>1</sup></td>
+        <td class="cabecera"><?= $iudicium ?></td>
     </tr>
     <?php
     break;
@@ -112,9 +141,9 @@ case 1201:
     </tr>
     <tr>
         <td></td>
-        <td class="any">ANNUS II</td>
-        <td class="cabecera">ECTS<sup>1</sup></td>
-        <td class="cabecera">Iudicium</td>
+        <td class="any"><?= $any_II ?></td>
+        <td class="cabecera"><?= $ECTS ?><sup>1</sup></td>
+        <td class="cabecera"><?= $iudicium ?></td>
     </tr>
     <?php
     break;
@@ -125,16 +154,16 @@ case 2101:
     </tr>
     <tr>
         <td></td>
-        <td colspan="7" class="curso">CURSUS INSTITUTIONALES S. THEOLOGI&#198;</td>
+        <td colspan="7" class="curso"><?= $curso_teologia ?></td>
     </tr>
     <tr>
         <td class="space"></td>
     </tr>
     <tr>
         <td></td>
-        <td class="any">ANNUS I</td>
-        <td class="cabecera">ECTS<sup>1</sup></td>
-        <td class="cabecera">Iudicium</td>
+        <td class="any"><?= $any_I ?></td>
+        <td class="cabecera"><?= $ECTS ?><sup>1</sup></td>
+        <td class="cabecera"><?= $iudicium ?></td>
     </tr>
     <?php
     break;
@@ -143,8 +172,7 @@ case 2201:
 </table>
 <br>
 </div>
-<div class="ects">(1) ECTS (anglice: European Credit Transfer System): 1 ECTS stat pro viginti quinque horis quas
-    alumnus studio dedicaverit.
+<div class="ects"><?= $pie_ects ?>
 </div>
 <div class="A4">
     <table>
@@ -158,9 +186,9 @@ case 2201:
         </tr>
         <tr>
             <td></td>
-            <td class="any">ANNUS II</td>
-            <td class="cabecera">ECTS<sup>1</sup></td>
-            <td class="cabecera">Iudicium</td>
+            <td class="any"><?= $any_II ?></td>
+            <td class="cabecera"><?= $ECTS ?><sup>1</sup></td>
+            <td class="cabecera"><?= $iudicium ?></td>
         </tr>
         <?php
         break;
@@ -171,9 +199,9 @@ case 2201:
             </tr>
             <tr>
                 <td></td>
-                <td class="any">ANNUS III</td>
-                <td class="cabecera">ECTS<sup>1</sup></td>
-                <td class="cabecera">Iudicium</td>
+                <td class="any"><?= $any_III ?></td>
+                <td class="cabecera"><?= $ECTS ?><sup>1</sup></td>
+                <td class="cabecera"><?= $iudicium ?></td>
             </tr>
             <?php
             break;
@@ -184,9 +212,9 @@ case 2201:
             </tr>
             <tr>
                 <td></td>
-                <td class="any">ANNUS IV</td>
-                <td class="cabecera">ECTS<sup>1</sup></td>
-                <td class="cabecera">Iudicium</td>
+                <td class="any"><?= $any_IV ?></td>
+                <td class="cabecera"><?= $ECTS ?><sup>1</sup></td>
+                <td class="cabecera"><?= $iudicium ?></td>
             </tr>
             <?php
             break;
@@ -231,21 +259,16 @@ case 2201:
                     <td class="space"></td>
                 </tr>
                 <tr>
-                    <td class="titulo1" colspan="5">PRÆLATURA SANCTÆ CRUCIS ET OPERIS DEI</td>
+                    <td class="titulo1" colspan="5"><?= $titulo_1 ?></td>
                 </tr>
                 <tr>
-                    <td class="titulo2" colspan="5">STUDIUM GENERALE REGIONIS <?= $region_latin ?></td>
+                    <td class="titulo2" colspan="5"><?= $titulo_2 ?></td>
                 </tr>
                 <tr>
-                    <td class="subtitulo1" colspan="5">CURRICULUM STUDIORUM</td>
+                    <td class="subtitulo1" colspan="5"><?= $titulo_3 ?></td>
                 </tr>
                 <tr>
-                    <td class="subtitulo2" colspan="5">
-                        Infrascriptus huius Studii Generalis Secretarius testatur ac fidem facit alumnum
-                        <b><?= $nom ?></b>, natum <?= $lugar_nacimiento ?>, <?= $f_nacimiento ?>,
-                        prout patet ex actis quæ in archivo nostro prostant,
-                        pericula rite superasse in disciplinis, ut infra:
-                    </td>
+                    <td class="subtitulo2" colspan="5"><?= $infra ?></td>
                 </tr>
                 <?php
                 // Asignaturas posibles:
@@ -387,8 +410,8 @@ case 2201:
                 <div class="fecha"><?= $lugar_fecha ?></div>
                 <table class="g_sello">
                     <tr>
-                        <td class="sello">L.S.<br>Studii Generalis</td>
-                        <td class="firma">In fidem:</td>
+                        <td class="sello"><?= $sello ?></td>
+                        <td class="firma"><?= $fidem ?></td>
                     </tr>
                     <tr>
                         <td class="espacio_firma"></td>
@@ -400,18 +423,16 @@ case 2201:
         <div class="g_libro">
             <table>
                 <tr>
-                    <td class="libro">Reg.</td>
-                    <td class="libro">lib.</td>
-                    <td class="libro">Pag.</td>
-                    <td class="libro">n.</td>
+                    <td class="libro"><?= $reg_num ?> (<?= $certificado ?>)</td>
+                    <td class="libro"></td>
+                    <td class="libro"></td>
 
                     <td class="secretario"><?= $vstgr ?></td>
                 </tr>
             </table>
         </div>
 
-        <div class="ects">(1) ECTS (anglice: European Credit Transfer System): 1 ECTS stat pro viginti quinque horis
-            quas alumnus studio dedicaverit.
+        <div class="ects"><?= $pie_ects ?>
         </div>
         <?php
         $footer = "<table class=\"piepagina\"><tr><td class=\"f7\">F10</td><td class=\"dir\">$dir_stgr</td></tr></table>";

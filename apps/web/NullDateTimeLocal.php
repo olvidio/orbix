@@ -2,8 +2,6 @@
 
 namespace web;
 
-use core\ConfigGlobal;
-
 /**
  * Classe per les dates. Afageix a la clase del php la vista amn num. romans.
  *
@@ -53,6 +51,11 @@ class NullDateTimeLocal extends \DateTime
                 $format = 'j/m/Y';
         }
         return $format;
+    }
+
+    public function getFechaLatin()
+    {
+        return '';
     }
 
     public static function createFromLocal($data = ''): string
