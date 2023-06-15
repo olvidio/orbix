@@ -185,7 +185,7 @@ if ($latin === "t") {
 $gesProfesor = new profesores\GestorProfesor();
 $cProfesores = $gesProfesor->getProfesores($aWhere, $aOperador);
 $a_nombramientos = array();
-$dep_n = '';
+$dep = '';
 foreach ($cProfesores as $oProfesor) {
     $id_departamento = $oProfesor->getId_departamento();
     $escrito_nombramiento = $oProfesor->getEscrito_nombramiento();
@@ -202,8 +202,8 @@ foreach ($cProfesores as $oProfesor) {
 
     $a_nombramientos[] = array('departamento' => $departamento, 'tipo_profesor' => $tipo_profesor, 'f_nombramiento' => $f_nombramiento, 'escrito_nombramiento' => $escrito_nombramiento);
     if (empty($f_cese)) {
-        $dep_n .= empty($dep_n)? '' : ', ';
-        $dep_n .= $departamento;
+        $dep .= empty($dep)? '' : '; ';
+        $dep .= $departamento;
     }
 }
 
@@ -212,7 +212,6 @@ if (empty($Qprint)) { // si no es para imprimir muestro todos los datos
     $gesProfesorDirector = new profesores\GestorProfesorDirector();
     $cDirectores = $gesProfesorDirector->getProfesoresDirectores($aWhere, $aOperador);
     $a_director = array();
-    $dep_d = '';
     foreach ($cDirectores as $oProfesorDirector) {
         $id_departamento = $oProfesorDirector->getId_departamento();
         $escrito_nombramiento = $oProfesorDirector->getEscrito_nombramiento();
@@ -224,10 +223,6 @@ if (empty($Qprint)) { // si no es para imprimir muestro todos los datos
         $departamento = $oDepartamento->getDepartamento();
 
         $a_director[] = array('departamento' => $departamento, 'f_nombramiento' => $f_nombramiento, 'escrito_nombramiento' => $escrito_nombramiento, 'f_cese' => $f_cese, 'escrito_cese' => $escrito_cese);
-        if (empty($f_cese)) {
-            $dep_d .= empty($dep_d)? '' : ', ';
-            $dep_d .= $departamento;
-        }
     }
     $a_cosas['clase_info'] = 'profesores\model\Info1020';
     $go_cosas['director'] = web\Hash::link(core\ConfigGlobal::getWeb() . '/apps/core/mod_tabla_sql.php?' . http_build_query($a_cosas));
@@ -259,11 +254,6 @@ if (empty($Qprint)) { // si no es para imprimir muestro todos los datos
     }
     $a_cosas['clase_info'] = 'profesores\model\Info1012';
     $go_cosas['publicaciones'] = web\Hash::link(core\ConfigGlobal::getWeb() . '/apps/core/mod_tabla_sql.php?' . http_build_query($a_cosas));
-}
-$dep = $dep_d;
-if (!empty($dep_n)) {
-    $dep .= empty($dep)? '' : ', ';
-    $dep .= $dep_n;
 }
 
 // Curriculum (clase_info=1017) ///////////////////
