@@ -97,6 +97,9 @@ class DBConnection
 
         $password_encoded = urlencode($password);
         $dsn = "postgresql://$user:$password_encoded@$host:$port/" . $dbname . $str_conexio;
+        if ($host === '/var/run/postgresql' ) {
+            $dsn ="postgresql:///dbname?host=$host";
+        }
 
         return $dsn;
     }

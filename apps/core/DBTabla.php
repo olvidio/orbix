@@ -64,7 +64,8 @@ class DBTabla extends DBAbstract
     private $Host;
     private $ssh_user;
 
-    /* CONSTRUCTOR -------------------------------------------------------------- */
+    private $sDb;
+    private mixed $dbname;
 
     /**
      * Constructor de la classe.
@@ -243,7 +244,7 @@ class DBTabla extends DBAbstract
      */
     public function copiar()
     {
-        if ($this->getHost() == 'localhost' || $this->getHost() == '127.0.0.1') {
+        if ($this->getHost() === 'localhost' || $this->getHost() === '127.0.0.1') {
             $this->copiar_local();
         } else {
             $this->copiar_remote();
@@ -433,7 +434,7 @@ class DBTabla extends DBAbstract
     {
         $oDbl = $this->getConexionPDO('new');
         foreach ($this->aTablas as $tabla => $param) {
-            if (!empty($param['id_schema']) && $param['id_schema'] == 'yes') {
+            if (!empty($param['id_schema']) && $param['id_schema'] === 'yes') {
                 $sqlSchema = "UPDATE $tabla SET id_schema = DEFAULT;";
                 if ($oDbl->query($sqlSchema) === false) {
                     $sClauError = 'DBTabla.schema.execute';
@@ -447,9 +448,9 @@ class DBTabla extends DBAbstract
     private function getConfigConexion($esq = 'ref')
     {
         // No he conseguido que funcione con ~/.pgpass.
-        if ($esq == 'ref') {
+        if ($esq === 'ref') {
             $esquema = $this->getRef();
-        } elseif ($esq == 'new') {
+        } elseif ($esq === 'new') {
             $esquema = $this->getNew();
         }
         switch ($this->sDb) {
