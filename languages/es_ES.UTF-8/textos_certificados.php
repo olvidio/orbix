@@ -9,7 +9,7 @@ $txt_superavit_2 = "";
 $curso_filosofia = "";
 
 //$any_I = "ANNUS I";
-$any_I = "";
+$any_I = "Año I";
 
 //$ECTS = "ECTS";
 $ECTS = "ECTS";

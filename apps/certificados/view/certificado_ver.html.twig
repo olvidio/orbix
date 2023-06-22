@@ -9,7 +9,7 @@
             <br>
             <label>
                 {{ "Nombre del alumno"|trans|raw }}:
-                <input type="text" name="nom" value="{{ nom }}"/>
+                <input type="text" size="50" name="nom" value="{{ nom }}"/>
             </label>
             <br>
             <label>
@@ -34,7 +34,7 @@
             </label>
             <br>
             <label>
-                {{ "Es copia"|trans|raw }}:
+                {{ "firmado digitalmente"|trans|raw }}:
                 <input type="checkbox" name="copia" {{ chk_copia }}/>
             </label>
             <br>
@@ -43,8 +43,7 @@
         </form>
     </div>
     <div style="width:60%; height:500px;">
-        <embed type="application/pdf" src="{{ filename_pdf }}" width='100%' height='100%'>
-        </embed>
+        <embed type="application/pdf" src="{{ filename_pdf }}" width='100%' height='100%' />
     </div>
 </div>
 

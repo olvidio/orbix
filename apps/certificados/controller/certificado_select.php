@@ -101,9 +101,9 @@ if (!empty($Qcertificado)) {
     $mes = date('m');
     $fin_m = $_SESSION['oConfig']->getMesFinStgr();
     if ($mes > $fin_m) {
-        $any = date('Y') + 1;
+        $any = (int) date('Y') + 1;
     } else {
-        $any = date('Y');
+        $any = (int) date('Y');
     }
     $inicurs_ca = curso_est("inicio", $any)->format('Y-m-d');
     $fincurs_ca = curso_est("fin", $any)->format('Y-m-d');
@@ -139,7 +139,7 @@ $a_botones[] = ['txt' => _("descargar pdf"), 'click' => "fnjs_descargar_pdf(\"#s
 $a_cabeceras = [['name' => ucfirst(_("certificado")), 'formatter' => 'clickFormatter'],
     ['name' => ucfirst(_("fecha")), 'class' => 'fecha'],
     _("alumno"),
-    _("copia"),
+    _("firmado digitalmente"),
     _("adjunto"),
     _("idioma"),
     _("destino"),
