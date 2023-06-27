@@ -220,7 +220,11 @@ switch ($Qque) {
                     $id_nom = $cEncargosSacd[0]->getId_nom();
                     // OJO puede ser de la dl o de_paso
                     $oPersona = Persona::NewPersona($id_nom);
-                    $ap_nom = $oPersona->getPrefApellidosNombre();
+                    if (is_object($oPersona)) {
+                        $ap_nom = $oPersona->getApellidosNombre();
+                    } else {
+                        $ap_nom = $oPersona; // puede ser un texto
+                    }
                     $sacd_posibles .= "<tr><td><span class=link id=$id_nom onclick=fnjs_asignar_sacd('" . $Qid_activ . "','$id_nom') >$num_orden * $ap_nom</span></td></tr>";
                 }
             }
