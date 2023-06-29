@@ -44,6 +44,11 @@ $oDesplAsignaturas = array();
 if (!empty($Qid_asignatura)) { //caso de modificar
     $mod = "editar";
 
+    $oActividadAsignatura = new actividadestudios\ActividadAsignaturaDl();
+    $oActividadAsignatura->setId_activ($Qid_activ);
+    $oActividadAsignatura->setId_asignatura($Qid_asignatura);
+    $oActividadAsignatura->DBCarregar();
+
     $GesProfesores = new profesores\GestorProfesor();
     $oDesplProfesores = $GesProfesores->getDesplProfesoresAsignatura($Qid_asignatura);
 
@@ -54,12 +59,6 @@ if (!empty($Qid_asignatura)) { //caso de modificar
         $oDesplProfesores->setOpciones($aOpciones);
         $oDesplProfesores->setOpcion_sel($id_profesor);
     }
-
-
-    $oActividadAsignatura = new actividadestudios\ActividadAsignaturaDl();
-    $oActividadAsignatura->setId_activ($Qid_activ);
-    $oActividadAsignatura->setId_asignatura($Qid_asignatura);
-    $oActividadAsignatura->DBCarregar();
 
     $aviso = $oActividadAsignatura->getAvis_profesor();
     $chk_avisado = ($aviso === "a") ? "selected" : '';
