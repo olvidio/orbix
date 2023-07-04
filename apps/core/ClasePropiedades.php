@@ -9,6 +9,7 @@ abstract class ClasePropiedades
      * @var object
      */
     protected $oDbl;
+    protected $oDbl_Select;
     /**
      * NomTabla de ClasePropiedades
      *
@@ -57,6 +58,12 @@ abstract class ClasePropiedades
         return $this->oDbl;
     }
 
+    /** idem sólo lectura */
+    public function getoDbl_Select()
+    {
+        return $this->oDbl_Select;
+    }
+
     /**
      * Establece el valor del atributo oDbl de ClasePropiedades
      * El faig public per quan s'ha de copiar dades d'un esquema a un altre.
@@ -66,6 +73,10 @@ abstract class ClasePropiedades
     public function setoDbl($oDbl)
     {
         $this->oDbl = $oDbl;
+    }
+    public function setoDbl_Select($oDbl_Select)
+    {
+        $this->oDbl_Select = $oDbl_Select;
     }
 
     /**

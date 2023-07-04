@@ -115,6 +115,7 @@ class Asignatura extends core\ClasePropiedades
     function __construct($a_id = '')
     {
         $oDbl = $GLOBALS['oDBPC'];
+        $oDbl_Select = $GLOBALS['oDBPC_Select'];
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
@@ -127,6 +128,7 @@ class Asignatura extends core\ClasePropiedades
             }
         }
         $this->setoDbl($oDbl);
+        $this->setoDbl_Select($oDbl_Select);
         $this->setNomTabla('xa_asignaturas');
     }
 
@@ -220,7 +222,7 @@ class Asignatura extends core\ClasePropiedades
      */
     public function DBCarregar($que = null)
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         if (isset($this->iid_asignatura)) {
             if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_asignatura='$this->iid_asignatura'")) === false) {

@@ -39,7 +39,7 @@ class GestorAsistenteIn extends GestorAsistentePub
         $aWhere['id_schema'] = $id_esquema;
         $aOperators['id_schema'] = '!=';
 
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $oAsistentePubSet = new core\Set();
         $oCondicion = new core\Condicion();
@@ -88,5 +88,3 @@ class GestorAsistenteIn extends GestorAsistentePub
 
     /* MÉTODOS GET y SET --------------------------------------------------------*/
 }
-
-?>

@@ -27,7 +27,9 @@ class GestorZona extends core\ClaseGestor
     function __construct()
     {
         $oDbl = $GLOBALS['oDBE'];
+        $oDbl_Select = $GLOBALS['oDBE_Select'];
         $this->setoDbl($oDbl);
+        $this->setoDbl_Select($oDbl_Select);
         $this->setNomTabla('zonas');
     }
 
@@ -42,7 +44,7 @@ class GestorZona extends core\ClaseGestor
      */
     function getListaZonas($iid_nom_jefe = '')
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $sCondicion = '';
         if (!empty($iid_nom_jefe)) {
@@ -91,7 +93,7 @@ class GestorZona extends core\ClaseGestor
      */
     function getZonas($aWhere = array(), $aOperators = array())
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $oZonaSet = new core\Set();
         $oCondicion = new core\Condicion();

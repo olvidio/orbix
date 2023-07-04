@@ -26,7 +26,9 @@ class GestorGrupoCasa extends core\ClaseGestor
     function __construct()
     {
         $oDbl = $GLOBALS['oDBC'];
+        $oDbl_Select = $GLOBALS['oDBC_Select'];
         $this->setoDbl($oDbl);
+        $this->setoDbl_Select($oDbl_Select);
         $this->setNomTabla('du_grupos_dl');
     }
 
@@ -65,7 +67,7 @@ class GestorGrupoCasa extends core\ClaseGestor
      */
     function getGrupoCasas($aWhere = array(), $aOperators = array())
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $oGrupoCasaSet = new core\Set();
         $oCondicion = new core\Condicion();

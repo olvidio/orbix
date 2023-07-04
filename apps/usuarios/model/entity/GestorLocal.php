@@ -26,7 +26,9 @@ class GestorLocal extends core\ClaseGestor
     function __construct()
     {
         $oDbl = $GLOBALS['oDBPC'];
+        $oDbl_Select = $GLOBALS['oDBPC_Select'];
         $this->setoDbl($oDbl);
+        $this->setoDbl_Select($oDbl_Select);
         $this->setNomTabla('x_locales');
     }
 
@@ -42,7 +44,7 @@ class GestorLocal extends core\ClaseGestor
      */
     function getListaIdiomas($sWhere = '')
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $sQuery = "SELECT DISTINCT idioma, nom_idioma
 				FROM $nom_tabla $sWhere
@@ -64,7 +66,7 @@ class GestorLocal extends core\ClaseGestor
      */
     function getListaLocales($sWhere = '')
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         if (empty($sWhere)) $sWhere = "WHERE activo = 't'";
         $sQuery = "SELECT id_locale, nom_locale
@@ -110,7 +112,7 @@ class GestorLocal extends core\ClaseGestor
      */
     function getLocales($aWhere = array(), $aOperators = array())
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $oLocalSet = new core\Set();
         $oCondicion = new core\Condicion();

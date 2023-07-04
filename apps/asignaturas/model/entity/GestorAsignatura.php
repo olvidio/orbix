@@ -31,7 +31,9 @@ class GestorAsignatura extends core\ClaseGestor
     function __construct()
     {
         $oDbl = $GLOBALS['oDBPC'];
+        $oDbl_Select = $GLOBALS['oDBPC_Select'];
         $this->setoDbl($oDbl);
+        $this->setoDbl_Select($oDbl_Select);
         $this->setNomTabla('xa_asignaturas');
     }
 
@@ -46,7 +48,7 @@ class GestorAsignatura extends core\ClaseGestor
      */
     function getArrayAsignaturas()
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $sQuery = "SELECT id_asignatura,nombre_corto FROM $nom_tabla ORDER BY id_asignatura";
         if (($oDbl->query($sQuery)) === false) {
@@ -90,7 +92,7 @@ class GestorAsignatura extends core\ClaseGestor
      */
     function getJsonAsignaturas($aWhere)
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $sCondi = '';
         foreach ($aWhere as $camp => $val) {
@@ -135,7 +137,7 @@ class GestorAsignatura extends core\ClaseGestor
      */
     function getArrayAsignaturasCreditos()
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $sQuery = "SELECT id_asignatura, nombre_asignatura, creditos FROM $nom_tabla ORDER BY id_nivel";
         if (($oDbl->query($sQuery)) === false) {
@@ -162,7 +164,7 @@ class GestorAsignatura extends core\ClaseGestor
      */
     function getListaAsignaturas($op_genericas = true)
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $sWhere = "WHERE status = 't' ";
         if (!$op_genericas) {
@@ -224,7 +226,7 @@ class GestorAsignatura extends core\ClaseGestor
      */
     function getAsignaturas($aWhere = array(), $aOperators = array())
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $oAsignaturaSet = new core\Set();
         $oCondicion = new core\Condicion();

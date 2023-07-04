@@ -27,7 +27,9 @@ class GestorActividadTarea extends core\ClaseGestor
     function __construct()
     {
         $oDbl = $GLOBALS['oDBC'];
+        $oDbl_Select = $GLOBALS['oDBC_Select'];
         $this->setoDbl($oDbl);
+        $this->setoDbl_Select($oDbl_Select);
         $this->setNomTabla('a_tareas');
     }
 
@@ -44,7 +46,7 @@ class GestorActividadTarea extends core\ClaseGestor
      */
     function getListaActividadTareas($iid_fase)
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $where_txt = '';
         $aOpciones = array();
@@ -100,7 +102,7 @@ class GestorActividadTarea extends core\ClaseGestor
      */
     function getActividadTareas($aWhere = array(), $aOperators = array())
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $oActividadTareaSet = new core\Set();
         $oCondicion = new core\Condicion();

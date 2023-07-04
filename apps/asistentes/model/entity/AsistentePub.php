@@ -245,6 +245,7 @@ class AsistentePub extends core\ClasePropiedades
     function __construct($a_id = '')
     {
         $oDbl = $GLOBALS['oDBEP'];
+        $oDbl_Select = $GLOBALS['oDBEP_Select'];
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
@@ -253,6 +254,7 @@ class AsistentePub extends core\ClasePropiedades
             }
         }
         $this->setoDbl($oDbl);
+        $this->setoDbl_Select($oDbl_Select);
         $this->setNomTabla('d_asistentes_de_paso');
     }
 
@@ -393,7 +395,7 @@ class AsistentePub extends core\ClasePropiedades
      */
     public function DBCarregar($que = null)
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         if (isset($this->iid_activ) && isset($this->iid_nom)) {
             if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_activ='$this->iid_activ' AND id_nom=$this->iid_nom")) === false) {

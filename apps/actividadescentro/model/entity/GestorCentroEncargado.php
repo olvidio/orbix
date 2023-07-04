@@ -30,7 +30,9 @@ class GestorCentroEncargado extends core\ClaseGestor
     function __construct()
     {
         $oDbl = $GLOBALS['oDBC'];
+        $oDbl_Select = $GLOBALS['oDBC_Select'];
         $this->setoDbl($oDbl);
+        $this->setoDbl_Select($oDbl_Select);
         $this->setNomTabla('da_ctr_encargados');
     }
 
@@ -47,7 +49,7 @@ class GestorCentroEncargado extends core\ClaseGestor
      */
     function getProximasActividadesDeCentro($id_ubi = '', $f_ini_act = '')
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $sQuery = "SELECT nom_activ,f_ini,f_fin,(f_ini - date '" . $f_ini_act . "') as dif
 				FROM a_actividades_dl a JOIN $nom_tabla e USING (id_activ)
@@ -76,7 +78,7 @@ class GestorCentroEncargado extends core\ClaseGestor
      */
     function getActividadesDeCentros($iid_ubi = '', $scondicion = '')
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $oActividadSet = new core\Set();
         if (!empty($scondicion)) $scondicion = ' AND ' . $scondicion;
@@ -103,7 +105,7 @@ class GestorCentroEncargado extends core\ClaseGestor
      */
     function getCentrosEncargadosActividad($iid_activ = '')
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $oUbiSet = new core\Set();
         $sQuery = "SELECT * FROM $nom_tabla d WHERE id_activ=$iid_activ ORDER BY num_orden";
@@ -162,7 +164,7 @@ class GestorCentroEncargado extends core\ClaseGestor
      */
     function getCentrosEncargados($aWhere = array(), $aOperators = array())
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $oCentroEncargadoSet = new core\Set();
         $oCondicion = new core\Condicion();

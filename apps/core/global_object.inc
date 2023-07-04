@@ -33,7 +33,7 @@ $oDBT = $oConexion->getPDO();
 */
 
 // public para todo el mundo
-$oConfigDB = new ConfigDB('comun'); //de la database comun 
+$oConfigDB = new ConfigDB('comun'); //de la database comun
 
 $config = $oConfigDB->getEsquema('public');
 $oConexion = new DBConnection($config);
@@ -43,17 +43,36 @@ $config = $oConfigDB->getEsquema('resto');
 $oConexion = new DBConnection($config);
 $oDBRC = $oConexion->getPDO();
 
+// public para todo el mundo sólo lectura
+$oConfigDB = new ConfigDB('comun_select'); //de la database comun
+
+$config = $oConfigDB->getEsquema('public');
+$oConexion = new DBConnection($config);
+$oDBPC_Select = $oConexion->getPDO();
+
+$config = $oConfigDB->getEsquema('resto');
+$oConexion = new DBConnection($config);
+$oDBRC_Select = $oConexion->getPDO();
+
+
+
+
 $user_sfsv = $_SESSION['session_auth']['sfsv'];
 switch ($user_sfsv) {
     case 1: //sv
         $esquemav = $_SESSION['session_auth']['esquema'];
         $esquema = \substr($esquemav, 0, -1);
         $esquemaf = $esquema . 'f';
-        //comun
+        //común
         $oConfigDB->setDataBase('comun');
         $config = $oConfigDB->getEsquema($esquema);
         $oConexion = new DBConnection($config);
         $oDBC = $oConexion->getPDO();
+        //común sólo lectura
+        $oConfigDB->setDataBase('comun_select');
+        $config = $oConfigDB->getEsquema($esquema);
+        $oConexion = new DBConnection($config);
+        $oDBC_Select = $oConexion->getPDO();
         //sv
         if (ConfigGlobal::is_dmz()) {
             /*
@@ -97,6 +116,20 @@ switch ($user_sfsv) {
         $config = $oConfigDB->getEsquema('restov');
         $oConexion = new DBConnection($config);
         $oDBER = $oConexion->getPDO();
+
+        //sv exterior sólo lectura
+        $oConfigDB->setDataBase('sv-e_select');
+        $config = $oConfigDB->getEsquema($esquemav);
+        $oConexion = new DBConnection($config);
+        $oDBE_Select = $oConexion->getPDO();
+
+        $config = $oConfigDB->getEsquema('publicv');
+        $oConexion = new DBConnection($config);
+        $oDBEP_Select = $oConexion->getPDO();
+
+        $config = $oConfigDB->getEsquema('restov');
+        $oConexion = new DBConnection($config);
+        $oDBER_Select = $oConexion->getPDO();
         break;
     case 2: //sf
         $esquemaf = $_SESSION['session_auth']['esquema'];

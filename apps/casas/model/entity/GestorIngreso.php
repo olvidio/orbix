@@ -26,7 +26,9 @@ class GestorIngreso extends core\ClaseGestor
     function __construct()
     {
         $oDbl = $GLOBALS['oDBC'];
+        $oDbl_Select = $GLOBALS['oDBC_Select'];
         $this->setoDbl($oDbl);
+        $this->setoDbl_Select($oDbl_Select);
         $this->setNomTabla('da_ingresos_dl');
     }
 
@@ -65,7 +67,7 @@ class GestorIngreso extends core\ClaseGestor
      */
     function getIngresos($aWhere = array(), $aOperators = array())
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $oIngresoSet = new core\Set();
         $oCondicion = new core\Condicion();

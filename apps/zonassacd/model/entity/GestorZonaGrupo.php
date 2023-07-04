@@ -27,7 +27,9 @@ class GestorZonaGrupo extends core\ClaseGestor
     function __construct()
     {
         $oDbl = $GLOBALS['oDBE'];
+        $oDbl_Select = $GLOBALS['oDBE_Select'];
         $this->setoDbl($oDbl);
+        $this->setoDbl_Select($oDbl_Select);
         $this->setNomTabla('zonas_grupos');
     }
 
@@ -43,7 +45,7 @@ class GestorZonaGrupo extends core\ClaseGestor
      */
     function getListaZonaGrupos($sCondicion = '')
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $sQuery = "SELECT id_grupo, nombre_grupo
 				FROM $nom_tabla
@@ -89,7 +91,7 @@ class GestorZonaGrupo extends core\ClaseGestor
      */
     function getZonasGrupo($aWhere = array(), $aOperators = array())
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $oZonaGrupoSet = new core\Set();
         $oCondicion = new core\Condicion();

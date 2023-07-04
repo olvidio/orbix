@@ -40,7 +40,9 @@ class GestorNivelStgr extends core\ClaseGestor
     function __construct()
     {
         $oDbl = $GLOBALS['oDBPC'];
+        $oDbl_Select = $GLOBALS['oDBPC_Select'];
         $this->setoDbl($oDbl);
+        $this->setoDbl_Select($oDbl_Select);
         $this->setNomTabla('xa_nivel_stgr');
     }
 
@@ -54,7 +56,7 @@ class GestorNivelStgr extends core\ClaseGestor
      */
     function getArrayNivelesStgr()
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
 
         $sQuery = "SELECT nivel_stgr,desc_breve || '(' || desc_nivel || ')' FROM $nom_tabla ORDER BY orden";
@@ -80,7 +82,7 @@ class GestorNivelStgr extends core\ClaseGestor
      */
     function getListaNivelesStgr()
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $sQuery = "SELECT nivel_stgr,desc_breve || '(' || desc_nivel || ')' FROM $nom_tabla ORDER BY orden";
         if (($oDbl->query($sQuery)) === false) {
@@ -129,7 +131,7 @@ class GestorNivelStgr extends core\ClaseGestor
      */
     function getNivelesStgr($aWhere = array(), $aOperators = array())
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $oNivelStgrSet = new core\Set();
         $oCondicion = new core\Condicion();
@@ -178,5 +180,3 @@ class GestorNivelStgr extends core\ClaseGestor
     /* MÉTODOS GET y SET --------------------------------------------------------*/
 
 }
-
-?>

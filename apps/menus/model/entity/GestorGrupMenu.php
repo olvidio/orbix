@@ -30,7 +30,9 @@ class GestorGrupMenu extends core\ClaseGestor
     function __construct()
     {
         $oDbl = $GLOBALS['oDBE'];
+        $oDbl_Select = $GLOBALS['oDBE_Select'];
         $this->setoDbl($oDbl);
+        $this->setoDbl_Select($oDbl_Select);
         $this->setNomTabla('aux_grupmenu');
     }
 
@@ -43,7 +45,7 @@ class GestorGrupMenu extends core\ClaseGestor
      */
     function getListaMenus()
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $sQuery = "SELECT id_grupmenu,grup_menu FROM $nom_tabla ORDER BY orden,grup_menu";
         if (($oDblSt = $oDbl->query($sQuery)) === false) {
@@ -87,7 +89,7 @@ class GestorGrupMenu extends core\ClaseGestor
      */
     function getGrupMenus($aWhere = array(), $aOperators = array())
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $oGrupMenuSet = new core\Set();
         $oCondicion = new core\Condicion();
@@ -136,5 +138,3 @@ class GestorGrupMenu extends core\ClaseGestor
     /* MÉTODOS GET y SET --------------------------------------------------------*/
 
 }
-
-?>

@@ -31,6 +31,7 @@ class ActividadEx extends ActividadAll
     function __construct($a_id = '')
     {
         $oDbl = $GLOBALS['oDBRC'];
+        $oDbl_Select = $GLOBALS['oDBRC_Select'];
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
@@ -44,6 +45,7 @@ class ActividadEx extends ActividadAll
             }
         }
         $this->setoDbl($oDbl);
+        $this->setoDbl_Select($oDbl_Select);
         $this->setNomTabla('a_actividades_ex');
     }
 
@@ -195,7 +197,7 @@ class ActividadEx extends ActividadAll
      */
     public function DBCarregar($que = null)
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         if (isset($this->iid_activ)) {
             if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_activ='$this->iid_activ'")) === false) {

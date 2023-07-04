@@ -35,6 +35,7 @@ class CasaEx extends Casa
     function __construct($a_id = '')
     {
         $oDbl = $GLOBALS['oDBRC'];
+        $oDbl_Select = $GLOBALS['oDBRC_Select'];
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
@@ -48,6 +49,7 @@ class CasaEx extends Casa
             }
         }
         $this->setoDbl($oDbl);
+        $this->setoDbl_Select($oDbl_Select);
         $this->setNomTabla('u_cdc_ex');
     }
 
@@ -166,7 +168,7 @@ class CasaEx extends Casa
      */
     public function DBCarregar($que = null)
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         if (isset($this->iid_ubi)) {
             if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_ubi='$this->iid_ubi'")) === false) {

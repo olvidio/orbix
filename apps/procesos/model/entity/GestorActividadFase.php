@@ -29,7 +29,9 @@ class GestorActividadFase extends core\ClaseGestor
     function __construct()
     {
         $oDbl = $GLOBALS['oDBC'];
+        $oDbl_Select = $GLOBALS['oDBC_Select'];
         $this->setoDbl($oDbl);
+        $this->setoDbl_Select($oDbl_Select);
         $this->setNomTabla('a_fases');
     }
 
@@ -43,7 +45,7 @@ class GestorActividadFase extends core\ClaseGestor
      */
     function getTodasActividadFases($a_id_tipo_proceso = [])
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
 
         $cond = '';
@@ -87,7 +89,7 @@ class GestorActividadFase extends core\ClaseGestor
      */
     function getArrayActividadFasesTodas($aProcesos = array())
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
 
         $oMiUsuario = new Usuario(core\ConfigGlobal::mi_id_usuario());
@@ -152,7 +154,7 @@ class GestorActividadFase extends core\ClaseGestor
      */
     public function getArrayFasesProcesos($aProcesos = array())
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
 
         $miSfsv = core\ConfigGlobal::mi_sfsv();
@@ -233,7 +235,7 @@ class GestorActividadFase extends core\ClaseGestor
      */
     function getListaActividadFases($aProcesos = array(), $bresp = false)
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
 
         $oMiUsuario = new Usuario(core\ConfigGlobal::mi_id_usuario());
@@ -352,7 +354,7 @@ class GestorActividadFase extends core\ClaseGestor
      */
     function getActividadFases($aWhere = array(), $aOperators = array())
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $oActividadFaseSet = new core\Set();
         $oCondicion = new core\Condicion();

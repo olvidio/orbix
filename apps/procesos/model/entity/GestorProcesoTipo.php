@@ -28,7 +28,9 @@ class GestorProcesoTipo extends core\ClaseGestor
     function __construct()
     {
         $oDbl = $GLOBALS['oDBC'];
+        $oDbl_Select = $GLOBALS['oDBC_Select'];
         $this->setoDbl($oDbl);
+        $this->setoDbl_Select($oDbl_Select);
         $this->setNomTabla('a_tipos_proceso');
     }
 
@@ -43,7 +45,7 @@ class GestorProcesoTipo extends core\ClaseGestor
      */
     function getListaProcesoTipos()
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $mi_sfsv = ConfigGlobal::mi_sfsv();
         $sQuery = "SELECT id_tipo_proceso, nom_proceso 
@@ -96,7 +98,7 @@ class GestorProcesoTipo extends core\ClaseGestor
      */
     function getProcesoTipos($aWhere = array(), $aOperators = array())
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $oProcesoTipoSet = new core\Set();
         $oCondicion = new core\Condicion();

@@ -159,6 +159,7 @@ class EncargoSacdHorarioExcepcion extends core\ClasePropiedades
     function __construct($a_id = '')
     {
         $oDbl = $GLOBALS['oDBE'];
+        $oDbl_Select = $GLOBALS['oDBE_Select'];
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
@@ -167,6 +168,7 @@ class EncargoSacdHorarioExcepcion extends core\ClasePropiedades
             }
         }
         $this->setoDbl($oDbl);
+        $this->setoDbl_Select($oDbl_Select);
         $this->setNomTabla('encargo_sacd_horario_excepcion');
     }
 
@@ -269,7 +271,7 @@ class EncargoSacdHorarioExcepcion extends core\ClasePropiedades
      */
     public function DBCarregar($que = null)
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         if (isset($this->iid_item_ex) && isset($this->iid_enc)) {
             if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_item_ex='$this->iid_item_ex' AND id_enc='$this->iid_enc'")) === FALSE) {

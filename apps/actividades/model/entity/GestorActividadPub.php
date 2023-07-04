@@ -27,7 +27,9 @@ class GestorActividadPub extends GestorActividadAll
     function __construct()
     {
         $oDbl = $GLOBALS['oDBPC'];
+        $oDbl_Select = $GLOBALS['oDBPC_Select'];
         $this->setoDbl($oDbl);
+        $this->setoDbl_Select($oDbl_Select);
         $this->setNomTabla('av_actividades_pub');
     }
 

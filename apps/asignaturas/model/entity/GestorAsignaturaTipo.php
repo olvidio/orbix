@@ -30,7 +30,9 @@ class GestorAsignaturaTipo extends core\ClaseGestor
     function __construct()
     {
         $oDbl = $GLOBALS['oDBPC'];
+        $oDbl_Select = $GLOBALS['oDBPC_Select'];
         $this->setoDbl($oDbl);
+        $this->setoDbl_Select($oDbl_Select);
         $this->setNomTabla('xa_tipo_asig');
     }
 
@@ -45,7 +47,7 @@ class GestorAsignaturaTipo extends core\ClaseGestor
      */
     function getListaAsignaturaTipos()
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $sQuery = "SELECT id_tipo,tipo_asignatura FROM $nom_tabla ORDER BY tipo_asignatura";
         if (($oDblSt = $oDbl->query($sQuery)) === false) {
@@ -95,7 +97,7 @@ class GestorAsignaturaTipo extends core\ClaseGestor
      */
     function getAsignaturaTipos($aWhere = array(), $aOperators = array())
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $oAsignaturaTipoSet = new core\Set();
         $oCondicion = new core\Condicion();
@@ -144,5 +146,3 @@ class GestorAsignaturaTipo extends core\ClaseGestor
     /* MÉTODOS GET y SET --------------------------------------------------------*/
 
 }
-
-?>
