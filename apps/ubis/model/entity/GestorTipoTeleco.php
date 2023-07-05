@@ -30,7 +30,9 @@ class GestorTipoTeleco extends core\ClaseGestor
     function __construct()
     {
         $oDbl = $GLOBALS['oDBPC'];
+        $oDbl_Select = $GLOBALS['oDBPC_Select'];
         $this->setoDbl($oDbl);
+        $this->setoDbl_Select($oDbl_Select);
         $this->setNomTabla('xd_tipo_teleco');
     }
 
@@ -45,7 +47,7 @@ class GestorTipoTeleco extends core\ClaseGestor
      */
     function getListaTiposTelecoPersona()
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $oTipoCentroSet = new core\Set();
         $sQuery = "SELECT tipo_teleco, nombre_teleco
@@ -68,7 +70,7 @@ class GestorTipoTeleco extends core\ClaseGestor
      */
     function getListaTiposTelecoUbi()
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $oTipoCentroSet = new core\Set();
         $sQuery = "SELECT tipo_teleco, nombre_teleco
@@ -116,7 +118,7 @@ class GestorTipoTeleco extends core\ClaseGestor
      */
     function getTiposTeleco($aWhere = array(), $aOperators = array())
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $oTipoTelecoSet = new core\Set();
         $oCondicion = new core\Condicion();
@@ -165,5 +167,3 @@ class GestorTipoTeleco extends core\ClaseGestor
     /* MÉTODOS GET y SET --------------------------------------------------------*/
 
 }
-
-?>

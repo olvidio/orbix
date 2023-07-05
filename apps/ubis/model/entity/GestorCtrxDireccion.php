@@ -30,6 +30,7 @@ class GestorCtrxDireccion extends GestorUbixDireccion
     {
         $oDbl = $GLOBALS['oDBP'];
         $this->setoDbl($oDbl);
+        $this->setoDbl_Select($oDbl);
         $this->setNomTabla('u_cross_ctr_dir');
     }
 

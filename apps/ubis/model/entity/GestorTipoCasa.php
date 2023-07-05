@@ -29,7 +29,9 @@ class GestorTipoCasa extends core\ClaseGestor
     function __construct()
     {
         $oDbl = $GLOBALS['oDBPC'];
+        $oDbl_Select = $GLOBALS['oDBPC_Select'];
         $this->setoDbl($oDbl);
+        $this->setoDbl_Select($oDbl_Select);
         $this->setNomTabla('xu_tipo_casa');
     }
 
@@ -43,7 +45,7 @@ class GestorTipoCasa extends core\ClaseGestor
      */
     function getListaTiposCasa()
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $oTipoCentroSet = new core\Set();
         $sQuery = "SELECT tipo_casa, nombre_tipo_casa
@@ -90,7 +92,7 @@ class GestorTipoCasa extends core\ClaseGestor
      */
     function getTiposCasa($aWhere = array(), $aOperators = array())
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $oTipoCasaSet = new core\Set();
         $oCondicion = new core\Condicion();
@@ -139,5 +141,3 @@ class GestorTipoCasa extends core\ClaseGestor
     /* MÉTODOS GET y SET --------------------------------------------------------*/
 
 }
-
-?>

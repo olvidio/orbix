@@ -30,6 +30,7 @@ class GestorDireccionCtr extends GestorDireccion
     {
         $oDbl = $GLOBALS['oDBP'];
         $this->setoDbl($oDbl);
+        $this->setoDbl_Select($oDbl);
         $this->setNomTabla('u_dir_ctr');
     }
 

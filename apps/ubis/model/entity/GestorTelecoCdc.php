@@ -29,7 +29,9 @@ class GestorTelecoCdc extends GestorTelecoUbi
     function __construct()
     {
         $oDbl = $GLOBALS['oDBPC'];
+        $oDbl_Select = $GLOBALS['oDBPC_Select'];
         $this->setoDbl($oDbl);
+        $this->setoDbl_Select($oDbl_Select);
         $this->setNomTabla('d_teleco_cdc');
     }
     /* MÉTODOS PÚBLICOS -----------------------------------------------------------*/
@@ -43,7 +45,7 @@ class GestorTelecoCdc extends GestorTelecoUbi
      */
     function getTelecos($aWhere = array(), $aOperators = array())
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $oTelecoCdcSet = new core\Set();
         $oCondicion = new core\Condicion();
@@ -91,5 +93,3 @@ class GestorTelecoCdc extends GestorTelecoUbi
     /* MÉTODOS PROTECTED --------------------------------------------------------*/
     /* MÉTODOS GET y SET --------------------------------------------------------*/
 }
-
-?>

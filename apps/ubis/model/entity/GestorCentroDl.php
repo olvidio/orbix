@@ -30,11 +30,14 @@ class GestorCentroDl extends GestorCentro
     {
         if (ConfigGlobal::is_dmz()) {
             $oDbl = $GLOBALS['oDBC'];
+            $oDbl_Select = $GLOBALS['oDBC_Select'];
             $this->setoDbl($oDbl);
+            $this->setoDbl_Select($oDbl_Select);
             $this->setNomTabla('cu_centros_dl');
         } else {
             $oDbl = $GLOBALS['oDB'];
             $this->setoDbl($oDbl);
+            $this->setoDbl_Select($oDbl);
             $this->setNomTabla('u_centros_dl');
         }
     }
@@ -44,5 +47,3 @@ class GestorCentroDl extends GestorCentro
     /* MÉTODOS GET y SET --------------------------------------------------------*/
 
 }
-
-?>

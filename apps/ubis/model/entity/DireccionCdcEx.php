@@ -37,6 +37,7 @@ class DireccionCdcEx extends DireccionCdc
     function __construct($a_id = '')
     {
         $oDbl = $GLOBALS['oDBRC'];
+        $oDbl_Select = $GLOBALS['oDBRC_Select'];
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
@@ -50,6 +51,7 @@ class DireccionCdcEx extends DireccionCdc
             }
         }
         $this->setoDbl($oDbl);
+        $this->setoDbl_Select($oDbl_Select);
         $this->setNomTabla('u_dir_cdc_ex');
     }
 
@@ -160,7 +162,7 @@ class DireccionCdcEx extends DireccionCdc
      */
     public function DBCarregar($que = null)
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         if (isset($this->iid_direccion)) {
             if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_direccion='$this->iid_direccion'")) === false) {

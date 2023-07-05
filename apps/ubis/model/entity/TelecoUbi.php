@@ -40,5 +40,3 @@ class TelecoUbi
         return $oTelecoUbi;
     }
 }
-
-?>

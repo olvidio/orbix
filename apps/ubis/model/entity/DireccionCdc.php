@@ -31,6 +31,7 @@ class DireccionCdc extends DireccionGlobal
     function __construct($a_id = '')
     {
         $oDbl = $GLOBALS['oDBPC'];
+        $oDbl_Select = $GLOBALS['oDBPC_Select'];
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
@@ -44,6 +45,7 @@ class DireccionCdc extends DireccionGlobal
             }
         }
         $this->setoDbl($oDbl);
+        $this->setoDbl_Select($oDbl_Select);
         $this->setNomTabla('u_dir_cdc');
     }
 
@@ -152,7 +154,7 @@ class DireccionCdc extends DireccionGlobal
      */
     public function DBCarregar($que = null)
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         if (isset($this->iid_direccion)) {
             if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_direccion='$this->iid_direccion'")) === false) {
@@ -261,5 +263,3 @@ class DireccionCdc extends DireccionGlobal
     /* MÉTODOS GET y SET --------------------------------------------------------*/
     /* MÉTODOS GET y SET D'ATRIBUTOS QUE NO SON CAMPOS -----------------------------*/
 }
-
-?>

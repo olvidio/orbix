@@ -29,7 +29,9 @@ class GestorCdcxDireccion extends GestorUbixDireccion
     function __construct()
     {
         $oDbl = $GLOBALS['oDBPC'];
+        $oDbl_Select = $GLOBALS['oDBPC_Select'];
         $this->setoDbl($oDbl);
+        $this->setoDbl_Select($oDbl_Select);
         $this->setNomTabla('u_cross_cdc_dir');
     }
 
@@ -44,7 +46,7 @@ class GestorCdcxDireccion extends GestorUbixDireccion
      */
     function getCdcxDirecciones($aWhere = array(), $aOperators = array())
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $oCdcxDireccionSet = new core\Set();
         $oCondicion = new core\Condicion();
@@ -93,5 +95,3 @@ class GestorCdcxDireccion extends GestorUbixDireccion
     /* MÉTODOS PROTECTED --------------------------------------------------------*/
     /* MÉTODOS GET y SET --------------------------------------------------------*/
 }
-
-?>

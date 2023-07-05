@@ -30,7 +30,9 @@ class GestorCasaDl extends GestorCasa
     function __construct()
     {
         $oDbl = $GLOBALS['oDBC'];
+        $oDbl_Select = $GLOBALS['oDBC_Select'];
         $this->setoDbl($oDbl);
+        $this->setoDbl_Select($oDbl_Select);
         $this->setNomTabla('u_cdc_dl');
     }
 
@@ -42,5 +44,3 @@ class GestorCasaDl extends GestorCasa
     /* MÉTODOS GET y SET --------------------------------------------------------*/
 
 }
-
-?>

@@ -32,11 +32,14 @@ class GestorCentro extends core\ClaseGestor
     {
         if (ConfigGlobal::is_dmz()) {
             $oDbl = $GLOBALS['oDBEP'];
+            $oDbl_Select = $GLOBALS['oDBEP_Select'];
             $this->setoDbl($oDbl);
+            $this->setoDbl_Select($oDbl_Select);
             $this->setNomTabla('u_centros');
         } else {
             $oDbl = $GLOBALS['oDBP'];
             $this->setoDbl($oDbl);
+            $this->setoDbl_Select($oDbl);
             $this->setNomTabla('u_centros');
         }
     }
@@ -51,7 +54,7 @@ class GestorCentro extends core\ClaseGestor
      */
     function getArrayCentros()
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $orden = 'nombre_ubi';
         $sCondicion = "WHERE status = 't'";
@@ -83,7 +86,7 @@ class GestorCentro extends core\ClaseGestor
      */
     function getListaCentros($sCondicion = '', $orden = '')
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         if (empty($orden)) {
             $orden = 'nombre_ubi';
@@ -110,7 +113,7 @@ class GestorCentro extends core\ClaseGestor
      */
     function getPosiblesCentros($sCondicion = '')
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $sQuery = "SELECT id_ubi, nombre_ubi
 				FROM $nom_tabla
@@ -169,7 +172,7 @@ class GestorCentro extends core\ClaseGestor
      */
     function getCentros($aWhere = array(), $aOperators = array())
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $oCentroSet = new core\Set();
         $oCondicion = new core\Condicion();
@@ -230,5 +233,3 @@ class GestorCentro extends core\ClaseGestor
     /* MÉTODOS GET y SET --------------------------------------------------------*/
 
 }
-
-?>

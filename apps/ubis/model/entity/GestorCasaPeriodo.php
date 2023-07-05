@@ -26,7 +26,9 @@ class GestorCasaPeriodo extends core\ClaseGestor
     function __construct()
     {
         $oDbl = $GLOBALS['oDBC'];
+        $oDbl_Select = $GLOBALS['oDBC_Select'];
         $this->setoDbl($oDbl);
+        $this->setoDbl_Select($oDbl_Select);
         $this->setNomTabla('du_periodos');
     }
 
@@ -44,7 +46,7 @@ class GestorCasaPeriodo extends core\ClaseGestor
      */
     function getArrayCasaPeriodos($id_ubi, $oInicio, $oFin)
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $inicio_iso = $oInicio->getIso();
         $fin_iso = $oFin->getIso();
@@ -93,7 +95,7 @@ class GestorCasaPeriodo extends core\ClaseGestor
      */
     function getCasaPeriodosDias($iseccion, $id_ubi, $oInicio, $oFin)
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $inicio_iso = $oInicio->getIso();
         $fin_iso = $oFin->getIso();
@@ -145,7 +147,7 @@ class GestorCasaPeriodo extends core\ClaseGestor
      */
     function getCasaPeriodos($aWhere = array(), $aOperators = array())
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $oCasaPeriodoSet = new core\Set();
         $oCondicion = new core\Condicion();

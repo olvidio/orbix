@@ -91,11 +91,14 @@ class CentroDl extends Centro
     {
         if (ConfigGlobal::is_dmz()) {
             $oDbl = $GLOBALS['oDBC'];
+            $oDbl_Select = $GLOBALS['oDBC_Select'];
             $this->setoDbl($oDbl);
+            $this->setoDbl_Select($oDbl);
             $this->setNomTabla('cu_centros_dl');
         } else {
             $oDbl = $GLOBALS['oDB'];
             $this->setoDbl($oDbl);
+            $this->setoDbl_Select($oDbl);
             $this->setNomTabla('u_centros_dl');
         }
         if (is_array($a_id)) {
@@ -259,7 +262,7 @@ class CentroDl extends Centro
      */
     public function DBCarregar($que = null)
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         if (isset($this->iid_ubi)) {
             if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_ubi='$this->iid_ubi'")) === false) {

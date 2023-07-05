@@ -40,5 +40,3 @@ class Direccion extends core\ClasePropiedades
         return $oDireccion;
     }
 }
-
-?>

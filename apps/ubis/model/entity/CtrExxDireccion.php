@@ -47,6 +47,7 @@ class CtrExxDireccion extends CtrxDireccion
             }
         }
         $this->setoDbl($oDbl);
+        $this->setoDbl_Select($oDbl);
         $this->setNomTabla('u_cross_ctr_ex_dir');
     }
 
@@ -55,5 +56,3 @@ class CtrExxDireccion extends CtrxDireccion
     /* MÉTODOS PRIVADOS ----------------------------------------------------------*/
 
 }
-
-?>

@@ -47,6 +47,7 @@ class CtrxDireccion extends UbixDireccion
             }
         }
         $this->setoDbl($oDbl);
+        $this->setoDbl_Select($oDbl);
         $this->setNomTabla('u_cross_ctr_dir');
     }
 
@@ -55,5 +56,3 @@ class CtrxDireccion extends UbixDireccion
     /* MÉTODOS PRIVADOS ----------------------------------------------------------*/
 
 }
-
-?>

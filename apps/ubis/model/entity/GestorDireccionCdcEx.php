@@ -27,7 +27,9 @@ class GestorDireccionCdcEx extends GestorDireccionCdc
     function __construct()
     {
         $oDbl = $GLOBALS['oDBRC'];
+        $oDbl_Select = $GLOBALS['oDBRC_Select'];
         $this->setoDbl($oDbl);
+        $this->setoDbl_Select($oDbl_Select);
         $this->setNomTabla('u_dir_cdc_ex');
     }
 
@@ -37,5 +39,3 @@ class GestorDireccionCdcEx extends GestorDireccionCdc
     /* MÉTODOS GET y SET --------------------------------------------------------*/
 
 }
-
-?>

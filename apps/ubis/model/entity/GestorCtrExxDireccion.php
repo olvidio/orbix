@@ -30,6 +30,7 @@ class GestorCtrExxDireccion extends GestorCtrxDireccion
     {
         $oDbl = $GLOBALS['oDBR'];
         $this->setoDbl($oDbl);
+        $this->setoDbl_Select($oDbl);
         $this->setNomTabla('u_cross_ctr_ex_dir');
     }
 
@@ -37,5 +38,3 @@ class GestorCtrExxDireccion extends GestorCtrxDireccion
     /* MÉTODOS PROTECTED --------------------------------------------------------*/
     /* MÉTODOS GET y SET --------------------------------------------------------*/
 }
-
-?>

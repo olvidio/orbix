@@ -75,6 +75,7 @@ class TipoTeleco extends core\ClasePropiedades
     function __construct($a_id = '')
     {
         $oDbl = $GLOBALS['oDBPC'];
+        $oDbl_Select = $GLOBALS['oDBPC_Select'];
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
@@ -88,6 +89,7 @@ class TipoTeleco extends core\ClasePropiedades
             }
         }
         $this->setoDbl($oDbl);
+        $this->setoDbl_Select($oDbl_Select);
         $this->setNomTabla('xd_tipo_teleco');
     }
 
@@ -176,7 +178,7 @@ class TipoTeleco extends core\ClasePropiedades
      */
     public function DBCarregar($que = null)
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         if (isset($this->stipo_teleco)) {
             if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE tipo_teleco='$this->stipo_teleco'")) === false) {
