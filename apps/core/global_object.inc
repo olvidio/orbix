@@ -140,6 +140,11 @@ switch ($user_sfsv) {
         $config = $oConfigDB->getEsquema($esquema);
         $oConexion = new DBConnection($config);
         $oDBC = $oConexion->getPDO();
+        //común sólo lectura
+        $oConfigDB->setDataBase('comun_select');
+        $config = $oConfigDB->getEsquema($esquema);
+        $oConexion = new DBConnection($config);
+        $oDBC_Select = $oConexion->getPDO();
 
         //sf
         $oConfigDB->setDataBase('sf');
@@ -147,28 +152,20 @@ switch ($user_sfsv) {
         $oConexion = new DBConnection($config);
         $oDB = $oConexion->getPDO();
         $oDBE = $oConexion->getPDO();
+        $oDBE_Select = $oConexion->getPDO();
 
         $config = $oConfigDB->getEsquema('publicf');
         $oConexion = new DBConnection($config);
         $oDBP = $oConexion->getPDO();
         $oDBEP = $oConexion->getPDO();
+        $oDBEP_Select = $oConexion->getPDO();
 
         $config = $oConfigDB->getEsquema('restof');
         $oConexion = new DBConnection($config);
         $oDBR = $oConexion->getPDO();
+        $oDBER_Select = $oConexion->getPDO();
 
-        //sf exterior
-        // De momento todo junto. No distingo tunel/dmz
-        /*
-        $oConfigDB->setDataBase('sf-e');
-        $config = $oConfigDB->getEsquema($esquemaf);
-        $oConexion = new dbConnection($config);
-        $oDBE = $oConexion->getPDO();
-
-        $config = $oConfigDB->getEsquema('publicf');
-        $oConexion = new dbConnection($config);
-        $oDBEP = $oConexion->getPDO();
-        */
+        //sf lectura
         break;
 }
 
