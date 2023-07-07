@@ -163,6 +163,7 @@ switch ($user_sfsv) {
         $config = $oConfigDB->getEsquema('restof');
         $oConexion = new DBConnection($config);
         $oDBR = $oConexion->getPDO();
+        $oDBER = $oConexion->getPDO();
         $oDBER_Select = $oConexion->getPDO();
 
         //sf lectura
