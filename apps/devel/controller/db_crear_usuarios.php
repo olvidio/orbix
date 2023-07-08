@@ -65,7 +65,7 @@ $oDBRol->setDbConexion($oDevelPC);
 $oDBRol->setUser($esquema);
 $oDBRol->setPwd($esquema_pwd);
 $oDBRol->crearUsuario();
-$oConfigDB->addEsquema('comun', $esquema, $esquema_pwd);
+$oConfigDB->addEsquemaEnFicheroPasswords('comun', $esquema, $esquema_pwd);
 
 // Con las bases de datos en distintos servidores, hay que ir cambiando la conexión:
 // sv
@@ -81,7 +81,7 @@ $oDBRol->setDbConexion($oDevelPC);
 $oDBRol->setUser($esquemav);
 $oDBRol->setPwd($esquemav_pwd);
 $oDBRol->crearUsuario();
-$oConfigDB->addEsquema('sv', $esquemav, $esquemav_pwd);
+$oConfigDB->addEsquemaEnFicheroPasswords('sv', $esquemav, $esquemav_pwd);
 
 // sv-e
 // Los mismos parametros que para sv.
@@ -105,7 +105,7 @@ if ($host_sv != $host_sve || $port_sv != $port_sve) {
     $oDBRol->setPwd($esquemav_pwd);
     $oDBRol->crearUsuario();
 }
-$oConfigDB->addEsquema('sv-e', $esquemav, $esquemav_pwd);
+$oConfigDB->addEsquemaEnFicheroPasswords('sv-e', $esquemav, $esquemav_pwd);
 
 // sf
 /* Si se crea desde sv, hay que crear el Role de sf para la database comun
@@ -140,7 +140,7 @@ if ($_SESSION['sfsv'] == 'sf') {
     $oDBRol->setUser($esquemaf);
     $oDBRol->setPwd($esquemaf_pwd);
     $oDBRol->crearUsuario();
-    $oConfigDB->addEsquema('sf', $esquemaf, $esquemaf_pwd);
+    $oConfigDB->addEsquemaEnFicheroPasswords('sf', $esquemaf, $esquemaf_pwd);
 }
 
 $archivo_conf = ConfigGlobal::DIR_PWD . '/  (comun.inc, sv.inc, sf.inc)';

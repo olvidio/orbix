@@ -244,7 +244,7 @@ class DBTabla extends DBAbstract
      */
     public function copiar()
     {
-        if ($this->getHost() === 'localhost' || $this->getHost() === '127.0.0.1') {
+        if ($this->getHost() === '/var/run/postgresql' || $this->getHost() === 'localhost' || $this->getHost() === '127.0.0.1') {
             $this->copiar_local();
         } else {
             $this->copiar_remote();
@@ -317,12 +317,13 @@ class DBTabla extends DBAbstract
         //          -U postgres -h 127.0.0.1 pruebas-comun" > /var/www/pruebas/log/db/Acse-crAcse.comun.sql
 
         $dbname = $this->getDbName();
+        $host_local = $this->getHost();
 
         // leer esquema
         //$command_ssh = "/usr/bin/ssh aquinate@192.168.200.16";
         $command_ssh = "/usr/bin/ssh " . $this->getSsh_user() . "@" . $this->getHost();
         $command_db = "/usr/bin/pg_dump -a" . $sTablas . " ";
-        $command_db .= "-U postgres -h 127.0.0.1 $dbname";
+        $command_db .= "-U postgres -h $host_local $dbname";
         $command = "$command_ssh \"$command_db\" > " . $this->getFileRef();
         //echo "$command<br>";
         passthru($command); // no output to capture so no need to store it

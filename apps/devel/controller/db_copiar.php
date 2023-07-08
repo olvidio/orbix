@@ -32,11 +32,10 @@ if (!empty($Qcomun)) {
     $oConfigDB = new core\ConfigDB('importar'); //de la database comun
     $config = $oConfigDB->getEsquema('public'); //de la database comun
 
-
     /**
      * lista de tablas de las que hay que copiar los valores.
      * Posteriormente hay que cambiar el id_schema (si tiene)
-     * y actualizar la sequencia (se hace al final, en DBTrasvase)
+     * y actualizar la secuencia (se hace al final, en DBTrasvase)
      *
      * @var array $aTablas
      */
@@ -45,6 +44,14 @@ if (!empty($Qcomun)) {
         "xa_tipo_tarifa" => ['id_schema' => 'yes'],
         "x_config_schema" => ['id_schema' => 'yes'],
     ];
+    $oDBTabla = new core\DBTabla();
+    $oDBTabla->setConfig($config);
+    $oDBTabla->setRef($esquemaRef);
+    $oDBTabla->setNew($esquema);
+    $oDBTabla->setTablas($aTablas);
+    $oDBTabla->copiar();
+    // para la DB Select de la máquina interna
+    $config = $oConfigDB->getEsquema('public_select'); //de la database comun
     $oDBTabla = new core\DBTabla();
     $oDBTabla->setConfig($config);
     $oDBTabla->setRef($esquemaRef);
@@ -65,7 +72,7 @@ if (!empty($Qcomun)) {
 // SV
 if (!empty($Qsv)) {
     $oConfigDB = new core\ConfigDB('importar');
-    $config = $oConfigDB->getEsquema('publicv-e'); // Todas estas tablas estan en sv-e
+    $config = $oConfigDB->getEsquema('publicv-e'); // Todas estas tablas están en sv-e
 
     $aTablas = ["aux_cross_usuarios_grupos" => ['id_schema' => 'yes'],
         "aux_grupmenu" => ['id_schema' => 'yes'],
@@ -97,7 +104,7 @@ if (!empty($Qsv)) {
 // SF
 if (!empty($Qsf)) {
     $oConfigDB = new core\ConfigDB('importar');
-    $config = $oConfigDB->getEsquema('publicf-e'); // Todas estas tablas estan en sv-e
+    $config = $oConfigDB->getEsquema('publicf-e'); // Todas estas tablas están en sv-e
 
     $aTablas = ["aux_cross_usuarios_grupos" => ['id_schema' => 'yes'],
         "aux_grupmenu" => ['id_schema' => 'yes'],
@@ -128,4 +135,4 @@ if (!empty($Qsf)) {
 }
 
 echo "<br>";
-echo sprintf(_("esquema: %s. Se han pasado todos los datos que se tenian."), $esquema);
+echo sprintf(_("esquema: %s. Se han pasado todos los datos que se tenían."), $esquema);
