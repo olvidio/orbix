@@ -160,9 +160,14 @@ class DBRol
     {
         $oDbl = $this->getoDbl();
         // comprobar antes si existe.
-        $sql = "SELECT 1 FROM pg_roles WHERE rolname='$this->sUser'";
+        $sql = "SELECT count(*) FROM pg_roles WHERE rolname='$this->sUser'";
 
-        if (($oDbl->query($sql)) === false) {
+        if (($res = $oDbl->query($sql)) === false) {
+            $sClauError = 'DBRol.query.exists';
+            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+            return false;
+        }
+        if ($res->fetchColumn() === 0) {
             $this->sOptions = empty($this->sOptions) ? 'NOSUPERUSER NOCREATEDB NOCREATEROLE INHERIT LOGIN' : $this->sOptions;
             $sql = "CREATE ROLE \"$this->sUser\" PASSWORD '$this->sPwd' $this->sOptions;";
 
