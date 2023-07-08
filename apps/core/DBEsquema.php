@@ -327,7 +327,8 @@ class DBEsquema
     {
         $this->leer_remote();
         $this->cambiar_nombre();
-        $this->eliminar_sync();
+        // Por el momento ya no tengo el otro servidor
+        //$this->eliminar_sync();
         $this->importar();
     }
 
