@@ -60,7 +60,7 @@ $oDevelPC = $oConexion->getPDO();
 
 $oDBRol = new core\DBRol();
 $oDBRol->setDbConexion($oDevelPC);
-// necesito crear los tres usuarios para dar perminsos
+// necesito crear los tres usuarios para dar permisos
 // comun
 $oDBRol->setUser($esquema);
 $oDBRol->setPwd($esquema_pwd);
@@ -82,6 +82,11 @@ $oDBRol->setUser($esquemav);
 $oDBRol->setPwd($esquemav_pwd);
 $oDBRol->crearUsuario();
 $oConfigDB->addEsquemaEnFicheroPasswords('sv', $esquemav, $esquemav_pwd);
+// también hay que crear los usuarios comun para la DB Select
+// No se añade al fichero de passwords. Ya se hace al hacer el sv-e, y el comun.
+$oDBRol->setUser($esquema);
+$oDBRol->setPwd($esquema_pwd);
+$oDBRol->crearUsuario();
 
 // sv-e
 // Los mismos parametros que para sv.
@@ -96,7 +101,7 @@ $oDevelPC = $oConexion->getPDO();
 $host_sve = $config['host'];
 $port_sve = $config['port'];
 
-// Si es el mismo servidor (portatil) me lo salto:
+// Si es el mismo servidor (portátil) me lo salto:
 if ($host_sv != $host_sve || $port_sv != $port_sve) {
     $oDBRol = new core\DBRol();
     $oDBRol->setDbConexion($oDevelPC);
