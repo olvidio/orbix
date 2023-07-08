@@ -130,9 +130,10 @@ $oDBRol->setDbConexion($oDevelPC);
 $oDBRol->setUser($esquemaf);
 $oDBRol->setPwd($esquemaf_pwd);
 $oDBRol->crearUsuario();
+$oConfigDB->addEsquemaEnFicheroPasswords('sf', $esquemaf, $esquemaf_pwd);
 
 // desde sf (añado el esquema al Role)
-//if ($_SESSION['sfsv'] == 'sf') {
+if ($_SESSION['sfsv'] == 'sf') {
     $oConfigDB = new core\ConfigDB('importar');
     //coge los valores de public: 1.la database sv-e; 2.nombre superusuario; 3.pasword superusuario;
     $config = $oConfigDB->getEsquema('publicf');
@@ -146,7 +147,7 @@ $oDBRol->crearUsuario();
     $oDBRol->setPwd($esquemaf_pwd);
     $oDBRol->crearUsuario();
     $oConfigDB->addEsquemaEnFicheroPasswords('sf', $esquemaf, $esquemaf_pwd);
-//}
+}
 
 $archivo_conf = ConfigGlobal::DIR_PWD . '/  (comun.inc, sv.inc, sf.inc)';
 echo sprintf(_("se han creado los usuarios. Ojo, un único usuario para pruebas y producción"));
