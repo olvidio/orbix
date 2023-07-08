@@ -160,7 +160,7 @@ class DBRol
     {
         $oDbl = $this->getoDbl();
         // comprobar antes si existe.
-        $sql = "SELECT 1 FROM pg_roles WHERE rolname=\"$this->sUser\"";
+        $sql = "SELECT 1 FROM pg_roles WHERE rolname='$this->sUser'";
 
         if (($oDbl->query($sql)) === false) {
             $this->sOptions = empty($this->sOptions) ? 'NOSUPERUSER NOCREATEDB NOCREATEROLE INHERIT LOGIN' : $this->sOptions;
