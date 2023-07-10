@@ -366,8 +366,8 @@ class DBEsquema
         // leer esquema
         //$command_ssh = "/usr/bin/ssh aquinate@192.168.200.16";
         $command_ssh = "/usr/bin/ssh -i /var/www/.ssh/id_rsa " . $this->getSsh_user() . "@" . $this->getHost();
-        $command_db = "/usr/bin/pg_dump -s --schema=\\\\\\\"" . $this->getRef() . "\\\\\\\" ";
-        $command_db .= "-U postgres -h $host_local $dbname";
+        $command_db = "/usr/bin/pg_dump -U postgres -s --schema=\\\\\\\"" . $this->getRef() . "\\\\\\\" ";
+        $command_db .= "-h $host_local $dbname";
         $command = "$command_ssh \"$command_db\" > " . $this->getFileRef();
         passthru($command); // no output to capture so no need to store it
         /*
@@ -388,7 +388,7 @@ class DBEsquema
         // crear archivo con el password
         $dsn = $this->getConexion('ref');
         // leer esquema
-        $command = "/usr/bin/pg_dump -s --schema=\\\"" . $this->getRef() . "\\\" ";
+        $command = "/usr/bin/pg_dump -U postgres -s --schema=\\\"" . $this->getRef() . "\\\" ";
         $command .= "--file=" . $this->getFileRef() . " ";
         $command .= "\"" . $dsn . "\"";
         $command .= " > " . $this->getFileLog() . " 2>&1";

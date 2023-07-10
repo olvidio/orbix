@@ -340,7 +340,7 @@ class DBTabla extends DBAbstract
         // crear archivo con el password
         $dsn = $this->getConexion('ref');
         // leer esquema
-        $command = "/usr/bin/pg_dump $a $sTablas";
+        $command = "/usr/bin/pg_dump -U postgres $a $sTablas";
         $command .= "--file=" . $this->getFileRef() . " ";
         $command .= "\"" . $dsn . "\"";
         $command .= " > " . $this->getFileLogR() . " 2>&1";
