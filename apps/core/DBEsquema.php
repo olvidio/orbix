@@ -320,6 +320,10 @@ class DBEsquema
             $this->crear_remote();
         }
     }
+    public function crear_select() {
+        // de momento nada:
+        return TRUE;
+    }
 
     private function crear_local()
     {
