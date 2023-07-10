@@ -60,6 +60,7 @@ class DBEsquema
     private mixed $sDlNew;
     private mixed $sRegionNew;
     private mixed $sDbRef;
+    private array $config;
 
     /**
      * Constructor de la classe.
@@ -90,6 +91,8 @@ class DBEsquema
 
     public function setConfig($config)
     {
+        $this->config = $config;
+
         $this->setDb($config['dbname']);
         $this->setHost($config['host']);
         $this->setSsh_user($config['ssh_user']);
@@ -321,8 +324,25 @@ class DBEsquema
         }
     }
     public function crear_select() {
-        // de momento nada:
-        return TRUE;
+        // es para las copias locales del servidor externo.
+        // Ya tenemos los archivos creador, sólo hay que importalos al servidor interior
+
+        //cambiar la conexión
+        $oConnection = new DBConnection($this->config);
+        $dsn = $oConnection->getURI();
+
+        $command = "PGOPTIONS='--client-min-messages=warning' /usr/bin/psql -U postgres -q  -X -t --pset pager=off ";
+        $command .= "--file=" . $this->getFileNew() . " ";
+        $command .= "\"" . $dsn . "\"";
+        $command .= " > " . $this->getFileLog() . " 2>&1";
+        passthru($command); // no output to capture so no need to store it
+        // read the file, if empty all's well
+        $error = file_get_contents($this->getFileLog());
+        if (trim($error) != '') {
+            if (ConfigGlobal::is_debug_mode()) {
+                echo sprintf(_("PSQL ERROR IN COMMAND(4): %s<br> mirar en: %s<br>"), $command, $this->getFileLog());
+            }
+        }
     }
 
     private function crear_local()
@@ -499,14 +519,6 @@ class DBEsquema
             case 'sf-e':
                 $oConfigDB = new ConfigDB('sf-e'); //de la database sf
                 $config = $oConfigDB->getEsquema($esquema); //de la database sf
-                break;
-            case 'comun_select':
-                $oConfigDB = new ConfigDB('comun_select'); //de la database sv
-                $config = $oConfigDB->getEsquema($esquema); //de la database sv
-                break;
-            case 'sv-e_select':
-                $oConfigDB = new ConfigDB('sv-e_select'); //de la database sv
-                $config = $oConfigDB->getEsquema($esquema); //de la database sv
                 break;
         }
 
