@@ -352,11 +352,13 @@ class DBEsquema
         $host_local = '/var/run/postgresql';
         // leer esquema
         //$command_ssh = "/usr/bin/ssh aquinate@192.168.200.16";
-        $command_ssh = "/usr/bin/ssh " . $this->getSsh_user() . "@" . $this->getHost();
+        $command_ssh = "/usr/bin/ssh -i /var/www/.ssh/id_rsa " . $this->getSsh_user() . "@" . $this->getHost();
         $command_db = "/usr/bin/pg_dump -s --schema=\\\\\\\"" . $this->getRef() . "\\\\\\\" ";
         $command_db .= "-U postgres -h $host_local $dbname";
         $command = "$command_ssh \"$command_db\" > " . $this->getFileRef();
-        $command .= " > " . $this->getFileLog() . " 2>&1";
+        passthru($command); // no output to capture so no need to store it
+        /*
+         $command .= " > " . $this->getFileLog() . " 2>&1";
         passthru($command); // no output to capture so no need to store it
         $error = file_get_contents($this->getFileLog());
         if (trim($error) != '') {
@@ -364,6 +366,7 @@ class DBEsquema
                 echo sprintf(_("PSQL ERROR IN COMMAND(0): %s<br> mirar: %s<br>"), $command, $this->getFileLog());
             }
         }
+        */
     }
 
     private function leer_local()
