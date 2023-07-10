@@ -407,7 +407,7 @@ class DBEsquema
         // crear archivo con el password
         $dsn = $this->getConexion('new');
         // Importar el esquema en la base de datos comun
-        $command = "PGOPTIONS='--client-min-messages=warning' /usr/bin/psql -q  -X -t --pset pager=off ";
+        $command = "PGOPTIONS='--client-min-messages=warning' /usr/bin/psql -U postgres -q  -X -t --pset pager=off ";
         $command .= "--file=" . $this->getFileNew() . " ";
         $command .= "\"" . $dsn . "\"";
         $command .= " > " . $this->getFileLog() . " 2>&1";
