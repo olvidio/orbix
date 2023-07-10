@@ -151,10 +151,12 @@ class DBEsquema
         $this->sNew = $this->getRegionNew() . '-' . $this->getDlNew();
         switch ($this->getDb()) {
             case 'comun':
+            case 'comun_select':
             case 'pruebas-comun':
                 break;
             case 'sv':
             case 'sv-e':
+            case 'sv-e_select':
             case 'pruebas-sv':
             case 'pruebas-sv-e':
                 $this->sNew .= 'v';
@@ -179,10 +181,12 @@ class DBEsquema
         $this->sRef = $this->getRegionRef() . '-' . $this->getDlRef();
         switch ($this->getDb()) {
             case 'comun':
+            case 'comun_select':
             case 'pruebas-comun':
                 break;
             case 'sv':
             case 'sv-e':
+            case 'sv-e_select':
             case 'pruebas-sv':
             case 'pruebas-sv-e':
                 $this->sRef .= 'v';
@@ -466,41 +470,8 @@ class DBEsquema
         } elseif ($esq === 'new') {
             $esquema = $this->getNew();
         }
-        switch ($this->sDb) {
-            case 'pruebas-comun':
-            case 'comun':
-                $oConfigDB = new ConfigDB('comun'); //de la database comun
-                $config = $oConfigDB->getEsquema($esquema); //de la database comun
-                break;
-            case 'pruebas-sv':
-            case 'sv':
-                $oConfigDB = new ConfigDB('sv'); //de la database sv
-                $config = $oConfigDB->getEsquema($esquema); //de la database sv
-                break;
-            case 'pruebas-sf':
-            case 'sf':
-                $oConfigDB = new ConfigDB('sf'); //de la database sf
-                $config = $oConfigDB->getEsquema($esquema); //de la database sf
-                break;
-            case 'pruebas-sv-e':
-            case 'sv-e':
-                $oConfigDB = new ConfigDB('sv-e'); //de la database sv
-                $config = $oConfigDB->getEsquema($esquema); //de la database sv
-                break;
-            case 'pruebas-sf-e':
-            case 'sf-e':
-                $oConfigDB = new ConfigDB('sf-e'); //de la database sf
-                $config = $oConfigDB->getEsquema($esquema); //de la database sf
-                break;
-            case 'comun_select':
-                $oConfigDB = new ConfigDB('comun_select'); //de la database sv
-                $config = $oConfigDB->getEsquema($esquema); //de la database sv
-                break;
-            case 'sv-e_select':
-                $oConfigDB = new ConfigDB('sv-e_select'); //de la database sv
-                $config = $oConfigDB->getEsquema($esquema); //de la database sv
-                break;
-        }
+        $oConfigDB = new ConfigDB('importar');
+        $config = $oConfigDB->getEsquema($esquema); //de la database comun
 
         return $config;
     }
