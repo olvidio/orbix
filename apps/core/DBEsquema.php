@@ -55,6 +55,11 @@ class DBEsquema
     private $ssh_user;
 
     /* CONSTRUCTOR -------------------------------------------------------------- */
+    private mixed $sRegionRef;
+    private mixed $sDlRef;
+    private mixed $sDlNew;
+    private mixed $sRegionNew;
+    private mixed $sDbRef;
 
     /**
      * Constructor de la classe.
@@ -456,9 +461,9 @@ class DBEsquema
     private function getConfigConexion($esq = 'ref')
     {
         // No he conseguido que funcione con ~/.pgpass.
-        if ($esq == 'ref') {
+        if ($esq === 'ref') {
             $esquema = $this->getRef();
-        } elseif ($esq == 'new') {
+        } elseif ($esq === 'new') {
             $esquema = $this->getNew();
         }
         switch ($this->sDb) {
@@ -486,6 +491,14 @@ class DBEsquema
             case 'sf-e':
                 $oConfigDB = new ConfigDB('sf-e'); //de la database sf
                 $config = $oConfigDB->getEsquema($esquema); //de la database sf
+                break;
+            case 'comun_select':
+                $oConfigDB = new ConfigDB('comun_select'); //de la database sv
+                $config = $oConfigDB->getEsquema($esquema); //de la database sv
+                break;
+            case 'sv-e_select':
+                $oConfigDB = new ConfigDB('sv-e_select'); //de la database sv
+                $config = $oConfigDB->getEsquema($esquema); //de la database sv
                 break;
         }
 
