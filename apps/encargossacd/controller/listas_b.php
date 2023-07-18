@@ -136,7 +136,7 @@ foreach ($tipos_de_ctr as $tipo_ctr_que) {
             $aOperadorT['f_fin'] = 'IS NULL';
             $aWhereT['_ordre'] = 'modo';
             $GesEncargoSacd = new GestorEncargoSacd();
-            $cEncargosSacd = $GesEncargoSacd->getEncargoSacd($aWhereT, $aOperadorT);
+            $cEncargosSacd = $GesEncargoSacd->getEncargosSacd($aWhereT, $aOperadorT);
             $s = 0;
             $dedic_horas_ctr = 0;
             foreach ($cEncargosSacd as $oEncargoSacd) {
@@ -152,7 +152,7 @@ foreach ($tipos_de_ctr as $tipo_ctr_que) {
                 if (!empty($cargos[$id_nom])) {
                     $orden_cargo = strtok($cargos[$id_nom], "#");
                     $cargo = strtok("#");
-                    if ($cargo == "sacd") $cargo .= " cl";
+                    if ($cargo === "sacd") $cargo .= " cl";
                     if (!empty($dedicacion_txt)) {
                         $dedicacion_txt = $cargo . " " . $dedicacion_txt;
                     } else {
