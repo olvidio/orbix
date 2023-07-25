@@ -275,7 +275,7 @@ foreach ($oMenuDbs as $oMenuDb) {
         for ($n = $indice; $n < $indice_old; $n++) {
             $li_submenus .= "</li></ul>";
         }
-        if (strstr($url, 'fnjs') !== false) {
+        if (!is_null($url) && strstr($url, 'fnjs') !== false) {
             $li_submenus .= "</li><li><a class=\"nohref\" onclick=\"$url;\"  >" . _($menu) . "</a>";
         } else {
             $li_submenus .= "</li><li><a class=\"nohref\" onclick=\"fnjs_link_submenu('$full_url','$parametros');\"  >" . _($menu) . "</a>";
