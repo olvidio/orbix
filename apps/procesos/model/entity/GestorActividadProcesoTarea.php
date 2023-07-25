@@ -45,7 +45,9 @@ class GestorActividadProcesoTarea extends ClaseGestor
     function __construct()
     {
         $oDbl = $GLOBALS['oDBC'];
+        $oDbl_Select = $GLOBALS['oDBC_Select'];
         $this->setoDbl($oDbl);
+        $this->setoDbl_Select($oDbl_Select);
         if (ConfigGlobal::mi_sfsv() == 1) {
             $this->setNomTabla('a_actividad_proceso_sv');
         } else {
@@ -127,7 +129,7 @@ class GestorActividadProcesoTarea extends ClaseGestor
      */
     public function getListaFaseEstado($iid_activ)
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $sQuery = "SELECT * FROM $nom_tabla WHERE id_activ=$iid_activ
                 ";
@@ -157,7 +159,7 @@ class GestorActividadProcesoTarea extends ClaseGestor
      */
     public function getSacdAprobado($iid_activ)
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getoDbl_Select();
         // Mirar el proceso de la sv
         $this->setNomTabla('a_actividad_proceso_sv');
         // La fase ok sacd es la 5. Por definición
@@ -268,7 +270,7 @@ class GestorActividadProcesoTarea extends ClaseGestor
      */
     function getFasesCompletadas($iid_activ = '')
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         // No puedo hacer la consulta con WHERE completado='t',
         // porque hay que distinguirlo de si existe el proceso o no, y hay que crearlo.
@@ -305,7 +307,7 @@ class GestorActividadProcesoTarea extends ClaseGestor
      */
     public function faseCompletada($iid_activ, $iid_fase)
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         // No puedo hacer la consulta con WHERE completado='t',
         // porque hay que distinguirlo de si existe el proceso o no, y hay que crearlo.
@@ -553,7 +555,7 @@ class GestorActividadProcesoTarea extends ClaseGestor
      */
     function getActividadProcesoTareas($aWhere = array(), $aOperators = array())
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $oActividadProcesoTareaSet = new Set();
         $oCondicion = new Condicion();

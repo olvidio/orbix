@@ -26,7 +26,9 @@ class GestorEncargoSacdObserv extends core\ClaseGestor
     function __construct()
     {
         $oDbl = $GLOBALS['oDBE'];
+        $oDbl_Select = $GLOBALS['oDBE_Select'];
         $this->setoDbl($oDbl);
+        $this->setoDbl_Select($oDbl_Select);
         $this->setNomTabla('encargo_sacd_observ');
     }
 
@@ -65,7 +67,7 @@ class GestorEncargoSacdObserv extends core\ClaseGestor
      */
     function getEncargoSacdObservs($aWhere = array(), $aOperators = array())
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $oEncargoSacdObservSet = new core\Set();
         $oCondicion = new core\Condicion();

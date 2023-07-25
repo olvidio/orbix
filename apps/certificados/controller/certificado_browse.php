@@ -3,6 +3,7 @@
 // INICIO Cabecera global de URL de controlador *********************************
 use personas\model\entity\GestorPersona;
 use personas\model\entity\Persona;
+use usuarios\model\entity\GestorLocal;
 use web\Hash;
 
 require_once("apps/core/global_header.inc");
@@ -32,15 +33,21 @@ $apellidos_nombre = $oPersona->getApellidosNombre();
 $certificado_actual = '';
 
 $oHashCertificadoPdf = new Hash();
-$oHashCertificadoPdf->setCamposForm('certificado_pdf!certificado_num!copia!f_certificado');
+$oHashCertificadoPdf->setCamposForm('certificado_pdf!certificado!copia!f_certificado!idioma');
 $oHashCertificadoPdf->setCamposNo('certificado_pdf!copia');
 //cambio el nombre, porque tiene el mismo id en el otro formulario
 $oHashCertificadoPdf->setArrayCamposHidden(['id_nom' => $Qid_nom]);
 
+//Idiomas
+$gesIdiomas = new GestorLocal();
+$oDesplIdiomas = $gesIdiomas->getListaLocales();
+$oDesplIdiomas->setNombre('idioma');
+$oDesplIdiomas->setBlanco(TRUE);
 
 $a_campos = ['oPosicion' => $oPosicion,
     'oHashCertificadoPdf' => $oHashCertificadoPdf,
    'ApellidosNombre' => $apellidos_nombre,
+   'oDesplIdiomas' => $oDesplIdiomas,
 ];
 
 $oView = new core\ViewTwig('certificados/controller');

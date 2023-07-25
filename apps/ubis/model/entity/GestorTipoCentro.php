@@ -29,7 +29,9 @@ class GestorTipoCentro extends core\ClaseGestor
     function __construct()
     {
         $oDbl = $GLOBALS['oDBPC'];
+        $oDbl_Select = $GLOBALS['oDBPC_Select'];
         $this->setoDbl($oDbl);
+        $this->setoDbl_Select($oDbl_Select);
         $this->setNomTabla('xu_tipo_ctr');
     }
 
@@ -42,7 +44,7 @@ class GestorTipoCentro extends core\ClaseGestor
      */
     function getListaTiposCentro()
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $sQuery = "SELECT tipo_ctr, nombre_tipo_ctr
 				FROM $nom_tabla
@@ -88,7 +90,7 @@ class GestorTipoCentro extends core\ClaseGestor
      */
     function getTiposCentro($aWhere = array(), $aOperators = array())
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $oTipoCentroSet = new core\Set();
         $oCondicion = new core\Condicion();
@@ -137,5 +139,3 @@ class GestorTipoCentro extends core\ClaseGestor
     /* MÉTODOS GET y SET --------------------------------------------------------*/
 
 }
-
-?>

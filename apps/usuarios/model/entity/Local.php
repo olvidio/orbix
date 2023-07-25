@@ -103,6 +103,7 @@ class Local extends core\ClasePropiedades
     function __construct($a_id = '')
     {
         $oDbl = $GLOBALS['oDBPC'];
+        $oDbl_Select = $GLOBALS['oDBPC_Select'];
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
@@ -110,11 +111,12 @@ class Local extends core\ClasePropiedades
             }
         } else {
             if (isset($a_id) && $a_id !== '') {
-                $this->sid_locale = (integer)$a_id; 
+                $this->sid_locale = (string)$a_id;
                 $this->aPrimary_key = array('id_locale' => $this->sid_locale);
             }
         }
         $this->setoDbl($oDbl);
+        $this->setoDbl_Select($oDbl_Select);
         $this->setNomTabla('x_locales');
     }
 
@@ -200,7 +202,7 @@ class Local extends core\ClasePropiedades
      */
     public function DBCarregar($que = null)
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         if (isset($this->sid_locale)) {
             if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_locale='$this->sid_locale'")) === false) {

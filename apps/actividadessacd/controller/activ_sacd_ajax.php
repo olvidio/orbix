@@ -199,7 +199,7 @@ switch ($Qque) {
         foreach ($oEnc->getCentrosEncargados(array('id_activ' => $Qid_activ, '_ordre' => 'num_orden')) as $oEncargado) {
             $id_ctr = $oEncargado->getId_ubi();
             $num_orden = $oEncargado->getNum_orden();
-            if (configGlobal::is_app_installed('encargossacd')) {
+            if (ConfigGlobal::is_app_installed('encargossacd')) {
                 $GesEncargos = new GestorEncargo();
                 // Tipos de encargo que son atención centro. No los rt.
                 // 1000,1100,1200,1300
@@ -220,7 +220,11 @@ switch ($Qque) {
                     $id_nom = $cEncargosSacd[0]->getId_nom();
                     // OJO puede ser de la dl o de_paso
                     $oPersona = Persona::NewPersona($id_nom);
-                    $ap_nom = $oPersona->getPrefApellidosNombre();
+                    if (is_object($oPersona)) {
+                        $ap_nom = $oPersona->getApellidosNombre();
+                    } else {
+                        $ap_nom = $oPersona; // puede ser un texto
+                    }
                     $sacd_posibles .= "<tr><td><span class=link id=$id_nom onclick=fnjs_asignar_sacd('" . $Qid_activ . "','$id_nom') >$num_orden * $ap_nom</span></td></tr>";
                 }
             }

@@ -56,12 +56,12 @@ if (!empty($sel)) { //vengo de un checkbox
     $oPosicion->addParametro('id_sel', $sel, 1);
     $scroll_id = (integer)filter_input(INPUT_POST, 'scroll_id');
     $oPosicion->addParametro('scroll_id', $scroll_id, 1);
-    if ($Qpau == "p") {
+    if ($Qpau === "p") {
         $id_nivel_real = strtok($sel[0], "#");
         $Qid_asignatura_real = strtok("#");
     }
 } else {
-    if (!empty($Qmod) && $Qmod != 'nuevo') {
+    if (!empty($Qmod) && $Qmod !== 'nuevo') {
         $Qid_asignatura_real = (string)filter_input(INPUT_POST, 'id_asignatura_real');
     } else {
         $Qid_asignatura_real = '';

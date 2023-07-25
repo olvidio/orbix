@@ -27,7 +27,9 @@ class GestorModuloInstalado extends core\ClaseGestor
     function __construct()
     {
         $oDbl = $GLOBALS['oDBE'];
+        $oDbl_Select = $GLOBALS['oDBE_Select'];
         $this->setoDbl($oDbl);
+        $this->setoDbl_Select($oDbl_Select);
         $this->setNomTabla('m0_mods_installed_dl');
     }
 
@@ -43,7 +45,7 @@ class GestorModuloInstalado extends core\ClaseGestor
      */
     function getListaModulosInstalados()
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $sQuery = "SELECT id_mod, nom
 				FROM $nom_tabla
@@ -88,7 +90,7 @@ class GestorModuloInstalado extends core\ClaseGestor
      */
     function getModulosInstalados($aWhere = array(), $aOperators = array())
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $oModuloInstaladoSet = new core\Set();
         $oCondicion = new core\Condicion();
@@ -136,5 +138,3 @@ class GestorModuloInstalado extends core\ClaseGestor
 
     /* MÉTODOS GET y SET --------------------------------------------------------*/
 }
-
-?>

@@ -26,7 +26,9 @@ class GestorNota extends core\ClaseGestor
     function __construct()
     {
         $oDbl = $GLOBALS['oDBPC'];
+        $oDbl_Select = $GLOBALS['oDBPC_Select'];
         $this->setoDbl($oDbl);
+        $this->setoDbl_Select($oDbl_Select);
         $this->setNomTabla('e_notas_situacion');
     }
 
@@ -43,7 +45,7 @@ class GestorNota extends core\ClaseGestor
      */
     function getArrayNotasSuperadas($bsuperada = 't')
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getoDbl_Select();
         $sQuery = "SELECT id_situacion
 				FROM e_notas_situacion 
 				WHERE superada = '$bsuperada'
@@ -68,7 +70,7 @@ class GestorNota extends core\ClaseGestor
      */
     function getListaNotas($sWhere = '')
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getoDbl_Select();
         $sQuery = "SELECT id_situacion, descripcion
 				FROM e_notas_situacion $sWhere
 				ORDER BY id_situacion";
@@ -113,7 +115,7 @@ class GestorNota extends core\ClaseGestor
      */
     function getNotas($aWhere = array(), $aOperators = array())
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $oNotaSet = new core\Set();
         $oCondicion = new core\Condicion();
@@ -161,5 +163,3 @@ class GestorNota extends core\ClaseGestor
 
     /* MÉTODOS GET y SET --------------------------------------------------------*/
 }
-
-?>

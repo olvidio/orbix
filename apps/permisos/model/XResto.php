@@ -15,7 +15,8 @@ class XResto
      *
      * @var integer
      */
-    protected $iid_activ;
+    protected $iid_activ = '';
+    protected $iid_tipo_activ = '';
 
     /**
      * fases. array amb les posibles fases.

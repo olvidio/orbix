@@ -169,7 +169,7 @@ abstract class UbixDireccion extends core\ClasePropiedades
      */
     public function DBCarregar($que = null)
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         if (isset($this->iid_ubi) && isset($this->iid_direccion)) {
             if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_ubi='$this->iid_ubi' AND id_direccion='$this->iid_direccion'")) === false) {

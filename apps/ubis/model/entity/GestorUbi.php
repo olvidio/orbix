@@ -43,7 +43,7 @@ class GestorUbi extends core\ClaseGestor
      */
     function getListaUbis($sCondicion = '')
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $sQuery = "SELECT id_ubi, nombre_ubi
 				FROM $nom_tabla
@@ -79,5 +79,3 @@ class GestorUbi extends core\ClaseGestor
     /* MÉTODOS GET y SET --------------------------------------------------------*/
 
 }
-
-?>

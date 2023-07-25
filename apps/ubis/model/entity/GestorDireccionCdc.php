@@ -29,7 +29,9 @@ class GestorDireccionCdc extends GestorDireccion
     function __construct()
     {
         $oDbl = $GLOBALS['oDBPC'];
+        $oDbl_Select = $GLOBALS['oDBPC_Select'];
         $this->setoDbl($oDbl);
+        $this->setoDbl_Select($oDbl_Select);
         $this->setNomTabla('u_dir_cdc');
     }
 
@@ -45,7 +47,7 @@ class GestorDireccionCdc extends GestorDireccion
      */
     function getDirecciones($aWhere = array(), $aOperators = array())
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $oRegionSet = new core\Set();
         $oCondicion = new core\Condicion();
@@ -93,5 +95,3 @@ class GestorDireccionCdc extends GestorDireccion
 
     /* MÉTODOS GET y SET --------------------------------------------------------*/
 }
-
-?>

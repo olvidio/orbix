@@ -55,11 +55,14 @@ class Centro extends UbiGlobal
     {
         if (ConfigGlobal::is_dmz()) {
             $oDbl = $GLOBALS['oDBEP'];
+            $oDbl_Select = $GLOBALS['oDBEP_Select'];
             $this->setoDbl($oDbl);
+            $this->setoDbl_Select($oDbl);
             $this->setNomTabla('u_centros');
         } else {
             $oDbl = $GLOBALS['oDBP'];
             $this->setoDbl($oDbl);
+            $this->setoDbl_Select($oDbl);
             $this->setNomTabla('u_centros');
         }
         if (is_array($a_id)) {
@@ -190,7 +193,7 @@ class Centro extends UbiGlobal
      */
     public function DBCarregar($que = null)
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         if (isset($this->iid_ubi)) {
             if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_ubi='$this->iid_ubi'")) === false) {

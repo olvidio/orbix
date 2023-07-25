@@ -121,7 +121,7 @@ switch ($Qmod) {
                     echo "\n" . $oActividad->getErrorTxt();
                 }
                 // generar proceso.
-                if (configGlobal::is_app_installed('procesos')) {
+                if (ConfigGlobal::is_app_installed('procesos')) {
                     $oGestorActividadProcesoTarea = new GestorActividadProcesoTarea();
                     $oGestorActividadProcesoTarea->generarProceso($id_activ, ConfigGlobal::mi_sfsv(), TRUE);
                 }
@@ -256,7 +256,7 @@ switch ($Qmod) {
             }
         }
         // Por defecto pongo todas las plazas en mi dl
-        if (configGlobal::is_app_installed('actividadplazas')) {
+        if (ConfigGlobal::is_app_installed('actividadplazas')) {
             if (!empty($Qplazas) && $Qdl_org == $mi_dele) {
                 $id_activ = $oActividad->getId_activ();
                 $id_dl = 0;
@@ -529,7 +529,7 @@ switch ($Qmod) {
                 }
             }
             // Por defecto pongo todas las plazas en mi dl
-            if (configGlobal::is_app_installed('actividadplazas')) {
+            if (ConfigGlobal::is_app_installed('actividadplazas')) {
                 $mi_dele = ConfigGlobal::mi_delef();
                 if (!empty($Qplazas) && ($plazas_old != $Qplazas) && $Qdl_org == $mi_dele) {
                     $id_dl = 0;

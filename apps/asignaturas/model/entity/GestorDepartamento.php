@@ -30,7 +30,9 @@ class GestorDepartamento extends core\ClaseGestor
     function __construct()
     {
         $oDbl = $GLOBALS['oDBPC'];
+        $oDbl_Select = $GLOBALS['oDBPC_Select'];
         $this->setoDbl($oDbl);
+        $this->setoDbl_Select($oDbl_Select);
         $this->setNomTabla('xe_departamentos');
     }
 
@@ -45,7 +47,7 @@ class GestorDepartamento extends core\ClaseGestor
      */
     function getListaDepartamentos()
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $sQuery = "SELECT id_departamento,departamento FROM $nom_tabla ORDER BY departamento";
         if (($oDblSt = $oDbl->query($sQuery)) === false) {
@@ -95,7 +97,7 @@ class GestorDepartamento extends core\ClaseGestor
      */
     function getDepartamentos($aWhere = array(), $aOperators = array())
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $oDepartamentoSet = new core\Set();
         $oCondicion = new core\Condicion();
@@ -144,5 +146,3 @@ class GestorDepartamento extends core\ClaseGestor
     /* MÉTODOS GET y SET --------------------------------------------------------*/
 
 }
-
-?>

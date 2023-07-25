@@ -9,6 +9,7 @@ abstract class ClaseGestor
      * @var object
      */
     protected $oDbl;
+    protected $oDbl_Select;
     /**
      * NomTabla de Grupo
      *
@@ -26,6 +27,12 @@ abstract class ClaseGestor
         return $this->oDbl;
     }
 
+    public function getoDbl_Select()
+    {
+        return $this->oDbl_Select;
+    }
+
+
     /**
      * Establece el valor del atributo oDbl de Grupo
      *
@@ -34,6 +41,10 @@ abstract class ClaseGestor
     public function setoDbl($oDbl)
     {
         $this->oDbl = $oDbl;
+    }
+    public function setoDbl_Select($oDbl_Select)
+    {
+        $this->oDbl_Select = $oDbl_Select;
     }
 
     /**

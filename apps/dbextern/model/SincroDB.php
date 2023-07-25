@@ -615,7 +615,7 @@ class SincroDB
 
     public function conexion($esquema)
     {
-        $sfsv_txt = (configGlobal::mi_sfsv() == 1) ? 'v' : 'f';
+        $sfsv_txt = (ConfigGlobal::mi_sfsv() == 1) ? 'v' : 'f';
         //Utilizo la conexión oDBR para cambiar momentáneamente el search_path.
         if (ConfigGlobal::mi_region_dl() == $esquema) {
             //Utilizo la conexión oDB para cambiar momentáneamente el search_path.

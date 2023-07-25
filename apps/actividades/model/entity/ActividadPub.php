@@ -30,6 +30,7 @@ class ActividadPub extends ActividadAll
     function __construct($a_id = '')
     {
         $oDbl = $GLOBALS['oDBPC'];
+        $oDbl_Select = $GLOBALS['oDBPC_Select'];
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
@@ -43,6 +44,7 @@ class ActividadPub extends ActividadAll
             }
         }
         $this->setoDbl($oDbl);
+        $this->setoDbl_Select($oDbl_Select);
         $this->setNomTabla('av_actividades_pub');
     }
 
@@ -111,7 +113,7 @@ class ActividadPub extends ActividadAll
      */
     public function DBCarregar($que = null)
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getoDbl_Select();
         if (isset($this->iid_activ)) {
             if (($oDblSt = $oDbl->query("SELECT * FROM av_actividades_pub WHERE id_activ='$this->iid_activ'")) === false) {
                 $sClauError = get_class($this) . '.carregar';

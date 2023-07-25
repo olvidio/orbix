@@ -25,7 +25,9 @@ class GestorAsistentePub extends core\ClaseGestor
     function __construct()
     {
         $oDbl = $GLOBALS['oDBEP'];
+        $oDbl_Select = $GLOBALS['oDBEP_Select'];
         $this->setoDbl($oDbl);
+        $this->setoDbl_Select($oDbl_Select);
         $this->setNomTabla('d_asistentes_de_paso');
     }
 
@@ -40,7 +42,7 @@ class GestorAsistentePub extends core\ClaseGestor
      */
     function getListaAsistentesDistintos($aId_activ = array())
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getoDbl_Select();
         $where = '';
         if (!empty($aId_activ)) {
             $where = 'WHERE id_activ=';
@@ -93,7 +95,7 @@ class GestorAsistentePub extends core\ClaseGestor
      */
     function getAsistentesPub($aWhere = array(), $aOperators = array())
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $oAsistentePubSet = new core\Set();
         $oCondicion = new core\Condicion();
@@ -143,5 +145,3 @@ class GestorAsistentePub extends core\ClaseGestor
 
     /* MÉTODOS GET y SET --------------------------------------------------------*/
 }
-
-?>

@@ -26,7 +26,9 @@ class GestorConfigSchema extends core\ClaseGestor
     function __construct()
     {
         $oDbl = $GLOBALS['oDBC'];
+        $oDbl_Select = $GLOBALS['oDBC_Select'];
         $this->setoDbl($oDbl);
+        $this->setoDbl_Select($oDbl_Select);
         $this->setNomTabla('x_config_schema');
     }
 
@@ -65,7 +67,7 @@ class GestorConfigSchema extends core\ClaseGestor
      */
     function getConfigsSchema($aWhere = array(), $aOperators = array())
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $oConfigSchemaSet = new core\Set();
         $oCondicion = new core\Condicion();

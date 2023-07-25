@@ -30,7 +30,9 @@ class GestorTareaProceso extends core\ClaseGestor
     function __construct()
     {
         $oDbl = $GLOBALS['oDBC'];
+        $oDbl_Select = $GLOBALS['oDBC_Select'];
         $this->setoDbl($oDbl);
+        $this->setoDbl_Select($oDbl_Select);
         $this->setNomTabla('a_tareas_proceso');
     }
 
@@ -45,7 +47,7 @@ class GestorTareaProceso extends core\ClaseGestor
      */
     public function getArrayFasesDependientes($iid_tipo_proceso)
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $sQuery = "SELECT * FROM $nom_tabla 
                     WHERE id_tipo_proceso = $iid_tipo_proceso
@@ -143,7 +145,7 @@ class GestorTareaProceso extends core\ClaseGestor
      */
     public function getListaFasesDependientes($iid_tipo_proceso, $id_fase, $id_tarea = 0, $f = 0)
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $sQuery = "SELECT * FROM $nom_tabla 
                     WHERE id_tipo_proceso = $iid_tipo_proceso
@@ -186,7 +188,7 @@ class GestorTareaProceso extends core\ClaseGestor
      */
     public function getStatusProceso($iid_tipo_proceso, $aFasesEstado)
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
 
         $sQuery = "SELECT id_fase,id_tarea,status FROM $nom_tabla
@@ -221,7 +223,7 @@ class GestorTareaProceso extends core\ClaseGestor
      */
     function getFasesProceso($iid_tipo_proceso = '')
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         if (empty($iid_tipo_proceso)) return array();
         //$sQuery = "SELECT * FROM $nom_tabla WHERE id_tipo_proceso = $iid_tipo_proceso ORDER BY n_orden";
@@ -241,7 +243,7 @@ class GestorTareaProceso extends core\ClaseGestor
 
     public function getFaseIndependiente($id_tipo_proceso)
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $sQry = "SELECT * FROM $nom_tabla 
                 WHERE id_tipo_proceso = $id_tipo_proceso AND json_fases_previas::text = '[]'::text ";
@@ -304,7 +306,7 @@ class GestorTareaProceso extends core\ClaseGestor
      */
     function getTareasProceso($aWhere = array(), $aOperators = array())
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $oTareaProcesoSet = new core\Set();
         $oCondicion = new core\Condicion();

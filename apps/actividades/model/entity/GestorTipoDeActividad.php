@@ -30,7 +30,9 @@ class GestorTipoDeActividad extends core\ClaseGestor
     function __construct()
     {
         $oDbl = $GLOBALS['oDBC'];
+        $oDbl_Select = $GLOBALS['oDBC_Select'];
         $this->setoDbl($oDbl);
+        $this->setoDbl_Select($oDbl_Select);
         $this->setNomTabla('a_tipos_actividad');
     }
 
@@ -45,7 +47,7 @@ class GestorTipoDeActividad extends core\ClaseGestor
      */
     public function getListaTiposActividad($sid_tipo_activ = '......')
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $a_id_tipos = [];
         $query = "SELECT id_tipo_activ
@@ -73,7 +75,7 @@ class GestorTipoDeActividad extends core\ClaseGestor
      */
     function getTiposDeProcesos($sid_tipo_activ = '......', $bdl_propia = 't', $sfsv = '')
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
 
         $a_sfsv = [];
@@ -128,7 +130,7 @@ class GestorTipoDeActividad extends core\ClaseGestor
 
     public function getId_tipoPosibles($regexp, $expr_txt)
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $a_id_tipos = [];
         $query = "SELECT substring(id_tipo_activ::text from '" . $regexp . "')
@@ -144,7 +146,7 @@ class GestorTipoDeActividad extends core\ClaseGestor
 
     public function getNom_tipoPosibles($num_digitos, $expr_txt)
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $tipo_nom = [];
         $nom_tipo = [];
@@ -165,7 +167,7 @@ class GestorTipoDeActividad extends core\ClaseGestor
 
     public function getAsistentesPosibles($aText, $regexp)
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $asistentes = [];
         $query_ta = "select substr(id_tipo_activ::text,2,1) as ta2
@@ -187,7 +189,7 @@ class GestorTipoDeActividad extends core\ClaseGestor
      */
     public function getActividadesPosibles($num_digitos, $aText, $expr_txt)
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $actividades = [];
         $query_ta = "select substr(id_tipo_activ::text,3,$num_digitos) as ta3
@@ -201,7 +203,7 @@ class GestorTipoDeActividad extends core\ClaseGestor
 
     public function getSfsvPosibles($aText)
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $sfsv = [];
         $query_ta = "select substr(id_tipo_activ::text,1,1) as ta1 from $nom_tabla where id_tipo_activ::text ~'' group by ta1 order by ta1";
@@ -244,7 +246,7 @@ class GestorTipoDeActividad extends core\ClaseGestor
      */
     function getTiposDeActividades($aWhere = array(), $aOperators = array())
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $oTipoDeActividadSet = new core\Set();
         $oCondicion = new core\Condicion();

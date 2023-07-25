@@ -20,7 +20,7 @@ class GestorCargoOAsistente
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
     /**
-     * conexión a l a base de datos PDO
+     * conexión a la base de datos PDO
      *
      * @var \PDO
      */

@@ -64,7 +64,8 @@ class DBTabla extends DBAbstract
     private $Host;
     private $ssh_user;
 
-    /* CONSTRUCTOR -------------------------------------------------------------- */
+    private $sDb;
+    private mixed $dbname;
 
     /**
      * Constructor de la classe.
@@ -243,7 +244,7 @@ class DBTabla extends DBAbstract
      */
     public function copiar()
     {
-        if ($this->getHost() == 'localhost' || $this->getHost() == '127.0.0.1') {
+        if ($this->getHost() === '/var/run/postgresql' || $this->getHost() === 'localhost' || $this->getHost() === '127.0.0.1') {
             $this->copiar_local();
         } else {
             $this->copiar_remote();
@@ -316,12 +317,13 @@ class DBTabla extends DBAbstract
         //          -U postgres -h 127.0.0.1 pruebas-comun" > /var/www/pruebas/log/db/Acse-crAcse.comun.sql
 
         $dbname = $this->getDbName();
+        $host_local = $this->getHost();
 
         // leer esquema
         //$command_ssh = "/usr/bin/ssh aquinate@192.168.200.16";
         $command_ssh = "/usr/bin/ssh " . $this->getSsh_user() . "@" . $this->getHost();
         $command_db = "/usr/bin/pg_dump -a" . $sTablas . " ";
-        $command_db .= "-U postgres -h 127.0.0.1 $dbname";
+        $command_db .= "-U postgres -h $host_local $dbname";
         $command = "$command_ssh \"$command_db\" > " . $this->getFileRef();
         //echo "$command<br>";
         passthru($command); // no output to capture so no need to store it
@@ -338,7 +340,7 @@ class DBTabla extends DBAbstract
         // crear archivo con el password
         $dsn = $this->getConexion('ref');
         // leer esquema
-        $command = "/usr/bin/pg_dump $a $sTablas";
+        $command = "/usr/bin/pg_dump -U postgres $a $sTablas";
         $command .= "--file=" . $this->getFileRef() . " ";
         $command .= "\"" . $dsn . "\"";
         $command .= " > " . $this->getFileLogR() . " 2>&1";
@@ -433,7 +435,7 @@ class DBTabla extends DBAbstract
     {
         $oDbl = $this->getConexionPDO('new');
         foreach ($this->aTablas as $tabla => $param) {
-            if (!empty($param['id_schema']) && $param['id_schema'] == 'yes') {
+            if (!empty($param['id_schema']) && $param['id_schema'] === 'yes') {
                 $sqlSchema = "UPDATE $tabla SET id_schema = DEFAULT;";
                 if ($oDbl->query($sqlSchema) === false) {
                     $sClauError = 'DBTabla.schema.execute';
@@ -447,9 +449,9 @@ class DBTabla extends DBAbstract
     private function getConfigConexion($esq = 'ref')
     {
         // No he conseguido que funcione con ~/.pgpass.
-        if ($esq == 'ref') {
+        if ($esq === 'ref') {
             $esquema = $this->getRef();
-        } elseif ($esq == 'new') {
+        } elseif ($esq === 'new') {
             $esquema = $this->getNew();
         }
         switch ($this->sDb) {

@@ -5,6 +5,7 @@ use certificados\domain\repositories\CertificadoRepository;
 use core\ConfigGlobal;
 use core\ServerConf;
 use personas\model\entity\Persona;
+use usuarios\model\entity\GestorLocal;
 use web\Hash;
 use function core\is_true;
 
@@ -29,6 +30,9 @@ $CertificadoRepository = new CertificadoRepository();
 $oCertificado = $CertificadoRepository->findById($Qid_item);
 
 $id_nom = $oCertificado->getId_nom();
+$nom = $oCertificado->getNom();
+$idioma = $oCertificado->getIdioma();
+$destino = $oCertificado->getDestino();
 $certificado = $oCertificado->getCertificado();
 $f_certificado = $oCertificado->getF_certificado()->getFromLocal();
 $copia = $oCertificado->isCopia();
@@ -41,9 +45,18 @@ $propio = $oCertificado->isPropio();
 
 $oPersona = Persona::NewPersona($id_nom);
 $apellidos_nombre = $oPersona->getApellidosNombre();
+$nom = empty($nom)? $apellidos_nombre : $nom;
+
+
+//Idiomas (blanco para latín)
+$gesIdiomas = new GestorLocal();
+$oDesplIdiomas = $gesIdiomas->getListaLocales();
+$oDesplIdiomas->setNombre('idioma');
+$oDesplIdiomas->setBlanco(TRUE);
+$oDesplIdiomas->setOpcion_sel($idioma);
 
 $oHashCertificadoPdf = new Hash();
-$oHashCertificadoPdf->setCamposForm('certificado_pdf!certificado_num!copia!f_certificado');
+$oHashCertificadoPdf->setCamposForm('certificado_pdf!certificado!copia!destino!f_certificado!idioma!nom');
 $oHashCertificadoPdf->setCamposNo('certificado_pdf!copia');
 //cambio el nombre, porque tiene el mismo id en el otro formulario
 $oHashCertificadoPdf->setArrayCamposHidden(['id_item' => $Qid_item, 'id_nom' => $id_nom, 'certificado_old' => $certificado]);
@@ -64,6 +77,10 @@ file_put_contents($filename_pdf, $content);
 $a_campos = ['oPosicion' => $oPosicion,
     'oHashCertificadoPdf' => $oHashCertificadoPdf,
     'ApellidosNombre' => $apellidos_nombre,
+    'nom' => $nom,
+    'idioma' => $idioma,
+    'oDesplIdiomas' => $oDesplIdiomas,
+    'destino' => $destino,
     'certificado' => $certificado,
     'f_certificado' => $f_certificado,
     'chk_copia' => $chk_copia,

@@ -29,7 +29,9 @@ class GestorPropuestaEncargoSacdHorario extends ClaseGestor
     function __construct()
     {
         $oDbl = $GLOBALS['oDBE'];
+        $oDbl_Select = $GLOBALS['oDBE_Select'];
         $this->setoDbl($oDbl);
+        $this->setoDbl_Select($oDbl_Select);
         $this->setNomTabla('propuesta_encargo_sacd_horario');
     }
 
@@ -38,7 +40,7 @@ class GestorPropuestaEncargoSacdHorario extends ClaseGestor
 
     public function existenLasTablas()
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
 
         $schema_name = ConfigGlobal::mi_region_dl();
@@ -160,7 +162,7 @@ class GestorPropuestaEncargoSacdHorario extends ClaseGestor
      */
     function getEncargoSacdHorarios($aWhere = array(), $aOperators = array())
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $oEncargoSacdHorarioSet = new Set();
         $oCondicion = new Condicion();

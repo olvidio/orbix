@@ -101,7 +101,7 @@ if ($oAsistente->perm_modificar() === FALSE) {
         $oGesActividades = new actividades\GestorActividad();
         $cActividades = $oGesActividades->getActividades($aWhere, $aOperador);
 
-        if (core\configGlobal::is_app_installed('actividadplazas')) {
+        if (core\ConfigGlobal::is_app_installed('actividadplazas')) {
             //primero las que se han pedido
             $cActividadesPreferidas = array();
             //Miro los actuales
@@ -152,7 +152,7 @@ if ($oAsistente->perm_modificar() === FALSE) {
             $nom_activ = $oActividad->getNom_activ();
             $dl_org = $oActividad->getDl_org();
             // plazas libres
-            if (core\configGlobal::is_app_installed('actividadplazas')) {
+            if (core\ConfigGlobal::is_app_installed('actividadplazas')) {
                 $concedidas = 0;
                 $cActividadPlazas = $gesActividadPlazas->getActividadesPlazas(array('id_dl' => $id_dl, 'id_activ' => $id_activ));
                 foreach ($cActividadPlazas as $oActividadPlazas) {

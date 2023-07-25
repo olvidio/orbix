@@ -117,6 +117,16 @@ fnjs_guardar=function(formulario){
 </form>
 <hr>
 
+
+<h3>{{ "valor inicio contadores"|trans|raw }}:</h3>
+<form id="frm_contador" name="frm_contador" action="">
+    {{ oHashC1.getCamposHtml|raw }}
+    {{ "para los certificados"|trans|raw }}
+    <input class="col-2" type="text" name="valor" value="{{ ini_contador_certificados }}">
+    <input type="button" value="{{ "guardar"|trans|raw }}" onclick="fnjs_guardar(this.form);">
+</form>
+<hr>
+
 <h3>{{ "idioma por defecto"|trans|raw }}:</h3>
 <form id="frm_idioma_default" name="frm_idioma_default" action="">
 {{ oHashI.getCamposHtml|raw }}

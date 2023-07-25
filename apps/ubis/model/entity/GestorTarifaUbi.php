@@ -30,7 +30,9 @@ class GestorTarifaUbi Extends core\ClaseGestor {
 	 */
 	function __construct() {
 		$oDbl = $GLOBALS['oDBC'];
+        $oDbl_Select = $GLOBALS['oDBC_Select'];
 		$this->setoDbl($oDbl);
+        $this->setoDbl_Select($oDbl_Select);
 		$this->setNomTabla('du_tarifas');
 	}
 
@@ -45,7 +47,7 @@ class GestorTarifaUbi Extends core\ClaseGestor {
 	 * @return array Una col·lecció d'objectes de tipus Tarifa
 	 */
 	function getTarifas($aWhere=array(),$aOperators=array()) {
-		$oDbl = $this->getoDbl();
+		$oDbl = $this->getoDbl_Select();
 		$nom_tabla = $this->getNomTabla();
 		$oTarifaSet = new Set();
 		$oCondicion = new Condicion();

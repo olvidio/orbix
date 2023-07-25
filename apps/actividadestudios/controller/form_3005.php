@@ -29,7 +29,7 @@ if (!empty($a_sel)) { //vengo de un checkbox
     $scroll_id = (integer)filter_input(INPUT_POST, 'scroll_id');
     $oPosicion->addParametro('scroll_id', $scroll_id, 1);
 } else {
-    if ($Qpau == 'a') {
+    if ($Qpau === 'a') {
         $Qid_activ = (integer)filter_input(INPUT_POST, 'id_pau');
     }
     $Qid_asignatura = (integer)filter_input(INPUT_POST, 'id_asignatura');
@@ -43,24 +43,28 @@ $oDesplAsignaturas = array();
 
 if (!empty($Qid_asignatura)) { //caso de modificar
     $mod = "editar";
-    $GesProfesores = new profesores\GestorProfesor();
-    $oDesplProfesores = $GesProfesores->getDesplProfesoresAsignatura($Qid_asignatura);
-    $oDesplProfesores->setOpcion_sel(-1);
 
     $oActividadAsignatura = new actividadestudios\ActividadAsignaturaDl();
     $oActividadAsignatura->setId_activ($Qid_activ);
     $oActividadAsignatura->setId_asignatura($Qid_asignatura);
     $oActividadAsignatura->DBCarregar();
 
+    $GesProfesores = new profesores\GestorProfesor();
+    $oDesplProfesores = $GesProfesores->getDesplProfesoresAsignatura($Qid_asignatura);
+
     $id_profesor = $oActividadAsignatura->getId_profesor();
     if (!empty($id_profesor)) {
+        $GesProfesores = new profesores\GestorProfesor();
+        $aOpciones = $GesProfesores->getListaProfesoresPub();
+        $oDesplProfesores->setOpciones($aOpciones);
         $oDesplProfesores->setOpcion_sel($id_profesor);
     }
+
     $aviso = $oActividadAsignatura->getAvis_profesor();
-    $chk_avisado = ($aviso == "a") ? "selected" : '';
-    $chk_confirmado = ($aviso == "c") ? "selected" : '';
+    $chk_avisado = ($aviso === "a") ? "selected" : '';
+    $chk_confirmado = ($aviso === "c") ? "selected" : '';
     $tipo = $oActividadAsignatura->getTipo();
-    $chk_preceptor = ($tipo == "p") ? "selected" : '';
+    $chk_preceptor = ($tipo === "p") ? "selected" : '';
     $f_ini = $oActividadAsignatura->getF_ini()->getFromLocal();
     $f_fin = $oActividadAsignatura->getF_fin()->getFromLocal();
 

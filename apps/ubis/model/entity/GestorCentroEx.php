@@ -28,6 +28,7 @@ class GestorCentroEx extends GestorCentro
     {
         $oDbl = $GLOBALS['oDBR'];
         $this->setoDbl($oDbl);
+        $this->setoDbl_Select($oDbl);
         $this->setNomTabla('u_centros_ex');
     }
 

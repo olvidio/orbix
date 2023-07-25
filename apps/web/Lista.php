@@ -2,8 +2,8 @@
 
 namespace web;
 
-use usuarios\model\entity as usuarios;
 use core;
+use usuarios\model\entity as usuarios;
 
 //require_once ("classes/personas/ext_web_preferencias.class");
 
@@ -88,19 +88,19 @@ class Lista
      *
      * @var boolean
      */
-    protected $bFiltro = true;
+    protected $bFiltro = TRUE;
     /**
      * bColVis de la Lista
      *
      * @var boolean
      */
-    protected $bColVis = true;
+    protected $bColVis = TRUE;
     /**
      * brecordar de la lista
      *
      * @var boolean
      */
-    protected $brecordar = true;
+    protected $brecordar = TRUE;
     /**
      * formato_tabla de la lista
      *
@@ -133,8 +133,8 @@ class Lista
         $aCabeceras = $this->aCabeceras;
         $aDatos = $this->aDatos;
         $key = $this->ikey;
-        $clase = 'lista';
         $id_tabla = $this->sid_tabla;
+        $clase = 'lista';
         //------------------------------------ html ------------------------------
         $Html = "<table class=\"$clase\"><tr>";
         foreach ($aCabeceras as $cabecera) {
@@ -261,7 +261,7 @@ class Lista
         } else {
             $sPrefs = $this->formato_tabla;
         }
-        if ($sPrefs === 'html') {
+        if ($sPrefs == 'html') {
             return $this->mostrar_tabla_html();
         } else {
             return $this->mostrar_tabla_slickgrid();
@@ -341,20 +341,20 @@ class Lista
         $tipo = 'slickGrid_' . $id_tabla . '_' . $idioma;
         $aUser = array(0 => $id_usuario, 1 => 44); // 44 es el id_usuario para default.
         $aColsVisible = '';
-        $bPanelVis = false;
+        $bPanelVis = FALSE;
         for ($i = 0; $i < count($aUser); $i++) {
             $user = $aUser[$i];
             $oPref = new usuarios\Preferencia(array('id_usuario' => $user, 'tipo' => $tipo));
 
             if ($sPrefs = $oPref->getPreferencia()) {
                 ;
-                $aPrefs = json_decode($sPrefs, true);
+                $aPrefs = json_decode($sPrefs, TRUE);
                 if (!empty($aPrefs['colVisible'])) {
                     $aColsVisible = $aPrefs['colVisible'];
                     //$aColsVisible = empty($aPrefs['colVisible'])? '*' : $aPrefs['colVisible'];
                     //$aColsVisible = explode(',',$aPrefs['colVisible']);
                 }
-                $bPanelVis = $aPrefs['panelVis'] === "si";
+                $bPanelVis = ($aPrefs['panelVis'] == "si") ? TRUE : FALSE;
                 if (!empty($aPrefs['colWidths'])) {
                     $aColsWidth = $aPrefs['colWidths'];
                 }
@@ -378,7 +378,7 @@ class Lista
             $c++;
             $width = isset($aColsWidth['sel']) ? $aColsWidth['sel'] : 30;
             $sColumns .= "{id: \"sel\", name: \"sel\", field: \"sel\", width:$width, sortable: false, formatter: checkboxSelectionFormatter}";
-            if (!is_array($aColsVisible) || $aColsVisible['sel'] === "true") {
+            if (!is_array($aColsVisible) || $aColsVisible['sel'] == "true") {
                 $sColumnsVisible .= "{id: \"sel\", name: \"sel\", field: \"sel\", width:$width, sortable: false, formatter: checkboxSelectionFormatter},";
             }
         }
@@ -397,7 +397,7 @@ class Lista
                 $width = filter_var($width, FILTER_SANITIZE_NUMBER_INT);
                 $formatter = !empty($Cabecera['formatter']) ? $Cabecera['formatter'] : '';
                 if (!empty($Cabecera['visible'])) {
-                    if ($Cabecera['visible'] === 'No' || $Cabecera['visible'] === 'no') {
+                    if ($Cabecera['visible'] == 'No' || $Cabecera['visible'] == 'no') {
                         $visible = FALSE;
                     }
                 }
@@ -424,7 +424,7 @@ class Lista
                 $sDefCol .= "}";
                 $aFields[] = $name_idx;
             }
-            if ((is_array($aColsVisible) && !empty($aColsVisible[$name_idx]) && ($aColsVisible[$name_idx] === "true")) || !is_array($aColsVisible)) {
+            if ((is_array($aColsVisible) && !empty($aColsVisible[$name_idx]) && ($aColsVisible[$name_idx] == "true")) || !is_array($aColsVisible)) {
                 if (!$visible) continue;
                 if ($cv > 0) {
                     $sColumnsVisible .= ',';
@@ -451,6 +451,7 @@ class Lista
         foreach ($a_valores as $num_fila => $fila) {
             $f++;
             $id_fila = $f . $ahora;
+            //uksort($fila,[$this, 'text_first']);
             ksort($fila);
             $icol = 0;
             $aFilas[$num_fila]["id"] = $id_fila;
@@ -1029,7 +1030,7 @@ class Lista
             $f % 2 ? 0 : $clase = "par";
             $f++;
             $id_fila = $f . $ahora;
-            ksort($fila);
+            uksort($fila, [$this, 'text_first']);
             if (!empty($fila['clase'])) {
                 $clase .= " " . $fila['clase'];
             }
@@ -1138,6 +1139,27 @@ class Lista
         return $tt;
     }
 
+    public function text_first($a, $b)
+    {
+        if (is_numeric($a)) {
+            if (is_numeric($b)) {
+                if ($a === $b) {
+                    $rta = 0;
+                } else {
+                    $rta = ($a < $b) ? -1 : 1;
+                }
+            } else {
+                $rta = 1;
+            }
+        } else {
+            if (is_numeric($b)) {
+                $rta = -1;
+            } else {
+                $rta = strcasecmp($a, $b);
+            }
+        }
+        return $rta;
+    }
 
 
     /**
@@ -1286,7 +1308,6 @@ class Lista
 
     public function getCsv($filename)
     {
-        $a_cabeceras = $this->aCabeceras;
         $a_valores = $this->aDatos;
 
         // http headers for downloads
@@ -1302,7 +1323,7 @@ class Lista
         $fp = fopen('php://output', 'w');
         foreach ($a_valores as $num_fila => $fila) {
             $a_valores_simple = [];
-            ksort($fila);
+            uksort($fila, [$this, 'text_first']);
             //$tbody.="<tr id='$id_fila' class='$clase'>";
             foreach ($fila as $col => $valor) {
                 if ($col === "clase") {
@@ -1315,30 +1336,13 @@ class Lista
                     continue;
                 }
                 if ($col === "sel") {
-                    if (empty($b)) continue; // si no hay botones (por permisos...) no tiene sentido el checkbox
-                    $col = "";
                     if (is_array($valor)) {
-                        if (!empty($valor['select'])) {
-                            $chk = $valor['select'];
-                        } else {
-                            $chk = "";
-                        }
                         $id = $valor['id'];
                     } else {
                         $id = $valor;
                     }
                     if (!empty($id)) {
-                        if (in_array($id, $a_valores_chk)) {
-                            $chk = 'checked';
-                        } else {
-                            $chk = '';
-                        }
-                        //$tbody.="<td tipo='sel' title='". _("clic para seleccionar")."'>";
-                        //$tbody.="<input class='sel' type='checkbox' $chk  name='sel[]' id='a$id' value='$id'>";
                         $a_valores_simple[] = $id;
-                        //$tbody.="</td>";
-                    } else { // no hay que dibujar el checkbox, pero si la columna
-                        //$tbody.="<td></td>";
                     }
                 } elseif (is_array($valor)) {
                     $val = $valor['valor'];

@@ -36,6 +36,7 @@ class PropuestaEncargoSacdHorario extends EncargoSacdHorario
     function __construct($a_id = '')
     {
         $oDbl = $GLOBALS['oDBE'];
+        $oDbl_Select = $GLOBALS['oDBE_Select'];
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
@@ -45,6 +46,7 @@ class PropuestaEncargoSacdHorario extends EncargoSacdHorario
             }
         }
         $this->setoDbl($oDbl);
+        $this->setoDbl_Select($oDbl_Select);
         $this->setNomTabla('propuesta_encargo_sacd_horario');
     }
 

@@ -26,7 +26,9 @@ class GestorZonaSacd extends core\ClaseGestor
     function __construct()
     {
         $oDbl = $GLOBALS['oDBE'];
+        $oDbl_Select = $GLOBALS['oDBE_Select'];
         $this->setoDbl($oDbl);
+        $this->setoDbl_Select($oDbl_Select);
         $this->setNomTabla('zonas_sacd');
     }
 
@@ -41,7 +43,7 @@ class GestorZonaSacd extends core\ClaseGestor
      */
     function getSacdsZona($iid_zona = '')
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $aLista = array();
         $sQuery = "SELECT id_nom
@@ -91,7 +93,7 @@ class GestorZonaSacd extends core\ClaseGestor
      */
     function getZonasSacds($aWhere = array(), $aOperators = array())
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $oZonaSacdSet = new core\Set();
         $oCondicion = new core\Condicion();

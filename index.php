@@ -121,7 +121,8 @@ if (ConfigGlobal::mi_usuario() === 'auxiliar') {
     $pag_ini = '';
 }
 
-$id_grupmenu = $_GET['id_grupmenu'] ?? $mi_id_grupmenu;
+$Qid_grupmenu = (integer)filter_input(INPUT_GET, 'id_grupmenu');
+$id_grupmenu = (integer) (empty($Qid_grupmenu)? $mi_id_grupmenu : $Qid_grupmenu);
 
 $aPref = $oGesPref->getPreferencias(array('id_usuario' => $id_usuario, 'tipo' => 'estilo'));
 if (is_array(($aPref)) && count($aPref) > 0) {
@@ -160,7 +161,7 @@ foreach ($cGrupMenuRoles as $oGrupMenuRole) {
 ksort($html_gm);
 $html_barra .= implode($html_gm);
 $html_exit = "<li onclick=\"fnjs_logout();\" >| " . ucfirst(_("salir")) . "</li>";
-$html_exit .= "<li> (login as: " . $oUsuario->getUsuario() . '[' . configGlobal::mi_region_dl() . "])</li>";
+$html_exit .= "<li> (login as: " . $oUsuario->getUsuario() . '[' . ConfigGlobal::mi_region_dl() . "])</li>";
 
 $html_barra .= $html_exit;
 $html_barra .= "</ul>";
@@ -274,7 +275,7 @@ foreach ($oMenuDbs as $oMenuDb) {
         for ($n = $indice; $n < $indice_old; $n++) {
             $li_submenus .= "</li></ul>";
         }
-        if (strstr($url, 'fnjs') !== false) {
+        if (!is_null($url) && strstr($url, 'fnjs') !== false) {
             $li_submenus .= "</li><li><a class=\"nohref\" onclick=\"$url;\"  >" . _($menu) . "</a>";
         } else {
             $li_submenus .= "</li><li><a class=\"nohref\" onclick=\"fnjs_link_submenu('$full_url','$parametros');\"  >" . _($menu) . "</a>";
@@ -289,7 +290,7 @@ for ($n = 1; $n < $indice_old; $n++) {
 $li_submenus .= "</li>";
 if ($gm < 2) {
     $html_exit = "<li><a class=\"nohref\" onclick=\"fnjs_logout();\" >| " . ucfirst(_("salir")) . "</a></li>";
-    $html_exit .= "<li><a class=\"nohref\"> (login as: " . $oUsuario->getUsuario() . '[' . configGlobal::mi_region_dl() . "])</a></li>";
+    $html_exit .= "<li><a class=\"nohref\"> (login as: " . $oUsuario->getUsuario() . '[' . ConfigGlobal::mi_region_dl() . "])</a></li>";
 
     $li_submenus .= $html_exit;
 }

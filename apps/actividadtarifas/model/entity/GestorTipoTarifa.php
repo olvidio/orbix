@@ -30,7 +30,9 @@ class GestorTipoTarifa extends core\ClaseGestor
     function __construct()
     {
         $oDbl = $GLOBALS['oDBC'];
+        $oDbl_Select = $GLOBALS['oDBC_Select'];
         $this->setoDbl($oDbl);
+        $this->setoDbl_Select($oDbl_Select);
         $this->setNomTabla('xa_tipo_tarifa');
     }
 
@@ -43,7 +45,7 @@ class GestorTipoTarifa extends core\ClaseGestor
      */
     function getArrayTipoTarifas($isfsv = '')
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
 
         $sWhere = empty($isfsv) ? '' : "WHERE sfsv=$isfsv";
@@ -70,7 +72,7 @@ class GestorTipoTarifa extends core\ClaseGestor
      */
     function getListaTipoTarifas($isfsv)
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $sQuery = "SELECT id_tarifa,letra FROM $nom_tabla WHERE sfsv=$isfsv ORDER BY letra";
         if (($oDbl->query($sQuery)) === false) {
@@ -119,7 +121,7 @@ class GestorTipoTarifa extends core\ClaseGestor
      */
     function getTipoTarifas($aWhere = array(), $aOperators = array())
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $oTipoTarifaSet = new core\Set();
         $oCondicion = new core\Condicion();
@@ -168,5 +170,3 @@ class GestorTipoTarifa extends core\ClaseGestor
     /* MÉTODOS GET y SET --------------------------------------------------------*/
 
 }
-
-?>

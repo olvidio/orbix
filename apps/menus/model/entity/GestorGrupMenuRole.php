@@ -29,7 +29,9 @@ class GestorGrupMenuRole extends core\ClaseGestor
     function __construct()
     {
         $oDbl = $GLOBALS['oDBE'];
+        $oDbl_Select = $GLOBALS['oDBE_Select'];
         $this->setoDbl($oDbl);
+        $this->setoDbl_Select($oDbl_Select);
         $this->setNomTabla('aux_grupmenu_rol');
     }
 
@@ -70,7 +72,7 @@ class GestorGrupMenuRole extends core\ClaseGestor
      */
     function getGrupMenuRoles($aWhere = array(), $aOperators = array())
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $oGrupMenuRoleSet = new core\Set();
         $oCondicion = new core\Condicion();
@@ -119,5 +121,3 @@ class GestorGrupMenuRole extends core\ClaseGestor
     /* MÉTODOS GET y SET --------------------------------------------------------*/
 
 }
-
-?>

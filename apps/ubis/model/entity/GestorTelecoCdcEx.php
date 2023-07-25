@@ -27,12 +27,10 @@ class GestorTelecoCdcEx extends GestorTelecoCdc
     function __construct()
     {
         $oDbl = $GLOBALS['oDBRC'];
+        $oDbl_Select = $GLOBALS['oDBRC_Select'];
         $this->setoDbl($oDbl);
+        $this->setoDbl_Select($oDbl_Select);
         $this->setNomTabla('d_teleco_cdc_ex');
     }
-    /* MÉTODOS PÚBLICOS -----------------------------------------------------------*/
-    /* MÉTODOS PROTECTED --------------------------------------------------------*/
-    /* MÉTODOS GET y SET --------------------------------------------------------*/
-}
 
-?>
+}

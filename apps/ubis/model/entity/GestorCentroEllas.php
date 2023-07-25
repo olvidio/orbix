@@ -27,7 +27,9 @@ class GestorCentroEllas extends GestorCentro
     function __construct()
     {
         $oDbl = $GLOBALS['oDBC'];
+        $oDbl_Select = $GLOBALS['oDBC_Select'];
         $this->setoDbl($oDbl);
+        $this->setoDbl_Select($oDbl_Select);
         $this->setNomTabla('cu_centros_dlf');
     }
 

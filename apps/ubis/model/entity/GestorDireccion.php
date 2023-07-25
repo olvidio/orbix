@@ -43,7 +43,7 @@ class GestorDireccion extends core\ClaseGestor
      */
     function getListaPoblacionesPorDl($sdl = '')
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $sQuery = "SELECT DISTINCT initcap(poblacion),initcap(poblacion)
 				FROM $nom_tabla
@@ -65,7 +65,7 @@ class GestorDireccion extends core\ClaseGestor
      */
     function getListaPoblaciones($sCondicion = '')
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $sQuery = "SELECT DISTINCT initcap(poblacion),initcap(poblacion)
 				FROM $nom_tabla
@@ -87,7 +87,7 @@ class GestorDireccion extends core\ClaseGestor
      */
     function getListaPaises($sCondicion = '')
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $sQuery = "SELECT DISTINCT initcap(pais),initcap(pais)
 				FROM $nom_tabla

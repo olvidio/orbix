@@ -274,5 +274,3 @@ class CentroEx extends Centro
 
     /* MÉTODOS GET y SET D'ATRIBUTOS QUE NO SON CAMPOS -----------------------------*/
 }
-
-?>

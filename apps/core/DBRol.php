@@ -159,28 +159,33 @@ class DBRol
     public function crearUsuario()
     {
         $oDbl = $this->getoDbl();
-        $this->sOptions = empty($this->sOptions) ? 'NOSUPERUSER NOCREATEDB NOCREATEROLE INHERIT LOGIN' : $this->sOptions;
+        // comprobar antes si existe.
+        $sql = "SELECT count(*) FROM pg_roles WHERE rolname='$this->sUser'";
 
-        $sql = "CREATE ROLE \"$this->sUser\" PASSWORD '$this->sPwd' $this->sOptions;";
-
-        if (($oDblSt = $oDbl->prepare($sql)) === false) {
-            $sClauError = 'DBRol.crear.prepare';
+        if (($res = $oDbl->query($sql)) === false) {
+            $sClauError = 'DBRol.query.exists';
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
             return false;
-        } else {
+        }
+        if ($res->fetchColumn() === 0) {
+            $this->sOptions = empty($this->sOptions) ? 'NOSUPERUSER NOCREATEDB NOCREATEROLE INHERIT LOGIN' : $this->sOptions;
+            $sql = "CREATE ROLE \"$this->sUser\" PASSWORD '$this->sPwd' $this->sOptions;";
+
+            if (($oDblSt = $oDbl->prepare($sql)) === false) {
+                $sClauError = 'DBRol.crear.prepare';
+                $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+                return false;
+            }
             try {
                 $oDblSt->execute();
             } catch (\PDOException $e) {
                 $sClauError = 'DBRol.crear.execute';
-                $err = $e->errorInfo[2];
-
-                if (strpos($err, 'already exists') !== FALSE || strpos($err, 'ya existe') !== FALSE) { // ya existe
-                    $this->cambiarPassword();
-                } else {
-                    $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
-                    return false;
-                }
+                $sClauError .= ' ' . $e->errorInfo[2];
+                $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
+                return false;
             }
+        } else {
+            $this->cambiarPassword();
         }
     }
 

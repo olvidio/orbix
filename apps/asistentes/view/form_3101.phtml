@@ -1,6 +1,6 @@
 <script>
     <?php
-    if (core\configGlobal::is_app_installed('actividadplazas')) {
+    if (core\ConfigGlobal::is_app_installed('actividadplazas')) {
     ?>
     /**
      * se ejecuta al cambiar el desplegable $oDesplegablePersonas
@@ -105,7 +105,7 @@
                           rows="3"><?= htmlspecialchars($observ_est) ?></textarea></td>
         </tr>
         <?php
-        if (core\configGlobal::is_app_installed('actividadplazas')) {
+        if (core\ConfigGlobal::is_app_installed('actividadplazas')) {
             ?>
             <tr>
                 <td class=etiqueta><?= _("plaza") ?></td>

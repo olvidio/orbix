@@ -30,7 +30,9 @@ class GestorSector extends core\ClaseGestor
     function __construct()
     {
         $oDbl = $GLOBALS['oDBPC'];
+        $oDbl_Select = $GLOBALS['oDBPC_Select'];
         $this->setoDbl($oDbl);
+        $this->setoDbl_Select($oDbl_Select);
         $this->setNomTabla('xe_sectores');
     }
 
@@ -45,7 +47,7 @@ class GestorSector extends core\ClaseGestor
      */
     function getArraySectores()
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $sQuery = "SELECT id_sector,id_departamento FROM $nom_tabla ORDER BY id_departamento";
         if (($oDblSt = $oDbl->query($sQuery)) === false) {
@@ -71,7 +73,7 @@ class GestorSector extends core\ClaseGestor
      */
     function getListaSectores()
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $sQuery = "SELECT id_sector,sector FROM $nom_tabla ORDER BY sector";
         if (($oDblSt = $oDbl->query($sQuery)) === false) {
@@ -121,7 +123,7 @@ class GestorSector extends core\ClaseGestor
      */
     function getSectores($aWhere = array(), $aOperators = array())
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $oSectorSet = new core\Set();
         $oCondicion = new core\Condicion();
@@ -170,5 +172,3 @@ class GestorSector extends core\ClaseGestor
     /* MÉTODOS GET y SET --------------------------------------------------------*/
 
 }
-
-?>

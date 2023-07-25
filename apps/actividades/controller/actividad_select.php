@@ -239,7 +239,7 @@ if (!empty($Qmodo) && $Qmodo != 'buscar') {
         $a_botones[] = array('txt' => _("publicar"),
             'click' => "jsForm.update(\"#seleccionados\",\"publicar\")");
     }
-    if (core\configGlobal::is_app_installed('asignaturas') && $_SESSION['oPerm']->have_perm_oficina('est')) {
+    if (core\ConfigGlobal::is_app_installed('asignaturas') && $_SESSION['oPerm']->have_perm_oficina('est')) {
         $a_botones[] = array('txt' => _("asignaturas"), 'click' => "jsForm.mandar(\"#seleccionados\",\"asig\")");
     }
 } else {
@@ -257,24 +257,24 @@ if (!empty($Qmodo) && $Qmodo != 'buscar') {
             $a_botones[] = array('txt' => _("borrar"), 'click' => "fnjs_borrar(\"#seleccionados\",\"eliminar\")");
         }
 
-        if (core\configGlobal::is_app_installed('actividadcargos')) {
+        if (core\ConfigGlobal::is_app_installed('actividadcargos')) {
             $a_botones[] = array('txt' => _("cargos"), 'click' => "jsForm.mandar(\"#seleccionados\",\"carg\")");
             $a_botones[] = array('txt' => _("lista cl"), 'click' => "jsForm.mandar(\"#seleccionados\",\"listcl\")");
         }
-        if (core\configGlobal::is_app_installed('asistentes')) {
+        if (core\ConfigGlobal::is_app_installed('asistentes')) {
             $a_botones[] = array('txt' => _("asistentes"), 'click' => "jsForm.mandar(\"#seleccionados\",\"asis\")");
             $a_botones[] = array('txt' => _("otras peticiones"), 'click' => "jsForm.mandar(\"#seleccionados\",\"asis_peticiones\")");
             $a_botones[] = array('txt' => _("lista"), 'click' => "jsForm.mandar(\"#seleccionados\",\"list\")");
             //$a_botones[] = array( 'txt' => _("transferir sasistentes a históricos"), 'click' =>"jsForm.mandar(\"#seleccionados\",\"historicos\")");
         }
-        if (core\configGlobal::is_app_installed('actividadplazas')) {
+        if (core\ConfigGlobal::is_app_installed('actividadplazas')) {
             $a_botones[] = array('txt' => _("plazas"), 'click' => "jsForm.mandar(\"#seleccionados\",\"plazas\")");
         }
-        if (core\configGlobal::is_app_installed('procesos')) {
+        if (core\ConfigGlobal::is_app_installed('procesos')) {
             $a_botones[] = array('txt' => _("proceso"), 'click' => "jsForm.mandar(\"#seleccionados\",\"proceso\")");
         }
 
-        if (core\configGlobal::is_app_installed('asignaturas')) {
+        if (core\ConfigGlobal::is_app_installed('asignaturas')) {
             if ($_SESSION['oPerm']->have_perm_oficina('est')) {
                 $a_botones[] = array('txt' => _("asignaturas"), 'click' => "jsForm.mandar(\"#seleccionados\",\"asig\")");
             }

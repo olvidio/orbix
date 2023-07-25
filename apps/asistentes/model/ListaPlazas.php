@@ -138,7 +138,7 @@ class ListaPlazas
 
             $id_pau = $id_activ;
             $txt_ctr = '';
-            if (configGlobal::is_app_installed('actividadcentros')) {
+            if (ConfigGlobal::is_app_installed('actividadcentros')) {
                 if ((($sasistentes == "s") || ($sasistentes == "sss+")) and ($sactividad == "cv")) {
                     // para las cv de s y de sss+ consulto los ctr que organizan
                     $oGesEncargados = new GestorCentroEncargado();
@@ -161,7 +161,7 @@ class ListaPlazas
             $nom_activ = empty($observ) ? $nom_activ : "$nom_activ $observ";
 
             if (!($sasistentes == "sss+" and $sactividad == "cv")) {
-                if (configGlobal::is_app_installed('actividadcargos')) {
+                if (ConfigGlobal::is_app_installed('actividadcargos')) {
                     //selecciono el cl
                     $oGesActividadCargos = new actividadcargos\GestorActividadCargo();
                     $cActividadCargos = $oGesActividadCargos->getActividadCargos(array('id_activ' => $id_pau));
@@ -232,7 +232,7 @@ class ListaPlazas
                         }
                     }
 
-                    if (configGlobal::is_app_installed('actividadplazas')) {
+                    if (ConfigGlobal::is_app_installed('actividadplazas')) {
                         // pedidas y 'en espera'
                         if ($oAsistente->getPlaza() < asistentes\Asistente::PLAZA_ASIGNADA) {
                             // Sólo los de mi dl

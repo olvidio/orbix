@@ -1,7 +1,7 @@
 
 {{ oPosicion.mostrar_left_slide()|raw }}
 
-{{ "Buscar certificado para"|trans|raw  }}: {{ ApellidosNombre }}
+{{ "Añadir un certificado para"|trans|raw  }}: {{ ApellidosNombre }}
 <br>
 <br>
 <form id='frm_upload' action="" method="post" enctype="multipart/form-data">
@@ -9,7 +9,7 @@
     <br>
     <label>
         {{ "Número de certificado"|trans|raw }}:
-        <input type="text" name="certificado_num" />
+        <input type="text" name="certificado" />
     </label>
     <br>
     <label>
@@ -18,7 +18,13 @@
     </label>
     <br>
     <label>
-        {{ "Es copia"|trans|raw }}:
+        {{ "idioma del certificado"|trans|raw }}:
+        {{ oDesplIdiomas.desplegable|raw }}
+        ({{ "blanco = latín"|trans|raw }})
+    </label>
+    <br>
+    <label>
+        {{ "Firmado digitalmente"|trans|raw }}:
         <input type="checkbox" name="copia" />
     </label>
     <br>

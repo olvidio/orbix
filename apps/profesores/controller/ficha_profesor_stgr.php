@@ -76,7 +76,7 @@ if ($_SESSION['oPerm']->have_perm_oficina('est')) {
 
 
 // Para cr stgr
-if (ConfigGlobal::mi_ambito() == 'rstgr') {
+if (ConfigGlobal::mi_ambito() === 'rstgr') {
     $Qprint = 1;
 }
 
@@ -152,7 +152,7 @@ $nom_ap = $oPersona->getNombreApellidosCrSin();
 $sacd = $oPersona->getSacd();
 $id_ctr = $oPersona->getid_ctr();
 
-if (ConfigGlobal::mi_ambito() == 'rstgr') {
+if (ConfigGlobal::mi_ambito() === 'rstgr') {
     $oCentroDl = new ubis\Centro($id_ctr);
 } else {
     $oCentroDl = new ubis\CentroDl($id_ctr);
@@ -175,21 +175,22 @@ $a_cosas = array('clase_info' => 'profesores\model\Info1022', //latin
     'go_to' => $go_to);
 $go_cosas['latin'] = web\Hash::link(core\ConfigGlobal::getWeb() . '/apps/core/mod_tabla_sql.php?' . http_build_query($a_cosas));
 
-if ($sacd == "t") {
+if ($sacd === "t") {
     $sacd_txt = "si";
 }
-if ($latin == "t") {
+if ($latin === "t") {
     $latin_txt = "si";
 }
 
 $gesProfesor = new profesores\GestorProfesor();
 $cProfesores = $gesProfesor->getProfesores($aWhere, $aOperador);
 $a_nombramientos = array();
+$dep = '';
 foreach ($cProfesores as $oProfesor) {
     $id_departamento = $oProfesor->getId_departamento();
     $escrito_nombramiento = $oProfesor->getEscrito_nombramiento();
     $f_nombramiento = $oProfesor->getF_nombramiento()->getFromLocal();
-    //$f_cese = $oProfesor->getF_cese();
+    $f_cese = $oProfesor->getF_cese()->getFromLocal();
     $escrito_cese = $oProfesor->getEscrito_cese();
     $id_tipo_profesor = $oProfesor->getId_tipo_profesor();
 
@@ -200,8 +201,11 @@ foreach ($cProfesores as $oProfesor) {
     $tipo_profesor = $oProfesorTipo->getTipo_profesor();
 
     $a_nombramientos[] = array('departamento' => $departamento, 'tipo_profesor' => $tipo_profesor, 'f_nombramiento' => $f_nombramiento, 'escrito_nombramiento' => $escrito_nombramiento);
+    if (empty($f_cese)) {
+        $dep .= empty($dep)? '' : '; ';
+        $dep .= $departamento;
+    }
 }
-$dep = !empty($departamento) ? $departamento : '';
 
 if (empty($Qprint)) { // si no es para imprimir muestro todos los datos
     // director departamento (clase_info=1020)  //////////////////////////////////
@@ -251,7 +255,6 @@ if (empty($Qprint)) { // si no es para imprimir muestro todos los datos
     $a_cosas['clase_info'] = 'profesores\model\Info1012';
     $go_cosas['publicaciones'] = web\Hash::link(core\ConfigGlobal::getWeb() . '/apps/core/mod_tabla_sql.php?' . http_build_query($a_cosas));
 }
-
 
 // Curriculum (clase_info=1017) ///////////////////
 $gesProfesorTituloEst = new profesores\GestorProfesorTituloEst();

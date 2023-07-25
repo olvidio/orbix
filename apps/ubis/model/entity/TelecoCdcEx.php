@@ -30,6 +30,7 @@ class TelecoCdcEx extends TelecoCdc
     function __construct($a_id = '')
     {
         $oDbl = $GLOBALS['oDBRC'];
+        $oDbl_Select = $GLOBALS['oDBRC_Select'];
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
@@ -43,6 +44,7 @@ class TelecoCdcEx extends TelecoCdc
             }
         }
         $this->setoDbl($oDbl);
+        $this->setoDbl_Select($oDbl_Select);
         $this->setNomTabla('d_teleco_cdc_ex');
     }
 
@@ -123,7 +125,7 @@ class TelecoCdcEx extends TelecoCdc
      */
     public function DBCarregar($que = null)
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         if (isset($this->iid_item) && isset($this->iid_ubi)) {
             if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_item=$this->iid_item AND id_ubi='$this->iid_ubi'")) === false) {
