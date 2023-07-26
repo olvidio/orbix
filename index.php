@@ -122,7 +122,7 @@ if (ConfigGlobal::mi_usuario() === 'auxiliar') {
 }
 
 $Qid_grupmenu = (integer)filter_input(INPUT_GET, 'id_grupmenu');
-$id_grupmenu = (integer) (empty($Qid_grupmenu)? $mi_id_grupmenu : $Qid_grupmenu);
+$id_grupmenu = (integer)(empty($Qid_grupmenu) ? $mi_id_grupmenu : $Qid_grupmenu);
 
 $aPref = $oGesPref->getPreferencias(array('id_usuario' => $id_usuario, 'tipo' => 'estilo'));
 if (is_array(($aPref)) && count($aPref) > 0) {
@@ -257,7 +257,7 @@ foreach ($oMenuDbs as $oMenuDb) {
     }
     if ($indice == $indice_old) {
         if (!empty($full_url)) {
-            if (strstr($url, 'fnjs') !== false) {
+            if (!is_null($url) && strstr($url, 'fnjs') !== false) {
                 $li_submenus .= "<li><a class=\"nohref\" onclick=\"$url;\"  >" . _($menu) . "</a>";
             } else {
                 $li_submenus .= "<li><a class=\"nohref\" onclick=\"fnjs_link_submenu('$full_url','$parametros');\"  >" . _($menu) . "</a>";
@@ -266,7 +266,7 @@ foreach ($oMenuDbs as $oMenuDb) {
             $li_submenus .= "<li><a class=\"nohref\" >" . _($menu) . "</a>";
         }
     } elseif ($indice > $indice_old) {
-        if (strstr($url, 'fnjs') !== false) {
+        if (!is_null($url) && strstr($url, 'fnjs') !== false) {
             $li_submenus .= "<ul><li><a class=\"nohref\" onclick=\"$url;\"  >" . _($menu) . "</a>";
         } else {
             $li_submenus .= "<ul><li><a class=\"nohref\" onclick=\"fnjs_link_submenu('$full_url','$parametros');\"  >" . _($menu) . "</a>";
