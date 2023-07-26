@@ -43,7 +43,7 @@ class DB extends DBAbstract
 
     public function create_plantillas()
     {
-        $this->addPermisoGlobal('sfsv');
+        $this->addPermisoGlobal('sfsv-e');
         $tabla = "misa_plantillas";
         $nom_tabla = $this->getNomTabla($tabla);
         $a_sql = [];
@@ -64,7 +64,7 @@ class DB extends DBAbstract
 
         $this->executeSql($a_sql);
 
-        $this->delPermisoGlobal('sfsv');
+        $this->delPermisoGlobal('sfsv-e');
     }
 
 

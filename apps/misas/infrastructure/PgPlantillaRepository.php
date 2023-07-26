@@ -29,7 +29,7 @@ class PgPlantillaRepository extends ClaseRepository implements PlantillaReposito
 {
     public function __construct()
     {
-        $oDbl = $GLOBALS['oDB'];
+        $oDbl = $GLOBALS['oDBE'];
         $this->setoDbl($oDbl);
         $this->setNomTabla('misa_plantillas_dl');
     }

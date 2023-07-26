@@ -66,7 +66,7 @@ class DBEsquema extends DBAbstract
         $this->esquema = ConfigGlobal::mi_region_dl();
         $this->role = '"' . $this->esquema . '"';
         // (debe estar después de fijar el role)
-        $this->addPermisoGlobal('sfsv');
+        $this->addPermisoGlobal('sfsv-e');
 
         $tabla = "misa_plantillas";
         $datosTabla = $this->infoTable($tabla);
@@ -105,7 +105,7 @@ class DBEsquema extends DBAbstract
 
         $this->executeSql($a_sql);
 
-        $this->delPermisoGlobal('sfsv');
+        $this->delPermisoGlobal('sfsv-e');
         // Devolver los valores al estado original
         $this->esquema = $esquema_org;
         $this->role = $role_org;
@@ -119,7 +119,7 @@ class DBEsquema extends DBAbstract
         $this->esquema = ConfigGlobal::mi_region_dl();
         $this->role = '"' . $this->esquema . '"';
         // (debe estar después de fijar el role)
-        $this->addPermisoGlobal('sfsv');
+        $this->addPermisoGlobal('sfsv-e');
 
         $datosTabla = $this->infoTable("misa_plantillas_dl");
 
@@ -127,7 +127,7 @@ class DBEsquema extends DBAbstract
 
         $this->eliminar($nom_tabla);
 
-        $this->delPermisoGlobal('sfsv');
+        $this->delPermisoGlobal('sfsv-e');
         // Devolver los valores al estado original
         $this->esquema = $esquema_org;
         $this->role = $role_org;
