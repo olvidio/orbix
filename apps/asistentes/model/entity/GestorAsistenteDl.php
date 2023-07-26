@@ -24,7 +24,9 @@ class GestorAsistenteDl extends GestorAsistente
     function __construct()
     {
         $oDbl = $GLOBALS['oDBE'];
+        $oDbl_Select = $GLOBALS['oDBE_Select'];
         $this->setoDbl($oDbl);
+        $this->setoDbl_Select($oDbl_Select);
         $this->setNomTabla('d_asistentes_dl');
     }
 
@@ -64,7 +66,7 @@ class GestorAsistenteDl extends GestorAsistente
      */
     function getAsistentesDl($aWhere = array(), $aOperators = array())
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $oAsistenteDlSet = new core\Set();
         $oCondicion = new core\Condicion();
@@ -113,5 +115,3 @@ class GestorAsistenteDl extends GestorAsistente
 
     /* MÉTODOS GET y SET --------------------------------------------------------*/
 }
-
-?>

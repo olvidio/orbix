@@ -29,7 +29,9 @@ class GestorDescTeleco extends core\ClaseGestor
     function __construct()
     {
         $oDbl = $GLOBALS['oDBPC'];
+        $oDbl_Select = $GLOBALS['oDBPC_Select'];
         $this->setoDbl($oDbl);
+        $this->setoDbl_Select($oDbl_Select);
         $this->setNomTabla('xd_desc_teleco');
     }
 
@@ -43,7 +45,7 @@ class GestorDescTeleco extends core\ClaseGestor
      */
     function getListaDescTelecoPersonas($sdepende)
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $sQuery = "SELECT id_item, desc_teleco
 				FROM $nom_tabla
@@ -64,7 +66,7 @@ class GestorDescTeleco extends core\ClaseGestor
      */
     function getListaDescTelecoUbis($sdepende)
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $sQuery = "SELECT id_item, desc_teleco
 				FROM $nom_tabla
@@ -111,7 +113,7 @@ class GestorDescTeleco extends core\ClaseGestor
      */
     function getDescsTeleco($aWhere = array(), $aOperators = array())
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $oDescTelecoSet = new core\Set();
         $oCondicion = new core\Condicion();
@@ -160,5 +162,3 @@ class GestorDescTeleco extends core\ClaseGestor
     /* MÉTODOS GET y SET --------------------------------------------------------*/
 
 }
-
-?>

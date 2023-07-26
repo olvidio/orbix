@@ -30,41 +30,50 @@ class ConfigDB
 
     public function setDataBase($database)
     {
-        if (ConfigGlobal::WEBDIR == 'pruebas') {
+        if (ConfigGlobal::WEBDIR === 'pruebas') {
             $database = 'pruebas-' . $database;
         }
         $this->data = include ConfigGlobal::DIR_PWD . '/' . $database . '.inc';
     }
 
-    public function addEsquema($database, $esquema, $esquema_pwd)
+    /**
+     * Añade el usuario y password del esquema en el archivo de passwords
+     * tipo: comun.inc
+     *
+     * @param $database
+     * @param $esquema
+     * @param $esquema_pwd
+     * @return void
+     */
+    public function addEsquemaEnFicheroPasswords($database, $esquema, $esquema_pwd)
     {
         // Las bases de datos de pruebas y producción están en el mismo cluster, y 
         // por tanto los usuarios son los mismos. Hay que ponerlo en los dos ficheros:
-        // Pero OJO: la parte de definicion de host y dbname son diferentes!!
+        // Pero OJO: la parte de definición de host y dbname son diferentes!!
 
-        $this->addEsquemaProduccion($database, $esquema, $esquema_pwd);
-        $this->addEsquemaPruebas($database, $esquema, $esquema_pwd);
-    }
+        // producción
+        $this->addEsquema($database, $esquema, $esquema_pwd);
 
-    public function addEsquemaProduccion($database, $esquema, $esquema_pwd)
-    {
-        $this->data = include ConfigGlobal::DIR_PWD . '/' . $database . '.inc';
-
-        $this->data[$esquema] = ['user' => $esquema, 'password' => $esquema_pwd];
-
-        $filename = ConfigGlobal::DIR_PWD . '/' . $database . '.inc';
-        file_put_contents($filename, '<?php return ' . var_export($this->data, true) . ' ;');
-    }
-
-    public function addEsquemaPruebas($database, $esquema, $esquema_pwd)
-    {
+        // pruebas
         $database = 'pruebas-' . $database;
-        $this->data = include ConfigGlobal::DIR_PWD . '/' . $database . '.inc';
+        $this->addEsquema($database, $esquema, $esquema_pwd);
+    }
 
+    private function addEsquema($database, $esquema, $esquema_pwd)
+    {
+        $filename = ServerConf::DIR_PWD . '/' . $database . '.inc';
+
+        $this->data = include $filename;
         $this->data[$esquema] = ['user' => $esquema, 'password' => $esquema_pwd];
+        file_put_contents($filename, '<?php return ' . var_export($this->data, true) . ' ;');
 
-        $filename_pruebas = ConfigGlobal::DIR_PWD . '/' . $database . '.inc';
-        file_put_contents($filename_pruebas, '<?php return ' . var_export($this->data, true) . ' ;');
+        // Para las DB Select
+        if ($database === 'sv-e' || $database === 'comun') {
+            $filename = ServerConf::DIR_PWD . '/' . $database . '_select.inc';
+            $this->data = include $filename;
+            $this->data[$esquema] = ['user' => $esquema, 'password' => $esquema_pwd];
+            file_put_contents($filename, '<?php return ' . var_export($this->data, true) . ' ;');
+        }
     }
 
     public function renombrarListaEsquema($database, $esquema_old, $esquema_new)

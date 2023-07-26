@@ -29,7 +29,9 @@ class GestorEncargoTipo extends core\ClaseGestor
     function __construct()
     {
         $oDbl = $GLOBALS['oDBE'];
+        $oDbl_Select = $GLOBALS['oDBE_Select'];
         $this->setoDbl($oDbl);
+        $this->setoDbl_Select($oDbl_Select);
         $this->setNomTabla('encargo_tipo');
     }
 
@@ -47,7 +49,7 @@ class GestorEncargoTipo extends core\ClaseGestor
      */
     public function id_tipo_encargo($grupo, $nom_tipo)
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
 
         $condta1 = '.';
@@ -86,7 +88,7 @@ class GestorEncargoTipo extends core\ClaseGestor
      */
     public function encargo_de_tipo($id_tipo_enc)
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $t_grupo = EncargoTipo::GRUPO;
 
@@ -163,7 +165,7 @@ class GestorEncargoTipo extends core\ClaseGestor
      */
     function getEncargoTipos($aWhere = array(), $aOperators = array())
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $oEncargoTipoSet = new core\Set();
         $oCondicion = new core\Condicion();

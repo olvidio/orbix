@@ -92,6 +92,7 @@ class ProcesoTipo extends core\ClasePropiedades
     function __construct($a_id = '')
     {
         $oDbl = $GLOBALS['oDBC'];
+        $oDbl_Select = $GLOBALS['oDBC_Select'];
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
@@ -104,6 +105,7 @@ class ProcesoTipo extends core\ClasePropiedades
             }
         }
         $this->setoDbl($oDbl);
+        $this->setoDbl_Select($oDbl_Select);
         $this->setNomTabla('a_tipos_proceso');
     }
 
@@ -179,7 +181,7 @@ class ProcesoTipo extends core\ClasePropiedades
      */
     public function DBCarregar($que = null)
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         if (isset($this->iid_tipo_proceso)) {
             if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_tipo_proceso='$this->iid_tipo_proceso'")) === FALSE) {

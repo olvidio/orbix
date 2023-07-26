@@ -30,7 +30,9 @@ class GestorMetaMenu extends core\ClaseGestor
     function __construct()
     {
         $oDbl = $GLOBALS['oDBPC'];
+        $oDbl_Select = $GLOBALS['oDBPC_Select'];
         $this->setoDbl($oDbl);
+        $this->setoDbl_Select($oDbl_Select);
         $this->setNomTabla('aux_metamenus');
     }
 
@@ -44,7 +46,7 @@ class GestorMetaMenu extends core\ClaseGestor
      */
     function getListaMetamenus($a_modulos = array())
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $Where = implode(' AND ', $a_modulos);
         if (!empty($Where)) $Where = "WHERE $Where";
@@ -91,7 +93,7 @@ class GestorMetaMenu extends core\ClaseGestor
      */
     function getMetamenus($aWhere = array(), $aOperators = array())
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $oMetamenuSet = new core\Set();
         $oCondicion = new core\Condicion();
@@ -140,5 +142,3 @@ class GestorMetaMenu extends core\ClaseGestor
     /* MÉTODOS GET y SET --------------------------------------------------------*/
 
 }
-
-?>

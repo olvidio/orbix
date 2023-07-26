@@ -26,7 +26,9 @@ class GestorTipoActivTarifa extends core\ClaseGestor
     function __construct()
     {
         $oDbl = $GLOBALS['oDBC'];
+        $oDbl_Select = $GLOBALS['oDBC_Select'];
         $this->setoDbl($oDbl);
+        $this->setoDbl_Select($oDbl_Select);
         $this->setNomTabla('xa_tipo_activ_tarifa');
     }
 
@@ -65,7 +67,7 @@ class GestorTipoActivTarifa extends core\ClaseGestor
      */
     function getTipoActivTarifas($aWhere = array(), $aOperators = array())
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $oTipoActivTarifaSet = new core\Set();
         $oCondicion = new core\Condicion();

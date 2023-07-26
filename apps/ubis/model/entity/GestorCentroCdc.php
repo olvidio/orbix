@@ -79,5 +79,3 @@ class GestorCentroCdc extends core\ClaseGestor
     /* MÉTODOS GET y SET --------------------------------------------------------*/
 
 }
-
-?>

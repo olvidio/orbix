@@ -45,6 +45,7 @@ class PropuestaEncargoSacd extends EncargoSacd
     function __construct($a_id = '')
     {
         $oDbl = $GLOBALS['oDBE'];
+        $oDbl_Select = $GLOBALS['oDBE_Select'];
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
@@ -57,6 +58,7 @@ class PropuestaEncargoSacd extends EncargoSacd
             }
         }
         $this->setoDbl($oDbl);
+        $this->setoDbl_Select($oDbl_Select);
         $this->setNomTabla('propuesta_encargos_sacd');
     }
 

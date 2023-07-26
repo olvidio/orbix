@@ -4,6 +4,7 @@ use actividadcargos\model\entity\GestorActividadCargo;
 use actividadcargos\model\entity\GestorCargo;
 use actividades\model\entity\ActividadAll;
 use actividades\model\entity\GestorActividad;
+use web\Hash;
 use function core\is_true;
 use encargossacd\model\entity\Encargo;
 use encargossacd\model\entity\GestorEncargoSacdHorario;
@@ -50,6 +51,10 @@ $aIdCargos_sacd = $gesCargos->getArrayCargosDeTipo('sacd');
 $oPosicion->recordar();
 
 echo "<button class='no_print' onclick=\"fnjs_exportar('html');\" >Descargar html</button>";
+
+$goLeyenda = Hash::link(core\ConfigGlobal::getWeb() . '/apps/zonassacd/controller/leyenda.php?' . http_build_query(array('id_item' => 1)));
+echo "<button class='no_print' onclick=\"window.open('$goLeyenda','leyenda','width=400,height=500,screenX=200,screenY=200,titlebar=yes');\" >Ver leyenda</button>";
+
 echo "<div id=\"exportar\">";
 $Qmodelo = (integer)filter_input(INPUT_POST, 'modelo');
 switch ($Qmodelo) {

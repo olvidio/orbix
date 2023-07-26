@@ -30,7 +30,9 @@ class GestorRegion extends core\ClaseGestor
     function __construct()
     {
         $oDbl = $GLOBALS['oDBPC'];
+        $oDbl_Select = $GLOBALS['oDBPC_Select'];
         $this->setoDbl($oDbl);
+        $this->setoDbl_Select($oDbl_Select);
         $this->setNomTabla('xu_region');
     }
 
@@ -44,7 +46,7 @@ class GestorRegion extends core\ClaseGestor
      */
     function getListaRegiones()
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $cond = "status = 't'";
         $sQuery = "SELECT region, nombre_region
@@ -92,7 +94,7 @@ class GestorRegion extends core\ClaseGestor
      */
     function getRegiones($aWhere = array(), $aOperators = array())
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $oRegionSet = new core\Set();
         $oCondicion = new core\Condicion();
@@ -141,5 +143,3 @@ class GestorRegion extends core\ClaseGestor
     /* MÉTODOS GET y SET --------------------------------------------------------*/
 
 }
-
-?>

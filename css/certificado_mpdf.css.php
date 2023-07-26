@@ -118,6 +118,7 @@ td.libro {
     font-size: 10pt;
     text-align: left;
     width: 8%;
+    white-space: nowrap;
 	}
 td.secretario {	
     font-size: 12pt;

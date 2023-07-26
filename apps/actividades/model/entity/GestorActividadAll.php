@@ -31,7 +31,10 @@ class GestorActividadAll extends core\ClaseGestor
     function __construct()
     {
         $oDbl = $GLOBALS['oDBPC'];
+        $oDbl_Select = $GLOBALS['oDBPC_Select'];
+
         $this->setoDbl($oDbl);
+        $this->setoDbl_Select($oDbl_Select);
         $this->setNomTabla('a_actividades_all');
     }
 
@@ -159,7 +162,7 @@ class GestorActividadAll extends core\ClaseGestor
      */
     function getCoincidencia($oActividad, $salida = 'bool')
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
 
         $iTolerancia = 1;
@@ -214,7 +217,7 @@ class GestorActividadAll extends core\ClaseGestor
      */
     function getUbis($aWhere = array(), $aOperators = array())
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $oCondicion = new core\Condicion();
         $aCondi = array();
@@ -265,7 +268,7 @@ class GestorActividadAll extends core\ClaseGestor
      */
     function getListaActividadesDeTipo($sid_tipo = '......', $scondicion = '')
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $sQuery = "SELECT id_activ, nom_activ
 		   FROM $nom_tabla
@@ -287,7 +290,7 @@ class GestorActividadAll extends core\ClaseGestor
      */
     function getListaActividadesEstudios($scondicion = '')
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $cond_nivel_stgr = "(nivel_stgr < 6 OR nivel_stgr=11)";
         if (empty($scondicion)) {
@@ -322,7 +325,7 @@ class GestorActividadAll extends core\ClaseGestor
      */
     function getArrayIds($aWhere = array(), $aOperators = array())
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $aListaId = array();
         $oCondicion = new core\Condicion();
@@ -418,7 +421,7 @@ class GestorActividadAll extends core\ClaseGestor
      */
     function getActividades($aWhere = array(), $aOperators = array())
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $oActividadSet = new core\Set();
         $oCondicion = new core\Condicion();

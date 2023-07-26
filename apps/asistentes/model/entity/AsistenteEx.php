@@ -38,6 +38,7 @@ class AsistenteEx extends AsistentePub
     function __construct($a_id = '')
     {
         $oDbl = $GLOBALS['oDBER'];
+        $oDbl_Select = $GLOBALS['oDBER_Select'];
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
@@ -46,6 +47,7 @@ class AsistenteEx extends AsistentePub
             }
         }
         $this->setoDbl($oDbl);
+        $this->setoDbl_Select($oDbl_Select);
         $this->setNomTabla('d_asistentes_ex');
     }
 

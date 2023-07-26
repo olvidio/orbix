@@ -71,7 +71,7 @@ case 1101:
     </tr>
     <tr>
         <td></td>
-        <td colspan="7" class="curso">CURSUS INSTITUTIONALES FILOSOFI&#198;</td>
+        <td colspan="7" class="curso">CURSUS INSTITUTIONALES PHILOSOPHI&#198;</td>
     </tr>
     <?= $cabecera; ?>
     <tr>
@@ -199,7 +199,15 @@ case 2108:
         }
 
         // -----------------------------
-
+        $rowEmpty = [
+            'id_nivel_asig' => '',
+            'id_nivel' => '',
+            'id_asignatura' => '',
+            'nombre_asignatura' => '',
+            'acta' => '',
+            'fecha' => '',
+            'nota' => '',
+        ];
         // -----------------------------  cabecera ---------------------------------
         ?>
         <head>
@@ -280,9 +288,19 @@ case 2108:
                 while ($a < count($cAsignaturas)) {
                     $oAsignatura = $cAsignaturas[$a++];
                     $row = current($aAprobadas);
+                    if (key($aAprobadas) === null) { // ha llegado al final
+                        $row = $rowEmpty;
+                    }
                     while (($row['id_nivel_asig'] < $oAsignatura->getId_nivel()) && ($j < $num_asig)) {
-                        $row = current($aAprobadas);
-                        next($aAprobadas);
+                        if (key($aAprobadas) === null) { // ha llegado al final
+                            $row = $rowEmpty;
+                        } else {
+                            $row = current($aAprobadas);
+                        }
+                        if (next($aAprobadas) === FALSE) {
+                            $row = $rowEmpty;
+                            break;
+                        }
                         $j++;
                     }
                     while (($oAsignatura->getId_nivel() < $row["id_nivel_asig"]) && ($row["id_nivel"] < 2434)) {

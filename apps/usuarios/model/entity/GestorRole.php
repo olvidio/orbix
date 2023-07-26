@@ -30,7 +30,9 @@ class GestorRole extends core\ClaseGestor
     function __construct()
     {
         $oDbl = $GLOBALS['oDBPC'];
+        $oDbl_Select = $GLOBALS['oDBPC_Select'];
         $this->setoDbl($oDbl);
+        $this->setoDbl_Select($oDbl_Select);
         $this->setNomTabla('aux_roles');
     }
 
@@ -46,7 +48,7 @@ class GestorRole extends core\ClaseGestor
      */
     function getListaRoles($sWhere = '')
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $sQuery = "SELECT id_role, role
 				FROM $nom_tabla $sWhere
@@ -68,7 +70,7 @@ class GestorRole extends core\ClaseGestor
      */
     function getArrayRoles($sWhere = '')
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $sQuery = "SELECT id_role, role
 				FROM $nom_tabla $sWhere
@@ -95,7 +97,7 @@ class GestorRole extends core\ClaseGestor
      */
     function getArrayRolesPau()
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $sQuery = "SELECT id_role, pau
 				FROM $nom_tabla WHERE pau IS NOT NULL
@@ -147,7 +149,7 @@ class GestorRole extends core\ClaseGestor
      */
     function getRoles($aWhere = array(), $aOperators = array())
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $oRoleSet = new core\Set();
         $oCondicion = new core\Condicion();

@@ -123,7 +123,7 @@ if ($Qmodo === 'publicar') {
     $oDesplDelegacionesOrg->setBlanco(false);
 }
 // para cambiar el listado de fases si no el la dl_propia
-if (core\configGlobal::is_app_installed('procesos')) {
+if (core\ConfigGlobal::is_app_installed('procesos')) {
     $oDesplDelegacionesOrg->setAction('fnjs_actualizar_fases();');
 }
 
@@ -166,7 +166,7 @@ $oFormP->setEmpiezaMax($Qempiezamax);
 $oHash = new Hash();
 $oHash->setCamposForm('dl_org!empiezamax!empiezamin!filtro_lugar!iactividad_val!iasistentes_val!id_tipo_activ!inom_tipo_val!isfsv_val!id_ubi!nom_activ!periodo!status!year');
 $camposNo = 'id_ubi!nom_activ';
-if (core\configGlobal::is_app_installed('procesos')) {
+if (core\ConfigGlobal::is_app_installed('procesos')) {
     $camposNo .= '!fases_on!fases_off';
 }
 $oHash->setcamposNo($camposNo);
@@ -261,7 +261,7 @@ $url_actualizar_fases = '';
 $h_actualizar_fases = '';
 $CuadrosFasesOn = '';
 $CuadrosFasesOff = '';
-if (core\configGlobal::is_app_installed('procesos')) {
+if (core\ConfigGlobal::is_app_installed('procesos')) {
     $proceso_installed = TRUE;
     $url_actualizar_fases = ConfigGlobal::getWeb() . '/apps/procesos/controller/actividad_que_fases_ajax.php';
     $oHash1 = new Hash();

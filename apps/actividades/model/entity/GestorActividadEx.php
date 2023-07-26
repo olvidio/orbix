@@ -28,7 +28,9 @@ class GestorActividadEx extends GestorActividadAll
     function __construct()
     {
         $oDbl = $GLOBALS['oDBRC'];
+        $oDbl_Select = $GLOBALS['oDBRC_Select'];
         $this->setoDbl($oDbl);
+        $this->setoDbl_Select($oDbl_Select);
         $this->setNomTabla('a_actividades_ex');
     }
 

@@ -30,7 +30,8 @@ function cambiar_idioma($idioma = '')
                 $a_idiomas = explode(",", $_SERVER["HTTP_ACCEPT_LANGUAGE"]); # Convertimos HTTP_ACCEPT_LANGUAGE en array
                 /* Recorremos el array hasta que encontramos un idioma del visitante que coincida con los idiomas
                 en que está disponible nuestra web */
-                for ($i = 0; $i < count($a_idiomas); $i++) {
+                $numero_de_idiomas = count($a_idiomas);
+                for ($i = 0; $i < $numero_de_idiomas; $i++) {
                     if (!isset($idioma)) {
                         if (substr($a_idiomas[$i], 0, 2) == "ca") {
                             $idioma = "ca_ES.UTF-8";
@@ -77,13 +78,13 @@ function cambiar_idioma($idioma = '')
 // APLICACIONES POSIBLES
 function getAppsPosibles()
 {
-    $oConfigDB = new ConfigDB('comun');
+    $oConfigDB = new ConfigDB('comun_select');
     $config = $oConfigDB->getEsquema('public');
     $oConexion = new DBConnection($config);
-    $oDBP = $oConexion->getPDO();
+    $oDBP_Select = $oConexion->getPDO();
     $sQuery = "SELECT * FROM m0_apps";
     $a_apps = array();
-    foreach ($oDBP->query($sQuery) as $aDades) {
+    foreach ($oDBP_Select->query($sQuery) as $aDades) {
         $nom = $aDades['nom'];
         $a_apps[$nom] = $aDades['id_app'];
     }
@@ -93,15 +94,15 @@ function getAppsPosibles()
 // MODULOS POSIBLES
 function getModsPosibles()
 {
-    $oConfigDB = new ConfigDB('comun');
+    $oConfigDB = new ConfigDB('comun_select');
     $config = $oConfigDB->getEsquema('public');
     $oConexion = new DBConnection($config);
-    $oDBP = $oConexion->getPDO();
+    $oDBP_Select = $oConexion->getPDO();
     $sQuery = "SELECT * FROM m0_modulos";
     $a_mods = array();
     $a_mods_req = array();
     $a_apps_req = array();
-    foreach ($oDBP->query($sQuery) as $aDades) {
+    foreach ($oDBP_Select->query($sQuery) as $aDades) {
         $id_mod = $aDades['id_mod'];
         $nom = $aDades['nom'];
         $mods_req = $aDades['mods_req'];
@@ -112,12 +113,12 @@ function getModsPosibles()
 }
 
 // APLICACIONES INSTALADAS EN LA DL
-function getModsInstalados($oDB)
+function getModsInstalados($oDB_Select)
 {
     $a_mods = getModsPosibles();
     $sQuery = "SELECT * FROM m0_mods_installed_dl WHERE status = 't'";
     $a_mods_installed = array();
-    foreach ($oDB->query($sQuery) as $aDades) {
+    foreach ($oDB_Select->query($sQuery) as $aDades) {
         $id_mod = $aDades['id_mod'];
         $nom_mod = $a_mods[$id_mod]['nom'];
         $a_mods_installed[$id_mod] = $nom_mod;
@@ -201,10 +202,10 @@ if (!isset($_SESSION['session_auth'])) {
                 $esquema = empty($_POST['esquema']) ? $esquema_web : $_POST['esquema'];
                 if (substr($esquema, -1) == 'v') {
                     $sfsv = 1;
-                    $oConfigDB = new ConfigDB('sv-e');
+                    $oConfigDB = new ConfigDB('sv-e_select');
                     $config = $oConfigDB->getEsquema($esquema);
                     $oConexion = new DBConnection($config);
-                    $oDB = $oConexion->getPDO();
+                    $oDB_Select = $oConexion->getPDO();
 
                 }
                 if (substr($esquema, -1) == 'f') {
@@ -212,18 +213,18 @@ if (!isset($_SESSION['session_auth'])) {
                     $oConfigDB = new ConfigDB('sf-e');
                     $config = $oConfigDB->getEsquema($esquema);
                     $oConexion = new DBConnection($config);
-                    $oDB = $oConexion->getPDO();
+                    $oDB_Select = $oConexion->getPDO();
                 }
                 $query = "SELECT * FROM aux_usuarios WHERE usuario = :usuario";
-                if (($oDBSt = $oDB->prepare($query)) === false) {
+                if (($oDBSt = $oDB_Select->prepare($query)) === false) {
                     $sClauError = 'login_obj.prepare';
-                    $_SESSION['oGestorErrores']->addErrorAppLastError($oDB, $sClauError, __LINE__, __FILE__);
+                    $_SESSION['oGestorErrores']->addErrorAppLastError($oDB_Select, $sClauError, __LINE__, __FILE__);
                     return false;
                 }
 
                 if (($oDBSt->execute($aWhere)) === false) {
                     $sClauError = 'loguin_obj.execute';
-                    $_SESSION['oGestorErrores']->addErrorAppLastError($oDB, $sClauError, __LINE__, __FILE__);
+                    $_SESSION['oGestorErrores']->addErrorAppLastError($oDB_Select, $sClauError, __LINE__, __FILE__);
                     return false;
                 }
 
@@ -235,14 +236,14 @@ if (!isset($_SESSION['session_auth'])) {
                     if ($oCrypt->encode($_POST['password'], $sPasswd) == $sPasswd) {
                         $id_usuario = $row['id_usuario'];
                         $id_role = $row['id_role'];
-                        $oConfigDB = new ConfigDB('comun');
+                        $oConfigDB = new ConfigDB('comun_select');
                         $config = $oConfigDB->getEsquema('public');
                         $oConexion = new DBConnection($config);
-                        $oDBP = $oConexion->getPDO();
+                        $oDBCP_Select = $oConexion->getPDO();
                         $queryr = "SELECT * FROM aux_roles WHERE id_role = $id_role";
-                        if (($oDBPSt = $oDBP->query($queryr)) === false) {
+                        if (($oDBPSt = $oDBCP_Select->query($queryr)) === false) {
                             $sClauError = 'login_obj.prepare';
-                            $_SESSION['oGestorErrores']->addErrorAppLastError($oDBP, $sClauError, __LINE__, __FILE__);
+                            $_SESSION['oGestorErrores']->addErrorAppLastError($oDBCP_Select, $sClauError, __LINE__, __FILE__);
                             return false;
                         }
                         $row2 = $oDBPSt->fetch(\PDO::FETCH_ASSOC);
@@ -275,7 +276,7 @@ if (!isset($_SESSION['session_auth'])) {
                         $a_apps = getAppsPosibles();
                         $app_installed = array();
 
-                        $a_mods_installed = getModsInstalados($oDB);
+                        $a_mods_installed = getModsInstalados($oDB_Select);
                         foreach ($a_mods_installed as $id_mod => $param) {
                             $ap1 = getAppsMods($id_mod);
                             $ap2 = getApps($id_mod);
@@ -285,13 +286,13 @@ if (!isset($_SESSION['session_auth'])) {
 
                         // Idioma
                         $query_idioma = sprintf("select * from web_preferencias where id_usuario = '%s' and tipo = '%s' ", $id_usuario, "idioma");
-                        $oDBStI = $oDB->query($query_idioma);
+                        $oDBStI = $oDB_Select->query($query_idioma);
                         $row = $oDBStI->fetch(\PDO::FETCH_ASSOC);
                         $idioma = ($row === FALSE) ? '' : $row['preferencia'];
 
                         // ordenApellidos
                         $query_ordenApellidos = sprintf("select * from web_preferencias where id_usuario = '%s' and tipo = '%s' ", $id_usuario, "ordenApellidos");
-                        $oDBStoA = $oDB->query($query_ordenApellidos);
+                        $oDBStoA = $oDB_Select->query($query_ordenApellidos);
                         $row = $oDBStoA->fetch(\PDO::FETCH_ASSOC);
                         $ordenApellidos = ($row === FALSE) ? '' : $row['preferencia'];
 

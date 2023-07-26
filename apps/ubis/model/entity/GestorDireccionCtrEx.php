@@ -28,6 +28,7 @@ class GestorDireccionCtrEx extends GestorDireccionCtr
     {
         $oDbl = $GLOBALS['oDBR'];
         $this->setoDbl($oDbl);
+        $this->setoDbl_Select($oDbl);
         $this->setNomTabla('u_dir_ctr_ex');
     }
 
@@ -38,5 +39,3 @@ class GestorDireccionCtrEx extends GestorDireccionCtr
     /* MÉTODOS GET y SET --------------------------------------------------------*/
 
 }
-
-?>

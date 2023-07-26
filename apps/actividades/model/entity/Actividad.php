@@ -30,6 +30,7 @@ class Actividad extends ActividadAll
     function __construct($a_id = '')
     {
         $oDbl = $GLOBALS['oDBC'];
+        $oDbl_Select = $GLOBALS['oDBC_Select'];
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
@@ -43,6 +44,7 @@ class Actividad extends ActividadAll
             }
         }
         $this->setoDbl($oDbl);
+        $this->setoDbl_Select($oDbl_Select);
         $this->setNomTabla('av_actividades');
     }
 
@@ -93,7 +95,7 @@ class Actividad extends ActividadAll
         if ($dl_org == core\ConfigGlobal::mi_delef()) {
             $oActividad = new ActividadDl($a_pkey);
         } else {
-            if ($id_tabla == 'dl') {
+            if ($id_tabla === 'dl') {
                 // caso especial dre puede cambiar las actividades de sf:
                 $dl_org_no_f = preg_replace('/(\.*)f$/', '\1', $dl_org);
                 if ($dl_org_no_f == core\ConfigGlobal::mi_delef() && $_SESSION['oPerm']->have_perm_oficina('des')) {
@@ -123,7 +125,7 @@ class Actividad extends ActividadAll
      */
     public function DBCarregar($que = null)
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         if (isset($this->iid_activ)) {
             if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_activ='$this->iid_activ'")) === false) {

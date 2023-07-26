@@ -25,7 +25,9 @@ class GestorTipoDossier extends core\ClaseGestor
     function __construct()
     {
         $oDbl = $GLOBALS['oDBPC'];
+        $oDbl_Select = $GLOBALS['oDBPC_Select'];
         $this->setoDbl($oDbl);
+        $this->setoDbl_Select($oDbl_Select);
         $this->setNomTabla('d_tipos_dossiers');
     }
 
@@ -64,7 +66,7 @@ class GestorTipoDossier extends core\ClaseGestor
      */
     function getTiposDossiers($aWhere = array(), $aOperators = array())
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $oTipoDossierSet = new core\Set();
         $oCondicion = new core\Condicion();
@@ -112,5 +114,3 @@ class GestorTipoDossier extends core\ClaseGestor
 
     /* MÉTODOS GET y SET --------------------------------------------------------*/
 }
-
-?>

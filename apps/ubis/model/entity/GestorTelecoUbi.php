@@ -58,5 +58,3 @@ abstract class GestorTelecoUbi extends core\ClaseGestor
     /* MÉTODOS GET y SET --------------------------------------------------------*/
 
 }
-
-?>

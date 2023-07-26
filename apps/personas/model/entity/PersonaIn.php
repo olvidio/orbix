@@ -35,10 +35,10 @@ class PersonaIn extends PersonaPub
     {
         $oF_nacimiento = $this->getF_nacimiento();
         if (!empty($oF_nacimiento)) {
-            $m = $oF_nacimiento->format('m');
-            $a = $oF_nacimiento->format('Y');
-            $ah = date("Y");
-            $mh = date("m");
+            $m = (int) $oF_nacimiento->format('m');
+            $a = (int) $oF_nacimiento->format('Y');
+            $ah = (int) date("Y");
+            $mh = (int) date("m");
             $inc_m = 0;
             $mh >= $m ? 0 : $inc_m = 1;
             $edad = $ah - $a - $inc_m;

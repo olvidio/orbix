@@ -41,8 +41,6 @@ class GestorProfesorActividad extends core\ClaseGestor
         $gesProfesoresDl = new GestorProfesor();
         $aProfesoresDl = $gesProfesoresDl->getListaProfesoresDl();
         // asistentes de otras dl que son profesores
-        //$gesProfesoresOtrasDl = new GestorAsistentesIn();
-
         // asistentes de paso que son profesores
         $gesAsistentesIn = new asistentes\GestorAsistenteIn();
         $aProfesoresEx = array();
@@ -58,10 +56,10 @@ class GestorProfesorActividad extends core\ClaseGestor
             }
             $obj_persona = get_class($oPersona);
             $obj_persona = str_replace("personas\\model\\entity\\", '', $obj_persona);
-            if ($obj_persona == 'PersonaDl') continue;
+            if ($obj_persona === 'PersonaDl') { continue; }
             // solo puede ser PersonaEx o PersonaIN;
             $profesor_stgr = $oPersona->getProfesor_stgr();
-            if ($profesor_stgr == false) continue;
+            if (!core\is_true($profesor_stgr)) { continue; }
 
             $ap_nom = $oPersona->getPrefApellidosNombre();
             //$ctr_dl=$oPersona->getCentro_o_dl();

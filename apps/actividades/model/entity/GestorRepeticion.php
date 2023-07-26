@@ -31,7 +31,9 @@ class GestorRepeticion extends core\ClaseGestor
     {
         // constructor buit
         $oDbl = $GLOBALS['oDBPC'];
+        $oDbl_Select = $GLOBALS['oDBPC_Select'];
         $this->setoDbl($oDbl);
+        $this->setoDbl_Select($oDbl_Select);
         $this->setNomTabla('xa_tipo_repeticion');
     }
 
@@ -46,7 +48,7 @@ class GestorRepeticion extends core\ClaseGestor
      */
     function getArrayRepeticion()
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $sQuery = "SELECT id_repeticion, repeticion
 				FROM $nom_tabla
@@ -73,7 +75,7 @@ class GestorRepeticion extends core\ClaseGestor
      */
     function getListaRepeticion()
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $sQuery = "SELECT id_repeticion, repeticion
 				FROM $nom_tabla
@@ -118,7 +120,7 @@ class GestorRepeticion extends core\ClaseGestor
      */
     function getRepeticiones($aWhere = array(), $aOperators = array())
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $oRepeticionSet = new core\Set();
         $oCondicion = new core\Condicion();
@@ -167,5 +169,3 @@ class GestorRepeticion extends core\ClaseGestor
     /* MÉTODOS GET y SET --------------------------------------------------------*/
 
 }
-
-?>

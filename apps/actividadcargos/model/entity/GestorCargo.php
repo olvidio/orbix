@@ -28,7 +28,9 @@ class GestorCargo extends core\ClaseGestor
     function __construct()
     {
         $oDbl = $GLOBALS['oDBPC'];
+        $oDbl_Select = $GLOBALS['oDBPC_Select'];
         $this->setoDbl($oDbl);
+        $this->setoDbl_Select($oDbl_Select);
         $this->setNomTabla('xd_orden_cargo');
     }
 
@@ -43,7 +45,7 @@ class GestorCargo extends core\ClaseGestor
      */
     public function getArrayCargosDeTipo($tipo_cargo = 'sacd')
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $sQuery = "SELECT id_cargo,cargo 
                 FROM $nom_tabla
@@ -72,7 +74,7 @@ class GestorCargo extends core\ClaseGestor
      */
     function getListaCargos()
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $sQuery = "SELECT id_cargo,cargo FROM $nom_tabla ORDER BY orden_cargo";
         if (($oDbl->query($sQuery)) === false) {
@@ -122,7 +124,7 @@ class GestorCargo extends core\ClaseGestor
      */
     function getCargos($aWhere = array(), $aOperators = array())
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $ocargoSet = new Set();
         $oCondicion = new Condicion();
@@ -170,5 +172,3 @@ class GestorCargo extends core\ClaseGestor
 
     /* MÉTODOS GET y SET --------------------------------------------------------*/
 }
-
-?>

@@ -28,6 +28,7 @@ class GestorDireccionCtrDl extends GestorDireccionCtr
     {
         $oDbl = $GLOBALS['oDB'];
         $this->setoDbl($oDbl);
+        $this->setoDbl_Select($oDbl);
         $this->setNomTabla('u_dir_ctr_dl');
     }
 
@@ -38,5 +39,3 @@ class GestorDireccionCtrDl extends GestorDireccionCtr
     /* MÉTODOS GET y SET --------------------------------------------------------*/
 
 }
-
-?>

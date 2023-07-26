@@ -31,7 +31,9 @@ class GestorActividadCargo extends core\ClaseGestor
     function __construct()
     {
         $oDbl = $GLOBALS['oDBE'];
+        $oDbl_Select = $GLOBALS['oDBE_Select'];
         $this->setoDbl($oDbl);
+        $this->setoDbl_Select($oDbl_Select);
         $this->setNomTabla('d_cargos_activ_dl');
     }
 
@@ -52,7 +54,7 @@ class GestorActividadCargo extends core\ClaseGestor
         $txt_where_cargos = implode(',', array_keys($aIdCargos_sacd));
 
         // Los sacd los pongo en la base de datos comun.
-        $oDbl = $GLOBALS['oDBC'];
+        $oDbl = $GLOBALS['oDBC_Select'];
         $nom_tabla = 'c' . $this->getNomTabla();
         $aLista = array();
         $sQuery = "SELECT id_nom, id_cargo
@@ -84,7 +86,7 @@ class GestorActividadCargo extends core\ClaseGestor
         $txt_where_cargos = implode(',', array_keys($aIdCargos_sacd));
 
         // Los sacd los pongo en la base de datos comun.
-        $oDbl = $GLOBALS['oDBC'];
+        $oDbl = $GLOBALS['oDBC_Select'];
         $nom_tabla = 'c' . $this->getNomTabla();
         $oPersonaSet = new core\Set();
         $sQuery = "SELECT id_nom, id_cargo
@@ -248,7 +250,7 @@ class GestorActividadCargo extends core\ClaseGestor
         // seleccionar las actividades segun los criterios de búsqueda.
         $GesActividades = new GestorActividad();
         $aListaIds = $GesActividades->getArrayIds($aWhereAct, $aOperadorAct);
-        // descarto los que no estan.
+        // descarto los que no están.
         $cActividadesOk = array();
         foreach ($cCargos as $oCargo) {
             $id_activ = $oCargo->getId_activ();
@@ -309,7 +311,7 @@ class GestorActividadCargo extends core\ClaseGestor
      */
     function getActividadCargos($aWhere = array(), $aOperators = array())
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $oActividadCargoSet = new core\Set();
         $oCondicion = new core\Condicion();
@@ -383,5 +385,3 @@ class GestorActividadCargo extends core\ClaseGestor
 
     /* MÉTODOS GET y SET --------------------------------------------------------*/
 }
-
-?>

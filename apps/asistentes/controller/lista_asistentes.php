@@ -117,7 +117,7 @@ $a_valores = array();
 $aListaCargos = array();
 $msg_err = '';
 // primero los cargos
-if (core\configGlobal::is_app_installed('actividadcargos')) {
+if (core\ConfigGlobal::is_app_installed('actividadcargos')) {
     $GesCargosEnActividad = new actividadcargos\GestorActividadCargo();
     $cCargosEnActividad = $GesCargosEnActividad->getActividadCargos(array('id_activ' => $id_pau));
     $mi_sfsv = core\ConfigGlobal::mi_sfsv();
@@ -218,7 +218,7 @@ foreach ($gesAsistentes->getAsistentes(array('id_activ' => $id_pau)) as $oAsiste
     $est_ok = $oAsistente->getEst_ok();
     $observ = $oAsistente->getObserv();
 
-    if (core\configGlobal::is_app_installed('actividadplazas')) {
+    if (core\ConfigGlobal::is_app_installed('actividadplazas')) {
         $plaza = $oAsistente->getPlaza();
         if ($plaza < 4) continue;
     }
@@ -241,7 +241,7 @@ foreach ($gesAsistentes->getAsistentes(array('id_activ' => $id_pau)) as $oAsiste
 uksort($asistentes, "core\strsinacentocmp");
 
 $c = 0;
-if (core\configGlobal::is_app_installed('actividadcargos')) {
+if (core\ConfigGlobal::is_app_installed('actividadcargos')) {
     $c = count($a_valores);
 }
 

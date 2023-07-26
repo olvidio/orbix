@@ -25,7 +25,9 @@ class GestorAsistenteEx extends core\ClaseGestor
     function __construct()
     {
         $oDbl = $GLOBALS['oDBER'];
+        $oDbl_Select = $GLOBALS['oDBER_Select'];
         $this->setoDbl($oDbl);
+        $this->setoDbl_Select($oDbl_Select);
         $this->setNomTabla('d_asistentes_ex');
     }
 
@@ -65,7 +67,7 @@ class GestorAsistenteEx extends core\ClaseGestor
      */
     function getAsistentesEx($aWhere = array(), $aOperators = array())
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $oAsistenteExSet = new core\Set();
         $oCondicion = new core\Condicion();
@@ -114,5 +116,3 @@ class GestorAsistenteEx extends core\ClaseGestor
 
     /* MÉTODOS GET y SET --------------------------------------------------------*/
 }
-
-?>

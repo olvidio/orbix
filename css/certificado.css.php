@@ -160,6 +160,7 @@ div.libro {
     vertical-align: bottom;
     position: absolute;
 	bottom: 0px;
+    white-space: nowrap;
 	}
 div.secretario {	
 	display: inline-block;

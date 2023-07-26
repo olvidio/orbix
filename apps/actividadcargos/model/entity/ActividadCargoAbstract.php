@@ -126,7 +126,9 @@ abstract class ActividadCargoAbstract extends core\ClasePropiedades
     function __construct($a_id = '')
     {
         $oDbl = $GLOBALS['oDBE'];
+        $oDbl_Select = $GLOBALS['oDBE_Select'];
         $this->setoDbl($oDbl);
+        $this->setoDbl_Select($oDbl_Select);
         $this->setNomTabla('d_cargos_activ_dl');
 
         if (is_array($a_id)) {
@@ -249,7 +251,7 @@ abstract class ActividadCargoAbstract extends core\ClasePropiedades
      */
     public function DBCarregar($que = null)
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         if (isset($this->iid_item)) {
             // necesario mirar el esquema en el caso de consultar las vistas de union para regiones stgr

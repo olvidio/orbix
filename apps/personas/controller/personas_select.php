@@ -288,13 +288,13 @@ $a_botones[] = array('txt' => _("ficha"),
     'click' => "fnjs_ficha(\"#seleccionados\")");
 $script['fnjs_ficha'] = 1;
 
-if (configGlobal::is_app_installed('asistentes')) {
+if (ConfigGlobal::is_app_installed('asistentes')) {
     $a_botones[] = array('txt' => _("ver actividades"),
         'click' => "fnjs_actividades(\"#seleccionados\")");
     $script['fnjs_actividades'] = 1;
 }
 
-if (configGlobal::is_app_installed('notas')) {
+if (ConfigGlobal::is_app_installed('notas')) {
     if (($tabla == "p_numerarios") || ($tabla == "p_agregados") || ($tabla == "p_de_paso_ex")) {
         $a_botones[] = array('txt' => _("ver tessera"),
             'click' => "fnjs_tessera(\"#seleccionados\")");
@@ -313,7 +313,7 @@ if (configGlobal::is_app_installed('notas')) {
         $script['fnjs_notas'] = 1;
     }
 }
-if (configGlobal::is_app_installed('actividadestudios')) {
+if (ConfigGlobal::is_app_installed('actividadestudios')) {
     if ($_SESSION['oPerm']->have_perm_oficina('sm') || $_SESSION['oPerm']->have_perm_oficina('est')) {
         if (($tabla == "p_numerarios") || ($tabla == "p_agregados") || ($tabla == "p_de_paso_ex")) {
             $a_botones[] = array('txt' => _("posibles ca"),
@@ -322,7 +322,7 @@ if (configGlobal::is_app_installed('actividadestudios')) {
         }
     }
 }
-if (configGlobal::is_app_installed('actividadplazas')) {
+if (ConfigGlobal::is_app_installed('actividadplazas')) {
     if (($tabla == "p_numerarios") || ($tabla == "p_agregados") || ($tabla == "p_de_paso_ex")) {
         $sactividad = 'ca'; //ca
         $a_botones[] = array('txt' => _("petición ca"),
@@ -334,13 +334,13 @@ if (configGlobal::is_app_installed('actividadplazas')) {
     }
 }
 if ($_SESSION['oPerm']->have_perm_oficina('est')) {
-    if (configGlobal::is_app_installed('actividadestudios')) {
+    if (ConfigGlobal::is_app_installed('actividadestudios')) {
         $a_botones[] = array('txt' => _("plan estudios"),
             'click' => "fnjs_matriculas(\"#seleccionados\")");
         $script['fnjs_matriculas'] = 1;
         //$permiso = 3;
     }
-    if (configGlobal::is_app_installed('profesores')) {
+    if (ConfigGlobal::is_app_installed('profesores')) {
         $a_botones[] = array('txt' => _("ficha profesor stgr"),
             'click' => "fnjs_ficha_profe(\"#seleccionados\")");
         $script['fnjs_ficha_profe'] = 1;
@@ -375,7 +375,7 @@ if (ConfigGlobal::mi_ambito() === 'rstgr') {
 }
 
 // en el caso de los de dre añado la posibilidad de listar la atencion a las actividades
-if (configGlobal::is_app_installed('actividadessacd')) {
+if (ConfigGlobal::is_app_installed('actividadessacd')) {
     if ($_SESSION['oPerm']->have_perm_oficina('des')) {
         $a_botones[] = array('txt' => _("atención actividades"),
             'click' => "fnjs_lista_activ(\"#seleccionados\")");

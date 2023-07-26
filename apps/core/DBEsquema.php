@@ -55,6 +55,12 @@ class DBEsquema
     private $ssh_user;
 
     /* CONSTRUCTOR -------------------------------------------------------------- */
+    private mixed $sRegionRef;
+    private mixed $sDlRef;
+    private mixed $sDlNew;
+    private mixed $sRegionNew;
+    private mixed $sDbRef;
+    private array $config;
 
     /**
      * Constructor de la classe.
@@ -85,6 +91,8 @@ class DBEsquema
 
     public function setConfig($config)
     {
+        $this->config = $config;
+
         $this->setDb($config['dbname']);
         $this->setHost($config['host']);
         $this->setSsh_user($config['ssh_user']);
@@ -146,10 +154,12 @@ class DBEsquema
         $this->sNew = $this->getRegionNew() . '-' . $this->getDlNew();
         switch ($this->getDb()) {
             case 'comun':
+            case 'comun_select':
             case 'pruebas-comun':
                 break;
             case 'sv':
             case 'sv-e':
+            case 'sv-e_select':
             case 'pruebas-sv':
             case 'pruebas-sv-e':
                 $this->sNew .= 'v';
@@ -174,10 +184,12 @@ class DBEsquema
         $this->sRef = $this->getRegionRef() . '-' . $this->getDlRef();
         switch ($this->getDb()) {
             case 'comun':
+            case 'comun_select':
             case 'pruebas-comun':
                 break;
             case 'sv':
             case 'sv-e':
+            case 'sv-e_select':
             case 'pruebas-sv':
             case 'pruebas-sv-e':
                 $this->sRef .= 'v';
@@ -305,10 +317,31 @@ class DBEsquema
 
     public function crear()
     {
-        if ($this->getHost() == 'localhost' || $this->getHost() == '127.0.0.1') {
+        if ($this->getHost() === '/var/run/postgresql' || $this->getHost() === 'localhost' || $this->getHost() === '127.0.0.1') {
             $this->crear_local();
         } else {
             $this->crear_remote();
+        }
+    }
+    public function crear_select() {
+        // es para las copias locales del servidor externo.
+        // Ya tenemos los archivos creador, sólo hay que importalos al servidor interior
+
+        //cambiar la conexión
+        $oConnection = new DBConnection($this->config);
+        $dsn = $oConnection->getURI();
+
+        $command = "PGOPTIONS='--client-min-messages=warning' /usr/bin/psql -U postgres -q  -X -t --pset pager=off ";
+        $command .= "--file=" . $this->getFileNew() . " ";
+        $command .= "\"" . $dsn . "\"";
+        $command .= " > " . $this->getFileLog() . " 2>&1";
+        passthru($command); // no output to capture so no need to store it
+        // read the file, if empty all's well
+        $error = file_get_contents($this->getFileLog());
+        if (trim($error) != '') {
+            if (ConfigGlobal::is_debug_mode()) {
+                echo sprintf(_("PSQL ERROR IN COMMAND(4): %s<br> mirar en: %s<br>"), $command, $this->getFileLog());
+            }
         }
     }
 
@@ -327,7 +360,8 @@ class DBEsquema
     {
         $this->leer_remote();
         $this->cambiar_nombre();
-        $this->eliminar_sync();
+        // Por el momento ya no tengo el otro servidor
+        //$this->eliminar_sync();
         $this->importar();
     }
 
@@ -347,14 +381,25 @@ class DBEsquema
         //          -U postgres -h 127.0.0.1 pruebas-comun" > /var/www/pruebas/log/db/Acse-crAcse.comun.sql
 
         $dbname = $this->getDbName();
+        // para conexiones locales via sockets
+        $host_local = '/var/run/postgresql';
         // leer esquema
         //$command_ssh = "/usr/bin/ssh aquinate@192.168.200.16";
-        $command_ssh = "/usr/bin/ssh " . $this->getSsh_user() . "@" . $this->getHost();
-        $command_db = "/usr/bin/pg_dump -s --schema=\\\\\\\"" . $this->getRef() . "\\\\\\\" ";
-        $command_db .= "-U postgres -h 127.0.0.1 $dbname";
+        $command_ssh = "/usr/bin/ssh -i /var/www/.ssh/id_rsa " . $this->getSsh_user() . "@" . $this->getHost();
+        $command_db = "/usr/bin/pg_dump -U postgres -s --schema=\\\\\\\"" . $this->getRef() . "\\\\\\\" ";
+        $command_db .= "-h $host_local $dbname";
         $command = "$command_ssh \"$command_db\" > " . $this->getFileRef();
-        //echo "$command<br>";
         passthru($command); // no output to capture so no need to store it
+        /*
+         $command .= " > " . $this->getFileLog() . " 2>&1";
+        passthru($command); // no output to capture so no need to store it
+        $error = file_get_contents($this->getFileLog());
+        if (trim($error) != '') {
+            if (ConfigGlobal::is_debug_mode()) {
+                echo sprintf(_("PSQL ERROR IN COMMAND(0): %s<br> mirar: %s<br>"), $command, $this->getFileLog());
+            }
+        }
+        */
     }
 
     private function leer_local()
@@ -363,7 +408,7 @@ class DBEsquema
         // crear archivo con el password
         $dsn = $this->getConexion('ref');
         // leer esquema
-        $command = "/usr/bin/pg_dump -s --schema=\\\"" . $this->getRef() . "\\\" ";
+        $command = "/usr/bin/pg_dump -U postgres -s --schema=\\\"" . $this->getRef() . "\\\" ";
         $command .= "--file=" . $this->getFileRef() . " ";
         $command .= "\"" . $dsn . "\"";
         $command .= " > " . $this->getFileLog() . " 2>&1";
@@ -382,7 +427,7 @@ class DBEsquema
         // crear archivo con el password
         $dsn = $this->getConexion('new');
         // Importar el esquema en la base de datos comun
-        $command = "PGOPTIONS='--client-min-messages=warning' /usr/bin/psql -q  -X -t --pset pager=off ";
+        $command = "PGOPTIONS='--client-min-messages=warning' /usr/bin/psql -U postgres -q  -X -t --pset pager=off ";
         $command .= "--file=" . $this->getFileNew() . " ";
         $command .= "\"" . $dsn . "\"";
         $command .= " > " . $this->getFileLog() . " 2>&1";
@@ -444,9 +489,9 @@ class DBEsquema
     private function getConfigConexion($esq = 'ref')
     {
         // No he conseguido que funcione con ~/.pgpass.
-        if ($esq == 'ref') {
+        if ($esq === 'ref') {
             $esquema = $this->getRef();
-        } elseif ($esq == 'new') {
+        } elseif ($esq === 'new') {
             $esquema = $this->getNew();
         }
         switch ($this->sDb) {

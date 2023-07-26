@@ -108,7 +108,7 @@ foreach ($cAsistentes as $oAsistente) {
             // añadir plazas libres sobre totales
 
             $txt_plazas = '';
-            if (configGlobal::is_app_installed('actividadplazas')) {
+            if (ConfigGlobal::is_app_installed('actividadplazas')) {
                 $concedidas = 0;
                 $cActividadPlazas = $gesActividadPlazas->getActividadesPlazas(array('id_dl' => $id_dl, 'id_activ' => $id_activ));
                 foreach ($cActividadPlazas as $oActividadPlazas) {

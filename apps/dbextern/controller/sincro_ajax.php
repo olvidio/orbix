@@ -222,7 +222,7 @@ switch ($que) {
         $mi_dele = ConfigGlobal::mi_delef();
         $mi_esquema = ConfigGlobal::mi_region_dl();
         $oHoy = new web\DateTimeLocal();
-        $sfsv_txt = (configGlobal::mi_sfsv() == 1) ? 'v' : 'f';
+        $sfsv_txt = (ConfigGlobal::mi_sfsv() == 1) ? 'v' : 'f';
         $esq_dst = "H-" . $dl . $sfsv_txt;
 
         if ($dl == 'cr') {
@@ -251,7 +251,7 @@ switch ($que) {
         $mi_dele = ConfigGlobal::mi_delef();
         $mi_esquema = ConfigGlobal::mi_region_dl();
         $oHoy = new web\DateTimeLocal();
-        $sfsv_txt = (configGlobal::mi_sfsv() == 1) ? 'v' : 'f';
+        $sfsv_txt = (ConfigGlobal::mi_sfsv() == 1) ? 'v' : 'f';
         $esq_dst = "H-" . $dl . $sfsv_txt;
 
         $oTrasladoDl->setDl_persona($mi_dele);

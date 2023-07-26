@@ -60,12 +60,12 @@ $oDevelPC = $oConexion->getPDO();
 
 $oDBRol = new core\DBRol();
 $oDBRol->setDbConexion($oDevelPC);
-// necesito crear los tres usuarios para dar perminsos
+// necesito crear los tres usuarios para dar permisos
 // comun
 $oDBRol->setUser($esquema);
 $oDBRol->setPwd($esquema_pwd);
 $oDBRol->crearUsuario();
-$oConfigDB->addEsquema('comun', $esquema, $esquema_pwd);
+$oConfigDB->addEsquemaEnFicheroPasswords('comun', $esquema, $esquema_pwd);
 
 // Con las bases de datos en distintos servidores, hay que ir cambiando la conexión:
 // sv
@@ -81,7 +81,12 @@ $oDBRol->setDbConexion($oDevelPC);
 $oDBRol->setUser($esquemav);
 $oDBRol->setPwd($esquemav_pwd);
 $oDBRol->crearUsuario();
-$oConfigDB->addEsquema('sv', $esquemav, $esquemav_pwd);
+$oConfigDB->addEsquemaEnFicheroPasswords('sv', $esquemav, $esquemav_pwd);
+// también hay que crear los usuarios comun para la DB Select
+// No se añade al fichero de passwords. Ya se hace al hacer el sv-e, y el comun.
+$oDBRol->setUser($esquema);
+$oDBRol->setPwd($esquema_pwd);
+$oDBRol->crearUsuario();
 
 // sv-e
 // Los mismos parametros que para sv.
@@ -96,7 +101,7 @@ $oDevelPC = $oConexion->getPDO();
 $host_sve = $config['host'];
 $port_sve = $config['port'];
 
-// Si es el mismo servidor (portatil) me lo salto:
+// Si es el mismo servidor (portátil) me lo salto:
 if ($host_sv != $host_sve || $port_sv != $port_sve) {
     $oDBRol = new core\DBRol();
     $oDBRol->setDbConexion($oDevelPC);
@@ -105,7 +110,7 @@ if ($host_sv != $host_sve || $port_sv != $port_sve) {
     $oDBRol->setPwd($esquemav_pwd);
     $oDBRol->crearUsuario();
 }
-$oConfigDB->addEsquema('sv-e', $esquemav, $esquemav_pwd);
+$oConfigDB->addEsquemaEnFicheroPasswords('sv-e', $esquemav, $esquemav_pwd);
 
 // sf
 /* Si se crea desde sv, hay que crear el Role de sf para la database comun
@@ -125,12 +130,13 @@ $oDBRol->setDbConexion($oDevelPC);
 $oDBRol->setUser($esquemaf);
 $oDBRol->setPwd($esquemaf_pwd);
 $oDBRol->crearUsuario();
+$oConfigDB->addEsquemaEnFicheroPasswords('sf', $esquemaf, $esquemaf_pwd);
 
 // desde sf (añado el esquema al Role)
 if ($_SESSION['sfsv'] == 'sf') {
     $oConfigDB = new core\ConfigDB('importar');
     //coge los valores de public: 1.la database sv-e; 2.nombre superusuario; 3.pasword superusuario;
-    $config = $oConfigDB->getEsquema('publicv-e');
+    $config = $oConfigDB->getEsquema('publicf');
     $oConexion = new core\DBConnection($config);
     $oDevelPC = $oConexion->getPDO();
 
@@ -140,7 +146,7 @@ if ($_SESSION['sfsv'] == 'sf') {
     $oDBRol->setUser($esquemaf);
     $oDBRol->setPwd($esquemaf_pwd);
     $oDBRol->crearUsuario();
-    $oConfigDB->addEsquema('sf', $esquemaf, $esquemaf_pwd);
+    $oConfigDB->addEsquemaEnFicheroPasswords('sf', $esquemaf, $esquemaf_pwd);
 }
 
 $archivo_conf = ConfigGlobal::DIR_PWD . '/  (comun.inc, sv.inc, sf.inc)';

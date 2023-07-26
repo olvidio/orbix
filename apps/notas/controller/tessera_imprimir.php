@@ -99,7 +99,7 @@ function titulo($id_asignatura)
         case 1101:
             $html = " 
 				<tr><td class=\"space\"></td></tr>
-				<tr><td></td><td colspan=\"7\" class=\"curso\">CURSUS INSTITUTIONALES FILOSOFI&#198;</td></tr>
+				<tr><td></td><td colspan=\"7\" class=\"curso\">CURSUS INSTITUTIONALES PHILOSOPHI&#198;</td></tr>
 				$cabecera
 				<tr><td class=\"space\"></td></tr>
 				<tr><td></td><td colspan=\"7\" class=\"any\">ANNUS I</td></tr>
@@ -178,7 +178,15 @@ function data($data)
 }
 
 // -----------------------------
-
+$rowEmpty = [
+    'id_nivel_asig' => '',
+    'id_nivel' => '',
+    'id_asignatura' => '',
+    'nombre_asignatura' => '',
+    'acta' => '',
+    'fecha' => '',
+    'nota' => '',
+];
 // -----------------------------  cabecera ---------------------------------
 $caraA = web\Hash::link('apps/notas/controller/tessera_imprimir.php?' . http_build_query(array('cara' => 'A', 'id_nom' => $id_nom, 'id_tabla' => $id_tabla, 'refresh' => 1)));
 $caraB = web\Hash::link('apps/notas/controller/tessera_imprimir.php?' . http_build_query(array('cara' => 'B', 'id_nom' => $id_nom, 'id_tabla' => $id_tabla, 'refresh' => 1)));
@@ -215,7 +223,7 @@ $h = $oHash->linkSinVal();
     <col style="width: 10%">
     <col style="width: 1%">
     <?php
-    if ($Qcara == "A") {
+    if ($Qcara === "A") {
         ?>
         <tr>
             <td class="space"></td>
@@ -283,27 +291,46 @@ $h = $oHash->linkSinVal();
     $i = 0;
     reset($aAprobadas);
     $row = current($aAprobadas);
+    if (key($aAprobadas) === null) { // ha llegado al final
+        $row = $rowEmpty;
+    }
+
     while ($a < count($cAsignaturas)) {
         $oAsignatura = $cAsignaturas[$a++];
 
         // para imprimir sólo una cara:
         // cara A hasta la asignatura 2107
-        if ($Qcara == "A" && $oAsignatura->getId_nivel() > 2107) {
+        if ($Qcara === "A" && $oAsignatura->getId_nivel() > 2107) {
             $row = current($aAprobadas);
             continue;
         }
-        if ($Qcara == "B" && $oAsignatura->getId_nivel() < 2108) {
+        if ($Qcara === "B" && $oAsignatura->getId_nivel() < 2108) {
+            if (key($aAprobadas) === null) { // ha llegado al final
+                $row = $rowEmpty;
+            }
             while (($row["id_nivel"] < 2107) && ($j < $num_asig)) {
-                $row = current($aAprobadas);
-                next($aAprobadas);
+                if (key($aAprobadas) === null) { // ha llegado al final
+                    $row = $rowEmpty;
+                } else {
+                    $row = current($aAprobadas);
+                }
+                if (next($aAprobadas) === FALSE) {
+                    $row = $rowEmpty;
+                    break;
+                }
                 $j++;
             }
             continue;
-            prev($aAprobadas);
         }
         while (($row['id_nivel_asig'] < $oAsignatura->getId_nivel()) && ($j < $num_asig)) {
+            if (key($aAprobadas) === null) { // ha llegado al final
+                $row = $rowEmpty;
+                break;
+            }
             $row = current($aAprobadas);
-            next($aAprobadas);
+            if (next($aAprobadas) === FALSE) {
+                break;
+            }
             $j++;
         }
         while (($oAsignatura->getId_nivel() < $row["id_nivel_asig"]) && ($row["id_nivel"] < 2434)) {
@@ -325,7 +352,7 @@ $h = $oHash->linkSinVal();
             </tr>
             <?php
             $oAsignatura = $cAsignaturas[$a++];
-            if ($Qcara == "A" && $oAsignatura->getId_nivel() > 2107) {
+            if ($Qcara === "A" && $oAsignatura->getId_nivel() > 2107) {
                 continue 2;
             }
         }

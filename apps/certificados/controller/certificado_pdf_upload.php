@@ -4,6 +4,8 @@
 // INICIO Cabecera global de URL de controlador *********************************
 use certificados\domain\entity\Certificado;
 use certificados\domain\repositories\CertificadoRepository;
+use core\ConfigGlobal;
+use personas\model\entity\Persona;
 use web\DateTimeLocal;
 use function core\is_true;
 
@@ -26,13 +28,19 @@ exit(); // terminate
 function upload()
 {
     $Qid_nom = (integer)filter_input(INPUT_POST, 'id_nom');
-    $Qcertificado = (string)filter_input(INPUT_POST, 'certificado_num');
+    $Qcertificado = (string)filter_input(INPUT_POST, 'certificado');
     $Qcopia = (string)filter_input(INPUT_POST, 'copia');
     $Qf_certificado = (string)filter_input(INPUT_POST, 'f_certificado');
+    $Qidioma = (string)filter_input(INPUT_POST, 'idioma');
 
     /* convertir las fechas a DateTimeLocal */
     $oF_certificado = DateTimeLocal::createFromLocal($Qf_certificado);
 
+    $oPersona = Persona::NewPersona($Qid_nom);
+    $apellidos_nombre = $oPersona->getApellidosNombre();
+    $nom = $apellidos_nombre;
+
+    $destino = ConfigGlobal::mi_region();
 
     $error_txt = '';
     $input = 'certificado_pdf'; // the input name for the fileinput plugin
@@ -55,6 +63,9 @@ function upload()
             $oCertificado->setId_item($id_item);
             $oCertificado->setDocumento($contenido_doc);
             $oCertificado->setId_nom($Qid_nom);
+            $oCertificado->setNom($nom);
+            $oCertificado->setDestino($destino);
+            $oCertificado->setIdioma($Qidioma);
             $oCertificado->setCertificado($Qcertificado);
             if (is_true($Qcopia)) {
                 $copia = TRUE;

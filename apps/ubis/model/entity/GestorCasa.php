@@ -30,7 +30,9 @@ class GestorCasa extends core\ClaseGestor
     function __construct()
     {
         $oDbl = $GLOBALS['oDBPC'];
+        $oDbl_Select = $GLOBALS['oDBPC_Select'];
         $this->setoDbl($oDbl);
+        $this->setoDbl_Select($oDbl_Select);
         $this->setNomTabla('u_cdc');
     }
 
@@ -46,7 +48,7 @@ class GestorCasa extends core\ClaseGestor
      */
     function getArrayPosiblesCasas($sCondicion = '')
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $sQuery = "SELECT id_ubi, nombre_ubi
 				FROM $nom_tabla
@@ -79,7 +81,7 @@ class GestorCasa extends core\ClaseGestor
      */
     function getPosiblesCasas($sCondicion = '')
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $sQuery = "SELECT id_ubi, nombre_ubi
 				FROM $nom_tabla
@@ -104,7 +106,7 @@ class GestorCasa extends core\ClaseGestor
      */
     function getCasas($aWhere = array(), $aOperators = array())
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $oCasaSet = new core\Set();
         $oCondicion = new core\Condicion();
@@ -153,5 +155,3 @@ class GestorCasa extends core\ClaseGestor
     /* MÉTODOS GET y SET --------------------------------------------------------*/
 
 }
-
-?>

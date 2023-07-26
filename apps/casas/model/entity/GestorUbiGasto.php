@@ -26,7 +26,9 @@ class GestorUbiGasto extends core\ClaseGestor
     function __construct()
     {
         $oDbl = $GLOBALS['oDBC'];
+        $oDbl_Select = $GLOBALS['oDBC_Select'];
         $this->setoDbl($oDbl);
+        $this->setoDbl_Select($oDbl_Select);
         $this->setNomTabla('du_gastos_dl');
     }
 
@@ -44,7 +46,7 @@ class GestorUbiGasto extends core\ClaseGestor
      */
     function getSumaGastos($id_ubi, $tipo, $oInicio, $oFin)
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $inicioIso = $oInicio->getIso();
         $finIso = $oFin->getIso();
@@ -90,7 +92,7 @@ class GestorUbiGasto extends core\ClaseGestor
      */
     function getUbiGastos($aWhere = array(), $aOperators = array())
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $oUbiGastoSet = new core\Set();
         $oCondicion = new core\Condicion();

@@ -29,7 +29,9 @@ class GestorGrupo extends core\ClaseGestor
     function __construct()
     {
         $oDbl = $GLOBALS['oDBE'];
+        $oDbl_Select = $GLOBALS['oDBE_Select'];
         $this->setoDbl($oDbl);
+        $this->setoDbl_Select($oDbl_Select);
         $this->setNomTabla('aux_grupos_y_usuarios');
     }
 
@@ -69,7 +71,7 @@ class GestorGrupo extends core\ClaseGestor
      */
     function getGrupos($aWhere = array(), $aOperators = array())
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $oGrupoSet = new core\Set();
         $oCondicion = new core\Condicion();

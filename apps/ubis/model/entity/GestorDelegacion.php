@@ -35,7 +35,9 @@ class GestorDelegacion extends ClaseGestor
     function __construct()
     {
         $oDbl = $GLOBALS['oDBPC'];
+        $oDbl_Select = $GLOBALS['oDBPC_Select'];
         $this->setoDbl($oDbl);
+        $this->setoDbl_Select($oDbl_Select);
         $this->setNomTabla('xu_dl');
     }
 
@@ -44,7 +46,7 @@ class GestorDelegacion extends ClaseGestor
 
     public function getArrayIdSchemaRegionStgr($sRegionStgr, $mi_sfsv)
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getoDbl_Select();
         $a_schemas = $this->getArraySchemasRegionStgr($sRegionStgr, $mi_sfsv);
 
         $list_dl = '';
@@ -75,7 +77,7 @@ class GestorDelegacion extends ClaseGestor
      */
     function getArraySchemasRegionStgr($sRegionStgr, $mi_sfsv)
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
 
         $sQuery = "SELECT u.id_dl, u.region, u.dl FROM $nom_tabla u 
@@ -105,7 +107,7 @@ class GestorDelegacion extends ClaseGestor
      */
     function getArrayDlRegionStgr($aRegiones = array())
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
 
         $num_regiones = count($aRegiones);
@@ -150,7 +152,7 @@ class GestorDelegacion extends ClaseGestor
             default:
                 $sf = (ConfigGlobal::mi_sfsv() == 2) ? 'f' : '';
         }
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
 
         /* Creo que todas las regiones ahora tinen su dl tipo: crArg
@@ -184,7 +186,7 @@ class GestorDelegacion extends ClaseGestor
     function getListaRegDele($bdl = 't')
     {
         $sf = (ConfigGlobal::mi_sfsv() == 2) ? 'f' : '';
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         if (is_true($bdl)) {
             $sQuery = "SELECT region||'-'||dl||'$sf', nombre_dl||' ('||dl||'$sf)'
@@ -220,7 +222,7 @@ class GestorDelegacion extends ClaseGestor
             $isfsv = ConfigGlobal::mi_sfsv();
         }
         $sf = ($isfsv == 2) ? 'f' : '';
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         // Ahora pongo las regiones que pueden organizar (todas) en la tabla de las dl.
         if (is_true($bdl)) {
@@ -254,7 +256,7 @@ class GestorDelegacion extends ClaseGestor
     {
         $isfsv = ConfigGlobal::mi_sfsv();
         $sf = ($isfsv == 2) ? 'f' : '';
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
 
         $num_regiones = count($aRegiones);
@@ -289,7 +291,7 @@ class GestorDelegacion extends ClaseGestor
      */
     function getArrayDelegaciones($aRegiones = array())
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
 
         $num_regiones = count($aRegiones);
@@ -349,7 +351,7 @@ class GestorDelegacion extends ClaseGestor
      */
     function getDelegaciones($aWhere = array(), $aOperators = array())
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $oDelegacionSet = new Set();
         $oCondicion = new Condicion();

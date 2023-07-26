@@ -114,8 +114,8 @@ function guardarObjeto($oObjeto, $campos_chk)
             // Si es un centro los valores sf/sv no se pueden cambiar
             $classname = get_class($oObjeto);
             $obj_pau = substr($classname, strrpos($classname, '\\') + 1);
-            if ($obj_pau == 'CentroDl' || $obj_pau == 'CentroEx') {
-                switch (core\Configglobal::mi_sfsv()) {
+            if ($obj_pau === 'CentroDl' || $obj_pau === 'CentroEx') {
+                switch (core\ConfigGlobal::mi_sfsv()) {
                     case 1: // sv
                         $a_values_o['sv'] = 't';
                         break;
@@ -129,7 +129,7 @@ function guardarObjeto($oObjeto, $campos_chk)
                 continue;
             }
             //cuando el campo es tipo_labor, se pasa un array que hay que convertirlo en número.
-            if ($camp == "tipo_labor") {
+            if ($camp === "tipo_labor") {
                 $byte = 0;
                 foreach ($_POST[$camp] as $bit) {
                     $byte = $byte + $bit;

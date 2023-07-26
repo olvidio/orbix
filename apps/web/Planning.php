@@ -466,7 +466,7 @@ class Planning
                     for ($d = 1; $d < $total_dias + 1; $d++) {
                         $texto = "";
                         $reserva = "";
-                        if ($pau == "u") {
+                        if ($pau === "u") {
                             $reserva = $this->reservado($mini_0, $dini_0, $d, $aini_0, $id_ubi, $periodos_sv);
                         }
                         for ($a = 0; $a < $num_a; $a++) {
@@ -479,7 +479,7 @@ class Planning
                                     }
                                     $inc2 = $inc + 1;
                                     $clase_act = $this->clase($id_tipo_activ[$a], $propio[$a], $plaza[$a]);
-                                    if (substr($id_tipo_activ[$a], 0, 1) == 1 && $reserva == "sf") {
+                                    if (substr($id_tipo_activ[$a], 0, 1) == 1 && $reserva === "sf") {
                                         $conflicto = "link_red";
                                     } else {
                                         $conflicto = "link";
