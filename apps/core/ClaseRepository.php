@@ -12,6 +12,7 @@ abstract class ClaseRepository
      * @var PDO
      */
     protected $oDbl;
+    protected $oDbl_Select;
     /**
      * NomTabla de ClasePropiedades
      *
@@ -47,6 +48,11 @@ abstract class ClaseRepository
         return $this->oDbl;
     }
 
+    public function getoDbl_Select()
+    {
+        return $this->oDbl_Select;
+    }
+
     /**
      * El faig public per quan s'ha de copiar dades d'un esquema a un altre.
      *
@@ -55,6 +61,11 @@ abstract class ClaseRepository
     public function setoDbl(PDO $oDbl): void
     {
         $this->oDbl = $oDbl;
+    }
+
+    public function setoDbl_Select($oDbl_Select)
+    {
+        $this->oDbl_Select = $oDbl_Select;
     }
 
     /**

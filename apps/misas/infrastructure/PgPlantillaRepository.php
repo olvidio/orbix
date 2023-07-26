@@ -30,7 +30,9 @@ class PgPlantillaRepository extends ClaseRepository implements PlantillaReposito
     public function __construct()
     {
         $oDbl = $GLOBALS['oDBE'];
+        $oDbl_Select = $GLOBALS['oDBE_Select'];
         $this->setoDbl($oDbl);
+        $this->setoDbl_Select($oDbl_Select);
         $this->setNomTabla('misa_plantillas_dl');
     }
 
@@ -46,7 +48,7 @@ class PgPlantillaRepository extends ClaseRepository implements PlantillaReposito
 	 */
 	public function getPlantillas(array $aWhere=[], array $aOperators=[]): array|FALSE
 	{
-		$oDbl = $this->getoDbl();
+		$oDbl = $this->getoDbl_Select();
 		$nom_tabla = $this->getNomTabla();
 		$PlantillaSet = new Set();
 		$oCondicion = new Condicion();
@@ -184,7 +186,7 @@ class PgPlantillaRepository extends ClaseRepository implements PlantillaReposito
 	
     private function isNew(int $id_item): bool
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_item = $id_item")) === FALSE) {
 			$sClaveError = 'PgPlantillaRepository.isNew';
@@ -207,7 +209,7 @@ class PgPlantillaRepository extends ClaseRepository implements PlantillaReposito
      */
     public function datosById(int $id_item): array|bool
     {
-        $oDbl = $this->getoDbl();
+        $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_item = $id_item")) === FALSE) {
 			$sClaveError = 'PgPlantillaRepository.getDatosById';
