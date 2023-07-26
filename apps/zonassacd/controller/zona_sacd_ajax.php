@@ -40,7 +40,7 @@ $QAsel = empty($QAsel) ? [] : $QAsel;
 
 switch ($Qque) {
     case 'get_lista':
-        if ($Qid_zona == "no") { // los que no tienen ninguna zona asignada.
+        if ($Qid_zona === "no") { // los que no tienen ninguna zona asignada.
             $GesSacd = new GestorPersona();
             // Para los de la dl y de_paso:
             $aClases = [];
@@ -85,7 +85,11 @@ switch ($Qque) {
                 // Ahora todos, para poder borrar a los que se han ido.
                 // if ($oPersona->getSituacion() != 'A') { continue; }
                 // if ($oPersona->getDl() != ConfigGlobal::mi_delef()) { continue; }
-                $ap_nom = $oPersona->getPrefApellidosNombre();
+                if (is_string($oPersona)) {
+                    $ap_nom = $oPersona;
+                } else {
+                    $ap_nom = $oPersona->getPrefApellidosNombre();
+                }
 
                 $a_sacds[$ap_nom] = $id_nom;
             }
@@ -170,7 +174,7 @@ switch ($Qque) {
         break;
     case 'update':
         if (!empty($Qid_zona_new)) {
-            if ($Qid_zona_new == "no") {
+            if ($Qid_zona_new === "no") {
                 $id_zona_new = "";
             } else {
                 $id_zona_new = $Qid_zona_new;
