@@ -32,7 +32,7 @@ if (!empty($a_sel)) { //vengo de un checkbox
     $s_pkey = explode('#', $a_sel[0]);
     // he cambiado las comillas dobles por simples. Deshago el cambio.
     $s_pkey = str_replace("'", '"', $s_pkey[0]);
-    $a_pkey = unserialize(core\urlsafe_b64decode($s_pkey));
+    $a_pkey = unserialize(core\urlsafe_b64decode($s_pkey), ['allowed_classes' => false]);
     // el scroll id es de la página anterior, hay que guardarlo allí
     $oPosicion->addParametro('id_sel', $a_sel, 1);
     $scroll_id = (integer)filter_input(INPUT_POST, 'scroll_id');

@@ -42,10 +42,10 @@ if (!empty($a_sel)) { //vengo de un checkbox
     $s_pkey = explode('#', $a_sel[0]);
     // he cambiado las comillas dobles por simples. Deshago el cambio.
     $s_pkey = str_replace("'", '"', $s_pkey[0]);
-    $a_pkey = unserialize(core\urlsafe_b64decode($s_pkey));
+    $a_pkey = unserialize(core\urlsafe_b64decode($s_pkey), ['allowed_classes' => false]);
 } else {
     $s_pkey = (string)filter_input(INPUT_POST, 's_pkey');
-    $a_pkey = unserialize(core\urlsafe_b64decode($s_pkey));
+    $a_pkey = unserialize(core\urlsafe_b64decode($s_pkey), ['allowed_classes' => false]);
 
 }
 

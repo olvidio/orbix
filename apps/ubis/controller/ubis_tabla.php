@@ -276,13 +276,12 @@ if (empty($sWhere)) {
     }
 
 } else {
-    $aWhere = unserialize(urlsafe_b64decode($sWhere));
-    $aOperador = unserialize(urlsafe_b64decode($sOperador));
-    $Gestor = unserialize(urlsafe_b64decode($sGestor));
-    $aWhereD = unserialize(urlsafe_b64decode($sWhereD));
-    $aOperadorD = unserialize(urlsafe_b64decode($sOperadorD));
-    $GestorDir = unserialize(urlsafe_b64decode($sGestorDir));
-    $metodo = $metodo;
+    $aWhere = unserialize(urlsafe_b64decode($sWhere), ['allowed_classes' => false]);
+    $aOperador = unserialize(urlsafe_b64decode($sOperador), ['allowed_classes' => false]);
+    $Gestor = unserialize(urlsafe_b64decode($sGestor), ['allowed_classes' => false]);
+    $aWhereD = unserialize(urlsafe_b64decode($sWhereD), ['allowed_classes' => false]);
+    $aOperadorD = unserialize(urlsafe_b64decode($sOperadorD), ['allowed_classes' => false]);
+    $GestorDir = unserialize(urlsafe_b64decode($sGestorDir), ['allowed_classes' => false]);
 }
 
 if (empty($aWhere) && empty($aWhereD)) {
