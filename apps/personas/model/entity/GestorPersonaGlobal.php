@@ -239,7 +239,7 @@ abstract class GestorPersonaGlobal extends core\ClaseGestor
      * @param string Nom del objecte
      * @return array Una col·lecció d'objectes de tipus PersonaDl
      */
-    function getPersonasObj($aWhere = array(), $aOperators = array(), $Obj)
+    function getPersonasObj($Obj, $aWhere = array(), $aOperators = array())
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();

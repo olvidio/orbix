@@ -536,7 +536,7 @@ class Lista
                             $aFilas[$num_fila][$aFields[$icol]] = addslashes($val);
                         }
                     } else {
-                        $aFilas[$num_fila][$aFields[$icol]] = addslashes($valor);
+                        $aFilas[$num_fila][$aFields[$icol]] = empty($valor)? '' : addslashes($valor);
                     }
                     $icol++;
                 }

@@ -38,7 +38,7 @@ class GestorPersonaOut extends GestorPersonaGlobal
      */
     function getPersonasOut($aWhere = array(), $aOperators = array())
     {
-        return parent::getPersonasObj($aWhere, $aOperators, 'personas\\model\entity\\PersonaOut');
+        return parent::getPersonasObj('personas\\model\entity\\PersonaOut', $aWhere, $aOperators);
 
         /* MÉTODOS PROTECTED --------------------------------------------------------*/
 
