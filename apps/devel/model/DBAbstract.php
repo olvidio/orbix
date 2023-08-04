@@ -2,7 +2,9 @@
 
 namespace devel\model;
 
+use core\ConfigDB;
 use core\ConfigGlobal;
+use core\DBConnection;
 
 /**
  * Crear las tablas necesaria a nivel de aplicación (global).
@@ -17,6 +19,10 @@ abstract class DBAbstract
     protected $role_vf;
     protected $oDbl;
     protected $user_orbix;
+    /**
+     * @var true
+     */
+    private bool $bLoaded;
 
     /**
      * Define el objeto PDO de la base de datos
@@ -60,7 +66,7 @@ abstract class DBAbstract
         $aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);
         // Para evitar posteriores cargas
         $this->bLoaded = TRUE;
-        if ($aDades['to_regclass'] == $nom_tabla) {
+        if ($aDades['to_regclass'] === $nom_tabla) {
             return TRUE;
         } else {
             return FALSE;
@@ -136,10 +142,20 @@ abstract class DBAbstract
     {
         switch ($db) {
             case 'comun':
+                /*
                 // Conexión Comun public, para entrar como usuario orbix.
                 $this->oDbl = $GLOBALS['oDBPC'];
-                // Dar permisos al role H-dlb de orbix (para poder aceder a global)
+                // Dar permisos al role H-dlb de orbix (para poder acceder a global)
                 $this->user_orbix = 'orbix';
+                */
+
+                // conectar con DB comun:
+                $oConfigDB = new ConfigDB('importar'); //de la database comun
+                $config = $oConfigDB->getEsquema('public'); //de la database comun
+
+                $oConexion = new DBConnection($config);
+                $this->oDbl = $oConexion->getPDO();
+
                 $a_sql = [];
                 $a_sql[0] = "GRANT $this->user_orbix TO $this->role;";
 
@@ -149,15 +165,24 @@ abstract class DBAbstract
                 $this->oDbl = $GLOBALS['oDBC'];
                 break;
             case 'sfsv':
+                /*
                 // Conexión sv public, para entrar como usuario orbixv/f.
                 $this->oDbl = $GLOBALS['oDBP'];
-                // Dar permisos al role H-dlbv de orbixv/f (para poder aceder a global)
+                */
+                // conectar con DB sv-e:
+                $oConfigDB = new ConfigDB('importar'); //de la database comun
+                $config = $oConfigDB->getEsquema('publicv'); //de la database comun
+                $oConexion = new DBConnection($config);
+                $this->oDbl = $oConexion->getPDO();
+
+                // Dar permisos al role H-dlbv de orbixv/f (para poder acceder a global)
                 if (ConfigGlobal::mi_sfsv() === 1) {
                     $vf = 'v';
                 } else {
                     $vf = 'f';
                 }
                 $this->user_orbix = 'orbix' . $vf;
+
 
                 $a_sql = [];
                 $a_sql[0] = "GRANT $this->user_orbix TO $this->role_vf;";
@@ -168,16 +193,23 @@ abstract class DBAbstract
                 $this->oDbl = $GLOBALS['oDB'];
                 break;
             case 'sfsv-e':
+                /*
                 // Conexión sv public, para entrar como usuario orbixv/f.
                 $this->oDbl = $GLOBALS['oDBEP'];
-                // Dar permisos al role H-dlbv de orbixv/f (para poder aceder a global)
+                */
+                // conectar con DB sv-e:
+                $oConfigDB = new ConfigDB('importar'); //de la database comun
+                $config = $oConfigDB->getEsquema('publicv-e'); //de la database comun
+                $oConexion = new DBConnection($config);
+                $this->oDbl = $oConexion->getPDO();
+
+                // Dar permisos al role H-dlbv de orbixv/f (para poder acceder a global)
                 if (ConfigGlobal::mi_sfsv() === 1) {
                     $vf = 'v';
                 } else {
                     $vf = 'f';
                 }
                 $this->user_orbix = 'orbix' . $vf;
-
                 $a_sql = [];
                 $a_sql[0] = "GRANT $this->user_orbix TO $this->role_vf;";
 
@@ -191,7 +223,7 @@ abstract class DBAbstract
 
     protected function getNomTabla($tabla)
     {
-        if ($this->esquema == 'public') {
+        if ($this->esquema === 'public') {
             $public_vf = $this->esquema . $this->vf;
             $nom_tabla = '"' . $public_vf . '".' . $tabla;
         } else {
@@ -214,6 +246,7 @@ abstract class DBAbstract
             }
         }
         $oDbl->commit();
+        return TRUE;
     }
 
     protected function eliminar($nom_tabla)
