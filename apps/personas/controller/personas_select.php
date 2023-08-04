@@ -353,7 +353,6 @@ if (ConfigGlobal::mi_ambito() === 'rstgr') {
     $a_botones = [];
 }
 if (ConfigGlobal::mi_ambito() === 'rstgr' || ConfigGlobal::mi_ambito() === 'r') {
-    $a_botones = [];
     $a_botones[] = array('txt' => _("ver tessera"),
         'click' => "fnjs_tessera(\"#seleccionados\")");
     $script['fnjs_tessera'] = 1;
