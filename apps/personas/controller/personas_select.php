@@ -295,7 +295,7 @@ if (ConfigGlobal::is_app_installed('asistentes')) {
 }
 
 if (ConfigGlobal::is_app_installed('notas')) {
-    if (($tabla == "p_numerarios") || ($tabla == "p_agregados") || ($tabla == "p_de_paso_ex")) {
+    if (($tabla === "p_numerarios") || ($tabla === "p_agregados") || ($tabla === "p_de_paso_ex")) {
         $a_botones[] = array('txt' => _("ver tessera"),
             'click' => "fnjs_tessera(\"#seleccionados\")");
         $script['fnjs_tessera'] = 1;
@@ -315,7 +315,7 @@ if (ConfigGlobal::is_app_installed('notas')) {
 }
 if (ConfigGlobal::is_app_installed('actividadestudios')) {
     if ($_SESSION['oPerm']->have_perm_oficina('sm') || $_SESSION['oPerm']->have_perm_oficina('est')) {
-        if (($tabla == "p_numerarios") || ($tabla == "p_agregados") || ($tabla == "p_de_paso_ex")) {
+        if (($tabla === "p_numerarios") || ($tabla === "p_agregados") || ($tabla === "p_de_paso_ex")) {
             $a_botones[] = array('txt' => _("posibles ca"),
                 'click' => "fnjs_posibles_ca(\"#seleccionados\")");
             $script['fnjs_posibles_ca'] = 1;
@@ -323,7 +323,7 @@ if (ConfigGlobal::is_app_installed('actividadestudios')) {
     }
 }
 if (ConfigGlobal::is_app_installed('actividadplazas')) {
-    if (($tabla == "p_numerarios") || ($tabla == "p_agregados") || ($tabla == "p_de_paso_ex")) {
+    if (($tabla === "p_numerarios") || ($tabla === "p_agregados") || ($tabla === "p_de_paso_ex")) {
         $sactividad = 'ca'; //ca
         $a_botones[] = array('txt' => _("petición ca"),
             'click' => "fnjs_peticion_activ(\"#seleccionados\",\"$sactividad\")");
@@ -348,7 +348,10 @@ if ($_SESSION['oPerm']->have_perm_oficina('est')) {
 }
 
 // Añadir certificados
-// Solo ver e imprimir tessera + certificados
+// Para rstgr borrar otros botones.
+if (ConfigGlobal::mi_ambito() === 'rstgr') {
+    $a_botones = [];
+}
 if (ConfigGlobal::mi_ambito() === 'rstgr' || ConfigGlobal::mi_ambito() === 'r') {
     $a_botones = [];
     $a_botones[] = array('txt' => _("ver tessera"),
