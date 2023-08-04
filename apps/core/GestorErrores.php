@@ -141,6 +141,7 @@ class GestorErrores
         fclose($handle);
     }
 
+    /*
     function addErrorSec($err = '', $sClauError, $line, $file)
     {
         $filename = $this->filename;
@@ -171,6 +172,5 @@ class GestorErrores
         }
         fclose($handle);
     }
+    */
 }
-
-?>
