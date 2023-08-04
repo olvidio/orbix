@@ -80,12 +80,20 @@ abstract class DBAbstract
     {
         switch ($db) {
             case 'comun':
+                /*
                 // Conexión Comun public, para entrar como usuario orbix.
                 $this->oDbl = $GLOBALS['oDBPC'];
+                */
+                // conectar con DB comun:
+                $oConfigDB = new ConfigDB('importar'); //de la database comun
+                $config = $oConfigDB->getEsquema('public'); //de la database comun
+                $oConexion = new DBConnection($config);
+                $this->oDbl = $oConexion->getPDO();
+
                 // Dar permisos al role H-dlb de orbix (para poder aceder a global)
                 $this->user_orbix = 'orbix';
                 $a_sql = [];
-                $a_sql[0] = "REVOKE $this->user_orbix FROM $this->role;";
+                $a_sql[0] = "REVOKE $this->user_orbix FROM $this->role GRANTED BY orbix_admindb;";
 
                 $this->executeSql($a_sql);
                 // Devuelve la conexión a origen.
@@ -93,8 +101,16 @@ abstract class DBAbstract
                 $this->oDbl = $GLOBALS['oDBC'];
                 break;
             case 'sfsv':
+                /*
                 // Conexión sv public, para entrar como usuario orbixv/f.
                 $this->oDbl = $GLOBALS['oDBP'];
+                */
+                // conectar con DB comun:
+                $oConfigDB = new ConfigDB('importar'); //de la database comun
+                $config = $oConfigDB->getEsquema('publicv'); //de la database comun
+                $oConexion = new DBConnection($config);
+                $this->oDbl = $oConexion->getPDO();
+
                 // Dar permisos al role H-dlbv de orbixv/f (para poder aceder a global)
                 if (ConfigGlobal::mi_sfsv() === 1) {
                     $vf = 'v';
@@ -104,7 +120,7 @@ abstract class DBAbstract
                 $this->user_orbix = 'orbix' . $vf;
 
                 $a_sql = [];
-                $a_sql[0] = "REVOKE $this->user_orbix FROM $this->role_vf;";
+                $a_sql[0] = "REVOKE $this->user_orbix FROM $this->role_vf GRANTED BY orbix_admindb;";
 
                 $this->executeSql($a_sql);
                 // Devuelve la conexión a origen.
@@ -112,8 +128,16 @@ abstract class DBAbstract
                 $this->oDbl = $GLOBALS['oDB'];
                 break;
             case 'sfsv-e':
+                /*
                 // Conexión sv public, para entrar como usuario orbixv/f.
                 $this->oDbl = $GLOBALS['oDBEP'];
+                */
+                // conectar con DB comun:
+                $oConfigDB = new ConfigDB('importar'); //de la database comun
+                $config = $oConfigDB->getEsquema('publicv-e'); //de la database comun
+                $oConexion = new DBConnection($config);
+                $this->oDbl = $oConexion->getPDO();
+
                 // Dar permisos al role H-dlbv de orbixv/f (para poder aceder a global)
                 if (ConfigGlobal::mi_sfsv() === 1) {
                     $vf = 'v';
@@ -123,7 +147,7 @@ abstract class DBAbstract
                 $this->user_orbix = 'orbix' . $vf;
 
                 $a_sql = [];
-                $a_sql[0] = "REVOKE $this->user_orbix FROM $this->role_vf;";
+                $a_sql[0] = "REVOKE $this->user_orbix FROM $this->role_vf GRANTED BY orbix_admindb;";
 
                 $this->executeSql($a_sql);
                 // Devuelve la conexión a origen.
@@ -145,19 +169,19 @@ abstract class DBAbstract
                 /*
                 // Conexión Comun public, para entrar como usuario orbix.
                 $this->oDbl = $GLOBALS['oDBPC'];
-                // Dar permisos al role H-dlb de orbix (para poder acceder a global)
-                $this->user_orbix = 'orbix';
                 */
 
                 // conectar con DB comun:
                 $oConfigDB = new ConfigDB('importar'); //de la database comun
                 $config = $oConfigDB->getEsquema('public'); //de la database comun
-
                 $oConexion = new DBConnection($config);
                 $this->oDbl = $oConexion->getPDO();
 
+                // Dar permisos al role H-dlb de orbix (para poder acceder a global)
+                $this->user_orbix = 'orbix';
+
                 $a_sql = [];
-                $a_sql[0] = "GRANT $this->user_orbix TO $this->role;";
+                $a_sql[0] = "GRANT $this->user_orbix TO $this->role GRANTED BY orbix_admindb;";
 
                 $this->executeSql($a_sql);
                 // Devuelve la conexión a origen.
@@ -185,7 +209,7 @@ abstract class DBAbstract
 
 
                 $a_sql = [];
-                $a_sql[0] = "GRANT $this->user_orbix TO $this->role_vf;";
+                $a_sql[0] = "GRANT $this->user_orbix TO $this->role_vf GRANTED BY orbix_admindb;";
 
                 $this->executeSql($a_sql);
                 // Devuelve la conexión a origen.
@@ -211,7 +235,7 @@ abstract class DBAbstract
                 }
                 $this->user_orbix = 'orbix' . $vf;
                 $a_sql = [];
-                $a_sql[0] = "GRANT $this->user_orbix TO $this->role_vf;";
+                $a_sql[0] = "GRANT $this->user_orbix TO $this->role_vf GRANTED BY orbix_admindb;";
 
                 $this->executeSql($a_sql);
                 // Devuelve la conexión a origen.
