@@ -349,10 +349,17 @@ if ($_SESSION['oPerm']->have_perm_oficina('est')) {
 
 // Añadir certificados
 // Para rstgr borrar otros botones.
-if (ConfigGlobal::mi_ambito() === 'rstgr') {
-    $a_botones = [];
+if (ConfigGlobal::mi_ambito() === 'r') {
+    $a_botones[] = array('txt' => _("imprimir certificado"),
+        'click' => "fnjs_imp_certificado(\"#seleccionados\")");
+    $script['fnjs_imp_certificado'] = 1;
+    $a_botones[] = array('txt' => _("adjuntar certificado"),
+        'click' => "fnjs_upload_certificado(\"#seleccionados\")");
+    $script['fnjs_upload_certificado'] = 1;
 }
+
 if (ConfigGlobal::mi_ambito() === 'rstgr' || ConfigGlobal::mi_ambito() === 'r') {
+    $a_botones = [];
     $a_botones[] = array('txt' => _("ver tessera"),
         'click' => "fnjs_tessera(\"#seleccionados\")");
     $script['fnjs_tessera'] = 1;
