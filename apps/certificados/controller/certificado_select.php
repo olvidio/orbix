@@ -48,7 +48,7 @@ if (isset($_POST['stack'])) {
     }
 }
 
-if (ConfigGlobal::mi_ambito() !== 'rstgr' || ConfigGlobal::mi_ambito() !== 'r') {
+if (ConfigGlobal::mi_ambito() === 'dl') {
     $msg = _("Este menú es sólo para las regiones del stgr.");
     $msg .="<br>";
     $msg .= _("Para ver los certificados de una persona, debe ir a través de los dossiers");
