@@ -120,8 +120,8 @@ if (!empty($Qcertificado)) {
         $Qcertificado = "^($sReg)";
         $aWhere['certificado'] = $Qcertificado;
         $aOperador['certificado'] = '~';
-        $CertificadoRepository = new CertificadoRepository();
     }
+    $CertificadoRepository = new CertificadoRepository();
     $cCertificados = $CertificadoRepository->getCertificados($aWhere, $aOperador);
 }
 
