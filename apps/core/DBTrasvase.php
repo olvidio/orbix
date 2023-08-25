@@ -418,11 +418,16 @@ class DBTrasvase extends DBAbstract
                 }
                 break;
             case 'dl2resto':
-                $this->addPermisoGlobal('comun');
-
-                $a_sql = [];
                 // actualizar el tipo_ubi.
-                $a_sql[] = "UPDATE \"$esquema\".u_cdc_dl SET tipo_ubi='cdcex';";
+                $sql = "UPDATE \"$esquema\".u_cdc_dl SET tipo_ubi='cdcex';";
+                if ($oDbl->query($sql) === false) {
+                    $sClauError = 'DBTrasvase.ctr.execute';
+                    $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+                    return false;
+                }
+
+                $this->addPermisoGlobal('comun');
+                $a_sql = [];
                 //cdc
                 $a_sql[] = "INSERT INTO resto.u_cdc_ex SELECT * FROM \"$esquema\".u_cdc_dl ;";
                 // primero las direcciones porque 'u_cross' tiene como foreign key id_direccion e id_ubi.
