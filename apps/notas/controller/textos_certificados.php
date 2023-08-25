@@ -14,7 +14,7 @@ $any_IV = "ANNUS IV";
 
 $titulo_1 = "PRÆLATURA SANCTÆ CRUCIS ET OPERIS DEI";
 
-$titulo_2 = "STUDIUM GENERALE REGIONIS $region";
+$titulo_2 = "STUDIUM GENERALE REGIONIS $region_latin";
 
 $titulo_3 = "CURRICULUM STUDIORUM";
 $infra = "Infrascriptus huius Studii Generalis Secretarius testatur ac fidem facit alumnum
