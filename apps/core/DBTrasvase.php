@@ -6,6 +6,7 @@ use actividades\model\entity\ActividadDl;
 use actividades\model\entity\ActividadEx;
 use actividades\model\entity\GestorActividadDl;
 use actividades\model\entity\GestorActividadEx;
+use devel\model\DBAbstract;
 use devel\model\entity\MapId;
 use ubis\model\entity\CasaDl;
 use ubis\model\entity\CdcDlxDireccion;
@@ -25,15 +26,8 @@ use ubis\model\entity\GestorTelecoCdcEx;
 use ubis\model\entity\GestorTelecoCtrEx;
 use ubis\model\entity\TelecoCdcDl;
 
-class DBTrasvase
+class DBTrasvase extends DBAbstract
 {
-
-    /**
-     * oDbl de Esquema
-     *
-     * @var object
-     */
-    private $oDbl;
 
     private $sdbname;
     private $sregion;
@@ -328,16 +322,18 @@ class DBTrasvase
     public function cdc($que)
     {
         // Conexión DB comun
+        $this->addPermisoGlobal('comun');
+
         $oDbl = $this->getoDbl();
 
         $esquema = $this->getEsquema();
         $dl = $this->getDl();
         $region = $this->getRegion();
-        $tipoUbicacion = substr($dl, 0, 2); // puede ser: cr => cominsión, dl => delegacion, ci => centro interregional.
+        $tipoUbicacion = substr($dl, 0, 2); // puede ser: cr => comisión, dl => delegación, ci => centro interregional.
 
         switch ($que) {
             case 'resto2dl':
-                if ($tipoUbicacion == 'cr') { //no hay delegaciones.
+                if ($tipoUbicacion === 'cr') { //no hay delegaciones.
                     $aWhere = ['dl' => '', 'region' => $region];
                     $aOperador = ['dl' => 'IS NULL'];
                 } else {
@@ -465,19 +461,21 @@ class DBTrasvase
                         $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
                         return false;
                     }
-                    // delete cross (deberia borrarse sólo; por el foreign key).
+                    // delete cross (debería borrarse sólo; por el foreign key).
                 }
                 break;
         }
+        $this->delPermisoGlobal('comun');
     }
 
     // SV o SF
     //---------------- Ctr --------------------
-    //---------------- Diressiones Ctr --------------------
+    //---------------- Direcciones Ctr --------------------
     //---------------- Teleco Ctr --------------------
     public function ctr($que)
     {
         // Conexión DB SV/SF
+        $this->addPermisoGlobal('sfsv');
         $oDbl = $this->getoDbl();
         // Conexión DB comun
         $this->setDbName('comun');
@@ -491,7 +489,7 @@ class DBTrasvase
 
         switch ($que) {
             case 'resto2dl':
-                if ($tipoUbicacion == 'cr') { //no hay delegaciones.
+                if ($tipoUbicacion === 'cr') { //no hay delegaciones.
                     $aWhere = ['dl' => '', 'region' => $region];
                     $aOperador = ['dl' => 'IS NULL'];
                 } else {
@@ -561,9 +559,9 @@ class DBTrasvase
                             $oCrosDireccion->setPropietario($propietario);
                             $oCrosDireccion->setPrincipal($principal);
                             $oCrosDireccion->DBGuardar();
-                            // Eliminar el cross y la direccion
+                            // Eliminar el cross y la dirección
                             $oDireccion->DBEliminar();
-                            // delete cross (deberia borrarse sólo; por el foreign key).
+                            // delete cross (debería borrarse sólo; por el foreign key).
                             $oUbixDireccion->DBEliminar();
                         }
                         // Buscar las telecos
@@ -574,7 +572,7 @@ class DBTrasvase
                             $aDades = $oTelecoCtrEx->getTot();
                             $oTelecoCdcDl = new TelecoCdcDl();
                             $oTelecoCdcDl->setoDbl($oDbl);
-                            $oTelecoCdcDl->setAllAtributes($aDades, TRUE);
+                            $oTelecoCdcDl->setAllAtributes($aDades);
                             if ($oTelecoCdcDl->DBGuardar() === FALSE) {
                                 $error .= '<br>' . _("no se ha guardado la casa");
                             } else {
@@ -638,6 +636,7 @@ class DBTrasvase
                 }
                 break;
         }
+        $this->delPermisoGlobal('sfsv');
     }
 
 }
