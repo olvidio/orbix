@@ -418,52 +418,25 @@ class DBTrasvase extends DBAbstract
                 }
                 break;
             case 'dl2resto':
+                $this->addPermisoGlobal('comun');
+
+                $a_sql = [];
                 // actualizar el tipo_ubi.
-                $sql = "UPDATE \"$esquema\".u_cdc_dl SET tipo_ubi='cdcex'";
-                if ($oDbl->query($sql) === false) {
-                    $sClauError = 'DBTrasvase.cdc.execute';
-                    $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
-                    return false;
-                }
+                $a_sql[] = "UPDATE \"$esquema\".u_cdc_dl SET tipo_ubi='cdcex';";
                 //cdc
-                $sql = "INSERT INTO resto.u_cdc_ex SELECT * FROM \"$esquema\".u_cdc_dl";
-                if ($oDbl->query($sql) === false) {
-                    $sClauError = 'DBTrasvase.cdc.execute';
-                    $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
-                    return false;
-                } else {
-                    // primero las direcciones porque 'u_cross' tiene como foreign key id_direccion e id_ubi.
-                    $sql = "INSERT INTO resto.u_dir_cdc_ex SELECT * FROM  \"$esquema\".u_dir_cdc_dl ";
-                    if ($oDbl->query($sql) === false) {
-                        $sClauError = 'DBTrasvase.cdc.execute';
-                        $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
-                        return false;
-                    }
-                    $sql = "INSERT INTO  resto.u_cross_cdc_ex_dir  SELECT * FROM \"$esquema\".u_cross_cdc_dl_dir";
-                    if ($oDbl->query($sql) === false) {
-                        $sClauError = 'DBTrasvase.cdc.execute';
-                        $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
-                        return false;
-                    }
-                    // delete cdc
-                    $sql = "TRUNCATE \"$esquema\".u_cdc_dl RESTART IDENTITY CASCADE";
-                    if ($oDbl->query($sql) === false) {
-                        $sClauError = 'DBTrasvase.cdc.execute';
-                        $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
-                        return false;
-                    }
-                    // delete dir
-                    $sql = "TRUNCATE \"$esquema\".u_dir_cdc_dl RESTART IDENTITY CASCADE";
-                    if ($oDbl->query($sql) === false) {
-                        $sClauError = 'DBTrasvase.cdc.execute';
-                        $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
-                        return false;
-                    }
-                    // delete cross (debería borrarse sólo; por el foreign key).
-                }
+                $a_sql[] = "INSERT INTO resto.u_cdc_ex SELECT * FROM \"$esquema\".u_cdc_dl ;";
+                // primero las direcciones porque 'u_cross' tiene como foreign key id_direccion e id_ubi.
+                $a_sql[] = "INSERT INTO resto.u_dir_cdc_ex SELECT * FROM  \"$esquema\".u_dir_cdc_dl ;";
+                $a_sql[] = "INSERT INTO  resto.u_cross_cdc_ex_dir  SELECT * FROM \"$esquema\".u_cross_cdc_dl_dir ;";
+                // delete cdc
+                $a_sql[] = "TRUNCATE \"$esquema\".u_cdc_dl RESTART IDENTITY CASCADE;";
+                // delete dir
+                $a_sql[] = "TRUNCATE \"$esquema\".u_dir_cdc_dl RESTART IDENTITY CASCADE;";
+                // delete cross (debería borrarse sólo; por el foreign key).
+                $this->executeSql($a_sql);
+                $this->delPermisoGlobal('comun');
                 break;
         }
-        $this->delPermisoGlobal('comun');
     }
 
     // SV o SF
