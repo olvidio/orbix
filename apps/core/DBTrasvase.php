@@ -37,13 +37,11 @@ class DBTrasvase extends DBAbstract
 
     /* CONSTRUCTOR -------------------------------------------------------------- */
 
-    /**
-     * Constructor de la classe.
-     *
-     */
     function __construct()
     {
-
+        $esquema_sfsv = ConfigGlobal::mi_region_dl();
+        $this->esquema = substr($esquema_sfsv, 0, -1); // quito la v o la f.
+        $this->role = '"' . $this->esquema . '"';
     }
 
 
