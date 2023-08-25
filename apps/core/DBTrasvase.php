@@ -320,8 +320,6 @@ class DBTrasvase extends DBAbstract
     public function cdc($que)
     {
         // Conexión DB comun
-        $this->addPermisoGlobal('comun');
-
         $oDbl = $this->getoDbl();
 
         $esquema = $this->getEsquema();
@@ -451,7 +449,6 @@ class DBTrasvase extends DBAbstract
     public function ctr($que)
     {
         // Conexión DB SV/SF
-        $this->addPermisoGlobal('sfsv');
         $oDbl = $this->getoDbl();
         // Conexión DB comun
         $this->setDbName('comun');
@@ -608,11 +605,10 @@ class DBTrasvase extends DBAbstract
                         $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
                         return false;
                     }
-                    // delete cross (deberia borrarse sólo; por el foreign key).
+                    // delete cross (debería borrarse sólo; por el foreign key).
                 }
                 break;
         }
-        $this->delPermisoGlobal('sfsv');
     }
 
 }
