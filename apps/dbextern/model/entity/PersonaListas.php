@@ -13,7 +13,7 @@ class PersonaListas extends core\ClasePropiedades
     Identif bigint NOTNULL
     Apenom varchar (56)
     dl vachar (5)
-    Ctr varchar (40)
+    ctr varchar (40)
     Lugar_Naci varchar (45)
     Fecha_Naci date
     Email varchar (50)
@@ -70,13 +70,13 @@ class PersonaListas extends core\ClasePropiedades
      *
      * @var string
      */
-    private $sDl;
+    private $sdl;
     /**
-     * Ctr de Listas
+     * ctr de Listas
      *
      * @var string
      */
-    private $sCtr;
+    private $sctr;
     /**
      * Lugar_Naci de Listas
      *
@@ -276,7 +276,7 @@ class PersonaListas extends core\ClasePropiedades
         $aDades = array();
         $aDades['Apenom'] = $this->sApenom;
         $aDades['dl'] = $this->sdl;
-        $aDades['Ctr'] = $this->sdl;
+        $aDades['ctr'] = $this->sctr;
         $aDades['Lugar_Naci'] = $this->sLugar_Naci;
         $aDades['Fecha_Naci'] = $this->dFecha_Naci;
         $aDades['Email'] = $this->sEmail;
@@ -297,7 +297,7 @@ class PersonaListas extends core\ClasePropiedades
             $update = "
 					Apenom                  = :Apenom,
 					dl                     	= :dl,
-					Ctr               		= :Ctr,
+					ctr               		= :ctr,
 					Lugar_Naci              = :Lugar_Naci,
 					Fecha_Naci              = :Fecha_Naci,
 					Email              		= :Email,
@@ -328,8 +328,8 @@ class PersonaListas extends core\ClasePropiedades
             }
         } else {
             // INSERT
-            $campos = "(Apenom,dl,Ctr,Lugar_Naci,Fecha_Naci,Email,Tfno_Movil,Ce,Prof_Carg,Titu_Estu,Encargos,INCORP,pertenece_r,camb_fic,fecha_c_fic,compartida_con_r)";
-            $valores = "(:Apenom,:dl,:Ctr,:Lugar_Naci,:Fecha_Naci,:Email,:Tfno_Movil,:Ce,:Prof_Carg,:Titu_Estu,:Encargos,:INCORP:pertenece_r,:camb_fic,:fecha_c_fic,:compartida_con_r)";
+            $campos = "(Apenom,dl,ctr,Lugar_Naci,Fecha_Naci,Email,Tfno_Movil,Ce,Prof_Carg,Titu_Estu,Encargos,INCORP,pertenece_r,camb_fic,fecha_c_fic,compartida_con_r)";
+            $valores = "(:Apenom,:dl,:ctr,:Lugar_Naci,:Fecha_Naci,:Email,:Tfno_Movil,:Ce,:Prof_Carg,:Titu_Estu,:Encargos,:INCORP:pertenece_r,:camb_fic,:fecha_c_fic,:compartida_con_r)";
             if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {
                 $sClauError = 'Listas.insertar.prepare';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
@@ -573,7 +573,7 @@ class PersonaListas extends core\ClasePropiedades
         if (array_key_exists('Identif', $aDades)) $this->setIdentif($aDades['Identif']);
         if (array_key_exists('Apenom', $aDades)) $this->setApenom($aDades['Apenom']);
         if (array_key_exists('dl', $aDades)) $this->setDl($aDades['dl']);
-        if (array_key_exists('Ctr', $aDades)) $this->setCtr($aDades['Ctr']);
+        if (array_key_exists('ctr', $aDades)) $this->setCtr($aDades['ctr']);
         if (array_key_exists('Lugar_Naci', $aDades)) $this->setLugar_Naci($aDades['Lugar_Naci']);
         if (array_key_exists('Fecha_Naci', $aDades)) $this->setFecha_Naci($aDades['Fecha_Naci']);
         if (array_key_exists('Email', $aDades)) $this->setEmail($aDades['Email']);
@@ -724,32 +724,32 @@ class PersonaListas extends core\ClasePropiedades
      *
      * @param string sdl
      */
-    function setDl($sDl)
+    function setDl($sdl)
     {
-        $this->sdl = $sDl;
+        $this->sdl = $sdl;
     }
 
     /**
-     * Recupera el atributo sdl de Listas
+     * Recupera el atributo sctr de Listas
      *
-     * @return string sdl
+     * @return string sctr
      */
     function getCtr()
     {
-        if (!isset($this->sdl) && !$this->bLoaded) {
+        if (!isset($this->sctr) && !$this->bLoaded) {
             $this->DBCarregar();
         }
-        return $this->sdl;
+        return $this->sctr;
     }
 
     /**
      * Establece el valor del atributo sdl de Listas
      *
-     * @param string sdl
+     * @param string sctr
      */
-    function setCtr($sCtr)
+    function setCtr($sctr)
     {
-        $this->sdl = $sCtr;
+        $this->sctr = $sctr;
     }
 
     /**
@@ -1204,7 +1204,7 @@ class PersonaListas extends core\ClasePropiedades
     }
 
     /**
-     * Recupera les propietats de l'atribut sdl de Listas
+     * Recupera les propietats de l'atribut sctr de Listas
      * en una clase del tipus DatosCampo
      *
      * @return core\DatosCampo
