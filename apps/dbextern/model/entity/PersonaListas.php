@@ -11,8 +11,8 @@ class PersonaListas extends core\ClasePropiedades
 
     /*
     Identif bigint NOTNULL
-    ApeNom varchar (56)
-    Dl vachar (5)
+    Apenom varchar (56)
+    dl vachar (5)
     Ctr varchar (40)
     Lugar_Naci varchar (45)
     Fecha_Naci date
@@ -60,13 +60,13 @@ class PersonaListas extends core\ClasePropiedades
      */
     private $iIdentif;
     /**
-     * ApeNom de Listas
+     * Apenom de Listas
      *
      * @var string
      */
-    private $sApeNom;
+    private $sApenom;
     /**
-     * Dl de Listas
+     * dl de Listas
      *
      * @var string
      */
@@ -274,9 +274,9 @@ class PersonaListas extends core\ClasePropiedades
             $bInsert = false;
         }
         $aDades = array();
-        $aDades['ApeNom'] = $this->sApeNom;
-        $aDades['Dl'] = $this->sDl;
-        $aDades['Ctr'] = $this->sCtr;
+        $aDades['Apenom'] = $this->sApenom;
+        $aDades['dl'] = $this->sdl;
+        $aDades['Ctr'] = $this->sdl;
         $aDades['Lugar_Naci'] = $this->sLugar_Naci;
         $aDades['Fecha_Naci'] = $this->dFecha_Naci;
         $aDades['Email'] = $this->sEmail;
@@ -295,8 +295,8 @@ class PersonaListas extends core\ClasePropiedades
         if ($bInsert === false) {
             //UPDATE
             $update = "
-					ApeNom                  = :ApeNom,
-					Dl                     	= :Dl,
+					Apenom                  = :Apenom,
+					dl                     	= :dl,
 					Ctr               		= :Ctr,
 					Lugar_Naci              = :Lugar_Naci,
 					Fecha_Naci              = :Fecha_Naci,
@@ -328,8 +328,8 @@ class PersonaListas extends core\ClasePropiedades
             }
         } else {
             // INSERT
-            $campos = "(ApeNom,Dl,Ctr,Lugar_Naci,Fecha_Naci,Email,Tfno_Movil,Ce,Prof_Carg,Titu_Estu,Encargos,INCORP,pertenece_r,camb_fic,fecha_c_fic,compartida_con_r)";
-            $valores = "(:ApeNom,:Dl,:Ctr,:Lugar_Naci,:Fecha_Naci,:Email,:Tfno_Movil,:Ce,:Prof_Carg,:Titu_Estu,:Encargos,:INCORP:pertenece_r,:camb_fic,:fecha_c_fic,:compartida_con_r)";
+            $campos = "(Apenom,dl,Ctr,Lugar_Naci,Fecha_Naci,Email,Tfno_Movil,Ce,Prof_Carg,Titu_Estu,Encargos,INCORP,pertenece_r,camb_fic,fecha_c_fic,compartida_con_r)";
+            $valores = "(:Apenom,:dl,:Ctr,:Lugar_Naci,:Fecha_Naci,:Email,:Tfno_Movil,:Ce,:Prof_Carg,:Titu_Estu,:Encargos,:INCORP:pertenece_r,:camb_fic,:fecha_c_fic,:compartida_con_r)";
             if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {
                 $sClauError = 'Listas.insertar.prepare';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
@@ -476,7 +476,7 @@ class PersonaListas extends core\ClasePropiedades
 
     public function dividirNombreCompleto()
     {
-        $ApeNom = $this->getApeNom();
+        $Apenom = $this->getApenom();
 
         $nombre = '';
         $apellido1 = '';
@@ -485,7 +485,7 @@ class PersonaListas extends core\ClasePropiedades
         $nx2 = '';
 
         /* separar el nombre, de los apellidos */
-        $partes = explode(',', trim($ApeNom));
+        $partes = explode(',', trim($Apenom));
         $apellidos = $partes[0];
         $nombre = empty($partes[1])? '' : $partes[1];
 
@@ -571,8 +571,8 @@ class PersonaListas extends core\ClasePropiedades
         if (!is_array($aDades)) return;
         if (array_key_exists('id_schema', $aDades)) $this->setId_schema($aDades['id_schema']);
         if (array_key_exists('Identif', $aDades)) $this->setIdentif($aDades['Identif']);
-        if (array_key_exists('ApeNom', $aDades)) $this->setApeNom($aDades['ApeNom']);
-        if (array_key_exists('Dl', $aDades)) $this->setDl($aDades['Dl']);
+        if (array_key_exists('Apenom', $aDades)) $this->setApenom($aDades['Apenom']);
+        if (array_key_exists('dl', $aDades)) $this->setDl($aDades['dl']);
         if (array_key_exists('Ctr', $aDades)) $this->setCtr($aDades['Ctr']);
         if (array_key_exists('Lugar_Naci', $aDades)) $this->setLugar_Naci($aDades['Lugar_Naci']);
         if (array_key_exists('Fecha_Naci', $aDades)) $this->setFecha_Naci($aDades['Fecha_Naci']);
@@ -598,7 +598,7 @@ class PersonaListas extends core\ClasePropiedades
         $aPK = $this->getPrimary_key();
         $this->setId_schema('');
         $this->setIdentif('');
-        $this->setApeNom('');
+        $this->setApenom('');
         $this->setDl('');
         $this->setCtr('');
         $this->setLugar_Naci('');
@@ -684,72 +684,72 @@ class PersonaListas extends core\ClasePropiedades
     }
 
     /**
-     * Recupera el atributo sApeNom de Listas
+     * Recupera el atributo sApenom de Listas
      *
-     * @return string sApeNom
+     * @return string sApenom
      */
-    function getApeNom()
+    function getApenom()
     {
-        if (!isset($this->sApeNom) && !$this->bLoaded) {
+        if (!isset($this->sApenom) && !$this->bLoaded) {
             $this->DBCarregar();
         }
-        return $this->sApeNom;
+        return $this->sApenom;
     }
 
     /**
-     * Establece el valor del atributo sApeNom de Listas
+     * Establece el valor del atributo sApenom de Listas
      *
-     * @param string sApeNom
+     * @param string sApenom
      */
-    function setApeNom($sApeNom)
+    function setApenom($sApenom)
     {
-        $this->sApeNom = $sApeNom;
+        $this->sApenom = $sApenom;
     }
 
     /**
-     * Recupera el atributo sDl de Listas
+     * Recupera el atributo sdl de Listas
      *
-     * @return string sDl
+     * @return string sdl
      */
     function getDl()
     {
-        if (!isset($this->sDl) && !$this->bLoaded) {
+        if (!isset($this->sdl) && !$this->bLoaded) {
             $this->DBCarregar();
         }
-        return $this->sDl;
+        return $this->sdl;
     }
 
     /**
-     * Establece el valor del atributo sDl de Listas
+     * Establece el valor del atributo sdl de Listas
      *
-     * @param string sDl
+     * @param string sdl
      */
     function setDl($sDl)
     {
-        $this->sDl = $sDl;
+        $this->sdl = $sDl;
     }
 
     /**
-     * Recupera el atributo sCtr de Listas
+     * Recupera el atributo sdl de Listas
      *
-     * @return string sCtr
+     * @return string sdl
      */
     function getCtr()
     {
-        if (!isset($this->sCtr) && !$this->bLoaded) {
+        if (!isset($this->sdl) && !$this->bLoaded) {
             $this->DBCarregar();
         }
-        return $this->sCtr;
+        return $this->sdl;
     }
 
     /**
-     * Establece el valor del atributo sCtr de Listas
+     * Establece el valor del atributo sdl de Listas
      *
-     * @param string sCtr
+     * @param string sdl
      */
     function setCtr($sCtr)
     {
-        $this->sCtr = $sCtr;
+        $this->sdl = $sCtr;
     }
 
     /**
@@ -1159,7 +1159,7 @@ class PersonaListas extends core\ClasePropiedades
     {
         $oListasSet = new core\Set();
 
-        $oListasSet->add($this->getDatosApeNom());
+        $oListasSet->add($this->getDatosApenom());
         $oListasSet->add($this->getDatosDl());
         $oListasSet->add($this->getDatosCtr());
         $oListasSet->add($this->getDatosLugar_Naci());
@@ -1176,21 +1176,21 @@ class PersonaListas extends core\ClasePropiedades
 
 
     /**
-     * Recupera les propietats de l'atribut sApeNom de Listas
+     * Recupera les propietats de l'atribut sApenom de Listas
      * en una clase del tipus DatosCampo
      *
      * @return core\DatosCampo
      */
-    function getDatosApeNom()
+    function getDatosApenom()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'ApeNom'));
+        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'Apenom'));
         $oDatosCampo->setEtiqueta(_("apellidos nombre"));
         return $oDatosCampo;
     }
 
     /**
-     * Recupera les propietats de l'atribut sDl de Listas
+     * Recupera les propietats de l'atribut sdl de Listas
      * en una clase del tipus DatosCampo
      *
      * @return core\DatosCampo
@@ -1198,13 +1198,13 @@ class PersonaListas extends core\ClasePropiedades
     function getDatosDl()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'Dl'));
+        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'dl'));
         $oDatosCampo->setEtiqueta(_("dl"));
         return $oDatosCampo;
     }
 
     /**
-     * Recupera les propietats de l'atribut sCtr de Listas
+     * Recupera les propietats de l'atribut sdl de Listas
      * en una clase del tipus DatosCampo
      *
      * @return core\DatosCampo
