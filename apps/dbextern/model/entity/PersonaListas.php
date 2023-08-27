@@ -487,14 +487,13 @@ class PersonaListas extends core\ClasePropiedades
         /* separar el nombre, de los apellidos */
         $partes = explode(',', trim($ApeNom));
         $apellidos = $partes[0];
-        $nombre = $partes[1];
-
+        $nombre = empty($partes[1])? '' : $partes[1];
 
         /* separar el apellidos completo en espacios */
         $tokens = explode(' ', trim($apellidos));
         /* array donde se guardan las "palabras" del apellidos */
         $names = array();
-        /* palabras de apellidos compuetos */
+        /* palabras de apellidos compuestos */
         // 27.3.2019 He quitado 'san', pues hay un apellido así
         $special_tokens = array('da', 'de', 'del', 'la', 'las', 'los', 'mac', 'mc', 'van', 'von', 'y', 'i', 'santa');
 
