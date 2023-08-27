@@ -60,7 +60,7 @@ $txt_alert = _("se va a poner la fecha de hoy como fecha de baja. Para cambiarlo
     }
     fnjs_traslado = function ($id_orbix) {
         //ir la dossier traslado de la persona
-        alert("debiería ir al dossier de traslado de la persona");
+        alert("debería ir al dossier de traslado de la persona");
     }
 
 </script>
