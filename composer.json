@@ -1,0 +1,20 @@
+{
+  "config": {
+    "vendor-dir": "libs/vendor",
+    "platform": {
+      "php": "8.2"
+    }
+  },
+  "require": {
+    "twig/twig": "^3.0",
+    "jblond/twig-trans": "^1.0",
+    "mpdf/mpdf": "^8.0",
+    "setasign/fpdi": "^2.2",
+    "ext-gettext": "*",
+    "ext-pdo": "*",
+    "ext-json": "*"
+  },
+  "require-dev": {
+    "roave/security-advisories": "dev-latest"
+  }
+}
