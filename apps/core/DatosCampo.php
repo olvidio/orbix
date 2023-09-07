@@ -100,6 +100,7 @@ class DatosCampo
 
 
     /* CONSTRUCTOR -------------------------------------------------------------- */
+    private array $aPrimary_key;
 
     /**
      * Constructor de la classe.
