@@ -3,6 +3,7 @@
 use asignaturas\model\entity as asignaturas;
 use notas\model\entity as notas;
 use personas\model\entity as personas;
+use function core\is_true;
 
 /**
  * Esta página sirve para la tessera de una persona.
@@ -264,7 +265,7 @@ case 2108:
                     if ($id_asignatura > 3000) {
                         $id_nivel_asig = $id_nivel;
                     } else {
-                        if ($oAsig->getStatus() !== 't') continue;
+                        if (!is_true($oAsig->getStatus())) { continue; }
                         $id_nivel_asig = $oAsig->getId_nivel();
                     }
                     $n = $id_nivel_asig;
@@ -298,7 +299,8 @@ case 2108:
                             $row = current($aAprobadas);
                         }
                         if (next($aAprobadas) === FALSE) {
-                            $row = $rowEmpty;
+                            // Lo quito porque no pintaba la última aprobada, pero estaba por algo??
+                            //$row = $rowEmpty;
                             break;
                         }
                         $j++;
