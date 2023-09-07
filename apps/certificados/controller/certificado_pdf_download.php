@@ -3,6 +3,7 @@
 
 // INICIO Cabecera global de URL de controlador *********************************
 use certificados\domain\repositories\CertificadoPublicRepository;
+use certificados\domain\repositories\CertificadoRepository;
 
 require_once("apps/core/global_header.inc");
 // Archivos requeridos por esta url **********************************************
@@ -19,7 +20,7 @@ $Qid_item = (string)filter_input(INPUT_GET, 'key');
 
 if (!empty($Qid_item)) {
 
-    $CertificadoPublicRepository = new CertificadoPublicRepository();
+    $CertificadoPublicRepository = new CertificadoRepository();
     $oCertificado = $CertificadoPublicRepository->findById($Qid_item);
     if (!empty($oCertificado)) {
         $nombre_fichero = $oCertificado->getCertificado();
