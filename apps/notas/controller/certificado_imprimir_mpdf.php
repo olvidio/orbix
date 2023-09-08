@@ -298,7 +298,7 @@ case 2201:
                     if ($id_asignatura > 3000) {
                         $id_nivel_asig = $id_nivel;
                     } else {
-                        if ($oAsig->getStatus() != 't') continue;
+                        if (!is_true($oAsig->getStatus())) { continue; }
                         $id_nivel_asig = $oAsig->getId_nivel();
                     }
                     $creditos = $oAsig->getCreditos();
@@ -329,7 +329,7 @@ case 2201:
                             $row = current($aAprobadas);
                         }
                         if (next($aAprobadas) === FALSE) {
-                            $row = $rowEmpty;
+                            // Igual que en tessera: $row = $rowEmpty;
                             break;
                         }
                         $j++;
