@@ -12,7 +12,9 @@
     "setasign/fpdi": "^2.2",
     "ext-gettext": "*",
     "ext-pdo": "*",
-    "ext-json": "*"
+    "ext-json": "*",
+    "ext-bcmath": "*",
+    "ext-calendar": "*"
   },
   "require-dev": {
     "roave/security-advisories": "dev-latest"

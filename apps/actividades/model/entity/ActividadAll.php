@@ -841,10 +841,10 @@ class ActividadAll extends core\ClasePropiedades
      *
      * @param integer iprecio='' optional
      */
-    function setPrecio($iprecio = '')
+    function setPrecio($iprecio = NULL)
     {
         // admito ',' como separador decimal.
-        $iprecio = str_replace(",", ".", $iprecio);
+        $iprecio = $iprecio? str_replace(",", ".", $iprecio) : NULL;
         $this->iprecio = $iprecio;
     }
 

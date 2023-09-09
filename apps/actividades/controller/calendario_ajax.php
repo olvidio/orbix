@@ -55,8 +55,8 @@ switch ($Qque) {
         $Qdoble = (string)filter_input(INPUT_POST, 'doble');
 
         $Qa_actividades = unserialize(base64_decode($Qsactividades), ['allowed_classes' => false]);
-        $QoIniPlanning = unserialize(base64_decode($QsIniPlanning), ['allowed_classes' => false]);
-        $QoFinPlanning = unserialize(base64_decode($QsFinPlanning), ['allowed_classes' => false]);
+        $QoIniPlanning = unserialize(base64_decode($QsIniPlanning), ['allowed_classes' => true]);
+        $QoFinPlanning = unserialize(base64_decode($QsFinPlanning), ['allowed_classes' => true]);
 
         /* TODO: comprobar que tiene permiso para crear algo. Sino: $Qmod = 0;
          *
