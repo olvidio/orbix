@@ -62,16 +62,18 @@ if (!empty($a_sel)) { //vengo de un checkbox
 // de 'Baja', y por defecto se busca en 'Altas'
 $tipo_persona = 'n';
 $oPersonaOrg = new PersonaN($id_nom);
-if (!is_object($oPersonaOrg)) {
+$apellido1 = $oPersonaOrg->getApellido1();
+if (empty($apellido1)) {
     // será agd
     $oPersonaOrg = new PersonaAgd($id_nom);
     $tipo_persona = 'agd';
-    if (!is_object($oPersonaOrg)) {
+    $apellido1 = $oPersonaOrg->getApellido1();
+    if (empty($apellido1)) {
         $msg_err = "<br>$oPersona con id_nom: $id_nom en  " . __FILE__ . ": line " . __LINE__;
         exit($msg_err);
     }
 }
-$oPersonaOrg->DBCarregar();
+
 $nom = $oPersonaOrg->getNombreApellidos();
 $apellido1 = $oPersonaOrg->getApellido1();
 
@@ -87,20 +89,20 @@ $aWhere = ['apellido1' => $apellido1];
 $cPersonas = $gesPersonas->getPersonas($aWhere);
 $a_posibles_personas = [];
 foreach ($cPersonas as $oPersona) {
-    $id_nom_org = $oPersona->getId_nom();
-    $nom_org = $oPersona->getNombreApellidos();
-    $a_posibles_personas[$id_nom_org] = $nom_org;
+    $id_nom_dst = $oPersona->getId_nom();
+    $nom_dst = $oPersona->getNombreApellidos();
+    $a_posibles_personas[$id_nom_dst] = $nom_dst;
 }
 
 $oDesplPersonas = new Desplegable();
-$oDesplPersonas->setNombre('id_nom_org');
+$oDesplPersonas->setNombre('id_nom_dst');
 $oDesplPersonas->setBlanco('true');
 $oDesplPersonas->setOpciones($a_posibles_personas);
 
 $oHash = new web\Hash();
-$oHash->setCamposForm('id_nom_org');
+$oHash->setCamposForm('id_nom_dst');
 $a_camposHidden = array(
-    'id_nom' => $id_nom
+    'id_nom_org' => $id_nom,
 );
 $oHash->setArraycamposHidden($a_camposHidden);
 

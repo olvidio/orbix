@@ -25,8 +25,8 @@ require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
 
-$id_nom = (integer)filter_input(INPUT_POST, 'id_nom');
 $id_nom_org = (integer)filter_input(INPUT_POST, 'id_nom_org');
+$id_nom_dst = (integer)filter_input(INPUT_POST, 'id_nom_dst');
 
 $gesPersonaNota = new GestorPersonaNota();
 $cPersonaOrgNotas = $gesPersonaNota->getPersonaNotas(['id_nom' => $id_nom_org]);
@@ -36,7 +36,7 @@ foreach ($cPersonaOrgNotas as $oPersonaNota) {
     $oPersonaNota->DBCarregar();
     //print_r($oPersonaNota);
     $NuevoObj = clone $oPersonaNota;
-    $NuevoObj->setId_nom($id_nom);
+    $NuevoObj->setId_nom($id_nom_dst);
     if ($NuevoObj->DBGuardar() === false) {
         $error .= '<br>' . _("no se ha guardado la nota");
     }
