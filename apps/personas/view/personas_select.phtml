@@ -153,6 +153,15 @@
             }
         }
         <?php } ?>
+        <?php if (!empty($script['fnjs_copiar_tessera'])) { ?>
+        fnjs_copiar_tessera = function (formulario) {
+            rta = fnjs_solo_uno(formulario);
+            if (rta === 1) {
+                $(formulario).attr('action', "apps/notas/controller/tessera_copiar_select.php");
+                fnjs_enviar_formulario(formulario);
+            }
+        }
+        <?php } ?>
     </script>
     <h3><?= $resultado ?></h3>
     <form id='seleccionados' name='seleccionados' action='' method='post'>

@@ -97,7 +97,7 @@ class CambioUsuarioObjetoPref extends core\ClasePropiedades
      */
     private $baviso_outdate;
     /**
-     * Objeto de CambioUsuarioObjetoPref
+     * oPersonaNota de CambioUsuarioObjetoPref
      *
      * @var string
      */

@@ -23,6 +23,9 @@ class Tesera
 {
 
     private $id_nom;
+    private string $curso_txt;
+    private web\DateTimeLocal $oInicio;
+    private web\DateTimeLocal $oFin;
 
     private function getCurso()
     {

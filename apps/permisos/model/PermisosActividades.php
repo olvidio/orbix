@@ -296,7 +296,7 @@ class PermisosActividades
     }
 
     /**
-     * Devuelve el Objeto PermAction para $iAfecta
+     * Devuelve el oPersonaNota PermAction para $iAfecta
      * Para la actividad $this->iidactiv y en la fase $this->id_fase
      *
      * @param string|integer $iAfecta
@@ -341,7 +341,7 @@ class PermisosActividades
     }
 
     /**
-     * Devuelve el Objeto PermAction para $iAfecta
+     * Devuelve el oPersonaNota PermAction para $iAfecta
      * Para la actividad $this->iidactiv
      * que esté con la $this->id_fase en 'on'.
      *

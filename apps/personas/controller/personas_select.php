@@ -345,6 +345,9 @@ if ($_SESSION['oPerm']->have_perm_oficina('est')) {
             'click' => "fnjs_ficha_profe(\"#seleccionados\")");
         $script['fnjs_ficha_profe'] = 1;
     }
+    $a_botones[] = array('txt' => _("copiar tessera"),
+        'click' => "fnjs_copiar_tessera(\"#seleccionados\")");
+    $script['fnjs_copiar_tessera'] = 1;
 }
 
 // Añadir certificados para las r.

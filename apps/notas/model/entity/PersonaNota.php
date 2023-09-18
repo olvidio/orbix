@@ -775,8 +775,10 @@ class PersonaNota extends core\ClasePropiedades
      */
     function setNota_num($inota_num = '')
     {
-        // adminto ',' como separador decimal.
-        $inota_num = str_replace(",", ".", $inota_num);
+        if (!empty($inota_num)) {
+            // admito ',' como separador decimal.
+            $inota_num = str_replace(",", ".", $inota_num);
+        }
         $this->inota_num = $inota_num;
     }
 

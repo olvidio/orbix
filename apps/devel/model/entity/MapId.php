@@ -49,7 +49,7 @@ class MapId extends core\ClasePropiedades
     private $bLoaded = FALSE;
 
     /**
-     * Objeto de MapId
+     * oPersonaNota de MapId
      *
      * @var string
      */

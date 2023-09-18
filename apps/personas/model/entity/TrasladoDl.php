@@ -640,7 +640,7 @@ class TrasladoDl
             foreach ($colection as $Objeto) {
                 $Objeto->setoDbl($oDBorg);
                 $Objeto->DBCarregar();
-                //print_r($Objeto);
+                //print_r($oPersonaNota);
                 $NuevoObj = clone $Objeto;
                 if (method_exists($NuevoObj, 'setId_item') === true) $NuevoObj->setId_item(null);
                 $NuevoObj->setoDbl($oDBdst);

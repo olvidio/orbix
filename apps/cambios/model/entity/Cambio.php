@@ -123,7 +123,7 @@ class Cambio extends core\ClasePropiedades
      */
     protected $sdl_org;
     /**
-     * Objeto de Cambio
+     * oPersonaNota de Cambio
      *
      * @var string
      */
