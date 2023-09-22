@@ -225,7 +225,7 @@ switch ($que) {
         $sfsv_txt = (ConfigGlobal::mi_sfsv() == 1) ? 'v' : 'f';
         $esq_dst = "H-" . $dl . $sfsv_txt;
 
-        if ($dl == 'cr') {
+        if ($dl === 'cr') {
             $situacion = 'D';
         } else {
             $situacion = 'L';
