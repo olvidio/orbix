@@ -226,8 +226,13 @@ switch ($que) {
         $sfsv_txt = (ConfigGlobal::mi_sfsv() == 1) ? 'v' : 'f';
         // si cambia de región, debe hacerse manualmente para introducir
         // correctamente el campo 'situacion'
+        if (str_starts_with($dl, 'dl')) {
+            $dl_dst = $dl;
+        } else {
+            $dl_dst = 'cr'.$dl;
+        }
         $gesDl = new GestorDelegacion();
-        $cDl = $gesDl->getDelegaciones(['dl' => $dl, 'status' => 't']);
+        $cDl = $gesDl->getDelegaciones(['dl' => $dl_dst, 'status' => 't']);
         $region_dst = $cDl[0]->getRegion();
 
         if ($region_dst !== ConfigGlobal::mi_region()) {
