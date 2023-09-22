@@ -236,6 +236,7 @@ switch ($que) {
         $region_dst = $cDl[0]->getRegion();
 
         if ($region_dst !== ConfigGlobal::mi_region()) {
+            echo "\n";
             echo _("Este traslado debe hacerse desde el dossier de traslados");
             echo "\n";
             echo _("Para asegurar que se llena correctamente el campo situación");
