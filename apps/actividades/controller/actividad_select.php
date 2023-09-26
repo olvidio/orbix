@@ -455,10 +455,10 @@ foreach ($cActividades as $oActividad) {
         }
 
     } else {
-        if (strlen($h_ini)) {
+        if (strlen($h_ini?? '')) {
             $h_ini = substr($h_ini, 0, (strlen($h_ini) - 3));
         }
-        if (strlen($h_fin)) {
+        if (strlen($h_fin?? '')) {
             $h_fin = substr($h_fin, 0, (strlen($h_fin) - 3));
         }
 
