@@ -23,7 +23,7 @@ $oDBPropiedades = new DBPropiedades();
 $a_posibles_esquemas = $oDBPropiedades->array_posibles_esquemas(TRUE, TRUE);
 // sólo para pruebas-sv-e
 if (ServerConf::WEBDIR !== 'pruebas') {
-    exit(_("Sólo se peuede borrar en la base de datos de pruebas"));
+    exit(_("Sólo se puede borrar en la base de datos de pruebas"));
 }
 $oConfigDB = new ConfigDB('sv-e');
 foreach ($a_posibles_esquemas as $esquema) {
