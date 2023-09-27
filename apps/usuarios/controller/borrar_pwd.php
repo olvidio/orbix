@@ -1,8 +1,10 @@
 <?php
 
 use core\ConfigDB;
+use core\ConfigGlobal;
 use core\DBConnection;
 use core\DBPropiedades;
+use core\ServerConf;
 use permisos\model\MyCrypt;
 use usuarios\model\entity\GestorUsuario;
 
@@ -19,9 +21,11 @@ require_once("apps/core/global_object.inc");
 // todos los esquemas
 $oDBPropiedades = new DBPropiedades();
 $a_posibles_esquemas = $oDBPropiedades->array_posibles_esquemas(TRUE, TRUE);
-$is_dl_in_orbix = FALSE;
 // sólo para pruebas-sv-e
-$oConfigDB = new ConfigDB('pruebas-sv-e');
+if (ServerConf::WEBDIR !== 'pruebas') {
+    exit(_("Sólo se peuede borrar en la base de datos de pruebas"));
+}
+$oConfigDB = new ConfigDB('sv-e');
 foreach ($a_posibles_esquemas as $esquema) {
     $esquema .= 'v';
     $config = $oConfigDB->getEsquema($esquema);
