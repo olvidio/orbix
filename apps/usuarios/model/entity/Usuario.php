@@ -232,8 +232,10 @@ class Usuario extends core\ClasePropiedades
             // Para evitar posteriores cargas
             $this->bLoaded = TRUE;
             // Llegeixo el password (la BD només em passa el handler)
-            $pass = $aDades['password'];
-            $aDades['password'] = fread($pass, 2048);
+            if (!empty($aDades['password'])) {
+                $pass = $aDades['password'];
+                $aDades['password'] = fread($pass, 2048);
+            }
             switch ($que) {
                 case 'tot':
                     $this->aDades = $aDades;
