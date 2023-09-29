@@ -2,6 +2,7 @@
 
 use usuarios\model\entity as usuarios;
 use ubis\model\entity as ubis;
+use web\Hash;
 
 /**
  * Es el frame inferior. Muestra la ficha de los ubis
@@ -136,14 +137,14 @@ if ($Qmod == 'nuevo') {
     $id_direccion = $Qid_direccion;
     $id_direccion_actual = $id_direccion_actual;
 
-    $golistadir = web\Hash::link('apps/ubis/controller/direcciones_que.php?' . http_build_query(array('id_ubi' => $Qid_ubi, 'id_direccion' => $Qid_direccion, 'obj_dir' => $Qobj_dir)));
+    $golistadir = Hash::link('apps/ubis/controller/direcciones_que.php?' . http_build_query(array('id_ubi' => $Qid_ubi, 'id_direccion' => $Qid_direccion, 'obj_dir' => $Qobj_dir)));
 
-    $oHashPlano = new web\Hash();
+    $oHashPlano = new Hash();
     $oHashPlano->setUrl('apps/ubis/controller/plano_bytea.php');
     $oHashPlano->setCamposForm('obj_dir!act!id_direccion');
     $h = $oHashPlano->linkSinVal();
 
-    $oHashDir = new web\Hash();
+    $oHashDir = new Hash();
     $oHashDir->setUrl('apps/ubis/controller/direcciones_editar.php');
     $oHashDir->setCamposNo('inc');
     $aCamposHidden = ['id_ubi' => $Qid_ubi,
@@ -207,7 +208,7 @@ $chk_principal = (!empty($principal) && $principal == "t") ? 'checked' : '';
 
 $campos_chk = 'cp_dcha!propietario!principal';
 
-$oHash = new web\Hash();
+$oHash = new Hash();
 $oHash->setCamposForm('a_p!c_p!direccion!f_direccion!latitud!longitud!nom_sede!observ!pais!poblacion!provincia!que');
 $oHash->setcamposNo('que!inc');
 $oHash->setCamposChk($campos_chk);
@@ -219,6 +220,8 @@ $a_camposHidden = array(
     'id_ubi' => $Qid_ubi
 );
 $oHash->setArraycamposHidden($a_camposHidden);
+
+$goInfo = Hash::link(core\ConfigGlobal::getWeb() . '/apps/ubis/controller/info_ubis.php?' . http_build_query(array('id_item' => 1)));
 
 $a_campos = ['oPosicion' => $oPosicion,
     'oHash' => $oHash,
@@ -248,6 +251,7 @@ $a_campos = ['oPosicion' => $oPosicion,
     'mas' => $mas,
     'menos' => $menos,
     'h' => $h,
+    'goInfo' => $goInfo,
 ];
 
 $oView = new core\View('ubis\controller');

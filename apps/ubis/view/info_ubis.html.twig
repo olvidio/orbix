@@ -1,0 +1,46 @@
+
+<h3>Complejidad a la hora de definir los ubis.</h3>
+
+Un ubi puede tener una o más telecos.
+<br>
+Un ubi puede tener una o más direcciones.
+<br>
+Varios ubis pueden tener la misma dirección.
+<br>
+<br>
+
+Originariamente a un centro le corresponde un cl. Y una casa es donde se pueden realizar actividades.
+<br>
+Posteriormente, se aceptan como centros otras entidades que se comportan como tales en cuanto a los encargos de sacd (misas, meditación, cf...) p.ej cgi.
+<br>
+Hay actividades que se realizan en los centros. Existen dos opciones.
+<br>
+<ol type="a">
+    <li>crear una casa con el nombre (y dirección) del centro. Esto es útil para casa grandes (tipo colegio mayor) donde además pueden realizarse dos actividades en paralelo (habría que definir dos casas, p.ej: Pedaralbes A, Pedralbes B)</li>
+    <li>Para centros pequeños (rs del extranjero), Se puede marcar el campo 'puede ser cdc' para que salga el ctr en las listas de casas.</li>
+</ol>
+Un centro puede tener una o más sedes, pero una será la principal. En la dirección se puede poner el nombre de la sede. Por ejemplo el ctr agdViamar tiene una sede en Badalona (Club Obenc) i otra en Mataró (Club El Far).
+
+<br>
+A su vez, varios centros pueden tener una misma sede. Por ejemplo agdMontagut y sgMontagut tienen la misma sede en 'Club Montagut'.
+<br>
+
+Una dirección (sede) debe tener un propietario (responsable). [esto creo que no es obligatorio por programa, pero si por lógica].
+<br>
+
+Todos los centros pueden tener un centro padre, que normalmente es donde vive el director. En el ejemplo anterior, agdMontagut tiene un centro padre que es 'Les Corts'.
+<br>
+
+Hay que evitar eliminar centros o casas, pues casi seguro que tienen muchos datos asociados. Debe usarse el campo 'en uso' (status). Se mantiene la posibilidad de eliminar, porque a veces si conviene.
+Para modificar, eliminar, crear sólo tiene permisos el usuario con permisos de scdl.
+
+
+<h3>Cartas de presentación.</h3>
+
+Lo primero es tener bien definidos los ubis.
+<br>
+Para asociar un nombre, teléfono, etc.  a un ubi, Hay que ir a:
+<br>
+Scdl > Direccones > cartas de presentación > modificar
+<br>
+y buscar en nuestra dl, la población a la que se desea añadir el destinatario de la carta de presentación. Allí nos salen los centros que hay en la ciudad. Al hacer click en la primera columna (director) nos aparece un formulario donde poner los datos de la persona de contacto.
