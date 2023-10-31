@@ -83,7 +83,7 @@
         <tr>
             <td class=etiqueta><?= ucfirst(_("observaciones")); ?></td>
             <td class=contenido colspan="3">
-                <textarea id="observ" name="observ" cols="40" rows="5"><?= htmlspecialchars($observ) ?></textarea></td>
+                <textarea id="observ" name="observ" cols="40" rows="5"><?= htmlspecialchars($observ ?? '') ?></textarea></td>
         </tr>
         <?php
         if (core\ConfigGlobal::is_app_installed('actividadplazas')) {

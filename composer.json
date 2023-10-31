@@ -14,7 +14,9 @@
     "ext-pdo": "*",
     "ext-json": "*",
     "ext-bcmath": "*",
-    "ext-calendar": "*"
+    "ext-calendar": "*",
+    "ext-zip": "*",
+    "ext-xml": "*"
   },
   "require-dev": {
     "roave/security-advisories": "dev-latest"

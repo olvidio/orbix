@@ -20,7 +20,7 @@ class BotonesCurso
 
     private $aWhere;
     private $aOperator;
-    private $mod_curso;
+    private $modo_curso;
     private $chk_1;
     private $chk_2;
     private $chk_3;

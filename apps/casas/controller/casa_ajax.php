@@ -100,7 +100,7 @@ switch ($Qque) {
         $txt .= $oHash->getCamposHtml();
         $txt .= _("ingresos reales") . "<input type=text size=12 name=ingresos value=\"$ingresos\">   " . _("asistentes") . " <input type=text size=12 name=num_asistentes value=\"$num_asistentes\">";
         $txt .= '<br>';
-        $txt .= _("observaciones") . "<input type=text size=40 name=observ value=\"" . htmlspecialchars($observ) . "\">";
+        $txt .= _("observaciones") . "<input type=text size=40 name=observ value=\"" . htmlspecialchars($observ ?? '') . "\">";
         $txt .= '<br><br>';
         $txt .= "<input type='button' value='" . _('guardar') . "' onclick=\"fnjs_guardar('#frm_ingreso','guardar');\" >";
         $txt .= "<input type='button' value='" . _('eliminar') . "' onclick=\"fnjs_guardar('#frm_ingreso','eliminar');\" >";

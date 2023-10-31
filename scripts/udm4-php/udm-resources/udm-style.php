@@ -364,7 +364,7 @@ $umr[$j++]='select{visibility:visible;}';
 }
 if($um['behaviors'][3]=='default'||$um['behaviors'][3]=='iframe')
 {
-$umr[$j++]='.udm .udmC{'.$um['t'][12].'left:0;top:0;z-index:'.($um['orientation'][6]+19020).';'.$um['t'][28].'filter:alpha(opacity=0);}';
+$umr[$j++]='.udm .udmC{'.$um['t'][12].'left:0;top:0;z-index:'.($um['orientation'][6]+19020).';'.$um['t'][28].'opacity:0;}';
 }
 if(count($um['menuClasses'])>0)
 {

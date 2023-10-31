@@ -63,6 +63,7 @@ class Select1303
     private $cAsistencias;
 
     private $status;
+    private string $aviso;
 
     public function getBotones($ca_num = 1)
     {

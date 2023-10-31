@@ -17,7 +17,7 @@ use asistentes\model\entity\Asistente;
  */
 
 /**
- * Función para dibujar un plannig.
+ * Función para dibujar un planning.
  *
  *variables globales
  *    .Deben definirse en la página desde donde se llama a la función.

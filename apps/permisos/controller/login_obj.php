@@ -4,9 +4,9 @@ namespace permisos\controller;
 
 use core\ConfigDB;
 use core\ConfigGlobal;
+use core\DBConnection;
 use core\DBPropiedades;
 use core\View;
-use core\DBConnection;
 use permisos\model\MyCrypt;
 
 
@@ -344,8 +344,18 @@ if (!isset($_SESSION['session_auth'])) {
                         /* para la traducción. Después de registrar session_auth */
                         cambiar_idioma();
                         /* a ver si memoriza el esquema al que entro */
-                        setcookie("esquema", $esquema, time() + (86400 * 30), "/"); // 86400 = 1 day
-                        setcookie("idioma", $idioma, time() + (86400 * 30), "/"); // 86400 = 1 day
+                        $time_expire_cookie = time() + (86400 * 30);  // 86400 = 1 day
+                        $arr_cookie_options = [
+                            'expires' => $time_expire_cookie,
+                            'path' => '/',
+                            //'domain' => '.example.com', // leading dot for compatibility or use subdomain
+                            'secure' => false,     // true or false (true solamente en https)
+                            'httponly' => true,    // or false
+                            'samesite' => 'Strict' // None || Lax  || Strict
+                            ];
+                        setcookie('esquema', $esquema, $arr_cookie_options);
+                        setcookie('idioma', $idioma, $arr_cookie_options);
+
                         /* Hacer que vaya a la pagina de inicio.
                          * No funciona, */
                         //header("Location: ".ConfigGlobal::getWeb(), true, 301);

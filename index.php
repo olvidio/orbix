@@ -1,13 +1,4 @@
 <?php
-/**
- * llama a la plantilla de inicio con el nombre de la oficina
- *
- * @package    delegacion
- * @subpackage    menus
- * @author    Daniel Serrabou
- * @since        15/5/02.
- *
- */
 
 // Para salir de la sesión.
 if (isset($_REQUEST['logout']) && $_REQUEST['logout'] === 'si') {
@@ -19,10 +10,15 @@ if (isset($_REQUEST['logout']) && $_REQUEST['logout'] === 'si') {
     // Nota: ¡Esto destruirá la sesión, y no la información de la sesión!
     if (ini_get("session.use_cookies")) {
         $params = session_get_cookie_params();
-        setcookie(session_name(), '', time() - 42000,
-            $params["path"], $params["domain"],
-            $params["secure"], $params["httponly"]
+        $arr_cookie_options = array(
+            'Expires' => time() - 42000,
+            'Path' => $params["path"],
+            'Domain' => $params["domain"],
+            'Secure' => $params["secure"],
+            'HttpOnly' => true,
+            'SameSite' => 'None' // None || Lax  || Strict
         );
+        setcookie(session_name(), '', $arr_cookie_options);
     }
     // Finalmente, destruir la sesión.
     session_regenerate_id();
@@ -334,75 +330,80 @@ $h = $oHash->linkSinVal();
 
     <!-- jQuery CSS -->
     <link type="text/css" rel='stylesheet'
-          href='<?= ConfigGlobal::getWeb_NodeScripts() . '/jquery-ui/themes/base/all.css'; ?>'/>
+          href='<?= ConfigGlobal::getWeb_NodeScripts() . '/jquery-ui/themes/base/all.css' ?>'/>
 
     <!-- jQuery -->
     <script type="text/javascript"
-            src='<?= ConfigGlobal::getWeb_NodeScripts() . '/jquery/dist/jquery.min.js'; ?>'></script>
+            src='<?= ConfigGlobal::getWeb_NodeScripts() . '/jquery/dist/jquery.min.js' ?>'></script>
     <script type="text/javascript"
-            src='<?= ConfigGlobal::getWeb_NodeScripts() . '/jquery-ui-dist/jquery-ui.min.js'; ?>'></script>
+            src='<?= ConfigGlobal::getWeb_NodeScripts() . '/jquery-ui/dist/jquery-ui.min.js' ?>'></script>
     <script type="text/javascript"
-            src='<?= ConfigGlobal::getWeb_NodeScripts() . '/jquery-ui/ui/widgets/datepicker.js'; ?>'></script>
+            src='<?= ConfigGlobal::getWeb_NodeScripts() . '/jquery-ui/ui/widgets/datepicker.js' ?>'></script>
     <script type="text/javascript"
-            src='<?= ConfigGlobal::getWeb_NodeScripts() . '/jquery-ui/ui/i18n/datepicker-es.js'; ?>'></script>
+            src='<?= ConfigGlobal::getWeb_NodeScripts() . '/jquery-ui/ui/i18n/datepicker-es.js' ?>'></script>
     <script type="text/javascript"
-            src='<?= ConfigGlobal::getWeb_NodeScripts() . '/jquery-ui/ui/i18n/datepicker-ca.js'; ?>'></script>
-
-    <!--
-<script type="text/javascript" src='<?= ConfigGlobal::getWeb_scripts() . '/jquery-migrate-3.1.0.js'; ?>'></script>
--->
+            src='<?= ConfigGlobal::getWeb_NodeScripts() . '/jquery-ui/ui/i18n/datepicker-ca.js' ?>'></script>
 
     <!-- Slick -->
-    <!-- OJO: IMPORTA el orden. Pueden salir avisos (en consola del navegaador) tipo: Grid.xx not defined  -->
+    <!-- OJO: IMPORTA el orden. Pueden salir avisos (en consola del navegador) tipo: Grid.xx not defined  -->
     <link type='text/css' rel='stylesheet'
-          href='<?= ConfigGlobal::getWeb_NodeScripts() . '/slickgrid/slick.grid.css'; ?>'/>
-
-    <script type='text/javascript'
-            src='<?= ConfigGlobal::getWeb_NodeScripts() . '/slickgrid/lib/firebugx.js'; ?>'></script>
-    <script type='text/javascript'
-            src='<?= ConfigGlobal::getWeb_NodeScripts() . '/slickgrid/lib/jquery.event.drag-2.3.0.js'; ?>'></script>
-    <script type='text/javascript'
-            src='<?= ConfigGlobal::getWeb_NodeScripts() . '/slickgrid/lib/jquery.event.drop-2.3.0.js'; ?>'></script>
-
-    <script type='text/javascript'
-            src='<?= ConfigGlobal::getWeb_NodeScripts() . '/slickgrid/slick.core.js'; ?>'></script>
-    <script type='text/javascript'
-            src='<?= ConfigGlobal::getWeb_NodeScripts() . '/slickgrid/slick.grid.js'; ?>'></script>
-    <script type='text/javascript'
-            src='<?= ConfigGlobal::getWeb_NodeScripts() . '/slickgrid/slick.editors.js'; ?>'></script>
-    <script type='text/javascript'
-            src='<?= ConfigGlobal::getWeb_NodeScripts() . '/slickgrid/slick.formatters.js'; ?>'></script>
-    <script type='text/javascript'
-            src='<?= ConfigGlobal::getWeb_NodeScripts() . '/slickgrid/slick.dataview.js'; ?>'></script>
-    <script type='text/javascript'
-            src='<?= ConfigGlobal::getWeb_NodeScripts() . '/slickgrid/plugins/slick.autotooltips.js'; ?>'></script>
-    <script type='text/javascript'
-            src='<?= ConfigGlobal::getWeb_NodeScripts() . '/slickgrid/plugins/slick.cellrangedecorator.js'; ?>'></script>
-    <script type='text/javascript'
-            src='<?= ConfigGlobal::getWeb_NodeScripts() . '/slickgrid/plugins/slick.cellrangeselector.js'; ?>'></script>
-    <script type='text/javascript'
-            src='<?= ConfigGlobal::getWeb_NodeScripts() . '/slickgrid/plugins/slick.cellselectionmodel.js'; ?>'></script>
-    <script type='text/javascript'
-            src='<?= ConfigGlobal::getWeb_NodeScripts() . '/slickgrid/plugins/slick.checkboxselectcolumn.js'; ?>'></script>
-    <script type='text/javascript'
-            src='<?= ConfigGlobal::getWeb_NodeScripts() . '/slickgrid/plugins/slick.rowselectionmodel.js'; ?>'></script>
-
-    <link type='text/css' rel='stylesheet'
-          href='<?= ConfigGlobal::getWeb_NodeScripts() . '/slickgrid/controls/slick.columnpicker.css'; ?>'/>
-    <script type='text/javascript'
-            src='<?= ConfigGlobal::getWeb_NodeScripts() . '/slickgrid/controls/slick.columnpicker.js'; ?>'></script>
-    <link type='text/css' rel='stylesheet'
-          href='<?= ConfigGlobal::getWeb_NodeScripts() . '/slickgrid/controls/slick.gridmenu.css'; ?>'/>
-    <script type='text/javascript'
-            src='<?= ConfigGlobal::getWeb_NodeScripts() . '/slickgrid/controls/slick.gridmenu.js'; ?>'></script>
-    <link type='text/css' rel='stylesheet'
-          href='<?= ConfigGlobal::getWeb_NodeScripts() . '/slickgrid/controls/slick.pager.css'; ?>'/>
-    <script type='text/javascript'
-            src='<?= ConfigGlobal::getWeb_NodeScripts() . '/slickgrid/controls/slick.pager.js'; ?>'></script>
+          href='<?= ConfigGlobal::getWeb_NodeScripts() . '/slickgrid/dist/styles/css/slick.grid.css' ?>'/>
 
     <!--
-<script type='text/javascript' src='<?= ConfigGlobal::getWeb_scripts() . '/SlickGrid/plugins/slick.autocolumnsize.js'; ?>'></script>
+    <script type='text/javascript'
+            src='<?= ConfigGlobal::getWeb_NodeScripts() . '/slickgrid/lib/jquery.event.drag-2.3.0.js' ?>'></script>
+    <script type='text/javascript'
+            src='<?= ConfigGlobal::getWeb_NodeScripts() . '/slickgrid/lib/jquery.event.drop-2.3.0.js' ?>'></script>
 -->
+
+    <script type='text/javascript'
+            src='<?= ConfigGlobal::getWeb_NodeScripts() . '/sortablejs/Sortable.js' ?>'></script>
+    <script type='text/javascript'
+            src='<?= ConfigGlobal::getWeb_NodeScripts() . '/slickgrid/dist/browser/slick.core.js' ?>'></script>
+    <script type='text/javascript'
+            src='<?= ConfigGlobal::getWeb_NodeScripts() . '/slickgrid/dist/browser/slick.interactions.js' ?>'></script>
+    <script type='text/javascript'
+            src='<?= ConfigGlobal::getWeb_NodeScripts() . '/slickgrid/dist/browser/slick.grid.js' ?>'></script>
+    <script type='text/javascript'
+            src='<?= ConfigGlobal::getWeb_NodeScripts() . '/slickgrid/dist/browser/slick.editors.js' ?>'></script>
+    <script type='text/javascript'
+            src='<?= ConfigGlobal::getWeb_NodeScripts() . '/slickgrid/dist/browser/slick.formatters.js' ?>'></script>
+    <script type='text/javascript'
+            src='<?= ConfigGlobal::getWeb_NodeScripts() . '/slickgrid/dist/browser/slick.dataview.js' ?>'></script>
+    <script type='text/javascript'
+            src='<?= ConfigGlobal::getWeb_NodeScripts() . '/slickgrid/dist/browser/plugins/slick.autotooltips.js' ?>'></script>
+    <script type='text/javascript'
+            src='<?= ConfigGlobal::getWeb_NodeScripts() . '/slickgrid/dist/browser/plugins/slick.cellrangedecorator.js' ?>'></script>
+    <script type='text/javascript'
+            src='<?= ConfigGlobal::getWeb_NodeScripts() . '/slickgrid/dist/browser/plugins/slick.cellrangeselector.js' ?>'></script>
+    <script type='text/javascript'
+            src='<?= ConfigGlobal::getWeb_NodeScripts() . '/slickgrid/dist/browser/plugins/slick.cellselectionmodel.js' ?>'></script>
+    <script type='text/javascript'
+            src='<?= ConfigGlobal::getWeb_NodeScripts() . '/slickgrid/dist/browser/plugins/slick.checkboxselectcolumn.js' ?>'></script>
+    <script type='text/javascript'
+            src='<?= ConfigGlobal::getWeb_NodeScripts() . '/slickgrid/dist/browser/plugins/slick.resizer.js' ?>'></script>
+    <script type='text/javascript'
+            src='<?= ConfigGlobal::getWeb_NodeScripts() . '/slickgrid/dist/browser/plugins/slick.rowselectionmodel.js' ?>'></script>
+
+    <link type='text/css' rel='stylesheet'
+          href='<?= ConfigGlobal::getWeb_NodeScripts() . '/slickgrid/dist/styles/css/slick.columnpicker.css' ?>'/>
+    <script type='text/javascript'
+            src='<?= ConfigGlobal::getWeb_NodeScripts() . '/slickgrid/dist/browser/controls/slick.columnpicker.js' ?>'></script>
+    <link type='text/css' rel='stylesheet'
+          href='<?= ConfigGlobal::getWeb_NodeScripts() . '/slickgrid/dist/styles/css/slick.gridmenu.css' ?>'/>
+    <script type='text/javascript'
+            src='<?= ConfigGlobal::getWeb_NodeScripts() . '/slickgrid/dist/browser/controls/slick.gridmenu.js' ?>'></script>
+    <link type='text/css' rel='stylesheet'
+          href='<?= ConfigGlobal::getWeb_NodeScripts() . '/slickgrid/dist/styles/css/slick.pager.css' ?>'/>
+    <script type='text/javascript'
+            src='<?= ConfigGlobal::getWeb_NodeScripts() . '/slickgrid/dist/browser/controls/slick.pager.js' ?>'></script>
+
+    <!--
+<script type='text/javascript' src='<?= ConfigGlobal::getWeb_scripts() . '/SlickGrid/dist/browser/plugins/slick.autocolumnsize.js' ?>'></script>
+-->
+
+    <script type='text/javascript'
+            src='<?= ConfigGlobal::getWeb_NodeScripts() . '/slickgrid/dist/browser/slick.groupitemmetadataprovider.js' ?>'></script>
 
     <!--  para procesos -->
     <script type='text/javascript'

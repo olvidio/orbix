@@ -70,6 +70,15 @@ class Select1302
     // ------ Variables para mantener la selección de la grid al volver atras
     private $Qid_sel;
     private $Qscroll_id;
+    private web\BotonesCurso $oBotonesCurso;
+    /**
+     * @var array|mixed
+     */
+    private mixed $aLinks_dl;
+    /**
+     * @var array|mixed
+     */
+    private mixed $aLinks_otros;
 
     private function getBotones()
     {

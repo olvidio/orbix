@@ -183,7 +183,7 @@ class GestorAsistente extends core\ClaseGestor
         $numAsis = 0;
         foreach ($cAsistentes as $oAsistente) {
             $id_nom = $oAsistente->getId_nom();
-            $propietario = $oAsistente->getPropietario();
+            $propietario = $oAsistente->getPropietario()?? '';
             $padre = strtok($propietario, '>');
             $child = strtok('>');
             //if ($sdl != $mi_dele) {

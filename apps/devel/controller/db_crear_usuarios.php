@@ -155,9 +155,9 @@ echo "<br>";
 echo sprintf(_("debe copiar los siguientes usuarios y passwords en el archivo %s"), $archivo_conf);
 echo "<br>";
 echo "<br>";
-echo "$esquema > " . htmlspecialchars($esquema_pwd) . "<br>";
-echo "$esquemav > " . htmlspecialchars($esquemav_pwd) . "<br>";
-echo "$esquemaf > " . htmlspecialchars($esquemaf_pwd) . "<br>";
+echo "$esquema > " . htmlspecialchars($esquema_pwd ?? '') . "<br>";
+echo "$esquemav > " . htmlspecialchars($esquemav_pwd ?? '') . "<br>";
+echo "$esquemaf > " . htmlspecialchars($esquemaf_pwd ?? '') . "<br>";
 echo "<br>";
 echo _("Ya no hace falta, pero interesa saberlo para acceder al a BD directamente.");
 

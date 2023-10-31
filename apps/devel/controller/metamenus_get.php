@@ -43,20 +43,20 @@ if (!empty($Qid_menu) || !empty($Qnuevo)) {
             </tr>
             <tr>
                 <td><?= _("texto menu") ?></td>
-                <td><input type="text" name="txt_menu" value="<?= htmlspecialchars($row['menu']) ?>" size="30"></td>
+                <td><input type="text" name="txt_menu" value="<?= htmlspecialchars($row['menu'] ?? '') ?>" size="30"></td>
             </tr>
             <tr>
                 <td><?= _("url") ?></td>
-                <td><input type="text" name="url" value="<?= htmlspecialchars($row['url']) ?>" size="70"></td>
+                <td><input type="text" name="url" value="<?= htmlspecialchars($row['url'] ?? '') ?>" size="70"></td>
             </tr>
             <tr>
                 <td><?= _("parametros") ?></td>
-                <td><input type="text" name="parametros" value="<?= htmlspecialchars($row['parametros']) ?>" size="70">
+                <td><input type="text" name="parametros" value="<?= htmlspecialchars($row['parametros'] ?? '') ?>" size="70">
                 </td>
             </tr>
             <tr>
                 <td><?= _("permisos") ?></td>
-                <td><input type="text" name="perm_menu" value="<?= htmlspecialchars($row['perm_menu']) ?>"></td>
+                <td><input type="text" name="perm_menu" value="<?= htmlspecialchars($row['perm_menu'] ?? '') ?>"></td>
             </tr>
         </table>
         <input type="button" onclick="fnjs_enviar_formulario('#frm_menus','#ficha');" value="<?= _("guardar") ?>">

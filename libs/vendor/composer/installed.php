@@ -3,7 +3,7 @@
         'name' => '__root__',
         'pretty_version' => 'dev-master',
         'version' => 'dev-master',
-        'reference' => 'da633ba716b335ff0ab931466ac3cece44c1dd13',
+        'reference' => 'ff7616ecf3f7af52f3468fc413f063335b66f6da',
         'type' => 'library',
         'install_path' => __DIR__ . '/../../../',
         'aliases' => array(),
@@ -13,7 +13,7 @@
         '__root__' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => 'da633ba716b335ff0ab931466ac3cece44c1dd13',
+            'reference' => 'ff7616ecf3f7af52f3468fc413f063335b66f6da',
             'type' => 'library',
             'install_path' => __DIR__ . '/../../../',
             'aliases' => array(),
@@ -38,9 +38,9 @@
             'dev_requirement' => false,
         ),
         'mpdf/psr-http-message-shim' => array(
-            'pretty_version' => '2.0.0',
-            'version' => '2.0.0.0',
-            'reference' => '1cf4c0b68b8461cea27411ff961482ce7687e34f',
+            'pretty_version' => 'v2.0.1',
+            'version' => '2.0.1.0',
+            'reference' => 'f25a0153d645e234f9db42e5433b16d9b113920f',
             'type' => 'library',
             'install_path' => __DIR__ . '/../mpdf/psr-http-message-shim',
             'aliases' => array(),
@@ -94,7 +94,7 @@
         'roave/security-advisories' => array(
             'pretty_version' => 'dev-latest',
             'version' => 'dev-latest',
-            'reference' => '9971379442eb64596a59f6c3b89ec66fac58c611',
+            'reference' => '85369a784d2c97074c3e3432a510bfcae8eee02e',
             'type' => 'metapackage',
             'install_path' => NULL,
             'aliases' => array(
@@ -103,9 +103,9 @@
             'dev_requirement' => true,
         ),
         'setasign/fpdi' => array(
-            'pretty_version' => 'v2.4.1',
-            'version' => '2.4.1.0',
-            'reference' => 'f4ba73e5bc053ccc90b81717c5df1cb2ea7bae7b',
+            'pretty_version' => 'v2.5.0',
+            'version' => '2.5.0.0',
+            'reference' => 'ecf0459643ec963febfb9a5d529dcd93656006a4',
             'type' => 'library',
             'install_path' => __DIR__ . '/../setasign/fpdi',
             'aliases' => array(),

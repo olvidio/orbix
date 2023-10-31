@@ -49,6 +49,7 @@ class Select1011
     // ------ Variables para mantener la selección de la grid al volver atras
     private $Qid_sel;
     private $Qscroll_id;
+    private string $LinkInsert;
 
     private function getBotones()
     {
@@ -133,8 +134,6 @@ class Select1011
         $i = 0;
         $a_valores = array();
         foreach ($cPersonaNotas as $oPersonaNota) {
-            $clase = "impar";
-            $i % 2 ? 0 : $clase = "par";
             $i++;
             $id_nivel = $oPersonaNota->getId_nivel();
             $id_asignatura = $oPersonaNota->getId_asignatura();
@@ -175,15 +174,15 @@ class Select1011
                 }
             }
 
-            if ($preceptor == "t") {
+            if ($preceptor === "t") {
                 $preceptor = _("sí");
             } else {
                 $preceptor = _("no");
             }
             // preceptor
-            if ($id_preceptor && $preceptor == "t") {
+            if ($id_preceptor && $preceptor === "t") {
                 $oPersonaDl = new personas\PersonaDl($id_preceptor);
-                $nom_precptor = $oPeronaDl->getPrefApellidosNombre();
+                $nom_precptor = $oPersonaDl->getPrefApellidosNombre();
                 if (empty($nom_precptor)) {
                     $nom_precptor = _("no lo encuentro");
                 }

@@ -325,7 +325,7 @@ class DBEsquema
     }
     public function crear_select() {
         // es para las copias locales del servidor externo.
-        // Ya tenemos los archivos creador, sólo hay que importalos al servidor interior
+        // Ya tenemos los archivos creados, sólo hay que importalos al servidor interior
 
         //cambiar la conexión
         $oConnection = new DBConnection($this->config);

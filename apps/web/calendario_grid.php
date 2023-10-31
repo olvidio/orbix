@@ -607,10 +607,10 @@ function dibujar_calendario($dd, $cabecera, $oInicio, $oFin, $actividades, $mod,
 
 
 	  $(function () {
-		dataView_$id_tabla = new Slick.Data.DataView();
+		dataView_$id_tabla = new SlickDataView();
 		dataView_$id_tabla.getItemMetadata = function (row) { $filametadata };
 
-		grid_$id_tabla = new Slick.Grid(\"#grid_$id_tabla\", dataView_$id_tabla, columns_$id_tabla, options);
+		grid_$id_tabla = new SlickGrid(\"#grid_$id_tabla\", dataView_$id_tabla, columns_$id_tabla, options);
 		grid_$id_tabla.setSelectionModel(new Slick.RowSelectionModel());
 
 		// initialize the model after all the events have been hooked up

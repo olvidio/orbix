@@ -79,7 +79,7 @@ $GesActas = new notas\GestorActa();
 $ult_lib = $GesActas->getUltimoLibro();
 $ult_pag = $GesActas->getUltimaPagina($ult_lib);
 $ult_lin = $GesActas->getUltimaLinea($ult_lib);
-$ult_acta = $GesActas->getUltimaActa($dl, $any);
+$ult_acta = $GesActas->getUltimaActa($any, $dl);
 $acta_new = '';
 $pdf = '';
 

@@ -165,10 +165,10 @@
     </script>
     <h3><?= $resultado ?></h3>
     <form id='seleccionados' name='seleccionados' action='' method='post'>
-        <?= $oHash->getCamposHtml(); ?>
+        <?= $oHash->getCamposHtml() ?>
         <input type='hidden' id='que' name='que' value=''>
         <input type='hidden' id='id_dossier' name='id_dossier' value=''>
-        <?= $oTabla->mostrar_tabla(); ?>
+        <?= $oTabla->mostrar_tabla() ?>
     </form>
     <br>
 <?php if ($permiso == 3) { ?>

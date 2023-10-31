@@ -40,7 +40,7 @@ function dibujar_campo($obj, $atributo, $size, $span1, $span2)
         $valor = $valor->getFromLocal();
     }
 
-    $valor = empty($valor)? '' : htmlspecialchars($valor);
+    $valor = empty($valor)? '' : htmlspecialchars($valor ?? '');
     /*
     $help=$a_valores_campo["help"];
     $help_ref=$a_valores_campo["help_ref"];
