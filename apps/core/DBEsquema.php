@@ -325,7 +325,11 @@ class DBEsquema
     }
     public function crear_select() {
         // es para las copias locales del servidor externo.
-        // Ya tenemos los archivos creados, sólo hay que importalos al servidor interior
+        // Ya tenemos los archivos creados,
+        // leer_local()
+        // cambiar_nombre()
+        // sólo hay que importalos al servidor interior
+        // importar():
 
         //cambiar la conexión
         $oConnection = new DBConnection($this->config);
@@ -343,6 +347,25 @@ class DBEsquema
                 echo sprintf(_("PSQL ERROR IN COMMAND(4): %s<br> mirar en: %s<br>"), $command, $this->getFileLog());
             }
         }
+
+        ///// REFRESCAR LA SUBSCRIPCIÓN ///////////
+        // (( para saber el nombre: SELECT oid, subdbid, subname, subconninfo, subpublications FROM pg_subscription; ))
+        // ALTER SUBSCRIPTION subcomun REFRESH PUBLICATION;
+        $command = "PGOPTIONS='--client-min-messages=warning' /usr/bin/psql -U postgres -q  -X -t --pset pager=off ";
+        $command .= "-c 'ALTER SUBSCRIPTION subcomun REFRESH PUBLICATION;' ";
+        $command .= "\"" . $dsn . "\"";
+        $command .= " > " . $this->getFileLog() . " 2>&1";
+        passthru($command); // no output to capture so no need to store it
+        // read the file, if empty all's well
+        $error = file_get_contents($this->getFileLog());
+        if (trim($error) != '') {
+            if (ConfigGlobal::is_debug_mode()) {
+                echo sprintf(_("PSQL ERROR IN COMMAND(4): %s<br> mirar en: %s<br>"), $command, $this->getFileLog());
+            }
+        }
+
+
+
     }
 
     private function crear_local()

@@ -51,13 +51,10 @@ if (!empty($Qcomun)) {
     $oDBTabla->setTablas($aTablas);
     $oDBTabla->copiar();
     // para la DB Select de la máquina interna
-    $config = $oConfigDB->getEsquema('public_select'); //de la database comun
-    $oDBTabla = new core\DBTabla();
-    $oDBTabla->setConfig($config);
-    $oDBTabla->setRef($esquemaRef);
-    $oDBTabla->setNew($esquema);
-    $oDBTabla->setTablas($aTablas);
-    $oDBTabla->copiar();
+    // No hay que volver a copiar, simplemente refrescar la Subscripción:
+    // Ya se hace al crear la tabla.
+    // (( para saber el nombre: SELECT oid, subdbid, subname, subconninfo, subpublications FROM pg_subscription; ))
+    // ALTER SUBSCRIPTION subcomun REFRESH PUBLICATION;
 
     $oTrasvase = new core\DBTrasvase();
     $oTrasvase->setRegion($Qregion);
