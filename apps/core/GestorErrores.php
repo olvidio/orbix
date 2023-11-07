@@ -33,6 +33,7 @@ class GestorErrores
     private $filename;
 
     /* CONSTRUCTOR -------------------------------------------------------------- */
+    private string|int|null $stack;
 
     /**
      * Constructor de la classe.
@@ -69,22 +70,6 @@ class GestorErrores
             end($_SESSION['errores']);
         }
         $_SESSION['errores'][] = $error;
-    }
-
-    function muestraMensaje($sClauError, $goto)
-    {
-        $txt = $this->leerErrorAppLastError();
-        if (strstr($txt, 'duplicate key')) {
-            echo _("ya existe un registro con esta información");
-        } else {
-            echo "\n dd" . $txt . "\n $sClauError <br>";
-        }
-        $oPosicion = new web\Posicion();
-        $seguir = $oPosicion->link_a($goto, 0);
-        //$seguir=link_a($goto,0);
-        echo "<br><span class='link' onclick=fnjs_update_div('#main',$seguir)>" . _("continuar") . "</span>";
-
-
     }
 
     function leerErrorAppLastError(&$oDBSt, $sClauError, $line, $file)
@@ -129,7 +114,7 @@ class GestorErrores
         $this->recordar($err[2]);
 
         $filename = $this->filename;
-        if (!$handle = fopen($filename, 'a')) {
+        if (!$handle = fopen($filename, 'ab')) {
             echo "Cannot open file ($filename)";
             die();
         }
@@ -141,6 +126,7 @@ class GestorErrores
         fclose($handle);
     }
 
+    /*
     function addErrorSec($err = '', $sClauError, $line, $file)
     {
         $filename = $this->filename;
@@ -148,7 +134,9 @@ class GestorErrores
         $this->addError($err, $sClauError, $line, $file);
         $this->filename = $filename;
     }
+*/
 
+    /*
     function addError($err = '', $sClauError, $line, $file)
     {
         // Cuando ejecuto algún controlador desde la linea de comandos, no existe la ip:
@@ -171,6 +159,5 @@ class GestorErrores
         }
         fclose($handle);
     }
+    */
 }
-
-?>
