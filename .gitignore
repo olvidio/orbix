@@ -54,3 +54,5 @@ log/*
 #!log/menus/tot_menus_base.sql
 .settings/org.eclipse.core.resources.prefs
 .settings/org.eclipse.core.runtime.prefs
+/orbix.iml
+/package-lock.json
