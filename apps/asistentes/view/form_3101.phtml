@@ -96,13 +96,13 @@
         <tr>
             <td class=etiqueta><?= ucfirst(_("observaciones actividad")); ?></td>
             <td class=contenido colspan="3">
-                <textarea id="observ" name="observ" cols="40" rows="3"><?= htmlspecialchars($observ) ?></textarea></td>
+                <textarea id="observ" name="observ" cols="40" rows="3"><?= htmlspecialchars($observ ?? '') ?></textarea></td>
         </tr>
         <tr>
             <td class=etiqueta><?= ucfirst(_("observaciones estudios")); ?></td>
             <td class=contenido colspan="3">
                 <textarea id="observ_est" name="observ_est" cols="40"
-                          rows="3"><?= htmlspecialchars($observ_est) ?></textarea></td>
+                          rows="3"><?= htmlspecialchars($observ_est ?? '') ?></textarea></td>
         </tr>
         <?php
         if (core\ConfigGlobal::is_app_installed('actividadplazas')) {

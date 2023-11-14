@@ -121,12 +121,12 @@
             <tr>
                 <td class=etiqueta><?= ucfirst(_("lugar")); ?>:</td>
                 <td colspan=2><input <?= $readonly ?> class=contenido size="30" id="lugar" name="lugar"
-                                                      value="<?= htmlspecialchars($lugar) ?>"></td>
+                                                      value="<?= htmlspecialchars($lugar ?? '') ?>"></td>
             </tr>
             <tr>
                 <td class=etiqueta><?= ucfirst(_("observaciones")); ?>:</td>
                 <td colspan=2><input <?= $readonly ?> class=contenido size="60" id="observ" name="observ"
-                                                      value="<?= htmlspecialchars($observ) ?>"></td>
+                                                      value="<?= htmlspecialchars($observ ?? '') ?>"></td>
             </tr>
             <tr>
                 <td class=etiqueta><?= ucfirst(_("asignatura")) ?>:</td>

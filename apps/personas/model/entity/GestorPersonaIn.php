@@ -37,7 +37,7 @@ class GestorPersonaIn extends GestorPersonaPub
      */
     function getPersonasIn($aWhere = array(), $aOperators = array())
     {
-        return parent::getPersonasObj($aWhere, $aOperators, 'personas\\model\entity\\PersonaIn');
+        return parent::getPersonasObj('personas\\model\entity\\PersonaIn', $aWhere, $aOperators);
     }
 
     /* MÉTODOS PROTECTED --------------------------------------------------------*/

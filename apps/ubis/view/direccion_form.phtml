@@ -1,3 +1,17 @@
+<style>
+    .info {
+        display: inline-block;
+        padding: 0px 3px 3px 3px;
+        /* color: #E83188; */
+        font-size: 22px;
+        border-radius: 50%;
+        border: solid 3px ;
+        width: 20px;
+        height: 20px;
+        font-weight: bold;
+        text-align: center;
+    }
+</style>
 <script>
     fnjs_guardar_dir = function (formulario) {
         var rr = fnjs_comprobar_campos(formulario, '<?= addslashes($obj) ?>');
@@ -142,6 +156,10 @@
             <td class=etiqueta>
                 <?= ucfirst(_("propietario")) ?>
                 <input type="checkbox" id="propietario" name="propietario" size="1" <?= $chk_propietario ?>>
+                <span class="info"
+                   title="<?= _("ayuda!") ?>"
+                    onclick="window.open('<?= $goInfo ?>','leyenda','width=800,height=700,screenX=200,screenY=200,titlebar=yes')" >
+                    i</span>
             </td>
         </tr>
         <tr>

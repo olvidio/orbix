@@ -6,6 +6,7 @@ use actividades\model\entity\ActividadDl;
 use actividades\model\entity\ActividadEx;
 use actividades\model\entity\GestorActividadDl;
 use actividades\model\entity\GestorActividadEx;
+use devel\model\DBAbstract;
 use devel\model\entity\MapId;
 use ubis\model\entity\CasaDl;
 use ubis\model\entity\CdcDlxDireccion;
@@ -25,15 +26,8 @@ use ubis\model\entity\GestorTelecoCdcEx;
 use ubis\model\entity\GestorTelecoCtrEx;
 use ubis\model\entity\TelecoCdcDl;
 
-class DBTrasvase
+class DBTrasvase extends DBAbstract
 {
-
-    /**
-     * oDbl de Esquema
-     *
-     * @var object
-     */
-    private $oDbl;
 
     private $sdbname;
     private $sregion;
@@ -43,13 +37,11 @@ class DBTrasvase
 
     /* CONSTRUCTOR -------------------------------------------------------------- */
 
-    /**
-     * Constructor de la classe.
-     *
-     */
     function __construct()
     {
-
+        $esquema_sfsv = ConfigGlobal::mi_region_dl();
+        $this->esquema = substr($esquema_sfsv, 0, -1); // quito la v o la f.
+        $this->role = '"' . $this->esquema . '"';
     }
 
 
@@ -333,11 +325,11 @@ class DBTrasvase
         $esquema = $this->getEsquema();
         $dl = $this->getDl();
         $region = $this->getRegion();
-        $tipoUbicacion = substr($dl, 0, 2); // puede ser: cr => cominsión, dl => delegacion, ci => centro interregional.
+        $tipoUbicacion = substr($dl, 0, 2); // puede ser: cr => comisión, dl => delegación, ci => centro interregional.
 
         switch ($que) {
             case 'resto2dl':
-                if ($tipoUbicacion == 'cr') { //no hay delegaciones.
+                if ($tipoUbicacion === 'cr') { //no hay delegaciones.
                     $aWhere = ['dl' => '', 'region' => $region];
                     $aOperador = ['dl' => 'IS NULL'];
                 } else {
@@ -425,55 +417,34 @@ class DBTrasvase
                 break;
             case 'dl2resto':
                 // actualizar el tipo_ubi.
-                $sql = "UPDATE \"$esquema\".u_cdc_dl SET tipo_ubi='cdcex'";
+                $sql = "UPDATE \"$esquema\".u_cdc_dl SET tipo_ubi='cdcex';";
                 if ($oDbl->query($sql) === false) {
-                    $sClauError = 'DBTrasvase.cdc.execute';
+                    $sClauError = 'DBTrasvase.ctr.execute';
                     $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
                     return false;
                 }
+
+                $this->addPermisoGlobal('comun');
+                $a_sql = [];
                 //cdc
-                $sql = "INSERT INTO resto.u_cdc_ex SELECT * FROM \"$esquema\".u_cdc_dl";
-                if ($oDbl->query($sql) === false) {
-                    $sClauError = 'DBTrasvase.cdc.execute';
-                    $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
-                    return false;
-                } else {
-                    // primero las direcciones porque 'u_cross' tiene como foreign key id_direccion e id_ubi.
-                    $sql = "INSERT INTO resto.u_dir_cdc_ex SELECT * FROM  \"$esquema\".u_dir_cdc_dl ";
-                    if ($oDbl->query($sql) === false) {
-                        $sClauError = 'DBTrasvase.cdc.execute';
-                        $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
-                        return false;
-                    }
-                    $sql = "INSERT INTO  resto.u_cross_cdc_ex_dir  SELECT * FROM \"$esquema\".u_cross_cdc_dl_dir";
-                    if ($oDbl->query($sql) === false) {
-                        $sClauError = 'DBTrasvase.cdc.execute';
-                        $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
-                        return false;
-                    }
-                    // delete cdc
-                    $sql = "TRUNCATE \"$esquema\".u_cdc_dl RESTART IDENTITY CASCADE";
-                    if ($oDbl->query($sql) === false) {
-                        $sClauError = 'DBTrasvase.cdc.execute';
-                        $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
-                        return false;
-                    }
-                    // delete dir
-                    $sql = "TRUNCATE \"$esquema\".u_dir_cdc_dl RESTART IDENTITY CASCADE";
-                    if ($oDbl->query($sql) === false) {
-                        $sClauError = 'DBTrasvase.cdc.execute';
-                        $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
-                        return false;
-                    }
-                    // delete cross (deberia borrarse sólo; por el foreign key).
-                }
+                $a_sql[] = "INSERT INTO resto.u_cdc_ex SELECT * FROM \"$esquema\".u_cdc_dl ;";
+                // primero las direcciones porque 'u_cross' tiene como foreign key id_direccion e id_ubi.
+                $a_sql[] = "INSERT INTO resto.u_dir_cdc_ex SELECT * FROM  \"$esquema\".u_dir_cdc_dl ;";
+                $a_sql[] = "INSERT INTO  resto.u_cross_cdc_ex_dir  SELECT * FROM \"$esquema\".u_cross_cdc_dl_dir ;";
+                // delete cdc
+                $a_sql[] = "TRUNCATE \"$esquema\".u_cdc_dl RESTART IDENTITY CASCADE;";
+                // delete dir
+                $a_sql[] = "TRUNCATE \"$esquema\".u_dir_cdc_dl RESTART IDENTITY CASCADE;";
+                // delete cross (debería borrarse sólo; por el foreign key).
+                $this->executeSql($a_sql);
+                $this->delPermisoGlobal('comun');
                 break;
         }
     }
 
     // SV o SF
     //---------------- Ctr --------------------
-    //---------------- Diressiones Ctr --------------------
+    //---------------- Direcciones Ctr --------------------
     //---------------- Teleco Ctr --------------------
     public function ctr($que)
     {
@@ -491,7 +462,7 @@ class DBTrasvase
 
         switch ($que) {
             case 'resto2dl':
-                if ($tipoUbicacion == 'cr') { //no hay delegaciones.
+                if ($tipoUbicacion === 'cr') { //no hay delegaciones.
                     $aWhere = ['dl' => '', 'region' => $region];
                     $aOperador = ['dl' => 'IS NULL'];
                 } else {
@@ -561,9 +532,9 @@ class DBTrasvase
                             $oCrosDireccion->setPropietario($propietario);
                             $oCrosDireccion->setPrincipal($principal);
                             $oCrosDireccion->DBGuardar();
-                            // Eliminar el cross y la direccion
+                            // Eliminar el cross y la dirección
                             $oDireccion->DBEliminar();
-                            // delete cross (deberia borrarse sólo; por el foreign key).
+                            // delete cross (debería borrarse sólo; por el foreign key).
                             $oUbixDireccion->DBEliminar();
                         }
                         // Buscar las telecos
@@ -574,7 +545,7 @@ class DBTrasvase
                             $aDades = $oTelecoCtrEx->getTot();
                             $oTelecoCdcDl = new TelecoCdcDl();
                             $oTelecoCdcDl->setoDbl($oDbl);
-                            $oTelecoCdcDl->setAllAtributes($aDades, TRUE);
+                            $oTelecoCdcDl->setAllAtributes($aDades);
                             if ($oTelecoCdcDl->DBGuardar() === FALSE) {
                                 $error .= '<br>' . _("no se ha guardado la casa");
                             } else {
@@ -634,7 +605,7 @@ class DBTrasvase
                         $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
                         return false;
                     }
-                    // delete cross (deberia borrarse sólo; por el foreign key).
+                    // delete cross (debería borrarse sólo; por el foreign key).
                 }
                 break;
         }

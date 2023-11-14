@@ -276,13 +276,12 @@ if (empty($sWhere)) {
     }
 
 } else {
-    $aWhere = unserialize(urlsafe_b64decode($sWhere));
-    $aOperador = unserialize(urlsafe_b64decode($sOperador));
-    $Gestor = unserialize(urlsafe_b64decode($sGestor));
-    $aWhereD = unserialize(urlsafe_b64decode($sWhereD));
-    $aOperadorD = unserialize(urlsafe_b64decode($sOperadorD));
-    $GestorDir = unserialize(urlsafe_b64decode($sGestorDir));
-    $metodo = $metodo;
+    $aWhere = unserialize(urlsafe_b64decode($sWhere), ['allowed_classes' => false]);
+    $aOperador = unserialize(urlsafe_b64decode($sOperador), ['allowed_classes' => false]);
+    $Gestor = unserialize(urlsafe_b64decode($sGestor), ['allowed_classes' => false]);
+    $aWhereD = unserialize(urlsafe_b64decode($sWhereD), ['allowed_classes' => false]);
+    $aOperadorD = unserialize(urlsafe_b64decode($sOperadorD), ['allowed_classes' => false]);
+    $GestorDir = unserialize(urlsafe_b64decode($sGestorDir), ['allowed_classes' => false]);
 }
 
 if (empty($aWhere) && empty($aWhereD)) {
@@ -359,8 +358,8 @@ foreach ($cUbis as $key => $oUbi) {
     }
     $aUbis[] = $id_ubi;
     $cUbisTot[$key] = $oUbi;
-    $a_region[$key] = strtolower($oUbi->getRegion());
-    $a_nom[$key] = strtolower($oUbi->getNombre_ubi());
+    $a_region[$key] = strtolower($oUbi->getRegion()?? '');
+    $a_nom[$key] = strtolower($oUbi->getNombre_ubi()?? '');
 }
 
 $sWhere = urlsafe_b64encode(serialize($aWhere));
@@ -373,7 +372,7 @@ $sGestorDir = urlsafe_b64encode(serialize($GestorDir));
 //si no existe la ficha, hacer una nueva	
 $nueva_ficha = '';
 $pagina_link = '';
-if ($Qtipo == "tot" || $Qloc == "tot") {
+if ($Qtipo === "tot" || $Qloc === "tot") {
     if (is_array($cUbisTot) && count($cUbisTot) == 0) {
         $nueva_ficha = 'especificar';
         $pagina_link = web\Hash::link('apps/ubis/controller/ubis_buscar.php?' . http_build_query(array('simple' => '2')));

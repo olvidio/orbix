@@ -90,7 +90,7 @@ foreach ($cPersonasListas as $oPersonaListas) {
         $cPersonas = $GesPersonas->getPersonasDl(array('id_nom' => $id_orbix));
         if (!empty($cPersonas) && count($cPersonas) > 0) {
             $situacion = $cPersonas[0]->getSituacion();
-            if ($situacion == 'A') {
+            if ($situacion === 'A') {
                 //1
                 $p1_unidas_dl++;
             } else { //seguramente está en otra dl
@@ -137,7 +137,7 @@ foreach ($cPersonasOrbix as $oPersonaOrbix) {
     $oGesMatch = new GestorIdMatchPersona();
     $cIdMatch = $oGesMatch->getIdMatchPersonas(array('id_orbix' => $id_nom_orbix));
     // Unidas a listas 7 y 8
-    if (!empty($cIdMatch[0]) and count($cIdMatch) > 0) {
+    if (!empty($cIdMatch[0]) && count($cIdMatch) > 0) {
         $id_nom_listas = $cIdMatch[0]->getId_listas();
         $oPersonaListas = new PersonaListas($id_nom_listas);
         //8. No listas
@@ -147,7 +147,7 @@ foreach ($cPersonasOrbix as $oPersonaOrbix) {
         } else {
             $dl_persona = $oPersonaListas->getDl();
             //7. En otra dl en listas
-            if ($dl_persona != $dl_listas) {
+            if ($dl_persona !== $dl_listas) {
                 $p7_orbix_unidas_otra_dl++;
                 $a_ids_traslados_A[] = $id_nom_listas;
             }

@@ -29,7 +29,7 @@ class GestorActaTribunal extends ClaseGestor
     function __construct()
     {
         // Si es cr, se mira en todas:
-        if (ConfigGlobal::mi_ambito() == 'rstgr') {
+        if (ConfigGlobal::mi_ambito() === 'rstgr') {
             $oDbl = $GLOBALS['oDBP'];
             $this->setoDbl($oDbl);
             $this->setNomTabla('e_actas_tribunal');
@@ -151,7 +151,7 @@ class GestorActaTribunal extends ClaseGestor
                 'id_item' => $aDades['id_item'],
             ];
             // Si es cr, se mira en todas:
-            if (ConfigGlobal::mi_ambito() == 'rstgr') {
+            if (ConfigGlobal::mi_ambito() === 'rstgr') {
                 $oActaTribunal = new ActaTribunal($a_pkey);
             } else {
                 $oActaTribunal = new ActaTribunalDl($a_pkey);

@@ -75,7 +75,7 @@ class Persona
                         if (count($cPersonasIn) > 0) {
                             $oPersona = $cPersonasIn[0];
                         } else {
-                            return _("no encuentro a nadie");
+                            return sprintf(_("no encuentro a nadie con id: %s"), $id_nom);
                         }
                     }
                 }

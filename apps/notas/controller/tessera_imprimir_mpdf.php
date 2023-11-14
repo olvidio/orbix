@@ -3,6 +3,7 @@
 use asignaturas\model\entity as asignaturas;
 use notas\model\entity as notas;
 use personas\model\entity as personas;
+use function core\is_true;
 
 /**
  * Esta página sirve para la tessera de una persona.
@@ -54,7 +55,7 @@ $replace = config\model\Config::$replace;
 
 function titulo($id_asignatura){
 $cabecera = '<tr><td class="space"></td></tr>
-	 		<tr valign="bottom"><td style="width: 2%"></td>
+	 		<tr><td style="width: 2%"></td>
 			<td class="cabecera" style="width: 46%">DISCIPLIN&#198;</td>
 			<td class="cabecera" style="width: 25%">CUM NOTA</td>
 			<td class="cabecera" style="width: 1%"></td>
@@ -73,7 +74,7 @@ case 1101:
         <td></td>
         <td colspan="7" class="curso">CURSUS INSTITUTIONALES PHILOSOPHI&#198;</td>
     </tr>
-    <?= $cabecera; ?>
+    <?= $cabecera ?>
     <tr>
         <td class="space"></td>
     </tr>
@@ -109,7 +110,7 @@ case 2101:
         <td></td>
         <td colspan="7" class="curso">CURSUS INSTITUTIONALES S THEOLOGI&#198;</td>
     </tr>
-    <?= $cabecera; ?>
+    <?= $cabecera ?>
     <tr>
         <td class="space"></td>
     </tr>
@@ -136,7 +137,7 @@ case 2108:
         <col style="width: 1%">
         <col style="width: 10%">
         <col style="width: 1%">
-        <?= $cabecera; ?>
+        <?= $cabecera ?>
         <tr>
             <td class="space"></td>
         </tr>
@@ -212,7 +213,7 @@ case 2108:
         ?>
         <head>
             <?php include_once(core\ConfigGlobal::$dir_estilos . '/tessera_mpdf.css.php'); ?>
-        </head>
+            <title></title></head>
         <div class="A4">
             <table class="A4">
                 <col style="width: 2%">
@@ -264,7 +265,7 @@ case 2108:
                     if ($id_asignatura > 3000) {
                         $id_nivel_asig = $id_nivel;
                     } else {
-                        if ($oAsig->getStatus() != 't') continue;
+                        if (!is_true($oAsig->getStatus())) { continue; }
                         $id_nivel_asig = $oAsig->getId_nivel();
                     }
                     $n = $id_nivel_asig;
@@ -298,7 +299,8 @@ case 2108:
                             $row = current($aAprobadas);
                         }
                         if (next($aAprobadas) === FALSE) {
-                            $row = $rowEmpty;
+                            // Lo quito porque no pintaba la última aprobada, pero estaba por algo??
+                            //$row = $rowEmpty;
                             break;
                         }
                         $j++;
@@ -321,7 +323,7 @@ case 2108:
                         $oAsignatura = $cAsignaturas[$a++];
                     }
 
-                    if ($oAsignatura->getId_nivel() == $row["id_nivel_asig"]) {
+                    if ($oAsignatura->getId_nivel() === $row["id_nivel_asig"]) {
                         titulo($oAsignatura->getId_nivel());
                         // para las opcionales
                         if ($row["id_asignatura"] > 3000 && $row["id_asignatura"] < 9000) {
@@ -359,7 +361,7 @@ case 2108:
                         }
                         $num_asig++;
                     } else {
-                        if (!$row["id_nivel"] || ($j == $num_asig)) {
+                        if (empty($row["id_nivel"]) || ($j === $num_asig)) {
                             titulo($oAsignatura->getId_asignatura());
                             $nombre_asignatura = strtr($oAsignatura->getNombre_asignatura(), $replace);
                             ?>

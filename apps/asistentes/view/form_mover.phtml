@@ -15,7 +15,7 @@
                     <td class=etiqueta><?= ucfirst(_("observaciones")); ?></td>
                     <td class=contenido>
                         <textarea id="observ" name="observ" cols="40"
-                                  rows="5"><?= htmlspecialchars($observ) ?></textarea></td>
+                                  rows="5"><?= htmlspecialchars($observ ?? '' ?? '') ?></textarea></td>
                 </tr>
             </table>
             <br>

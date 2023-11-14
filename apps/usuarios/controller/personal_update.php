@@ -1,13 +1,16 @@
-﻿<?php
-//namespace usuarios\controller;
-use usuarios\model\entity as usuarios;
+<?php
+
 
 // INICIO Cabecera global de URL de controlador *********************************
+use usuarios\model\entity\Preferencia;
+
 require_once("apps/core/global_header.inc");
 // Archivos requeridos por esta url **********************************************
 
 // Crea los objetos de uso global **********************************************
 require_once("apps/core/global_object.inc");
+// Crea los objetos por esta url  **********************************************
+
 // FIN de  Cabecera global de URL de controlador ********************************
 
 $id_usuario = core\ConfigGlobal::mi_id_usuario();
@@ -20,10 +23,10 @@ switch ($Qque) {
         $QsPrefs = (string)filter_input(INPUT_POST, 'sPrefs');
         $idioma = core\ConfigGlobal::mi_Idioma();
         $tipo = 'slickGrid_' . $Qtabla . '_' . $idioma;
-        $oPref = new usuarios\Preferencia(array('id_usuario' => $id_usuario, 'tipo' => $tipo));
+        $oPref = new Preferencia(array('id_usuario' => $id_usuario, 'tipo' => $tipo));
         // si no se han cambiado las columnas visibles, pongo las actuales (sino las borra).
-        $aPrefs = json_decode($QsPrefs, true);
-        if ($aPrefs['colVisible'] == 'noCambia') {
+        $aPrefs = json_decode($QsPrefs, true, 512, JSON_THROW_ON_ERROR);
+        if ($aPrefs['colVisible'] === 'noCambia') {
             $sPrefs_old = $oPref->getPreferencia();
             $aPrefs_old = json_decode($sPrefs_old, true);
             $aPrefs['colVisible'] = empty($aPrefs_old['colVisible']) ? '' : $aPrefs_old['colVisible'];
@@ -44,7 +47,7 @@ switch ($Qque) {
         $Qinicio = empty($Qinicio) ? 'exterior' : $Qinicio;
         // Guardar página de inicio:
         $inicio = $Qinicio . "#" . $Qoficina;
-        $oPref = new usuarios\Preferencia(array('id_usuario' => $id_usuario, 'tipo' => 'inicio'));
+        $oPref = new Preferencia(array('id_usuario' => $id_usuario, 'tipo' => 'inicio'));
         $oPref->setPreferencia($inicio);
         if ($oPref->DBGuardar() === false) {
             echo _("hay un error, no se ha guardado");
@@ -55,16 +58,16 @@ switch ($Qque) {
         $Qestilo_color = (string)filter_input(INPUT_POST, 'estilo_color');
         $Qtipo_menu = (string)filter_input(INPUT_POST, 'tipo_menu');
         $estilo = $Qestilo_color . "#" . $Qtipo_menu;
-        $oPref = new usuarios\Preferencia(array('id_usuario' => $id_usuario, 'tipo' => 'estilo'));
+        $oPref = new Preferencia(array('id_usuario' => $id_usuario, 'tipo' => 'estilo'));
         $oPref->setPreferencia($estilo);
         if ($oPref->DBGuardar() === false) {
             echo _("hay un error, no se ha guardado");
             echo "\n" . $oPref->getErrorTxt();
         }
 
-        // Guardar presentacion tablas:
+        // Guardar presentación tablas:
         $Qtipo_tabla = (string)filter_input(INPUT_POST, 'tipo_tabla');
-        $oPref = new usuarios\Preferencia(array('id_usuario' => $id_usuario, 'tipo' => 'tabla_presentacion'));
+        $oPref = new Preferencia(array('id_usuario' => $id_usuario, 'tipo' => 'tabla_presentacion'));
         $oPref->setPreferencia($Qtipo_tabla);
         if ($oPref->DBGuardar() === false) {
             echo _("hay un error, no se ha guardado");
@@ -73,7 +76,7 @@ switch ($Qque) {
 
         // Guardar presentacion nombre Apellidos:
         $QordenApellidos = (string)filter_input(INPUT_POST, 'ordenApellidos');
-        $oPref = new usuarios\Preferencia(array('id_usuario' => $id_usuario, 'tipo' => 'ordenApellidos'));
+        $oPref = new Preferencia(array('id_usuario' => $id_usuario, 'tipo' => 'ordenApellidos'));
         $oPref->setPreferencia($QordenApellidos);
         if ($oPref->DBGuardar() === false) {
             echo _("hay un error, no se ha guardado");
@@ -83,7 +86,7 @@ switch ($Qque) {
 
         // Guardar idioma:
         $Qidioma_nou = (string)filter_input(INPUT_POST, 'idioma_nou');
-        $oPref = new usuarios\Preferencia(array('id_usuario' => $id_usuario, 'tipo' => 'idioma'));
+        $oPref = new Preferencia(array('id_usuario' => $id_usuario, 'tipo' => 'idioma'));
         $oPref->setPreferencia($Qidioma_nou);
         if ($oPref->DBGuardar() === false) {
             echo _("hay un error, no se ha guardado");

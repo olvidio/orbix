@@ -1,0 +1,27 @@
+<h2 class=titulo>{{ "copiar la tesera de"|trans|raw }} {{ nom }}</h2>
+<form id="frm_sin_nombre" name="frm_sin_nombre" action="" method="POST">
+    {{ oHash.getCamposHtml()|raw }}
+    {{ "a"|trans|raw }}
+    {{ oDesplPersonas.desplegable()|raw }}
+    <br>
+    <br>
+    <input type="button" id="copiar" name="copiar" onclick="fnjs_copiar('#frm_sin_nombre');"
+           value="{{ "copiar"|trans }}">
+</form>
+<script>
+    fnjs_copiar = function (formulario) {
+        request = $.ajax({
+            data: $(formulario).serialize(),
+            url: 'apps/notas/controller/tessera_copiar.php',
+            method: 'POST',
+            dataType: 'json'
+        });
+        request.done(function (json) {
+            if (json.success !== true) {
+                alert("{{ "respuesta"|trans|raw }}" + json.mensaje);
+            } else {
+                 {{ oPosicion.js_atras()|raw }}
+            }
+        });
+    }
+</script>

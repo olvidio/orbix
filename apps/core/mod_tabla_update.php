@@ -24,7 +24,7 @@ if (!empty($a_sel)) { //vengo de un checkbox
     $Qs_pkey = str_replace("'", '"', $Qs_pkey[0]);
 }
 
-$a_pkey = unserialize(core\urlsafe_b64decode($Qs_pkey));
+$a_pkey = unserialize(core\urlsafe_b64decode($Qs_pkey), ['allowed_classes' => false]);
 
 // Tiene que ser en dos pasos.
 $obj = $Qclase_info;

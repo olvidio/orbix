@@ -1162,7 +1162,7 @@ abstract class PersonaGlobal extends core\ClasePropiedades
                     $ctr = $this->getDl();
                     break;
                 case 'PersonaGlobal':
-                    if (ConfigGlobal::mi_ambito() == 'rstgr') {
+                    if (ConfigGlobal::mi_ambito() === 'rstgr') {
                         $oCentroDl = new ubis\Centro($this->getId_ctr());
                     } else {
                         $oCentroDl = new ubis\CentroDl($this->getId_ctr());
@@ -1176,7 +1176,7 @@ abstract class PersonaGlobal extends core\ClasePropiedades
                 case 'PersonaS':
                 case 'PersonaSSSC':
                     // OJO CON las regiones de stgr
-                    if (ConfigGlobal::mi_ambito() == 'rstgr') {
+                    if (ConfigGlobal::mi_ambito() === 'rstgr') {
                         $oCentro = new ubis\Centro($this->getId_ctr());
                     } else {
                         $oCentro = new ubis\CentroDl($this->getId_ctr());

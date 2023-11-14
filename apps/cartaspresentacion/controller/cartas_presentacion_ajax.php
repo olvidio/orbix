@@ -140,11 +140,11 @@ switch ($Qque_mod) {
         $nombre_ubi .= empty($nom_sede) ? '' : " ($nom_sede)";
 
         $dl = $oCentro->getDl();
-        if ($dl == ConfigGlobal::mi_delef()) {
+        if ($dl === ConfigGlobal::mi_delef()) {
             $oCartaPresentacion = new CartaPresentacionDl();
         } else {
             $tipo_ctr = $oCentro->getTipo_ctr();
-            if ($tipo_ctr == 'cr') {
+            if ($tipo_ctr === 'cr') {
                 $oCartaPresentacion = new CartaPresentacionEx();
             } else {
                 $msg_exit = _("No puede modificar datos de otra dl");
@@ -235,11 +235,11 @@ switch ($Qque_mod) {
                 // Busco el ctr para saber si es de la dl o ex.
                 $oCentro = new Centro($Qid_ubi);
                 $dl = $oCentro->getDl();
-                if ($dl == ConfigGlobal::mi_delef()) {
+                if ($dl === ConfigGlobal::mi_delef()) {
                     $oCartaPresentacion = new CartaPresentacionDl();
                 } else {
                     $tipo_ctr = $oCentro->getTipo_ctr();
-                    if ($tipo_ctr == 'cr') {
+                    if ($tipo_ctr === 'cr') {
                         $oCartaPresentacion = new CartaPresentacionEx();
                     } else {
                         exit (_("No puede modificar datos de otra dl"));
@@ -437,7 +437,7 @@ switch ($Qque_mod) {
                     $pres = _("si");
                 }
 
-                if ($permiso == 'modificar') {
+                if ($permiso === 'modificar') {
                     $script = '';
                     $ctr_txt = $nombre_ubi;
                     $script = "fnjs_modificar($id_direccion,$id_ubi)";

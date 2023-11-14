@@ -17,7 +17,7 @@ use asistentes\model\entity\Asistente;
  */
 
 /**
- * Función para dibujar un plannig.
+ * Función para dibujar un planning.
  *
  *variables globales
  *    .Deben definirse en la página desde donde se llama a la función.
@@ -79,6 +79,7 @@ class Planning
     private $imod;
     private $inueva;
     private $idoble = 1;
+    private DateTimeLocal|false $oFinAct;
 
     public function dibujar()
     {
@@ -112,7 +113,7 @@ class Planning
         //if ($aini_0 < 100) $aini_0=$aini_0+2000;
         //if ($afi_0 < 100) $afi_0=$afi_0+2000;
 
-        //esto lo hacia con la "z" de la instruccion date, pero se lia para más de un año...
+        //esto lo hacia con la "z" de la instrucción date, pero se lia para más de un año...
         (float)$num_sec_ini_0 = mktime($h_ini_0, $m_ini_0, $s_ini_0, $mini_0, $dini_0, $aini_0);
         (float)$num_sec_fi_0 = mktime($h_fi_0, $m_fi_0, $s_fi_0, $mfi_0, $dfi_0, $afi_0);
         (float)$num_sec = $num_sec_fi_0 - $num_sec_ini_0;
@@ -142,7 +143,7 @@ class Planning
             if ($m != $m_anterior || $c >= $total_dias_0) {
                 $inc_c = $this->idd * ($c - $c_anterior);
                 $lletra_mes = $mes[$m_anterior];
-                $txt_head .= "<th colspan=$inc_c widht=\"$ample%\" class=\"mes\" >$lletra_mes - $any</th>";
+                $txt_head .= "<th colspan=$inc_c style=\"widht: $ample%\" class=\"mes\" >$lletra_mes - $any</th>";
                 $c_anterior = $c;
                 $m_anterior = $m;
             }
@@ -162,7 +163,7 @@ class Planning
                 $diumenge = "lletra";
             }
             $lletra_dia = $semana[$w];
-            $txt_head .= "<th colspan=$this->idd align=center class=$diumenge >$lletra_dia</th>";
+            $txt_head .= "<th colspan=$this->idd style='text-align:center' class=$diumenge >$lletra_dia</th>";
         }
         $txt_head .= "</tr><tr>";
 
@@ -175,7 +176,7 @@ class Planning
                 $diumenge = "num";
             }
             $num_dia = date("j", mktime(0, 0, 0, $mini_0, $dini_0 + $c, $aini_0));
-            $txt_head .= "<th colspan=$this->idd align=center class=$diumenge >$num_dia</th>";
+            $txt_head .= "<th colspan=$this->idd style='text-align:center' class=$diumenge >$num_dia</th>";
         }
         $txt_head .= "</tr>";
 
@@ -193,7 +194,7 @@ class Planning
                 //list($pau,$id_pau,$persona,$centro) = preg_split('/#/', $per ); //separo el id_ubi del nombre
                 list($pau, $id_pau, $persona) = preg_split('/#/', $per); //separo el id_ubi del nombre
 
-                if ($pau == "u") { // para los ubis...
+                if ($pau === 'u') { // para los ubis...
                     $id_ubi = $id_pau;
                     $gesCasaPeriodo = new GestorCasaPeriodo();
                     $periodos_sv[$id_ubi] = $gesCasaPeriodo->getArrayCasaPeriodos($id_ubi, $this->oInicio, $this->oFin);
@@ -204,7 +205,7 @@ class Planning
                     $ancho = $long;
                 }
 
-                $num_a = sizeof($actividad);
+                $num_a = count($actividad);
                 //echo "$persona: $num_a<br>";
                 //en el primer bucle pongo todas las variables en vectores, y en el segundo compruebo que no existan intersecciones de fechas.
                 //print_r($actividad);
@@ -308,8 +309,8 @@ class Planning
                     $mfi[$a] = $this->oFinAct->format('m');
                     $afi[$a] = $this->oFinAct->format('Y');
 
-                    settype($dini[$a], "integer");
-                    settype($dfi[$a], "integer");
+                    $dini[$a] = (int)$dini[$a];
+                    $dfi[$a] = (int)$dfi[$a];
                     //echo "dias: $ini -> $dini[$a],$mini[$a],$aini[$a]:: $fi -> $dfi[$a],$mfi[$a],$afi[$a]<br>";
                     //echo "hora: $hora_ini[$a],$m_ini[$a],$s_ini[$a],$mini[$a],$dini[$a],$aini[$a]<br>";
 
@@ -409,7 +410,7 @@ class Planning
                                 //miro de coger la primera fila desocupada
                                 $f = 0;
                                 foreach ($fila_dia as $val) {
-                                    if ($val == "v") {
+                                    if ($val === 'v') {
                                         $fila[$a] = $f;
                                         $fila_dia[$f] = "x"; //marco fila ocupada
                                         break;
@@ -426,7 +427,7 @@ class Planning
                     }
                     //poner los cambios (sólo desocupados) en $fila_dia
                     foreach ($fila_dia_new as $f => $val) {
-                        if ($val == "v") {
+                        if ($val === 'v') {
                             $fila_dia[$f] = "v";
                             $fila_dia_new[$f] = "";
                         }
@@ -502,25 +503,24 @@ class Planning
                             if ($p > 1) {
                                 $p = 2;
                             }
-                            $w = \date("w", mktime(0, 0, 0, $mini_0, $dini_0 + $dia, $aini_0));
+                            $w = \date("w", mktime(0, 0, 0, $mini_0, (int)$dini_0 + (int)$dia, $aini_0));
                             if ($w == 1) { //el lunes he de poner la linea que separa las semanas.
                                 $diumenge = "diumenge" . $p;
                             } else {
                                 $diumenge = "nada" . $p;
                             }
-
-                            $bgcolor = $this->scolorColumnaUno;                        // color de las columnas según si es par o impar
-                            (($d - 1) / $this->idd) % 2 ? 0 : $bgcolor = $this->scolorColumnaDos;    // por cada dia, todas las divisiones del dia iguales
+                            // color de las columnas según si es par o impar
+                            $bgcolor = (int)(($d - 1) / $this->idd) % 2 ? $this->scolorColumnaUno : $this->scolorColumnaDos;
                             //$bg_color_r=reservado($mini_0,$dini_0,$dia,$aini_0,$id_ubi,$periodos_sv);
                             switch ($reserva) {
                                 case "sf":
-                                    $bgcolor = "FFCCCC";
+                                    $bgcolor = "#FFCCCC";
                                     break;
                                 case "sv":
-                                    $bgcolor = "CCCCFF";
+                                    $bgcolor = "#CCCCFF";
                                     break;
                                 case "res":
-                                    $bgcolor = "CCFFCC";
+                                    $bgcolor = "#CCFFCC";
                                     break;
                                 case "pascua":
                                     $bgcolor = 'red';
@@ -533,7 +533,7 @@ class Planning
                                     echo "<td bgcolor=".$bgcolor." class=$diumenge onclick=\"javascript:alert('$this->inueva_act')\">&nbsp;</td>";
                                 } else { 
                                 */
-                                $html .= "<td bgcolor=" . $bgcolor . " class=$diumenge>&nbsp;</td>";
+                                $html .= "<td style=\"background-color: $bgcolor\" class=$diumenge>&nbsp;</td>";
                                 //}
                             }
                         }
@@ -552,9 +552,9 @@ class Planning
 
     // -------------------------------------------------------------------------------------------
     /**
-     *Sirve para selecionar el color de fondo si está reservado.
+     *Sirve para seleccionar el color de fondo si está reservado.
      */
-    private function reservado($mini_0, $dini_0, $dia, $aini_0, $id_ubi, $periodos_sv)
+    private function reservado($mini_0, $dini_0, $dia, $aini_0, $id_ubi, $periodos_sv): string
     {
         if ($id_ubi == 1) {
             return "";
@@ -563,19 +563,23 @@ class Planning
         if (!is_array($periodo_ubi)) {
             return "";
         }
-        $dia2 = $dia / $this->idd;
+        $dia2 = (int) ($dia / $this->idd);
         $dia_real = date("Ymd", mktime(0, 0, 0, $mini_0, $dini_0 + $dia2, $aini_0));
         $color = "";
         // Domingo de pascua:
         $dia_pascua = date("Ymd", easter_date($aini_0));
-        if ($dia_real == $dia_pascua) return "pascua";
+        if ($dia_real == $dia_pascua) {
+            return "pascua";
+        }
         foreach ($periodo_ubi as $per) {
             if ($dia_real <= $per['iso_fin'] && $dia_real >= $per['iso_ini']) {
                 if ($per['sfsv'] == 1) $color = "sv";
                 if ($per['sfsv'] == 2) $color = "sf";
                 if ($per['sfsv'] == 3) $color = "res";
                 break;
-            } elseif ($dia_real < $per['iso_ini']) {
+            }
+
+            if ($dia_real < $per['iso_ini']) {
                 $color = "";
                 break;
             }

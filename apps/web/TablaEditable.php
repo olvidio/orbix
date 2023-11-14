@@ -197,7 +197,7 @@ class TablaEditable
             return '<br \>' . _("no hay ninguna fila");
         }
         if (!empty($a_botones)) {
-            if ($a_botones == "ninguno") {
+            if ($a_botones === "ninguno") {
                 $b = "x";
             } else {
                 foreach ($a_botones as $a_boton) {
@@ -239,14 +239,6 @@ class TablaEditable
             }
         }
 
-        if ($b != 0 && $b != 'x') {
-            $width = isset($aColsWidth['sel']) ? $aColsWidth['sel'] : 30;
-            $sColumns .= "{id: \"sel\", name: \"sel\", field: \"sel\", width:$width, sortable: false, formatter: checkboxSelectionFormatter}";
-            if (!is_array($aColsVisible) || $aColsVisible['sel'] == "true") {
-                $sColumnsVisible .= "{id: \"sel\", name: \"sel\", field: \"sel\", width:$width, sortable: false, formatter: checkboxSelectionFormatter},";
-            }
-        }
-
         $aCols = $this->getHeader($a_cabeceras);
         $sColumns = $aCols['cols'];
         $sColumnsVisible = $aCols['colsVivible'];
@@ -271,19 +263,21 @@ class TablaEditable
             $aFilas[$num_fila]["id"] = $id_fila;
             $aFilas[$num_fila]['editable'] = '';
             foreach ($fila as $col => $valor) {
-                if ($col == "clase") {
+                if ($col === "clase") {
                     $id = $valor;
                     $aFilas[$num_fila]["clase"] = addslashes($id);
                     continue;
                 }
-                if ($col == "order") {
+                if ($col === "order") {
                     continue;
                 }
-                if ($col == "select") {
+                if ($col === "select") {
                     continue;
                 }
-                if ($col == "sel") {
-                    if (empty($b)) continue; // si no hay botones (por permisos...) no tiene sentido el checkbox
+                if ($col === "sel") {
+                    if (empty($b)) {
+                        continue;
+                    } // si no hay botones (por permisos...) no tiene sentido el checkbox
                     //$col="";
                     if (is_array($valor)) {
                         if (!empty($valor['select'])) {
@@ -373,7 +367,7 @@ class TablaEditable
         // calculo la altura de la tabla
         if (empty($grid_height) && $f < 12) {
             $grid_height = (4 + $f) * 25; // +4 (cabecera y última linea en blanco). 25 = rowheight
-            // mínimo, porque sino al deplegar el cuadro de búsqueda tapa tota la información
+            // mínimo, porque sino al desplegar el cuadro de búsqueda tapa tota la información
             $grid_height = ($grid_height < 200) ? 200 : $grid_height;
         } else {
             $grid_height = empty($grid_height) ? 350 : $grid_height;
@@ -389,17 +383,26 @@ class TablaEditable
 			var columnsAll_$id_tabla = $sColumns;
 			var data_$id_tabla = $sData;
 
+            var resizer = new Slick.Plugins.Resizer({
+              container: '#grid_$id_tabla',
+              rightPadding: 5,
+              bottomPadding: 5,
+              minHeight: 80,
+              minWidth: 200,
+              calculateAvailableSizeBy:  'container',
+            });
+            
 			var options = {
 				editable: true
-				,enableAddRow: false
+                ,enableAutoResize: true
 				,enableCellNavigation: true
+				,enableAddRow: false
+				,enableColumnReorder: true
 				,asyncEditorLoading: false
 				,autoEdit: false
-				,enableColumnReorder: true
-				,autosizeColsMode: true
 				,topPanelHeight: 50
 				,autoHeight: false
-				,forceFitColumns: true
+				,autosizeColsMode: Slick.GridAutosizeColsMode.LegacyForceFit
 			};
 
 			var sortcol = \"" . $sortcol . "\";
@@ -444,6 +447,13 @@ class TablaEditable
 				//console.log(row);
 			}
 					
+            function resumeAutoResize() {
+              resizer.pauseResizer(false);
+              resizer.resizeGrid();
+              // you could also delay the resize (in milliseconds)
+              resizer.resizeGrid(500);
+            }
+            
 			function clickFormatter(row, cell, value, columnDef, dataContext) {
 				if (ira=dataContext['ira']) {
 					return \"<span class=link onclick=\\\"fnjs_update_div('#main','\"+ira+\"') \\\" >\"+value+\"</span>\";
@@ -579,6 +589,7 @@ class TablaEditable
 				grid_$id_tabla = new Slick.Grid(\"#grid_$id_tabla\", dataView_$id_tabla, columns_$id_tabla, options);
 				grid_$id_tabla.setSelectionModel(new Slick.RowSelectionModel());
 				grid_$id_tabla.registerPlugin(new Slick.AutoTooltips());
+				grid_$id_tabla.registerPlugin(resizer);
                 //grid_$id_tabla.registerPlugin(new Slick.AutoColumnSize());
 
 				var pager = new Slick.Controls.Pager(dataView_$id_tabla, grid_$id_tabla, $(\"#pager\"));
@@ -735,8 +746,8 @@ class TablaEditable
 		";
 
         //$tt.="<div id=\"GridContainer_".$id_tabla."\"  style=\"width:{$grid_width}px; height:{$grid_height}px;\" >
-        //OJO. si heigth no es auto, al hacer resize desde html, los textos de debajo de la grid no se mueven.
-        $tt .= "<div id=\"GridContainer_" . $id_tabla . "\"  style=\"width:{$grid_width}px; height:auto;\" >
+        //OJO. si height no es auto, al hacer resize desde html, los textos de debajo de la grid no se mueven.
+        $ta = "<div id=\"GridContainer_" . $id_tabla . "\"  style=\"width:{$grid_width}px; height:auto;\" >
 		<div class=\"grid-header\">
 		  <span style=\"width:90%; display: inline-block;\">$botones</span>
 		  <span style=\"float:right\" class=\"ui-icon ui-icon-disk\" title=\"" . _("guardar selección de columnas") . "\"
@@ -744,12 +755,12 @@ class TablaEditable
 		  <span style=\"float:right\" class=\"ui-icon ui-icon-search\" title=\"" . _("ver/ocultar panel de búsqueda") . "\"
 				onclick=\"toggleFilterRow_$id_tabla()\"></span>
 		</div>
-		<div id=\"grid_$id_tabla\"  style=\"width:{$grid_width}px;\"></div>
+		<div id=\"grid_$id_tabla\"  style=\"width:{$grid_width}px;\" onresize=\"resumeAutoResize()\" ></div>
 		";
-        $tt .= "</div>";
+        $ta .= "</div>";
 
-        $tt .= "
-		<div id=\"inlineFilterPanel_" . $id_tabla . "\" style=\"display:none;background:#dddddd;padding:3px;color:black;\">
+        $ta .= "
+		<div id=\"inlineFilterPanel_" . $id_tabla . "\" style=\"background:#dddddd;padding:3px;color:black;\">
 		  " . _("Buscar en todas las columnas") . " <input type=\"text\" id=\"txtSearch_" . $id_tabla . "\">
 		</div>
 		";
@@ -759,14 +770,17 @@ class TablaEditable
         $a_camposHidden = array('que' => 'update');
         $oHash->setArraycamposHidden($a_camposHidden);
 
-        $tt .= "<form id=\"form_update\" action=\"?\" method=\"POST\">";
-        $tt .= $oHash->getCamposHtml();
-        $tt .= "
+        $ta .= "<form id=\"form_update\" action=\"?\" method=\"POST\">";
+        $ta .= $oHash->getCamposHtml();
+        $ta .= "
 		  <input type=\"hidden\" name=\"data\" value=\"\">
 		  <input type=\"hidden\" name=\"colName\" value=\"\">
 		</form>
 		";
-        return $tt;
+
+         $tb = $ta . $tt;
+
+        return $tb;
     }
 
     public function getHeader($aHeader)

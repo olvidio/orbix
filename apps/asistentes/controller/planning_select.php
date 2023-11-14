@@ -54,10 +54,10 @@ if (isset($_POST['stack'])) {
         $Qscroll_id = $oPosicion->getParametro('scroll_id');
         $oPosicion->olvidar($stack); //limpio todos los estados hacia delante.
 
-        $aWhere = unserialize(base64_decode($QsaWhere));
-        $aOperador = unserialize(base64_decode($QsaOperador));
-        $aWhereCtr = unserialize(base64_decode($QsaWhereCtr));
-        $aOperadorCtr = unserialize(base64_decode($QsaOperadorCtr));
+        $aWhere = unserialize(base64_decode($QsaWhere), ['allowed_classes' => false]);
+        $aOperador = unserialize(base64_decode($QsaOperador), ['allowed_classes' => false]);
+        $aWhereCtr = unserialize(base64_decode($QsaWhereCtr), ['allowed_classes' => false]);
+        $aOperadorCtr = unserialize(base64_decode($QsaOperadorCtr), ['allowed_classes' => false]);
     }
 } else { //si no vengo por goto.
     $Qtipo = (string)filter_input(INPUT_POST, 'tipo');

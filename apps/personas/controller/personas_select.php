@@ -175,10 +175,10 @@ if ($miRolePau == Role::PAU_NOM) { //persona
             $aWhere['sacd'] = 't';
         }
     } else {
-        $aWhere = unserialize(core\urlsafe_b64decode($sWhere));
-        $aOperador = unserialize(core\urlsafe_b64decode($sOperador));
-        $aWhereCtr = unserialize(core\urlsafe_b64decode($sWhereCtr));
-        $aOperadorCtr = unserialize(core\urlsafe_b64decode($sOperadorCtr));
+        $aWhere = unserialize(core\urlsafe_b64decode($sWhere), ['allowed_classes' => false]);
+        $aOperador = unserialize(core\urlsafe_b64decode($sOperador), ['allowed_classes' => false]);
+        $aWhereCtr = unserialize(core\urlsafe_b64decode($sWhereCtr), ['allowed_classes' => false]);
+        $aOperadorCtr = unserialize(core\urlsafe_b64decode($sOperadorCtr), ['allowed_classes' => false]);
     }
 
     if (!empty($aWhereCtr)) {
@@ -295,7 +295,7 @@ if (ConfigGlobal::is_app_installed('asistentes')) {
 }
 
 if (ConfigGlobal::is_app_installed('notas')) {
-    if (($tabla == "p_numerarios") || ($tabla == "p_agregados") || ($tabla == "p_de_paso_ex")) {
+    if (($tabla === "p_numerarios") || ($tabla === "p_agregados") || ($tabla === "p_de_paso_ex")) {
         $a_botones[] = array('txt' => _("ver tessera"),
             'click' => "fnjs_tessera(\"#seleccionados\")");
         $script['fnjs_tessera'] = 1;
@@ -315,7 +315,7 @@ if (ConfigGlobal::is_app_installed('notas')) {
 }
 if (ConfigGlobal::is_app_installed('actividadestudios')) {
     if ($_SESSION['oPerm']->have_perm_oficina('sm') || $_SESSION['oPerm']->have_perm_oficina('est')) {
-        if (($tabla == "p_numerarios") || ($tabla == "p_agregados") || ($tabla == "p_de_paso_ex")) {
+        if (($tabla === "p_numerarios") || ($tabla === "p_agregados") || ($tabla === "p_de_paso_ex")) {
             $a_botones[] = array('txt' => _("posibles ca"),
                 'click' => "fnjs_posibles_ca(\"#seleccionados\")");
             $script['fnjs_posibles_ca'] = 1;
@@ -323,7 +323,7 @@ if (ConfigGlobal::is_app_installed('actividadestudios')) {
     }
 }
 if (ConfigGlobal::is_app_installed('actividadplazas')) {
-    if (($tabla == "p_numerarios") || ($tabla == "p_agregados") || ($tabla == "p_de_paso_ex")) {
+    if (($tabla === "p_numerarios") || ($tabla === "p_agregados") || ($tabla === "p_de_paso_ex")) {
         $sactividad = 'ca'; //ca
         $a_botones[] = array('txt' => _("petición ca"),
             'click' => "fnjs_peticion_activ(\"#seleccionados\",\"$sactividad\")");
@@ -345,16 +345,22 @@ if ($_SESSION['oPerm']->have_perm_oficina('est')) {
             'click' => "fnjs_ficha_profe(\"#seleccionados\")");
         $script['fnjs_ficha_profe'] = 1;
     }
+    $a_botones[] = array('txt' => _("copiar tessera"),
+        'click' => "fnjs_copiar_tessera(\"#seleccionados\")");
+    $script['fnjs_copiar_tessera'] = 1;
 }
 
-// Añadir certificados
+// Añadir certificados para las r.
 if (ConfigGlobal::mi_ambito() === 'r') {
     $a_botones[] = array('txt' => _("imprimir certificado"),
         'click' => "fnjs_imp_certificado(\"#seleccionados\")");
     $script['fnjs_imp_certificado'] = 1;
+    $a_botones[] = array('txt' => _("adjuntar certificado"),
+        'click' => "fnjs_upload_certificado(\"#seleccionados\")");
+    $script['fnjs_upload_certificado'] = 1;
 }
 
-// Solo ver e imprimir tessera + certificados
+// Para rstgr borrar otros botones.
 if (ConfigGlobal::mi_ambito() === 'rstgr') {
     $a_botones = [];
     $a_botones[] = array('txt' => _("ver tessera"),
@@ -374,7 +380,7 @@ if (ConfigGlobal::mi_ambito() === 'rstgr') {
     $script['fnjs_ficha_profe'] = 1;
 }
 
-// en el caso de los de dre añado la posibilidad de listar la atencion a las actividades
+// en el caso de los de dre añado la posibilidad de listar la atención a las actividades
 if (ConfigGlobal::is_app_installed('actividadessacd')) {
     if ($_SESSION['oPerm']->have_perm_oficina('des')) {
         $a_botones[] = array('txt' => _("atención actividades"),
@@ -417,10 +423,10 @@ foreach ($cPersonas as $oPersona) {
     $id_nom = $oPersona->getId_nom();
     $nom = $oPersona->getPrefApellidosNombre();
 
-    if ($obj_pau != 'PersonaEx') {
+    if ($obj_pau !== 'PersonaEx') {
         $id_ctr = $oPersona->getId_ctr();
 
-        if (ConfigGlobal::mi_ambito() == 'rstgr') {
+        if (ConfigGlobal::mi_ambito() === 'rstgr') {
             $oCentroDl = new ubis\Centro($id_ctr);
         } else {
             $oCentroDl = new ubis\CentroDl($id_ctr);

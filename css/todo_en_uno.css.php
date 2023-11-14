@@ -10,8 +10,7 @@ namespace core;
 
 include_once (ConfigGlobal::$dir_estilos.'/colores.php'); 
 ?>
-<style>
-/*  ################ IMPRESORA #################### */
+<style>/*  ################ IMPRESORA #################### */
 @page { size: 21cm 29.7cm; margin: 0cm }
 @media print {
 	div.A4 { 
@@ -758,4 +757,4 @@ div.ventana z-index: 160;
 		border-width: 1px 1px 1px 1px;
 	}
 }
-</style> 
+</style>

@@ -39,7 +39,7 @@ class GestorActa extends core\ClaseGestor
      * @param string regió/dl/? en el que buscar la últim número d'acta.
      * @return integer
      */
-    function getUltimaActa($sRegion = '?', $any)
+    function getUltimaActa($any, $sRegion = '?')
     {
         $sRegion = ($sRegion == '?') ? "\\" . $sRegion : $sRegion;
         $oDbl = $this->getoDbl();

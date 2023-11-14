@@ -35,12 +35,12 @@ function dibujar_campo($obj, $atributo, $size, $span1, $span2)
     $oDatosCampo = $obj->$getdatos();
     $etiqueta = $oDatosCampo->getEtiqueta();
     // si el campo es fecha, añado la clase=fecha
-    if ($oDatosCampo->getTipo() == 'fecha') {
+    if ($oDatosCampo->getTipo() === 'fecha') {
         $class = 'fecha';
         $valor = $valor->getFromLocal();
     }
 
-    $valor = htmlspecialchars($valor);
+    $valor = empty($valor)? '' : htmlspecialchars($valor ?? '');
     /*
     $help=$a_valores_campo["help"];
     $help_ref=$a_valores_campo["help_ref"];
@@ -58,7 +58,7 @@ function dibujar_campo($obj, $atributo, $size, $span1, $span2)
     } else {
         $dibujo .= "&nbsp";
     }
-    if ($oDatosCampo->getTipo() == 'check') {
+    if ($oDatosCampo->getTipo() === 'check') {
         $chk = ($valor) ? 'checked' : '';
         $dibujo .= "<input class=\"$class contenido\" id=\"$name\" name=\"$name\" type=checkbox $chk >";
     } else {

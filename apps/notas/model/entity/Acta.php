@@ -485,7 +485,7 @@ class Acta extends core\ClasePropiedades
             $any = $oData->format('y');
             // inventar acta.
             $oGesActas = new GestorActa();
-            $num_acta = 1 + $oGesActas->getUltimaActa($valor, $any);
+            $num_acta = 1 + $oGesActas->getUltimaActa($any, $valor);
         }
         // no sé nada
         if ($valor == '?') {

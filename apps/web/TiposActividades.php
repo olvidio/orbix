@@ -180,6 +180,8 @@ class TiposActividades
     private $extendida = FALSE;
 
     /* CONSTRUCTOR -------------------------------------------------------------- */
+    private array $afNom_tipo;
+    private array $aNom_tipo;
 
     /**
      * Constructor de la classe.

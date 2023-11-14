@@ -63,7 +63,7 @@
             <td class=etiqueta><?= ucfirst(_("observaciones")); ?></td>
             <td>
                 <textarea class=contenido id="observ" name="observ" cols="40"
-                          rows="5"><?= htmlspecialchars($observ) ?></textarea></td>
+                          rows="5"><?= htmlspecialchars($observ ?? '') ?></textarea></td>
         </tr>
         <?php
         if ($Qmod == "nuevo" && empty($id_activ_real)) {

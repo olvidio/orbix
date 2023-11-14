@@ -46,8 +46,8 @@ class DatosForm
                 case "ver":
                     if ($this->mod !== 'nuevo') {
                         $formulario .= "<tr><td class=etiqueta>" . ucfirst($eti) . "</td>";
-                        $formulario .= "<td class=contenido>" . htmlspecialchars($valor_camp) . "</td></tr>";
-                        $formulario .= "<input type='hidden' name='$nom_camp' value=\"" . htmlspecialchars($valor_camp) . "\"></td></tr>";
+                        $formulario .= "<td class=contenido>" . htmlspecialchars($valor_camp ?? '') . "</td></tr>";
+                        $formulario .= "<input type='hidden' name='$nom_camp' value=\"" . htmlspecialchars($valor_camp ?? '') . "\"></td></tr>";
                     }
                     $camposNo .= empty($camposNo) ? $nom_camp : '!' . $nom_camp;
                     break;
@@ -55,7 +55,7 @@ class DatosForm
                 case "texto":
                     $formulario .= "<tr><td class=etiqueta>" . ucfirst($eti) . "</td>";
                     $size = $var_1;
-                    $formulario .= "<td class=contenido><input type='text' name='$nom_camp' value=\"" . htmlspecialchars($valor_camp) . "\" size='$size'></td></tr>";
+                    $formulario .= "<td class=contenido><input type='text' name='$nom_camp' value=\"" . htmlspecialchars($valor_camp ?? '') . "\" size='$size'></td></tr>";
                     break;
                 case "fecha":
                     $formulario .= "<tr><td class=etiqueta>" . ucfirst($eti) . "</td>";

@@ -536,7 +536,7 @@ class Lista
                             $aFilas[$num_fila][$aFields[$icol]] = addslashes($val);
                         }
                     } else {
-                        $aFilas[$num_fila][$aFields[$icol]] = addslashes($valor);
+                        $aFilas[$num_fila][$aFields[$icol]] = empty($valor)? '' : addslashes($valor);
                     }
                     $icol++;
                 }
@@ -567,7 +567,7 @@ class Lista
         // calculo la altura de la tabla
         if (empty($grid_height) && $f < 12) {
             $grid_height = (3 + $f) * 25; // +4 (cabecera y última linea en blanco). 25 = rowheight
-            // mínimo, porque sino al deplegar el cuadro de búsqueda tapa tota la información
+            // mínimo, porque sino al desplegar el cuadro de búsqueda tapa tota la información
             $grid_height = ($grid_height < 200) ? 200 : $grid_height;
         } else {
             $grid_height = empty($grid_height) ? 350 : $grid_height;
@@ -575,27 +575,37 @@ class Lista
 
 
         $tt = "<input id=\"scroll_id\" name=\"scroll_id\" value=\"$scroll_id\" type=\"hidden\">";
-
-//                ,autosizeColsMode: 
         $tt .= "
 			<script>
+			
 			var dataView_$id_tabla;
 			var grid_$id_tabla;
 			var columns_$id_tabla = $sColumnsVisible;
 			var columnsAll_$id_tabla = $sColumns;
 			var data_$id_tabla = $sData;
-			
+
+            var resizer = new Slick.Plugins.Resizer({
+              container: '#grid_$id_tabla',
+              rightPadding: 5,
+              bottomPadding: 5,
+              minHeight: 80,
+              minWidth: 200,
+              calculateAvailableSizeBy:  'container',
+            });
+            //grid.registerPlugin(resizer);	
+ 
 			var options = {
-				enableCellNavigation: true
-				,enableAddRow: false
-				,enableColumnReorder: true
-				,topPanelHeight: 50
-				,autoHeight: false
+                enableAutoResize: true
+                ,enableCellNavigation: true
+                ,enableAddRow: false
+                ,enableColumnReorder: true
+                ,topPanelHeight: 50
+                ,autoHeight: false
                 ,syncColumnCellResize: true
                 ,autosizeColumns: true
-				,forceFitColumns: true
+                ,autosizeColsMode: Slick.GridAutosizeColsMode.LegacyForceFit
 			};
-			
+            
 			var sortcol = \"" . $sortcol . "\";
 			var sortdir = 1;
 			var searchString = \"\";
@@ -620,7 +630,14 @@ class Lista
 				$(\"#scroll_id\").val(row);
 				//console.log(row);
 			}
-			
+            
+			function resumeAutoResize() {
+              resizer.pauseResizer(false);
+              resizer.resizeGrid();
+              // you could also delay the resize (in milliseconds)
+              resizer.resizeGrid(500);
+            }
+    
 			function clickFormatter(row, cell, value, columnDef, dataContext) {
 				if (ira=dataContext['ira']) {
 					return \"<span class=link onclick=\\\"fnjs_update_div('#main','\"+ira+\"'); return false; \\\" >\"+value+\"</span>\";
@@ -794,6 +811,7 @@ class Lista
 				grid_$id_tabla = new Slick.Grid(\"#grid_$id_tabla\", dataView_$id_tabla, columns_$id_tabla, options);
 				grid_$id_tabla.setSelectionModel(new Slick.RowSelectionModel());
 				grid_$id_tabla.registerPlugin(new Slick.AutoTooltips());
+				grid_$id_tabla.registerPlugin(resizer);
 				//grid_$id_tabla.registerPlugin(new Slick.AutoColumnSize());
 				
 				var pager = new Slick.Controls.Pager(dataView_$id_tabla, grid_$id_tabla, $(\"#pager\"));
@@ -930,26 +948,30 @@ class Lista
 		";
 
 
-        //OJO. si heigth no es auto, al hacer resize desde html, los textos de debajo de la grid no se mueven.
-        $tt .= "<div id=\"GridContainer_" . $id_tabla . "\"  style=\"width:{$grid_width}px; height:auto;\" >
+        //OJO. si height no es auto, al hacer resize desde html, los textos de debajo de la grid no se mueven.
+        $ta = "<div id=\"GridContainer_" . $id_tabla . "\"  style=\"width:{$grid_width}px; height:auto;\" >
 		<div class=\"grid-header\">
-		  <span style=\"width:90%; display: inline-block;\">$botones</span>
+          <span style=\"width:90%; display: inline-block;\">$botones</span>
 		  <span style=\"float:right\" class=\"ui-icon ui-icon-disk\" title=\"" . _("guardar selección de columnas") . "\"
 				onclick=\"fnjs_def_tabla('" . $id_tabla . "')\"></span>
 		  <span style=\"float:right\" class=\"ui-icon ui-icon-search\" title=\"" . _("ver/ocultar panel de búsqueda") . "\"
 				onclick=\"toggleFilterRow_$id_tabla()\"></span>
 		</div>
-		<div id=\"grid_$id_tabla\"  style=\"width:{$grid_width}px;\"></div>
+		<div id=\"grid_$id_tabla\"  style=\"width:{$grid_width}px; height:{$grid_height}px;\" onresize=\"resumeAutoResize()\" ></div>
 		";
-        $tt .= "</div>";
+        $ta .= "</div>";
 
-        $tt .= "
-		<div id=\"inlineFilterPanel_" . $id_tabla . "\" style=\"display:none;background:#dddddd;padding:3px;color:black;\">
+        $ta .= "
+		<div id=\"inlineFilterPanel_" . $id_tabla . "\" style=\"background:#dddddd;padding:3px;color:black;\">
 		  " . _("Buscar en todas las columnas") . " <input type=\"text\" id=\"txtSearch_" . $id_tabla . "\">
 		</div>
 		";
 
-        return $tt;
+        //$ta .= "<button onmouseenter=\"resumeAutoResize()\">Resume Auto-Resize</button>";
+
+        $tb = $ta . $tt;
+
+        return $tb;
     }
 
 

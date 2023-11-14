@@ -3,13 +3,34 @@
 namespace core;
 
 use config\model\Config;
-use web;
-use menus\model\entity\GestorGrupMenuRole;
 use permisos\model as permisos;
 use usuarios\model\entity as usuarios;
+use web;
 
-if (session_id() == "") {
-    session_start(); // if no active session we start a new one
+if (session_status() !== PHP_SESSION_ACTIVE) {
+    /* Para detectar el error: "Headers already sent" */
+    //$file = $line = null; headers_sent($file, $line); die("$file:$line");
+
+    // Configure timeout to 30 minutes
+    $timeout = 1800;
+    $maxlifetime = time() + $timeout;
+
+    // Set the maxlifetime of session
+    ini_set("session.gc_maxlifetime", $timeout);
+
+    // Also set the session cookie timeout
+    ini_set("session.cookie_lifetime", $timeout);
+
+    //$domain = ConfigGlobal::getDomain();
+    // Now start the session
+    session_set_cookie_params([
+        'lifetime' => $maxlifetime,
+        'Secure' => false,
+        'HttpOnly' => true,
+        'SameSite' => 'Strict',
+        //'Domain' => $domain
+        ]);
+    session_start();
 }
 
 require_once('apps/permisos/controller/login_obj.php');
@@ -53,8 +74,6 @@ $oDBPC_Select = $oConexion->getPDO();
 $config = $oConfigDB->getEsquema('resto');
 $oConexion = new DBConnection($config);
 $oDBRC_Select = $oConexion->getPDO();
-
-
 
 
 $user_sfsv = $_SESSION['session_auth']['sfsv'];

@@ -8,8 +8,6 @@ input.editor-text {
   background: transparent;
   outline: 0;
   padding: 0;
-  size:10px;
-
 }
 .cell-title {
   font-weight: bold;

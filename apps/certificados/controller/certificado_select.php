@@ -48,7 +48,7 @@ if (isset($_POST['stack'])) {
     }
 }
 
-if (ConfigGlobal::mi_ambito() !== 'rstgr') {
+if (ConfigGlobal::mi_ambito() === 'dl') {
     $msg = _("Este menú es sólo para las regiones del stgr.");
     $msg .="<br>";
     $msg .= _("Para ver los certificados de una persona, debe ir a través de los dossiers");
@@ -120,15 +120,15 @@ if (!empty($Qcertificado)) {
         $Qcertificado = "^($sReg)";
         $aWhere['certificado'] = $Qcertificado;
         $aOperador['certificado'] = '~';
-        $CertificadoRepository = new CertificadoRepository();
     }
+    $CertificadoRepository = new CertificadoRepository();
     $cCertificados = $CertificadoRepository->getCertificados($aWhere, $aOperador);
 }
 
 $botones = 0; // para 'añadir certificado'
 $a_botones = [];
 // Si soy region del stgr
-if (ConfigGlobal::mi_ambito() === 'rstgr') {
+if (ConfigGlobal::mi_ambito() === 'rstgr' || ConfigGlobal::mi_ambito() === 'r') {
         $a_botones[] = array('txt' => _("eliminar"), 'click' => "fnjs_eliminar(\"#seleccionados\")");
         $a_botones[] = array('txt' => _("modificar"), 'click' => "fnjs_modificar(\"#seleccionados\")");
         $botones = 1; // para 'añadir certificado'

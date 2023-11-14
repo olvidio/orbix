@@ -35,22 +35,6 @@ require_once("apps/core/global_header.inc");
 require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-function poner_asistencia($id_activ, $sacd)
-{
-    $insert = "INSERT INTO d_asistentes_activ
-			              (id_activ,id_nom,propio)
-						  VALUES ('$id_activ','$sacd','f')";
-    $oDB->exec($insert);
-}
-
-function quitar_asistencia($id_activ, $sacd)
-{
-    $delete = "DELETE FROM d_asistentes_activ
-			        WHERE id_activ='$id_activ' AND id_nom='$sacd' ";
-    //echo "sql: $delete";
-    $oDB->exec($delete);
-}
-
 function borrar_actividad($id_activ)
 {
     $oActividad = new Actividad($id_activ);
@@ -327,7 +311,7 @@ switch ($Qmod) {
                 }
             }
         }
-        // si vengo desde la presentacion del planning, ya tengo el id_activ.
+        // si vengo desde la presentación del planning, ya tengo el id_activ.
         if (!empty($Qid_activ)) {
             $oActividad = new Actividad($Qid_activ);
             $id_tipo_activ = $oActividad->getId_tipo_activ();

@@ -13,12 +13,12 @@ use asistentes\model\entity\GestorAsistenteOut;
 use core\ConfigDB;
 use core\ConfigGlobal;
 use core\ConverterDate;
-use core\DBPropiedades;
 use core\DBConnection;
+use core\DBPropiedades;
 use dossiers\model\entity\GestorDossier;
 use dossiers\model\entity\TipoDossier;
-use web;
 use ubis\model\entity\GestorDelegacion;
+use web;
 
 
 /**
@@ -342,11 +342,18 @@ class TrasladoDl
     /* -----------------------------------------------------------------------*/
     public function trasladar()
     {
-        $msg = '';
-        if ($this->comprobar() === false) {
+        if (($rta = $this->comprobar()) > 0) {
             $msg = $this->serror;
-            return _("comprobar.") . $msg;
+            if ($rta === 3) {
+                if ($this->cambiarFichaPersona() === false) {
+                    $msg .= "\n";
+                    $msg .= _("OJO: Debería cambiar el campo situación. No se ha hecho ningún cambio.");
+                }
+
+            }
+            return _("comprobar:") . " " . $msg;
         }
+
         // Aviso si le faltan notas
         if ($this->comprobarNotas() === false) {
             $msg = $this->serror;
@@ -386,27 +393,30 @@ class TrasladoDl
         return true;
     }
 
-    public function comprobar()
+    private function comprobar()
     {
         $error = '';
-        if (!empty($this->sdl_dst) and $this->sdl_dst == $this->sdl_persona) {
+        $rta = 0;
+        if (!empty($this->sdl_dst) && ($this->sdl_dst === $this->sdl_persona)) {
             $error = _("ya está trasladado. No se ha hecho ningún cambio.");
+            $rta = 1;
         }
         // Que la dl destino exista:
         $gesDelegacion = new GestorDelegacion();
         $a_dl = $gesDelegacion->getArrayDelegaciones();
-        if (!empty($this->sdl_org) and !in_array($this->sdl_org, $a_dl)) {
-            $error = _("No existe la dl origen. Ponerla bien en al ficha de la persona.");
+        if (!empty($this->sdl_org) && !in_array($this->sdl_org, $a_dl, true)) {
+            $error = _("No existe la dl origen. Ponerla bien en la ficha de la persona.");
+            $rta = 2;
         }
-        if (!empty($this->sdl_dst) and !in_array($this->sdl_dst, $a_dl)) {
+        if (!empty($this->sdl_dst) && !in_array($this->sdl_dst, $a_dl, true)) {
             $error = _("No existe la dl destino.");
+            $error .= "\n";
+            $error .= _("Solamente se anotará el traslado. No se mueven los datos.");
+            $rta = 3;
         }
-        if (empty($error)) {
-            return true;
-        } else {
-            $this->serror = $error;
-            return false;
-        }
+
+        $this->serror = $error;
+        return $rta;
     }
 
     public function comprobarNotas()
@@ -640,7 +650,7 @@ class TrasladoDl
             foreach ($colection as $Objeto) {
                 $Objeto->setoDbl($oDBorg);
                 $Objeto->DBCarregar();
-                //print_r($Objeto);
+                //print_r($oPersonaNota);
                 $NuevoObj = clone $Objeto;
                 if (method_exists($NuevoObj, 'setId_item') === true) $NuevoObj->setId_item(null);
                 $NuevoObj->setoDbl($oDBdst);

@@ -54,7 +54,7 @@ if (!empty($a_sel)) { //vengo de un checkbox
 $Qmod = (string)filter_input(INPUT_POST, 'mod');
 
 $Qsa_actas = (string)filter_input(INPUT_POST, 'sa_actas');
-$Qa_actas = unserialize(base64_decode($Qsa_actas));
+$Qa_actas = unserialize(base64_decode($Qsa_actas), ['allowed_classes' => false]);
 $Qacta = (string)filter_input(INPUT_POST, 'acta');
 $Qnotas = (string)filter_input(INPUT_POST, 'notas');
 
@@ -79,7 +79,7 @@ $GesActas = new notas\GestorActa();
 $ult_lib = $GesActas->getUltimoLibro();
 $ult_pag = $GesActas->getUltimaPagina($ult_lib);
 $ult_lin = $GesActas->getUltimaLinea($ult_lib);
-$ult_acta = $GesActas->getUltimaActa($dl, $any);
+$ult_acta = $GesActas->getUltimaActa($any, $dl);
 $acta_new = '';
 $pdf = '';
 
@@ -112,7 +112,7 @@ if (empty($notas) && empty($Qnotas)) {
     }
 }
 
-if ($notas != 'nuevo' && $Qmod != 'nueva' && !empty($acta_actual)) { //significa que no es nuevo
+if ($notas !== 'nuevo' && $Qmod !== 'nueva' && !empty($acta_actual)) { //significa que no es nuevo
     if (false && !empty($Qacta) && !empty($notas)) { // vengo de actualizar esta pág.
         // estoy actualizando la página
         $id_asignatura_actual = (integer)filter_input(INPUT_POST, 'id_asignatura_actual');
@@ -281,7 +281,7 @@ $oHashActaDelete->setArrayCamposHidden(['acta_num' => $acta_actual]);
 $h_delete = $oHashActaDelete->getParamAjax();
 
 // Solo cr, puede eliminar un acta firmada:
-if (ConfigGlobal::mi_ambito() == 'rstgr') {
+if (ConfigGlobal::mi_ambito() === 'rstgr' || ConfigGlobal::mi_ambito() === 'r') {
     $soy_rstgr = TRUE;
 } else {
     $soy_rstgr = FALSE;

@@ -5,6 +5,7 @@ use dbextern\model\entity\GestorIdMatchPersona;
 use dbextern\model\entity\GestorPersonaListas;
 use dbextern\model\entity\IdMatchPersona;
 use ubis\model\entity\GestorCentroDl;
+use ubis\model\entity\GestorDelegacion;
 
 // INICIO Cabecera global de URL de controlador *********************************
 require_once("apps/core/global_header.inc");
@@ -223,13 +224,27 @@ switch ($que) {
         $mi_esquema = ConfigGlobal::mi_region_dl();
         $oHoy = new web\DateTimeLocal();
         $sfsv_txt = (ConfigGlobal::mi_sfsv() == 1) ? 'v' : 'f';
-        $esq_dst = "H-" . $dl . $sfsv_txt;
-
-        if ($dl == 'cr') {
-            $situacion = 'D';
+        // si cambia de región, debe hacerse manualmente para introducir
+        // correctamente el campo 'situacion'
+        if (str_starts_with($dl, 'dl')) {
+            $dl_dst = $dl;
         } else {
-            $situacion = 'L';
+            $dl_dst = 'cr'.$dl;
         }
+        $gesDl = new GestorDelegacion();
+        $cDl = $gesDl->getDelegaciones(['dl' => $dl_dst, 'status' => 't']);
+        $region_dst = $cDl[0]->getRegion();
+
+        if ($region_dst !== ConfigGlobal::mi_region()) {
+            echo "\n";
+            echo _("Este traslado debe hacerse desde el dossier de traslados");
+            echo "\n";
+            echo _("Para asegurar que se llena correctamente el campo situación");
+            break;
+        }
+
+        $esq_dst = $region_dst . '-' . $dl_dst . $sfsv_txt;
+        $situacion = 'L';
 
         $oTrasladoDl->setDl_persona($mi_dele);
         $oTrasladoDl->setReg_dl_org($mi_esquema);

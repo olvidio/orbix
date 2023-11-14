@@ -6,7 +6,7 @@ $id_nom = (integer)filter_input(INPUT_POST, 'id_nom');
 $id_tabla = (string)filter_input(INPUT_POST, 'id_tabla');
 
 ob_start();
-include(dirname(__FILE__) . '/tessera_imprimir_mpdf.php');
+include(__DIR__ . '/tessera_imprimir_mpdf.php');
 $content = ob_get_clean();
 
 // convert to PDF
