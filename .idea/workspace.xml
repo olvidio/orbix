@@ -5,6 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f178a244-4024-41f6-8417-4831ab0bb057" name="Changes" comment="merge master to misas">
+      <change afterPath="$PROJECT_DIR$/.idea/phpunit.xml" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/apps/notas/controller/tessera_copiar.php" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/apps/notas/controller/tessera_copiar_select.php" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/apps/notas/view/tessera_copiar_select.html.twig" afterDir="false" />
@@ -494,6 +495,7 @@
       <change beforePath="$PROJECT_DIR$/.idea/php.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/php.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/sqldialects.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sqldialects.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.project" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.settings/.jsdtscope" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.settings/org.eclipse.ltk.core.refactoring.prefs" beforeDir="false" />
@@ -2145,8 +2147,6 @@
       <change beforePath="$PROJECT_DIR$/node_modules/jquery-ui/external/jquery-1.12.3/jquery.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/jquery-ui/external/jquery-1.12.3/jquery.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/node_modules/jquery-ui/external/jquery-1.12.4/LICENSE.txt" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/jquery-ui/external/jquery-1.12.4/LICENSE.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/node_modules/jquery-ui/external/jquery-1.12.4/jquery.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/jquery-ui/external/jquery-1.12.4/jquery.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/jquery-ui/external/jquery-1.7.0/MIT-LICENSE.txt" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/jquery-ui/external/jquery-1.7.0/MIT-LICENSE.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/jquery-ui/external/jquery-1.7.1/MIT-LICENSE.txt" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/jquery-ui/external/jquery-1.7.1/MIT-LICENSE.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/node_modules/jquery-ui/external/jquery-1.8.0/MIT-LICENSE.txt" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/jquery-ui/external/jquery-1.8.0/MIT-LICENSE.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/node_modules/jquery-ui/external/jquery-1.8.0/jquery.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/jquery-ui/external/jquery-1.8.0/jquery.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/node_modules/jquery-ui/external/jquery-1.8.1/MIT-LICENSE.txt" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/jquery-ui/external/jquery-1.8.1/MIT-LICENSE.txt" afterDir="false" />
@@ -2906,6 +2906,9 @@
   <component name="ProblemsViewState">
     <option name="selectedTabId" value="CurrentFile" />
   </component>
+  <component name="ProjectColorInfo"><![CDATA[{
+  "associatedIndex": 5
+}]]></component>
   <component name="ProjectId" id="2Fc5pyW3rCz0nKogGFs6qGRB2J7" />
   <component name="ProjectViewState">
     <option name="foldersAlwaysOnTop" value="false" />
@@ -3045,6 +3048,7 @@
       <workItem from="1679383712530" duration="1430000" />
       <workItem from="1679391584274" duration="7336000" />
       <workItem from="1683097177335" duration="18000" />
+      <workItem from="1699978487382" duration="1046000" />
     </task>
     <task id="LOCAL-00013" summary="sintaxis">
       <created>1665478367349</created>
@@ -3389,7 +3393,7 @@
       <option name="project" value="LOCAL" />
       <updated>1679384782892</updated>
     </task>
-    <option name="localTasksCounter" value="62" />
+    <option name="localTasksCounter" value="63" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -3407,6 +3411,8 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
+    <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
+    <option name="CHECK_NEW_TODO" value="false" />
     <MESSAGE value="typo en :: poner nombre en vez de id_nom al grabar notas acta" />
     <MESSAGE value="typo2 en :: poner nombre en vez de id_nom al grabar notas acta" />
     <MESSAGE value="revisión texto en index.php" />
