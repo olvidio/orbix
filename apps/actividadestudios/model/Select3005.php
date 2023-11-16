@@ -61,6 +61,7 @@ class Select3005
     // ------ Variables para mantener la selección de la grid al volver atras
     private $Qid_sel;
     private $Qscroll_id;
+    private string $LinkInsert;
 
     public function getBotones()
     {
