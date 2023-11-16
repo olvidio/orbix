@@ -1,4 +1,5 @@
-﻿<?php
+<?php
+
 // INICIO Cabecera global de URL de controlador *********************************
 require_once("apps/core/global_header.inc");
 // Archivos requeridos por esta url **********************************************

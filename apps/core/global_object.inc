@@ -8,7 +8,7 @@ use usuarios\model\entity as usuarios;
 use web;
 
 if (session_status() !== PHP_SESSION_ACTIVE) {
-    /* Para detectar el error: "Headers already sent" */
+    // Para detectar el error: "Headers already sent"
     //$file = $line = null; headers_sent($file, $line); die("$file:$line");
 
     // Configure timeout to 30 minutes
@@ -339,7 +339,7 @@ if (empty($_SESSION['oPermActividades'])) {
     //$oPermActividades = $_SESSION['oPermActividades'];
 }
 
-// Para validar los parametros enviados via POST
+// Para validar los parámetros enviados via POST
 $oValidator = new web\Hash();
 echo $oValidator->validatePost($_POST);
 

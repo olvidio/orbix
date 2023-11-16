@@ -20,7 +20,7 @@ use profesores\model\entity\Congreso;
         }
 
         table {
-            width: 680;
+            width: 680px;
             font-size: 12pt;
         }
 
@@ -98,7 +98,7 @@ use profesores\model\entity\Congreso;
         <?php
         if (!empty($a_curriculum) && is_array($a_curriculum)) {
             foreach ($a_curriculum as $n => $row) {
-                echo "<tr><td>${row['titulo']}</td><td>${row['centro_dnt']}</td><td>${row['year']}</td></tr>";
+                echo "<tr><td>{$row['titulo']}</td><td>{$row['centro_dnt']}</td><td>{$row['year']}</td></tr>";
             }
         }
         ?>
@@ -115,7 +115,7 @@ use profesores\model\entity\Congreso;
         <?php
         if (!empty($a_nombramientos) && is_array($a_nombramientos)) {
             foreach ($a_nombramientos as $n => $row) {
-                echo "<tr><td>${row['tipo_profesor']}</td><td>${row['f_nombramiento']}</td><td>${row['escrito_nombramiento']}</td></tr>";
+                echo "<tr><td>{$row['tipo_profesor']}</td><td>{$row['f_nombramiento']}</td><td>{$row['escrito_nombramiento']}</td></tr>";
             }
         }
         ?>
@@ -132,7 +132,7 @@ use profesores\model\entity\Congreso;
         <?php
         if (!empty($ampliacion) && is_array($ampliacion)) {
             foreach ($ampliacion as $n => $row) {
-                echo "<tr><td>${row['nombre_corto']}</td><td>${row['escrito_nombramiento']}</td><td>${row['f_nombramiento']}</td></tr>";
+                echo "<tr><td>{$row['nombre_corto']}</td><td>{$row['escrito_nombramiento']}</td><td>{$row['f_nombramiento']}</td></tr>";
             }
         }
         ?>

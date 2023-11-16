@@ -21,7 +21,7 @@ include_once(core\ConfigGlobal::$dir_estilos . '/colores.php');
         }
 
         table {
-            width: 680;
+            width: 680px;
         }
 
         th {
@@ -129,7 +129,7 @@ include_once(core\ConfigGlobal::$dir_estilos . '/colores.php');
                         } else {
                             $eclesiastico_txt = _("no");
                         }
-                        echo "<tr><td>${row['titulo']}</td><td>${row['centro_dnt']}</td><td>${row['year']}</td><td>$eclesiastico_txt</td></tr>";
+                        echo "<tr><td>{$row['titulo']}</td><td>{$row['centro_dnt']}</td><td>{$row['year']}</td><td>$eclesiastico_txt</td></tr>";
                     }
                 }
                 ?>
@@ -158,7 +158,7 @@ include_once(core\ConfigGlobal::$dir_estilos . '/colores.php');
                 <?php
                 if (is_array($a_nombramientos)) {
                     foreach ($a_nombramientos as $n => $row) {
-                        echo "<tr><td>${row['departamento']}</td><td>${row['tipo_profesor']}</td><td>${row['f_nombramiento']}</td><td>${row['escrito_nombramiento']}</td><td>${row['f_cese']}</td><td>${row['escrito_cese']}</td></tr>";
+                        echo "<tr><td>{$row['departamento']}</td><td>{$row['tipo_profesor']}</td><td>{$row['f_nombramiento']}</td><td>{$row['escrito_nombramiento']}</td><td>{$row['f_cese']}</td><td>{$row['escrito_cese']}</td></tr>";
                     }
                 }
                 ?>
@@ -187,7 +187,7 @@ include_once(core\ConfigGlobal::$dir_estilos . '/colores.php');
                 <?php
                 if (is_array($a_director)) {
                     foreach ($a_director as $n => $row) {
-                        echo "<tr><td>${row['departamento']}</td></td><td>${row['f_nombramiento']}</td><td>${row['escrito_nombramiento']}</td><td>${row['f_cese']}</td><td>${row['escrito_cese']}</td></tr>";
+                        echo "<tr><td>{$row['departamento']}</td></td><td>{$row['f_nombramiento']}</td><td>{$row['escrito_nombramiento']}</td><td>{$row['f_cese']}</td><td>{$row['escrito_cese']}</td></tr>";
                     }
                 }
                 ?>
@@ -215,7 +215,7 @@ include_once(core\ConfigGlobal::$dir_estilos . '/colores.php');
                     <?php
                     if (is_array($a_ampliacion)) {
                         foreach ($a_ampliacion as $n => $row) {
-                            echo "<tr><td>${row['nombre_corto']}</td><td>${row['escrito_nombramiento']}</td><td>${row['f_nombramiento']}</td><td>${row['f_cese']}</td><td>${row['escrito_cese']}</td></tr>";
+                            echo "<tr><td>{$row['nombre_corto']}</td><td>{$row['escrito_nombramiento']}</td><td>{$row['f_nombramiento']}</td><td>{$row['f_cese']}</td><td>{$row['escrito_cese']}</td></tr>";
                         }
                     }
                     ?>
@@ -317,7 +317,7 @@ include_once(core\ConfigGlobal::$dir_estilos . '/colores.php');
                                     } else {
                                         $pendiente_txt = _("no");
                                     }
-                                    echo "<tr><td>${row['tipo_publicacion']}</td><td>${row['titulo']}</td><td>${row['editorial']}</td><td>${row['coleccion']}</td><td>${row['f_publicacion']}</td><td>$pendiente_txt</td><td>${row['referencia']}</td><td>${row['lugar']}</td><td>${row['observ']}</td></tr>";
+                                    echo "<tr><td>{$row['tipo_publicacion']}</td><td>{$row['titulo']}</td><td>{$row['editorial']}</td><td>{$row['coleccion']}</td><td>{$row['f_publicacion']}</td><td>$pendiente_txt</td><td>{$row['referencia']}</td><td>{$row['lugar']}</td><td>{$row['observ']}</td></tr>";
                                 }
                             }
                             ?>
