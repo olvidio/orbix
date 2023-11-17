@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 
 use core\ConfigGlobal;
 use menus\model\entity as menus;
@@ -37,7 +37,7 @@ $filename_base = "$dir_base/log/menus/tot_menus_base.sql";
 $filename = "$dir_base/log/menus/tot_menus.sql";
 $filelog = "$dir_base/log/menus/menus.log";
 
-if ($Qaccion == 'importar') {
+if ($Qaccion === 'importar') {
     /* IMPORTANTE
        En el fichero /etc/sudoers  (editar con visudo) debe estar la linea:
 
@@ -97,7 +97,7 @@ if ($Qaccion == 'importar') {
 }
 
 
-if ($Qaccion == 'exportar') {
+if ($Qaccion === 'exportar') {
     // PASSAR A FICHEROS
 
     /* IMPORTANTE

@@ -31,7 +31,6 @@ namespace orbix\apps\core {
 }
 
 namespace orbix\apps {
-
     //permisos/login_inc
     use permisos\model\MyCrypt;
 

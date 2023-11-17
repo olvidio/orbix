@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 
 use actividadcargos\model\entity as actividadcargos;
 use actividades\model\entity as actividades;

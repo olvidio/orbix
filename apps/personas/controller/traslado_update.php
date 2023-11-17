@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 
 use core\ConfigGlobal;
 use dossiers\model\entity\Dossier;

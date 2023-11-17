@@ -59,6 +59,10 @@ $gesAsistentes = new GestorAsistente();
 foreach ($gesAsistentes->getAsistentes(array('id_activ' => $id_activ)) as $oAsistente) {
     $id_nom = $oAsistente->getId_nom();
     $oPersona = Persona::NewPersona($id_nom);
+    if (is_string($oPersona)) {
+        // no se encuentra esta persona...
+        continue;
+    }
     $stgr = $oPersona->getStgr();
     // sólo los que hacen estudios:
     if (!array_key_exists($stgr, $aTipos_stgr)) {

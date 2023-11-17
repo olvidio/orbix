@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /**
  * Esta página sirve para seleccionar una casa o varias para ver sus actividades etc.
  *

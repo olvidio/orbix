@@ -44,11 +44,11 @@ foreach ($cDatosCampos as $oDatosCampo) {
     $not_null = $oDatosCampo->datos_campo($oDbl, 'nulo');
     $longitud = $oDatosCampo->datos_campo($oDbl, 'longitud');
 
-    if (($nomcamp == 'id_nom' || $nomcamp == 'id_activ' || $nomcamp == 'id_ubi') && $Qcc_pau == 1) {
+    if (($nomcamp === 'id_nom' || $nomcamp === 'id_activ' || $nomcamp === 'id_ubi') && $Qcc_pau === 1) {
         $nomcamp = 'id_pau';
     }
     // caso especial.
-    if ($nomcamp == 'sfsv') {
+    if ($nomcamp === 'sfsv') {
         $nomcamp = 'isfsv';
     }
 
@@ -96,7 +96,7 @@ foreach ($cDatosCampos as $oDatosCampo) {
                 case 'int2':
                     //$valor=(int)$valor;
                     if (is_numeric($valor)) {
-                        if ((int)$valor != $valor) {
+                        if ((int)$valor != $valor) {  //$valor es un string  (viene del POST)
                             $errores[] = array('txt' => _("el campo \"%1\$s\" debe ser un número entero, y es: \"%2\$s\""),
                                 'camp' => $nomcamp,
                                 'etiqueta' => $etiqueta,
@@ -184,9 +184,9 @@ foreach ($cDatosCampos as $oDatosCampo) {
             $vacio = 1;
         }
     } else {
-        $vacio = ($tipo == 'bool') ? 0 : 1; // en el caso de checkbox entiendo que no valor = false.
+        $vacio = ($tipo === 'bool') ? 0 : 1; // en el caso de checkbox entiendo que no valor = false.
     }
-    if ($vacio == 1) {
+    if ($vacio === 1) {
         // Es necesario?
         if ($not_null) {
             //tiene un valor por defecto?

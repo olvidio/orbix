@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 
 use ubis\model\entity as ubis;
 

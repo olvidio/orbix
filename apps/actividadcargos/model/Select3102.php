@@ -126,7 +126,7 @@ class Select3102
             $oCargo = new actividadcargos\Cargo(array('id_cargo' => $id_cargo));
             $tipo_cargo = $oCargo->getTipo_cargo();
             // para los sacd en sf
-            if ($tipo_cargo == 'sacd' && $mi_sfsv == 2) {
+            if ($tipo_cargo === 'sacd' && $mi_sfsv == 2) {
                 continue;
             }
             $oPersona = personas\Persona::NewPersona($id_nom);
@@ -153,7 +153,7 @@ class Select3102
             } else {
                 $permiso = 3;
             }
-            $puede_agd == 't' ? $chk_puede_agd = "si" : $chk_puede_agd = "no";
+            $puede_agd === 't' ? $chk_puede_agd = "si" : $chk_puede_agd = "no";
 
             // Para los de des, elimino el cargo y la asistencia. Para el resto, sólo el cargo (no la asistencia).
             $this->txt_eliminar = _("¿Está seguro que desea quitar este cargo a esta persona?");

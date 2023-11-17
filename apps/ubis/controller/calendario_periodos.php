@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /**
  * Esta página sirve para asignar una dirección a un determinado ubi.
  *

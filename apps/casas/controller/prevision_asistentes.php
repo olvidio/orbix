@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 
 /**
  * Esta página lista las actividades de s y sg.

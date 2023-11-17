@@ -128,7 +128,7 @@ $html .= $oHashSelect->getCamposHtml();
 $html .= "<input type='hidden' id='mod' name='mod' value=''>";
 
 $oTabla = new web\Lista();
-// para el id_tabla, convierto los posibles '/' y '\' en '_' i también quito '.php'
+// para el id_tabla, convierto los posibles '/' y '\' en '_' y también quito '.php'
 //$oTabla->setId_tabla('datos_sql'.  $this->id_dossier);
 $id_tabla = str_replace('/', '_', $Qclase_info);
 $id_tabla = str_replace('\\', '_', $id_tabla);
@@ -142,7 +142,7 @@ $oTabla->setDatos($oDatosTabla->getValores());
 $html .= $oTabla->mostrar_tabla();
 
 if ($Qpermiso == 3) {
-    $html .= "<br><table cellspacing=3  class=botones><tr class=botones>
+    $html .= "<br><table class=botones><tr class=botones>
 		<td class=botones><input name=\"btn_new\" type=\"button\" value=\"";
     $html .= _("nuevo");
     $html .= "\" onclick=\"fnjs_nuevo('#seleccionados');\"></td></tr></table>";

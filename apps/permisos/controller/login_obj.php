@@ -289,6 +289,9 @@ if (!isset($_SESSION['session_auth'])) {
                         $oDBStI = $oDB_Select->query($query_idioma);
                         $row = $oDBStI->fetch(\PDO::FETCH_ASSOC);
                         $idioma = ($row === FALSE) ? '' : $row['preferencia'];
+                        if (!isset($idioma)) {
+                            $idioma = '';
+                        }
 
                         // ordenApellidos
                         $query_ordenApellidos = sprintf("select * from web_preferencias where id_usuario = '%s' and tipo = '%s' ", $id_usuario, "ordenApellidos");

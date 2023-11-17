@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 // INICIO Cabecera global de URL de controlador *********************************
 require_once("apps/core/global_header.inc");
 // Archivos requeridos por esta url **********************************************
@@ -13,7 +13,7 @@ $oDevelPC = $GLOBALS['oDBPC'];
 
 //************ GRUPMENU **************
 $sql_del = 'TRUNCATE TABLE ref_grupmenu RESTART IDENTITY';
-if ($oDevelPCSt = $oDevelPC->query($sql_del) === false) {
+if (($oDevelPCSt = $oDevelPC->query($sql_del)) === false) {
     $sClauError = 'ExportarMenu.VaciarTabla';
     $_SESSION['oGestorErrores']->addErrorAppLastError($oDevelPCSt, $sClauError, __LINE__, __FILE__);
     return false;
@@ -39,7 +39,7 @@ foreach ($oDevel->query($sQry, \PDO::FETCH_ASSOC) as $aDades) {
 }
 //************ GRUPMENU_ROL **************
 $sql_del = 'TRUNCATE TABLE ref_grupmenu_rol RESTART IDENTITY';
-if ($oDevelPCSt = $oDevelPC->query($sql_del) === false) {
+if (($oDevelPCSt = $oDevelPC->query($sql_del)) === false) {
     $sClauError = 'ExportarMenu.VaciarTabla';
     $_SESSION['oGestorErrores']->addErrorAppLastError($oDevelPCSt, $sClauError, __LINE__, __FILE__);
     return false;
@@ -65,7 +65,7 @@ foreach ($oDevel->query($sQry, \PDO::FETCH_ASSOC) as $aDades) {
 }
 //************ MENUS **************
 $sql_del = 'TRUNCATE TABLE ref_menus RESTART IDENTITY';
-if ($oDevelPCSt = $oDevelPC->query($sql_del) === false) {
+if (($oDevelPCSt = $oDevelPC->query($sql_del)) === false) {
     $sClauError = 'ExportarMenu.VaciarTabla';
     $_SESSION['oGestorErrores']->addErrorAppLastError($oDevelPCSt, $sClauError, __LINE__, __FILE__);
     return false;

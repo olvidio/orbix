@@ -1,4 +1,5 @@
 <?php
+
 // INICIO Cabecera global de URL de controlador *********************************
 require_once("apps/core/global_header.inc");
 // Archivos requeridos por esta url **********************************************
@@ -113,35 +114,33 @@ echo $oPosicion->mostrar_left_slide(1);
 <script>
     fnjs_grabar = function (formulario) {
         var rr = fnjs_comprobar_campos(formulario, '<?= addslashes(get_class($oFicha)) ?>');
-        //alert ("EEE "+rr);
         if (rr == 'ok') {
-            $(formulario).attr('action', "apps/core/mod_tabla_update.php");
-            $(formulario).one("submit", function () {
-                $.ajax({
-                    url: $(this).attr('action'),
-                    type: 'post',
-                    data: $(this).serialize()
-                })
-                    .done(function (rta_txt) {
-                        if (rta_txt != '' && rta_txt != '\\n') {
-                            alert('<?= _("respuesta") ?>: ' + rta_txt);
-                        } else {
-                            <?= $oPosicion->js_atras(1); ?>
-                        }
-                    });
-                return false;
+            var url = "apps/core/mod_tabla_update.php";
+            var parametros = $(formulario).serialize();
+
+            var request = $.ajax({
+                url: url,
+                data: parametros,
+                type: 'post',
+                dataType: 'html'
             });
-            $(formulario).trigger("submit");
-            $(formulario).off();
+            request.done(function (rta_txt) {
+                if (rta_txt != '' && rta_txt != '\\n') {
+                    alert('<?= _("respuesta") ?>: ' + rta_txt);
+                } else {
+                    <?= $oPosicion->js_atras(1); ?>
+                }
+            });
         }
     }
+
     fnjs_cancelar = function (formulario) {
         <?= $oPosicion->js_atras(1); ?>
     }
+
     fnjs_actualizar_depende = function (camp, accion) {
         var valor_depende = $('#' + camp).val();
         var parametros = 'clase_info=<?= $clase_info?>&accion=' + accion + '&valor_depende=' + valor_depende + '<?= $h ?>';
-        //var url='apps/core/mod_tabla_actualizar.php';
         var url = '<?= $web_depende ?>';
         $.ajax({
             url: url,
@@ -154,6 +153,7 @@ echo $oPosicion->mostrar_left_slide(1);
             });
         return false;
     }
+
     $('#seleccionados').ready(function () {
         $('#seleccionados .fecha').each(function (i) {
             $(this).datepicker();
@@ -166,14 +166,14 @@ echo $oPosicion->mostrar_left_slide(1);
     <h3 class=subtitulo><?= ucfirst($tit_txt) ?></h3>
     <h4><?= ucfirst($explicacion_txt) ?></h4>
     <table>
-        <?= $oDatosForm->getFormulario(); ?>
+        <?= $oDatosForm->getFormulario() ?>
     </table>
     <br>
     <table>
         <tr>
-            <td><input type="button" name="guardar" value="<?= ucfirst(_("guardar")) ?>" align="MIDDLE"
+            <td><input type="button" name="guardar" value="<?= ucfirst(_("guardar")) ?>"
                        onclick="fnjs_grabar('#seleccionados')"></td>
-            <td><input type="button" name="atras" value="<?= ucfirst(_("cancelar")) ?>" align="MIDDLE"
+            <td><input type="button" name="atras" value="<?= ucfirst(_("cancelar")) ?>"
                        onclick="fnjs_cancelar('#seleccionados')"></td>
         </tr>
     </table>
