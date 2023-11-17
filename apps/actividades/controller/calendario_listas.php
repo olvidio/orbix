@@ -189,7 +189,7 @@ foreach (array_keys($aGrupos) as $key) {
         case "oficina":
             $aWhere['_ordre'] = 'f_ini';
             // $key es el id asistentes
-            if ($mi_of == "des") {
+            if ($mi_of === "des") {
                 $oGesActiv = new GestorActividad();
                 // los de la sssc
                 $aWhere['id_tipo_activ'] = '^16';
@@ -230,8 +230,8 @@ foreach (array_keys($aGrupos) as $key) {
             $h_fin = $oActividad->getH_fin();
             $tarifa = $oActividad->getTarifa();
 
-            $h_ini = preg_replace('/(\d+):(\d+):(\d+)/', '$1:$2', $h_ini);
-            $h_fin = preg_replace('/(\d+):(\d+):(\d+)/', '$1:$2', $h_fin);
+            $h_ini = preg_replace('/(\d+):(\d+):(\d+)/', '$1:$2', $h_ini?? '');
+            $h_fin = preg_replace('/(\d+):(\d+):(\d+)/', '$1:$2', $h_fin?? '');
 
 
             $id_ubi = $oActividad->getId_ubi();
@@ -264,7 +264,7 @@ foreach (array_keys($aGrupos) as $key) {
             if (!$oPermActiv->have_perm_action('ver')) { // sólo puede ver que està ocupado
                 $a_ubi_activ[$key][$a]['sfsv'] = $ssfsv;
                 $a_ubi_activ[$key][$a]['tipo_activ'] = _("ocupado");
-                if ($tipo == 'oficina') {
+                if ($tipo === 'oficina') {
                     $a_ubi_activ[$key][$a]['cdc'] = "$nombre_ubi";
                 }
                 $a_ubi_activ[$key][$a]['fechas'] = "$f_ini - $f_fin";
@@ -275,7 +275,7 @@ foreach (array_keys($aGrupos) as $key) {
             } else {
                 $a_ubi_activ[$key][$a]['sfsv'] = $ssfsv;
                 $a_ubi_activ[$key][$a]['tipo_activ'] = "$sasistentes $sactividad $snom_tipo";
-                if ($tipo == 'oficina') {
+                if ($tipo === 'oficina') {
                     $a_ubi_activ[$key][$a]['cdc'] = "$nombre_ubi";
                 }
                 $a_ubi_activ[$key][$a]['fechas'] = "$f_ini - $f_fin";
@@ -288,7 +288,7 @@ foreach (array_keys($aGrupos) as $key) {
 
             $a_ubi_activ[$key][$a]['ctr_encargados'] = ''; //inicializar
 
-            if ($ver_ctr == 'si' && $oPermCtr->have_perm_action('ver')) {
+            if ($ver_ctr === 'si' && $oPermCtr->have_perm_action('ver')) {
                 $oGesEncargados = new GestorCentroEncargado();
                 $cCtrsEncargados = $oGesEncargados->getCentrosEncargados(array('id_activ' => $id_activ, '_ordre' => 'num_orden'));
 

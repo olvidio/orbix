@@ -156,12 +156,12 @@ foreach ($cActividades as $oActividad) {
     if (!empty($h_ini)) {
         $pattern = '/(\d+):(\d+):(\d+)/';
         $replacement = '$1:$2';
-        $h_ini = preg_replace($pattern, $replacement, $h_ini);
+        $h_ini = preg_replace($pattern, $replacement, $h_ini?? '');
     }
     if (!empty($h_fin)) {
         $pattern = '/(\d+):(\d+):(\d+)/';
         $replacement = '$1:$2';
-        $h_fin = preg_replace($pattern, $replacement, $h_fin);
+        $h_fin = preg_replace($pattern, $replacement, $h_fin?? '');
     }
     // calcular fecha activación
     $activacion = $aConversion_activacion[$id_tipo_activ];

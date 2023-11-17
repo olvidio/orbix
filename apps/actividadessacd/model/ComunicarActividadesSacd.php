@@ -148,11 +148,11 @@ class ComunicarActividadesSacd
                 $f_fin = $oF_fin->formatRoman();
 
                 if (!empty($h_ini)) {
-                    $h_ini = preg_replace('/(\d{2}):(\d{2}):(\d{2})/', '\1:\2', $h_ini);
+                    $h_ini = preg_replace('/(\d{2}):(\d{2}):(\d{2})/', '\1:\2', $h_ini?? '');
                     $f_ini .= " ($h_ini)";
                 }
                 if (!empty($h_fin)) {
-                    $h_fin = preg_replace('/(\d{2}):(\d{2}):(\d{2})/', '\1:\2', $h_fin);
+                    $h_fin = preg_replace('/(\d{2}):(\d{2}):(\d{2})/', '\1:\2', $h_fin?? '');
                     $f_fin .= " ($h_fin)";
                 }
 
