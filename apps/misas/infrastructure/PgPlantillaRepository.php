@@ -10,12 +10,8 @@ use PDOException;
 
 use misas\domain\entity\Plantilla;
 use misas\domain\repositories\PlantillaRepositoryInterface;
-use web\Desplegable;
-
-
-use web\TimeLocal;
-use web\NullTimeLocal;
 use core\ConverterDate;
+
 /**
  * Clase que adapta la tabla misa_plantillas_dl a la interfaz del repositorio
  *

@@ -4,12 +4,7 @@ namespace misas\domain\repositories;
 
 use PDO;
 use misas\domain\entity\Plantilla;
-use web\Desplegable;
 
-
-use web\TimeLocal;
-use web\NullTimeLocal;
-use core\ConverterDate;
 /**
  * Interfaz de la clase Plantilla y su Repositorio
  *

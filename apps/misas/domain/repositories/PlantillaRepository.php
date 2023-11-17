@@ -5,12 +5,7 @@ namespace misas\domain\repositories;
 use PDO;
 use misas\domain\entity\Plantilla;
 use misas\infrastructure\PgPlantillaRepository;
-use web\Desplegable;
 
-
-use web\TimeLocal;
-use web\NullTimeLocal;
-use core\ConverterDate;
 /**
  *
  * Clase para gestionar la lista de objetos tipo Plantilla

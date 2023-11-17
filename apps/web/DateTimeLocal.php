@@ -74,7 +74,7 @@ class DateTimeLocal extends DateTime
      * @param string $separador separador entre dia, mes año
      * @return string
      */
-    static public function getFormat($separador = '/')
+    static public function getFormat($separador = '/'): string
     {
         $idioma = $_SESSION['session_auth']['idioma'];
         # Si no hemos encontrado ningún idioma que nos convenga, mostramos la web en el idioma por defecto

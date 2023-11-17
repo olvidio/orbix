@@ -8,7 +8,7 @@
 <script>
 
     fnjs_quitar_sacd = function (param) {
-        request = $.ajax({
+        var request = $.ajax({
             data: param,
             url: 'apps/misas/controller/asignar_sacd.php',
             method: 'POST',
@@ -25,9 +25,46 @@
     }
 
     fnjs_asignar_sacd = function (data) {
-        request = $.ajax({
+        var request = $.ajax({
             data: data,
             url: 'apps/misas/controller/asignar_sacd.php',
+            method: 'POST',
+            dataType: 'json'
+        });
+        request.done(function (json) {
+            if (json.success !== true) {
+                alert("{{ "respuesta"|trans|raw }}: " + json.mensaje);
+            } else {
+                fnjs_update_div('#main', '{{ url_crear_plantilla|raw }}');
+                fnjs_cerrar();
+            }
+        });
+    }
+
+    fnjs_guardar_horario = function (data) {
+        var t_start = $('#t_start').val();
+        var t_end = $('#t_end').val();
+        var dataNew = data +'&t_start='+t_start+'&t_end='+t_end;
+        var request = $.ajax({
+            data: dataNew,
+            url: 'apps/misas/controller/guardar_horario.php',
+            method: 'POST',
+            dataType: 'json'
+        });
+        request.done(function (json) {
+            if (json.success !== true) {
+                alert("{{ "respuesta"|trans|raw }}: " + json.mensaje);
+            } else {
+                fnjs_update_div('#main', '{{ url_crear_plantilla|raw }}');
+                fnjs_cerrar();
+            }
+        });
+    }
+
+    fnjs_quitar_horario = function (data) {
+        var request = $.ajax({
+            data: data,
+            url: 'apps/misas/controller/quitar_horario.php',
             method: 'POST',
             dataType: 'json'
         });

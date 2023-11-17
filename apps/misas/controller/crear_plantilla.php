@@ -144,6 +144,9 @@ foreach ($cCentros as $oCentro) {
             $id_nom = $oPlantilla->getId_nom();
             $oPersonaSacd = new PersonaSacd($id_nom);
             $sacd = $oPersonaSacd->getNombreApellidos();
+            if (empty(trim($sacd))) {
+                $sacd = _("se tiene el id, pero NO el sacd");
+            }
         } else {
             $sacd = '??';
         }

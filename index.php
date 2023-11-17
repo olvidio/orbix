@@ -331,6 +331,9 @@ $h = $oHash->linkSinVal();
     <!-- jQuery CSS -->
     <link type="text/css" rel='stylesheet'
           href='<?= ConfigGlobal::getWeb_NodeScripts() . '/jquery-ui/themes/base/all.css' ?>'/>
+    <!-- ClockPicker Stylesheet -->
+    <link rel="stylesheet" type="text/css"
+          href='<?= ConfigGlobal::getWeb_NodeScripts() . '/clockpicker/dist/jquery-clockpicker.css' ?>' />
 
     <!-- jQuery -->
     <script type="text/javascript"
@@ -343,6 +346,10 @@ $h = $oHash->linkSinVal();
             src='<?= ConfigGlobal::getWeb_NodeScripts() . '/jquery-ui/ui/i18n/datepicker-es.js' ?>'></script>
     <script type="text/javascript"
             src='<?= ConfigGlobal::getWeb_NodeScripts() . '/jquery-ui/ui/i18n/datepicker-ca.js' ?>'></script>
+    <!-- clockPiker -->
+    <script type="text/javascript"
+            src='<?= ConfigGlobal::getWeb_NodeScripts() . '/clockpicker/dist/jquery-clockpicker.js' ?>'></script>
+
 
     <!-- Slick -->
     <!-- OJO: IMPORTA el orden. Pueden salir avisos (en consola del navegador) tipo: Grid.xx not defined  -->
