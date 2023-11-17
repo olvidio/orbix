@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /**
  * Esta página sirve para seleccionar una casa, y posteriormente mostrar una lista
  * de los presupuestos de esta casa para sf,sv i total.

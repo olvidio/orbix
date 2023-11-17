@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 
 use menus\model\entity as menus;
 

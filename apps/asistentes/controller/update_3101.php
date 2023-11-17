@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /**
  * Actualiza los datos de un objeto Asistente.
  * Al eliminar también elimina  las matrículas.

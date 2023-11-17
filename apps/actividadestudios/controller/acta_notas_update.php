@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 
 use actividades\model\entity\Actividad;
 use actividadestudios\model\entity\ActividadAsignaturaDl;

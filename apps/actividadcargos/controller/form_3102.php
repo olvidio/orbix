@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /**
  * Muestra un formulario para introducir/cambiar los datos del Cargo en una
  * persona en una actividad.

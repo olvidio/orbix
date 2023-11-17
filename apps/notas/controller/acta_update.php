@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 
 use notas\model\entity as notas;
 

@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 
 use asignaturas\model\entity as asignaturas;
 use dossiers\model\entity as dossiers;

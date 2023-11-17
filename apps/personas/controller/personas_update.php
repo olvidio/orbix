@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 
 use function core\is_true;
 use usuarios\model\entity as usuarios;

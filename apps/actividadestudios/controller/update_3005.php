@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 
 use actividadestudios\model\entity as actividadestudios;
 use dossiers\model\entity as dossiers;
