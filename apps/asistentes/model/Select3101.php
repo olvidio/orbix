@@ -327,7 +327,7 @@ class Select3101
                 if (ConfigGlobal::is_app_installed('actividadplazas')) {
                     // las cuento todas y a la hora de enseñar miro si soy la dl org o no.
                     // propiedad de la plaza:
-                    $propietario = $oAsistente->getPropietario();
+                    $propietario = $oAsistente->getPropietario() ?? '';
                     $padre = strtok($propietario, '>');
                     $child = strtok('>');
                     $dl = $child;
@@ -478,6 +478,7 @@ class Select3101
                 if ($propietario === NULL || $propietario === 'xxx') {
                     $this->msg_err .= _("ALERTA: asistente sin propiedad en la plaza") . ":<br>";
                     $this->msg_err .= "$nom(" . $oPersona->getId_tabla() . ")<br>";
+                    $propietario = '';
                 }
                 $padre = strtok($propietario, '>');
                 $child = strtok('>');
