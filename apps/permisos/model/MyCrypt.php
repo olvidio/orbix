@@ -48,21 +48,14 @@ class MyCrypt
          * Enabling this policy setting requires passwords to meet the following requirements:
 
          1.-Passwords may not contain the user's samAccountName (Account Name) value or entire displayName (Full Name value). Both checks are not case sensitive.
-
          The samAccountName is checked in its entirety only to determine whether it is part of the password. If the samAccountName is less than three characters long, this check is skipped.
-
          The displayName is parsed for delimiters: commas, periods, dashes or hyphens, underscores, spaces, pound signs, and tabs. If any of these delimiters are found, the displayName is split and all parsed sections (tokens) are confirmed to not be included in the password. Tokens that are less than three characters are ignored, and substrings of the tokens are not checked. For example, the name "Erin M. Hagens" is split into three tokens: "Erin", "M", and "Hagens". Because the second token is only one character long, it is ignored. Therefore, this user could not have a password that included either "erin" or "hagens" as a substring anywhere in the password.
 
          2.- The password contains characters from three of the following categories:
-
          *Uppercase letters of European languages (A through Z, with diacritic marks, Greek and Cyrillic characters)
-
          *Lowercase letters of European languages (a through z, sharp-s, with diacritic marks, Greek and Cyrillic characters)
-
          *Base 10 digits (0 through 9)
-
          *Nonalphanumeric characters: ~!@#$%^&*_-+=`|(){}[]:;"'<>,.?/
-
          *Any Unicode character that is categorized as an alphabetic character but is not uppercase or lowercase. This includes Unicode characters from Asian languages.
          */
 

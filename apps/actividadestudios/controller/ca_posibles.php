@@ -325,7 +325,7 @@ if (!empty($a_sel)) { //vengo de un checkbox
         $oUbi = new ubis\CentroDl($id_ubi);
         $Ctr = $oUbi->getNombre_ubi();
         // para ordenar paso a minúsculas.
-        $ctr = strtolower($Ctr);
+        $ctr = strtolower($Ctr?? '');
         $cOrdPersonas[$ctr][] = array('Ctr' => $Ctr, 'oPersonaDl' => $oPersonaDl);
     }
 } else {
@@ -338,7 +338,7 @@ if (!empty($a_sel)) { //vengo de un checkbox
             $oUbi = new ubis\CentroDl($id_ubi);
             $Ctr = $oUbi->getNombre_ubi();
             // para ordenar paso a minúsculas.
-            $ctr = strtolower($Ctr);
+            $ctr = strtolower($Ctr?? '');
         }
         $cOrdPersonas[$ctr][] = array('Ctr' => $Ctr, 'oPersonaDl' => $oPersonaDl);
     }

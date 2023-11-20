@@ -82,7 +82,7 @@ class GestorRole extends core\ClaseGestor
         }
         $aRoles = [];
         foreach ($oDbl->query($sQuery) as $aDades) {
-            $nom_role = strtolower($aDades['role']);
+            $nom_role = strtolower($aDades['role']?? '');
             $aRoles[$nom_role] = $aDades['id_role'];
         }
         return $aRoles;
@@ -109,7 +109,7 @@ class GestorRole extends core\ClaseGestor
         }
         $aPauRoles = [];
         foreach ($oDbl->query($sQuery) as $aDades) {
-            $nom_pau = strtolower($aDades['pau']);
+            $nom_pau = strtolower($aDades['pau']?? '');
             $id_role = strtolower($aDades['id_role']);
             $aPauRoles[$id_role] = $nom_pau;
         }

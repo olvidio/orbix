@@ -53,7 +53,7 @@ class odf
 
     function startElement($parser, $tagName, $attrs)
     {
-        $cTagName = strtolower($tagName);
+        $cTagName = strtolower($tagName?? '');
         if ($cTagName === 'style:font-face') {
             //$this->fonts[$attrs['STYLE:NAME']] = $attrs;
         } elseif ($cTagName === 'style:style') {
@@ -91,7 +91,7 @@ class odf
 
     function endElement($parser, $tagName)
     {
-        $cTagName = strtolower($tagName);
+        $cTagName = strtolower($tagName?? '');
         if ($cTagName === 'table:table') {
             $this->currentSheet++;
             $this->currentRow = 0;
