@@ -117,8 +117,8 @@ $aplicacion = !empty($Q_aplicacion) ? $Q_aplicacion : "delegación";
 
 // crear el directorio legacy si no existe
 $dir_legacy = ServerConf::DIR . '/apps/' . $grupo . '/legacy';
-if (!is_dir($dir_legacy)) {
-    mkdir($dir_legacy);
+if (!mkdir($dir_legacy) && !is_dir($dir_legacy)) {
+    throw new \RuntimeException(sprintf('Directory "%s" was not created', $dir_legacy));
 }
 
 /* rename file of class to old if exists */
@@ -370,7 +370,7 @@ foreach ($oDbl->query($sql) as $row) {
             $tip_val = '';
             $json_dades .= "\n\t\t\t";
             $json_dades .= '$aDatos[\'' . $nomcamp . '\'] = (new ConverterJson($aDatos[\'' . $nomcamp . '\']))->fromPg();';
-        break;
+            break;
         case 'bytea':
             $tipo_db = 'string';
             $tip = 's';
@@ -399,7 +399,7 @@ foreach ($oDbl->query($sql) as $row) {
             $bytea_bind .= "\n\t\t";
             $bytea_bind .= 'if ($aDatos !== FALSE) {';
             $bytea_bind .= "\n\t\t\t";
-            $bytea_bind .= '$aDatos[\'' . $nomcamp . '\'] = hex2bin($' . $tip . $nomcamp . ');';
+            $bytea_bind .= '$aDatos[\'' . $nomcamp . '\'] = hex2bin($' . $tip . $nomcamp . ' ?? \'\');';
             $bytea_bind .= "\n\t\t";
             $bytea_bind .= '}';
             break;
@@ -784,7 +784,7 @@ use $grupo\\infrastructure\\$pg_clase;
 use web\Desplegable;
 ";
 $txt_repository .= "\n" . $use_txt;
-$txt_repository.= "
+$txt_repository .= "
 /**
  *
  * Clase para gestionar la lista de objetos tipo $Q_clase
@@ -886,7 +886,7 @@ $txt_repository .= '
 	 *
 	 * @param array $aWhere asociativo con los valores para cada campo de la BD.
 	 * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-	 * @return array|FALSE Una colección de objetos de tipo ' . $Q_clase ;
+	 * @return array|FALSE Una colección de objetos de tipo ' . $Q_clase;
 if (!empty($a_use_txt['JsonException'])) {
     $txt_repository .= "\n\t" . ' * @throws JsonException';
 }
@@ -907,7 +907,7 @@ $txt_interface .= '
 	 *
 	 * @param array $aWhere asociativo con los valores para cada campo de la BD.
 	 * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-	 * @return array|FALSE Una colección de objetos de tipo ' . $Q_clase ;
+	 * @return array|FALSE Una colección de objetos de tipo ' . $Q_clase;
 if (!empty($a_use_txt['JsonException'])) {
     $txt_interface .= "\n\t" . ' * @throws JsonException';
 }
@@ -927,10 +927,10 @@ $txt_pgRepositorio .= '
 	 * @param array $aWhere asociativo con los valores para cada campo de la BD.
 	 * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
 	 * @return array|FALSE Una colección de objetos de tipo ' . $Q_clase;
-    if (!empty($a_use_txt['JsonException'])) {
+if (!empty($a_use_txt['JsonException'])) {
     $txt_pgRepositorio .= "\n\t" . ' * @throws JsonException';
-    }
-    $txt_pgRepositorio .= "\n\t" . '
+}
+$txt_pgRepositorio .= "\n\t" . '
 	 */
 	public function get' . $clase_plural . '(array $aWhere=[], array $aOperators=[]): array|FALSE
 	{
@@ -1371,8 +1371,8 @@ $txt_pgRepositorio .= "\n}";
 /* ESCRIURE LA CLASSSE  PG REPOSITORY  --------------------------------- */
 // crear el directorio infrastructure si no existe
 $dir_infra = ServerConf::DIR . '/apps/' . $grupo . '/infrastructure';
-if (!is_dir($dir_infra)) {
-    mkdir($dir_infra);
+if (!mkdir($dir_infra) && !is_dir($dir_infra)) {
+    throw new \RuntimeException(sprintf('Directory "%s" was not created', $dir_infra));
 }
 $filename = $dir_infra . '/' . $pg_clase . '.php';
 if (!$handle = fopen($filename, 'w')) {
@@ -1389,8 +1389,8 @@ fclose($handle);
 
 /* ESCRIURE LA CLASSE  REPOSITORYINTERFACE  --------------------------------- */
 $dir_repositories = ServerConf::DIR . '/apps/' . $grupo . '/domain/repositories';
-if (!is_dir($dir_repositories)) {
-    mkdir($dir_repositories);
+if (!mkdir($dir_repositories) && !is_dir($dir_repositories)) {
+    throw new \RuntimeException(sprintf('Directory "%s" was not created', $dir_repositories));
 }
 $filename = $dir_repositories . '/' . $clase_interface . '.php';
 if (!$handle = fopen($filename, 'w')) {

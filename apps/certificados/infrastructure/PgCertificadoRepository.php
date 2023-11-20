@@ -255,7 +255,7 @@ class PgCertificadoRepository extends ClaseRepository implements CertificadoRepo
         $oDblSt->bindColumn('documento', $sdocumento, PDO::PARAM_STR);
         $aDatos = $oDblSt->fetch(PDO::FETCH_ASSOC);
         if ($aDatos !== FALSE) {
-            $aDatos['documento'] = hex2bin($sdocumento);
+            $aDatos['documento'] = hex2bin($sdocumento?? '');
         }
         // para las fechas del postgres (texto iso)
         if ($aDatos !== FALSE) {

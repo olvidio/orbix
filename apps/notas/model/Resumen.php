@@ -703,9 +703,9 @@ class Resumen extends core\ClasePropiedades
          */
 
         // En el caso cr-stgr, añado la dl al nombre ubi.
+        $where_dl = '';
         if (ConfigGlobal::mi_ambito() === 'rstgr') {
             // Si tengo dl filtro por dl.
-            $where_dl = '';
             if (!empty($this->getArrayDl())) {
                 $dl_csv = implode("','", $this->getArrayDl());
                 $where_dl = "p.dl IN ('$dl_csv') AND";

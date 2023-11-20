@@ -373,7 +373,7 @@ class Acta extends core\ClasePropiedades
     {
         if (!is_array($aDades)) return;
         if (array_key_exists('id_schema', $aDades)) $this->setId_schema($aDades['id_schema']);
-        // la fecha debe estar antes del acta por si hay que usar la funcion inventarActa.
+        // la fecha debe estar antes del acta por si hay que usar la función inventarActa.
         if (array_key_exists('f_acta', $aDades)) $this->setF_acta($aDades['f_acta'], $convert);
         if (array_key_exists('acta', $aDades)) $this->setActa($aDades['acta']);
         if (array_key_exists('id_asignatura', $aDades)) $this->setId_asignatura($aDades['id_asignatura']);
@@ -732,7 +732,7 @@ class Acta extends core\ClasePropiedades
         if (!isset($this->pdf) && !$this->bLoaded) {
             $this->DBCarregar();
         }
-        return hex2bin($this->pdf);
+        return hex2bin($this->pdf?? '');
     }
     /* MÉTODOS GET y SET D'ATRIBUTOS QUE NO SON CAMPOS -----------------------------*/
 
