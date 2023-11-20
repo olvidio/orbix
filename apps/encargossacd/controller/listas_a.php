@@ -125,28 +125,32 @@ foreach ($tipos_de_ctr as $tipo_ctr_que) {
                 $modo = $oEncargoSacd->getModo();
                 $id_nom = $oEncargoSacd->getId_nom();
                 $oPersona = Persona::NewPersona($id_nom);
-                $nom_ap = $oPersona->getNombreApellidosCrSin();
+                if (is_string($oPersona)) {
+                    $nom_ap = $oPersona;
+                } else {
+                    $nom_ap = $oPersona->getNombreApellidosCrSin();
+                }
                 if ($id_tipo_enc == '1101') { // para las meditaciones, es colaborador
                     $sacd_colaborador .= "<br>" . $nom_ap;
                 } else {
                     switch ($modo) {
                         case 2:
                             // para los centros de estudio, añado: '(dre)'
-                            if ($tipo_ctr == "^njce") {
+                            if ($tipo_ctr === "^njce") {
                                 $sacd_titular = sprintf("%s (%s)", $nom_ap, _("dre"));
                             } else {
                                 $sacd_titular = $nom_ap;
                             }
                             break;
                         case 3:
-                            if ($tipo_ctr == "^ss") {
+                            if ($tipo_ctr === "^ss") {
                                 $parentesis = _("confesor");
                             } else {
                                 $parentesis = _("no cl");
                             }
                             if ($Qsf == 1) {
                                 // para los centros de estudio, añado: '(dre)'
-                                if ($tipo_ctr == "^njce") {
+                                if ($tipo_ctr === "^njce") {
                                     $sacd_titular = sprintf("%s (%s)", $nom_ap, _("dre"));
                                 } else {
                                     $sacd_titular = $nom_ap;
