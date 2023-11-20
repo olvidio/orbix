@@ -35,6 +35,7 @@ class SincroDB
 
     private $aDlListas2Orbix;
     private $aDlOrbix2listas;
+    private $path_ini;
 
 
     public function getTipo_persona()
