@@ -8,6 +8,7 @@ use actividades\model\entity\GestorRepeticion;
 use actividadtarifas\model\entity\GestorTipoTarifa;
 use cambios\model\GestorAvisoCambios;
 use core\ConfigGlobal;
+use core\ConverterJson;
 use function core\is_true;
 use core;
 use stdClass;
@@ -690,8 +691,8 @@ class Cambio extends core\ClasePropiedades
         if (array_key_exists('id_tipo_cambio', $aDades)) $this->setId_tipo_cambio($aDades['id_tipo_cambio']);
         if (array_key_exists('id_activ', $aDades)) $this->setId_activ($aDades['id_activ']);
         if (array_key_exists('id_tipo_activ', $aDades)) $this->setId_tipo_activ($aDades['id_tipo_activ']);
-        if (array_key_exists('json_fases_sv', $aDades)) $this->setJson_fases_sv($aDades['json_fases_sv']);
-        if (array_key_exists('json_fases_sf', $aDades)) $this->setJson_fases_sf($aDades['json_fases_sf']);
+        if (array_key_exists('json_fases_sv', $aDades)) $this->setJson_fases_sv($aDades['json_fases_sv'], TRUE);
+        if (array_key_exists('json_fases_sf', $aDades)) $this->setJson_fases_sf($aDades['json_fases_sf'], TRUE);
         if (array_key_exists('id_status', $aDades)) $this->setId_status($aDades['id_status']);
         if (array_key_exists('dl_org', $aDades)) $this->setDl_org($aDades['dl_org']);
         if (array_key_exists('objeto', $aDades)) $this->setObjeto($aDades['objeto']);
@@ -888,14 +889,11 @@ class Cambio extends core\ClasePropiedades
     }
 
     /**
-     * Establece el valor del atributo json_fases_sv de Cambio
-     *
-     * @param object $oFases
+     * @throws \JsonException
      */
-    function setJson_fases_sv($oFases)
+    public function setJson_fases_sv(string|array|null $oJSON, bool $db = FALSE):void
     {
-        $json_fases_sv = json_encode($oFases);
-        $this->json_fases_sv = $json_fases_sv;
+        $this->json_fases_sv = (new ConverterJson($oJSON, FALSE))->toPg($db);
     }
 
     /**
@@ -921,14 +919,11 @@ class Cambio extends core\ClasePropiedades
     }
 
     /**
-     * Establece el valor del atributo json_fases_sf de Cambio
-     *
-     * @param object $oFases
+     * @throws \JsonException
      */
-    function setJson_fases_sf($oFases)
+    public function setJson_fases_sf(string|array|null $oJSON, bool $db = FALSE):void
     {
-        $json_fases_sf = json_encode($oFases);
-        $this->json_fases_sf = $json_fases_sf;
+        $this->json_fases_sf = (new ConverterJson($oJSON, FALSE))->toPg($db);
     }
 
     /**

@@ -250,8 +250,10 @@ class GestorAvisoCambios
                     case 'AsistenteOut':
                     case 'ActividadCargoNoSacd':
                     case 'ActividadCargoSacd':
-                        $oActividadCambio->setPropiedad('id_nom');
-                        $oActividadCambio->setValor_old($aDadesActuals['id_nom']);
+                        if (!empty($aDadesActuals['id_nom'])) {
+                            $oActividadCambio->setPropiedad('id_nom');
+                            $oActividadCambio->setValor_old($aDadesActuals['id_nom']);
+                        }
                         break;
                     case 'CentroEncargado':
                         $oActividadCambio->setPropiedad('id_ubi');
