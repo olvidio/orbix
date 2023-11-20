@@ -41,7 +41,7 @@ switch ($que) {
 
         $oActividadPlazasDl->DBCarregar();
 
-        $json_cedidas = $oActividadPlazasDl->getCedidas();
+        $json_cedidas = $oActividadPlazasDl->getCedidas()?? '';
         $oCedidas = json_decode($json_cedidas);
         if (empty($oCedidas)) {
             $oCedidas = new stdClass;
