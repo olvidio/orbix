@@ -105,12 +105,12 @@ abstract class ClaseGestor
             foreach ($cClassesTot as $key_c => $oClass) {
                 $get = '';
                 foreach ($a_ordre as $key_o => $ordre) {
-                    //comprobar que en $ordre está sólo el campo. Puede tener parametros: ASC, DESC
+                    //comprobar que en $ordre está sólo el campo. Puede tener parámetros: ASC, DESC
                     $aa_ordre = explode(' ', $ordre);
                     $ordreCamp = $aa_ordre[0];
                     $get = 'get' . ucfirst($ordreCamp);
                     if (method_exists($oClass, $get)) {
-                        $a_ord[$key_o][$key_c] = strtolower($oClass->$get());
+                        $a_ord[$key_o][$key_c] = strtolower($oClass->$get() ?? '');
                         $a_ord_cond[$key_o] = SORT_ASC;
                         if (count($aa_ordre) > 1) {
                             if ($aa_ordre[1] === 'DESC') {
