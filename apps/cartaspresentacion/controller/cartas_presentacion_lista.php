@@ -39,15 +39,18 @@ switch ($Qque) {
             $GesPresentacion = new GestorCartaPresentacion();
         }
         $colPresentacion = $GesPresentacion->getCartasPresentacion();
-        $a_mega = array();
+        $a_mega_tmp = [];
         foreach ($colPresentacion as $oPresentacion) {
             $id_ubi = $oPresentacion->getId_ubi();
             $oCentro = new Centro($id_ubi);
             $dl = $oCentro->getDl();
-            if ($solo_dl == 1 && $dl != $mi_dele) continue;
-            $a_mega = array_merge_recursive($a_mega, mega_array($oPresentacion, $oCentro, $ordenar_dl));
+            if ($solo_dl === 1 && $dl !== $mi_dele) {
+                continue;
+            }
+            $a_mega_tmp[] = mega_array($oPresentacion, $oCentro, $ordenar_dl);
         }
-        echo lista_cartas($a_mega, $ordenar_dl);
+        $a_mega = array_merge_recursive(...$a_mega_tmp);
+        lista_cartas($a_mega, $ordenar_dl);
         break;
     case "get":
         $ordenar_dl = 1;
@@ -70,7 +73,7 @@ switch ($Qque) {
 
             $GesDirecciones = new GestorDireccionCtr();
             $cDirecciones = $GesDirecciones->getDirecciones($aWhere, $aOperador);
-            $a_mega = array();
+            $a_mega_tmp = [];
             foreach ($cDirecciones as $oDireccion) {
                 $id_direccion = $oDireccion->getId_direccion();
                 $cId_ubis = $oDireccion->getUbis();
@@ -87,22 +90,25 @@ switch ($Qque) {
                     $colPresentacion = $GesPresentacion->getCartasPresentacion(array('id_ubi' => $id_ubi, 'id_direccion' => $id_direccion));
                     if (!empty($colPresentacion) && !empty($colPresentacion[0])) {
                         $oPresentacion = $colPresentacion[0];
-                        $a_mega = array_merge_recursive($a_mega, mega_array($oPresentacion, $oCentro, $ordenar_dl));
+                        $a_mega_tmp[] = mega_array($oPresentacion, $oCentro, $ordenar_dl);
                     }
                 }
+                $a_mega = array_merge_recursive(...$a_mega_tmp);
             }
             // Extiendo la búsqueda al campo zona
             if (!empty($Qpoblacion)) {
                 $GesPresentacion = new GestorCartaPresentacion();
                 $colPresentacion = $GesPresentacion->getCartasPresentacion(array('zona' => $Qpoblacion), array('zona' => 'sin_acentos'));
+                $a_mega_tmp = [];
                 foreach ($colPresentacion as $oPresentacion) {
                     $id_ubi = $oPresentacion->getId_ubi();
                     $oCentro = new Centro($id_ubi);
-                    $a_mega = array_merge_recursive($a_mega, mega_array($oPresentacion, $oCentro, $ordenar_dl));
+                    $a_mega_tmp[] = mega_array($oPresentacion, $oCentro, $ordenar_dl);
                 }
+                $a_mega = array_merge_recursive(...$a_mega_tmp);
             }
 
-            echo lista_cartas($a_mega, $ordenar_dl);
+            lista_cartas($a_mega, $ordenar_dl);
         }
         if (!empty($Qregion)) {
             $aWhere['region'] = $Qregion;
@@ -110,16 +116,17 @@ switch ($Qque) {
 
             $GesCentros = new GestorCentro();
             $cCentros = $GesCentros->getCentros($aWhere, $aOperador);
-            $a_mega = array();
+            $a_mega_tmp = [];
             foreach ($cCentros as $oCentro) {
                 $id_ubi = $oCentro->getId_ubi();
                 $GesPresentacion = new GestorCartaPresentacion();
                 $cPresentacion = $GesPresentacion->getCartasPresentacion(array('id_ubi' => $id_ubi));
                 foreach ($cPresentacion as $oPresentacion) {
-                    $a_mega = array_merge_recursive($a_mega, mega_array($oPresentacion, $oCentro, $ordenar_dl));
+                    $a_mega_tmp[] = mega_array($oPresentacion, $oCentro, $ordenar_dl);
                 }
             }
-            echo lista_cartas($a_mega, $ordenar_dl);
+            $a_mega = array_merge_recursive(...$a_mega_tmp);
+            lista_cartas($a_mega, $ordenar_dl);
         }
         if (!empty($Qdl)) {
             $aWhere['dl'] = $Qdl;
@@ -127,16 +134,17 @@ switch ($Qque) {
 
             $GesCentros = new GestorCentro();
             $cCentros = $GesCentros->getCentros($aWhere, $aOperador);
-            $a_mega = array();
+            $a_mega_tmp = [];
             foreach ($cCentros as $oCentro) {
                 $id_ubi = $oCentro->getId_ubi();
                 $GesPresentacion = new GestorCartaPresentacion();
                 $cPresentacion = $GesPresentacion->getCartasPresentacion(array('id_ubi' => $id_ubi));
                 foreach ($cPresentacion as $oPresentacion) {
-                    $a_mega = array_merge_recursive($a_mega, mega_array($oPresentacion, $oCentro, $ordenar_dl));
+                    $a_mega_tmp[] = mega_array($oPresentacion, $oCentro, $ordenar_dl);
                 }
             }
-            echo lista_cartas($a_mega, $ordenar_dl);
+            $a_mega = array_merge_recursive(...$a_mega_tmp);
+            lista_cartas($a_mega, $ordenar_dl);
         }
         break;
 }
@@ -190,7 +198,7 @@ function mega_array($oPresentacion, $oCentro, $ordenar_dl)
         $telf .= ' fax:' . $fax;
     }
     // si es una dl o r fuera de España, pongo el e-mail del centro.
-    if ($region != 'H' && (strpos($tipo_ctr, 'cr') !== false || strpos($tipo_ctr, 'dl') !== false)) {
+    if ($region !== 'H' && (strpos($tipo_ctr, 'cr') !== false || strpos($tipo_ctr, 'dl') !== false)) {
         // 15 es el id para otros asuntos ( 20 es para asuntos de gobierno).
         $mail = $oCentro->getTeleco("e-mail", "15", " / ");
         if (!empty($mail)) {
@@ -252,7 +260,7 @@ function mega_array($oPresentacion, $oCentro, $ordenar_dl)
         if (($tipo_labor & 256) == 256) $aTipo[] = $aTiposLabor[256];  //'numerarios';
         if (($tipo_labor & 64) == 64) $aTipo[] = $aTiposLabor[64];  //'s';
         if (($tipo_labor & 32) == 32) $aTipo[] = $aTiposLabor[32];  //'sss+';
-        if ($tipo_ctr == 'dl' || $tipo_ctr == 'cr') $aTipo[] = 'otras r';
+        if ($tipo_ctr === 'dl' || $tipo_ctr === 'cr') $aTipo[] = 'otras r';
         if (($tipo_labor & 2) == 2) {
             $edad .= $aTiposLabor[2];
         }  //'jóvenes'
@@ -273,7 +281,9 @@ function mega_array($oPresentacion, $oCentro, $ordenar_dl)
         $msgError .= $oCentro->getNombre_ubi();
     }
     //zona
-    if (!empty($zona)) $edad .= "<br>$zona";
+    if (!empty($zona)) {
+        $edad .= "<br>$zona";
+    }
 
     $poblacion .= empty($pais) ? '' : '<br>(' . $pais . ')';
     if ($ordenar_dl == 1) {
@@ -328,7 +338,7 @@ function datos_a_celdas($a_texto)
     return $html;
 }
 
-function lista_cartas($a_mega, $ordenar_dl)
+function lista_cartas($a_mega, $ordenar_dl): void
 {
     //print_r($a_mega);
     // cartas agd
@@ -393,7 +403,6 @@ function lista_cartas($a_mega, $ordenar_dl)
                 krsort($a_edad); // primero m, después j
                 if ($poblacion != $poblacion_anterior) {
                     $txt_poblacion = strtoupper_dlb($poblacion);
-                    $txt_poblacion .= empty($pais) ? '' : '<br>(' . $pais . ')';
                     $html .= "<tr><td $class>" . strtoupper_dlb($txt_poblacion) . "</td>";
                 }
                 $f = 0;
@@ -429,7 +438,7 @@ function format_telf($number)
 {
     // The regular expression is set to a variable.
     $regex = "/^(\(?\d{3}\)?)?[- .]?(\d{3})[- .]?(\d{3})[- .]?( \(?.*\)?)?$/";
-    $a_telf = explode(" / ", $number);
+    $a_telf = explode(" / ", $number?? '');
     $formattedValue = [];
     foreach ($a_telf as $tel) {
         $formattedValue[] = preg_replace($regex, "\\1 \\2 \\3\\4", $tel);
