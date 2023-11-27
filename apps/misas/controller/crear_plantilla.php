@@ -89,6 +89,18 @@ $a_cabeceras = [
     'D',
 ];
 
+$a_cosas = ['id_zona' => $Qid_zona,
+'id_ubi' => 0,
+'tarea' => 1,
+'dia' => 'MON',
+'semana' => 0,
+'id_item' => '',
+];
+
+$pagina = Hash::link(core\ConfigGlobal::getWeb() . '/apps/misas/controller/lista_ctr_zona.php?' . http_build_query($a_cosas));
+$a_botones = array(array('txt' => _("añadir centro o tarea"), 'click' => "fnjs_modificar('$pagina')"));
+
+
 $PlantillaRepository = new PlantillaRepository();
 $i = 0;
 $a_valores = [];
@@ -96,6 +108,17 @@ foreach ($cCentros as $oCentro) {
     $i++;
     $id_ubi = "{$oCentro->getId_ubi()}"; // Para que lo coja como un string.
     $nombre_ubi = $oCentro->getNombre_ubi();
+    $semana = 0;
+    $id_item = '';
+    $aWhere = [
+            'id_ctr' => $id_ubi,
+//            'tarea' => $tarea,
+//            'dia' => $dia,
+            'semana' => $semana,
+    ];
+    $cPlantillas = $PlantillaRepository->getPlantillas($aWhere);
+    if (is_array($cPlantillas) && count($cPlantillas) > 0) {
+
     $tarea = 1; // 1:Misa, 2: bendición
     $a_valores[$i]['clase'] = 'tono2';
     $a_valores[$i][0] = $id_ubi;
@@ -141,6 +164,8 @@ foreach ($cCentros as $oCentro) {
         if (is_array($cPlantillas) && count($cPlantillas) > 0) {
             $oPlantilla = $cPlantillas[0];
             $id_item = $oPlantilla->getId_item();
+            $t_start = $oPlantilla->getT_start()->format('H:i');
+            $t_end = $oPlantilla->getT_end()->format('H:i');
             $id_nom = $oPlantilla->getId_nom();
             $oPersonaSacd = new PersonaSacd($id_nom);
             $sacd = $oPersonaSacd->getNombreApellidos();
@@ -149,6 +174,8 @@ foreach ($cCentros as $oCentro) {
             }
         } else {
             $sacd = '??';
+            $t_start = '??';
+            $t_end = '??';
         }
         $a_cosas = ['id_zona' => $Qid_zona,
             'id_ubi' => $id_ubi,
@@ -160,8 +187,18 @@ foreach ($cCentros as $oCentro) {
         $pagina = Hash::link(core\ConfigGlobal::getWeb() . '/apps/misas/controller/lista_sacd_zona.php?' . http_build_query($a_cosas));
         $texto_nombre = "<span class=link onclick=\"fnjs_modificar('$pagina');\">$sacd</span>";
         $pagina_horario = Hash::link(core\ConfigGlobal::getWeb() . '/apps/misas/controller/horario_tarea.php?' . http_build_query($a_cosas));
+        $pagina = Hash::link(core\ConfigGlobal::getWeb() . '/apps/misas/controller/lista_sacd_zona.php?' . http_build_query($a_cosas));
+        $texto_nombre = "<span class=link onclick=\"fnjs_modificar('$pagina');\">$sacd</span>";
+        $pagina_horario = Hash::link(core\ConfigGlobal::getWeb() . '/apps/misas/controller/horario_tarea.php?' . http_build_query($a_cosas));
         $icono_horario = "<span class=link onclick=\"fnjs_modificar('$pagina_horario');\"><img src=\"$reloj\" width=\"12\" height=\"12\" style=\"float: right; margin: 0px 0px 15px 15px;\" alt=\"" . _("horario") . "\"></span>";
+        if (($t_start!='??') && ($t_start!=null) && ($t_end!='??') && ($t_end!=null))
+            $icono_horario = "<br><span class=link onclick=\"fnjs_modificar('$pagina_horario');\">$t_start - $t_end</span>";
+        if (($t_start!='??') && ($t_start!=null) && (($t_end=='??') || ($t_end==null)))
+            $icono_horario = "<br><span class=link onclick=\"fnjs_modificar('$pagina_horario');\">$t_start</span>";
         $a_valores[$i][$c] = $texto_nombre . $icono_horario;
+
+        }
+
     }
 }
 
