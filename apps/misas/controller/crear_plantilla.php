@@ -22,7 +22,6 @@ require_once("apps/core/global_object.inc");
 $Qid_zona = 24; // l'hospitalet (24)
 
 // ctr de la zona
-
 $aWhere['status'] = 't';
 $aWhere['id_zona'] = $Qid_zona;
 $aWhere['_ordre'] = 'nombre_ubi';
@@ -204,15 +203,15 @@ $aQuery = ['id_zona' => $Qid_zona];
 array_walk($aQuery, 'core\poner_empty_on_null');
 $url_crear_plantilla = web\Hash::link($url . '?' . http_build_query($aQuery));
 
-$oHash = new Hash();
-$oHash->setUrl(core\ConfigGlobal::getWeb() . '/apps/misas/controller/lista_ctr_zona.php');
-$oHash->setArrayCamposHidden($aQuery));
-$param_id_zona = $oHash->getParamAjax();
+$url = '/apps/misas/controller/lista_ctr_zona.php';
+// el hppt_build_query no pasa los valores null
+array_walk($aQuery, 'core\poner_empty_on_null');
+$pagina_lista_ctr_zona = web\Hash::link($url . '?' . http_build_query($aQuery));
 
 $a_campos = ['oPosicion' => $oPosicion,
     'oTabla' => $oTabla,
     'url_crear_plantilla' => $url_crear_plantilla,
-    'param_id_zona' => $param_id_zona
+    'pagina_lista_ctr_zona' => $pagina_lista_ctr_zona,
 ];
 
 $oView = new core\ViewTwig('misas/controller');
