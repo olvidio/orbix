@@ -89,17 +89,6 @@ $a_cabeceras = [
     'D',
 ];
 
-$a_cosas = ['id_zona' => $Qid_zona,
-'id_ubi' => 0,
-'tarea' => 1,
-'dia' => 'MON',
-'semana' => 0,
-'id_item' => '',
-];
-
-$pagina = Hash::link(core\ConfigGlobal::getWeb() . '/apps/misas/controller/lista_ctr_zona.php?' . http_build_query($a_cosas));
-$a_botones = array(array('txt' => _("añadir centro o tarea"), 'click' => "fnjs_modificar('$pagina')"));
-
 
 $PlantillaRepository = new PlantillaRepository();
 $i = 0;
@@ -215,10 +204,15 @@ $aQuery = ['id_zona' => $Qid_zona];
 array_walk($aQuery, 'core\poner_empty_on_null');
 $url_crear_plantilla = web\Hash::link($url . '?' . http_build_query($aQuery));
 
+$oHash = new Hash();
+$oHash->setUrl(core\ConfigGlobal::getWeb() . '/apps/misas/controller/lista_ctr_zona.php');
+$oHash->setArrayCamposHidden($aQuery));
+$param_id_zona = $oHash->getParamAjax();
 
 $a_campos = ['oPosicion' => $oPosicion,
     'oTabla' => $oTabla,
     'url_crear_plantilla' => $url_crear_plantilla,
+    'param_id_zona' => $param_id_zona
 ];
 
 $oView = new core\ViewTwig('misas/controller');
