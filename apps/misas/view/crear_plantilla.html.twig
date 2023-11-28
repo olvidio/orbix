@@ -1,6 +1,6 @@
 <h2>Plantilla per a l'Hospitalet</h2>
 <br>
-<span class="link" onclick="fnjs_añadir_centro('#main','{{ goListaSacd }}')">
+<span class="link" onclick="fnjs_update_div('#main','{{ pagina_lista_ctr_zona }}')">
     {{ "Añadir centro"|trans|raw }}
 </span>
 <br>
@@ -10,10 +10,10 @@
 <div id='overlay'></div>
 
 <script>
-    fnjs_añadir_centros = function (data) {
+    fnjs_añadir_centro = function (data) {
         var request = $.ajax({
             data: data,
-            url: 'apps/misas/controller/asignar_sacd.php',
+            url: 'apps/misas/controller/asignar_encago_a_ctr_zona.php',
             method: 'POST',
             dataType: 'json'
         });
