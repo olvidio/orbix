@@ -33,7 +33,6 @@ use actividadescentro\model\entity\GestorCentroEncargado;
 use actividadtarifas\model\entity\TipoTarifa;
 use core\ConfigGlobal;
 use ubis\model\entity\Casa;
-use web\DateTimeLocal;
 use web\Lista;
 use web\Periodo;
 use web\TiposActividades;
@@ -354,10 +353,10 @@ foreach ($cActividades as $oActividad) {
     $a_valores[$i][2] = $f_ini;
     $a_valores[$i][4] = $f_fin;
     if ($ver_hora == 1) {
-        if (strlen($h_ini)) {
+        if (strlen($h_ini ?? '')) {
             $h_ini = substr($h_ini, 0, (strlen($h_ini) - 3));
         }
-        if (strlen($h_fin)) {
+        if (strlen($h_fin ?? '')) {
             $h_fin = substr($h_fin, 0, (strlen($h_fin) - 3));
         }
         $a_valores[$i][3] = $h_ini;

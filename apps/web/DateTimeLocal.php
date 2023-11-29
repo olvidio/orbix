@@ -260,7 +260,7 @@ class DateTimeLocal extends DateTime
         $horas = (int)$interval->format('%a') * 24 + (int)$interval->format('%h') + $interval->format('%i') / 60 + $interval->format('%s') / 3600;
         $horas = $horas + 12;
         $dias_con_decimales = $horas / 24;
-        $dias_enteros = ($dias_con_decimales % $horas);
+        $dias_enteros = (int)($dias_con_decimales % $horas);
         $decimales = round(($dias_con_decimales - $dias_enteros), 1);
         if ($decimales > 0.1) {
             $decimal_redondeado = 0.5;

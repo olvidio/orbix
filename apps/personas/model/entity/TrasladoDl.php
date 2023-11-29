@@ -720,13 +720,18 @@ class TrasladoDl
             $err = 0;
             $oAsistenteDl->setoDbl($oDBorgE);
             $oAsistenteDl->DBCarregar();
-            $oAsistenteOut = new AsistenteOut();
-            $oAsistenteOut->setoDbl($oDBdstE);
-            $oAsistenteOut = $this->copiarAsistencia($oAsistenteDl, $oAsistenteOut);
-            $oAsistenteOut->setTraslado('t');
-            if ($oAsistenteOut->DBGuardar() === false) {
+            $oAsistenteOut1 = new AsistenteOut();
+            $oAsistenteOut1->setoDbl($oDBdstE);
+            $oAsistenteOut = $this->copiarAsistencia($oAsistenteDl, $oAsistenteOut1);
+            if ($oAsistenteOut === NULL) {
                 $error .= '<br>' . sprintf(_("No se ha guardado la asistencia(out) a id_activ: %s"), $id_activ);
                 $err = 1;
+            } else {
+                $oAsistenteOut->setTraslado('t');
+                if ($oAsistenteOut->DBGuardar() === false) {
+                    $error .= '<br>' . sprintf(_("No se ha guardado la asistencia(out) a id_activ: %s"), $id_activ);
+                    $err = 1;
+                }
             }
             // borrar el origen
             if ($err == 0) {
@@ -927,6 +932,7 @@ class TrasladoDl
             $oDestino->setObserv($oOrigen->getObserv());
             return $oDestino;
         }
+        return null;
     }
 
     private function testActividad($id_activ)

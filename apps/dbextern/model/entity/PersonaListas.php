@@ -429,24 +429,26 @@ class PersonaListas extends core\ClasePropiedades
     public function dividirCe()
     {
         $matches = array();
+        $this->ice_num = '';
+        $this->sce_lugar = '';
+        $this->ice_ini = '';
+        $this->ice_fin = '';
+
         $subject = $this->getCe();
-        $pattern = '/^(\d?)(\w+.*)[,:]\s*(\d*)-(\d*)/';
-        $pattern2 = '/^(\d*)-(\d*)/';
-        if (preg_match($pattern, $subject, $matches)) {
-            $this->ice_num = $matches[1];
-            $this->sce_lugar = $matches[2];
-            $this->ice_ini = $matches[3];
-            $this->ice_fin = $matches[4];
-        } else if (preg_match($pattern2, $subject, $matches)) {
-            $this->ice_num = '';
-            $this->sce_lugar = '';
-            $this->ice_ini = $matches[1];
-            $this->ice_fin = $matches[2];
-        } else {
-            $this->ice_num = '';
-            $this->sce_lugar = '';
-            $this->ice_ini = '';
-            $this->ice_fin = '';
+        if (!empty($subject)) {
+            $pattern = '/^(\d?)(\w+.*)[,:]\s*(\d*)-(\d*)/';
+            $pattern2 = '/^(\d*)-(\d*)/';
+            if (preg_match($pattern, $subject, $matches)) {
+                $this->ice_num = $matches[1];
+                $this->sce_lugar = $matches[2];
+                $this->ice_ini = $matches[3];
+                $this->ice_fin = $matches[4];
+            } else if (preg_match($pattern2, $subject, $matches)) {
+                $this->ice_num = '';
+                $this->sce_lugar = '';
+                $this->ice_ini = $matches[1];
+                $this->ice_fin = $matches[2];
+            }
         }
     }
 
