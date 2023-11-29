@@ -334,9 +334,9 @@ class TablaEditable
                         if (!empty($valor['span'])) {
                             $span = "$val";
                         }
-                        $aFilas[$num_fila][$col] = addslashes($val);
+                        $aFilas[$num_fila][$col] = addslashes($val?? '');
                     } else {
-                        $aFilas[$num_fila][$col] = addslashes($valor);
+                        $aFilas[$num_fila][$col] = addslashes($valor?? '');
                     }
                 }
             }

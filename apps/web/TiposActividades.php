@@ -665,10 +665,10 @@ class TiposActividades
     {
         if (is_numeric($this->snom_tipo)) {
             if (isset($this->afNom_tipo)) {
-                return $this->afNom_tipo[$this->snom_tipo];
+                return $this->afNom_tipo[$this->snom_tipo]?? '?';
             } else {
                 $this->getNom_tipoPosibles3Digitos();
-                return $this->afNom_tipo[$this->snom_tipo];
+                return $this->afNom_tipo[$this->snom_tipo]?? '?';
             }
         } else {
             return 'all';

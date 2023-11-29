@@ -57,9 +57,12 @@ if (!empty($Qid_nom)) {
     // miro si es de paso
 
     $oPersona = personas\Persona::NewPersona($Qid_nom);
+    if (is_string($oPersona)) {
+        exit($oPersona);
+    }
     $classname = str_replace("personas\\model\\entity\\", '', get_class($oPersona));
 
-    if ($classname == 'PersonaEx') {
+    if ($classname === 'PersonaEx') {
         $GesPersonasDePaso = new personas\GestorPersonaEx();
         $cAlumnos = $GesPersonasDePaso->getPersonasEx($aWhere, $aOperador);
     } else {

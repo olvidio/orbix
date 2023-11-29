@@ -64,6 +64,8 @@ class Select1303
 
     private $status;
     private string $aviso;
+    private mixed $id_activ;
+    private string $link_add;
 
     public function getBotones($ca_num = 1)
     {
@@ -90,7 +92,7 @@ class Select1303
     {
         $this->id_activ = $oAsistente->getId_activ();
         $propio = $oAsistente->getPropio();
-        if ($propio != 't') echo _("no está como propio, no debería tener plan de estudios");
+        if ($propio !== 't') echo _("no está como propio, no debería tener plan de estudios");
 
         $est_ok = $oAsistente->getEst_ok();
         $observ_est = $oAsistente->getObserv_est();
@@ -102,7 +104,7 @@ class Select1303
         $dl_alumno = $oAlumno->getDl();
         $classname = str_replace("personas\\model\\entity\\", '', get_class($oAlumno));
         $this->permiso = 3;
-        if ($classname == 'PersonaEx') {
+        if ($classname === 'PersonaEx') {
             $this->permiso = 3;
         } elseif ($dl_alumno != ConfigGlobal::mi_delef()) {
             $this->permiso = 2;
@@ -113,7 +115,7 @@ class Select1303
         $cMatriculas = $GesMatriculas->getMatriculas(array('id_nom' => $this->id_pau, 'id_activ' => $this->id_activ, '_ordre' => 'id_nivel'));
 
         $form = "seleccionados" . $ca_num;
-        if ($est_ok == "t") {
+        if ($est_ok === "t") {
             $chk_1 = "checked";
             $chk_2 = "";
         } else {
@@ -129,7 +131,7 @@ class Select1303
             $id_asignatura = $oMatricula->getId_asignatura();
             $preceptor = $oMatricula->getPreceptor();
             $id_preceptor = $oMatricula->getId_preceptor();
-            if ($preceptor == "t") {
+            if ($preceptor === "t") {
                 if (!empty($id_preceptor)) {
                     $oPersona = personas\Persona::NewPersona($id_preceptor);
                     if (!is_object($oPersona)) {
