@@ -205,6 +205,11 @@ if (core\ConfigGlobal::is_app_installed('actividadplazas')) {
     $oHash1->setUrl($url_ajax);
     $oHash1->setCamposForm('que!id_activ!id_nom');
     $h1 = $oHash1->linkSinVal();
+} else {
+    $h1 = '';
+    $url_ajax = '';
+    $oDesplegablePlaza = '';
+    $oDesplPosiblesPropietarios = '';
 }
 
 $oHash = new web\Hash();

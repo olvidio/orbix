@@ -170,7 +170,11 @@ foreach ($cActas as $oActa) {
     $id_asignatura = $oActa->getId_asignatura();
     $pdf = $oActa->getpdf();
 
-    $nombre_corto = $a_asignaturas[$id_asignatura];
+    if (empty($a_asignaturas[$id_asignatura])) {
+        $nombre_corto = sprintf(_("nombre corto no definido para id asignatura: %s"), $id_asignatura);
+    } else {
+        $nombre_corto = $a_asignaturas[$id_asignatura];
+    }
     $acta_2 = urlencode($acta);
     $pagina = Hash::link('apps/notas/controller/acta_ver.php?' . http_build_query(array('acta' => $acta)));
     $a_valores[$i]['sel'] = $acta_2;

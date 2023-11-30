@@ -536,7 +536,7 @@ class Lista
                             $aFilas[$num_fila][$aFields[$icol]] = addslashes($val);
                         }
                     } else {
-                        $aFilas[$num_fila][$aFields[$icol]] = empty($valor)? '' : addslashes($valor);
+                        $aFilas[$num_fila][$aFields[$icol]] = empty($valor) ? '' : addslashes($valor);
                     }
                     $icol++;
                 }
@@ -1124,6 +1124,7 @@ class Lista
                         $tbody .= "<td colspan='" . $valor['span'] . "'>$val</td>";
                     }
                 } else {
+                    $valor = $valor ?? '';
                     // si es una fecha, pongo la clase fecha, para exportar a excel...
                     if (preg_match("/^(\d)+[\/-](\d)+[\/-](\d\d)+$/", $valor)) {
                         list($d, $m, $y) = preg_split('/[:\/\.-]/', $valor);

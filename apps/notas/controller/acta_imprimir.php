@@ -90,7 +90,7 @@ $any = $oAsignatura->getYear();
 
 $id_tipo = $oAsignatura->getId_tipo();
 $oAsignaturaTipo = new asignaturas\AsignaturaTipo($id_tipo);
-$curso = strtr($oAsignaturaTipo->getTipo_latin(), $replace);
+$curso = strtr($oAsignaturaTipo->getTipo_latin()?? '', $replace);
 
 switch ($any) {
     case 1:
