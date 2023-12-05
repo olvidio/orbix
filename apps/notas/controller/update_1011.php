@@ -54,7 +54,7 @@ switch ($Qmod) {
         if ($Qid_asignatura == '1') {
             $oGesAsignaturas = new asignaturas\GestorAsignatura();
             $cAsignaturas = $oGesAsignaturas->getAsignaturas(array('id_nivel' => $Qid_nivel));
-            $oAsignatura = $cAsignaturas[0]; // sólo deberia haber una
+            $oAsignatura = $cAsignaturas[0]; // sólo debería haber una
             $id_asignatura = $oAsignatura->getId_asignatura();
         } else {//es una opcional
             $id_asignatura = $Qid_asignatura;

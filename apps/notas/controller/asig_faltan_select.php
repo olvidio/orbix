@@ -29,7 +29,7 @@ require_once("apps/core/global_object.inc");
 
 $oPosicion->recordar();
 
-$Qnumero = (string)filter_input(INPUT_POST, 'numero');
+$Qnumero = (int)filter_input(INPUT_POST, 'numero');
 $Qb_c = (string)filter_input(INPUT_POST, 'b_c');
 $Qc1 = (string)filter_input(INPUT_POST, 'c1');
 $Qc2 = (string)filter_input(INPUT_POST, 'c2');
@@ -153,7 +153,6 @@ foreach ($aId_nom as $id_nom => $aAsignaturas) {
         $telfs .= $telfs_fijo ?? '';
         $telfs .= $telfs_movil ?? '';
     }
-    $mails = '';
     $mails = $oPersona->telecos_persona($id_nom, "e-mail", " / ", "*", FALSE);
 
     $condicion_2 = "Where id_nom='" . $id_nom . "'";

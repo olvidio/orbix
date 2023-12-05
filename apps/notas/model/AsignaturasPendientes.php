@@ -215,10 +215,10 @@ class AsignaturasPendientes extends core\ClasePropiedades
                 $condicion_stgr = "AND p.stgr = 'c2'";
                 break;
         }
-        return array('num' => $num_curso, 'condicion' => $condicion, 'condicion_stgr' => $condicion_stgr);
+        return array('num' => (int)$num_curso, 'condicion' => $condicion, 'condicion_stgr' => $condicion_stgr);
     }
 
-    public function personasQueLesFalta($num_asignaturas, $curso)
+    public function personasQueLesFalta(int $num_asignaturas, $curso)
     {
         $lista = $this->blista;
         $oDbl = $this->getoDbl();
