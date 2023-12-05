@@ -4,15 +4,13 @@ namespace permisos\model;
 
 use actividades\model\entity\Actividad;
 use actividades\model\entity\GestorTipoDeActividad;
-use actividades\model\entity\TipoDeActividad;
 use core\ConfigGlobal;
-use function core\is_true;
-use procesos\model\PermAccion;
 use procesos\model\entity as procesos;
-use procesos\model\entity\GestorTareaProceso;
-use usuarios\model\entity as usuarios;
-use procesos\model\entity\TareaProceso;
 use procesos\model\entity\ActividadFase;
+use procesos\model\entity\GestorTareaProceso;
+use procesos\model\PermAccion;
+use usuarios\model\entity as usuarios;
+use function core\is_true;
 
 /**
  * Classe que genera un array amb els permisos per cada usuari. Es guarda a la sesió per tenir-ho a l'abast en qualsevol moment:
@@ -174,10 +172,11 @@ class PermisosActividades
             } else {
                 $this->aPermOtras[$id_tipo_activ_txt]->setOmplir($iAfecta, $fase_ref, $perm_on, $perm_off);
             }
-        }
-        if (!empty($id_tipo_activ_txt)) {
-            if (!empty($this->aPermDl[$id_tipo_activ_txt])) $this->aPermDl[$id_tipo_activ_txt]->setOrdenar();
-            if (!empty($this->aPermOtras[$id_tipo_activ_txt])) $this->aPermOtras[$id_tipo_activ_txt]->setOrdenar();
+
+            if (!empty($id_tipo_activ_txt)) {
+                if (!empty($this->aPermDl[$id_tipo_activ_txt])) { $this->aPermDl[$id_tipo_activ_txt]->setOrdenar(); }
+                if (!empty($this->aPermOtras[$id_tipo_activ_txt])) { $this->aPermOtras[$id_tipo_activ_txt]->setOrdenar(); }
+            }
         }
     }
 
