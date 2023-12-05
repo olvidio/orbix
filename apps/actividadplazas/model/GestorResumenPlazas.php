@@ -4,8 +4,8 @@ namespace actividadplazas\model;
 
 use core;
 use core\ConfigGlobal;
+use This;
 use function core\is_true;
-use phpDocumentor\Reflection\Types\This;
 
 /**
  * GestorActividadPlazas
@@ -51,7 +51,7 @@ class GestorResumenPlazas
 
     /* CONSTRUCTOR -------------------------------------------------------------- */
 
-    
+
     function __construct()
     {
     }
@@ -222,12 +222,13 @@ class GestorResumenPlazas
         $plazas_totales = $oActividad->getPlazas();
         if (empty($plazas_totales)) {
             $id_ubi = $oActividad->getId_ubi();
-            $oCasa = \ubis\model\entity\Ubi::NewUbi($id_ubi);
-            // Si la casa es un ctr de otra dl, no sé las plazas
-            if (method_exists($oCasa, 'getPlazas')) {
-                $plazas_totales = $oCasa->getPlazas();
-            } else {
-                $plazas_totales = '';
+            $plazas_totales = '';
+            if (!empty($id_ubi)) {
+                $oCasa = \ubis\model\entity\Ubi::NewUbi($id_ubi);
+                // Si la casa es un ctr de otra dl, no sé las plazas
+                if (method_exists($oCasa, 'getPlazas')) {
+                    $plazas_totales = $oCasa->getPlazas();
+                }
             }
             if (empty($plazas_totales)) {
                 $plazas_totales = '?';
@@ -258,7 +259,7 @@ class GestorResumenPlazas
         $dl_org = $oActividad->getDl_org();
         $plazas_totales = $this->getPlazasTotales();
         /*
-        // si la actividad no está pulicada, no hay plazas de otras dl. Todas para la dl org.
+        // si la actividad no está publicada, no hay plazas de otras dl. Todas para la dl org.
         if ($oActividad->getPublicado() === false) {
 //			$ocupadas = $gesAsistentes->getPlazasOcupadasPorDl($id_activ,$dl_org);
 //			if ($ocupadas < 0) { // No se sabe

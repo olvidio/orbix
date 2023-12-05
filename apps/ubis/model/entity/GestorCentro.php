@@ -199,7 +199,7 @@ class GestorCentro extends core\ClaseGestor
         if (isset($aWhere['_ordre'])) unset($aWhere['_ordre']);
         $sQry = "SELECT * FROM $nom_tabla " . $sCondi . $sOrdre . $sLimit;
         if (($oDblSt = $oDbl->prepare($sQry)) === false) {
-            $sClauError = 'GestorCentro.llistar.prepare';
+            $sClauError = 'GestorCentro.listar.prepare';
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
             return false;
         }
