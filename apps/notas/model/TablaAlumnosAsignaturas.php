@@ -47,7 +47,9 @@ class TablaAlumnosAsignaturas
         $a = 3;
         foreach ($cAsignaturas as $oAsignatura) {
             $a++;
-            $a_cabeceras[$a] = $oAsignatura->getNombre_corto();
+            $nom_asig = $oAsignatura->getNombre_corto();
+            $creditos = $oAsignatura->getCreditos()?? '';
+            $a_cabeceras[$a] = "$nom_asig ($creditos)";
         }
         //todas
         $cAsignaturasTodas = $GesAsignaturas->getAsignaturas(array('_ordre' => 'id_asignatura'));
@@ -185,7 +187,9 @@ class TablaAlumnosAsignaturas
         $a = 3;
         foreach ($cAsignaturas as $oAsignatura) {
             $a++;
-            $a_cabeceras[$a] = $oAsignatura->getNombre_corto();
+            $nom_asig = $oAsignatura->getNombre_corto();
+            $creditos = $oAsignatura->getCreditos()?? '';
+            $a_cabeceras[$a] = "$nom_asig ($creditos)";
         }
         //todas
         $cAsignaturasTodas = $GesAsignaturas->getAsignaturas(array('_ordre' => 'id_asignatura'));
@@ -294,17 +298,11 @@ class TablaAlumnosAsignaturas
         return $oTabla;
     }
 
-    /**
-     * @return multitype:
-     */
     public function getA_delegacionesStgr()
     {
         return $this->a_delegacionesStgr;
     }
 
-    /**
-     * @param multitype: $a_delegacionesStgr
-     */
     public function setA_delegacionesStgr($a_delegacionesStgr)
     {
         $this->a_delegacionesStgr = $a_delegacionesStgr;
