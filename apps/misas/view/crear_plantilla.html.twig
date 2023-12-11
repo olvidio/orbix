@@ -1,31 +1,15 @@
-<h2>Plantilla per a l'Hospitalet</h2>
-<br>
-<span class="link" onclick="fnjs_update_div('#main','{{ pagina_lista_ctr_zona }}')">
-    {{ "Añadir centro"|trans|raw }}
-</span>
-<br>
-{{ oTabla.mostrar_tabla_html()|raw }}
+<div id="div_plantilla">
+    <span class="link" onclick="fnjs_modificar('{{ pagina_crear_encargo|raw }}');">
+        {{ "Añadir Encargo de centro"|trans|raw }}
+    </span>
+    <br>
+    {{ oTabla.mostrar_tabla_html()|raw }}
+</div>
 
 <div id='div_modificar'></div>
 <div id='overlay'></div>
 
 <script>
-    fnjs_añadir_centro = function (data) {
-        var request = $.ajax({
-            data: data,
-            url: 'apps/misas/controller/asignar_encago_a_ctr_zona.php',
-            method: 'POST',
-            dataType: 'json'
-        });
-        request.done(function (json) {
-            if (json.success !== true) {
-                alert("{{ "respuesta"|trans|raw }}: " + json.mensaje);
-            } else {
-                fnjs_update_div('#main', '{{ url_crear_plantilla|raw }}');
-                fnjs_cerrar();
-            }
-        });
-    }
 
     fnjs_quitar_sacd = function (param) {
         var request = $.ajax({
@@ -64,7 +48,7 @@
     fnjs_guardar_horario = function (data) {
         var t_start = $('#t_start').val();
         var t_end = $('#t_end').val();
-        var dataNew = data +'&t_start='+t_start+'&t_end='+t_end;
+        var dataNew = data + '&t_start=' + t_start + '&t_end=' + t_end;
         var request = $.ajax({
             data: dataNew,
             url: 'apps/misas/controller/guardar_horario.php',

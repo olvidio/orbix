@@ -18,10 +18,12 @@ if (is_array($aQuery)) {
 }
 $goListaSacd = Hash::link('apps/misas/controller/lista_sacd.php?' . http_build_query($aQuery));
 $goCrearPlantilla = Hash::link('apps/misas/controller/crear_plantilla.php?' . http_build_query($aQuery));
+$goSelectZona = Hash::link('apps/misas/controller/seleccionar_zona.php?' . http_build_query($aQuery));
 
 $a_campos = ['oPosicion' => $oPosicion,
 		'goListaSacd' => $goListaSacd,
     'goCrearPlantilla' => $goCrearPlantilla,
+    'goSelectZona' => $goSelectZona,
 ];
 
 $oView = new core\ViewTwig('misas/controller');

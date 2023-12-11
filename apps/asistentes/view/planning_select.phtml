@@ -26,7 +26,7 @@
 </script>
 <h3><?= sprintf(_("%s personas encontradas"), $num_personas); ?></h3>
 <form id='seleccionados' name='seleccionados' action='' method='post'>
-    <?= $oHash->getCamposHtml(); ?>
+    <?= $oHashNuevo->getCamposHtml(); ?>
     <input type="hidden" id="modelo" name="modelo" value="">
     <input type='hidden' id='que' name='que' value=''>
     <input type='hidden' id='id_dossier' name='id_dossier' value=''>

@@ -24,7 +24,7 @@
 
 <h3><?= $usuario ?></h3>
 <form id=frm_usuario name=frm_usuario action='' method="post">
-    <?= $oHash->getCamposHtml(); ?>
+    <?= $oHashNuevo->getCamposHtml(); ?>
     <?= ucfirst(_("email")) ?>:<input type=text name=email value="<?= $email ?>"><br>
     <br>
     <input type=button onclick="fnjs_guardar(this.form);" value="<?= $txt_guardar ?>">

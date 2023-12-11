@@ -102,7 +102,7 @@ $oDesplRef->setBlanco('t');
 $oDesplRef->setOpciones($op_dia_ref);
 $oDesplRef->setOpcion_sel($dia_ref);
 
-// miro si tinen excepciones:
+// miro si tienen excepciones:
 if (!empty($id_item_h)) {
     $GesEncargoHorarioExcepcion = new GestorEncargoHorarioExcepcion();
     $cEncargoHorarioExcepcion = $GesEncargoHorarioExcepcion->getEncargoHorarioExcepciones(['id_item_h' => $id_item_h]);

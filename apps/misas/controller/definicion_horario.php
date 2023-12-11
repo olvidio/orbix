@@ -17,7 +17,7 @@ require_once("apps/core/global_object.inc");
 $Qid_zona = (integer)filter_input(INPUT_POST, 'id_zona');
 $Qid_ubi = (integer)filter_input(INPUT_POST, 'id_ubi');
 $Qtarea =  (integer)filter_input(INPUT_POST, 'tarea');
-$Qdia = (string)filter_input(INPUT_POST, 'dia');
+$Qdia_ref = (string)filter_input(INPUT_POST, 'dia');
 $Qsemana = (integer)filter_input(INPUT_POST, 'semana');
 $Qid_item = (integer)filter_input(INPUT_POST, 'id_item');
 
@@ -63,7 +63,8 @@ $param_quitar = $oHash->getParamAjax();
 $a_campos = ['oPosicion' => $oPosicion,
 		'oTabla' => $oTabla,
     'param_quitar' => $param_quitar,
+    'dia_ref' => $dia_ref,
 ];
 
 $oView = new core\ViewTwig('misas/controller');
-echo $oView->render('lista_sacd.html.twig', $a_campos);
+echo $oView->render('definicion_horario.html.twig', $a_campos);

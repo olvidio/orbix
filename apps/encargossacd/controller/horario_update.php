@@ -46,7 +46,7 @@ if (empty($Qmas_menos)) $Qdia_ref = $Qdia;
 
 switch ($Qmod) {
     case 'nuevo':
-        //Compruebo que estén todos los campos necesasrios
+        //Compruebo que estén todos los campos necesarios
         if (empty($Qf_ini) || empty($Qdia)) {
             echo _("Debe llenar todos los campos que tengan un (*)") . "<br>";
             exit;
@@ -70,7 +70,7 @@ switch ($Qmod) {
         }
         break;
     case "editar":
-        //Compruebo que estén todos los campos necesasrios
+        //Compruebo que estén todos los campos necesarios
         if (empty($Qf_ini) || empty($Qdia)) {
             echo _("Debe llenar todos los campos que tengan un (*)") . "<br>";
             exit;
