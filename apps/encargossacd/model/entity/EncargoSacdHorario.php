@@ -151,11 +151,15 @@ class EncargoSacdHorario extends core\ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'id_item') && $val_id !== '') $this->iid_item = (int)$val_id;
-                if (($nom_id == 'id_enc') && $val_id !== '') $this->iid_enc = (int)$val_id;
-                if (($nom_id == 'id_nom') && $val_id !== '') $this->iid_nom = (int)$val_id;
+                if (($nom_id === 'id_item') && $val_id !== '') $this->iid_item = (int)$val_id;
+            }
+        } else {
+            if (isset($a_id) && $a_id !== '') {
+                $this->iid_item = (integer)$a_id;
+                $this->aPrimary_key = array('id_item' => $this->iid_item);
             }
         }
+
         $this->setoDbl($oDbl);
         $this->setoDbl_Select($oDbl_Select);
         $this->setNomTabla('encargo_sacd_horario');

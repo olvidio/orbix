@@ -1,0 +1,302 @@
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+    <link rel="shortcut icon" type="image/ico" href="favicon.ico"/>
+    <title>SlickGrid example: CompositeEditor</title>
+    <!--
+    <link rel="stylesheet" href="../dist/styles/css/slick-icons.css" type="text/css"/>
+    <link rel="stylesheet" href="../dist/styles/css/example-demo.css" type="text/css"/>
+    <link rel="stylesheet" href="../dist/styles/css/slick-alpine-theme.css" type="text/css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+  -->
+
+
+    <link type='text/css' rel='stylesheet'
+          href='node_modules/slickgrid/dist/styles/css/slick-icons.css'/>
+    <link type='text/css' rel='stylesheet'
+          href='node_modules/slickgrid/dist/styles/css/example-demo.css'/>
+    <link type='text/css' rel='stylesheet'
+          href='node_modules/slickgrid/dist/styles/css/slick-alpine-theme.css'/>
+
+    <style>
+        .cell-title {
+            font-weight: bold;
+        }
+
+        .cell-effort-driven {
+            justify-content: center;
+        }
+
+        .item-details-form {
+            z-index: 1000;
+            display: inline-block;
+            border: 1px solid black;
+            margin: 8px;
+            padding: 10px;
+            background: #fbfbfb;
+            -moz-box-shadow: 0px 0px 15px black;
+            -webkit-box-shadow: 0px 0px 15px black;
+            box-shadow: 0px 0px 15px black;
+
+            position: absolute;
+            top: 10px;
+            left: 150px;
+        }
+
+        .item-details-form-buttons {
+            float: right;
+        }
+
+        .item-details-label {
+            margin-left: 10px;
+            margin-top: 20px;
+            display: block;
+            font-weight: bold;
+        }
+
+        .item-details-editor-container {
+            width: 200px;
+            height: 20px;
+            border: 1px solid silver;
+            background: white;
+            display: block;
+            margin: 10px;
+            margin-top: 4px;
+            padding: 0;
+            padding-left: 4px;
+            padding-right: 0px;
+        }
+    </style>
+</head>
+<div style="position:relative">
+    <div style="width:700px;">
+        <div id="myGrid" class="slick-container" style="width:100%;height:500px;"></div>
+    </div>
+
+
+    <div class='item-details-form' style="display: none">
+
+        <label>{{ encargo_descripcion }}</label>
+        <hr/>
+        <input type="hidden" id="cell_selected" value=""/>
+        <input type="hidden" id="row_selected" value=""/>
+        <div class='item-details-label'>
+            <label for="id_sacd">Sacd:</label>
+            {{ oDesplSacd.desplegable|raw }}
+        </div>
+
+        <div style="margin-left: 10px; margin-top: 10px;">
+            <div class="input-group clockpicker" style="float: left;">
+                <label for="tstart">{{ "Inicio"|trans|raw }}</label>
+                <input id="tstart" type="text" class="form-control" size="3" value="">
+                <span class="input-group-addon">
+                <span class="glyphicon glyphicon-time"></span>
+            </span>
+            </div>
+            <div class="input-group clockpicker" style="float:right;">
+                <label for="tend">{{ "Fin"|trans|raw }}</label>
+                <input id="tend" type="text" class="form-control" size="3" value="">
+                <span class="input-group-addon">
+                <span class="glyphicon glyphicon-time"></span>
+            </span>
+            </div>
+        </div>
+
+        <div style="margin-top: 40px;">
+            <label for="observ"> {{ "Observaciones"|trans|raw }}: </label>
+            <input id="observ" type="text" class="form-control" size="20" value="">
+        </div>
+
+        <hr/>
+        <div class='item-details-form-buttons'>
+            <button data-action='save' class='slick-btn slick-btn-primary'>Save</button>
+            <button data-action='cancel' class='slick-btn slick-btn-default'>Cancel</button>
+        </div>
+    </div>
+
+</div>
+
+<script src="node_modules/slickgrid/dist/browser/slick.core.js"></script>
+<script src="node_modules/slickgrid/dist/browser/slick.interactions.js"></script>
+<script src="node_modules/slickgrid/dist/browser/slick.grid.js"></script>
+<script src="node_modules/slickgrid/dist/browser/plugins/slick.cellrangeselector.js"></script>
+<script src="node_modules/slickgrid/dist/browser/plugins/slick.cellselectionmodel.js"></script>
+<script src="node_modules/slickgrid/dist/browser/slick.formatters.js"></script>
+<script src="node_modules/slickgrid/dist/browser/slick.editors.js"></script>
+<script src="node_modules/slickgrid/dist/browser/slick.compositeeditor.js"></script>
+
+<script>
+
+    var modal = $(".item-details-form");
+
+    modal.keydown(function (e) {
+        if (e.which == Slick.keyCode.ENTER) {
+            commitCurrentEdit();
+            e.stopPropagation();
+            e.preventDefault();
+        } else if (e.which == Slick.keyCode.ESCAPE) {
+            cancelCurrentEdit();
+            e.stopPropagation();
+            e.preventDefault();
+        }
+    });
+
+    modal.find("[data-action=save]").click(function () {
+        commitCurrentEdit();
+    });
+
+    modal.find("[data-action=cancel]").click(function () {
+        cancelCurrentEdit();
+    });
+
+    function cancelCurrentEdit() {
+        modal.hide();
+    }
+
+    function commitCurrentEdit(cell) {
+        cell = $('#cell_selected').val();
+        row = $('#row_selected').val();
+        var id_campo = columns[cell].field;
+        //var meta = data[row].meta[id_campo];
+        //let id_nom = meta.id_nom;
+        //let iniciales = meta.iniciales;
+
+        let key = $('#id_sacd').val();
+        const myArray = key.split("#");
+        let id_nom = myArray[0];
+        let iniciales = myArray[1];
+
+        let tstart = $('#tstart').val();
+        let tend = $('#tend').val();
+        let observ = $('#observ').val();
+
+        let texto = '';
+        if (observ !== "") {
+            texto = '(*) ';
+        }
+        texto += iniciales;
+
+        data[row].meta[id_campo].key = key;
+        data[row].meta[id_campo].tstart = tstart;
+        data[row].meta[id_campo].tend = tend;
+        data[row].meta[id_campo].observ = observ;
+
+        // guardar cambios en DB
+        var request = $.ajax({
+            data: JSON.stringify(data[row].meta[id_campo]),
+            url: 'apps/misas/controller/cuadricula_update.php',
+            method: 'POST',
+            dataType: 'json'
+        });
+        request.done(function (json) {
+            if (json.success !== true) {
+                alert("{{ "respuesta"|trans|raw }}: " + json.mensaje);
+            } else {
+                data[row][id_campo] = texto;
+                grid.updateRow(row);
+                modal.hide();
+                reset_campos_modal();
+            }
+        });
+    }
+
+    function reset_campos_modal() {
+        $('#id_sacd').val('');
+        $('#tstart').val('');
+        $('#tend').val('');
+        $('#observ').val('');
+    }
+
+    function openDetails(cell) {
+        $('#cell_selected').val(cell.cell);
+        $('#row_selected').val(cell.row);
+        // recuperar los datos del meta e introducirlos en los campos
+        let id_campo = columns[cell.cell].field;
+        let meta = data[cell.row].meta[id_campo];
+
+        let key = meta.key;
+        let tstart = meta.tstart;
+        let tend = meta.tend;
+        let observ = meta.observ;
+
+        $('#id_sacd').val(key);
+        $('#tstart').val(tstart);
+        $('#tend').val(tend);
+        $('#observ').val(observ);
+        modal.show();
+    }
+
+    function requiredFieldValidator(value) {
+        if (value == null || value == undefined || !value.length) {
+            return {valid: false, msg: "This is a required field"};
+        } else {
+            return {valid: true, msg: null};
+        }
+    }
+
+    var grid;
+    var data = [];
+    var columns = [
+        {id: "dia_1", name: "Lunes 1", field: "dia_1", width: 80, cssClass: "cell-title"},
+        {id: "dia_2", name: "Martes", field: "dia_2", width: 80, cssClass: "cell-title"},
+        {id: "dia_3", name: "Miércoles", field: "dia_3", width: 80, cssClass: "cell-title"},
+        {id: "dia_4", name: "Jueves", field: "dia_4", width: 80, cssClass: "cell-title"},
+        {id: "dia_5", name: "Viernes", field: "dia_5", width: 80, cssClass: "cell-title"},
+        {id: "dia_6", name: "Sábado", field: "dia_6", width: 80, cssClass: "cell-title"},
+        {id: "dia_7", name: "Domingo", field: "dia_7", width: 80, cssClass: "cell-title"}
+    ];
+    var options = {
+        editable: false,
+        enableAddRow: true,
+        enableCellNavigation: true,
+        asyncEditorLoading: false,
+        autoEdit: false
+    };
+
+
+    $(function () {
+        for (var i = 0; i < 50; i++) {
+            var encargo = (data[i] = {});
+
+            encargo["dia_1"] = "misa 1 - " + i;
+            encargo["dia_2"] = "misa 2 - " + i;
+            encargo["dia_3"] = "misa 3 - " + i;
+            encargo["dia_4"] = "misa 4 - " + i;
+            encargo["dia_5"] = "misa 5 - " + i;
+            encargo["dia_6"] = "misa 6 - " + i;
+            encargo["dia_7"] = "misa 7 - " + i;
+
+            // añado una columna 'meta' con metadatos, invisible, porque no está
+            // en la definición de columns
+            encargo["meta"] = {
+                "dia_1": {"color": "", "key": '', "tstart": '', "tend": '', "observ": ''},
+                "dia_2": {"color": "", "key": '', "tstart": '', "tend": '', "observ": ''},
+                "dia_3": {"color": "", "key": '', "tstart": '', "tend": '', "observ": ''},
+                "dia_4": {"color": "", "key": '', "tstart": '', "tend": '', "observ": ''},
+                "dia_5": {"color": "", "key": '', "tstart": '', "tend": '', "observ": ''},
+                "dia_6": {"color": "", "key": '', "tstart": '', "tend": '', "observ": ''},
+                "dia_7": {"color": "", "key": '', "tstart": '', "tend": '', "observ": ''}
+            };
+        }
+
+        grid = new Slick.Grid("#myGrid", data, columns, options);
+
+        grid.onClick.subscribe(function (e) {
+
+            var cell = grid.getCellFromEvent(e);
+
+            openDetails(cell);
+
+            e.stopPropagation();
+        });
+
+        grid.setActiveCell(0, 0);
+    })
+
+
+    $('.clockpicker').clockpicker({
+            placement: 'bottom',
+            align: 'right',
+            donetext: 'Correcto!'
+        }
+    );
+</script>

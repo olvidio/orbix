@@ -458,7 +458,7 @@ class EncargoSacd extends core\ClasePropiedades
 
     /**
      * Establece el valor del atributo df_ini de EncargoSacd
-     * Si df_ini es string, y convert=true se convierte usando el formato web\DateTimeLocal->getForamat().
+     * Si df_ini es string, y convert=true se convierte usando el formato web\DateTimeLocal->getFormat().
      * Si convert es false, df_ini debe ser un string en formato ISO (Y-m-d). Corresponde al pgstyle de la base de datos.
      *
      * @param web\DateTimeLocal|string df_ini='' optional.

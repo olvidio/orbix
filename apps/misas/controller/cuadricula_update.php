@@ -14,7 +14,10 @@ require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
 
-$Qid_item_h = (integer)filter_input(INPUT_POST, 'id_item_h');
+$json = $_POST;
+$a_json = json_decode($json);
+
+
 $Qt_start = (string)filter_input(INPUT_POST, 't_start');
 $Qt_end = (string)filter_input(INPUT_POST, 't_end');
 

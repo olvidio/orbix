@@ -173,16 +173,16 @@ foreach ($cCentros as $oCentro) {
             'id_item' => $id_item,
         ];
         $pagina = Hash::link(core\ConfigGlobal::getWeb() . '/apps/misas/controller/lista_sacd_zona.php?' . http_build_query($a_cosas));
-        $texto_nombre = "<span class=link onclick=\"fnjs_modificar('$pagina');\">$sacd</span>";
+        $texto_nombre = "<span class=link onclick=\"fnjs_mostrar_modal('$pagina');\">$sacd</span>";
         $pagina_horario = Hash::link(core\ConfigGlobal::getWeb() . '/apps/misas/controller/horario_tarea.php?' . http_build_query($a_cosas));
         $pagina = Hash::link(core\ConfigGlobal::getWeb() . '/apps/misas/controller/lista_sacd_zona.php?' . http_build_query($a_cosas));
-        $texto_nombre = "<span class=link onclick=\"fnjs_modificar('$pagina');\">$sacd</span>";
+        $texto_nombre = "<span class=link onclick=\"fnjs_mostrar_modal('$pagina');\">$sacd</span>";
         $pagina_horario = Hash::link(core\ConfigGlobal::getWeb() . '/apps/misas/controller/horario_tarea.php?' . http_build_query($a_cosas));
-        $icono_horario = "<span class=link onclick=\"fnjs_modificar('$pagina_horario');\"><img src=\"$reloj\" width=\"12\" height=\"12\" style=\"float: right; margin: 0px 0px 15px 15px;\" alt=\"" . _("horario") . "\"></span>";
+        $icono_horario = "<span class=link onclick=\"fnjs_mostrar_modal('$pagina_horario');\"><img src=\"$reloj\" width=\"12\" height=\"12\" style=\"float: right; margin: 0px 0px 15px 15px;\" alt=\"" . _("horario") . "\"></span>";
         if (($t_start!='??') && ($t_start!=null) && ($t_end!='??') && ($t_end!=null))
-            $icono_horario = "<br><span class=link onclick=\"fnjs_modificar('$pagina_horario');\">$t_start - $t_end</span>";
+            $icono_horario = "<br><span class=link onclick=\"fnjs_mostrar_modal('$pagina_horario');\">$t_start - $t_end</span>";
         if (($t_start!='??') && ($t_start!=null) && (($t_end=='??') || ($t_end==null)))
-            $icono_horario = "<br><span class=link onclick=\"fnjs_modificar('$pagina_horario');\">$t_start</span>";
+            $icono_horario = "<br><span class=link onclick=\"fnjs_mostrar_modal('$pagina_horario');\">$t_start</span>";
         $a_valores[$i][$c] = $texto_nombre . $icono_horario;
 
         }
@@ -215,4 +215,4 @@ $a_campos = ['oPosicion' => $oPosicion,
 ];
 
 $oView = new core\ViewTwig('misas/controller');
-echo $oView->render('crear_plantilla.html.twig', $a_campos);
+echo $oView->render('ver_plantilla_zona.html.twig', $a_campos);
