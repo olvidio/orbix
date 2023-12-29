@@ -147,6 +147,19 @@ class DateTimeLocal extends DateTime
     }
 
     /**
+     * devolver null para las 00:00
+     * @return string|null
+     */
+    public function getHora()
+    {
+        $str_hora = $this->format('H:i');
+        if ($str_hora === '00:00') {
+            return null;
+        }
+        return $str_hora;
+    }
+
+    /**
      * Devuelve la fecha en el formato local (según el idioma del usuario)
      *
      * @param string $separador (.-/)

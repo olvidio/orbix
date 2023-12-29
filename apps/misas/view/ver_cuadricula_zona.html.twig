@@ -75,10 +75,12 @@
 
     <div class='item-details-form' style="display: none">
 
-        <label>{{ encargo_descripcion }}</label>
+        <label id="titulo_modal"></label>
         <hr/>
         <input type="hidden" id="cell_selected" value=""/>
         <input type="hidden" id="row_selected" value=""/>
+        <input type="hidden" id="uuid_selected" value=""/>
+        <input type="hidden" id="id_enc_selected" value=""/>
         <div class='item-details-label'>
             <label for="id_sacd">Sacd:</label>
             {{ oDesplSacd.desplegable|raw }}
@@ -168,29 +170,49 @@
         let tstart = $('#tstart').val();
         let tend = $('#tend').val();
         let observ = $('#observ').val();
+        let uuid_item = $('#uuid_selected').val();
+        let id_enc = $('#id_enc_selected').val();
 
-        let texto = '';
-        if (observ !== "") {
-            texto = '(*) ';
+        var texto = '+';
+        if (iniciales !== undefined) {
+            texto = iniciales;
+            if (observ !== "") {
+                texto += '*';
+            }
         }
-        texto += iniciales;
 
+        data[row].meta[id_campo].uuid_item = uuid_item;
         data[row].meta[id_campo].key = key;
         data[row].meta[id_campo].tstart = tstart;
         data[row].meta[id_campo].tend = tend;
         data[row].meta[id_campo].observ = observ;
+        data[row].meta[id_campo].id_enc = id_enc;
+
+        let meta = data[row].meta[id_campo];
+        // añadir el campo día
+        meta.dia = id_campo;
+        // añadir el hash (se puede cambiar todo menos el encargo)
+        const arr_h = { {{ array_h|raw }} };
+        const mergedJSON = { ...meta, ...arr_h };
 
         // guardar cambios en DB
         var request = $.ajax({
-            data: JSON.stringify(data[row].meta[id_campo]),
             url: 'apps/misas/controller/cuadricula_update.php',
             method: 'POST',
+            data: mergedJSON,
             dataType: 'json'
         });
         request.done(function (json) {
             if (json.success !== true) {
                 alert("{{ "respuesta"|trans|raw }}: " + json.mensaje);
             } else {
+                // es posible que al guardar se creen datos (tstart, tend) que hay que añadir a los metadatos
+                meta_update = json.meta;
+                data[row].meta[id_campo].key = meta_update.key;
+                data[row].meta[id_campo].tstart = meta_update.tstart;
+                data[row].meta[id_campo].tend = meta_update.tend;
+                data[row].meta[id_campo].observ = meta_update.observ;
+
                 data[row][id_campo] = texto;
                 grid.updateRow(row);
                 modal.hide();
@@ -204,12 +226,15 @@
         $('#tstart').val('');
         $('#tend').val('');
         $('#observ').val('');
+        $('#id_enc').val('');
     }
 
     function openDetails(cell) {
+        const url = URL.createObjectURL(new Blob())
         $('#cell_selected').val(cell.cell);
         $('#row_selected').val(cell.row);
         // recuperar los datos del meta e introducirlos en los campos
+        let encargo = data[cell.row].encargo;
         let id_campo = columns[cell.cell].field;
         let meta = data[cell.row].meta[id_campo];
 
@@ -217,11 +242,19 @@
         let tstart = meta.tstart;
         let tend = meta.tend;
         let observ = meta.observ;
+        let id_enc = meta.id_enc;
+        let uuid_item = meta.uuid_item;
+        if (uuid_item === "") {
+            uuid_item = url.substring(url.lastIndexOf('/') + 1)
+        }
 
+        $('#titulo_modal').html(encargo);
         $('#id_sacd').val(key);
         $('#tstart').val(tstart);
         $('#tend').val(tend);
         $('#observ').val(observ);
+        $('#uuid_selected').val(uuid_item);
+        $('#id_enc_selected').val(id_enc);
         modal.show();
     }
 
@@ -234,16 +267,8 @@
     }
 
     var grid;
-    var data = [];
-    var columns = [
-        {id: "dia_1", name: "Lunes 1", field: "dia_1", width: 80, cssClass: "cell-title"},
-        {id: "dia_2", name: "Martes", field: "dia_2", width: 80, cssClass: "cell-title"},
-        {id: "dia_3", name: "Miércoles", field: "dia_3", width: 80, cssClass: "cell-title"},
-        {id: "dia_4", name: "Jueves", field: "dia_4", width: 80, cssClass: "cell-title"},
-        {id: "dia_5", name: "Viernes", field: "dia_5", width: 80, cssClass: "cell-title"},
-        {id: "dia_6", name: "Sábado", field: "dia_6", width: 80, cssClass: "cell-title"},
-        {id: "dia_7", name: "Domingo", field: "dia_7", width: 80, cssClass: "cell-title"}
-    ];
+    var data = {{ json_data_cuadricula|raw }};
+    var columns = {{ json_columns_cuadricula|raw }};
     var options = {
         editable: false,
         enableAddRow: true,
@@ -254,38 +279,11 @@
 
 
     $(function () {
-        for (var i = 0; i < 50; i++) {
-            var encargo = (data[i] = {});
-
-            encargo["dia_1"] = "misa 1 - " + i;
-            encargo["dia_2"] = "misa 2 - " + i;
-            encargo["dia_3"] = "misa 3 - " + i;
-            encargo["dia_4"] = "misa 4 - " + i;
-            encargo["dia_5"] = "misa 5 - " + i;
-            encargo["dia_6"] = "misa 6 - " + i;
-            encargo["dia_7"] = "misa 7 - " + i;
-
-            // añado una columna 'meta' con metadatos, invisible, porque no está
-            // en la definición de columns
-            encargo["meta"] = {
-                "dia_1": {"color": "", "key": '', "tstart": '', "tend": '', "observ": ''},
-                "dia_2": {"color": "", "key": '', "tstart": '', "tend": '', "observ": ''},
-                "dia_3": {"color": "", "key": '', "tstart": '', "tend": '', "observ": ''},
-                "dia_4": {"color": "", "key": '', "tstart": '', "tend": '', "observ": ''},
-                "dia_5": {"color": "", "key": '', "tstart": '', "tend": '', "observ": ''},
-                "dia_6": {"color": "", "key": '', "tstart": '', "tend": '', "observ": ''},
-                "dia_7": {"color": "", "key": '', "tstart": '', "tend": '', "observ": ''}
-            };
-        }
-
         grid = new Slick.Grid("#myGrid", data, columns, options);
 
         grid.onClick.subscribe(function (e) {
-
             var cell = grid.getCellFromEvent(e);
-
             openDetails(cell);
-
             e.stopPropagation();
         });
 

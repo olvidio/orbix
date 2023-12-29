@@ -54,18 +54,19 @@ class EncargoDia
     public function setAllAttributes(array $aDatos): EncargoDia
     {
         if (array_key_exists('uuid_item', $aDatos)) {
-            $this->setId_item($aDatos['uuid_item']);
+            $uuid = new EncargoDiaId($aDatos['uuid_item']);
+            $this->setUuid_item($uuid);
         }
         if (array_key_exists('id_enc', $aDatos)) {
             $this->setId_enc($aDatos['id_enc']);
         }
         if (array_key_exists('tstart', $aDatos)) {
             $tstart = $aDatos['tstart']?? new NullDateTimeLocal();
-            $this->setT_start($tstart);
+            $this->setTstart($tstart);
         }
         if (array_key_exists('tend', $aDatos)) {
             $tend = $aDatos['tend']?? new NullDateTimeLocal();
-            $this->setT_end($tend);
+            $this->setTend($tend);
         }
         if (array_key_exists('id_nom', $aDatos)) {
             $this->setId_nom($aDatos['id_nom']);

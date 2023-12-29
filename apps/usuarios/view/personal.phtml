@@ -28,7 +28,7 @@ if (ConfigGlobal::is_app_installed('cambios')) {
 ?>
 <h2><?= ucfirst(_("preferencias personales")) ?><br></h2>
 <form id=preferencias name=preferencias action="apps/usuarios/controller/personal_update.php" method="post">
-    <?= $oHashNuevo->getCamposHtml(); ?>
+    <?= $oHash->getCamposHtml(); ?>
     <table>
         <tr>
             <td><?= ucfirst(_("página central de inicio")) ?>:</td>

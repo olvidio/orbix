@@ -26,7 +26,7 @@ class ViewTwig extends Environment
     /**
      * Namespace
      *
-     * @var Twig\Loader\FilesystemLoader
+     * @var FilesystemLoader
      */
     private $loader;
 

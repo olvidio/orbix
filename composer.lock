@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "3bb55bd6dc67cd40b104cd9dae5710e4",
+    "content-hash": "7a9651c5240b031fe73ca0de53b2d2f9",
     "packages": [
         {
             "name": "jblond/twig-trans",
@@ -1457,7 +1457,8 @@
         "ext-json": "*",
         "ext-bcmath": "*",
         "ext-calendar": "*",
-        "ext-zip": "*"
+        "ext-zip": "*",
+        "ext-xml": "*"
     },
     "platform-dev": [],
     "platform-overrides": {

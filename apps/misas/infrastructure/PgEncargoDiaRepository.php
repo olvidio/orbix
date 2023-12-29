@@ -25,8 +25,8 @@ class PgEncargoDiaRepository extends ClaseRepository implements EncargoDiaReposi
 {
     public function __construct()
     {
-        $oDbl = $GLOBALS['oDB'];
-        $oDbl_Select = $GLOBALS['oDB_Select'];
+        $oDbl = $GLOBALS['oDBC'];
+        $oDbl_Select = $GLOBALS['oDBC_Select'];
         $this->setoDbl($oDbl);
         $this->setoDbl_Select($oDbl_Select);
         $this->setNomTabla('misa_cuadricula_dl');
@@ -143,8 +143,8 @@ class PgEncargoDiaRepository extends ClaseRepository implements EncargoDiaReposi
         $aDatos['id_nom'] = $EncargoDia->getId_nom();
         $aDatos['observ'] = $EncargoDia->getObserv();
         // para las fechas
-        $aDatos['tstart'] = (new ConverterDate('time', $EncargoDia->getTstart()))->toPg();
-        $aDatos['tend'] = (new ConverterDate('time', $EncargoDia->getTend()()))->toPg();
+        $aDatos['tstart'] = (new ConverterDate('timestamp', $EncargoDia->getTstart()))->toPg();
+        $aDatos['tend'] = (new ConverterDate('timestamp', $EncargoDia->getTend()))->toPg();
 
         array_walk($aDatos, 'core\poner_null');
 
@@ -218,6 +218,7 @@ class PgEncargoDiaRepository extends ClaseRepository implements EncargoDiaReposi
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
+        $uuid_item = $uuid_item->value();
         if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE uuid_item = '$uuid_item'")) === FALSE) {
             $sClaveError = 'PgPlantillaRepository.getDatosById';
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);

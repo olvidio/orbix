@@ -2,6 +2,10 @@
 
 namespace core\ValueObject;
 
+use Ramsey\Uuid\Uuid as RamseyUuid;
+use Ramsey\Uuid\Exception\InvalidArgumentException;
+
+require_once('libs/vendor/autoload.php');
 class Uuid
 {
     protected $value;
