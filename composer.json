@@ -16,7 +16,8 @@
     "ext-bcmath": "*",
     "ext-calendar": "*",
     "ext-zip": "*",
-    "ext-xml": "*"
+    "ext-xml": "*",
+    "ramsey/uuid": "^4.7"
   },
   "require-dev": {
     "roave/security-advisories": "dev-latest"

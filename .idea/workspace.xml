@@ -5,7 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f178a244-4024-41f6-8417-4831ab0bb057" name="Changes" comment="pujar coses per salva (3)">
-      <change beforePath="$PROJECT_DIR$/.idea/php.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/php.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -245,7 +245,8 @@
       <workItem from="1703673625831" duration="9216000" />
       <workItem from="1703707211019" duration="408000" />
       <workItem from="1703750817818" duration="29027000" />
-      <workItem from="1703836853592" duration="336000" />
+      <workItem from="1703836853592" duration="420000" />
+      <workItem from="1703837396634" duration="691000" />
     </task>
     <task id="LOCAL-00013" summary="sintaxis">
       <created>1665478367349</created>
@@ -590,7 +591,7 @@
       <option name="project" value="LOCAL" />
       <updated>1679384782892</updated>
     </task>
-    <option name="localTasksCounter" value="66" />
+    <option name="localTasksCounter" value="67" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
