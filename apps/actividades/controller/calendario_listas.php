@@ -4,6 +4,7 @@ use actividades\model\entity\GestorActividad;
 use actividadescentro\model\entity\GestorCentroEncargado;
 use actividadtarifas\model\entity\TipoTarifa;
 use asistentes\model\entity\GestorAsistente;
+use config\model\Config;
 use core\ConfigGlobal;
 use dossiers\model\PermisoDossier;
 use permisos\model\PermisosActividadesTrue;
@@ -246,9 +247,14 @@ foreach (array_keys($aGrupos) as $key) {
 
             //$oIngreso = new Ingreso(array('id_activ'=>$id_activ));
             //$num_asistentes=$oIngreso->getNum_asistentes();
-            $gesAsistentes = new GestorAsistente();
-            $cAsistentes = $gesAsistentes->getAsistentesDeActividad($id_activ);
-            $num_asistentes = count($cAsistentes);
+            //TODO:  que se vea desde fuera, que es dónde interesa.
+            if (ConfigGlobal::$dmz) {
+                $num_asistentes = '?';
+            } else {
+                $gesAsistentes = new GestorAsistente();
+                $cAsistentes = $gesAsistentes->getAsistentesDeActividad($id_activ);
+                $num_asistentes = count($cAsistentes);
+            }
 
             // mirar permisos.
             if (core\ConfigGlobal::is_app_installed('procesos')) {
