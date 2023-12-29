@@ -42,7 +42,7 @@ class Plantilla
      *
      * @var string
      */
-    private string $sdia;
+    private string $sdia = '';
     /**
      * Semana de Plantilla
      *

@@ -69,9 +69,24 @@ $oDesplCentros = new Desplegable();
 $oDesplCentros->setNombre('id_ubi');
 $oDesplCentros->setOpciones($aCentros);
 
+$aTareas=['1'=>'misa', '2'=>'bendición', '3'=>'retiro'];
+$oDesplTareas= new Desplegable();
+$oDesplTareas->setNombre('id_tarea');
+$oDesplTareas->setOpciones($aTareas);
+
+$oHash = new Hash();
+$oHash->setArrayCamposHidden(['que' => 'anadir']);
+$oHash->setCamposForm('id_ubi!id_tarea');
+$h_anadir = $oHash->getParamAjax();
+
+
 $a_campos = [
     'oDesplCentros' => $oDesplCentros,
+    'oDesplTareas' => $oDesplTareas,
+    'h' => $h_anadir,
     ];
+
+
 
 $oView = new core\ViewTwig('misas/controller');
 echo $oView->render('lista_ctr.html.twig', $a_campos);
