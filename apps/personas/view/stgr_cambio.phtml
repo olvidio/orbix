@@ -1,7 +1,7 @@
 <?= $oPosicion->mostrar_left_slide(1); ?>
 <h2 class=titulo><?= ucfirst(_("cambiar el stgr")); ?></h2>
 <form id="frm_sin_nombre" name="frm_sin_nombre" action="apps/personas/controller/stgr_update.php" method="POST">
-    <?= $oHashNuevo->getCamposHtml(); ?>
+    <?= $oHash->getCamposHtml(); ?>
     <table>
         <tr>
             <th class=etiqueta_inv><?= $nom; ?></th>

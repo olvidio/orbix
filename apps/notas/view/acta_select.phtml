@@ -69,7 +69,7 @@
 </script>
 <form id="frm_sin_nombre" name="frm_sin_nombre" action="apps/notas/controller/acta_select.php" method="post"
       onkeypress="fnjs_enviar(event,this);">
-    <?= $oHashNuevo->getCamposHtml(); ?>
+    <?= $oHash->getCamposHtml(); ?>
 
     <p class="comentario"><?= _("<b>Ayuda para búsquedas</b>") ?>:<br>
         - <?= _("En las <b>Delegaciones</b>, solo busca entre las actas de la propia delegación o Región. En las <b>Regiones que tienen delegaciones dependientes</b>, buscará entre todas las actas de todas sus delegaciones.") ?>

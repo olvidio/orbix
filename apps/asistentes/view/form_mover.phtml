@@ -5,7 +5,7 @@
         <input type='button' value="<?= _("cancelar") ?>" onclick='fnjs_mover_cerrar();'>
     <?php } else { ?>
         <form id="frm_mover" name="frm_mover" action="apps/asistentes/controller/update_3101.php" method="POST">
-            <?= $oHashNuevo->getCamposHtml(); ?>
+            <?= $oHash->getCamposHtml(); ?>
             <table style="width: 400px">
                 <tr>
                     <td class=etiqueta><?= ucfirst(_("mover a")) ?>:</td>

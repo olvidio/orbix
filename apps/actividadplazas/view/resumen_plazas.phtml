@@ -37,7 +37,7 @@ use function core\is_true;
     <?= $oHashActualizar->getCamposHtml(); ?>
 </form>
 <form id="frm_resumen" name="frm_resumen" action="" method="POST">
-    <?= $oHashNuevo->getCamposHtml(); ?>
+    <?= $oHash->getCamposHtml(); ?>
     <?= $nom_activ ?>
     <?php if (is_true($otra_dl)) { ?>
         <span class="alert"><?= _("Sólo se ven las ocupadas por la propia dl") ?></span>

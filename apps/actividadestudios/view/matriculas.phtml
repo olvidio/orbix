@@ -35,7 +35,7 @@
 <h2 class=titulo><?= $titulo ?></h2>
 <h3><?= $aviso; ?></h3>
 <form id="seleccionados" name="seleccionados" action="" method="post">
-    <?= $oHashNuevo->getCamposHtml(); ?>
+    <?= $oHash->getCamposHtml(); ?>
     <input type="hidden" id="pau" name="pau" value="p">
     <input type="hidden" id="mod" name="mod" value="">
     <?= $oTabla->mostrar_tabla(); ?>

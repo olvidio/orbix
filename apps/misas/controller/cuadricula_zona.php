@@ -148,7 +148,7 @@ $json_data_cuadricula = json_encode($data_cuadricula);
 
 $oHash = new Hash();
 $oHash->setCamposForm('color!dia!id_enc!key!observ!tend!tstart!uuid_item');
-$oHash->setArrayCamposHidden(['id_enc' => $id_enc]);
+//$oHash->setArrayCamposHidden(['id_enc' => $id_enc]);
 $array_h = $oHash->getParamAjaxEnArray();
 
 
