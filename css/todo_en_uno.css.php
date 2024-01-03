@@ -23,7 +23,7 @@ include_once (ConfigGlobal::$dir_estilos.'/colores.php');
 	/* antes usaba hidden, pero con hidden conserva el espacio ocupado, con none NO
 	.no_print { visibility : hidden; }
  	*/
-	.no_print { display : none; }
+	.no_print { display: none; }
    /* Uso la etiqueta <div> </div> para hacer un salto de página al imprimir */
 	.salta_pag {page-break-after:always;}
 
@@ -239,7 +239,7 @@ div.ventana z-index: 160;
 	}
 
 	.help-tip:hover p {
-		display:block;
+		display: block;
 		transform-origin: 100% 0%;
 
 		-webkit-animation: fadeIn 0.3s ease-in-out;
@@ -737,7 +737,6 @@ div.ventana z-index: 160;
 		border-color: transparent <?= $medio ?> transparent transparent;
 
 		opacity: .75; /* opacidad para Firefox */
-		display: inherit;
 		text-indent: -99999px;
 		outline: none;
 		position: relative;
