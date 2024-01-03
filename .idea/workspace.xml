@@ -4,8 +4,134 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f178a244-4024-41f6-8417-4831ab0bb057" name="Changes" comment="pujar coses per salva (3)">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    <list default="true" id="f178a244-4024-41f6-8417-4831ab0bb057" name="Changes" comment="add clockpiker">
+      <change beforePath="$PROJECT_DIR$/apps/web/Lista.php" beforeDir="false" afterPath="$PROJECT_DIR$/apps/web/Lista.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/index.php" beforeDir="false" afterPath="$PROJECT_DIR$/index.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/.package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/.package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/jquery/AUTHORS.txt" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/jquery/AUTHORS.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/jquery/LICENSE.txt" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/jquery/LICENSE.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/jquery/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/jquery/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/jquery/bower.json" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/jquery/bower.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/jquery/dist/jquery.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/jquery/dist/jquery.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/jquery/dist/jquery.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/jquery/dist/jquery.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/jquery/dist/jquery.min.map" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/jquery/dist/jquery.min.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/jquery/dist/jquery.slim.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/jquery/dist/jquery.slim.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/jquery/dist/jquery.slim.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/jquery/dist/jquery.slim.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/jquery/dist/jquery.slim.min.map" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/jquery/dist/jquery.slim.min.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/jquery/external/sizzle/LICENSE.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/jquery/external/sizzle/dist/sizzle.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/jquery/external/sizzle/dist/sizzle.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/jquery/external/sizzle/dist/sizzle.min.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/jquery/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/jquery/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/jquery/src/ajax.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/jquery/src/ajax.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/jquery/src/ajax/jsonp.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/jquery/src/ajax/jsonp.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/jquery/src/ajax/load.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/jquery/src/ajax/load.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/jquery/src/ajax/script.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/jquery/src/ajax/script.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/jquery/src/ajax/var/location.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/jquery/src/ajax/var/location.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/jquery/src/ajax/var/nonce.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/jquery/src/ajax/var/nonce.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/jquery/src/ajax/var/rquery.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/jquery/src/ajax/var/rquery.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/jquery/src/ajax/xhr.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/jquery/src/ajax/xhr.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/jquery/src/attributes.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/jquery/src/attributes.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/jquery/src/attributes/attr.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/jquery/src/attributes/attr.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/jquery/src/attributes/classes.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/jquery/src/attributes/classes.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/jquery/src/attributes/prop.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/jquery/src/attributes/prop.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/jquery/src/attributes/support.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/jquery/src/attributes/support.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/jquery/src/attributes/val.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/jquery/src/attributes/val.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/jquery/src/callbacks.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/jquery/src/callbacks.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/jquery/src/core.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/jquery/src/core.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/jquery/src/core/DOMEval.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/jquery/src/core/DOMEval.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/jquery/src/core/access.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/jquery/src/core/access.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/jquery/src/core/camelCase.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/jquery/src/core/camelCase.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/jquery/src/core/init.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/jquery/src/core/init.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/jquery/src/core/isAttached.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/jquery/src/core/isAttached.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/jquery/src/core/nodeName.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/jquery/src/core/nodeName.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/jquery/src/core/parseHTML.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/jquery/src/core/parseHTML.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/jquery/src/core/parseXML.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/jquery/src/core/parseXML.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/jquery/src/core/ready-no-deferred.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/jquery/src/core/ready-no-deferred.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/jquery/src/core/ready.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/jquery/src/core/ready.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/jquery/src/core/readyException.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/jquery/src/core/readyException.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/jquery/src/core/stripAndCollapse.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/jquery/src/core/stripAndCollapse.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/jquery/src/core/support.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/jquery/src/core/support.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/jquery/src/core/toType.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/jquery/src/core/toType.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/jquery/src/core/var/rsingleTag.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/jquery/src/core/var/rsingleTag.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/jquery/src/css.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/jquery/src/css.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/jquery/src/css/addGetHookIf.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/jquery/src/css/addGetHookIf.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/jquery/src/css/adjustCSS.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/jquery/src/css/adjustCSS.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/jquery/src/css/curCSS.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/jquery/src/css/curCSS.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/jquery/src/css/finalPropName.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/jquery/src/css/finalPropName.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/jquery/src/css/hiddenVisibleSelectors.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/jquery/src/css/hiddenVisibleSelectors.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/jquery/src/css/showHide.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/jquery/src/css/showHide.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/jquery/src/css/support.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/jquery/src/css/support.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/jquery/src/css/var/cssExpand.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/jquery/src/css/var/cssExpand.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/jquery/src/css/var/getStyles.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/jquery/src/css/var/getStyles.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/jquery/src/css/var/isHiddenWithinTree.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/jquery/src/css/var/isHiddenWithinTree.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/jquery/src/css/var/rboxStyle.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/jquery/src/css/var/rboxStyle.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/jquery/src/css/var/rnumnonpx.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/jquery/src/css/var/rnumnonpx.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/jquery/src/css/var/swap.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/jquery/src/css/var/swap.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/jquery/src/data.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/jquery/src/data.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/jquery/src/data/Data.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/jquery/src/data/Data.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/jquery/src/data/var/acceptData.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/jquery/src/data/var/acceptData.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/jquery/src/data/var/dataPriv.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/jquery/src/data/var/dataPriv.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/jquery/src/data/var/dataUser.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/jquery/src/data/var/dataUser.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/jquery/src/deferred.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/jquery/src/deferred.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/jquery/src/deferred/exceptionHook.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/jquery/src/deferred/exceptionHook.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/jquery/src/deprecated.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/jquery/src/deprecated.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/jquery/src/deprecated/ajax-event-alias.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/jquery/src/deprecated/ajax-event-alias.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/jquery/src/deprecated/event.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/jquery/src/deprecated/event.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/jquery/src/dimensions.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/jquery/src/dimensions.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/jquery/src/effects.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/jquery/src/effects.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/jquery/src/effects/Tween.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/jquery/src/effects/Tween.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/jquery/src/effects/animatedSelector.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/jquery/src/effects/animatedSelector.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/jquery/src/event.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/jquery/src/event.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/jquery/src/event/focusin.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/jquery/src/event/support.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/jquery/src/event/trigger.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/jquery/src/event/trigger.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/jquery/src/exports/amd.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/jquery/src/exports/amd.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/jquery/src/exports/global.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/jquery/src/exports/global.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/jquery/src/jquery.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/jquery/src/jquery.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/jquery/src/manipulation.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/jquery/src/manipulation.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/jquery/src/manipulation/_evalUrl.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/jquery/src/manipulation/_evalUrl.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/jquery/src/manipulation/buildFragment.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/jquery/src/manipulation/buildFragment.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/jquery/src/manipulation/getAll.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/jquery/src/manipulation/getAll.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/jquery/src/manipulation/setGlobalEval.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/jquery/src/manipulation/setGlobalEval.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/jquery/src/manipulation/support.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/jquery/src/manipulation/support.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/jquery/src/manipulation/var/rscriptType.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/jquery/src/manipulation/var/rscriptType.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/jquery/src/manipulation/var/rtagName.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/jquery/src/manipulation/var/rtagName.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/jquery/src/manipulation/wrapMap.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/jquery/src/manipulation/wrapMap.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/jquery/src/offset.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/jquery/src/offset.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/jquery/src/queue.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/jquery/src/queue.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/jquery/src/queue/delay.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/jquery/src/queue/delay.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/jquery/src/selector-native.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/jquery/src/selector-native.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/jquery/src/selector-sizzle.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/jquery/src/selector.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/jquery/src/selector.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/jquery/src/serialize.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/jquery/src/serialize.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/jquery/src/traversing.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/jquery/src/traversing.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/jquery/src/traversing/findFilter.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/jquery/src/traversing/findFilter.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/jquery/src/traversing/var/dir.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/jquery/src/traversing/var/dir.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/jquery/src/traversing/var/rneedsContext.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/jquery/src/traversing/var/rneedsContext.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/jquery/src/traversing/var/siblings.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/jquery/src/traversing/var/siblings.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/jquery/src/var/ObjectFunctionString.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/jquery/src/var/ObjectFunctionString.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/jquery/src/var/arr.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/jquery/src/var/arr.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/jquery/src/var/class2type.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/jquery/src/var/class2type.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/jquery/src/var/document.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/jquery/src/var/document.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/jquery/src/var/documentElement.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/jquery/src/var/documentElement.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/jquery/src/var/flat.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/jquery/src/var/flat.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/jquery/src/var/fnToString.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/jquery/src/var/fnToString.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/jquery/src/var/getProto.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/jquery/src/var/getProto.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/jquery/src/var/hasOwn.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/jquery/src/var/hasOwn.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/jquery/src/var/indexOf.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/jquery/src/var/indexOf.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/jquery/src/var/isFunction.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/jquery/src/var/isFunction.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/jquery/src/var/isWindow.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/jquery/src/var/isWindow.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/jquery/src/var/pnum.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/jquery/src/var/pnum.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/jquery/src/var/push.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/jquery/src/var/push.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/jquery/src/var/rcheckableType.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/jquery/src/var/rcheckableType.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/jquery/src/var/rcssNum.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/jquery/src/var/rcssNum.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/jquery/src/var/rnothtmlwhite.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/jquery/src/var/rnothtmlwhite.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/jquery/src/var/slice.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/jquery/src/var/slice.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/jquery/src/var/support.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/jquery/src/var/support.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/jquery/src/var/toString.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/jquery/src/var/toString.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/node_modules/jquery/src/wrap.js" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/jquery/src/wrap.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -75,6 +201,9 @@
       <path value="$PROJECT_DIR$/libs/vendor/psr/log" />
       <path value="$PROJECT_DIR$/libs/vendor/mpdf/psr-log-aware-trait" />
       <path value="$PROJECT_DIR$/libs/vendor/mpdf/psr-http-message-shim" />
+      <path value="$PROJECT_DIR$/libs/vendor/ramsey/uuid" />
+      <path value="$PROJECT_DIR$/libs/vendor/ramsey/collection" />
+      <path value="$PROJECT_DIR$/libs/vendor/brick/math" />
     </include_path>
   </component>
   <component name="ProblemsViewState">
@@ -89,33 +218,33 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;JavaScript Debug.TarifaUbi.php.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;codeWithMe.voiceChat.enabledByDefault&quot;: &quot;false&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/home/dani/orbix_local/orbix/apps/misas/view&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.17356321&quot;,
-    &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;settings.php.debug.servers&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "JavaScript Debug.TarifaUbi.php.executor": "Run",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "codeWithMe.voiceChat.enabledByDefault": "false",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "/home/dani/orbix_local/orbix/apps/misas/view",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "Modules",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.17356321",
+    "run.code.analysis.last.selected.profile": "pProject Default",
+    "settings.editor.selected.configurable": "editor.preferences.gutterIcons",
+    "vue.rearranger.settings.migration": "true"
   },
-  &quot;keyToStringList&quot;: {
-    &quot;DatabaseDriversLRU&quot;: [
-      &quot;postgresql&quot;
+  "keyToStringList": {
+    "DatabaseDriversLRU": [
+      "postgresql"
     ]
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/apps/misas/view" />
@@ -591,7 +720,7 @@
       <option name="project" value="LOCAL" />
       <updated>1679384782892</updated>
     </task>
-    <option name="localTasksCounter" value="67" />
+    <option name="localTasksCounter" value="68" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -622,8 +751,6 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_NEW_TODO" value="false" />
-    <MESSAGE value="&#10;nueva branch" />
-    <MESSAGE value="clase info (profesor stgr) en mayúscula" />
     <MESSAGE value="repasra clases mayuscula y use" />
     <MESSAGE value="modificaciones en composer y twig" />
     <MESSAGE value="cambiar render por renderizar" />
@@ -647,7 +774,9 @@
     <MESSAGE value="login idioma null" />
     <MESSAGE value="pujar coses per salva" />
     <MESSAGE value="pujar coses per salva (3)" />
-    <option name="LAST_COMMIT_MESSAGE" value="pujar coses per salva (3)" />
+    <MESSAGE value="npm clockpiker" />
+    <MESSAGE value="add clockpiker" />
+    <option name="LAST_COMMIT_MESSAGE" value="add clockpiker" />
     <option name="GROUP_MULTIFILE_MERGE_BY_DIRECTORY" value="true" />
   </component>
   <component name="XDebuggerManager">
