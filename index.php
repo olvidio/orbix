@@ -334,7 +334,6 @@ $h = $oHash->linkSinVal();
     <!-- ClockPicker Stylesheet -->
     <link rel="stylesheet" type="text/css"
           href='<?= ConfigGlobal::getWeb_NodeScripts() . '/clockpicker/dist/jquery-clockpicker.css' ?>' />
-
     <!-- jQuery -->
     <script type="text/javascript"
             src='<?= ConfigGlobal::getWeb_NodeScripts() . '/jquery/dist/jquery.min.js' ?>'></script>
@@ -346,23 +345,24 @@ $h = $oHash->linkSinVal();
             src='<?= ConfigGlobal::getWeb_NodeScripts() . '/jquery-ui/ui/i18n/datepicker-es.js' ?>'></script>
     <script type="text/javascript"
             src='<?= ConfigGlobal::getWeb_NodeScripts() . '/jquery-ui/ui/i18n/datepicker-ca.js' ?>'></script>
+
     <!-- clockPiker -->
     <script type="text/javascript"
             src='<?= ConfigGlobal::getWeb_NodeScripts() . '/clockpicker/dist/jquery-clockpicker.js' ?>'></script>
 
-
-    <!-- Slick -->
+    <!-- SlickGrid Stylesheet CSS -->
     <!-- OJO: IMPORTA el orden. Pueden salir avisos (en consola del navegador) tipo: Grid.xx not defined  -->
     <link type='text/css' rel='stylesheet'
           href='<?= ConfigGlobal::getWeb_NodeScripts() . '/slickgrid/dist/styles/css/slick.grid.css' ?>'/>
+    <link type='text/css' rel='stylesheet'
+          href='<?= ConfigGlobal::getWeb_NodeScripts() . '/slickgrid/dist/styles/css/slick.columnpicker.css' ?>'/>
+    <link type='text/css' rel='stylesheet'
+          href='<?= ConfigGlobal::getWeb_NodeScripts() . '/slickgrid/dist/styles/css/slick.gridmenu.css' ?>'/>
+    <link type='text/css' rel='stylesheet'
+          href='<?= ConfigGlobal::getWeb_NodeScripts() . '/slickgrid/dist/styles/css/slick.pager.css' ?>'/>
 
-    <!--
-    <script type='text/javascript'
-            src='<?= ConfigGlobal::getWeb_NodeScripts() . '/slickgrid/lib/jquery.event.drag-2.3.0.js' ?>'></script>
-    <script type='text/javascript'
-            src='<?= ConfigGlobal::getWeb_NodeScripts() . '/slickgrid/lib/jquery.event.drop-2.3.0.js' ?>'></script>
--->
 
+    <!-- Slick -->
     <script type='text/javascript'
             src='<?= ConfigGlobal::getWeb_NodeScripts() . '/sortablejs/Sortable.js' ?>'></script>
     <script type='text/javascript'
@@ -372,43 +372,25 @@ $h = $oHash->linkSinVal();
     <script type='text/javascript'
             src='<?= ConfigGlobal::getWeb_NodeScripts() . '/slickgrid/dist/browser/slick.grid.js' ?>'></script>
     <script type='text/javascript'
-            src='<?= ConfigGlobal::getWeb_NodeScripts() . '/slickgrid/dist/browser/slick.editors.js' ?>'></script>
-    <script type='text/javascript'
-            src='<?= ConfigGlobal::getWeb_NodeScripts() . '/slickgrid/dist/browser/slick.formatters.js' ?>'></script>
-    <script type='text/javascript'
             src='<?= ConfigGlobal::getWeb_NodeScripts() . '/slickgrid/dist/browser/slick.dataview.js' ?>'></script>
     <script type='text/javascript'
+            src='<?= ConfigGlobal::getWeb_NodeScripts() . '/slickgrid/dist/browser/slick.editors.js' ?>'></script>
+    <script type='text/javascript'
             src='<?= ConfigGlobal::getWeb_NodeScripts() . '/slickgrid/dist/browser/plugins/slick.autotooltips.js' ?>'></script>
-    <script type='text/javascript'
-            src='<?= ConfigGlobal::getWeb_NodeScripts() . '/slickgrid/dist/browser/plugins/slick.cellrangedecorator.js' ?>'></script>
-    <script type='text/javascript'
-            src='<?= ConfigGlobal::getWeb_NodeScripts() . '/slickgrid/dist/browser/plugins/slick.cellrangeselector.js' ?>'></script>
-    <script type='text/javascript'
-            src='<?= ConfigGlobal::getWeb_NodeScripts() . '/slickgrid/dist/browser/plugins/slick.cellselectionmodel.js' ?>'></script>
-    <script type='text/javascript'
-            src='<?= ConfigGlobal::getWeb_NodeScripts() . '/slickgrid/dist/browser/plugins/slick.checkboxselectcolumn.js' ?>'></script>
     <script type='text/javascript'
             src='<?= ConfigGlobal::getWeb_NodeScripts() . '/slickgrid/dist/browser/plugins/slick.resizer.js' ?>'></script>
     <script type='text/javascript'
             src='<?= ConfigGlobal::getWeb_NodeScripts() . '/slickgrid/dist/browser/plugins/slick.rowselectionmodel.js' ?>'></script>
-
-    <link type='text/css' rel='stylesheet'
-          href='<?= ConfigGlobal::getWeb_NodeScripts() . '/slickgrid/dist/styles/css/slick.columnpicker.css' ?>'/>
     <script type='text/javascript'
-            src='<?= ConfigGlobal::getWeb_NodeScripts() . '/slickgrid/dist/browser/controls/slick.columnpicker.js' ?>'></script>
-    <link type='text/css' rel='stylesheet'
-          href='<?= ConfigGlobal::getWeb_NodeScripts() . '/slickgrid/dist/styles/css/slick.gridmenu.css' ?>'/>
+            src='<?= ConfigGlobal::getWeb_NodeScripts() . '/slickgrid/dist/browser/plugins/slick.cellselectionmodel.js' ?>'></script>
     <script type='text/javascript'
             src='<?= ConfigGlobal::getWeb_NodeScripts() . '/slickgrid/dist/browser/controls/slick.gridmenu.js' ?>'></script>
-    <link type='text/css' rel='stylesheet'
-          href='<?= ConfigGlobal::getWeb_NodeScripts() . '/slickgrid/dist/styles/css/slick.pager.css' ?>'/>
     <script type='text/javascript'
             src='<?= ConfigGlobal::getWeb_NodeScripts() . '/slickgrid/dist/browser/controls/slick.pager.js' ?>'></script>
-
-    <!--
-<script type='text/javascript' src='<?= ConfigGlobal::getWeb_scripts() . '/SlickGrid/dist/browser/plugins/slick.autocolumnsize.js' ?>'></script>
--->
-
+    <script type='text/javascript'
+            src='<?= ConfigGlobal::getWeb_NodeScripts() . '/slickgrid/dist/browser/controls/slick.columnpicker.js' ?>'></script>
+    <script type='text/javascript'
+            src='<?= ConfigGlobal::getWeb_NodeScripts() . '/slickgrid/dist/browser/controls/slick.columnmenu.js' ?>'></script>
     <script type='text/javascript'
             src='<?= ConfigGlobal::getWeb_NodeScripts() . '/slickgrid/dist/browser/slick.groupitemmetadataprovider.js' ?>'></script>
 
