@@ -42,6 +42,7 @@ class EncargoDia
      * @var string|null
      */
     private string|null $sobserv = null;
+    private bool|null $bok = FALSE;
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
@@ -73,6 +74,9 @@ class EncargoDia
         }
         if (array_key_exists('observ', $aDatos)) {
             $this->setObserv($aDatos['observ']);
+        }
+        if (array_key_exists('ok', $aDatos)) {
+            $this->setOk($aDatos['ok']);
         }
         return $this;
     }
@@ -159,4 +163,14 @@ class EncargoDia
     {
         $this->sobserv = $sobserv;
     }
+    public function isOk(): ?bool
+    {
+        return $this->bok;
+    }
+
+    public function setOk(?bool $bok): void
+    {
+        $this->bok = $bok;
+    }
+
 }

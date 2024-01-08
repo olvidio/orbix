@@ -11,6 +11,7 @@ use misas\domain\entity\EncargoDia;
 use misas\domain\repositories\EncargoDiaRepositoryInterface;
 use PDO;
 use PDOException;
+use function core\is_true;
 
 /**
  * Clase que adapta la tabla misa_plantillas_dl a la interfaz del repositorio
@@ -145,6 +146,12 @@ class PgEncargoDiaRepository extends ClaseRepository implements EncargoDiaReposi
         // para las fechas
         $aDatos['tstart'] = (new ConverterDate('timestamp', $EncargoDia->getTstart()))->toPg();
         $aDatos['tend'] = (new ConverterDate('timestamp', $EncargoDia->getTend()))->toPg();
+        //para el caso de los boolean FALSE, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
+        if (is_true($aDatos['ok'])) {
+            $aDatos['ok'] = 'true';
+        } else {
+            $aDatos['ok'] = 'false';
+        }
 
         array_walk($aDatos, 'core\poner_null');
 
@@ -155,7 +162,8 @@ class PgEncargoDiaRepository extends ClaseRepository implements EncargoDiaReposi
 					tstart                  = :tstart,
 					tend                    = :tend,
 					id_nom                   = :id_nom,
-					observ                   = :observ";
+					observ                   = :observ,
+                    ok                      = :ok";
             if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE uuid_item = '$uuid_item'")) === FALSE) {
                 $sClaveError = 'PgPlantillaRepository.update.prepare';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
@@ -174,8 +182,8 @@ class PgEncargoDiaRepository extends ClaseRepository implements EncargoDiaReposi
         } else {
             // INSERT
             $aDatos['uuid_item'] = $EncargoDia->getUuid_item();
-            $campos = "(uuid_item,id_enc,tstart,tend,id_nom,observ)";
-            $valores = "(:uuid_item,:id_enc,:tstart,:tend,:id_nom,:observ)";
+            $campos = "(uuid_item,id_enc,tstart,tend,id_nom,observ,ok)";
+            $valores = "(:uuid_item,:id_enc,:tstart,:tend,:id_nom,:observ,ok)";
             if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === FALSE) {
                 $sClaveError = 'PgPlantillaRepository.insertar.prepare';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
