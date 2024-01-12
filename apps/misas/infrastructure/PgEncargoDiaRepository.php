@@ -178,7 +178,7 @@ class PgEncargoDiaRepository extends ClaseRepository implements EncargoDiaReposi
             // INSERT
             $aDatos['uuid_item'] = $EncargoDia->getUuid_item();
             $campos = "(uuid_item,id_enc,tstart,tend,id_nom,observ,status)";
-            $valores = "(:uuid_item,:id_enc,:tstart,:tend,:id_nom,:observ,status)";
+            $valores = "(:uuid_item,:id_enc,:tstart,:tend,:id_nom,:observ,:status)";
             if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === FALSE) {
                 $sClaveError = 'PgPlantillaRepository.insertar.prepare';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
