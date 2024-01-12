@@ -91,7 +91,7 @@ class DB extends DBAbstract
             tend timestamp,
             id_nom integer,
             observ text,
-            ok boolean
+            status smallint
             );";
         $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->user_orbix";
 

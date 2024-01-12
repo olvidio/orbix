@@ -18,6 +18,10 @@ use web\NullDateTimeLocal;
 class EncargoDia
 {
 
+    const STATUS_PROPUESTA = 1;
+    const STATUS_COMUNICADO_SACD = 2;
+    const STATUS_COMUNICADO_CTR = 3;
+
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
     private EncargoDiaId $uuid_item;
@@ -42,7 +46,7 @@ class EncargoDia
      * @var string|null
      */
     private string|null $sobserv = null;
-    private bool|null $bok = FALSE;
+    private int|null $istatus = self::STATUS_PROPUESTA;
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
@@ -75,8 +79,8 @@ class EncargoDia
         if (array_key_exists('observ', $aDatos)) {
             $this->setObserv($aDatos['observ']);
         }
-        if (array_key_exists('ok', $aDatos)) {
-            $this->setOk($aDatos['ok']);
+        if (array_key_exists('status', $aDatos)) {
+            $this->setStatus($aDatos['status']);
         }
         return $this;
     }
@@ -163,14 +167,14 @@ class EncargoDia
     {
         $this->sobserv = $sobserv;
     }
-    public function isOk(): ?bool
+    public function getStatus(): ?bool
     {
-        return $this->bok;
+        return $this->istatus;
     }
 
-    public function setOk(?bool $bok): void
+    public function setStatus(?bool $istatus): void
     {
-        $this->bok = $bok;
+        $this->istatus = $istatus;
     }
 
 }
