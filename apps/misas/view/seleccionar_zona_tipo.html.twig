@@ -1,0 +1,53 @@
+<div id="div_select_zona">
+    <form id="frm_zona_ctr" name="frm_zona_ctr" action="" method="post">
+        {{ oHash.getCamposHtml|raw }}
+        <table>
+            <thead>
+            <tr>
+                <th class=titulo_inv colspan=4>{{ "Plantilla de la zona"|trans|capitalize }}:&nbsp;&nbsp;&nbsp;
+                    {{ oDesplZonas.desplegable|raw }}
+                </th>
+                <th class=titulo_inv colspan=4>{{ "Tipo de plantilla"|trans|capitalize }}:&nbsp;&nbsp;&nbsp;
+                    {{ oDesplTipoPlantilla.desplegable|raw }}
+                </th>
+            </tr>
+            </thead>
+        </table>
+    </form>
+</div>
+
+<br>
+<div id="div_plantilla">
+</div>
+
+<script>
+    fnjs_ver_plantilla_zona = function () {
+        let id_zona = $('#id_zona').val();
+        let TipoPlantilla = $('#TipoPlantilla').val();
+        if ((id_zona) && (TipoPlantilla)){
+                let url = '{{ url_ver_plantilla_zona }}';
+                let parametros = 'id_zona=' + id_zona + '{{ h_zona|raw }}'+ ' & TipoPlantilla=' + TipoPlantilla + '{{ string|raw }}';
+        }
+        else {
+            if (id_zona) {
+                let url = '{{ url_ver_plantilla_zona }}';
+                let parametros = 'id_zona=' + id_zona + '{{ h_zona|raw }}';
+            }
+            if (TipoPlantilla) {
+                let url = '{{ url_ver_plantilla_zona }}';
+                let parametros = 'TipoPlantilla=' + TipoPlantilla + '{{ string|raw }}';
+            }
+        
+
+            $.ajax({
+                url: url,
+                type: 'post',
+                data: parametros,
+                dataType: 'html'
+            })
+                .done(function (rta_txt) {
+                    $('#div_plantilla').html(rta_txt);
+                });
+        }
+    }
+</script>

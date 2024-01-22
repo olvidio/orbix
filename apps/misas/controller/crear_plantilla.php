@@ -1,13 +1,15 @@
 <?php
 
-// INICIO Cabecera global de URL de controlador *********************************
 
-use misas\domain\repositories\PlantillaRepository;
+// INICIO Cabecera global de URL de controlador *********************************
+use encargossacd\model\EncargoConstants;
+use misas\domain\repositories\EncargoDiaRepository;
+use misas\model\EncargosZona;
 use personas\model\entity\PersonaSacd;
-use ubis\model\entity\GestorCentroDl;
-use ubis\model\entity\GestorCentroEllas;
+use web\DateTimeLocal;
+use web\Desplegable;
 use web\Hash;
-use web\Lista;
+use zonassacd\model\entity\GestorZonaSacd;
 
 require_once("apps/core/global_header.inc");
 // Archivos requeridos por esta url **********************************************
@@ -19,200 +21,149 @@ require_once("apps/core/global_object.inc");
 
 //$gestorPersonaSacd = new GestorPersonaSacd();
 
-$Qid_zona = 24; // l'hospitalet (24)
+//$Qid_zona = 3; // l'hospitalet (24) Sarrià(3)
+$Qid_zona = (integer)filter_input(INPUT_POST, 'id_zona');
+$QTipoPlantilla = (string)filter_input(INPUT_POST, 'TipoPlantilla');
 
-// ctr de la zona
-$aWhere['status'] = 't';
-$aWhere['id_zona'] = $Qid_zona;
-$aWhere['_ordre'] = 'nombre_ubi';
-$GesCentrosDl = new GestorCentroDl();
-$cCentrosDl = $GesCentrosDl->getCentros($aWhere);
-$GesCentrosSf = new GestorCentroEllas();
-$cCentrosSf = $GesCentrosSf->getCentros($aWhere);
-$cCentros = array_merge($cCentrosDl, $cCentrosSf);
+$gesZonaSacd = new GestorZonaSacd();
+$a_Id_nom = $gesZonaSacd->getSacdsZona($Qid_zona);
+$a_iniciales = [];
 
-$a_botones = [];
-/* tabla editable
-$a_cabeceras = [
-    ['name' => "id_ubi", 'field' => 'id', 'visible' => 'no'],
-    ['name' => _("Centro"), 'field' => 'ctr', 'width' => 80, 'formatter' => 'clickFormatter'],
-    ['name' => 'L', 'title' => _("lunes"), 'field' => "L", 'width' => 15, 'editor' => 'Slick.Editors.Integer', 'formatter' => 'cssFormatter'],
-    ['name' => 'M', 'title' => _("lunes"), 'field' => "M", 'width' => 15, 'editor' => 'Slick.Editors.Integer', 'formatter' => 'cssFormatter'],
-    ['name' => 'X', 'title' => _("lunes"), 'field' => "X", 'width' => 15, 'editor' => 'Slick.Editors.Integer', 'formatter' => 'cssFormatter'],
-    ['name' => 'J', 'title' => _("lunes"), 'field' => "J", 'width' => 15, 'editor' => 'Slick.Editors.Integer', 'formatter' => 'cssFormatter'],
-    ['name' => 'V', 'title' => _("lunes"), 'field' => "V", 'width' => 15, 'editor' => 'Slick.Editors.Integer', 'formatter' => 'cssFormatter'],
-    ['name' => 'S', 'title' => _("lunes"), 'field' => "S", 'width' => 15, 'editor' => 'Slick.Editors.Integer', 'formatter' => 'cssFormatter'],
-    ['name' => 'D', 'title' => _("lunes"), 'field' => "D", 'width' => 15, 'editor' => 'Slick.Editors.Integer', 'formatter' => 'cssFormatter'],
-];
+foreach ($a_Id_nom as $id_nom) {
+    $PersonaSacd = new PersonaSacd($id_nom);
+    $sacd = $PersonaSacd->getNombreApellidos();
+    // iniciales
+    $nom = mb_substr($PersonaSacd->getNom(), 0, 1);
+    $ap1 = mb_substr($PersonaSacd->getApellido1(), 0, 1);
+    $ap2 = mb_substr($PersonaSacd->getApellido2(), 0, 1);
+    $iniciales = strtoupper($nom . $ap1 . $ap2);
 
-$i = 0;
-$a_valores = [];
-foreach ($cCentros as $oCentro) {
-    $i++;
-    $id_ubi = "{$oCentro->getId_ubi()}"; // Para que lo coja como un string.
-    $nombre_ubi = $oCentro->getNombre_ubi();
-    $a_valores[$i]['clase'] = 'tono2';
-    $a_valores[$i]['id'] = $id_ubi;
-    $a_valores[$i]['ctr'] = $nombre_ubi;
-    foreach ($a_cabeceras as $column ) {
-        $field = $column['field'];
-        if ($field === 'id' || $field === 'ctr') {
-            continue;
-        }
-        $a_valores[$i][$field] = ['editable' => 'true', 'valor' => 'x'];
+    $a_iniciales[$id_nom] = $iniciales;
 
-    }
+    $key = $id_nom . '#' . $iniciales;
+
+    $a_sacd[$key] = $sacd ?? '?';
 }
 
-$oTabla = new TablaEditable();
-$oTabla->setId_tabla('crear_plantilla');
-$UpdateUrl = ConfigGlobal::getWeb() . '/apps/misas/controller/plantilla_ajax.php';
-//$oTabla->setUpdateUrl($UpdateUrl);
-$oTabla->setCabeceras($a_cabeceras);
-$oTabla->setBotones($a_botones);
-$oTabla->setDatos($a_valores);
-*/
+$oDesplSacd = new Desplegable();
+$oDesplSacd->setNombre('id_sacd');
+$oDesplSacd->setOpciones($a_sacd);
+$oDesplSacd->setBlanco(TRUE);
 
-$reloj = core\ConfigGlobal::getWeb_icons() . '/reloj.png';
+//switch ($QTipoPlantilla)
+$oInicio = new DateTimeLocal('2001-01-01');
+$oFin = new DateTimeLocal('2001-01-08');
+$interval = new DateInterval('P1D');
+$date_range = new DatePeriod($oInicio, $interval, $oFin);
 
-/* tabla html */
-$a_cabeceras = [
-    "id_ubi",
-    _("Centro"),
-    'L',
-    'M',
-    'X',
-    'J',
-    'V',
-    'S',
-    'D',
+$columns_cuadricula = [
+    ["id" => "encargo", "name" => "Encargo", "field" => "encargo", "width" => 150, "cssClass" => "cell-title"],
 ];
 
+$a_dias_semana = EncargoConstants::OPCIONES_DIA_SEMANA;
+foreach ($date_range as $date) {
+    $num_dia = $date->format('Y-m-d');
+    //$nom_dia = $date->format('D');
+    $dia_week = $date->format('N');
+    //$dia_mes = $date->format('d');
+    $nom_dia = $a_dias_semana[$dia_week];
 
-$PlantillaRepository = new PlantillaRepository();
-$i = 0;
-$a_valores = [];
-foreach ($cCentros as $oCentro) {
-    $i++;
-    $id_ubi = "{$oCentro->getId_ubi()}"; // Para que lo coja como un string.
-    $nombre_ubi = $oCentro->getNombre_ubi();
-    $semana = 0;
-    $id_item = '';
-    $aWhere = [
-            'id_ctr' => $id_ubi,
-//            'tarea' => $tarea,
-//            'dia' => $dia,
-            'semana' => $semana,
-    ];
-    $cPlantillas = $PlantillaRepository->getPlantillas($aWhere);
-    if (is_array($cPlantillas) && count($cPlantillas) > 0) {
+    $columns_cuadricula[] =
+        ["id" => "$num_dia", "name" => "$nom_dia", "field" => "$num_dia", "width" => 80, "cssClass" => "cell-title"];
+}
 
-    $tarea = 1; // 1:Misa, 2: bendición
-    $a_valores[$i]['clase'] = 'tono2';
-    $a_valores[$i][0] = $id_ubi;
-    $a_valores[$i][1] = $nombre_ubi;
-    $c = 1;
-    foreach ($a_cabeceras as $column) {
-        $c++;
-        if ($column === 'id_ubi' || $column === _("Centro")) {
-            continue;
-        }
-        switch ($column) {
-            case 'L':
-                $dia = 'MON';
-                break;
-            case 'M':
-                $dia = 'TUE';
-                break;
-            case 'X':
-                $dia = 'WED';
-                break;
-            case 'J':
-                $dia ='THU';
-                break;
-            case 'V':
-                $dia = 'FRI';
-                break;
-            case 'S':
-                $dia = 'SAT';
-                break;
-            case 'D':
-                $dia = 'SUN';
-                break;
-        }
-        $semana = 0;
-        $id_item = '';
+$data_cuadricula = [];
+// encargos de misa (8010) para la zona
+$a_tipo_enc = [8010, 8011];
+$EncargosZona = new EncargosZona($Qid_zona, $oInicio, $oFin);
+$EncargosZona->setATipoEnc($a_tipo_enc);
+$cEncargosZona = $EncargosZona->getEncargos();
+$e = 0;
+foreach ($cEncargosZona as $oEncargo) {
+    $e++;
+    $id_enc = $oEncargo->getId_enc();
+    $desc_enc = $oEncargo->getDesc_enc();
+    $d = 0;
+    $data_cols = [];
+    $meta_dia = [];
+    foreach ($date_range as $date) {
+        $d++;
+        $num_dia = $date->format('Y-m-d');
+        $nom_dia = $date->format('D');
+
+        $data_cols["$num_dia"] = " -- ";
+
+        $meta_dia["$num_dia"] = [
+            "uuid_item" => "",
+            "color" => "",
+            "key" => '',
+            "tstart" => '',
+            "tend" => '',
+            "observ" => '',
+            "id_enc" => $id_enc,
+        ];
+
+        // sobreescribir los que tengo datos:
+        $inicio_dia = $num_dia.' 00:00:00';
+        $fin_dia = $num_dia.' 23:59:59';
         $aWhere = [
-                'id_ctr' => $id_ubi,
-                'tarea' => $tarea,
-                'dia' => $dia,
-                'semana' => $semana,
+            'id_enc' => $id_enc,
+            'tstart' => "'$inicio_dia', '$fin_dia'",
         ];
-        $cPlantillas = $PlantillaRepository->getPlantillas($aWhere);
-        if (is_array($cPlantillas) && count($cPlantillas) > 0) {
-            $oPlantilla = $cPlantillas[0];
-            $id_item = $oPlantilla->getId_item();
-            $t_start = $oPlantilla->getT_start()->format('H:i');
-            $t_end = $oPlantilla->getT_end()->format('H:i');
-            $id_nom = $oPlantilla->getId_nom();
-            $oPersonaSacd = new PersonaSacd($id_nom);
-            $sacd = $oPersonaSacd->getNombreApellidos();
-            if (empty(trim($sacd))) {
-                $sacd = _("se tiene el id, pero NO el sacd");
-            }
-        } else {
-            $sacd = '??';
-            $t_start = '??';
-            $t_end = '??';
-        }
-        $a_cosas = ['id_zona' => $Qid_zona,
-            'id_ubi' => $id_ubi,
-            'tarea' => $tarea,
-            'dia' => $dia,
-            'semana' => $semana,
-            'id_item' => $id_item,
+        $aOperador = [
+            'tstart' => 'BETWEEN',
         ];
-        $pagina = Hash::link(core\ConfigGlobal::getWeb() . '/apps/misas/controller/lista_sacd_zona.php?' . http_build_query($a_cosas));
-        $texto_nombre = "<span class=link onclick=\"fnjs_mostrar_modal('$pagina');\">$sacd</span>";
-        $pagina_horario = Hash::link(core\ConfigGlobal::getWeb() . '/apps/misas/controller/horario_tarea.php?' . http_build_query($a_cosas));
-        $pagina = Hash::link(core\ConfigGlobal::getWeb() . '/apps/misas/controller/lista_sacd_zona.php?' . http_build_query($a_cosas));
-        $texto_nombre = "<span class=link onclick=\"fnjs_mostrar_modal('$pagina');\">$sacd</span>";
-        $pagina_horario = Hash::link(core\ConfigGlobal::getWeb() . '/apps/misas/controller/horario_tarea.php?' . http_build_query($a_cosas));
-        $icono_horario = "<span class=link onclick=\"fnjs_mostrar_modal('$pagina_horario');\"><img src=\"$reloj\" width=\"12\" height=\"12\" style=\"float: right; margin: 0px 0px 15px 15px;\" alt=\"" . _("horario") . "\"></span>";
-        if (($t_start!='??') && ($t_start!=null) && ($t_end!='??') && ($t_end!=null))
-            $icono_horario = "<br><span class=link onclick=\"fnjs_mostrar_modal('$pagina_horario');\">$t_start - $t_end</span>";
-        if (($t_start!='??') && ($t_start!=null) && (($t_end=='??') || ($t_end==null)))
-            $icono_horario = "<br><span class=link onclick=\"fnjs_mostrar_modal('$pagina_horario');\">$t_start</span>";
-        $a_valores[$i][$c] = $texto_nombre . $icono_horario;
+        $EncargoDiaRepository = new EncargoDiaRepository();
+        $cEncargosDia = $EncargoDiaRepository->getEncargoDias($aWhere,$aOperador);
 
+        if (count($cEncargosDia) > 1) {
+            exit(_("sólo debería haber uno"));
         }
 
+        if (count($cEncargosDia) === 1) {
+            $oEncargoDia = $cEncargosDia[0];
+            $id_nom = $oEncargoDia->getId_nom();
+            $hora_ini = $oEncargoDia->getTstart()->format('H:i');
+            if ($hora_ini=='00:00')
+                $hora_ini='';
+            $iniciales = $a_iniciales[$id_nom];
+            $color = '';
+
+            $meta_dia["$num_dia"] = [
+                "uuid_item" => $oEncargoDia->getUuid_item()->value(),
+                "color" => $color,
+                "key" => "$id_nom#$iniciales",
+                "tstart" => $oEncargoDia->getTstart()->getHora(),
+                "tend" => $oEncargoDia->getTend()->getHora(),
+                "observ" => $oEncargoDia->getObserv(),
+                "id_enc" => $id_enc,
+            ];
+            // añadir '*' si tiene observaciones
+            $iniciales .= empty($oEncargoDia->getObserv())? '' : '*';
+            $data_cols["$num_dia"] = $iniciales." ".$hora_ini;
+        }
     }
+    $data_cols["encargo"] = $desc_enc;
+    $data_cols["meta"] = $meta_dia;
+    // añado una columna 'meta' con metadatos, invisible, porque no está
+    // en la definición de columns
+    $data_cuadricula[] = $data_cols;
 }
 
-$oTabla = new Lista();
-$oTabla->setId_tabla('crear_plantilla');
-$oTabla->setCabeceras($a_cabeceras);
-$oTabla->setBotones($a_botones);
-$oTabla->setDatos($a_valores);
+$json_columns_cuadricula = json_encode($columns_cuadricula);
+$json_data_cuadricula = json_encode($data_cuadricula);
 
+$oHash = new Hash();
+$oHash->setCamposForm('color!dia!id_enc!key!observ!tend!tstart!uuid_item');
+$array_h = $oHash->getParamAjaxEnArray();
 
-$url = 'apps/misas/controller/crear_plantilla.php';
-$aQuery = ['id_zona' => $Qid_zona];
-// el hppt_build_query no pasa los valores null
-array_walk($aQuery, 'core\poner_empty_on_null');
-$url_crear_plantilla = web\Hash::link($url . '?' . http_build_query($aQuery));
-
-$url = '/apps/misas/controller/lista_ctr_zona.php';
-// el hppt_build_query no pasa los valores null
-array_walk($aQuery, 'core\poner_empty_on_null');
-$pagina_lista_ctr_zona = web\Hash::link($url . '?' . http_build_query($aQuery));
 
 $a_campos = ['oPosicion' => $oPosicion,
-    'oTabla' => $oTabla,
-    'url_crear_plantilla' => $url_crear_plantilla,
-    'pagina_lista_ctr_zona' => $pagina_lista_ctr_zona,
+    'oDesplSacd' => $oDesplSacd,
+    'json_columns_cuadricula' => $json_columns_cuadricula,
+    'json_data_cuadricula' => $json_data_cuadricula,
+    'array_h' => $array_h,
 ];
 
 $oView = new core\ViewTwig('misas/controller');
-echo $oView->render('ver_plantilla_zona.html.twig', $a_campos);
+echo $oView->render('ver_cuadricula_zona.html.twig', $a_campos);
