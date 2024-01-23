@@ -1,16 +1,15 @@
 <?php
 
-// INICIO Cabecera global de URL de controlador *********************************
 
-use encargossacd\model\entity\Encargo;
-use encargossacd\model\entity\GestorEncargoHorario;
-use encargossacd\model\entity\GestorEncargoSacdHorario;
+// INICIO Cabecera global de URL de controlador *********************************
+use encargossacd\model\EncargoConstants;
+use misas\domain\repositories\EncargoDiaRepository;
 use misas\model\EncargosZona;
 use personas\model\entity\PersonaSacd;
-use ubis\model\entity\CentroDl;
 use web\DateTimeLocal;
+use web\Desplegable;
 use web\Hash;
-use web\Lista;
+use zonassacd\model\entity\GestorZonaSacd;
 
 require_once("apps/core/global_header.inc");
 // Archivos requeridos por esta url **********************************************
@@ -19,294 +18,198 @@ require_once("apps/core/global_header.inc");
 require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
+
+//$gestorPersonaSacd = new GestorPersonaSacd();
+
+//$Qid_zona = 3; // l'hospitalet (24) Sarrià(3)
 $Qid_zona = (integer)filter_input(INPUT_POST, 'id_zona');
+$QTipoPlantilla = (string)filter_input(INPUT_POST, 'TipoPlantilla');
 
-$oInicio = DateTimeLocal::createFromLocal('1/1/2000');
-$oFin = DateTimeLocal::createFromLocal('8/1/2000');
+$gesZonaSacd = new GestorZonaSacd();
+$a_Id_nom = $gesZonaSacd->getSacdsZona($Qid_zona);
+$a_iniciales = [];
 
+foreach ($a_Id_nom as $id_nom) {
+    $PersonaSacd = new PersonaSacd($id_nom);
+    $sacd = $PersonaSacd->getNombreApellidos();
+    // iniciales
+    $nom = mb_substr($PersonaSacd->getNom(), 0, 1);
+    $ap1 = mb_substr($PersonaSacd->getApellido1(), 0, 1);
+    $ap2 = mb_substr($PersonaSacd->getApellido2(), 0, 1);
+    $iniciales = strtoupper($nom . $ap1 . $ap2);
+
+    $a_iniciales[$id_nom] = $iniciales;
+
+    $key = $id_nom . '#' . $iniciales;
+
+    $a_sacd[$key] = $sacd ?? '?';
+}
+
+$oDesplSacd = new Desplegable();
+$oDesplSacd->setNombre('id_sacd');
+$oDesplSacd->setOpciones($a_sacd);
+$oDesplSacd->setBlanco(TRUE);
+
+$columns_cuadricula = [
+    ["id" => "encargo", "name" => "Encargo", "field" => "encargo", "width" => 150, "cssClass" => "cell-title"],
+];
+
+switch ($QTipoPlantilla) {
+    case 's':
+        $oInicio = new DateTimeLocal('2001-01-01');
+        $oFin = new DateTimeLocal('2001-01-08');
+        $interval = new DateInterval('P1D');
+        $date_range = new DatePeriod($oInicio, $interval, $oFin);
+        $a_dias_semana = EncargoConstants::OPCIONES_DIA_SEMANA;
+        foreach ($date_range as $date) {
+            $num_dia = $date->format('Y-m-d');
+            //$nom_dia = $date->format('D');
+            $dia_week = $date->format('N');
+            //$dia_mes = $date->format('d');
+            $nom_dia = $a_dias_semana[$dia_week];
+        
+            $columns_cuadricula[] =
+                ["id" => "$num_dia", "name" => "$nom_dia", "field" => "$num_dia", "width" => 80, "cssClass" => "cell-title"];
+        }
+        break;
+    case 'd':
+        $oInicio = new DateTimeLocal('2001-10-01');
+        $oFin = new DateTimeLocal('2001-10-12');
+        $interval = new DateInterval('P1D');
+        $date_range = new DatePeriod($oInicio, $interval, $oFin);
+        $a_dias_semana = EncargoConstants::OPCIONES_DIA_SEMANA;
+        foreach ($date_range as $date) {
+            $num_dia = $date->format('Y-m-d');
+            //$nom_dia = $date->format('D');
+            $dia_week = $date->format('N');
+            $dia_mes = $date->format('d');
+            if ($dia_mes<7)
+                $nom_dia = $a_dias_semana[$dia_week];
+            else
+                $nom_dia = 'domingo '.strval($dia_mes-6);
+        
+            $columns_cuadricula[] =
+                ["id" => "$num_dia", "name" => "$nom_dia", "field" => "$num_dia", "width" => 80, "cssClass" => "cell-title"];
+        }
+        break;
+    case 'm':
+        $oInicio = new DateTimeLocal('2002-04-01');
+        $oFin = new DateTimeLocal('2002-05-06');
+        $interval = new DateInterval('P1D');
+        $date_range = new DatePeriod($oInicio, $interval, $oFin);
+        $a_dias_semana = EncargoConstants::OPCIONES_DIA_SEMANA;
+        foreach ($date_range as $date) {
+            $num_dia = $date->format('Y-m-d');
+            //$nom_dia = $date->format('D');
+            $dia_week = $date->format('N');
+            $dia_mes = $date->format('d');
+//            $nom_dia = $a_dias_semana[$dia_week].' '.strval(intdiv(($dia_mes-1),7)+1);
+//            $nom_dia = $a_dias_semana[$dia_week].' '.strval(intdiv(date_diff($date, $oInicio),7)+1);
+            $nom_dia = $a_dias_semana[$dia_week].' '.intdiv(date_diff($date, $oInicio)->format('%a'),7)+1;
+            $columns_cuadricula[] =
+                ["id" => "$num_dia", "name" => "$nom_dia", "field" => "$num_dia", "width" => 80, "cssClass" => "cell-title"];
+        }
+        break;
+    
+    }
+//$oInicio = new DateTimeLocal('2001-01-01');
+//$oFin = new DateTimeLocal('2001-01-08');
+
+
+
+
+$data_cuadricula = [];
 // encargos de misa (8010) para la zona
 $a_tipo_enc = [8010, 8011];
 $EncargosZona = new EncargosZona($Qid_zona, $oInicio, $oFin);
 $EncargosZona->setATipoEnc($a_tipo_enc);
+$cEncargosZona = $EncargosZona->getEncargos();
+$e = 0;
+foreach ($cEncargosZona as $oEncargo) {
+    $e++;
+    $id_enc = $oEncargo->getId_enc();
+    $desc_enc = $oEncargo->getDesc_enc();
+    $d = 0;
+    $data_cols = [];
+    $meta_dia = [];
+    foreach ($date_range as $date) {
+        $d++;
+        $num_dia = $date->format('Y-m-d');
+        $nom_dia = $date->format('D');
 
+        $data_cols["$num_dia"] = " -- ";
 
-$a_botones = [];
-/* tabla editable
-$a_cabeceras = [
-    ['name' => "id_ubi", 'field' => 'id', 'visible' => 'no'],
-    ['name' => _("Centro"), 'field' => 'ctr', 'width' => 80, 'formatter' => 'clickFormatter'],
-    ['name' => 'L', 'title' => _("lunes"), 'field' => "L", 'width' => 15, 'editor' => 'Slick.Editors.Integer', 'formatter' => 'cssFormatter'],
-    ['name' => 'M', 'title' => _("lunes"), 'field' => "M", 'width' => 15, 'editor' => 'Slick.Editors.Integer', 'formatter' => 'cssFormatter'],
-    ['name' => 'X', 'title' => _("lunes"), 'field' => "X", 'width' => 15, 'editor' => 'Slick.Editors.Integer', 'formatter' => 'cssFormatter'],
-    ['name' => 'J', 'title' => _("lunes"), 'field' => "J", 'width' => 15, 'editor' => 'Slick.Editors.Integer', 'formatter' => 'cssFormatter'],
-    ['name' => 'V', 'title' => _("lunes"), 'field' => "V", 'width' => 15, 'editor' => 'Slick.Editors.Integer', 'formatter' => 'cssFormatter'],
-    ['name' => 'S', 'title' => _("lunes"), 'field' => "S", 'width' => 15, 'editor' => 'Slick.Editors.Integer', 'formatter' => 'cssFormatter'],
-    ['name' => 'D', 'title' => _("lunes"), 'field' => "D", 'width' => 15, 'editor' => 'Slick.Editors.Integer', 'formatter' => 'cssFormatter'],
-];
-
-$i = 0;
-$a_valores = [];
-foreach ($cCentros as $oCentro) {
-    $i++;
-    $id_ubi = "{$oCentro->getId_ubi()}"; // Para que lo coja como un string.
-    $nombre_ubi = $oCentro->getNombre_ubi();
-    $a_valores[$i]['clase'] = 'tono2';
-    $a_valores[$i]['id'] = $id_ubi;
-    $a_valores[$i]['ctr'] = $nombre_ubi;
-    foreach ($a_cabeceras as $column ) {
-        $field = $column['field'];
-        if ($field === 'id' || $field === 'ctr') {
-            continue;
-        }
-        $a_valores[$i][$field] = ['editable' => 'true', 'valor' => 'x'];
-
-    }
-}
-
-$oTabla = new TablaEditable();
-$oTabla->setId_tabla('ver_plantilla_zona');
-$UpdateUrl = ConfigGlobal::getWeb() . '/apps/misas/controller/plantilla_ajax.php';
-//$oTabla->setUpdateUrl($UpdateUrl);
-$oTabla->setCabeceras($a_cabeceras);
-$oTabla->setBotones($a_botones);
-$oTabla->setDatos($a_valores);
-*/
-
-/*
-function valorFila($a_horario_por_dias)
-{
-    foreach ($cEncargoHorarios as $oEncargoHorario) {
-        $oPlantilla = $cPlantillas[0];
-        $id_item = $oPlantilla->getId_item();
-        $t_start = $oPlantilla->getT_start()->format('H:i');
-        $t_end = $oPlantilla->getT_end()->format('H:i');
-        $id_nom = $oPlantilla->getId_nom();
-        $oPersonaSacd = new PersonaSacd($id_nom);
-        $sacd = $oPersonaSacd->getNombreApellidos();
-        if (empty(trim($sacd))) {
-            $sacd = _("se tiene el id, pero NO el sacd");
-        }
-    }
-else {
-    $sacd = '??';
-    $t_start = '??';
-    $t_end = '??';
-}
-
-    $a_cosas = ['id_zona' => $Qid_zona,
-        'id_ubi' => $id_ubi,
-        'dia' => $dia,
-        'id_item' => $id_item,
-    ];
-    $pagina = Hash::link(core\ConfigGlobal::getWeb() . '/apps/misas/controller/definicion_horario.php?' . http_build_query($a_cosas));
-    $texto_nombre = "<span class=link onclick=\"fnjs_mostrar_modal('$pagina');\">$sacd</span>";
-
-    $reloj = core\ConfigGlobal::getWeb_icons() . '/reloj.png';
-    $pagina_horario = Hash::link(core\ConfigGlobal::getWeb() . '/apps/misas/controller/horario_tarea.php?' . http_build_query($a_cosas));
-    $icono_horario = "<span class=link onclick=\"fnjs_mostrar_modal('$pagina_horario');\"><img src=\"$reloj\" width=\"12\" height=\"12\" style=\"float: right; margin: 0 0 15px 15px;\" alt=\"" . _("horario") . "\"></span>";
-    if (($t_start !== '??') && ($t_start !== null) && ($t_end !== '??') && ($t_end !== null)) {
-        $icono_horario = "<br><span class=link onclick=\"fnjs_mostrar_modal('$pagina_horario');\">$t_start - $t_end</span>";
-    }
-    if (($t_start !== '??') && ($t_start !== null) && (($t_end === '??') || ($t_end === null))) {
-        $icono_horario = "<br><span class=link onclick=\"fnjs_mostrar_modal('$pagina_horario');\">$t_start</span>";
-    }
-
-    return $texto_nombre . $icono_horario;
-}
-*/
-
-
-/* tabla html */
-$a_cabeceras = [
-    "sel",
-    _("Centro"),
-    _("encargo"),
-    'L',
-    'M',
-    'X',
-    'J',
-    'V',
-    'S',
-    'D',
-];
-
-
-/// $a_ctr_enc[$id_ubi][$id_tipo_enc][$id_enc][$dia_num_semana] = links
-$a_ctr_enc_t = $EncargosZona->cuadriculaSemana();
-$i = 0;
-$a_valores = [];
-foreach ($a_ctr_enc_t as $id_ubi => $a_ctr_enc) {
-    $oCentroDl = new CentroDl($id_ubi);
-    $nombre_ubi = $oCentroDl->getNombre_ubi();
-    foreach ($a_ctr_enc as $id_tipo_enc => $a_id_enc) {
-        $i++;
-        $id_enc = key($a_id_enc);
-        $oEncargo = new Encargo($id_enc);
-        $desc_enc = $oEncargo->getDesc_enc();
-
-        $a_cosas = ['id_zona' => $Qid_zona,
-            'id_ubi' => $id_ubi,
-            'id_enc' => $id_enc,
-            'origen' => 'misas',
+        $meta_dia["$num_dia"] = [
+            "uuid_item" => "",
+            "color" => "",
+            "key" => '',
+            "tstart" => '',
+            "tend" => '',
+            "observ" => '',
+            "id_enc" => $id_enc,
         ];
-        $pagina = Hash::link(core\ConfigGlobal::getWeb() . '/apps/encargossacd/controller/encargo_horario_select.php?' . http_build_query($a_cosas));
-        $texto_encargo = "<span class=link onclick=\"fnjs_mostrar_modal('$pagina');\">$desc_enc</span>";
 
-        $a_valores[$i]['clase'] = 'tono2';
-        $a_valores[$i][0] = "$id_ubi#$id_enc";
-        $a_valores[$i][1] = $nombre_ubi;
-        $a_valores[$i][2] = $texto_encargo;
+        // sobreescribir los que tengo datos:
+        $inicio_dia = $num_dia.' 00:00:00';
+        $fin_dia = $num_dia.' 23:59:59';
+        $aWhere = [
+            'id_enc' => $id_enc,
+            'tstart' => "'$inicio_dia', '$fin_dia'",
+        ];
+        $aOperador = [
+            'tstart' => 'BETWEEN',
+        ];
+        $EncargoDiaRepository = new EncargoDiaRepository();
+        $cEncargosDia = $EncargoDiaRepository->getEncargoDias($aWhere,$aOperador);
 
-        // horarios del encargo_ctr
-        $a_datos_encargo_horario = [];
-        $gesEncargoHorarioCentro = new GestorEncargoHorario();
-        $cEncargoHorarios = $gesEncargoHorarioCentro->getEncargoHorarios(['id_enc' => $id_enc]);
-        foreach ($cEncargoHorarios as $oEncargoHorario) {
-            $id_item_h = $oEncargoHorario->getId_item_h();
-            $f_ini_iso = empty($oEncargoHorario->getF_ini()) ? '' : $oEncargoHorario->getF_ini()->getIso();
-            $f_fin_iso = empty($oEncargoHorario->getF_fin()) ? '' : $oEncargoHorario->getF_fin()->getIso();
-            $dia_ref = $oEncargoHorario->getDia_ref();
-            $dia_num = $oEncargoHorario->getDia_num();
-            $mas_menos = $oEncargoHorario->getMas_menos();
-            $dia_inc = $oEncargoHorario->getDia_inc();
-            $h_ini = $oEncargoHorario->getH_ini();
-            $h_fin = $oEncargoHorario->getH_fin();
-            $n_sacd = $oEncargoHorario->getN_sacd();
-            $mes = $oEncargoHorario->getMes();
-
-            if ($dia_ref === 'A') { //todos
-                $datos_i = ['id_item_h' => $id_item_h,
-                    'h_ini' => $h_ini,
-                    'h_fin' => $h_fin,
-                    'n_sacd' => $n_sacd,
-                ];
-                $a_dias_encargo = [1, 2, 3, 4, 5, 6, 7];
-                $a_datos_encargo_horario = [1 => $datos_i,
-                    2 => $datos_i,
-                    3 => $datos_i,
-                    4 => $datos_i,
-                    5 => $datos_i,
-                    6 => $datos_i,
-                    7 => $datos_i
-                ];
-            } else {
-                $datos_i = ['id_item_h' => $id_item_h,
-                    'h_ini' => $h_ini,
-                    'h_fin' => $h_fin,
-                    'n_sacd' => $n_sacd,
-                ];
-                $a_dias_encargo = [$dia_ref]; // TODO debería ser el dia calculado...
-                $a_datos_encargo_horario = [$dia_ref => $datos_i];
-            }
+        if (count($cEncargosDia) > 1) {
+            exit(_("sólo debería haber uno"));
         }
 
-        $c = 1;
-        foreach ($a_cabeceras as $column) {
-            $c++;
-            if ($column === 'sel' || $column === _("Centro") || $column === _("encargo")) {
-                continue;
-            }
-            $dia = $c - 4; //numérico de la semana: 1 = lunes
+        if (count($cEncargosDia) === 1) {
+            $oEncargoDia = $cEncargosDia[0];
+            $id_nom = $oEncargoDia->getId_nom();
+            $hora_ini = $oEncargoDia->getTstart()->format('H:i');
+            if ($hora_ini=='00:00')
+                $hora_ini='';
+            $iniciales = $a_iniciales[$id_nom];
+            $color = '';
 
-            // si para este dia el encargo NO es activo, salto. (por defcto pongo en blanco.
-            $a_valores[$i][$c] = "";
-            if (!in_array($dia, $a_dias_encargo)) {
-                continue;
-            }
-
-            $sacd = $a_ctr_enc[$id_tipo_enc][$id_enc][$dia];
-            $id_sacd = 0;
-            $id_item_horario_sacd = 0;
-            // buscar sacd encargado
-            $gesEncargoSacdHorario = new GestorEncargoSacdHorario();
-            $aWhere = [
-                'id_enc' => $id_enc,
-                'dia_ref' => $dia,
+            $meta_dia["$num_dia"] = [
+                "uuid_item" => $oEncargoDia->getUuid_item()->value(),
+                "color" => $color,
+                "key" => "$id_nom#$iniciales",
+                "tstart" => $oEncargoDia->getTstart()->getHora(),
+                "tend" => $oEncargoDia->getTend()->getHora(),
+                "observ" => $oEncargoDia->getObserv(),
+                "id_enc" => $id_enc,
             ];
-            $aOperador = [];
-            /*
-            if (!empty($f_ini_iso)) {
-                $aWhere['f_ini'] = $f_ini_iso;
-                $aOperador['f_ini'] = '>';
-            }
-            if (!empty($f_fin_iso)) {
-                $aWhere['f_fin'] = $f_fin_iso;
-                $aOperador['f_fin'] = '<';
-            } else {
-                $aWhere['f_fin'] = 'x';
-                $aOperador['f_fin'] = 'IS NULL';
-            }
-            */
-            $cEncargoSacdHorario = $gesEncargoSacdHorario->getEncargoSacdHorarios($aWhere, $aOperador);
-            if (!empty($cEncargoSacdHorario)) {
-                $oEncargoHorarioSacd = $cEncargoSacdHorario[0];
-                $id_sacd = $oEncargoHorarioSacd->getId_nom();
-                $oPersonaSacd = new PersonaSacd($id_sacd);
-                $sacd = $oPersonaSacd->getApellidosNombre();
-                $id_item_horario_sacd = $oEncargoHorarioSacd->getId_item();
-            }
-
-            $id_item_h = empty($a_datos_encargo_horario[$dia]['id_item_h']) ? '' : $a_datos_encargo_horario[$dia]['id_item_h'];
-            $t_start = empty($a_datos_encargo_horario[$dia]['h_ini']) ? '??' : $a_datos_encargo_horario[$dia]['h_ini'];
-            $t_end = empty($a_datos_encargo_horario[$dia]['h_fin']) ? '??' : $a_datos_encargo_horario[$dia]['h_fin'];
-
-            $a_cosas = ['id_zona' => $Qid_zona,
-                'id_ubi' => $id_ubi,
-                'id_enc' => $id_enc,
-                'dia' => $dia,
-                'id_item_h' => $id_item_h,
-                'id_sacd' => $id_sacd,
-                'id_item_horario_sacd' => $id_item_horario_sacd,
-            ];
-            $pagina = Hash::link(core\ConfigGlobal::getWeb() . '/apps/misas/controller/sacd_para_encargo.php?' . http_build_query($a_cosas));
-            $texto_nombre = "<span class=link onclick=\"fnjs_mostrar_modal('$pagina');\">$sacd</span>";
-
-            $reloj = core\ConfigGlobal::getWeb_icons() . '/reloj.png';
-            $pagina_horario = Hash::link(core\ConfigGlobal::getWeb() . '/apps/misas/controller/horario_tarea.php?' . http_build_query($a_cosas));
-            $icono_horario = "<span class=link onclick=\"fnjs_mostrar_modal('$pagina_horario');\"><img src=\"$reloj\" width=\"12\" height=\"12\" style=\"float: right; margin: 0 0 15px 15px;\" alt=\"" . _("horario") . "\"></span>";
-            if (($t_start !== '??') && ($t_start !== null) && ($t_end !== '??') && ($t_end !== null)) {
-                $icono_horario = "<br><span class=link onclick=\"fnjs_mostrar_modal('$pagina_horario');\">$t_start - $t_end</span>";
-            }
-            if (($t_start !== '??') && ($t_start !== null) && (($t_end === '??') || ($t_end === null))) {
-                $icono_horario = "<br><span class=link onclick=\"fnjs_mostrar_modal('$pagina_horario');\">$t_start</span>";
-            }
-
-            $a_valores[$i][$c] = "$texto_nombre  $icono_horario";
+            // añadir '*' si tiene observaciones
+            $iniciales .= empty($oEncargoDia->getObserv())? '' : '*';
+            $data_cols["$num_dia"] = $iniciales." ".$hora_ini;
         }
     }
+    $data_cols["encargo"] = $desc_enc;
+    $data_cols["meta"] = $meta_dia;
+    // añado una columna 'meta' con metadatos, invisible, porque no está
+    // en la definición de columns
+    $data_cuadricula[] = $data_cols;
 }
 
-$oTabla = new Lista();
-$oTabla->setId_tabla('ver_plantilla_zona');
-$oTabla->setCabeceras($a_cabeceras);
-$oTabla->setBotones($a_botones);
-$oTabla->setDatos($a_valores);
+$json_columns_cuadricula = json_encode($columns_cuadricula);
+$json_data_cuadricula = json_encode($data_cuadricula);
 
-// para crear un nuevo encargo
-$a_cosas = [
-    'que' => 'nuevo',
-    'grupo' => 8,
-    'id_zona' => $Qid_zona,
-];
-$pagina_crear_encargo = Hash::link(core\ConfigGlobal::getWeb() . '/apps/encargossacd/controller/encargo_ver.php?' . http_build_query($a_cosas));
+$oHash = new Hash();
+$oHash->setCamposForm('color!dia!id_enc!key!observ!tend!tstart!uuid_item');
+$array_h = $oHash->getParamAjaxEnArray();
 
-$url = 'apps/misas/controller/ver_plantilla_zona.php';
-$aQuery = ['id_zona' => $Qid_zona];
-// el http_build_query no pasa los valores null
-array_walk($aQuery, 'core\poner_empty_on_null');
-$url_ver_plantilla_zona = web\Hash::link($url . '?' . http_build_query($aQuery));
-
-$url = '/apps/misas/controller/lista_ctr_zona.php';
-// el http_build_query no pasa los valores null
-array_walk($aQuery, 'core\poner_empty_on_null');
-$pagina_lista_ctr_zona = web\Hash::link($url . '?' . http_build_query($aQuery));
 
 $a_campos = ['oPosicion' => $oPosicion,
-    'oTabla' => $oTabla,
-    'url_ver_plantilla_zona' => $url_ver_plantilla_zona,
-    'pagina_lista_ctr_zona' => $pagina_lista_ctr_zona,
-    'pagina_crear_encargo' => $pagina_crear_encargo,
+    'oDesplSacd' => $oDesplSacd,
+    'json_columns_cuadricula' => $json_columns_cuadricula,
+    'json_data_cuadricula' => $json_data_cuadricula,
+    'array_h' => $array_h,
 ];
 
 $oView = new core\ViewTwig('misas/controller');
-echo $oView->render('ver_plantilla_zona.html.twig', $a_campos);
+echo $oView->render('ver_cuadricula_zona.html.twig', $a_campos);

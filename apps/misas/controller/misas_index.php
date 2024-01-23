@@ -20,7 +20,7 @@ if (is_array($aQuery)) {
 }
 $goListaSacd = Hash::link('apps/misas/controller/lista_sacd.php?' . http_build_query($aQuery));
 $goCrearPlantilla = Hash::link('apps/misas/controller/crear_plantilla.php?' . http_build_query($aQuery));
-$goSelectZona = Hash::link('apps/misas/controller/seleccionar_zona.php?' . http_build_query($aQuery));
+$goSelectZona = Hash::link('apps/misas/controller/seleccionar_zona_tipoplantilla.php?' . http_build_query($aQuery));
 $goCuadricula = Hash::link('apps/misas/controller/cuadricula_zona.php?' . http_build_query($aQuery));
 $goIniciales = Hash::link('apps/misas/controller/tabla_iniciales_sacd.php?' . http_build_query($aQuery));
 

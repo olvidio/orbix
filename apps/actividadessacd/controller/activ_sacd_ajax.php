@@ -239,7 +239,7 @@ switch ($Qque) {
         if ($Qseleccion & 4) {
             $a_Clases[] = array('clase' => 'PersonaEx', 'get' => 'getPersonasEx');
         }
-        if ($Qseleccion & 8) {
+        if ($Qseleccion & 8) { 
             $a_Clases[] = array('clase' => 'PersonaSSSC', 'get' => 'getPersonas');
         }
         if ($Qseleccion & 16) {

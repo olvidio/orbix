@@ -24,20 +24,10 @@
     fnjs_ver_plantilla_zona = function () {
         let id_zona = $('#id_zona').val();
         let TipoPlantilla = $('#TipoPlantilla').val();
-        if ((id_zona) && (TipoPlantilla)){
+        if (id_zona) {
                 let url = '{{ url_ver_plantilla_zona }}';
-                let parametros = 'id_zona=' + id_zona + '{{ h_zona|raw }}'+ ' & TipoPlantilla=' + TipoPlantilla + '{{ string|raw }}';
-        }
-        else {
-            if (id_zona) {
-                let url = '{{ url_ver_plantilla_zona }}';
-                let parametros = 'id_zona=' + id_zona + '{{ h_zona|raw }}';
-            }
-            if (TipoPlantilla) {
-                let url = '{{ url_ver_plantilla_zona }}';
-                let parametros = 'TipoPlantilla=' + TipoPlantilla + '{{ string|raw }}';
-            }
-        
+                let parametros = 'id_zona=' + id_zona + ' & TipoPlantilla=' + TipoPlantilla + '{{ h_zonatipo|raw }}';
+       
 
             $.ajax({
                 url: url,
