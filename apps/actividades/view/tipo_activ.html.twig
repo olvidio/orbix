@@ -34,18 +34,26 @@ p.tres:hover {
 <script>
 fnjs_guardar_nuevo=function(formulario){
 	var err=0;
-	var id_nom_tipo_activ=$('#id_nom_tipo_activ').val();
+    var id_nom_tipo_activ=$('#id_nom_tipo_activ').val();
 	var id_tipo_activ=$('#id_tipo_activ').val();
 	if (!id_nom_tipo_activ) { alert ("{{ "Tipo no válido"|trans|raw }}"); err=1; }
 	if (!nom_tipo_activ) { alert ("{{ "debe indicar un nombre"|trans|raw }}"); err=1; }
+    var data = $(formulario).serialize();
+    // Estos campos no están dentro del formulario. Los añado:
+    var isfsv_val=$('#isfsv_val').val();
+    var iactividad_val=$('#iactividad_val').val();
+    var iasistentes_val=$('#iasistentes_val').val();
+    data += '&isfsv_val='+isfsv_val;
+    data += '&iactividad_val='+iactividad_val;
+    data += '&iasistentes_val='+iasistentes_val;
+
 	if (!err) {
-		$('#que').val('nuevo');
 		$(formulario).attr('action','{{ url_ajax }}');
 		$(formulario).one("submit", function() {
 			$.ajax({
 				url: $(this).attr('action'),
 				type: 'post',
-				data: $(this).serialize()
+				data: data
 			})
 			.done(function (rta_txt) {
 				if (rta_txt != '' && rta_txt != '\n') {

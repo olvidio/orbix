@@ -50,9 +50,9 @@ switch ($Qque) {
         break;
     case 'form_nuevo':
         $oHash = new web\Hash();
-        $camposForm = 'iactividad_val!iasistentes_val!id_nom_tipo_activ!isfsv_val!nom_tipo_activ!scroll_id';
+        $camposForm = 'iactividad_val!iasistentes_val!id_nom_tipo_activ!isfsv_val!nom_tipo_activ';
         $oHash->setCamposForm($camposForm);
-        $a_camposHidden = ['que' => ''];
+        $a_camposHidden = ['que' => 'nuevo'];
         $oHash->setArrayCamposHidden($a_camposHidden);
         $oHash->setCamposNo('que');
 
@@ -89,7 +89,7 @@ switch ($Qque) {
         $camposForm = 'nom_tipo_activ';
         $oHash->setCamposNo('que');
         $a_camposHidden = array(
-            'que' => '',
+            'que' => 'update',
             'id_tipo_activ' => $Qid_tipo_activ,
         );
         $oHash->setCamposForm($camposForm);
