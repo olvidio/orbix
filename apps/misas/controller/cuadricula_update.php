@@ -85,10 +85,16 @@ if (empty($Qkey)) { // no hay ningún sacd
             $cEncargoHorarios2 = $gesEncargoHorario->getEncargoHorarios($aWhere, $aOperador);
             $cEncargoHorarios = array_merge($cEncargoHorarios1, $cEncargoHorarios2);
             // TODO si hay varios?¿?¿
-            if (count($cEncargoHorarios) > 0) {
-                $oEncargoHorario = $cEncargoHorarios[0];
-                $h_ini = $oEncargoHorario->getH_ini();
-                $h_fin = $oEncargoHorario->getH_fin();
+            if (count($cEncargoHorarios) > 0) {            $aWhere = [
+                'id_enc' => $id_enc,
+                'tstart' => "'$inicio_dia_plantilla', '$fin_dia_plantilla'",
+            ];
+            $aOperador = [
+                'tstart' => 'BETWEEN',
+            ];
+            $EncargoDiaRepository = new EncargoDiaRepository();
+            $cEncargosDia = $EncargoDiaRepository->getEncargoDias($aWhere,$aOperador);
+
             }
             if (empty($Qtstart) && !empty($h_ini)) {
                 $Qtstart = $h_ini;

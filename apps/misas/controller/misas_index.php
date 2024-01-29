@@ -18,16 +18,16 @@ $aQuery = [ 'pau' => 'a',
 if (is_array($aQuery)) {
     array_walk($aQuery, 'core\poner_empty_on_null');
 }
-$goListaSacd = Hash::link('apps/misas/controller/lista_sacd.php?' . http_build_query($aQuery));
+$goModificarPlantilla = Hash::link('apps/misas/controller/seleccionar_zona_tipoplantilla.php?' . http_build_query($aQuery));
+$goPrepararNuevoPeriodo = Hash::link('apps/misas/controller/preparar_nuevo_periodo.php?' . http_build_query($aQuery));
 $goCrearPlantilla = Hash::link('apps/misas/controller/crear_plantilla.php?' . http_build_query($aQuery));
-$goSelectZona = Hash::link('apps/misas/controller/seleccionar_zona_tipoplantilla.php?' . http_build_query($aQuery));
 $goCuadricula = Hash::link('apps/misas/controller/cuadricula_zona.php?' . http_build_query($aQuery));
 $goIniciales = Hash::link('apps/misas/controller/tabla_iniciales_sacd.php?' . http_build_query($aQuery));
 
 $a_campos = ['oPosicion' => $oPosicion,
-		'goListaSacd' => $goListaSacd,
+    'goModificarPlantilla' => $goModificarPlantilla,
+    'goPrepararNuevoPeriodo' => $goPrepararNuevoPeriodo,
     'goCrearPlantilla' => $goCrearPlantilla,
-    'goSelectZona' => $goSelectZona,
     'goCuadricula' => $goCuadricula,
     'goIniciales' => $goIniciales,
 ];

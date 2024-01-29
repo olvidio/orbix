@@ -25,11 +25,10 @@ $oDesplTipoPlantilla->setOpciones($a_TiposPlantilla);
 $oDesplTipoPlantilla->setNombre('TipoPlantilla');
 $oDesplTipoPlantilla->setAction('fnjs_ver_plantilla_zona()');
 
-//$url_ver_plantilla_zona = 'apps/misas/controller/crear_plantilla.php';
 $url_ver_plantilla_zona = 'apps/misas/controller/ver_plantilla_zona.php';
 $oHashZonaTipo = new Hash();
 $oHashZonaTipo->setUrl($url_ver_plantilla_zona);
-$oHashZonaTipo->setCamposForm('id_zona!TipoPlantilla');
+$oHashZonaTipo->setCamposForm('id_zona!TipoPlantilla!seleccion');
 $h_zonatipo = $oHashZonaTipo->linkSinVal();
 
 $a_campos = ['oPosicion' => $oPosicion,
@@ -41,4 +40,3 @@ $a_campos = ['oPosicion' => $oPosicion,
 
 $oView = new core\ViewTwig('misas/controller');
 echo $oView->render('seleccionar_zona_tipo.html.twig', $a_campos);
-//echo $oView->render('seleccionar_zona.html.twig', $a_campos);

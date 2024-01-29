@@ -1,0 +1,51 @@
+<div id="div_nuevo_periodo">
+    <form id="frm_nuevo_periodo" name="frm_nuevo_periodo" action="" method="post">
+        {{ oHash.getCamposHtml|raw }}
+        <table>
+            <thead>
+            <tr>
+                <th class=titulo_inv colspan=4>{{ "Plantilla de la zona"|trans|capitalize }}:&nbsp;&nbsp;&nbsp;
+                    {{ oDesplZonas.desplegable|raw }}
+                </th>
+                <th class=titulo_inv colspan=4>{{ "Tipo de plantilla"|trans|capitalize }}:&nbsp;&nbsp;&nbsp;
+                    {{ oDesplTipoPlantilla.desplegable|raw }}
+                </th>
+            </tr>
+            <tr>
+            {{ oFormP.getHtml()|raw }}
+            </tr>
+            <tr>
+            Borrará todos los datos introducidos en este periodo!!
+            </tr>
+            </thead>
+        </table>
+    </form>
+</div>
+
+<br>
+<div id="div_plantilla">
+</div>
+
+<script>
+    fnjs_nuevo_periodo = function () {
+        let id_zona = $('#id_zona').val();
+        let TipoPlantilla = $('#TipoPlantilla').val();
+        if (id_zona) {
+            let url = '{{ url_crear_nuevo_periodo }}';
+    	    var periodo=$('#periodo').val();
+    	    var empiezamax=$('#empiezamax').val();
+    	    var empiezamin=$('#empiezamin').val();
+
+            let parametros = 'id_zona=' + id_zona + ' & TipoPlantilla=' + TipoPlantilla + '& periodo=' + periodo + '& empiezamax='+ empiezamax + '& empiezamin='+ empiezamin +'{{ h_nuevo_periodo|raw }}';
+            $.ajax({
+                url: url,
+                type: 'post',
+                data: parametros,
+                dataType: 'html'
+            })
+                .done(function (rta_txt) {
+                    $('#div_plantilla').html(rta_txt);
+                });
+        }
+    }
+</script>

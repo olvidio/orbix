@@ -22,9 +22,9 @@ require_once("apps/core/global_object.inc");
 
 //$gestorPersonaSacd = new GestorPersonaSacd();
 
-//$Qid_zona = 3; // l'hospitalet (24) Sarrià(3)
 $Qid_zona = (integer)filter_input(INPUT_POST, 'id_zona');
-$QTipoPlantilla = (string)filter_input(INPUT_POST, 'TipoPlantilla');
+$QEmpiezaMin = (string)filter_input(INPUT_POST, 'empiezamin');
+$QEmpiezaMax = (string)filter_input(INPUT_POST, 'empiezamax');
 $Qseleccion = (string)filter_input(INPUT_POST, 'seleccion');
 
 $a_iniciales = [];
@@ -118,66 +118,20 @@ $columns_cuadricula = [
     ["id" => "encargo", "name" => "Encargo", "field" => "encargo", "width" => 150, "cssClass" => "cell-title"],
 ];
 
-switch ($QTipoPlantilla) {
-    case 's':
-        $oInicio = new DateTimeLocal('2001-01-01');
-        $oFin = new DateTimeLocal('2001-01-08');
-        $interval = new DateInterval('P1D');
-        $date_range = new DatePeriod($oInicio, $interval, $oFin);
-        $a_dias_semana = EncargoConstants::OPCIONES_DIA_SEMANA;
-        foreach ($date_range as $date) {
-            $num_dia = $date->format('Y-m-d');
-            //$nom_dia = $date->format('D');
-            $dia_week = $date->format('N');
-            //$dia_mes = $date->format('d');
-            $nom_dia = $a_dias_semana[$dia_week];
-        
-            $columns_cuadricula[] =
-                ["id" => "$num_dia", "name" => "$nom_dia", "field" => "$num_dia", "width" => 80, "cssClass" => "cell-title"];
-        }
-        break;
-    case 'd':
-        $oInicio = new DateTimeLocal('2001-10-01');
-        $oFin = new DateTimeLocal('2001-10-12');
-        $interval = new DateInterval('P1D');
-        $date_range = new DatePeriod($oInicio, $interval, $oFin);
-        $a_dias_semana = EncargoConstants::OPCIONES_DIA_SEMANA;
-        foreach ($date_range as $date) {
-            $num_dia = $date->format('Y-m-d');
-            //$nom_dia = $date->format('D');
-            $dia_week = $date->format('N');
-            $dia_mes = $date->format('d');
-            if ($dia_mes<7)
-                $nom_dia = $a_dias_semana[$dia_week];
-            else
-                $nom_dia = 'domingo '.strval($dia_mes-6);
-        
-            $columns_cuadricula[] =
-                ["id" => "$num_dia", "name" => "$nom_dia", "field" => "$num_dia", "width" => 80, "cssClass" => "cell-title"];
-        }
-        break;
-    case 'm':
-        $oInicio = new DateTimeLocal('2002-04-01');
-        $oFin = new DateTimeLocal('2002-05-06');
-        $interval = new DateInterval('P1D');
-        $date_range = new DatePeriod($oInicio, $interval, $oFin);
-        $a_dias_semana = EncargoConstants::OPCIONES_DIA_SEMANA;
-        foreach ($date_range as $date) {
-            $num_dia = $date->format('Y-m-d');
-            //$nom_dia = $date->format('D');
-            $dia_week = $date->format('N');
-            $dia_mes = $date->format('d');
-//            $nom_dia = $a_dias_semana[$dia_week].' '.strval(intdiv(($dia_mes-1),7)+1);
-//            $nom_dia = $a_dias_semana[$dia_week].' '.strval(intdiv(date_diff($date, $oInicio),7)+1);
-            $nom_dia = $a_dias_semana[$dia_week].' '.intdiv(date_diff($date, $oInicio)->format('%a'),7)+1;
-            $columns_cuadricula[] =
-                ["id" => "$num_dia", "name" => "$nom_dia", "field" => "$num_dia", "width" => 80, "cssClass" => "cell-title"];
-        }
-        break;
+    $oInicio = new DateTimeLocal('QEmpiezamin');
+    $oFin = new DateTimeLocal('QEmpiezamax');
+    $interval = new DateInterval('P1D');
+    $date_range = new DatePeriod($oInicio, $interval, $oFin);
+    $a_dias_semana = EncargoConstants::OPCIONES_DIA_SEMANA;
+    foreach ($date_range as $date) {
+        $num_dia = $date->format('Y-m-d');
+        $dia_week = $date->format('N');
+        $nom_dia = $a_dias_semana[$dia_week];
+    
+        $columns_cuadricula[] =
+            ["id" => "$num_dia", "name" => "$nom_dia", "field" => "$num_dia", "width" => 80, "cssClass" => "cell-title"];
     
     }
-//$oInicio = new DateTimeLocal('2001-01-01');
-//$oFin = new DateTimeLocal('2001-01-08');
 
 
 
