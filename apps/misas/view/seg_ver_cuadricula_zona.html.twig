@@ -85,10 +85,7 @@
             <label for="id_sacd">Sacd:</label>
             {{ oDesplSacd.desplegable|raw }}
         </div>
-        {{ url_desplegable_sacd }}
-        <div id="desplegable_sacd">
-        hola
-        </div>
+
         <div style="margin-left: 10px; margin-top: 10px;">
             <div class="input-group clockpicker" style="float: left;">
                 <label for="tstart">{{ "Inicio"|trans|raw }}</label>
@@ -258,50 +255,6 @@
         $('#observ').val(observ);
         $('#uuid_selected').val(uuid_item);
         $('#id_enc_selected').val(id_enc);
-
-
-        var url_desplegable_sacd = '{{ url_desplegable_sacd }}';
-        var h_desplegable_sacd = '{{ h_desplegable_sacd }}';
-        parametros = 'id_zona= {{ id_zona }} & seleccion= {{ seleccion }} ';
-//        parametros = 'id_zona= {{ id_zona  }} & seleccion= {{ seleccion }} {{ h_desplegable_sacd |raw }}';
-//        let parametros = 'id_zona= {{ id_zona  }} & seleccion= {{ seleccion }} & {{ h_desplegable_sacd |raw }}';
-        request = $.ajax({
-            data: parametros,
-            url: url_desplegable_sacd,
-            method: 'POST'
-        });
-        request.done(function (json) {
-            alert(json.desplegable);
-            html=json.desplegable;
-//            if (json.success != true) {
-//                alert(json.mensaje);
-//            } else {
-                // You can create an Array from this like so:
-//                var respuesta = JSON.parse(json.cargos);
-//                html = respuesta;
-//            }
-        });
-
-	        //alert ("prelatura: "+na+" paso: "+p+" zona: "+zona+" tot "+ seleccion);
-
-//            $.ajax({
-//                url: url,
-//                type: 'post',
-//                data: parametros,
-//                dataType: 'html'
-//            })
-//                .done(function (rta_txt) {
-//                    $('#div_plantilla').html(rta_txt);
-//                });
-
-
-//        html='<b>aqui va el desplegable</b>';
-//                alert(json.mensaje);
-
- //       html='<b>'+json.mensaje+'</b>';
-        $("#desplegable_sacd").html(html);
-
-
         modal.show();
     }
 

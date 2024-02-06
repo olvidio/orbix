@@ -1,26 +1,5 @@
 <table>
     <tr>
-        <th colspan="2">
-            {{ nombre_encargo }}
-        </th>
-    </tr>
-    <tr>
-        <td>
-            dia_ref:
-        </td>
-        <td>
-            {{ dia_ref }}
-        </td>
-    <tr>
-        <td>
-            sacd necesarios:
-        </td>
-        <td>
-            {{ num_sacd }}
-        </td>
-    </tr>
-
-    <tr>
         <td>
             sacd encargados:
         </td>
@@ -29,16 +8,6 @@
                 {{ oHash.getCamposHtml|raw }}
             {{ oDesplSacd.desplegable|raw }}
             </form>
-        </td>
-    </tr>
-    <tr>
-        <td>
-            Horario:
-        </td>
-        <td>
-            {{ h_ini }}
-            -
-            {{ h_fin }}
         </td>
     </tr>
 </table>

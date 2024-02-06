@@ -4,6 +4,8 @@
 // INICIO Cabecera global de URL de controlador *********************************
 use encargossacd\model\EncargoConstants;
 use misas\domain\repositories\EncargoDiaRepository;
+use misas\domain\entity\EncargoDia;
+use misas\domain\EncargoDiaId;
 use misas\model\EncargosZona;
 use personas\model\entity\PersonaSacd;
 use web\DateTimeLocal;
@@ -11,6 +13,8 @@ use web\Desplegable;
 use web\Hash;
 use zonassacd\model\entity\GestorZonaSacd;
 use personas\model\entity\GestorPersona;
+use core\ValueObject;
+use Ramsey\Uuid\Uuid as RamseyUuid;
 
 require_once("apps/core/global_header.inc");
 // Archivos requeridos por esta url **********************************************
@@ -96,7 +100,6 @@ $e = 0;
 foreach ($cEncargosZona as $oEncargo) {
     $e++;
     $id_enc = $oEncargo->getId_enc();
-    $desc_enc = $oEncargo->getDesc_enc();
     $d = 0;
     $data_cols = [];
     $meta_dia = [];
@@ -108,7 +111,7 @@ foreach ($cEncargosZona as $oEncargo) {
         {
             $dia_week = $date->format('N');
             $dia_plantilla= '2001-01-'.$dia_week;
-            $inicio_dia_plantilla = $dia_plantill.' 00:00:00';
+            $inicio_dia_plantilla = $dia_plantilla.' 00:00:00';
             $fin_dia_plantilla = $dia_plantilla.' 23:59:59';
             $aWhere = [
                 'id_enc' => $id_enc,
@@ -117,6 +120,7 @@ foreach ($cEncargosZona as $oEncargo) {
             $aOperador = [
                 'tstart' => 'BETWEEN',
             ];
+
             $EncargoDiaRepository = new EncargoDiaRepository();
             $cEncargosDia = $EncargoDiaRepository->getEncargoDias($aWhere,$aOperador);
     
@@ -128,14 +132,53 @@ foreach ($cEncargosZona as $oEncargo) {
                 $oEncargoDia = $cEncargosDia[0];
                 $id_nom = $oEncargoDia->getId_nom();
                 $hora_ini = $oEncargoDia->getTstart()->format('H:i');
-                if ($hora_ini=='00:00')
-                    $hora_ini='';
                 $hora_fin = $oEncargoDia->getTend()->format('H:i');
-                if ($hora_fin=='00:00')
-                    $hora_fin='';
-                $observ" => $oEncargoDia->getObserv(),
-                $
+                $observ = $oEncargoDia->getObserv();
             }
+
+            $inicio_nuevo_dia = $num_dia.' 00:00:00';
+            $fin_nuevo_dia = $num_dia.' 23:59:59';
+            $aWhere = [
+                'id_enc' => $id_enc,
+                'tstart' => "'$inicio_nuevo_dia', '$fin_nuevo_dia'",
+            ];
+            $aOperador = [
+                'tstart' => 'BETWEEN',
+            ];
+            $EncargoNuevoDiaRepository = new EncargoDiaRepository();
+            $cEncargoNuevoDia = $EncargoNuevoDiaRepository->getEncargoDias($aWhere,$aOperador);
+    
+            if (count($cEncargoNuevoDia) > 1) {
+                exit(_("sólo debería haber máximo uno"));
+            }
+
+            if (empty($cEncargoNuevoDia)) {
+                $oEncargoDia = new EncargoDia();
+                $Uuid = new EncargoDiaId(RamseyUuid::uuid4()->toString());
+//                $Uuid = new EncargoDiaId(uuid4()->toString);
+                $oEncargoDia->setUuid_item($Uuid);
+                $oEncargoDia->setId_nom($id_nom);
+//                $oEncargoDia->setTstart($hora_ini);
+//                $oEncargoDia->setTend($hora_fin);
+                if (isset($observ))
+                    $oEncargoDia->setObserv($observ);
+                $oEncargoDia->setId_enc($id_enc);
+                if ($EncargoDiaRepository->Guardar($oEncargoDia) === FALSE) {
+                    $error_txt .= $EncargoDiaRepository->getErrorTxt();
+                }
+            } else {
+                // debería haber solamente uno
+                $oEncargoDia = $cEncargoNuevoDia[0];
+                $oEncargoDia->setId_nom($id_nom);
+                $oEncargoDia->setTstart($hora_ini);
+                $oEncargoDia->setTend($hora_fin);
+                $oEncargoDia->setObserv($observ);
+                $oEncargoDia->setId_enc($id_enc);
+                if ($oEncargoDia->Guardar() === FALSE) {
+                    $error_txt = $oEncargoDia->getErrorTxt();
+                }
+            }
+        }
 
         $data_cols["$num_dia"] = " -- ";
 

@@ -18,18 +18,17 @@ $aQuery = [ 'pau' => 'a',
 if (is_array($aQuery)) {
     array_walk($aQuery, 'core\poner_empty_on_null');
 }
-
-$goModificarPlantilla = Hash::link('apps/misas/controller/modificar_plantilla.php?' . http_build_query($aQuery));
-$goPrepararPlanDeMisas = Hash::link('apps/misas/controller/preparar_plan_de_misas.php?' . http_build_query($aQuery));
-$goModificarPlanDeMisas = Hash::link('apps/misas/controller/modificar_plan_de_misas.php?' . http_build_query($aQuery));
-$goModificarEncargosZona = Hash::link('apps/misas/controller/modificar_encargos_zona.php?' . http_build_query($aQuery));
+$goModificarPlantilla = Hash::link('apps/misas/controller/seleccionar_zona_tipoplantilla.php?' . http_build_query($aQuery));
+$goPrepararNuevoPeriodo = Hash::link('apps/misas/controller/preparar_nuevo_periodo.php?' . http_build_query($aQuery));
+$goBuscarAusencias = Hash::link('apps/misas/controller/buscar_ausencias.php?' . http_build_query($aQuery));
+$goCuadricula = Hash::link('apps/misas/controller/cuadricula_zona.php?' . http_build_query($aQuery));
 $goIniciales = Hash::link('apps/misas/controller/tabla_iniciales_sacd.php?' . http_build_query($aQuery));
 
 $a_campos = ['oPosicion' => $oPosicion,
     'goModificarPlantilla' => $goModificarPlantilla,
-    'goPrepararPlanDeMisas' => $goPrepararPlanDeMisas,
-    'goModificarPlanDeMisas' => $goModificarPlanDeMisas,
-    'goModificarEncargosZona' => $goModificarEncargosZona,
+    'goPrepararNuevoPeriodo' => $goPrepararNuevoPeriodo,
+    'goBuscarAusencias' => $goBuscarAusencias,
+    'goCuadricula' => $goCuadricula,
     'goIniciales' => $goIniciales,
 ];
 

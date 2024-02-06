@@ -21,6 +21,10 @@ class EncargoDia
     const STATUS_PROPUESTA = 1;
     const STATUS_COMUNICADO_SACD = 2;
     const STATUS_COMUNICADO_CTR = 3;
+    const PLANTILLA_SEMANAL = 's';
+    const PLANTILLA_DOMINGOS = 'd';
+    const PLANTILLA_MENSUAL = 'm';
+    const PLAN_DE_MISAS = 'p';
 
     /* ATRIBUTOS ----------------------------------------------------------------- */
 

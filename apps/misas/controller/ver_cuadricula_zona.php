@@ -24,7 +24,7 @@ require_once("apps/core/global_object.inc");
 
 //$Qid_zona = 3; // l'hospitalet (24) Sarrià(3)
 $Qid_zona = (integer)filter_input(INPUT_POST, 'id_zona');
-$QTipoPlantilla = (string)filter_input(INPUT_POST, 'TipoPlantilla');
+$QTipoPlantilla = (string)filter_input(INPUT_POST, 'tipo_plantilla');
 $Qseleccion = (string)filter_input(INPUT_POST, 'seleccion');
 
 $a_iniciales = [];
@@ -267,11 +267,21 @@ $oHash = new Hash();
 $oHash->setCamposForm('color!dia!id_enc!key!observ!tend!tstart!uuid_item');
 $array_h = $oHash->getParamAjaxEnArray();
 
+$url_desplegable_sacd = 'apps/misas/controller/desplegable_sacd.php';
+$oHash_desplegable_sacd = new Hash();
+$oHash_desplegable_sacd->setCamposForm('id_zona!seleccion');
+$h_desplegable_sacd = $oHash_desplegable_sacd->getParamAjaxEnArray();
+
+echo 'HASH: '.$h_desplegable_sacd;
 
 $a_campos = ['oPosicion' => $oPosicion,
     'oDesplSacd' => $oDesplSacd,
     'json_columns_cuadricula' => $json_columns_cuadricula,
     'json_data_cuadricula' => $json_data_cuadricula,
+    'url_desplegable_sacd' =>$url_desplegable_sacd,
+    'h_desplegable_sacd' => $h_desplegable_sacd,
+    'id_zona' => $Qid_zona,
+    'seleccion' => $Qseleccion,
     'array_h' => $array_h,
 ];
 
