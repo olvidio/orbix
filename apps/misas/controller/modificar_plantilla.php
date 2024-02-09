@@ -29,7 +29,7 @@ $oDesplTipoPlantilla->setAction('fnjs_ver_plantilla_zona()');
 $url_ver_cuadricula_zona = 'apps/misas/controller/ver_cuadricula_zona.php';
 $oHashZonaTipo = new Hash();
 $oHashZonaTipo->setUrl($url_ver_cuadricula_zona);
-$oHashZonaTipo->setCamposForm('id_zona!tipo_plantilla!seleccion');
+$oHashZonaTipo->setCamposForm('id_zona!tipo_plantilla');
 $h_zonatipo = $oHashZonaTipo->linkSinVal();
 
 $a_campos = ['oPosicion' => $oPosicion,

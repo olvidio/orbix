@@ -13,12 +13,6 @@
             </tr>
             </thead>
         </table>
-        <p>{{ "Selección de sacd"|trans|raw }}:
-		    <input id="sacd_zona" type="checkbox" value="2" checked Onclick='fnjs_ver_plantilla_zona()'>{{ "zona"|trans|raw }}
-		    <input id="sacd_na"type="checkbox" value="4" Onclick='fnjs_ver_plantilla_zona()'>{{ "prelatura"|trans|raw }}
-		    <input id="sacd_p" type="checkbox" value="8" Onclick='fnjs_ver_plantilla_zona()'>{{ "de paso"|trans|raw }}
-	    </p>
-
     </form>
 </div>
 
@@ -36,12 +30,7 @@
             var na=$('#sacd_na').prop('checked');
     	    var p=$('#sacd_p').prop('checked');
 
-            var seleccion=0;
-	        if (zona) seleccion+=2;
-        	if (na) seleccion+=4;
-	        if (p) seleccion+=8;
-	        //alert ("prelatura: "+na+" paso: "+p+" zona: "+zona+" tot "+ seleccion);
-            let parametros = 'id_zona=' + id_zona + ' & tipo_plantilla=' + tipo_plantilla + '& seleccion=' + seleccion + '{{ h_zonatipo|raw }}';
+            let parametros = 'id_zona=' + id_zona + ' & tipo_plantilla=' + tipo_plantilla + '{{ h_zonatipo|raw }}';
 
             $.ajax({
                 url: url,

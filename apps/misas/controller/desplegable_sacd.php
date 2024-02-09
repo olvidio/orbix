@@ -24,11 +24,11 @@ require_once("apps/core/global_object.inc");
 
 //$Qid_zona = 3; // l'hospitalet (24) Sarrià(3)
 $Qid_zona = (integer)filter_input(INPUT_POST, 'id_zona');
-$Qseleccion = (string)filter_input(INPUT_POST, 'seleccion');
+$Qseleccion = 2;
 
 $a_iniciales = [];
 
-$desplegable_sacd='<SELECT ID="sacd">';
+$desplegable_sacd='<SELECT ID="id_sacd">';
 
 
 if ($Qseleccion & 2) {
@@ -53,6 +53,7 @@ if ($Qseleccion & 2) {
         $a_sacd[$key] = $sacd ?? '?';
     }
 }
+/*
 if ($Qseleccion & 4) {
     $a_Clases = [];
     $a_Clases[] = array('clase' => 'PersonaN', 'get' => 'getPersonas');
@@ -110,7 +111,7 @@ if ($Qseleccion & 8) {
         $a_sacd[$key] = $sacd ?? '?';
     }
 }
-
+*/
 $desplegable_sacd.='</SELECT>';
 //$desplegable_sacd='hola';
 

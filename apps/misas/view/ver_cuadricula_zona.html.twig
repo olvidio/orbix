@@ -81,13 +81,17 @@
         <input type="hidden" id="row_selected" value=""/>
         <input type="hidden" id="uuid_selected" value=""/>
         <input type="hidden" id="id_enc_selected" value=""/>
+        <p>{{ "Selección de sacd"|trans|raw }}:
+		    <input id="sacd_zona" type="checkbox" value="2" checked>{{ "zona"|trans|raw }}
+		    <input id="sacd_na"type="checkbox" value="4">{{ "prelatura"|trans|raw }}
+		    <input id="sacd_p" type="checkbox" value="8">{{ "de paso"|trans|raw }}
+	    </p>
+
         <div class='item-details-label'>
             <label for="id_sacd">Sacd:</label>
-            {{ oDesplSacd.desplegable|raw }}
-        </div>
-        {{ url_desplegable_sacd }}
-        <div id="desplegable_sacd">
-        hola
+            <div id="desplegable_sacd">
+            div desplegable_sacd
+            </div>
         </div>
         <div style="margin-left: 10px; margin-top: 10px;">
             <div class="input-group clockpicker" style="float: left;">
@@ -164,8 +168,9 @@
         //var meta = data[row].meta[id_campo];
         //let id_nom = meta.id_nom;
         //let iniciales = meta.iniciales;
-
+alert('estoy aquí');
         let key = $('#id_sacd').val();
+alert('key:'+key);
         const myArray = key.split("#");
         let id_nom = myArray[0];
         let iniciales = myArray[1];
@@ -262,7 +267,7 @@
 
         var url_desplegable_sacd = '{{ url_desplegable_sacd }}';
         var h_desplegable_sacd = '{{ h_desplegable_sacd }}';
-        parametros = 'id_zona= {{ id_zona }} & seleccion= {{ seleccion }} ';
+        parametros = 'id_zona= {{ id_zona }} ';
 //        parametros = 'id_zona= {{ id_zona  }} & seleccion= {{ seleccion }} {{ h_desplegable_sacd |raw }}';
 //        let parametros = 'id_zona= {{ id_zona  }} & seleccion= {{ seleccion }} & {{ h_desplegable_sacd |raw }}';
         request = $.ajax({
