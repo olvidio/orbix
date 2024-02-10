@@ -231,40 +231,11 @@ $array_h = $oHash->getParamAjaxEnArray();
 $url_desplegable_sacd = 'apps/misas/controller/desplegable_sacd.php';
 $oHash_desplegable_sacd = new Hash();
 $oHash_desplegable_sacd->setCamposForm('id_zona!id_sacd');
-$h_desplegable_sacd = $oHash_desplegable_sacd->getParamAjax();
-
-$a_iniciales = [];
-$Qseleccion = 2;
-
-if ($Qseleccion & 2) {
-    $gesZonaSacd = new GestorZonaSacd();
-    $a_Id_nom = $gesZonaSacd->getSacdsZona($Qid_zona);
-    
-    foreach ($a_Id_nom as $id_nom) {
-        $PersonaSacd = new PersonaSacd($id_nom);
-        $sacd = $PersonaSacd->getNombreApellidos();
-        // iniciales
-        $nom = mb_substr($PersonaSacd->getNom(), 0, 1);
-        $ap1 = mb_substr($PersonaSacd->getApellido1(), 0, 1);
-        $ap2 = mb_substr($PersonaSacd->getApellido2(), 0, 1);
-        $iniciales = strtoupper($nom . $ap1 . $ap2);
-    
-        $a_iniciales[$id_nom] = $iniciales;
-    
-        $key = $id_nom . '#' . $iniciales;
-    
-        $a_sacd[$key] = $sacd ?? '?';
-    }
-}
-$oDesplSacd = new Desplegable();
-$oDesplSacd->setNombre('id_sacd');
-$oDesplSacd->setOpciones($a_sacd);
-$oDesplSacd->setBlanco(TRUE);
+$h_desplegable_sacd = $oHash_desplegable_sacd->getParamAjaxEnArray();
 
 $a_campos = ['oPosicion' => $oPosicion,
     'json_columns_cuadricula' => $json_columns_cuadricula,
     'json_data_cuadricula' => $json_data_cuadricula,
-    'oDesplSacd' => $oDesplSacd,
     'url_desplegable_sacd' =>$url_desplegable_sacd,
     'h_desplegable_sacd' => $h_desplegable_sacd,
     'id_zona' => $Qid_zona,
