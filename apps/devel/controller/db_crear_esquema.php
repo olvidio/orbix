@@ -83,7 +83,7 @@ if (!empty($Qcomun)) {
     $oDBEsquema->setDlRef($DlRef);
     $oDBEsquema->setRegionNew($RegionNew);
     $oDBEsquema->setDlNew($DlNew);
-    $oDBEsquema->crear_select(); // los select son caso especial...
+    $oDBEsquema->crear_select('comun'); // los select son caso especial...
 
     // Hay que quitar a los usuarios del grupo para que no tenga permisos para la tabla padre.
     $oDBRol->delGrupo('orbix');
@@ -164,7 +164,7 @@ if (!empty($Qsv)) {
     $oDBEsquema->setDlRef($DlRef);
     $oDBEsquema->setRegionNew($RegionNew);
     $oDBEsquema->setDlNew($DlNew);
-    $oDBEsquema->crear_select();
+    $oDBEsquema->crear_select('sv-e');
     // Hay que quitar a los usuarios del grupo para que no tenga permisos para la tabla padre.
     $oDBRol->delGrupo('orbixv');
 

@@ -323,7 +323,7 @@ class DBEsquema
             $this->crear_remote();
         }
     }
-    public function crear_select() {
+    public function crear_select(string $db) {
         // es para las copias locales del servidor externo.
         // Ya tenemos los archivos creados,
         // leer_local()
@@ -351,8 +351,13 @@ class DBEsquema
         ///// REFRESCAR LA SUBSCRIPCIÓN ///////////
         // (( para saber el nombre: SELECT oid, subdbid, subname, subconninfo, subpublications FROM pg_subscription; ))
         // ALTER SUBSCRIPTION subcomun REFRESH PUBLICATION;
-        $command = "PGOPTIONS='--client-min-messages=warning' /usr/bin/psql -U postgres -q  -X -t --pset pager=off ";
-        $command .= "-c 'ALTER SUBSCRIPTION subcomun REFRESH PUBLICATION;' ";
+        $command = "PGOPTIONS='--client-min-messages=warning' /usr/bin/psql -d $db -U postgres -q  -X -t --pset pager=off ";
+        if ($db === 'comun') {
+            $command .= "-c 'ALTER SUBSCRIPTION subcomun REFRESH PUBLICATION;' ";
+        }
+        if ($db === 'sv-e') {
+            $command .= "-c 'ALTER SUBSCRIPTION subsve REFRESH PUBLICATION;' ";
+        }
         $command .= "\"" . $dsn . "\"";
         $command .= " > " . $this->getFileLog() . " 2>&1";
         passthru($command); // no output to capture so no need to store it
