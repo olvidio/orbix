@@ -230,7 +230,7 @@ $array_h = $oHash->getParamAjaxEnArray();
 
 $url_desplegable_sacd = 'apps/misas/controller/desplegable_sacd.php';
 $oHash_desplegable_sacd = new Hash();
-$oHash_desplegable_sacd->setCamposForm('id_zona!id_sacd');
+$oHash_desplegable_sacd->setCamposForm('id_zona!id_sacd!seleccion');
 $h_desplegable_sacd = $oHash_desplegable_sacd->getParamAjax();
 
 $a_iniciales = [];

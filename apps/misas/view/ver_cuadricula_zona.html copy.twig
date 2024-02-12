@@ -294,35 +294,7 @@
         $('#uuid_selected').val(uuid_item);
         $('#id_enc_selected').val(id_enc);
 
-//        prepara_select_sacd();
-
-    	var z=$('#sacd_zona').prop('checked');
-        var na=$('#sacd_na').prop('checked');
-	    var p=$('#sacd_p').prop('checked');
-    	var seleccion=0;
-       	if (z) seleccion+=2;
-	    if (na) seleccion+=4;
-    	if (p) seleccion+=8;
-	    alert ("a: "+na+" b "+p+" c "+z+" tot "+ seleccion);
-
-        let url_desplegable_sacd = '{{ url_desplegable_sacd }}';
-	    let id_zona = '{{ id_zona }}';
-        var posicion=key.indexOf('#');
-        var id_sacd=key.substring(0,posicion)
-	    var parametros= 'id_zona = ' + id_zona + '&  id_sacd = ' + id_sacd + ' & seleccion = ' + seleccion + '{{ h_desplegable_sacd|raw }}';
-        request = $.ajax({
-		    url: url_desplegable_sacd,
-		    data: parametros,
-		    type: 'post',
-            dataType: 'json'
-        });
-
-        request.done(function (json) {
-                html=json.desplegable;
-                $("#desplegable").html(html);
-        });
-
-        modal.show();
+        prepara_select_sacd();
     }
 
     function requiredFieldValidator(value) {

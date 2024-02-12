@@ -41,17 +41,14 @@ function iniciales($id_nom) {
 
 $Qid_zona = (integer)filter_input(INPUT_POST, 'id_zona_');
 $Qid_sacd = (integer)filter_input(INPUT_POST, 'id_sacd_');
-//$key_explode = explode($Qkey, '#');
-//$key_explode = explode('#',$Qkey);
-//$Qid_sacd = $key_explode[0];
+$Qseleccion = (integer)filter_input(INPUT_POST, 'seleccion_');
+
+//echo $Qid_zona.'#'.$Qid_sacd.'s'.$Qseleccion;
 
 $Qseleccion = 2;
-//echo 'HOOOLAAA<br>';
-//echo 'SACD:'.$Qkey.$Qid_sacd.$key_explode[0].'<br>';
 $a_iniciales = [];
 
 $desplegable_sacd='<SELECT ID="id_sacd">';
-//$Qid_sacd=-10016194;
 if ($Qid_sacd>0) {
     $PersonaSacd = new PersonaSacd($Qid_sacd);
     $sacd = $PersonaSacd->getNombreApellidos();
@@ -63,6 +60,7 @@ $iniciales = iniciales($Qid_sacd);
 $a_iniciales[$Qid_sacd] = $iniciales;
     
 $key = $Qid_sacd . '#' . $iniciales;
+//$desplegable_sacd.='<OPTION VALUE="'.$key.'">'.$key.'('.$iniciales.')</OPTION>';
 $desplegable_sacd.='<OPTION VALUE="'.$key.'">'.$sacd.'('.$iniciales.')</OPTION>';
     
 $a_sacd[$key] = $sacd ?? '?';
