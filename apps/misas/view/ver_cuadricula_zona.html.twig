@@ -245,13 +245,14 @@
        	if (z) seleccion+=2;
 	    if (na) seleccion+=4;
     	if (p) seleccion+=8;
-	    alert ("a: "+na+" b "+p+" c "+z+" tot "+ seleccion);
+//	    alert ("a: "+na+" b "+p+" c "+z+" tots "+ seleccion);
 
         let url_desplegable_sacd = '{{ url_desplegable_sacd }}';
 	    let id_zona = '{{ id_zona }}';
         var posicion=key.indexOf('#');
-        var id_sacd=key.substring(0,posicion)
-	    var parametros= 'id_zona = ' + id_zona + '&  id_sacd = ' + id_sacd + ' & seleccion = ' + seleccion + '{{ h_desplegable_sacd|raw }}';
+        var id_sacd=key.substring(0,posicion);
+        var parametros= 'id_zona = ' + id_zona + '&  id_sacd = ' + id_sacd + '{{ h_desplegable_sacd|raw }}';
+//	    var parametros= 'id_zona = ' + id_zona + '&  id_sacd = ' + id_sacd + ' & seleccion = ' + seleccion + ' & {{ h_desplegable_sacd|raw }} ';
         request = $.ajax({
 		    url: url_desplegable_sacd,
 		    data: parametros,
