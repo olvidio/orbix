@@ -23,30 +23,41 @@ require_once("apps/core/global_object.inc");
 function iniciales($id_nom) {
     if ($id_nom>0) {
         $PersonaSacd = new PersonaSacd($id_nom);
-        // iniciales
-        $nom = mb_substr($PersonaSacd->getNom(), 0, 1);
-        $ap1 = mb_substr($PersonaSacd->getApellido1(), 0, 1);
-        $ap2 = mb_substr($PersonaSacd->getApellido2(), 0, 1);
+        $nom = $PersonaSacd->getNom();
+        $ap1 = $PersonaSacd->getApellido1();
+        $ap2 = $PersonaSacd->getApellido2();
     } else {
         $PersonaEx = new PersonaEx($id_nom);
         $sacdEx = $PersonaEx->getNombreApellidos();
-        // iniciales
-        $nom = mb_substr($PersonaEx->getNom(), 0, 1);
-        $ap1 = mb_substr($PersonaEx->getApellido1(), 0, 1);
-        $ap2 = mb_substr($PersonaEx->getApellido2(), 0, 1);
+        $nom = $PersonaEx->getNom();
+        $ap1 = $PersonaEx->getApellido1();
+        $ap2 = $PersonaEx->getApellido2();
     }
-    $iniciales = strtoupper($nom . $ap1 . $ap2);
+
+    // iniciales
+    $inom='';
+    if (!is_null($nom))
+        $inom = mb_substr($nom, 0, 1);
+    $iap1='';
+    if (!is_null($iap1))
+        $iap1 = mb_substr($ap1, 0, 1);
+    $iap2='';
+    if (!is_null($iap2))
+        $iap2 = mb_substr($ap2, 0, 1);
+
+    $iniciales = strtoupper($inom . $iap1 . $iap2);
     return $iniciales;
 }
 
-$Qid_zona = (integer)filter_input(INPUT_POST, 'id_zona_');
-$Qid_sacd = (integer)filter_input(INPUT_POST, 'id_sacd_');
-$Qseleccion = (integer)filter_input(INPUT_POST, 'seleccion_');
+$Qid_zona = (integer)filter_input(INPUT_POST, 'id_zona');
+$Qid_sacd = (integer)filter_input(INPUT_POST, 'id_sacd');
+$Qseleccion = (integer)filter_input(INPUT_POST, 'seleccion');
 
 //echo $Qid_zona.'#'.$Qid_sacd.'s'.$Qseleccion;
 
-$Qseleccion = 2;
+//$Qseleccion = 2;
 $a_iniciales = [];
+// $Qid_sacd=100111501;
 
 $desplegable_sacd='<SELECT ID="id_sacd">';
 if ($Qid_sacd>0) {
@@ -87,8 +98,9 @@ if ($Qseleccion & 2) {
         $a_sacd[$key] = $sacd ?? '?';
     }
 }
-/*
+
 if ($Qseleccion & 4) {
+//    echo 'seleccion 4';
     $a_Clases = [];
     $a_Clases[] = array('clase' => 'PersonaN', 'get' => 'getPersonas');
     $a_Clases[] = array('clase' => 'PersonaAgd', 'get' => 'getPersonas');
@@ -102,18 +114,13 @@ if ($Qseleccion & 4) {
     $cPersonas = $GesPersonas->getPersonas($aWhere, $aOperador);
     foreach ($cPersonas as $oPersona) {
         $id_nom = $oPersona->getId_nom();
-        $PersonaSacd = new PersonaSacd($id_nom);
-        $sacd = $PersonaSacd->getNombreApellidos();
-        // iniciales
-        $nom = mb_substr($PersonaSacd->getNom(), 0, 1);
-        $ap1 = mb_substr($PersonaSacd->getApellido1(), 0, 1);
-        $ap2 = mb_substr($PersonaSacd->getApellido2(), 0, 1);
-        $iniciales = strtoupper($nom . $ap1 . $ap2);
-    
+        $iniciales = iniciales($id_nom);
         $a_iniciales[$id_nom] = $iniciales;
     
         $key = $id_nom . '#' . $iniciales;
 
+        $desplegable_sacd.='<OPTION VALUE="'.$key.'">'.$sacd.'('.$iniciales.')</OPTION>';
+    
         $a_sacd[$key] = $sacd ?? '?';
     }
 }
@@ -130,22 +137,17 @@ if ($Qseleccion & 8) {
     $cPersonas = $GesPersonas->getPersonas($aWhere, $aOperador);
     foreach ($cPersonas as $oPersona) {
         $id_nom = $oPersona->getId_nom();
-        $PersonaSacd = new PersonaSacd($id_nom);
-        $sacd = $PersonaSacd->getNombreApellidos();
-        // iniciales
-        $nom = mb_substr($PersonaSacd->getNom(), 0, 1);
-        $ap1 = mb_substr($PersonaSacd->getApellido1(), 0, 1);
-        $ap2 = mb_substr($PersonaSacd->getApellido2(), 0, 1);
-        $iniciales = strtoupper($nom . $ap1 . $ap2);
-    
+        $iniciales = iniciales($id_nom);
         $a_iniciales[$id_nom] = $iniciales;
     
         $key = $id_nom . '#' . $iniciales;
 
+        $desplegable_sacd.='<OPTION VALUE="'.$key.'">'.$sacd.'('.$iniciales.')</OPTION>';
+    
         $a_sacd[$key] = $sacd ?? '?';
     }
 }
-*/
+
 $desplegable_sacd.='</SELECT>';
 
 $jsondata['mensaje']='mensaje de desplegable';

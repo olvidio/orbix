@@ -225,14 +225,17 @@ $json_columns_cuadricula = json_encode($columns_cuadricula);
 $json_data_cuadricula = json_encode($data_cuadricula);
 
 $oHash = new Hash();
-$oHash->setCamposForm('color!dia!id_enc!key!observ!tend!tstart!uuid_item');
+$oHash->setCamposForm('color!dia!id_enc!key!observ!tend!tstart!uuid_item!id_sacd_inicial!id_sacd_inicial');
 $array_h = $oHash->getParamAjaxEnArray();
 
 $url_desplegable_sacd = 'apps/misas/controller/desplegable_sacd.php';
 $oHash_desplegable_sacd = new Hash();
-$oHash_desplegable_sacd->setCamposForm('id_zona!id_sacd');
-//$oHash_desplegable_sacd->setCamposForm('id_zona!id_sacd!seleccion');
-$h_desplegable_sacd = $oHash_desplegable_sacd->getParamAjax();
+$oHash_desplegable_sacd->setUrl($url_desplegable_sacd);
+//$oHash_desplegable_sacd->setCamposForm('id_zona');
+//$oHash_desplegable_sacd->setCamposForm('id_zona!id_sacd');
+$oHash_desplegable_sacd->setCamposForm('id_zona!id_sacd!seleccion');
+//$oHash_desplegable_sacd->setCamposNo('seleccion');
+$h_desplegable_sacd = $oHash_desplegable_sacd->linkSinVal();
 
 $a_iniciales = [];
 $Qseleccion = 2;

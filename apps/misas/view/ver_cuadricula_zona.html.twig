@@ -81,6 +81,7 @@
         <input type="hidden" id="row_selected" value=""/>
         <input type="hidden" id="uuid_selected" value=""/>
         <input type="hidden" id="id_enc_selected" value=""/>
+        <input id="id_sacd_inicial" value=""/>
         <p>{{ "Selección de sacd"|trans|raw }}:
 		    <input id="sacd_zona" type="checkbox" value="2" checked OnChange="prepara_select_sacd();">{{ "zona"|trans|raw }}
 		    <input id="sacd_na"type="checkbox" value="4" OnChange="prepara_select_sacd();">{{ "prelatura"|trans|raw }}
@@ -238,6 +239,7 @@
     }
 
     function prepara_select_sacd() {
+//        alert('hola2');
     	var z=$('#sacd_zona').prop('checked');
         var na=$('#sacd_na').prop('checked');
 	    var p=$('#sacd_p').prop('checked');
@@ -245,14 +247,20 @@
        	if (z) seleccion+=2;
 	    if (na) seleccion+=4;
     	if (p) seleccion+=8;
+	    var ii2=$('#id_sacd_inicial').val();
+//    	let id_sacd_seleccionado=document.getElementById('id_sacd_inicial').text;
+//        alert ('id: '+ii+' ii2:'+ii2)
 //	    alert ("a: "+na+" b "+p+" c "+z+" tots "+ seleccion);
+alert(ii2);
 
         let url_desplegable_sacd = '{{ url_desplegable_sacd }}';
 	    let id_zona = '{{ id_zona }}';
-        var posicion=key.indexOf('#');
-        var id_sacd=key.substring(0,posicion);
-        var parametros= 'id_zona = ' + id_zona + '&  id_sacd = ' + id_sacd + '{{ h_desplegable_sacd|raw }}';
-//	    var parametros= 'id_zona = ' + id_zona + '&  id_sacd = ' + id_sacd + ' & seleccion = ' + seleccion + ' & {{ h_desplegable_sacd|raw }} ';
+//        var posicion=key.indexOf('#');
+//        var id_sacd=key.substring(0,posicion);
+//        id_sacd_seleccionado='100111501';
+//        ii2='100111501';
+//        var parametros= 'id_zona= ' + id_zona + '&  id_sacd = ' + ii2 + '{{ h_desplegable_sacd|raw }}';
+	    var parametros= 'id_zona= ' + id_zona + '&  id_sacd= ' + ii2 + ' & seleccion= ' + seleccion + ' & {{ h_desplegable_sacd|raw }} ';
         request = $.ajax({
 		    url: url_desplegable_sacd,
 		    data: parametros,
@@ -294,35 +302,40 @@
         $('#observ').val(observ);
         $('#uuid_selected').val(uuid_item);
         $('#id_enc_selected').val(id_enc);
-
-//        prepara_select_sacd();
-
-    	var z=$('#sacd_zona').prop('checked');
-        var na=$('#sacd_na').prop('checked');
-	    var p=$('#sacd_p').prop('checked');
-    	var seleccion=0;
-       	if (z) seleccion+=2;
-	    if (na) seleccion+=4;
-    	if (p) seleccion+=8;
-	    alert ("a: "+na+" b "+p+" c "+z+" tot "+ seleccion);
-
-        let url_desplegable_sacd = '{{ url_desplegable_sacd }}';
-	    let id_zona = '{{ id_zona }}';
         var posicion=key.indexOf('#');
-        var id_sacd=key.substring(0,posicion);
-	    var parametros= 'id_zona = ' + id_zona + '&  id_sacd = ' + id_sacd + '{{ h_desplegable_sacd|raw }}';
-//	    var parametros= 'id_zona = ' + id_zona + '&  id_sacd = ' + id_sacd + ' & seleccion = ' + seleccion + ' & {{ h_desplegable_sacd|raw }}';
-        request = $.ajax({
-		    url: url_desplegable_sacd,
-		    data: parametros,
-		    type: 'post',
-            dataType: 'json'
-        });
+        var id_sacd_inicial=key.substring(0,posicion);
+        $('#id_sacd_inicial').val(id_sacd_inicial);
 
-        request.done(function (json) {
-                html=json.desplegable;
-                $("#desplegable").html(html);
-        });
+//alert('hola');
+        prepara_select_sacd();
+
+//    	var z=$('#sacd_zona').prop('checked');
+//        var na=$('#sacd_na').prop('checked');
+//	    var p=$('#sacd_p').prop('checked');
+//    	var seleccion=0;
+//       	if (z) seleccion+=2;
+//	    if (na) seleccion+=4;
+//    	if (p) seleccion+=8;
+//	    alert ("a: "+na+" b "+p+" c "+z+" tot "+ seleccion);
+
+//        let url_desplegable_sacd = '{{ url_desplegable_sacd }}';
+//	    let id_zona = '{{ id_zona }}';
+//        var posicion=key.indexOf('#');
+//        var id_sacd=key.substring(0,posicion);
+//        var parametros= 'id_zona = ' + id_zona +  '{{ h_desplegable_sacd|raw }}';
+//        var parametros= 'id_zona = ' + id_zona + '&  id_sacd = ' + id_sacd + '{{ h_desplegable_sacd|raw }}';
+//	    var parametros= 'id_zona = ' + id_zona + '&  id_sacd = ' + id_sacd + ' & seleccion = ' + seleccion + '{{ h_desplegable_sacd|raw }}';
+//        request = $.ajax({
+//		    url: url_desplegable_sacd,
+//		    data: parametros,
+//		    type: 'post',
+//            dataType: 'json'
+//        });
+
+//        request.done(function (json) {
+//                html=json.desplegable;
+//                $("#desplegable").html(html);
+//        });
 
         modal.show();
     }
