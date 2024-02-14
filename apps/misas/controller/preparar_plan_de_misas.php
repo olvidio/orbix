@@ -28,7 +28,7 @@ $oFormP->setFormName('frm_nuevo_periodo');
 $oFormP->setTitulo(core\strtoupper_dlb(_("seleccionar un periodo")));
 $oFormP->setPosiblesPeriodos($aOpciones);
 
-$oFormP->setBoton("<input type=button name=\"buscar\" value=\"" . _("buscar") . "\" onclick=\"fnjs_nuevo_periodo();\">");
+$oFormP->setBoton("<input type=button name=\"preparar\" value=\"" . _("preparar") . "\" onclick=\"fnjs_nuevo_periodo();\">");
 
 $oGestorZona = new GestorZona();
 $oDesplZonas = $oGestorZona->getListaZonas();
@@ -54,4 +54,4 @@ $a_campos = ['oPosicion' => $oPosicion,
 ];
 
 $oView = new core\ViewTwig('misas/controller');
-echo $oView->render('preparar_nuevo_periodo.html.twig', $a_campos);
+echo $oView->render('preparar_plan_de_misas.html.twig', $a_campos);

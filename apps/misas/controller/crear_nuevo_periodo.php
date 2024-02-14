@@ -6,6 +6,8 @@ use encargossacd\model\EncargoConstants;
 use misas\domain\repositories\EncargoDiaRepository;
 use misas\domain\entity\EncargoDia;
 use misas\domain\EncargoDiaId;
+use misas\domain\EncargoDiaTend;
+use misas\domain\EncargoDiaTstart;
 use misas\model\EncargosZona;
 use personas\model\entity\PersonaSacd;
 use web\DateTimeLocal;
@@ -33,6 +35,8 @@ $Qempiezamin = (string)filter_input(INPUT_POST, 'empiezamin');
 $Qempiezamax = (string)filter_input(INPUT_POST, 'empiezamax');
 $Qempiezamin_rep=str_replace('/','-',$Qempiezamin);
 $Qempiezamax_rep=str_replace('/','-',$Qempiezamax);
+
+echo 'HOLA: '.$Qempiezamin_rep.$Qempiezamax_rep.'<br>';
 
 $a_dias_semana_breve=[1=>'L', 2=>'M', 3=>'X', 4=>'J', 5=>'V', 6=>'S', 7=>'D'];
 
@@ -70,9 +74,10 @@ $columns_cuadricula = [
 ];
 
 //FALTA periode propera setmana i proper mes
+//Funciona solament quan es dona data d'inici i final
 
         $oInicio = new DateTimeLocal($Qempiezamin_rep);
-        $oFin = new DateTimeLocal($Qempiezamax_rep);
+        $oFin = new DateTimeLocal($Qempiezamax_rep.' 23:59:59');
         $interval = new DateInterval('P1D');
         $date_range = new DatePeriod($oInicio, $interval, $oFin);
         $a_dias_semana = EncargoConstants::OPCIONES_DIA_SEMANA;
@@ -83,6 +88,7 @@ $columns_cuadricula = [
             $dia_mes = $date->format('d');
             //$nom_dia = $a_dias_semana[$dia_week];
             $nom_dia=$a_dias_semana_breve[$dia_week].' '.$dia_mes;
+echo 'nom_dia: '.$nom_dia.'<br';
             $columns_cuadricula[] =
                 ["id" => "$num_dia", "name" => "$nom_dia", "field" => "$num_dia", "width" => 80, "cssClass" => "cell-title"];
         }
@@ -100,6 +106,7 @@ $e = 0;
 foreach ($cEncargosZona as $oEncargo) {
     $e++;
     $id_enc = $oEncargo->getId_enc();
+    $desc_enc = $oEncargo->getDesc_enc();
     $d = 0;
     $data_cols = [];
     $meta_dia = [];
@@ -107,10 +114,13 @@ foreach ($cEncargosZona as $oEncargo) {
         $d++;
         $num_dia = $date->format('Y-m-d');
         $nom_dia = $date->format('D');
+        echo 'dia: '.$num_dia.$nom_dia.'--'.$QTipoPlantilla.'<br>';
         if($QTipoPlantilla=='s')
         {
+            echo 'tipo s OK<br>';
             $dia_week = $date->format('N');
             $dia_plantilla= '2001-01-'.$dia_week;
+            echo 'dia '.$dia_plantilla.'<br>';
             $inicio_dia_plantilla = $dia_plantilla.' 00:00:00';
             $fin_dia_plantilla = $dia_plantilla.' 23:59:59';
             $aWhere = [
@@ -127,10 +137,11 @@ foreach ($cEncargosZona as $oEncargo) {
             if (count($cEncargosDia) > 1) {
                 exit(_("sólo debería haber uno"));
             }
-    
+    echo 'count: '.count($cEncargosDia).'<br>';
             if (count($cEncargosDia) === 1) {
                 $oEncargoDia = $cEncargosDia[0];
                 $id_nom = $oEncargoDia->getId_nom();
+                echo 'id_nom'.$id_nom.'<br>';
                 $hora_ini = $oEncargoDia->getTstart()->format('H:i');
                 $hora_fin = $oEncargoDia->getTend()->format('H:i');
                 $observ = $oEncargoDia->getObserv();
@@ -153,13 +164,18 @@ foreach ($cEncargosZona as $oEncargo) {
             }
 
             if (empty($cEncargoNuevoDia)) {
+echo 'empty<br>';
                 $oEncargoDia = new EncargoDia();
                 $Uuid = new EncargoDiaId(RamseyUuid::uuid4()->toString());
 //                $Uuid = new EncargoDiaId(uuid4()->toString);
                 $oEncargoDia->setUuid_item($Uuid);
                 $oEncargoDia->setId_nom($id_nom);
-//                $oEncargoDia->setTstart($hora_ini);
-//                $oEncargoDia->setTend($hora_fin);
+                $tstart = new EncargoDiaTstart($num_dia, $hora_ini);
+                $oEncargoDia->setTstart($tstart);
+            
+                $tend = new EncargoDiaTend($num_dia, $hora_fin);
+                $oEncargoDia->setTend($tend);
+            
                 if (isset($observ))
                     $oEncargoDia->setObserv($observ);
                 $oEncargoDia->setId_enc($id_enc);
@@ -167,6 +183,7 @@ foreach ($cEncargosZona as $oEncargo) {
                     $error_txt .= $EncargoDiaRepository->getErrorTxt();
                 }
             } else {
+                echo 'ple<br>';
                 // debería haber solamente uno
                 $oEncargoDia = $cEncargoNuevoDia[0];
                 $oEncargoDia->setId_nom($id_nom);
@@ -232,7 +249,7 @@ foreach ($cEncargosZona as $oEncargo) {
             $data_cols["$num_dia"] = $iniciales." ".$hora_ini;
         }
     }
-    $data_cols["encargo"] = $desc_enc;
+    $data_cols["encargo"] = $desc_enc;  
     $data_cols["meta"] = $meta_dia;
     // añado una columna 'meta' con metadatos, invisible, porque no está
     // en la definición de columns
