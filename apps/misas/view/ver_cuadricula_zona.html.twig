@@ -185,6 +185,9 @@
         var texto = '+';
         if (iniciales !== undefined) {
             texto = iniciales;
+            if (tstart !== "") {
+                texto += ' '+tstart;
+            }
             if (observ !== "") {
                 texto += '*';
             }
@@ -239,7 +242,6 @@
     }
 
     function prepara_select_sacd() {
-//        alert('hola2');
     	var z=$('#sacd_zona').prop('checked');
         var na=$('#sacd_na').prop('checked');
 	    var p=$('#sacd_p').prop('checked');
@@ -248,10 +250,6 @@
 	    if (na) seleccion+=4;
     	if (p) seleccion+=8;
 	    var ii2=$('#id_sacd_inicial').val();
-//    	let id_sacd_seleccionado=document.getElementById('id_sacd_inicial').text;
-//        alert ('id: '+ii+' ii2:'+ii2)
-//	    alert ("a: "+na+" b "+p+" c "+z+" tots "+ seleccion);
-alert(ii2);
 
         let url_desplegable_sacd = '{{ url_desplegable_sacd }}';
 	    let id_zona = '{{ id_zona }}';

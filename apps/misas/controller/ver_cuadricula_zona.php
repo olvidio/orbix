@@ -225,7 +225,7 @@ $json_columns_cuadricula = json_encode($columns_cuadricula);
 $json_data_cuadricula = json_encode($data_cuadricula);
 
 $oHash = new Hash();
-$oHash->setCamposForm('color!dia!id_enc!key!observ!tend!tstart!uuid_item!id_sacd_inicial!id_sacd_inicial');
+$oHash->setCamposForm('color!dia!id_enc!key!observ!tend!tstart!uuid_item');
 $array_h = $oHash->getParamAjaxEnArray();
 
 $url_desplegable_sacd = 'apps/misas/controller/desplegable_sacd.php';
