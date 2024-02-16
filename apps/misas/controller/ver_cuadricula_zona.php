@@ -41,6 +41,11 @@ function iniciales($id_nom) {
 
 $Qid_zona = (integer)filter_input(INPUT_POST, 'id_zona');
 $QTipoPlantilla = (string)filter_input(INPUT_POST, 'tipo_plantilla');
+$Qperiodo = (string)filter_input(INPUT_POST, 'periodo');
+$Qempiezamin = (string)filter_input(INPUT_POST, 'empiezamin');
+$Qempiezamax = (string)filter_input(INPUT_POST, 'empiezamax');
+$Qempiezamin_rep=str_replace('/','-',$Qempiezamin);
+$Qempiezamax_rep=str_replace('/','-',$Qempiezamax);
 
 $columns_cuadricula = [
     ["id" => "encargo", "name" => "Encargo", "field" => "encargo", "width" => 150, "cssClass" => "cell-title"],
@@ -106,8 +111,10 @@ switch ($QTipoPlantilla) {
     }
 //$oInicio = new DateTimeLocal('2001-01-01');
 //$oFin = new DateTimeLocal('2001-01-08');
-
-
+if ($Qempiezamin!='')
+    $oInicio = $Qempiezamin_rep;
+if ($Qempiezamax!='')
+    $oInicio = $Qempiezamax_rep;
 
 
 $data_cuadricula = [];

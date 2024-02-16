@@ -25,7 +25,7 @@ if (empty($Qid_item)) {
 }
 
 $oT_start = new NullDateTimeLocal();
-$oPlantilla->setT_start($oT_start);
+$oPlantilla->setT_start($oT_startseg);
 $oT_end = new NullDateTimeLocal();
 $oPlantilla->setT_end($oT_end);
 
