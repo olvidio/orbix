@@ -3,18 +3,23 @@
 
 // INICIO Cabecera global de URL de controlador *********************************
 use encargossacd\model\EncargoConstants;
+use actividades\model\entity\ActividadAll;
+use actividades\model\entity\GestorActividad;
+use actividadcargos\model\entity\GestorActividadCargo;
 use misas\domain\repositories\EncargoDiaRepository;
 use misas\domain\entity\EncargoDia;
 use misas\domain\EncargoDiaId;
 use misas\domain\EncargoDiaTend;
 use misas\domain\EncargoDiaTstart;
 use misas\model\EncargosZona;
+use personas\model\entity\GestorPersona;
 use personas\model\entity\PersonaSacd;
+use personas\model\entity\PersonaEx;
 use web\DateTimeLocal;
 use web\Desplegable;
 use web\Hash;
+use web\TiposActividades;
 use zonassacd\model\entity\GestorZonaSacd;
-use personas\model\entity\GestorPersona;
 use core\ValueObject;
 use Ramsey\Uuid\Uuid as RamseyUuid;
 
@@ -25,6 +30,34 @@ require_once("apps/core/global_header.inc");
 require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
+function iniciales($id_nom) {
+    if ($id_nom>0) {
+        $PersonaSacd = new PersonaSacd($id_nom);
+        $nom = $PersonaSacd->getNom();
+        $ap1 = $PersonaSacd->getApellido1();
+        $ap2 = $PersonaSacd->getApellido2();
+    } else {
+        $PersonaEx = new PersonaEx($id_nom);
+        $sacdEx = $PersonaEx->getNombreApellidos();
+        $nom = $PersonaEx->getNom();
+        $ap1 = $PersonaEx->getApellido1();
+        $ap2 = $PersonaEx->getApellido2();
+    }
+
+    // iniciales
+    $inom='';
+    if (!is_null($nom))
+        $inom = mb_substr($nom, 0, 1);
+    $iap1='';
+    if (!is_null($ap1))
+        $iap1 = mb_substr($ap1, 0, 1);
+    $iap2='';
+    if (!is_null($ap2))
+        $iap2 = mb_substr($ap2, 0, 1);
+
+    $iniciales = strtoupper($inom . $iap1 . $iap2);
+    return $iniciales;
+}
 
 $Qid_zona = (integer)filter_input(INPUT_POST, 'id_zona');
 $QTipoPlantilla = (string)filter_input(INPUT_POST, 'TipoPlantilla');
@@ -40,8 +73,6 @@ echo 'HOLA: '.$Qempiezamin_rep.$Qempiezamax_rep.'<br>';
 
 $a_dias_semana_breve=[1=>'L', 2=>'M', 3=>'X', 4=>'J', 5=>'V', 6=>'S', 7=>'D'];
 
-$a_iniciales = [];
-
 $a_Clases = [];
 
 $gesZonaSacd = new GestorZonaSacd();
@@ -50,13 +81,7 @@ $a_Id_nom = $gesZonaSacd->getSacdsZona($Qid_zona);
 foreach ($a_Id_nom as $id_nom) {
     $PersonaSacd = new PersonaSacd($id_nom);
     $sacd = $PersonaSacd->getNombreApellidos();
-    // iniciales
-    $nom = mb_substr($PersonaSacd->getNom(), 0, 1);
-    $ap1 = mb_substr($PersonaSacd->getApellido1(), 0, 1);
-    $ap2 = mb_substr($PersonaSacd->getApellido2(), 0, 1);
-    $iniciales = strtoupper($nom . $ap1 . $ap2);
-
-    $a_iniciales[$id_nom] = $iniciales;
+    $iniciales = iniciales($id_nom);
 
     $key = $id_nom . '#' . $iniciales;
 
@@ -147,6 +172,77 @@ foreach ($cEncargosZona as $oEncargo) {
                 $observ = $oEncargoDia->getObserv();
             }
 
+
+
+            //compruebo que no esté fuera
+            $aWhereAct = [];
+            $aOperadorAct = [];
+            $aWhereAct['f_ini'] = "'$num_dia'";
+            $aOperadorAct['f_ini'] = '<=';
+            $aWhereAct['f_fin'] = "'$num_dia'";
+            $aOperadorAct['f_fin'] = '>=';
+//            if (!is_true($Qpropuesta)) {
+                $aWhereAct['status'] = ActividadAll::STATUS_ACTUAL;
+//            } else {
+//                $aWhereAct['status'] = ActividadAll::STATUS_BORRABLE;
+//                $aOperadorAct['status'] = '!=';
+//            }
+            /*			
+			$aWhere = ['id_nom' => $id_nom, 'plaza' => Asistente::PLAZA_PEDIDA];
+			$aOperador = ['plaza' => '>='];
+			*/
+            $aWhere = ['id_nom' => $id_nom];
+            $aOperador = [];
+
+            $oGesActividadCargo = new GestorActividadCargo();
+            $cAsistentes = $oGesActividadCargo->getAsistenteCargoDeActividad($aWhere, $aOperador, $aWhereAct, $aOperadorAct);
+
+            foreach ($cAsistentes as $aAsistente) {
+                $id_activ = $aAsistente['id_activ'];
+echo 'actividad: '.$id_activ;
+                $propio = $aAsistente['propio'];
+                $plaza = $aAsistente['plaza'];
+                $id_cargo = empty($aAsistente['id_cargo']) ? '' : $aAsistente['id_cargo'];
+
+                // Seleccionar sólo las del periodo
+                $aWhereAct['id_activ'] = $id_activ;
+                $GesActividades = new GestorActividad();
+                $cActividades = $GesActividades->getActividades($aWhereAct, $aOperadorAct);
+                if (is_array($cActividades) && count($cActividades) == 0) continue;
+
+                $oActividad = $cActividades[0]; // sólo debería haber una.
+                $id_tipo_activ = $oActividad->getId_tipo_activ();
+                $oF_ini = $oActividad->getF_ini();
+                $oF_fin = $oActividad->getF_fin();
+                $h_ini = $oActividad->getH_ini();
+                $h_fin = $oActividad->getH_fin();
+                $dl_org = $oActividad->getDl_org();
+                $nom_activ = $oActividad->getNom_activ();
+echo ' nom: '.$nom_activ.'<br>';
+                $oTipoActividad = new TiposActividades($id_tipo_activ);
+                $ssfsv = $oTipoActividad->getSfsvText();
+
+                //para el caso de que la actividad comience antes
+                //del periodo de inicio obligo a que tome una hora de inicio
+                //en el entorno de las primeras del día (a efectos del planning
+                //ya es suficiente con la 1:16 de la madrugada)
+/*                if ($oIniPlanning > $oF_ini) {
+                    $ini = $inicio_local;
+                    $hini = "1:16";
+                } else {
+                    $ini = (string)$oF_ini->getFromLocal();
+                    $hini = (string)$h_ini;
+                }
+                $fi = (string)$oF_fin->getFromLocal();
+                $hfi = (string)$h_fin;
+*/
+
+//                if (is_true($Qpropuesta)) {
+                    $nom_curt = $oTipoActividad->getAsistentesText() . " " . $oTipoActividad->getActividadText();
+                    $nom_llarg = $nom_activ;
+echo 'nom llarg: '.$nom_llarg;
+            }
+
             $inicio_nuevo_dia = $num_dia.' 00:00:00';
             $fin_nuevo_dia = $num_dia.' 23:59:59';
             $aWhere = [
@@ -175,7 +271,7 @@ echo 'empty<br>';
             
                 $tend = new EncargoDiaTend($num_dia, $hora_fin);
                 $oEncargoDia->setTend($tend);
-            
+
                 if (isset($observ))
                     $oEncargoDia->setObserv($observ);
                 $oEncargoDia->setId_enc($id_enc);
@@ -187,12 +283,14 @@ echo 'empty<br>';
                 // debería haber solamente uno
                 $oEncargoDia = $cEncargoNuevoDia[0];
                 $oEncargoDia->setId_nom($id_nom);
-                $oEncargoDia->setTstart($hora_ini);
-                $oEncargoDia->setTend($hora_fin);
+                $tstart = new EncargoDiaTstart($num_dia, $hora_ini);
+                $oEncargoDia->setTstart($tstart);
+                $tend = new EncargoDiaTend($num_dia, $hora_fin);
+                $oEncargoDia->setTend($tend);
                 $oEncargoDia->setObserv($observ);
                 $oEncargoDia->setId_enc($id_enc);
-                if ($oEncargoDia->Guardar() === FALSE) {
-                    $error_txt = $oEncargoDia->getErrorTxt();
+                if ($EncargoDiaRepository->Guardar($oEncargoDia) === FALSE) {
+                    $error_txt .= $EncargoDiaRepository->getErrorTxt();
                 }
             }
         }
@@ -232,7 +330,7 @@ echo 'empty<br>';
             $hora_ini = $oEncargoDia->getTstart()->format('H:i');
             if ($hora_ini=='00:00')
                 $hora_ini='';
-            $iniciales = $a_iniciales[$id_nom];
+            $iniciales = iniciales($id_nom);
             $color = '';
 
             $meta_dia["$num_dia"] = [

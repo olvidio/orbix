@@ -39,10 +39,10 @@ function iniciales($id_nom) {
     if (!is_null($nom))
         $inom = mb_substr($nom, 0, 1);
     $iap1='';
-    if (!is_null($iap1))
+    if (!is_null($ap1))
         $iap1 = mb_substr($ap1, 0, 1);
     $iap2='';
-    if (!is_null($iap2))
+    if (!is_null($ap2))
         $iap2 = mb_substr($ap2, 0, 1);
 
     $iniciales = strtoupper($inom . $iap1 . $iap2);
@@ -56,7 +56,6 @@ $Qseleccion = (integer)filter_input(INPUT_POST, 'seleccion');
 //echo $Qid_zona.'#'.$Qid_sacd.'s'.$Qseleccion;
 
 //$Qseleccion = 2;
-$a_iniciales = [];
 // $Qid_sacd=100111501;
 
 $desplegable_sacd='<SELECT ID="id_sacd">';
@@ -89,7 +88,6 @@ if ($Qseleccion & 2) {
             $sacd = $PersonaEx->getNombreApellidos();
         }
         $iniciales = iniciales($id_nom);
-        $a_iniciales[$id_nom] = $iniciales;
     
         $key = $id_nom . '#' . $iniciales;
 
@@ -114,8 +112,14 @@ if ($Qseleccion & 4) {
     $cPersonas = $GesPersonas->getPersonas($aWhere, $aOperador);
     foreach ($cPersonas as $oPersona) {
         $id_nom = $oPersona->getId_nom();
+        if ($id_nom>0) {
+            $PersonaSacd = new PersonaSacd($id_nom);
+            $sacd = $PersonaSacd->getNombreApellidos();
+/*        } else {
+            $PersonaEx = new PersonaEx($id_nom);
+            $sacd = $PersonaEx->getNombreApellidos();
+*/        }
         $iniciales = iniciales($id_nom);
-        $a_iniciales[$id_nom] = $iniciales;
     
         $key = $id_nom . '#' . $iniciales;
 
@@ -137,8 +141,14 @@ if ($Qseleccion & 8) {
     $cPersonas = $GesPersonas->getPersonas($aWhere, $aOperador);
     foreach ($cPersonas as $oPersona) {
         $id_nom = $oPersona->getId_nom();
+        if ($id_nom>0) {
+            $PersonaSacd = new PersonaSacd($id_nom);
+            $sacd = $PersonaSacd->getNombreApellidos();
+        } else {
+            $PersonaEx = new PersonaEx($id_nom);
+            $sacd = $PersonaEx->getNombreApellidos();
+        }
         $iniciales = iniciales($id_nom);
-        $a_iniciales[$id_nom] = $iniciales;
     
         $key = $id_nom . '#' . $iniciales;
 
