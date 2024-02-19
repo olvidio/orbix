@@ -1,0 +1,42 @@
+<div id="div_select_zona">
+    <form id="frm_zona_ctr" name="frm_zona_ctr" action="" method="post">
+        {{ oHash.getCamposHtml|raw }}
+        <table>
+            <thead>
+            <tr>
+                <th class=titulo_inv colspan=4>{{ "Plantilla de la zona"|trans|capitalize }}:&nbsp;&nbsp;&nbsp;
+                    {{ oDesplZonas.desplegable|raw }}
+                </th>
+            </tr>
+            </thead>
+        </table>
+    </form>
+</div>
+
+<br>
+<div id="div_plantilla">
+plantilla
+</div>
+
+<script>
+alert('hola')
+    fnjs_ver_encargos_zona = function () {
+        alert('ver_encargos_zona');
+        let id_zona = $('#id_zona').val();
+        if (id_zona) {
+            let url = '{{ url_ver_encargos_zona }}';
+
+            let parametros = 'id_zona=' + id_zona + ' + '{{ h_zona|raw }}';
+
+            $.ajax({
+                url: url,
+                type: 'post',
+                data: parametros,
+                dataType: 'html'
+            })
+                .done(function (rta_txt) {
+                    $('#div_plantilla').html(rta_txt);
+                });
+        }
+    }
+</script>

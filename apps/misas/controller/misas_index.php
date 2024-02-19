@@ -22,14 +22,14 @@ if (is_array($aQuery)) {
 $goModificarPlantilla = Hash::link('apps/misas/controller/modificar_plantilla.php?' . http_build_query($aQuery));
 $goPrepararPlanDeMisas = Hash::link('apps/misas/controller/preparar_plan_de_misas.php?' . http_build_query($aQuery));
 $goModificarPlanDeMisas = Hash::link('apps/misas/controller/modificar_plan_de_misas.php?' . http_build_query($aQuery));
-$goModificarEncargosZona = Hash::link('apps/misas/controller/modificar_encargos_zona.php?' . http_build_query($aQuery));
+$goModificarEncargos = Hash::link('apps/misas/controller/modificar_encargos.php?' . http_build_query($aQuery));
 $goIniciales = Hash::link('apps/misas/controller/tabla_iniciales_sacd.php?' . http_build_query($aQuery));
 
 $a_campos = ['oPosicion' => $oPosicion,
     'goModificarPlantilla' => $goModificarPlantilla,
     'goPrepararPlanDeMisas' => $goPrepararPlanDeMisas,
     'goModificarPlanDeMisas' => $goModificarPlanDeMisas,
-    'goModificarEncargosZona' => $goModificarEncargosZona,
+    'goModificarEncargos' => $goModificarEncargos,
     'goIniciales' => $goIniciales,
 ];
 
