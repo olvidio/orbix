@@ -4,11 +4,8 @@
         <table>
             <thead>
             <tr>
-                <th class=titulo_inv colspan=4>{{ "Plantilla de la zona"|trans|capitalize }}:&nbsp;&nbsp;&nbsp;
+                <th class=titulo_inv colspan=4>{{ "Encargos de la zona"|trans|capitalize }}:&nbsp;&nbsp;&nbsp;
                     {{ oDesplZonas.desplegable|raw }}
-                </th>
-                <th class=titulo_inv colspan=4>{{ "Tipo de plantilla"|trans|capitalize }}:&nbsp;&nbsp;&nbsp;
-                    {{ oDesplTipoPlantilla.desplegable|raw }}
                 </th>
             </tr>
             </thead>
@@ -17,13 +14,12 @@
 </div>
 
 <br>
-<div id="div_plantilla">
+<div id="div_encargos">
 </div>
 
 <script>
     fnjs_ver_encargos_zona = function () {
         let id_zona = $('#id_zona').val();
-alert('zona: '+id_zona);
         let tipo_plantilla = 's';
         if (id_zona) {
             let url = '{{ url_ver_encargos_zona }}';
@@ -37,7 +33,7 @@ alert('zona: '+id_zona);
                 dataType: 'html'
             })
                 .done(function (rta_txt) {
-                    $('#div_plantilla').html(rta_txt);
+                    $('#div_encargos').html(rta_txt);
                 });
         }
     }

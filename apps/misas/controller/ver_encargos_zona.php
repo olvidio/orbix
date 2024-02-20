@@ -12,6 +12,9 @@ use web\Hash;
 use zonassacd\model\entity\GestorZonaSacd;
 use personas\model\entity\GestorPersona;
 use personas\model\entity\PersonaEx;
+use encargossacd\model\entity\GestorEncargo;
+use encargossacd\model\entity\EncargoTipo;
+use ubis\model\entity\Ubi;
 
 require_once("apps/core/global_header.inc");
 // Archivos requeridos por esta url **********************************************
@@ -41,158 +44,77 @@ function iniciales($id_nom) {
 
 $Qid_zona = (integer)filter_input(INPUT_POST, 'id_zona');
 $QTipoPlantilla = 's';
-$Qperiodo = (string)filter_input(INPUT_POST, 'periodo');
-$Qempiezamin = (string)filter_input(INPUT_POST, 'empiezamin');
-$Qempiezamax = (string)filter_input(INPUT_POST, 'empiezamax');
-$Qempiezamin_rep=str_replace('/','-',$Qempiezamin);
-$Qempiezamax_rep=str_replace('/','-',$Qempiezamax);
 
 $columns_cuadricula = [
     ["id" => "encargo", "name" => "Encargo", "field" => "encargo", "width" => 150, "cssClass" => "cell-title"],
+    ["id" => "tipo_encargo", "name" => "Tipo de encargo", "field" => "tipo_encargo", "width" => 150, "cssClass" => "cell-title"],
+    ["id" => "lugar", "name" => "Lugar", "field" => "lugar", "width" => 150, "cssClass" => "cell-title"],
+    ["id" => "descripcion_lugar", "name" => "Descripción lugar", "field" => "descripcion_lugar", "width" => 150, "cssClass" => "cell-title"],
+    ["id" => "idioma", "name" => "Idioma", "field" => "idioma", "width" => 150, "cssClass" => "cell-title"],
+    ["id" => "observaciones", "name" => "Observaciones", "field" => "observaciones", "width" => 150, "cssClass" => "cell-title"],  
 ];
 
-switch ($QTipoPlantilla) {
-    case 's':
-        $oInicio = new DateTimeLocal('2001-01-01');
-        $oFin = new DateTimeLocal('2001-01-08');
-        $interval = new DateInterval('P1D');
-        $date_range = new DatePeriod($oInicio, $interval, $oFin);
-        $a_dias_semana = EncargoConstants::OPCIONES_DIA_SEMANA;
-        foreach ($date_range as $date) {
-            $num_dia = $date->format('Y-m-d');
-            //$nom_dia = $date->format('D');
-            $dia_week = $date->format('N');
-            //$dia_mes = $date->format('d');
-            $nom_dia = $a_dias_semana[$dia_week];
-        
-            $columns_cuadricula[] =
-                ["id" => "$num_dia", "name" => "$nom_dia", "field" => "$num_dia", "width" => 80, "cssClass" => "cell-title"];
-        }
-        break;
-    case 'd':
-        $oInicio = new DateTimeLocal('2001-10-01');
-        $oFin = new DateTimeLocal('2001-10-12');
-        $interval = new DateInterval('P1D');
-        $date_range = new DatePeriod($oInicio, $interval, $oFin);
-        $a_dias_semana = EncargoConstants::OPCIONES_DIA_SEMANA;
-        foreach ($date_range as $date) {
-            $num_dia = $date->format('Y-m-d');
-            //$nom_dia = $date->format('D');
-            $dia_week = $date->format('N');
-            $dia_mes = $date->format('d');
-            if ($dia_mes<7)
-                $nom_dia = $a_dias_semana[$dia_week];
-            else
-                $nom_dia = 'domingo '.strval($dia_mes-6);
-        
-            $columns_cuadricula[] =
-                ["id" => "$num_dia", "name" => "$nom_dia", "field" => "$num_dia", "width" => 80, "cssClass" => "cell-title"];
-        }
-        break;
-    case 'm':
-        $oInicio = new DateTimeLocal('2002-04-01');
-        $oFin = new DateTimeLocal('2002-05-06');
-        $interval = new DateInterval('P1D');
-        $date_range = new DatePeriod($oInicio, $interval, $oFin);
-        $a_dias_semana = EncargoConstants::OPCIONES_DIA_SEMANA;
-        foreach ($date_range as $date) {
-            $num_dia = $date->format('Y-m-d');
-            //$nom_dia = $date->format('D');
-            $dia_week = $date->format('N');
-            $dia_mes = $date->format('d');
-//            $nom_dia = $a_dias_semana[$dia_week].' '.strval(intdiv(($dia_mes-1),7)+1);
-//            $nom_dia = $a_dias_semana[$dia_week].' '.strval(intdiv(date_diff($date, $oInicio),7)+1);
-            $nom_dia = $a_dias_semana[$dia_week].' '.intdiv(date_diff($date, $oInicio)->format('%a'),7)+1;
-            $columns_cuadricula[] =
-                ["id" => "$num_dia", "name" => "$nom_dia", "field" => "$num_dia", "width" => 80, "cssClass" => "cell-title"];
-        }
-        break;
-    
-    }
-//$oInicio = new DateTimeLocal('2001-01-01');
-//$oFin = new DateTimeLocal('2001-01-08');
-if ($Qempiezamin!='')
-    $oInicio = $Qempiezamin_rep;
-if ($Qempiezamax!='')
-    $oInicio = $Qempiezamax_rep;
+ /*   $id_enc = $oEncargo->getId_enc();
+    $idioma_enc = empty($idioma_enc) ? 'ca_ES' : $idioma_enc;
+*/
+
+
+
+
 
 
 $data_cuadricula = [];
 // encargos de misa (8010) para la zona
 $a_tipo_enc = [8010, 8011];
-$EncargosZona = new EncargosZona($Qid_zona, $oInicio, $oFin);
-$EncargosZona->setATipoEnc($a_tipo_enc);
-$cEncargosZona = $EncargosZona->getEncargos();
+
+$aWhere = array();
+$aOperador = array();
+$cond_tipo_enc = "{" . implode(', ', $a_tipo_enc) . "}";
+$aWhere['id_tipo_enc'] = $cond_tipo_enc;
+$aOperador['id_tipo_enc'] = 'ANY';
+$aWhere['id_zona'] = $Qid_zona;
+
+$aWhere['_ordre'] = 'desc_enc';
+$GesEncargos = new GestorEncargo();
+$cEncargos = $GesEncargos->getEncargos($aWhere, $aOperador);
+
 $e = 0;
-foreach ($cEncargosZona as $oEncargo) {
-    $e++;
+//foreach ($cEncargosZona as $oEncargo) {
+foreach ($cEncargos as $oEncargo) {
+        $e++;
     $id_enc = $oEncargo->getId_enc();
     $desc_enc = $oEncargo->getDesc_enc();
+    $id_ubi = $oEncargo->getId_ubi();
+    $id_tipo_enc = $oEncargo->getId_tipo_enc();
+    $desc_lugar = $oEncargo->getDesc_lugar();
+    $idioma_enc = $oEncargo->getIdioma_enc();
+    $observ = $oEncargo->getObserv();
+    if (!empty($id_ubi)) {
+        $oUbi = Ubi::newUbi($id_ubi);
+        $nombre_ubi = $oUbi->getNombre_ubi();
+    } else {
+        $nombre_ubi = '';
+    }
+
+    if (!empty($id_tipo_enc)) {
+        $oEncargoTipo = new EncargoTipo($id_tipo_enc);
+        $tipo_enc = $oEncargoTipo->getTipo_enc();
+    //$nom_tipo=$tipo['nom_tipo'];
+    } else {
+        $tipo_enc = '';
+    }
+
     $d = 0;
     $data_cols = [];
-    $meta_dia = [];
-    foreach ($date_range as $date) {
-        $d++;
-        $num_dia = $date->format('Y-m-d');
-        $nom_dia = $date->format('D');
+    $meta_dia='';
 
-        $data_cols["$num_dia"] = " -- ";
-
-        $meta_dia["$num_dia"] = [
-            "uuid_item" => "",
-            "color" => "",
-            "key" => '',
-            "tstart" => '',
-            "tend" => '',
-            "observ" => '',
-            "id_enc" => $id_enc,
-        ];
-
-        // sobreescribir los que tengo datos:
-        $inicio_dia = $num_dia.' 00:00:00';
-        $fin_dia = $num_dia.' 23:59:59';
-        $aWhere = [
-            'id_enc' => $id_enc,
-            'tstart' => "'$inicio_dia', '$fin_dia'",
-        ];
-        $aOperador = [
-            'tstart' => 'BETWEEN',
-        ];
-        $EncargoDiaRepository = new EncargoDiaRepository();
-        $cEncargosDia = $EncargoDiaRepository->getEncargoDias($aWhere,$aOperador);
-
-        if (count($cEncargosDia) > 1) {
-            exit(_("sólo debería haber uno"));
-        }
-
-        if (count($cEncargosDia) === 1) {
-            $oEncargoDia = $cEncargosDia[0];
-            $id_nom = $oEncargoDia->getId_nom();
-            $hora_ini = $oEncargoDia->getTstart()->format('H:i');
-            if ($hora_ini=='00:00')
-                $hora_ini='';
-//            $iniciales = $a_iniciales[$id_nom];
-            $iniciales = iniciales($id_nom);
-//              $iniciales = $id_nom;
-            $color = '';
-
-            $meta_dia["$num_dia"] = [
-                "uuid_item" => $oEncargoDia->getUuid_item()->value(),
-                "color" => $color,
-                "key" => "$id_nom#$iniciales",
-                "tstart" => $oEncargoDia->getTstart()->getHora(),
-                "tend" => $oEncargoDia->getTend()->getHora(),
-                "observ" => $oEncargoDia->getObserv(),
-                "id_enc" => $id_enc,
-            ];
-            // añadir '*' si tiene observaciones
-            $iniciales .= " ".$hora_ini;
-            $iniciales .= empty($oEncargoDia->getObserv())? '' : '*';
-            $data_cols["$num_dia"] = $iniciales;
-        }
-    }
     $data_cols["encargo"] = $desc_enc;
+    $data_cols["tipo_encargo"] = $tipo_enc;
     $data_cols["meta"] = $meta_dia;
+    $data_cols["lugar"] = $nombre_ubi;
+    $data_cols["idioma"] = $idioma_enc;
+    $data_cols["descripcion_lugar"] = $desc_lugar;
+    $data_cols["observaciones"] = $observ;
     // añado una columna 'meta' con metadatos, invisible, porque no está
     // en la definición de columns
     $data_cuadricula[] = $data_cols;
