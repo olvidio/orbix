@@ -54,7 +54,7 @@
         }
 
         .item-details-editor-container {
-            width: 200px;
+            width: 300px;
             height: 20px;
             border: 1px solid silver;
             background: white;
@@ -79,43 +79,33 @@
         <hr/>
         <input type="hidden" id="cell_selected" value=""/>
         <input type="hidden" id="row_selected" value=""/>
-        <input type="hidden" id="uuid_selected" value=""/>
         <input type="hidden" id="id_enc_selected" value=""/>
-        <input id="id_sacd_inicial" value=""/>
-        <p>{{ "Selección de sacd"|trans|raw }}:
-		    <input id="sacd_zona" type="checkbox" value="2" checked OnChange="prepara_select_sacd();">{{ "zona"|trans|raw }}
-		    <input id="sacd_na"type="checkbox" value="4" OnChange="prepara_select_sacd();">{{ "prelatura"|trans|raw }}
-		    <input id="sacd_p" type="checkbox" value="8" OnChange="prepara_select_sacd();">{{ "de paso"|trans|raw }}
-	    </p>
 
         <div class='item-details-label'>
-            <label for="id_sacd">Sacd:</label>
+            <label for="encargo"> {{ "Encargo"|trans|raw }}: </label>
+            <input id="encargo" type="text" class="form-control" size="20" value="">
+        </div>
+
+        <div style="margin-top: 20px;">
+            <label for="id_tipo_enc">Tipo de encargo:</label>
             <div id="desplegable">
+            <input id="desplegable_tipo_de_encargo" type="text" class="form-control" size="20" value="">
             </div>
         </div>
 
-        <div style="margin-left: 10px; margin-top: 10px;">
-            <div class="input-group clockpicker" style="float: left;">
-                <label for="tstart">{{ "Inicio"|trans|raw }}</label>
-                <input id="tstart" type="text" class="form-control" size="3" value="">
-                <span class="input-group-addon">
-                <span class="glyphicon glyphicon-time"></span>
-            </span>
-            </div>
-            <div class="input-group clockpicker" style="float:right;">
-                <label for="tend">{{ "Fin"|trans|raw }}</label>
-                <input id="tend" type="text" class="form-control" size="3" value="">
-                <span class="input-group-addon">
-                <span class="glyphicon glyphicon-time"></span>
-            </span>
-            </div>
+        <div style="margin-top: 20px;">
+            <label for="descripcion_lugar"> {{ "Descripción lugar"|trans|raw }}: </label>
+            <input id="descripcion_lugar" type="text" class="form-control" size="20" value="">
         </div>
 
-        <div style="margin-top: 40px;">
+        <div style="margin-top: 20px;">
             <label for="observ"> {{ "Observaciones"|trans|raw }}: </label>
             <input id="observ" type="text" class="form-control" size="20" value="">
         </div>
-
+        <div style="margin-top: 20px;">
+            <label for="idioma"> {{ "Idioma"|trans|raw }}: </label>
+            {{ oDesplIdiomas.desplegable()|raw }}
+        </div>
         <hr/>
         <div class='item-details-form-buttons'>
             <button data-action='save' class='slick-btn slick-btn-primary'>Save</button>
@@ -166,42 +156,16 @@
         cell = $('#cell_selected').val();
         row = $('#row_selected').val();
         var id_campo = columns[cell].field;
-        //var meta = data[row].meta[id_campo];
-        //let id_nom = meta.id_nom;
-        //let iniciales = meta.iniciales;
 
-        let key = $('#id_sacd').val();
-        const myArray = key.split("#");
-        let id_nom = myArray[0];
-        let iniciales = myArray[1];
-
-        let tstart = $('#tstart').val();
-        let tend = $('#tend').val();
+        let id_enc_selected = $('#id_enc_selected').val();
         let observ = $('#observ').val();
-        let uuid_item = $('#uuid_selected').val();
-        let id_enc = $('#id_enc_selected').val();
+        let encargo = $('#encargo').val();
+        let descripcion_lugar = $('#descripcion_lugar').val();
+        let idioma_enc = $('#idioma_enc').val();
 
-        var texto = '+';
-        if (iniciales !== undefined) {
-            texto = iniciales;
-            if (tstart !== "") {
-                texto += ' '+tstart;
-            }
-            if (observ !== "") {
-                texto += '*';
-            }
-        }
-
-        data[row].meta[id_campo].uuid_item = uuid_item;
-        data[row].meta[id_campo].key = key;
-        data[row].meta[id_campo].tstart = tstart;
-        data[row].meta[id_campo].tend = tend;
         data[row].meta[id_campo].observ = observ;
         data[row].meta[id_campo].id_enc = id_enc;
 
-        let meta = data[row].meta[id_campo];
-        // añadir el campo día
-        meta.dia = id_campo;
         // añadir el hash (se puede cambiar todo menos el encargo)
         const arr_h = { {{ array_h|raw }} };
         const mergedJSON = { ...meta, ...arr_h };
@@ -272,62 +236,26 @@
         const url = URL.createObjectURL(new Blob());
         $('#cell_selected').val(cell.cell);
         $('#row_selected').val(cell.row);
-        // recuperar los datos del meta e introducirlos en los campos
+
         let encargo = data[cell.row].encargo;
         let id_campo = columns[cell.cell].field;
-        let meta = data[cell.row].meta[id_campo];
-
-        let key = meta.key;
-        let tstart = meta.tstart;
-        let tend = meta.tend;
-        let observ = meta.observ;
-        let id_enc = meta.id_enc;
-        let uuid_item = meta.uuid_item;
-        if (uuid_item === "") {
-            uuid_item = url.substring(url.lastIndexOf('/') + 1)
-        }
+        let id_tipo_enc = data[cell.row].id_tipo_enc;
+        let tipo_encargo = data[cell.row].tipo_encargo;
+        let observ = data[cell.row].observ;
+        let id_enc = data[cell.row].id_enc;
+        let idioma = data[cell.row].idioma_enc;
+        let descripcion_lugar = data[cell.row].descripcion_lugar;
 
         $('#titulo_modal').html(encargo);
-        $('#id_sacd').val(key);
-        $('#tstart').val(tstart);
-        $('#tend').val(tend);
         $('#observ').val(observ);
-        $('#uuid_selected').val(uuid_item);
+        $('#encargo').val(encargo);
         $('#id_enc_selected').val(id_enc);
-        var posicion=key.indexOf('#');
-        var id_sacd_inicial=key.substring(0,posicion);
-        $('#id_sacd_inicial').val(id_sacd_inicial);
+        $('#desplegable_tipo_de_encargo').val(tipo_encargo);
+        $('#descripcion_lugar').val(descripcion_lugar);
+        $('#idioma_enc').val(idioma);
+//a.options[a.selectedIndex].value);        
+        //document.getElementById('sel').value = 'bike';
 
-//alert('hola');
-        prepara_select_sacd();
-
-//    	var z=$('#sacd_zona').prop('checked');
-//        var na=$('#sacd_na').prop('checked');
-//	    var p=$('#sacd_p').prop('checked');
-//    	var seleccion=0;
-//       	if (z) seleccion+=2;
-//	    if (na) seleccion+=4;
-//    	if (p) seleccion+=8;
-//	    alert ("a: "+na+" b "+p+" c "+z+" tot "+ seleccion);
-
-//        let url_desplegable_sacd = '{{ url_desplegable_sacd }}';
-//	    let id_zona = '{{ id_zona }}';
-//        var posicion=key.indexOf('#');
-//        var id_sacd=key.substring(0,posicion);
-//        var parametros= 'id_zona = ' + id_zona +  '{{ h_desplegable_sacd|raw }}';
-//        var parametros= 'id_zona = ' + id_zona + '&  id_sacd = ' + id_sacd + '{{ h_desplegable_sacd|raw }}';
-//	    var parametros= 'id_zona = ' + id_zona + '&  id_sacd = ' + id_sacd + ' & seleccion = ' + seleccion + '{{ h_desplegable_sacd|raw }}';
-//        request = $.ajax({
-//		    url: url_desplegable_sacd,
-//		    data: parametros,
-//		    type: 'post',
-//            dataType: 'json'
-//        });
-
-//        request.done(function (json) {
-//                html=json.desplegable;
-//                $("#desplegable").html(html);
-//        });
 
         modal.show();
     }

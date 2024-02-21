@@ -50,13 +50,10 @@ $columns_cuadricula = [
     ["id" => "tipo_encargo", "name" => "Tipo de encargo", "field" => "tipo_encargo", "width" => 150, "cssClass" => "cell-title"],
     ["id" => "lugar", "name" => "Lugar", "field" => "lugar", "width" => 150, "cssClass" => "cell-title"],
     ["id" => "descripcion_lugar", "name" => "Descripción lugar", "field" => "descripcion_lugar", "width" => 150, "cssClass" => "cell-title"],
-    ["id" => "idioma", "name" => "Idioma", "field" => "idioma", "width" => 150, "cssClass" => "cell-title"],
-    ["id" => "observaciones", "name" => "Observaciones", "field" => "observaciones", "width" => 150, "cssClass" => "cell-title"],  
+    ["id" => "idioma_enc", "name" => "Idioma", "field" => "idioma_enc", "width" => 150, "cssClass" => "cell-title"],
+    ["id" => "observ", "name" => "Observaciones", "field" => "observ", "width" => 150, "cssClass" => "cell-title"],  
 ];
 
- /*   $id_enc = $oEncargo->getId_enc();
-    $idioma_enc = empty($idioma_enc) ? 'ca_ES' : $idioma_enc;
-*/
 
 
 
@@ -89,6 +86,7 @@ foreach ($cEncargos as $oEncargo) {
     $desc_lugar = $oEncargo->getDesc_lugar();
     $idioma_enc = $oEncargo->getIdioma_enc();
     $observ = $oEncargo->getObserv();
+
     if (!empty($id_ubi)) {
         $oUbi = Ubi::newUbi($id_ubi);
         $nombre_ubi = $oUbi->getNombre_ubi();
@@ -109,12 +107,15 @@ foreach ($cEncargos as $oEncargo) {
     $meta_dia='';
 
     $data_cols["encargo"] = $desc_enc;
+    $data_cols["id_enc"] = $id_enc;
+    $data_cols["id_tipo_enc"] = $id_tipo_enc;
     $data_cols["tipo_encargo"] = $tipo_enc;
     $data_cols["meta"] = $meta_dia;
     $data_cols["lugar"] = $nombre_ubi;
-    $data_cols["idioma"] = $idioma_enc;
+    $data_cols["idioma_enc"] = $idioma_enc;
     $data_cols["descripcion_lugar"] = $desc_lugar;
-    $data_cols["observaciones"] = $observ;
+    $data_cols["observ"] = $observ;
+//    echo $data_cols["encargo"].$data_cols["observ"].'ZZ<br>';
     // añado una columna 'meta' con metadatos, invisible, porque no está
     // en la definición de columns
     $data_cuadricula[] = $data_cols;
@@ -126,6 +127,13 @@ $json_data_cuadricula = json_encode($data_cuadricula);
 $oHash = new Hash();
 $oHash->setCamposForm('color!dia!id_enc!key!observ!tend!tstart!uuid_item');
 $array_h = $oHash->getParamAjaxEnArray();
+
+$GesLocales = new usuarios\model\entity\GestorLocal();
+$oDesplIdiomas = $GesLocales->getListaIdiomas();
+$oDesplIdiomas->setNombre("idioma_enc");
+//$oDesplIdiomas->setOpcion_sel($idioma_enc);
+$oDesplIdiomas->setOpcion_sel($idioma_enc);
+$oDesplIdiomas->setBlanco(1);
 
 $url_desplegable_sacd = 'apps/misas/controller/desplegable_sacd.php';
 $oHash_desplegable_sacd = new Hash();
@@ -170,6 +178,7 @@ $a_campos = ['oPosicion' => $oPosicion,
     'oDesplSacd' => $oDesplSacd,
     'url_desplegable_sacd' =>$url_desplegable_sacd,
     'h_desplegable_sacd' => $h_desplegable_sacd,
+    'oDesplIdiomas' => $oDesplIdiomas,
     'id_zona' => $Qid_zona,
     'array_h' => $array_h,
 ];
