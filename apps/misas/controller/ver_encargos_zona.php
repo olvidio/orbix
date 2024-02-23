@@ -14,6 +14,9 @@ use personas\model\entity\GestorPersona;
 use personas\model\entity\PersonaEx;
 use encargossacd\model\entity\GestorEncargo;
 use encargossacd\model\entity\EncargoTipo;
+use encargossacd\model\entity\GestorEncargoTipo;
+use ubis\model\entity\GestorCentroDl;
+use ubis\model\entity\GestorCentroEllas;
 use ubis\model\entity\Ubi;
 
 require_once("apps/core/global_header.inc");
@@ -23,45 +26,35 @@ require_once("apps/core/global_header.inc");
 require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-function iniciales($id_nom) {
-    if ($id_nom>0) {
-        $PersonaSacd = new PersonaSacd($id_nom);
-        // iniciales
-        $nom = mb_substr($PersonaSacd->getNom(), 0, 1);
-        $ap1 = mb_substr($PersonaSacd->getApellido1(), 0, 1);
-        $ap2 = mb_substr($PersonaSacd->getApellido2(), 0, 1);
-    } else {
-        $PersonaEx = new PersonaEx($id_nom);
-        $sacdEx = $PersonaEx->getNombreApellidos();
-        // iniciales
-        $nom = mb_substr($PersonaEx->getNom(), 0, 1);
-        $ap1 = mb_substr($PersonaEx->getApellido1(), 0, 1);
-        $ap2 = mb_substr($PersonaEx->getApellido2(), 0, 1);
-    }
-    $iniciales = strtoupper($nom . $ap1 . $ap2);
-    return $iniciales;
-}
-
 $Qid_zona = (integer)filter_input(INPUT_POST, 'id_zona');
 $QTipoPlantilla = 's';
 
 $columns_cuadricula = [
     ["id" => "encargo", "name" => "Encargo", "field" => "encargo", "width" => 150, "cssClass" => "cell-title"],
     ["id" => "tipo_encargo", "name" => "Tipo de encargo", "field" => "tipo_encargo", "width" => 150, "cssClass" => "cell-title"],
+//    ["id" => "id_tipo_enc", "name" => "id Tipo de encargo", "field" => "id_tipo_enc", "width" => 150, "cssClass" => "cell-title"],
     ["id" => "lugar", "name" => "Lugar", "field" => "lugar", "width" => 150, "cssClass" => "cell-title"],
     ["id" => "descripcion_lugar", "name" => "Descripción lugar", "field" => "descripcion_lugar", "width" => 150, "cssClass" => "cell-title"],
-    ["id" => "idioma_enc", "name" => "Idioma", "field" => "idioma_enc", "width" => 150, "cssClass" => "cell-title"],
+    ["id" => "nom_idioma", "name" => "Idioma", "field" => "nom_idioma", "width" => 150, "cssClass" => "cell-title"],
     ["id" => "observ", "name" => "Observaciones", "field" => "observ", "width" => 150, "cssClass" => "cell-title"],  
 ];
 
-
-
-
-
-
-
 $data_cuadricula = [];
 // encargos de misa (8010) para la zona
+/*$grupo='8...';
+    $aWhere = [];
+    $aOperador = [];
+    $aWhere['id_tipo_enc'] = '^' . $grupo;
+    $aOperador['id_tipo_enc'] = '~';
+    $oGesEncargoTipo = new GestorEncargoTipo();
+    $cEncargoTipos = $oGesEncargoTipo->getEncargoTipos($aWhere, $aOperador);
+
+    // desplegable de nom_tipo
+    $posibles_encargo_tipo = [];
+    foreach ($cEncargoTipos as $oEncargoTipo) {
+*/
+
+
 $a_tipo_enc = [8010, 8011];
 
 $aWhere = array();
@@ -102,6 +95,13 @@ foreach ($cEncargos as $oEncargo) {
         $tipo_enc = '';
     }
 
+    $nom_idioma = '';
+    $GesLocales = new usuarios\model\entity\GestorLocal();
+    $cIdiomas = $GesLocales->getLocales(['idioma' => $idioma_enc]);
+    if (is_array($cIdiomas) && count($cIdiomas) > 0) {
+        $nom_idioma = $cIdiomas[0]->getNom_idioma();
+    }
+
     $d = 0;
     $data_cols = [];
     $meta_dia='';
@@ -113,6 +113,7 @@ foreach ($cEncargos as $oEncargo) {
     $data_cols["meta"] = $meta_dia;
     $data_cols["lugar"] = $nombre_ubi;
     $data_cols["idioma_enc"] = $idioma_enc;
+    $data_cols["nom_idioma"] = $nom_idioma;
     $data_cols["descripcion_lugar"] = $desc_lugar;
     $data_cols["observ"] = $observ;
 //    echo $data_cols["encargo"].$data_cols["observ"].'ZZ<br>';
@@ -124,63 +125,81 @@ foreach ($cEncargos as $oEncargo) {
 $json_columns_cuadricula = json_encode($columns_cuadricula);
 $json_data_cuadricula = json_encode($data_cuadricula);
 
-$oHash = new Hash();
-$oHash->setCamposForm('color!dia!id_enc!key!observ!tend!tstart!uuid_item');
-$array_h = $oHash->getParamAjaxEnArray();
+$url_update_encargos_zona = 'apps/misas/controller/update_encargos_zona.php';
+$oHashEncargosZona = new Hash();
+$oHashEncargosZona->setUrl($url_update_encargos_zona);
+$oHashEncargosZona->setCamposForm('id_enc!que!id_tipo_enc!id_ubi!id_zona!descripcion_lugar!encargo!idioma_enc!observ');
+$h_encargos_zona = $oHashEncargosZona->linkSinVal();
+
+$oHashBorrarEncargosZona = new Hash();
+$oHashBorrarEncargosZona->setUrl($url_update_encargos_zona);
+$oHashBorrarEncargosZona->setCamposForm('id_enc!que');
+$h_borrar_encargos_zona = $oHashBorrarEncargosZona->linkSinVal();
+
+
+
+$oGesEncargoTipo = new GestorEncargoTipo();
+
+$grupo='8...';
+//if (!empty($grupo)) {
+    $aWhere = [];
+    $aOperador = [];
+    $aWhere['id_tipo_enc'] = '^' . $grupo;
+    $aOperador['id_tipo_enc'] = '~';
+    $oGesEncargoTipo = new GestorEncargoTipo();
+    $cEncargoTipos = $oGesEncargoTipo->getEncargoTipos($aWhere, $aOperador);
+
+    // desplegable de nom_tipo
+    $posibles_encargo_tipo = [];
+    foreach ($cEncargoTipos as $oEncargoTipo) {
+        $posibles_encargo_tipo[$oEncargoTipo->getId_tipo_enc()] = $oEncargoTipo->getTipo_enc();
+//        echo $oEncargoTipo->getId_tipo_enc().'-->'.$oEncargoTipo->getTipo_enc().'<br>';
+    }
+    $oDesplNoms = new Desplegable();
+    $oDesplNoms->setNombre('id_tipo_enc');
+    $oDesplNoms->setOpciones($posibles_encargo_tipo);
+    $oDesplNoms->setOpcion_sel($id_tipo_enc);
+    $oDesplNoms->setBlanco('t');
+
+$aWhere = [];
+$aWhere['status'] = 't';
+$aWhere['id_zona'] = $Qid_zona;
+$aWhere['_ordre'] = 'nombre_ubi';
+$GesCentrosDl = new GestorCentroDl();
+$cCentrosDl = $GesCentrosDl->getCentros($aWhere);
+$GesCentrosSf = new GestorCentroEllas();
+$cCentrosSf = $GesCentrosSf->getCentros($aWhere);
+$cCentros = array_merge($cCentrosDl, $cCentrosSf);
+
+$aCentros = [];
+foreach ($cCentros as $oCentro) {
+    $id_ubi = $oCentro->getId_ubi();
+    $nombre_ubi = $oCentro->getNombre_ubi();
+
+    $aCentros[$id_ubi] = $nombre_ubi;
+}
+
+$oDesplCentros = new Desplegable();
+$oDesplCentros->setNombre('id_ubi');
+$oDesplCentros->setOpcion_sel($id_ubi);
+$oDesplCentros->setOpciones($aCentros);
+
 
 $GesLocales = new usuarios\model\entity\GestorLocal();
 $oDesplIdiomas = $GesLocales->getListaIdiomas();
 $oDesplIdiomas->setNombre("idioma_enc");
-//$oDesplIdiomas->setOpcion_sel($idioma_enc);
 $oDesplIdiomas->setOpcion_sel($idioma_enc);
 $oDesplIdiomas->setBlanco(1);
-
-$url_desplegable_sacd = 'apps/misas/controller/desplegable_sacd.php';
-$oHash_desplegable_sacd = new Hash();
-$oHash_desplegable_sacd->setUrl($url_desplegable_sacd);
-//$oHash_desplegable_sacd->setCamposForm('id_zona');
-//$oHash_desplegable_sacd->setCamposForm('id_zona!id_sacd');
-$oHash_desplegable_sacd->setCamposForm('id_zona!id_sacd!seleccion');
-//$oHash_desplegable_sacd->setCamposNo('seleccion');
-$h_desplegable_sacd = $oHash_desplegable_sacd->linkSinVal();
-
-$a_iniciales = [];
-$Qseleccion = 2;
-
-if ($Qseleccion & 2) {
-    $gesZonaSacd = new GestorZonaSacd();
-    $a_Id_nom = $gesZonaSacd->getSacdsZona($Qid_zona);
-    
-    foreach ($a_Id_nom as $id_nom) {
-        $PersonaSacd = new PersonaSacd($id_nom);
-        $sacd = $PersonaSacd->getNombreApellidos();
-        // iniciales
-        $nom = mb_substr($PersonaSacd->getNom(), 0, 1);
-        $ap1 = mb_substr($PersonaSacd->getApellido1(), 0, 1);
-        $ap2 = mb_substr($PersonaSacd->getApellido2(), 0, 1);
-        $iniciales = strtoupper($nom . $ap1 . $ap2);
-    
-        $a_iniciales[$id_nom] = $iniciales;
-    
-        $key = $id_nom . '#' . $iniciales;
-    
-        $a_sacd[$key] = $sacd ?? '?';
-    }
-}
-$oDesplSacd = new Desplegable();
-$oDesplSacd->setNombre('id_sacd');
-$oDesplSacd->setOpciones($a_sacd);
-$oDesplSacd->setBlanco(TRUE);
 
 $a_campos = ['oPosicion' => $oPosicion,
     'json_columns_cuadricula' => $json_columns_cuadricula,
     'json_data_cuadricula' => $json_data_cuadricula,
-    'oDesplSacd' => $oDesplSacd,
-    'url_desplegable_sacd' =>$url_desplegable_sacd,
-    'h_desplegable_sacd' => $h_desplegable_sacd,
+    'h_encargos_zona' => $h_encargos_zona,
+    'h_borrar_encargos_zona' => $h_borrar_encargos_zona,
+    'oDesplCentros' => $oDesplCentros,
+    'oDesplNoms' => $oDesplNoms,
     'oDesplIdiomas' => $oDesplIdiomas,
     'id_zona' => $Qid_zona,
-    'array_h' => $array_h,
 ];
 
 $oView = new core\ViewTwig('misas/controller');

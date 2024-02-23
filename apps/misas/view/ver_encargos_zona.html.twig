@@ -68,6 +68,9 @@
     </style>
 </head>
 <div style="position:relative">
+
+    <input type=button name="nuevo" value="" _("nuevo") onclick="fnjs_nuevo();">
+
     <div style="width:100%;">
         <div id="myGrid" class="slick-container" style="width:100%;height:500px;"></div>
     </div>
@@ -83,14 +86,18 @@
 
         <div class='item-details-label'>
             <label for="encargo"> {{ "Encargo"|trans|raw }}: </label>
-            <input id="encargo" type="text" class="form-control" size="20" value="">
+            <input id="encargo" type="text" class="form-control" size="20" value="">&nbsp;&nbsp;&nbsp; 
+		<span class=link onclick="fnjs_generarNomEnc(document.modifica)">{{ "generar" }}</span>
         </div>
 
         <div style="margin-top: 20px;">
             <label for="id_tipo_enc">Tipo de encargo:</label>
-            <div id="desplegable">
-            <input id="desplegable_tipo_de_encargo" type="text" class="form-control" size="20" value="">
-            </div>
+            {{ oDesplNoms.desplegable()|raw }}	
+        </div>
+
+        <div style="margin-top: 20px;">
+            <label for="id_ubi"> {{ "Lugar"|trans|raw }}: </label>
+            {{ oDesplCentros.desplegable()|raw }}
         </div>
 
         <div style="margin-top: 20px;">
@@ -109,6 +116,7 @@
         <hr/>
         <div class='item-details-form-buttons'>
             <button data-action='save' class='slick-btn slick-btn-primary'>Save</button>
+            <button data-action='eliminar_encargo' class='slick-btn slick-btn-primary'>Eliminar encargo</button>
             <button data-action='cancel' class='slick-btn slick-btn-default'>Cancel</button>
         </div>
     </div>
@@ -144,6 +152,10 @@
         commitCurrentEdit();
     });
 
+    modal.find("[data-action=eliminar_encargo]").click(function () {
+        eliminarCurrentEdit();
+    });
+
     modal.find("[data-action=cancel]").click(function () {
         cancelCurrentEdit();
     });
@@ -155,26 +167,57 @@
     function commitCurrentEdit(cell) {
         cell = $('#cell_selected').val();
         row = $('#row_selected').val();
-        var id_campo = columns[cell].field;
-
         let id_enc_selected = $('#id_enc_selected').val();
         let observ = $('#observ').val();
         let encargo = $('#encargo').val();
-        let descripcion_lugar = $('#descripcion_lugar').val();
+        let id_tipo_enc = $('#id_tipo_enc').val();
+        let id_ubi = $('#id_ubi').val();
+        let id_zona = $('#id_zona').val();
         let idioma_enc = $('#idioma_enc').val();
-
-        data[row].meta[id_campo].observ = observ;
-        data[row].meta[id_campo].id_enc = id_enc;
+        let descripcion_lugar = $('#descripcion_lugar').val();
 
         // añadir el hash (se puede cambiar todo menos el encargo)
-        const arr_h = { {{ array_h|raw }} };
-        const mergedJSON = { ...meta, ...arr_h };
+        parametros='id_enc=' + id_enc_selected + '&que=Modificar' + '&id_tipo_enc=' + id_tipo_enc + '&id_ubi=' + id_ubi + '&id_zona=' + id_zona + '&descripcion_lugar=' + descripcion_lugar + '&encargo=' + encargo + '&idioma_enc=' + idioma_enc + '&observ=' + observ + '{{ h_encargos_zona|raw }}';;
 
         // guardar cambios en DB
         var request = $.ajax({
-            url: 'apps/misas/controller/cuadricula_update.php',
+            url: 'apps/misas/controller/update_encargos_zona.php',
             method: 'POST',
-            data: mergedJSON,
+            data: parametros,
+            dataType: 'json'
+        });
+        request.done(function (json) {
+            if (json.success !== true) {
+                alert("{{ "respuesta"|trans|raw }}: " + json.mensaje);
+            } else {
+                data[row]['encargo'] = encargo;
+                nom_tipo=$('#id_tipo_enc :selected').text();
+                data[row]['tipo_encargo'] = nom_tipo;
+                data[row]['lugar'] = json.lugar;
+                data[row]['descripcion_lugar'] = descripcion_lugar;
+                var nom_idioma=$('#idioma_enc :selected').text();
+                data[row]['nom_idioma'] = nom_idioma;
+                data[row]['idioma_enc'] = idioma_enc;
+                grid.updateRow(row);
+                modal.hide();
+                reset_campos_modal();
+            }
+        });
+    }
+
+    function eliminarCurrentEdit(cell) {
+        cell = $('#cell_selected').val();
+        row = $('#row_selected').val();
+        var id_campo = columns[cell].field;
+
+        let id_enc_selected = $('#id_enc_selected').val();
+        parametros='id_enc=' + id_enc_selected + '&que=Borrar' + '{{ h_borrar_encargo_zona|raw }}';;
+
+        // guardar cambios en DB
+        var request = $.ajax({
+            url: 'apps/misas/controller/update_encargos_zona.php',
+            method: 'POST',
+            data: parametros,
             dataType: 'json'
         });
         request.done(function (json) {
@@ -182,18 +225,16 @@
                 alert("{{ "respuesta"|trans|raw }}: " + json.mensaje);
             } else {
                 // es posible que al guardar se creen datos (tstart, tend) que hay que añadir a los metadatos
-                meta_update = json.meta;
-                data[row].meta[id_campo].key = meta_update.key;
-                data[row].meta[id_campo].tstart = meta_update.tstart;
-                data[row].meta[id_campo].tend = meta_update.tend;
-                data[row].meta[id_campo].observ = meta_update.observ;
-
-                data[row][id_campo] = texto;
+ 
                 grid.updateRow(row);
                 modal.hide();
                 reset_campos_modal();
             }
         });
+    }
+
+    function fnjs_nuevo(){
+        alert('nuevo);
     }
 
     function reset_campos_modal() {
@@ -204,33 +245,6 @@
         $('#id_enc').val('');
     }
 
-    function prepara_select_sacd() {
-    	var z=$('#sacd_zona').prop('checked');
-        var na=$('#sacd_na').prop('checked');
-	    var p=$('#sacd_p').prop('checked');
-    	var seleccion=0;
-       	if (z) seleccion+=2;
-	    if (na) seleccion+=4;
-    	if (p) seleccion+=8;
-	    var ii2=$('#id_sacd_inicial').val();
-
-        let url_desplegable_sacd = '{{ url_desplegable_sacd }}';
-	    let id_zona = '{{ id_zona }}';
-	    var parametros= 'id_zona= ' + id_zona + '&  id_sacd= ' + ii2 + ' & seleccion= ' + seleccion + ' & {{ h_desplegable_sacd|raw }} ';
-        request = $.ajax({
-		    url: url_desplegable_sacd,
-		    data: parametros,
-		    type: 'post',
-            dataType: 'json'
-        });
-
-        request.done(function (json) {
-                html=json.desplegable;
-                $("#desplegable").html(html);
-        });
-
-        modal.show();
-    }
 
     function openDetails(cell) {
         const url = URL.createObjectURL(new Blob());
@@ -250,12 +264,10 @@
         $('#observ').val(observ);
         $('#encargo').val(encargo);
         $('#id_enc_selected').val(id_enc);
+        $('#id_tipo_enc').val(id_tipo_enc);
         $('#desplegable_tipo_de_encargo').val(tipo_encargo);
         $('#descripcion_lugar').val(descripcion_lugar);
         $('#idioma_enc').val(idioma);
-//a.options[a.selectedIndex].value);        
-        //document.getElementById('sel').value = 'bike';
-
 
         modal.show();
     }
@@ -299,4 +311,17 @@
             donetext: 'Correcto!'
         }
     );
+
+    fnjs_generarNomEnc=function(formulario){
+	var nom_tipo='';
+    nom_tipo=$('#id_tipo_enc :selected').text();
+	lloc=$('#id_ubi :selected').text();
+    tipus=nom_tipo;
+    if (lloc == '') {
+    	$('#encargo').val(tipus);
+    } else {
+    	$('#encargo').val(tipus+' ('+lloc+')');
+	}
+}
+
 </script>

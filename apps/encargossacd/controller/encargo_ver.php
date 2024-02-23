@@ -147,7 +147,10 @@ $oDesplGrupos->setOpcion_sel($Qgrupo);
 $oDesplGrupos->setBlanco(1);
 $oDesplGrupos->setAction("fnjs_lst_tipo_enc();");
 
+$Qgrupo='8...';
+
 if (!empty($Qgrupo)) {
+    echo 'Grupo:'.$Qgrupo.'<br>';
     $aWhere = [];
     $aOperador = [];
     $aWhere['id_tipo_enc'] = '^' . $Qgrupo;
