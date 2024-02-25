@@ -20,10 +20,10 @@ require_once("apps/core/global_header.inc");
 require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$Qid_enc = (string)filter_input(INPUT_POST, 'id_enc');
 $Qque  = (string)filter_input(INPUT_POST, 'que');
 
-if($Qque=='Modificar'){
+if (($Qque=='Modificar')||($Qque=='Nuevo')) {
+    $Qid_enc = (string)filter_input(INPUT_POST, 'id_enc');
     $Qid_tipo_enc = (string)filter_input(INPUT_POST, 'id_tipo_enc');
     $Qid_ubi = (string)filter_input(INPUT_POST, 'id_ubi');
     $Qid_zona = (string)filter_input(INPUT_POST, 'id_zona');
@@ -35,6 +35,8 @@ if($Qque=='Modificar'){
     $error_txt = '';
 
     $EncargoZona = new Encargo();
+    if ($Qid_enc=='') {
+        $Qid_enc=$EncargoZona->getId_enc();    }
     $EncargoZona->setId_enc($Qid_enc);
     $EncargoZona->setId_tipo_enc($Qid_tipo_enc);
     $EncargoZona->setsf_sv(8);
@@ -51,6 +53,7 @@ if($Qque=='Modificar'){
         $nombre_ubi = '';
     }
     $jsondata['lugar']=$nombre_ubi;
+    $jsondata['que']=$Qque;
 
     if ($EncargoZona->DBGuardar($EncargoZona) === FALSE) {
         echo 'ERROR'.$EncargoZona->getErrorTxt();
@@ -58,7 +61,26 @@ if($Qque=='Modificar'){
     }
 }
 
+/*if($Qque=='Nuevo'){
+    $Qid_zona = (string)filter_input(INPUT_POST, 'id_zona');
+    $error_txt = '';
+
+    $EncargoZona = new Encargo();
+    $Qid_enc=$EncargoZona->getId_enc();
+    $EncargoZona->setId_enc($Qid_enc);
+    $EncargoZona->setsf_sv(8);
+    $EncargoZona->setId_zona($Qid_zona);
+    $jsondata['lugar']='';
+
+    if ($EncargoZona->DBGuardar($EncargoZona) === FALSE) {
+        echo 'ERROR'.$EncargoZona->getErrorTxt();
+        $error_txt .= $EncargoZona->getErrorTxt();
+    }
+}
+*/
+
 if($Qque=='Borrar'){
+    $Qid_enc = (string)filter_input(INPUT_POST, 'id_enc');
     $EncargoZona = new Encargo();
     $EncargoZona->setId_enc($Qid_enc);
     if ($EncargoZona->DBEliminar($EncargoZona) === FALSE) {

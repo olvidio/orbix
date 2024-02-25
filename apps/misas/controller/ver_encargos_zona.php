@@ -64,7 +64,8 @@ $aWhere['id_tipo_enc'] = $cond_tipo_enc;
 $aOperador['id_tipo_enc'] = 'ANY';
 $aWhere['id_zona'] = $Qid_zona;
 
-$aWhere['_ordre'] = 'desc_enc';
+//$aWhere['_ordre'] = 'desc_enc';
+$aWhere['_ordre'] = 'observ';
 $GesEncargos = new GestorEncargo();
 $cEncargos = $GesEncargos->getEncargos($aWhere, $aOperador);
 
@@ -136,6 +137,11 @@ $oHashBorrarEncargosZona->setUrl($url_update_encargos_zona);
 $oHashBorrarEncargosZona->setCamposForm('id_enc!que');
 $h_borrar_encargos_zona = $oHashBorrarEncargosZona->linkSinVal();
 
+
+$oHashNuevoEncargosZona = new Hash();
+$oHashNuevoEncargosZona->setUrl($url_update_encargos_zona);
+$oHashNuevoEncargosZona->setCamposForm('que!id_zona');
+$h_borrar_encargos_zona = $oHashBorrarEncargosZona->linkSinVal();
 
 
 $oGesEncargoTipo = new GestorEncargoTipo();
