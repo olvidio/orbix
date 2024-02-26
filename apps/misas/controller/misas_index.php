@@ -23,7 +23,8 @@ $goModificarPlantilla = Hash::link('apps/misas/controller/modificar_plantilla.ph
 $goPrepararPlanDeMisas = Hash::link('apps/misas/controller/preparar_plan_de_misas.php?' . http_build_query($aQuery));
 $goModificarPlanDeMisas = Hash::link('apps/misas/controller/modificar_plan_de_misas.php?' . http_build_query($aQuery));
 $goModificarEncargos = Hash::link('apps/misas/controller/modificar_encargos.php?' . http_build_query($aQuery));
-$goIniciales = Hash::link('apps/misas/controller/tabla_iniciales_sacd.php?' . http_build_query($aQuery));
+$goIniciales = Hash::link('apps/misas/controller/modificar_iniciales_sacd_zona.php?' . http_build_query($aQuery));
+//$goIniciales = Hash::link('apps/misas/controller/tabla_iniciales_sacd.php?' . http_build_query($aQuery));
 
 $a_campos = ['oPosicion' => $oPosicion,
     'goModificarPlantilla' => $goModificarPlantilla,
