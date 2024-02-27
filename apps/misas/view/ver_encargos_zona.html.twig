@@ -178,10 +178,11 @@
         let idioma_enc = $('#idioma_enc').val();
         let descripcion_lugar = $('#descripcion_lugar').val();
         let que=$('#que').val();
-        if (que=='')
-            que='Modificar';
+        if (que=='') {
+            que = 'modificar';
+        }
         // añadir el hash (se puede cambiar todo menos el encargo)
-        parametros='id_enc=' + id_enc_selected + '&que=' + que + '&id_tipo_enc=' + id_tipo_enc + '&id_ubi=' + id_ubi + '&id_zona=' + id_zona + '&descripcion_lugar=' + descripcion_lugar + '&encargo=' + encargo + '&idioma_enc=' + idioma_enc + '&observ=' + observ + '{{ h_encargos_zona|raw }}';;
+        parametros='id_enc=' + id_enc_selected + '&que=' + que + '&id_tipo_enc=' + id_tipo_enc + '&id_ubi=' + id_ubi + '&id_zona=' + id_zona + '&descripcion_lugar=' + descripcion_lugar + '&encargo=' + encargo + '&idioma_enc=' + idioma_enc + '&observ=' + observ + '{{ h_encargos_zona|raw }}';
 
         // guardar cambios en DB
         var request = $.ajax({
@@ -195,7 +196,7 @@
                 alert("{{ "respuesta"|trans|raw }}: " + json.mensaje);
             } else {
                     alert('json:'+json.que)
-                if (json.que=='Nuevo'){
+                if (json.que=='nuevo'){
                     alert('json.Nuevo');
                     nom_tipo=$('#id_tipo_enc :selected').text();
                     var nom_idioma=$('#idioma_enc :selected').text();
@@ -229,7 +230,7 @@
         var id_campo = columns[cell].field;
 
         let id_enc_selected = $('#id_enc_selected').val();
-        parametros='id_enc=' + id_enc_selected + '&que=Borrar' + '{{ h_borrar_encargo_zona|raw }}';;
+        parametros='id_enc=' + id_enc_selected + '&que=borrar' + '{{ h_borrar_encargo_zona|raw }}';;
 
         // guardar cambios en DB
         var request = $.ajax({
@@ -259,7 +260,7 @@
     }
 
     function fnjs_nuevo(){
-        $('#que').val('Nuevo');
+        $('#que').val('nuevo');
         reset_campos_modal();
         $('#titulo_modal').html('nuevo encargo');
         modal.show();

@@ -102,6 +102,19 @@ class Encargo extends core\ClasePropiedades
      * @var string
      */
     private $sobserv;
+    /**
+     * Orden de Encargo
+     *
+     * @var int
+     */
+    private int $iorden=0;
+    /**
+     * Prioridad de Encargo
+     *
+     * @var int
+     */
+    private int $iprioridad=0;
+
     /* ATRIBUTOS QUE NO SON CAMPOS------------------------------------------------- */
     /**
      * oDbl de Encargo
@@ -170,6 +183,8 @@ class Encargo extends core\ClasePropiedades
         $aDades['idioma_enc'] = $this->sidioma_enc;
         $aDades['desc_lugar'] = $this->sdesc_lugar;
         $aDades['observ'] = $this->sobserv;
+        $aDades['orden'] = $this->iorden;
+        $aDades['prioridad'] = $this->iprioridad;
         array_walk($aDades, 'core\poner_null');
 
         if ($bInsert === FALSE) {
@@ -182,7 +197,9 @@ class Encargo extends core\ClasePropiedades
 					desc_enc                 = :desc_enc,
 					idioma_enc               = :idioma_enc,
 					desc_lugar               = :desc_lugar,
-					observ                   = :observ";
+					observ                   = :observ,
+                    orden                    = :orden,
+					prioridad                = :prioridad";
             if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_enc='$this->iid_enc'")) === FALSE) {
                 $sClauError = 'Encargo.update.prepare';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
@@ -201,8 +218,8 @@ class Encargo extends core\ClasePropiedades
         } else {
             // INSERT
             array_unshift($aDades, $this->iid_enc);
-            $campos = "(id_tipo_enc,sf_sv,id_ubi,id_zona,desc_enc,idioma_enc,desc_lugar,observ)";
-            $valores = "(:id_tipo_enc,:sf_sv,:id_ubi,:id_zona,:desc_enc,:idioma_enc,:desc_lugar,:observ)";
+            $campos = "(id_tipo_enc,sf_sv,id_ubi,id_zona,desc_enc,idioma_enc,desc_lugar,observ,orden,prioridad)";
+            $valores = "(:id_tipo_enc,:sf_sv,:id_ubi,:id_zona,:desc_enc,:idioma_enc,:desc_lugar,:observ,:orden,:prioridad)";
             if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === FALSE) {
                 $sClauError = 'Encargo.insertar.prepare';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
@@ -343,6 +360,8 @@ class Encargo extends core\ClasePropiedades
         if (array_key_exists('idioma_enc', $aDades)) $this->setIdioma_enc($aDades['idioma_enc']);
         if (array_key_exists('desc_lugar', $aDades)) $this->setDesc_lugar($aDades['desc_lugar']);
         if (array_key_exists('observ', $aDades)) $this->setObserv($aDades['observ']);
+        if (array_key_exists('orden', $aDades)) $this->setOrden($aDades['orden']);
+        if (array_key_exists('prioridad', $aDades)) $this->setPrioridad($aDades['prioridad']);
     }
 
     /**
@@ -613,6 +632,50 @@ class Encargo extends core\ClasePropiedades
     function setObserv($sobserv = '')
     {
         $this->sobserv = $sobserv;
+    }
+    /**
+     * Recupera el atributo iorden de Encargo
+     *
+     * @return int iorden
+     */
+    function getOrden()
+    {
+        if (!isset($this->iorden) && !$this->bLoaded) {
+            $this->DBCarregar();
+        }
+        return $this->iorden;
+    }
+
+    /**
+     * Establece el valor del atributo iorden de Encargo
+     *
+     * @param int iorden='' optional
+     */
+    function setOrden($iorden = '')
+    {
+        $this->iorden = $iorden;
+    }
+    /**
+     * Recupera el atributo iprioridad de Encargo
+     *
+     * @return int iprioridad
+     */
+    function getPrioridad()
+    {
+        if (!isset($this->iprioridad) && !$this->bLoaded) {
+            $this->DBCarregar();
+        }
+        return $this->iprioridad;
+    }
+
+    /**
+     * Establece el valor del atributo iprioridad de Encargo
+     *
+     * @param int iprioridad='' optional
+     */
+    function setPrioridad($iprioridad = '')
+    {
+        $this->iprioridad = $iprioridad;
     }
     /* MÉTODOS GET y SET D'ATRIBUTOS QUE NO SON CAMPOS -----------------------------*/
 

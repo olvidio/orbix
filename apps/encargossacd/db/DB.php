@@ -139,7 +139,9 @@ class DB extends DBAbstract
                     desc_enc character varying(150),
                     idioma_enc character varying(15),
                     desc_lugar character varying(150),
-                    observ text
+                    observ text,
+                    orden smallint,
+                    prioridad smallint
                     );";
         $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->user_orbix";
 

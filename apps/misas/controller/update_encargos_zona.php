@@ -3,14 +3,6 @@
 // INICIO Cabecera global de URL de controlador *********************************
 
 use encargossacd\model\entity\Encargo;
-use encargossacd\model\entity\EncargoTipo;
-use encargossacd\model\entity\GestorEncargoHorario;
-use misas\domain\EncargoDiaId;
-use misas\domain\EncargoDiaTend;
-use misas\domain\EncargoDiaTstart;
-use misas\domain\entity\EncargoDia;
-use misas\domain\repositories\EncargoDiaRepository;
-use web\DateTimeLocal;
 use ubis\model\entity\Ubi;
 
 require_once("apps/core/global_header.inc");
@@ -20,9 +12,10 @@ require_once("apps/core/global_header.inc");
 require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$Qque  = (string)filter_input(INPUT_POST, 'que');
+$Qque = (string)filter_input(INPUT_POST, 'que');
 
-if (($Qque=='Modificar')||($Qque=='Nuevo')) {
+$error_txt = '';
+if (($Qque === 'modificar') || ($Qque === 'nuevo')) {
     $Qid_enc = (string)filter_input(INPUT_POST, 'id_enc');
     $Qid_tipo_enc = (string)filter_input(INPUT_POST, 'id_tipo_enc');
     $Qid_ubi = (string)filter_input(INPUT_POST, 'id_ubi');
@@ -31,13 +24,14 @@ if (($Qque=='Modificar')||($Qque=='Nuevo')) {
     $Qencargo = (string)filter_input(INPUT_POST, 'encargo');
     $Qidioma_enc = (string)filter_input(INPUT_POST, 'idioma_enc');
     $Qobserv = (string)filter_input(INPUT_POST, 'observ');
-    $Qdia = (string)filter_input(INPUT_POST, 'dia');    
-    $error_txt = '';
+    $Qdia = (string)filter_input(INPUT_POST, 'dia');
 
-    $EncargoZona = new Encargo();
-    if ($Qid_enc=='') {
-        $Qid_enc=$EncargoZona->getId_enc();    }
-    $EncargoZona->setId_enc($Qid_enc);
+    if (empty($Qid_enc)) { // nuevo
+        $EncargoZona = new Encargo();
+    } else {
+        $EncargoZona = new Encargo($Qid_enc);
+        $EncargoZona->DBCarregar();
+    }
     $EncargoZona->setId_tipo_enc($Qid_tipo_enc);
     $EncargoZona->setsf_sv(8);
     $EncargoZona->setId_ubi($Qid_ubi);
@@ -52,38 +46,18 @@ if (($Qque=='Modificar')||($Qque=='Nuevo')) {
     } else {
         $nombre_ubi = '';
     }
-    $jsondata['lugar']=$nombre_ubi;
-    $jsondata['que']=$Qque;
+    $jsondata['lugar'] = $nombre_ubi;
+    $jsondata['que'] = $Qque;
 
-    if ($EncargoZona->DBGuardar($EncargoZona) === FALSE) {
-        echo 'ERROR'.$EncargoZona->getErrorTxt();
+    if ($EncargoZona->DBGuardar() === FALSE) {
         $error_txt .= $EncargoZona->getErrorTxt();
     }
 }
 
-/*if($Qque=='Nuevo'){
-    $Qid_zona = (string)filter_input(INPUT_POST, 'id_zona');
-    $error_txt = '';
-
-    $EncargoZona = new Encargo();
-    $Qid_enc=$EncargoZona->getId_enc();
-    $EncargoZona->setId_enc($Qid_enc);
-    $EncargoZona->setsf_sv(8);
-    $EncargoZona->setId_zona($Qid_zona);
-    $jsondata['lugar']='';
-
-    if ($EncargoZona->DBGuardar($EncargoZona) === FALSE) {
-        echo 'ERROR'.$EncargoZona->getErrorTxt();
-        $error_txt .= $EncargoZona->getErrorTxt();
-    }
-}
-*/
-
-if($Qque=='Borrar'){
+if ($Qque === 'borrar') {
     $Qid_enc = (string)filter_input(INPUT_POST, 'id_enc');
-    $EncargoZona = new Encargo();
-    $EncargoZona->setId_enc($Qid_enc);
-    if ($EncargoZona->DBEliminar($EncargoZona) === FALSE) {
+    $EncargoZona = new Encargo($Qid_enc);
+    if ($EncargoZona->DBEliminar() === FALSE) {
         $error_txt .= $EncargoZona->getErrorTxt();
     }
 }
