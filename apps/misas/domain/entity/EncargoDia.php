@@ -21,9 +21,33 @@ class EncargoDia
     const STATUS_PROPUESTA = 1;
     const STATUS_COMUNICADO_SACD = 2;
     const STATUS_COMUNICADO_CTR = 3;
-    const PLANTILLA_SEMANAL = 's';
-    const PLANTILLA_DOMINGOS = 'd';
-    const PLANTILLA_MENSUAL = 'm';
+    const PLANTILLA_SEMANAL_UNO = 's1';
+    const PLANTILLA_DOMINGOS_UNO = 'd1';
+    const PLANTILLA_MENSUAL_UNO = 'm1';
+    const PLANTILLA_SEMANAL_TRES = 's3';
+    const PLANTILLA_DOMINGOS_TRES = 'd3';
+    const PLANTILLA_MENSUAL_TRES = 'm3';
+    const INICIO_SEMANAL_UNO = '2001-01-01';
+    const FIN_SEMANAL_UNO = '2001-01-08';
+    const INICIO_SEMANAL_DOS = '2001-01-08';
+    const FIN_SEMANAL_DOS = '2001-01-15';
+    const INICIO_SEMANAL_TRES = '2001-01-15';
+    const FIN_SEMANAL_TRES = '2001-01-22';
+    const INTERVAL_SEMANAL = 'P7D';
+    const INICIO_DOMINGOS_UNO = '2001-10-01';
+    const FIN_DOMINGOS_UNO = '2001-10-12';
+    const INICIO_DOMINGOS_DOS = '2001-10-12';
+    const FIN_DOMINGOS_DOS = '2001-10-23';
+    const INICIO_DOMINGOS_TRES = '2001-10-23';
+    const FIN_DOMINGOS_TRES = '2001-11-03';
+    const INTERVAL_DOMINGOS = 'P11D';
+    const INICIO_MENSUAL_UNO = '2002-04-01';
+    const FIN_MENSUAL_UNO = '2002-05-06';
+    const INICIO_MENSUAL_DOS = '2002-05-06';
+    const FIN_MENSUAL_DOS = '2002-06-11';
+    const INICIO_MENSUAL_TRES = '2002-06-11';
+    const FIN_MENSUAL_TRES = '2002-07-15';
+    const INTERVAL_MENSUAL = 'P35D';
     const PLAN_DE_MISAS = 'p';
 
     /* ATRIBUTOS ----------------------------------------------------------------- */

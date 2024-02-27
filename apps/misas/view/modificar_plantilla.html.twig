@@ -26,12 +26,7 @@
         let tipo_plantilla = $('#tipo_plantilla').val();
         if (id_zona) {
             let url = '{{ url_ver_cuadricula_zona }}';
-	        var zona=$('#sacd_zona').prop('checked');
-            var na=$('#sacd_na').prop('checked');
-    	    var p=$('#sacd_p').prop('checked');
-
             let parametros = 'id_zona=' + id_zona + ' & tipo_plantilla=' + tipo_plantilla + '{{ h_zonatipo|raw }}';
-
             $.ajax({
                 url: url,
                 type: 'post',

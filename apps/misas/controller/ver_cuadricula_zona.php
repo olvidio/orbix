@@ -4,6 +4,7 @@
 // INICIO Cabecera global de URL de controlador *********************************
 use encargossacd\model\EncargoConstants;
 use misas\domain\repositories\EncargoDiaRepository;
+use misas\domain\entity\EncargoDia;
 use misas\model\EncargosZona;
 use personas\model\entity\PersonaSacd;
 use web\DateTimeLocal;
@@ -52,32 +53,48 @@ $columns_cuadricula = [
 ];
 
 switch ($QTipoPlantilla) {
-    case 's':
-        $oInicio = new DateTimeLocal('2001-01-01');
-        $oFin = new DateTimeLocal('2001-01-08');
+    case EncargoDia::PLANTILLA_SEMANAL_UNO:
+    case EncargoDia::PLANTILLA_SEMANAL_TRES:
+        $oInicio = new DateTimeLocal(EncargoDia::INICIO_SEMANAL_UNO);
+        $oFin = new DateTimeLocal(EncargoDia::FIN_SEMANAL_UNO);
         $interval = new DateInterval('P1D');
         $date_range = new DatePeriod($oInicio, $interval, $oFin);
+        if ($QTipoPlantilla == EncargoDia::PLANTILLA_SEMANAL_TRES) {
+            $oInicio2 = new DateTimeLocal(EncargoDia::INICIO_SEMANAL_DOS);
+            $oFin2 = new DateTimeLocal(EncargoDia::FIN_SEMANAL_DOS);
+            $date_range2 = new DatePeriod($oInicio2, $interval, $oFin2);
+            $oInicio3 = new DateTimeLocal(EncargoDia::INICIO_SEMANAL_TRES);
+            $oFin3 = new DateTimeLocal(EncargoDia::FIN_SEMANAL_TRES);
+            $date_range3 = new DatePeriod($oInicio3, $interval, $oFin3);
+            $interval3=New DateInterval(EncargoDia::INTERVAL_SEMANAL);
+        }
         $a_dias_semana = EncargoConstants::OPCIONES_DIA_SEMANA;
         foreach ($date_range as $date) {
             $num_dia = $date->format('Y-m-d');
-            //$nom_dia = $date->format('D');
             $dia_week = $date->format('N');
-            //$dia_mes = $date->format('d');
             $nom_dia = $a_dias_semana[$dia_week];
         
             $columns_cuadricula[] =
                 ["id" => "$num_dia", "name" => "$nom_dia", "field" => "$num_dia", "width" => 80, "cssClass" => "cell-title"];
         }
         break;
-    case 'd':
-        $oInicio = new DateTimeLocal('2001-10-01');
-        $oFin = new DateTimeLocal('2001-10-12');
+    case EncargoDia::PLANTILLA_DOMINGOS_UNO:
+    case EncargoDia::PLANTILLA_DOMINGOS_TRES:
+        $oInicio = new DateTimeLocal(EncargoDia::INICIO_DOMINGOS_UNO);
+        $oFin = new DateTimeLocal(EncargoDia::FIN_DOMINGOS_UNO);
         $interval = new DateInterval('P1D');
         $date_range = new DatePeriod($oInicio, $interval, $oFin);
+        if ($QTipoPlantilla == EncargoDia::PLANTILLA_DOMINGOS_TRES) {
+            $oInicio2 = new DateTimeLocal(EncargoDia::INICIO_DOMINGOS_DOS);
+            $oFin2 = new DateTimeLocal(EncargoDia::FIN_DOMINGOS_DOS);
+            $date_range2 = new DatePeriod($oInicio2, $interval, $oFin2);
+            $oInicio3 = new DateTimeLocal(EncargoDia::INICIO_DOMINGOS_TRES);
+            $oFin3 = new DateTimeLocal(EncargoDia::FIN_DOMINGOS_TRES);
+            $date_range3 = new DatePeriod($oInicio3, $interval, $oFin3);
+        }
         $a_dias_semana = EncargoConstants::OPCIONES_DIA_SEMANA;
         foreach ($date_range as $date) {
             $num_dia = $date->format('Y-m-d');
-            //$nom_dia = $date->format('D');
             $dia_week = $date->format('N');
             $dia_mes = $date->format('d');
             if ($dia_mes<7)
@@ -89,50 +106,61 @@ switch ($QTipoPlantilla) {
                 ["id" => "$num_dia", "name" => "$nom_dia", "field" => "$num_dia", "width" => 80, "cssClass" => "cell-title"];
         }
         break;
-    case 'm':
-        $oInicio = new DateTimeLocal('2002-04-01');
-        $oFin = new DateTimeLocal('2002-05-06');
+    case EncargoDia::PLANTILLA_MENSUAL_UNO:
+    case EncargoDia::PLANTILLA_MENSUAL_TRES:
+        $oInicio = new DateTimeLocal(EncargoDia::INICIO_MENSUAL_UNO);
+        $oFin = new DateTimeLocal(EncargoDia::FIN_MENSUAL_UNO);
         $interval = new DateInterval('P1D');
         $date_range = new DatePeriod($oInicio, $interval, $oFin);
+        if ($QTipoPlantilla == EncargoDia::PLANTILLA_MENSUAL_TRES) {
+            $oInicio2 = new DateTimeLocal(EncargoDia::INICIO_MENSUAL_DOS);
+            $oFin2 = new DateTimeLocal(EncargoDia::FIN_MENSUAL_DOS);
+            $date_range2 = new DatePeriod($oInicio2, $interval, $oFin2);
+            $oInicio3 = new DateTimeLocal(EncargoDia::INICIO_MENSUAL_TRES);
+            $oFin3 = new DateTimeLocal(EncargoDia::FIN_MENSUAL_TRES);
+            $date_range3 = new DatePeriod($oInicio3, $interval, $oFin3);
+        }
         $a_dias_semana = EncargoConstants::OPCIONES_DIA_SEMANA;
         foreach ($date_range as $date) {
             $num_dia = $date->format('Y-m-d');
-            //$nom_dia = $date->format('D');
             $dia_week = $date->format('N');
             $dia_mes = $date->format('d');
-//            $nom_dia = $a_dias_semana[$dia_week].' '.strval(intdiv(($dia_mes-1),7)+1);
-//            $nom_dia = $a_dias_semana[$dia_week].' '.strval(intdiv(date_diff($date, $oInicio),7)+1);
             $nom_dia = $a_dias_semana[$dia_week].' '.intdiv(date_diff($date, $oInicio)->format('%a'),7)+1;
+
             $columns_cuadricula[] =
                 ["id" => "$num_dia", "name" => "$nom_dia", "field" => "$num_dia", "width" => 80, "cssClass" => "cell-title"];
         }
         break;
     
     }
-//$oInicio = new DateTimeLocal('2001-01-01');
-//$oFin = new DateTimeLocal('2001-01-08');
+
 if ($Qempiezamin!='')
     $oInicio = $Qempiezamin_rep;
 if ($Qempiezamax!='')
     $oInicio = $Qempiezamax_rep;
 
-
 $data_cuadricula = [];
 // encargos de misa (8010) para la zona
-$a_tipo_enc = [8010, 8011];
+$a_tipo_enc = [8100, 8101, 8103, 8200, 8203, 8300, 8302, 8303];
 $EncargosZona = new EncargosZona($Qid_zona, $oInicio, $oFin);
 $EncargosZona->setATipoEnc($a_tipo_enc);
 $cEncargosZona = $EncargosZona->getEncargos();
-$e = 0;
+//$e = 0;
 foreach ($cEncargosZona as $oEncargo) {
-    $e++;
+//    $e++;
     $id_enc = $oEncargo->getId_enc();
     $desc_enc = $oEncargo->getDesc_enc();
-    $d = 0;
+//    $d = 0;
     $data_cols = [];
     $meta_dia = [];
+    if (($QTipoPlantilla == EncargoDia::PLANTILLA_SEMANAL_TRES) || ($QTipoPlantilla == EncargoDia::PLANTILLA_DOMINGOS_TRES) || ($QTipoPlantilla == EncargoDia::PLANTILLA_MENSUAL_TRES)) {
+        $data_cols2 = [];
+        $meta_dia2 = [];
+        $data_cols3= [];
+        $meta_dia3 = [];        
+    }
     foreach ($date_range as $date) {
-        $d++;
+//        $d++;
         $num_dia = $date->format('Y-m-d');
         $nom_dia = $date->format('D');
 
@@ -171,9 +199,7 @@ foreach ($cEncargosZona as $oEncargo) {
             $hora_ini = $oEncargoDia->getTstart()->format('H:i');
             if ($hora_ini=='00:00')
                 $hora_ini='';
-//            $iniciales = $a_iniciales[$id_nom];
             $iniciales = iniciales($id_nom);
-//              $iniciales = $id_nom;
             $color = '';
 
             $meta_dia["$num_dia"] = [
@@ -190,12 +216,139 @@ foreach ($cEncargosZona as $oEncargo) {
             $iniciales .= empty($oEncargoDia->getObserv())? '' : '*';
             $data_cols["$num_dia"] = $iniciales;
         }
+
+        if (($QTipoPlantilla == EncargoDia::PLANTILLA_SEMANAL_TRES) || ($QTipoPlantilla == EncargoDia::PLANTILLA_DOMINGOS_TRES) || ($QTipoPlantilla == EncargoDia::PLANTILLA_MENSUAL_TRES)) {
+            $data_cols2["$num_dia"] = " -- ";
+            $data_cols3["$num_dia"] = " -- ";
+
+            $meta_dia2["$num_dia"] = [
+                "uuid_item" => "",
+                "color" => "",
+                "key" => '',
+                "tstart" => '',
+                "tend" => '',
+                "observ" => '',
+                "id_enc" => $id_enc,
+            ];
+            $meta_dia3["$num_dia"] = [
+                "uuid_item" => "",
+                "color" => "",
+                "key" => '',
+                "tstart" => '',
+                "tend" => '',
+                "observ" => '',
+                "id_enc" => $id_enc,
+            ];
+            echo 'date:'.$date->format('Y-m-d').'<br>';
+            $date2=$date;
+            echo 'date2:'.$date2->format('Y-m-d').'<br>';
+            $date2 -> add($interval3);
+            echo 'date2 add:'.$date2->format('Y-m-d').'<br>';
+            $date3=$date2;
+            echo 'date3:'.$date2->format('Y-m-d').'<br>';
+            $date3 -> add($interval3);
+            echo 'date3 add:'.$date2->format('Y-m-d').'<br>';
+            $num_dia2 = $date2->format('Y-m-d');
+            $num_dia3 = $date3->format('Y-m-d');
+            echo $num_dia.'-'.$num_dia2.'-'.$num_dia3.'<br>';
+
+            // sobreescribir los que tengo datos:
+            $inicio_dia2 = $num_dia2.' 00:00:00';
+            $fin_dia2 = $num_dia2.' 23:59:59';
+            $inicio_dia3 = $num_dia3.' 00:00:00';
+            $fin_dia3 = $num_dia3.' 23:59:59';
+            $aWhere = [
+            'id_enc' => $id_enc,
+            'tstart' => "'$inicio_dia2', '$fin_dia2'",
+            ];
+            $aOperador = [
+                'tstart' => 'BETWEEN',
+            ];
+            $EncargoDiaRepository = new EncargoDiaRepository();
+            $cEncargosDia = $EncargoDiaRepository->getEncargoDias($aWhere,$aOperador);
+
+            if (count($cEncargosDia) > 1) {
+                exit(_("sólo debería haber uno"));
+            }
+
+            if (count($cEncargosDia) === 1) {
+                $oEncargoDia = $cEncargosDia[0];
+                $id_nom = $oEncargoDia->getId_nom();
+                $hora_ini = $oEncargoDia->getTstart()->format('H:i');
+                if ($hora_ini=='00:00')
+                    $hora_ini='';
+                $iniciales = iniciales($id_nom);
+                $color = '';
+
+                $meta_dia2["$num_dia"] = [
+                    "uuid_item" => $oEncargoDia->getUuid_item()->value(),
+                    "color" => $color,
+                    "key" => "$id_nom#$iniciales",
+                    "tstart" => $oEncargoDia->getTstart()->getHora(),
+                    "tend" => $oEncargoDia->getTend()->getHora(),
+                    "observ" => $oEncargoDia->getObserv(),
+                    "id_enc" => $id_enc,
+                ];
+                // añadir '*' si tiene observaciones
+                $iniciales .= " ".$hora_ini;
+                $iniciales .= empty($oEncargoDia->getObserv())? '' : '*';
+                $data_cols2["$num_dia"] = $iniciales;
+            }
+
+            $aWhere = [
+                'id_enc' => $id_enc,
+                'tstart' => "'$inicio_dia2', '$fin_dia2'",
+            ];
+            $aOperador = [
+                'tstart' => 'BETWEEN',
+            ];
+            $EncargoDiaRepository = new EncargoDiaRepository();
+            $cEncargosDia = $EncargoDiaRepository->getEncargoDias($aWhere,$aOperador);
+
+            if (count($cEncargosDia) > 1) {
+                exit(_("sólo debería haber uno"));
+            }
+
+            if (count($cEncargosDia) === 1) {
+                $oEncargoDia = $cEncargosDia[0];
+                $id_nom = $oEncargoDia->getId_nom();
+                $hora_ini = $oEncargoDia->getTstart()->format('H:i');
+                if ($hora_ini=='00:00')
+                    $hora_ini='';
+                $iniciales = iniciales($id_nom);
+                $color = '';
+
+                $meta_dia3["$num_dia"] = [
+                    "uuid_item" => $oEncargoDia->getUuid_item()->value(),
+                    "color" => $color,
+                    "key" => "$id_nom#$iniciales",
+                    "tstart" => $oEncargoDia->getTstart()->getHora(),
+                    "tend" => $oEncargoDia->getTend()->getHora(),
+                    "observ" => $oEncargoDia->getObserv(),
+                    "id_enc" => $id_enc,
+                ];
+                // añadir '*' si tiene observaciones
+                $iniciales .= " ".$hora_ini;
+                $iniciales .= empty($oEncargoDia->getObserv())? '' : '*';
+                $data_cols3["$num_dia"] = $iniciales;
+            }
+        }
     }
+
     $data_cols["encargo"] = $desc_enc;
     $data_cols["meta"] = $meta_dia;
     // añado una columna 'meta' con metadatos, invisible, porque no está
     // en la definición de columns
     $data_cuadricula[] = $data_cols;
+
+    if (($QTipoPlantilla == EncargoDia::PLANTILLA_SEMANAL_TRES) || ($QTipoPlantilla == EncargoDia::PLANTILLA_DOMINGOS_TRES) || ($QTipoPlantilla == EncargoDia::PLANTILLA_MENSUAL_TRES)) {
+        $data_cols["encargo"] = '';
+        $data_cols["meta"] = $meta_dia2;          
+        $data_cuadricula[] = $data_cols;
+        $data_cols["encargo"] = '';
+        $data_cols["meta"] = $meta_dia3;          
+        $data_cuadricula[] = $data_cols;
+    }
 }
 
 $json_columns_cuadricula = json_encode($columns_cuadricula);
