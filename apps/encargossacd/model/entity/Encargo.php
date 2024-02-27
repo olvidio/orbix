@@ -105,15 +105,15 @@ class Encargo extends core\ClasePropiedades
     /**
      * Orden de Encargo
      *
-     * @var int
+     * @var integer
      */
-    private int $iorden=0;
+    private $iorden;
     /**
      * Prioridad de Encargo
      *
-     * @var int
+     * @var integer
      */
-    private int $iprioridad=0;
+    private $iprioridad;
 
     /* ATRIBUTOS QUE NO SON CAMPOS------------------------------------------------- */
     /**
