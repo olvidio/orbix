@@ -4,7 +4,17 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f178a244-4024-41f6-8417-4831ab0bb057" name="Changes" comment="cosas jquery" />
+    <list default="true" id="f178a244-4024-41f6-8417-4831ab0bb057" name="Changes" comment="(2) orden y prioridad a encargos">
+      <change afterPath="$PROJECT_DIR$/apps/misas/controller/zona_sacd_datos_get.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/apps/misas/controller/zona_sacd_datos_put.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/misas/controller/ver_misas_zona.php" beforeDir="false" afterPath="$PROJECT_DIR$/apps/misas/controller/ver_misas_zona.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/zonassacd/controller/zona_sacd.php" beforeDir="false" afterPath="$PROJECT_DIR$/apps/zonassacd/controller/zona_sacd.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/zonassacd/controller/zona_sacd_ajax.php" beforeDir="false" afterPath="$PROJECT_DIR$/apps/zonassacd/controller/zona_sacd_ajax.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/zonassacd/db/DB.php" beforeDir="false" afterPath="$PROJECT_DIR$/apps/zonassacd/db/DB.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/zonassacd/model/entity/ZonaSacd.php" beforeDir="false" afterPath="$PROJECT_DIR$/apps/zonassacd/model/entity/ZonaSacd.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/zonassacd/view/zona_sacd.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/apps/zonassacd/view/zona_sacd.html.twig" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -36,7 +46,7 @@
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
-  <component name="PhpDebugGeneral" ignore_connections_through_unregistered_servers="false" xdebug_force_break_when_outside_project="false" />
+  <component name="PhpDebugGeneral" ignore_connections_through_unregistered_servers="false" listening_started="true" xdebug_force_break_when_outside_project="false" />
   <component name="PhpServers">
     <servers>
       <server host="dlb.tramity.local" id="633e8920-d57c-4985-aebc-4faaab44e16e" name="dlb.tramity.local" port="443" use_path_mappings="true">
@@ -90,37 +100,37 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;JavaScript Debug.TarifaUbi.php.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;codeWithMe.voiceChat.enabledByDefault&quot;: &quot;false&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/home/dani/orbix_local/orbix/apps/misas/view&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.17356321&quot;,
-    &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;editor.preferences.gutterIcons&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "JavaScript Debug.TarifaUbi.php.executor": "Run",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "codeWithMe.voiceChat.enabledByDefault": "false",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "/home/dani/orbix_local/orbix/apps/misas/controller",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "Modules",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.17356321",
+    "run.code.analysis.last.selected.profile": "pProject Default",
+    "settings.editor.selected.configurable": "editor.preferences.gutterIcons",
+    "vue.rearranger.settings.migration": "true"
   },
-  &quot;keyToStringList&quot;: {
-    &quot;DatabaseDriversLRU&quot;: [
-      &quot;postgresql&quot;
+  "keyToStringList": {
+    "DatabaseDriversLRU": [
+      "postgresql"
     ]
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/apps/misas/view" />
       <recent name="$PROJECT_DIR$/apps/misas/controller" />
+      <recent name="$PROJECT_DIR$/apps/misas/view" />
       <recent name="$PROJECT_DIR$/apps/pasarela/controller" />
       <recent name="$PROJECT_DIR$/apps/pasarela/model" />
       <recent name="$PROJECT_DIR$/apps/pasarela/view" />
@@ -249,6 +259,7 @@
       <workItem from="1703836853592" duration="420000" />
       <workItem from="1703837396634" duration="691000" />
       <workItem from="1704273914504" duration="6647000" />
+      <workItem from="1709108553960" duration="9415000" />
     </task>
     <task id="LOCAL-00013" summary="sintaxis">
       <created>1665478367349</created>
@@ -593,7 +604,7 @@
       <option name="project" value="LOCAL" />
       <updated>1679384782892</updated>
     </task>
-    <option name="localTasksCounter" value="72" />
+    <option name="localTasksCounter" value="75" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -624,9 +635,6 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_NEW_TODO" value="false" />
-    <MESSAGE value="clean types" />
-    <MESSAGE value="composer check" />
-    <MESSAGE value="añadir ficheros composer al git" />
     <MESSAGE value="composer no check" />
     <MESSAGE value="composer downgrade php 7.2" />
     <MESSAGE value="mas ficheros que no estaban en github" />
@@ -649,34 +657,13 @@
     <MESSAGE value="arreglos css" />
     <MESSAGE value="cosas ide" />
     <MESSAGE value="cosas jquery" />
-    <option name="LAST_COMMIT_MESSAGE" value="cosas jquery" />
+    <MESSAGE value="update iniciales" />
+    <MESSAGE value="añadir orden y prioridad a encargos" />
+    <MESSAGE value="(2) orden y prioridad a encargos" />
+    <option name="LAST_COMMIT_MESSAGE" value="(2) orden y prioridad a encargos" />
     <option name="GROUP_MULTIFILE_MERGE_BY_DIRECTORY" value="true" />
   </component>
   <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="php">
-          <url>file://$PROJECT_DIR$/apps/actividadtarifas/controller/tarifa_ajax.php</url>
-          <line>224</line>
-          <option name="timeStamp" value="11" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="php">
-          <url>file://$PROJECT_DIR$/apps/personas/controller/personas_select.php</url>
-          <line>2</line>
-          <option name="timeStamp" value="12" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="php">
-          <url>file://$PROJECT_DIR$/apps/misas/controller/crear_plantilla.php</url>
-          <line>145</line>
-          <option name="timeStamp" value="22" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="php">
-          <url>file://$PROJECT_DIR$/apps/casas/controller/casa_ajax.php</url>
-          <line>160</line>
-          <option name="timeStamp" value="30" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
     <watches-manager>
       <configuration name="cuadricula_update.php">
         <watch expression="$aWhere[&quot;f_ini&quot;]" />

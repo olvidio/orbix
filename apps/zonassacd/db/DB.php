@@ -118,7 +118,14 @@ class DB extends DBAbstract
                 id_item integer NOT NULL,
                 id_nom integer NOT NULL,
                 id_zona smallint NOT NULL,
-                propia boolean DEFAULT true NOT NULL
+                propia boolean DEFAULT true NOT NULL,
+                dw1 bool DEFAULT true,
+                dw2 bool DEFAULT true,
+                dw3 bool DEFAULT true,
+                dw4 bool DEFAULT true,
+                dw5 bool DEFAULT true,
+                dw6 bool DEFAULT true,
+                dw7 bool DEFAULT true
             );";
         $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->user_orbix";
 

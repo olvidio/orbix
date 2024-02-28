@@ -7,6 +7,7 @@ use web\Lista;
 use zonassacd\model\entity\GestorZonaSacd;
 use zonassacd\model\entity\Zona;
 use zonassacd\model\entity\ZonaSacd;
+use function core\is_true;
 
 /**
  * Esta página sirve ver todos los sacd con sus zonas. También los sacd de paso.
@@ -79,6 +80,8 @@ switch ($Qque) {
             $GesZonasSacd = new GestorZonaSacd();
             $cZonaSacd = $GesZonasSacd->getZonasSacds($aWhere, $aOperador);
             $a_sacds = array();
+            $a_valores = array();
+            $i = 0;
             foreach ($cZonaSacd as $oZonaSacd) {
                 $id_nom = $oZonaSacd->getId_nom();
                 $oPersona = Persona::NewPersona($id_nom);
@@ -90,24 +93,35 @@ switch ($Qque) {
                 } else {
                     $ap_nom = $oPersona->getPrefApellidosNombre();
                 }
+                $aAp1[$i] = $ap_nom; // para criterio de ordenación
 
-                $a_sacds[$ap_nom] = $id_nom;
+                $a_valores[$i]['sel'] = $id_nom;
+                $a_valores[$i][1] = $ap_nom;
+                $a_valores[$i][2] = $nombre_zona;
+                $a_valores[$i][3] = $oZonaSacd->getPropia();
+                $a_valores[$i][4] = is_true($oZonaSacd->getDw1()) ? 'x' : '-';
+                $a_valores[$i][5] = is_true($oZonaSacd->getDw2()) ? 'x' : '-';
+                $a_valores[$i][6] = is_true($oZonaSacd->getDw3()) ? 'x' : '-';
+                $a_valores[$i][7] = is_true($oZonaSacd->getDw4()) ? 'x' : '-';
+                $a_valores[$i][8] = is_true($oZonaSacd->getDw5()) ? 'x' : '-';
+                $a_valores[$i][9] = is_true($oZonaSacd->getDw6()) ? 'x' : '-';
+                $a_valores[$i][10] = is_true($oZonaSacd->getDw7()) ? 'x' : '-';
+                $i++;
             }
-            $a_valores = array();
-            if (is_array($a_sacds) && count($a_sacds) >= 1) {
-                ksort($a_sacds);
-                $i = 0;
-                foreach ($a_sacds as $ap_nom => $id_nom) {
-                    $a_valores[$i]['sel'] = $id_nom;
-                    $a_valores[$i][1] = $ap_nom;
-                    $a_valores[$i][2] = $nombre_zona;
-                    $a_valores[$i][3] = $oZonaSacd->getPropia();
-                    $i++;
-                }
-            }
+
+            $multisort_args = array();
+            $multisort_args[] = $aAp1;
+            $multisort_args[] = SORT_ASC;
+            $multisort_args[] = SORT_STRING;
+            $multisort_args[] = &$a_valores;   // finally add the source array, by reference
+            call_user_func_array("array_multisort", $multisort_args);
+
         }
-        $a_cabeceras = array(_("sacd"), _("zona"), _("propia"));
-        $a_botones = 'ninguno';
+        $a_cabeceras = [_("sacd"), _("zona"), _("propia"),
+            _("L"), _("M"), _("X"), _("J"), _("V"), _("S"), _("D"),
+        ];
+        $a_botones[] = ['txt' => _("modificar"),
+            'click' => "fnjs_modificar(this.form)"];
         /* ---------------------------------- html --------------------------------------- */
         $oTabla = new Lista();
         $oTabla->setId_tabla('zona_sacd_ajax');
@@ -180,7 +194,7 @@ switch ($Qque) {
                 $id_zona_new = $Qid_zona_new;
             }
             foreach ($QAsel as $id_nom) {
-                if ($Qacumular == 2) {
+                if ($Qacumular === 2) {
                     if (empty($id_zona_new)) {
                         $aWhere = ['id_nom' => $id_nom, 'id_zona' => $Qid_zona];
                         $GesZonasSacd = new GestorZonaSacd();

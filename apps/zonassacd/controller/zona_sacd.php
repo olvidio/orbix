@@ -36,6 +36,18 @@ $oHashSacd->setUrl($url_ajax);
 $oHashSacd->setCamposForm('que!id_zona');
 $h_sacd = $oHashSacd->linkSinVal();
 
+$oHashUrlGet = new Hash();
+$oHashUrlGet->setUrl('apps/misas/controller/zona_sacd_datos_get.php');
+$oHashUrlGet->setCamposForm('id_sacd!id_zona');
+$h_url_get = $oHashUrlGet->linkSinVal();
+
+$oHashUrlPut = new Hash();
+$oHashUrlPut->setUrl('apps/misas/controller/zona_sacd_datos_put.php');
+$oHashUrlPut->setCamposForm('id_sacd!id_zona!dw1!dw2!dw3!dw4!dw5!dw6!dw7');
+$h_url_put = $oHashUrlPut->linkSinVal();
+
+
+
 $oHash = new Hash();
 $oHash->setUrl($url_ajax);
 $a_camposHidden = ['acumular' => 0, 'que' => 'update'];
@@ -52,6 +64,8 @@ $a_campos = ['oPosicion' => $oPosicion,
     'oHash' => $oHash,
     'url_ajax' => $url_ajax,
     'h_sacd' => $h_sacd,
+    'h_url_get' => $h_url_get,
+    'h_url_put' => $h_url_put,
     'perm_des' => $perm_des,
     'oDesplZonas' => $oDesplZonas,
 ];
