@@ -7,11 +7,13 @@ use misas\domain\repositories\EncargoDiaRepository;
 use misas\domain\entity\EncargoDia;
 use misas\model\EncargosZona;
 use personas\model\entity\PersonaSacd;
+use encargossacd\model\entity\GestorEncargo;
+use encargossacd\model\entity\GestorEncargoTipo;
 use web\DateTimeLocal;
-use web\Desplegable;
+//use web\Desplegable;
 use web\Hash;
-use zonassacd\model\entity\GestorZonaSacd;
-use personas\model\entity\GestorPersona;
+//use zonassacd\model\entity\GestorZonaSacd;
+//use personas\model\entity\GestorPersona;
 use personas\model\entity\PersonaEx;
 
 require_once("apps/core/global_header.inc");
@@ -43,16 +45,23 @@ function iniciales($id_nom) {
 $Qid_zona = (integer)filter_input(INPUT_POST, 'id_zona');
 $QTipoPlantilla = (string)filter_input(INPUT_POST, 'tipo_plantilla');
 $Qperiodo = (string)filter_input(INPUT_POST, 'periodo');
+$Qorden = (string)filter_input(INPUT_POST, 'orden');
 $Qempiezamin = (string)filter_input(INPUT_POST, 'empiezamin');
 $Qempiezamax = (string)filter_input(INPUT_POST, 'empiezamax');
 $Qempiezamin_rep=str_replace('/','-',$Qempiezamin);
 $Qempiezamax_rep=str_replace('/','-',$Qempiezamax);
 
+if ($Qorden == '')
+    $Qorden='desc_enc';
+
 $columns_cuadricula = [
     ["id" => "encargo", "name" => "Encargo", "field" => "encargo", "width" => 150, "cssClass" => "cell-title"],
 ];
+$columns_sacd = [
+    ["id" => "sacerdote", "name" => "Sacerdote", "field" => "sacerdote", "width" => 150, "cssClass" => "cell-title"],
+];
 
-switch ($QTipoPlantilla) {
+switch (trim($QTipoPlantilla)) {
     case EncargoDia::PLANTILLA_SEMANAL_UNO:
     case EncargoDia::PLANTILLA_SEMANAL_TRES:
         $oInicio = new DateTimeLocal(EncargoDia::INICIO_SEMANAL_UNO);
@@ -75,6 +84,8 @@ switch ($QTipoPlantilla) {
             $nom_dia = $a_dias_semana[$dia_week];
         
             $columns_cuadricula[] =
+                ["id" => "$num_dia", "name" => "$nom_dia", "field" => "$num_dia", "width" => 80, "cssClass" => "cell-title"];
+            $columns_sacd[] =
                 ["id" => "$num_dia", "name" => "$nom_dia", "field" => "$num_dia", "width" => 80, "cssClass" => "cell-title"];
         }
         break;
@@ -104,6 +115,8 @@ switch ($QTipoPlantilla) {
         
             $columns_cuadricula[] =
                 ["id" => "$num_dia", "name" => "$nom_dia", "field" => "$num_dia", "width" => 80, "cssClass" => "cell-title"];
+            $columns_sacd[] =
+                ["id" => "$num_dia", "name" => "$nom_dia", "field" => "$num_dia", "width" => 80, "cssClass" => "cell-title"];
         }
         break;
     case EncargoDia::PLANTILLA_MENSUAL_UNO:
@@ -129,6 +142,8 @@ switch ($QTipoPlantilla) {
 
             $columns_cuadricula[] =
                 ["id" => "$num_dia", "name" => "$nom_dia", "field" => "$num_dia", "width" => 80, "cssClass" => "cell-title"];
+            $columns_sacd[] =
+                ["id" => "$num_dia", "name" => "$nom_dia", "field" => "$num_dia", "width" => 80, "cssClass" => "cell-title"];
         }
         break;
     
@@ -137,20 +152,39 @@ switch ($QTipoPlantilla) {
 if ($Qempiezamin!='')
     $oInicio = $Qempiezamin_rep;
 if ($Qempiezamax!='')
-    $oInicio = $Qempiezamax_rep;
+    $oFin = $Qempiezamax_rep;
 
 $data_cuadricula = [];
-// encargos de misa (8010) para la zona
-$a_tipo_enc = [8100, 8101, 8103, 8200, 8203, 8300, 8302, 8303];
-$EncargosZona = new EncargosZona($Qid_zona, $oInicio, $oFin);
+$data_sacd = [];
+
+
+
+
+$oGesEncargoTipo = new GestorEncargoTipo();
+
+$grupo = '8...';
+//if (!empty($grupo)) {
+$aWhere = [];
+$aOperador = [];
+$aWhere['id_tipo_enc'] = '^' . $grupo;
+$aOperador['id_tipo_enc'] = '~';
+$oGesEncargoTipo = new GestorEncargoTipo();
+$cEncargoTipos = $oGesEncargoTipo->getEncargoTipos($aWhere, $aOperador);
+
+
+$posibles_encargo_tipo = [];
+foreach ($cEncargoTipos as $oEncargoTipo) {
+    if ($oEncargoTipo->getId_tipo_enc()>=8100)
+        $a_tipo_enc[] = $oEncargoTipo->getId_tipo_enc();
+}
+
+
+$EncargosZona = new EncargosZona($Qid_zona, $oInicio, $oFin, $Qorden);
 $EncargosZona->setATipoEnc($a_tipo_enc);
 $cEncargosZona = $EncargosZona->getEncargos();
-//$e = 0;
 foreach ($cEncargosZona as $oEncargo) {
-//    $e++;
     $id_enc = $oEncargo->getId_enc();
     $desc_enc = $oEncargo->getDesc_enc();
-//    $d = 0;
     $data_cols = [];
     $meta_dia = [];
     if (($QTipoPlantilla == EncargoDia::PLANTILLA_SEMANAL_TRES) || ($QTipoPlantilla == EncargoDia::PLANTILLA_DOMINGOS_TRES) || ($QTipoPlantilla == EncargoDia::PLANTILLA_MENSUAL_TRES)) {
@@ -174,6 +208,7 @@ foreach ($cEncargosZona as $oEncargo) {
             "tend" => '',
             "observ" => '',
             "id_enc" => $id_enc,
+            "dia" => $num_dia,
         ];
 
         // sobreescribir los que tengo datos:
@@ -190,7 +225,11 @@ foreach ($cEncargosZona as $oEncargo) {
         $cEncargosDia = $EncargoDiaRepository->getEncargoDias($aWhere,$aOperador);
 
         if (count($cEncargosDia) > 1) {
-            exit(_("sólo debería haber uno"));
+            $oEncargoDia = $cEncargosDia[0];
+            $id_nom = $oEncargoDia->getId_nom();
+            $oEncargoDia = $cEncargosDia[1];
+            $id_nom = $oEncargoDia->getId_nom();
+            exit(_("sólo debería haber uno").'-'.$inicio_dia.'-'.$fin_dia.'-'.$id_enc);
         }
 
         if (count($cEncargosDia) === 1) {
@@ -210,6 +249,7 @@ foreach ($cEncargosZona as $oEncargo) {
                 "tend" => $oEncargoDia->getTend()->getHora(),
                 "observ" => $oEncargoDia->getObserv(),
                 "id_enc" => $id_enc,
+                "dia" => $num_dia,
             ];
             // añadir '*' si tiene observaciones
             $iniciales .= " ".$hora_ini;
@@ -221,6 +261,12 @@ foreach ($cEncargosZona as $oEncargo) {
             $data_cols2["$num_dia"] = " -- ";
             $data_cols3["$num_dia"] = " -- ";
 
+            $date2=new DateTime($num_dia);
+            $date2 -> add($interval3);
+            $num_dia2 = $date2->format('Y-m-d');
+            $date3=new DateTime($num_dia2);
+            $date3 -> add($interval3);
+            $num_dia3 = $date3->format('Y-m-d');
             $meta_dia2["$num_dia"] = [
                 "uuid_item" => "",
                 "color" => "",
@@ -229,6 +275,7 @@ foreach ($cEncargosZona as $oEncargo) {
                 "tend" => '',
                 "observ" => '',
                 "id_enc" => $id_enc,
+                "dia" => $num_dia2,
             ];
             $meta_dia3["$num_dia"] = [
                 "uuid_item" => "",
@@ -238,23 +285,13 @@ foreach ($cEncargosZona as $oEncargo) {
                 "tend" => '',
                 "observ" => '',
                 "id_enc" => $id_enc,
+                "dia" => $num_dia3,
             ];
-            echo 'date:'.$date->format('Y-m-d').'<br>';
-            $date2=$date;
-            echo 'date2:'.$date2->format('Y-m-d').'<br>';
-            $date2 -> add($interval3);
-            echo 'date2 add:'.$date2->format('Y-m-d').'<br>';
-            $date3=$date2;
-            echo 'date3:'.$date2->format('Y-m-d').'<br>';
-            $date3 -> add($interval3);
-            echo 'date3 add:'.$date2->format('Y-m-d').'<br>';
-            $num_dia2 = $date2->format('Y-m-d');
-            $num_dia3 = $date3->format('Y-m-d');
-            echo $num_dia.'-'.$num_dia2.'-'.$num_dia3.'<br>';
 
             // sobreescribir los que tengo datos:
             $inicio_dia2 = $num_dia2.' 00:00:00';
             $fin_dia2 = $num_dia2.' 23:59:59';
+
             $inicio_dia3 = $num_dia3.' 00:00:00';
             $fin_dia3 = $num_dia3.' 23:59:59';
             $aWhere = [
@@ -288,6 +325,7 @@ foreach ($cEncargosZona as $oEncargo) {
                     "tend" => $oEncargoDia->getTend()->getHora(),
                     "observ" => $oEncargoDia->getObserv(),
                     "id_enc" => $id_enc,
+                    "dia" => $num_dia2,
                 ];
                 // añadir '*' si tiene observaciones
                 $iniciales .= " ".$hora_ini;
@@ -297,7 +335,7 @@ foreach ($cEncargosZona as $oEncargo) {
 
             $aWhere = [
                 'id_enc' => $id_enc,
-                'tstart' => "'$inicio_dia2', '$fin_dia2'",
+                'tstart' => "'$inicio_dia3', '$fin_dia3'",
             ];
             $aOperador = [
                 'tstart' => 'BETWEEN',
@@ -326,6 +364,7 @@ foreach ($cEncargosZona as $oEncargo) {
                     "tend" => $oEncargoDia->getTend()->getHora(),
                     "observ" => $oEncargoDia->getObserv(),
                     "id_enc" => $id_enc,
+                    "dia" => $num_dia3,
                 ];
                 // añadir '*' si tiene observaciones
                 $iniciales .= " ".$hora_ini;
@@ -342,12 +381,12 @@ foreach ($cEncargosZona as $oEncargo) {
     $data_cuadricula[] = $data_cols;
 
     if (($QTipoPlantilla == EncargoDia::PLANTILLA_SEMANAL_TRES) || ($QTipoPlantilla == EncargoDia::PLANTILLA_DOMINGOS_TRES) || ($QTipoPlantilla == EncargoDia::PLANTILLA_MENSUAL_TRES)) {
-        $data_cols["encargo"] = '';
-        $data_cols["meta"] = $meta_dia2;          
-        $data_cuadricula[] = $data_cols;
-        $data_cols["encargo"] = '';
-        $data_cols["meta"] = $meta_dia3;          
-        $data_cuadricula[] = $data_cols;
+        $data_cols2["encargo"] = '';
+        $data_cols2["meta"] = $meta_dia2;     
+        $data_cuadricula[] = $data_cols2;
+        $data_cols3["encargo"] = '';
+        $data_cols3["meta"] = $meta_dia3;          
+        $data_cuadricula[] = $data_cols3;
     }
 }
 
@@ -361,44 +400,12 @@ $array_h = $oHash->getParamAjaxEnArray();
 $url_desplegable_sacd = 'apps/misas/controller/desplegable_sacd.php';
 $oHash_desplegable_sacd = new Hash();
 $oHash_desplegable_sacd->setUrl($url_desplegable_sacd);
-//$oHash_desplegable_sacd->setCamposForm('id_zona');
-//$oHash_desplegable_sacd->setCamposForm('id_zona!id_sacd');
 $oHash_desplegable_sacd->setCamposForm('id_zona!id_sacd!seleccion');
-//$oHash_desplegable_sacd->setCamposNo('seleccion');
 $h_desplegable_sacd = $oHash_desplegable_sacd->linkSinVal();
-
-$a_iniciales = [];
-$Qseleccion = 2;
-
-if ($Qseleccion & 2) {
-    $gesZonaSacd = new GestorZonaSacd();
-    $a_Id_nom = $gesZonaSacd->getSacdsZona($Qid_zona);
-    
-    foreach ($a_Id_nom as $id_nom) {
-        $PersonaSacd = new PersonaSacd($id_nom);
-        $sacd = $PersonaSacd->getNombreApellidos();
-        // iniciales
-        $nom = mb_substr($PersonaSacd->getNom(), 0, 1);
-        $ap1 = mb_substr($PersonaSacd->getApellido1(), 0, 1);
-        $ap2 = mb_substr($PersonaSacd->getApellido2(), 0, 1);
-        $iniciales = strtoupper($nom . $ap1 . $ap2);
-    
-        $a_iniciales[$id_nom] = $iniciales;
-    
-        $key = $id_nom . '#' . $iniciales;
-    
-        $a_sacd[$key] = $sacd ?? '?';
-    }
-}
-$oDesplSacd = new Desplegable();
-$oDesplSacd->setNombre('id_sacd');
-$oDesplSacd->setOpciones($a_sacd);
-$oDesplSacd->setBlanco(TRUE);
 
 $a_campos = ['oPosicion' => $oPosicion,
     'json_columns_cuadricula' => $json_columns_cuadricula,
     'json_data_cuadricula' => $json_data_cuadricula,
-    'oDesplSacd' => $oDesplSacd,
     'url_desplegable_sacd' =>$url_desplegable_sacd,
     'h_desplegable_sacd' => $h_desplegable_sacd,
     'id_zona' => $Qid_zona,

@@ -12,14 +12,16 @@ class EncargosZona
 
     protected int $id_zona;
     protected array $a_tipo_enc;
+    protected $orden;
     private DateTimeLocal $inicio;
     private DateTimeLocal $fin;
 
-    public function __construct($id_zona, $inicio, $fin)
+    public function __construct($id_zona, $inicio, $fin, $orden)
     {
         $this->id_zona = $id_zona;
         $this->inicio = $inicio ?? DateTimeLocal::createFromLocal('1/1/2000');
         $this->fin = $fin ?? DateTimeLocal::createFromLocal('8/1/2000');
+        $this->orden = $orden;
     }
 
     public function cuadriculaSemana()
@@ -93,7 +95,8 @@ class EncargosZona
         $aWhere['id_tipo_enc'] = $cond_tipo_enc;
         $aOperador['id_tipo_enc'] = 'ANY';
         $aWhere['id_zona'] = $this->id_zona;
-        $aWhere['_ordre'] = 'desc_enc';
+//        $aWhere['_ordre'] = 'desc_enc';
+        $aWhere['_ordre'] = $this->orden;
 
         $GestorEncargo = new GestorEncargo();
         $cEncargos = $GestorEncargo->getEncargos($aWhere, $aOperador);

@@ -10,6 +10,9 @@
                 <th class=titulo_inv colspan=4>{{ "Tipo de plantilla"|trans|capitalize }}:&nbsp;&nbsp;&nbsp;
                     {{ oDesplTipoPlantilla.desplegable|raw }}
                 </th>
+                <th class=titulo_inv colspan=4>{{ "Orden"|trans|capitalize }}:&nbsp;&nbsp;&nbsp;
+                    {{ oDesplOrden.desplegable|raw }}
+                </th>
             </tr>
             </thead>
         </table>
@@ -24,9 +27,10 @@
     fnjs_ver_plantilla_zona = function () {
         let id_zona = $('#id_zona').val();
         let tipo_plantilla = $('#tipo_plantilla').val();
+        let orden = $('#orden').val();
         if (id_zona) {
             let url = '{{ url_ver_cuadricula_zona }}';
-            let parametros = 'id_zona=' + id_zona + ' & tipo_plantilla=' + tipo_plantilla + '{{ h_zonatipo|raw }}';
+            let parametros = 'id_zona=' + id_zona + ' & tipo_plantilla=' + tipo_plantilla + ' & orden=' + orden + '{{ h_zonatipo|raw }}';
             $.ajax({
                 url: url,
                 type: 'post',
