@@ -178,7 +178,7 @@
         if (rta == 1) {
             var form = $(formulario).attr('id');
             /* selecciono los elementos input del id=formulario */
-            var selector = $('#' + form + ' div.slick-cell > input');
+            var selector=$('#'+form+' input');
 
             $(selector).each(function (i, item) {
                 if ($(item).prop('checked') == true) {
@@ -191,15 +191,18 @@
 
     var modal = $(".item-details-form");
 
-    modal.keydown(function (e) {
-        if (e.which == Slick.keyCode.ENTER) {
-            commitCurrentEdit();
-            e.stopPropagation();
-            e.preventDefault();
-        } else if (e.which == Slick.keyCode.ESCAPE) {
-            cancelCurrentEdit();
-            e.stopPropagation();
-            e.preventDefault();
+    $(document).keydown(function (e) {
+        debugger;
+        if(modal.css('display') != 'none') {
+            if (e.which == Slick.keyCode.ENTER) {
+                commitCurrentEdit();
+                e.stopPropagation();
+                e.preventDefault();
+            } else if (e.which == Slick.keyCode.ESCAPE) {
+                cancelCurrentEdit();
+                e.stopPropagation();
+                e.preventDefault();
+            }
         }
     });
 
