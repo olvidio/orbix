@@ -69,7 +69,10 @@
 </head>
 <div style="position:relative">
     <div style="width:100%;">
-        <div id="myGrid" class="slick-container" style="width:100%;height:500px;"></div>
+        <div id="myGrid" class="slick-container" style="width:100%;height:300px;"></div>
+    </div>
+    <div style="width:100%;">
+        <div id="Grid_sacd" class="slick-container" style="width:100%;height:300px;"></div>
     </div>
 
 
@@ -328,9 +331,13 @@
         autoEdit: false
     };
 
+    var grid_sacd;
+    var data_sacd = {{ json_data_sacd|raw }};
+    var columns_sacd = {{ json_columns_sacd|raw }};
 
     $(function () {
         grid = new Slick.Grid("#myGrid", data, columns, options);
+        grid_sacd = new Slick.Grid("#Grid_sacd", data_sacd, columns_sacd, options);
 
         grid.onClick.subscribe(function (e) {
             var cell = grid.getCellFromEvent(e);

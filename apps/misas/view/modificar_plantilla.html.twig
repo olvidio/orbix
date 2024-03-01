@@ -30,7 +30,7 @@
         let orden = $('#orden').val();
         if (id_zona) {
             let url = '{{ url_ver_cuadricula_zona }}';
-            let parametros = 'id_zona=' + id_zona + ' & tipo_plantilla=' + tipo_plantilla + ' & orden=' + orden + '{{ h_zonatipo|raw }}';
+            let parametros = 'id_zona=' + id_zona + '&tipo_plantilla=' + tipo_plantilla + '&orden=' + orden + '{{ h_zonatipo|raw }}';
             $.ajax({
                 url: url,
                 type: 'post',

@@ -12,7 +12,7 @@ class EncargosZona
 
     protected int $id_zona;
     protected array $a_tipo_enc;
-    protected $orden;
+    protected string $orden;
     private DateTimeLocal $inicio;
     private DateTimeLocal $fin;
 
