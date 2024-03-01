@@ -27,7 +27,7 @@ class consumirColaMail
 
     public function seleccionar($limit)
     {
-        $aWhere = ['sended' => 'x', 'limit' => $limit];
+        $aWhere = ['sended' => 'x', '_limit' => $limit];
         $aOperador['sended'] = 'IS NULL';
         $cMails = $this->ColaMailRepository->getColaMails($aWhere, $aOperador);
 
