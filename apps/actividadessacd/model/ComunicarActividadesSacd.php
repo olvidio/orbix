@@ -251,6 +251,9 @@ class ComunicarActividadesSacd
         $cUsuarios = $gesUsuarios->getUsuarios(['usuario' => $jefe_calendario]);
         $oUsuarioJefe = $cUsuarios[0];
         $e_mail_jefe = $oUsuarioJefe->getEmail();
+        if (empty($e_mail_jefe)) {
+            exit(_("No hay un mail (jefe calendario) para enviar los errores. No se procesan los mails."));
+        }
 
         $i = 0;
         foreach ($array_actividades as $id_nom => $vector) {
@@ -352,7 +355,7 @@ class ComunicarActividadesSacd
             //Dirección de respuesta
             $headers .= "Reply-To: no-Reply@moneders.net\r\n";
             //Ruta del mensaje desde origen a destino
-            $headers .= "Return-path: aquinate@moneders.net\r\n";
+            $headers .= "Return-path: dani@moneders.net\r\n";
 
             $cuerpo = "<html lang=\"$idioma\"><body>$body</body></html>";
             //echo "($email<br>$asunto<br>$cuerpo<br>$headers)<br>";

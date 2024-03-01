@@ -20,9 +20,7 @@ class consumirColaMail
         $ahora = new DateTimeLocal();
         $ahora->sub(new DateInterval('P1M'));
         $date_iso = $ahora->getIso();
-        $aWhere['sended'] = "'$date_iso'";
-        $aOperador['sended'] = '<';
-        $this->ColaMailRepository->deleteColaMails($aWhere,$aOperador);
+        $this->ColaMailRepository->deleteColaMails($date_iso);
     }
 
     public function seleccionar($limit)
@@ -46,7 +44,7 @@ class consumirColaMail
             $message = $oMail->getMessage();
             $headers = $oMail->getHeaders();
             // para pruebas
-            $mail_to = 'dani@moneders.net';
+            $mail_to = 'danixxx@moneders.net';
             mail($mail_to, $subject, $message, $headers);
             $oMail->setSended($ahora);
             $this->ColaMailRepository->Guardar($oMail);
