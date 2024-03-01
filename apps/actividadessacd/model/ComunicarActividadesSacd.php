@@ -299,15 +299,15 @@ class ComunicarActividadesSacd
             $body .= " <!-- Actividades -->
                 <table  style='border: 1px solid #000; border-collapse: collapse; margin: 0; margin-bottom: 1em; padding: 6px;'>
                     <tr>
-                        <td style='text-align: center; font-weight: bold; padding: 1rem; outline: 2px solid black;'>$f_ini</td>
-                        <td style='text-align: center; font-weight: bold; padding: 1rem; outline: 2px solid black;'>$f_fin</td>
-                        <td style='text-align: center; font-weight: bold; padding: 1rem; outline: 2px solid black;'>$nombre_ubi</td>
-                        <td style='text-align: center; font-weight: bold; padding: 1rem; outline: 2px solid black;'>$sfsv</td>
-                        <td style='text-align: center; font-weight: bold; padding: 1rem; outline: 2px solid black;'>$actividad</td>
-                        <td style='text-align: center; font-weight: bold; padding: 1rem; outline: 2px solid black;'>$asistentes</td>
-                        <td style='text-align: center; font-weight: bold; padding: 1rem; outline: 2px solid black;'>$encargado</td>
-                        <td style='text-align: center; font-weight: bold; padding: 1rem; outline: 2px solid black;'>$observ</td>
-                        <td style='text-align: center; font-weight: bold; padding: 1rem; outline: 2px solid black;'>$nom_tipo</td>
+                        <td style='text-align: center; font-weight: bold; padding: 1rem; outline: 1px solid black;'>$f_ini</td>
+                        <td style='text-align: center; font-weight: bold; padding: 1rem; outline: 1px solid black;'>$f_fin</td>
+                        <td style='text-align: center; font-weight: bold; padding: 1rem; outline: 1px solid black;'>$nombre_ubi</td>
+                        <td style='text-align: center; font-weight: bold; padding: 1rem; outline: 1px solid black;'>$sfsv</td>
+                        <td style='text-align: center; font-weight: bold; padding: 1rem; outline: 1px solid black;'>$actividad</td>
+                        <td style='text-align: center; font-weight: bold; padding: 1rem; outline: 1px solid black;'>$asistentes</td>
+                        <td style='text-align: center; font-weight: bold; padding: 1rem; outline: 1px solid black;'>$encargado</td>
+                        <td style='text-align: center; font-weight: bold; padding: 1rem; outline: 1px solid black;'>$observ</td>
+                        <td style='text-align: center; font-weight: bold; padding: 1rem; outline: 1px solid black;'>$nom_tipo</td>
                     </tr>";
             if (is_array($a_actividades)) {
                 foreach ($a_actividades as $act) {
@@ -322,15 +322,15 @@ class ComunicarActividadesSacd
                         $cargo_observ = $act['observ'];
                     }
                     $body .= "<tr>
-                        <td style='text-align: left; padding: 1rem; outline: 2px solid black;'>$marca " . $act['f_ini'] . "</td>
-                        <td style='text-align: left; padding: 1rem; outline: 2px solid black;'>" . $act['f_fin'] . "</td>
-                        <td style='text-align: center; padding: 1rem; outline: 2px solid black;'>" . $act['nombre_ubi'] . "</td>
-                        <td style='text-align: center; padding: 1rem; outline: 2px solid black;'>" . $act['sfsv'] . "</td>
-                        <td style='text-align: center; padding: 1rem; outline: 2px solid black;'>" . $act['actividad'] . "</td>
-                        <td style='text-align: center; padding: 1rem; outline: 2px solid black;'>" . $act['asistentes'] . "</td>
-                        <td style='text-align: center; padding: 1rem; outline: 2px solid black;'>" . $act['encargado'] . "</td>
-                        <td style='text-align: center; padding: 1rem; outline: 2px solid black;'>" . $cargo_observ . "</td>
-                        <td style='text-align: center; padding: 1rem; outline: 2px solid black;'>" . $act['nom_tipo'] . "</td>
+                        <td style='text-align: left; padding: 1rem; outline: 1px solid black;'>$marca " . $act['f_ini'] . "</td>
+                        <td style='text-align: left; padding: 1rem; outline: 1px solid black;'>" . $act['f_fin'] . "</td>
+                        <td style='text-align: center; padding: 1rem; outline: 1px solid black;'>" . $act['nombre_ubi'] . "</td>
+                        <td style='text-align: center; padding: 1rem; outline: 1px solid black;'>" . $act['sfsv'] . "</td>
+                        <td style='text-align: center; padding: 1rem; outline: 1px solid black;'>" . $act['actividad'] . "</td>
+                        <td style='text-align: center; padding: 1rem; outline: 1px solid black;'>" . $act['asistentes'] . "</td>
+                        <td style='text-align: center; padding: 1rem; outline: 1px solid black;'>" . $act['encargado'] . "</td>
+                        <td style='text-align: center; padding: 1rem; outline: 1px solid black;'>" . $cargo_observ . "</td>
+                        <td style='text-align: center; padding: 1rem; outline: 1px solid black;'>" . $act['nom_tipo'] . "</td>
                     </tr>";
                 }
             }
