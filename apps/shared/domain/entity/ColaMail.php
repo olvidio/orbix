@@ -67,7 +67,8 @@ class ColaMail {
 	{
 		if (array_key_exists('uuid_item',$aDatos))
 		{
-			$this->setUuid_item($aDatos['uuid_item']);
+            $ColaMailId = new ColaMailId($aDatos['uuid_item']);
+			$this->setUuid_item($ColaMailId);
 		}
 		if (array_key_exists('mail_to',$aDatos))
 		{
