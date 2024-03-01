@@ -372,15 +372,15 @@ class ComunicarActividadesSacd
 
             $email = "$e_mail_jefe, $e_mail_sacd, $e_mail_ctr";
 
-            $html = "<div class=salta_pag id=\"$i\">
+            $body = "<div class=salta_pag id=\"$i\">
                 <br><!-- si no pongo esta linea, no me imprime el nombre (a partir de la 2ª página -->
                 <cabecera>
                     <izquierda>$nom_ap</izquierda>";
-            $html .= "<derecha>vc-$mi_dele</derecha>";
-            $html .= "</cabecera>
+            $body .= "<derecha>vc-$mi_dele</derecha>";
+            $body .= "</cabecera>
                     <comunicacion>$txt</comunicacion>";
 
-            $html .= " <!-- Actividades -->
+            $body .= " <!-- Actividades -->
                 <table class=enc>
                     <tr>
                         <td class=cabecera_izq>$f_ini</td>
@@ -405,7 +405,7 @@ class ComunicarActividadesSacd
                     } else {
                         $cargo_observ = $act['observ'];
                     }
-                    $html .= "<tr>
+                    $body .= "<tr>
                         <td>$marca " . $act['f_ini'] . "</td>
                         <td>" . $act['f_fin'] . "</td>
                         <td class=centro>" . $act['nombre_ubi'] . "</td>
@@ -418,13 +418,12 @@ class ComunicarActividadesSacd
                     </tr>";
                 }
             }
-            $html .= "</table>
+            $body .= "</table>
                     <pie>
                         <izquierda>*) $propio</izquierda>
                         <derecha>$lugar_fecha</derecha>
                     </pie>
                 </div>";
-            $html .= "</body></html>";
 
             // mail
 
@@ -439,7 +438,7 @@ class ComunicarActividadesSacd
             //Ruta del mensaje desde origen a destino
             $headers .= "Return-path: aquinate@moneders.net\r\n";
 
-            $cuerpo = "<html lang=\"$idioma\">$style<body>$html</body>";
+            $cuerpo = "<html lang=\"$idioma\">$style<body>$body</body></html>";
             //echo "($email<br>$asunto<br>$cuerpo<br>$headers)<br>";
             //mail($email, $asunto, $cuerpo, $headers);
             /* dado que desde dentro no puedo enviar mails,
