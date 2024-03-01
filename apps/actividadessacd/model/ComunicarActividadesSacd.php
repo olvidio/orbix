@@ -252,92 +252,6 @@ class ComunicarActividadesSacd
         $oUsuarioJefe = $cUsuarios[0];
         $e_mail_jefe = $oUsuarioJefe->getEmail();
 
-        $style = "<style>
-    @page {
-      size: A4 landscape;
-    }
-
-    div.salta_pag {
-        clear: both;
-        display: block;
-        width: 25cm;
-        page-break-after: always;
-        font-family: 'Arial', sans-serif;
-        font-size: 12pt;
-    }
-
-    table {
-        width: 25cm;
-        border: 1px outset grey;
-        padding: 1px 
-    }
-
-    td { 
-            border: thin inset grey;
-            margin: 1px;
-    }
-
-    td.cabecera {
-        text-align: left;
-        font-weight: bold;
-    }
-
-    table.enc, table.enc td {
-        border: 1px solid #000;
-        border-collapse: collapse;
-        margin: 0;
-        margin-bottom: 1em;
-        padding: 6px;
-    }
-
-    table.enc td.cabecera {
-        text-align: center;
-        font-weight: bold;
-    }
-
-    table.enc td.cabecera_izq {
-        text-align: left;
-        font-weight: bold;
-    }
-
-    td.centro {
-        text-align: center;
-    }
-
-    p {
-        margin-left: 0;
-        font-weight: bold;
-    }
-
-    comunicacion {
-        display: block;
-        padding-left: 15mm;
-        padding-right: 10mm;
-        padding-top: 10mm;
-        padding-bottom: 10mm;
-    }
-
-    izquierda {
-        display: block;
-        float: left;
-        text-align: left;
-    }
-
-    derecha {
-        display: block;
-        float: right;
-        text-align: right;
-    }
-
-    cabecera {
-        display: block;
-    }
-
-    pie {
-        display: block;
-    }
-</style>";
-
         $i = 0;
         foreach ($array_actividades as $id_nom => $vector) {
             $i++;
@@ -370,28 +284,30 @@ class ComunicarActividadesSacd
             $oCentroDl = new CentroDl($id_ctr);
             $e_mail_ctr = $oCentroDl->emailPrincipalOPrimero();
 
-            $email = "$e_mail_jefe, $e_mail_sacd, $e_mail_ctr";
+            $email = $e_mail_jefe;
+            $email .= empty($e_mail_sacd)? '' : ", $e_mail_sacd";
+            $email .= empty($e_mail_ctr)? '' : ", $e_mail_ctr";
 
-            $body = "<div class=salta_pag id=\"$i\">
+            $body = "<div style='clear: both; display: block; width: 25cm; page-break-after: always; font-family: sans-serif; font-size: 12pt;'>
                 <br><!-- si no pongo esta linea, no me imprime el nombre (a partir de la 2ª página -->
-                <cabecera>
-                    <izquierda>$nom_ap</izquierda>";
-            $body .= "<derecha>vc-$mi_dele</derecha>";
-            $body .= "</cabecera>
-                    <comunicacion>$txt</comunicacion>";
+                <span style='display: block'>
+                    <span style = 'display: block; float: left; text-align: left;'>$nom_ap</span>";
+            $body .= "<span style='display: block; float: right; text-align: right;'>vc-$mi_dele</span>";
+            $body .= "</span>
+                    <span style = 'display: block; padding-left: 15mm; padding-right: 10mm; padding-top: 10mm; padding-bottom: 10mm;'>$txt</span>";
 
             $body .= " <!-- Actividades -->
-                <table class=enc>
+                <table  style='border: 1px solid #000; border-collapse: collapse; margin: 0; margin-bottom: 1em; padding: 6px;'>
                     <tr>
-                        <td class=cabecera_izq>$f_ini</td>
-                        <td class=cabecera_izq>$f_fin</td>
-                        <td class=cabecera>$nombre_ubi</td>
-                        <td class=cabecera>$sfsv</td>
-                        <td class=cabecera>$actividad</td>
-                        <td class=cabecera>$asistentes</td>
-                        <td class=cabecera>$encargado</td>
-                        <td class=cabecera>$observ</td>
-                        <td class=cabecera>$nom_tipo</td>
+                        <td style='text-align: left; font-weight: bold;'>$f_ini</td>
+                        <td style='text-align: left; font-weight: bold;'>$f_fin</td>
+                        <td style='text-align: center; font-weight: bold;'>$nombre_ubi</td>
+                        <td style='text-align: center; font-weight: bold;'>$sfsv</td>
+                        <td style='text-align: center; font-weight: bold;'>$actividad</td>
+                        <td style='text-align: center; font-weight: bold;'>$asistentes</td>
+                        <td style='text-align: center; font-weight: bold;'>$encargado</td>
+                        <td style='text-align: center; font-weight: bold;'>$observ</td>
+                        <td style='text-align: center; font-weight: bold;'>$nom_tipo</td>
                     </tr>";
             if (is_array($a_actividades)) {
                 foreach ($a_actividades as $act) {
@@ -406,23 +322,23 @@ class ComunicarActividadesSacd
                         $cargo_observ = $act['observ'];
                     }
                     $body .= "<tr>
-                        <td>$marca " . $act['f_ini'] . "</td>
-                        <td>" . $act['f_fin'] . "</td>
-                        <td class=centro>" . $act['nombre_ubi'] . "</td>
-                        <td class=centro>" . $act['sfsv'] . "</td>
-                        <td class=centro>" . $act['actividad'] . "</td>
-                        <td class=centro>" . $act['asistentes'] . "</td>
-                        <td class=centro>" . $act['encargado'] . "</td>
-                        <td class=centro>" . $cargo_observ . "</td>
-                        <td class=centro>" . $act['nom_tipo'] . "</td>
+                        <td style='text-align: left;'>$marca " . $act['f_ini'] . "</td>
+                        <td style='text-align: left;'>" . $act['f_fin'] . "</td>
+                        <td style='text-align: center;'>" . $act['nombre_ubi'] . "</td>
+                        <td style='text-align: center;'>" . $act['sfsv'] . "</td>
+                        <td style='text-align: center;'>" . $act['actividad'] . "</td>
+                        <td style='text-align: center;'>" . $act['asistentes'] . "</td>
+                        <td style='text-align: center;'>" . $act['encargado'] . "</td>
+                        <td style='text-align: center;'>" . $cargo_observ . "</td>
+                        <td style='text-align: center;'>" . $act['nom_tipo'] . "</td>
                     </tr>";
                 }
             }
             $body .= "</table>
-                    <pie>
-                        <izquierda>*) $propio</izquierda>
-                        <derecha>$lugar_fecha</derecha>
-                    </pie>
+                    <span style = 'display: block;'>
+                        <span style = 'display: block; float: left; text-align: left;'>*) $propio</span>
+                        <span style='display: block; float: right; text-align: right;'>$lugar_fecha</span>
+                    </span>
                 </div>";
 
             // mail
@@ -438,7 +354,7 @@ class ComunicarActividadesSacd
             //Ruta del mensaje desde origen a destino
             $headers .= "Return-path: aquinate@moneders.net\r\n";
 
-            $cuerpo = "<html lang=\"$idioma\">$style<body>$body</body></html>";
+            $cuerpo = "<html lang=\"$idioma\"><body>$body</body></html>";
             //echo "($email<br>$asunto<br>$cuerpo<br>$headers)<br>";
             //mail($email, $asunto, $cuerpo, $headers);
             /* dado que desde dentro no puedo enviar mails,
