@@ -42,7 +42,7 @@ abstract class ClaseRepository
      *
      * @return PDO $oDbl
      */
-    public function getoDbl()
+    public function getoDbl(): PDO
     {
         return $this->oDbl;
     }
@@ -52,7 +52,7 @@ abstract class ClaseRepository
      *
      * @param PDO $oDbl
      */
-    public function setoDbl(PDO $oDbl)
+    public function setoDbl(PDO $oDbl): void
     {
         $this->oDbl = $oDbl;
     }
@@ -61,7 +61,7 @@ abstract class ClaseRepository
      *
      * @return string $sNomTabla
      */
-    public function getNomTabla()
+    public function getNomTabla(): string
     {
         return $this->sNomTabla;
     }
@@ -78,7 +78,7 @@ abstract class ClaseRepository
      * sErrorTxt
      * @return string
      */
-    public function getErrorTxt()
+    public function getErrorTxt(): string
     {
         return $this->sErrorTxt;
     }

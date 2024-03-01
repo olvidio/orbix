@@ -4,8 +4,8 @@ use actividadessacd\model\ActividadesSacdFunciones;
 use actividadessacd\model\ComunicarActividadesSacd;
 use core\ConfigGlobal;
 use personas\model\entity\GestorPersonaEx;
-use personas\model\entity\GestorPersonaSSSC;
 use personas\model\entity\GestorPersonaSacd;
+use personas\model\entity\GestorPersonaSSSC;
 use personas\model\entity\PersonaSacd;
 use usuarios\model\entity\Usuario;
 use web\DateTimeLocal;
@@ -53,6 +53,8 @@ $Qperiodo = (string)filter_input(INPUT_POST, 'periodo');
 $Qyear = (string)filter_input(INPUT_POST, 'year');
 $Qempiezamin = (string)filter_input(INPUT_POST, 'empiezamin');
 $Qempiezamax = (string)filter_input(INPUT_POST, 'empiezamax');
+
+$Qmail = (string)filter_input(INPUT_POST, 'mail');
 
 $oPosicion->recordar();
 
@@ -103,7 +105,7 @@ $oPeriodo->setPeriodo($Qperiodo);
 $inicioIso = $oPeriodo->getF_ini_iso();
 $finIso = $oPeriodo->getF_fin_iso();
 
-// llista d'activitats posibles en el periode.
+// lista de actividades posibles en el periodo.
 if (empty($inicioIso) || empty($finIso)) {
     exit ("<br>" . _("falta determinar un periodo"));
 }
@@ -138,6 +140,7 @@ switch ($Qque) {
         $cPersonas = array($oPersona);
         break;
 }
+
 $oComunicarActividadesSacd = new ComunicarActividadesSacd();
 $oComunicarActividadesSacd->setInicioIso($inicioIso);
 $oComunicarActividadesSacd->setFinIso($finIso);
@@ -155,11 +158,14 @@ $a_campos = ['oPosicion' => $oPosicion,
     'propuesta' => $Qpropuesta,
 ];
 
-$oView = new core\View('actividadessacd/controller');
-$oView->renderizar('com_sacd_activ_print.phtml', $a_campos);
+if ($Qmail === 'no') {
+    $oView = new core\View('actividadessacd/controller');
+    $oView->renderizar('com_sacd_activ_print.phtml', $a_campos);
+}
 
 // Añado la lista de los sacd de paso:
-if ($Qque != "un_sacd") {
+$array_actividades_de_paso = [];
+if ($Qque != "un_sacd" && $Qmail === 'no') {
     $aWhereP = [];
     $aWhereP['situacion'] = 'A';
     $aWhereP['sacd'] = 't';
@@ -177,11 +183,11 @@ if ($Qque != "un_sacd") {
 
     $oComunicarActividadesSacd->setPersonas($cPersonas);
 
-    $array_actividades = $oComunicarActividadesSacd->getArrayComunicacion();
+    $array_actividades_de_paso = $oComunicarActividadesSacd->getArrayComunicacion();
 
     if (count($array_actividades) > 0) {
         $a_campos = ['oPosicion' => $oPosicion,
-            'array_actividades' => $array_actividades,
+            'array_actividades' => $array_actividades_de_paso,
             'Qque' => $Qque,
             'mi_dele' => $mi_dele,
             'lugar_fecha' => $lugar_fecha,
@@ -193,4 +199,8 @@ if ($Qque != "un_sacd") {
         echo "<hr>";
         $oView->renderizar('com_sacd_activ_print.phtml', $a_campos);
     }
+}
+
+if  ($Qmail === 'si') {
+    $oComunicarActividadesSacd->envairMails($array_actividades);
 }

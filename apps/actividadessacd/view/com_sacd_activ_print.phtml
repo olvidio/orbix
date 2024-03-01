@@ -1,9 +1,4 @@
 <script>
-    fnjs_mailto = function (mail, id) {
-        var bodycontent = $('#' + id).text();
-        var mailToLink = "mailto:" + mail + "?subject=actividades&body=" + encodeURIComponent(bodycontent);
-        window.location.href = mailToLink;
-    }
     fnjs_left_side_hide();
 </script>
 <style type="text/css">
@@ -115,13 +110,14 @@ foreach ($array_actividades as $id_nom => $vector) {
         <cabecera>
             <izquierda><?= $nom_ap ?></izquierda>
             <?php if ($propuesta != "true") { ?>
-            <?php if ($Qque == "nagd") { ?>
-                <derecha>vc-<?= $mi_dele ?></derecha><?php } ?>
-        </cabecera>
-        <comunicacion><?= $txt ?></comunicacion>
-        <?php } else { ?>
-            </cabecera>
-        <?php } ?>
+                <?php if ($Qque === "nagd") { ?>
+                    <derecha>vc-<?= $mi_dele ?></derecha>
+                <?php } ?>
+                </cabecera>
+                <comunicacion><?= $txt ?></comunicacion>
+            <?php } else { ?>
+                </cabecera>
+            <?php } ?>
         <!-- Actividades -->
         <table class=enc border=1>
             <tr>
@@ -175,4 +171,4 @@ foreach ($array_actividades as $id_nom => $vector) {
     <?php
 }
 ?>
-</body></html>
+</body>

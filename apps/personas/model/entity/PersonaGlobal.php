@@ -2,12 +2,12 @@
 
 namespace personas\model\entity;
 
-use core\ConfigGlobal;
-use function core\strtoupper_dlb;
 use core;
-use web;
+use core\ConfigGlobal;
 use ubis\model\entity as ubis;
 use ubis\model\entity\DescTeleco;
+use web;
+use function core\strtoupper_dlb;
 
 /**
  * Fitxer amb la Classe que accedeix a la taula personas_dl
@@ -20,7 +20,7 @@ use ubis\model\entity\DescTeleco;
  */
 
 /**
- * Clase que implementa la entidad personas_dl
+ * Clase que implementa la entidad personas
  *
  * @package delegación
  * @subpackage model
@@ -32,8 +32,8 @@ abstract class PersonaGlobal extends core\ClasePropiedades
 {
 
     // Para que la variable stgr_posibles coja las traducciones, hay 
-    // que ejecutar la funcion 'traduccion_init()'. Cosa que se hace justo
-    // al final de la definicion de la clase: PersonaGlobal::traduccion_init();
+    // que ejecutar la función 'traduccion_init()'. Cosa que se hace justo
+    // al final de la definición de la clase: PersonaGlobal::traduccion_init();
     static $stgr_posibles;
 
     static function traduccion_init()
@@ -246,13 +246,13 @@ abstract class PersonaGlobal extends core\ClasePropiedades
      */
     protected $sApellidos;
     /**
-     * Nombre en latin del porfesor, para las actas
+     * Nombre en latin,  para las actas
      *
      * @var string
      */
     protected $sTituloNombreLatin;
     /**
-     * Nombre del porfesor, para las actas
+     * Nombre del profesor, para las actas
      *
      * @var string
      */
@@ -275,6 +275,35 @@ abstract class PersonaGlobal extends core\ClasePropiedades
      */
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
+
+    /**
+     * Devuelve el e-mail principal o primero de la lista de teleco de una persona
+     *
+     *    $desc_teleco en la tabla (DB: comun) public.xd_desc_teleco
+     *
+     *       13    e-mail    principal
+     *       14    e-mail    profesional
+     *       15    e-mail    otros
+     */
+    public function emailPrincipalOPrimero($id_nom, $desc_teleco = 13)
+    {
+        $aWhere = [];
+        $aWhere['id_nom'] = $id_nom;
+        $aWhere['tipo_teleco'] = 'e-mail';
+        if ($desc_teleco !== 13) {
+            $aWhere['desc_teleco'] = $desc_teleco;
+        }
+        $aWhere['_ordre'] = 'desc_teleco';
+
+        $e_mail = '';
+        $GesTelecoPersonas = new GestorTelecoPersonaDl();
+        $cTelecos = $GesTelecoPersonas->getTelecos($aWhere);
+        if (!empty($cTelecos) && count($cTelecos) > 0) {
+            $oTeleco = $cTelecos[0];
+            $e_mail = $oTeleco->getNum_teleco();
+        }
+        return $e_mail;
+    }
 
     /**
      * Devuelve los teleco de una persona especificados por

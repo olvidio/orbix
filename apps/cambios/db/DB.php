@@ -96,7 +96,7 @@ class DB extends DBAbstract
 
         $a_sql[] = "ALTER TABLE $nom_tabla ALTER id_schema SET DEFAULT 3000";
         $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->user_orbix";
-        // Aseguarme que todos pueden leer:
+        // Asegurarme que todos pueden leer:
         $a_sql[] = "GRANT SELECT,DELETE ON $nom_tabla TO PUBLIC; ";
         $a_sql[] = "GRANT SELECT,UPDATE ON $id_seq TO PUBLIC; ";
 

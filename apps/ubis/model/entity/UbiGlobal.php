@@ -168,6 +168,55 @@ abstract class UbiGlobal extends core\ClasePropiedades
     }
 
     /**
+     * Devuelve el e-mail principal o primero de la lista de teleco de una persona
+     *
+     *    $desc_teleco en la tabla (DB: comun) public.xd_desc_teleco
+     *
+     *       13    e-mail    principal
+     *       20    e-mail    gobierno
+     *       15    e-mail    otros
+     */
+    public function emailPrincipalOPrimero($desc_teleco = 13)
+    {
+        $aClassName = explode('\\', get_called_class());
+        $childClassName = end($aClassName);
+        switch ($childClassName) {
+            case 'Centro':
+                $obj = 'ubis\model\entity\GestorTelecoCtr';
+                break;
+            case 'CentroDl':
+                $obj = 'ubis\model\entity\GestorTelecoCtrDl';
+                break;
+            case 'CentroEx':
+                $obj = 'ubis\model\entity\GestorTelecoCtrEx';
+                break;
+            case 'Casa':
+                $obj = 'ubis\model\entity\GestorTelecoCdc';
+                break;
+            case 'CasaDl':
+                $obj = 'ubis\model\entity\GestorTelecoCdcDl';
+                break;
+            case 'CasaEx':
+                $obj = 'ubis\model\entity\GestorTelecoCdcEx';
+                break;
+        }
+        $aWhere['id_ubi'] = $this->getId_ubi();
+        $aWhere['tipo_teleco'] = 'e-mail';
+        if ($desc_teleco !== 13) {
+            $aWhere['desc_teleco'] = $desc_teleco;
+        }
+
+        $e_mail = '';
+        $GesTelecoUbis = new $obj();
+        $cTelecos = $GesTelecoUbis->getTelecos($aWhere);
+        if (!empty($cTelecos) && count($cTelecos) > 0) {
+            $oTeleco = $cTelecos[0];
+            $e_mail = $oTeleco->getNum_teleco();
+        }
+        return $e_mail;
+    }
+
+    /**
      * Devuelve los teleco de un ubi especificados por
      *
      *     parámetros $id_ubi,$tipo_teleco,$desc_teleco,$separador

@@ -15,6 +15,10 @@
       <path value="$PROJECT_DIR$/libs/vendor/psr/log" />
       <path value="$PROJECT_DIR$/libs/vendor/mpdf/psr-log-aware-trait" />
       <path value="$PROJECT_DIR$/libs/vendor/mpdf/psr-http-message-shim" />
+      <path value="$PROJECT_DIR$/libs/vendor/php-http/message-factory" />
+      <path value="$PROJECT_DIR$/libs/vendor/brick/math" />
+      <path value="$PROJECT_DIR$/libs/vendor/ramsey/uuid" />
+      <path value="$PROJECT_DIR$/libs/vendor/ramsey/collection" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="8.2">

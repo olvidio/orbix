@@ -44,7 +44,9 @@ $oFormP->setFormName('seleccion');
 $oFormP->setTitulo(core\strtoupper_dlb(_("seleccionar un periodo")));
 $oFormP->setPosiblesPeriodos($aOpciones);
 
-$oFormP->setBoton("<input type=button name=\"buscar\" value=\"" . _("buscar") . "\" onclick=\"fnjs_ver();\">");
+$sBotonBuscar = "<input type=button name=\"buscar\" value=\"" . _("buscar") . "\" onclick=\"fnjs_ver();\">";
+$sBotonEnviar = "<input type=button name=\"enviar\" value=\"" . _("enviar mail") . "\" onclick=\"fnjs_enviar_mails();\">";
+$oFormP->setBoton("$sBotonBuscar  $sBotonEnviar");
 
 $url = "apps/actividadessacd/controller/com_sacd_activ.php";
 
@@ -57,8 +59,10 @@ $a_camposHidden = array(
     'id_nom' => $Qid_nom,
     'que' => 'nagd',
     'propuesta' => $Qpropuesta,
+    'mail' => '',
 );
 $oHash->setArraycamposHidden($a_camposHidden);
+$oHash->setCamposNo('mail');
 
 $perm_mod_txt = TRUE;
 $oMiUsuario = new Usuario(ConfigGlobal::mi_id_usuario());
