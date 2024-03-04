@@ -351,7 +351,7 @@ class ComunicarActividadesSacd
             $headers .= "Content-type: text/html; charset=utf-8\r\n";
 
             //Dirección del remitente
-            $headers .= "From: $e_mail_jefe\r\n";
+            $headers .= "From: dani@moneders.net\r\n";
             //Dirección de respuesta
             $headers .= "Reply-To: $e_mail_jefe\r\n";
             //Ruta del mensaje desde origen a destino
