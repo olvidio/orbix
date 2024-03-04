@@ -44,7 +44,7 @@ class consumirColaMail
             $message = $oMail->getMessage();
             $headers = $oMail->getHeaders();
             // para pruebas
-            $mail_to = 'danixxx@moneders.net';
+            $mail_to = 'danixxx@moneders.net, dserrabou@gmail.com';
             mail($mail_to, $subject, $message, $headers);
             $oMail->setSended($ahora);
             $this->ColaMailRepository->Guardar($oMail);
