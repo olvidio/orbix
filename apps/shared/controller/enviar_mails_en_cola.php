@@ -43,4 +43,5 @@ require_once("apps/core/global_object.inc");
  */
 
 $oCosumidor = new consumirColaMail();
+$oCosumidor->purge();
 $oCosumidor->enviar();

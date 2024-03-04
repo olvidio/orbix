@@ -351,11 +351,11 @@ class ComunicarActividadesSacd
             $headers .= "Content-type: text/html; charset=utf-8\r\n";
 
             //Dirección del remitente
-            $headers .= "From: Aquinate <no-Reply@moneders.net>\r\n";
+            $headers .= "From: $e_mail_jefe\r\n";
             //Dirección de respuesta
-            $headers .= "Reply-To: no-Reply@moneders.net\r\n";
+            $headers .= "Reply-To: $e_mail_jefe\r\n";
             //Ruta del mensaje desde origen a destino
-            $headers .= "Return-path: dani@moneders.net\r\n";
+            $headers .= "Return-path: $e_mail_jefe\r\n";
 
             $cuerpo = "<html lang=\"$idioma\"><body>$body</body></html>";
             //echo "($email<br>$asunto<br>$cuerpo<br>$headers)<br>";

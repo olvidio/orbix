@@ -48,7 +48,11 @@ class ColaMailRepository implements ColaMailRepositoryInterface
 	{
 	    return $this->repository->getColaMails($aWhere, $aOperators);
 	}
-	
+
+    public function deleteColaMails(string $date_iso): void
+    {
+        $this->repository->deleteColaMails($date_iso);
+    }
 /* -------------------- ENTIDAD --------------------------------------------- */
 
 	public function Eliminar(ColaMail $ColaMail): bool
@@ -102,4 +106,5 @@ class ColaMailRepository implements ColaMailRepositoryInterface
     {
         return $this->repository->findById($uuid_item);
     }
+
 }

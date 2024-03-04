@@ -92,6 +92,20 @@ class PgColaMailRepository extends ClaseRepository implements ColaMailRepository
 		return $ColaMailSet->getTot();
 	}
 
+    public function deleteColaMails($date_iso): void
+    {
+        $oDbl = $this->getoDbl();
+        $nom_tabla = $this->getNomTabla();
+
+        $sQry = "DELETE FROM $nom_tabla WHERE sended < '$date_iso'";
+
+        if (($oDblSt = $oDbl->query($sQry)) === FALSE) {
+            $sClaveError = 'PgColaMailRepository.listar.prepare';
+            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
+            //return FALSE;
+        }
+    }
+
 /* -------------------- ENTIDAD --------------------------------------------- */
 
 	public function Eliminar(ColaMail $ColaMail): bool

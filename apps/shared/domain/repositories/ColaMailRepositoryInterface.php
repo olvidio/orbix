@@ -33,7 +33,9 @@ interface ColaMailRepositoryInterface
 	
 	 */
 	public function getColaMails(array $aWhere=[], array $aOperators=[]): array|FALSE;
-	
+
+	public function deleteColaMails(string $date_iso): void;
+
 /* -------------------- ENTIDAD --------------------------------------------- */
 
 	public function Eliminar(ColaMail $ColaMail): bool;
