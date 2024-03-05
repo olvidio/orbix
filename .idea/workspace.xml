@@ -4,9 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f178a244-4024-41f6-8417-4831ab0bb057" name="Changes" comment="days of week en encargos (2)">
+    <list default="true" id="f178a244-4024-41f6-8417-4831ab0bb057" name="Changes" comment="enviar comunicación sacd - html (11)">
+      <change afterPath="$PROJECT_DIR$/apps/misas/domain/entity/InicialesSacdDB.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/misas/domain/entity/InicialesSacd.php" beforeDir="false" afterPath="$PROJECT_DIR$/apps/misas/domain/entity/InicialesSacd.php" afterDir="false" />
     </list>
+    <list id="209fa7a7-e540-4095-aa55-f077853d1613" name="Changes by salva" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -628,7 +631,6 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_NEW_TODO" value="false" />
-    <MESSAGE value="mas ficheros que no estaban en github" />
     <MESSAGE value="añadir botón 'ver notas' en select personas&#10;error en View render asignaturas" />
     <MESSAGE value="error al exportar pasarela" />
     <MESSAGE value="recalcular las duraciones de actividades" />
@@ -653,7 +655,8 @@
     <MESSAGE value="(2) orden y prioridad a encargos" />
     <MESSAGE value="days of week en encargos" />
     <MESSAGE value="days of week en encargos (2)" />
-    <option name="LAST_COMMIT_MESSAGE" value="days of week en encargos (2)" />
+    <MESSAGE value="enviar comunicación sacd - html (11)" />
+    <option name="LAST_COMMIT_MESSAGE" value="enviar comunicación sacd - html (11)" />
     <option name="GROUP_MULTIFILE_MERGE_BY_DIRECTORY" value="true" />
   </component>
   <component name="XDebuggerManager">
@@ -661,7 +664,7 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="php">
           <url>file://$PROJECT_DIR$/apps/misas/controller/ver_cuadricula_zona.php</url>
-          <line>46</line>
+          <line>67</line>
           <option name="timeStamp" value="4" />
         </line-breakpoint>
       </breakpoints>
