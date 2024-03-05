@@ -35,4 +35,17 @@ class InicialesSacd extends InicialesSacdDB
 
         return $iniciales;
     }
+    public function nombre_sacd($id_nom): string
+    {
+        $nombre_sacd='';
+        if ($id_nom>0) {
+            $PersonaSacd = new PersonaSacd($id_nom);
+            $nombre_sacd = $PersonaSacd->getNombreApellidos().' ('.iniciales($id_nom).')';
+        }
+        if ($id_nom<0) {
+            $PersonaEx = new PersonaEx($id_nom);
+            $nombre_sacd = $PersonaEx->getNombreApellidos().' ('.iniciales($id_nom).')';
+        }
+        return $nombre_sacd;
+    }
 }
