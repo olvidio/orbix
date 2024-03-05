@@ -2,89 +2,37 @@
 
 namespace misas\domain\entity;
 
-class InicialesSacd
+use misas\domain\repositories\InicialesSacdRepository;
+use personas\model\entity\PersonaEx;
+use personas\model\entity\PersonaSacd;
+
+class InicialesSacd extends InicialesSacdDB
 {
 
-    /* ATRIBUTOS ----------------------------------------------------------------- */
-
-    private int|null $iid_nom = null;
-    private string|null $siniciales = null;
-    private string|null $scolor = null;
-
-    /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
-
-    /**
-     * Establece el valor de todos los atributos
-     *
-     * @param array $aDatos
-     * @return InicialesSacd
-     */
-    public function setAllAttributes(array $aDatos): InicialesSacd
+    public function iniciales($id_nom): string
     {
-        if (array_key_exists('id_nom', $aDatos)) {
-            $this->setId_nom($aDatos['id_nom']);
+        $InicialesSacdRepository = new InicialesSacdRepository();
+        $InicialesSacd = $InicialesSacdRepository->findById($id_nom);
+        if ($InicialesSacd === null) {
+            if ($id_nom > 0) {
+                $PersonaSacd = new PersonaSacd($id_nom);
+                // iniciales
+                $nom = mb_substr($PersonaSacd->getNom(), 0, 1);
+                $ap1 = mb_substr($PersonaSacd->getApellido1(), 0, 1);
+                $ap2 = mb_substr($PersonaSacd->getApellido2(), 0, 1);
+            } else {
+                $PersonaEx = new PersonaEx($id_nom);
+                $sacdEx = $PersonaEx->getNombreApellidos();
+                // iniciales
+                $nom = mb_substr($PersonaEx->getNom(), 0, 1);
+                $ap1 = mb_substr($PersonaEx->getApellido1(), 0, 1);
+                $ap2 = mb_substr($PersonaEx->getApellido2(), 0, 1);
+            }
+            $iniciales = strtoupper($nom . $ap1 . $ap2);
+        } else {
+            $iniciales = $InicialesSacd->getIniciales();
         }
-        if (array_key_exists('iniciales', $aDatos)) {
-            $this->setIniciales($aDatos['iniciales']);
-        }
-        if (array_key_exists('color', $aDatos)) {
-            $this->setColor($aDatos['color']);
-        }
-        return $this;
-    }
 
-
-    /**
-     *
-     * @return int|null $iid_nom
-     */
-    public function getId_nom(): ?int
-    {
-        return $this->iid_nom;
-    }
-
-    /**
-     *
-     * @param int|null $iid_nom
-     */
-    public function setId_nom(?int $iid_nom = null): void
-    {
-        $this->iid_nom = $iid_nom;
-    }
-
-    /**
-     *
-     * @return string|null $siniciales
-     */
-    public function getIniciales(): ?string
-    {
-        return $this->siniciales;
-    }
-
-    /**
-     *
-     * @param string|null $siniciales
-     */
-    public function setIniciales(?string $siniciales = null): void
-    {
-        $this->siniciales = $siniciales;
-    }
-
-    /**
-     *
-     * @return string|null $scolor
-     */
-    public function getColor(): ?string
-    {
-        return $this->scolor;
-    }
-
-    /**
-     *
-     * @param string|null $scolor
-     */
-    public function setColor(?string $scolor = null): void
-    {
-        $this->scolor = $scolor;
+        return $iniciales;
     }
 }
