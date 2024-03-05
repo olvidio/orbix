@@ -351,7 +351,10 @@ class ComunicarActividadesSacd
             $headers .= "Content-type: text/html; charset=utf-8\r\n";
 
             //Dirección del remitente
-            $headers .= "From: $e_mail_jefe\r\n";
+            $headers .= "From: aquinate@moneders.net\r\n";
+            // Por cambios en la política de gmail, para evitar conflictos con
+            // SPF y DKIM, el From debe ser igual que el Return-path.
+
             //Dirección de respuesta
             $headers .= "Reply-To: $e_mail_jefe\r\n";
             //Ruta del mensaje desde origen a destino
