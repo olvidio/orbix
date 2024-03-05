@@ -351,11 +351,17 @@ class ComunicarActividadesSacd
             $headers .= "Content-type: text/html; charset=utf-8\r\n";
 
             //Dirección del remitente
-            $headers .= "From: dani@moneders.net\r\n";
+            $headers .= "From: $e_mail_jefe\r\n";
             //Dirección de respuesta
             $headers .= "Reply-To: $e_mail_jefe\r\n";
             //Ruta del mensaje desde origen a destino
+            // El exim4 escribe su return-path, y por tanto esta linea no
+            // tiene ningún efecto. Por defecto es root@actividades.moneders.net,
+            // se cambia en /etc/email-addresses:
+            //  root: aquinate@moneders.net
             $headers .= "Return-path: $e_mail_jefe\r\n";
+            // la idea es crear una regla de redirección en aquinate@moneders.net
+            // que redirija a From.
 
             $cuerpo = "<html lang=\"$idioma\"><body>$body</body></html>";
             //echo "($email<br>$asunto<br>$cuerpo<br>$headers)<br>";
