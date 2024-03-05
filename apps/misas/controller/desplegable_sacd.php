@@ -3,7 +3,9 @@
 
 // INICIO Cabecera global de URL de controlador *********************************
 use encargossacd\model\EncargoConstants;
+use encargossacd\model\entity\GestorEncargo;
 use misas\domain\repositories\EncargoDiaRepository;
+use misas\domain\repositories\InicialesSacdRepository;
 use misas\model\EncargosZona;
 use personas\model\entity\PersonaSacd;
 use web\DateTimeLocal;
@@ -21,37 +23,45 @@ require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
 function iniciales($id_nom) {
-    if ($id_nom>0) {
-        $PersonaSacd = new PersonaSacd($id_nom);
-        $nom = $PersonaSacd->getNom();
-        $ap1 = $PersonaSacd->getApellido1();
-        $ap2 = $PersonaSacd->getApellido2();
+    $InicialesSacdRepository = new InicialesSacdRepository();
+    $InicialesSacd = $InicialesSacdRepository->findById($id_nom);
+    if ($InicialesSacd === null) {
+        if ($id_nom>0) {
+            $PersonaSacd = new PersonaSacd($id_nom);
+            // iniciales
+            $nom = mb_substr($PersonaSacd->getNom(), 0, 1);
+            $ap1 = mb_substr($PersonaSacd->getApellido1(), 0, 1);
+            $ap2 = mb_substr($PersonaSacd->getApellido2(), 0, 1);
+        } else {
+            $PersonaEx = new PersonaEx($id_nom);
+            $sacdEx = $PersonaEx->getNombreApellidos();
+            // iniciales
+            $nom = mb_substr($PersonaEx->getNom(), 0, 1);
+            $ap1 = mb_substr($PersonaEx->getApellido1(), 0, 1);
+            $ap2 = mb_substr($PersonaEx->getApellido2(), 0, 1);
+        }
+        $iniciales = strtoupper($nom . $ap1 . $ap2);
     } else {
-        $PersonaEx = new PersonaEx($id_nom);
-        $sacdEx = $PersonaEx->getNombreApellidos();
-        $nom = $PersonaEx->getNom();
-        $ap1 = $PersonaEx->getApellido1();
-        $ap2 = $PersonaEx->getApellido2();
+        $iniciales = $InicialesSacd->getIniciales();
     }
 
-    // iniciales
-    $inom='';
-    if (!is_null($nom))
-        $inom = mb_substr($nom, 0, 1);
-    $iap1='';
-    if (!is_null($ap1))
-        $iap1 = mb_substr($ap1, 0, 1);
-    $iap2='';
-    if (!is_null($ap2))
-        $iap2 = mb_substr($ap2, 0, 1);
-
-    $iniciales = strtoupper($inom . $iap1 . $iap2);
     return $iniciales;
+}
+function nombre_sacd($id_nom) {
+    if ($id_nom>0) {
+        $PersonaSacd = new PersonaSacd($id_nom);
+        $nombre_sacd = $PersonaSacd->getNombreApellidos().' ('.iniciales($id_nom).')';
+    } else {
+        $PersonaEx = new PersonaEx($id_nom);
+        $nombre_sacd = $PersonaEx->getNombreApellidos().' ('.iniciales($id_nom).')';
+    }
+    return $nombre_sacd;
 }
 
 $Qid_zona = (integer)filter_input(INPUT_POST, 'id_zona');
 $Qid_sacd = (integer)filter_input(INPUT_POST, 'id_sacd');
 $Qseleccion = (integer)filter_input(INPUT_POST, 'seleccion');
+$Qdia = (string)filter_input(INPUT_POST, 'dia');
 
 //echo $Qid_zona.'#'.$Qid_sacd.'s'.$Qseleccion;
 
@@ -59,46 +69,83 @@ $Qseleccion = (integer)filter_input(INPUT_POST, 'seleccion');
 // $Qid_sacd=100111501;
 
 $desplegable_sacd='<SELECT ID="id_sacd">';
-if ($Qid_sacd>0) {
-    $PersonaSacd = new PersonaSacd($Qid_sacd);
-    $sacd = $PersonaSacd->getNombreApellidos();
-} else {
-    $PersonaEx = new PersonaEx($Qid_sacd);
-    $sacd = $PersonaEx->getNombreApellidos();
-}
+$sacd=nombre_sacd($Qid_sacd);
 $iniciales = iniciales($Qid_sacd);
-$a_iniciales[$Qid_sacd] = $iniciales;
-    
+
 $key = $Qid_sacd . '#' . $iniciales;
 //$desplegable_sacd.='<OPTION VALUE="'.$key.'">'.$key.'('.$iniciales.')</OPTION>';
-$desplegable_sacd.='<OPTION VALUE="'.$key.'">'.$sacd.'('.$iniciales.')</OPTION>';
+//if ($iniciales==''){
+    $desplegable_sacd.='<OPTION VALUE="'.$key.'">'.$sacd.'</OPTION>';
+//} else {
+//    $desplegable_sacd.='<OPTION VALUE="'.$key.'">'.$sacd.'('.$iniciales.')</OPTION>';
+//}
     
-$a_sacd[$key] = $sacd ?? '?';
+if ($Qseleccion & 1) {
+    $gesZonaSacd = new GestorZonaSacd();
+    $a_Id_nom = $gesZonaSacd->getSacdsZona($Qid_zona);
+    
+    foreach ($a_Id_nom as $id_nom) {
+        $libre=true;
+        $inicio_dia = $Qdia.' 00:00:00';
+        $fin_dia = $Qdia.' 23:59:59';
+        $aWhere = [
+            'id_nom' => $id_nom,
+            'tstart' => "'$inicio_dia', '$fin_dia'",
+        ];
+        $aOperador = [
+            'tstart' => 'BETWEEN',
+        ];
+        $EncargoDiaRepository = new EncargoDiaRepository();
+        $cEncargosDia = $EncargoDiaRepository->getEncargoDias($aWhere,$aOperador);
+        foreach ($cEncargosDia as $oEncargoDia) {
+            $id_enc = $oEncargoDia->getId_enc();
+            //miro si és Missa a primera hora.
 
+            $aWhere = array();
+            $aOperador = array();
+            $aWhere['id_enc'] = $id_enc;
+            
+            $GesEncargos = new GestorEncargo();
+            $cEncargos = $GesEncargos->getEncargos($aWhere, $aOperador);
+            
+ //Tiene que haber sólo uno, falta comprobarlo
+            foreach ($cEncargos as $oEncargo) {
+                $id_enc = $oEncargo->getId_enc();
+                $desc_enc = $oEncargo->getDesc_enc();
+                $id_tipo_enc = $oEncargo->getId_tipo_enc();
+
+                if (substr($id_tipo_enc,1,1)=='1')
+                {
+                    $libre=false;
+                }
+            }
+        }
+        if ($libre) {
+            $sacd=nombre_sacd($id_nom);
+            $iniciales = iniciales($id_nom);
+        
+            $key = $id_nom . '#' . $iniciales;
+    
+//            $desplegable_sacd.='<OPTION VALUE="'.$key.'">'.$sacd.'('.$iniciales.')</OPTION>';
+            $desplegable_sacd.='<OPTION VALUE="'.$key.'">'.$sacd.'</OPTION>';
+        }
+    }
+}    
 if ($Qseleccion & 2) {
     $gesZonaSacd = new GestorZonaSacd();
     $a_Id_nom = $gesZonaSacd->getSacdsZona($Qid_zona);
     
     foreach ($a_Id_nom as $id_nom) {
-        if ($id_nom>0) {
-            $PersonaSacd = new PersonaSacd($id_nom);
-            $sacd = $PersonaSacd->getNombreApellidos();
-        } else {
-            $PersonaEx = new PersonaEx($id_nom);
-            $sacd = $PersonaEx->getNombreApellidos();
-        }
+        $sacd=nombre_sacd($id_nom);
         $iniciales = iniciales($id_nom);
     
         $key = $id_nom . '#' . $iniciales;
 
         $desplegable_sacd.='<OPTION VALUE="'.$key.'">'.$sacd.'('.$iniciales.')</OPTION>';
-    
-        $a_sacd[$key] = $sacd ?? '?';
     }
 }
 
 if ($Qseleccion & 4) {
-//    echo 'seleccion 4';
     $a_Clases = [];
     $a_Clases[] = array('clase' => 'PersonaN', 'get' => 'getPersonas');
     $a_Clases[] = array('clase' => 'PersonaAgd', 'get' => 'getPersonas');
@@ -112,20 +159,12 @@ if ($Qseleccion & 4) {
     $cPersonas = $GesPersonas->getPersonas($aWhere, $aOperador);
     foreach ($cPersonas as $oPersona) {
         $id_nom = $oPersona->getId_nom();
-        if ($id_nom>0) {
-            $PersonaSacd = new PersonaSacd($id_nom);
-            $sacd = $PersonaSacd->getNombreApellidos();
-/*        } else {
-            $PersonaEx = new PersonaEx($id_nom);
-            $sacd = $PersonaEx->getNombreApellidos();
-*/        }
+        $sacd=nombre_sacd($id_nom);
         $iniciales = iniciales($id_nom);
     
         $key = $id_nom . '#' . $iniciales;
-
-        $desplegable_sacd.='<OPTION VALUE="'.$key.'">'.$sacd.'('.$iniciales.')</OPTION>';
-    
-        $a_sacd[$key] = $sacd ?? '?';
+        $desplegable_sacd.='<OPTION VALUE="'.$key.'">'.$sacd.'</OPTION>';
+//        $desplegable_sacd.='<OPTION VALUE="'.$key.'">'.$sacd.'('.$iniciales.')</OPTION>';
     }
 }
 if ($Qseleccion & 8) { 
@@ -141,20 +180,12 @@ if ($Qseleccion & 8) {
     $cPersonas = $GesPersonas->getPersonas($aWhere, $aOperador);
     foreach ($cPersonas as $oPersona) {
         $id_nom = $oPersona->getId_nom();
-        if ($id_nom>0) {
-            $PersonaSacd = new PersonaSacd($id_nom);
-            $sacd = $PersonaSacd->getNombreApellidos();
-        } else {
-            $PersonaEx = new PersonaEx($id_nom);
-            $sacd = $PersonaEx->getNombreApellidos();
-        }
+        $sacd=nombre_sacd($id_nom);
         $iniciales = iniciales($id_nom);
     
         $key = $id_nom . '#' . $iniciales;
-
-        $desplegable_sacd.='<OPTION VALUE="'.$key.'">'.$sacd.'('.$iniciales.')</OPTION>';
-    
-        $a_sacd[$key] = $sacd ?? '?';
+        $desplegable_sacd.='<OPTION VALUE="'.$key.'">'.$sacd.'</OPTION>';
+//        $desplegable_sacd.='<OPTION VALUE="'.$key.'">'.$sacd.'('.$iniciales.')</OPTION>';
     }
 }
 

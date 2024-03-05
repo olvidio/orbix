@@ -83,14 +83,14 @@
         <input type="hidden" id="cell_selected" value=""/>
         <input type="hidden" id="row_selected" value=""/>
         <input type="hidden" id="uuid_selected" value=""/>
-        <input type="hidden" id="dia" value=""/>
+        <input id="dia" value=""/>
         <input type="hidden" id="id_enc_selected" value=""/>
         <input type="hidden" id="id_sacd_inicial" value=""/>
         <p>{{ "Selección de sacd"|trans|raw }}:
-		    <input id="sacd_libre" type="checkbox" value="2" checked OnChange="prepara_select_sacd();">{{ "libre"|trans|raw }}
-		    <input id="sacd_zona" type="checkbox" value="4" OnChange="prepara_select_sacd();">{{ "zona"|trans|raw }}
-		    <input id="sacd_na"type="checkbox" value="8" OnChange="prepara_select_sacd();">{{ "prelatura"|trans|raw }}
-		    <input id="sacd_p" type="checkbox" value="16" OnChange="prepara_select_sacd();">{{ "de paso"|trans|raw }}
+		    <input id="sacd_libre" type="checkbox" value="2" OnChange="prepara_select_sacd();">{{ "libre"|trans|raw }}
+		    <input id="sacd_zona" type="checkbox" value="4" checked OnChange="prepara_select_sacd();">{{ "zona"|trans|raw }}
+		    <input id="sacd_dl"type="checkbox" value="8" OnChange="prepara_select_sacd();">{{ "dl"|trans|raw }}
+		    <input id="sacd_depaso" type="checkbox" value="16" OnChange="prepara_select_sacd();">{{ "de paso"|trans|raw }}
 	    </p>
 
         <div style="margin-left: 10px; margin-top: 10px;">
@@ -248,18 +248,21 @@
     }
 
     function prepara_select_sacd() {
-    	var z=$('#sacd_zona').prop('checked');
-        var na=$('#sacd_na').prop('checked');
-	    var p=$('#sacd_p').prop('checked');
+    	var sacd_libre=$('#sacd_libre').prop('checked');
+    	var sacd_zona=$('#sacd_zona').prop('checked');
+        var sacd_dl=$('#sacd_dl').prop('checked');
+	    var sacd_depaso=$('#sacd_depaso').prop('checked');
+        var dia=$('#dia').val();
     	var seleccion=0;
-       	if (z) seleccion+=2;
-	    if (na) seleccion+=4;
-    	if (p) seleccion+=8;
+       	if (sacd_libre) seleccion+=1;
+       	if (sacd_zona) seleccion+=2;
+	    if (sacd_dl) seleccion+=4;
+    	if (sacd_depaso) seleccion+=8;
 	    var ii2=$('#id_sacd_inicial').val();
 
         let url_desplegable_sacd = '{{ url_desplegable_sacd }}';
 	    let id_zona = '{{ id_zona }}';
-	    var parametros= 'id_zona= ' + id_zona + '&  id_sacd= ' + ii2 + ' & seleccion= ' + seleccion + ' & {{ h_desplegable_sacd|raw }} ';
+	    var parametros= 'id_zona=' + id_zona + '&id_sacd=' + ii2 + '&seleccion=' + seleccion + '&dia=' + dia + ' & {{ h_desplegable_sacd|raw }} ';
         request = $.ajax({
 		    url: url_desplegable_sacd,
 		    data: parametros,

@@ -22,8 +22,8 @@ require_once("apps/core/global_object.inc");
 $Qid_zona = (integer)filter_input(INPUT_POST, 'id_zona');
 
 $columns_cuadricula = [
-    ["id" => "id_sacd", "name" => "Id sacd", "field" => "id_sacd", "width" => 150, "cssClass" => "cell-title"],
-    ["id" => "nombre_sacd", "name" => "Nombre sacd", "field" => "nombre_sacd", "width" => 150, "cssClass" => "cell-title"],
+//    ["id" => "id_sacd", "name" => "Id sacd", "field" => "id_sacd", "width" => 150, "cssClass" => "cell-title"],
+    ["id" => "nombre_sacd", "name" => "Nombre sacd", "field" => "nombre_sacd", "width" => 250, "cssClass" => "cell-title"],
     ["id" => "iniciales", "name" => "Iniciales", "field" => "iniciales", "width" => 150, "cssClass" => "cell-title"],
     ["id" => "color", "name" => "Color", "field" => "color", "width" => 150, "cssClass" => "cell-title"],
 ];
