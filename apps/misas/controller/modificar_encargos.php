@@ -19,14 +19,26 @@ $oDesplZonas = $oGestorZona->getListaZonas();
 $oDesplZonas->setNombre('id_zona');
 $oDesplZonas->setAction('fnjs_ver_encargos_zona()');
 
+$a_Orden = array(
+    'orden' => 'orden',
+    'prioridad' => 'prioridad',
+    'desc_enc' => 'alfabético',
+);
+
+$oDesplOrden = new Desplegable();
+$oDesplOrden->setOpciones($a_Orden);
+$oDesplOrden->setNombre('orden');
+$oDesplOrden->setAction('fnjs_ver_encargos_zona()');
+
 $url_ver_encargos_zona = 'apps/misas/controller/ver_encargos_zona.php';
 $oHashZona = new Hash();
 $oHashZona->setUrl($url_ver_encargos_zona);
-$oHashZona->setCamposForm('id_zona');
+$oHashZona->setCamposForm('id_zona!orden');
 $h_zona = $oHashZona->linkSinVal();
 
 $a_campos = ['oPosicion' => $oPosicion,
     'oDesplZonas' => $oDesplZonas,
+    'oDesplOrden' => $oDesplOrden,
     'url_ver_encargos_zona' => $url_ver_encargos_zona,
     'h_zona' => $h_zona,
 ];

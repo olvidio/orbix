@@ -19,6 +19,8 @@ if (($Qque === 'modificar') || ($Qque === 'nuevo')) {
     $Qid_enc = (string)filter_input(INPUT_POST, 'id_enc');
     $Qid_tipo_enc = (string)filter_input(INPUT_POST, 'id_tipo_enc');
     $Qid_ubi = (string)filter_input(INPUT_POST, 'id_ubi');
+    $Qorden = (string)filter_input(INPUT_POST, 'orden');
+    $Qprioridad = (string)filter_input(INPUT_POST, 'prioridad');
     $Qid_zona = (string)filter_input(INPUT_POST, 'id_zona');
     $Qdescripcion_lugar = (string)filter_input(INPUT_POST, 'descripcion_lugar');
     $Qencargo = (string)filter_input(INPUT_POST, 'encargo');
@@ -35,6 +37,8 @@ if (($Qque === 'modificar') || ($Qque === 'nuevo')) {
     $EncargoZona->setId_tipo_enc($Qid_tipo_enc);
     $EncargoZona->setsf_sv(8);
     $EncargoZona->setId_ubi($Qid_ubi);
+    $EncargoZona->setOrden($Qorden);
+    $EncargoZona->setPrioridad($Qprioridad);
     $EncargoZona->setId_zona($Qid_zona);
     $EncargoZona->setDesc_enc($Qencargo);
     $EncargoZona->setIdioma_enc($Qidioma_enc);

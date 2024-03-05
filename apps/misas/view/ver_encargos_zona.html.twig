@@ -10,11 +10,12 @@
   -->
 
 
-    <link type='text/css' rel='stylesheet'
+    <link type='text/css' rel='rioridadstylesheet'
           href='node_modules/slickgrid/dist/styles/css/slick-icons.css'/>
     <link type='text/css' rel='stylesheet'
           href='node_modules/slickgrid/dist/styles/css/example-demo.css'/>
-    <link type='text/css' rel='stylesheet'
+    <link type='text/css' rel='stylesheet'        $('#observ').val(observ);
+
           href='node_modules/slickgrid/dist/styles/css/slick-alpine-theme.css'/>
 
     <style>
@@ -84,7 +85,7 @@
         <input type="hidden" id="cell_selected" value=""/>
         <input type="hidden" id="row_selected" value=""/>
         <input type="hidden" id="id_enc_selected" value=""/>
-        <input id="que" value=""/>
+        <input type="hidden" id="que" value=""/>
 
         <div class='item-details-label'>
             <label for="encargo"> {{ "Encargo"|trans|raw }}: </label>
@@ -99,19 +100,24 @@
 
         <div style="margin-top: 20px;">
             <label for="id_ubi"> {{ "Lugar"|trans|raw }}: </label>
-            {{ oDesplCentros.desplegable()|raw }}
-        </div>
-
-        <div style="margin-top: 20px;">
+            {{ oDesplCentros.desplegable()|raw }}&nbsp;&nbsp;&nbsp;&nbsp;
             <label for="descripcion_lugar"> {{ "Descripción lugar"|trans|raw }}: </label>
             <input id="descripcion_lugar" type="text" class="form-control" size="20" value="">
         </div>
 
         <div style="margin-top: 20px;">
-            <label for="observ"> {{ "Observaciones"|trans|raw }}: </label>
-            <input id="observ" type="text" class="form-control" size="20" value="">
+            <label for="orden"> {{ "Orden"|trans|raw }}: </label>
+            <input id="orden" type="text" class="form-control" size="20" value="">
         </div>
+
         <div style="margin-top: 20px;">
+            <label for="prioridad"> {{ "Prioridad"|trans|raw }}: </label>
+            <input id="prioridad" type="text" class="form-control" size="20" value="">&nbsp;&nbsp;&nbsp;&nbsp;
+        </div>
+
+        <div style="margin-top: 20px;">
+            <label for="observ"> {{ "Observaciones"|trans|raw }}: </label>
+            <input id="observ" type="text" class="form-control" size="20" value="">&nbsp;&nbsp;&nbsp;&nbsp;
             <label for="idioma"> {{ "Idioma"|trans|raw }}: </label>
             {{ oDesplIdiomas.desplegable()|raw }}
         </div>
@@ -174,6 +180,9 @@
         let encargo = $('#encargo').val();
         let id_tipo_enc = $('#id_tipo_enc').val();
         let id_ubi = $('#id_ubi').val();
+        let orden = $('#orden').val(); 
+        alert ('orden'+orden);
+        let prioridad = $('#prioridad').val();
         let id_zona = $('#id_zona').val();
         let idioma_enc = $('#idioma_enc').val();
         let descripcion_lugar = $('#descripcion_lugar').val();
@@ -182,7 +191,7 @@
             que = 'modificar';
         }
         // añadir el hash (se puede cambiar todo menos el encargo)
-        parametros='id_enc=' + id_enc_selected + '&que=' + que + '&id_tipo_enc=' + id_tipo_enc + '&id_ubi=' + id_ubi + '&id_zona=' + id_zona + '&descripcion_lugar=' + descripcion_lugar + '&encargo=' + encargo + '&idioma_enc=' + idioma_enc + '&observ=' + observ + '{{ h_encargos_zona|raw }}';
+        parametros='id_enc=' + id_enc_selected + '&que=' + que + '&id_tipo_enc=' + id_tipo_enc + '&id_ubi=' + id_ubi + '&id_zona=' + id_zona + '&descripcion_lugar=' + descripcion_lugar + '&encargo=' + encargo + '&idioma_enc=' + idioma_enc + '&observ=' + observ + '&orden=' + orden + '&prioridad=' + prioridad + '{{ h_encargos_zona|raw }}';
 
         // guardar cambios en DB
         var request = $.ajax({
@@ -195,7 +204,6 @@
             if (json.success !== true) {
                 alert("{{ "respuesta"|trans|raw }}: " + json.mensaje);
             } else {
-                    alert('json:'+json.que)
                 if (json.que=='nuevo'){
                     alert('json.Nuevo');
                     nom_tipo=$('#id_tipo_enc :selected').text();
@@ -270,7 +278,6 @@
         alert('nfjs_nnnnuevo');
                     data.push({'encargo':'e', 'tipo_encargo': 'nom_tipo', 'lugar':'json.lugar', 'descripcion_lugar':'descripcion_lugar', 'nom_idioma':'nom_idioma', 'idioma_enc':'idioma_enc'})
                     grid.updateRowCount();
- alert('filas:'+data.getPagingInfo.totalRows);
                 grid.updateRow(row);
                     grid.render();
     }
@@ -280,6 +287,8 @@
         $('#observ').val('');
         $('#encargo').val('');
         $('#lugar').val('');
+        $('#orden').val('');
+        $('#prioridad').val('');
         $('#id_ubi').val('');
         $('#id_enc_selected').val('');
         $('#id_tipo_enc').val('');
@@ -300,11 +309,17 @@
         let tipo_encargo = data[cell.row].tipo_encargo;
         let observ = data[cell.row].observ;
         let id_enc = data[cell.row].id_enc;
+        let orden = data[cell.row].orden;
+        let prioridad = data[cell.row].prioridad;
+        alert(orden);
         let idioma = data[cell.row].idioma_enc;
         let descripcion_lugar = data[cell.row].descripcion_lugar;
 
         $('#titulo_modal').html(encargo);
         $('#observ').val(observ);
+//        $('#orden').val(orden);
+        $('#orden').val('33');
+        $('#prioridad').val(prioridad);
         $('#encargo').val(encargo);
         $('#id_enc_selected').val(id_enc);
         $('#id_tipo_enc').val(id_tipo_enc);

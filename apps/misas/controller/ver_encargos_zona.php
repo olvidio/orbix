@@ -19,18 +19,20 @@ require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
 $Qid_zona = (integer)filter_input(INPUT_POST, 'id_zona');
-$QTipoPlantilla = 's';
+$Qorden = (string)filter_input(INPUT_POST, 'orden');
 
 $columns_cuadricula = [
-    ["id" => "encargo", "name" => "Encargo", "field" => "encargo", "width" => 150, "cssClass" => "cell-title"],
-    ["id" => "tipo_encargo", "name" => "Tipo de encargo", "field" => "tipo_encargo", "width" => 150, "cssClass" => "cell-title"],
+    ["id" => "encargo", "name" => "Encargo", "field" => "encargo", "width" => 250, "cssClass" => "cell-title"],
+    ["id" => "tipo_encargo", "name" => "Tipo de encargo", "field" => "tipo_encargo", "width" => 200, "cssClass" => "cell-title"],
 //    ["id" => "id_tipo_enc", "name" => "id Tipo de encargo", "field" => "id_tipo_enc", "width" => 150, "cssClass" => "cell-title"],
     ["id" => "lugar", "name" => "Lugar", "field" => "lugar", "width" => 150, "cssClass" => "cell-title"],
+    ["id" => "orden", "name" => "Orden", "field" => "orden", "width" => 100, "cssClass" => "cell-title"],
+    ["id" => "prioridad", "name" => "Prioridad", "field" => "prioridad", "width" => 100, "cssClass" => "cell-title"],
     ["id" => "descripcion_lugar", "name" => "Descripción lugar", "field" => "descripcion_lugar", "width" => 150, "cssClass" => "cell-title"],
     ["id" => "nom_idioma", "name" => "Idioma", "field" => "nom_idioma", "width" => 150, "cssClass" => "cell-title"],
     ["id" => "observ", "name" => "Observaciones", "field" => "observ", "width" => 150, "cssClass" => "cell-title"],
 ];
-
+echo 'hola';
 $data_cuadricula = [];
 // encargos de misa (8010) para la zona
 /*$grupo='8...';
@@ -46,8 +48,23 @@ $data_cuadricula = [];
     foreach ($cEncargoTipos as $oEncargoTipo) {
 */
 
+$oGesEncargoTipo = new GestorEncargoTipo();
 
-$a_tipo_enc = [8010, 8011];
+$grupo = '8...';
+//if (!empty($grupo)) {
+$aWhere = [];
+$aOperador = [];
+$aWhere['id_tipo_enc'] = '^' . $grupo;
+$aOperador['id_tipo_enc'] = '~';
+$oGesEncargoTipo = new GestorEncargoTipo();
+$cEncargoTipos = $oGesEncargoTipo->getEncargoTipos($aWhere, $aOperador);
+
+
+$posibles_encargo_tipo = [];
+foreach ($cEncargoTipos as $oEncargoTipo) {
+    if ($oEncargoTipo->getId_tipo_enc()>=8100)
+        $a_tipo_enc[] = $oEncargoTipo->getId_tipo_enc();
+}
 
 $aWhere = array();
 $aOperador = array();
@@ -56,22 +73,21 @@ $aWhere['id_tipo_enc'] = $cond_tipo_enc;
 $aOperador['id_tipo_enc'] = 'ANY';
 $aWhere['id_zona'] = $Qid_zona;
 
-//$aWhere['_ordre'] = 'desc_enc';
-$aWhere['_ordre'] = 'observ';
+$aWhere['_ordre'] = $Qorden;
 $GesEncargos = new GestorEncargo();
 $cEncargos = $GesEncargos->getEncargos($aWhere, $aOperador);
 
-$e = 0;
 $id_tipo_enc = '';
 $idioma_enc = '';
 foreach ($cEncargos as $oEncargo) {
-    $e++;
     $id_enc = $oEncargo->getId_enc();
     $desc_enc = $oEncargo->getDesc_enc();
     $id_ubi = $oEncargo->getId_ubi();
     $id_tipo_enc = $oEncargo->getId_tipo_enc();
     $desc_lugar = $oEncargo->getDesc_lugar();
     $idioma_enc = $oEncargo->getIdioma_enc();
+    $orden = $oEncargo->getOrden();
+    $prioridad = $oEncargo->getPrioridad();
     $observ = $oEncargo->getObserv();
 
     if (!empty($id_ubi)) {
@@ -109,6 +125,8 @@ foreach ($cEncargos as $oEncargo) {
     $data_cols["idioma_enc"] = $idioma_enc;
     $data_cols["nom_idioma"] = $nom_idioma;
     $data_cols["descripcion_lugar"] = $desc_lugar;
+    $data_cols["orden"] = $orden;
+    $data_cols["prioridad"] = $prioridad;
     $data_cols["observ"] = $observ;
 //    echo $data_cols["encargo"].$data_cols["observ"].'ZZ<br>';
     // añado una columna 'meta' con metadatos, invisible, porque no está
@@ -122,7 +140,7 @@ $json_data_cuadricula = json_encode($data_cuadricula);
 $url_update_encargos_zona = 'apps/misas/controller/update_encargos_zona.php';
 $oHashEncargosZona = new Hash();
 $oHashEncargosZona->setUrl($url_update_encargos_zona);
-$oHashEncargosZona->setCamposForm('id_enc!que!id_tipo_enc!id_ubi!id_zona!descripcion_lugar!encargo!idioma_enc!observ');
+$oHashEncargosZona->setCamposForm('id_enc!que!id_tipo_enc!id_ubi!id_zona!descripcion_lugar!encargo!idioma_enc!observ!orden!prioridad');
 $h_encargos_zona = $oHashEncargosZona->linkSinVal();
 
 $oHashBorrarEncargosZona = new Hash();

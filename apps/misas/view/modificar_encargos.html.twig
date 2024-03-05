@@ -7,6 +7,9 @@
                 <th class=titulo_inv colspan=4>{{ "Encargos de la zona"|trans|capitalize }}:&nbsp;&nbsp;&nbsp;
                     {{ oDesplZonas.desplegable|raw }}
                 </th>
+                <th class=titulo_inv colspan=4>{{ "Orden"|trans|capitalize }}:&nbsp;&nbsp;&nbsp;
+                    {{ oDesplOrden.desplegable|raw }}
+                </th>
             </tr>
             </thead>
         </table>
@@ -20,10 +23,11 @@
 <script>
     fnjs_ver_encargos_zona = function () {
         let id_zona = $('#id_zona').val();
+        let orden = $('#orden').val();
         if (id_zona) {
             let url = '{{ url_ver_encargos_zona }}';
 
-            let parametros = 'id_zona=' + id_zona +  '{{ h_zona|raw }}';
+            let parametros = 'id_zona=' + id_zona +  '&orden=' + orden + '{{ h_zona|raw }}';
 
             $.ajax({
                 url: url,
