@@ -27,7 +27,7 @@ $a_Orden = array(
 
 $oDesplOrden = new Desplegable();
 $oDesplOrden->setOpciones($a_Orden);
-$oDesplOrden->setNombre('orden');
+$oDesplOrden->setNombre('orden_select');
 $oDesplOrden->setAction('fnjs_ver_encargos_zona()');
 
 $url_ver_encargos_zona = 'apps/misas/controller/ver_encargos_zona.php';

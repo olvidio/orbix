@@ -81,8 +81,8 @@
 
         <label id="titulo_modal"></label>
         <hr/>
-        <input type="hidden" id="cell_selected" value=""/>
-        <input type="hidden" id="row_selected" value=""/>
+        <input id="cell_selected" value=""/>
+        <input id="row_selected" value=""/>
         <input type="hidden" id="id_enc_selected" value=""/>
         <input type="hidden" id="que" value=""/>
 
@@ -180,7 +180,6 @@
         let id_tipo_enc = $('#id_tipo_enc').val();
         let id_ubi = $('#id_ubi').val();
         let orden = $('#orden').val(); 
-        alert ('orden'+orden);
         let prioridad = $('#prioridad').val();
         let id_zona = $('#id_zona').val();
         let idioma_enc = $('#idioma_enc').val();
@@ -217,9 +216,12 @@
                     data[row]['encargo'] = encargo;
                     nom_tipo=$('#id_tipo_enc :selected').text();
                     data[row]['tipo_encargo'] = nom_tipo;
+                    data[row]['id_ubi'] = id_ubi;
+                    var lugar=$('#id_ubi :selected').text();
                     data[row]['lugar'] = json.lugar;
+                    data[row]['orden'] = orden;
+                    data[row]['prioridad'] = prioridad;
                     data[row]['descripcion_lugar'] = descripcion_lugar;
-                    var nom_idioma=$('#idioma_enc :selected').text();
                     data[row]['nom_idioma'] = nom_idioma;
                     data[row]['idioma_enc'] = idioma_enc;
                     data[row]['observ'] = observ;
@@ -254,8 +256,11 @@
                 // es posible que al guardar se creen datos (tstart, tend) que hay que añadir a los metadatos
                     data[row]['tipo_encargo'] = '';
                     data[row]['encargo'] = '';
+                    data[row]['id_ubi'] = '';
                     data[row]['lugar'] = '';
                     data[row]['descripcion_lugar'] = '';
+                    data[row]['orden'] = '';
+                    data[row]['prioridad'] = '';
                     data[row]['nom_idioma'] = '';
                     data[row]['idioma_enc'] = '';
                     data[row]['observ'] = '';
@@ -308,20 +313,20 @@
         let tipo_encargo = data[cell.row].tipo_encargo;
         let observ = data[cell.row].observ;
         let id_enc = data[cell.row].id_enc;
+        let id_ubi = data[cell.row].id_ubi;
         let orden = data[cell.row].orden;
         let prioridad = data[cell.row].prioridad;
-        alert(orden);
         let idioma = data[cell.row].idioma_enc;
         let descripcion_lugar = data[cell.row].descripcion_lugar;
 
         $('#titulo_modal').html(encargo);
         $('#observ').val(observ);
-//        $('#orden').val(orden);
-        $('#orden').val('33');
+        $('#orden').val(orden);
         $('#prioridad').val(prioridad);
         $('#encargo').val(encargo);
         $('#id_enc_selected').val(id_enc);
         $('#id_tipo_enc').val(id_tipo_enc);
+        $('#id_ubi').val(id_ubi);
         $('#desplegable_tipo_de_encargo').val(tipo_encargo);
         $('#descripcion_lugar').val(descripcion_lugar);
         $('#idioma_enc').val(idioma);

@@ -49,7 +49,8 @@ if (($Qque === 'modificar') || ($Qque === 'nuevo')) {
         $nombre_ubi = $oUbi->getNombre_ubi();
     } else {
         $nombre_ubi = '';
-    }
+    }    
+
     $jsondata['lugar'] = $nombre_ubi;
     $jsondata['que'] = $Qque;
 

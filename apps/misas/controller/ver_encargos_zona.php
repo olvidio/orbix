@@ -25,6 +25,7 @@ $columns_cuadricula = [
     ["id" => "encargo", "name" => "Encargo", "field" => "encargo", "width" => 250, "cssClass" => "cell-title"],
     ["id" => "tipo_encargo", "name" => "Tipo de encargo", "field" => "tipo_encargo", "width" => 200, "cssClass" => "cell-title"],
 //    ["id" => "id_tipo_enc", "name" => "id Tipo de encargo", "field" => "id_tipo_enc", "width" => 150, "cssClass" => "cell-title"],
+    ["id" => "id_ubi", "name" => "id ubi", "field" => "id_ubi", "width" => 150, "cssClass" => "cell-title"],
     ["id" => "lugar", "name" => "Lugar", "field" => "lugar", "width" => 150, "cssClass" => "cell-title"],
     ["id" => "orden", "name" => "Orden", "field" => "orden", "width" => 100, "cssClass" => "cell-title"],
     ["id" => "prioridad", "name" => "Prioridad", "field" => "prioridad", "width" => 100, "cssClass" => "cell-title"],
@@ -32,26 +33,12 @@ $columns_cuadricula = [
     ["id" => "nom_idioma", "name" => "Idioma", "field" => "nom_idioma", "width" => 150, "cssClass" => "cell-title"],
     ["id" => "observ", "name" => "Observaciones", "field" => "observ", "width" => 150, "cssClass" => "cell-title"],
 ];
-echo 'hola';
-$data_cuadricula = [];
-// encargos de misa (8010) para la zona
-/*$grupo='8...';
-    $aWhere = [];
-    $aOperador = [];
-    $aWhere['id_tipo_enc'] = '^' . $grupo;
-    $aOperador['id_tipo_enc'] = '~';
-    $oGesEncargoTipo = new GestorEncargoTipo();
-    $cEncargoTipos = $oGesEncargoTipo->getEncargoTipos($aWhere, $aOperador);
 
-    // desplegable de nom_tipo
-    $posibles_encargo_tipo = [];
-    foreach ($cEncargoTipos as $oEncargoTipo) {
-*/
+$data_cuadricula = [];
 
 $oGesEncargoTipo = new GestorEncargoTipo();
 
 $grupo = '8...';
-//if (!empty($grupo)) {
 $aWhere = [];
 $aOperador = [];
 $aWhere['id_tipo_enc'] = '^' . $grupo;
@@ -59,11 +46,14 @@ $aOperador['id_tipo_enc'] = '~';
 $oGesEncargoTipo = new GestorEncargoTipo();
 $cEncargoTipos = $oGesEncargoTipo->getEncargoTipos($aWhere, $aOperador);
 
-
+$a_tipo_enc = [];
 $posibles_encargo_tipo = [];
 foreach ($cEncargoTipos as $oEncargoTipo) {
-    if ($oEncargoTipo->getId_tipo_enc()>=8100)
+    if ($oEncargoTipo->getId_tipo_enc()>=8100) {
         $a_tipo_enc[] = $oEncargoTipo->getId_tipo_enc();
+        $posibles_encargo_tipo[$oEncargoTipo->getId_tipo_enc()] = $oEncargoTipo->getTipo_enc();
+    }
+
 }
 
 $aWhere = array();
@@ -115,12 +105,13 @@ foreach ($cEncargos as $oEncargo) {
     $d = 0;
     $data_cols = [];
     $meta_dia = '';
-
+echo $desc_enc.' '.$id_enc.' '.$id_ubi.' '.$nombre_ubi.' '.$id_tipo_enc.'<br>';
     $data_cols["encargo"] = $desc_enc;
     $data_cols["id_enc"] = $id_enc;
     $data_cols["id_tipo_enc"] = $id_tipo_enc;
     $data_cols["tipo_encargo"] = $tipo_enc;
     $data_cols["meta"] = $meta_dia;
+    $data_cols["id_ubi"] = $id_ubi;
     $data_cols["lugar"] = $nombre_ubi;
     $data_cols["idioma_enc"] = $idioma_enc;
     $data_cols["nom_idioma"] = $nom_idioma;
@@ -128,9 +119,6 @@ foreach ($cEncargos as $oEncargo) {
     $data_cols["orden"] = $orden;
     $data_cols["prioridad"] = $prioridad;
     $data_cols["observ"] = $observ;
-//    echo $data_cols["encargo"].$data_cols["observ"].'ZZ<br>';
-    // añado una columna 'meta' con metadatos, invisible, porque no está
-    // en la definición de columns
     $data_cuadricula[] = $data_cols;
 }
 
@@ -153,24 +141,26 @@ $oHashNuevoEncargosZona->setUrl($url_update_encargos_zona);
 $oHashNuevoEncargosZona->setCamposForm('que!id_zona');
 $h_borrar_encargos_zona = $oHashBorrarEncargosZona->linkSinVal();
 
+$aWhere = array();
+$aOperador = array();
+$cond_tipo_enc = "{" . implode(', ', $a_tipo_enc) . "}";
+$aWhere['id_tipo_enc'] = $cond_tipo_enc;
+$aOperador['id_tipo_enc'] = 'ANY';
+$aWhere['id_zona'] = $Qid_zona;
 
-$oGesEncargoTipo = new GestorEncargoTipo();
+$aWhere['_ordre'] = $Qorden;
+$GesEncargos = new GestorEncargo();
+$cEncargos = $GesEncargos->getEncargos($aWhere, $aOperador);
 
-$grupo = '8...';
-//if (!empty($grupo)) {
-$aWhere = [];
-$aOperador = [];
-$aWhere['id_tipo_enc'] = '^' . $grupo;
-$aOperador['id_tipo_enc'] = '~';
-$oGesEncargoTipo = new GestorEncargoTipo();
-$cEncargoTipos = $oGesEncargoTipo->getEncargoTipos($aWhere, $aOperador);
+$id_tipo_enc = '';
+$idioma_enc = '';
+/*$posibles_encargo_tipo = [];
+foreach ($cEncargos as $oEncargo) {
 
-// desplegable de nom_tipo
-$posibles_encargo_tipo = [];
-foreach ($cEncargoTipos as $oEncargoTipo) {
+    $id_tipo_enc = $oEncargo->getId_tipo_enc();
     $posibles_encargo_tipo[$oEncargoTipo->getId_tipo_enc()] = $oEncargoTipo->getTipo_enc();
 //        echo $oEncargoTipo->getId_tipo_enc().'-->'.$oEncargoTipo->getTipo_enc().'<br>';
-}
+}*/
 $oDesplNoms = new Desplegable();
 $oDesplNoms->setNombre('id_tipo_enc');
 $oDesplNoms->setOpciones($posibles_encargo_tipo);
