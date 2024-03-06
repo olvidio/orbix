@@ -9,6 +9,7 @@ use actividadtarifas\model\entity\GestorTipoTarifa;
 use cambios\model\GestorAvisoCambios;
 use core\ConfigGlobal;
 use core\ConverterJson;
+use JsonException;
 use function core\is_true;
 use core;
 use stdClass;
@@ -870,26 +871,19 @@ class Cambio extends core\ClasePropiedades
      * Recupera el atributo json_fases_sv de Cambio
      *
      * @param boolean $bArray si hay que devolver un array en vez de un objeto.
-     * @return object $oFases
+     * @throws JsonException
      */
-    function getJson_fases_sv($bArray = FALSE)
+    public function getJson_fases_sv(bool $bArray = FALSE): array|stdClass|null
     {
         if (!isset($this->json_fases_sv) && !$this->bLoaded) {
             $this->DBCarregar();
         }
-        $oFases = json_decode(json_decode($this->json_fases_sv), $bArray);
-        if (empty($oFases) || $oFases == '[]') {
-            if ($bArray) {
-                $oFases = [];
-            } else {
-                $oFases = new stdClass;
-            }
-        }
-        return $oFases;
+
+         return (new ConverterJson($this->json_fases_sv, $bArray))->fromPg();
     }
 
     /**
-     * @throws \JsonException
+     * @throws JsonException
      */
     public function setJson_fases_sv(string|array|null $oJSON, bool $db = FALSE):void
     {
