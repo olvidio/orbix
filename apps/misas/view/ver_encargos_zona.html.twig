@@ -70,7 +70,6 @@
 <div style="position:relative">
 
     <input type=button name="nuevo" value="nuevo" onclick="fnjs_nuevo();">
-    <input type=button name="nnuevo" value="nnuevo" onclick="fnjs_nnuevo();">
 
     <div style="width:100%;">
         <div id="myGrid" class="slick-container" style="width:100%;height:500px;"></div>
@@ -81,8 +80,8 @@
 
         <label id="titulo_modal"></label>
         <hr/>
-        <input id="cell_selected" value=""/>
-        <input id="row_selected" value=""/>
+        <input type="hidden" id="cell_selected" value=""/>
+        <input type="hidden" id="row_selected" value=""/>
         <input type="hidden" id="id_enc_selected" value=""/>
         <input type="hidden" id="que" value=""/>
 
@@ -202,33 +201,20 @@
             if (json.success !== true) {
                 alert("{{ "respuesta"|trans|raw }}: " + json.mensaje);
             } else {
-                if (json.que=='nuevo'){
-                    alert('json.Nuevo');
-                    nom_tipo=$('#id_tipo_enc :selected').text();
-                    var nom_idioma=$('#idioma_enc :selected').text();
-                    data.push({'encargo':encargo, 'tipo_encargo': nom_tipo, 'lugar':json.lugar, 'descripcion_lugar':descripcion_lugar, 'nom_idioma':nom_idioma, 'idioma_enc':idioma_enc})
-                    grid.updateRowCount();
-                    grid.render();
-                    modal.hide();
-                    reset_campos_modal();
-                }
-                else{
-                    data[row]['encargo'] = encargo;
-                    nom_tipo=$('#id_tipo_enc :selected').text();
-                    data[row]['tipo_encargo'] = nom_tipo;
-                    data[row]['id_ubi'] = id_ubi;
-                    var lugar=$('#id_ubi :selected').text();
-                    data[row]['lugar'] = json.lugar;
-                    data[row]['orden'] = orden;
-                    data[row]['prioridad'] = prioridad;
-                    data[row]['descripcion_lugar'] = descripcion_lugar;
-                    data[row]['nom_idioma'] = nom_idioma;
-                    data[row]['idioma_enc'] = idioma_enc;
-                    data[row]['observ'] = observ;
-                    grid.updateRow(row);
-                    modal.hide();
-                    reset_campos_modal();
-                }
+                let id_zona = $('#id_zona').val();
+                let orden_select = $('#orden_select').val();
+                let url = '{{ url_ver_encargos_zona }}';
+                parametros='id_zona=' + id_zona + '&orden=' + orden_select + '{{ h_ver_encargos_zona|raw }}';;
+
+                var request = $.ajax({
+                    url: url,
+                    method: 'POST',
+                    data: parametros,
+                    dataType: 'html'
+               })
+                .done(function (rta_txt) {
+                    $('#div_encargos').html(rta_txt);
+                });
             }
         });
     }
@@ -252,21 +238,20 @@
             if (json.success !== true) {
                 alert("{{ "respuesta"|trans|raw }}: " + json.mensaje);
             } else {
-                alert('soc aci');
-                // es posible que al guardar se creen datos (tstart, tend) que hay que añadir a los metadatos
-                    data[row]['tipo_encargo'] = '';
-                    data[row]['encargo'] = '';
-                    data[row]['id_ubi'] = '';
-                    data[row]['lugar'] = '';
-                    data[row]['descripcion_lugar'] = '';
-                    data[row]['orden'] = '';
-                    data[row]['prioridad'] = '';
-                    data[row]['nom_idioma'] = '';
-                    data[row]['idioma_enc'] = '';
-                    data[row]['observ'] = '';
-                    grid.updateRow(row);
-                modal.hide();
-                reset_campos_modal();
+                let id_zona = $('#id_zona').val();
+                let orden_select = $('#orden_select').val();
+                let url = '{{ url_ver_encargos_zona }}';
+                parametros='id_zona=' + id_zona + '&orden=' + orden_select + '{{ h_ver_encargos_zona|raw }}';;
+
+                var request = $.ajax({
+                    url: url,
+                    method: 'POST',
+                    data: parametros,
+                    dataType: 'html'
+               })
+                .done(function (rta_txt) {
+                    $('#div_encargos').html(rta_txt);
+                });
             }
         });
     }
@@ -276,14 +261,6 @@
         reset_campos_modal();
         $('#titulo_modal').html('nuevo encargo');
         modal.show();
-    }
-
-    function fnjs_nnuevo(){
-        alert('nfjs_nnnnuevo');
-                    data.push({'encargo':'e', 'tipo_encargo': 'nom_tipo', 'lugar':'json.lugar', 'descripcion_lugar':'descripcion_lugar', 'nom_idioma':'nom_idioma', 'idioma_enc':'idioma_enc'})
-                    grid.updateRowCount();
-                grid.updateRow(row);
-                    grid.render();
     }
 
     function reset_campos_modal() {

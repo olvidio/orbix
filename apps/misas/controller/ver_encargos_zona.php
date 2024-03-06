@@ -25,7 +25,7 @@ $columns_cuadricula = [
     ["id" => "encargo", "name" => "Encargo", "field" => "encargo", "width" => 250, "cssClass" => "cell-title"],
     ["id" => "tipo_encargo", "name" => "Tipo de encargo", "field" => "tipo_encargo", "width" => 200, "cssClass" => "cell-title"],
 //    ["id" => "id_tipo_enc", "name" => "id Tipo de encargo", "field" => "id_tipo_enc", "width" => 150, "cssClass" => "cell-title"],
-    ["id" => "id_ubi", "name" => "id ubi", "field" => "id_ubi", "width" => 150, "cssClass" => "cell-title"],
+//    ["id" => "id_ubi", "name" => "id ubi", "field" => "id_ubi", "width" => 150, "cssClass" => "cell-title"],
     ["id" => "lugar", "name" => "Lugar", "field" => "lugar", "width" => 150, "cssClass" => "cell-title"],
     ["id" => "orden", "name" => "Orden", "field" => "orden", "width" => 100, "cssClass" => "cell-title"],
     ["id" => "prioridad", "name" => "Prioridad", "field" => "prioridad", "width" => 100, "cssClass" => "cell-title"],
@@ -105,7 +105,6 @@ foreach ($cEncargos as $oEncargo) {
     $d = 0;
     $data_cols = [];
     $meta_dia = '';
-echo $desc_enc.' '.$id_enc.' '.$id_ubi.' '.$nombre_ubi.' '.$id_tipo_enc.'<br>';
     $data_cols["encargo"] = $desc_enc;
     $data_cols["id_enc"] = $id_enc;
     $data_cols["id_tipo_enc"] = $id_tipo_enc;
@@ -131,6 +130,12 @@ $oHashEncargosZona->setUrl($url_update_encargos_zona);
 $oHashEncargosZona->setCamposForm('id_enc!que!id_tipo_enc!id_ubi!id_zona!descripcion_lugar!encargo!idioma_enc!observ!orden!prioridad');
 $h_encargos_zona = $oHashEncargosZona->linkSinVal();
 
+$url_ver_encargos_zona = 'apps/misas/controller/ver_encargos_zona.php';
+$oHashVerEncargosZona = new Hash();
+$oHashVerEncargosZona->setUrl($url_ver_encargos_zona);
+$oHashVerEncargosZona->setCamposForm('id_zona!orden');
+$h_ver_encargos_zona = $oHashVerEncargosZona->linkSinVal();
+
 $oHashBorrarEncargosZona = new Hash();
 $oHashBorrarEncargosZona->setUrl($url_update_encargos_zona);
 $oHashBorrarEncargosZona->setCamposForm('id_enc!que');
@@ -154,13 +159,6 @@ $cEncargos = $GesEncargos->getEncargos($aWhere, $aOperador);
 
 $id_tipo_enc = '';
 $idioma_enc = '';
-/*$posibles_encargo_tipo = [];
-foreach ($cEncargos as $oEncargo) {
-
-    $id_tipo_enc = $oEncargo->getId_tipo_enc();
-    $posibles_encargo_tipo[$oEncargoTipo->getId_tipo_enc()] = $oEncargoTipo->getTipo_enc();
-//        echo $oEncargoTipo->getId_tipo_enc().'-->'.$oEncargoTipo->getTipo_enc().'<br>';
-}*/
 $oDesplNoms = new Desplegable();
 $oDesplNoms->setNombre('id_tipo_enc');
 $oDesplNoms->setOpciones($posibles_encargo_tipo);
@@ -201,7 +199,10 @@ $a_campos = ['oPosicion' => $oPosicion,
     'json_columns_cuadricula' => $json_columns_cuadricula,
     'json_data_cuadricula' => $json_data_cuadricula,
     'h_encargos_zona' => $h_encargos_zona,
+    'h_ver_encargos_zona' => $h_ver_encargos_zona,
+    'url_ver_encargos_zona' => $url_ver_encargos_zona,
     'h_borrar_encargos_zona' => $h_borrar_encargos_zona,
+    'url_update_encargos_zona' => $url_update_encargos_zona,
     'oDesplCentros' => $oDesplCentros,
     'oDesplNoms' => $oDesplNoms,
     'oDesplIdiomas' => $oDesplIdiomas,
