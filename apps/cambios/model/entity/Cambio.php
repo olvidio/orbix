@@ -195,7 +195,7 @@ class Cambio extends core\ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'id_item_cambio') && $val_id !== '') $this->iid_item_cambio = (int)$val_id;
+                if (($nom_id === 'id_item_cambio') && $val_id !== '') $this->iid_item_cambio = (int)$val_id;
             }
         } else {
             if (isset($a_id) && $a_id !== '') {
@@ -419,7 +419,7 @@ class Cambio extends core\ClasePropiedades
          * Para el resto de id_nom devuelvo false para que no lo ponga en la lista.
          *
          */
-        if ($sPropiedad == 'id_nom') {
+        if ($sPropiedad === 'id_nom') {
             if (!empty($sValor_old)) {
                 //$oPersona = Persona::NewPersona($sValor_old);
                 $oPersona = new PersonaSacd($sValor_old);
@@ -431,7 +431,7 @@ class Cambio extends core\ClasePropiedades
                 $sValor_new = $oPersona->getPrefApellidosNombre();
             }
         }
-        if ($sPropiedad == 'id_ubi') {
+        if ($sPropiedad === 'id_ubi') {
             if (!empty($sValor_old)) {
                 $oUbi = Ubi::NewUbi($sValor_old);
                 $sValor_old = $oUbi->getNombre_ubi();
@@ -442,34 +442,34 @@ class Cambio extends core\ClasePropiedades
             }
         }
         /* Per posar noms que s'entenguin als camps de l'activitat */
-        if ($sObjeto == 'Actividad' or
-            $sObjeto == 'ActividadDl' or
-            $sObjeto == 'ActividadEx') {
+        if ($sObjeto === 'Actividad' or
+            $sObjeto === 'ActividadDl' or
+            $sObjeto === 'ActividadEx') {
 
-            if ($sPropiedad == 'status') {
+            if ($sPropiedad === 'status') {
                 $sValor_old = $aStatus[$sValor_old];
                 $sValor_new = $aStatus[$sValor_new];
             }
             // Caso especial si el campo es fecha.
-            if ($sPropiedad == 'f_ini' || $sPropiedad == 'f_fin') {
+            if ($sPropiedad === 'f_ini' || $sPropiedad === 'f_fin') {
                 $oFOld = new DateTimeLocal($sValor_old);
                 $sValor_old = $oFOld->getFromLocal();
                 $oFNew = new DateTimeLocal($sValor_new);
                 $sValor_new = $oFNew->getFromLocal();
             }
-            if ($sPropiedad == 'id_tarifa') {
+            if ($sPropiedad === 'id_tarifa') {
                 $gesTarifas = new GestorTipoTarifa();
                 $aTarifas = $gesTarifas->getArrayTipoTarifas();
                 $sValor_old = empty($sValor_old) ? $sValor_old : $aTarifas[$sValor_old];
                 $sValor_new = empty($sValor_new) ? $sValor_new : $aTarifas[$sValor_new];
             }
-            if ($sPropiedad == 'id_repeticion') {
+            if ($sPropiedad === 'id_repeticion') {
                 $gesRepeticion = new GestorRepeticion();
                 $aRepeticion = $gesRepeticion->getArrayRepeticion();
                 $sValor_old = empty($sValor_old) ? $sValor_old : $aRepeticion[$sValor_old];
                 $sValor_new = empty($sValor_new) ? $sValor_new : $aRepeticion[$sValor_new];
             }
-            if ($sPropiedad == 'nivel_stgr') {
+            if ($sPropiedad === 'nivel_stgr') {
                 $gesNivelStgr = new GestorNivelStgr();
                 $aNivelStgr = $gesNivelStgr->getArrayNivelesStgr();
                 $sValor_old = empty($sValor_old) ? $sValor_old : $aNivelStgr[$sValor_old];
@@ -488,10 +488,10 @@ class Cambio extends core\ClasePropiedades
                 $etiqueta = $oDatosCampo->getEtiqueta();
                 // si es boolean, traduzco a true-false:
                 $tipo = $oDatosCampo->datos_campo($oDbl, 'tipo');
-                if ($tipo == 'bool') {
+                if ($tipo === 'bool') {
                     // OJO. Excepción en el caso de completar una fase, el campo es completado (bool), pero en el 
                     // valor_old lo que pongo es el id_fase.
-                    if ($sObjeto != 'ActividadProcesoTarea' && $sPropiedad != 'completado') {
+                    if ($sObjeto !== 'ActividadProcesoTarea' && $sPropiedad !== 'completado') {
                         $sValor_old = is_true($sValor_old) ? 'true' : 'false';
                     }
                     $sValor_new = is_true($sValor_new) ? 'true' : 'false';
@@ -500,11 +500,11 @@ class Cambio extends core\ClasePropiedades
         }
 
         // para los asistentes que no son sacd. No tengo su nombre.
-        if ($sObjeto == 'Asistente' or
-            $sObjeto == 'AsistenteDl' or
-            $sObjeto == 'AsistenteOut' or
-            $sObjeto == 'AsistenteEx' or
-            $sObjeto == 'AsistenteIn') {
+        if ($sObjeto === 'Asistente' or
+            $sObjeto === 'AsistenteDl' or
+            $sObjeto === 'AsistenteOut' or
+            $sObjeto === 'AsistenteEx' or
+            $sObjeto === 'AsistenteIn') {
             if (empty($sValor_new) && empty($sValor_old)) return FALSE;
         }
         $sValor_old = empty($sValor_old) ? '-' : $sValor_old;
@@ -613,10 +613,10 @@ class Cambio extends core\ClasePropiedades
                         $sFase = $aStatus[$idStatus];
 
                         $sformat = _("Fase cambiada en la actividad \"%1\$s\". Status \"%3\$s\"");
-                        if ($sValor_old == '-' && $sValor_new == 1) {
+                        if ($sValor_old === '-' && $sValor_new == 1) {
                             $sformat = _("Status \"%2\$s\" completado en la actividad \"%1\$s\". Status actual \"%3\$s\"");
                         }
-                        if ($sValor_old == 1 && $sValor_new == '-') {
+                        if ($sValor_old == 1 && $sValor_new === '-') {
                             $sformat = _("Status \"%2\$s\" eliminada en la actividad \"%1\$s\". Status actual \"%3\$s\"");
                         }
                     }
@@ -770,7 +770,7 @@ class Cambio extends core\ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'id_item_cambio') && $val_id !== '') $this->iid_item_cambio = (int)$val_id;
+                if (($nom_id === 'id_item_cambio') && $val_id !== '') $this->iid_item_cambio = (int)$val_id;
             }
         }
     }
@@ -894,26 +894,19 @@ class Cambio extends core\ClasePropiedades
      * Recupera el atributo json_fases_sf de Cambio
      *
      * @param boolean $bArray si hay que devolver un array en vez de un objeto.
-     * @return object $oFases
+     * @throws JsonException
      */
-    function getJson_fases_sf($bArray = FALSE)
+    function getJson_fases_sf($bArray = FALSE): array|stdClass|null
     {
         if (!isset($this->json_fases_sf) && !$this->bLoaded) {
             $this->DBCarregar();
         }
-        $oFases = json_decode(json_decode($this->json_fases_sf), $bArray);
-        if (empty($oFases) || $oFases == '[]') {
-            if ($bArray) {
-                $oFases = [];
-            } else {
-                $oFases = new stdClass;
-            }
-        }
-        return $oFases;
+
+        return (new ConverterJson($this->json_fases_sf, $bArray))->fromPg();
     }
 
     /**
-     * @throws \JsonException
+     * @throws JsonException
      */
     public function setJson_fases_sf(string|array|null $oJSON, bool $db = FALSE):void
     {
@@ -1126,7 +1119,7 @@ class Cambio extends core\ClasePropiedades
      * Si itiimestamp es string, y convert=true se convierte usando el formato web\DateTimeLocal->getFormat().
      * Si convert es false, df_ini debe ser un string en formato ISO (Y-m-d). Corresponde al pgstyle de la base de datos.
      *
-     * @param date|string itiimestamp='' optional.
+     * @param string itiimestamp='' optional.
      * @param boolean convert=true optional. Si es false, itiimestamp debe ser un string en formato ISO (Y-m-d).
      */
     function setTimestamp_cambio($itimestamp_cambio = '', $convert = false)
