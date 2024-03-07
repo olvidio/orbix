@@ -27,27 +27,26 @@ class consumirColaMail
     {
         $aWhere = ['sended' => 'x', '_limit' => $limit];
         $aOperador['sended'] = 'IS NULL';
-        $cMails = $this->ColaMailRepository->getColaMails($aWhere, $aOperador);
-
-        return $cMails;
+        return $this->ColaMailRepository->getColaMails($aWhere, $aOperador);
     }
 
     public function enviar()
     {
         $ahora = new DateTimeLocal();
         // de 5 en 5 para no consumir mucha memoria
-        $cMails = $this->seleccionar(5);
-        foreach ($cMails as $oMail) {
-            //$uuid_item = $oMail->getUuid_item();
-            $mail_to = $oMail->getMail_to();
-            $subject = $oMail->getSubject();
-            $message = $oMail->getMessage();
-            $headers = $oMail->getHeaders();
-            // para pruebas
-            $mail_to = 'danixxx@moneders.net, dserrabou@gmail.com';
-            mail($mail_to, $subject, $message, $headers);
-            $oMail->setSended($ahora);
-            $this->ColaMailRepository->Guardar($oMail);
+        while ( $cMails = $this->seleccionar(5)) {
+            foreach ($cMails as $oMail) {
+                //$uuid_item = $oMail->getUuid_item();
+                $mail_to = $oMail->getMail_to();
+                $subject = $oMail->getSubject();
+                $message = $oMail->getMessage();
+                $headers = $oMail->getHeaders();
+                // para pruebas
+                $mail_to = 'danixxx@moneders.net, dserrabou@gmail.com';
+                mail($mail_to, $subject, $message, $headers);
+                $oMail->setSended($ahora);
+                $this->ColaMailRepository->Guardar($oMail);
+            }
         }
     }
 }

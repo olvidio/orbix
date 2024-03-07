@@ -289,17 +289,16 @@ class ComunicarActividadesSacd
 
             $email = $e_mail_jefe;
             $email .= empty($e_mail_sacd)? '' : ", $e_mail_sacd";
-            $email .= empty($e_mail_ctr)? '' : ", $e_mail_ctr";
 
-            $body = "<div style='clear: both; display: block; width: 25cm; page-break-after: always; font-family: sans-serif; font-size: 12pt;'>
+            $body_cabecera = "<div style='clear: both; display: block; width: 25cm; page-break-after: always; font-family: sans-serif; font-size: 12pt;'>
                 <br><!-- si no pongo esta linea, no me imprime el nombre (a partir de la 2ª página -->
                 <span style='display: block'>
                     <span style = 'display: block; float: left; text-align: left;'>$nom_ap</span>";
-            $body .= "<span style='display: block; float: right; text-align: right;'>vc-$mi_dele</span>";
-            $body .= "</span>
+            $body_cabecera .= "<span style='display: block; float: right; text-align: right;'>vc-$mi_dele</span>";
+            $body_cabecera .= "</span>
                     <span style = 'display: block; padding-left: 15mm; padding-right: 10mm; padding-top: 10mm; padding-bottom: 10mm;'>$txt</span>";
 
-            $body .= " <!-- Actividades -->
+            $body_cabecera .= " <!-- Actividades -->
                 <table  style='border: 1px solid #000; border-collapse: collapse; margin: 0; margin-bottom: 1em; padding: 6px;'>
                     <tr>
                         <td style='text-align: center; font-weight: bold; padding: 1rem; outline: 1px solid black;'>$f_ini</td>
@@ -312,6 +311,8 @@ class ComunicarActividadesSacd
                         <td style='text-align: center; font-weight: bold; padding: 1rem; outline: 1px solid black;'>$observ</td>
                         <td style='text-align: center; font-weight: bold; padding: 1rem; outline: 1px solid black;'>$nom_tipo</td>
                     </tr>";
+            $body_sacd = '';
+            $body_ctr = '';
             if (is_array($a_actividades)) {
                 foreach ($a_actividades as $act) {
                     if (is_true($act['propio'])) {
@@ -324,7 +325,7 @@ class ComunicarActividadesSacd
                     } else {
                         $cargo_observ = $act['observ'];
                     }
-                    $body .= "<tr>
+                    $body_sacd .= "<tr>
                         <td style='text-align: left; padding: 1rem; outline: 1px solid black;'>$marca " . $act['f_ini'] . "</td>
                         <td style='text-align: left; padding: 1rem; outline: 1px solid black;'>" . $act['f_fin'] . "</td>
                         <td style='text-align: center; padding: 1rem; outline: 1px solid black;'>" . $act['nombre_ubi'] . "</td>
@@ -335,25 +336,48 @@ class ComunicarActividadesSacd
                         <td style='text-align: center; padding: 1rem; outline: 1px solid black;'>" . $cargo_observ . "</td>
                         <td style='text-align: center; padding: 1rem; outline: 1px solid black;'>" . $act['nom_tipo'] . "</td>
                     </tr>";
+
+                    $body_ctr .= "<tr>
+                        <td style='text-align: left; padding: 1rem; outline: 1px solid black;'>$marca " . $act['f_ini'] . "</td>
+                        <td style='text-align: left; padding: 1rem; outline: 1px solid black;'>" . $act['f_fin'] . "</td>
+                        <td style='text-align: center; padding: 1rem; outline: 1px solid black;'>" . $act['nombre_ubi'] . "</td>
+                        <td style='text-align: center; padding: 1rem; outline: 1px solid black;'>" . $act['sfsv'] . "</td>
+                        <td style='text-align: center; padding: 1rem; outline: 1px solid black;'>" . $act['actividad'] . "</td>
+                        <td style='text-align: center; padding: 1rem; outline: 1px solid black;'>" . $act['asistentes'] . "</td>
+                        ";
+                    if ($act['sfsv'] === "sf") {
+                        $body_ctr .= "<td style='text-align: center; padding: 1rem; outline: 1px solid black;'></td>
+                            <td style='text-align: center; padding: 1rem; outline: 1px solid black;'></td>
+                            <td style='text-align: center; padding: 1rem; outline: 1px solid black;'></td>
+                        </tr>";
+                    } else {
+                        $body_ctr .= "<td style='text-align: center; padding: 1rem; outline: 1px solid black;'>" . $act['encargado'] . "</td>
+                            <td style='text-align: center; padding: 1rem; outline: 1px solid black;'>" . $cargo_observ . "</td>
+                            <td style='text-align: center; padding: 1rem; outline: 1px solid black;'>" . $act['nom_tipo'] . "</td>
+                        </tr>";
+                    }
                 }
             }
-            $body .= "</table>
+            $body_pie = "</table>
                     <span style = 'display: block;'>
                         <span style = 'display: block; float: left; text-align: left;'>*) $propio</span>
                         <span style='display: block; float: right; text-align: right;'>$lugar_fecha</span>
                     </span>
                 </div>";
 
-            // mail
+            // mail. Distingo para el sacd y para el ctr:
+            $body_sacd = $body_cabecera.$body_sacd.$body_pie;
+            $body_ctr = $body_cabecera.$body_ctr.$body_pie;
 
             //Envío en formato HTML
             $headers = "MIME-Version: 1.0\r\n";
             $headers .= "Content-type: text/html; charset=utf-8\r\n";
 
             //Dirección del remitente
-            $headers .= "From: no-Reply@moneders.net\r\n";
+            $headers .= "From: Aquinate <no-Reply@moneders.net>\r\n";
             // Por cambios en la política de gmail, para evitar conflictos con
             // SPF y DKIM, el From debe ser igual que el Return-path.
+            // Parece que el no-Reply también lo acepta.
 
             //Dirección de respuesta
             $headers .= "Reply-To: $e_mail_jefe\r\n";
@@ -366,14 +390,12 @@ class ComunicarActividadesSacd
             // la idea es crear una regla de redirección en aquinate@moneders.net
             // que redirija a From.
 
-            $cuerpo = "<html lang=\"$idioma\"><body>$body</body></html>";
-            //echo "($email<br>$asunto<br>$cuerpo<br>$headers)<br>";
-            //mail($email, $asunto, $cuerpo, $headers);
             /* dado que desde dentro no puedo enviar mails,
             guardo la información en una tabla (cola_mails) en db=comun
             para poder acceder desde el servidor exterior, y con un cron
             o algo ir enviando los mails */
             $write_by = basename(__FILE__);
+            $cuerpo = "<html lang=\"$idioma\"><body>$body_sacd</body></html>";
             $ColaMailId = new ColaMailId(Uuid::random());
             $oColaMail = new ColaMail();
             $oColaMail->setUuid_item($ColaMailId);
@@ -384,6 +406,22 @@ class ComunicarActividadesSacd
             $oColaMail->setWrited_by($write_by);
             $ColaMailRepository = new ColaMailRepository();
             $ColaMailRepository->Guardar($oColaMail);
+
+            // mail para el ctr. No se envía copia al jefe de calendario
+            if (!empty($e_mail_ctr)) {
+                $cuerpo = "<html lang=\"$idioma\"><body>$body_ctr</body></html>";
+                $ColaMailId = new ColaMailId(Uuid::random());
+                $oColaMail = new ColaMail();
+                $oColaMail->setUuid_item($ColaMailId);
+                $oColaMail->setMail_to($e_mail_ctr);
+                $oColaMail->setHeaders($headers);
+                $oColaMail->setMessage($cuerpo);
+                $oColaMail->setSubject($asunto);
+                $oColaMail->setWrited_by($write_by);
+                $ColaMailRepository = new ColaMailRepository();
+                $ColaMailRepository->Guardar($oColaMail);
+            }
+
         }
     }
 }

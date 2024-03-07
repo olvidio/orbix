@@ -34,7 +34,14 @@
     }
     fnjs_enviar_mails = function () {
         $('#mail').val('si');
-        alert("{{ "No se enviará a los sacd que no tengan actividades"|trans|raw }}");
+        let msg = "{{ "- Se enviará a las 14:30 y a las 21:00."|trans|raw }}";
+        msg += "\r\n";
+        msg += "{{ "- Se enviará una copia al jefe del calendario y al ctr del sacd."|trans|raw }}";
+        msg += "\r\n";
+        msg += "{{ "- No se enviará a los sacd que no tengan actividades"|trans|raw }}";
+        msg += "\r\n";
+
+        alert(msg);
         var url = '{{ url|raw }}';
         var parametros = $('#seleccion').serialize();
         $.ajax({
