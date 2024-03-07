@@ -231,7 +231,7 @@ class ComunicarActividadesSacd
         $poblacion = $oActividadesSacdFunciones->getLugar_dl();
         $lugar_fecha = "$poblacion, $hoy_local";
 
-        $asunto = _("actividades");
+        $asunto = _("atención actividades");
         $mi_dele = ConfigGlobal::mi_dele();
 
         // e-mail jefe calendario
@@ -351,7 +351,9 @@ class ComunicarActividadesSacd
             $headers .= "Content-type: text/html; charset=utf-8\r\n";
 
             //Dirección del remitente
-            $headers .= "From: $e_mail_jefe\r\n";
+            $headers .= "From: no-Reply@moneders.net\r\n";
+            // Por cambios en la política de gmail, para evitar conflictos con
+            // SPF y DKIM, el From debe ser igual que el Return-path.
 
             //Dirección de respuesta
             $headers .= "Reply-To: $e_mail_jefe\r\n";
