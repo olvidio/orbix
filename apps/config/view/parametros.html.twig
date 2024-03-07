@@ -9,7 +9,7 @@ fnjs_guardar=function(formulario){
 			data: $(this).serialize()
 		})
 		.done(function (rta_txt) {
-			if (rta_txt != '' && rta_txt != '\n') {
+			if (rta_txt !== '' && rta_txt !== '\n') {
 				alert (rta_txt);
 			}
         });
@@ -54,9 +54,10 @@ fnjs_guardar=function(formulario){
 
 
 <h3>{{ "jefe calendario (login). Si son varios, separarlos por coma"|trans|raw }}:</h3>
+<h6>{{ "por orden, al e-mail del primero es la que se envian las comunicaciones de atención de actividades"|trans|raw }}:</h6>
 <form id="frm_jefecalendario" name="frm_jefecalendario" action="">
 {{ oHashJC.getCamposHtml|raw }}
-<input type="text" name="valor" value="{{ jefe_calendario }}" >
+<input type="text" name="valor" value="{{ jefe_calendario }}" size="70">
 <input type="button" value="{{ "Guardar"|trans|raw }}" onClick="fnjs_guardar(this.form);" >
 </form>
 <hr>

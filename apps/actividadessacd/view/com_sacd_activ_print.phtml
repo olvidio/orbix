@@ -1,7 +1,7 @@
 <script>
     fnjs_left_side_hide();
 </script>
-<style type="text/css">
+<style>
     body {
         size: landscape;
     }
@@ -80,11 +80,7 @@
     }
 </style>
 <body>
-<?php if ($Qque == "un_sacd") {
-    echo $oPosicion->mostrar_left_slide(1);
-}
-?>
-<span id="span_exportar" title="comunicacion_sacd"></span>
+<span id="span_exportar" title="comunicacion_sacd">
 <?php
 $i = 0;
 foreach ($array_actividades as $id_nom => $vector) {
@@ -109,10 +105,10 @@ foreach ($array_actividades as $id_nom => $vector) {
         <br><!-- si no pongo esta linea, no me imprime el nombre (a partir de la 2ª página -->
         <cabecera>
             <izquierda><?= $nom_ap ?></izquierda>
-            <?php if ($propuesta != "true") { ?>
-                <?php if ($Qque === "nagd") { ?>
-                    <derecha>vc-<?= $mi_dele ?></derecha>
-                <?php } ?>
+            <?php if ($propuesta !== "true") { ?>
+            <?php if ($Qque === "nagd") { ?>
+                <derecha>vc-<?= $mi_dele ?></derecha>
+            <?php } ?>
                 </cabecera>
                 <comunicacion><?= $txt ?></comunicacion>
             <?php } else { ?>
@@ -171,4 +167,5 @@ foreach ($array_actividades as $id_nom => $vector) {
     <?php
 }
 ?>
+</span>
 </body>

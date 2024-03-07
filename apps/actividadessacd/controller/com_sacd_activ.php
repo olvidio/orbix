@@ -9,6 +9,7 @@ use personas\model\entity\GestorPersonaSSSC;
 use personas\model\entity\PersonaSacd;
 use usuarios\model\entity\Usuario;
 use web\DateTimeLocal;
+use web\Hash;
 use web\Periodo;
 
 /**
@@ -55,6 +56,7 @@ $Qempiezamin = (string)filter_input(INPUT_POST, 'empiezamin');
 $Qempiezamax = (string)filter_input(INPUT_POST, 'empiezamax');
 
 $Qmail = (string)filter_input(INPUT_POST, 'mail');
+$Qmail = empty($Qmail) ? 'no' : $Qmail;
 
 $oPosicion->recordar();
 
@@ -72,7 +74,7 @@ if ($oMiUsuario->isRole('p-sacd')) {
 }
 
 // Si vengo de la página personas_select.php, sólo quiero ver la lista de un sacd.
-if ($Qque == "un_sacd") {
+if ($Qque === "un_sacd") {
     $a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
     if (!empty($a_sel)) { //vengo de un checkbox
         $Qid_nom = (integer)strtok($a_sel[0], "#");
@@ -133,7 +135,7 @@ switch ($Qque) {
         $aWhereP['dl'] = $mi_dele;
         $aWhereP['_ordre'] = 'apellido1,apellido2,nom';
         $GesPersonas = new GestorPersonaSSSC();
-        $cPersonas = $GesPersonas->getPersonasSSSC($aWhereP);
+        $cPersonas = $GesPersonas->getPersonas($aWhereP);
         break;
     case "un_sacd":
         $oPersona = new PersonaSacd($Qid_nom);
@@ -159,13 +161,41 @@ $a_campos = ['oPosicion' => $oPosicion,
 ];
 
 if ($Qmail === 'no') {
-    $oView = new core\View('actividadessacd/controller');
-    $oView->renderizar('com_sacd_activ_print.phtml', $a_campos);
+    if ($Qque === 'un_sacd') {
+        $periodo_txt = sprintf(_("atención actividades para el periodo %s"), $oPeriodo->getTxt_cusro());
+        $url = "apps/actividadessacd/controller/com_sacd_activ.php";
+
+        $oHash = new Hash();
+        $a_camposHidden = array(
+            'id_nom' => $Qid_nom,
+            'que' => $Qque,
+            'mail' => '',
+        );
+        $oHash->setArraycamposHidden($a_camposHidden);
+        $oHash->setCamposNo('mail');
+
+        $a_campos = [ 'oPosicion' => $oPosicion,
+            'oHash' => $oHash,
+            'url' => $url,
+            'array_actividades' => $array_actividades,
+            'Qque' => $Qque,
+            'mi_dele' => $mi_dele,
+            'lugar_fecha' => $lugar_fecha,
+            'propuesta' => $Qpropuesta,
+            'periodo_txt' => $periodo_txt,
+        ];
+
+        $oView = new core\View('actividadessacd/controller');
+        $oView->renderizar('com_un_sacd_activ_print.phtml', $a_campos);
+    } else {
+        $oView = new core\View('actividadessacd/controller');
+        $oView->renderizar('com_sacd_activ_print.phtml', $a_campos);
+    }
 }
 
 // Añado la lista de los sacd de paso:
 $array_actividades_de_paso = [];
-if ($Qque != "un_sacd" && $Qmail === 'no') {
+if ($Qque !== "un_sacd" && $Qmail === 'no') {
     $aWhereP = [];
     $aWhereP['situacion'] = 'A';
     $aWhereP['sacd'] = 't';
@@ -201,6 +231,6 @@ if ($Qque != "un_sacd" && $Qmail === 'no') {
     }
 }
 
-if  ($Qmail === 'si') {
+if ($Qmail === 'si') {
     $oComunicarActividadesSacd->envairMails($array_actividades);
 }

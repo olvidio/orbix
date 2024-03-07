@@ -22,7 +22,6 @@ require_once("apps/core/global_header.inc");
 require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-
 // claves:
 $a_Claves = ["com_sacd" => _("comunicación a los sacerdotes"),
     't_propio' => _("titulo: propio"),

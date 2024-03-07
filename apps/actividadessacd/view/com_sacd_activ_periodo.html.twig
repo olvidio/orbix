@@ -1,17 +1,17 @@
 <div id='condiciones' class='no_print'>
+    {% if perm_mod_txt %}
+        <li>
+            <span class=link onclick="fnjs_update_div('#main','{{ url_com_txt|raw }}')">
+                {{ "click para modificar los textos de las comunicaciones"|trans|raw }}
+            </span>
+        </li>
+    {% endif %}
+
     <form id="seleccion" name="seleccion" action="{{ url }}" method="post">
         <h3 class=subtitulo>{{ "lista con la atención de actividades para mandar a los sacd"|trans|raw }}</h3>
         {{ oHash.getCamposHtml()|raw }}
         {{ oFormP.getHtml()|raw }}
     </form>
-
-    {% if perm_mod_txt %}
-        <li>
-	<span class=link onclick="fnjs_update_div('#main','{{ url_com_txt|raw }}')">
-		{{ "modificar los textos de las comunicaciones"|trans|raw }}
-	</span>
-        </li>
-    {% endif %}
 </div>
 <div id='exportar' refe='actividadessacd/view/com_sacd_activ_print.phtml'>
 </div>

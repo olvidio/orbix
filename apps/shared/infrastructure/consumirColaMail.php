@@ -32,9 +32,9 @@ class consumirColaMail
 
     public function enviar()
     {
-        $ahora = new DateTimeLocal();
         // de 5 en 5 para no consumir mucha memoria
         while ( $cMails = $this->seleccionar(5)) {
+            $ahora = new DateTimeLocal();
             foreach ($cMails as $oMail) {
                 //$uuid_item = $oMail->getUuid_item();
                 $mail_to = $oMail->getMail_to();
