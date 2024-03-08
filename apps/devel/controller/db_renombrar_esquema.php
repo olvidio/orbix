@@ -226,7 +226,8 @@ if (!empty($Qcomun)) {
     $oAlterSchema->setSchema($esquema);
 
     $oAlterSchema->setDefaults($aDefaults);
-    $oAlterSchema->updateDatosRegexp($aDatos);
+    // No hace falta cambiar los datos, ya se sincroniza
+    //$oAlterSchema->updateDatosRegexp($aDatos);
 }
 
 // sv
