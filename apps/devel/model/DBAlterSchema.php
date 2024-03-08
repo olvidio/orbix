@@ -496,7 +496,7 @@ class DBAlterSchema
 
     /**
      * Para el esquema matriz, pasa las asistencias_out a asistencias_dl para el caso de asistencias
-     *  a actividades que estan en la dl (las que se han insertado de dl_old) y se borran del
+     *  a actividades que están en la dl (las que se han insertado de dl_old) y se borran del
      *  la tabla de a_importadas.
      *
      */

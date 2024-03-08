@@ -59,6 +59,22 @@ $oConfigDBComun->renombrarListaEsquema('comun', $esquema_old, $esquema);
 $oGesDbSchema = new GestorDbSchema();
 $oGesDbSchema->cambiarNombre($esquema_old, $esquema, 'comun');
 
+/////////  para comun en interior (select)
+$configComunP = $oConfigDB->getEsquema('public_select');
+$oConexion = new core\DBConnection($configComunP);
+$oConComun = $oConexion->getPDO();
+$oDBRol->setDbConexion($oConComun);
+// mantener el password:
+$oConfigDBComun = new core\ConfigDB('comun');
+$configComun = $oConfigDBComun->getEsquema($esquema_old);
+$esquema_pwd = $configComun['password'];
+
+$oDBRol->setUser($esquema);
+$oDBRol->setPwd($esquema_pwd);
+$oDBRol->renombrarSchema($esquema_old); // Cambia el nombre del esquema
+$oDBRol->renombrarUsuario($esquema_old); // reescribe el password que ya tenia.
+$oConfigDBComun->renombrarListaEsquema('comun', $esquema_old, $esquema);
+
 // sv
 $configSvP = $oConfigDB->getEsquema('publicv');
 $oConexion = new core\DBConnection($configSvP);
@@ -100,6 +116,8 @@ $oConfigDBSve->renombrarListaEsquema('sv-e', $esquema_oldv, $esquemav);
 $oGesDbSchema = new GestorDbSchema();
 $oGesDbSchema->cambiarNombre($esquema_old, $esquema, 'sv-e');
 
+//////////// sv-e para db interior (select) debería servir el de sv normal
+
 // sf
 /*
 $configSf = $oConfigDB->getEsquema('publicf');
@@ -128,16 +146,6 @@ $DlNew = $Qdl;
 
 // comun
 if (!empty($Qcomun)) {
-    $oConfigDB = new core\ConfigDB('importar'); //de la database comun
-    $config = $oConfigDB->getEsquema('public'); //de la database comun
-
-    $oConexion = new core\DBConnection($config);
-    $oDevelPC = $oConexion->getPDO();
-
-    $oAlterSchema = new DBAlterSchema();
-    $oAlterSchema->setDbConexion($oDevelPC);
-    $oAlterSchema->setSchema($esquema);
-
     // Valores Default:
     $aDefaults = [
         ['tabla' => 'a_actividad_proceso_sf', 'campo' => 'id_schema', 'valor' => "idschema('$esquema'::text)"],
@@ -175,7 +183,6 @@ if (!empty($Qcomun)) {
         ['tabla' => 'xa_tipo_activ_tarifa', 'campo' => 'id_schema', 'valor' => "idschema('$esquema'::text)"],
         ['tabla' => 'xa_tipo_tarifa', 'campo' => 'id_schema', 'valor' => "idschema('$esquema'::text)"],
     ];
-    $oAlterSchema->setDefaults($aDefaults);
 
     // datos
     // REGEXP_REPLACE(source, pattern, replacement_string,[, flags])
@@ -193,8 +200,33 @@ if (!empty($Qcomun)) {
         ['tabla' => 'cu_centros_dlf', 'campo' => 'region', 'pattern' => "\m$region_old\M", 'replacement' => "$RegionNew"],
     ];
 
+    // comun normal
+    $oConfigDB = new core\ConfigDB('importar'); //de la database comun
+    $config = $oConfigDB->getEsquema('public'); //de la database comun
+
+    $oConexion = new core\DBConnection($config);
+    $oDevelPC = $oConexion->getPDO();
+
+    $oAlterSchema = new DBAlterSchema();
+    $oAlterSchema->setDbConexion($oDevelPC);
+    $oAlterSchema->setSchema($esquema);
+
+    $oAlterSchema->setDefaults($aDefaults);
     $oAlterSchema->updateDatosRegexp($aDatos);
 
+    // comun select (servidor interno)
+    $oConfigDB = new core\ConfigDB('importar'); //de la database comun
+    $config = $oConfigDB->getEsquema('public_select'); //de la database comun
+
+    $oConexion = new core\DBConnection($config);
+    $oDevelPC = $oConexion->getPDO();
+
+    $oAlterSchema = new DBAlterSchema();
+    $oAlterSchema->setDbConexion($oDevelPC);
+    $oAlterSchema->setSchema($esquema);
+
+    $oAlterSchema->setDefaults($aDefaults);
+    $oAlterSchema->updateDatosRegexp($aDatos);
 }
 
 // sv
@@ -301,17 +333,7 @@ if (!empty($Qsv)) {
     */
     $oAlterSchema->updateCedidasAll($dl_old, $DlNew);
 
-    // Esquema sv-e
-    $oConfigDB = new core\ConfigDB('importar'); //de la database sv
-    $config = $oConfigDB->getEsquema('publicv-e');
-
-    $oConexion = new core\DBConnection($config);
-    $oDevelPC = $oConexion->getPDO();
-
-    $oAlterSchema = new DBAlterSchema();
-    $oAlterSchema->setDbConexion($oDevelPC);
-    $oAlterSchema->setSchema($esquemav);
-
+    ////////////// Esquema sv-e
     // Valores Default:
     $aDefaults = [
         ['tabla' => 'a_sacd_textos', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
@@ -348,7 +370,6 @@ if (!empty($Qsv)) {
         ['tabla' => 'zonas_grupos', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
         ['tabla' => 'zonas_sacd', 'campo' => 'id_schema', 'valor' => "public.idschema('$esquemav'::text)"],
     ];
-    $oAlterSchema->setDefaults($aDefaults);
 
     // datos
     // Todos los esquemas:
@@ -356,8 +377,35 @@ if (!empty($Qsv)) {
         ['tabla' => 'global.d_asistentes_dl', 'campo' => 'dl_responsable', 'pattern' => "\m$dl_old\M", 'replacement' => "$DlNew"],
         ['tabla' => 'publicv.d_asistentes_de_paso', 'campo' => 'dl_responsable', 'pattern' => "\m$dl_old\M", 'replacement' => "$DlNew"],
     ];
-    $oAlterSchema->updateDatosRegexpTodos($aDatos);
 
+    ///// sv-e normal
+    $oConfigDB = new core\ConfigDB('importar'); //de la database sv
+    $config = $oConfigDB->getEsquema('publicv-e');
+
+    $oConexion = new core\DBConnection($config);
+    $oDevelPC = $oConexion->getPDO();
+
+    $oAlterSchema = new DBAlterSchema();
+    $oAlterSchema->setDbConexion($oDevelPC);
+    $oAlterSchema->setSchema($esquemav);
+
+    $oAlterSchema->setDefaults($aDefaults);
+    $oAlterSchema->updateDatosRegexpTodos($aDatos);
+    $oAlterSchema->updatePropietarioAll($dl_old, $DlNew);
+
+    ///// sv-e select (servidor interno)
+    $oConfigDB = new core\ConfigDB('importar'); //de la database sv
+    $config = $oConfigDB->getEsquema('publicv-e_select');
+
+    $oConexion = new core\DBConnection($config);
+    $oDevelPC = $oConexion->getPDO();
+
+    $oAlterSchema = new DBAlterSchema();
+    $oAlterSchema->setDbConexion($oDevelPC);
+    $oAlterSchema->setSchema($esquemav);
+
+    $oAlterSchema->setDefaults($aDefaults);
+    $oAlterSchema->updateDatosRegexpTodos($aDatos);
     $oAlterSchema->updatePropietarioAll($dl_old, $DlNew);
 }
 
