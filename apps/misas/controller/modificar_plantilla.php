@@ -50,14 +50,14 @@ $url_ver_cuadricula_zona = 'apps/misas/controller/ver_cuadricula_zona.php';
 $oHashZonaTipo = new Hash();
 $oHashZonaTipo->setUrl($url_ver_cuadricula_zona);
 $oHashZonaTipo->setCamposForm('id_zona!tipo_plantilla!orden');
-$h_zonatipo = $oHashZonaTipo->linkSinVal();
+$h_zona_tipo = $oHashZonaTipo->linkSinVal();
 
 $a_campos = ['oPosicion' => $oPosicion,
     'oDesplZonas' => $oDesplZonas,
     'oDesplTipoPlantilla' => $oDesplTipoPlantilla,
     'oDesplOrden' => $oDesplOrden,
     'url_ver_cuadricula_zona' => $url_ver_cuadricula_zona,
-    'h_zona' => $h_zonatipo,
+    'h_zona_tipo' => $h_zona_tipo,
 ];
 
 $oView = new core\ViewTwig('misas/controller');

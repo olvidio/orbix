@@ -6,6 +6,7 @@ use encargossacd\model\EncargoConstants;
 use actividades\model\entity\ActividadAll;
 use actividades\model\entity\GestorActividad;
 use actividadcargos\model\entity\GestorActividadCargo;
+use encargossacd\model\entity\GestorEncargoTipo;
 use misas\domain\repositories\EncargoDiaRepository;
 use misas\domain\entity\EncargoDia;
 use misas\domain\EncargoDiaId;
@@ -66,18 +67,23 @@ $Qseleccion = (string)filter_input(INPUT_POST, 'seleccion');
 $Qperiodo = (string)filter_input(INPUT_POST, 'periodo');
 $Qempiezamin = (string)filter_input(INPUT_POST, 'empiezamin');
 $Qempiezamax = (string)filter_input(INPUT_POST, 'empiezamax');
-$Qempiezamin_rep=str_replace('/','-',$Qempiezamin);
-$Qempiezamax_rep=str_replace('/','-',$Qempiezamax);
+$partes_min=explode('/',$Qempiezamin);
+$Qempiezamin_rep=$partes_min[2].'-'.$partes_min[1].'-'.$partes_min[0];
+$partes_max=explode('/',$Qempiezamax);
+$Qempiezamax_rep=$partes_max[2].'-'.$partes_max[1].'-'.$partes_max[0];
+$sInicio=$Qempiezamin_rep.' 00:00:00';
+$sFin=$Qempiezamax_rep.' 23:59:59';
 
-echo 'HOLA: '.$Qempiezamin_rep.$Qempiezamax_rep.'<br>';
+echo 'Tipo: '.$QTipoPlantilla.'<br>';
+echo 'HOLA: '.$Qempiezamin_rep.' - '.$Qempiezamax_rep.'<br>';
 
 $a_dias_semana_breve=[1=>'L', 2=>'M', 3=>'X', 4=>'J', 5=>'V', 6=>'S', 7=>'D'];
 
 $a_Clases = [];
 
+//Comprovar si cal!!!!!
 $gesZonaSacd = new GestorZonaSacd();
 $a_Id_nom = $gesZonaSacd->getSacdsZona($Qid_zona);
-
 foreach ($a_Id_nom as $id_nom) {
     $PersonaSacd = new PersonaSacd($id_nom);
     $sacd = $PersonaSacd->getNombreApellidos();
@@ -101,42 +107,72 @@ $columns_cuadricula = [
 //FALTA periode propera setmana i proper mes
 //Funciona solament quan es dona data d'inici i final
 
-        $oInicio = new DateTimeLocal($Qempiezamin_rep);
-        $oFin = new DateTimeLocal($Qempiezamax_rep.' 23:59:59');
+        $oInicio = new DateTimeLocal($sInicio);
+        $oFin = new DateTimeLocal($sFin);
         $interval = new DateInterval('P1D');
         $date_range = new DatePeriod($oInicio, $interval, $oFin);
         $a_dias_semana = EncargoConstants::OPCIONES_DIA_SEMANA;
         foreach ($date_range as $date) {
-                    $num_dia = $date->format('Y-m-d');
+            $num_dia = $date->format('Y-m-d');
             //$nom_dia = $date->format('D');
             $dia_week = $date->format('N');
             $dia_mes = $date->format('d');
             //$nom_dia = $a_dias_semana[$dia_week];
             $nom_dia=$a_dias_semana_breve[$dia_week].' '.$dia_mes;
-echo 'nom_dia: '.$nom_dia.'<br';
+echo 'nom_dia: '.$nom_dia.'<br>';
             $columns_cuadricula[] =
                 ["id" => "$num_dia", "name" => "$nom_dia", "field" => "$num_dia", "width" => 80, "cssClass" => "cell-title"];
         }
 
 
+        $oGesEncargoTipo = new GestorEncargoTipo();
 
+        $grupo = '8...';
+        $aWhere = [];
+        $aOperador = [];
+        $aWhere['id_tipo_enc'] = '^' . $grupo;
+        $aOperador['id_tipo_enc'] = '~';
+        $oGesEncargoTipo = new GestorEncargoTipo();
+        $cEncargoTipos = $oGesEncargoTipo->getEncargoTipos($aWhere, $aOperador);
+        
+        $a_tipo_enc = [];
+        $posibles_encargo_tipo = [];
+        foreach ($cEncargoTipos as $oEncargoTipo) {
+            if ($oEncargoTipo->getId_tipo_enc()>=8100) {
+                $a_tipo_enc[] = $oEncargoTipo->getId_tipo_enc();
+            }
+        
+        }        
 
 $data_cuadricula = [];
-// encargos de misa (8010) para la zona
-$a_tipo_enc = [8010, 8011];
-$EncargosZona = new EncargosZona($Qid_zona, $oInicio, $oFin);
+$orden='prioridad';
+$EncargosZona = new EncargosZona($Qid_zona, $oInicio, $oFin, $orden);
 $EncargosZona->setATipoEnc($a_tipo_enc);
 $cEncargosZona = $EncargosZona->getEncargos();
-$e = 0;
 foreach ($cEncargosZona as $oEncargo) {
-    $e++;
+    $id_enc = $oEncargo->getId_enc();
+    $aWhere = [
+        'id_enc' => $id_enc,
+        'tstart' => "'$sInicio', '$sFin'",
+    ];
+    $aOperador = [
+        'tstart' => 'BETWEEN',
+    ];
+    $EncargoDiaRepository = new EncargoDiaRepository();
+    $cEncargosaBorrar = $EncargoDiaRepository->getEncargoDias($aWhere,$aOperador);
+    foreach($cEncargosaBorrar as $oEncargoaBorrar) {
+        $id_enc=$oEncargoaBorrar->getId_enc();
+        $Uuid = $oEncargoaBorrar->getUuid_item();
+        echo 'id_enc'.$id_enc.'-'.$Uuid.'<br>';
+        $EncargoDiaRepository->Eliminar($oEncargoaBorrar);
+    }
+
     $id_enc = $oEncargo->getId_enc();
     $desc_enc = $oEncargo->getDesc_enc();
-    $d = 0;
+echo $desc_enc.'<br>';
     $data_cols = [];
     $meta_dia = [];
     foreach ($date_range as $date) {
-        $d++;
         $num_dia = $date->format('Y-m-d');
         $nom_dia = $date->format('D');
         echo 'dia: '.$num_dia.$nom_dia.'--'.$QTipoPlantilla.'<br>';
@@ -171,9 +207,18 @@ foreach ($cEncargosZona as $oEncargo) {
                 $hora_fin = $oEncargoDia->getTend()->format('H:i');
                 $observ = $oEncargoDia->getObserv();
             }
+            
+            if (count($cEncargosDia) === 0) {
+                $id_nom = null;
+                echo 'id_nom'.$id_nom.'<br>';
+                $hora_ini = '';
+                $hora_fin = '';
+                $observ = '';
+            }
 
 
-
+if ($id_nom!=null) {
+    
             //compruebo que no esté fuera
             $aWhereAct = [];
             $aOperadorAct = [];
@@ -243,6 +288,7 @@ echo ' nom: '.$nom_activ.'<br>';
 echo 'nom llarg: '.$nom_llarg;
             }
 
+}
             $inicio_nuevo_dia = $num_dia.' 00:00:00';
             $fin_nuevo_dia = $num_dia.' 23:59:59';
             $aWhere = [
@@ -261,36 +307,43 @@ echo 'nom llarg: '.$nom_llarg;
 
             if (empty($cEncargoNuevoDia)) {
 echo 'empty<br>';
-                $oEncargoDia = new EncargoDia();
-                $Uuid = new EncargoDiaId(RamseyUuid::uuid4()->toString());
+                if ($id_nom!=null) {
+                    echo 'gravo nou:'.$id_nom.'<br>';
+                    $oEncargoDia = new EncargoDia();
+                    $Uuid = new EncargoDiaId(RamseyUuid::uuid4()->toString());
 //                $Uuid = new EncargoDiaId(uuid4()->toString);
-                $oEncargoDia->setUuid_item($Uuid);
-                $oEncargoDia->setId_nom($id_nom);
-                $tstart = new EncargoDiaTstart($num_dia, $hora_ini);
-                $oEncargoDia->setTstart($tstart);
+                    $oEncargoDia->setUuid_item($Uuid);
+                    $oEncargoDia->setId_nom($id_nom);
+                    $tstart = new EncargoDiaTstart($num_dia, $hora_ini);
+                    $oEncargoDia->setTstart($tstart);
             
-                $tend = new EncargoDiaTend($num_dia, $hora_fin);
-                $oEncargoDia->setTend($tend);
+                    $tend = new EncargoDiaTend($num_dia, $hora_fin);
+                    $oEncargoDia->setTend($tend);
 
-                if (isset($observ))
-                    $oEncargoDia->setObserv($observ);
-                $oEncargoDia->setId_enc($id_enc);
-                if ($EncargoDiaRepository->Guardar($oEncargoDia) === FALSE) {
-                    $error_txt .= $EncargoDiaRepository->getErrorTxt();
+                    if (isset($observ))
+                        $oEncargoDia->setObserv($observ);
+                    $oEncargoDia->setId_enc($id_enc);
+                    if ($EncargoDiaRepository->Guardar($oEncargoDia) === FALSE) {
+                        $error_txt .= $EncargoDiaRepository->getErrorTxt();
+                    }
                 }
             } else {
-                echo 'ple<br>';
+                echo 'ple i els hauria de haver borrat abans<br>';
+                echo $id_nom.'<br>';
                 // debería haber solamente uno
-                $oEncargoDia = $cEncargoNuevoDia[0];
-                $oEncargoDia->setId_nom($id_nom);
-                $tstart = new EncargoDiaTstart($num_dia, $hora_ini);
-                $oEncargoDia->setTstart($tstart);
-                $tend = new EncargoDiaTend($num_dia, $hora_fin);
-                $oEncargoDia->setTend($tend);
-                $oEncargoDia->setObserv($observ);
-                $oEncargoDia->setId_enc($id_enc);
-                if ($EncargoDiaRepository->Guardar($oEncargoDia) === FALSE) {
-                    $error_txt .= $EncargoDiaRepository->getErrorTxt();
+                if ($id_nom!=null) {
+                    echo 'gravo nou<br>';
+                    $oEncargoDia = $cEncargoNuevoDia[0];
+                    $oEncargoDia->setId_nom($id_nom);
+                    $tstart = new EncargoDiaTstart($num_dia, $hora_ini);
+                    $oEncargoDia->setTstart($tstart);
+                    $tend = new EncargoDiaTend($num_dia, $hora_fin);
+                    $oEncargoDia->setTend($tend);
+                    $oEncargoDia->setObserv($observ);
+                    $oEncargoDia->setId_enc($id_enc);
+                    if ($EncargoDiaRepository->Guardar($oEncargoDia) === FALSE) {
+                        $error_txt .= $EncargoDiaRepository->getErrorTxt();
+                    }    
                 }
             }
         }

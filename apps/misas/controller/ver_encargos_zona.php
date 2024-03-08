@@ -4,7 +4,6 @@
 // INICIO Cabecera global de URL de controlador *********************************
 use encargossacd\model\entity\EncargoTipo;
 use encargossacd\model\entity\GestorEncargo;
-use encargossacd\model\entity\GestorEncargoTipo;
 use ubis\model\entity\GestorCentroDl;
 use ubis\model\entity\GestorCentroEllas;
 use ubis\model\entity\Ubi;

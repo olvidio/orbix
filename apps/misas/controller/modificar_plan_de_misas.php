@@ -29,25 +29,37 @@ $oFormP->setFormName('frm_nuevo_periodo');
 $oFormP->setTitulo(core\strtoupper_dlb(_("seleccionar un periodo")));
 $oFormP->setPosiblesPeriodos($aOpciones);
 
-$oFormP->setBoton("<input type=button name=\"preparar\" value=\"" . _("preparar") . "\" onclick=\"fnjs_nuevo_periodo();\">");
+$oFormP->setBoton("<input type=button name=\"ver\" value=\"" . _("ver") . "\" onclick=\"fnjs_ver_plantilla_zona();\">");
 
 $oGestorZona = new GestorZona();
 $oDesplZonas = $oGestorZona->getListaZonas();
 $oDesplZonas->setNombre('id_zona');
 $oDesplZonas->setAction('fnjs_ver_plantilla_zona()');
 
+$a_Orden = array(
+    'orden' => 'orden',
+    'prioridad' => 'prioridad',
+    'desc_enc' => 'alfabético',
+);
+
+$oDesplOrden = new Desplegable();
+$oDesplOrden->setOpciones($a_Orden);
+$oDesplOrden->setNombre('orden');
+$oDesplOrden->setAction('fnjs_ver_plantilla_zona()');
+
 $url_ver_cuadricula_zona = 'apps/misas/controller/ver_cuadricula_zona.php';
-$oHashZonaTipo = new Hash();
-$oHashZonaTipo->setUrl($url_ver_cuadricula_zona);
-$oHashZonaTipo->setCamposForm('id_zona!periodo!empiezamin!empiezamax');
-$h_zona = $oHashZonaTipo->linkSinVal();
+$oHashZonaPeriodo = new Hash();
+$oHashZonaPeriodo->setUrl($url_ver_cuadricula_zona);
+$oHashZonaPeriodo->setCamposForm('id_zona!periodo!empiezamin!empiezamax!orden');
+$h_zona_periodo = $oHashZonaPeriodo->linkSinVal();
 
 $a_campos = ['oPosicion' => $oPosicion,
     'oDesplZonas' => $oDesplZonas,
+    'oDesplOrden' => $oDesplOrden,
     'oFormP' => $oFormP,
     'url_ver_cuadricula_zona' => $url_ver_cuadricula_zona,
-    'h_zona' => $h_zona,
+    'h_zona_periodo' => $h_zona_periodo,
 ];
-
+ 
 $oView = new core\ViewTwig('misas/controller');
 echo $oView->render('modificar_plan_de_misas.html.twig', $a_campos);

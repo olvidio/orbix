@@ -12,7 +12,7 @@
                 </th>
                 <th class=titulo_inv colspan=4>{{ "Orden"|trans|capitalize }}:&nbsp;&nbsp;&nbsp;
                     {{ oDesplOrden.desplegable|raw }}
-                </th>
+                </th> 
             </tr>
             </thead>
         </table>
@@ -20,7 +20,7 @@
 </div>
 
 <br>
-<div id="div_plantilla">
+<div id="div_cuadricula">
 </div>
 
 <script>
@@ -30,7 +30,7 @@
         let orden = $('#orden').val();
         if (id_zona) {
             let url = '{{ url_ver_cuadricula_zona }}';
-            let parametros = 'id_zona=' + id_zona + '&tipo_plantilla=' + tipo_plantilla + '&orden=' + orden + '{{ h_zonatipo|raw }}';
+            let parametros = 'id_zona=' + id_zona + '&tipo_plantilla=' + tipo_plantilla + '&orden=' + orden + '{{ h_zona_tipo|raw }}';
             $.ajax({
                 url: url,
                 type: 'post',
@@ -38,7 +38,7 @@
                 dataType: 'html'
             })
                 .done(function (rta_txt) {
-                    $('#div_plantilla').html(rta_txt);
+                    $('#div_cuadricula').html(rta_txt);
                 });
         }
     }

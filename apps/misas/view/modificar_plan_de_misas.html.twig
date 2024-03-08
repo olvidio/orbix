@@ -4,9 +4,12 @@
         <table>
             <thead>
             <tr>
-                <th class=titulo_inv colspan=4>{{ "Plantilla de la zona"|trans|capitalize }}:&nbsp;&nbsp;&nbsp;
+                <th class=titulo_inv colspan=4>{{ "Plan de Misas de la zona"|trans|capitalize }}:&nbsp;&nbsp;&nbsp;
                     {{ oDesplZonas.desplegable|raw }}
                 </th>
+                <th class=titulo_inv colspan=4>{{ "Orden"|trans|capitalize }}:&nbsp;&nbsp;&nbsp;
+                    {{ oDesplOrden.desplegable|raw }}
+                </th> 
             </tr>
             <tr>
             {{ oFormP.getHtml()|raw }}
@@ -17,7 +20,7 @@
 </div>
 
 <br>
-<div id="div_plantilla">
+<div id="div_cuadricula">
 </div>
 
 <script>
@@ -29,8 +32,9 @@
     	    var periodo=$('#periodo').val();
     	    var empiezamax=$('#empiezamax').val();
     	    var empiezamin=$('#empiezamin').val();
+            let orden = $('#orden').val();
 
-            let parametros = 'id_zona=' + id_zona + ' '{{ h_zona|raw }}';
+            let parametros = 'id_zona=' + id_zona + '&periodo=' + periodo + '&empiezamin=' + empiezamin + '&empiezamax=' + empiezamax + '&orden=' + orden +'{{ h_zona|raw }}';
 
             $.ajax({
                 url: url,
@@ -39,7 +43,7 @@
                 dataType: 'html'
             })
                 .done(function (rta_txt) {
-                    $('#div_plantilla').html(rta_txt);
+                    $('#div_cuadricula').html(rta_txt);
                 });
         }
     }
