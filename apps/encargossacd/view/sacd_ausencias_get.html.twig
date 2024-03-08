@@ -14,7 +14,7 @@ fnjs_guardar=function(formulario){
                 data: $(this).serialize()
 			})
 			.done(function (rta_txt) {
-				if (rta_txt != '' && rta_txt != '\\n') {
+				if (rta_txt !== '' && rta_txt !== '\\n') {
 					alert ('{{ "respuesta"|trans|raw }}: '+rta_txt);
 				} else {
 					{{ oPosicion.js_atras(1)|raw }}

@@ -432,7 +432,7 @@ abstract class ActividadCargoAbstract extends core\ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'id_item') && $val_id !== '') $this->iid_item = (int)$val_id;
+                if (($nom_id === 'id_item') && $val_id !== '') $this->iid_item = (int)$val_id;
             }
         }
     }
@@ -634,7 +634,7 @@ abstract class ActividadCargoAbstract extends core\ClasePropiedades
     {
         $nom_tabla = $this->getNomTabla();
         $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'puede_agd'));
-        $oDatosCampo->setEtiqueta(_("¿puede ser agd?"));
+        $oDatosCampo->setEtiqueta(_("¿Puede ser agd?"));
         return $oDatosCampo;
     }
 

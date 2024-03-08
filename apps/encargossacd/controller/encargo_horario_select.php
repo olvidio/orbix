@@ -146,7 +146,7 @@ $aCamposHidden = [
 $oHash->setUrl($url_actualizar);
 $oHash->setArrayCamposHidden($aCamposHidden);
 
-$txt_eliminar = _("¿Esta Seguro que desea borrar este horario?");
+$txt_eliminar = _("¿Está seguro que desea borrar este horario?");
 
 $a_campos = ['oPosicion' => $oPosicion,
     'titulo' => $titulo,

@@ -89,7 +89,7 @@ $oHash->setArraycamposHidden(array('que' => 'eliminar'));
 $aQuery = ['nuevo' => 1, 'quien' => 'grupo'];
 $url_nuevo = web\Hash::link(core\ConfigGlobal::getWeb() . '/apps/casas/controller/grupo_form.php?' . http_build_query($aQuery));
 
-$txt_eliminar = _("¿está seguro?");
+$txt_eliminar = _("¿Está seguro?");
 
 $a_campos = ['oPosicion' => $oPosicion,
     'oHash' => $oHash,

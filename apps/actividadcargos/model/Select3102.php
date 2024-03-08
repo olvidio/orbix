@@ -88,7 +88,7 @@ class Select3102
     {
         $a_cabeceras = array(_("cargo"),
             array('name' => _("nombre y apellidos"), 'width' => 300),
-            _("¿puede ser agd?"),
+            _("¿Puede ser agd?"),
             _("observaciones")
         );
         return $a_cabeceras;

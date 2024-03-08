@@ -93,7 +93,7 @@ switch ($Qque) {
         $oHash->setArraycamposHidden($a_camposHidden);
 
         $txt = "<form id='frm_ingreso'>";
-        $txt .= '<h3>' . _("Actividad") . ':</h3>';
+        $txt .= '<h3>' . _("actividad") . ':</h3>';
         $txt .= '<h5>' . $nom_activ . '</h5>';
         $txt .= _("id_tarifa") . ": $tarifa_html<br>" . _("precio") . " <input type=text size=8 name=precio value=\"$precio\">";
         $txt .= '<h3>' . _("Ingreso") . ':</h3>';
@@ -154,7 +154,7 @@ switch ($Qque) {
 
         $inicioIso = $oPeriodo->getF_ini_iso();
         $finIso = $oPeriodo->getF_fin_iso();
-        if (!empty($Qperiodo) && $Qperiodo == 'desdeHoy') {
+        if (!empty($Qperiodo) && $Qperiodo === 'desdeHoy') {
             $aWhere['f_fin'] = "'$inicioIso','$finIso'";
             $aOperador['f_fin'] = 'BETWEEN';
         } else {

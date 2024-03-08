@@ -17,7 +17,7 @@ fnjs_borrar_hasta_fecha=function(formulario){
             data: $(this).serialize()
         })
         .done(function (rta_txt) {
-            if (rta_txt != '' && rta_txt != '\\n') {
+            if (rta_txt !== '' && rta_txt !== '\\n') {
                 alert ('{{ "respuesta"|trans|raw }}: '+rta_txt);
             } else {
             	fnjs_actualizar(formulario);

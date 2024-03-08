@@ -237,14 +237,14 @@ class PersonaListas extends core\ClasePropiedades
      */
     function __construct($a_id = '')
     {
-        if (!empty($_SESSION['oDBListas']) && $_SESSION['oDBListas'] == 'error') {
+        if (!empty($_SESSION['oDBListas']) && $_SESSION['oDBListas'] === 'error') {
             exit(_("no se puede conectar con la base de datos de Listas"));
         }
         $oDbl = $GLOBALS['oDBListas'];
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'Identif') && $val_id !== '') $this->iIdentif = (int)$val_id;
+                if (($nom_id === 'Identif') && $val_id !== '') $this->iIdentif = (int)$val_id;
             }
         } else {
             if (isset($a_id) && $a_id !== '') {
@@ -529,7 +529,7 @@ class PersonaListas extends core\ClasePropiedades
                 break;
             case 3:
                 //con preposicion o sin preposicion
-                if ($names[1]['prep'] == 'n') {
+                if ($names[1]['prep'] === 'n') {
                     $apellido1 = $names[0]['txt'];
                     $nx1 = $names[0]['nx'];
                     $apellido2 = $names[1]['txt'] . ' ' . $names[2]['txt'];
@@ -1187,7 +1187,7 @@ class PersonaListas extends core\ClasePropiedades
     {
         $nom_tabla = $this->getNomTabla();
         $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'Apenom'));
-        $oDatosCampo->setEtiqueta(_("apellidos nombre"));
+        $oDatosCampo->setEtiqueta(_("apellidos, nombre"));
         return $oDatosCampo;
     }
 

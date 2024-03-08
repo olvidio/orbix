@@ -96,7 +96,7 @@ fnjs_guardar=function(tipo=''){
 				type: 'post'
             })
             .done(function( rta_txt ) {
-                if (rta_txt != '' && rta_txt != '\\n') {
+                if (rta_txt !== '' && rta_txt !== '\\n') {
                     alert ('{{ "respuesta"|trans|raw }}: '+rta_txt);
                 }
                 // Esta función está en calendario_planning.phtml 

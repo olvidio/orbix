@@ -32,7 +32,7 @@
 
         fnjs_guardar_acta = function (formulario) {
             var rr = fnjs_comprobar_campos(formulario, '<?= addslashes($obj) ?>');
-            if (rr == 'ok') {
+            if (rr === 'ok') {
                 $(formulario).attr('action', 'apps/notas/controller/acta_update.php');
                 <?php if (!empty($notas) && $notas != 'nuevo') { ?>
                 $(formulario).one("submit", function () {
@@ -42,7 +42,7 @@
                         data: $(this).serialize()
                     })
                         .done(function (rta_txt) {
-                            if (rta_txt != '' && rta_txt != '\\n') {
+                            if (rta_txt !== '' && rta_txt !== '\\n') {
                                 alert('<?= _("respuesta") ?>: ' + rta_txt);
                             }
                         });
@@ -58,7 +58,7 @@
                         data: $(this).serialize()
                     })
                         .done(function (rta_txt) {
-                            if (rta_txt != '' && rta_txt != '\\n') {
+                            if (rta_txt !== '' && rta_txt !== '\\n') {
                                 alert('<?= _("respuesta") ?>: ' + rta_txt);
                             } else {
                                 <?= $oPosicion->js_atras(1); ?>

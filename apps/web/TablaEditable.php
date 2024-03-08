@@ -939,7 +939,7 @@ class TablaEditable
 						data: $(this).serialize()
 					})
 					.done(function (rta_txt) {
-						if (rta_txt != '' && rta_txt != '\\n') {
+						if (rta_txt !== '' && rta_txt !== '\\n') {
 							alert ('<?= _(\"respuesta\") ?>: '+rta_txt);
 						}
 					});

@@ -227,7 +227,7 @@ msgstr "activity"
 #: actividadcargos/model/entity/ActividadCargoAbstract.php:635
 #: actividadcargos/view/form_1302.phtml:59
 #: actividadcargos/view/form_3102.phtml:53
-msgid "¿puede ser agd?"
+msgid "¿Puede ser agd?"
 msgstr "Can it be agd?"
 
 #: actividadcargos/model/Select1302.php:88

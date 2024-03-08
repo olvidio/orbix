@@ -1,8 +1,6 @@
 <?php
 
 use encargossacd\model\EncargoFunciones;
-use encargossacd\model\entity\GestorEncargo;
-use encargossacd\model\entity\GestorEncargoSacdHorario;
 use personas\model\entity\PersonaDl;
 
 /**
@@ -139,7 +137,7 @@ $titulo = _("horario de") . ": " . $desc_enc;
         if (err != 1) {
             switch (tipo) {
                 case 4:
-                    if (confirm("<?= _("¿Esta seguro que desea borrar este horario?") ?>")) {
+                    if (confirm("<?= _("¿Está seguro que desea borrar este horario?") ?>")) {
                         formulario.mod.value = "eliminar";
                         formulario.attr('action', 'des/tareas/horario_sacd_update.php');
                     }
@@ -187,7 +185,7 @@ $titulo = _("horario de") . ": " . $desc_enc;
                         <?php
                         $dia = $oEncargoFunciones->calcular_dia($mas_menos, $dia_ref, $dia_inc);
                         reset($opciones_dia_semana);
-                        while (list($key, $d_semana) = each($opciones_dia_semana)) {
+                        foreach ($opciones_dia_semana as $key => $d_semana) {
                             if ($dia == $key) {
                                 $selected = "selected";
                             } else {
@@ -201,7 +199,7 @@ $titulo = _("horario de") . ": " . $desc_enc;
             <td>
                 <select class=contenido id="mas_menos" name="mas_menos">
                     <?php
-                    if ($mas_menos == "-") {
+                    if ($mas_menos === "-") {
                         $sel_menos = "selected";
                         $sel_mas = "";
                     }
@@ -220,7 +218,7 @@ $titulo = _("horario de") . ": " . $desc_enc;
                     <option/>
                     <?php
                     reset($opciones_ordinales);
-                    while (list($key, $d_ord) = each($opciones_ordinales)) {
+                    foreach ($opciones_ordinales as $key => $d_ord) {
                         if ($dia_num == $key) {
                             $selected = "selected";
                         } else {
@@ -235,7 +233,7 @@ $titulo = _("horario de") . ": " . $desc_enc;
                     <option/>
                     <?php
                     reset($opciones_dia_ref);
-                    while (list($key, $d_ref) = each($opciones_dia_ref)) {
+                    foreach ($opciones_dia_ref as $key => $d_ref) {
                         if ($dia_ref == $key) {
                             $selected = "selected";
                         } else {

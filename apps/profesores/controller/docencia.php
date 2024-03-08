@@ -31,7 +31,7 @@ if (ConfigGlobal::mi_ambito() === 'rstgr') {
     $a_cabeceras[1] = _("dl");
 }
 
-$a_cabeceras[2] = _("Apellidos, nombre");
+$a_cabeceras[2] = _("apellidos, nombre");
 $a_cabeceras[3] = _("incio curso");
 $a_cabeceras[4] = _("asignatura");
 $a_cabeceras[5] = _("modo");

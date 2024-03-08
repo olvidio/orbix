@@ -99,7 +99,7 @@ fnjs_cambiar_ubi=function(){
                 data: $(this).serialize()
         })
         .done(function (rta_txt) {
-            if (rta_txt != '' && rta_txt != '\\n') {
+            if (rta_txt !== '' && rta_txt !== '\\n') {
                 alert ('{{ "respuesta"|trans|raw }}: '+rta_txt);
             } else {
                 if (tipo!='nuevo') { // En el caso de nuevo, me quedo en el formulario.

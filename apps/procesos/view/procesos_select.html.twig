@@ -16,7 +16,7 @@ fnjs_regenerar=function(){
             data: parametros
         })
         .done(function (rta_txt) {
-            if (rta_txt != '' && rta_txt != '\\n') {
+            if (rta_txt !== '' && rta_txt !== '\\n') {
                 /* añadir debajo de la actividad */
                 $('#div_proceso').html(rta_txt);
             }
@@ -42,7 +42,7 @@ fnjs_clonar=function(){
             data: parametros
         })
         .done(function (rta_txt) {
-            if (rta_txt != '' && rta_txt != '\\n') {
+            if (rta_txt !== '' && rta_txt !== '\\n') {
                 /* añadir debajo de la actividad */
                 $('#div_proceso').html(rta_txt);
             }
@@ -97,7 +97,7 @@ fnjs_actualizar=function(){
 		data: parametros
 	})
 	.done(function (rta_txt) {
-		if (rta_txt != '' && rta_txt != '\\n') {
+		if (rta_txt !== '' && rta_txt !== '\\n') {
 			/* añadir debajo de la actividad */
 			$('#div_proceso').html(rta_txt);
 		}
@@ -117,7 +117,7 @@ fnjs_listado=function(){
 		data: parametros
 	})
 	.done(function (rta_txt) {
-		if (rta_txt != '' && rta_txt != '\\n') {
+		if (rta_txt !== '' && rta_txt !== '\\n') {
 			/* añadir debajo de la actividad */
 			$('#div_proceso').html(rta_txt);
 		}

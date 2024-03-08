@@ -47,7 +47,7 @@
                         data: $(this).serialize()
                     })
                         .done(function (rta_txt) {
-                            if (rta_txt != '' && rta_txt != '\\n') {
+                            if (rta_txt !== '' && rta_txt !== '\\n') {
                                 alert('<?= _("respuesta") ?>: ' + rta_txt);
                             } else {
                                 fnjs_actualizar(formulario);
@@ -101,7 +101,7 @@
     fnjs_guardar_datos = function (formulario) {
         var rr = fnjs_comprobar_campos(formulario, '<?= addslashes($obj) ?>');
         //alert ("EEE "+rr);
-        if (rr == 'ok') {
+        if (rr === 'ok') {
             $('#que_user').val('<?= $que_user ?>');
             $(formulario).attr('action', "apps/usuarios/controller/usuario_update.php");
             $(formulario).one("submit", function () {
@@ -111,7 +111,7 @@
                     data: $(this).serialize()
                 })
                     .done(function (rta_txt) {
-                        if (rta_txt != '' && rta_txt != '\\n') {
+                        if (rta_txt !== '' && rta_txt !== '\\n') {
                             alert('<?= _("respuesta") ?>: ' + rta_txt);
                         } else {
                             <?= $oPosicion->js_atras(1); ?>

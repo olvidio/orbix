@@ -82,7 +82,7 @@ class DatosTabla
 							type: 'post',
 							data: $(this).serialize()})
 						.done(function (rta_txt) {
-							if (rta_txt != '' && rta_txt != '\\n') {
+							if (rta_txt !== '' && rta_txt !== '\\n') {
 								alert (\"$respuesta: \"+rta_txt);
 							} else { 
 								fnjs_actualizar(formulario);
@@ -179,7 +179,7 @@ class DatosTabla
                         $a_valores[$c][$v] = $var;
                         break;
                     case "check":
-                        if ($valor_camp == "t") {
+                        if ($valor_camp === "t") {
                             $a_valores[$c][$v] = _("sí");
                         } else {
                             $a_valores[$c][$v] = _("no");

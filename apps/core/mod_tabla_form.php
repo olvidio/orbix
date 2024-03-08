@@ -114,7 +114,7 @@ echo $oPosicion->mostrar_left_slide(1);
 <script>
     fnjs_grabar = function (formulario) {
         var rr = fnjs_comprobar_campos(formulario, '<?= addslashes(get_class($oFicha)) ?>');
-        if (rr == 'ok') {
+        if (rr === 'ok') {
             var url = "apps/core/mod_tabla_update.php";
             var parametros = $(formulario).serialize();
 
@@ -125,7 +125,7 @@ echo $oPosicion->mostrar_left_slide(1);
                 dataType: 'html'
             });
             request.done(function (rta_txt) {
-                if (rta_txt != '' && rta_txt != '\\n') {
+                if (rta_txt !== '' && rta_txt !== '\\n') {
                     alert('<?= _("respuesta") ?>: ' + rta_txt);
                 } else {
                     <?= $oPosicion->js_atras(1); ?>

@@ -36,7 +36,7 @@ foreach ($a_ids_traslados_A as $id_nom_listas) {
     $a_persona_listas[$i]['ape_nom'] = $oPersonaListas->getApeNom();
     $dl_listas = $oPersonaListas->getDl();
     preg_match('/(\w*)(cr)$/', $dl_listas, $matches);
-    if (!empty($matches[2]) && $matches[2] == 'cr') {
+    if (!empty($matches[2]) && $matches[2] === 'cr') {
         $dl = $matches[1];
     } else {
         $dl = "dl" . $dl_listas;
@@ -68,7 +68,7 @@ $txt_alert = _("se va a poner la fecha de hoy como fecha de traslado. Para cambi
             data: parametros
         })
             .done(function (rta_txt) {
-                if (rta_txt != '' && rta_txt != '\\n') {
+                if (rta_txt !== '' && rta_txt !== '\\n') {
                     alert('<?= _("respuesta") ?>: ' + rta_txt);
                 } else {
                     //tachar la fila

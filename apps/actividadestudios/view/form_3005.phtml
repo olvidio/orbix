@@ -41,7 +41,7 @@
     fnjs_guardar = function (formulario) {
         var rr = fnjs_comprobar_campos(formulario, '<?= addslashes($obj) ?>');
 
-        if (rr == 'ok') {
+        if (rr === 'ok') {
             $(formulario).attr('action', 'apps/actividadestudios/controller/update_3005.php');
             $(formulario).one("submit", function () {
                 $.ajax({
@@ -50,7 +50,7 @@
                     data: $(this).serialize()
                 })
                     .done(function (rta_txt) {
-                        if (rta_txt != '' && rta_txt != '\\n') {
+                        if (rta_txt !== '' && rta_txt !== '\\n') {
                             alert('<?= _("respuesta") ?>: ' + rta_txt);
                         } else {
                             <?= $oPosicion->js_atras(1); ?>
@@ -100,7 +100,7 @@
                 </select></td>
         </tr>
         <tr>
-            <td class=etiqueta><?= _("¿profesor avisado?") ?></td>
+            <td class=etiqueta><?= _("¿Profesor avisado?") ?></td>
             <td><select class=contenido id='avis_profesor' name='avis_profesor'>
                     <option></option>
                     <option value='a' <?= $chk_avisado ?> ><?= _("avisado") ?></option>

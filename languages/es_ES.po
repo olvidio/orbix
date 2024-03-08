@@ -192,7 +192,7 @@ msgstr ""
 #: actividadcargos/model/select3102.class.php:77
 #: actividadcargos/view/form_1302.phtml:52
 #: actividadcargos/view/form_3102.phtml:46
-msgid "¿puede ser agd?"
+msgid "¿Puede ser agd?"
 msgstr ""
 
 #: actividadcargos/model/entity/actividadcargoabstract.class.php:531

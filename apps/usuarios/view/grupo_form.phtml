@@ -2,7 +2,7 @@
     fnjs_guardar = function (formulario) {
         var rr = fnjs_comprobar_campos(formulario, '<?= addslashes($obj) ?>');
         //alert ("EEE "+rr);
-        if (rr == 'ok') {
+        if (rr === 'ok') {
             $('#user_que').val('<?= $user_que ?>');
             $(formulario).attr('action', "apps/usuarios/controller/usuario_update.php");
             $(formulario).one("submit", function () {
@@ -12,7 +12,7 @@
                     data: $(this).serialize()
                 })
                     .done(function (rta_txt) {
-                        if (rta_txt != '' && rta_txt != '\\n') {
+                        if (rta_txt !== '' && rta_txt !== '\\n') {
                             alert('<?= _("respuesta") ?>: ' + rta_txt);
                         } else {
                             <?= $oPosicion->js_atras(1); ?>

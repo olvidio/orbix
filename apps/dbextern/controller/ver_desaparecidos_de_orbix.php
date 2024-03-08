@@ -49,7 +49,7 @@ $h = $oHash->linkSinVal();
             data: parametros
         })
             .done(function (rta_txt) {
-                if (rta_txt != '' && rta_txt != '\\n') {
+                if (rta_txt !== '' && rta_txt !== '\\n') {
                     alert('<?= _("respuesta") ?>: ' + rta_txt);
                 } else {
                     //tachar la fila
@@ -76,7 +76,7 @@ $h = $oHash->linkSinVal();
         echo "<tr id=fila$i>";
         echo "<td class='titulo'>" . $persona_listas['ape_nom'] . '</td>';
         echo "<td>" . $dl_listas . '</td>';
-        echo "<td><span class=link onClick='fnjs_desunir($id_listas,$i)'>" . _("desunir") . '</span><td>';
+        echo "<td><span class=link onClick='fnjs_desunir($id_listas, $i)'>" . _("desunir") . '</span><td>';
         echo '</tr>';
     }
     ?>

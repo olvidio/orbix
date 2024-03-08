@@ -191,7 +191,7 @@ $explicacion_txt .= _("al efectuar alguna acción dentro de las listas, las pers
             data: parametros
         })
             .done(function (rta_txt) {
-                if (rta_txt != '' && rta_txt != '\\n') {
+                if (rta_txt !== '' && rta_txt !== '\\n') {
                     alert('<?= _("respuesta") ?>: ' + rta_txt);
                 }
             });

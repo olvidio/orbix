@@ -325,7 +325,7 @@ if (!empty($Qseccion)) {
         <td colspan=8 class=titulo><?= _("Actividades próximo año") ?></td>
     <tr>
     <tr>
-        <td colspan=2><?= _("Actividad") ?></td>
+        <td colspan=2><?= _("actividad") ?></td>
         <td><?= _("nº de días") ?></td>
         <td><?= _("previsión de asistentes") ?></td>
         <td><?= _("nº total de asistencias") ?></td>

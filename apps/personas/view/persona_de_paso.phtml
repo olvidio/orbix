@@ -8,7 +8,7 @@ use core\ConfigGlobal;
     fnjs_guardar = function (formulario) {
         var rr = fnjs_comprobar_campos('#frm2', '<?= addslashes($obj_txt) ?>');
         //alert ("EEE "+rr);
-        if (rr == 'ok') {
+        if (rr === 'ok') {
             $('#que').val('guardar');
             $(formulario).attr('action', "apps/personas/controller/personas_update.php");
             $(formulario).one("submit", function () {
@@ -18,7 +18,7 @@ use core\ConfigGlobal;
                     data: $(this).serialize()
                 })
                     .done(function (rta_txt) {
-                        if (rta_txt != '' && rta_txt != '\\n') {
+                        if (rta_txt !== '' && rta_txt !== '\\n') {
                             alert('<?= _("respuesta") ?>: ' + rta_txt);
                         } else {
                             <?= $oPosicion->js_atras(1); ?>
@@ -41,7 +41,7 @@ use core\ConfigGlobal;
                     data: $(this).serialize()
                 })
                     .done(function (rta_txt) {
-                        if (rta_txt != '' && rta_txt != '\\n') {
+                        if (rta_txt !== '' && rta_txt !== '\\n') {
                             alert('<?= _("respuesta") ?>: ' + rta_txt);
                         } else {
                             <?= $oPosicion->js_atras(1); ?>

@@ -50,7 +50,7 @@ $txt_alert = _("se va a poner la fecha de hoy como fecha de baja. Para cambiarlo
             data: parametros
         })
             .done(function (rta_txt) {
-                if (rta_txt != '' && rta_txt != '\\n') {
+                if (rta_txt !== '' && rta_txt !== '\\n') {
                     alert('<?= _("respuesta") ?>: ' + rta_txt);
                 } else {
                     //tachar la fila

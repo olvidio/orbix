@@ -93,7 +93,7 @@ class Select1302
     {
         $a_cabeceras = array(_("cargo"),
             array('name' => _("actividad"), 'width' => 300),
-            _("¿puede ser agd?"),
+            _("¿Puede ser agd?"),
             _("observaciones")
         );
         return $a_cabeceras;
@@ -150,7 +150,7 @@ class Select1302
             $oCargo = new Cargo(array('id_cargo' => $id_cargo));
             $tipo_cargo = $oCargo->getTipo_cargo();
             // para los sacd en sf
-            if ($tipo_cargo == 'sacd' && $mi_sfsv == 2) {
+            if ($tipo_cargo === 'sacd' && $mi_sfsv == 2) {
                 continue;
             }
 
@@ -163,7 +163,7 @@ class Select1302
             $puede_agd = $oActividadCargo->getPuede_agd();
             $observ = $oActividadCargo->getObserv();
 
-            $puede_agd == 't' ? $chk_puede_agd = "si" : $chk_puede_agd = "no";
+            $puede_agd === 't' ? $chk_puede_agd = "si" : $chk_puede_agd = "no";
 
             // para modificar.
             $id_tipo = substr($id_tipo_activ, 0, 3); //cojo los 3 primeros dígitos
