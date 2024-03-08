@@ -96,7 +96,7 @@ $aWhere = array('region' => $a_reg[0], 'dl' => $mi_dl);
 $gesDelegacion = new GestorDelegacion();
 $cDelegaciones = $gesDelegacion->getDelegaciones($aWhere);
 if (empty($cDelegaciones)) {
-    $msg = sprintf(_("No se ha definido ninguna dl='%s' en la región '%s"),$mi_dl, $a_reg[0]);
+    $msg = sprintf(_("No se ha definido ninguna dl='%s' en la región '%s'."),$mi_dl, $a_reg[0]);
     exit ($msg);
 }
 $oMiDelegacion = $cDelegaciones[0];
