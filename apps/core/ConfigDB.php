@@ -80,7 +80,7 @@ class ConfigDB
     {
         // Las bases de datos de pruebas y producción están en el mismo cluster, y 
         // por tanto los usuarios son los mismos. Hay que ponerlo en los dos ficheros:
-        // Pero OJO: la parte de definicion de host y dbname son diferentes!!
+        // Pero OJO: la parte de definición de host y dbname son diferentes!!
 
         $this->renombrarListaEsquemaProduccion($database, $esquema_old, $esquema_new);
         $this->renombrarListaEsquemaPruebas($database, $esquema_old, $esquema_new);

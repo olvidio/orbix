@@ -73,7 +73,7 @@ $oDBRol->setUser($esquema);
 $oDBRol->setPwd($esquema_pwd);
 $oDBRol->renombrarSchema($esquema_old); // Cambia el nombre del esquema
 $oDBRol->renombrarUsuario($esquema_old); // reescribe el password que ya tenia.
-$oConfigDBComun->renombrarListaEsquema('comun', $esquema_old, $esquema);
+$oConfigDBComun->renombrarListaEsquema('comun_select', $esquema_old, $esquema);
 
 // sv
 $configSvP = $oConfigDB->getEsquema('publicv');
@@ -117,6 +117,7 @@ $oGesDbSchema = new GestorDbSchema();
 $oGesDbSchema->cambiarNombre($esquema_old, $esquema, 'sv-e');
 
 //////////// sv-e para db interior (select) debería servir el de sv normal
+$oConfigDBSve->renombrarListaEsquema('sv-e_select', $esquema_oldv, $esquemav);
 
 // sf
 /*
@@ -214,7 +215,7 @@ if (!empty($Qcomun)) {
     $oAlterSchema->setDefaults($aDefaults);
     $oAlterSchema->updateDatosRegexp($aDatos);
 
-    // comun select (servidor interno)
+    // comun_select (servidor interno)
     $oConfigDB = new core\ConfigDB('importar'); //de la database comun
     $config = $oConfigDB->getEsquema('public_select'); //de la database comun
 
@@ -394,7 +395,7 @@ if (!empty($Qsv)) {
     $oAlterSchema->updateDatosRegexpTodos($aDatos);
     $oAlterSchema->updatePropietarioAll($dl_old, $DlNew);
 
-    ///// sv-e select (servidor interno)
+    ///// sv-e_select (servidor interno)
     $oConfigDB = new core\ConfigDB('importar'); //de la database sv
     $config = $oConfigDB->getEsquema('publicv-e_select');
 
@@ -406,8 +407,9 @@ if (!empty($Qsv)) {
     $oAlterSchema->setSchema($esquemav);
 
     $oAlterSchema->setDefaults($aDefaults);
-    $oAlterSchema->updateDatosRegexpTodos($aDatos);
-    $oAlterSchema->updatePropietarioAll($dl_old, $DlNew);
+    // No debería hacer falta. Se sincroniza
+    //$oAlterSchema->updateDatosRegexpTodos($aDatos);
+    //$oAlterSchema->updatePropietarioAll($dl_old, $DlNew);
 }
 
 /*
