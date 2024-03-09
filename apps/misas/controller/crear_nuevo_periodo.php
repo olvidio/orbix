@@ -9,6 +9,8 @@ use actividadcargos\model\entity\GestorActividadCargo;
 use encargossacd\model\entity\GestorEncargoTipo;
 use misas\domain\repositories\EncargoDiaRepository;
 use misas\domain\entity\EncargoDia;
+use misas\domain\repositories\InicialesSacdRepository;
+use misas\domain\entity\InicialesSacd;
 use misas\domain\EncargoDiaId;
 use misas\domain\EncargoDiaTend;
 use misas\domain\EncargoDiaTstart;
@@ -31,6 +33,7 @@ require_once("apps/core/global_header.inc");
 require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
+//Se ha de eliminar esta función
 function iniciales($id_nom) {
     if ($id_nom>0) {
         $PersonaSacd = new PersonaSacd($id_nom);
@@ -60,6 +63,12 @@ function iniciales($id_nom) {
     return $iniciales;
 }
 
+function esta_fuera($id_nom, $inicio, $fin) {
+    return 'FUERA OK '.$id_nom.'<br>';
+}
+
+
+
 $Qid_zona = (integer)filter_input(INPUT_POST, 'id_zona');
 $QTipoPlantilla = (string)filter_input(INPUT_POST, 'TipoPlantilla');
 $Qseleccion = (string)filter_input(INPUT_POST, 'seleccion');
@@ -79,29 +88,11 @@ echo 'HOLA: '.$Qempiezamin_rep.' - '.$Qempiezamax_rep.'<br>';
 
 $a_dias_semana_breve=[1=>'L', 2=>'M', 3=>'X', 4=>'J', 5=>'V', 6=>'S', 7=>'D'];
 
-$a_Clases = [];
-
-//Comprovar si cal!!!!!
-$gesZonaSacd = new GestorZonaSacd();
-$a_Id_nom = $gesZonaSacd->getSacdsZona($Qid_zona);
-foreach ($a_Id_nom as $id_nom) {
-    $PersonaSacd = new PersonaSacd($id_nom);
-    $sacd = $PersonaSacd->getNombreApellidos();
-    $iniciales = iniciales($id_nom);
-
-    $key = $id_nom . '#' . $iniciales;
-
-    $a_sacd[$key] = $sacd ?? '?';
-}
-
-
-$oDesplSacd = new Desplegable();
-$oDesplSacd->setNombre('id_sacd');
-$oDesplSacd->setOpciones($a_sacd);
-$oDesplSacd->setBlanco(TRUE);
-
 $columns_cuadricula = [
     ["id" => "encargo", "name" => "Encargo", "field" => "encargo", "width" => 150, "cssClass" => "cell-title"],
+];
+$columns_sacd = [
+    ["id" => "sacerdote", "name" => "Sacerdote", "field" => "sacerdote", "width" => 150, "cssClass" => "cell-title"],
 ];
 
 //FALTA periode propera setmana i proper mes
@@ -121,28 +112,115 @@ $columns_cuadricula = [
             $nom_dia=$a_dias_semana_breve[$dia_week].' '.$dia_mes;
 echo 'nom_dia: '.$nom_dia.'<br>';
             $columns_cuadricula[] =
-                ["id" => "$num_dia", "name" => "$nom_dia", "field" => "$num_dia", "width" => 80, "cssClass" => "cell-title"];
+["id" => "$num_dia", "name" => "$nom_dia", "field" => "$num_dia", "width" => 80, "cssClass" => "cell-title"];
+            $columns_cuadricula[] =
+["id" => "$num_dia", "name" => "$nom_dia", "field" => "$num_dia", "width" => 80, "cssClass" => "cell-title"];
+}
+
+//        $data_sacd = [];
+        $aWhere = [];
+        $aWhere['id_zona'] = $Qid_zona;
+        $aOperador = array();
+        $GesZonasSacd = new GestorZonaSacd();
+        $cZonaSacd = $GesZonasSacd->getZonasSacds($aWhere, $aOperador);
+        $contador_sacd = [];
+        $esta_sacd = [];
+        foreach ($cZonaSacd as $oZonaSacd) {
+//            $data_cols_sacd = [];
+            $id_nom = $oZonaSacd->getId_nom();
+            $contador_sacd[$id_nom] = [];
+//            $InicialesSacdRepository = new InicialesSacdRepository();
+//            $nombre_sacd=$InicialesSacdRepository->nombre_sacd($id_nom);
+            $InicialesSacd = new InicialesSacd();
+            $nombre_sacd=$InicialesSacd->nombre_sacd($id_nom);
+echo 'NOMBRE:'.$nombre_sacd.' '.$id_nom.'<br>';
+            $contador_sacd[$id_nom]['nombre']=$nombre_sacd;
+            foreach ($date_range as $date) {
+                $num_dia = $date->format('Y-m-d');
+//                $data_cols_sacd[$num_dia] = 0;    
+                $contador_sacd[$id_nom][$num_dia] = 0;    
+                $esta_sacd[$id_nom][$num_dia] = 1;    
+}
+
+                $aWhereAct = [];
+                $aOperadorAct = [];
+                $aWhereAct['f_ini'] = "'$sFin'";
+                $aOperadorAct['f_ini'] = '<=';
+                $aWhereAct['f_fin'] = "'$sInicio'";
+                $aOperadorAct['f_fin'] = '>=';
+                $aWhereAct['status'] = ActividadAll::STATUS_ACTUAL;
+                $aWhere = ['id_nom' => $id_nom];
+                $aOperador = [];
+            
+                $oGesActividadCargo = new GestorActividadCargo();
+                $cAsistentes = $oGesActividadCargo->getAsistenteCargoDeActividad($aWhere, $aOperador, $aWhereAct, $aOperadorAct);
+            
+                foreach ($cAsistentes as $aAsistente) {
+                    $id_activ = $aAsistente['id_activ'];
+            echo 'actividad: '.$id_activ;
+                    $propio = $aAsistente['propio'];
+            //        $plaza = $aAsistente['plaza'];
+                    $id_cargo = empty($aAsistente['id_cargo']) ? '' : $aAsistente['id_cargo'];
+            
+                    // Seleccionar sólo las del periodo
+                    $aWhereAct['id_activ'] = $id_activ;
+                    $GesActividades = new GestorActividad();
+                    $cActividades = $GesActividades->getActividades($aWhereAct, $aOperadorAct);
+                    if (is_array($cActividades) && count($cActividades) == 0) continue;
+            
+                    $oActividad = $cActividades[0]; // sólo debería haber una.
+                    $id_tipo_activ = $oActividad->getId_tipo_activ();
+                    $dInicioActividad = $oActividad->getF_ini();
+                    $sInicioActividad = $dInicioActividad->format('Y-m-d');
+                    $dFinActividad = $oActividad->getF_fin();
+                    $sFinActividad = $dFinActividad->format('Y-m-d');
+                    $h_ini = $oActividad->getH_ini();
+                    $h_fin = $oActividad->getH_fin();
+                    $dl_org = $oActividad->getDl_org();
+                    $nom_activ = $oActividad->getNom_activ();
+            echo ' nom: '.$nom_activ.'<br>';
+                    $oTipoActividad = new TiposActividades($id_tipo_activ);
+                        $nom_curt = $oTipoActividad->getAsistentesText() . " " . $oTipoActividad->getActividadText();
+                        $nom_llarg = $nom_activ;
+            echo 'nom_curt:'.$nom_curt.'nom llarg: '.$nom_llarg.'<br>';
+            echo $sInicioActividad.'='.$h_ini.'-->'.$sFinActividad.'='.$h_fin.'<br>';
+                $esta_sacd[$id_nom][$sInicioActividad] = 2;  
+                $esta_sacd[$id_nom][$sFinActividad] = -1;          
+                $date_range_actividad = new DatePeriod($dInicioActividad, $interval, $dFinActividad);
+                foreach ($date_range_actividad as $date) {
+                    $num_dia = $date->format('Y-m-d');
+//                $data_cols_sacd[$num_dia] = 0;    
+                    $esta_sacd[$id_nom][$num_dia] = 0;
+                }
+
+            }
+//            $data_sacd[]=$data_cols_sacd;
+            
+            echo 'AUSENCIAS:<br><br>';
+            foreach ($date_range as $date) {
+                $num_dia = $date->format('Y-m-d');
+                echo $esta_sacd[$id_nom][$num_dia].' ';
+            }
+            echo '<br><br>';
         }
 
+$oGesEncargoTipo = new GestorEncargoTipo();
 
-        $oGesEncargoTipo = new GestorEncargoTipo();
+$grupo = '8...';
+$aWhere = [];
+$aOperador = [];
+$aWhere['id_tipo_enc'] = '^' . $grupo;
+$aOperador['id_tipo_enc'] = '~';
+$oGesEncargoTipo = new GestorEncargoTipo();
+$cEncargoTipos = $oGesEncargoTipo->getEncargoTipos($aWhere, $aOperador);
 
-        $grupo = '8...';
-        $aWhere = [];
-        $aOperador = [];
-        $aWhere['id_tipo_enc'] = '^' . $grupo;
-        $aOperador['id_tipo_enc'] = '~';
-        $oGesEncargoTipo = new GestorEncargoTipo();
-        $cEncargoTipos = $oGesEncargoTipo->getEncargoTipos($aWhere, $aOperador);
-        
-        $a_tipo_enc = [];
-        $posibles_encargo_tipo = [];
-        foreach ($cEncargoTipos as $oEncargoTipo) {
-            if ($oEncargoTipo->getId_tipo_enc()>=8100) {
-                $a_tipo_enc[] = $oEncargoTipo->getId_tipo_enc();
-            }
-        
-        }        
+$a_tipo_enc = [];
+$posibles_encargo_tipo = [];
+foreach ($cEncargoTipos as $oEncargoTipo) {
+    if ($oEncargoTipo->getId_tipo_enc()>=8100) {
+        $a_tipo_enc[] = $oEncargoTipo->getId_tipo_enc();
+    }
+}        
 
 $data_cuadricula = [];
 $orden='prioridad';
@@ -158,12 +236,14 @@ foreach ($cEncargosZona as $oEncargo) {
     $aOperador = [
         'tstart' => 'BETWEEN',
     ];
+
+    //Borro los encargos ya asignados en ese periodo
     $EncargoDiaRepository = new EncargoDiaRepository();
     $cEncargosaBorrar = $EncargoDiaRepository->getEncargoDias($aWhere,$aOperador);
     foreach($cEncargosaBorrar as $oEncargoaBorrar) {
-        $id_enc=$oEncargoaBorrar->getId_enc();
-        $Uuid = $oEncargoaBorrar->getUuid_item();
-        echo 'id_enc'.$id_enc.'-'.$Uuid.'<br>';
+//        $id_enc=$oEncargoaBorrar->getId_enc();
+//        $Uuid = $oEncargoaBorrar->getUuid_item();
+//        echo 'id_enc'.$id_enc.'-'.$Uuid.'<br>';
         $EncargoDiaRepository->Eliminar($oEncargoaBorrar);
     }
 
@@ -175,7 +255,7 @@ echo $desc_enc.'<br>';
     foreach ($date_range as $date) {
         $num_dia = $date->format('Y-m-d');
         $nom_dia = $date->format('D');
-        echo 'dia: '.$num_dia.$nom_dia.'--'.$QTipoPlantilla.'<br>';
+echo 'dia: '.$num_dia.$nom_dia.'--'.$QTipoPlantilla.'<br>';
         if($QTipoPlantilla=='s')
         {
             echo 'tipo s OK<br>';
@@ -198,7 +278,6 @@ echo $desc_enc.'<br>';
             if (count($cEncargosDia) > 1) {
                 exit(_("sólo debería haber uno"));
             }
-    echo 'count: '.count($cEncargosDia).'<br>';
             if (count($cEncargosDia) === 1) {
                 $oEncargoDia = $cEncargosDia[0];
                 $id_nom = $oEncargoDia->getId_nom();
@@ -208,6 +287,7 @@ echo $desc_enc.'<br>';
                 $observ = $oEncargoDia->getObserv();
             }
             
+//si no hay nadie asignado para ese encargo vacio las variables
             if (count($cEncargosDia) === 0) {
                 $id_nom = null;
                 echo 'id_nom'.$id_nom.'<br>';
@@ -217,78 +297,9 @@ echo $desc_enc.'<br>';
             }
 
 
-if ($id_nom!=null) {
+        if ($id_nom!=null) {
     
             //compruebo que no esté fuera
-            $aWhereAct = [];
-            $aOperadorAct = [];
-            $aWhereAct['f_ini'] = "'$num_dia'";
-            $aOperadorAct['f_ini'] = '<=';
-            $aWhereAct['f_fin'] = "'$num_dia'";
-            $aOperadorAct['f_fin'] = '>=';
-//            if (!is_true($Qpropuesta)) {
-                $aWhereAct['status'] = ActividadAll::STATUS_ACTUAL;
-//            } else {
-//                $aWhereAct['status'] = ActividadAll::STATUS_BORRABLE;
-//                $aOperadorAct['status'] = '!=';
-//            }
-            /*			
-			$aWhere = ['id_nom' => $id_nom, 'plaza' => Asistente::PLAZA_PEDIDA];
-			$aOperador = ['plaza' => '>='];
-			*/
-            $aWhere = ['id_nom' => $id_nom];
-            $aOperador = [];
-
-            $oGesActividadCargo = new GestorActividadCargo();
-            $cAsistentes = $oGesActividadCargo->getAsistenteCargoDeActividad($aWhere, $aOperador, $aWhereAct, $aOperadorAct);
-
-            foreach ($cAsistentes as $aAsistente) {
-                $id_activ = $aAsistente['id_activ'];
-echo 'actividad: '.$id_activ;
-                $propio = $aAsistente['propio'];
-                $plaza = $aAsistente['plaza'];
-                $id_cargo = empty($aAsistente['id_cargo']) ? '' : $aAsistente['id_cargo'];
-
-                // Seleccionar sólo las del periodo
-                $aWhereAct['id_activ'] = $id_activ;
-                $GesActividades = new GestorActividad();
-                $cActividades = $GesActividades->getActividades($aWhereAct, $aOperadorAct);
-                if (is_array($cActividades) && count($cActividades) == 0) continue;
-
-                $oActividad = $cActividades[0]; // sólo debería haber una.
-                $id_tipo_activ = $oActividad->getId_tipo_activ();
-                $oF_ini = $oActividad->getF_ini();
-                $oF_fin = $oActividad->getF_fin();
-                $h_ini = $oActividad->getH_ini();
-                $h_fin = $oActividad->getH_fin();
-                $dl_org = $oActividad->getDl_org();
-                $nom_activ = $oActividad->getNom_activ();
-echo ' nom: '.$nom_activ.'<br>';
-                $oTipoActividad = new TiposActividades($id_tipo_activ);
-                $ssfsv = $oTipoActividad->getSfsvText();
-
-                //para el caso de que la actividad comience antes
-                //del periodo de inicio obligo a que tome una hora de inicio
-                //en el entorno de las primeras del día (a efectos del planning
-                //ya es suficiente con la 1:16 de la madrugada)
-/*                if ($oIniPlanning > $oF_ini) {
-                    $ini = $inicio_local;
-                    $hini = "1:16";
-                } else {
-                    $ini = (string)$oF_ini->getFromLocal();
-                    $hini = (string)$h_ini;
-                }
-                $fi = (string)$oF_fin->getFromLocal();
-                $hfi = (string)$h_fin;
-*/
-
-//                if (is_true($Qpropuesta)) {
-                    $nom_curt = $oTipoActividad->getAsistentesText() . " " . $oTipoActividad->getActividadText();
-                    $nom_llarg = $nom_activ;
-echo 'nom llarg: '.$nom_llarg;
-            }
-
-}
             $inicio_nuevo_dia = $num_dia.' 00:00:00';
             $fin_nuevo_dia = $num_dia.' 23:59:59';
             $aWhere = [
@@ -301,10 +312,6 @@ echo 'nom llarg: '.$nom_llarg;
             $EncargoNuevoDiaRepository = new EncargoDiaRepository();
             $cEncargoNuevoDia = $EncargoNuevoDiaRepository->getEncargoDias($aWhere,$aOperador);
     
-            if (count($cEncargoNuevoDia) > 1) {
-                exit(_("sólo debería haber máximo uno"));
-            }
-
             if (empty($cEncargoNuevoDia)) {
 echo 'empty<br>';
                 if ($id_nom!=null) {
@@ -331,20 +338,6 @@ echo 'empty<br>';
                 echo 'ple i els hauria de haver borrat abans<br>';
                 echo $id_nom.'<br>';
                 // debería haber solamente uno
-                if ($id_nom!=null) {
-                    echo 'gravo nou<br>';
-                    $oEncargoDia = $cEncargoNuevoDia[0];
-                    $oEncargoDia->setId_nom($id_nom);
-                    $tstart = new EncargoDiaTstart($num_dia, $hora_ini);
-                    $oEncargoDia->setTstart($tstart);
-                    $tend = new EncargoDiaTend($num_dia, $hora_fin);
-                    $oEncargoDia->setTend($tend);
-                    $oEncargoDia->setObserv($observ);
-                    $oEncargoDia->setId_enc($id_enc);
-                    if ($EncargoDiaRepository->Guardar($oEncargoDia) === FALSE) {
-                        $error_txt .= $EncargoDiaRepository->getErrorTxt();
-                    }    
-                }
             }
         }
 
@@ -406,7 +399,7 @@ echo 'empty<br>';
     // en la definición de columns
     $data_cuadricula[] = $data_cols;
 }
-
+}
 $json_columns_cuadricula = json_encode($columns_cuadricula);
 $json_data_cuadricula = json_encode($data_cuadricula);
 
@@ -416,7 +409,6 @@ $array_h = $oHash->getParamAjaxEnArray();
 
 
 $a_campos = ['oPosicion' => $oPosicion,
-    'oDesplSacd' => $oDesplSacd,
     'json_columns_cuadricula' => $json_columns_cuadricula,
     'json_data_cuadricula' => $json_data_cuadricula,
     'array_h' => $array_h,
