@@ -189,7 +189,7 @@ foreach ($date_range as $date) {
     $dia_week_sacd[$num_dia] = $date->format('N');
     $dia_mes = $date->format('d');
     $nom_dia = $num_dia;
-echo $nom_dia;
+//echo $nom_dia;
     $columns_cuadricula[] =
         ["id" => "$num_dia", "name" => "$nom_dia", "field" => "$num_dia", "width" => 80, "cssClass" => "cell-title"];
     $columns_sacd[] =
@@ -227,7 +227,7 @@ $cEncargosZona = $EncargosZona->getEncargos();
 foreach ($cEncargosZona as $oEncargo) {
     $id_enc = $oEncargo->getId_enc();
     $desc_enc = $oEncargo->getDesc_enc();
-    echo $id_enc.$desc_enc.'<br>';
+//    echo $id_enc.$desc_enc.'<br>';
     $data_cols = [];
     $meta_dia = [];
     if (($QTipoPlantilla == EncargoDia::PLANTILLA_SEMANAL_TRES) || ($QTipoPlantilla == EncargoDia::PLANTILLA_DOMINGOS_TRES) || ($QTipoPlantilla == EncargoDia::PLANTILLA_MENSUAL_TRES)) {
@@ -240,7 +240,7 @@ foreach ($cEncargosZona as $oEncargo) {
 //        $d++;
         $num_dia = $date->format('Y-m-d');
         $nom_dia = $date->format('D');
-echo $num_dia.'<br>';
+//echo $num_dia.'<br>';
         $data_cols["$num_dia"] = " -- ";
 
         $meta_dia["$num_dia"] = [
@@ -282,7 +282,7 @@ echo $num_dia.'<br>';
             if ($hora_ini=='00:00')
                 $hora_ini='';
             $iniciales = iniciales($id_nom);
-            echo $iniciales.'<br>';
+//            echo $iniciales.'<br>';
             $color = '';
 
             $meta_dia["$num_dia"] = [
@@ -450,7 +450,7 @@ foreach ($cZonaSacd as $oZonaSacd) {
     foreach ($date_range as $date) {
         $num_dia = $date->format('Y-m-d');
         $dws = $dia_week_sacd[$num_dia];
-echo $num_dia.'-'.$dws.'='.$esta_en_zona[$dws].'<br>';
+//echo $num_dia.'-'.$dws.'='.$esta_en_zona[$dws].'<br>';
         if ($esta_en_zona[$dws]){
             $data_cols[$num_dia] = 'SI';    
         } else {
@@ -477,8 +477,7 @@ $oHash_desplegable_sacd = new Hash();
 $oHash_desplegable_sacd->setUrl($url_desplegable_sacd);
 $oHash_desplegable_sacd->setCamposForm('id_zona!id_sacd!seleccion!dia');
 $h_desplegable_sacd = $oHash_desplegable_sacd->linkSinVal();
-echo $json_columns_cuadricula.'<br>';
-echo $json_data_cuadricula.'<br>';
+
 $a_campos = ['oPosicion' => $oPosicion,
     'json_columns_cuadricula' => $json_columns_cuadricula,
     'json_data_cuadricula' => $json_data_cuadricula,

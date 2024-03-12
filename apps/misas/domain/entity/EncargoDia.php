@@ -29,6 +29,7 @@ class EncargoDia
     const PLANTILLA_MENSUAL_TRES = 'm3';
     const INICIO_SEMANAL_UNO = '2001-01-01';
     const FIN_SEMANAL_UNO = '2001-01-08';
+    const PARTE_SEMANAL = '2001-01-';
     const INICIO_SEMANAL_DOS = '2001-01-08';
     const FIN_SEMANAL_DOS = '2001-01-15';
     const INICIO_SEMANAL_TRES = '2001-01-15';
@@ -36,6 +37,7 @@ class EncargoDia
     const INTERVAL_SEMANAL = 'P7D';
     const INICIO_DOMINGOS_UNO = '2001-10-01';
     const FIN_DOMINGOS_UNO = '2001-10-12';
+    const PARTE_DOMINGOS = '2001-10-';
     const INICIO_DOMINGOS_DOS = '2001-10-12';
     const FIN_DOMINGOS_DOS = '2001-10-23';
     const INICIO_DOMINGOS_TRES = '2001-10-23';
@@ -43,6 +45,7 @@ class EncargoDia
     const INTERVAL_DOMINGOS = 'P11D';
     const INICIO_MENSUAL_UNO = '2002-04-01';
     const FIN_MENSUAL_UNO = '2002-05-06';
+    const PARTE_MENSUAL = '2002-04-';
     const INICIO_MENSUAL_DOS = '2002-05-06';
     const FIN_MENSUAL_DOS = '2002-06-11';
     const INICIO_MENSUAL_TRES = '2002-06-11';

@@ -4,6 +4,7 @@
 
 use web\Hash;
 use zonassacd\model\entity\GestorZona;
+use misas\domain\entity\EncargoDia;
 use web\Desplegable;
 use web\PeriodoQue;
 
@@ -34,15 +35,23 @@ $oGestorZona = new GestorZona();
 $oDesplZonas = $oGestorZona->getListaZonas();
 $oDesplZonas->setNombre('id_zona');
 
-$a_TiposPlantilla= array('s'=>'semanal', 'd'=>'semanal y domingos', 'm'=>'mensual');
+$a_TiposPlantilla = array(
+    EncargoDia::PLANTILLA_SEMANAL_UNO=>'semanal una opción',
+    EncargoDia::PLANTILLA_DOMINGOS_UNO=>'semanal y domingos una opción',
+    EncargoDia::PLANTILLA_MENSUAL_UNO=>'mensual una opción',
+    EncargoDia::PLANTILLA_SEMANAL_TRES=>'semanal tres opciones',
+    EncargoDia::PLANTILLA_DOMINGOS_TRES=>'semanal y domingos tres opciones',
+    EncargoDia::PLANTILLA_MENSUAL_TRES=>'mensual tres opciones',
+);
+
 $oDesplTipoPlantilla = new Desplegable();
 $oDesplTipoPlantilla->setOpciones($a_TiposPlantilla);
-$oDesplTipoPlantilla->setNombre('TipoPlantilla');
+$oDesplTipoPlantilla->setNombre('tipoplantilla');
 
 $url_crear_nuevo_periodo = 'apps/misas/controller/crear_nuevo_periodo.php';
 $oHashNuevoPeriodo = new Hash();
 $oHashNuevoPeriodo->setUrl($url_crear_nuevo_periodo);
-$oHashNuevoPeriodo->setCamposForm('id_zona!TipoPlantilla!periodo!empiezamin!empiezamax');
+$oHashNuevoPeriodo->setCamposForm('id_zona!tipoplantilla!periodo!empiezamin!empiezamax');
 $h_nuevo_periodo = $oHashNuevoPeriodo->linkSinVal();
 
 $a_campos = ['oPosicion' => $oPosicion,

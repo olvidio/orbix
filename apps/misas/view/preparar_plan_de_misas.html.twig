@@ -29,14 +29,14 @@
 <script>
     fnjs_nuevo_periodo = function () {
         let id_zona = $('#id_zona').val();
-        let TipoPlantilla = $('#TipoPlantilla').val();
+        let tipoplantilla = $('#tipoplantilla').val();
         if (id_zona) {
             let url = '{{ url_crear_nuevo_periodo }}';
     	    var periodo=$('#periodo').val();
     	    var empiezamax=$('#empiezamax').val();
     	    var empiezamin=$('#empiezamin').val();
 
-            let parametros = 'id_zona=' + id_zona + ' & TipoPlantilla=' + TipoPlantilla + '& periodo=' + periodo + '& empiezamax='+ empiezamax + '& empiezamin='+ empiezamin +'{{ h_nuevo_periodo|raw }}';
+            let parametros = 'id_zona=' + id_zona + ' & tipoplantilla=' + tipoplantilla + '& periodo=' + periodo + '& empiezamax='+ empiezamax + '& empiezamin='+ empiezamin +'{{ h_nuevo_periodo|raw }}';
             $.ajax({
                 url: url,
                 type: 'post',
