@@ -211,9 +211,9 @@ class ActividadNuevoCurso
         $fechas_new = "$f_ini_new-$f_fin_new";
         $nom_activ = $oActividadOrigen->getNom_activ();
 
-        $patrón = '/^(.*)(\(.*?\-.*?\))(.*)/';
-        $sustitución = '{$1}(' . $fechas_new . ')$3';
-        $nom_activ_new = preg_replace($patrón, $sustitución, $nom_activ);
+        $patron = '/^(.*)(\(.*?-.*?\))(.*)/';
+        $sustitucion = '$1(' . $fechas_new . ')$3';
+        $nom_activ_new = preg_replace($patron, $sustitucion, $nom_activ);
 
         if ($this->bVer_lista) {
             echo "$tipo=> $fechas_new :: $nom_activ_new<br>";
