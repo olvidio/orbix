@@ -40,11 +40,11 @@ class InicialesSacd extends InicialesSacdDB
         $nombre_sacd='';
         if ($id_nom>0) {
             $PersonaSacd = new PersonaSacd($id_nom);
-            $nombre_sacd = $PersonaSacd->getNombreApellidos().' ('.iniciales($id_nom).')';
+            $nombre_sacd = $PersonaSacd->getNombreApellidos().' ('.$this->iniciales($id_nom).')';
         }
         if ($id_nom<0) {
             $PersonaEx = new PersonaEx($id_nom);
-            $nombre_sacd = $PersonaEx->getNombreApellidos().' ('.iniciales($id_nom).')';
+            $nombre_sacd = $PersonaEx->getNombreApellidos().' ('.$this->iniciales($id_nom).')';
         }
         return $nombre_sacd;
     }

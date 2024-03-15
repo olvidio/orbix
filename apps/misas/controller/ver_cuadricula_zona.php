@@ -5,6 +5,7 @@
 use encargossacd\model\EncargoConstants;
 use misas\domain\repositories\EncargoDiaRepository;
 use misas\domain\repositories\InicialesSacdRepository;
+use misas\domain\entity\InicialesSacd;
 use misas\domain\entity\EncargoDia;
 use misas\model\EncargosZona;
 use personas\model\entity\PersonaSacd;
@@ -25,44 +26,6 @@ require_once("apps/core/global_header.inc");
 require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-function iniciales($id_nom) {
-    $InicialesSacdRepository = new InicialesSacdRepository();
-    $InicialesSacd = $InicialesSacdRepository->findById($id_nom);
-    if ($InicialesSacd === null) {
-        if ($id_nom>0) {
-            $PersonaSacd = new PersonaSacd($id_nom);
-            // iniciales
-            $nom = mb_substr($PersonaSacd->getNom(), 0, 1);
-            $ap1 = mb_substr($PersonaSacd->getApellido1(), 0, 1);
-            $ap2 = mb_substr($PersonaSacd->getApellido2(), 0, 1);
-        } else {
-            $PersonaEx = new PersonaEx($id_nom);
-            $sacdEx = $PersonaEx->getNombreApellidos();
-            // iniciales
-            $nom = mb_substr($PersonaEx->getNom(), 0, 1);
-            $ap1 = mb_substr($PersonaEx->getApellido1(), 0, 1);
-            $ap2 = mb_substr($PersonaEx->getApellido2(), 0, 1);
-        }
-        $iniciales = strtoupper($nom . $ap1 . $ap2);
-    } else {
-        $iniciales = $InicialesSacd->getIniciales();
-    }
-
-    return $iniciales;
-}
-function nombre_sacd($id_nom) {
-    $nombre_sacd='';
-    if ($id_nom>0) {
-        $PersonaSacd = new PersonaSacd($id_nom);
-        $nombre_sacd = $PersonaSacd->getNombreApellidos().' ('.iniciales($id_nom).')';
-    }
-    if ($id_nom<0) {
-        $PersonaEx = new PersonaEx($id_nom);
-        $nombre_sacd = $PersonaEx->getNombreApellidos().' ('.iniciales($id_nom).')';
-    }
-    return $nombre_sacd;
-}
-
 $Qid_zona = (integer)filter_input(INPUT_POST, 'id_zona');
 $QTipoPlantilla = (string)filter_input(INPUT_POST, 'tipo_plantilla');
 $Qperiodo = (string)filter_input(INPUT_POST, 'periodo');
@@ -74,6 +37,10 @@ $Qempiezamax_rep=str_replace('/','-',$Qempiezamax);
 
 if ($Qorden == '')
     $Qorden='desc_enc';
+
+$a_dias_semana_breve=[1=>'L', 2=>'M', 3=>'X', 4=>'J', 5=>'V', 6=>'S', 7=>'D'];
+$a_nombre_mes_breve=[1=>'Ene', 2=>'feb', 3=>'mar', 4=>'abr', 5=>'may', 6=>'jun', 7=>'jul', 8=>'ago', 9=>'sep', 10=>'oct', 11=>'nov', 12=>'dic'];
+
 
 $columns_cuadricula = [
     ["id" => "encargo", "name" => "Encargo", "field" => "encargo", "width" => 250, "cssClass" => "cell-title"],
@@ -125,6 +92,7 @@ switch (trim($QTipoPlantilla)) {
             $oInicio3 = new DateTimeLocal(EncargoDia::INICIO_DOMINGOS_TRES);
             $oFin3 = new DateTimeLocal(EncargoDia::FIN_DOMINGOS_TRES);
             $date_range3 = new DatePeriod($oInicio3, $interval, $oFin3);
+            $interval3=New DateInterval(EncargoDia::INTERVAL_DOMINGOS);
         }
         $a_dias_semana = EncargoConstants::OPCIONES_DIA_SEMANA;
         foreach ($date_range as $date) {
@@ -156,8 +124,9 @@ switch (trim($QTipoPlantilla)) {
             $oFin2 = new DateTimeLocal(EncargoDia::FIN_MENSUAL_DOS);
             $date_range2 = new DatePeriod($oInicio2, $interval, $oFin2);
             $oInicio3 = new DateTimeLocal(EncargoDia::INICIO_MENSUAL_TRES);
-            $oFin3 = new DateTimeLocal(EncargoDianjs_nuevo_periodo::FIN_MENSUAL_TRES);
+            $oFin3 = new DateTimeLocal(EncargoDia::FIN_MENSUAL_TRES);
             $date_range3 = new DatePeriod($oInicio3, $interval, $oFin3);
+            $interval3=New DateInterval(EncargoDia::INTERVAL_MENSUAL);
         }
         $a_dias_semana = EncargoConstants::OPCIONES_DIA_SEMANA;
         foreach ($date_range as $date) {
@@ -188,8 +157,9 @@ foreach ($date_range as $date) {
     $dia_week = $date->format('N');
     $dia_week_sacd[$num_dia] = $date->format('N');
     $dia_mes = $date->format('d');
-    $nom_dia = $num_dia;
-//echo $nom_dia;
+//    $nom_dia = $num_dia;
+    $nom_dia=$a_dias_semana_breve[$dia_week].' '.$dia_mes;
+    //echo $nom_dia;
     $columns_cuadricula[] =
         ["id" => "$num_dia", "name" => "$nom_dia", "field" => "$num_dia", "width" => 80, "cssClass" => "cell-title"];
     $columns_sacd[] =
@@ -281,8 +251,8 @@ foreach ($cEncargosZona as $oEncargo) {
             $hora_ini = $oEncargoDia->getTstart()->format('H:i');
             if ($hora_ini=='00:00')
                 $hora_ini='';
-            $iniciales = iniciales($id_nom);
-//            echo $iniciales.'<br>';
+            $InicialesSacd = new InicialesSacd();
+            $iniciales=$InicialesSacd->iniciales($id_nom);
             $color = '';
 
             $meta_dia["$num_dia"] = [
@@ -358,7 +328,8 @@ foreach ($cEncargosZona as $oEncargo) {
                     $hora_ini = $oEncargoDia->getTstart()->format('H:i');
                 if ($hora_ini=='00:00')
                     $hora_ini='';
-                $iniciales = iniciales($id_nom);
+                $InicialesSacd = new InicialesSacd();
+                $iniciales=$InicialesSacd->iniciales($id_nom);
                 $color = '';
 
                 $meta_dia2["$num_dia"] = [
@@ -397,7 +368,8 @@ foreach ($cEncargosZona as $oEncargo) {
                 $hora_ini = $oEncargoDia->getTstart()->format('H:i');
                 if ($hora_ini=='00:00')
                     $hora_ini='';
-                $iniciales = iniciales($id_nom);
+                $InicialesSacd = new InicialesSacd();
+                $iniciales=$InicialesSacd->iniciales($id_nom);
                 $color = '';
 
                 $meta_dia3["$num_dia"] = [
@@ -443,7 +415,9 @@ $cZonaSacd = $GesZonasSacd->getZonasSacds($aWhere, $aOperador);
 foreach ($cZonaSacd as $oZonaSacd) {
     $data_cols = [];
     $id_nom = $oZonaSacd->getId_nom();
-    $nombre_sacd=nombre_sacd($id_nom);
+//    $nombre_sacd=nombre_sacd($id_nom);
+    $InicialesSacd = new InicialesSacd();
+    $nombre_sacd=$InicialesSacd->nombre_sacd($id_nom);
     $data_cols['sacerdote']=$nombre_sacd;
 //    echo $nombre_sacd.'<br>';
     $esta_en_zona=array('', $oZonaSacd->getDw1(),$oZonaSacd->getDw2(),$oZonaSacd->getDw3(),$oZonaSacd->getDw4(),$oZonaSacd->getDw5(),$oZonaSacd->getDw6(),$oZonaSacd->getDw7());
