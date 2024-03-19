@@ -73,10 +73,19 @@ switch (trim($QTipoPlantilla)) {
             $dia_week_sacd[$num_dia] = $date->format('N');
             $nom_dia = $a_dias_semana[$dia_week];
         
-            $columns_cuadricula[] =
-                ["id" => "$num_dia", "name" => "$nom_dia", "field" => "$num_dia", "width" => 80, "cssClass" => "cell-title"];
-            $columns_sacd[] =
-                ["id" => "$num_dia", "name" => "$nom_dia", "field" => "$num_dia", "width" => 80, "cssClass" => "cell-title"];
+            $columns_cuadricula[] = [
+                "id" => "$num_dia", 
+                "name" => "$nom_dia", 
+                "field" => "$num_dia", 
+                "width" => 80, 
+                "cssClass" => "cell-title"
+            ];
+            $columns_sacd[] = [
+                "id" => "$num_dia", 
+                "name" => "$nom_dia", 
+                "field" => "$num_dia", 
+                "width" => 80, 
+                "cssClass" => "cell-title"];
         }
         break;
     case EncargoDia::PLANTILLA_DOMINGOS_UNO:
@@ -107,10 +116,19 @@ switch (trim($QTipoPlantilla)) {
                 $dia_week_sacd[$num_dia] = 7;
             }
         
-            $columns_cuadricula[] =
-                ["id" => "$num_dia", "name" => "$nom_dia", "field" => "$num_dia", "width" => 80, "cssClass" => "cell-title"];
-            $columns_sacd[] =
-                ["id" => "$num_dia", "name" => "$nom_dia", "field" => "$num_dia", "width" => 80, "cssClass" => "cell-title"];
+            $columns_cuadricula[] = [
+                "id" => "$num_dia", 
+                "name" => "$nom_dia", 
+                "field" => "$num_dia", 
+                "width" => 80, 
+                "cssClass" => "cell-title"
+            ];
+            $columns_sacd[] = [
+                "id" => "$num_dia", 
+                "name" => "$nom_dia", 
+                "field" => "$num_dia", 
+                "width" => 80, 
+                "cssClass" => "cell-title"];
         }
         break;
     case EncargoDia::PLANTILLA_MENSUAL_UNO:
@@ -136,36 +154,54 @@ switch (trim($QTipoPlantilla)) {
             $dia_mes = $date->format('d');
             $nom_dia = $a_dias_semana[$dia_week].' '.intdiv(date_diff($date, $oInicio)->format('%a'),7)+1;
 
-            $columns_cuadricula[] =
-                ["id" => "$num_dia", "name" => "$nom_dia", "field" => "$num_dia", "width" => 80, "cssClass" => "cell-title"];
-            $columns_sacd[] =
-                ["id" => "$num_dia", "name" => "$nom_dia", "field" => "$num_dia", "width" => 80, "cssClass" => "cell-title"];
+            $columns_cuadricula[] = [
+                "id" => "$num_dia", 
+                "name" => "$nom_dia", 
+                "field" => "$num_dia", 
+                "width" => 80, 
+                "cssClass" => "cell-title"
+            ];
+            $columns_sacd[] = [
+                "id" => "$num_dia", 
+                "name" => "$nom_dia", 
+                "field" => "$num_dia", 
+                "width" => 80, 
+                "cssClass" => "cell-title"];
         }
         break;
-    
-    }
+    case EncargoDia::PLAN_DE_MISAS:
+        if ($Qempiezamin!='') {
+            $oInicio = new DateTimeLocal($Qempiezamin_rep);
+        }
+        if ($Qempiezamax!='') {
+            $oFin = new DateTimeLocal($Qempiezamax_rep);
+        }
+        $interval = new DateInterval('P1D');
+        $date_range = new DatePeriod($oInicio, $interval, $oFin);
+        foreach ($date_range as $date) {
+            $num_dia = $date->format('Y-m-d');
+            $dia_week = $date->format('N');
+            $dia_week_sacd[$num_dia] = $date->format('N');
+            $dia_mes = $date->format('d');
+            $nom_dia=$a_dias_semana_breve[$dia_week].' '.$dia_mes;
+            $columns_cuadricula[] = [
+                "id" => "$num_dia", 
+                "name" => "$nom_dia", 
+                "field" => "$num_dia", 
+                "width" => 80, 
+                "cssClass" => "cell-title"
+            ];
+            $columns_sacd[] = [
+                "id" => "$num_dia", 
+                "name" => "$nom_dia", 
+                "field" => "$num_dia", 
+                "width" => 80, 
+                "cssClass" => "cell-title"
+            ];
 
-    //Si no es una plantilla....
-if ($Qempiezamin!='')
-    $oInicio = new DateTimeLocal($Qempiezamin_rep);
-if ($Qempiezamax!='')
-    $oFin = new DateTimeLocal($Qempiezamax_rep);
-$interval = new DateInterval('P1D');
-$date_range = new DatePeriod($oInicio, $interval, $oFin);
-foreach ($date_range as $date) {
-    $num_dia = $date->format('Y-m-d');
-    $dia_week = $date->format('N');
-    $dia_week_sacd[$num_dia] = $date->format('N');
-    $dia_mes = $date->format('d');
-//    $nom_dia = $num_dia;
-    $nom_dia=$a_dias_semana_breve[$dia_week].' '.$dia_mes;
-    //echo $nom_dia;
-    $columns_cuadricula[] =
-        ["id" => "$num_dia", "name" => "$nom_dia", "field" => "$num_dia", "width" => 80, "cssClass" => "cell-title"];
-    $columns_sacd[] =
-        ["id" => "$num_dia", "name" => "$nom_dia", "field" => "$num_dia", "width" => 80, "cssClass" => "cell-title"];
-}
-// FINS Aquí
+        }
+        break;
+}   
 
 
 

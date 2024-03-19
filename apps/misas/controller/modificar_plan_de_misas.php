@@ -16,11 +16,8 @@ require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
 $aOpciones = array(
-    'semana_next' => _("próxima semana de lunes a domingo"),
-    'mes_next' => _("próximo mes natural"),
-    'trimestre_2' => _("segundo trimestre"),
-    'trimestre_3' => _("tercer trimestre"),
-    'trimestre_4' => _("cuarto trimestre"),
+    'semana_next' => _("próxima semana"),
+    'mes_next' => _("próximo mes"),
     'separador' => '---------',
     'otro' => _("otro")
 );
@@ -34,7 +31,6 @@ $oFormP->setBoton("<input type=button name=\"ver\" value=\"" . _("ver") . "\" on
 $oGestorZona = new GestorZona();
 $oDesplZonas = $oGestorZona->getListaZonas();
 $oDesplZonas->setNombre('id_zona');
-$oDesplZonas->setAction('fnjs_ver_plantilla_zona()');
 
 $a_Orden = array(
     'orden' => 'orden',
@@ -50,7 +46,7 @@ $oDesplOrden->setAction('fnjs_ver_plantilla_zona()');
 $url_ver_cuadricula_zona = 'apps/misas/controller/ver_cuadricula_zona.php';
 $oHashZonaPeriodo = new Hash();
 $oHashZonaPeriodo->setUrl($url_ver_cuadricula_zona);
-$oHashZonaPeriodo->setCamposForm('id_zona!periodo!empiezamin!empiezamax!orden');
+$oHashZonaPeriodo->setCamposForm('id_zona!periodo!empiezamin!empiezamax!orden!tipo_plantilla');
 $h_zona_periodo = $oHashZonaPeriodo->linkSinVal();
 
 $a_campos = ['oPosicion' => $oPosicion,

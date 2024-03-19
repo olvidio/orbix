@@ -27,6 +27,30 @@
 </div>
 
 <script>
+    fnjs_ver_plantilla_zona = function () {
+        let id_zona = $('#id_zona').val();
+        if (id_zona) {
+            let url = '{{ url_ver_cuadricula_zona }}';
+	        var zona=$('#sacd_zona').prop('checked');
+    	    var periodo=$('#periodo').val();
+    	    var empiezamax=$('#empiezamax').val();
+    	    var empiezamin=$('#empiezamin').val();
+            let orden = $('#orden').val();
+
+            let parametros = 'id_zona=' + id_zona + '&periodo=' + periodo + '&empiezamin=' + empiezamin + '&empiezamax=' + empiezamax + '&orden=' + orden + '&tipo_plantilla=p' + '{{ h_zona|raw }}';
+
+            $.ajax({
+                url: url,
+                type: 'post',
+                data: parametros,
+                dataType: 'html'
+            })
+                .done(function (rta_txt) {
+                    $('#div_cuadricula').html(rta_txt);
+                });
+        }
+    }
+
     fnjs_nuevo_periodo = function () {
         let id_zona = $('#id_zona').val();
         let tipoplantilla = $('#tipoplantilla').val();

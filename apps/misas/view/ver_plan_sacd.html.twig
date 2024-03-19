@@ -4,12 +4,9 @@
         <table>
             <thead>
             <tr>
-                <th class=titulo_inv colspan=4>{{ "Plan de Misas de la zona"|trans|capitalize }}:&nbsp;&nbsp;&nbsp;
-                    {{ oDesplZonas.desplegable|raw }}
+                <th class=titulo_inv colspan=4>{{ "Plan de Misas de un sacd"|trans|capitalize }}:&nbsp;&nbsp;&nbsp;
+                    {{ oDesplSacd.desplegable|raw }}
                 </th>
-                <th class=titulo_inv colspan=4>{{ "Orden"|trans|capitalize }}:&nbsp;&nbsp;&nbsp;
-                    {{ oDesplOrden.desplegable|raw }}
-                </th> 
             </tr>
             <tr>
             {{ oFormP.getHtml()|raw }}
@@ -24,17 +21,15 @@
 </div>
 
 <script>
-    fnjs_ver_plantilla_zona = function () {
-        let id_zona = $('#id_zona').val();
-        if (id_zona) {
-            let url = '{{ url_ver_cuadricula_zona }}';
-	        var zona=$('#sacd_zona').prop('checked');
+    fnjs_ver_plan_sacd = function () {
+        let id_sacd = $('#id_sacd').val();
+        if (id_sacd) {
+            let url = '{{ url_buscar_plan_sacd }}';
     	    var periodo=$('#periodo').val();
     	    var empiezamax=$('#empiezamax').val();
     	    var empiezamin=$('#empiezamin').val();
-            let orden = $('#orden').val();
 
-            let parametros = 'id_zona=' + id_zona + '&periodo=' + periodo + '&empiezamin=' + empiezamin + '&empiezamax=' + empiezamax + '&orden=' + orden + '&tipo_plantilla=p' + '{{ h_zona_plantilla|raw }}';
+            let parametros = 'id_sacd=' + id_sacd + '&periodo=' + periodo + '&empiezamin=' + empiezamin + '&empiezamax=' + empiezamax + '{{ h_plan_sacd|raw }}';
 
             $.ajax({
                 url: url,

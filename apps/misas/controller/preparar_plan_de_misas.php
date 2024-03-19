@@ -29,6 +29,7 @@ $oFormP->setFormName('frm_nuevo_periodo');
 $oFormP->setTitulo(core\strtoupper_dlb(_("seleccionar un periodo")));
 $oFormP->setPosiblesPeriodos($aOpciones);
 
+$oFormP->setBoton("<input type=button name=\"ver\" value=\"" . _("ver") . "\" onclick=\"fnjs_ver_plantilla_zona();\">");
 $oFormP->setBoton("<input type=button name=\"preparar\" value=\"" . _("preparar") . "\" onclick=\"fnjs_nuevo_periodo();\">");
 
 $oGestorZona = new GestorZona();
