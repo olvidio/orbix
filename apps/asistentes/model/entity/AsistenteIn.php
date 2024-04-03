@@ -2,8 +2,8 @@
 
 namespace asistentes\model\entity;
 
-use core;
-use core\ConfigGlobal;
+use actividades\model\entity\Actividad;
+use personas\model\entity\PersonaEx;
 use function core\is_true;
 
 /**
@@ -74,12 +74,18 @@ class AsistenteIn extends AsistentePub
         if (is_true($this->perm_modificar())) {
             parent::DBEliminar();
         } else {
-            $errot_txt = _("el asistente es de otra dl. Se debe modificar en la dl origen.");
-            $errot_txt .= "<br>";
-            echo $errot_txt;
-            echo "<pre>";
-            print_r($this);
-            echo "</pre>";
+            $id_nom = $this->getId_nom();
+            $id_activ = $this->getId_activ();
+            $oPersona = new PersonaEx($id_nom);
+            $ape_nom = $oPersona->getApellidosNombre();
+            $oActividad = new Actividad($id_activ);
+            $nom_activ = $oActividad->getNom_activ();
+
+            $error_txt = _("el asistente es de otra dl. Se debe modificar en la dl origen.");
+            $error_txt .= "<br>";
+            $error_txt .= "actividad: $nom_activ<br>";
+            $error_txt .= "asistente: $ape_nom<br>";
+            echo $error_txt;
             return FALSE;
         }
     }
