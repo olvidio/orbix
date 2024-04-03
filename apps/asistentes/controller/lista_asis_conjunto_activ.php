@@ -40,7 +40,7 @@ $Qdl_org = (string)filter_input(INPUT_POST, 'dl_org');
 $Qempiezamin = (string)filter_input(INPUT_POST, 'empiezamin');
 $Qempiezamax = (string)filter_input(INPUT_POST, 'empiezamax');
 
-// valores por defeccto
+// valores por defecto
 if (empty($Qperiodo)) {
     $Qperiodo = 'actual';
 }
@@ -80,7 +80,7 @@ if (empty($Qid_tipo_activ)) {
     $sactividad = $oTipoActiv->getActividadText();
     $nom_tipo = $oTipoActiv->getNom_tipoText();
 }
-if ($Qid_tipo_activ != '......') {
+if ($Qid_tipo_activ !== '......') {
     $aWhere['id_tipo_activ'] = "^$Qid_tipo_activ";
     $aOperador['id_tipo_activ'] = '~';
 }
@@ -99,7 +99,7 @@ $oPeriodo->setPeriodo($Qperiodo);
 
 $inicioIso = $oPeriodo->getF_ini_iso();
 $finIso = $oPeriodo->getF_fin_iso();
-if (!empty($Qperiodo) && $Qperiodo == 'desdeHoy') {
+if (!empty($Qperiodo) && $Qperiodo === 'desdeHoy') {
     $aWhere['f_fin'] = "'$inicioIso','$finIso'";
     $aOperador['f_fin'] = 'BETWEEN';
 } else {
@@ -116,7 +116,7 @@ if (!empty($Qnom_activ)) {
     $aOperador['nom_activ'] = 'ILIKE';
 }
 // Publicar
-if (!empty($Qmodo) && $Qmodo == 'publicar') {
+if (!empty($Qmodo) && $Qmodo === 'publicar') {
     $aWhere['publicado'] = 'f';
 }
 $aWhere['_ordre'] = 'f_ini';
@@ -136,7 +136,7 @@ if (empty($Qdl_org) || $Qdl_org == $mi_dele) {
     $oListaPlazasDl->setOperador($aOperador);
     $oListaPlazasDl->setId_tipo_activ($Qid_tipo_activ);
     // sólo sacd
-    if ($Qque == 'list_cjto_sacd') {
+    if ($Qque === 'list_cjto_sacd') {
         $oListaPlazasDl->setSacd(TRUE);
     }
 

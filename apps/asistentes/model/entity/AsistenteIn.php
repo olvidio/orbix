@@ -70,11 +70,16 @@ class AsistenteIn extends AsistentePub
      */
     public function DBEliminar()
     {
-        // Para los de paso si se puede guardar. Para el reso NO
+        // Para los de paso si se puede guardar. Para el resto NO
         if (is_true($this->perm_modificar())) {
             parent::DBEliminar();
         } else {
-            exit (_("el asistente es de otra dl. Se debe modificar en la dl origen."));
+            $errot_txt = _("el asistente es de otra dl. Se debe modificar en la dl origen.");
+            $errot_txt .= "<br>";
+            echo $errot_txt;
+            echo "<pre>";
+            print_r($this);
+            echo "</pre>";
             return FALSE;
         }
     }
