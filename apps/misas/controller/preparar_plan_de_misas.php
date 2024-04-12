@@ -18,10 +18,6 @@ require_once("apps/core/global_object.inc");
 $aOpciones = array(
     'semana_next' => _("próxima semana de lunes a domingo"),
     'mes_next' => _("próximo mes natural"),
-    'trimestre_2' => _("segundo trimestre"),
-    'trimestre_3' => _("tercer trimestre"),
-    'trimestre_4' => _("cuarto trimestre"),
-    'separador' => '---------',
     'otro' => _("otro")
 );
 $oFormP = new PeriodoQue();
@@ -55,12 +51,20 @@ $oHashNuevoPeriodo->setUrl($url_crear_nuevo_periodo);
 $oHashNuevoPeriodo->setCamposForm('id_zona!tipoplantilla!periodo!empiezamin!empiezamax');
 $h_nuevo_periodo = $oHashNuevoPeriodo->linkSinVal();
 
+$url_ver_cuadricula_zona = 'apps/misas/controller/ver_cuadricula_zona.php';
+$oHashZonaPeriodo = new Hash();
+$oHashZonaPeriodo->setUrl($url_ver_cuadricula_zona);
+$oHashZonaPeriodo->setCamposForm('id_zona!periodo!empiezamin!empiezamax!orden!tipo_plantilla');
+$h_zona_periodo = $oHashZonaPeriodo->linkSinVal();
+
 $a_campos = ['oPosicion' => $oPosicion,
     'oDesplZonas' => $oDesplZonas,
     'oDesplTipoPlantilla' => $oDesplTipoPlantilla,
     'oFormP' => $oFormP,
     'url_crear_nuevo_periodo' => $url_crear_nuevo_periodo,
     'h_nuevo_periodo' => $h_nuevo_periodo,
+    'url_ver_cuadricula_zona' => $url_ver_cuadricula_zona,
+    'h_zona_periodo' => $h_zona_periodo,
 ];
 
 $oView = new core\ViewTwig('misas/controller');

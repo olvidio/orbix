@@ -33,8 +33,6 @@ require_once("apps/core/global_header.inc");
 require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-//Se ha de eliminar esta función
-
 $Qid_zona = (integer)filter_input(INPUT_POST, 'id_zona');
 $QTipoPlantilla = (string)filter_input(INPUT_POST, 'tipoplantilla');
 $Qseleccion = (string)filter_input(INPUT_POST, 'seleccion');
@@ -42,10 +40,55 @@ $Qseleccion = (string)filter_input(INPUT_POST, 'seleccion');
 $Qperiodo = (string)filter_input(INPUT_POST, 'periodo');
 $Qempiezamin = (string)filter_input(INPUT_POST, 'empiezamin');
 $Qempiezamax = (string)filter_input(INPUT_POST, 'empiezamax');
-$partes_min=explode('/',$Qempiezamin);
-$Qempiezamin_rep=$partes_min[2].'-'.$partes_min[1].'-'.$partes_min[0];
-$partes_max=explode('/',$Qempiezamax);
-$Qempiezamax_rep=$partes_max[2].'-'.$partes_max[1].'-'.$partes_max[0];
+
+$menos_un_dia = new DateInterval('P1D');
+$menos_un_dia->invert = 1;
+
+echo $Qperiodo.'<br>';
+
+switch ($Qperiodo) {
+    case "semana_next":
+        $dia_week = date('N');
+        echo 'dia:'.$dia_week.'<br>';
+        $empiezamin = new DateTimeLocal(date('Y-m-d'));
+        $intervalo='P'.(8-$dia_week).'D';
+        $empiezamin->add(new DateInterval($intervalo));
+        $Qempiezamin_rep = $empiezamin->format('Y-m-d');
+        echo 'empieza'.$Qempiezamin_rep.'<br>';
+        $intervalo='P7D';
+        $empiezamax = $empiezamin;
+        $empiezamax->add(new DateInterval($intervalo));
+        $empiezamax->add($menos_un_dia);
+        $Qempiezamax_rep = $empiezamax->format('Y-m-d');
+        echo 'fin'.$Qempiezamax_rep.'<br>';
+        break;
+    case "mes_next":
+        $proximo_mes = date('m') + 1;
+        $anyo = date('Y');
+        if ($proximo_mes == 12) {
+            $proximo_mes = 1;
+            $anyo++;
+        }
+        $empiezamin = new DateTimeLocal(date($anyo.'-'.$proximo_mes.'-01'));
+        $Qempiezamin_rep = $empiezamin->format('Y-m-d');
+        echo 'empieza'.$Qempiezamin_rep.'<br>';
+        $siguiente_mes = $proximo_mes + 1;
+        if ($siguiente_mes == 12) {
+            $siguiente_mes = 1;
+            $anyo++;
+        }
+        $empiezamax = new DateTimeLocal(date($anyo.'-'.$siguiente_mes.'-01'));
+        $empiezamax->add($menos_un_dia);
+        $Qempiezamax_rep = $empiezamax->format('Y-m-d');
+        echo 'fin'.$Qempiezamax_rep.'<br>';
+        break;
+    default:
+        $partes_min=explode('/',$Qempiezamin);
+        $Qempiezamin_rep=$partes_min[2].'-'.$partes_min[1].'-'.$partes_min[0];
+        $partes_max=explode('/',$Qempiezamax);
+        $Qempiezamax_rep=$partes_max[2].'-'.$partes_max[1].'-'.$partes_max[0];
+}
+
 $sInicio=$Qempiezamin_rep.' 00:00:00';
 $sFin=$Qempiezamax_rep.' 23:59:59';
 

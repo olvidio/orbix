@@ -23,7 +23,7 @@
 </div>
 
 <br>
-<div id="div_plantilla">
+<div id="div_cuadricula">
 </div>
 
 <script>
@@ -37,7 +37,7 @@
     	    var empiezamin=$('#empiezamin').val();
             let orden = $('#orden').val();
 
-            let parametros = 'id_zona=' + id_zona + '&periodo=' + periodo + '&empiezamin=' + empiezamin + '&empiezamax=' + empiezamax + '&orden=' + orden + '&tipo_plantilla=p' + '{{ h_zona|raw }}';
+            let parametros = 'id_zona=' + id_zona + '&periodo=' + periodo + '&empiezamin=' + empiezamin + '&empiezamax=' + empiezamax + '&orden=' + orden + '&tipo_plantilla=p' + '{{ h_zona_periodo|raw }}';
 
             $.ajax({
                 url: url,
@@ -68,7 +68,7 @@
                 dataType: 'html'
             })
                 .done(function (rta_txt) {
-                    $('#div_plantilla').html(rta_txt);
+                    fnjs_ver_plantilla_zona();
                 });
         }
     }

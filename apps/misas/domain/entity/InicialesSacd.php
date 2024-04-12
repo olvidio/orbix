@@ -19,7 +19,10 @@ class InicialesSacd extends InicialesSacdDB
                 // iniciales
                 $nom = mb_substr($PersonaSacd->getNom(), 0, 1);
                 $ap1 = mb_substr($PersonaSacd->getApellido1(), 0, 1);
-                $ap2 = mb_substr($PersonaSacd->getApellido2(), 0, 1);
+                $a2=$PersonaSacd->getApellido2();
+                if ($a2 == null)
+                    $a2='';
+                $ap2 = mb_substr($a2, 0, 1);
             } else {
                 $PersonaEx = new PersonaEx($id_nom);
                 $sacdEx = $PersonaEx->getNombreApellidos();

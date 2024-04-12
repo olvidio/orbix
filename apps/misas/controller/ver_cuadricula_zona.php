@@ -32,10 +32,42 @@ $Qperiodo = (string)filter_input(INPUT_POST, 'periodo');
 $Qorden = (string)filter_input(INPUT_POST, 'orden');
 $Qempiezamin = (string)filter_input(INPUT_POST, 'empiezamin');
 $Qempiezamax = (string)filter_input(INPUT_POST, 'empiezamax');
-$Qempiezamin_rep=str_replace('/','-',$Qempiezamin);
-$Qempiezamax_rep=str_replace('/','-',$Qempiezamax);
 
-if ($Qorden == '')
+switch ($Qperiodo) {
+    case "semana_next":
+        $dia_week = date('N');
+        $empiezamin = new DateTimeLocal(date('Y-m-d'));
+        $intervalo='P'.(8-$dia_week).'D';
+        $empiezamin->add(new DateInterval($intervalo));
+        $Qempiezamin_rep = $empiezamin->format('Y-m-d');
+        $intervalo='P7D';
+        $empiezamax = $empiezamin;
+        $empiezamax->add(new DateInterval($intervalo));
+        $Qempiezamax_rep = $empiezamax->format('Y-m-d');
+        break;
+    case "mes_next":
+        $proximo_mes = date('m') + 1;
+        $anyo = date('Y');
+        if ($proximo_mes == 12) {
+            $proximo_mes = 1;
+            $anyo++;
+        }
+        $empiezamin = new DateTimeLocal(date($anyo.'-'.$proximo_mes.'-01'));
+        $Qempiezamin_rep = $empiezamin->format('Y-m-d');
+        $siguiente_mes = $proximo_mes + 1;
+        if ($siguiente_mes == 12) {
+            $siguiente_mes = 1;
+            $anyo++;
+        }
+        $empiezamax = new DateTimeLocal(date($anyo.'-'.$siguiente_mes.'-01'));
+        $Qempiezamax_rep = $empiezamax->format('Y-m-d');
+        break;
+    default:
+    $Qempiezamin_rep=str_replace('/','-',$Qempiezamin);
+    $Qempiezamax_rep=str_replace('/','-',$Qempiezamax);
+}
+
+if(isset($Qorden) && ($Qorden!==null))
     $Qorden='desc_enc';
 
 $a_dias_semana_breve=[1=>'L', 2=>'M', 3=>'X', 4=>'J', 5=>'V', 6=>'S', 7=>'D'];
@@ -170,12 +202,8 @@ switch (trim($QTipoPlantilla)) {
         }
         break;
     case EncargoDia::PLAN_DE_MISAS:
-        if ($Qempiezamin!='') {
-            $oInicio = new DateTimeLocal($Qempiezamin_rep);
-        }
-        if ($Qempiezamax!='') {
-            $oFin = new DateTimeLocal($Qempiezamax_rep);
-        }
+        $oInicio = new DateTimeLocal($Qempiezamin_rep);
+        $oFin = new DateTimeLocal($Qempiezamax_rep);
         $interval = new DateInterval('P1D');
         $date_range = new DatePeriod($oInicio, $interval, $oFin);
         foreach ($date_range as $date) {
@@ -225,7 +253,6 @@ foreach ($cEncargoTipos as $oEncargoTipo) {
     if ($oEncargoTipo->getId_tipo_enc()>=8100)
         $a_tipo_enc[] = $oEncargoTipo->getId_tipo_enc();
 }
-
 
 $EncargosZona = new EncargosZona($Qid_zona, $oInicio, $oFin, $Qorden);
 $EncargosZona->setATipoEnc($a_tipo_enc);

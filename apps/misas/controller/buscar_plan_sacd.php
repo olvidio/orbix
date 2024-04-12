@@ -9,6 +9,7 @@ use misas\domain\entity\InicialesSacd;
 use misas\domain\entity\EncargoDia;
 use misas\model\EncargosZona;
 use personas\model\entity\PersonaSacd;
+use encargossacd\model\entity\Encargo;
 use encargossacd\model\entity\GestorEncargo;
 use encargossacd\model\entity\GestorEncargoTipo;
 use zonassacd\model\entity\GestorZonaSacd;
@@ -56,65 +57,13 @@ $date_range = new DatePeriod($oInicio, $interval, $oFin);
 
 $data_cuadricula = [];
 
-/*$oGesEncargoTipo = new GestorEncargoTipo();
-
-$grupo = '8...';
-//if (!empty($grupo)) {
-$aWhere = [];
-$aOperador = [];
-$aWhere['id_tipo_enc'] = '^' . $grupo;
-$aOperador['id_tipo_enc'] = '~';
-$oGesEncargoTipo = new GestorEncargoTipo();
-$cEncargoTipos = $oGesEncargoTipo->getEncargoTipos($aWhere, $aOperador);
-
-
-$posibles_encargo_tipo = [];
-foreach ($cEncargoTipos as $oEncargoTipo) {
-    if ($oEncargoTipo->getId_tipo_enc()>=8100)
-        $a_tipo_enc[] = $oEncargoTipo->getId_tipo_enc();
-}
-*/
-
-/*$EncargosZona = new EncargosZona($Qid_zona, $oInicio, $oFin, $Qorden);
-$EncargosZona->setATipoEnc($a_tipo_enc);
-$cEncargosZona = $EncargosZona->getEncargos();
-foreach ($cEncargosZona as $oEncargo) {
-    $id_enc = $oEncargo->getId_enc();
-    $desc_enc = $oEncargo->getDesc_enc();
-//    echo $id_enc.$desc_enc.'<br>';
-    $data_cols = [];
-    $meta_dia = [];
-    if (($QTipoPlantilla == EncargoDia::PLANTILLA_SEMANAL_TRES) || ($QTipoPlantilla == EncargoDia::PLANTILLA_DOMINGOS_TRES) || ($QTipoPlantilla == EncargoDia::PLANTILLA_MENSUAL_TRES)) {
-        $data_cols2 = [];
-        $meta_dia2 = [];
-        $data_cols3= [];
-        $meta_dia3 = [];        
-    }
-    foreach ($date_range as $date) {
-//        $d++;
-        $num_dia = $date->format('Y-m-d');
-        $nom_dia = $date->format('D');
-//echo $num_dia.'<br>';
-        $data_cols["$num_dia"] = " -- ";
-
-        $meta_dia["$num_dia"] = [
-            "uuid_item" => "",
-            "color" => "",
-            "key" => '',
-            "tstart" => '',
-            "tend" => '',
-            "observ" => '',
-            "id_enc" => $id_enc,
-            "dia" => $num_dia,
-        ];
-
-        // sobreescribir los que tengo datos:*/
 $inicio_dia = '2024-3-01 00:00:00';
 $fin_dia = '2024-3-31 23:59:59';
 $aWhere = [
     'id_nom' => $Qid_sacd,
     'tstart' => "'$inicio_dia', '$fin_dia'",
 ];
+$aWhere['_ordre'] = 'tstart';
 $aOperador = [
     'tstart' => 'BETWEEN',
 ];
@@ -141,9 +90,12 @@ foreach($cEncargosDia as $oEncargoDia) {
 
     $data_cols["dia"] = $dia_y_hora;
     $data_cols["observaciones"] = $observ;
-//    $data_cols["encargo"] = $desc_enc;
-    $data_cols["encargo"] = $id_enc;
-    echo $id_enc.$dia_y_hora.$observ.'<br>';
+
+    $oEncargo = new Encargo($id_enc);
+    $desc_enc = $oEncargo->getDesc_enc();
+
+    $data_cols["encargo"] = $desc_enc;
+    echo $id_enc.$desc_enc.$dia_y_hora.$observ.'<br>';
 
     $data_cuadricula[] = $data_cols;
 }
