@@ -17,7 +17,7 @@ require_once("apps/core/global_header.inc");
 // Crea los objetos de uso global **********************************************
 require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
-
+echo 'hhhollla';
 $aOpciones = array(
     'semana_next' => _("próxima semana de lunes a domingo"),
     'mes_next' => _("próximo mes natural"),
@@ -34,29 +34,28 @@ $oFormP->setPosiblesPeriodos($aOpciones);
 
 $oFormP->setBoton("<input type=button name=\"ver\" value=\"" . _("ver") . "\" onclick=\"fnjs_ver_plan_sacd();\">");
 
-$a_Clases = [];
-$a_Clases[] = array('clase' => 'PersonaN', 'get' => 'getPersonas');
-$a_Clases[] = array('clase' => 'PersonaAgd', 'get' => 'getPersonas');
 $aWhere = [];
-$aOperador = [];
-$aWhere['sacd'] = 't';
-$aWhere['situacion'] = 'A';
-$aWhere['_ordre'] = 'apellido1,apellido2,nom';
-$GesPersonas = new GestorPersona();
-$GesPersonas->setClases($a_Clases);
-$cPersonas = $GesPersonas->getPersonas($aWhere, $aOperador);
-foreach ($cPersonas as $oPersona) {
-    $id_nom = $oPersona->getId_nom();
-    $InicialesSacd = new InicialesSacd();
-    $sacd=$InicialesSacd->nombre_sacd($id_nom);
-    $iniciales=$InicialesSacd->iniciales($id_nom);
-    $key = $id_nom . '#' . $iniciales;
-    $a_sacd[$key] = $sacd ?? '?';
+$aWhere['status'] = 't';
+$aWhere['id_zona'] = $Qid_zona;
+$aWhere['_ordre'] = 'nombre_ubi';
+$GesCentrosDl = new GestorCentroDl();
+$cCentrosDl = $GesCentrosDl->getCentros($aWhere);
+$GesCentrosSf = new GestorCentroEllas();
+$cCentrosSf = $GesCentrosSf->getCentros($aWhere);
+$cCentros = array_merge($cCentrosDl, $cCentrosSf);
+
+$aCentros = [];
+foreach ($cCentros as $oCentro) {
+    $id_ubi = $oCentro->getId_ubi();
+    $nombre_ubi = $oCentro->getNombre_ubi();
+
+    $aCentros[$id_ubi] = $nombre_ubi;
 }
-$oDesplSacd = new Desplegable();
-$oDesplSacd->setNombre('id_sacd');
-$oDesplSacd->setOpciones($a_sacd);
-$oDesplSacd->setBlanco(TRUE);
+
+$oDesplCentros = new Desplegable();
+$oDesplCentros->setNombre('id_ubi');
+$oDesplCentros->setOpcion_sel($id_ubi);
+$oDesplCentros->setOpciones($aCentros);
 
 $url_ver_plan_sacd = 'apps/misas/controller/ver_plan_sacd.php';
 $oHashPlanSacd = new Hash();
@@ -65,7 +64,7 @@ $oHashPlanSacd->setCamposForm('id_sacd!periodo!empiezamin!empiezamax');
 $h_plan_sacd = $oHashPlanSacd->linkSinVal();
 
 $a_campos = ['oPosicion' => $oPosicion,
-    'oDesplSacd' => $oDesplSacd,
+    'oDesplCentros' => $oDesplCentros,
     'oFormP' => $oFormP,
     'url_ver_plan_sacd' => $url_ver_plan_sacd,
     'h_plan_sacd' => $h_plan_sacd,
