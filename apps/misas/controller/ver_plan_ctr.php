@@ -27,12 +27,13 @@ require_once("apps/core/global_header.inc");
 require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$Qid_sacd = (integer)filter_input(INPUT_POST, 'id_sacd');
+$Qid_ubi = (integer)filter_input(INPUT_POST, 'id_ubi');
 $Qperiodo = (string)filter_input(INPUT_POST, 'periodo');
 $Qorden = (string)filter_input(INPUT_POST, 'orden');
 $Qempiezamin = (string)filter_input(INPUT_POST, 'empiezamin');
 $Qempiezamax = (string)filter_input(INPUT_POST, 'empiezamax');
 
+echo 'ubi: '.$Qid_ubi.'<br>';
 switch ($Qperiodo) {
     case "semana_next":
         $dia_week = date('N');
@@ -90,7 +91,7 @@ $inicio_dia = $Qempiezamin_rep.' 00:00:00';
 $fin_dia = $Qempiezamax_rep.' 23:59:59';
 
 $aWhere = [
-    'id_nom' => $Qid_sacd,
+    'id_ubi' => $Qid_ubi,
     'tstart' => "'$inicio_dia', '$fin_dia'",
 ];
 $aWhere['_ordre'] = 'tstart';
@@ -141,4 +142,4 @@ $a_campos = ['oPosicion' => $oPosicion,
 ];
 
 $oView = new core\ViewTwig('misas/controller');
-echo $oView->render('ver_plan_sacd.html.twig', $a_campos);
+echo $oView->render('ver_plan_ctr.html.twig', $a_campos);

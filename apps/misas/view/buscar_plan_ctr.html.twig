@@ -1,13 +1,19 @@
+<table>
+<tr><th class=titulo_inv colspan=4>{{ "plan de misas de un centro" }}</th></tr>
+<tr><th class=titulo_inv>{{ "zona" }}:
+{{ oDesplZonas.desplegable()|raw }}
+</th>
+<th class=titulo_inv colspan=3 id="centros">{{ "centro" }}:
+{{ oDesplCtrs.desplegable()|raw }}
+</th>
+</tr>
+</table>
+
 <div id="div_select_zona">
     <form id="frm_zona_ctr" name="frm_zona_ctr" action="" method="post">
         {{ oHash.getCamposHtml|raw }}
         <table>
             <thead>
-            <tr>
-                <th class=titulo_inv colspan=4>{{ "Plan de Misas de un s"|trans|capitalize }}:&nbsp;&nbsp;&nbsp;
-                    {{ oDesplCentros.desplegable|raw }}
-                </th>
-            </tr>
             <tr>
             {{ oFormP.getHtml()|raw }}
             </tr>
@@ -21,15 +27,31 @@
 </div>
 
 <script>
-    fnjs_ver_plan_sacd = function () {
-        let id_sacd = $('#id_sacd').val();
-        if (id_sacd) {
-            let url = '{{ url_ver_plan_sacd }}';
+    fnjs_buscar_plan_ctr = function () {
+        let id_zona = $('#id_zona').val();
+            let url = '{{ url_buscar_plan_ctr }}';
+
+        if (id_zona) {
+            let parametros = 'id_zona=' + id_zona + '{{ h_buscar_plan_ctr|raw }}';
+            
+            $.ajax({
+                url: url,
+                type: 'post',
+                data: parametros,
+                dataType: 'html'
+            })
+        }
+    }
+
+    fnjs_ver_plan_ctr = function () {
+        let id_ubi = $('#id_ubi').val();
+        if (id_ubi) {
+            let url = '{{ url_ver_plan_ctr }}';
     	    var periodo=$('#periodo').val();
     	    var empiezamax=$('#empiezamax').val();
     	    var empiezamin=$('#empiezamin').val();
 
-            let parametros = 'id_sacd=' + id_sacd + '&periodo=' + periodo + '&empiezamin=' + empiezamin + '&empiezamax=' + empiezamax + '{{ h_plan_sacd|raw }}';
+            let parametros = 'id_ubi=' + id_ubi + '&periodo=' + periodo + '&empiezamin=' + empiezamin + '&empiezamax=' + empiezamax + '{{ h_plan_sacd|raw }}';
             $.ajax({
                 url: url,
                 type: 'post',
