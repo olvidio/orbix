@@ -167,7 +167,6 @@ foreach ($cEncargosZona as $oEncargo) {
             "id_enc" => $id_enc,
         ];
 
-        // sobreescribir los que tengo datos:
         $inicio_dia = $num_dia.' 00:00:00';
         $fin_dia = $num_dia.' 23:59:59';
         $aWhere = [

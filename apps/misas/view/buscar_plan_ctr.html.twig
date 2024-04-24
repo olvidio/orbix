@@ -4,7 +4,7 @@
 {{ oDesplZonas.desplegable()|raw }}
 </th>
 <th class=titulo_inv colspan=3 id="centros">{{ "centro" }}:
-{{ oDesplCtrs.desplegable()|raw }}
+{{ oDesplCentros.desplegable()|raw }}
 </th>
 </tr>
 </table>
@@ -40,18 +40,23 @@
                 data: parametros,
                 dataType: 'html'
             })
+                .done(function (rta_txt) {
+                $('#main').html(rta_txt);
+            });
         }
     }
 
     fnjs_ver_plan_ctr = function () {
         let id_ubi = $('#id_ubi').val();
+        let id_zona = $('#id_zona').val();
+        
         if (id_ubi) {
             let url = '{{ url_ver_plan_ctr }}';
     	    var periodo=$('#periodo').val();
     	    var empiezamax=$('#empiezamax').val();
     	    var empiezamin=$('#empiezamin').val();
 
-            let parametros = 'id_ubi=' + id_ubi + '&periodo=' + periodo + '&empiezamin=' + empiezamin + '&empiezamax=' + empiezamax + '{{ h_plan_sacd|raw }}';
+            let parametros = 'id_zona=' + id_zona + '&id_ubi=' + id_ubi + '&periodo=' + periodo + '&empiezamin=' + empiezamin + '&empiezamax=' + empiezamax + '{{ h_plan_sacd|raw }}';
             $.ajax({
                 url: url,
                 type: 'post',

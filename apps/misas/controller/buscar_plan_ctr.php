@@ -82,7 +82,7 @@ $oFormP->setBoton("<input type=button name=\"ver\" value=\"" . _("ver") . "\" on
 $url_ver_plan_ctr = 'apps/misas/controller/ver_plan_ctr.php';
 $oHashPlanCtr = new Hash();
 $oHashPlanCtr->setUrl($url_ver_plan_ctr);
-$oHashPlanCtr->setCamposForm('id_ubi!periodo!empiezamin!empiezamax');
+$oHashPlanCtr->setCamposForm('id_zona!id_ubi!periodo!empiezamin!empiezamax');
 $h_plan_ctr = $oHashPlanCtr->linkSinVal();
 
 $a_campos = ['oPosicion' => $oPosicion,
