@@ -1,8 +1,10 @@
 <?php
 
 use core\ConfigGlobal;
+use core\DBPropiedades;
 use ubis\model\entity as ubis;
 use personas\model\entity\PersonaGlobal;
+use web\Desplegable;
 
 /**
  * Funciones más comunes de la aplicación
@@ -116,11 +118,26 @@ if (!empty($Qnuevo)) {
 
 // para la dl
 $gesDl = new ubis\GestorDelegacion();
-$oDesplDl = $gesDl->getListaDelegaciones();
-$oDesplDl->setNombre('dl');
-$oDesplDl->setOpcion_sel($dl);
+$a_dl_todas = $gesDl->getArrayDelegacionesActuales();
 
-// para el ctr, si es nuevo o está vacio
+// si es nuevo de paso, solamente permito las dl que no están en aquinate.
+if ($Qnuevo === 1 && $Qobj_pau === 'PersonaEx') {
+    $oDBPropiedades = new DBPropiedades();
+    $a_dl_esquemas = $oDBPropiedades->array_posibles_dl_de_esquemas(TRUE);
+    $a_dl = array_diff_key($a_dl_todas, $a_dl_esquemas);
+} else {
+    $a_dl = $a_dl_todas;
+}
+
+//$oDesplDl = $gesDl->getListaDelegaciones();
+$oDesplDl = new Desplegable();
+$oDesplDl->setNombre('dl');
+$oDesplDl->setOpciones($a_dl);
+$oDesplDl->setOpcion_sel($dl);
+$oDesplDl->setBlanco(TRUE);
+
+
+// para el ctr, si es nuevo o está vacío
 if (empty($nom_ctr)) {
     $GesCentroDl = new ubis\GestorCentroDl();
     $oDesplCentroDl = $GesCentroDl->getListaCentros();

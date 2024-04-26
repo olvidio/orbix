@@ -172,6 +172,18 @@ class DBPropiedades
         return $a_esquemas;
     }
 
+    public function array_posibles_dl_de_esquemas($comun = FALSE, $rstgr = FALSE)
+    {
+        $a_posibles_esquemas = $this->array_posibles_esquemas($comun, $rstgr);
+        $a_dl = [];
+        foreach ($a_posibles_esquemas as $esquema) {
+            $region = strtok($esquema, '-');
+            $dl = strtok('-');
+            $a_dl[$dl] = $dl;
+        }
+        return $a_dl;
+    }
+
     public function posibles_tablas($default = '')
     {
         $txt = "<select id=\"tabla\" name=\"tabla\" >";

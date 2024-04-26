@@ -6,8 +6,8 @@ use core\ClaseGestor;
 use core\Condicion;
 use core\ConfigGlobal;
 use core\Set;
-use function core\is_true;
 use web;
+use function core\is_true;
 
 /**
  * GestorDelegacion
@@ -155,14 +155,6 @@ class GestorDelegacion extends ClaseGestor
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
 
-        /* Creo que todas las regiones ahora tinen su dl tipo: crArg
-            $sQuery="SELECT 'dl|'||dl||'$sf', nombre_dl||' ('||dl||'$sf)'
-                    FROM $nom_tabla
-                    UNION
-                    SELECT 'r|'||u.region,u.nombre_region||' ('||region||')'
-                    FROM xu_region u
-                    ORDER BY 2";
-        */
         $sQuery = "SELECT 'dl|'||dl||'$sf', nombre_dl||' ('||dl||'$sf)'
                 FROM $nom_tabla
                 WHERE status = 't'
@@ -314,6 +306,28 @@ class GestorDelegacion extends ClaseGestor
             $id_dl = $row['id_dl'];
             $dl = $row['dl'];
             $a_dl[$id_dl] = $dl;
+        }
+        return $a_dl;
+    }
+
+    function getArrayDelegacionesActuales()
+    {
+        $oDbl = $this->getoDbl_Select();
+        $nom_tabla = $this->getNomTabla();
+
+        $isfsv = ConfigGlobal::mi_sfsv();
+        $sf = ($isfsv == 2) ? 'f' : '';
+
+        $sQuery = "SELECT dl, nombre_dl||' ('||region||'-'||dl||'$sf)'
+                   FROM $nom_tabla u 
+					WHERE status = 't'
+					ORDER BY nombre_dl";
+        //echo "query: $sQuery";
+        $a_dl = array();
+        foreach ($oDbl->query($sQuery) as $row) {
+            $dl_sigla = $row[0];
+            $dl_nom = $row[1];
+            $a_dl[$dl_sigla] = $dl_nom;
         }
         return $a_dl;
     }
