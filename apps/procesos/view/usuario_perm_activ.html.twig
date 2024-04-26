@@ -70,18 +70,15 @@ fnjs_grabar=function(formulario){
 <input type='hidden' id='id_tipo_activ' name='id_tipo_activ'> </td>
 <h3>{{ "seleccionar un tipo de actividad"|trans|raw }}:</h3>
 <table>
-<tr>
-<td class=etiqueta>{{ "para actividades que organiza"|trans|raw }}:</td>
-<td colspan=5>
-	<input type=radio name=dl_propia value='t' {{ chk_propia }} onchange='fnjs_actualizar_fases();' > {{ "la propia dl"|trans|raw }}
-	<input type=radio name=dl_propia value='f' {{ chk_otra }} onchange='fnjs_actualizar_fases();' > {{ "otras dl"|trans|raw }}
-</td></tr>
-<tr>
+	<tr>
+		<td class=etiqueta>{{ "para actividades que organiza"|trans|raw }}:</td>
+		<td colspan=5>
+			<input type=radio name=dl_propia value='t' {{ chk_propia }} onchange='fnjs_actualizar_fases();' > {{ "la propia dl"|trans|raw }}
+			<input type=radio name=dl_propia value='f' {{ chk_otra }} onchange='fnjs_actualizar_fases();' > {{ "otras dl"|trans|raw }}
+		</td>
+	</tr>
 </table>
-{{ oActividadTipo.getHtml()|raw }}
-<table>
-</tr>
-</table>
+{{ oActividadTipo.getHtml(extendida)|raw }}
 <br>
 <table>
 <tr>

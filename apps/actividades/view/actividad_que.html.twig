@@ -33,14 +33,20 @@ fnjs_actualizar_fases=function(){
 	} else {
 		dl_propia = 'f';
 	}
+	var extendida=$('#extendida').val();
 	var isfsv=$('#isfsv_val').val();
 	var iasistentes=$('#iasistentes_val').val();
 	var iactividad=$('#iactividad_val').val();
 	var inom_tipo=$('#inom_tipo_val').val();
 	
 	if (!iasistentes) iasistentes='.';
-	if (!iactividad) iactividad='.';
-	if (!inom_tipo) inom_tipo='...';
+	if(!extendida) {
+		if (!iactividad) iactividad = '.';
+		if (!inom_tipo) inom_tipo = '...';
+	} else {
+		if (!iactividad || iactividad === '.') iactividad = '..';
+		if (!inom_tipo || inom_tipo === '...') inom_tipo = '..';
+	}
 
 	id_tipo_activ=isfsv+iasistentes+iactividad+inom_tipo;
 
@@ -92,14 +98,20 @@ fnjs_buscar=function(act){
 	
 	if (err != 1) {
 		/* genero el id_tipo_actividad */
+		var extendida=$('#extendida').val();
 		var isfsv=$('#isfsv_val').val();
 		var iasistentes=$('#iasistentes_val').val();
 		var iactividad=$('#iactividad_val').val();
 		var inom_tipo=$('#inom_tipo_val').val();
 		if (!isfsv) isfsv=".";
 		if (!iasistentes) iasistentes=".";
-		if (!iactividad) iactividad=".";
-		if (!inom_tipo) inom_tipo="...";
+		if(!extendida) {
+			if (!iactividad) iactividad = '.';
+			if (!inom_tipo) inom_tipo = '...';
+		} else {
+			if (!iactividad || iactividad === '.') iactividad = '..';
+			if (!inom_tipo || inom_tipo === '...') inom_tipo = '..';
+		}
 		var id=isfsv+iasistentes+iactividad+inom_tipo;
 
 		$('#id_tipo_activ').val(id);
@@ -109,10 +121,11 @@ fnjs_buscar=function(act){
 }
 fnjs_lugar=function(){
 	var opcion_sel='{{ Qid_ubi }}';
+	var extendida=$('#extendida').val();
 	var isfsv=$('#isfsv_val').val();
 	var filtro_lugar=$('#filtro_lugar').val();
 	var url='apps/actividades/controller/actividad_tipo_get.php';
-	var parametros='modo=buscar&salida=lugar&entrada='+filtro_lugar+'&opcion_sel='+opcion_sel+'&isfsv='+isfsv+'{{ h|raw }}';
+	var parametros='extendida=' + extendida + '&modo=buscar&salida=lugar&entrada='+filtro_lugar+'&opcion_sel='+opcion_sel+'&isfsv='+isfsv+'{{ h|raw }}';
 	$.ajax({
 		url: url,
 		type: 'post',

@@ -7,10 +7,11 @@ use ubis\model\entity\GestorDelegacion;
 use web\Desplegable;
 use web\Lista;
 use web\TiposActividades;
+use function core\is_true;
 
 /**
  * Devuelvo un desplegable con los valores posibles del tipo de actividad
- *  segun el valor de entrada.
+ *  según el valor de entrada.
  *
  */
 
@@ -26,6 +27,8 @@ $Qentrada = (string)filter_input(INPUT_POST, 'entrada');
 $Qsalida = (string)filter_input(INPUT_POST, 'salida');
 $Qmodo = (string)filter_input(INPUT_POST, 'modo');
 $Qmodo = empty($Qmodo) ? 'buscar' : $Qmodo;
+$Qextendida = (string)filter_input(INPUT_POST, 'extendida');
+$extendida = (bool)is_true($Qextendida);
 
 switch ($Qsalida) {
     case "asistentes":
@@ -41,7 +44,7 @@ switch ($Qsalida) {
             $blanco = FALSE;
         }
         $oDespl = new Desplegable('iasistentes_val', $a_asistentes_posibles, '', $blanco);
-        $oDespl->setAction('fnjs_actividad()');
+        $oDespl->setAction('fnjs_actividad('.$extendida.')');
         $oDespl->setValBlanco('.');
         $oDespl->setOpcion_sel('.');
         echo $oDespl->desplegable();
@@ -50,16 +53,9 @@ switch ($Qsalida) {
         $aux = $Qentrada . '....';
         $oTipoActiv = new TiposActividades($aux);
         $a_actividades_posibles = $oTipoActiv->getActividadesPosibles1Digito();
-        $oDespl = new Desplegable('iactividad_val', $a_actividades_posibles, '', true);
-        $oDespl->setAction('fnjs_nom_tipo()');
-        $oDespl->setValBlanco('.');
-        $oDespl->setOpcion_sel('.');
-        echo $oDespl->desplegable();
-        break;
-    case "actividad_extendida":
-        $aux = $Qentrada . '....';
-        $oTipoActiv = new TiposActividades($aux);
-        $a_actividades_posibles = $oTipoActiv->getActividadesPosibles2Digitos();
+        if ($extendida) {
+            $a_actividades_posibles = $oTipoActiv->getActividadesPosibles2Digitos();
+        }
         $oDespl = new Desplegable('iactividad_val', $a_actividades_posibles, '', true);
         $oDespl->setAction('fnjs_nom_tipo()');
         $oDespl->setValBlanco('.');
@@ -67,12 +63,21 @@ switch ($Qsalida) {
         echo $oDespl->desplegable();
         break;
     case "nom_tipo":
-        $aux = $Qentrada . '...';
-        $oTipoActiv = new TiposActividades($aux);
-        $a_nom_tipo_posibles = $oTipoActiv->getNom_tipoPosibles3Digitos();
+        if ($extendida) {
+            $aux = $Qentrada . '..';
+            $oTipoActiv = new TiposActividades($aux, $extendida);
+            $a_nom_tipo_posibles = $oTipoActiv->getNom_tipoPosibles2Digitos();
+            $opcion_blanco = '..';
+        } else {
+            $aux = $Qentrada . '...';
+            $oTipoActiv = new TiposActividades($aux, $extendida);
+            $a_nom_tipo_posibles = $oTipoActiv->getNom_tipoPosibles3Digitos();
+            $opcion_blanco = '...';
+
+        }
         $oDespl = new Desplegable('inom_tipo_val', $a_nom_tipo_posibles, '', true);
-        $oDespl->setValBlanco('...');
-        $oDespl->setOpcion_sel('...');
+        $oDespl->setValBlanco($opcion_blanco);
+        $oDespl->setOpcion_sel($opcion_blanco);
         if ($Qmodo === 'buscar') {
             $oDespl->setAction('fnjs_id_activ()');
         } else {

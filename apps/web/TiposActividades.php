@@ -25,7 +25,7 @@ Inicialmente se pensó un tipo de actividad de 6 dígitos con la siguiente estru
   |  |_______________  asistentes
   |__________________  sv/sf
 
-Pero en la práctica, habia que distinguir entre actividades (ca-cv) de estudios y no de estudios,
+Pero en la práctica, había que distinguir entre actividades (ca-cv) de estudios y no de estudios,
  , actividades(cve-sacd) propias para los sacd y actividades (cv-sr-bach/univ) de sr para bachilleres
  o universitarios. Así que se toman 2 dígitos para actividad y 2 para nom_tipo.
     
@@ -542,18 +542,20 @@ class TiposActividades
     }
 
     /**
-     * Recupera el atributo acividades en format de text
+     * Recupera el atributo actividades en format de text
      *
      * @return string
      */
     public function getActividadText()
     {
-        $aText = $this->getFlipActividad1Digito();
         if (is_numeric($this->sactividad)) {
+            $aText = $this->getFlipActividad1Digito();
+            if ($this->extendida) {
+                $aText = $this->getFlipActividad2Digitos();
+            }
             return $aText[$this->sactividad];
-        } else {
-            return 'all';
         }
+        return 'all';
     }
 
     /**
@@ -568,13 +570,16 @@ class TiposActividades
                 $sActividad = 'all';
             }
             $this->sactividad = $this->aActividad1Digito[$sActividad];
+            if ($this->extendida) {
+                $this->sactividad = $this->aActividad2Digitos[$sActividad];
+            }
         } else {
             return false;
         }
     }
 
     /**
-     * Recupera el atributo acividades (2 digits) en format de text
+     * Recupera el atributo actividades (2 digits) en format de text
      *
      * @return string
      */
@@ -606,7 +611,7 @@ class TiposActividades
     }
 
     /**
-     * Recupera el atributo acividades en format de integer
+     * Recupera el atributo actividades en format de integer
      *
      * @return integer
      */
@@ -616,11 +621,6 @@ class TiposActividades
 
     }
 
-    /**
-     * Estableix l'atribut asistentes en format de integer
-     *
-     * @return 'false' si falla
-     */
     public function setActividadId($id)
     {
         $this->sactividad = $id;
@@ -638,7 +638,7 @@ class TiposActividades
     }
 
     /**
-     * Recupera el atributo acividades posibles en format de array
+     * Recupera el atributo actividades posibles en format de array
      *
      * @return array
      */

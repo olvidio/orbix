@@ -125,7 +125,7 @@ class ActividadTipo
 
 
         // si es una búsqueda, también puedo buscar todos. (Excepto sf/sv)
-        if ($_SESSION['oConfig']->is_jefeCalendario() || (isset($this->que) && $this->que == "buscar" || $this->bperm_jefe)) {
+        if ($_SESSION['oConfig']->is_jefeCalendario() || ((isset($this->que) && $this->que == "buscar") || $this->bperm_jefe)) {
             $oTipoActivB = new web\TiposActividades();
             if ($this->ssfsv) $oTipoActivB->setSfsvText($this->ssfsv);
             $a_asistentes_posibles = $oTipoActivB->getAsistentesPosibles();
@@ -187,7 +187,7 @@ class ActividadTipo
         $url = ConfigGlobal::getWeb() . '/apps/actividades/controller/actividad_tipo_get.php';
         $oHashTipo = new web\Hash();
         $oHashTipo->setUrl('apps/actividades/controller/actividad_tipo_get.php');
-        $oHashTipo->setCamposForm('modo!salida!entrada');
+        $oHashTipo->setCamposForm('extendida!modo!salida!entrada');
         $h = $oHashTipo->linkSinVal();
 
         $url_act = ConfigGlobal::getWeb() . '/apps/actividades/controller/actividad_ver.php';
@@ -215,6 +215,7 @@ class ActividadTipo
             'oDesplActividad' => $oDesplActividad,
             'oDesplNomTipo' => $oDesplNomTipo,
             'procesos_installed' => $procesos_installed,
+            'extendida' => $extendida,
         ];
 
         switch ($this->para) {

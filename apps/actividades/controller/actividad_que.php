@@ -164,7 +164,7 @@ $oFormP->setEmpiezaMin($Qempiezamin);
 $oFormP->setEmpiezaMax($Qempiezamax);
 
 $oHash = new Hash();
-$oHash->setCamposForm('dl_org!empiezamax!empiezamin!filtro_lugar!iactividad_val!iasistentes_val!id_tipo_activ!inom_tipo_val!isfsv_val!id_ubi!nom_activ!periodo!status!year');
+$oHash->setCamposForm('extendida!dl_org!empiezamax!empiezamin!filtro_lugar!iactividad_val!iasistentes_val!id_tipo_activ!inom_tipo_val!isfsv_val!id_ubi!nom_activ!periodo!status!year');
 $camposNo = 'id_ubi!nom_activ';
 if (core\ConfigGlobal::is_app_installed('procesos')) {
     $camposNo .= '!fases_on!fases_off';
@@ -179,7 +179,7 @@ $oHash->setArraycamposHidden($a_camposHidden);
 
 $oHash1 = new Hash();
 $oHash1->setUrl(core\ConfigGlobal::getWeb() . '/apps/actividades/controller/actividad_tipo_get.php');
-$oHash1->setCamposForm('modo!salida!entrada!opcion_sel!isfsv');
+$oHash1->setCamposForm('extendida!modo!salida!entrada!opcion_sel!isfsv');
 $h = $oHash1->linkSinVal();
 
 $aQuery = array('que' => $Qque, 'sactividad' => $Qsactividad, 'sasistentes' => $Qsasistentes);

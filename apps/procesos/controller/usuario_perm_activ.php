@@ -56,7 +56,7 @@ if (empty($Qid_tipo_activ_txt)) {// nuevo
     $Qdl_propia = 't';
 }
 
-$oTipoActiv = new TiposActividades($Qid_tipo_activ_txt);
+$oTipoActiv = new TiposActividades($Qid_tipo_activ_txt, TRUE);
 
 $sfsv = $oTipoActiv->getSfsvText();
 $asistentes = $oTipoActiv->getAsistentesText();
@@ -138,6 +138,7 @@ $a_camposHidden = array(
     'id_usuario' => $Qid_usuario,
     'que' => 'perm_update',
     'quien' => $Qquien,
+    'extendida' => TRUE,
 );
 $oHash->setArraycamposHidden($a_camposHidden);
 
@@ -166,6 +167,7 @@ $a_campos = [
     'chk_otra' => $chk_otra,
     'oActividadTipo' => $oActividadTipo,
     'aPerm' => $aPerm,
+    'extendida' => TRUE,
 ];
 
 $oView = new core\ViewTwig('procesos/controller');

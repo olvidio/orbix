@@ -46,7 +46,7 @@ if ($Qid_item !== 'nuevo') {
 
     $oHash1 = new Hash();
     $oHash1->setUrl(core\ConfigGlobal::getWeb() . '/apps/actividadtarifas/controller/actividad_tipo_get.php');
-    $oHash1->setCamposForm('modo!salida!entrada!opcion_sel!isfsv');
+    $oHash1->setCamposForm('extendida!modo!salida!entrada!opcion_sel!isfsv');
     $h = $oHash1->linkSinVal();
 
     $url_ajax = ConfigGlobal::getWeb() . '/apps/actividadtarifas/controller/tarifa_tipo_actividad_ajax.php';
@@ -95,7 +95,7 @@ if ($Qid_item !== 'nuevo') {
 
     $oHash1 = new Hash();
     $oHash1->setUrl(core\ConfigGlobal::getWeb() . '/apps/actividadtarifas/controller/actividad_tipo_get.php');
-    $oHash1->setCamposForm('modo!salida!entrada!opcion_sel!isfsv');
+    $oHash1->setCamposForm('extendida!modo!salida!entrada!opcion_sel!isfsv');
     $h = $oHash1->linkSinVal();
 
 
