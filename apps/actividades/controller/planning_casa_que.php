@@ -61,7 +61,7 @@ $a_camposHidden1 = array(
 $oHash1->setArraycamposHidden($a_camposHidden1);
 //casas
 $oHash2 = new web\Hash();
-$oHash2->setCamposForm('cdc_sel!id_cdc_mas!id_cdc_num!empiezamax!empiezamin!extendida!iactividad_val!iasistentes_val!periodo!year');
+$oHash2->setCamposForm('cdc_sel!id_cdc_mas!id_cdc_num!empiezamax!empiezamin!iactividad_val!iasistentes_val!periodo!year');
 $oHash2->setcamposNo('id_cdc!sin_activ!modelo');
 $a_camposHidden2 = array(
     'tipo' => $Qtipo,
