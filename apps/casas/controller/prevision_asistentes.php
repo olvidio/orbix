@@ -173,7 +173,7 @@ $oTabla->setCabeceras($a_cabeceras);
 $oTabla->setDatos($a_valores);
 
 $oHash = new web\Hash();
-$oHash->setCamposForm('empiezamax!empiezamin!iactividad_val!iasistentes_val!mi_of!periodo!year');
+$oHash->setCamposForm('empiezamax!empiezamin!extendida!iactividad_val!iasistentes_val!mi_of!periodo!year');
 $oHash->setCamposNo('!refresh');
 
 if (empty($mi_of)) {

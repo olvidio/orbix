@@ -108,7 +108,7 @@ $oFormP->setDesplPeriodosOpcion_sel($Qperiodo);
 $oFormP->setBoton($boton);
 
 $oHashPeriodo = new web\Hash();
-$oHashPeriodo->setCamposForm('empiezamax!empiezamin!periodo!year!iactividad_val!iasistentes_val');
+$oHashPeriodo->setCamposForm('empiezamax!empiezamin!periodo!year!extendida!iactividad_val!iasistentes_val');
 $oHashPeriodo->setCamposNo('!refresh');
 $a_camposHiddenP = array();
 $oHashPeriodo->setArraycamposHidden($a_camposHiddenP);

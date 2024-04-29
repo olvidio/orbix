@@ -64,7 +64,7 @@
         var extendida = $('#extendida').val();
         var isfsv = $('#isfsv_val').val();
         var iasistentes = $('#iasistentes_val').val();
-        var parametros = 'extendida='+extendida+'&modo=buscar&salida=extendida&entrada=' + isfsv + iasistentes + '{{ h|raw }}';
+        var parametros = 'extendida='+extendida+'&modo=buscar&salida=actividad&entrada=' + isfsv + iasistentes + '{{ h|raw }}';
         $.ajax({
             url: url,
             type: 'post',

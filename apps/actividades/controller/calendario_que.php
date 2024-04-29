@@ -29,7 +29,7 @@ $miSfsv = core\ConfigGlobal::mi_sfsv();
 
 //casas
 $oHash = new web\Hash();
-$oHash->setCamposForm('cdc_sel!id_cdc_mas!id_cdc_num!empiezamax!empiezamin!iactividad_val!iasistentes_val!periodo!year');
+$oHash->setCamposForm('cdc_sel!id_cdc_mas!id_cdc_num!empiezamax!empiezamin!extendida!iactividad_val!iasistentes_val!periodo!year');
 $oHash->setcamposNo('id_cdc!modelo');
 $a_camposHidden = array(
     'modelo' => '',

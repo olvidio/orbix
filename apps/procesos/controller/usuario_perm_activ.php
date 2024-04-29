@@ -132,7 +132,7 @@ foreach ($aAfecta_a as $afecta_a_txt => $num) {
 }
 
 $oHash = new web\Hash();
-$oHash->setCamposForm('dl_propia!fase_ref!iactividad_val!iasistentes_val!inom_tipo_val!isfsv_val!perm_on!perm_off');
+$oHash->setCamposForm('dl_propia!fase_ref!extendida!iactividad_val!iasistentes_val!inom_tipo_val!isfsv_val!perm_on!perm_off');
 $oHash->setCamposNo('afecta_a!id_tipo_activ');
 $a_camposHidden = array(
     'id_usuario' => $Qid_usuario,

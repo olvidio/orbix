@@ -75,7 +75,7 @@ $oHashAct->setCamposForm('que!id_activ');
 $h_actualizar = $oHashAct->linkSinVal();
 
 $oHash = new Hash();
-$oHash->setCamposForm('empiezamax!empiezamin!iactividad_val!iasistentes_val!periodo!year');
+$oHash->setCamposForm('empiezamax!empiezamin!extendida!iactividad_val!iasistentes_val!periodo!year');
 $a_camposHidden = array(
     'que' => 'lista_activ',
     'tipo' => $Qtipo,

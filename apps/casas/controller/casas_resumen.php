@@ -87,7 +87,7 @@ $oFormP->setPosiblesPeriodos($aOpciones);
 $oFormP->setDesplAnysOpcion_sel(date('Y'));
 
 $oHash = new web\Hash();
-$sCamposForm = 'cdc_sel!empiezamax!empiezamin!iactividad_val!iasistentes_val!id_cdc!id_cdc_mas!id_cdc_num!periodo!sfsv!tipo!year';
+$sCamposForm = 'cdc_sel!empiezamax!empiezamin!extendida!iactividad_val!iasistentes_val!id_cdc!id_cdc_mas!id_cdc_num!periodo!sfsv!tipo!year';
 $aCamposHidden = [
     'tipo' => $Qtipo,
     'sfsv' => $Qsfsv,

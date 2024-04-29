@@ -129,7 +129,7 @@ $url_ajax = "apps/pasarela/controller/exportar_select.php";
 
 $oHash = new Hash();
 $oHash->setUrl($url_ajax);
-$oHash->setCamposForm('cdc_sel!empiezamax!empiezamin!iactividad_val!iasistentes_val!id_cdc!id_cdc_mas!id_cdc_num!id_tipo_activ!inom_tipo_val!isfsv_val!periodo!year');
+$oHash->setCamposForm('cdc_sel!empiezamax!empiezamin!extendida!iactividad_val!iasistentes_val!id_cdc!id_cdc_mas!id_cdc_num!id_tipo_activ!inom_tipo_val!isfsv_val!periodo!year');
 $oHash->setCamposNo('cdc_sel!id_cdc!id_cdc_mas!id_cdc_num');
 
 $a_campos = ['oPosicion' => $oPosicion,

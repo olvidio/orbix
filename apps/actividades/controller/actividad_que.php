@@ -164,7 +164,7 @@ $oFormP->setEmpiezaMin($Qempiezamin);
 $oFormP->setEmpiezaMax($Qempiezamax);
 
 $oHash = new Hash();
-$oHash->setCamposForm('extendida!dl_org!empiezamax!empiezamin!filtro_lugar!iactividad_val!iasistentes_val!id_tipo_activ!inom_tipo_val!isfsv_val!id_ubi!nom_activ!periodo!status!year');
+$oHash->setCamposForm('dl_org!empiezamax!empiezamin!filtro_lugar!extendida!iactividad_val!iasistentes_val!id_tipo_activ!inom_tipo_val!isfsv_val!id_ubi!nom_activ!periodo!status!year');
 $camposNo = 'id_ubi!nom_activ';
 if (core\ConfigGlobal::is_app_installed('procesos')) {
     $camposNo .= '!fases_on!fases_off';

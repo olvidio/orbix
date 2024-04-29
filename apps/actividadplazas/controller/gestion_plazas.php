@@ -256,7 +256,7 @@ $oFormP->setDesplPeriodosOpcion_sel($Qperiodo);
 $oFormP->setBoton($boton);
 
 $oHash = new web\Hash();
-$oHash->setCamposForm('empiezamax!empiezamin!iactividad_val!iasistentes_val!id_tipo_activ!periodo!year');
+$oHash->setCamposForm('empiezamax!empiezamin!extendida!iactividad_val!iasistentes_val!id_tipo_activ!periodo!year');
 $oHash->setCamposNo('!refresh');
 $a_camposHidden = array(
     'id_tipo_activ' => $Qid_tipo_activ,

@@ -164,7 +164,7 @@ switch ($Qque) {
         $oDesplRepeticion->setOpcion_sel($id_repeticion);
 
         $oHash = new web\Hash();
-        $camposForm = 'dl_org!f_fin!f_ini!h_fin!h_ini!iactividad_val!iasistentes_val!id_repeticion!id_ubi!inom_tipo_val!isfsv_val!lugar_esp!nivel_stgr!nom_activ!nombre_ubi!observ!plazas!precio!publicado!status!id_tarifa';
+        $camposForm = 'dl_org!f_fin!f_ini!h_fin!h_ini!extendida!iactividad_val!iasistentes_val!id_repeticion!id_ubi!inom_tipo_val!isfsv_val!lugar_esp!nivel_stgr!nom_activ!nombre_ubi!observ!plazas!precio!publicado!status!id_tarifa';
         $camposNo = 'id_tipo_activ!mod';
         $a_camposHidden = array(
             'id_tipo_activ' => $id_tipo_activ,
@@ -318,7 +318,7 @@ switch ($Qque) {
         $oDesplRepeticion->setOpcion_sel($id_repeticion);
 
         $oHash = new web\Hash();
-        $camposForm = 'dl_org!f_fin!f_ini!h_fin!h_ini!iactividad_val!iasistentes_val!id_repeticion!id_ubi!inom_tipo_val!isfsv_val!lugar_esp!nivel_stgr!nom_activ!nombre_ubi!observ!plazas!precio!publicado!status!id_tarifa';
+        $camposForm = 'dl_org!f_fin!f_ini!h_fin!h_ini!extendida!iactividad_val!iasistentes_val!id_repeticion!id_ubi!inom_tipo_val!isfsv_val!lugar_esp!nivel_stgr!nom_activ!nombre_ubi!observ!plazas!precio!publicado!status!id_tarifa';
         $camposNo = 'id_tipo_activ!mod';
         $a_camposHidden = array(
             'id_tipo_activ' => $id_tipo_activ,
