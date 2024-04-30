@@ -78,7 +78,7 @@ $url = "apps/actividadessacd/controller/com_sacd_activ.php";
 $url_com_txt = Hash::link('apps/actividadessacd/controller/com_sacd_txt.php');
 
 $oHash = new Hash();
-$oHash->setCamposForm('empiezamax!empiezamin!extendida!iactividad_val!iasistentes_val!periodo!year');
+$oHash->setCamposForm('empiezamax!empiezamin!iactividad_val!iasistentes_val!periodo!year');
 $a_camposHidden = array(
     'sacd' => 'uno',
     'id_nom' => $Qid_nom,
