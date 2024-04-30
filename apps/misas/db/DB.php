@@ -26,9 +26,9 @@ class DB extends DBAbstract
 
     public function dropAll()
     {
-        $this->eliminar_plantillas();
         $this->eliminar_cuadricula();
         $this->eliminar_iniciales();
+        $this->eliminar_rel_encargo_ctr();
     }
 
     public function createAll()
@@ -36,6 +36,7 @@ class DB extends DBAbstract
         //$this->create_plantillas();
         $this->create_cuadricula();
         $this->create_iniciales();
+        $this->create_rel_encargo_ctr();
     }
 
     /**
@@ -113,47 +114,39 @@ class DB extends DBAbstract
     }
 
     /**
-     * En el esquema sv
-     *  // OJO Corresponde al esquema sf/sv, no al comun.
-     *  // OJO Corresponde al esquema public, no al global.
+     * En el esquema comun
      */
-
-    public function create_plantillas()
+    public function create_rel_encargo_ctr()
     {
-        $this->addPermisoGlobal('sfsv-e');
-        $tabla = "misa_plantillas";
+        $this->addPermisoGlobal('comun');
+        $tabla = "misa_rel_encargo_ctr";
         $nom_tabla = $this->getNomTabla($tabla);
         $a_sql = [];
 
         $a_sql[] = "CREATE TABLE IF NOT EXISTS $nom_tabla (
             id_schema integer NOT NULL,
-            id_item integer NOT NULL,
-            id_ctr integer NOT NULL,
-            tarea smallint NOT NULL,
-            dia varchar(3) NOT NULL,
-            semana smallint,
-            t_start TIME,
-            t_end TIME,
-            id_nom integer,
-            observ text
+            uuid_item uuid NOT NULL,
+            id_enc integer NOT NULL,
+            id_ubi integer NOT NULL
             );";
         $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->user_orbix";
 
         $this->executeSql($a_sql);
 
-        $this->delPermisoGlobal('sfsv-e');
+        $this->delPermisoGlobal('comun');
     }
 
 
-    public function eliminar_plantillas()
+    public function eliminar_rel_encargo_ctr()
     {
-        $this->addPermisoGlobal('sfsv-e');
-        $tabla = "misa_plantillas";
+        $this->addPermisoGlobal('comun');
+        $tabla = "misa_rel_encargo_ctr";
         $nom_tabla = $this->getNomTabla($tabla);
 
         $this->eliminar($nom_tabla);
 
-        $this->delPermisoGlobal('sfsv-e');
+        $this->delPermisoGlobal('comun');
     }
+
 
 }

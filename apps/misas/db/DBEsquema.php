@@ -27,16 +27,16 @@ class DBEsquema extends DBAbstract
 
     public function dropAll()
     {
-        $this->eliminar_plantillas();
         $this->eliminar_cuadricula();
         $this->eliminar_iniciales();
+        $this->eliminar_rel_encargo_ctr();
     }
 
     public function createAll()
     {
-        //$this->create_plantillas();
         $this->create_cuadricula();
         $this->create_iniciales();
+        $this->create_rel_encargo_ctr();
     }
 
     public function llenarAll()
@@ -60,11 +60,11 @@ class DBEsquema extends DBAbstract
                 $campo_seq = '';
                 $id_seq = '';
                 break;
-            case "misa_plantillas":
-                $datosTabla['tabla'] = "misa_plantillas_dl";
-                $nom_tabla = $this->getNomTabla("misa_plantillas_dl");
-                $campo_seq = 'id_item';
-                $id_seq = $nom_tabla . "_" . $campo_seq . "_seq";
+            case "misa_rel_encargo_ctr":
+                $datosTabla['tabla'] = "misa_rel_encargo_ctr_dl";
+                $nom_tabla = $this->getNomTabla("misa_rel_encargo_ctr");
+                $campo_seq = '';
+                $id_seq = '';
                 break;
         }
         $datosTabla['nom_tabla'] = $nom_tabla;
@@ -115,6 +115,7 @@ class DBEsquema extends DBAbstract
 
         $this->delPermisoGlobal('comun');
     }
+
     public function create_cuadricula()
     {
         // (debe estar después de fijar el role)
@@ -155,23 +156,16 @@ class DBEsquema extends DBAbstract
 
         $this->delPermisoGlobal('comun');
     }
-    public function create_plantillas()
-    {
-        // OJO Corresponde al esquema sf/sv, no al comun.
-        $esquema_org = $this->esquema;
-        $role_org = $this->role;
-        $this->esquema = ConfigGlobal::mi_region_dl();
-        $this->role = '"' . $this->esquema . '"';
-        // (debe estar después de fijar el role)
-        $this->addPermisoGlobal('sfsv-e');
 
-        $tabla = "misa_plantillas";
+    public function create_rel_encargo_ctr()
+    {
+        // (debe estar después de fijar el role)
+        $this->addPermisoGlobal('comun');
+
+        $tabla = "misa_rel_encargo_ctr";
         $datosTabla = $this->infoTable($tabla);
 
         $nom_tabla = $datosTabla['nom_tabla'];
-        $campo_seq = $datosTabla['campo_seq'];
-        $id_seq = $datosTabla['id_seq'];
-
         $nom_tabla_parent = 'global';
 
         $a_sql = [];
@@ -181,53 +175,27 @@ class DBEsquema extends DBAbstract
 
         $a_sql[] = "ALTER TABLE $nom_tabla ALTER id_schema SET DEFAULT public.idschema('$this->esquema'::text)";
 
-        //secuencia
-        $a_sql[] = "CREATE SEQUENCE IF NOT EXISTS $id_seq;";
-        $a_sql[] = "ALTER SEQUENCE $id_seq
-                    INCREMENT BY 1
-                    MINVALUE 1
-                    MAXVALUE 9223372036854775807
-                    START WITH 1
-                    NO CYCLE;";
-        $a_sql[] = "ALTER SEQUENCE $id_seq OWNER TO $this->role;";
-
-        $a_sql[] = "ALTER TABLE $nom_tabla ALTER $campo_seq SET DEFAULT nextval('$id_seq'::regclass); ";
-
-        $a_sql[] = "ALTER TABLE $nom_tabla ADD PRIMARY KEY (id_item); ";
-
-        $a_sql[] = "ALTER TABLE $nom_tabla ADD CONSTRAINT misa_plantillas_dl_ukey
-                    UNIQUE (id_ctr, tarea, dia, semana); ";
+        $a_sql[] = "ALTER TABLE $nom_tabla ADD PRIMARY KEY (uuid_item); ";
 
         $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->role; ";
 
         $this->executeSql($a_sql);
 
-        $this->delPermisoGlobal('sfsv-e');
-        // Devolver los valores al estado original
-        $this->esquema = $esquema_org;
-        $this->role = $role_org;
+        $this->delPermisoGlobal('comun');
     }
 
-    public function eliminar_plantillas()
+    public function eliminar_rel_encargo_ctr()
     {
-        // OJO Corresponde al esquema sf/sv, no al comun.
-        $esquema_org = $this->esquema;
-        $role_org = $this->role;
-        $this->esquema = ConfigGlobal::mi_region_dl();
-        $this->role = '"' . $this->esquema . '"';
         // (debe estar después de fijar el role)
-        $this->addPermisoGlobal('sfsv-e');
+        $this->addPermisoGlobal('comun');
 
-        $datosTabla = $this->infoTable("misa_plantillas");
+        $datosTabla = $this->infoTable("misa_rel_encargo_ctr");
 
         $nom_tabla = $datosTabla['nom_tabla'];
 
         $this->eliminar($nom_tabla);
 
-        $this->delPermisoGlobal('sfsv-e');
-        // Devolver los valores al estado original
-        $this->esquema = $esquema_org;
-        $this->role = $role_org;
+        $this->delPermisoGlobal('comun');
     }
 
 }
