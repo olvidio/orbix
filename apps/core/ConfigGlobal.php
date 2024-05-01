@@ -111,7 +111,7 @@ class ConfigGlobal extends ServerConf
      *
      * @return integer  1: sv, 2 sf
      */
-    public static function mi_sfsv()
+    public static function mi_sfsv(): int
     {
         return $_SESSION['session_auth']['sfsv'];
     }
