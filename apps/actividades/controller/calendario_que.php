@@ -29,7 +29,7 @@ $miSfsv = core\ConfigGlobal::mi_sfsv();
 
 //casas
 $oHash = new web\Hash();
-$oHash->setCamposForm('cdc_sel!id_cdc_mas!id_cdc_num!empiezamax!empiezamin!extendida!iactividad_val!iasistentes_val!periodo!year');
+$oHash->setCamposForm('cdc_sel!id_cdc_mas!id_cdc_num!empiezamax!empiezamin!iactividad_val!iasistentes_val!periodo!year');
 $oHash->setcamposNo('id_cdc!modelo');
 $a_camposHidden = array(
     'modelo' => '',
@@ -49,7 +49,7 @@ $oFormP = new web\PeriodoQue();
 $oFormP->setFormName('que');
 $oFormP->setTitulo(core\strtoupper_dlb(_("período del planning actividades para el próximo año")));
 $oFormP->setPosiblesPeriodos($aOpciones);
-$oFormP->setDesplAnysOpcion_sel(date('Y') + 1);
+$oFormP->setDesplAnysOpcion_sel((int)date('Y') + 1);
 
 $oForm = new web\CasasQue();
 $oForm->setTitulo(core\strtoupper_dlb(_("búsqueda de casas cuyo planning interesa")));
@@ -64,11 +64,11 @@ if ($oMiUsuario->isRolePau('cdc')) {
         $oForm->setCasas('all');
         $donde = "WHERE status='t'";
     } else {
-        if ($miSfsv == 1) {
+        if ($miSfsv === 1) {
             $oForm->setCasas('sv');
             $donde = "WHERE status='t' AND sv='t'";
         }
-        if ($miSfsv == 2) {
+        if ($miSfsv === 2) {
             $oForm->setCasas('sf');
             $donde = "WHERE status='t' AND sf='t'";
         }
