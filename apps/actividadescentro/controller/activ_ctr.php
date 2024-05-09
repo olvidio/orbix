@@ -72,7 +72,7 @@ $oHashOrden->setCamposForm('que!id_activ!id_ubi!num_orden');
 $h_orden = $oHashOrden->linkSinVal();
 
 $oHash = new Hash();
-$oHash->setCamposForm('empiezamax!empiezamin!extendida!iactividad_val!iasistentes_val!periodo!year');
+$oHash->setCamposForm('empiezamax!empiezamin!iactividad_val!iasistentes_val!periodo!year');
 
 // $Qtipo viene por menú. Para la sf, debería ser sfsg pero en el menu está sólo sg:
 if (ConfigGlobal::mi_sfsv() == 2) {
