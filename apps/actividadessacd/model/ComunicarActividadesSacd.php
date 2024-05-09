@@ -292,11 +292,11 @@ class ComunicarActividadesSacd
 
             $body_cabecera = "<div style='clear: both; display: block; width: 25cm; page-break-after: always; font-family: sans-serif; font-size: 12pt;'>
                 <br><!-- si no pongo esta linea, no me imprime el nombre (a partir de la 2ª página -->
-                <span style='display: block'>
-                    <span style = 'display: block; float: left; text-align: left;'>$nom_ap</span>";
-            $body_cabecera .= "<span style='display: block; float: right; text-align: right;'>vc-$mi_dele</span>";
-            $body_cabecera .= "</span>
-                    <span style = 'display: block; padding-left: 15mm; padding-right: 10mm; padding-top: 10mm; padding-bottom: 10mm;'>$txt</span>";
+                  <div style='display: block;width: 25cm;'>";
+            $body_cabecera .= "<div style = 'display: block; float: left; text-align: left; width: 10cm;'>$nom_ap</div>";
+            $body_cabecera .= "<div style='display: block; float: right; text-align: right; width: 10cm'>vc-$mi_dele</div>";
+            $body_cabecera .= "</div>";
+            $body_cabecera .= "<div style = 'display: block; padding-left: 15mm; padding-right: 10mm; padding-top: 10mm; padding-bottom: 10mm;'>$txt</div>";
 
             $body_cabecera .= " <!-- Actividades -->
                 <table  style='border: 1px solid #000; border-collapse: collapse; margin: 0; margin-bottom: 1em; padding: 6px;'>
@@ -358,12 +358,12 @@ class ComunicarActividadesSacd
                     }
                 }
             }
-            $body_pie = "</table>
-                    <span style = 'display: block;'>
-                        <span style = 'display: block; float: left; text-align: left;'>*) $propio</span>
-                        <span style='display: block; float: right; text-align: right;'>$lugar_fecha</span>
-                    </span>
-                </div>";
+            $body_pie = "</table>";
+            $body_pie .= "<div style = 'display: block;width: 25cm;'>
+                        <div style = 'display: block; float: left; text-align: left;width: 10cm'>*) $propio</div>
+                        <div style='display: block; float: right; text-align: right;width: 10cm'>$lugar_fecha</div>
+                    </div>";
+            $body_pie .= "</div>";
 
             // mail. Distingo para el sacd y para el ctr:
             $body_sacd = $body_cabecera.$body_sacd.$body_pie;
