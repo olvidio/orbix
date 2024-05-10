@@ -1,0 +1,370 @@
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+    <link rel="shortcut icon" type="image/ico" href="favicon.ico"/>
+    <title>SlickGrid example: CompositeEditor</title>
+    <!--
+    <link rel="stylesheet" href="../dist/styles/css/slick-icons.css" type="text/css"/>
+    <link rel="stylesheet" href="../dist/styles/css/example-demo.css" type="text/css"/>
+    <link rel="stylesheet" href="../dist/styles/css/slick-alpine-theme.css" type="text/css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+  -->
+
+
+    <link type='text/css' rel='rioridadstylesheet'
+          href='node_modules/slickgrid/dist/styles/css/slick-icons.css'/>
+    <link type='text/css' rel='stylesheet'
+          href='node_modules/slickgrid/dist/styles/css/example-demo.css'/>
+    <link type='text/css' rel='stylesheet'
+          href='node_modules/slickgrid/dist/styles/css/slick-alpine-theme.css'/>
+
+    <style>
+        .cell-title {
+            font-weight: bold;
+        }
+
+        .cell-effort-driven {
+            justify-content: center;
+        }
+
+        .item-details-form {
+            z-index: 1000;
+            display: inline-block;
+            border: 1px solid black;
+            margin: 8px;
+            padding: 10px;
+            background: #fbfbfb;
+            -moz-box-shadow: 0px 0px 15px black;
+            -webkit-box-shadow: 0px 0px 15px black;
+            box-shadow: 0px 0px 15px black;
+
+            position: absolute;
+            top: 10px;
+            left: 150px;
+        }
+
+        .item-details-form-buttons {
+            float: right;
+        }
+
+        .item-details-label {
+            margin-left: 10px;
+            margin-top: 20px;
+            display: block;
+            font-weight: bold;
+        }
+
+        .item-details-editor-container {
+            width: 300px;
+            height: 20px;
+            border: 1px solid silver;
+            background: white;
+            display: block;
+            margin: 10px;
+            margin-top: 4px;
+            padding: 0;
+            padding-left: 4px;
+            padding-right: 0px;
+        }
+    </style>
+</head>
+<div style="position:relative">
+
+    <input type=button name="nuevo" value="nuevo" onclick="fnjs_nuevo();">
+
+    <div style="width:100%;">
+        <div id="myGrid" class="slick-container" style="width:100%;height:500px;"></div>
+    </div>
+
+
+    <div class='item-details-form' style="display: none">
+
+        <label id="titulo_modal"></label>
+        <hr/>
+        <input type="hidden" id="cell_selected" value=""/>
+        <input type="hidden" id="row_selected" value=""/>
+        <input type="hidden" id="id_enc_selected" value=""/>
+        <input type="hidden" id="que" value=""/>
+
+        <p>{{ "Encargos de otras zonas"|trans|raw }}:
+		    <input id="enc_otras_zonas" type="checkbox" value="1" OnChange="prepara_select_enc();">{{ "libre"|trans|raw }}
+	    </p>
+
+        <div style="margin-left: 10px; margin-top: 10px;">
+            <label for="id_enc">{{ "Encargo: "|trans|raw }}</label>
+            <div id="desplegable">
+            </div>
+        </div>
+
+        <div style="margin-left: 10px; margin-top: 20px;">
+            <label for="id_ubi"> {{ "Lugar"|trans|raw }}: </label>
+            {{ oDesplCentros.desplegable()|raw }}
+        </div>
+
+        <hr/>
+        <div class='item-details-form-buttons'>
+            <button data-action='save' class='slick-btn slick-btn-primary'>Grabar</button>
+            <button data-action='eliminar_encargo' class='slick-btn slick-btn-primary'>Eliminar encargo</button>
+            <button data-action='cancel' class='slick-btn slick-btn-default'>Cancel</button>
+        </div>
+    </div>
+
+</div>
+
+<script src="node_modules/slickgrid/dist/browser/slick.core.js"></script>
+<script src="node_modules/slickgrid/dist/browser/slick.interactions.js"></script>
+<script src="node_modules/slickgrid/dist/browser/slick.grid.js"></script>
+<script src="node_modules/slickgrid/dist/browser/plugins/slick.cellrangeselector.js"></script>
+<script src="node_modules/slickgrid/dist/browser/plugins/slick.cellselectionmodel.js"></script>
+<script src="node_modules/slickgrid/dist/browser/slick.formatters.js"></script>
+<script src="node_modules/slickgrid/dist/browser/slick.editors.js"></script>
+<script src="node_modules/slickgrid/dist/browser/slick.compositeeditor.js"></script>
+
+<script>
+
+    var modal = $(".item-details-form");
+
+    modal.keydown(function (e) {
+        if (e.which == Slick.keyCode.ENTER) {
+            commitCurrentEdit();
+            e.stopPropagation();
+            e.preventDefault();
+        } else if (e.which == Slick.keyCode.ESCAPE) {
+            cancelCurrentEdit();
+            e.stopPropagation();
+            e.preventDefault();
+        }
+    });
+
+    modal.find("[data-action=save]").click(function () {
+        commitCurrentEdit();
+    });
+
+    modal.find("[data-action=eliminar_encargo]").click(function () {
+        eliminarCurrentEdit();
+    });
+
+    modal.find("[data-action=cancel]").click(function () {
+        cancelCurrentEdit();
+    });
+
+    function cancelCurrentEdit() {
+        modal.hide();
+    }
+
+    function commitCurrentEdit(cell) {
+        cell = $('#cell_selected').val();
+        row = $('#row_selected').val();
+        let id_enc_selected = $('#id_enc_selected').val();
+        let observ = $('#observ').val();
+        let encargo = $('#encargo').val();
+        let id_tipo_enc = $('#id_tipo_enc').val();
+        let id_ubi = $('#id_ubi').val();
+        let orden = $('#orden').val(); 
+        let prioridad = $('#prioridad').val();
+        let id_zona = $('#id_zona').val();
+        let idioma_enc = $('#idioma_enc').val();
+        let descripcion_lugar = $('#descripcion_lugar').val();
+        let que=$('#que').val();
+        if (que=='') {
+            que = 'modificar';
+        }
+        // añadir el hash (se puede cambiar todo menos el encargo)
+        parametros='id_enc=' + id_enc_selected + '&que=' + que + '&id_tipo_enc=' + id_tipo_enc + '&id_ubi=' + id_ubi + '&id_zona=' + id_zona + '&descripcion_lugar=' + descripcion_lugar + '&encargo=' + encargo + '&idioma_enc=' + idioma_enc + '&observ=' + observ + '&orden=' + orden + '&prioridad=' + prioridad + '{{ h_encargos_zona|raw }}';
+
+        // guardar cambios en DB
+        var request = $.ajax({
+            url: 'apps/misas/controller/update_encargos_zona.php',
+            method: 'POST',
+            data: parametros,
+            dataType: 'json'
+        });
+        request.done(function (json) {
+            if (json.success !== true) {
+                alert("{{ "respuesta"|trans|raw }}: " + json.mensaje);
+            } else {
+                let id_zona = $('#id_zona').val();
+                let orden_select = $('#orden_select').val();
+                let url = '{{ url_ver_encargos_zona }}';
+                parametros='id_zona=' + id_zona + '&orden=' + orden_select + '{{ h_ver_encargos_zona|raw }}';;
+
+                var request = $.ajax({
+                    url: url,
+                    method: 'POST',
+                    data: parametros,
+                    dataType: 'html'
+               })
+                .done(function (rta_txt) {
+                    $('#div_encargos').html(rta_txt);
+                });
+            }
+        });
+    }
+
+    function eliminarCurrentEdit(cell) {
+        cell = $('#cell_selected').val();
+        row = $('#row_selected').val();
+        var id_campo = columns[cell].field;
+
+        let id_enc_selected = $('#id_enc_selected').val();
+        parametros='id_enc=' + id_enc_selected + '&que=borrar' + '{{ h_borrar_encargo_zona|raw }}';;
+
+        // guardar cambios en DB
+        var request = $.ajax({
+            url: 'apps/misas/controller/update_encargos_zona.php',
+            method: 'POST',
+            data: parametros,
+            dataType: 'json'
+        });
+        request.done(function (json) {
+            if (json.success !== true) {
+                alert("{{ "respuesta"|trans|raw }}: " + json.mensaje);
+            } else {
+                let id_zona = $('#id_zona').val();
+                let orden_select = $('#orden_select').val();
+                let url = '{{ url_ver_encargos_zona }}';
+                parametros='id_zona=' + id_zona + '&orden=' + orden_select + '{{ h_ver_encargos_zona|raw }}';;
+
+                var request = $.ajax({
+                    url: url,
+                    method: 'POST',
+                    data: parametros,
+                    dataType: 'html'
+               })
+                .done(function (rta_txt) {
+                    $('#div_encargos').html(rta_txt);
+                });
+            }
+        });
+    }
+    function prepara_select_enc() {
+    	var enc_otras_zonas=$('#enc_otras_zonas').prop('checked');
+        var dia=$('#dia').val();
+    	var seleccion=0;
+	    var ii2=$('#id_enc_inicial').val();
+
+        let url_desplegable_enc = '{{ url_desplegable_enc }}';
+	    let id_zona = '{{ id_zona }}';
+	    var parametros= 'id_zona=' + id_zona + '&id_enc=' + ii2 + '&enc_otras_zonas=' + enc_otras_zonas + ' & {{ h_desplegable_enc|raw }} ';
+        request = $.ajax({
+		    url: url_desplegable_enc,
+		    data: parametros,
+		    type: 'post',
+            dataType: 'json'
+        });
+
+        request.done(function (json) {
+                html=json.desplegable;
+                $("#desplegable_enc").html(html);
+        });
+
+        modal.show();
+    }
+
+    function fnjs_nuevo(){
+        $('#que').val('nuevo');
+        reset_campos_modal();
+        $('#titulo_modal').html('nuevo encargo');
+        modal.show();
+    }
+
+    function reset_campos_modal() {
+        $('#titulo_modal').html('');
+        $('#observ').val('');
+        $('#encargo').val('');
+        $('#lugar').val('');
+        $('#orden').val('');
+        $('#prioridad').val('');
+        $('#id_ubi').val('');
+        $('#id_enc_selected').val('');
+        $('#id_tipo_enc').val('');
+        $('#desplegable_tipo_de_encargo').val('');
+        $('#descripcion_lugar').val('');
+        $('#idioma_enc').val('');
+    }
+
+
+    function openDetails(cell) {
+        const url = URL.createObjectURL(new Blob());
+        $('#cell_selected').val(cell.cell);
+        $('#row_selected').val(cell.row);
+
+        let encargo = data[cell.row].encargo;
+        let id_campo = columns[cell.cell].field;
+        let id_tipo_enc = data[cell.row].id_tipo_enc;
+        let tipo_encargo = data[cell.row].tipo_encargo;
+        let observ = data[cell.row].observ;
+        let id_enc = data[cell.row].id_enc;
+        let id_ubi = data[cell.row].id_ubi;
+        let orden = data[cell.row].orden;
+        let prioridad = data[cell.row].prioridad;
+        let idioma = data[cell.row].idioma_enc;
+        let descripcion_lugar = data[cell.row].descripcion_lugar;
+
+        $('#titulo_modal').html(encargo);
+        $('#observ').val(observ);
+        $('#orden').val(orden);
+        $('#prioridad').val(prioridad);
+        $('#encargo').val(encargo);
+        $('#id_enc_selected').val(id_enc);
+        $('#id_tipo_enc').val(id_tipo_enc);
+        $('#id_ubi').val(id_ubi);
+        $('#desplegable_tipo_de_encargo').val(tipo_encargo);
+        $('#descripcion_lugar').val(descripcion_lugar);
+        $('#idioma_enc').val(idioma);
+
+        modal.show();
+    }
+
+    function requiredFieldValidator(value) {
+        if (value == null || value == undefined || !value.length) {
+            return {valid: false, msg: "This is a required field"};
+        } else {
+            return {valid: true, msg: null};
+        }
+    }
+
+    var grid;
+    var data = {{ json_data_cuadricula|raw }};
+    var columns = {{ json_columns_cuadricula|raw }};
+    var options = {
+        editable: false,
+        enableAddRow: true,
+        enableCellNavigation: true,
+        asyncEditorLoading: false,
+        autoEdit: false
+    };
+
+
+    $(function () {
+        grid = new Slick.Grid("#myGrid", data, columns, options);
+
+        grid.onClick.subscribe(function (e) {
+            var cell = grid.getCellFromEvent(e);
+            openDetails(cell);
+            e.stopPropagation();
+        });
+
+        grid.setActiveCell(0, 0);
+    })
+
+
+    $('.clockpicker').clockpicker({
+            placement: 'bottom',
+            align: 'right',
+            donetext: 'Correcto!'
+        }
+    );
+
+    fnjs_generarNomEnc=function(formulario){
+    	var nom_tipo='';
+        nom_tipo=$('#id_tipo_enc :selected').text();
+    	lloc=$('#id_ubi :selected').text();
+        tipus=nom_tipo;
+        if (lloc == '') {
+    	    $('#encargo').val(tipus);
+        } else {
+    	    $('#encargo').val(tipus+' ('+lloc+')');
+	    }
+    }
+
+</script>

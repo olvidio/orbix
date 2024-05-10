@@ -18,6 +18,7 @@ $goModificarPlanDeMisas = Hash::link('apps/misas/controller/modificar_plan_de_mi
 $goBuscarPlanSacd = Hash::link('apps/misas/controller/buscar_plan_sacd.php');
 $goBuscarPlanCtr = Hash::link('apps/misas/controller/buscar_plan_ctr.php');
 $goModificarEncargos = Hash::link('apps/misas/controller/modificar_encargos.php');
+$goModificarEncargosCtr = Hash::link('apps/misas/controller/modificar_encargos_centros.php');
 $goIniciales = Hash::link('apps/misas/controller/modificar_iniciales_sacd_zona.php');
 
 $a_campos = ['oPosicion' => $oPosicion,
@@ -27,6 +28,7 @@ $a_campos = ['oPosicion' => $oPosicion,
     'goBuscarPlanSacd' => $goBuscarPlanSacd,
     'goBuscarPlanCtr' => $goBuscarPlanCtr,
     'goModificarEncargos' => $goModificarEncargos,
+    'goModificarEncargosCtr' => $goModificarEncargosCtr,
     'goIniciales' => $goIniciales,
 ];
 
