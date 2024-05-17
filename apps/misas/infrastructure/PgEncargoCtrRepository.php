@@ -238,7 +238,7 @@ class PgEncargoCtrRepository extends ClaseRepository implements EncargoCtrReposi
         return TRUE;
     }
 
-    private function isNew(EncargoDiaId $uuid_item): bool
+    private function isNew(EncargoCtrId $uuid_item): bool
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();

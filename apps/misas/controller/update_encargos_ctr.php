@@ -3,8 +3,10 @@
 // INICIO Cabecera global de URL de controlador *********************************
 
 use misas\domain\entity\EncargoCtr;
+use misas\domain\EncargoCtrId;
 use misas\domain\repositories\EncargoCtrRepository;
 use ubis\model\entity\Ubi;
+use Ramsey\Uuid\Uuid as RamseyUuid;
 
 require_once("apps/core/global_header.inc");
 // Archivos requeridos por esta url **********************************************
@@ -14,27 +16,39 @@ require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
 $Qque = (string)filter_input(INPUT_POST, 'que');
+$Qid_enc = (integer)filter_input(INPUT_POST, 'id_enc');
+$Qid_ctr = (integer)filter_input(INPUT_POST, 'id_ctr');
 
 $error_txt = '';
-if (($Qque === 'modificar') || ($Qque === 'nuevo')) {
+
+if ($Qque === 'nuevo') {
+//    echo $Qid_enc.'-->'.$Qid_ctr.'<br>';
+    $Uuid = new EncargoCtrId(RamseyUuid::uuid4()->toString());
+    $EncargoCtrRepository = new EncargoCtrRepository();
+    $EncargoCtr = new EncargoCtr();
+    $EncargoCtr->setUuid_item($Uuid);
+    $EncargoCtr->setId_ubi($Qid_ctr);
+    $EncargoCtr->setId_enc($Qid_enc);
+    if ($EncargoCtrRepository->Guardar($EncargoCtr) === FALSE) {
+        $error_txt .= $EncargoCtrRepository->getErrorTxt();
+    }  
+}
+
+if ($Qque === 'modificar') {
     $Qid_enc = (string)filter_input(INPUT_POST, 'id_enc');
     $Qid_ctr = (string)filter_input(INPUT_POST, 'id_ctr');
 
-    $EncargoCtrRepository = new EncargoCtrRepository();
-    $EncargoCtr = $EncargoCtrRepository->findById($Qid_enc);
-    if (is_null($InicialesSacd)) {
-        $InicialesSacd = new InicialesSacd();
-        $InicialesSacd->setId_nom($Qid_sacd);
-    }
 
-    $InicialesSacd->setIniciales($Qiniciales);
-    $InicialesSacd->setColor($Qcolor);
+
+
+    $EncargoCtr = new EncargoCtr();
+    $EncargoCtr = $EncargoCtr->findById($Qid_enc);
 
     $EncargoCtr = new EncargoCtr($Qid_enc);
     $EncargoCtr->setId_ubi($Qid_ctr);
 
     $jsondata['que'] = $Qque;
-    if ($EncargoCtrRepository->Guardar($EncargoCtr) === FALSE) {
+    if ($EncargoCtr->Guardar($EncargoCtr) === FALSE) {
         $error_txt .= $EncargoCtr->getErrorTxt();
     }
 }

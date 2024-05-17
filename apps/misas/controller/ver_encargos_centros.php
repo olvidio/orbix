@@ -122,7 +122,7 @@ $oDesplEncargos->setOpciones($aEncargos);
 $oGestorZonaCtr = new GestorZona();
 $oDesplZonasCtr = $oGestorZonaCtr->getListaZonas();
 $oDesplZonasCtr->setNombre('id_zona_ctr');
-$oDesplZonasCtr->setOpciones($Qid_zona);
+$oDesplZonasCtr->setOpcion_sel($Qid_zona);
 $oDesplZonasCtr->setAction('fnjs_prepara_select_ctr()');
 
 $aWhere = [];
@@ -148,7 +148,7 @@ $oDesplCentros->setNombre('id_ubi');
 $oDesplCentros->setOpcion_sel($id_ubi);
 $oDesplCentros->setOpciones($aCentros);
 
-$url_desplegable_ctr = 'apps/misas/controller/desplegable_ctrr.php';
+$url_desplegable_ctr = 'apps/misas/controller/desplegable_ctr.php';
 $oHash_desplegable_ctr = new Hash();
 $oHash_desplegable_ctr->setUrl($url_desplegable_ctr);
 $oHash_desplegable_ctr->setCamposForm('id_zona!id_ctr!ctr_otras_zonas');

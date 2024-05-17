@@ -70,8 +70,6 @@
 <div style="position:relative">
 
     <input type=button name="nuevo" value="nuevo" onclick="fnjs_nuevo();">
-    <input type=button name="nuevo2" value="nuevo2" onclick="fnjs_nuevo2();">
-    <input type=button name="nuevo2" value="nuevo3" onclick="alert('hola');fnjs_nuevo3();">
 
     <div style="width:100%;">
         <div id="myGrid" class="slick-container" style="width:100%;height:500px;"></div>
@@ -88,7 +86,7 @@
         <input type="hidden" id="que" value=""/>
 
         <p>{{ "Centros de otras zonas"|trans|raw }}:
-		    <input id="ctr_otras_zonas" type="checkbox" value="1" OnChange="prepara_select_ctrr();">
+		    <input id="ctr_otras_zonas" type="checkbox" value="1" OnChange="prepara_select_ctr();">
 	    </p>
 
         <div style="margin-left: 10px; margin-top: 10px;">
@@ -128,10 +126,6 @@
 
 <script>
 
-    function fnjs_nuevo2(){
-        alert ('nuevo2');
-    }
-
     var modal = $(".item-details-form");
 
     modal.keydown(function (e) {
@@ -163,7 +157,7 @@
     }
 
     function commitCurrentEdit(cell) {
-        alert('commit');
+//        alert('commit');
         cell = $('#cell_selected').val();
         row = $('#row_selected').val();
 
@@ -180,7 +174,7 @@
         if (que=='') {
             que = 'modificar';
         }
-        alert(id_enc+' es '+id_enc_selected+ ' ctr '+id_ctr)
+//        alert(id_enc+' es '+id_enc_selected+ ' ctr '+id_ctr)
         // añadir el hash (se puede cambiar todo menos el encargo)
         parametros='id_enc=' + id_enc + '&que=' + que + '&id_ctr=' + id_ctr + '&id_zona=' + '{{ h_encargos_zona|raw }}';
 
@@ -252,7 +246,7 @@
     function prepara_select_ctr() {
     	var ctr_otras_zonas=$('#ctr_otras_zonas').prop('checked');
  	    var ii2=$('#id_ctr_inicial').val();
-        let url_desplegable_ctr = '{{ url_desplegable_ctrr }}';
+        let url_desplegable_ctr = '{{ url_desplegable_ctr }}';
 	    let id_zona = '{{ id_zona }}';
 	    var parametros= 'id_zona=' + id_zona + '&id_ctr=' + ii2 + '&ctr_otras_zonas=' + ctr_otras_zonas + '&{{ h_desplegable_ctr|raw }} ';
         request = $.ajax({
@@ -271,10 +265,12 @@
     }
 
     function fnjs_nuevo(){
-        alert ('nuevo');
         $('#que').val('nuevo');
         reset_campos_modal();
         $('#titulo_modal').html('nuevo encargo visible para un centro');
+
+        prepara_select_ctr();
+
         modal.show();
     }
 
@@ -324,7 +320,7 @@
         $('#descripcion_lugar').val(descripcion_lugar);
         $('#idioma_enc').val(idioma);
 
-        prepara_select_ctrr();
+        prepara_select_ctr();
 
         modal.show();
     }
@@ -369,8 +365,5 @@
             donetext: 'Correcto!'
         }
     );
-    function fnjs_nuevo3(){
-        alert ('nuevo3');
-    }
 
 </script>
