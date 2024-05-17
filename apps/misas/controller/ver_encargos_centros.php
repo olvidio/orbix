@@ -11,6 +11,7 @@ use ubis\model\entity\GestorCentroEllas;
 use ubis\model\entity\Ubi;
 use web\Desplegable;
 use web\Hash;
+use zonassacd\model\entity\GestorZona;
 
 require_once("apps/core/global_header.inc");
 // Archivos requeridos por esta url **********************************************
@@ -97,7 +98,6 @@ foreach ($cEncargoTipos as $oEncargoTipo) {
         $a_tipo_enc[] = $oEncargoTipo->getId_tipo_enc();
         $posibles_encargo_tipo[$oEncargoTipo->getId_tipo_enc()] = $oEncargoTipo->getTipo_enc();
     }
-
 }
 
 $aWhere = array();
@@ -109,6 +109,21 @@ $aWhere['id_zona'] = $Qid_zona;
 
 $GesEncargos = new GestorEncargo();
 $cEncargos = $GesEncargos->getEncargos($aWhere, $aOperador);
+foreach ($cEncargos as $oEncargo) {
+    $id_enc = $oEncargo->getId_enc();
+    $desc_enc = $oEncargo->getDesc_enc();
+    $aEncargos[$id_enc] = $desc_enc;
+}
+
+$oDesplEncargos = new Desplegable();
+$oDesplEncargos->setNombre('id_enc');
+$oDesplEncargos->setOpciones($aEncargos);
+
+$oGestorZonaCtr = new GestorZona();
+$oDesplZonasCtr = $oGestorZonaCtr->getListaZonas();
+$oDesplZonasCtr->setNombre('id_zona_ctr');
+$oDesplZonasCtr->setOpciones($Qid_zona);
+$oDesplZonasCtr->setAction('fnjs_prepara_select_ctr()');
 
 $aWhere = [];
 $aWhere['status'] = 't';
@@ -133,11 +148,11 @@ $oDesplCentros->setNombre('id_ubi');
 $oDesplCentros->setOpcion_sel($id_ubi);
 $oDesplCentros->setOpciones($aCentros);
 
-$url_desplegable_enc = 'apps/misas/controller/desplegable_enc.php';
-$oHash_desplegable_enc = new Hash();
-$oHash_desplegable_enc->setUrl($url_desplegable_enc;
-$oHash_desplegable_enc->setCamposForm('id_zona!id_enc!enc_otras_zonas');
-$h_desplegable_enc = $oHash_desplegable_enc->linkSinVal();
+$url_desplegable_ctr = 'apps/misas/controller/desplegable_ctrr.php';
+$oHash_desplegable_ctr = new Hash();
+$oHash_desplegable_ctr->setUrl($url_desplegable_ctr);
+$oHash_desplegable_ctr->setCamposForm('id_zona!id_ctr!ctr_otras_zonas');
+$h_desplegable_ctr = $oHash_desplegable_ctr->linkSinVal();
 
 $a_campos = ['oPosicion' => $oPosicion,
     'json_columns_cuadricula' => $json_columns_cuadricula,
@@ -147,9 +162,11 @@ $a_campos = ['oPosicion' => $oPosicion,
     'url_ver_encargos_centros' => $url_ver_encargos_centros,
     'h_borrar_encargos_centros' => $h_borrar_encargos_centros,
     'url_update_encargos_centros' => $url_update_encargos_centros,
-    'url_desplegable_sacd' =>$url_desplegable_enc,
-    'h_desplegable_sacd' => $h_desplegable_enc,
+    'url_desplegable_ctr' => $url_desplegable_ctr,
+    'h_desplegable_ctr' => $h_desplegable_ctr,
+    'oDesplZonasCtr' => $oDesplZonasCtr,
     'oDesplCentros' => $oDesplCentros,
+    'oDesplEncargos' => $oDesplEncargos,
     'id_zona' => $Qid_zona,
 ];
 

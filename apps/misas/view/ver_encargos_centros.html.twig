@@ -70,6 +70,8 @@
 <div style="position:relative">
 
     <input type=button name="nuevo" value="nuevo" onclick="fnjs_nuevo();">
+    <input type=button name="nuevo2" value="nuevo2" onclick="fnjs_nuevo2();">
+    <input type=button name="nuevo2" value="nuevo3" onclick="alert('hola');fnjs_nuevo3();">
 
     <div style="width:100%;">
         <div id="myGrid" class="slick-container" style="width:100%;height:500px;"></div>
@@ -85,19 +87,24 @@
         <input type="hidden" id="id_enc_selected" value=""/>
         <input type="hidden" id="que" value=""/>
 
-        <p>{{ "Encargos de otras zonas"|trans|raw }}:
-		    <input id="enc_otras_zonas" type="checkbox" value="1" OnChange="prepara_select_enc();">{{ "libre"|trans|raw }}
+        <p>{{ "Centros de otras zonas"|trans|raw }}:
+		    <input id="ctr_otras_zonas" type="checkbox" value="1" OnChange="prepara_select_ctrr();">
 	    </p>
 
         <div style="margin-left: 10px; margin-top: 10px;">
             <label for="id_enc">{{ "Encargo: "|trans|raw }}</label>
-            <div id="desplegable">
-            </div>
+            {{ oDesplEncargos.desplegable()|raw }}
         </div>
 
-        <div style="margin-left: 10px; margin-top: 20px;">
-            <label for="id_ubi"> {{ "Lugar"|trans|raw }}: </label>
-            {{ oDesplCentros.desplegable()|raw }}
+        <div style="margin-left: 10px; margin-top: 10px;">
+            <label for="id_zona_ctr">{{ "Zona del centro: "|trans|raw }}</label>
+            {{ oDesplZonasCtr.desplegable()|raw }}
+        </div>
+
+        <div style="margin-left: 10px; margin-top: 10px;">
+            <label for="id_ctr">{{ "Centro: "|trans|raw }}</label>
+            <div id="desplegable">
+            </div>
         </div>
 
         <hr/>
@@ -120,6 +127,10 @@
 <script src="node_modules/slickgrid/dist/browser/slick.compositeeditor.js"></script>
 
 <script>
+
+    function fnjs_nuevo2(){
+        alert ('nuevo2');
+    }
 
     var modal = $(".item-details-form");
 
@@ -152,28 +163,30 @@
     }
 
     function commitCurrentEdit(cell) {
+        alert('commit');
         cell = $('#cell_selected').val();
         row = $('#row_selected').val();
+
+        let key = $('#id_ctr').val();
+        const myArray = key.split("#");
+ //       let id_ctr = myArray[0];
+        let nombre_ctr = myArray[1];
+
         let id_enc_selected = $('#id_enc_selected').val();
-        let observ = $('#observ').val();
-        let encargo = $('#encargo').val();
-        let id_tipo_enc = $('#id_tipo_enc').val();
-        let id_ubi = $('#id_ubi').val();
-        let orden = $('#orden').val(); 
-        let prioridad = $('#prioridad').val();
+        let id_ctr = $('#id_ctr').val();
+        let id_enc = $('#id_enc').val();
         let id_zona = $('#id_zona').val();
-        let idioma_enc = $('#idioma_enc').val();
-        let descripcion_lugar = $('#descripcion_lugar').val();
         let que=$('#que').val();
         if (que=='') {
             que = 'modificar';
         }
+        alert(id_enc+' es '+id_enc_selected+ ' ctr '+id_ctr)
         // añadir el hash (se puede cambiar todo menos el encargo)
-        parametros='id_enc=' + id_enc_selected + '&que=' + que + '&id_tipo_enc=' + id_tipo_enc + '&id_ubi=' + id_ubi + '&id_zona=' + id_zona + '&descripcion_lugar=' + descripcion_lugar + '&encargo=' + encargo + '&idioma_enc=' + idioma_enc + '&observ=' + observ + '&orden=' + orden + '&prioridad=' + prioridad + '{{ h_encargos_zona|raw }}';
+        parametros='id_enc=' + id_enc + '&que=' + que + '&id_ctr=' + id_ctr + '&id_zona=' + '{{ h_encargos_zona|raw }}';
 
         // guardar cambios en DB
         var request = $.ajax({
-            url: 'apps/misas/controller/update_encargos_zona.php',
+            url: 'apps/misas/controller/update_encargos_ctr.php',
             method: 'POST',
             data: parametros,
             dataType: 'json'
@@ -183,9 +196,8 @@
                 alert("{{ "respuesta"|trans|raw }}: " + json.mensaje);
             } else {
                 let id_zona = $('#id_zona').val();
-                let orden_select = $('#orden_select').val();
-                let url = '{{ url_ver_encargos_zona }}';
-                parametros='id_zona=' + id_zona + '&orden=' + orden_select + '{{ h_ver_encargos_zona|raw }}';;
+                let url = '{{ url_ver_encargos_centros }}';
+                parametros='id_zona=' + id_zona + '{{ h_ver_encargos_zona|raw }}';;
 
                 var request = $.ajax({
                     url: url,
@@ -236,17 +248,15 @@
             }
         });
     }
-    function prepara_select_enc() {
-    	var enc_otras_zonas=$('#enc_otras_zonas').prop('checked');
-        var dia=$('#dia').val();
-    	var seleccion=0;
-	    var ii2=$('#id_enc_inicial').val();
 
-        let url_desplegable_enc = '{{ url_desplegable_enc }}';
+    function prepara_select_ctr() {
+    	var ctr_otras_zonas=$('#ctr_otras_zonas').prop('checked');
+ 	    var ii2=$('#id_ctr_inicial').val();
+        let url_desplegable_ctr = '{{ url_desplegable_ctrr }}';
 	    let id_zona = '{{ id_zona }}';
-	    var parametros= 'id_zona=' + id_zona + '&id_enc=' + ii2 + '&enc_otras_zonas=' + enc_otras_zonas + ' & {{ h_desplegable_enc|raw }} ';
+	    var parametros= 'id_zona=' + id_zona + '&id_ctr=' + ii2 + '&ctr_otras_zonas=' + ctr_otras_zonas + '&{{ h_desplegable_ctr|raw }} ';
         request = $.ajax({
-		    url: url_desplegable_enc,
+		    url: url_desplegable_ctr,
 		    data: parametros,
 		    type: 'post',
             dataType: 'json'
@@ -254,16 +264,17 @@
 
         request.done(function (json) {
                 html=json.desplegable;
-                $("#desplegable_enc").html(html);
+                $("#desplegable").html(html);
         });
 
         modal.show();
     }
 
     function fnjs_nuevo(){
+        alert ('nuevo');
         $('#que').val('nuevo');
         reset_campos_modal();
-        $('#titulo_modal').html('nuevo encargo');
+        $('#titulo_modal').html('nuevo encargo visible para un centro');
         modal.show();
     }
 
@@ -284,6 +295,7 @@
 
 
     function openDetails(cell) {
+        alert('details');
         const url = URL.createObjectURL(new Blob());
         $('#cell_selected').val(cell.cell);
         $('#row_selected').val(cell.row);
@@ -312,6 +324,8 @@
         $('#descripcion_lugar').val(descripcion_lugar);
         $('#idioma_enc').val(idioma);
 
+        prepara_select_ctrr();
+
         modal.show();
     }
 
@@ -339,6 +353,7 @@
         grid = new Slick.Grid("#myGrid", data, columns, options);
 
         grid.onClick.subscribe(function (e) {
+            alert('onclic');
             var cell = grid.getCellFromEvent(e);
             openDetails(cell);
             e.stopPropagation();
@@ -354,17 +369,8 @@
             donetext: 'Correcto!'
         }
     );
-
-    fnjs_generarNomEnc=function(formulario){
-    	var nom_tipo='';
-        nom_tipo=$('#id_tipo_enc :selected').text();
-    	lloc=$('#id_ubi :selected').text();
-        tipus=nom_tipo;
-        if (lloc == '') {
-    	    $('#encargo').val(tipus);
-        } else {
-    	    $('#encargo').val(tipus+' ('+lloc+')');
-	    }
+    function fnjs_nuevo3(){
+        alert ('nuevo3');
     }
 
 </script>
