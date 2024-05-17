@@ -176,11 +176,11 @@
         }
 //        alert(id_enc+' es '+id_enc_selected+ ' ctr '+id_ctr)
         // añadir el hash (se puede cambiar todo menos el encargo)
-        parametros='id_enc=' + id_enc + '&que=' + que + '&id_ctr=' + id_ctr + '&id_zona=' + '{{ h_encargos_zona|raw }}';
+        parametros='id_enc=' + id_enc + '&que=' + que + '&id_ctr=' + id_ctr + '&id_zona=' + '{{ h_encargos_centros|raw }}';
 
         // guardar cambios en DB
         var request = $.ajax({
-            url: 'apps/misas/controller/update_encargos_ctr.php',
+            url: 'apps/misas/controller/update_encargos_centros.php',
             method: 'POST',
             data: parametros,
             dataType: 'json'
@@ -191,7 +191,7 @@
             } else {
                 let id_zona = $('#id_zona').val();
                 let url = '{{ url_ver_encargos_centros }}';
-                parametros='id_zona=' + id_zona + '{{ h_ver_encargos_zona|raw }}';;
+                parametros='id_zona=' + id_zona + '{{ h_ver_encargos_centros|raw }}';
 
                 var request = $.ajax({
                     url: url,

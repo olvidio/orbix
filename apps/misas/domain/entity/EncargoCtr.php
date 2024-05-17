@@ -48,7 +48,7 @@ class EncargoCtr
             $this->setId_enc($aDatos['id_enc']);
         }
         if (array_key_exists('id_ubi', $aDatos)) {
-            $this->setId_enc($aDatos['id_ubi']);
+            $this->setId_ubi($aDatos['id_ubi']);
         }
         return $this;
     }

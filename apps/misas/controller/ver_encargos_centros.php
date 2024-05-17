@@ -64,7 +64,7 @@ $json_data_cuadricula = json_encode($data_cuadricula);
 $url_update_encargos_centros = 'apps/misas/controller/update_encargos_centros.php';
 $oHashEncargosCtr = new Hash();
 $oHashEncargosCtr->setUrl($url_update_encargos_centros);
-$oHashEncargosCtr->setCamposForm('id_enc!id_ubi');
+$oHashEncargosCtr->setCamposForm('id_enc!que!id_ctr!id_zona');
 $h_encargos_centros = $oHashEncargosCtr->linkSinVal();
 
 $url_ver_encargos_centros = 'apps/misas/controller/ver_encargos_centros.php';
@@ -153,6 +153,12 @@ $oHash_desplegable_ctr = new Hash();
 $oHash_desplegable_ctr->setUrl($url_desplegable_ctr);
 $oHash_desplegable_ctr->setCamposForm('id_zona!id_ctr!ctr_otras_zonas');
 $h_desplegable_ctr = $oHash_desplegable_ctr->linkSinVal();
+
+$url_update_encargos_zona = 'apps/misas/controller/update_encargos_centros.php';
+$oHashEncargosZona = new Hash();
+$oHashEncargosZona->setUrl($url_update_encargos_zona);
+$oHashEncargosZona->setCamposForm('id_enc!que!id_ctr!id_zona');
+$h_encargos_zona = $oHashEncargosZona->linkSinVal();
 
 $a_campos = ['oPosicion' => $oPosicion,
     'json_columns_cuadricula' => $json_columns_cuadricula,
