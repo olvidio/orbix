@@ -105,7 +105,7 @@ if ($Qperiodo === 'no') {
 }
 
 $oHash = new web\Hash();
-$sCamposForm = 'que!id_cdc!id_cdc_mas!id_cdc_num!empiezamax!empiezamin!extendida!iactividad_val!iasistentes_val!year';
+$sCamposForm = 'que!id_cdc!id_cdc_mas!id_cdc_num!empiezamax!empiezamin!iactividad_val!iasistentes_val!year';
 //$oHash->setcamposNo('id_cdc!modelo');
 
 switch ($tipo_lista) {
