@@ -493,10 +493,10 @@ switch ($Qque) {
                 $id_tarifa = $oActividad->getTarifa();
                 $observ = $oActividad->getObserv();
 
-                if (strlen($h_ini)) {
+                if (!empty($h_ini)) {
                     $h_ini = substr($h_ini, 0, (strlen($h_ini) - 3));
                 }
-                if (strlen($h_fin)) {
+                if (!empty($h_fin)) {
                     $h_fin = substr($h_fin, 0, (strlen($h_fin) - 3));
                 }
                 // mirar permisos.
