@@ -83,6 +83,8 @@
         <input type="hidden" id="cell_selected" value=""/>
         <input type="hidden" id="row_selected" value=""/>
         <input type="hidden" id="id_enc_selected" value=""/>
+        <input type="hidden" id="id_ctr_selected" value=""/>
+        <input id="id_item" value=""/>
         <input type="hidden" id="que" value=""/>
 
         <p>{{ "Centros de otras zonas"|trans|raw }}:
@@ -157,27 +159,27 @@
     }
 
     function commitCurrentEdit(cell) {
-//        alert('commit');
+        alert('commit2');
         cell = $('#cell_selected').val();
         row = $('#row_selected').val();
 
         let key = $('#id_ctr').val();
         const myArray = key.split("#");
- //       let id_ctr = myArray[0];
-        let nombre_ctr = myArray[1];
+       let id_ctr = myArray[0];
+//        let nombre_ctr = myArray[1];
 
+        let id_item = $('#id_item').val();
         let id_enc_selected = $('#id_enc_selected').val();
-        let id_ctr = $('#id_ctr').val();
+ //       let id_ctr = $('#id_ctr').val();
         let id_enc = $('#id_enc').val();
         let id_zona = $('#id_zona').val();
         let que=$('#que').val();
         if (que=='') {
             que = 'modificar';
         }
-//        alert(id_enc+' es '+id_enc_selected+ ' ctr '+id_ctr)
         // añadir el hash (se puede cambiar todo menos el encargo)
-        parametros='id_enc=' + id_enc + '&que=' + que + '&id_ctr=' + id_ctr + '&id_zona=' + '{{ h_encargos_centros|raw }}';
-
+        parametros='id_item=' + id_item + 'id_enc=' + id_enc + '&que=' + que + '&id_ctr=' + id_ctr + '&id_zona=' + id_zona + '{{ h_encargos_centros|raw }}';
+alert(parametros);
         // guardar cambios en DB
         var request = $.ajax({
             url: 'apps/misas/controller/update_encargos_centros.php',
@@ -207,6 +209,7 @@
     }
 
     function eliminarCurrentEdit(cell) {
+        alert('eliminar');
         cell = $('#cell_selected').val();
         row = $('#row_selected').val();
         var id_campo = columns[cell].field;
@@ -245,10 +248,10 @@
 
     function prepara_select_ctr() {
     	var ctr_otras_zonas=$('#ctr_otras_zonas').prop('checked');
- 	    var ii2=$('#id_ctr_inicial').val();
+ 	    var ctr_selected=$('#id_ctr_selected').val();
         let url_desplegable_ctr = '{{ url_desplegable_ctr }}';
 	    let id_zona = '{{ id_zona }}';
-	    var parametros= 'id_zona=' + id_zona + '&id_ctr=' + ii2 + '&ctr_otras_zonas=' + ctr_otras_zonas + '&{{ h_desplegable_ctr|raw }} ';
+	    var parametros= 'id_zona=' + id_zona + '&id_ctr=' + ctr_selected + '&ctr_otras_zonas=' + ctr_otras_zonas + '&{{ h_desplegable_ctr|raw }} ';
         request = $.ajax({
 		    url: url_desplegable_ctr,
 		    data: parametros,
@@ -265,6 +268,7 @@
     }
 
     function fnjs_nuevo(){
+        alert('nuevo');
         $('#que').val('nuevo');
         reset_campos_modal();
         $('#titulo_modal').html('nuevo encargo visible para un centro');
@@ -296,30 +300,18 @@
         $('#cell_selected').val(cell.cell);
         $('#row_selected').val(cell.row);
 
+        let id_item = data[cell.row].id_item;
         let encargo = data[cell.row].encargo;
-        let id_campo = columns[cell.cell].field;
-        let id_tipo_enc = data[cell.row].id_tipo_enc;
-        let tipo_encargo = data[cell.row].tipo_encargo;
-        let observ = data[cell.row].observ;
-        let id_enc = data[cell.row].id_enc;
-        let id_ubi = data[cell.row].id_ubi;
-        let orden = data[cell.row].orden;
-        let prioridad = data[cell.row].prioridad;
-        let idioma = data[cell.row].idioma_enc;
-        let descripcion_lugar = data[cell.row].descripcion_lugar;
+        let id_encargo = data[cell.row].id_encargo;
+        let id_centro = data[cell.row].id_centro;
+        let centro = data[cell.row].centro;
 
-        $('#titulo_modal').html(encargo);
-        $('#observ').val(observ);
-        $('#orden').val(orden);
-        $('#prioridad').val(prioridad);
+        $('#titulo_modal').html('modificar encargo visble para un centro');
+        $('#id_item').val(id_item);
         $('#encargo').val(encargo);
-        $('#id_enc_selected').val(id_enc);
-        $('#id_tipo_enc').val(id_tipo_enc);
-        $('#id_ubi').val(id_ubi);
-        $('#desplegable_tipo_de_encargo').val(tipo_encargo);
-        $('#descripcion_lugar').val(descripcion_lugar);
-        $('#idioma_enc').val(idioma);
-
+        $('#id_enc').val(id_encargo);
+        $('#id_ctr_selected').val(id_centro);
+        $('#id_ctr').val(id_centro);
         prepara_select_ctr();
 
         modal.show();
@@ -349,7 +341,6 @@
         grid = new Slick.Grid("#myGrid", data, columns, options);
 
         grid.onClick.subscribe(function (e) {
-            alert('onclic');
             var cell = grid.getCellFromEvent(e);
             openDetails(cell);
             e.stopPropagation();

@@ -16,8 +16,11 @@ require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
 $Qque = (string)filter_input(INPUT_POST, 'que');
+$Qid_item = (string)filter_input(INPUT_POST, 'id_item');
 $Qid_enc = (integer)filter_input(INPUT_POST, 'id_enc');
 $Qid_ctr = (integer)filter_input(INPUT_POST, 'id_ctr');
+
+echo 'id_item: '.$Qid_item.'<br>';
 
 $error_txt = '';
 

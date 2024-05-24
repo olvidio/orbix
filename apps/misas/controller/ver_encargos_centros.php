@@ -2,6 +2,7 @@
 
 
 // INICIO Cabecera global de URL de controlador *********************************
+use encargossacd\model\entity\Encargo;
 use encargossacd\model\entity\EncargoTipo;
 use encargossacd\model\entity\GestorEncargoTipo;
 use encargossacd\model\entity\GestorEncargo;
@@ -23,8 +24,11 @@ require_once("apps/core/global_object.inc");
 $Qid_zona = (integer)filter_input(INPUT_POST, 'id_zona');
 
 $columns_cuadricula = [
-    ["id" => "encargo", "name" => "Encargo", "field" => "encargo", "width" => 250, "cssClass" => "cell-title"],
-    ["id" => "centro", "name" => "Centro", "field" => "centro", "width" => 100, "cssClass" => "cell-title"],
+//   ["id" => "id_item", "name" => "Id Item", "field" => "id_item", "width" => 100, "cssClass" => "cell-title"],
+//    ["id" => "id_encargo", "name" => "Id Encargo", "field" => "id_encargo", "width" => 50, "cssClass" => "cell-title"],
+["id" => "encargo", "name" => "Encargo", "field" => "encargo", "width" => 250, "cssClass" => "cell-title"],
+//    ["id" => "id_centro", "name" => "Id Centro", "field" => "id_centro", "width" => 100, "cssClass" => "cell-title"],
+    ["id" => "centro", "name" => "Centro", "field" => "centro", "width" => 150, "cssClass" => "cell-title"],
 ];
 
 $data_cuadricula = [];
@@ -48,11 +52,16 @@ if (isset($Qid_zona)) {
         $EncargoCtrRepository = new EncargoCtrRepository();
         $cEncargosCtr = $EncargoCtrRepository->getEncargosCentro($id_ubi);
         foreach ($cEncargosCtr as $oEncargo) {
-            $desc_enc= $oEncargo->getId_enc();
+            $id_enc = $oEncargo->getId_enc();
+            $id_item = $oEncargo->getUuid_item()->value();
             $data_cols = [];
+            $data_cols["id_item"] = $id_item;
+            $data_cols["id_encargo"] = $id_enc;
+            $oEncargo = new Encargo($id_enc);
+            $desc_enc = $oEncargo->getDesc_enc();
             $data_cols["encargo"] = $desc_enc;
-            $data_cols["id_ubi"] = $id_ubi;
-            $data_cols["lugar"] = $nombre_ubi;
+            $data_cols["id_centro"] = $id_ubi;
+            $data_cols["centro"] = $nombre_ubi;
             $data_cuadricula[] = $data_cols;
         }
     }    
@@ -64,7 +73,7 @@ $json_data_cuadricula = json_encode($data_cuadricula);
 $url_update_encargos_centros = 'apps/misas/controller/update_encargos_centros.php';
 $oHashEncargosCtr = new Hash();
 $oHashEncargosCtr->setUrl($url_update_encargos_centros);
-$oHashEncargosCtr->setCamposForm('id_enc!que!id_ctr!id_zona');
+$oHashEncargosCtr->setCamposForm('id_item|id_enc!que!id_ctr!id_zona');
 $h_encargos_centros = $oHashEncargosCtr->linkSinVal();
 
 $url_ver_encargos_centros = 'apps/misas/controller/ver_encargos_centros.php';
@@ -75,13 +84,13 @@ $h_ver_encargos_centros = $oHashVerEncargosCtr->linkSinVal();
 
 $oHashBorrarEncargosCtr = new Hash();
 $oHashBorrarEncargosCtr->setUrl($url_update_encargos_centros);
-$oHashBorrarEncargosCtr->setCamposForm('id_enc!id_ubi');
+$oHashBorrarEncargosCtr->setCamposForm('id_item');
 $h_borrar_encargos_centros = $oHashBorrarEncargosCtr->linkSinVal();
 
 $oHashNuevoEncargosCtr = new Hash();
 $oHashNuevoEncargosCtr->setUrl($url_update_encargos_centros);
 $oHashNuevoEncargosCtr->setCamposForm('id_enc!id_ubi');
-$h_borrar_encargos_centros = $oHashBorrarEncargosCtr->linkSinVal();
+$h_nuevo_encargos_centros = $oHashNuevoEncargosCtr->linkSinVal();
 
 $grupo = '8...';
 $aWhere = [];

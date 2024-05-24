@@ -27,7 +27,7 @@ require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
 $Qid_zona = (integer)filter_input(INPUT_POST, 'id_zona');
-$Qid_ctr = (integer)filter_input(INPUT_POST, 'id_crt');
+$Qid_ctr = (integer)filter_input(INPUT_POST, 'id_ctr');
 $Qctr_otras_zonas = (integer)filter_input(INPUT_POST, 'ctr_otras_zonas');
 
 //echo $Qid_zona.'#'.$Qid_ctr.'s'.$Qctr_otras_zonas;
