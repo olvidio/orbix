@@ -4,6 +4,7 @@
 // INICIO Cabecera global de URL de controlador *********************************
 use encargossacd\model\EncargoConstants;
 use misas\domain\repositories\EncargoDiaRepository;
+use misas\domain\repositories\EncargoCtrRepository;
 use misas\domain\repositories\InicialesSacdRepository;
 use misas\domain\entity\InicialesSacd;
 use misas\domain\entity\EncargoDia;
@@ -35,7 +36,6 @@ $Qorden = (string)filter_input(INPUT_POST, 'orden');
 $Qempiezamin = (string)filter_input(INPUT_POST, 'empiezamin');
 $Qempiezamax = (string)filter_input(INPUT_POST, 'empiezamax');
 
-echo 'ubi: '.$Qid_ubi.'<br>';
 switch ($Qperiodo) {
     case "semana_next":
         $dia_week = date('N');
@@ -80,40 +80,11 @@ $columns_cuadricula = [
     ["id" => "observaciones", "name" => "Observaciones", "field" => "observaciones", "width" => 250, "cssClass" => "cell-title"],
 ];
 
-$oGesEncargoTipo = new GestorEncargoTipo();
-
-$grupo = '8...';
-
-$aWhere = [];
-$aOperador = [];
-$aWhere['id_tipo_enc'] = '^' . $grupo;
-$aOperador['id_tipo_enc'] = '~';
-$oGesEncargoTipo = new GestorEncargoTipo();
-$cEncargoTipos = $oGesEncargoTipo->getEncargoTipos($aWhere, $aOperador);
-
-$posibles_encargo_tipo = [];
-foreach ($cEncargoTipos as $oEncargoTipo) {
-    if ($oEncargoTipo->getId_tipo_enc()>=8100) {
-        $a_tipo_enc[] = $oEncargoTipo->getId_tipo_enc();
-        echo 'tipo encargo>8100: '.$oEncargoTipo->getId_tipo_enc().'<br>';
-    }
-}
-
-$aWhere = array();
-$aOperador = array();
-$cond_tipo_enc = "{" . implode(', ', $a_tipo_enc) . "}";
-$aWhere['id_tipo_enc'] = $cond_tipo_enc;
-$aOperador['id_tipo_enc'] = 'ANY';
-$aWhere['id_zona'] = $Qid_zona;
-
-//$aWhere['_ordre'] = $Qorden;
-$GesEncargos = new GestorEncargo();
-$cEncargos = $GesEncargos->getEncargos($aWhere, $aOperador);
-
-$id_tipo_enc = '';
-$idioma_enc = '';
-foreach ($cEncargos as $oEncargo) {
-    $id_enc = $oEncargo->getId_enc();
+$EncargoCtrRepository = new EncargoCtrRepository();
+$cEncargosCtr = $EncargoCtrRepository->getEncargosCentro($Qid_ubi);
+foreach ($cEncargosCtr as $oEncargoCtr) {
+    $id_enc = $oEncargoCtr->getId_enc();
+    $oEncargo = new Encargo($id_enc);
     $desc_enc = $oEncargo->getDesc_enc();
     $id_ubi = $oEncargo->getId_ubi();
     $id_tipo_enc = $oEncargo->getId_tipo_enc();
@@ -133,13 +104,10 @@ foreach ($cEncargos as $oEncargo) {
     if (!empty($id_tipo_enc)) {
         $oEncargoTipo = new EncargoTipo($id_tipo_enc);
         $tipo_enc = $oEncargoTipo->getTipo_enc();
-        //$nom_tipo=$tipo['nom_tipo'];
     } else {
         $tipo_enc = '';
     }
-    if ($id_ubi==$Qid_ubi)
-    echo $id_enc.'-'.$id_ubi.'='.$Qid_ubi.'-'.$id_tipo_enc.'-'.$desc_lugar.'-'.$nombre_ubi.'-'.$tipo_enc.'<br>';
-}
+
 
 $dia_week_sacd = [];
 $oInicio = new DateTimeLocal($Qempiezamin_rep);
@@ -155,7 +123,7 @@ $fin_dia = $Qempiezamax_rep.' 23:59:59';
 
 echo 'I:'.$inicio_dia.'<br>';
 $aWhere = [
-    'id_ubi' => $Qid_ubi,
+    'id_enc' => $id_enc,
     'tstart' => "'$inicio_dia', '$fin_dia'",
 ];
 $aWhere['_ordre'] = 'tstart';
@@ -194,6 +162,9 @@ foreach($cEncargosDia as $oEncargoDia) {
     $data_cuadricula[] = $data_cols;
 }
 
+
+
+}
 
 
 $json_columns_cuadricula = json_encode($columns_cuadricula);
