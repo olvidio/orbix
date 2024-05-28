@@ -159,7 +159,6 @@
     }
 
     function commitCurrentEdit(cell) {
-        alert('commit2');
         cell = $('#cell_selected').val();
         row = $('#row_selected').val();
 
@@ -178,11 +177,11 @@
             que = 'modificar';
         }
         // añadir el hash (se puede cambiar todo menos el encargo)
-        parametros='id_item=' + id_item + 'id_enc=' + id_enc + '&que=' + que + '&id_ctr=' + id_ctr + '&id_zona=' + id_zona + '{{ h_encargos_centros|raw }}';
-alert(parametros);
+        parametros='id_item=' + id_item + '&id_enc=' + id_enc + '&que=' + que + '&id_ctr=' + id_ctr + '&id_zona=' + id_zona + '{{ h_update_encargos_centros|raw }}';
+        let url_update_encargos_centros = '{{ url_update_encargos_centros }}';
         // guardar cambios en DB
         var request = $.ajax({
-            url: 'apps/misas/controller/update_encargos_centros.php',
+            url: url_update_encargos_centros,
             method: 'POST',
             data: parametros,
             dataType: 'json'
@@ -209,17 +208,17 @@ alert(parametros);
     }
 
     function eliminarCurrentEdit(cell) {
-        alert('eliminar');
         cell = $('#cell_selected').val();
         row = $('#row_selected').val();
         var id_campo = columns[cell].field;
+        let url_update_encargos_centros = '{{ url_update_encargos_centros }}';
 
-        let id_enc_selected = $('#id_enc_selected').val();
-        parametros='id_enc=' + id_enc_selected + '&que=borrar' + '{{ h_borrar_encargo_zona|raw }}';;
+        let id_item = $('#id_item').val();
+        parametros='id_item=' + id_item + '&que=borrar' + '{{ h_borrar_encargo_centro|raw }}';;
 
         // guardar cambios en DB
         var request = $.ajax({
-            url: 'apps/misas/controller/update_encargos_zona.php',
+            url: url_update_encargos_centros,
             method: 'POST',
             data: parametros,
             dataType: 'json'
@@ -295,7 +294,6 @@ alert(parametros);
 
 
     function openDetails(cell) {
-        alert('details');
         const url = URL.createObjectURL(new Blob());
         $('#cell_selected').val(cell.cell);
         $('#row_selected').val(cell.row);

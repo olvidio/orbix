@@ -20,7 +20,7 @@ $Qid_item = (string)filter_input(INPUT_POST, 'id_item');
 $Qid_enc = (integer)filter_input(INPUT_POST, 'id_enc');
 $Qid_ctr = (integer)filter_input(INPUT_POST, 'id_ctr');
 
-echo 'id_item: '.$Qid_item.'<br>';
+//echo 'id_item: '.$Qid_item.'<br>';
 
 $error_txt = '';
 
@@ -38,30 +38,27 @@ if ($Qque === 'nuevo') {
 }
 
 if ($Qque === 'modificar') {
-    $Qid_enc = (string)filter_input(INPUT_POST, 'id_enc');
-    $Qid_ctr = (string)filter_input(INPUT_POST, 'id_ctr');
-
-
-
+    $Uid_item = new EncargoCtrId($Qid_item);
 
     $EncargoCtr = new EncargoCtr();
-    $EncargoCtr = $EncargoCtr->findById($Qid_enc);
+    $EncargoCtrRepository = new EncargoCtrRepository();
+    $EncargoCtr = $EncargoCtrRepository->findById($Uid_item);
 
-    $EncargoCtr = new EncargoCtr($Qid_enc);
     $EncargoCtr->setId_ubi($Qid_ctr);
+    $EncargoCtr->setId_enc($Qid_enc);
 
-    $jsondata['que'] = $Qque;
-    if ($EncargoCtr->Guardar($EncargoCtr) === FALSE) {
-        $error_txt .= $EncargoCtr->getErrorTxt();
-    }
+    if ($EncargoCtrRepository->Guardar($EncargoCtr) === FALSE) {
+        $error_txt .= $EncargoCtrRepository->getErrorTxt();
+    }  
 }
 
 if ($Qque === 'borrar') {
-    $Qid_enc = (string)filter_input(INPUT_POST, 'id_enc');
-    $EncargoZona = new Encargo($Qid_enc);
-    if ($EncargoZona->DBEliminar() === FALSE) {
-        $error_txt .= $EncargoZona->getErrorTxt();
-    }
+    $Uid_item = new EncargoCtrId($Qid_item);
+    $EncargoCtrRepository = new EncargoCtrRepository();
+    $EncargoCtr = $EncargoCtrRepository->findById($Uid_item);
+    if ($EncargoCtrRepository->Eliminar($EncargoCtr) === FALSE) {
+        $error_txt .= $EncargoCtrRepository->getErrorTxt();
+    }  
 }
 
 if (empty($error_txt)) {

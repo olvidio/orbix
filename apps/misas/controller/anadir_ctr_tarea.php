@@ -27,7 +27,7 @@ switch ($Qque) {
         $Qdia='MON';
         $Qid_item = $PlantillaRepository->getNewId_item();
         $oPlantilla = new Plantilla();
-            $oPlantilla->setId_item($Qid_item);
+        $oPlantilla->setId_item($Qid_item);
 
         $oPlantilla->setTarea($Qid_tarea);
         $oPlantilla->setId_ctr($Qid_ubi);
@@ -41,6 +41,9 @@ switch ($Qque) {
         }
         break;
     case 'quitar':
+
+//ERROR crec que no envio Qid_item!!!!!!!!!!!!!!!!!!!!!
+
         $oPlantilla = $PlantillaRepository->findById($Qid_item);
         if ($PlantillaRepository->Eliminar($oPlantilla) === FALSE) {
             $error_txt .= $PlantillaRepository->getErrorTxt();

@@ -73,8 +73,8 @@ $json_data_cuadricula = json_encode($data_cuadricula);
 $url_update_encargos_centros = 'apps/misas/controller/update_encargos_centros.php';
 $oHashEncargosCtr = new Hash();
 $oHashEncargosCtr->setUrl($url_update_encargos_centros);
-$oHashEncargosCtr->setCamposForm('id_item|id_enc!que!id_ctr!id_zona');
-$h_encargos_centros = $oHashEncargosCtr->linkSinVal();
+$oHashEncargosCtr->setCamposForm('id_item!id_enc!que!id_ctr!id_zona');
+$h_update_encargos_centros = $oHashEncargosCtr->linkSinVal();
 
 $url_ver_encargos_centros = 'apps/misas/controller/ver_encargos_centros.php';
 $oHashVerEncargosCtr = new Hash();
@@ -172,7 +172,7 @@ $h_encargos_zona = $oHashEncargosZona->linkSinVal();
 $a_campos = ['oPosicion' => $oPosicion,
     'json_columns_cuadricula' => $json_columns_cuadricula,
     'json_data_cuadricula' => $json_data_cuadricula,
-    'h_encargos_centros' => $h_encargos_centros,
+    'h_update_encargos_centros' => $h_update_encargos_centros,
     'h_ver_encargos_centros' => $h_ver_encargos_centros,
     'url_ver_encargos_centros' => $url_ver_encargos_centros,
     'h_borrar_encargos_centros' => $h_borrar_encargos_centros,
