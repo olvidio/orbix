@@ -217,7 +217,7 @@ switch ($Qque) {
                     }
                 } else {
                     // Si el id_zona es 0, son nuevos: hay que hacer insert.
-                    if ($Qid_zona == 0) {
+                    if ($Qid_zona === 'no' || $Qid_zona == 0) {
                         $oZonaSacd = new ZonaSacd();
                         $oZonaSacd->setId_nom($id_nom);
                         $oZonaSacd->setId_zona($id_zona_new);
