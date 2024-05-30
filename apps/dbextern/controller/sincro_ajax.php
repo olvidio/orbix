@@ -4,6 +4,7 @@ use core\ConfigGlobal;
 use dbextern\model\entity\GestorIdMatchPersona;
 use dbextern\model\entity\GestorPersonaListas;
 use dbextern\model\entity\IdMatchPersona;
+use dbextern\model\SincroDB;
 use ubis\model\entity\GestorCentroDl;
 use ubis\model\entity\GestorDelegacion;
 
@@ -30,6 +31,7 @@ switch ($que) {
 
         $Query = "SELECT * FROM dbo.q_dl_Estudios_b WHERE Identif = $id_nom_listas ";
         //AND camb_fic IS NULL";
+        $oSincroDB = new SincroDB();
         $oGesListas = new GestorPersonaListas();
         $cPersonasListas = $oGesListas->getPersonaListasQuery($Query);
         if ($cPersonasListas !== FALSE && count($cPersonasListas) == 1) {
@@ -45,6 +47,9 @@ switch ($que) {
             $apellido2_sinprep = $oPersonaListas->getApellido2_sinprep();
             $f_nacimiento = $oPersonaListas->getFecha_Naci();
             $lugar_nacimiento = $oPersonaListas->getLugar_Naci();
+            // para las dl dentro de regiones
+            $dl_listas = $oPersonaListas->getDl();
+            $dl_orbix = $oSincroDB->dlListas2Orbix($dl_listas);
 
             $id_tipo_persona = substr($id_nom_listas, 0, 1);
             switch ($id_tipo_persona) {
@@ -92,6 +97,7 @@ switch ($que) {
             $oPersona->setApellido2($apellido2_sinprep);
             $oPersona->setF_nacimiento($f_nacimiento);
             $oPersona->setLugar_nacimiento($lugar_nacimiento);
+            $oPersona->setDl($dl_orbix);
 
             if ($oPersona->DBGuardar() === false) {
                 exit(_("hay un error, no se ha guardado"));
@@ -103,7 +109,7 @@ switch ($que) {
 
     // Empalmo con lo de unir:
     case 'unir':
-        if ($que != 'crear') {
+        if ($que !== 'crear') {
             $id_orbix = (integer)filter_input(INPUT_POST, 'id_orbix');
             $id_nom_listas = (integer)filter_input(INPUT_POST, 'id_nom_listas');
             $id = (integer)filter_input(INPUT_POST, 'id');
@@ -196,7 +202,7 @@ switch ($que) {
         $aEsquemas = $oTrasladoDl->getEsquemas($id_nom_orbix, $tipo_persona);
         //keys:  schema,id_schema,situacion,f_situacion
         foreach ($aEsquemas as $esquema) {
-            if ($esquema['situacion'] == 'A') {
+            if ($esquema['situacion'] === 'A') {
                 $esq_org = $esquema['schemaname'];
             }
         }
@@ -318,6 +324,9 @@ switch ($que) {
             $apellido2_sinprep = $oPersonaListas->getApellido2_sinprep();
             $f_nacimiento = $oPersonaListas->getFecha_Naci();
             $lugar_nacimiento = $oPersonaListas->getLugar_Naci();
+            // para las dl dentro de regiones
+            $dl_listas = $oPersonaListas->getDl();
+            $dl_orbix = $oSincroDB->dlListas2Orbix($dl_listas);
 
             $id_tipo_persona = substr($id_nom_listas, 0, 1);
             switch ($id_tipo_persona) {
@@ -365,6 +374,7 @@ switch ($que) {
             $oPersona->setApellido2($apellido2_sinprep);
             $oPersona->setF_nacimiento($f_nacimiento);
             $oPersona->setLugar_nacimiento($lugar_nacimiento);
+            $oPersona->setDl($dl_orbix);
 
             if ($oPersona->DBGuardar() === false) {
                 exit(_("hay un error, no se ha guardado"));
