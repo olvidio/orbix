@@ -5,8 +5,9 @@ namespace core;
 class ConfigGlobal extends ServerConf
 {
 
+    // la region en formato orbix, las dl en formato de DBU
     public const REGIONES_CON_DL = [
-            'crPla' => ['dlu', 'dlpar'],
+            'crPla' => ['u', 'par'],
         ];
 
     public static function getWebPort()

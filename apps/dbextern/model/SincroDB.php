@@ -179,10 +179,11 @@ class SincroDB
             // Añadir las delegaciones dependientes de la región (que no tienen esquema propio)
             if (array_key_exists($this->region, ConfigGlobal::REGIONES_CON_DL)) {
                 $cPersonasListas_n = [];
-                foreach (ConfigGlobal::REGIONES_CON_DL[$this->region] as $region_n) {
+                foreach (ConfigGlobal::REGIONES_CON_DL[$this->region] as $dl_n) {
+
                     $Query = "SELECT * FROM dbo.q_dl_Estudios_b
-                          WHERE Identif LIKE '$this->id_tipo%' AND  Dl='$this->dl_listas'
-                               AND (pertenece_r='$region_n' OR compartida_con_r='$region_n') ";
+                          WHERE Identif LIKE '$this->id_tipo%' AND  Dl='$dl_n'
+                               AND (pertenece_r='$this->region' OR compartida_con_r='$this->region') ";
                     // todos los de listas
                     $oGesListas = new GestorPersonaListas();
                     $cPersonasListas_n[] = $oGesListas->getPersonaListasQuery($Query);
@@ -315,20 +316,6 @@ class SincroDB
         // todos los de listas
         $oGesListas = new GestorPersonaListas();
         $cPersonasListas = $oGesListas->getPersonaListasQuery($Query);
-
-        // Añadir las delegaciones dependientes de la región (que no tienen esquema propio)
-        if (array_key_exists($this->region, ConfigGlobal::REGIONES_CON_DL)) {
-            $cPersonasListas_n = [];
-            foreach (ConfigGlobal::REGIONES_CON_DL[$this->region] as $region_n) {
-                $Query = "SELECT * FROM dbo.q_dl_Estudios_b
-                        WHERE Identif LIKE '$this->id_tipo%' AND  ApeNom LIKE '%" . $apellido1 . "%'
-                            AND (pertenece_r='$region_n' OR compartida_con_r='$region_n') ";
-                // todos los de listas
-                $oGesListas = new GestorPersonaListas();
-                $cPersonasListas_n[] = $oGesListas->getPersonaListasQuery($Query);
-            }
-            $cPersonasListas = array_merge($cPersonasListas, ...array_values($cPersonasListas_n));
-        }
 
         $i = 0;
         $a_lista_bdu = [];

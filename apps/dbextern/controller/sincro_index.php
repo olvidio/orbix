@@ -72,10 +72,10 @@ $cPersonasListas = $oGesListas->getPersonaListasQuery($Query);
 // Añadir las delegaciones dependientes de la región (que no tienen esquema propio)
 if (array_key_exists($region, ConfigGlobal::REGIONES_CON_DL)) {
     $cPersonasListas_n = [];
-    foreach (ConfigGlobal::REGIONES_CON_DL[$region] as $region_n) {
+    foreach (ConfigGlobal::REGIONES_CON_DL[$region] as $dl_n) {
         $Query = "SELECT * FROM dbo.q_dl_Estudios_b
-          WHERE Identif LIKE '$id_tipo%' AND  Dl='$dl_listas'
-               AND (pertenece_r='$region_n' OR compartida_con_r='$region_n') ";
+          WHERE Identif LIKE '$id_tipo%' AND  Dl='$dl_n'
+               AND (pertenece_r='$region' OR compartida_con_r='$region') ";
         // todos los de listas
         $oGesListas = new GestorPersonaListas();
         $cPersonasListas_n[] = $oGesListas->getPersonaListasQuery($Query);
