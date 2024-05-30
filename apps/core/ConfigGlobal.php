@@ -5,6 +5,10 @@ namespace core;
 class ConfigGlobal extends ServerConf
 {
 
+    public const REGIONES_CON_DL = [
+            'crPla' => ['dlu', 'dlpar'],
+        ];
+
     public static function getWebPort()
     {
         $private = getenv('PRIVATE');

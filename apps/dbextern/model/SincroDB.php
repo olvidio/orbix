@@ -3,6 +3,7 @@
 namespace dbextern\model;
 
 use core\ConfigGlobal;
+use dbextern\model\entity\GestorDlListas;
 use dbextern\model\entity\GestorIdMatchPersona;
 use dbextern\model\entity\GestorPersonaListas;
 use dbextern\model\entity\IdMatchPersona;
@@ -10,11 +11,10 @@ use dbextern\model\entity\PersonaListas;
 use PDO;
 use personas\model\entity\GestorPersonaDl;
 use personas\model\entity\GestorTelecoPersonaDl;
+use personas\model\entity\PersonaDl;
 use personas\model\entity\TelecoPersonaDl;
 use personas\model\entity\TrasladoDl;
 use web\DateTimeLocal;
-use dbextern\model\entity\GestorDlListas;
-use personas\model\entity\PersonaDl;
 
 /**
  * Description of SincroDB
@@ -82,7 +82,7 @@ class SincroDB
 
     public function getRegion()
     {
-        return $this->region();
+        return $this->region;
     }
 
     public function setRegion($region)
@@ -175,6 +175,21 @@ class SincroDB
             // todos los de listas
             $oGesListas = new GestorPersonaListas();
             $cPersonasListas = $oGesListas->getPersonaListasQuery($Query);
+
+            // Añadir las delegaciones dependientes de la región (que no tienen esquema propio)
+            if (array_key_exists($this->region, ConfigGlobal::REGIONES_CON_DL)) {
+                $cPersonasListas_n = [];
+                foreach (ConfigGlobal::REGIONES_CON_DL[$this->region] as $region_n) {
+                    $Query = "SELECT * FROM dbo.q_dl_Estudios_b
+                          WHERE Identif LIKE '$this->id_tipo%' AND  Dl='$this->dl_listas'
+                               AND (pertenece_r='$region_n' OR compartida_con_r='$region_n') ";
+                    // todos los de listas
+                    $oGesListas = new GestorPersonaListas();
+                    $cPersonasListas_n[] = $oGesListas->getPersonaListasQuery($Query);
+
+                }
+                $cPersonasListas = array_merge($cPersonasListas, ...array_values($cPersonasListas_n));
+            }
             $this->cPersonasListas = $cPersonasListas;
         }
         return $this->cPersonasListas;
@@ -257,16 +272,16 @@ class SincroDB
                 }
             }
             //elimino public, publicv, global
-            if ($esquema == 'global') {
+            if ($esquema === 'global') {
                 continue;
             }
-            if ($esquema == 'public') {
+            if ($esquema === 'public') {
                 continue;
             }
-            if ($esquema == 'publicv') {
+            if ($esquema === 'publicv') {
                 continue;
             }
-            if ($esquema == 'restov') {
+            if ($esquema === 'restov') {
                 continue;
             }
 //			$esquema_slash = '"'.$esquema.'"';
@@ -290,7 +305,6 @@ class SincroDB
     public function posiblesBDU($id_nom_orbix)
     {
         $oPersonaDl = new PersonaDl($id_nom_orbix);
-        $oPersonaDl = new PersonaDl($id_nom_orbix);
         $oPersonaDl->DBCarregar();
 
         $apellido1 = $oPersonaDl->getApellido1();
@@ -301,6 +315,21 @@ class SincroDB
         // todos los de listas
         $oGesListas = new GestorPersonaListas();
         $cPersonasListas = $oGesListas->getPersonaListasQuery($Query);
+
+        // Añadir las delegaciones dependientes de la región (que no tienen esquema propio)
+        if (array_key_exists($this->region, ConfigGlobal::REGIONES_CON_DL)) {
+            $cPersonasListas_n = [];
+            foreach (ConfigGlobal::REGIONES_CON_DL[$this->region] as $region_n) {
+                $Query = "SELECT * FROM dbo.q_dl_Estudios_b
+                        WHERE Identif LIKE '$this->id_tipo%' AND  ApeNom LIKE '%" . $apellido1 . "%'
+                            AND (pertenece_r='$region_n' OR compartida_con_r='$region_n') ";
+                // todos los de listas
+                $oGesListas = new GestorPersonaListas();
+                $cPersonasListas_n[] = $oGesListas->getPersonaListasQuery($Query);
+            }
+            $cPersonasListas = array_merge($cPersonasListas, ...array_values($cPersonasListas_n));
+        }
+
         $i = 0;
         $a_lista_bdu = [];
         foreach ($cPersonasListas as $oPersonaListas) {
@@ -370,16 +399,16 @@ class SincroDB
                 }
             }
             //elimino public, publicv, global
-            if ($esquema == 'global') {
+            if ($esquema === 'global') {
                 continue;
             }
-            if ($esquema == 'public') {
+            if ($esquema === 'public') {
                 continue;
             }
-            if ($esquema == 'publicv') {
+            if ($esquema === 'publicv') {
                 continue;
             }
-            if ($esquema == 'restov') {
+            if ($esquema === 'restov') {
                 continue;
             }
 //			$esquema_slash = '"'.$esquema.'"';
@@ -522,7 +551,7 @@ class SincroDB
 
         $oPersona->DBCarregar();
         //Las personas en listas siempre están en situación 'A'
-        if ($oPersona->getSituacion() != 'A') {
+        if ($oPersona->getSituacion() !== 'A') {
             $oPersona->setSituacion('A');
             $oPersona->setF_situacion($oHoy);
         }
@@ -607,7 +636,7 @@ class SincroDB
         $esquema = '';
         foreach ($a_esquemas as $info_eschema) {
             // array(schemaName,id_schema,situacion,f_situacion)
-            if ($info_eschema['situacion'] == 'A') {
+            if ($info_eschema['situacion'] === 'A') {
                 $esquema = $info_eschema['schemaname'];
             }
         }
