@@ -185,7 +185,6 @@ foreach ($cCentros as $oCentro) {
 
 $oDesplCentros = new Desplegable();
 $oDesplCentros->setNombre('id_ubi');
-$oDesplCentros->setOpcion_sel($id_ubi);
 $oDesplCentros->setOpciones($aCentros);
 
 

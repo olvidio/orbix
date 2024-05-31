@@ -14,6 +14,7 @@ use personas\model\entity\PersonaSacd;
 use ubis\model\entity\CentroDl;
 use ubis\model\entity\GestorCentroDl;
 use ubis\model\entity\GestorCentroEllas;
+use ubis\model\entity\Ubi;
 use web\DateTimeLocal;
 use web\Desplegable;
 use web\Hash;
@@ -34,8 +35,8 @@ $Qctr_otras_zonas = (integer)filter_input(INPUT_POST, 'ctr_otras_zonas');
 
 $desplegable_ctr='<SELECT ID="id_ctr">';
 
-$oCentroDl = new CentroDl($Qid_ctr);
-$nombre_ctr = $oCentroDl->getNombre_ubi();
+$oCentro = Ubi::newUbi($Qid_ctr);
+$nombre_ctr = $oCentro->getNombre_ubi();
 $key = $Qid_ctr . '#' . $nombre_ctr;
 $desplegable_ctr.='<OPTION VALUE="'.$key.'">'.$nombre_ctr.'</OPTION>';
 
