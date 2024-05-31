@@ -60,7 +60,7 @@ function borrar_actividad($id_activ)
             }
         }
     } else {
-        if ($id_tabla == 'dl') {
+        if ($id_tabla === 'dl') {
             // No se puede eliminar una actividad de otra dl. Hay que borrarla como importada
             $oImportada = new Importada($id_activ);
             $oImportada->DBEliminar();
@@ -102,7 +102,7 @@ switch ($Qmod) {
                 $oImportada = new Importada($id_activ);
                 if ($oImportada->DBGuardar() === false) {
                     echo _("hay un error, no se ha importado");
-                    echo "\n" . $oActividad->getErrorTxt();
+                    echo "\n" . $oImportada->getErrorTxt();
                 }
                 // generar proceso.
                 if (ConfigGlobal::is_app_installed('procesos')) {
@@ -339,7 +339,6 @@ switch ($Qmod) {
         //Aunque el content-type no sea un problema en la mayoría de casos, es recomendable especificarlo
         header('Content-type: application/json; charset=utf-8');
         echo json_encode($jsondata);
-        exit();
         break;
     case "cmb_tipo": // sólo cambio el tipo a una actividad existente //____________________________
         $Qid_tipo_activ = (integer)filter_input(INPUT_POST, 'id_tipo_activ');
@@ -374,18 +373,18 @@ switch ($Qmod) {
         $Qpublicado = (string)filter_input(INPUT_POST, 'publicado');
 
         //echo "id_tipo de actividad: $id_tipo_activ<br>";
-        if (!empty($Qid_tipo_activ) and !strstr($Qid_tipo_activ, '.')) {
+        if (!empty($Qid_tipo_activ) and strpos($Qid_tipo_activ, '.') === false) {
             $valor_id_tipo_activ = $Qid_tipo_activ;
         } else {
             $condta = $Qisfsv_val . $Qiasistentes_val . $Qiactividad_val . $Qinom_tipo_val;
-            if (!strstr($condta, '.')) {
+            if (strpos($condta, '.') === false) {
                 $valor_id_tipo_activ = $condta;
             } else {
                 echo _("debe seleccionar un tipo de actividad") . "<br>";
                 die();
             }
         }
-        $oActividad = new Actividad($id_activ);
+        $oActividad = new Actividad($Qid_activ);
         $oActividad->DBCarregar();
         $oActividad->setId_tipo_activ($valor_id_tipo_activ);
         if (isset($Qdl_org)) {
@@ -445,14 +444,14 @@ switch ($Qmod) {
         // permiso
         $_SESSION['oPermActividades']->setActividad($Qid_activ, $Qid_tipo_activ, $Qdl_org);
         $oPermActiv = $_SESSION['oPermActividades']->getPermisoActual('datos');
-        if (empty($Qid_tipo_activ) && ConfigGlobal::is_app_installed('procesos') && $oPermActiv->have_perm_activ('crear') === TRUE) {
+        if ( ConfigGlobal::is_app_installed('procesos') && $oPermActiv->have_perm_activ('crear') === TRUE) {
             $Qisfsv_val = (integer)filter_input(INPUT_POST, 'isfsv_val');
             $Qiasistentes_val = (integer)filter_input(INPUT_POST, 'iasistentes_val');
             $Qiactividad_val = (integer)filter_input(INPUT_POST, 'iactividad_val');
             // Puede ser '000' > sin especificar
             $Qinom_tipo_val = (string)filter_input(INPUT_POST, 'inom_tipo_val');
             $condta = $Qisfsv_val . $Qiasistentes_val . $Qiactividad_val . $Qinom_tipo_val;
-            if (!strstr($condta, '.')) {
+            if (strpos($condta, '.') === false) {
                 $valor_id_tipo_activ = $condta;
             } else {
                 echo _("debe seleccionar un tipo de actividad") . "<br>";
