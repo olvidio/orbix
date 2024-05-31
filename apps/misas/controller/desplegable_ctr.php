@@ -51,7 +51,6 @@ $cCentrosSf = $GesCentrosSf->getCentros($aWhere);
 $cCentros = array_merge($cCentrosDl, $cCentrosSf);
         
 foreach ($cCentros as $oCentro) {
-    $nombre_ctr = $oCentro->getNombre_ubi();
     $id_ctr = $oCentro->getId_ubi();
     $nombre_ctr = $oCentro->getNombre_ubi();
     $desplegable_ctr.='<OPTION VALUE="'.$id_ctr.'">'.$nombre_ctr.'</OPTION>';    

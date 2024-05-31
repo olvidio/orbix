@@ -111,6 +111,7 @@ foreach ($cEncargoTipos as $oEncargoTipo) {
 
 $aWhere = array();
 $aOperador = array();
+$aEncargos = array();
 $cond_tipo_enc = "{" . implode(', ', $a_tipo_enc) . "}";
 $aWhere['id_tipo_enc'] = $cond_tipo_enc;
 $aOperador['id_tipo_enc'] = 'ANY';
@@ -154,7 +155,6 @@ foreach ($cCentros as $oCentro) {
 
 $oDesplCentros = new Desplegable();
 $oDesplCentros->setNombre('id_ubi');
-$oDesplCentros->setOpcion_sel($id_ubi);
 $oDesplCentros->setOpciones($aCentros);
 
 $url_desplegable_ctr = 'apps/misas/controller/desplegable_ctr.php';

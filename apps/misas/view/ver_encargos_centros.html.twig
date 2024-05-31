@@ -84,12 +84,8 @@
         <input type="hidden" id="row_selected" value=""/>
         <input type="hidden" id="id_enc_selected" value=""/>
         <input type="hidden" id="id_ctr_selected" value=""/>
-        <input id="id_item" value=""/>
+        <input type="hidden" id="id_item" value=""/>
         <input type="hidden" id="que" value=""/>
-
-        <p>{{ "Centros de otras zonas"|trans|raw }}:
-		    <input id="ctr_otras_zonas" type="checkbox" value="1" OnChange="prepara_select_ctr();">
-	    </p>
 
         <div style="margin-left: 10px; margin-top: 10px;">
             <label for="id_enc">{{ "Encargo: "|trans|raw }}</label>
@@ -229,8 +225,8 @@
             } else {
                 let id_zona = $('#id_zona').val();
                 let orden_select = $('#orden_select').val();
-                let url = '{{ url_ver_encargos_zona }}';
-                parametros='id_zona=' + id_zona + '&orden=' + orden_select + '{{ h_ver_encargos_zona|raw }}';;
+                let url = '{{ url_ver_encargos_centros }}';
+                parametros='id_zona=' + id_zona + '{{ h_ver_encargos_centros|raw }}';
 
                 var request = $.ajax({
                     url: url,
@@ -243,13 +239,14 @@
                 });
             }
         });
+        modal.show();
     }
 
-    function prepara_select_ctr() {
+    function fnjs_prepara_select_ctr() {
     	var ctr_otras_zonas=$('#ctr_otras_zonas').prop('checked');
  	    var ctr_selected=$('#id_ctr_selected').val();
         let url_desplegable_ctr = '{{ url_desplegable_ctr }}';
-	    let id_zona = '{{ id_zona }}';
+        let id_zona = $('#id_zona_ctr').val();
 	    var parametros= 'id_zona=' + id_zona + '&id_ctr=' + ctr_selected + '&ctr_otras_zonas=' + ctr_otras_zonas + '&{{ h_desplegable_ctr|raw }} ';
         request = $.ajax({
 		    url: url_desplegable_ctr,
@@ -267,12 +264,11 @@
     }
 
     function fnjs_nuevo(){
-        alert('nuevo');
         $('#que').val('nuevo');
         reset_campos_modal();
         $('#titulo_modal').html('nuevo encargo visible para un centro');
 
-        prepara_select_ctr();
+        fnjs_prepara_select_ctr();
 
         modal.show();
     }
@@ -310,7 +306,7 @@
         $('#id_enc').val(id_encargo);
         $('#id_ctr_selected').val(id_centro);
         $('#id_ctr').val(id_centro);
-        prepara_select_ctr();
+        fnjs_prepara_select_ctr();
 
         modal.show();
     }
