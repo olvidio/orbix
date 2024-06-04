@@ -1,23 +1,14 @@
 <style>
 div.A4 {
     width: 99%;
-    height: 99%;
+    height: 100%;
     border: 2px solid black;
 }
 
 table.A4 {
     width: 98%;
-    height: 98%;
+    height: 100%;
     page-break-inside: avoid;
-    /*
-border-style : solid;
-border-width : 1pt;
-border-color : Black;
-border-left-width : 1pt;
-border-right-width : 1pt;
-border-top-width : 1pt;
-border-bottom-width : 1pt;
-*/
 }
 
 td {
@@ -57,7 +48,7 @@ td.dato {
     border-bottom-width: 0.5pt;
 }
 
-TD.curso {
+td.curso {
     color: black;
     font-size: 12pt;
     font-family: serif;
@@ -65,7 +56,7 @@ TD.curso {
     font-weight: bold;
 }
 
-TD.cabecera {
+td.cabecera {
     color: black;
     font-size: 10pt;
     font-family: serif;
@@ -73,7 +64,7 @@ TD.cabecera {
     font-weight: bold;
 }
 
-TD.any {
+td.any {
     color: black;
     font-size: 10pt;
     font-family: serif;
@@ -81,12 +72,12 @@ TD.any {
     font-weight: bold;
 }
 
-TD.titulo {
+td.titulo {
     font-family: serif;
     font-size: 22pt
 }
 
-TD.subtitulo {
+td.subtitulo {
     font-family: serif;
     font-size: 16pt
 }
