@@ -54,14 +54,14 @@ $region_latin = $_SESSION['oConfig']->getNomRegionLatin();
 $replace = config\model\Config::$replace;
 
 function titulo($id_asignatura){
-    $cabecera = '<tr><td class="space"></td></tr>
+    $cabecera = '<tr><td></td><td  colspan="7" class="space"></td></tr>
                 <tr><td style="width: 2%"></td>
                 <td class="cabecera" style="width: 46%">DISCIPLIN&#198;</td>
                 <td class="cabecera" style="width: 25%">CUM NOTA</td>
                 <td class="cabecera" style="width: 1%"></td>
-                <td class="cabecera" style="width: 10%">DIES EXAMINIS</td>
+                <td class="cabecera" style="width: 12%">DIES EXAMINIS</td>
                 <td class="cabecera" style="width: 1%"></td>
-                <td class="cabecera" style="width: 10%">NUMERUS IN ACTIS</td>
+                <td class="cabecera" style="width: 12%">NUMERUS IN ACTIS</td>
                 <td style="width: 1%"></td>
                 </tr>';
     switch ($id_asignatura){
@@ -336,12 +336,12 @@ $rowEmpty = [
                     ?>
                     <tr>
                         <td></td>
-                        <td><?= $nombre_asignatura; ?>&nbsp;</td>
-                        <td class="dato"><?= $row["nota"]; ?>&nbsp;</td>
+                        <td><?= $nombre_asignatura ?>&nbsp;</td>
+                        <td class="dato"><?= $row["nota"] ?>&nbsp;</td>
                         <td>&nbsp;</td>
-                        <td class="dato"><?= $row["fecha"]; ?>&nbsp;</td>
+                        <td class="dato"><?= $row["fecha"] ?>&nbsp;</td>
                         <td>&nbsp;</td>
-                        <td class="dato"><?= $row["acta"]; ?>&nbsp;</td>
+                        <td class="dato"><?= $row["acta"] ?>&nbsp;</td>
                         <td></td>
                     </tr>
                     <?php
@@ -354,7 +354,7 @@ $rowEmpty = [
                     ?>
                     <tr>
                         <td></td>
-                        <td><?= $nombre_asignatura; ?>&nbsp;</td>
+                        <td><?= $nombre_asignatura ?>&nbsp;</td>
                         <td class="dato">&nbsp;</td>
                         <td>&nbsp;</td>
                         <td class="dato">&nbsp;</td>
