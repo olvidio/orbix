@@ -466,7 +466,10 @@ switch ($Qmod) {
         $oActividad->DBCarregar();
         $plazas_old = $oActividad->getPlazas();
 
-        $oActividad->setId_tipo_activ($valor_id_tipo_activ);
+        // compruebo que tiene 6 dígitos
+        if (!empty($valor_id_tipo_activ) && !(($valor_id_tipo_activ / 100000) < 1)) {
+            $oActividad->setId_tipo_activ($valor_id_tipo_activ);
+        }
         if (isset($Qdl_org)) {
             $dl_orig = $oActividad->getDl_org();
             $dl_org = strtok($Qdl_org, '#');
