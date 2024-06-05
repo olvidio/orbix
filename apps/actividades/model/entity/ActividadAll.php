@@ -586,7 +586,7 @@ class ActividadAll extends core\ClasePropiedades
         if (empty($iid_tipo_activ) || (($iid_tipo_activ / 100000) < 1)) {
             $serr = "id_tipo_activ incorrecto: $iid_tipo_activ";
             $sClauError = "ActividadAll.setId_tipo_activ";
-            $_SESSION['oGestorErrores']->addError($serr, $sClauError, __LINE__, __FILE__);
+            $_SESSION['oGestorErrores']->addErrorAppLastError($serr, $sClauError, __LINE__, __FILE__);
             return false;
         }
         $this->iid_tipo_activ = $iid_tipo_activ;
