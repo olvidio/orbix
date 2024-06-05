@@ -92,7 +92,9 @@ class Select1303
     {
         $this->id_activ = $oAsistente->getId_activ();
         $propio = $oAsistente->getPropio();
-        if ($propio !== 't') echo _("no está como propio, no debería tener plan de estudios");
+        if (!core\is_true($propio)) {
+            echo _("no está como propio, no debería tener plan de estudios");
+        }
 
         $est_ok = $oAsistente->getEst_ok();
         $observ_est = $oAsistente->getObserv_est();
