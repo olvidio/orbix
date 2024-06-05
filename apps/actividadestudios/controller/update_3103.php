@@ -6,6 +6,7 @@ use asistentes\model\entity as asistentes;
 use asistentes\model\entity\AsistentePub;
 use dossiers\model\entity as dossiers;
 use personas\model\entity as personas;
+use function core\is_true;
 
 // INICIO Cabecera global de URL de controlador *********************************
 require_once("apps/core/global_header.inc");
@@ -25,12 +26,12 @@ $Qobserv_est = (string)filter_input(INPUT_POST, 'observ_est');
 //En el caso de eliminar desde la lista de cargos
 $a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 if (!empty($a_sel)) { //vengo de un checkbox
-    if ($Qpau == "p") {
+    if ($Qpau === "p") {
         $Qid_activ = (integer)strtok($a_sel[0], "#");
         $Qid_asignatura = (integer)strtok("#");
         $Qid_nom = (integer)filter_input(INPUT_POST, 'id_pau');
     }
-    if ($Qpau == "a") {
+    if ($Qpau === "a") {
         $Qid_nom = (integer)strtok($a_sel[0], "#");
         $Qid_asignatura = (integer)strtok("#");
         $Qid_activ = (integer)filter_input(INPUT_POST, 'id_pau');
@@ -64,7 +65,11 @@ switch ($Qmod) {
         $oAsistente->DBGuardar();
         break;
     case 'plan':  //------------ confirmar estudios --------
-        $est_ok = (isset($Qest_ok) && $Qest_ok == 't') ? 't' : 'f';
+        if (is_true($Qest_ok)) {
+            $est_ok = 't';
+        } else {
+            $est_ok = 'f';
+        }
         $oAsistentePub = new AsistentePub();
         $oAsistente = $oAsistentePub->getClaseAsistente($Qid_nom, $Qid_activ);
         $oAsistente->setPrimary_key(array('id_activ' => $Qid_activ, 'id_nom' => $Qid_nom));
