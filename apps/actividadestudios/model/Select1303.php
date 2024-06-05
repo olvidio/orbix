@@ -117,7 +117,7 @@ class Select1303
         $cMatriculas = $GesMatriculas->getMatriculas(array('id_nom' => $this->id_pau, 'id_activ' => $this->id_activ, '_ordre' => 'id_nivel'));
 
         $form = "seleccionados" . $ca_num;
-        if ($est_ok === "t") {
+        if (core\is_true($est_ok)) {
             $chk_1 = "checked";
             $chk_2 = "";
         } else {
