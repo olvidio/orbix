@@ -238,12 +238,19 @@
                 $('#id_zona').val(id_zona);
                 $('#titulo_modal').html(json.nombre_sacd);
                 if (json.dw1 === true) { $('#dw1').prop('checked', true); }
+                else { $('#dw1').prop('checked', false); }
                 if (json.dw2 === true) { $('#dw2').prop('checked', true); }
+                else { $('#dw2').prop('checked', false); }
                 if (json.dw3 === true) { $('#dw3').prop('checked', true); }
+                else { $('#dw3').prop('checked', false); }
                 if (json.dw4 === true) { $('#dw4').prop('checked', true); }
+                else { $('#dw4').prop('checked', false); }
                 if (json.dw5 === true) { $('#dw5').prop('checked', true); }
+                else { $('#dw5').prop('checked', false); }
                 if (json.dw6 === true) { $('#dw6').prop('checked', true); }
+                else { $('#dw6').prop('checked', false); }
                 if (json.dw7 === true) { $('#dw7').prop('checked', true); }
+                else { $('#dw7').prop('checked', false); }
                 modal.show();
             }
         });
