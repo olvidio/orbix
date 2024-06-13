@@ -229,7 +229,8 @@ El atributo BORDER indica en pixels el ancho del reborde de las tablas. BORDER =
 @media print {
     div { page-break-after: always; }
     table  {
-	    width: 27.0cm;
+	    /* width: 27.0cm; */
+        width: 100%;
 		table-layout:fixed;
      }
 
