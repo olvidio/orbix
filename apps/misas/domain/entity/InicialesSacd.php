@@ -35,6 +35,10 @@ class InicialesSacd extends InicialesSacdDB
         } else {
             $iniciales = $InicialesSacd->getIniciales();
         }
+        if ($id_nom==0)
+        {
+            $iniciales=' -- ';
+        }
 
         return $iniciales;
     }

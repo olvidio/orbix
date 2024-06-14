@@ -9,12 +9,12 @@ use misas\domain\repositories\EncargoDiaRepository;
 use misas\domain\repositories\InicialesSacdRepository;
 use misas\model\EncargosZona;
 use personas\model\entity\PersonaSacd;
+use personas\model\entity\GestorPersona;
+use personas\model\entity\PersonaEx;
 use web\DateTimeLocal;
 use web\Desplegable;
 use web\Hash;
 use zonassacd\model\entity\GestorZonaSacd;
-use personas\model\entity\GestorPersona;
-use personas\model\entity\PersonaEx;
 
 require_once("apps/core/global_header.inc");
 // Archivos requeridos por esta url **********************************************
@@ -39,8 +39,13 @@ $sacd=$InicialesSacd->nombre_sacd($Qid_sacd);
 $iniciales=$InicialesSacd->iniciales($Qid_sacd);
 
 $key = $Qid_sacd . '#' . $iniciales;
-    $desplegable_sacd.='<OPTION VALUE="'.$key.'">'.$sacd.'</OPTION>';
-    
+$desplegable_sacd.='<OPTION VALUE="'.$key.'">'.$sacd.'</OPTION>';
+if ($Qid_sacd!=0)
+{
+    $desplegable_sacd.='<OPTION VALUE=""></OPTION>';
+}
+
+//libre
 if ($Qseleccion & 1) {
     $gesZonaSacd = new GestorZonaSacd();
     $a_Id_nom = $gesZonaSacd->getSacdsZona($Qid_zona);
@@ -68,8 +73,7 @@ if ($Qseleccion & 1) {
             
             $GesEncargos = new GestorEncargo();
             $cEncargos = $GesEncargos->getEncargos($aWhere, $aOperador);
-            
- //Tiene que haber sólo uno, falta comprobarlo
+
             foreach ($cEncargos as $oEncargo) {
                 $id_enc = $oEncargo->getId_enc();
                 $desc_enc = $oEncargo->getDesc_enc();
@@ -82,6 +86,39 @@ if ($Qseleccion & 1) {
             }
         }
         if ($libre) {
+            $aWhere = [];
+            $aWhere['id_zona'] = $Qid_zona;
+            $aWhere['id_nom'] = $id_nom;
+            $GesZonasSacd = new GestorZonaSacd();
+            $cZonaSacd = $GesZonasSacd->getZonasSacds($aWhere);
+            $dia = strtotime($Qdia);
+            $n_dia_semana=date('N', $dia);
+            $oZonaSacd = $cZonaSacd[0];
+            switch ($n_dia_semana) {
+                case 1:
+                    $libre = $oZonaSacd->getDw1();
+                break;
+                case 2:
+                    $libre = $oZonaSacd->getDw2();
+                break;
+                case 3:
+                    $libre = $oZonaSacd->getDw3();
+                break;
+                case 4:
+                    $libre = $oZonaSacd->getDw4();
+                break;
+                case 5:
+                    $libre = $oZonaSacd->getDw5();
+                break;
+                case 6:
+                    $libre = $oZonaSacd->getDw6();
+                break;
+                case 7:
+                    $libre = $oZonaSacd->getDw7();
+                break;
+            }
+        }
+        if ($libre) {
             $InicialesSacd = new InicialesSacd();
             $sacd=$InicialesSacd->nombre_sacd($id_nom);
             $iniciales=$InicialesSacd->iniciales($id_nom);
@@ -91,7 +128,8 @@ if ($Qseleccion & 1) {
             $desplegable_sacd.='<OPTION VALUE="'.$key.'">'.$sacd.'</OPTION>';
         }
     }
-}    
+}
+//zona
 if ($Qseleccion & 2) {
     $gesZonaSacd = new GestorZonaSacd();
     $a_Id_nom = $gesZonaSacd->getSacdsZona($Qid_zona);

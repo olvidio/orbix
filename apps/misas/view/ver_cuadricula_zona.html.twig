@@ -87,10 +87,10 @@
         <input type="hidden" id="id_enc_selected" value=""/>
         <input type="hidden" id="id_sacd_inicial" value=""/>
         <p>{{ "Selección de sacd"|trans|raw }}:
-		    <input id="sacd_libre" type="checkbox" value="2" OnChange="prepara_select_sacd();">{{ "libre"|trans|raw }}
-		    <input id="sacd_zona" type="checkbox" value="4" checked OnChange="prepara_select_sacd();">{{ "zona"|trans|raw }}
-		    <input id="sacd_dl"type="checkbox" value="8" OnChange="prepara_select_sacd();">{{ "dl"|trans|raw }}
-		    <input id="sacd_depaso" type="checkbox" value="16" OnChange="prepara_select_sacd();">{{ "de paso"|trans|raw }}
+		    <input id="sacd_libre" type="radio" name="grupos_sacd" value="2" OnChange="prepara_select_sacd();">{{ "libre"|trans|raw }}
+		    <input id="sacd_zona" type="radio" name="grupos_sacd" value="4" checked OnChange="prepara_select_sacd();">{{ "zona"|trans|raw }}
+		    <input id="sacd_dl"type="radio" name="grupos_sacd"value="8" OnChange="prepara_select_sacd();">{{ "dl"|trans|raw }}
+		    <input id="sacd_depaso" type="radio" name="grupos_sacd"value="16" OnChange="prepara_select_sacd();">{{ "de paso"|trans|raw }}
 	    </p>
 
         <div style="margin-left: 10px; margin-top: 10px;">
@@ -187,7 +187,7 @@
         let uuid_item = $('#uuid_selected').val();
         let id_enc = $('#id_enc_selected').val();
 
-        var texto = '+';
+        var texto = ' -- ';
         if (iniciales !== undefined) {
             texto = iniciales;
             if (tstart !== "") {
