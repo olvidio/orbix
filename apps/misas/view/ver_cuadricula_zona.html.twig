@@ -84,13 +84,14 @@
         <input type="hidden" id="row_selected" value=""/>
         <input type="hidden" id="uuid_selected" value=""/>
         <input id="dia" value=""/>
+        <input id="seleccionado" value=""/>
         <input type="hidden" id="id_enc_selected" value=""/>
         <input type="hidden" id="id_sacd_inicial" value=""/>
         <p>{{ "Selección de sacd"|trans|raw }}:
-		    <input id="sacd_libre" type="radio" name="grupos_sacd" value="2" OnChange="prepara_select_sacd();">{{ "libre"|trans|raw }}
-		    <input id="sacd_zona" type="radio" name="grupos_sacd" value="4" checked OnChange="prepara_select_sacd();">{{ "zona"|trans|raw }}
-		    <input id="sacd_dl"type="radio" name="grupos_sacd"value="8" OnChange="prepara_select_sacd();">{{ "dl"|trans|raw }}
-		    <input id="sacd_depaso" type="radio" name="grupos_sacd"value="16" OnChange="prepara_select_sacd();">{{ "de paso"|trans|raw }}
+		    <input id="sacd_libre" type="radio" name="grupos_sacd" value="1" OnChange="prepara_select_sacd();">{{ "libre"|trans|raw }}
+		    <input id="sacd_zona" type="radio" name="grupos_sacd" value="2" OnChange="prepara_select_sacd();">{{ "zona"|trans|raw }}
+		    <input id="sacd_dl"type="radio" name="grupos_sacd"value="4" OnChange="prepara_select_sacd();">{{ "dl"|trans|raw }}
+		    <input id="sacd_depaso" type="radio" name="grupos_sacd"value="8" OnChange="prepara_select_sacd();">{{ "de paso"|trans|raw }}
 	    </p>
 
         <div style="margin-left: 10px; margin-top: 10px;">
@@ -224,17 +225,28 @@
             if (json.success !== true) {
                 alert("{{ "respuesta"|trans|raw }}: " + json.mensaje);
             } else {
-                // es posible que al guardar se creen datos (tstart, tend) que hay que añadir a los metadatos
-                meta_update = json.meta;
-                data[row].meta[id_campo].key = meta_update.key;
-                data[row].meta[id_campo].tstart = meta_update.tstart;
-                data[row].meta[id_campo].tend = meta_update.tend;
-                data[row].meta[id_campo].observ = meta_update.observ;
-
-                data[row][id_campo] = texto;
-                grid.updateRow(row);
-                modal.hide();
-                reset_campos_modal();
+                let id_zona = '{{id_zona}}';
+                let tipo_plantilla = '{{tipo_plantilla}}';
+                let orden = '{{orden}}';
+                let url = '{{ url_ver_cuadricula_zona }}';
+    	        var sacd_libre=$('#sacd_libre').prop('checked');
+            	var sacd_zona=$('#sacd_zona').prop('checked');
+                var sacd_dl=$('#sacd_dl').prop('checked');
+        	    var sacd_depaso=$('#sacd_depaso').prop('checked');
+       	        if (sacd_libre) seleccion=1;
+           	    if (sacd_zona) seleccion=2;
+	            if (sacd_dl) seleccion=4;
+            	if (sacd_depaso) seleccion=8;
+                let parametros = 'id_zona=' + id_zona + '&tipo_plantilla=' + tipo_plantilla + '&orden=' + orden  + '&seleccion=' + seleccion + '{{ h_ver_cuadricula_zona|raw }}';
+                $.ajax({
+                    url: url,
+                    type: 'post',
+                    data: parametros,
+                    dataType: 'html'
+                 })
+                .done(function (rta_txt) {
+                    $('#main').html(rta_txt);
+                });
             }
         });
     }
@@ -253,11 +265,10 @@
         var sacd_dl=$('#sacd_dl').prop('checked');
 	    var sacd_depaso=$('#sacd_depaso').prop('checked');
         var dia=$('#dia').val();
-    	var seleccion=0;
-       	if (sacd_libre) seleccion+=1;
-       	if (sacd_zona) seleccion+=2;
-	    if (sacd_dl) seleccion+=4;
-    	if (sacd_depaso) seleccion+=8;
+       	if (sacd_libre) seleccion=1;
+       	if (sacd_zona) seleccion=2;
+	    if (sacd_dl) seleccion=4;
+    	if (sacd_depaso) seleccion=8;
 	    var ii2=$('#id_sacd_inicial').val();
 
         let url_desplegable_sacd = '{{ url_desplegable_sacd }}';
@@ -302,17 +313,34 @@
         $('#id_sacd').val(key);
         $('#tstart').val(tstart);
         $('#tend').val(tend);
+//        $('#dia').val(dia);
         $('#dia').val(dia);
         $('#observ').val(observ);
         $('#uuid_selected').val(uuid_item);
         $('#id_enc_selected').val(id_enc);
+
+        if (seleccion==0) {
+            seleccion=2;
+        }
+        if (seleccion==1) {
+            $('#sacd_libre').prop('checked', true);
+        }
+        if (seleccion==2) {
+            $('#sacd_zona').prop('checked', true);
+        }
+        if (seleccion==4) {
+            $('#sacd_dl').prop('checked', true);
+        }
+        if (seleccion==8) {
+            $('#sacd_depaso').prop('checked', true);
+        }
         var posicion=key.indexOf('#');
         var id_sacd_inicial=key.substring(0,posicion);
         $('#id_sacd_inicial').val(id_sacd_inicial);
-
         prepara_select_sacd();
 
         modal.show();
+        $('#sacd_zona').checked=true;
     }
 
     function requiredFieldValidator(value) {
@@ -338,6 +366,20 @@
     var grid_sacd;
     var data_sacd = {{ json_data_sacd|raw }};
     var columns_sacd = {{ json_columns_sacd|raw }};
+    var seleccion ={{ seleccion }};
+    if (seleccion==1) {
+        $('#sacd_libre').checked=true;
+    }
+    if (seleccion==2) {
+        $('#sacd_zona').checked=true;
+    }
+    if (seleccion==4) {
+        $('#sacd_dl').checked=true;
+    }
+    if (seleccion==8) {
+        $('#sacd_depaso').checked=true;
+    }
+
 
     $(function () {
         grid = new Slick.Grid("#myGrid", data, columns, options);

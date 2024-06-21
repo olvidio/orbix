@@ -31,90 +31,6 @@ $EncargosZona->setATipoEnc($a_tipo_enc);
 
 
 $a_botones = [];
-/* tabla editable
-$a_cabeceras = [
-    ['name' => "id_ubi", 'field' => 'id', 'visible' => 'no'],
-    ['name' => _("Centro"), 'field' => 'ctr', 'width' => 80, 'formatter' => 'clickFormatter'],
-    ['name' => 'L', 'title' => _("lunes"), 'field' => "L", 'width' => 15, 'editor' => 'Slick.Editors.Integer', 'formatter' => 'cssFormatter'],
-    ['name' => 'M', 'title' => _("lunes"), 'field' => "M", 'width' => 15, 'editor' => 'Slick.Editors.Integer', 'formatter' => 'cssFormatter'],
-    ['name' => 'X', 'title' => _("lunes"), 'field' => "X", 'width' => 15, 'editor' => 'Slick.Editors.Integer', 'formatter' => 'cssFormatter'],
-    ['name' => 'J', 'title' => _("lunes"), 'field' => "J", 'width' => 15, 'editor' => 'Slick.Editors.Integer', 'formatter' => 'cssFormatter'],
-    ['name' => 'V', 'title' => _("lunes"), 'field' => "V", 'width' => 15, 'editor' => 'Slick.Editors.Integer', 'formatter' => 'cssFormatter'],
-    ['name' => 'S', 'title' => _("lunes"), 'field' => "S", 'width' => 15, 'editor' => 'Slick.Editors.Integer', 'formatter' => 'cssFormatter'],
-    ['name' => 'D', 'title' => _("lunes"), 'field' => "D", 'width' => 15, 'editor' => 'Slick.Editors.Integer', 'formatter' => 'cssFormatter'],
-];
-
-$i = 0;
-$a_valores = [];
-foreach ($cCentros as $oCentro) {
-    $i++;
-    $id_ubi = "{$oCentro->getId_ubi()}"; // Para que lo coja como un string.
-    $nombre_ubi = $oCentro->getNombre_ubi();
-    $a_valores[$i]['clase'] = 'tono2';
-    $a_valores[$i]['id'] = $id_ubi;
-    $a_valores[$i]['ctr'] = $nombre_ubi;
-    foreach ($a_cabeceras as $column ) {
-        $field = $column['field'];
-        if ($field === 'id' || $field === 'ctr') {
-            continue;
-        }
-        $a_valores[$i][$field] = ['editable' => 'true', 'valor' => 'x'];
-
-    }
-}
-
-$oTabla = new TablaEditable();
-$oTabla->setId_tabla('ver_plantilla_zona');
-$UpdateUrl = ConfigGlobal::getWeb() . '/apps/misas/controller/plantilla_ajax.php';
-//$oTabla->setUpdateUrl($UpdateUrl);
-$oTabla->setCabeceras($a_cabeceras);
-$oTabla->setBotones($a_botones);
-$oTabla->setDatos($a_valores);
-*/
-
-/*
-function valorFila($a_horario_por_dias)
-{
-    foreach ($cEncargoHorarios as $oEncargoHorario) {
-        $oPlantilla = $cPlantillas[0];
-        $id_item = $oPlantilla->getId_item();
-        $t_start = $oPlantilla->getT_start()->format('H:i');
-        $t_end = $oPlantilla->getT_end()->format('H:i');
-        $id_nom = $oPlantilla->getId_nom();
-        $oPersonaSacd = new PersonaSacd($id_nom);
-        $sacd = $oPersonaSacd->getNombreApellidos();
-        if (empty(trim($sacd))) {
-            $sacd = _("se tiene el id, pero NO el sacd");
-        }
-    }
-else {
-    $sacd = '??';
-    $t_start = '??';
-    $t_end = '??';
-}
-
-    $a_cosas = ['id_zona' => $Qid_zona,
-        'id_ubi' => $id_ubi,
-        'dia' => $dia,
-        'id_item' => $id_item,
-    ];
-    $pagina = Hash::link(core\ConfigGlobal::getWeb() . '/apps/misas/controller/definicion_horario.php?' . http_build_query($a_cosas));
-    $texto_nombre = "<span class=link onclick=\"fnjs_mostrar_modal('$pagina');\">$sacd</span>";
-
-    $reloj = core\ConfigGlobal::getWeb_icons() . '/reloj.png';
-    $pagina_horario = Hash::link(core\ConfigGlobal::getWeb() . '/apps/misas/controller/horario_tarea.php?' . http_build_query($a_cosas));
-    $icono_horario = "<span class=link onclick=\"fnjs_mostrar_modal('$pagina_horario');\"><img src=\"$reloj\" width=\"12\" height=\"12\" style=\"float: right; margin: 0 0 15px 15px;\" alt=\"" . _("horario") . "\"></span>";
-    if (($t_start !== '??') && ($t_start !== null) && ($t_end !== '??') && ($t_end !== null)) {
-        $icono_horario = "<br><span class=link onclick=\"fnjs_mostrar_modal('$pagina_horario');\">$t_start - $t_end</span>";
-    }
-    if (($t_start !== '??') && ($t_start !== null) && (($t_end === '??') || ($t_end === null))) {
-        $icono_horario = "<br><span class=link onclick=\"fnjs_mostrar_modal('$pagina_horario');\">$t_start</span>";
-    }
-
-    return $texto_nombre . $icono_horario;
-}
-*/
-
 
 /* tabla html */
 $a_cabeceras = [
@@ -224,19 +140,7 @@ foreach ($a_ctr_enc_t as $id_ubi => $a_ctr_enc) {
                 'dia_ref' => $dia,
             ];
             $aOperador = [];
-            /*
-            if (!empty($f_ini_iso)) {
-                $aWhere['f_ini'] = $f_ini_iso;
-                $aOperador['f_ini'] = '>';
-            }
-            if (!empty($f_fin_iso)) {
-                $aWhere['f_fin'] = $f_fin_iso;
-                $aOperador['f_fin'] = '<';
-            } else {
-                $aWhere['f_fin'] = 'x';
-                $aOperador['f_fin'] = 'IS NULL';
-            }
-            */
+
             $cEncargoSacdHorario = $gesEncargoSacdHorario->getEncargoSacdHorarios($aWhere, $aOperador);
             if (!empty($cEncargoSacdHorario)) {
                 $oEncargoHorarioSacd = $cEncargoSacdHorario[0];
