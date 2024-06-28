@@ -65,6 +65,15 @@
             padding-left: 4px;
             padding-right: 0px;
         }
+    .green {
+      background-color: #d1e7dd;
+    }
+    .red {
+      background-color: #f8d7da;
+    }
+    .orange {
+      background-color: #fff3cd;
+    }
     </style>
 </head>
 <div style="position:relative">
@@ -73,6 +82,9 @@
     </div>
     <div style="width:100%;">
         <div id="Grid_sacd" class="slick-container" style="width:100%;height:300px;"></div>
+    </div>
+    <div style="width:100%;">
+        <div id="Grid2" class="slick-container" style="width:100%;height:300px;"></div>
     </div>
 
 
@@ -351,6 +363,23 @@
         }
     }
 
+function statusFormatter(row, cell, value, columnDef, dataContext) {
+      var rtn = { text: value, removeClasses: 'red orange green' };
+      if (value !== null && value !== "") {
+        if (value < 33) {
+          rtn.addClasses = "red";
+          rtn.toolTip = "danger zone";
+        } else if (value < 66) {
+          rtn.addClasses =  "orange";
+          rtn.toolTip = "might want to look at it";
+        } else {
+          rtn.addClasses =  "green";
+          rtn.toolTip = "all good";
+        }
+      }
+      return rtn;
+  }
+
     var grid;
     var data = {{ json_data_cuadricula|raw }};
 //    alert(data);
@@ -380,10 +409,35 @@
         $('#sacd_depaso').checked=true;
     }
 
+  var columns2 = [
+    {id: "title", name: "Title", field: "title", width: 120, cssClass: "cell-title"},
+    {id: "duration", name: "Duration", field: "duration"},
+    {id: "status", name: "Status", field: "percentComplete", width: 50, resizable: false, formatter: statusFormatter, editor: Slick.Editors.Text },
+ ];
+//    var columns2 = {{ json_columns2|raw }};
+//alert (columns2[2]['formatter']);
+    var data2;
+    for (var i = 0; i < 5; i++) {
+      var d = (data2[i] = {});
+
+      d["title"] = "sacerdote " + i;
+      d["duration"] = "5 days";
+      d["percentComplete"] = Math.min(100, Math.round(Math.random() * 110));
+      d["start"] = "01/01/2009";
+      d["finish"] = "01/05/2009";
+      d["effortDriven"] = (i % 5 == 0);
+    }
+      var options2 = {
+    editable: true,
+    enableAddRow: false,
+    enableCellNavigation: true,
+    createPreHeaderPanel: true
+  };
 
     $(function () {
         grid = new Slick.Grid("#myGrid", data, columns, options);
         grid_sacd = new Slick.Grid("#Grid_sacd", data_sacd, columns_sacd, options);
+ //       grid2 = new Slick.Grid("#Grid2", data2, columns2, options2);
 
         grid.onClick.subscribe(function (e) {
             var cell = grid.getCellFromEvent(e);

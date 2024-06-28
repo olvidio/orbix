@@ -119,7 +119,9 @@ switch (trim($QTipoPlantilla)) {
                 "name" => "$nom_dia", 
                 "field" => "$num_dia", 
                 "width" => 80, 
-                "cssClass" => "cell-title"];
+//                "formatter" => "statusFormatter",
+                "cssClass" => "cell-title"
+            ];
         }
         break;
     case EncargoDia::PLANTILLA_DOMINGOS_UNO:
@@ -226,7 +228,8 @@ switch (trim($QTipoPlantilla)) {
                 "name" => "$nom_dia", 
                 "field" => "$num_dia", 
                 "width" => 80, 
-                "cssClass" => "cell-title"
+                "formatter" => "statusFormatter"
+ //               "cssClass" => "cell-title"
             ];
 
         }
@@ -234,6 +237,21 @@ switch (trim($QTipoPlantilla)) {
 }   
 
 
+/*var columns2 = [
+    {id: "title", name: "Title", field: "title", width: 120, cssClass: "cell-title", formatter: formatter},
+    {id: "duration", name: "Duration", field: "duration"},
+    {id: "%", name: "% Complete", field: "percentComplete", width: 95, resizable: false, formatter: Slick.Formatters.PercentCompleteBar},
+    {id: "status", name: "Status", field: "percentComplete", width: 50, resizable: false, formatter: statusFormatter, editor: Slick.Editors.Text },
+    {id: "start", name: "Start", field: "start", minWidth: 60},
+    {id: "finish", name: "Finish", field: "finish", minWidth: 60},
+    {id: "effort-driven", name: "Effort Driven", sortable: false, width: 90, minWidth: 20, maxWidth: 90, cssClass: "cell-effort-driven", field: "effortDriven", formatter: Slick.Formatters.Checkmark}
+  ];*/
+  $columns2 = [
+    ["id" => "sacerdote", "name" => "Sacerdote", "field" => "sacerdote", "width" => 250, "cssClass" => "cell-title"],
+    ["id" => "duration", "name" => "Duration", "field" => "duration", ],
+    ["id" => "status", "name" => "Status", "field" => "percentComplete", 'formatter'=> 'statusFormatter', "editor"=> "Slick.Editors.Text"],
+//    ["id" => "status", "name" => "Status", "field" => "percentComplete", "editor"=> "Slick.Editors.Text"],
+];
 
 
 $data_cuadricula = [];
@@ -526,9 +544,11 @@ foreach ($cZonaSacd as $oZonaSacd) {
         $dws = $dia_week_sacd[$num_dia];
 //echo $num_dia.'-'.$dws.'='.$esta_en_zona[$dws].'<br>';
         if ($esta_en_zona[$dws]){
-            $data_cols[$num_dia] = 'SI'.$misas_dia.$misas_1a_hora;    
+            $data_cols[$num_dia]=$misas_dia*10+$misas_1a_hora;
+//            $data_cols[$num_dia] = 'SI'.$misas_dia.$misas_1a_hora;    
         } else {
-            $data_cols[$num_dia] = 'NO'.$misas_dia.$misas_1a_hora;
+            $data_cols[$num_dia]=$misas_dia*10+$misas_1a_hora;
+//            $data_cols[$num_dia] = 'NO'.$misas_dia.$misas_1a_hora;
         }
     }
     $data_sacd[]=$data_cols;
@@ -541,6 +561,7 @@ $json_data_cuadricula = json_encode($data_cuadricula);
 $json_columns_sacd = json_encode($columns_sacd);
 $json_data_sacd = json_encode($data_sacd);
 
+$json_columns2 = json_encode($columns2);
 
 $oHash = new Hash();
 $oHash->setCamposForm('color!dia!id_enc!key!observ!tend!tstart!uuid_item');
@@ -562,6 +583,7 @@ $a_campos = ['oPosicion' => $oPosicion,
     'json_columns_cuadricula' => $json_columns_cuadricula,
     'json_data_cuadricula' => $json_data_cuadricula,
     'json_columns_sacd' => $json_columns_sacd,
+    'json_columns2' => $json_columns2,
     'json_data_sacd' => $json_data_sacd,
     'url_desplegable_sacd' =>$url_desplegable_sacd,
     'h_desplegable_sacd' => $h_desplegable_sacd,
