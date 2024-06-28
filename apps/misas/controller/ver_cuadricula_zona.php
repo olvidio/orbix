@@ -483,13 +483,13 @@ foreach ($cZonaSacd as $oZonaSacd) {
     $InicialesSacd = new InicialesSacd();
     $nombre_sacd=$InicialesSacd->nombre_sacd($id_nom);
     $data_cols['sacerdote']=$nombre_sacd;
-    echo $nombre_sacd.$id_nom.'<br>';
+ //   echo $nombre_sacd.$id_nom.'<br>';
     $esta_en_zona=array('', $oZonaSacd->getDw1(),$oZonaSacd->getDw2(),$oZonaSacd->getDw3(),$oZonaSacd->getDw4(),$oZonaSacd->getDw5(),$oZonaSacd->getDw6(),$oZonaSacd->getDw7());
     foreach ($date_range as $date) {
         $inicio_dia = $date->format('d-m-Y').' 00:00:00';
         $fin_dia = $date->format('d-m-Y').' 23:59:59';
-echo $inicio_dia.'-'.$fin_dia.'<br>';
-echo 'id nom: '.$id_nom.'<br>';
+//echo $inicio_dia.'-'.$fin_dia.'<br>';
+//echo 'id nom: '.$id_nom.'<br>';
 
         $aWhere = [
             'id_nom' => $id_nom,
@@ -506,10 +506,10 @@ echo 'id nom: '.$id_nom.'<br>';
         $misas_1a_hora=0;
         foreach($cEncargosDia as $oEncargoDia) {
             $id_enc = $oEncargoDia->getId_enc();
-            echo 'id_enc: '.$id_enc.'<br>';
+ //           echo 'id_enc: '.$id_enc.'<br>';
             $oEncargo = new Encargo(array('id_enc' => $id_enc));
             $id_tipo_enc = $oEncargo->getId_tipo_enc();
-            echo 'tipo: '.$id_tipo_enc.'<br>';
+ //           echo 'tipo: '.$id_tipo_enc.'<br>';
             if (substr($id_tipo_enc,1,1)=='1')
             {
                 $misas_dia++;
@@ -519,9 +519,9 @@ echo 'id nom: '.$id_nom.'<br>';
             {
                 $misas_dia++;
             }
-            echo $misas_dia.$misas_1a_hora.'<br>';
+ //           echo $misas_dia.$misas_1a_hora.'<br>';
         }
-        echo $misas_dia.$misas_1a_hora.'<br>';
+ //       echo $misas_dia.$misas_1a_hora.'<br>';
         $num_dia = $date->format('Y-m-d');
         $dws = $dia_week_sacd[$num_dia];
 //echo $num_dia.'-'.$dws.'='.$esta_en_zona[$dws].'<br>';
