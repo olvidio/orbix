@@ -82,6 +82,8 @@ $columns_cuadricula = [
 $columns_sacd = [
     ["id" => "sacerdote", "name" => "Sacerdote", "field" => "sacerdote", "width" => 250, "cssClass" => "cell-title"],
 ];
+$columns2 = "[
+    {'id': 'sacerdote', 'name' : 'Sacerdote', 'field' : 'sacerdote', 'width' : 250, 'cssClass' : 'cell-title'}";
 
 $dia_week_sacd = [];
 switch (trim($QTipoPlantilla)) {
@@ -122,6 +124,8 @@ switch (trim($QTipoPlantilla)) {
 //                "formatter" => "statusFormatter",
                 "cssClass" => "cell-title"
             ];
+            $columns2 .= ",
+            {'id' : '".$num_dia."', 'name' : '".$nom_dia."', 'field' : '".$num_dia."', 'formatter': statusFormatter}";
         }
         break;
     case EncargoDia::PLANTILLA_DOMINGOS_UNO:
@@ -228,31 +232,15 @@ switch (trim($QTipoPlantilla)) {
                 "name" => "$nom_dia", 
                 "field" => "$num_dia", 
                 "width" => 80, 
-                "formatter" => "statusFormatter"
- //               "cssClass" => "cell-title"
+                "formatter" => "statusFormatter",
+                "cssClass" => "cell-title"
             ];
 
         }
         break;
-}   
+} 
 
-/*
-var $columns2 = "[
-    {id: 'title', name: 'Title', field: 'title', width: 120, cssClass: 'cell-title', formatter: formatter},
-    {id: 'duration', name: 'Duration', field: 'duration'},
-    {id: '%', name: '% Complete', field: 'percentComplete', width: 95, resizable: false, formatter: Slick.Formatters.PercentCompleteBar},
-    {id: 'status', name: 'Status', field: 'percentComplete', width: 50, resizable: false, formatter: statusFormatter, editor: Slick.Editors.Text },
-    {id: 'start', name: 'Start', field: 'start', minWidth: 60},
-    {id: 'finish', name: 'Finish', field: 'finish', minWidth: 60},
-    {id: 'effort-driven', name: 'Effort Driven', sortable: false, width: 90, minWidth: 20, maxWidth: 90, cssClass: 'cell-effort-driven', field: 'effortDriven', formatter: Slick.Formatters.Checkmark}
-  ]";
-*/
-
-$columns2 = "[
-    {'id': 'sacerdote', 'name' : 'Sacerdote', 'field' : 'sacerdote', 'width' : 250, 'cssClass' : 'cell-title'},
-    {'id' : 'duration', 'name' : 'Duration', 'field' : 'duration' },
-    {'id' : 'status', 'name' : 'Status', 'field' : 'percentComplete', 'formatter': statusFormatter, 'editor': 'Slick.Editors.Text'}
-]";
+$columns2 .= "]";
 
 $data_cuadricula = [];
 
@@ -282,7 +270,8 @@ foreach ($cEncargosZona as $oEncargo) {
     $desc_enc = $oEncargo->getDesc_enc();
 //    echo $id_enc.$desc_enc.'<br>';
     $data_cols = [];
-    $meta_dia = [];
+    $data_cols = [];
+    $meta_sacd = [];
     if (($QTipoPlantilla == EncargoDia::PLANTILLA_SEMANAL_TRES) || ($QTipoPlantilla == EncargoDia::PLANTILLA_DOMINGOS_TRES) || ($QTipoPlantilla == EncargoDia::PLANTILLA_MENSUAL_TRES)) {
         $data_cols2 = [];
         $meta_dia2 = [];
@@ -504,8 +493,8 @@ foreach ($cZonaSacd as $oZonaSacd) {
  //   echo $nombre_sacd.$id_nom.'<br>';
     $esta_en_zona=array('', $oZonaSacd->getDw1(),$oZonaSacd->getDw2(),$oZonaSacd->getDw3(),$oZonaSacd->getDw4(),$oZonaSacd->getDw5(),$oZonaSacd->getDw6(),$oZonaSacd->getDw7());
     foreach ($date_range as $date) {
-        $inicio_dia = $date->format('d-m-Y').' 00:00:00';
-        $fin_dia = $date->format('d-m-Y').' 23:59:59';
+        $inicio_dia = $date->format('Y-m-d').' 00:00:00';
+        $fin_dia = $date->format('Y-m-d').' 23:59:59';
 //echo $inicio_dia.'-'.$fin_dia.'<br>';
 //echo 'id nom: '.$id_nom.'<br>';
 
@@ -550,7 +539,9 @@ foreach ($cZonaSacd as $oZonaSacd) {
             $data_cols[$num_dia]=$misas_dia*10+$misas_1a_hora;
 //            $data_cols[$num_dia] = 'NO'.$misas_dia.$misas_1a_hora;
         }
+        $meta_sacd["$num_dia"]=$misas_dia*10+$misas_1a_hora;
     }
+    $data_cols["meta"]=$meta_sacd;
     $data_sacd[]=$data_cols;
 }
 
@@ -560,7 +551,7 @@ $json_data_cuadricula = json_encode($data_cuadricula);
 
 $json_columns_sacd = json_encode($columns_sacd);
 $json_data_sacd = json_encode($data_sacd);
-
+echo $json_data_sacd;
 $oHash = new Hash();
 $oHash->setCamposForm('color!dia!id_enc!key!observ!tend!tstart!uuid_item');
 $array_h = $oHash->getParamAjaxEnArray();
