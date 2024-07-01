@@ -377,18 +377,23 @@ function statusFormatter(row, cell, value, columnDef, dataContext) {
           rtn.toolTip = "all good";
         }
       }
+alert('cell: '+cell);
+alert('row: '+row)
+
+        row = $('#row_selected').val();
       var id_campo = columns_sacd[cell].field;
-//alert('id_campo: '+id_campo);
-//alert('cell: '+cell);
-//alert('row: '+row)
-      let meta=data_sacd[cell.row][id_campo];
-//alert('meta: '+meta)
+alert('id_campo: '+id_campo);
+      meta_s=data_sacd[cell]['sacerdote'];
+alert('meta_s: '+meta_s)
+      meta=data_sacd[cell]['meta']['2001-01-01'];
+alert('meta: '+meta)
       return rtn;
   }
 
+var meta;
+var meta_s;
     var grid;
     var data = {{ json_data_cuadricula|raw }};
-    alert('data: '+data);
     var columns = {{ json_columns_cuadricula|raw }};
     var options = {
         editable: false,
@@ -400,7 +405,6 @@ function statusFormatter(row, cell, value, columnDef, dataContext) {
 
     var grid_sacd;
     var data_sacd = {{ json_data_sacd|raw }};
-    alert('data_sacd: '+data_sacd);
     var columns_sacd = {{ json_columns_sacd|raw }};
     var seleccion ={{ seleccion }};
     if (seleccion==1) {
