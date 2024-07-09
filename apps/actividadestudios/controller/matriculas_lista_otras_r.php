@@ -6,6 +6,7 @@ use actividadestudios\model\entity\GestorMatricula;
 use actividadestudios\model\entity\GestorMatriculaDl;
 use asignaturas\model\entity\Asignatura;
 use core\ConfigGlobal;
+use notas\model\entity\GestorPersonaNota;
 use personas\model\entity\Persona;
 use ubis\model\entity\GestorDelegacion;
 use web\DateTimeLocal;
@@ -103,28 +104,51 @@ $a_cabeceras = array(
     _("dl"),
     _("actividad"),
     _("asignaturas"),
+    _("notas"),
 );
 
 $i = 0;
 $a_valores = array();
 $msg_err = '';
 $id_nom_anterior = '';
+$str_actividades = '';
 $str_asignaturas = '';
+$nota_txt = '';
 foreach ($cMatriculas as $oMatricula) {
     $i++;
     $id_nom = $oMatricula->getId_nom();
     $id_activ = $oMatricula->getId_activ();
     $id_asignatura = $oMatricula->getId_asignatura();
-    $nota_txt = $oMatricula->getNotaSobre();
+    $nota_matricula = $oMatricula->getNotaSobre();
 
     $oActividad = new Actividad($id_activ);
     $nom_activ = $oActividad->getNom_activ();
+    $str_actividades .= empty($str_actividades)? '' : ', ';
+    $str_actividades .= trim($nom_activ);
 
-    if ($id_nom != $id_nom_anterior) {
+    $oAsignatura = new Asignatura($id_asignatura);
+    $nombre_corto = $oAsignatura->getNombre_corto();
+
+    $str_asignaturas .= empty($str_asignaturas)? '' : ', ';
+    $str_asignaturas .= trim($nombre_corto);
+    $str_asignaturas .= empty($nota_matricula)? '' : " ($nota_matricula)";
+
+    $gesNotas = new GestorPersonaNota();
+    $cNotas = $gesNotas->getPersonaNotas(['id_nom' => $id_nom, 'id_asignatura' => $id_asignatura]);
+    if (!empty($cNotas[0])) {
+        $nota_txt .= empty($nota_txt)? '' : ', ';
+        $nota_txt .= $cNotas[0]->getNota_txt();
+    }
+
+    if (!empty($id_nom_anterior) && ($id_nom != $id_nom_anterior) ) {
         $mails_alumno = '';
-        $oPersona = Persona::newPersona($id_nom);
+        $oPersona = Persona::newPersona($id_nom_anterior);
         if (!is_object($oPersona)) {
-            $msg_err .= "<br>$oPersona con id_nom: $id_nom en  " . __FILE__ . ": line " . __LINE__;
+            $msg_err .= "<br>$oPersona con id_nom: $id_nom_anterior en  " . __FILE__ . ": line " . __LINE__;
+            $str_actividades = '';
+            $str_asignaturas = '';
+            $nota_txt = '';
+            $id_nom_anterior = $id_nom;
             continue;
         }
         $apellidos_nombre = $oPersona->getPrefApellidosNombre();
@@ -132,30 +156,28 @@ foreach ($cMatriculas as $oMatricula) {
         $dl = $oPersona->getDl();
         // quitar los que ya son de la región del stgr
         if (in_array($dl, $a_dl_de_la_region_stgr, true)){
+            $str_actividades = '';
+            $str_asignaturas = '';
+            $nota_txt = '';
+            $id_nom_anterior = $id_nom;
             continue;
         }
 
-        $mails_alumno = $oPersona->telecos_persona($id_nom, 'e-mail', ' / ');
+        $mails_alumno = $oPersona->telecos_persona($id_nom_anterior, 'e-mail', ' / ');
         if (!empty($mails_alumno)) {
             $apellidos_nombre .= ' [' . $mails_alumno . ']';
         }
 
-        $a_valores[$i]['sel'] = "$id_nom";
+        $a_valores[$i]['sel'] = "$id_nom_anterior";
         $a_valores[$i][1] = $apellidos_nombre;
         $a_valores[$i][2] = $dl;
         $a_valores[$i][3] = $nom_activ;
         $a_valores[$i][4] = $str_asignaturas;
+        $a_valores[$i][5] = $nota_txt;
 
         $a_Nombre[$i] = $apellidos_nombre;
         $str_asignaturas = '';
     }
-
-    $oAsignatura = new Asignatura($id_asignatura);
-    $nombre_corto = $oAsignatura->getNombre_corto();
-
-    $str_asignaturas .= empty($str_asignaturas)? '' : ', ';
-    $str_asignaturas .= trim($nombre_corto);
-    $str_asignaturas .= empty($nota_txt)? '' : " ($nota_txt)";
 
     $id_nom_anterior = $id_nom;
 }
