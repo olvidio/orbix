@@ -153,7 +153,7 @@ class PgCertificadoRepository extends ClaseRepository implements CertificadoRepo
         $aDatos['propio'] = $Certificado->isPropio();
         $aDatos['copia'] = $Certificado->isCopia();
         // para los bytea
-        $aDatos['documento'] = bin2hex($Certificado->getDocumento());
+        $aDatos['documento'] = bin2hex($Certificado->getDocumento()?? '');
         // para las fechas
         $aDatos['f_certificado'] = (new ConverterDate('date', $Certificado->getF_certificado()))->toPg();
         array_walk($aDatos, 'core\poner_null');
