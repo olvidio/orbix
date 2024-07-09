@@ -260,7 +260,8 @@ if ((ConfigGlobal::mi_region() === ConfigGlobal::mi_delef()) && !isset($_SESSION
             $schema_vf = $esquemaf;
         }
 
-        $oMatView = new DBView($schema_vf, $user_sfsv, 'exterior');
+        // Las vistas sólo las actualizo para consulta (interior)
+        $oMatView = new DBView($schema_vf, $user_sfsv, 'exterior_select');
         foreach ($views as $view) {
             $oMatView->setView($view);
             if ($oMatView->ExisteYEsIgual()) {
@@ -279,7 +280,7 @@ if ((ConfigGlobal::mi_region() === ConfigGlobal::mi_delef()) && !isset($_SESSION
 
         $schema = $esquema;
 
-        $oMatView = new DBView($schema, NULL, 'comun');
+        $oMatView = new DBView($schema, NULL, 'comun_select');
         foreach ($views as $view) {
             $oMatView->setView($view);
             if ($oMatView->ExisteYEsIgual(TRUE)) {
@@ -289,6 +290,7 @@ if ((ConfigGlobal::mi_region() === ConfigGlobal::mi_delef()) && !isset($_SESSION
                 $oMatView->create(TRUE);
             }
         }
+
         $_SESSION['Refresh'] = 'ok';
     } catch (\PDOException $e) {
         //Hay que poner el mensaje entre /* ... */ para que el script que carga a continuación lo interprete como un comentario.

@@ -61,6 +61,16 @@ class DBView
             case 'comun':
                 $config = $oConfigDB->getEsquema('public');
                 break;
+            case 'exterior_select':
+                if ($mi_sfsv === 1) {
+                    $config = $oConfigDB->getEsquema('publicv-e_select');
+                } elseif ($mi_sfsv === 2) {
+                    $config = $oConfigDB->getEsquema('publicf');
+                }
+                break;
+            case 'comun_select':
+                $config = $oConfigDB->getEsquema('public_select');
+                break;
         }
         $oConexion = new DBConnection($config);
         $oDbl = $oConexion->getPDO();
