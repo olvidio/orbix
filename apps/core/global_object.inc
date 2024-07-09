@@ -247,6 +247,7 @@ if ((ConfigGlobal::mi_region() === ConfigGlobal::mi_delef()) && !isset($_SESSION
             }
         }
 
+        // Las vistas sólo las actualizo para consulta (interior)
         // para el esquema sv-e
         $views = [
             'd_asistentes_out',
@@ -260,7 +261,6 @@ if ((ConfigGlobal::mi_region() === ConfigGlobal::mi_delef()) && !isset($_SESSION
             $schema_vf = $esquemaf;
         }
 
-        // Las vistas sólo las actualizo para consulta (interior)
         $oMatView = new DBView($schema_vf, $user_sfsv, 'exterior_select');
         foreach ($views as $view) {
             $oMatView->setView($view);

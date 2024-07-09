@@ -63,13 +63,13 @@ class DBView
                 break;
             case 'exterior_select':
                 if ($mi_sfsv === 1) {
-                    $config = $oConfigDB->getEsquema('publicv-e_select');
+                    $config = $oConfigDB->getEsquema('publicv');
                 } elseif ($mi_sfsv === 2) {
                     $config = $oConfigDB->getEsquema('publicf');
                 }
                 break;
             case 'comun_select':
-                $config = $oConfigDB->getEsquema('public_select');
+                $config = $oConfigDB->getEsquema('public');
                 break;
         }
         $oConexion = new DBConnection($config);
@@ -317,7 +317,7 @@ class DBView
             $list_dl .= "'$a_reg[1]'::character varying";
         }
         $where = "(av_actividades_pub.dl_org)::text = any ((array[$list_dl])::text[])";
-        return "SELECT $columns FROM av_actividades_pub WHERE ($where)";
+        return "SELECT $columns FROM public.av_actividades_pub WHERE ($where)";
     }
 
     private function getDefViewAsistentesOut()
