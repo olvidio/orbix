@@ -171,7 +171,7 @@ foreach ($cMatriculas as $oMatricula) {
         $a_valores[$i]['sel'] = "$id_nom_anterior";
         $a_valores[$i][1] = $apellidos_nombre;
         $a_valores[$i][2] = $dl;
-        $a_valores[$i][3] = $nom_activ;
+        $a_valores[$i][3] = $str_actividades;
         $a_valores[$i][4] = $str_asignaturas;
         $a_valores[$i][5] = $nota_txt;
 
