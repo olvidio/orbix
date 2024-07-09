@@ -88,7 +88,7 @@ switch ($Qque) {
         } else {
             $error_txt = ordena($Qid_activ, $Qid_ubi, $Qnum_orden);
         }
-        $error_txt = addslashes($error_txt);
+        $error_txt = addslashes($error_txt?? '');
         echo "{ \"que\": \"$Qque}\", \"txt\": \"\", \"error\": \"$error_txt\" }";
         break;
     case "get":
