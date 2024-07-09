@@ -111,6 +111,7 @@ $i = 0;
 $a_valores = array();
 $msg_err = '';
 $id_nom_anterior = '';
+$id_activ_anterior = '';
 $str_actividades = '';
 $str_asignaturas = '';
 $nota_txt = '';
@@ -121,10 +122,13 @@ foreach ($cMatriculas as $oMatricula) {
     $id_asignatura = $oMatricula->getId_asignatura();
     $nota_matricula = $oMatricula->getNotaSobre();
 
-    $oActividad = new Actividad($id_activ);
-    $nom_activ = $oActividad->getNom_activ();
-    $str_actividades .= empty($str_actividades)? '' : ', ';
-    $str_actividades .= trim($nom_activ);
+    if ( $id_nom !== $id_nom_anterior || (($id_activ !== $id_activ_anterior) && $id_nom === $id_nom_anterior)) {
+        $oActividad = new Actividad($id_activ);
+        $nom_activ = $oActividad->getNom_activ();
+        $dl_org = $oActividad->getDl_org();
+        $str_actividades .= empty($str_actividades) ? '' : ', ';
+        $str_actividades .= trim($nom_activ) . "($dl_org)";
+    }
 
     $oAsignatura = new Asignatura($id_asignatura);
     $nombre_corto = $oAsignatura->getNombre_corto();
@@ -136,8 +140,13 @@ foreach ($cMatriculas as $oMatricula) {
     $gesNotas = new GestorPersonaNota();
     $cNotas = $gesNotas->getPersonaNotas(['id_nom' => $id_nom, 'id_asignatura' => $id_asignatura]);
     if (!empty($cNotas[0])) {
+        $oNota = $cNotas[0];
+        $nota_num = $oNota->getNota_num();
+        $id_schema = $oNota->getId_schema();
         $nota_txt .= empty($nota_txt)? '' : ', ';
-        $nota_txt .= $cNotas[0]->getNota_txt();
+        $nota_txt .= '['.$id_schema.']'.$nombre_corto.'('.$nota_num.')';
+    } else {
+        $nota_txt .= '#';
     }
 
     if (!empty($id_nom_anterior) && ($id_nom != $id_nom_anterior) ) {
@@ -149,6 +158,7 @@ foreach ($cMatriculas as $oMatricula) {
             $str_asignaturas = '';
             $nota_txt = '';
             $id_nom_anterior = $id_nom;
+            $id_activ_anterior = $id_activ;
             continue;
         }
         $apellidos_nombre = $oPersona->getPrefApellidosNombre();
@@ -160,6 +170,7 @@ foreach ($cMatriculas as $oMatricula) {
             $str_asignaturas = '';
             $nota_txt = '';
             $id_nom_anterior = $id_nom;
+            $id_activ_anterior = $id_activ;
             continue;
         }
 
@@ -180,6 +191,7 @@ foreach ($cMatriculas as $oMatricula) {
     }
 
     $id_nom_anterior = $id_nom;
+    $id_activ_anterior = $id_activ;
 }
 
 // ordenar por alumno
