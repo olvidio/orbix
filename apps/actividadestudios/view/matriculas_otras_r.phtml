@@ -1,4 +1,9 @@
 <script>
+    fnjs_buscar_por_apellidos = function () {
+        $('#apellidos_form').attr('action', "apps/actividadestudios/controller/matriculas_lista_otras_r.php");
+        fnjs_enviar_formulario('#apellidos_form', '#main');
+    }
+
     fnjs_buscar = function () {
         var campo = '<input type="hidden" name="refresh" value=1>';
         $('#periodo_form').attr('action', "apps/actividadestudios/controller/matriculas_lista_otras_r.php");
@@ -16,10 +21,28 @@
     }
     fnjs_left_side_hide();
 </script>
+<form id='apellidos_form' action=''>
+    <?= $oHashApellidos->getCamposHtml() ?>
+    <table>
+        <tr>
+            <td class=etiqueta>
+                <h2 class=titulo><?= $titulo_busqueda_por_apellidos ?></h2>
+            </td>
+            <td  style="vertical-align: middle"><input class=contenido id="apellido1" name="apellido1" size="40" value=""></td>
+            <td>
+                <input type="button" id="btn_ok" name="btn"
+                      onclick="fnjs_buscar_por_apellidos('#apellidos_form')"
+                      value="<?= ucfirst(_("buscar")) ?>" class="btn">
+            </td>
+        </tr>
+    </table>
+</form>
+<br>
 <form id='periodo_form' action=''>
     <?= $oHashPeriodo->getCamposHtml() ?>
     <?= $oFormP->getHtml() ?>
 </form>
+
 <h2 class=titulo><?= $titulo ?></h2>
 <h3><?= $aviso; ?></h3>
 <form id="seleccionados" name="seleccionados" action="" method="post">

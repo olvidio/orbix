@@ -3,10 +3,8 @@
 use actividades\model\entity\Actividad;
 use actividades\model\entity\GestorActividad;
 use actividadestudios\model\entity\GestorMatricula;
-use actividadestudios\model\entity\GestorMatriculaDl;
-use asignaturas\model\entity\Asignatura;
-use core\ConfigGlobal;
-use notas\model\entity\GestorPersonaNota;
+use personas\model\entity\GestorPersona;
+use personas\model\entity\GestorPersonaStgr;
 use personas\model\entity\Persona;
 use ubis\model\entity\GestorDelegacion;
 use web\DateTimeLocal;
@@ -14,7 +12,6 @@ use web\Hash;
 use web\Lista;
 use web\Periodo;
 use web\Posicion;
-use function core\is_true;
 
 /**
  * Para asegurar que inicia la sesion, y poder acceder a los permisos
@@ -51,148 +48,128 @@ $Qperiodo = (string)filter_input(INPUT_POST, 'periodo');
 $Qempiezamin = (string)filter_input(INPUT_POST, 'empiezamin');
 $Qempiezamax = (string)filter_input(INPUT_POST, 'empiezamax');
 
-//periodo
-if (empty($Qperiodo)) {
-    $Qperiodo = 'curso_ca';
-}
+$Qapellidos = (string)filter_input(INPUT_POST, 'apellido1');
 
-// periodo.
-$oPeriodo = new Periodo();
-$oPeriodo->setAny($Qyear);
-$oPeriodo->setEmpiezaMin($Qempiezamin);
-$oPeriodo->setEmpiezaMax($Qempiezamax);
-$oPeriodo->setPeriodo($Qperiodo);
-
-
-$inicioIso = $oPeriodo->getF_ini_iso();
-$finIso = $oPeriodo->getF_fin_iso();
-
-$aWhereActividad['f_ini'] = "'$inicioIso','$finIso'";
-$aOperadorActividad['f_ini'] = 'BETWEEN';
-
-$gesActividades = new GestorActividad();
-$a_IdActividades = $gesActividades->getArrayIds($aWhereActividad, $aOperadorActividad);
-
-$str_actividades = "{" . implode(', ', $a_IdActividades) . "}";
-$aWhere = ['id_activ' => $str_actividades];
-$aOperador = ['id_activ' => 'ANY'];
-
-// Buscar dl y r dependientes de la actual región del stgr:
-$schema = $_SESSION['session_auth']['esquema'];
-$a_reg = explode('-', $schema);
-$RegionStgr = $a_reg[0];
-$gesDl = new GestorDelegacion();
-$a_dl_de_la_region_stgr = $gesDl->getArrayDlRegionStgr([$RegionStgr]);
-
-$gesMatriculasDl = new GestorMatricula();
-$cMatriculas = $gesMatriculasDl->getMatriculas($aWhere, $aOperador);
-
-// Convertir las fechas inicio y fin a formato local:
-$oF_qini = new DateTimeLocal($inicioIso);
-$QinicioLocal = $oF_qini->getFromLocal();
-$oF_qfin = new DateTimeLocal($finIso);
-$QfinLocal = $oF_qfin->getFromLocal();
-$titulo = _(sprintf(_("Lista de alumnos de otras regiones matriculados en alguna asignatura en el periodo: %s - %s."), $QinicioLocal, $QfinLocal));
 $a_botones = array(
     array('txt' => _("imprimir certificado"), 'click' => "fnjs_imp_certificado(this.form)"),
 );
 
-
-
 $a_cabeceras = array(
     _("alumno"),
     _("dl"),
-    _("actividad"),
-    _("asignaturas"),
-    _("notas"),
+    _("actividades"),
 );
 
-$i = 0;
-$a_valores = array();
-$msg_err = '';
-$id_nom_anterior = '';
-$id_activ_anterior = '';
-$str_actividades = '';
-$str_asignaturas = '';
-$nota_txt = '';
-foreach ($cMatriculas as $oMatricula) {
-    $i++;
-    $id_nom = $oMatricula->getId_nom();
-    $id_activ = $oMatricula->getId_activ();
-    $id_asignatura = $oMatricula->getId_asignatura();
-    $nota_matricula = $oMatricula->getNotaSobre();
+$titulo_busqueda_por_apellidos = _("búsqueda por apellidos");
+$titulo = '';
 
-    if ( $id_nom !== $id_nom_anterior || (($id_activ !== $id_activ_anterior) && $id_nom === $id_nom_anterior)) {
+////// Apellidos
+if (!empty($Qapellidos)) {
+
+    /*
+    $GesPersonas = new GestorPersonaStgr();
+    $cPersonas = $GesPersonas->getPerosnasOtrosStgr($Qapellidos);
+    */
+    $cPersonas = [];
+    $i = 0;
+    $a_Nombre = [];
+    foreach ($cPersonas as $oPersona) {
+        $id_nom = $oPersona->getId_nom();
+        $dl = $oPersona->getDl();
+        $apellidos_nombre = $oPersona->getPrefApellidosNombre();
+
+        $i++;
+        $a_valores[$i]['sel'] = "$id_nom";
+        $a_valores[$i][1] = $apellidos_nombre;
+        $a_valores[$i][2] = $dl;
+        $a_valores[$i][3] = "";
+
+        $a_Nombre[$i] = $apellidos_nombre;
+    }
+} else {
+    ////// Periodo actividades
+
+//periodo
+    if (empty($Qperiodo)) {
+        $Qperiodo = 'curso_ca';
+    }
+
+// periodo.
+    $oPeriodo = new Periodo();
+    $oPeriodo->setAny($Qyear);
+    $oPeriodo->setEmpiezaMin($Qempiezamin);
+    $oPeriodo->setEmpiezaMax($Qempiezamax);
+    $oPeriodo->setPeriodo($Qperiodo);
+
+    $inicioIso = $oPeriodo->getF_ini_iso();
+    $finIso = $oPeriodo->getF_fin_iso();
+
+    $aWhereActividad['f_ini'] = "'$inicioIso','$finIso'";
+    $aOperadorActividad['f_ini'] = 'BETWEEN';
+
+    $gesActividades = new GestorActividad();
+    $a_IdActividades = $gesActividades->getArrayIds($aWhereActividad, $aOperadorActividad);
+
+    $str_actividades = "{" . implode(', ', $a_IdActividades) . "}";
+    $aWhere = ['id_activ' => $str_actividades];
+    $aOperador = ['id_activ' => 'ANY'];
+
+// Buscar dl y r dependientes de la actual región del stgr:
+    $schema = $_SESSION['session_auth']['esquema'];
+    $a_reg = explode('-', $schema);
+    $RegionStgr = $a_reg[0];
+    $gesDl = new GestorDelegacion();
+    $a_dl_de_la_region_stgr = $gesDl->getArrayDlRegionStgr([$RegionStgr]);
+
+    $gesMatriculasDl = new GestorMatricula();
+    $a_alumnos_otras_regiones_stgr = $gesMatriculasDl->getMatriculasOtroStgr($a_IdActividades);
+
+// Convertir las fechas inicio y fin a formato local:
+    $oF_qini = new DateTimeLocal($inicioIso);
+    $QinicioLocal = $oF_qini->getFromLocal();
+    $oF_qfin = new DateTimeLocal($finIso);
+    $QfinLocal = $oF_qfin->getFromLocal();
+    $titulo = _(sprintf(_("Lista de alumnos de otras regiones matriculados en alguna asignatura en el periodo: %s - %s."), $QinicioLocal, $QfinLocal));
+    $i = 0;
+    $a_valores = array();
+    $msg_err = '';
+    $str_actividades = '';
+    $id_nom_anterior = '';
+    foreach ($a_alumnos_otras_regiones_stgr as $a_alumno_activ) {
+        $i++;
+        $id_nom = $a_alumno_activ['id_nom'];
+        $id_activ = $a_alumno_activ['id_activ'];
+
+        $oPersona = Persona::newPersona($id_nom);
+        if (!is_object($oPersona)) {
+            $msg_err .= "<br>$oPersona con id_nom: $id_nom en  " . __FILE__ . ": line " . __LINE__;
+            continue;
+        }
+
         $oActividad = new Actividad($id_activ);
         $nom_activ = $oActividad->getNom_activ();
         $dl_org = $oActividad->getDl_org();
         $str_actividades .= empty($str_actividades) ? '' : ', ';
         $str_actividades .= trim($nom_activ) . "($dl_org)";
-    }
 
-    $oAsignatura = new Asignatura($id_asignatura);
-    $nombre_corto = $oAsignatura->getNombre_corto();
+        if ($id_nom != $id_nom_anterior) {
+            $apellidos_nombre = $oPersona->getPrefApellidosNombre();
+            $ctr = $oPersona->getCentro_o_dl();
+            $dl = $oPersona->getDl();
 
-    $str_asignaturas .= empty($str_asignaturas)? '' : ', ';
-    $str_asignaturas .= trim($nombre_corto);
-    $str_asignaturas .= empty($nota_matricula)? '' : " ($nota_matricula)";
+            $a_valores[$i]['sel'] = "$id_nom";
+            $a_valores[$i][1] = $apellidos_nombre;
+            $a_valores[$i][2] = $dl;
+            $a_valores[$i][3] = $str_actividades;
 
-    $gesNotas = new GestorPersonaNota();
-    $cNotas = $gesNotas->getPersonaNotas(['id_nom' => $id_nom, 'id_asignatura' => $id_asignatura]);
-    if (!empty($cNotas[0])) {
-        $oNota = $cNotas[0];
-        $nota_num = $oNota->getNota_num();
-        $id_schema = $oNota->getId_schema();
-        $nota_txt .= empty($nota_txt)? '' : ', ';
-        $nota_txt .= '['.$id_schema.']'.$nombre_corto.'('.$nota_num.')';
-    } else {
-        $nota_txt .= '#';
-    }
-
-    if (!empty($id_nom_anterior) && ($id_nom != $id_nom_anterior) ) {
-        $mails_alumno = '';
-        $oPersona = Persona::newPersona($id_nom_anterior);
-        if (!is_object($oPersona)) {
-            $msg_err .= "<br>$oPersona con id_nom: $id_nom_anterior en  " . __FILE__ . ": line " . __LINE__;
+            $a_Nombre[$i] = $apellidos_nombre;
             $str_actividades = '';
-            $str_asignaturas = '';
-            $nota_txt = '';
-            $id_nom_anterior = $id_nom;
-            $id_activ_anterior = $id_activ;
-            continue;
         }
-        $apellidos_nombre = $oPersona->getPrefApellidosNombre();
-        $ctr = $oPersona->getCentro_o_dl();
-        $dl = $oPersona->getDl();
-        // quitar los que ya son de la región del stgr
-        if (in_array($dl, $a_dl_de_la_region_stgr, true)){
-            $str_actividades = '';
-            $str_asignaturas = '';
-            $nota_txt = '';
-            $id_nom_anterior = $id_nom;
-            $id_activ_anterior = $id_activ;
-            continue;
-        }
-
-        $mails_alumno = $oPersona->telecos_persona($id_nom_anterior, 'e-mail', ' / ');
-        if (!empty($mails_alumno)) {
-            $apellidos_nombre .= ' [' . $mails_alumno . ']';
-        }
-
-        $a_valores[$i]['sel'] = "$id_nom_anterior";
-        $a_valores[$i][1] = $apellidos_nombre;
-        $a_valores[$i][2] = $dl;
-        $a_valores[$i][3] = $str_actividades;
-        $a_valores[$i][4] = $str_asignaturas;
-        $a_valores[$i][5] = $nota_txt;
-
-        $a_Nombre[$i] = $apellidos_nombre;
-        $str_asignaturas = '';
+        $id_nom_anterior = $id_nom;
     }
 
-    $id_nom_anterior = $id_nom;
-    $id_activ_anterior = $id_activ;
 }
+
 
 // ordenar por alumno
 if (!empty($a_valores)) {
@@ -217,6 +194,7 @@ $a_camposHidden = array(
     'queSel' => 'asig',
 );
 $oHash->setArraycamposHidden($a_camposHidden);
+
 
 if (!empty($msg_err)) {
     echo $msg_err;
@@ -257,14 +235,21 @@ $oHashPeriodo->setCamposNo('!refresh');
 $a_camposHiddenP = array();
 $oHashPeriodo->setArraycamposHidden($a_camposHiddenP);
 
+$oHashApellidos = new web\Hash();
+$oHashApellidos->setCamposForm('apellido1');
+$a_camposHiddenP = array();
+$oHashApellidos->setArraycamposHidden($a_camposHiddenP);
+
 $a_campos = ['oPosicion' => $oPosicion,
     'oHash' => $oHash,
     'mod' => $Qmod,
     'oTabla' => $oTabla,
     'titulo' => $titulo,
+    'titulo_busqueda_por_apellidos' => $titulo_busqueda_por_apellidos,
     'aviso' => $aviso,
     'oFormP' => $oFormP,
     'oHashPeriodo' => $oHashPeriodo,
+    'oHashApellidos' => $oHashApellidos,
 ];
 
 $oView = new core\View('actividadestudios/controller');

@@ -72,4 +72,5 @@ class GestorPersona extends core\ClaseGestor
     /* MÉTODOS PROTECTED --------------------------------------------------------*/
 
     /* MÉTODOS GET y SET --------------------------------------------------------*/
+
 }

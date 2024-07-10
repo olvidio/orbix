@@ -3,6 +3,7 @@
 namespace actividadestudios\model\entity;
 
 use core;
+use ubis\model\entity\GestorDelegacion;
 
 /**
  * GestorMatricula
@@ -166,7 +167,59 @@ class GestorMatricula extends core\ClaseGestor
         return $oMatriculaSet->getTot();
     }
 
-    /* MÉTODOS PROTECTED --------------------------------------------------------*/
+    public function getMatriculasOtroStgr(false|array $a_IdActividades)
+    {
+        $oDbl = $this->getoDbl();
+        $str_actividades = implode(', ', $a_IdActividades);
+        /*
+         $str_actividades = "{" . implode(', ', $a_IdActividades) . "}";
+        $aWhere = ['id_activ' => $str_actividades];
+        $aOperador = ['id_activ' => 'ANY'];
+        */
 
-    /* MÉTODOS GET y SET --------------------------------------------------------*/
+        // Buscar dl y r dependientes de la actual región del stgr:
+        $schema = $_SESSION['session_auth']['esquema'];
+        $a_reg = explode('-', $schema);
+        $RegionStgr = $a_reg[0];
+        $gesDl = new GestorDelegacion();
+        $a_dl_de_la_region_stgr = $gesDl->getArrayDlRegionStgr([$RegionStgr]);
+        $str_dl = "'" . implode("', '",$a_dl_de_la_region_stgr) ."'";
+
+        // Personas de paso asistentes a las actividades
+        $sqlA  = "SELECT m.id_nom, m.id_activ 
+                    FROM publicv.d_matriculas_activ m LEFT JOIN global.personas p USING (id_nom)
+                     WHERE p.id_nom IS NULL AND m.id_activ IN ( $str_actividades)
+                     GROUP BY id_nom, id_activ
+                ";
+
+        $sqlB = "SELECT m.id_nom, m.id_activ 
+                    FROM publicv.d_matriculas_activ m 
+                    WHERE  m.id_activ IN ($str_actividades) 
+                    AND NOT EXISTS (SELECT id_nom FROM global.personas p WHERE p.id_nom = m.id_nom) 
+                    GROUP BY id_nom, id_activ
+                ";
+
+        // Personas de otras regiones del stgr
+        $sqlC = "SELECT m.id_nom, m.id_activ 
+                    FROM publicv.d_matriculas_activ m LEFT JOIN global.personas p USING (id_nom) 
+                    WHERE p.dl NOT IN ($str_dl) 
+                    AND m.id_activ IN ($str_actividades) 
+                    GROUP BY id_nom, id_activ
+                  ";
+
+        $sQry = "$sqlA  UNION  $sqlC ORDER BY id_nom";
+        if (($oDblSt = $oDbl->query($sQry)) === false) {
+            $sClauError = 'GestorMatricula.llistar.execute';
+            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+            return false;
+        }
+        $aDades = $oDblSt->fetchAll(\PDO::FETCH_ASSOC);
+
+        return $aDades;
+        /*
+        foreach ($oDbl as $aDades) {
+
+        }
+        */
+    }
 }
