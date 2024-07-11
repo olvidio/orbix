@@ -78,7 +78,7 @@ class Select1010
         $a_cabeceras = [
             _("certificado"),
             _("fecha"),
-            _("copia"),
+            _("firmado digitalmente"),
             _("adjunto"),
         ];
         return $a_cabeceras;

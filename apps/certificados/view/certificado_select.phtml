@@ -4,9 +4,12 @@
         if (rta === 1) {
             /* selecciono los elementos con class="sel" de las tablas del id=formulario */
             $(formulario + ' input.sel').each(function (i) {
-                if ($(this).prop('checked') == true) {
+                var url_download;
+                var key;
+                var url;
+                if ($(this).prop('checked') === true) {
                     key = $(this).prop('value');
-                    url = "apps/certificados/controller/certificado_pdf_download.php";
+                    url = 'apps/certificados/controller/certificado_pdf_download.php';
                     url_download = url + '?key=' + key + '<?= $h_download ?>';
                     window.open(url_download);
                 }

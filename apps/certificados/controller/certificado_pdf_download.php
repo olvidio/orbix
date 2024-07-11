@@ -1,5 +1,6 @@
 <?php
-
+// para que funcione bien la seguridad
+$_POST = $_GET;
 
 // INICIO Cabecera global de URL de controlador *********************************
 use certificados\domain\repositories\CertificadoPublicRepository;
