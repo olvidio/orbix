@@ -49,6 +49,7 @@ function modifica_sacd_ausencias($id_item, $id_enc, $id_nom, $f_ini, $f_fin)
         $gesHorario = new GestorEncargoSacdHorario();
         $cHorario = $gesHorario->getEncargoSacdHorarios($aWhere);
         foreach ($cHorario as $oHorario) {
+            $oHorario->DBCarregar();
             $oHorario->setF_ini($f_ini);
             $oHorario->setF_fin($f_fin);
             if ($oHorario->DBGuardar() === false) {
