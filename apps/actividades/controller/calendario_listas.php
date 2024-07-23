@@ -36,11 +36,13 @@ require_once("apps/core/global_object.inc");
 function nomUbi($id_ubi)
 {
     $oCasa = new Casa($id_ubi);
-    if (empty($oCasa)) {
+    $nombre_ubi  = $oCasa->getNombre_ubi();
+    if (empty($nombre_ubi)) {
         // probar con los ctr.
         $oCasa = new Centro($id_ubi);
+        $nombre_ubi  = $oCasa->getNombre_ubi();
     }
-    return $oCasa->getNombre_ubi();
+    return $nombre_ubi;
 }
 
 $oPosicion->recordar();
@@ -225,6 +227,7 @@ foreach (array_keys($aGrupos) as $key) {
             $a++;
             $id_activ = $oActividad->getId_activ();
             $id_tipo_activ = $oActividad->getId_tipo_activ();
+            $nom_activ = $oActividad->getNom_activ();
             $dl_org = $oActividad->getDl_org();
             $f_ini = $oActividad->getF_ini()->getFromLocal();
             $f_fin = $oActividad->getF_fin()->getFromLocal();
@@ -239,7 +242,11 @@ foreach (array_keys($aGrupos) as $key) {
             $id_ubi = $oActividad->getId_ubi();
             $lugar_esp = $oActividad->getLugar_esp();
             if (empty($lugar_esp)) {
-                $nombre_ubi = nomUbi($id_ubi);
+                if (empty($id_ubi)) {
+                    echo sprintf(_("La actividad: %s  No tiene lugar asignado"), $nom_activ)."<br>";
+                } else {
+                    $nombre_ubi = nomUbi($id_ubi);
+                }
             } else {
                 $nombre_ubi = $lugar_esp;
             }
