@@ -4,11 +4,11 @@ use actividades\model\entity\GestorActividad;
 use actividadescentro\model\entity\GestorCentroEncargado;
 use actividadtarifas\model\entity\TipoTarifa;
 use asistentes\model\entity\GestorAsistente;
-use config\model\Config;
 use core\ConfigGlobal;
 use dossiers\model\PermisoDossier;
 use permisos\model\PermisosActividadesTrue;
 use ubis\model\entity\Casa;
+use ubis\model\entity\Centro;
 use ubis\model\entity\CentroDl;
 use ubis\model\entity\GestorCasaDl;
 use web\Lista;
@@ -38,7 +38,7 @@ function nomUbi($id_ubi)
     $oCasa = new Casa($id_ubi);
     if (empty($oCasa)) {
         // probar con los ctr.
-        $oCasa = new CentroDl($id_ubi);
+        $oCasa = new Centro($id_ubi);
     }
     return $oCasa->getNombre_ubi();
 }
@@ -232,8 +232,8 @@ foreach (array_keys($aGrupos) as $key) {
             $h_fin = $oActividad->getH_fin();
             $tarifa = $oActividad->getTarifa();
 
-            $h_ini = preg_replace('/(\d+):(\d+):(\d+)/', '$1:$2', $h_ini?? '');
-            $h_fin = preg_replace('/(\d+):(\d+):(\d+)/', '$1:$2', $h_fin?? '');
+            $h_ini = preg_replace('/(\d+):(\d+):(\d+)/', '$1:$2', $h_ini ?? '');
+            $h_fin = preg_replace('/(\d+):(\d+):(\d+)/', '$1:$2', $h_fin ?? '');
 
             // lugar
             $id_ubi = $oActividad->getId_ubi();
