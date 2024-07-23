@@ -235,9 +235,14 @@ foreach (array_keys($aGrupos) as $key) {
             $h_ini = preg_replace('/(\d+):(\d+):(\d+)/', '$1:$2', $h_ini?? '');
             $h_fin = preg_replace('/(\d+):(\d+):(\d+)/', '$1:$2', $h_fin?? '');
 
-
+            // lugar
             $id_ubi = $oActividad->getId_ubi();
-            $nombre_ubi = nomUbi($id_ubi);
+            $lugar_esp = $oActividad->getLugar_esp();
+            if (empty($lugar_esp)) {
+                $nombre_ubi = nomUbi($id_ubi);
+            } else {
+                $nombre_ubi = $lugar_esp;
+            }
 
             $oTipoActiv = new TiposActividades($id_tipo_activ);
             $ssfsv = $oTipoActiv->getSfsvText();
