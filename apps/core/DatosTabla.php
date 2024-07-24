@@ -32,6 +32,7 @@ class DatosTabla
     private $eliminar_txt;
 
     private $Coleccion;
+    private $oFicha;
     private $bloque; // necesario para el script
     private $action_form; // necesario para el script
     private $action_update; // necesario para el script
@@ -179,7 +180,7 @@ class DatosTabla
                         $a_valores[$c][$v] = $var;
                         break;
                     case "check":
-                        if ($valor_camp === "t") {
+                        if (is_true($valor_camp)) {
                             $a_valores[$c][$v] = _("sí");
                         } else {
                             $a_valores[$c][$v] = _("no");
