@@ -65,6 +65,21 @@ switch ($Qperiodo) {
         $empiezamax->add(new DateInterval($intervalo));
         $Qempiezamax_rep = $empiezamax->format('Y-m-d');
         break;
+    case "este_mes":
+        $este_mes = date('m');
+        $anyo = date('Y');
+        $empiezamin = new DateTimeLocal(date($anyo.'-'.$este_mes.'-01'));
+        $Qempiezamin_rep = $empiezamin->format('Y-m-d');
+        $siguiente_mes = $este_mes + 1;
+        if ($siguiente_mes == 12) {
+            $siguiente_mes = 1;
+            $anyo++;
+        }
+        $empiezamax = new DateTimeLocal(date($anyo.'-'.$siguiente_mes.'-01'));
+        $Qempiezamax_rep = $empiezamax->format('Y-m-d');
+        break;
+
+        
     case "proximo_mes":
         $proximo_mes = date('m') + 1;
         $anyo = date('Y');
