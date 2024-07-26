@@ -15,22 +15,24 @@ require_once("apps/core/global_header.inc");
 require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$aOpciones = array(
-    'semana_next' => _("próxima semana"),
-    'mes_next' => _("próximo mes"),
+$aPeriodos = array(
+    'esta_semana' => _("esta semana"),
+    'este_mes' => _("este mes"),
+    'proxima_semana' => _("próxima semana"),
+    'proximo_mes' => _("próximo mes"),
     'separador' => '---------',
     'otro' => _("otro")
 );
-$oFormP = new PeriodoQue();
-$oFormP->setFormName('frm_nuevo_periodo');
-$oFormP->setTitulo(core\strtoupper_dlb(_("seleccionar un periodo")));
-$oFormP->setPosiblesPeriodos($aOpciones);
 
-$oFormP->setBoton("<input type=button name=\"ver\" value=\"" . _("ver") . "\" onclick=\"fnjs_ver_plantilla_zona();\">");
+$oDesplPeriodos = new Desplegable();
+$oDesplPeriodos->setOpciones($aPeriodos);
+$oDesplPeriodos->setNombre('periodos');
+$oDesplPeriodos->setAction('fnjs_ver_plantilla_zona()');
 
 $oGestorZona = new GestorZona();
 $oDesplZonas = $oGestorZona->getListaZonas();
 $oDesplZonas->setNombre('id_zona');
+$oDesplZonas->setAction('fnjs_ver_plantilla_zona()');
 
 $a_Orden = array(
     'orden' => 'orden',
@@ -52,7 +54,7 @@ $h_zona_periodo = $oHashZonaPeriodo->linkSinVal();
 $a_campos = ['oPosicion' => $oPosicion,
     'oDesplZonas' => $oDesplZonas,
     'oDesplOrden' => $oDesplOrden,
-    'oFormP' => $oFormP,
+    'oDesplPeriodos' => $oDesplPeriodos,
     'url_ver_cuadricula_zona' => $url_ver_cuadricula_zona,
     'h_zona_periodo' => $h_zona_periodo,
 ];

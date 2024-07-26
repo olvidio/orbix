@@ -36,7 +36,25 @@ $Qempiezamax = (string)filter_input(INPUT_POST, 'empiezamax');
 $Qseleccion = (integer)filter_input(INPUT_POST, 'seleccion');
 
 switch ($Qperiodo) {
-    case "semana_next":
+    case "esta_semana":
+        $dia_week = date('N');
+        $dia_week--;
+        if ($dia_week==-1){
+            $dia_week=6;
+        }
+        $empiezamin = new DateTimeLocal(date('Y-m-d'));
+        $intervalo='P'.($dia_week).'D';
+        $di = new DateInterval($intervalo);
+        $di->invert = 1; // intervalo negativo
+
+        $empiezamin->add($di);
+        $Qempiezamin_rep = $empiezamin->format('Y-m-d');
+        $intervalo='P7D';
+        $empiezamax = $empiezamin;
+        $empiezamax->add(new DateInterval($intervalo));
+        $Qempiezamax_rep = $empiezamax->format('Y-m-d');
+        break;
+    case "proxima_semana":
         $dia_week = date('N');
         $empiezamin = new DateTimeLocal(date('Y-m-d'));
         $intervalo='P'.(8-$dia_week).'D';
@@ -47,7 +65,7 @@ switch ($Qperiodo) {
         $empiezamax->add(new DateInterval($intervalo));
         $Qempiezamax_rep = $empiezamax->format('Y-m-d');
         break;
-    case "mes_next":
+    case "proximo_mes":
         $proximo_mes = date('m') + 1;
         $anyo = date('Y');
         if ($proximo_mes == 12) {
@@ -162,12 +180,6 @@ switch (trim($QTipoPlantilla)) {
                 "width" => 80, 
                 "cssClass" => "cell-title"
             ];
-/*            $columns_sacd[] = [
-                "id" => "$num_dia", 
-                "name" => "$nom_dia", 
-                "field" => "$num_dia", 
-                "width" => 80, 
-                "cssClass" => "cell-title"];*/
             $columns_sacd .= ",
             {'id' : '".$num_dia."', 'name' : '".$nom_dia."', 'field' : '".$num_dia."', 'width' : 80, 'formatter': statusFormatter}";
         }
@@ -202,12 +214,6 @@ switch (trim($QTipoPlantilla)) {
                 "width" => 80, 
                 "cssClass" => "cell-title"
             ];
-/*            $columns_sacd[] = [
-                "id" => "$num_dia", 
-                "name" => "$nom_dia", 
-                "field" => "$num_dia", 
-                "width" => 80, 
-                "cssClass" => "cell-title"];*/
             $columns_sacd .= ",
             {'id' : '".$num_dia."', 'name' : '".$nom_dia."', 'field' : '".$num_dia."', 'width' : 80, 'formatter': statusFormatter}";
         }
@@ -222,7 +228,8 @@ switch (trim($QTipoPlantilla)) {
             $dia_week = $date->format('N');
             $dia_week_sacd[$num_dia] = $date->format('N');
             $dia_mes = $date->format('d');
-            $nom_dia=$a_dias_semana_breve[$dia_week].' '.$dia_mes;
+            $num_mes = $date->format('m');
+            $nom_dia=$a_dias_semana_breve[$dia_week].' '.$dia_mes.'.'.$num_mes;
             $columns_cuadricula[] = [
                 "id" => "$num_dia", 
                 "name" => "$nom_dia", 
@@ -230,14 +237,7 @@ switch (trim($QTipoPlantilla)) {
                 "width" => 80, 
                 "cssClass" => "cell-title"
             ];
-/*            $columns_sacd[] = [
-                "id" => "$num_dia", 
-                "name" => "$nom_dia", 
-                "field" => "$num_dia", 
-                "width" => 80, 
-                "formatter" => "statusFormatter",
-                "cssClass" => "cell-title"
-            ];*/
+
             $columns_sacd .= ",
             {'id' : '".$num_dia."', 'name' : '".$nom_dia."', 'field' : '".$num_dia."', 'width' : 80, 'formatter': statusFormatter}";
         }

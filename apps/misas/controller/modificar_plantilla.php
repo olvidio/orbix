@@ -45,7 +45,6 @@ $oDesplOrden->setOpciones($a_Orden);
 $oDesplOrden->setNombre('orden');
 $oDesplOrden->setAction('fnjs_ver_plantilla_zona()');
 
-
 $url_ver_cuadricula_zona = 'apps/misas/controller/ver_cuadricula_zona.php';
 $oHashZonaTipo = new Hash();
 $oHashZonaTipo->setUrl($url_ver_cuadricula_zona);

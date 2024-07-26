@@ -7,12 +7,12 @@
                 <th class=titulo_inv colspan=4>{{ "Plan de Misas de la zona"|trans|capitalize }}:&nbsp;&nbsp;&nbsp;
                     {{ oDesplZonas.desplegable|raw }}
                 </th>
+                <th class=titulo_inv colspan=4>{{ "Periodo"|trans|capitalize }}:&nbsp;&nbsp;&nbsp;
+                    {{ oDesplPeriodos.desplegable|raw }}
+                </th>
                 <th class=titulo_inv colspan=4>{{ "Orden"|trans|capitalize }}:&nbsp;&nbsp;&nbsp;
                     {{ oDesplOrden.desplegable|raw }}
                 </th> 
-            </tr>
-            <tr>
-            {{ oFormP.getHtml()|raw }}
             </tr>
             </thead>
         </table>
@@ -29,7 +29,7 @@
         if (id_zona) {
             let url = '{{ url_ver_cuadricula_zona }}';
 	        var zona=$('#sacd_zona').prop('checked');
-    	    var periodo=$('#periodo').val();
+    	    var periodo=$('#periodos').val();
     	    var empiezamax=$('#empiezamax').val();
     	    var empiezamin=$('#empiezamin').val();
             let orden = $('#orden').val();
