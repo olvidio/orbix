@@ -79,10 +79,10 @@ $a_nombre_mes_breve=[1=>'Ene', 2=>'feb', 3=>'mar', 4=>'abr', 5=>'may', 6=>'jun',
 $columns_cuadricula = [
     ["id" => "encargo", "name" => "Encargo", "field" => "encargo", "width" => 250, "cssClass" => "cell-title"],
 ];
-$columns_sacd = [
+$columns2 = [
     ["id" => "sacerdote", "name" => "Sacerdote", "field" => "sacerdote", "width" => 250, "cssClass" => "cell-title"],
 ];
-$columns2 = "[
+$columns_sacd = "[
     {'id': 'sacerdote', 'name' : 'Sacerdote', 'field' : 'sacerdote', 'width' : 250, 'cssClass' : 'cell-title'}";
 
 $dia_week_sacd = [];
@@ -116,16 +116,15 @@ switch (trim($QTipoPlantilla)) {
                 "width" => 80, 
                 "cssClass" => "cell-title"
             ];
-            $columns_sacd[] = [
+            $columns2[] = [
                 "id" => "$num_dia", 
                 "name" => "$nom_dia", 
                 "field" => "$num_dia", 
                 "width" => 80, 
-//                "formatter" => "statusFormatter",
                 "cssClass" => "cell-title"
             ];
-            $columns2 .= ",
-            {'id' : '".$num_dia."', 'name' : '".$nom_dia."', 'field' : '".$num_dia."', 'formatter': statusFormatter}";
+            $columns_sacd .= ",
+            {'id' : '".$num_dia."', 'name' : '".$nom_dia."', 'field' : '".$num_dia."', 'width' : 80, 'formatter': statusFormatter}";
         }
         break;
     case EncargoDia::PLANTILLA_DOMINGOS_UNO:
@@ -163,12 +162,14 @@ switch (trim($QTipoPlantilla)) {
                 "width" => 80, 
                 "cssClass" => "cell-title"
             ];
-            $columns_sacd[] = [
+/*            $columns_sacd[] = [
                 "id" => "$num_dia", 
                 "name" => "$nom_dia", 
                 "field" => "$num_dia", 
                 "width" => 80, 
-                "cssClass" => "cell-title"];
+                "cssClass" => "cell-title"];*/
+            $columns_sacd .= ",
+            {'id' : '".$num_dia."', 'name' : '".$nom_dia."', 'field' : '".$num_dia."', 'width' : 80, 'formatter': statusFormatter}";
         }
         break;
     case EncargoDia::PLANTILLA_MENSUAL_UNO:
@@ -201,12 +202,14 @@ switch (trim($QTipoPlantilla)) {
                 "width" => 80, 
                 "cssClass" => "cell-title"
             ];
-            $columns_sacd[] = [
+/*            $columns_sacd[] = [
                 "id" => "$num_dia", 
                 "name" => "$nom_dia", 
                 "field" => "$num_dia", 
                 "width" => 80, 
-                "cssClass" => "cell-title"];
+                "cssClass" => "cell-title"];*/
+            $columns_sacd .= ",
+            {'id' : '".$num_dia."', 'name' : '".$nom_dia."', 'field' : '".$num_dia."', 'width' : 80, 'formatter': statusFormatter}";
         }
         break;
     case EncargoDia::PLAN_DE_MISAS:
@@ -227,20 +230,21 @@ switch (trim($QTipoPlantilla)) {
                 "width" => 80, 
                 "cssClass" => "cell-title"
             ];
-            $columns_sacd[] = [
+/*            $columns_sacd[] = [
                 "id" => "$num_dia", 
                 "name" => "$nom_dia", 
                 "field" => "$num_dia", 
                 "width" => 80, 
                 "formatter" => "statusFormatter",
                 "cssClass" => "cell-title"
-            ];
-
+            ];*/
+            $columns_sacd .= ",
+            {'id' : '".$num_dia."', 'name' : '".$nom_dia."', 'field' : '".$num_dia."', 'width' : 80, 'formatter': statusFormatter}";
         }
         break;
 } 
 
-$columns2 .= "]";
+$columns_sacd .= "]";
 
 $data_cuadricula = [];
 
@@ -271,7 +275,7 @@ foreach ($cEncargosZona as $oEncargo) {
 //    echo $id_enc.$desc_enc.'<br>';
     $data_cols = [];
     $data_cols = [];
-    $meta_sacd = [];
+//    $meta_sacd = [];
     if (($QTipoPlantilla == EncargoDia::PLANTILLA_SEMANAL_TRES) || ($QTipoPlantilla == EncargoDia::PLANTILLA_DOMINGOS_TRES) || ($QTipoPlantilla == EncargoDia::PLANTILLA_MENSUAL_TRES)) {
         $data_cols2 = [];
         $meta_dia2 = [];
@@ -511,20 +515,30 @@ foreach ($cZonaSacd as $oZonaSacd) {
 
         $misas_dia=0;
         $misas_1a_hora=0;
+        $misas_dia_zona=0;
+        $misas_1a_hora_zona=0;
         foreach($cEncargosDia as $oEncargoDia) {
             $id_enc = $oEncargoDia->getId_enc();
- //           echo 'id_enc: '.$id_enc.'<br>';
+//            echo 'id_enc: '.$id_enc.'<br>';
             $oEncargo = new Encargo(array('id_enc' => $id_enc));
             $id_tipo_enc = $oEncargo->getId_tipo_enc();
- //           echo 'tipo: '.$id_tipo_enc.'<br>';
+            $id_zona_enc = $oEncargo->getId_zona();
+//            echo 'tipo: '.$id_tipo_enc.' zona: '.$id_zona_enc.'<br>';
             if (substr($id_tipo_enc,1,1)=='1')
             {
                 $misas_dia++;
                 $misas_1a_hora++;
+                if ($Qid_zona==$id_zona_enc){
+                    $misas_dia_zona++;
+                    $misas_1a_hora_zona++;
+                }
             }
             if (substr($id_tipo_enc,1,1)=='2')
             {
                 $misas_dia++;
+                if ($Qid_zona==$id_zona_enc){
+                    $misas_dia_zona++;
+                }
             }
  //           echo $misas_dia.$misas_1a_hora.'<br>';
         }
@@ -532,16 +546,35 @@ foreach ($cZonaSacd as $oZonaSacd) {
         $num_dia = $date->format('Y-m-d');
         $dws = $dia_week_sacd[$num_dia];
 //echo $num_dia.'-'.$dws.'='.$esta_en_zona[$dws].'<br>';
-        if ($esta_en_zona[$dws]){
-            $data_cols[$num_dia]=$misas_dia*10+$misas_1a_hora;
-//            $data_cols[$num_dia] = 'SI'.$misas_dia.$misas_1a_hora;    
-        } else {
-            $data_cols[$num_dia]=$misas_dia*10+$misas_1a_hora;
-//            $data_cols[$num_dia] = 'NO'.$misas_dia.$misas_1a_hora;
+        $color_fondo='verde';
+        $texto='';
+        if ($misas_dia>2){
+            $color_fondo='rojo';
+            $texto='Este día tiene más de dos Misas';
         }
-        $meta_sacd["$num_dia"]=$misas_dia*10+$misas_1a_hora;
+        if ($misas_dia==2){
+            $color_fondo='amarillo';
+            $texto='Este día tiene dos Misas';
+        }
+        if ($misas_1a_hora==2){
+            $color_fondo='rojo';
+            $texto='Tiene dos Misas a primera hora';
+        }
+
+
+        if ($esta_en_zona[$dws]){
+//            $data_cols[$num_dia]=$misas_dia*10+$misas_1a_hora;
+            $data_cols[$num_dia] = 'SI#'.$color_fondo.'#'.$texto;    
+        } else {
+//            $data_cols[$num_dia]=$misas_dia*10+$misas_1a_hora;
+            if ($misas_1a_hora_zona>0){
+                $color_fondo='rojo';
+                $texto='No está en la zona y tiene Misa a primera hora';
+            }
+            $data_cols[$num_dia] = 'NO#'.$color_fondo.'#'.$texto;
+        }
     }
-    $data_cols["meta"]=$meta_sacd;
+//    $data_cols["meta"]=$meta_sacd;
     $data_sacd[]=$data_cols;
 }
 
@@ -549,9 +582,8 @@ foreach ($cZonaSacd as $oZonaSacd) {
 $json_columns_cuadricula = json_encode($columns_cuadricula);
 $json_data_cuadricula = json_encode($data_cuadricula);
 
-$json_columns_sacd = json_encode($columns_sacd);
+$json_columns2 = json_encode($columns2);
 $json_data_sacd = json_encode($data_sacd);
-echo $json_data_sacd;
 $oHash = new Hash();
 $oHash->setCamposForm('color!dia!id_enc!key!observ!tend!tstart!uuid_item');
 $array_h = $oHash->getParamAjaxEnArray();
@@ -571,8 +603,8 @@ $h_ver_cuadricula_zona = $oHash_ver_cuadricula_zona->linkSinVal();
 $a_campos = ['oPosicion' => $oPosicion,
     'json_columns_cuadricula' => $json_columns_cuadricula,
     'json_data_cuadricula' => $json_data_cuadricula,
-    'json_columns_sacd' => $json_columns_sacd,
-    'columns2' => $columns2,
+    'json_columns2' => $json_columns2,
+    'columns_sacd' => $columns_sacd,
     'json_data_sacd' => $json_data_sacd,
     'url_desplegable_sacd' =>$url_desplegable_sacd,
     'h_desplegable_sacd' => $h_desplegable_sacd,

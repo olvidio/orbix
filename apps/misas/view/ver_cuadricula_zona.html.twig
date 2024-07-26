@@ -65,14 +65,14 @@
             padding-left: 4px;
             padding-right: 0px;
         }
-    .green {
+    .verde {
       background-color: #d1e7dd;
     }
-    .red {
+    .rojo {
       background-color: #f8d7da;
     }
-    .orange {
-      background-color: #fff3cd;
+    .amarillo {
+      background-color: #ffff00;
     }
     </style>
 </head>
@@ -82,9 +82,6 @@
     </div>
     <div style="width:100%;">
         <div id="Grid_sacd" class="slick-container" style="width:100%;height:300px;"></div>
-    </div>
-    <div style="width:100%;">
-        <div id="Grid2" class="slick-container" style="width:100%;height:300px;"></div>
     </div>
 
 
@@ -184,9 +181,6 @@
         cell = $('#cell_selected').val();
         row = $('#row_selected').val();
         var id_campo = columns[cell].field;
-        //var meta = data[row].meta[id_campo];
-        //let id_nom = meta.id_nom;
-        //let iniciales = meta.iniciales;
 
         let key = $('#id_sacd').val();
         const myArray = key.split("#");
@@ -219,8 +213,6 @@
         data[row].meta[id_campo].id_enc = id_enc;
 
         let meta = data[row].meta[id_campo];
-        // añadir el campo día
-//        meta.dia = id_campo;
         meta.dia = dia;
         // añadir el hash (se puede cambiar todo menos el encargo)
         const arr_h = { {{ array_h|raw }} };
@@ -325,7 +317,6 @@
         $('#id_sacd').val(key);
         $('#tstart').val(tstart);
         $('#tend').val(tend);
-//        $('#dia').val(dia);
         $('#dia').val(dia);
         $('#observ').val(observ);
         $('#uuid_selected').val(uuid_item);
@@ -364,34 +355,27 @@
     }
 
 function statusFormatter(row, cell, value, columnDef, dataContext) {
-      var rtn = { text: value, removeClasses: 'red orange green' };
-      if (value !== null && value !== "") {
-        if (value < 33) {
-          rtn.addClasses = "red";
-          rtn.toolTip = "danger zone";
-        } else if (value < 66) {
-          rtn.addClasses =  "orange";
-          rtn.toolTip = "might want to look at it";
-        } else {
-          rtn.addClasses =  "green";
-          rtn.toolTip = "all good";
+    vs=value.split("#");
+    color=vs[1];
+    texto=vs[2];
+      var rtn = { text: vs[0], removeClasses: 'red orange green' };
+
+      if (color !== null && color !== "") {
+        if (color == "rojo") {
+          rtn.addClasses = "rojo";
+          rtn.toolTip = texto;
+        } else if (color == "amarillo") {
+          rtn.addClasses =  "amarillo";
+          rtn.toolTip = texto;
+        } else if (color == "verde") {
+          rtn.addClasses =  "verde";
+          rtn.toolTip = texto;
         }
       }
-alert('cell: '+cell);
-alert('row: '+row)
-
-        row = $('#row_selected').val();
-      var id_campo = columns_sacd[cell].field;
-alert('id_campo: '+id_campo);
-      meta_s=data_sacd[cell]['sacerdote'];
-alert('meta_s: '+meta_s)
-      meta=data_sacd[cell]['meta']['2001-01-01'];
-alert('meta: '+meta)
       return rtn;
   }
 
 var meta;
-var meta_s;
     var grid;
     var data = {{ json_data_cuadricula|raw }};
     var columns = {{ json_columns_cuadricula|raw }};
@@ -405,7 +389,7 @@ var meta_s;
 
     var grid_sacd;
     var data_sacd = {{ json_data_sacd|raw }};
-    var columns_sacd = {{ json_columns_sacd|raw }};
+    var columns2 = {{ json_columns2|raw }};
     var seleccion ={{ seleccion }};
     if (seleccion==1) {
         $('#sacd_libre').checked=true;
@@ -420,15 +404,7 @@ var meta_s;
         $('#sacd_depaso').checked=true;
     }
 
-    /*
-  var columns2 = [
-    {id: "title", name: "Title", field: "title", width: 120, cssClass: "cell-title"},
-    {id: "duration", name: "Duration", field: "duration"},
-    {id: "status", name: "Status", field: "percentComplete", width: 50, resizable: false, formatter: statusFormatter, editor: Slick.Editors.Text },
- ];
-*/
-    var columns2 = {{ columns2|raw }};
-//    alert (columns2[2]['formatter']);
+    var columns_sacd = {{ columns_sacd|raw }};
 
       var options2 = {
     editable: true,
@@ -440,7 +416,6 @@ var meta_s;
     $(function () {
         grid = new Slick.Grid("#myGrid", data, columns, options);
         grid_sacd = new Slick.Grid("#Grid_sacd", data_sacd, columns_sacd, options);
-        grid2 = new Slick.Grid("#Grid2", data_sacd, columns2, options);
 
         grid.onClick.subscribe(function (e) {
             var cell = grid.getCellFromEvent(e);
