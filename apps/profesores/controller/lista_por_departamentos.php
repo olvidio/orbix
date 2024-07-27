@@ -78,7 +78,7 @@ $cDepartamentos = $oGesDepartamentos->getDepartamentos(array('_ordre' => 'depart
 
 
 //por cada departamento:
-// orden alfabetico personas.
+// orden alfabético personas.
 $aClaustro = array();
 foreach ($cDepartamentos as $oDepartamento) {
     $id_departamento = $oDepartamento->getId_departamento();
@@ -102,7 +102,7 @@ foreach ($cDepartamentos as $oDepartamento) {
     foreach ($cProfesorDirector as $oProfesorDirector) {
         $id_nom = $oProfesorDirector->getId_nom();
         $oPersonaDl = new personas\model\entity\PersonaDl($id_nom);
-        if ($oPersonaDl->getSituacion() != 'A') {
+        if ($oPersonaDl->getSituacion() !== 'A') {
             continue;
         }
         $dl = $oPersonaDl->getDl();
@@ -132,7 +132,7 @@ foreach ($cDepartamentos as $oDepartamento) {
         foreach ($cProfesores as $oProfesor) {
             $id_nom = $oProfesor->getId_nom();
             $oPersonaDl = new personas\model\entity\PersonaDl($id_nom);
-            if ($oPersonaDl->getSituacion() != 'A') {
+            if ($oPersonaDl->getSituacion() !== 'A') {
                 continue;
             }
             $dl = $oPersonaDl->getDl();

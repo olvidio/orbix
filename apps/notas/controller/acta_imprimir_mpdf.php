@@ -31,9 +31,9 @@ function data($data) {
 }
 
 function num_latin($num) {
-	$unidades=array('',I,II,III,IV,V,VI,VII,VIII,IX,X);
-	$decenas=array('',X,XX,XXX,XL,L,LX,LXX,LXXX,XC,C);
-	$centenas=array('',C,CC,CCC,CD,D,DC,DCC,DCCC,CM,M);
+	$unidades=array('','I','II','III','IV,V','VI','VII','VIII','IX','X');
+	$decenas=array('','X','XX','XXX','XL','L','LX','LXX','LXXX','XC','C');
+	$centenas=array('','C','CC','CCC','CD','D','DC','DCC','DCCC','CM','M');
 	$uni=substr($num,-1,1);
 	if (strlen($num)>1) { $dec=substr($num,-2,1); } else { $dec=0;}
 	if (strlen($num)>2) { $cen=substr($num,-3,1); } else { $cen=0;}
@@ -65,7 +65,7 @@ $any=$oAsignatura->getYear();
 
 $id_tipo=$oAsignatura->getId_tipo();
 $oAsignaturaTipo = new asignaturas\AsignaturaTipo($id_tipo);
-$curso = strtr($oAsignaturaTipo->getTipo_latin(), $replace);
+$curso = strtr($oAsignaturaTipo->getTipo_latin()?? '', $replace);
 
 switch ($any) {
 	case 1:
@@ -155,7 +155,7 @@ $tribunal_html .= "<div class=\"sello\">L.S.<br>Studii Generalis</div>";
 ?>
 <meta http-equiv="content-type" content="text/html; charset=utf-8" />
 <div class="A4" >
-<?php if ($cara=="A") { ?>
+<?php if ($cara==="A") { ?>
 <div class="cabecera"><?= $nombre_prelatura ?></div>
 <div class="region">STUDIUM GENERALE REGIONIS: <?= $region_latin ?></div>
 <div class="curso"><?= sprintf("CURSUS INSTITUTIONALES:&nbsp;&nbsp;  %s &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ANNUS: %s",$curso,$any); ?></div>
@@ -187,15 +187,15 @@ $tribunal_html .= "<div class=\"sello\">L.S.<br>Studii Generalis</div>";
 
 }
 
-if ($cara=="A" && $num_alumnos+$lin_tribunal<$lin_max_cara_A) { $tribunal=1; }
-if ($cara=="A" && $num_alumnos+$lin_tribunal>$lin_max_cara_A) { $tribunal=0; }
+if ($cara==="A" && $num_alumnos+$lin_tribunal<$lin_max_cara_A) { $tribunal=1; }
+if ($cara==="A" && $num_alumnos+$lin_tribunal>$lin_max_cara_A) { $tribunal=0; }
 
 if (!empty($tribunal)){
 	echo $tribunal_html; 
 	$tribunal=0;
 }
 
-if ($cara=="A") {
+if ($cara==="A") {
 ?>
 </div>
 <div class="pie">
@@ -214,7 +214,7 @@ $cara='B';
 
 echo '<div class="A4" >';
 
-if ($cara=="B" && $alum_cara_B > 0 ) {
+if ($cara==="B" && $alum_cara_B > 0 ) {
 	?>
 	<table class="alumni" height="<?= $alum_cara_B ?>" >
 	<tr><td width="55%" class="alumni"></td><td  width="10%"></td><td width="35%"></td></tr>
@@ -239,7 +239,7 @@ if ($cara=="B" && $alum_cara_B > 0 ) {
 }
 
 // tribunal -----------------
-if ($cara=="B" && $num_alumnos+$lin_tribunal>=$lin_max_cara_A) { $tribunal=1; }
+if ($cara==="B" && $num_alumnos+$lin_tribunal>=$lin_max_cara_A) { $tribunal=1; }
 if (!empty($tribunal)){
 	echo $tribunal_html;
 }

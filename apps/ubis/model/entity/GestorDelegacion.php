@@ -44,6 +44,13 @@ class GestorDelegacion extends ClaseGestor
 
     /* MÉTODOS PÚBLICOS -----------------------------------------------------------*/
 
+    /**
+     * Devuelve un array con los [ schema => id_schema ] de la región stgr
+     *
+     * @param $sRegionStgr
+     * @param $mi_sfsv
+     * @return array
+     */
     public function getArrayIdSchemaRegionStgr($sRegionStgr, $mi_sfsv)
     {
         $oDbl = $this->getoDbl_Select();
@@ -70,7 +77,7 @@ class GestorDelegacion extends ClaseGestor
     }
 
     /**
-     * retorna un objecte del tipus Array, els esquemes d'una regió del stgr
+     * retorna un Array [id_dl => "region-dl"], els esquemes d'una regió del stgr
      *
      * @param string region.
      * @return array Una Llista d'esquemes.
@@ -100,7 +107,7 @@ class GestorDelegacion extends ClaseGestor
     }
 
     /**
-     * retorna un objecte del tipus Array, les dl d'una regió del stgr
+     * retorna un Array, les dl d'una regió del stgr
      *
      * @param array optional lista de regions.
      * @return array Una Llista de delegacions.
@@ -375,9 +382,9 @@ class GestorDelegacion extends ClaseGestor
             $sOperador = isset($aOperators[$camp]) ? $aOperators[$camp] : '';
             if ($a = $oCondicion->getCondicion($camp, $sOperador, $val)) $aCondi[] = $a;
             // operadores que no requieren valores
-            if ($sOperador == 'BETWEEN' || $sOperador == 'IS NULL' || $sOperador == 'IS NOT NULL' || $sOperador == 'OR') unset($aWhere[$camp]);
-            if ($sOperador == 'IN' || $sOperador == 'NOT IN') unset($aWhere[$camp]);
-            if ($sOperador == 'TXT') unset($aWhere[$camp]);
+            if ($sOperador === 'BETWEEN' || $sOperador === 'IS NULL' || $sOperador === 'IS NOT NULL' || $sOperador === 'OR') unset($aWhere[$camp]);
+            if ($sOperador === 'IN' || $sOperador === 'NOT IN') unset($aWhere[$camp]);
+            if ($sOperador === 'TXT') unset($aWhere[$camp]);
         }
         $sCondi = implode(' AND ', $aCondi);
         if ($sCondi != '') $sCondi = " WHERE " . $sCondi;
