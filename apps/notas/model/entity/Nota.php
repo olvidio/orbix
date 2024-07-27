@@ -44,6 +44,7 @@ class Nota extends core\ClasePropiedades
     10 | nota numérica   | t        | nm
     11 | Exento          | t        | e
     12 | examinado       | f        | ex
+    13 | falta certificado | f      | fc
     */
 
     // tipo constantes.
@@ -60,6 +61,7 @@ class Nota extends core\ClasePropiedades
     const NUMERICA = 10;
     const EXENTO = 11;
     const EXAMINADO = 12;
+    const FALTA_CERTIFICADO = 13;
     //
     // Para que la variable stgr_posibles coja las traducciones, hay
     // que ejecutar la funcion 'traduccion_init()'. Cosa que se hace justo
@@ -82,6 +84,7 @@ class Nota extends core\ClasePropiedades
             self::NUMERICA => _("nota numérica"),
             self::EXENTO => _("Exento"),
             self::EXAMINADO => _("examinado"),
+            self::FALTA_CERTIFICADO => _("falta certificado"),
         ];
     }
 
@@ -162,7 +165,7 @@ class Nota extends core\ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'id_situacion') && $val_id !== '') $this->iid_situacion = (int)$val_id; 
+                if (($nom_id === 'id_situacion') && $val_id !== '') $this->iid_situacion = (int)$val_id;
             }
         } else {
             if (isset($a_id) && $a_id !== '') {
@@ -375,7 +378,7 @@ class Nota extends core\ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'id_situacion') && $val_id !== '') $this->iid_situacion = (int)$val_id; 
+                if (($nom_id === 'id_situacion') && $val_id !== '') $this->iid_situacion = (int)$val_id;
             }
         }
     }

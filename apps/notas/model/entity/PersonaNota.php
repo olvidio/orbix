@@ -192,9 +192,9 @@ class PersonaNota extends core\ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'id_nom') && $val_id !== '') $this->iid_nom = (int)$val_id;
-                if (($nom_id == 'id_asignatura') && $val_id !== '') $this->iid_asignatura = (int)$val_id;
-                if (($nom_id == 'id_nivel') && $val_id !== '') $this->iid_nivel = (int)$val_id;
+                if (($nom_id === 'id_nom') && $val_id !== '') $this->iid_nom = (int)$val_id;
+                if (($nom_id === 'id_asignatura') && $val_id !== '') $this->iid_asignatura = (int)$val_id;
+                if (($nom_id === 'id_nivel') && $val_id !== '') $this->iid_nivel = (int)$val_id;
             }
         }
         $this->setoDbl($oDbl);
@@ -272,7 +272,7 @@ class PersonaNota extends core\ClasePropiedades
             }
         } else {
             // INSERT
-            /* En la base de datos esite un trigger 'e_notas_insert_trigger' para poner la nota en el esquema correspondiente
+            /* En la base de datos existe un trigger 'e_notas_insert_trigger' para poner la nota en el esquema correspondiente
              * Por eso hay que decir el id_schema en el INSERT:
              *       DECLARE n text;
              *       BEGIN
@@ -284,10 +284,12 @@ class PersonaNota extends core\ClasePropiedades
              *               EXECUTE 'INSERT INTO ' || quote_ident(n) || '.e_notas_dl SELECT $1.* ' USING NEW;
              *       END CASE;
              */
-
-            array_unshift($aDades, $this->iid_schema, $this->iid_nom);
-            $campos = "(id_schema,id_nom,id_nivel,id_asignatura,id_situacion,acta,f_acta,detalle,preceptor,id_preceptor,epoca,id_activ,nota_num,nota_max,tipo_acta)";
-            $valores = "(:id_schema,:id_nom,:id_nivel,:id_asignatura,:id_situacion,:acta,:f_acta,:detalle,:preceptor,:id_preceptor,:epoca,:id_activ,:nota_num,:nota_max,:tipo_acta)";
+            //array_unshift($aDades, $this->iid_schema, $this->iid_nom);
+            //$campos = "(id_schema,id_nom,id_nivel,id_asignatura,id_situacion,acta,f_acta,detalle,preceptor,id_preceptor,epoca,id_activ,nota_num,nota_max,tipo_acta)";
+            //$valores = "(:id_schema,:id_nom,:id_nivel,:id_asignatura,:id_situacion,:acta,:f_acta,:detalle,:preceptor,:id_preceptor,:epoca,:id_activ,:nota_num,:nota_max,:tipo_acta)";
+            array_unshift($aDades, $this->iid_nom);
+            $campos = "(id_nom,id_nivel,id_asignatura,id_situacion,acta,f_acta,detalle,preceptor,id_preceptor,epoca,id_activ,nota_num,nota_max,tipo_acta)";
+            $valores = "(:id_nom,:id_nivel,:id_asignatura,:id_situacion,:acta,:f_acta,:detalle,:preceptor,:id_preceptor,:epoca,:id_activ,:nota_num,:nota_max,:tipo_acta)";
             //echo "INSERT INTO $nom_tabla $campos VALUES $valores";
             if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {
                 $sClauError = 'PersonaNota.insertar.prepare';
@@ -484,8 +486,8 @@ class PersonaNota extends core\ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'id_nom') && $val_id !== '') $this->iid_nom = (int)$val_id;
-                if (($nom_id == 'id_nivel') && $val_id !== '') $this->iid_nivel = (int)$val_id;
+                if (($nom_id === 'id_nom') && $val_id !== '') $this->iid_nom = (int)$val_id;
+                if (($nom_id === 'id_nivel') && $val_id !== '') $this->iid_nivel = (int)$val_id;
             }
         }
     }
@@ -627,7 +629,7 @@ class PersonaNota extends core\ClasePropiedades
      * Si df_acta es string, y convert=true se convierte usando el formato webDateTimeLocal->getFormat().
      * Si convert es false, df_acta debe ser un string en formato ISO (Y-m-d). Corresponde al pgstyle de la base de datos.
      *
-     * @param date|string df_acta='' optional.
+     * @param web\DateTimeLocal|string df_acta='' optional.
      * @param boolean convert=true optional. Si es false, df_acta debe ser un string en formato ISO (Y-m-d).
      */
     function setF_acta($df_acta = '', $convert = true)
