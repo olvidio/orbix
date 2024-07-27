@@ -44,10 +44,10 @@ $Qempiezamax = (string)filter_input(INPUT_POST, 'empiezamax');
 $menos_un_dia = new DateInterval('P1D');
 $menos_un_dia->invert = 1;
 
-echo $Qperiodo.'<br>';
+echo 'zona:'.$Qid_zona.' tipoplantilla: '.$QTipoPlantilla.' periodo '.$Qperiodo.'<br>';
 
 switch ($Qperiodo) {
-    case "semana_next":
+    case "proxima_semana":
         $dia_week = date('N');
         echo 'dia:'.$dia_week.'<br>';
         $empiezamin = new DateTimeLocal(date('Y-m-d'));
@@ -62,7 +62,7 @@ switch ($Qperiodo) {
         $Qempiezamax_rep = $empiezamax->format('Y-m-d');
         echo 'fin'.$Qempiezamax_rep.'<br>';
         break;
-    case "mes_next":
+    case "proximo_mes":
         $proximo_mes = date('m') + 1;
         $anyo = date('Y');
         if ($proximo_mes == 12) {

@@ -27,12 +27,12 @@ $aPeriodos = array(
 $oDesplPeriodos = new Desplegable();
 $oDesplPeriodos->setOpciones($aPeriodos);
 $oDesplPeriodos->setNombre('periodos');
-$oDesplPeriodos->setAction('fnjs_ver_plantilla_zona()');
+$oDesplPeriodos->setAction('fnjs_ver_cuadricula_zona()');
 
 $oGestorZona = new GestorZona();
 $oDesplZonas = $oGestorZona->getListaZonas();
 $oDesplZonas->setNombre('id_zona');
-$oDesplZonas->setAction('fnjs_ver_plantilla_zona()');
+$oDesplZonas->setAction('fnjs_ver_cuadricula_zona()');
 
 $a_Orden = array(
     'orden' => 'orden',
@@ -43,7 +43,7 @@ $a_Orden = array(
 $oDesplOrden = new Desplegable();
 $oDesplOrden->setOpciones($a_Orden);
 $oDesplOrden->setNombre('orden');
-$oDesplOrden->setAction('fnjs_ver_plantilla_zona()');
+$oDesplOrden->setAction('fnjs_ver_cuadricula_zona()');
 
 $url_ver_cuadricula_zona = 'apps/misas/controller/ver_cuadricula_zona.php';
 $oHashZonaPeriodo = new Hash();
