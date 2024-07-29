@@ -76,7 +76,7 @@ switch ($Qque) {
         $Qnum_orden = (string)filter_input(INPUT_POST, 'num_orden');
         $Qid_ubi = (integer)filter_input(INPUT_POST, 'id_ubi');
         $error_txt = '';
-        if ($Qnum_orden == "borrar") { //entonces es borrar:
+        if ($Qnum_orden === "borrar") { //entonces es borrar:
             if ($Qid_activ && $Qid_ubi) {
                 $oCentroEncargado = new CentroEncargado(array('id_activ' => $Qid_activ, 'id_ubi' => $Qid_ubi));
                 if ($oCentroEncargado->DBEliminar() === false) {
@@ -130,7 +130,7 @@ switch ($Qque) {
         $f_ini_act_iso = $oDateIniAct->getIso();
 
         $aWhere['status'] = 't';
-        $aWhere['tipo_ctr'] = '^s[^s]';
+        $aWhere['tipo_ctr'] = '^s[^s]*';
         $aWhere['_ordre'] = 'nombre_ubi';
         $aOperador['tipo_ctr'] = '~';
         $GesCentros = new GestorCentroDl();
