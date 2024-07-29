@@ -7,6 +7,10 @@ use PHPUnit\Framework\TestCase;
 class notasTest extends TestCase
 {
 
+    public function test_adding() {
+         $this->assertEquals(2, 1+2);
+     }
+
     /*
     public function getDataSet()
     {
