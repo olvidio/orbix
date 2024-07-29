@@ -415,6 +415,12 @@ switch ($Qmod) {
             echo _("hay un error, no se ha guardado");
             echo "\n" . $oActividad->getErrorTxt();
         }
+        // Si tiene procesos, hay que hacerlo de nuevo
+        if (ConfigGlobal::is_app_installed('procesos')) {
+            // Copiado de actividad_proceso_ajax case 'generar':
+            $oGestorActividadProcesoTarea = new GestorActividadProcesoTarea();
+            $oGestorActividadProcesoTarea->generarProceso($Qid_activ, ConfigGlobal::mi_sfsv(), TRUE);
+        }
         break;
     case "editar": // editar la actividad.
         $Qid_tipo_activ = (integer)filter_input(INPUT_POST, 'id_tipo_activ');
@@ -444,7 +450,7 @@ switch ($Qmod) {
         // permiso
         $_SESSION['oPermActividades']->setActividad($Qid_activ, $Qid_tipo_activ, $Qdl_org);
         $oPermActiv = $_SESSION['oPermActividades']->getPermisoActual('datos');
-        if ( ConfigGlobal::is_app_installed('procesos') && $oPermActiv->have_perm_activ('crear') === TRUE) {
+        if (ConfigGlobal::is_app_installed('procesos') && $oPermActiv->have_perm_activ('crear') === TRUE) {
             $Qisfsv_val = (integer)filter_input(INPUT_POST, 'isfsv_val');
             $Qiasistentes_val = (integer)filter_input(INPUT_POST, 'iasistentes_val');
             $Qiactividad_val = (integer)filter_input(INPUT_POST, 'iactividad_val');

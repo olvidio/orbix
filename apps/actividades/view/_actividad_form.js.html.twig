@@ -88,6 +88,9 @@ fnjs_guardar=function(tipo='') {
 
     if (tipo==='cambiar_tipo') {
        err = !confirm("{{ "continúa si has ajustado el nombre de la actividad"|trans|raw }}");
+        {% if procesos_installed %}
+           alert("{{ "La actividad pasará a proyecto, y se deberá volver a marcar las fases correspondientes"|trans|raw }}");
+        {% endif %}
     }
 
     var rr=fnjs_comprobar_campos('#modifica','{{ obj|raw }}');
