@@ -1,7 +1,7 @@
 {% block head %}
 {{  oHash.getCamposHtml|raw }}
 <input type='hidden' id='mod' name='mod' value="{{ mod }}">
-{% if ((mod == 'nuevo') or (accion == 'cambiar_tipo')) %}
+{% if ((mod == 'nuevo') or (mod == 'cambiar_tipo')) %}
 	<table><tr><th class=titulo_inv>{{ "nueva actividad"|trans|capitalize }}
 	</th></tr>
 	<tr><td class=subtitulo>{{ "escoger el tipo de actividad"|trans|capitalize }}

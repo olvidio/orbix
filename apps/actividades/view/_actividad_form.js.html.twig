@@ -61,7 +61,7 @@ fnjs_cambiar_ubi=function(){
     });
 };
 
-    fnjs_guardar=function(tipo='') {
+fnjs_guardar=function(tipo='') {
     var err = 0;
     if (!fnjs_comprobar_fecha('#f_ini','{{ locale_us }}')) {err=1;}
     if (!fnjs_comprobar_fecha('#f_fin','{{ locale_us }}')) {err=1;}
@@ -84,6 +84,10 @@ fnjs_cambiar_ubi=function(){
 
     if (!dl_org) {
         alert("{{ "debe llenar el campo de Organiza"|trans|raw }}"); err=1;
+    }
+
+    if (tipo==='cambiar_tipo') {
+       err = !confirm("{{ "continúa si has ajustado el nombre de la actividad"|trans|raw }}");
     }
 
     var rr=fnjs_comprobar_campos('#modifica','{{ obj|raw }}');

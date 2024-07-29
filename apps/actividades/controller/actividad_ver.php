@@ -67,7 +67,10 @@ $dos = '';
 if (!empty($Qid_activ)) { // caso de modificar
     $alt = _("ver dossiers");
     $dos = _("dossiers");
-    $Qmod = 'editar';
+    // caso particular de cambiar el tipo
+    if ($Qmod !== 'cambiar_tipo') {
+        $Qmod = 'editar';
+    }
 
     $oActividad = new Actividad($Qid_activ);
     $a_status = $oActividad->getArrayStatus();
@@ -276,7 +279,7 @@ $oDesplRepeticion->setOpcion_sel($id_repeticion);
 $oHash = new Hash();
 $camposForm = 'status!dl_org!f_fin!f_ini!h_fin!h_ini!id_repeticion!id_ubi!lugar_esp!mod!nivel_stgr!nom_activ!nombre_ubi!observ!precio!id_tarifa!publicado!plazas';
 $camposNo = 'mod';
-if ($Qmod == 'nuevo') {
+if ($Qmod === 'nuevo' OR $Qmod === 'cambiar_tipo') {
     $camposForm .= '!extendida!iactividad_val!iasistentes_val!inom_tipo_val!isfsv_val';
     $camposNo .= '!id_tipo_activ';
 } else {
@@ -307,7 +310,7 @@ $oActividadTipo->setSfsv($ssfsv);
 $oActividadTipo->setAsistentes($sasistentes);
 $oActividadTipo->setActividad($sactividad);
 $oActividadTipo->setNom_tipo($snom_tipo);
-if (strlen($id_tipo_activ) > 3) {
+if (($Qmod !== 'cambiar_tipo') && (strlen($id_tipo_activ) > 3)) {
     $extendida = TRUE;
 } else {
     $extendida = FALSE;
@@ -316,7 +319,6 @@ if (strlen($id_tipo_activ) > 3) {
 $procesos_installed = core\ConfigGlobal::is_app_installed('procesos');
 
 $status_txt = $a_status[$status];
-$accion = '';
 $a_campos = ['oPosicion' => $oPosicion,
     'oHash' => $oHash,
     'h' => $h,
@@ -326,7 +328,6 @@ $a_campos = ['oPosicion' => $oPosicion,
     'dos' => $dos,
     'oPermActiv' => $oPermActiv,
     'permiso_des' => $permiso_des,
-    'accion' => $accion,
     'sasistentes' => $sasistentes,
     'sactividad' => $sactividad,
     'snom_tipo' => $snom_tipo,

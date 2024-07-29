@@ -3,7 +3,7 @@
  * Esta página actualiza la tabla de las actividades.
  *
  *
- * @param string $mod 'nuevo'|'cmb_tipo'|'eliminar'|'editar'|'actualizar_sacd'|'actualizar_ctr'
+ * @param string $mod 'nuevo'|'cambiar_tipo'|'eliminar'|'editar'|'actualizar_sacd'|'actualizar_ctr'
  * @param string $origen 'calendario' sirve para volver (si no es calendario).
  * @author    Daniel Serrabou
  * @since        15/5/02.
@@ -340,7 +340,7 @@ switch ($Qmod) {
         header('Content-type: application/json; charset=utf-8');
         echo json_encode($jsondata);
         break;
-    case "cmb_tipo": // sólo cambio el tipo a una actividad existente //____________________________
+    case "cambiar_tipo": // sólo cambio el tipo a una actividad existente //____________________________
         $Qid_tipo_activ = (integer)filter_input(INPUT_POST, 'id_tipo_activ');
         $Qisfsv_val = (integer)filter_input(INPUT_POST, 'isfsv_val');
         $Qiasistentes_val = (integer)filter_input(INPUT_POST, 'iasistentes_val');

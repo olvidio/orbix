@@ -3,21 +3,21 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <!-- jQuery -->
     <script type="text/javascript"
-            src='<?= core\ConfigGlobal::getWeb_NodeScripts() . '/jquery/dist/jquery.min.js'; ?>'></script>
+            src='<?= core\ConfigGlobal::getWeb_NodeScripts() . '/jquery/dist/jquery.min.js' ?>'></script>
     <script type="text/javascript"
-            src='<?= core\ConfigGlobal::getWeb_NodeScripts() . '/jquery-ui/dist/jquery-ui.min.js'; ?>'></script>
+            src='<?= core\ConfigGlobal::getWeb_NodeScripts() . '/jquery-ui/dist/jquery-ui.min.js' ?>'></script>
     <!--estilos-->
     <?php include_once(core\ConfigGlobal::$dir_estilos . '/todo_en_uno.css.php'); ?>
 </head>
 
 <h2><?= _("buscar una casa") ?></h2>
-<?= ucfirst(_("hay 5 opciones diferentes para buscar una casa")); ?>
+<?= ucfirst(_("hay 5 opciones diferentes para buscar una casa")) ?>
 <!-- casas usadas anteriormente por esta delegación --------------------------------------------- -->
 <form id="frm_buscar_1" name="frm_buscar_1" action="">
-    <?= $oHash1->getCamposHtml(); ?>
+    <?= $oHash1->getCamposHtml() ?>
     <table border=1 style="width: 95%;">
         <tr>
-            <th colspan=2 class=titulo_inv><?= ucfirst(_("opción 1: posibles lugares (por historial)")); ?></th>
+            <th colspan=2 class=titulo_inv><?= ucfirst(_("opción 1: posibles lugares (por historial)")) ?></th>
         </tr>
         <tr>
             <td class="etiqueta"><?= _("más frequentes") ?></td>
@@ -31,8 +31,8 @@
         </tr>
         <tr>
             <td colspan=2 style="text-align:right;"><input id="b_buscar_1" name="b_buscar" TYPE="button"
-                                                           VALUE="<?= _("seleccionar"); ?>"
-                                                           onclick="fnjs_buscar('#frm_buscar_1')"></td>
+                                           VALUE="<?= _("seleccionar") ?>"
+                                           onclick="fnjs_buscar('#frm_buscar_1')"></td>
         </tr>
     </table>
 </form>
@@ -41,10 +41,10 @@
     <?= $oHash2->getCamposHtml(); ?>
     <table border=1 style="width: 95%;">
         <tr>
-            <th colspan=2 class=titulo_inv><?= ucfirst(_("opción 2: según a la región a la que pertenece")); ?></th>
+            <th colspan=2 class=titulo_inv><?= ucfirst(_("opción 2: según a la región a la que pertenece")) ?></th>
         </tr>
-        <td class=etiqueta><?= _("según dl o r"); ?>:</td>
-        <td colspan=2><?= $oDesplRegion->desplegable(); ?></td>
+        <td class=etiqueta><?= _("según dl o r") ?>:</td>
+        <td colspan=2><?= $oDesplRegion->desplegable() ?></td>
         </tr>
         <tr>
             <td class=etiqueta><?= _("lugar"); ?></td>
@@ -52,8 +52,8 @@
         </tr>
         <tr>
             <td colspan=2 style="text-align:right;"><input id="b_buscar_2" name="b_buscar" TYPE="button"
-                                                           VALUE="<?= _("seleccionar"); ?>"
-                                                           onclick="fnjs_buscar('#frm_buscar_2')"></td>
+                                           VALUE="<?= _("seleccionar") ?>"
+                                           onclick="fnjs_buscar('#frm_buscar_2')"></td>
         </tr>
     </table>
 </form>
@@ -62,7 +62,7 @@
     <?= $oHash3->getCamposHtml(); ?>
     <table border=1 style="width: 95%;">
         <tr>
-            <th colspan=2 class=titulo_inv><?= ucfirst(_("opción 3: buscar por el nombre")); ?></th>
+            <th colspan=2 class=titulo_inv><?= ucfirst(_("opción 3: buscar por el nombre")) ?></th>
         </tr>
         <tr>
             <td class=etiqueta><?= _("nombre del lugar") ?></td>
@@ -71,8 +71,8 @@
 
         <tr>
             <td colspan=2 style="text-align:right;"><input id="b_buscar_2" name="b_buscar" TYPE="button"
-                                                           VALUE="<?= _("buscar"); ?>"
-                                                           onclick="fnjs_enviar_form('#frm_buscar_3','#lst_lugares')">
+                                           VALUE="<?= _("buscar") ?>"
+                                           onclick="fnjs_enviar_form('#frm_buscar_3','#lst_lugares')">
             </td>
         </tr>
         <tr>
@@ -83,11 +83,11 @@
 </form>
 <!-- Lugares especiales --------------------------------------------- -->
 <form id="frm_buscar_4" name="frm_buscar_4" action="">
-    <?= $oHash4->getCamposHtml(); ?>
+    <?= $oHash4->getCamposHtml() ?>
     <table border=1 style="width: 95%;">
         <tr>
             <th colspan=2
-                class=titulo_inv><?= ucfirst(_("opción 4: Un lugar especial (sin dirección posible)")); ?></th>
+                class=titulo_inv><?= ucfirst(_("opción 4: Un lugar especial (sin dirección posible)")) ?></th>
         </tr>
         <tr>
             <td class=etiqueta><?= _("nombre del lugar") ?></td>
@@ -96,8 +96,8 @@
 
         <tr>
             <td colspan=2 style="text-align:right;"><input id="b_buscar_4" name="b_buscar" TYPE="button"
-                                                           VALUE="<?= _("seleccionar"); ?>"
-                                                           onclick="fnjs_buscar('#frm_buscar_4')"></td>
+                                           VALUE="<?= _("seleccionar") ?>"
+                                           onclick="fnjs_buscar('#frm_buscar_4')"></td>
         </tr>
     </table>
 </form>
@@ -105,12 +105,12 @@
 <form id="frm_buscar_5" name="frm_buscar_5" action="">
     <table border=1 style="width: 95%;">
         <tr>
-            <th colspan=2 class=titulo_inv><?= ucfirst(_("opción 5: Por determinar")); ?></th>
+            <th colspan=2 class=titulo_inv><?= ucfirst(_("opción 5: Por determinar")) ?></th>
         </tr>
         <tr>
             <td colspan=5 style="text-align:right;"><input id="b_buscar_5" name="b_buscar" TYPE="button"
-                                                           VALUE="<?= _("seleccionar"); ?>"
-                                                           onclick="fnjs_buscar('#frm_buscar_5')"></td>
+                                           VALUE="<?= _("seleccionar") ?>"
+                                           onclick="fnjs_buscar('#frm_buscar_5')"></td>
         </tr>
     </table>
 </form>

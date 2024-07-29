@@ -91,6 +91,10 @@ jsForm.mandar = function (formulario, que) {
         case "datos":
             this.action = "apps/actividades/controller/actividad_ver.php";
             break;
+        case "cambiar_tipo":
+            $('#mod').val(que);
+            this.action = "apps/actividades/controller/actividad_ver.php";
+            break;
         case "lista_clase":
             this.action = "apps/actividadestudios/controller/lista_clases_ca.php";
             break;

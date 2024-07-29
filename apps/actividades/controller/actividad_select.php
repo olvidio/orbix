@@ -255,6 +255,7 @@ if (!empty($Qmodo) && $Qmodo != 'buscar') {
             // Ahora lo generalizo para todas. (no sólo proyecto). 17.X.2011
             $eliminar = 1; //condición de eliminable
             $a_botones[] = array('txt' => _("borrar"), 'click' => "fnjs_borrar(\"#seleccionados\",\"eliminar\")");
+            $a_botones[] = array('txt' => _("cambiar tipo"), 'click' => "jsForm.mandar(\"#seleccionados\",\"cambiar_tipo\")");
         }
 
         if (core\ConfigGlobal::is_app_installed('actividadcargos')) {
