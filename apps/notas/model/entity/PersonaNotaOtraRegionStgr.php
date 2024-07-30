@@ -38,7 +38,7 @@ class PersonaNotaOtraRegionStgr extends PersonaNota
      * @param integer|array iid_nom,iid_nivel
      *                        $a_id. Un array con los nombres=>valores de las claves primarias.
      */
-    function __construct($esquema_region_stgr, $a_id = '')
+    function __construct(string $esquema_region_stgr, ?array $a_id = NULL)
     {
         $db = (ConfigGlobal::mi_sfsv() === 1 )? 'sv' : 'sf';
         // se debe conectar con la region del stgr padre
