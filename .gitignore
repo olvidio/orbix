@@ -87,3 +87,4 @@ log/*
 /tests/end-to-end/*.log
 /tests/end-to-end/*.out
 /tests/end-to-end/*.php
+/tests/config/
