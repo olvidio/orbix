@@ -1,5 +1,4 @@
 <?php
-
 // Para salir de la sesión.
 if (isset($_REQUEST['logout']) && $_REQUEST['logout'] === 'si') {
     session_start();

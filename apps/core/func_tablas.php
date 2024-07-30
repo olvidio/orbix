@@ -24,7 +24,7 @@ require_once("global_header.inc");
 // Archivos requeridos por esta url **********************************************
 
 // Crea los objetos de uso global **********************************************
-require_once("global_object.inc");
+//require_once("global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 /**
  *

@@ -17,10 +17,19 @@
     "ext-calendar": "*",
     "ext-zip": "*",
     "ext-xml": "*",
-    "ramsey/uuid": "^4.7"
+    "ramsey/uuid": "^4.7",
+    "ext-intl": "*"
   },
   "require-dev": {
     "roave/security-advisories": "dev-latest",
     "phpunit/phpunit": "^11.2"
-  }
+  },
+  "autoload": {
+        "psr-4": {
+          "": "apps/"
+        }
+   },
+   "autoload-dev": {
+       "psr-4": { "Tests\\": "tests/" }
+   }
 }

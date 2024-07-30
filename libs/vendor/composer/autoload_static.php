@@ -33,6 +33,7 @@ class ComposerStaticInitfe4939d609572947ee73ffcc0a42bf32
         'T' => 
         array (
             'Twig\\' => 5,
+            'Tests\\' => 6,
         ),
         'S' => 
         array (
@@ -79,6 +80,10 @@ class ComposerStaticInitfe4939d609572947ee73ffcc0a42bf32
         'Twig\\' => 
         array (
             0 => __DIR__ . '/..' . '/twig/twig/src',
+        ),
+        'Tests\\' => 
+        array (
+            0 => __DIR__ . '/../../..' . '/tests',
         ),
         'Symfony\\Polyfill\\Php80\\' => 
         array (
@@ -132,6 +137,10 @@ class ComposerStaticInitfe4939d609572947ee73ffcc0a42bf32
         array (
             0 => __DIR__ . '/..' . '/brick/math/src',
         ),
+    );
+
+    public static $fallbackDirsPsr4 = array (
+        0 => __DIR__ . '/../../..' . '/apps',
     );
 
     public static $classMap = array (
@@ -1337,6 +1346,7 @@ class ComposerStaticInitfe4939d609572947ee73ffcc0a42bf32
         return \Closure::bind(function () use ($loader) {
             $loader->prefixLengthsPsr4 = ComposerStaticInitfe4939d609572947ee73ffcc0a42bf32::$prefixLengthsPsr4;
             $loader->prefixDirsPsr4 = ComposerStaticInitfe4939d609572947ee73ffcc0a42bf32::$prefixDirsPsr4;
+            $loader->fallbackDirsPsr4 = ComposerStaticInitfe4939d609572947ee73ffcc0a42bf32::$fallbackDirsPsr4;
             $loader->classMap = ComposerStaticInitfe4939d609572947ee73ffcc0a42bf32::$classMap;
 
         }, null, ClassLoader::class);

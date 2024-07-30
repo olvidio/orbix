@@ -2,8 +2,12 @@
 
 namespace notas\model\entity;
 
-use core;
-use web;
+use core\ClasePropiedades;
+use core\ConverterDate;
+use core\DatosCampo;
+use core\Set;
+use web\DateTimeLocal;
+use web\NullDateTimeLocal;
 use function core\is_true;
 
 /**
@@ -25,7 +29,7 @@ use function core\is_true;
  * @version 1.0
  * @created 07/04/2014
  */
-class PersonaNota extends core\ClasePropiedades
+class PersonaNota extends ClasePropiedades
 {
 
     // tipo_acta constants.
@@ -98,7 +102,7 @@ class PersonaNota extends core\ClasePropiedades
     /**
      * F_acta de PersonaNota
      *
-     * @var web\DateTimeLocal
+     * @var DateTimeLocal
      */
     protected $df_acta;
     /**
@@ -186,7 +190,7 @@ class PersonaNota extends core\ClasePropiedades
      * @param integer|array iid_nom,iid_nivel
      *                        $a_id. Un array con los nombres=>valores de las claves primarias.
      */
-    function __construct($a_id = '')
+    function __construct(?array $a_id = NULL)
     {
         $oDbl = $GLOBALS['oDBP'];
         if (is_array($a_id)) {
@@ -233,7 +237,7 @@ class PersonaNota extends core\ClasePropiedades
         $aDades['tipo_acta'] = $this->itipo_acta;
         array_walk($aDades, 'core\poner_null');
         //para el caso de los boolean FALSE, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
-        if (core\is_true($aDades['preceptor'])) {
+        if (is_true($aDades['preceptor'])) {
             $aDades['preceptor'] = 'true';
         } else {
             $aDades['preceptor'] = 'false';
@@ -481,7 +485,7 @@ class PersonaNota extends core\ClasePropiedades
      *
      * @return array aPrimary_key
      */
-    public function setPrimary_key($a_id = '')
+    public function setPrimary_key(?array $a_id = null)
     {
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
@@ -610,17 +614,17 @@ class PersonaNota extends core\ClasePropiedades
     /**
      * Recupera el atributo df_acta de PersonaNota
      *
-     * @return web\DateTimeLocal df_acta
+     * @return DateTimeLocal df_acta
      */
-    function getF_acta()
+    function getF_acta(): DateTimeLocal|NullDateTimeLocal
     {
         if (!isset($this->df_acta) && !$this->bLoaded) {
             $this->DBCarregar();
         }
         if (empty($this->df_acta)) {
-            return new web\NullDateTimeLocal();
+            return new NullDateTimeLocal();
         }
-        $oConverter = new core\ConverterDate('date', $this->df_acta);
+        $oConverter = new ConverterDate('date', $this->df_acta);
         return $oConverter->fromPg();
     }
 
@@ -629,13 +633,13 @@ class PersonaNota extends core\ClasePropiedades
      * Si df_acta es string, y convert=true se convierte usando el formato webDateTimeLocal->getFormat().
      * Si convert es false, df_acta debe ser un string en formato ISO (Y-m-d). Corresponde al pgstyle de la base de datos.
      *
-     * @param web\DateTimeLocal|string df_acta='' optional.
+     * @param DateTimeLocal|string df_acta='' optional.
      * @param boolean convert=true optional. Si es false, df_acta debe ser un string en formato ISO (Y-m-d).
      */
     function setF_acta($df_acta = '', $convert = true)
     {
         if ($convert === true && !empty($df_acta)) {
-            $oConverter = new core\ConverterDate('date', $df_acta);
+            $oConverter = new ConverterDate('date', $df_acta);
             $this->df_acta = $oConverter->toPg();
         } else {
             $this->df_acta = $df_acta;
@@ -890,7 +894,7 @@ class PersonaNota extends core\ClasePropiedades
      */
     function getDatosCampos()
     {
-        $oPersonaNotaSet = new core\Set();
+        $oPersonaNotaSet = new Set();
 
         $oPersonaNotaSet->add($this->getDatosId_asignatura());
         $oPersonaNotaSet->add($this->getDatosId_situacion());
@@ -912,12 +916,12 @@ class PersonaNota extends core\ClasePropiedades
      * Recupera les propietats de l'atribut iid_asignatura de PersonaNota
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosId_asignatura()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_asignatura'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_asignatura'));
         $oDatosCampo->setEtiqueta(_("id_asignatura"));
         return $oDatosCampo;
     }
@@ -926,12 +930,12 @@ class PersonaNota extends core\ClasePropiedades
      * Recupera les propietats de l'atribut iid_situacion de PersonaNota
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosId_situacion()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_situacion'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_situacion'));
         $oDatosCampo->setEtiqueta(_("id_situacion"));
         return $oDatosCampo;
     }
@@ -940,12 +944,12 @@ class PersonaNota extends core\ClasePropiedades
      * Recupera les propietats de l'atribut sacta de PersonaNota
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosActa()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'acta'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'acta'));
         $oDatosCampo->setEtiqueta(_("acta"));
         // Las actcas de otras r sólo tienen la sigla de la r
         $oDatosCampo->setRegExp("/^(\?|\w{1,6}\??)(\s+([0-9]{0,3})\/([0-9]{2})\??)?$/");
@@ -959,12 +963,12 @@ class PersonaNota extends core\ClasePropiedades
      * Recupera les propietats de l'atribut df_acta de PersonaNota
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosF_acta()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'f_acta'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'f_acta'));
         $oDatosCampo->setEtiqueta(_("fecha acta"));
         $oDatosCampo->setTipo('fecha');
         return $oDatosCampo;
@@ -974,12 +978,12 @@ class PersonaNota extends core\ClasePropiedades
      * Recupera les propietats de l'atribut sdetalle de PersonaNota
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosDetalle()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'detalle'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'detalle'));
         $oDatosCampo->setEtiqueta(_("detalle"));
         return $oDatosCampo;
     }
@@ -988,12 +992,12 @@ class PersonaNota extends core\ClasePropiedades
      * Recupera les propietats de l'atribut bpreceptor de PersonaNota
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosPreceptor()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'preceptor'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'preceptor'));
         $oDatosCampo->setEtiqueta(_("preceptor"));
         return $oDatosCampo;
     }
@@ -1002,12 +1006,12 @@ class PersonaNota extends core\ClasePropiedades
      * Recupera les propietats de l'atribut iid_preceptor de PersonaNota
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosId_preceptor()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_preceptor'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_preceptor'));
         $oDatosCampo->setEtiqueta(_("id_preceptor"));
         return $oDatosCampo;
     }
@@ -1016,12 +1020,12 @@ class PersonaNota extends core\ClasePropiedades
      * Recupera les propietats de l'atribut iepoca de PersonaNota
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosEpoca()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'epoca'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'epoca'));
         $oDatosCampo->setEtiqueta(_("época"));
         return $oDatosCampo;
     }
@@ -1030,12 +1034,12 @@ class PersonaNota extends core\ClasePropiedades
      * Recupera les propietats de l'atribut iid_activ de PersonaNota
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosId_activ()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_activ'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_activ'));
         $oDatosCampo->setEtiqueta(_("id_activ"));
         return $oDatosCampo;
     }
@@ -1044,12 +1048,12 @@ class PersonaNota extends core\ClasePropiedades
      * Recupera les propietats de l'atribut inota_num de PersonaNota
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosNota_num()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'nota_num'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'nota_num'));
         $oDatosCampo->setEtiqueta(_("nota num"));
         return $oDatosCampo;
     }
@@ -1058,12 +1062,12 @@ class PersonaNota extends core\ClasePropiedades
      * Recupera les propietats de l'atribut inota_max de PersonaNota
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosNota_max()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'nota_max'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'nota_max'));
         $oDatosCampo->setEtiqueta(_("nota max"));
         return $oDatosCampo;
     }
@@ -1072,12 +1076,12 @@ class PersonaNota extends core\ClasePropiedades
      * Recupera les propietats de l'atribut itipo_acta de PersonaNota
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosTipo_acta()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'tipo_acta'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'tipo_acta'));
         $oDatosCampo->setEtiqueta(_("tipo de acta"));
         return $oDatosCampo;
     }

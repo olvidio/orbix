@@ -32,15 +32,19 @@ class GestorErrores
 
     private $filename;
 
-    /* CONSTRUCTOR -------------------------------------------------------------- */
+    private string|int|null $stack;
 
     /**
      * Constructor de la classe.
      *
      */
-    function __construct()
+    function __construct(bool $test = FALSE)
     {
-        $this->filename = ConfigGlobal::$directorio . '/log/errores.log';
+        if ($test) {
+            $this->filename = '/home/dani/orbix_local/orbix/log/errores.log';
+        } else {
+            $this->filename = ConfigGlobal::$directorio . '/log/errores.log';
+        }
     }
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
@@ -69,22 +73,6 @@ class GestorErrores
             end($_SESSION['errores']);
         }
         $_SESSION['errores'][] = $error;
-    }
-
-    function muestraMensaje($sClauError, $goto)
-    {
-        $txt = $this->leerErrorAppLastError();
-        if (strstr($txt, 'duplicate key')) {
-            echo _("ya existe un registro con esta información");
-        } else {
-            echo "\n dd" . $txt . "\n $sClauError <br>";
-        }
-        $oPosicion = new web\Posicion();
-        $seguir = $oPosicion->link_a($goto, 0);
-        //$seguir=link_a($goto,0);
-        echo "<br><span class='link' onclick=fnjs_update_div('#main',$seguir)>" . _("continuar") . "</span>";
-
-
     }
 
     function leerErrorAppLastError(&$oDBSt, $sClauError, $line, $file)
@@ -141,36 +129,4 @@ class GestorErrores
         fclose($handle);
     }
 
-    /*
-    function addErrorSec($err = '', $sClauError, $line, $file)
-    {
-        $filename = $this->filename;
-        $this->filename = ConfigGlobal::$directorio . '/log/security.log';
-        $this->addError($err, $sClauError, $line, $file);
-        $this->filename = $filename;
-    }
-
-    function addError($err = '', $sClauError, $line, $file)
-    {
-        // Cuando ejecuto algún controlador desde la linea de comandos, no existe la ip:
-        $ip = empty($_SERVER['REMOTE_ADDR']) ? 'localhost' : $_SERVER['REMOTE_ADDR'];
-        $user = ConfigGlobal::mi_usuario();
-        $esquema = ConfigGlobal::mi_region_dl();
-        $ahora = date("Y/m/d H:i:s");
-        $id_user = $user . "[$esquema]$ip ";
-        $txt = "\n" . $ahora . " - " . $id_user . "->>  " . $err . "\n $sClauError en linea $line de: $file\n";
-
-        $filename = $this->filename;
-        if (!$handle = fopen($filename, 'a')) {
-            echo "Cannot open file ($filename)";
-            die();
-        }
-        // Write $somecontent to our opened file.
-        if (fwrite($handle, $txt) === FALSE) {
-            echo "Cannot write to file ($filename)";
-            die();
-        }
-        fclose($handle);
-    }
-    */
 }
