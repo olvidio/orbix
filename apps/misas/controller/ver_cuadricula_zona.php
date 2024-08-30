@@ -289,7 +289,7 @@ foreach ($cEncargosZona as $oEncargo) {
     $desc_enc = $oEncargo->getDesc_enc();
 //    echo $id_enc.$desc_enc.'<br>';
     $data_cols = [];
-    $data_cols = [];
+    $meta_dia = [];
 //    $meta_sacd = [];
     if (($QTipoPlantilla == EncargoDia::PLANTILLA_SEMANAL_TRES) || ($QTipoPlantilla == EncargoDia::PLANTILLA_DOMINGOS_TRES) || ($QTipoPlantilla == EncargoDia::PLANTILLA_MENSUAL_TRES)) {
         $data_cols2 = [];
@@ -612,7 +612,7 @@ $h_desplegable_sacd = $oHash_desplegable_sacd->linkSinVal();
 $url_ver_cuadricula_zona = 'apps/misas/controller/ver_cuadricula_zona.php';
 $oHash_ver_cuadricula_zona = new Hash();
 $oHash_ver_cuadricula_zona->setUrl($url_ver_cuadricula_zona);
-$oHash_ver_cuadricula_zona->setCamposForm('id_zona!tipo_plantilla!orden!seleccion');
+$oHash_ver_cuadricula_zona->setCamposForm('id_zona!tipo_plantilla!orden!seleccion!periodo!empiezamin!empiezamax');
 $h_ver_cuadricula_zona = $oHash_ver_cuadricula_zona->linkSinVal();
 
 $a_campos = ['oPosicion' => $oPosicion,
@@ -629,6 +629,9 @@ $a_campos = ['oPosicion' => $oPosicion,
     'tipo_plantilla' => $QTipoPlantilla,
     'orden' => $Qorden,
     'seleccion' => $Qseleccion,
+    'periodo' => $Qperiodo,
+    'empieza_min' => $Qempiezamin,
+    'empieza_max' => $Qempiezamax,
     'array_h' => $array_h,
 ];
 

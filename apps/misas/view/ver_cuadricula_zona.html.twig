@@ -76,7 +76,7 @@
     }
     </style>
 </head>
-<div style="position:relative">
+<div id="cuadriculas" style="position:relative">
     <div style="width:100%;">
         <div id="myGrid" class="slick-container" style="width:100%;height:300px;"></div>
     </div>
@@ -232,6 +232,9 @@
                 let id_zona = '{{id_zona}}';
                 let tipo_plantilla = '{{tipo_plantilla}}';
                 let orden = '{{orden}}';
+                let periodo = '{{periodo}}';
+                let empiezamin = '{{empiezamin}}';
+                let empiezamax = '{{empiezamax}}';
                 let url = '{{ url_ver_cuadricula_zona }}';
     	        var sacd_libre=$('#sacd_libre').prop('checked');
             	var sacd_zona=$('#sacd_zona').prop('checked');
@@ -241,7 +244,7 @@
            	    if (sacd_zona) seleccion=2;
 	            if (sacd_dl) seleccion=4;
             	if (sacd_depaso) seleccion=8;
-                let parametros = 'id_zona=' + id_zona + '&tipo_plantilla=' + tipo_plantilla + '&orden=' + orden  + '&seleccion=' + seleccion + '{{ h_ver_cuadricula_zona|raw }}';
+                let parametros = 'id_zona=' + id_zona + '&tipo_plantilla=' + tipo_plantilla + '&orden=' + orden  + '&seleccion=' + seleccion + '&periodo=' + periodo + '&empiezamin=' + empiezamin + '&empiezamax=' + empiezamax + '{{ h_ver_cuadricula_zona|raw }}';
                 $.ajax({
                     url: url,
                     type: 'post',
@@ -249,7 +252,7 @@
                     dataType: 'html'
                  })
                 .done(function (rta_txt) {
-                    $('#main').html(rta_txt);
+                    $('#cuadriculas').html(rta_txt);
                 });
             }
         });

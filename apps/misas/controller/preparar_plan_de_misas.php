@@ -21,24 +21,25 @@ $aPeriodos = array(
     'otro' => _("otro")
 );
 
-$oDesplPeriodos = new Desplegable();
-$oDesplPeriodos->setOpciones($aPeriodos);
-$oDesplPeriodos->setNombre('periodos');
-$oDesplPeriodos->setAction('fnjs_ver_cuadricula_zona()');
-
+//$oDesplPeriodos = new Desplegable();
+//$oDesplPeriodos->setOpciones($aPeriodos);
+//$oDesplPeriodos->setNombre('periodos');
+//$oDesplPeriodos->setAction('fnjs_nuevo_periodo()');
+//$oDesplPeriodos->setAction('fnjs_ver_cuadricula_zona()');
 
 $aOpciones = array(
-    'semana_next' => _("próxima semana de lunes a domingo"),
-    'mes_next' => _("próximo mes natural"),
+    'proxima_semana' => _("próxima semana de lunes a domingo"),
+    'proximo_mes' => _("próximo mes natural"),
     'otro' => _("otro")
 );
 $oFormP = new PeriodoQue();
 $oFormP->setFormName('frm_nuevo_periodo');
 $oFormP->setTitulo(core\strtoupper_dlb(_("seleccionar un periodo")));
 $oFormP->setPosiblesPeriodos($aOpciones);
+$oFormP->setisDesplAnysVisible(FALSE);
 
-$oFormP->setBoton("<input type=button name=\"ver\" value=\"" . _("ver") . "\" onclick=\"fnjs_ver_plantilla_zona();\">");
-$oFormP->setBoton("<input type=button name=\"preparar\" value=\"" . _("preparar") . "\" onclick=\"fnjs_nuevo_periodo();\">");
+//$oFormP->setBoton("<input type=button name=\"ver\" value=\"" . _("ver") . "\" onclick=\"fnjs_ver_plantilla_zona();\">");
+//$oFormP->setBoton("<input type=button name=\"preparar\" value=\"" . _("preparar") . "\" onclick=\"fnjs_nuevo_periodo();\">");
 
 $oGestorZona = new GestorZona();
 $oDesplZonas = $oGestorZona->getListaZonas();
@@ -73,7 +74,7 @@ $h_zona_periodo = $oHashZonaPeriodo->linkSinVal();
 
 $a_campos = ['oPosicion' => $oPosicion,
     'oDesplZonas' => $oDesplZonas,
-    'oDesplPeriodos' => $oDesplPeriodos,
+//    'oDesplPeriodos' => $oDesplPeriodos,
     'oDesplTipoPlantilla' => $oDesplTipoPlantilla,
     'oFormP' => $oFormP,
     'url_crear_nuevo_periodo' => $url_crear_nuevo_periodo,

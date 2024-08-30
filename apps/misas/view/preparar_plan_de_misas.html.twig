@@ -7,18 +7,20 @@
                 <th class=titulo_inv colspan=4>{{ "Preparar Misas de la zona"|trans|capitalize }}:&nbsp;&nbsp;&nbsp;
                     {{ oDesplZonas.desplegable|raw }}
                 </th>
-                <th class=titulo_inv colspan=4>{{ "Periodo"|trans|capitalize }}:&nbsp;&nbsp;&nbsp;
-                    {{ oDesplPeriodos.desplegable|raw }}
-                </th>
                 <th class=titulo_inv colspan=4>{{ "Tipo de plantilla"|trans|capitalize }}:&nbsp;&nbsp;&nbsp;
                     {{ oDesplTipoPlantilla.desplegable|raw }}
                 </th>
             </tr>
-                <th>
-                    <input type=button name="preparar" value="preparar" onclick="fnjs_nuevo_periodo();">
-                </th>
             <tr>
-            Borrará todos los datos introducidos en este periodo!!
+                {{ oFormP.getTd()|raw }}   
+            </tr>
+            <tr>
+                <td>
+                    <input type=button name="preparar" value="preparar" onclick="fnjs_nuevo_periodo();"><br>
+                    Borrará todos los datos introducidos en este periodo!!
+                </td>
+            </tr>
+            <tr>
             </tr>
             </thead>
         </table>
@@ -30,12 +32,15 @@
 </div>
 
 <script>
+    $("#empiezamin").datepicker();
+    $("#empiezamax").datepicker();
+
     fnjs_ver_cuadricula_zona = function () {
         let id_zona = $('#id_zona').val();
         if (id_zona) {
             let url = '{{ url_ver_cuadricula_zona }}';
 	        var zona=$('#sacd_zona').prop('checked');
-    	    var periodo=$('#periodos').val();
+    	    var periodo=$('#periodo').val();
     	    var empiezamax=$('#empiezamax').val();
     	    var empiezamin=$('#empiezamin').val();
             let orden = $('#orden').val();
@@ -55,24 +60,8 @@
     }
 
     fnjs_nuevo_periodo = function () {
-        let id_zona = $('#id_zona').val();
-        let tipoplantilla = $('#tipoplantilla').val();
-        if (id_zona) {
-            let url = '{{ url_crear_nuevo_periodo }}';
-    	    var periodo=$('#periodos').val();
-    	    var empiezamax=$('#empiezamax').val();
-    	    var empiezamin=$('#empiezamin').val();
-
-            let parametros = 'id_zona=' + id_zona + ' & tipoplantilla=' + tipoplantilla + '& periodo=' + periodo + '& empiezamax='+ empiezamax + '& empiezamin='+ empiezamin +'{{ h_nuevo_periodo|raw }}';
-            $.ajax({
-                url: url,
-                type: 'post',
-                data: parametros,
-                dataType: 'html'
-            })
-                .done(function (rta_txt) {
-                    fnjs_ver_cuadricula_zona();
-                });
-        }
+   	    var periodo=$('#periodos').val();
+        alert(periodo);
+        fnjs_ver_cuadricula_zona();
     }
 </script>
