@@ -332,7 +332,11 @@ for ($e = 1; $e <= $num_enc; $e++) {
         "mod_horario_$e" => $mod_horario[$e],
     ];
     //$oHash->setUrl($url_actualizar);
-    $campos_form = 'dedic_ctr_m!dedic_ctr_t!dedic_ctr_v!dedic_m!dedic_t!dedic_v!id_sacd_suplente!id_sacd_titular!observ';
+    if ($tipo_centro !== 'of') {
+        $campos_form = 'dedic_ctr_m!dedic_ctr_t!dedic_ctr_v!dedic_m!dedic_t!dedic_v!id_sacd_suplente!id_sacd_titular!observ';
+    } else {
+        $campos_form = 'dedic_ctr_m!dedic_ctr_t!dedic_ctr_v!dedic_m!dedic_t!dedic_v!observ';
+    }
     $oHash->setCamposForm($campos_form);
     $oHash->setcamposNo('id_sacd!sacd_num!cl!refresh');
     $oHash->setArrayCamposHidden($aCamposHidden);

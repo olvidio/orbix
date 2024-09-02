@@ -11,7 +11,7 @@ use web\DateTimeLocal;
 /**
  * Esta página actualiza la base de datos de los encargos.
  *
- * Se le puede pasar la varaible $mod.
+ * Se le puede pasar la variable $mod.
  *    Si es 1 >> inserta un nuevo encargo.
  *    Si es 2 >> modifica
  *
@@ -36,7 +36,7 @@ $Qid_enc = (integer)filter_input(INPUT_POST, "id_enc_$Qe");
 $Qsacd_num = (integer)filter_input(INPUT_POST, "sacd_num");
 $Qid_ubi = (integer)filter_input(INPUT_POST, "id_ubi_$Qe");
 $Qtipo_centro = (string)filter_input(INPUT_POST, "tipo_centro_$Qe");
-// Ahora mismo todo es por modulos
+// Ahora mismo es por módulos
 //$Qmod_horario = (string)  filter_input(INPUT_POST, "mod_horario $Qe");
 
 $Qn_sacd = (integer)filter_input(INPUT_POST, 'n_sacd');
@@ -67,8 +67,8 @@ $GesEncargoTipo = new GestorEncargoTipo();
 
 switch ($Qmod) {
     case "nuevo": //nuevo
-        if ($Qtipo_centro != "of") { // para el caso de los oficiales no pongo titular ni suplente.
-            //Compruebo que estén todos los campos necesasrios
+        if ($Qtipo_centro !== "of") { // para el caso de los oficiales no pongo titular ni suplente.
+            //Compruebo que estén todos los campos necesarios
             if (empty($Qid_sacd_titular)) {
                 echo _("Debe nombrar un sacerdote tirular") . "<br>";
                 exit;
@@ -179,15 +179,15 @@ switch ($Qmod) {
         }
         break;
     case "editar": //modificar
-        if ($Qtipo_centro != "of") { // para el caso de los oficiales no pongo titular ni suplente.
+        if ($Qtipo_centro !== "of") { // para el caso de los oficiales no pongo titular ni suplente.
             //Compruebo que estén todos los campos necesarios
             if (empty($Qid_sacd_titular)) {
-                if (!empty($Qid_enc)) { // Si existe el ancargo, lo elimino.
+                if (!empty($Qid_enc)) { // Si existe el encargo, lo elimino.
                     $oEncargo = new Encargo(array('id_enc' => $Qid_enc));
                     $oEncargo->DBEliminar();
                     exit;
                 } else {
-                    echo _("Debe nombrar un sacerdote tirular") . "\n";
+                    echo _("Debe nombrar un sacerdote titular") . "\n";
                     exit;
                 }
             }
@@ -196,8 +196,8 @@ switch ($Qmod) {
                 exit(_("El sacd titular y suplente deben ser distintos"));
             }
 
-            /* encargo: atencion ctr */
-            // Quedaria poder cambiar la zona, el idioma...
+            /* encargo: atención ctr */
+            // Quedaría poder cambiar la zona, el idioma...
             $oEncargo = new Encargo(array('id_enc' => $Qid_enc));
             $oEncargo->DBCarregar();
             $oEncargo->setObserv($Qobserv);
@@ -236,7 +236,7 @@ switch ($Qmod) {
         }
 
         for ($i = 0; $i < $Qsacd_num; $i++) {
-            if ($i > 0) { // sacd colaboradores
+            if ($i > 0 || $Qtipo_centro === "of") { // para el caso de los oficiales son sacd colaboradores
                 if (!empty($QAid_sacd[$i])) {
                     $GesEncargoTipo->insert_sacd($Qid_enc, $QAid_sacd[$i], 5);
                 }
@@ -251,6 +251,7 @@ switch ($Qmod) {
                 $aOperador['modo'] = '~';
                 $cEncargosSacd = $GesEncargoSacd->getEncargosSacd($aWhere, $aOperador);
                 $actual_id_sacd_titular = 0;
+                $actual_modo = 0;
                 foreach ($cEncargosSacd as $oEncargoSacd) { // se supone que sólo hay uno.
                     $actual_id_sacd_titular = $oEncargoSacd->getId_nom();
                     $actual_modo = $oEncargoSacd->getModo();
@@ -271,7 +272,7 @@ switch ($Qmod) {
                     $GesEncargoSacd2 = new GestorEncargoSacd();
                     $aWhere = [
                         'id_enc' => $Qid_enc,
-                        'id_nom' => $Qid_sacd_titular,
+                        'id_nom' => $actual_id_sacd_titular,
                         'modo' => $modo,
                         'f_ini' => $oF_ini->getIso(),
                     ];
@@ -290,7 +291,7 @@ switch ($Qmod) {
                 }
                 $QAid_sacd[0] = $Qid_sacd_titular;
             }
-            if (!empty($QAid_sacd[$i])) { // si está vacio salto.
+            if (!empty($QAid_sacd[$i])) { // si está vacío salto.
                 // busco el id_item de la tarea_sacd.
                 $GesEncargoSacd = new GestorEncargoSacd();
                 $aWhere = array();
@@ -323,7 +324,7 @@ switch ($Qmod) {
             $aWhere['f_fin'] = 'x';
             $aOperador['f_fin'] = 'IS NULL';
             $cEncargosSacd = $GesEncargoSacd->getEncargosSacd($aWhere, $aOperador);
-            if (is_array($cEncargosSacd) && count($cEncargosSacd) == 0) {
+            if (is_array($cEncargosSacd) && count($cEncargosSacd) === 0) {
                 $GesEncargoTipo->insert_sacd($Qid_enc, $Qid_sacd_suplente, 4);
             } else {
                 foreach ($cEncargosSacd as $oEncargoSacd) { // se supone que sólo hay uno.
@@ -351,7 +352,7 @@ switch ($Qmod) {
             }
         }
         // para grabar los datos del número de alumnos (si es un cgi).
-        if (strstr($Qtipo_centro, "cgi")) {
+        if (str_contains($Qtipo_centro, "cgi")) {
             //$GesEncargoTipo->grabar_alumnos($Qid_ubi,$Qnum_alum);
         }
         break;

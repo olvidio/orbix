@@ -34,6 +34,7 @@ fnjs_añadir_sacd=function(enc){
 	/* antes de sacd suplente colocar nuevo sacd, y dedicación para cada uno */
 	$('#fin_sacd_'+enc).before('<tr><td>sacd '+n+':</td><td colspan=3 class=contenido><select name=id_sacd['+n+']>'+lista_sacd+'</td></tr>'+dedicacion);
 
+	$('[name="id_sacd['+n+']"]').val(0);
 	$('#sacd_num_'+enc).val(++n);
 }
 </script>
