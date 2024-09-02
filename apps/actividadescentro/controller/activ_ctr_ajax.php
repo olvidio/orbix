@@ -21,25 +21,28 @@ require_once("apps/core/global_object.inc");
 
 /**
  * En teoria tendria que cambiar el orden de la lista de los centros encargados
- * de la actividad. Si num_orden és '+' (más importante), hago descender el orden un valor, y reordeno el resto de centros...
+ * de la actividad. Si orden és '+' (más importante), hago descender el orden un valor, y reordeno el resto de centros...
  */
-function ordena($id_activ, $id_ubi, $num_orden)
+function ordena($id_activ, $id_ubi, $orden)
 {
     $GesCentroEncargado = new GestorCentroEncargado();
     $cCentrosEncargados = $GesCentroEncargado->getCentrosEncargados(array('id_activ' => $id_activ, '_ordre' => 'num_orden'));
     $i_max = count($cCentrosEncargados);
     for ($i = 0; $i < $i_max; $i++) {
         if ($cCentrosEncargados[$i]->getId_ubi() == $id_ubi) {
-            switch ($num_orden) {
+            $num_orden = $cCentrosEncargados[$i]->getNum_orden();
+            switch ($orden) {
                 case "mas":
                     if ($i >= 1) {
-                        $anterior_id_ubi = $cCentrosEncargados[($i - 1)]->getId_ubi();
-                        if (!empty($anterior_id_ubi)) {
-                            $cCentrosEncargados[($i - 1)]->setId_ubi($id_ubi);
+                        $anterior_num_orden = $cCentrosEncargados[($i - 1)]->getNum_orden();
+                        if (!empty($anterior_num_orden)) {
+                            $cCentrosEncargados[($i - 1)]->DBCarregar();
+                            $cCentrosEncargados[($i - 1)]->setNum_orden($num_orden);
                             if ($cCentrosEncargados[($i - 1)]->DBGuardar() === false) {
                                 echo _("hay un error, no se ha guardado");
                             }
-                            $cCentrosEncargados[($i)]->setId_ubi($anterior_id_ubi);
+                            $cCentrosEncargados[($i)]->DBCarregar();
+                            $cCentrosEncargados[($i)]->setNum_orden($anterior_num_orden);
                             if ($cCentrosEncargados[($i)]->DBGuardar() === false) {
                                 echo _("hay un error, no se ha guardado");
                             }
@@ -48,13 +51,15 @@ function ordena($id_activ, $id_ubi, $num_orden)
                     break;
                 case "menos":
                     if ($i < ($i_max - 1)) {
-                        $post_id_ubi = $cCentrosEncargados[($i + 1)]->getId_ubi();
-                        if (!empty($post_id_ubi)) {
-                            $cCentrosEncargados[($i + 1)]->setId_ubi($id_ubi);
+                        $post_num_orden = $cCentrosEncargados[($i + 1)]->getNum_orden();
+                        if (!empty($post_num_orden)) {
+                            $cCentrosEncargados[($i + 1)]->DBCarregar();
+                            $cCentrosEncargados[($i + 1)]->setNum_orden($num_orden);
                             if ($cCentrosEncargados[($i + 1)]->DBGuardar() === false) {
                                 echo _("hay un error, no se ha guardado");
                             }
-                            $cCentrosEncargados[($i)]->setId_ubi($post_id_ubi);
+                            $cCentrosEncargados[($i)]->DBCarregar();
+                            $cCentrosEncargados[($i)]->setNum_orden($post_num_orden);
                             if ($cCentrosEncargados[($i)]->DBGuardar() === false) {
                                 echo _("hay un error, no se ha guardado");
                             }
@@ -83,7 +88,7 @@ switch ($Qque) {
                     $error_txt = _("hay un error, no se ha eliminado el centro");
                 }
             } else {
-                $error_txt = _("no sé cuál he de borar");
+                $error_txt = _("no sé cuál he de borrar");
             }
         } else {
             $error_txt = ordena($Qid_activ, $Qid_ubi, $Qnum_orden);
