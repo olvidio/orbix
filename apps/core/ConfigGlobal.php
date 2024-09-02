@@ -6,6 +6,8 @@ class ConfigGlobal extends ServerConf
 {
 
     // la region (sin cr), las dl en formato de DBU
+    // Actualmente se usa para sincronizar con la BDU.
+    // las dl de la bdu (sin esquema en orbix) se añaden a la región que tiene esquema en Orbix.
     public const REGIONES_CON_DL = [
             'Pla' => ['u', 'par'],
         ];

@@ -6,6 +6,7 @@ use core\ClasePropiedades;
 use core\ConverterDate;
 use core\DatosCampo;
 use core\Set;
+use PDO;
 use web\DateTimeLocal;
 use web\NullDateTimeLocal;
 use function core\is_true;
@@ -208,8 +209,21 @@ class PersonaNota extends ClasePropiedades
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
     /**
-     * Guarda los atributos de la clase en la base de datos.
-     * Si no existe el registro, hace el insert; Si existe hace el update.
+     * Guarda dependiendo de la persona y de la region que pone la nota
+     * Si la region no tiene stgr, da error
+     * si la persona pertenece a la dl/r se guarda en PersonaNotaDl
+     * si la persona pertenece a otra dl/r se guarda en PersonaNotaOtraRegionStgr
+     * si la persona pertenece a otra dl/r de aquinate se le guarda una copia en su dl/r
+     *
+     * Antiguo trigger:
+     *
+     * SELECT schema into n FROM public.db_idschema WHERE id=NEW.id_schema;               +
+     CASE n                                                                             +
+     WHEN 'restov', 'restof' THEN                                                       +
+       EXECUTE 'INSERT INTO ' || quote_ident(n) || '.e_notas_ex SELECT $1.* ' USING NEW;+
+     ELSE                                                                               +
+       EXECUTE 'INSERT INTO ' || quote_ident(n) || '.e_notas_dl SELECT $1.* ' USING NEW;+
+     END CASE;
      *
      */
     public function DBGuardar()

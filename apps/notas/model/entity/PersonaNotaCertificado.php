@@ -7,9 +7,7 @@ use core\DBConnection;
 use Tests\config\MockConfigDB;
 
 /**
- * GestorPersonaNotaDl
- *
- * Classe per gestionar la llista d'objectes de la clase PersonaNotaDl
+ * Fitxer amb la Classe que accedeix a la taula e_notas_dl
  *
  * @package delegación
  * @subpackage model
@@ -17,16 +15,22 @@ use Tests\config\MockConfigDB;
  * @version 1.0
  * @created 07/04/2014
  */
-class GestorPersonaNotaOtraRegionStgr extends GestorPersonaNota
+
+/**
+ * Clase que implementa la entidad e_notas_dl
+ *
+ * @package delegación
+ * @subpackage model
+ * @author Daniel Serrabou
+ * @version 1.0
+ * @created 07/04/2014
+ */
+class PersonaNotaCertificado extends PersonaNota
 {
-    /* ATRIBUTOS ----------------------------------------------------------------- */
 
-    /* CONSTRUCTOR -------------------------------------------------------------- */
-
-    function __construct($esquema_region_stgr, bool $mock = FALSE, $a_id = '')
+    function __construct(string $nombre_schema, $mock = FALSE)
     {
-        $this->esquema_region_stgr = $esquema_region_stgr;
-        $this->mock = $mock;
+        // Conectar con la tabla de la dl
         $db = (ConfigGlobal::mi_sfsv() === 1 )? 'sv' : 'sf';
         // se debe conectar con la region del stgr padre
         if ($mock) {
@@ -34,11 +38,12 @@ class GestorPersonaNotaOtraRegionStgr extends GestorPersonaNota
         }else {
             $oConfigDB = new ConfigDB($db); //de la database sv/sf
         }
-        $config = $oConfigDB->getEsquema($esquema_region_stgr);
+        $config = $oConfigDB->getEsquema($nombre_schema);
         $oConexion = new DBConnection($config);
         $oDbl = $oConexion->getPDO();
 
         $this->setoDbl($oDbl);
-        $this->setNomTabla('e_notas_otra_region_stgr');
+        $this->setNomTabla('e_notas_dl');
     }
+
 }

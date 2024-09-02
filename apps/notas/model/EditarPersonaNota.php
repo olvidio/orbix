@@ -4,11 +4,12 @@ namespace notas\model;
 
 use asignaturas\model\entity\GestorAsignatura;
 use core\ConfigGlobal;
-use core\DBPropiedades;
 use devel\model\entity\GestorDbSchema;
 use dossiers\model\entity\Dossier;
 use notas\model\entity\Acta;
+use notas\model\entity\Nota;
 use notas\model\entity\PersonaNota;
+use notas\model\entity\PersonaNotaCertificado;
 use notas\model\entity\PersonaNotaDl;
 use notas\model\entity\PersonaNotaOtraRegionStgr;
 use personas\model\entity\Persona;
@@ -16,6 +17,7 @@ use ubis\model\entity\GestorDelegacion;
 
 class EditarPersonaNota
 {
+    private bool $mock = FALSE;
 
     private string $msg_err = '';
     private int $id_nom;
@@ -45,18 +47,18 @@ class EditarPersonaNota
         return $this->msg_err;
     }
 
-    public function nuevo($camposExtra): string
+    public function nuevo(array $camposExtra): string
     {
-        /* Hace falta saber en que esquema está la persona, para poner la nota en la tabla del
-         * esquema correspondiente.
-         *    - si es de paso en la tabla 'e_notas_otra_region_stgr' de mi region stgr
-         *    - si es de otra region del stgr, en 'e_notas_otra_region_stgr' de mi region stgr
-         *          y una copia en 'e_notas_dl' de la region de la persona, con:
-         *              + acta = 'falta certificado de '
-         *              + id_situacion = 13 (falta certificado)
-         *              + tipo_acta = 2 = certificado
-         *     - si es de mi región del stgr, en la tabla 'e_notas_dl' de mi dl/region
-         */
+
+        $a_ObjetosPersonaNota = $this->getObjetosPersonaNota($this->getDatosRegionStgr(), $this->getId_schema_persona());
+
+        return $this->nuevo2($a_ObjetosPersonaNota, $camposExtra);
+    }
+
+    public function nuevo2(array $a_ObjetosPersonaNota, array $camposExtra): array
+    {
+        $rta = [];
+        $oPersonaNota = $a_ObjetosPersonaNota['nota'];
 
         $id_situacion = $camposExtra['id_situacion'];
         $acta = $camposExtra['acta'];
@@ -69,12 +71,6 @@ class EditarPersonaNota
         $id_activ = $camposExtra['id_activ'];
         $nota_num = $camposExtra['nota_num'];
         $nota_max = $camposExtra['nota_max'];
-
-        $oPersonaNota = $this->seleccionarEntidad();
-        // puede devolver mensaje de error
-        if (!empty($this->msg_err)) {
-            return $this->msg_err;
-        }
 
         //No es una opcional
         if ($this->id_asignatura === 1) {
@@ -117,15 +113,42 @@ class EditarPersonaNota
         $oPersonaNota->setNota_num($nota_num);
         $oPersonaNota->setNota_max($nota_max);
         if ($oPersonaNota->DBGuardar() === false) {
-            $this->msg_err .= _("hay un error, no se ha guardado");
+            throw new \RuntimeException(_("hay un error, no se ha guardado. Nota"));
         }
+        $rta['nota'] =$oPersonaNota;
         // si no está abierto, hay que abrir el dossier para esta persona
         //abrir_dossier('p',$_POST['id_pau'],'1303',$oDB);
         $oDossier = new Dossier(array('tabla' => 'p', 'id_pau' => $this->id_nom, 'id_tipo_dossier' => 1303));
         $oDossier->abrir();
         $oDossier->DBGuardar();
 
-        return $this->msg_err;
+        // Pongo las notas en la dl de la persona, esperando al certificado
+        if (array_key_exists('certificado', $a_ObjetosPersonaNota)) {
+            $oPersonaNotaCertificado = $a_ObjetosPersonaNota['certificado'];
+
+            $oPersonaNotaCertificado->setId_nivel($this->id_nivel);
+            $oPersonaNotaCertificado->setId_asignatura($id_asignatura);
+            $oPersonaNotaCertificado->setId_nom($this->id_nom);
+
+            $oPersonaNotaCertificado->setId_situacion(Nota::FALTA_CERTIFICADO);
+            $oPersonaNotaCertificado->setActa(_("falta certificado"));
+            $oPersonaNotaCertificado->setDetalle($acta);
+            $oPersonaNotaCertificado->setTipo_acta(PersonaNota::FORMATO_CERTIFICADO);
+
+            $oPersonaNotaCertificado->setF_acta($f_acta);
+            $oPersonaNotaCertificado->setPreceptor($preceptor);
+            $oPersonaNotaCertificado->setId_preceptor($id_preceptor);
+            $oPersonaNotaCertificado->setEpoca($epoca);
+            $oPersonaNotaCertificado->setId_activ($id_activ);
+            $oPersonaNotaCertificado->setNota_num($nota_num);
+            $oPersonaNotaCertificado->setNota_max($nota_max);
+            if ($oPersonaNotaCertificado->DBGuardar() === false) {
+                throw new \RuntimeException(_("hay un error, no se ha guardado. Nota Certificado"));
+            }
+            $rta['certificado'] =$oPersonaNotaCertificado;
+        }
+
+        return $rta;
     }
 
     public function editar($camposExtra): string
@@ -146,7 +169,9 @@ class EditarPersonaNota
         $id_asignatura_real = $camposExtra['id_asignatura_real'];
 
 
-        $oPersonaNota = $this->seleccionarEntidad();
+        $a_ObjetosPersonaNota = $this->getObjetosPersonaNota($this->getDatosRegionStgr(), $this->getId_schema_persona());
+        $oPersonaNota = $a_ObjetosPersonaNota['nota'];
+
         // puede devolver mensaje de error
         if (!empty($this->msg_err)) {
             return $this->msg_err;
@@ -196,69 +221,78 @@ class EditarPersonaNota
         return $this->msg_err;
     }
 
-    private function seleccionarEntidad()
-    {
-        // mi region stgr
-        $mi_dl = ConfigGlobal::mi_dele();
+    public function getDatosRegionStgr() {
+
         $gesDelegacion = new GestorDelegacion();
-        $a_mi_delegacion = $gesDelegacion->getDelegaciones(['dl' => $mi_dl]);
-        $mi_region_stgr = $a_mi_delegacion[0]->getRegion_stgr();
-        $esquema_region_stgr = $this->esquma_region_stgr($mi_region_stgr);
+        $a_mi_region_stgr = $gesDelegacion->mi_region_stgr();
+        $a_mi_region_stgr['mi_id_schema'] = ConfigGlobal::mi_id_schema();
 
-        if (empty($mi_region_stgr)) {
-            $this->msg_err .= _("Debe indicar a que región del stgr pertenece su dl/r");
-            return $this->msg_err;
-        }
+        return $a_mi_region_stgr;
+    }
 
-        // para saber a que schema pertenece la persona
-        $oPersona = Persona::NewPersona($this->id_nom);
-        if (!is_object($oPersona)) {
-            $msg_err = "<br>$oPersona con id_nom: $this->id_nom en  " . __FILE__ . ": line " . __LINE__;
-            exit($msg_err);
-        }
-        $id_schema = $oPersona->getId_schema();
+    /**
+     * Se lo paso por constructor para poder hacer test con otra información
+     * @return PersonaNota[]
+     */
+    public function getObjetosPersonaNota(array $a_mi_region_stgr, int $id_schema_persona): array
+    {
+        /* Hace falta saber en que esquema está la persona, para poner la nota en la tabla del
+         * esquema correspondiente.
+         *    - si es de paso en la tabla 'e_notas_otra_region_stgr' de mi region stgr
+         *    - si es de otra region del stgr, en 'e_notas_otra_region_stgr' de mi region stgr
+         *          y una copia en 'e_notas_dl' de la region de la persona, con:
+         *              + acta = 'falta certificado de '
+         *              + id_situacion = 13 (falta certificado)
+         *              + tipo_acta = 2 = certificado
+         *     - si es de mi región del stgr, en la tabla 'e_notas_dl' de mi dl/region
+         */
+
+        /* region que está introduciendo la nota:
+         *    a) la que organiza los ca
+         *    b) la propia del alumno mediante dossiers.
+         */
+
+        $mi_region_stgr = $a_mi_region_stgr['region_stgr'];
+        $esquema_region_stgr = $a_mi_region_stgr['esquema_region_stgr'];
+        $id_esquema_region_stgr = $a_mi_region_stgr['id_esquema_region_stgr'];
+        $mi_id_schema = $a_mi_region_stgr['mi_id_schema'];
+
         $gesSchemas = new GestorDbSchema();
-        $cSchemas = $gesSchemas->getDbSchemas(['id' => $id_schema]);
-        $nombre_schema_alumno = $cSchemas[0]->getSchema();
+        $cSchemas = $gesSchemas->getDbSchemas(['id' => $id_schema_persona]);
+        $nombre_schema_persona = $cSchemas[0]->getSchema();
 
-        if ($nombre_schema_alumno === 'restov' || $nombre_schema_alumno === 'restof') {
+        if ($nombre_schema_persona === 'restov' || $nombre_schema_persona === 'restof') {
             // guardar en e_notas_otra_region_stgr
-            $oPersonaNota = new PersonaNotaOtraRegionStgr($esquema_region_stgr);
+            $rta['nota'] = new PersonaNotaOtraRegionStgr($esquema_region_stgr, $this->mock);
         } else {
-            $mi_region = ConfigGlobal::mi_region();
-            if ($mi_region === $mi_region_stgr) {
+            if ($id_schema_persona === $mi_id_schema) {
                 // normal
-                $oPersonaNota = new PersonaNotaDl();
+                $rta['nota'] = new PersonaNotaDl();
             } else {
                 // guardar en e_notas_otra_region_stgr
-                $oPersonaNota = new PersonaNotaOtraRegionStgr($esquema_region_stgr);
+                $rta['nota'] = new PersonaNotaOtraRegionStgr($esquema_region_stgr, $this->mock);
+                $rta['certificado'] = new PersonaNotaCertificado($nombre_schema_persona, $this->mock);
             }
         }
 
-        return $oPersonaNota;
+        return $rta;
     }
 
-    public function esquma_region_stgr($region_stgr)
+    private function getId_schema_persona(): int
     {
-        $esquema_region_stgr = "$region_stgr-$region_stgr";
-        // si no existe, puede que sea la region tipo 'crPla'
-        // comprobar que no es una dl que ya tiene su esquema
-        $oDBPropiedades = new DBPropiedades();
-        $a_posibles_esquemas = $oDBPropiedades->array_posibles_esquemas(TRUE, TRUE);
-        if (!in_array($esquema_region_stgr, $a_posibles_esquemas)) {
-            $esquema_region_stgr = "cr$region_stgr-$region_stgr";
+        // para saber a que schema pertenece la persona
+        $oPersona = Persona::NewPersona($this->id_nom);
+        if (!is_object($oPersona)) {
+            $msg_err = "$oPersona con id_nom: $this->id_nom en  " . __FILE__ . ": line " . __LINE__;
+            // exit($msg_err);
+            throw new \RuntimeException($msg_err);
         }
-        if (!in_array($esquema_region_stgr, $a_posibles_esquemas)) {
-            echo _("No encuentro el esquema del a regioón del stgr");
-            die();
-        }
-        if (ConfigGlobal::mi_sfsv() === 1) {
-            $esquema_region_stgr .= 'v';
-            $db = 'sv';
-        } else {
-            $esquema_region_stgr .= 'f';
-            $db = 'sf';
-        }
-        return $esquema_region_stgr;
+        return $oPersona->getId_schema();
     }
+
+    public function setMock(bool $mock): void
+    {
+        $this->mock = $mock;
+    }
+
 }

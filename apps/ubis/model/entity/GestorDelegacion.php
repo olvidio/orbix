@@ -6,6 +6,7 @@ use core\ClaseGestor;
 use core\Condicion;
 use core\ConfigGlobal;
 use core\Set;
+use Exception;
 use web;
 use function core\is_true;
 
@@ -43,6 +44,67 @@ class GestorDelegacion extends ClaseGestor
 
 
     /* MÉTODOS PÚBLICOS -----------------------------------------------------------*/
+
+    /**
+     * @throws Exception
+     */
+    public function mi_region_stgr()
+    {
+        $oDbl = $this->getoDbl_Select();
+        $nom_tabla = $this->getNomTabla();
+
+        $mi_dele = ConfigGlobal::mi_dele();
+
+        $sQuery = "SELECT region_stgr 
+                        FROM $nom_tabla
+                        WHERE dl = '$mi_dele'";
+
+        if (($oDblSt = $oDbl->query($sQuery)) === false) {
+            $sClauError = 'GestorDelegacion.region_stgr';
+            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+            return false;
+        }
+        $aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);
+        if ($aDades === FALSE) {
+            $message = sprintf(_("falta indicar a que región del stgr pertenece la dl %s"), $mi_dele);
+            throw new \RuntimeException($message);
+        }
+        $region_stgr = $aDades['region_stgr'];
+        // nombre del esquema
+        $esquema_region_stgr = $region_stgr . '-cr' . $region_stgr;
+        // caso especial de H:
+        if ($region_stgr === 'H') {
+            $esquema_region_stgr = 'H-H';
+        }
+        if (ConfigGlobal::mi_sfsv() === 2) {
+            $esquema_region_stgr .= 'f';
+        } else {
+            $esquema_region_stgr .= 'v';
+        }
+
+        // buscar el id_schema
+        $sQuery = "SELECT id 
+                        FROM db_idschema
+                        WHERE schema = '$esquema_region_stgr'";
+
+        if (($oDblSt = $oDbl->query($sQuery)) === false) {
+            $sClauError = 'GestorDelegacion.region_stgr';
+            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+            return false;
+        }
+        $aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);
+        if ($aDades === FALSE) {
+            $message = sprintf(_("No se encuentra el id del esquema %s"), $region_stgr);
+            throw new \RuntimeException($message);
+        }
+        $id_esquema_region_stgr = $aDades['id'];
+
+
+        return ['region_stgr' => $region_stgr,
+            'esquema_region_stgr' => $esquema_region_stgr,
+            'id_esquema_region_stgr' => $id_esquema_region_stgr,
+        ];
+    }
 
     public function getArrayIdSchemaRegionStgr($sRegionStgr, $mi_sfsv)
     {

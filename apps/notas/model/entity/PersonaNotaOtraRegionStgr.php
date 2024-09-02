@@ -4,6 +4,7 @@ namespace notas\model\entity;
 use core\ConfigDB;
 use core\ConfigGlobal;
 use core\DBConnection;
+use Tests\config\MockConfigDB;
 
 /**
  * Fitxer amb la Classe que accedeix a la taula e_notas_otra_region_stgr
@@ -38,11 +39,15 @@ class PersonaNotaOtraRegionStgr extends PersonaNota
      * @param integer|array iid_nom,iid_nivel
      *                        $a_id. Un array con los nombres=>valores de las claves primarias.
      */
-    function __construct(string $esquema_region_stgr, ?array $a_id = NULL)
+    function __construct(string $esquema_region_stgr, bool $mock=FALSE, ?array $a_id = NULL)
     {
         $db = (ConfigGlobal::mi_sfsv() === 1 )? 'sv' : 'sf';
         // se debe conectar con la region del stgr padre
-        $oConfigDB = new ConfigDB($db); //de la database sv/sf
+        if ($mock) {
+            $oConfigDB = new MockConfigDB($db);
+        }else {
+            $oConfigDB = new ConfigDB($db); //de la database sv/sf
+        }
         $config = $oConfigDB->getEsquema($esquema_region_stgr);
         $oConexion = new DBConnection($config);
         $oDbl = $oConexion->getPDO();

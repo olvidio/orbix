@@ -22,7 +22,9 @@ class GestorPersonaNota extends core\ClaseGestor
     /* CONSTRUCTOR -------------------------------------------------------------- */
 
 
-    
+    protected bool $mock;
+    protected string $esquema_region_stgr;
+
     function __construct()
     {
         $oDbl = $GLOBALS['oDBP'];
@@ -149,11 +151,14 @@ class GestorPersonaNota extends core\ClaseGestor
         foreach ($oDblSt as $aDades) {
             $a_pkey = array('id_nom' => $aDades['id_nom'],
                 'id_nivel' => $aDades['id_nivel']);
-            if ($this->sNomTabla == "e_notas") {
+            if ($this->sNomTabla === "e_notas") {
                 $oPersonaNota = new PersonaNota($a_pkey);
             }
-            if ($this->sNomTabla == "e_notas_dl") {
+            if ($this->sNomTabla === "e_notas_dl") {
                 $oPersonaNota = new PersonaNotaDl($a_pkey);
+            }
+            if ($this->sNomTabla === "e_notas_otra_region_stgr") {
+                $oPersonaNota = new PersonaNotaOtraRegionStgr($this->esquema_region_stgr, $this->mock, $a_pkey);
             }
             $oPersonaNota->setoDbl($oDbl);
             $oPersonaNotaSet->add($oPersonaNota);

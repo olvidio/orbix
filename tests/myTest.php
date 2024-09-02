@@ -28,6 +28,9 @@ class myTest extends TestCase
 
     public function setUp(): void
     {
+        # Turn on error reporting
+        error_reporting(E_ALL);
+
         $_SESSION['oGestorErrores'] = new GestorErrores(TRUE);
 
         $id_usuario = 443;
