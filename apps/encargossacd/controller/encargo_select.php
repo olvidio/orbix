@@ -19,7 +19,7 @@ $oPosicion->recordar();
 //Si vengo por medio de Posicion, borro la última
 if (isset($_POST['stack'])) {
     $stack = filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
-    if ($stack != '') {
+    if ($stack !== '') {
         // No me sirve el de global_object, sino el de la session
         $oPosicion2 = new web\Posicion();
         if ($oPosicion2->goStack($stack)) { // devuelve false si no puede ir
@@ -121,7 +121,7 @@ foreach ($cEncargos as $oEncargo) {
     if (!empty($sf_sv)) {
         $oGesEncargoTipo = new GestorEncargoTipo();
         $a_seccion = $oGesEncargoTipo->getArraySeccion();
-        $seccion = $a_seccion[$sf_sv];
+        $seccion = $a_seccion[$sf_sv]?? '?¿?';
     }
 
     $idioma = '';
@@ -131,7 +131,7 @@ foreach ($cEncargos as $oEncargo) {
         $idioma = $cIdiomas[0]->getNom_idioma();
     }
 
-    if ($sf_sv == 2) $a_valores[$i]['clase'] = "tono2";
+    if ($sf_sv === 2) $a_valores[$i]['clase'] = "tono2";
 
     if (!empty($id_ubi)) {
         $oUbi = Ubi::newUbi($id_ubi);

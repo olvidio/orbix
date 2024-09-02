@@ -281,7 +281,7 @@ class Lista
      *
      * $a_valores:  array(
      *    [fila]['clase'] = valor => añade añade 'valor' en el atributo class de la fila
-     *    [fila]['sel'] = valor => crea la colummna sel con un checkbox con id='#'.addslashes(valor)
+     *    [fila]['sel'] = valor => crea la columna sel con un checkbox con id='#'.addslashes(valor)
      *    [fila]['select'] = array(valor)    => marca como checked los checkbox de la columna 'sel' con id = valor
      *    [fila]['scroll_id'] = valor    => ejecuta: " grid_$id_tabla.scrollRowToTop($scroll_id);" Que desplaza las filas hasta la linea correspondiente.
      *    [fila][col] = txt
@@ -513,19 +513,19 @@ class Lista
                         }
                         if (!empty($valor['script'])) {
                             $ira = $valor['script'];
-                            $aFilas[$num_fila]['script'] = addslashes($ira);
+                            $aFilas[$num_fila]['script'] = addslashes($ira?? '');
                         }
                         if (!empty($valor['script2'])) {
                             $ira = $valor['script2'];
-                            $aFilas[$num_fila]['script2'] = addslashes($ira);
+                            $aFilas[$num_fila]['script2'] = addslashes($ira?? '');
                         }
                         if (!empty($valor['script3'])) {
                             $ira = $valor['script3'];
-                            $aFilas[$num_fila]['script3'] = addslashes($ira);
+                            $aFilas[$num_fila]['script3'] = addslashes($ira?? '');
                         }
                         if (!empty($valor['span'])) {
                             $span = $valor['span'];
-                            $aFilas[$num_fila][$aFields[$icol]] = addslashes($val);
+                            $aFilas[$num_fila][$aFields[$icol]] = addslashes($val?? '');
                             $icol++;
                             for ($s = 1; $s < $span; $s++) {
                                 $aFilas[$num_fila][$aFields[$icol]] = '';
@@ -533,10 +533,10 @@ class Lista
                             }
                             $icol--;
                         } else {
-                            $aFilas[$num_fila][$aFields[$icol]] = addslashes($val);
+                            $aFilas[$num_fila][$aFields[$icol]] = addslashes($val?? '');
                         }
                     } else {
-                        $aFilas[$num_fila][$aFields[$icol]] = empty($valor) ? '' : addslashes($valor);
+                        $aFilas[$num_fila][$aFields[$icol]] = empty($valor) ? '' : addslashes($valor?? '');
                     }
                     $icol++;
                 }
