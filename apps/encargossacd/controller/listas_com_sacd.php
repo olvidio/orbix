@@ -11,8 +11,6 @@ use personas\model\entity\PersonaDl;
 use ubis\model\entity\CentroDl;
 use ubis\model\entity\CentroEllas;
 use web\DateTimeLocal;
-use encargossacd\model\entity\GestorPropuestaEncargosSacd;
-use encargossacd\model\entity\GestorPropuestaEncargoSacdHorario;
 
 /**
  * Esta página muestra los encargos de un sacd.
@@ -145,10 +143,18 @@ foreach ($cPersonas as $oPersona) {
         }
         $seccion = '';
         if (!empty($id_tipo_enc)) {
-            if ($id_tipo_enc_txt[1] == 2) {
-                $seccion = "sf";
-            } else {
-                $seccion = "sv";
+            switch ($id_tipo_enc_txt[1]) {
+                case 1:
+                    $seccion = "sv";
+                    break;
+                case 2:
+                    $seccion = "sf";
+                    break;
+                case 3:
+                    $seccion = "sss+";
+                    break;
+                default:
+                    $seccion = '';
             }
         }
 
