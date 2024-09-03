@@ -6,8 +6,9 @@ use encargossacd\model\entity\GestorEncargoHorario;
 use encargossacd\model\entity\GestorEncargoSacd;
 use encargossacd\model\entity\GestorEncargoSacdHorario;
 use encargossacd\model\entity\GestorEncargoTipo;
-use personas\model\entity\GestorPersonaDl;
+use personas\model\entity\GestorPersona;
 use ubis\model\entity\CentroDl;
+use web\Desplegable;
 use web\Hash;
 
 /**
@@ -28,6 +29,7 @@ require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
 $Qid_ubi = (integer)filter_input(INPUT_POST, 'id_ubi');
+$Qseleccion_sacd = (integer)filter_input(INPUT_POST, 'seleccion_sacd');
 
 $f_hoy = date('Y-m-d');
 
@@ -35,8 +37,41 @@ $f_hoy = date('Y-m-d');
 $GesEncargoTipo = new GestorEncargoTipo();
 
 /* lista sacd posibles */
-$GesPersonas = new GestorPersonaDl();
-$oDesplSacd = $GesPersonas->getListaSacd("AND id_tabla ~ '^(a|n|sss)$'");
+// selecciono según la variable selecion_sacd ('2'=> n y agd, '4'=> de paso, '8'=> sssc, '16'=>cp)
+$a_Clases = [];
+$chk_prelatura = '';
+$chk_de_paso = '';
+$chk_sssc = '';
+if (empty($Qseleccion_sacd) || ($Qseleccion_sacd & 2)) {
+    $a_Clases[] = array('clase' => 'PersonaN', 'get' => 'getPersonas');
+    $a_Clases[] = array('clase' => 'PersonaAgd', 'get' => 'getPersonas');
+    $chk_prelatura = 'checked';
+}
+if ($Qseleccion_sacd & 4) {
+    $a_Clases[] = array('clase' => 'PersonaEx', 'get' => 'getPersonasEx');
+    $chk_de_paso = 'checked';
+}
+if ($Qseleccion_sacd & 8) {
+    $a_Clases[] = array('clase' => 'PersonaSSSC', 'get' => 'getPersonas');
+    $chk_sssc = 'checked';
+}
+
+$aWhere = [];
+$aOperador = [];
+$aWhere['sacd'] = 't';
+$aWhere['situacion'] = 'A';
+$aWhere['_ordre'] = 'apellido1,apellido2,nom';
+$GesPersonas = new GestorPersona();
+$GesPersonas->setClases($a_Clases);
+$cPersonas = $GesPersonas->getPersonas($aWhere, $aOperador);
+$aOpciones = [];
+foreach ($cPersonas as $oPersona) {
+    $id_nom = $oPersona->getId_nom();
+    $apellidos_nombre = $oPersona->getApellidosNombre();
+    $aOpciones[$id_nom] = $apellidos_nombre;
+}
+
+$oDesplSacd = new Desplegable('', $aOpciones, '', true);
 
 /* Miro el tipo de ctr. Si es el de oficiales dl, no pongo titular ni suplente. */
 $oCentro = new CentroDl($Qid_ubi);
@@ -357,6 +392,12 @@ if (($_SESSION['oPerm']->have_perm_oficina('des')) || ($_SESSION['oPerm']->have_
     $perm_des = TRUE;
 }
 
+$url_ficha = 'apps/encargossacd/controller/ctr_get_ficha.php';
+$oHashFicha = new Hash();
+$oHashFicha->setUrl($url_ficha);
+$oHashFicha->setCamposForm('id_ubi!seleccion_sacd');
+$h_ficha = $oHashFicha->linkSinVal();
+
 $a_campos = [
     'oPosicion' => $oPosicion,
     'num_enc' => $num_enc,
@@ -381,6 +422,12 @@ $a_campos = [
     'dedic_ctr_m' => $dedic_ctr_m,
     'dedic_ctr_t' => $dedic_ctr_t,
     'dedic_ctr_v' => $dedic_ctr_v,
+    'url_ficha' => $url_ficha,
+    'id_ubi' => $Qid_ubi,
+    'h_ficha' => $h_ficha,
+    'chk_prelatura' => $chk_prelatura,
+    'chk_de_paso' => $chk_de_paso,
+    'chk_sssc' => $chk_sssc,
 ];
 
 $oView = new core\ViewTwig('encargossacd/controller');

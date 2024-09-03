@@ -1,110 +1,162 @@
 <script>
-fnjs_cerrar=function(){
-	$('#div_modificar').html('');
-	$('#div_modificar').width('0');
-	$('#div_modificar').height('0');
-	$('#div_modificar').removeClass('ventana');
-	document.getElementById("overlay").style.display = "none";
-}
+    fnjs_cerrar = function () {
+        $('#div_modificar').html('');
+        $('#div_modificar').width('0');
+        $('#div_modificar').height('0');
+        $('#div_modificar').removeClass('ventana');
+        document.getElementById("overlay").style.display = "none";
+    }
 
-fnjs_crear_horario=function(enc){
-    var id_enc=$('#id_enc_'+enc).val();
-	//alert ("id_en: "+id_enc);
+    fnjs_crear_horario = function (enc) {
+        var id_enc = $('#id_enc_' + enc).val();
+        //alert ("id_en: "+id_enc);
 
-	var url='des/tareas/encargo_horario';
-	var parametros='origen=ctr&nuevo=1&id_enc='+id_enc;
-	fnjs_update_div('#main',url+'?'+parametros);
-}
+        var url = 'des/tareas/encargo_horario';
+        var parametros = 'origen=ctr&nuevo=1&id_enc=' + id_enc;
+        fnjs_update_div('#main', url + '?' + parametros);
+    }
 
-fnjs_añadir_sacd=function(enc){
-    var n=$('#sacd_num_'+enc).val();
-    var horario=$('#mod_horario_'+enc).val();
-	var dedicacion;
-	/* lista posibles sacd */
-	var lista_sacd='{{ oDesplSacd.options()|raw }}';
-	
-	/* dedicacion */
-	dedicacion='<tr><td class=etiqueta >{{ "dedicación"|trans|raw }}</td>';
-	if (horario == 3) {
-		dedicacion+='<td><span class="link" onclick="fnjs_crear_horario({{ e }});">{{ "crear horario"|trans|raw }}</span></td></tr><tr>';
-	} else {
-		dedicacion+='<td><input type=text size=1 name=dedic_m['+n+']> {{ "mañanas"|trans|raw }}</td><td><input type=text size=1 name=dedic_t['+n+']> {{ "tarde 1ª hora"|trans|raw }}</td><td><input type=text size=1 name=dedic_v['+n+']> {{ "tarde 2ª hora"|trans|raw }}</td></tr><tr>';
-	}
+    fnjs_añadir_sacd = function (enc) {
+        var n = $('#sacd_num_' + enc).val();
+        var horario = $('#mod_horario_' + enc).val();
+        var dedicacion;
+        /* lista posibles sacd */
+        var lista_sacd = '{{ oDesplSacd.options()|raw }}';
 
-	/* antes de sacd suplente colocar nuevo sacd, y dedicación para cada uno */
-	$('#fin_sacd_'+enc).before('<tr><td>sacd '+n+':</td><td colspan=3 class=contenido><select name=id_sacd['+n+']>'+lista_sacd+'</td></tr>'+dedicacion);
+        /* dedicacion */
+        dedicacion = '<tr><td class=etiqueta >{{ "dedicación"|trans|raw }}</td>';
+        if (horario == 3) {
+            dedicacion += '<td><span class="link" onclick="fnjs_crear_horario({{ e }});">{{ "crear horario"|trans|raw }}</span></td></tr><tr>';
+        } else {
+            dedicacion += '<td><input type=text size=1 name=dedic_m[' + n + ']> {{ "mañanas"|trans|raw }}</td><td><input type=text size=1 name=dedic_t[' + n + ']> {{ "tarde 1ª hora"|trans|raw }}</td><td><input type=text size=1 name=dedic_v[' + n + ']> {{ "tarde 2ª hora"|trans|raw }}</td></tr><tr>';
+        }
 
-	$('[name="id_sacd['+n+']"]').val(0);
-	$('#sacd_num_'+enc).val(++n);
-}
+        /* antes de sacd suplente colocar nuevo sacd, y dedicación para cada uno */
+        $('#fin_sacd_' + enc).before('<tr><td>sacd ' + n + ':</td><td colspan=3 class=contenido><select name=id_sacd[' + n + ']>' + lista_sacd + '</td></tr>' + dedicacion);
+
+        $('[name="id_sacd[' + n + ']"]').val(0);
+        $('#sacd_num_' + enc).val(++n);
+    }
+
+
+    fnjs_cambiar_lista_sacd = function () {
+        //alert("nuevo"+id_activ);
+        // para restringir la lista de sacd.
+        var na = $('#sacd_na').prop('checked');
+        var p = $('#sacd_p').prop('checked');
+        var sss = $('#sacd_sss').prop('checked');
+        var cp = $('#sacd_cp').prop('checked');
+        var seleccion_sacd = 0;
+        if (na) seleccion_sacd += 2;
+        if (p) seleccion_sacd += 4;
+        if (sss) seleccion_sacd += 8;
+        if (cp) seleccion_sacd += 16;
+        //alert ("a: "+na+" b "+p+" c "+sss+" d "+cp+" tot "+ seleccion);
+        var url = '{{ url_ficha|raw }}';
+        var parametros = 'id_ubi={{ id_ubi }}&seleccion_sacd=' + seleccion_sacd + '{{ h_ficha|raw }}';
+
+        $.ajax({
+            url: url,
+            type: 'post',
+            data: parametros,
+            dataType: 'html'
+        })
+            .done(function (rta_txt) {
+                $('#ficha').html(rta_txt);
+            });
+    }
 </script>
+<p>{{ "Selección de sacd"|trans|raw }}:
+    <input id="sacd_na" type="checkbox" value="2" onchange="fnjs_cambiar_lista_sacd()"
+           {{ chk_prelatura }}>{{ "prelatura"|trans|raw }}
+    <input id="sacd_p" type="checkbox" value="4" onchange="fnjs_cambiar_lista_sacd()" {{ chk_de_paso }}>{{ "de paso"|trans|raw }}
+    <input id="sacd_sss" type="checkbox" value="8" onchange="fnjs_cambiar_lista_sacd()" {{ chk_sssc }}>{{ "sss+"|trans|raw }}
+</p>
 {% for e in 1..num_enc %}
-	<form id="datos_ctr_{{ e }}" action="" method="post">
-	<input type="hidden"  id="sacd_num_{{ e }}" name="sacd_num" value="{{ sacd_num[e] }}">
-	{{ a_Hash[e].getCamposHtml()|raw }}
-	<table border=1>
-	<tr><td class=titulo colspan=5>{{ a_desc_enc[e] }}</td></tr>
-	<tr id="sacd_titular">
-    {%  if tipo_centro != 'of' %} 
-		<td>{{ "sacd titular"|trans|raw }}:</td>
-		<td colspan=3>
-		<select name=id_sacd_titular id=id_sacd_titular_{{ e }} class=contenido>
-		{{ a_despl_titular[e].options()|raw }}
-		</select>
-		</td>
-		<td><input type=checkbox name=cl value=1 {{ cl_checked[e] }}>{{ "cl"|trans|raw }}</td>
-		</tr>
-		<tr><td class=etiqueta >{{ "dedicación"|trans|raw }}</td>
-		{%  if mod_horario[e] == 3 %} 
-			<td colspan=3><span class="link" onclick="fnjs_crear_horario({{ e }});">{{ dedic_sacd[e][0] }}</span></td>
-        {% else %}
-            <td><input type=text size=1 name=dedic_m[0] value={{ dedic_m[e][0] }}> {{ "mañanas"|trans|raw }}</td>
-            <td><input type=text size=1 name=dedic_t[0] value={{ dedic_t[e][0] }}> {{ "tarde 1ª hora"|trans|raw }}</td>
-            <td><input type=text size=1 name=dedic_v[0] value={{ dedic_v[e][0] }}> {{ "tarde 2ª hora"|trans|raw }}</td></tr>
-		{% endif %}
-		</tr>
-        <tr id="sacd_suplente">
-        <td>{{ "Suplente"|trans|raw }}</td>
-        <td colspan=3>
-        <select name=id_sacd_suplente id=id_sacd_suplente_{{ e }} class=contenido>
-		{{ a_despl_suplente[e].options()|raw }}
-		</select>
-		</td></tr>
-    {% endif %}
-	{{ otros_sacd[e]|raw }}
-	<tr id="fin_sacd_{{ e }}"></tr>
-	<tr><td><span class="link" onclick="fnjs_añadir_sacd({{ e }});">{{ "añadir sacd colaborador"|trans|raw }}</span></td></tr>
-	<tr>
-	<td colspan=4>{{ "observaciones"|trans|raw }}: <textarea rows=3 cols=50 name=observ >{{ a_observ[e] }}</textarea></td></tr>
-	<tr>
-	<td class=etiqueta >{{ "exigencias del ctr"|trans|raw }}</td>
-	{% if mod_horario[e] == 3 %}
-		<td colspan=3><span class="link" onclick="fnjs_crear_horario({{ e }});">{{ dedic_ctr[e] }}</span></td>
-	{% else %}
-		<td><input type=text size=1 name=dedic_ctr_m value={{ dedic_ctr_m[e] }}> {{ "mañanas"|trans|raw }}</td>
-		<td><input type=text size=1 name=dedic_ctr_t value={{ dedic_ctr_t[e] }}> {{ "tarde 1ª hora"|trans|raw }}</td>
-		<td><input type=text size=1 name=dedic_ctr_v value={{ dedic_ctr_v[e] }}> {{ "tarde 2ª hora"|trans|raw }}</td></tr>
-    {% endif %}
-    
-	{#
-	if (strstr($tipo_centro,"cgi")) { //para el caso de los cgi
-		include_once("func_tareas.php"); // para saber $any1
-		$num_alum = '';
-		$oDatosCgi = new DatosCgi(array('id_ubi'=>$Qid_ubi,'curso_ini_any'=>$GLOBALS['any1']));
-		$num_alum = $oDatosCgi->getNum_alum($num_alum);
-		?>
-		<tr><td>{{ "nº de alumnos"|trans|raw }}:</td>
-		<td colspan=2><input type=text name=num_alum value={{ num_alum }}></td></tr>
-		<?php
-	}
-	#}
+    <form id="datos_ctr_{{ e }}" action="" method="post">
+        <input type="hidden" id="sacd_num_{{ e }}" name="sacd_num" value="{{ sacd_num[e] }}">
+        {{ a_Hash[e].getCamposHtml()|raw }}
+        <table border=1>
+            <tr>
+                <td class=titulo colspan=5>{{ a_desc_enc[e] }}</td>
+            </tr>
+            <tr id="sacd_titular">
+                {% if tipo_centro != 'of' %}
+                <td>{{ "sacd titular"|trans|raw }}:</td>
+                <td colspan=3>
+                    <select name=id_sacd_titular id=id_sacd_titular_{{ e }} class=contenido>
+                        {{ a_despl_titular[e].options()|raw }}
+                    </select>
+                </td>
+                <td><input type=checkbox name=cl value=1 {{ cl_checked[e] }}>{{ "cl"|trans|raw }}</td>
+            </tr>
+            <tr>
+                <td class=etiqueta>{{ "dedicación"|trans|raw }}</td>
+                {% if mod_horario[e] == 3 %}
+                <td colspan=3><span class="link" onclick="fnjs_crear_horario({{ e }});">{{ dedic_sacd[e][0] }}</span>
+                </td>
+                {% else %}
+                <td><input type=text size=1 name=dedic_m[0] value={{ dedic_m[e][0] }}> {{ "mañanas"|trans|raw }}</td>
+                <td><input type=text size=1 name=dedic_t[0] value={{ dedic_t[e][0] }}> {{ "tarde 1ª hora"|trans|raw }}
+                </td>
+                <td><input type=text size=1 name=dedic_v[0] value={{ dedic_v[e][0] }}> {{ "tarde 2ª hora"|trans|raw }}
+                </td>
+            </tr>
+            {% endif %}
+            </tr>
+            <tr id="sacd_suplente">
+                <td>{{ "Suplente"|trans|raw }}</td>
+                <td colspan=3>
+                    <select name=id_sacd_suplente id=id_sacd_suplente_{{ e }} class=contenido>
+                        {{ a_despl_suplente[e].options()|raw }}
+                    </select>
+                </td>
+            </tr>
+            {% endif %}
+            {{ otros_sacd[e]|raw }}
+            <tr id="fin_sacd_{{ e }}"></tr>
+            <tr>
+                <td><span class="link"
+                          onclick="fnjs_añadir_sacd({{ e }});">{{ "añadir sacd colaborador"|trans|raw }}</span></td>
+            </tr>
+            <tr>
+                <td colspan=4>{{ "observaciones"|trans|raw }}: <textarea rows=3 cols=50
+                                                                         name=observ>{{ a_observ[e] }}</textarea></td>
+            </tr>
+            <tr>
+                <td class=etiqueta>{{ "exigencias del ctr"|trans|raw }}</td>
+                {% if mod_horario[e] == 3 %}
+                <td colspan=3><span class="link" onclick="fnjs_crear_horario({{ e }});">{{ dedic_ctr[e] }}</span></td>
+                {% else %}
+                <td><input type=text size=1 name=dedic_ctr_m value={{ dedic_ctr_m[e] }}> {{ "mañanas"|trans|raw }}</td>
+                <td><input type=text size=1 name=dedic_ctr_t value={{ dedic_ctr_t[e] }}> {{ "tarde 1ª hora"|trans|raw }}
+                </td>
+                <td><input type=text size=1 name=dedic_ctr_v value={{ dedic_ctr_v[e] }}> {{ "tarde 2ª hora"|trans|raw }}
+                </td>
+            </tr>
+            {% endif %}
 
-	{% if perm_des %}
-	<tr><td colspan=5><input type="button" name="ok" onclick="fnjs_guardar({{ e }});" value="{{ "guardar"|trans|raw }}"></td></tr>
-	{% endif %}
-	</tbody>
-	</table>
-	</form>
+            {#
+            if (strstr($tipo_centro,"cgi")) { //para el caso de los cgi
+                include_once("func_tareas.php"); // para saber $any1
+                $num_alum = '';
+                $oDatosCgi = new DatosCgi(array('id_ubi'=>$Qid_ubi,'curso_ini_any'=>$GLOBALS['any1']));
+                $num_alum = $oDatosCgi->getNum_alum($num_alum);
+                ?>
+                <tr><td>{{ "nº de alumnos"|trans|raw }}:</td>
+                <td colspan=2><input type=text name=num_alum value={{ num_alum }}></td></tr>
+                <?php
+            }
+            #}
+
+            {% if perm_des %}
+                <tr>
+                    <td colspan=5><input type="button" name="ok" onclick="fnjs_guardar({{ e }});"
+                                         value="{{ "guardar"|trans|raw }}"></td>
+                </tr>
+            {% endif %}
+        </table>
+    </form>
 {% endfor %}
 <div id='div_modificar'></div>
 <div id='overlay'></div>
