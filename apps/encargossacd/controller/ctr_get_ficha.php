@@ -36,42 +36,7 @@ $f_hoy = date('Y-m-d');
 // Para las funciones
 $GesEncargoTipo = new GestorEncargoTipo();
 
-/* lista sacd posibles */
-// selecciono según la variable selecion_sacd ('2'=> n y agd, '4'=> de paso, '8'=> sssc, '16'=>cp)
-$a_Clases = [];
-$chk_prelatura = '';
-$chk_de_paso = '';
-$chk_sssc = '';
-if (empty($Qseleccion_sacd) || ($Qseleccion_sacd & 2)) {
-    $a_Clases[] = array('clase' => 'PersonaN', 'get' => 'getPersonas');
-    $a_Clases[] = array('clase' => 'PersonaAgd', 'get' => 'getPersonas');
-    $chk_prelatura = 'checked';
-}
-if ($Qseleccion_sacd & 4) {
-    $a_Clases[] = array('clase' => 'PersonaEx', 'get' => 'getPersonasEx');
-    $chk_de_paso = 'checked';
-}
-if ($Qseleccion_sacd & 8) {
-    $a_Clases[] = array('clase' => 'PersonaSSSC', 'get' => 'getPersonas');
-    $chk_sssc = 'checked';
-}
-
-$aWhere = [];
-$aOperador = [];
-$aWhere['sacd'] = 't';
-$aWhere['situacion'] = 'A';
-$aWhere['_ordre'] = 'apellido1,apellido2,nom';
-$GesPersonas = new GestorPersona();
-$GesPersonas->setClases($a_Clases);
-$cPersonas = $GesPersonas->getPersonas($aWhere, $aOperador);
-$aOpciones = [];
-foreach ($cPersonas as $oPersona) {
-    $id_nom = $oPersona->getId_nom();
-    $apellidos_nombre = $oPersona->getApellidosNombre();
-    $aOpciones[$id_nom] = $apellidos_nombre;
-}
-
-$oDesplSacd = new Desplegable('', $aOpciones, '', true);
+list($chk_prelatura, $chk_de_paso, $chk_sssc, $oDesplSacd) = getDesplegableSacdyCheckBox($Qseleccion_sacd);
 
 /* Miro el tipo de ctr. Si es el de oficiales dl, no pongo titular ni suplente. */
 $oCentro = new CentroDl($Qid_ubi);
@@ -332,6 +297,12 @@ if (is_array($cEncargos) && count($cEncargos) == 0) { // nuevo encargo
                             $dedicacion1 .= "</td><td><input type=text size=1 name=dedic_v[$s] value=" . $dedic_v[$e][$s] . ">" . _("tarde 2ª hora") . "</td></tr><tr>";
 
                     }
+                    // Hay que asegurar que el sacd está en el desplegable. Puede ser un sacd de la sssc
+                    if (!array_key_exists($id_nom, $oDesplSacd->getOpciones())) {
+                        //recalcular las opciones, añadiendo los de la sssc
+                        $Qseleccion_sacd = 10;
+                        list($chk_prelatura, $chk_de_paso, $chk_sssc, $oDesplSacd) = getDesplegableSacdyCheckBox($Qseleccion_sacd);
+                    }
                     $oDesplSacd->setOpcion_sel($id_nom);
                     $dedicacion .= "<tr><td>sacd $s:</td><td colspan=3 class=contenido><select name=id_sacd[$s]>";
                     $dedicacion .= $oDesplSacd->options();
@@ -379,10 +350,23 @@ for ($e = 1; $e <= $num_enc; $e++) {
     $a_Hash[$e] = $oHash;
 
     $oDesplTitular = clone $oDesplSacd;
+    // Hay que asegurar que el sacd está en el desplegable. Puede ser un sacd de la sssc
+    if (!array_key_exists($id_nom, $oDesplTitular->getOpciones())) {
+        //recalcular las opciones, añadiendo los de la sssc
+        $Qseleccion_sacd = 10;
+        list($chk_prelatura, $chk_de_paso, $chk_sssc, $oDesplTitular) = getDesplegableSacdyCheckBox($Qseleccion_sacd);
+    }
     $oDesplTitular->setOpcion_sel($actual_id_sacd_titular[$e]);
     $a_despl_titular[$e] = $oDesplTitular;
+
     $oDesplSuplente = clone $oDesplSacd;
-    $oDesplSuplente->setOpcion_sel($actual_id_sacd_suplente[$e]);
+    // Hay que asegurar que el sacd está en el desplegable. Puede ser un sacd de la sssc
+    if (!array_key_exists($id_nom, $oDesplSuplente->getOpciones())) {
+        //recalcular las opciones, añadiendo los de la sssc
+        $Qseleccion_sacd = 10;
+        list($chk_prelatura, $chk_de_paso, $chk_sssc, $oDesplSuplente) = getDesplegableSacdyCheckBox($Qseleccion_sacd);
+    }
+    $oDesplTitular->setOpcion_sel($actual_id_sacd_titular[$e]);
     $a_despl_suplente[$e] = $oDesplSuplente;
 }
 
@@ -432,3 +416,48 @@ $a_campos = [
 
 $oView = new core\ViewTwig('encargossacd/controller');
 $oView->renderizar('ctr_get_ficha.html.twig', $a_campos);
+
+/**
+ * @param int $Qseleccion_sacd
+ * @return array
+ */
+function getDesplegableSacdyCheckBox(int $Qseleccion_sacd): array
+{
+    /* lista sacd posibles */
+// selecciono según la variable selecion_sacd ('2'=> n y agd, '4'=> de paso, '8'=> sssc, '16'=>cp)
+    $a_Clases = [];
+    $chk_prelatura = '';
+    $chk_de_paso = '';
+    $chk_sssc = '';
+    if (empty($Qseleccion_sacd) || ($Qseleccion_sacd & 2)) {
+        $a_Clases[] = array('clase' => 'PersonaN', 'get' => 'getPersonas');
+        $a_Clases[] = array('clase' => 'PersonaAgd', 'get' => 'getPersonas');
+        $chk_prelatura = 'checked';
+    }
+    if ($Qseleccion_sacd & 4) {
+        $a_Clases[] = array('clase' => 'PersonaEx', 'get' => 'getPersonasEx');
+        $chk_de_paso = 'checked';
+    }
+    if ($Qseleccion_sacd & 8) {
+        $a_Clases[] = array('clase' => 'PersonaSSSC', 'get' => 'getPersonas');
+        $chk_sssc = 'checked';
+    }
+
+    $aWhere = [];
+    $aOperador = [];
+    $aWhere['sacd'] = 't';
+    $aWhere['situacion'] = 'A';
+    $aWhere['_ordre'] = 'apellido1,apellido2,nom';
+    $GesPersonas = new GestorPersona();
+    $GesPersonas->setClases($a_Clases);
+    $cPersonas = $GesPersonas->getPersonas($aWhere, $aOperador);
+    $aOpciones = [];
+    foreach ($cPersonas as $oPersona) {
+        $id_nom = $oPersona->getId_nom();
+        $apellidos_nombre = $oPersona->getApellidosNombre();
+        $aOpciones[$id_nom] = $apellidos_nombre;
+    }
+
+    $oDesplSacd = new Desplegable('', $aOpciones, '', true);
+    return array($chk_prelatura, $chk_de_paso, $chk_sssc, $oDesplSacd);
+}

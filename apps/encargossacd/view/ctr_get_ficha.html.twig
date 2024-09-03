@@ -69,8 +69,8 @@
 <p>{{ "Selección de sacd"|trans|raw }}:
     <input id="sacd_na" type="checkbox" value="2" onchange="fnjs_cambiar_lista_sacd()"
            {{ chk_prelatura }}>{{ "prelatura"|trans|raw }}
-    <input id="sacd_p" type="checkbox" value="4" onchange="fnjs_cambiar_lista_sacd()" {{ chk_de_paso }}>{{ "de paso"|trans|raw }}
-    <input id="sacd_sss" type="checkbox" value="8" onchange="fnjs_cambiar_lista_sacd()" {{ chk_sssc }}>{{ "sss+"|trans|raw }}
+    <input id="sacd_sss" type="checkbox" value="8" onchange="fnjs_cambiar_lista_sacd()"
+           {{ chk_sssc }}>{{ "sss+"|trans|raw }}
 </p>
 {% for e in 1..num_enc %}
     <form id="datos_ctr_{{ e }}" action="" method="post">
