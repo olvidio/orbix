@@ -76,7 +76,7 @@ $oPlanning->setColorColumnaDos($colorColumnaDos);
 $oPlanning->setTable_border($table_border);
 
 $Qyear = (integer)filter_input(INPUT_POST, 'year');
-$year = empty($Qyear) ? date('Y') + 1 : $Qyear;
+$year = empty($Qyear) ? (integer)date('Y') + 1 : $Qyear;
 $Qtrimestre = (integer)filter_input(INPUT_POST, 'trimestre');
 
 $Qid_zona = (string)filter_input(INPUT_POST, 'id_zona');
@@ -156,7 +156,7 @@ switch ($Qtrimestre) {
 }
 
 $inicio_iso = $year . "/" . $ini_trim;
-if ($Qtrimestre == 5) {
+if ($Qtrimestre === 5) {
     $fin_iso = ($year + 1) . "/" . $fin_trim;
 } else {
     $fin_iso = $year . "/" . $fin_trim;
@@ -177,7 +177,7 @@ switch ($Qid_zona) {
         $a_zonas_o = array();
         foreach ($cZonasSacd as $oZonaSacd) {
             $id_zona = $oZonaSacd->getId_zona();
-            if (array_key_exists($id_zona, $a_zonas)) continue;
+            if (array_key_exists($id_zona, $a_zonas)) { continue; }
             $oZona = new Zona($id_zona);
             $nombre_zona = $oZona->getNombre_zona();
             $orden = $oZona->getOrden();
@@ -220,12 +220,12 @@ foreach ($aa_zonas as $a_zonas) {
         $id_nom = $oZonaSacd->getId_nom();
 
         $oSacd = new PersonaSacd($id_nom);
-        if ($oSacd->getSituacion() != 'A') continue;
+        if ($oSacd->getSituacion() !== 'A') { continue; }
 
         $ap_nom = $oSacd->getPrefApellidosNombre();
         $persona[$p] = "p#$id_nom#$ap_nom";
 
-        if ($Qactividad == 'si') {
+        if ($Qactividad === 'si') {
             $a = 0;
             $aWhereAct = [];
             $aOperadorAct = [];
@@ -259,7 +259,7 @@ foreach ($aa_zonas as $a_zonas) {
                 $aWhereAct['id_activ'] = $id_activ;
                 $GesActividades = new GestorActividad();
                 $cActividades = $GesActividades->getActividades($aWhereAct, $aOperadorAct);
-                if (is_array($cActividades) && count($cActividades) == 0) continue;
+                if (is_array($cActividades) && count($cActividades) === 0) { continue; }
 
                 $oActividad = $cActividades[0]; // sólo debería haber una.
                 $id_tipo_activ = $oActividad->getId_tipo_activ();
@@ -352,7 +352,7 @@ foreach ($aa_zonas as $a_zonas) {
                 $oEncargo = new Encargo($id_enc);
                 $id_tipo_enc = $oEncargo->getId_tipo_enc();
                 $id = (string)$id_tipo_enc;
-                if ($id[0] != 7 && $id[0] != 4) continue;
+                if ($id[0] != 7 && $id[0] != 4) { continue; }
 
                 //para el caso de que la actividad comience antes
                 //del periodo de inicio obligo a que tome una hora de inicio
@@ -368,7 +368,7 @@ foreach ($aa_zonas as $a_zonas) {
 
                 $propio = "p";
                 $nom_llarg = $oEncargo->getDesc_enc();
-                $nom_curt = ($nom_llarg[0] == 'A') ? 'a' : 'x';
+                $nom_curt = ($nom_llarg[0] === 'A') ? 'a' : 'x';
                 if ($ini != $fi) {
                     $nom_llarg .= " ($ini-$fi)";
                 } else {
@@ -401,7 +401,7 @@ foreach ($aa_zonas as $a_zonas) {
             $p++;
         }
     }
-    // oredenar las personas
+    // ordenar las personas
     uksort($actividades, "strnatcasecmp"); // case insensitive
     /*
     lo que sigue es para que nos represente una linea en blanco al final:
