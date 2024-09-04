@@ -4,12 +4,11 @@ use actividades\model\entity\GestorActividadDl;
 use actividadescentro\model\entity\CentroEncargado;
 use actividadescentro\model\entity\GestorCentroEncargado;
 use permisos\model\PermisosActividadesTrue;
+use ubis\model\entity\GestorCasa;
 use ubis\model\entity\GestorCentroDl;
 use ubis\model\entity\GestorCentroEllas;
 use web\DateTimeLocal;
 use web\Periodo;
-use ubis\model\entity\Casa;
-use ubis\model\entity\GestorCasa;
 
 // INICIO Cabecera global de URL de controlador *********************************
 require_once("apps/core/global_header.inc");
@@ -20,55 +19,53 @@ require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
 /**
- * En teoria tendria que cambiar el orden de la lista de los centros encargados
+ * En teoría tendría que cambiar el orden de la lista de los centros encargados
  * de la actividad. Si orden és '+' (más importante), hago descender el orden un valor, y reordeno el resto de centros...
  */
-function ordena($id_activ, $id_ubi, $orden)
+function ordena($id_activ, $id_ubi, $orden): string
 {
+    $err_txt = '';
     $GesCentroEncargado = new GestorCentroEncargado();
     $cCentrosEncargados = $GesCentroEncargado->getCentrosEncargados(array('id_activ' => $id_activ, '_ordre' => 'num_orden'));
     $i_max = count($cCentrosEncargados);
     for ($i = 0; $i < $i_max; $i++) {
-        if ($cCentrosEncargados[$i]->getId_ubi() == $id_ubi) {
+        if ($cCentrosEncargados[$i]->getId_ubi() === $id_ubi) {
             $num_orden = $cCentrosEncargados[$i]->getNum_orden();
             switch ($orden) {
                 case "mas":
                     if ($i >= 1) {
                         $anterior_num_orden = $cCentrosEncargados[($i - 1)]->getNum_orden();
-                        if (!empty($anterior_num_orden)) {
-                            $cCentrosEncargados[($i - 1)]->DBCarregar();
-                            $cCentrosEncargados[($i - 1)]->setNum_orden($num_orden);
-                            if ($cCentrosEncargados[($i - 1)]->DBGuardar() === false) {
-                                echo _("hay un error, no se ha guardado");
-                            }
-                            $cCentrosEncargados[($i)]->DBCarregar();
-                            $cCentrosEncargados[($i)]->setNum_orden($anterior_num_orden);
-                            if ($cCentrosEncargados[($i)]->DBGuardar() === false) {
-                                echo _("hay un error, no se ha guardado");
-                            }
+                        $cCentrosEncargados[($i - 1)]->DBCarregar();
+                        $cCentrosEncargados[($i - 1)]->setNum_orden($num_orden);
+                        if ($cCentrosEncargados[($i - 1)]->DBGuardar() === false) {
+                            $err_txt .= _("Error al ordenar (1)");
+                        }
+                        $cCentrosEncargados[($i)]->DBCarregar();
+                        $cCentrosEncargados[($i)]->setNum_orden($anterior_num_orden);
+                        if ($cCentrosEncargados[($i)]->DBGuardar() === false) {
+                            $err_txt .= _("Error al ordenar (2)");
                         }
                     }
                     break;
                 case "menos":
                     if ($i < ($i_max - 1)) {
                         $post_num_orden = $cCentrosEncargados[($i + 1)]->getNum_orden();
-                        if (!empty($post_num_orden)) {
-                            $cCentrosEncargados[($i + 1)]->DBCarregar();
-                            $cCentrosEncargados[($i + 1)]->setNum_orden($num_orden);
-                            if ($cCentrosEncargados[($i + 1)]->DBGuardar() === false) {
-                                echo _("hay un error, no se ha guardado");
-                            }
-                            $cCentrosEncargados[($i)]->DBCarregar();
-                            $cCentrosEncargados[($i)]->setNum_orden($post_num_orden);
-                            if ($cCentrosEncargados[($i)]->DBGuardar() === false) {
-                                echo _("hay un error, no se ha guardado");
-                            }
+                        $cCentrosEncargados[($i + 1)]->DBCarregar();
+                        $cCentrosEncargados[($i + 1)]->setNum_orden($num_orden);
+                        if ($cCentrosEncargados[($i + 1)]->DBGuardar() === false) {
+                            $err_txt .= _("Error al ordenar (3)");
+                        }
+                        $cCentrosEncargados[($i)]->DBCarregar();
+                        $cCentrosEncargados[($i)]->setNum_orden($post_num_orden);
+                        if ($cCentrosEncargados[($i)]->DBGuardar() === false) {
+                            $err_txt .= _("Error al ordenar (4)");
                         }
                     }
                     break;
             }
         }
     }
+    return $err_txt;
 }
 
 $Qque = (string)filter_input(INPUT_POST, 'que');
@@ -93,7 +90,7 @@ switch ($Qque) {
         } else {
             $error_txt = ordena($Qid_activ, $Qid_ubi, $Qnum_orden);
         }
-        $error_txt = addslashes($error_txt?? '');
+        $error_txt = addslashes($error_txt ?? '');
         echo "{ \"que\": \"$Qque}\", \"txt\": \"\", \"error\": \"$error_txt\" }";
         break;
     case "get":
@@ -379,7 +376,7 @@ switch ($Qque) {
             if ($oPermActiv->have_perm_activ('ver') === false) { // sólo puede ver que està ocupado
             } else {
                 $a_valores[$i][0] = $id_activ;
-                $a_valores[$i][10] = $oPermCtr; // para no tener que recalcularlo despues.
+                $a_valores[$i][10] = $oPermCtr; // para no tener que recalcularlo después.
 
                 $a_valores[$i][1] = $nom_activ;
 
