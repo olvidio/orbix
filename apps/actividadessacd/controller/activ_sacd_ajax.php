@@ -115,9 +115,9 @@ function ordena($id_activ, $id_nom, $num_orden)
 $Qque = (string)filter_input(INPUT_POST, 'que');
 $Qid_activ = (integer)filter_input(INPUT_POST, 'id_activ');
 
-if ($Qque == 'lista_activ') {
+if ($Qque === 'lista_activ') {
     $Qtipo = (string)filter_input(INPUT_POST, 'tipo');
-    if ($Qtipo == 'solape') {
+    if ($Qtipo === 'solape') {
         $Qque = $Qtipo;
     }
 }
@@ -130,7 +130,7 @@ switch ($Qque) {
         $Qid_cargo = (integer)filter_input(INPUT_POST, 'id_cargo');
         $Qid_nom = (integer)filter_input(INPUT_POST, 'id_nom');
         $error_txt = '';
-        if ($Qnum_orden == "borrar") { //entonces es borrar:
+        if ($Qnum_orden === "borrar") { //entonces es borrar:
             if ($Qid_activ && $Qid_cargo) {
                 $oCargoActiv = new ActividadCargo(array('id_activ' => $Qid_activ, 'id_cargo' => $Qid_cargo));
                 // Para obligar a cargar el id_item y poder eliminar. (hemos creado el objeto: con id_activ,id_cargo)
@@ -203,12 +203,12 @@ switch ($Qque) {
                 $GesEncargos = new GestorEncargo();
                 // Tipos de encargo que son atención centro. No los rt.
                 // 1000,1100,1200,1300
-                // Todos los 100 (es generico) "sacd del cl"...: 1001
+                // Todos los 100 (es genérico) "sacd del cl"...: 1001
                 $aWhere = ['id_ubi' => $id_ctr, 'id_tipo_enc' => '^1(00|100|200|300)'];
                 $aOperador = ['id_tipo_enc' => '~'];
                 $cEncargos = $GesEncargos->getEncargos($aWhere, $aOperador);
                 if (is_array($cEncargos) && count($cEncargos) > 0) { // puede ser que no haya sacd encargado (dlb, dlbf).
-                    // només n'hi hauria d'haver un.
+                    // solamente debería haber uno.
                     $id_enc = $cEncargos[0]->getId_enc();
                     $GesEncargoSacd = new GestorEncargoSacd();
                     $aWhere = array('id_enc' => $id_enc, 'modo' => '2|3', 'f_fin' => '');
@@ -421,7 +421,7 @@ switch ($Qque) {
                 $a_valores[$i][0] = $id_activ;
                 $a_valores[$i][10] = $oPermSacd; // para no tener que recalcularlo después.
                 $a_valores[$i][1] = $nom_activ;
-                // Fase en la que se en cuentra
+                // Fase en la que se encuentra
                 $GesActividadProceso = new GestorActividadProcesoTarea();
                 $sacd_aprobado = $GesActividadProceso->getSacdAprobado($id_activ);
                 if ($sacd_aprobado === TRUE) {
@@ -498,7 +498,7 @@ switch ($Qque) {
         <h3><?= $titulo ?></h3>
         <span class="comentario">
 		<?= _("NOTA: en sv, al asignar un sacd, se añade la asistencia a la actividad."); ?>
-        <?php if ($Qtipo == 'falta_sacd') {
+        <?php if ($Qtipo === 'falta_sacd') {
             echo "<br>";
             echo sprintf(_("Actividades aprobadas y no aprobadas sin sacds (independiente de la fase \"%s\")"), $txt_fase_ok_sacd);
             echo "<br>";
@@ -668,7 +668,7 @@ switch ($Qque) {
         ?>
         <h3><?= $titulo ?></h3>
         <span class="comentario">
-        <!-- <?= _("NOTA: Si termina y empieza el mismo día en el mismo lugar no se pone."); ?> -->
+        <!-- <?= _("NOTA: Si termina y empieza el mismo día en el mismo lugar no se pone.") ?> -->
         </span>
         <br>
         <table>

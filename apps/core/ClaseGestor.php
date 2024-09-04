@@ -1,6 +1,8 @@
 <?php
 namespace core;
 
+use web\QuitarAcentos;
+
 abstract class ClaseGestor
 {
     /**
@@ -79,14 +81,13 @@ abstract class ClaseGestor
      */
     protected function getConjunt($a_Clases, $namespace, $aWhere, $aOperators)
     {
-        $cClassesTot = array();
-        $ord_Tot = array();
-
         $paraOrdenar = '';
         if (isset($aWhere['_ordre']) && $aWhere['_ordre'] != '') {
             $paraOrdenar = $aWhere['_ordre'];
             unset($aWhere['_ordre']);
         }
+
+        $a_xx = [];
         foreach ($a_Clases as $aClasse) {
             $Classe = $aClasse['clase'];
             $get = $aClasse['get'];
@@ -96,8 +97,11 @@ abstract class ClaseGestor
             $Gestor = $namespace . '\Gestor' . $Classe;
             $oGesClasse = new $Gestor;
             $cClasses = $oGesClasse->$get($aWhere, $aOperators);
-            if (is_array($cClasses)) $cClassesTot = array_merge($cClassesTot, $cClasses);
+            if (is_array($cClasses)) {
+                $a_xx[] = $cClasses;
+            }
         }
+        $cClassesTot = array_merge(...$a_xx);
 
         //ordenar
         if (!empty($paraOrdenar)) {
@@ -110,7 +114,11 @@ abstract class ClaseGestor
                     $ordreCamp = $aa_ordre[0];
                     $get = 'get' . ucfirst($ordreCamp);
                     if (method_exists($oClass, $get)) {
-                        $a_ord[$key_o][$key_c] = strtolower($oClass->$get() ?? '');
+                        $text = $oClass->$get() ?? '';
+                        // Anular acentos, cambiar ñ por nzz
+                        $text = QuitarAcentos::to_sort($text);
+                        $text = strtolower($text);
+                        $a_ord[$key_o][$key_c] = $text;
                         $a_ord_cond[$key_o] = SORT_ASC;
                         if (count($aa_ordre) > 1) {
                             if ($aa_ordre[1] === 'DESC') {
@@ -137,5 +145,3 @@ abstract class ClaseGestor
     }
 
 }
-
-?>

@@ -351,7 +351,7 @@ for ($e = 1; $e <= $num_enc; $e++) {
 
     $oDesplTitular = clone $oDesplSacd;
     // Hay que asegurar que el sacd está en el desplegable. Puede ser un sacd de la sssc
-    if (!array_key_exists($id_nom, $oDesplTitular->getOpciones())) {
+    if (!empty($id_nom) && !array_key_exists($id_nom, $oDesplTitular->getOpciones())) {
         //recalcular las opciones, añadiendo los de la sssc
         $Qseleccion_sacd = 10;
         list($chk_prelatura, $chk_de_paso, $chk_sssc, $oDesplTitular) = getDesplegableSacdyCheckBox($Qseleccion_sacd);
@@ -361,7 +361,7 @@ for ($e = 1; $e <= $num_enc; $e++) {
 
     $oDesplSuplente = clone $oDesplSacd;
     // Hay que asegurar que el sacd está en el desplegable. Puede ser un sacd de la sssc
-    if (!array_key_exists($id_nom, $oDesplSuplente->getOpciones())) {
+    if (!empty($id_nom) && !array_key_exists($id_nom, $oDesplSuplente->getOpciones())) {
         //recalcular las opciones, añadiendo los de la sssc
         $Qseleccion_sacd = 10;
         list($chk_prelatura, $chk_de_paso, $chk_sssc, $oDesplSuplente) = getDesplegableSacdyCheckBox($Qseleccion_sacd);
