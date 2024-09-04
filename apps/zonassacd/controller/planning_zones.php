@@ -88,6 +88,16 @@ $oHash->setArraycamposHidden($a_camposHidden);
 $oHash->setCamposForm('actividad!year!id_zona!trimestre');
 $oHash->setCamposNo('modelo');
 
+$oFormAny = new web\PeriodoQue();
+$any = (integer)date('Y');
+$aOpcionesAnys[$any - 4] = $any - 4;
+$aOpcionesAnys[$any - 3] = $any - 3;
+$aOpcionesAnys[$any - 2] = $any - 2;
+$aOpcionesAnys[$any - 1] = $any - 1;
+$aOpcionesAnys[$any] = $any;
+$aOpcionesAnys[$any + 1] = $any + 1;
+$oFormAny->setPosiblesAnys($aOpcionesAnys);
+
 $a_campos = ['oPosicion' => $oPosicion,
     'oHash' => $oHash,
     'url' => $url,
@@ -99,6 +109,7 @@ $a_campos = ['oPosicion' => $oPosicion,
     'chk_trim3' => $chk_trim3,
     'chk_trim4' => $chk_trim4,
     'chk_trim5' => $chk_trim5,
+    'oFormAny' => $oFormAny,
 ];
 
 $oView = new core\ViewTwig('zonassacd/controller');

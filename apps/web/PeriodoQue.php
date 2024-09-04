@@ -244,13 +244,15 @@ class PeriodoQue
 
     function getOpcionesAnys()
     {
-        $any = (integer)date('Y');
-        $aOpcionesAnys[$any - 2] = $any - 2;
-        $aOpcionesAnys[$any - 1] = $any - 1;
-        $aOpcionesAnys[$any] = $any;
-        $aOpcionesAnys[$any + 1] = $any + 1;
-        $aOpcionesAnys[$any + 2] = $any + 2;
-        $this->aOpcionesAnys = $aOpcionesAnys;
+        if (empty($this->aOpcionesAnys)) {
+            $any = (integer)date('Y');
+            $aOpcionesAnys[$any - 2] = $any - 2;
+            $aOpcionesAnys[$any - 1] = $any - 1;
+            $aOpcionesAnys[$any] = $any;
+            $aOpcionesAnys[$any + 1] = $any + 1;
+            $aOpcionesAnys[$any + 2] = $any + 2;
+            $this->aOpcionesAnys = $aOpcionesAnys;
+        }
         return $this->aOpcionesAnys;
     }
 

@@ -105,6 +105,10 @@ switch ($Qtrimestre) {
         $ini_trim = "12/1";
         $fin_trim = "1/31";
         break;
+    case 6:
+        $ini_trim = "7/1";
+        $fin_trim = "8/31";
+        break;
     case 101:
         $ini_trim = "1/1";
         $fin_trim = "1/31";

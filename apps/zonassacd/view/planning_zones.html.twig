@@ -30,9 +30,10 @@ fnjs_ver_planning = function(n) {
 	<td><input type="radio" name="trimestre" value=112>{{ "diciembre"|trans|raw }}</td>
 	</tr>
 	<tr><td></td><td><input type="radio" name="trimestre" value=5 {{ chk_trim5 }}>{{ "navidad: diciembre-enero"|trans|raw }}</td>
+	<tr><td></td><td><input type="radio" name="trimestre" value=6 {{ chk_trim6 }}>{{ "verano: julilo-agosto"|trans|raw }}</td>
 	</tr>
 	<tr><td class=etiqueta>{{ "año"|trans|raw }}:</td>
-	    <td><input class=contenido name="year" size="5" value="{{ year }}"></td></tr>
+		<td>{{ oFormAny.getDesplAnys().desplegable()|raw }}</td></tr>
 	<tr><th class=titulo_inv colspan=5>{{ "zonas o subzona"|trans|raw }}</th></tr>
 	<tr><td></td><td>
 	<select name='id_zona' class=contenido>
