@@ -191,6 +191,11 @@ fnjs_left_side_hide();
     <tr>
         <td class=etiqueta>{{ "organiza"|trans|raw }}:</td>
         <td colspan=3>{{ oDesplDelegacionesOrg.desplegable()|raw }}</td>
+		<td>{{ "publicada"|trans }}:
+			<input type="radio" name="publicado" value="1" {{ chk_publicado_1 }}/>{{ "si"|trans }}
+			<input type="radio" name="publicado" value="2" {{ chk_publicado_2 }}/>{{ "no"|trans }}
+			<input type="radio" name="publicado" value="3" {{ chk_publicado_3 }}/>{{ "todas"|trans }}
+		</td>
     </tr>
 {% endif %}
 <tr><td class=etiqueta>{{ "periodo"|raw }}:</td>

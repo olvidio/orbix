@@ -66,6 +66,7 @@ $Qempiezamin = (string)filter_input(INPUT_POST, 'empiezamin');
 $Qfases_on = (array)filter_input(INPUT_POST, 'fases_on', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 $Qfases_off = (array)filter_input(INPUT_POST, 'fases_off', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 $Qlistar_asistentes = (string)filter_input(INPUT_POST, 'listar_asistentes');
+$Qpublicado = (integer)filter_input(INPUT_POST, 'publicado');
 
 $isfsv = core\ConfigGlobal::mi_sfsv();
 $permiso_des = FALSE;
@@ -164,7 +165,7 @@ $oFormP->setEmpiezaMin($Qempiezamin);
 $oFormP->setEmpiezaMax($Qempiezamax);
 
 $oHash = new Hash();
-$oHash->setCamposForm('dl_org!empiezamax!empiezamin!filtro_lugar!extendida!iactividad_val!iasistentes_val!id_tipo_activ!inom_tipo_val!isfsv_val!id_ubi!nom_activ!periodo!status!year');
+$oHash->setCamposForm('dl_org!empiezamax!empiezamin!filtro_lugar!extendida!iactividad_val!iasistentes_val!id_tipo_activ!inom_tipo_val!isfsv_val!id_ubi!nom_activ!periodo!status!year!publicado');
 $camposNo = 'id_ubi!nom_activ';
 if (core\ConfigGlobal::is_app_installed('procesos')) {
     $camposNo .= '!fases_on!fases_off';
@@ -294,6 +295,23 @@ if (core\ConfigGlobal::is_app_installed('procesos')) {
     }
 }
 
+$chk_publicado_1 = '';
+$chk_publicado_2 = '';
+$chk_publicado_3 = '';
+switch ($Qpublicado) {
+    case 1:
+        $chk_publicado_1 = "checked='true'";
+        break;
+    case 2:
+        $chk_publicado_2 = "checked='true'";
+        break;
+    case 3:
+    default:
+        $chk_publicado_3 = "checked='true'";
+        break;
+}
+
+
 $a_campos = ['oPosicion' => $oPosicion,
     'oHash' => $oHash,
     'accion' => $accion,
@@ -326,6 +344,9 @@ $a_campos = ['oPosicion' => $oPosicion,
     'CuadrosFasesOff' => $CuadrosFasesOff,
     'mi_dele' => $mi_dele,
     'locale_us' => ConfigGlobal::is_locale_us(),
+    'chk_publicado_1' => $chk_publicado_1,
+    'chk_publicado_2' => $chk_publicado_2,
+    'chk_publicado_3' => $chk_publicado_3,
 ];
 
 $oView = new ViewTwig('actividades/controller');

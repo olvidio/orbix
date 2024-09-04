@@ -66,7 +66,7 @@ if (isset($_POST['stack'])) {
 
 //Si vengo de vuelta con el parámetro 'continuar', los datos no están en el POST,
 // sino en $Posicion. Le paso la referencia del stack donde está la información.
-if (!empty($Qcontinuar) && $Qcontinuar == 'si' && ($QGstack != '')) {
+if (!empty($Qcontinuar) && $Qcontinuar === 'si' && ($QGstack != '')) {
     $oPosicion->goStack($QGstack);
     $Qmodo = $oPosicion->getParametro('modo');
     //	$Qque = $oPosicion->getParametro('que');
@@ -82,6 +82,7 @@ if (!empty($Qcontinuar) && $Qcontinuar == 'si' && ($QGstack != '')) {
     $Qempiezamax = $oPosicion->getParametro('empiezamax');
     $Qfases_on = $oPosicion->getParametro('fases_on');
     $Qfases_off = $oPosicion->getParametro('fases_off');
+    $Qpublicado = $oPosicion->getParametro('publicado');
     $Qid_sel = $oPosicion->getParametro('id_sel');
     $Qscroll_id = $oPosicion->getParametro('scroll_id');
     $oPosicion->olvidar($QGstack); //limpio todos los estados hacia delante.
@@ -117,6 +118,7 @@ if (!empty($Qcontinuar) && $Qcontinuar == 'si' && ($QGstack != '')) {
     $Qempiezamax = (string)filter_input(INPUT_POST, 'empiezamax');
     $Qfases_on = (array)filter_input(INPUT_POST, 'fases_on', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
     $Qfases_off = (array)filter_input(INPUT_POST, 'fases_off', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+    $Qpublicado = (integer)filter_input(INPUT_POST, 'publicado');
 
     // valores por defecto
     if (empty($Qperiodo)) {
@@ -139,6 +141,7 @@ if (!empty($Qcontinuar) && $Qcontinuar == 'si' && ($QGstack != '')) {
         'empiezamax' => $Qempiezamax,
         'fases_on' => $Qfases_on,
         'fases_off' => $Qfases_off,
+        'publicado' => $Qpublicado,
     );
     $oPosicion->setParametros($aGoBack, 1);
 }
@@ -187,7 +190,7 @@ if (empty($Qid_tipo_activ)) {
     $sasistentes = $oTipoActiv->getAsistentesText();
     $sactividad = $oTipoActiv->getActividadText();
 }
-if ($Qid_tipo_activ != '......') {
+if ($Qid_tipo_activ !== '......') {
     $aWhere['id_tipo_activ'] = "^$Qid_tipo_activ";
     $aOperador['id_tipo_activ'] = '~';
 }
@@ -220,20 +223,27 @@ if (!empty($Qdl_org)) {
     $aWhere['dl_org'] = $Qdl_org;
 }
 // Publicar
-if (!empty($Qmodo) && $Qmodo == 'publicar') {
+if (!empty($Qmodo) && $Qmodo === 'publicar') {
     $aWhere['publicado'] = 'f';
+} elseif (!empty($Qpublicado)) {
+    if ($Qpublicado === 1) {
+        $aWhere['publicado'] = 't';
+    }
+    if ($Qpublicado === 2) {
+        $aWhere['publicado'] = 'f';
+    }
 }
 
 // miro que rol tengo. Si soy casa, sólo veo la mía
 $oMiUsuario = new usuarios\Usuario(core\ConfigGlobal::mi_id_usuario());
 
-if (!empty($Qmodo) && $Qmodo != 'buscar') {
+if (!empty($Qmodo) && $Qmodo !== 'buscar') {
     $a_botones = [];
-    if ($Qmodo == 'importar') {
+    if ($Qmodo === 'importar') {
         $a_botones[] = array('txt' => _("importar"),
             'click' => "jsForm.update(\"#seleccionados\",\"importar\")");
     }
-    if ($Qmodo == 'publicar') {
+    if ($Qmodo === 'publicar') {
         $a_botones[] = array('txt' => _("datos"),
             'click' => "jsForm.mandar(\"#seleccionados\",\"datos\")");
         $a_botones[] = array('txt' => _("publicar"),
@@ -310,7 +320,7 @@ if (!$oMiUsuario->isRolePau('ctr')) {
 $a_cabeceras[] = ucfirst(_("centro"));
 $a_cabeceras[] = ucfirst(_("observaciones"));
 
-if (!empty($Qmodo) && $Qmodo == 'importar') {
+if (!empty($Qmodo) && $Qmodo === 'importar') {
     // actividades publicadas
     $mod = 'importar';
     $GesActividades = new GestorActividadPub();
@@ -375,7 +385,7 @@ foreach ($cActividades as $oActividad) {
     // Si es para importar, quito las que ya están importadas
     // y no miro permisos de procesos
     //echo "nom: $nom_activ<br>";
-    if (!empty($Qmodo) && $Qmodo == 'importar') {
+    if (!empty($Qmodo) && $Qmodo === 'importar') {
         $cImportadas = $GesImportada->getImportadas(array('id_activ' => $id_activ));
         if ($cImportadas !== FALSE && !empty($cImportadas)) {
             continue;
@@ -520,8 +530,8 @@ foreach ($cActividades as $oActividad) {
         $a_valores[$i][1] = $f_ini;
         $a_valores[$i][2] = $f_fin;
 
-        if ($Qmodo != 'importar') {
-            if ($sPrefs == 'html') {
+        if ($Qmodo !== 'importar') {
+            if ($sPrefs === 'html') {
                 $pagina = web\Hash::link(core\ConfigGlobal::getWeb() . '/apps/dossiers/controller/dossiers_ver.php?' . http_build_query(array('pau' => 'a', 'id_pau' => $id_activ, 'obj_pau' => $obj_pau)));
                 $a_valores[$i][3] = array('ira' => $pagina, 'valor' => $nom_activ . $con);
             } else {
@@ -637,7 +647,7 @@ if (!$oMiUsuario->isRolePau('cdc') && !$oMiUsuario->isRolePau('ctr')) {
 // Es para los botones de crear nueva actividad. Puede ser que tenga permiso para ver
 // pero no para crear. Hay que determinar los asistentes:
 $aTiposActiv = [];
-if (!empty($Qid_tipo_activ) && ($Qid_tipo_activ[1] != '.')) {
+if (!empty($Qid_tipo_activ) && ($Qid_tipo_activ[1] !== '.')) {
     $oTipoActivCrear = new web\TiposActividades($Qid_tipo_activ);
     $aTiposActiv = $oTipoActivCrear->getArrayAsistentesIndividual();
 }
