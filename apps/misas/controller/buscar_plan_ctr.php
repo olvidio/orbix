@@ -56,6 +56,21 @@ $oDesplCentros->setOpciones($aCentros);
 if (isset($id_ubi)) {
     $oDesplCentros->setOpcion_sel($id_ubi);
 }
+$oDesplZonas->setAction('fnjs_buscar_plan_ctr()');
+
+$aPeriodo = array(
+    'esta_semana' => _("esta semana"),
+    'este_mes' => _("este mes"),
+    'proxima_semana' => _("próxima semana"),
+    'proximo_mes' => _("próximo mes"),
+    'separador' => '---------',
+    'otro' => _("otro")
+);
+
+$oDesplPeriodo = new Desplegable();
+$oDesplPeriodo->setOpciones($aPeriodo);
+$oDesplPeriodo->setNombre('periodo');
+$oDesplPeriodo->setAction('fnjs_ver_plan_ctr()');
 
 $url_buscar_plan_ctr = 'apps/misas/controller/buscar_plan_ctr.php';
 $oHashBuscarPlanCtr = new Hash();
@@ -88,6 +103,7 @@ $h_plan_ctr = $oHashPlanCtr->linkSinVal();
 $a_campos = ['oPosicion' => $oPosicion,
     'oDesplZonas' => $oDesplZonas,
     'oDesplCentros' => $oDesplCentros,
+    'oDesplPeriodo' => $oDesplPeriodo,
     'oFormP' => $oFormP,
     'url_buscar_plan_ctr' => $url_buscar_plan_ctr,
     'url_ver_plan_ctr' => $url_ver_plan_ctr,

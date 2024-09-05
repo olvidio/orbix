@@ -18,21 +18,19 @@ require_once("apps/core/global_header.inc");
 require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$aOpciones = array(
-    'semana_next' => _("próxima semana de lunes a domingo"),
-    'mes_next' => _("próximo mes natural"),
-    'trimestre_2' => _("segundo trimestre"),
-    'trimestre_3' => _("tercer trimestre"),
-    'trimestre_4' => _("cuarto trimestre"),
+$aPeriodo = array(
+    'esta_semana' => _("esta semana"),
+    'este_mes' => _("este mes"),
+    'proxima_semana' => _("próxima semana"),
+    'proximo_mes' => _("próximo mes"),
     'separador' => '---------',
     'otro' => _("otro")
 );
-$oFormP = new PeriodoQue();
-$oFormP->setFormName('frm_ver_plan_sacd');
-$oFormP->setTitulo(core\strtoupper_dlb(_("seleccionar un periodo")));
-$oFormP->setPosiblesPeriodos($aOpciones);
 
-$oFormP->setBoton("<input type=button name=\"ver\" value=\"" . _("ver") . "\" onclick=\"fnjs_ver_plan_sacd();\">");
+$oDesplPeriodo = new Desplegable();
+$oDesplPeriodo->setOpciones($aPeriodo);
+$oDesplPeriodo->setNombre('periodo');
+$oDesplPeriodo->setAction('fnjs_ver_plan_sacd()');
 
 $a_Clases = [];
 $a_Clases[] = array('clase' => 'PersonaN', 'get' => 'getPersonas');
@@ -57,6 +55,7 @@ $oDesplSacd = new Desplegable();
 $oDesplSacd->setNombre('id_sacd');
 $oDesplSacd->setOpciones($a_sacd);
 $oDesplSacd->setBlanco(TRUE);
+$oDesplSacd->setAction('fnjs_ver_plan_sacd()');
 
 $url_ver_plan_sacd = 'apps/misas/controller/ver_plan_sacd.php';
 $oHashPlanSacd = new Hash();
@@ -66,7 +65,7 @@ $h_plan_sacd = $oHashPlanSacd->linkSinVal();
 
 $a_campos = ['oPosicion' => $oPosicion,
     'oDesplSacd' => $oDesplSacd,
-    'oFormP' => $oFormP,
+    'oDesplPeriodo' => $oDesplPeriodo,
     'url_ver_plan_sacd' => $url_ver_plan_sacd,
     'h_plan_sacd' => $h_plan_sacd,
 ];

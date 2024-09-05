@@ -1,4 +1,4 @@
-<div id="div_select_zona">
+<div id="div_select_periodo_sacd">
     <form id="frm_zona_ctr" name="frm_zona_ctr" action="" method="post">
         {{ oHash.getCamposHtml|raw }}
         <table>
@@ -7,9 +7,9 @@
                 <th class=titulo_inv colspan=4>{{ "Plan de Misas de un sacd"|trans|capitalize }}:&nbsp;&nbsp;&nbsp;
                     {{ oDesplSacd.desplegable|raw }}
                 </th>
-            </tr>
-            <tr>
-            {{ oFormP.getHtml()|raw }}
+                <th class=titulo_inv colspan=4>{{ "Periodo"|trans|capitalize }}:&nbsp;&nbsp;&nbsp;
+                    {{ oDesplPeriodo.desplegable|raw }}
+                </th>
             </tr>
             </thead>
         </table>
@@ -18,6 +18,9 @@
 
 <br>
 <div id="div_cuadricula">
+</div>
+        </table>
+    </form>
 </div>
 
 <script>

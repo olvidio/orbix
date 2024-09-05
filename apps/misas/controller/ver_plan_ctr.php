@@ -37,7 +37,25 @@ $Qempiezamin = (string)filter_input(INPUT_POST, 'empiezamin');
 $Qempiezamax = (string)filter_input(INPUT_POST, 'empiezamax');
 
 switch ($Qperiodo) {
-    case "semana_next":
+    case "esta_semana":
+        $dia_week = date('N');
+        $dia_week--;
+        if ($dia_week==-1){
+            $dia_week=6;
+        }
+        $empiezamin = new DateTimeLocal(date('Y-m-d'));
+        $intervalo='P'.($dia_week).'D';
+        $di = new DateInterval($intervalo);
+        $di->invert = 1; // intervalo negativo
+
+        $empiezamin->add($di);
+        $Qempiezamin_rep = $empiezamin->format('Y-m-d');
+        $intervalo='P7D';
+        $empiezamax = $empiezamin;
+        $empiezamax->add(new DateInterval($intervalo));
+        $Qempiezamax_rep = $empiezamax->format('Y-m-d');
+        break;
+    case "proxima_semana":
         $dia_week = date('N');
         $empiezamin = new DateTimeLocal(date('Y-m-d'));
         $intervalo='P'.(8-$dia_week).'D';
@@ -48,7 +66,22 @@ switch ($Qperiodo) {
         $empiezamax->add(new DateInterval($intervalo));
         $Qempiezamax_rep = $empiezamax->format('Y-m-d');
         break;
-    case "mes_next":
+    case "este_mes":
+        $este_mes = date('m');
+        $anyo = date('Y');
+        $empiezamin = new DateTimeLocal(date($anyo.'-'.$este_mes.'-01'));
+        $Qempiezamin_rep = $empiezamin->format('Y-m-d');
+        $siguiente_mes = $este_mes + 1;
+        if ($siguiente_mes == 12) {
+            $siguiente_mes = 1;
+            $anyo++;
+        }
+        $empiezamax = new DateTimeLocal(date($anyo.'-'.$siguiente_mes.'-01'));
+        $Qempiezamax_rep = $empiezamax->format('Y-m-d');
+        break;
+
+        
+    case "proximo_mes":
         $proximo_mes = date('m') + 1;
         $anyo = date('Y');
         if ($proximo_mes == 12) {
@@ -80,13 +113,46 @@ $columns_cuadricula = [
     ["id" => "observaciones", "name" => "Observaciones", "field" => "observaciones", "width" => 250, "cssClass" => "cell-title"],
 ];
 
+$dia_week_sacd = [];
+$oInicio = new DateTimeLocal($Qempiezamin_rep);
+$oFin = new DateTimeLocal($Qempiezamax_rep);
+
+$interval = new DateInterval('P1D');
+$date_range = new DatePeriod($oInicio, $interval, $oFin);
+
+$inicio_dia = $Qempiezamin_rep.' 00:00:00';
+$fin_dia = $Qempiezamax_rep.' 23:59:59';
+
+echo 'D: '.$inicio_dia.'-'.$fin_dia.'<br>';
+echo 'U: '.$Qid_ubi.'<br>';
+
+foreach ($date_range as $date) {
+    $id_dia = $date->format('Y-m-d');
+    $num_dia = $date->format('j');
+    $num_mes = $date->format('n');
+    $dia_week = $date->format('N');
+    $dia_week_sacd[$id_dia] = $date->format('N');
+    $nom_dia = $a_dias_semana_breve[$dia_week].$num_dia.$a_nombre_mes_breve[$num_mes];
+
+    $columns_cuadricula[] = [
+        "id" => "$id_dia", 
+        "name" => "$nom_dia", 
+        "field" => "$id_dia", 
+        "width" => 80, 
+        "cssClass" => "cell-title"
+    ];
+}
+$data_cuadricula = [];
+
 $EncargoCtrRepository = new EncargoCtrRepository();
 $cEncargosCtr = $EncargoCtrRepository->getEncargosCentro($Qid_ubi);
 foreach ($cEncargosCtr as $oEncargoCtr) {
     $id_enc = $oEncargoCtr->getId_enc();
+    echo 'E: '.$id_enc.'<br>';
     $oEncargo = new Encargo($id_enc);
     $desc_enc = $oEncargo->getDesc_enc();
     $id_ubi = $oEncargo->getId_ubi();
+    echo 'U: '.$id_ubi.'<br>';
     $id_tipo_enc = $oEncargo->getId_tipo_enc();
     $desc_lugar = $oEncargo->getDesc_lugar();
     $idioma_enc = $oEncargo->getIdioma_enc();
@@ -108,60 +174,54 @@ foreach ($cEncargosCtr as $oEncargoCtr) {
         $tipo_enc = '';
     }
 
+    foreach ($date_range as $date) {
+        $id_dia = $date->format('Y-m-d');
+    
+        $inicio_dia = $id_dia.' 00:00:00';
+        $fin_dia = $id_dia.' 23:59:59';
 
-$dia_week_sacd = [];
-$oInicio = new DateTimeLocal($Qempiezamin_rep);
-$oFin = new DateTimeLocal($Qempiezamax_rep);
+        echo 'I:'.$inicio_dia.'<br>';
+        $aWhere = [
+            'id_enc' => $id_enc,
+            'tstart' => "'$inicio_dia', '$fin_dia'",
+        ];
+        $aWhere['_ordre'] = 'tstart';
+        $aOperador = [
+            'tstart' => 'BETWEEN',
+        ];
+        $EncargoDiaRepository = new EncargoDiaRepository();
+        $cEncargosDia = $EncargoDiaRepository->getEncargoDias($aWhere,$aOperador);
 
-$interval = new DateInterval('P1D');
-$date_range = new DatePeriod($oInicio, $interval, $oFin);
+        foreach($cEncargosDia as $oEncargoDia) {
+            $id_enc = $oEncargoDia->getId_enc();
+            $dia = $oEncargoDia->getTstart()->format('d-m-Y');
+            $hora_ini = $oEncargoDia->getTstart()->format('H:i');
+            $hora_fin = $oEncargoDia->getTend()->format('H:i');
+            if ($hora_ini=='00:00')
+                $hora_ini='';
+            if ($hora_fin=='00:00')
+                $hora_fin='';
+            $observ = $oEncargoDia->getObserv();
+            $dia_y_hora=$dia;
+            if ($hora_ini!='') {
+                $dia_y_hora .= ' '.$hora_ini;
+                if ($hora_fin!='') {
+                    $dia_y_hora .= '-'.$hora_fin;
+                }
+            }
 
-$data_cuadricula = [];
+        $data_cols["dia"] = $dia_y_hora;
+        $data_cols["observaciones"] = $observ;
 
-$inicio_dia = $Qempiezamin_rep.' 00:00:00';
-$fin_dia = $Qempiezamax_rep.' 23:59:59';
+        $oEncargo = new Encargo($id_enc);
+        $desc_enc = $oEncargo->getDesc_enc();
 
-echo 'I:'.$inicio_dia.'<br>';
-$aWhere = [
-    'id_enc' => $id_enc,
-    'tstart' => "'$inicio_dia', '$fin_dia'",
-];
-$aWhere['_ordre'] = 'tstart';
-$aOperador = [
-    'tstart' => 'BETWEEN',
-];
-$EncargoDiaRepository = new EncargoDiaRepository();
-$cEncargosDia = $EncargoDiaRepository->getEncargoDias($aWhere,$aOperador);
+        $data_cols["encargo"] = $desc_enc;
 
-foreach($cEncargosDia as $oEncargoDia) {
-    $id_enc = $oEncargoDia->getId_enc();
-    $dia = $oEncargoDia->getTstart()->format('d-m-Y');
-    $hora_ini = $oEncargoDia->getTstart()->format('H:i');
-    $hora_fin = $oEncargoDia->getTend()->format('H:i');
-    if ($hora_ini=='00:00')
-        $hora_ini='';
-    if ($hora_fin=='00:00')
-        $hora_fin='';
-    $observ = $oEncargoDia->getObserv();
-    $dia_y_hora=$dia;
-    if ($hora_ini!='') {
-        $dia_y_hora .= ' '.$hora_ini;
-        if ($hora_fin!='') {
-            $dia_y_hora .= '-'.$hora_fin;
-        }
+        $data_cuadricula[] = $data_cols;
+
     }
-
-    $data_cols["dia"] = $dia_y_hora;
-    $data_cols["observaciones"] = $observ;
-
-    $oEncargo = new Encargo($id_enc);
-    $desc_enc = $oEncargo->getDesc_enc();
-
-    $data_cols["encargo"] = $desc_enc;
-
-    $data_cuadricula[] = $data_cols;
 }
-
 
 
 }

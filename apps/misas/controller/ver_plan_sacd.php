@@ -26,7 +26,7 @@ require_once("apps/core/global_header.inc");
 // Crea los objetos de uso global **********************************************
 require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
-
+ 
 $Qid_sacd = (integer)filter_input(INPUT_POST, 'id_sacd');
 $Qperiodo = (string)filter_input(INPUT_POST, 'periodo');
 $Qorden = (string)filter_input(INPUT_POST, 'orden');
@@ -34,7 +34,25 @@ $Qempiezamin = (string)filter_input(INPUT_POST, 'empiezamin');
 $Qempiezamax = (string)filter_input(INPUT_POST, 'empiezamax');
 
 switch ($Qperiodo) {
-    case "semana_next":
+    case "esta_semana":
+        $dia_week = date('N');
+        $dia_week--;
+        if ($dia_week==-1){
+            $dia_week=6;
+        }
+        $empiezamin = new DateTimeLocal(date('Y-m-d'));
+        $intervalo='P'.($dia_week).'D';
+        $di = new DateInterval($intervalo);
+        $di->invert = 1; // intervalo negativo
+
+        $empiezamin->add($di);
+        $Qempiezamin_rep = $empiezamin->format('Y-m-d');
+        $intervalo='P7D';
+        $empiezamax = $empiezamin;
+        $empiezamax->add(new DateInterval($intervalo));
+        $Qempiezamax_rep = $empiezamax->format('Y-m-d');
+        break;
+    case "proxima_semana":
         $dia_week = date('N');
         $empiezamin = new DateTimeLocal(date('Y-m-d'));
         $intervalo='P'.(8-$dia_week).'D';
@@ -45,7 +63,22 @@ switch ($Qperiodo) {
         $empiezamax->add(new DateInterval($intervalo));
         $Qempiezamax_rep = $empiezamax->format('Y-m-d');
         break;
-    case "mes_next":
+    case "este_mes":
+        $este_mes = date('m');
+        $anyo = date('Y');
+        $empiezamin = new DateTimeLocal(date($anyo.'-'.$este_mes.'-01'));
+        $Qempiezamin_rep = $empiezamin->format('Y-m-d');
+        $siguiente_mes = $este_mes + 1;
+        if ($siguiente_mes == 12) {
+            $siguiente_mes = 1;
+            $anyo++;
+        }
+        $empiezamax = new DateTimeLocal(date($anyo.'-'.$siguiente_mes.'-01'));
+        $Qempiezamax_rep = $empiezamax->format('Y-m-d');
+        break;
+
+        
+    case "proximo_mes":
         $proximo_mes = date('m') + 1;
         $anyo = date('Y');
         if ($proximo_mes == 12) {
