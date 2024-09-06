@@ -129,6 +129,7 @@ foreach ($cPersonas as $oPersona) {
         $sup_tit = "";
         $desc_enc = $oEncargo->getDesc_enc();
         $id_ubi = $oEncargo->getId_ubi();
+        $desc_lugar = $oEncargo->getDesc_lugar();
         $grupo = $array_orden[$modo];
         if (!empty($id_ubi)) { // en algunos encargos no hay ubi
             //$oUbi = new Centro($id_ubi);
@@ -232,8 +233,10 @@ foreach ($cPersonas as $oPersona) {
             continue;
         }
         if (!empty($id_enc)) {
+            $nombre_ubi_lugar = $nombre_ubi;
+            $nombre_ubi_lugar .= empty($desc_lugar)? '' : ' ('.$desc_lugar.')';
             $array_enc = array("desc_enc" => $desc_enc,
-                "nombre_ubi" => $nombre_ubi,
+                "nombre_ubi" => $nombre_ubi_lugar,
                 "seccion" => $seccion,
                 "dedic_m" => $dedic_m,
                 "dedic_t" => $dedic_t,

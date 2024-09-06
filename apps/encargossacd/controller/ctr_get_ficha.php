@@ -366,7 +366,7 @@ for ($e = 1; $e <= $num_enc; $e++) {
         $Qseleccion_sacd = 10;
         list($chk_prelatura, $chk_de_paso, $chk_sssc, $oDesplSuplente) = getDesplegableSacdyCheckBox($Qseleccion_sacd);
     }
-    $oDesplTitular->setOpcion_sel($actual_id_sacd_titular[$e]);
+    $oDesplSuplente->setOpcion_sel($actual_id_sacd_suplente[$e]);
     $a_despl_suplente[$e] = $oDesplSuplente;
 }
 
