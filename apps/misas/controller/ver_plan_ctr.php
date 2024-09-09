@@ -108,9 +108,7 @@ $a_nombre_mes_breve=[1=>'Ene', 2=>'feb', 3=>'mar', 4=>'abr', 5=>'may', 6=>'jun',
 
 
 $columns_cuadricula = [
-    ["id" => "dia", "name" => "Dia", "field" => "dia", "width" => 150, "cssClass" => "cell-title"],
     ["id" => "encargo", "name" => "Encargo", "field" => "encargo", "width" => 250, "cssClass" => "cell-title"],
-    ["id" => "observaciones", "name" => "Observaciones", "field" => "observaciones", "width" => 250, "cssClass" => "cell-title"],
 ];
 
 $dia_week_sacd = [];
@@ -122,9 +120,6 @@ $date_range = new DatePeriod($oInicio, $interval, $oFin);
 
 $inicio_dia = $Qempiezamin_rep.' 00:00:00';
 $fin_dia = $Qempiezamax_rep.' 23:59:59';
-
-echo 'D: '.$inicio_dia.'-'.$fin_dia.'<br>';
-echo 'U: '.$Qid_ubi.'<br>';
 
 foreach ($date_range as $date) {
     $id_dia = $date->format('Y-m-d');
@@ -148,11 +143,9 @@ $EncargoCtrRepository = new EncargoCtrRepository();
 $cEncargosCtr = $EncargoCtrRepository->getEncargosCentro($Qid_ubi);
 foreach ($cEncargosCtr as $oEncargoCtr) {
     $id_enc = $oEncargoCtr->getId_enc();
-    echo 'E: '.$id_enc.'<br>';
     $oEncargo = new Encargo($id_enc);
     $desc_enc = $oEncargo->getDesc_enc();
     $id_ubi = $oEncargo->getId_ubi();
-    echo 'U: '.$id_ubi.'<br>';
     $id_tipo_enc = $oEncargo->getId_tipo_enc();
     $desc_lugar = $oEncargo->getDesc_lugar();
     $idioma_enc = $oEncargo->getIdioma_enc();
@@ -180,7 +173,6 @@ foreach ($cEncargosCtr as $oEncargoCtr) {
         $inicio_dia = $id_dia.' 00:00:00';
         $fin_dia = $id_dia.' 23:59:59';
 
-        echo 'I:'.$inicio_dia.'<br>';
         $aWhere = [
             'id_enc' => $id_enc,
             'tstart' => "'$inicio_dia', '$fin_dia'",
@@ -194,6 +186,7 @@ foreach ($cEncargosCtr as $oEncargoCtr) {
 
         foreach($cEncargosDia as $oEncargoDia) {
             $id_enc = $oEncargoDia->getId_enc();
+            $id_nom = $oEncargoDia->getId_nom();
             $dia = $oEncargoDia->getTstart()->format('d-m-Y');
             $hora_ini = $oEncargoDia->getTstart()->format('H:i');
             $hora_fin = $oEncargoDia->getTend()->format('H:i');
@@ -205,26 +198,47 @@ foreach ($cEncargosCtr as $oEncargoCtr) {
             $dia_y_hora=$dia;
             if ($hora_ini!='') {
                 $dia_y_hora .= ' '.$hora_ini;
-                if ($hora_fin!='') {
-                    $dia_y_hora .= '-'.$hora_fin;
-                }
             }
+            if ($hora_fin!='') {
+                $dia_y_hora .= '-'.$hora_fin;
+            }
+            $InicialesSacd = new InicialesSacd();
+            $iniciales=$InicialesSacd->iniciales($id_nom);
+            $color = '';
 
-        $data_cols["dia"] = $dia_y_hora;
-        $data_cols["observaciones"] = $observ;
+            $meta_dia["$id_dia"] = [
+                "uuid_item" => $oEncargoDia->getUuid_item()->value(),
+                "color" => $color,
+                "key" => "$id_nom#$iniciales",
+                "tstart" => $oEncargoDia->getTstart()->getHora(),
+                "tend" => $oEncargoDia->getTend()->getHora(),
+                "observ" => $oEncargoDia->getObserv(),
+                "id_enc" => $id_enc,
+                "dia" => $num_dia,
+            ];
+            // añadir '*' si tiene observaciones
+            $iniciales .= " ".$hora_ini;
+            $iniciales .= empty($oEncargoDia->getObserv())? '' : '*';
+            $data_cols["$id_dia"] = $iniciales;
+
+
+        }
+
+//        $data_cols["dia"] = $dia_y_hora;
+//        $data_cols["observaciones"] = $observ;
 
         $oEncargo = new Encargo($id_enc);
         $desc_enc = $oEncargo->getDesc_enc();
 
         $data_cols["encargo"] = $desc_enc;
 
-        $data_cuadricula[] = $data_cols;
 
     }
+    $data_cuadricula[] = $data_cols;
 }
 
 
-}
+
 
 
 $json_columns_cuadricula = json_encode($columns_cuadricula);
