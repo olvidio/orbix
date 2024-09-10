@@ -13,6 +13,7 @@ use personas\model\entity as personas;
 use web\Hash;
 use web\Lista;
 use actividadestudios\model\entity\GestorMatricula;
+use function core\is_true;
 
 class Select1011
 {
@@ -174,7 +175,7 @@ class Select1011
                 }
             }
 
-            if ($preceptor === "t") {
+            if (is_true($preceptor)) {
                 $preceptor = _("sí");
             } else {
                 $preceptor = _("no");
