@@ -52,7 +52,7 @@ switch ($Qmod) {
         $camposExtra['nota_num'] = (float)filter_input(INPUT_POST, 'nota_num', FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
         $camposExtra['nota_max'] = (integer)filter_input(INPUT_POST, 'nota_max');
 
-        $msg_err = $oEditarPersonaNota->nuevo($camposExtra);
+        $oEditarPersonaNota->nuevo($camposExtra);
         break;
     case 'editar':  //------------ EDITAR --------
         // se ataca a la tabla padre 'e_notas', no hace falta saber en que tabla está. Ya lo sabe él

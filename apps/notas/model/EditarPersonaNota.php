@@ -47,7 +47,7 @@ class EditarPersonaNota
         return $this->msg_err;
     }
 
-    public function nuevo(array $camposExtra): string
+    public function nuevo(array $camposExtra): array
     {
 
         $a_ObjetosPersonaNota = $this->getObjetosPersonaNota($this->getDatosRegionStgr(), $this->getId_schema_persona());
@@ -76,6 +76,10 @@ class EditarPersonaNota
         if ($this->id_asignatura === 1) {
             $oGesAsignaturas = new GestorAsignatura();
             $cAsignaturas = $oGesAsignaturas->getAsignaturas(array('id_nivel' => $this->id_nivel));
+            if (!is_array($cAsignaturas) || count($cAsignaturas) === 0) {
+                $msg_err = sprintf(_("No se encuentra una asignatura para le nivel: %s"),$this->id_nivel);
+                exit ($msg_err);
+            }
             $oAsignatura = $cAsignaturas[0]; // sólo debería haber una
             $id_asignatura = $oAsignatura->getId_asignatura();
         } else {//es una opcional
