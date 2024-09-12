@@ -35,6 +35,9 @@ class ComposerAutoloaderInitfe4939d609572947ee73ffcc0a42bf32
 
         $includeFiles = \Composer\Autoload\ComposerStaticInitfe4939d609572947ee73ffcc0a42bf32::$files;
         foreach ($includeFiles as $fileIdentifier => $file) {
+            if (str_contains($file, 'phpunit') && $_ENV['SERVER_NAME'] !== 'orbix.docker') {
+                continue;
+            }
             composerRequirefe4939d609572947ee73ffcc0a42bf32($fileIdentifier, $file);
         }
 
