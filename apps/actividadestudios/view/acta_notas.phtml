@@ -21,7 +21,7 @@ use notas\model\entity\Nota;
 
     fnjs_imprimir = function (form_acta) {
         mod = $('#mod').val();
-        if (mod == 'nueva') {
+        if (mod === 'nueva') {
             alert("<?= $txt_alert_acta ?>");
         } else {
             fnjs_left_side_hide();
@@ -32,7 +32,7 @@ use notas\model\entity\Nota;
 
     //paso las matrículas a notas definitivas
     fnjs_guardar_tessera = function (form_acta) {
-        // comporbar que se ha guardado el acta
+        // comprobar que se ha guardado el acta
         mod = $('#mod').val();
         if (mod == 'nueva') {
             alert("<?= $txt_alert_acta ?>");
@@ -57,11 +57,11 @@ use notas\model\entity\Nota;
         }
     }
 
-    // Grabar las notas en la matricula
+    // Grabar las notas en la matrícula
     fnjs_guardar_nota = function () {
-        // comporbar que se ha guardado el acta
+        // comprobar que se ha guardado el acta
         mod = $('#mod').val();
-        if (mod == 'nueva') {
+        if (mod === 'nueva') {
             alert("<?= $txt_alert_acta ?>");
         } else {
             $('#que').val("1");

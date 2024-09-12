@@ -184,6 +184,7 @@ class EditarPersonaNota
         if (!empty($this->id_nom) && !empty($id_asignatura_real)) {
             $oPersonaNota->setId_nom($this->id_nom);
             $oPersonaNota->setId_nivel($this->id_nivel);
+            $oPersonaNota->setId_asignatura($id_asignatura_real);
             $oPersonaNota->DBCarregar(); // Para que cargue los valores que ya tiene.
         }
 

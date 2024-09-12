@@ -6,6 +6,7 @@ use actividadestudios\model\entity\GestorMatricula;
 use actividadestudios\model\entity\Matricula;
 use asignaturas\model\entity\Asignatura;
 use core\ConfigGlobal;
+use notas\model\EditarPersonaNota;
 use notas\model\entity\Acta;
 use notas\model\entity\GestorActa;
 use notas\model\entity\GestorPersonaNota;
@@ -134,7 +135,7 @@ if ($Qque === 3) { //paso las matrículas a notas definitivas (Grabar e imprimir
                     $op_min=0;
                     $op_max=2;
                     break;
-                case 2:	// sólo de caudrienio
+                case 2:	// sólo de cuadrienio
                     $aWhere['id_nivel'] = "243.";
                     $aOperador['id_nivel'] = '~';
                     $op_min=3;
@@ -237,23 +238,23 @@ if ($Qque === 3) { //paso las matrículas a notas definitivas (Grabar e imprimir
                     }
             }
 
-            $oPersonaNota = new PersonaNota(array('id_nom' => $id_nom, 'id_asignatura' => $Qid_asignatura));
-            // guardo los datos
-            $oPersonaNota->setId_schema($id_schema);
-            $oPersonaNota->setId_nivel($id_nivel);
-            $oPersonaNota->setId_situacion($id_situacion);
-            $oPersonaNota->setActa($acta);
-            $oPersonaNota->setF_acta($f_acta);
-            $oPersonaNota->setId_activ($Qid_activ);
-            $oPersonaNota->setPreceptor($preceptor);
-            $oPersonaNota->setId_preceptor($id_preceptor);
-            $oPersonaNota->setEpoca($iepoca);
-            $oPersonaNota->setNota_num($nota_num);
-            $oPersonaNota->setNota_max($nota_max);
-            $oPersonaNota->setTipo_acta(PersonaNota::FORMATO_ACTA);
-            if ($oPersonaNota->DBGuardar() === false) {
-                echo _("hay un error, no se ha guardado");
-                echo "\n" . $oPersonaNota->getErrorTxt();
+            $oEditarPersonaNota = new EditarPersonaNota($id_nom, $Qid_asignatura, $id_nivel);
+            $camposExtra['id_situacion'] = $id_situacion;
+            $camposExtra['acta'] = $acta;
+            $camposExtra['f_acta'] = $f_acta;
+            $camposExtra['tipo_acta'] = PersonaNota::FORMATO_ACTA;
+            $camposExtra['preceptor'] = $preceptor;
+            $camposExtra['id_preceptor'] = $id_preceptor;
+            $camposExtra['epoca'] = $iepoca;
+            $camposExtra['id_activ'] = $Qid_activ;
+            $camposExtra['nota_num'] = $nota_num;
+            $camposExtra['nota_max'] = $nota_max;
+            $camposExtra['detalle'] = '';
+            if (isset($oPersonaNotaAnterior)) {
+                $camposExtra['id_asignatura_real'] = $Qid_asignatura;
+                $oEditarPersonaNota->editar($camposExtra);
+            } else {
+                $oEditarPersonaNota->nuevo($camposExtra);
             }
         }
     }
@@ -327,18 +328,12 @@ if ($Qque === 1) { // Grabar las notas en la matricula
 if (!empty($msg_err)) {
     echo $msg_err;
 }
-//vuelve a la presentacion de la ficha.
+//vuelve a la presentación de la ficha.
 if (empty($error)) {
     if (!empty($go_to)) {
         $go_to = urlencode($go_to);
-        //echo "gou: $go_to<br>";
-//		echo $oPosicion->ir_a($go_to);
     }
 } else {
     echo $error;
     echo "\n";
-
-//	$go_avant = web\Hash::link(core\ConfigGlobal::getWeb().'/apps/notas/controller/acta_imprimir.php?'.http_build_query(array('acta'=>$acta)));
-//	echo "<input type='button' onclick=fnjs_update_div('#main','".$go_avant."') value="._("continuar").">";
-
 }
