@@ -35,8 +35,13 @@ $Qempiezamin = (string)filter_input(INPUT_POST, 'empiezamin');
 $Qempiezamax = (string)filter_input(INPUT_POST, 'empiezamax');
 $Qseleccion = (integer)filter_input(INPUT_POST, 'seleccion');
 
+echo 'zona: '.$Qid_zona.'<br>';
+echo 'tipo: '.$QTipoPlantilla.'<br>';
+echo 'periodo: '.$Qperiodo.'<br>';
+
 switch ($Qperiodo) {
     case "esta_semana":
+        echo 'HHHHHHHola<br>';
         $dia_week = date('N');
         $dia_week--;
         if ($dia_week==-1){
@@ -49,6 +54,7 @@ switch ($Qperiodo) {
 
         $empiezamin->add($di);
         $Qempiezamin_rep = $empiezamin->format('Y-m-d');
+        echo 'Qemin: '.$Qempiezamin_rep.'<br>';
         $intervalo='P7D';
         $empiezamax = $empiezamin;
         $empiezamax->add(new DateInterval($intervalo));
@@ -101,6 +107,7 @@ switch ($Qperiodo) {
         $Qempiezamin_rep=str_replace('/','-',$Qempiezamin);
         $Qempiezamax_rep=str_replace('/','-',$Qempiezamax);
 }
+echo 'Qemin: '.$Qempiezamin_rep.'<br>';
 
 if(isset($Qorden) && ($Qorden!==null))
     $Qorden='desc_enc';
@@ -234,6 +241,9 @@ switch (trim($QTipoPlantilla)) {
         }
         break;
     case EncargoDia::PLAN_DE_MISAS:
+        echo 'Plan de Misas<br>';
+//        if ((isset($oInicio)) && (isset($oFin)))
+//        {
         $oInicio = new DateTimeLocal($Qempiezamin_rep);
         $oFin = new DateTimeLocal($Qempiezamax_rep);
         $interval = new DateInterval('P1D');
@@ -256,6 +266,7 @@ switch (trim($QTipoPlantilla)) {
             $columns_sacd .= ",
             {'id' : '".$num_dia."', 'name' : '".$nom_dia."', 'field' : '".$num_dia."', 'width' : 80, 'formatter': statusFormatter}";
         }
+//        }
         break;
 } 
 
@@ -274,9 +285,7 @@ $aOperador['id_tipo_enc'] = '~';
 $oGesEncargoTipo = new GestorEncargoTipo();
 $cEncargoTipos = $oGesEncargoTipo->getEncargoTipos($aWhere, $aOperador);
 
-
-$posibles_encargo_tipo = [];
-foreach ($cEncargoTipos as $oEncargoTipo) {
+$posibles_encargo_tipo = [];foreach ($cEncargoTipos as $oEncargoTipo) {
     if ($oEncargoTipo->getId_tipo_enc()>=8100)
         $a_tipo_enc[] = $oEncargoTipo->getId_tipo_enc();
 }

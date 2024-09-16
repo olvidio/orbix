@@ -34,9 +34,12 @@
 <script>
     $("#empiezamin").datepicker();
     $("#empiezamax").datepicker();
+    $("#periodo").datepicker();
 
     fnjs_ver_cuadricula_zona = function () {
+        alert('ver_cuadricula_zona');
         let id_zona = $('#id_zona').val();
+        alert('id_zona:'+id_zona);
         if (id_zona) {
             let url = '{{ url_ver_cuadricula_zona }}';
 	        var zona=$('#sacd_zona').prop('checked');
@@ -60,6 +63,22 @@
     }
 
     fnjs_nuevo_periodo = function () {
+        alert('fnjs_nuevo_periodo');
+        let id_zona = $('#id_zona').val();
+        alert('id_zona:'+id_zona);
+        let tipoplantilla = $('#tipoplantilla').val();
+        alert('tipoplantilla:'+tipoplantilla);
+        if (id_zona) {
+            let url = '{{ url_crear_nuevo_periodo }}';
+        alert('url:'+url);
+
+    	    var periodo=$('#periodos').val();
+        alert('periodo:'+periodo);
+    	    var empiezamax=$('#empiezamax').val();
+        alert('empiezamax:'+empiezamax);
+    	    var empiezamin=$('#empiezamin').val();
+        alert('empiezamin:'+empiezamin);
+        }
    	    var periodo=$('#periodos').val();
         alert(periodo);
         fnjs_ver_cuadricula_zona();

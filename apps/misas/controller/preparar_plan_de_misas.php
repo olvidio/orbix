@@ -5,6 +5,7 @@
 use web\Hash;
 use zonassacd\model\entity\GestorZona;
 use misas\domain\entity\EncargoDia;
+use web\DateTimeLocal;
 use web\Desplegable;
 use web\PeriodoQue;
 
@@ -38,6 +39,11 @@ $oFormP->setTitulo(core\strtoupper_dlb(_("seleccionar un periodo")));
 $oFormP->setPosiblesPeriodos($aOpciones);
 $oFormP->setisDesplAnysVisible(FALSE);
 
+$ohoy = new DateTimeLocal(date('Y-m-d'));
+$shoy = $ohoy ->format('Y-m-d');
+
+$oFormP->setEmpiezaMin($shoy);
+$oFormP->setEmpiezaMax($shoy);
 //$oFormP->setBoton("<input type=button name=\"ver\" value=\"" . _("ver") . "\" onclick=\"fnjs_ver_plantilla_zona();\">");
 //$oFormP->setBoton("<input type=button name=\"preparar\" value=\"" . _("preparar") . "\" onclick=\"fnjs_nuevo_periodo();\">");
 
