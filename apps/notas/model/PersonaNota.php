@@ -269,7 +269,7 @@ class PersonaNota
         $this->id_activ = $id_activ;
     }
 
-    public function getNotaNum(): int
+    public function getNotaNum(): float
     {
         return $this->nota_num;
     }
