@@ -33,7 +33,7 @@ class PersonaNota
     private int $id_preceptor;
     private int $epoca;
     private int $id_activ;
-    private int $nota_num;
+    private float $nota_num;
     private int $nota_max;
     private int $tipo_acta;
 
@@ -274,7 +274,7 @@ class PersonaNota
         return $this->nota_num;
     }
 
-    public function setNotaNum(int $nota_num): void
+    public function setNotaNum(float $nota_num): void
     {
         $this->nota_num = $nota_num;
     }
