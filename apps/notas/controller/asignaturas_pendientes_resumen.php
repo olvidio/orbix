@@ -106,7 +106,7 @@ $aOperador['id_tabla'] = '~';
 $GesPersonas = new personas\GestorPersonaDl();
 $cPersonas = $GesPersonas->getPersonasDl($aWhere, $aOperador);
 $p = 0;
-$GesNotas = new notas\GestorPersonaNotaDl();
+$GesNotas = new notas\GestorPersonaNotaDlDB();
 foreach ($cPersonas as $oPersona) {
     $p++;
     $id_nom = $oPersona->getId_nom();

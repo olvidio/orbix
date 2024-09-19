@@ -82,6 +82,25 @@ class ConfigGlobal extends ServerConf
         return self::$debug;
     }
 
+    public static function setTest_mode(bool $test)
+    {
+        self::$test = $test;
+    }
+
+    public static function is_test_mode()
+    {
+        return self::$test;
+    }
+
+    public static function getDIR_PWD()
+    {
+        if (self::is_test_mode()) {
+            return  self::DIR_PWD_TEST;
+        }
+
+        return  self::DIR_PWD;
+    }
+
     /**
      * devuelve true/false si está o no instalado el módulo.
      *

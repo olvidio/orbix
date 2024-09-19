@@ -1,6 +1,8 @@
 <?php
 
 use notas\model\EditarPersonaNota;
+use notas\model\PersonaNota;
+use web\DateTimeLocal;
 
 /**
  * Para asegurar que inicia la sesión, y poder acceder a los permisos
@@ -32,45 +34,47 @@ if (!empty($a_sel)) { //vengo de un checkbox
     $id_nivel = (integer)filter_input(INPUT_POST, 'id_nivel');
 }
 
-$oEditarPersonaNota = new EditarPersonaNota($Qid_pau, $id_asignatura, $id_nivel);
+$id_situacion = (integer)filter_input(INPUT_POST, 'id_situacion');
+$acta = (string)filter_input(INPUT_POST, 'acta');
+$f_acta = (string)filter_input(INPUT_POST, 'f_acta');
+$oF_acta = DateTimeLocal::createFromLocal($f_acta);
+$tipo_acta = (integer)filter_input(INPUT_POST, 'tipo_acta');
+$preceptor = (string)filter_input(INPUT_POST, 'preceptor');
+$id_preceptor = (integer)filter_input(INPUT_POST, 'id_preceptor');
+$detalle = (string)filter_input(INPUT_POST, 'detalle');
+$epoca = (integer)filter_input(INPUT_POST, 'epoca');
+$id_activ = (integer)filter_input(INPUT_POST, 'id_activ');
+$nota_num = (float)filter_input(INPUT_POST, 'nota_num', FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
+$nota_max = (integer)filter_input(INPUT_POST, 'nota_max');
 
+$oPersonaNota = new PersonaNota();
+$oPersonaNota->setIdNivel($id_nivel);
+$oPersonaNota->setIdAsignatura($id_asignatura);
+$oPersonaNota->setIdNom($Qid_pau);
+$oPersonaNota->setIdSituacion($id_situacion);
+$oPersonaNota->setActa($acta);
+$oPersonaNota->setDetalle($detalle);
+$oPersonaNota->setTipoActa($tipo_acta);
+$oPersonaNota->setFActa($oF_acta);
+$oPersonaNota->setPreceptor($preceptor);
+$oPersonaNota->setIdPreceptor($id_preceptor);
+$oPersonaNota->setEpoca($epoca);
+$oPersonaNota->setIdActiv($id_activ);
+$oPersonaNota->setNotaNum($nota_num);
+$oPersonaNota->setNotaMax($nota_max);
+
+$oEditarPersonaNota = new EditarPersonaNota($oPersonaNota);
 switch ($Qmod) {
     case 'eliminar': //------------ BORRAR --------
         $msg_err = $oEditarPersonaNota->eliminar();
         break;
     case 'nuevo': //------------ NUEVO --------
-
-        $camposExtra['id_situacion'] = (integer)filter_input(INPUT_POST, 'id_situacion');
-        $camposExtra['acta'] = (string)filter_input(INPUT_POST, 'acta');
-        $camposExtra['f_acta'] = (string)filter_input(INPUT_POST, 'f_acta');
-        $camposExtra['tipo_acta'] = (integer)filter_input(INPUT_POST, 'tipo_acta');
-        $camposExtra['preceptor'] = (string)filter_input(INPUT_POST, 'preceptor');
-        $camposExtra['id_preceptor'] = (integer)filter_input(INPUT_POST, 'id_preceptor');
-        $camposExtra['detalle'] = (string)filter_input(INPUT_POST, 'detalle');
-        $camposExtra['epoca'] = (integer)filter_input(INPUT_POST, 'epoca');
-        $camposExtra['id_activ'] = (integer)filter_input(INPUT_POST, 'id_activ');
-        $camposExtra['nota_num'] = (float)filter_input(INPUT_POST, 'nota_num', FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
-        $camposExtra['nota_max'] = (integer)filter_input(INPUT_POST, 'nota_max');
-
-        $oEditarPersonaNota->nuevo($camposExtra);
+        $oEditarPersonaNota->nuevo();
         break;
     case 'editar':  //------------ EDITAR --------
         // se ataca a la tabla padre 'e_notas', no hace falta saber en que tabla está. Ya lo sabe él
-
-        $camposExtra['id_situacion'] = (integer)filter_input(INPUT_POST, 'id_situacion');
-        $camposExtra['acta'] = (string)filter_input(INPUT_POST, 'acta');
-        $camposExtra['f_acta'] = (string)filter_input(INPUT_POST, 'f_acta');
-        $camposExtra['tipo_acta'] = (integer)filter_input(INPUT_POST, 'tipo_acta');
-        $camposExtra['preceptor'] = (string)filter_input(INPUT_POST, 'preceptor');
-        $camposExtra['id_preceptor'] = (integer)filter_input(INPUT_POST, 'id_preceptor');
-        $camposExtra['detalle'] = (string)filter_input(INPUT_POST, 'detalle');
-        $camposExtra['epoca'] = (integer)filter_input(INPUT_POST, 'epoca');
-        $camposExtra['id_activ'] = (integer)filter_input(INPUT_POST, 'id_activ');
-        $camposExtra['nota_num'] = (float)filter_input(INPUT_POST, 'nota_num', FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
-        $camposExtra['nota_max'] = (integer)filter_input(INPUT_POST, 'nota_max');
-        $camposExtra['id_asignatura_real'] = (integer)filter_input(INPUT_POST, 'id_asignatura_real');
-
-        $msg_err = $oEditarPersonaNota->editar($camposExtra);
+        $id_asignatura_real = (integer)filter_input(INPUT_POST, 'id_asignatura_real');
+        $msg_err = $oEditarPersonaNota->editar($id_asignatura_real);
         break;
 }
 

@@ -3,6 +3,7 @@
 namespace Tests;
 
 use config\model\Config;
+use core\ConfigDB;
 use core\ConfigGlobal;
 use core\DBConnection;
 use core\DBView;
@@ -11,8 +12,6 @@ use permisos\model\PermDl;
 use permisos\model\PermisosActividades;
 use permisos\model\PermisosActividadesTrue;
 use PHPUnit\Framework\TestCase;
-use Tests\config\MockConfigDB;
-use Twig\Runtime\EscaperRuntime;
 use usuarios\model\entity\GestorPermMenu;
 use usuarios\model\entity\GestorUsuarioGrupo;
 
@@ -23,13 +22,14 @@ class myTest extends TestCase
 //use
 //include('apps/core/ServerConf.php');
 //include('apps/core/ConfigGlobal.php');
-//include('tests/config/MockConfigDB.php');
 //include('apps/core/DBConnection.php');
 
     public function setUp(): void
     {
         # Turn on error reporting
         error_reporting(E_ALL);
+
+        ConfigGlobal::setTest_mode(TRUE);
 
         $_SESSION['oGestorErrores'] = new GestorErrores(TRUE);
 
@@ -48,7 +48,7 @@ class myTest extends TestCase
         $idioma = '';
         $ordenApellidos = '';
         $id_schema = '';
-//si existe, registro la sesion con los permisos
+//si existe, registro la sesión con los permisos
         if (!isset($_SESSION['session_auth'])) {
             $session_auth = ['id_usuario' => $id_usuario,
                 'sfsv' => $sfsv,
@@ -90,7 +90,7 @@ class myTest extends TestCase
         }
 
 // public para todo el mundo
-        $oConfigDB = new MockConfigDB('comun'); //de la database comun
+        $oConfigDB = new ConfigDB('comun'); //de la database comun
 
         $config = $oConfigDB->getEsquema('public');
         $oConexion = new DBConnection($config);
@@ -101,7 +101,7 @@ class myTest extends TestCase
         $GLOBALS['oDBRC'] = $oConexion->getPDO();
 
 // public para todo el mundo sólo lectura
-        $oConfigDB = new MockConfigDB('comun_select'); //de la database comun
+        $oConfigDB = new ConfigDB('comun_select'); //de la database comun
 
         $config = $oConfigDB->getEsquema('public');
         $oConexion = new DBConnection($config);
@@ -146,7 +146,7 @@ class myTest extends TestCase
             // No en el caso de cr (H-Hv)
             if ((ConfigGlobal::mi_region() != ConfigGlobal::mi_delef()) && !isset($_SESSION['oDBListas'])) {
                 try {
-                    $oConfigDB = new MockConfigDB('listas');
+                    $oConfigDB = new ConfigDB('listas');
                     $config = $oConfigDB->getEsquema('public');
                     $oConexion = new DBConnection($config);
                     $oDBListas = $oConexion->getPDOListas();

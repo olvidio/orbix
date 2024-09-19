@@ -22,7 +22,8 @@
   },
   "require-dev": {
     "roave/security-advisories": "dev-latest",
-    "phpunit/phpunit": "^11.2"
+    "phpunit/phpunit": "^11.2",
+    "fakerphp/faker": "^1.23"
   },
   "autoload": {
         "psr-4": {

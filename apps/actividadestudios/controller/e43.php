@@ -60,7 +60,7 @@ if ($matriculas > 0) {
         $nombre_corto = $oAsignatura->getNombre_corto();
         //$nota = $oMatricula->getNota_txt();
 
-        $GesNotas = new notas\model\entity\GestorPersonaNota();
+        $GesNotas = new notas\model\entity\GestorPersonaNotaDB();
         $cNotas = $GesNotas->getPersonaNotas(array('id_nom' => $Qid_nom, 'id_asignatura' => $id_asignatura));
         if ($cNotas !== FALSE && count($cNotas) > 0) {
             $oNota = $cNotas[0];

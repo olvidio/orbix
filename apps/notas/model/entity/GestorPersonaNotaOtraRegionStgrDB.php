@@ -1,10 +1,10 @@
 <?php
+
 namespace notas\model\entity;
 
 use core\ConfigDB;
 use core\ConfigGlobal;
 use core\DBConnection;
-use Tests\config\MockConfigDB;
 
 /**
  * GestorPersonaNotaDl
@@ -17,23 +17,18 @@ use Tests\config\MockConfigDB;
  * @version 1.0
  * @created 07/04/2014
  */
-class GestorPersonaNotaOtraRegionStgr extends GestorPersonaNota
+class GestorPersonaNotaOtraRegionStgrDB extends GestorPersonaNotaDB
 {
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
     /* CONSTRUCTOR -------------------------------------------------------------- */
 
-    function __construct($esquema_region_stgr, bool $mock = FALSE, $a_id = '')
+    function __construct($esquema_region_stgr)
     {
         $this->esquema_region_stgr = $esquema_region_stgr;
-        $this->mock = $mock;
-        $db = (ConfigGlobal::mi_sfsv() === 1 )? 'sv' : 'sf';
+        $db = (ConfigGlobal::mi_sfsv() === 1) ? 'sv' : 'sf';
         // se debe conectar con la region del stgr padre
-        if ($mock) {
-            $oConfigDB = new MockConfigDB($db);
-        }else {
-            $oConfigDB = new ConfigDB($db); //de la database sv/sf
-        }
+        $oConfigDB = new ConfigDB($db); //de la database sv/sf
         $config = $oConfigDB->getEsquema($esquema_region_stgr);
         $oConexion = new DBConnection($config);
         $oDbl = $oConexion->getPDO();

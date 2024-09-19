@@ -22,6 +22,9 @@ class ConfigDB
         $data = $this->data['default'];
         $data['schema'] = $esquema;
         //sobreescribir los valores default
+        if (!array_key_exists($esquema, $this->data)) {
+           throw new \RuntimeException(sprintf(_("hay que añadir los parámetros de conexión para el esquema: %s"), $esquema));
+        }
         foreach ($this->data[$esquema] as $key => $value) {
             $data[$key] = $value;
         }
@@ -33,7 +36,7 @@ class ConfigDB
         if (ConfigGlobal::WEBDIR === 'pruebas') {
             $database = 'pruebas-' . $database;
         }
-        $this->data = include ConfigGlobal::DIR_PWD . '/' . $database . '.inc';
+        $this->data = include ConfigGlobal::getDIR_PWD() . '/' . $database . '.inc';
     }
 
     /**
@@ -61,7 +64,7 @@ class ConfigDB
 
     private function addEsquema($database, $esquema, $esquema_pwd)
     {
-        $filename = ServerConf::DIR_PWD . '/' . $database . '.inc';
+        $filename = ConfigGlobal::getDIR_PWD() . '/' . $database . '.inc';
 
         $this->data = include $filename;
         $this->data[$esquema] = ['user' => $esquema, 'password' => $esquema_pwd];
@@ -69,7 +72,7 @@ class ConfigDB
 
         // Para las DB Select
         if ($database === 'sv-e' || $database === 'comun') {
-            $filename = ServerConf::DIR_PWD . '/' . $database . '_select.inc';
+            $filename = ConfigGlobal::getDIR_PWD() . '/' . $database . '_select.inc';
             $this->data = include $filename;
             $this->data[$esquema] = ['user' => $esquema, 'password' => $esquema_pwd];
             file_put_contents($filename, '<?php return ' . var_export($this->data, true) . ' ;');
@@ -88,26 +91,26 @@ class ConfigDB
 
     public function renombrarListaEsquemaProduccion($database, $esquema_old, $esquema_new)
     {
-        $this->data = include ConfigGlobal::DIR_PWD . '/' . $database . '.inc';
+        $this->data = include ConfigGlobal::getDIR_PWD() . '/' . $database . '.inc';
 
         $esquema_pwd = $this->data[$esquema_old]['password'];
         unset($this->data[$esquema_old]);
         $this->data[$esquema_new] = ['user' => $esquema_new, 'password' => $esquema_pwd];
 
-        $filename = ConfigGlobal::DIR_PWD . '/' . $database . '.inc';
+        $filename = ConfigGlobal::getDIR_PWD() . '/' . $database . '.inc';
         file_put_contents($filename, '<?php return ' . var_export($this->data, true) . ' ;');
     }
 
     public function renombrarListaEsquemaPruebas($database, $esquema_old, $esquema_new)
     {
         $database = 'pruebas-' . $database;
-        $this->data = include ConfigGlobal::DIR_PWD . '/' . $database . '.inc';
+        $this->data = include ConfigGlobal::getDIR_PWD() . '/' . $database . '.inc';
 
         $esquema_pwd = $this->data[$esquema_old]['password'];
         unset($this->data[$esquema_old]);
         $this->data[$esquema_new] = ['user' => $esquema_new, 'password' => $esquema_pwd];
 
-        $filename_pruebas = ConfigGlobal::DIR_PWD . '/' . $database . '.inc';
+        $filename_pruebas = ConfigGlobal::getDIR_PWD() . '/' . $database . '.inc';
         file_put_contents($filename_pruebas, '<?php return ' . var_export($this->data, true) . ' ;');
     }
 }

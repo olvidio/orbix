@@ -3,172 +3,189 @@
 namespace Tests\unit\notas;
 
 use core\ConfigGlobal;
+use Exception;
 use notas\model\EditarPersonaNota;
-use notas\model\entity\GestorPersonaNotaDl;
-use notas\model\entity\GestorPersonaNotaOtraRegionStgr;
-use notas\model\entity\PersonaNotaDl;
-use notas\model\entity\PersonaNotaOtraRegionStgr;
+use notas\model\entity\GestorPersonaNotaDlDB;
+use notas\model\entity\GestorPersonaNotaOtraRegionStgrDB;
+use notas\model\entity\PersonaNotaDB;
+use notas\model\entity\PersonaNotaDlDB;
+use notas\model\entity\PersonaNotaOtraRegionStgrDB;
+use RuntimeException;
 use Tests\myTest;
 use ubis\model\entity\GestorDelegacion;
-use web\DateTimeLocal;
 
 class notasTest extends myTest
 {
+    private string $session_org;
+
     /**
      * Sets up the test suite prior to every test.
      */
     public function setUp(): void
     {
         parent::setUp();
+        $this->session_org = $_SESSION['session_auth']['esquema'];
     }
 
-    public function test_adding()
-    {
-        $this->assertEquals(3, 1 + 2);
-    }
 
-     /////////// Región o dl mal definida (no pertenece al stgr) ///////////
+    /////////// Región o dl mal definida (no pertenece al stgr) ///////////
+
     /**
      * Persona de paso. Nota en r/dl sin pertenecer a una region del stgr
      * debe dar error
      * @return void
      */
-    public function test_guardar_nota_sin_region_p_de_paso()
+    public function test_guardar_nota_sin_region_p_de_paso(): void
     {
-        $this->expectException(\RuntimeException::class);
+        //$this->markTestSkipped('Skipped test');
+        $this->expectException(RuntimeException::class);
 
-        $id_nom = -1001123;
-        $id_asignatura = 234;
-        $id_nivel = 234;
-
-        $session_org = $_SESSION['session_auth']['esquema'];
+        // dlB desde la que se ejecuta la operación de guardar nota.
         $_SESSION['session_auth']['esquema'] = 'Pla-crPlav';
 
-        $oEditarPersonaNota = new EditarPersonaNota($id_nom, $id_asignatura, $id_nivel);
-        $camposExtra = $this->crear_camposExtra();
-        $oEditarPersonaNota->nuevo( $camposExtra);
+        // persona de paso: id_nom negativo; esquema = -1001;
+        $id_nom = -1001123;
+        $id_schema_persona = '-1001'; // restov
+        $NotasFactory = new NotasFactory();
+        $NotasFactory->setCount(1);
+        $cPersonaNotas = $NotasFactory->create($id_nom);
+        $personaNota = $cPersonaNotas[0];
 
-        $_SESSION['session_auth']['esquema'] = $session_org;
+        $oEditarPersonaNota = new EditarPersonaNota($personaNota);
+        $datosRegionStgr = $oEditarPersonaNota->getDatosRegionStgr();
+
+        $a_ObjetosPersonaNota = $oEditarPersonaNota->getObjetosPersonaNota($datosRegionStgr, $id_schema_persona);
+
+        $oEditarPersonaNota->nuevo2($a_ObjetosPersonaNota);
     }
 
     ///////////////  Una region ella misma region del stgr ////////////
-
+    //// La única diferencia con la dl del stgr es que la tabla e_notas_otra_region
+    /// está en el propio esquema, no existe una instancia superior.
     /**
-     * Persona de paso. Nota en region que pertenecer a una region del stgr
-     * debe guardar la nota en la tabla del r-stgr
+     * Guardar nota de una persona de paso desde una region del stgr (crB).
+     *      nota en la tabla crB.e_notas_otras_region_stgr
      * @return void
-     * @throws \Exception
+     * @throws Exception
      */
-    public function test_guardar_nota_region_p_de_paso()
+    public function test_guardar_nota_region_p_de_paso_desde_crB(): void
     {
-        // persona de paso: id_nom negativo; esquema = -1001;
-        $id_nom = -1001123;
-        $id_schema_persona = '-1001'; // restov
-        $id_asignatura = 234;
-        $id_nivel = 234;
-
-        $session_org = $_SESSION['session_auth']['esquema'];
+        //$this->markTestSkipped('Skipped test');
+        // dlB desde la que se ejecuta la operación de guardar nota.
         $_SESSION['session_auth']['esquema'] = 'GalBel-crGalBelv';
 
-        $oEditarPersonaNota = new EditarPersonaNota($id_nom, $id_asignatura, $id_nivel);
-        $oEditarPersonaNota->setMock(TRUE);
-        $camposExtra = $this->crear_camposExtra();
+        // persona de paso: id_nom negativo; esquema = -1001;
+        $id_nom = -1001124;
+        $id_schema_persona = '-1001'; // restov
+        $NotasFactory = new NotasFactory();
+        $NotasFactory->setCount(1);
+        $cPersonaNotas = $NotasFactory->create($id_nom);
+        $personaNota = $cPersonaNotas[0];
+
+        $oEditarPersonaNota = new EditarPersonaNota($personaNota);
         $datosRegionStgr = $oEditarPersonaNota->getDatosRegionStgr();
 
         $a_ObjetosPersonaNota = $oEditarPersonaNota->getObjetosPersonaNota($datosRegionStgr, $id_schema_persona);
 
-        $rta = $oEditarPersonaNota->nuevo2($a_ObjetosPersonaNota, $camposExtra);
+        $rta = $oEditarPersonaNota->nuevo2($a_ObjetosPersonaNota);
         $oPersonaNota = $rta['nota'];
         $oPersonaNota->DBCarregar(); // Importante: El PDO al hacer execute cambia los integer a string. Con esto vuelven al tipo original.
         $oPersonaNota->getPrimary_key(); // para que tenga el mismo valor que la otra
-        $oPersonaNotaCertificado = $rta['certificado']?? '';
 
         $gesDelegacion = new GestorDelegacion();
         $a_mi_region_stgr = $gesDelegacion->mi_region_stgr();
         $esquema_region_stgr = $a_mi_region_stgr['esquema_region_stgr'];
 
-        $gesPersonaNota = new GestorPersonaNotaOtraRegionStgr($esquema_region_stgr, TRUE);
-        $cPersonaNota = $gesPersonaNota->getPersonaNotas(['id_nom' => $id_nom, 'id_asignatura' => $id_asignatura]);
+        $gesPersonaNota = new GestorPersonaNotaOtraRegionStgrDB($esquema_region_stgr);
+        $cPersonaNota = $gesPersonaNota->getPersonaNotas(['id_nom' => $id_nom, 'id_asignatura' => $personaNota->getIdAsignatura()]);
         $oPersonaNota2 = $cPersonaNota[0];
         $oPersonaNota2->DBCarregar();
 
         $this->assertEquals($oPersonaNota, $oPersonaNota2);
+        $oPersonaNota2->DBEliminar();
 
-        $_SESSION['session_auth']['esquema'] = $session_org;
+        // nota certificado (No debe existir)
+        $oPersonaNotaCertificadoDB = $rta['certificado'] ?? '';
+        $this->assertEquals('', $oPersonaNotaCertificadoDB);
+
     }
 
-    ///////////////  Una dl/r que pertenece a una region stgr ////////////
+    ///////////////  Desde una dl/r que pertenece a una region stgr ////////////
     ///
     /**
-     * Persona de paso. Nota en dl que pertenece a una region del stgr
-     * debe guardar la nota en la tabla del r-stgr
+     * Guardar nota de una persona de paso desde la dlB (que organiza la actividad)
+     *      nota en la tabla dlB.e_notas_otras_region_stgr
      * @return void
-     * @throws \Exception
+     * @throws Exception
      */
-    public function test_guardar_nota_delegacion_p_de_paso()
+    public function test_guardar_nota_p_de_paso_desde_dl_stgr(): void
     {
-        // persona de paso: id_nom negativo; esquema = -1001;
-        $id_nom = -1001123;
-        $id_schema_persona = '-1001'; // restov
-        $id_asignatura = 234;
-        $id_nivel = 234;
-
-        $session_org = $_SESSION['session_auth']['esquema'];
+        // dlB desde la que se ejecuta la operación de guardar nota.
         $_SESSION['session_auth']['esquema'] = 'H-dlbv';
 
-        $oEditarPersonaNota = new EditarPersonaNota($id_nom, $id_asignatura, $id_nivel);
-        $oEditarPersonaNota->setMock(TRUE);
-        $camposExtra = $this->crear_camposExtra();
+        // persona de paso: id_nom negativo; esquema = -1001;
+        $id_nom = -1001125;
+        $id_schema_persona = '-1001'; // restov
+        $NotasFactory = new NotasFactory();
+        $NotasFactory->setCount(1);
+        $cPersonaNotas = $NotasFactory->create($id_nom);
+        $personaNota = $cPersonaNotas[0];
+
+        $oEditarPersonaNota = new EditarPersonaNota($personaNota);
         $datosRegionStgr = $oEditarPersonaNota->getDatosRegionStgr();
 
         $a_ObjetosPersonaNota = $oEditarPersonaNota->getObjetosPersonaNota($datosRegionStgr, $id_schema_persona);
 
-        $rta = $oEditarPersonaNota->nuevo2($a_ObjetosPersonaNota, $camposExtra);
+        $rta = $oEditarPersonaNota->nuevo2($a_ObjetosPersonaNota);
         $oPersonaNota = $rta['nota'];
         $oPersonaNota->DBCarregar(); // Importante: El PDO al hacer execute cambia los integer a string. Con esto vuelven al tipo original.
         $oPersonaNota->getPrimary_key(); // para que tenga el mismo valor que la otra
-        $oPersonaNotaCertificado = $rta['certificado']?? '';
 
         $gesDelegacion = new GestorDelegacion();
         $a_mi_region_stgr = $gesDelegacion->mi_region_stgr();
         $esquema_region_stgr = $a_mi_region_stgr['esquema_region_stgr'];
 
-        $gesPersonaNota = new GestorPersonaNotaOtraRegionStgr($esquema_region_stgr, TRUE);
-        $cPersonaNota = $gesPersonaNota->getPersonaNotas(['id_nom' => $id_nom, 'id_asignatura' => $id_asignatura]);
+        $gesPersonaNota = new GestorPersonaNotaOtraRegionStgrDB($esquema_region_stgr);
+        $cPersonaNota = $gesPersonaNota->getPersonaNotas(['id_nom' => $id_nom, 'id_asignatura' => $personaNota->getIdAsignatura()]);
         $oPersonaNota2 = $cPersonaNota[0];
         $oPersonaNota2->DBCarregar();
 
         $this->assertEquals($oPersonaNota, $oPersonaNota2);
+        $oPersonaNota2->DBEliminar();
 
-        $_SESSION['session_auth']['esquema'] = $session_org;
+        // nota certificado (No debe existir)
+        $oPersonaNotaCertificadoDB = $rta['certificado'] ?? '';
+        $this->assertEquals('', $oPersonaNotaCertificadoDB);
+
     }
 
     /**
-     * Persona de otra dl de Aquinate. Nota en dl que pertenece a una region del stgr
-     * debe guardar la nota en la tabla r-stgr + certificado en dl alumno.
+     * Guardar nota de una persona dlA (presente en Aquinate) desde la dlB (que organiza la actividad)
+     *      nota en la tabla dlB.e_notas_otras_region_stgr
+     *      nota "falta certificado" en dlA.e_notas_dl.
      * @return void
-     * @throws \Exception
+     * @throws Exception
      */
-    public function test_guardar_nota_dl_persona_otra_region()
+    public function test_guardar_nota_dl_persona_otra_region_desde_dl_stgr(): void
     {
-        $session_org = $_SESSION['session_auth']['esquema'];
+        // dlB desde la que se ejecuta la operación de guardar nota.
         $_SESSION['session_auth']['esquema'] = 'H-dlbv';
         $_SESSION['session_auth']['mi_id_schema'] = 1001;
 
-        // persona de otra dl
-        $id_nom = 10011255;
-        $id_schema_persona = ConfigGlobal::mi_id_schema(); // El mismo que el de la _SESSION
-        $id_asignatura = 23456;
-        $id_nivel = 23456;
+        // persona de la dlA
+        $id_nom = 10061256;
+        $id_schema_persona = 1006;
+        $NotasFactory = new NotasFactory();
+        $NotasFactory->setCount(1);
+        $cPersonaNotas = $NotasFactory->create($id_nom);
+        $personaNota = $cPersonaNotas[0];
 
-        $oEditarPersonaNota = new EditarPersonaNota($id_nom, $id_asignatura, $id_nivel);
-        $oEditarPersonaNota->setMock(TRUE);
-        $camposExtra = $this->crear_camposExtra();
+        $oEditarPersonaNota = new EditarPersonaNota($personaNota);
         $datosRegionStgr = $oEditarPersonaNota->getDatosRegionStgr();
 
         $a_ObjetosPersonaNota = $oEditarPersonaNota->getObjetosPersonaNota($datosRegionStgr, $id_schema_persona);
 
-        $rta = $oEditarPersonaNota->nuevo2($a_ObjetosPersonaNota, $camposExtra);
+        $rta = $oEditarPersonaNota->nuevo2($a_ObjetosPersonaNota);
         $oPersonaNota = $rta['nota'];
         $oPersonaNota->DBCarregar(); // Importante: El PDO al hacer execute cambia los integer a string. Con esto vuelven al tipo original.
         $oPersonaNota->getPrimary_key(); // para que tenga el mismo valor que la otra
@@ -177,84 +194,94 @@ class notasTest extends myTest
         $a_mi_region_stgr = $gesDelegacion->mi_region_stgr();
         $esquema_region_stgr = $a_mi_region_stgr['esquema_region_stgr'];
 
-        $gesPersonaNota = new GestorPersonaNotaOtraRegionStgr($esquema_region_stgr, TRUE);
-        $cPersonaNota = $gesPersonaNota->getPersonaNotas(['id_nom' => $id_nom, 'id_asignatura' => $id_asignatura]);
+        $gesPersonaNota = new GestorPersonaNotaOtraRegionStgrDB($esquema_region_stgr);
+        $cPersonaNota = $gesPersonaNota->getPersonaNotas(['id_nom' => $id_nom, 'id_asignatura' => $personaNota->getIdAsignatura()]);
         $oPersonaNota2 = $cPersonaNota[0];
         $oPersonaNota2->DBCarregar();
 
         $this->assertEquals($oPersonaNota, $oPersonaNota2);
 
         // guardar certificado
-        $oPersonaNotaCertificado = $rta['certificado']?? '';
-        $this->assertNotEquals('', $oPersonaNotaCertificado);
+        $oPersonaNotaCertificadoDB = $rta['certificado'] ?? '';
+        $this->assertNotEquals('', $oPersonaNotaCertificadoDB);
 
-        $oPersonaNotaCertificado->DBCarregar(); // Importante: El PDO al hacer execute cambia los integer a string. Con esto vuelven al tipo original.
-        $oPersonaNotaCertificado->getPrimary_key(); // para que tenga el mismo valor que la otra
+        $oPersonaNotaCertificadoDB->DBCarregar(); // Importante: El PDO al hacer execute cambia los integer a string. Con esto vuelven al tipo original.
+        $oPersonaNotaCertificadoDB->getPrimary_key(); // para que tenga el mismo valor que la otra
 
         $gesDelegacion = new GestorDelegacion();
         $a_mi_region_stgr = $gesDelegacion->mi_region_stgr();
         $esquema_region_stgr = $a_mi_region_stgr['esquema_region_stgr'];
 
-        $gesPersonaNotaCertficado = new GestorPersonaNotaOtraRegionStgr($esquema_region_stgr, TRUE);
-        $cPersonaNotaCertificado = $gesPersonaNotaCertficado->getPersonaNotas(['id_nom' => $id_nom, 'id_asignatura' => $id_asignatura]);
-        $oPersonaNotaCertificado2 = $cPersonaNotaCertificado[0];
-        $oPersonaNotaCertificado2->DBCarregar();
+        $gesPersonaNotaOtraRegionDB = new GestorPersonaNotaOtraRegionStgrDB($esquema_region_stgr);
+        $cPersonaNotaOtraRegionDB = $gesPersonaNotaOtraRegionDB->getPersonaNotas(['id_nom' => $id_nom, 'id_asignatura' => $personaNota->getIdAsignatura()]);
+        $oPersonaNotaOtraRegionDB = $cPersonaNotaOtraRegionDB[0];
+        $oPersonaNotaOtraRegionDB->DBCarregar();
 
-        $this->assertEquals($oPersonaNotaCertificado, $oPersonaNotaCertificado2);
+        // Son dos clases distintas, no se pueden comparar. Miramos las propiedades
+        //$this->assertEquals($oPersonaNotaCertificadoDB, $oPersonaNotaOtraRegionDB);
+        $this->assertEquals($oPersonaNotaCertificadoDB->getId_nom(), $oPersonaNotaOtraRegionDB->getId_nom());
+        $this->assertEquals($oPersonaNotaCertificadoDB->getId_nivel(), $oPersonaNotaOtraRegionDB->getId_nivel());
+        $this->assertEquals($oPersonaNotaCertificadoDB->getId_asignatura(), $oPersonaNotaOtraRegionDB->getId_asignatura());
+        $this->assertEquals($oPersonaNotaCertificadoDB->getNota_num(), $oPersonaNotaOtraRegionDB->getNota_num());
 
-        $_SESSION['session_auth']['esquema'] = $session_org;
+        $oPersonaNotaOtraRegionDB->DBEliminar();
+
     }
 
     /**
-     * Persona de la dl. Nota en dl que pertenece a una region del stgr
-     * debe guardar la nota en la tabla dl.
+     * Guardar nota de una persona de la dl en su propia dl.
+     *      tabla "H-dlbv".e_notas_dl.
      * @return void
-     * @throws \Exception
+     * @throws Exception
      */
-    public function test_guardar_nota_dl_persona_dl()
+    public function test_guardar_nota_dl_persona_dl_desde_dl_stgr(): void
     {
-        $session_org = $_SESSION['session_auth']['esquema'];
         $_SESSION['session_auth']['esquema'] = 'H-dlbv';
         $_SESSION['session_auth']['mi_id_schema'] = 1001;
 
         // persona de la dl
         $id_nom = 10011255;
         $id_schema_persona = ConfigGlobal::mi_id_schema(); // El mismo que el de la _SESSION
-        $id_asignatura = 23456;
-        $id_nivel = 23456;
+        $NotasFactory = new NotasFactory();
+        $NotasFactory->setCount(1);
+        $cPersonaNotas = $NotasFactory->create($id_nom);
+        $personaNota = $cPersonaNotas[0];
 
-        $oEditarPersonaNota = new EditarPersonaNota($id_nom, $id_asignatura, $id_nivel);
-        $oEditarPersonaNota->setMock(TRUE);
-        $camposExtra = $this->crear_camposExtra();
+        $oEditarPersonaNota = new EditarPersonaNota($personaNota);
         $datosRegionStgr = $oEditarPersonaNota->getDatosRegionStgr();
 
         $a_ObjetosPersonaNota = $oEditarPersonaNota->getObjetosPersonaNota($datosRegionStgr, $id_schema_persona);
 
-        $rta = $oEditarPersonaNota->nuevo2($a_ObjetosPersonaNota, $camposExtra);
+        $rta = $oEditarPersonaNota->nuevo2($a_ObjetosPersonaNota);
         $oPersonaNota = $rta['nota'];
         $oPersonaNota->DBCarregar(); // Importante: El PDO al hacer execute cambia los integer a string. Con esto vuelven al tipo original.
         $oPersonaNota->getPrimary_key(); // para que tenga el mismo valor que la otra
 
-        $gesPersonaNota = new GestorPersonaNotaDl(TRUE);
-        $cPersonaNota = $gesPersonaNota->getPersonaNotas(['id_nom' => $id_nom, 'id_asignatura' => $id_asignatura]);
+        $gesPersonaNota = new GestorPersonaNotaDlDB();
+        $cPersonaNota = $gesPersonaNota->getPersonaNotas(['id_nom' => $id_nom, 'id_asignatura' => $personaNota->getIdAsignatura()]);
         $oPersonaNota2 = $cPersonaNota[0];
         $oPersonaNota2->DBCarregar();
 
         $this->assertEquals($oPersonaNota, $oPersonaNota2);
+        $oPersonaNota2->DBEliminar();
 
         // nota certificado (No debe existir)
-        $oPersonaNotaCertificado = $rta['certificado']?? '';
+        $oPersonaNotaCertificado = $rta['certificado'] ?? '';
         $this->assertEquals('', $oPersonaNotaCertificado);
 
-        $_SESSION['session_auth']['esquema'] = $session_org;
     }
 
 
-
-    public function test_save_PersonaNotaOtraRegionStgr()
+    /**
+     * Comprobar que se puede guardar una nota en la base de datos:
+     *  tabla "H-Hv".e_notas_otra_region_stgr
+     *
+     * @return void
+     */
+    public function test_save_PersonaNotaOtraRegionStgr(): void
     {
         $esquema_region_stgr = "H-Hv";
-        $oPersonaNotaI = new PersonaNotaOtraRegionStgr($esquema_region_stgr, TRUE);
+        $oPersonaNotaI = new PersonaNotaOtraRegionStgrDB($esquema_region_stgr);
         $oPersonaNota = $this->crear_PersonaNota($oPersonaNotaI);
         $oPersonaNota->DBGuardar();
         $oPersonaNota->DBCarregar();
@@ -263,22 +290,24 @@ class notasTest extends myTest
         $id_nom = $oPersonaNota->getId_nom();
         $id_asignatura = $oPersonaNota->getId_asignatura();
 
-        $gesPersonaNota = new GestorPersonaNotaOtraRegionStgr($esquema_region_stgr, TRUE);
+        $gesPersonaNota = new GestorPersonaNotaOtraRegionStgrDB($esquema_region_stgr);
         $cPersonaNota = $gesPersonaNota->getPersonaNotas(['id_nom' => $id_nom, 'id_asignatura' => $id_asignatura]);
         $oPersonaNota2 = $cPersonaNota[0];
         $oPersonaNota2->DBCarregar();
 
-        $result = $this->assertEquals($oPersonaNota, $oPersonaNota2);
-
-        //$oPersonaNota2->DBEliminar();
-
-        return $result;
-
+        $this->assertEquals($oPersonaNota, $oPersonaNota2);
+        $oPersonaNota2->DBEliminar();
     }
 
-    public function test_save_PersonaNotaDl()
+    /**
+     * Comprobar que se puede guardar una nota en la base de datos:
+     *  tabla "H-dlbv".e_notas_dl (la dl que está ejecutando el test)
+     *
+     * @return void
+     */
+    public function test_save_PersonaNotaDl(): void
     {
-        $oPersonaNotaDl = new PersonaNotaDl();
+        $oPersonaNotaDl = new PersonaNotaDlDB();
         $oPersonaNota = $this->crear_PersonaNota($oPersonaNotaDl);
         $oPersonaNota->DBGuardar();
         $oPersonaNota->DBCarregar();
@@ -287,59 +316,39 @@ class notasTest extends myTest
         $id_nom = $oPersonaNota->getId_nom();
         $id_asignatura = $oPersonaNota->getId_asignatura();
 
-        $gesPersonaNota = new GestorPersonaNotaDl();
+        $gesPersonaNota = new GestorPersonaNotaDlDB();
         $cPersonaNota = $gesPersonaNota->getPersonaNotas(['id_nom' => $id_nom, 'id_asignatura' => $id_asignatura]);
         $oPersonaNota2 = $cPersonaNota[0];
         $oPersonaNota2->DBCarregar();
 
         $this->assertEquals($oPersonaNota, $oPersonaNota2);
-
         $oPersonaNota2->DBEliminar();
     }
 
-    public function crear_camposExtra()
+    public function crear_PersonaNota($oPersonaNotaDB): PersonaNotaDB
     {
-        $oFActa = new DateTimeLocal('2024-11-07');
-        $camposExtra = [
-            'id_nom' => 1001123,
-            'id_asignatura' => 234,
-            'id_nivel' => 234,
-            'id_situacion' => 1,
-            'acta' => 'dlb 23/24',
-            'f_acta' => $oFActa,
-            'tipo_acta' => 1,
-            'preceptor' => false,
-            'id_preceptor' => 0,
-            'detalle' => 'algo',
-            'epoca' => 2,
-            'id_activ' => 30012345,
-            'nota_num' => 9,
-            'nota_max' => 10,
-        ];
-        return $camposExtra;
-    }
+        $id_nom = 100112345;
+        $NotasFactory = new NotasFactory();
+        $NotasFactory->setCount(1);
+        $cPersonaNotas = $NotasFactory->create($id_nom);
+        $personaNota = $cPersonaNotas[0];
 
-    public function crear_PersonaNota($oPersonaNota)
-    {
+        $oPersonaNotaDB->setId_nivel($personaNota->getIdNivel());
+        $oPersonaNotaDB->setId_asignatura($personaNota->getIdAsignatura());
+        $oPersonaNotaDB->setId_nom($personaNota->getIdNom());
+        $oPersonaNotaDB->setId_situacion($personaNota->getIdSituacion());
+        $oPersonaNotaDB->setActa($personaNota->getActa());
+        $oPersonaNotaDB->setF_acta($personaNota->getFActa());
+        $oPersonaNotaDB->setTipo_acta($personaNota->getTipoActa());
+        $oPersonaNotaDB->setPreceptor($personaNota->isPreceptor());
+        $oPersonaNotaDB->setId_preceptor($personaNota->getIdPreceptor());
+        $oPersonaNotaDB->setDetalle($personaNota->getDetalle());
+        $oPersonaNotaDB->setEpoca($personaNota->getEpoca());
+        $oPersonaNotaDB->setId_activ($personaNota->getIdActiv());
+        $oPersonaNotaDB->setNota_num($personaNota->getNotaNum());
+        $oPersonaNotaDB->setNota_max($personaNota->getNotaMax());
 
-        $camposExtra = $this->crear_camposExtra();
-
-        $oPersonaNota->setId_nivel($camposExtra['id_nivel']);
-        $oPersonaNota->setId_asignatura($camposExtra['id_asignatura']);
-        $oPersonaNota->setId_nom($camposExtra['id_nom']);
-        $oPersonaNota->setId_situacion($camposExtra['id_situacion']);
-        $oPersonaNota->setActa($camposExtra['acta']);
-        $oPersonaNota->setF_acta($camposExtra['f_acta']);
-        $oPersonaNota->setTipo_acta($camposExtra['tipo_acta']);
-        $oPersonaNota->setPreceptor($camposExtra['preceptor']);
-        $oPersonaNota->setId_preceptor($camposExtra['id_preceptor']);
-        $oPersonaNota->setDetalle($camposExtra['detalle']);
-        $oPersonaNota->setEpoca($camposExtra['epoca']);
-        $oPersonaNota->setId_activ($camposExtra['id_activ']);
-        $oPersonaNota->setNota_num($camposExtra['nota_num']);
-        $oPersonaNota->setNota_max($camposExtra['nota_max']);
-
-        return $oPersonaNota;
+        return $oPersonaNotaDB;
 
     }
 
@@ -347,72 +356,10 @@ class notasTest extends myTest
     /**
      * Runs at the end of every test.
      */
-    public function tearDown(): void
+    protected function tearDown(): void
     {
-
-        //$oPersonaNota2->DBEliminar();
-
+        $_SESSION['session_auth']['esquema'] = $this->session_org;
         parent::tearDown();
     }
-    /*
-    public function getDataSet()
-    {
 
-        return $this->createFlatXmlDataSet('./tests/guestbook_fixture.xml');
-    }
-    */
-
-    /*
-    public function testRowCount()
-    {
-
-        $this->assertSame(2, $this->getConnection()->getRowCount('guestbook'), 'Pre-Condition');
-    }
-    */
-
-    /*
-    public function testAddGuest()
-    {
-
-        // get the class to be tested, providing the PDObject as database connection
-        $guestbook = new Guestbook($this->pdo);
-
-        // insert a new guest
-        $guestbook->addGuest('Daniel', 'St Kilda, Scotland', '4545');
-
-        // get the resulting table from our database
-        $queryTable = $this->getConnection()->createQueryTable(
-            'guestbook', 'SELECT id, name, address, phone FROM guestbook'
-        );
-
-        // get the table we would expect after inserting a new guest
-        $expectedTable = $this->createFlatXmlDataSet('./tests/guestbook_expected.xml')->getTable('guestbook');
-
-        // ...and compare both tables ...it passes!
-        $this->assertTablesEqual($expectedTable, $queryTable, "New User Added");
-    }
-    */
-
-    /*
-    public function testFailingAddGuest()
-    {
-
-        // get the class to be tested, providing the PDObject as database connection
-        $guestbook = new Guestbook($this->pdo);
-
-        // insert a new guest, but omit the value for 'phone' to let the test fail
-        $guestbook->addGuest('Daniel', 'St Kilda, Scotland', '');
-
-        // get the resulting table from our database, changed by the Guestbook Class
-        $queryTable = $this->getConnection()->createQueryTable(
-            'guestbook', 'SELECT id, name, address, phone FROM guestbook'
-        );
-
-        // get the *expected* table from a flat XML dataset
-        $expectedTable = $this->createFlatXmlDataSet('./tests/guestbook_expected.xml')->getTable('guestbook');
-
-        // ...and compare both tables which will fail
-        $this->assertTablesEqual($expectedTable, $queryTable, 'Failure On Purpose');
-    }
-    */
 }

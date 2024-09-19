@@ -9,9 +9,9 @@ use core\ConfigGlobal;
 use notas\model\EditarPersonaNota;
 use notas\model\entity\Acta;
 use notas\model\entity\GestorActa;
-use notas\model\entity\GestorPersonaNota;
+use notas\model\entity\GestorPersonaNotaDB;
 use notas\model\entity\Nota;
-use notas\model\entity\PersonaNota;
+use notas\model\entity\PersonaNotaDB;
 use personas\model\entity\Persona;
 use web\TiposActividades;
 use function core\is_true;
@@ -41,12 +41,12 @@ if ($Qque === 3) { //paso las matrículas a notas definitivas (Grabar e imprimir
     // miro la epoca
     $oActividad = new Actividad($Qid_activ);
     $id_tipo_activ = $oActividad->getId_tipo_activ();
-    $iepoca = PersonaNota::EPOCA_CA;
+    $iepoca = PersonaNotaDB::EPOCA_CA;
     $oTipoActividad = new TiposActividades($id_tipo_activ);
     $asistentes = $oTipoActividad->getAsistentesText();
     $actividad = $oTipoActividad->getActividadText();
     if ($asistentes === 'agd' && $actividad === 'ca') {
-        $iepoca = PersonaNota::EPOCA_INVIERNO;
+        $iepoca = PersonaNotaDB::EPOCA_INVIERNO;
     }
 
     $GesMatriculas = new GestorMatricula();
@@ -148,7 +148,7 @@ if ($Qque === 3) { //paso las matrículas a notas definitivas (Grabar e imprimir
                     $op_min = 0;
                     $op_max = 7;
             }
-            $GesPersonaNotas = new GestorPersonaNota();
+            $GesPersonaNotas = new GestorPersonaNotaDB();
             $aWhere['id_nom'] = $id_nom;
             $aWhere['_ordre'] = 'id_nivel DESC';
             $cPersonaNotas = $GesPersonaNotas->getPersonaNotas($aWhere, $aOperador);
@@ -192,7 +192,7 @@ if ($Qque === 3) { //paso las matrículas a notas definitivas (Grabar e imprimir
         //  - si existe en otro id_activ, AVISO!!
         //
         $id_activ_old = 0;
-        $oGesPersonaNota = new GestorPersonaNota();
+        $oGesPersonaNota = new GestorPersonaNotaDB();
         $cBuscarPersonaNotas = $oGesPersonaNota->getPersonaNotas(array('id_nom' => $id_nom, 'id_asignatura' => $Qid_asignatura));
         unset($oPersonaNotaAnterior);
         if (!empty($cBuscarPersonaNotas)) {
@@ -242,7 +242,7 @@ if ($Qque === 3) { //paso las matrículas a notas definitivas (Grabar e imprimir
             $camposExtra['id_situacion'] = $id_situacion;
             $camposExtra['acta'] = $acta;
             $camposExtra['f_acta'] = $f_acta;
-            $camposExtra['tipo_acta'] = PersonaNota::FORMATO_ACTA;
+            $camposExtra['tipo_acta'] = PersonaNotaDB::FORMATO_ACTA;
             $camposExtra['preceptor'] = $preceptor;
             $camposExtra['id_preceptor'] = $id_preceptor;
             $camposExtra['epoca'] = $iepoca;

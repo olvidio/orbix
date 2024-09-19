@@ -8,35 +8,34 @@ use devel\model\entity\GestorDbSchema;
 use dossiers\model\entity\Dossier;
 use notas\model\entity\Acta;
 use notas\model\entity\Nota;
-use notas\model\entity\PersonaNota;
-use notas\model\entity\PersonaNotaCertificado;
-use notas\model\entity\PersonaNotaDl;
-use notas\model\entity\PersonaNotaOtraRegionStgr;
+use notas\model\entity\PersonaNotaDB;
+use notas\model\entity\PersonaNotaCertificadoDB;
+use notas\model\entity\PersonaNotaDlDB;
+use notas\model\entity\PersonaNotaOtraRegionStgrDB;
 use personas\model\entity\Persona;
 use ubis\model\entity\GestorDelegacion;
 
 class EditarPersonaNota
 {
-    private bool $mock = FALSE;
-
     private string $msg_err = '';
     private int $id_nom;
     private int $id_asignatura;
     private int $id_nivel;
+    private PersonaNota $personaNota;
 
-    public function __construct($id_nom, $id_asignatura, $id_nivel)
+    public function __construct(PersonaNota $oPersonaNota)
     {
-
-        $this->id_nom = $id_nom;
-        $this->id_asignatura = $id_asignatura;
-        $this->id_nivel = $id_nivel;
+        $this->personaNota = $oPersonaNota;
+        $this->id_nom = $oPersonaNota->getIdNom();
+        $this->id_nivel = $oPersonaNota->getIdNivel();
+        $this->id_asignatura = $oPersonaNota->getIdAsignatura();
     }
 
     public function eliminar(): string
     {
         // se ataca a la tabla padre 'e_notas', no hace falta saber en que tabla está. Ya lo sabe él
         if (!empty($this->id_nom) && !empty($this->id_asignatura) && !empty($this->id_nivel)) {
-            $oPersonaNota = new PersonaNota();
+            $oPersonaNota = new PersonaNotaDB();
             $oPersonaNota->setId_nom($this->id_nom);
             $oPersonaNota->setId_asignatura($this->id_asignatura);
             $oPersonaNota->setId_nivel($this->id_nivel);
@@ -47,58 +46,62 @@ class EditarPersonaNota
         return $this->msg_err;
     }
 
-    public function nuevo(array $camposExtra): array
+    public function nuevo(): array
     {
 
         $a_ObjetosPersonaNota = $this->getObjetosPersonaNota($this->getDatosRegionStgr(), $this->getId_schema_persona());
 
-        return $this->nuevo2($a_ObjetosPersonaNota, $camposExtra);
+        return $this->nuevo2($a_ObjetosPersonaNota);
     }
 
-    public function nuevo2(array $a_ObjetosPersonaNota, array $camposExtra): array
+    public function nuevo2(array $a_ObjetosPersonaNota): array
     {
         $rta = [];
-        $oPersonaNota = $a_ObjetosPersonaNota['nota'];
+        $oPersonaNotaDB = $a_ObjetosPersonaNota['nota'];
 
-        $id_situacion = $camposExtra['id_situacion'];
-        $acta = $camposExtra['acta'];
-        $f_acta = $camposExtra['f_acta'];
-        $tipo_acta = $camposExtra['tipo_acta'];
-        $preceptor = $camposExtra['preceptor'];
-        $id_preceptor = $camposExtra['id_preceptor'];
-        $detalle = $camposExtra['detalle'];
-        $epoca = $camposExtra['epoca'];
-        $id_activ = $camposExtra['id_activ'];
-        $nota_num = $camposExtra['nota_num'];
-        $nota_max = $camposExtra['nota_max'];
+        $id_situacion = $this->personaNota->getIdSituacion();
+        $acta = $this->personaNota->getActa();
+        $f_acta = $this->personaNota->getFActa();
+        $tipo_acta = $this->personaNota->getTipoActa();
+        $preceptor = $this->personaNota->isPreceptor();
+        $id_preceptor = $this->personaNota->getIdPreceptor();
+        $detalle = $this->personaNota->getDetalle();
+        $epoca = $this->personaNota->getEpoca();
+        $id_activ = $this->personaNota->getIdActiv();
+        $nota_num = $this->personaNota->getNotaNum();
+        $nota_max = $this->personaNota->getNotaMax();
 
-        //No es una opcional
-        if ($this->id_asignatura === 1) {
+        //No es una opcional TODO: en otro sitio
+        /*
+        if ($this->personaNota->getIdAsignatura() === 1) {
             $oGesAsignaturas = new GestorAsignatura();
-            $cAsignaturas = $oGesAsignaturas->getAsignaturas(array('id_nivel' => $this->id_nivel));
+            $cAsignaturas = $oGesAsignaturas->getAsignaturas(array('id_nivel' => $this->personaNota->getIdNivel()));
             if (!is_array($cAsignaturas) || count($cAsignaturas) === 0) {
-                $msg_err = sprintf(_("No se encuentra una asignatura para le nivel: %s"),$this->id_nivel);
+                $msg_err = sprintf(_("No se encuentra una asignatura para le nivel: %s"),$this->personaNota->getIdNivel());
                 exit ($msg_err);
             }
             $oAsignatura = $cAsignaturas[0]; // sólo debería haber una
             $id_asignatura = $oAsignatura->getId_asignatura();
         } else {//es una opcional
-            $id_asignatura = $this->id_asignatura;
+            $id_asignatura = $this->personaNota->getIdAsignatura();
         }
-        $oPersonaNota->setId_nivel($this->id_nivel);
-        $oPersonaNota->setId_asignatura($id_asignatura);
-        $oPersonaNota->setId_nom($this->id_nom);
-        //$oPersonaNota->setId_schema($id_schema);
+        */
+        $id_asignatura = $this->personaNota->getIdAsignatura();
 
-        $oPersonaNota->setId_situacion($id_situacion);
-        $oPersonaNota->setF_acta($f_acta);
-        $oPersonaNota->setTipo_acta($tipo_acta);
+        $oPersonaNotaDB->setId_nivel($this->personaNota->getIdNivel());
+        $oPersonaNotaDB->setId_asignatura($id_asignatura);
+        $oPersonaNotaDB->setId_nom($this->personaNota->getIdNom());
+        //$oPersonaNotaDB->setId_schema($id_schema);
+
+        $oPersonaNotaDB->setId_situacion($id_situacion);
+        $oPersonaNotaDB->setF_acta($f_acta);
+        $oPersonaNotaDB->setTipo_acta($tipo_acta);
         // comprobar valor del acta
         if (!empty($acta)) {
-            if ($tipo_acta === PersonaNota::FORMATO_CERTIFICADO) {
-                $oPersonaNota->setActa($acta);
+            if ($tipo_acta === PersonaNotaDB::FORMATO_CERTIFICADO) {
+                $oPersonaNotaDB->setActa($acta);
             }
-            if ($tipo_acta === PersonaNota::FORMATO_ACTA) {
+            if ($tipo_acta === PersonaNotaDB::FORMATO_ACTA) {
                 $oActa = new Acta();
                 $valor = trim($acta);
                 $reg_exp = "/^(\?|\w{1,6}\??)\s+([0-9]{0,3})\/([0-9]{2})\??$/";
@@ -106,75 +109,80 @@ class EditarPersonaNota
                     // inventar acta.
                     $valor = $oActa->inventarActa($valor, $f_acta);
                 }
-                $oPersonaNota->setActa($valor);
+                $oPersonaNotaDB->setActa($valor);
             }
         }
-        $oPersonaNota->setPreceptor($preceptor);
-        $oPersonaNota->setId_preceptor($id_preceptor);
-        $oPersonaNota->setDetalle($detalle);
-        $oPersonaNota->setEpoca($epoca);
-        $oPersonaNota->setId_activ($id_activ);
-        $oPersonaNota->setNota_num($nota_num);
-        $oPersonaNota->setNota_max($nota_max);
-        if ($oPersonaNota->DBGuardar() === false) {
-            throw new \RuntimeException(_("hay un error, no se ha guardado. Nota"));
+        $oPersonaNotaDB->setPreceptor($preceptor);
+        $oPersonaNotaDB->setId_preceptor($id_preceptor);
+        $oPersonaNotaDB->setDetalle($detalle);
+        $oPersonaNotaDB->setEpoca($epoca);
+        $oPersonaNotaDB->setId_activ($id_activ);
+        $oPersonaNotaDB->setNota_num($nota_num);
+        $oPersonaNotaDB->setNota_max($nota_max);
+        if ($oPersonaNotaDB->DBGuardar() === false) {
+            $err = end($_SESSION['errores']);
+            throw new \RuntimeException(sprintf(_("No se ha guardado la Nota: %s"), $err));
         }
-        $rta['nota'] =$oPersonaNota;
+        $rta['nota'] =$oPersonaNotaDB;
         // si no está abierto, hay que abrir el dossier para esta persona
-        //abrir_dossier('p',$_POST['id_pau'],'1303',$oDB);
-        $oDossier = new Dossier(array('tabla' => 'p', 'id_pau' => $this->id_nom, 'id_tipo_dossier' => 1303));
-        $oDossier->abrir();
-        $oDossier->DBGuardar();
+        //No hace falta si es una persona de paso
+        if ($this->personaNota->getIdNom() > 0) {
+            $oDossier = new Dossier(array('tabla' => 'p', 'id_pau' => $this->personaNota->getIdNom(), 'id_tipo_dossier' => 1303));
+            $oDossier->abrir();
+            if ($oDossier->DBGuardar() === false) {
+                $err = end($_SESSION['errores']);
+                throw new \RuntimeException(sprintf(_("No al guardar el dossier: %s"), $err));
+            }
+        }
 
         // Pongo las notas en la dl de la persona, esperando al certificado
         if (array_key_exists('certificado', $a_ObjetosPersonaNota)) {
-            $oPersonaNotaCertificado = $a_ObjetosPersonaNota['certificado'];
+            $oPersonaNotaCertificadoDB = $a_ObjetosPersonaNota['certificado'];
 
-            $oPersonaNotaCertificado->setId_nivel($this->id_nivel);
-            $oPersonaNotaCertificado->setId_asignatura($id_asignatura);
-            $oPersonaNotaCertificado->setId_nom($this->id_nom);
+            $oPersonaNotaCertificadoDB->setId_nivel($this->personaNota->getIdNivel());
+            $oPersonaNotaCertificadoDB->setId_asignatura($id_asignatura);
+            $oPersonaNotaCertificadoDB->setId_nom($this->personaNota->getIdNom());
 
-            $oPersonaNotaCertificado->setId_situacion(Nota::FALTA_CERTIFICADO);
-            $oPersonaNotaCertificado->setActa(_("falta certificado"));
-            $oPersonaNotaCertificado->setDetalle($acta);
-            $oPersonaNotaCertificado->setTipo_acta(PersonaNota::FORMATO_CERTIFICADO);
+            $oPersonaNotaCertificadoDB->setId_situacion(Nota::FALTA_CERTIFICADO);
+            $oPersonaNotaCertificadoDB->setActa(_("falta certificado"));
+            $oPersonaNotaCertificadoDB->setDetalle($acta);
+            $oPersonaNotaCertificadoDB->setTipo_acta(PersonaNotaDB::FORMATO_CERTIFICADO);
 
-            $oPersonaNotaCertificado->setF_acta($f_acta);
-            $oPersonaNotaCertificado->setPreceptor($preceptor);
-            $oPersonaNotaCertificado->setId_preceptor($id_preceptor);
-            $oPersonaNotaCertificado->setEpoca($epoca);
-            $oPersonaNotaCertificado->setId_activ($id_activ);
-            $oPersonaNotaCertificado->setNota_num($nota_num);
-            $oPersonaNotaCertificado->setNota_max($nota_max);
-            if ($oPersonaNotaCertificado->DBGuardar() === false) {
+            $oPersonaNotaCertificadoDB->setF_acta($f_acta);
+            $oPersonaNotaCertificadoDB->setPreceptor($preceptor);
+            $oPersonaNotaCertificadoDB->setId_preceptor($id_preceptor);
+            $oPersonaNotaCertificadoDB->setEpoca($epoca);
+            $oPersonaNotaCertificadoDB->setId_activ($id_activ);
+            $oPersonaNotaCertificadoDB->setNota_num($nota_num);
+            $oPersonaNotaCertificadoDB->setNota_max($nota_max);
+            if ($oPersonaNotaCertificadoDB->DBGuardar() === false) {
                 throw new \RuntimeException(_("hay un error, no se ha guardado. Nota Certificado"));
             }
-            $rta['certificado'] =$oPersonaNotaCertificado;
+            $rta['certificado'] =$oPersonaNotaCertificadoDB;
         }
 
         return $rta;
     }
 
-    public function editar($camposExtra): string
+    public function editar(int $id_asignatura_real): string
     {
         // se ataca a la tabla padre 'e_notas', no hace falta saber en que tabla está. Ya lo sabe él
 
-        $id_situacion = $camposExtra['id_situacion'];
-        $acta = $camposExtra['acta'];
-        $f_acta = $camposExtra['f_acta'];
-        $tipo_acta = $camposExtra['tipo_acta'];
-        $preceptor = $camposExtra['preceptor'];
-        $id_preceptor = $camposExtra['id_preceptor'];
-        $detalle = $camposExtra['detalle'];
-        $epoca = $camposExtra['epoca'];
-        $id_activ = $camposExtra['id_activ'];
-        $nota_num = $camposExtra['nota_num'];
-        $nota_max = $camposExtra['nota_max'];
-        $id_asignatura_real = $camposExtra['id_asignatura_real'];
+        $id_situacion = $this->personaNota->getIdSituacion();
+        $acta = $this->personaNota->getActa();
+        $f_acta = $this->personaNota->getFActa();
+        $tipo_acta = $this->personaNota->getTipoActa();
+        $preceptor = $this->personaNota->isPreceptor();
+        $id_preceptor = $this->personaNota->getIdPreceptor();
+        $detalle = $this->personaNota->getDetalle();
+        $epoca = $this->personaNota->getEpoca();
+        $id_activ = $this->personaNota->getIdActiv();
+        $nota_num = $this->personaNota->getNotaNum();
+        $nota_max = $this->personaNota->getNotaMax();
 
 
         $a_ObjetosPersonaNota = $this->getObjetosPersonaNota($this->getDatosRegionStgr(), $this->getId_schema_persona());
-        $oPersonaNota = $a_ObjetosPersonaNota['nota'];
+        $personaNotaDB = $a_ObjetosPersonaNota['nota'];
 
         // puede devolver mensaje de error
         if (!empty($this->msg_err)) {
@@ -182,21 +190,21 @@ class EditarPersonaNota
         }
 
         if (!empty($this->id_nom) && !empty($id_asignatura_real)) {
-            $oPersonaNota->setId_nom($this->id_nom);
-            $oPersonaNota->setId_nivel($this->id_nivel);
-            $oPersonaNota->setId_asignatura($id_asignatura_real);
-            $oPersonaNota->DBCarregar(); // Para que cargue los valores que ya tiene.
+            $personaNotaDB->setId_nom($this->personaNota->getIdNom());
+            $personaNotaDB->setId_nivel($this->personaNota->getIdNivel());
+            $personaNotaDB->setId_asignatura($id_asignatura_real);
+            $personaNotaDB->DBCarregar(); // Para que cargue los valores que ya tiene.
         }
 
-        $oPersonaNota->setId_situacion($id_situacion);
-        $oPersonaNota->setF_acta($f_acta);
-        $oPersonaNota->setTipo_acta($tipo_acta);
+        $personaNotaDB->setId_situacion($id_situacion);
+        $personaNotaDB->setF_acta($f_acta);
+        $personaNotaDB->setTipo_acta($tipo_acta);
         // comprobar valor del acta
         if (!empty($acta)) {
-            if ($tipo_acta === PersonaNota::FORMATO_CERTIFICADO) {
-                $oPersonaNota->setActa($acta);
+            if ($tipo_acta === PersonaNotaDB::FORMATO_CERTIFICADO) {
+                $personaNotaDB->setActa($acta);
             }
-            if ($tipo_acta === PersonaNota::FORMATO_ACTA) {
+            if ($tipo_acta === PersonaNotaDB::FORMATO_ACTA) {
                 $oActa = new Acta();
                 $valor = trim($acta);
                 $reg_exp = "/^(\?|\w{1,6}\??)\s+([0-9]{0,3})\/([0-9]{2})\??$/";
@@ -204,23 +212,23 @@ class EditarPersonaNota
                     // inventar acta.
                     $valor = $oActa->inventarActa($valor, $f_acta);
                 }
-                $oPersonaNota->setActa($valor);
+                $personaNotaDB->setActa($valor);
             }
         }
         if (empty($preceptor)) {
-            $oPersonaNota->setPreceptor('');
-            $oPersonaNota->setId_preceptor('');
+            $personaNotaDB->setPreceptor('');
+            $personaNotaDB->setId_preceptor('');
         } else {
-            $oPersonaNota->setPreceptor($preceptor);
-            $oPersonaNota->setId_preceptor($id_preceptor);
+            $personaNotaDB->setPreceptor($preceptor);
+            $personaNotaDB->setId_preceptor($id_preceptor);
         }
-        $oPersonaNota->setDetalle($detalle);
-        $oPersonaNota->setEpoca($epoca);
-        $oPersonaNota->setId_activ($id_activ);
-        $oPersonaNota->setNota_num($nota_num);
-        $oPersonaNota->setNota_max($nota_max);
+        $personaNotaDB->setDetalle($detalle);
+        $personaNotaDB->setEpoca($epoca);
+        $personaNotaDB->setId_activ($id_activ);
+        $personaNotaDB->setNota_num($nota_num);
+        $personaNotaDB->setNota_max($nota_max);
 
-        if ($oPersonaNota->DBGuardar() === false) {
+        if ($personaNotaDB->DBGuardar() === false) {
             $this->msg_err .= _("hay un error, no se ha guardado");
         }
         return $this->msg_err;
@@ -237,7 +245,7 @@ class EditarPersonaNota
 
     /**
      * Se lo paso por constructor para poder hacer test con otra información
-     * @return PersonaNota[]
+     * @return PersonaNotaDB[]
      */
     public function getObjetosPersonaNota(array $a_mi_region_stgr, int $id_schema_persona): array
     {
@@ -268,15 +276,15 @@ class EditarPersonaNota
 
         if ($nombre_schema_persona === 'restov' || $nombre_schema_persona === 'restof') {
             // guardar en e_notas_otra_region_stgr
-            $rta['nota'] = new PersonaNotaOtraRegionStgr($esquema_region_stgr, $this->mock);
+            $rta['nota'] = new PersonaNotaOtraRegionStgrDB($esquema_region_stgr);
         } else {
             if ($id_schema_persona === $mi_id_schema) {
                 // normal
-                $rta['nota'] = new PersonaNotaDl();
+                $rta['nota'] = new PersonaNotaDlDB();
             } else {
                 // guardar en e_notas_otra_region_stgr
-                $rta['nota'] = new PersonaNotaOtraRegionStgr($esquema_region_stgr, $this->mock);
-                $rta['certificado'] = new PersonaNotaCertificado($nombre_schema_persona, $this->mock);
+                $rta['nota'] = new PersonaNotaOtraRegionStgrDB($esquema_region_stgr);
+                $rta['certificado'] = new PersonaNotaCertificadoDB($nombre_schema_persona);
             }
         }
 
@@ -293,11 +301,6 @@ class EditarPersonaNota
             throw new \RuntimeException($msg_err);
         }
         return $oPersona->getId_schema();
-    }
-
-    public function setMock(bool $mock): void
-    {
-        $this->mock = $mock;
     }
 
 }

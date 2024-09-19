@@ -130,7 +130,7 @@ foreach ($cAlumnos as $oPersonaDl) {
                 }
 
                 //busco las asignaturas que ya están aprobadas y las pongo en un array.
-                $GesPersonaNotas = new notas\GestorPersonaNota();
+                $GesPersonaNotas = new notas\GestorPersonaNotaDB();
                 $cPersonaNotas = $GesPersonaNotas->getPersonaNotasSuperadas($id_nom);
                 $a_aprobadas = array();
                 foreach ($cPersonaNotas as $oPersonaNota) {

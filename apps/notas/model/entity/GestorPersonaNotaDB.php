@@ -15,14 +15,13 @@ use core;
  * @version 1.0
  * @created 07/04/2014
  */
-class GestorPersonaNota extends core\ClaseGestor
+class GestorPersonaNotaDB extends core\ClaseGestor
 {
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
     /* CONSTRUCTOR -------------------------------------------------------------- */
 
 
-    protected bool $mock;
     protected string $esquema_region_stgr;
 
     function __construct()
@@ -72,35 +71,12 @@ class GestorPersonaNota extends core\ClaseGestor
         foreach ($oDblSt as $aDades) {
             $a_pkey = array('id_nom' => $aDades['id_nom'],
                 'id_asignatura' => $aDades['id_asignatura']);
-            $oPersonaNota = new PersonaNota($a_pkey);
+            $oPersonaNota = $this->chooseNewObject($a_pkey);
             $oPersonaNotaSet->add($oPersonaNota);
         }
         return $oPersonaNotaSet->getTot();
     }
 
-    /**
-     * retorna l'array d'objectes de tipus PersonaNota
-     *
-     * @param string sQuery la query a executar.
-     * @return array Una col·lecció d'objectes de tipus PersonaNota
-     */
-    function getPersonaNotasQuery($sQuery = '')
-    {
-        $oDbl = $this->getoDbl();
-        $oPersonaNotaSet = new core\Set();
-        if (($oDblSt = $oDbl->query($sQuery)) === false) {
-            $sClauError = 'GestorPersonaNota.query';
-            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
-            return false;
-        }
-        foreach ($oDbl->query($sQuery) as $aDades) {
-            $a_pkey = array('id_nom' => $aDades['id_nom'],
-                'id_nivel' => $aDades['id_nivel']);
-            $oPersonaNota = new PersonaNota($a_pkey);
-            $oPersonaNotaSet->add($oPersonaNota);
-        }
-        return $oPersonaNotaSet->getTot();
-    }
 
     /**
      * retorna l'array d'objectes de tipus PersonaNota
@@ -109,7 +85,7 @@ class GestorPersonaNota extends core\ClaseGestor
      * @param array aOperators associatiu amb els valors dels operadors que cal aplicar a cada variable
      * @return array Una col·lecció d'objectes de tipus PersonaNota
      */
-    function getPersonaNotas($aWhere = array(), $aOperators = array())
+    public function getPersonaNotas($aWhere = array(), $aOperators = array())
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
@@ -151,24 +127,27 @@ class GestorPersonaNota extends core\ClaseGestor
         foreach ($oDblSt as $aDades) {
             $a_pkey = array('id_nom' => $aDades['id_nom'],
                 'id_nivel' => $aDades['id_nivel']);
-            if ($this->sNomTabla === "e_notas") {
-                $oPersonaNota = new PersonaNota($a_pkey);
-            }
-            if ($this->sNomTabla === "e_notas_dl") {
-                $oPersonaNota = new PersonaNotaDl($a_pkey);
-            }
-            if ($this->sNomTabla === "e_notas_otra_region_stgr") {
-                $oPersonaNota = new PersonaNotaOtraRegionStgr($this->esquema_region_stgr, $this->mock, $a_pkey);
-            }
+            $oPersonaNota = $this->chooseNewObject($a_pkey);
             $oPersonaNota->setoDbl($oDbl);
             $oPersonaNotaSet->add($oPersonaNota);
         }
         return $oPersonaNotaSet->getTot();
     }
 
-    /* MÉTODOS PROTECTED --------------------------------------------------------*/
+    protected function chooseNewObject($a_pkey): PersonaNotaDlDB|PersonaNotaDB|PersonaNotaOtraRegionStgrDB
+    {
+        if ($this->sNomTabla === "e_notas") {
+            $oPersonaNota = new PersonaNotaDB($a_pkey);
+        }
+        if ($this->sNomTabla === "e_notas_dl") {
+            $oPersonaNota = new PersonaNotaDlDB($a_pkey);
+        }
+        if ($this->sNomTabla === "e_notas_otra_region_stgr") {
+            $oPersonaNota = new PersonaNotaOtraRegionStgrDB($this->esquema_region_stgr, $a_pkey);
+        }
+        return $oPersonaNota;
+    }
 
-    /* MÉTODOS GET y SET --------------------------------------------------------*/
 }
 
 ?>

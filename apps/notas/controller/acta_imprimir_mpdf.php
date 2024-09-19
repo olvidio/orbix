@@ -97,7 +97,7 @@ $aWhere['id_situacion'] = $superadas_txt;
 $aOperador['id_situacion'] = 'ANY';
 $aWhere['acta'] = $acta;
 
-$GesPersonaNotas = new notas\GestorPersonaNota();
+$GesPersonaNotas = new notas\GestorPersonaNotaDB();
 $cPersonaNotas = $GesPersonaNotas->getPersonaNotas($aWhere,$aOperador);
 
 // para ordenar

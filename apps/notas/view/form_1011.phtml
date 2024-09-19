@@ -6,7 +6,7 @@
     fnjs_buscar_acta = function () {
         var tipo_acta = $('input[name=tipo_acta]:checked').val();
         var mod = $('#mod').val();
-        if (mod == 'nuevo' && tipo_acta == <?= notas\model\entity\PersonaNota::FORMATO_ACTA ?>) {
+        if (mod == 'nuevo' && tipo_acta == <?= notas\model\entity\PersonaNotaDB::FORMATO_ACTA ?>) {
             var acta = $('#acta').val();
 
             var url = '<?= $url_ajax ?>';
@@ -252,10 +252,10 @@
             <tr>
                 <td>
                     <input type="radio" id="tipo_acta_a" name="tipo_acta"
-                           value="<?= notas\model\entity\PersonaNota::FORMATO_ACTA ?>" <?= $chk_acta ?> >
+                           value="<?= notas\model\entity\PersonaNotaDB::FORMATO_ACTA ?>" <?= $chk_acta ?> >
                     <?= _("acta") ?>
                     <input type="radio" id="tipo_acta_c" name="tipo_acta"
-                           value="<?= notas\model\entity\PersonaNota::FORMATO_CERTIFICADO ?>" <?= $chk_certificado ?> >
+                           value="<?= notas\model\entity\PersonaNotaDB::FORMATO_CERTIFICADO ?>" <?= $chk_certificado ?> >
                     <?= _("certificado") ?>
                 </td>
                 <td colspan=1><input type="text" id="acta" name="acta" value="<?= $acta ?>" size="20"
@@ -318,13 +318,13 @@
             <tr>
                 <td><?= _("época") ?></td>
                 <td colspan="2"><input type="radio" id="epoca3" name="epoca"
-                                       value="<?= notas\model\entity\PersonaNota::EPOCA_OTRO ?>" <?= $chk_epoca_otro ?> >
+                                       value="<?= notas\model\entity\PersonaNotaDB::EPOCA_OTRO ?>" <?= $chk_epoca_otro ?> >
                     <?= _("sin especificar") ?>
                     <input type="radio" id="epoca1" name="epoca"
-                           value="<?= notas\model\entity\PersonaNota::EPOCA_CA ?>" <?= $chk_epoca_ca ?> >
+                           value="<?= notas\model\entity\PersonaNotaDB::EPOCA_CA ?>" <?= $chk_epoca_ca ?> >
                     <?= _("ca") ?>
                     <input type="radio" id="epoca2" name="epoca"
-                           value="<?= notas\model\entity\PersonaNota::EPOCA_INVIERNO ?>" <?= $chk_epoca_inv ?> >
+                           value="<?= notas\model\entity\PersonaNotaDB::EPOCA_INVIERNO ?>" <?= $chk_epoca_inv ?> >
                     <?= _("semestre invierno") ?>
                 </td>
             </tr>

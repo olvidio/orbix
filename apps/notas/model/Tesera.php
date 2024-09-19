@@ -128,7 +128,7 @@ class Tesera
     public function getAsignaturasAprobadas($id_nom)
     {
         // Asignaturas cursadas:
-        $GesNotas = new entity\GestorPersonaNota();
+        $GesNotas = new entity\GestorPersonaNotaDB();
         $aWhere = array();
         $aOperador = array();
         $aWhere['id_nom'] = $id_nom;

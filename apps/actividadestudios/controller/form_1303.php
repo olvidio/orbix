@@ -105,7 +105,7 @@ if (!empty($id_asignatura_real)) { //caso de modificar
     $aWhere['id_nivel'] = 3000;
     $aOperador['id_nivel'] = '<';
     $aWhere['_ordre'] = 'id_nivel';
-    $GesPersonaNotas = new notas\GestorPersonaNota();
+    $GesPersonaNotas = new notas\GestorPersonaNotaDB();
     $cAsignaturasSuperadas = $GesPersonaNotas->getPersonaNotas($aWhere, $aOperador);
     $aSuperadas = array();
     foreach ($cAsignaturasSuperadas as $oAsignatura) {

@@ -1,1 +1,0 @@
-Fichero para que el git no ignore el directorio 'log/db', porque sino al actualizar, lo borra en destino que si que tengo cosas.
