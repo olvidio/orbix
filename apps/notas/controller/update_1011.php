@@ -1,5 +1,6 @@
 <?php
 
+use asignaturas\model\entity\GestorAsignatura;
 use notas\model\EditarPersonaNota;
 use notas\model\PersonaNota;
 use web\DateTimeLocal;
@@ -47,21 +48,34 @@ $id_activ = (integer)filter_input(INPUT_POST, 'id_activ');
 $nota_num = (float)filter_input(INPUT_POST, 'nota_num', FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
 $nota_max = (integer)filter_input(INPUT_POST, 'nota_max');
 
+if ($id_asignatura === 1) {
+    $oGesAsignaturas = new GestorAsignatura();
+    $cAsignaturas = $oGesAsignaturas->getAsignaturas(array('id_nivel' => $id_nivel));
+    if (!is_array($cAsignaturas) || count($cAsignaturas) === 0) {
+        $msg_err = sprintf(_("No se encuentra una asignatura para le nivel: %s"), $id_nivel);
+        exit ($msg_err);
+    }
+    $oAsignatura = $cAsignaturas[0]; // sólo debería haber una
+    $id_asignatura = $oAsignatura->getId_asignatura();
+}
+
 $oPersonaNota = new PersonaNota();
 $oPersonaNota->setIdNivel($id_nivel);
 $oPersonaNota->setIdAsignatura($id_asignatura);
 $oPersonaNota->setIdNom($Qid_pau);
-$oPersonaNota->setIdSituacion($id_situacion);
-$oPersonaNota->setActa($acta);
-$oPersonaNota->setDetalle($detalle);
-$oPersonaNota->setTipoActa($tipo_acta);
-$oPersonaNota->setFActa($oF_acta);
-$oPersonaNota->setPreceptor($preceptor);
-$oPersonaNota->setIdPreceptor($id_preceptor);
-$oPersonaNota->setEpoca($epoca);
-$oPersonaNota->setIdActiv($id_activ);
-$oPersonaNota->setNotaNum($nota_num);
-$oPersonaNota->setNotaMax($nota_max);
+if ($Qmod !== 'eliminar') {
+    $oPersonaNota->setIdSituacion($id_situacion);
+    $oPersonaNota->setActa($acta);
+    $oPersonaNota->setDetalle($detalle);
+    $oPersonaNota->setTipoActa($tipo_acta);
+    $oPersonaNota->setFActa($oF_acta);
+    $oPersonaNota->setPreceptor($preceptor);
+    $oPersonaNota->setIdPreceptor($id_preceptor);
+    $oPersonaNota->setEpoca($epoca);
+    $oPersonaNota->setIdActiv($id_activ);
+    $oPersonaNota->setNotaNum($nota_num);
+    $oPersonaNota->setNotaMax($nota_max);
+}
 
 $oEditarPersonaNota = new EditarPersonaNota($oPersonaNota);
 switch ($Qmod) {

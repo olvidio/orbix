@@ -35,11 +35,11 @@ class EditarPersonaNota
     {
         // se ataca a la tabla padre 'e_notas', no hace falta saber en que tabla está. Ya lo sabe él
         if (!empty($this->id_nom) && !empty($this->id_asignatura) && !empty($this->id_nivel)) {
-            $oPersonaNota = new PersonaNotaDB();
-            $oPersonaNota->setId_nom($this->id_nom);
-            $oPersonaNota->setId_asignatura($this->id_asignatura);
-            $oPersonaNota->setId_nivel($this->id_nivel);
-            if ($oPersonaNota->DBEliminar() === false) {
+            $oPersonaNotaDB = new PersonaNotaDB();
+            $oPersonaNotaDB->setId_nom($this->id_nom);
+            $oPersonaNotaDB->setId_asignatura($this->id_asignatura);
+            $oPersonaNotaDB->setId_nivel($this->id_nivel);
+            if ($oPersonaNotaDB->DBEliminar() === false) {
                 $this->msg_err .= _("hay un error, no se ha borrado");
             }
         }
@@ -59,6 +59,7 @@ class EditarPersonaNota
         $rta = [];
         $oPersonaNotaDB = $a_ObjetosPersonaNota['nota'];
 
+        $id_asignatura = $this->personaNota->getIdAsignatura();
         $id_situacion = $this->personaNota->getIdSituacion();
         $acta = $this->personaNota->getActa();
         $f_acta = $this->personaNota->getFActa();
@@ -70,23 +71,6 @@ class EditarPersonaNota
         $id_activ = $this->personaNota->getIdActiv();
         $nota_num = $this->personaNota->getNotaNum();
         $nota_max = $this->personaNota->getNotaMax();
-
-        //No es una opcional TODO: en otro sitio
-        /*
-        if ($this->personaNota->getIdAsignatura() === 1) {
-            $oGesAsignaturas = new GestorAsignatura();
-            $cAsignaturas = $oGesAsignaturas->getAsignaturas(array('id_nivel' => $this->personaNota->getIdNivel()));
-            if (!is_array($cAsignaturas) || count($cAsignaturas) === 0) {
-                $msg_err = sprintf(_("No se encuentra una asignatura para le nivel: %s"),$this->personaNota->getIdNivel());
-                exit ($msg_err);
-            }
-            $oAsignatura = $cAsignaturas[0]; // sólo debería haber una
-            $id_asignatura = $oAsignatura->getId_asignatura();
-        } else {//es una opcional
-            $id_asignatura = $this->personaNota->getIdAsignatura();
-        }
-        */
-        $id_asignatura = $this->personaNota->getIdAsignatura();
 
         $oPersonaNotaDB->setId_nivel($this->personaNota->getIdNivel());
         $oPersonaNotaDB->setId_asignatura($id_asignatura);
