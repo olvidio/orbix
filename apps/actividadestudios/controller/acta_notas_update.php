@@ -12,6 +12,7 @@ use notas\model\entity\GestorActa;
 use notas\model\entity\GestorPersonaNotaDB;
 use notas\model\entity\Nota;
 use notas\model\entity\PersonaNotaDB;
+use notas\model\PersonaNota;
 use personas\model\entity\Persona;
 use web\TiposActividades;
 use function core\is_true;
@@ -89,8 +90,8 @@ if ($Qque === 3) { //paso las matrículas a notas definitivas (Grabar e imprimir
             }
 
             $oActa = new Acta($acta);
-            $f_acta = $oActa->getF_acta()->getFromLocal();
-            if (empty($acta) || empty($f_acta)) {
+            $oF_acta = $oActa->getF_acta();
+            if (empty($acta) || empty($oF_acta)) {
                 $error .= _("debe introducir los datos del acta. No se ha guardado nada.") . "\n";
                 exit($error);
             }
@@ -98,15 +99,15 @@ if ($Qque === 3) { //paso las matrículas a notas definitivas (Grabar e imprimir
             // para las cursadas o examinadas no aprobadas
             if ($id_situacion === NOTA::CURSADA || $id_situacion === NOTA::EXAMINADO || empty($id_situacion)) {
                 //conseguir una fecha para poner como fecha acta. las cursadas se guardan durante 2 años
-                $f_acta = $cActas[0]->getF_acta()->getFromLocal();
+                $oF_acta = $cActas[0]->getF_acta();
             } else {
                 if (empty($acta)) {
                     $error .= _("falta definir el acta para alguna nota") . "\n";
                     exit($error);
                 }
                 $oActa = new Acta($acta);
-                $f_acta = $oActa->getF_acta()->getFromLocal();
-                if (empty($f_acta)) {
+                $oF_acta = $oActa->getF_acta();
+                if (empty($oF_acta)) {
                     $error .= _("debe introducir los datos del acta. No se ha guardado nada.") . "\n";
                     exit($error);
                 }
@@ -122,7 +123,7 @@ if ($Qque === 3) { //paso las matrículas a notas definitivas (Grabar e imprimir
             $oActividadAsignatura = new ActividadAsignaturaDl(array('id_activ' => $Qid_activ, 'id_asignatura' => $Qid_asignatura));
             $id_preceptor = $oActividadAsignatura->getId_profesor();
         } else {
-            $id_preceptor = '';
+            $id_preceptor = 0;
         }
 
         //Si es una opcional miro el id nivel para cada uno
@@ -238,23 +239,29 @@ if ($Qque === 3) { //paso las matrículas a notas definitivas (Grabar e imprimir
                     }
             }
 
-            $oEditarPersonaNota = new EditarPersonaNota($id_nom, $Qid_asignatura, $id_nivel);
-            $camposExtra['id_situacion'] = $id_situacion;
-            $camposExtra['acta'] = $acta;
-            $camposExtra['f_acta'] = $f_acta;
-            $camposExtra['tipo_acta'] = PersonaNotaDB::FORMATO_ACTA;
-            $camposExtra['preceptor'] = $preceptor;
-            $camposExtra['id_preceptor'] = $id_preceptor;
-            $camposExtra['epoca'] = $iepoca;
-            $camposExtra['id_activ'] = $Qid_activ;
-            $camposExtra['nota_num'] = $nota_num;
-            $camposExtra['nota_max'] = $nota_max;
-            $camposExtra['detalle'] = '';
+
+            $oPersonaNota = new PersonaNota();
+            $oPersonaNota->setIdNivel($id_nivel);
+            $oPersonaNota->setIdAsignatura($Qid_asignatura);
+            $oPersonaNota->setIdNom($id_nom);
+            $oPersonaNota->setIdSituacion($id_situacion);
+            $oPersonaNota->setActa($acta);
+            $oPersonaNota->setFActa($oF_acta);
+            $oPersonaNota->setDetalle('');
+            $oPersonaNota->setTipoActa(PersonaNotaDB::FORMATO_ACTA);
+            $oPersonaNota->setPreceptor($preceptor);
+            $oPersonaNota->setIdPreceptor($id_preceptor);
+            $oPersonaNota->setEpoca($iepoca);
+            $oPersonaNota->setIdActiv($Qid_activ);
+            $oPersonaNota->setNotaNum($nota_num);
+            $oPersonaNota->setNotaMax($nota_max);
+
+            $oEditarPersonaNota = new EditarPersonaNota($oPersonaNota);
+
             if (isset($oPersonaNotaAnterior)) {
-                $camposExtra['id_asignatura_real'] = $Qid_asignatura;
-                $oEditarPersonaNota->editar($camposExtra);
+                $oEditarPersonaNota->editar($Qid_asignatura);
             } else {
-                $oEditarPersonaNota->nuevo($camposExtra);
+                $oEditarPersonaNota->nuevo();
             }
         }
     }
