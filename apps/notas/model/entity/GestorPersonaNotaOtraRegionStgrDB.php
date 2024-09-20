@@ -6,17 +6,6 @@ use core\ConfigDB;
 use core\ConfigGlobal;
 use core\DBConnection;
 
-/**
- * GestorPersonaNotaDl
- *
- * Classe per gestionar la llista d'objectes de la clase PersonaNotaDl
- *
- * @package delegación
- * @subpackage model
- * @author Daniel Serrabou
- * @version 1.0
- * @created 07/04/2014
- */
 class GestorPersonaNotaOtraRegionStgrDB extends GestorPersonaNotaDB
 {
     /* ATRIBUTOS ----------------------------------------------------------------- */

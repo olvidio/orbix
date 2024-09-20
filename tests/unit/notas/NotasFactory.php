@@ -31,6 +31,7 @@ class NotasFactory
         $cPersonaNotas = [];
         $cAsignaturas = $faker->randomElements($this->a_asignaturas, $count);
         $a_id_nivel_ocupado = [];
+        $a_id_asignatura_ocupado = [];
         foreach ($cAsignaturas as $Asignatura) {
             $id_asignatura = $Asignatura['id_asignatura'];
             $id_nivel = $Asignatura['id_nivel'];
@@ -40,6 +41,12 @@ class NotasFactory
             if (in_array($id_nivel, $a_id_nivel_ocupado)) {
                 continue; // no puede haber duplicados
             }
+            $a_id_nivel_ocupado[] = $id_nivel;
+
+            if (in_array($id_asignatura, $a_id_asignatura_ocupado)) {
+                continue; // no puede haber duplicados
+            }
+            $a_id_asignatura_ocupado[] = $id_asignatura;
 
             $f_acta_iso = $faker->dateTimeBetween()->format('Y-m-d'); // a date between -30 years ago, and now
             $oFActa = new DateTimeLocal($f_acta_iso); // a date between -30 years ago, and now
@@ -50,12 +57,15 @@ class NotasFactory
 
             $id_situacion = 1;
             $tipo_acta = 1;
-            $preceptor = false;
+            $preceptor = $faker->boolean();
             $id_preceptor = 0;
-            $detalle = 'algo';
+            if ($preceptor) {
+                $id_preceptor = $id_nom + 111;
+            }
+            $detalle = $faker->sentence(3);
             $epoca = 2;
             $id_activ = 30012345;
-            $nota_num = $faker->numberBetween(3, 10); // TODO: puede ser un float 8.5...
+            $nota_num = $faker->randomFloat(1, 2, 10);
             $nota_max = 10;
 
             $oPersonaNota = new PersonaNota();

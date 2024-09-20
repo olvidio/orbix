@@ -119,6 +119,7 @@ class GestorPersonaNotaDB extends core\ClaseGestor
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
             return false;
         }
+
         if (($oDblSt->execute($aWhere)) === false) {
             $sClauError = 'GestorPersonaNota.llistar.execute';
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);

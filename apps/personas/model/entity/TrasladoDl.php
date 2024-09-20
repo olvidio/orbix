@@ -17,6 +17,8 @@ use core\DBConnection;
 use core\DBPropiedades;
 use dossiers\model\entity\GestorDossier;
 use dossiers\model\entity\TipoDossier;
+use notas\model\EditarPersonaNota;
+use notas\model\PersonaNota;
 use ubis\model\entity\GestorDelegacion;
 use web;
 
@@ -634,7 +636,7 @@ class TrasladoDl
         $oDBorg = $this->conexionOrg();
         $oDBdst = $this->conexionDst();
 
-        $gestor = "notas\\model\\entity\\GestorPersonaNotaDl";
+        $gestor = "notas\\model\\entity\\GestorPersonaNotaDlDB";
         $ges = new $gestor();
         $ges->setoDbl($oDBorg);
         $colection = $ges->getPersonaNotas(array('id_nom' => $this->iid_nom));
@@ -646,25 +648,34 @@ class TrasladoDl
                 return false;
             }
             $aSchema = $qRs->fetch(\PDO::FETCH_ASSOC);
-            $id_schema = $aSchema['id'];
-            foreach ($colection as $Objeto) {
-                $Objeto->setoDbl($oDBorg);
-                $Objeto->DBCarregar();
-                //print_r($oPersonaNota);
-                $NuevoObj = clone $Objeto;
-                if (method_exists($NuevoObj, 'setId_item') === true) $NuevoObj->setId_item(null);
-                $NuevoObj->setoDbl($oDBdst);
-                $NuevoObj->setId_schema($id_schema);
-                if ($NuevoObj->DBGuardar() === false) {
-                    $error .= '<br>' . _("no se ha guardado la nota");
-                } else {
-                    //borrar la origen:
-                    $Objeto->DBEliminar();
-                }
+            $id_schema_persona =  $aSchema['id'];
+            foreach ($colection as $oPersonaNotaDB) {
+                $oPersonaNota = new PersonaNota();
+                $oPersonaNota->setIdNom($oPersonaNotaDB->getId_nom());
+                $oPersonaNota->setIdNivel($oPersonaNotaDB->getId_nivel());
+                $oPersonaNota->setIdAsignatura($oPersonaNotaDB->getId_asignatura());
+                $oPersonaNota->setIdSituacion($oPersonaNotaDB->getId_situacion());
+                $oPersonaNota->setActa($oPersonaNotaDB->getActa());
+                $oPersonaNota->setFActa($oPersonaNotaDB->getF_acta());
+                $oPersonaNota->setTipoActa($oPersonaNotaDB->getTipo_acta());
+                $oPersonaNota->setPreceptor($oPersonaNotaDB->getPreceptor());
+                $oPersonaNota->setIdPreceptor($oPersonaNotaDB->getId_preceptor());
+                $oPersonaNota->setDetalle($oPersonaNotaDB->getDetalle());
+                $oPersonaNota->setEpoca($oPersonaNotaDB->getEpoca());
+                $oPersonaNota->setIdActiv($oPersonaNotaDB->getId_activ());
+                $oPersonaNota->setNotaNum($oPersonaNotaDB->getNota_num());
+                $oPersonaNota->setNotaMax($oPersonaNotaDB->getNota_max());
+
+                $oEditarPersonaNota = new EditarPersonaNota($oPersonaNota);
+                $datosRegionStgr = $oEditarPersonaNota->getDatosRegionStgr();
+                $a_ObjetosPersonaNota = $oEditarPersonaNota->getObjetosPersonaNota($datosRegionStgr, $id_schema_persona);
+                $oEditarPersonaNota->crear_nueva_personaNota_para_cada_objeto_del_array($a_ObjetosPersonaNota);
+
+                //borrar la origen:
+                $oPersonaNotaDB->DBEliminar();
             }
+
         }
-        //$this->restaurarConexionOrg($oDBorg);
-        //$this->restaurarConexionDst($oDBdst);
         if (empty($error)) {
             return true;
         } else {

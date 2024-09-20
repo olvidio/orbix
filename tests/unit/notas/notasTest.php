@@ -56,7 +56,7 @@ class notasTest extends myTest
 
         $a_ObjetosPersonaNota = $oEditarPersonaNota->getObjetosPersonaNota($datosRegionStgr, $id_schema_persona);
 
-        $oEditarPersonaNota->nuevo2($a_ObjetosPersonaNota);
+        $oEditarPersonaNota->crear_nueva_personaNota_para_cada_objeto_del_array($a_ObjetosPersonaNota);
     }
 
     ///////////////  Una region ella misma region del stgr ////////////
@@ -87,7 +87,7 @@ class notasTest extends myTest
 
         $a_ObjetosPersonaNota = $oEditarPersonaNota->getObjetosPersonaNota($datosRegionStgr, $id_schema_persona);
 
-        $rta = $oEditarPersonaNota->nuevo2($a_ObjetosPersonaNota);
+        $rta = $oEditarPersonaNota->crear_nueva_personaNota_para_cada_objeto_del_array($a_ObjetosPersonaNota);
         $oPersonaNota = $rta['nota'];
         $oPersonaNota->DBCarregar(); // Importante: El PDO al hacer execute cambia los integer a string. Con esto vuelven al tipo original.
         $oPersonaNota->getPrimary_key(); // para que tenga el mismo valor que la otra
@@ -136,7 +136,7 @@ class notasTest extends myTest
 
         $a_ObjetosPersonaNota = $oEditarPersonaNota->getObjetosPersonaNota($datosRegionStgr, $id_schema_persona);
 
-        $rta = $oEditarPersonaNota->nuevo2($a_ObjetosPersonaNota);
+        $rta = $oEditarPersonaNota->crear_nueva_personaNota_para_cada_objeto_del_array($a_ObjetosPersonaNota);
         $oPersonaNota = $rta['nota'];
         $oPersonaNota->DBCarregar(); // Importante: El PDO al hacer execute cambia los integer a string. Con esto vuelven al tipo original.
         $oPersonaNota->getPrimary_key(); // para que tenga el mismo valor que la otra
@@ -185,7 +185,7 @@ class notasTest extends myTest
 
         $a_ObjetosPersonaNota = $oEditarPersonaNota->getObjetosPersonaNota($datosRegionStgr, $id_schema_persona);
 
-        $rta = $oEditarPersonaNota->nuevo2($a_ObjetosPersonaNota);
+        $rta = $oEditarPersonaNota->crear_nueva_personaNota_para_cada_objeto_del_array($a_ObjetosPersonaNota);
         $oPersonaNota = $rta['nota'];
         $oPersonaNota->DBCarregar(); // Importante: El PDO al hacer execute cambia los integer a string. Con esto vuelven al tipo original.
         $oPersonaNota->getPrimary_key(); // para que tenga el mismo valor que la otra
@@ -252,7 +252,7 @@ class notasTest extends myTest
 
         $a_ObjetosPersonaNota = $oEditarPersonaNota->getObjetosPersonaNota($datosRegionStgr, $id_schema_persona);
 
-        $rta = $oEditarPersonaNota->nuevo2($a_ObjetosPersonaNota);
+        $rta = $oEditarPersonaNota->crear_nueva_personaNota_para_cada_objeto_del_array($a_ObjetosPersonaNota);
         $oPersonaNota = $rta['nota'];
         $oPersonaNota->DBCarregar(); // Importante: El PDO al hacer execute cambia los integer a string. Con esto vuelven al tipo original.
         $oPersonaNota->getPrimary_key(); // para que tenga el mismo valor que la otra

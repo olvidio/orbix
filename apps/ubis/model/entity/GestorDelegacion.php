@@ -48,16 +48,18 @@ class GestorDelegacion extends ClaseGestor
     /**
      * @throws Exception
      */
-    public function mi_region_stgr()
+    public function mi_region_stgr($dele='')
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
 
-        $mi_dele = ConfigGlobal::mi_dele();
+        if (empty($dele)) {
+            $dele = ConfigGlobal::mi_dele();
+        }
 
         $sQuery = "SELECT region_stgr 
                         FROM $nom_tabla
-                        WHERE dl = '$mi_dele'";
+                        WHERE dl = '$dele'";
 
         if (($oDblSt = $oDbl->query($sQuery)) === false) {
             $sClauError = 'GestorDelegacion.region_stgr';
@@ -66,7 +68,7 @@ class GestorDelegacion extends ClaseGestor
         }
         $aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);
         if ($aDades === FALSE) {
-            $message = sprintf(_("falta indicar a que región del stgr pertenece la dl %s"), $mi_dele);
+            $message = sprintf(_("falta indicar a que región del stgr pertenece la dl %s"), $dele);
             throw new \RuntimeException($message);
         }
         $region_stgr = $aDades['region_stgr'];
