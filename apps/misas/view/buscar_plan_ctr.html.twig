@@ -6,15 +6,18 @@
             </th>
         </tr>
         <tr>
-            <th class=titulo_inv>{{ "zona" }}:
+            <th class=titulo_inv colspan=3 >{{ "zona" }}:
                 {{ oDesplZonas.desplegable()|raw }}
             </th>
             <th class=titulo_inv colspan=3 id="centros">{{ "centro" }}:
                 {{ oDesplCentros.desplegable()|raw }}
             </th>
-            <th class=titulo_inv colspan=4>{{ "Periodo"|trans|capitalize }}:&nbsp;&nbsp;&nbsp;
-                {{ oDesplPeriodo.desplegable|raw }}
-            </th>
+        </tr>
+        <tr>
+            <td>
+                {{ "Periodo:"|trans|capitalize }}:&nbsp;&nbsp;&nbsp;
+            </td>
+            {{ oFormP.getTd()|raw }}   
         </tr>
     </table>
 </div>
@@ -66,4 +69,7 @@
                 });
         }
     }
+	$(document).ready($('#periodo').change(function(){funjs_activar_fecha();fnjs_ver_plan_ctr();}));
+	$(document).ready($('#empiezamin').change(function(){funjs_activar_fecha();fnjs_ver_plan_ctr();}));
+	$(document).ready($('#empiezamax').change(function(){funjs_activar_fecha();fnjs_ver_plan_ctr();}));
 </script>

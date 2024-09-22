@@ -5,6 +5,7 @@
 use web\Hash;
 use zonassacd\model\entity\GestorZona;
 use misas\domain\entity\EncargoDia;
+use web\DateTimeLocal;
 use web\Desplegable;
 use web\PeriodoQue;
 
@@ -15,19 +16,27 @@ require_once("apps/core/global_header.inc");
 require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$aPeriodos = array(
+$aOpciones = array(
     'esta_semana' => _("esta semana"),
     'este_mes' => _("este mes"),
-    'proxima_semana' => _("próxima semana"),
-    'proximo_mes' => _("próximo mes"),
+    'proxima_semana' => _("próxima semana de lunes a domingo"),
+    'proximo_mes' => _("próximo mes natural"),
     'separador' => '---------',
     'otro' => _("otro")
 );
 
-$oDesplPeriodos = new Desplegable();
-$oDesplPeriodos->setOpciones($aPeriodos);
-$oDesplPeriodos->setNombre('periodos');
-$oDesplPeriodos->setAction('fnjs_ver_cuadricula_zona()');
+$oFormP = new PeriodoQue();
+$oFormP->setFormName('frm_nuevo_periodo');
+$oFormP->setTitulo(core\strtoupper_dlb(_("seleccionar un periodo")));
+$oFormP->setPosiblesPeriodos($aOpciones);
+$oFormP->setDesplPeriodosOpcion_sel('esta_semana');
+$oFormP->setisDesplAnysVisible(FALSE);
+
+$ohoy = new DateTimeLocal(date('Y-m-d'));
+$shoy = $ohoy ->format('d/m/Y');
+
+$oFormP->setEmpiezaMin($shoy);
+$oFormP->setEmpiezaMax($shoy);
 
 $oGestorZona = new GestorZona();
 $oDesplZonas = $oGestorZona->getListaZonas();
@@ -54,7 +63,7 @@ $h_zona_periodo = $oHashZonaPeriodo->linkSinVal();
 $a_campos = ['oPosicion' => $oPosicion,
     'oDesplZonas' => $oDesplZonas,
     'oDesplOrden' => $oDesplOrden,
-    'oDesplPeriodos' => $oDesplPeriodos,
+    'oFormP' => $oFormP,
     'url_ver_cuadricula_zona' => $url_ver_cuadricula_zona,
     'h_zona_periodo' => $h_zona_periodo,
 ];

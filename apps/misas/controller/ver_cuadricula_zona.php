@@ -35,13 +35,9 @@ $Qempiezamin = (string)filter_input(INPUT_POST, 'empiezamin');
 $Qempiezamax = (string)filter_input(INPUT_POST, 'empiezamax');
 $Qseleccion = (integer)filter_input(INPUT_POST, 'seleccion');
 
-echo 'zona: '.$Qid_zona.'<br>';
-echo 'tipo: '.$QTipoPlantilla.'<br>';
 echo 'periodo: '.$Qperiodo.'<br>';
-
 switch ($Qperiodo) {
     case "esta_semana":
-        echo 'HHHHHHHola<br>';
         $dia_week = date('N');
         $dia_week--;
         if ($dia_week==-1){
@@ -54,7 +50,6 @@ switch ($Qperiodo) {
 
         $empiezamin->add($di);
         $Qempiezamin_rep = $empiezamin->format('Y-m-d');
-        echo 'Qemin: '.$Qempiezamin_rep.'<br>';
         $intervalo='P7D';
         $empiezamax = $empiezamin;
         $empiezamax->add(new DateInterval($intervalo));
@@ -108,6 +103,7 @@ switch ($Qperiodo) {
         $Qempiezamax_rep=str_replace('/','-',$Qempiezamax);
 }
 echo 'Qemin: '.$Qempiezamin_rep.'<br>';
+echo 'Qemax: '.$Qempiezamax_rep.'<br>';
 
 if(isset($Qorden) && ($Qorden!==null))
     $Qorden='desc_enc';
@@ -247,6 +243,7 @@ switch (trim($QTipoPlantilla)) {
         $oInicio = new DateTimeLocal($Qempiezamin_rep);
         $oFin = new DateTimeLocal($Qempiezamax_rep);
         $interval = new DateInterval('P1D');
+        $oFin -> add($interval);
         $date_range = new DatePeriod($oInicio, $interval, $oFin);
         foreach ($date_range as $date) {
             $num_dia = $date->format('Y-m-d');

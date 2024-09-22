@@ -4,12 +4,20 @@
         <table>
             <thead>
             <tr>
-                <th class=titulo_inv colspan=4>{{ "Plan de Misas de un sacd"|trans|capitalize }}:&nbsp;&nbsp;&nbsp;
+                <th class=titulo_inv colspan=4>
+                    {{ "Plan de Misas de un sacerdote"|trans|capitalize }}
+                </th>
+            </tr>
+            <tr>
+                <th class=titulo_inv colspan=4>{{ "Sacerdote"|trans|capitalize }}:&nbsp;&nbsp;&nbsp;
                     {{ oDesplSacd.desplegable|raw }}
                 </th>
-                <th class=titulo_inv colspan=4>{{ "Periodo"|trans|capitalize }}:&nbsp;&nbsp;&nbsp;
-                    {{ oDesplPeriodo.desplegable|raw }}
-                </th>
+            </tr>
+            <tr>
+                <td>
+                    {{ "Periodo:"|trans|capitalize }}:&nbsp;&nbsp;&nbsp;
+                </td>
+                {{ oFormP.getTd()|raw }}   
             </tr>
             </thead>
         </table>
@@ -44,4 +52,7 @@
                 });
         }
     }
+	$(document).ready($('#periodo').change(function(){funjs_activar_fecha();fnjs_ver_plan_sacd();}));
+	$(document).ready($('#empiezamin').change(function(){funjs_activar_fecha();fnjs_ver_plan_sacd();}));
+	$(document).ready($('#empiezamax').change(function(){funjs_activar_fecha();fnjs_ver_plan_sacd();}));
 </script>

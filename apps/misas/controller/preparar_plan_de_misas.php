@@ -15,37 +15,24 @@ require_once("apps/core/global_header.inc");
 // Crea los objetos de uso global **********************************************
 require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
-$aPeriodos = array(
-    'proxima_semana' => _("próxima semana"),
-    'proximo_mes' => _("próximo mes"),
-    'separador' => '---------',
-    'otro' => _("otro")
-);
-
-//$oDesplPeriodos = new Desplegable();
-//$oDesplPeriodos->setOpciones($aPeriodos);
-//$oDesplPeriodos->setNombre('periodos');
-//$oDesplPeriodos->setAction('fnjs_nuevo_periodo()');
-//$oDesplPeriodos->setAction('fnjs_ver_cuadricula_zona()');
-
 $aOpciones = array(
     'proxima_semana' => _("próxima semana de lunes a domingo"),
     'proximo_mes' => _("próximo mes natural"),
     'otro' => _("otro")
 );
+
 $oFormP = new PeriodoQue();
 $oFormP->setFormName('frm_nuevo_periodo');
 $oFormP->setTitulo(core\strtoupper_dlb(_("seleccionar un periodo")));
 $oFormP->setPosiblesPeriodos($aOpciones);
+$oFormP->setDesplPeriodosOpcion_sel('proxima_semana');
 $oFormP->setisDesplAnysVisible(FALSE);
 
 $ohoy = new DateTimeLocal(date('Y-m-d'));
-$shoy = $ohoy ->format('Y-m-d');
+$shoy = $ohoy ->format('d/m/Y');
 
 $oFormP->setEmpiezaMin($shoy);
 $oFormP->setEmpiezaMax($shoy);
-//$oFormP->setBoton("<input type=button name=\"ver\" value=\"" . _("ver") . "\" onclick=\"fnjs_ver_plantilla_zona();\">");
-//$oFormP->setBoton("<input type=button name=\"preparar\" value=\"" . _("preparar") . "\" onclick=\"fnjs_nuevo_periodo();\">");
 
 $oGestorZona = new GestorZona();
 $oDesplZonas = $oGestorZona->getListaZonas();
@@ -66,6 +53,17 @@ $oDesplTipoPlantilla->setOpciones($a_TiposPlantilla);
 $oDesplTipoPlantilla->setNombre('tipoplantilla');
 $oDesplTipoPlantilla->setAction('fnjs_ver_cuadricula_zona()');
 
+$a_Orden = array(
+    'orden' => 'orden',
+    'prioridad' => 'prioridad',
+    'desc_enc' => 'alfabético',
+);
+
+$oDesplOrden = new Desplegable();
+$oDesplOrden->setOpciones($a_Orden);
+$oDesplOrden->setNombre('orden');
+$oDesplOrden->setAction('fnjs_ver_cuadricula_zona()');
+
 $url_crear_nuevo_periodo = 'apps/misas/controller/crear_nuevo_periodo.php';
 $oHashNuevoPeriodo = new Hash();
 $oHashNuevoPeriodo->setUrl($url_crear_nuevo_periodo);
@@ -80,8 +78,8 @@ $h_zona_periodo = $oHashZonaPeriodo->linkSinVal();
 
 $a_campos = ['oPosicion' => $oPosicion,
     'oDesplZonas' => $oDesplZonas,
-//    'oDesplPeriodos' => $oDesplPeriodos,
     'oDesplTipoPlantilla' => $oDesplTipoPlantilla,
+    'oDesplOrden' => $oDesplOrden,
     'oFormP' => $oFormP,
     'url_crear_nuevo_periodo' => $url_crear_nuevo_periodo,
     'h_nuevo_periodo' => $h_nuevo_periodo,

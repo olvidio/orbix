@@ -77,6 +77,8 @@
     </style>
 </head>
 <div id="cuadriculas" style="position:relative">
+    <input type="hidden" id="empiezamin" value=""/>
+    <input type="hidden" id="empiezamax" value=""/>
     <div style="width:100%;">
         <div id="myGrid" class="slick-container" style="width:100%;height:300px;"></div>
     </div>
@@ -233,8 +235,8 @@
                 let tipo_plantilla = '{{tipo_plantilla}}';
                 let orden = '{{orden}}';
                 let periodo = '{{periodo}}';
-                let empiezamin = '{{empiezamin}}';
-                let empiezamax = '{{empiezamax}}';
+                let empiezamin = $('#empiezamin').val();
+                let empiezamax = $('#empiezamax').val();
                 let url = '{{ url_ver_cuadricula_zona }}';
     	        var sacd_libre=$('#sacd_libre').prop('checked');
             	var sacd_zona=$('#sacd_zona').prop('checked');
@@ -389,6 +391,8 @@ var meta;
         asyncEditorLoading: false,
         autoEdit: false
     };
+    $('#empiezamin').val({{empiezamin}});
+    $('#empiezamax').val({{empiezamax}});
 
     var grid_sacd;
     var data_sacd = {{ json_data_sacd|raw }};

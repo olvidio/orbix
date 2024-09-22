@@ -8,6 +8,7 @@ use zonassacd\model\entity\GestorZonaSacd;
 use personas\model\entity\GestorPersona;
 use misas\domain\entity\InicialesSacd;
 use misas\domain\entity\EncargoDia;
+use web\DateTimeLocal;
 use web\Desplegable;
 use web\PeriodoQue;
 
@@ -25,12 +26,34 @@ $aPeriodo = array(
     'proximo_mes' => _("próximo mes"),
     'separador' => '---------',
     'otro' => _("otro")
-);
+); 
 
 $oDesplPeriodo = new Desplegable();
 $oDesplPeriodo->setOpciones($aPeriodo);
 $oDesplPeriodo->setNombre('periodo');
 $oDesplPeriodo->setAction('fnjs_ver_plan_sacd()');
+
+$aOpciones = array(
+    'esta_semana' => _("esta semana"),
+    'este_mes' => _("este mes"),
+    'proxima_semana' => _("próxima semana de lunes a domingo"),
+    'proximo_mes' => _("próximo mes natural"),
+    'separador' => '---------',
+    'otro' => _("otro")
+);
+
+$oFormP = new PeriodoQue();
+$oFormP->setFormName('frm_nuevo_periodo');
+$oFormP->setTitulo(core\strtoupper_dlb(_("seleccionar un periodo")));
+$oFormP->setPosiblesPeriodos($aOpciones);
+$oFormP->setDesplPeriodosOpcion_sel('esta_semana');
+$oFormP->setisDesplAnysVisible(FALSE);
+
+$ohoy = new DateTimeLocal(date('Y-m-d'));
+$shoy = $ohoy ->format('d/m/Y');
+
+$oFormP->setEmpiezaMin($shoy);
+$oFormP->setEmpiezaMax($shoy);
 
 $a_Clases = [];
 $a_Clases[] = array('clase' => 'PersonaN', 'get' => 'getPersonas');
@@ -65,7 +88,8 @@ $h_plan_sacd = $oHashPlanSacd->linkSinVal();
 
 $a_campos = ['oPosicion' => $oPosicion,
     'oDesplSacd' => $oDesplSacd,
-    'oDesplPeriodo' => $oDesplPeriodo,
+//    'oDesplPeriodo' => $oDesplPeriodo,
+    'oFormP' => $oFormP,
     'url_ver_plan_sacd' => $url_ver_plan_sacd,
     'h_plan_sacd' => $h_plan_sacd,
 ];

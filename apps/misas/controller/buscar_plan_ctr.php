@@ -10,6 +10,7 @@ use ubis\model\entity\GestorCentroDl;
 use ubis\model\entity\GestorCentroEllas;
 use misas\domain\entity\InicialesSacd;
 use misas\domain\entity\EncargoDia;
+use web\DateTimeLocal;
 use web\Desplegable;
 use web\PeriodoQue;
 
@@ -56,43 +57,35 @@ $oDesplCentros->setOpciones($aCentros);
 if (isset($id_ubi)) {
     $oDesplCentros->setOpcion_sel($id_ubi);
 }
-$oDesplZonas->setAction('fnjs_buscar_plan_ctr()');
+$oDesplCentros->setAction('fnjs_ver_plan_ctr()');
 
-$aPeriodo = array(
+$aOpciones = array(
     'esta_semana' => _("esta semana"),
     'este_mes' => _("este mes"),
-    'proxima_semana' => _("próxima semana"),
-    'proximo_mes' => _("próximo mes"),
+    'proxima_semana' => _("próxima semana de lunes a domingo"),
+    'proximo_mes' => _("próximo mes natural"),
     'separador' => '---------',
     'otro' => _("otro")
 );
 
-$oDesplPeriodo = new Desplegable();
-$oDesplPeriodo->setOpciones($aPeriodo);
-$oDesplPeriodo->setNombre('periodo');
-$oDesplPeriodo->setAction('fnjs_ver_plan_ctr()');
+$oFormP = new PeriodoQue();
+$oFormP->setFormName('frm_nuevo_periodo');
+$oFormP->setTitulo(core\strtoupper_dlb(_("seleccionar un periodo")));
+$oFormP->setPosiblesPeriodos($aOpciones);
+$oFormP->setDesplPeriodosOpcion_sel('esta_semana');
+$oFormP->setisDesplAnysVisible(FALSE);
+
+$ohoy = new DateTimeLocal(date('Y-m-d'));
+$shoy = $ohoy ->format('d/m/Y');
+
+$oFormP->setEmpiezaMin($shoy);
+$oFormP->setEmpiezaMax($shoy);
 
 $url_buscar_plan_ctr = 'apps/misas/controller/buscar_plan_ctr.php';
 $oHashBuscarPlanCtr = new Hash();
 $oHashBuscarPlanCtr->setUrl($url_buscar_plan_ctr);
 $oHashBuscarPlanCtr->setCamposForm('id_zona');
 $h_buscar_plan_ctr = $oHashBuscarPlanCtr->linkSinVal();
-
-$aOpciones = array(
-    'semana_next' => _("próxima semana de lunes a domingo"),
-    'mes_next' => _("próximo mes natural"),
-    'trimestre_2' => _("segundo trimestre"),
-    'trimestre_3' => _("tercer trimestre"),
-    'trimestre_4' => _("cuarto trimestre"),
-    'separador' => '---------',
-    'otro' => _("otro")
-);
-$oFormP = new PeriodoQue();
-$oFormP->setFormName('frm_ver_plan_ctr');
-$oFormP->setTitulo(core\strtoupper_dlb(_("seleccionar un periodo")));
-$oFormP->setPosiblesPeriodos($aOpciones);
-
-$oFormP->setBoton("<input type=button name=\"ver\" value=\"" . _("ver") . "\" onclick=\"fnjs_ver_plan_ctr();\">");
 
 $url_ver_plan_ctr = 'apps/misas/controller/ver_plan_ctr.php';
 $oHashPlanCtr = new Hash();
@@ -103,7 +96,6 @@ $h_plan_ctr = $oHashPlanCtr->linkSinVal();
 $a_campos = ['oPosicion' => $oPosicion,
     'oDesplZonas' => $oDesplZonas,
     'oDesplCentros' => $oDesplCentros,
-    'oDesplPeriodo' => $oDesplPeriodo,
     'oFormP' => $oFormP,
     'url_buscar_plan_ctr' => $url_buscar_plan_ctr,
     'url_ver_plan_ctr' => $url_ver_plan_ctr,

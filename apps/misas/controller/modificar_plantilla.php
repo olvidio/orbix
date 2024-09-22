@@ -14,7 +14,6 @@ require_once("apps/core/global_header.inc");
 require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-
 $oGestorZona = new GestorZona();
 $oDesplZonas = $oGestorZona->getListaZonas();
 $oDesplZonas->setNombre('id_zona');
