@@ -67,11 +67,15 @@ class GestorDelegacion extends ClaseGestor
             return false;
         }
         $aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);
-        if ($aDades === FALSE) {
-            $message = sprintf(_("falta indicar a que región del stgr pertenece la dl %s"), $dele);
+        if ($aDades === FALSE || empty($aDades)) {
+            $message = sprintf(_("No se encuentra información de la dl: %s"), $dele);
             throw new \RuntimeException($message);
         }
         $region_stgr = $aDades['region_stgr'];
+        if (empty($aDades['region_stgr']))  {
+            $message = sprintf(_("falta indicar a que región del stgr pertenece la dl: %s"), $dele);
+            throw new \RuntimeException($message);
+        }
         // nombre del esquema
         $esquema_region_stgr = $region_stgr . '-cr' . $region_stgr;
         // caso especial de H:
@@ -96,7 +100,7 @@ class GestorDelegacion extends ClaseGestor
         }
         $aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);
         if ($aDades === FALSE) {
-            $message = sprintf(_("No se encuentra el id del esquema %s"), $region_stgr);
+            $message = sprintf(_("No se encuentra el id del esquema: %s"), $esquema_region_stgr);
             throw new \RuntimeException($message);
         }
         $id_esquema_region_stgr = $aDades['id'];

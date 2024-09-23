@@ -2,7 +2,6 @@
 
 namespace notas\model;
 
-use asignaturas\model\entity\GestorAsignatura;
 use core\ConfigDB;
 use core\ConfigGlobal;
 use core\DBConnection;
@@ -10,12 +9,11 @@ use devel\model\entity\GestorDbSchema;
 use dossiers\model\entity\Dossier;
 use notas\model\entity\Acta;
 use notas\model\entity\Nota;
-use notas\model\entity\PersonaNotaDB;
 use notas\model\entity\PersonaNotaCertificadoDB;
+use notas\model\entity\PersonaNotaDB;
 use notas\model\entity\PersonaNotaDlDB;
 use notas\model\entity\PersonaNotaOtraRegionStgrDB;
 use personas\model\entity\Persona;
-use PhpParser\Node\Expr\Throw_;
 use ubis\model\entity\GestorDelegacion;
 
 class EditarPersonaNota
@@ -115,7 +113,7 @@ class EditarPersonaNota
             $err = end($_SESSION['errores']);
             throw new \RuntimeException(sprintf(_("No se ha guardado la Nota: %s"), $err));
         }
-        $rta['nota'] =$oPersonaNotaDB;
+        $rta['nota'] = $oPersonaNotaDB;
         // si no está abierto, hay que abrir el dossier para esta persona
         // si es una persona de paso, No hace falta
         if ($id_nom > 0) {
@@ -129,7 +127,7 @@ class EditarPersonaNota
 
         // Pongo las notas en la dl de la persona, esperando al certificado
         if (array_key_exists('certificado', $a_ObjetosPersonaNota)) {
-            $new_detalle = empty($detalle)? "$acta" : "$acta ($detalle)";
+            $new_detalle = empty($detalle) ? "$acta" : "$acta ($detalle)";
             $oPersonaNotaCertificadoDB = $a_ObjetosPersonaNota['certificado'];
 
             $oPersonaNotaCertificadoDB->setId_nom($id_nom);
@@ -150,7 +148,7 @@ class EditarPersonaNota
             if ($oPersonaNotaCertificadoDB->DBGuardar() === false) {
                 throw new \RuntimeException(_("hay un error, no se ha guardado. Nota Certificado"));
             }
-            $rta['certificado'] =$oPersonaNotaCertificadoDB;
+            $rta['certificado'] = $oPersonaNotaCertificadoDB;
         }
 
         return $rta;
@@ -226,10 +224,19 @@ class EditarPersonaNota
         return $this->msg_err;
     }
 
-    public function getDatosRegionStgr($dele= '') {
+    public function getDatosRegionStgr($dele = '')
+    {
 
         $gesDelegacion = new GestorDelegacion();
-        $a_mi_region_stgr = $gesDelegacion->mi_region_stgr($dele);
+        try {
+            $a_mi_region_stgr = $gesDelegacion->mi_region_stgr($dele);
+        } catch (\RuntimeException $e) {
+            $msg = _("Problema con los datos en la tabla de delegaciones");
+            $msg .= "\r\n";
+            $msg .= $e->getMessage();
+            die($msg);
+        }
+
         $a_mi_region_stgr['mi_id_schema'] = ConfigGlobal::mi_id_schema();
 
         return $a_mi_region_stgr;
@@ -266,7 +273,7 @@ class EditarPersonaNota
         $cSchemas = $gesSchemas->getDbSchemas(['id' => $id_schema_persona]);
         $nombre_schema_persona = $cSchemas[0]->getSchema();
         if (empty($nombre_schema_persona)) {
-            $msg = sprintf(_("No se encuentra el nombre del esquema de la persona con id_nom: %s"),$id_schema_persona);
+            $msg = sprintf(_("No se encuentra el nombre del esquema de la persona con id_nom: %s"), $id_schema_persona);
             throw new \RuntimeException($msg);
         }
 
@@ -275,14 +282,14 @@ class EditarPersonaNota
             $rta['nota'] = new PersonaNotaOtraRegionStgrDB($esquema_region_stgr);
         } else {
             $a_reg = explode('-', $nombre_schema_persona);
-            $new_dele = substr($a_reg[1],0, -1); // quito la v o la f.
+            $new_dele = substr($a_reg[1], 0, -1); // quito la v o la f.
             $datos_reg_destino = $this->getDatosRegionStgr($new_dele);
 
             // para los traslados incluir el caso de que las dos tengan el mismo esquema_region_stgr
             if ($id_schema_persona === $mi_id_schema || $esquema_region_stgr === $datos_reg_destino['esquema_region_stgr']) {
                 // normal
                 $oPersonasNotaDB = new PersonaNotaDlDB();
-                if ( $esquema_region_stgr === $datos_reg_destino['esquema_region_stgr']) {
+                if ($esquema_region_stgr === $datos_reg_destino['esquema_region_stgr']) {
                     // Conectar con la tabla de la dl
                     $db = (ConfigGlobal::mi_sfsv() === 1) ? 'sv' : 'sf';
                     // se debe conectar con la region del stgr padre
