@@ -5,7 +5,6 @@ use actividadestudios\model\entity\ActividadAsignaturaDl;
 use actividadestudios\model\entity\GestorMatricula;
 use actividadestudios\model\entity\Matricula;
 use asignaturas\model\entity\Asignatura;
-use core\ConfigGlobal;
 use notas\model\EditarPersonaNota;
 use notas\model\entity\Acta;
 use notas\model\entity\GestorActa;
@@ -265,7 +264,9 @@ if ($Qque === 3) { //paso las matrículas a notas definitivas (Grabar e imprimir
             }
         }
     }
-    $go_to = ConfigGlobal::getWeb() . "/apps/notas/controller/acta_imprimir.php?acta=$acta|main";
+    //$go_to = ConfigGlobal::getWeb() . "/apps/notas/controller/acta_imprimir.php?acta=$acta|main";
+    $a_parametros = array('acta' => $acta);
+    $go_to = web\Hash::link(core\ConfigGlobal::getWeb() . '/apps/notas/controller/acta_imprimir.php?' . http_build_query($a_parametros));
 }
 
 if ($Qque === 1) { // Grabar las notas en la matricula
@@ -333,14 +334,14 @@ if ($Qque === 1) { // Grabar las notas en la matricula
 }
 
 if (!empty($msg_err)) {
-    echo $msg_err;
-}
-//vuelve a la presentación de la ficha.
-if (empty($error)) {
-    if (!empty($go_to)) {
-        $go_to = urlencode($go_to);
-    }
+    $jsondata['success'] = FALSE;
+    $jsondata['mensaje'] = $msg_err;
 } else {
-    echo $error;
-    echo "\n";
+    $jsondata['success'] = TRUE;
+    $jsondata['goto'] = $go_to;
 }
+
+//Aunque el content-type no sea un problema en la mayoría de casos, es recomendable especificarlo
+header('Content-type: application/json; charset=utf-8');
+echo json_encode($jsondata, JSON_THROW_ON_ERROR);
+exit();
