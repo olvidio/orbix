@@ -128,7 +128,6 @@ class GestorDbSchema extends core\ClaseGestor
     function getNext($schema)
     {
         // comprobar si existe
-        $cSchema = [];
         $cSchema = $this->getDbSchemas(['schema' => $schema]);
         if (empty($cSchema)) {
             $netxId = $this->getLast() + 1;
@@ -157,29 +156,6 @@ class GestorDbSchema extends core\ClaseGestor
             $lastId = $aDades['id'];
         }
         return $lastId;
-    }
-
-    /**
-     * retorna l'array d'objectes de tipus DbSchema
-     *
-     * @param string sQuery la query a executar.
-     * @return array Una col·lecció d'objectes de tipus DbSchema
-     */
-    function getDbSchemasQuery($sQuery = '')
-    {
-        $oDbl = $this->getoDbl();
-        $oDbSchemaSet = new core\Set();
-        if (($oDblSt = $oDbl->query($sQuery)) === false) {
-            $sClauError = 'GestorDbSchema.query';
-            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
-            return false;
-        }
-        foreach ($oDbl->query($sQuery) as $aDades) {
-            $a_pkey = array('schema' => $aDades['schema']);
-            $oDbSchema = new DbSchema($a_pkey);
-            $oDbSchemaSet->add($oDbSchema);
-        }
-        return $oDbSchemaSet->getTot();
     }
 
     /**

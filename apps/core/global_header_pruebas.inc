@@ -1,5 +1,6 @@
 <?php
-
+require __DIR__ . '/../../libs/vendor/autoload.php';
+/*
 namespace pruebas\apps\core {
     spl_autoload_extensions('.php');
     spl_autoload_register(__NAMESPACE__ . '\autoload');
@@ -42,3 +43,4 @@ namespace pruebas\apps {
     use core\ConfigGlobal;
     use core\GestorErrores;
 }
+*/

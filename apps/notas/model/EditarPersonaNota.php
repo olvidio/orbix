@@ -15,6 +15,7 @@ use notas\model\entity\PersonaNotaCertificadoDB;
 use notas\model\entity\PersonaNotaDlDB;
 use notas\model\entity\PersonaNotaOtraRegionStgrDB;
 use personas\model\entity\Persona;
+use PhpParser\Node\Expr\Throw_;
 use ubis\model\entity\GestorDelegacion;
 
 class EditarPersonaNota
@@ -264,15 +265,19 @@ class EditarPersonaNota
         $gesSchemas = new GestorDbSchema();
         $cSchemas = $gesSchemas->getDbSchemas(['id' => $id_schema_persona]);
         $nombre_schema_persona = $cSchemas[0]->getSchema();
-
-        $a_reg = explode('-', $nombre_schema_persona);
-        $new_dele = substr($a_reg[1],0, -1); // quito la v o la f.
-        $datos_reg_destino = $this->getDatosRegionStgr($new_dele);
+        if (empty($nombre_schema_persona)) {
+            $msg = sprintf(_("No se encuentra el nombre del esquema de la persona con id_nom: %s"),$id_schema_persona);
+            throw new \RuntimeException($msg);
+        }
 
         if ($nombre_schema_persona === 'restov' || $nombre_schema_persona === 'restof') {
             // guardar en e_notas_otra_region_stgr
             $rta['nota'] = new PersonaNotaOtraRegionStgrDB($esquema_region_stgr);
         } else {
+            $a_reg = explode('-', $nombre_schema_persona);
+            $new_dele = substr($a_reg[1],0, -1); // quito la v o la f.
+            $datos_reg_destino = $this->getDatosRegionStgr($new_dele);
+
             // para los traslados incluir el caso de que las dos tengan el mismo esquema_region_stgr
             if ($id_schema_persona === $mi_id_schema || $esquema_region_stgr === $datos_reg_destino['esquema_region_stgr']) {
                 // normal

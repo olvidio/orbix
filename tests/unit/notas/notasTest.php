@@ -5,6 +5,7 @@ namespace Tests\unit\notas;
 use core\ConfigGlobal;
 use Exception;
 use notas\model\EditarPersonaNota;
+use notas\model\entity\GestorPersonaNotaDB;
 use notas\model\entity\GestorPersonaNotaDlDB;
 use notas\model\entity\GestorPersonaNotaOtraRegionStgrDB;
 use notas\model\entity\PersonaNotaDB;
@@ -161,12 +162,87 @@ class notasTest extends myTest
 
     /**
      * Guardar nota de una persona dlA (presente en Aquinate) desde la dlB (que organiza la actividad)
+     * que pertenecen a distintas regiones del stgr
      *      nota en la tabla dlB.e_notas_otras_region_stgr
      *      nota "falta certificado" en dlA.e_notas_dl.
      * @return void
      * @throws Exception
      */
     public function test_guardar_nota_dl_persona_otra_region_desde_dl_stgr(): void
+    {
+        // dlB desde la que se ejecuta la operación de guardar nota.
+        $_SESSION['session_auth']['esquema'] = 'H-dlbv';
+        $_SESSION['session_auth']['mi_id_schema'] = 1001;
+
+        // persona de la dlA
+        $id_nom = 1029156;
+        $id_schema_persona = 1029; // GalBelv
+        $NotasFactory = new NotasFactory();
+        $NotasFactory->setCount(1);
+        $cPersonaNotas = $NotasFactory->create($id_nom);
+        $personaNota = $cPersonaNotas[0];
+
+        $oEditarPersonaNota = new EditarPersonaNota($personaNota);
+        $datosRegionStgr = $oEditarPersonaNota->getDatosRegionStgr();
+
+        $a_ObjetosPersonaNota = $oEditarPersonaNota->getObjetosPersonaNota($datosRegionStgr, $id_schema_persona);
+
+        $rta = $oEditarPersonaNota->crear_nueva_personaNota_para_cada_objeto_del_array($a_ObjetosPersonaNota);
+        $oPersonaNota = $rta['nota'];
+        $oPersonaNota->DBCarregar(); // Importante: El PDO al hacer execute cambia los integer a string. Con esto vuelven al tipo original.
+        $oPersonaNota->getPrimary_key(); // para que tenga el mismo valor que la otra
+
+        $gesDelegacion = new GestorDelegacion();
+        $a_mi_region_stgr = $gesDelegacion->mi_region_stgr();
+        $esquema_region_stgr = $a_mi_region_stgr['esquema_region_stgr'];
+
+        // Estoy en H-dlbv. La nota debe estar en GalBel-crGalBelv.
+        // por tanto miro en la tabla padre y compruebo que el esquema es el que toca.
+        $gesPersonaNota = new GestorPersonaNotaOtraRegionStgrDB($esquema_region_stgr);
+        $cPersonaNota = $gesPersonaNota->getPersonaNotas(['id_nom' => $id_nom, 'id_asignatura' => $personaNota->getIdAsignatura()]);
+        if (!empty($cPersonaNota)) {
+            $oPersonaNota2 = $cPersonaNota[0];
+            if (!is_null($oPersonaNota2)) {
+                $oPersonaNota2->DBCarregar();
+            }
+        } else {
+            $oPersonaNota2 = null;
+        }
+        $this->assertEquals($oPersonaNota, $oPersonaNota2);
+        $oPersonaNota2->DBEliminar();
+
+        // guardar certificado
+        $oPersonaNotaCertificadoDB = $rta['certificado'] ?? '';
+        $this->assertNotEquals('', $oPersonaNotaCertificadoDB);
+
+        $oPersonaNotaCertificadoDB->DBCarregar(); // Importante: El PDO al hacer execute cambia los integer a string. Con esto vuelven al tipo original.
+        $oPersonaNotaCertificadoDB->getPrimary_key(); // para que tenga el mismo valor que la otra
+
+        // Estoy en H-dlbv. La nota debe estar en GalBel-crGalBelv.
+        // por tanto miro en la tabla padre y compruebo que el esquema es el que toca.
+        $gesPersonaNotDB = new GestorPersonaNotaDB();
+        $cPersonaNotaDB = $gesPersonaNotDB->getPersonaNotas(['id_nom' => $id_nom, 'id_asignatura' => $personaNota->getIdAsignatura()]);
+        $oPersonaNotaDB = $cPersonaNotaDB[0];
+        $oPersonaNotaDB->DBCarregar();
+
+        // Son dos clases distintas, no se pueden comparar. Miramos las propiedades
+        $this->assertNotEquals($oPersonaNotaCertificadoDB, $oPersonaNotaDB);
+        $this->assertEquals($oPersonaNotaCertificadoDB->getId_nom(), $oPersonaNotaDB->getId_nom());
+        $this->assertEquals($oPersonaNotaCertificadoDB->getId_nivel(), $oPersonaNotaDB->getId_nivel());
+        $this->assertEquals($oPersonaNotaCertificadoDB->getId_asignatura(), $oPersonaNotaDB->getId_asignatura());
+        $this->assertEquals($oPersonaNotaCertificadoDB->getNota_num(), $oPersonaNotaDB->getNota_num());
+        $this->assertEquals($id_schema_persona, $oPersonaNotaDB->getId_schema());
+
+        $oPersonaNotaDB->DBEliminar();
+    }
+    /**
+     * Guardar nota de una persona dlA desde la dlB (que organiza la actividad)
+     * Si las dos pertenecen a la misma región del stgr
+     *      nota en dlA.e_notas_dl.
+     * @return void
+     * @throws Exception
+     */
+    public function test_guardar_nota_dl_persona_desde_dl_stgr(): void
     {
         // dlB desde la que se ejecuta la operación de guardar nota.
         $_SESSION['session_auth']['esquema'] = 'H-dlbv';
@@ -190,42 +266,32 @@ class notasTest extends myTest
         $oPersonaNota->DBCarregar(); // Importante: El PDO al hacer execute cambia los integer a string. Con esto vuelven al tipo original.
         $oPersonaNota->getPrimary_key(); // para que tenga el mismo valor que la otra
 
-        $gesDelegacion = new GestorDelegacion();
-        $a_mi_region_stgr = $gesDelegacion->mi_region_stgr();
-        $esquema_region_stgr = $a_mi_region_stgr['esquema_region_stgr'];
-
-        $gesPersonaNota = new GestorPersonaNotaOtraRegionStgrDB($esquema_region_stgr);
+        // Estoy en H-dlbv. La nota debe estar en H-dlsv.
+        // por tanto miro en la tabla padre y compruebo que el esquema es el que toca.
+        $gesPersonaNota = new GestorPersonaNotaDB();
         $cPersonaNota = $gesPersonaNota->getPersonaNotas(['id_nom' => $id_nom, 'id_asignatura' => $personaNota->getIdAsignatura()]);
-        $oPersonaNota2 = $cPersonaNota[0];
-        $oPersonaNota2->DBCarregar();
+        if (!empty($cPersonaNota)) {
+            $oPersonaNota2 = $cPersonaNota[0];
+            if (!is_null($oPersonaNota2)) {
+                $oPersonaNota2->DBCarregar();
+            }
+        } else {
+            $oPersonaNota2 = null;
+        }
 
-        $this->assertEquals($oPersonaNota, $oPersonaNota2);
+        // Son dos clases distintas, no se pueden comparar. Miramos las propiedades
+        $this->assertNotEquals($oPersonaNota, $oPersonaNota2);
+        $this->assertEquals($oPersonaNota->getId_nom(), $oPersonaNota2->getId_nom());
+        $this->assertEquals($oPersonaNota->getId_nivel(), $oPersonaNota2->getId_nivel());
+        $this->assertEquals($oPersonaNota->getId_asignatura(), $oPersonaNota2->getId_asignatura());
+        $this->assertEquals($oPersonaNota->getNota_num(), $oPersonaNota2->getNota_num());
+
+        $this->assertEquals($id_schema_persona, $oPersonaNota2->getId_schema());
+        $oPersonaNota2->DBEliminar();
 
         // guardar certificado
         $oPersonaNotaCertificadoDB = $rta['certificado'] ?? '';
-        $this->assertNotEquals('', $oPersonaNotaCertificadoDB);
-
-        $oPersonaNotaCertificadoDB->DBCarregar(); // Importante: El PDO al hacer execute cambia los integer a string. Con esto vuelven al tipo original.
-        $oPersonaNotaCertificadoDB->getPrimary_key(); // para que tenga el mismo valor que la otra
-
-        $gesDelegacion = new GestorDelegacion();
-        $a_mi_region_stgr = $gesDelegacion->mi_region_stgr();
-        $esquema_region_stgr = $a_mi_region_stgr['esquema_region_stgr'];
-
-        $gesPersonaNotaOtraRegionDB = new GestorPersonaNotaOtraRegionStgrDB($esquema_region_stgr);
-        $cPersonaNotaOtraRegionDB = $gesPersonaNotaOtraRegionDB->getPersonaNotas(['id_nom' => $id_nom, 'id_asignatura' => $personaNota->getIdAsignatura()]);
-        $oPersonaNotaOtraRegionDB = $cPersonaNotaOtraRegionDB[0];
-        $oPersonaNotaOtraRegionDB->DBCarregar();
-
-        // Son dos clases distintas, no se pueden comparar. Miramos las propiedades
-        //$this->assertEquals($oPersonaNotaCertificadoDB, $oPersonaNotaOtraRegionDB);
-        $this->assertEquals($oPersonaNotaCertificadoDB->getId_nom(), $oPersonaNotaOtraRegionDB->getId_nom());
-        $this->assertEquals($oPersonaNotaCertificadoDB->getId_nivel(), $oPersonaNotaOtraRegionDB->getId_nivel());
-        $this->assertEquals($oPersonaNotaCertificadoDB->getId_asignatura(), $oPersonaNotaOtraRegionDB->getId_asignatura());
-        $this->assertEquals($oPersonaNotaCertificadoDB->getNota_num(), $oPersonaNotaOtraRegionDB->getNota_num());
-
-        $oPersonaNotaOtraRegionDB->DBEliminar();
-
+        $this->assertEquals('', $oPersonaNotaCertificadoDB);
     }
 
     /**
