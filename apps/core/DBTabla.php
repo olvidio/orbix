@@ -244,7 +244,11 @@ class DBTabla extends DBAbstract
      */
     public function copiar()
     {
-        if ($this->getHost() === '/var/run/postgresql' || $this->getHost() === 'localhost' || $this->getHost() === '127.0.0.1') {
+        if ($this->getHost() === 'db' ||
+            $this->getHost() === '/var/run/postgresql' ||
+            $this->getHost() === 'localhost' ||
+            $this->getHost() === '127.0.0.1'
+        ) {
             $this->copiar_local();
         } else {
             $this->copiar_remote();
@@ -340,7 +344,7 @@ class DBTabla extends DBAbstract
         // crear archivo con el password
         $dsn = $this->getConexion('ref');
         // leer esquema
-        $command = "/usr/bin/pg_dump -U postgres $a $sTablas";
+        $command = "/usr/bin/pg_dump -h " . $this->getHost() . "  -U postgres $a $sTablas";
         $command .= "--file=" . $this->getFileRef() . " ";
         $command .= "\"" . $dsn . "\"";
         $command .= " > " . $this->getFileLogR() . " 2>&1";
@@ -349,7 +353,7 @@ class DBTabla extends DBAbstract
         $error = file_get_contents($this->getFileLogR());
         if (trim($error) != '') {
             if (ConfigGlobal::is_debug_mode()) {
-                echo sprintf(_("PG_DUMP ERROR IN COMMAND: %s<br> mirar: %s<br>"), $command, $this->getFileLogR());
+                echo sprintf(_("PG_DUMP ERROR IN COMMAND(1): %s<br> mirar: %s<br>"), $command, $this->getFileLogR());
             }
         }
     }
@@ -387,7 +391,7 @@ class DBTabla extends DBAbstract
         // crear archivo con el password
         $dsn = $this->getConexionAdmin('publicv-e');
 
-        $command = "PGOPTIONS='--client-min-messages=warning' /usr/bin/psql -q -X -t ";
+        $command = "PGOPTIONS='--client-min-messages=warning' /usr/bin/psql -h " . $this->getHost() . " -U postgres -q -X -t ";
         $command .= "--pset pager=off ";
         $command .= "--file=" . $this->getFileNew() . " ";
         $command .= "\"" . $dsn . "\"";
@@ -397,7 +401,7 @@ class DBTabla extends DBAbstract
         $error = file_get_contents($this->getFileLogW());
         if (trim($error) != '') {
             if (ConfigGlobal::is_debug_mode()) {
-                echo sprintf(_("PSQL ERROR IN COMMAND: %s<br><br> mirar en: %s"), $command, $this->getFileLogW());
+                echo sprintf(_("PSQL ERROR IN COMMAND(2): %s<br><br> mirar en: %s"), $command, $this->getFileLogW());
                 echo "<br>" . _("Si sólo salen números, son las filas que se ha insertado: Está bien.");
                 echo "<pre>$error</pre>";
                 return FALSE;
@@ -411,7 +415,7 @@ class DBTabla extends DBAbstract
         // crear archivo con el password
         $dsn = $this->getConexion('new');
 
-        $command = "PGOPTIONS='--client-min-messages=warning' /usr/bin/psql -q -X -t ";
+        $command = "PGOPTIONS='--client-min-messages=warning' /usr/bin/psql -h " . $this->getHost() . " -U postgres -q -X -t ";
         $command .= "--pset pager=off ";
         $command .= "--file=" . $this->getFileNew() . " ";
         $command .= "\"" . $dsn . "\"";
@@ -421,7 +425,7 @@ class DBTabla extends DBAbstract
         $error = file_get_contents($this->getFileLogW());
         if (trim($error) != '') {
             if (ConfigGlobal::is_debug_mode()) {
-                echo sprintf(_("PSQL ERROR IN COMMAND: %s<br><br> mirar en: %s"), $command, $this->getFileLogW());
+                echo sprintf(_("PSQL ERROR IN COMMAND(3): %s<br><br> mirar en: %s"), $command, $this->getFileLogW());
                 echo "<br>" . _("Si sólo salen números, son las filas que se ha insertado: Está bien.");
                 echo "<pre>$error</pre>";
             }
