@@ -154,10 +154,20 @@ class EditarPersonaNota
         return $rta;
     }
 
-    public function editar(int $id_asignatura_real): string
+    public function editar(int $id_asignatura_real): array
     {
-        // se ataca a la tabla padre 'e_notas', no hace falta saber en que tabla está. Ya lo sabe él
+        $a_ObjetosPersonaNota = $this->getObjetosPersonaNota($this->getDatosRegionStgr(), $this->getId_schema_persona());
 
+        return $this->editar_personaNota_para_cada_objeto_del_array($a_ObjetosPersonaNota, $id_asignatura_real);
+    }
+
+    public function editar_personaNota_para_cada_objeto_del_array(array $a_ObjetosPersonaNota, int $id_asignatura_real): array
+    {
+        $rta = [];
+
+        $id_nom = $this->personaNota->getIdNom();
+        $id_nivel = $this->personaNota->getIdNivel();
+        $id_asignatura = $this->personaNota->getIdAsignatura();
         $id_situacion = $this->personaNota->getIdSituacion();
         $acta = $this->personaNota->getActa();
         $f_acta = $this->personaNota->getFActa();
@@ -170,29 +180,22 @@ class EditarPersonaNota
         $nota_num = $this->personaNota->getNotaNum();
         $nota_max = $this->personaNota->getNotaMax();
 
-
-        $a_ObjetosPersonaNota = $this->getObjetosPersonaNota($this->getDatosRegionStgr(), $this->getId_schema_persona());
-        $personaNotaDB = $a_ObjetosPersonaNota['nota'];
-
-        // puede devolver mensaje de error
-        if (!empty($this->msg_err)) {
-            return $this->msg_err;
+        $oPersonaNotaDB = $a_ObjetosPersonaNota['nota'];
+        $oPersonaNotaDB->setId_nom($id_nom);
+        $oPersonaNotaDB->setId_nivel($id_nivel);
+        if (!empty($id_asignatura_real)) {
+            $oPersonaNotaDB->setId_asignatura($id_asignatura_real);
+            $oPersonaNotaDB->DBCarregar(); // Para que cargue los valores que ya tiene.
         }
 
-        if (!empty($this->id_nom) && !empty($id_asignatura_real)) {
-            $personaNotaDB->setId_nom($this->personaNota->getIdNom());
-            $personaNotaDB->setId_nivel($this->personaNota->getIdNivel());
-            $personaNotaDB->setId_asignatura($id_asignatura_real);
-            $personaNotaDB->DBCarregar(); // Para que cargue los valores que ya tiene.
-        }
-
-        $personaNotaDB->setId_situacion($id_situacion);
-        $personaNotaDB->setF_acta($f_acta);
-        $personaNotaDB->setTipo_acta($tipo_acta);
+        $oPersonaNotaDB->setId_asignatura($id_asignatura);
+        $oPersonaNotaDB->setId_situacion($id_situacion);
+        $oPersonaNotaDB->setF_acta($f_acta);
+        $oPersonaNotaDB->setTipo_acta($tipo_acta);
         // comprobar valor del acta
         if (!empty($acta)) {
             if ($tipo_acta === PersonaNotaDB::FORMATO_CERTIFICADO) {
-                $personaNotaDB->setActa($acta);
+                $oPersonaNotaDB->setActa($acta);
             }
             if ($tipo_acta === PersonaNotaDB::FORMATO_ACTA) {
                 $oActa = new Acta();
@@ -202,26 +205,59 @@ class EditarPersonaNota
                     // inventar acta.
                     $valor = $oActa->inventarActa($valor, $f_acta);
                 }
-                $personaNotaDB->setActa($valor);
+                $oPersonaNotaDB->setActa($valor);
             }
         }
         if (empty($preceptor)) {
-            $personaNotaDB->setPreceptor('');
-            $personaNotaDB->setId_preceptor('');
+            $oPersonaNotaDB->setPreceptor('');
+            $oPersonaNotaDB->setId_preceptor('');
         } else {
-            $personaNotaDB->setPreceptor($preceptor);
-            $personaNotaDB->setId_preceptor($id_preceptor);
+            $oPersonaNotaDB->setPreceptor($preceptor);
+            $oPersonaNotaDB->setId_preceptor($id_preceptor);
         }
-        $personaNotaDB->setDetalle($detalle);
-        $personaNotaDB->setEpoca($epoca);
-        $personaNotaDB->setId_activ($id_activ);
-        $personaNotaDB->setNota_num($nota_num);
-        $personaNotaDB->setNota_max($nota_max);
+        $oPersonaNotaDB->setDetalle($detalle);
+        $oPersonaNotaDB->setEpoca($epoca);
+        $oPersonaNotaDB->setId_activ($id_activ);
+        $oPersonaNotaDB->setNota_num($nota_num);
+        $oPersonaNotaDB->setNota_max($nota_max);
 
-        if ($personaNotaDB->DBGuardar() === false) {
-            $this->msg_err .= _("hay un error, no se ha guardado");
+        if ($oPersonaNotaDB->DBGuardar() === false) {
+            $err = end($_SESSION['errores']);
+            throw new \RuntimeException(sprintf(_("No se ha modificado la Nota: %s"), $err));
         }
-        return $this->msg_err;
+        $rta['nota'] = $oPersonaNotaDB;
+
+        // Pongo las notas en la dl de la persona, esperando al certificado
+        if (array_key_exists('certificado', $a_ObjetosPersonaNota)) {
+            $new_detalle = empty($detalle) ? "$acta" : "$acta ($detalle)";
+            $oPersonaNotaCertificadoDB = $a_ObjetosPersonaNota['certificado'];
+
+            $oPersonaNotaCertificadoDB->setId_nom($id_nom);
+            $oPersonaNotaCertificadoDB->setId_nivel($id_nivel);
+            if (!empty($id_asignatura_real)) {
+                $oPersonaNotaDB->setId_asignatura($id_asignatura_real);
+                $oPersonaNotaDB->DBCarregar(); // Para que cargue los valores que ya tiene.
+            }
+            $oPersonaNotaCertificadoDB->setId_asignatura($id_asignatura);
+            $oPersonaNotaCertificadoDB->setId_situacion(Nota::FALTA_CERTIFICADO);
+            $oPersonaNotaCertificadoDB->setActa(_("falta certificado"));
+            $oPersonaNotaCertificadoDB->setDetalle($new_detalle);
+            $oPersonaNotaCertificadoDB->setTipo_acta(PersonaNotaDB::FORMATO_CERTIFICADO);
+
+            $oPersonaNotaCertificadoDB->setF_acta($f_acta);
+            $oPersonaNotaCertificadoDB->setPreceptor($preceptor);
+            $oPersonaNotaCertificadoDB->setId_preceptor($id_preceptor);
+            $oPersonaNotaCertificadoDB->setEpoca($epoca);
+            $oPersonaNotaCertificadoDB->setId_activ($id_activ);
+            $oPersonaNotaCertificadoDB->setNota_num($nota_num);
+            $oPersonaNotaCertificadoDB->setNota_max($nota_max);
+            if ($oPersonaNotaCertificadoDB->DBGuardar() === false) {
+                throw new \RuntimeException(_("hay un error, no se ha guardado. Nota Certificado"));
+            }
+            $rta['certificado'] = $oPersonaNotaCertificadoDB;
+        }
+
+        return $rta;
     }
 
     public function getDatosRegionStgr($dele = '')
