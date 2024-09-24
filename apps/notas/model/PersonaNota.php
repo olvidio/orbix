@@ -24,18 +24,18 @@ class PersonaNota
     private int $id_schema;
     private int $id_nom;
     private int $id_nivel;
-    private int $id_asignatura;
-    private int $id_situacion;
-    private string $acta;
-    private DateTimeLocal $f_acta;
-    private string $detalle;
+    private ?int $id_asignatura;
+    private ?int $id_situacion;
+    private ?string $acta;
+    private ?DateTimeLocal $f_acta;
+    private ?string $detalle;
     private bool $preceptor;
-    private int $id_preceptor;
-    private int $epoca;
-    private int $id_activ;
-    private float $nota_num;
-    private int $nota_max;
-    private int $tipo_acta;
+    private ?int $id_preceptor;
+    private ?int $epoca;
+    private ?int $id_activ;
+    private ?float $nota_num;
+    private ?int $nota_max;
+    private ?int $tipo_acta;
 
     private bool $aprobada;
 
@@ -179,52 +179,52 @@ class PersonaNota
         $this->id_nivel = $id_nivel;
     }
 
-    public function getIdAsignatura(): int
+    public function getIdAsignatura(): ?int
     {
         return $this->id_asignatura;
     }
 
-    public function setIdAsignatura(int $id_asignatura): void
+    public function setIdAsignatura(?int $id_asignatura): void
     {
         $this->id_asignatura = $id_asignatura;
     }
 
-    public function getIdSituacion(): int
+    public function getIdSituacion(): ?int
     {
         return $this->id_situacion;
     }
 
-    public function setIdSituacion(int $id_situacion): void
+    public function setIdSituacion(?int $id_situacion): void
     {
         $this->id_situacion = $id_situacion;
     }
 
-    public function getActa(): string
+    public function getActa(): ?string
     {
         return $this->acta;
     }
 
-    public function setActa(string $acta): void
+    public function setActa(?string $acta): void
     {
         $this->acta = $acta;
     }
 
-    public function getFActa(): DateTimeLocal
+    public function getFActa(): ?DateTimeLocal
     {
         return $this->f_acta;
     }
 
-    public function setFActa(DateTimeLocal $f_acta): void
+    public function setFActa(?DateTimeLocal $f_acta): void
     {
         $this->f_acta = $f_acta;
     }
 
-    public function getDetalle(): string
+    public function getDetalle(): ?string
     {
         return $this->detalle;
     }
 
-    public function setDetalle(string $detalle): void
+    public function setDetalle(?string $detalle): void
     {
         $this->detalle = $detalle;
     }
@@ -239,62 +239,62 @@ class PersonaNota
         $this->preceptor = $preceptor;
     }
 
-    public function getIdPreceptor(): int
+    public function getIdPreceptor(): ?int
     {
         return $this->id_preceptor;
     }
 
-    public function setIdPreceptor(int $id_preceptor): void
+    public function setIdPreceptor(?int $id_preceptor): void
     {
         $this->id_preceptor = $id_preceptor;
     }
 
-    public function getEpoca(): int
+    public function getEpoca(): ?int
     {
         return $this->epoca;
     }
 
-    public function setEpoca(int $epoca): void
+    public function setEpoca(?int $epoca): void
     {
         $this->epoca = $epoca;
     }
 
-    public function getIdActiv(): int
+    public function getIdActiv(): ?int
     {
         return $this->id_activ;
     }
 
-    public function setIdActiv(int $id_activ): void
+    public function setIdActiv(?int $id_activ): void
     {
         $this->id_activ = $id_activ;
     }
 
-    public function getNotaNum(): float
+    public function getNotaNum(): ?float
     {
         return $this->nota_num;
     }
 
-    public function setNotaNum(float $nota_num): void
+    public function setNotaNum(?float $nota_num): void
     {
         $this->nota_num = $nota_num;
     }
 
-    public function getNotaMax(): int
+    public function getNotaMax(): ?int
     {
         return $this->nota_max;
     }
 
-    public function setNotaMax(int $nota_max): void
+    public function setNotaMax(?int $nota_max): void
     {
         $this->nota_max = $nota_max;
     }
 
-    public function getTipoActa(): int
+    public function getTipoActa(): ?int
     {
         return $this->tipo_acta;
     }
 
-    public function setTipoActa(int $tipo_acta): void
+    public function setTipoActa(?int $tipo_acta): void
     {
         $this->tipo_acta = $tipo_acta;
     }
