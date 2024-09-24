@@ -264,9 +264,6 @@ if ($Qque === 3) { //paso las matrículas a notas definitivas (Grabar e imprimir
             }
         }
     }
-    //$go_to = ConfigGlobal::getWeb() . "/apps/notas/controller/acta_imprimir.php?acta=$acta|main";
-    $a_parametros = array('acta' => $acta);
-    $go_to = web\Hash::link(core\ConfigGlobal::getWeb() . '/apps/notas/controller/acta_imprimir.php?' . http_build_query($a_parametros));
 }
 
 if ($Qque === 1) { // Grabar las notas en la matricula
@@ -338,7 +335,6 @@ if (!empty($msg_err)) {
     $jsondata['mensaje'] = $msg_err;
 } else {
     $jsondata['success'] = TRUE;
-    $jsondata['goto'] = $go_to;
 }
 
 //Aunque el content-type no sea un problema en la mayoría de casos, es recomendable especificarlo
