@@ -1,8 +1,8 @@
 <?php
 namespace notas\model\entity;
 
-use function core\is_true;
 use core;
+use function core\is_true;
 
 /**
  * GestorPersonaNota
@@ -70,7 +70,8 @@ class GestorPersonaNotaDB extends core\ClaseGestor
         }
         foreach ($oDblSt as $aDades) {
             $a_pkey = array('id_nom' => $aDades['id_nom'],
-                'id_asignatura' => $aDades['id_asignatura']);
+                'id_nivel' => $aDades['id_nivel'],
+                'tipo_acta' => $aDades['tipo_acta']);
             $oPersonaNota = $this->chooseNewObject($a_pkey);
             $oPersonaNotaSet->add($oPersonaNota);
         }
@@ -127,7 +128,8 @@ class GestorPersonaNotaDB extends core\ClaseGestor
         }
         foreach ($oDblSt as $aDades) {
             $a_pkey = array('id_nom' => $aDades['id_nom'],
-                'id_nivel' => $aDades['id_nivel']);
+                'id_nivel' => $aDades['id_nivel'],
+                'tipo_acta' => $aDades['tipo_acta']);
             $oPersonaNota = $this->chooseNewObject($a_pkey);
             $oPersonaNota->setoDbl($oDbl);
             $oPersonaNotaSet->add($oPersonaNota);

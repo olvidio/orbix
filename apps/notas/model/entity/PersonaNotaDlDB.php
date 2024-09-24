@@ -23,6 +23,9 @@ class PersonaNotaDlDB extends PersonaNotaDB
                 if (($nom_id === 'id_nivel') && $val_id !== '') {
                     $this->iid_nivel = (int)$val_id;
                 }
+                if (($nom_id === 'tipo_acta') && $val_id !== '') {
+                    $this->itipo_acta = (int)$val_id;
+                }
             }
         }
         $this->setoDbl($oDbl);

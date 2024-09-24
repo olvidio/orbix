@@ -6,7 +6,6 @@ use core\ClasePropiedades;
 use core\ConverterDate;
 use core\DatosCampo;
 use core\Set;
-use PDO;
 use web\DateTimeLocal;
 use web\NullDateTimeLocal;
 use function core\is_true;
@@ -206,6 +205,9 @@ class PersonaNotaDB extends ClasePropiedades
                 if (($nom_id === 'id_nivel') && $val_id !== '') {
                     $this->iid_nivel = (int)$val_id;
                 }
+                if (($nom_id === 'tipo_acta') && $val_id !== '') {
+                    $this->itipo_acta = (int)$val_id;
+                }
             }
         }
         $this->setoDbl($oDbl);
@@ -224,12 +226,12 @@ class PersonaNotaDB extends ClasePropiedades
      * Antiguo trigger:
      *
      * SELECT schema into n FROM public.db_idschema WHERE id=NEW.id_schema;               +
-     CASE n                                                                             +
-     WHEN 'restov', 'restof' THEN                                                       +
-       EXECUTE 'INSERT INTO ' || quote_ident(n) || '.e_notas_ex SELECT $1.* ' USING NEW;+
-     ELSE                                                                               +
-       EXECUTE 'INSERT INTO ' || quote_ident(n) || '.e_notas_dl SELECT $1.* ' USING NEW;+
-     END CASE;
+     * CASE n                                                                             +
+     * WHEN 'restov', 'restof' THEN                                                       +
+     * EXECUTE 'INSERT INTO ' || quote_ident(n) || '.e_notas_ex SELECT $1.* ' USING NEW;+
+     * ELSE                                                                               +
+     * EXECUTE 'INSERT INTO ' || quote_ident(n) || '.e_notas_dl SELECT $1.* ' USING NEW;+
+     * END CASE;
      *
      */
     public function DBGuardar()
@@ -279,7 +281,8 @@ class PersonaNotaDB extends ClasePropiedades
 					nota_num                 = :nota_num,
 					nota_max                 = :nota_max,
 					tipo_acta                = :tipo_acta";
-            if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_nom=$this->iid_nom AND id_nivel=$this->iid_nivel ")) === false) {
+            $sql_prepare = "UPDATE $nom_tabla SET $update WHERE id_nom=$this->iid_nom AND id_nivel=$this->iid_nivel  AND tipo_acta=$this->itipo_acta ";
+            if (($oDblSt = $oDbl->prepare($sql_prepare)) === false) {
                 $sClauError = 'PersonaNota.update.prepare';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
                 return false;
@@ -343,8 +346,8 @@ class PersonaNotaDB extends ClasePropiedades
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        if (isset($this->iid_nom) && isset($this->iid_nivel)) {
-            if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_nom=$this->iid_nom AND id_nivel=$this->iid_nivel ")) === false) {
+        if (isset($this->iid_nom) && isset($this->iid_nivel) && isset($this->itipo_acta)) {
+            if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_nom=$this->iid_nom AND id_nivel=$this->iid_nivel AND tipo_acta=$this->itipo_acta ")) === false) {
                 $sClauError = 'PersonaNota.carregar';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
                 return false;
@@ -381,7 +384,7 @@ class PersonaNotaDB extends ClasePropiedades
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        if (($oDblSt = $oDbl->exec("DELETE FROM $nom_tabla WHERE id_nom=$this->iid_nom AND id_nivel='$this->iid_nivel'")) === false) {
+        if (($oDblSt = $oDbl->exec("DELETE FROM $nom_tabla WHERE id_nom=$this->iid_nom AND id_nivel=$this->iid_nivel AND tipo_acta=$this->itipo_acta")) === false) {
             $sClauError = 'PersonaNota.eliminar';
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
             return false;
@@ -495,7 +498,7 @@ class PersonaNotaDB extends ClasePropiedades
     function getPrimary_key()
     {
         if (!isset($this->aPrimary_key)) {
-            $this->aPrimary_key = array('id_nom' => $this->iid_nom, 'id_nivel' => $this->iid_nivel);
+            $this->aPrimary_key = array('id_nom' => $this->iid_nom, 'id_nivel' => $this->iid_nivel, 'tipo_acta' => $this->itipo_acta);
         }
         return $this->aPrimary_key;
     }
@@ -512,6 +515,7 @@ class PersonaNotaDB extends ClasePropiedades
             foreach ($a_id as $nom_id => $val_id) {
                 if (($nom_id === 'id_nom') && $val_id !== '') $this->iid_nom = (int)$val_id;
                 if (($nom_id === 'id_nivel') && $val_id !== '') $this->iid_nivel = (int)$val_id;
+                if (($nom_id === 'tipo_acta') && $val_id !== '') $this->itipo_acta = (int)$val_id;
             }
         }
     }
