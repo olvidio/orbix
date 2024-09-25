@@ -23,8 +23,6 @@ require_once("apps/core/global_object.inc");
 
 $Qid_zona = (integer)filter_input(INPUT_POST, 'id_zona');
 
-echo 'id_zona: '.$Qid_zona;
-
 $oGestorZona = new GestorZona();
 $oDesplZonas = $oGestorZona->getListaZonas();
 $oDesplZonas->setNombre('id_zona');

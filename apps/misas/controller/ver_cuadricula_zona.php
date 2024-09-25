@@ -35,7 +35,6 @@ $Qempiezamin = (string)filter_input(INPUT_POST, 'empiezamin');
 $Qempiezamax = (string)filter_input(INPUT_POST, 'empiezamax');
 $Qseleccion = (integer)filter_input(INPUT_POST, 'seleccion');
 
-echo 'periodo: '.$Qperiodo.'<br>';
 switch ($Qperiodo) {
     case "esta_semana":
         $dia_week = date('N');
@@ -102,10 +101,8 @@ switch ($Qperiodo) {
         $Qempiezamin_rep=str_replace('/','-',$Qempiezamin);
         $Qempiezamax_rep=str_replace('/','-',$Qempiezamax);
 }
-echo 'Qemin: '.$Qempiezamin_rep.'<br>';
-echo 'Qemax: '.$Qempiezamax_rep.'<br>';
 
-if(isset($Qorden) && ($Qorden!==null))
+if(!isset($Qorden) || ($Qorden===null))
     $Qorden='desc_enc';
 
 $a_dias_semana_breve=[1=>'L', 2=>'M', 3=>'X', 4=>'J', 5=>'V', 6=>'S', 7=>'D'];
@@ -237,9 +234,6 @@ switch (trim($QTipoPlantilla)) {
         }
         break;
     case EncargoDia::PLAN_DE_MISAS:
-        echo 'Plan de Misas<br>';
-//        if ((isset($oInicio)) && (isset($oFin)))
-//        {
         $oInicio = new DateTimeLocal($Qempiezamin_rep);
         $oFin = new DateTimeLocal($Qempiezamax_rep);
         $interval = new DateInterval('P1D');
@@ -263,7 +257,6 @@ switch (trim($QTipoPlantilla)) {
             $columns_sacd .= ",
             {'id' : '".$num_dia."', 'name' : '".$nom_dia."', 'field' : '".$num_dia."', 'width' : 80, 'formatter': statusFormatter}";
         }
-//        }
         break;
 } 
 
