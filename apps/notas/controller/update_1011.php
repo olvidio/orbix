@@ -88,7 +88,7 @@ switch ($Qmod) {
     case 'editar':  //------------ EDITAR --------
         // se ataca a la tabla padre 'e_notas', no hace falta saber en que tabla está. Ya lo sabe él
         $id_asignatura_real = (integer)filter_input(INPUT_POST, 'id_asignatura_real');
-        $msg_err = $oEditarPersonaNota->editar($id_asignatura_real);
+        $oEditarPersonaNota->editar($id_asignatura_real);
         break;
 }
 
