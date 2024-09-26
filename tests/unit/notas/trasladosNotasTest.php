@@ -82,22 +82,24 @@ class trasladosNotasTest extends myTest
 
         // 3.- Comprobar:
 
-        // 3.1.- No existen en e_notas_otra_region. de cr A
-        // 3.2.- No existen en e_notas_dl de dlB
-        // 3.3.- No existen en e_notas_otra_region de la region de dlB
-        // 3.4.- Existen en e_notas_dl. de crA
+        // 3.1.- No existen en e_notas_otra_region. de crB
+        // 3.2.- No existen en e_notas_dl de crB
+        // 3.3.- No existen en e_notas_otra_region de la region de dlA
+        // 3.4.- Existen en e_notas_dl. de dlA
 
-        // 3.1.- No existen en e_notas_otra_region. de cr A
+        // 3.1.- No existen en e_notas_otra_region. de cr B
+        $oDBdst = $this->setConexion($esquemaB.'v');
         foreach ($this->cPersonaNotas as $oPersonaNotaA) {
             $id_asignatura = $oPersonaNotaA->getIdAsignatura();
-            $gesPersonaNota = new GestorPersonaNotaOtraRegionStgrDB($esquema_region_stgrA);
+            $gesPersonaNota = new GestorPersonaNotaOtraRegionStgrDB($esquema_region_stgrB);
+            $gesPersonaNota->setoDbl($oDBdst);
             $cPersonaNotasB = $gesPersonaNota->getPersonaNotas(['id_nom' => $this->id_nom, 'id_asignatura' => $id_asignatura]);
             $oPersonaNotaB = $cPersonaNotasB[0] ?? '';
 
             $this->assertEquals('', $oPersonaNotaB);
         }
 
-        // 3.2.- No existen en e_notas_dl de dlB
+        // 3.2.- No existen en e_notas_dl de crB
         $oDBdst = $this->setConexion($esquemaB.'v');
         foreach ($this->cPersonaNotas as $oPersonaNotaA) {
             $id_asignatura = $oPersonaNotaA->getIdAsignatura();
@@ -109,11 +111,11 @@ class trasladosNotasTest extends myTest
             $this->assertEquals('', $oPersonaNotaB);
         }
 
-        // 3.3.- No existen en e_notas_otra_region de la region de dlB
-        $oDBdst = $this->setConexion($esquema_region_stgrB);
+        // 3.3.- No existen en e_notas_otra_region de la region de dlA
+        $oDBdst = $this->setConexion($esquema_region_stgrA);
         foreach ($this->cPersonaNotas as $oPersonaNotaA) {
             $id_asignatura = $oPersonaNotaA->getIdAsignatura();
-            $gesPersonaNota = new GestorPersonaNotaOtraRegionStgrDB($esquema_region_stgrB);
+            $gesPersonaNota = new GestorPersonaNotaOtraRegionStgrDB($esquema_region_stgrA);
             $gesPersonaNota->setoDbl($oDBdst);
             $cPersonaNotasB = $gesPersonaNota->getPersonaNotas(['id_nom' => $this->id_nom, 'id_asignatura' => $id_asignatura]);
             $oPersonaNotaB = $cPersonaNotasB[0] ?? '';
@@ -121,7 +123,7 @@ class trasladosNotasTest extends myTest
             $this->assertEquals('', $oPersonaNotaB);
         }
 
-        // 3.4.- Existen en e_notas_dl. de crA
+        // 3.4.- Existen en e_notas_dl. de dlA
         $oDBdst = $this->setConexion($esquemaA.'v');
         foreach ($this->cPersonaNotas as $oPersonaNotaA) {
             $id_asignatura = $oPersonaNotaA->getIdAsignatura();
