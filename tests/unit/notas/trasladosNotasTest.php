@@ -49,8 +49,104 @@ class trasladosNotasTest extends myTest
     /////////// Traslado de vuelta a notas de una región a una dl de H. ///////////
     ///
     /**
+     * Al revés que el siguiente
+     *
      * 1.- traslado de dlA a crB, sin borrar
      * 2.- traslado de crB a dlA
+     * 3.- comprobar:
+     *      - las notas de dlA.e_notas_dl que son certificados y están en la tabla crA.e_notas_otra_region_stgr
+     *          se ponen en dlA.e_notas_dl y se quitan de crA.e_notas_otra_region_stgr.
+     *
+     * @return void
+     */
+    public function test_traslado_de_vuelta_de_dlA_a_crB(): void
+    {
+        $esquemaA = 'H-dlb';
+        $esquemaB = 'GalBel-crGalBel';
+        $dlA = 'dlb';
+        $dlB = 'crGalBel';
+
+        // preparara entorno con traslado de dlB a crA
+        $this->generarNotas($esquemaA);
+        $this->guardar_notas($esquemaA);
+        $this->trasladar_notas($esquemaA, $esquemaB);
+
+        // trasladar del crA a dlB
+        $this->trasladar_notas($esquemaB, $esquemaA);
+
+        $gesDelegacion = new GestorDelegacion();
+        $a_mi_region_stgr = $gesDelegacion->mi_region_stgr($dlA);
+        $esquema_region_stgrA = $a_mi_region_stgr['esquema_region_stgr'];
+        $a_mi_region_stgr = $gesDelegacion->mi_region_stgr($dlB);
+        $esquema_region_stgrB = $a_mi_region_stgr['esquema_region_stgr'];
+
+        // 3.- Comprobar:
+
+        // 3.1.- No existen en e_notas_otra_region. de cr A
+        // 3.2.- No existen en e_notas_dl de dlB
+        // 3.3.- No existen en e_notas_otra_region de la region de dlB
+        // 3.4.- Existen en e_notas_dl. de crA
+
+        // 3.1.- No existen en e_notas_otra_region. de cr A
+        foreach ($this->cPersonaNotas as $oPersonaNotaA) {
+            $id_asignatura = $oPersonaNotaA->getIdAsignatura();
+            $gesPersonaNota = new GestorPersonaNotaOtraRegionStgrDB($esquema_region_stgrA);
+            $cPersonaNotasB = $gesPersonaNota->getPersonaNotas(['id_nom' => $this->id_nom, 'id_asignatura' => $id_asignatura]);
+            $oPersonaNotaB = $cPersonaNotasB[0] ?? '';
+
+            $this->assertEquals('', $oPersonaNotaB);
+        }
+
+        // 3.2.- No existen en e_notas_dl de dlB
+        $oDBdst = $this->setConexion($esquemaB.'v');
+        foreach ($this->cPersonaNotas as $oPersonaNotaA) {
+            $id_asignatura = $oPersonaNotaA->getIdAsignatura();
+            $gesPersonaNota = new GestorPersonaNotaDlDB();
+            $gesPersonaNota->setoDbl($oDBdst);
+            $cPersonaNotasB = $gesPersonaNota->getPersonaNotas(['id_nom' => $this->id_nom, 'id_asignatura' => $id_asignatura]);
+            $oPersonaNotaB = $cPersonaNotasB[0] ?? '';
+
+            $this->assertEquals('', $oPersonaNotaB);
+        }
+
+        // 3.3.- No existen en e_notas_otra_region de la region de dlB
+        $oDBdst = $this->setConexion($esquema_region_stgrB);
+        foreach ($this->cPersonaNotas as $oPersonaNotaA) {
+            $id_asignatura = $oPersonaNotaA->getIdAsignatura();
+            $gesPersonaNota = new GestorPersonaNotaOtraRegionStgrDB($esquema_region_stgrB);
+            $gesPersonaNota->setoDbl($oDBdst);
+            $cPersonaNotasB = $gesPersonaNota->getPersonaNotas(['id_nom' => $this->id_nom, 'id_asignatura' => $id_asignatura]);
+            $oPersonaNotaB = $cPersonaNotasB[0] ?? '';
+
+            $this->assertEquals('', $oPersonaNotaB);
+        }
+
+        // 3.4.- Existen en e_notas_dl. de crA
+        $oDBdst = $this->setConexion($esquemaA.'v');
+        foreach ($this->cPersonaNotas as $oPersonaNotaA) {
+            $id_asignatura = $oPersonaNotaA->getIdAsignatura();
+            $gesPersonaNota = new GestorPersonaNotaDlDB();
+            $gesPersonaNota->setoDbl($oDBdst);
+            $cPersonaNotasB = $gesPersonaNota->getPersonaNotas(['id_nom' => $this->id_nom, 'id_asignatura' => $id_asignatura]);
+            $oPersonaNotaB = $cPersonaNotasB[0];
+
+            // Son dos clases distintas, no se pueden comparar. Miramos las propiedades
+            //$this->assertEquals($oPersonaNotaA, $oPersonaNotaB);
+            $this->assertEquals($oPersonaNotaA->getIdNom(), $oPersonaNotaB->getId_nom());
+            $this->assertEquals($oPersonaNotaA->getIdNivel(), $oPersonaNotaB->getId_nivel());
+            $this->assertEquals($oPersonaNotaA->getIdAsignatura(), $oPersonaNotaB->getId_asignatura());
+            $this->assertEquals($oPersonaNotaA->getNotaNum(), $oPersonaNotaB->getNota_num());
+            $this->assertEquals($oPersonaNotaA->getIdSituacion(), $oPersonaNotaB->getId_situacion());
+
+            // 4.- borrar las pruebas
+            $oPersonaNotaB->DBEliminar();
+        }
+    }
+
+    ///
+    /**
+     * 1.- traslado de dlB a crA, sin borrar
+     * 2.- traslado de crA a dlB
      * 3.- comprobar:
      *      - las notas de crB.e_notas_dl que son certificados y están en la tabla crA.e_notas_otra_region_stgr
      *          se ponen en dlA.e_notas_dl y se quitan de crA.e_notas_otra_region_stgr.

@@ -641,6 +641,10 @@ class TrasladoDl
         $ges->setoDbl($oDBorg);
         $colection = $ges->getPersonaNotas(array('id_nom' => $this->iid_nom));
         if (!empty($colection)) {
+            $gesDelegacion = new GestorDelegacion();
+            $new_dl = GestorDelegacion::getDlFromSchema($this->snew_esquema);
+            $a_mi_region_stgr = $gesDelegacion->mi_region_stgr($new_dl);
+            $esquema_region_stgr = $a_mi_region_stgr['esquema_region_stgr'];
             // Para saber el nuevo id_schema de la dl destino:
             if (($qRs = $oDBorg->query("SELECT id FROM public.db_idschema WHERE schema = '$this->snew_esquema'")) === false) {
                 $sClauError = 'Controller.Traslados';
@@ -669,7 +673,7 @@ class TrasladoDl
                 $oEditarPersonaNota = new EditarPersonaNota($oPersonaNota);
                 $datosRegionStgr = $oEditarPersonaNota->getDatosRegionStgr();
                 $a_ObjetosPersonaNota = $oEditarPersonaNota->getObjetosPersonaNota($datosRegionStgr, $id_schema_persona);
-                $oEditarPersonaNota->crear_nueva_personaNota_para_cada_objeto_del_array($a_ObjetosPersonaNota, $this->snew_esquema);
+                $oEditarPersonaNota->crear_nueva_personaNota_para_cada_objeto_del_array($a_ObjetosPersonaNota, $esquema_region_stgr);
 
                 //borrar la origen:
                 $oPersonaNotaDB->DBEliminar();

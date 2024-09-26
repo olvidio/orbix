@@ -59,10 +59,10 @@ class EditarPersonaNota
     /**
      * Se separa de la función 'nuevo' para que los test puedan manipular los objetos
      * @param array $a_ObjetosPersonaNota ['nota' => PersonaNotaDB, 'certificado' => $oPersonaNotaCertificadoDB]
-     * @param string $new_esquema únicamente para los traslados
+     * @param string $esquema_region_stgr únicamente para los traslados.
      * @return array
      */
-    public function crear_nueva_personaNota_para_cada_objeto_del_array(array $a_ObjetosPersonaNota, string $new_esquema = ''): array
+    public function crear_nueva_personaNota_para_cada_objeto_del_array(array $a_ObjetosPersonaNota, string $esquema_region_stgr = ''): array
     {
         $rta = [];
         $guardar = TRUE;
@@ -84,7 +84,7 @@ class EditarPersonaNota
         $nota_max = $this->personaNota->getNotaMax();
 
         // En el caso de traslados, si el tipo de acta es un certificado,
-        if ($tipo_acta === PersonaNota::FORMATO_CERTIFICADO && !empty($new_esquema)) {
+        if ($tipo_acta === PersonaNota::FORMATO_CERTIFICADO && !empty($esquema_region_stgr)) {
             // puede ser que haga referencia a e_notas_dl o a e_notas_otra_region_stgr
             if ($oPersonaNotaDB instanceof PersonaNotaOtraRegionStgrDB) {
                 // Si es certificado debería de ser de otra región, y por tanto no guardo nada
@@ -135,8 +135,8 @@ class EditarPersonaNota
         if (array_key_exists('certificado', $a_ObjetosPersonaNota)) {
             // en el caso de traslados, comprobar que no se tenga la nota real
             // buscarla en OtraRegionStgr (sobreescribo todos los valores por los originales)
-            if ($tipo_acta === PersonaNotaDB::FORMATO_CERTIFICADO && $oPersonaNotaDB instanceof PersonaNotaDB && !empty($new_esquema)) {
-                $gesPersonaNotaOtraRegionDB = new GestorPersonaNotaOtraRegionStgrDB($new_esquema);
+            if ($tipo_acta === PersonaNotaDB::FORMATO_CERTIFICADO && $oPersonaNotaDB instanceof PersonaNotaDB && !empty($esquema_region_stgr)) {
+                $gesPersonaNotaOtraRegionDB = new GestorPersonaNotaOtraRegionStgrDB($esquema_region_stgr);
                 $cPersonaNotasOtraRegion = $gesPersonaNotaOtraRegionDB->getPersonaNotas(['id_nom' => $id_nom, 'id_asignatura' => $id_asignatura]);
                 if (!empty($cPersonaNotasOtraRegion)) {
                     $personaNotaOriginal = $cPersonaNotasOtraRegion[0];
