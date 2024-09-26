@@ -17,7 +17,6 @@ use ubis\model\entity\GestorDelegacion;
 class trasladosNotasTest extends myTest
 {
     private string $session_org;
-    private int $id_schema_rog;
 
     private string $snew_esquema;
     private string $sreg_dl_org;
@@ -43,7 +42,6 @@ class trasladosNotasTest extends myTest
         // Lo usa el setConnection
         putenv("UBICACION=sv");
         $this->session_org = $_SESSION['session_auth']['esquema'];
-        $this->id_schema_rog = $_SESSION['session_auth']['mi_id_schema'] = 1027;
     }
 
     /////////// Traslado de vuelta a notas de una región a una dl de H. ///////////
@@ -54,8 +52,6 @@ class trasladosNotasTest extends myTest
      * 1.- traslado de dlA a crB, sin borrar
      * 2.- traslado de crB a dlA
      * 3.- comprobar:
-     *      - las notas de dlA.e_notas_dl que son certificados y están en la tabla crA.e_notas_otra_region_stgr
-     *          se ponen en dlA.e_notas_dl y se quitan de crA.e_notas_otra_region_stgr.
      *
      * @return void
      */
@@ -636,11 +632,6 @@ class trasladosNotasTest extends myTest
         $reg_dl_org = $esquemaA . $sfsv_txt;
         $Qnew_dl = $esquemaB . $sfsv_txt;
 
-        /*
-        $this->sreg_dl_org = $reg_dl_org;
-        $this->sreg_dl_dst = $Qnew_dl;
-        */
-
         // Es necesario para que las funciones que detecten  "mi_schema" lo hagan correctamente
         $_SESSION['session_auth']['esquema'] = $reg_dl_org;
         $_SESSION['session_auth']['mi_id_schema'] = $id_esquemaA;
@@ -689,9 +680,7 @@ class trasladosNotasTest extends myTest
         $config = $oConfigDB->getEsquema($esquema);
         $oConexion = new DBConnection($config);
 
-        $oDB = $oConexion->getPDO();
-        //$this->verConexion($oDB);
-        return $oDB;
+        return $oConexion->getPDO();
     }
 
     public function generarNotas(string $esquema): void
@@ -719,13 +708,6 @@ class trasladosNotasTest extends myTest
         $this->cPersonaNotas = $NotasFactory->create($this->id_nom,$dl);
     }
 
-    private function conexionOrg($exterior = FALSE): \PDO
-    {
-
-        $this->snew_esquema = $this->sreg_dl_org;
-        return $this->setConexion($this->snew_esquema, $exterior);
-    }
-
     private function conexionDst($exterior = FALSE): \PDO
     {
         $this->snew_esquema = $this->sreg_dl_dst;
@@ -738,7 +720,6 @@ class trasladosNotasTest extends myTest
     protected function tearDown(): void
     {
         $_SESSION['session_auth']['esquema'] = $this->session_org;
-        $_SESSION['session_auth']['mi_id_schema'] = $this->id_schema_rog;
         parent::tearDown();
     }
 }
