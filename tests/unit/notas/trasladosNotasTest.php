@@ -12,6 +12,7 @@ use notas\model\entity\GestorPersonaNotaOtraRegionStgrDB;
 use notas\model\entity\Nota;
 use personas\model\entity\TrasladoDl;
 use Tests\myTest;
+use ubis\model\entity\GestorDelegacion;
 
 class trasladosNotasTest extends myTest
 {
@@ -28,12 +29,7 @@ class trasladosNotasTest extends myTest
 
     public function __construct(string $name)
     {
-        //  Generar notas para id_nom (debe existir, para que no dé error)!!!
-        $this->id_nom = 100111832;
-        $this->id_schema_persona = 1001;
-        $NotasFactory = new NotasFactory();
-        $NotasFactory->setCount(10);
-        $this->cPersonaNotas = $NotasFactory->create($this->id_nom);
+        $this->generarNotas('H-dlb');
 
         parent::__construct($name);
     }
@@ -50,6 +46,103 @@ class trasladosNotasTest extends myTest
         $this->id_schema_rog = $_SESSION['session_auth']['mi_id_schema'] = 1027;
     }
 
+    /////////// Traslado de vuelta a notas de una región a una dl de H. ///////////
+    ///
+    /**
+     * 1.- traslado de dlA a crB, sin borrar
+     * 2.- traslado de crB a dlA
+     * 3.- comprobar:
+     *      - las notas de crB.e_notas_dl que son certificados y están en la tabla crA.e_notas_otra_region_stgr
+     *          se ponen en dlA.e_notas_dl y se quitan de crA.e_notas_otra_region_stgr.
+     *
+     * @return void
+     */
+    public function test_traslado_de_vuelta_de_crA_a_dlB(): void
+    {
+        $esquemaA = 'GalBel-crGalBel';
+        $esquemaB = 'H-dlb';
+        $dlA = 'crGalBel';
+        $dlB = 'dlb';
+
+        // preparara entorno con traslado de dlB a crA
+        $this->generarNotas($esquemaA);
+        $this->guardar_notas($esquemaA);
+        $this->trasladar_notas($esquemaA, $esquemaB);
+
+        // trasladar del crA a dlB
+        $this->trasladar_notas($esquemaB, $esquemaA);
+
+        $gesDelegacion = new GestorDelegacion();
+        $a_mi_region_stgr = $gesDelegacion->mi_region_stgr($dlA);
+        $esquema_region_stgrA = $a_mi_region_stgr['esquema_region_stgr'];
+        $a_mi_region_stgr = $gesDelegacion->mi_region_stgr($dlB);
+        $esquema_region_stgrB = $a_mi_region_stgr['esquema_region_stgr'];
+
+        // 3.- Comprobar:
+
+        // 3.1.- No existen en e_notas_otra_region. de cr A
+        // 3.2.- No existen en e_notas_dl de dlB
+        // 3.3.- No existen en e_notas_otra_region de la region de dlB
+        // 3.4.- Existen en e_notas_dl. de crA
+
+        // 3.1.- No existen en e_notas_otra_region. de cr A
+        foreach ($this->cPersonaNotas as $oPersonaNotaA) {
+            $id_asignatura = $oPersonaNotaA->getIdAsignatura();
+            $gesPersonaNota = new GestorPersonaNotaOtraRegionStgrDB($esquema_region_stgrA);
+            $cPersonaNotasB = $gesPersonaNota->getPersonaNotas(['id_nom' => $this->id_nom, 'id_asignatura' => $id_asignatura]);
+            $oPersonaNotaB = $cPersonaNotasB[0] ?? '';
+
+            $this->assertEquals('', $oPersonaNotaB);
+        }
+
+        // 3.2.- No existen en e_notas_dl de dlB
+        $oDBdst = $this->setConexion($esquemaB.'v');
+        foreach ($this->cPersonaNotas as $oPersonaNotaA) {
+            $id_asignatura = $oPersonaNotaA->getIdAsignatura();
+            $gesPersonaNota = new GestorPersonaNotaDlDB();
+            $gesPersonaNota->setoDbl($oDBdst);
+            $cPersonaNotasB = $gesPersonaNota->getPersonaNotas(['id_nom' => $this->id_nom, 'id_asignatura' => $id_asignatura]);
+            $oPersonaNotaB = $cPersonaNotasB[0] ?? '';
+
+            $this->assertEquals('', $oPersonaNotaB);
+        }
+
+        // 3.3.- No existen en e_notas_otra_region de la region de dlB
+        $oDBdst = $this->setConexion($esquema_region_stgrB);
+        foreach ($this->cPersonaNotas as $oPersonaNotaA) {
+            $id_asignatura = $oPersonaNotaA->getIdAsignatura();
+            $gesPersonaNota = new GestorPersonaNotaOtraRegionStgrDB($esquema_region_stgrB);
+            $gesPersonaNota->setoDbl($oDBdst);
+            $cPersonaNotasB = $gesPersonaNota->getPersonaNotas(['id_nom' => $this->id_nom, 'id_asignatura' => $id_asignatura]);
+            $oPersonaNotaB = $cPersonaNotasB[0] ?? '';
+
+            $this->assertEquals('', $oPersonaNotaB);
+        }
+
+        // 3.4.- Existen en e_notas_dl. de crA
+        $oDBdst = $this->setConexion($esquemaA.'v');
+        foreach ($this->cPersonaNotas as $oPersonaNotaA) {
+            $id_asignatura = $oPersonaNotaA->getIdAsignatura();
+            $gesPersonaNota = new GestorPersonaNotaDlDB();
+            $gesPersonaNota->setoDbl($oDBdst);
+            $cPersonaNotasB = $gesPersonaNota->getPersonaNotas(['id_nom' => $this->id_nom, 'id_asignatura' => $id_asignatura]);
+            $oPersonaNotaB = $cPersonaNotasB[0];
+
+            // Son dos clases distintas, no se pueden comparar. Miramos las propiedades
+            //$this->assertEquals($oPersonaNotaA, $oPersonaNotaB);
+            $this->assertEquals($oPersonaNotaA->getIdNom(), $oPersonaNotaB->getId_nom());
+            $this->assertEquals($oPersonaNotaA->getIdNivel(), $oPersonaNotaB->getId_nivel());
+            $this->assertEquals($oPersonaNotaA->getIdAsignatura(), $oPersonaNotaB->getId_asignatura());
+            $this->assertEquals($oPersonaNotaA->getNotaNum(), $oPersonaNotaB->getNota_num());
+            $this->assertEquals($oPersonaNotaA->getIdSituacion(), $oPersonaNotaB->getId_situacion());
+
+            // 4.- borrar las pruebas
+            $oPersonaNotaB->DBEliminar();
+        }
+    }
+
+
+
     /////////// Traslado de notas de una región a una dl de H. ///////////
     ///
     /**
@@ -63,38 +156,19 @@ class trasladosNotasTest extends myTest
      */
     public function test_traslado_de_crA_a_dlB(): void
     {
-        $_SESSION['session_auth']['esquema'] = 'M-crMv';
-        $_SESSION['session_auth']['mi_id_schema'] = 1027;
-        $this->id_schema_persona = 1027;
-
-        $dlA = 'crM'; // Doy por supuesto que estoy conectado como dlb.
+        $esquemaA = 'GalBel-crGalBel';
+        $esquemaB = 'H-dlb';
+        $dlA = 'crGalBel';
         $dlB = 'dlb';
 
-        $sfsv_txt = (ConfigGlobal::mi_sfsv() === 1) ? 'v' : 'f';
+        // preparara entorno con traslado de dlB a crA
+        $this->generarNotas($esquemaA);
+        $this->guardar_notas($esquemaA);
+        $this->trasladar_notas($esquemaA, $esquemaB);
 
-        $reg_dl_org = 'M-' . $dlA . $sfsv_txt;
-        $Qnew_dl = 'H-' . $dlB . $sfsv_txt;
-
-        $this->sreg_dl_org = $reg_dl_org;
-        $this->sreg_dl_dst = $Qnew_dl;
-
-        // 1.- guardar notas del dlA
-        foreach ($this->cPersonaNotas as $oPersonaNota) {
-            $oEditarPersonaNota = new EditarPersonaNota($oPersonaNota);
-            $datosRegionStgr = $oEditarPersonaNota->getDatosRegionStgr();
-            $esquema_region_stgr = $datosRegionStgr['esquema_region_stgr'];
-            $a_ObjetosPersonaNota = $oEditarPersonaNota->getObjetosPersonaNota($datosRegionStgr, $this->id_schema_persona);
-            $oEditarPersonaNota->crear_nueva_personaNota_para_cada_objeto_del_array($a_ObjetosPersonaNota);
-        }
-
-        // 2.- trasladar
-        $oTrasladoDl = new TrasladoDl();
-        $oTrasladoDl->setId_nom($this->id_nom);
-        $oTrasladoDl->setDl_persona($dlA);
-        $oTrasladoDl->setReg_dl_org($reg_dl_org);
-        $oTrasladoDl->setReg_dl_dst($Qnew_dl);
-
-        $oTrasladoDl->copiarNotas();
+        $gesDelegacion = new GestorDelegacion();
+        $a_mi_region_stgr = $gesDelegacion->mi_region_stgr($dlA);
+        $esquema_region_stgr = $a_mi_region_stgr['esquema_region_stgr'];
 
         // 3.- Comprobar:
 
@@ -118,7 +192,7 @@ class trasladosNotasTest extends myTest
         }
 
         // 3.2.- Existen en e_notas_dl region destino con 'falta certificado'
-        $oDBdst = $this->conexionDst();
+        $oDBdst = $this->setConexion($esquemaB.'v');
         foreach ($this->cPersonaNotas as $oPersonaNotaA) {
             $id_asignatura = $oPersonaNotaA->getIdAsignatura();
             $gesPersonaNota = new GestorPersonaNotaDlDB();
@@ -150,6 +224,7 @@ class trasladosNotasTest extends myTest
 
     }
     /////////// Traslado de notas de una región a otra región del stgr. ///////////
+
     /**
      * 1.- crear notas y guardar en crA
      * 2.- trasladar:
@@ -250,6 +325,7 @@ class trasladosNotasTest extends myTest
     }
 
     /////////// Traslado de notas de dl a otra región del stgr. ///////////
+
     /**
      * 1.- guardar notas en dlA
      * 2.- trasladar
@@ -425,6 +501,64 @@ class trasladosNotasTest extends myTest
         }
     }
 
+    ///////////////////////////////////////////////////////////////////////
+    private function guardar_notas($esquemaA) {
+        $gesDelegacion = new GestorDelegacion();
+        $dlA = GestorDelegacion::getDlFromSchema($esquemaA);
+        $a_mi_region_stgr = $gesDelegacion->mi_region_stgr($dlA);
+        $id_esquemaA = $a_mi_region_stgr['mi_id_schema'];
+
+        $sfsv_txt = (ConfigGlobal::mi_sfsv() === 1) ? 'v' : 'f';
+        $reg_dl_org = $esquemaA . $sfsv_txt;
+
+        $this->sreg_dl_org = $reg_dl_org;
+
+        $_SESSION['session_auth']['esquema'] = $reg_dl_org;
+        $_SESSION['session_auth']['mi_id_schema'] = $id_esquemaA;
+        $this->id_schema_persona = $id_esquemaA;
+
+        // 1.- guardar notas del dlA
+        foreach ($this->cPersonaNotas as $oPersonaNota) {
+            $oEditarPersonaNota = new EditarPersonaNota($oPersonaNota);
+            $datosRegionStgr = $oEditarPersonaNota->getDatosRegionStgr();
+            $a_ObjetosPersonaNota = $oEditarPersonaNota->getObjetosPersonaNota($datosRegionStgr, $this->id_schema_persona);
+            $oEditarPersonaNota->crear_nueva_personaNota_para_cada_objeto_del_array($a_ObjetosPersonaNota);
+        }
+    }
+
+    private function trasladar_notas($esquemaA, $esquemaB)
+    {
+
+        $gesDelegacion = new GestorDelegacion();
+        $dlA = GestorDelegacion::getDlFromSchema($esquemaA);
+        $a_mi_region_stgr = $gesDelegacion->mi_region_stgr($dlA);
+        $id_esquemaA = $a_mi_region_stgr['mi_id_schema'];
+
+        $sfsv_txt = (ConfigGlobal::mi_sfsv() === 1) ? 'v' : 'f';
+        $reg_dl_org = $esquemaA . $sfsv_txt;
+        $Qnew_dl = $esquemaB . $sfsv_txt;
+
+        /*
+        $this->sreg_dl_org = $reg_dl_org;
+        $this->sreg_dl_dst = $Qnew_dl;
+        */
+
+        // Es necesario para que las funciones que detecten  "mi_schema" lo hagan correctamente
+        $_SESSION['session_auth']['esquema'] = $reg_dl_org;
+        $_SESSION['session_auth']['mi_id_schema'] = $id_esquemaA;
+        $this->id_schema_persona = $id_esquemaA;
+
+        // 2.- trasladar
+        $oTrasladoDl = new TrasladoDl();
+        $oTrasladoDl->setId_nom($this->id_nom);
+        $oTrasladoDl->setDl_persona($dlA);
+        $oTrasladoDl->setReg_dl_org($reg_dl_org);
+        $oTrasladoDl->setReg_dl_dst($Qnew_dl);
+
+        $oTrasladoDl->copiarNotas();
+    }
+
+    ///
     ///////////// Conexiones DB. Copiado del TrasladoDl ////////////////////////
     private function setConexion($esquema, $exterior = FALSE): \PDO
     {
@@ -445,6 +579,8 @@ class trasladosNotasTest extends myTest
             // dlp?
             $oDBPropiedades = new DBPropiedades();
             $aEsquemas = $oDBPropiedades->array_posibles_esquemas();
+            // añadir el H-Hv
+            $aEsquemas['H-Hv'] = 'H-Hv';
 
             if (!in_array($esquema, $aEsquemas, true)) {
                 $esquema = 'restov';
@@ -458,6 +594,31 @@ class trasladosNotasTest extends myTest
         $oDB = $oConexion->getPDO();
         //$this->verConexion($oDB);
         return $oDB;
+    }
+
+    public function generarNotas(string $esquema): void
+    {
+        //  Generar notas para id_nom (debe existir, para que no dé error)!!!
+        switch ($esquema) {
+            case 'H-dlb':
+                $this->id_nom = 100111832;
+                $this->id_schema_persona = 1001;
+                break;
+            case 'M-crM':
+                $this->id_nom = 10271837;
+                $this->id_schema_persona = 1027;
+                break;
+            case 'GalBel-crGalBel':
+                $this->id_nom = 102912;
+                $this->id_schema_persona = 1029;
+                break;
+        }
+        $NotasFactory = new NotasFactory();
+        $NotasFactory->setCount(10);
+
+        $dl =  GestorDelegacion::getDlFromSchema($esquema);
+
+        $this->cPersonaNotas = $NotasFactory->create($this->id_nom,$dl);
     }
 
     private function conexionOrg($exterior = FALSE): \PDO

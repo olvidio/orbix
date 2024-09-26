@@ -439,12 +439,12 @@ class TrasladoDl
             $nom_activ = $oActividad->getNom_activ();
             $oAsignatura = new Asignatura($id_asignatura);
             $nombre_corto = $oAsignatura->getNombre_corto();
-            $msg .= empty($msg) ? '' : '<br>';
+            $msg .= empty($msg) ? '' : "\n";
             $msg .= sprintf(_("ca: %s, asignatura: %s"), $nom_activ, $nombre_corto);
         }
         //$this->restaurarConexionOrg($oDBorg);
         if (!empty($msg)) {
-            $error = _("tiene pendiente de poner las notas de:") . '<br>' . $msg;
+            $error = _("tiene pendiente de poner las notas de:") . "\n" . $msg;
         }
         if (empty($error)) {
             return true;
@@ -669,7 +669,7 @@ class TrasladoDl
                 $oEditarPersonaNota = new EditarPersonaNota($oPersonaNota);
                 $datosRegionStgr = $oEditarPersonaNota->getDatosRegionStgr();
                 $a_ObjetosPersonaNota = $oEditarPersonaNota->getObjetosPersonaNota($datosRegionStgr, $id_schema_persona);
-                $oEditarPersonaNota->crear_nueva_personaNota_para_cada_objeto_del_array($a_ObjetosPersonaNota);
+                $oEditarPersonaNota->crear_nueva_personaNota_para_cada_objeto_del_array($a_ObjetosPersonaNota, $this->snew_esquema);
 
                 //borrar la origen:
                 $oPersonaNotaDB->DBEliminar();

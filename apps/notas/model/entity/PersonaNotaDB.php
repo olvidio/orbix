@@ -726,7 +726,7 @@ class PersonaNotaDB extends ClasePropiedades
         if (!isset($this->iid_preceptor) && !$this->bLoaded) {
             $this->DBCarregar();
         }
-        return $this->iid_preceptor?? 0;
+        return $this->iid_preceptor;
     }
 
     /**
@@ -734,7 +734,7 @@ class PersonaNotaDB extends ClasePropiedades
      *
      * @param integer iid_preceptor='' optional
      */
-    function setId_preceptor($iid_preceptor = 0)
+    function setId_preceptor($iid_preceptor = null)
     {
         $this->iid_preceptor = $iid_preceptor;
     }

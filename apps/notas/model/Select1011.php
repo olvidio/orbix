@@ -100,17 +100,17 @@ class Select1011
                 $nom_activ = $oActividad->getNom_activ();
                 $oAsignatura = new asignaturas\Asignatura($id_asignatura);
                 $nombre_corto = $oAsignatura->getNombre_corto();
-                $msg .= empty($msg) ? '' : '<br>';
+                $msg .= empty($msg) ? '' : "\n";
                 $msg .= sprintf(_("ca: %s, asignatura: %s"), $nom_activ, $nombre_corto);
             }
             if (!empty($msg)) {
-                $msg = _("tiene pendiente de poner las notas de:") . '<br>' . $msg;
+                $msg = _("tiene pendiente de poner las notas de:") . "\n" . $msg;
             }
         }
 
 
-        $gesPersonaNotas = new notas\GestorPersonaNotaDB();
-        // Que si muestre el "fin bienio, fincuadrienio".
+        $gesPersonaNotas = new notas\GestorPersonaNotaDlDB();
+        // Que si muestre el "fin bienio, fin cuadrienio".
         //$cPersonaNotas = $gesPersonaNotas->getPersonaNotas(array('id_nom'=>  $this->id_pau,'id_asignatura'=>9000,'_ordre'=>'id_nivel'),array('id_asignatura'=>'<'));
         $cPersonaNotas = $gesPersonaNotas->getPersonaNotas(array('id_nom' => $this->id_pau, '_ordre' => 'id_nivel'), array('id_asignatura' => '<'));
 

@@ -122,7 +122,7 @@ if ($Qque === 3) { //paso las matrículas a notas definitivas (Grabar e imprimir
             $oActividadAsignatura = new ActividadAsignaturaDl(array('id_activ' => $Qid_activ, 'id_asignatura' => $Qid_asignatura));
             $id_preceptor = $oActividadAsignatura->getId_profesor();
         } else {
-            $id_preceptor = 0;
+            $id_preceptor = null;
         }
 
         //Si es una opcional miro el id nivel para cada uno

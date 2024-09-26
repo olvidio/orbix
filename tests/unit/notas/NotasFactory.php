@@ -10,13 +10,15 @@ use web\DateTimeLocal;
 class NotasFactory
 {
     private int $count = 1;
+    private string $dl;
 
     public function __construct()
     {
     }
 
-    public function create($id_nom)
+    public function create($id_nom,$dl)
     {
+        $this->dl = $dl;
         return $this->crear_PersonaNotas($id_nom);
     }
 
@@ -53,12 +55,12 @@ class NotasFactory
 
             $year = $oFActa->format('y');
             $num_acta = $faker->numberBetween(1, 150);
-            $acta = 'dlb ' . "$num_acta/$year";
+            $acta = $this->dl . ' ' . "$num_acta/$year";
 
             $id_situacion = 1;
             $tipo_acta = 1;
             $preceptor = $faker->boolean();
-            $id_preceptor = 0;
+            $id_preceptor = null;
             if ($preceptor) {
                 $id_preceptor = $id_nom + 111;
             }

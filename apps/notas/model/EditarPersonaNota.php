@@ -8,6 +8,7 @@ use core\DBConnection;
 use devel\model\entity\GestorDbSchema;
 use dossiers\model\entity\Dossier;
 use notas\model\entity\Acta;
+use notas\model\entity\GestorPersonaNotaOtraRegionStgrDB;
 use notas\model\entity\Nota;
 use notas\model\entity\PersonaNotaCertificadoDB;
 use notas\model\entity\PersonaNotaDB;
@@ -58,11 +59,13 @@ class EditarPersonaNota
     /**
      * Se separa de la función 'nuevo' para que los test puedan manipular los objetos
      * @param array $a_ObjetosPersonaNota ['nota' => PersonaNotaDB, 'certificado' => $oPersonaNotaCertificadoDB]
+     * @param string $new_esquema únicamente para los traslados
      * @return array
      */
-    public function crear_nueva_personaNota_para_cada_objeto_del_array(array $a_ObjetosPersonaNota): array
+    public function crear_nueva_personaNota_para_cada_objeto_del_array(array $a_ObjetosPersonaNota, string $new_esquema = ''): array
     {
         $rta = [];
+        $guardar = TRUE;
         $oPersonaNotaDB = $a_ObjetosPersonaNota['nota'];
 
         $id_nom = $this->personaNota->getIdNom();
@@ -80,6 +83,15 @@ class EditarPersonaNota
         $nota_num = $this->personaNota->getNotaNum();
         $nota_max = $this->personaNota->getNotaMax();
 
+        // En el caso de traslados, si el tipo de acta es un certificado,
+        if ($tipo_acta === PersonaNota::FORMATO_CERTIFICADO && !empty($new_esquema)) {
+            // puede ser que haga referencia a e_notas_dl o a e_notas_otra_region_stgr
+            if ($oPersonaNotaDB instanceof PersonaNotaOtraRegionStgrDB) {
+                // Si es certificado debería de ser de otra región, y por tanto no guardo nada
+                $guardar = FALSE;
+            }
+        }
+
         $oPersonaNotaDB->setId_nom($id_nom);
         $oPersonaNotaDB->setId_nivel($id_nivel);
         $oPersonaNotaDB->setId_asignatura($id_asignatura);
@@ -92,13 +104,7 @@ class EditarPersonaNota
                 $oPersonaNotaDB->setActa($acta);
             }
             if ($tipo_acta === PersonaNotaDB::FORMATO_ACTA) {
-                $oActa = new Acta();
-                $valor = trim($acta);
-                $reg_exp = "/^(\?|\w{1,6}\??)\s+([0-9]{0,3})\/([0-9]{2})\??$/";
-                if (!preg_match($reg_exp, $valor)) {
-                    // inventar acta.
-                    $valor = $oActa->inventarActa($valor, $f_acta);
-                }
+                $valor = Acta::inventarActa($acta, $f_acta);
                 $oPersonaNotaDB->setActa($valor);
             }
         }
@@ -109,7 +115,7 @@ class EditarPersonaNota
         $oPersonaNotaDB->setId_activ($id_activ);
         $oPersonaNotaDB->setNota_num($nota_num);
         $oPersonaNotaDB->setNota_max($nota_max);
-        if ($oPersonaNotaDB->DBGuardar() === false) {
+        if ($guardar && $oPersonaNotaDB->DBGuardar() === false) {
             $err = end($_SESSION['errores']);
             throw new \RuntimeException(sprintf(_("No se ha guardado la Nota: %s"), $err));
         }
@@ -127,17 +133,43 @@ class EditarPersonaNota
 
         // Pongo las notas en la dl de la persona, esperando al certificado
         if (array_key_exists('certificado', $a_ObjetosPersonaNota)) {
-            $new_detalle = empty($detalle) ? "$acta" : "$acta ($detalle)";
-            $oPersonaNotaCertificadoDB = $a_ObjetosPersonaNota['certificado'];
+            // en el caso de traslados, comprobar que no se tenga la nota real
+            // buscarla en OtraRegionStgr (sobreescribo todos los valores por los originales)
+            if ($tipo_acta === PersonaNotaDB::FORMATO_CERTIFICADO && $oPersonaNotaDB instanceof PersonaNotaDB && !empty($new_esquema)) {
+                $gesPersonaNotaOtraRegionDB = new GestorPersonaNotaOtraRegionStgrDB($new_esquema);
+                $cPersonaNotasOtraRegion = $gesPersonaNotaOtraRegionDB->getPersonaNotas(['id_nom' => $id_nom, 'id_asignatura' => $id_asignatura]);
+                if (!empty($cPersonaNotasOtraRegion)) {
+                    $personaNotaOriginal = $cPersonaNotasOtraRegion[0];
+                    $id_nivel = $personaNotaOriginal->getId_nivel();
+                    $id_asignatura = $personaNotaOriginal->getId_asignatura();
+                    $id_situacion = $personaNotaOriginal->getId_situacion();
+                    $acta = $personaNotaOriginal->getActa();
+                    $f_acta = $personaNotaOriginal->getF_acta();
+                    $tipo_acta = $personaNotaOriginal->getTipo_acta();
+                    $preceptor = $personaNotaOriginal->getPreceptor();
+                    $id_preceptor = $personaNotaOriginal->getId_preceptor();
+                    $detalle = $personaNotaOriginal->getDetalle();
+                    $epoca = $personaNotaOriginal->getEpoca();
+                    $id_activ = $personaNotaOriginal->getId_activ();
+                    $nota_num = $personaNotaOriginal->getNota_num();
+                    $nota_max = $personaNotaOriginal->getNota_max();
+                }
+            } else {
+                // valores que se cambian:
+                $id_situacion = Nota::FALTA_CERTIFICADO;
+                $detalle = empty($detalle) ? "$acta" : "$acta ($detalle)";
+                $acta = _("falta certificado");
+                $tipo_acta = PersonaNotaDB::FORMATO_CERTIFICADO;
+            }
 
+            $oPersonaNotaCertificadoDB = $a_ObjetosPersonaNota['certificado'];
             $oPersonaNotaCertificadoDB->setId_nom($id_nom);
             $oPersonaNotaCertificadoDB->setId_nivel($id_nivel);
             $oPersonaNotaCertificadoDB->setId_asignatura($id_asignatura);
-            $oPersonaNotaCertificadoDB->setId_situacion(Nota::FALTA_CERTIFICADO);
-            $oPersonaNotaCertificadoDB->setActa(_("falta certificado"));
-            $oPersonaNotaCertificadoDB->setDetalle($new_detalle);
-            $oPersonaNotaCertificadoDB->setTipo_acta(PersonaNotaDB::FORMATO_CERTIFICADO);
-
+            $oPersonaNotaCertificadoDB->setId_situacion($id_situacion);
+            $oPersonaNotaCertificadoDB->setActa($acta);
+            $oPersonaNotaCertificadoDB->setDetalle($detalle);
+            $oPersonaNotaCertificadoDB->setTipo_acta($tipo_acta);
             $oPersonaNotaCertificadoDB->setF_acta($f_acta);
             $oPersonaNotaCertificadoDB->setPreceptor($preceptor);
             $oPersonaNotaCertificadoDB->setId_preceptor($id_preceptor);
@@ -145,8 +177,14 @@ class EditarPersonaNota
             $oPersonaNotaCertificadoDB->setId_activ($id_activ);
             $oPersonaNotaCertificadoDB->setNota_num($nota_num);
             $oPersonaNotaCertificadoDB->setNota_max($nota_max);
+
             if ($oPersonaNotaCertificadoDB->DBGuardar() === false) {
                 throw new \RuntimeException(_("hay un error, no se ha guardado. Nota Certificado"));
+            } else {
+                // borrar la original (asegurarme que se ha guardado lo anterior)
+                if (!empty($personaNotaOriginal)) {
+                    $personaNotaOriginal->DBEliminar();
+                }
             }
             $rta['certificado'] = $oPersonaNotaCertificadoDB;
         }
@@ -198,13 +236,7 @@ class EditarPersonaNota
                 $oPersonaNotaDB->setActa($acta);
             }
             if ($tipo_acta === PersonaNotaDB::FORMATO_ACTA) {
-                $oActa = new Acta();
-                $valor = trim($acta);
-                $reg_exp = "/^(\?|\w{1,6}\??)\s+([0-9]{0,3})\/([0-9]{2})\??$/";
-                if (!preg_match($reg_exp, $valor)) {
-                    // inventar acta.
-                    $valor = $oActa->inventarActa($valor, $f_acta);
-                }
+                $valor = Acta::inventarActa($acta, $f_acta);
                 $oPersonaNotaDB->setActa($valor);
             }
         }
@@ -272,8 +304,6 @@ class EditarPersonaNota
             $msg .= $e->getMessage();
             die($msg);
         }
-
-        $a_mi_region_stgr['mi_id_schema'] = ConfigGlobal::mi_id_schema();
 
         return $a_mi_region_stgr;
     }

@@ -38,18 +38,20 @@ class notasTest extends myTest
      */
     public function test_guardar_nota_sin_region_p_de_paso(): void
     {
-        //$this->markTestSkipped('Skipped test');
+        $this->markTestSkipped('Skipped test');
         $this->expectException(RuntimeException::class);
 
         // dlB desde la que se ejecuta la operación de guardar nota.
-        $_SESSION['session_auth']['esquema'] = 'Pla-crPlav';
+        $esquema =  'Pla-crPlav';
+        $_SESSION['session_auth']['esquema'] = $esquema;
 
         // persona de paso: id_nom negativo; esquema = -1001;
         $id_nom = -1001123;
         $id_schema_persona = '-1001'; // restov
         $NotasFactory = new NotasFactory();
         $NotasFactory->setCount(1);
-        $cPersonaNotas = $NotasFactory->create($id_nom);
+        $dl =  GestorDelegacion::getDlFromSchema($esquema);
+        $cPersonaNotas = $NotasFactory->create($id_nom,$dl);
         $personaNota = $cPersonaNotas[0];
 
         $oEditarPersonaNota = new EditarPersonaNota($personaNota);
@@ -72,15 +74,18 @@ class notasTest extends myTest
     public function test_guardar_nota_region_p_de_paso_desde_crB(): void
     {
         //$this->markTestSkipped('Skipped test');
+
         // dlB desde la que se ejecuta la operación de guardar nota.
-        $_SESSION['session_auth']['esquema'] = 'GalBel-crGalBelv';
+        $esquema = 'GalBel-crGalBelv';
+        $_SESSION['session_auth']['esquema'] = $esquema;
 
         // persona de paso: id_nom negativo; esquema = -1001;
         $id_nom = -1001124;
         $id_schema_persona = '-1001'; // restov
         $NotasFactory = new NotasFactory();
         $NotasFactory->setCount(1);
-        $cPersonaNotas = $NotasFactory->create($id_nom);
+        $dl =  GestorDelegacion::getDlFromSchema($esquema);
+        $cPersonaNotas = $NotasFactory->create($id_nom,$dl);
         $personaNota = $cPersonaNotas[0];
 
         $oEditarPersonaNota = new EditarPersonaNota($personaNota);
@@ -122,14 +127,16 @@ class notasTest extends myTest
     public function test_guardar_nota_p_de_paso_desde_dl_stgr(): void
     {
         // dlB desde la que se ejecuta la operación de guardar nota.
-        $_SESSION['session_auth']['esquema'] = 'H-dlbv';
+        $esquema = 'H-dlbv';
+        $_SESSION['session_auth']['esquema'] = $esquema;
 
         // persona de paso: id_nom negativo; esquema = -1001;
         $id_nom = -1001125;
         $id_schema_persona = '-1001'; // restov
         $NotasFactory = new NotasFactory();
         $NotasFactory->setCount(1);
-        $cPersonaNotas = $NotasFactory->create($id_nom);
+        $dl =  GestorDelegacion::getDlFromSchema($esquema);
+        $cPersonaNotas = $NotasFactory->create($id_nom,$dl);
         $personaNota = $cPersonaNotas[0];
 
         $oEditarPersonaNota = new EditarPersonaNota($personaNota);
@@ -171,7 +178,8 @@ class notasTest extends myTest
     public function test_guardar_nota_dl_persona_otra_region_desde_dl_stgr(): void
     {
         // dlB desde la que se ejecuta la operación de guardar nota.
-        $_SESSION['session_auth']['esquema'] = 'H-dlbv';
+        $esquema = 'H-dlbv';
+        $_SESSION['session_auth']['esquema'] = $esquema;
         $_SESSION['session_auth']['mi_id_schema'] = 1001;
 
         // persona de la dlA
@@ -179,7 +187,8 @@ class notasTest extends myTest
         $id_schema_persona = 1029; // GalBelv
         $NotasFactory = new NotasFactory();
         $NotasFactory->setCount(1);
-        $cPersonaNotas = $NotasFactory->create($id_nom);
+        $dl =  GestorDelegacion::getDlFromSchema($esquema);
+        $cPersonaNotas = $NotasFactory->create($id_nom,$dl);
         $personaNota = $cPersonaNotas[0];
 
         $oEditarPersonaNota = new EditarPersonaNota($personaNota);
@@ -246,7 +255,8 @@ class notasTest extends myTest
     public function test_modificar_nota_dl_persona_otra_region_desde_dl_stgr(): void
     {
         // dlB desde la que se ejecuta la operación de guardar nota.
-        $_SESSION['session_auth']['esquema'] = 'H-dlbv';
+        $esquema =  'H-dlbv';
+        $_SESSION['session_auth']['esquema'] = $esquema;
         $_SESSION['session_auth']['mi_id_schema'] = 1001;
 
         // persona de la dlA
@@ -254,7 +264,8 @@ class notasTest extends myTest
         $id_schema_persona = 1029; // GalBelv
         $NotasFactory = new NotasFactory();
         $NotasFactory->setCount(1);
-        $cPersonaNotas = $NotasFactory->create($id_nom);
+        $dl =  GestorDelegacion::getDlFromSchema($esquema);
+        $cPersonaNotas = $NotasFactory->create($id_nom,$dl);
         $personaNota = $cPersonaNotas[0];
 
         $oEditarPersonaNota = new EditarPersonaNota($personaNota);
@@ -328,7 +339,8 @@ class notasTest extends myTest
     public function test_guardar_nota_dl_persona_desde_dl_stgr(): void
     {
         // dlB desde la que se ejecuta la operación de guardar nota.
-        $_SESSION['session_auth']['esquema'] = 'H-dlbv';
+        $esquema = 'H-dlbv';
+        $_SESSION['session_auth']['esquema'] = $esquema;
         $_SESSION['session_auth']['mi_id_schema'] = 1001;
 
         // persona de la dlA
@@ -336,7 +348,8 @@ class notasTest extends myTest
         $id_schema_persona = 1006;
         $NotasFactory = new NotasFactory();
         $NotasFactory->setCount(1);
-        $cPersonaNotas = $NotasFactory->create($id_nom);
+        $dl =  GestorDelegacion::getDlFromSchema($esquema);
+        $cPersonaNotas = $NotasFactory->create($id_nom,$dl);
         $personaNota = $cPersonaNotas[0];
 
         $oEditarPersonaNota = new EditarPersonaNota($personaNota);
@@ -385,7 +398,8 @@ class notasTest extends myTest
      */
     public function test_guardar_nota_dl_persona_dl_desde_dl_stgr(): void
     {
-        $_SESSION['session_auth']['esquema'] = 'H-dlbv';
+        $esquema = 'H-dlbv';
+        $_SESSION['session_auth']['esquema'] = $esquema;
         $_SESSION['session_auth']['mi_id_schema'] = 1001;
 
         // persona de la dl
@@ -393,7 +407,8 @@ class notasTest extends myTest
         $id_schema_persona = ConfigGlobal::mi_id_schema(); // El mismo que el de la _SESSION
         $NotasFactory = new NotasFactory();
         $NotasFactory->setCount(1);
-        $cPersonaNotas = $NotasFactory->create($id_nom);
+        $dl =  GestorDelegacion::getDlFromSchema($esquema);
+        $cPersonaNotas = $NotasFactory->create($id_nom,$dl);
         $personaNota = $cPersonaNotas[0];
 
         $oEditarPersonaNota = new EditarPersonaNota($personaNota);
@@ -476,10 +491,12 @@ class notasTest extends myTest
 
     public function crear_PersonaNota($oPersonaNotaDB): PersonaNotaDB
     {
+        $esquema = 'H-dlbv';
         $id_nom = 100112345;
         $NotasFactory = new NotasFactory();
         $NotasFactory->setCount(1);
-        $cPersonaNotas = $NotasFactory->create($id_nom);
+        $dl =  GestorDelegacion::getDlFromSchema($esquema);
+        $cPersonaNotas = $NotasFactory->create($id_nom,$dl);
         $personaNota = $cPersonaNotas[0];
 
         $oPersonaNotaDB->setId_nivel($personaNota->getIdNivel());

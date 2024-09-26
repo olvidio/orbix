@@ -12,7 +12,7 @@ class GestorPersonaNotaOtraRegionStgrDB extends GestorPersonaNotaDB
 
     /* CONSTRUCTOR -------------------------------------------------------------- */
 
-    function __construct($esquema_region_stgr)
+    function __construct(string $esquema_region_stgr)
     {
         $this->esquema_region_stgr = $esquema_region_stgr;
         $db = (ConfigGlobal::mi_sfsv() === 1) ? 'sv' : 'sf';

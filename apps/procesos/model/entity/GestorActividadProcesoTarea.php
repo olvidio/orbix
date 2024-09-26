@@ -204,7 +204,7 @@ class GestorActividadProcesoTarea extends ClaseGestor
 
         // Creo que cuando pasa es que no existe la actividad (pero se tiene el id_activ)
         if (empty($oActividad) || empty($iid_tipo_activ)) {
-            echo sprintf(_("La actividad: %s ya no existe"), $iid_activ);
+            echo sprintf(_("La actividad: %s ya no existe"), $iid_activ). "\n";
             return TRUE;
         }
         $dl_org = $oActividad->getDl_org();

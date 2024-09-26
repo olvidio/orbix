@@ -45,10 +45,21 @@ class GestorDelegacion extends ClaseGestor
 
     /* MÉTODOS PÚBLICOS -----------------------------------------------------------*/
 
+    public static function getDlFromSchema(string $esquema): string
+    {
+        $a_reg = explode('-', $esquema);
+        $dl = $a_reg[1];
+        // quito la v o la f.
+        if (substr($dl, -1) === 'v' || substr($dl, -1) === 'f') {
+            $dl = substr($a_reg[1], 0, -1);
+        }
+        return $dl;
+    }
+
     /**
      * @throws Exception
      */
-    public function mi_region_stgr($dele='')
+    public function mi_region_stgr($dele = '')
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
@@ -57,7 +68,7 @@ class GestorDelegacion extends ClaseGestor
             $dele = ConfigGlobal::mi_dele();
         }
 
-        $sQuery = "SELECT region_stgr 
+        $sQuery = "SELECT region_stgr, region
                         FROM $nom_tabla
                         WHERE dl = '$dele'";
 
@@ -71,12 +82,14 @@ class GestorDelegacion extends ClaseGestor
             $message = sprintf(_("No se encuentra información de la dl: %s"), $dele);
             throw new \RuntimeException($message);
         }
+        $region_dele = $aDades['region'];
         $region_stgr = $aDades['region_stgr'];
-        if (empty($aDades['region_stgr']))  {
+        if (empty($aDades['region_stgr'])) {
             $message = sprintf(_("falta indicar a que región del stgr pertenece la dl: %s"), $dele);
             throw new \RuntimeException($message);
         }
         // nombre del esquema
+        $esquema_dele = $region_dele . '-' . $dele;
         $esquema_region_stgr = $region_stgr . '-cr' . $region_stgr;
         // caso especial de H:
         if ($region_stgr === 'H') {
@@ -84,35 +97,43 @@ class GestorDelegacion extends ClaseGestor
         }
         if (ConfigGlobal::mi_sfsv() === 2) {
             $esquema_region_stgr .= 'f';
+            $esquema_dele .= 'f';
         } else {
             $esquema_region_stgr .= 'v';
+            $esquema_dele .= 'v';
         }
 
-        // buscar el id_schema
-        $sQuery = "SELECT id 
+        // buscar el id_schema de $esquema_region_stgr y de $dele
+        $sQuery = "SELECT schema, id 
                         FROM db_idschema
-                        WHERE schema = '$esquema_region_stgr'";
+                        WHERE schema = '$esquema_region_stgr' OR schema = '$esquema_dele'";
 
         if (($oDblSt = $oDbl->query($sQuery)) === false) {
             $sClauError = 'GestorDelegacion.region_stgr';
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
             return false;
         }
-        $aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);
-        if ($aDades === FALSE) {
-            $message = sprintf(_("No se encuentra el id del esquema: %s"), $esquema_region_stgr);
-            throw new \RuntimeException($message);
+        foreach ($oDbl->query($sQuery) as $aDades) {
+            if ($aDades === FALSE) {
+                $message = sprintf(_("No se encuentra el id del esquema: %s"), $esquema_region_stgr);
+                throw new \RuntimeException($message);
+            }
+            if ($aDades['schema'] === $esquema_region_stgr) {
+                $id_esquema_region_stgr = $aDades['id'];
+            }
+            if ($aDades['schema'] === $esquema_dele) {
+                $id_esquema_dele = $aDades['id'];
+            }
         }
-        $id_esquema_region_stgr = $aDades['id'];
-
-
         return ['region_stgr' => $region_stgr,
             'esquema_region_stgr' => $esquema_region_stgr,
             'id_esquema_region_stgr' => $id_esquema_region_stgr,
+            'mi_id_schema' => $id_esquema_dele,
         ];
     }
 
-    public function getArrayIdSchemaRegionStgr($sRegionStgr, $mi_sfsv)
+    public
+    function getArrayIdSchemaRegionStgr($sRegionStgr, $mi_sfsv)
     {
         $oDbl = $this->getoDbl_Select();
         $a_schemas = $this->getArraySchemasRegionStgr($sRegionStgr, $mi_sfsv);
