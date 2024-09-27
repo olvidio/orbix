@@ -257,10 +257,15 @@ if ($Qque === 3) { //paso las matrículas a notas definitivas (Grabar e imprimir
 
             $oEditarPersonaNota = new EditarPersonaNota($oPersonaNota);
 
-            if (isset($oPersonaNotaAnterior)) {
-                $oEditarPersonaNota->editar($Qid_asignatura);
-            } else {
-                $oEditarPersonaNota->nuevo();
+            try {
+                if (isset($oPersonaNotaAnterior)) {
+                    $oEditarPersonaNota->editar($Qid_asignatura);
+                } else {
+                    $oEditarPersonaNota->nuevo();
+                }
+            } catch (\RuntimeException $e) {
+                $msg_err .= "\r\n";
+                $msg_err .= $e->getMessage();
             }
         }
     }

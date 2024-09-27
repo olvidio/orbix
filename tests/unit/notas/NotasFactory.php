@@ -57,7 +57,7 @@ class NotasFactory
             $num_acta = $faker->numberBetween(1, 150);
             $acta = $this->dl . ' ' . "$num_acta/$year";
 
-            $id_situacion = 1;
+            $id_situacion = 10;
             $tipo_acta = 1;
             $preceptor = $faker->boolean();
             $id_preceptor = null;

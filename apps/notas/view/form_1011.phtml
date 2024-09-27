@@ -207,6 +207,9 @@
             if (!fnjs_comprobar_fecha('#f_acta',<?= $locale_us ?>)) {
                 err = 1;
             }
+        } else {
+            alert("debe llenar el campo fecha acta");
+            err = 1;
         }
 
         var rr = fnjs_comprobar_campos(formulario, '<?= addslashes($obj) ?>');

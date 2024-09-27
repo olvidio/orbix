@@ -8,6 +8,7 @@ use core\DBConnection;
 use devel\model\entity\GestorDbSchema;
 use dossiers\model\entity\Dossier;
 use notas\model\entity\Acta;
+use notas\model\entity\GestorPersonaNotaDlDB;
 use notas\model\entity\GestorPersonaNotaOtraRegionStgrDB;
 use notas\model\entity\Nota;
 use notas\model\entity\PersonaNotaCertificadoDB;
@@ -33,7 +34,7 @@ class EditarPersonaNota
         $this->id_asignatura = $oPersonaNota->getIdAsignatura();
     }
 
-    public function eliminar(): string
+    public function eliminar(): void
     {
         // se ataca a la tabla padre 'e_notas', no hace falta saber en que tabla está. Ya lo sabe él
         if (!empty($this->id_nom) && !empty($this->id_asignatura) && !empty($this->id_nivel)) {
@@ -42,10 +43,10 @@ class EditarPersonaNota
             $oPersonaNotaDB->setId_asignatura($this->id_asignatura);
             $oPersonaNotaDB->setId_nivel($this->id_nivel);
             if ($oPersonaNotaDB->DBEliminar() === false) {
-                $this->msg_err .= _("hay un error, no se ha borrado");
+                $err = end($_SESSION['errores']);
+                throw new \RuntimeException(sprintf(_("No se ha eliminado la Nota: %s"), $err));
             }
         }
-        return $this->msg_err;
     }
 
     public function nuevo(): array
@@ -83,11 +84,29 @@ class EditarPersonaNota
         $nota_num = $this->personaNota->getNotaNum();
         $nota_max = $this->personaNota->getNotaMax();
 
+        // comprobar si existe, para lanzar un aviso y no hacer nada:
+        if ($oPersonaNotaDB instanceof PersonaNotaDlDB) {
+            $oDbl = $oPersonaNotaDB->getoDbl(); // asegurarme que estoy consultando en el mismo esquema
+            $gesPersonaNota = new GestorPersonaNotaDlDB();
+            $gesPersonaNota->setoDbl($oDbl);
+            $cPersonaNota = $gesPersonaNota->getPersonaNotas(['id_nom' => $id_nom, 'id_nivel' => $id_nivel]);
+            if (!empty($cPersonaNota)) {
+                $oPersonaNota2 = $cPersonaNota[0];
+                if (!is_null($oPersonaNota2)) {
+                    $oPersonaNota2->DBCarregar();
+                    $err = _("Ya existe esta nota");
+                    throw new \RuntimeException($err);
+                }
+            }
+        }
+
+
         // En el caso de traslados, si el tipo de acta es un certificado,
         if ($tipo_acta === PersonaNota::FORMATO_CERTIFICADO && !empty($esquema_region_stgr)) {
             // puede ser que haga referencia a e_notas_dl o a e_notas_otra_region_stgr
             if ($oPersonaNotaDB instanceof PersonaNotaOtraRegionStgrDB) {
                 // Si es certificado debería de ser de otra región, y por tanto no guardo nada
+                // en la tabla e_notas_otra_region_stgr de mi región stgr, ya lo tendrá la original
                 $guardar = FALSE;
             }
         }
@@ -264,6 +283,30 @@ class EditarPersonaNota
             $new_detalle = empty($detalle) ? "$acta" : "$acta ($detalle)";
             $oPersonaNotaCertificadoDB = $a_ObjetosPersonaNota['certificado'];
 
+            // comprobar que no existe con una situación distinta a la 'falta certificado
+            if ($oPersonaNotaCertificadoDB instanceof PersonaNotaCertificadoDB) {
+                $oDbl = $oPersonaNotaCertificadoDB->getoDbl(); // asegurarme que estoy consultando en el mismo esquema
+                $gesPersonaNota = new GestorPersonaNotaDlDB();
+                $gesPersonaNota->setoDbl($oDbl);
+                $aWhere = ['id_nom' => $id_nom,
+                    'id_nivel' => $id_nivel,
+                    'id_situacion' => Nota::FALTA_CERTIFICADO,
+                ];
+                $aOperador = ['id_situacion' => '!='];
+                $cPersonaNota = $gesPersonaNota->getPersonaNotas($aWhere, $aOperador);
+                if (!empty($cPersonaNota)) {
+                    $oPersonaNota2 = $cPersonaNota[0];
+                    if (!is_null($oPersonaNota2)) {
+                        $oPersona = Persona::NewPersona($id_nom);
+                        $nom = $oPersona->getPrefApellidosNombre();
+
+                        $err = sprintf(_("Ya existe una nota para %s en su dl"), $nom);
+                        $err .= "\n" . _("debería quitarlo del acta");
+                        throw new \RuntimeException($err);
+                    }
+                }
+            }
+
             $oPersonaNotaCertificadoDB->setId_nom($id_nom);
             $oPersonaNotaCertificadoDB->setId_nivel($id_nivel);
             if (!empty($id_asignatura_real)) {
@@ -292,7 +335,8 @@ class EditarPersonaNota
         return $rta;
     }
 
-    public function getDatosRegionStgr($dele = '')
+    public
+    function getDatosRegionStgr($dele = '')
     {
 
         $gesDelegacion = new GestorDelegacion();
@@ -312,7 +356,8 @@ class EditarPersonaNota
      * Se lo paso por constructor para poder hacer test con otra información
      * @return PersonaNotaDB[]
      */
-    public function getObjetosPersonaNota(array $a_mi_region_stgr, int $id_schema_persona): array
+    public
+    function getObjetosPersonaNota(array $a_mi_region_stgr, int $id_schema_persona): array
     {
         /* Hace falta saber en que esquema está la persona, para poner la nota en la tabla del
          * esquema correspondiente.
@@ -377,7 +422,8 @@ class EditarPersonaNota
         return $rta;
     }
 
-    private function getId_schema_persona(): int
+    private
+    function getId_schema_persona(): int
     {
         // para saber a que schema pertenece la persona
         $oPersona = Persona::NewPersona($this->id_nom);

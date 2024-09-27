@@ -80,10 +80,20 @@ if ($Qmod !== 'eliminar') {
 $oEditarPersonaNota = new EditarPersonaNota($oPersonaNota);
 switch ($Qmod) {
     case 'eliminar': //------------ BORRAR --------
-        $msg_err = $oEditarPersonaNota->eliminar();
+        try {
+            $oEditarPersonaNota->eliminar();
+        } catch (\RuntimeException $e) {
+            $msg_err .= "\r\n";
+            $msg_err .= $e->getMessage();
+        }
         break;
     case 'nuevo': //------------ NUEVO --------
-        $oEditarPersonaNota->nuevo();
+        try {
+            $oEditarPersonaNota->nuevo();
+        } catch (\RuntimeException $e) {
+            $msg_err .= "\r\n";
+            $msg_err .= $e->getMessage();
+        }
         break;
     case 'editar':  //------------ EDITAR --------
         // se ataca a la tabla padre 'e_notas', no hace falta saber en que tabla está. Ya lo sabe él
