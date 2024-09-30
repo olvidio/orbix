@@ -20,6 +20,7 @@ $goBuscarPlanCtr = Hash::link('apps/misas/controller/buscar_plan_ctr.php');
 $goModificarEncargos = Hash::link('apps/misas/controller/modificar_encargos.php');
 $goModificarEncargosCtr = Hash::link('apps/misas/controller/modificar_encargos_centros.php');
 $goIniciales = Hash::link('apps/misas/controller/modificar_iniciales_sacd_zona.php');
+$goStatus = Hash::link('apps/misas/controller/cambiar_status.php');
 
 $a_campos = ['oPosicion' => $oPosicion,
     'goModificarPlantilla' => $goModificarPlantilla,
@@ -30,6 +31,7 @@ $a_campos = ['oPosicion' => $oPosicion,
     'goModificarEncargos' => $goModificarEncargos,
     'goModificarEncargosCtr' => $goModificarEncargosCtr,
     'goIniciales' => $goIniciales,
+    'goStatus' => $goStatus,
 ];
 
 $oView = new core\ViewTwig('misas/controller');

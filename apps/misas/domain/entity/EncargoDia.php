@@ -195,12 +195,12 @@ class EncargoDia
     {
         $this->sobserv = $sobserv;
     }
-    public function getStatus(): ?bool
+    public function getStatus(): ?int
     {
         return $this->istatus;
     }
 
-    public function setStatus(?bool $istatus): void
+    public function setStatus(?int $istatus): void
     {
         $this->istatus = $istatus;
     }
