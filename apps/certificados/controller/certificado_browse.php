@@ -33,7 +33,7 @@ $apellidos_nombre = $oPersona->getApellidosNombre();
 $certificado_actual = '';
 
 $oHashCertificadoPdf = new Hash();
-$oHashCertificadoPdf->setCamposForm('certificado_pdf!certificado!copia!f_certificado!idioma');
+$oHashCertificadoPdf->setCamposForm('certificado_pdf!certificado!copia!f_certificado!idioma!f_enviado');
 $oHashCertificadoPdf->setCamposNo('certificado_pdf!copia');
 //cambio el nombre, porque tiene el mismo id en el otro formulario
 $oHashCertificadoPdf->setArrayCamposHidden(['id_nom' => $Qid_nom]);

@@ -28,6 +28,11 @@
         <input type="checkbox" name="copia" />
     </label>
     <br>
+    <label>
+        {{ "Fecha del envio"|trans|raw }}:
+        <input type="text" id="f_enviado" name="f_enviado" />
+    </label>
+    <br>
     <br>
     {{ "Fichero"|trans|raw }}:
     <input type="file" name="certificado_pdf" id="fileToUpload" />
@@ -41,6 +46,9 @@
 
     fnjs_upload_pdf = function () {
         if (!fnjs_comprobar_fecha('#f_certificado','{{ locale_us }}')) {
+            return;
+        }
+        if (!fnjs_comprobar_fecha('#f_enviado','{{ locale_us }}')) {
             return;
         }
 
@@ -71,6 +79,10 @@
 
 $(function() {
     $("#f_certificado").datepicker({
+        numberOfMonths: 3,
+        showButtonPanel: true
+    });
+    $("#f_enviado").datepicker({
         numberOfMonths: 3,
         showButtonPanel: true
     });

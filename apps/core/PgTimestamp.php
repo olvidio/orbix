@@ -35,8 +35,8 @@ class PgTimestamp
      */
     public function fromPg()
     {
-        $data = trim($this->data);
-        if ($data !== '') {
+        if (!empty($this->data)) {
+            $data = trim($this->data);
             $oFecha = new web\DateTimeLocal($data);
             //$fecha = $oFecha->createFromLocal($data);
         } else {

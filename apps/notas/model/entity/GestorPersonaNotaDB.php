@@ -152,5 +152,3 @@ class GestorPersonaNotaDB extends core\ClaseGestor
     }
 
 }
-
-?>

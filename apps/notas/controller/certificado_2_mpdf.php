@@ -6,6 +6,8 @@ $_POST = $_GET;
 $id_item = (string)filter_input(INPUT_POST, 'id_item');
 */
 
+use notas\model\entity\GestorPersonaNotaOtraRegionStgrDB;
+
 $Qguardar = empty($_GET['guardar']) ? '' : $_GET['guardar'];
 
 ob_start();
@@ -41,5 +43,11 @@ if (!empty($Qguardar)) {
     $pdf = $mpdf->Output("certificado($nom).pdf", 'S'); // as string
     $oCertificado->setDocumento($pdf);
     $CertificadoRepository->Guardar($oCertificado);
+    // también hay que guardarlo en las notas afectadas
+    $oF_certificado = $oCertificado->getF_certificado();
+    // Se supone que si accedo a esta página es porque soy una región del stgr.
+    $esquema_region_stgr = $_SESSION['session_auth']['esquema'];
+    $gesPersonaNotaOtraRegionStgr = new GestorPersonaNotaOtraRegionStgrDB($esquema_region_stgr);
+    $gesPersonaNotaOtraRegionStgr->addCertificado($id_nom, $certificado, $oF_certificado);
 }
 

@@ -35,6 +35,7 @@ $idioma = $oCertificado->getIdioma();
 $destino = $oCertificado->getDestino();
 $certificado = $oCertificado->getCertificado();
 $f_certificado = $oCertificado->getF_certificado()->getFromLocal();
+$f_enviado = $oCertificado->getF_enviado()->getFromLocal();
 $copia = $oCertificado->isCopia();
 if (is_true($copia)) {
     $chk_copia = 'checked';
@@ -56,7 +57,7 @@ $oDesplIdiomas->setBlanco(TRUE);
 $oDesplIdiomas->setOpcion_sel($idioma);
 
 $oHashCertificadoPdf = new Hash();
-$oHashCertificadoPdf->setCamposForm('certificado_pdf!certificado!copia!destino!f_certificado!idioma!nom');
+$oHashCertificadoPdf->setCamposForm('certificado_pdf!certificado!copia!destino!f_certificado!idioma!nom!f_enviado');
 $oHashCertificadoPdf->setCamposNo('certificado_pdf!copia');
 //cambio el nombre, porque tiene el mismo id en el otro formulario
 $oHashCertificadoPdf->setArrayCamposHidden(['id_item' => $Qid_item, 'id_nom' => $id_nom, 'certificado_old' => $certificado]);
@@ -83,6 +84,7 @@ $a_campos = ['oPosicion' => $oPosicion,
     'destino' => $destino,
     'certificado' => $certificado,
     'f_certificado' => $f_certificado,
+    'f_enviado' => $f_enviado,
     'chk_copia' => $chk_copia,
         // para ver pdf
     'filename_pdf' => $filename_pdf_web,

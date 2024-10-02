@@ -2,6 +2,7 @@
 // INICIO Cabecera global de URL de controlador *********************************
 
 use certificados\domain\repositories\CertificadoRepository;
+use notas\model\entity\GestorPersonaNotaOtraRegionStgrDB;
 
 require_once("apps/core/global_header.inc");
 // Archivos requeridos por esta url **********************************************
@@ -31,9 +32,15 @@ if (!empty($Qid_item)) {
     $CertificadoRepository = new CertificadoRepository();
     $oCertificado = $CertificadoRepository->findById($Qid_item);
     if (!empty($oCertificado)) {
+        $certificado = $oCertificado->getCertificado();
         if ($CertificadoRepository->Eliminar($oCertificado) === FALSE) {
-            $error_txt .= $oActa->getErrorTxt();
+            $error_txt .= $oCertificado->getErrorTxt();
         }
+        // Hay que borrar también el certificado de las notas_otra_region_stgr
+        // Se supone que si accedo a esta página es porque soy una región del stgr.
+        $esquema_region_stgr = $_SESSION['session_auth']['esquema'];
+        $gesPersonaNotaOtraRegionStgr = new GestorPersonaNotaOtraRegionStgrDB($esquema_region_stgr);
+        $gesPersonaNotaOtraRegionStgr->deleteCertificado($certificado);
     }
 } else {
     $error_txt = _("No se encuentra el certificado");

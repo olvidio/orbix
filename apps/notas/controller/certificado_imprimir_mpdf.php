@@ -4,6 +4,7 @@ use asignaturas\model\entity as asignaturas;
 use certificados\domain\repositories\CertificadoRepository;
 use core\ConfigGlobal;
 use notas\model\entity as notas;
+use notas\model\PersonaNota;
 use personas\model\entity\Persona;
 use web\DateTimeLocal;
 use function core\is_true;
@@ -288,6 +289,7 @@ case 2201:
                 $aWhere['id_nom'] = $id_nom;
                 $aWhere['id_nivel'] = '1100,2500';
                 $aOperador['id_nivel'] = 'BETWEEN';
+                $aWhere['tipo_acta'] = PersonaNota::FORMATO_ACTA;
                 $cNotas = $GesNotas->getPersonaNotas($aWhere, $aOperador);
                 $aAprobadas = array();
                 foreach ($cNotas as $oPersonaNota) {

@@ -38,6 +38,11 @@
                 <input type="checkbox" name="copia" {{ chk_copia }}/>
             </label>
             <br>
+            <label>
+                {{ "Fecha del envio"|trans|raw }}:
+                <input type="text" id="f_enviado" name="f_enviado" value="{{ f_enviado }}"/>
+            </label>
+            <br>
             <br>
             <input type="button" onclick="fnjs_guardar();" value="{{ "Guardar"|trans|raw }}">
         </form>
@@ -51,6 +56,10 @@
 
     fnjs_guardar = function () {
         if (!fnjs_comprobar_fecha('#f_certificado', '{{ locale_us }}')) {
+            return;
+        }
+
+        if (!fnjs_comprobar_fecha('#f_enviado', '{{ locale_us }}')) {
             return;
         }
 
@@ -77,6 +86,10 @@
 
     $(function () {
         $("#f_certificado").datepicker({
+            numberOfMonths: 3,
+            showButtonPanel: true
+        });
+        $("#f_enviado").datepicker({
             numberOfMonths: 3,
             showButtonPanel: true
         });

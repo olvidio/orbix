@@ -28,7 +28,7 @@
             <td class=etiqueta>
                 <h2 class=titulo><?= $titulo_busqueda_por_apellidos ?></h2>
             </td>
-            <td  style="vertical-align: middle"><input class=contenido id="apellido1" name="apellido1" size="40" value=""></td>
+            <td  style="vertical-align: middle"><input class=contenido id="apellido1" name="apellido1" size="40" value="<?= $Qapellido1 ?>"></td>
             <td>
                 <input type="button" id="btn_ok" name="btn"
                       onclick="fnjs_buscar_por_apellidos('#apellidos_form')"
@@ -38,10 +38,6 @@
     </table>
 </form>
 <br>
-<form id='periodo_form' action=''>
-    <?= $oHashPeriodo->getCamposHtml() ?>
-    <?= $oFormP->getHtml() ?>
-</form>
 
 <h2 class=titulo><?= $titulo ?></h2>
 <h3><?= $aviso; ?></h3>

@@ -85,12 +85,17 @@ $oHashCertificadoPdf->setCamposForm('certificado!copia!f_certificado!idioma!dest
 $oHashCertificadoPdf->setCamposNo('copia');
 $oHashCertificadoPdf->setArrayCamposHidden(['id_nom' => $id_nom, 'nuevo' => 1]);
 
+$pag_certificado_2_pdf = ConfigGlobal::getWeb() . '/apps/notas/controller/certificado_2_mpdf.php';
 $oHash = new Hash();
-$oHash->setUrl(ConfigGlobal::getWeb() . '/apps/notas/controller/certificado_2_mpdf.php');
+$oHash->setUrl($pag_certificado_2_pdf);
 $oHash->setCamposForm('id_item!guardar');
 $h = $oHash->linkSinVal();
 
-$pag_certificado_2_pdf = ConfigGlobal::getWeb() . '/apps/notas/controller/certificado_2_mpdf.php';
+$pag_certificado_eliminar = ConfigGlobal::getWeb() . '/apps/certificados/controller/certificado_delete.php';
+$oHash_e = new Hash();
+$oHash_e->setUrl($pag_certificado_eliminar);
+$oHash_e->setCamposForm('id_item');
+$h_eliminar = $oHash_e->linkSinVal();
 
 $a_campos = ['oPosicion' => $oPosicion,
     'oHashCertificadoPdf' => $oHashCertificadoPdf,
@@ -100,7 +105,9 @@ $a_campos = ['oPosicion' => $oPosicion,
     'destino' => $destino,
     'oDesplIdiomas' => $oDesplIdiomas,
     'pag_certificado_2_pdf' => $pag_certificado_2_pdf,
+    'pag_certificado_eliminar' => $pag_certificado_eliminar,
     'h' => $h,
+    'h_eliminar' => $h_eliminar,
 ];
 
 $oView = new core\ViewTwig('notas/controller');

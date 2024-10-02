@@ -27,11 +27,13 @@ $Qdestino = (string)filter_input(INPUT_POST, 'destino');
 $Qcertificado = (string)filter_input(INPUT_POST, 'certificado');
 $Qcopia = (string)filter_input(INPUT_POST, 'copia');
 $Qf_certificado = (string)filter_input(INPUT_POST, 'f_certificado');
+$Qf_enviado = (string)filter_input(INPUT_POST, 'f_enviado');
 
 $Qcertificado_old = (string)filter_input(INPUT_POST, 'certificado_old');
 
 /* convertir las fechas a DateTimeLocal */
 $oF_certificado = DateTimeLocal::createFromLocal($Qf_certificado);
+$oF_enviado = DateTimeLocal::createFromLocal($Qf_enviado);
 
 $error_txt = '';
 
@@ -64,6 +66,9 @@ if (is_true($Qcopia)) {
 $oCertificado->setCopia($copia);
 $oCertificado->setPropio(FALSE);
 $oCertificado->setF_certificado($oF_certificado);
+if (!empty($oF_enviado)) {
+    $oCertificado->setF_enviado($oF_enviado);
+}
 
 if ($certificadoRepository->Guardar($oCertificado) === FALSE) {
     $error_txt .= $certificadoRepository->getErrorTxt();

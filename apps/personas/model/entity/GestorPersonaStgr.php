@@ -24,25 +24,24 @@ class GestorPersonaStgr extends GestorPersonaGlobal
 
     function __construct()
     {
-        $oDbl = $GLOBALS['oDBR'];
+        $oDbl = $GLOBALS['oDBP'];
         $this->setoDbl($oDbl);
-        $this->setNomTabla('p_de_paso_ex');
+        $this->setNomTabla('p_de_paso');
     }
 
-    public function getPerosnasOtrosStgr(string $Qapellidos)
+    public function getPerosnasOtrosStgr(string $Qapellido1)
     {
-        // Buscar dl y r dependientes de la actual región del stgr:
-        $schema = $_SESSION['session_auth']['esquema'];
-        $a_reg = explode('-', $schema);
-        $RegionStgr = $a_reg[0];
-        $gesDl = new GestorDelegacion();
-        $a_dl_de_la_region_stgr = $gesDl->getArrayDlRegionStgr([$RegionStgr]);
-        $str_dl = "'" . implode("', '", $a_dl_de_la_region_stgr) . "'";
+        // Buscar todos los que han hecho cv fuera de su dl. están en publicv.p_de_paso
+        $aWhere = [];
+        $aWhere['apellido1'] = '^' . $Qapellido1;
+        $aOperador['apellido1'] = 'sin_acentos';
 
-        // Buscar en depaso
+        $aWhere['situacion'] = 'A';
+        $aWhere['stgr'] = 'b|c1|c2';
+        $aOperador['stgr'] = '~';
+        $aWhere['_ordre'] = 'dl,stgr,apellido1,nom';
 
-        // Buscar en el resto de dl (global menos mis dl)
-
+        return $this->getPersonas($aWhere, $aOperador);
 
     }
 }

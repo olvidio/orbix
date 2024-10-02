@@ -77,6 +77,12 @@ class Certificado {
 	 * @var string|null
 	 */
 	 private $sdocumento = null;
+    /**
+     * F_enviado de Certificado
+     *
+     * @var DateTimeLocal|null
+     */
+    private $df_enviado = null;
 
 	/* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
@@ -128,6 +134,10 @@ class Certificado {
 		{
 			$this->setDocumento($aDatos['documento']);
 		}
+        if (array_key_exists('f_enviado',$aDatos))
+        {
+            $this->setF_enviado($aDatos['f_enviado']);
+        }
 		return $this;
 	}
 	/**
@@ -291,4 +301,20 @@ class Certificado {
 	{
 		$this->sdocumento = $sdocumento;
 	}
+    /**
+     *
+     * @return DateTimeLocal|NullDateTimeLocal|null $df_enviado
+     */
+    public function getF_enviado()
+    {
+        return $this->df_enviado?? new NullDateTimeLocal;
+    }
+    /**
+     *
+     * @param DateTimeLocal|null $df_enviado
+     */
+    public function setF_enviado($df_enviado = null)
+    {
+        $this->df_enviado = $df_enviado;
+    }
 }

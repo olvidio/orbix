@@ -143,6 +143,7 @@ $a_cabeceras = [['name' => ucfirst(_("certificado")), 'formatter' => 'clickForma
     _("adjunto"),
     _("idioma"),
     _("destino"),
+    _("enviado"),
 ];
 
 $i = 0;
@@ -158,6 +159,7 @@ foreach ($cCertificados as $oCertificado) {
     $idioma = $oCertificado->getIdioma();
     $destino = $oCertificado->getDestino();
     $pdf = $oCertificado->getDocumento();
+    $f_enviado = $oCertificado->getF_enviado()->getFromLocal();
 
     if (!empty($idioma)) {
         $oLocal = new Local($idioma);
@@ -188,6 +190,7 @@ foreach ($cCertificados as $oCertificado) {
     $a_valores[$i][5] = empty($pdf) ? '' : _("Sí");
     $a_valores[$i][6] = $idioma;
     $a_valores[$i][7] = $destino;
+    $a_valores[$i][8] = $f_enviado;
 }
 if (isset($Qid_sel) && !empty($Qid_sel)) {
     $a_valores['select'] = $Qid_sel;
