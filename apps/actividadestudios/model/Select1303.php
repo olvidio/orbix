@@ -64,8 +64,6 @@ class Select1303
 
     private $status;
     private string $aviso;
-    private mixed $id_activ;
-    private string $link_add;
 
     public function getBotones($ca_num = 1)
     {

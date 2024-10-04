@@ -74,7 +74,7 @@ class DateTimeLocal extends DateTime
      * @param string $separador separador entre dia, mes año
      * @return string
      */
-    static public function getFormat($separador = '/')
+    static public function getFormat($separador = '/'): string
     {
         $idioma = $_SESSION['session_auth']['idioma'];
         # Si no hemos encontrado ningún idioma que nos convenga, mostramos la web en el idioma por defecto
@@ -144,6 +144,19 @@ class DateTimeLocal extends DateTime
         $format = self::getFormat($separador);
         $format .= ' H:i:s';
         return parent::format($format);
+    }
+
+    /**
+     * devolver null para las 00:00
+     * @return string|null
+     */
+    public function getHora()
+    {
+        $str_hora = $this->format('H:i');
+        if ($str_hora === '00:00') {
+            return null;
+        }
+        return $str_hora;
     }
 
     /**

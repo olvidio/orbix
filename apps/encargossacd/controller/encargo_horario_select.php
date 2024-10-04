@@ -28,6 +28,7 @@ if (!empty($Qid_sel)) { //vengo de un checkbox
 }
 
 $Qmod = (string)filter_input(INPUT_POST, 'mod');
+$Qorigen = (string)filter_input(INPUT_POST, 'origen');
 
 $oEncargo = new Encargo($Qid_enc);
 $desc_enc = $oEncargo->getDesc_enc();
@@ -80,8 +81,8 @@ foreach ($cEncargoHorarios as $oEncargoHorario) {
     $h_fin = $oEncargoHorario->getH_fin();
     $n_sacd = $oEncargoHorario->getN_sacd();
     $mes = $oEncargoHorario->getMes();
-    $f_ini = $oEncargoHorario->getF_ini()->getFromLocal();
-    $f_fin = $oEncargoHorario->getF_fin()->getFromLocal();
+    $f_ini = empty($oEncargoHorario->getF_ini())? null : $oEncargoHorario->getF_ini()->getFromLocal();
+    $f_fin = empty($oEncargoHorario->getF_fin())? null : $oEncargoHorario->getF_fin()->getFromLocal();
 
     $aQuery = ['mod' => 'editar',
         'id_enc' => $id_enc,
@@ -124,6 +125,7 @@ foreach ($cEncargoHorarios as $oEncargoHorario) {
 $aQuery = ['mod' => 'nuevo',
     'id_enc' => $Qid_enc,
     'desc_enc' => $desc_enc,
+    'origen' => $Qorigen,
 ];
 // el hppt_build_query no pasa los valores null
 if (is_array($aQuery)) {
@@ -148,12 +150,19 @@ $oHash->setArrayCamposHidden($aCamposHidden);
 
 $txt_eliminar = _("¿Está seguro que desea borrar este horario?");
 
+$div_para_nuevo = 'main';
+if ($Qorigen === 'misas') {
+    $div_para_nuevo = 'div_modificar5';
+}
+
 $a_campos = ['oPosicion' => $oPosicion,
     'titulo' => $titulo,
     'oHash' => $oHash,
     'oTabla' => $oTabla,
     'txt_eliminar' => $txt_eliminar,
     'pagina_nuevo' => $pagina_nuevo,
+    'desc_enc' => $desc_enc,
+    'div_para_nuevo' => $div_para_nuevo,
 ];
 
 $oView = new core\ViewTwig('encargossacd/controller');

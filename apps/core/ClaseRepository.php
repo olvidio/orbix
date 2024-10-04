@@ -12,6 +12,7 @@ abstract class ClaseRepository
      * @var PDO
      */
     protected $oDbl;
+    protected $oDbl_Select;
     /**
      * NomTabla de ClasePropiedades
      *
@@ -32,7 +33,7 @@ abstract class ClaseRepository
      *
      * @param integer $iid_schema
      */
-    public function setId_schema(int $iid_schema)
+    public function setId_schema(int $iid_schema): void
     {
         $this->iid_schema = $iid_schema;
     }
@@ -47,6 +48,11 @@ abstract class ClaseRepository
         return $this->oDbl;
     }
 
+    public function getoDbl_Select()
+    {
+        return $this->oDbl_Select;
+    }
+
     /**
      * El faig public per quan s'ha de copiar dades d'un esquema a un altre.
      *
@@ -55,6 +61,11 @@ abstract class ClaseRepository
     public function setoDbl(PDO $oDbl): void
     {
         $this->oDbl = $oDbl;
+    }
+
+    public function setoDbl_Select($oDbl_Select)
+    {
+        $this->oDbl_Select = $oDbl_Select;
     }
 
     /**
@@ -69,7 +80,7 @@ abstract class ClaseRepository
     /**
      * @param string $sNomTabla
      */
-    public function setNomTabla(string $sNomTabla)
+    public function setNomTabla(string $sNomTabla): void
     {
         $this->sNomTabla = $sNomTabla;
     }
@@ -106,7 +117,7 @@ abstract class ClaseRepository
      *
      * @return integer $iid_schema
      */
-    protected function getId_schema()
+    protected function getId_schema(): int
     {
         return $this->iid_schema;
     }
@@ -116,7 +127,7 @@ abstract class ClaseRepository
      * @param string $sErrorTxt
      * @return ClaseRepository
      */
-    protected function setErrorTxt(string $sErrorTxt)
+    protected function setErrorTxt(string $sErrorTxt): ClaseRepository
     {
         $this->sErrorTxt = $sErrorTxt;
         return $this;

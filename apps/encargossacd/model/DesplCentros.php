@@ -9,6 +9,7 @@ use web\Desplegable;
 class DesplCentros
 {
 
+    private $id_zona = null;
     public function getDesplPorFiltro($filtro_ctr)
     {
         switch ($filtro_ctr) {
@@ -51,11 +52,41 @@ class DesplCentros
                 $oDesplCtr->setBlanco(TRUE);
                 $oDesplCtr->setOpciones($aa_op);
                 break;
+            case 8:
+                if (!empty($this->id_zona)) {
+                    $GesCentrosDl = new GestorCentroDl();
+                    $query = "WHERE id_zona = $this->id_zona AND status='t' ";
+                    $oDesplCtr1 = $GesCentrosDl->getListaCentros($query, 'nombre_ubi');
+                    $opciones_sv = $oDesplCtr1->getOpciones()->fetchAll(\PDO::FETCH_ASSOC); // para pasarlo a un array
+                    $GesCentrosSf = new GestorCentroEllas();
+                    $oDesplCtr1 = $GesCentrosSf->getListaCentros($query, 'nombre_ubi');
+                    $opciones_sf = $oDesplCtr1->getOpciones()->fetchAll(\PDO::FETCH_ASSOC);
+                    $a_opciones = array_merge($opciones_sv, $opciones_sf);
+                    $aa_op = [];
+                    foreach ($a_opciones as $a_vector) {
+                        $aa_op[$a_vector['id_ubi']] = $a_vector['nombre_ubi'];
+                    }
+                    $oDesplCtr = new Desplegable();
+                    $oDesplCtr->setBlanco(TRUE);
+                    $oDesplCtr->setOpciones($aa_op);
+                } else {
+                    $oDesplCtr = new Desplegable();
+                    $oDesplCtr->setOpciones([]);
+                }
+                break;
             default:
                 $oDesplCtr = new Desplegable();
                 $oDesplCtr->setOpciones([]);
         }
 
         return $oDesplCtr;
+    }
+
+    /**
+     * @param mixed $id_zona
+     */
+    public function setIdZona($id_zona): void
+    {
+        $this->id_zona = $id_zona;
     }
 }

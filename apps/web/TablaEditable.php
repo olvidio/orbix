@@ -427,20 +427,24 @@ class TablaEditable
 				}
 			}
 
-			function metadata(old_metadata_provider) {
-			  return function(row) {
-				var item = this.getItem(row);
-				var ret  = (old_metadata_provider(row) || {});
-				//console.log(item);
-				if (item) {
-				  ret.cssClasses = (ret.cssClasses || '');
-				  if (item.clase) {
-					ret.cssClasses += item.clase;
-				  }
-				}
-				return ret;
-			  }
-			}
+            function metadata(previousItemMetadata) {
+                return (rowNumber) => {
+                    const item = dataView_$id_tabla.getItem(rowNumber);
+                    
+                    let meta = {
+                        cssClasses: ''
+                      };
+                    if (typeof previousItemMetadata === 'object') {
+                        meta = previousItemMetadata(rowNumber);
+                    }
+
+                    if (meta && item && item.clase) {
+                        meta.cssClasses = (meta.cssClasses || '') + ' ' + item.clase;
+                    }
+
+                    return meta;
+				};
+            }
 			
 			function add_scroll_id(row) {
 				$(\"#scroll_id\").val(row);	

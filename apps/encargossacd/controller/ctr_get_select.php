@@ -12,8 +12,10 @@ require_once("apps/core/global_object.inc");
 
 $Qid_ubi = (integer)filter_input(INPUT_POST, 'id_ubi');
 $Qfiltro_ctr = (string)filter_input(INPUT_POST, 'filtro_ctr');
+$Qid_zona = (integer)filter_input(INPUT_POST, 'id_zona');
 
 $oGrupoCtr = new DesplCentros();
+$oGrupoCtr->setIdZona($Qid_zona);
 
 $oDesplCtr = $oGrupoCtr->getDesplPorFiltro($Qfiltro_ctr);
 $oDesplCtr->setNombre('lst_ctrs');

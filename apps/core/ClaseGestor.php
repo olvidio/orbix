@@ -1,8 +1,6 @@
 <?php
 namespace core;
 
-use web\QuitarAcentos;
-
 abstract class ClaseGestor
 {
     /**
@@ -81,13 +79,14 @@ abstract class ClaseGestor
      */
     protected function getConjunt($a_Clases, $namespace, $aWhere, $aOperators)
     {
+        $cClassesTot = array();
+        $ord_Tot = array();
+
         $paraOrdenar = '';
         if (isset($aWhere['_ordre']) && $aWhere['_ordre'] != '') {
             $paraOrdenar = $aWhere['_ordre'];
             unset($aWhere['_ordre']);
         }
-
-        $a_xx = [];
         foreach ($a_Clases as $aClasse) {
             $Classe = $aClasse['clase'];
             $get = $aClasse['get'];
@@ -97,11 +96,8 @@ abstract class ClaseGestor
             $Gestor = $namespace . '\Gestor' . $Classe;
             $oGesClasse = new $Gestor;
             $cClasses = $oGesClasse->$get($aWhere, $aOperators);
-            if (is_array($cClasses)) {
-                $a_xx[] = $cClasses;
-            }
+            if (is_array($cClasses)) $cClassesTot = array_merge($cClassesTot, $cClasses);
         }
-        $cClassesTot = array_merge(...$a_xx);
 
         //ordenar
         if (!empty($paraOrdenar)) {
@@ -109,21 +105,15 @@ abstract class ClaseGestor
             foreach ($cClassesTot as $key_c => $oClass) {
                 $get = '';
                 foreach ($a_ordre as $key_o => $ordre) {
-                    //comprobar que en $ordre está sólo el campo. Puede tener parámetros: ASC, DESC
+                    //comprobar que en $ordre está sólo el campo. Puede tener parametros: ASC, DESC
                     $aa_ordre = explode(' ', $ordre);
                     $ordreCamp = $aa_ordre[0];
                     $get = 'get' . ucfirst($ordreCamp);
-                    if (method_exists($oClass, $get)) {
-                        $text = $oClass->$get() ?? '';
-                        // Anular acentos, cambiar ñ por nzz
-                        $text = QuitarAcentos::to_sort($text);
-                        $text = strtolower($text);
-                        $a_ord[$key_o][$key_c] = $text;
-                        $a_ord_cond[$key_o] = SORT_ASC;
-                        if (count($aa_ordre) > 1) {
-                            if ($aa_ordre[1] === 'DESC') {
-                                $a_ord_cond[$key_o] = SORT_DESC;
-                            }
+                    $a_ord[$key_o][$key_c] = strtolower($oClass->$get());
+                    $a_ord_cond[$key_o] = SORT_ASC;
+                    if (count($aa_ordre) > 1) {
+                        if ($aa_ordre[1] == 'DESC') {
+                            $a_ord_cond[$key_o] = SORT_DESC;
                         }
                     }
                 }
@@ -145,3 +135,5 @@ abstract class ClaseGestor
     }
 
 }
+
+?>

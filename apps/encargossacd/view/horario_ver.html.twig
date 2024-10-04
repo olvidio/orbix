@@ -36,33 +36,33 @@ fnjs_guardar=function(formulario){
 	   $('#dia_inc').val(inc);
 	}
 
-	if (err!=1) {
-		mod = $('#mod').val();
-	    if (mod == 'excepcion') {
-            $(formulario).attr('action','des/tareas/horario_excepcion_ver.php');
-	    } 
-	    fnjs_enviar_formulario('#modifica');
-	    $(formulario).attr('action','apps/encargossacd/controller/horario_update.php');
-		$(formulario).one("submit", function() {
-			$.ajax({
-                url: $(this).attr('action'),
-                type: 'post',
-                data: $(this).serialize()
-			})
-			.done(function (rta_txt) {
-				if (rta_txt !== '' && rta_txt !== '\\n') {
-					alert ('{{ "respuesta"|trans|raw }}: '+rta_txt);
-				} else {
-					{{ oPosicion.js_atras(1)|raw }}
-				}
-			});
-			return false;
-		});
-		$(formulario).trigger("submit");
-		$(formulario).off();
-	}
-	return false;
-}
+        if (err != 1) {
+            mod = $('#mod').val();
+            if (mod == 'excepcion') {
+                $(formulario).attr('action', 'des/tareas/horario_excepcion_ver.php');
+            }
+            fnjs_enviar_formulario('#modifica');
+            $(formulario).attr('action', 'apps/encargossacd/controller/horario_update.php');
+            $(formulario).one("submit", function () {
+                $.ajax({
+                    url: $(this).attr('action'),
+                    type: 'post',
+                    data: $(this).serialize()
+                })
+                    .done(function (rta_txt) {
+                        if (rta_txt !== '' && rta_txt !== '\\n') {
+                            alert('{{ "respuesta"|trans|raw }}: ' + rta_txt);
+                        } else {
+                            {{ oPosicion.js_atras(1)|raw }}
+                        }
+                    });
+                return false;
+            });
+            $(formulario).trigger("submit");
+            $(formulario).off();
+        }
+        return false;
+    }
 </script>
 <body>
 <form id="modifica" name="modifica" action="" method="post">

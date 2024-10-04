@@ -2,7 +2,9 @@
 namespace core;
 
 // INICIO Cabecera global de URL de controlador *********************************
-	require_once ("apps/core/global_header.inc");
+use web\Hash;
+
+require_once ("apps/core/global_header.inc");
 // Archivos requeridos por esta url **********************************************
 
 // Crea los objetos de uso global **********************************************
@@ -18,6 +20,12 @@ if (ConfigGlobal::$web_path === '/pruebas' || ConfigGlobal::$web_path === '/prue
 include_once(ConfigGlobal::$dir_estilos.'/todo_en_uno.css.php');
 include_once(ConfigGlobal::$dir_estilos.'/menu_horizontal.css.php');
 
+$aQuery = [ 'pau' => 'a' ];
+// el hppt_build_query no pasa los valores null
+if (is_array($aQuery)) {
+    array_walk($aQuery, 'core\poner_empty_on_null');
+}
+$goMisas = Hash::link('apps/misas/controller/misas_index.php?' . http_build_query($aQuery));
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html lang="es">
@@ -38,6 +46,16 @@ include_once(ConfigGlobal::$dir_estilos.'/menu_horizontal.css.php');
   <p>OCTUBRE 2022: se ha añadido una dl fantasma ('Otra dl de aquinate') para poder introducir actividades que organiza
       otra dl que si está en aquinate, pero que no las va a introducir en su dl
       (por ejemplo actividades de sg, cuando no se usa para sg)</p>
+<?php
+  if  ($esquemav  === 'H-dlbv') {
+  ?>
+  <h1>Misas</h1>
+  <br>
+      <span class="link" onclick="fnjs_update_div('#main','<?= $goMisas ?>')">index de misas</span></h2>
+  <?php
+  }
+?>
+  <br>
     <h1>Tutoriales</h1>
     <br>
     <h2><a href="#uso_general">1. Uso en general</a></h2>

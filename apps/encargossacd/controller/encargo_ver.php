@@ -93,6 +93,11 @@ $Qgrupo = (string)filter_input(INPUT_POST, 'grupo');
 $Qfiltro_ctr = (string)filter_input(INPUT_POST, 'filtro_ctr');
 $Qdesc_enc = (string)filter_input(INPUT_POST, 'desc_enc');
 $Qdesc_lugar = (string)filter_input(INPUT_POST, 'desc_lugar');
+$Qid_zona = (integer)filter_input(INPUT_POST, 'id_zona');
+
+if ($Qgrupo == 8) {
+    $Qfiltro_ctr = 8;
+}
 
 $idioma_enc = '';
 if (empty($Qque) || $Qque === 'editar') { //significa que no es nuevo
@@ -142,7 +147,10 @@ $oDesplGrupos->setOpcion_sel($Qgrupo);
 $oDesplGrupos->setBlanco(1);
 $oDesplGrupos->setAction("fnjs_lst_tipo_enc();");
 
+$Qgrupo='8...';
+
 if (!empty($Qgrupo)) {
+    echo 'Grupo:'.$Qgrupo.'<br>';
     $aWhere = [];
     $aOperador = [];
     $aWhere['id_tipo_enc'] = '^' . $Qgrupo;
@@ -175,6 +183,7 @@ $oDesplGrupoCtrs->setBlanco(1);
 $oDesplGrupoCtrs->setAction("fnjs_lista_ctrs();");
 
 $oGrupoCtr = new DesplCentros();
+$oGrupoCtr->setIdZona($Qid_zona);
 $oDesplCtrs = $oGrupoCtr->getDesplPorFiltro($Qfiltro_ctr);
 $oDesplCtrs->setNombre('lst_ctrs');
 $oDesplCtrs->setAction('fnjs_ver_ficha()');
@@ -193,6 +202,7 @@ $oHashAct = new Hash();
 $aCamposHidden = [
     'que' => $Qque,
     'id_enc' => $Qid_enc,
+    'id_zona' => $Qid_zona,
 ];
 $oHashAct->setUrl($url_actualizar);
 if ($Qque === 'nuevo') {
@@ -207,6 +217,7 @@ $oHashAct->setArrayCamposHidden($aCamposHidden);
 $url_ctr = 'apps/encargossacd/controller/ctr_get_select.php';
 $oHashCtr = new Hash();
 $oHashCtr->setUrl($url_ctr);
+$oHashCtr->setArrayCamposHidden(['id_zona' => $Qid_zona]);
 $oHashCtr->setCamposForm('filtro_ctr!id_ubi');
 $h_ctr = $oHashCtr->linkSinVal();
 

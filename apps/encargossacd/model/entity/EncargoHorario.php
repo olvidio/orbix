@@ -608,7 +608,8 @@ class EncargoHorario extends core\ClasePropiedades
         if (!isset($this->th_ini) && !$this->bLoaded) {
             $this->DBCarregar();
         }
-        return $this->th_ini;
+        preg_match('/(\d*):(\d*):(\d*)/', $this->th_ini, $matches);
+        return "$matches[1]:$matches[2]";
     }
 
     /**
@@ -631,7 +632,8 @@ class EncargoHorario extends core\ClasePropiedades
         if (!isset($this->th_fin) && !$this->bLoaded) {
             $this->DBCarregar();
         }
-        return $this->th_fin;
+        preg_match('/(\d*):(\d*):(\d*)/', $this->th_fin, $matches);
+        return "$matches[1]:$matches[2]";
     }
 
     /**

@@ -1,6 +1,7 @@
 <?php
 
 use encargossacd\model\entity\EncargoHorario;
+use encargossacd\model\entity\GestorEncargoTipo;
 use web\Hash;
 use web\Desplegable;
 use encargossacd\model\EncargoConstants;
@@ -31,17 +32,18 @@ $oPosicion->recordar($Qrefresh);
 
 $Qmod = (string)filter_input(INPUT_POST, 'mod');
 $Qid_enc = (integer)filter_input(INPUT_POST, 'id_enc');
+$Qorigen = (string)filter_input(INPUT_POST, 'origen');
 $Qdesc_enc = (string)filter_input(INPUT_POST, 'desc_enc');
 $Qdesc_enc = urldecode($Qdesc_enc);
 
-if ($Qmod != 'nuevo') { //significa que no es nuevo
+if ($Qmod !== 'nuevo') { //significa que no es nuevo
     $id_item_h = (integer)filter_input(INPUT_POST, 'id_item_h');
     if (!empty($_POST['sel'])) { //vengo de un checkbox
         $id_item_h = strtok($_POST['sel'][0], "#");
     }
     $EncargoHorario = new EncargoHorario($id_item_h);
-    $f_ini = $EncargoHorario->getF_ini()->getFromLocal();
-    $f_fin = $EncargoHorario->getF_fin()->getFromLocal();
+    $f_ini = $EncargoHorario->getF_ini() === null ? '' : $EncargoHorario->getF_ini()->getFromLocal();
+    $f_fin = $EncargoHorario->getF_fin() === null ? '' : $EncargoHorario->getF_fin()->getFromLocal();
     $dia_ref = $EncargoHorario->getDia_ref();
     $dia_num = $EncargoHorario->getDia_num();
     $mas_menos = $EncargoHorario->getMas_menos();
@@ -64,12 +66,9 @@ if ($Qmod != 'nuevo') { //significa que no es nuevo
     $mes = '';
 }
 
-if (empty($id_item_h)) {
-    $titulo = _("nuevo") . " ";
-}
 $titulo = _("horario de") . ": " . $Qdesc_enc;
 
-$oGesEncagoTipo = new \encargossacd\model\entity\GestorEncargoTipo();
+$oGesEncagoTipo = new GestorEncargoTipo();
 $dia = $oGesEncagoTipo->calcular_dia($mas_menos, $dia_ref, $dia_inc);
 $opciones_dia_semana = EncargoConstants::OPCIONES_DIA_SEMANA;
 $oDesplDia = new Desplegable();
@@ -102,7 +101,7 @@ $oDesplRef->setBlanco('t');
 $oDesplRef->setOpciones($op_dia_ref);
 $oDesplRef->setOpcion_sel($dia_ref);
 
-// miro si tinen excepciones:
+// miro si tienen excepciones:
 if (!empty($id_item_h)) {
     $GesEncargoHorarioExcepcion = new GestorEncargoHorarioExcepcion();
     $cEncargoHorarioExcepcion = $GesEncargoHorarioExcepcion->getEncargoHorarioExcepciones(['id_item_h' => $id_item_h]);

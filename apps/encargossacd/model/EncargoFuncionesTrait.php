@@ -129,7 +129,8 @@ trait EncargoFuncionesTrait
                 '2' => "sf",
                 '3' => "sss+",
                 '4' => "igl",
-                '5' => "cgi/oc"
+                '5' => "cgi/oc",
+                '8' => "zonas",
             ];
         } else {
             $array_seccion = [
@@ -137,7 +138,8 @@ trait EncargoFuncionesTrait
                 '1' => "sv",
                 '3' => "sss+",
                 '4' => "igl",
-                '5' => "cgi/oc"
+                '5' => "cgi/oc",
+                '8' => "zonas",
             ];
         }
         return $array_seccion;

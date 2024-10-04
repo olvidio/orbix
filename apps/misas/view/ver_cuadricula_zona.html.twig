@@ -1,0 +1,443 @@
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+    <link rel="shortcut icon" type="image/ico" href="favicon.ico"/>
+    <title>SlickGrid example: CompositeEditor</title>
+    <!--
+    <link rel="stylesheet" href="../dist/styles/css/slick-icons.css" type="text/css"/>
+    <link rel="stylesheet" href="../dist/styles/css/example-demo.css" type="text/css"/>
+    <link rel="stylesheet" href="../dist/styles/css/slick-alpine-theme.css" type="text/css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+  -->
+
+
+    <link type='text/css' rel='stylesheet'
+          href='node_modules/slickgrid/dist/styles/css/slick-icons.css'/>
+    <link type='text/css' rel='stylesheet'
+          href='node_modules/slickgrid/dist/styles/css/example-demo.css'/>
+    <link type='text/css' rel='stylesheet'
+          href='node_modules/slickgrid/dist/styles/css/slick-alpine-theme.css'/>
+
+    <style>
+        .cell-title {
+            font-weight: bold;
+        }
+
+        .cell-effort-driven {
+            justify-content: center;
+        }
+
+        .item-details-form {
+            z-index: 1000;
+            display: inline-block;
+            border: 1px solid black;
+            margin: 8px;
+            padding: 10px;
+            background: #fbfbfb;
+            -moz-box-shadow: 0px 0px 15px black;
+            -webkit-box-shadow: 0px 0px 15px black;
+            box-shadow: 0px 0px 15px black;
+
+            position: absolute;
+            top: 10px;
+            left: 150px;
+        }
+
+        .item-details-form-buttons {
+            float: right;
+        }
+
+        .item-details-label {
+            margin-left: 10px;
+            margin-top: 20px;
+            display: block;
+            font-weight: bold;
+        }
+
+        .item-details-editor-container {
+            width: 200px;
+            height: 20px;
+            border: 1px solid silver;
+            background: white;
+            display: block;
+            margin: 10px;
+            margin-top: 4px;
+            padding: 0;
+            padding-left: 4px;
+            padding-right: 0px;
+        }
+    .verde {
+      background-color: #d1e7dd;
+    }
+    .rojo {
+      background-color: #f8d7da;
+    }
+    .amarillo {
+      background-color: #ffff00;
+    }
+    </style>
+</head>
+<div id="cuadriculas" style="position:relative">
+    <input type="hidden" id="empiezamin" value=""/>
+    <input type="hidden" id="empiezamax" value=""/>
+    <div style="width:100%;">
+        <div id="myGrid" class="slick-container" style="width:100%;height:300px;"></div>
+    </div>
+    <div style="width:100%;">
+        <div id="Grid_sacd" class="slick-container" style="width:100%;height:300px;"></div>
+    </div>
+
+
+    <div class='item-details-form' style="display: none">
+
+        <label id="titulo_modal"></label>
+        <hr/>
+        <input type="hidden" id="cell_selected" value=""/>
+        <input type="hidden" id="row_selected" value=""/>
+        <input type="hidden" id="uuid_selected" value=""/>
+        <input id="dia" value=""/>
+        <input id="seleccionado" value=""/>
+        <input type="hidden" id="id_enc_selected" value=""/>
+        <input type="hidden" id="id_sacd_inicial" value=""/>
+        <p>{{ "Selección de sacd"|trans|raw }}:
+		    <input id="sacd_libre" type="radio" name="grupos_sacd" value="1" OnChange="prepara_select_sacd();">{{ "libre"|trans|raw }}
+		    <input id="sacd_zona" type="radio" name="grupos_sacd" value="2" OnChange="prepara_select_sacd();">{{ "zona"|trans|raw }}
+		    <input id="sacd_dl"type="radio" name="grupos_sacd"value="4" OnChange="prepara_select_sacd();">{{ "dl"|trans|raw }}
+		    <input id="sacd_depaso" type="radio" name="grupos_sacd"value="8" OnChange="prepara_select_sacd();">{{ "de paso"|trans|raw }}
+	    </p>
+
+        <div style="margin-left: 10px; margin-top: 10px;">
+            <label for="id_sacd">{{ "Sacerdote: "|trans|raw }}</label>
+            <div id="desplegable">
+            </div>
+        </div>
+
+        <div style="margin-left: 10px; margin-top: 10px;">
+            <div class="input-group clockpicker" style="float: left;">
+                <label for="tstart">{{ "Inicio"|trans|raw }}</label>
+                <input id="tstart" type="text" class="form-control" size="3" value="">
+                <span class="input-group-addon">
+                <span class="glyphicon glyphicon-time"></span>&nbsp&nbsp&nbsp&nbsp
+            </span>
+            </div>
+            <div class="input-group clockpicker" style="float:left;">
+                <label for="tend">{{ "Fin"|trans|raw }}</label>
+                <input id="tend" type="text" class="form-control" size="3" value="">
+                <span class="input-group-addon">
+                <span class="glyphicon glyphicon-time"></span>
+            </span>
+            </div>
+        </div>
+
+        <div style="margin-top: 40px;">
+            <label for="observ"> {{ "Observaciones"|trans|raw }}: </label>
+            <input id="observ" type="text" class="form-control" size="20" value="">
+        </div>
+
+        <hr/>
+        <div class='item-details-form-buttons'>
+            <button data-action='save' class='slick-btn slick-btn-primary'>Save</button>
+            <button data-action='cancel' class='slick-btn slick-btn-default'>Cancel</button>
+        </div>
+    </div>
+
+</div>
+
+<script src="node_modules/slickgrid/dist/browser/slick.core.js"></script>
+<script src="node_modules/slickgrid/dist/browser/slick.interactions.js"></script>
+<script src="node_modules/slickgrid/dist/browser/slick.grid.js"></script>
+<script src="node_modules/slickgrid/dist/browser/plugins/slick.cellrangeselector.js"></script>
+<script src="node_modules/slickgrid/dist/browser/plugins/slick.cellselectionmodel.js"></script>
+<script src="node_modules/slickgrid/dist/browser/slick.formatters.js"></script>
+<script src="node_modules/slickgrid/dist/browser/slick.editors.js"></script>
+<script src="node_modules/slickgrid/dist/browser/slick.compositeeditor.js"></script>
+
+<script>
+
+    var modal = $(".item-details-form");
+
+    modal.keydown(function (e) {
+        if (e.which == Slick.keyCode.ENTER) {
+            commitCurrentEdit();
+            e.stopPropagation();
+            e.preventDefault();
+        } else if (e.which == Slick.keyCode.ESCAPE) {
+            cancelCurrentEdit();
+            e.stopPropagation();
+            e.preventDefault();
+        }
+    });
+
+    modal.find("[data-action=save]").click(function () {
+        commitCurrentEdit();
+    });
+
+    modal.find("[data-action=cancel]").click(function () {
+        cancelCurrentEdit();
+    });
+
+    function cancelCurrentEdit() {
+        modal.hide();
+    }
+
+    function commitCurrentEdit(cell) {
+        cell = $('#cell_selected').val();
+        row = $('#row_selected').val();
+        var id_campo = columns[cell].field;
+
+        let key = $('#id_sacd').val();
+        const myArray = key.split("#");
+        let id_nom = myArray[0];
+        let iniciales = myArray[1];
+
+        let tstart = $('#tstart').val();
+        let tend = $('#tend').val();
+        let dia = $('#dia').val();
+        let observ = $('#observ').val();
+        let uuid_item = $('#uuid_selected').val();
+        let id_enc = $('#id_enc_selected').val();
+
+        var texto = ' -- ';
+        if (iniciales !== undefined) {
+            texto = iniciales;
+            if (tstart !== "") {
+                texto += ' '+tstart;
+            }
+            if (observ !== "") {
+                texto += '*';
+            }
+        }
+
+        data[row].meta[id_campo].uuid_item = uuid_item;
+        data[row].meta[id_campo].key = key;
+        data[row].meta[id_campo].tstart = tstart;
+        data[row].meta[id_campo].tend = tend;
+        data[row].meta[id_campo].observ = observ;
+        data[row].meta[id_campo].id_enc = id_enc;
+
+        let meta = data[row].meta[id_campo];
+        meta.dia = dia;
+        // añadir el hash (se puede cambiar todo menos el encargo)
+        const arr_h = { {{ array_h|raw }} };
+        const mergedJSON = { ...meta, ...arr_h };
+
+        // guardar cambios en DB
+        var request = $.ajax({
+            url: 'apps/misas/controller/cuadricula_update.php',
+            method: 'POST',
+            data: mergedJSON,
+            dataType: 'json'
+        });
+        request.done(function (json) {
+            if (json.success !== true) {
+                alert("{{ "respuesta"|trans|raw }}: " + json.mensaje);
+            } else {
+                let id_zona = '{{id_zona}}';
+                let tipo_plantilla = '{{tipo_plantilla}}';
+                let orden = '{{orden}}';
+                let periodo = '{{periodo}}';
+                let empiezamin = $('#empiezamin').val();
+                let empiezamax = $('#empiezamax').val();
+                let url = '{{ url_ver_cuadricula_zona }}';
+    	        var sacd_libre=$('#sacd_libre').prop('checked');
+            	var sacd_zona=$('#sacd_zona').prop('checked');
+                var sacd_dl=$('#sacd_dl').prop('checked');
+        	    var sacd_depaso=$('#sacd_depaso').prop('checked');
+       	        if (sacd_libre) seleccion=1;
+           	    if (sacd_zona) seleccion=2;
+	            if (sacd_dl) seleccion=4;
+            	if (sacd_depaso) seleccion=8;
+                let parametros = 'id_zona=' + id_zona + '&tipo_plantilla=' + tipo_plantilla + '&orden=' + orden  + '&seleccion=' + seleccion + '&periodo=' + periodo + '&empiezamin=' + empiezamin + '&empiezamax=' + empiezamax + '{{ h_ver_cuadricula_zona|raw }}';
+                $.ajax({
+                    url: url,
+                    type: 'post',
+                    data: parametros,
+                    dataType: 'html'
+                 })
+                .done(function (rta_txt) {
+                    $('#cuadriculas').html(rta_txt);
+                });
+            }
+        });
+    }
+
+    function reset_campos_modal() {
+        $('#id_sacd').val('');
+        $('#tstart').val('');
+        $('#tend').val('');
+        $('#observ').val('');
+        $('#id_enc').val('');
+    }
+
+    function prepara_select_sacd() {
+    	var sacd_libre=$('#sacd_libre').prop('checked');
+    	var sacd_zona=$('#sacd_zona').prop('checked');
+        var sacd_dl=$('#sacd_dl').prop('checked');
+	    var sacd_depaso=$('#sacd_depaso').prop('checked');
+        var dia=$('#dia').val();
+       	if (sacd_libre) seleccion=1;
+       	if (sacd_zona) seleccion=2;
+	    if (sacd_dl) seleccion=4;
+    	if (sacd_depaso) seleccion=8;
+	    var ii2=$('#id_sacd_inicial').val();
+
+        let url_desplegable_sacd = '{{ url_desplegable_sacd }}';
+	    let id_zona = '{{ id_zona }}';
+	    var parametros= 'id_zona=' + id_zona + '&id_sacd=' + ii2 + '&seleccion=' + seleccion + '&dia=' + dia + ' & {{ h_desplegable_sacd|raw }} ';
+        request = $.ajax({
+		    url: url_desplegable_sacd,
+		    data: parametros,
+		    type: 'post',
+            dataType: 'json'
+        });
+
+        request.done(function (json) {
+                html=json.desplegable;
+                $("#desplegable").html(html);
+        });
+
+        modal.show();
+    }
+
+    function openDetails(cell) {
+        const url = URL.createObjectURL(new Blob());
+        $('#cell_selected').val(cell.cell);
+        $('#row_selected').val(cell.row);
+        // recuperar los datos del meta e introducirlos en los campos
+        let encargo = data[cell.row].encargo;
+        let id_campo = columns[cell.cell].field;
+        let meta = data[cell.row].meta[id_campo];
+
+        let key = meta.key;
+        let tstart = meta.tstart;
+        let tend = meta.tend;
+        let observ = meta.observ;
+        let id_enc = meta.id_enc;
+        let dia = meta.dia;
+        let uuid_item = meta.uuid_item;
+        if (uuid_item === "") {
+            uuid_item = url.substring(url.lastIndexOf('/') + 1)
+        }
+
+        $('#titulo_modal').html(encargo);
+        $('#id_sacd').val(key);
+        $('#tstart').val(tstart);
+        $('#tend').val(tend);
+        $('#dia').val(dia);
+        $('#observ').val(observ);
+        $('#uuid_selected').val(uuid_item);
+        $('#id_enc_selected').val(id_enc);
+
+        if (seleccion==0) {
+            seleccion=2;
+        }
+        if (seleccion==1) {
+            $('#sacd_libre').prop('checked', true);
+        }
+        if (seleccion==2) {
+            $('#sacd_zona').prop('checked', true);
+        }
+        if (seleccion==4) {
+            $('#sacd_dl').prop('checked', true);
+        }
+        if (seleccion==8) {
+            $('#sacd_depaso').prop('checked', true);
+        }
+        var posicion=key.indexOf('#');
+        var id_sacd_inicial=key.substring(0,posicion);
+        $('#id_sacd_inicial').val(id_sacd_inicial);
+        prepara_select_sacd();
+
+        modal.show();
+        $('#sacd_zona').checked=true;
+    }
+
+    function requiredFieldValidator(value) {
+        if (value == null || value == undefined || !value.length) {
+            return {valid: false, msg: "This is a required field"};
+        } else {
+            return {valid: true, msg: null};
+        }
+    }
+
+function statusFormatter(row, cell, value, columnDef, dataContext) {
+    vs=value.split("#");
+    color=vs[1];
+    texto=vs[2];
+      var rtn = { text: vs[0], removeClasses: 'red orange green' };
+
+      if (color !== null && color !== "") {
+        if (color == "rojo") {
+          rtn.addClasses = "rojo";
+          rtn.toolTip = texto;
+        } else if (color == "amarillo") {
+          rtn.addClasses =  "amarillo";
+          rtn.toolTip = texto;
+        } else if (color == "verde") {
+          rtn.addClasses =  "verde";
+          rtn.toolTip = texto;
+        }
+      }
+      return rtn;
+  }
+
+var meta;
+    var grid;
+    var data = {{ json_data_cuadricula|raw }};
+    var columns = {{ json_columns_cuadricula|raw }};
+    var options = {
+        editable: false,
+        enableAddRow: true,
+        enableCellNavigation: true,
+        asyncEditorLoading: false,
+        autoEdit: false
+    };
+    $('#empiezamin').val({{empiezamin}});
+    $('#empiezamax').val({{empiezamax}});
+
+    var grid_sacd;
+    var data_sacd = {{ json_data_sacd|raw }};
+    var columns2 = {{ json_columns2|raw }};
+    var seleccion ={{ seleccion }};
+    if (seleccion==1) {
+        $('#sacd_libre').checked=true;
+    }
+    if (seleccion==2) {
+        $('#sacd_zona').checked=true;
+    }
+    if (seleccion==4) {
+        $('#sacd_dl').checked=true;
+    }
+    if (seleccion==8) {
+        $('#sacd_depaso').checked=true;
+    }
+
+    var columns_sacd = {{ columns_sacd|raw }};
+
+      var options2 = {
+    editable: true,
+    enableAddRow: false,
+    enableCellNavigation: true,
+    createPreHeaderPanel: true
+  };
+
+    $(function () {
+        grid = new Slick.Grid("#myGrid", data, columns, options);
+        grid_sacd = new Slick.Grid("#Grid_sacd", data_sacd, columns_sacd, options);
+
+        grid.onClick.subscribe(function (e) {
+            var cell = grid.getCellFromEvent(e);
+            openDetails(cell);
+            e.stopPropagation();
+        });
+
+        grid.setActiveCell(0, 0);
+    })
+
+
+    $('.clockpicker').clockpicker({
+            placement: 'bottom',
+            align: 'right',
+            donetext: 'Correcto!'
+        }
+    );
+</script>

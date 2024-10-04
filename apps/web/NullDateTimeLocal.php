@@ -33,26 +33,6 @@ class NullDateTimeLocal extends \DateTime
         return $aMeses;
     }
 
-    static private function getFormat()
-    {
-        $idioma = $_SESSION['session_auth']['idioma'];
-        # Si no hemos encontrado ningún idioma que nos convenga, mostramos la web en el idioma por defecto
-        if (!isset($idioma)) {
-            $idioma = $_SESSION['oConfig']->getIdioma_default();
-        }
-        $a_idioma = explode('.', $idioma);
-        $code_lng = $a_idioma[0];
-        //$code_char = $a_idioma[1];
-        switch ($code_lng) {
-            case 'en_US':
-                $format = 'm/j/Y';
-                break;
-            default:
-                $format = 'j/m/Y';
-        }
-        return $format;
-    }
-
     public function getFechaLatin()
     {
         return '';

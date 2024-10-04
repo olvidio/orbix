@@ -54,6 +54,12 @@ class PeriodoQue
      *
      * @var array
      */
+    private $isDesplAnysVisible= TRUE;
+    /**
+     * aOpcionesAnys de PeriodoQue
+     *
+     * @var boolean
+     */
     private $aOpcionesAnys;
     /**
      * sBoton de PeriodoQue
@@ -134,7 +140,11 @@ class PeriodoQue
         }
         //-- Final para que funcione
         $sHtml .= '<td class=contenido>' . $this->getDesplPeriodos()->desplegable() . '</td>';
-        $sHtml .= '<td class=contenido>' . $this->getDesplAnys()->desplegable() . '</td>';
+        if($this->isDesplAnysVisible){
+            $sHtml .= '<td class=contenido>' . $this->getDesplAnys()->desplegable() . '</td>';
+        } else {
+            $sHtml .= '<input type="hidden" name="year" value="">';
+        }
         //$sHtml.='<td colspan=5 id="span_fechas" class=etiqueta style="visibility: hidden;">   ';
         $sHtml .= '<td colspan=5 id="span_fechas" class="d_novisible etiqueta" >   ';
         $sHtml .= _("entre");
@@ -282,6 +292,11 @@ class PeriodoQue
     function setDesplAnys($oDespl)
     {
         $this->oDesplAnys = $oDespl;
+    }
+
+    function setisDesplAnysVisible(bool $visible)
+    {
+        $this->isDesplAnysVisible = $visible;
     }
 
     function setDesplAnysOpcion_sel($sOpcion_sel)

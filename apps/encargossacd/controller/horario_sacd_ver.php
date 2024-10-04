@@ -174,9 +174,9 @@ $titulo = _("horario de") . ": " . $desc_enc;
         <tr>
 
             <td class=etiqueta><?php echo ucfirst(_("activo desde")); ?>:</td>
-            <td><input class="fecha" size="11" id="f_ini" id="f_ini" name="f_ini" value="<?= $f_ini ?>">
+            <td><input class="fecha" size="11" id="f_ini" id="f_ini" name="f_ini" value="<?= $f_ini_iso ?>">
             <td class=etiqueta><?php echo ucfirst(_("hasta")); ?>:</td>
-            <td><input class="fecha" size="11" id="f_fin" id="f_fin" name="f_fin" value="<?= $f_fin ?>">
+            <td><input class="fecha" size="11" id="f_fin" id="f_fin" name="f_fin" value="<?= $f_fin_iso ?>">
         </tr>
         <tr>
             <td class=etiqueta><?php echo ucfirst(_("dia")); ?>:</td>
