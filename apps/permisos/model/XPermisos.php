@@ -4,7 +4,7 @@ namespace permisos\model;
 
 use core\ConfigGlobal;
 
-class XPermisos
+abstract class XPermisos
 {
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
@@ -13,7 +13,7 @@ class XPermisos
      *
      * @var array
      */
-    protected $permissions = array();
+    public static $permissions =[];
     /**
      * permis amb el que es contruyeix la clase. La resta es compara amb aquest.
      *
@@ -22,10 +22,6 @@ class XPermisos
     protected $iaccion;
 
     /* METODES ----------------------------------------------------------------- */
-    public function __construct($iaccion = 0)
-    {
-        $this->iaccion = $iaccion;
-    }
 
     function setAccion($iaccion)
     {
@@ -34,12 +30,12 @@ class XPermisos
 
     function getPermissions()
     {
-        return $this->permissions;
+        return self::$permissions;
     }
 
     function setPermissions($permissions)
     {
-        $this->permissions = $permissions;
+        self::$permissions = $permissions;
     }
 
     function getTodos()
@@ -84,9 +80,9 @@ class XPermisos
         */
         if (!($has_one && $ok0)) {
             return false;
-        } else {
-            return true;
         }
+
+        return true;
     }
 
     /**
@@ -253,11 +249,11 @@ class XPermisos
 
     function perm_sel($name, $current = "", $class = "")
     {
-        reset($this->permissions);
+        reset(self::$permissions);
         $ret = sprintf("<select multiple name=\"%s[]\"%s>\n",
             $name,
             ($class != "") ? " class=$class" : "");
-        foreach ($this->permissions as $k => $v) {
+        foreach (self::$permissions as $k => $v) {
             $ret .= sprintf(" <option%s%s>%s\n",
                 $this->perm_islisted($current, $k) ? " selected" : "",
                 ($class != "") ? " class=$class" : "",
@@ -280,7 +276,7 @@ class XPermisos
             $bin = 0;
         }
         $txt = "";
-        foreach ($this->permissions as $nom => $num) {
+        foreach (self::$permissions as $nom => $num) {
             if ($bin == $num) {
                 $chk = "checked";
             } else {
@@ -300,7 +296,7 @@ class XPermisos
     {
         $camp = $nomcamp . "[]";
         $txt = "";
-        foreach ($this->permissions as $nom => $num) {
+        foreach (self::$permissions as $nom => $num) {
             if (in_array($num, $a_perm)) {
                 $chk = "checked";
             } else {
@@ -323,7 +319,7 @@ class XPermisos
             $bin = 0;
         }
         $txt = "";
-        foreach ($this->permissions as $nom => $num) {
+        foreach (self::$permissions as $nom => $num) {
             if ($bin & $num) {
                 $chk = "checkbox-checked.png";
             } else {
@@ -347,13 +343,13 @@ class XPermisos
         }
         //$bin &= (-1);
         $txt = "";
-        // un bucle para comprobar que no exista uno identico
-        foreach ($this->permissions as $nom => $num) {
+        // un bucle para comprobar que no exista uno idéntico
+        foreach (self::$permissions as $nom => $num) {
             if ($bin === $num) {
                 $admin = $num;
             }
         }
-        foreach ($this->permissions as $nom => $num) {
+        foreach (self::$permissions as $nom => $num) {
             if (!empty($admin)) {
                 if ($admin == $num) {
                     $chk = "checked";
@@ -380,7 +376,7 @@ class XPermisos
         }
         $txt = "";
         $i = 0;
-        foreach ($this->permissions as $nom => $num) {
+        foreach (self::$permissions as $nom => $num) {
             //if ($bin & $num) {
             if (($bin & $num) === $num) {
                 $i++;
@@ -399,7 +395,7 @@ class XPermisos
         }
         $txt = "";
         $i = 0;
-        foreach ($this->permissions as $nom => $num) {
+        foreach (self::$permissions as $nom => $num) {
             //if ($bin & $num) {
             if ($bin === $num) {
                 $i++;
@@ -418,7 +414,7 @@ class XPermisos
         }
         $txt = "";
         $i = 0;
-        foreach ($this->permissions as $nom => $num) {
+        foreach (self::$permissions as $nom => $num) {
             if ($bin & $num) {
                 $i++;
                 if ($i > 1) $txt .= ', ';
@@ -436,7 +432,7 @@ class XPermisos
         }
         $txt = array();
         $i = 0;
-        foreach ($this->permissions as $nom => $num) {
+        foreach (self::$permissions as $nom => $num) {
             $i++;
             $txt[$num] = "$nom";
         }

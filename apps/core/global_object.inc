@@ -3,6 +3,7 @@
 namespace core;
 
 use config\model\Config;
+use menus\model\PermisoMenu;
 use permisos\model as permisos;
 use usuarios\model\entity as usuarios;
 use usuarios\model\entity\Usuario;
@@ -323,6 +324,7 @@ if (ConfigGlobal::is_app_installed('menus')) {
         $isJefeZona = FALSE;
         $id_usuario = ConfigGlobal::mi_id_usuario();
         $oMiUsuario = new Usuario($id_usuario);
+
         if ($oMiUsuario->isRole('p-sacd')) { //sacd
             $id_nom = $oMiUsuario->getId_pau();
             if (!empty($id_nom)) {
@@ -331,7 +333,8 @@ if (ConfigGlobal::is_app_installed('menus')) {
             }
         }
         if ($isJefeZona) {
-            $perm_jefe_zona = 1 << 17; //131072,
+            $permissions = PermisoMenu::omplir();
+            $perm_jefe_zona = $permissions['jefeZona'];
             $iperm_menu = $iperm_menu | $perm_jefe_zona;
         }
         //echo "perms: $iperm_menu<br>";

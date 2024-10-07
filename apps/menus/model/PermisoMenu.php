@@ -24,7 +24,6 @@ class PermisoMenu extends permisos\XPermisos
      */
     private $sPermLogin;
 
-    public $permissions;
     public $todos;
 
     /* CONSTRUCTOR -------------------------------------------------------------- */
@@ -36,10 +35,10 @@ class PermisoMenu extends permisos\XPermisos
     public function __construct()
     {
         $this->iaccion = $_SESSION['iPermMenus'];
-        $this->omplir();
+        self::omplir();
     }
 
-    private function omplir()
+    public static function omplir()
     {
         $permissions = [];
         $permissions['adl'] = 1;
@@ -62,17 +61,20 @@ class PermisoMenu extends permisos\XPermisos
         $permissions['nax'] = 1 << 14; //16384,
         $permissions['calendario'] = 1 << 15; //32768,
         $permissions['ctr'] = 1 << 16; //65536,
-        $permissions['jefeZona'] = 1<<17; //131072,
+        $permissions['jefeZona'] = 1 << 17; //131072,
         $permissions['sacd'] = 1 << 18; //262144,
         $permissions['persona'] = 1 << 19;
         $permissions['casa'] = 1 << 20;
         $permissions['admin_sf'] = 1 << 21;
         $permissions['admin_sv'] = 1 << 25; // uno que se grande, para que sea el último
 
-        $this->permissions = $permissions;
+        self::$permissions = $permissions;
+        
+        return self::$permissions;
     }
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
+
     /**
      * Retorna true o false si és visible o no.
      *

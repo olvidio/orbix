@@ -25,7 +25,6 @@ class PermisoDossier extends permisos\XPermisos
      */
     private $sPermLogin;
 
-    public $permissions;
     public $todos;
 
     /* CONSTRUCTOR -------------------------------------------------------------- */
@@ -62,7 +61,7 @@ class PermisoDossier extends permisos\XPermisos
         $permissions['sddl'] = 1 << 13; //8192,
         $permissions['nax'] = 1 << 14; //16384,
 
-        $this->permissions = $permissions;
+        self::$permissions = $permissions;
     }
 
 }

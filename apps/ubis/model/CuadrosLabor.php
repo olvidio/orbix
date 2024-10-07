@@ -28,19 +28,19 @@ class CuadrosLabor extends permisos\XPermisos
     {
         $miSfsv = ConfigGlobal::mi_sfsv();
 
-        $this->permissions = $this->generarArrayTraducido();
+        self::$permissions = $this->generarArrayTraducido();
 
         if ($miSfsv == 1) {
-            $this->permissions[_("sss+")] = 32;
+            self::$permissions[_("sss+")] = 32;
         }
         if ($miSfsv == 2) {
-            $this->permissions[_("nax")] = 32;
+            self::$permissions[_("nax")] = 32;
         }
     }
 
     public function getTxtTiposLabor()
     {
-        return array_flip($this->permissions);
+        return array_flip(self::$permissions);
     }
 
 }

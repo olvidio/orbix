@@ -48,6 +48,6 @@ class PermDl extends XPermisos
         // (1<<24 uno menos que sv) y le quito 8(des), 1024(vcsd) y 1
         $permission_users['admin_sv'] = -1; //; // todo unos, depende de la máquina, 32 o 64 bits.
 
-        $this->permissions = $permission_users;
+        self::$permissions = $permission_users;
     }
 }
