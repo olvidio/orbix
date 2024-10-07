@@ -217,7 +217,7 @@ abstract class XPermisos
         if (!is_array($p)) {
             return array(false, 0);
         }
-        $perms = $this->permissions;
+        $perms = self::$permissions;
         $r = 0;
         reset($p);
         foreach ($p as $key => $val) {
