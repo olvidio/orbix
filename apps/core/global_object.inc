@@ -324,18 +324,14 @@ if (ConfigGlobal::is_app_installed('menus')) {
         $id_usuario = ConfigGlobal::mi_id_usuario();
         $oMiUsuario = new Usuario($id_usuario);
         if ($oMiUsuario->isRole('p-sacd')) { //sacd
-            if ($_SESSION['oConfig']->is_jefeCalendario()) {
-                $isJefeZona = TRUE;
-            } else {
-                $id_nom = $oMiUsuario->getId_pau();
-                if (!empty($id_nom)) {
-                    $oGesZonas = new GestorZona();
-                    $isJefeZona = $oGesZonas->isJefeZona($id_nom);
-                }
+            $id_nom = $oMiUsuario->getId_pau();
+            if (!empty($id_nom)) {
+                $oGesZonas = new GestorZona();
+                $isJefeZona = $oGesZonas->isJefeZona($id_nom);
             }
         }
         if ($isJefeZona) {
-            $perm_jefe_zona = 1<<17; //131072,
+            $perm_jefe_zona = 1 << 17; //131072,
             $iperm_menu = $iperm_menu | $perm_jefe_zona;
         }
         //echo "perms: $iperm_menu<br>";
