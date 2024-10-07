@@ -5,7 +5,9 @@ namespace core;
 use config\model\Config;
 use permisos\model as permisos;
 use usuarios\model\entity as usuarios;
+use usuarios\model\entity\Usuario;
 use web;
+use zonassacd\model\entity\GestorZona;
 
 if (session_status() !== PHP_SESSION_ACTIVE) {
     // Para detectar el error: "Headers already sent"
@@ -29,7 +31,7 @@ if (session_status() !== PHP_SESSION_ACTIVE) {
         'HttpOnly' => true,
         'SameSite' => 'Strict',
         //'Domain' => $domain
-        ]);
+    ]);
     session_start();
 }
 
@@ -316,6 +318,25 @@ if (ConfigGlobal::is_app_installed('menus')) {
                 // Or (inclusive or) 	Bits that are set in either $a or $b are set.
                 $iperm_menu = $iperm_menu | $oPermMenu->getMenu_perm();
             }
+        }
+        // añadir el permiso de 'jefeZona'
+        $isJefeZona = FALSE;
+        $id_usuario = ConfigGlobal::mi_id_usuario();
+        $oMiUsuario = new Usuario($id_usuario);
+        if ($oMiUsuario->isRole('p-sacd')) { //sacd
+            if ($_SESSION['oConfig']->is_jefeCalendario()) {
+                $isJefeZona = TRUE;
+            } else {
+                $id_nom = $oMiUsuario->getId_pau();
+                if (!empty($id_nom)) {
+                    $oGesZonas = new GestorZona();
+                    $isJefeZona = $oGesZonas->isJefeZona($id_nom);
+                }
+            }
+        }
+        if ($isJefeZona) {
+            $perm_jefe_zona = 1<<17; //131072,
+            $iperm_menu = $iperm_menu | $perm_jefe_zona;
         }
         //echo "perms: $iperm_menu<br>";
         $_SESSION['iPermMenus'] = $iperm_menu;

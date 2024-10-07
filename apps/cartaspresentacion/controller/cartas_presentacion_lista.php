@@ -111,8 +111,9 @@ switch ($Qque) {
             lista_cartas($a_mega, $ordenar_dl);
         }
         if (!empty($Qregion)) {
+            $aWhere = [];
+            $aOperador = [];
             $aWhere['region'] = $Qregion;
-            $aOperador = array();
 
             $GesCentros = new GestorCentro();
             $cCentros = $GesCentros->getCentros($aWhere, $aOperador);

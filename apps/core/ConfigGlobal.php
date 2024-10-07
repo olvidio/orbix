@@ -5,6 +5,7 @@ namespace core;
 class ConfigGlobal extends ServerConf
 {
 
+    public static $auth_method='database';
     // la region (sin cr), las dl en formato de DBU
     public const REGIONES_CON_DL = [
             'Pla' => ['u', 'par'],

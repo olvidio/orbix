@@ -23,7 +23,6 @@ class GestorZona extends core\ClaseGestor
     /* CONSTRUCTOR -------------------------------------------------------------- */
 
 
-    
     function __construct()
     {
         $oDbl = $GLOBALS['oDBE'];
@@ -35,6 +34,25 @@ class GestorZona extends core\ClaseGestor
 
 
     /* MÉTODOS PÚBLICOS -----------------------------------------------------------*/
+
+    function isJefeZona(int $id_nom): bool
+    {
+        $oDbl = $this->getoDbl_Select();
+        $nom_tabla = $this->getNomTabla();
+
+        //SELECT EXISTS(SELECT 1 FROM contact WHERE id=12)
+        $sQuery = "SELECT EXISTS(SELECT 1
+					FROM $nom_tabla
+					WHERE id_nom = $id_nom)";
+        if (($oDblSt = $oDbl->query($sQuery)) === false) {
+            $sClauError = 'GestorZona.lista';
+            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+            return false;
+        }
+
+        $row = $oDblSt->fetch();
+        return $row[0];
+    }
 
 
     /**
@@ -59,29 +77,6 @@ class GestorZona extends core\ClaseGestor
             return false;
         }
         return new Desplegable('', $oDblSt, '', true);
-    }
-
-    /**
-     * retorna l'array d'objectes de tipus Zona
-     *
-     * @param string sQuery la query a executar.
-     * @return array Una col·lecció d'objectes de tipus Zona
-     */
-    function getZonasQuery($sQuery = '')
-    {
-        $oDbl = $this->getoDbl();
-        $oZonaSet = new core\Set();
-        if (($oDbl->query($sQuery)) === FALSE) {
-            $sClauError = 'GestorZona.query';
-            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
-            return FALSE;
-        }
-        foreach ($oDbl->query($sQuery) as $aDades) {
-            $a_pkey = array('id_zona' => $aDades['id_zona']);
-            $oZona = new Zona($a_pkey);
-            $oZonaSet->add($oZona);
-        }
-        return $oZonaSet->getTot();
     }
 
     /**
