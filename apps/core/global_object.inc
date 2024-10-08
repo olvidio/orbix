@@ -333,7 +333,8 @@ if (ConfigGlobal::is_app_installed('menus')) {
             }
         }
         if ($isJefeZona) {
-            $permissions = PermisoMenu::omplir();
+            $oPermisoMenu = new PermisoMenu();
+            $permissions = $oPermisoMenu->omplir();
             $perm_jefe_zona = $permissions['jefeZona'];
             $iperm_menu = $iperm_menu | $perm_jefe_zona;
         }
