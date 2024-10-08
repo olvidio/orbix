@@ -13,7 +13,7 @@ abstract class XPermisos
      *
      * @var array
      */
-    public static $permissions =[];
+    protected $permissions;
     /**
      * permis amb el que es contruyeix la clase. La resta es compara amb aquest.
      *
@@ -30,12 +30,12 @@ abstract class XPermisos
 
     function getPermissions()
     {
-        return self::$permissions;
+        return $this->permissions;
     }
 
     function setPermissions($permissions)
     {
-        self::$permissions = $permissions;
+        $this->permissions = $permissions;
     }
 
     function getTodos()
@@ -217,7 +217,7 @@ abstract class XPermisos
         if (!is_array($p)) {
             return array(false, 0);
         }
-        $perms = self::$permissions;
+        $perms = $this->permissions;
         $r = 0;
         reset($p);
         foreach ($p as $key => $val) {
@@ -249,11 +249,11 @@ abstract class XPermisos
 
     function perm_sel($name, $current = "", $class = "")
     {
-        reset(self::$permissions);
+        reset($this->permissions);
         $ret = sprintf("<select multiple name=\"%s[]\"%s>\n",
             $name,
             ($class != "") ? " class=$class" : "");
-        foreach (self::$permissions as $k => $v) {
+        foreach ($this->permissions as $k => $v) {
             $ret .= sprintf(" <option%s%s>%s\n",
                 $this->perm_islisted($current, $k) ? " selected" : "",
                 ($class != "") ? " class=$class" : "",
@@ -276,7 +276,7 @@ abstract class XPermisos
             $bin = 0;
         }
         $txt = "";
-        foreach (self::$permissions as $nom => $num) {
+        foreach ($this->permissions as $nom => $num) {
             if ($bin == $num) {
                 $chk = "checked";
             } else {
@@ -296,7 +296,7 @@ abstract class XPermisos
     {
         $camp = $nomcamp . "[]";
         $txt = "";
-        foreach (self::$permissions as $nom => $num) {
+        foreach ($this->permissions as $nom => $num) {
             if (in_array($num, $a_perm)) {
                 $chk = "checked";
             } else {
@@ -319,7 +319,7 @@ abstract class XPermisos
             $bin = 0;
         }
         $txt = "";
-        foreach (self::$permissions as $nom => $num) {
+        foreach ($this->permissions as $nom => $num) {
             if ($bin & $num) {
                 $chk = "checkbox-checked.png";
             } else {
@@ -344,12 +344,12 @@ abstract class XPermisos
         //$bin &= (-1);
         $txt = "";
         // un bucle para comprobar que no exista uno idéntico
-        foreach (self::$permissions as $nom => $num) {
+        foreach ($this->permissions as $nom => $num) {
             if ($bin === $num) {
                 $admin = $num;
             }
         }
-        foreach (self::$permissions as $nom => $num) {
+        foreach ($this->permissions as $nom => $num) {
             if (!empty($admin)) {
                 if ($admin == $num) {
                     $chk = "checked";
@@ -376,7 +376,7 @@ abstract class XPermisos
         }
         $txt = "";
         $i = 0;
-        foreach (self::$permissions as $nom => $num) {
+        foreach ($this->permissions as $nom => $num) {
             //if ($bin & $num) {
             if (($bin & $num) === $num) {
                 $i++;
@@ -395,7 +395,7 @@ abstract class XPermisos
         }
         $txt = "";
         $i = 0;
-        foreach (self::$permissions as $nom => $num) {
+        foreach ($this->permissions as $nom => $num) {
             //if ($bin & $num) {
             if ($bin === $num) {
                 $i++;
@@ -414,7 +414,7 @@ abstract class XPermisos
         }
         $txt = "";
         $i = 0;
-        foreach (self::$permissions as $nom => $num) {
+        foreach ($this->permissions as $nom => $num) {
             if ($bin & $num) {
                 $i++;
                 if ($i > 1) $txt .= ', ';
@@ -432,7 +432,7 @@ abstract class XPermisos
         }
         $txt = array();
         $i = 0;
-        foreach (self::$permissions as $nom => $num) {
+        foreach ($this->permissions as $nom => $num) {
             $i++;
             $txt[$num] = "$nom";
         }

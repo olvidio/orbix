@@ -61,7 +61,7 @@ class PermisoDossier extends permisos\XPermisos
         $permissions['sddl'] = 1 << 13; //8192,
         $permissions['nax'] = 1 << 14; //16384,
 
-        self::$permissions = $permissions;
+       $this->permissions= $permissions;
     }
 
 }

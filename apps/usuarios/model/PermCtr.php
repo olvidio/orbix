@@ -9,7 +9,7 @@ class PermCtr extends permisos\XPermisos
      public function __construct($iaccion = 0)
     {
         $this->iaccion = $iaccion;
-        self::$permissions = [
+       $this->permissions= [
             "nada" => 0,
             "ver" => 1,
             "cl" => 3,

@@ -28,7 +28,7 @@ class CuadrosLabor extends permisos\XPermisos
     {
         $miSfsv = ConfigGlobal::mi_sfsv();
 
-        self::$permissions = $this->generarArrayTraducido();
+       $this->permissions= $this->generarArrayTraducido();
 
         if ($miSfsv == 1) {
             self::$permissions[_("sss+")] = 32;

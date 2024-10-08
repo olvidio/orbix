@@ -9,7 +9,7 @@ class PermAccion extends permisos\XPermisos
     public function __construct($iaccion = 0)
     {
         $this->iaccion = $iaccion;
-        self::$permissions = [
+       $this->permissions= [
             "nada" => 0,
             "ocupado" => 1,
             "ver" => 3,

@@ -12,6 +12,6 @@ class PermAfectados extends permisos\XPermisos
     public function __construct($iaccion = 0)
     {
         $this->iaccion = $iaccion;
-        self::$permissions = PermisosActividades::AFECTA;
+       $this->permissions= PermisosActividades::AFECTA;
     }
 }

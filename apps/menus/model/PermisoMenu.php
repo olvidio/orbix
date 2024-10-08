@@ -35,10 +35,10 @@ class PermisoMenu extends permisos\XPermisos
     public function __construct()
     {
         $this->iaccion = $_SESSION['iPermMenus'];
-        self::omplir();
+        $this->omplir();
     }
 
-    public static function omplir()
+    public function omplir()
     {
         $permissions = [];
         $permissions['adl'] = 1;
@@ -68,9 +68,9 @@ class PermisoMenu extends permisos\XPermisos
         $permissions['admin_sf'] = 1 << 21;
         $permissions['admin_sv'] = 1 << 25; // uno que se grande, para que sea el último
 
-        self::$permissions = $permissions;
+       $this->permissions= $permissions;
         
-        return self::$permissions;
+        return $this->permissions;
     }
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
