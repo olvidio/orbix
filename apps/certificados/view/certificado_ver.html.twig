@@ -35,7 +35,7 @@
             <br>
             <label>
                 {{ "firmado digitalmente"|trans|raw }}:
-                <input type="checkbox" name="copia" {{ chk_copia }}/>
+                <input type="checkbox" name="firmado" {{ chk_firmado }}/>
             </label>
             <br>
             <label>
@@ -60,7 +60,7 @@
         }
 
         if (!fnjs_comprobar_fecha('#f_enviado', '{{ locale_us }}')) {
-            return;
+            //return;
         }
 
         if (typeof event !== 'undefined') {

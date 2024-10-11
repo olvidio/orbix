@@ -17,7 +17,7 @@
 /*		<td id="col_oficinas" colspan=8><span id="oficinas_span" ></span>
 /*	<?php
 /*		// para que me salga una opción más en blanco
-/*		echo "<select tabindex='89' id='oficinas_mas' name='oficinas_mas' class=contenido  onChange=\"fnjs_mas_inputs(event,'oficinas','g1');\" onKeyDown=\"fnjs_mas_inputs(event,'oficinas','g1');\" onkeyPress=\"stop_tab(event);\" ><option value=0 />";
+/*		echo "<select tabindex='89' id='oficinas_mas' name='oficinas_mas' class=contenido  onChange=\"fnjs_mas_inputs(event,'oficinas','g1');\" onKeyDown=\"fnjs_mas_inputs(event,'oficinas','g1');\" onkeydown=\"stop_tab(event);\" ><option value=0 />";
 /*			pdo_options($oDBSt_db_oficinas,"",0);
 /*		echo "</select>";
 /*		echo "</td></tr>";

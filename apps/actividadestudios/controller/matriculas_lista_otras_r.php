@@ -92,7 +92,7 @@ if (!empty($Qapellido1)) {
     $gesAsignaturas = new GestorAsignatura();
     $a_asignaturas = $gesAsignaturas->getArrayAsignaturas();
 
-    $titulo = _("Lista de alumnos de otras regiones pendientes de enviar certificado");
+    $titulo = _("Lista de alumnos de otras regiones pendientes de generar certificado");
     $i = 0;
     $a_valores = array();
     $msg_err = '';

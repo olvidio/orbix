@@ -12,9 +12,7 @@
 
 use certificados\domain\repositories\CertificadoRepository;
 use core\ConfigGlobal;
-use notas\model\entity as notas;
 use personas\model\entity\Persona;
-use ubis\model\entity\GestorDelegacion;
 use usuarios\model\entity\Local;
 use web\Hash;
 use web\Lista;
@@ -50,7 +48,7 @@ if (isset($_POST['stack'])) {
 
 if (ConfigGlobal::mi_ambito() === 'dl') {
     $msg = _("Este menú es sólo para las regiones del stgr.");
-    $msg .="<br>";
+    $msg .= "<br>";
     $msg .= _("Para ver los certificados de una persona, debe ir a través de los dossiers");
     exit ($msg);
 }
@@ -101,9 +99,9 @@ if (!empty($Qcertificado)) {
     $mes = date('m');
     $fin_m = $_SESSION['oConfig']->getMesFinStgr();
     if ($mes > $fin_m) {
-        $any = (int) date('Y') + 1;
+        $any = (int)date('Y') + 1;
     } else {
-        $any = (int) date('Y');
+        $any = (int)date('Y');
     }
     $inicurs_ca = curso_est("inicio", $any)->format('Y-m-d');
     $fincurs_ca = curso_est("fin", $any)->format('Y-m-d');
@@ -129,9 +127,11 @@ $botones = 0; // para 'añadir certificado'
 $a_botones = [];
 // Si soy region del stgr
 if (ConfigGlobal::mi_ambito() === 'rstgr' || ConfigGlobal::mi_ambito() === 'r') {
-        $a_botones[] = array('txt' => _("eliminar"), 'click' => "fnjs_eliminar(\"#seleccionados\")");
-        $a_botones[] = array('txt' => _("modificar"), 'click' => "fnjs_modificar(\"#seleccionados\")");
-        $botones = 1; // para 'añadir certificado'
+    $a_botones[] = array('txt' => _("eliminar"), 'click' => "fnjs_eliminar(\"#seleccionados\")");
+    $a_botones[] = array('txt' => _("modificar"), 'click' => "fnjs_modificar(\"#seleccionados\")");
+    $a_botones[] = array('txt' => _("subir pdf firmado"), 'click' => "fnjs_upload_certificado(\"#seleccionados\")");
+    $a_botones[] = array('txt' => _("enviar"), 'click' => "fnjs_enviar(\"#seleccionados\")");
+    $botones = 1; // para 'añadir certificado'
 }
 
 $a_botones[] = ['txt' => _("descargar pdf"), 'click' => "fnjs_descargar_pdf(\"#seleccionados\")"];
@@ -154,7 +154,7 @@ foreach ($cCertificados as $oCertificado) {
     $certificado = $oCertificado->getCertificado();
     $f_certificado = $oCertificado->getF_certificado()->getFromLocal();
     $id_nom = $oCertificado->getId_nom();
-    $copia = $oCertificado->isCopia();
+    $firmado = $oCertificado->isFirmado();
     $nom = $oCertificado->getNom();
     $idioma = $oCertificado->getIdioma();
     $destino = $oCertificado->getDestino();
@@ -172,7 +172,7 @@ foreach ($cCertificados as $oCertificado) {
     } else {
         $nom_db = $oPersona->getNombreApellidos();
     }
-    $nom_alumno = empty($nom)? $nom_db : $nom;
+    $nom_alumno = empty($nom) ? $nom_db : $nom;
 
     $pagina = Hash::link('apps/certificados/controller/certificado_ver.php?' . http_build_query(array('certificado' => $certificado)));
     $a_valores[$i]['sel'] = $id_item;
@@ -186,7 +186,7 @@ foreach ($cCertificados as $oCertificado) {
     $a_valores[$i][1] = $certificado;
     $a_valores[$i][2] = $f_certificado;
     $a_valores[$i][3] = $nom_alumno;
-    $a_valores[$i][4] = is_true($copia)? _("Sí") : _("No");
+    $a_valores[$i][4] = is_true($firmado) ? _("Sí") : _("No");
     $a_valores[$i][5] = empty($pdf) ? '' : _("Sí");
     $a_valores[$i][6] = $idioma;
     $a_valores[$i][7] = $destino;

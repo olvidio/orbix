@@ -141,7 +141,7 @@ fnjs_left_side_hide();
 {% endblock %}
 {% block body %}
 <div id="exportar" >
-<form id="modifica"name="modifica" action="" method="post" onkeypress="fnjs_enviar(event,this);" >
+<form id="modifica"name="modifica" action="" method="post" onkeydown="fnjs_enviar(event,this);" >
 {{ oHash.getCamposHtml()|raw }}
 <h3 class=subtitulo>{{ titulo }}</h3>
 <table>

@@ -56,7 +56,7 @@ class DB extends DBAbstract
                     certificado varchar(50),
                     f_certificado date,
                     propio bool,
-                    copia bool,
+                    firmado bool,
                     documento bytea
                     );";
 

@@ -47,7 +47,7 @@ fnjs_borrar=function(formulario){
 }
 </script>
 {% if no_tipo_enc %}
-	<form id="frm_encargo_que" action="des/tareas/encargo_select.php" method="post" onkeypress="fnjs_enviar(event,this);" >
+	<form id="frm_encargo_que" action="des/tareas/encargo_select.php" method="post" onkeydown="fnjs_enviar(event,this);" >
 	<table>
 	<thead>
 	<th class=titulo_inv colspan=4>{{ "buscar un encargo"|trans|capitalize }}&nbsp;&nbsp;&nbsp;

@@ -300,8 +300,10 @@ class EditarPersonaNota
                         $oPersona = Persona::NewPersona($id_nom);
                         $nom = $oPersona->getPrefApellidosNombre();
 
-                        $err = sprintf(_("Ya existe una nota para %s en su dl"), $nom);
-                        $err .= "\n" . _("debería quitarlo del acta");
+                        $err = sprintf(_("%s ya tiene puesta nota para esta asignatura en su r/dl."), $nom);
+                        $err .= "\n" . _("Si ha guardado este acta anteriormente puede ignorar este aviso.");
+                        $err .= "\n" . _("Si es la primera vez que 'guarda las notas en tessera' sería conveniente
+                            revisar con su r la situación de esta persona");
                         throw new \RuntimeException($err);
                     }
                 }

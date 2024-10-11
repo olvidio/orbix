@@ -40,7 +40,7 @@
     ?>
 </script>
 <div id="condiciones">
-    <form id="frm_buscar_1" name="frm_buscar_1" action="" onkeypress="fnjs_enviar(event,this);">
+    <form id="frm_buscar_1" name="frm_buscar_1" action="" onkeydown="fnjs_enviar(event,this);">
         <?= $oHash->getCamposHtml(); ?>
         <input type="hidden" name="opcion" value="">
         <input type="hidden" name="simple" value="1">
@@ -157,7 +157,7 @@
     </form>
 
     <!-- más opciones --------------------------------------------- -->
-    <form id="frm_buscar_2" name="frm_buscar_2" action="" onkeypress="fnjs_enviar(event,this);">
+    <form id="frm_buscar_2" name="frm_buscar_2" action="" onkeydown="fnjs_enviar(event,this);">
         <?= $oHash->getCamposHtml(); ?>
         <input type="hidden" name="opcion" value="">
         <input type="hidden" name="simple" value="2">

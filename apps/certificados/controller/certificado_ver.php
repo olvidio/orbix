@@ -36,17 +36,17 @@ $destino = $oCertificado->getDestino();
 $certificado = $oCertificado->getCertificado();
 $f_certificado = $oCertificado->getF_certificado()->getFromLocal();
 $f_enviado = $oCertificado->getF_enviado()->getFromLocal();
-$copia = $oCertificado->isCopia();
-if (is_true($copia)) {
-    $chk_copia = 'checked';
+$firmado = $oCertificado->isFirmado();
+if (is_true($firmado)) {
+    $chk_firmado = 'checked';
 } else {
-    $chk_copia = '';
+    $chk_firmado = '';
 }
 $propio = $oCertificado->isPropio();
 
 $oPersona = Persona::NewPersona($id_nom);
 $apellidos_nombre = $oPersona->getApellidosNombre();
-$nom = empty($nom)? $apellidos_nombre : $nom;
+$nom = empty($nom) ? $apellidos_nombre : $nom;
 
 
 //Idiomas (blanco para latín)
@@ -57,23 +57,27 @@ $oDesplIdiomas->setBlanco(TRUE);
 $oDesplIdiomas->setOpcion_sel($idioma);
 
 $oHashCertificadoPdf = new Hash();
-$oHashCertificadoPdf->setCamposForm('certificado_pdf!certificado!copia!destino!f_certificado!idioma!nom!f_enviado');
-$oHashCertificadoPdf->setCamposNo('certificado_pdf!copia');
+$oHashCertificadoPdf->setCamposForm('certificado_pdf!certificado!firmado!destino!f_certificado!idioma!nom!f_enviado');
+$oHashCertificadoPdf->setCamposNo('certificado_pdf!firmado');
 //cambio el nombre, porque tiene el mismo id en el otro formulario
 $oHashCertificadoPdf->setArrayCamposHidden(['id_item' => $Qid_item, 'id_nom' => $id_nom, 'certificado_old' => $certificado]);
 
 // borrar los posibles fichero antiguos de /tmp
-$dir_tmp = ServerConf::DIR .'/log/tmp/';
+$dir_tmp = ServerConf::DIR . '/log/tmp/';
 $cmd_shell = "find $dir_tmp -mtime +1 -delete";
 shell_exec($cmd_shell);
 
 // Descargar el pdf en un file en log/
-$filename_sin_barra = str_replace('/', '_',$certificado);
-$filename_sin_espacio = str_replace(' ', '_',$filename_sin_barra);
-$filename_pdf = ServerConf::DIR .'/log/tmp/' . $filename_sin_espacio . '.pdf';
-$filename_pdf_web = ConfigGlobal::getWeb() .'/log/tmp/' . $filename_sin_espacio . '.pdf';
-$content = $oCertificado->getDocumento();
-file_put_contents($filename_pdf, $content);
+$filename_sin_barra = str_replace('/', '_', $certificado);
+$filename_sin_espacio = str_replace(' ', '_', $filename_sin_barra);
+$filename_pdf = ServerConf::DIR . '/log/tmp/' . $filename_sin_espacio . '.pdf';
+if (is_file($filename_pdf)) {
+    $filename_pdf_web = ConfigGlobal::getWeb() . '/log/tmp/' . $filename_sin_espacio . '.pdf';
+    $content = $oCertificado->getDocumento();
+    file_put_contents($filename_pdf, $content);
+} else {
+    $filename_pdf_web = '';
+}
 
 $a_campos = ['oPosicion' => $oPosicion,
     'oHashCertificadoPdf' => $oHashCertificadoPdf,
@@ -85,8 +89,8 @@ $a_campos = ['oPosicion' => $oPosicion,
     'certificado' => $certificado,
     'f_certificado' => $f_certificado,
     'f_enviado' => $f_enviado,
-    'chk_copia' => $chk_copia,
-        // para ver pdf
+    'chk_firmado' => $chk_firmado,
+    // para ver pdf
     'filename_pdf' => $filename_pdf_web,
 ];
 

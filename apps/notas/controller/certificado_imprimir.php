@@ -81,8 +81,8 @@ $certificado = "$sigla $num/$any";
 $destino = '';
 
 $oHashCertificadoPdf = new Hash();
-$oHashCertificadoPdf->setCamposForm('certificado!copia!f_certificado!idioma!destino');
-$oHashCertificadoPdf->setCamposNo('copia');
+$oHashCertificadoPdf->setCamposForm('certificado!firmado!f_certificado!idioma!destino');
+$oHashCertificadoPdf->setCamposNo('firmado');
 $oHashCertificadoPdf->setArrayCamposHidden(['id_nom' => $id_nom, 'nuevo' => 1]);
 
 $pag_certificado_2_pdf = ConfigGlobal::getWeb() . '/apps/notas/controller/certificado_2_mpdf.php';

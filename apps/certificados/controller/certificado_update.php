@@ -25,7 +25,7 @@ $Qnom = (string)filter_input(INPUT_POST, 'nom');
 $Qidioma = (string)filter_input(INPUT_POST, 'idioma');
 $Qdestino = (string)filter_input(INPUT_POST, 'destino');
 $Qcertificado = (string)filter_input(INPUT_POST, 'certificado');
-$Qcopia = (string)filter_input(INPUT_POST, 'copia');
+$Qfirmado = (string)filter_input(INPUT_POST, 'firmado');
 $Qf_certificado = (string)filter_input(INPUT_POST, 'f_certificado');
 $Qf_enviado = (string)filter_input(INPUT_POST, 'f_enviado');
 
@@ -58,12 +58,12 @@ $oCertificado->setNom($Qnom);
 $oCertificado->setIdioma($Qidioma);
 $oCertificado->setDestino($Qdestino);
 $oCertificado->setCertificado($Qcertificado);
-if (is_true($Qcopia)) {
-    $copia = TRUE;
+if (is_true($Qfirmado)) {
+    $firmado = TRUE;
 } else {
-    $copia = FALSE;
+    $firmado = FALSE;
 }
-$oCertificado->setCopia($copia);
+$oCertificado->setFirmado($firmado);
 $oCertificado->setPropio(FALSE);
 $oCertificado->setF_certificado($oF_certificado);
 if (!empty($oF_enviado)) {
@@ -78,7 +78,9 @@ if (!empty($Qcertificado_old)) {
     $filename_sin_barra = str_replace('/', '_', $Qcertificado_old);
     $filename_sin_espacio = str_replace(' ', '_', $filename_sin_barra);
     $filename_pdf = ConfigGlobal::DIR . '/log/tmp/' . $filename_sin_espacio . '.pdf';
-    unlink($filename_pdf);
+    if (is_file($filename_pdf)) {
+        unlink($filename_pdf);
+    }
 }
 
 if (empty($error_txt)) {

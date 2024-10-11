@@ -47,11 +47,11 @@ $idioma = $oCertificado->getIdioma();
 $destino = $oCertificado->getDestino();
 $certificado = $oCertificado->getCertificado();
 $f_certificado = $oCertificado->getF_certificado()->getFromLocal();
-$copia = $oCertificado->isCopia();
-if (is_true($copia)) {
-    $chk_copia = 'checked';
+$firmado = $oCertificado->isFirmado();
+if (is_true($firmado)) {
+    $chk_firmado = 'checked';
 } else {
-    $chk_copia = '';
+    $chk_firmado = '';
 }
 $propio = $oCertificado->isPropio();
 

@@ -39,7 +39,7 @@
     fnjs_left_side_hide();
 </script>
 <h3>Buscar usuario</h3>
-<form id=frm_buscar name=frm_buscar action="" method="post" onkeypress="fnjs_enviar(event,this);">
+<form id=frm_buscar name=frm_buscar action="" method="post" onkeydown="fnjs_enviar(event,this);">
     <?= $oHash->getCamposHtml(); ?>
     <?= ucfirst(_("nombre")) ?>:<input type=text name=username value="<?= $username ?>">
     <input type="button" onclick="fnjs_buscar();" id="btn_ok" name="btn_ok" value="<?= ucfirst(_("buscar")); ?>"

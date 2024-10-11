@@ -68,7 +68,7 @@
     fnjs_left_side_hide();
 </script>
 <form id="frm_sin_nombre" name="frm_sin_nombre" action="apps/notas/controller/acta_select.php" method="post"
-      onkeypress="fnjs_enviar(event,this);">
+      onkeydown="fnjs_enviar(event,this);">
     <?= $oHash->getCamposHtml(); ?>
 
     <p class="comentario"><?= _("<b>Ayuda para búsquedas</b>") ?>:<br>

@@ -1,4 +1,31 @@
 <script>
+    fnjs_enviar = function (formulario) {
+        rta = fnjs_solo_uno(formulario);
+        if (rta === 1) {
+            request = $.ajax({
+                data: $(formulario).serialize(),
+                url: 'apps/certificados/controller/certificado_enviar.php',
+                method: 'POST',
+                dataType: 'json'
+            });
+            request.done(function (json) {
+                if (json.success !== true) {
+                    alert("<?= _("respuesta") ?>: " + json.mensaje);
+                } else {
+                    fnjs_actualizar(formulario);
+                }
+            });
+        }
+    }
+    fnjs_upload_certificado = function (formulario) {
+        rta = fnjs_solo_uno(formulario);
+        if (rta === 1) {
+            $(formulario).attr('action', "apps/certificados/controller/certificado_upload_firmado.php");
+            $(formulario).target = "print";
+            fnjs_enviar_formulario(formulario);
+        }
+    }
+
     fnjs_descargar_pdf = function (formulario) {
         rta = fnjs_solo_uno(formulario);
         if (rta === 1) {
@@ -60,7 +87,7 @@
 </script>
 <form id="frm_sin_nombre" name="frm_sin_nombre" action="apps/certificados/controller/certificado_select.php"
       method="post"
-      onkeypress="fnjs_enviar(event,this);">
+      onkeydown="fnjs_enviar(event,this);">
     <?= $oHash->getCamposHtml() ?>
 
     <p class="comentario"><?= _("<b>Ayuda para búsquedas</b>") ?>:<br>

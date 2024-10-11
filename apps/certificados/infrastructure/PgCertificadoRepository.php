@@ -152,7 +152,7 @@ class PgCertificadoRepository extends ClaseRepository implements CertificadoRepo
         $aDatos['destino'] = $Certificado->getDestino();
         $aDatos['certificado'] = $Certificado->getCertificado();
         $aDatos['propio'] = $Certificado->isPropio();
-        $aDatos['copia'] = $Certificado->isCopia();
+        $aDatos['firmado'] = $Certificado->isFirmado();
         // para los bytea
         $aDatos['documento'] = bin2hex($Certificado->getDocumento()?? '');
         // para las fechas
@@ -165,10 +165,10 @@ class PgCertificadoRepository extends ClaseRepository implements CertificadoRepo
         } else {
             $aDatos['propio'] = 'false';
         }
-        if (is_true($aDatos['copia'])) {
-            $aDatos['copia'] = 'true';
+        if (is_true($aDatos['firmado'])) {
+            $aDatos['firmado'] = 'true';
         } else {
-            $aDatos['copia'] = 'false';
+            $aDatos['firmado'] = 'false';
         }
 
         if ($bInsert === FALSE) {
@@ -181,7 +181,7 @@ class PgCertificadoRepository extends ClaseRepository implements CertificadoRepo
 					certificado              = :certificado,
 					f_certificado            = :f_certificado,
 					propio                   = :propio,
-					copia                    = :copia,
+					firmado                    = :firmado,
 					documento                = :documento,
                     f_enviado                = :f_enviado";
             if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_item = $id_item")) === FALSE) {
@@ -202,8 +202,8 @@ class PgCertificadoRepository extends ClaseRepository implements CertificadoRepo
         } else {
             // INSERT
             $aDatos['id_item'] = $Certificado->getId_item();
-            $campos = "(id_item,id_nom,nom,idioma,destino,certificado,f_certificado,propio,copia,documento,f_enviado)";
-            $valores = "(:id_item,:id_nom,:nom,:idioma,:destino,:certificado,:f_certificado,:propio,:copia,:documento,:f_enviado)";
+            $campos = "(id_item,id_nom,nom,idioma,destino,certificado,f_certificado,propio,firmado,documento,f_enviado)";
+            $valores = "(:id_item,:id_nom,:nom,:idioma,:destino,:certificado,:f_certificado,:propio,:firmado,:documento,:f_enviado)";
             if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === FALSE) {
                 $sClaveError = 'PgCertificadoRepository.insertar.prepare';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);

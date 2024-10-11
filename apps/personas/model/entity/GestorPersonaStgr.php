@@ -37,8 +37,8 @@ class GestorPersonaStgr extends GestorPersonaGlobal
         $aOperador['apellido1'] = 'sin_acentos';
 
         $aWhere['situacion'] = 'A';
-        $aWhere['stgr'] = 'b|c1|c2';
-        $aOperador['stgr'] = '~';
+        //$aWhere['stgr'] = 'b|c1|c2';
+        //$aOperador['stgr'] = '~';
         $aWhere['_ordre'] = 'dl,stgr,apellido1,nom';
 
         return $this->getPersonas($aWhere, $aOperador);

@@ -66,11 +66,11 @@ class Certificado {
 	 */
 	 private $bpropio = null;
 	/**
-	 * Copia de Certificado
+	 * firmado de Certificado
 	 *
 	 * @var bool|null
 	 */
-	 private $bcopia = null;
+	 private $bfirmado = null;
 	/**
 	 * Documento de Certificado
 	 *
@@ -126,9 +126,9 @@ class Certificado {
 		{
 			$this->setPropio(is_true($aDatos['propio']));
 		}
-		if (array_key_exists('copia',$aDatos))
+		if (array_key_exists('firmado',$aDatos))
 		{
-			$this->setCopia(is_true($aDatos['copia']));
+			$this->setFirmado(is_true($aDatos['firmado']));
 		}
 		if (array_key_exists('documento',$aDatos))
 		{
@@ -271,19 +271,19 @@ class Certificado {
 	}
 	/**
 	 *
-	 * @return bool|null $bcopia
+	 * @return bool|null $bfirmado
 	 */
-	public function isCopia()
+	public function isFirmado()
 	{
-		return $this->bcopia;
+		return $this->bfirmado;
 	}
 	/**
 	 *
-	 * @param bool|null $bcopia
+	 * @param bool|null $bfirmado
 	 */
-	public function setCopia(?bool $bcopia = null)
+	public function setFirmado(?bool $bfirmado = null)
 	{
-		$this->bcopia = $bcopia;
+		$this->bfirmado = $bfirmado;
 	}
 	/**
 	 *
