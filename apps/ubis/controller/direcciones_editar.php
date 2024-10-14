@@ -3,6 +3,7 @@
 use usuarios\model\entity as usuarios;
 use ubis\model\entity as ubis;
 use web\Hash;
+use function core\is_true;
 
 /**
  * Es el frame inferior. Muestra la ficha de los ubis
@@ -202,9 +203,9 @@ if (empty($Qmod) & empty($Qid_direccion)) {
     die();
 }
 
-$chk_dcha = (!empty($cp_dcha) && $cp_dcha == "t") ? 'checked' : '';
-$chk_propietario = (!empty($propietario) && $propietario == "t") ? 'checked' : '';
-$chk_principal = (!empty($principal) && $principal == "t") ? 'checked' : '';
+$chk_dcha = is_true($cp_dcha)? 'checked' : '';
+$chk_propietario = is_true($propietario) ? 'checked' : '';
+$chk_principal = is_true($principal) ? 'checked' : '';
 
 $campos_chk = 'cp_dcha!propietario!principal';
 

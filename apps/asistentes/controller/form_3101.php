@@ -30,6 +30,7 @@
 use actividades\model\entity as actividades;
 use asistentes\model\entity as asistentes;
 use personas\model\entity as personas;
+use function core\is_true;
 
 // INICIO Cabecera global de URL de controlador *********************************
 require_once("apps/core/global_header.inc");
@@ -179,9 +180,9 @@ if (!empty($Qid_nom)) { //caso de modificar
         $oDesplegablePersonas->setAction('fnjs_cmb_propietario()');
     }
 }
-$propio_chk = (!empty($propio) && $propio == 't') ? 'checked' : '';
-$falta_chk = (!empty($falta) && $falta == 't') ? 'checked' : '';
-$est_chk = (!empty($est_ok) && $est_ok == 't') ? 'checked' : '';
+$propio_chk = (!empty($propio) && is_true($propio)) ? 'checked' : '';
+$falta_chk = (!empty($falta) && is_true($falta)) ? 'checked' : '';
+$est_chk = (!empty($est_ok) && is_true($est_ok)) ? 'checked' : '';
 
 if (core\ConfigGlobal::is_app_installed('actividadplazas')) {
     $oDesplegablePlaza = $gesAsistentes->getPosiblesPlaza();

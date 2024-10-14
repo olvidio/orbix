@@ -10,6 +10,7 @@ use core;
 use web;
 use web\Hash;
 use core\ConfigGlobal;
+use function core\is_true;
 
 /**
  * Gestiona el dossier 3102: Cargos de una actividad
@@ -153,7 +154,7 @@ class Select3102
             } else {
                 $permiso = 3;
             }
-            $puede_agd === 't' ? $chk_puede_agd = "si" : $chk_puede_agd = "no";
+            is_true($puede_agd)? $chk_puede_agd = "si" : $chk_puede_agd = "no";
 
             // Para los de des, elimino el cargo y la asistencia. Para el resto, sólo el cargo (no la asistencia).
             $this->txt_eliminar = _("¿Está seguro que desea quitar este cargo a esta persona?");

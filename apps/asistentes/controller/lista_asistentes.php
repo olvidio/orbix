@@ -7,6 +7,7 @@ use personas\model\entity as personas;
 use usuarios\model\entity as usuarios;
 use ubis\model\entity as ubis;
 use actividades\model\entity\Actividad;
+use function core\is_true;
 
 /**
  * Esta página lista los asistentes a una actividad seleccionada
@@ -147,7 +148,7 @@ if (core\ConfigGlobal::is_app_installed('actividadcargos')) {
         $observ_c = $oActividadCargo->getObserv();
         $ctr_dl = $oPersona->getCentro_o_dl();
 
-        $puede_agd == 't' ? $chk_puede_agd = "si" : $chk_puede_agd = "no";
+        is_true($puede_agd)? $chk_puede_agd = "si" : $chk_puede_agd = "no";
 
         // ahora miro si también asiste:
         $aWhere = array('id_activ' => $id_pau, 'id_nom' => $id_nom);
@@ -168,13 +169,13 @@ if (core\ConfigGlobal::is_app_installed('actividadcargos')) {
             $est_ok = $cAsistente[0]->getEst_ok();
             $observ = $cAsistente[0]->getObserv();
 
-            if ($propio == 't') {
+            if (is_true($propio)) {
                 $chk_propio = _("sí");
             } else {
                 $chk_propio = _("no");
             }
-            $falta == 't' ? $chk_falta = _("sí") : $chk_falta = _("no");
-            $est_ok == 't' ? $chk_est_ok = _("sí") : $chk_est_ok = _("no");
+            is_true($falta)? $chk_falta = _("sí") : $chk_falta = _("no");
+            is_true($est_ok)? $chk_est_ok = _("sí") : $chk_est_ok = _("no");
             $asis = "t";
             $a_valores[$c][3] = $chk_propio;
             $a_valores[$c][4] = $chk_est_ok;
@@ -222,13 +223,13 @@ foreach ($gesAsistentes->getAsistentes(array('id_activ' => $id_pau)) as $oAsiste
         $plaza = $oAsistente->getPlaza();
         if ($plaza < 4) continue;
     }
-    if ($propio == 't') {
+    if (is_true($propio)) {
         $chk_propio = _("sí");
     } else {
         $chk_propio = _("no");
     }
-    $falta == 't' ? $chk_falta = _("sí") : $chk_falta = _("no");
-    $est_ok == 't' ? $chk_est_ok = _("sí") : $chk_est_ok = _("no");
+    is_true($falta)? $chk_falta = _("sí") : $chk_falta = _("no");
+    is_true($est_ok)? $chk_est_ok = _("sí") : $chk_est_ok = _("no");
 
     $a_val[2] = "$nom  ($ctr_dl)";
     $a_val[3] = $chk_propio;

@@ -6,6 +6,7 @@ use actividadestudios\model\entity as actividadestudios;
 use asignaturas\model\entity as asignaturas;
 use asistentes\model\entity as asistentes;
 use personas\model\entity as personas;
+use function core\is_true;
 
 // INICIO Cabecera global de URL de controlador *********************************
 require_once("apps/core/global_header.inc");
@@ -148,11 +149,7 @@ foreach ($cAsistentes as $oAsistente) {
             $oAsignatura = new asignaturas\Asignatura($id_asignatura);
             $nombre_corto = $oAsignatura->getNombre_corto();
             $creditos = $oAsignatura->getCreditos();
-            if ($preceptor == "t") {
-                $preceptor = "(" . _("preceptor") . ")";
-            } else {
-                $preceptor = "";
-            }
+            $preceptor = is_true($preceptor)? "(" . _("preceptor") . ")" : '';
 
             $aAsignaturas[$i]['nombre_corto'] = $nombre_corto;
             $aAsignaturas[$i]['creditos'] = $creditos;

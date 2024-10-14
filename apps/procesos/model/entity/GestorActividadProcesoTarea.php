@@ -496,7 +496,7 @@ class GestorActividadProcesoTarea extends ClaseGestor
                             $completado = 't';
                         }
                     }
-                    if ($completado == 't') {
+                    if (is_true($completado)) {
                         $oActividadProcesoTarea->setCompletado($completado);
                         if (($oActividadProcesoTarea->DBGuardar(1)) === false) {
                             echo "4.error: No se ha guardado el proceso: $iid_activ,$iid_tipo_proceso,$id_fase,$id_tarea<br>";

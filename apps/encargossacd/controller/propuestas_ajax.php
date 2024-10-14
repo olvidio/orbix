@@ -83,13 +83,13 @@ switch ($Qque) {
         $oHoy = new DateTimeLocal();
         $f_ini = $oHoy->getFromLocal();
         foreach (['m', 't', 'v'] as $modulo) {
-            if ($modulo == "m") {
+            if ($modulo === "m") {
                 $dedicacion = $Qdedic_m;
             }
-            if ($modulo == "t") {
+            if ($modulo === "t") {
                 $dedicacion = $Qdedic_t;
             }
-            if ($modulo == "v") {
+            if ($modulo === "v") {
                 $dedicacion = $Qdedic_v;
             }
 

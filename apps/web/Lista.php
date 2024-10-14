@@ -4,6 +4,7 @@ namespace web;
 
 use core;
 use usuarios\model\entity as usuarios;
+use function core\is_true;
 
 //require_once ("classes/personas/ext_web_preferencias.class");
 
@@ -380,7 +381,7 @@ class Lista
             $c++;
             $width = isset($aColsWidth['sel']) ? $aColsWidth['sel'] : 30;
             $sColumns .= "{id: \"sel\", name: \"sel\", field: \"sel\", width:$width, sortable: false, formatter: checkboxSelectionFormatter}";
-            if (!is_array($aColsVisible) || $aColsVisible['sel'] == "true") {
+            if (!is_array($aColsVisible) || is_true($aColsVisible['sel'])) {
                 $sColumnsVisible .= "{id: \"sel\", name: \"sel\", field: \"sel\", width:$width, sortable: false, formatter: checkboxSelectionFormatter},";
             }
         }

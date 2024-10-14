@@ -456,7 +456,7 @@ class PermisosActividades
                 $permiso_ver = TRUE;
             }
             //si también asiste. tiene propio = 't'
-            if ($propio == 't' && $oPermAsisSacd->have_perm_activ('ver') === TRUE) {
+            if (is_true($propio) && $oPermAsisSacd->have_perm_activ('ver') === TRUE) {
                 $permiso_ver = TRUE;
             }
         } else {

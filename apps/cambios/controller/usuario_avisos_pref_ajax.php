@@ -105,8 +105,8 @@ switch ($Qsalida) {
                 $chk_old = 'checked';
                 $chk_new = 'checked';
             } else {
-                $chk_old = ($oCambioUsuarioPropiedadPref->getValor_old() == 't') ? 'checked' : '';
-                $chk_new = ($oCambioUsuarioPropiedadPref->getValor_new() == 't') ? 'checked' : '';
+                $chk_old = (is_true($oCambioUsuarioPropiedadPref->getValor_old())) ? 'checked' : '';
+                $chk_new = (is_true($oCambioUsuarioPropiedadPref->getValor_new())) ? 'checked' : '';
             }
         } else {
             $valor = '';

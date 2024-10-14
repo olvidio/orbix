@@ -4,6 +4,7 @@ namespace dossiers\model;
 use core;
 use personas\model\entity as personas;
 use web;
+use function core\is_true;
 
 /**
  * Classe per gestionar permisos de dossiers
@@ -48,7 +49,7 @@ class PermDossier
             $rta = 3;
         }
 
-        if ($depende === "t" && $rta == 3 && $pau === "p") {
+        if (is_true($depende) && $rta == 3 && $pau === "p") {
             // busco el id_tabla para saber de quién se trata y ver si es de mi oficina.
             $oPersona = personas\Persona::NewPersona($id_pau);
             if (!is_object($oPersona)) {

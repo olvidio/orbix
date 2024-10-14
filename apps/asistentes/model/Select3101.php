@@ -11,6 +11,7 @@ use dossiers\model as dossiers;
 use ubis;
 use web;
 use personas\model\entity as personas;
+use function core\is_true;
 
 /**
  * Esta página muestra una tabla con los asistentes de una actividad.
@@ -361,7 +362,7 @@ class Select3101
                     }
                 }
 
-                if ($propio == 't') {
+                if (is_true($propio)) {
                     $chk_propio = _("sí");
                     // Para los de des, elimino el cargo y la asistencia. Para el resto, sólo el cargo (no la asistencia).
                     if (($_SESSION['oPerm']->have_perm_oficina('des')) || ($_SESSION['oPerm']->have_perm_oficina('vcsd'))) {
@@ -373,8 +374,8 @@ class Select3101
                     $chk_propio = _("no");
                     $eliminar = 2;  //si no es propio, al eliminar el cargo, elimino la asistencia
                 }
-                $falta == 't' ? $chk_falta = _("sí") : $chk_falta = _("no");
-                $est_ok == 't' ? $chk_est_ok = _("sí") : $chk_est_ok = _("no");
+                is_true($falta)? $chk_falta = _("sí") : $chk_falta = _("no");
+                is_true($est_ok)? $chk_est_ok = _("sí") : $chk_est_ok = _("no");
                 $asis = "t";
 
                 if ($this->permiso == 3) {
@@ -519,13 +520,13 @@ class Select3101
                 }
             }
 
-            if ($propio == 't') {
+            if (is_true($propio)) {
                 $chk_propio = _("sí");
             } else {
                 $chk_propio = _("no");
             }
-            $falta == 't' ? $chk_falta = _("sí") : $chk_falta = _("no");
-            $est_ok == 't' ? $chk_est_ok = _("sí") : $chk_est_ok = _("no");
+            is_true($falta)? $chk_falta = _("sí") : $chk_falta = _("no");
+            is_true($est_ok)? $chk_est_ok = _("sí") : $chk_est_ok = _("no");
 
             if ($this->permiso == 3) {
                 $a_val['sel'] = "$id_nom";

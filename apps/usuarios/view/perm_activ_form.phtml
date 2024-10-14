@@ -3,6 +3,7 @@
 use actividades\model\entity\GestorTipoDeActividad;
 use procesos\model\PermAccion;
 use procesos\model\entity\GestorActividadFase;
+use function core\is_true;
 
 // propios
 $i = 0;
@@ -40,7 +41,7 @@ foreach ($cUsuarioPerm as $oUsuarioPerm) {
     $perm_on = $oUsuarioPerm->getPerm_on();
     $perm_off = $oUsuarioPerm->getPerm_off();
 
-    if ($dl_propia == 't') {
+    if (is_true($dl_propia)) {
         if (substr($id_tipo_activ_txt, 0, 1) == 1) { //sv
             $dl_propia_txt = core\ConfigGlobal::mi_dele();
         } else { //sf

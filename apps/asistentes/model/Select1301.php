@@ -8,6 +8,7 @@ use asistentes\model\entity as asistentes;
 use dossiers\model as dossiers;
 use core;
 use web;
+use function core\is_true;
 
 /**
  * Gestiona el dossier 1301: Actividades a las que asiste una persona.
@@ -163,9 +164,9 @@ class Select1301
                 $permiso = 1;
             }
 
-            $propio == 't' ? $chk_propio = "si" : $chk_propio = "no";
-            $falta == 't' ? $chk_falta = "si" : $chk_falta = "no";
-            $est_ok == 't' ? $chk_est_ok = "si" : $chk_est_ok = "no";
+            is_true($propio)? $chk_propio = "si" : $chk_propio = "no";
+            is_true($falta)? $chk_falta = "si" : $chk_falta = "no";
+            is_true($est_ok)? $chk_est_ok = "si" : $chk_est_ok = "no";
 
             if ($permiso == 3) {
                 $a_valores[$i]['sel'] = "$id_activ";

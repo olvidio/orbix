@@ -1,6 +1,7 @@
 <?php
 
 use ubis\model\entity as ubis;
+use function core\is_true;
 
 // INICIO Cabecera global de URL de controlador *********************************
 require_once("apps/core/global_header.inc");
@@ -123,7 +124,7 @@ foreach ($Coleccion as $oFila) {
                 $a_valores[$c][$v] = $var;
                 break;
             case "check":
-                if ($valor_camp == "t") {
+                if (is_true($valor_camp)) {
                     $a_valores[$c][$v] = _("sí");
                 } else {
                     $a_valores[$c][$v] = _("no");

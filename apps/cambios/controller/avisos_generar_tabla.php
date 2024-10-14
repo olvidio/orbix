@@ -165,9 +165,9 @@ while ($num_cambios) {
 
         // para dl y dlf:
         $dl_org_no_f = preg_replace('/(\.*)f$/', '\1', $dl_org);
-        $dl_propia = (ConfigGlobal::mi_dele() == $dl_org_no_f) ? 't' : 'f';
+        $dl_propia = (ConfigGlobal::mi_dele() === $dl_org_no_f);
         // Si es de otra dl, compruebo que sea una actividad importada, sino no tiene sentido avisar.
-        if ($dl_propia == 'f') {
+        if (!is_true($dl_propia)) {
             $GesImportada = new GestorImportada();
             $cImportadas = $GesImportada->getImportadas(array('id_activ' => $id_activ));
             if (empty($cImportadas)) {
@@ -180,7 +180,7 @@ while ($num_cambios) {
         $aWhere = [];
         $aOperador = [];
         $aWhere['objeto'] = $sObjeto;
-        $aWhere['dl_org'] = ($dl_propia == 'f') ? 'x' : $dl_org;
+        $aWhere['dl_org'] = (!is_true($dl_propia)) ? 'x' : $dl_org;
         $aWhere['id_tipo_activ_txt'] = $id_tipo_activ;
         $aOperador['id_tipo_activ_txt'] = '~INV';
         $aWhere['_ordre'] = 'aviso_tipo,id_usuario,id_tipo_activ_txt DESC'; // intento que el primero sea el más definido.

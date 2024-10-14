@@ -6,6 +6,7 @@ use core\ConfigGlobal;
 use ubis\model\entity\GestorRegion;
 use ubis\model\entity\CasaDl;
 use ubis\model\entity\CentroDl;
+use function core\is_true;
 
 /**
  * Es el frame inferior. Muestra la ficha de los ubis
@@ -175,18 +176,18 @@ if (strstr($Qobj_pau, 'Dl')) {
 
 $oPermActiv = new ubis\model\CuadrosLabor();
 
-$chk = ($status == "t" || $status == "true") ? 'checked' : '';
+$chk = is_true($status) ? 'checked' : '';
 $campos_chk = 'status!sv!sf';
 
 $camposForm = 'que!dl!tipo_ubi!status!region!nombre_ubi';
-if ($tipo_ubi == "ctrdl" || $tipo_ubi == "ctrsf") {
+if ($tipo_ubi === "ctrdl" || $tipo_ubi === "ctrsf") {
     $camposForm .= '!num_pi!num_cartas!num_cartas_mensuales!plazas!num_habit_indiv!n_buzon!observ';
 }
-if ($tipo_ubi == "ctrdl" || $tipo_ubi == "ctrex" || $tipo_ubi == "ctrsf") {
+if ($tipo_ubi === "ctrdl" || $tipo_ubi === "ctrex" || $tipo_ubi === "ctrsf") {
     $camposForm .= '!id_ctr_padre!tipo_ctr';
     $campos_chk .= '!cdc!tipo_labor';
 }
-if ($tipo_ubi == "cdcdl" || $tipo_ubi == "cdcex") {
+if ($tipo_ubi === "cdcdl" || $tipo_ubi === "cdcex") {
     $camposForm .= '!tipo_casa!plazas!plazas_min!num_sacd!sf!sv';
 }
 $oHash = new web\Hash();
@@ -207,7 +208,7 @@ switch ($tipo_ubi) {
     case "ctrdl":
     case "ctrsf":
         $cdc = $oUbi->getCdc();
-        $chk_cdc = ($cdc == "t" || $cdc == "true") ? 'checked' : '';
+        $chk_cdc = is_true($cdc)? 'checked' : '';
         $tipo_labor = $oUbi->getTipo_labor();
         $id_ctr_padre = $oUbi->getId_ctr_padre();
         $tipo_ctr = $oUbi->getTipo_ctr();
@@ -270,7 +271,7 @@ switch ($tipo_ubi) {
         break;
     case "ctrex":
         $cdc = $oUbi->getCdc();
-        $chk_cdc = ($cdc == "t" || $cdc == "true") ? 'checked' : '';
+        $chk_cdc = is_true($cdc)? 'checked' : '';
         $tipo_labor = $oUbi->getTipo_labor();
         $id_ctr_padre = $oUbi->getId_ctr_padre();
         $tipo_ctr = $oUbi->getTipo_ctr();
@@ -328,8 +329,8 @@ switch ($tipo_ubi) {
         $sv = $oUbi->getSv();
         $sf = $oUbi->getSf();
 
-        $sv_chk = ($sv == "t" || $sv == "true") ? 'checked' : '';
-        $sf_chk = ($sf == "t" || $sf == "true") ? 'checked' : '';
+        $sv_chk = is_true($sv)? 'checked' : '';
+        $sf_chk = is_true($sf)? 'checked' : '';
         $oTiposCasa = new ubis\model\entity\GestorTipoCasa();
         $oTiposCasaOpciones = $oTiposCasa->getListaTiposCasa();
         $oDesplegableTiposCasa = new web\Desplegable('tipo_casa', $oTiposCasaOpciones, $tipo_casa, true);

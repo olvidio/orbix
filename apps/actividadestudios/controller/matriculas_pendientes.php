@@ -7,6 +7,7 @@ use personas\model\entity as personas;
 use web\Hash;
 use web\Lista;
 use web\Posicion;
+use function core\is_true;
 
 /**
  * Para asegurar que inicia la sesion, y poder acceder a los permisos
@@ -69,11 +70,7 @@ foreach ($cMatriculasPendientes as $oMatricula) {
     $id_activ = $oMatricula->getId_activ();
     $id_asignatura = $oMatricula->getId_asignatura();
     $preceptor = $oMatricula->getPreceptor();
-    if ($preceptor == "t") {
-        $preceptor = "x";
-    } else {
-        $preceptor = "";
-    }
+    $preceptor = is_true($preceptor)? 'x' : '';
 
     //echo "id_activ: $id_activ<br>";
     //echo "id_asignatura: $id_asignatura<br>";

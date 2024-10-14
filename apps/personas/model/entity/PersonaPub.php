@@ -4,6 +4,7 @@ namespace personas\model\entity;
 
 use core;
 use core\ConfigGlobal;
+use function core\is_true;
 
 /**
  * Fitxer amb la Classe que accedeix a la taula p_de_paso
@@ -200,7 +201,7 @@ class PersonaPub extends PersonaGlobal
         // Modifico la ficha en la BD-comun. En el caso de los de paso (ex) y dl = mi_dele
         // Cuando se va, cambio la dl y allí lo borro.
         if (get_class($this) == 'personas\model\entity\PersonaEx' &&
-            $this->bsacd === 'true' && $this->sdl == ConfigGlobal::mi_dele()) {
+            is_true($this->bsacd) && $this->sdl == ConfigGlobal::mi_dele()) {
             $aDades = $this->aDades;
             $aDades['id_tabla'] = $this->sid_tabla;
             $this->copia2Comun($aDades);
@@ -368,10 +369,10 @@ class PersonaPub extends PersonaGlobal
             $bsacd_old = 'false';
         }
         // Si un sacd de paso lo cambio a NO sacd (de mi_dele), lo elimino de cp_sacd.
-        if (get_class($this) == 'personas\model\entity\PersonaEx' &&
+        if (get_class($this) === 'personas\model\entity\PersonaEx' &&
             $this->sdl == ConfigGlobal::mi_dele() &&
-            $bsacd_old === 'true' &&
-            $bsacd === 'f') {
+            is_true($bsacd_old) &&
+            !is_true($bsacd)) {
             $this->eliminarDeComun();
         }
 
@@ -395,7 +396,7 @@ class PersonaPub extends PersonaGlobal
         // (ya se hace al guardar)
         // Si un sacd de paso marcha de la dl, lo elimino de cp_sacd.
         if (get_class($this) == 'personas\model\entity\PersonaEx' &&
-            $sacd === 'true' &&
+            is_true($sacd) &&
             $this->sdl == ConfigGlobal::mi_dele() &&
             $sdl != ConfigGlobal::mi_dele()) {
             $this->eliminarDeComun();

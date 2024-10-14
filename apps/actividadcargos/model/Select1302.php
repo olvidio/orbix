@@ -10,6 +10,7 @@ use dossiers\model as dossiers;
 use personas\model\entity as personas;
 use web;
 use web\Hash;
+use function core\is_true;
 
 /**
  * Gestiona el dossier 1302: Cargos de una persona en actividades
@@ -154,7 +155,7 @@ class Select1302
             $puede_agd = $oActividadCargo->getPuede_agd();
             $observ = $oActividadCargo->getObserv();
 
-            $puede_agd === 't' ? $chk_puede_agd = "si" : $chk_puede_agd = "no";
+            is_true($puede_agd)? $chk_puede_agd = "si" : $chk_puede_agd = "no";
 
             // para modificar.
             $id_tipo = substr($id_tipo_activ, 0, 3); //cojo los 3 primeros dígitos

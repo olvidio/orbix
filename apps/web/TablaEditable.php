@@ -3,6 +3,7 @@ namespace web;
 
 use usuarios\model\entity as usuarios;
 use core;
+use function core\is_true;
 
 /**
  * TablaEditable
@@ -303,7 +304,7 @@ class TablaEditable
                     if (is_array($valor)) {
                         $val = $valor['valor'];
                         if (!empty($valor['editable'])) {
-                            if ($valor['editable'] == 'true') {
+                            if (is_true($valor['editable'])) {
                                 $aFilas[$num_fila]['editable'] .= (!empty($aFilas[$num_fila]['editable'])) ? "," . $col : $col;
                             }
                         }
@@ -849,7 +850,8 @@ class TablaEditable
                 }
                 $sDefCol .= "}";
             }
-            if ((is_array($aColsVisible) && !empty($aColsVisible[$name_idx]) && ($aColsVisible[$name_idx] == "true")) || !is_array($aColsVisible)) {
+            if ((is_array($aColsVisible) && !empty($aColsVisible[$name_idx]) && is_true($aColsVisible[$name_idx]))
+                || !is_array($aColsVisible)) {
                 if (!$visible) {
                     continue;
                 }

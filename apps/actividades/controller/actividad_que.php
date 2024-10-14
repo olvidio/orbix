@@ -270,7 +270,7 @@ if (core\ConfigGlobal::is_app_installed('procesos')) {
     $oHash1->setCamposForm('salida!dl_propia!id_tipo_activ');
     $h_actualizar_fases = $oHash1->linkSinVal();
 
-    $dl_propia = ($Qdl_org === $mi_dele) ? 't' : 'f';
+    $dl_propia = ($Qdl_org === $mi_dele);
     $GesTiposActiv = new GestorTipoDeActividad();
     // Para limitar las opciones:
     if (empty($Qid_tipo_activ)) {

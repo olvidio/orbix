@@ -19,6 +19,7 @@
 use actividades\model\entity\GestorActividadDl;
 use actividades\model\ActividadNuevoCurso;
 use web\Hash;
+use function core\is_true;
 
 // INICIO Cabecera global de URL de controlador *********************************
 require_once("apps/core/global_header.inc");
@@ -69,7 +70,7 @@ if ($Qok == 1) {
     $txt_crear = '';
     $i = 0;
     // cabeceras de la lista
-    if ($Qver_lista == 't') {
+    if (is_true($Qver_lista)) {
         echo _("tipo repetición => fechas_new :: nom_activ_new") . "<br>";
     }
 

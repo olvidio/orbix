@@ -20,6 +20,7 @@ use usuarios\model\entity\Preferencia;
 use web\Lista;
 use web\Periodo;
 use web\TiposActividades;
+use function core\is_true;
 
 require_once("apps/core/global_header.inc");
 // Archivos requeridos por esta url **********************************************
@@ -200,13 +201,13 @@ foreach ($cActividades as $oActividad) {
     $oUbi = new Casa($id_ubi);
 
     $nombre_ubi = $oUbi->getNombre_ubi();
-    if ($oUbi->getSv() == "t") {
+    if (is_true($oUbi->getSv())) {
         $comun = "sv";
     }
-    if ($oUbi->getSf() == "t") {
+    if (is_true($oUbi->getSf())) {
         $comun = "sf";
     }
-    if (($oUbi->getSv() == "t") and ($oUbi->getSf() == "t")) {
+    if ((is_true($oUbi->getSv())) and (is_true($oUbi->getSf()))) {
         $comun = "comun";
     }
 

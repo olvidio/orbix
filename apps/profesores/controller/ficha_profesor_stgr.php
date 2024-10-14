@@ -7,6 +7,7 @@ use dossiers\model\entity\TipoDossier;
 use personas\model\entity as personas;
 use profesores\model\entity as profesores;
 use ubis\model\entity as ubis;
+use function core\is_true;
 
 /**
  * Esta página sirve para la ficha de profesor del stgr.
@@ -175,10 +176,10 @@ $a_cosas = array('clase_info' => 'profesores\model\Info1022', //latin
     'go_to' => $go_to);
 $go_cosas['latin'] = web\Hash::link(core\ConfigGlobal::getWeb() . '/apps/core/mod_tabla_sql.php?' . http_build_query($a_cosas));
 
-if ($sacd === "t") {
+if (is_true($sacd)) {
     $sacd_txt = "si";
 }
-if ($latin === "t") {
+if (is_true($latin)) {
     $latin_txt = "si";
 }
 

@@ -573,7 +573,7 @@ trait EncargoFuncionesTrait
             $txt = sprintf(_("excpeto del %s al %s"), $f_ini, $f_fin);
         }
 
-        if ($horario == "t") {
+        if ($horario === "t") {
             $texto_h = $this->texto_horario($mas_menos, $dia_ref, $dia_inc, $dia_num, $h_ini, $h_fin, $n_sacd);
             $txt .= " " . _("que se cambia a") . ": " . $texto_h;
         } else {

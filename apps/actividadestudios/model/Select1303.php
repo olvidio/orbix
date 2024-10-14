@@ -131,7 +131,7 @@ class Select1303
             $id_asignatura = $oMatricula->getId_asignatura();
             $preceptor = $oMatricula->getPreceptor();
             $id_preceptor = $oMatricula->getId_preceptor();
-            if ($preceptor === "t") {
+            if (is_true($preceptor)) {
                 if (!empty($id_preceptor)) {
                     $oPersona = personas\Persona::NewPersona($id_preceptor);
                     if (!is_object($oPersona)) {

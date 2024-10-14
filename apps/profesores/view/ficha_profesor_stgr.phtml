@@ -1,6 +1,7 @@
 <?php
 
 use asignaturas\model\entity as asignaturas;
+use function core\is_true;
 
 // INICIO Cabecera global de URL de controlador *********************************
 require_once("apps/core/global_header.inc");
@@ -124,7 +125,7 @@ include_once(core\ConfigGlobal::$dir_estilos . '/colores.php');
                 <?php
                 if (is_array($a_curriculum)) {
                     foreach ($a_curriculum as $n => $row) {
-                        if ($row['eclesiastico'] == "t") {
+                        if (is_true($row['eclesiastico'])) {
                             $eclesiastico_txt = _("sí");
                         } else {
                             $eclesiastico_txt = _("no");
@@ -312,7 +313,7 @@ include_once(core\ConfigGlobal::$dir_estilos . '/colores.php');
                             <?php
                             if (is_array($a_publicaciones)) {
                                 foreach ($a_publicaciones as $n => $row) {
-                                    if ($row['pendiente'] == "t") {
+                                    if (is_true($row['pendiente'])) {
                                         $pendiente_txt = _("sí");
                                     } else {
                                         $pendiente_txt = _("no");

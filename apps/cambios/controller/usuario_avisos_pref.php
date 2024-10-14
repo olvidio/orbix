@@ -72,7 +72,7 @@ $oDesplObjetos->setBlanco('true');
 $oDesplObjetos->setOpciones($aObjetos);
 $oDesplObjetos->setAction('fnjs_actualizar_fases(); fnjs_actualizar_propiedades()');
 
-if ($Qsalida == 'modificar' && !empty($Qid_item_usuario_objeto)) {
+if ($Qsalida === 'modificar' && !empty($Qid_item_usuario_objeto)) {
     $oCambioUsuarioObjetoPref = new CambioUsuarioObjetoPref(array('id_item_usuario_objeto' => $Qid_item_usuario_objeto));
     $id_tipo_activ = $oCambioUsuarioObjetoPref->getId_tipo_activ_txt();
     $dl_org = $oCambioUsuarioObjetoPref->getDl_org();
@@ -85,16 +85,16 @@ if ($Qsalida == 'modificar' && !empty($Qid_item_usuario_objeto)) {
     $aviso_outdate = $oCambioUsuarioObjetoPref->getAviso_outdate();
     // para dl y dlf:
     $dl_org_no_f = preg_replace('/(\.*)f$/', '\1', $dl_org);
-    $dl_propia = (ConfigGlobal::mi_dele() == $dl_org_no_f) ? 't' : 'f';
+    $dl_propia = (ConfigGlobal::mi_dele() === $dl_org_no_f);
 
     $GesTiposActiv = new GestorTipoDeActividad();
     $aTiposDeProcesos = $GesTiposActiv->getTiposDeProcesos($id_tipo_activ, $dl_propia);
 
     $oDesplObjetos->setOpcion_sel($objeto);
     $oDesplTiposAviso->setOpcion_sel($aviso_tipo);
-} elseif ($Qsalida == 'nuevo') { // es nuevo
+} elseif ($Qsalida === 'nuevo') { // es nuevo
     $Qid_item_usuario_objeto = '';
-    $dl_propia = 't';
+    $dl_propia = true;
     $id_pau = '';
 
     $id_tipo_activ = $mi_sfsv . '.....';

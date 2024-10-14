@@ -32,6 +32,7 @@ use personas\model\entity\GestorPersonaNax;
 use personas\model\entity\GestorPersonaS;
 use personas\model\entity\Persona;
 use web\Hash;
+use function core\is_true;
 
 // INICIO Cabecera global de URL de controlador *********************************
 require_once("apps/core/global_header.inc");
@@ -151,7 +152,7 @@ $oDesplegableCargos = $oCargos->getListaCargos();
 $oDesplegableCargos->setNombre('id_cargo');
 $oDesplegableCargos->setBlanco(false);
 $oDesplegableCargos->setOpcion_sel($Qid_cargo);
-$chk = (!empty($puede_agd) && $puede_agd === 't') ? 'checked' : '';
+$chk = (!empty($puede_agd) && is_true($puede_agd)) ? 'checked' : '';
 
 
 $oHash = new Hash();

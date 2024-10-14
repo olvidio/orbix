@@ -51,7 +51,7 @@ switch ($Qque) {
             } // No existe
             $oTarea = new ActividadTarea($id_tarea);
             $tarea = $oTarea->getDesc_tarea();
-            $chk = ($completado == 't') ? 'checked' : '';
+            $chk = is_true($completado)? 'checked' : '';
             //buscar of responsable
             $GesTareaProceso = new GestorTareaProceso();
             $cTareasProceso = $GesTareaProceso->getTareasProceso(['id_tipo_proceso' => $id_tipo_proceso,

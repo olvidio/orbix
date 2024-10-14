@@ -13,6 +13,7 @@ use personas\model\entity as personas;
 use web\Hash;
 use web\Lista;
 use actividadestudios\model\entity\GestorMatricula;
+use function core\is_true;
 
 class Select1011
 {
@@ -174,13 +175,9 @@ class Select1011
                 }
             }
 
-            if ($preceptor === "t") {
-                $preceptor = _("sí");
-            } else {
-                $preceptor = _("no");
-            }
+            $preceptor = is_true($preceptor)? _("sí") : _("no");
             // preceptor
-            if ($id_preceptor && $preceptor === "t") {
+            if ($id_preceptor && is_true($preceptor)) {
                 $oPersonaDl = new personas\PersonaDl($id_preceptor);
                 $nom_precptor = $oPersonaDl->getPrefApellidosNombre();
                 if (empty($nom_precptor)) {

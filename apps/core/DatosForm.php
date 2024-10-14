@@ -98,7 +98,7 @@ class DatosForm
                     break;
                 case "check":
                     $formulario .= "<tr><td class=etiqueta>" . ucfirst($eti) . "</td>";
-                    if ($valor_camp == "t") {
+                    if (is_true($valor_camp)) {
                         $chk = "checked";
                     } else {
                         $chk = "";

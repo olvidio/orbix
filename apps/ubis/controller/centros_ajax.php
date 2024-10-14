@@ -5,6 +5,7 @@ use ubis\model\entity\CentroDl;
 use ubis\model\entity\GestorCentroDl;
 use web\Hash;
 use web\Lista;
+use function core\is_true;
 
 // INICIO Cabecera global de URL de controlador *********************************
 require_once("apps/core/global_header.inc");
@@ -105,7 +106,7 @@ switch ($Qque) {
         $plazas = $oCentro->getPlazas();
         $sede = $oCentro->getSede();
 
-        $chk_sede = ($sede == 't') ? 'checked' : '';
+        $chk_sede = is_true($sede) ? 'checked' : '';
 
         $oHash = new Hash();
         $oHash->setUrl($url_ajax);
@@ -159,7 +160,7 @@ switch ($Qque) {
             isset($_POST['num_habit_indiv']) ? $oCentro->setNum_habit_indiv($_POST['num_habit_indiv']) : '';
             isset($_POST['plazas']) ? $oCentro->setPlazas($_POST['plazas']) : '';
             if (isset($_POST['sede'])) {
-                ($_POST['sede'] == "true") ? $oCentro->setSede('t') : $oCentro->setSede('f');
+                is_true($_POST['sede'])? $oCentro->setSede('t') : $oCentro->setSede('f');
             }
 
             if ($oCentro->DBGuardar() === false) {

@@ -17,6 +17,7 @@ use usuarios\model\entity\Usuario;
 use web\DateTimeLocal;
 use zonassacd\model\entity\GestorZona;
 use zonassacd\model\entity\GestorZonaSacd;
+use function core\is_true;
 
 
 /**
@@ -181,10 +182,10 @@ class Avisos
                     return $rta;
                 } else {
                     // ojo con los boolean.
-                    if (($valor_cmb == 't') || ($valor == 't') || ($valor_cmb === true) || ($valor === true)) {
+                    if ((is_true($valor_cmb)) || (is_true($valor))) {
                         return ((bool)$valor_cmb === (bool)$valor);
                     }
-                    if (($valor_cmb == 'f') || ($valor == 'f') || ($valor_cmb === false) || ($valor === false)) {
+                    if ((!is_true($valor_cmb)) || (!is_true($valor))) {
                         return ((bool)$valor_cmb === (bool)$valor);
                     }
                     return ($valor_cmb == $valor);

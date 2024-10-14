@@ -73,7 +73,7 @@ class GestorTipoDeActividad extends core\ClaseGestor
      * @param string ssfsv ( '',1,2,all)
      * @return array Una llista de id_tipo_proceso
      */
-    function getTiposDeProcesos($sid_tipo_activ = '......', $bdl_propia = 't', $sfsv = '')
+    function getTiposDeProcesos($sid_tipo_activ = '......', $bdl_propia = true, $sfsv = '')
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
