@@ -42,7 +42,7 @@
     	    var empiezamin=$('#empiezamin').val();
             let orden = $('#orden').val();
 
-            let parametros = 'id_zona=' + id_zona + '&periodo=' + periodo + '&empiezamin=' + empiezamin + '&empiezamax=' + empiezamax + '&orden=' + orden + '&tipo_plantilla=p' + '{{ h_zona_plantilla|raw }}';
+            let parametros = 'id_zona=' + id_zona + '&periodo=' + periodo + '&empiezamin=' + empiezamin + '&empiezamax=' + empiezamax + '&orden=' + orden + '&tipo_plantilla=p' + '{{ h_zona_periodo|raw }}';
 
             $.ajax({
                 url: url,
