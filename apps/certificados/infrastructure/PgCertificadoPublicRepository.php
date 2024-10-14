@@ -151,7 +151,7 @@ class PgCertificadoPublicRepository extends ClaseRepository implements Certifica
         $aDatos['idioma'] = $Certificado->getIdioma();
         $aDatos['destino'] = $Certificado->getDestino();
         $aDatos['certificado'] = $Certificado->getCertificado();
-        $aDatos['propio'] = $Certificado->isPropio();
+        $aDatos['esquema_emisor'] = $Certificado->getEsquema_emisor();
         $aDatos['firmado'] = $Certificado->isFirmado();
         // para los bytea
         $aDatos['documento'] = bin2hex($Certificado->getDocumento());
@@ -160,11 +160,6 @@ class PgCertificadoPublicRepository extends ClaseRepository implements Certifica
         $aDatos['f_enviado'] = (new ConverterDate('date', $Certificado->getF_enviado()))->toPg();
         array_walk($aDatos, 'core\poner_null');
         //para el caso de los boolean FALSE, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
-        if (is_true($aDatos['propio'])) {
-            $aDatos['propio'] = 'true';
-        } else {
-            $aDatos['propio'] = 'false';
-        }
         if (is_true($aDatos['firmado'])) {
             $aDatos['firmado'] = 'true';
         } else {
@@ -180,7 +175,7 @@ class PgCertificadoPublicRepository extends ClaseRepository implements Certifica
 					destino                   = :destino,
 					certificado              = :certificado,
 					f_certificado            = :f_certificado,
-					propio                   = :propio,
+					esquema_emisor                   = :esquema_emisor,
 					firmado                  = :firmado,
 					documento                = :documento,
                     f_enviado                = :f_enviado";
@@ -202,8 +197,8 @@ class PgCertificadoPublicRepository extends ClaseRepository implements Certifica
         } else {
             // INSERT
             $aDatos['id_item'] = $Certificado->getId_item();
-            $campos = "(id_item,id_nom,nom,idioma,destino,certificado,f_certificado,propio,firmado,documento,f_enviado)";
-            $valores = "(:id_item,:id_nom,:nom,:idioma,:destino,:certificado,:f_certificado,:propio,:firmado,:documento,:f_enviado)";
+            $campos = "(id_item,id_nom,nom,idioma,destino,certificado,f_certificado,esquema_emisor,firmado,documento,f_enviado)";
+            $valores = "(:id_item,:id_nom,:nom,:idioma,:destino,:certificado,:f_certificado,:esquema_emisor,:firmado,:documento,:f_enviado)";
             if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === FALSE) {
                 $sClaveError = 'PgCertificadoRepository.insertar.prepare';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);

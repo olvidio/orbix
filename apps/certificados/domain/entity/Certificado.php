@@ -1,7 +1,8 @@
 <?php
 
 namespace certificados\domain\entity;
-	use function core\is_true;
+	use core\ConfigGlobal;
+    use function core\is_true;
 	use web\DateTimeLocal;
 	use web\NullDateTimeLocal;
 /**
@@ -60,11 +61,11 @@ class Certificado {
 	 */
 	 private $df_certificado = null;
 	/**
-	 * Propio de Certificado
+	 * Esquema emisor de Certificado
 	 *
-	 * @var bool|null
+	 * @var string|null
 	 */
-	 private $bpropio = null;
+	 private $sesquema_emisor = null;
 	/**
 	 * firmado de Certificado
 	 *
@@ -122,9 +123,9 @@ class Certificado {
 		{
 			$this->setF_certificado($aDatos['f_certificado']);
 		}
-		if (array_key_exists('propio',$aDatos))
+		if (array_key_exists('esquema_emisor',$aDatos))
 		{
-			$this->setPropio(is_true($aDatos['propio']));
+			$this->setEsquema_emisor(is_true($aDatos['esquema_emisor']));
 		}
 		if (array_key_exists('firmado',$aDatos))
 		{
@@ -253,21 +254,29 @@ class Certificado {
 	{
         $this->df_certificado = $df_certificado;
 	}
+    /**
+     *
+     * @return bool
+     */
+    public function isPropio()
+    {
+        return ($this->sesquema_emisor === ConfigGlobal::mi_region_dl());
+    }
 	/**
 	 *
-	 * @return bool|null $bpropio
+	 * @return ?string $sesquema_emisor
 	 */
-	public function isPropio()
+	public function getEsquema_emisor()
 	{
-		return $this->bpropio;
+		return $this->sesquema_emisor;
 	}
 	/**
 	 *
-	 * @param bool|null $bpropio
+	 * @param ?string $sesquema_emisor
 	 */
-	public function setPropio(?bool $bpropio = null)
+	public function setEsquema_emisor(string $sesquema_emisor=null)
 	{
-		$this->bpropio = $bpropio;
+		$this->sesquema_emisor = $sesquema_emisor;
 	}
 	/**
 	 *

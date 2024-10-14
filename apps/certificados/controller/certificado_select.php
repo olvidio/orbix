@@ -13,6 +13,7 @@
 use certificados\domain\repositories\CertificadoRepository;
 use core\ConfigGlobal;
 use personas\model\entity\Persona;
+use ubis\model\entity\GestorDelegacion;
 use usuarios\model\entity\Local;
 use web\Hash;
 use web\Lista;
@@ -46,7 +47,8 @@ if (isset($_POST['stack'])) {
     }
 }
 
-if (ConfigGlobal::mi_ambito() === 'dl') {
+$gesDelegeacion = new GestorDelegacion();
+if (!$gesDelegeacion->soy_region_stgr()) {
     $msg = _("Este menú es sólo para las regiones del stgr.");
     $msg .= "<br>";
     $msg .= _("Para ver los certificados de una persona, debe ir a través de los dossiers");
@@ -126,7 +128,7 @@ if (!empty($Qcertificado)) {
 $botones = 0; // para 'añadir certificado'
 $a_botones = [];
 // Si soy region del stgr
-if (ConfigGlobal::mi_ambito() === 'rstgr' || ConfigGlobal::mi_ambito() === 'r') {
+if ($gesDelegeacion->soy_region_stgr()) {
     $a_botones[] = array('txt' => _("eliminar"), 'click' => "fnjs_eliminar(\"#seleccionados\")");
     $a_botones[] = array('txt' => _("modificar"), 'click' => "fnjs_modificar(\"#seleccionados\")");
     $a_botones[] = array('txt' => _("subir pdf firmado"), 'click' => "fnjs_upload_certificado(\"#seleccionados\")");

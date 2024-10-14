@@ -101,7 +101,7 @@ function upload()
                     $firmado = FALSE;
                 }
                 $oCertificado->setFirmado($firmado);
-                $oCertificado->setPropio(FALSE);
+                $oCertificado->setEsquema_emisor(FALSE);
                 $oCertificado->setF_certificado($oF_certificado);
 
                 if ($certificadoRepository->Guardar($oCertificado) === FALSE) {

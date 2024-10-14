@@ -10,6 +10,7 @@ use asistentes\model\entity\AsistenteDl;
 use asistentes\model\entity\AsistenteOut;
 use asistentes\model\entity\GestorAsistenteDl;
 use asistentes\model\entity\GestorAsistenteOut;
+use certificados\domain\repositories\CertificadoRepository;
 use core\ConfigDB;
 use core\ConfigGlobal;
 use core\ConverterDate;
@@ -652,7 +653,7 @@ class TrasladoDl
                 return false;
             }
             $aSchema = $qRs->fetch(\PDO::FETCH_ASSOC);
-            $id_schema_persona =  $aSchema['id'];
+            $id_schema_persona = $aSchema['id'];
             foreach ($colection as $oPersonaNotaDB) {
                 $oPersonaNota = new PersonaNota();
                 $oPersonaNota->setIdNom($oPersonaNotaDB->getId_nom());
@@ -903,6 +904,41 @@ class TrasladoDl
         }
     }
 
+    public function trasladar_certificados($Certificado)
+    {
+        $error = '';
+        $oDBorg = $this->conexionOrg();
+        $oDBdst = $this->conexionDst();
+
+        $id_item = $Certificado->getId_item();
+        // para que ponga el suyo según la DB
+
+        $certificadoRepository = new CertificadoRepository();
+        $certificadoRepository->setoDbl($oDBdst);
+        $newId_item = $certificadoRepository->getNewId_item();
+        $Certificado->setId_item($newId_item);
+        if ($certificadoRepository->Guardar($Certificado) === FALSE) {
+            $error .= $certificadoRepository->getErrorTxt();
+        }
+
+        // eliminar el original
+        $certificadoRepository2 = new CertificadoRepository();
+        $oCertificado = $certificadoRepository2->findById($id_item);
+        if (!empty($oCertificado)) {
+            $certificado = $oCertificado->getCertificado();
+            if ($certificadoRepository2->Eliminar($oCertificado) === FALSE) {
+                $error .= _("Algo falló");
+            }
+        }
+
+        if (empty($error)) {
+            return true;
+        } else {
+            $this->serror = $error;
+            return false;
+        }
+    }
+
     public function apuntar()
     {
         $error = '';
@@ -929,7 +965,8 @@ class TrasladoDl
         }
     }
 
-    private function copiarAsistencia($oOrigen, $oDestino)
+    private
+    function copiarAsistencia($oOrigen, $oDestino)
     {
         // Hay que comprobar que la actividad existe,
         // TODO: y que esta accesible. Sino, ver si hay que importarla.
@@ -950,7 +987,8 @@ class TrasladoDl
         return null;
     }
 
-    private function testActividad($id_activ)
+    private
+    function testActividad($id_activ)
     {
         $gesActividades = new GestorActividadAll();
         $cActividades = $gesActividades->getActividades(['id_activ' => $id_activ]);
@@ -966,7 +1004,8 @@ class TrasladoDl
      *
      * @param \PDO $conn
      */
-    private function verConexion($conn)
+    private
+    function verConexion($conn)
     {
         $conn->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
 

@@ -110,14 +110,14 @@ class Select1010
 
             $id_item = $oCertificado->getId_item();
             $certificado = $oCertificado->getCertificado();
-            $copia = $oCertificado->isCopia();
+            $firmado = $oCertificado->isFirmado();
             $f_certificado = $oCertificado->getF_certificado()->getFromLocal();
             $pdf = $oCertificado->getDocumento();
 
             $a_valores[$i]['sel'] = $id_item;
             $a_valores[$i][1] = $certificado;
             $a_valores[$i][2] = $f_certificado;
-            $a_valores[$i][3] = core\is_true($copia) ? _("Sí") : _("No");
+            $a_valores[$i][3] = core\is_true($firmado) ? _("Sí") : _("No");
             $a_valores[$i][4] = empty($pdf) ? '' : _("Sí");
 
         }

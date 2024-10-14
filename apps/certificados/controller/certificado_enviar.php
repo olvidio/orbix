@@ -2,6 +2,9 @@
 
 // INICIO Cabecera global de URL de controlador *********************************
 use certificados\domain\repositories\CertificadoRepository;
+use core\DBPropiedades;
+use personas\model\entity\TrasladoDl;
+use ubis\model\entity\GestorDelegacion;
 
 require_once("apps/core/global_header.inc");
 // Archivos requeridos por esta url **********************************************
@@ -30,16 +33,46 @@ $nom = $oCertificado->getNom();
 $destino = $oCertificado->getDestino();
 $certificado = $oCertificado->getCertificado();
 
+$error_txt = '';
+// destino?
+$oPersona = personas\model\entity\Persona::NewPersona($id_nom);
+if (!is_object($oPersona)) {
+    $error_txt .= "<br>$oPersona con id_nom: $id_nom en  " . __FILE__ . ": line " . __LINE__;
+}
+$nom = $oPersona->getNombreApellidos();
+
+$dl_origen = core\ConfigGlobal::mi_delef();
+$dl_destino = $oPersona->getDl();
+$gesDelegacion = new GestorDelegacion();
+$a_datos_region_stgr = $gesDelegacion->mi_region_stgr($dl_destino);
+$esquema_region_stgr_dst =$a_datos_region_stgr['esquema_region_stgr'];
+
 //1.- saber si está en aquinate
+// comprobar que no es una dl que ya tiene su esquema
+$oDBPropiedades = new DBPropiedades();
+$a_posibles_esquemas = $oDBPropiedades->array_posibles_esquemas(TRUE, TRUE);
+$is_dl_in_orbix = FALSE;
+foreach ($a_posibles_esquemas as $esquema) {
+    $row = explode('-', $esquema);
+    if ($row[1] === $dl_destino) {
+        $is_dl_in_orbix = TRUE;
+        break;
+    }
+}
 
 //2.- mover $certificado
+if ($is_dl_in_orbix) {
+    $oTrasladoDl = new TrasladoDl();
+    $oTrasladoDl->setReg_dl_dst($esquema_region_stgr_dst);
 
+    $oTrasladoDl->trasladar_certificados($oCertificado);
+    $error_txt = $oTrasladoDl->getError();
+    //3.- enviar aviso
 
-//3.- enviar aviso
+} else {
+    $error_txt .= _("Hay que enviar manualmente el certificado. Esta persona no está en aquinate");
+}
 
-
-
-$error_txt = 'en construcción';
 if (!empty($error_txt)) {
     $jsondata['success'] = FALSE;
     $jsondata['mensaje'] = $error_txt;
