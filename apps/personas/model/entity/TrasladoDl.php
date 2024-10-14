@@ -389,6 +389,11 @@ class TrasladoDl
             return _("copiar dossiers") . $msg;
         }
 
+        if ($this->trasladarDossierCertificados() === false) {
+            $msg = $this->serror;
+            return _("trasladar certificados") . $msg;
+        }
+
         if ($this->copiarAsistencias() === false) {
             $msg = $this->serror;
             return _("copiar asistencias") . $msg;
@@ -896,6 +901,28 @@ class TrasladoDl
         // Volver oDBdst a su estado original:
         //$this->restaurarConexionDst($oDBdst);
         //$this->restaurarConexionOrg($oDBorg);
+        if (empty($error)) {
+            return true;
+        } else {
+            $this->serror = $error;
+            return false;
+        }
+    }
+
+    public function trasladarDossierCertificados()
+    {
+        $error = '';
+        $oDBorg = $this->conexionOrg();
+
+        $certificadoRepository = new CertificadoRepository();
+        $certificadoRepository->setoDbl($oDBorg);
+        $cCertificados = $certificadoRepository->getCertificados(['id_nom' => $this->iid_nom]);
+        foreach ($cCertificados as $Certificado) {
+            if (!$this->trasladar_certificados($Certificado)) {
+                $error .= '<br>' . $this->serror = $error;
+            }
+        }
+
         if (empty($error)) {
             return true;
         } else {
