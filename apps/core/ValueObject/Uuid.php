@@ -6,7 +6,7 @@ namespace core\ValueObject;
 use Ramsey\Uuid\Exception\InvalidArgumentException;
 use Ramsey\Uuid\Uuid as RamseyUuid;
 
-require_once('libs/vendor/autoload.php');
+//require_once('libs/vendor/autoload.php');
 
 class Uuid
 {

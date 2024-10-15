@@ -80,7 +80,7 @@ function upload()
             //$fileSize = $_FILES[$input]['size']; // the file size
 
             //Make sure we have a file path
-            if ($tmpFilePath != "") {
+            if ($tmpFilePath !== "") {
 
                 $fp = fopen($tmpFilePath, 'rb');
                 $contenido_doc = fread($fp, filesize($tmpFilePath));

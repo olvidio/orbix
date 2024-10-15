@@ -2,9 +2,14 @@
 
 // INICIO Cabecera global de URL de controlador *********************************
 use certificados\domain\repositories\CertificadoRepository;
+use core\ConfigGlobal;
 use core\DBPropiedades;
 use personas\model\entity\TrasladoDl;
+use tablonanuncios\domain\AnuncioId;
+use tablonanuncios\domain\entity\Anuncio;
+use tablonanuncios\domain\repositories\AnuncioRepository;
 use ubis\model\entity\GestorDelegacion;
+use web\DateTimeLocal;
 
 require_once("apps/core/global_header.inc");
 // Archivos requeridos por esta url **********************************************
@@ -29,7 +34,7 @@ $CertificadoRepository = new CertificadoRepository();
 $oCertificado = $CertificadoRepository->findById($Qid_item);
 
 $id_nom = $oCertificado->getId_nom();
-$nom = $oCertificado->getNom();
+$nombre_apellidos = $oCertificado->getNom();
 $destino = $oCertificado->getDestino();
 $certificado = $oCertificado->getCertificado();
 
@@ -39,7 +44,7 @@ $oPersona = personas\model\entity\Persona::NewPersona($id_nom);
 if (!is_object($oPersona)) {
     $error_txt .= "<br>$oPersona con id_nom: $id_nom en  " . __FILE__ . ": line " . __LINE__;
 }
-$nom = $oPersona->getNombreApellidos();
+$nombre_apellidos = $oPersona->getNombreApellidos();
 
 $dl_origen = core\ConfigGlobal::mi_delef();
 $dl_destino = $oPersona->getDl();
@@ -68,6 +73,22 @@ if ($is_dl_in_orbix) {
     $oTrasladoDl->trasladar_certificados($oCertificado);
     $error_txt = $oTrasladoDl->getError();
     //3.- enviar aviso
+    $texto_anuncio = sprintf(_("se ha recibido el certificado %s para %s."),$certificado,$nombre_apellidos);
+    $Anuncio = new Anuncio();
+    $uuid_item = AnuncioId::random();
+    $tanotado = new DateTimeLocal();
+
+    $Anuncio->setUuid_item($uuid_item);
+    $Anuncio->setUsuarioCreador(ConfigGlobal::mi_usuario());
+    $Anuncio->setEsquemaEmisor(ConfigGlobal::mi_region_dl());
+    $Anuncio->setEsquemaDestino($esquema_region_stgr_dst);
+    $Anuncio->setTextoAnuncio($texto_anuncio);
+    $Anuncio->setTablon('est');
+    $Anuncio->setTanotado($tanotado);
+    $Anuncio->setCategoria(Anuncio::CAT_AVISO);
+
+    $AnuncioRepository = new AnuncioRepository();
+    $AnuncioRepository->Guardar($Anuncio);
 
 } else {
     $error_txt .= _("Hay que enviar manualmente el certificado. Esta persona no está en aquinate");

@@ -1,9 +1,8 @@
 <?php
 
-namespace Tests\unit\notas;
+namespace Tests\factories\notas;
 
 use Faker\Factory;
-use notas\model\entity\PersonaNotaDB;
 use notas\model\PersonaNota;
 use web\DateTimeLocal;
 

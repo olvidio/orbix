@@ -12,6 +12,7 @@ use notas\model\entity\PersonaNotaDB;
 use notas\model\entity\PersonaNotaDlDB;
 use notas\model\entity\PersonaNotaOtraRegionStgrDB;
 use RuntimeException;
+use Tests\factories\notas\NotasFactory;
 use Tests\myTest;
 use ubis\model\entity\GestorDelegacion;
 

@@ -11,6 +11,7 @@ use notas\model\entity\GestorPersonaNotaDlDB;
 use notas\model\entity\GestorPersonaNotaOtraRegionStgrDB;
 use notas\model\entity\Nota;
 use personas\model\entity\TrasladoDl;
+use Tests\factories\notas\NotasFactory;
 use Tests\myTest;
 use ubis\model\entity\GestorDelegacion;
 

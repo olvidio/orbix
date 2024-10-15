@@ -3,7 +3,7 @@
 namespace Tests\unit\notas;
 
 use notas\model\EditarPersonaNota;
-use RuntimeException;
+use Tests\factories\notas\NotasFactory;
 use Tests\myTest;
 use ubis\model\entity\GestorDelegacion;
 
