@@ -17,7 +17,7 @@ class Anuncio
     private string $esquema_emisor;
     private string $esquema_destino;
     private string $texto_anuncio;
-    private string $idioma;
+    private ?string $idioma;
     private string $tablon;
     private DateTimeLocal|NullDateTimeLocal $tanotado;
     private DateTimeLocal|NullDateTimeLocal $teliminado;
@@ -111,12 +111,12 @@ class Anuncio
         $this->texto_anuncio = $texto_anuncio;
     }
 
-    public function getIdioma(): string
+    public function getIdioma(): ?string
     {
         return $this->idioma;
     }
 
-    public function setIdioma(string $idioma): void
+    public function setIdioma(?string $idioma): void
     {
         $this->idioma = $idioma;
     }

@@ -83,7 +83,8 @@ if ($is_dl_in_orbix) {
     $Anuncio->setEsquemaEmisor(ConfigGlobal::mi_region_dl());
     $Anuncio->setEsquemaDestino($esquema_region_stgr_dst);
     $Anuncio->setTextoAnuncio($texto_anuncio);
-    $Anuncio->setTablon('est');
+    $Anuncio->setIdioma('');
+    $Anuncio->setTablon('vest');
     $Anuncio->setTanotado($tanotado);
     $Anuncio->setCategoria(Anuncio::CAT_AVISO);
 

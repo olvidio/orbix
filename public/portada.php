@@ -1,5 +1,8 @@
 <?php
 namespace core;
+use config\model\Config;
+use menus\model\entity\GrupMenu;
+use tablonanuncios\domain\TablonAnunciosParaGM;
 use web;
 
 // INICIO Cabecera global de URL de controlador *********************************
@@ -10,12 +13,19 @@ use web;
 	require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
+// ES un include de index.php, tengo todas sus variables...
+
+ $oGrupMenu = new GrupMenu($id_grupmenu);
+// $grup_menu = $oGrupMenu->getGrup_menu($_SESSION['oConfig']->getAmbito());
+// Utilizo las siglas para la dl
+$grup_menu = $oGrupMenu->getGrup_menu('dl');
+
+$tablonAnuncios = new TablonAnunciosParaGM($grup_menu);
+$oTabla = $tablonAnuncios->getTabla();
 ?>
 
-<script> 
-  $(function(){
-      $("#includedContent").load("public/ayuda/index.php"); 
-  });
-</script>
 
-<div id=includedContent ></div>
+<div id=tablon_anuncios>Tablón <?= $grup_menu ?>
+    <br><br>
+<?= $oTabla->mostrar_tabla() ?>
+</div>
