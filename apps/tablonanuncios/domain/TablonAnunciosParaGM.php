@@ -19,11 +19,14 @@ class TablonAnunciosParaGM
     {
         $AnuncioRepository = new AnuncioRepository();
         $aWhere = [
-            'tablon' => $this->tablon,
+            'tablon' => '^('.$this->tablon.')',
             'esquema_destino' => ConfigGlobal::mi_region_dl(),
             'teliminado' => 'x',
         ];
-        $aOperador = ['teliminado' => 'IS NULL'];
+        $aOperador = [
+            'tablon' => '~*',
+            'teliminado' => 'IS NULL'
+        ];
         $cAnuncios = $AnuncioRepository->getAnuncios($aWhere, $aOperador);
         $a_valores = [];
         $i = 0;

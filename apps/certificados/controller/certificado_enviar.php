@@ -84,7 +84,7 @@ if ($is_dl_in_orbix) {
     $Anuncio->setEsquemaDestino($esquema_region_stgr_dst);
     $Anuncio->setTextoAnuncio($texto_anuncio);
     $Anuncio->setIdioma('');
-    $Anuncio->setTablon('vest');
+    $Anuncio->setTablon('vest|Estudios');
     $Anuncio->setTanotado($tanotado);
     $Anuncio->setCategoria(Anuncio::CAT_AVISO);
 
