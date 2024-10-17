@@ -99,9 +99,14 @@ class Select1010
             $this->msg_err = "<br>$oPersona con id_nom: $this->id_pau en  " . __FILE__ . ": line " . __LINE__;
             exit($this->msg_err);
         }
+        $aWhere = [
+            'id_nom' => $this->id_pau,
+            'firmado' => true,
+            '_ordre' => 'f_certificado'
+        ];
 
         $CertificadoPublicRepository = new CertificadoPublicRepository();
-        $cCertificados = $CertificadoPublicRepository->getCertificados(['id_nom' => $this->id_pau, '_ordre' => 'f_certificado']);
+        $cCertificados = $CertificadoPublicRepository->getCertificados($aWhere);
 
         $i = 0;
         $a_valores = array();

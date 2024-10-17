@@ -74,28 +74,21 @@ if (!empty($Qcertificado)) {
     $aOperador['certificado'] = '~';
     $aWhere['_ordre'] = 'f_certificado DESC, certificado DESC';
 
-    // si es número busca en la dl.
+    // solamente los de mi región que no estén enviados
+    $esquema_emisor = ConfigGlobal::mi_region_dl();
+    $aWhere['esquema_emisor'] = $esquema_emisor;
+
+    // si es número busca en la región.
     $matches = [];
     preg_match("/^(\d*)(\/)?(\d*)/", $Qcertificado, $matches);
     if (!empty($matches[1])) {
-        // Si es cr, se mira en todas (las suyas):
-        if (ConfigGlobal::mi_ambito() === 'rstgr') {
-            $dl = ConfigGlobal::mi_region();
-            $Qacta_dl = '';
-            $Qacta_dl .= empty($Qacta_dl) ? '' : "|";
-            $Qacta_dl .= empty($matches[3]) ? "$dl " . $matches[1] . '/' . date("y") : "$dl $Qcertificado";
+        $region = ConfigGlobal::mi_region();
+        $Qcertificado_region = empty($matches[3]) ? "$region " . $matches[1] . '/' . date("y") : "$region $Qcertificado";
 
-            $aWhere['certificado'] = $Qacta_dl;
-            $CertificadoRepository = new CertificadoRepository();
-            $cCertificados = $CertificadoRepository->getCertificados($aWhere, $aOperador);
-        }
-    } else {
-        // busca en la tabla de la dl, sin mirar el nombre:
-        if (ConfigGlobal::mi_ambito() === 'rstgr') {
-            $CertificadoRepository = new CertificadoRepository();
-            $cCertificados = $CertificadoRepository->getCertificados($aWhere, $aOperador);
-        }
+        $aWhere['certificado'] = $Qcertificado_region;
     }
+    $CertificadoRepository = new CertificadoRepository();
+    $cCertificados = $CertificadoRepository->getCertificados($aWhere, $aOperador);
     $titulo = $Qtitulo;
 } else {
     $mes = date('m');
@@ -113,14 +106,13 @@ if (!empty($Qcertificado)) {
     $aOperador['f_certificado'] = 'BETWEEN';
     $aWhere['_ordre'] = 'f_certificado DESC, certificado DESC';
 
+    // solamente los de mi región que no estén enviados
+    $esquema_emisor = ConfigGlobal::mi_region_dl();
+    $aWhere['esquema_emisor'] = $esquema_emisor;
+    $aWhere['f_enviado'] = 'x';
+    $aOperador['f_enviado'] = 'IS NULL';
+
     $titulo = ucfirst(sprintf(_("lista de actas del curso %s"), $txt_curso));
-    // Si es cr, se mira en todas:
-    if (ConfigGlobal::mi_ambito() === 'rstgr') {
-        $sReg = ConfigGlobal::mi_region();
-        $Qcertificado = "^($sReg)";
-        $aWhere['certificado'] = $Qcertificado;
-        $aOperador['certificado'] = '~';
-    }
     $CertificadoRepository = new CertificadoRepository();
     $cCertificados = $CertificadoRepository->getCertificados($aWhere, $aOperador);
 }
@@ -132,7 +124,7 @@ if ($gesDelegeacion->soy_region_stgr()) {
     $a_botones[] = array('txt' => _("eliminar"), 'click' => "fnjs_eliminar(\"#seleccionados\")");
     $a_botones[] = array('txt' => _("modificar"), 'click' => "fnjs_modificar(\"#seleccionados\")");
     $a_botones[] = array('txt' => _("subir pdf firmado"), 'click' => "fnjs_upload_certificado(\"#seleccionados\")");
-    $a_botones[] = array('txt' => _("enviar"), 'click' => "fnjs_enviar(\"#seleccionados\")");
+    $a_botones[] = array('txt' => _("enviar"), 'click' => "fnjs_enviar_certificado(\"#seleccionados\")");
     $botones = 1; // para 'añadir certificado'
 }
 
