@@ -138,7 +138,6 @@ class PgAnuncioRepository extends ClaseRepository implements AnuncioRepositoryIn
         $bInsert = $this->isNew($uuid_item);
 
         $aDatos = [];
-        $aDatos['uuid_item'] = $Anuncio->getUuid_item();
         $aDatos['usuario_creador'] = $Anuncio->getUsuarioCreador();
         $aDatos['esquema_emisor'] = $Anuncio->getEsquemaEmisor();
         $aDatos['esquema_destino'] = $Anuncio->getEsquemaDestino();
