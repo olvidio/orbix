@@ -2,7 +2,7 @@
 
 namespace notas\model;
 
-use certificados\domain\repositories\CertificadoPublicRepository;
+use certificados\domain\repositories\CertificadoRepository;
 use core;
 use personas\model\entity as personas;
 use web;
@@ -105,8 +105,8 @@ class Select1010
             '_ordre' => 'f_certificado'
         ];
 
-        $CertificadoPublicRepository = new CertificadoPublicRepository();
-        $cCertificados = $CertificadoPublicRepository->getCertificados($aWhere);
+        $CertificadoRepository = new CertificadoRepository();
+        $cCertificados = $CertificadoRepository->getCertificados($aWhere);
 
         $i = 0;
         $a_valores = array();
