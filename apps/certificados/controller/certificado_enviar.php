@@ -67,11 +67,13 @@ foreach ($a_posibles_esquemas as $esquema) {
 
 //2.- mover $certificado
 if ($is_dl_in_orbix) {
+    $oHoy = new DateTimeLocal();
+    $oCertificado->setF_enviado($oHoy);
     $oTrasladoDl = new TrasladoDl();
     $oTrasladoDl->setReg_dl_dst($esquema_region_stgr_dst);
 
     $oTrasladoDl->trasladar_certificados($oCertificado);
-    $error_txt = $oTrasladoDl->getError();
+    $error_txt .= $oTrasladoDl->getError();
     //3.- enviar aviso
     $texto_anuncio = sprintf(_("se ha recibido el certificado %s para %s."),$certificado,$nombre_apellidos);
     $Anuncio = new Anuncio();

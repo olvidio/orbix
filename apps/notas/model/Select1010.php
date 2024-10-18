@@ -101,7 +101,7 @@ class Select1010
         }
         $aWhere = [
             'id_nom' => $this->id_pau,
-            'firmado' => true,
+            //'firmado' => true,           mejor que se vean todos
             '_ordre' => 'f_certificado'
         ];
 
