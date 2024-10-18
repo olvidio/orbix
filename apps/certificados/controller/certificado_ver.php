@@ -42,7 +42,6 @@ if (is_true($firmado)) {
 } else {
     $chk_firmado = '';
 }
-$propio = $oCertificado->isPropio();
 
 $oPersona = Persona::NewPersona($id_nom);
 $apellidos_nombre = $oPersona->getApellidosNombre();

@@ -53,7 +53,6 @@ if (is_true($firmado)) {
 } else {
     $chk_firmado = '';
 }
-$propio = $oCertificado->isPropio();
 
 $oPersona = Persona::NewPersona($id_nom);
 if (!is_object($oPersona)) {

@@ -125,7 +125,7 @@ class Certificado {
 		}
 		if (array_key_exists('esquema_emisor',$aDatos))
 		{
-			$this->setEsquema_emisor(is_true($aDatos['esquema_emisor']));
+			$this->setEsquema_emisor($aDatos['esquema_emisor']);
 		}
 		if (array_key_exists('firmado',$aDatos))
 		{
@@ -254,14 +254,6 @@ class Certificado {
 	{
         $this->df_certificado = $df_certificado;
 	}
-    /**
-     *
-     * @return bool
-     */
-    public function isPropio()
-    {
-        return ($this->sesquema_emisor === ConfigGlobal::mi_region_dl());
-    }
 	/**
 	 *
 	 * @return ?string $sesquema_emisor
