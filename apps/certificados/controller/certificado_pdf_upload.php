@@ -101,7 +101,7 @@ function upload()
                     $firmado = FALSE;
                 }
                 $oCertificado->setFirmado($firmado);
-                $oCertificado->setEsquema_emisor(FALSE);
+                $oCertificado->setEsquema_emisor(ConfigGlobal::mi_region_dl());
                 $oCertificado->setF_certificado($oF_certificado);
 
                 if ($certificadoRepository->Guardar($oCertificado) === FALSE) {

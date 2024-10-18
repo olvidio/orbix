@@ -64,7 +64,7 @@ if (is_true($Qfirmado)) {
     $firmado = FALSE;
 }
 $oCertificado->setFirmado($firmado);
-$oCertificado->setEsquema_emisor(FALSE);
+$oCertificado->setEsquema_emisor(ConfigGlobal::mi_region_dl());
 $oCertificado->setF_certificado($oF_certificado);
 if (!empty($oF_enviado)) {
     $oCertificado->setF_enviado($oF_enviado);
