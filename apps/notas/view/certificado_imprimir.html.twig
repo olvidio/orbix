@@ -47,7 +47,7 @@
         }
 
         datos = $('#frm_upload').serialize();
-        request = $.ajax({
+        var request = $.ajax({
             data: datos,
             url: 'apps/certificados/controller/certificado_update.php',
             method: 'POST',
@@ -75,7 +75,7 @@
                     var url2 = "{{ pag_certificado_eliminar }}" + '?id_item=' + item + '{{ h_eliminar|raw }}';
                     fnjs_update_div('#main', url2);
                     {{ oPosicion.js_atras(1)|raw }}
-                };
+                }
             }
         });
     }
