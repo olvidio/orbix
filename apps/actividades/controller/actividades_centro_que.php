@@ -145,7 +145,7 @@ $url_ajax = ConfigGlobal::getWeb() . '/programas/centro_ajax.php';
 
 $oHash = new web\Hash();
 $oHash->setUrl($url);
-$oHash->setCamposForm('empiezamin!empiezamax!extendida!iactividad_val!iasistentes_val!id_ctr!id_ctr_mas!id_ctr_num!periodo!year');
+$oHash->setCamposForm('empiezamin!empiezamax!iactividad_val!iasistentes_val!id_ctr!id_ctr_mas!id_ctr_num!periodo!year');
 $oHash->setCamposNo('id_ctr');
 
 $a_campos = ['oPosicion' => $oPosicion,
