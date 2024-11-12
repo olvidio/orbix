@@ -4,6 +4,7 @@ use asignaturas\model\entity\GestorAsignatura;
 use notas\model\EditarPersonaNota;
 use notas\model\PersonaNota;
 use web\DateTimeLocal;
+use web\NullDateTimeLocal;
 
 /**
  * Para asegurar que inicia la sesión, y poder acceder a los permisos
@@ -38,7 +39,11 @@ if (!empty($a_sel)) { //vengo de un checkbox
 $id_situacion = (integer)filter_input(INPUT_POST, 'id_situacion');
 $acta = (string)filter_input(INPUT_POST, 'acta');
 $f_acta = (string)filter_input(INPUT_POST, 'f_acta');
-$oF_acta = DateTimeLocal::createFromLocal($f_acta);
+if (empty($f_acta)) {
+    $oF_acta = new NullDateTimeLocal();
+} else {
+    $oF_acta = DateTimeLocal::createFromLocal($f_acta);
+}
 $tipo_acta = (integer)filter_input(INPUT_POST, 'tipo_acta');
 $preceptor = (string)filter_input(INPUT_POST, 'preceptor');
 $id_preceptor = (integer)filter_input(INPUT_POST, 'id_preceptor');

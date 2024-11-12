@@ -5,6 +5,7 @@ namespace notas\model;
 use notas\model\entity\GestorNota;
 use notas\model\entity\Nota;
 use web\DateTimeLocal;
+use web\NullDateTimeLocal;
 
 class PersonaNota
 {
@@ -27,7 +28,7 @@ class PersonaNota
     private ?int $id_asignatura;
     private ?int $id_situacion;
     private ?string $acta;
-    private ?DateTimeLocal $f_acta;
+    private DateTimeLocal|NullDateTimeLocal $f_acta;
     private ?string $detalle;
     private bool $preceptor;
     private ?int $id_preceptor;
@@ -209,12 +210,12 @@ class PersonaNota
         $this->acta = $acta;
     }
 
-    public function getFActa(): ?DateTimeLocal
+    public function getFActa(): DateTimeLocal|NullDateTimeLocal
     {
         return $this->f_acta;
     }
 
-    public function setFActa(?DateTimeLocal $f_acta): void
+    public function setFActa(DateTimeLocal|NullDateTimeLocal $f_acta): void
     {
         $this->f_acta = $f_acta;
     }

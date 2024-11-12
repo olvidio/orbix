@@ -1,7 +1,8 @@
 <?php
 
-namespace Tests\unit\notas;
+namespace Tests\integration\certificados;
 
+use certificados\domain\repositories\CertificadoRepository;
 use core\ConfigDB;
 use core\ConfigGlobal;
 use core\DBConnection;
@@ -16,7 +17,7 @@ use Tests\factories\notas\NotasFactory;
 use Tests\myTest;
 use ubis\model\entity\GestorDelegacion;
 
-class trasladosNotasTest extends myTest
+class trasladoCertificadosTest extends myTest
 {
     private string $session_org;
 
@@ -25,12 +26,12 @@ class trasladosNotasTest extends myTest
     private string $sreg_dl_dst;
 
     private int $id_nom;
-    private array $cPersonaNotas;
+    private array $cCertificados;
     private int $id_schema_persona;
 
     public function __construct(string $name)
     {
-        $this->generarNotas('H-dlb');
+        $this->generarCertificados('H-dlb');
 
         parent::__construct($name);
     }
@@ -65,7 +66,7 @@ class trasladosNotasTest extends myTest
         $dlB = 'crGalBel';
 
         // preparara entorno con traslado de dlB a crA
-        $this->generarNotas($esquemaA);
+        $this->generarCertificados($esquemaA);
         $this->guardar_notas($esquemaA);
         $this->trasladar_notas($esquemaA, $esquemaB);
 
@@ -87,7 +88,7 @@ class trasladosNotasTest extends myTest
 
         // 3.1.- No existen en e_notas_otra_region. de cr B
         $oDBdst = $this->setConexion($esquemaB.'v');
-        foreach ($this->cPersonaNotas as $oPersonaNotaA) {
+        foreach ($this->cCertificados as $oPersonaNotaA) {
             $id_asignatura = $oPersonaNotaA->getIdAsignatura();
             $gesPersonaNota = new GestorPersonaNotaOtraRegionStgrDB($esquema_region_stgrB);
             $gesPersonaNota->setoDbl($oDBdst);
@@ -99,7 +100,7 @@ class trasladosNotasTest extends myTest
 
         // 3.2.- No existen en e_notas_dl de crB
         $oDBdst = $this->setConexion($esquemaB.'v');
-        foreach ($this->cPersonaNotas as $oPersonaNotaA) {
+        foreach ($this->cCertificados as $oPersonaNotaA) {
             $id_asignatura = $oPersonaNotaA->getIdAsignatura();
             $gesPersonaNota = new GestorPersonaNotaDlDB();
             $gesPersonaNota->setoDbl($oDBdst);
@@ -111,7 +112,7 @@ class trasladosNotasTest extends myTest
 
         // 3.3.- No existen en e_notas_otra_region de la region de dlA
         $oDBdst = $this->setConexion($esquema_region_stgrA);
-        foreach ($this->cPersonaNotas as $oPersonaNotaA) {
+        foreach ($this->cCertificados as $oPersonaNotaA) {
             $id_asignatura = $oPersonaNotaA->getIdAsignatura();
             $gesPersonaNota = new GestorPersonaNotaOtraRegionStgrDB($esquema_region_stgrA);
             $gesPersonaNota->setoDbl($oDBdst);
@@ -123,7 +124,7 @@ class trasladosNotasTest extends myTest
 
         // 3.4.- Existen en e_notas_dl. de dlA
         $oDBdst = $this->setConexion($esquemaA.'v');
-        foreach ($this->cPersonaNotas as $oPersonaNotaA) {
+        foreach ($this->cCertificados as $oPersonaNotaA) {
             $id_asignatura = $oPersonaNotaA->getIdAsignatura();
             $gesPersonaNota = new GestorPersonaNotaDlDB();
             $gesPersonaNota->setoDbl($oDBdst);
@@ -161,7 +162,7 @@ class trasladosNotasTest extends myTest
         $dlB = 'dlb';
 
         // preparara entorno con traslado de dlB a crA
-        $this->generarNotas($esquemaA);
+        $this->generarCertificados($esquemaA);
         $this->guardar_notas($esquemaA);
         $this->trasladar_notas($esquemaA, $esquemaB);
 
@@ -182,7 +183,7 @@ class trasladosNotasTest extends myTest
         // 3.4.- Existen en e_notas_dl. de crA
 
         // 3.1.- No existen en e_notas_otra_region. de cr A
-        foreach ($this->cPersonaNotas as $oPersonaNotaA) {
+        foreach ($this->cCertificados as $oPersonaNotaA) {
             $id_asignatura = $oPersonaNotaA->getIdAsignatura();
             $gesPersonaNota = new GestorPersonaNotaOtraRegionStgrDB($esquema_region_stgrA);
             $cPersonaNotasB = $gesPersonaNota->getPersonaNotas(['id_nom' => $this->id_nom, 'id_asignatura' => $id_asignatura]);
@@ -193,7 +194,7 @@ class trasladosNotasTest extends myTest
 
         // 3.2.- No existen en e_notas_dl de dlB
         $oDBdst = $this->setConexion($esquemaB.'v');
-        foreach ($this->cPersonaNotas as $oPersonaNotaA) {
+        foreach ($this->cCertificados as $oPersonaNotaA) {
             $id_asignatura = $oPersonaNotaA->getIdAsignatura();
             $gesPersonaNota = new GestorPersonaNotaDlDB();
             $gesPersonaNota->setoDbl($oDBdst);
@@ -205,7 +206,7 @@ class trasladosNotasTest extends myTest
 
         // 3.3.- No existen en e_notas_otra_region de la region de dlB
         $oDBdst = $this->setConexion($esquema_region_stgrB);
-        foreach ($this->cPersonaNotas as $oPersonaNotaA) {
+        foreach ($this->cCertificados as $oPersonaNotaA) {
             $id_asignatura = $oPersonaNotaA->getIdAsignatura();
             $gesPersonaNota = new GestorPersonaNotaOtraRegionStgrDB($esquema_region_stgrB);
             $gesPersonaNota->setoDbl($oDBdst);
@@ -217,7 +218,7 @@ class trasladosNotasTest extends myTest
 
         // 3.4.- Existen en e_notas_dl. de crA
         $oDBdst = $this->setConexion($esquemaA.'v');
-        foreach ($this->cPersonaNotas as $oPersonaNotaA) {
+        foreach ($this->cCertificados as $oPersonaNotaA) {
             $id_asignatura = $oPersonaNotaA->getIdAsignatura();
             $gesPersonaNota = new GestorPersonaNotaDlDB();
             $gesPersonaNota->setoDbl($oDBdst);
@@ -258,7 +259,7 @@ class trasladosNotasTest extends myTest
         $dlB = 'dlb';
 
         // preparara entorno con traslado de dlB a crA
-        $this->generarNotas($esquemaA);
+        $this->generarCertificados($esquemaA);
         $this->guardar_notas($esquemaA);
         $this->trasladar_notas($esquemaA, $esquemaB);
 
@@ -269,7 +270,7 @@ class trasladosNotasTest extends myTest
         // 3.- Comprobar:
 
         // 3.1.-Existen en e_notas_otra_region.
-        foreach ($this->cPersonaNotas as $oPersonaNotaA) {
+        foreach ($this->cCertificados as $oPersonaNotaA) {
             $id_asignatura = $oPersonaNotaA->getIdAsignatura();
             $gesPersonaNota = new GestorPersonaNotaOtraRegionStgrDB($esquema_region_stgr);
             $cPersonaNotasB = $gesPersonaNota->getPersonaNotas(['id_nom' => $this->id_nom, 'id_asignatura' => $id_asignatura]);
@@ -289,7 +290,7 @@ class trasladosNotasTest extends myTest
 
         // 3.2.- Existen en e_notas_dl region destino con 'falta certificado'
         $oDBdst = $this->setConexion($esquemaB.'v');
-        foreach ($this->cPersonaNotas as $oPersonaNotaA) {
+        foreach ($this->cCertificados as $oPersonaNotaA) {
             $id_asignatura = $oPersonaNotaA->getIdAsignatura();
             $gesPersonaNota = new GestorPersonaNotaDlDB();
             $gesPersonaNota->setoDbl($oDBdst);
@@ -309,7 +310,7 @@ class trasladosNotasTest extends myTest
         }
 
         // 3.3.- No existen en origen crA.e_notas_dl
-        foreach ($this->cPersonaNotas as $oPersonaNotaA) {
+        foreach ($this->cCertificados as $oPersonaNotaA) {
             $id_asignatura = $oPersonaNotaA->getIdAsignatura();
             $gesPersonaNota = new GestorPersonaNotaDlDB();
             $cPersonaNotasB = $gesPersonaNota->getPersonaNotas(['id_nom' => $this->id_nom, 'id_asignatura' => $id_asignatura]);
@@ -348,7 +349,7 @@ class trasladosNotasTest extends myTest
         $this->sreg_dl_dst = $Qnew_dl;
 
         // 1.- guardar notas del dlA
-        foreach ($this->cPersonaNotas as $oPersonaNota) {
+        foreach ($this->cCertificados as $oPersonaNota) {
             $oEditarPersonaNota = new EditarPersonaNota($oPersonaNota);
             $datosRegionStgr = $oEditarPersonaNota->getDatosRegionStgr();
             $esquema_region_stgr = $datosRegionStgr['esquema_region_stgr'];
@@ -368,7 +369,7 @@ class trasladosNotasTest extends myTest
         // 3.- Comprobar:
 
         // 3.1.-Existen en e_notas_otra_region.
-        foreach ($this->cPersonaNotas as $oPersonaNotaA) {
+        foreach ($this->cCertificados as $oPersonaNotaA) {
             $id_asignatura = $oPersonaNotaA->getIdAsignatura();
             $gesPersonaNota = new GestorPersonaNotaOtraRegionStgrDB($esquema_region_stgr);
             $cPersonaNotasB = $gesPersonaNota->getPersonaNotas(['id_nom' => $this->id_nom, 'id_asignatura' => $id_asignatura]);
@@ -388,7 +389,7 @@ class trasladosNotasTest extends myTest
 
         // 3.2.- Existen en e_notas_dl region destino con 'falta certificado'
         $oDBdst = $this->conexionDst();
-        foreach ($this->cPersonaNotas as $oPersonaNotaA) {
+        foreach ($this->cCertificados as $oPersonaNotaA) {
             $id_asignatura = $oPersonaNotaA->getIdAsignatura();
             $gesPersonaNota = new GestorPersonaNotaDlDB();
             $gesPersonaNota->setoDbl($oDBdst);
@@ -408,7 +409,7 @@ class trasladosNotasTest extends myTest
         }
 
         // 3.3.- No existen en origen crA.e_notas_dl
-        foreach ($this->cPersonaNotas as $oPersonaNotaA) {
+        foreach ($this->cCertificados as $oPersonaNotaA) {
             $id_asignatura = $oPersonaNotaA->getIdAsignatura();
             $gesPersonaNota = new GestorPersonaNotaDlDB();
             $cPersonaNotasB = $gesPersonaNota->getPersonaNotas(['id_nom' => $this->id_nom, 'id_asignatura' => $id_asignatura]);
@@ -450,7 +451,7 @@ class trasladosNotasTest extends myTest
         $this->sreg_dl_dst = $Qnew_dl;
 
         // 1.- guardar notas del dlA
-        foreach ($this->cPersonaNotas as $oPersonaNota) {
+        foreach ($this->cCertificados as $oPersonaNota) {
             $oEditarPersonaNota = new EditarPersonaNota($oPersonaNota);
             $datosRegionStgr = $oEditarPersonaNota->getDatosRegionStgr();
             $esquema_region_stgr = $datosRegionStgr['esquema_region_stgr']; // para usar la información más abajo
@@ -471,7 +472,7 @@ class trasladosNotasTest extends myTest
         $oDBdst = $this->conexionDst();
 
         // 3.1.-Existen en e_notas_otra_region.
-        foreach ($this->cPersonaNotas as $oPersonaNotaA) {
+        foreach ($this->cCertificados as $oPersonaNotaA) {
             $id_asignatura = $oPersonaNotaA->getIdAsignatura();
             $gesPersonaNota = new GestorPersonaNotaOtraRegionStgrDB($esquema_region_stgr);
             $cPersonaNotasB = $gesPersonaNota->getPersonaNotas(['id_nom' => $this->id_nom, 'id_asignatura' => $id_asignatura]);
@@ -490,7 +491,7 @@ class trasladosNotasTest extends myTest
         }
 
         // 3.2.- Existen en e_notas_dl region destino con 'falta certificado'
-        foreach ($this->cPersonaNotas as $oPersonaNotaA) {
+        foreach ($this->cCertificados as $oPersonaNotaA) {
             $id_asignatura = $oPersonaNotaA->getIdAsignatura();
             $gesPersonaNota = new GestorPersonaNotaDlDB();
             $gesPersonaNota->setoDbl($oDBdst);
@@ -509,7 +510,7 @@ class trasladosNotasTest extends myTest
             $oPersonaNotaB->DBEliminar();
         }
         // 3.3.- No existen en origen
-        foreach ($this->cPersonaNotas as $oPersonaNotaA) {
+        foreach ($this->cCertificados as $oPersonaNotaA) {
             $id_asignatura = $oPersonaNotaA->getIdAsignatura();
             $gesPersonaNota = new GestorPersonaNotaDlDB();
             //$gesPersonaNota->setoDbl($oDBorg);
@@ -521,11 +522,11 @@ class trasladosNotasTest extends myTest
     }
     ///
 
-    /////////// Traslado de notas de dl a dl de una misma región del stgr. ///////////
+    /////////// Traslado de certificados de dlA a dlB de una misma región del stgr. ///////////
     /**
-     * 1.- crear notas y guardar en dlA
-     * 2.- trasladar (pasan de la tabla dlA.e_notas_dl a la tabla dlB.e_notas_dl)
-     * 3.- comprobar notas en dlB y que no existen en dlA
+     * 1.- crear certificados y guardar en dlA
+     * 2.- trasladar (No debería hacer nada)
+     * 3.- comprobar certificados en dlB.
      *
      * @return void
      */
@@ -546,11 +547,9 @@ class trasladosNotasTest extends myTest
         $this->sreg_dl_dst = $Qnew_dl;
 
         // 1.- guardar notas del dlA
-        foreach ($this->cPersonaNotas as $oPersonaNota) {
-            $oEditarPersonaNota = new EditarPersonaNota($oPersonaNota);
-            $datosRegionStgr = $oEditarPersonaNota->getDatosRegionStgr();
-            $a_ObjetosPersonaNota = $oEditarPersonaNota->getObjetosPersonaNota($datosRegionStgr, $this->id_schema_persona);
-            $oEditarPersonaNota->crear_nueva_personaNota_para_cada_objeto_del_array($a_ObjetosPersonaNota);
+        $certificadoRepository = new CertificadoRepository();
+        foreach ($this->cCertificados as $oCertificado) {
+            $certificadoRepository->Guardar($oCertificado);
         }
 
         // 2.- trasladar
@@ -560,45 +559,36 @@ class trasladosNotasTest extends myTest
         $oTrasladoDl->setReg_dl_org($reg_dl_org);
         $oTrasladoDl->setReg_dl_dst($Qnew_dl);
 
-        $oTrasladoDl->copiarNotas();
+        $oTrasladoDl->trasladarDossierCertificados();
 
         // 3.- Comprobar:
         // 3.1.-Existen en destino, y no existen en origen
         $oDBdst = $this->conexionDst();
 
-        foreach ($this->cPersonaNotas as $oPersonaNotaA) {
-            $id_asignatura = $oPersonaNotaA->getIdAsignatura();
-            $gesPersonaNota = new GestorPersonaNotaDlDB();
-            $gesPersonaNota->setoDbl($oDBdst);
-            $cPersonaNotasB = $gesPersonaNota->getPersonaNotas(['id_nom' => $this->id_nom, 'id_asignatura' => $id_asignatura]);
-            $oPersonaNotaB = $cPersonaNotasB[0];
+        $certificadoRepositoryB = new CertificadoRepository();
+        $certificadoRepositoryB->setoDbl($oDBdst);
+        foreach ($this->cCertificados as $oCertificadoA) {
+            $certificadoA = $oCertificadoA->getCertificado();
 
+            $cCertificadosB = $certificadoRepositoryB->getCertificados(['certificado' => $certificadoA]);
+            $oCertificadoB = $cCertificadosB[0];
 
             // Son dos clases distintas, no se pueden comparar. Miramos las propiedades
-            //$this->assertEquals($oPersonaNotaA, $oPersonaNotaB);
+            $this->assertEquals($oCertificadoA, $oCertificadoB);
+            /*
             $this->assertEquals($oPersonaNotaA->getIdNom(), $oPersonaNotaB->getId_nom());
             $this->assertEquals($oPersonaNotaA->getIdNivel(), $oPersonaNotaB->getId_nivel());
             $this->assertEquals($oPersonaNotaA->getIdAsignatura(), $oPersonaNotaB->getId_asignatura());
             $this->assertEquals($oPersonaNotaA->getNotaNum(), $oPersonaNotaB->getNota_num());
             $this->assertEquals($oPersonaNotaA->getIdSituacion(), $oPersonaNotaB->getId_situacion());
-
+            */
             // 4.- borrar las pruebas
-            $oPersonaNotaB->DBEliminar();
-        }
-        // 3.2.- No existen en origen
-        foreach ($this->cPersonaNotas as $oPersonaNotaA) {
-            $id_asignatura = $oPersonaNotaA->getIdAsignatura();
-            $gesPersonaNota = new GestorPersonaNotaDlDB();
-            //$gesPersonaNota->setoDbl($oDBorg);
-            $cPersonaNotasB = $gesPersonaNota->getPersonaNotas(['id_nom' => $this->id_nom, 'id_asignatura' => $id_asignatura]);
-            $oPersonaNotaB = $cPersonaNotasB[0] ?? '';
-
-            $this->assertEquals('', $oPersonaNotaB);
+            //$oPersonaNotaB->DBEliminar();
         }
     }
 
     ///////////////////////////////////////////////////////////////////////
-    private function guardar_notas($esquemaA) {
+    private function guardar_certificados($esquemaA) {
         $gesDelegacion = new GestorDelegacion();
         $dlA = GestorDelegacion::getDlFromSchema($esquemaA);
         $a_mi_region_stgr = $gesDelegacion->mi_region_stgr($dlA);
@@ -614,17 +604,17 @@ class trasladosNotasTest extends myTest
         $this->id_schema_persona = $id_esquemaA;
 
         // 1.- guardar notas del dlA
-        foreach ($this->cPersonaNotas as $oPersonaNota) {
-            $oEditarPersonaNota = new EditarPersonaNota($oPersonaNota);
-            $datosRegionStgr = $oEditarPersonaNota->getDatosRegionStgr();
-            $a_ObjetosPersonaNota = $oEditarPersonaNota->getObjetosPersonaNota($datosRegionStgr, $this->id_schema_persona);
-            $oEditarPersonaNota->crear_nueva_personaNota_para_cada_objeto_del_array($a_ObjetosPersonaNota);
+        $certificadoRepository = new CertificadoRepository();
+        foreach ($this->cCertificados as $Certificado) {
+            $certificadoRepository->Guardar($Certificado);
         }
     }
 
-    private function trasladar_notas($esquemaA, $esquemaB)
+    private function trasladar_certificados($esquemaA, $esquemaB)
     {
 
+        $a_reg = explode('-', $esquema);
+        $region = $a_reg[0];
         $gesDelegacion = new GestorDelegacion();
         $dlA = GestorDelegacion::getDlFromSchema($esquemaA);
         $a_mi_region_stgr = $gesDelegacion->mi_region_stgr($dlA);
@@ -646,7 +636,7 @@ class trasladosNotasTest extends myTest
         $oTrasladoDl->setReg_dl_org($reg_dl_org);
         $oTrasladoDl->setReg_dl_dst($Qnew_dl);
 
-        $oTrasladoDl->copiarNotas();
+        $oTrasladoDl->trasladarDossierCertificados();
     }
 
     ///
@@ -705,9 +695,10 @@ class trasladosNotasTest extends myTest
         $certificadosFactory = new CertificadosFactory();
         $certificadosFactory->setCount(10);
 
-        $region =  GestorDelegacion::getDlFromSchema($esquema);
+        $a_reg = explode('-', $esquema);
+        $region = $a_reg[0];
 
-        $this->cPersonaNotas = $certificadosFactory->create($this->id_nom,$region);
+        $this->cCertificados = $certificadosFactory->create($this->id_nom,$region);
     }
 
     private function conexionDst($exterior = FALSE): \PDO

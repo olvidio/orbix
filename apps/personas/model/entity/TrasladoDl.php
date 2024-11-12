@@ -913,6 +913,7 @@ class TrasladoDl
     {
         $error = '';
         $oDBorg = $this->conexionOrg();
+        // si es una dl, hay que buscarlos en la region del stgr
 
         $certificadoRepository = new CertificadoRepository();
         $certificadoRepository->setoDbl($oDBorg);

@@ -59,22 +59,33 @@
             } else {
                 var item = json.item;
                 var url = "{{ pag_certificado_2_pdf }}" + '?guardar=1&id_item=' + item + '{{ h|raw }}';
-                window.open(url, "sele");
+                let new_window = open(url, "sele");
                 // Una vez descargado, hay que permitir cancelar y borrar si no está correcto
                 var msg = "{{ "¿Es correcto?"|trans|raw }}";
                 msg += "\n";
                 msg += "\n";
                 msg += "{{ "'Cancel' para eliminar el certificado recién creado"|trans|raw }}\n";
                 msg += "\n";
-                if (confirm(msg)) {
+                // el confirm normal no funciona con el Chrome, Si hace referencia a otra ventana o iframe,
+                // devuelve false siempre!
+                let isChromeAgent = false;
+                if (navigator.userAgent.includes("Chrome")) {
+                    isChromeAgent = true;
+                }
+                debugger;
+                if (isChromeAgent) {
                     // ok
-                    debugger;
                     {{ oPosicion.js_atras(1)|raw }}
                 } else {
-                    // cancel
-                    var url2 = "{{ pag_certificado_eliminar }}" + '?id_item=' + item + '{{ h_eliminar|raw }}';
-                    fnjs_update_div('#main', url2);
-                    {{ oPosicion.js_atras(1)|raw }}
+                    if (confirm(msg)) {
+                        // ok
+                        {{ oPosicion.js_atras(1)|raw }}
+                    } else {
+                        // cancel
+                        var url2 = "{{ pag_certificado_eliminar }}" + '?id_item=' + item + '{{ h_eliminar|raw }}';
+                        fnjs_update_div('#main', url2);
+                        {{ oPosicion.js_atras(1)|raw }}
+                    }
                 }
             }
         });
