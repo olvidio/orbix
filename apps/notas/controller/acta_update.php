@@ -74,7 +74,7 @@ switch ($Qmod) {
         // comprobar valor del acta
         if (isset($Qacta)) {
             $valor = trim($Qacta);
-            $reg_exp = "/^(\?|\w{1,6}\??)\s+([0-9]{0,3})\/([0-9]{2})\??$/";
+            $reg_exp = "/^(\?|\w{1,8}\??)\s+([0-9]{0,3})\/([0-9]{2})\??$/";
             if (preg_match($reg_exp, $valor) == 1) {
             } else {
                 // inventar acta.
