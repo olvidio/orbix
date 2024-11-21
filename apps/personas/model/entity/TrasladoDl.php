@@ -10,6 +10,7 @@ use asistentes\model\entity\AsistenteDl;
 use asistentes\model\entity\AsistenteOut;
 use asistentes\model\entity\GestorAsistenteDl;
 use asistentes\model\entity\GestorAsistenteOut;
+use certificados\domain\repositories\CertificadoDlRepository;
 use certificados\domain\repositories\CertificadoRepository;
 use core\ConfigDB;
 use core\ConfigGlobal;
@@ -536,16 +537,16 @@ class TrasladoDl
                 }
             }
             //elimino public, publicv, global
-            if ($esquema == 'global') {
+            if ($esquema === 'global') {
                 continue;
             }
-            if ($esquema == 'public') {
+            if ($esquema === 'public') {
                 continue;
             }
-            if ($esquema == 'publicv') {
+            if ($esquema === 'publicv') {
                 continue;
             }
-            if ($esquema == 'restov') {
+            if ($esquema === 'restov') {
                 $tabla_personas = 'p_de_paso_ex';
             }
             $esquema_slash = '"' . $esquema . '"';
@@ -887,7 +888,7 @@ class TrasladoDl
                     if ($NuevoObj->DBGuardar() === false) {
                         $error .= '<br>' . sprintf(_("No se ha guardado el dossier: %s"), $class);
                     } else { // Borrar excepto traslado
-                        if ($class != 'Traslado') {
+                        if ($class !== 'Traslado') {
                             $Objeto->DBEliminar();
                         }
                     }
@@ -915,9 +916,9 @@ class TrasladoDl
         $oDBorg = $this->conexionOrg();
         // si es una dl, hay que buscarlos en la region del stgr
 
-        $certificadoRepository = new CertificadoRepository();
-        $certificadoRepository->setoDbl($oDBorg);
-        $cCertificados = $certificadoRepository->getCertificados(['id_nom' => $this->iid_nom]);
+        $certificadoDlRepository = new CertificadoDlRepository();
+        $certificadoDlRepository->setoDbl($oDBorg);
+        $cCertificados = $certificadoDlRepository->getCertificados(['id_nom' => $this->iid_nom]);
         foreach ($cCertificados as $Certificado) {
             if (!$this->trasladar_certificados($Certificado)) {
                 $error .= '<br>' . $this->serror = $error;
@@ -941,20 +942,20 @@ class TrasladoDl
         $id_item = $Certificado->getId_item();
         // para que ponga el suyo según la DB
 
-        $certificadoRepository = new CertificadoRepository();
-        $certificadoRepository->setoDbl($oDBdst);
-        $newId_item = $certificadoRepository->getNewId_item();
+        $certificadoDlRepository = new CertificadoDlRepository();
+        $certificadoDlRepository->setoDbl($oDBdst);
+        $newId_item = $certificadoDlRepository->getNewId_item();
         $Certificado->setId_item($newId_item);
-        if ($certificadoRepository->Guardar($Certificado) === FALSE) {
-            $error .= $certificadoRepository->getErrorTxt();
+        if ($certificadoDlRepository->Guardar($Certificado) === FALSE) {
+            $error .= $certificadoDlRepository->getErrorTxt();
         }
 
         // eliminar el original
-        $certificadoRepository2 = new CertificadoRepository();
-        $oCertificado = $certificadoRepository2->findById($id_item);
+        $certificadoDlRepository2 = new CertificadoDlRepository();
+        $oCertificado = $certificadoDlRepository2->findById($id_item);
         if (!empty($oCertificado)) {
             $certificado = $oCertificado->getCertificado();
-            if ($certificadoRepository2->Eliminar($oCertificado) === FALSE) {
+            if ($certificadoDlRepository2->Eliminar($oCertificado) === FALSE) {
                 $error .= _("Algo falló");
             }
         }

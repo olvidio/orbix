@@ -546,7 +546,7 @@ class trasladoCertificadosTest extends myTest
         $this->sreg_dl_org = $reg_dl_org;
         $this->sreg_dl_dst = $Qnew_dl;
 
-        // 1.- guardar notas del dlA
+        // 1.- guardar certificados del dlA
         $certificadoRepository = new CertificadoRepository();
         foreach ($this->cCertificados as $oCertificado) {
             $certificadoRepository->Guardar($oCertificado);
@@ -677,7 +677,7 @@ class trasladoCertificadosTest extends myTest
 
     public function generarCertificados(string $esquema): void
     {
-        //  Generar notas para id_nom (debe existir, para que no dé error)!!!
+        //  Generar certificados para id_nom (debe existir, para que no dé error)!!!
         switch ($esquema) {
             case 'H-dlb':
                 $this->id_nom = 100111832;

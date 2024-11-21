@@ -2,19 +2,22 @@
 
 namespace certificados\infrastructure;
 
-use certificados\domain\entity\Certificado;
-use certificados\domain\repositories\CertificadoRepositoryInterface;
+use certificados\domain\entity\CertificadoDl;
+use certificados\domain\repositories\CertificadoDlRepositoryInterface;
 use core\ClaseRepository;
 use core\Condicion;
 use core\ConverterDate;
 use core\Set;
+use Exception;
 use PDO;
 use PDOException;
+use RuntimeException;
 use function core\is_true;
+use function PHPUnit\Framework\throwException;
 
 
 /**
- * Clase que adapta la tabla e_certificados_rstgr a la interfaz del repositorio
+ * Clase que adapta la tabla e_certificados_dl a la interfaz del repositorio
  *
  * @package orbix
  * @subpackage model
@@ -22,13 +25,13 @@ use function core\is_true;
  * @version 2.0
  * @created 27/2/2023
  */
-class PgCertificadoRepository extends ClaseRepository implements CertificadoRepositoryInterface
+class PgCertificadoDlRepository extends ClaseRepository implements CertificadoDlRepositoryInterface
 {
     public function __construct()
     {
         $oDbl = $GLOBALS['oDB'];
         $this->setoDbl($oDbl);
-        $this->setNomTabla('e_certificados_rstgr');
+        $this->setNomTabla('e_certificados_dl');
     }
 
     /* -------------------- GESTOR BASE ---------------------------------------- */
@@ -40,7 +43,7 @@ class PgCertificadoRepository extends ClaseRepository implements CertificadoRepo
      * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
      * @return array|FALSE Una colección de objetos de tipo Certificado
      */
-    public function getCertificados(array $aWhere = [], array $aOperators = []): bool|array
+    public function getCertificados(array $aWhere = [], array $aOperators = []): array|bool
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
@@ -111,8 +114,8 @@ class PgCertificadoRepository extends ClaseRepository implements CertificadoRepo
             }
             // para las fechas del postgres (texto iso)
             $aDatos['f_certificado'] = (new ConverterDate('date', $aDatos['f_certificado']))->fromPg();
-            $aDatos['f_enviado'] = (new ConverterDate('date', $aDatos['f_enviado']))->fromPg();
-            $Certificado = new Certificado();
+            $aDatos['f_recibido'] = (new ConverterDate('date', $aDatos['f_recibido']))->fromPg();
+            $Certificado = new CertificadoDl();
             $Certificado->setAllAttributes($aDatos);
             $CertificadoSet->add($Certificado);
         }
@@ -121,7 +124,7 @@ class PgCertificadoRepository extends ClaseRepository implements CertificadoRepo
 
     /* -------------------- ENTIDAD --------------------------------------------- */
 
-    public function Eliminar(Certificado $Certificado)
+    public function Eliminar(CertificadoDl $Certificado)
     {
         $id_item = $Certificado->getId_item();
         $oDbl = $this->getoDbl();
@@ -138,7 +141,7 @@ class PgCertificadoRepository extends ClaseRepository implements CertificadoRepo
     /**
      * Si no existe el registro, hace un insert, si existe, se hace el update.
      */
-    public function Guardar(Certificado $Certificado)
+    public function Guardar(CertificadoDl $Certificado)
     {
         $id_item = $Certificado->getId_item();
         $oDbl = $this->getoDbl();
@@ -157,7 +160,7 @@ class PgCertificadoRepository extends ClaseRepository implements CertificadoRepo
         $aDatos['documento'] = bin2hex($Certificado->getDocumento()?? '');
         // para las fechas
         $aDatos['f_certificado'] = (new ConverterDate('date', $Certificado->getF_certificado()))->toPg();
-        $aDatos['f_enviado'] = (new ConverterDate('date', $Certificado->getF_enviado()))->toPg();
+        $aDatos['f_recibido'] = (new ConverterDate('date', $Certificado->getF_recibido()))->toPg();
         array_walk($aDatos, 'core\poner_null');
         //para el caso de los boolean FALSE, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
         if (is_true($aDatos['firmado'])) {
@@ -178,7 +181,7 @@ class PgCertificadoRepository extends ClaseRepository implements CertificadoRepo
 					esquema_emisor           = :esquema_emisor,
 					firmado                  = :firmado,
 					documento                = :documento,
-                    f_enviado                = :f_enviado";
+                    f_recibido                = :f_recibido";
             if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_item = $id_item")) === FALSE) {
                 $sClaveError = 'PgCertificadoRepository.update.prepare';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
@@ -197,8 +200,8 @@ class PgCertificadoRepository extends ClaseRepository implements CertificadoRepo
         } else {
             // INSERT
             $aDatos['id_item'] = $Certificado->getId_item();
-            $campos = "(id_item,id_nom,nom,idioma,destino,certificado,f_certificado,esquema_emisor,firmado,documento,f_enviado)";
-            $valores = "(:id_item,:id_nom,:nom,:idioma,:destino,:certificado,:f_certificado,:esquema_emisor,:firmado,:documento,:f_enviado)";
+            $campos = "(id_item,id_nom,nom,idioma,destino,certificado,f_certificado,esquema_emisor,firmado,documento,f_recibido)";
+            $valores = "(:id_item,:id_nom,:nom,:idioma,:destino,:certificado,:f_certificado,:esquema_emisor,:firmado,:documento,:f_recibido)";
             if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === FALSE) {
                 $sClaveError = 'PgCertificadoRepository.insertar.prepare';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
@@ -258,7 +261,7 @@ class PgCertificadoRepository extends ClaseRepository implements CertificadoRepo
         // para las fechas del postgres (texto iso)
         if ($aDatos !== FALSE) {
             $aDatos['f_certificado'] = (new ConverterDate('date', $aDatos['f_certificado']))->fromPg();
-            $aDatos['f_enviado'] = (new ConverterDate('date', $aDatos['f_enviado']))->fromPg();
+            $aDatos['f_recibido'] = (new ConverterDate('date', $aDatos['f_recibido']))->fromPg();
         }
         return $aDatos;
     }
@@ -267,19 +270,21 @@ class PgCertificadoRepository extends ClaseRepository implements CertificadoRepo
     /**
      * Busca la clase con id_item en la base de datos .
      */
-    public function findById(int $id_item)
+    public function findById(int $id_item): CertificadoDl
     {
         $aDatos = $this->datosById($id_item);
         if (empty($aDatos)) {
-            return null;
+            $errorMsg = sprintf(_("Error en la linea %s de %s"),__LINE__,__FILE__ ) . ': ';
+            $errorMsg .= _("No se encuentra el certificado");
+            throw new RuntimeException($errorMsg);
         }
-        return (new Certificado())->setAllAttributes($aDatos);
+        return (new CertificadoDl())->setAllAttributes($aDatos);
     }
 
     public function getNewId_item()
     {
         $oDbl = $this->getoDbl();
-        $sQuery = "select nextval('e_certificados_rstgr_id_item_seq'::regclass)";
+        $sQuery = "select nextval('e_certificados_dl_id_item_seq'::regclass)";
         return $oDbl->query($sQuery)->fetchColumn();
     }
 }

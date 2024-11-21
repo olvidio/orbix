@@ -2,9 +2,10 @@
 
 namespace certificados\domain\repositories;
 
+use certificados\domain\entity\CertificadoDl;
+use certificados\infrastructure\PgCertificadoDlRepository;
 use PDO;
-use certificados\domain\entity\Certificado;
-use certificados\infrastructure\PgCertificadoRepository;
+
 
 /**
  *
@@ -16,7 +17,7 @@ use certificados\infrastructure\PgCertificadoRepository;
  * @version 2.0
  * @created 27/2/2023
  */
-class CertificadoRepository implements CertificadoRepositoryInterface
+class CertificadoDlRepository implements CertificadoDlRepositoryInterface
 {
 
     /**
@@ -26,7 +27,7 @@ class CertificadoRepository implements CertificadoRepositoryInterface
 
     public function __construct()
     {
-        $this->repository = new PgCertificadoRepository();
+        $this->repository = new PgCertificadoDlRepository();
     }
 
 /* -------------------- GESTOR BASE ---------------------------------------- */
@@ -46,12 +47,12 @@ class CertificadoRepository implements CertificadoRepositoryInterface
 	
 /* -------------------- ENTIDAD --------------------------------------------- */
 
-	public function Eliminar(Certificado $Certificado)
+	public function Eliminar(CertificadoDl $Certificado)
     {
         return $this->repository->Eliminar($Certificado);
     }
 
-	public function Guardar(Certificado $Certificado)
+	public function Guardar(CertificadoDl $Certificado)
     {
         return $this->repository->Guardar($Certificado);
     }

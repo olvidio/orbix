@@ -10,6 +10,7 @@
  *
  */
 
+use certificados\domain\repositories\CertificadoDlRepository;
 use certificados\domain\repositories\CertificadoRepository;
 use core\ConfigGlobal;
 use personas\model\entity\Persona;
@@ -48,14 +49,20 @@ if (isset($_POST['stack'])) {
 }
 
 $gesDelegeacion = new GestorDelegacion();
+/*
 if (!$gesDelegeacion->soy_region_stgr()) {
     $msg = _("Este menú es sólo para las regiones del stgr.");
     $msg .= "<br>";
     $msg .= _("Para ver los certificados de una persona, debe ir a través de los dossiers");
     exit ($msg);
 }
+*/
+
 $Qtitulo = (string)filter_input(INPUT_POST, 'titulo');
 $Qcertificado = (string)filter_input(INPUT_POST, 'certificado');
+$Qid_dossier = (integer)filter_input(INPUT_POST, 'id_dossier');
+
+$local = empty($Qid_dossier)? FALSE: TRUE;
 
 /*
 * Defino un array con los datos actuales, para saber volver después de navegar un rato
@@ -87,33 +94,44 @@ if (!empty($Qcertificado)) {
 
         $aWhere['certificado'] = $Qcertificado_region;
     }
-    $CertificadoRepository = new CertificadoRepository();
+    if ($local) {
+        $CertificadoRepository = new CertificadoDlRepository();
+    } else {
+        $CertificadoRepository = new CertificadoRepository();
+    }
     $cCertificados = $CertificadoRepository->getCertificados($aWhere, $aOperador);
     $titulo = $Qtitulo;
 } else {
-    $mes = date('m');
-    $fin_m = $_SESSION['oConfig']->getMesFinStgr();
-    if ($mes > $fin_m) {
-        $any = (int)date('Y') + 1;
+    if ($local) {
+        // selecciono todos
+        $aWhere['_ordre'] = 'f_certificado DESC, certificado DESC';
+        $titulo = ucfirst(_("lista de certificados"));
+        $CertificadoRepository = new CertificadoDlRepository();
     } else {
-        $any = (int)date('Y');
+        $mes = date('m');
+        $fin_m = $_SESSION['oConfig']->getMesFinStgr();
+        if ($mes > $fin_m) {
+            $any = (int)date('Y') + 1;
+        } else {
+            $any = (int)date('Y');
+        }
+        $inicurs_ca = curso_est("inicio", $any)->format('Y-m-d');
+        $fincurs_ca = curso_est("fin", $any)->format('Y-m-d');
+        $txt_curso = "$inicurs_ca - $fincurs_ca";
+
+        $aWhere['f_certificado'] = "'$inicurs_ca','$fincurs_ca'";
+        $aOperador['f_certificado'] = 'BETWEEN';
+        $aWhere['_ordre'] = 'f_certificado DESC, certificado DESC';
+
+        // solamente los de mi región que no estén enviados
+        $esquema_emisor = ConfigGlobal::mi_region_dl();
+        $aWhere['esquema_emisor'] = $esquema_emisor;
+        $aWhere['f_enviado'] = 'x';
+        $aOperador['f_enviado'] = 'IS NULL';
+
+        $titulo = ucfirst(sprintf(_("lista de certificados emitidos en el curso %s"), $txt_curso));
+        $CertificadoRepository = new CertificadoRepository();
     }
-    $inicurs_ca = curso_est("inicio", $any)->format('Y-m-d');
-    $fincurs_ca = curso_est("fin", $any)->format('Y-m-d');
-    $txt_curso = "$inicurs_ca - $fincurs_ca";
-
-    $aWhere['f_certificado'] = "'$inicurs_ca','$fincurs_ca'";
-    $aOperador['f_certificado'] = 'BETWEEN';
-    $aWhere['_ordre'] = 'f_certificado DESC, certificado DESC';
-
-    // solamente los de mi región que no estén enviados
-    $esquema_emisor = ConfigGlobal::mi_region_dl();
-    $aWhere['esquema_emisor'] = $esquema_emisor;
-    $aWhere['f_enviado'] = 'x';
-    $aOperador['f_enviado'] = 'IS NULL';
-
-    $titulo = ucfirst(sprintf(_("lista de actas del curso %s"), $txt_curso));
-    $CertificadoRepository = new CertificadoRepository();
     $cCertificados = $CertificadoRepository->getCertificados($aWhere, $aOperador);
 }
 
@@ -137,8 +155,12 @@ $a_cabeceras = [['name' => ucfirst(_("certificado")), 'formatter' => 'clickForma
     _("adjunto"),
     _("idioma"),
     _("destino"),
-    _("enviado"),
 ];
+if ($local) {
+    $a_cabeceras[] = _("recibido");
+} else {
+    $a_cabeceras[] = _("enviado");
+}
 
 $i = 0;
 $a_valores = array();
@@ -153,7 +175,11 @@ foreach ($cCertificados as $oCertificado) {
     $idioma = $oCertificado->getIdioma();
     $destino = $oCertificado->getDestino();
     $pdf = $oCertificado->getDocumento();
-    $f_enviado = $oCertificado->getF_enviado()->getFromLocal();
+    if ($local) {
+        $fecha = $oCertificado->getF_recibido()->getFromLocal();
+    } else {
+        $fecha = $oCertificado->getF_enviado()->getFromLocal();
+    }
 
     if (!empty($idioma)) {
         $oLocal = new Local($idioma);
@@ -184,7 +210,7 @@ foreach ($cCertificados as $oCertificado) {
     $a_valores[$i][5] = empty($pdf) ? '' : _("Sí");
     $a_valores[$i][6] = $idioma;
     $a_valores[$i][7] = $destino;
-    $a_valores[$i][8] = $f_enviado;
+    $a_valores[$i][8] = $fecha;
 }
 if (isset($Qid_sel) && !empty($Qid_sel)) {
     $a_valores['select'] = $Qid_sel;
@@ -202,8 +228,11 @@ $oHash1->setCamposNo('sel!scroll_id!mod!refresh');
 
 $oHashDown = new Hash();
 $oHashDown->setUrl('apps/certificados/controller/certificado_pdf_download.php');
+// con los boolean hay problemas
+$local_string = empty($local)? 'f' : 't';
+$oHashDown->setArrayCamposHidden(['local' => $local_string, 'dani' => 'cosas']);
 $oHashDown->setCamposForm('key');
-$h_download = $oHashDown->linkSinVal();
+$h_download = $oHashDown->linkConVal();
 
 $oTabla = new Lista();
 $oTabla->setId_tabla('certificado_select');
@@ -221,6 +250,7 @@ $a_campos = ['oPosicion' => $oPosicion,
     'botones' => $botones,
     'txt_eliminar' => $txt_eliminar,
     'h_download' => $h_download,
+    'local' => $local,
 ];
 
 $oView = new core\View('certificados/controller');

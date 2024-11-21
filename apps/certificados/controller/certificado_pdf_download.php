@@ -3,8 +3,9 @@
 $_POST = $_GET;
 
 // INICIO Cabecera global de URL de controlador *********************************
-use certificados\domain\repositories\CertificadoPublicRepository;
+use certificados\domain\repositories\CertificadoDlRepository;
 use certificados\domain\repositories\CertificadoRepository;
+use function core\is_true;
 
 require_once("apps/core/global_header.inc");
 // Archivos requeridos por esta url **********************************************
@@ -17,11 +18,15 @@ require_once("apps/core/global_object.inc");
 
 // El download es via GET!!!";
 
-$Qid_item = (string)filter_input(INPUT_GET, 'key');
+$Qid_item = (int)filter_input(INPUT_GET, 'key');
+$Qlocal = (string)filter_input(INPUT_GET, 'local');
 
 if (!empty($Qid_item)) {
-
-    $CertificadoPublicRepository = new CertificadoRepository();
+    if (is_true($Qlocal)) {
+        $CertificadoPublicRepository = new CertificadoDlRepository();
+    } else {
+        $CertificadoPublicRepository = new CertificadoRepository();
+    }
     $oCertificado = $CertificadoPublicRepository->findById($Qid_item);
     if (!empty($oCertificado)) {
         $nombre_fichero = $oCertificado->getCertificado();

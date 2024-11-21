@@ -2,7 +2,7 @@
     fnjs_enviar_certificado = function (formulario) {
         rta = fnjs_solo_uno(formulario);
         if (rta === 1) {
-            request = $.ajax({
+            let request = $.ajax({
                 data: $(formulario).serialize(),
                 url: 'apps/certificados/controller/certificado_enviar.php',
                 method: 'POST',
@@ -37,7 +37,7 @@
                 if ($(this).prop('checked') === true) {
                     key = $(this).prop('value');
                     url = 'apps/certificados/controller/certificado_pdf_download.php';
-                    url_download = url + '?key=' + key + '<?= $h_download ?>';
+                    url_download = url + '?key=' + key + '&<?= $h_download ?>';
                     window.open(url_download);
                 }
             });
@@ -85,6 +85,7 @@
     }
     fnjs_left_side_hide();
 </script>
+<?php if (!$local) { ?>
 <form id="frm_sin_nombre" name="frm_sin_nombre" action="apps/certificados/controller/certificado_select.php"
       method="post"
       onkeydown="fnjs_enviar(event,this);">
@@ -100,17 +101,6 @@
         <br>
         - <?= _("Por lo tanto, punto y asterisco (.*) significa que puede haber un numero indeterminado de caracteres en esa posición.") ?>
         <br>
-        - <?= _("<b>Ejemplos</b>:") ?><br>
-        - <?= _("<b>dlm. 2/19</b>: devolverá, dlmE 2/19, dlmO 2/19, dlmH 2/19,... pero no devolvería dlM 2/19, porque faltaría un carácter entre la m y el espacio.") ?>
-        <br>
-        - <?= _("<b>dl.* 2/19</b>: devolverá, dlmE 2/19, dlmO 2/19, dlb 2/19, dlna 2/19, etc.") ?><br>
-        - <?= _("<b>dl.*/19</b>: devolverá todos los certificados de todas las delegaciones del año 19 en el caso de ser una Región con delegaciones y en el caso de una Delegación devolverá las certificados de esa delegación del año 19.") ?>
-        <br>
-        - <?= _("<b>dlp .*/20</b>: devolverá los certificados de dlp del año 2020 ----- crC .*/21: devolverá todas los certificados del año 21 de Canadá.") ?>
-        <br>
-        - <?= _("<b>dl.*/20</b>: devolverá los certificados de la propia delegación (o de toda la Región si es una región con delegaciones). Puede ser útil para Delegaciones que han cambiado de nombre, porque buscará entre las certificados a las que tiene acceso la delegación, incluyendo el nombre de la actual y el nombre antiguo. ") ?>
-        <br>
-
     </p>
 
     <table>
@@ -118,9 +108,9 @@
             &nbsp;&nbsp;&nbsp;<input class=contenido id="certificado" name="certificado" size="30">
             <div class="help-tip">
                 <p><?= _("ejemplos") ?>:<br>
-                    - <?= _("23/15 (sólo número) => busca en las certificados de la r/dl.") ?><br>
-                    - <?= _("crX .* | dlx .* => todas las certificados de crX o dlx. Hay que dejar espacio") ?><br>
-                    - <?= _("crX .*/15 | dlx .*/15 => todas las certificados de crX o dlx del año 15") ?><br>
+                    - <?= _("23/15 (sólo número) => busca en los certificados de la rstgr.") ?><br>
+                    - <?= _("H .* | crEso .* => todos las certificados de H o Eso. Hay que dejar espacio") ?><br>
+                    - <?= _("H .*/15 | crEso .*/15 => todos los certificados de H o crEso del año 15") ?><br>
                 </p>
             </div>
         </th>
@@ -130,6 +120,7 @@
         </th>
     </table>
 </form>
+<?php } ?>
 
 <h3 class=subtitulo><?= $titulo ?></h3>
 <form id='seleccionados' name='seleccionados' action='' method='post'>

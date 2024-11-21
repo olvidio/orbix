@@ -3,6 +3,8 @@
 
 // INICIO Cabecera global de URL de controlador *********************************
 use certificados\domain\entity\Certificado;
+use certificados\domain\entity\CertificadoDl;
+use certificados\domain\repositories\CertificadoDlRepository;
 use certificados\domain\repositories\CertificadoRepository;
 use core\ConfigGlobal;
 use personas\model\entity\Persona;
@@ -43,14 +45,14 @@ function upload()
             $fp = fopen($tmpFilePath, 'rb');
             $contenido_doc = fread($fp, filesize($tmpFilePath));
 
-            $certificadoRepository = new CertificadoRepository();
-            $oCertificado = $certificadoRepository->findById($Qid_item);
+            $certificadoDlRepository = new CertificadoDlRepository();
+            $oCertificadoDl = $certificadoDlRepository->findById($Qid_item);
 
-            $oCertificado->setDocumento($contenido_doc);
-            $oCertificado->setFirmado(TRUE);
+            $oCertificadoDl->setDocumento($contenido_doc);
+            $oCertificadoDl->setFirmado(TRUE);
 
-            if ($certificadoRepository->Guardar($oCertificado) === FALSE) {
-                $error_txt .= $certificadoRepository->getErrorTxt();
+            if ($certificadoDlRepository->Guardar($oCertificadoDl) === FALSE) {
+                $error_txt .= $certificadoDlRepository->getErrorTxt();
             }
 
         } else {
@@ -85,27 +87,27 @@ function upload()
                 $fp = fopen($tmpFilePath, 'rb');
                 $contenido_doc = fread($fp, filesize($tmpFilePath));
 
-                $certificadoRepository = new CertificadoRepository();
-                $id_item = $certificadoRepository->getNewId_item();
-                $oCertificado = new Certificado();
-                $oCertificado->setId_item($id_item);
-                $oCertificado->setDocumento($contenido_doc);
-                $oCertificado->setId_nom($Qid_nom);
-                $oCertificado->setNom($nom);
-                $oCertificado->setDestino($destino);
-                $oCertificado->setIdioma($Qidioma);
-                $oCertificado->setCertificado($Qcertificado);
+                $certificadoDlRepository = new CertificadoDlRepository();
+                $id_item = $certificadoDlRepository->getNewId_item();
+                $oCertificadoDl = new CertificadoDl();
+                $oCertificadoDl->setId_item($id_item);
+                $oCertificadoDl->setDocumento($contenido_doc);
+                $oCertificadoDl->setId_nom($Qid_nom);
+                $oCertificadoDl->setNom($nom);
+                $oCertificadoDl->setDestino($destino);
+                $oCertificadoDl->setIdioma($Qidioma);
+                $oCertificadoDl->setCertificado($Qcertificado);
                 if (is_true($Qfirmado)) {
                     $firmado = TRUE;
                 } else {
                     $firmado = FALSE;
                 }
-                $oCertificado->setFirmado($firmado);
-                $oCertificado->setEsquema_emisor(ConfigGlobal::mi_region_dl());
-                $oCertificado->setF_certificado($oF_certificado);
+                $oCertificadoDl->setFirmado($firmado);
+                $oCertificadoDl->setEsquema_emisor(ConfigGlobal::mi_region_dl());
+                $oCertificadoDl->setF_certificado($oF_certificado);
 
-                if ($certificadoRepository->Guardar($oCertificado) === FALSE) {
-                    $error_txt .= $certificadoRepository->getErrorTxt();
+                if ($certificadoDlRepository->Guardar($oCertificadoDl) === FALSE) {
+                    $error_txt .= $certificadoDlRepository->getErrorTxt();
                 }
 
             } else {

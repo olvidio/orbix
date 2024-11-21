@@ -31,27 +31,27 @@
       <path value="$PROJECT_DIR$/libs/vendor/phpunit/php-code-coverage" />
       <path value="$PROJECT_DIR$/libs/vendor/fakerphp/faker" />
       <path value="$PROJECT_DIR$/libs/vendor/psr/container" />
+      <path value="$PROJECT_DIR$/libs/vendor/nikic/php-parser" />
       <path value="$PROJECT_DIR$/libs/vendor/theseer/tokenizer" />
+      <path value="$PROJECT_DIR$/libs/vendor/symfony/deprecation-contracts" />
+      <path value="$PROJECT_DIR$/libs/vendor/symfony/polyfill-php80" />
+      <path value="$PROJECT_DIR$/libs/vendor/phar-io/version" />
       <path value="$PROJECT_DIR$/libs/vendor/phar-io/manifest" />
       <path value="$PROJECT_DIR$/libs/vendor/sebastian/recursion-context" />
-      <path value="$PROJECT_DIR$/libs/vendor/sebastian/cli-parser" />
       <path value="$PROJECT_DIR$/libs/vendor/sebastian/object-enumerator" />
-      <path value="$PROJECT_DIR$/libs/vendor/symfony/polyfill-php80" />
-      <path value="$PROJECT_DIR$/libs/vendor/sebastian/global-state" />
-      <path value="$PROJECT_DIR$/libs/vendor/symfony/deprecation-contracts" />
+      <path value="$PROJECT_DIR$/libs/vendor/sebastian/cli-parser" />
       <path value="$PROJECT_DIR$/libs/vendor/sebastian/version" />
-      <path value="$PROJECT_DIR$/libs/vendor/sebastian/comparator" />
+      <path value="$PROJECT_DIR$/libs/vendor/sebastian/global-state" />
       <path value="$PROJECT_DIR$/libs/vendor/sebastian/type" />
-      <path value="$PROJECT_DIR$/libs/vendor/sebastian/diff" />
+      <path value="$PROJECT_DIR$/libs/vendor/sebastian/comparator" />
       <path value="$PROJECT_DIR$/libs/vendor/sebastian/complexity" />
-      <path value="$PROJECT_DIR$/libs/vendor/sebastian/object-reflector" />
+      <path value="$PROJECT_DIR$/libs/vendor/sebastian/diff" />
       <path value="$PROJECT_DIR$/libs/vendor/sebastian/exporter" />
-      <path value="$PROJECT_DIR$/libs/vendor/sebastian/lines-of-code" />
+      <path value="$PROJECT_DIR$/libs/vendor/sebastian/object-reflector" />
       <path value="$PROJECT_DIR$/libs/vendor/sebastian/environment" />
-      <path value="$PROJECT_DIR$/libs/vendor/sebastian/code-unit-reverse-lookup" />
+      <path value="$PROJECT_DIR$/libs/vendor/sebastian/lines-of-code" />
       <path value="$PROJECT_DIR$/libs/vendor/sebastian/code-unit" />
-      <path value="$PROJECT_DIR$/libs/vendor/phar-io/version" />
-      <path value="$PROJECT_DIR$/libs/vendor/nikic/php-parser" />
+      <path value="$PROJECT_DIR$/libs/vendor/sebastian/code-unit-reverse-lookup" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="8.2">

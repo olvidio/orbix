@@ -40,7 +40,7 @@ class PgCertificadoPublicRepository extends ClaseRepository implements Certifica
      * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
      * @return array|FALSE Una colección de objetos de tipo Certificado
      */
-    public function getCertificados(array $aWhere = [], array $aOperators = [])
+    public function getCertificados(array $aWhere = [], array $aOperators = []): bool|array
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
@@ -239,7 +239,7 @@ class PgCertificadoPublicRepository extends ClaseRepository implements Certifica
      * @param int $id_item
      * @return array|bool
      */
-    public function datosById(int $id_item)
+    public function datosById(int $id_item): bool|array
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();

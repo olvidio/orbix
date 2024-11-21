@@ -115,6 +115,17 @@
             }
         }
         <?php } ?>
+        <?php if (!empty($script['fnjs_ver_certificados'])) { ?>
+        fnjs_ver_certificados = function (formulario) {
+            rta = fnjs_solo_uno(formulario);
+            if (rta === 1) {
+                $('#id_dossier').val("1026");
+                $(formulario).attr('action', "apps/certificados/controller/certificado_select.php");
+                $(formulario).target = "main";
+                fnjs_enviar_formulario(formulario);
+            }
+        }
+        <?php } ?>
         <?php if (!empty($script['fnjs_imp_certificado'])) { ?>
         fnjs_imp_certificado = function (formulario) {
             rta = fnjs_solo_uno(formulario);

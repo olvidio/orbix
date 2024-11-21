@@ -5,8 +5,8 @@ namespace certificados\domain\repositories;
 use certificados\infrastructure\PgCertificadoPublicRepository;
 use PDO;
 use certificados\domain\entity\Certificado;
-/**
- *
+
+/*
  * Clase para gestionar la lista de objetos tipo Certificado
  * 
  * @package orbix
@@ -38,8 +38,8 @@ class CertificadoPublicRepository implements CertificadoRepositoryInterface
 	 * @return array|FALSE Una colección de objetos de tipo Certificado
 	
 	 */
-	public function getCertificados(array $aWhere=[], array $aOperators=[])
-	{
+	public function getCertificados(array $aWhere=[], array $aOperators=[]): bool|array
+    {
 	    return $this->repository->getCertificados($aWhere, $aOperators);
 	}
 	
@@ -83,7 +83,7 @@ class CertificadoPublicRepository implements CertificadoRepositoryInterface
      * @return array|bool
 	
      */
-    public function datosById(int $id_item)
+    public function datosById(int $id_item): bool|array
     {
         return $this->repository->datosById($id_item);
     }
