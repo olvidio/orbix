@@ -117,7 +117,6 @@ if ($miRolePau == Role::PAU_NOM) { //persona
         default:
             $tabla = 'nada';
             break;
-        case 'n':
     }
 
 } else {
@@ -263,9 +262,8 @@ switch ($tabla) {
         }
         break;
     case 'nada':
+        $cPersonas = [];
         exit (_("No se encuentra ningún centro con esta condición"));
-        $cPersonas = array();
-        break;
 }
 
 $sWhere = core\urlsafe_b64encode(serialize($aWhere));
@@ -348,10 +346,6 @@ if ($_SESSION['oPerm']->have_perm_oficina('est')) {
     $a_botones[] = array('txt' => _("copiar tessera"),
         'click' => "fnjs_copiar_tessera(\"#seleccionados\")");
     $script['fnjs_copiar_tessera'] = 1;
-}
-
-// Añadir certificados para las r.
-if (ConfigGlobal::mi_ambito() === 'dl') {
     $a_botones[] = array('txt' => _("ver certificados"),
         'click' => "fnjs_ver_certificados(\"#seleccionados\")");
     $script['fnjs_ver_certificados'] = 1;
