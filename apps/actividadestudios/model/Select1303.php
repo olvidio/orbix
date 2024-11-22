@@ -9,6 +9,7 @@ use personas\model\entity as personas;
 use core;
 use web;
 use core\ConfigGlobal;
+use function core\is_true;
 
 /**
  * Gestiona el dossier 1303: Asignaturas que cursa una persona (matrículas)
@@ -64,6 +65,8 @@ class Select1303
 
     private $status;
     private string $aviso;
+    private mixed $id_activ;
+    private string $link_add;
 
     public function getBotones($ca_num = 1)
     {
@@ -223,7 +226,7 @@ class Select1303
         $mes = date('m');
         $fin_m = $_SESSION['oConfig']->getMesFinStgr();
         if ($mes > $fin_m) {
-            $any = date('Y') + 1;
+            $any = (int)date('Y') + 1;
         } else {
             $any = date('Y');
         }
@@ -234,7 +237,7 @@ class Select1303
         // Compruebo si está de repaso...
         $oPersona = new personas\PersonaDl(array('id_nom' => $this->id_pau));
         $stgr = $oPersona->getStgr();
-        if ($stgr == 'r') $aviso .= _("está de repaso") . "<br>";
+        if ($stgr === 'r') $aviso .= _("está de repaso") . "<br>";
 
         $aWhere = array();
         $aOperadores = array();
