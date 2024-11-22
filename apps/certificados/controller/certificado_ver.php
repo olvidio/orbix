@@ -1,6 +1,7 @@
 <?php
 
 // INICIO Cabecera global de URL de controlador *********************************
+use certificados\domain\repositories\CertificadoDlRepository;
 use certificados\domain\repositories\CertificadoRepository;
 use core\ConfigGlobal;
 use core\ServerConf;
@@ -18,6 +19,9 @@ require_once("apps/core/global_object.inc");
 
 $a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 
+$Qid_dossier = (integer)filter_input(INPUT_POST, 'id_dossier');
+$local = empty($Qid_dossier) ? FALSE : TRUE;
+
 if (!empty($a_sel)) { //vengo de un checkbox
     $Qid_item = (integer)strtok($a_sel[0], "#");
     // el scroll id es de la página anterior, hay que guardarlo allí
@@ -26,7 +30,11 @@ if (!empty($a_sel)) { //vengo de un checkbox
     $oPosicion->addParametro('scroll_id', $scroll_id, 1);
 }
 
-$CertificadoRepository = new CertificadoRepository();
+if ($local) {
+    $CertificadoRepository = new CertificadoDlRepository();
+} else {
+    $CertificadoRepository = new CertificadoRepository();
+}
 $oCertificado = $CertificadoRepository->findById($Qid_item);
 
 $id_nom = $oCertificado->getId_nom();
@@ -35,7 +43,11 @@ $idioma = $oCertificado->getIdioma();
 $destino = $oCertificado->getDestino();
 $certificado = $oCertificado->getCertificado();
 $f_certificado = $oCertificado->getF_certificado()->getFromLocal();
-$f_enviado = $oCertificado->getF_enviado()->getFromLocal();
+if ($local){
+    $fecha = $oCertificado->getF_recibido()->getFromLocal();
+} else {
+    $fecha = $oCertificado->getF_enviado()->getFromLocal();
+}
 $firmado = $oCertificado->isFirmado();
 if (is_true($firmado)) {
     $chk_firmado = 'checked';
@@ -56,10 +68,16 @@ $oDesplIdiomas->setBlanco(TRUE);
 $oDesplIdiomas->setOpcion_sel($idioma);
 
 $oHashCertificadoPdf = new Hash();
-$oHashCertificadoPdf->setCamposForm('certificado_pdf!certificado!firmado!destino!f_certificado!idioma!nom!f_enviado');
+$oHashCertificadoPdf->setCamposForm('certificado_pdf!certificado!firmado!destino!f_certificado!idioma!nom!fecha');
 $oHashCertificadoPdf->setCamposNo('certificado_pdf!firmado');
 //cambio el nombre, porque tiene el mismo id en el otro formulario
-$oHashCertificadoPdf->setArrayCamposHidden(['id_item' => $Qid_item, 'id_nom' => $id_nom, 'certificado_old' => $certificado]);
+$oHashCertificadoPdf->setArrayCamposHidden(
+    [
+        'local' => $local,
+        'id_item' => $Qid_item,
+        'id_nom' => $id_nom,
+        'certificado_old' => $certificado
+    ]);
 
 // borrar los posibles fichero antiguos de /tmp
 $dir_tmp = ServerConf::DIR . '/log/tmp/';
@@ -87,7 +105,7 @@ $a_campos = ['oPosicion' => $oPosicion,
     'destino' => $destino,
     'certificado' => $certificado,
     'f_certificado' => $f_certificado,
-    'f_enviado' => $f_enviado,
+    'fecha' => $fecha,
     'chk_firmado' => $chk_firmado,
     // para ver pdf
     'filename_pdf' => $filename_pdf_web,

@@ -10,8 +10,8 @@ use asistentes\model\entity\AsistenteDl;
 use asistentes\model\entity\AsistenteOut;
 use asistentes\model\entity\GestorAsistenteDl;
 use asistentes\model\entity\GestorAsistenteOut;
+use certificados\domain\entity\CertificadoDl;
 use certificados\domain\repositories\CertificadoDlRepository;
-use certificados\domain\repositories\CertificadoRepository;
 use core\ConfigDB;
 use core\ConfigGlobal;
 use core\ConverterDate;
@@ -933,20 +933,20 @@ class TrasladoDl
         }
     }
 
-    public function trasladar_certificados($Certificado)
+    public function trasladar_certificados($CertificadoDl)
     {
         $error = '';
         $oDBorg = $this->conexionOrg();
         $oDBdst = $this->conexionDst();
 
-        $id_item = $Certificado->getId_item();
+        $id_item = $CertificadoDl->getId_item();
         // para que ponga el suyo según la DB
 
         $certificadoDlRepository = new CertificadoDlRepository();
         $certificadoDlRepository->setoDbl($oDBdst);
         $newId_item = $certificadoDlRepository->getNewId_item();
-        $Certificado->setId_item($newId_item);
-        if ($certificadoDlRepository->Guardar($Certificado) === FALSE) {
+        $CertificadoDl->setId_item($newId_item);
+        if ($certificadoDlRepository->Guardar($CertificadoDl) === FALSE) {
             $error .= $certificadoDlRepository->getErrorTxt();
         }
 
@@ -966,6 +966,31 @@ class TrasladoDl
             $this->serror = $error;
             return false;
         }
+    }
+
+    public function copiar_certificados_a_dl($Certificado)
+    {
+        $error = '';
+        $oDBdst = $this->conexionDst();
+
+        $id_item = $Certificado->getId_item();
+        // para que ponga el suyo según la DB
+        $CertificadoDl = $this->copyCertificado2Dl($Certificado);
+
+        $certificadoDlRepository = new CertificadoDlRepository();
+        $certificadoDlRepository->setoDbl($oDBdst);
+        $newId_item = $certificadoDlRepository->getNewId_item();
+        $CertificadoDl->setId_item($newId_item);
+        if ($certificadoDlRepository->Guardar($CertificadoDl) === FALSE) {
+            $error .= $certificadoDlRepository->getErrorTxt();
+        }
+
+        if (empty($error)) {
+            return true;
+        }
+
+        $this->serror = $error;
+        return false;
     }
 
     public function apuntar()
@@ -1053,6 +1078,23 @@ class TrasladoDl
             }
         }
         echo $attr;
+    }
+
+    private function copyCertificado2Dl($Certificado)
+    {
+        $oCertificadoDl = new CertificadoDl();
+        $oCertificadoDl->setId_nom($Certificado->getId_nom());
+        $oCertificadoDl->setNom($Certificado->getNom());
+        $oCertificadoDl->setIdioma($Certificado->getIdioma());
+        $oCertificadoDl->setDestino($Certificado->getDestino());
+        $oCertificadoDl->setCertificado($Certificado->getCertificado());
+        $oCertificadoDl->setF_certificado($Certificado->getF_certificado());
+        $oCertificadoDl->setEsquema_emisor($Certificado->getEsquema_emisor());
+        $oCertificadoDl->setFirmado($Certificado->isFirmado());
+        $oCertificadoDl->setDocumento($Certificado->getDocumento());
+        $oCertificadoDl->setF_recibido(new web\DateTimeLocal());
+
+        return $oCertificadoDl;
     }
 
 }

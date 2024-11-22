@@ -142,7 +142,9 @@ if ($gesDelegeacion->soy_region_stgr()) {
     $a_botones[] = array('txt' => _("eliminar"), 'click' => "fnjs_eliminar(\"#seleccionados\")");
     $a_botones[] = array('txt' => _("modificar"), 'click' => "fnjs_modificar(\"#seleccionados\")");
     $a_botones[] = array('txt' => _("subir pdf firmado"), 'click' => "fnjs_upload_certificado(\"#seleccionados\")");
-    $a_botones[] = array('txt' => _("enviar"), 'click' => "fnjs_enviar_certificado(\"#seleccionados\")");
+    if (!$local) {
+        $a_botones[] = array('txt' => _("enviar"), 'click' => "fnjs_enviar_certificado(\"#seleccionados\")");
+    }
     $botones = 1; // para 'añadir certificado'
 }
 
@@ -225,6 +227,7 @@ $oHash->setCamposForm('certificado');
 $oHash1 = new Hash();
 $oHash1->setCamposForm('sel!mod');
 $oHash1->setCamposNo('sel!scroll_id!mod!refresh');
+$oHash1->setArrayCamposHidden(['id_dossier' => $Qid_dossier]);
 
 $oHashDown = new Hash();
 $oHashDown->setUrl('apps/certificados/controller/certificado_pdf_download.php');

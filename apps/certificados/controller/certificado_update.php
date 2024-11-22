@@ -3,6 +3,8 @@
 
 // INICIO Cabecera global de URL de controlador *********************************
 use certificados\domain\entity\Certificado;
+use certificados\domain\entity\CertificadoDl;
+use certificados\domain\repositories\CertificadoDlRepository;
 use certificados\domain\repositories\CertificadoRepository;
 use core\ConfigGlobal;
 use personas\model\entity\Persona;
@@ -27,20 +29,30 @@ $Qdestino = (string)filter_input(INPUT_POST, 'destino');
 $Qcertificado = (string)filter_input(INPUT_POST, 'certificado');
 $Qfirmado = (string)filter_input(INPUT_POST, 'firmado');
 $Qf_certificado = (string)filter_input(INPUT_POST, 'f_certificado');
-$Qf_enviado = (string)filter_input(INPUT_POST, 'f_enviado');
+$Qfecha = (string)filter_input(INPUT_POST, 'fecha');
 
 $Qcertificado_old = (string)filter_input(INPUT_POST, 'certificado_old');
+$local = (bool)filter_input(INPUT_POST, 'local');
 
 /* convertir las fechas a DateTimeLocal */
 $oF_certificado = DateTimeLocal::createFromLocal($Qf_certificado);
-$oF_enviado = DateTimeLocal::createFromLocal($Qf_enviado);
+$oFecha = DateTimeLocal::createFromLocal($Qfecha);
 
 $error_txt = '';
 
-$certificadoRepository = new CertificadoRepository();
+if ($local) {
+    $certificadoRepository = new CertificadoDlRepository();
+} else {
+    $certificadoRepository = new CertificadoRepository();
+}
+
 if (is_true($Qnuevo)) {
     $Qid_item = $certificadoRepository->getNewId_item();
-    $oCertificado = new Certificado();
+    if ($local) {
+        $oCertificado = new CertificadoDl();
+    } else {
+        $oCertificado = new Certificado();
+    }
     $oCertificado->setId_item($Qid_item);
 } else {
     $oCertificado = $certificadoRepository->findById($Qid_item);
@@ -66,8 +78,12 @@ if (is_true($Qfirmado)) {
 $oCertificado->setFirmado($firmado);
 $oCertificado->setEsquema_emisor(ConfigGlobal::mi_region_dl());
 $oCertificado->setF_certificado($oF_certificado);
-if (!empty($oF_enviado)) {
-    $oCertificado->setF_enviado($oF_enviado);
+if (!empty($oFecha)) {
+    if ($local) {
+        $oCertificado->setF_recibido($oFecha);
+    } else {
+        $oCertificado->setF_enviado($oFecha);
+    }
 }
 
 if ($certificadoRepository->Guardar($oCertificado) === FALSE) {

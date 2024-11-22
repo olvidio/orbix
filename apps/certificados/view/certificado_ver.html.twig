@@ -39,8 +39,8 @@
             </label>
             <br>
             <label>
-                {{ "Fecha del envio"|trans|raw }}:
-                <input type="text" id="f_enviado" name="f_enviado" value="{{ f_enviado }}"/>
+                {{ "Fecha del envio/recibo"|trans|raw }}:
+                <input type="text" id="fecha" name="fecha" value="{{ fecha }}"/>
             </label>
             <br>
             <br>
@@ -59,7 +59,7 @@
             return;
         }
 
-        if (!fnjs_comprobar_fecha('#f_enviado', '{{ locale_us }}')) {
+        if (!fnjs_comprobar_fecha('#fecha', '{{ locale_us }}')) {
             //return;
         }
 
@@ -68,7 +68,7 @@
         }
 
         datos = $('#frm_upload').serialize();
-        request = $.ajax({
+        let request = $.ajax({
             data: datos,
             url: 'apps/certificados/controller/certificado_update.php',
             method: 'POST',
@@ -89,7 +89,7 @@
             numberOfMonths: 3,
             showButtonPanel: true
         });
-        $("#f_enviado").datepicker({
+        $("#fecha").datepicker({
             numberOfMonths: 3,
             showButtonPanel: true
         });

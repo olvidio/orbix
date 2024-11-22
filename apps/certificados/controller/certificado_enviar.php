@@ -72,7 +72,7 @@ if ($is_dl_in_orbix) {
     $oTrasladoDl = new TrasladoDl();
     $oTrasladoDl->setReg_dl_dst($esquema_region_stgr_dst);
 
-    $oTrasladoDl->trasladar_certificados($oCertificado);
+    $oTrasladoDl->copiar_certificados_a_dl($oCertificado);
     $error_txt .= $oTrasladoDl->getError();
     //3.- enviar aviso
     $texto_anuncio = sprintf(_("se ha recibido el certificado %s para %s."),$certificado,$nombre_apellidos);
