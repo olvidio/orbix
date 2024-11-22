@@ -101,6 +101,27 @@ if (!empty($Qapellido1)) {
     foreach ($a_notas_otras_regiones_stgr_sin_cert as $oPersonaNotaOtraRegionDB) {
         $i++;
         $id_nom = $oPersonaNotaOtraRegionDB->getId_nom();
+
+        if (!empty($id_nom_anterior) && $id_nom != $id_nom_anterior) {
+            $oPersona = Persona::newPersona($id_nom_anterior);
+            if (!is_object($oPersona)) {
+                $msg_err .= "<br>$oPersona con id_nom: $id_nom_anterior en  " . __FILE__ . ": line " . __LINE__;
+                continue;
+            }
+
+            $apellidos_nombre = $oPersona->getPrefApellidosNombre();
+            $ctr = $oPersona->getCentro_o_dl();
+            $dl = $oPersona->getDl();
+
+            $a_valores[$i]['sel'] = "$id_nom_anterior";
+            $a_valores[$i][1] = $apellidos_nombre;
+            $a_valores[$i][2] = $dl;
+            $a_valores[$i][3] = $str_asignaturas;
+
+            // para ordenar.
+            $a_Nombre[$i] = $apellidos_nombre;
+            $str_asignaturas = '';
+        }
         $id_asignatura = $oPersonaNotaOtraRegionDB->getId_asignatura();
         $id_activ = $oPersonaNotaOtraRegionDB->getId_activ();
 
@@ -113,26 +134,6 @@ if (!empty($Qapellido1)) {
         $str_asignaturas .= trim($nom_asignatura);
         $str_asignaturas .= empty($nom_activ) ? '' : "($nom_activ)";
 
-        if (!empty($id_nom_anterior) && $id_nom != $id_nom_anterior) {
-            $oPersona = Persona::newPersona($id_nom);
-            if (!is_object($oPersona)) {
-                $msg_err .= "<br>$oPersona con id_nom: $id_nom en  " . __FILE__ . ": line " . __LINE__;
-                continue;
-            }
-
-            $apellidos_nombre = $oPersona->getPrefApellidosNombre();
-            $ctr = $oPersona->getCentro_o_dl();
-            $dl = $oPersona->getDl();
-
-            $a_valores[$i]['sel'] = "$id_nom";
-            $a_valores[$i][1] = $apellidos_nombre;
-            $a_valores[$i][2] = $dl;
-            $a_valores[$i][3] = $str_asignaturas;
-
-            // para ordenar.
-            $a_Nombre[$i] = $apellidos_nombre;
-            $str_asignaturas = '';
-        }
         $id_nom_anterior = $id_nom;
     }
     // para escribir el último. Ojo, si no hay ninguno, $id_nom = ''
@@ -146,13 +147,13 @@ if (!empty($Qapellido1)) {
         $ctr = $oPersona->getCentro_o_dl();
         $dl = $oPersona->getDl();
 
-        $a_valores[$i]['sel'] = "$id_nom";
-        $a_valores[$i][1] = $apellidos_nombre;
-        $a_valores[$i][2] = $dl;
-        $a_valores[$i][3] = $str_asignaturas;
+        $a_valores[$i+1]['sel'] = "$id_nom";
+        $a_valores[$i+1][1] = $apellidos_nombre;
+        $a_valores[$i+1][2] = $dl;
+        $a_valores[$i+1][3] = $str_asignaturas;
 
         // para ordenar.
-        $a_Nombre[$i] = $apellidos_nombre;
+        $a_Nombre[$i+1] = $apellidos_nombre;
         $str_asignaturas = '';
     }
 

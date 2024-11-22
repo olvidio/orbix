@@ -2,7 +2,6 @@
 
 
 // INICIO Cabecera global de URL de controlador *********************************
-use certificados\domain\entity\Certificado;
 use certificados\domain\entity\CertificadoDl;
 use certificados\domain\repositories\CertificadoDlRepository;
 use certificados\domain\repositories\CertificadoRepository;
@@ -30,6 +29,8 @@ exit(); // terminate
 function upload()
 {
     $Qsolo_pdf = (integer)filter_input(INPUT_POST, 'solo_pdf');
+    $Qid_dossier = (integer)filter_input(INPUT_POST, 'id_dossier');
+    $local = empty($Qid_dossier) ? FALSE : TRUE;
 
     $error_txt = '';
     $input = 'certificado_pdf'; // the input name for the fileinput plugin
@@ -45,7 +46,11 @@ function upload()
             $fp = fopen($tmpFilePath, 'rb');
             $contenido_doc = fread($fp, filesize($tmpFilePath));
 
-            $certificadoDlRepository = new CertificadoDlRepository();
+            if ($local) {
+                $certificadoDlRepository = new CertificadoDlRepository();
+            } else {
+                $certificadoDlRepository = new CertificadoRepository();
+            }
             $oCertificadoDl = $certificadoDlRepository->findById($Qid_item);
 
             $oCertificadoDl->setDocumento($contenido_doc);
@@ -87,7 +92,11 @@ function upload()
                 $fp = fopen($tmpFilePath, 'rb');
                 $contenido_doc = fread($fp, filesize($tmpFilePath));
 
-                $certificadoDlRepository = new CertificadoDlRepository();
+                if ($local) {
+                    $certificadoDlRepository = new CertificadoDlRepository();
+                } else {
+                    $certificadoDlRepository = new CertificadoRepository();
+                }
                 $id_item = $certificadoDlRepository->getNewId_item();
                 $oCertificadoDl = new CertificadoDl();
                 $oCertificadoDl->setId_item($id_item);

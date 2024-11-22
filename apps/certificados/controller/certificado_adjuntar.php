@@ -14,6 +14,7 @@ require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ****************
 
 $a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+$Qid_dossier = (integer)filter_input(INPUT_POST, 'id_dossier');
 
 if (!empty($a_sel)) { //vengo de un checkbox
     $Qid_nom = (integer)strtok($a_sel[0], "#");
@@ -36,7 +37,7 @@ $oHashCertificadoPdf = new Hash();
 $oHashCertificadoPdf->setCamposForm('certificado_pdf!certificado!firmado!f_certificado!idioma!f_enviado');
 $oHashCertificadoPdf->setCamposNo('certificado_pdf!firmado');
 //cambio el nombre, porque tiene el mismo id en el otro formulario
-$oHashCertificadoPdf->setArrayCamposHidden(['id_nom' => $Qid_nom]);
+$oHashCertificadoPdf->setArrayCamposHidden(['id_nom' => $Qid_nom, 'id_dossier' => $Qid_dossier]);
 
 //Idiomas
 $gesIdiomas = new GestorLocal();

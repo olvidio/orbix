@@ -21,7 +21,7 @@
 
         var datos = new FormData(document.getElementById("frm_upload"));
 
-        request = $.ajax({
+        let request = $.ajax({
             data: datos,
             url: 'apps/certificados/controller/certificado_pdf_upload.php',
             method: 'POST',

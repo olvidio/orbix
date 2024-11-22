@@ -12,6 +12,7 @@ use asistentes\model\entity\GestorAsistenteDl;
 use asistentes\model\entity\GestorAsistenteOut;
 use certificados\domain\entity\CertificadoDl;
 use certificados\domain\repositories\CertificadoDlRepository;
+use certificados\domain\repositories\CertificadoRepository;
 use core\ConfigDB;
 use core\ConfigGlobal;
 use core\ConverterDate;
@@ -983,6 +984,12 @@ class TrasladoDl
         $CertificadoDl->setId_item($newId_item);
         if ($certificadoDlRepository->Guardar($CertificadoDl) === FALSE) {
             $error .= $certificadoDlRepository->getErrorTxt();
+        }
+        // pongo fecha enviado
+        $certificadoRepository = new CertificadoRepository();
+        $Certificado->setF_enviado(new web\DateTimeLocal());
+        if ($certificadoRepository->Guardar($Certificado) === FALSE) {
+            $error .= $certificadoRepository->getErrorTxt();
         }
 
         if (empty($error)) {
