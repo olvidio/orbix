@@ -200,6 +200,7 @@ switch ($Qque) {
             $any_anterior = $Qyear - 1;
             $any_actual = $Qyear;
             echo '<br><span class="link" onclick="fnjs_modificar(\'nuevo\');">' . _("añadir tarifa") . '</span>';
+            echo "<br>";
             echo '<br><span class="link" onclick="fnjs_copiar_tarifas();">';
             echo sprintf(_("copiar las del año %1\$d a este (%2\$d). Esto borrará las tarifas actuales de %2\$d"), $any_anterior, $any_actual);
             echo '</span>';
