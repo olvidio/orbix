@@ -39,8 +39,8 @@
             </label>
             <br>
             <label>
-                {{ "Fecha del envio/recibo"|trans|raw }}:
-                <input type="text" id="fecha" name="fecha" value="{{ fecha }}"/>
+                {{ "Fecha del envio"|trans|raw }}:
+                <input type="text" id="f_enviado" name="f_enviado" value="{{ f_enviado }}"/>
             </label>
             <br>
             <br>
@@ -59,7 +59,7 @@
             return;
         }
 
-        if (!fnjs_comprobar_fecha('#fecha', '{{ locale_us }}')) {
+        if (!fnjs_comprobar_fecha('#f_enviado', '{{ locale_us }}')) {
             //return;
         }
 
@@ -89,7 +89,7 @@
             numberOfMonths: 3,
             showButtonPanel: true
         });
-        $("#fecha").datepicker({
+        $("#_enviado").datepicker({
             numberOfMonths: 3,
             showButtonPanel: true
         });

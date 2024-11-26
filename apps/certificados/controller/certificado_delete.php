@@ -1,7 +1,6 @@
 <?php
 // INICIO Cabecera global de URL de controlador *********************************
 
-use certificados\domain\repositories\CertificadoDlRepository;
 use certificados\domain\repositories\CertificadoRepository;
 use notas\model\entity\GestorPersonaNotaOtraRegionStgrDB;
 
@@ -14,12 +13,7 @@ require_once("apps/core/global_object.inc");
 
 // FIN de  Cabecera global de URL de controlador ********************************
 
-// El delete es via POST!!!";
-
 $a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-
-$Qid_dossier = (integer)filter_input(INPUT_POST, 'id_dossier');
-$local = empty($Qid_dossier)? FALSE: TRUE;
 
 if (!empty($a_sel)) { //vengo de un checkbox
     $Qid_item = (integer)strtok($a_sel[0], "#");
@@ -33,11 +27,7 @@ if (!empty($a_sel)) { //vengo de un checkbox
 
 $error_txt = '';
 if (!empty($Qid_item)) {
-    if ($local) {
-        $CertificadoRepository = new CertificadoDlRepository();
-    } else {
-        $CertificadoRepository = new CertificadoRepository();
-    }
+    $CertificadoRepository = new CertificadoRepository();
     $oCertificado = $CertificadoRepository->findById($Qid_item);
     if (!empty($oCertificado)) {
         $certificado = $oCertificado->getCertificado();

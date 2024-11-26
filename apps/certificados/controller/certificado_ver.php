@@ -35,7 +35,7 @@ $idioma = $oCertificado->getIdioma();
 $destino = $oCertificado->getDestino();
 $certificado = $oCertificado->getCertificado();
 $f_certificado = $oCertificado->getF_certificado()->getFromLocal();
-$fecha = $oCertificado->getF_enviado()->getFromLocal();
+$f_enviado = $oCertificado->getF_enviado()->getFromLocal();
 $firmado = $oCertificado->isFirmado();
 if (is_true($firmado)) {
     $chk_firmado = 'checked';
@@ -92,7 +92,7 @@ $a_campos = ['oPosicion' => $oPosicion,
     'destino' => $destino,
     'certificado' => $certificado,
     'f_certificado' => $f_certificado,
-    'fecha' => $fecha,
+    'f_enviado' => $f_enviado,
     'chk_firmado' => $chk_firmado,
     // para ver pdf
     'filename_pdf' => $filename_pdf_web,

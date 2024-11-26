@@ -77,9 +77,10 @@ class Select1010
     {
         $a_cabeceras = [
             _("certificado"),
-            _("fecha"),
+            _("fecha certificado"),
             _("firmado digitalmente"),
             _("adjunto"),
+            _("recibido"),
         ];
         return $a_cabeceras;
     }
@@ -117,6 +118,7 @@ class Select1010
             $certificado = $oCertificado->getCertificado();
             $firmado = $oCertificado->isFirmado();
             $f_certificado = $oCertificado->getF_certificado()->getFromLocal();
+            $f_recibido = $oCertificado->getF_recibido()->getFromLocal();
             $pdf = $oCertificado->getDocumento();
 
             $a_valores[$i]['sel'] = $id_item;
@@ -124,6 +126,7 @@ class Select1010
             $a_valores[$i][2] = $f_certificado;
             $a_valores[$i][3] = core\is_true($firmado) ? _("Sí") : _("No");
             $a_valores[$i][4] = empty($pdf) ? '' : _("Sí");
+            $a_valores[$i][5] = $f_recibido;
 
         }
         if (!empty($a_valores)) {
