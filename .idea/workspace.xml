@@ -4,14 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f178a244-4024-41f6-8417-4831ab0bb057" name="Changes" comment="Interrupción">
-      <change beforePath="$PROJECT_DIR$/.idea/php.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/php.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    <list default="true" id="f178a244-4024-41f6-8417-4831ab0bb057" name="Changes" comment="añadir opción copiar tarifas año/casa">
       <change beforePath="$PROJECT_DIR$/apps/actividadtarifas/controller/tarifa_ajax.php" beforeDir="false" afterPath="$PROJECT_DIR$/apps/actividadtarifas/controller/tarifa_ajax.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/actividadtarifas/controller/tarifa_ubi.php" beforeDir="false" afterPath="$PROJECT_DIR$/apps/actividadtarifas/controller/tarifa_ubi.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/apps/actividadtarifas/view/tarifa_ubi.phtml" beforeDir="false" afterPath="$PROJECT_DIR$/apps/actividadtarifas/view/tarifa_ubi.phtml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/ubis/model/entity/GestorTarifaUbi.php" beforeDir="false" afterPath="$PROJECT_DIR$/apps/ubis/model/entity/GestorTarifaUbi.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/web/PeriodoQue.php" beforeDir="false" afterPath="$PROJECT_DIR$/apps/web/PeriodoQue.php" afterDir="false" />
     </list>
     <list id="209fa7a7-e540-4095-aa55-f077853d1613" name="Changes by salva" comment="Changes by salva" />
     <option name="SHOW_DIALOG" value="false" />
@@ -626,7 +621,7 @@
       <option name="project" value="LOCAL" />
       <updated>1679384782892</updated>
     </task>
-    <option name="localTasksCounter" value="80" />
+    <option name="localTasksCounter" value="81" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -657,7 +652,6 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_NEW_TODO" value="false" />
-    <MESSAGE value="permisos. poner agd en ca, crt de n" />
     <MESSAGE value="muchos cambios por subir, no sé de que" />
     <MESSAGE value="antes de reconstruir packages.json (npm)" />
     <MESSAGE value="actualizar npm package.json. Añadir clockpiker" />
@@ -682,7 +676,8 @@
     <MESSAGE value="nueva clase IinicialesSacd" />
     <MESSAGE value="quitar extendida (4)" />
     <MESSAGE value="Interrupción" />
-    <option name="LAST_COMMIT_MESSAGE" value="Interrupción" />
+    <MESSAGE value="añadir opción copiar tarifas año/casa" />
+    <option name="LAST_COMMIT_MESSAGE" value="añadir opción copiar tarifas año/casa" />
     <option name="GROUP_MULTIFILE_MERGE_BY_DIRECTORY" value="true" />
   </component>
   <component name="XDebuggerManager">

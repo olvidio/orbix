@@ -44,7 +44,7 @@ class GestorTarifaUbi extends core\ClaseGestor
 
     public function copiar($year, $id_ubi)
     {
-        $oDbl = $this->getoDbl_Select();
+        $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
 
         $this->delete($year, $id_ubi);
@@ -69,7 +69,7 @@ class GestorTarifaUbi extends core\ClaseGestor
 
     private function delete($year, $id_ubi)
     {
-        $oDbl = $this->getoDbl_Select();
+        $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         $sWhere = "WHERE id_ubi = $id_ubi AND year = $year";
         $sQry = "DELETE FROM $nom_tabla " . $sWhere;
