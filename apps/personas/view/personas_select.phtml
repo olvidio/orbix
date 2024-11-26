@@ -119,7 +119,7 @@
         fnjs_ver_certificados = function (formulario) {
             rta = fnjs_solo_uno(formulario);
             if (rta === 1) {
-                $('#id_dossier').val("1026");
+                $('#id_dossier').val("1010");
                 $(formulario).attr('action', "apps/certificados/controller/certificado_select.php");
                 $(formulario).target = "main";
                 fnjs_enviar_formulario(formulario);
@@ -140,7 +140,7 @@
         fnjs_upload_certificado = function (formulario) {
             rta = fnjs_solo_uno(formulario);
             if (rta === 1) {
-                $('#id_dossier').val("1026");
+                $('#id_dossier').val("1010");
                 $(formulario).attr('action', "apps/certificados/controller/certificado_adjuntar.php");
                 $(formulario).target = "print";
                 fnjs_enviar_formulario(formulario);

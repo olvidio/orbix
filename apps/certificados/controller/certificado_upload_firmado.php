@@ -28,7 +28,9 @@ if (!empty($a_sel)) { //vengo de un checkbox
     $scroll_id = (integer)filter_input(INPUT_POST, 'scroll_id');
     $oPosicion->addParametro('scroll_id', $scroll_id, 1);
 } else {
+    // desde dossiers es uno nuevo
     $Qid_item = (integer)filter_input(INPUT_POST, 'id_item');
+    $Qid_nom = (integer)filter_input(INPUT_POST, 'id_pau');
 }
 
 if ($local) {

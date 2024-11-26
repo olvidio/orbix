@@ -10,9 +10,8 @@
  *
  */
 
-use certificados\domain\CertificadoSelect;
+use certificados\domain\CertificadoDlSelect;
 use core\ConfigGlobal;
-use function core\curso_est;
 
 // INICIO Cabecera global de URL de controlador *********************************
 require_once("apps/core/global_header.inc");
@@ -28,8 +27,6 @@ $mi_region = ConfigGlobal::mi_region();
 $Qrefresh = (integer)filter_input(INPUT_POST, 'refresh');
 $oPosicion->recordar($Qrefresh);
 
-$Qid_sel = '';
-$Qscroll_id = '';
 //Si vengo por medio de Posicion, borro la última
 if (isset($_POST['stack'])) {
     $stack = filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
@@ -43,32 +40,17 @@ if (isset($_POST['stack'])) {
     }
 }
 
-/*
-if (!$gesDelegeacion->soy_region_stgr()) {
-    $msg = _("Este menú es sólo para las regiones del stgr.");
-    $msg .= "<br>";
-    $msg .= _("Para ver los certificados de una persona, debe ir a través de los dossiers");
-    exit ($msg);
-}
-*/
-
 $Qtitulo = (string)filter_input(INPUT_POST, 'titulo');
 $Qcertificado = (string)filter_input(INPUT_POST, 'certificado');
+$Qid_dossier = (integer)filter_input(INPUT_POST, 'id_dossier');
+
+$local = empty($Qid_dossier) ? FALSE : TRUE;
 
 // otros?
 $titulo = $Qtitulo;
-// restp
-$mes = date('m');
-$fin_m = $_SESSION['oConfig']->getMesFinStgr();
-if ($mes > $fin_m) {
-    $any = (int)date('Y') + 1;
-} else {
-    $any = (int)date('Y');
-}
-$inicurs_ca = curso_est("inicio", $any)->format('Y-m-d');
-$fincurs_ca = curso_est("fin", $any)->format('Y-m-d');
-$txt_curso = "$inicurs_ca - $fincurs_ca";
-$titulo = ucfirst(sprintf(_("lista de certificados emitidos en el curso %s y no enviados"), $txt_curso));
+// local
+$titulo = ucfirst(_("lista de certificados"));
+
 
 /*
 * Defino un array con los datos actuales, para saber volver después de navegar un rato
@@ -78,7 +60,8 @@ $aGoBack = array(
     'certificado' => $Qcertificado);
 $oPosicion->setParametros($aGoBack, 1);
 
-$a_campos = CertificadoSelect::getCamposVista($Qcertificado, $Qid_sel, $Qscroll_id, $inicurs_ca, $fincurs_ca);
+
+$a_campos = CertificadoDlSelect::getCamposVista($Qcertificado, $Qid_sel, $Qscroll_id, $Qid_dossier);
 
 $txt_eliminar = _("¿Está seguro que quiere eliminar el certificado?");
 

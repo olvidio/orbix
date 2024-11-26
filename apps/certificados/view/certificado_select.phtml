@@ -85,7 +85,6 @@
     }
     fnjs_left_side_hide();
 </script>
-<?php if (!$local) { ?>
 <form id="frm_sin_nombre" name="frm_sin_nombre" action="apps/certificados/controller/certificado_select.php"
       method="post"
       onkeydown="fnjs_enviar(event,this);">
@@ -120,7 +119,6 @@
         </th>
     </table>
 </form>
-<?php } ?>
 
 <h3 class=subtitulo><?= $titulo ?></h3>
 <form id='seleccionados' name='seleccionados' action='' method='post'>
@@ -128,14 +126,3 @@
     <input type='Hidden' id='mod' name='mod' value=''>
     <?= $oTabla->mostrar_tabla() ?>
 </form>
-<?php
-// -----------------------------------  Botones  ----------------------
-/*
-if (!empty($botones)) {
-    echo "<table><tr class=botones>";
-    $txt_g = ucwords(_("añadir Certificado"));
-    echo "<th class='link_inv' onclick='fnjs_nuevo(\"#seleccionados\")'>$txt_g</th>";
-    echo "</tr></table><br>";
-}
-*/
-// fin ----------------------------  Botones  ----------------------

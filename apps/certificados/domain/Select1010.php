@@ -1,8 +1,8 @@
 <?php
 
-namespace notas\model;
+namespace certificados\domain;
 
-use certificados\domain\repositories\CertificadoRepository;
+use certificados\domain\repositories\CertificadoDlRepository;
 use core;
 use personas\model\entity as personas;
 use web;
@@ -69,7 +69,7 @@ class Select1010
     private function getBotones()
     {
         $a_botones[] = ['txt' => _("descargar pdf"), 'click' => "fnjs_descargar_pdf(\"#seleccionados\")"];
-
+        $a_botones[] = array('txt' => _("adjuntar certificado"), 'click' => "fnjs_upload_certificado(\"#seleccionados\")");
         return $a_botones;
     }
 
@@ -105,8 +105,8 @@ class Select1010
             '_ordre' => 'f_certificado'
         ];
 
-        $CertificadoRepository = new CertificadoRepository();
-        $cCertificados = $CertificadoRepository->getCertificados($aWhere);
+        $certificadoDlRepository = new CertificadoDlRepository();
+        $cCertificados = $certificadoDlRepository->getCertificados($aWhere);
 
         $i = 0;
         $a_valores = array();
@@ -143,7 +143,6 @@ class Select1010
     public function getHtml()
     {
         $this->txt_eliminar = _("No tiene permisos para eliminar");
-        /*
         // En el caso de actualizar la misma página (fnjs_actualizar) solo me quedo con la última (stack=0).
         $oPosicion = new web\Posicion();
         $stack = $oPosicion->getStack(0);
@@ -160,7 +159,6 @@ class Select1010
             'stack' => $stack,
         );
         $oHashSelect->setArraycamposHidden($a_camposHidden);
-        */
 
         //Hay que ponerlo antes, para que calcule los chk.
         $oTabla = new web\Lista();
@@ -175,11 +173,11 @@ class Select1010
         $h_download = $oHashDown->linkSinVal();
 
         $a_campos = ['oTabla' => $oTabla,
-//            'oHashSelect' => $oHashSelect,
+            'oHashSelect' => $oHashSelect,
             'h_download' => $h_download,
         ];
 
-        $oView = new core\View(__NAMESPACE__);
+        $oView = new core\View('certificados/view');
         $oView->renderizar('select1010.phtml', $a_campos);
     }
 

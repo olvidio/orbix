@@ -182,7 +182,7 @@ echo $oPosicion->mostrar_left_slide(1);
         <table>
             <tr>
                 <td><span class="link" onclick="fnjs_update_div('#main','<?= $godossiers ?>')"><img
-                                src="<?= ConfigGlobal::getWeb_icons() ?>/dossiers.gif" border=0 width=40 height=40
+                                src="<?= ConfigGlobal::getWeb_icons() ?>/dossiers.gif" width=40 height=40
                                 alt='<?= $alt ?>'>(<?= $dos ?>)</span></td>
                 <td class="titulo"><?= $titulo ?></td>
         </table>
@@ -207,8 +207,14 @@ if (empty($Qid_dossier)) { // enseña la lista de dossiers.
 
         // Para presentaciones particulares
         $nameFile = "../../$app/model/Select" . $id_dossier . ".php";
-        if (realpath($nameFile)) { //como file_exists
-            $nameClaseSelect = "$app\\model\\Select" . $id_dossier;
+        $nameFile2 = "../../$app/domain/Select" . $id_dossier . ".php";
+        if (realpath($nameFile) || realpath($nameFile2)) { //como file_exists
+            if (realpath($nameFile)) { //como file_exists
+                $nameClaseSelect = "$app\\model\\Select" . $id_dossier;
+            }
+            if (realpath($nameFile2)) { //como file_exists
+                $nameClaseSelect = "$app\\domain\\Select" . $id_dossier;
+            }
             $claseSelect = new $nameClaseSelect();
             $claseSelect->setId_dossier($id_dossier);
             $claseSelect->setPau($pau);
@@ -241,11 +247,11 @@ if (empty($Qid_dossier)) { // enseña la lista de dossiers.
             }
             echo $claseSelect->getHtml();
         } else {
-            // para presentacion genérica, con la info tipo Info1012.php
+            // para presentación genérica, con la info tipo Info1012.php
             // datos del dossier:
             $oTipoDossier = new TipoDossier($id_dossier);
             $app = $oTipoDossier->getApp();
-            // No sé porque no acepa aqui el '_' en el nombre de la clase.
+            // No sé porque no acepa aquí el '_' en el nombre de la clase.
             $clase_info = "$app\\model\\Info$id_dossier";
             // Tiene que ser en dos pasos.
             $obj = $clase_info;
