@@ -133,9 +133,6 @@ switch ($Qque) {
 
             $oGesTipoActivTarifas = new GestorTipoActivTarifa();
             $cTipoActivTarifas = $oGesTipoActivTarifas->getTipoActivTarifas(array('id_tarifa' => $id_tarifa));
-            if (empty($cTipoActivTarifas)) {
-                continue;
-            }
             $txt = '';
             $t = 0;
             foreach ($cTipoActivTarifas as $oTipoActivTarifa) {
