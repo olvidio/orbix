@@ -4,16 +4,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f178a244-4024-41f6-8417-4831ab0bb057" name="Changes" comment="nueva clase IinicialesSacd">
-      <change afterPath="$PROJECT_DIR$/apps/misas/domain/EncargoCtrId.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/misas/domain/entity/EncargoCtr.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/misas/domain/repositories/EncargoCtrRepository.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/misas/domain/repositories/EncargoCtrRepositoryInterface.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/misas/infrastructure/PgEncargoCtrRepository.php" afterDir="false" />
+    <list default="true" id="f178a244-4024-41f6-8417-4831ab0bb057" name="Changes" comment="Interrupción">
+      <change beforePath="$PROJECT_DIR$/.idea/php.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/php.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/misas/db/DB.php" beforeDir="false" afterPath="$PROJECT_DIR$/apps/misas/db/DB.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/misas/db/DBEsquema.php" beforeDir="false" afterPath="$PROJECT_DIR$/apps/misas/db/DBEsquema.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/misas/view/modificar_plan_de_misas.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/apps/misas/view/modificar_plan_de_misas.html.twig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/actividadtarifas/controller/tarifa_ajax.php" beforeDir="false" afterPath="$PROJECT_DIR$/apps/actividadtarifas/controller/tarifa_ajax.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/actividadtarifas/controller/tarifa_ubi.php" beforeDir="false" afterPath="$PROJECT_DIR$/apps/actividadtarifas/controller/tarifa_ubi.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/actividadtarifas/view/tarifa_ubi.phtml" beforeDir="false" afterPath="$PROJECT_DIR$/apps/actividadtarifas/view/tarifa_ubi.phtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/ubis/model/entity/GestorTarifaUbi.php" beforeDir="false" afterPath="$PROJECT_DIR$/apps/ubis/model/entity/GestorTarifaUbi.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/web/PeriodoQue.php" beforeDir="false" afterPath="$PROJECT_DIR$/apps/web/PeriodoQue.php" afterDir="false" />
     </list>
     <list id="209fa7a7-e540-4095-aa55-f077853d1613" name="Changes by salva" comment="Changes by salva" />
     <option name="SHOW_DIALOG" value="false" />
@@ -33,7 +31,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="master" />
+        <entry key="$PROJECT_DIR$" value="certificados" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -87,6 +85,18 @@
       <path value="$PROJECT_DIR$/libs/vendor/ramsey/uuid" />
       <path value="$PROJECT_DIR$/libs/vendor/ramsey/collection" />
       <path value="$PROJECT_DIR$/libs/vendor/brick/math" />
+      <path value="$PROJECT_DIR$/libs/vendor/php-http/message-factory" />
+      <path value="$PROJECT_DIR$/libs/vendor/brick/math" />
+      <path value="$PROJECT_DIR$/libs/vendor/ramsey/uuid" />
+      <path value="$PROJECT_DIR$/libs/vendor/ramsey/collection" />
+      <path value="$PROJECT_DIR$/libs/vendor/phpunit/phpunit" />
+      <path value="$PROJECT_DIR$/libs/vendor/phpunit/php-timer" />
+      <path value="$PROJECT_DIR$/libs/vendor/phpunit/php-invoker" />
+      <path value="$PROJECT_DIR$/libs/vendor/phpunit/php-text-template" />
+      <path value="$PROJECT_DIR$/libs/vendor/phpunit/php-file-iterator" />
+      <path value="$PROJECT_DIR$/libs/vendor/phpunit/php-code-coverage" />
+      <path value="$PROJECT_DIR$/libs/vendor/fakerphp/faker" />
+      <path value="$PROJECT_DIR$/libs/vendor/psr/container" />
     </include_path>
   </component>
   <component name="ProblemsViewState">
@@ -101,33 +111,34 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;JavaScript Debug.TarifaUbi.php.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;codeWithMe.voiceChat.enabledByDefault&quot;: &quot;false&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/home/dani/orbix_local/orbix/apps/misas/controller&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.17356321&quot;,
-    &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;editor.preferences.gutterIcons&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "JavaScript Debug.TarifaUbi.php.executor": "Run",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "codeWithMe.voiceChat.enabledByDefault": "false",
+    "git-widget-placeholder": "master",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "/home/dani/orbix_local/orbix/apps/misas/controller",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "Modules",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.17356321",
+    "run.code.analysis.last.selected.profile": "pProject Default",
+    "settings.editor.selected.configurable": "editor.preferences.gutterIcons",
+    "vue.rearranger.settings.migration": "true"
   },
-  &quot;keyToStringList&quot;: {
-    &quot;DatabaseDriversLRU&quot;: [
-      &quot;postgresql&quot;
+  "keyToStringList": {
+    "DatabaseDriversLRU": [
+      "postgresql"
     ]
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/apps/misas/controller" />
@@ -646,7 +657,6 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_NEW_TODO" value="false" />
-    <MESSAGE value="redondeo duracion acttividades pasarela" />
     <MESSAGE value="permisos. poner agd en ca, crt de n" />
     <MESSAGE value="muchos cambios por subir, no sé de que" />
     <MESSAGE value="antes de reconstruir packages.json (npm)" />
@@ -671,7 +681,8 @@
     <MESSAGE value="Changes by salva" />
     <MESSAGE value="nueva clase IinicialesSacd" />
     <MESSAGE value="quitar extendida (4)" />
-    <option name="LAST_COMMIT_MESSAGE" value="quitar extendida (4)" />
+    <MESSAGE value="Interrupción" />
+    <option name="LAST_COMMIT_MESSAGE" value="Interrupción" />
     <option name="GROUP_MULTIFILE_MERGE_BY_DIRECTORY" value="true" />
   </component>
   <component name="XDebuggerManager">
@@ -679,8 +690,8 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="php">
           <url>file://$PROJECT_DIR$/apps/misas/controller/ver_cuadricula_zona.php</url>
-          <line>67</line>
-          <option name="timeStamp" value="4" />
+          <line>37</line>
+          <option name="timeStamp" value="9" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

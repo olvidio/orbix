@@ -2,6 +2,7 @@
 
 use actividadtarifas\model\entity\GestorTipoActivTarifa;
 use actividadtarifas\model\entity\GestorTipoTarifa;
+use actividadtarifas\model\entity\TipoActivTarifa;
 use actividadtarifas\model\entity\TipoTarifa;
 use core\ConfigGlobal;
 use ubis\model\entity\GestorTarifaUbi;
@@ -10,7 +11,6 @@ use web\Desplegable;
 use web\Hash;
 use web\Lista;
 use web\TiposActividades;
-use actividadtarifas\model\entity\TipoActivTarifa;
 
 // INICIO Cabecera global de URL de controlador *********************************
 require_once("apps/core/global_header.inc");
@@ -69,10 +69,10 @@ switch ($Qque) {
             $oGesTipoTarifa = new GestorTipoTarifa();
             $oTipoTarifas = $oGesTipoTarifa->getListaTipoTarifas($miSfsv);
             $oTipoTarifas->setNombre('id_tarifa');
-            $txt .= _("tarifa").": ";
+            $txt .= _("tarifa") . ": ";
             $txt .= $oTipoTarifas->desplegable();
             $txt .= '<br><br>';
-            $txt .= _("serie").": ";
+            $txt .= _("serie") . ": ";
             $txt .= $oDesplPosiblesSeries->desplegable();
             $txt .= '<br><br>';
         }
@@ -84,6 +84,18 @@ switch ($Qque) {
         $txt .= "</form> ";
         echo $txt;
         break;
+    case "copiar":
+        $Qid_ubi = (string)filter_input(INPUT_POST, 'id_ubi');
+        $Qyear = (string)filter_input(INPUT_POST, 'year');
+
+        $any_anterior = $Qyear -1;
+        // listado de tarifas por casa y año
+        if (!empty($Qid_ubi) && !empty($any_anterior)) {
+            $oGesTarifa = new GestorTarifaUbi();
+            $oGesTarifa->copiar($Qyear, $Qid_ubi);
+        } else {
+            $cTarifas = [];
+        }
     case "get":
         $Qid_ubi = (string)filter_input(INPUT_POST, 'id_ubi');
         $Qyear = (string)filter_input(INPUT_POST, 'year');
@@ -121,6 +133,9 @@ switch ($Qque) {
 
             $oGesTipoActivTarifas = new GestorTipoActivTarifa();
             $cTipoActivTarifas = $oGesTipoActivTarifas->getTipoActivTarifas(array('id_tarifa' => $id_tarifa));
+            if (empty($cTipoActivTarifas)) {
+                continue;
+            }
             $txt = '';
             $t = 0;
             foreach ($cTipoActivTarifas as $oTipoActivTarifa) {
@@ -175,8 +190,19 @@ switch ($Qque) {
         $oLista->setDatos($a_valores);
         echo $oLista->lista();
         // sólo pueden añadir: adl, pr i actividades
-        if (($_SESSION['oPerm']->have_perm_oficina('adl')) || ($_SESSION['oPerm']->have_perm_oficina('pr')) || ($_SESSION['oPerm']->have_perm_oficina('calendario'))) {
+        if (!empty($Qid_ubi) &
+            (
+                ($_SESSION['oPerm']->have_perm_oficina('adl')) ||
+                ($_SESSION['oPerm']->have_perm_oficina('pr')) ||
+                ($_SESSION['oPerm']->have_perm_oficina('calendario'))
+            )
+        ) {
+            $any_anterior = $Qyear - 1;
+            $any_actual = $Qyear;
             echo '<br><span class="link" onclick="fnjs_modificar(\'nuevo\');">' . _("añadir tarifa") . '</span>';
+            echo '<br><span class="link" onclick="fnjs_copiar_tarifas();">';
+            echo sprintf(_("copiar las del año %1\$d a este (%2\$d). Esto borrará las tarifas actuales de %2\$d"), $any_anterior, $any_actual);
+            echo '</span>';
         }
         break;
     case "update":

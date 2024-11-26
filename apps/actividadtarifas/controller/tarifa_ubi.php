@@ -27,9 +27,10 @@ if ($_SESSION['oPerm']->have_perm_oficina('des') || $_SESSION['oPerm']->have_per
     }
 }
 $oForm->setPosiblesCasas($donde);
-$oForm->setAction('');
+$oForm->setAction('fnjs_ver()');
 
 $oFormAny = new web\PeriodoQue();
+$oFormAny->setAction('fnjs_ver()');
 
 $oHash = new web\Hash();
 $oHash->setUrl(core\ConfigGlobal::getWeb() . '/apps/actividadtarifas/controller/tarifa_ajax.php');

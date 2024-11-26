@@ -83,6 +83,27 @@
         document.getElementById("overlay").style.display = "none";
     }
 
+    fnjs_copiar_tarifas = function () {
+        id_ubi = $('#id_cdc').val();
+        year = $('#year').val();
+        // obtener el listado de periodos
+        var url = '<?= core\ConfigGlobal::getWeb() ?>/apps/actividadtarifas/controller/tarifa_ajax.php';
+        var parametros = 'que=copiar&id_ubi=' + id_ubi + '&year=' + year + '<?= $h_ver ?>';
+
+        $.ajax({
+            url: url,
+            type: 'post',
+            data: parametros
+        })
+            .done(function (rta_txt) {
+                if (rta_txt) {
+                    // añadir debajo de la casa
+                    $('#ficha').html(rta_txt);
+                }
+            });
+        document.getElementById("overlay").style.display = "none";
+    }
+
     $(document).ready(fnjs_ver());
 </script>
 <form name="seleccion" action="">

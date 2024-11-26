@@ -54,7 +54,7 @@ class PeriodoQue
      *
      * @var array
      */
-    private $isDesplAnysVisible= TRUE;
+    private $isDesplAnysVisible = TRUE;
     /**
      * aOpcionesAnys de PeriodoQue
      *
@@ -92,6 +92,7 @@ class PeriodoQue
      */
     private $sFormName;
 
+    private $sAction = '';
 
     /* CONSTRUCTOR ------------------------------------------------------------- */
 
@@ -140,7 +141,7 @@ class PeriodoQue
         }
         //-- Final para que funcione
         $sHtml .= '<td class=contenido>' . $this->getDesplPeriodos()->desplegable() . '</td>';
-        if($this->isDesplAnysVisible){
+        if ($this->isDesplAnysVisible) {
             $sHtml .= '<td class=contenido>' . $this->getDesplAnys()->desplegable() . '</td>';
         } else {
             $sHtml .= '<input type="hidden" name="year" value="">';
@@ -284,9 +285,17 @@ class PeriodoQue
             $oDesplAnys->setOpciones($aOpciones);
             $oDesplAnys->setBlanco(false);
             $oDesplAnys->setOpcion_sel($any);
+            if (!empty($this->sAction)) {
+                $oDesplAnys->setAction($this->sAction);
+            }
             $this->oDesplAnys = $oDesplAnys;
         }
         return $this->oDesplAnys;
+    }
+
+    function setAction($sAction)
+    {
+        $this->sAction = $sAction;
     }
 
     function setDesplAnys($oDespl)
