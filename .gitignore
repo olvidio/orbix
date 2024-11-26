@@ -56,3 +56,4 @@ log/*
 .settings/org.eclipse.core.runtime.prefs
 /.idea/
 .vscode/launch.json
+.idea/workspace.xm
