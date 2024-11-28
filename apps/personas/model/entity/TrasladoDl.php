@@ -18,6 +18,7 @@ use core\ConfigGlobal;
 use core\ConverterDate;
 use core\DBConnection;
 use core\DBPropiedades;
+use core\ServerConf;
 use dossiers\model\entity\GestorDossier;
 use dossiers\model\entity\TipoDossier;
 use notas\model\EditarPersonaNota;
@@ -256,6 +257,9 @@ class TrasladoDl
             if (!in_array($esquema, $aEsquemas)) {
                 $esquema = 'restov';
             }
+        }
+        if (ServerConf::WEBDIR === 'pruebas') {
+            $database = 'pruebas-'.$database;
         }
 
         $oConfigDB = new ConfigDB($database);
