@@ -129,7 +129,7 @@ switch ($pau) {
                 exit($msg_err);
             }
             $clase = get_class($oPersona);
-            $Qobj_pau = join('', array_slice(explode('\\', $clase), -1));
+            $Qobj_pau = implode('', array_slice(explode('\\', $clase), -1));
         } else {
             $clase = "personas\\model\\entity\\$Qobj_pau";
             $oPersona = new $clase($id_pau);
@@ -231,7 +231,7 @@ if (empty($Qid_dossier)) { // enseña la lista de dossiers.
                 $claseSelect->setQScroll_id($Qscroll_id);
             }
 
-            switch ($id_dossier) {
+            switch ((int)$id_dossier) {
                 case 1301:
                 case 1302:
                     // propio del 1302
@@ -311,12 +311,12 @@ if (empty($Qid_dossier)) { // enseña la lista de dossiers.
             }
 
             // Poner o no el botón de inserta. En algunos casos ya está en la presentación particular.
-            if ($Qpermiso == 3) {
-                $html .= "<br><table cellspacing=3  class=botones><tr class=botones>
+            if ((int)$Qpermiso === 3) {
+                $html .= "<br><table class=botones><tr class=botones>
 					<td class=botones><input name=\"btn_new\" type=\"button\" value=\"";
                 $html .= _("nuevo");
                 // caso especial para traslados:
-                if ($id_dossier == 1004) {
+                if ((int)$id_dossier === 1004) {
                     $insert = Hash::link(ConfigGlobal::getWeb() . '/apps/personas/controller/traslado_form.php?' . http_build_query(array('cabecera' => 'no', 'id_pau' => $id_pau, 'id_dossier' => $id_dossier, 'obj_pau' => $Qobj_pau)));
                     $html .= "\" onclick=\"fnjs_update_div('#main','$insert');\"></td></tr></table>";
                 } else {

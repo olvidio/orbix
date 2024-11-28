@@ -21,8 +21,8 @@ require_once("apps/core/global_object.inc");
 $Qid_item = (int)filter_input(INPUT_GET, 'key');
 
 if (!empty($Qid_item)) {
-    $CertificadoPublicRepository = new CertificadoDlRepository();
-    $oCertificado = $CertificadoPublicRepository->findById($Qid_item);
+    $CertificadoDlRepository = new CertificadoDlRepository();
+    $oCertificado = $CertificadoDlRepository->findById($Qid_item);
     if (!empty($oCertificado)) {
         $nombre_fichero = $oCertificado->getCertificado();
         $nombre_fichero .= '.pdf';

@@ -49,8 +49,12 @@ $nombre_apellidos = $oPersona->getNombreApellidos();
 $dl_origen = core\ConfigGlobal::mi_delef();
 $dl_destino = $oPersona->getDl();
 $gesDelegacion = new GestorDelegacion();
-$a_datos_region_stgr = $gesDelegacion->mi_region_stgr($dl_destino);
-$esquema_region_stgr_dst =$a_datos_region_stgr['esquema_region_stgr'];
+try {
+    $a_datos_region_stgr = $gesDelegacion->mi_region_stgr($dl_destino);
+    $esquema_region_stgr_dst =$a_datos_region_stgr['esquema_region_stgr'];
+} catch (Exception $e) {
+    $error_txt .= $e->getMessage(). "\n" ;
+}
 
 //1.- saber si está en aquinate
 // comprobar que no es una dl que ya tiene su esquema

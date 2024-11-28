@@ -56,7 +56,7 @@ $oDesplIdiomas->setBlanco(TRUE);
 $oDesplIdiomas->setOpcion_sel($idioma);
 
 $oHashCertificadoPdf = new Hash();
-$oHashCertificadoPdf->setCamposForm('certificado_pdf!certificado!firmado!destino!f_certificado!idioma!nom!fecha');
+$oHashCertificadoPdf->setCamposForm('certificado_pdf!certificado!firmado!destino!f_certificado!idioma!nom!f_enviado');
 $oHashCertificadoPdf->setCamposNo('certificado_pdf!firmado');
 //cambio el nombre, porque tiene el mismo id en el otro formulario
 $oHashCertificadoPdf->setArrayCamposHidden(

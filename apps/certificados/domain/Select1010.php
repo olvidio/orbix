@@ -69,7 +69,8 @@ class Select1010
     private function getBotones()
     {
         $a_botones[] = ['txt' => _("descargar pdf"), 'click' => "fnjs_descargar_pdf(\"#seleccionados\")"];
-        $a_botones[] = array('txt' => _("adjuntar certificado"), 'click' => "fnjs_upload_certificado(\"#seleccionados\")");
+        $a_botones[] = array('txt' => _("modificar certificado"), 'click' => "fnjs_upload_certificado(\"#seleccionados\")");
+        $a_botones[] = array('txt' => _("eliminar"), 'click' => "fnjs_eliminar_certificado(\"#seleccionados\")");
         return $a_botones;
     }
 
@@ -151,6 +152,7 @@ class Select1010
         $stack = $oPosicion->getStack(0);
 
         $oHashSelect = new web\Hash();
+        //$oHashSelect->setCamposForm('sel');
         $oHashSelect->setCamposNo('sel!mod!scroll_id!refresh');
         $a_camposHidden = array(
             'pau' => $this->pau,
@@ -171,11 +173,17 @@ class Select1010
         $oTabla->setDatos($this->getValores());
 
         $oHashDown = new Hash();
-        $oHashDown->setUrl('apps/certificados/controller/certificado_pdf_download.php');
+        $oHashDown->setUrl('apps/certificados/controller/certificado_dl_pdf_download.php');
         $oHashDown->setCamposForm('key');
         $h_download = $oHashDown->linkSinVal();
 
-        $a_campos = ['oTabla' => $oTabla,
+        $aQuery = ['nuevo' => 1, 'id_nom' => $this->id_pau];
+        $url_nuevo = web\Hash::link(core\ConfigGlobal::getWeb() . '/apps/certificados/controller/certificado_dl_adjuntar.php?' . http_build_query($aQuery));
+
+        $a_campos = [
+            'oPosicion' => $oPosicion,
+            'oTabla' => $oTabla,
+            'url_nuevo' => $url_nuevo,
             'oHashSelect' => $oHashSelect,
             'h_download' => $h_download,
         ];

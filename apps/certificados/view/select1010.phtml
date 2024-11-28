@@ -1,9 +1,43 @@
 <script>
-     fnjs_upload_certificado = function (formulario) {
-            $(formulario).attr('action', "apps/certificados/controller/certificado_pdf_upload.php");
-            $(formulario).target = "print";
-            fnjs_enviar_formulario(formulario);
+    fnjs_eliminar_certificado = function (formulario) {
+        rta = fnjs_solo_uno(formulario);
+        if (rta === 1) {
+            if (confirm("<?= _("¿seguro que desea borrar el certificado?") ?>")) {
+                $('#mod').val("eliminar");
+                let request = $.ajax({
+                    data: $(formulario).serialize(),
+                    url: 'apps/certificados/controller/certificado_dl_delete.php',
+                    method: 'POST',
+                    dataType: 'json'
+                });
+                request.done(function (json) {
+                    if (json.success !== true) {
+                        alert("<?= _("respuesta") ?>: " + json.mensaje);
+                    } else {
+                        fnjs_actualizar(formulario);
+                    }
+                });
+            }
+        }
     }
+
+    fnjs_actualizar = function (formulario) {
+        var campo = '<input type="hidden" name="refresh" value=1>';
+        $(formulario).attr('action', "apps/dossiers/controller/dossiers_ver.php");
+        $(formulario).append(campo);
+        fnjs_enviar_formulario(formulario, '#main');
+    }
+
+    fnjs_upload_certificado = function (formulario) {
+        $(formulario).attr('action', "apps/certificados/controller/certificado_dl_modificar.php");
+        fnjs_enviar_formulario(formulario);
+    }
+
+    fnjs_nuevo_certificado = function (id_nom) {
+        $(formulario).attr('action', "apps/certificados/controller/certificado_dl_adjuntar.php");
+        fnjs_enviar_formulario(formulario);
+    }
+
     fnjs_descargar_pdf = function (formulario) {
         rta = fnjs_solo_uno(formulario);
         if (rta === 1) {
@@ -11,7 +45,7 @@
             $(formulario + ' input.sel').each(function (i) {
                 if ($(this).prop('checked') == true) {
                     key = $(this).prop('value');
-                    url = "apps/certificados/controller/certificado_pdf_download.php";
+                    url = "apps/certificados/controller/certificado_dl_pdf_download.php";
                     url_download = url + '?key=' + key + '<?= $h_download ?>';
                     window.open(url_download);
                 }
@@ -24,3 +58,12 @@
     <?= $oHashSelect->getCamposHtml() ?>
     <?= $oTabla->mostrar_tabla() ?>
 </form>
+<br>
+<table class=botones>
+    <tr class=botones>
+        <td class=botones>
+            <input name="btn_new" type="button" value="<?= _("adjuntar nuevo certificado") ?>"
+                   onclick="fnjs_update_div('#main','<?= $url_nuevo ?>');">
+        </td>
+    </tr>
+</table>

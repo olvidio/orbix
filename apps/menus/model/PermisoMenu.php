@@ -35,7 +35,7 @@ class PermisoMenu extends permisos\XPermisos
      */
     public function __construct()
     {
-        $this->iaccion = $_SESSION['iPermMenus'];
+        $this->iaccion = $_SESSION['iPermMenus']?? 1;
         $this->omplir();
     }
 
