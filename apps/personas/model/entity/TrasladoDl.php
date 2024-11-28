@@ -258,9 +258,6 @@ class TrasladoDl
                 $esquema = 'restov';
             }
         }
-        if (ServerConf::WEBDIR === 'pruebas') {
-            $database = 'pruebas-'.$database;
-        }
 
         $oConfigDB = new ConfigDB($database);
         $config = $oConfigDB->getEsquema($esquema);
