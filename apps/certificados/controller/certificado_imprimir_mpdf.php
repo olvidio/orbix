@@ -80,9 +80,9 @@ if (!empty($idioma)) {
     if (!file_exists($filename_textos)) {
         $msg = sprintf(_("No existe un fichero con las traducciones para %s"), $idioma);
         exit ($msg);
-    } else {
-        include($filename_textos);
     }
+
+    include($filename_textos);
 
     if ($nivel_stgr === 'r') {
         $txt_superavit = $txt_superavit_1;
@@ -90,13 +90,10 @@ if (!empty($idioma)) {
     } else {
         $txt_superavit = '';
     }
-    $oHoy = new DateTimeLocal();
-    $lugar_fecha = $lugar_firma . ",  " . $oHoy->getFechaLatin();
-    $region = $region_latin;
 
 } else {
     $filename_textos = "textos_certificados.php";
-    include(__DIR__ . '/' . $filename_textos);
+    include(__DIR__ . 'certificado_imprimir_mpdf.php/' . $filename_textos);
     if ($nivel_stgr === 'r') {
         $txt_superavit = $txt_superavit_1;
         $txt_superavit .= ' ' . $txt_superavit_2;
@@ -105,11 +102,10 @@ if (!empty($idioma)) {
         $txt_superavit = '';
     }
 
-    $oHoy = new DateTimeLocal();
-    $lugar_fecha = $lugar_firma . ",  " . $oHoy->getFechaLatin();
-
-    $region = $region_latin;
 }
+$oHoy = new DateTimeLocal();
+$lugar_fecha = $lugar_firma . ",  " . $oHoy->getFechaLatin();
+$region = $region_latin;
 
 function titulo($id_asignatura){
 global $curso_filosofia, $curso_teologia, $ECTS, $iudicium, $any_I, $any_II, $any_III, $any_IV, $pie_ects;
@@ -226,7 +222,7 @@ case 2201:
             $fecha = explode("-", $data);
             $any = substr($fecha[0], 2);
             $fechaok = $fecha[2] . "." . $fecha[1] . "." . $any;
-            if ($fecha[1] == 00) {
+            if ($fecha[1] === '00') {
                 $fechaok = "";
             }
             echo "$fechaok";
@@ -341,7 +337,7 @@ case 2201:
                         $etcs = number_format(($creditos * 2), 0);
                         titulo($oAsignatura->getId_nivel());
                         ?>
-                        <tr valign="bottom">
+                        <tr  style="vertical-align: text-bottom">
                             <td></td>
                             <td><?= $nombre_asignatura ?>&nbsp;</td>
                             <td class="dato"><?= $etcs ?>&nbsp;</td>
@@ -352,14 +348,14 @@ case 2201:
                         $oAsignatura = $cAsignaturas[$a++];
                     }
 
-                    if ($oAsignatura->getId_nivel() == $row["id_nivel_asig"]) {
+                    if ((int)$oAsignatura->getId_nivel() === (int)$row["id_nivel_asig"]) {
                         titulo($oAsignatura->getId_nivel());
                         // para las opcionales
                         if ($row["id_asignatura"] > 3000 && $row["id_asignatura"] < 9000) {
                             $nombre_asignatura = strtr($row["nombre_asignatura"], $replace);
                             $algo = $oAsignatura->getNombre_asignatura() . "<br>&nbsp;&nbsp;&nbsp;&nbsp;" . $nombre_asignatura;
                             ?>
-                            <tr class="opcional" valign="bottom">
+                            <tr class="opcional" style="vertical-align: text-bottom">
                                 <td></td>
                                 <td><?= $algo ?>&nbsp;</td>
                                 <td class="dato"><?= $row["creditos"] ?>&nbsp;</td>
@@ -381,7 +377,7 @@ case 2201:
                         }
                         $num_asig++;
                     } else {
-                        if (!$row["id_nivel"] || ($j == $num_asig)) {
+                        if (!$row["id_nivel"] || ($j === $num_asig)) {
                             $nombre_asignatura = strtr($oAsignatura->getNombre_asignatura(), $replace);
                             $creditos = $oAsignatura->getCreditos();
                             $etcs = number_format(($creditos * 2), 0);

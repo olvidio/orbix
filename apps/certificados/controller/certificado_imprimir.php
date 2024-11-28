@@ -22,7 +22,7 @@ $oPosicion->recordar();
 //Si vengo por medio de Posicion, borro la última
 if (isset($_POST['stack'])) {
     $stack2 = filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
-    if ($stack2 != '') {
+    if ($stack2 !== '') {
         $oPosicion2 = new web\Posicion();
         if ($oPosicion2->goStack($stack2)) { // devuelve false si no puede ir
             $Qid_sel = $oPosicion2->getParametro('id_sel');
@@ -85,7 +85,7 @@ $oHashCertificadoPdf->setCamposForm('certificado!firmado!f_certificado!idioma!de
 $oHashCertificadoPdf->setCamposNo('firmado');
 $oHashCertificadoPdf->setArrayCamposHidden(['id_nom' => $id_nom, 'nuevo' => 1]);
 
-$pag_certificado_2_pdf = ConfigGlobal::getWeb() . '/apps/notas/controller/certificado_2_mpdf.php';
+$pag_certificado_2_pdf = ConfigGlobal::getWeb() . '/apps/certificados/controller/certificado_2_mpdf.php';
 $oHash = new Hash();
 $oHash->setUrl($pag_certificado_2_pdf);
 $oHash->setCamposForm('id_item!guardar');
@@ -110,5 +110,5 @@ $a_campos = ['oPosicion' => $oPosicion,
     'h_eliminar' => $h_eliminar,
 ];
 
-$oView = new core\ViewTwig('notas/controller');
+$oView = new core\ViewTwig('certificados/controller');
 $oView->renderizar('certificado_imprimir.html.twig', $a_campos);

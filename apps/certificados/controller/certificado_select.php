@@ -33,7 +33,7 @@ $Qscroll_id = '';
 //Si vengo por medio de Posicion, borro la última
 if (isset($_POST['stack'])) {
     $stack = filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
-    if ($stack != '') {
+    if ($stack !== '') {
         $oPosicion2 = new web\Posicion();
         if ($oPosicion2->goStack($stack)) { // devuelve false si no puede ir
             $Qid_sel = $oPosicion2->getParametro('id_sel');
@@ -42,15 +42,6 @@ if (isset($_POST['stack'])) {
         }
     }
 }
-
-/*
-if (!$gesDelegeacion->soy_region_stgr()) {
-    $msg = _("Este menú es sólo para las regiones del stgr.");
-    $msg .= "<br>";
-    $msg .= _("Para ver los certificados de una persona, debe ir a través de los dossiers");
-    exit ($msg);
-}
-*/
 
 $Qtitulo = (string)filter_input(INPUT_POST, 'titulo');
 $Qcertificado = (string)filter_input(INPUT_POST, 'certificado');

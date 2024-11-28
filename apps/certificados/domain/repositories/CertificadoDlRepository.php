@@ -20,10 +20,7 @@ use PDO;
 class CertificadoDlRepository implements CertificadoDlRepositoryInterface
 {
 
-    /**
-     * @var CertificadoRepositoryInterface
-     */
-    private $repository;
+    private PgCertificadoDlRepository $repository;
 
     public function __construct()
     {
@@ -47,32 +44,32 @@ class CertificadoDlRepository implements CertificadoDlRepositoryInterface
 	
 /* -------------------- ENTIDAD --------------------------------------------- */
 
-	public function Eliminar(CertificadoDl $Certificado)
+	public function Eliminar(CertificadoDl $Certificado): bool
     {
         return $this->repository->Eliminar($Certificado);
     }
 
-	public function Guardar(CertificadoDl $Certificado)
+	public function Guardar(CertificadoDl $Certificado): bool
     {
         return $this->repository->Guardar($Certificado);
     }
 
-	public function getErrorTxt()
+	public function getErrorTxt(): string
     {
         return $this->repository->getErrorTxt();
     }
 
-	public function getoDbl()
+	public function getoDbl(): PDO
     {
         return $this->repository->getoDbl();
     }
 
-	public function setoDbl(PDO $oDbl)
+	public function setoDbl(PDO $oDbl): void
     {
         $this->repository->setoDbl($oDbl);
     }
 
-	public function getNomTabla()
+	public function getNomTabla(): string
     {
         return $this->repository->getNomTabla();
     }
@@ -94,7 +91,7 @@ class CertificadoDlRepository implements CertificadoDlRepositoryInterface
      * Busca la clase con id_item en el repositorio.
 	
      */
-    public function findById(int $id_item)
+    public function findById(int $id_item): CertificadoDl
     {
         return $this->repository->findById($id_item);
     }

@@ -56,7 +56,7 @@
             event.preventDefault();
         }
         //datos = $('#frm_upload').serialize();
-        var datos = new FormData(document.getElementById("frm_upload"));
+        let datos = new FormData(document.getElementById("frm_upload"));
 
         let request = $.ajax({
             data: datos,

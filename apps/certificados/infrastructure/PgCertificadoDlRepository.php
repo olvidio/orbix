@@ -8,12 +8,10 @@ use core\ClaseRepository;
 use core\Condicion;
 use core\ConverterDate;
 use core\Set;
-use Exception;
 use PDO;
 use PDOException;
 use RuntimeException;
 use function core\is_true;
-use function PHPUnit\Framework\throwException;
 
 
 /**
@@ -124,7 +122,7 @@ class PgCertificadoDlRepository extends ClaseRepository implements CertificadoDl
 
     /* -------------------- ENTIDAD --------------------------------------------- */
 
-    public function Eliminar(CertificadoDl $Certificado)
+    public function Eliminar(CertificadoDl $Certificado): bool
     {
         $id_item = $Certificado->getId_item();
         $oDbl = $this->getoDbl();
@@ -141,7 +139,7 @@ class PgCertificadoDlRepository extends ClaseRepository implements CertificadoDl
     /**
      * Si no existe el registro, hace un insert, si existe, se hace el update.
      */
-    public function Guardar(CertificadoDl $Certificado)
+    public function Guardar(CertificadoDl $Certificado): bool
     {
         $id_item = $Certificado->getId_item();
         $oDbl = $this->getoDbl();
@@ -157,7 +155,7 @@ class PgCertificadoDlRepository extends ClaseRepository implements CertificadoDl
         $aDatos['esquema_emisor'] = $Certificado->getEsquema_emisor();
         $aDatos['firmado'] = $Certificado->isFirmado();
         // para los bytea
-        $aDatos['documento'] = bin2hex($Certificado->getDocumento()?? '');
+        $aDatos['documento'] = bin2hex($Certificado->getDocumento() ?? '');
         // para las fechas
         $aDatos['f_certificado'] = (new ConverterDate('date', $Certificado->getF_certificado()))->toPg();
         $aDatos['f_recibido'] = (new ConverterDate('date', $Certificado->getF_recibido()))->toPg();
@@ -220,7 +218,7 @@ class PgCertificadoDlRepository extends ClaseRepository implements CertificadoDl
         return TRUE;
     }
 
-    private function isNew(int $id_item)
+    private function isNew(int $id_item): bool
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
@@ -256,7 +254,7 @@ class PgCertificadoDlRepository extends ClaseRepository implements CertificadoDl
         $oDblSt->bindColumn('documento', $sdocumento, PDO::PARAM_STR);
         $aDatos = $oDblSt->fetch(PDO::FETCH_ASSOC);
         if ($aDatos !== FALSE) {
-            $aDatos['documento'] = hex2bin($sdocumento?? '');
+            $aDatos['documento'] = hex2bin($sdocumento ?? '');
         }
         // para las fechas del postgres (texto iso)
         if ($aDatos !== FALSE) {
@@ -274,7 +272,7 @@ class PgCertificadoDlRepository extends ClaseRepository implements CertificadoDl
     {
         $aDatos = $this->datosById($id_item);
         if (empty($aDatos)) {
-            $errorMsg = sprintf(_("Error en la linea %s de %s"),__LINE__,__FILE__ ) . ': ';
+            $errorMsg = sprintf(_("Error en la linea %s de %s"), __LINE__, __FILE__) . ': ';
             $errorMsg .= _("No se encuentra el certificado");
             throw new RuntimeException($errorMsg);
         }

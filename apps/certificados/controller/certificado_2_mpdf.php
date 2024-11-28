@@ -6,6 +6,8 @@ $_POST = $_GET;
 $id_item = (string)filter_input(INPUT_POST, 'id_item');
 */
 
+use Mpdf\Mpdf;
+use Mpdf\MpdfException;
 use notas\model\entity\GestorPersonaNotaOtraRegionStgrDB;
 
 $Qguardar = empty($_GET['guardar']) ? '' : $_GET['guardar'];
@@ -31,16 +33,37 @@ $config = [
     'margin_header' => 0,
     'margin_footer' => 5,
 ];
-$mpdf = new \Mpdf\Mpdf($config);
-$mpdf->SetDisplayMode('fullpage');
+
+try {
+    $mpdf = new Mpdf($config);
+    $mpdf->SetDisplayMode('fullpage');
+} catch (MpdfException $e) {
+    $msg_err = $e->getMessage();
+    exit($msg_err);
+}
 $mpdf->list_indent_first_level = 0;    // 1 or 0 - whether to indent the first level of a list
 $mpdf->setHTMLFooter($footer);
-$mpdf->WriteHTML($content);
-$mpdf->Output("certificado($nom).pdf", 'D');
+try {
+    $mpdf->WriteHTML($content);
+} catch (MpdfException $e) {
+    $msg_err = $e->getMessage();
+    exit($msg_err);
+}
+try {
+    $mpdf->Output("certificado($nom).pdf", 'D');
+} catch (MpdfException $e) {
+    $msg_err = $e->getMessage();
+    exit($msg_err);
+}
 
 // grabar en la DB
 if (!empty($Qguardar)) {
-    $pdf = $mpdf->Output("certificado($nom).pdf", 'S'); // as string
+    try {
+        $pdf = $mpdf->Output("certificado($nom).pdf", 'S');
+    } catch (MpdfException $e) {
+        $msg_err = $e->getMessage();
+        exit($msg_err);
+    } // as string
     $oCertificado->setDocumento($pdf);
     $CertificadoRepository->Guardar($oCertificado);
     // también hay que guardarlo en las notas afectadas

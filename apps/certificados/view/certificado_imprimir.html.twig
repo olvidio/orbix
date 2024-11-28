@@ -46,8 +46,8 @@
             event.preventDefault();
         }
 
-        datos = $('#frm_upload').serialize();
-        var request = $.ajax({
+        let datos = $('#frm_upload').serialize();
+        let request = $.ajax({
             data: datos,
             url: 'apps/certificados/controller/certificado_update.php',
             method: 'POST',
@@ -57,11 +57,11 @@
             if (json.success !== true) {
                 alert("{{ "respuesta"|trans|raw }}: " + json.mensaje);
             } else {
-                var item = json.item;
-                var url = "{{ pag_certificado_2_pdf }}" + '?guardar=1&id_item=' + item + '{{ h|raw }}';
-                let new_window = open(url, "sele");
+                let item = json.item;
+                let url = "{{ pag_certificado_2_pdf }}" + '?guardar=1&id_item=' + item + '{{ h|raw }}';
+                open(url, "sele");
                 // Una vez descargado, hay que permitir cancelar y borrar si no está correcto
-                var msg = "{{ "¿Es correcto?"|trans|raw }}";
+                let msg = "{{ "¿Es correcto?"|trans|raw }}";
                 msg += "\n";
                 msg += "\n";
                 msg += "{{ "'Cancel' para eliminar el certificado recién creado"|trans|raw }}\n";
@@ -81,7 +81,7 @@
                         {{ oPosicion.js_atras(1)|raw }}
                     } else {
                         // cancel
-                        var url2 = "{{ pag_certificado_eliminar }}" + '?id_item=' + item + '{{ h_eliminar|raw }}';
+                        let url2 = "{{ pag_certificado_eliminar }}" + '?id_item=' + item + '{{ h_eliminar|raw }}';
                         fnjs_update_div('#main', url2);
                         {{ oPosicion.js_atras(1)|raw }}
                     }

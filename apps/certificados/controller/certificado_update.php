@@ -3,10 +3,9 @@
 
 // INICIO Cabecera global de URL de controlador *********************************
 use certificados\domain\entity\Certificado;
-use certificados\domain\entity\CertificadoDl;
-use certificados\domain\repositories\CertificadoDlRepository;
 use certificados\domain\repositories\CertificadoRepository;
 use core\ConfigGlobal;
+use core\ServerConf;
 use personas\model\entity\Persona;
 use web\DateTimeLocal;
 use function core\is_true;
@@ -29,30 +28,21 @@ $Qdestino = (string)filter_input(INPUT_POST, 'destino');
 $Qcertificado = (string)filter_input(INPUT_POST, 'certificado');
 $Qfirmado = (string)filter_input(INPUT_POST, 'firmado');
 $Qf_certificado = (string)filter_input(INPUT_POST, 'f_certificado');
-$Qfecha = (string)filter_input(INPUT_POST, 'fecha');
+$Qf_enviado = (string)filter_input(INPUT_POST, 'f_enviado');
 
 $Qcertificado_old = (string)filter_input(INPUT_POST, 'certificado_old');
-$local = (bool)filter_input(INPUT_POST, 'local');
 
 /* convertir las fechas a DateTimeLocal */
 $oF_certificado = DateTimeLocal::createFromLocal($Qf_certificado);
-$oFecha = DateTimeLocal::createFromLocal($Qfecha);
+$oF_enviado = DateTimeLocal::createFromLocal($Qf_enviado);
 
 $error_txt = '';
 
-if ($local) {
-    $certificadoRepository = new CertificadoDlRepository();
-} else {
-    $certificadoRepository = new CertificadoRepository();
-}
+$certificadoRepository = new CertificadoRepository();
 
 if (is_true($Qnuevo)) {
     $Qid_item = $certificadoRepository->getNewId_item();
-    if ($local) {
-        $oCertificado = new CertificadoDl();
-    } else {
-        $oCertificado = new Certificado();
-    }
+    $oCertificado = new Certificado();
     $oCertificado->setId_item($Qid_item);
 } else {
     $oCertificado = $certificadoRepository->findById($Qid_item);
@@ -78,12 +68,8 @@ if (is_true($Qfirmado)) {
 $oCertificado->setFirmado($firmado);
 $oCertificado->setEsquema_emisor(ConfigGlobal::mi_region_dl());
 $oCertificado->setF_certificado($oF_certificado);
-if (!empty($oFecha)) {
-    if ($local) {
-        $oCertificado->setF_recibido($oFecha);
-    } else {
-        $oCertificado->setF_enviado($oFecha);
-    }
+if (!empty($oF_enviado)) {
+    $oCertificado->setF_enviado($oF_enviado);
 }
 
 if ($certificadoRepository->Guardar($oCertificado) === FALSE) {
@@ -93,7 +79,7 @@ if ($certificadoRepository->Guardar($oCertificado) === FALSE) {
 if (!empty($Qcertificado_old)) {
     $filename_sin_barra = str_replace('/', '_', $Qcertificado_old);
     $filename_sin_espacio = str_replace(' ', '_', $filename_sin_barra);
-    $filename_pdf = ConfigGlobal::DIR . '/log/tmp/' . $filename_sin_espacio . '.pdf';
+    $filename_pdf = ServerConf::DIR . '/log/tmp/' . $filename_sin_espacio . '.pdf';
     if (is_file($filename_pdf)) {
         unlink($filename_pdf);
     }

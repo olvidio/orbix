@@ -19,7 +19,7 @@
 
     fnjs_upload_pdf = function () {
 
-        var datos = new FormData(document.getElementById("frm_upload"));
+        let datos = new FormData(document.getElementById("frm_upload"));
 
         let request = $.ajax({
             data: datos,

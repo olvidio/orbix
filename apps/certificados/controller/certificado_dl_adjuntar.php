@@ -27,10 +27,7 @@ $f_certificado = '';
 $f_recibido = '';
 $firmado = '';
 
-
-if (empty($f_recibido)) {
-    $f_recibido = (new DateTimeLocal())->getFromLocal();
-}
+$f_recibido = (new DateTimeLocal())->getFromLocal();
 if (is_true($firmado)) {
     $chk_firmado = 'checked';
 } else {

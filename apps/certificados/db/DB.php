@@ -24,13 +24,13 @@ class DB extends DBAbstract
         $this->esquema = 'public';
     }
 
-    public function dropAll()
+    public function dropAll(): void
     {
         $this->eliminar_e_certificados_emitidos();
         $this->eliminar_e_certificados_recibidos();
     }
 
-    public function createAll()
+    public function createAll(): void
     {
         $this->create_e_certificados_emitidos();
         $this->create_e_certificados_recibidos();
@@ -40,7 +40,7 @@ class DB extends DBAbstract
      * En el esquema sv
      *   OJO Corresponde al esquema sf/sv, no al comun.
      */
-    public function create_e_certificados_emitidos()
+    public function create_e_certificados_emitidos(): void
     {
         $this->addPermisoGlobal('sfsv');
 
@@ -70,7 +70,7 @@ class DB extends DBAbstract
         $this->delPermisoGlobal('sfsv');
     }
 
-    public function eliminar_e_certificados_emitidos()
+    public function eliminar_e_certificados_emitidos(): void
     {
         $this->addPermisoGlobal('sfsv');
 
@@ -85,7 +85,7 @@ class DB extends DBAbstract
      * En el esquema sv
      *   OJO Corresponde al esquema sf/sv, no al comun.
      */
-    public function create_e_certificados_recibidos()
+    public function create_e_certificados_recibidos(): void
     {
         $this->addPermisoGlobal('sfsv');
 
@@ -115,7 +115,7 @@ class DB extends DBAbstract
         $this->delPermisoGlobal('sfsv');
     }
 
-    public function eliminar_e_certificados_recibidos()
+    public function eliminar_e_certificados_recibidos(): void
     {
         $this->addPermisoGlobal('sfsv');
 

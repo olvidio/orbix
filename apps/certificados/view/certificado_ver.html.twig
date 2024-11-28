@@ -67,7 +67,7 @@
             event.preventDefault();
         }
 
-        datos = $('#frm_upload').serialize();
+        let datos = $('#frm_upload').serialize();
         let request = $.ajax({
             data: datos,
             url: 'apps/certificados/controller/certificado_update.php',

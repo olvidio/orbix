@@ -24,7 +24,7 @@ class DBEsquema extends DBAbstract
         $this->role_vf = '"' . $esquema_sfsv . '"';
     }
 
-    public function dropAll()
+    public function dropAll(): void
     {
         $a_reg = explode('-', $this->esquema);
         $dl = $a_reg[1];
@@ -38,7 +38,7 @@ class DBEsquema extends DBAbstract
         }
     }
 
-    public function createAll()
+    public function createAll(): void
     {
         $a_reg = explode('-', $this->esquema);
         $dl = $a_reg[1];
@@ -52,7 +52,7 @@ class DBEsquema extends DBAbstract
         }
     }
 
-    public function llenarAll()
+    public function llenarAll(): void
     {
     }
 
@@ -79,7 +79,7 @@ class DBEsquema extends DBAbstract
         return $datosTabla;
     }
 
-    public function create_e_certificados_emitidos()
+    public function create_e_certificados_emitidos(): void
     {
         // OJO Corresponde al esquema sf/sv, no al comun.
         $esquema_org = $this->esquema;
@@ -142,7 +142,7 @@ class DBEsquema extends DBAbstract
         $this->role = $role_org;
     }
 
-    public function create_e_certificados_recibidos()
+    public function create_e_certificados_recibidos(): void
     {
         // OJO Corresponde al esquema sf/sv, no al comun.
         $esquema_org = $this->esquema;
@@ -205,7 +205,7 @@ class DBEsquema extends DBAbstract
         $this->role = $role_org;
     }
 
-    public function eliminar_e_certificados_emitidos()
+    public function eliminar_e_certificados_emitidos(): void
     {
         // OJO Corresponde al esquema sf/sv, no al comun.
         $esquema_org = $this->esquema;
@@ -227,7 +227,7 @@ class DBEsquema extends DBAbstract
         $this->role = $role_org;
     }
 
-    public function eliminar_e_certificados_recibidos()
+    public function eliminar_e_certificados_recibidos(): void
     {
         // OJO Corresponde al esquema sf/sv, no al comun.
         $esquema_org = $this->esquema;

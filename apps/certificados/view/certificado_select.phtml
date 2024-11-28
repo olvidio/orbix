@@ -29,8 +29,8 @@
     fnjs_descargar_pdf = function (formulario) {
         rta = fnjs_solo_uno(formulario);
         if (rta === 1) {
-            /* selecciono los elementos con class="sel" de las tablas del id=formulario */
-            $(formulario + ' input.sel').each(function (i) {
+            /* selecciono los elementos con class="sel" de las tablas con id = formulario */
+            $(formulario + ' input.sel').each(function () {
                 let url_download;
                 let key;
                 let url;
@@ -78,7 +78,7 @@
         }
     }
     fnjs_actualizar = function (formulario) {
-        var campo = '<input type="hidden" name="refresh" value=1>';
+        let campo = '<input type="hidden" name="refresh" value=1>';
         $(formulario).attr('action', "apps/certificados/controller/certificado_select.php");
         $(formulario).append(campo);
         fnjs_enviar_formulario(formulario, '#main');

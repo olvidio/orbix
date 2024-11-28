@@ -1,8 +1,7 @@
 <?php
 // INICIO Cabecera global de URL de controlador *********************************
 
-use certificados\domain\repositories\CertificadoRepository;
-use notas\model\entity\GestorPersonaNotaOtraRegionStgrDB;
+use certificados\domain\CertificadoDelete;
 
 require_once("apps/core/global_header.inc");
 // Archivos requeridos por esta url **********************************************
@@ -25,24 +24,7 @@ if (!empty($a_sel)) { //vengo de un checkbox
     $Qid_item = (integer)filter_input(INPUT_POST, 'id_item');
 }
 
-$error_txt = '';
-if (!empty($Qid_item)) {
-    $CertificadoRepository = new CertificadoRepository();
-    $oCertificado = $CertificadoRepository->findById($Qid_item);
-    if (!empty($oCertificado)) {
-        $certificado = $oCertificado->getCertificado();
-        if ($CertificadoRepository->Eliminar($oCertificado) === FALSE) {
-            $error_txt .= $CertificadoRepository->getErrorTxt();
-        }
-        // Hay que borrar también el certificado de las notas_otra_region_stgr
-        // Se supone que si accedo a esta página es porque soy una región del stgr.
-        $esquema_region_stgr = $_SESSION['session_auth']['esquema'];
-        $gesPersonaNotaOtraRegionStgr = new GestorPersonaNotaOtraRegionStgrDB($esquema_region_stgr);
-        $gesPersonaNotaOtraRegionStgr->deleteCertificado($certificado);
-    }
-} else {
-    $error_txt = _("No se encuentra el certificado");
-}
+$error_txt = CertificadoDelete::delete($Qid_item);
 
 if (!empty($error_txt)) {
     $jsondata['success'] = FALSE;

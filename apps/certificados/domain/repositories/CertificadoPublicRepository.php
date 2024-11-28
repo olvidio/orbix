@@ -18,10 +18,7 @@ use certificados\domain\entity\Certificado;
 class CertificadoPublicRepository implements CertificadoRepositoryInterface
 {
 
-    /**
-     * @var CertificadoRepositoryInterface
-     */
-    private $repository;
+    private PgCertificadoPublicRepository $repository;
 
     public function __construct()
     {
@@ -45,17 +42,17 @@ class CertificadoPublicRepository implements CertificadoRepositoryInterface
 	
 /* -------------------- ENTIDAD --------------------------------------------- */
 
-	public function Eliminar(Certificado $Certificado)
+	public function Eliminar(Certificado $Certificado): bool
     {
         return $this->repository->Eliminar($Certificado);
     }
 
-	public function Guardar(Certificado $Certificado)
+	public function Guardar(Certificado $Certificado): bool
     {
         return $this->repository->Guardar($Certificado);
     }
 
-	public function getErrorTxt()
+	public function getErrorTxt(): string
     {
         return $this->repository->getErrorTxt();
     }
@@ -65,12 +62,12 @@ class CertificadoPublicRepository implements CertificadoRepositoryInterface
         return $this->repository->getoDbl();
     }
 
-	public function setoDbl(PDO $oDbl)
+	public function setoDbl(PDO $oDbl): void
     {
         $this->repository->setoDbl($oDbl);
     }
 
-	public function getNomTabla()
+	public function getNomTabla(): string
     {
         return $this->repository->getNomTabla();
     }
@@ -92,7 +89,7 @@ class CertificadoPublicRepository implements CertificadoRepositoryInterface
      * Busca la clase con id_item en el repositorio.
 	
      */
-    public function findById(int $id_item)
+    public function findById(int $id_item): Certificado
     {
         return $this->repository->findById($id_item);
     }

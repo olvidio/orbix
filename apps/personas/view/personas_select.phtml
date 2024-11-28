@@ -130,7 +130,7 @@
         fnjs_imp_certificado = function (formulario) {
             rta = fnjs_solo_uno(formulario);
             if (rta === 1) {
-                $(formulario).attr('action', "apps/notas/controller/certificado_imprimir.php");
+                $(formulario).attr('action', "apps/certificados/controller/certificado_imprimir.php");
                 $(formulario).target = "print";
                 fnjs_enviar_formulario(formulario);
             }

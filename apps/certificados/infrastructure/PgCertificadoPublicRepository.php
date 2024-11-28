@@ -10,6 +10,7 @@ use core\ConverterDate;
 use core\Set;
 use PDO;
 use PDOException;
+use RuntimeException;
 use function core\is_true;
 
 
@@ -121,7 +122,7 @@ class PgCertificadoPublicRepository extends ClaseRepository implements Certifica
 
     /* -------------------- ENTIDAD --------------------------------------------- */
 
-    public function Eliminar(Certificado $Certificado)
+    public function Eliminar(Certificado $Certificado): bool
     {
         $id_item = $Certificado->getId_item();
         $oDbl = $this->getoDbl();
@@ -138,7 +139,7 @@ class PgCertificadoPublicRepository extends ClaseRepository implements Certifica
     /**
      * Si no existe el registro, hace un insert, si existe, se hace el update.
      */
-    public function Guardar(Certificado $Certificado)
+    public function Guardar(Certificado $Certificado): bool
     {
         $id_item = $Certificado->getId_item();
         $oDbl = $this->getoDbl();
@@ -217,7 +218,7 @@ class PgCertificadoPublicRepository extends ClaseRepository implements Certifica
         return TRUE;
     }
 
-    private function isNew(int $id_item)
+    private function isNew(int $id_item): bool
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
@@ -267,11 +268,12 @@ class PgCertificadoPublicRepository extends ClaseRepository implements Certifica
     /**
      * Busca la clase con id_item en la base de datos .
      */
-    public function findById(int $id_item)
+    public function findById(int $id_item): Certificado
     {
         $aDatos = $this->datosById($id_item);
         if (empty($aDatos)) {
-            return NULL;
+            $txt_err = sprintf(_("No se ha encontrado el item %s en la base de datos"), $id_item);
+            throw new RuntimeException($txt_err);
         }
         return (new Certificado())->setAllAttributes($aDatos);
     }

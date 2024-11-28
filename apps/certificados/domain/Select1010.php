@@ -27,46 +27,42 @@ class Select1010
      * según el tipo de persona de que se trate y quién seamos nosotros.
      * @var array $ref_perm
      */
-    private $ref_perm;
+    private array $ref_perm;
     /* @var $msg_err string */
-    private $msg_err;
+    private string $msg_err;
     /* @var $a_valores array */
-    private $a_valores;
+    private array $a_valores;
     /**
      * Para pasar a la vista, aparece como alerta antes de ejecutarse
      * @var string $txt_eliminar
      */
-    private $txt_eliminar;
+    private string $txt_eliminar;
     /* @var $bloque string  necesario para el script */
-    private $bloque;
+    private string $bloque;
 
     // ---------- Variables requeridas
     /* @var $queSel integer */
-    private $queSel;
+    private int $queSel;
     /* @var $id_dossier integer */
-    private $id_dossier;
+    private int $id_dossier;
     /* @var $pau string */
-    private $pau;
+    private string $pau;
     /* @var $obj_pau string */
-    private $obj_pau;
+    private string $obj_pau;
     /* @var $id_pau integer */
-    private $id_pau;
+    private int $id_pau;
     /**
      * 3: para todo, 2, 1:solo lectura
      * @var integer $permiso
      */
     private $permiso;
-    /**
-     * Cambia la selección de actividades según actuales(1), curso(2), todos los cursos(3)
-     * @var integer $modo_curso
-     */
-    private $modo_curso;
 
     // ------ Variables para mantener la selección de la grid al volver atras
     private $Qid_sel;
     private $Qscroll_id;
+    private mixed $status;
 
-    private function getBotones()
+    private function getBotones(): array
     {
         $a_botones[] = ['txt' => _("descargar pdf"), 'click' => "fnjs_descargar_pdf(\"#seleccionados\")"];
         $a_botones[] = array('txt' => _("modificar certificado"), 'click' => "fnjs_upload_certificado(\"#seleccionados\")");
@@ -74,19 +70,18 @@ class Select1010
         return $a_botones;
     }
 
-    private function getCabeceras()
+    private function getCabeceras(): array
     {
-        $a_cabeceras = [
+        return [
             _("certificado"),
             _("fecha certificado"),
             _("firmado digitalmente"),
             _("adjunto"),
             _("recibido"),
         ];
-        return $a_cabeceras;
     }
 
-    private function getValores()
+    private function getValores(): array
     {
         if (empty($this->a_valores)) {
             $this->getTabla();
@@ -94,7 +89,7 @@ class Select1010
         return $this->a_valores;
     }
 
-    private function getTabla()
+    private function getTabla(): void
     {
         $oPersona = personas\Persona::newPersona($this->id_pau);
         if (!is_object($oPersona)) {
@@ -133,10 +128,10 @@ class Select1010
         if (!empty($a_valores)) {
             // Estas dos variables vienen de la pagina 'padre' dossiers_ver.php
             // las pongo al final, porque al contar los valores del array se despista.
-            if (isset($this->Qid_sel) && !empty($this->Qid_sel)) {
+            if (!empty($this->Qid_sel)) {
                 $a_valores['select'] = $this->Qid_sel;
             }
-            if (isset($this->Qscroll_id) && !empty($this->Qscroll_id)) {
+            if (!empty($this->Qscroll_id)) {
                 $a_valores['scroll_id'] = $this->Qscroll_id;
             }
         }
@@ -192,27 +187,27 @@ class Select1010
         $oView->renderizar('select1010.phtml', $a_campos);
     }
 
-    public function getId_dossier()
+    public function getId_dossier(): int
     {
         return $this->id_dossier;
     }
 
-    public function getPau()
+    public function getPau(): string
     {
         return $this->pau;
     }
 
-    public function getObj_pau()
+    public function getObj_pau(): string
     {
         return $this->obj_pau;
     }
 
-    public function getId_pau()
+    public function getId_pau(): int
     {
         return $this->id_pau;
     }
 
-    public function getPermiso()
+    public function getPermiso(): int
     {
         return $this->permiso;
     }
@@ -222,52 +217,52 @@ class Select1010
         return $this->status;
     }
 
-    public function setId_dossier($Qid_dossier)
+    public function setId_dossier($Qid_dossier): void
     {
         $this->id_dossier = $Qid_dossier;
     }
 
-    public function setPau($Qpau)
+    public function setPau($Qpau): void
     {
         $this->pau = $Qpau;
     }
 
-    public function setObj_pau($Qobj_pau)
+    public function setObj_pau($Qobj_pau): void
     {
         $this->obj_pau = $Qobj_pau;
     }
 
-    public function setId_pau($Qid_pau)
+    public function setId_pau($Qid_pau): void
     {
         $this->id_pau = $Qid_pau;
     }
 
-    public function setPermiso($Qpermiso)
+    public function setPermiso($Qpermiso): void
     {
         $this->permiso = $Qpermiso;
     }
 
-    public function setStatus($Qstatus)
+    public function setStatus($Qstatus): void
     {
         $this->status = $Qstatus;
     }
 
-    public function setQid_sel($Qid_sel)
+    public function setQid_sel($Qid_sel): void
     {
         $this->Qid_sel = $Qid_sel;
     }
 
-    public function setQscroll_id($Qscroll_id)
+    public function setQscroll_id($Qscroll_id): void
     {
         $this->Qscroll_id = $Qscroll_id;
     }
 
-    public function setBloque($bloque)
+    public function setBloque($bloque): void
     {
         $this->bloque = $bloque;
     }
 
-    public function setQueSel($queSel)
+    public function setQueSel($queSel): void
     {
         $this->queSel = $queSel;
     }
