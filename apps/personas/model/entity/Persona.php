@@ -96,17 +96,15 @@ class Persona
         $a_lista = [];
         $oGesPersonasDl = new GestorPersonaDl();
         foreach ($this->posiblesEsquemas() as $esquema) {
-            if ($esquema === 'restov') {
-                $a_lista[] = [
-                    'esquema' => $esquema,
-                    'ape_nom' => '',
-                    'dl_persona' => '',
-                ];
-                continue;
-            }
             $oDB = $this->conexion($esquema);
-            $oGesPersonasDl->setoDbl($oDB);
-            $cPersonasDl = $oGesPersonasDl->getPersonasDl($aWhere);
+            if ($esquema === 'restov') {
+                $oGesPersonasEx = new GestorPersonaEx();
+                $oGesPersonasEx->setoDbl($oDB);
+                $cPersonasDl = $oGesPersonasEx->getPersonasEx($aWhere);
+            } else {
+                $oGesPersonasDl->setoDbl($oDB);
+                $cPersonasDl = $oGesPersonasDl->getPersonasDl($aWhere);
+            }
             foreach ($cPersonasDl as $oPersonaDl) {
                 $oPersonaDl->setoDbl($oDB);
                 $ape_nom = $oPersonaDl->getPrefApellidosNombre();
