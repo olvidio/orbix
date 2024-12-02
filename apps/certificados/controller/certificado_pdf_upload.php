@@ -34,28 +34,40 @@ function upload()
     $tmpFilePath = $_FILES[$input]['tmp_name']; // the temp file path
     $fileName = $_FILES[$input]['name']; // the file name
 
+    $error_txt = '';
     if ($tmpFilePath !== "") {
         $fp = fopen($tmpFilePath, 'rb');
         $contenido_doc = fread($fp, filesize($tmpFilePath));
 
         if (is_true($Qsolo_pdf)) {
             $Qid_item = (integer)filter_input(INPUT_POST, 'id_item');
-            $error_txt = CertificadoUpload::uploadTxt($Qid_item, $contenido_doc);
+            $rta = CertificadoUpload::uploadTxt($Qid_item, $contenido_doc);
+            if (!is_object($rta)) {
+                $error_txt = $rta;
+            }
         } else {
             $Qid_nom = (integer)filter_input(INPUT_POST, 'id_nom');
             $Qcertificado = (string)filter_input(INPUT_POST, 'certificado');
             $Qfirmado = (string)filter_input(INPUT_POST, 'firmado');
             $Qf_certificado = (string)filter_input(INPUT_POST, 'f_certificado');
             $Qidioma = (string)filter_input(INPUT_POST, 'idioma');
+            $Qdestino = (string)filter_input(INPUT_POST, 'destino');
+            $Qf_enviado = (string)filter_input(INPUT_POST, 'f_enviado');
             /* convertir las fechas a DateTimeLocal */
             $oF_certificado = DateTimeLocal::createFromLocal($Qf_certificado);
+            $oF_enviado = DateTimeLocal::createFromLocal($Qf_enviado);
+
             if (is_true($Qfirmado)) {
                 $firmado = TRUE;
             } else {
                 $firmado = FALSE;
             }
 
-            $error_txt = CertificadoUpload::uploadNew($contenido_doc, $Qid_nom, $Qcertificado, $firmado, $Qidioma, $oF_certificado);
+            $rta = CertificadoUpload::uploadNew($Qid_nom,$contenido_doc, $Qidioma,  $Qcertificado, $firmado, $oF_certificado, $oF_enviado, $Qdestino);
+
+            if (!is_object($rta)) {
+                $error_txt = $rta;
+            }
         }
     } else {
         $error_txt = sprintf(_("No se puede subir el archivo %s"), $fileName);

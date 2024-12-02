@@ -44,12 +44,16 @@ function upload(): array
         $Qfirmado = (string)filter_input(INPUT_POST, 'firmado');
         $Qf_certificado = (string)filter_input(INPUT_POST, 'f_certificado');
         $Qidioma = (string)filter_input(INPUT_POST, 'idioma');
+        $Qdestino = (string)filter_input(INPUT_POST, 'destino');
         $Qf_recibido = (string)filter_input(INPUT_POST, 'f_recibido');
         /* convertir las fechas a DateTimeLocal */
         $oF_certificado = DateTimeLocal::createFromLocal($Qf_certificado);
         $oF_recibido = DateTimeLocal::createFromLocal($Qf_recibido);
 
-        $error_txt = CertificadoDlUpload::uploadNew($Qid_nom, $Qid_item, $contenido_doc, $Qidioma, $Qcertificado, $Qfirmado, $oF_certificado, $oF_recibido);
+        $oCertificadoDl = CertificadoDlUpload::uploadNew($Qid_item, $Qid_nom, $contenido_doc, $Qidioma, $Qcertificado, $Qfirmado, $oF_certificado, $oF_recibido, $Qdestino);
+        if (!is_object($oCertificadoDl)) {
+            $error_txt .= $oCertificadoDl;
+        }
     } else {
         $error_txt .= sprintf(_("No se puede subir el archivo %s"), $fileName);
     }

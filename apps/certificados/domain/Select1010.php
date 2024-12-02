@@ -42,7 +42,7 @@ class Select1010
 
     // ---------- Variables requeridas
     /* @var $queSel integer */
-    private int $queSel;
+    private string $queSel;
     /* @var $id_dossier integer */
     private int $id_dossier;
     /* @var $pau string */

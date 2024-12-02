@@ -32,7 +32,7 @@ class CertificadoEnviar
         $error_txt = '';
         // destino?
         $gesPersona = new Persona();
-        /*
+        /*     $a_lista = [
                             'esquema' => $esquema,
                             'id_nom' => $id_nom,
                             'ape_nom' => $ape_nom,
@@ -41,6 +41,7 @@ class CertificadoEnviar
                             'apellido1' => $apellido1,
                             'apellido2' => $apellido2,
                             'situacion' => $situacion,
+                         ]
         */
         $a_lista = $gesPersona->buscarEnTodasRegiones($id_nom);
         $b_saltar = FALSE;

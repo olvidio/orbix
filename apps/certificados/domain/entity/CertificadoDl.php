@@ -56,12 +56,8 @@ class CertificadoDl
      * @var string|null
      */
     private ?string $scertificado = null;
-    /**
-     * F_certificado de Certificado
-     *
-     * @var DateTimeLocal|null
-     */
-    private ?DateTimeLocal $df_certificado = null;
+
+    private DateTimeLocal|NullDateTimeLocal $df_certificado;
     /**
      * Esquema emisor de Certificado
      *
@@ -80,12 +76,8 @@ class CertificadoDl
      * @var string|null
      */
     private ?string $sdocumento = null;
-    /**
-     * F_recibido de Certificado
-     *
-     * @var DateTimeLocal|null
-     */
-    private ?DateTimeLocal $df_recibido = null;
+
+    private DateTimeLocal|NullDateTimeLocal $df_recibido;
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
@@ -128,7 +120,7 @@ class CertificadoDl
             $this->setDocumento($aDatos['documento']);
         }
         if (array_key_exists('f_recibido', $aDatos)) {
-            $this->setF_recibido($aDatos['f_recibido']);
+            $this->setF_recibido($aDatos['f_recibido']?? new NullDateTimeLocal());
         }
         return $this;
     }
@@ -235,20 +227,12 @@ class CertificadoDl
         $this->scertificado = $scertificado;
     }
 
-    /**
-     *
-     * @return DateTimeLocal|NullDateTimeLocal|null $df_certificado
-     */
-    public function getF_certificado()
+    public function getF_certificado(): DateTimeLocal|NullDateTimeLocal
     {
         return $this->df_certificado ?? new NullDateTimeLocal;
     }
 
-    /**
-     *
-     * @param DateTimeLocal|null $df_certificado
-     */
-    public function setF_certificado(DateTimeLocal $df_certificado = null): void
+    public function setF_certificado(DateTimeLocal|NullDateTimeLocal $df_certificado): void
     {
         $this->df_certificado = $df_certificado;
     }
@@ -307,20 +291,12 @@ class CertificadoDl
         $this->sdocumento = $sdocumento;
     }
 
-    /**
-     *
-     * @return DateTimeLocal|NullDateTimeLocal|null $df_recibido
-     */
-    public function getF_recibido()
+    public function getF_recibido(): DateTimeLocal|NullDateTimeLocal
     {
         return $this->df_recibido ?? new NullDateTimeLocal;
     }
 
-    /**
-     *
-     * @param DateTimeLocal|null $df_recibido
-     */
-    public function setF_recibido(DateTimeLocal $df_recibido = null): void
+    public function setF_recibido(DateTimeLocal|NullDateTimeLocal $df_recibido): void
     {
         $this->df_recibido = $df_recibido;
     }

@@ -56,10 +56,13 @@ if ($mes > $fin_m) {
 } else {
     $any = (int)date('Y');
 }
-$inicurs_ca = curso_est("inicio", $any)->format('Y-m-d');
-$fincurs_ca = curso_est("fin", $any)->format('Y-m-d');
-$txt_curso = "$inicurs_ca - $fincurs_ca";
-$titulo = ucfirst(sprintf(_("lista de certificados emitidos en el curso %s y no enviados"), $txt_curso));
+$oInicurs_ca = curso_est("inicio", $any);
+$oFincurs_ca = curso_est("fin", $any);
+$inicurs_ca_iso = $oInicurs_ca->getIso();
+$fincurs_ca_iso = $oFincurs_ca->getIso();
+$inicurs_ca_local = $oInicurs_ca->getFromLocal();
+$fincurs_ca_local = $oFincurs_ca->getFromLocal();
+$titulo = ucfirst(sprintf(_("lista de certificados emitidos entre %s y %s y no enviados"), $inicurs_ca_local, $fincurs_ca_local));
 
 /*
 * Defino un array con los datos actuales, para saber volver después de navegar un rato
@@ -69,7 +72,7 @@ $aGoBack = array(
     'certificado' => $Qcertificado);
 $oPosicion->setParametros($aGoBack, 1);
 
-$a_campos = CertificadoSelect::getCamposVista($Qcertificado, $Qid_sel, $Qscroll_id, $inicurs_ca, $fincurs_ca);
+$a_campos = CertificadoSelect::getCamposVista($Qcertificado, $Qid_sel, $Qscroll_id, $inicurs_ca_iso, $fincurs_ca_iso);
 
 $txt_eliminar = _("¿Está seguro que quiere eliminar el certificado?");
 

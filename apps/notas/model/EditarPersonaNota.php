@@ -199,11 +199,11 @@ class EditarPersonaNota
 
             if ($oPersonaNotaCertificadoDB->DBGuardar() === false) {
                 throw new \RuntimeException(_("hay un error, no se ha guardado. Nota Certificado"));
-            } else {
-                // borrar la original (asegurarme que se ha guardado lo anterior)
-                if (!empty($personaNotaOriginal)) {
-                    $personaNotaOriginal->DBEliminar();
-                }
+            }
+
+            // borrar la original (asegurarme que se ha guardado lo anterior)
+            if (!empty($personaNotaOriginal)) {
+                $personaNotaOriginal->DBEliminar();
             }
             $rta['certificado'] = $oPersonaNotaCertificadoDB;
         }

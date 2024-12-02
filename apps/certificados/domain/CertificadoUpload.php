@@ -7,35 +7,62 @@ use certificados\domain\repositories\CertificadoRepository;
 use core\ConfigGlobal;
 use personas\model\entity\Persona;
 use web\DateTimeLocal;
+use web\NullDateTimeLocal;
 
 class CertificadoUpload
 {
 
-    public static function uploadTxt(int $id_item, false|string $contenido_doc): string
+    private static $oDbl;
+
+    /**
+     * Para poder cambiar le conexión en el caso de los tests.
+     *
+     * @param $oDbl
+     * @return void
+     */
+    public static function setoDbl($oDbl): void
     {
-        $error_txt = '';
-        $certificadoDlRepository = new CertificadoRepository();
-        $oCertificadoDl = $certificadoDlRepository->findById($id_item);
-
-        $oCertificadoDl->setDocumento($contenido_doc);
-        $oCertificadoDl->setFirmado(TRUE);
-
-        if ($certificadoDlRepository->Guardar($oCertificadoDl) === FALSE) {
-            $error_txt .= $certificadoDlRepository->getErrorTxt();
-        }
-        return $error_txt;
+        self::$oDbl = $oDbl;
     }
 
-    public static function uploadNew(false|string $contenido_doc, int $id_nom, string $certificado, bool $firmado, string $idioma, DateTimeLocal $oF_certificado): string
+    public static function uploadTxt(int $id_item, false|string $contenido_doc): string|Certificado
     {
         $error_txt = '';
+        $certificadoRepository = new CertificadoRepository();
+        if (isset(self::$oDbl)) { // para los tests
+            $certificadoRepository->setoDbl(self::$oDbl);
+        }
+        $oCertificado = $certificadoRepository->findById($id_item);
+
+        $oCertificado->setDocumento($contenido_doc);
+
+        if ($certificadoRepository->Guardar($oCertificado) === FALSE) {
+            return $certificadoRepository->getErrorTxt();
+        }
+        return $oCertificado;
+    }
+
+    public static function uploadNew(int                             $id_nom,
+                                     false|string                    $contenido_doc,
+                                     string                          $idioma,
+                                     string                          $certificado,
+                                     bool                            $firmado,
+                                     DateTimeLocal|NullDateTimeLocal $oF_certificado,
+                                     DateTimeLocal|NullDateTimeLocal $oF_enviado,
+                                     ?string                         $destino): string|Certificado
+    {
         $oPersona = Persona::NewPersona($id_nom);
         $apellidos_nombre = $oPersona->getApellidosNombre();
         $nom = $apellidos_nombre;
 
-        $destino = ConfigGlobal::mi_region();
+        if (empty($destino)) {
+            $destino = $oPersona->getDl();
+        }
 
         $certificadoRepository = new CertificadoRepository();
+        if (isset(self::$oDbl)) { // para los tests
+            $certificadoRepository->setoDbl(self::$oDbl);
+        }
         $id_item = $certificadoRepository->getNewId_item();
         $oCertificado = new Certificado();
         $oCertificado->setId_item($id_item);
@@ -48,10 +75,11 @@ class CertificadoUpload
         $oCertificado->setFirmado($firmado);
         $oCertificado->setEsquema_emisor(ConfigGlobal::mi_region_dl());
         $oCertificado->setF_certificado($oF_certificado);
+        $oCertificado->setF_enviado($oF_enviado);
 
         if ($certificadoRepository->Guardar($oCertificado) === FALSE) {
-            $error_txt .= $certificadoRepository->getErrorTxt();
+            return $certificadoRepository->getErrorTxt();
         }
-        return $error_txt;
+        return $oCertificado;
     }
 }

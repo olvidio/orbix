@@ -455,12 +455,11 @@ class TrasladoDl
         if (!empty($msg)) {
             $error = _("tiene pendiente de poner las notas de:") . "\n" . $msg;
         }
-        if (empty($error)) {
-            return true;
-        } else {
+        if (!empty($error)) {
             $this->serror = $error;
             return false;
         }
+        return true;
     }
 
     public function cambiarFichaPersona()
@@ -482,12 +481,11 @@ class TrasladoDl
             $error .= '<br>' . _("hay un error, no se ha guardado");
         }
         //$this->restaurarConexionOrg($oDBorg);
-        if (empty($error)) {
-            return true;
-        } else {
+        if (!empty($error)) {
             $this->serror = $error;
             return false;
         }
+        return true;
     }
 
     /**
@@ -626,12 +624,11 @@ class TrasladoDl
         }
         //$this->restaurarConexionOrg($oDBorg);
         //$this->restaurarConexionDst($oDBdst);
-        if (empty($error)) {
-            return true;
-        } else {
+        if (!empty($error)) {
             $this->serror = $error;
             return false;
         }
+        return true;
     }
 
     public function copiarNotas()
@@ -689,12 +686,11 @@ class TrasladoDl
             }
 
         }
-        if (empty($error)) {
-            return true;
-        } else {
+        if (!empty($error)) {
             $this->serror = $error;
             return false;
         }
+        return true;
     }
 
     public function copiarAsistencias()
@@ -766,12 +762,11 @@ class TrasladoDl
 
         //$this->restaurarConexionOrg($oDBorgE);
         //$this->restaurarConexionDst($oDBdstE);
-        if (empty($error)) {
-            return true;
-        } else {
+        if (!empty($error)) {
             $this->serror = $error;
             return false;
         }
+        return true;
     }
 
     public function trasladarDossiers()
@@ -904,12 +899,11 @@ class TrasladoDl
         // Volver oDBdst a su estado original:
         //$this->restaurarConexionDst($oDBdst);
         //$this->restaurarConexionOrg($oDBorg);
-        if (empty($error)) {
-            return true;
-        } else {
+        if (!empty($error)) {
             $this->serror = $error;
             return false;
         }
+        return true;
     }
 
     public function trasladarDossierCertificados()
@@ -927,12 +921,11 @@ class TrasladoDl
             }
         }
 
-        if (empty($error)) {
-            return true;
-        } else {
+        if (!empty($error)) {
             $this->serror = $error;
             return false;
         }
+        return true;
     }
 
     public function trasladar_certificados($CertificadoDl)
@@ -962,12 +955,12 @@ class TrasladoDl
             }
         }
 
-        if (empty($error)) {
-            return true;
-        } else {
+        if (!empty($error)) {
             $this->serror = $error;
             return false;
         }
+
+        return true;
     }
 
     public function copiar_certificados_a_dl($Certificado)
@@ -993,12 +986,12 @@ class TrasladoDl
             $error .= $certificadoRepository->getErrorTxt();
         }
 
-        if (empty($error)) {
-            return true;
+        if (!empty($error)) {
+            $this->serror = $error;
+            return false;
         }
 
-        $this->serror = $error;
-        return false;
+        return true;
     }
 
     public function apuntar()
@@ -1019,12 +1012,12 @@ class TrasladoDl
             $error .= '<br>' . _("hay un error, no se ha guardado");
         }
         //$this->restaurarConexionOrg($oDBorg);
-        if (empty($error)) {
-            return true;
-        } else {
+        if (!empty($error)) {
             $this->serror = $error;
             return false;
         }
+
+        return true;
     }
 
     private

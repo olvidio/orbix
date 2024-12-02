@@ -78,7 +78,7 @@ if (!empty($idioma)) {
     $dir = ConfigGlobal::$dir_languages . '/' . $idioma;
     $filename_textos = $dir . '/' . "textos_certificados.php";
     if (!file_exists($filename_textos)) {
-        $msg = sprintf(_("No existe un fichero con las traducciones para %s"), $idioma);
+        $msg = "<br>".sprintf(_("No existe un fichero con las traducciones para %s"), $idioma);
         exit ($msg);
     }
 
@@ -93,7 +93,7 @@ if (!empty($idioma)) {
 
 } else {
     $filename_textos = "textos_certificados.php";
-    include(__DIR__ . 'certificado_imprimir_mpdf.php/' . $filename_textos);
+    include(__DIR__ . '/' . $filename_textos);
     if ($nivel_stgr === 'r') {
         $txt_superavit = $txt_superavit_1;
         $txt_superavit .= ' ' . $txt_superavit_2;

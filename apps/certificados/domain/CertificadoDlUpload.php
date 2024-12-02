@@ -7,26 +7,41 @@ use certificados\domain\repositories\CertificadoDlRepository;
 use core\ConfigGlobal;
 use personas\model\entity\Persona;
 use web\DateTimeLocal;
+use web\NullDateTimeLocal;
 use function core\is_true;
 
 class CertificadoDlUpload
 {
+    private static mixed $oDbl;
 
-    public static function uploadNew(int                 $Qid_nom,
-                                     int                 $Qid_item,
-                                     false|string        $contenido_doc,
-                                     string              $Qidioma,
-                                     string              $Qcertificado,
-                                     string              $Qfirmado,
-                                     false|DateTimeLocal $oF_certificado,
-                                     false|DateTimeLocal $oF_recibido): string
+    /**
+     * Para poder cambiar le conexión en el caso de los tests.
+     *
+     * @param $oDbl
+     * @return void
+     */
+    public static function setoDbl($oDbl): void
     {
-        $error_txt = '';
+        self::$oDbl = $oDbl;
+    }
+
+    public static function uploadNew(int                             $Qid_item,
+                                     int                             $Qid_nom,
+                                     false|string                    $contenido_doc,
+                                     string                          $Qidioma,
+                                     string                          $Qcertificado,
+                                     string                          $Qfirmado,
+                                     DateTimeLocal|NullDateTimeLocal $oF_certificado,
+                                     DateTimeLocal|NullDateTimeLocal $oF_recibido,
+                                     ?string                         $destino): string|CertificadoDl
+    {
         $oPersona = Persona::NewPersona($Qid_nom);
         $apellidos_nombre = $oPersona->getApellidosNombre();
         $nom = $apellidos_nombre;
 
-        $destino = ConfigGlobal::mi_region();
+        if (empty($destino)) {
+            $destino = $oPersona->getDl();
+        }
 
         $certificadoDlRepository = new CertificadoDlRepository();
         if (empty($Qid_item)) {
@@ -53,8 +68,8 @@ class CertificadoDlUpload
         $oCertificadoDl->setF_recibido($oF_recibido);
 
         if ($certificadoDlRepository->Guardar($oCertificadoDl) === FALSE) {
-            $error_txt .= $certificadoDlRepository->getErrorTxt();
+            return $certificadoDlRepository->getErrorTxt();
         }
-        return $error_txt;
+        return $oCertificadoDl;
     }
 }
