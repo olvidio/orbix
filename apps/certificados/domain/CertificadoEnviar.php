@@ -66,6 +66,7 @@ class CertificadoEnviar
             try {
                 $a_datos_region_stgr = $gesDelegacion->mi_region_stgr($dl_destino);
                 $esquema_region_stgr_dst = $a_datos_region_stgr['esquema_region_stgr'];
+                $esquema_dl_dst = $a_datos_region_stgr['esquema_dl'];
             } catch (Exception $e) {
                 $error_txt .= $e->getMessage() . "\n";
             }
@@ -88,7 +89,7 @@ class CertificadoEnviar
                 $oHoy = new DateTimeLocal();
                 $oCertificado->setF_enviado($oHoy);
                 $oTrasladoDl = new TrasladoDl();
-                $oTrasladoDl->setReg_dl_dst($esquema_region_stgr_dst);
+                $oTrasladoDl->setReg_dl_dst($esquema_dl_dst);
 
                 $oTrasladoDl->copiar_certificados_a_dl($oCertificado);
                 $error_txt .= $oTrasladoDl->getError();
