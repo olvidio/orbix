@@ -166,7 +166,7 @@ class GestorDelegacion extends ClaseGestor
             'esquema_region_stgr' => $esquema_region_stgr,
             'id_esquema_region_stgr' => $id_esquema_region_stgr,
             'mi_id_schema' => $id_esquema_dele,
-            'schema_dl' => $esquema_dele,
+            'esquema_dl' => $esquema_dele,
         ];
     }
 
