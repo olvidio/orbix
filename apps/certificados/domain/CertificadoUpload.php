@@ -25,7 +25,7 @@ class CertificadoUpload
         self::$oDbl = $oDbl;
     }
 
-    public static function uploadTxt(int $id_item, false|string $contenido_doc): string|Certificado
+    public static function uploadTxtFirmado(int $id_item, false|string $contenido_doc): string|Certificado
     {
         $error_txt = '';
         $certificadoRepository = new CertificadoRepository();
@@ -35,6 +35,7 @@ class CertificadoUpload
         $oCertificado = $certificadoRepository->findById($id_item);
 
         $oCertificado->setDocumento($contenido_doc);
+        $oCertificado->setFirmado(TRUE);
 
         if ($certificadoRepository->Guardar($oCertificado) === FALSE) {
             return $certificadoRepository->getErrorTxt();

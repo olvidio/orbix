@@ -66,7 +66,7 @@ class CertificadoUploadTest extends myTest
             // cambiar le texto
             $contenido_doc_new = $faker->sentence(450);
             $CertificadoUpload::setoDbl($oDBdst);
-            $CertificadoDB2 = $CertificadoUpload::uploadTxt($CertificadoDB->getId_item(), $contenido_doc_new);
+            $CertificadoDB2 = $CertificadoUpload::uploadTxtFirmado($CertificadoDB->getId_item(), $contenido_doc_new);
 
             $this->assertInstanceOf(Certificado::class, $CertificadoDB2);
 

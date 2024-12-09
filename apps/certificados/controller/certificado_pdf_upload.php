@@ -41,7 +41,7 @@ function upload()
 
         if (is_true($Qsolo_pdf)) {
             $Qid_item = (integer)filter_input(INPUT_POST, 'id_item');
-            $rta = CertificadoUpload::uploadTxt($Qid_item, $contenido_doc);
+            $rta = CertificadoUpload::uploadTxtFirmado($Qid_item, $contenido_doc);
             if (!is_object($rta)) {
                 $error_txt = $rta;
             }
