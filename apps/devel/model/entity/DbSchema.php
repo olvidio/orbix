@@ -89,7 +89,7 @@ class DbSchema extends core\ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'schema') && $val_id !== '') $this->sschema = (string)$val_id; // evitem SQL injection fent cast a string
+                if (($nom_id == 'schema') && $val_id !== '') $this->sschema = (string)$val_id;
             }
         } else {
             if (isset($a_id) && $a_id !== '') {

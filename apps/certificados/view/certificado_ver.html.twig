@@ -35,7 +35,12 @@
             <br>
             <label>
                 {{ "firmado digitalmente"|trans|raw }}:
-                <input type="checkbox" name="copia" {{ chk_copia }}/>
+                <input type="checkbox" name="firmado" {{ chk_firmado }}/>
+            </label>
+            <br>
+            <label>
+                {{ "Fecha del envio"|trans|raw }}:
+                <input type="text" id="f_enviado" name="f_enviado" value="{{ f_enviado }}"/>
             </label>
             <br>
             <br>
@@ -54,12 +59,16 @@
             return;
         }
 
+        if (!fnjs_comprobar_fecha('#f_enviado', '{{ locale_us }}')) {
+            //return;
+        }
+
         if (typeof event !== 'undefined') {
             event.preventDefault();
         }
 
-        datos = $('#frm_upload').serialize();
-        request = $.ajax({
+        let datos = $('#frm_upload').serialize();
+        let request = $.ajax({
             data: datos,
             url: 'apps/certificados/controller/certificado_update.php',
             method: 'POST',
@@ -77,6 +86,10 @@
 
     $(function () {
         $("#f_certificado").datepicker({
+            numberOfMonths: 3,
+            showButtonPanel: true
+        });
+        $("#_enviado").datepicker({
             numberOfMonths: 3,
             showButtonPanel: true
         });

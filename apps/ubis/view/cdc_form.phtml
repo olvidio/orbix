@@ -2,7 +2,7 @@
     fnjs_guardar = function (formulario) {
         var error = 0;
         var tipo_ubi = $("#tipo_ubi").val();
-        if (tipo_ubi == "cdcdl" || tipo_ubi == "cdcex") {
+        if (tipo_ubi === "cdcdl" || tipo_ubi === "cdcex") {
             var camp_sf = "#sf:checked";
             var camp_sv = "#sv:checked";
             var val_sf = $(camp_sf).length;
@@ -96,26 +96,28 @@
             <td>
                 <?= ucfirst(_("tipo de casa")) ?>
                 <?= $oDesplegableTiposCasa->desplegable(); ?>
+            </td>
         </tr>
-        </td>
-        <?php
-        // -----------------------------------  Botones  ----------------------
-        if (!empty($botones)) {
-            echo "<table><tr class=botones>";
-            $b = strtok($botones, ",");
-            while ($b) {
-                if ($b == 1) {
-                    $txt_g = ucwords(_("guardar cambios"));
-                    echo "<th class='link_inv' onclick=\"fnjs_guardar('#frm2');\">$txt_g</th>";
-                }
-                if ($b == 2) {
-                    $txt_e = ucwords(_("eliminar"));
-                    echo "<th class='link_inv' onclick=\"fnjs_eliminar('#frm2');\">$txt_e</th>";
-                }
-                $b = strtok(",");
+    </table>
+    <br>
+    <?php
+    // -----------------------------------  Botones  ----------------------
+    if (!empty($botones)) {
+        echo "<table><tr class=botones>";
+        $b = strtok($botones, ",");
+        while ($b) {
+            if ($b == 1) {
+                $txt_g = ucwords(_("guardar cambios"));
+                echo "<th class='link_inv' onclick=\"fnjs_guardar('#frm2');\">$txt_g</th>";
             }
-            echo "</tr></table><br>";
+            if ($b == 2) {
+                $txt_e = ucwords(_("eliminar"));
+                echo "<th class='link_inv' onclick=\"fnjs_eliminar('#frm2');\">$txt_e</th>";
+            }
+            $b = strtok(",");
         }
-        // fin ----------------------------  Botones  ----------------------
-        ?>
+        echo "</tr></table>";
+        }
+    // fin ----------------------------  Botones  ----------------------
+    ?>
 </form>

@@ -3,7 +3,8 @@
 namespace personas\model\entity;
 
 use core;
-use ubis\model\entity\DescTeleco;
+use core\ConfigGlobal;
+use PDO;
 
 /**
  * Fitxer amb la Classe que accedeix a la taula pv_personas
@@ -29,6 +30,7 @@ class Persona
     /* ATRIBUTOS ----------------------------------------------------------------- */
     /* ATRIBUTOS QUE NO SON CAMPOS------------------------------------------------- */
     /* CONSTRUCTOR -------------------------------------------------------------- */
+    private $path_ini;
 
 
     /**
@@ -84,12 +86,112 @@ class Persona
         return $oPersona;
     }
 
-    /* OTROS MÉTODOS  ----------------------------------------------------------*/
-    /* MÉTODOS PRIVADOS ----------------------------------------------------------*/
 
-    /* MÉTODOS GET y SET --------------------------------------------------------*/
+    public function buscarEnTodasRegiones($id_nom)
+    {
+        $aWhere = [];
+        $aWhere['situacion'] = 'A';
+        $aWhere['id_nom'] = $id_nom;
 
-    /* MÉTODOS GET y SET D'ATRIBUTOS QUE NO SON CAMPOS -----------------------------*/
+        $a_lista = [];
+        $oGesPersonasDl = new GestorPersonaDl();
+        foreach ($this->posiblesEsquemas() as $esquema) {
+            $oDB = $this->conexion($esquema);
+            if ($esquema === 'restov') {
+                $oGesPersonasEx = new GestorPersonaEx();
+                $oGesPersonasEx->setoDbl($oDB);
+                $cPersonasDl = $oGesPersonasEx->getPersonasEx($aWhere);
+            } else {
+                $oGesPersonasDl->setoDbl($oDB);
+                $cPersonasDl = $oGesPersonasDl->getPersonasDl($aWhere);
+            }
+            foreach ($cPersonasDl as $oPersonaDl) {
+                $oPersonaDl->setoDbl($oDB);
+                $ape_nom = $oPersonaDl->getPrefApellidosNombre();
+                $nombre = $oPersonaDl->getNom();
+                $dl_persona = $oPersonaDl->getDl();
+                $apellido1 = $oPersonaDl->getApellido1();
+                $apellido2 = $oPersonaDl->getApellido2();
+                $situacion = $oPersonaDl->getSituacion();
+                $a_lista[] = [
+                    'esquema' => $esquema,
+                    'id_nom' => $id_nom,
+                    'ape_nom' => $ape_nom,
+                    'nombre' => $nombre,
+                    'dl_persona' => $dl_persona,
+                    'apellido1' => $apellido1,
+                    'apellido2' => $apellido2,
+                    'situacion' => $situacion,
+                ];
+            }
+            $this->restaurarConexion($oDB);
+        }
+        return $a_lista;
+    }
 
+    private function posiblesEsquemas()
+    {
+        // posibles esquemas
+        /*
+         * @todo: filtrar por regiones?
+         */
+        $oDBR = $GLOBALS['oDBR'];
+        $qRs = $oDBR->query("SELECT DISTINCT schemaname FROM pg_stat_user_tables");
+        $aResultSql = $qRs->fetchAll(\PDO::FETCH_ASSOC);
+        $aEsquemas = $aResultSql;
+        //Utilizo la conexión oDBR para cambiar momentáneamente el search_path.
+        $oDBR = $GLOBALS['oDBR'];
+        $qRs = $oDBR->query('SHOW search_path');
+        $aPath = $qRs->fetch(\PDO::FETCH_ASSOC);
+        $path_org = addslashes($aPath['search_path']);
+        $a_posibles = [];
+        foreach ($aEsquemas as $esquemaName) {
+            $esquema = $esquemaName['schemaname'];
+            //elimino el de H-H
+            if (strpos($esquema, '-')) {
+                $a_reg = explode('-', $esquema);
+                $reg = $a_reg[0];
+                $dl = substr($a_reg[1], 0, -1); // quito la v o la f.
+                if ($reg === $dl) {
+                    continue;
+                }
+            }
+            //elimino public, publicv, global
+            if ($esquema === 'global') {
+                continue;
+            }
+            if ($esquema === 'public') {
+                continue;
+            }
+            if ($esquema === 'publicv') {
+                continue;
+            }
+            $a_posibles[] = $esquema;
+        }
+        return $a_posibles;
+    }
 
+    private function conexion($esquema)
+    {
+        //Utilizo la conexión oDBR para cambiar momentáneamente el search_path.
+        if (ConfigGlobal::mi_region_dl() == $esquema) {
+            //Utilizo la conexión oDB para cambiar momentáneamente el search_path.
+            $oDB = $GLOBALS['oDB'];
+        } else {
+            // Sólo funciona con la conexión oDBR porque el usuario es orbixv que
+            // tiene permiso de lectura para todos los esquemas
+            $oDB = $GLOBALS['oDBR'];
+        }
+        $qRs = $oDB->query('SHOW search_path');
+        $aPath = $qRs->fetch(PDO::FETCH_ASSOC);
+        $this->path_ini = $aPath['search_path'];
+        $oDB->exec('SET search_path TO public,"' . $esquema . '"');
+        return $oDB;
+    }
+
+    private function restaurarConexion($oDB)
+    {
+        // Volver oDBR a su estado original:
+        $oDB->exec("SET search_path TO $this->path_ini");
+    }
 }

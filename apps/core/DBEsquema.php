@@ -214,9 +214,9 @@ class DBEsquema
         return $this->Host;
     }
 
-    public function setHost($host)
+    public function setHost($Host)
     {
-        $this->Host = $host;
+        $this->Host = $Host;
     }
 
     public function getSsh_user()
@@ -317,13 +317,19 @@ class DBEsquema
 
     public function crear()
     {
-        if ($this->getHost() === '/var/run/postgresql' || $this->getHost() === 'localhost' || $this->getHost() === '127.0.0.1') {
+        if ($this->getHost() === 'db' ||
+            $this->getHost() === '/var/run/postgresql' ||
+            $this->getHost() === 'localhost' ||
+            $this->getHost() === '127.0.0.1'
+        ) {
             $this->crear_local();
         } else {
             $this->crear_remote();
         }
     }
-    public function crear_select(string $db) {
+
+    public function crear_select(string $db)
+    {
         // es para las copias locales del servidor externo.
         // Ya tenemos los archivos creados,
         // leer_local()
@@ -335,7 +341,7 @@ class DBEsquema
         $oConnection = new DBConnection($this->config);
         $dsn = $oConnection->getURI();
 
-        $command = "PGOPTIONS='--client-min-messages=warning' /usr/bin/psql -U postgres -q  -X -t --pset pager=off ";
+        $command = "PGOPTIONS='--client-min-messages=warning' /usr/bin/psql -h " . $this->getHost() . " -U postgres -q  -X -t --pset pager=off ";
         $command .= "--file=" . $this->getFileNew() . " ";
         $command .= "\"" . $dsn . "\"";
         $command .= " > " . $this->getFileLog() . " 2>&1";
@@ -349,26 +355,28 @@ class DBEsquema
         }
 
         ///// REFRESCAR LA SUBSCRIPCIÓN ///////////
-        // (( para saber el nombre: SELECT oid, subdbid, subname, subconninfo, subpublications FROM pg_subscription; ))
-        // ALTER SUBSCRIPTION subcomun REFRESH PUBLICATION;
-        $command = "PGOPTIONS='--client-min-messages=warning' /usr/bin/psql -d $db -U postgres -q  -X -t --pset pager=off ";
-        if ($db === 'comun') {
-            $command .= "-c 'ALTER SUBSCRIPTION subcomun REFRESH PUBLICATION;' ";
-        }
-        if ($db === 'sv-e') {
-            $command .= "-c 'ALTER SUBSCRIPTION subsve REFRESH PUBLICATION;' ";
-        }
-        $command .= "\"" . $dsn . "\"";
-        $command .= " > " . $this->getFileLog() . " 2>&1";
-        passthru($command); // no output to capture so no need to store it
-        // read the file, if empty all's well
-        $error = file_get_contents($this->getFileLog());
-        if (trim($error) != '') {
-            if (ConfigGlobal::is_debug_mode()) {
-                echo sprintf(_("PSQL ERROR IN COMMAND(4): %s<br> mirar en: %s<br>"), $command, $this->getFileLog());
+        /// No para develop
+        if ($this->getHost() !== 'db') {
+            // (( para saber el nombre: SELECT oid, subdbid, subname, subconninfo, subpublications FROM pg_subscription; ))
+            // ALTER SUBSCRIPTION subcomun REFRESH PUBLICATION;
+            $command = "PGOPTIONS='--client-min-messages=warning' /usr/bin/psql -h " . $this->getHost() . " -d $db -U postgres -q  -X -t --pset pager=off ";
+            if ($db === 'comun') {
+                $command .= "-c 'ALTER SUBSCRIPTION subcomun REFRESH PUBLICATION;' ";
+            }
+            if ($db === 'sv-e') {
+                $command .= "-c 'ALTER SUBSCRIPTION subsve REFRESH PUBLICATION;' ";
+            }
+            $command .= "\"" . $dsn . "\"";
+            $command .= " > " . $this->getFileLog() . " 2>&1";
+            passthru($command); // no output to capture so no need to store it
+            // read the file, if empty all's well
+            $error = file_get_contents($this->getFileLog());
+            if (trim($error) != '') {
+                if (ConfigGlobal::is_debug_mode()) {
+                    echo sprintf(_("PSQL ERROR IN COMMAND(4): %s<br> mirar en: %s<br>"), $command, $this->getFileLog());
+                }
             }
         }
-
 
 
     }
@@ -436,7 +444,7 @@ class DBEsquema
         // crear archivo con el password
         $dsn = $this->getConexion('ref');
         // leer esquema
-        $command = "/usr/bin/pg_dump -U postgres -s --schema=\\\"" . $this->getRef() . "\\\" ";
+        $command = "/usr/bin/pg_dump -h " . $this->getHost() . " -U postgres -s --schema=\\\"" . $this->getRef() . "\\\" ";
         $command .= "--file=" . $this->getFileRef() . " ";
         $command .= "\"" . $dsn . "\"";
         $command .= " > " . $this->getFileLog() . " 2>&1";
@@ -455,7 +463,7 @@ class DBEsquema
         // crear archivo con el password
         $dsn = $this->getConexion('new');
         // Importar el esquema en la base de datos comun
-        $command = "PGOPTIONS='--client-min-messages=warning' /usr/bin/psql -U postgres -q  -X -t --pset pager=off ";
+        $command = "PGOPTIONS='--client-min-messages=warning' /usr/bin/psql -h " . $this->getHost() . " -U postgres -q  -X -t --pset pager=off ";
         $command .= "--file=" . $this->getFileNew() . " ";
         $command .= "\"" . $dsn . "\"";
         $command .= " > " . $this->getFileLog() . " 2>&1";
@@ -475,7 +483,7 @@ class DBEsquema
         $esquema = $this->getNew();
         $sql = "DROP SCHEMA IF EXISTS \\\"" . $esquema . "\\\" CASCADE;";
 
-        $command = "PGOPTIONS='--client-min-messages=warning' /usr/bin/psql -q -X -t --pset pager=off";
+        $command = "PGOPTIONS='--client-min-messages=warning' /usr/bin/psql -h " . $this->getHost() . " -q -X -t --pset pager=off";
         $command .= " -c \"" . $sql . "\" ";
         $command .= "\"" . $dsn . "\"";
         $command .= " > " . $this->getFileLog() . " 2>&1";

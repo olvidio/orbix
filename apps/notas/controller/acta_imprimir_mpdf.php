@@ -1,8 +1,16 @@
 <?php
-use asignaturas\model\entity as asignaturas;
-use notas\model\entity as notas;
-use personas\model\entity as personas;
+
+
+use asignaturas\model\entity\Asignatura;
+use asignaturas\model\entity\AsignaturaTipo;
 use core\ConfigGlobal;
+use notas\model\entity\Acta;
+use notas\model\entity\GestorActaTribunal;
+use notas\model\getDatosActa;
+use personas\model\entity\GestorNombreLatin;
+use personas\model\entity\Persona;
+
+
 /**
 * Esta página está como include de acta_2_mpdf.php
 *
@@ -23,24 +31,6 @@ use core\ConfigGlobal;
 	require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-function data($data) {
-	list($dia,$mes,$any) = preg_split('/[\.\/-]/', $data ); //los delimitadores pueden ser /, ., -
-	$mes_latin=array('ianuario','februario','martio','aprili','maio','iunio','iulio','augusto','septembri','octobri','novembri','decembri');
-	$fecha_latin="die ".$dia." mense  ".$mes_latin[$mes-1]."  anno  ".$any;
-	return $fecha_latin;
-}
-
-function num_latin($num) {
-	$unidades=array('','I','II','III','IV,V','VI','VII','VIII','IX','X');
-	$decenas=array('','X','XX','XXX','XL','L','LX','LXX','LXXX','XC','C');
-	$centenas=array('','C','CC','CCC','CD','D','DC','DCC','DCCC','CM','M');
-	$uni=substr($num,-1,1);
-	if (strlen($num)>1) { $dec=substr($num,-2,1); } else { $dec=0;}
-	if (strlen($num)>2) { $cen=substr($num,-3,1); } else { $cen=0;}
-	$latin=$centenas[$cen].$decenas[$dec].$unidades[$uni];
-	return $latin;
-}	
-
 // conversion
 $replace  = config\model\Config::$replace;
 $region_latin = $_SESSION['oConfig']->getNomRegionLatin();
@@ -48,7 +38,7 @@ $nombre_prelatura = strtr("PRAELATURA SANCTAE CRUCIS ET OPERIS DEI", $replace);
 $reg_stgr = "Stgr".ConfigGlobal::mi_region();
 
 // acta
-$oActa = new notas\Acta($acta);
+$oActa = new Acta($acta); // $acta está en el archivo que hace un include de este.
 $id_asignatura = $oActa->getId_asignatura();
 $id_activ = $oActa->getId_activ();
 $oF_acta = $oActa->getF_acta();
@@ -58,14 +48,14 @@ $linea = $oActa->getLinea();
 $lugar = $oActa->getLugar();
 $observ = $oActa->getObserv();
 
-$oAsignatura = new asignaturas\Asignatura($id_asignatura);
+$oAsignatura = new Asignatura($id_asignatura);
 $nombre_corto=$oAsignatura->getNombre_corto();
 $nombre_asignatura = strtr($oAsignatura->getNombre_asignatura(), $replace);
 $any=$oAsignatura->getYear();
 
 $id_tipo=$oAsignatura->getId_tipo();
-$oAsignaturaTipo = new asignaturas\AsignaturaTipo($id_tipo);
-$curso = strtr($oAsignaturaTipo->getTipo_latin()?? '', $replace);
+$oAsignaturaTipo = new AsignaturaTipo($id_tipo);
+$curso = strtr($oAsignaturaTipo->getTipo_latin(), $replace);
 
 switch ($any) {
 	case 1:
@@ -85,29 +75,17 @@ switch ($any) {
 }
 
 // -----------------------------
-// alumnos:
-$aWhere = [];
-$aOperador = [];
 
-$GesNotas  = new notas\GestorNota();
-$aIdSuperadas = $GesNotas->getArrayNotasSuperadas();
-$superadas_txt = "{".implode(', ',$aIdSuperadas)."}";
-
-$aWhere['id_situacion'] = $superadas_txt;
-$aOperador['id_situacion'] = 'ANY';
-$aWhere['acta'] = $acta;
-
-$GesPersonaNotas = new notas\GestorPersonaNota();
-$cPersonaNotas = $GesPersonaNotas->getPersonaNotas($aWhere,$aOperador);
+$cPersonaNotas = getDatosActa::getNotas($acta);
 
 // para ordenar
 $errores = '';
-$aPersonasNotas = array(); 
-$oGesNomLatin = new personas\GestorNombreLatin();
+$aPersonasNotas = array();
+$oGesNomLatin = new GestorNombreLatin();
 foreach($cPersonaNotas as $oPersonaNota) {
 	$id_situacion=$oPersonaNota->getId_situacion();
 	$id_nom=$oPersonaNota->getId_nom();
-	$oPersona = personas\Persona::NewPersona($id_nom);
+	$oPersona = Persona::NewPersona($id_nom);
 	if (!is_object($oPersona)) {
 		$errores .= "<br>".sprintf(_("existe una nota de la que no se tiene acceso al nombre (id_nom = %s): es de otra dl o 'de paso' borrado."),$id_nom);
 		$errores .= " " . _("no aparece en la lista");
@@ -125,7 +103,7 @@ uksort($aPersonasNotas, "core\strsinacentocmp"); // compara sin contar los acent
 $num_alumnos=count($aPersonasNotas);
 
 // tribunal:
-$GesTribunal = new notas\GestorActaTribunal();
+$GesTribunal = new GestorActaTribunal();
 $cTribunal = $GesTribunal->getActasTribunales(array('acta'=>$acta,'_ordre'=>'orden')); 
 $num_examinadores=count($cTribunal);
 

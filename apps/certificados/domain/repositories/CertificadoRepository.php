@@ -5,13 +5,7 @@ namespace certificados\domain\repositories;
 use PDO;
 use certificados\domain\entity\Certificado;
 use certificados\infrastructure\PgCertificadoRepository;
-use web\Desplegable;
 
-
-use web\DateTimeLocal;
-use web\NullDateTimeLocal;
-use core\ConverterDate;
-use function core\is_true;
 /**
  *
  * Clase para gestionar la lista de objetos tipo Certificado
@@ -25,10 +19,7 @@ use function core\is_true;
 class CertificadoRepository implements CertificadoRepositoryInterface
 {
 
-    /**
-     * @var CertificadoRepositoryInterface
-     */
-    private $repository;
+    private PgCertificadoRepository $repository;
 
     public function __construct()
     {
@@ -45,39 +36,39 @@ class CertificadoRepository implements CertificadoRepositoryInterface
 	 * @return array|FALSE Una colección de objetos de tipo Certificado
 	
 	 */
-	public function getCertificados(array $aWhere=[], array $aOperators=[])
-	{
+	public function getCertificados(array $aWhere=[], array $aOperators=[]): bool|array
+    {
 	    return $this->repository->getCertificados($aWhere, $aOperators);
 	}
 	
 /* -------------------- ENTIDAD --------------------------------------------- */
 
-	public function Eliminar(Certificado $Certificado)
+	public function Eliminar(Certificado $Certificado): bool
     {
         return $this->repository->Eliminar($Certificado);
     }
 
-	public function Guardar(Certificado $Certificado)
+	public function Guardar(Certificado $Certificado): bool
     {
         return $this->repository->Guardar($Certificado);
     }
 
-	public function getErrorTxt()
+	public function getErrorTxt(): string
     {
         return $this->repository->getErrorTxt();
     }
 
-	public function getoDbl()
+	public function getoDbl(): PDO
     {
         return $this->repository->getoDbl();
     }
 
-	public function setoDbl(PDO $oDbl)
+	public function setoDbl(PDO $oDbl): void
     {
         $this->repository->setoDbl($oDbl);
     }
 
-	public function getNomTabla()
+	public function getNomTabla(): string
     {
         return $this->repository->getNomTabla();
     }
@@ -90,7 +81,7 @@ class CertificadoRepository implements CertificadoRepositoryInterface
      * @return array|bool
 	
      */
-    public function datosById(int $id_item)
+    public function datosById(int $id_item): bool|array
     {
         return $this->repository->datosById($id_item);
     }
@@ -99,7 +90,7 @@ class CertificadoRepository implements CertificadoRepositoryInterface
      * Busca la clase con id_item en el repositorio.
 	
      */
-    public function findById(int $id_item)
+    public function findById(int $id_item): Certificado
     {
         return $this->repository->findById($id_item);
     }

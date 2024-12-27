@@ -129,7 +129,7 @@ switch ($pau) {
                 exit($msg_err);
             }
             $clase = get_class($oPersona);
-            $Qobj_pau = join('', array_slice(explode('\\', $clase), -1));
+            $Qobj_pau = implode('', array_slice(explode('\\', $clase), -1));
         } else {
             $clase = "personas\\model\\entity\\$Qobj_pau";
             $oPersona = new $clase($id_pau);
@@ -182,7 +182,7 @@ echo $oPosicion->mostrar_left_slide(1);
         <table>
             <tr>
                 <td><span class="link" onclick="fnjs_update_div('#main','<?= $godossiers ?>')"><img
-                                src="<?= ConfigGlobal::getWeb_icons() ?>/dossiers.gif" border=0 width=40 height=40
+                                src="<?= ConfigGlobal::getWeb_icons() ?>/dossiers.gif" width=40 height=40
                                 alt='<?= $alt ?>'>(<?= $dos ?>)</span></td>
                 <td class="titulo"><?= $titulo ?></td>
         </table>
@@ -207,8 +207,14 @@ if (empty($Qid_dossier)) { // enseña la lista de dossiers.
 
         // Para presentaciones particulares
         $nameFile = "../../$app/model/Select" . $id_dossier . ".php";
-        if (realpath($nameFile)) { //como file_exists
-            $nameClaseSelect = "$app\\model\\Select" . $id_dossier;
+        $nameFile2 = "../../$app/domain/Select" . $id_dossier . ".php";
+        if (realpath($nameFile) || realpath($nameFile2)) { //como file_exists
+            if (realpath($nameFile)) { //como file_exists
+                $nameClaseSelect = "$app\\model\\Select" . $id_dossier;
+            }
+            if (realpath($nameFile2)) { //como file_exists
+                $nameClaseSelect = "$app\\domain\\Select" . $id_dossier;
+            }
             $claseSelect = new $nameClaseSelect();
             $claseSelect->setId_dossier($id_dossier);
             $claseSelect->setPau($pau);
@@ -225,7 +231,7 @@ if (empty($Qid_dossier)) { // enseña la lista de dossiers.
                 $claseSelect->setQScroll_id($Qscroll_id);
             }
 
-            switch ($id_dossier) {
+            switch ((int)$id_dossier) {
                 case 1301:
                 case 1302:
                     // propio del 1302
@@ -241,11 +247,11 @@ if (empty($Qid_dossier)) { // enseña la lista de dossiers.
             }
             echo $claseSelect->getHtml();
         } else {
-            // para presentacion genérica, con la info tipo Info1012.php
+            // para presentación genérica, con la info tipo Info1012.php
             // datos del dossier:
             $oTipoDossier = new TipoDossier($id_dossier);
             $app = $oTipoDossier->getApp();
-            // No sé porque no acepa aqui el '_' en el nombre de la clase.
+            // No sé porque no acepa aquí el '_' en el nombre de la clase.
             $clase_info = "$app\\model\\Info$id_dossier";
             // Tiene que ser en dos pasos.
             $obj = $clase_info;
@@ -305,12 +311,12 @@ if (empty($Qid_dossier)) { // enseña la lista de dossiers.
             }
 
             // Poner o no el botón de inserta. En algunos casos ya está en la presentación particular.
-            if ($Qpermiso == 3) {
-                $html .= "<br><table cellspacing=3  class=botones><tr class=botones>
+            if ((int)$Qpermiso === 3) {
+                $html .= "<br><table class=botones><tr class=botones>
 					<td class=botones><input name=\"btn_new\" type=\"button\" value=\"";
                 $html .= _("nuevo");
                 // caso especial para traslados:
-                if ($id_dossier == 1004) {
+                if ((int)$id_dossier === 1004) {
                     $insert = Hash::link(ConfigGlobal::getWeb() . '/apps/personas/controller/traslado_form.php?' . http_build_query(array('cabecera' => 'no', 'id_pau' => $id_pau, 'id_dossier' => $id_dossier, 'obj_pau' => $Qobj_pau)));
                     $html .= "\" onclick=\"fnjs_update_div('#main','$insert');\"></td></tr></table>";
                 } else {

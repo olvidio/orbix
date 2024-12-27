@@ -1,0 +1,91 @@
+
+{{ oPosicion.mostrar_left_slide(1)|raw }}
+
+{{ "Añadir un certificado para"|trans|raw  }}: {{ nom }}
+<br>
+<br>
+<form id='frm_upload' action="" method="post" enctype="multipart/form-data">
+    {{ oHashCertificadoPdf.getCamposHtml()|raw }}
+    <br>
+    <label>
+        {{ "Número de certificado"|trans|raw }}:
+        <input type="text" name="certificado" value="{{ certificado }}"/>
+    </label>
+    <br>
+    <label>
+        {{ "Fecha del certificado"|trans|raw }}:
+        <input type="text" id="f_certificado" name="f_certificado" value="{{ f_certificado }}" />
+    </label>
+    <br>
+    <label>
+        {{ "idioma del certificado"|trans|raw }}:
+        {{ oDesplIdiomas.desplegable|raw }}
+        ({{ "blanco = latín"|trans|raw }})
+    </label>
+    <br>
+    <label>
+        {{ "Firmado digitalmente"|trans|raw }}:
+        <input type="checkbox" name="firmado" {{ chk_firmado }}/>
+    </label>
+    <br>
+    <label>
+        {{ "Fecha recibido"|trans|raw }}:
+        <input type="text" id="f_recibido" name="f_recibido" value="{{ f_recibido }}" />
+    </label>
+    <br>
+    <br>
+    {{ "Fichero"|trans|raw }}:
+    <input type="file" name="certificado_pdf" id="fileToUpload" />
+    <br>
+    <br>
+    <input type="button" onclick="fnjs_upload_pdf();" value="{{ "subir pdf"|trans|raw }}">
+</form>
+
+
+<script type="text/javascript">
+
+    fnjs_upload_pdf = function () {
+        if (!fnjs_comprobar_fecha('#f_certificado','{{ locale_us }}')) {
+            return;
+        }
+        if (!fnjs_comprobar_fecha('#f_recibido','{{ locale_us }}')) {
+            return;
+        }
+
+        if (typeof event !== 'undefined') {
+            event.preventDefault();
+        }
+        //datos = $('#frm_upload').serialize();
+        let datos = new FormData(document.getElementById("frm_upload"));
+
+        let request = $.ajax({
+            data: datos,
+            url: 'apps/certificados/controller/certificado_dl_pdf_upload.php',
+            method: 'POST',
+            dataType: 'json',
+            cache: false,
+            contentType: false,
+            processData: false
+        });
+        request.done(function (json) {
+            if (json.success !== true) {
+                alert("{{ "respuesta"|trans|raw }}: " + json.mensaje );
+            } else {
+                {{ oPosicion.js_atras(1)|raw }}
+            }
+        });
+    }
+
+
+$(function() {
+    $("#f_certificado").datepicker({
+        numberOfMonths: 3,
+        showButtonPanel: true
+    });
+    $("#f_recibido").datepicker({
+        numberOfMonths: 3,
+        showButtonPanel: true
+    });
+
+});
+</script>

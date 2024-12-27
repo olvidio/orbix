@@ -1,6 +1,7 @@
 <?php
 
 use notas\model\entity as notas;
+use notas\model\entity\Acta;
 
 // INICIO Cabecera global de URL de controlador *********************************
 require_once("apps/core/global_header.inc");
@@ -73,13 +74,7 @@ switch ($Qmod) {
         $oActa->setF_acta($Qf_acta);
         // comprobar valor del acta
         if (isset($Qacta)) {
-            $valor = trim($Qacta);
-            $reg_exp = "/^(\?|\w{1,8}\??)\s+([0-9]{0,3})\/([0-9]{2})\??$/";
-            if (preg_match($reg_exp, $valor) == 1) {
-            } else {
-                // inventar acta.
-                $valor = $oActa->inventarActa($valor, $Qf_acta);
-            }
+            $valor = Acta::inventarActa($Qacta, $Qf_acta);
             $oActa->setActa($valor);
         }
         $oActa->setLibro($Qlibro);

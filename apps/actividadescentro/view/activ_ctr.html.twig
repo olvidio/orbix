@@ -151,7 +151,7 @@ fnjs_ver=function(){
 fnjs_left_side_hide();
 </script>
 <div id="condiciones" class="no_print">
-<form name="frm_cond" id="frm_cond" target="print" action="" method="post" onkeypress="fnjs_enviar(event,this);">
+<form name="frm_cond" id="frm_cond" target="print" action="" method="post" onkeydown="fnjs_enviar(event,this);">
 {{ oHash.getCamposHtml()|raw }}
 {{ oFormP.getHtml()|raw }}
 </form>

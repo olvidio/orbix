@@ -2,7 +2,7 @@
     fnjs_left_side_hide();
 </script>
 <form id="frm_asig_altan" action="apps/notas/controller/asig_faltan_select.php" method="post"
-      onkeypress="fnjs_enviar(event,this);">
+      onkeydown="fnjs_enviar(event,this);">
     <?= $oHash->getCamposHtml(); ?>
     <table>
         <thead>
@@ -46,7 +46,7 @@
 </form>
 <br/>
 <form id="frm_asig_altan1" action="apps/notas/controller/asig_faltan_personas_select.php" method="post"
-      onkeypress="fnjs_enviar(event,this);">
+      onkeydown="fnjs_enviar(event,this);">
     <?= $oHash1->getCamposHtml(); ?>
     <table>
         <thead>

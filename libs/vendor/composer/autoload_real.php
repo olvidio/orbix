@@ -33,7 +33,7 @@ class ComposerAutoloaderInitfe4939d609572947ee73ffcc0a42bf32
 
         $loader->register(true);
 
-        $includeFiles = \Composer\Autoload\ComposerStaticInitfe4939d609572947ee73ffcc0a42bf32::$files;
+        $includeFiles = \Composer\Autoload\ComposerStaticInitfe4939d609572947ee73ffcc0a42bf32::getFiles();
         foreach ($includeFiles as $fileIdentifier => $file) {
             composerRequirefe4939d609572947ee73ffcc0a42bf32($fileIdentifier, $file);
         }

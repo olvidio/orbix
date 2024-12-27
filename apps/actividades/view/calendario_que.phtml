@@ -46,7 +46,7 @@
     }
 </script>
 <form name="que" id="que" target="print" action="apps/actividades/controller/calendario_planning.php" method="post"
-      onkeypress="fnjs_enviar(event,this);">
+      onkeydown="fnjs_enviar(event,this);">
     <?= $oHash->getCamposHtml(); ?>
     <?= $oForm->getHtmlTabla(); ?>
     <?= $oFormP->getHtml(); ?>

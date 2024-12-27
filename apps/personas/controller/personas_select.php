@@ -117,7 +117,6 @@ if ($miRolePau == Role::PAU_NOM) { //persona
         default:
             $tabla = 'nada';
             break;
-        case 'n':
     }
 
 } else {
@@ -263,9 +262,8 @@ switch ($tabla) {
         }
         break;
     case 'nada':
+        $cPersonas = [];
         exit (_("No se encuentra ningún centro con esta condición"));
-        $cPersonas = array();
-        break;
 }
 
 $sWhere = core\urlsafe_b64encode(serialize($aWhere));
@@ -348,16 +346,14 @@ if ($_SESSION['oPerm']->have_perm_oficina('est')) {
     $a_botones[] = array('txt' => _("copiar tessera"),
         'click' => "fnjs_copiar_tessera(\"#seleccionados\")");
     $script['fnjs_copiar_tessera'] = 1;
-}
-
-// Añadir certificados para las r.
-if (ConfigGlobal::mi_ambito() === 'r') {
-    $a_botones[] = array('txt' => _("imprimir certificado"),
-        'click' => "fnjs_imp_certificado(\"#seleccionados\")");
-    $script['fnjs_imp_certificado'] = 1;
+    /*
+    $a_botones[] = array('txt' => _("ver certificados"),
+        'click' => "fnjs_ver_certificados(\"#seleccionados\")");
+    $script['fnjs_ver_certificados'] = 1;
     $a_botones[] = array('txt' => _("adjuntar certificado"),
         'click' => "fnjs_upload_certificado(\"#seleccionados\")");
     $script['fnjs_upload_certificado'] = 1;
+    */
 }
 
 // Para rstgr borrar otros botones.
@@ -393,13 +389,13 @@ $a_cabeceras = array(ucfirst(_("tabla")),
     array('name' => _("nombre y apellidos"), 'width' => 250, 'formatter' => 'clickFormatter')
 );
 
-if ($tabla == "p_sssc") {
+if ($tabla === "p_sssc") {
     $a_cabeceras[] = ucfirst(_("socio"));
 }
 
 $a_cabeceras[] = ucfirst(_("centro"));
 
-if (($tabla == "p_numerarios") || ($tabla == "p_agregados") || ($tabla == "p_de_paso_ex")) {
+if (($tabla === "p_numerarios") || ($tabla === "p_agregados") || ($tabla === "p_de_paso_ex")) {
     $a_cabeceras[] = ucfirst(_("stgr"));
 }
 if (!empty($Qcmb)) {
@@ -441,21 +437,21 @@ foreach ($cPersonas as $oPersona) {
 
     $a_val['sel'] = "$id_nom#$id_tabla";
     $a_val[1] = $id_tabla;
-    if ($sPrefs == 'html') {
+    if ($sPrefs === 'html') {
         $pagina = web\Hash::link(ConfigGlobal::getWeb() . '/apps/personas/controller/home_persona.php?' . http_build_query(array('id_nom' => $id_nom, 'id_tabla' => $id_tabla, 'obj_pau' => $obj_pau)));
         $a_val[2] = array('ira' => $pagina, 'valor' => $nom);
     } else {
         $pagina = 'fnjs_home("#seleccionados")';
         $a_val[2] = array('script' => $pagina, 'valor' => $nom);
     }
-    if ($tabla == "p_sssc") {
+    if ($tabla === "p_sssc") {
         //$a_val[3]=$row['socio'];
     }
     $a_val[4] = $nombre_ubi;
     /*la siguiente instrucción es para que el campo stgr sólo se visualice
     para los n y agd siempre que no estemos ante una selección para ver
     un planning*/
-    if ((($tabla == 'p_numerarios') || ($tabla == 'p_agregados')) and ($tipo != 'planning')) {
+    if ((($tabla === 'p_numerarios') || ($tabla === 'p_agregados')) and ($tipo !== 'planning')) {
         $a_val[5] = $oPersona->getStgr();
     }
     if (!empty($Qcmb)) {

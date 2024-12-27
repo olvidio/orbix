@@ -22,7 +22,7 @@ use function core\is_true;
 
     fnjs_imprimir = function (form_acta) {
         mod = $('#mod').val();
-        if (mod == 'nueva') {
+        if (mod === 'nueva') {
             alert("<?= $txt_alert_acta ?>");
         } else {
             fnjs_left_side_hide();
@@ -33,55 +33,49 @@ use function core\is_true;
 
     //paso las matrículas a notas definitivas
     fnjs_guardar_tessera = function (form_acta) {
-        // comporbar que se ha guardado el acta
+        // comprobar que se ha guardado el acta
         mod = $('#mod').val();
         if (mod == 'nueva') {
             alert("<?= $txt_alert_acta ?>");
         } else {
             $('#que').val("3");
-            $('#f_1303').attr('action', "apps/actividadestudios/controller/acta_notas_update.php");
-            $('#f_1303').one("submit", function () {
-                $.ajax({
-                    url: $(this).attr('action'),
-                    type: 'post',
-                    data: $(this).serialize()
-                })
-                    .done(function (rta_txt) {
-                        if (rta_txt != '' && rta_txt != '\n') {
-                            alert(rta_txt);
-                        }
-                    });
-                return false;
-            });
-            $('#f_1303').trigger("submit");
-            $('#f_1303').off();
+            let url = "apps/actividadestudios/controller/acta_notas_update.php";
+            $.ajax({
+                url: url,
+                type: 'post',
+                data: $('#f_1303').serialize()
+            })
+                .done(function (json) {
+                    if (json.success !== true) {
+                        alert("respuesta" + json.mensaje);
+                    }
+                });
         }
     }
 
-    // Grabar las notas en la matricula
+    // Grabar las notas en la matrícula
     fnjs_guardar_nota = function () {
-        // comporbar que se ha guardado el acta
+        // SUPER IMPORTANTE: poner "global: false" en el ajax, para transmitir el evento al
+        // onClick del botón "grabar notas en tessera"
+        // comprobar que se ha guardado el acta
         mod = $('#mod').val();
-        if (mod == 'nueva') {
+        if (mod === 'nueva') {
             alert("<?= $txt_alert_acta ?>");
         } else {
             $('#que').val("1");
-            $('#f_1303').attr('action', "apps/actividadestudios/controller/acta_notas_update.php");
-            $('#f_1303').one("submit", function () {
-                $.ajax({
-                    url: $(this).attr('action'),
-                    type: 'post',
-                    data: $(this).serialize()
-                })
-                    .done(function (rta_txt) {
-                        if (rta_txt != '' && rta_txt != '\n') {
-                            alert(rta_txt);
-                        }
-                    });
-                return false;
-            });
-            $('#f_1303').trigger("submit");
-            $('#f_1303').off();
+            let url = "apps/actividadestudios/controller/acta_notas_update.php";
+
+            $.ajax({
+                url: url,
+                type: 'post',
+                data: $('#f_1303').serialize(),
+                global: false
+            })
+                .done(function (json) {
+                    if (json.success !== true) {
+                        alert("respuesta" + json.mensaje);
+                    }
+                });
         }
     }
 </script>
@@ -172,7 +166,7 @@ use function core\is_true;
     </table>
 </form>
 <?php if ($permiso == 3) { ?>
-    <br><input type="button" value="<?= strtoupper(_("grabar notas en tessera")); ?>"
+    <br><input id='dani' type="button" value="<?= strtoupper(_("grabar notas en tessera")); ?>"
                onclick="fnjs_guardar_tessera('#frm_acta')">
     <br><input type="button" value="<?= strtoupper(_("imprimir")); ?>" onclick="fnjs_imprimir('#frm_acta')">
 <?php } ?>

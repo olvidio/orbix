@@ -32,16 +32,19 @@ class GestorErrores
 
     private $filename;
 
-    /* CONSTRUCTOR -------------------------------------------------------------- */
     private string|int|null $stack;
 
     /**
      * Constructor de la classe.
      *
      */
-    function __construct()
+    function __construct(bool $test = FALSE)
     {
-        $this->filename = ConfigGlobal::$directorio . '/log/errores.log';
+        if ($test) {
+            $this->filename = '/home/dani/orbix_local/orbix/log/errores.log';
+        } else {
+            $this->filename = ConfigGlobal::$directorio . '/log/errores.log';
+        }
     }
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
@@ -95,7 +98,7 @@ class GestorErrores
      */
     function addErrorAppLastError(&$oDBSt, $sClauError, $line, $file)
     {
-        // Cuando ejecuto algun controlador desde la linea de comandos, no existe la ip:
+        // Cuando ejecuto algún controlador desde la linea de comandos, no existe la ip:
         $ip = empty($_SERVER['REMOTE_ADDR']) ? 'localhost' : $_SERVER['REMOTE_ADDR'];
         $user = ConfigGlobal::mi_usuario();
         $esquema = ConfigGlobal::mi_region_dl();
@@ -114,7 +117,7 @@ class GestorErrores
         $this->recordar($err[2]);
 
         $filename = $this->filename;
-        if (!$handle = fopen($filename, 'ab')) {
+        if (!$handle = fopen($filename, 'a')) {
             echo "Cannot open file ($filename)";
             die();
         }
@@ -134,9 +137,7 @@ class GestorErrores
         $this->addError($err, $sClauError, $line, $file);
         $this->filename = $filename;
     }
-*/
 
-    /*
     function addError($err = '', $sClauError, $line, $file)
     {
         // Cuando ejecuto algún controlador desde la linea de comandos, no existe la ip:

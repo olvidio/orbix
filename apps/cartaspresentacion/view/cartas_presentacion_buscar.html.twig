@@ -9,7 +9,7 @@ fnjs_buscar=function(formulario){
 
 </script>
 <div id="condiciones">
-<form id="frm_buscar_1" name="frm_buscar_1" action="" onkeypress="fnjs_enviar(event,this);" >
+<form id="frm_buscar_1" name="frm_buscar_1" action="" onkeydown="fnjs_enviar(event,this);" >
 {{ oHash.getCamposHtml|raw }}
 <table border=1>
 <thead><th class=titulo_inv colspan=4>{{ "Cartas de presentación"|trans|raw }}</th>

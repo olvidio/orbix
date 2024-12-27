@@ -232,7 +232,7 @@ $rowEmpty = [
         $cAsignaturas = $GesAsignaturas->getAsignaturas($aWhere, $aOperador);
 
         // Asignaturas cursadas:
-        $GesNotas = new notas\GestorPersonaNota();
+        $GesNotas = new notas\GestorPersonaNotaDB();
         $aWhere = array();
         $aOperador = array();
         $aWhere['id_nom'] = $id_nom;

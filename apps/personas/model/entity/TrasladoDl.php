@@ -10,13 +10,19 @@ use asistentes\model\entity\AsistenteDl;
 use asistentes\model\entity\AsistenteOut;
 use asistentes\model\entity\GestorAsistenteDl;
 use asistentes\model\entity\GestorAsistenteOut;
+use certificados\domain\entity\CertificadoDl;
+use certificados\domain\repositories\CertificadoDlRepository;
+use certificados\domain\repositories\CertificadoRepository;
 use core\ConfigDB;
 use core\ConfigGlobal;
 use core\ConverterDate;
 use core\DBConnection;
 use core\DBPropiedades;
+use core\ServerConf;
 use dossiers\model\entity\GestorDossier;
 use dossiers\model\entity\TipoDossier;
+use notas\model\EditarPersonaNota;
+use notas\model\PersonaNota;
 use ubis\model\entity\GestorDelegacion;
 use web;
 
@@ -386,6 +392,11 @@ class TrasladoDl
             return _("copiar dossiers") . $msg;
         }
 
+        if ($this->trasladarDossierCertificados() === false) {
+            $msg = $this->serror;
+            return _("trasladar certificados") . $msg;
+        }
+
         if ($this->copiarAsistencias() === false) {
             $msg = $this->serror;
             return _("copiar asistencias") . $msg;
@@ -437,19 +448,18 @@ class TrasladoDl
             $nom_activ = $oActividad->getNom_activ();
             $oAsignatura = new Asignatura($id_asignatura);
             $nombre_corto = $oAsignatura->getNombre_corto();
-            $msg .= empty($msg) ? '' : '<br>';
+            $msg .= empty($msg) ? '' : "\n";
             $msg .= sprintf(_("ca: %s, asignatura: %s"), $nom_activ, $nombre_corto);
         }
         //$this->restaurarConexionOrg($oDBorg);
         if (!empty($msg)) {
-            $error = _("tiene pendiente de poner las notas de:") . '<br>' . $msg;
+            $error = _("tiene pendiente de poner las notas de:") . "\n" . $msg;
         }
-        if (empty($error)) {
-            return true;
-        } else {
+        if (!empty($error)) {
             $this->serror = $error;
             return false;
         }
+        return true;
     }
 
     public function cambiarFichaPersona()
@@ -471,12 +481,11 @@ class TrasladoDl
             $error .= '<br>' . _("hay un error, no se ha guardado");
         }
         //$this->restaurarConexionOrg($oDBorg);
-        if (empty($error)) {
-            return true;
-        } else {
+        if (!empty($error)) {
             $this->serror = $error;
             return false;
         }
+        return true;
     }
 
     /**
@@ -528,16 +537,16 @@ class TrasladoDl
                 }
             }
             //elimino public, publicv, global
-            if ($esquema == 'global') {
+            if ($esquema === 'global') {
                 continue;
             }
-            if ($esquema == 'public') {
+            if ($esquema === 'public') {
                 continue;
             }
-            if ($esquema == 'publicv') {
+            if ($esquema === 'publicv') {
                 continue;
             }
-            if ($esquema == 'restov') {
+            if ($esquema === 'restov') {
                 $tabla_personas = 'p_de_paso_ex';
             }
             $esquema_slash = '"' . $esquema . '"';
@@ -615,12 +624,11 @@ class TrasladoDl
         }
         //$this->restaurarConexionOrg($oDBorg);
         //$this->restaurarConexionDst($oDBdst);
-        if (empty($error)) {
-            return true;
-        } else {
+        if (!empty($error)) {
             $this->serror = $error;
             return false;
         }
+        return true;
     }
 
     public function copiarNotas()
@@ -634,11 +642,15 @@ class TrasladoDl
         $oDBorg = $this->conexionOrg();
         $oDBdst = $this->conexionDst();
 
-        $gestor = "notas\\model\\entity\\GestorPersonaNotaDl";
+        $gestor = "notas\\model\\entity\\GestorPersonaNotaDlDB";
         $ges = new $gestor();
         $ges->setoDbl($oDBorg);
         $colection = $ges->getPersonaNotas(array('id_nom' => $this->iid_nom));
         if (!empty($colection)) {
+            $gesDelegacion = new GestorDelegacion();
+            $new_dl = GestorDelegacion::getDlFromSchema($this->snew_esquema);
+            $a_mi_region_stgr = $gesDelegacion->mi_region_stgr($new_dl);
+            $esquema_region_stgr = $a_mi_region_stgr['esquema_region_stgr'];
             // Para saber el nuevo id_schema de la dl destino:
             if (($qRs = $oDBorg->query("SELECT id FROM public.db_idschema WHERE schema = '$this->snew_esquema'")) === false) {
                 $sClauError = 'Controller.Traslados';
@@ -646,31 +658,39 @@ class TrasladoDl
                 return false;
             }
             $aSchema = $qRs->fetch(\PDO::FETCH_ASSOC);
-            $id_schema = $aSchema['id'];
-            foreach ($colection as $Objeto) {
-                $Objeto->setoDbl($oDBorg);
-                $Objeto->DBCarregar();
-                //print_r($oPersonaNota);
-                $NuevoObj = clone $Objeto;
-                if (method_exists($NuevoObj, 'setId_item') === true) $NuevoObj->setId_item(null);
-                $NuevoObj->setoDbl($oDBdst);
-                $NuevoObj->setId_schema($id_schema);
-                if ($NuevoObj->DBGuardar() === false) {
-                    $error .= '<br>' . _("no se ha guardado la nota");
-                } else {
-                    //borrar la origen:
-                    $Objeto->DBEliminar();
-                }
+            $id_schema_persona = $aSchema['id'];
+            foreach ($colection as $oPersonaNotaDB) {
+                $oPersonaNota = new PersonaNota();
+                $oPersonaNota->setIdNom($oPersonaNotaDB->getId_nom());
+                $oPersonaNota->setIdNivel($oPersonaNotaDB->getId_nivel());
+                $oPersonaNota->setIdAsignatura($oPersonaNotaDB->getId_asignatura());
+                $oPersonaNota->setIdSituacion($oPersonaNotaDB->getId_situacion());
+                $oPersonaNota->setActa($oPersonaNotaDB->getActa());
+                $oPersonaNota->setFActa($oPersonaNotaDB->getF_acta());
+                $oPersonaNota->setTipoActa($oPersonaNotaDB->getTipo_acta());
+                $oPersonaNota->setPreceptor($oPersonaNotaDB->getPreceptor());
+                $oPersonaNota->setIdPreceptor($oPersonaNotaDB->getId_preceptor());
+                $oPersonaNota->setDetalle($oPersonaNotaDB->getDetalle());
+                $oPersonaNota->setEpoca($oPersonaNotaDB->getEpoca());
+                $oPersonaNota->setIdActiv($oPersonaNotaDB->getId_activ());
+                $oPersonaNota->setNotaNum($oPersonaNotaDB->getNota_num());
+                $oPersonaNota->setNotaMax($oPersonaNotaDB->getNota_max());
+
+                $oEditarPersonaNota = new EditarPersonaNota($oPersonaNota);
+                $datosRegionStgr = $oEditarPersonaNota->getDatosRegionStgr();
+                $a_ObjetosPersonaNota = $oEditarPersonaNota->getObjetosPersonaNota($datosRegionStgr, $id_schema_persona);
+                $oEditarPersonaNota->crear_nueva_personaNota_para_cada_objeto_del_array($a_ObjetosPersonaNota, $esquema_region_stgr);
+
+                //borrar la origen:
+                $oPersonaNotaDB->DBEliminar();
             }
+
         }
-        //$this->restaurarConexionOrg($oDBorg);
-        //$this->restaurarConexionDst($oDBdst);
-        if (empty($error)) {
-            return true;
-        } else {
+        if (!empty($error)) {
             $this->serror = $error;
             return false;
         }
+        return true;
     }
 
     public function copiarAsistencias()
@@ -742,12 +762,11 @@ class TrasladoDl
 
         //$this->restaurarConexionOrg($oDBorgE);
         //$this->restaurarConexionDst($oDBdstE);
-        if (empty($error)) {
-            return true;
-        } else {
+        if (!empty($error)) {
             $this->serror = $error;
             return false;
         }
+        return true;
     }
 
     public function trasladarDossiers()
@@ -866,7 +885,7 @@ class TrasladoDl
                     if ($NuevoObj->DBGuardar() === false) {
                         $error .= '<br>' . sprintf(_("No se ha guardado el dossier: %s"), $class);
                     } else { // Borrar excepto traslado
-                        if ($class != 'Traslado') {
+                        if ($class !== 'Traslado') {
                             $Objeto->DBEliminar();
                         }
                     }
@@ -880,12 +899,99 @@ class TrasladoDl
         // Volver oDBdst a su estado original:
         //$this->restaurarConexionDst($oDBdst);
         //$this->restaurarConexionOrg($oDBorg);
-        if (empty($error)) {
-            return true;
-        } else {
+        if (!empty($error)) {
             $this->serror = $error;
             return false;
         }
+        return true;
+    }
+
+    public function trasladarDossierCertificados()
+    {
+        $error = '';
+        $oDBorg = $this->conexionOrg();
+        // si es una dl, hay que buscarlos en la region del stgr
+
+        $certificadoDlRepository = new CertificadoDlRepository();
+        $certificadoDlRepository->setoDbl($oDBorg);
+        $cCertificados = $certificadoDlRepository->getCertificados(['id_nom' => $this->iid_nom]);
+        foreach ($cCertificados as $Certificado) {
+            if (!$this->trasladar_certificados($Certificado)) {
+                $error .= '<br>' . $this->serror = $error;
+            }
+        }
+
+        if (!empty($error)) {
+            $this->serror = $error;
+            return false;
+        }
+        return true;
+    }
+
+    public function trasladar_certificados($CertificadoDl)
+    {
+        $error = '';
+        $oDBorg = $this->conexionOrg();
+        $oDBdst = $this->conexionDst();
+
+        $id_item = $CertificadoDl->getId_item();
+        // para que ponga el suyo según la DB
+
+        $certificadoDlRepository = new CertificadoDlRepository();
+        $certificadoDlRepository->setoDbl($oDBdst);
+        $newId_item = $certificadoDlRepository->getNewId_item();
+        $CertificadoDl->setId_item($newId_item);
+        if ($certificadoDlRepository->Guardar($CertificadoDl) === FALSE) {
+            $error .= $certificadoDlRepository->getErrorTxt();
+        }
+
+        // eliminar el original
+        $certificadoDlRepository2 = new CertificadoDlRepository();
+        $oCertificado = $certificadoDlRepository2->findById($id_item);
+        if (!empty($oCertificado)) {
+            $certificado = $oCertificado->getCertificado();
+            if ($certificadoDlRepository2->Eliminar($oCertificado) === FALSE) {
+                $error .= _("Algo falló");
+            }
+        }
+
+        if (!empty($error)) {
+            $this->serror = $error;
+            return false;
+        }
+
+        return true;
+    }
+
+    public function copiar_certificados_a_dl($Certificado)
+    {
+        $error = '';
+        $oDBdst = $this->conexionDst();
+
+        $id_item = $Certificado->getId_item();
+        // para que ponga el suyo según la DB
+        $CertificadoDl = $this->copyCertificado2Dl($Certificado);
+
+        $certificadoDlRepository = new CertificadoDlRepository();
+        $certificadoDlRepository->setoDbl($oDBdst);
+        $newId_item = $certificadoDlRepository->getNewId_item();
+        $CertificadoDl->setId_item($newId_item);
+        if ($certificadoDlRepository->Guardar($CertificadoDl) === FALSE) {
+            $error .= $certificadoDlRepository->getErrorTxt();
+        }
+        // pongo fecha enviado
+        $certificadoRepository = new CertificadoRepository();
+        $Certificado->setF_enviado(new web\DateTimeLocal());
+        if ($certificadoRepository->Guardar($Certificado) === FALSE) {
+            $error .= $certificadoRepository->getErrorTxt();
+        }
+
+        if (!empty($error)) {
+            $this->serror = $error;
+            return false;
+        }
+
+        return true;
     }
 
     public function apuntar()
@@ -906,15 +1012,16 @@ class TrasladoDl
             $error .= '<br>' . _("hay un error, no se ha guardado");
         }
         //$this->restaurarConexionOrg($oDBorg);
-        if (empty($error)) {
-            return true;
-        } else {
+        if (!empty($error)) {
             $this->serror = $error;
             return false;
         }
+
+        return true;
     }
 
-    private function copiarAsistencia($oOrigen, $oDestino)
+    private
+    function copiarAsistencia($oOrigen, $oDestino)
     {
         // Hay que comprobar que la actividad existe,
         // TODO: y que esta accesible. Sino, ver si hay que importarla.
@@ -935,7 +1042,8 @@ class TrasladoDl
         return null;
     }
 
-    private function testActividad($id_activ)
+    private
+    function testActividad($id_activ)
     {
         $gesActividades = new GestorActividadAll();
         $cActividades = $gesActividades->getActividades(['id_activ' => $id_activ]);
@@ -951,7 +1059,8 @@ class TrasladoDl
      *
      * @param \PDO $conn
      */
-    private function verConexion($conn)
+    private
+    function verConexion($conn)
     {
         $conn->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
 
@@ -970,6 +1079,23 @@ class TrasladoDl
             }
         }
         echo $attr;
+    }
+
+    private function copyCertificado2Dl($Certificado)
+    {
+        $oCertificadoDl = new CertificadoDl();
+        $oCertificadoDl->setId_nom($Certificado->getId_nom());
+        $oCertificadoDl->setNom($Certificado->getNom());
+        $oCertificadoDl->setIdioma($Certificado->getIdioma());
+        $oCertificadoDl->setDestino($Certificado->getDestino());
+        $oCertificadoDl->setCertificado($Certificado->getCertificado());
+        $oCertificadoDl->setF_certificado($Certificado->getF_certificado());
+        $oCertificadoDl->setEsquema_emisor($Certificado->getEsquema_emisor());
+        $oCertificadoDl->setFirmado($Certificado->isFirmado());
+        $oCertificadoDl->setDocumento($Certificado->getDocumento());
+        $oCertificadoDl->setF_recibido(new web\DateTimeLocal());
+
+        return $oCertificadoDl;
     }
 
 }

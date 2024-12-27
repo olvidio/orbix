@@ -6,7 +6,7 @@ $txt_superavit_1 = "";
 $txt_superavit_2 = "";
 
 //$curso_filosofia = "CURSUS INSTITUTIONALES PHILOSOPHI&#198;";
-$curso_filosofia = "";
+$curso_filosofia = "CURSO INSTITUCIONAL DE FILOSOFÍA";
 
 //$any_I = "ANNUS I";
 $any_I = "Año I";
@@ -33,10 +33,10 @@ $any_III = "";
 $any_IV = "";
 
 //$titulo_1 = "PRÆLATURA SANCTÆ CRUCIS ET OPERIS DEI";
-$titulo_1 = "";
+$titulo_1 = "PRELATURA DE LA SANTA CRUZ Y OPUS DEI";
 
 //$titulo_2 = "STUDIUM GENERALE REGIONIS $region";
-$titulo_2 = "";
+$titulo_2 = "ESTUDIO GENERAL DE LA REGIÓN DE ESPAÑA";
 
 //$titulo_3 = "CURRICULUM STUDIORUM";
 $titulo_3 = "";

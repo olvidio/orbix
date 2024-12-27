@@ -6,7 +6,7 @@ fnjs_lista=function(){
 };
 fnjs_left_side_hide();
 </script>
-<form id="modifica"name="modifica" action="" method="post" onkeypress="fnjs_enviar(event,this);" >
+<form id="modifica"name="modifica" action="" method="post" onkeydown="fnjs_enviar(event,this);" >
 {{ oHash.getCamposHtml()|raw }}
 <h3>{{ "seleccionar un tipo de actividad"|trans|raw }}:</h3>
 

@@ -5,12 +5,13 @@ use actividadestudios\model\entity\ActividadAsignaturaDl;
 use actividadestudios\model\entity\GestorMatricula;
 use actividadestudios\model\entity\Matricula;
 use asignaturas\model\entity\Asignatura;
-use core\ConfigGlobal;
+use notas\model\EditarPersonaNota;
 use notas\model\entity\Acta;
 use notas\model\entity\GestorActa;
-use notas\model\entity\GestorPersonaNota;
+use notas\model\entity\GestorPersonaNotaDB;
 use notas\model\entity\Nota;
-use notas\model\entity\PersonaNota;
+use notas\model\entity\PersonaNotaDB;
+use notas\model\PersonaNota;
 use personas\model\entity\Persona;
 use web\TiposActividades;
 use function core\is_true;
@@ -40,12 +41,12 @@ if ($Qque === 3) { //paso las matrículas a notas definitivas (Grabar e imprimir
     // miro la epoca
     $oActividad = new Actividad($Qid_activ);
     $id_tipo_activ = $oActividad->getId_tipo_activ();
-    $iepoca = PersonaNota::EPOCA_CA;
+    $iepoca = PersonaNotaDB::EPOCA_CA;
     $oTipoActividad = new TiposActividades($id_tipo_activ);
     $asistentes = $oTipoActividad->getAsistentesText();
     $actividad = $oTipoActividad->getActividadText();
     if ($asistentes === 'agd' && $actividad === 'ca') {
-        $iepoca = PersonaNota::EPOCA_INVIERNO;
+        $iepoca = PersonaNotaDB::EPOCA_INVIERNO;
     }
 
     $GesMatriculas = new GestorMatricula();
@@ -88,8 +89,8 @@ if ($Qque === 3) { //paso las matrículas a notas definitivas (Grabar e imprimir
             }
 
             $oActa = new Acta($acta);
-            $f_acta = $oActa->getF_acta()->getFromLocal();
-            if (empty($acta) || empty($f_acta)) {
+            $oF_acta = $oActa->getF_acta();
+            if (empty($acta) || empty($oF_acta)) {
                 $error .= _("debe introducir los datos del acta. No se ha guardado nada.") . "\n";
                 exit($error);
             }
@@ -97,15 +98,15 @@ if ($Qque === 3) { //paso las matrículas a notas definitivas (Grabar e imprimir
             // para las cursadas o examinadas no aprobadas
             if ($id_situacion === NOTA::CURSADA || $id_situacion === NOTA::EXAMINADO || empty($id_situacion)) {
                 //conseguir una fecha para poner como fecha acta. las cursadas se guardan durante 2 años
-                $f_acta = $cActas[0]->getF_acta()->getFromLocal();
+                $oF_acta = $cActas[0]->getF_acta();
             } else {
                 if (empty($acta)) {
                     $error .= _("falta definir el acta para alguna nota") . "\n";
                     exit($error);
                 }
                 $oActa = new Acta($acta);
-                $f_acta = $oActa->getF_acta()->getFromLocal();
-                if (empty($f_acta)) {
+                $oF_acta = $oActa->getF_acta();
+                if (empty($oF_acta)) {
                     $error .= _("debe introducir los datos del acta. No se ha guardado nada.") . "\n";
                     exit($error);
                 }
@@ -121,7 +122,7 @@ if ($Qque === 3) { //paso las matrículas a notas definitivas (Grabar e imprimir
             $oActividadAsignatura = new ActividadAsignaturaDl(array('id_activ' => $Qid_activ, 'id_asignatura' => $Qid_asignatura));
             $id_preceptor = $oActividadAsignatura->getId_profesor();
         } else {
-            $id_preceptor = '';
+            $id_preceptor = null;
         }
 
         //Si es una opcional miro el id nivel para cada uno
@@ -134,7 +135,7 @@ if ($Qque === 3) { //paso las matrículas a notas definitivas (Grabar e imprimir
                     $op_min=0;
                     $op_max=2;
                     break;
-                case 2:	// sólo de caudrienio
+                case 2:	// sólo de cuadrienio
                     $aWhere['id_nivel'] = "243.";
                     $aOperador['id_nivel'] = '~';
                     $op_min=3;
@@ -147,7 +148,7 @@ if ($Qque === 3) { //paso las matrículas a notas definitivas (Grabar e imprimir
                     $op_min = 0;
                     $op_max = 7;
             }
-            $GesPersonaNotas = new GestorPersonaNota();
+            $GesPersonaNotas = new GestorPersonaNotaDB();
             $aWhere['id_nom'] = $id_nom;
             $aWhere['_ordre'] = 'id_nivel DESC';
             $cPersonaNotas = $GesPersonaNotas->getPersonaNotas($aWhere, $aOperador);
@@ -191,7 +192,7 @@ if ($Qque === 3) { //paso las matrículas a notas definitivas (Grabar e imprimir
         //  - si existe en otro id_activ, AVISO!!
         //
         $id_activ_old = 0;
-        $oGesPersonaNota = new GestorPersonaNota();
+        $oGesPersonaNota = new GestorPersonaNotaDB();
         $cBuscarPersonaNotas = $oGesPersonaNota->getPersonaNotas(array('id_nom' => $id_nom, 'id_asignatura' => $Qid_asignatura));
         unset($oPersonaNotaAnterior);
         if (!empty($cBuscarPersonaNotas)) {
@@ -237,27 +238,37 @@ if ($Qque === 3) { //paso las matrículas a notas definitivas (Grabar e imprimir
                     }
             }
 
-            $oPersonaNota = new PersonaNota(array('id_nom' => $id_nom, 'id_asignatura' => $Qid_asignatura));
-            // guardo los datos
-            $oPersonaNota->setId_schema($id_schema);
-            $oPersonaNota->setId_nivel($id_nivel);
-            $oPersonaNota->setId_situacion($id_situacion);
+
+            $oPersonaNota = new PersonaNota();
+            $oPersonaNota->setIdNivel($id_nivel);
+            $oPersonaNota->setIdAsignatura($Qid_asignatura);
+            $oPersonaNota->setIdNom($id_nom);
+            $oPersonaNota->setIdSituacion($id_situacion);
             $oPersonaNota->setActa($acta);
-            $oPersonaNota->setF_acta($f_acta);
-            $oPersonaNota->setId_activ($Qid_activ);
+            $oPersonaNota->setFActa($oF_acta);
+            $oPersonaNota->setDetalle('');
+            $oPersonaNota->setTipoActa(PersonaNotaDB::FORMATO_ACTA);
             $oPersonaNota->setPreceptor($preceptor);
-            $oPersonaNota->setId_preceptor($id_preceptor);
+            $oPersonaNota->setIdPreceptor($id_preceptor);
             $oPersonaNota->setEpoca($iepoca);
-            $oPersonaNota->setNota_num($nota_num);
-            $oPersonaNota->setNota_max($nota_max);
-            $oPersonaNota->setTipo_acta(PersonaNota::FORMATO_ACTA);
-            if ($oPersonaNota->DBGuardar() === false) {
-                echo _("hay un error, no se ha guardado");
-                echo "\n" . $oPersonaNota->getErrorTxt();
+            $oPersonaNota->setIdActiv($Qid_activ);
+            $oPersonaNota->setNotaNum($nota_num);
+            $oPersonaNota->setNotaMax($nota_max);
+
+            $oEditarPersonaNota = new EditarPersonaNota($oPersonaNota);
+
+            try {
+                if (isset($oPersonaNotaAnterior)) {
+                    $oEditarPersonaNota->editar($Qid_asignatura);
+                } else {
+                    $oEditarPersonaNota->nuevo();
+                }
+            } catch (\RuntimeException $e) {
+                $msg_err .= "\r\n";
+                $msg_err .= $e->getMessage();
             }
         }
     }
-    $go_to = ConfigGlobal::getWeb() . "/apps/notas/controller/acta_imprimir.php?acta=$acta|main";
 }
 
 if ($Qque === 1) { // Grabar las notas en la matricula
@@ -325,20 +336,13 @@ if ($Qque === 1) { // Grabar las notas en la matricula
 }
 
 if (!empty($msg_err)) {
-    echo $msg_err;
-}
-//vuelve a la presentacion de la ficha.
-if (empty($error)) {
-    if (!empty($go_to)) {
-        $go_to = urlencode($go_to);
-        //echo "gou: $go_to<br>";
-//		echo $oPosicion->ir_a($go_to);
-    }
+    $jsondata['success'] = FALSE;
+    $jsondata['mensaje'] = $msg_err;
 } else {
-    echo $error;
-    echo "\n";
-
-//	$go_avant = web\Hash::link(core\ConfigGlobal::getWeb().'/apps/notas/controller/acta_imprimir.php?'.http_build_query(array('acta'=>$acta)));
-//	echo "<input type='button' onclick=fnjs_update_div('#main','".$go_avant."') value="._("continuar").">";
-
+    $jsondata['success'] = TRUE;
 }
+
+//Aunque el content-type no sea un problema en la mayoría de casos, es recomendable especificarlo
+header('Content-type: application/json; charset=utf-8');
+echo json_encode($jsondata, JSON_THROW_ON_ERROR);
+exit();

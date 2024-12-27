@@ -169,6 +169,7 @@ class DBTrasvase extends DBAbstract
     {
         switch ($this->getDbName()) {
             case 'sv':
+            case 'sv-e':
                 $seccion = 'v';
                 break;
             case 'sf':
@@ -186,6 +187,7 @@ class DBTrasvase extends DBAbstract
     {
         switch ($this->getDbName()) {
             case 'sv':
+            case 'sv-e':
                 $seccion = 'v';
                 break;
             case 'sf':

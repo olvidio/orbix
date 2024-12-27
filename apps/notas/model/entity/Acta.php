@@ -2,7 +2,6 @@
 
 namespace notas\model\entity;
 
-use core\ConverterDate;
 use core;
 use web;
 
@@ -465,35 +464,39 @@ class Acta extends core\ClasePropiedades
     }
 
     /**
-     * inventa el valor de l'atribut sacta de Acta
+     * inventa el valor del acta, si no es correcto
      *
-     * @param string sacta
      */
-    function inventarActa($valor, $fecha = '')
+    public static function inventarActa(string $valor, web\DateTimeLocal|string $fecha): string
     {
-        // Se puede usar la funcion desde personaNota, por eso se puede pasar la fecha.
-        $fecha = !empty($fecha) ? $fecha : $this->getF_acta();
-        if (empty($fecha)) {
-            $any = '?';
-            $num_acta = 'x';
-        } else {
-            if (is_object($fecha)) {
-                $oData = $fecha;
-            } else {
-                $oData = web\DateTimeLocal::createFromLocal($fecha);
-            }
-            $any = $oData->format('y');
+        $valor = trim($valor);
+        // comprobar si hace falta, o ya está bien el acta como está
+        $reg_exp = "/^(\?|\w+\??)\s+([0-9]{0,3})\/([0-9]{2})\??$/";
+        if (!preg_match($reg_exp, $valor)) {
             // inventar acta.
-            $oGesActas = new GestorActa();
-            $num_acta = 1 + $oGesActas->getUltimaActa($any, $valor);
-        }
-        // no sé nada
-        if ($valor == '?') {
-            // 'dl? xx/15?';
-            $valor = "dl? $num_acta/$any?";
-        } else {  // solo la región o dl
-            // 'region xx/15?';
-            $valor = "$valor $num_acta/$any?";
+            // Se puede usar la función desde personaNota, por eso se puede pasar la fecha.
+            if (empty($fecha)) {
+                $any = '?';
+                $num_acta = 'x';
+            } else {
+                if (is_object($fecha)) {
+                    $oData = $fecha;
+                } else {
+                    $oData = web\DateTimeLocal::createFromLocal($fecha);
+                }
+                $any = $oData->format('y');
+                // inventar acta.
+                $oGesActas = new GestorActa();
+                $num_acta = 1 + $oGesActas->getUltimaActa($any, $valor);
+            }
+            // no sé nada
+            if ($valor === '?') {
+                // 'dl? xx/15?';
+                $valor = "dl? $num_acta/$any?";
+            } else {  // solo la región o dl
+                // 'region xx/15?';
+                $valor = "$valor $num_acta/$any?";
+            }
         }
         return $valor;
     }
@@ -732,7 +735,7 @@ class Acta extends core\ClasePropiedades
         if (!isset($this->pdf) && !$this->bLoaded) {
             $this->DBCarregar();
         }
-        return hex2bin($this->pdf?? '');
+        return hex2bin($this->pdf ?? '');
     }
     /* MÉTODOS GET y SET D'ATRIBUTOS QUE NO SON CAMPOS -----------------------------*/
 

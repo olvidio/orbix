@@ -4,13 +4,7 @@ namespace certificados\domain\repositories;
 
 use PDO;
 use certificados\domain\entity\Certificado;
-use web\Desplegable;
 
-
-use web\DateTimeLocal;
-use web\NullDateTimeLocal;
-use core\ConverterDate;
-use function core\is_true;
 /**
  * Interfaz de la clase Certificado y su Repositorio
  *
@@ -33,7 +27,7 @@ interface CertificadoRepositoryInterface
 	 * @return array|FALSE Una colección de objetos de tipo Certificado
 	
 	 */
-	public function getCertificados(array $aWhere=[], array $aOperators=[]);
+	public function getCertificados(array $aWhere=[], array $aOperators=[]):array|bool;
 	
 /* -------------------- ENTIDAD --------------------------------------------- */
 
@@ -57,7 +51,7 @@ interface CertificadoRepositoryInterface
      * @return array|bool
 	
      */
-    public function datosById(int $id_item);
+    public function datosById(int $id_item):array|bool;
 	
     /**
      * Busca la clase con id_item en el repositorio.

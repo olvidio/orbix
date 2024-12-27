@@ -599,7 +599,7 @@ class Delegacion extends core\ClasePropiedades
         $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'region_stgr'));
         $oDatosCampo->setEtiqueta(_("región del stgr"));
         $oDatosCampo->setTipo('texto');
-        $oDatosCampo->setArgument(3);
+        $oDatosCampo->setArgument(5);
         return $oDatosCampo;
     }
 

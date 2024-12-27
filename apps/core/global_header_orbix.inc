@@ -1,5 +1,7 @@
 <?php
 
+require __DIR__ . '/../../libs/vendor/autoload.php';
+/*
 namespace orbix\apps\core {
     spl_autoload_extensions('.php');
     spl_autoload_register(__NAMESPACE__ . '\autoload');
@@ -29,7 +31,6 @@ namespace orbix\apps\core {
         }
     }
 }
-
 namespace orbix\apps {
     //permisos/login_inc
     use permisos\model\MyCrypt;
@@ -44,3 +45,4 @@ namespace orbix\apps {
     use core\ConfigGlobal;
     use core\GestorErrores;
 }
+*/

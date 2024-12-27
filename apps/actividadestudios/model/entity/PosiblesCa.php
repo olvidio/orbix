@@ -50,7 +50,7 @@ class PosiblesCa extends core\ClasePropiedades
             $id_situacion = $oNota->getId_situacion();
             $aSuperadas[$id_situacion] = 't';
         }
-        $GesPersonaNotas = new notas\GestorPersonaNota();
+        $GesPersonaNotas = new notas\GestorPersonaNotaDB();
         $cPersonaNotas = $GesPersonaNotas->getPersonaNotas(array('id_nom' => $id_nom));
         $num_opcionales = 0;
         $todas_asig_p = array();

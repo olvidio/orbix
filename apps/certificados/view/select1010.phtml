@@ -1,0 +1,69 @@
+<script>
+    fnjs_eliminar_certificado = function (formulario) {
+        rta = fnjs_solo_uno(formulario);
+        if (rta === 1) {
+            if (confirm("<?= _("¿seguro que desea borrar el certificado?") ?>")) {
+                $('#mod').val("eliminar");
+                let request = $.ajax({
+                    data: $(formulario).serialize(),
+                    url: 'apps/certificados/controller/certificado_dl_delete.php',
+                    method: 'POST',
+                    dataType: 'json'
+                });
+                request.done(function (json) {
+                    if (json.success !== true) {
+                        alert("<?= _("respuesta") ?>: " + json.mensaje);
+                    } else {
+                        fnjs_actualizar(formulario);
+                    }
+                });
+            }
+        }
+    }
+
+    fnjs_actualizar = function (formulario) {
+        let campo = '<input type="hidden" name="refresh" value=1>';
+        $(formulario).attr('action', "apps/dossiers/controller/dossiers_ver.php");
+        $(formulario).append(campo);
+        fnjs_enviar_formulario(formulario, '#main');
+    }
+
+    fnjs_upload_certificado = function (formulario) {
+        $(formulario).attr('action', "apps/certificados/controller/certificado_dl_modificar.php");
+        fnjs_enviar_formulario(formulario);
+    }
+
+    fnjs_nuevo_certificado = function () {
+        $(formulario).attr('action', "apps/certificados/controller/certificado_dl_adjuntar.php");
+        fnjs_enviar_formulario(formulario);
+    }
+
+    fnjs_descargar_pdf = function (formulario) {
+        rta = fnjs_solo_uno(formulario);
+        if (rta === 1) {
+            /* selecciono los elementos con class="sel" de las tablas con id = formulario */
+            $(formulario + ' input.sel').each(function () {
+                if ($(this).prop('checked') === true) {
+                    let key = $(this).prop('value');
+                    let url = "apps/certificados/controller/certificado_dl_pdf_download.php";
+                    let url_download = url + '?key=' + key + '<?= $h_download ?>';
+                    window.open(url_download);
+                }
+            });
+        }
+    }
+</script>
+<h3 class=subtitulo><?= ucfirst(_("relación de certificados")) ?></h3>
+<form id="seleccionados" name="seleccionados" action="" method="post">
+    <?= $oHashSelect->getCamposHtml() ?>
+    <?= $oTabla->mostrar_tabla() ?>
+</form>
+<br>
+<table class=botones>
+    <tr class=botones>
+        <td class=botones>
+            <input name="btn_new" type="button" value="<?= _("adjuntar nuevo certificado") ?>"
+                   onclick="fnjs_update_div('#main','<?= $url_nuevo ?>');">
+        </td>
+    </tr>
+</table>

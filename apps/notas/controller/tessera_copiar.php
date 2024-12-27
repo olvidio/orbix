@@ -1,6 +1,6 @@
 <?php
 
-use notas\model\entity\GestorPersonaNota;
+use notas\model\entity\GestorPersonaNotaDB;
 
 /**
  * Esta página sirve para la tessera de una persona.
@@ -28,7 +28,7 @@ require_once("apps/core/global_object.inc");
 $id_nom_org = (integer)filter_input(INPUT_POST, 'id_nom_org');
 $id_nom_dst = (integer)filter_input(INPUT_POST, 'id_nom_dst');
 
-$gesPersonaNota = new GestorPersonaNota();
+$gesPersonaNota = new GestorPersonaNotaDB();
 $cPersonaOrgNotas = $gesPersonaNota->getPersonaNotas(['id_nom' => $id_nom_org]);
 
 $error = '';

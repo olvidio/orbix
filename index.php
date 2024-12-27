@@ -1,5 +1,4 @@
 <?php
-
 // Para salir de la sesión.
 if (isset($_REQUEST['logout']) && $_REQUEST['logout'] === 'si') {
     session_start();
@@ -833,7 +832,7 @@ $h = $oHash->linkSinVal();
 
     function fnjs_enviar(evt, objeto) {
         var frm = objeto.id;
-        if (evt.keyCode === 13 && evt.type === "keypress") {
+        if (evt.keyCode === 13 && evt.type === "keydown") {
             //alert ('hola33 '+evt.keyCode+' '+evt.type);
             // buscar el botón 'ok'
             var b = $('#' + frm + ' input.btn_ok');

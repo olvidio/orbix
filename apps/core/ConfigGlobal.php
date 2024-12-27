@@ -7,6 +7,8 @@ class ConfigGlobal extends ServerConf
 
     public static $auth_method='database';
     // la region (sin cr), las dl en formato de DBU
+    // Actualmente se usa para sincronizar con la BDU.
+    // las dl de la bdu (sin esquema en orbix) se añaden a la región que tiene esquema en Orbix.
     public const REGIONES_CON_DL = [
             'Pla' => ['u', 'par'],
         ];
@@ -79,6 +81,25 @@ class ConfigGlobal extends ServerConf
     public static function is_debug_mode()
     {
         return self::$debug;
+    }
+
+    public static function setTest_mode(bool $test)
+    {
+        self::$test = $test;
+    }
+
+    public static function is_test_mode()
+    {
+        return self::$test;
+    }
+
+    public static function getDIR_PWD()
+    {
+        if (self::is_test_mode()) {
+            return  self::DIR_PWD_TEST;
+        }
+
+        return  self::DIR_PWD;
     }
 
     /**

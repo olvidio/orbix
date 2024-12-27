@@ -115,11 +115,22 @@
             }
         }
         <?php } ?>
+        <?php if (!empty($script['fnjs_ver_certificados'])) { ?>
+        fnjs_ver_certificados = function (formulario) {
+            rta = fnjs_solo_uno(formulario);
+            if (rta === 1) {
+                $('#id_dossier').val("1010");
+                $(formulario).attr('action', "apps/certificados/controller/certificado_select.php");
+                $(formulario).target = "main";
+                fnjs_enviar_formulario(formulario);
+            }
+        }
+        <?php } ?>
         <?php if (!empty($script['fnjs_imp_certificado'])) { ?>
         fnjs_imp_certificado = function (formulario) {
             rta = fnjs_solo_uno(formulario);
             if (rta === 1) {
-                $(formulario).attr('action', "apps/notas/controller/certificado_imprimir.php");
+                $(formulario).attr('action', "apps/certificados/controller/certificado_imprimir.php");
                 $(formulario).target = "print";
                 fnjs_enviar_formulario(formulario);
             }
@@ -129,7 +140,8 @@
         fnjs_upload_certificado = function (formulario) {
             rta = fnjs_solo_uno(formulario);
             if (rta === 1) {
-                $(formulario).attr('action', "apps/certificados/controller/certificado_browse.php");
+                $('#id_dossier').val("1010");
+                $(formulario).attr('action', "apps/certificados/controller/certificado_adjuntar.php");
                 $(formulario).target = "print";
                 fnjs_enviar_formulario(formulario);
             }

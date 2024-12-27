@@ -109,8 +109,8 @@ class Select1011
         }
 
 
-        $gesPersonaNotas = new notas\GestorPersonaNota();
-        // Que si muestre el "fin bienio, fincuadrienio".
+        $gesPersonaNotas = new notas\GestorPersonaNotaDlDB();
+        // Que si muestre el "fin bienio, fin cuadrienio".
         //$cPersonaNotas = $gesPersonaNotas->getPersonaNotas(array('id_nom'=>  $this->id_pau,'id_asignatura'=>9000,'_ordre'=>'id_nivel'),array('id_asignatura'=>'<'));
         $cPersonaNotas = $gesPersonaNotas->getPersonaNotas(array('id_nom' => $this->id_pau, '_ordre' => 'id_nivel'), array('id_asignatura' => '<'));
 
@@ -174,6 +174,7 @@ class Select1011
                     $nombre_corto = $nom_op . " (" . $nombre_corto . ")";
                 }
             }
+
 
             $preceptor = is_true($preceptor)? _("sí") : _("no");
             // preceptor

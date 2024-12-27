@@ -145,8 +145,9 @@ if ($Qmod == 'nuevo') {
     $oHashPlano->setCamposForm('obj_dir!act!id_direccion');
     $h = $oHashPlano->linkSinVal();
 
+    $url = 'apps/ubis/controller/direcciones_editar.php';
     $oHashDir = new Hash();
-    $oHashDir->setUrl('apps/ubis/controller/direcciones_editar.php');
+    $oHashDir->setUrl($url);
     $oHashDir->setCamposNo('inc');
     $aCamposHidden = ['id_ubi' => $Qid_ubi,
         'id_direccion' => $Qid_direccion,
@@ -155,9 +156,7 @@ if ($Qmod == 'nuevo') {
         'refresh' => 1,
     ];
     $oHashDir->setArrayCamposHidden($aCamposHidden);
-    $go_dir = $oHashDir->linkConVal();
-    //$go_dir = web\Hash::link('apps/ubis/controller/direcciones_editar.php?'.http_build_query(array('id_ubi'=>$Qid_ubi,'id_direccion'=>$Qid_direccion,'obj_dir'=>$Qobj_dir,'idx'=>$idx,'hno'=>'inc')));
-
+    $go_dir = $url.'?'.$oHashDir->linkConVal();
 }
 
 //----------------------------------Permisos según el usuario

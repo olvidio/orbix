@@ -44,13 +44,13 @@ switch ($Qque) {
                 $oActividad = new Actividad($id_activ);
                 $nom_activ = $oActividad->getNom_activ();
                 $id_tipo_actividad = $oActividad->getId_tipo_activ();
-                $epoca = notas\PersonaNota::EPOCA_CA;
+                $epoca = notas\PersonaNotaDB::EPOCA_CA;
                 if ($id_tipo_actividad == 132500) { //sem invierno
-                    $epoca = notas\PersonaNota::EPOCA_INVIERNO;
+                    $epoca = notas\PersonaNotaDB::EPOCA_INVIERNO;
                 }
             } else {
                 $nom_activ = '';
-                $epoca = notas\PersonaNota::EPOCA_OTRO;
+                $epoca = notas\PersonaNotaDB::EPOCA_OTRO;
             }
             // hace falta el id_nivel (para las no opcionales):
             $oAsignatura = new Asignatura($id_asignatura);
@@ -173,7 +173,7 @@ switch ($Qque) {
         $aWhere['id_nom'] = $Qid_nom;
         $aWhere['id_asignatura'] = 3000;
         $aOperador['id_asignatura'] = '>';
-        $GesPersonaNotas = new notas\GestorPersonaNota();
+        $GesPersonaNotas = new notas\GestorPersonaNotaDB();
         $cAsignaturasOpSuperadas = $GesPersonaNotas->getPersonaNotas($aWhere, $aOperador);
         $aOpSuperadas = array();
         foreach ($cAsignaturasOpSuperadas as $oAsignatura) {

@@ -1,4 +1,4 @@
-<form id="frm_personas_que" action="<?= $action ?>" method="post" onkeypress="fnjs_enviar(event,this);">
+<form id="frm_personas_que" action="<?= $action ?>" method="post" onkeydown="fnjs_enviar(event,this);">
     <?= $oHash->getCamposHtml(); ?>
     <table>
         <thead>

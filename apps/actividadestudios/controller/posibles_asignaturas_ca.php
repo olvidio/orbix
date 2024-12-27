@@ -15,7 +15,7 @@
 use asignaturas\model\entity\GestorAsignatura;
 use asistentes\model\entity\GestorAsistente;
 use notas\model\AsignaturasPendientes;
-use notas\model\entity\GestorPersonaNota;
+use notas\model\entity\GestorPersonaNotaDB;
 use personas\model\entity\Persona;
 use personas\model\entity\PersonaGlobal;
 use ubis\model\entity\CentroDl;
@@ -77,7 +77,7 @@ foreach ($gesAsistentes->getAsistentes(array('id_activ' => $id_activ)) as $oAsis
         $a_alumnos_fin_c[] = ['apellidos_nombre' => $ap_nom, 'asignaturas' => $aNomAsignaturasFaltan];
     }
     // busco las asignaturas aprobadas
-    $GesNotas = new GestorPersonaNota();
+    $GesNotas = new GestorPersonaNotaDB();
     $aWhere = array();
     $aOperador = array();
     $aWhere['id_nom'] = $id_nom;

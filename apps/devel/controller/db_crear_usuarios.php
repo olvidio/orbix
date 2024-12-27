@@ -149,7 +149,7 @@ if ($_SESSION['sfsv'] == 'sf') {
     $oConfigDB->addEsquemaEnFicheroPasswords('sf', $esquemaf, $esquemaf_pwd);
 }
 
-$archivo_conf = ConfigGlobal::DIR_PWD . '/  (comun.inc, sv.inc, sf.inc)';
+$archivo_conf = ConfigGlobal::getDIR_PWD() . '/  (comun.inc, sv.inc, sf.inc)';
 echo sprintf(_("se han creado los usuarios. Ojo, un único usuario para pruebas y producción"));
 echo "<br>";
 echo sprintf(_("debe copiar los siguientes usuarios y passwords en el archivo %s"), $archivo_conf);

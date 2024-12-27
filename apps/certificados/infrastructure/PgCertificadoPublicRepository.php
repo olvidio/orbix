@@ -10,6 +10,7 @@ use core\ConverterDate;
 use core\Set;
 use PDO;
 use PDOException;
+use RuntimeException;
 use function core\is_true;
 
 
@@ -40,7 +41,7 @@ class PgCertificadoPublicRepository extends ClaseRepository implements Certifica
      * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
      * @return array|FALSE Una colección de objetos de tipo Certificado
      */
-    public function getCertificados(array $aWhere = [], array $aOperators = [])
+    public function getCertificados(array $aWhere = [], array $aOperators = []): bool|array
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
@@ -111,6 +112,7 @@ class PgCertificadoPublicRepository extends ClaseRepository implements Certifica
             }
             // para las fechas del postgres (texto iso)
             $aDatos['f_certificado'] = (new ConverterDate('date', $aDatos['f_certificado']))->fromPg();
+            $aDatos['f_enviado'] = (new ConverterDate('date', $aDatos['f_enviado']))->fromPg();
             $Certificado = new Certificado();
             $Certificado->setAllAttributes($aDatos);
             $CertificadoSet->add($Certificado);
@@ -120,7 +122,7 @@ class PgCertificadoPublicRepository extends ClaseRepository implements Certifica
 
     /* -------------------- ENTIDAD --------------------------------------------- */
 
-    public function Eliminar(Certificado $Certificado)
+    public function Eliminar(Certificado $Certificado): bool
     {
         $id_item = $Certificado->getId_item();
         $oDbl = $this->getoDbl();
@@ -137,7 +139,7 @@ class PgCertificadoPublicRepository extends ClaseRepository implements Certifica
     /**
      * Si no existe el registro, hace un insert, si existe, se hace el update.
      */
-    public function Guardar(Certificado $Certificado)
+    public function Guardar(Certificado $Certificado): bool
     {
         $id_item = $Certificado->getId_item();
         $oDbl = $this->getoDbl();
@@ -150,23 +152,19 @@ class PgCertificadoPublicRepository extends ClaseRepository implements Certifica
         $aDatos['idioma'] = $Certificado->getIdioma();
         $aDatos['destino'] = $Certificado->getDestino();
         $aDatos['certificado'] = $Certificado->getCertificado();
-        $aDatos['propio'] = $Certificado->isPropio();
-        $aDatos['copia'] = $Certificado->isCopia();
+        $aDatos['esquema_emisor'] = $Certificado->getEsquema_emisor();
+        $aDatos['firmado'] = $Certificado->isFirmado();
         // para los bytea
         $aDatos['documento'] = bin2hex($Certificado->getDocumento());
         // para las fechas
         $aDatos['f_certificado'] = (new ConverterDate('date', $Certificado->getF_certificado()))->toPg();
+        $aDatos['f_enviado'] = (new ConverterDate('date', $Certificado->getF_enviado()))->toPg();
         array_walk($aDatos, 'core\poner_null');
         //para el caso de los boolean FALSE, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
-        if (is_true($aDatos['propio'])) {
-            $aDatos['propio'] = 'true';
+        if (is_true($aDatos['firmado'])) {
+            $aDatos['firmado'] = 'true';
         } else {
-            $aDatos['propio'] = 'false';
-        }
-        if (is_true($aDatos['copia'])) {
-            $aDatos['copia'] = 'true';
-        } else {
-            $aDatos['copia'] = 'false';
+            $aDatos['firmado'] = 'false';
         }
 
         if ($bInsert === FALSE) {
@@ -178,9 +176,10 @@ class PgCertificadoPublicRepository extends ClaseRepository implements Certifica
 					destino                   = :destino,
 					certificado              = :certificado,
 					f_certificado            = :f_certificado,
-					propio                   = :propio,
-					copia                    = :copia,
-					documento                = :documento";
+					esquema_emisor                   = :esquema_emisor,
+					firmado                  = :firmado,
+					documento                = :documento,
+                    f_enviado                = :f_enviado";
             if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_item = $id_item")) === FALSE) {
                 $sClaveError = 'PgCertificadoRepository.update.prepare';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
@@ -199,8 +198,8 @@ class PgCertificadoPublicRepository extends ClaseRepository implements Certifica
         } else {
             // INSERT
             $aDatos['id_item'] = $Certificado->getId_item();
-            $campos = "(id_item,id_nom,nom,idioma,destino,certificado,f_certificado,propio,copia,documento)";
-            $valores = "(:id_item,:id_nom,:nom,:idioma,:destino,:certificado,:f_certificado,:propio,:copia,:documento)";
+            $campos = "(id_item,id_nom,nom,idioma,destino,certificado,f_certificado,esquema_emisor,firmado,documento,f_enviado)";
+            $valores = "(:id_item,:id_nom,:nom,:idioma,:destino,:certificado,:f_certificado,:esquema_emisor,:firmado,:documento,:f_enviado)";
             if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === FALSE) {
                 $sClaveError = 'PgCertificadoRepository.insertar.prepare';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
@@ -219,7 +218,7 @@ class PgCertificadoPublicRepository extends ClaseRepository implements Certifica
         return TRUE;
     }
 
-    private function isNew(int $id_item)
+    private function isNew(int $id_item): bool
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
@@ -241,7 +240,7 @@ class PgCertificadoPublicRepository extends ClaseRepository implements Certifica
      * @param int $id_item
      * @return array|bool
      */
-    public function datosById(int $id_item)
+    public function datosById(int $id_item): bool|array
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
@@ -255,11 +254,12 @@ class PgCertificadoPublicRepository extends ClaseRepository implements Certifica
         $oDblSt->bindColumn('documento', $sdocumento, PDO::PARAM_STR);
         $aDatos = $oDblSt->fetch(PDO::FETCH_ASSOC);
         if ($aDatos !== FALSE) {
-            $aDatos['documento'] = hex2bin($sdocumento?? '');
+            $aDatos['documento'] = hex2bin($sdocumento ?? '');
         }
         // para las fechas del postgres (texto iso)
         if ($aDatos !== FALSE) {
             $aDatos['f_certificado'] = (new ConverterDate('date', $aDatos['f_certificado']))->fromPg();
+            $aDatos['f_enviado'] = (new ConverterDate('date', $aDatos['f_enviado']))->fromPg();
         }
         return $aDatos;
     }
@@ -268,11 +268,12 @@ class PgCertificadoPublicRepository extends ClaseRepository implements Certifica
     /**
      * Busca la clase con id_item en la base de datos .
      */
-    public function findById(int $id_item)
+    public function findById(int $id_item): Certificado
     {
         $aDatos = $this->datosById($id_item);
         if (empty($aDatos)) {
-            return NULL;
+            $txt_err = sprintf(_("No se ha encontrado el item %s en la base de datos"), $id_item);
+            throw new RuntimeException($txt_err);
         }
         return (new Certificado())->setAllAttributes($aDatos);
     }

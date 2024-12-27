@@ -42,7 +42,7 @@ require_once("apps/core/global_object.inc");
 
 $oPosicion->recordar();
 
-$obj = 'notas\\model\\entity\\PersonaNota';
+$obj = 'notas\\model\\entity\\PersonaNotaDB';
 
 $Qpau = (string)filter_input(INPUT_POST, 'pau');
 $Qid_pau = (integer)filter_input(INPUT_POST, 'id_pau');
@@ -88,7 +88,7 @@ if (!empty($Qid_asignatura_real)) { //caso de modificar
     $id_asignatura = $Qid_asignatura_real;
     $aWhere['id_nom'] = $Qid_pau;
     $aWhere['id_asignatura'] = $Qid_asignatura_real;
-    $GesPersonaNotas = new notas\GestorPersonaNota();
+    $GesPersonaNotas = new notas\GestorPersonaNotaDB();
     $cPersonaNotas = $GesPersonaNotas->getPersonaNotas($aWhere);
 
     $oPersonaNota = $cPersonaNotas[0]; // solo deberia existir una.
@@ -188,7 +188,7 @@ if (!empty($Qid_asignatura_real)) { //caso de modificar
     $aWhere['id_nivel'] = 3000;
     $aOperador['id_nivel'] = '<';
     $aWhere['_ordre'] = 'id_nivel';
-    $GesPersonaNotas = new notas\GestorPersonaNota();
+    $GesPersonaNotas = new notas\GestorPersonaNotaDB();
     $cAsignaturasSuperadas = $GesPersonaNotas->getPersonaNotas($aWhere, $aOperador);
     $aSuperadas = array();
     foreach ($cAsignaturasSuperadas as $oAsignatura) {
@@ -230,12 +230,12 @@ if (!empty($preceptor)) {
 $oDesplNotas->setOpcion_sel($id_situacion);
 
 if (!empty($tipo_acta)) {
-    if ($tipo_acta == notas\PersonaNota::FORMATO_ACTA) {
+    if ($tipo_acta == notas\PersonaNotaDB::FORMATO_ACTA) {
         $chk_acta = "checked";
     } else {
         $chk_acta = "";
     }
-    if ($tipo_acta == notas\PersonaNota::FORMATO_CERTIFICADO) {
+    if ($tipo_acta == notas\PersonaNotaDB::FORMATO_CERTIFICADO) {
         $chk_certificado = "checked";
     } else {
         $chk_certificado = "";
@@ -246,17 +246,17 @@ if (!empty($tipo_acta)) {
 }
 
 if (!empty($epoca)) {
-    if ($epoca == notas\PersonaNota::EPOCA_CA) {
+    if ($epoca == notas\PersonaNotaDB::EPOCA_CA) {
         $chk_epoca_ca = "checked";
     } else {
         $chk_epoca_ca = "";
     }
-    if ($epoca == notas\PersonaNota::EPOCA_INVIERNO) {
+    if ($epoca == notas\PersonaNotaDB::EPOCA_INVIERNO) {
         $chk_epoca_inv = "checked";
     } else {
         $chk_epoca_inv = "";
     }
-    if ($epoca == notas\PersonaNota::EPOCA_OTRO) {
+    if ($epoca == notas\PersonaNotaDB::EPOCA_OTRO) {
         $chk_epoca_otro = "checked";
     } else {
         $chk_epoca_otro = "";

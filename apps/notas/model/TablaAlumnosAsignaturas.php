@@ -4,8 +4,8 @@ namespace notas\model;
 
 use asignaturas\model\entity\GestorAsignatura;
 use notas\model\entity\GestorNota;
-use notas\model\entity\GestorPersonaNota;
-use notas\model\entity\GestorPersonaNotaDl;
+use notas\model\entity\GestorPersonaNotaDB;
+use notas\model\entity\GestorPersonaNotaDlDB;
 use notas\model\entity\Nota;
 use personas\model\entity\GestorPersonaDl;
 use web\Lista;
@@ -85,7 +85,7 @@ class TablaAlumnosAsignaturas
 
         $GesPersonas = new GestorPersonaDl();
         $cPersonas = $GesPersonas->getPersonasDl($aWhere, $aOperador);
-        $GesPersonaNotas = new GestorPersonaNota();
+        $GesPersonaNotas = new GestorPersonaNotaDB();
         $p = 0;
         $a_valores = [];
         foreach ($cPersonas as $oPersona) {
@@ -217,7 +217,7 @@ class TablaAlumnosAsignaturas
 
         $GesPersonas = new GestorPersonaDl();
         $cPersonas = $GesPersonas->getPersonasDl($aWhere, $aOperador);
-        $GesPersonaNotas = new GestorPersonaNotaDl();
+        $GesPersonaNotas = new GestorPersonaNotaDlDB();
         $p = 0;
         $a_valores = [];
         foreach ($cPersonas as $oPersona) {

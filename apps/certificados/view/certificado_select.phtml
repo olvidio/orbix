@@ -1,16 +1,43 @@
 <script>
+    fnjs_enviar_certificado = function (formulario) {
+        rta = fnjs_solo_uno(formulario);
+        if (rta === 1) {
+            let request = $.ajax({
+                data: $(formulario).serialize(),
+                url: 'apps/certificados/controller/certificado_enviar.php',
+                method: 'POST',
+                dataType: 'json'
+            });
+            request.done(function (json) {
+                if (json.success !== true) {
+                    alert("<?= _("respuesta") ?>: " + json.mensaje);
+                } else {
+                    fnjs_actualizar(formulario);
+                }
+            });
+        }
+    }
+    fnjs_upload_certificado = function (formulario) {
+        rta = fnjs_solo_uno(formulario);
+        if (rta === 1) {
+            $(formulario).attr('action', "apps/certificados/controller/certificado_upload_firmado.php");
+            $(formulario).target = "print";
+            fnjs_enviar_formulario(formulario);
+        }
+    }
+
     fnjs_descargar_pdf = function (formulario) {
         rta = fnjs_solo_uno(formulario);
         if (rta === 1) {
-            /* selecciono los elementos con class="sel" de las tablas del id=formulario */
-            $(formulario + ' input.sel').each(function (i) {
-                var url_download;
-                var key;
-                var url;
+            /* selecciono los elementos con class="sel" de las tablas con id = formulario */
+            $(formulario + ' input.sel').each(function () {
+                let url_download;
+                let key;
+                let url;
                 if ($(this).prop('checked') === true) {
                     key = $(this).prop('value');
                     url = 'apps/certificados/controller/certificado_pdf_download.php';
-                    url_download = url + '?key=' + key + '<?= $h_download ?>';
+                    url_download = url + '?key=' + key + '&<?= $h_download ?>';
                     window.open(url_download);
                 }
             });
@@ -34,7 +61,7 @@
         if (rta === 1) {
             if (confirm("<?= $txt_eliminar ?>")) {
                 $('#mod').val("eliminar");
-                request = $.ajax({
+                let request = $.ajax({
                     data: $(formulario).serialize(),
                     url: 'apps/certificados/controller/certificado_delete.php',
                     method: 'POST',
@@ -51,7 +78,7 @@
         }
     }
     fnjs_actualizar = function (formulario) {
-        var campo = '<input type="hidden" name="refresh" value=1>';
+        let campo = '<input type="hidden" name="refresh" value=1>';
         $(formulario).attr('action', "apps/certificados/controller/certificado_select.php");
         $(formulario).append(campo);
         fnjs_enviar_formulario(formulario, '#main');
@@ -60,7 +87,7 @@
 </script>
 <form id="frm_sin_nombre" name="frm_sin_nombre" action="apps/certificados/controller/certificado_select.php"
       method="post"
-      onkeypress="fnjs_enviar(event,this);">
+      onkeydown="fnjs_enviar(event,this);">
     <?= $oHash->getCamposHtml() ?>
 
     <p class="comentario"><?= _("<b>Ayuda para búsquedas</b>") ?>:<br>
@@ -73,17 +100,6 @@
         <br>
         - <?= _("Por lo tanto, punto y asterisco (.*) significa que puede haber un numero indeterminado de caracteres en esa posición.") ?>
         <br>
-        - <?= _("<b>Ejemplos</b>:") ?><br>
-        - <?= _("<b>dlm. 2/19</b>: devolverá, dlmE 2/19, dlmO 2/19, dlmH 2/19,... pero no devolvería dlM 2/19, porque faltaría un carácter entre la m y el espacio.") ?>
-        <br>
-        - <?= _("<b>dl.* 2/19</b>: devolverá, dlmE 2/19, dlmO 2/19, dlb 2/19, dlna 2/19, etc.") ?><br>
-        - <?= _("<b>dl.*/19</b>: devolverá todos los certificados de todas las delegaciones del año 19 en el caso de ser una Región con delegaciones y en el caso de una Delegación devolverá las certificados de esa delegación del año 19.") ?>
-        <br>
-        - <?= _("<b>dlp .*/20</b>: devolverá los certificados de dlp del año 2020 ----- crC .*/21: devolverá todas los certificados del año 21 de Canadá.") ?>
-        <br>
-        - <?= _("<b>dl.*/20</b>: devolverá los certificados de la propia delegación (o de toda la Región si es una región con delegaciones). Puede ser útil para Delegaciones que han cambiado de nombre, porque buscará entre las certificados a las que tiene acceso la delegación, incluyendo el nombre de la actual y el nombre antiguo. ") ?>
-        <br>
-
     </p>
 
     <table>
@@ -91,9 +107,9 @@
             &nbsp;&nbsp;&nbsp;<input class=contenido id="certificado" name="certificado" size="30">
             <div class="help-tip">
                 <p><?= _("ejemplos") ?>:<br>
-                    - <?= _("23/15 (sólo número) => busca en las certificados de la r/dl.") ?><br>
-                    - <?= _("crX .* | dlx .* => todas las certificados de crX o dlx. Hay que dejar espacio") ?><br>
-                    - <?= _("crX .*/15 | dlx .*/15 => todas las certificados de crX o dlx del año 15") ?><br>
+                    - <?= _("23/15 (sólo número) => busca en los certificados de la rstgr.") ?><br>
+                    - <?= _("H .* | crEso .* => todos las certificados de H o Eso. Hay que dejar espacio") ?><br>
+                    - <?= _("H .*/15 | crEso .*/15 => todos los certificados de H o crEso del año 15") ?><br>
                 </p>
             </div>
         </th>
@@ -110,14 +126,3 @@
     <input type='Hidden' id='mod' name='mod' value=''>
     <?= $oTabla->mostrar_tabla() ?>
 </form>
-<?php
-// -----------------------------------  Botones  ----------------------
-/*
-if (!empty($botones)) {
-    echo "<table><tr class=botones>";
-    $txt_g = ucwords(_("añadir Certificado"));
-    echo "<th class='link_inv' onclick='fnjs_nuevo(\"#seleccionados\")'>$txt_g</th>";
-    echo "</tr></table><br>";
-}
-*/
-// fin ----------------------------  Botones  ----------------------
