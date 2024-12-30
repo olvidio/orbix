@@ -141,20 +141,20 @@ if (!empty($Qapellido1)) {
         $oPersona = Persona::newPersona($id_nom);
         if (!is_object($oPersona)) {
             $msg_err .= "<br>$oPersona con id_nom: $id_nom en  " . __FILE__ . ": line " . __LINE__;
+        } else {
+            $apellidos_nombre = $oPersona->getPrefApellidosNombre();
+            $ctr = $oPersona->getCentro_o_dl();
+            $dl = $oPersona->getDl();
+
+            $a_valores[$i + 1]['sel'] = "$id_nom";
+            $a_valores[$i + 1][1] = $apellidos_nombre;
+            $a_valores[$i + 1][2] = $dl;
+            $a_valores[$i + 1][3] = $str_asignaturas;
+
+            // para ordenar.
+            $a_Nombre[$i + 1] = $apellidos_nombre;
+            $str_asignaturas = '';
         }
-
-        $apellidos_nombre = $oPersona->getPrefApellidosNombre();
-        $ctr = $oPersona->getCentro_o_dl();
-        $dl = $oPersona->getDl();
-
-        $a_valores[$i+1]['sel'] = "$id_nom";
-        $a_valores[$i+1][1] = $apellidos_nombre;
-        $a_valores[$i+1][2] = $dl;
-        $a_valores[$i+1][3] = $str_asignaturas;
-
-        // para ordenar.
-        $a_Nombre[$i+1] = $apellidos_nombre;
-        $str_asignaturas = '';
     }
 
 }
