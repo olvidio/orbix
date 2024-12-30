@@ -272,6 +272,6 @@ class ConfigGlobal extends ServerConf
     // ----------- ordenApellidos -------------------
     public static function mi_ordenApellidos()
     {
-        return $_SESSION['session_auth']['ordenApellidos'];
+        return $_SESSION['session_auth']['ordenApellidos'] ?? '';
     }
 }

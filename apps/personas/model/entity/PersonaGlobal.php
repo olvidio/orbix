@@ -964,11 +964,11 @@ abstract class PersonaGlobal extends core\ClasePropiedades
     {
         $Pref_ordenApellidos = ConfigGlobal::mi_ordenApellidos();
 
-        if ($Pref_ordenApellidos == 'nom_ap') {
+        if ($Pref_ordenApellidos === 'nom_ap') {
             return $this->getNombreApellidos();
-        } else {
-            return $this->getApellidosNombre();
         }
+
+        return $this->getApellidosNombre();
     }
 
     /**
