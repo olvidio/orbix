@@ -346,14 +346,15 @@ if ($_SESSION['oPerm']->have_perm_oficina('est')) {
     $a_botones[] = array('txt' => _("copiar tessera"),
         'click' => "fnjs_copiar_tessera(\"#seleccionados\")");
     $script['fnjs_copiar_tessera'] = 1;
-    /*
-    $a_botones[] = array('txt' => _("ver certificados"),
-        'click' => "fnjs_ver_certificados(\"#seleccionados\")");
-    $script['fnjs_ver_certificados'] = 1;
-    $a_botones[] = array('txt' => _("adjuntar certificado"),
-        'click' => "fnjs_upload_certificado(\"#seleccionados\")");
-    $script['fnjs_upload_certificado'] = 1;
-    */
+
+    if (ConfigGlobal::mi_ambito() === 'r') {
+        $a_botones[] = array('txt' => _("imprimir certificado"),
+            'click' => "fnjs_imp_certificado(\"#seleccionados\")");
+        $script['fnjs_imp_certificado'] = 1;
+        $a_botones[] = array('txt' => _("adjuntar certificado"),
+            'click' => "fnjs_upload_certificado(\"#seleccionados\")");
+        $script['fnjs_upload_certificado'] = 1;
+    }
 }
 
 // Para rstgr borrar otros botones.
