@@ -65,7 +65,7 @@ switch ($Qperiodo) {
     case "proximo_mes":
         $proximo_mes = date('m') + 1;
         $anyo = date('Y');
-        if ($proximo_mes == 12) {
+        if ($proximo_mes == 13) {
             $proximo_mes = 1;
             $anyo++;
         }
@@ -73,7 +73,7 @@ switch ($Qperiodo) {
         $Qempiezamin_rep = $empiezamin->format('Y-m-d');
         echo 'empieza'.$Qempiezamin_rep.'<br>';
         $siguiente_mes = $proximo_mes + 1;
-        if ($siguiente_mes == 12) {
+        if ($siguiente_mes == 13) {
             $siguiente_mes = 1;
             $anyo++;
         }

@@ -50,8 +50,9 @@ if (empty($Qkey)) { // no hay ningún sacd
     $flag_borrado = TRUE;
 } else {
     $porciones = explode("#", $Qkey);
-    $id_nom = $porciones[0];
-    $iniciales = $porciones[1];
+    $iniciales = $porciones[0];
+    $id_nom = $porciones[1];
+//    echo 'id nom: '.$id_nom.'<br>';
 
     $oEncargoDia->setId_nom($id_nom);
 

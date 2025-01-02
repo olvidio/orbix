@@ -38,13 +38,15 @@ $InicialesSacd = new InicialesSacd();
 $sacd=$InicialesSacd->nombre_sacd($Qid_sacd);
 $iniciales=$InicialesSacd->iniciales($Qid_sacd);
 
-$key = $Qid_sacd . '#' . $iniciales;
+//$key = $Qid_sacd . '#' . $iniciales;
+$key = $iniciales . '#' . $Qid_sacd;
 $desplegable_sacd.='<OPTION VALUE="'.$key.'">'.$sacd.'</OPTION>';
 if ($Qid_sacd!=0)
 {
     $desplegable_sacd.='<OPTION VALUE=""></OPTION>';
 }
 
+$lista_sacd=array();
 //libre
 if ($Qseleccion & 1) {
     $gesZonaSacd = new GestorZonaSacd();
@@ -123,9 +125,11 @@ if ($Qseleccion & 1) {
             $sacd=$InicialesSacd->nombre_sacd($id_nom);
             $iniciales=$InicialesSacd->iniciales($id_nom);
         
-            $key = $id_nom . '#' . $iniciales;
-    
-            $desplegable_sacd.='<OPTION VALUE="'.$key.'">'.$sacd.'</OPTION>';
+//            $key = $id_nom . '#' . $iniciales;
+            $key =  $iniciales . '#' . $id_nom;
+            $lista_sacd[$key]=$sacd;
+            
+//            $desplegable_sacd.='<OPTION VALUE="'.$key.'">'.$sacd.'</OPTION>';
         }
     }
 }
@@ -139,9 +143,11 @@ if ($Qseleccion & 2) {
         $sacd=$InicialesSacd->nombre_sacd($id_nom);
         $iniciales=$InicialesSacd->iniciales($id_nom);
 
-        $key = $id_nom . '#' . $iniciales;
+//        $key = $id_nom . '#' . $iniciales;
+        $key =  $iniciales . '#' . $id_nom;
+        $lista_sacd[$key]=$sacd;
 
-        $desplegable_sacd.='<OPTION VALUE="'.$key.'">'.$sacd.'</OPTION>';
+//        $desplegable_sacd.='<OPTION VALUE="'.$key.'">'.$sacd.'</OPTION>';
     }
 }
 
@@ -163,9 +169,13 @@ if ($Qseleccion & 4) {
         $sacd=$InicialesSacd->nombre_sacd($id_nom);
         $iniciales=$InicialesSacd->iniciales($id_nom);
 
-        $key = $id_nom . '#' . $iniciales;
-        $desplegable_sacd.='<OPTION VALUE="'.$key.'">'.$sacd.'</OPTION>';
-    }
+//        $key = $id_nom . '#' . $iniciales;
+
+        $key =  $iniciales . '#' . $id_nom;
+        $lista_sacd[$key]=$sacd;
+//        $desplegable_sacd.='<OPTION VALUE="'.$key.'">'.$sacd.'</OPTION>';
+
+}
 }
 if ($Qseleccion & 8) { 
     $a_Clases = [];
@@ -184,12 +194,23 @@ if ($Qseleccion & 8) {
         $sacd=$InicialesSacd->nombre_sacd($id_nom);
         $iniciales=$InicialesSacd->iniciales($id_nom);
 
-        $key = $id_nom . '#' . $iniciales;
-        $desplegable_sacd.='<OPTION VALUE="'.$key.'">'.$sacd.'</OPTION>';
+//        $key = $id_nom . '#' . $iniciales;
+        $key =  $iniciales . '#' . $id_nom;
+        $lista_sacd[$key]=$sacd;
+//      $desplegable_sacd.='<OPTION VALUE="'.$key.'">'.$sacd.'</OPTION>';
     }
 }
 
+ksort($lista_sacd);
+foreach($lista_sacd as $key => $sacd)
+{
+//        echo $key.'-->'.$sacd.'<br>';
+    $desplegable_sacd.='<OPTION VALUE="'.$key.'">'.$sacd.'</OPTION>';
+}
+
 $desplegable_sacd.='</SELECT>';
+
+//echo $desplegable_sacd;
 
 $jsondata['mensaje']='mensaje de desplegable';
 $jsondata['desplegable']=$desplegable_sacd;

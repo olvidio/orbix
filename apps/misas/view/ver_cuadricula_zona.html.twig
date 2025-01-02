@@ -65,25 +65,36 @@
             padding-left: 4px;
             padding-right: 0px;
         }
+    .verdeclaro {
+      background-color: #d1e7dd;    }
     .verde {
-      background-color: #d1e7dd;
-    }
+      background-color: #00ff00;    }
+    .rojoclaro {
+      background-color: #f8d7da;    }
     .rojo {
-      background-color: #f8d7da;
-    }
+      background-color: #ff0000;    }
+    .amarilloclaro {
+      background-color: #ffffaa    }
     .amarillo {
-      background-color: #ffff00;
-    }
+      background-color: #ffff00;    }
+    .violetaclaro {
+      background-color: #e8a0e8;    }
+    .azulclaro2 {
+      background-color: #80e0e0;    }
+    .azulclaro {
+      background-color: #a0f0f0;    }
+    .titulo {
+      background-color: #f6f6f6;
+      font-weight: normal;
+      color: #454545;
+      font-size: 13px;    }
     </style>
 </head>
 <div id="cuadriculas" style="position:relative">
     <input type="hidden" id="empiezamin" value=""/>
     <input type="hidden" id="empiezamax" value=""/>
     <div style="width:100%;">
-        <div id="myGrid" class="slick-container" style="width:100%;height:300px;"></div>
-    </div>
-    <div style="width:100%;">
-        <div id="Grid_sacd" class="slick-container" style="width:100%;height:300px;"></div>
+        <div id="myGrid" class="slick-container" style="width:100%;height:500px;"></div>
     </div>
 
 
@@ -94,8 +105,8 @@
         <input type="hidden" id="cell_selected" value=""/>
         <input type="hidden" id="row_selected" value=""/>
         <input type="hidden" id="uuid_selected" value=""/>
-        <input id="dia" value=""/>
-        <input id="seleccionado" value=""/>
+        <input type="hidden" id="dia" value=""/>
+        <input type="hidden" id="seleccionado" value=""/>
         <input type="hidden" id="id_enc_selected" value=""/>
         <input type="hidden" id="id_sacd_inicial" value=""/>
         <p>{{ "Selección de sacd"|trans|raw }}:
@@ -180,14 +191,15 @@
     }
 
     function commitCurrentEdit(cell) {
+        alert('edit');
         cell = $('#cell_selected').val();
         row = $('#row_selected').val();
         var id_campo = columns[cell].field;
 
         let key = $('#id_sacd').val();
         const myArray = key.split("#");
-        let id_nom = myArray[0];
-        let iniciales = myArray[1];
+        let iniciales = myArray[0];
+        let id_nom = myArray[1];
 
         let tstart = $('#tstart').val();
         let tend = $('#tend').val();
@@ -217,26 +229,31 @@
         let meta = data[row].meta[id_campo];
         meta.dia = dia;
         // añadir el hash (se puede cambiar todo menos el encargo)
-        const arr_h = { {{ array_h|raw }} };
-        const mergedJSON = { ...meta, ...arr_h };
+//        const arr_h = { {{ array_h|raw }} };
+//        const mergedJSON = { ...meta, ...arr_h };
+        let parametros_update = 'id_enc=' + id_enc + '&uuid_item=' + uuid_item + '&key=' + key  + '&observ=' + observ + '&dia=' + dia + '&tend=' + tend + '&tstart=' + tstart + '{{ h_ver_cuadricula_zona|raw }}';
+
 
         // guardar cambios en DB
         var request = $.ajax({
             url: 'apps/misas/controller/cuadricula_update.php',
             method: 'POST',
-            data: mergedJSON,
-            dataType: 'json'
+            data: parametros,
+            dataType: 'html'
         });
         request.done(function (json) {
             if (json.success !== true) {
                 alert("{{ "respuesta"|trans|raw }}: " + json.mensaje);
             } else {
+                alert('else');
                 let id_zona = '{{id_zona}}';
                 let tipo_plantilla = '{{tipo_plantilla}}';
                 let orden = '{{orden}}';
                 let periodo = '{{periodo}}';
                 let empiezamin = $('#empiezamin').val();
                 let empiezamax = $('#empiezamax').val();
+                let fila = row;
+                let columna = cell;
                 let url = '{{ url_ver_cuadricula_zona }}';
     	        var sacd_libre=$('#sacd_libre').prop('checked');
             	var sacd_zona=$('#sacd_zona').prop('checked');
@@ -246,7 +263,7 @@
            	    if (sacd_zona) seleccion=2;
 	            if (sacd_dl) seleccion=4;
             	if (sacd_depaso) seleccion=8;
-                let parametros = 'id_zona=' + id_zona + '&tipo_plantilla=' + tipo_plantilla + '&orden=' + orden  + '&seleccion=' + seleccion + '&periodo=' + periodo + '&empiezamin=' + empiezamin + '&empiezamax=' + empiezamax + '{{ h_ver_cuadricula_zona|raw }}';
+                let parametros = 'id_zona=' + id_zona + '&tipo_plantilla=' + tipo_plantilla + '&orden=' + orden  + '&seleccion=' + seleccion + '&periodo=' + periodo + '&empiezamin=' + empiezamin + '&empiezamax=' + empiezamax + '&fila=' + fila + '&columna=' + columna + '{{ h_ver_cuadricula_zona|raw }}';
                 $.ajax({
                     url: url,
                     type: 'post',
@@ -254,6 +271,7 @@
                     dataType: 'html'
                  })
                 .done(function (rta_txt) {
+                    alert('done');
                     $('#cuadriculas').html(rta_txt);
                 });
             }
@@ -359,33 +377,76 @@
         }
     }
 
-function statusFormatter(row, cell, value, columnDef, dataContext) {
-    vs=value.split("#");
-    color=vs[1];
-    texto=vs[2];
-      var rtn = { text: vs[0], removeClasses: 'red orange green' };
-
+function formato_sacd(row, cell, value, columnDef, dataContext) {
+    var id_campo=columns[cell].field;
+    var color=data_sacd[row].meta[id_campo].color;
+    var texto=data_sacd[row].meta[id_campo].texto;
+//alert('sacd: '+sacd+' id_campo: '+id_campo+'value: '+value+' texto: '+texto+' color '+color);
+      var rtn = { text: value, removeClasses: 'rd orange green' };
       if (color !== null && color !== "") {
-        if (color == "rojo") {
-          rtn.addClasses = "rojo";
-          rtn.toolTip = texto;
-        } else if (color == "amarillo") {
-          rtn.addClasses =  "amarillo";
-          rtn.toolTip = texto;
-        } else if (color == "verde") {
-          rtn.addClasses =  "verde";
+          rtn.addClasses =  color;
           rtn.toolTip = texto;
         }
-      }
       return rtn;
+  }
+
+function formato_misas(row, cell, value, columnDef, dataContext) {
+    var id_campo=columns[cell].field;
+    var color=data[row].meta[id_campo].color;
+      var rtn = { text: value, removeClasses: 'amarillo amarilloclaro azulclaro rojo rojoclaro verde verdeclaro violetaclaro' };
+
+      if (color !== null && color !== "") {
+          rtn.addClasses = color;
+//          rtn.toolTip = value;
+        }
+      return rtn;
+  }
+
+function formato_encargos(row, cell, value, columnDef, dataContext) {
+    var id_campo=columns[cell].field;
+    var color=data[row].color_encargo;
+    var rtn = { text: value, removeClasses: 'amarillo amarilloclaro azulclaro rojo rojoclaro verde verdeclaro violetaclaro' };
+
+    if (color !== null && color !== "") {
+          rtn.addClasses = color;
+    }
+    return rtn;
+  }
+function formato(row, cell, value, columnDef, dataContext) {
+    var color='';
+    var id_campo=columns[cell].field;
+    tipo=data[row].meta[id_campo].tipo;
+    var rtn = { text: value, removeClasses: 'amarillo amarilloclaro azulclaro rojo rojoclaro verde verdeclaro violetaclaro' };
+    if (tipo=='sacd') {
+        color=data[row].meta[id_campo].color;
+ //       alert(tipo);
+        var texto=data[row].meta[id_campo].texto;
+ //       if (texto!='')
+ //       alert (texto);
+        rtn.toolTip = texto;
+    }
+    if (tipo=='misas') {
+        color=data[row].meta[id_campo].color;
+    }
+    if (tipo=='titulo') {
+        color='titulo';
+    }
+ 
+    if (color !== null && color !== "") {
+          rtn.addClasses = color;
+    }
+    return rtn;
   }
 
 var meta;
     var grid;
     var data = {{ json_data_cuadricula|raw }};
-    var columns = {{ json_columns_cuadricula|raw }};
+//    var columns = {{ json_columns_cuadricula|raw }};
+    var columns = {{ columns_cuadricula|raw }};
     var options = {
         editable: false,
+        frozenColumn: 0,
+        frozenRow: 0,
         enableAddRow: true,
         enableCellNavigation: true,
         asyncEditorLoading: false,
@@ -395,7 +456,7 @@ var meta;
     $('#empiezamax').val({{empiezamax}});
 
     var grid_sacd;
-    var data_sacd = {{ json_data_sacd|raw }};
+//    var data_sacd = {{ json_data_sacd|raw }};
     var columns2 = {{ json_columns2|raw }};
     var seleccion ={{ seleccion }};
     if (seleccion==1) {
@@ -411,7 +472,7 @@ var meta;
         $('#sacd_depaso').checked=true;
     }
 
-    var columns_sacd = {{ columns_sacd|raw }};
+//    var columns_sacd = {{ columns_sacd|raw }};
 
       var options2 = {
     editable: true,
@@ -422,7 +483,7 @@ var meta;
 
     $(function () {
         grid = new Slick.Grid("#myGrid", data, columns, options);
-        grid_sacd = new Slick.Grid("#Grid_sacd", data_sacd, columns_sacd, options);
+//        grid_sacd = new Slick.Grid("#Grid_sacd", data_sacd, columns_sacd, options);
 
         grid.onClick.subscribe(function (e) {
             var cell = grid.getCellFromEvent(e);
@@ -430,7 +491,10 @@ var meta;
             e.stopPropagation();
         });
 
-        grid.setActiveCell(0, 0);
+        var fila ={{ fila }};
+        var columna ={{ columna }};
+
+        grid.setActiveCell(fila, columna);
     })
 
 

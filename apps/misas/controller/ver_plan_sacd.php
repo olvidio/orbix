@@ -69,7 +69,7 @@ switch ($Qperiodo) {
         $empiezamin = new DateTimeLocal(date($anyo.'-'.$este_mes.'-01'));
         $Qempiezamin_rep = $empiezamin->format('Y-m-d');
         $siguiente_mes = $este_mes + 1;
-        if ($siguiente_mes == 12) {
+        if ($siguiente_mes == 13) {
             $siguiente_mes = 1;
             $anyo++;
         }
@@ -81,14 +81,14 @@ switch ($Qperiodo) {
     case "proximo_mes":
         $proximo_mes = date('m') + 1;
         $anyo = date('Y');
-        if ($proximo_mes == 12) {
+        if ($proximo_mes == 13) {
             $proximo_mes = 1;
             $anyo++;
         }
         $empiezamin = new DateTimeLocal(date($anyo.'-'.$proximo_mes.'-01'));
         $Qempiezamin_rep = $empiezamin->format('Y-m-d');
         $siguiente_mes = $proximo_mes + 1;
-        if ($siguiente_mes == 12) {
+        if ($siguiente_mes == 13) {
             $siguiente_mes = 1;
             $anyo++;
         }
