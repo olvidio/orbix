@@ -110,7 +110,7 @@
         <input type="hidden" id="id_enc_selected" value=""/>
         <input type="hidden" id="id_sacd_inicial" value=""/>
         <p>{{ "Selección de sacd"|trans|raw }}:
-		    <input id="sacd_libre" type="radio" name="grupos_sacd" value="1" OnChange="prepara_select_sacd();">{{ "libre"|trans|raw }}
+		    <input id="sacd_libre" type="radio" name="grupos_sacd" value="1" OnChange="prepara_select_sacd();">{{ "libre a 1a hora"|trans|raw }}
 		    <input id="sacd_zona" type="radio" name="grupos_sacd" value="2" OnChange="prepara_select_sacd();">{{ "zona"|trans|raw }}
 		    <input id="sacd_dl"type="radio" name="grupos_sacd"value="4" OnChange="prepara_select_sacd();">{{ "dl"|trans|raw }}
 		    <input id="sacd_depaso" type="radio" name="grupos_sacd"value="8" OnChange="prepara_select_sacd();">{{ "de paso"|trans|raw }}
@@ -191,7 +191,7 @@
     }
 
     function commitCurrentEdit(cell) {
-        alert('edit');
+//        alert('edit');
         cell = $('#cell_selected').val();
         row = $('#row_selected').val();
         var id_campo = columns[cell].field;
@@ -231,21 +231,24 @@
         // añadir el hash (se puede cambiar todo menos el encargo)
 //        const arr_h = { {{ array_h|raw }} };
 //        const mergedJSON = { ...meta, ...arr_h };
-        let parametros_update = 'id_enc=' + id_enc + '&uuid_item=' + uuid_item + '&key=' + key  + '&observ=' + observ + '&dia=' + dia + '&tend=' + tend + '&tstart=' + tstart + '{{ h_ver_cuadricula_zona|raw }}';
+        let parametros_update = 'id_enc=' + id_enc + '&uuid_item=' + uuid_item + '&key=' + key  + '&observ=' + observ + '&dia=' + dia + '&tend=' + tend + '&tstart=' + tstart + '{{ h_cuadricula_update|raw }}';
 
 
         // guardar cambios en DB
-        var request = $.ajax({
+        request = $.ajax({
             url: 'apps/misas/controller/cuadricula_update.php',
-            method: 'POST',
-            data: parametros,
+            type: 'post',
+            data: parametros_update,
             dataType: 'html'
         });
         request.done(function (json) {
-            if (json.success !== true) {
-                alert("{{ "respuesta"|trans|raw }}: " + json.mensaje);
-            } else {
-                alert('else');
+//            alert('json: '+json);
+//            alert('json.succes: '+json.success);
+//            alert('json.meta: '+json.meta.key);
+//            if (json.success !== true) {
+//                alert("{{ "respuesta"|trans|raw }}: " + json.mensaje);
+//            } else {
+//                alert('else');
                 let id_zona = '{{id_zona}}';
                 let tipo_plantilla = '{{tipo_plantilla}}';
                 let orden = '{{orden}}';
@@ -271,10 +274,9 @@
                     dataType: 'html'
                  })
                 .done(function (rta_txt) {
-                    alert('done');
                     $('#cuadriculas').html(rta_txt);
                 });
-            }
+//            }
         });
     }
 

@@ -145,7 +145,7 @@ if (empty($error_txt)) {
     $jsondata['meta'] = $a_meta;
 } else {
     $jsondata['success'] = false;
-    $jsondata['mensaje'] = $error_txt;
+    $jsondata['mensaje'] = 'ERROR: '.$error_txt;
 }
 
 //Aunque el content-type no sea un problema en la mayoría de casos, es recomendable especificarlo

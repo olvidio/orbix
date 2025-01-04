@@ -41,6 +41,8 @@ $Qfila = (integer)filter_input(INPUT_POST, 'fila');
 $Qcolumna = (integer)filter_input(INPUT_POST, 'columna');
 $Qseleccion = (integer)filter_input(INPUT_POST, 'seleccion');
 
+$un_dia = new DateInterval('P1D');
+
 switch ($Qperiodo) {
     case "esta_semana":
         $dia_week = date('N');
@@ -83,8 +85,7 @@ switch ($Qperiodo) {
         }
         
         $empiezamax = new DateTimeLocal(date($anyo.'-'.$siguiente_mes.'-01'));
-        $intervalo='P1D';
-        $empiezamax->sub(new DateInterval($intervalo));
+        $empiezamax->sub($un_dia);
         $Qempiezamax_rep = $empiezamax->format('Y-m-d');
         break;
 
@@ -104,8 +105,7 @@ switch ($Qperiodo) {
             $anyo++;
         }
         $empiezamax = new DateTimeLocal(date($anyo.'-'.$siguiente_mes.'-01'));
-        $intervalo='P1D';
-        $empiezamax->sub(new DateInterval($intervalo));
+        $empiezamax->sub($un_dia);
         $Qempiezamax_rep = $empiezamax->format('Y-m-d');
         break;
     default:
@@ -684,7 +684,7 @@ foreach ($cZonaSacd as $oZonaSacd) {
                     $esta_sacd[$id_nom][$num_dia] = 0;
                     $donde_esta_sacd[$id_nom][$num_dia] = $nom_llarg;
                 }
-                    }
+            }
 }
 
 $data_cols = [];
