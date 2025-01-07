@@ -52,6 +52,7 @@ $a_cabeceras = array(
     _("alumno"),
     _("dl"),
     _("asignaturas"),
+    _("id"),
 );
 
 $titulo_busqueda_por_apellidos = _("búsqueda por apellidos");
@@ -72,6 +73,7 @@ if (!empty($Qapellido1)) {
 
         $i++;
         $a_valores[$i]['sel'] = "$id_nom";
+        $a_valores[$i][4] = $id_nom;
         $a_valores[$i][1] = $apellidos_nombre;
         $a_valores[$i][2] = $dl;
         $a_valores[$i][3] = "";
@@ -115,6 +117,7 @@ if (!empty($Qapellido1)) {
             $dl = $oPersona->getDl();
 
             $a_valores[$i]['sel'] = "$id_nom_anterior";
+            $a_valores[$i][4] = $id_nom_anterior;
             $a_valores[$i][1] = $apellidos_nombre;
             $a_valores[$i][2] = $dl;
             $a_valores[$i][3] = $str_asignaturas;
@@ -148,6 +151,7 @@ if (!empty($Qapellido1)) {
             $dl = $oPersona->getDl();
 
             $a_valores[$i + 1]['sel'] = "$id_nom";
+            $a_valores[$i + 1][4] = $id_nom;
             $a_valores[$i + 1][1] = $apellidos_nombre;
             $a_valores[$i + 1][2] = $dl;
             $a_valores[$i + 1][3] = $str_asignaturas;
