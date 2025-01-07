@@ -13,15 +13,13 @@
  * @subpackage    actividades
  */
 
+use actividades\domain\ActividadNueva;
 use actividades\model\entity\Actividad;
-use actividades\model\entity\ActividadAll;
 use actividades\model\entity\ActividadDl;
-use actividades\model\entity\ActividadEx;
 use actividades\model\entity\Importada;
 use actividadplazas\model\entity\ActividadPlazasDl;
 use actividadplazas\model\entity\GestorActividadPlazas;
 use core\ConfigGlobal;
-use core\DBPropiedades;
 use procesos\model\entity\GestorActividadProcesoTarea;
 
 /**
@@ -113,154 +111,50 @@ switch ($Qmod) {
         }
         break;
     case "nuevo":
-        $Qid_tipo_activ = (integer)filter_input(INPUT_POST, 'id_tipo_activ');
-        $Qid_ubi = (integer)filter_input(INPUT_POST, 'id_ubi');
-        $Qnum_asistentes = (integer)filter_input(INPUT_POST, 'num_asistentes');
-        $Qstatus = (integer)filter_input(INPUT_POST, 'status');
-        $Qid_repeticion = (integer)filter_input(INPUT_POST, 'id_repeticion');
-        $Qplazas = (integer)filter_input(INPUT_POST, 'plazas');
-        $Qtarifa = (integer)filter_input(INPUT_POST, 'id_tarifa');
-        $Qprecio = filter_input(INPUT_POST, 'precio', FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
-
-        $Qdl_org = (string)filter_input(INPUT_POST, 'dl_org');
-        $Qnom_activ = (string)filter_input(INPUT_POST, 'nom_activ');
-        $Qlugar_esp = (string)filter_input(INPUT_POST, 'lugar_esp');
-        $Qdesc_activ = (string)filter_input(INPUT_POST, 'desc_activ');
-        $Qf_ini = (string)filter_input(INPUT_POST, 'f_ini');
-        $Qf_fin = (string)filter_input(INPUT_POST, 'f_fin');
-        $Qtipo_horario = (string)filter_input(INPUT_POST, 'tipo_horario');
-        $Qobserv = (string)filter_input(INPUT_POST, 'observ');
-        $Qnivel_stgr = (string)filter_input(INPUT_POST, 'nivel_stgr');
-        $Qobserv_material = (string)filter_input(INPUT_POST, 'observ_material');
-        $Qh_ini = (string)filter_input(INPUT_POST, 'h_ini');
-        $Qh_fin = (string)filter_input(INPUT_POST, 'h_fin');
-        $Qpublicado = (string)filter_input(INPUT_POST, 'publicado');
-        // si estoy creando una actividad de otra dl es porque la quiero importar y por tanto debe estar publicada.
-        if ($Qdl_org != ConfigGlobal::mi_delef()) {
-            $Qpublicado = 't';
-            // comprobar que no es una dl que ya tiene su esquema
-            $oDBPropiedades = new DBPropiedades();
-            $a_posibles_esquemas = $oDBPropiedades->array_posibles_esquemas(TRUE, TRUE);
-            $is_dl_in_orbix = FALSE;
-            foreach ($a_posibles_esquemas as $esquema) {
-                $row = explode('-', $esquema);
-                if ($row[1] === $Qdl_org) {
-                    $is_dl_in_orbix = TRUE;
-                    break;
-                }
-            }
-            if ($is_dl_in_orbix) {
-                echo _("No puede crear una actividad que organiza una dl/r que ya usa aquinate");
-                die();
-            }
-
-        }
-
         // Puede ser '000' > sin especificar
         $Qinom_tipo_val = (string)filter_input(INPUT_POST, 'inom_tipo_val');
-
-        // permiso
-        $_SESSION['oPermActividades']->setActividad($Qid_activ, $Qid_tipo_activ, $Qdl_org);
-        // para dl y dlf:
-        $dl_org_no_f = preg_replace('/(\.*)f$/', '\1', $Qdl_org);
-        $dl_propia = (ConfigGlobal::mi_dele() == $dl_org_no_f) ? TRUE : FALSE;
-        if (ConfigGlobal::is_app_installed('procesos') && $_SESSION['oPermActividades']->getPermisoCrear($dl_propia) === FALSE) {
-            echo _("No tiene permiso para crear una actividad de este tipo") . "<br>";
-            die();
-        }
-
-        //Compruebo que estén todos los campos necesasrios
-        if (empty($Qnom_activ) || empty($Qf_ini) || empty($Qf_fin) || empty($Qstatus) || empty($Qdl_org)) {
-            echo _("debe llenar todos los campos que tengan un (*)") . "<br>";
-            die();
-        }
         if (empty($Qinom_tipo_val)) {
             echo _("debe seleccionar un tipo de actividad") . "<br>";
             die();
         }
 
-        $isfsv = substr($Qid_tipo_activ, 0, 1);
-        $mi_dele = ConfigGlobal::mi_delef($isfsv);
-        if ($Qdl_org == $mi_dele) {
-            $oActividad = new ActividadDl();
-        } else {
-            $oActividad = new ActividadEx();
-            $oActividad->setPublicado('t');
-            $oActividad->setId_tabla('ex');
-            $Qstatus = ActividadAll::STATUS_ACTUAL; // Que sea estado actual.
-        }
-        $oActividad->setDl_org($Qdl_org);
-        if (isset($Qid_tipo_activ)) {
-            if ($oActividad->setId_tipo_activ($Qid_tipo_activ) === false) {
-                echo _("tipo de actividad incorrecto");
-                die();
-            }
-        }
-        $oActividad->setNom_activ($Qnom_activ);
+        $datosActividad = [
+            'id_tipo_activ' => (integer)filter_input(INPUT_POST, 'id_tipo_activ'),
+            'id_ubi' => (integer)filter_input(INPUT_POST, 'id_ubi'),
+            'num_asistentes' => (integer)filter_input(INPUT_POST, 'num_asistentes'),
+            'status' => (integer)filter_input(INPUT_POST, 'status'),
+            'id_repeticion' => (integer)filter_input(INPUT_POST, 'id_repeticion'),
+            'plazas' => (integer)filter_input(INPUT_POST, 'plazas'),
+            'tarifa' => (integer)filter_input(INPUT_POST, 'id_tarifa'),
+            'precio' => filter_input(INPUT_POST, 'precio', FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION),
 
-        // En el caso de tener id_ubi (!=1) borro el campo lugar_esp.
-        if (!empty($Qid_ubi) && $Qid_ubi != 1) {
-            $oActividad->setId_ubi($Qid_ubi);
-            $oActividad->setLugar_esp('');
-        } else {
-            $oActividad->setId_ubi($Qid_ubi);
-            $oActividad->setLugar_esp($Qlugar_esp);
-        }
-        $oActividad->setDesc_activ($Qdesc_activ);
-        $oActividad->setF_ini($Qf_ini);
-        $oActividad->setF_fin($Qf_fin);
-        $oActividad->setTipo_horario($Qtipo_horario);
-        $oActividad->setPrecio($Qprecio);
-        $oActividad->setNum_asistentes($Qnum_asistentes);
-        $oActividad->setStatus($Qstatus);
-        $oActividad->setObserv($Qobserv);
-        // Si nivel_stgr está vacio, pongo el calculado.
-        if (empty($Qnivel_stgr)) {
-            $Qnivel_stgr = $oActividad->generarNivelStgr();
-        }
-        $oActividad->setNivel_stgr($Qnivel_stgr);
-        $oActividad->setId_repeticion($Qid_repeticion);
-        $oActividad->setObserv_material($Qobserv_material);
-        $oActividad->setTarifa($Qtarifa);
-        $oActividad->setH_ini($Qh_ini);
-        $oActividad->setH_fin($Qh_fin);
-        $oActividad->setPublicado($Qpublicado);
-        $oActividad->setPlazas($Qplazas);
-        if ($oActividad->DBGuardar() === false) {
-            echo _("hay un error, no se ha guardado");
-            echo "\n" . $oActividad->getErrorTxt();
-        }
-        // si estoy creando una actividad de otra dl es porque la quiero importar.
-        if ($Qdl_org != $mi_dele) {
-            $id_activ = $oActividad->getId_activ();
-            $oImportada = new Importada($id_activ);
-            if ($oImportada->DBGuardar() === false) {
-                echo _("hay un error, no se ha importado");
-                echo "\n" . $oActividad->getErrorTxt();
-            }
-        }
-        // Por defecto pongo todas las plazas en mi dl
-        if (ConfigGlobal::is_app_installed('actividadplazas')) {
-            if (!empty($Qplazas) && $Qdl_org == $mi_dele) {
-                $id_activ = $oActividad->getId_activ();
-                $id_dl = 0;
-                $gesDelegacion = new ubis\model\entity\GestorDelegacion();
-                $cDelegaciones = $gesDelegacion->getDelegaciones(array('dl' => $mi_dele));
-                if (is_array($cDelegaciones) && count($cDelegaciones)) {
-                    $id_dl = $cDelegaciones[0]->getId_dl();
-                }
-                //Si es la dl_org, son plazas concedidas, sino pedidas.
-                $oActividadPlazasDl = new ActividadPlazasDl(array('id_activ' => $id_activ, 'id_dl' => $id_dl, 'dl_tabla' => $mi_dele));
-                $oActividadPlazasDl->DBCarregar();
-                $oActividadPlazasDl->setPlazas($Qplazas);
+            'dl_org' => (string)filter_input(INPUT_POST, 'dl_org'),
+            'nom_activ' => (string)filter_input(INPUT_POST, 'nom_activ'),
+            'lugar_esp' => (string)filter_input(INPUT_POST, 'lugar_esp'),
+            'desc_activ' => (string)filter_input(INPUT_POST, 'desc_activ'),
+            'f_ini' => (string)filter_input(INPUT_POST, 'f_ini'),
+            'f_fin' => (string)filter_input(INPUT_POST, 'f_fin'),
+            'tipo_horario' => (string)filter_input(INPUT_POST, 'tipo_horario'),
+            'observ' => (string)filter_input(INPUT_POST, 'observ'),
+            'nivel_stgr' => (string)filter_input(INPUT_POST, 'nivel_stgr'),
+            'observ_material' => (string)filter_input(INPUT_POST, 'observ_material'),
+            'h_ini' => (string)filter_input(INPUT_POST, 'h_ini'),
+            'h_fin' => (string)filter_input(INPUT_POST, 'h_fin'),
+            'publicado' => (string)filter_input(INPUT_POST, 'publicado'),
+        ];
 
-                //print_r($oActividadPlazasDl);
-                if ($oActividadPlazasDl->DBGuardar() === false) {
-                    echo _("hay un error, no se ha guardado");
-                    echo "\n" . $oActividadPlazasDl->getErrorTxt();
-                }
-            }
+        $error_txt = ActividadNueva::actividadNueva($datosActividad);
+
+        if (!empty($error_txt)) {
+            $jsondata['success'] = FALSE;
+            $jsondata['mensaje'] = $error_txt;
+        } else {
+            $jsondata['success'] = TRUE;
         }
+        //Aunque el content-type no sea un problema en la mayoría de casos, es recomendable especificarlo
+        header('Content-type: application/json; charset=utf-8');
+        echo json_encode($jsondata);
+        break;
         break;
     case "duplicar": // duplicar la actividad.
         $a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);

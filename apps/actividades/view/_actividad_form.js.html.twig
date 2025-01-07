@@ -106,13 +106,23 @@ fnjs_guardar=function(tipo='') {
                 data: $(this).serialize()
         })
         .done(function (rta_txt) {
-            if (rta_txt !== '' && rta_txt !== '\\n') {
-                alert ('{{ "respuesta"|trans|raw }}: '+rta_txt);
+            let volver=1;
+            if (typeof(rta_txt) === 'object') {
+                if (rta_txt.success !== true) {
+                    alert ('{{ "respuesta"|trans|raw }}: '+rta_txt.mensaje);
+                    volver = 0;
+                }
             } else {
-                if (tipo!='nuevo') { // En el caso de nuevo, me quedo en el formulario.
-                {{ oPosicion.js_atras(1)|raw }}
+                if (rta_txt !== '' && rta_txt !== '\\n') {
+                    alert('{{ "respuesta"|trans|raw }}: ' + rta_txt);
+                    volver = 0;
+                }
             }
-        }
+            if (volver===1) {
+                if (tipo!=='nuevo') { // En el caso de nuevo, me quedo en el formulario.
+                    {{ oPosicion.js_atras(1)|raw }}
+                }
+            }
         // OJO hay que actualizar el formulario de la lista, no el actual.
         // Esta función está en calendario_planning.phtml
         //fnjs_ver();
