@@ -42,7 +42,7 @@ if (empty($a_ce[$mi_dl])) {
     echo "<br>";
     echo _("Hay definirla en el código.");
     echo "<br>";
-    echo "__FILE__, __LINE__";
+    echo __FILE__ . ', ' . __LINE__;
 }
 $ce_lugar = $a_ce[$mi_dl];
 

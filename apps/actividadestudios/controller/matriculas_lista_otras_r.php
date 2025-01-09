@@ -107,7 +107,7 @@ if (!empty($Qapellido1)) {
         if (!empty($id_nom_anterior) && $id_nom != $id_nom_anterior) {
             $oPersona = Persona::newPersona($id_nom_anterior);
             if (!is_object($oPersona)) {
-                $msg_err .= "<br>$oPersona con id_nom: $id_nom_anterior en  " . __FILE__ . ": line " . __LINE__;
+                $msg_err .= "<br>$oPersona en  " . __FILE__ . ": line " . __LINE__;
                 $id_nom_anterior = $id_nom;
                 continue;
             }
