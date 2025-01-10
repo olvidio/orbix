@@ -132,7 +132,7 @@ class GestorPersonaAll extends core\ClaseGestor
         $oPersonaOut->setF_situacion($aDades['f_situacion'], false);
         $oPersonaOut->setApel_fam($aDades['apel_fam']);
         $oPersonaOut->setInc($aDades['inc']);
-        $oPersonaOut->setF_inc($aDades['f_inc']);
+        $oPersonaOut->setF_inc($aDades['f_inc'],false);
         $oPersonaOut->setStgr($aDades['stgr']);
         //$oPersonaOut->setEdad($aDades['edad']);
         $oPersonaOut->setProfesion($aDades['profesion']);
