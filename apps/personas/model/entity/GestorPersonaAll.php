@@ -126,7 +126,7 @@ class GestorPersonaAll extends core\ClaseGestor
         $oPersonaOut->setApellido1($aDades['apellido1']);
         $oPersonaOut->setNx2($aDades['nx2']);
         $oPersonaOut->setApellido2($aDades['apellido2']);
-        $oPersonaOut->setF_nacimiento($aDades['f_nacimiento']);
+        $oPersonaOut->setF_nacimiento($aDades['f_nacimiento'],false);
         $oPersonaOut->setLengua($aDades['lengua']);
         $oPersonaOut->setSituacion($aDades['situacion']);
         $oPersonaOut->setF_situacion($aDades['f_situacion'], false);
