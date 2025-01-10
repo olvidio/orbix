@@ -3,6 +3,10 @@
 namespace personas\model\entity;
 
 use core;
+use core\ConfigDB;
+use core\DBConnection;
+use profesores\model\entity\GestorProfesor;
+use web\DateTimeLocal;
 
 /**
  * GestorPersonaAll
@@ -50,9 +54,20 @@ class GestorPersonaAll extends core\ClaseGestor
         $sql = "SELECT * FROM $nom_tabla WHERE id_nom=$id_nom AND situacion = 'A' ORDER BY f_situacion";
         if ($oDblSt = $this->ejecutar($sql)) {
             foreach ($oDblSt as $aDades) {
-                $d_schema_persona = $aDades['id_schema'];
+                $id_schema_persona = $aDades['id_schema'];
             }
-            return new PersonaIn($id_nom);
+            // Si hay más de uno, me quedo con el que tiene la fecha de cambio situación más reciente.
+            // Es posible que no exista como personaOut y hay que crearla
+            $oPersonaIN = new PersonaIn($id_nom);
+            $nom = $oPersonaIN->getNom();
+            if (!empty($nom)) {
+                return $oPersonaIN;
+            }
+
+            // crear una nueva desde el esquema de la persona
+            if ($this->nuevaPersonaOut($id_schema_persona)) {
+                return new PersonaIn($id_nom);
+            }
         }
 
         // que esté en la dl, pero no en situación = 'A'
@@ -72,30 +87,96 @@ class GestorPersonaAll extends core\ClaseGestor
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
             return FALSE;
         }
-        if (empty($oDblSt)) {
+        if (empty($oDblSt->rowCount())) {
             return FALSE;
         }
 
         return $oDblSt;
     }
 
-    private function generarEntidad($tipo)
+    private function nuevaPersonaOut($id_schema_persona)
     {
-        switch ($tipo) {
-            case 'Dl':
-                $oPersona = new PersonaDl($this->id_nom);
-                break;
-            case 'Ex':
-                $oPersona = new PersonaEx($this->id_nom);
-                break;
-            case 'In':
-                $oPersona = new PersonaIn($this->id_nom);
-                break;
+        $nom_tabla = $this->getNomTabla();
+        $sql = "SELECT * FROM $nom_tabla WHERE id_nom=$this->id_nom AND situacion = 'A' AND id_schema = $id_schema_persona";
+        $oDblSt = $this->ejecutar($sql);
+        if (empty($oDblSt->rowCount())) {
+            return FALSE;
         }
 
-        $oPersona->DBCarregar();
+        // en un mismo esquema sólo debería haber una
+        $aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);
 
-        return $oPersona;
+        $schema_persona = $this->getSchemaFromId($id_schema_persona);
+
+        $oPersonaOut = new PersonaOut($this->id_nom);
+        // cambiar conexión al schema_persona:
+        $oConfigDB = new ConfigDB('sv');
+        $config = $oConfigDB->getEsquema($schema_persona);
+        $oConexion = new DBConnection($config);
+        $oDbl = $oConexion->getPDO();
+        $oPersonaOut->setoDbl($oDbl);
+
+        $oPersonaOut->setId_cr($aDades['id_cr']);
+        $oPersonaOut->setId_tabla('p' . $aDades['id_tabla']);
+        $oPersonaOut->setDl($aDades['dl']);
+        $oPersonaOut->setSacd($aDades['sacd']);
+        $oPersonaOut->setTrato($aDades['trato']);
+        $oPersonaOut->setNom($aDades['nom']);
+        $oPersonaOut->setNx1($aDades['nx1']);
+        $oPersonaOut->setApellido1($aDades['apellido1']);
+        $oPersonaOut->setNx2($aDades['nx2']);
+        $oPersonaOut->setApellido2($aDades['apellido2']);
+        $oPersonaOut->setF_nacimiento($aDades['f_nacimiento']);
+        $oPersonaOut->setLengua($aDades['lengua']);
+        $oPersonaOut->setSituacion($aDades['situacion']);
+        $oPersonaOut->setF_situacion($aDades['f_situacion'], false);
+        $oPersonaOut->setApel_fam($aDades['apel_fam']);
+        $oPersonaOut->setInc($aDades['inc']);
+        $oPersonaOut->setF_inc($aDades['f_inc']);
+        $oPersonaOut->setStgr($aDades['stgr']);
+        //$oPersonaOut->setEdad($aDades['edad']);
+        $oPersonaOut->setProfesion($aDades['profesion']);
+        $oPersonaOut->setEap($aDades['eap']);
+        $oPersonaOut->setObserv($aDades['observ']);
+        $oPersonaOut->setLugar_nacimiento($aDades['lugar_nacimiento']);
+        //$oPersonaOut->setProfesor_stgr($aDades['profesor_stgr']);
+
+        // miro si es profesor
+        $gesProfesores = new GestorProfesor();
+        $gesProfesores->setoDbl($oDbl);
+        $cProfesores = $gesProfesores->getProfesores(array('id_nom' => $this->id_nom, 'f_cese' => ''), array('f_cese' => 'IS NULL'));
+        if (count($cProfesores) > 0) {
+            $oPersonaOut->setProfesor_stgr('t');
+        }
+        // calculo la edad
+        if (!empty($aDades['f_nacimiento'])) {
+            $oF_nacimiento = new DateTimeLocal($aDades['f_nacimiento']);
+            if (!empty($oF_nacimiento)) {
+                $oF_nacimiento = new DateTimeLocal($aDades['f_nacimiento']);
+                $m = (int)$oF_nacimiento->format('m');
+                $a = (int)$oF_nacimiento->format('Y');
+                $ah = (int)date("Y");
+                $mh = (int)date("m");
+                $inc_m = 0;
+                $mh >= $m ? 0 : $inc_m = 1;
+                $edad = $ah - $a - $inc_m;
+
+                $oPersonaOut->setEdad($edad);
+            }
+        }
+
+        $oPersonaOut->DBGuardar();
+
+        return TRUE;
+    }
+
+    private function getSchemaFromId($id_schema_persona)
+    {
+        $sql = "SELECT * FROM public.db_idschema WHERE id = $id_schema_persona";
+        $oDblSt = $this->ejecutar($sql);
+        $aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);
+
+        return $aDades['schema'];
     }
 
 }

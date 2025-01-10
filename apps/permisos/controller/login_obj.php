@@ -33,16 +33,16 @@ function cambiar_idioma($idioma = '')
                 $numero_de_idiomas = count($a_idiomas);
                 for ($i = 0; $i < $numero_de_idiomas; $i++) {
                     if (!isset($idioma)) {
-                        if (substr($a_idiomas[$i], 0, 2) == "ca") {
+                        if (substr($a_idiomas[$i], 0, 2) === "ca") {
                             $idioma = "ca_ES.UTF-8";
                         }
-                        if (substr($a_idiomas[$i], 0, 2) == "es") {
+                        if (substr($a_idiomas[$i], 0, 2) === "es") {
                             $idioma = "es_ES.UTF-8";
                         }
-                        if (substr($a_idiomas[$i], 0, 2) == "en") {
+                        if (substr($a_idiomas[$i], 0, 2) === "en") {
                             $idioma = "en_US.UTF-8";
                         }
-                        if (substr($a_idiomas[$i], 0, 2) == "de") {
+                        if (substr($a_idiomas[$i], 0, 2) === "de") {
                             $idioma = "de_DE.UTF-8";
                         }
                         //if (substr($a_idiomas[$i], 0, 2) == "en"){$idioma = "en";}
@@ -196,7 +196,7 @@ if (!isset($_SESSION['session_auth'])) {
 
         $aWhere = array('usuario' => $_POST['username']);
         $esquema = empty($_POST['esquema']) ? $esquema_web : $_POST['esquema'];
-        if (substr($esquema, -1) == 'v') {
+        if (substr($esquema, -1) === 'v') {
             $sfsv = 1;
             $oConfigDB = new ConfigDB('sv-e_select');
             $config = $oConfigDB->getEsquema($esquema);
@@ -204,7 +204,7 @@ if (!isset($_SESSION['session_auth'])) {
             $oDB_Select = $oConexion->getPDO();
 
         }
-        if (substr($esquema, -1) == 'f') {
+        if (substr($esquema, -1) === 'f') {
             $sfsv = 2;
             $oConfigDB = new ConfigDB('sf-e');
             $config = $oConfigDB->getEsquema($esquema);
@@ -263,7 +263,7 @@ if (!isset($_SESSION['session_auth'])) {
                 $mail = empty($mail) ? $row['email'] : $mail;
                 $expire = ""; //de moment, per fer servir més endevant...
                 // Para obligar a cambiar el password
-                if ($_POST['password'] == '1ªVegada') {
+                if ($_POST['password'] === '1ªVegada') {
                     $expire = 1;
                 }
 
