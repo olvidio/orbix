@@ -4,13 +4,13 @@ namespace notas\model;
 
 use actividades\model\entity as actividades;
 use asignaturas\model\entity\Departamento;
+use asignaturas\model\entity\GestorAsignatura;
 use asignaturas\model\entity\GestorSector;
-use core\ConfigGlobal;
 use core;
+use core\ConfigGlobal;
+use notas\model\entity\GestorNota;
 use personas\model\entity as personas;
 use profesores\model\entity as profesores;
-use notas\model\entity\GestorNota;
-use asignaturas\model\entity\GestorAsignatura;
 
 /**
  * Fitxer amb la Classe que accedeix a la taula e_notas_situacion
@@ -771,6 +771,7 @@ class Resumen extends core\ClasePropiedades
             $notas_vf = 'publicf.e_notas';
         }
         $ce_lugar = $this->getCe_lugar();
+        $ce_lugar_quote = "'" . str_replace(',', "','", $ce_lugar) . "'";
         $any = $this->getAnyFiCurs();
         $curs = $this->getCurso();
 
@@ -791,7 +792,7 @@ class Resumen extends core\ClasePropiedades
 			WHERE p.id_nom=n.id_nom
 				AND n.f_acta $curs
 				AND (n.id_nivel BETWEEN 1100 AND 1229 OR n.id_nivel BETWEEN 2100 AND 2429)
-                AND (p.ce_lugar = '$ce_lugar' AND p.ce_ini IS NOT NULL AND (p.ce_fin IS NULL OR p.ce_fin = '$any'))
+                AND (p.ce_lugar IN ($ce_lugar_quote) AND p.ce_ini IS NOT NULL AND (p.ce_fin IS NULL OR p.ce_fin = '$any'))
                 AND (p.situacion = 'A' OR p.situacion = 'D' OR p.situacion = 'L')
                 $Where_superada
 				";
