@@ -431,7 +431,7 @@ class Resumen extends core\ClasePropiedades
 					SELECT DISTINCT n.id_nom,n.id_asignatura,n.id_nivel,
 						   n.epoca,n.f_acta,n.acta,n.preceptor
 					FROM $tabla p, $notas_vf n
-					WHERE p.id_nom=n.id_nom AND n.f_acta $curs
+					WHERE p.id_nom=n.id_nom AND n.f_acta $curs AND tipo_acta = 1
                         $Where_superada
 					";
         //echo "sql: $sqlLlenar<br>";
