@@ -24,29 +24,16 @@ require_once("apps/core/global_header.inc");
 require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-//por aproximación:
-$a_ce = array('dlb' => 'Barcelona',
-    'dlgr' => 'Granada',
-    'dlmE' => 'Madrid (E)',
-    'dlmO' => 'Madrid (O)',
-    'dlp' => 'Pamplona (cep)',
-    'dls' => 'Sevilla',
-    'dln' => 'Valladolid',
-    'dlal' => 'Valencia',
-    'H' => 'región stgr H',
-);
-$mi_dl = core\ConfigGlobal::mi_delef();
+$ce_lugar = $_SESSION['oConfig']->getCe_lugar();
 
-if (empty($a_ce[$mi_dl])) {
+if (empty($ce_lugar)) {
     echo _("No está definido el ce para esta dl/r");
     echo "<br>";
-    echo _("Hay definirla en el código.");
+    echo _("Hay definirlo en los parámetros de configuración.");
     echo "<br>";
-    echo __FILE__ . ', ' . __LINE__;
 }
-$ce_lugar = $a_ce[$mi_dl];
 
-/* Cálculo del informe cr 1/18. 
+/* Cálculo del informe cr 1/18.
  * Se coge a las personas que dependen de la dl el 1 de octubre siguiente al curso al que se refiere el informe
  *	(Fichero=A)
  *	(Fichero=A y Fecha cambio fichero NULL o menor 2/10/18) + (Fichero != A y Fecha cambio fichero entre 1/10/18 - FechaActual/18)

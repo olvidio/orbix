@@ -52,12 +52,20 @@ fnjs_guardar=function(formulario){
 </form>
 <hr>
 
-
 <h3>{{ "jefe calendario (login). Si son varios, separarlos por coma"|trans|raw }}:</h3>
 <h6>{{ "importa el orden: al e-mail del primero es al que se envian las comunicaciones de atención de actividades"|trans|raw }}:</h6>
 <form id="frm_jefecalendario" name="frm_jefecalendario" action="">
-{{ oHashJC.getCamposHtml|raw }}
-<input type="text" name="valor" value="{{ jefe_calendario }}" size="70">
+    {{ oHashJC.getCamposHtml|raw }}
+    <input type="text" name="valor" value="{{ jefe_calendario }}" size="70">
+    <input type="button" value="{{ "Guardar"|trans|raw }}" onClick="fnjs_guardar(this.form);" >
+</form>
+<hr>
+
+<h3>{{ "Nombre del centro de estudios. Si son varios, separarlos por coma"|trans|raw }}:</h3>
+<h6>{{ "debe ser el mismo texto que aparece en la BDU (y después de sincronizar en aquinate)"|trans|raw }}:</h6>
+<form id="frm_nom_ce" name="frm_nom_ce" action="">
+{{ oHashCE.getCamposHtml|raw }}
+<input type="text" name="valor" value="{{ ce_lugar }}" size="70">
 <input type="button" value="{{ "Guardar"|trans|raw }}" onClick="fnjs_guardar(this.form);" >
 </form>
 <hr>

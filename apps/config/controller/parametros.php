@@ -89,6 +89,24 @@ $oHashJC->setArrayCamposHidden(['parametro' => $parametro]);
 $a_campos['oHashJC'] = $oHashJC;
 $a_campos['jefe_calendario'] = $val_jefe_calendario;
 
+// ----------- Lugar centro(s) estudios -------------------
+$parametro = 'ce_lugar';
+$oConfigSchema = new ConfigSchema($parametro);
+$valor = $oConfigSchema->getValor();
+
+if (empty($valor)) {
+    $valor = 'daniii';
+}
+$val_ce_lugar = $valor;
+
+$oHashCE = new Hash();
+$oHashCE->setUrl($url);
+$oHashCE->setCamposForm('valor');
+$oHashCE->setArrayCamposHidden(['parametro' => $parametro]);
+
+$a_campos['oHashCE'] = $oHashCE;
+$a_campos['ce_lugar'] = $val_ce_lugar;
+
 // ----------- Nombre región en latin (html) -------------------
 $parametro = 'region_latin';
 $oConfigSchema = new ConfigSchema($parametro);

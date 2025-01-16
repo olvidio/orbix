@@ -93,6 +93,21 @@ class Config
         }
     }
 
+    public function getCe_lugar()
+    {
+        $parametro = 'ce_lugar';
+        $oConfigSchema = new ConfigSchema($parametro);
+        $valor = $oConfigSchema->getValor();
+        if (empty($valor)) {
+            $nom_param = _("lugar ce");
+            $this->msg .= "<br><br>";
+            $this->msg .= sprintf(_("falta el parámetro: %s"), $nom_param);
+            exit ($this->msg);
+        } else {
+            return $valor;
+        }
+    }
+
     public function getIdioma_default()
     {
         $parametro = 'idioma_default';
