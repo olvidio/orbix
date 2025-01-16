@@ -27,7 +27,7 @@ $grup_menu = $oGrupMenu->getGrup_menu('dl');
 $tablonAnuncios = new TablonAnunciosParaGM($grup_menu);
 $oTabla = $tablonAnuncios->getTabla();
 
-$txt_eliminar = _("esto borrar los anuncios seleccionados");
+$txt_eliminar = _("esto borrará los anuncios seleccionados");
 
 $oHash = new Hash();
 $oHash->setCamposForm('sel!mod');
