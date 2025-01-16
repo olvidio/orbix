@@ -24,6 +24,7 @@ class EditarPersonaNota
     private int $id_nom;
     private int $id_asignatura;
     private int $id_nivel;
+    private int $tipo_acta;
     private PersonaNota $personaNota;
 
     public function __construct(PersonaNota $oPersonaNota)
@@ -32,16 +33,18 @@ class EditarPersonaNota
         $this->id_nom = $oPersonaNota->getIdNom();
         $this->id_nivel = $oPersonaNota->getIdNivel();
         $this->id_asignatura = $oPersonaNota->getIdAsignatura();
+        $this->tipo_acta = $oPersonaNota->getTipoActa();
     }
 
     public function eliminar(): void
     {
         // se ataca a la tabla padre 'e_notas', no hace falta saber en que tabla está. Ya lo sabe él
-        if (!empty($this->id_nom) && !empty($this->id_asignatura) && !empty($this->id_nivel)) {
+        if (!empty($this->id_nom) && !empty($this->id_asignatura) && !empty($this->id_nivel) && !empty($this->tipo_acta)) {
             $oPersonaNotaDB = new PersonaNotaDB();
             $oPersonaNotaDB->setId_nom($this->id_nom);
             $oPersonaNotaDB->setId_asignatura($this->id_asignatura);
             $oPersonaNotaDB->setId_nivel($this->id_nivel);
+            $oPersonaNotaDB->setTipo_acta($this->tipo_acta);
             if ($oPersonaNotaDB->DBEliminar() === false) {
                 $err = end($_SESSION['errores']);
                 throw new \RuntimeException(sprintf(_("No se ha eliminado la Nota: %s"), $err));

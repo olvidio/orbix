@@ -31,9 +31,11 @@ $a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_A
 if (!empty($a_sel)) { //vengo de un checkbox
     $id_nivel = (integer)strtok($a_sel[0], "#");
     $id_asignatura = (integer)strtok("#");
+    $tipo_acta = (integer)strtok("#");
 } else {
     $id_asignatura = (integer)filter_input(INPUT_POST, 'id_asignatura');
     $id_nivel = (integer)filter_input(INPUT_POST, 'id_nivel');
+    $tipo_acta = (integer)filter_input(INPUT_POST, 'tipo_acta');
 }
 
 $id_situacion = (integer)filter_input(INPUT_POST, 'id_situacion');
@@ -44,7 +46,6 @@ if (empty($f_acta)) {
 } else {
     $oF_acta = DateTimeLocal::createFromLocal($f_acta);
 }
-$tipo_acta = (integer)filter_input(INPUT_POST, 'tipo_acta');
 $preceptor = (string)filter_input(INPUT_POST, 'preceptor');
 $id_preceptor = (integer)filter_input(INPUT_POST, 'id_preceptor');
 $detalle = (string)filter_input(INPUT_POST, 'detalle');
@@ -68,11 +69,11 @@ $oPersonaNota = new PersonaNota();
 $oPersonaNota->setIdNivel($id_nivel);
 $oPersonaNota->setIdAsignatura($id_asignatura);
 $oPersonaNota->setIdNom($Qid_pau);
+$oPersonaNota->setTipoActa($tipo_acta);
 if ($Qmod !== 'eliminar') {
     $oPersonaNota->setIdSituacion($id_situacion);
     $oPersonaNota->setActa($acta);
     $oPersonaNota->setDetalle($detalle);
-    $oPersonaNota->setTipoActa($tipo_acta);
     $oPersonaNota->setFActa($oF_acta);
     $oPersonaNota->setPreceptor($preceptor);
     $oPersonaNota->setIdPreceptor($id_preceptor);

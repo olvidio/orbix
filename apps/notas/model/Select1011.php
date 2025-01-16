@@ -147,6 +147,7 @@ class Select1011
             $epoca = $oPersonaNota->getEpoca();
             $detalle = $oPersonaNota->getDetalle();
             $id_activ = $oPersonaNota->getId_activ();
+            $tipo_acta = $oPersonaNota->getTipo_acta();
 
             $nom_activ = '';
             if (!empty($id_activ)) {
@@ -188,7 +189,7 @@ class Select1011
             }
 
             if ($this->permiso == 3) {
-                $a_valores[$i]['sel'] = "$id_nivel#$id_asignatura";
+                $a_valores[$i]['sel'] = "$id_nivel#$id_asignatura#$tipo_acta";
             } else {
                 $a_valores[$i]['sel'] = "";
             }
