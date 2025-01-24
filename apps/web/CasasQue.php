@@ -154,7 +154,7 @@ class CasasQue
         $sHtml .= '</th></tr>';
         foreach ($this->aCasas as $inum => $sCasa) {
             $chk_cdc = '';
-            if ($inum === $this->cdc_sel) {
+            if ($inum === $this->getCdcSel()) {
                 $chk_cdc = 'checked';
             }
             if ($inum === 9) {
@@ -279,5 +279,13 @@ class CasasQue
     public function setCdcSel(int $cdc_sel): void
     {
         $this->cdc_sel = $cdc_sel;
+    }
+
+    public function getCdcSel(): int
+    {
+        if (isset($this->cdc_sel)) {
+            return $this->cdc_sel;
+        }
+        return 0;
     }
 }

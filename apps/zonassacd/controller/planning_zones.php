@@ -51,7 +51,8 @@ $Qtrimestre = (integer)filter_input(INPUT_POST, 'trimestre');
 
 $Qid_zona = (integer)filter_input(INPUT_POST, 'id_zona');
 $Qactividad = (string)filter_input(INPUT_POST, 'actividad');
-$Qpropuesta = (string)filter_input(INPUT_POST, 'propuesta');
+//$Qpropuesta = (string)filter_input(INPUT_POST, 'propuesta');
+$Qpropuesta = TRUE; // Para que también salgan las actividades en proyecto
 
 
 $chk_trim1 = '';
