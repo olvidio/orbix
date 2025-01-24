@@ -2,9 +2,7 @@
 
 namespace web;
 
-use core;
 use ubis\model\entity\GestorCasaPeriodo;
-use asistentes\model\entity\Asistente;
 
 /**
  * Esta página sólo tiene las funciones. Es para hacer incluir en la página que sea
@@ -59,6 +57,7 @@ use asistentes\model\entity\Asistente;
  *                    [8] id                - id_activ
  *                    [9] propio            - si la actividad es propia o no (f o t). Añadido para des: 23.1.2007
  *                   [10] plaza            - si la asistencia esta en pedida o asignada. Añadido para des: 14.3.2020
+ *                   [11] clase            - para calcular el css en el origen. Añadido para sf: 22.1.2025
  *
  * @param integer $doble - 0 ó 1. Para que las cabeceras de filas y columnas también a la izquierda y abajo.
  *
@@ -84,7 +83,6 @@ class Planning
     public function dibujar()
     {
         $html = '';
-        $bgcolor = $this->scolorColumnaUno;
         //dias de la semana y meses
         $semana = array(_("D"), _("L"), _("M"), _("X"), _("J"), _("V"), _("S"));
         $mes = array(_("enero"), _("febrero"), _("marzo"), _("abril"), _("mayo"), _("junio"), _("julio"),
@@ -121,7 +119,7 @@ class Planning
         $total_dias_0 = round($num_sec / 86400) + 1; // 86400 segundos es un dia
 
 
-        //divido cada dia en tres: despues de desayunar, antes de comer, antes de cenar. $this->idd=3
+        //divido cada dia en tres: después de desayunar, antes de comer, antes de cenar. $this->idd=3
         $total_dias = $this->idd * $total_dias_0;
 
         //la primera columna ocupa el 10%
@@ -192,7 +190,7 @@ class Planning
         foreach ($this->a_actividades as $ww) {
             foreach ($ww as $per => $actividad) {
                 //list($pau,$id_pau,$persona,$centro) = preg_split('/#/', $per ); //separo el id_ubi del nombre
-                list($pau, $id_pau, $persona) = preg_split('/#/', $per); //separo el id_ubi del nombre
+                list($pau, $id_pau, $persona) = explode('#', $per); //separo el id_ubi del nombre
 
                 if ($pau === 'u') { // para los ubis...
                     $id_ubi = $id_pau;
@@ -241,6 +239,7 @@ class Planning
                     $fi = (isset($activi["f_fi"])) ? $activi["f_fi"] : '';
                     $hfi = (isset($activi["h_fi"])) ? $activi["h_fi"] : '';
                     $id_activ[$a] = (isset($activi["id_activ"])) ? $activi["id_activ"] : 0;
+                    $css[$a] = (isset($activi["css"])) ? $activi["css"] : '';
 
                     if (empty($ini)) {
                         echo _("PREMIO: Ha conseguido crear una actividad sin fecha de inicio.");
@@ -479,17 +478,17 @@ class Planning
                                         $inc = $total_dias - $n_dini[$a];
                                     }
                                     $inc2 = $inc + 1;
-                                    $clase_act = $this->clase($id_tipo_activ[$a], $propio[$a], $plaza[$a]);
+                                    $clase_act = $css[$a];
                                     if (substr($id_tipo_activ[$a], 0, 1) == 1 && $reserva === "sf") {
                                         $conflicto = "link_red";
                                     } else {
                                         $conflicto = "link";
                                     }
                                     if (!empty($this->imod) && !empty($lnk[$a])) {
-                                        $texto = "<td colspan=\"$inc2\" class=\"$clase_act\" title=\"$nom[$a]\"><span class=\"$conflicto\" onclick=\"fnjs_cambiar_activ('$id_activ[$a]','$this->imod');\">$nom_curt[$a]</span></td>";
+                                        $texto = "<td colspan=\"$inc2\" class=\"$clase_act\" title=\"$nom[$a]\"><span class=\"texto $conflicto\" onclick=\"fnjs_cambiar_activ('$id_activ[$a]','$this->imod');\">$nom_curt[$a]</span></td>";
                                     } else {
-                                        $clase_act = $clase_act . "_nomod";
-                                        $texto = "<td colspan=\"$inc2\" class=\"$clase_act\" title=\"$nom[$a]\">$nom_curt[$a]</td>";
+                                        //$clase_act = $clase_act . "_nomod";
+                                        $texto = "<td colspan=\"$inc2\" class=\"$clase_act\" title=\"$nom[$a]\"><span class='texto'>$nom_curt[$a]</span></td>";
                                     }
                                     $d = $d + $inc;
                                     $html .= $texto;
@@ -587,36 +586,6 @@ class Planning
         //echo "dr: $dia_real, dini: $per['f_ini'], dfin: $per['f_fin']";
         return $color;
     }
-
-    /**
-     *Es para no volver a escribir todo en la función select.
-     *Sirve para selecionar el color en funcion del tipo de actividad: sv, sf, resto
-     */
-    private function clase($id_tipo_activ, $propio, $plaza)
-    {
-        switch (substr($id_tipo_activ, 0, 1)) {
-            case 1:
-                $clase = "actsv";
-                break;
-            case 2:
-                $clase = "actsf";
-                break;
-            default:
-                $clase = "actotras";
-        }
-        // sobreescribo
-        if ($propio === TRUE) {
-            $clase = 'actpropio';
-        }
-        if ($propio === "p") {
-            $clase = 'actpersonal';
-        }
-        if (!empty($plaza) && $plaza < Asistente::PLAZA_ASIGNADA) {
-            $clase = 'provisional ' . $clase;
-        }
-        return $clase;
-    }
-
 
     /**
      * oInicio

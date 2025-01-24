@@ -44,7 +44,7 @@ class GestorActividadAll extends core\ClaseGestor
     /**
      * Devuelve un array con las actividades de una casa en un periodo.
      * Se modifican las fechas de inicio (si es anterior al periodo),
-     *  para que empieze en el inicio del periodo
+     *  para que empiece en el inicio del periodo
      * Se requiere del array $_SESSION['oPermActividades'] para saber si se tiene permisos para ver...
      *
      * @param integer $id_ubi
@@ -91,6 +91,7 @@ class GestorActividadAll extends core\ClaseGestor
             $h_fin = $oActividad->getH_fin();
             $dl_org = $oActividad->getDl_org();
             $nom_activ = $oActividad->getNom_activ();
+            $css = web\PlanningStyle::clase($id_tipo_activ, '', '',$oActividad->getStatus());
 
             $oTipoActividad = new web\TiposActividades($id_tipo_activ);
             $ssfsv = $oTipoActividad->getSfsvText();
@@ -126,7 +127,7 @@ class GestorActividadAll extends core\ClaseGestor
             }
 
             if ($oPermActiv->have_perm_activ('modificar')) { // puede modificar
-                // en realidad creo que simplemente tiene que haber algo. Activa la funcion de javascript: cambiar_activ.
+                // en realidad creo que simplemente tiene que haber algo. Activa la función de javascript: cambiar_activ.
                 $pagina = 'programas/actividad_ver.php';
             } else {
                 $pagina = '';
@@ -141,7 +142,8 @@ class GestorActividadAll extends core\ClaseGestor
                 'h_fi' => $hfi,
                 'id_tipo_activ' => $id_tipo_activ,
                 'pagina' => $pagina,
-                'id_activ' => $id_activ
+                'id_activ' => $id_activ,
+                'css' => $css,
             );
             $a++;
         }

@@ -43,6 +43,7 @@ class CasasQue
     private $sSeleccionados;
 
     /* CONSTRUCTOR -------------------------------------------------------------- */
+    private int $cdc_sel;
 
     /**
      * Constructor de la classe.
@@ -116,6 +117,9 @@ class CasasQue
         $oSelects = new DesplegableArray('', $aOpcionesCasas, 'id_cdc');
         $oSelects->setBlanco('t');
         $oSelects->setAccionConjunto('fnjs_mas_casas(event)');
+        if (!empty($this->sSeleccionados)) {
+            $oSelects->setSeleccionados($this->sSeleccionados);
+        }
 
         $sHtml = '<script>
 		funjs_otro = function(v) {
@@ -149,12 +153,16 @@ class CasasQue
         $sHtml .= $this->sTitulo;
         $sHtml .= '</th></tr>';
         foreach ($this->aCasas as $inum => $sCasa) {
+            $chk_cdc = '';
+            if ($inum === $this->cdc_sel) {
+                $chk_cdc = 'checked';
+            }
             if ($inum === 9) {
-                $sHtml .= '<tr><td><input type="radio" id="cdc_sel_' . $inum . '" name="cdc_sel" value="' . $inum . '" onClick="funjs_otro(1);">' . $sCasa . '</td>';
+                $sHtml .= '<tr><td><input type="radio" id="cdc_sel_' . $inum . '" name="cdc_sel" value="' . $inum . '" onClick="funjs_otro(1);" '.$chk_cdc.'>' . $sCasa . '</td>';
                 // para seleccionar más de una casa
                 $sHtml .= '<td>' . $oSelects->ListaSelects() . '</td>';
             } else {
-                $sHtml .= '<tr><td><input type="radio" id="cdc_sel_' . $inum . '" name="cdc_sel" value="' . $inum . '" onClick="funjs_otro(0);">' . $sCasa . '</td></tr>';
+                $sHtml .= '<tr><td><input type="radio" id="cdc_sel_' . $inum . '" name="cdc_sel" value="' . $inum . '" onClick="funjs_otro(0);" '.$chk_cdc.'>' . $sCasa . '</td></tr>';
             }
         }
         $sHtml .= '<tr><td> </td></tr>';
@@ -243,6 +251,11 @@ class CasasQue
         $this->oDesplCasas->setAction($sAction);
     }
 
+    public function setCasasSel($sCasas)
+    {
+
+    }
+
     function setTitulo($sTitulo)
     {
         $this->sTitulo = $sTitulo;
@@ -261,5 +274,10 @@ class CasasQue
     public function setSeleccionados($sSeleccionados)
     {
         $this->sSeleccionados = $sSeleccionados;
+    }
+
+    public function setCdcSel(int $cdc_sel): void
+    {
+        $this->cdc_sel = $cdc_sel;
     }
 }

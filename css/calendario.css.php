@@ -20,9 +20,9 @@ Se define un estilo, para la tabla.
 
 
 bla,bla...
-El atributo FRAME controla las líneas perimetrales de la tabla y puede recibir los siguientes valores: 
+El atributo FRAME controla las líneas perimetrales de la tabla y puede recibir los siguientes valores:
 
-VOID - ABOVE - BELOW - HSIDES - LHS - RHS - VSIDES - BOX - BORDER 
+VOID - ABOVE - BELOW - HSIDES - LHS - RHS - VSIDES - BOX - BORDER
 
 VOID: Ninguna línea. Este es el valor por omisión (default).
 ABOVE: La línea superior únicamente.
@@ -34,17 +34,17 @@ VSIDES: Las líneas derecha e izquierda únicamente.
 BOX: Las cuatro líneas.
 BORDER: Las cuatro líneas.
 
-El atributo RULES controla las líneas que aparecen entre celdas. Sus valores son: 
+El atributo RULES controla las líneas que aparecen entre celdas. Sus valores son:
 
-NONE - GROUPS - ROWS - COLS - ALL 
+NONE - GROUPS - ROWS - COLS - ALL
 
 NONE: Ninguna línea. Este es el valor por omisión.
 GROUPS: Las líneas entre grupos de líneas y grupos de columnas.
 ROWS: Serán visibles las líneas que separan líneas (elemento TR).
 COLS: Serán visibles las líneas que separan columnas (elemento TD).
-ALL: Todas las líneas. 
+ALL: Todas las líneas.
 
-El atributo BORDER indica en pixels el ancho del reborde de las tablas. BORDER = 3 dibujará un reborde de tres pixels de ancho. 
+El atributo BORDER indica en pixels el ancho del reborde de las tablas. BORDER = 3 dibujará un reborde de tres pixels de ancho.
 
 -->
 
@@ -111,6 +111,19 @@ El atributo BORDER indica en pixels el ancho del reborde de las tablas. BORDER =
 
     td.provisional  {
         text-decoration: line-through;
+    }
+
+td.proyecto  {
+    background: repeating-linear-gradient( -45deg, #888, #888 1px, #eeffff 1px, #eeffff 5px );
+}
+
+td.proyectof  {
+        background: repeating-linear-gradient( -45deg, #888, #888 1px, #ff9999 1px, #ff9999 5px );
+    }
+
+    td.proyecto span.texto  {
+        background-color: #FFFFFF;
+        padding-inline: 5px;
     }
 
 	td.actpropio  {
@@ -224,7 +237,7 @@ El atributo BORDER indica en pixels el ancho del reborde de las tablas. BORDER =
      	background-color : #FFFFAA;
      	text-decoration : none;
     }
-	 
+
 
 @media print {
     div { page-break-after: always; }
@@ -255,7 +268,7 @@ El atributo BORDER indica en pixels el ancho del reborde de las tablas. BORDER =
 		border-collapse: collapse;
      	border-style : solid;
 		font-size : 7pt;
-    } 
+    }
 
     th.diumengenum  {
 		border-width: 1px;
@@ -263,7 +276,7 @@ El atributo BORDER indica en pixels el ancho del reborde de las tablas. BORDER =
 		border-collapse: collapse;
      	border-style: solid;
 		font-size : 7pt;
-    } 
+    }
 
     th.lletra  {
      	font-size : 7pt;

@@ -436,7 +436,7 @@ class PermisosActividades
      * @param boolean $propio
      * @return boolean
      */
-    public function havePermisoSacd($id_cargo, $propio)
+    public function havePermisoSacd($id_cargo, $propio): bool
     {
         $permiso_ver = FALSE;
         $oPermActiv = $this->getPermisoActual('datos');

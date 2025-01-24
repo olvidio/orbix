@@ -53,8 +53,8 @@
     <?= $oHash2->getCamposHtml(); ?>
     <?= $oForm->getHtmlTabla(); ?>
     <?= _("incluir casas sin actividad:") ?>
-    <input type="Radio" id="sin_activ" name="sin_activ" value=0 checked> <?= _("no") ?>
-    <input type="Radio" name="sin_activ" value=1> <?= _("sí") ?>
+    <input type="Radio" id="sin_activ" name="sin_activ" value=0 <?= $chk_actividad_no ?> > <?= _("no") ?>
+    <input type="Radio" name="sin_activ" value=1 <?= $chk_actividad_si ?> > <?= _("sí") ?>
     <?= $oFormP->getHtml(); ?>
     <table>
         <tfoot>

@@ -10,24 +10,24 @@ fnjs_ver_planning = function(n) {
 <table>
 	<tr><th class=titulo_inv colspan=5>{{ "trimestre o mes que interesa"|trans|raw }}</th></tr>
 	<tr><td></td><td><input type="radio" name="trimestre" value=1 {{ chk_trim1 }}>{{ "enero-marzo"|trans|raw }}</td>
-	<td><input type="radio" name="trimestre" value=101>{{ "enero"|trans|raw }}</td>
-	<td><input type="radio" name="trimestre" value=102>{{ "febero"|trans|raw }}</td>
-	<td><input type="radio" name="trimestre" value=103>{{ "marzo"|trans|raw }}</td>
+	<td><input type="radio" name="trimestre" value=101 {{ chk_trim_101 }}>{{ "enero"|trans|raw }}</td>
+	<td><input type="radio" name="trimestre" value=102 {{ chk_trim_102 }}>{{ "febero"|trans|raw }}</td>
+	<td><input type="radio" name="trimestre" value=103 {{ chk_trim_103 }}>{{ "marzo"|trans|raw }}</td>
 	</tr>
 	<tr><td></td><td><input type="radio" name="trimestre" value=2 {{ chk_trim2 }}>{{ "abril-junio"|trans|raw }}</td>
-	<td><input type="radio" name="trimestre" value=104>{{ "abril"|trans|raw }}</td>
-	<td><input type="radio" name="trimestre" value=105>{{ "mayo"|trans|raw }}</td>
-	<td><input type="radio" name="trimestre" value=106>{{ "junio"|trans|raw }}</td>
+	<td><input type="radio" name="trimestre" value=104 {{ chk_trim_104 }}>{{ "abril"|trans|raw }}</td>
+	<td><input type="radio" name="trimestre" value=105 {{ chk_trim_105 }}>{{ "mayo"|trans|raw }}</td>
+	<td><input type="radio" name="trimestre" value=106 {{ chk_trim_106 }}>{{ "junio"|trans|raw }}</td>
 	</tr>
 	<tr><td></td><td><input type="radio" name="trimestre" value=3 {{ chk_trim3 }}>{{ "julio-septiembre"|trans|raw }}</td>
-	<td><input type="radio" name="trimestre" value=107>{{ "julio"|trans|raw }}</td>
-	<td><input type="radio" name="trimestre" value=108>{{ "agosto"|trans|raw }}</td>
-	<td><input type="radio" name="trimestre" value=109>{{ "septiembre"|trans|raw }}</td>
+	<td><input type="radio" name="trimestre" value=107 {{ chk_trim_107 }}>{{ "julio"|trans|raw }}</td>
+	<td><input type="radio" name="trimestre" value=108 {{ chk_trim_108 }}>{{ "agosto"|trans|raw }}</td>
+	<td><input type="radio" name="trimestre" value=109 {{ chk_trim_109 }}>{{ "septiembre"|trans|raw }}</td>
 	</tr>
 	<tr><td></td><td><input type="radio" name="trimestre" value=4 {{ chk_trim4 }}>{{ "octubre-diciembre"|trans|raw }}</td>
-	<td><input type="radio" name="trimestre" value=110>{{ "octubre"|trans|raw }}</td>
-	<td><input type="radio" name="trimestre" value=111>{{ "noviembre"|trans|raw }}</td>
-	<td><input type="radio" name="trimestre" value=112>{{ "diciembre"|trans|raw }}</td>
+	<td><input type="radio" name="trimestre" value=110 {{ chk_trim_110 }}>{{ "octubre"|trans|raw }}</td>
+	<td><input type="radio" name="trimestre" value=111 {{ chk_trim_111 }}>{{ "noviembre"|trans|raw }}</td>
+	<td><input type="radio" name="trimestre" value=112 {{ chk_trim_112 }}>{{ "diciembre"|trans|raw }}</td>
 	</tr>
 	<tr><td></td><td><input type="radio" name="trimestre" value=5 {{ chk_trim5 }}>{{ "navidad: diciembre-enero"|trans|raw }}</td>
 	<tr><td></td><td><input type="radio" name="trimestre" value=6 {{ chk_trim6 }}>{{ "verano: julilo-agosto"|trans|raw }}</td>
@@ -45,8 +45,8 @@ fnjs_ver_planning = function(n) {
 	</select>
 	</tr>
 	<tr><th class=titulo_inv colspan=5>{{ "¿con activitades?"|trans|raw }}</th></tr>
-	<tr><td></td><td><input type="radio" name="actividad" value="si" checked>{{ "con actividades"|trans|raw }}</td></tr>
-	<tr><td></td><td><input type="radio" name="actividad" value="no" >{{ "sin actividades"|trans|raw }}</td></tr>
+	<tr><td></td><td><input type="radio" name="actividad" value="si" {{ chk_actividad_si }}>{{ "con actividades"|trans|raw }}</td></tr>
+	<tr><td></td><td><input type="radio" name="actividad" value="no" {{ chk_actividad_no }}>{{ "sin actividades"|trans|raw }}</td></tr>
 </table>
 <br>
 <table>

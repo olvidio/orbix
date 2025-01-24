@@ -2,6 +2,7 @@
 
 use core\ConfigGlobal;
 use usuarios\model\entity as usuarios;
+use web\Posicion;
 
 /**
  * Página que presentará los formularios de los distintos plannings
@@ -26,6 +27,20 @@ require_once('apps/core/global_object.inc');
 
 $oPosicion->recordar();
 
+//Si vengo de vuelta y le paso la referencia del stack donde está la información.
+if (isset($_POST['stack'])) {
+    $stack = filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
+    if ($stack !== '') {
+        // No me sirve el de global_object, sino el de la session
+        $oPosicion2 = new Posicion();
+        if ($oPosicion2->goStack($stack)) { // devuelve false si no puede ir
+            $Qid_sel = $oPosicion2->getParametro('id_sel');
+            $Qscroll_id = $oPosicion2->getParametro('scroll_id');
+            $oPosicion2->olvidar($stack);
+        }
+    }
+}
+
 $oMiUsuario = new usuarios\Usuario(core\ConfigGlobal::mi_id_usuario());
 $miSfsv = core\ConfigGlobal::mi_sfsv();
 
@@ -39,6 +54,21 @@ if ($mes > $fin_m) {
 $Qtipo = (string)filter_input(INPUT_POST, 'tipo');
 $Qobj_pau = (string)filter_input(INPUT_POST, 'obj_pau');
 $Qna = (string)filter_input(INPUT_POST, 'na');
+
+$Qsin_activ = (integer)filter_input(INPUT_POST, 'sin_activ');
+$chk_actividad_no = 'checked';
+$chk_actividad_si = '';
+if (!empty($Qsin_activ && $Qsin_activ === 1)) {
+    $chk_actividad_no = '';
+    $chk_actividad_si = 'checked';
+}
+
+$Qcdc_sel = (integer)filter_input(INPUT_POST, 'cdc_sel');
+$Qyear = (integer)filter_input(INPUT_POST, 'year');
+$Qperiodo = (string)filter_input(INPUT_POST, 'periodo');
+$Qempiezamax = (string)filter_input(INPUT_POST, 'empiezamax');
+$Qempiezamin = (string)filter_input(INPUT_POST, 'empiezamin');
+$QsSeleccionados = (string)filter_input(INPUT_POST, 'sSeleccionados');
 
 //personas
 $oHash = new web\Hash();
@@ -82,9 +112,17 @@ $oFormP = new web\PeriodoQue();
 $oFormP->setFormName('que');
 $oFormP->setTitulo(core\strtoupper_dlb(_("periodo del planning actividades")));
 $oFormP->setPosiblesPeriodos($aOpciones);
-$oFormP->setDesplAnysOpcion_sel(date('Y'));
+$oFormP->setDesplPeriodosOpcion_sel($Qperiodo);
+if (empty($Qyear)) {
+    $Qyear = date("Y");
+}
+$oFormP->setDesplAnysOpcion_sel($Qyear);
 
-if ($Qtipo == 'planning_cdc') {
+$oFormP->setEmpiezaMin($Qempiezamin);
+$oFormP->setEmpiezaMax($Qempiezamax);
+
+
+if ($Qtipo === 'planning_cdc') {
     $oForm = new web\CasasQue();
     $oForm->setTitulo(core\strtoupper_dlb(_("búsqueda de casas cuyo planning interesa")));
     // miro que rol tengo. Si soy casa, sólo veo la mía
@@ -110,12 +148,16 @@ if ($Qtipo == 'planning_cdc') {
         }
     }
     $oForm->setPosiblesCasas($donde);
+    $oForm->setCdcSel($Qcdc_sel);
+    $oForm->setSeleccionados($QsSeleccionados);
 
     $a_campos = ['oPosicion' => $oPosicion,
         'oHash2' => $oHash2,
         'oFormP' => $oFormP,
         'oForm' => $oForm,
         'locale_us' => ConfigGlobal::is_locale_us(),
+        'chk_actividad_no' => $chk_actividad_no,
+        'chk_actividad_si' => $chk_actividad_si,
     ];
 
     $oView = new core\View('actividades/controller');

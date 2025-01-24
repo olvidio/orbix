@@ -116,6 +116,12 @@ if (empty($print)) {
 $interval = $oFinPlanning->diff($oIniPlanning)->format('%m');
 if ($interval < 2) $doble = 0;
 
+$Qsacd = '';
+$Qctr = '';
+$Qtodos_n = '';
+$Qtodos_agd = '';
+$Qtodos_s = '';
+
 switch ($Qtipo) {
     case 'planning':
     case 'p_de_paso':
@@ -148,6 +154,9 @@ switch ($Qtipo) {
             $aWhereP['sacd'] = 'f';
         }
         if (!empty($Qctr)) {
+            $Qtodos_n = '';
+            $Qtodos_agd = '';
+            $Qtodos_s = '';
             $nom_ubi = str_replace("+", "\+", $Qctr); // para los centros de la sss+
             $aWhere['nombre_ubi'] = '^' . $nom_ubi;
             $aOperador['nombre_ubi'] = 'sin_acentos';
@@ -195,15 +204,21 @@ switch ($Qtipo) {
         break;
 }
 
-$GesActividades = new actividades\GestorActividad();
+$aGoBackComun = array(
+    'modelo' => $Qmodelo,
+    'tipo' => $Qtipo,
+    'year' => $Qyear,
+    'periodo' => $Qperiodo,
+    'empiezamax' => $Qempiezamax,
+    'empiezamin' => $Qempiezamin,
+);
 
-if ($Qtipo == 'planning_cdc' || $Qtipo == 'casa') {
-    $Qsin_activ = (string)filter_input(INPUT_POST, 'sin_activ');
-    if (!empty($Qsin_activ) && $Qsin_activ == 1) {
-        $sin_activ = 1;
-    } else {
-        $sin_activ = 0;
-    } //Para dibujar caudricula aunque no tenga actividades.
+$GesActividades = new actividades\GestorActividad();
+$sCdc = '';
+$sin_activ = 0;
+if ($Qtipo === 'planning_cdc' || $Qtipo === 'casa') {
+    $sin_activ = (integer)filter_input(INPUT_POST, 'sin_activ');
+    //Para dibujar cuadricula aunque no tenga actividades.
     if ($Qcdc_sel < 10) { //Para buscar por casas.
         $aWhere = array();
         $aOperador = array();
@@ -239,8 +254,11 @@ if ($Qtipo == 'planning_cdc' || $Qtipo == 'casa') {
                 // posible selección múltiple de casas
                 $a_id_cdc = (array)filter_input(INPUT_POST, 'id_cdc', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
                 if (!empty($a_id_cdc)) {
-                    $aWhere['id_ubi'] = '^' . implode('$|^', $a_id_cdc) . '$';
-                    $aOperador['id_ubi'] = '~';
+                    $sCdc = implode(',', $a_id_cdc);
+                    //$aWhere['id_ubi'] = '^' . implode('$|^', $a_id_cdc) . '$';
+                    //$aOperador['id_ubi'] = '~';
+                    $aWhere['id_ubi'] = $sCdc;
+                    $aOperador['id_ubi'] = 'IN';
                 }
                 break;
         }
@@ -248,9 +266,9 @@ if ($Qtipo == 'planning_cdc' || $Qtipo == 'casa') {
         $GesCasaDl = new ubis\GestorCasaDl();
         $cCasasDl = $GesCasaDl->getCasas($aWhere, $aOperador);
 
-        if ($Qcdc_sel == 6) { //añado los ctr de sf
+        if ($Qcdc_sel === 6) { //añado los ctr de sf
             foreach ($cCentrosSf as $oCentroSf) {
-                array_push($cCasasDl, $oCentroSf);
+                $cCasasDl[] = $oCentroSf;
             }
         }
 
@@ -268,7 +286,7 @@ if ($Qtipo == 'planning_cdc' || $Qtipo == 'casa') {
             if ($a_cdc !== false) {
                 $a_actividades[$nombre_ubi] = array($cdc[$p] => $a_cdc);
                 $p++;
-            } elseif ($sin_activ == 1) {
+            } elseif ($sin_activ === 1) {
                 $a_actividades[$nombre_ubi] = array($cdc[$p] => array());
                 $p++;
             }
@@ -325,7 +343,7 @@ if ($Qtipo == 'planning_cdc' || $Qtipo == 'casa') {
             if ($a_cdc !== false) {
                 $a_actividades[$nombre_ubi] = array($cdc[$p] => $a_cdc);
                 $p++;
-            } elseif ($sin_activ == 1) {
+            } elseif ($sin_activ === 1) {
                 $a_actividades[$nombre_ubi] = array($cdc[$p] => array());
                 $p++;
             }
@@ -339,7 +357,13 @@ if ($Qtipo == 'planning_cdc' || $Qtipo == 'casa') {
         $cdc[$p + 1] = "##";
         $a_actividades[] = array($cdc[$p + 1] => array());
     }
+    $aGoBack1 = array(
+        'cdc_sel' => $Qcdc_sel,
+        'sin_activ' => $sin_activ,
+        'sSeleccionados' => $sCdc,
+    );
 } else {
+    $Qid_ubi = '';
     $GesActividadAsignaturas = new actividadestudios\GestorActividadAsignaturaDl();
     $aWhere = array('f_ini' => "'$inicio_iso','$fin_iso'");
     $aOperador = array('f_ini' => 'BETWEEN');
@@ -405,6 +429,8 @@ if ($Qtipo == 'planning_cdc' || $Qtipo == 'casa') {
             $dl_org = $oActividad->getDl_org();
             $nom_activ = $oActividad->getNom_activ();
 
+            $css = web\PlanningStyle::clase($id_tipo_activ, $propio, '', $oActividad->getStatus());
+
             $oTipoActividad = new web\TiposActividades($id_tipo_activ);
             $ssfsv = $oTipoActividad->getSfsvText();
 
@@ -450,7 +476,8 @@ if ($Qtipo == 'planning_cdc' || $Qtipo == 'casa') {
                 'id_tipo_activ' => $id_tipo_activ,
                 'pagina' => '',
                 'id_activ' => $id_activ,
-                'propio' => $propio
+                'propio' => $propio,
+                'css' => $css,
             );
         }
         // En los profesores, añado las clases del stgr en actividades
@@ -490,7 +517,18 @@ if ($Qtipo == 'planning_cdc' || $Qtipo == 'casa') {
         }
         $p++;
     }
+    $aGoBack1 = array(
+        'sacd' => $Qsacd,
+        'ctr' => $Qctr,
+        'todos_n' => $Qtodos_n,
+        'todos_agd' => $Qtodos_agd,
+        'todos_s' => $Qtodos_s,
+        'id_ubi' => $Qid_ubi,
+    );
 }//fin del else
+
+$aGoBack = array_merge($aGoBackComun, $aGoBack1);
+$oPosicion->setParametros($aGoBack, 1);
 
 // En el caso de personas doy la opción de volver a los seleccionados.
 //if ($Qtipo=='planning' || $Qtipo=='p_de_paso' ) {

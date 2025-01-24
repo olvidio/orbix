@@ -37,22 +37,22 @@
         </tr>
         <tr>
             <td class=etiqueta><?= ucfirst(_("centro")); ?></td>
-            <td><input class=contenido id="ctr" name="ctr"></td>
+            <td><input class=contenido id="ctr" name="ctr" value="<?= $ctr ?>"></td>
             <td class=etiqueta
                 colspan="1"><?= ucfirst(_("(por defecto saldrán todos los n ordenados por ctr)")); ?></td>
         </tr>
         <tr>
             <td class=etiqueta colspan=9>
-                <input type="Checkbox" id="todos_n" name="todos_n" value="t"><?= _("todos los ctr con n"); ?>
-                <input type="Checkbox" id="todos_agd" name="todos_agd" value="t"><?= _("todos los ctr con agd"); ?>
-                <input type="Checkbox" id="todos_s" name="todos_s" value="t"><?= _("todos los ctr con s"); ?>
+                <input type="Checkbox" id="todos_n" name="todos_n" value="t" <?= $chk_todos_n ?>><?= _("todos los ctr con n"); ?>
+                <input type="Checkbox" id="todos_agd" name="todos_agd" value="t" <?= $chk_todos_agd ?>><?= _("todos los ctr con agd"); ?>
+                <input type="Checkbox" id="todos_s" name="todos_s" value="t" <?= $chk_todos_s ?>><?= _("todos los ctr con s"); ?>
             </td>
         </tr>
         <tr>
-            <td class=etiqueta colspan=9><?= _("incluir sacd"); ?>:<input type="Radio" id="sacd" name="sacd" value=0
-                                                                          checked><?= _("no"); ?><input type="Radio"
-                                                                                                        name="sacd"
-                                                                                                        value=1><?= _("sí"); ?>
+            <td class=etiqueta colspan=9>
+                <?= _("incluir sacd"); ?>:
+                <input type="Radio" id="sacd" name="sacd" value=0 <?= $chk_sacd_no ?> ><?= _("no"); ?>
+                <input type="Radio" name="sacd" value=1 <?= $chk_sacd_si ?> ><?= _("sí"); ?>
             </td>
         </tr>
     </table>

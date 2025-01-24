@@ -84,7 +84,7 @@ $mod = 1; // 0 u otro valor (1 ver, 2 modificar, 3 eliminar..) el valor se pasa 
 
 /* En este caso casi todos los usuarios que entran en esta pagina de calendario es
  * para poder crear actividades. Por tanto nueva=1. Según el tipo de actividad no podrá
- * ser, pero esto hay que mirarlo a la horta de guardar.
+ * ser, pero esto hay que mirarlo a la hora de guardar.
  */
 $nueva = 1; // 0 o 1 para asignar una nueva actividad.
 

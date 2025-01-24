@@ -4,16 +4,15 @@ use actividadcargos\model\entity\GestorActividadCargo;
 use actividadcargos\model\entity\GestorCargo;
 use actividades\model\entity\ActividadAll;
 use actividades\model\entity\GestorActividad;
-use web\Hash;
-use function core\is_true;
 use encargossacd\model\entity\Encargo;
 use encargossacd\model\entity\GestorEncargoSacdHorario;
 use personas\model\entity\PersonaSacd;
-use procesos\model\entity\GestorActividadProcesoTarea;
+use web\Hash;
 use web\TiposActividades;
 use zonassacd\model\entity\GestorZona;
 use zonassacd\model\entity\GestorZonaSacd;
 use zonassacd\model\entity\Zona;
+use function core\is_true;
 
 /**
  * Esta página tiene la misión de realizar la llamada a calendario php;
@@ -22,7 +21,7 @@ use zonassacd\model\entity\Zona;
  *
  * @param integer $any El año al que hace referencia.
  * @param integer $trimestre diversas combinaciones de meses.
- * @param string $actividad Si se quiere mortrar las actividades o no (sólo la cuadrícula).
+ * @param string $actividad Si se quiere mostrar las actividades o no (sólo la cuadrícula).
  * @param integer|string $id_zona Puede ser:
  * id_zona, para una zona.
  * 'todo' para todas las zonas.
@@ -43,46 +42,33 @@ require_once("apps/core/global_header.inc");
 require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
+$oPosicion->recordar();
 
 // valores del id_cargo de tipo_cargo = sacd:
 $gesCargos = new GestorCargo();
 $aIdCargos_sacd = $gesCargos->getArrayCargosDeTipo('sacd');
 
-$oPosicion->recordar();
-
-echo "<button class='no_print' onclick=\"fnjs_exportar('html');\" >Descargar html</button>";
-
-$goLeyenda = Hash::link(core\ConfigGlobal::getWeb() . '/apps/zonassacd/controller/leyenda.php?' . http_build_query(array('id_item' => 1)));
-echo "<button class='no_print' onclick=\"window.open('$goLeyenda','leyenda','width=400,height=500,screenX=200,screenY=200,titlebar=yes');\" >Ver leyenda</button>";
-
-echo "<div id=\"exportar\">";
 $Qmodelo = (integer)filter_input(INPUT_POST, 'modelo');
-switch ($Qmodelo) {
-    case 2:
-        $print = 1;
-    case 1:
-        include_once(core\ConfigGlobal::$dir_estilos . '/calendario.css.php');
-        //include_once('apps/web/calendario.php');
-        break;
-    case 3:
-        include_once(core\ConfigGlobal::$dir_estilos . '/calendario_grid.css.php');
-        include_once('apps/web/calendario_grid.php');
-        break;
-}
-// para los estilos. Las variables están en la página css.
-$oPlanning = new web\Planning();
-$oPlanning->setColorColumnaUno($colorColumnaUno);
-$oPlanning->setColorColumnaDos($colorColumnaDos);
-$oPlanning->setTable_border($table_border);
-
 $Qyear = (integer)filter_input(INPUT_POST, 'year');
-$year = empty($Qyear) ? (integer)date('Y') + 1 : $Qyear;
 $Qtrimestre = (integer)filter_input(INPUT_POST, 'trimestre');
 
 $Qid_zona = (string)filter_input(INPUT_POST, 'id_zona');
 $Qactividad = (string)filter_input(INPUT_POST, 'actividad');
 $Qpropuesta = (string)filter_input(INPUT_POST, 'propuesta');
 
+
+$aGoBack = array(
+    'modelo' => $Qmodelo,
+    'year' => $Qyear,
+    'trimestre' => $Qtrimestre,
+    'id_zona' => $Qid_zona,
+    'actividad' => $Qactividad,
+    'propuesta' => $Qpropuesta,
+);
+$oPosicion->setParametros($aGoBack, 1);
+
+
+$year = empty($Qyear) ? (integer)date('Y') + 1 : $Qyear;
 // ISO: mes/dia
 switch ($Qtrimestre) {
     case 1:
@@ -169,7 +155,6 @@ if ($Qtrimestre === 5) {
 $oIniPlanning = web\DateTimeLocal::createFromFormat('Y/m/d', $inicio_iso);
 $oFinPlanning = web\DateTimeLocal::createFromFormat('Y/m/d', $fin_iso);
 $inicio_local = $oIniPlanning->getFromLocal();
-//$fin_local = $oFinPlanning->getFromLocal();
 
 switch ($Qid_zona) {
     case "todo_propias":
@@ -181,7 +166,9 @@ switch ($Qid_zona) {
         $a_zonas_o = array();
         foreach ($cZonasSacd as $oZonaSacd) {
             $id_zona = $oZonaSacd->getId_zona();
-            if (array_key_exists($id_zona, $a_zonas)) { continue; }
+            if (array_key_exists($id_zona, $a_zonas)) {
+                continue;
+            }
             $oZona = new Zona($id_zona);
             $nombre_zona = $oZona->getNombre_zona();
             $orden = $oZona->getOrden();
@@ -224,7 +211,9 @@ foreach ($aa_zonas as $a_zonas) {
         $id_nom = $oZonaSacd->getId_nom();
 
         $oSacd = new PersonaSacd($id_nom);
-        if ($oSacd->getSituacion() !== 'A') { continue; }
+        if ($oSacd->getSituacion() !== 'A') {
+            continue;
+        }
 
         $ap_nom = $oSacd->getPrefApellidosNombre();
         $persona[$p] = "p#$id_nom#$ap_nom";
@@ -263,7 +252,9 @@ foreach ($aa_zonas as $a_zonas) {
                 $aWhereAct['id_activ'] = $id_activ;
                 $GesActividades = new GestorActividad();
                 $cActividades = $GesActividades->getActividades($aWhereAct, $aOperadorAct);
-                if (is_array($cActividades) && count($cActividades) === 0) { continue; }
+                if (is_array($cActividades) && count($cActividades) === 0) {
+                    continue;
+                }
 
                 $oActividad = $cActividades[0]; // sólo debería haber una.
                 $id_tipo_activ = $oActividad->getId_tipo_activ();
@@ -321,6 +312,8 @@ foreach ($aa_zonas as $a_zonas) {
                     }
                 }
 
+                $css = web\PlanningStyle::clase($id_tipo_activ, $propio, $plaza, $oActividad->getStatus());
+
                 $aActivPersona[] = array(
                     'nom_curt' => $nom_curt,
                     'nom_llarg' => $nom_llarg,
@@ -333,6 +326,7 @@ foreach ($aa_zonas as $a_zonas) {
                     'id_activ' => $id_activ,
                     'propio' => $propio,
                     'plaza' => $plaza,
+                    'css' => $css,
                 );
                 $a++;
             }
@@ -356,7 +350,9 @@ foreach ($aa_zonas as $a_zonas) {
                 $oEncargo = new Encargo($id_enc);
                 $id_tipo_enc = $oEncargo->getId_tipo_enc();
                 $id = (string)$id_tipo_enc;
-                if ($id[0] != 7 && $id[0] != 4) { continue; }
+                if ($id[0] !== '7' && $id[0] !== '4') {
+                    continue;
+                }
 
                 //para el caso de que la actividad comience antes
                 //del periodo de inicio obligo a que tome una hora de inicio
@@ -373,7 +369,7 @@ foreach ($aa_zonas as $a_zonas) {
                 $propio = "p";
                 $nom_llarg = $oEncargo->getDesc_enc();
                 $nom_curt = ($nom_llarg[0] === 'A') ? 'a' : 'x';
-                if ($ini != $fi) {
+                if ($ini !== $fi) {
                     $nom_llarg .= " ($ini-$fi)";
                 } else {
                     $nom_llarg .= " ($ini)";
@@ -418,15 +414,42 @@ foreach ($aa_zonas as $a_zonas) {
     $cabeceras_por_zona[$z] = $nombre_zona;
 }
 
-$oPlanning->setDd(3);
-$oPlanning->setInicio($oIniPlanning);
-$oPlanning->setFin($oFinPlanning);
-// ---------------- html ---------------------------------------------
-if ($z == 1) {
+if ($z === 1) {
     $titulo = $cabeceras_por_zona[$z];
 } else {
     $titulo = _("planning por zonas");
 }
+
+$oPlanning = new web\Planning();
+$oPlanning->setDd(3);
+$oPlanning->setInicio($oIniPlanning);
+$oPlanning->setFin($oFinPlanning);
+
+$goLeyenda = Hash::link(core\ConfigGlobal::getWeb() . '/apps/zonassacd/controller/leyenda.php?' . http_build_query(array('id_item' => 1)));
+// ---------------- html ---------------------------------------------
+
+echo $oPosicion->mostrar_left_slide(1);
+
+echo "<button class='no_print' onclick=\"fnjs_exportar('html');\" >" . _("Descargar html") . "</button>";
+echo "<button class='no_print' onclick=\"window.open('$goLeyenda','leyenda','width=400,height=500,screenX=200,screenY=200,titlebar=yes');\" >" . _("Ver leyenda") . "</button>";
+
+echo "<div id=\"exportar\">";
+switch ($Qmodelo) {
+    case 2:
+        $print = 1;
+    case 1:
+        include_once(core\ConfigGlobal::$dir_estilos . '/calendario.css.php');
+        break;
+    case 3:
+        include_once(core\ConfigGlobal::$dir_estilos . '/calendario_grid.css.php');
+        include_once('apps/web/calendario_grid.php');
+        break;
+}
+
+// para los estilos. Las variables están en la página css.
+$oPlanning->setColorColumnaUno($colorColumnaUno);
+$oPlanning->setColorColumnaDos($colorColumnaDos);
+$oPlanning->setTable_border($table_border);
 
 echo "<span id=\"span_exportar\"  title=\"$titulo\">";
 for ($i = 1; $i <= $z; $i++) {
