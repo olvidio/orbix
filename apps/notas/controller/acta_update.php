@@ -31,11 +31,11 @@ if (!empty($a_sel)) { //vengo de un checkbox (caso de eliminar)
 
 $dl_acta = strtok($Qacta, ' ');
 
-if ($dl_acta == $mi_dele || $dl_acta == "?") {
+if ($dl_acta == $mi_dele || $dl_acta === "?") {
     $oActa = new notas\ActaDl();
     $oActaTribunal = new notas\ActaTribunalDl();
 } else {
-    // Ojo si la dl ya existe no deberia hacerse
+    // Ojo si la dl ya existe no debería hacerse
     $oActa = new notas\ActaEx();
     switch ($Qmod) {
         case 'nueva':
@@ -125,7 +125,7 @@ switch ($Qmod) {
         break;
 }
 
-//borrar todos (y despues poner los nuevos)
+//borrar todos (y después poner los nuevos)
 $oGesActaTribunal = new notas\GestorActaTribunalDl();
 $cActaTribunal = $oGesActaTribunal->getActasTribunales(array('acta' => $Qacta));
 foreach ($cActaTribunal as $oActaTribunal) {

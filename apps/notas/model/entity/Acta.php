@@ -770,7 +770,7 @@ class Acta extends core\ClasePropiedades
         $nom_tabla = $this->getNomTabla();
         $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'acta'));
         $oDatosCampo->setEtiqueta(_("acta"));
-        // Las actcas de otras r sólo tienen la sigla de la r
+        // Las actas de otras r sólo tienen la sigla de la r
         $oDatosCampo->setRegExp("/^(\?|\w{1,8}\??)(\s+([0-9]{0,3})\/([0-9]{2})\??)?$/");
         $txt = "No tienen el formato: 'dlxx nn/aa'. Debe tener sólo un espacio.";
         $txt .= "\nSi sólo se sabe la region/dl poner la sigla.\nSi no se sabe nada poner ?.\n";
