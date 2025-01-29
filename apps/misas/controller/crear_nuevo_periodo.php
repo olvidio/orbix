@@ -278,6 +278,152 @@ foreach ($cEncargoTipos as $oEncargoTipo) {
 $data_cuadricula = [];
 $orden='prioridad';
 
+$hay_bendicion=array();
+// Miro qué días hay bendición
+foreach ($date_range as $date) {
+    $bendicion='NO';
+
+    $dia_completo=$date->format('Y-m-d');
+    $dia_semana=date('w', strtotime($dia_completo));
+        
+    $temps='';
+        
+    $partes=explode('-', $dia_completo);
+    $dia=intval($partes[2]);
+    $mes=intval($partes[1]);
+    $anyo=intval($partes[0]);
+//    $date_dia_completo= new DateTime($dia_completo);
+    echo 'd-m-Y'.$dia.'.'.$mes.'.'.$anyo.'<br>';
+    //DPascua
+        
+    $DPascua = new DateTime("$anyo-03-21");
+    $dias_Pascua=easter_days($anyo);
+    $DPascua->add(new DateInterval("P{$dias_Pascua}D"));
+    $sDPascua=$DPascua->format('Y-m-d');
+    $tiempo=strtotime($dia_completo)-strtotime($sDPascua);
+    $hores=$tiempo/3600;
+    $dies=$hores/24;
+    if (($dies>=-46) && ($dies<0))
+        $temps='Q';
+    if (($dies>=0) && ($dies<50))
+        $temps='P';
+        
+    // Madre de Dios, Reyes, cumpleaños nP
+    if (($mes==1) && (($dia==1) || ($dia==6) || ($dia==9)))
+        $bendicion='SI';        
+    // Fundación sección de mujeres
+    if (($mes==2) && ($dia==14))
+        $bendicion='SI';
+        // S. José
+    if ((($mes==3) && ($dia==19)) || (($mes==4) && ($dia>=1) && ($dia<=5) && ($temps=='P') && ($setmana==2) && ($dia_semana==2)) || (($temps=='Q') && ($dia_semana==1) && ($dia==20) && ($mes==3)))
+        $bendicion='SI';
+        // Anunciación
+    if ((($mes==3) && ($dia==25)) || (((($mes==4) && ($dia>=1) && ($dia<=9)) || (($mes==3) && ($dia==31))) && ($temps=='P') && ($setmana==2) && ($dia_semana==1)) || (($temps=='Q') && ($dia_semana==1) && ($dia==26) && ($mes==3)))
+        // aniversario ordenación nP
+    if (($mes==3) && ($dia==28))
+        $bendicion='SI';
+        // aniversario 1a Comunión nP
+    if (($mes==4) && ($dia==23))
+        $bendicion='SI';
+        // Beato Álvaro
+    if (($mes==5) && ($dia==12))
+        $bendicion='SI';
+        // S. Juan, S. Josemaría, S. Pedro
+    if (($mes==6) && (($dia==24) || ($dia==26) || ($dia==29)))
+        $bendicion='SI';
+        // Asunción
+    if (($mes==8) && ($dia==15))
+        $bendicion='SI';
+        // Santa Cruz, S. Arcángeles
+    if (($mes==9) && (($dia==14) || ($dia==29)))
+        $bendicion='SI';
+        // Fundación Opus Dei, Canonización nP
+    if (($mes==10) && (($dia==2) || ($dia==6)))
+        $bendicion='SI';
+        // Todos los santos, aniversario Prelatura
+    if (($mes==11) && (($dia==1) || ($dia==28)))
+        $bendicion='SI';
+        // Inmaculada, S. Juan
+    if (($mes==12) && (($dia==8) || ($dia==27)))
+        $bendicion='SI';
+        
+        //Cristo Rey
+    if (($mes==11) && ($dia>=19) && ($dia<=25) && ($dia_semana==0))
+        $bendicion='SI';
+        
+        //Sagrada Familia
+    if (($mes==12) && ($dia>25) && ($dia_semana==0))
+        $bendicion='SI';
+    if (($mes==12) && ($dia==30) && ($dia_semana==5))
+        $bendicion='SI';
+        
+        //Bautismo del Señor
+    if (($mes==1) && ($dia>6) && ($dia<14) && ($dia_semana==7))
+        $bendicion=='SI';
+        //Ascensión
+    $Ascension = new DateTime("$anyo-03-21");
+    $DP=easter_days($anyo);
+    $dias_Ascension= $DP+42;
+    $Ascension->add(new DateInterval("P{$dias_Ascension}D"));
+    if (($mes==$Ascension->format('n')) && ($dia==$Ascension->format('j')))
+        $bendicion='SI';
+        //Pentecostés
+    $pentecostes = new DateTime("$anyo-03-21");
+    $dias_pentecostes= $DP+49;
+    $pentecostes->add(new DateInterval("P{$dias_pentecostes}D"));
+    if (($mes==$pentecostes->format('n')) && ($dia==$pentecostes->format('j')))
+        $bendicion='SI';
+        //Santísima Trinidad
+    $ST = new DateTime("$anyo-03-21");
+    $dias_ST= $DP+56;
+    $ST->add(new DateInterval("P{$dias_ST}D"));
+    if (($mes==$ST->format('n')) && ($dia==$ST->format('j')))
+        $bendicion='SI';
+        //Corpus
+    $Corpus = new DateTime("$anyo-03-21");
+    $dias_Corpus= $DP+63;
+    $Corpus->add(new DateInterval("P{$dias_Corpus}D"));
+    if (($mes==$Corpus->format('n')) && ($dia==$Corpus->format('j')))
+        $bendicion='SI';
+        //Sagra Cor
+    $SC = new DateTime("$anyo-03-21");
+    $dias_SC= $DP+68;
+    $SC->add(new DateInterval("P{$dias_SC}D"));
+    if (($mes==$SC->format('n')) && ($dia==$SC->format('j')))
+        $bendicion='SI';
+        
+        // aniversario elección del Papa
+    if (($mes==3) && ($dia==13))
+        $bendicion='SI';
+        // aniversario elección del Padre
+    if (($mes==1) && ($dia==23))
+        $bendicion='SI';
+        // cumpleaños del Padre
+    if (($mes==10) && ($dia==27))
+        $bendicion='SI';
+        // Santo del Padre
+    if (($mes==5) && ($dia==30))
+        $bendicion='SI';
+        
+    if ($dia_semana==6)
+        $bendicion='SI';
+
+            
+        //Comienzo una semana antes para que sea Domingo de Ramos y no Domingo de Pascua (así el desplazamiento es siempre positivo)
+    $DiasSantos = new DateTime("$anyo-03-14");
+    $DP=easter_days($anyo);
+    $DiasSantos->add(new DateInterval("P{$DP}D"));
+        //En Semana Santa no hay bendiciones
+    for ($i=1; $i<=7; $i++)
+    {
+        if (($mes==$DiasSantos->format('n')) && ($dia==$DiasSantos->format('j'))) {
+            $bendicion='NO';
+        }
+        $DiasSantos->add(new DateInterval("P1D"));
+    }
+    $hay_bendicion[$dia_completo]=$bendicion;
+}
+
 $EncargosZona = new EncargosZona($Qid_zona, $oInicio, $oFin, $orden);
 $EncargosZona->setATipoEnc($a_tipo_enc);
 $cEncargosZona = $EncargosZona->getEncargos();
@@ -308,155 +454,10 @@ foreach ($cEncargosZona as $oEncargo) {
     $data_cols = [];
     $meta_dia = [];
     foreach ($date_range as $date) {
-        if ($id_tipo==8300) {
-            $bendicion='NO';
-    
-            $dia_completo=$date->format('Y-m-d');
-            $dia_semana=date('w', strtotime($dia_completo));
-            
-            $temps='';
-            
-            $partes=explode('-', $dia_completo);
-            $dia=intval($partes[2]);
-            $mes=intval($partes[1]);
-            $anyo=intval($partes[0]);
-            $date_dia_completo= new DateTime($dia_completo);
-            echo 'd-m-Y'.$dia.'.'.$mes.'.'.$anyo.'<br>';
-            //DPascua
-            
-            $DPascua = new DateTime("$anyo-03-21");
-            $dias_Pascua=easter_days($anyo);
-            $DPascua->add(new DateInterval("P{$dias_Pascua}D"));
-            $sDPascua=$DPascua->format('Y-m-d');
-            $tiempo=strtotime($dia_completo)-strtotime($sDPascua);
-            $hores=$tiempo/3600;
-            $dies=$hores/24;
-            if (($dies>=-46) && ($dies<0))
-                $temps='Q';
-            if (($dies>=0) && ($dies<50))
-                $temps='P';
-            
-            // Madre de Dios, Reyes, cumpleaños nP
-            if (($mes==1) && (($dia==1) || ($dia==6) || ($dia==9)))
-                $bendicion='SI';
-            // Fundación sección de mujeres
-            if (($mes==2) && ($dia==14))
-                $bendicion='SI';
-            // S. José
-            if ((($mes==3) && ($dia==19)) || (($mes==4) && ($dia>=1) && ($dia<=5) && ($temps=='P') && ($setmana==2) && ($dia_semana==2)) || (($temps=='Q') && ($dia_semana==1) && ($dia==20) && ($mes==3)))
-                $bendicion='SI';
-            // Anunciación
-            if ((($mes==3) && ($dia==25)) || (((($mes==4) && ($dia>=1) && ($dia<=9)) || (($mes==3) && ($dia==31))) && ($temps=='P') && ($setmana==2) && ($dia_semana==1)) || (($temps=='Q') && ($dia_semana==1) && ($dia==26) && ($mes==3)))
-            // aniversario ordenación nP
-            if (($mes==3) && ($dia==28))
-                $bendicion='SI';
-            // aniversario 1a Comunión nP
-            if (($mes==4) && ($dia==23))
-                $bendicion='SI';
-            // Beato Álvaro
-            if (($mes==5) && ($dia==12))
-                $bendicion='SI';
-            // S. Juan, S. Josemaría, S. Pedro
-            if (($mes==6) && (($dia==24) || ($dia==26) || ($dia==29)))
-                $bendicion='SI';
-            // Asunción
-            if (($mes==8) && ($dia==15))
-                $bendicion='SI';
-            // Santa Cruz, S. Arcángeles
-            if (($mes==9) && (($dia==14) || ($dia==29)))
-                $bendicion='SI';
-            // Fundación Opus Dei, Canonización nP
-            if (($mes==10) && (($dia==2) || ($dia==6)))
-                $bendicion='SI';
-            // Todos los santos, aniversario Prelatura
-            if (($mes==11) && (($dia==1) || ($dia==28)))
-                $bendicion='SI';
-            if (($mes==11) && (($dia==1) || ($dia==28)))
-                echo 'TTTTTTOOTS SANTS!!!!!<br>';
-            // Inmaculada, S. Juan
-            if (($mes==12) && (($dia==8) || ($dia==27)))
-                $bendicion='SI';
-            
-            //Cristo Rey
-            if (($mes==11) && ($dia>=19) && ($dia<=25) && ($dia_semana==0))
-                $bendicion='SI';
-            
-            //Sagrada Familia
-            if (($mes==12) && ($dia>25) && ($dia_semana==0))
-                $bendicion='SI';
-            if (($mes==12) && ($dia==30) && ($dia_semana==5))
-                $bendicion='SI';
-            
-            //Bautismo del Señor
-            if (($mes==1) && ($dia>6) && ($dia<14) && ($dia_semana==7))
-                $bendicion=='SI';
-            //Ascensión
-            $Ascension = new DateTime("$anyo-03-21");
-            $DP=easter_days($anyo);
-            $dias_Ascension= $DP+42;
-            $Ascension->add(new DateInterval("P{$dias_Ascension}D"));
-            if (($mes==$Ascension->format('n')) && ($dia==$Ascension->format('j')))
-                $bendicion='SI';
-            //Pentecostés
-            $pentecostes = new DateTime("$anyo-03-21");
-            $dias_pentecostes= $DP+49;
-            $pentecostes->add(new DateInterval("P{$dias_pentecostes}D"));
-            if (($mes==$pentecostes->format('n')) && ($dia==$pentecostes->format('j')))
-                $bendicion='SI';
-            //Santísima Trinidad
-            $ST = new DateTime("$anyo-03-21");
-            $dias_ST= $DP+56;
-            $ST->add(new DateInterval("P{$dias_ST}D"));
-            if (($mes==$ST->format('n')) && ($dia==$ST->format('j')))
-                $bendicion='SI';
-            //Corpus
-            $Corpus = new DateTime("$anyo-03-21");
-            $dias_Corpus= $DP+63;
-            $Corpus->add(new DateInterval("P{$dias_Corpus}D"));
-            if (($mes==$Corpus->format('n')) && ($dia==$Corpus->format('j')))
-                $bendicion='SI';
-            //Sagra Cor
-            $SC = new DateTime("$anyo-03-21");
-            $dias_SC= $DP+68;
-            $SC->add(new DateInterval("P{$dias_SC}D"));
-            if (($mes==$SC->format('n')) && ($dia==$SC->format('j')))
-                $bendicion='SI';
-            
-            // aniversario elección del Papa
-            if (($mes==3) && ($dia==13))
-                $bendicion='SI';
-            // aniversario elección del Padre
-            if (($mes==1) && ($dia==23))
-                $bendicion='SI';
-            // cumpleaños del Padre
-            if (($mes==10) && ($dia==27))
-                $bendicion='SI';
-            // Santo del Padre
-            if (($mes==5) && ($dia==30))
-                $bendicion='SI';
-            
-            if ($dia_semana==6)
-                $bendicion='SI';
-
-                
-            echo 'BENDICION:'.$bendicion.'<br>';
-            //Comienzo una semana antes para que sea Domingo de Ramos y no Domingo de Pascua (así el desplazamiento es siempre positivo)
-            $DiasSantos = new DateTime("$anyo-03-14");
-            $DP=easter_days($anyo);
-            $DiasSantos->add(new DateInterval("P{$DP}D"));
-            //En Semana Santa no hay bendiciones
-            for ($i=1; $i<=7; $i++)
-            {
-                if (($mes==$DiasSantos->format('n')) && ($dia==$DiasSantos->format('j'))) {
-                    $bendicion='NO';
-                }
-                $DiasSantos->add(new DateInterval("P1D"));
-            }
-        }
-
         $ok_encargo=false;
+        $dia_completo=$date->format('Y-m-d');
 
-        if (($id_tipo!=8300) || ($bendicion=='SI')) {
+        if (($id_tipo!=8300) || ($hay_bendicion[$dia_completo]=='SI')) {
             $num_dia = $date->format('Y-m-d');
             $nom_dia = $date->format('D');
             if(($QTipoPlantilla== EncargoDia::PLANTILLA_SEMANAL_UNO) || ($QTipoPlantilla== EncargoDia::PLANTILLA_SEMANAL_TRES)) {
