@@ -19,11 +19,11 @@ abstract class XPermisos
      *
      * @var integer
      */
-    protected $iaccion;
+    protected int $iaccion;
 
     /* METODES ----------------------------------------------------------------- */
 
-    function setAccion($iaccion)
+    function setAccion(int $iaccion)
     {
         $this->iaccion = $iaccion;
     }
@@ -169,7 +169,7 @@ abstract class XPermisos
 
     /* MÉTODOS PRIVADOS --------------------------------------------------------- */
     /*
-   * Genera el número suma de permiso. Se le passa un array de texto con los permisos
+   * Genera el número suma de permiso. Se le pasa un array de texto con los permisos
    *
    *
    */
@@ -190,7 +190,7 @@ abstract class XPermisos
     }
 
     /*
-   * Genera el número suma de permiso. Se le passa un array de integer con los permisos
+   * Genera el número suma de permiso. Se le pasa un array de integer con los permisos
    *
    *
    */
@@ -208,7 +208,7 @@ abstract class XPermisos
     }
 
     /*
-   * Genera el número suma de permiso. Se le passa un array de texto con los permisos
+   * Genera el número suma de permiso. Se le pasa un array de texto con los permisos
    *
    *
    */

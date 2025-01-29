@@ -45,9 +45,9 @@ class PermisosActividadesTrue
     /**
      * Per saber a quina activitat fa referència.
      *
-     * @var integer
+     * @var string
      */
-    protected $iid_tipo_activ;
+    protected $sid_tipo_activ;
 
     /**
      * Id_activ de PermisoActividad
@@ -115,9 +115,9 @@ class PermisosActividadesTrue
         return $this->iid_fase;
     }
 
-    public function getPermisoActual($iAfecta)
+    public function getPermisoActual($sAfecta)
     {
-        // devuleve permiso de crear (15) en cualquier caso
+        // devuelve permiso de crear (15) en cualquier caso
         return new PermAccion(15);
     }
 
@@ -132,7 +132,7 @@ class PermisosActividadesTrue
     {
         //echo "tipo_activ: $id_tipo_activ_txt, propia: ".$this->bpropia."<br>";
         //if ($this->btop === true) {echo "ERROR2"; die();}
-        if (empty($id_tipo_activ_txt)) $id_tipo_activ_txt = $this->iid_tipo_activ;
+        if (empty($id_tipo_activ_txt)) $id_tipo_activ_txt = $this->sid_tipo_activ;
         if ($this->bpropia === true) {
             if (array_key_exists($id_tipo_activ_txt, $this->aPermDl)) {
                 return $this->aPermDl[$id_tipo_activ_txt];
@@ -150,7 +150,7 @@ class PermisosActividadesTrue
 
     public function getPermisosPrev($id_tipo_activ_txt = '')
     {
-        if (empty($id_tipo_activ_txt)) $id_tipo_activ_txt = $this->iid_tipo_activ;
+        if (empty($id_tipo_activ_txt)) $id_tipo_activ_txt = $this->sid_tipo_activ;
         if (($prev_id_tipo = $this->getIdTipoPrev($id_tipo_activ_txt)) === false) {
             return false;
         }
@@ -164,25 +164,25 @@ class PermisosActividadesTrue
         } else {
             $this->btop = false;
         }
-        // actualitzar el id_tipo_activ
-        $this->iid_tipo_activ = $id_tipo_activ;
+        // actualizar el id_tipo_activ
+        $this->sid_tipo_activ = $id_tipo_activ;
     }
 
     public function setId_activ($id_activ)
     {
-        // actualitza el id_tipo_activ
+        // actualiza el id_tipo_activ
         $this->iid_activ = $id_activ;
     }
 
     public function setId_tipo_proceso($id_tipo_proceso)
     {
-        // actualitza el id_tipo_proceso
+        // actualiza el id_tipo_proceso
         $this->iid_tipo_proceso = $id_tipo_proceso;
     }
 
     public function setPropia($bpropia)
     {
-        // actualitza el bpropia
+        // actualiza el bpropia
         if (is_true($bpropia)) {
             $this->bpropia = true;
         } else {
@@ -192,7 +192,7 @@ class PermisosActividadesTrue
 
     public function getIdTipoPrev($id_tipo_activ_txt = '')
     {
-        if (empty($id_tipo_activ_txt)) $id_tipo_activ_txt = $this->iid_tipo_activ;
+        if (empty($id_tipo_activ_txt)) $id_tipo_activ_txt = $this->sid_tipo_activ;
         $rta = preg_match('/(\d+)(\d)(\.*)/', $id_tipo_activ_txt, $match);
         if (empty($rta)) {
             if ($id_tipo_activ_txt == '1.....' || $id_tipo_activ_txt == '2.....' || $id_tipo_activ_txt == '3.....') {
@@ -210,7 +210,7 @@ class PermisosActividadesTrue
         $prev_id_tipo = $num_prev . "." . $pto;
         //echo "<br>$num, $num_prev, $prev_id_tipo <br>";
         //print_r($this);
-        $this->iid_tipo_activ = $prev_id_tipo;
+        $this->sid_tipo_activ = $prev_id_tipo;
         return $prev_id_tipo;
     }
 
@@ -218,7 +218,7 @@ class PermisosActividadesTrue
     private function getId_tipo_activ()
     {
         // buscar el id_tipo_activ
-        return $this->iid_tipo_activ;
+        return $this->sid_tipo_activ;
     }
 
     private function getId_tipo_proceso()
