@@ -42,6 +42,7 @@ abstract class ClaseGestor
     {
         $this->oDbl = $oDbl;
     }
+
     public function setoDbl_Select($oDbl_Select)
     {
         $this->oDbl_Select = $oDbl_Select;
@@ -109,10 +110,10 @@ abstract class ClaseGestor
                     $aa_ordre = explode(' ', $ordre);
                     $ordreCamp = $aa_ordre[0];
                     $get = 'get' . ucfirst($ordreCamp);
-                    $a_ord[$key_o][$key_c] = strtolower($oClass->$get());
+                    $a_ord[$key_o][$key_c] = strtolower($oClass->$get() ?? '');
                     $a_ord_cond[$key_o] = SORT_ASC;
                     if (count($aa_ordre) > 1) {
-                        if ($aa_ordre[1] == 'DESC') {
+                        if ($aa_ordre[1] === 'DESC') {
                             $a_ord_cond[$key_o] = SORT_DESC;
                         }
                     }

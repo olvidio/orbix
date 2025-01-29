@@ -10,6 +10,10 @@
  */
 
 // INICIO Cabecera global de URL de controlador *********************************
+use core\ConfigGlobal;
+use core\ViewPhtml;
+use web\Hash;
+
 require_once("apps/core/global_header.inc");
 // Archivos requeridos por esta url **********************************************
 
@@ -24,7 +28,7 @@ if (empty($Qid_tipo_activ)) {
     //$Qssfsv = (string)  filter_input(INPUT_POST, 'ssfsv');
     $Qssfsv = '';
     if (empty($Qssfsv)) {
-        $mi_sfsv = core\ConfigGlobal::mi_sfsv();
+        $mi_sfsv = ConfigGlobal::mi_sfsv();
         if ($mi_sfsv == 1) $Qssfsv = 'sv';
         if ($mi_sfsv == 2) $Qssfsv = 'sf';
     }
@@ -43,11 +47,11 @@ $desplDelegaciones = $gesDelegacion->getListaDelegaciones($aRegiones);
 $desplDelegaciones->setNombre("dl");
 $desplDelegaciones->setAction("fnjs_comparativa()");
 
-$mi_dele = core\ConfigGlobal::mi_delef();
+$mi_dele = ConfigGlobal::mi_delef();
 $txt = sprintf(_("comparar %s con:"), $mi_dele);
 
-$oHash = new web\Hash();
-$oHash->setUrl(core\ConfigGlobal::getWeb() . '/apps/actividadplazas/controller/plazas_balance_dl.php');
+$oHash = new Hash();
+$oHash->setUrl(ConfigGlobal::getWeb() . '/apps/actividadplazas/controller/plazas_balance_dl.php');
 $oHash->setCamposForm('dl!id_tipo_activ');
 $h = $oHash->linkSinVal();
 
@@ -58,5 +62,5 @@ $a_campos = [
     'desplDelegaciones' => $desplDelegaciones,
 ];
 
-$oView = new core\View('actividadplazas/controller');
+$oView = new ViewPhtml('actividadplazas/controller');
 $oView->renderizar('plazas_balance_que.phtml', $a_campos);

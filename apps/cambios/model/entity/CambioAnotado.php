@@ -2,7 +2,10 @@
 
 namespace cambios\model\entity;
 
-use core;
+use core\ClasePropiedades;
+use core\DatosCampo;
+use core\Set;
+use function core\is_true;
 
 /**
  * Fitxer amb la Classe que accedeix a la taula av_cambios_anotados_dl
@@ -23,7 +26,7 @@ use core;
  * @version 1.0
  * @created 2/5/2019
  */
-class CambioAnotado extends core\ClasePropiedades
+class CambioAnotado extends ClasePropiedades
 {
     /* ATRIBUTOS ----------------------------------------------------------------- */
     /**
@@ -113,7 +116,7 @@ class CambioAnotado extends core\ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'id_item') && $val_id !== '') $this->iid_item = (int)$val_id; 
+                if (($nom_id === 'id_item') && $val_id !== '') $this->iid_item = (int)$val_id;
             }
         } else {
             if (isset($a_id) && $a_id !== '') {
@@ -165,7 +168,7 @@ class CambioAnotado extends core\ClasePropiedades
         $aDades['server'] = $this->iserver;
         array_walk($aDades, 'core\poner_null');
         //para el caso de los boolean FALSE, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
-        if (core\is_true($aDades['anotado'])) {
+        if (is_true($aDades['anotado'])) {
             $aDades['anotado'] = 'true';
         } else {
             $aDades['anotado'] = 'false';
@@ -215,7 +218,7 @@ class CambioAnotado extends core\ClasePropiedades
 
             $nom_seq = $this->getNomTabla() . '_id_item_seq';
 
-            $this->id_item = $oDbl->lastInsertId($nom_seq);
+            $this->iid_item = $oDbl->lastInsertId($nom_seq);
         }
         $this->setAllAtributes($aDades);
         return TRUE;
@@ -283,7 +286,7 @@ class CambioAnotado extends core\ClasePropiedades
      *
      * @param array $aDades
      */
-    function setAllAtributes($aDades)
+    function setAllAtributes(array $aDades)
     {
         if (!is_array($aDades)) return;
         if (array_key_exists('id_item', $aDades)) $this->setId_item($aDades['id_item']);
@@ -347,7 +350,7 @@ class CambioAnotado extends core\ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'id_item') && $val_id !== '') $this->iid_item = (int)$val_id; 
+                if (($nom_id === 'id_item') && $val_id !== '') $this->iid_item = (int)$val_id;
             }
         }
     }
@@ -474,7 +477,7 @@ class CambioAnotado extends core\ClasePropiedades
      */
     function getDatosCampos()
     {
-        $oCambioAnotadoSet = new core\Set();
+        $oCambioAnotadoSet = new Set();
 
         $oCambioAnotadoSet->add($this->getDatosId_schema_cambio());
         $oCambioAnotadoSet->add($this->getDatosId_item_cambio());
@@ -488,12 +491,12 @@ class CambioAnotado extends core\ClasePropiedades
      * Recupera les propietats de l'atribut iid_schema_cambio de CambioAnotado
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosId_schema_cambio()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_schema_cambio'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_schema_cambio'));
         $oDatosCampo->setEtiqueta(_("id_schema_cambio"));
         return $oDatosCampo;
     }
@@ -502,12 +505,12 @@ class CambioAnotado extends core\ClasePropiedades
      * Recupera les propietats de l'atribut iid_item_cambio de CambioAnotado
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosId_item_cambio()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_item_cambio'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_item_cambio'));
         $oDatosCampo->setEtiqueta(_("id_item_cambio"));
         return $oDatosCampo;
     }
@@ -516,12 +519,12 @@ class CambioAnotado extends core\ClasePropiedades
      * Recupera les propietats de l'atribut banotado de CambioAnotado
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosAnotado()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'anotado'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'anotado'));
         $oDatosCampo->setEtiqueta(_("anotado"));
         return $oDatosCampo;
     }
@@ -530,12 +533,12 @@ class CambioAnotado extends core\ClasePropiedades
      * Recupera les propietats de l'atribut iserver de CambioAnotado
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosServer()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'server'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'server'));
         $oDatosCampo->setEtiqueta(_("servidor"));
         return $oDatosCampo;
     }

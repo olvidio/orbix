@@ -1,13 +1,13 @@
 <?php
 
 use actividades\model\ActividadTipo;
+use core\ConfigGlobal;
 use core\ViewTwig;
 use web\CasasQue;
 use web\Hash;
 use web\PeriodoQue;
-use core\ConfigGlobal;
-use ubis\model\entity\GestorCasaDl;
 use web\Posicion;
+use ubis\model\entity\GestorCasaDl;
 
 /**
  * Página para cambiar la fase a un grupo de actividades.
@@ -57,7 +57,7 @@ $Qcdc_sel = (integer)filter_input(INPUT_POST, 'cdc_sel');
 $Qid_cdc_mas = (string)filter_input(INPUT_POST, 'id_cdc_mas');
 $Qid_cdc_num = (string)filter_input(INPUT_POST, 'id_cdc_num');
 
-$isfsv = core\ConfigGlobal::mi_sfsv();
+$isfsv = ConfigGlobal::mi_sfsv();
 $permiso_des = FALSE;
 // mejor que no venga por menú. Así solo veo las de mi sección.
 // añado la opción sv para calendario...

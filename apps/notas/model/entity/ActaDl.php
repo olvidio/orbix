@@ -1,8 +1,6 @@
 <?php
 namespace notas\model\entity;
 
-use core;
-
 /**
  * Fitxer amb la Classe que accedeix a la taula e_actas
  *
@@ -43,7 +41,7 @@ class ActaDl extends Acta
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'acta') && $val_id !== '') $this->sacta = (string)$val_id; // evitem SQL injection fent cast a string
+                if (($nom_id === 'acta') && $val_id !== '') $this->sacta = (string)$val_id; // evitem SQL injection fent cast a string
             }
         } else {
             if (isset($a_id) && $a_id !== '') {
@@ -55,10 +53,4 @@ class ActaDl extends Acta
         $this->setNomTabla('e_actas_dl');
     }
 
-    /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
-    /* OTROS MÉTODOS  ----------------------------------------------------------*/
-    /* MÉTODOS PRIVADOS ----------------------------------------------------------*/
-    /* MÉTODOS GET y SET --------------------------------------------------------*/
 }
-
-?>

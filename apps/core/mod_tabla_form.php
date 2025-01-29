@@ -1,6 +1,9 @@
 <?php
 
 // INICIO Cabecera global de URL de controlador *********************************
+use core\ConfigGlobal;
+use web\Hash;
+
 require_once("apps/core/global_header.inc");
 // Archivos requeridos por esta url **********************************************
 
@@ -51,17 +54,17 @@ if (!empty($a_sel) && ($Qmod !== 'nuevo')) { //vengo de un checkbox (para el cas
     $a_pkey = array();
 }
 
-$web_depende = core\ConfigGlobal::getWeb() . "/apps/core/mod_tabla_depende.php";
+$web_depende = ConfigGlobal::getWeb() . "/apps/core/mod_tabla_depende.php";
 /* generar url go_to para volver a la tabla */
 $aQuery['s_pkey'] = $Qs_pkey;
 // para los dossiers
 if (!empty($Qobj_pau)) {
     $aQuery['obj_pau'] = $Qobj_pau;
     $sQuery = http_build_query($aQuery);
-    $Qgo_to = web\Hash::link(core\ConfigGlobal::getWeb() . "/apps/dossiers/controller/dossiers_ver.php?$sQuery");
+    $Qgo_to = Hash::link(ConfigGlobal::getWeb() . "/apps/dossiers/controller/dossiers_ver.php?$sQuery");
 } else {
     $sQuery = http_build_query($aQuery);
-    $Qgo_to = web\Hash::link(core\ConfigGlobal::getWeb() . "/apps/core/mod_tabla_sql.php?$sQuery");
+    $Qgo_to = Hash::link(ConfigGlobal::getWeb() . "/apps/core/mod_tabla_sql.php?$sQuery");
 }
 
 // Tiene que ser en dos pasos.
@@ -86,7 +89,7 @@ $explicacion_txt = $oInfoClase->getTxtExplicacion();
 $camposForm = $oDatosForm->getCamposForm();
 $camposNo = $oDatosForm->getCamposNo();
 
-$oHashSelect = new web\Hash();
+$oHashSelect = new Hash();
 $oHashSelect->setCamposForm($camposForm);
 $oHashSelect->setCamposNo('sel!' . $camposNo);
 $a_camposHidden = array(
@@ -104,7 +107,7 @@ $oHashSelect->setArraycamposHidden($a_camposHidden);
 
 
 $clase_info = urlencode($Qclase_info);
-$oHash1 = new web\Hash();
+$oHash1 = new Hash();
 $oHash1->setUrl($web_depende);
 $oHash1->setCamposForm('clase_info!accion!valor_depende');
 $h = $oHash1->linkSinVal();

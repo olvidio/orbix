@@ -2,7 +2,9 @@
 
 namespace cartaspresentacion\model\entity;
 
-use core;
+use core\ClasePropiedades;
+use core\DatosCampo;
+use core\Set;
 
 /**
  * Fitxer amb la Classe que accedeix a la taula du_presentacion_dl
@@ -23,7 +25,7 @@ use core;
  * @version 1.0
  * @created 8/4/2019
  */
-class CartaPresentacion extends core\ClasePropiedades
+class CartaPresentacion extends ClasePropiedades
 {
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
@@ -32,7 +34,7 @@ class CartaPresentacion extends core\ClasePropiedades
      *
      * @var array
      */
-    private $aPrimary_key;
+    protected $aPrimary_key;
 
     /**
      * aDades de CartaPresentacion
@@ -119,8 +121,8 @@ class CartaPresentacion extends core\ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'id_direccion') && $val_id !== '') $this->iid_direccion = (int)$val_id;
-                if (($nom_id == 'id_ubi') && $val_id !== '') $this->iid_ubi = (int)$val_id;
+                if (($nom_id === 'id_direccion') && $val_id !== '') $this->iid_direccion = (int)$val_id;
+                if (($nom_id === 'id_ubi') && $val_id !== '') $this->iid_ubi = (int)$val_id;
             }
         }
         $this->setoDbl($oDbl);
@@ -261,7 +263,7 @@ class CartaPresentacion extends core\ClasePropiedades
      *
      * @param array $aDades
      */
-    function setAllAtributes($aDades)
+    function setAllAtributes(array $aDades)
     {
         if (!is_array($aDades)) return;
         if (array_key_exists('id_direccion', $aDades)) $this->setId_direccion($aDades['id_direccion']);
@@ -329,8 +331,8 @@ class CartaPresentacion extends core\ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'id_direccion') && $val_id !== '') $this->iid_direccion = (int)$val_id;
-                if (($nom_id == 'id_ubi') && $val_id !== '') $this->iid_ubi = (int)$val_id;
+                if (($nom_id === 'id_direccion') && $val_id !== '') $this->iid_direccion = (int)$val_id;
+                if (($nom_id === 'id_ubi') && $val_id !== '') $this->iid_ubi = (int)$val_id;
             }
         }
     }
@@ -503,7 +505,7 @@ class CartaPresentacion extends core\ClasePropiedades
      */
     function getDatosCampos()
     {
-        $oCartaPresentacionSet = new core\Set();
+        $oCartaPresentacionSet = new Set();
 
         $oCartaPresentacionSet->add($this->getDatosPres_nom());
         $oCartaPresentacionSet->add($this->getDatosPres_telf());
@@ -518,12 +520,12 @@ class CartaPresentacion extends core\ClasePropiedades
      * Recupera les propietats de l'atribut spres_nom de CartaPresentacion
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosPres_nom()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'pres_nom'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'pres_nom'));
         $oDatosCampo->setEtiqueta(_("pres_nom"));
         return $oDatosCampo;
     }
@@ -532,12 +534,12 @@ class CartaPresentacion extends core\ClasePropiedades
      * Recupera les propietats de l'atribut spres_telf de CartaPresentacion
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosPres_telf()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'pres_telf'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'pres_telf'));
         $oDatosCampo->setEtiqueta(_("pres_telf"));
         return $oDatosCampo;
     }
@@ -546,12 +548,12 @@ class CartaPresentacion extends core\ClasePropiedades
      * Recupera les propietats de l'atribut spres_mail de CartaPresentacion
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosPres_mail()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'pres_mail'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'pres_mail'));
         $oDatosCampo->setEtiqueta(_("pres_mail"));
         return $oDatosCampo;
     }
@@ -560,12 +562,12 @@ class CartaPresentacion extends core\ClasePropiedades
      * Recupera les propietats de l'atribut szona de CartaPresentacion
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosZona()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'zona'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'zona'));
         $oDatosCampo->setEtiqueta(_("zona"));
         return $oDatosCampo;
     }
@@ -574,12 +576,12 @@ class CartaPresentacion extends core\ClasePropiedades
      * Recupera les propietats de l'atribut sobserv de CartaPresentacion
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosObserv()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'observ'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'observ'));
         $oDatosCampo->setEtiqueta(_("observ"));
         return $oDatosCampo;
     }

@@ -242,18 +242,6 @@ class DatosCampo
 
     /* MÉTODOS GET y SET --------------------------------------------------------*/
 
-    /**
-     * Recupera todos los atributos de TelecoUbi en un array
-     *
-     * @return array aDades
-     */
-    function getTot()
-    {
-        if (!is_array($this->aDades)) {
-            $this->DBCarregar('tot');
-        }
-        return $this->aDades;
-    }
 
     /**
      * Recupera el atributo snom_tabla de DatosCampo
@@ -345,29 +333,6 @@ class DatosCampo
     function setAviso($baviso)
     {
         $this->baviso = $baviso;
-    }
-
-    /**
-     * Recupera el atributo stipodb de DatosCampo
-     *
-     * @return string stipodb
-     */
-    function getTipoDb()
-    {
-        if (!isset($this->stipodb)) {
-            //$this->DBCarregar();
-        }
-        return $this->stipodb;
-    }
-
-    /**
-     * Establece el valor del atributo stipodb de DatosCampo
-     *
-     * @param string stipodb
-     */
-    function setTipoDb($stipodb)
-    {
-        $this->stipodb = $stipodb;
     }
 
     /**

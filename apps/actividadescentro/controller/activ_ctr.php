@@ -1,8 +1,9 @@
 <?php
 
+use core\ConfigGlobal;
+use core\ViewTwig;
 use web\Hash;
 use web\PeriodoQue;
-use core\ConfigGlobal;
 
 /**
  * Esta página lista las actividades de s y sg con los centros encargados.
@@ -106,5 +107,5 @@ $a_campos = ['oPosicion' => $oPosicion,
     'url_ajax' => $url_ajax,
 ];
 
-$oView = new core\ViewTwig('actividadescentro/controller');
+$oView = new ViewTwig('actividadescentro/controller');
 $oView->renderizar('activ_ctr.html.twig', $a_campos);

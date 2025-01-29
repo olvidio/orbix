@@ -11,6 +11,8 @@
  */
 
 // INICIO Cabecera global de URL de controlador *********************************
+use core\ConfigGlobal;
+
 require_once("apps/core/global_header.inc");
 // Archivos requeridos por esta url **********************************************
 
@@ -45,7 +47,7 @@ foreach ($cRepeticion as $oRepeticion) {
 
 //echo $texto;
 //$dir_base = "/var/www/orbix";
-$dir_base = core\ConfigGlobal::DIR;
+$dir_base = ConfigGlobal::DIR;
 $filename = "$dir_base/apps/menus/view/traducir_menu.phtml";
 $somecontent = $texto;
 

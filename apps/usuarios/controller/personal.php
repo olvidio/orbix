@@ -1,10 +1,15 @@
 <?php
 
-use usuarios\model\entity as usuarios;
-use menus\model\entity as menus;
-use web\Desplegable;
-use cambios\model\entity\Cambio;
 use cambios\model\entity\CambioUsuario;
+use core\ConfigGlobal;
+use core\ViewPhtml;
+use menus\model\entity\GestorGrupMenuRole;
+use menus\model\entity\GrupMenu;
+use usuarios\model\entity\GestorLocal;
+use usuarios\model\entity\GestorPreferencia;
+use usuarios\model\entity\Preferencia;
+use web\Desplegable;
+use web\Hash;
 
 // INICIO Cabecera global de URL de controlador *********************************
 require_once("apps/core/global_header.inc");
@@ -17,10 +22,10 @@ require_once("apps/core/global_object.inc");
 
 $oPosicion->recordar();
 
-$oGesPref = new usuarios\GestorPreferencia();
+$oGesPref = new GestorPreferencia();
 
-$id_usuario = core\ConfigGlobal::mi_id_usuario();
-$id_role = core\ConfigGlobal::mi_id_role();
+$id_usuario = ConfigGlobal::mi_id_usuario();
+$id_role = ConfigGlobal::mi_id_role();
 // ----------- Página de inicio -------------------
 $aPref = $oGesPref->getPreferencias(array('id_usuario' => $id_usuario, 'tipo' => 'inicio'));
 if (is_array($aPref) && count($aPref) > 0) {
@@ -37,7 +42,7 @@ $aOpciones = ['exterior' => ucfirst(_("home")),
     'personal' => ucfirst(_("personal")),
     'aniversarios' => ucfirst(_("aniversarios")),
 ];
-if (core\ConfigGlobal::is_app_installed('cambios')) {
+if (ConfigGlobal::is_app_installed('cambios')) {
     $aOpciones['avisos'] = ucfirst(_("avisos cambios actividades"));
 }
 
@@ -48,13 +53,13 @@ $oDesplInicio->setOpcion_sel($inicio);
 
 
 //oficinas posibles:
-$GesGMR = new menus\GestorGrupMenuRole();
+$GesGMR = new GestorGrupMenuRole();
 $cGMR = $GesGMR->getGrupMenuRoles(array('id_role' => $id_role));
 //$mi_oficina_menu=$cGMR[0]->getId_grupmenu();
 $posibles = '';
 foreach ($cGMR as $oGMR) {
     $id_grupmenu = $oGMR->getId_grupmenu();
-    $oGrupMenu = new menus\GrupMenu($id_grupmenu);
+    $oGrupMenu = new GrupMenu($id_grupmenu);
     $grup_menu = $oGrupMenu->getGrup_menu($_SESSION['oConfig']->getAmbito());
 
     if ($id_grupmenu == $oficina) {
@@ -78,25 +83,25 @@ if (is_array($aPref) && count($aPref) > 0) {
 }
 
 // color
-$estil_azul = ($estilo_color == "azul") ? "selected" : '';
-$estil_naranja = ($estilo_color == "naranja") ? "selected" : '';
-$estil_verde = ($estilo_color == "verde") ? "selected" : '';
+$estil_azul = ($estilo_color === "azul") ? "selected" : '';
+$estil_naranja = ($estilo_color === "naranja") ? "selected" : '';
+$estil_verde = ($estilo_color === "verde") ? "selected" : '';
 
 // disposición:
-$tipo_menu_h = ($tipo_menu == "horizontal") ? "selected" : '';
-$tipo_menu_v = ($tipo_menu == "vertical") ? "selected" : '';
+$tipo_menu_h = ($tipo_menu === "horizontal") ? "selected" : '';
+$tipo_menu_v = ($tipo_menu === "vertical") ? "selected" : '';
 
 // ----------- Tipo de tablas -------------------
-$oPref = new usuarios\Preferencia(array('id_usuario' => $id_usuario, 'tipo' => 'tabla_presentacion'));
+$oPref = new Preferencia(array('id_usuario' => $id_usuario, 'tipo' => 'tabla_presentacion'));
 $tipo_tabla = $oPref->getPreferencia();
-$tipo_tabla_s = ($tipo_tabla == "slickgrid") ? "selected" : '';
-$tipo_tabla_h = ($tipo_tabla == "html") ? "selected" : '';
+$tipo_tabla_s = ($tipo_tabla === "slickgrid") ? "selected" : '';
+$tipo_tabla_h = ($tipo_tabla === "html") ? "selected" : '';
 
 // ----------- Orden Apellidos en listas -------------------
-$oPref = new usuarios\Preferencia(array('id_usuario' => $id_usuario, 'tipo' => 'ordenApellidos'));
+$oPref = new Preferencia(array('id_usuario' => $id_usuario, 'tipo' => 'ordenApellidos'));
 $tipo_apellidos = $oPref->getPreferencia();
-$tipo_apellidos_nom_ap = ($tipo_apellidos == "nom_ap") ? "selected" : '';
-$tipo_apellidos_ap_nom = ($tipo_apellidos == "ap_nom") ? "selected" : '';
+$tipo_apellidos_nom_ap = ($tipo_apellidos === "nom_ap") ? "selected" : '';
+$tipo_apellidos_ap_nom = ($tipo_apellidos === "ap_nom") ? "selected" : '';
 
 // ----------- Idioma -------------------
 //Tengo la variable $idioma en ConfigGlobal, pero vuelvo a consultarla 
@@ -108,19 +113,19 @@ if (is_array($aPref) && count($aPref) > 0) {
 } else {
     $idioma = '';
 }
-$oGesLocales = new usuarios\GestorLocal();
+$oGesLocales = new GestorLocal();
 $oDesplLocales = $oGesLocales->getListaLocales();
 $oDesplLocales->setNombre('idioma_nou');
 $oDesplLocales->setOpcion_sel($idioma);
 
-$aniversarios = web\Hash::link(core\ConfigGlobal::getWeb() . '/programas/aniversarios.php');
-$avisos = web\Hash::link(core\ConfigGlobal::getWeb() . '/apps/usuarios/controller/usuario_form.php?' . http_build_query(array('quien' => 'usuario', 'id_usuario' => $id_usuario)));
-$avisos_lista = web\Hash::link(core\ConfigGlobal::getWeb() . '/apps/cambios/controller/avisos_generar.php?' . http_build_query(array('id_usuario' => $id_usuario, 'aviso_tipo' => CambioUsuario::TIPO_LISTA)));
-$avisos_mails = web\Hash::link(core\ConfigGlobal::getWeb() . '/apps/cambios/controller/avisos_generar.php?' . http_build_query(array('id_usuario' => $id_usuario, 'aviso_tipo' => CambioUsuario::TIPO_MAIL)));
-$cambio_password = web\Hash::link(core\ConfigGlobal::getWeb() . '/apps/usuarios/controller/usuario_form_pwd.php');
-$cambio_mail = web\Hash::link(core\ConfigGlobal::getWeb() . '/apps/usuarios/controller/usuario_form_mail.php');
+$aniversarios = Hash::link(ConfigGlobal::getWeb() . '/programas/aniversarios.php');
+$avisos = Hash::link(ConfigGlobal::getWeb() . '/apps/usuarios/controller/usuario_form.php?' . http_build_query(array('quien' => 'usuario', 'id_usuario' => $id_usuario)));
+$avisos_lista = Hash::link(ConfigGlobal::getWeb() . '/apps/cambios/controller/avisos_generar.php?' . http_build_query(array('id_usuario' => $id_usuario, 'aviso_tipo' => CambioUsuario::TIPO_LISTA)));
+$avisos_mails = Hash::link(ConfigGlobal::getWeb() . '/apps/cambios/controller/avisos_generar.php?' . http_build_query(array('id_usuario' => $id_usuario, 'aviso_tipo' => CambioUsuario::TIPO_MAIL)));
+$cambio_password = Hash::link(ConfigGlobal::getWeb() . '/apps/usuarios/controller/usuario_form_pwd.php');
+$cambio_mail = Hash::link(ConfigGlobal::getWeb() . '/apps/usuarios/controller/usuario_form_mail.php');
 
-$oHash = new web\Hash();
+$oHash = new Hash();
 $oHash->setCamposForm('inicio!oficina!estilo_color!tipo_menu!tipo_tabla!ordenApellidos!idioma_nou');
 
 $a_campos = [
@@ -145,5 +150,5 @@ $a_campos = [
     'cambio_mail' => $cambio_mail,
 ];
 
-$oView = new core\View('usuarios/controller');
+$oView = new ViewPhtml('usuarios/controller');
 $oView->renderizar('personal.phtml', $a_campos);

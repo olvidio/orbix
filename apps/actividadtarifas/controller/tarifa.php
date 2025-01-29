@@ -1,5 +1,9 @@
 <?php
 // INICIO Cabecera global de URL de controlador *********************************
+use core\ConfigGlobal;
+use core\ViewPhtml;
+use web\Hash;
+
 require_once("apps/core/global_header.inc");
 // Archivos requeridos por esta url **********************************************
 
@@ -10,13 +14,13 @@ require_once("apps/core/global_object.inc");
 
 $txt_eliminar = _("¿Está seguro de borrar esta tarifa?");
 
-$oHash = new web\Hash();
-$oHash->setUrl(core\ConfigGlobal::getWeb() . '/apps/actividadtarifas/controller/tarifa_ajax.php');
+$oHash = new Hash();
+$oHash->setUrl(ConfigGlobal::getWeb() . '/apps/actividadtarifas/controller/tarifa_ajax.php');
 $oHash->setCamposForm('que');
 $h_ver = $oHash->linkSinVal();
 
-$oHashMod = new web\Hash();
-$oHashMod->setUrl(core\ConfigGlobal::getWeb() . '/apps/actividadtarifas/controller/tarifa_ajax.php');
+$oHashMod = new Hash();
+$oHashMod->setUrl(ConfigGlobal::getWeb() . '/apps/actividadtarifas/controller/tarifa_ajax.php');
 $oHashMod->setCamposForm('que!id_tarifa');
 $h_modificar = $oHashMod->linkSinVal();
 
@@ -26,5 +30,5 @@ $a_campos = ['oPosicion' => $oPosicion,
     'txt_eliminar' => $txt_eliminar,
 ];
 
-$oView = new core\View('actividadtarifas/controller');
+$oView = new ViewPhtml('actividadtarifas/controller');
 $oView->renderizar('tarifa.phtml', $a_campos);

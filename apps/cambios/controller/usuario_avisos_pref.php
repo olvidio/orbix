@@ -2,19 +2,20 @@
 
 use actividades\model\entity\ActividadAll;
 use actividades\model\entity\GestorTipoDeActividad;
-use cambios\model\GestorAvisoCambios;
 use cambios\model\entity\CambioUsuarioObjetoPref;
+use cambios\model\GestorAvisoCambios;
 use core\ConfigGlobal;
-use function core\is_true;
-use procesos\model\CuadrosFases;
+use core\ViewTwig;
+use web\Desplegable;
+use web\DesplegableArray;
+use web\Hash;
+use web\TiposActividades;
 use procesos\model\entity\GestorActividadFase;
 use ubis\model\entity\GestorCasaDl;
 use usuarios\model\entity\GrupoOUsuario;
 use usuarios\model\entity\Role;
 use usuarios\model\entity\Usuario;
-use web\Desplegable;
-use web\DesplegableArray;
-use web\TiposActividades;
+use function core\is_true;
 
 // INICIO Cabecera global de URL de controlador *********************************
 
@@ -189,7 +190,7 @@ if ($_SESSION['oConfig']->is_jefeCalendario()
 }
 $oActividadTipo->setPerm_jefe($perm_jefe);
 
-$oHash = new web\Hash();
+$oHash = new Hash();
 $oHash->setCamposForm('id_fase_ref!salida!aviso_tipo!objeto!dl_propia!extendida!iactividad_val!iasistentes_val!inom_tipo_val!isfsv_val');
 $oHash->setcamposNo('casas!casas_mas!casas_num!id_tipo_activ!inom_tipo_val');
 $oHash->setCamposChk('aviso_off!aviso_on!aviso_outdate');
@@ -202,17 +203,17 @@ $oHash->setArraycamposHidden($a_camposHidden);
 
 
 $url_actualizar = ConfigGlobal::getWeb() . '/apps/cambios/controller/usuario_avisos_pref_ajax.php';
-$oHash1 = new web\Hash();
+$oHash1 = new Hash();
 $oHash1->setUrl($url_actualizar);
 $oHash1->setCamposForm('salida!dl_propia!id_tipo_activ!id_usuario!objeto');
 $h_actualizar = $oHash1->linkSinVal();
 
-$oHash2 = new web\Hash();
+$oHash2 = new Hash();
 $oHash2->setUrl($url_actualizar);
 $oHash2->setCamposForm('salida!objeto!id_item_usuario_objeto');
 $h_propiedades = $oHash2->linkSinVal();
 
-$oHash3 = new web\Hash();
+$oHash3 = new Hash();
 $oHash3->setUrl($url_actualizar);
 $oHash3->setCamposForm('salida!objeto!propiedad!id_item');
 $h_mod = $oHash3->linkSinVal();
@@ -251,5 +252,5 @@ $a_campos = [
     'chk_outdate' => $chk_outdate,
 ];
 
-$oView = new core\ViewTwig('cambios/controller');
+$oView = new ViewTwig('cambios/controller');
 $oView->renderizar('usuario_avisos_pref.html.twig', $a_campos);

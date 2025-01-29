@@ -1,3 +1,8 @@
+<?php
+
+use core\ConfigGlobal;
+
+?>
 <table class="no_print">
     <tr>
         <td><?= $oPosicion->mostrar_back_arrow(1) ?></td>
@@ -9,7 +14,7 @@
 		<?= _("Cara B (detrás)"); ?></span></td>
         <td align="center">
 	<span class=link
-          onclick='window.open("<?= core\ConfigGlobal::getWeb() ?>/apps/notas/controller/acta_2_mpdf.php?acta=<?= urlencode($acta) ?><?= $h ?>&PHPSESSID=<?= session_id(); ?>", "sele");'>
+          onclick='window.open("<?= ConfigGlobal::getWeb() ?>/apps/notas/controller/acta_2_mpdf.php?acta=<?= urlencode($acta) ?><?= $h ?>&PHPSESSID=<?= session_id(); ?>", "sele");'>
 		<?= _("PDF"); ?></span></td>
     </tr>
     <?php if (!empty($errores)) {

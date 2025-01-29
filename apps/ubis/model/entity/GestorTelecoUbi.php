@@ -1,7 +1,7 @@
 <?php
 namespace ubis\model\entity;
 
-use core;
+use core\ClaseGestor;
 
 /**
  * GestorTelecoUbi
@@ -14,7 +14,7 @@ use core;
  * @version 1.0
  * @created 01/10/2010
  */
-abstract class GestorTelecoUbi extends core\ClaseGestor
+abstract class GestorTelecoUbi extends ClaseGestor
 {
     /* ATRIBUTOS ----------------------------------------------------------------- */
 

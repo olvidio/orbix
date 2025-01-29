@@ -2,7 +2,9 @@
 
 namespace procesos\model\entity;
 
-use core;
+use core\ClasePropiedades;
+use core\DatosCampo;
+use core\Set;
 
 /**
  * Fitxer amb la Classe que accedeix a la taula a_tipos_proceso
@@ -23,7 +25,7 @@ use core;
  * @version 1.0
  * @created 07/12/2018
  */
-class ProcesoTipo extends core\ClasePropiedades
+class ProcesoTipo extends ClasePropiedades
 {
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
@@ -96,7 +98,7 @@ class ProcesoTipo extends core\ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'id_tipo_proceso') && $val_id !== '') $this->iid_tipo_proceso = (int)$val_id;
+                if (($nom_id === 'id_tipo_proceso') && $val_id !== '') $this->iid_tipo_proceso = (int)$val_id;
             }
         } else {
             if (isset($a_id) && $a_id !== '') {
@@ -169,7 +171,7 @@ class ProcesoTipo extends core\ClasePropiedades
                     return FALSE;
                 }
             }
-            $this->id_tipo_proceso = $oDbl->lastInsertId('a_tipos_proceso_id_tipo_proceso_seq');
+            $this->iid_tipo_proceso = $oDbl->lastInsertId('a_tipos_proceso_id_tipo_proceso_seq');
         }
         $this->setAllAtributes($aDades);
         return TRUE;
@@ -237,7 +239,7 @@ class ProcesoTipo extends core\ClasePropiedades
      *
      * @param array $aDades
      */
-    function setAllAtributes($aDades)
+    function setAllAtributes(array $aDades)
     {
         if (!is_array($aDades)) return;
         if (array_key_exists('id_tipo_proceso', $aDades)) $this->setId_tipo_proceso($aDades['id_tipo_proceso']);
@@ -297,7 +299,7 @@ class ProcesoTipo extends core\ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'id_tipo_proceso') && $val_id !== '') $this->iid_tipo_proceso = (int)$val_id;
+                if (($nom_id === 'id_tipo_proceso') && $val_id !== '') $this->iid_tipo_proceso = (int)$val_id;
             }
         }
     }
@@ -378,7 +380,7 @@ class ProcesoTipo extends core\ClasePropiedades
      */
     function getDatosCampos()
     {
-        $oProcesoTipoSet = new core\Set();
+        $oProcesoTipoSet = new Set();
 
         $oProcesoTipoSet->add($this->getDatosNom_proceso());
         $oProcesoTipoSet->add($this->getDatosSfsv());
@@ -390,12 +392,12 @@ class ProcesoTipo extends core\ClasePropiedades
      * Recupera les propietats de l'atribut snom_proceso de ProcesoTipo
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosNom_proceso()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'nom_proceso'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'nom_proceso'));
         $oDatosCampo->setEtiqueta(_("nombre del proceso"));
         $oDatosCampo->setTipo('texto');
         $oDatosCampo->setArgument('30');
@@ -406,12 +408,12 @@ class ProcesoTipo extends core\ClasePropiedades
      * Recupera les propietats de l'atribut isfsv de ProcesoTipo
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosSfsv()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'sfsv'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'sfsv'));
         $oDatosCampo->setEtiqueta(_("sf / sv"));
         $oDatosCampo->setTipo('array');
         $oDatosCampo->setLista([1 => _("sv"), 2 => _("sf")]);

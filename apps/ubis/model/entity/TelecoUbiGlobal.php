@@ -1,7 +1,9 @@
 <?php
 namespace ubis\model\entity;
 
-use core;
+use core\ClasePropiedades;
+use core\DatosCampo;
+use core\Set;
 
 /**
  * Clase que implementa la entidad d_teleco_ubis
@@ -12,7 +14,7 @@ use core;
  * @version 1.0
  * @created 01/10/2010
  */
-abstract class TelecoUbiGlobal extends core\ClasePropiedades
+abstract class TelecoUbiGlobal extends ClasePropiedades
 {
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
@@ -126,7 +128,7 @@ abstract class TelecoUbiGlobal extends core\ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'id_item') && $val_id !== '') $this->iid_item = (int)$val_id; 
+                if (($nom_id === 'id_item') && $val_id !== '') $this->iid_item = (int)$val_id;
             }
         }
     }
@@ -276,7 +278,7 @@ abstract class TelecoUbiGlobal extends core\ClasePropiedades
      */
     function getDatosCampos()
     {
-        $oTelecoUbiSet = new core\Set();
+        $oTelecoUbiSet = new Set();
 
         $oTelecoUbiSet->add($this->getDatosTipo_teleco());
         $oTelecoUbiSet->add($this->getDatosDesc_teleco());
@@ -288,7 +290,7 @@ abstract class TelecoUbiGlobal extends core\ClasePropiedades
     function getDatosTipo_teleco()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'tipo_teleco'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'tipo_teleco'));
         $oDatosCampo->setEtiqueta(_("nombre teleco"));
         $oDatosCampo->setTipo('opciones');
         $oDatosCampo->setArgument('ubis\model\entity\TipoTeleco'); // nombre del objeto relacionado
@@ -301,7 +303,7 @@ abstract class TelecoUbiGlobal extends core\ClasePropiedades
     function getDatosDesc_teleco()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'desc_teleco'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'desc_teleco'));
         $oDatosCampo->setEtiqueta(_("descripción"));
         $oDatosCampo->setTipo('depende');
         $oDatosCampo->setArgument('ubis\model\entity\DescTeleco');
@@ -314,7 +316,7 @@ abstract class TelecoUbiGlobal extends core\ClasePropiedades
     function getDatosNum_teleco()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'num_teleco'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'num_teleco'));
         $oDatosCampo->setEtiqueta(_("número o siglas"));
         $oDatosCampo->setTipo('texto');
         $oDatosCampo->setArgument('50');
@@ -324,7 +326,7 @@ abstract class TelecoUbiGlobal extends core\ClasePropiedades
     function getDatosObserv()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'observ'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'observ'));
         $oDatosCampo->setEtiqueta(_("observaciones"));
         $oDatosCampo->setTipo('texto');
         $oDatosCampo->setArgument('50');

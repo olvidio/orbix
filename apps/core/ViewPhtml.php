@@ -14,7 +14,7 @@ namespace core;
  * @version 1.0
  * @created 22/9/2010
  */
-class View
+class ViewPhtml
 {
     /* ATRIBUTOS ----------------------------------------------------------------- */
 

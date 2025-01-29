@@ -10,8 +10,13 @@
  */
 
 // INICIO Cabecera global de URL de controlador *********************************
-use ubis\model\entity\GestorDelegacion;
+use actividadplazas\model\entity\GestorActividadPlazas;
+use core\ConfigGlobal;
+use core\ViewPhtml;
+use web\Hash;
 use web\Periodo;
+use ubis\model\entity\GestorDelegacion;
+use web\TablaEditable;
 
 require_once("apps/core/global_header.inc");
 // Archivos requeridos por esta url **********************************************
@@ -36,7 +41,7 @@ if (empty($Qid_tipo_activ)) {
     //$Qssfsv = (string)  filter_input(INPUT_POST, 'ssfsv');
     $Qssfsv = '';
     if (empty($Qssfsv)) {
-        $mi_sfsv = core\ConfigGlobal::mi_sfsv();
+        $mi_sfsv = ConfigGlobal::mi_sfsv();
         if ($mi_sfsv == 1) $Qssfsv = 'sv';
         if ($mi_sfsv == 2) $Qssfsv = 'sf';
     }
@@ -90,8 +95,8 @@ $finIso = $oPeriodo->getF_fin_iso();
 $status = \actividades\model\entity\ActividadAll::STATUS_ACTUAL; //actual
 
 // Seleccionar los id_dl del mismo grupo de estudios
-$mi_reg = core\ConfigGlobal::mi_region();
-$mi_dl = core\ConfigGlobal::mi_delef();
+$mi_reg = ConfigGlobal::mi_region();
+$mi_dl = ConfigGlobal::mi_delef();
 $aWhere = array('region' => $mi_reg, 'dl' => $mi_dl);
 $gesDelegacion = new GestorDelegacion();
 $cDelegaciones = $gesDelegacion->getDelegaciones($aWhere);
@@ -109,7 +114,7 @@ if (empty($grupo_estudios)) {
     $gesDelegacion = new ubis\model\entity\GestorDelegacion();
     $cDelegaciones = $gesDelegacion->getDelegaciones(array('grupo_estudios' => $grupo_estudios, '_ordre' => 'region,dl'));
 }
-$gesActividadPlazas = new \actividadplazas\model\entity\GestorActividadPlazas();
+$gesActividadPlazas = new GestorActividadPlazas();
 // Seleccionar actividades exportadas de los id_dl
 
 $a_grupo = array();
@@ -223,9 +228,9 @@ foreach ($a_grupo as $dl => $id_dl) {
 }
 $a_botones = array();
 
-$oTabla = new web\TablaEditable();
+$oTabla = new TablaEditable();
 $oTabla->setId_tabla('gestion_plazas');
-$UpdateUrl = core\ConfigGlobal::getWeb() . '/apps/actividadplazas/controller/gestion_plazas_ajax.php';
+$UpdateUrl = ConfigGlobal::getWeb() . '/apps/actividadplazas/controller/gestion_plazas_ajax.php';
 $oTabla->setUpdateUrl($UpdateUrl);
 $oTabla->setCabeceras($a_cabeceras);
 $oTabla->setBotones($a_botones);
@@ -255,7 +260,7 @@ $oFormP->setDesplAnysOpcion_sel($Qyear);
 $oFormP->setDesplPeriodosOpcion_sel($Qperiodo);
 $oFormP->setBoton($boton);
 
-$oHash = new web\Hash();
+$oHash = new Hash();
 $oHash->setCamposForm('empiezamax!empiezamin!extendida!iactividad_val!iasistentes_val!id_tipo_activ!periodo!year');
 $oHash->setCamposNo('!refresh');
 $a_camposHidden = array(
@@ -269,5 +274,5 @@ $a_campos = ['oPosicion' => $oPosicion,
     'oHash' => $oHash,
 ];
 
-$oView = new core\View('actividadplazas/controller');
+$oView = new ViewPhtml('actividadplazas/controller');
 $oView->renderizar('gestion_plazas.phtml', $a_campos);

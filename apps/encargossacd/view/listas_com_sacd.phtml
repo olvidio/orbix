@@ -4,7 +4,7 @@
         display: block;
         width: 17cm;
         page-break-after: always;
-        font-family: 'Arial';
+        font-family: 'Arial', serif;
         font-size: 12pt;
     }
 
@@ -80,6 +80,8 @@
     <span id="span_exportar" title="comunicacion_encargos_sacd"></span>
     <?php
     // sacd
+    use core\ConfigGlobal;
+
     $s = 0;
     foreach ($array_modo as $array_modo_sacd) {
         $s++;
@@ -89,7 +91,7 @@
             <cabecera>
                 <izquierda><?= $array_modo[$s]['nom_ap'] ?></izquierda>
                 <?php if ($Qsel == "nagd") { ?>
-                    <derecha>vc-<?= core\ConfigGlobal::mi_delef() ?></derecha>
+                    <derecha>vc-<?= ConfigGlobal::mi_delef() ?></derecha>
                 <?php } ?>
             </cabecera>
             <comunicacion>

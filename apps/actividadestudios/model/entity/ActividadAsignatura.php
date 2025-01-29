@@ -2,8 +2,12 @@
 
 namespace actividadestudios\model\entity;
 
-use core;
-use web;
+use core\ClasePropiedades;
+use core\ConverterDate;
+use core\DatosCampo;
+use core\Set;
+use web\DateTimeLocal;
+use web\NullDateTimeLocal;
 
 /**
  * Fitxer amb la Classe que accedeix a la taula d_asignaturas_activ_all
@@ -24,7 +28,7 @@ use web;
  * @version 1.0
  * @created 14/11/2014
  */
-class ActividadAsignatura extends core\ClasePropiedades
+class ActividadAsignatura extends ClasePropiedades
 {
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
@@ -86,13 +90,13 @@ class ActividadAsignatura extends core\ClasePropiedades
     /**
      * F_ini de ActividadAsignatura
      *
-     * @var web\DateTimeLocal
+     * @var DateTimeLocal
      */
     protected $df_ini;
     /**
      * F_fin de ActividadAsignatura
      *
-     * @var web\DateTimeLocal
+     * @var DateTimeLocal
      */
     protected $df_fin;
     /* ATRIBUTOS QUE NO SON CAMPOS------------------------------------------------- */
@@ -109,6 +113,10 @@ class ActividadAsignatura extends core\ClasePropiedades
      */
     protected $sNomTabla;
     /* CONSTRUCTOR -------------------------------------------------------------- */
+    /**
+     * @var true
+     */
+    private bool $bLoaded = FALSE;
 
     /**
      * Constructor de la classe.
@@ -124,8 +132,8 @@ class ActividadAsignatura extends core\ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'id_activ') && $val_id !== '') $this->iid_activ = (int)$val_id; 
-                if (($nom_id == 'id_asignatura') && $val_id !== '') $this->iid_asignatura = (int)$val_id; 
+                if (($nom_id === 'id_activ') && $val_id !== '') $this->iid_activ = (int)$val_id;
+                if (($nom_id === 'id_asignatura') && $val_id !== '') $this->iid_asignatura = (int)$val_id;
             }
         }
         $this->setoDbl($oDbl);
@@ -266,7 +274,7 @@ class ActividadAsignatura extends core\ClasePropiedades
      *
      * @param array $aDades
      */
-    function setAllAtributes($aDades, $convert = FALSE)
+    function setAllAtributes(array $aDades, $convert = FALSE)
     {
         if (!is_array($aDades)) return;
         if (array_key_exists('id_schema', $aDades)) $this->setId_schema($aDades['id_schema']);
@@ -336,8 +344,8 @@ class ActividadAsignatura extends core\ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'id_activ') && $val_id !== '') $this->iid_activ = (int)$val_id; 
-                if (($nom_id == 'id_asignatura') && $val_id !== '') $this->iid_asignatura = (int)$val_id; 
+                if (($nom_id === 'id_activ') && $val_id !== '') $this->iid_activ = (int)$val_id;
+                if (($nom_id === 'id_asignatura') && $val_id !== '') $this->iid_asignatura = (int)$val_id;
             }
         }
     }
@@ -460,7 +468,7 @@ class ActividadAsignatura extends core\ClasePropiedades
     /**
      * Recupera el atributo df_ini de ActividadAsignatura
      *
-     * @return web\DateTimeLocal df_ini
+     * @return DateTimeLocal|NullDateTimeLocal
      */
     function getF_ini()
     {
@@ -468,9 +476,9 @@ class ActividadAsignatura extends core\ClasePropiedades
             $this->DBCarregar();
         }
         if (empty($this->df_ini)) {
-            return new web\NullDateTimeLocal();
+            return new NullDateTimeLocal();
         }
-        $oConverter = new core\ConverterDate('date', $this->df_ini);
+        $oConverter = new ConverterDate('date', $this->df_ini);
         return $oConverter->fromPg();
     }
 
@@ -479,13 +487,13 @@ class ActividadAsignatura extends core\ClasePropiedades
      * Si df_ini es string, y convert=true se convierte usando el formato webDateTimeLocal->getFormat().
      * Si convert es false, df_ini debe ser un string en formato ISO (Y-m-d). Corresponde al pgstyle de la base de datos.
      *
-     * @param date|string df_ini='' optional.
+     * @param DateTimeLocal|string df_ini='' optional.
      * @param boolean convert=true optional. Si es false, df_ini debe ser un string en formato ISO (Y-m-d).
      */
     function setF_ini($df_ini = '', $convert = true)
     {
         if ($convert === true && !empty($df_ini)) {
-            $oConverter = new core\ConverterDate('date', $df_ini);
+            $oConverter = new ConverterDate('date', $df_ini);
             $this->df_ini = $oConverter->toPg();
         } else {
             $this->df_ini = $df_ini;
@@ -495,7 +503,7 @@ class ActividadAsignatura extends core\ClasePropiedades
     /**
      * Recupera el atributo df_fin de ActividadAsignatura
      *
-     * @return web\DateTimeLocal df_fin
+     * @return DateTimeLocal|NullDateTimeLocal
      */
     function getF_fin()
     {
@@ -503,9 +511,9 @@ class ActividadAsignatura extends core\ClasePropiedades
             $this->DBCarregar();
         }
         if (empty($this->df_fin)) {
-            return new web\NullDateTimeLocal();
+            return new NullDateTimeLocal();
         }
-        $oConverter = new core\ConverterDate('date', $this->df_fin);
+        $oConverter = new ConverterDate('date', $this->df_fin);
         return $oConverter->fromPg();
     }
 
@@ -514,13 +522,13 @@ class ActividadAsignatura extends core\ClasePropiedades
      * Si df_fin es string, y convert=true se convierte usando el formato webDateTimeLocal->getFormat().
      * Si convert es false, df_fin debe ser un string en formato ISO (Y-m-d). Corresponde al pgstyle de la base de datos.
      *
-     * @param date|string df_fin='' optional.
+     * @param DateTimeLocal|string df_fin='' optional.
      * @param boolean convert=true optional. Si es false, df_fin debe ser un string en formato ISO (Y-m-d).
      */
     function setF_fin($df_fin = '', $convert = true)
     {
         if ($convert === true && !empty($df_fin)) {
-            $oConverter = new core\ConverterDate('date', $df_fin);
+            $oConverter = new ConverterDate('date', $df_fin);
             $this->df_fin = $oConverter->toPg();
         } else {
             $this->df_fin = $df_fin;
@@ -534,7 +542,7 @@ class ActividadAsignatura extends core\ClasePropiedades
      */
     function getDatosCampos()
     {
-        $oActividadAsignaturaSet = new core\Set();
+        $oActividadAsignaturaSet = new Set();
 
         $oActividadAsignaturaSet->add($this->getDatosId_profesor());
         $oActividadAsignaturaSet->add($this->getDatosAvis_profesor());
@@ -549,12 +557,12 @@ class ActividadAsignatura extends core\ClasePropiedades
      * Recupera les propietats de l'atribut iid_profesor de ActividadAsignatura
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosId_profesor()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_profesor'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_profesor'));
         $oDatosCampo->setEtiqueta(_("id_profesor"));
         return $oDatosCampo;
     }
@@ -563,12 +571,12 @@ class ActividadAsignatura extends core\ClasePropiedades
      * Recupera les propietats de l'atribut savis_profesor de ActividadAsignatura
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosAvis_profesor()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'avis_profesor'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'avis_profesor'));
         $oDatosCampo->setEtiqueta(_("aviso profesor"));
         return $oDatosCampo;
     }
@@ -577,12 +585,12 @@ class ActividadAsignatura extends core\ClasePropiedades
      * Recupera les propietats de l'atribut stipo de ActividadAsignatura
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosTipo()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'tipo'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'tipo'));
         $oDatosCampo->setEtiqueta(_("tipo"));
         return $oDatosCampo;
     }
@@ -591,12 +599,12 @@ class ActividadAsignatura extends core\ClasePropiedades
      * Recupera les propietats de l'atribut df_ini de ActividadAsignatura
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosF_ini()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'f_ini'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'f_ini'));
         $oDatosCampo->setEtiqueta(_("fecha inicio"));
         $oDatosCampo->setTipo('fecha');
         return $oDatosCampo;
@@ -606,12 +614,12 @@ class ActividadAsignatura extends core\ClasePropiedades
      * Recupera les propietats de l'atribut df_fin de ActividadAsignatura
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosF_fin()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'f_fin'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'f_fin'));
         $oDatosCampo->setEtiqueta(_("fecha fin"));
         $oDatosCampo->setTipo('fecha');
         return $oDatosCampo;

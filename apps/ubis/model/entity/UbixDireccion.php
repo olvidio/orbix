@@ -1,7 +1,10 @@
 <?php
 namespace ubis\model\entity;
 
-use core;
+use core\ClasePropiedades;
+use core\DatosCampo;
+use core\Set;
+use function core\is_true;
 
 /**
  * Fitxer amb la Classe que accedeix a la taula u_cross_ubi_dir
@@ -22,7 +25,7 @@ use core;
  * @version 1.0
  * @created 11/02/2014
  */
-abstract class UbixDireccion extends core\ClasePropiedades
+abstract class UbixDireccion extends ClasePropiedades
 {
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
@@ -107,12 +110,12 @@ abstract class UbixDireccion extends core\ClasePropiedades
         $aDades['principal'] = $this->bprincipal;
         array_walk($aDades, 'core\poner_null');
         //para el caso de los boolean FALSE, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
-        if (core\is_true($aDades['propietario'])) {
+        if (is_true($aDades['propietario'])) {
             $aDades['propietario'] = 'true';
         } else {
             $aDades['propietario'] = 'false';
         }
-        if (core\is_true($aDades['principal'])) {
+        if (is_true($aDades['principal'])) {
             $aDades['principal'] = 'true';
         } else {
             $aDades['principal'] = 'false';
@@ -225,7 +228,7 @@ abstract class UbixDireccion extends core\ClasePropiedades
      *
      * @param array $aDades
      */
-    function setAllAtributes($aDades)
+    function setAllAtributes(array $aDades)
     {
         if (!is_array($aDades)) return;
         if (array_key_exists('id_schema', $aDades)) $this->setId_schema($aDades['id_schema']);
@@ -393,7 +396,7 @@ abstract class UbixDireccion extends core\ClasePropiedades
      */
     function getDatosCampos()
     {
-        $oUbixDireccionSet = new core\Set();
+        $oUbixDireccionSet = new Set();
 
         $oUbixDireccionSet->add($this->getDatosPropietario());
         $oUbixDireccionSet->add($this->getDatosPrincipal());
@@ -405,12 +408,12 @@ abstract class UbixDireccion extends core\ClasePropiedades
      * Recupera les propietats de l'atribut bpropietario de UbixDireccion
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosPropietario()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'propietario'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'propietario'));
         $oDatosCampo->setEtiqueta(_("propietario"));
         return $oDatosCampo;
     }
@@ -419,12 +422,12 @@ abstract class UbixDireccion extends core\ClasePropiedades
      * Recupera les propietats de l'atribut bprincipal de UbixDireccion
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosPrincipal()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'principal'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'principal'));
         $oDatosCampo->setEtiqueta(_("principal"));
         return $oDatosCampo;
     }

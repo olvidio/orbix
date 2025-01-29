@@ -2,7 +2,10 @@
 
 namespace notas\model\entity;
 
-use core;
+use core\ClasePropiedades;
+use core\DatosCampo;
+use core\Set;
+use function core\is_true;
 
 /**
  * Fitxer amb la Classe que accedeix a la taula e_notas_situacion
@@ -23,7 +26,7 @@ use core;
  * @version 1.0
  * @created 07/04/2014
  */
-class Nota extends core\ClasePropiedades
+class Nota extends ClasePropiedades
 {
     // Al final de hecho deberían ser todo constantes, porque en demasiados sitios se tiene en 
     // Cuenta que es.
@@ -200,7 +203,7 @@ class Nota extends core\ClasePropiedades
         $aDades['breve'] = $this->sbreve;
         array_walk($aDades, 'core\poner_null');
         //para el caso de los boolean FALSE, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
-        if (core\is_true($aDades['superada'])) {
+        if (is_true($aDades['superada'])) {
             $aDades['superada'] = 'true';
         } else {
             $aDades['superada'] = 'false';
@@ -314,7 +317,7 @@ class Nota extends core\ClasePropiedades
      *
      * @param array $aDades
      */
-    function setAllAtributes($aDades)
+    function setAllAtributes(array $aDades)
     {
         if (!is_array($aDades)) return;
         if (array_key_exists('id_schema', $aDades)) $this->setId_schema($aDades['id_schema']);
@@ -482,7 +485,7 @@ class Nota extends core\ClasePropiedades
      */
     function getDatosCampos()
     {
-        $oNotaSet = new core\Set();
+        $oNotaSet = new Set();
 
         $oNotaSet->add($this->getDatosDescripcion());
         $oNotaSet->add($this->getDatosSuperada());
@@ -495,12 +498,12 @@ class Nota extends core\ClasePropiedades
      * Recupera les propietats de l'atribut sdescripcion de Nota
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosDescripcion()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'descripcion'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'descripcion'));
         $oDatosCampo->setEtiqueta(_("descripción"));
         return $oDatosCampo;
     }
@@ -509,12 +512,12 @@ class Nota extends core\ClasePropiedades
      * Recupera les propietats de l'atribut bsuperada de Nota
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosSuperada()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'superada'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'superada'));
         $oDatosCampo->setEtiqueta(_("superada"));
         return $oDatosCampo;
     }
@@ -523,12 +526,12 @@ class Nota extends core\ClasePropiedades
      * Recupera les propietats de l'atribut sbreve de Nota
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosBreve()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'breve'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'breve'));
         $oDatosCampo->setEtiqueta(_("breve"));
         return $oDatosCampo;
     }

@@ -1,9 +1,10 @@
 <?php
 
-use ubis\model\entity\GestorCasaDl;
+use casas\model\entity\GrupoCasa;
+use core\ViewTwig;
 use web\Desplegable;
 use web\Hash;
-use casas\model\entity\GrupoCasa;
+use ubis\model\entity\GestorCasaDl;
 
 // INICIO Cabecera global de URL de controlador *********************************
 require_once("apps/core/global_header.inc");
@@ -54,5 +55,5 @@ $a_campos = [
     'oDesplCasaHija' => $oDesplCasaHija,
 ];
 
-$oView = new core\ViewTwig('casas/controller');
+$oView = new ViewTwig('casas/controller');
 $oView->renderizar('grupo_form.html.twig', $a_campos);

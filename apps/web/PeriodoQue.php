@@ -342,14 +342,14 @@ class PeriodoQue
     function setEmpiezaMinIso($sEmpiezaMinIso)
     {
         $oEmpiezamin = new DateTimeLocal($sEmpiezaMinIso);
-        $sEmpiezaMin = $oEmpiezamin->getLocal();
+        $sEmpiezaMin = $oEmpiezamin->getFromLocal();
         $this->sEmpiezaMin = $sEmpiezaMin;
     }
 
     function setEmpiezaMaxIso($sEmpiezaMaxIso)
     {
         $oEmpiezamax = new DateTimeLocal($sEmpiezaMaxIso);
-        $sEmpiezaMax = $oEmpiezamax->getLocal();
+        $sEmpiezaMax = $oEmpiezamax->getFromLocal();
         $this->sEmpiezaMax = $sEmpiezaMax;
     }
 

@@ -32,10 +32,11 @@ use actividades\model\entity\GestorActividad;
 use actividadescentro\model\entity\GestorCentroEncargado;
 use actividadtarifas\model\entity\TipoTarifa;
 use core\ConfigGlobal;
-use ubis\model\entity\Casa;
+use web\Hash;
 use web\Lista;
 use web\Periodo;
 use web\TiposActividades;
+use ubis\model\entity\Casa;
 use function core\is_true;
 
 require_once("apps/core/global_header.inc");
@@ -326,7 +327,7 @@ foreach ($cActividades as $oActividad) {
     if (is_true($oUbi->getSv())) {
         $comun = "sv";
     }
-    if (s_true($oUbi->getSf())) {
+    if (is_true($oUbi->getSf())) {
         $comun = "sf";
     }
     if ((is_true($oUbi->getSv())) and (is_true($oUbi->getSf()))) {
@@ -378,7 +379,6 @@ foreach ($cActividades as $oActividad) {
     $oEnc = new GestorCentroEncargado();
     $ctrs = '';
     foreach ($oEnc->getCentrosEncargadosActividad($id_activ) as $oEncargado) {
-        ;
         $ctrs .= $oEncargado->getNombre_ubi() . ', ';
     }
     $ctrs = substr($ctrs, 0, -2);
@@ -387,7 +387,6 @@ foreach ($cActividades as $oActividad) {
         $oCargosActividad = new GestorActividadCargo();
         $sacds = '';
         foreach ($oCargosActividad->getActividadSacds($id_activ) as $oPersona) {
-            ;
             $sacds .= $oPersona->getPrefApellidosNombre() . "# "; // la coma la utilizo como separador de apellidos, nombre.
         }
         $sacds = substr($sacds, 0, -2);
@@ -395,7 +394,7 @@ foreach ($cActividades as $oActividad) {
         $a_valores[$i][14] = $observ;
     }
     if (ConfigGlobal::is_dmz() === FALSE) {
-        $pagina = web\Hash::link(core\ConfigGlobal::getWeb() . '/apps/asistentes/controller/lista_asistentes.php?' . "id_pau=$id_activ&que=$Qque");
+        $pagina = Hash::link(ConfigGlobal::getWeb() . '/apps/asistentes/controller/lista_asistentes.php?' . "id_pau=$id_activ&que=$Qque");
         $txt = _("ver asistentes");
         $a_valores[$i][15] = array('ira' => $pagina, 'valor' => $txt);
     }

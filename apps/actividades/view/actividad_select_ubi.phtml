@@ -1,13 +1,18 @@
+<?php
+
+use core\ConfigGlobal;
+
+?>
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <!-- jQuery -->
     <script type="text/javascript"
-            src='<?= core\ConfigGlobal::getWeb_NodeScripts() . '/jquery/dist/jquery.min.js' ?>'></script>
+            src='<?= ConfigGlobal::getWeb_NodeScripts() . '/jquery/dist/jquery.min.js' ?>'></script>
     <script type="text/javascript"
-            src='<?= core\ConfigGlobal::getWeb_NodeScripts() . '/jquery-ui/dist/jquery-ui.min.js' ?>'></script>
+            src='<?= ConfigGlobal::getWeb_NodeScripts() . '/jquery-ui/dist/jquery-ui.min.js' ?>'></script>
     <!--estilos-->
-    <?php include_once(core\ConfigGlobal::$dir_estilos . '/todo_en_uno.css.php'); ?>
+    <?php include_once(ConfigGlobal::$dir_estilos . '/todo_en_uno.css.php'); ?>
 </head>
 
 <h2><?= _("buscar una casa") ?></h2>
@@ -43,6 +48,7 @@
         <tr>
             <th colspan=2 class=titulo_inv><?= ucfirst(_("opción 2: según a la región a la que pertenece")) ?></th>
         </tr>
+        <tr>
         <td class=etiqueta><?= _("según dl o r") ?>:</td>
         <td colspan=2><?= $oDesplRegion->desplegable() ?></td>
         </tr>
@@ -119,7 +125,7 @@
         if (!bloque) {
             bloque = '#main';
         }
-        $(id_form).attr('action', '<?= core\ConfigGlobal::getWeb() . '/apps/ubis/controller/ubis_lista.php' ?>');
+        $(id_form).attr('action', '<?= ConfigGlobal::getWeb() . '/apps/ubis/controller/ubis_lista.php' ?>');
         $(id_form).one("submit", function () {
             $.ajax({
                 url: $(this).attr('action'),
@@ -139,7 +145,7 @@
         var extendida=$('#extendida').val();
         var isfsv = <?= $isfsv ?>;
         var filtro_lugar = $('#filtro_lugar').val();
-        var url = '<?= core\ConfigGlobal::getWeb() . '/apps/actividades/controller/actividad_tipo_get.php' ?>';
+        var url = '<?= ConfigGlobal::getWeb() . '/apps/actividades/controller/actividad_tipo_get.php' ?>';
         var parametros = 'extendida=' + extendida + '&modo=buscar&salida=lugar&entrada=' + filtro_lugar + '&isfsv=' + isfsv + '<?= $h ?>';
         $.ajax({
             url: url,

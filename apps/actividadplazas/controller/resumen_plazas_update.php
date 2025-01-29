@@ -1,6 +1,6 @@
 <?php
 
-use actividadplazas\model\entity as actividadplazas;
+use actividadplazas\model\entity\ActividadPlazasDl;
 use core\ConfigGlobal;
 
 // INICIO Cabecera global de URL de controlador *********************************
@@ -21,7 +21,7 @@ switch ($que) {
 
         $dl = substr($reg_dl, strpos($reg_dl, '-') + 1);
 
-        $mi_dele = core\ConfigGlobal::mi_delef();
+        $mi_dele = ConfigGlobal::mi_delef();
         // OJO, para sf todavia hay que quitar la f:
         if (ConfigGlobal::mi_sfsv() == 2) {
             $dl_sigla = substr($mi_dele, 0, -1);
@@ -37,7 +37,7 @@ switch ($que) {
             $id_dl = $cDelegaciones[0]->getId_dl();
         }
         //Si es la dl_org, son plazas concedidas, sino pedidas.
-        $oActividadPlazasDl = new actividadplazas\ActividadPlazasDl(array('id_activ' => $id_activ, 'id_dl' => $id_dl, 'dl_tabla' => $mi_dele));
+        $oActividadPlazasDl = new ActividadPlazasDl(array('id_activ' => $id_activ, 'id_dl' => $id_dl, 'dl_tabla' => $mi_dele));
 
         $oActividadPlazasDl->DBCarregar();
 

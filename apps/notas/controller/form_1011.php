@@ -22,15 +22,20 @@
  *
  */
 
-use actividades\model\entity as actividades;
-use asignaturas\model\entity as asignaturas;
-use core\ConfigGlobal;
-use notas\model\entity as notas;
-use personas\model\entity as personas;
-use profesores\model\entity as profesores;
-use notas\model\entity\Nota;
-use web\Hash;
 use actividades\model\entity\Actividad;
+use actividades\model\entity\GestorActividad;
+use asignaturas\model\entity\Asignatura;
+use asignaturas\model\entity\GestorAsignatura;
+use core\ConfigGlobal;
+use core\ViewPhtml;
+use notas\model\entity\GestorNota;
+use notas\model\entity\GestorPersonaNotaDB;
+use notas\model\entity\Nota;
+use notas\model\entity\PersonaNotaDB;
+use personas\model\entity\Persona;
+use profesores\model\entity\GestorProfesor;
+use web\Desplegable;
+use web\Hash;
 
 // INICIO Cabecera global de URL de controlador *********************************
 require_once("apps/core/global_header.inc");
@@ -68,7 +73,7 @@ if (!empty($sel)) { //vengo de un checkbox
     }
 }
 
-$GesNotas = new notas\GestorNota();
+$GesNotas = new GestorNota();
 $oDesplNotas = $GesNotas->getListaNotas();
 $oDesplNotas->setNombre('id_situacion');
 
@@ -80,15 +85,15 @@ foreach ($cNotas as $oNota) {
 }
 
 
-$GesActividades = new actividades\GestorActividad();
-$GesAsignaturas = new asignaturas\GestorAsignatura();
+$GesActividades = new GestorActividad();
+$GesAsignaturas = new GestorAsignatura();
 
 if (!empty($Qid_asignatura_real)) { //caso de modificar
     $mod = "editar";
     $id_asignatura = $Qid_asignatura_real;
     $aWhere['id_nom'] = $Qid_pau;
     $aWhere['id_asignatura'] = $Qid_asignatura_real;
-    $GesPersonaNotas = new notas\GestorPersonaNotaDB();
+    $GesPersonaNotas = new GestorPersonaNotaDB();
     $cPersonaNotas = $GesPersonaNotas->getPersonaNotas($aWhere);
 
     $oPersonaNota = $cPersonaNotas[0]; // solo deberia existir una.
@@ -106,7 +111,7 @@ if (!empty($Qid_asignatura_real)) { //caso de modificar
     $epoca = $oPersonaNota->getEpoca();
     $id_activ = $oPersonaNota->getId_activ();
 
-    $oAsignatura = new asignaturas\Asignatura($Qid_asignatura_real);
+    $oAsignatura = new Asignatura($Qid_asignatura_real);
     $nombre_corto = $oAsignatura->getNombre_corto();
     if ($oPersonaNota->getId_asignatura() > 3000) {
         $id_nivel = $oPersonaNota->getId_nivel();
@@ -114,13 +119,13 @@ if (!empty($Qid_asignatura_real)) { //caso de modificar
         $id_nivel = $oAsignatura->getId_nivel();
     }
 
-    $GesProfes = new profesores\GestorProfesor();
+    $GesProfes = new GestorProfesor();
     $cProfesores = $GesProfes->getProfesores();
     $aProfesores = array();
     $msg_err = '';
     foreach ($cProfesores as $oProfesor) {
         $id_nom = $oProfesor->getId_nom();
-        $oPersona = personas\Persona::NewPersona($id_nom);
+        $oPersona = Persona::NewPersona($id_nom);
         if (!is_object($oPersona)) {
             $msg_err .= "<br>$oPersona con id_nom: $id_nom en  " . __FILE__ . ": line " . __LINE__;
             continue;
@@ -130,7 +135,7 @@ if (!empty($Qid_asignatura_real)) { //caso de modificar
     }
     uasort($aProfesores, 'core\strsinacentocmp');
 
-    $oDesplProfesores = new web\Desplegable();
+    $oDesplProfesores = new Desplegable();
     $oDesplProfesores->setNombre('id_preceptor');
     $oDesplProfesores->setOpciones($aProfesores);
     $oDesplProfesores->setOpcion_sel($id_preceptor);
@@ -171,7 +176,7 @@ if (!empty($Qid_asignatura_real)) { //caso de modificar
     $aWhere['_ordre'] = 'nombre_corto';
     $cOpcionales = $GesAsignaturas->getAsignaturas($aWhere, $aOperador);
     // Asignaturas superadas
-    $GesNotas = new notas\GestorNota();
+    $GesNotas = new GestorNota();
     $cSuperadas = $GesNotas->getNotas(array('superada' => 't'));
     $cond = '';
     $c = 0;
@@ -188,7 +193,7 @@ if (!empty($Qid_asignatura_real)) { //caso de modificar
     $aWhere['id_nivel'] = 3000;
     $aOperador['id_nivel'] = '<';
     $aWhere['_ordre'] = 'id_nivel';
-    $GesPersonaNotas = new notas\GestorPersonaNotaDB();
+    $GesPersonaNotas = new GestorPersonaNotaDB();
     $cAsignaturasSuperadas = $GesPersonaNotas->getPersonaNotas($aWhere, $aOperador);
     $aSuperadas = array();
     foreach ($cAsignaturasSuperadas as $oAsignatura) {
@@ -210,7 +215,7 @@ if (!empty($Qid_asignatura_real)) { //caso de modificar
     $aFaltan[9998] = _("fin cuadrienio");
     $aFaltan[9999] = _("fin bienio");
 
-    $oDesplNiveles = new web\Desplegable();
+    $oDesplNiveles = new Desplegable();
     $oDesplNiveles->setNombre('id_nivel');
     $oDesplNiveles->setOpciones($aFaltan);
     $oDesplNiveles->setBlanco(1);
@@ -230,12 +235,12 @@ if (!empty($preceptor)) {
 $oDesplNotas->setOpcion_sel($id_situacion);
 
 if (!empty($tipo_acta)) {
-    if ($tipo_acta == notas\PersonaNotaDB::FORMATO_ACTA) {
+    if ($tipo_acta == PersonaNotaDB::FORMATO_ACTA) {
         $chk_acta = "checked";
     } else {
         $chk_acta = "";
     }
-    if ($tipo_acta == notas\PersonaNotaDB::FORMATO_CERTIFICADO) {
+    if ($tipo_acta == PersonaNotaDB::FORMATO_CERTIFICADO) {
         $chk_certificado = "checked";
     } else {
         $chk_certificado = "";
@@ -246,17 +251,17 @@ if (!empty($tipo_acta)) {
 }
 
 if (!empty($epoca)) {
-    if ($epoca == notas\PersonaNotaDB::EPOCA_CA) {
+    if ($epoca == PersonaNotaDB::EPOCA_CA) {
         $chk_epoca_ca = "checked";
     } else {
         $chk_epoca_ca = "";
     }
-    if ($epoca == notas\PersonaNotaDB::EPOCA_INVIERNO) {
+    if ($epoca == PersonaNotaDB::EPOCA_INVIERNO) {
         $chk_epoca_inv = "checked";
     } else {
         $chk_epoca_inv = "";
     }
-    if ($epoca == notas\PersonaNotaDB::EPOCA_OTRO) {
+    if ($epoca == PersonaNotaDB::EPOCA_OTRO) {
         $chk_epoca_otro = "checked";
     } else {
         $chk_epoca_otro = "";
@@ -296,7 +301,7 @@ foreach ($cOpcionalesGenericas as $oOpcional) {
 $condicion_js = substr($condicion, 0, -4);
 
 
-$oHash = new web\Hash();
+$oHash = new Hash();
 $campos_chk = '!preceptor';
 $camposForm = 'preceptor!nota_num!nota_max!id_situacion!acta!tipo_acta!f_acta!preceptor!id_preceptor!epoca!id_activ!detalle';
 $camposNo = 'refresh!id_preceptor!id_activ' . $campos_chk;
@@ -322,7 +327,7 @@ $oHash->setCamposForm($camposForm);
 $oHash->setcamposNo($camposNo);
 $oHash->setArraycamposHidden($a_camposHidden);
 
-$url_ajax = core\ConfigGlobal::getWeb() . '/apps/notas/controller/notas_ajax.php';
+$url_ajax = ConfigGlobal::getWeb() . '/apps/notas/controller/notas_ajax.php';
 $oHash1 = new Hash();
 $oHash1->setUrl($url_ajax);
 $oHash1->setCamposForm('que!id_nom');
@@ -382,5 +387,5 @@ $a_campos = [
     'locale_us' => ConfigGlobal::is_locale_us(),
 ];
 
-$oView = new core\View('notas/model');
+$oView = new ViewPhtml('notas/model');
 $oView->renderizar('form_1011.phtml', $a_campos);

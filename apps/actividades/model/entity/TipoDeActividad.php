@@ -2,8 +2,10 @@
 
 namespace actividades\model\entity;
 
+use core\ClasePropiedades;
 use core\ConfigGlobal;
-use core;
+use core\DatosCampo;
+use core\Set;
 use web\TiposActividades;
 
 /**
@@ -25,7 +27,7 @@ use web\TiposActividades;
  * @version 1.0
  * @created 09/11/2018
  */
-class TipoDeActividad extends core\ClasePropiedades
+class TipoDeActividad extends ClasePropiedades
 {
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
@@ -122,7 +124,7 @@ class TipoDeActividad extends core\ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'id_tipo_activ') && $val_id !== '') $this->iid_tipo_activ = (int)$val_id; 
+                if (($nom_id === 'id_tipo_activ') && $val_id !== '') $this->iid_tipo_activ = (int)$val_id;
             }
         } else {
             if (isset($a_id) && $a_id !== '') {
@@ -359,7 +361,7 @@ class TipoDeActividad extends core\ClasePropiedades
      *
      * @param array $aDades
      */
-    function setAllAtributes($aDades)
+    function setAllAtributes(array $aDades)
     {
         if (!is_array($aDades)) return;
         if (array_key_exists('id_tipo_activ', $aDades)) $this->setId_tipo_activ($aDades['id_tipo_activ']);
@@ -430,7 +432,7 @@ class TipoDeActividad extends core\ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'id_tipo_activ') && $val_id !== '') $this->iid_tipo_activ = (int)$val_id; 
+                if (($nom_id === 'id_tipo_activ') && $val_id !== '') $this->iid_tipo_activ = (int)$val_id;
             }
         }
     }
@@ -604,7 +606,7 @@ class TipoDeActividad extends core\ClasePropiedades
      */
     function getDatosCampos()
     {
-        $oTipoDeActividadSet = new core\Set();
+        $oTipoDeActividadSet = new Set();
 
         $oTipoDeActividadSet->add($this->getDatosId_schema());
         $oTipoDeActividadSet->add($this->getDatosNombre());
@@ -620,12 +622,12 @@ class TipoDeActividad extends core\ClasePropiedades
      * Recupera les propietats de l'atribut iid_schema de TipoDeActividad
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosId_schema()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_schema'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_schema'));
         $oDatosCampo->setEtiqueta(_("id_schema"));
         return $oDatosCampo;
     }
@@ -634,12 +636,12 @@ class TipoDeActividad extends core\ClasePropiedades
      * Recupera les propietats de l'atribut snombre de TipoDeActividad
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosNombre()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'nombre'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'nombre'));
         $oDatosCampo->setEtiqueta(_("nombre"));
         return $oDatosCampo;
     }
@@ -648,12 +650,12 @@ class TipoDeActividad extends core\ClasePropiedades
      * Recupera les propietats de l'atribut iid_tipo_proceso_sv de TipoDeActividad
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosId_tipo_proceso_sv()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_tipo_proceso_sv'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_tipo_proceso_sv'));
         $oDatosCampo->setEtiqueta(_("id_tipo_proceso_sv"));
         return $oDatosCampo;
     }
@@ -662,12 +664,12 @@ class TipoDeActividad extends core\ClasePropiedades
      * Recupera les propietats de l'atribut iid_tipo_proceso_ex_sv de TipoDeActividad
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosId_tipo_proceso_ex_sv()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_tipo_proceso_ex_sv'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_tipo_proceso_ex_sv'));
         $oDatosCampo->setEtiqueta(_("id_tipo_proceso_ex_sv"));
         return $oDatosCampo;
     }
@@ -676,12 +678,12 @@ class TipoDeActividad extends core\ClasePropiedades
      * Recupera les propietats de l'atribut iid_tipo_proceso_sf de TipoDeActividad
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosId_tipo_proceso_sf()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_tipo_proceso_sf'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_tipo_proceso_sf'));
         $oDatosCampo->setEtiqueta(_("id_tipo_proceso_sf"));
         return $oDatosCampo;
     }
@@ -690,12 +692,12 @@ class TipoDeActividad extends core\ClasePropiedades
      * Recupera les propietats de l'atribut iid_tipo_proceso_ex_sf de TipoDeActividad
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosId_tipo_proceso_ex_sf()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_tipo_proceso_ex_sf'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_tipo_proceso_ex_sf'));
         $oDatosCampo->setEtiqueta(_("id_tipo_proceso_ex_sf"));
         return $oDatosCampo;
     }

@@ -10,14 +10,16 @@
  *
  */
 
-use asignaturas\model\entity as asignaturas;
+use asignaturas\model\entity\GestorAsignatura;
 use core\ConfigGlobal;
-use notas\model\entity as notas;
+use core\ViewPhtml;
+use notas\model\entity\GestorActa;
+use notas\model\entity\GestorActaDl;
+use notas\model\entity\GestorActaEx;
 use web\Hash;
 use web\Lista;
-use function core\curso_est;
 use ubis\model\entity\GestorDelegacion;
-use asignaturas\model\entity\GestorAsignatura;
+use function core\curso_est;
 
 // INICIO Cabecera global de URL de controlador *********************************
 require_once("apps/core/global_header.inc");
@@ -80,22 +82,22 @@ if (!empty($Qacta)) {
                 $Qacta_dl .= empty($matches[3]) ? "$dl " . $matches[1] . '/' . date("y") : "$dl $Qacta";
             }
             $aWhere['acta'] = $Qacta_dl;
-            $GesActas = new notas\GestorActa();
+            $GesActas = new GestorActa();
         } else {
             $aWhere['acta'] = empty($matches[3]) ? "$mi_dele " . $matches[1] . '/' . date("y") : "$mi_dele $Qacta";
-            $GesActas = new notas\GestorActaDl();
+            $GesActas = new GestorActaDl();
         }
         $cActas = $GesActas->getActas($aWhere, $aOperador);
     } else {
         // busca en la tabla de la dl, sin mirar el nombre:
         if (ConfigGlobal::mi_ambito() === 'rstgr') {
-            $GesActas = new notas\GestorActa();
+            $GesActas = new GestorActa();
             $cActas = $GesActas->getActas($aWhere, $aOperador);
         } else {
-            $GesActas = new notas\GestorActaDl();
+            $GesActas = new GestorActaDl();
             $cActas = $GesActas->getActas($aWhere, $aOperador);
             if (empty($cActas)) {
-                $GesActas = new notas\GestorActaEx();
+                $GesActas = new GestorActaEx();
                 $cActas = $GesActas->getActas($aWhere, $aOperador);
             }
         }
@@ -126,9 +128,9 @@ if (!empty($Qacta)) {
         $Qacta = "^($sReg)";
         $aWhere['acta'] = $Qacta;
         $aOperador['acta'] = '~';
-        $GesActas = new notas\GestorActa();
+        $GesActas = new GestorActa();
     } else {
-        $GesActas = new notas\GestorActaDl();
+        $GesActas = new GestorActaDl();
     }
     $cActas = $GesActas->getActas($aWhere, $aOperador);
 }
@@ -224,5 +226,5 @@ $a_campos = ['oPosicion' => $oPosicion,
     'h_download' => $h_download,
 ];
 
-$oView = new core\View('notas/controller');
+$oView = new ViewPhtml('notas/controller');
 $oView->renderizar('acta_select.phtml', $a_campos);

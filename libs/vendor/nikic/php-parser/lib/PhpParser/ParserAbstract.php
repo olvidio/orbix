@@ -31,6 +31,7 @@ use PhpParser\Node\Stmt\Property;
 use PhpParser\Node\Stmt\TryCatch;
 use PhpParser\Node\UseItem;
 use PhpParser\NodeVisitor\CommentAnnotatingVisitor;
+use RangeException;
 
 abstract class ParserAbstract implements Parser {
     private const SYMBOL_NONE = -1;
@@ -252,7 +253,7 @@ abstract class ParserAbstract implements Parser {
                     // Map the lexer token id to the internally used symbols.
                     $tokenValue = $token->text;
                     if (!isset($this->phpTokenToSymbol[$tokenId])) {
-                        throw new \RangeException(sprintf(
+                        throw new RangeException(sprintf(
                             'The lexer returned an invalid token (id=%d, value=%s)',
                             $tokenId, $tokenValue
                         ));
@@ -410,7 +411,7 @@ abstract class ParserAbstract implements Parser {
             }
         }
 
-        throw new \RuntimeException('Reached end of parser loop');
+        throw new RunTimeException('Reached end of parser loop');
     }
 
     protected function emitError(Error $error): void {

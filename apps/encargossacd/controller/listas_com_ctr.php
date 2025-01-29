@@ -1,14 +1,15 @@
 <?php
 
 use core\ConfigGlobal;
+use core\ViewPhtml;
 use encargossacd\model\EncargoFunciones;
 use encargossacd\model\entity\GestorEncargo;
+use encargossacd\model\entity\GestorEncargoSacd;
 use encargossacd\model\entity\GestorEncargoTexto;
 use personas\model\entity\PersonaDl;
+use web\DateTimeLocal;
 use ubis\model\entity\GestorCentroDl;
 use ubis\model\entity\GestorCentroEllas;
-use web\DateTimeLocal;
-use encargossacd\model\entity\GestorEncargoSacd;
 
 /**
  * Esta página muestra los encargos de un ctr.
@@ -120,5 +121,5 @@ $a_campos = ['oPosicion' => $oPosicion,
     'lugar_fecha' => $lugar_fecha,
 ];
 
-$oView = new core\View('encargossacd/controller');
+$oView = new ViewPhtml('encargossacd/controller');
 $oView->renderizar('listas_com_ctr.phtml', $a_campos);

@@ -2,8 +2,13 @@
 
 namespace ubis\model\entity;
 
-use core;
-use web;
+
+use core\ClasePropiedades;
+use core\ConverterDate;
+use core\DatosCampo;
+use core\Set;
+use web\DateTimeLocal;
+use web\NullDateTimeLocal;
 
 /**
  * Clase que implementa la entidad ubis
@@ -14,7 +19,7 @@ use web;
  * @version 1.0
  * @created 01/10/2010
  */
-abstract class UbiGlobal extends core\ClasePropiedades
+abstract class UbiGlobal extends ClasePropiedades
 {
     /* ATRIBUTOS ----------------------------------------------------------------- */
     /**
@@ -83,7 +88,7 @@ abstract class UbiGlobal extends core\ClasePropiedades
     /**
      * F_status de Ubi
      *
-     * @var web\DateTimeLocal
+     * @var DateTimeLocal
      */
     protected $df_status;
     /**
@@ -250,7 +255,7 @@ abstract class UbiGlobal extends core\ClasePropiedades
         }
         $aWhere['id_ubi'] = $this->getId_ubi();
         $aWhere['tipo_teleco'] = $tipo_teleco;
-        if ($desc_teleco != '*' && !empty($desc_teleco)) {
+        if ($desc_teleco !== '*' && !empty($desc_teleco)) {
             $aWhere['desc_teleco'] = $desc_teleco;
         }
         $GesTelecoUbis = new $obj();
@@ -261,7 +266,7 @@ abstract class UbiGlobal extends core\ClasePropiedades
             foreach ($cTelecos as $oTelecoUbi) {
                 $iDescTel = $oTelecoUbi->getDesc_teleco();
                 $num_teleco = trim($oTelecoUbi->getNum_teleco());
-                if ($desc_teleco == "*" && !empty($iDescTel)) {
+                if ($desc_teleco === "*" && !empty($iDescTel)) {
                     //$tels.=$num_teleco." (".$DescTel.")".$separador;
                     $oDescTel = new DescTeleco($iDescTel);
                     $tels .= $num_teleco . "(" . $oDescTel->getDesc_teleco() . ")" . $separador;
@@ -311,7 +316,7 @@ abstract class UbiGlobal extends core\ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'id_ubi') && $val_id !== '') $this->iid_ubi = (int)$val_id;
+                if (($nom_id === 'id_ubi') && $val_id !== '') $this->iid_ubi = (int)$val_id;
             }
         }
     }
@@ -480,7 +485,7 @@ abstract class UbiGlobal extends core\ClasePropiedades
     /**
      * Recupera el atributo df_status de Ubi
      *
-     * @return web\DateTimeLocal df_status
+     * @return DateTimeLocal|NullDateTimeLocal df_status
      */
     function getF_status()
     {
@@ -488,9 +493,9 @@ abstract class UbiGlobal extends core\ClasePropiedades
             $this->DBCarregar();
         }
         if (empty($this->df_status)) {
-            return new web\NullDateTimeLocal();
+            return new NullDateTimeLocal();
         }
-        $oConverter = new core\ConverterDate('date', $this->df_status);
+        $oConverter = new ConverterDate('date', $this->df_status);
         return $oConverter->fromPg();
     }
 
@@ -499,13 +504,13 @@ abstract class UbiGlobal extends core\ClasePropiedades
      * Si df_status es string, y convert=true se convierte usando el formato webDateTimeLocal->getFormat().
      * Si convert es false, df_status debe ser un string en formato ISO (Y-m-d). Corresponde al pgstyle de la base de datos.
      *
-     * @param date|string df_status='' optional.
+     * @param string df_status='' optional.
      * @param boolean convert=true optional. Si es false, df_status debe ser un string en formato ISO (Y-m-d).
      */
     function setF_status($df_status = '', $convert = true)
     {
         if ($convert === true && !empty($df_status)) {
-            $oConverter = new core\ConverterDate('date', $df_status);
+            $oConverter = new ConverterDate('date', $df_status);
             $this->df_status = $oConverter->toPg();
         } else {
             $this->df_status = $df_status;
@@ -565,7 +570,7 @@ abstract class UbiGlobal extends core\ClasePropiedades
      */
     function getDatosCampos()
     {
-        $oUbiSet = new core\Set();
+        $oUbiSet = new Set();
 
         $oUbiSet->add($this->getDatosTipo_ubi());
         $oUbiSet->add($this->getDatosNombre_ubi());
@@ -584,12 +589,12 @@ abstract class UbiGlobal extends core\ClasePropiedades
      * Recupera les propietats de l'atribut stipo_ubi de Ubi
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosTipo_ubi()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'tipo_ubi'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'tipo_ubi'));
         $oDatosCampo->setEtiqueta(_("tipo de ubi"));
         return $oDatosCampo;
     }
@@ -598,12 +603,12 @@ abstract class UbiGlobal extends core\ClasePropiedades
      * Recupera les propietats de l'atribut snombre_ubi de Ubi
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosNombre_ubi()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'nombre_ubi'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'nombre_ubi'));
         $oDatosCampo->setEtiqueta(_("nombre ubi"));
         return $oDatosCampo;
     }
@@ -612,12 +617,12 @@ abstract class UbiGlobal extends core\ClasePropiedades
      * Recupera les propietats de l'atribut sdl de Ubi
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosDl()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'dl'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'dl'));
         $oDatosCampo->setEtiqueta(_("dl"));
         return $oDatosCampo;
     }
@@ -626,12 +631,12 @@ abstract class UbiGlobal extends core\ClasePropiedades
      * Recupera les propietats de l'atribut spais de Ubi
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosPais()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'pais'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'pais'));
         $oDatosCampo->setEtiqueta(_("país"));
         return $oDatosCampo;
     }
@@ -640,12 +645,12 @@ abstract class UbiGlobal extends core\ClasePropiedades
      * Recupera les propietats de l'atribut sregion de Ubi
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosRegion()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'region'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'region'));
         $oDatosCampo->setEtiqueta(_("región"));
         return $oDatosCampo;
     }
@@ -654,12 +659,12 @@ abstract class UbiGlobal extends core\ClasePropiedades
      * Recupera les propietats de l'atribut bstatus de Ubi
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosStatus()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'status'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'status'));
         $oDatosCampo->setEtiqueta(_("status"));
         return $oDatosCampo;
     }
@@ -668,12 +673,12 @@ abstract class UbiGlobal extends core\ClasePropiedades
      * Recupera les propietats de l'atribut df_status de Ubi
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosF_status()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'f_status'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'f_status'));
         $oDatosCampo->setEtiqueta(_("fecha status"));
         $oDatosCampo->setTipo('fecha');
         return $oDatosCampo;
@@ -683,12 +688,12 @@ abstract class UbiGlobal extends core\ClasePropiedades
      * Recupera les propietats de l'atribut bsv de Ubi
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosSv()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'sv'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'sv'));
         $oDatosCampo->setEtiqueta(_("sv"));
         return $oDatosCampo;
     }
@@ -697,12 +702,12 @@ abstract class UbiGlobal extends core\ClasePropiedades
      * Recupera les propietats de l'atribut bsf de Ubi
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosSf()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'sf'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'sf'));
         $oDatosCampo->setEtiqueta(_("sf"));
         return $oDatosCampo;
     }

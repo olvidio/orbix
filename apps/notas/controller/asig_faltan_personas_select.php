@@ -3,10 +3,10 @@
 use asignaturas\model\entity\Asignatura;
 use core\ConfigGlobal;
 use notas\model\AsignaturasPendientes;
-use ubis\model\entity\CentroDl;
 use web\Hash;
 use web\Lista;
 use web\Posicion;
+use ubis\model\entity\CentroDl;
 
 /**
  * Esta página muestra una tabla con las personas que cumplen con la condicion.

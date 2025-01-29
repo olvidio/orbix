@@ -2,11 +2,11 @@
 
 namespace procesos\model;
 
-use core;
+use core\DatosInfo;
 
 /* No vale el underscore en el nombre */
 
-class InfoFases extends core\DatosInfo
+class InfoFases extends DatosInfo
 {
 
     public function __construct()

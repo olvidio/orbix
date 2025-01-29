@@ -1,17 +1,18 @@
 <?php
 
 use core\ConfigGlobal;
-use function core\strtoupper_dlb;
+use core\ViewTwig;
 use encargossacd\model\EncargoFunciones;
 use encargossacd\model\entity\Encargo;
 use encargossacd\model\entity\GestorEncargoSacd;
 use personas\model\entity\GestorPersonaDl;
+use web\DateTimeLocal;
 use ubis\model\entity\CentroDl;
 use ubis\model\entity\CentroEllas;
 use ubis\model\entity\GestorCentroDl;
-use web\DateTimeLocal;
 use zonassacd\model\entity\GestorZona;
 use zonassacd\model\entity\GestorZonaGrupo;
+use function core\strtoupper_dlb;
 
 /* Listado de ateción sacd. según cr 9/05, Anexo2,9.4 c) 
 *
@@ -263,5 +264,5 @@ $a_campos = ['oPosicion' => $oPosicion,
     'Html' => $Html_all,
 ];
 
-$oView = new core\ViewTwig('encargossacd/controller');
+$oView = new ViewTwig('encargossacd/controller');
 $oView->renderizar('listas.html.twig', $a_campos);

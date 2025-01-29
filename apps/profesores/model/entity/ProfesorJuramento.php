@@ -2,8 +2,12 @@
 
 namespace profesores\model\entity;
 
-use core;
-use web;
+use core\ClasePropiedades;
+use core\ConverterDate;
+use core\DatosCampo;
+use core\Set;
+use web\DateTimeLocal;
+use web\NullDateTimeLocal;
 
 /**
  * Fitxer amb la Classe que accedeix a la taula d_profesor_juramento
@@ -24,7 +28,7 @@ use web;
  * @version 1.0
  * @created 08/04/2014
  */
-class ProfesorJuramento extends core\ClasePropiedades
+class ProfesorJuramento extends ClasePropiedades
 {
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
@@ -64,7 +68,7 @@ class ProfesorJuramento extends core\ClasePropiedades
     /**
      * F_juramento de ProfesorJuramento
      *
-     * @var web\DateTimeLocal
+     * @varDateTimeLocal
      */
     private $df_juramento;
     /* ATRIBUTOS QUE NO SON CAMPOS------------------------------------------------- */
@@ -96,8 +100,8 @@ class ProfesorJuramento extends core\ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'id_item') && $val_id !== '') $this->iid_item = (int)$val_id; 
-                if (($nom_id == 'id_nom') && $val_id !== '') $this->iid_nom = (int)$val_id; 
+                if (($nom_id === 'id_item') && $val_id !== '') $this->iid_item = (int)$val_id;
+                if (($nom_id === 'id_nom') && $val_id !== '') $this->iid_nom = (int)$val_id;
             }
         }
         $this->setoDbl($oDbl);
@@ -163,7 +167,7 @@ class ProfesorJuramento extends core\ClasePropiedades
                     return false;
                 }
             }
-            $this->id_item = $oDbl->lastInsertId('d_profesor_juramento_id_item_seq');
+            $this->iid_item = $oDbl->lastInsertId('d_profesor_juramento_id_item_seq');
         }
         $this->setAllAtributes($aDades);
         return true;
@@ -231,7 +235,7 @@ class ProfesorJuramento extends core\ClasePropiedades
      *
      * @param array $aDades
      */
-    function setAllAtributes($aDades, $convert = FALSE)
+    function setAllAtributes(array $aDades, $convert = FALSE)
     {
         if (!is_array($aDades)) return;
         if (array_key_exists('id_schema', $aDades)) $this->setId_schema($aDades['id_schema']);
@@ -293,8 +297,8 @@ class ProfesorJuramento extends core\ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'id_item') && $val_id !== '') $this->iid_item = (int)$val_id; 
-                if (($nom_id == 'id_nom') && $val_id !== '') $this->iid_nom = (int)$val_id; 
+                if (($nom_id === 'id_item') && $val_id !== '') $this->iid_item = (int)$val_id;
+                if (($nom_id === 'id_nom') && $val_id !== '') $this->iid_nom = (int)$val_id;
             }
         }
     }
@@ -348,7 +352,7 @@ class ProfesorJuramento extends core\ClasePropiedades
     /**
      * Recupera el atributo df_juramento de ProfesorJuramento
      *
-     * @return web\DateTimeLocal df_juramento
+     * @returnDateTimeLocal df_juramento
      */
     function getF_juramento()
     {
@@ -356,9 +360,9 @@ class ProfesorJuramento extends core\ClasePropiedades
             $this->DBCarregar();
         }
         if (empty($this->df_juramento)) {
-            return new web\NullDateTimeLocal();
+            return new NullDateTimeLocal();
         }
-        $oConverter = new core\ConverterDate('date', $this->df_juramento);
+        $oConverter = new ConverterDate('date', $this->df_juramento);
         return $oConverter->fromPg();
     }
 
@@ -367,13 +371,13 @@ class ProfesorJuramento extends core\ClasePropiedades
      * Si df_juramento es string, y convert=true se convierte usando el formato webDateTimeLocal->getFormat().
      * Si convert es false, df_juramento debe ser un string en formato ISO (Y-m-d). Corresponde al pgstyle de la base de datos.
      *
-     * @param date|string df_juramento='' optional.
+     * @param DateTimeLocal|string df_juramento='' optional.
      * @param boolean convert=true optional. Si es false, df_juramento debe ser un string en formato ISO (Y-m-d).
      */
     function setF_juramento($df_juramento = '', $convert = true)
     {
         if ($convert === true && !empty($df_juramento)) {
-            $oConverter = new core\ConverterDate('date', $df_juramento);
+            $oConverter = new ConverterDate('date', $df_juramento);
             $this->df_juramento = $oConverter->toPg();
         } else {
             $this->df_juramento = $df_juramento;
@@ -387,7 +391,7 @@ class ProfesorJuramento extends core\ClasePropiedades
      */
     function getDatosCampos()
     {
-        $oProfesorJuramentoSet = new core\Set();
+        $oProfesorJuramentoSet = new Set();
 
         $oProfesorJuramentoSet->add($this->getDatosF_juramento());
         return $oProfesorJuramentoSet->getTot();
@@ -398,12 +402,12 @@ class ProfesorJuramento extends core\ClasePropiedades
      * Recupera les propietats de l'atribut df_juramento de ProfesorJuramento
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosF_juramento()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'f_juramento'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'f_juramento'));
         $oDatosCampo->setEtiqueta(_("fecha del juramento"));
         $oDatosCampo->setTipo('fecha');
         return $oDatosCampo;

@@ -3,10 +3,13 @@
 namespace certificados\domain;
 
 use certificados\domain\repositories\CertificadoDlRepository;
-use core;
-use personas\model\entity as personas;
-use web;
+use core\ConfigGlobal;
+use core\ViewPhtml;
+use personas\model\entity\Persona;
 use web\Hash;
+use web\Lista;
+use web\Posicion;
+use function core\is_true;
 
 /**
  * Gestiona el dossier 1301: Actividades a las que asiste una persona.
@@ -91,7 +94,7 @@ class Select1010
 
     private function getTabla(): void
     {
-        $oPersona = personas\Persona::newPersona($this->id_pau);
+        $oPersona = Persona::newPersona($this->id_pau);
         if (!is_object($oPersona)) {
             $this->msg_err = "<br>$oPersona con id_nom: $this->id_pau en  " . __FILE__ . ": line " . __LINE__;
             exit($this->msg_err);
@@ -120,7 +123,7 @@ class Select1010
             $a_valores[$i]['sel'] = $id_item;
             $a_valores[$i][1] = $certificado;
             $a_valores[$i][2] = $f_certificado;
-            $a_valores[$i][3] = core\is_true($firmado) ? _("Sí") : _("No");
+            $a_valores[$i][3] = is_true($firmado) ? _("Sí") : _("No");
             $a_valores[$i][4] = empty($pdf) ? '' : _("Sí");
             $a_valores[$i][5] = $f_recibido;
 
@@ -143,10 +146,10 @@ class Select1010
     {
         $this->txt_eliminar = _("No tiene permisos para eliminar");
         // En el caso de actualizar la misma página (fnjs_actualizar) solo me quedo con la última (stack=0).
-        $oPosicion = new web\Posicion();
+        $oPosicion = new Posicion();
         $stack = $oPosicion->getStack(0);
 
-        $oHashSelect = new web\Hash();
+        $oHashSelect = new Hash();
         //$oHashSelect->setCamposForm('sel');
         $oHashSelect->setCamposNo('sel!mod!scroll_id!refresh');
         $a_camposHidden = array(
@@ -161,7 +164,7 @@ class Select1010
         $oHashSelect->setArraycamposHidden($a_camposHidden);
 
         //Hay que ponerlo antes, para que calcule los chk.
-        $oTabla = new web\Lista();
+        $oTabla = new Lista();
         $oTabla->setId_tabla('select1010');
         $oTabla->setCabeceras($this->getCabeceras());
         $oTabla->setBotones($this->getBotones());
@@ -173,7 +176,7 @@ class Select1010
         $h_download = $oHashDown->linkSinVal();
 
         $aQuery = ['nuevo' => 1, 'id_nom' => $this->id_pau];
-        $url_nuevo = web\Hash::link(core\ConfigGlobal::getWeb() . '/apps/certificados/controller/certificado_dl_adjuntar.php?' . http_build_query($aQuery));
+        $url_nuevo = Hash::link(ConfigGlobal::getWeb() . '/apps/certificados/controller/certificado_dl_adjuntar.php?' . http_build_query($aQuery));
 
         $a_campos = [
             'oPosicion' => $oPosicion,
@@ -183,7 +186,7 @@ class Select1010
             'h_download' => $h_download,
         ];
 
-        $oView = new core\View('certificados/view');
+        $oView = new ViewPhtml('certificados/view');
         $oView->renderizar('select1010.phtml', $a_campos);
     }
 

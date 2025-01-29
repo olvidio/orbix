@@ -10,6 +10,9 @@
  */
 
 // INICIO Cabecera global de URL de controlador *********************************
+use core\ViewPhtml;
+use web\Hash;
+
 require_once("apps/core/global_header.inc");
 // Archivos requeridos por esta url **********************************************
 
@@ -62,11 +65,11 @@ $oDesplAsignaturas = $GesAsignaturas->getListaAsignaturas();
 $oDesplAsignaturas->setNombre('id_asignatura');
 $oDesplAsignaturas->setOpcion_sel($Qid_asignatura);
 
-$oHash = new web\Hash();
+$oHash = new Hash();
 $oHash->setcamposChk('personas_n!personas_agd!c1!c2!lista');
 $oHash->setCamposForm('numero!b_c');
 
-$oHash1 = new web\Hash();
+$oHash1 = new Hash();
 $oHash1->setcamposChk('personas_n!personas_agd!c1!c2');
 $oHash1->setCamposForm('id_asignatura!b_c');
 
@@ -85,5 +88,5 @@ $a_campos = ['oPosicion' => $oPosicion,
     'chk_lista' => $chk_lista,
 ];
 
-$oView = new core\View('notas/controller');
+$oView = new ViewPhtml('notas/controller');
 $oView->renderizar('asig_faltan_que.phtml', $a_campos);

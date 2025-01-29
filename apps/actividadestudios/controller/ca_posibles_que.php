@@ -1,9 +1,14 @@
 <?php
 
 use core\ConfigGlobal;
+use core\ViewPhtml;
+use personas\model\entity\GestorPersonaAgd;
+use personas\model\entity\GestorPersonaN;
+use ubis\model\entity\CentroDl;
+use ubis\model\entity\GestorDelegacion;
+use web\Desplegable;
+use web\Hash;
 use function core\is_true;
-use personas\model\entity as personas;
-use ubis\model\entity as ubis;
 
 // INICIO Cabecera global de URL de controlador *********************************
 require_once("apps/core/global_header.inc");
@@ -15,7 +20,7 @@ require_once("apps/core/global_object.inc");
 
 $oPosicion->recordar();
 
-//Si vengo de vuelta y le paso la referecia del stack donde está la información.
+//Si vengo de vuelta y le paso la referencia del stack donde está la información.
 if (isset($_POST['stack'])) {
     $stack = filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
     if ($stack != '') {
@@ -48,8 +53,8 @@ $Qca_todos = (string)filter_input(INPUT_POST, 'ca_todos');
 
 
 // Grupo de estudios
-$mi_dele = core\ConfigGlobal::mi_delef();
-$GesGrupoEst = new ubis\GestorDelegacion();
+$mi_dele = ConfigGlobal::mi_delef();
+$GesGrupoEst = new GestorDelegacion();
 $cMiDl = $GesGrupoEst->getDelegaciones(array('dl' => $mi_dele));
 if (is_array($cMiDl) && !empty($cMiDl)) {
     $grupo_estudios = $cMiDl[0]->getGrupo_estudios();
@@ -64,12 +69,12 @@ if (is_array($cMiDl) && !empty($cMiDl)) {
 }
 
 // centros donde hay numerarios, aunque sean de agd
-$GesPersonas = new personas\GestorPersonaN();
+$GesPersonas = new GestorPersonaN();
 $aListaCtr = $GesPersonas->getListaCtr();
 $aCentrosN = array();
 $aCentrosOrden = array();
 foreach ($aListaCtr as $id_ubi) {
-    $oCentro = new ubis\CentroDl(array('id_ubi' => $id_ubi));
+    $oCentro = new CentroDl(array('id_ubi' => $id_ubi));
     $nombre_ubi = $oCentro->getNombre_ubi();
     $aCentrosOrden[$nombre_ubi] = array($id_ubi => $nombre_ubi);
 }
@@ -84,7 +89,7 @@ foreach ($aCentrosOrden as $aCentro) {
     $aCentrosNExt[$key] = $value;
 }
 
-$oDesplCtrN = new web\Desplegable();
+$oDesplCtrN = new Desplegable();
 $oDesplCtrN->setNombre('id_ctr_n');
 $oDesplCtrN->setOpciones($aCentrosNExt);
 $oDesplCtrN->setOpcion_sel($Qid_ctr_n);
@@ -92,12 +97,12 @@ $oDesplCtrN->setBlanco(1);
 $oDesplCtrN->setAction("fnjs_n_a('n')");
 
 // centros donde hay agregados, aunque sean de n
-$GesPersonas = new personas\GestorPersonaAgd();
+$GesPersonas = new GestorPersonaAgd();
 $aListaCtr = $GesPersonas->getListaCtr();
 $aCentrosAgd = array();
 $aCentrosOrden = array();
 foreach ($aListaCtr as $id_ubi) {
-    $oCentro = new ubis\CentroDl(array('id_ubi' => $id_ubi));
+    $oCentro = new CentroDl(array('id_ubi' => $id_ubi));
     $nombre_ubi = $oCentro->getNombre_ubi();
     $aCentrosOrden[$nombre_ubi] = array($id_ubi => $nombre_ubi);
 }
@@ -112,7 +117,7 @@ foreach ($aCentrosOrden as $aCentro) {
     $aCentrosAgdExt[$key] = $value;
 }
 
-$oDesplCtrAgd = new web\Desplegable();
+$oDesplCtrAgd = new Desplegable();
 $oDesplCtrAgd->setNombre('id_ctr_agd');
 $oDesplCtrAgd->setOpciones($aCentrosAgdExt);
 $oDesplCtrAgd->setOpcion_sel($Qid_ctr_agd);
@@ -142,7 +147,7 @@ $oFormP->setDesplAnysOpcion_sel($any);
 $oFormP->setEmpiezaMin($Qempiezamin);
 $oFormP->setEmpiezaMax($Qempiezamax);
 
-$oHash = new web\Hash();
+$oHash = new Hash();
 $oHash->setCamposForm('id_ctr_agd!id_ctr_n!texto!empiezamax!empiezamin!periodo!ref!iactividad_val!iasistentes_val!year');
 $oHash->setCamposNo('na!grupo_estudios!ca_estudios!ca_repaso!ca_todos');
 $a_camposHidden = array(
@@ -151,7 +156,7 @@ $a_camposHidden = array(
 );
 $oHash->setArraycamposHidden($a_camposHidden);
 
-if ($Qgrupo_estudios == 'todos') {
+if ($Qgrupo_estudios === 'todos') {
     $chk_todos = 'checked';
     $chk_grupo = '';
 } else {
@@ -159,7 +164,7 @@ if ($Qgrupo_estudios == 'todos') {
     $chk_grupo = 'checked';
 }
 
-// valor por defecto (si no vengo de vuelts: stack='')
+// valor por defecto (si no vengo de vuelta: stack='')
 //if (empty($stack) && empty($Qca_estudios)) { $Qca_estudios = TRUE; }
 //if (empty($stack) && empty($Qca_repaso)) { $Qca_repaso = TRUE; }
 if (empty($stack) && empty($Qca_todos)) {
@@ -188,5 +193,5 @@ $a_campos = [
     'locale_us' => ConfigGlobal::is_locale_us(),
 ];
 
-$oView = new core\View('actividadestudios/controller');
+$oView = new ViewPhtml('actividadestudios/controller');
 $oView->renderizar('ca_posibles_que.phtml', $a_campos);

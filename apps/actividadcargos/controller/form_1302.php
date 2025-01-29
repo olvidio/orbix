@@ -29,8 +29,13 @@
 
 //Comentario para comprobar subidas desde Eclipse (2)
 
-use actividadcargos\model\entity as actividadcargos;
-use actividades\model\entity as actividades;
+use actividadcargos\model\entity\ActividadCargo;
+use actividadcargos\model\entity\GestorCargo;
+use actividades\model\entity\Actividad;
+use actividades\model\entity\ActividadAll;
+use actividades\model\entity\GestorActividad;
+use core\ConfigGlobal;
+use core\ViewPhtml;
 use web\Hash;
 use function core\is_true;
 
@@ -72,14 +77,14 @@ $id_activ_real = '';
 $nom_activ = '';
 $cActividades = array();
 if (!empty($Qid_item)) { //caso de modificar
-    $oActividadCargo = new actividadcargos\ActividadCargo(array('id_item' => $Qid_item));
+    $oActividadCargo = new ActividadCargo(array('id_item' => $Qid_item));
     $id_activ = $oActividadCargo->getId_activ();
     $id_nom = $oActividadCargo->getId_nom();
     $id_cargo = $oActividadCargo->getId_cargo();
     $puede_agd = $oActividadCargo->getPuede_agd();
     $observ = $oActividadCargo->getObserv();
 
-    $oActividad = new actividades\Actividad(array('id_activ' => $id_activ));
+    $oActividad = new Actividad(array('id_activ' => $id_activ));
     $nom_activ = $oActividad->getNom_activ();
     // si es de la sf quito la 'f'
     $dl = preg_replace('/f$/', '', $oActividad->getDl_org());
@@ -87,7 +92,7 @@ if (!empty($Qid_item)) { //caso de modificar
     $id_activ_real = $id_activ;
 } else { //caso de nuevo cargo
     if (empty($Qid_tipo)) {
-        $mi_sfsv = core\ConfigGlobal::mi_sfsv();
+        $mi_sfsv = ConfigGlobal::mi_sfsv();
         $id_tipo = '^' . $mi_sfsv;  //caso genérico para todas las actividades
     } else {
         $id_tipo = empty($Qid_tipo) ? "" : '^' . $Qid_tipo;
@@ -95,23 +100,23 @@ if (!empty($Qid_item)) { //caso de modificar
     if (!empty($Qque_dl)) {
         $aWhere['dl_org'] = $Qque_dl;
     } else {
-        $aWhere['dl_org'] = core\ConfigGlobal::mi_delef();
+        $aWhere['dl_org'] = ConfigGlobal::mi_delef();
         $aOperadores['dl_org'] = '!=';
     }
 
     $aWhere['id_tipo_activ'] = $id_tipo;
     $aOperadores['id_tipo_activ'] = '~';
-    $aWhere['status'] = actividades\ActividadAll::STATUS_ACTUAL;
+    $aWhere['status'] = ActividadAll::STATUS_ACTUAL;
     $aWhere['_ordre'] = 'f_ini';
 
-    $oGesActividades = new actividades\GestorActividad();
+    $oGesActividades = new GestorActividad();
     $cActividades = $oGesActividades->getActividades($aWhere, $aOperadores);
 
     $puede_agd = "f"; //valor por defecto
     $observ = ""; //valor por defecto
 }
 
-$oCargos = new actividadcargos\GestorCargo();
+$oCargos = new GestorCargo();
 $oDesplegableCargos = $oCargos->getListaCargos();
 $oDesplegableCargos->setNombre('id_cargo');
 $oDesplegableCargos->setBlanco(false);
@@ -150,5 +155,5 @@ $a_campos = ['obj' => $obj,
     'Qmod' => $Qmod,
 ];
 
-$oView = new core\View('actividadcargos/model');
+$oView = new ViewPhtml('actividadcargos/model');
 $oView->renderizar('form_1302.phtml', $a_campos);

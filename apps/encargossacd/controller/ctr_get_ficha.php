@@ -1,5 +1,6 @@
 <?php
 
+use core\ViewTwig;
 use encargossacd\model\entity\EncargoTipo;
 use encargossacd\model\entity\GestorEncargo;
 use encargossacd\model\entity\GestorEncargoHorario;
@@ -7,9 +8,9 @@ use encargossacd\model\entity\GestorEncargoSacd;
 use encargossacd\model\entity\GestorEncargoSacdHorario;
 use encargossacd\model\entity\GestorEncargoTipo;
 use personas\model\entity\GestorPersona;
-use ubis\model\entity\CentroDl;
 use web\Desplegable;
 use web\Hash;
+use ubis\model\entity\CentroDl;
 
 /**
  * Esta página muestra la ficha de atención sacerdotal de un centro. Se inserta en ctr_ficha.php
@@ -414,7 +415,7 @@ $a_campos = [
     'chk_sssc' => $chk_sssc,
 ];
 
-$oView = new core\ViewTwig('encargossacd/controller');
+$oView = new ViewTwig('encargossacd/controller');
 $oView->renderizar('ctr_get_ficha.html.twig', $a_campos);
 
 /**

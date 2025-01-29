@@ -1,6 +1,9 @@
 <?php
 
-use usuarios\model\entity as usuarios;
+use core\ConfigGlobal;
+use core\ViewPhtml;
+use usuarios\model\entity\Usuario;
+use web\Hash;
 
 /**
  * Formulario para cambiar el mail por parte del usuario.
@@ -18,13 +21,13 @@ require_once("apps/core/global_object.inc");
 $expire = $_SESSION['session_auth']['expire'];
 
 
-$oMiUsuario = new usuarios\Usuario(core\ConfigGlobal::mi_id_usuario());
+$oMiUsuario = new Usuario(ConfigGlobal::mi_id_usuario());
 $id_usuario = $oMiUsuario->getId_usuario();
 
 $txt_guardar = _("guardar datos");
 $txt_ok = _("se ha cambiado el mail");
 
-$oUsuario = new usuarios\Usuario(array('id_usuario' => $id_usuario));
+$oUsuario = new Usuario(array('id_usuario' => $id_usuario));
 
 $id_usuario = $oUsuario->getId_usuario();
 $usuario = $oUsuario->getUsuario();
@@ -34,7 +37,7 @@ $pass = $oUsuario->getPassword();
 $email = $oUsuario->getEmail();
 //$id_role=$oUsuario->getId_role();
 
-$oHash = new web\Hash();
+$oHash = new Hash();
 $oHash->setCamposForm('que!email');
 $oHash->setcamposNo('que');
 $a_camposHidden = array(
@@ -55,5 +58,5 @@ $a_campos = [
     'txt_ok' => $txt_ok,
 ];
 
-$oView = new core\View('usuarios/controller');
+$oView = new ViewPhtml('usuarios/controller');
 $oView->renderizar('usuario_form_mail.phtml', $a_campos);

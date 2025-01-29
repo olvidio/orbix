@@ -1,6 +1,7 @@
 <?php
 
-use dossiers\model\entity as dossiers;
+use dossiers\model\entity\GestorTipoDossier;
+use web\Hash;
 
 /**
  * Página de selección de los dossiers cuyos permisos deseo visualizar
@@ -30,7 +31,7 @@ en caso de no pasarla, por defecto lista los de personas:
 $Qtipo = (string)filter_input(INPUT_POST, 'tipo');
 $tipo = empty($Qtipo) ? 'p' : $Qtipo;
 
-$GesTipoDossiers = new dossiers\GestorTipoDossier();
+$GesTipoDossiers = new GestorTipoDossier();
 $cTipoDossiers = $GesTipoDossiers->getTiposDossiers(array('tabla_from' => $tipo, '_ordre' => 'id_tipo_dossier'));
 
 echo "<table>";
@@ -40,7 +41,7 @@ foreach ($cTipoDossiers as $oTipoDossier) {
     $depende_modificar = $oTipoDossier->getDepende_modificar();
     $descripcion = $oTipoDossier->getDescripcion();
 
-    $pagina = web\Hash::link('apps/dossiers/controller/perm_dossier_ver.php?' . http_build_query(array('id_tipo_dossier' => $id_tipo_dossier, 'depende_modificar' => $depende_modificar, 'tipo' => $tipo)));
+    $pagina = Hash::link('apps/dossiers/controller/perm_dossier_ver.php?' . http_build_query(array('id_tipo_dossier' => $id_tipo_dossier, 'depende_modificar' => $depende_modificar, 'tipo' => $tipo)));
     echo "<tr><td>" . $descripcion . "</td>";
     echo "<td><span class=link onclick=\"fnjs_update_div('#main','$pagina');\">" . _("ver o modificar permisos") . "</span></td><tr>";
 }

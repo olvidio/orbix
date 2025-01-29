@@ -1,7 +1,7 @@
 <?php
 namespace ubis\model\entity;
 
-use core;
+use core\ClaseGestor;
 
 /**
  * GestorUbixDireccion
@@ -14,7 +14,7 @@ use core;
  * @version 1.0
  * @created 11/02/2014
  */
-class GestorUbixDireccion extends core\ClaseGestor
+class GestorUbixDireccion extends ClaseGestor
 {
     /* ATRIBUTOS ----------------------------------------------------------------- */
 

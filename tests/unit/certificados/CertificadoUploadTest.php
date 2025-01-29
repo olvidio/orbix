@@ -10,10 +10,10 @@ use core\ConfigGlobal;
 use core\DBConnection;
 use core\DBPropiedades;
 use Faker\Factory;
-use Tests\factories\certificados\CertificadosFactory;
-use Tests\myTest;
 use web\DateTimeLocal;
 use web\NullDateTimeLocal;
+use Tests\factories\certificados\CertificadosFactory;
+use Tests\myTest;
 
 class CertificadoUploadTest extends myTest
 {

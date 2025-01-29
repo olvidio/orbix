@@ -1,6 +1,7 @@
 <?php
 
 use core\ConfigGlobal;
+use core\ViewPhtml;
 use encargossacd\model\EncargoFunciones;
 use encargossacd\model\entity\Encargo;
 use encargossacd\model\entity\GestorEncargoSacd;
@@ -8,9 +9,9 @@ use encargossacd\model\entity\GestorEncargoSacdHorario;
 use encargossacd\model\entity\GestorEncargoSacdObserv;
 use personas\model\entity\GestorPersonaDl;
 use personas\model\entity\PersonaDl;
+use web\DateTimeLocal;
 use ubis\model\entity\CentroDl;
 use ubis\model\entity\CentroEllas;
-use web\DateTimeLocal;
 
 /**
  * Esta página muestra los encargos de un sacd.
@@ -257,5 +258,5 @@ $a_campos = ['oPosicion' => $oPosicion,
     'lugar_fecha' => $lugar_fecha,
 ];
 
-$oView = new core\View('encargossacd/controller');
+$oView = new ViewPhtml('encargossacd/controller');
 $oView->renderizar('listas_com_sacd.phtml', $a_campos);

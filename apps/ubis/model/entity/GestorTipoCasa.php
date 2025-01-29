@@ -1,7 +1,9 @@
 <?php
 namespace ubis\model\entity;
 
-use core;
+use core\ClaseGestor;
+use core\Condicion;
+use core\Set;
 
 /**
  * GestorTipoCasa
@@ -14,7 +16,7 @@ use core;
  * @version 1.0
  * @created 01/10/2010
  */
-class GestorTipoCasa extends core\ClaseGestor
+class GestorTipoCasa extends ClaseGestor
 {
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
@@ -41,13 +43,13 @@ class GestorTipoCasa extends core\ClaseGestor
     /**
      * retorna una lista tipo_casa=>nombre_tipo_casa
      *
-     * @return array Una Llista
+     * @return array|false
      */
     function getListaTiposCasa()
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
-        $oTipoCentroSet = new core\Set();
+        $oTipoCentroSet = new Set();
         $sQuery = "SELECT tipo_casa, nombre_tipo_casa
 				FROM $nom_tabla
 				ORDER BY tipo_casa";
@@ -63,13 +65,13 @@ class GestorTipoCasa extends core\ClaseGestor
      * retorna l'array d'objectes de tipus TipoCasa
      *
      * @param string sQuery la query a executar.
-     * @return array Una col·lecció d'objectes de tipus TipoCasa
+     * @return array|false
      */
     function getTiposCasaQuery($sQuery = '')
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        $oTipoCasaSet = new core\Set();
+        $oTipoCasaSet = new Set();
         if (($oDblSt = $oDbl->query($sQuery)) === false) {
             $sClauError = 'GestorTipoCasa.query';
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
@@ -88,23 +90,23 @@ class GestorTipoCasa extends core\ClaseGestor
      *
      * @param array aWhere associatiu amb els valors de les variables amb les quals farem la query
      * @param array aOperators associatiu amb els valors dels operadors que cal aplicar a cada variable
-     * @return array Una col·lecció d'objectes de tipus TipoCasa
+     * @return array|void
      */
     function getTiposCasa($aWhere = array(), $aOperators = array())
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
-        $oTipoCasaSet = new core\Set();
-        $oCondicion = new core\Condicion();
+        $oTipoCasaSet = new Set();
+        $oCondicion = new Condicion();
         $aCondi = array();
         foreach ($aWhere as $camp => $val) {
             if ($camp === '_ordre') continue;
             $sOperador = isset($aOperators[$camp]) ? $aOperators[$camp] : '';
             if ($a = $oCondicion->getCondicion($camp, $sOperador, $val)) $aCondi[] = $a;
             // operadores que no requieren valores
-            if ($sOperador == 'BETWEEN' || $sOperador == 'IS NULL' || $sOperador == 'IS NOT NULL' || $sOperador == 'OR') unset($aWhere[$camp]);
-            if ($sOperador == 'IN' || $sOperador == 'NOT IN') unset($aWhere[$camp]);
-            if ($sOperador == 'TXT') unset($aWhere[$camp]);
+            if ($sOperador === 'BETWEEN' || $sOperador === 'IS NULL' || $sOperador === 'IS NOT NULL' || $sOperador === 'OR') unset($aWhere[$camp]);
+            if ($sOperador === 'IN' || $sOperador === 'NOT IN') unset($aWhere[$camp]);
+            if ($sOperador === 'TXT') unset($aWhere[$camp]);
         }
         $sCondi = implode(' AND ', $aCondi);
         if ($sCondi != '') $sCondi = " WHERE " . $sCondi;

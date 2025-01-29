@@ -1,8 +1,10 @@
 <?php
 namespace asignaturas\model\entity;
 
-use core;
-use web;
+use core\ClaseGestor;
+use core\Condicion;
+use core\Set;
+use web\Desplegable;
 
 /**
  * GestorSector
@@ -15,7 +17,7 @@ use web;
  * @version 1.0
  * @created 01/12/2010
  */
-class GestorSector extends core\ClaseGestor
+class GestorSector extends ClaseGestor
 {
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
@@ -43,7 +45,7 @@ class GestorSector extends core\ClaseGestor
      * retorna un array
      * Els posibles sectors per departament.
      *
-     * @return array
+     * @return array|false
      */
     function getArraySectores()
     {
@@ -69,7 +71,7 @@ class GestorSector extends core\ClaseGestor
      * retorna un objecte del tipus Desplegable
      * Els posibles sectors.
      *
-     * @return array Una Llista
+     * @return array|false
      */
     function getListaSectores()
     {
@@ -87,20 +89,20 @@ class GestorSector extends core\ClaseGestor
             $val = $aClave[1];
             $aOpciones[$clave] = $val;
         }
-        return new web\Desplegable('', $aOpciones, '', true);
+        return new Desplegable('', $aOpciones, '', true);
     }
 
     /**
      * retorna l'array d'objectes de tipus Sector
      *
      * @param string sQuery la query a executar.
-     * @return array Una col·lecció d'objectes de tipus Sector
+     * @return array|false
      */
     function getSectoresQuery($sQuery = '')
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        $oSectorSet = new core\Set();
+        $oSectorSet = new Set();
         if (($oDblSt = $oDbl->query($sQuery)) === false) {
             $sClauError = 'GestorSector.query';
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
@@ -119,23 +121,23 @@ class GestorSector extends core\ClaseGestor
      *
      * @param array aWhere associatiu amb els valors de les variables amb les quals farem la query
      * @param array aOperators associatiu amb els valors dels operadors que cal aplicar a cada variable
-     * @return array Una col·lecció d'objectes de tipus Sector
+     * @return array|void
      */
     function getSectores($aWhere = array(), $aOperators = array())
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
-        $oSectorSet = new core\Set();
-        $oCondicion = new core\Condicion();
+        $oSectorSet = new Set();
+        $oCondicion = new Condicion();
         $aCondi = array();
         foreach ($aWhere as $camp => $val) {
             if ($camp === '_ordre') continue;
             $sOperador = isset($aOperators[$camp]) ? $aOperators[$camp] : '';
             if ($a = $oCondicion->getCondicion($camp, $sOperador, $val)) $aCondi[] = $a;
             // operadores que no requieren valores
-            if ($sOperador == 'BETWEEN' || $sOperador == 'IS NULL' || $sOperador == 'IS NOT NULL' || $sOperador == 'OR') unset($aWhere[$camp]);
-            if ($sOperador == 'IN' || $sOperador == 'NOT IN') unset($aWhere[$camp]);
-            if ($sOperador == 'TXT') unset($aWhere[$camp]);
+            if ($sOperador === 'BETWEEN' || $sOperador === 'IS NULL' || $sOperador === 'IS NOT NULL' || $sOperador === 'OR') unset($aWhere[$camp]);
+            if ($sOperador === 'IN' || $sOperador === 'NOT IN') unset($aWhere[$camp]);
+            if ($sOperador === 'TXT') unset($aWhere[$camp]);
         }
         $sCondi = implode(' AND ', $aCondi);
         if ($sCondi != '') $sCondi = " WHERE " . $sCondi;

@@ -18,13 +18,13 @@ use core\ConfigGlobal;
 use core\ConverterDate;
 use core\DBConnection;
 use core\DBPropiedades;
-use core\ServerConf;
 use dossiers\model\entity\GestorDossier;
 use dossiers\model\entity\TipoDossier;
 use notas\model\EditarPersonaNota;
 use notas\model\PersonaNota;
 use ubis\model\entity\GestorDelegacion;
-use web;
+use web\DateTimeLocal;
+use web\NullDateTimeLocal;
 
 
 /**
@@ -64,6 +64,7 @@ class TrasladoDl
     private $path_ini_org;
     private $path_ini_dst;
     private $snew_esquema;
+    private bool $bLoaded = FALSE;
 
     public function getError()
     {
@@ -202,15 +203,12 @@ class TrasladoDl
     /**
      * Recupera el atributo df_traslado de TrasladoDl
      *
-     * @return web\DateTimeLocal df_dl
+     * @returnDateTimeLocal df_dl
      */
     function getF_dl()
     {
-        if (!isset($this->df_dl) && !$this->bLoaded) {
-            $this->DBCarregar();
-        }
         if (empty($this->df_dl)) {
-            return new web\NullDateTimeLocal();
+            return new NullDateTimeLocal();
         }
         $oConverter = new ConverterDate('date', $this->df_dl);
         return $oConverter->fromPg();
@@ -221,7 +219,7 @@ class TrasladoDl
      * Si df_dl es string, y convert=true se convierte usando el formato webDateTimeLocal->getFormat().
      * Si convert es false, df_dl debe ser un string en formato ISO (Y-m-d). Corresponde al pgstyle de la base de datos.
      *
-     * @param date|string df_dl='' optional.
+     * @param DateTimeLocal|string df_dl='' optional.
      * @param boolean convert=true optional. Si es false, df_dl debe ser un string en formato ISO (Y-m-d).
      */
     function setF_dl($df_dl = '', $convert = true)
@@ -981,7 +979,7 @@ class TrasladoDl
         }
         // pongo fecha enviado
         $certificadoRepository = new CertificadoRepository();
-        $Certificado->setF_enviado(new web\DateTimeLocal());
+        $Certificado->setF_enviado(new DateTimeLocal());
         if ($certificadoRepository->Guardar($Certificado) === FALSE) {
             $error .= $certificadoRepository->getErrorTxt();
         }
@@ -1060,7 +1058,7 @@ class TrasladoDl
      * @param \PDO $conn
      */
     private
-    function verConexion($conn)
+    function verConexion(\PDO $conn)
     {
         $conn->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
 
@@ -1093,7 +1091,7 @@ class TrasladoDl
         $oCertificadoDl->setEsquema_emisor($Certificado->getEsquema_emisor());
         $oCertificadoDl->setFirmado($Certificado->isFirmado());
         $oCertificadoDl->setDocumento($Certificado->getDocumento());
-        $oCertificadoDl->setF_recibido(new web\DateTimeLocal());
+        $oCertificadoDl->setF_recibido(new DateTimeLocal());
 
         return $oCertificadoDl;
     }

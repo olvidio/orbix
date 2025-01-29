@@ -1,7 +1,9 @@
 <?php
 namespace actividades\model\entity;
 
-use core;
+use core\ClasePropiedades;
+use core\DatosCampo;
+use core\Set;
 
 /**
  * Fitxer amb la Classe que accedeix a la taula $nom_tabla
@@ -22,7 +24,7 @@ use core;
  * @version 1.0
  * @created 04/02/2011
  */
-class Repeticion extends core\ClasePropiedades
+class Repeticion extends ClasePropiedades
 {
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
@@ -90,7 +92,7 @@ class Repeticion extends core\ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'id_repeticion') && $val_id !== '') $this->iid_repeticion = (int)$val_id; 
+                if (($nom_id === 'id_repeticion') && $val_id !== '') $this->iid_repeticion = (int)$val_id;
             }
         } else {
             if (isset($a_id) && $a_id !== '') {
@@ -233,7 +235,7 @@ class Repeticion extends core\ClasePropiedades
      *
      * @param array $aDades
      */
-    function setAllAtributes($aDades)
+    function setAllAtributes(array $aDades)
     {
         if (!is_array($aDades)) return;
         if (array_key_exists('id_repeticion', $aDades)) $this->setId_repeticion($aDades['id_repeticion']);
@@ -294,7 +296,7 @@ class Repeticion extends core\ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'id_repeticion') && $val_id !== '') $this->iid_repeticion = (int)$val_id; 
+                if (($nom_id === 'id_repeticion') && $val_id !== '') $this->iid_repeticion = (int)$val_id;
             }
         }
     }
@@ -398,7 +400,7 @@ class Repeticion extends core\ClasePropiedades
      */
     function getDatosCampos()
     {
-        $oRepeticionSet = new core\Set();
+        $oRepeticionSet = new Set();
 
         $oRepeticionSet->add($this->getDatosRepeticion());
         $oRepeticionSet->add($this->getDatosTemporada());
@@ -411,12 +413,12 @@ class Repeticion extends core\ClasePropiedades
      * Recupera les propietats de l'atribut srepeticion de Repeticion
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosRepeticion()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'repeticion'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'repeticion'));
         $oDatosCampo->setEtiqueta(_("repetición"));
         $oDatosCampo->setTipo('texto');
         $oDatosCampo->setArgument(30);
@@ -427,12 +429,12 @@ class Repeticion extends core\ClasePropiedades
      * Recupera les propietats de l'atribut stemporada de Repeticion
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosTemporada()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'temporada'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'temporada'));
         $oDatosCampo->setEtiqueta(_("temporada"));
         $oDatosCampo->setTipo('texto');
         $oDatosCampo->setArgument(1);
@@ -443,12 +445,12 @@ class Repeticion extends core\ClasePropiedades
      * Recupera les propietats de l'atribut stipo de Repeticion
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosTipo()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'tipo'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'tipo'));
         $oDatosCampo->setEtiqueta(_("tipo"));
         $oDatosCampo->setTipo('texto');
         $oDatosCampo->setArgument(1);

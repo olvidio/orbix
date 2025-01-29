@@ -5,8 +5,9 @@
  */
 
 use core\ConfigGlobal;
-use usuarios\model\entity\Preferencia;
+use core\ViewTwig;
 use web\Hash;
+use usuarios\model\entity\Preferencia;
 
 // INICIO Cabecera global de URL de controlador *********************************
 require_once("apps/core/global_header.inc");
@@ -37,7 +38,7 @@ $aOpciones = array(
 );
 
 // por defecto
-$id_usuario = core\ConfigGlobal::mi_id_usuario();
+$id_usuario = ConfigGlobal::mi_id_usuario();
 $tipo = 'busqueda_activ_sr';
 $oPref = new Preferencia(array('id_usuario' => $id_usuario, 'tipo' => $tipo));
 $json_busqueda = $oPref->getPreferencia();
@@ -124,5 +125,5 @@ $a_campos = ['oPosicion' => $oPosicion,
     'fullUrl' => $fullUrl,
 ];
 
-$oView = new core\ViewTwig('actividades/controller');
+$oView = new ViewTwig('actividades/controller');
 $oView->renderizar('lista_sr_csv_que.html.twig', $a_campos);

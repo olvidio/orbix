@@ -1,5 +1,6 @@
 <?php
 
+use core\ViewTwig;
 use web\Hash;
 use web\PeriodoQue;
 
@@ -99,5 +100,5 @@ $a_campos = ['oPosicion' => $oPosicion,
     'perm_des' => $perm_des,
 ];
 
-$oView = new core\ViewTwig('actividadessacd/controller');
+$oView = new ViewTwig('actividadessacd/controller');
 $oView->renderizar('activ_sacd.html.twig', $a_campos);

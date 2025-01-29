@@ -1,7 +1,7 @@
 <?php
 namespace actividades\model\entity;
 
-use core;
+use core\ClasePropiedades;
 
 /**
  * Fitxer amb la Classe que accedeix a la taula $nom_tabla
@@ -22,7 +22,7 @@ use core;
  * @version 1.0
  * @created 04/02/2011
  */
-class Importada extends core\ClasePropiedades
+class Importada extends ClasePropiedades
 {
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
@@ -72,7 +72,7 @@ class Importada extends core\ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'id_activ') && $val_id !== '') $this->iid_activ = (int)$val_id; 
+                if (($nom_id === 'id_activ') && $val_id !== '') $this->iid_activ = (int)$val_id;
             }
         } else {
             if (isset($a_id) && $a_id !== '') {
@@ -192,7 +192,7 @@ class Importada extends core\ClasePropiedades
      *
      * @param array $aDades
      */
-    function setAllAtributes($aDades)
+    function setAllAtributes(array $aDades)
     {
         if (!is_array($aDades)) return;
         if (array_key_exists('id_schema', $aDades)) $this->setId_schema($aDades['id_schema']);
@@ -249,7 +249,7 @@ class Importada extends core\ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'id_activ') && $val_id !== '') $this->iid_activ = (int)$val_id; 
+                if (($nom_id === 'id_activ') && $val_id !== '') $this->iid_activ = (int)$val_id;
             }
         }
     }

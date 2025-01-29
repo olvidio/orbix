@@ -2,7 +2,11 @@
 
 namespace devel\model\entity;
 
-use core;
+use core\ClaseGestor;
+use core\Condicion;
+use core\ConfigDB;
+use core\DBConnection;
+use core\Set;
 
 /**
  * GestorDbSchema
@@ -15,7 +19,7 @@ use core;
  * @version 1.0
  * @created 19/06/2018
  */
-class GestorDbSchema extends core\ClaseGestor
+class GestorDbSchema extends ClaseGestor
 {
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
@@ -39,29 +43,29 @@ class GestorDbSchema extends core\ClaseGestor
      * @param string $database
      * @return \PDO
      */
-    function connectar($database)
+    function connectar(string $database)
     {
         switch ($database) {
             case 'comun':
                 $oDB = $this->getoDbl();
                 break;
             case 'sv':
-                $oConfigDB = new core\ConfigDB('sv');
+                $oConfigDB = new ConfigDB('sv');
                 $config = $oConfigDB->getEsquema('public');
-                $oConexion = new core\DBConnection($config);
+                $oConexion = new DBConnection($config);
                 $oDB = $oConexion->getPDO();
                 break;
             case 'sv-e':
-                $oConfigDB = new core\ConfigDB('sv-e');
+                $oConfigDB = new ConfigDB('sv-e');
                 $config = $oConfigDB->getEsquema('public');
-                $oConexion = new core\DBConnection($config);
+                $oConexion = new DBConnection($config);
                 $oDB = $oConexion->getPDO();
                 break;
             case 'sf':
                 // Conectar Db df
-                $oConfigDB = new core\ConfigDB('sf');
+                $oConfigDB = new ConfigDB('sf');
                 $config = $oConfigDB->getEsquema('public');
-                $oConexion = new core\DBConnection($config);
+                $oConexion = new DBConnection($config);
                 $oDB = $oConexion->getPDO();
                 $this->setoDbl($oDB);
                 break;
@@ -163,23 +167,23 @@ class GestorDbSchema extends core\ClaseGestor
      *
      * @param array aWhere associatiu amb els valors de les variables amb les quals farem la query
      * @param array aOperators associatiu amb els valors dels operadors que cal aplicar a cada variable
-     * @return array Una col·lecció d'objectes de tipus DbSchema
+     * @return array|void
      */
     function getDbSchemas($aWhere = array(), $aOperators = array())
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        $oDbSchemaSet = new core\Set();
-        $oCondicion = new core\Condicion();
+        $oDbSchemaSet = new Set();
+        $oCondicion = new Condicion();
         $aCondi = array();
         foreach ($aWhere as $camp => $val) {
-            if ($camp == '_ordre') continue;
+            if ($camp === '_ordre') continue;
             $sOperador = isset($aOperators[$camp]) ? $aOperators[$camp] : '';
             if ($a = $oCondicion->getCondicion($camp, $sOperador, $val)) $aCondi[] = $a;
             // operadores que no requieren valores
-            if ($sOperador == 'BETWEEN' || $sOperador == 'IS NULL' || $sOperador == 'IS NOT NULL' || $sOperador == 'OR') unset($aWhere[$camp]);
-            if ($sOperador == 'IN' || $sOperador == 'NOT IN') unset($aWhere[$camp]);
-            if ($sOperador == 'TXT') unset($aWhere[$camp]);
+            if ($sOperador === 'BETWEEN' || $sOperador === 'IS NULL' || $sOperador === 'IS NOT NULL' || $sOperador === 'OR') unset($aWhere[$camp]);
+            if ($sOperador === 'IN' || $sOperador === 'NOT IN') unset($aWhere[$camp]);
+            if ($sOperador === 'TXT') unset($aWhere[$camp]);
         }
         $sCondi = implode(' AND ', $aCondi);
         if ($sCondi != '') $sCondi = " WHERE " . $sCondi;

@@ -1,7 +1,10 @@
 <?php
 namespace dossiers\model\entity;
 
-use core;
+use core\ClasePropiedades;
+use core\DatosCampo;
+use core\Set;
+use function core\is_true;
 
 /**
  * Fitxer amb la Classe que accedeix a la taula d_tipos_dossiers
@@ -22,7 +25,7 @@ use core;
  * @version 1.0
  * @created 22/05/2014
  */
-class TipoDossier extends core\ClasePropiedades
+class TipoDossier extends ClasePropiedades
 {
 
     // db constantes.
@@ -155,7 +158,7 @@ class TipoDossier extends core\ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'id_tipo_dossier') && $val_id !== '') $this->iid_tipo_dossier = (int)$val_id; 
+                if (($nom_id === 'id_tipo_dossier') && $val_id !== '') $this->iid_tipo_dossier = (int)$val_id;
             }
         } else {
             if (isset($a_id) && $a_id !== '') {
@@ -198,7 +201,7 @@ class TipoDossier extends core\ClasePropiedades
         $aDades['db'] = $this->idb;
         array_walk($aDades, 'core\poner_null');
         //para el caso de los boolean FALSE, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
-        if (core\is_true($aDades['depende_modificar'])) {
+        if (is_true($aDades['depende_modificar'])) {
             $aDades['depende_modificar'] = 'true';
         } else {
             $aDades['depende_modificar'] = 'false';
@@ -320,7 +323,7 @@ class TipoDossier extends core\ClasePropiedades
      *
      * @param array $aDades
      */
-    function setAllAtributes($aDades)
+    function setAllAtributes(array $aDades)
     {
         if (!is_array($aDades)) return;
         if (array_key_exists('id_schema', $aDades)) $this->setId_schema($aDades['id_schema']);
@@ -400,7 +403,7 @@ class TipoDossier extends core\ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'id_tipo_dossier') && $val_id !== '') $this->iid_tipo_dossier = (int)$val_id; 
+                if (($nom_id === 'id_tipo_dossier') && $val_id !== '') $this->iid_tipo_dossier = (int)$val_id;
             }
         }
     }
@@ -688,7 +691,7 @@ class TipoDossier extends core\ClasePropiedades
      */
     function getDatosCampos()
     {
-        $oTipoDossierSet = new core\Set();
+        $oTipoDossierSet = new Set();
 
         $oTipoDossierSet->add($this->getDatosDescripcion());
         $oTipoDossierSet->add($this->getDatosTabla_from());
@@ -709,12 +712,12 @@ class TipoDossier extends core\ClasePropiedades
      * Recupera les propietats de l'atribut sdescripcion de TipoDossier
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosDescripcion()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'descripcion'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'descripcion'));
         $oDatosCampo->setEtiqueta(_("descripción"));
         return $oDatosCampo;
     }
@@ -723,12 +726,12 @@ class TipoDossier extends core\ClasePropiedades
      * Recupera les propietats de l'atribut stabla_from de TipoDossier
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosTabla_from()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'tabla_from'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'tabla_from'));
         $oDatosCampo->setEtiqueta(_("tabla_from"));
         return $oDatosCampo;
     }
@@ -737,12 +740,12 @@ class TipoDossier extends core\ClasePropiedades
      * Recupera les propietats de l'atribut stabla_to de TipoDossier
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosTabla_to()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'tabla_to'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'tabla_to'));
         $oDatosCampo->setEtiqueta(_("tabla_to"));
         return $oDatosCampo;
     }
@@ -751,12 +754,12 @@ class TipoDossier extends core\ClasePropiedades
      * Recupera les propietats de l'atribut scampo_to de TipoDossier
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosCampo_to()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'campo_to'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'campo_to'));
         $oDatosCampo->setEtiqueta(_("campo_to"));
         return $oDatosCampo;
     }
@@ -765,12 +768,12 @@ class TipoDossier extends core\ClasePropiedades
      * Recupera les propietats de l'atribut iid_tipo_dossier_rel de TipoDossier
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosId_tipo_dossier_rel()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_tipo_dossier_rel'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_tipo_dossier_rel'));
         $oDatosCampo->setEtiqueta(_("id_tipo_dossier_rel"));
         return $oDatosCampo;
     }
@@ -779,12 +782,12 @@ class TipoDossier extends core\ClasePropiedades
      * Recupera les propietats de l'atribut ipermiso_lectura de TipoDossier
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosPermiso_lectura()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'permiso_lectura'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'permiso_lectura'));
         $oDatosCampo->setEtiqueta(_("permiso de lectura"));
         return $oDatosCampo;
     }
@@ -793,12 +796,12 @@ class TipoDossier extends core\ClasePropiedades
      * Recupera les propietats de l'atribut ipermiso_escritura de TipoDossier
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosPermiso_escritura()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'permiso_escritura'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'permiso_escritura'));
         $oDatosCampo->setEtiqueta(_("permiso de escritura"));
         return $oDatosCampo;
     }
@@ -807,12 +810,12 @@ class TipoDossier extends core\ClasePropiedades
      * Recupera les propietats de l'atribut bdepende_modificar de TipoDossier
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosDepende_modificar()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'depende_modificar'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'depende_modificar'));
         $oDatosCampo->setEtiqueta(_("depende modificar"));
         return $oDatosCampo;
     }
@@ -821,12 +824,12 @@ class TipoDossier extends core\ClasePropiedades
      * Recupera les propietats de l'atribut sapp de TipoDossier
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosApp()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'app'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'app'));
         $oDatosCampo->setEtiqueta(_("app"));
         return $oDatosCampo;
     }
@@ -835,12 +838,12 @@ class TipoDossier extends core\ClasePropiedades
      * Recupera les propietats de l'atribut sclass de TipoDossier
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosClass()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'class'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'class'));
         $oDatosCampo->setEtiqueta(_("class"));
         return $oDatosCampo;
     }
@@ -849,12 +852,12 @@ class TipoDossier extends core\ClasePropiedades
      * Recupera les propietats de l'atribut idb de TipoDossier
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosDb()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'db'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'db'));
         $oDatosCampo->setEtiqueta(_("db"));
         return $oDatosCampo;
     }

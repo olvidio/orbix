@@ -1,11 +1,9 @@
 <?php
 // INICIO Cabecera global de URL de controlador *********************************
 
-use certificados\domain\repositories\CertificadoRepository;
-use notas\model\entity\GestorPersonaNotaOtraRegionStgrDB;
+use web\DateTimeLocal;
 use tablonanuncios\domain\AnuncioId;
 use tablonanuncios\domain\repositories\AnuncioRepository;
-use web\DateTimeLocal;
 
 require_once("apps/core/global_header.inc");
 // Archivos requeridos por esta url **********************************************

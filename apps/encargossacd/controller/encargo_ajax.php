@@ -2,7 +2,6 @@
 
 use encargossacd\model\entity\Encargo;
 use encargossacd\model\entity\GestorEncargoTipo;
-use function encargossacd\model\entity\GestorEncargoTipo\id_tipo_encargo;
 use web\Desplegable;
 
 /**
@@ -76,7 +75,7 @@ switch ($Qque) {
         if (!empty($Qid_tipo_enc) and !strstr($Qid_tipo_enc, '.')) {
             $id_tipo_enc = $Qid_tipo_enc;
         } else {
-            $condta = id_tipo_encargo($Qgrupo, $Qnom_tipo);
+            $condta = GestorEncargoTipo::id_tipo_encargo($Qgrupo, $Qnom_tipo);
             if (!strstr($condta, '.')) {
                 $id_tipo_enc = $condta;
             } else {

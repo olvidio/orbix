@@ -1,5 +1,7 @@
 <?php
 // para que funcione bien la seguridad
+use core\ConfigGlobal;
+
 $_POST = $_GET;
 
 $id_nom = (integer)filter_input(INPUT_GET, 'id_nom');
@@ -12,10 +14,10 @@ include(dirname(__FILE__) . '/e43_imprimir_mpdf.php');
 $content = ob_get_clean();
 
 // convert to PDF
-require_once(core\ConfigGlobal::$dir_libs . '/vendor/autoload.php');
+require_once(ConfigGlobal::$dir_libs . '/vendor/autoload.php');
 
 // quitar los acentos , ñ etc. del nombre
-$nom = web\QuitarAcentos::convert($nom);
+$nom =web\QuitarAcentos::convert($nom);
 
 //$mpdf = new \Mpdf\Mpdf(['','A4','','',10,10,10,10,6,3]);
 $config = ['mode' => 'utf-8',

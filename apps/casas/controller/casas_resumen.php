@@ -1,11 +1,13 @@
 <?php
 
 use core\ConfigGlobal;
-use function core\strtoupper_dlb;
+use core\ViewTwig;
+use web\CasasQue;
+use web\Hash;
+use web\PeriodoQue;
 use usuarios\model\entity\Role;
 use usuarios\model\entity\Usuario;
-use web\CasasQue;
-use web\PeriodoQue;
+use function core\strtoupper_dlb;
 
 /**
  * Página que presentará los formularios de los distintos plannings
@@ -86,7 +88,7 @@ $oFormP->setTitulo(strtoupper_dlb(_('periodo para el resumen económico')));
 $oFormP->setPosiblesPeriodos($aOpciones);
 $oFormP->setDesplAnysOpcion_sel(date('Y'));
 
-$oHash = new web\Hash();
+$oHash = new Hash();
 $sCamposForm = 'cdc_sel!empiezamax!empiezamin!extendida!iactividad_val!iasistentes_val!id_cdc!id_cdc_mas!id_cdc_num!periodo!sfsv!tipo!year';
 $aCamposHidden = [
     'tipo' => $Qtipo,
@@ -105,5 +107,5 @@ $a_campos = ['oPosicion' => $oPosicion,
     'oFormP' => $oFormP,
 ];
 
-$oView = new core\ViewTwig('casas/controller');
+$oView = new ViewTwig('casas/controller');
 $oView->renderizar('casa_resumen_que.html.twig', $a_campos);

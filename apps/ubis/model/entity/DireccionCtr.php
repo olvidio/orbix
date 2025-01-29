@@ -1,6 +1,8 @@
 <?php
 
 namespace ubis\model\entity;
+use function core\is_true;
+
 /**
  * Clase que implementa la entidad u_dir_ctr
  *
@@ -78,7 +80,7 @@ class DireccionCtr extends DireccionGlobal
         $aDades['nom_sede'] = $this->snom_sede;
         array_walk($aDades, 'core\poner_null');
         //para el caso de los boolean FALSE, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
-        if (core\is_true($aDades['cp_dcha'])) {
+        if (is_true($aDades['cp_dcha'])) {
             $aDades['cp_dcha'] = 'true';
         } else {
             $aDades['cp_dcha'] = 'false';
@@ -205,7 +207,7 @@ class DireccionCtr extends DireccionGlobal
      *
      * @param array $aDades
      */
-    function setAllAtributes($aDades, $convert = FALSE)
+    function setAllAtributes(array $aDades, $convert = FALSE)
     {
         if (!is_array($aDades)) return;
         if (array_key_exists('id_schema', $aDades)) $this->setId_schema($aDades['id_schema']);

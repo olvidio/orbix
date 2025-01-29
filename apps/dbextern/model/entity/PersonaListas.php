@@ -2,10 +2,14 @@
 
 namespace dbextern\model\entity;
 
-use core;
-use web;
 
-class PersonaListas extends core\ClasePropiedades
+use core\ClasePropiedades;
+use core\DatosCampo;
+use core\Set;
+use DateTime;
+use web\DateTimeLocal;
+
+class PersonaListas extends ClasePropiedades
 {
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
@@ -86,7 +90,7 @@ class PersonaListas extends core\ClasePropiedades
     /**
      * Fecha_Naci de Listas
      *
-     * @var web\DateTimeLocal
+     * @var DateTimeLocal
      */
     private $dFecha_Naci;
     /**
@@ -147,7 +151,7 @@ class PersonaListas extends core\ClasePropiedades
     /**
      * Fecha_c_fic de Listas
      *
-     * @var web\DateTimeLocal
+     * @var DateTimeLocal
      */
     private $dfecha_c_fic;
     /**
@@ -345,7 +349,7 @@ class PersonaListas extends core\ClasePropiedades
                     return false;
                 }
             }
-            $this->Identif = $oDbl->lastInsertId($nom_tabla . '_id_menu_seq');
+            $this->iIdentif = $oDbl->lastInsertId($nom_tabla . '_id_menu_seq');
         }
         $this->setAllAtributes($aDades);
         return true;
@@ -465,7 +469,7 @@ class PersonaListas extends core\ClasePropiedades
         $i = 0;
         foreach ($tokens as $token) {
             if ($i == 0) {
-                $_token = strtolower($token);
+                $_token = strtolower($token ?? '');
                 if (in_array($_token, $special_tokens)) {
                     continue;
                 }
@@ -489,7 +493,7 @@ class PersonaListas extends core\ClasePropiedades
         /* separar el nombre, de los apellidos */
         $partes = explode(',', trim($Apenom));
         $apellidos = $partes[0];
-        $nombre = empty($partes[1])? '' : $partes[1];
+        $nombre = empty($partes[1]) ? '' : $partes[1];
 
         /* separar el apellidos completo en espacios */
         $tokens = explode(' ', trim($apellidos));
@@ -501,7 +505,7 @@ class PersonaListas extends core\ClasePropiedades
 
         $prev = "";
         foreach ($tokens as $token) {
-            $_token = strtolower($token);
+            $_token = strtolower($token ?? '');
             if (in_array($_token, $special_tokens)) {
                 $prev .= "$token ";
             } else {
@@ -568,7 +572,7 @@ class PersonaListas extends core\ClasePropiedades
      *
      * @param array $aDades
      */
-    function setAllAtributes($aDades)
+    function setAllAtributes(array $aDades)
     {
         if (!is_array($aDades)) return;
         if (array_key_exists('id_schema', $aDades)) $this->setId_schema($aDades['id_schema']);
@@ -657,7 +661,7 @@ class PersonaListas extends core\ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'Identif') && $val_id !== '') $this->iIdentif = (int)$val_id;
+                if (($nom_id === 'Identif') && $val_id !== '') $this->iIdentif = (int)$val_id;
             }
         }
     }
@@ -780,7 +784,7 @@ class PersonaListas extends core\ClasePropiedades
     /**
      * Recupera el atributo dFecha_Naci de Listas
      *
-     * @return string date dFecha_Naci
+     * @return string|DateTimeLocal
      */
     function getFecha_Naci()
     {
@@ -793,11 +797,11 @@ class PersonaListas extends core\ClasePropiedades
     /**
      * Establece el valor del atributo dFecha_Naci de Listas
      *
-     * @param date dFecha_Naci
+     * @param DateTimeLocal dFecha_Naci
      */
     function setFecha_Naci($dFecha_Naci)
     {
-        $oFecha = new \DateTime($dFecha_Naci);
+        $oFecha = new DateTime($dFecha_Naci);
         $new_fecha = date_format($oFecha, 'j/m/Y');
         $this->dFecha_Naci = $new_fecha;
     }
@@ -872,29 +876,6 @@ class PersonaListas extends core\ClasePropiedades
     }
 
     /**
-     * Recupera el atributo iID_TABLA de Listas
-     *
-     * @return integer iID_TABLA
-     */
-    function getID_TABLA()
-    {
-        if (!isset($this->iID_TABLA) && !$this->bLoaded) {
-            $this->DBCarregar();
-        }
-        return $this->iID_TABLA;
-    }
-
-    /**
-     * Establece el valor del atributo iID_TABLA de Listas
-     *
-     * @param integer iID_TABLA
-     */
-    function setID_TABLA($iID_TABLA)
-    {
-        $this->iID_TABLA = $iID_TABLA;
-    }
-
-    /**
      * @return string
      */
     public function getProfesion_cargo()
@@ -930,7 +911,7 @@ class PersonaListas extends core\ClasePropiedades
     /**
      * @param string $sProfesion_cargo
      */
-    public function setProfesion_cargo($sProfesion_cargo)
+    public function setProfesion_cargo(string $sProfesion_cargo)
     {
         $this->sProfesion_cargo = $sProfesion_cargo;
     }
@@ -938,7 +919,7 @@ class PersonaListas extends core\ClasePropiedades
     /**
      * @param string $sTitulo_Estudios
      */
-    public function setTitulo_Estudios($sTitulo_Estudios)
+    public function setTitulo_Estudios(string $sTitulo_Estudios)
     {
         $this->sTitulo_Estudios = $sTitulo_Estudios;
     }
@@ -946,7 +927,7 @@ class PersonaListas extends core\ClasePropiedades
     /**
      * @param string $sEncargos
      */
-    public function setEncargos($sEncargos)
+    public function setEncargos(string $sEncargos)
     {
         $this->sEncargos = $sEncargos;
     }
@@ -954,7 +935,7 @@ class PersonaListas extends core\ClasePropiedades
     /**
      * @param string $sIncorporacion
      */
-    public function setIncorporacion($sIncorporacion)
+    public function setIncorporacion(string $sIncorporacion)
     {
         $this->sIncorporacion = $sIncorporacion;
     }
@@ -977,7 +958,7 @@ class PersonaListas extends core\ClasePropiedades
     }
 
     /**
-     * @return \web\DateTimeLocal
+     * @return DateTimeLocal
      */
     public function getFecha_c_fic()
     {
@@ -987,7 +968,7 @@ class PersonaListas extends core\ClasePropiedades
     /**
      * @param string $spertenece_r
      */
-    public function setPertenece_r($spertenece_r)
+    public function setPertenece_r(string $spertenece_r)
     {
         $this->spertenece_r = $spertenece_r;
     }
@@ -995,15 +976,15 @@ class PersonaListas extends core\ClasePropiedades
     /**
      * @param string $scamb_fic
      */
-    public function setCamb_fic($scamb_fic)
+    public function setCamb_fic(string $scamb_fic)
     {
         $this->scamb_fic = $scamb_fic;
     }
 
     /**
-     * @param \web\DateTimeLocal $dfecha_c_fic
+     * @param DateTimeLocal $dfecha_c_fic
      */
-    public function setFecha_c_fic($dfecha_c_fic)
+    public function setFecha_c_fic(DateTimeLocal $dfecha_c_fic)
     {
         $this->dfecha_c_fic = $dfecha_c_fic;
     }
@@ -1159,7 +1140,7 @@ class PersonaListas extends core\ClasePropiedades
      */
     function getDatosCampos()
     {
-        $oListasSet = new core\Set();
+        $oListasSet = new Set();
 
         $oListasSet->add($this->getDatosApenom());
         $oListasSet->add($this->getDatosDl());
@@ -1181,12 +1162,12 @@ class PersonaListas extends core\ClasePropiedades
      * Recupera les propietats de l'atribut sApenom de Listas
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosApenom()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'Apenom'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'Apenom'));
         $oDatosCampo->setEtiqueta(_("apellidos, nombre"));
         return $oDatosCampo;
     }
@@ -1195,12 +1176,12 @@ class PersonaListas extends core\ClasePropiedades
      * Recupera les propietats de l'atribut sdl de Listas
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosDl()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'dl'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'dl'));
         $oDatosCampo->setEtiqueta(_("dl"));
         return $oDatosCampo;
     }
@@ -1209,12 +1190,12 @@ class PersonaListas extends core\ClasePropiedades
      * Recupera les propietats de l'atribut sctr de Listas
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosCtr()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'Ctr'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'Ctr'));
         $oDatosCampo->setEtiqueta(_("ctr"));
         return $oDatosCampo;
     }
@@ -1223,12 +1204,12 @@ class PersonaListas extends core\ClasePropiedades
      * Recupera les propietats de l'atribut sLugar_Naci de Listas
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosLugar_Naci()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'Lugar_Naci'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'Lugar_Naci'));
         $oDatosCampo->setEtiqueta(_("lugar de nacimiento"));
         return $oDatosCampo;
     }
@@ -1237,12 +1218,12 @@ class PersonaListas extends core\ClasePropiedades
      * Recupera les propietats de l'atribut dFecha_Naci de Listas
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosFecha_Naci()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'Fecha_Naci'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'Fecha_Naci'));
         $oDatosCampo->setEtiqueta(_("fecha de nacimiento"));
         $oDatosCampo->setTipo('fecha');
         return $oDatosCampo;
@@ -1252,12 +1233,12 @@ class PersonaListas extends core\ClasePropiedades
      * Recupera les propietats de l'atribut sEmail de Listas
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosEmail()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'Email'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'Email'));
         $oDatosCampo->setEtiqueta(_("email"));
         return $oDatosCampo;
     }
@@ -1266,12 +1247,12 @@ class PersonaListas extends core\ClasePropiedades
      * Recupera les propietats de l'atribut sTfno_Movil de Listas
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosTfno_Movil()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'Tfno_Movil'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'Tfno_Movil'));
         $oDatosCampo->setEtiqueta(_("teléfono móvil"));
         return $oDatosCampo;
     }
@@ -1280,12 +1261,12 @@ class PersonaListas extends core\ClasePropiedades
      * Recupera les propietats de l'atribut sCe de Listas
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosCe()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'Ce'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'Ce'));
         $oDatosCampo->setEtiqueta(_("ce"));
         return $oDatosCampo;
     }
@@ -1294,12 +1275,12 @@ class PersonaListas extends core\ClasePropiedades
      * Recupera les propietats de l'atribut sProfesion_cargo de Listas
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosProfesion_cargo()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'Prof_Carg'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'Prof_Carg'));
         $oDatosCampo->setEtiqueta(_("profesión cargo"));
         return $oDatosCampo;
     }
@@ -1308,12 +1289,12 @@ class PersonaListas extends core\ClasePropiedades
      * Recupera les propietats de l'atribut sEncargos de Listas
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosEncargos()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'Encargos'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'Encargos'));
         $oDatosCampo->setEtiqueta(_("encargos"));
         return $oDatosCampo;
     }
@@ -1322,12 +1303,12 @@ class PersonaListas extends core\ClasePropiedades
      * Recupera les propietats de l'atribut sTitulo_Estudios de Listas
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosTitulo_estudios()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'Titu_Estu'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'Titu_Estu'));
         $oDatosCampo->setEtiqueta(_("titulo estudios"));
         return $oDatosCampo;
     }
@@ -1336,12 +1317,12 @@ class PersonaListas extends core\ClasePropiedades
      * Recupera les propietats de l'atribut sIncorporacion de Listas
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosIncorporacion()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'INCORP'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'INCORP'));
         $oDatosCampo->setEtiqueta(_("incorporación"));
         return $oDatosCampo;
     }
@@ -1350,12 +1331,12 @@ class PersonaListas extends core\ClasePropiedades
      * Recupera les propietats de l'atribut sIncorporacion de Listas
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosPertenece_r()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'pertenece_r'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'pertenece_r'));
         $oDatosCampo->setEtiqueta(_("Pertenece_r"));
         return $oDatosCampo;
     }

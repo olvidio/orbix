@@ -2,7 +2,6 @@
 
 namespace cartaspresentacion\model\entity;
 
-use core;
 
 /**
  * Fitxer amb la Classe que accedeix a la taula du_presentacion
@@ -43,8 +42,8 @@ class CartaPresentacionDl extends CartaPresentacion
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'id_direccion') && $val_id !== '') $this->iid_direccion = (int)$val_id; 
-                if (($nom_id == 'id_ubi') && $val_id !== '') $this->iid_ubi = (int)$val_id; 
+                if (($nom_id === 'id_direccion') && $val_id !== '') $this->iid_direccion = (int)$val_id;
+                if (($nom_id === 'id_ubi') && $val_id !== '') $this->iid_ubi = (int)$val_id;
             }
         }
         $this->setoDbl($oDbl);

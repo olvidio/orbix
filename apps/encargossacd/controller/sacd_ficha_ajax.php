@@ -14,7 +14,6 @@ use personas\model\entity\GestorPersonaDl;
 use web\DateTimeLocal;
 use web\Desplegable;
 use web\Hash;
-use encargossacd\model\entity\EncargoSacd;
 
 /**
  * Esta página muestra los encargos de un sacd.

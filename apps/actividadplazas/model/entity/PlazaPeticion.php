@@ -2,7 +2,9 @@
 
 namespace actividadplazas\model\entity;
 
-use core;
+use core\ClasePropiedades;
+use core\DatosCampo;
+use core\Set;
 
 /**
  * Fitxer amb la Classe que accedeix a la taula dap_plazas_peticion_dl
@@ -23,7 +25,7 @@ use core;
  * @version 1.0
  * @created 22/11/2016
  */
-class PlazaPeticion extends core\ClasePropiedades
+class PlazaPeticion extends ClasePropiedades
 {
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
@@ -107,8 +109,8 @@ class PlazaPeticion extends core\ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'id_nom') && $val_id !== '') $this->iid_nom = (int)$val_id; 
-                if (($nom_id == 'id_activ') && $val_id !== '') $this->iid_activ = (int)$val_id; 
+                if (($nom_id === 'id_nom') && $val_id !== '') $this->iid_nom = (int)$val_id;
+                if (($nom_id === 'id_activ') && $val_id !== '') $this->iid_activ = (int)$val_id;
             }
         }
         $this->setoDbl($oDbl);
@@ -243,7 +245,7 @@ class PlazaPeticion extends core\ClasePropiedades
      *
      * @param array $aDades
      */
-    function setAllAtributes($aDades)
+    function setAllAtributes(array $aDades)
     {
         if (!is_array($aDades)) return;
         if (array_key_exists('id_schema', $aDades)) $this->setId_schema($aDades['id_schema']);
@@ -307,8 +309,8 @@ class PlazaPeticion extends core\ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'id_nom') && $val_id !== '') $this->iid_nom = (int)$val_id; 
-                if (($nom_id == 'id_activ') && $val_id !== '') $this->iid_activ = (int)$val_id; 
+                if (($nom_id === 'id_nom') && $val_id !== '') $this->iid_nom = (int)$val_id;
+                if (($nom_id === 'id_activ') && $val_id !== '') $this->iid_activ = (int)$val_id;
             }
         }
     }
@@ -412,7 +414,7 @@ class PlazaPeticion extends core\ClasePropiedades
      */
     function getDatosCampos()
     {
-        $oPlazaPeticionSet = new core\Set();
+        $oPlazaPeticionSet = new Set();
 
         $oPlazaPeticionSet->add($this->getDatosId_schema());
         $oPlazaPeticionSet->add($this->getDatosOrden());
@@ -425,12 +427,12 @@ class PlazaPeticion extends core\ClasePropiedades
      * Recupera les propietats de l'atribut iid_schema de PlazaPeticion
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosId_schema()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_schema'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_schema'));
         $oDatosCampo->setEtiqueta(_("id_schema"));
         return $oDatosCampo;
     }
@@ -439,12 +441,12 @@ class PlazaPeticion extends core\ClasePropiedades
      * Recupera les propietats de l'atribut iorden de PlazaPeticion
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosOrden()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'orden'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'orden'));
         $oDatosCampo->setEtiqueta(_("orden"));
         return $oDatosCampo;
     }
@@ -453,12 +455,12 @@ class PlazaPeticion extends core\ClasePropiedades
      * Recupera les propietats de l'atribut stipo de PlazaPeticion
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosTipo()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'tipo'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'tipo'));
         $oDatosCampo->setEtiqueta(_("tipo"));
         return $oDatosCampo;
     }

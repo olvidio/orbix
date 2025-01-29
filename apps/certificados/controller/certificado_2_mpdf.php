@@ -6,6 +6,7 @@ $_POST = $_GET;
 $id_item = (string)filter_input(INPUT_POST, 'id_item');
 */
 
+use core\ConfigGlobal;
 use Mpdf\Mpdf;
 use Mpdf\MpdfException;
 use notas\model\entity\GestorPersonaNotaOtraRegionStgrDB;
@@ -17,12 +18,12 @@ include(__DIR__ . '/certificado_imprimir_mpdf.php');
 $content = ob_get_clean();
 
 // convert to PDF
-require_once(core\ConfigGlobal::$dir_libs . '/vendor/autoload.php');
+require_once(ConfigGlobal::$dir_libs . '/vendor/autoload.php');
 
 //echo "$content";
 //exit();
 // quitar los acentos , ñ etc. del nombre
-$nom = web\QuitarAcentos::convert($nom);
+$nom =web\QuitarAcentos::convert($nom);
 
 $config = [
     'format' => 'A4',

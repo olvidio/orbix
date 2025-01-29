@@ -2,13 +2,14 @@
 
 namespace actividadestudios\model;
 
-use actividades\model\entity as actividades;
-use asignaturas\model\entity as asignaturas;
-use personas\model\entity as personas;
-use devel\model\entity\GestorDbSchema;
-use web;
-use core;
+use actividades\model\entity\ActividadAll;
+use asignaturas\model\entity\Asignatura;
 use core\ConfigGlobal;
+use core\ViewPhtml;
+use devel\model\entity\GestorDbSchema;
+use personas\model\entity\Persona;
+use web\Hash;
+use web\Lista;
 
 /**
  * Gestiona el dossier 3005: Asignaturas de una actividad.
@@ -105,7 +106,7 @@ class Select3005
         $GesActivAsignaturas = new entity\GestorActividadAsignatura();
         $cActivAsignaturas = $GesActivAsignaturas->getActividadAsignaturas(array('id_activ' => $this->id_pau, '_ordre' => 'id_asignatura'));
 
-        $mi_dele = core\ConfigGlobal::mi_delef();
+        $mi_dele = ConfigGlobal::mi_delef();
         $gesDbSchemas = new GestorDbSchema();
         $c = 0;
         $a_valores = array();
@@ -113,7 +114,7 @@ class Select3005
             $c++;
             $id_activ = $oActividadAsignatura->getId_activ();
             $id_asignatura = $oActividadAsignatura->getId_asignatura();
-            $oAsignatura = new asignaturas\Asignatura($id_asignatura);
+            $oAsignatura = new Asignatura($id_asignatura);
             $nombre_corto = $oAsignatura->getNombre_corto();
             $creditos = $oAsignatura->getCreditos();
             $id_schema = $oActividadAsignatura->getId_schema();
@@ -131,7 +132,7 @@ class Select3005
 
             $id_profesor = $oActividadAsignatura->getId_profesor();
             if (!empty($id_profesor)) {
-                $oPersona = personas\Persona::NewPersona($id_profesor);
+                $oPersona = Persona::NewPersona($id_profesor);
                 if (!is_object($oPersona)) {
                     $this->msg_err .= "<br>$oPersona con id_nom: $id_profesor (profesor) en  " . __FILE__ . ": line " . __LINE__;
                     $nom = '';
@@ -180,12 +181,12 @@ class Select3005
 
     public function getHtml()
     {
-        $oActividad = new actividades\ActividadAll($this->id_pau);
+        $oActividad = new ActividadAll($this->id_pau);
         $this->dl_org = $oActividad->getDl_org();
         // Finalmente hay que dar permiso a todos, porque pueden crear asignaturas para su dl
         $this->permiso = 3;
 
-        $oHashSelect = new web\Hash();
+        $oHashSelect = new Hash();
         $oHashSelect->setCamposForm('');
         $oHashSelect->setCamposNo('sel!mod!scroll_id!refresh');
         $a_camposHidden = array(
@@ -199,7 +200,7 @@ class Select3005
         $oHashSelect->setArraycamposHidden($a_camposHidden);
 
         //Hay que ponerlo antes, para que calcule los chk.
-        $oTabla = new web\Lista();
+        $oTabla = new Lista();
         $oTabla->setId_tabla('select3005');
         $oTabla->setCabeceras($this->getCabeceras());
         $oTabla->setBotones($this->getBotones());
@@ -216,7 +217,7 @@ class Select3005
             'bloque' => $this->bloque,
         ];
 
-        $oView = new core\View(__NAMESPACE__);
+        $oView = new ViewPhtml(__NAMESPACE__);
         $oView->renderizar('select3005.phtml', $a_campos);
     }
 
@@ -229,7 +230,7 @@ class Select3005
             if (is_array($a_dataUrl)) {
                 array_walk($a_dataUrl, 'core\poner_empty_on_null');
             }
-            $this->LinkInsert = web\Hash::link(core\ConfigGlobal::getWeb() . "/apps/actividadestudios/controller/form_3005.php?" . http_build_query($a_dataUrl));
+            $this->LinkInsert = Hash::link(ConfigGlobal::getWeb() . "/apps/actividadestudios/controller/form_3005.php?" . http_build_query($a_dataUrl));
         }
     }
 

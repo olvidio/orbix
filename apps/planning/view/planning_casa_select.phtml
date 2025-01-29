@@ -1,3 +1,8 @@
+<?php
+
+use core\ConfigGlobal;
+
+?>
 <script>
     fnjs_nueva_activ = function (id_ubi) {
         $('#div_modificar').addClass('ventana');
@@ -5,7 +10,7 @@
         $('#div_modificar').height('auto');
         document.getElementById("overlay").style.display = "block";
 
-        var url = '<?= core\ConfigGlobal::getWeb() ?>/apps/actividades/controller/calendario_ajax.php';
+        var url = '<?= ConfigGlobal::getWeb() ?>/apps/actividades/controller/planning_casa_nueva.php';
         var parametros = 'id_ubi=' + id_ubi + "&<?= $param_new ?>";
 
         fnjs_update_div('#div_modificar', url + '?' + parametros);
@@ -17,7 +22,7 @@
         $('#div_modificar').height('auto');
         document.getElementById("overlay").style.display = "block";
 
-        var url = '<?= core\ConfigGlobal::getWeb() ?>/apps/actividades/controller/calendario_ajax.php';
+        var url = '<?= ConfigGlobal::getWeb() ?>/apps/actividades/controller/planning_casa_modificar.php';
         var parametros = 'id_activ=' + id_activ + "&<?= $param_mod ?>";
 
         fnjs_update_div('#div_modificar', url + '?' + parametros);
@@ -36,7 +41,7 @@
 
     fnjs_ver = function () {
         /* obtener el listado */
-        var url = '<?= core\ConfigGlobal::getWeb() ?>/apps/actividades/controller/calendario_ajax.php';
+        var url = '<?= ConfigGlobal::getWeb() ?>/apps/planning/controller/planning_casa_ver.php';
         var parametros = "<?= $param_ver ?>";
 
         $('#ficha').html('');

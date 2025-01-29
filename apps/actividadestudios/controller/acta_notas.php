@@ -1,14 +1,18 @@
 <?php
 
-use actividades\model\entity as actividades;
-use actividadestudios\model\entity as actividadestudios;
+use actividades\model\entity\Actividad;
 use actividadestudios\model\entity\GestorActividadAsignatura;
+use actividadestudios\model\entity\GestorMatricula;
 use core\ConfigGlobal;
+use core\ViewPhtml;
 use devel\model\entity\GestorDbSchema;
-use notas\model\entity as notas;
-use personas\model\entity as personas;
-use web\Posicion;
+use notas\model\entity\GestorActa;
+use notas\model\entity\GestorNota;
 use notas\model\entity\Nota;
+use personas\model\entity\Persona;
+use web\Desplegable;
+use web\Hash;
+use web\Posicion;
 
 // INICIO Cabecera global de URL de controlador *********************************
 require_once("apps/core/global_header.inc");
@@ -71,14 +75,14 @@ if ($mi_dele === $dl_matricula) {
     $permiso = 1;
 }
 
-$GesNotas = new notas\GestorNota();
+$GesNotas = new GestorNota();
 $oDesplNotas = $GesNotas->getListaNotas();
 $oDesplNotas->setNombre('id_situacion[]');
 
-$oActividad = new actividades\Actividad($id_activ);
+$oActividad = new Actividad($id_activ);
 $nom_activ = $oActividad->getNom_activ();
 
-$GesMatriculas = new actividadestudios\GestorMatricula();
+$GesMatriculas = new GestorMatricula();
 $cMatriculados = $GesMatriculas->getMatriculas(array('id_asignatura' => $id_asignatura, 'id_activ' => $id_activ));
 $matriculados = count($cMatriculados);
 $aPersonasMatriculadas = array();
@@ -87,7 +91,7 @@ if ($matriculados > 0) {
     $msg_err = '';
     foreach ($cMatriculados as $oMatricula) {
         $id_nom = $oMatricula->getId_nom();
-        $oPersona = personas\Persona::NewPersona($id_nom);
+        $oPersona = Persona::NewPersona($id_nom);
         if (!is_object($oPersona)) {
             $msg_err .= "<br>$oPersona con id_nom: $id_nom en  " . __FILE__ . ": line " . __LINE__;
             continue;
@@ -106,7 +110,7 @@ $Qopcional = (string)filter_input(INPUT_POST, 'opcional');
 $Qprimary_key_s = (string)filter_input(INPUT_POST, 'primary_key_s');
 $Qid_nivel = (integer)filter_input(INPUT_POST, 'id_nivel');
 
-$GesActas = new notas\GestorActa();
+$GesActas = new GestorActa();
 $cActas = $GesActas->getActas(array('id_activ' => $id_activ, 'id_asignatura' => $id_asignatura, '_ordre' => 'f_acta'));
 $acta_principal = '';
 if (is_array($cActas) && !empty($cActas)) {
@@ -116,7 +120,7 @@ if (is_array($cActas) && !empty($cActas)) {
         $a_actas[$nom_acta] = $oActa->getActa();
     }
     $notas = "acta"; // para indicar a la página de actas que está dentro de ésta.
-    $oDesplActas = new web\Desplegable();
+    $oDesplActas = new Desplegable();
     $oDesplActas->setNombre('acta_nota[]');
     $oDesplActas->setOpciones($a_actas);
     // Si sólo hay una, la selecciono por defecto.
@@ -125,14 +129,14 @@ if (is_array($cActas) && !empty($cActas)) {
     }
 } else {
     $notas = "nuevo";// para indicar a la página de actas que está dentro de ésta.
-    $oDesplActas = new web\Desplegable();
+    $oDesplActas = new Desplegable();
     $oDesplActas->setOpciones(array('primero guardar acta'));
 }
 
 
 $nota_max_default = $_SESSION['oConfig']->getNota_max();
 
-$oHashNotas = new web\Hash();
+$oHashNotas = new Hash();
 $oHashNotas->setCamposForm('id_nom!nota_num!nota_max!form_preceptor!acta_nota');
 $oHashNotas->setCamposNo('que');
 $a_camposHidden1 = array(
@@ -166,5 +170,5 @@ $a_campos = ['oPosicion' => $oPosicion,
     'nota_max_default' => $nota_max_default,
 ];
 
-$oView = new core\View('actividadestudios/controller');
+$oView = new ViewPhtml('actividadestudios/controller');
 $oView->renderizar('acta_notas.phtml', $a_campos);

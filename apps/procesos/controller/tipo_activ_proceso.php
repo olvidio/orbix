@@ -1,5 +1,6 @@
 <?php
 
+use core\ViewTwig;
 use web\Hash;
 
 /**
@@ -45,5 +46,5 @@ $a_campos = ['oPosicion' => $oPosicion,
     'url_ajax' => $url_ajax,
 ];
 
-$oView = new core\ViewTwig('procesos/controller');
+$oView = new ViewTwig('procesos/controller');
 $oView->renderizar('tipo_activ_proceso.html.twig', $a_campos);

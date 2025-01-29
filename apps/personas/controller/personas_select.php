@@ -1,12 +1,22 @@
 <?php
 
 use core\ConfigGlobal;
-use personas\model\entity as personas;
-use ubis\model\entity as ubis;
-use usuarios\model\entity as usuarios;
+use core\ViewPhtml;
+use personas\model\entity\GestorPersonaAgd;
+use personas\model\entity\GestorPersonaEx;
+use personas\model\entity\GestorPersonaN;
+use personas\model\entity\GestorPersonaNax;
+use personas\model\entity\GestorPersonaS;
+use personas\model\entity\GestorPersonaSSSC;
+use personas\model\entity\PersonaDl;
+use ubis\model\entity\Centro;
+use ubis\model\entity\CentroDl;
+use ubis\model\entity\GestorCentroDl;
+use usuarios\model\entity\Preferencia;
 use usuarios\model\entity\Role;
 use usuarios\model\entity\Usuario;
-use personas\model\entity\PersonaDl;
+use web\Hash;
+use web\Lista;
 
 /**
  * Esta página muestra una tabla con las personas que cumplen con la condicion.
@@ -181,7 +191,7 @@ if ($miRolePau == Role::PAU_NOM) { //persona
     }
 
     if (!empty($aWhereCtr)) {
-        $gesCentros = new ubis\GestorCentroDl();
+        $gesCentros = new GestorCentroDl();
         $cCentros = $gesCentros->getCentros($aWhereCtr, $aOperadorCtr);
         $aId_ctrs = [];
         foreach ($cCentros as $oCentro) {
@@ -204,7 +214,7 @@ $obj_pau = '';
 switch ($tabla) {
     case "p_sssc":
         $obj_pau = 'PersonaSSSC';
-        $GesPersona = new personas\GestorPersonaSSSC();
+        $GesPersona = new GestorPersonaSSSC();
         $cPersonas = $GesPersona->getPersonasDl($aWhere, $aOperador);
         if ($_SESSION['oPerm']->have_perm_oficina('des')) {
             $permiso = 3;
@@ -212,7 +222,7 @@ switch ($tabla) {
         break;
     case "p_supernumerarios":
         $obj_pau = 'PersonaS';
-        $GesPersona = new personas\GestorPersonaS();
+        $GesPersona = new GestorPersonaS();
         $cPersonas = $GesPersona->getPersonasDl($aWhere, $aOperador);
         if ($_SESSION['oPerm']->have_perm_oficina('sg')) {
             $permiso = 3;
@@ -220,7 +230,7 @@ switch ($tabla) {
         break;
     case "p_numerarios":
         $obj_pau = 'PersonaN';
-        $GesPersona = new personas\GestorPersonaN();
+        $GesPersona = new GestorPersonaN();
         $cPersonas = $GesPersona->getPersonasDl($aWhere, $aOperador);
         if ($_SESSION['oPerm']->have_perm_oficina('sm')) {
             $permiso = 3;
@@ -228,7 +238,7 @@ switch ($tabla) {
         break;
     case "p_nax":
         $obj_pau = 'PersonaNax';
-        $GesPersona = new personas\GestorPersonaNax();
+        $GesPersona = new GestorPersonaNax();
         if (($cPersonas = $GesPersona->getPersonasDl($aWhere, $aOperador)) === false) {
             $cPersonas = array();
         }
@@ -238,7 +248,7 @@ switch ($tabla) {
         break;
     case "p_agregados":
         $obj_pau = 'PersonaAgd';
-        $GesPersona = new personas\GestorPersonaAgd();
+        $GesPersona = new GestorPersonaAgd();
         $cPersonas = $GesPersona->getPersonasDl($aWhere, $aOperador);
         if ($_SESSION['oPerm']->have_perm_oficina('agd')) {
             $permiso = 3;
@@ -251,7 +261,7 @@ switch ($tabla) {
             $id_tabla = 'p' . $Qna;
         }
         $obj_pau = 'PersonaEx';
-        $GesPersona = new personas\GestorPersonaEx();
+        $GesPersona = new GestorPersonaEx();
         $cPersonas = $GesPersona->getPersonas($aWhere, $aOperador);
         if ($_SESSION['oPerm']->have_perm_oficina('sm')
             || $_SESSION['oPerm']->have_perm_oficina('agd')
@@ -411,7 +421,7 @@ $a_personas = array();
 $sPrefs = '';
 $id_usuario = ConfigGlobal::mi_id_usuario();
 $tipo = 'tabla_presentacion';
-$oPref = new usuarios\Preferencia(array('id_usuario' => $id_usuario, 'tipo' => $tipo));
+$oPref = new Preferencia(array('id_usuario' => $id_usuario, 'tipo' => $tipo));
 $sPrefs = $oPref->getPreferencia();
 foreach ($cPersonas as $oPersona) {
     $i++;
@@ -424,9 +434,9 @@ foreach ($cPersonas as $oPersona) {
         $id_ctr = $oPersona->getId_ctr();
 
         if (ConfigGlobal::mi_ambito() === 'rstgr') {
-            $oCentroDl = new ubis\Centro($id_ctr);
+            $oCentroDl = new Centro($id_ctr);
         } else {
-            $oCentroDl = new ubis\CentroDl($id_ctr);
+            $oCentroDl = new CentroDl($id_ctr);
         }
         $nombre_ubi = $oCentroDl->getNombre_ubi();
     } else {
@@ -439,7 +449,7 @@ foreach ($cPersonas as $oPersona) {
     $a_val['sel'] = "$id_nom#$id_tabla";
     $a_val[1] = $id_tabla;
     if ($sPrefs === 'html') {
-        $pagina = web\Hash::link(ConfigGlobal::getWeb() . '/apps/personas/controller/home_persona.php?' . http_build_query(array('id_nom' => $id_nom, 'id_tabla' => $id_tabla, 'obj_pau' => $obj_pau)));
+        $pagina = Hash::link(ConfigGlobal::getWeb() . '/apps/personas/controller/home_persona.php?' . http_build_query(array('id_nom' => $id_nom, 'id_tabla' => $id_tabla, 'obj_pau' => $obj_pau)));
         $a_val[2] = array('ira' => $pagina, 'valor' => $nom);
     } else {
         $pagina = 'fnjs_home("#seleccionados")';
@@ -475,17 +485,17 @@ if (isset($Qscroll_id) && !empty($Qscroll_id)) {
     $a_valores['scroll_id'] = $Qscroll_id;
 }
 
-$oTabla = new web\Lista();
+$oTabla = new Lista();
 $oTabla->setId_tabla("personas_select_$tabla");
 $oTabla->setCabeceras($a_cabeceras);
 $oTabla->setBotones($a_botones);
 $oTabla->setDatos($a_valores);
 
-$pagina = web\Hash::link(ConfigGlobal::getWeb() . '/apps/personas/controller/personas_editar.php?' . http_build_query(array('obj_pau' => $obj_pau, 'id_tabla' => $id_tabla, 'nuevo' => 1, 'apellido1' => $Qapellido1)));
+$pagina = Hash::link(ConfigGlobal::getWeb() . '/apps/personas/controller/personas_editar.php?' . http_build_query(array('obj_pau' => $obj_pau, 'id_tabla' => $id_tabla, 'nuevo' => 1, 'apellido1' => $Qapellido1)));
 
 $resultado = sprintf(_("%s personas encontradas"), $i);
 
-$oHash = new web\Hash();
+$oHash = new Hash();
 $oHash->setCamposForm('sel!que!id_dossier');
 $oHash->setcamposNo('que!id_dossier!scroll_id');
 $a_camposHidden = array(
@@ -506,5 +516,5 @@ $a_campos = ['oPosicion' => $oPosicion,
     'permiso' => $permiso,
 ];
 
-$oView = new core\View('personas/controller');
+$oView = new ViewPhtml('personas/controller');
 $oView->renderizar('personas_select.phtml', $a_campos);

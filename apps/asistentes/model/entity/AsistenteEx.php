@@ -1,7 +1,6 @@
 <?php
 namespace asistentes\model\entity;
 
-use core;
 
 /**
  * Fitxer amb la Classe que accedeix a la taula d_asistentes_ex
@@ -42,8 +41,8 @@ class AsistenteEx extends AsistentePub
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'id_activ') && $val_id !== '') $this->iid_activ = (int)$val_id; 
-                if (($nom_id == 'id_nom') && $val_id !== '') $this->iid_nom = (int)$val_id; 
+                if (($nom_id === 'id_activ') && $val_id !== '') $this->iid_activ = (int)$val_id;
+                if (($nom_id === 'id_nom') && $val_id !== '') $this->iid_nom = (int)$val_id;
             }
         }
         $this->setoDbl($oDbl);
@@ -51,9 +50,4 @@ class AsistenteEx extends AsistentePub
         $this->setNomTabla('d_asistentes_ex');
     }
 
-    /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
-    /* OTROS MÉTODOS  ----------------------------------------------------------*/
-    /* MÉTODOS PRIVADOS ----------------------------------------------------------*/
 }
-
-?>

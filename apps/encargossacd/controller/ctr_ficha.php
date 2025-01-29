@@ -1,12 +1,12 @@
 <?php
 
+use core\ViewTwig;
 use encargossacd\model\DesplCentros;
-use encargossacd\model\EncargoConstants;
 use encargossacd\model\entity\GestorEncargoTipo;
-use ubis\model\entity\CentroDl;
-use ubis\model\entity\CentroEllas;
 use web\Desplegable;
 use web\Hash;
+use ubis\model\entity\CentroDl;
+use ubis\model\entity\CentroEllas;
 
 /**
  * Esta página muestra la atención sacerdotal de un centro.
@@ -115,5 +115,5 @@ $a_campos = ['oPosicion' => $oPosicion,
     'oDesplCtrs' => $oDesplCtrs,
 ];
 
-$oView = new core\ViewTwig('encargossacd/controller');
+$oView = new ViewTwig('encargossacd/controller');
 $oView->renderizar('ctr_ficha.html.twig', $a_campos);

@@ -2,7 +2,7 @@
 
 namespace menus\model;
 
-use permisos\model as permisos;
+use permisos\model\XPermisos;
 
 /**
  * Classe per saber els permisos d'un usuari sobre els menus.
@@ -13,7 +13,7 @@ use permisos\model as permisos;
  * @version 1.0
  * @created 4/12/2010
  */
-class PermisoMenu extends permisos\XPermisos
+class PermisoMenu extends XPermisos
 {
     /* ATRIBUTOS ----------------------------------------------------------------- */
 

@@ -68,7 +68,7 @@ class XResto
      * @param integer $iAfecta
      * @return boolean
      */
-    public function hasAfecta($iAfecta)
+    public function hasAfecta(int $iAfecta)
     {
         foreach ($this->aDades as $sumaAfecta => $arr) {
             // miro la suma de bits

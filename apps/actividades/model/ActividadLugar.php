@@ -8,9 +8,11 @@
 
 namespace actividades\model;
 
-use ubis\model\entity as ubis;
-use web;
 use core\ConfigGlobal;
+use ubis\model\entity\Casa;
+use ubis\model\entity\GestorCasa;
+use ubis\model\entity\GestorCentroCdc;
+use web\Desplegable;
 
 /**
  * Description of actividadlugar
@@ -28,7 +30,7 @@ class ActividadLugar
     {
 
         //dl|dlb,r|Aut
-        $oCasa = new ubis\Casa($id_ubi);
+        $oCasa = new Casa($id_ubi);
         $dl = $oCasa->getDl();
         $reg = $oCasa->getRegion();
 
@@ -49,15 +51,15 @@ class ActividadLugar
         $reg = strtok("|");
         // las regiones pequeñas, las cr se tratan como dl (p. ej: crBel)
         $cr = substr($reg, 0, 2);
-        if ($cr == 'cr') {
+        if ($cr === 'cr') {
             $dl_r = 'r';
             $reg = substr($reg, 2);
         }
         // En el caso de sf, $reg acaba en 'f' (dlbf)
         $reg_no_f = preg_replace('/(\.*)f$/', '\1', $reg);
 
-        if ($this->ssfsv == 'sv') $this->isfsv = 1;
-        if ($this->ssfsv == 'sf') $this->isfsv = 2;
+        if ($this->ssfsv === 'sv') $this->isfsv = 1;
+        if ($this->ssfsv === 'sf') $this->isfsv = 2;
         $isfsv = empty($this->isfsv) ? ConfigGlobal::mi_sfsv() : $this->isfsv;
         switch ($isfsv) {
             case 1:
@@ -79,7 +81,7 @@ class ActividadLugar
         }
         $donde .= $donde_sfsv;
 
-        if ($dl_r != "dl" and $dl_r != "r") {
+        if ($dl_r !== "dl" and $dl_r !== "r") {
             $donde = "";
         }
         if (!empty($donde)) {
@@ -87,7 +89,7 @@ class ActividadLugar
         } else {
             $donde = "WHERE status='t'";
         }
-        $oGesCasas = new ubis\GestorCasa();
+        $oGesCasas = new GestorCasa();
         $oOpcionesCasas = $oGesCasas->getArrayPosiblesCasas($donde);
 
         // Centros (hay una copia en BD comun)
@@ -102,12 +104,12 @@ class ActividadLugar
         }
         $donde_ctr .= $donde_sfsv;
 
-        $oGesCentros = new ubis\GestorCentroCdc();
+        $oGesCentros = new GestorCentroCdc();
         $oOpcionesCentros = $oGesCentros->getOpcionesCentrosCdc($donde_ctr);
 
         $oOpcionesTotal = $oOpcionesCasas + $oOpcionesCentros;
 
-        $oDesplCasas = new web\Desplegable(array('oOpciones' => $oOpcionesTotal));
+        $oDesplCasas = new Desplegable(array('oOpciones' => $oOpcionesTotal));
         $oDesplCasas->setNombre('id_ubi');
         $oDesplCasas->setBlanco(true);
         if (!empty($this->opcion_sel)) {

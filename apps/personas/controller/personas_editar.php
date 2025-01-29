@@ -2,9 +2,14 @@
 
 use core\ConfigGlobal;
 use core\DBPropiedades;
-use ubis\model\entity as ubis;
+use core\ViewPhtml;
 use personas\model\entity\PersonaGlobal;
+use ubis\model\entity\Centro;
+use ubis\model\entity\CentroDl;
+use ubis\model\entity\GestorCentroDl;
+use ubis\model\entity\GestorDelegacion;
 use web\Desplegable;
+use web\Hash;
 
 /**
  * Funciones más comunes de la aplicación
@@ -105,9 +110,9 @@ if (!empty($Qnuevo)) {
     // para el ctr hay que buscar el nombre
     if (!empty($id_ctr)) {
         if (ConfigGlobal::mi_ambito() === 'rstgr') {
-            $oCentroDl = new ubis\Centro($id_ctr);
+            $oCentroDl = new Centro($id_ctr);
         } else {
-            $oCentroDl = new ubis\CentroDl($id_ctr);
+            $oCentroDl = new CentroDl($id_ctr);
         }
         $nom_ctr = $oCentroDl->getNombre_ubi();
         $oDesplCentroDl = array();
@@ -117,7 +122,7 @@ if (!empty($Qnuevo)) {
 }
 
 // para la dl
-$gesDl = new ubis\GestorDelegacion();
+$gesDl = new GestorDelegacion();
 $a_dl_todas = $gesDl->getArrayDelegacionesActuales();
 
 // si es nuevo de paso, solamente permito las dl que no están en aquinate.
@@ -139,7 +144,7 @@ $oDesplDl->setBlanco(TRUE);
 
 // para el ctr, si es nuevo o está vacío
 if (empty($nom_ctr)) {
-    $GesCentroDl = new ubis\GestorCentroDl();
+    $GesCentroDl = new GestorCentroDl();
     $oDesplCentroDl = $GesCentroDl->getListaCentros();
     $oDesplCentroDl->setAction("fnjs_act_ctr('ctr')");
     $oDesplCentroDl->setNombre("id_ctr");
@@ -225,7 +230,7 @@ switch ($Qobj_pau) {
 }
 
 if (empty($Qnuevo)) {
-    $ir_a_traslado = web\hash::link('apps/personas/controller/traslado_form.php?' . http_build_query(array('pau' => 'p', 'id_pau' => $Qid_nom, 'obj_pau' => $Qobj_pau)));
+    $ir_a_traslado = Hash::link('apps/personas/controller/traslado_form.php?' . http_build_query(array('pau' => 'p', 'id_pau' => $Qid_nom, 'obj_pau' => $Qobj_pau)));
 }
 
 $botones = 0;
@@ -259,13 +264,13 @@ $oDesplLengua->setOpcion_sel($oPersona->getLengua());
 
 //posibles valores de stgr
 $aTipos_stgr = PersonaGlobal::$stgr_posibles;
-$oDesplStgr = new web\Desplegable();
+$oDesplStgr = new Desplegable();
 $oDesplStgr->setNombre('stgr');
 $oDesplStgr->setOpciones($aTipos_stgr);
 $oDesplStgr->setOpcion_sel($stgr);
 $oDesplStgr->setBlanco(true);
 
-$oHash = new web\Hash();
+$oHash = new Hash();
 $campos_chk = 'sacd';
 $camposForm = 'que!id_ctr!apel_fam!apellido1!apellido2!dl!eap!f_inc!f_nacimiento!f_situacion!inc!lengua!nom!nx1!nx2!observ!profesion!situacion!stgr!trato!lugar_nacimiento!ce!ce_lugar!ce_ini!ce_fin';
 
@@ -289,9 +294,9 @@ $a_camposHidden = array(
 $oHash->setArraycamposHidden($a_camposHidden);
 
 $a_parametros = array('pau' => 'p', 'id_nom' => $Qid_nom, 'obj_pau' => $Qobj_pau);
-$gohome = web\Hash::link('apps/personas/controller/home_persona.php?' . http_build_query($a_parametros));
+$gohome = Hash::link('apps/personas/controller/home_persona.php?' . http_build_query($a_parametros));
 $a_parametros = array('pau' => 'p', 'id_pau' => $Qid_nom, 'obj_pau' => $Qobj_pau);
-$godossiers = web\Hash::link('apps/dossiers/controller/dossiers_ver.php?' . http_build_query($a_parametros));
+$godossiers = Hash::link('apps/dossiers/controller/dossiers_ver.php?' . http_build_query($a_parametros));
 
 $titulo = $oPersona->getNombreApellidos();
 
@@ -321,5 +326,5 @@ $a_campos = ['obj_txt' => $obj,
     'botones' => $botones,
 ];
 
-$oView = new core\View('personas\controller');
+$oView = new ViewPhtml('personas\controller');
 $oView->renderizar($presentacion, $a_campos);

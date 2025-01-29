@@ -1,9 +1,16 @@
 <?php
 
-use actividades\model\entity as actividades;
-use actividadestudios\model\entity as actividadestudios;
-use asignaturas\model\entity as asignaturas;
-use notas\model\entity as notas;
+use actividades\model\entity\Actividad;
+use actividadestudios\model\entity\GestorMatriculaDl;
+use actividadestudios\model\entity\Matricula;
+use asignaturas\model\entity\Asignatura;
+use asignaturas\model\entity\GestorAsignatura;
+use core\ConfigGlobal;
+use core\ViewPhtml;
+use notas\model\entity\GestorNota;
+use notas\model\entity\GestorPersonaNotaDB;
+use web\Desplegable;
+use web\Hash;
 
 // INICIO Cabecera global de URL de controlador *********************************
 require_once("apps/core/global_header.inc");
@@ -34,19 +41,19 @@ if (!empty($a_sel)) { //vengo de un checkbox
     $oPosicion->addParametro('scroll_id', $scroll_id, 1);
 }
 
-$oActividad = new actividades\Actividad($Qid_activ);
+$oActividad = new Actividad($Qid_activ);
 $nom_activ = $oActividad->getNom_activ();
 
-$GesAsignaturas = new asignaturas\GestorAsignatura();
+$GesAsignaturas = new GestorAsignatura();
 
 $oDesplProfesores = array();
 if (!empty($id_asignatura_real)) { //caso de modificar
     $mod = "editar";
-    $oMatricula = new actividadestudios\Matricula(array('id_nom' => $Qid_nom, 'id_activ' => $Qid_activ, 'id_asignatura' => $id_asignatura_real));
+    $oMatricula = new Matricula(array('id_nom' => $Qid_nom, 'id_activ' => $Qid_activ, 'id_asignatura' => $id_asignatura_real));
     $id_situacion = $oMatricula->getId_situacion();
     $preceptor = $oMatricula->getPreceptor();
     $id_preceptor = $oMatricula->getId_preceptor();
-    $oAsignatura = new asignaturas\Asignatura($id_asignatura_real);
+    $oAsignatura = new Asignatura($id_asignatura_real);
     $nombre_corto = $oAsignatura->getNombre_corto();
     $id_nivel = $id_asignatura_real;
     $id_asignatura = $id_asignatura_real;
@@ -88,7 +95,7 @@ if (!empty($id_asignatura_real)) { //caso de modificar
     $aWhere['_ordre'] = 'nombre_corto';
     $cOpcionales = $GesAsignaturas->getAsignaturas($aWhere, $aOperador);
     // Asignaturas superadas
-    $GesNotas = new notas\GestorNota();
+    $GesNotas = new GestorNota();
     $cSuperadas = $GesNotas->getNotas(array('superada' => 't'));
     $cond = '';
     $c = 0;
@@ -105,7 +112,7 @@ if (!empty($id_asignatura_real)) { //caso de modificar
     $aWhere['id_nivel'] = 3000;
     $aOperador['id_nivel'] = '<';
     $aWhere['_ordre'] = 'id_nivel';
-    $GesPersonaNotas = new notas\GestorPersonaNotaDB();
+    $GesPersonaNotas = new GestorPersonaNotaDB();
     $cAsignaturasSuperadas = $GesPersonaNotas->getPersonaNotas($aWhere, $aOperador);
     $aSuperadas = array();
     foreach ($cAsignaturasSuperadas as $oAsignatura) {
@@ -114,7 +121,7 @@ if (!empty($id_asignatura_real)) { //caso de modificar
         $aSuperadas[$id_nivel] = $id_asignatura;
     }
     // También quito las ya matriculadas
-    $GesMatriculas = new actividadestudios\GestorMatriculaDl();
+    $GesMatriculas = new GestorMatriculaDl();
     $cMatriculas = $GesMatriculas->getMatriculas(array('id_nom' => $Qid_nom, 'id_activ' => $Qid_activ));
     $aMatriculadas = array();
     foreach ($cMatriculas as $oMatricula) {
@@ -133,7 +140,7 @@ if (!empty($id_asignatura_real)) { //caso de modificar
         $aFaltan[$id_nivel] = $nombre_corto;
     }
 
-    $oDesplNiveles = new web\Desplegable();
+    $oDesplNiveles = new Desplegable();
     $oDesplNiveles->setNombre('id_nivel');
     $oDesplNiveles->setOpciones($aFaltan);
     $oDesplNiveles->setBlanco(1);
@@ -160,7 +167,7 @@ foreach ($cOpcionalesGenericas as $oOpcional) {
 }
 $condicion_js = substr($condicion, 0, -4);
 
-$oHash = new web\Hash();
+$oHash = new Hash();
 $camposForm = '';
 $oHash->setCamposNo('preceptor!id_preceptor');
 $a_camposHidden = array(
@@ -177,13 +184,13 @@ if (!empty($id_asignatura_real)) {
 $oHash->setCamposForm($camposForm);
 $oHash->setArraycamposHidden($a_camposHidden);
 
-$url_ajax = core\ConfigGlobal::getWeb() . '/apps/notas/controller/notas_ajax.php';
-$oHash1 = new web\Hash();
+$url_ajax = ConfigGlobal::getWeb() . '/apps/notas/controller/notas_ajax.php';
+$oHash1 = new Hash();
 $oHash1->setUrl($url_ajax);
 $oHash1->setCamposForm('que!id_nom');
 //$oHash1->setCamposNo('id_nom'); 
 $h1 = $oHash1->linkSinVal();
-$oHash2 = new web\Hash();
+$oHash2 = new Hash();
 $oHash2->setUrl($url_ajax);
 $oHash2->setCamposForm('que');
 $h2 = $oHash2->linkSinVal();
@@ -204,5 +211,5 @@ $a_campos = ['obj' => $obj,
     'oDesplProfesores' => $oDesplProfesores,
 ];
 
-$oView = new core\View('actividadestudios/controller');
+$oView = new ViewPhtml('actividadestudios/controller');
 $oView->renderizar('form_1303.phtml', $a_campos);

@@ -2,9 +2,9 @@
 
 namespace usuarios\model;
 
-use permisos\model as permisos;
+use permisos\model\XPermisos;
 
-class PermCtr extends permisos\XPermisos
+class PermCtr extends XPermisos
 {
      public function __construct($iaccion = 0)
     {

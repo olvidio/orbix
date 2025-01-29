@@ -1,10 +1,11 @@
 <?php
 
 // INICIO Cabecera global de URL de controlador *********************************
+use core\ViewTwig;
 use personas\model\entity\Persona;
-use usuarios\model\entity\GestorLocal;
 use web\DateTimeLocal;
 use web\Hash;
+use usuarios\model\entity\GestorLocal;
 use function core\is_true;
 
 require_once("apps/core/global_header.inc");
@@ -63,5 +64,5 @@ $a_campos = [
     'chk_firmado' => $chk_firmado,
 ];
 
-$oView = new core\ViewTwig('certificados/controller');
+$oView = new ViewTwig('certificados/controller');
 $oView->renderizar('certificado_dl_adjuntar.html.twig', $a_campos);

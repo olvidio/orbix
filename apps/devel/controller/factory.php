@@ -4,8 +4,8 @@ namespace devel\controller;
 
 use core\ConfigGlobal;
 use core\ServerConf;
-use RuntimeException;
 use web\DateTimeLocal;
+use RuntimeException;
 use function core\is_true;
 
 /**
@@ -118,7 +118,7 @@ $aplicacion = !empty($Q_aplicacion) ? $Q_aplicacion : "delegación";
 // crear el directorio legacy si no existe
 $dir_legacy = ServerConf::DIR . '/apps/' . $grupo . '/legacy';
 if (!mkdir($dir_legacy) && !is_dir($dir_legacy)) {
-    throw new \RuntimeException(sprintf('Directory "%s" was not created', $dir_legacy));
+    throw new RunTimeException(sprintf('Directory "%s" was not created', $dir_legacy));
 }
 
 /* rename file of class to old if exists */
@@ -817,10 +817,9 @@ $txt_repository = "<?php
 
 namespace $grupo\\domain\\repositories;
 
-use PDO;
-use $grupo\\domain\\entity\\$Q_clase;
-use $grupo\\infrastructure\\$pg_clase;
 use web\Desplegable;
+$grupo\\domain\\entity\\$Q_clase;
+$grupo\\infrastructure\\$pg_clase;
 ";
 $txt_repository .= "\n" . $use_txt;
 $txt_repository .= "
@@ -852,9 +851,8 @@ $txt_interface = "<?php
 
 namespace $grupo\\domain\\repositories;
 
-use PDO;
-use $grupo\\domain\\entity\\$Q_clase;
-use web\\Desplegable;
+use web\Desplegable;
+$grupo\\domain\\entity\\$Q_clase;
 ";
 $txt_interface .= "\n" . $use_txt;
 $txt_interface .= "
@@ -1415,7 +1413,7 @@ $txt_pgRepositorio .= "\n}";
 // crear el directorio infrastructure si no existe
 $dir_infra = ServerConf::DIR . '/apps/' . $grupo . '/infrastructure';
 if (!mkdir($dir_infra) && !is_dir($dir_infra)) {
-    throw new \RuntimeException(sprintf('Directory "%s" was not created', $dir_infra));
+    throw new RunTimeException(sprintf('Directory "%s" was not created', $dir_infra));
 }
 $filename = $dir_infra . '/' . $pg_clase . '.php';
 if (!$handle = fopen($filename, 'w')) {
@@ -1433,7 +1431,7 @@ fclose($handle);
 /* ESCRIURE LA CLASSE  REPOSITORYINTERFACE  --------------------------------- */
 $dir_repositories = ServerConf::DIR . '/apps/' . $grupo . '/domain/repositories';
 if (!mkdir($dir_repositories) && !is_dir($dir_repositories)) {
-    throw new \RuntimeException(sprintf('Directory "%s" was not created', $dir_repositories));
+    throw new RunTimeException(sprintf('Directory "%s" was not created', $dir_repositories));
 }
 $filename = $dir_repositories . '/' . $clase_interface . '.php';
 if (!$handle = fopen($filename, 'w')) {

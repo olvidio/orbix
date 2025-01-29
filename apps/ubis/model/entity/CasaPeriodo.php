@@ -2,8 +2,13 @@
 
 namespace ubis\model\entity;
 
-use core;
-use web;
+
+use core\ClasePropiedades;
+use core\ConverterDate;
+use core\DatosCampo;
+use core\Set;
+use web\DateTimeLocal;
+use web\NullDateTimeLocal;
 
 /**
  * Fitxer amb la Classe que accedeix a la taula du_periodos
@@ -24,7 +29,7 @@ use web;
  * @version 1.0
  * @created 12/11/2018
  */
-class CasaPeriodo extends core\ClasePropiedades
+class CasaPeriodo extends ClasePropiedades
 {
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
@@ -70,13 +75,13 @@ class CasaPeriodo extends core\ClasePropiedades
     /**
      * F_ini de CasaPeriodo
      *
-     * @var web\DateTimeLocal
+     * @var DateTimeLocal
      */
     private $df_ini;
     /**
      * F_fin de CasaPeriodo
      *
-     * @var web\DateTimeLocal
+     * @var DateTimeLocal
      */
     private $df_fin;
     /**
@@ -115,7 +120,7 @@ class CasaPeriodo extends core\ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'id_item') && $val_id !== '') $this->iid_item = (int)$val_id;
+                if (($nom_id === 'id_item') && $val_id !== '') $this->iid_item = (int)$val_id;
             }
         } else {
             if (isset($a_id) && $a_id !== '') {
@@ -192,7 +197,7 @@ class CasaPeriodo extends core\ClasePropiedades
                     return FALSE;
                 }
             }
-            $this->id_item = $oDbl->lastInsertId('du_periodos_id_item_seq');
+            $this->iid_item = $oDbl->lastInsertId('du_periodos_id_item_seq');
         }
         $this->setAllAtributes($aDades);
         return TRUE;
@@ -260,7 +265,7 @@ class CasaPeriodo extends core\ClasePropiedades
      *
      * @param array $aDades
      */
-    function setAllAtributes($aDades, $convert = FALSE)
+    function setAllAtributes(array $aDades, $convert = FALSE)
     {
         if (!is_array($aDades)) return;
         if (array_key_exists('id_item', $aDades)) $this->setId_item($aDades['id_item']);
@@ -324,7 +329,7 @@ class CasaPeriodo extends core\ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'id_item') && $val_id !== '') $this->iid_item = (int)$val_id;
+                if (($nom_id === 'id_item') && $val_id !== '') $this->iid_item = (int)$val_id;
             }
         }
     }
@@ -378,7 +383,7 @@ class CasaPeriodo extends core\ClasePropiedades
     /**
      * Recupera el atributo df_ini de CasaPeriodo
      *
-     * @return web\DateTimeLocal df_ini
+     * @returnDateTimeLocal df_ini
      */
     function getF_ini()
     {
@@ -386,9 +391,9 @@ class CasaPeriodo extends core\ClasePropiedades
             $this->DBCarregar();
         }
         if (empty($this->df_ini)) {
-            return new web\NullDateTimeLocal();
+            return new NullDateTimeLocal();
         }
-        $oConverter = new core\ConverterDate('date', $this->df_ini);
+        $oConverter = new ConverterDate('date', $this->df_ini);
         return $oConverter->fromPg();
     }
 
@@ -396,12 +401,12 @@ class CasaPeriodo extends core\ClasePropiedades
      * Establece el valor del atributo df_ini de CasaPeriodo
      *
      * @param boolean convert=TRUE optional. Si vengo con los valores de las base de datos no hay que convertirlo.
-     * @param web\DateTimeLocal df_ini='' optional
+     * @paramDateTimeLocal df_ini='' optional
      */
     function setF_ini($df_ini = '', $convert = true)
     {
         if ($convert === true && !empty($df_ini)) {
-            $oConverter = new core\ConverterDate('date', $df_ini);
+            $oConverter = new ConverterDate('date', $df_ini);
             $this->df_ini = $oConverter->toPg();
         } else {
             $this->df_ini = $df_ini;
@@ -411,7 +416,7 @@ class CasaPeriodo extends core\ClasePropiedades
     /**
      * Recupera el atributo df_fin de CasaPeriodo
      *
-     * @return web\DateTimeLocal df_fin
+     * @returnDateTimeLocal df_fin
      */
     function getF_fin()
     {
@@ -419,9 +424,9 @@ class CasaPeriodo extends core\ClasePropiedades
             $this->DBCarregar();
         }
         if (empty($this->df_fin)) {
-            return new web\NullDateTimeLocal();
+            return new NullDateTimeLocal();
         }
-        $oConverter = new core\ConverterDate('date', $this->df_fin);
+        $oConverter = new ConverterDate('date', $this->df_fin);
         return $oConverter->fromPg();
     }
 
@@ -429,12 +434,12 @@ class CasaPeriodo extends core\ClasePropiedades
      * Establece el valor del atributo df_fin de CasaPeriodo
      *
      * @param boolean convert=TRUE optional. Si vengo con los valores de las base de datos no hay que convertirlo.
-     * @param web\DateTimeLocal df_fin='' optional
+     * @paramDateTimeLocal df_fin='' optional
      */
     function setF_fin($df_fin = '', $convert = true)
     {
         if ($convert === true && !empty($df_fin)) {
-            $oConverter = new core\ConverterDate('date', $df_fin);
+            $oConverter = new ConverterDate('date', $df_fin);
             $this->df_fin = $oConverter->toPg();
         } else {
             $this->df_fin = $df_fin;
@@ -471,7 +476,7 @@ class CasaPeriodo extends core\ClasePropiedades
      */
     function getDatosCampos()
     {
-        $oCasaPeriodoSet = new core\Set();
+        $oCasaPeriodoSet = new Set();
 
         $oCasaPeriodoSet->add($this->getDatosId_ubi());
         $oCasaPeriodoSet->add($this->getDatosF_ini());
@@ -484,12 +489,12 @@ class CasaPeriodo extends core\ClasePropiedades
      * Recupera les propietats de l'atribut iid_ubi de CasaPeriodo
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosId_ubi()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_ubi'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_ubi'));
         $oDatosCampo->setEtiqueta(_("id_ubi"));
         return $oDatosCampo;
     }
@@ -498,12 +503,12 @@ class CasaPeriodo extends core\ClasePropiedades
      * Recupera les propietats de l'atribut df_ini de CasaPeriodo
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosF_ini()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'f_ini'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'f_ini'));
         $oDatosCampo->setEtiqueta(_("f_ini"));
         $oDatosCampo->setTipo('fecha');
         return $oDatosCampo;
@@ -513,12 +518,12 @@ class CasaPeriodo extends core\ClasePropiedades
      * Recupera les propietats de l'atribut df_fin de CasaPeriodo
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosF_fin()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'f_fin'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'f_fin'));
         $oDatosCampo->setEtiqueta(_("f_fin"));
         $oDatosCampo->setTipo('fecha');
         return $oDatosCampo;
@@ -528,12 +533,12 @@ class CasaPeriodo extends core\ClasePropiedades
      * Recupera les propietats de l'atribut isfsv de CasaPeriodo
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosSfsv()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'sfsv'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'sfsv'));
         $oDatosCampo->setEtiqueta(_("sfsv"));
         return $oDatosCampo;
     }

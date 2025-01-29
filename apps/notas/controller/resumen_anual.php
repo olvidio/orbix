@@ -12,9 +12,11 @@
 
 // INICIO Cabecera global de URL de controlador *********************************
 use core\ConfigGlobal;
-use ubis\model\entity\GestorDelegacion;
+use core\ViewPhtml;
+use core\ViewTwig;
 use web\Desplegable;
 use web\Hash;
+use ubis\model\entity\GestorDelegacion;
 
 require_once("apps/core/global_header.inc");
 // Archivos requeridos por esta url **********************************************
@@ -23,6 +25,7 @@ require_once("apps/core/global_header.inc");
 require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
+$oPosicion->recordar();
 
 $Qdl = (array)filter_input(INPUT_POST, 'dl', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 $Qfiltro = (integer)filter_input(INPUT_POST, 'filtro', FILTER_DEFAULT);
@@ -73,17 +76,17 @@ if (ConfigGlobal::mi_ambito() === 'rstgr' && $Qfiltro == 1) {
 
 }
 
-$go['comprobar_n'] = web\Hash::link(core\ConfigGlobal::getWeb() . '/apps/notas/controller/comprobar_notas.php?' . http_build_query($a_comprobar_n));
-$go['comprobar_a'] = web\Hash::link(core\ConfigGlobal::getWeb() . '/apps/notas/controller/comprobar_notas.php?' . http_build_query($a_comprobar_a));
-$go['n_listado'] = web\Hash::link(core\ConfigGlobal::getWeb() . '/apps/notas/controller/informe_stgr_n.php?' . http_build_query($a_n_listado));
-$go['n_numeros'] = web\Hash::link(core\ConfigGlobal::getWeb() . '/apps/notas/controller/informe_stgr_n.php?' . http_build_query($a_n_numeros));
-$go['agd_listado'] = web\Hash::link(core\ConfigGlobal::getWeb() . '/apps/notas/controller/informe_stgr_agd.php?' . http_build_query($a_agd_listado));
-$go['agd_numeros'] = web\Hash::link(core\ConfigGlobal::getWeb() . '/apps/notas/controller/informe_stgr_agd.php?' . http_build_query($a_agd_numeros));
-$go['profesores_numeros'] = web\Hash::link(core\ConfigGlobal::getWeb() . '/apps/notas/controller/informe_stgr_profesores.php?' . http_build_query($a_profesores_numeros));
-$go['profesores_listado'] = web\Hash::link(core\ConfigGlobal::getWeb() . '/apps/notas/controller/informe_stgr_profesores.php?' . http_build_query($a_profesores_listado));
-$go['asig_faltan'] = web\Hash::link(core\ConfigGlobal::getWeb() . '/apps/notas/controller/asig_faltan_que.php');
+$go['comprobar_n'] = Hash::link(ConfigGlobal::getWeb() . '/apps/notas/controller/comprobar_notas.php?' . http_build_query($a_comprobar_n));
+$go['comprobar_a'] = Hash::link(ConfigGlobal::getWeb() . '/apps/notas/controller/comprobar_notas.php?' . http_build_query($a_comprobar_a));
+$go['n_listado'] = Hash::link(ConfigGlobal::getWeb() . '/apps/notas/controller/informe_stgr_n.php?' . http_build_query($a_n_listado));
+$go['n_numeros'] = Hash::link(ConfigGlobal::getWeb() . '/apps/notas/controller/informe_stgr_n.php?' . http_build_query($a_n_numeros));
+$go['agd_listado'] = Hash::link(ConfigGlobal::getWeb() . '/apps/notas/controller/informe_stgr_agd.php?' . http_build_query($a_agd_listado));
+$go['agd_numeros'] = Hash::link(ConfigGlobal::getWeb() . '/apps/notas/controller/informe_stgr_agd.php?' . http_build_query($a_agd_numeros));
+$go['profesores_numeros'] = Hash::link(ConfigGlobal::getWeb() . '/apps/notas/controller/informe_stgr_profesores.php?' . http_build_query($a_profesores_numeros));
+$go['profesores_listado'] = Hash::link(ConfigGlobal::getWeb() . '/apps/notas/controller/informe_stgr_profesores.php?' . http_build_query($a_profesores_listado));
+$go['asig_faltan'] = Hash::link(ConfigGlobal::getWeb() . '/apps/notas/controller/asig_faltan_que.php');
 
-$go['filtro'] = web\Hash::link(core\ConfigGlobal::getWeb() . '/apps/notas/controller/resumen_anual.php?' . http_build_query(array('filtro' => 1)));
+$go['filtro'] = Hash::link(ConfigGlobal::getWeb() . '/apps/notas/controller/resumen_anual.php?' . http_build_query(array('filtro' => 1)));
 
 if (ConfigGlobal::mi_ambito() === 'rstgr' && $Qfiltro == 1) {
     $url = 'apps/notas/controller/resumen_anual.php';
@@ -94,7 +97,7 @@ if (ConfigGlobal::mi_ambito() === 'rstgr' && $Qfiltro == 1) {
         'oCuadros' => $oCuadros,
     ];
 
-    $oView = new core\ViewTwig('ubis/controller');
+    $oView = new ViewTwig('ubis/controller');
     $oView->renderizar('dl_rstgr_que.html.twig', $a_campos);
 }
 
@@ -106,6 +109,6 @@ if (ConfigGlobal::mi_ambito() !== 'rstgr' ||
         'rstgr' => $rstgr,
     ];
 
-    $oView = new core\View('notas/model');
+    $oView = new ViewPhtml('notas/model');
     $oView->renderizar('resumen_anual.phtml', $a_campos);
 }

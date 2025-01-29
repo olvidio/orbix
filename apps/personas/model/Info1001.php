@@ -2,15 +2,15 @@
 
 namespace personas\model;
 
-use core;
-use web;
-
-// necesario para los deplegables de 'depende'
-use ubis\model\entity as ubis;
+// necesario para los desplegables de 'depende'
 
 /* No vale el underscore en el nombre */
 
-class Info1001 extends core\DatosInfo
+use core\DatosInfo;
+use ubis\model\entity\GestorDescTeleco;
+use web\Desplegable;
+
+class Info1001 extends DatosInfo
 {
 
     public function __construct()
@@ -57,9 +57,9 @@ class Info1001 extends core\DatosInfo
         $v1 = $oFicha->tipo_teleco;
         $v2 = $oFicha->desc_teleco;
         if (!empty($v2)) {
-            $oDepende = new ubis\GestorDescTeleco();
+            $oDepende = new GestorDescTeleco();
             $aOpciones = $oDepende->getListaDescTelecoPersonas($v1);
-            $oDesplegable = new web\Desplegable('', $aOpciones, $v2, true);
+            $oDesplegable = new Desplegable('', $aOpciones, $v2, true);
             $despl_depende = $oDesplegable->options();
         } else {
             $despl_depende = "<option></option>";
@@ -71,10 +71,10 @@ class Info1001 extends core\DatosInfo
     {
         //caso de actualizar el campo depende
         if (isset($this->accion)) {
-            if ($this->accion == 'desc_teleco') {
-                $oDepende = new ubis\GestorDescTeleco();
+            if ($this->accion === 'desc_teleco') {
+                $oDepende = new GestorDescTeleco();
                 $aOpciones = $oDepende->getListaDescTelecoPersonas($valor_depende);
-                $oDesplegable = new web\Desplegable('', $aOpciones, '', true);
+                $oDesplegable = new Desplegable('', $aOpciones, '', true);
                 $despl_depende = $oDesplegable->options();
             }
         }

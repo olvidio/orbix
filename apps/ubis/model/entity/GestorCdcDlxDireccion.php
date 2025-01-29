@@ -1,8 +1,6 @@
 <?php
 namespace ubis\model\entity;
 
-use core;
-
 /**
  * GestorUbixDireccion
  *

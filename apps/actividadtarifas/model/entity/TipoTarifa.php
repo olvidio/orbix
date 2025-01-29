@@ -1,7 +1,9 @@
 <?php
 namespace actividadtarifas\model\entity;
 
-use core;
+use core\ClasePropiedades;
+use core\DatosCampo;
+use core\Set;
 
 /**
  * Clase que implementa la entidad $nom_tabla
@@ -12,7 +14,7 @@ use core;
  * @version 1.0
  * @created 22/12/2010
  */
-class TipoTarifa extends core\ClasePropiedades
+class TipoTarifa extends ClasePropiedades
 {
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
@@ -233,7 +235,7 @@ class TipoTarifa extends core\ClasePropiedades
      *
      * @param array $aDades
      */
-    function setAllAtributes($aDades)
+    function setAllAtributes(array $aDades)
     {
         if (!is_array($aDades)) return;
         if (array_key_exists('id_tarifa', $aDades)) $this->setId_tarifa($aDades['id_tarifa']);
@@ -297,7 +299,7 @@ class TipoTarifa extends core\ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'id_tarifa') && $val_id !== '') $this->iid_tarifa = (int)$val_id; 
+                if (($nom_id === 'id_tarifa') && $val_id !== '') $this->iid_tarifa = (int)$val_id;
             }
         }
     }
@@ -445,7 +447,7 @@ class TipoTarifa extends core\ClasePropiedades
      */
     function getDatosCampos()
     {
-        $oTipoTarifaSet = new core\Set();
+        $oTipoTarifaSet = new Set();
 
         $oTipoTarifaSet->add($this->getDatosModo());
         $oTipoTarifaSet->add($this->getDatosLetra());
@@ -459,12 +461,12 @@ class TipoTarifa extends core\ClasePropiedades
      * Recupera les propietats de l'atribut imodo de TipoTarifa
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosModo()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'modo'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'modo'));
         $oDatosCampo->setEtiqueta(_("modo"));
         return $oDatosCampo;
     }
@@ -473,12 +475,12 @@ class TipoTarifa extends core\ClasePropiedades
      * Recupera les propietats de l'atribut sletra de TipoTarifa
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosLetra()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'letra'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'letra'));
         $oDatosCampo->setEtiqueta(_("letra"));
         return $oDatosCampo;
     }
@@ -487,12 +489,12 @@ class TipoTarifa extends core\ClasePropiedades
      * Recupera les propietats de l'atribut isfsv de TipoTarifa
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosSfsv()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'sfsv'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'sfsv'));
         $oDatosCampo->setEtiqueta(_("sfsv"));
         return $oDatosCampo;
     }
@@ -501,12 +503,12 @@ class TipoTarifa extends core\ClasePropiedades
      * Recupera les propietats de l'atribut iobserv de TipoTarifa
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosObserv()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'observ'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'observ'));
         $oDatosCampo->setEtiqueta(_("observaciones"));
         return $oDatosCampo;
     }

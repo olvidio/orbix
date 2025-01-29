@@ -2,17 +2,18 @@
 
 use actividades\model\entity\ActividadAll;
 use actividades\model\entity\GestorTipoDeActividad;
-use cambios\model\GestorAvisoCambios;
 use cambios\model\entity\CambioUsuarioObjetoPref;
 use cambios\model\entity\CambioUsuarioPropiedadPref;
 use cambios\model\entity\GestorCambioUsuarioPropiedadPref;
+use cambios\model\GestorAvisoCambios;
 use core\ConfigGlobal;
-use function core\is_true;
+use web\DesplegableArray;
 use procesos\model\entity\GestorActividadFase;
 use ubis\model\entity\GestorCasaDl;
 use usuarios\model\entity\Role;
 use usuarios\model\entity\Usuario;
-use web\DesplegableArray;
+use web\Hash;
+use function core\is_true;
 
 // INICIO Cabecera global de URL de controlador *********************************
 
@@ -198,7 +199,7 @@ switch ($Qsalida) {
         $txt .= "<input type='button' value='" . _("eliminar") . "' onclick=\"fnjs_guardar_cond('eliminar_cond');\" >";
         $txt .= "<input type='button' value='" . _("cancel") . "' onclick=\"fnjs_cerrar();\" >";
 
-        $oHash = new web\Hash();
+        $oHash = new Hash();
         $oHash->setCamposForm("salida!objeto!propiedad!operador!valor");
         $oHash->setCamposChk("valor_old!valor_new");
         $oHash->setCamposNo("id_ubi!id_ubi_mas!id_ubi_num");
@@ -305,7 +306,7 @@ switch ($Qsalida) {
             }
             $html .= '</table></td>';
 
-            $oHash = new web\Hash();
+            $oHash = new Hash();
             $oHash->setCamposForm($scamposForm . "!salida!id_item_usuario_objeto_prop");
             $aCamposHidden = [
                 'objeto_prop' => $Qobjeto,

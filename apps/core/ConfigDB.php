@@ -2,6 +2,8 @@
 
 namespace core;
 
+use RuntimeException;
+
 /**
  * Básicamente la conexión a la base de datos, con los passwd para cada esquema.
  * @author dani
@@ -23,7 +25,7 @@ class ConfigDB
         $data['schema'] = $esquema;
         //sobreescribir los valores default
         if (!array_key_exists($esquema, $this->data)) {
-           throw new \RuntimeException(sprintf(_("hay que añadir los parámetros de conexión para el esquema: %s"), $esquema));
+           throw new RunTimeException(sprintf(_("hay que añadir los parámetros de conexión para el esquema: %s"), $esquema));
         }
         foreach ($this->data[$esquema] as $key => $value) {
             $data[$key] = $value;

@@ -2,7 +2,10 @@
 
 namespace ubis\model\entity;
 
-use core;
+use core\ClasePropiedades;
+use core\DatosCampo;
+use core\Set;
+use function core\is_true;
 
 /**
  * Clase que implementa la entidad xu_dl
@@ -13,7 +16,7 @@ use core;
  * @version 1.0
  * @created 20/11/2010
  */
-class Delegacion extends core\ClasePropiedades
+class Delegacion extends ClasePropiedades
 {
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
@@ -136,7 +139,7 @@ class Delegacion extends core\ClasePropiedades
         $aDades['status'] = $this->bstatus;
         array_walk($aDades, 'core\poner_null');
         //para el caso de los boolean FALSE, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
-        if (core\is_true($aDades['status'])) {
+        if (is_true($aDades['status'])) {
             $aDades['status'] = 'true';
         } else {
             $aDades['status'] = 'false';
@@ -254,7 +257,7 @@ class Delegacion extends core\ClasePropiedades
      *
      * @param array $aDades
      */
-    function setAllAtributes($aDades)
+    function setAllAtributes(array $aDades)
     {
         if (!is_array($aDades)) return;
         if (array_key_exists('id_dl', $aDades)) $this->setId_dl($aDades['id_dl']);
@@ -494,7 +497,7 @@ class Delegacion extends core\ClasePropiedades
      */
     function getDatosCampos()
     {
-        $oDelegacionSet = new core\Set();
+        $oDelegacionSet = new Set();
 
         $oDelegacionSet->add($this->getDatosId_dl());
         $oDelegacionSet->add($this->getDatosRegion());
@@ -511,12 +514,12 @@ class Delegacion extends core\ClasePropiedades
      * Recupera les propietats de l'atribut iid_dl de Delegacion
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosId_dl()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_dl'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_dl'));
         $oDatosCampo->setEtiqueta(_("id_dl"));
         $oDatosCampo->setTipo('texto');
         return $oDatosCampo;
@@ -526,12 +529,12 @@ class Delegacion extends core\ClasePropiedades
      * Recupera les propietats de l'atribut sdl de Delegacion
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosDl()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'dl'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'dl'));
         $oDatosCampo->setEtiqueta(_("sigla"));
         $oDatosCampo->setTipo('texto');
         return $oDatosCampo;
@@ -541,12 +544,12 @@ class Delegacion extends core\ClasePropiedades
      * Recupera les propietats de l'atribut snombre_dl de Delegacion
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosNombre_dl()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'nombre_dl'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'nombre_dl'));
         $oDatosCampo->setEtiqueta(_("nombre de la delegación"));
         $oDatosCampo->setTipo('texto');
         $oDatosCampo->setArgument(30);
@@ -557,12 +560,12 @@ class Delegacion extends core\ClasePropiedades
      * Recupera les propietats de l'atribut sgrupo_estudios de Delegacion
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosGrupo_estudios()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'grupo_estudios'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'grupo_estudios'));
         $oDatosCampo->setEtiqueta(_("grupo del stgr"));
         $oDatosCampo->setTipo('texto');
         $oDatosCampo->setArgument(3);
@@ -573,12 +576,12 @@ class Delegacion extends core\ClasePropiedades
      * Recupera les propietats de l'atribut sregion de Delegacion
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosRegion()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'region'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'region'));
         $oDatosCampo->setEtiqueta(_("nombre de la región"));
         $oDatosCampo->setTipo('opciones');
         $oDatosCampo->setArgument('ubis\model\entity\Region');
@@ -591,12 +594,12 @@ class Delegacion extends core\ClasePropiedades
      * Recupera les propietats de l'atribut sregion_stgr de Delegacion
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosRegion_stgr()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'region_stgr'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'region_stgr'));
         $oDatosCampo->setEtiqueta(_("región del stgr"));
         $oDatosCampo->setTipo('texto');
         $oDatosCampo->setArgument(5);
@@ -607,12 +610,12 @@ class Delegacion extends core\ClasePropiedades
      * Recupera les propietats de l'atribut bstatus de Delegacion
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosStatus()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'status'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'status'));
         $oDatosCampo->setEtiqueta(_("en activo"));
         $oDatosCampo->setTipo('check');
         return $oDatosCampo;

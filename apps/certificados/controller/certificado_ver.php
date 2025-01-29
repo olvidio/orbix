@@ -4,9 +4,10 @@
 use certificados\domain\repositories\CertificadoRepository;
 use core\ConfigGlobal;
 use core\ServerConf;
+use core\ViewTwig;
 use personas\model\entity\Persona;
-use usuarios\model\entity\GestorLocal;
 use web\Hash;
+use usuarios\model\entity\GestorLocal;
 use function core\is_true;
 
 require_once("apps/core/global_header.inc");
@@ -98,5 +99,5 @@ $a_campos = ['oPosicion' => $oPosicion,
     'filename_pdf' => $filename_pdf_web,
 ];
 
-$oView = new core\ViewTwig('certificados/controller');
+$oView = new ViewTwig('certificados/controller');
 $oView->renderizar('certificado_ver.html.twig', $a_campos);

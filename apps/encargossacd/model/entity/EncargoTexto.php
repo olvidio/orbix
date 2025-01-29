@@ -2,7 +2,9 @@
 
 namespace encargossacd\model\entity;
 
-use core;
+use core\ClasePropiedades;
+use core\DatosCampo;
+use core\Set;
 
 /**
  * Fitxer amb la Classe que accedeix a la taula encargo_textos
@@ -23,7 +25,7 @@ use core;
  * @version 1.0
  * @created 05/03/2019
  */
-class EncargoTexto extends core\ClasePropiedades
+class EncargoTexto extends ClasePropiedades
 {
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
@@ -102,7 +104,7 @@ class EncargoTexto extends core\ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'id_item') && $val_id !== '') $this->iid_item = (int)$val_id; 
+                if (($nom_id === 'id_item') && $val_id !== '') $this->iid_item = (int)$val_id;
             }
         } else {
             if (isset($a_id) && $a_id !== '') {
@@ -177,7 +179,7 @@ class EncargoTexto extends core\ClasePropiedades
                     return FALSE;
                 }
             }
-            $this->id_item = $oDbl->lastInsertId('encargo_textos_id_item_seq');
+            $this->iid_item = $oDbl->lastInsertId('encargo_textos_id_item_seq');
         }
         $this->setAllAtributes($aDades);
         return TRUE;
@@ -245,7 +247,7 @@ class EncargoTexto extends core\ClasePropiedades
      *
      * @param array $aDades
      */
-    function setAllAtributes($aDades)
+    function setAllAtributes(array $aDades)
     {
         if (!is_array($aDades)) return;
         if (array_key_exists('id_item', $aDades)) $this->setId_item($aDades['id_item']);
@@ -307,7 +309,7 @@ class EncargoTexto extends core\ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'id_item') && $val_id !== '') $this->iid_item = (int)$val_id; 
+                if (($nom_id === 'id_item') && $val_id !== '') $this->iid_item = (int)$val_id;
             }
         }
     }
@@ -411,7 +413,7 @@ class EncargoTexto extends core\ClasePropiedades
      */
     function getDatosCampos()
     {
-        $oEncargoTextoSet = new core\Set();
+        $oEncargoTextoSet = new Set();
 
         $oEncargoTextoSet->add($this->getDatosIdioma());
         $oEncargoTextoSet->add($this->getDatosClave());
@@ -424,12 +426,12 @@ class EncargoTexto extends core\ClasePropiedades
      * Recupera les propietats de l'atribut sidioma de EncargoTexto
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosIdioma()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'idioma'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'idioma'));
         $oDatosCampo->setEtiqueta(_("idioma"));
         return $oDatosCampo;
     }
@@ -438,12 +440,12 @@ class EncargoTexto extends core\ClasePropiedades
      * Recupera les propietats de l'atribut sclave de EncargoTexto
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosClave()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'clave'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'clave'));
         $oDatosCampo->setEtiqueta(_("clave"));
         return $oDatosCampo;
     }
@@ -452,12 +454,12 @@ class EncargoTexto extends core\ClasePropiedades
      * Recupera les propietats de l'atribut stexto de EncargoTexto
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosTexto()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'texto'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'texto'));
         $oDatosCampo->setEtiqueta(_("texto"));
         return $oDatosCampo;
     }

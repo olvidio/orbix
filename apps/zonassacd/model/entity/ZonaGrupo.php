@@ -2,7 +2,9 @@
 
 namespace zonassacd\model\entity;
 
-use core;
+use core\ClasePropiedades;
+use core\DatosCampo;
+use core\Set;
 
 /**
  * Fitxer amb la Classe que accedeix a la taula zonas_grupos
@@ -23,7 +25,7 @@ use core;
  * @version 1.0
  * @created 01/03/2019
  */
-class ZonaGrupo extends core\ClasePropiedades
+class ZonaGrupo extends ClasePropiedades
 {
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
@@ -96,7 +98,7 @@ class ZonaGrupo extends core\ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'id_grupo') && $val_id !== '') $this->iid_grupo = (int)$val_id;
+                if (($nom_id === 'id_grupo') && $val_id !== '') $this->iid_grupo = (int)$val_id;
             }
         } else {
             if (isset($a_id) && $a_id !== '') {
@@ -169,7 +171,7 @@ class ZonaGrupo extends core\ClasePropiedades
                     return FALSE;
                 }
             }
-            $this->id_grupo = $oDbl->lastInsertId('zonas_grupos_id_grupo_seq');
+            $this->iid_grupo = $oDbl->lastInsertId('zonas_grupos_id_grupo_seq');
         }
         $this->setAllAtributes($aDades);
         return TRUE;
@@ -237,7 +239,7 @@ class ZonaGrupo extends core\ClasePropiedades
      *
      * @param array $aDades
      */
-    function setAllAtributes($aDades)
+    function setAllAtributes(array $aDades)
     {
         if (!is_array($aDades)) return;
         if (array_key_exists('id_grupo', $aDades)) $this->setId_grupo($aDades['id_grupo']);
@@ -297,7 +299,7 @@ class ZonaGrupo extends core\ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'id_grupo') && $val_id !== '') $this->iid_grupo = (int)$val_id;
+                if (($nom_id === 'id_grupo') && $val_id !== '') $this->iid_grupo = (int)$val_id;
             }
         }
     }
@@ -378,7 +380,7 @@ class ZonaGrupo extends core\ClasePropiedades
      */
     function getDatosCampos()
     {
-        $oZonaGrupoSet = new core\Set();
+        $oZonaGrupoSet = new Set();
 
         $oZonaGrupoSet->add($this->getDatosNombre_grupo());
         $oZonaGrupoSet->add($this->getDatosOrden());
@@ -390,12 +392,12 @@ class ZonaGrupo extends core\ClasePropiedades
      * Recupera les propietats de l'atribut snombre_grupo de ZonaGrupo
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosNombre_grupo()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'nombre_grupo'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'nombre_grupo'));
         $oDatosCampo->setEtiqueta(_("nombre del grupo"));
         $oDatosCampo->setTipo('texto');
         $oDatosCampo->setArgument('30');
@@ -406,12 +408,12 @@ class ZonaGrupo extends core\ClasePropiedades
      * Recupera les propietats de l'atribut iorden de ZonaGrupo
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosOrden()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'orden'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'orden'));
         $oDatosCampo->setEtiqueta(_("orden"));
         $oDatosCampo->setTipo('texto');
         $oDatosCampo->setArgument('5');

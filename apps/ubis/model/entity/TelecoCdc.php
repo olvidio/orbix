@@ -1,8 +1,6 @@
 <?php
 namespace ubis\model\entity;
 
-use core;
-
 /**
  * Clase que implementa la entidad public.d_teleco_cdc
  *
@@ -180,7 +178,7 @@ class TelecoCdc extends TelecoUbiGlobal
      *
      * @param array $aDades
      */
-    function setAllAtributes($aDades)
+    function setAllAtributes(array $aDades)
     {
         if (!is_array($aDades)) return;
         if (array_key_exists('id_schema', $aDades)) $this->setId_schema($aDades['id_schema']);

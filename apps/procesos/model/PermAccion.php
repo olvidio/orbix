@@ -2,9 +2,10 @@
 
 namespace procesos\model;
 
-use permisos\model as permisos;
 
-class PermAccion extends permisos\XPermisos
+use permisos\model\XPermisos;
+
+class PermAccion extends XPermisos
 {
     public function __construct($iaccion = 0)
     {

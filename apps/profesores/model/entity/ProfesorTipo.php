@@ -1,7 +1,9 @@
 <?php
 namespace profesores\model\entity;
 
-use core;
+use core\ClasePropiedades;
+use core\DatosCampo;
+use core\Set;
 
 /**
  * Fitxer amb la Classe que accedeix a la taula xe_tipo_profesor_stgr
@@ -22,7 +24,7 @@ use core;
  * @version 1.0
  * @created 07/04/2014
  */
-class ProfesorTipo extends core\ClasePropiedades
+class ProfesorTipo extends ClasePropiedades
 {
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
@@ -88,7 +90,7 @@ class ProfesorTipo extends core\ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'id_tipo_profesor') && $val_id !== '') $this->iid_tipo_profesor = (int)$val_id; 
+                if (($nom_id === 'id_tipo_profesor') && $val_id !== '') $this->iid_tipo_profesor = (int)$val_id;
             }
         } else {
             if (isset($a_id) && $a_id !== '') {
@@ -158,7 +160,7 @@ class ProfesorTipo extends core\ClasePropiedades
                     return false;
                 }
             }
-            $this->id_tipo_profesor = $oDbl->lastInsertId('xe_tipo_profe_id_tipo_profe_seq');
+            $this->iid_tipo_profesor = $oDbl->lastInsertId('xe_tipo_profe_id_tipo_profe_seq');
         }
         $this->setAllAtributes($aDades);
         return true;
@@ -226,7 +228,7 @@ class ProfesorTipo extends core\ClasePropiedades
      *
      * @param array $aDades
      */
-    function setAllAtributes($aDades)
+    function setAllAtributes(array $aDades)
     {
         if (!is_array($aDades)) return;
         if (array_key_exists('id_tipo_profesor', $aDades)) $this->setId_tipo_profesor($aDades['id_tipo_profesor']);
@@ -284,7 +286,7 @@ class ProfesorTipo extends core\ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'id_tipo_ptofesor') && $val_id !== '') $this->iid_tipo_ptofesor = (int)$val_id; 
+                if (($nom_id === 'id_tipo_ptofesor') && $val_id !== '') $this->iid_tipo_profesor = (int)$val_id;
             }
         }
     }
@@ -342,7 +344,7 @@ class ProfesorTipo extends core\ClasePropiedades
      */
     function getDatosCampos()
     {
-        $oProfesorTipoSet = new core\Set();
+        $oProfesorTipoSet = new Set();
 
         $oProfesorTipoSet->add($this->getDatosTipo_profesor());
         return $oProfesorTipoSet->getTot();
@@ -353,12 +355,12 @@ class ProfesorTipo extends core\ClasePropiedades
      * Recupera les propietats de l'atribut stipo_profesor de ProfesorTipo
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosTipo_profesor()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'tipo_profesor'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'tipo_profesor'));
         $oDatosCampo->setEtiqueta(_("tipo de profesor"));
         return $oDatosCampo;
     }

@@ -2,6 +2,7 @@
 
 
 // INICIO Cabecera global de URL de controlador *********************************
+use core\ViewTwig;
 use encargossacd\model\EncargoConstants;
 use misas\domain\repositories\EncargoDiaRepository;
 use misas\model\EncargosZona;
@@ -159,5 +160,5 @@ $a_campos = ['oPosicion' => $oPosicion,
     'array_h' => $array_h,
 ];
 
-$oView = new core\ViewTwig('misas/controller');
+$oView = new ViewTwig('misas/controller');
 echo $oView->render('ver_cuadricula_zona.html.twig', $a_campos);

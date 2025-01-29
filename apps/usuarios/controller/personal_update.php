@@ -2,7 +2,9 @@
 
 
 // INICIO Cabecera global de URL de controlador *********************************
+use core\ConfigGlobal;
 use usuarios\model\entity\Preferencia;
+use web\Hash;
 
 require_once("apps/core/global_header.inc");
 // Archivos requeridos por esta url **********************************************
@@ -13,7 +15,7 @@ require_once("apps/core/global_object.inc");
 
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$id_usuario = core\ConfigGlobal::mi_id_usuario();
+$id_usuario = ConfigGlobal::mi_id_usuario();
 
 $Qque = (string)filter_input(INPUT_POST, 'que');
 
@@ -21,7 +23,7 @@ switch ($Qque) {
     case "slickGrid":
         $Qtabla = (string)filter_input(INPUT_POST, 'tabla');
         $QsPrefs = (string)filter_input(INPUT_POST, 'sPrefs');
-        $idioma = core\ConfigGlobal::mi_Idioma();
+        $idioma = ConfigGlobal::mi_Idioma();
         $tipo = 'slickGrid_' . $Qtabla . '_' . $idioma;
         $oPref = new Preferencia(array('id_usuario' => $id_usuario, 'tipo' => $tipo));
         // si no se han cambiado las columnas visibles, pongo las actuales (sino las borra).
@@ -94,6 +96,6 @@ switch ($Qque) {
         }
 
         // volver a la página de configuración
-        $location = web\Hash::link(core\ConfigGlobal::getWeb() . '/index.php?' . http_build_query(array('PHPSESSID' => session_id())));
+        $location = Hash::link(ConfigGlobal::getWeb() . '/index.php?' . http_build_query(array('PHPSESSID' => session_id())));
         echo "<body onload=\"$location\";></body>";
 }

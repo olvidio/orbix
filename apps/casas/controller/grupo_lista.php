@@ -1,6 +1,8 @@
 <?php
 // INICIO Cabecera global de URL de controlador *********************************
 use casas\model\entity\GestorGrupoCasa;
+use core\ConfigGlobal;
+use core\ViewTwig;
 use web\Hash;
 use web\Lista;
 use ubis\model\entity\CasaDl;
@@ -59,7 +61,7 @@ foreach ($cGrupoCasas as $oGrupoCasa) {
     $casa_hijo = $oCasaHijo->getNombre_ubi();
 
 
-    $pagina = web\Hash::link(core\ConfigGlobal::getWeb() . '/apps/casas/controller/grupo_form.php?' . http_build_query(array('id_item' => $id_item)));
+    $pagina = Hash::link(ConfigGlobal::getWeb() . '/apps/casas/controller/grupo_form.php?' . http_build_query(array('id_item' => $id_item)));
 
     $a_valores[$i]['sel'] = "$id_item#";
     $a_valores[$i][1] = $casa_padre;
@@ -87,7 +89,7 @@ $oHash->setArraycamposHidden(array('que' => 'eliminar'));
 
 
 $aQuery = ['nuevo' => 1, 'quien' => 'grupo'];
-$url_nuevo = web\Hash::link(core\ConfigGlobal::getWeb() . '/apps/casas/controller/grupo_form.php?' . http_build_query($aQuery));
+$url_nuevo = Hash::link(ConfigGlobal::getWeb() . '/apps/casas/controller/grupo_form.php?' . http_build_query($aQuery));
 
 $txt_eliminar = _("¿Está seguro?");
 
@@ -98,5 +100,5 @@ $a_campos = ['oPosicion' => $oPosicion,
     'url_nuevo' => $url_nuevo,
 ];
 
-$oView = new core\ViewTwig('casas/controller');
+$oView = new ViewTwig('casas/controller');
 $oView->renderizar('grupo_lista.html.twig', $a_campos);

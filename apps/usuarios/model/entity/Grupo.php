@@ -1,7 +1,9 @@
 <?php
 namespace usuarios\model\entity;
 
-use core;
+use core\ClasePropiedades;
+use core\DatosCampo;
+use core\Set;
 
 /**
  * Clase que implementa la entidad $nom_tabla
@@ -12,7 +14,7 @@ use core;
  * @version 1.0
  * @created 21/10/2010
  */
-class Grupo extends core\ClasePropiedades
+class Grupo extends ClasePropiedades
 {
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
@@ -218,7 +220,7 @@ class Grupo extends core\ClasePropiedades
      *
      * @param array $aDades
      */
-    function setAllAtributes($aDades)
+    function setAllAtributes(array $aDades)
     {
         if (!is_array($aDades)) return;
         if (array_key_exists('id_schema', $aDades)) $this->setId_schema($aDades['id_schema']);
@@ -280,7 +282,7 @@ class Grupo extends core\ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'id_usuario') && $val_id !== '') $this->iid_usuario = (int)$val_id;
+                if (($nom_id === 'id_usuario') && $val_id !== '') $this->iid_usuario = (int)$val_id;
             }
         }
     }
@@ -362,7 +364,7 @@ class Grupo extends core\ClasePropiedades
      */
     function getDatosCampos()
     {
-        $oGrupoSet = new core\Set();
+        $oGrupoSet = new Set();
 
         $oGrupoSet->add($this->getDatosUsuario());
         $oGrupoSet->add($this->getDatosId_role());
@@ -374,12 +376,12 @@ class Grupo extends core\ClasePropiedades
      * Recupera les propietats de l'atribut susuario de Grupo
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosUsuario()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'usuario'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'usuario'));
         $oDatosCampo->setEtiqueta(_("usuario"));
         return $oDatosCampo;
     }
@@ -388,12 +390,12 @@ class Grupo extends core\ClasePropiedades
      * Recupera les propietats de l'atribut iid_role de Usuario
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosId_role()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_role'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_role'));
         $oDatosCampo->setEtiqueta(_("id_role"));
         return $oDatosCampo;
     }

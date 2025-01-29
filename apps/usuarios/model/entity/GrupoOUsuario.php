@@ -1,8 +1,6 @@
 <?php
 namespace usuarios\model\entity;
 
-use core;
-
 /**
  * Clase treballar amb Grups i Usuaris a l'hora.
  *
@@ -16,6 +14,10 @@ class GrupoOUsuario extends Grupo
 {
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
+    /**
+     * @var int
+     */
+    private int $isfsv;
 
     /**
      * Carga los campos de la base de datos como atributos de la clase.

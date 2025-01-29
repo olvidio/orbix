@@ -1,4 +1,9 @@
-<script>
+<?php
+
+use web\Hash;
+
+?>
+    <script>
     fnjs_del_grupmenu = function (formulario) {
         $('#que').val('del_grupmenu');
         $(formulario).attr('action', "apps/usuarios/controller/role_update.php");
@@ -22,7 +27,7 @@
     }
 
     fnjs_add_grupmenu = function (que) {
-        go = '<?= web\Hash::link('apps/usuarios/controller/role_grupmenu.php?' . http_build_query(array('id_role' => $Qid_role))) ?>';
+        go = '<?= Hash::link('apps/usuarios/controller/role_grupmenu.php?' . http_build_query(array('id_role' => $Qid_role))) ?>';
         fnjs_update_div('#main', go);
     }
 

@@ -2,8 +2,11 @@
 
 namespace procesos\model\entity;
 
-use core;
+use core\ClasePropiedades;
 use core\ConfigGlobal;
+use core\DatosCampo;
+use core\Set;
+use function core\is_true;
 
 /**
  * Fitxer amb la Classe que accedeix a la taula a_fases
@@ -24,7 +27,7 @@ use core\ConfigGlobal;
  * @version 1.0
  * @created 07/12/2018
  */
-class ActividadFase extends core\ClasePropiedades
+class ActividadFase extends ClasePropiedades
 {
 
     // Fases constants.
@@ -110,7 +113,7 @@ class ActividadFase extends core\ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'id_fase') && $val_id !== '') $this->iid_fase = (int)$val_id;
+                if (($nom_id === 'id_fase') && $val_id !== '') $this->iid_fase = (int)$val_id;
             }
         } else {
             if (isset($a_id) && $a_id !== '') {
@@ -145,12 +148,12 @@ class ActividadFase extends core\ClasePropiedades
         $aDades['sv'] = $this->bsv;
         array_walk($aDades, 'core\poner_null');
         //para el caso de los boolean FALSE, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
-        if (core\is_true($aDades['sf'])) {
+        if (is_true($aDades['sf'])) {
             $aDades['sf'] = 'true';
         } else {
             $aDades['sf'] = 'false';
         }
-        if (core\is_true($aDades['sv'])) {
+        if (is_true($aDades['sv'])) {
             $aDades['sv'] = 'true';
         } else {
             $aDades['sv'] = 'false';
@@ -196,7 +199,7 @@ class ActividadFase extends core\ClasePropiedades
                     return FALSE;
                 }
             }
-            $this->id_fase = $oDbl->lastInsertId('a_fases_id_fase_seq');
+            $this->iid_fase = $oDbl->lastInsertId('a_fases_id_fase_seq');
         }
         $this->setAllAtributes($aDades);
         return TRUE;
@@ -279,7 +282,7 @@ class ActividadFase extends core\ClasePropiedades
      *
      * @param array $aDades
      */
-    function setAllAtributes($aDades)
+    function setAllAtributes(array $aDades)
     {
         if (!is_array($aDades)) return;
         if (array_key_exists('id_fase', $aDades)) $this->setId_fase($aDades['id_fase']);
@@ -341,7 +344,7 @@ class ActividadFase extends core\ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'id_fase') && $val_id !== '') $this->iid_fase = (int)$val_id;
+                if (($nom_id === 'id_fase') && $val_id !== '') $this->iid_fase = (int)$val_id;
             }
         }
     }
@@ -461,7 +464,7 @@ class ActividadFase extends core\ClasePropiedades
      */
     function getDatosCampos()
     {
-        $oActividadFaseSet = new core\Set();
+        $oActividadFaseSet = new Set();
 
         $oActividadFaseSet->add($this->getDatosDesc_fase());
         $oActividadFaseSet->add($this->getDatosSf());
@@ -473,12 +476,12 @@ class ActividadFase extends core\ClasePropiedades
      * Recupera les propietats de l'atribut sdesc_fase de ActividadFase
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosDesc_fase()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'desc_fase'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'desc_fase'));
         $oDatosCampo->setEtiqueta(_("descripción"));
         $oDatosCampo->setTipo('texto');
         $oDatosCampo->setArgument('30');
@@ -489,12 +492,12 @@ class ActividadFase extends core\ClasePropiedades
      * Recupera les propietats de l'atribut bsf de ActividadFase
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosSf()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'sf'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'sf'));
         $oDatosCampo->setEtiqueta(_("sf"));
         $oDatosCampo->setTipo('check');
         return $oDatosCampo;
@@ -504,12 +507,12 @@ class ActividadFase extends core\ClasePropiedades
      * Recupera les propietats de l'atribut bsv de ActividadFase
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosSv()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'sv'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'sv'));
         $oDatosCampo->setEtiqueta(_("sv"));
         $oDatosCampo->setTipo('check');
         return $oDatosCampo;

@@ -1,3 +1,8 @@
+<?php
+
+use core\ConfigGlobal;
+
+?>
 <script>
     fnjs_guardar = function (formulario) {
         var err = 0;
@@ -53,7 +58,7 @@ if (empty($Qcabecera) || $Qcabecera != "no") {
             </td>
             <td>
 	<span class=link onclick="fnjs_update_div('#main','<?= $godossiers ?>')">
-		<img src=<?= core\ConfigGlobal::getWeb_icons() ?>/dossiers.gif border=0 width=40 height=40
+		<img src=<?= ConfigGlobal::getWeb_icons() ?>/dossiers.gif border=0 width=40 height=40
              alt='<?= _("ver dossiers") ?>'>(<?= _("dossiers") ?>)
 	</span>
             <td class=titulo><span class=link onclick="fnjs_update_div('#main','<?= $gohome ?>')"><?= $titulo ?></span>

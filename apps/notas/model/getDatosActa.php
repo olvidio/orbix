@@ -2,12 +2,8 @@
 
 namespace notas\model;
 
-use core\ConfigGlobal;
-use Exception;
-use notas\model\entity as notas;
 use notas\model\entity\GestorNota;
 use notas\model\entity\GestorPersonaNotaDB;
-use ubis\model\entity\GestorDelegacion;
 
 class getDatosActa
 {

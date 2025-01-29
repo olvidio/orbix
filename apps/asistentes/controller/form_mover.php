@@ -1,9 +1,20 @@
 <?php
 
-use actividades\model\entity as actividades;
-use asistentes\model\entity as asistentes;
-use actividadestudios\model\entity as actividadestudios;
+use actividades\model\entity\Actividad;
+use actividades\model\entity\ActividadAll;
+use actividades\model\entity\GestorActividad;
+use actividadestudios\model\entity\GestorActividadAsignaturaDl;
+use actividadestudios\model\entity\PosiblesCa;
+use actividadplazas\model\entity\GestorActividadPlazas;
+use actividadplazas\model\entity\GestorPlazaPeticion;
+use asistentes\model\entity\Asistente;
 use asistentes\model\entity\AsistentePub;
+use asistentes\model\entity\GestorAsistente;
+use core\ConfigGlobal;
+use core\ViewPhtml;
+use ubis\model\entity\GestorDelegacion;
+use web\Desplegable;
+use web\Hash;
 
 // INICIO Cabecera global de URL de controlador *********************************
 require_once("apps/core/global_header.inc");
@@ -40,12 +51,12 @@ if ($oAsistente->perm_modificar() === FALSE) {
     ];
 } else {
 
-    $oPosiblesCa = new actividadestudios\PosiblesCa();
+    $oPosiblesCa = new PosiblesCa();
 
-    $gesDelegacion = new ubis\model\entity\GestorDelegacion();
-    $gesActividadPlazas = new \actividadplazas\model\entity\GestorActividadPlazas();
-    $gesAsistentes = new \asistentes\model\entity\GestorAsistente();
-    $mi_dele = core\ConfigGlobal::mi_delef();
+    $gesDelegacion = new GestorDelegacion();
+    $gesActividadPlazas = new GestorActividadPlazas();
+    $gesAsistentes = new GestorAsistente();
+    $mi_dele = ConfigGlobal::mi_delef();
     $cDelegaciones = $gesDelegacion->getDelegaciones(array('dl' => $mi_dele));
     $oDelegacion = $cDelegaciones[0];
     $id_dl = $oDelegacion->getId_dl();
@@ -56,7 +67,7 @@ if ($oAsistente->perm_modificar() === FALSE) {
         $mod = "mover";
 
         //del mismo tipo que la anterior
-        $oActividad = new actividades\Actividad(array('id_activ' => $Qid_activ_old));
+        $oActividad = new Actividad(array('id_activ' => $Qid_activ_old));
         $id_tipo = $oActividad->getId_tipo_activ();
 
         // IMPORTANT: Propietario del a plaza
@@ -94,25 +105,25 @@ if ($oAsistente->perm_modificar() === FALSE) {
 
         $aWhere['id_tipo_activ'] = '^' . $id_tipo;
         $aOperador['id_tipo_activ'] = '~';
-        $aWhere['status'] = actividades\ActividadAll::STATUS_ACTUAL;
+        $aWhere['status'] = ActividadAll::STATUS_ACTUAL;
         $aWhere['_ordre'] = 'f_ini';
 
         // todas las posibles.
-        $oGesActividades = new actividades\GestorActividad();
+        $oGesActividades = new GestorActividad();
         $cActividades = $oGesActividades->getActividades($aWhere, $aOperador);
 
-        if (core\ConfigGlobal::is_app_installed('actividadplazas')) {
+        if (ConfigGlobal::is_app_installed('actividadplazas')) {
             //primero las que se han pedido
             $cActividadesPreferidas = array();
             //Miro los actuales
-            $gesPlazasPeticion = new \actividadplazas\model\entity\GestorPlazaPeticion();
+            $gesPlazasPeticion = new GestorPlazaPeticion();
             $cPlazasPeticion = $gesPlazasPeticion->getPlazasPeticion(array('id_nom' => $Qid_nom, 'tipo' => $sactividad, '_ordre' => 'orden'));
             $sid_activ = '';
             foreach ($cPlazasPeticion as $oPlazaPeticion) {
                 $id_activ = $oPlazaPeticion->getId_activ();
-                $oActividad = new actividades\Actividad($id_activ);
+                $oActividad = new Actividad($id_activ);
                 // Asegurar que es una actividad actual (No terminada)
-                if ($oActividad->getStatus() != actividades\ActividadAll::STATUS_ACTUAL) {
+                if ($oActividad->getStatus() != ActividadAll::STATUS_ACTUAL) {
                     continue;
                 }
                 // Asegurar que es una actividad del periodo
@@ -152,7 +163,7 @@ if ($oAsistente->perm_modificar() === FALSE) {
             $nom_activ = $oActividad->getNom_activ();
             $dl_org = $oActividad->getDl_org();
             // plazas libres
-            if (core\ConfigGlobal::is_app_installed('actividadplazas')) {
+            if (ConfigGlobal::is_app_installed('actividadplazas')) {
                 $concedidas = 0;
                 $cActividadPlazas = $gesActividadPlazas->getActividadesPlazas(array('id_dl' => $id_dl, 'id_activ' => $id_activ));
                 foreach ($cActividadPlazas as $oActividadPlazas) {
@@ -173,7 +184,7 @@ if ($oAsistente->perm_modificar() === FALSE) {
             }
             // creditos
             // por cada ca creo un array con las asignaturas y los créditos.
-            $GesActividadAsignaturas = new actividadestudios\GestorActividadAsignaturaDl();
+            $GesActividadAsignaturas = new GestorActividadAsignaturaDl();
             $aAsignaturasCa = $GesActividadAsignaturas->getAsignaturasCa($id_activ);
 
             $result = $oPosiblesCa->contar_creditos($Qid_nom, $aAsignaturasCa);
@@ -185,11 +196,11 @@ if ($oAsistente->perm_modificar() === FALSE) {
         $aOpciones[$id_activ] = "$nom_activ $txt_plazas  $txt_creditos";
     }
 
-    $oDesplActividades = new web\Desplegable();
+    $oDesplActividades = new Desplegable();
     $oDesplActividades->setNombre('id_activ');
     $oDesplActividades->setOpciones($aOpciones);
 
-    $oHash = new web\Hash();
+    $oHash = new Hash();
     $camposForm = 'observ!id_activ';
     $oHash->setCamposNo('falta!est_ok');
     $a_camposHidden = array(
@@ -197,7 +208,7 @@ if ($oAsistente->perm_modificar() === FALSE) {
         'id_activ_old' => $Qid_activ_old,
         'mod' => $mod,
         'propio' => $propio,
-        'plaza' => asistentes\Asistente::PLAZA_ASIGNADA,
+        'plaza' => Asistente::PLAZA_ASIGNADA,
         'propietario' => $propietario,
     );
     $oHash->setCamposForm($camposForm);
@@ -214,6 +225,6 @@ if ($oAsistente->perm_modificar() === FALSE) {
 }
 
 
-$oView = new core\View('asistentes/model');
+$oView = new ViewPhtml('asistentes/model');
 
 $oView->renderizar('form_mover.phtml', $a_campos);

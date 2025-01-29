@@ -2,6 +2,7 @@
 
 namespace procesos\model;
 
+use stdClass;
 use web\Desplegable;
 
 class CuadrosFases
@@ -57,7 +58,7 @@ class CuadrosFases
     function getoFases()
     {
         if (!is_object($this->oFases)) {
-            $this->oFases = new \stdClass;
+            $this->oFases = new stdClass;
         }
         return $this->oFases;
     }

@@ -1,6 +1,9 @@
 <?php
 
 // INICIO Cabecera global de URL de controlador *********************************
+use core\ConfigGlobal;
+use web\Hash;
+
 require_once("apps/core/global_header.inc");
 // Archivos requeridos por esta url **********************************************
 
@@ -27,8 +30,8 @@ foreach ($a_ids_desaparecidos_de_listas as $id_nom_orbix) {
 }
 
 
-$url_sincro_ajax = core\ConfigGlobal::getWeb() . '/apps/dbextern/controller/sincro_ajax.php';
-$oHash = new web\Hash();
+$url_sincro_ajax = ConfigGlobal::getWeb() . '/apps/dbextern/controller/sincro_ajax.php';
+$oHash = new Hash();
 $oHash->setUrl($url_sincro_ajax);
 //$oHash->setArraycamposHidden($a_camposHidden);
 $oHash->setCamposForm('que!id_nom_orbix!tipo_persona');

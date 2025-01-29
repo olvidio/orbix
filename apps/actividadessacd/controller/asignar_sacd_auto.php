@@ -1,9 +1,8 @@
 <?php
 
-use core\ConfigGlobal;
-use web\Hash;
 use actividadessacd\model\AsignarSacd;
 use web\DateTimeLocal;
+use web\Hash;
 
 // INICIO Cabecera global de URL de controlador *********************************
 

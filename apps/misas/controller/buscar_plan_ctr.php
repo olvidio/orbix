@@ -2,17 +2,14 @@
 
 // INICIO Cabecera global de URL de controlador *********************************
 
-use web\Hash;
-use zonassacd\model\entity\GestorZona;
-use zonassacd\model\entity\GestorZonaSacd;
-use personas\model\entity\GestorPersona;
-use ubis\model\entity\GestorCentroDl;
-use ubis\model\entity\GestorCentroEllas;
-use misas\domain\entity\InicialesSacd;
-use misas\domain\entity\EncargoDia;
+use core\ViewTwig;
 use web\DateTimeLocal;
 use web\Desplegable;
+use web\Hash;
 use web\PeriodoQue;
+use ubis\model\entity\GestorCentroDl;
+use ubis\model\entity\GestorCentroEllas;
+use zonassacd\model\entity\GestorZona;
 
 require_once("apps/core/global_header.inc");
 // Archivos requeridos por esta url **********************************************
@@ -100,5 +97,5 @@ $a_campos = ['oPosicion' => $oPosicion,
     'h_plan_ctr' => $h_plan_ctr,
 ];
  
-$oView = new core\ViewTwig('misas/controller');
+$oView = new ViewTwig('misas/controller');
 echo $oView->render('buscar_plan_ctr.html.twig', $a_campos);

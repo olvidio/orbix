@@ -1,16 +1,16 @@
 <?php
 
-use actividades\model\entity as actividades;
-use actividadestudios\model\entity as actividadestudios;
-use asignaturas\model\entity as asignaturas;
-use personas\model\entity as personas;
+use actividades\model\entity\Actividad;
+use actividadestudios\model\entity\GestorMatriculaDl;
+use asignaturas\model\entity\Asignatura;
+use personas\model\entity\Persona;
 use web\Hash;
 use web\Lista;
 use web\Posicion;
 use function core\is_true;
 
 /**
- * Para asegurar que inicia la sesion, y poder acceder a los permisos
+ * Para asegurar que inicia la sesión, y poder acceder a los permisos
  */
 // INICIO Cabecera global de URL de controlador *********************************
 require_once("apps/core/global_header.inc");
@@ -43,7 +43,7 @@ if (!empty($traslados)) {
     // Periodo??
 
 } else {
-    $gesMatriculasDl = new actividadestudios\GestorMatriculaDl();
+    $gesMatriculasDl = new GestorMatriculaDl();
     $cMatriculasPendientes = $gesMatriculasDl->getMatriculasPendientes();
 }
 
@@ -75,15 +75,15 @@ foreach ($cMatriculasPendientes as $oMatricula) {
     //echo "id_activ: $id_activ<br>";
     //echo "id_asignatura: $id_asignatura<br>";
 
-    $oActividad = new actividades\Actividad($id_activ);
+    $oActividad = new Actividad($id_activ);
     $nom_activ = $oActividad->getNom_activ();
-    $oPersona = personas\Persona::newPersona($id_nom);
+    $oPersona = Persona::newPersona($id_nom);
     if (!is_object($oPersona)) {
         $msg_err .= "<br>$oPersona con id_nom: $id_nom en  " . __FILE__ . ": line " . __LINE__;
         continue;
     }
     $apellidos_nombre = $oPersona->getPrefApellidosNombre();
-    $oAsignatura = new asignaturas\Asignatura($id_asignatura);
+    $oAsignatura = new Asignatura($id_asignatura);
     $nombre_corto = $oAsignatura->getNombre_corto();
 
     $a_valores[$i]['sel'] = "$id_activ#$id_asignatura#$id_nom";

@@ -2,8 +2,9 @@
 
 namespace dbextern\model\entity;
 
-use core;
-use web;
+use core\ClasePropiedades;
+use core\DatosCampo;
+use core\Set;
 
 /**
  * Para las dl que están en la DBU
@@ -11,7 +12,7 @@ use web;
  * @author dani
  *
  */
-class DlListas extends core\ClasePropiedades
+class DlListas extends ClasePropiedades
 {
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
@@ -90,14 +91,14 @@ class DlListas extends core\ClasePropiedades
      */
     function __construct($a_id = '')
     {
-        if (!empty($_SESSION['oDBListas']) && $_SESSION['oDBListas'] == 'error') {
+        if (!empty($_SESSION['oDBListas']) && $_SESSION['oDBListas'] === 'error') {
             exit(_("no se puede conectar con la base de datos de Listas"));
         }
         $oDbl = $GLOBALS['oDBListas'];
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'dl') && $val_id !== '') $this->sDl = (string)$val_id; 
+                if (($nom_id === 'dl') && $val_id !== '') $this->sDl = (string)$val_id;
             }
         } else {
             if (isset($a_id) && $a_id !== '') {
@@ -182,7 +183,7 @@ class DlListas extends core\ClasePropiedades
      *
      * @param array $aDades
      */
-    function setAllAtributes($aDades)
+    function setAllAtributes(array $aDades)
     {
         if (!is_array($aDades)) return;
         if (array_key_exists('dl', $aDades)) $this->setDl($aDades['dl']);
@@ -245,7 +246,7 @@ class DlListas extends core\ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'dl') && $val_id !== '') $this->sDl = (string)$val_id;
+                if (($nom_id === 'dl') && $val_id !== '') $this->sDl = (string)$val_id;
             }
         }
     }
@@ -373,7 +374,7 @@ class DlListas extends core\ClasePropiedades
      */
     function getDatosCampos()
     {
-        $oListasSet = new core\Set();
+        $oListasSet = new Set();
 
         $oListasSet->add($this->getDatosDl());
         $oListasSet->add($this->getDatosNombre_dl());
@@ -387,12 +388,12 @@ class DlListas extends core\ClasePropiedades
      * Recupera les propietats de l'atribut sDl de Listas
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosDl()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'dl'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'dl'));
         $oDatosCampo->setEtiqueta(_("dl"));
         return $oDatosCampo;
     }
@@ -401,12 +402,12 @@ class DlListas extends core\ClasePropiedades
      * Recupera les propietats de l'atribut sNombre_dl de Listas
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosNombre_dl()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'nombre_dl'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'nombre_dl'));
         $oDatosCampo->setEtiqueta(_("Nombre dl"));
         return $oDatosCampo;
     }
@@ -415,12 +416,12 @@ class DlListas extends core\ClasePropiedades
      * Recupera les propietats de l'atribut iNumero_dl de Listas
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatoiNumero_dl()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'numero_dl'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'numero_dl'));
         $oDatosCampo->setEtiqueta(_("Número dl"));
         return $oDatosCampo;
     }
@@ -429,12 +430,12 @@ class DlListas extends core\ClasePropiedades
      * Recupera les propietats de l'atribut sAbr_r de Listas
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosAbr_r()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'abr_r'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'abr_r'));
         $oDatosCampo->setEtiqueta(_("Abreviatura región"));
         return $oDatosCampo;
     }
@@ -443,12 +444,12 @@ class DlListas extends core\ClasePropiedades
      * Recupera les propietats de l'atribut iNumero_r de Listas
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatoiNumero_r()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'numero_r'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'numero_r'));
         $oDatosCampo->setEtiqueta(_("Número región"));
         return $oDatosCampo;
     }

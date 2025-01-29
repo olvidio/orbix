@@ -6,8 +6,10 @@ Hasta ahora, yo me manejaba con Access y tenía una manera de saber qué acta ib
 
 
 use asignaturas\model\entity\Asignatura;
+use core\ViewPhtml;
 use notas\model\entity\GestorActaDl;
 use web\DateTimeLocal;
+use web\Hash;
 use web\Periodo;
 
 // INICIO Cabecera global de URL de controlador *********************************
@@ -107,7 +109,7 @@ $oFormP->setDesplAnysOpcion_sel($Qyear);
 $oFormP->setDesplPeriodosOpcion_sel($Qperiodo);
 $oFormP->setBoton($boton);
 
-$oHashPeriodo = new web\Hash();
+$oHashPeriodo = new Hash();
 $oHashPeriodo->setCamposForm('empiezamax!empiezamin!periodo!year!iactividad_val!iasistentes_val');
 $oHashPeriodo->setCamposNo('!refresh');
 $a_camposHiddenP = array();
@@ -126,5 +128,5 @@ $a_campos = ['aActas' => $aActas,
     'oHashPeriodo' => $oHashPeriodo,
 ];
 
-$oView = new core\View('notas/controller');
+$oView = new ViewPhtml('notas/controller');
 $oView->renderizar('acta_listado_anual.phtml', $a_campos);

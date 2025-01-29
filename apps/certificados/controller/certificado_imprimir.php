@@ -1,10 +1,11 @@
 <?php
 
 use core\ConfigGlobal;
-use personas\model\entity as personas;
-use usuarios\model\entity\GestorLocal;
+use core\ViewTwig;
+use personas\model\entity\Persona;
 use web\DateTimeLocal;
 use web\Hash;
+use usuarios\model\entity\GestorLocal;
 
 /**
  * Funciones más comunes de la aplicación
@@ -45,7 +46,7 @@ if (!empty($a_sel)) { //vengo de un checkbox
     $id_tabla = (string)filter_input(INPUT_POST, 'id_tabla');
 }
 
-$oPersona = personas\Persona::NewPersona($id_nom);
+$oPersona = Persona::NewPersona($id_nom);
 if (!is_object($oPersona)) {
     $msg_err = "<br>$oPersona con id_nom: $id_nom en  " . __FILE__ . ": line " . __LINE__;
     exit($msg_err);
@@ -110,5 +111,5 @@ $a_campos = ['oPosicion' => $oPosicion,
     'h_eliminar' => $h_eliminar,
 ];
 
-$oView = new core\ViewTwig('certificados/controller');
+$oView = new ViewTwig('certificados/controller');
 $oView->renderizar('certificado_imprimir.html.twig', $a_campos);

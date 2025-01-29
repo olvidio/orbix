@@ -2,14 +2,12 @@
 
 // INICIO Cabecera global de URL de controlador *********************************
 
-use web\Hash;
-use zonassacd\model\entity\GestorZona;
-use zonassacd\model\entity\GestorZonaSacd;
-use personas\model\entity\GestorPersona;
+use core\ViewTwig;
 use misas\domain\entity\InicialesSacd;
-use misas\domain\entity\EncargoDia;
+use personas\model\entity\GestorPersona;
 use web\DateTimeLocal;
 use web\Desplegable;
+use web\Hash;
 use web\PeriodoQue;
 
 require_once("apps/core/global_header.inc");
@@ -94,5 +92,5 @@ $a_campos = ['oPosicion' => $oPosicion,
     'h_plan_sacd' => $h_plan_sacd,
 ];
  
-$oView = new core\ViewTwig('misas/controller');
+$oView = new ViewTwig('misas/controller');
 echo $oView->render('buscar_plan_sacd.html.twig', $a_campos);

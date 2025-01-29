@@ -1,5 +1,6 @@
 <?php
 
+use core\ViewTwig;
 use web\Hash;
 use zonassacd\model\entity\GestorZona;
 
@@ -70,5 +71,5 @@ $a_campos = ['oPosicion' => $oPosicion,
     'oDesplZonas' => $oDesplZonas,
 ];
 
-$oView = new core\ViewTwig('zonassacd/controller');
+$oView = new ViewTwig('zonassacd/controller');
 $oView->renderizar('zona_sacd.html.twig', $a_campos);

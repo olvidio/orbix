@@ -1,6 +1,7 @@
 <?php
 
-use asignaturas\model\entity as asignaturas;
+use asignaturas\model\entity\Asignatura;
+use core\ConfigGlobal;
 use function core\is_true;
 
 // INICIO Cabecera global de URL de controlador *********************************
@@ -11,7 +12,7 @@ require_once("apps/core/global_header.inc");
 require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-include_once(core\ConfigGlobal::$dir_estilos . '/colores.php');
+include_once(ConfigGlobal::$dir_estilos . '/colores.php');
 
 ?>
 <html>
@@ -83,7 +84,7 @@ include_once(core\ConfigGlobal::$dir_estilos . '/colores.php');
                 <td></td>
                 <td></td>
                 <td class=derecha>dl:</td>
-                <td><?= core\ConfigGlobal::mi_delef() ?></td>
+                <td><?= ConfigGlobal::mi_delef() ?></td>
             </tr>
             <tr>
                 <td>Departamento:</td>
@@ -350,7 +351,7 @@ include_once(core\ConfigGlobal::$dir_estilos . '/colores.php');
                                         $curso_inicio = $oDocencia->getCurso_inicio();
                                         $acta = $oDocencia->getActa();
                                         $array_tipo = $oDocencia->getDatosTipo()->getLista();
-                                        $oAsignatura = new asignaturas\Asignatura($id_asignatura);
+                                        $oAsignatura = new Asignatura($id_asignatura);
                                         $nombre_corto = $oAsignatura->getNombre_corto();
                                         $modo = empty($tipo) ? '' : $array_tipo[$tipo];
                                         $curso_fin = $curso_inicio + 1;

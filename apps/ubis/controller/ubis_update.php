@@ -1,8 +1,12 @@
 <?php
 
+use core\ConfigGlobal;
+use ubis\model\entity\CdcDlxDireccion;
+use ubis\model\entity\CdcExxDireccion;
+use ubis\model\entity\CtrDlxDireccion;
+use ubis\model\entity\CtrExxDireccion;
+use usuarios\model\entity\Usuario;
 use function core\is_true;
-use ubis\model\entity as ubis;
-use usuarios\model\entity as usuarios;
 
 /**
  * Para asegurar que inicia la sesion, y poder acceder a los permisos
@@ -15,7 +19,7 @@ require_once("apps/core/global_header.inc");
 require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$oMiUsuario = new usuarios\Usuario(core\ConfigGlobal::mi_id_usuario());
+$oMiUsuario = new Usuario(ConfigGlobal::mi_id_usuario());
 
 $Qque = (string)filter_input(INPUT_POST, 'que');
 $Qobj_pau = (string)filter_input(INPUT_POST, 'obj_pau');
@@ -64,16 +68,16 @@ switch ($Qque) {
 
         switch ($Qobj_dir) {
             case "DireccionCtrDl":
-                $xDireccion = new ubis\CtrDlxDireccion($a_pkey);
+                $xDireccion = new CtrDlxDireccion($a_pkey);
                 break;
             case "DireccionCtrEx":
-                $xDireccion = new ubis\CtrExxDireccion($a_pkey);
+                $xDireccion = new CtrExxDireccion($a_pkey);
                 break;
             case "DireccionCdcDl":
-                $xDireccion = new ubis\CdcDlxDireccion($a_pkey);
+                $xDireccion = new CdcDlxDireccion($a_pkey);
                 break;
             case "DireccionCdcEx":
-                $xDireccion = new ubis\CdcExxDireccion($a_pkey);
+                $xDireccion = new CdcExxDireccion($a_pkey);
                 break;
         }
         if (!empty($Qpropietario)) {
@@ -115,7 +119,7 @@ function guardarObjeto($oObjeto, $campos_chk)
             $classname = get_class($oObjeto);
             $obj_pau = substr($classname, strrpos($classname, '\\') + 1);
             if ($obj_pau === 'CentroDl' || $obj_pau === 'CentroEx') {
-                switch (core\ConfigGlobal::mi_sfsv()) {
+                switch (ConfigGlobal::mi_sfsv()) {
                     case 1: // sv
                         $a_values_o['sv'] = 't';
                         break;

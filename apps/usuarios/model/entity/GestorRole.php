@@ -1,8 +1,11 @@
 <?php
 namespace usuarios\model\entity;
 
-use core;
-use web;
+
+use core\ClaseGestor;
+use core\Condicion;
+use core\Set;
+use web\Desplegable;
 
 /**
  * GestorRole
@@ -15,7 +18,7 @@ use web;
  * @version 1.0
  * @created 16/01/2014
  */
-class GestorRole extends core\ClaseGestor
+class GestorRole extends ClaseGestor
 {
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
@@ -44,7 +47,7 @@ class GestorRole extends core\ClaseGestor
      * Els posibles roles
      *
      * @param string sWhere condicion con el WHERE.
-     * @return array Una Llista
+     * @return array|false
      */
     function getListaRoles($sWhere = '')
     {
@@ -58,7 +61,7 @@ class GestorRole extends core\ClaseGestor
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
             return false;
         }
-        return new web\Desplegable('', $oDblSt, '', true);
+        return new Desplegable('', $oDblSt, '', true);
     }
 
     /**
@@ -66,7 +69,7 @@ class GestorRole extends core\ClaseGestor
      * (el nom convertit a minúscules) per nom => id
      *
      * @param string sWhere condicion con el WHERE.
-     * @return array
+     * @return array|false
      */
     function getArrayRoles($sWhere = '')
     {
@@ -93,7 +96,7 @@ class GestorRole extends core\ClaseGestor
      * (el nom convertit a minúscules) per nom => id
      *
      * @param string sWhere condicion con el WHERE.
-     * @return array
+     * @return array|false
      */
     function getArrayRolesPau()
     {
@@ -120,13 +123,13 @@ class GestorRole extends core\ClaseGestor
      * retorna l'array d'objectes de tipus Role
      *
      * @param string sQuery la query a executar.
-     * @return array Una col·lecció d'objectes de tipus Role
+     * @return array|false
      */
     function getRolesQuery($sQuery = '')
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        $oRoleSet = new core\Set();
+        $oRoleSet = new Set();
         if (($oDblSt = $oDbl->query($sQuery)) === false) {
             $sClauError = 'GestorRole.query';
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
@@ -145,23 +148,23 @@ class GestorRole extends core\ClaseGestor
      *
      * @param array aWhere associatiu amb els valors de les variables amb les quals farem la query
      * @param array aOperators associatiu amb els valors dels operadors que cal aplicar a cada variable
-     * @return array Una col·lecció d'objectes de tipus Role
+     * @return array|void
      */
     function getRoles($aWhere = array(), $aOperators = array())
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
-        $oRoleSet = new core\Set();
-        $oCondicion = new core\Condicion();
+        $oRoleSet = new Set();
+        $oCondicion = new Condicion();
         $aCondi = array();
         foreach ($aWhere as $camp => $val) {
-            if ($camp == '_ordre') continue;
+            if ($camp === '_ordre') continue;
             $sOperador = isset($aOperators[$camp]) ? $aOperators[$camp] : '';
             if ($a = $oCondicion->getCondicion($camp, $sOperador, $val)) $aCondi[] = $a;
             // operadores que no requieren valores
-            if ($sOperador == 'BETWEEN' || $sOperador == 'IS NULL' || $sOperador == 'IS NOT NULL' || $sOperador == 'OR') unset($aWhere[$camp]);
-            if ($sOperador == 'IN' || $sOperador == 'NOT IN') unset($aWhere[$camp]);
-            if ($sOperador == 'TXT') unset($aWhere[$camp]);
+            if ($sOperador === 'BETWEEN' || $sOperador === 'IS NULL' || $sOperador === 'IS NOT NULL' || $sOperador === 'OR') unset($aWhere[$camp]);
+            if ($sOperador === 'IN' || $sOperador === 'NOT IN') unset($aWhere[$camp]);
+            if ($sOperador === 'TXT') unset($aWhere[$camp]);
         }
         $sCondi = implode(' AND ', $aCondi);
         if ($sCondi != '') $sCondi = " WHERE " . $sCondi;

@@ -1,3 +1,8 @@
+<?php
+
+use core\ConfigGlobal;
+
+?>
 <script>
     fnjs_buscar = function (formulario) {
         var err = 0;
@@ -64,7 +69,7 @@
                            value="a" <?= $a ?> ><?= ucfirst(_("todos los agregados")) ?></td>
             </tr>
             <?php
-            if (core\ConfigGlobal::mi_sfsv() == 1) { ?>
+            if (ConfigGlobal::mi_sfsv() == 1) { ?>
                 <tr>
                     <td class="etiqueta" onclick="fnjs_otro(0);">
                         <input type="radio" id="n_agd_3" name="n_agd"

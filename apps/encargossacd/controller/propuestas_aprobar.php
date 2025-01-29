@@ -1,8 +1,8 @@
 <?php
 
 // INICIO Cabecera global de URL de controlador *********************************
-use encargossacd\model\GestorPropuestas;
 use encargossacd\model\entity\GestorPropuestaEncargosSacd;
+use encargossacd\model\GestorPropuestas;
 use web\DateTimeLocal;
 
 require_once("apps/core/global_header.inc");

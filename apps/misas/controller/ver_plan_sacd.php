@@ -2,23 +2,15 @@
 
 
 // INICIO Cabecera global de URL de controlador *********************************
-use encargossacd\model\EncargoConstants;
-use misas\domain\repositories\EncargoDiaRepository;
-use misas\domain\repositories\InicialesSacdRepository;
-use misas\domain\entity\InicialesSacd;
-use misas\domain\entity\EncargoDia;
-use misas\model\EncargosZona;
-use personas\model\entity\PersonaSacd;
+use core\ViewTwig;
 use encargossacd\model\entity\Encargo;
-use encargossacd\model\entity\GestorEncargo;
-use encargossacd\model\entity\GestorEncargoTipo;
-use zonassacd\model\entity\GestorZonaSacd;
+use misas\domain\repositories\EncargoDiaRepository;
 use web\DateTimeLocal;
-//use web\Desplegable;
 use web\Hash;
+
+//use web\Desplegable;
 //use zonassacd\model\entity\GestorZonaSacd;
 //use personas\model\entity\GestorPersona;
-use personas\model\entity\PersonaEx;
 
 require_once("apps/core/global_header.inc");
 // Archivos requeridos por esta url **********************************************
@@ -173,5 +165,5 @@ $a_campos = ['oPosicion' => $oPosicion,
     'json_data_cuadricula' => $json_data_cuadricula,
 ];
 
-$oView = new core\ViewTwig('misas/controller');
+$oView = new ViewTwig('misas/controller');
 echo $oView->render('ver_plan_sacd.html.twig', $a_campos);

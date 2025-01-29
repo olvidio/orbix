@@ -1,12 +1,12 @@
 <?php
 
-use actividades\model\entity as actividades;
-use actividadcargos\model\entity as actividadcargos;
-use asistentes\model\entity as asistentes;
-use personas\model\entity as personas;
-use usuarios\model\entity as usuarios;
-use ubis\model\entity as ubis;
+use actividadcargos\model\entity\Cargo;
+use actividadcargos\model\entity\GestorActividadCargo;
+use asistentes\model\entity\GestorAsistente;
+use core\ConfigGlobal;
+use core\ViewPhtml;
 use actividades\model\entity\Actividad;
+use personas\model\entity\Persona;
 use function core\is_true;
 
 /**
@@ -49,7 +49,7 @@ if (!empty($a_sel)) { //vengo de un checkbox
 }
 
 $queSel = (string)filter_input(INPUT_POST, 'queSel');
-$gesAsistentes = new asistentes\GestorAsistente();
+$gesAsistentes = new GestorAsistente();
 
 function datos($oPersona)
 {
@@ -71,7 +71,7 @@ function datos($oPersona)
             $profesion = $oPersona->getProfesion();
             $f_nacimiento = $oPersona->getF_nacimiento()->getFromLocal();
             $inc = $oPersona->getInc();
-            if (empty($inc) || $inc == "?") {
+            if (empty($inc) || $inc === "?") {
                 $f_inc = "?";
             } else {
                 //$get = "getF_$inc()";
@@ -118,29 +118,29 @@ $a_valores = array();
 $aListaCargos = array();
 $msg_err = '';
 // primero los cargos
-if (core\ConfigGlobal::is_app_installed('actividadcargos')) {
-    $GesCargosEnActividad = new actividadcargos\GestorActividadCargo();
+if (ConfigGlobal::is_app_installed('actividadcargos')) {
+    $GesCargosEnActividad = new GestorActividadCargo();
     $cCargosEnActividad = $GesCargosEnActividad->getActividadCargos(array('id_activ' => $id_pau));
-    $mi_sfsv = core\ConfigGlobal::mi_sfsv();
+    $mi_sfsv = ConfigGlobal::mi_sfsv();
     foreach ($cCargosEnActividad as $oActividadCargo) {
         $c++;
         $num++; // número total de asistentes.
         $id_nom = $oActividadCargo->getId_nom();
         $aListaCargos[] = $id_nom;
         $id_cargo = $oActividadCargo->getId_cargo();
-        $oCargo = new actividadcargos\Cargo(array('id_cargo' => $id_cargo));
+        $oCargo = new Cargo(array('id_cargo' => $id_cargo));
         $tipo_cargo = $oCargo->getTipo_cargo();
         // para los sacd en sf
-        if ($tipo_cargo == 'sacd' && $mi_sfsv == 2) {
+        if ($tipo_cargo === 'sacd' && $mi_sfsv == 2) {
             continue;
         }
 
-        $oPersona = personas\Persona::NewPersona($id_nom);
+        $oPersona = Persona::NewPersona($id_nom);
         if (!is_object($oPersona)) {
             $msg_err .= "<br>$oPersona con id_nom: $id_nom en  " . __FILE__ . ": line " . __LINE__;
             continue;
         }
-        $oCargo = new actividadcargos\Cargo($id_cargo);
+        $oCargo = new Cargo($id_cargo);
         $nom = $oPersona->getPrefApellidosNombre();
 
         $cargo = $oCargo->getCargo();
@@ -206,7 +206,7 @@ foreach ($gesAsistentes->getAsistentes(array('id_activ' => $id_pau)) as $oAsiste
         continue;
     }
 
-    $oPersona = personas\Persona::NewPersona($id_nom);
+    $oPersona = Persona::NewPersona($id_nom);
     if (!is_object($oPersona)) {
         $msg_err .= "<br>$oPersona con id_nom: $id_nom en  " . __FILE__ . ": line " . __LINE__;
         continue;
@@ -219,7 +219,7 @@ foreach ($gesAsistentes->getAsistentes(array('id_activ' => $id_pau)) as $oAsiste
     $est_ok = $oAsistente->getEst_ok();
     $observ = $oAsistente->getObserv();
 
-    if (core\ConfigGlobal::is_app_installed('actividadplazas')) {
+    if (ConfigGlobal::is_app_installed('actividadplazas')) {
         $plaza = $oAsistente->getPlaza();
         if ($plaza < 4) continue;
     }
@@ -242,7 +242,7 @@ foreach ($gesAsistentes->getAsistentes(array('id_activ' => $id_pau)) as $oAsiste
 uksort($asistentes, "core\strsinacentocmp");
 
 $c = 0;
-if (core\ConfigGlobal::is_app_installed('actividadcargos')) {
+if (ConfigGlobal::is_app_installed('actividadcargos')) {
     $c = count($a_valores);
 }
 
@@ -260,7 +260,7 @@ foreach ($a_valores as $k => $val) {
     $c = $val[1];
     $oPersona = $val[7];
     $a_datos_cl = array();
-    if ($queSel == "listcl") {
+    if ($queSel === "listcl") {
         $a_datos_cl = datos($oPersona);
         // las observ no son las personales, sino de la asistencia:
         $a_datos_cl['observ'] = $a_valores[$k][6];
@@ -278,5 +278,5 @@ $a_campos = [
     'aAsistentes' => $aAsistentes,
 ];
 
-$oView = new core\View('asistentes/controller');
+$oView = new ViewPhtml('asistentes/controller');
 $oView->renderizar('lista_asistentes.phtml', $a_campos);

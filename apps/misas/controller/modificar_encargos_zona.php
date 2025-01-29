@@ -2,15 +2,17 @@
 
 // INICIO Cabecera global de URL de controlador *********************************
 
+use core\ConfigGlobal;
+use core\ViewTwig;
 use encargossacd\model\entity\Encargo;
 use encargossacd\model\entity\GestorEncargoHorario;
 use encargossacd\model\entity\GestorEncargoSacdHorario;
 use misas\model\EncargosZona;
 use personas\model\entity\PersonaSacd;
-use ubis\model\entity\CentroDl;
 use web\DateTimeLocal;
 use web\Hash;
 use web\Lista;
+use ubis\model\entity\CentroDl;
 
 require_once("apps/core/global_header.inc");
 // Archivos requeridos por esta url **********************************************
@@ -65,7 +67,7 @@ foreach ($a_ctr_enc_t as $id_ubi => $a_ctr_enc) {
             'id_enc' => $id_enc,
             'origen' => 'misas',
         ];
-        $pagina = Hash::link(core\ConfigGlobal::getWeb() . '/apps/encargossacd/controller/encargo_horario_select.php?' . http_build_query($a_cosas));
+        $pagina = Hash::link(ConfigGlobal::getWeb() . '/apps/encargossacd/controller/encargo_horario_select.php?' . http_build_query($a_cosas));
         $texto_encargo = "<span class=link onclick=\"fnjs_mostrar_modal('$pagina');\">$desc_enc</span>";
 
         $a_valores[$i]['clase'] = 'tono2';
@@ -175,11 +177,11 @@ foreach ($a_ctr_enc_t as $id_ubi => $a_ctr_enc) {
                 'id_sacd' => $id_sacd,
                 'id_item_horario_sacd' => $id_item_horario_sacd,
             ];
-            $pagina = Hash::link(core\ConfigGlobal::getWeb() . '/apps/misas/controller/sacd_para_encargo.php?' . http_build_query($a_cosas));
+            $pagina = Hash::link(ConfigGlobal::getWeb() . '/apps/misas/controller/sacd_para_encargo.php?' . http_build_query($a_cosas));
             $texto_nombre = "<span class=link onclick=\"fnjs_mostrar_modal('$pagina');\">$sacd</span>";
 
-            $reloj = core\ConfigGlobal::getWeb_icons() . '/reloj.png';
-            $pagina_horario = Hash::link(core\ConfigGlobal::getWeb() . '/apps/misas/controller/horario_tarea.php?' . http_build_query($a_cosas));
+            $reloj = ConfigGlobal::getWeb_icons() . '/reloj.png';
+            $pagina_horario = Hash::link(ConfigGlobal::getWeb() . '/apps/misas/controller/horario_tarea.php?' . http_build_query($a_cosas));
             $icono_horario = "<span class=link onclick=\"fnjs_mostrar_modal('$pagina_horario');\"><img src=\"$reloj\" width=\"12\" height=\"12\" style=\"float: right; margin: 0 0 15px 15px;\" alt=\"" . _("horario") . "\"></span>";
             if (($t_start !== '??') && ($t_start !== null) && ($t_end !== '??') && ($t_end !== null)) {
                 $icono_horario = "<br><span class=link onclick=\"fnjs_mostrar_modal('$pagina_horario');\">$t_start - $t_end</span>";
@@ -205,18 +207,18 @@ $a_cosas = [
     'grupo' => 8,
     'id_zona' => $Qid_zona,
 ];
-$pagina_crear_encargo = Hash::link(core\ConfigGlobal::getWeb() . '/apps/encargossacd/controller/encargo_ver.php?' . http_build_query($a_cosas));
+$pagina_crear_encargo = Hash::link(ConfigGlobal::getWeb() . '/apps/encargossacd/controller/encargo_ver.php?' . http_build_query($a_cosas));
 
 $url = 'apps/misas/controller/ver_plantilla_zona.php';
 $aQuery = ['id_zona' => $Qid_zona];
 // el http_build_query no pasa los valores null
 array_walk($aQuery, 'core\poner_empty_on_null');
-$url_ver_plantilla_zona = web\Hash::link($url . '?' . http_build_query($aQuery));
+$url_ver_plantilla_zona = Hash::link($url . '?' . http_build_query($aQuery));
 
 $url = '/apps/misas/controller/lista_ctr_zona.php';
 // el http_build_query no pasa los valores null
 array_walk($aQuery, 'core\poner_empty_on_null');
-$pagina_lista_ctr_zona = web\Hash::link($url . '?' . http_build_query($aQuery));
+$pagina_lista_ctr_zona = Hash::link($url . '?' . http_build_query($aQuery));
 
 $a_campos = ['oPosicion' => $oPosicion,
     'oTabla' => $oTabla,
@@ -225,5 +227,5 @@ $a_campos = ['oPosicion' => $oPosicion,
     'pagina_crear_encargo' => $pagina_crear_encargo,
 ];
 
-$oView = new core\ViewTwig('misas/controller');
+$oView = new ViewTwig('misas/controller');
 echo $oView->render('ver_plantilla_zona.html.twig', $a_campos);

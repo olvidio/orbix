@@ -38,7 +38,7 @@ namespace orbix\apps {
     //use permisos\model\Perm;
 
     use core\ClasePropiedades;
-    use core\DatosCampo;
+    use DatosCampo;
     use core\Condicion;
     use core\Set;
 

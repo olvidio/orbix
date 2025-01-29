@@ -1,9 +1,10 @@
 <?php
 
-use asignaturas\model\entity as asignaturas;
+use asignaturas\model\entity\Asignatura;
+use asignaturas\model\entity\GestorAsignatura;
 use certificados\domain\repositories\CertificadoRepository;
 use core\ConfigGlobal;
-use notas\model\entity as notas;
+use notas\model\entity\GestorPersonaNotaDB;
 use notas\model\PersonaNota;
 use personas\model\entity\Persona;
 use web\DateTimeLocal;
@@ -241,7 +242,7 @@ case 2201:
         // -----------------------------  cabecera ---------------------------------
         ?>
         <head>
-            <?php include_once(core\ConfigGlobal::$dir_estilos . '/certificado_mpdf.css.php'); ?>
+            <?php include_once(ConfigGlobal::$dir_estilos . '/certificado_mpdf.css.php'); ?>
         </head>
         <body>
         <div class="A4">
@@ -268,7 +269,7 @@ case 2201:
                 </tr>
                 <?php
                 // Asignaturas posibles:
-                $GesAsignaturas = new asignaturas\GestorAsignatura();
+                $GesAsignaturas = new GestorAsignatura();
                 $aWhere = array();
                 $aOperador = array();
                 $aWhere['status'] = 't';
@@ -278,7 +279,7 @@ case 2201:
                 $cAsignaturas = $GesAsignaturas->getAsignaturas($aWhere, $aOperador);
 
                 // Asignaturas cursadas:
-                $GesNotas = new notas\GestorPersonaNotaDB();
+                $GesNotas = new GestorPersonaNotaDB();
                 $aWhere = array();
                 $aOperador = array();
                 $aWhere['id_nom'] = $id_nom;
@@ -291,7 +292,7 @@ case 2201:
                     $id_asignatura = $oPersonaNota->getId_asignatura();
                     $id_nivel = $oPersonaNota->getId_nivel();
 
-                    $oAsig = new asignaturas\Asignatura($id_asignatura);
+                    $oAsig = new Asignatura($id_asignatura);
                     if ($id_asignatura > 3000) {
                         $id_nivel_asig = $id_nivel;
                     } else {

@@ -1,10 +1,13 @@
 <?php
 
-use actividades\model\entity as actividades;
-use core\DBPropiedades;
-use web\Desplegable;
-use function core\is_true;
+use actividades\model\entity\Actividad;
+use actividadplazas\model\GestorResumenPlazas;
 use core\ConfigGlobal;
+use core\DBPropiedades;
+use core\ViewPhtml;
+use web\Desplegable;
+use web\Hash;
+use function core\is_true;
 
 // INICIO Cabecera global de URL de controlador *********************************
 require_once("apps/core/global_header.inc");
@@ -43,7 +46,7 @@ $oDesplDelegaciones->setOpciones($aOpcionesDl);
 
 // comprobar que la actividad está publicada, sino: avisar!
 $publicado = '';
-$oActividad = new actividades\Actividad($id_activ);
+$oActividad = new Actividad($id_activ);
 $publicado = $oActividad->getPublicado();
 // Si no es una actividad de la dl, publicado da NULL (igual que todos los campos)
 if (!is_true($publicado) || $publicado === null) {
@@ -55,7 +58,7 @@ if ($oActividad->getDl_org() != ConfigGlobal::mi_delef()) {
     $otra_dl = TRUE;
 }
 
-$gesActividadPlazas = new \actividadplazas\model\GestorResumenPlazas();
+$gesActividadPlazas = new GestorResumenPlazas();
 $gesActividadPlazas->setId_activ($id_activ);
 $a_plazas = $gesActividadPlazas->getResumen();
 
@@ -66,7 +69,7 @@ $tot_conseguidas = empty($a_plazas['total']['conseguidas']) ? 0 : $a_plazas['tot
 $tot_disponibles = empty($a_plazas['total']['disponibles']) ? 0 : $a_plazas['total']['disponibles'];
 $tot_ocupadas = empty($a_plazas['total']['ocupadas']) ? 0 : $a_plazas['total']['ocupadas'];
 
-$oHash = new web\Hash();
+$oHash = new Hash();
 $camposForm = 'num_plazas!region_dl';
 $a_camposHidden = array(
     'id_activ' => $id_activ,
@@ -75,7 +78,7 @@ $a_camposHidden = array(
 $oHash->setCamposForm($camposForm);
 $oHash->setArraycamposHidden($a_camposHidden);
 
-$oHashActualizar = new web\Hash();
+$oHashActualizar = new Hash();
 $oHashActualizar->setCamposNo('refresh');
 $a_camposHiddenActualizar = array(
     'id_activ' => $id_activ,
@@ -100,5 +103,5 @@ $a_campos = [
     'oDesplDelegaciones' => $oDesplDelegaciones,
 ];
 
-$oView = new core\View('actividadplazas/controller');
+$oView = new ViewPhtml('actividadplazas/controller');
 $oView->renderizar('resumen_plazas.phtml', $a_campos);

@@ -32,14 +32,16 @@ use actividades\model\entity\ActividadAll;
 use actividades\model\entity\GestorActividad;
 use actividadescentro\model\entity\GestorCentroEncargado;
 use core\ConfigGlobal;
-use function core\strtoupper_dlb;
+use core\ViewPhtml;
 use permisos\model\PermisosActividadesTrue;
-use ubis\model\entity\Ubi;
-use usuarios\model\entity\Preferencia;
+use web\Hash;
 use web\Lista;
 use web\Periodo;
 use web\PeriodoQue;
 use web\TiposActividades;
+use ubis\model\entity\Ubi;
+use usuarios\model\entity\Preferencia;
+use function core\strtoupper_dlb;
 
 require_once("apps/core/global_header.inc");
 // Archivos requeridos por esta url **********************************************
@@ -51,7 +53,7 @@ require_once("apps/core/global_object.inc");
 // Declarción de variables ******************************************************
 $num_max_actividades = 200;
 
-$mi_sfsv = core\ConfigGlobal::mi_sfsv();
+$mi_sfsv = ConfigGlobal::mi_sfsv();
 
 $oPosicion->recordar();
 
@@ -207,8 +209,8 @@ $aWhere['_ordre'] = 'f_ini';
 $cActividades = $GesActividades->getActividades($aWhere, $aOperador);
 $num_activ = count($cActividades);
 if ($num_activ > $num_max_actividades && empty($Qcontinuar)) {
-    $go_avant = web\Hash::link(core\ConfigGlobal::getWeb() . '/apps/actividades/controller/actividad_select.php?' . http_build_query(array('continuar' => 'si', 'stack' => $oPosicion->getStack())));
-    $go_atras = web\Hash::link(core\ConfigGlobal::getWeb() . '/apps/actividades/controller/actividad_que.php?' . http_build_query(array('stack' => $oPosicion->getStack())));
+    $go_avant = Hash::link(ConfigGlobal::getWeb() . '/apps/actividades/controller/actividad_select.php?' . http_build_query(array('continuar' => 'si', 'stack' => $oPosicion->getStack())));
+    $go_atras = Hash::link(ConfigGlobal::getWeb() . '/apps/actividades/controller/actividad_que.php?' . http_build_query(array('stack' => $oPosicion->getStack())));
     echo "<h2>" . sprintf(_("son %s actividades a mostrar. ¿Seguro que quiere continuar?."), $num_activ) . '</h2>';
     echo "<input type='button' onclick=fnjs_update_div('#main','" . $go_avant . "') value=" . _("continuar") . ">";
     echo "<input type='button' onclick=fnjs_update_div('#main','" . $go_atras . "') value=" . _("volver") . ">";
@@ -262,11 +264,11 @@ foreach ($cActividades as $oActividad) {
     $sasistentes = $oTipoActividad->getAsistentesText();
     $sactividad = $oTipoActividad->getActividadText();
     $nom_tipo = $oTipoActividad->getNom_tipoText();
-    if (core\ConfigGlobal::is_app_installed('procesos') && $oPermActiv->have_perm_activ('ocupado') === false) {
+    if (ConfigGlobal::is_app_installed('procesos') && $oPermActiv->have_perm_activ('ocupado') === false) {
         $sin++;
         continue;
     } // no tiene permisos ni para ver.
-    if (core\ConfigGlobal::is_app_installed('procesos') && $oPermActiv->have_perm_activ('ver') === false) { // sólo puede ver que està ocupado
+    if (ConfigGlobal::is_app_installed('procesos') && $oPermActiv->have_perm_activ('ver') === false) { // sólo puede ver que està ocupado
         $a_valores[$i]['sel'] = '';
         $a_valores[$i][1] = sprintf(_('ocupado %s (%s-%s)'), $ssfsv, $f_ini, $f_fin);
         //$a_valores[$i][1]= array( 'ira'=>'x', 'valor'=>'ocupado');
@@ -291,11 +293,10 @@ foreach ($cActividades as $oActividad) {
 
         // sacd
         $sacds = "";
-        if (core\ConfigGlobal::is_app_installed('actividadessacd')) {
+        if (ConfigGlobal::is_app_installed('actividadessacd')) {
             if ($oPermSacd->have_perm_action('ver') === true) { // sólo si tiene permiso
                 $gesCargosActividad = new GestorActividadCargo();
                 foreach ($gesCargosActividad->getActividadSacds($id_activ) as $oPersona) {
-                    ;
                     $sacds .= $oPersona->getPrefApellidosNombre() . "# "; // la coma la utilizo como separador de apellidos, nombre.
                 }
                 $sacds = substr($sacds, 0, -2);
@@ -303,7 +304,7 @@ foreach ($cActividades as $oActividad) {
         }
         //ctrs encargados.
         $ctrs = "";
-        if (core\ConfigGlobal::is_app_installed('actividadescentro')) {
+        if (ConfigGlobal::is_app_installed('actividadescentro')) {
             $oEnc = new GestorCentroEncargado();
             $n = 0;
             foreach ($oEnc->getCentrosEncargadosActividad($id_activ) as $oEncargado) {
@@ -361,7 +362,7 @@ $oFormP->setDesplAnysOpcion_sel($Qyear);
 $oFormP->setEmpiezaMin($Qempiezamin);
 $oFormP->setEmpiezaMax($Qempiezamax);
 
-$oHash = new web\Hash();
+$oHash = new Hash();
 $oHash->setUrl('apps/actividades/controller/lista_actividades_sg.php');
 $a_camposHidden = array(
     'que' => $Qque,
@@ -375,7 +376,7 @@ $a_camposHidden = array(
 $oHash->setArraycamposHidden($a_camposHidden);
 $oHash->setCamposNo('modo!id_tipo_activ!id_ubi!periodo!year!dl_org!status!empiezamin!empiezamax!filtro_lugar');
 
-$oHashSel = new web\Hash();
+$oHashSel = new Hash();
 $oHashSel->setCamposForm('!sel!mod!queSel');
 $oHashSel->setcamposNo('continuar!scroll_id');
 $a_camposHiddenSel = array(
@@ -387,7 +388,7 @@ $a_camposHiddenSel = array(
 );
 $oHashSel->setArraycamposHidden($a_camposHiddenSel);
 
-$oTabla = new web\Lista();
+$oTabla = new Lista();
 $oTabla->setId_tabla('actividad_select');
 $oTabla->setCabeceras($a_cabeceras);
 $oTabla->setBotones($a_botones);
@@ -412,5 +413,5 @@ $a_campos = ['oPosicion' => $oPosicion,
 ];
 
 
-$oView = new core\View('actividades/controller');
+$oView = new ViewPhtml('actividades/controller');
 $oView->renderizar('lista_actividades_sg.phtml', $a_campos);

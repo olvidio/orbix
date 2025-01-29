@@ -2,8 +2,12 @@
 
 namespace profesores\model\entity;
 
-use core;
-use web;
+use core\ClasePropiedades;
+use core\ConverterDate;
+use core\DatosCampo;
+use core\Set;
+use web\DateTimeLocal;
+use web\NullDateTimeLocal;
 
 /**
  * Fitxer amb la Classe que accedeix a la taula d_congresos
@@ -24,7 +28,7 @@ use web;
  * @version 1.0
  * @created 28/10/2014
  */
-class Congreso extends core\ClasePropiedades
+class Congreso extends ClasePropiedades
 {
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
@@ -82,13 +86,13 @@ class Congreso extends core\ClasePropiedades
     /**
      * F_ini de Congreso
      *
-     * @var web\DateTimeLocal
+     * @varDateTimeLocal
      */
     private $df_ini;
     /**
      * F_fin de Congreso
      *
-     * @var web\DateTimeLocal
+     * @varDateTimeLocal
      */
     private $df_fin;
     /**
@@ -132,8 +136,8 @@ class Congreso extends core\ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'id_item') && $val_id !== '') $this->iid_item = (int)$val_id;
-                if (($nom_id == 'id_nom') && $val_id !== '') $this->iid_nom = (int)$val_id;
+                if (($nom_id === 'id_item') && $val_id !== '') $this->iid_item = (int)$val_id;
+                if (($nom_id === 'id_nom') && $val_id !== '') $this->iid_nom = (int)$val_id;
             }
         }
         $this->setoDbl($oDbl);
@@ -209,7 +213,7 @@ class Congreso extends core\ClasePropiedades
                     return FALSE;
                 }
             }
-            $this->id_item = $oDbl->lastInsertId('d_congresos_id_item_seq');
+            $this->iid_item = $oDbl->lastInsertId('d_congresos_id_item_seq');
         }
         $this->setAllAtributes($aDades);
         return TRUE;
@@ -277,7 +281,7 @@ class Congreso extends core\ClasePropiedades
      *
      * @param array $aDades
      */
-    function setAllAtributes($aDades, $convert = FALSE)
+    function setAllAtributes(array $aDades, $convert = FALSE)
     {
         if (!is_array($aDades)) return;
         if (array_key_exists('id_schema', $aDades)) $this->setId_schema($aDades['id_schema']);
@@ -349,8 +353,8 @@ class Congreso extends core\ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'id_item') && $val_id !== '') $this->iid_item = (int)$val_id;
-                if (($nom_id == 'id_nom') && $val_id !== '') $this->iid_nom = (int)$val_id;
+                if (($nom_id === 'id_item') && $val_id !== '') $this->iid_item = (int)$val_id;
+                if (($nom_id === 'id_nom') && $val_id !== '') $this->iid_nom = (int)$val_id;
             }
         }
     }
@@ -450,7 +454,7 @@ class Congreso extends core\ClasePropiedades
     /**
      * Recupera el atributo df_ini de Congreso
      *
-     * @return web\DateTimeLocal df_ini
+     * @returnDateTimeLocal df_ini
      */
     function getF_ini()
     {
@@ -458,9 +462,9 @@ class Congreso extends core\ClasePropiedades
             $this->DBCarregar();
         }
         if (empty($this->df_ini)) {
-            return new web\NullDateTimeLocal();
+            return new NullDateTimeLocal();
         }
-        $oConverter = new core\ConverterDate('date', $this->df_ini);
+        $oConverter = new ConverterDate('date', $this->df_ini);
         return $oConverter->fromPg();
     }
 
@@ -469,13 +473,13 @@ class Congreso extends core\ClasePropiedades
      * Si df_ini es string, y convert=TRUE se convierte usando el formato webDateTimeLocal->getFormat().
      * Si convert es FALSE, df_ini debe ser un string en formato ISO (Y-m-d). Corresponde al pgstyle de la base de datos.
      *
-     * @param date|string df_ini='' optional.
+     * @param DateTimeLocal|string df_ini='' optional.
      * @param boolean convert=TRUE optional. Si es FALSE, df_ini debe ser un string en formato ISO (Y-m-d).
      */
     function setF_ini($df_ini = '', $convert = TRUE)
     {
         if ($convert === TRUE && !empty($df_ini)) {
-            $oConverter = new core\ConverterDate('date', $df_ini);
+            $oConverter = new ConverterDate('date', $df_ini);
             $this->df_ini = $oConverter->toPg();
         } else {
             $this->df_ini = $df_ini;
@@ -485,7 +489,7 @@ class Congreso extends core\ClasePropiedades
     /**
      * Recupera el atributo df_fin de Congreso
      *
-     * @return web\DateTimeLocal df_fin
+     * @returnDateTimeLocal df_fin
      */
     function getF_fin()
     {
@@ -493,9 +497,9 @@ class Congreso extends core\ClasePropiedades
             $this->DBCarregar();
         }
         if (empty($this->df_fin)) {
-            return new web\NullDateTimeLocal();
+            return new NullDateTimeLocal();
         }
-        $oConverter = new core\ConverterDate('date', $this->df_fin);
+        $oConverter = new ConverterDate('date', $this->df_fin);
         return $oConverter->fromPg();
     }
 
@@ -504,13 +508,13 @@ class Congreso extends core\ClasePropiedades
      * Si df_fin es string, y convert=TRUE se convierte usando el formato webDateTimeLocal->getFormat().
      * Si convert es FALSE, df_fin debe ser un string en formato ISO (Y-m-d). Corresponde al pgstyle de la base de datos.
      *
-     * @param date|string df_fin='' optional.
+     * @param DateTimeLocal|string df_fin='' optional.
      * @param boolean convert=TRUE optional. Si es FALSE, df_fin debe ser un string en formato ISO (Y-m-d).
      */
     function setF_fin($df_fin = '', $convert = TRUE)
     {
         if ($convert === TRUE && !empty($df_fin)) {
-            $oConverter = new core\ConverterDate('date', $df_fin);
+            $oConverter = new ConverterDate('date', $df_fin);
             $this->df_fin = $oConverter->toPg();
         } else {
             $this->df_fin = $df_fin;
@@ -570,7 +574,7 @@ class Congreso extends core\ClasePropiedades
      */
     function getDatosCampos()
     {
-        $oCongresoSet = new core\Set();
+        $oCongresoSet = new Set();
 
         $oCongresoSet->add($this->getDatosCongreso());
         $oCongresoSet->add($this->getDatosLugar());
@@ -585,12 +589,12 @@ class Congreso extends core\ClasePropiedades
      * Recupera les propietats de l'atribut scongreso de Congreso
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosCongreso()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'congreso'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'congreso'));
         $oDatosCampo->setEtiqueta(_("congreso"));
         $oDatosCampo->setTipo('texto');
         $oDatosCampo->setArgument(80);
@@ -601,12 +605,12 @@ class Congreso extends core\ClasePropiedades
      * Recupera les propietats de l'atribut slugar de Congreso
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosLugar()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'lugar'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'lugar'));
         $oDatosCampo->setEtiqueta(_("lugar"));
         $oDatosCampo->setTipo('texto');
         $oDatosCampo->setArgument(30);
@@ -617,12 +621,12 @@ class Congreso extends core\ClasePropiedades
      * Recupera les propietats de l'atribut df_ini de Congreso
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosF_ini()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'f_ini'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'f_ini'));
         $oDatosCampo->setEtiqueta(_("fecha inicio"));
         $oDatosCampo->setTipo('fecha');
         return $oDatosCampo;
@@ -632,12 +636,12 @@ class Congreso extends core\ClasePropiedades
      * Recupera les propietats de l'atribut df_fin de Congreso
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosF_fin()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'f_fin'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'f_fin'));
         $oDatosCampo->setEtiqueta(_("fecha fin"));
         $oDatosCampo->setTipo('fecha');
         return $oDatosCampo;
@@ -647,12 +651,12 @@ class Congreso extends core\ClasePropiedades
      * Recupera les propietats de l'atribut sorganiza de Congreso
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosOrganiza()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'organiza'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'organiza'));
         $oDatosCampo->setEtiqueta(_("organiza"));
         $oDatosCampo->setTipo('texto');
         $oDatosCampo->setArgument(50);
@@ -663,12 +667,12 @@ class Congreso extends core\ClasePropiedades
      * Recupera les propietats de l'atribut itipo de Congreso
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosTipo()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'tipo'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'tipo'));
         $oDatosCampo->setEtiqueta(_("tipo"));
         $oDatosCampo->setTipo('array');
         $oDatosCampo->setLista(array(1 => _("cv"), 2 => _("congreso"), 3 => _("reunión")));

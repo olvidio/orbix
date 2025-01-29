@@ -1,8 +1,10 @@
 <?php
 
-use pasarela\model\entity\PasarelaConfig;
+use core\ConfigGlobal;
+use core\ViewTwig;
 use pasarela\model\Nombre;
 use web\Hash;
+use web\TiposActividades;
 
 // INICIO Cabecera global de URL de controlador *********************************
 require_once("apps/core/global_header.inc");
@@ -42,14 +44,14 @@ switch ($Qque) {
         $Qid_tipo_activ = (integer)filter_input(INPUT_POST, 'id_tipo_activ');
         $Qnombre_actividad = (string)filter_input(INPUT_POST, 'nombre_actividad');
 
-        $oActividadTipo = new \web\TiposActividades($Qid_tipo_activ);
+        $oActividadTipo = new TiposActividades($Qid_tipo_activ);
         $svsf = $oActividadTipo->getSfsvText();
         $asistentes = $oActividadTipo->getAsistentesText();
         $actividad = $oActividadTipo->getActividadText();
         $tipo_txt = "$svsf $asistentes $actividad";
 
         $oHash = new Hash();
-        $oHash->setUrl(core\ConfigGlobal::getWeb() . '/apps/pasarela/controller/nombre_ajax.php');
+        $oHash->setUrl(ConfigGlobal::getWeb() . '/apps/pasarela/controller/nombre_ajax.php');
         $oHash->setCamposForm('id_tipo_activ!nombre_actividad');
         $oHash->setCamposNo('id_tipo_activ!que');
         $a_camposHidden = array(
@@ -65,7 +67,7 @@ switch ($Qque) {
             'nombre_actividad' => $Qnombre_actividad,
         ];
 
-        $oView = new core\ViewTwig('pasarela/controller');
+        $oView = new ViewTwig('pasarela/controller');
         $oView->renderizar('nombre_form.html.twig', $a_campos);
         break;
     case 'form_nuevo':
@@ -84,7 +86,7 @@ switch ($Qque) {
 
 
         $oHash = new Hash();
-        $oHash->setUrl(core\ConfigGlobal::getWeb() . '/apps/pasarela/controller/nombre_ajax.php');
+        $oHash->setUrl(ConfigGlobal::getWeb() . '/apps/pasarela/controller/nombre_ajax.php');
         $oHash->setCamposForm('iactividad_val!iasistentes_val!id_tipo_activ!inom_tipo_val!isfsv_val!nombre_actividad');
         $oHash->setCamposNo('id_tipo_activ!que');
         $a_camposHidden = array(
@@ -99,7 +101,7 @@ switch ($Qque) {
             'oActividadTipo' => $oActividadTipo,
         ];
 
-        $oView = new core\ViewTwig('pasarela/controller');
+        $oView = new ViewTwig('pasarela/controller');
         $oView->renderizar('nombre_form_nuevo.html.twig', $a_campos);
         break;
 }

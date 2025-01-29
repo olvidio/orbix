@@ -1,7 +1,8 @@
 <?php
 
+use core\ConfigGlobal;
+use usuarios\model\entity\Usuario;
 use function core\is_true;
-use usuarios\model\entity as usuarios;
 
 /**
  * Para asegurar que inicia la sesion, y poder acceder a los permisos
@@ -19,8 +20,8 @@ $Qobj_pau = (string)filter_input(INPUT_POST, 'obj_pau');
 $Qque = (string)filter_input(INPUT_POST, 'que');
 $Qcampos_chk = (string)filter_input(INPUT_POST, 'campos_chk');
 
-$oMiUsuario = new usuarios\Usuario(core\ConfigGlobal::mi_id_usuario());
-$miSfsv = core\ConfigGlobal::mi_sfsv();
+$oMiUsuario = new Usuario(ConfigGlobal::mi_id_usuario());
+$miSfsv = ConfigGlobal::mi_sfsv();
 
 switch ($Qque) {
     case 'eliminar':
@@ -28,7 +29,7 @@ switch ($Qque) {
         $oPersona = new $obj($Qid_nom);
         $dl = $oPersona->getDl();
         // solo lo dejo borrar si es de mi dl.
-        if (core\ConfigGlobal::mi_delef() == $dl) {
+        if (ConfigGlobal::mi_delef() == $dl) {
             if ($oPersona->DBEliminar() === false) {
                 echo _("hay un error, no se ha eliminado");
                 echo "\n" . $oPersona->getErrorTxt();

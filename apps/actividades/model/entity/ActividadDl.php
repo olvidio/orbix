@@ -3,8 +3,10 @@
 namespace actividades\model\entity;
 
 use cambios\model\GestorAvisoCambios;
-use core;
+use core\ConfigGlobal;
 use procesos\model\entity\GestorActividadProcesoTarea;
+use ReflectionClass;
+use function core\is_true;
 
 /**
  * Clase que implementa la entidad a_actividades_dl
@@ -93,7 +95,7 @@ class ActividadDl extends ActividadAll
         $aDades['plazas'] = $this->iplazas;
         array_walk($aDades, 'core\poner_null');
         //para el caso de los boolean FALSE, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
-        if (core\is_true($aDades['publicado'])) {
+        if (is_true($aDades['publicado'])) {
             $aDades['publicado'] = 'true';
         } else {
             $aDades['publicado'] = 'false';
@@ -141,9 +143,9 @@ class ActividadDl extends ActividadAll
             }
             // Aunque no tenga el módulo de 'cambios', quizá otra dl si lo tenga.
             // Anoto el cambio si la actividad está publicada
-            if (empty($quiet) && (core\ConfigGlobal::is_app_installed('cambios') || $aDades['publicado'] == TRUE)) {
+            if (empty($quiet) && (ConfigGlobal::is_app_installed('cambios') || is_true($aDades['publicado']))) {
                 $oGestorCanvis = new GestorAvisoCambios();
-                $shortClassName = (new \ReflectionClass($this))->getShortName();
+                $shortClassName = (new ReflectionClass($this))->getShortName();
                 $oGestorCanvis->addCanvi($shortClassName, 'UPDATE', $this->iid_activ, $aDades, $this->aDadesActuals);
             }
             $this->setAllAtributes($aDades);
@@ -179,16 +181,16 @@ class ActividadDl extends ActividadAll
             $this->setAllAtributes($aDadesLast);
 
             // generar proceso.
-            if (core\ConfigGlobal::is_app_installed('procesos') && $this->NoGenerarProceso === FALSE) {
+            if (ConfigGlobal::is_app_installed('procesos') && $this->bNoGenerarProceso === FALSE) {
                 $oGestorActividadProcesoTarea = new GestorActividadProcesoTarea();
                 $oGestorActividadProcesoTarea->generarProceso($aDadesLast['id_activ']);
             }
             // anotar cambio.
             // Aunque no tenga el módulo de 'cambios', quizá otra dl si lo tenga.
             // Anoto el cambio si la actividad está publicada
-            if (empty($quiet) && (core\ConfigGlobal::is_app_installed('cambios') || $aDades['publicado'] == TRUE)) {
+            if (empty($quiet) && (ConfigGlobal::is_app_installed('cambios') || is_true($aDades['publicado']))) {
                 $oGestorCanvis = new GestorAvisoCambios();
-                $shortClassName = (new \ReflectionClass($this))->getShortName();
+                $shortClassName = (new ReflectionClass($this))->getShortName();
                 $oGestorCanvis->addCanvi($shortClassName, 'INSERT', $aDadesLast['id_activ'], $aDadesLast, array());
             }
         }
@@ -219,7 +221,7 @@ class ActividadDl extends ActividadAll
                 case 'guardar':
                     if (!$oDblSt->rowCount()) return false;
                     // Hay que guardar los boolean de la misma manera que al guardar los datos ('false','true'):
-                    if (core\is_true($aDades['publicado'])) {
+                    if (is_true($aDades['publicado'])) {
                         $aDades['publicado'] = 'true';
                     } else {
                         $aDades['publicado'] = 'false';
@@ -254,12 +256,12 @@ class ActividadDl extends ActividadAll
         } else {
             // Aunque no tenga el módulo de 'cambios', quizá otra dl si lo tenga.
             // Anoto el cambio si la actividad está publicada
-            if (empty($quiet) && (core\ConfigGlobal::is_app_installed('cambios') || $this->bpublicado === TRUE)) {
+            if (empty($quiet) && (ConfigGlobal::is_app_installed('cambios') || $this->bpublicado === TRUE)) {
                 // per carregar les dades a $this->aDadesActuals i poder posar-les als canvis.
                 $this->DBCarregar('guardar');
                 // ho poso abans d'esborrar perque sino no trova cap valor. En el cas d'error s'hauria d'esborrar l'apunt.
                 $oGestorCanvis = new GestorAvisoCambios();
-                $shortClassName = (new \ReflectionClass($this))->getShortName();
+                $shortClassName = (new ReflectionClass($this))->getShortName();
                 $oGestorCanvis->addCanvi($shortClassName, 'DELETE', $this->iid_activ, array(), $this->aDadesActuals);
             }
             if (($oDbl->exec("DELETE FROM $nom_tabla WHERE id_activ='$this->iid_activ'")) === false) {
@@ -297,7 +299,7 @@ class ActividadDl extends ActividadAll
      *
      * @param array $aDades
      */
-    function setAllAtributes($aDades, $convert = FALSE)
+    function setAllAtributes(array $aDades, $convert = FALSE)
     {
         if (!is_array($aDades)) return;
         if (array_key_exists('id_schema', $aDades)) $this->setId_schema($aDades['id_schema']);

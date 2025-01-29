@@ -7,7 +7,8 @@ use core\Condicion;
 use core\ConfigGlobal;
 use core\Set;
 use Exception;
-use web;
+use RuntimeException;
+use web\Desplegable;
 use function core\is_true;
 
 /**
@@ -82,12 +83,12 @@ class GestorDelegacion extends ClaseGestor
         $aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);
         if ($aDades === FALSE || empty($aDades)) {
             $message = sprintf(_("No se encuentra información de la dl: %s"), $dele);
-            throw new \RuntimeException($message);
+            throw new RunTimeException($message);
         }
         $region_stgr = 'cr' . $aDades['region_stgr'];
         if (empty($aDades['region_stgr'])) {
             $message = sprintf(_("falta indicar a que región del stgr pertenece la dl: %s"), $dele);
-            throw new \RuntimeException($message);
+            throw new RunTimeException($message);
         }
 
         return $dele === $region_stgr;
@@ -117,13 +118,13 @@ class GestorDelegacion extends ClaseGestor
         $aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);
         if ($aDades === FALSE || empty($aDades)) {
             $message = sprintf(_("No se encuentra información de la dl: %s"), $dele);
-            throw new \RuntimeException($message);
+            throw new RunTimeException($message);
         }
         $region_dele = $aDades['region'];
         $region_stgr = $aDades['region_stgr'];
         if (empty($aDades['region_stgr'])) {
             $message = sprintf(_("falta indicar a que región del stgr pertenece la dl: %s"), $dele);
-            throw new \RuntimeException($message);
+            throw new RunTimeException($message);
         }
         // nombre del esquema
         $esquema_dele = $region_dele . '-' . $dele;
@@ -153,7 +154,7 @@ class GestorDelegacion extends ClaseGestor
         foreach ($oDbl->query($sQuery) as $aDades) {
             if ($aDades === FALSE) {
                 $message = sprintf(_("No se encuentra el id del esquema: %s"), $esquema_region_stgr);
-                throw new \RuntimeException($message);
+                throw new RunTimeException($message);
             }
             if ($aDades['schema'] === $esquema_region_stgr) {
                 $id_esquema_region_stgr = $aDades['id'];
@@ -265,7 +266,7 @@ class GestorDelegacion extends ClaseGestor
      * retorna un objecte del tipus Desplegable
      *
      * @param array optional lista de regions.
-     * @return object Una Llista de delegacions i regions per filtrar.
+     * @return false|object
      */
     function getListaDlURegionesFiltro($isfsv = '')
     {
@@ -292,7 +293,7 @@ class GestorDelegacion extends ClaseGestor
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
             return false;
         }
-        return new web\Desplegable('', $oDblSt, '', true);
+        return new Desplegable('', $oDblSt, '', true);
     }
 
     /**
@@ -300,7 +301,7 @@ class GestorDelegacion extends ClaseGestor
      * Es fa servir ConfigGlobal::mi_dele() sense la 'f' perque es global a les dues seccions.
      *
      * @param boolean si se incluye la dl o no
-     * @return object Una Llista de delegacions (amb el nom de la regió).
+     * @return false|object
      */
     function getListaRegDele($bdl = 't')
     {
@@ -325,7 +326,7 @@ class GestorDelegacion extends ClaseGestor
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
             return false;
         }
-        return new web\Desplegable('', $oDblSt, '', true);
+        return new Desplegable('', $oDblSt, '', true);
     }
 
     /**
@@ -333,7 +334,7 @@ class GestorDelegacion extends ClaseGestor
      *
      * @param integer $sfsv 1 para sv, 2 para sf
      * @param boolean si se incluye la dl o no
-     * @return object Una Llista de delegacions i regions.
+     * @return false|object
      */
     function getListaDelegacionesURegiones($isfsv = 0, $bdl = 't')
     {
@@ -362,14 +363,14 @@ class GestorDelegacion extends ClaseGestor
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
             return false;
         }
-        return new web\Desplegable('', $oDblSt, '', true);
+        return new Desplegable('', $oDblSt, '', true);
     }
 
     /**
      * retorna un objecte del tipus Desplegable
      *
      * @param array optional lista de regions.
-     * @return object Una Llista de delegacions.
+     * @return false|object
      */
     function getListaDelegaciones($aRegiones = array())
     {
@@ -399,7 +400,7 @@ class GestorDelegacion extends ClaseGestor
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
             return false;
         }
-        return new web\Desplegable('', $oDblSt, '', true);
+        return new Desplegable('', $oDblSt, '', true);
     }
 
     /**
@@ -463,7 +464,7 @@ class GestorDelegacion extends ClaseGestor
      * retorna l'array d'objectes de tipus Delegacion
      *
      * @param string sQuery la query a executar.
-     * @return array Una col·lecció d'objectes de tipus Delegacion
+     * @return array|false
      */
     function getDelegacionesQuery($sQuery = '')
     {
@@ -488,7 +489,7 @@ class GestorDelegacion extends ClaseGestor
      *
      * @param array aWhere associatiu amb els valors de les variables amb les quals farem la query
      * @param array aOperators associatiu amb els valors dels operadors que cal aplicar a cada variable
-     * @return array Una col·lecció d'objectes de tipus Delegacion
+     * @return array|void
      */
     function getDelegaciones($aWhere = array(), $aOperators = array())
     {
@@ -502,9 +503,9 @@ class GestorDelegacion extends ClaseGestor
             $sOperador = isset($aOperators[$camp]) ? $aOperators[$camp] : '';
             if ($a = $oCondicion->getCondicion($camp, $sOperador, $val)) $aCondi[] = $a;
             // operadores que no requieren valores
-            if ($sOperador == 'BETWEEN' || $sOperador == 'IS NULL' || $sOperador == 'IS NOT NULL' || $sOperador == 'OR') unset($aWhere[$camp]);
-            if ($sOperador == 'IN' || $sOperador == 'NOT IN') unset($aWhere[$camp]);
-            if ($sOperador == 'TXT') unset($aWhere[$camp]);
+            if ($sOperador === 'BETWEEN' || $sOperador === 'IS NULL' || $sOperador === 'IS NOT NULL' || $sOperador === 'OR') unset($aWhere[$camp]);
+            if ($sOperador === 'IN' || $sOperador === 'NOT IN') unset($aWhere[$camp]);
+            if ($sOperador === 'TXT') unset($aWhere[$camp]);
         }
         $sCondi = implode(' AND ', $aCondi);
         if ($sCondi != '') $sCondi = " WHERE " . $sCondi;

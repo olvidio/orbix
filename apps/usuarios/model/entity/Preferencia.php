@@ -1,7 +1,9 @@
 <?php
 namespace usuarios\model\entity;
 
-use core;
+use core\ClasePropiedades;
+use core\DatosCampo;
+use core\Set;
 
 /**
  * Fitxer amb la Classe que accedeix a la taula $nom_tabla
@@ -22,7 +24,7 @@ use core;
  * @version 1.0
  * @created 16/11/2010
  */
-class Preferencia extends core\ClasePropiedades
+class Preferencia extends ClasePropiedades
 {
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
@@ -84,8 +86,8 @@ class Preferencia extends core\ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if ($nom_id == 'id_usuario') $nom_id = 'i' . $nom_id;
-                if ($nom_id == 'tipo') $nom_id = 's' . $nom_id;
+                if ($nom_id === 'id_usuario') $nom_id = 'i' . $nom_id;
+                if ($nom_id === 'tipo') $nom_id = 's' . $nom_id;
                 if ($val_id !== '') $this->$nom_id = $val_id;
             }
         }
@@ -220,7 +222,7 @@ class Preferencia extends core\ClasePropiedades
      *
      * @param array $aDades
      */
-    function setAllAtributes($aDades)
+    function setAllAtributes(array $aDades)
     {
         if (!is_array($aDades)) return;
         if (array_key_exists('id_schema', $aDades)) $this->setId_schema($aDades['id_schema']);
@@ -280,8 +282,8 @@ class Preferencia extends core\ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'id_usuario') && $val_id !== '') $this->iid_usuario = (int)$val_id; 
-                if (($nom_id == 'tipo') && $val_id !== '') $this->stipo = $val_id;
+                if (($nom_id === 'id_usuario') && $val_id !== '') $this->iid_usuario = (int)$val_id;
+                if (($nom_id === 'tipo') && $val_id !== '') $this->stipo = $val_id;
             }
         }
     }
@@ -362,7 +364,7 @@ class Preferencia extends core\ClasePropiedades
      */
     function getDatosCampos()
     {
-        $oPreferenciaSet = new core\Set();
+        $oPreferenciaSet = new Set();
 
         $oPreferenciaSet->add($this->getDatosPreferencia());
         return $oPreferenciaSet->getTot();
@@ -373,12 +375,12 @@ class Preferencia extends core\ClasePropiedades
      * Recupera les propietats de l'atribut spreferencia de Preferencia
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosPreferencia()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'preferencia'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'preferencia'));
         $oDatosCampo->setEtiqueta(_("preferencia"));
         return $oDatosCampo;
     }

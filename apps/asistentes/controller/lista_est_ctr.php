@@ -1,13 +1,15 @@
 <?php
 
-use actividades\model\entity as actividades;
-use actividadestudios\model\entity as actividadestudios;
-use asignaturas\model\entity as asignaturas;
-use asistentes\model\entity as asistentes;
-use function core\is_true;
-use personas\model\entity as personas;
-use ubis\model\entity as ubis;
+use actividades\model\entity\Actividad;
+use actividadestudios\model\entity\GestorMatricula;
+use asignaturas\model\entity\Asignatura;
+use asistentes\model\entity\GestorAsistente;
+use personas\model\entity\GestorPersonaDl;
+use personas\model\entity\Persona;
+use ubis\model\entity\GestorCentroDl;
+use web\Lista;
 use web\Periodo;
+use function core\is_true;
 
 /**
  * Listado del plan de estudios por ctr
@@ -112,7 +114,7 @@ switch ($Qn_agd) {
 }
 
 // primero selecciono los centros
-$GesCentrosDl = new ubis\GestorCentroDl();
+$GesCentrosDl = new GestorCentroDl();
 $cCentros = $GesCentrosDl->getCentros($aWhereCtr, $aOperadorCtr);
 $a_valores = array();
 foreach ($cCentros as $oCentroDl) {
@@ -126,13 +128,13 @@ foreach ($cCentros as $oCentroDl) {
     $aWhere['_ordre'] = 'apellido1,apellido2,nom';
     // Ahora (28.IV.2010) los agd quieren que salgan los sacd y los que no hacen estudios.
     $tipo_ctr = $oCentroDl->getTipo_ctr();
-    if (substr($tipo_ctr, 0, 1) == "n") { // ctr de numerarios.
+    if (strpos($tipo_ctr, "n") === 0) { // ctr de numerarios.
         $aWhere['sacd'] = 'f';
         $aWhere['stgr'] = 'n';
         $aOperador['stgr'] = '!=';
     }
 
-    $GesPersonas = new personas\GestorPersonaDl();
+    $GesPersonas = new GestorPersonaDl();
     $cPersonas = $GesPersonas->getPersonas($aWhere, $aOperador);
     $i = 0;
     foreach ($cPersonas as $oPersonaDl) {
@@ -147,13 +149,13 @@ foreach ($cCentros as $oCentroDl) {
         //$condicion = "propio='t' AND $periodo AND id_tipo_activ::text ~ '^1(12|33)'";
         $aWhereNom['id_nom'] = $id_nom;
         $aOperadorNom = [];
-        $GesAsistente = new asistentes\GestorAsistente();
+        $GesAsistente = new GestorAsistente();
         $cAsistentes = $GesAsistente->getActividadesDeAsistente($aWhereNom, $aOperadorNom, $aWhereAct, $aOperadorAct);
         $a = 0;
         foreach ($cAsistentes as $oAsistente) {
             $a++;
             $id_activ = $oAsistente->getId_activ();
-            $oActividad = new actividades\Actividad($id_activ);
+            $oActividad = new Actividad($id_activ);
             $nom_activ = $oActividad->getNom_activ();
 
             $oF_ini = $oActividad->getF_ini();
@@ -171,18 +173,18 @@ foreach ($cCentros as $oCentroDl) {
                         break;
                     default:
                         $asignaturas = '';
-                        $GesMatriculas = new actividadestudios\GestorMatricula();
+                        $GesMatriculas = new GestorMatricula();
                         $cMatriculas = $GesMatriculas->getMatriculas(array('id_nom' => $id_nom, 'id_activ' => $id_activ));
                         foreach ($cMatriculas as $oMatricula) {
                             $id_asignatura = $oMatricula->getId_asignatura();
                             $preceptor = $oMatricula->getPreceptor();
                             $id_preceptor = $oMatricula->getId_preceptor();
-                            $oAsignatura = new asignaturas\Asignatura($id_asignatura);
+                            $oAsignatura = new Asignatura($id_asignatura);
                             $nombre_corto = $oAsignatura->getNombre_corto();
                             $creditos = $oAsignatura->getCreditos();
                             if (is_true($preceptor)) {
                                 if (!empty($id_preceptor)) {
-                                    $oPersona = personas\Persona::NewPersona($id_preceptor);
+                                    $oPersona = Persona::NewPersona($id_preceptor);
                                     // Comprobar si el preceptor asiste al ca.
                                     $aWherePreceptor = ['id_activ' => $id_activ, 'id_nom' => $id_nom];
                                     $cAsistentesP = $GesAsistente->getAsistentes($aWherePreceptor);
@@ -215,7 +217,7 @@ $a_cabeceras[] = _("asignaturas");
 
 asort($aGrupos);
 
-$oLista = new web\Lista();
+$oLista = new Lista();
 $oLista->setGrupos($aGrupos);
 $oLista->setCabeceras($a_cabeceras);
 $oLista->setDatos($a_valores);

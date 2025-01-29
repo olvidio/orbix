@@ -2,8 +2,12 @@
 
 namespace encargossacd\model\entity;
 
-use core;
-use web;
+
+use core\ClasePropiedades;
+use core\ConverterDate;
+use core\DatosCampo;
+use core\Set;
+use function core\is_true;
 
 /**
  * Fitxer amb la Classe que accedeix a la taula encargo_horario_excepcion
@@ -24,7 +28,7 @@ use web;
  * @version 1.0
  * @created 11/01/2019
  */
-class EncargoHorarioExcepcion extends core\ClasePropiedades
+class EncargoHorarioExcepcion extends ClasePropiedades
 {
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
@@ -70,13 +74,13 @@ class EncargoHorarioExcepcion extends core\ClasePropiedades
     /**
      * F_ini de EncargoHorarioExcepcion
      *
-     * @var web\DateTimeLocal
+     * @varDateTimeLocal
      */
     private $df_ini;
     /**
      * F_fin de EncargoHorarioExcepcion
      *
-     * @var web\DateTimeLocal
+     * @varDateTimeLocal
      */
     private $df_fin;
     /**
@@ -169,8 +173,8 @@ class EncargoHorarioExcepcion extends core\ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'id_enc') && $val_id !== '') $this->iid_enc = (int)$val_id; 
-                if (($nom_id == 'id_item_ex') && $val_id !== '') $this->iid_item_ex = (int)$val_id; 
+                if (($nom_id === 'id_enc') && $val_id !== '') $this->iid_enc = (int)$val_id;
+                if (($nom_id === 'id_item_ex') && $val_id !== '') $this->iid_item_ex = (int)$val_id;
             }
         }
         $this->setoDbl($oDbl);
@@ -210,7 +214,7 @@ class EncargoHorarioExcepcion extends core\ClasePropiedades
         $aDades['mes'] = $this->imes;
         array_walk($aDades, 'core\poner_null');
         //para el caso de los boolean FALSE, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
-        if (core\is_true($aDades['horario'])) {
+        if (is_true($aDades['horario'])) {
             $aDades['horario'] = 'true';
         } else {
             $aDades['horario'] = 'false';
@@ -267,7 +271,7 @@ class EncargoHorarioExcepcion extends core\ClasePropiedades
                     return FALSE;
                 }
             }
-            $this->id_item_ex = $oDbl->lastInsertId('encargo_horario_excepcion_id_item_ex_seq');
+            $this->iid_item_ex = $oDbl->lastInsertId('encargo_horario_excepcion_id_item_ex_seq');
         }
         $this->setAllAtributes($aDades);
         return TRUE;
@@ -335,7 +339,7 @@ class EncargoHorarioExcepcion extends core\ClasePropiedades
      *
      * @param array $aDades
      */
-    function setAllAtributes($aDades, $convert = FALSE)
+    function setAllAtributes(array $aDades, $convert = FALSE)
     {
         if (!is_array($aDades)) return;
         if (array_key_exists('id_enc', $aDades)) $this->setId_enc($aDades['id_enc']);
@@ -419,8 +423,8 @@ class EncargoHorarioExcepcion extends core\ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'id_enc') && $val_id !== '') $this->iid_enc = (int)$val_id; 
-                if (($nom_id == 'id_item_ex') && $val_id !== '') $this->iid_item_ex = (int)$val_id; 
+                if (($nom_id === 'id_enc') && $val_id !== '') $this->iid_enc = (int)$val_id;
+                if (($nom_id === 'id_item_ex') && $val_id !== '') $this->iid_item_ex = (int)$val_id;
             }
         }
     }
@@ -497,14 +501,14 @@ class EncargoHorarioExcepcion extends core\ClasePropiedades
     /**
      * Recupera el atributo df_ini de EncargoHorarioExcepcion
      *
-     * @return web\DateTimeLocal df_ini
+     * @returnDateTimeLocal df_ini
      */
     function getF_ini()
     {
         if (!isset($this->df_ini) && !$this->bLoaded) {
             $this->DBCarregar();
         }
-        $oConverter = new core\ConverterDate('date', $this->df_ini);
+        $oConverter = new ConverterDate('date', $this->df_ini);
         return $oConverter->fromPg();
     }
 
@@ -513,13 +517,13 @@ class EncargoHorarioExcepcion extends core\ClasePropiedades
      * Si df_ini es string, y convert=true se convierte usando el formato web\DateTimeLocal->getForamat().
      * Si convert es false, df_ini debe ser un string en formato ISO (Y-m-d). Corresponde al pgstyle de la base de datos.
      *
-     * @param web\DateTimeLocal|string df_ini='' optional.
+     * @paramDateTimeLocal|string df_ini='' optional.
      * @param boolean convert=TRUE optional. Si es false, df_ini debe ser un string en formato ISO (Y-m-d).
      */
     function setF_ini($df_ini = '', $convert = TRUE)
     {
         if ($convert === TRUE && !empty($df_ini)) {
-            $oConverter = new core\ConverterDate('date', $df_ini);
+            $oConverter = new ConverterDate('date', $df_ini);
             $this->df_ini = $oConverter->toPg();
         } else {
             $this->df_ini = $df_ini;
@@ -529,14 +533,14 @@ class EncargoHorarioExcepcion extends core\ClasePropiedades
     /**
      * Recupera el atributo df_fin de EncargoHorarioExcepcion
      *
-     * @return web\DateTimeLocal df_fin
+     * @returnDateTimeLocal df_fin
      */
     function getF_fin()
     {
         if (!isset($this->df_fin) && !$this->bLoaded) {
             $this->DBCarregar();
         }
-        $oConverter = new core\ConverterDate('date', $this->df_fin);
+        $oConverter = new ConverterDate('date', $this->df_fin);
         return $oConverter->fromPg();
     }
 
@@ -545,13 +549,13 @@ class EncargoHorarioExcepcion extends core\ClasePropiedades
      * Si df_fin es string, y convert=true se convierte usando el formato web\DateTimeLocal->getForamat().
      * Si convert es false, df_fin debe ser un string en formato ISO (Y-m-d). Corresponde al pgstyle de la base de datos.
      *
-     * @param web\DateTimeLocal|string df_fin='' optional.
+     * @paramDateTimeLocal|string df_fin='' optional.
      * @param boolean convert=TRUE optional. Si es false, df_ini debe ser un string en formato ISO (Y-m-d).
      */
     function setF_fin($df_fin = '', $convert = TRUE)
     {
         if ($convert === TRUE && !empty($df_fin)) {
-            $oConverter = new core\ConverterDate('date', $df_fin);
+            $oConverter = new ConverterDate('date', $df_fin);
             $this->df_fin = $oConverter->toPg();
         } else {
             $this->df_fin = $df_fin;
@@ -795,7 +799,7 @@ class EncargoHorarioExcepcion extends core\ClasePropiedades
      */
     function getDatosCampos()
     {
-        $oEncargoHorarioExcepcionSet = new core\Set();
+        $oEncargoHorarioExcepcionSet = new Set();
 
         $oEncargoHorarioExcepcionSet->add($this->getDatosId_item_h());
         $oEncargoHorarioExcepcionSet->add($this->getDatosF_ini());
@@ -818,12 +822,12 @@ class EncargoHorarioExcepcion extends core\ClasePropiedades
      * Recupera les propietats de l'atribut iid_item_h de EncargoHorarioExcepcion
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosId_item_h()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_item_h'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_item_h'));
         $oDatosCampo->setEtiqueta(_("id_item_h"));
         return $oDatosCampo;
     }
@@ -832,12 +836,12 @@ class EncargoHorarioExcepcion extends core\ClasePropiedades
      * Recupera les propietats de l'atribut df_ini de EncargoHorarioExcepcion
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosF_ini()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'f_ini'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'f_ini'));
         $oDatosCampo->setEtiqueta(_("f_ini"));
         return $oDatosCampo;
     }
@@ -846,12 +850,12 @@ class EncargoHorarioExcepcion extends core\ClasePropiedades
      * Recupera les propietats de l'atribut df_fin de EncargoHorarioExcepcion
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosF_fin()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'f_fin'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'f_fin'));
         $oDatosCampo->setEtiqueta(_("f_fin"));
         return $oDatosCampo;
     }
@@ -860,12 +864,12 @@ class EncargoHorarioExcepcion extends core\ClasePropiedades
      * Recupera les propietats de l'atribut sdesc_ex de EncargoHorarioExcepcion
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosDesc_ex()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'desc_ex'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'desc_ex'));
         $oDatosCampo->setEtiqueta(_("desc_ex"));
         return $oDatosCampo;
     }
@@ -874,12 +878,12 @@ class EncargoHorarioExcepcion extends core\ClasePropiedades
      * Recupera les propietats de l'atribut bhorario de EncargoHorarioExcepcion
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosHorario()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'horario'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'horario'));
         $oDatosCampo->setEtiqueta(_("horario"));
         return $oDatosCampo;
     }
@@ -888,12 +892,12 @@ class EncargoHorarioExcepcion extends core\ClasePropiedades
      * Recupera les propietats de l'atribut sdia_ref de EncargoHorarioExcepcion
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosDia_ref()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'dia_ref'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'dia_ref'));
         $oDatosCampo->setEtiqueta(_("dia_ref"));
         return $oDatosCampo;
     }
@@ -902,12 +906,12 @@ class EncargoHorarioExcepcion extends core\ClasePropiedades
      * Recupera les propietats de l'atribut idia_num de EncargoHorarioExcepcion
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosDia_num()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'dia_num'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'dia_num'));
         $oDatosCampo->setEtiqueta(_("dia_num"));
         return $oDatosCampo;
     }
@@ -916,12 +920,12 @@ class EncargoHorarioExcepcion extends core\ClasePropiedades
      * Recupera les propietats de l'atribut smas_menos de EncargoHorarioExcepcion
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosMas_menos()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'mas_menos'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'mas_menos'));
         $oDatosCampo->setEtiqueta(_("mas_menos"));
         return $oDatosCampo;
     }
@@ -930,12 +934,12 @@ class EncargoHorarioExcepcion extends core\ClasePropiedades
      * Recupera les propietats de l'atribut idia_inc de EncargoHorarioExcepcion
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosDia_inc()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'dia_inc'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'dia_inc'));
         $oDatosCampo->setEtiqueta(_("dia_inc"));
         return $oDatosCampo;
     }
@@ -944,12 +948,12 @@ class EncargoHorarioExcepcion extends core\ClasePropiedades
      * Recupera les propietats de l'atribut th_ini de EncargoHorarioExcepcion
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosH_ini()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'h_ini'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'h_ini'));
         $oDatosCampo->setEtiqueta(_("h_ini"));
         return $oDatosCampo;
     }
@@ -958,12 +962,12 @@ class EncargoHorarioExcepcion extends core\ClasePropiedades
      * Recupera les propietats de l'atribut th_fin de EncargoHorarioExcepcion
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosH_fin()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'h_fin'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'h_fin'));
         $oDatosCampo->setEtiqueta(_("h_fin"));
         return $oDatosCampo;
     }
@@ -972,12 +976,12 @@ class EncargoHorarioExcepcion extends core\ClasePropiedades
      * Recupera les propietats de l'atribut in_sacd de EncargoHorarioExcepcion
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosN_sacd()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'n_sacd'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'n_sacd'));
         $oDatosCampo->setEtiqueta(_("n_sacd"));
         return $oDatosCampo;
     }
@@ -986,12 +990,12 @@ class EncargoHorarioExcepcion extends core\ClasePropiedades
      * Recupera les propietats de l'atribut imes de EncargoHorarioExcepcion
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosMes()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'mes'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'mes'));
         $oDatosCampo->setEtiqueta(_("mes"));
         return $oDatosCampo;
     }

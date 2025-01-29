@@ -11,6 +11,7 @@ use usuarios\model\entity\PermMenu;
 use usuarios\model\entity\PermUsuarioCentro;
 use usuarios\model\entity\Role;
 use usuarios\model\entity\Usuario;
+use function core\is_true;
 
 // INICIO Cabecera global de URL de controlador *********************************
 require_once("apps/core/global_header.inc");
@@ -171,7 +172,7 @@ switch ($Qque) {
                     $eliminar = FALSE;
                 }
             }
-            if ($eliminar == TRUE) {
+            if (is_true($eliminar)) {
                 $cPermUsuarioActividad = $gesPermUsuarioActividad->getPermUsuarioActividades($aWhere);
                 // Solo deberia haber uno???
                 if (count($cPermUsuarioActividad) == 1) {
@@ -284,14 +285,6 @@ switch ($Qque) {
 
                 $oUsuario = new Usuario(array('id_usuario' => $Qid_usuario));
                 $oUsuario->setUsuario($Qusuario);
-                //cuando el campo es perm_activ, se pasa un array que hay que convertirlo en número.
-                if (!empty($Qperm_activ)) {
-                    $byte = 0;
-                    foreach ($Qperm_activ as $bit) {
-                        $byte = $byte + $bit;
-                    }
-                    $oUsuario->setPerm_activ($byte);
-                }
                 $oUsuario->setid_role($Qid_role);
                 $oUsuario->setEmail($Qemail);
                 $oUsuario->setNom_usuario($Qnom_usuario);
@@ -305,15 +298,15 @@ switch ($Qque) {
                 $oRole = new Role($Qid_role);
                 $pau = $oRole->getPau();
                 // sacd
-                if (($pau == 'sacd' || $pau == 'nom') && !empty($Qid_nom)) {
+                if (($pau === 'sacd' || $pau === 'nom') && !empty($Qid_nom)) {
                     $oUsuario->setId_pau($Qid_nom);
                 }
                 // centros (sv o sf)
-                if (($pau == 'ctr') && !empty($Qid_ctr)) {
+                if (($pau === 'ctr') && !empty($Qid_ctr)) {
                     $oUsuario->setId_pau($Qid_ctr);
                 }
                 // casas
-                if ($pau == 'cdc' && !empty($Qcasas)) {
+                if ($pau === 'cdc' && !empty($Qcasas)) {
                     $txt_casa = '';
                     $i = 0;
                     foreach ($Qcasas as $id_ubi) {
@@ -361,14 +354,6 @@ switch ($Qque) {
                     $oUsuario->setEmail($Qemail);
                     $oUsuario->setId_role($Qid_role);
                     $oUsuario->setNom_usuario($Qnom_usuario);
-                    //cuando el campo es perm_activ, se pasa un array que hay que convertirlo en número.
-                    if (!empty($Qperm_activ)) {
-                        $byte = 0;
-                        foreach ($Qperm_activ as $bit) {
-                            $byte = $byte + $bit;
-                        }
-                        $oUsuario->setPerm_activ($byte);
-                    }
                     if ($oUsuario->DBGuardar() === false) {
                         echo _("hay un error, no se ha guardado");
                         echo "\n" . $oUsuario->getErrorTxt();

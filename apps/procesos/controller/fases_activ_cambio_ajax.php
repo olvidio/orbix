@@ -6,15 +6,14 @@ use actividades\model\entity\GestorActividadDl;
 use actividades\model\entity\GestorTipoDeActividad;
 use actividades\model\entity\TipoDeActividad;
 use core\ConfigGlobal;
-use function core\is_true;
-use procesos\model\entity\ActividadFase;
+use web\Hash;
+use web\Lista;
+use web\Periodo;
+use procesos\model\entity\ActividadProcesoTarea;
 use procesos\model\entity\GestorActividadFase;
 use procesos\model\entity\GestorActividadProcesoTarea;
 use procesos\model\entity\GestorTareaProceso;
-use web\Lista;
-use web\Periodo;
-use procesos\model\entity\TareaProceso;
-use procesos\model\entity\ActividadProcesoTarea;
+use function core\is_true;
 
 // INICIO Cabecera global de URL de controlador *********************************
 require_once("apps/core/global_header.inc");
@@ -219,7 +218,7 @@ switch ($Qque) {
         $oTabla->setBotones($a_botones);
         $oTabla->setDatos($a_valores);
 
-        $oHash = new web\Hash();
+        $oHash = new Hash();
         $oHash->setCamposForm('sel');
         $oHash->setcamposNo('scroll_id');
         $a_camposHidden = array(

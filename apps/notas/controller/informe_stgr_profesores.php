@@ -1,6 +1,6 @@
 <?php
 
-use notas\model as notas;
+use notas\model\Resumen;
 
 /**
  * Esta página sirve para el resumen anual de los profesores
@@ -47,7 +47,7 @@ $lista = empty($Qlista) ? false : true;
 	5 Ayudante
 	6 Asociado
 */
-$Resumen = new notas\Resumen('profesores');
+$Resumen = new Resumen('profesores');
 $Resumen->setAnyIniCurs($any_ini_curs);
 $Resumen->setLista($lista);
 $Resumen->nuevaTablaProfe();
@@ -96,9 +96,7 @@ $a_textos[47] = ucfirst(_("nº de departamentos"));
 
 // ---------------------------------- html ----------------------------------------------------
 ?>
-<script>
-    fnjs_left_side_hide();
-</script>
+<?= $oPosicion->mostrar_left_slide(1) ?>
 <p><?= \core\strtoupper_dlb(_("profesores stgr")) ?>   <?= $curso_txt ?></p>
 <table border=1>
     <?php

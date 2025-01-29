@@ -1,8 +1,8 @@
 <?php
 
 // INICIO Cabecera global de URL de controlador *********************************
+use core\ViewTwig;
 use encargossacd\model\entity\EncargoHorario;
-use misas\domain\repositories\PlantillaRepository;
 use web\Hash;
 
 require_once("apps/core/global_header.inc");
@@ -35,5 +35,5 @@ $a_campos = [
     'param_quitar' => $param_quitar,
 ];
 
-$oView = new core\ViewTwig('misas/controller');
+$oView = new ViewTwig('misas/controller');
 echo $oView->render('horario_tarea.html.twig', $a_campos);

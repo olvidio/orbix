@@ -1,16 +1,12 @@
 <?php
 
-use asignaturas\model\entity as asignaturas;
-use notas\model\entity as notas;
-use personas\model\entity as personas;
-use notas\model\entity\Nota;
 use core\ConfigGlobal;
-use web\Desplegable;
-use ubis\model\entity\GestorDelegacion;
-use SebastianBergmann\CodeCoverage\Report\PHP;
+use core\ViewTwig;
 use notas\model\TablaAlumnosAsignaturas;
+use web\Desplegable;
 use web\Hash;
 use web\Lista;
+use ubis\model\entity\GestorDelegacion;
 
 /**
  * Esta página sirve para generar un cuadro con las asignaturas pendientes de todos los alumnos.
@@ -76,7 +72,7 @@ if (ConfigGlobal::mi_ambito() === 'rstgr') {
         'oCuadros' => $oCuadros,
     ];
 
-    $oView = new core\ViewTwig('ubis/controller');
+    $oView = new ViewTwig('ubis/controller');
     $oView->renderizar('dl_rstgr_que.html.twig', $a_campos);
 }
 ?>

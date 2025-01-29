@@ -1,7 +1,11 @@
 <?php
 
-use usuarios\model\entity as usuarios;
-use menus\model\entity as menus;
+use core\ViewPhtml;
+use menus\model\entity\GestorGrupMenu;
+use menus\model\entity\GestorGrupMenuRole;
+use usuarios\model\entity\Role;
+use web\Hash;
+use web\Lista;
 
 // INICIO Cabecera global de URL de controlador *********************************
 require_once("apps/core/global_header.inc");
@@ -26,11 +30,11 @@ if (!empty($a_sel)) { //vengo de un checkbox
     $oPosicion->addParametro('scroll_id', $scroll_id, 1);
 }
 
-$oRole = new usuarios\Role(array('id_role' => $Qid_role));
+$oRole = new Role(array('id_role' => $Qid_role));
 $role = $oRole->getRole();
 
 // los que ya tengo:
-$oGesGMRol = new menus\GestorGrupMenuRole();
+$oGesGMRol = new GestorGrupMenuRole();
 $cGMR = $oGesGMRol->getGrupMenuRoles(array('id_role' => $Qid_role));
 $aGrupMenus = array();
 foreach ($cGMR as $oGrupMenuRole) {
@@ -38,7 +42,7 @@ foreach ($cGMR as $oGrupMenuRole) {
     $aGrupMenus[$id_grupmenu] = 'x';
 }
 
-$oGesGM = new menus\GestorGrupMenu();
+$oGesGM = new GestorGrupMenu();
 $cGM = $oGesGM->getGrupMenus();
 $a_valores = array();
 $i = 0;
@@ -56,13 +60,13 @@ foreach ($cGM as $oGrupMenu) {
 
 $a_cabeceras = array('grupmenu');
 $a_botones[] = array('txt' => _("añadir"), 'click' => "fnjs_add_grupmenu(\"#from_grupmenu\")");
-$oTabla = new web\Lista();
+$oTabla = new Lista();
 $oTabla->setId_tabla('grupmenu');
 $oTabla->setCabeceras($a_cabeceras);
 $oTabla->setBotones($a_botones);
 $oTabla->setDatos($a_valores);
 
-$oHash = new web\Hash();
+$oHash = new Hash();
 $oHash->setCamposForm('sel');
 $oHash->setcamposNo('scroll_id');
 $a_camposHidden = array(
@@ -77,5 +81,5 @@ $a_campos = ['oPosicion' => $oPosicion,
     'oTabla' => $oTabla,
 ];
 
-$oView = new core\View('usuarios/controller');
+$oView = new ViewPhtml('usuarios/controller');
 $oView->renderizar('role_grupmenu.phtml', $a_campos);

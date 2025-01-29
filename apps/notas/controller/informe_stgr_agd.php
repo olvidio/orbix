@@ -1,7 +1,7 @@
 <?php
 
 use core\ConfigGlobal;
-use notas\model as notas;
+use notas\model\Resumen;
 use ubis\model\entity\GestorDelegacion;
 
 /**
@@ -54,7 +54,7 @@ $Qdl = (array)filter_input(INPUT_POST, 'dl', FILTER_DEFAULT, FILTER_REQUIRE_ARRA
 $Qlista = (string)filter_input(INPUT_POST, 'lista');
 $lista = empty($Qlista) ? false : true;
 
-$Resumen = new notas\Resumen('agregados');
+$Resumen = new Resumen('agregados');
 if (!empty($Qdl)) {
     $region_stgr = ConfigGlobal::mi_dele();
     $gesDelegacion = new GestorDelegacion();
@@ -155,9 +155,7 @@ if ($lista) {
 
 // ---------------------------------- html ----------------------------------------------------
 ?>
-<script>
-    fnjs_left_side_hide();
-</script>
+<?= $oPosicion->mostrar_left_slide(1) ?>
 <p><?= \core\strtoupper_dlb(_("alumnos agregados")) ?>   <?= $curso_txt ?></p>
 <table border=1>
     <?php

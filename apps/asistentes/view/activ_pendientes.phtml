@@ -1,5 +1,10 @@
-<form id="que_pdte" action="<?= core\ConfigGlobal::getWeb() ?>/apps/asistentes/controller/activ_pendientes_select.php"
-      method="post" onkeydown="fnjs_enviar(event,this);">
+<?php
+
+use core\ConfigGlobal;
+
+?>
+    <form id="que_pdte" action="<?= ConfigGlobal::getWeb() ?>/apps/asistentes/controller/activ_pendientes_select.php"
+          method="post" onkeydown="fnjs_enviar(event,this);">
     <?= $oHash->getCamposHtml(); ?>
     <table>
         <thead>

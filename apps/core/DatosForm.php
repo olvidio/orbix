@@ -2,7 +2,7 @@
 
 namespace core;
 
-use web;
+use web\Desplegable;
 
 /**
  * Clase que implementa la entidad d_dossiers_abiertos
@@ -60,7 +60,7 @@ class DatosForm
                 case "fecha":
                     $formulario .= "<tr><td class=etiqueta>" . ucfirst($eti) . "</td>";
                     $locale_us = ConfigGlobal::is_locale_us();
-                    // el valor_camp debe ser un objeto web\DateTimeLocal
+                    // el valor_camp debe ser un objeto DateTimeLocal
                     $valor_camp_txt = $valor_camp->getFromLocal();
                     $formulario .= "<td class=contenido><input class=\"fecha\" type=\"text\" id=\"$nom_camp\" name=\"$nom_camp\" value=\"$valor_camp_txt\" 
 									onchange='fnjs_comprobar_fecha(\"#$nom_camp\",$locale_us)'>";
@@ -87,11 +87,11 @@ class DatosForm
                     break;
                 case "array":
                     $formulario .= "<tr><td class=etiqueta>" . ucfirst($eti) . "</td>";
-//					$oDespl = new web\Desplegable();
+//					$oDespl = new Desplegable();
 //					$oDespl->setOpciones($var_1);
 //					$oDespl->setOpcion_sel($valor_camp);
                     $aOpciones = $oDatosCampo->getLista();
-                    $oDesplegable = new web\Desplegable($nom_camp, $aOpciones, $valor_camp, true);
+                    $oDesplegable = new Desplegable($nom_camp, $aOpciones, $valor_camp, true);
                     $formulario .= "<td class=contenido><select name=\"$nom_camp\">";
                     $formulario .= $oDesplegable->options();
                     $formulario .= "</select></td></tr>";
@@ -157,7 +157,7 @@ class DatosForm
     /**
      * @param mixed $mod
      */
-    public function setMod($mod): void
+    public function setMod(mixed $mod): void
     {
         $this->mod = $mod;
     }

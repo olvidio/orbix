@@ -11,6 +11,10 @@
  */
 
 // INICIO Cabecera global de URL de controlador *********************************
+use core\ViewPhtml;
+use web\Desplegable;
+use web\Hash;
+
 require_once("apps/core/global_header.inc");
 // Archivos requeridos por esta url **********************************************
 
@@ -68,13 +72,13 @@ $tipos = array("n" => _("no cursa est."),
     "r" => _("repaso"),
 );
 
-$oDespl = new web\Desplegable();
+$oDespl = new Desplegable();
 $oDespl->setNombre('stgr');
 $oDespl->setOpciones($tipos);
 $oDespl->setOpcion_sel($stgr);
 $oDespl->setBlanco(true);
 
-$oHash = new web\Hash();
+$oHash = new Hash();
 $oHash->setCamposForm('stgr');
 $a_camposHidden = array(
     'obj_pau' => $obj_pau,
@@ -88,5 +92,5 @@ $a_campos = ['oPosicion' => $oPosicion,
     'oDespl' => $oDespl,
 ];
 
-$oView = new core\View('personas/controller');
+$oView = new ViewPhtml('personas/controller');
 $oView->renderizar('stgr_cambio.phtml', $a_campos);

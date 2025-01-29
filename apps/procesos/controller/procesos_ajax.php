@@ -1,6 +1,7 @@
 <?php
 
 use actividades\model\entity\ActividadAll;
+use core\ConfigGlobal;
 use menus\model\PermisoMenu;
 use procesos\model\entity\ActividadFase;
 use procesos\model\entity\ActividadTarea;
@@ -76,8 +77,8 @@ switch ($Qque) {
         $oActividad = new ActividadAll();
         $a_status = $oActividad->getArrayStatus();
 
-        $oMiUsuario = new Usuario(core\ConfigGlobal::mi_id_usuario());
-        $miSfsv = core\ConfigGlobal::mi_sfsv();
+        $oMiUsuario = new Usuario(ConfigGlobal::mi_id_usuario());
+        $miSfsv = ConfigGlobal::mi_sfsv();
 
         // para crear un desplegable de oficinas. Uso los de los menus
         $oPermMenus = new PermisoMenu;
@@ -167,8 +168,8 @@ switch ($Qque) {
         $oActividad = new ActividadAll();
         $a_status = $oActividad->getArrayStatus();
 
-        $oMiUsuario = new Usuario(core\ConfigGlobal::mi_id_usuario());
-        $miSfsv = core\ConfigGlobal::mi_sfsv();
+        $oMiUsuario = new Usuario(ConfigGlobal::mi_id_usuario());
+        $miSfsv = ConfigGlobal::mi_sfsv();
 
         // para crear un desplegable de oficinas. Uso los de los menus
         $oPermMenus = new PermisoMenu;

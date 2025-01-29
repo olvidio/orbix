@@ -1,6 +1,9 @@
 <?php
 
-use ubis\model\entity as ubis;
+use ubis\model\entity\CdcDlxDireccion;
+use ubis\model\entity\CdcExxDireccion;
+use ubis\model\entity\CtrDlxDireccion;
+use ubis\model\entity\CtrExxDireccion;
 
 /**
  * Esta página sirve para asignar una dirección a un determinado ubi.
@@ -27,16 +30,16 @@ $Qid_direccion = (integer)filter_input(INPUT_POST, 'id_direccion');
 $a_pkey = array('id_ubi' => $Qid_ubi, 'id_direccion' => $Qid_direccion);
 switch ($Qobj_dir) {
     case "DireccionCtrDl":
-        $oUbi = new ubis\CtrDlxDireccion($a_pkey);
+        $oUbi = new CtrDlxDireccion($a_pkey);
         break;
     case "DireccionCtrEx":
-        $oUbi = new ubis\CtrExxDireccion($a_pkey);
+        $oUbi = new CtrExxDireccion($a_pkey);
         break;
     case "DireccionCdcDl":
-        $oUbi = new ubis\CdcDlxDireccion($a_pkey);
+        $oUbi = new CdcDlxDireccion($a_pkey);
         break;
     case "DireccionCdcEx":
-        $oUbi = new ubis\CdcExxDireccion($a_pkey);
+        $oUbi = new CdcExxDireccion($a_pkey);
         break;
 }
 

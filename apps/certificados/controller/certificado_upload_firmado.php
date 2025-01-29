@@ -2,6 +2,7 @@
 
 // INICIO Cabecera global de URL de controlador *********************************
 use certificados\domain\repositories\CertificadoRepository;
+use core\ViewTwig;
 use personas\model\entity\Persona;
 use web\Hash;
 
@@ -50,5 +51,5 @@ $a_campos = ['oPosicion' => $oPosicion,
     'ApellidosNombre' => $apellidos_nombre,
 ];
 
-$oView = new core\ViewTwig('certificados/controller');
+$oView = new ViewTwig('certificados/controller');
 $oView->renderizar('certificado_subir_firmado.html.twig', $a_campos);

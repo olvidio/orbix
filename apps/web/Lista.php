@@ -2,8 +2,8 @@
 
 namespace web;
 
-use core;
-use usuarios\model\entity as usuarios;
+use core\ConfigGlobal;
+use usuarios\model\entity\Preferencia;
 use function core\is_true;
 
 //require_once ("classes/personas/ext_web_preferencias.class");
@@ -127,7 +127,6 @@ class Lista
     /**
      * Muestra una tabla simple
      *
-     * @param ikey indice del array aDatos
      * @return string Html
      *
      */
@@ -256,15 +255,15 @@ class Lista
     function mostrar_tabla()
     {
         $sPrefs = '';
-        $id_usuario = core\ConfigGlobal::mi_id_usuario();
+        $id_usuario = ConfigGlobal::mi_id_usuario();
         $tipo = 'tabla_presentacion';
         if (empty($this->formato_tabla)) {
-            $oPref = new usuarios\Preferencia(array('id_usuario' => $id_usuario, 'tipo' => $tipo));
+            $oPref = new Preferencia(array('id_usuario' => $id_usuario, 'tipo' => $tipo));
             $sPrefs = $oPref->getPreferencia();
         } else {
             $sPrefs = $this->formato_tabla;
         }
-        if ($sPrefs == 'html') {
+        if ($sPrefs === 'html') {
             return $this->mostrar_tabla_html();
         } else {
             return $this->mostrar_tabla_slickgrid();
@@ -339,18 +338,17 @@ class Lista
             }
         }
 
-        $id_usuario = core\ConfigGlobal::mi_id_usuario();
-        $idioma = core\ConfigGlobal::mi_Idioma();
+        $id_usuario = ConfigGlobal::mi_id_usuario();
+        $idioma = ConfigGlobal::mi_Idioma();
         $tipo = 'slickGrid_' . $id_tabla . '_' . $idioma;
         $aUser = array(0 => $id_usuario, 1 => 44); // 44 es el id_usuario para default.
         $aColsVisible = '';
         $bPanelVis = FALSE;
         for ($i = 0, $iMax = count($aUser); $i < $iMax; $i++) {
             $user = $aUser[$i];
-            $oPref = new usuarios\Preferencia(array('id_usuario' => $user, 'tipo' => $tipo));
+            $oPref = new Preferencia(array('id_usuario' => $user, 'tipo' => $tipo));
 
             if ($sPrefs = $oPref->getPreferencia()) {
-                ;
                 $aPrefs = json_decode($sPrefs, TRUE, 512, JSON_THROW_ON_ERROR);
                 if (!empty($aPrefs['colVisible'])) {
                     $aColsVisible = $aPrefs['colVisible'];
@@ -400,7 +398,7 @@ class Lista
                 $width = filter_var($width, FILTER_SANITIZE_NUMBER_INT);
                 $formatter = !empty($Cabecera['formatter']) ? $Cabecera['formatter'] : '';
                 if (!empty($Cabecera['visible'])) {
-                    if (strtolower($Cabecera['visible']) === 'no') {
+                    if (strtolower($Cabecera['visible'] ?? '') === 'no') {
                         $visible = FALSE;
                     }
                 }
@@ -427,7 +425,7 @@ class Lista
                 $sDefCol .= "}";
                 $aFields[] = $name_idx;
             }
-            if ((is_array($aColsVisible) && !empty($aColsVisible[$name_idx]) && ($aColsVisible[$name_idx] == "true")) || !is_array($aColsVisible)) {
+            if ((is_array($aColsVisible) && !empty($aColsVisible[$name_idx]) && ($aColsVisible[$name_idx] === "true")) || !is_array($aColsVisible)) {
                 if (!$visible) continue;
                 if ($cv > 0) {
                     $sColumnsVisible .= ',';
@@ -516,19 +514,19 @@ class Lista
                         }
                         if (!empty($valor['script'])) {
                             $ira = $valor['script'];
-                            $aFilas[$num_fila]['script'] = addslashes($ira?? '');
+                            $aFilas[$num_fila]['script'] = addslashes($ira ?? '');
                         }
                         if (!empty($valor['script2'])) {
                             $ira = $valor['script2'];
-                            $aFilas[$num_fila]['script2'] = addslashes($ira?? '');
+                            $aFilas[$num_fila]['script2'] = addslashes($ira ?? '');
                         }
                         if (!empty($valor['script3'])) {
                             $ira = $valor['script3'];
-                            $aFilas[$num_fila]['script3'] = addslashes($ira?? '');
+                            $aFilas[$num_fila]['script3'] = addslashes($ira ?? '');
                         }
                         if (!empty($valor['span'])) {
                             $span = $valor['span'];
-                            $aFilas[$num_fila][$aFields[$icol]] = addslashes($val?? '');
+                            $aFilas[$num_fila][$aFields[$icol]] = addslashes($val ?? '');
                             $icol++;
                             for ($s = 1; $s < $span; $s++) {
                                 $aFilas[$num_fila][$aFields[$icol]] = '';
@@ -536,10 +534,10 @@ class Lista
                             }
                             $icol--;
                         } else {
-                            $aFilas[$num_fila][$aFields[$icol]] = addslashes($val?? '');
+                            $aFilas[$num_fila][$aFields[$icol]] = addslashes($val ?? '');
                         }
                     } else {
-                        $aFilas[$num_fila][$aFields[$icol]] = empty($valor) ? '' : addslashes($valor?? '');
+                        $aFilas[$num_fila][$aFields[$icol]] = empty($valor) ? '' : addslashes($valor ?? '');
                     }
                     $icol++;
                 }
@@ -1190,6 +1188,7 @@ class Lista
         }
         return $rta;
     }
+
     public function getCsv($filename)
     {
         $a_valores = $this->aDatos;

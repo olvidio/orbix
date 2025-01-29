@@ -3,9 +3,9 @@
 namespace ubis\model;
 
 use core\ConfigGlobal;
-use permisos\model as permisos;
+use permisos\model\XPermisos;
 
-class CuadrosLabor extends permisos\XPermisos
+class CuadrosLabor extends XPermisos
 {
     public $classname = "CuadrosLabor";
 

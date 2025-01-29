@@ -1,12 +1,18 @@
 <?php
 
 use core\ConfigGlobal;
-use ubis\model\entity as ubis;
+use core\DBPropiedades;
+use core\ViewPhtml;
+use ubis\model\entity\GestorCasa;
+use ubis\model\entity\GestorCasaDl;
+use ubis\model\entity\GestorCasaEx;
+use ubis\model\entity\GestorCentro;
+use ubis\model\entity\GestorCentroDl;
+use ubis\model\entity\GestorCentroEx;
 use web\Desplegable;
 use web\Hash;
 use web\Lista;
 use web\Posicion;
-use core\DBPropiedades;
 
 /**
  * Página para realizar algunos listados standard de ubis
@@ -207,27 +213,27 @@ if ($Qloc == 'ex') {
 
 switch ($obj) {
     case 'Centro':
-        $oGesCentros = new ubis\GestorCentro();
+        $oGesCentros = new GestorCentro();
         $cUbis = $oGesCentros->getCentros($aWhere, $aOperador);
         break;
     case 'CentroDl':
-        $oGesCentros = new ubis\GestorCentroDl();
+        $oGesCentros = new GestorCentroDl();
         $cUbis = $oGesCentros->getCentros($aWhere, $aOperador);
         break;
     case 'CentroEx':
-        $oGesCentros = new ubis\GestorCentroEx();
+        $oGesCentros = new GestorCentroEx();
         $cUbis = $oGesCentros->getCentros($aWhere, $aOperador);
         break;
     case 'Casa':
-        $oGesCasas = new ubis\GestorCasa();
+        $oGesCasas = new GestorCasa();
         $cUbis = $oGesCasas->getCasas($aWhere, $aOperador);
         break;
     case 'CasaDl':
-        $oGesCasas = new ubis\GestorCasaDl();
+        $oGesCasas = new GestorCasaDl();
         $cUbis = $oGesCasas->getCasas($aWhere, $aOperador);
         break;
     case 'CasaEx':
-        $oGesCasas = new ubis\GestorCasaEx();
+        $oGesCasas = new GestorCasaEx();
         $cUbis = $oGesCasas->getCasas($aWhere, $aOperador);
         break;
     case 'none':
@@ -392,8 +398,8 @@ $a_camposHidden1 = array(
 $oHash1->setArraycamposHidden($a_camposHidden1);
 
 
-$oHash2 = new web\Hash();
-$oHash2->setUrl(core\ConfigGlobal::getWeb() . '/apps/ubis/controller/delegacion_que.php');
+$oHash2 = new Hash();
+$oHash2->setUrl(ConfigGlobal::getWeb() . '/apps/ubis/controller/delegacion_que.php');
 $oHash2->setCamposForm('');
 $h2 = $oHash2->linkSinVal();
 
@@ -407,5 +413,5 @@ $a_campos = ['oPosicion' => $oPosicion,
     'h2' => $h2,
 ];
 
-$oView = new core\View('ubis/controller');
+$oView = new ViewPhtml('ubis/controller');
 $oView->renderizar('list_ctr.phtml', $a_campos);

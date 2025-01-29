@@ -1,7 +1,9 @@
 <?php
 
 use core\ConfigGlobal;
-use ubis\model\entity as ubis;
+use core\ViewPhtml;
+use ubis\model\entity\GestorCentroDl;
+use web\Hash;
 
 /**
  * Formulario para ctr de los listados de profesión y de los asistentes a actividades
@@ -106,20 +108,20 @@ switch ($Qn_agd) {
         break;
 }
 
-$oGesCentros = new ubis\GestorCentroDl();
+$oGesCentros = new GestorCentroDl();
 $oDesplCentros = $oGesCentros->getListaCentros("WHERE status = 't' AND tipo_ctr ~ '^a|^n' ");
 $oDesplCentros->setNombre('id_ubi');
 $oDesplCentros->setBlanco(true);
 $oDesplCentros->setOpcion_sel($Qid_ubi);
 $oDesplCentros->setAction('fnjs_otro(1)');
 
-$oHash = new web\Hash();
+$oHash = new Hash();
 $oHash->setCamposForm('n_agd!empiezamax!empiezamin!periodo!year!iactividad_val!iasistentes_val');
 $oHash->setcamposNo('id_ubi');
 $oHash->setArraycamposHidden($a_camposHidden);
 
 $oFormP = array();
-if ($Qlista == "list_activ" || $Qlista == "list_est") {
+if ($Qlista === "list_activ" || $Qlista === "list_est") {
     $aOpciones = array(
         'curso_ca' => _("curso ca"),
         'curso_crt' => _("curso crt"),
@@ -169,5 +171,5 @@ $a_campos = [
     'locale_us' => ConfigGlobal::is_locale_us(),
 ];
 
-$oView = new core\View('asistentes/controller');
+$oView = new ViewPhtml('asistentes/controller');
 $oView->renderizar('que_ctr_lista.phtml', $a_campos);

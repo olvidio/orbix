@@ -1,7 +1,10 @@
 <?php
 namespace menus\model\entity;
 
-use core;
+use core\ClasePropiedades;
+use core\DatosCampo;
+use core\Set;
+use function core\is_true;
 
 /**
  * Fitxer amb la Classe que accedeix a la taula $nom_tabla
@@ -22,7 +25,7 @@ use core;
  * @version 1.0
  * @created 15/01/2014
  */
-class MenuDb extends core\ClasePropiedades
+class MenuDb extends ClasePropiedades
 {
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
@@ -114,7 +117,7 @@ class MenuDb extends core\ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'id_menu') && $val_id !== '') $this->iid_menu = (int)$val_id; 
+                if (($nom_id === 'id_menu') && $val_id !== '') $this->iid_menu = (int)$val_id;
             }
         } else {
             if (isset($a_id) && $a_id !== '') {
@@ -153,7 +156,7 @@ class MenuDb extends core\ClasePropiedades
         $aDades['ok'] = $this->bok;
         array_walk($aDades, 'core\poner_null');
         //para el caso de los boolean FALSE, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
-        if (core\is_true($aDades['ok'])) {
+        if (is_true($aDades['ok'])) {
             $aDades['ok'] = 'true';
         } else {
             $aDades['ok'] = 'false';
@@ -203,7 +206,7 @@ class MenuDb extends core\ClasePropiedades
                     return false;
                 }
             }
-            $this->id_menu = $oDbl->lastInsertId($nom_tabla . '_id_menu_seq');
+            $this->iid_menu = $oDbl->lastInsertId($nom_tabla . '_id_menu_seq');
         }
         $this->setAllAtributes($aDades);
         return true;
@@ -271,7 +274,7 @@ class MenuDb extends core\ClasePropiedades
      *
      * @param array $aDades
      */
-    function setAllAtributes($aDades)
+    function setAllAtributes(array $aDades)
     {
         if (!is_array($aDades)) return;
         if (array_key_exists('id_schema', $aDades)) $this->setId_schema($aDades['id_schema']);
@@ -342,7 +345,7 @@ class MenuDb extends core\ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'id_menu') && $val_id !== '') $this->iid_menu = (int)$val_id; 
+                if (($nom_id === 'id_menu') && $val_id !== '') $this->iid_menu = (int)$val_id;
             }
         }
     }
@@ -539,7 +542,7 @@ class MenuDb extends core\ClasePropiedades
      */
     function getDatosCampos()
     {
-        $oMenuDbSet = new core\Set();
+        $oMenuDbSet = new Set();
 
         $oMenuDbSet->add($this->getDatosOrden());
         $oMenuDbSet->add($this->getDatosMenu());
@@ -555,12 +558,12 @@ class MenuDb extends core\ClasePropiedades
      * Recupera les propietats de l'atribut iorden de MenuDb
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosOrden()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'orden'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'orden'));
         $oDatosCampo->setEtiqueta(_("orden"));
         return $oDatosCampo;
     }
@@ -569,12 +572,12 @@ class MenuDb extends core\ClasePropiedades
      * Recupera les propietats de l'atribut smenu de MenuDb
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosMenu()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'menu'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'menu'));
         $oDatosCampo->setEtiqueta(_("menú"));
         return $oDatosCampo;
     }
@@ -583,12 +586,12 @@ class MenuDb extends core\ClasePropiedades
      * Recupera les propietats de l'atribut sparametros de MenuDb
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosParametros()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'parametros'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'parametros'));
         $oDatosCampo->setEtiqueta(_("parametros"));
         return $oDatosCampo;
     }
@@ -597,12 +600,12 @@ class MenuDb extends core\ClasePropiedades
      * Recupera les propietats de l'atribut iid_metamenu de MenuDb
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosId_metamenu()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_metamenu'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_metamenu'));
         $oDatosCampo->setEtiqueta(_("id_metamenu"));
         return $oDatosCampo;
     }
@@ -611,12 +614,12 @@ class MenuDb extends core\ClasePropiedades
      * Recupera les propietats de l'atribut imenu_perm de MenuDb
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosMenu_perm()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'menu_perm'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'menu_perm'));
         $oDatosCampo->setEtiqueta(_("menu_perm"));
         return $oDatosCampo;
     }
@@ -625,12 +628,12 @@ class MenuDb extends core\ClasePropiedades
      * Recupera les propietats de l'atribut iid_grupmenu de MenuDb
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosId_grupmenu()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_grupmenu'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_grupmenu'));
         $oDatosCampo->setEtiqueta(_("id_grupmenu"));
         return $oDatosCampo;
     }
@@ -639,12 +642,12 @@ class MenuDb extends core\ClasePropiedades
      * Recupera les propietats de l'atribut bok de MenuDb
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosOk()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'ok'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'ok'));
         $oDatosCampo->setEtiqueta(_("ok"));
         return $oDatosCampo;
     }

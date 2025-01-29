@@ -2,7 +2,6 @@
 
 namespace web;
 
-use core;
 
 /**
  * Esta página sólo contiene funciones. Es para incluir en otras.

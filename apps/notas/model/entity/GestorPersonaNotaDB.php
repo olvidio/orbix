@@ -1,7 +1,9 @@
 <?php
 namespace notas\model\entity;
 
-use core;
+use core\ClaseGestor;
+use core\Condicion;
+use core\Set;
 use function core\is_true;
 
 /**
@@ -15,7 +17,7 @@ use function core\is_true;
  * @version 1.0
  * @created 07/04/2014
  */
-class GestorPersonaNotaDB extends core\ClaseGestor
+class GestorPersonaNotaDB extends ClaseGestor
 {
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
@@ -38,13 +40,13 @@ class GestorPersonaNotaDB extends core\ClaseGestor
      * retorna l'array d'objectes de tipus PersonaNota. Només les aprovades.
      *
      * @param integer id_nom  de la persona.
-     * @return array Una col·lecció d'objectes de tipus PersonaNota
+     * @return false Una col·lecció d'objectes de tipus PersonaNota
      */
     function getPersonaNotasSuperadas($id_nom, $nivel = '')
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        $oPersonaNotaSet = new core\Set();
+        $oPersonaNotaSet = new Set();
 
         $cond_nivel = '';
         if (is_true($nivel)) {
@@ -84,23 +86,23 @@ class GestorPersonaNotaDB extends core\ClaseGestor
      *
      * @param array aWhere associatiu amb els valors de les variables amb les quals farem la query
      * @param array aOperators associatiu amb els valors dels operadors que cal aplicar a cada variable
-     * @return array Una col·lecció d'objectes de tipus PersonaNota
+     * @return void Una col·lecció d'objectes de tipus PersonaNota
      */
     public function getPersonaNotas($aWhere = array(), $aOperators = array())
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        $oPersonaNotaSet = new core\Set();
-        $oCondicion = new core\Condicion();
+        $oPersonaNotaSet = new Set();
+        $oCondicion = new Condicion();
         $aCondi = array();
         foreach ($aWhere as $camp => $val) {
-            if ($camp == '_ordre') continue;
+            if ($camp === '_ordre') continue;
             $sOperador = isset($aOperators[$camp]) ? $aOperators[$camp] : '';
             if ($a = $oCondicion->getCondicion($camp, $sOperador, $val)) $aCondi[] = $a;
             // operadores que no requieren valores
-            if ($sOperador == 'BETWEEN' || $sOperador == 'IS NULL' || $sOperador == 'IS NOT NULL' || $sOperador == 'OR') unset($aWhere[$camp]);
-            if ($sOperador == 'IN' || $sOperador == 'NOT IN') unset($aWhere[$camp]);
-            if ($sOperador == 'TXT') unset($aWhere[$camp]);
+            if ($sOperador === 'BETWEEN' || $sOperador === 'IS NULL' || $sOperador === 'IS NOT NULL' || $sOperador === 'OR') unset($aWhere[$camp]);
+            if ($sOperador === 'IN' || $sOperador === 'NOT IN') unset($aWhere[$camp]);
+            if ($sOperador === 'TXT') unset($aWhere[$camp]);
         }
         $sCondi = implode(' AND ', $aCondi);
         if ($sCondi != '') $sCondi = " WHERE " . $sCondi;

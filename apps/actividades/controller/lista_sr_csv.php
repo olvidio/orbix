@@ -15,11 +15,11 @@
 use actividades\model\entity\GestorActividad;
 use actividadescentro\model\entity\GestorCentroEncargado;
 use core\ConfigGlobal;
-use ubis\model\entity\Casa;
-use usuarios\model\entity\Preferencia;
 use web\Lista;
 use web\Periodo;
 use web\TiposActividades;
+use ubis\model\entity\Casa;
+use usuarios\model\entity\Preferencia;
 use function core\is_true;
 
 require_once("apps/core/global_header.inc");
@@ -62,7 +62,7 @@ $aPref = ['status' => $json_status,
 // Guardar Preferencia
 //$json_busqueda = "{ 'status': $json_status, 'periodo': '$Qperiodo', 'tipo_activ': $json_activ, 'ubis_compartidos': $json_cdc}";
 $json_busqueda = json_encode($aPref);
-$id_usuario = core\ConfigGlobal::mi_id_usuario();
+$id_usuario = ConfigGlobal::mi_id_usuario();
 $tipo = 'busqueda_activ_sr';
 $oPref = new Preferencia(array('id_usuario' => $id_usuario, 'tipo' => $tipo));
 $oPref->setPreferencia($json_busqueda);
@@ -239,7 +239,6 @@ foreach ($cActividades as $oActividad) {
     $oEnc = new GestorCentroEncargado();
     $ctrs = '';
     foreach ($oEnc->getCentrosEncargadosActividad($id_activ) as $oEncargado) {
-        ;
         $ctrs .= $oEncargado->getNombre_ubi() . ', ';
     }
     $ctrs = substr($ctrs, 0, -2);

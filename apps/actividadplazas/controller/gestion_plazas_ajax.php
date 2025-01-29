@@ -4,8 +4,9 @@
  *
  */
 
-use actividades\model\entity as actividades;
-use actividadplazas\model\entity as actividadplazas;
+use actividades\model\entity\ActividadDl;
+use actividadplazas\model\entity\ActividadPlazasDl;
+use actividadplazas\model\GestorResumenPlazas;
 use core\ConfigGlobal;
 
 // INICIO Cabecera global de URL de controlador *********************************
@@ -30,10 +31,10 @@ switch ($que) {
         $dl_org = $obj->dlorg;
         $plazas = $obj->$dl;
 
-        $mi_dele = core\ConfigGlobal::mi_delef();
+        $mi_dele = ConfigGlobal::mi_delef();
         //Para las plazas totales
-        if ($dl == 'tot' && $mi_dele == $dl_org) {
-            $oActividadDl = new actividades\ActividadDl(array('id_activ' => $id_activ));
+        if ($dl === 'tot' && $mi_dele == $dl_org) {
+            $oActividadDl = new ActividadDl(array('id_activ' => $id_activ));
             $oActividadDl->DBCarregar();
             $oActividadDl->setPlazas($plazas);
             if ($oActividadDl->DBGuardar() === false) {
@@ -55,7 +56,7 @@ switch ($que) {
                 $id_dl = $cDelegaciones[0]->getId_dl();
             }
             //Si es la dl_org, son plazas concedidas, sino pedidas.
-            $oActividadPlazasDl = new actividadplazas\ActividadPlazasDl(array('id_activ' => $id_activ, 'id_dl' => $id_dl, 'dl_tabla' => $mi_dele));
+            $oActividadPlazasDl = new ActividadPlazasDl(array('id_activ' => $id_activ, 'id_dl' => $id_dl, 'dl_tabla' => $mi_dele));
             $oActividadPlazasDl->DBCarregar();
             $oActividadPlazasDl->setPlazas($plazas);
 
@@ -87,8 +88,8 @@ switch ($que) {
             }
         }
         // valor por defecto
-        $propietario = core\ConfigGlobal::mi_delef() . ">" . $dl_de_paso;
-        $gesActividadPlazas = new \actividadplazas\model\GestorResumenPlazas();
+        $propietario = ConfigGlobal::mi_delef() . ">" . $dl_de_paso;
+        $gesActividadPlazas = new GestorResumenPlazas();
         $gesActividadPlazas->setId_activ($id_activ);
         $oDesplPosiblesPropietarios = $gesActividadPlazas->getPosiblesPropietarios($dl_de_paso);
         $oDesplPosiblesPropietarios->setNombre('propietario');

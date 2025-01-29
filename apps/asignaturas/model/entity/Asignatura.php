@@ -1,7 +1,10 @@
 <?php
 namespace asignaturas\model\entity;
 
-use core;
+use core\ClasePropiedades;
+use core\DatosCampo;
+use core\Set;
+use function core\is_true;
 
 /**
  * Fitxer amb la Classe que accedeix a la taula $nom_tabla
@@ -22,7 +25,7 @@ use core;
  * @version 1.0
  * @created 29/11/2010
  */
-class Asignatura extends core\ClasePropiedades
+class Asignatura extends ClasePropiedades
 {
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
@@ -159,7 +162,7 @@ class Asignatura extends core\ClasePropiedades
         $aDades['id_tipo'] = $this->iid_tipo;
         array_walk($aDades, 'core\poner_null');
         //para el caso de los boolean FALSE, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
-        if (core\is_true($aDades['status'])) {
+        if (is_true($aDades['status'])) {
             $aDades['status'] = 'true';
         } else {
             $aDades['status'] = 'false';
@@ -278,7 +281,7 @@ class Asignatura extends core\ClasePropiedades
      *
      * @param array $aDades
      */
-    function setAllAtributes($aDades)
+    function setAllAtributes(array $aDades)
     {
         if (!is_array($aDades)) return;
         if (array_key_exists('id_asignatura', $aDades)) $this->setId_asignatura($aDades['id_asignatura']);
@@ -349,7 +352,7 @@ class Asignatura extends core\ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'id_asignatura') && $val_id !== '') $this->iid_asignatura = (int)$val_id; 
+                if (($nom_id === 'id_asignatura') && $val_id !== '') $this->iid_asignatura = (int)$val_id;
             }
         }
     }
@@ -568,7 +571,7 @@ class Asignatura extends core\ClasePropiedades
      */
     function getDatosCampos()
     {
-        $oAsignaturaSet = new core\Set();
+        $oAsignaturaSet = new Set();
 
         $oAsignaturaSet->add($this->getDatosId_asignatura());
         $oAsignaturaSet->add($this->getDatosId_nivel());
@@ -587,12 +590,12 @@ class Asignatura extends core\ClasePropiedades
      * Recupera les propietats de l'atribut iid_asignatura de Asignatura
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosId_asignatura()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_asignatura'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_asignatura'));
         $oDatosCampo->setEtiqueta(_("id asignatura"));
         $oDatosCampo->setTipo('texto');
         $oDatosCampo->setArgument(5);
@@ -603,12 +606,12 @@ class Asignatura extends core\ClasePropiedades
      * Recupera les propietats de l'atribut iid_nivel de Asignatura
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosId_nivel()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_nivel'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_nivel'));
         $oDatosCampo->setEtiqueta(_("id nivel"));
         $oDatosCampo->setTipo('texto');
         $oDatosCampo->setArgument(5);
@@ -619,12 +622,12 @@ class Asignatura extends core\ClasePropiedades
      * Recupera les propietats de l'atribut snombre_asignatura de Asignatura
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosNombre_asignatura()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'nombre_asignatura'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'nombre_asignatura'));
         $oDatosCampo->setEtiqueta(_("nombre largo"));
         $oDatosCampo->setTipo('texto');
         $oDatosCampo->setArgument(40);
@@ -635,12 +638,12 @@ class Asignatura extends core\ClasePropiedades
      * Recupera les propietats de l'atribut snombre_corto de Asignatura
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosNombre_corto()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'nombre_corto'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'nombre_corto'));
         $oDatosCampo->setEtiqueta(_("nombre corto"));
         $oDatosCampo->setTipo('texto');
         $oDatosCampo->setArgument(30);
@@ -651,12 +654,12 @@ class Asignatura extends core\ClasePropiedades
      * Recupera les propietats de l'atribut screditos de Asignatura
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosCreditos()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'creditos'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'creditos'));
         $oDatosCampo->setEtiqueta(_("créditos"));
         $oDatosCampo->setTipo('decimal');
         $oDatosCampo->setArgument(4);
@@ -667,12 +670,12 @@ class Asignatura extends core\ClasePropiedades
      * Recupera les propietats de l'atribut syear de Asignatura
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosYear()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'year'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'year'));
         $oDatosCampo->setEtiqueta(_("año"));
         $oDatosCampo->setTipo('texto');
         $oDatosCampo->setArgument(4);
@@ -683,12 +686,12 @@ class Asignatura extends core\ClasePropiedades
      * Recupera les propietats de l'atribut iid_sector de Asignatura
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosId_sector()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_sector'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_sector'));
         $oDatosCampo->setEtiqueta(_("sector"));
         $oDatosCampo->setTipo('opciones');
         $oDatosCampo->setArgument('asignaturas\model\entity\Sector');
@@ -701,12 +704,12 @@ class Asignatura extends core\ClasePropiedades
      * Recupera les propietats de l'atribut bstatus de Asignatura
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosStatus()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'status'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'status'));
         $oDatosCampo->setEtiqueta(_("en uso"));
         $oDatosCampo->setTipo('check');
         return $oDatosCampo;
@@ -716,12 +719,12 @@ class Asignatura extends core\ClasePropiedades
      * Recupera les propietats de l'atribut iid_tipo de Asignatura
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosId_tipo()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_tipo'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_tipo'));
         $oDatosCampo->setEtiqueta(_("tipo"));
         $oDatosCampo->setTipo('opciones');
         $oDatosCampo->setArgument('asignaturas\model\entity\AsignaturaTipo');

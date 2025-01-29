@@ -1,13 +1,13 @@
 <?php
 
-use encargossacd\model\entity\Encargo;
-use ubis\model\entity\CentroEllas;
-use ubis\model\entity\CentroDl;
-use encargossacd\model\entity\GestorEncargoTipo;
+use core\ViewTwig;
 use encargossacd\model\DesplCentros;
+use encargossacd\model\entity\Encargo;
+use encargossacd\model\entity\GestorEncargoTipo;
 use web\Desplegable;
 use web\Hash;
-use encargossacd\model\EncargoConstants;
+use ubis\model\entity\CentroDl;
+use ubis\model\entity\CentroEllas;
 
 // INICIO Cabecera global de URL de controlador *********************************
 require_once("apps/core/global_header.inc");
@@ -127,7 +127,7 @@ if (!empty($Qid_tipo_enc)) {
     $Qgrupo = $tipo['grupo'];
     //$nom_tipo=$tipo['nom_tipo'];
 } else {
-    $Qid_tipo_enc = $oGesEncargoTipo->id_tipo_encargo($Qgrupo, '...');
+    $Qid_tipo_enc = GestorEncargoTipo::id_tipo_encargo($Qgrupo, '...');
 }
 
 $ee = $oGesEncargoTipo->encargo_de_tipo($Qid_tipo_enc);
@@ -253,5 +253,5 @@ $a_campos = ['oPosicion' => $oPosicion,
     'txt_btn' => $txt_btn,
 ];
 
-$oView = new core\ViewTwig('encargossacd/controller');
+$oView = new ViewTwig('encargossacd/controller');
 $oView->renderizar('encargo_ver.html.twig', $a_campos);

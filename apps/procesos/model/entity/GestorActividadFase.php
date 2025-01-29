@@ -2,10 +2,13 @@
 
 namespace procesos\model\entity;
 
-use core;
+use core\ClaseGestor;
+use core\Condicion;
+use core\ConfigGlobal;
+use core\Set;
 use permisos\model\PermDl;
-use usuarios\model\entity\Usuario;
 use web\Desplegable;
+use usuarios\model\entity\Usuario;
 
 /**
  * GestorActividadFase
@@ -18,7 +21,7 @@ use web\Desplegable;
  * @version 1.0
  * @created 07/12/2018
  */
-class GestorActividadFase extends core\ClaseGestor
+class GestorActividadFase extends ClaseGestor
 {
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
@@ -41,7 +44,7 @@ class GestorActividadFase extends core\ClaseGestor
      * retorna un array
      *
      * @param array lista de procesos.
-     * @return array Una Llista de totes les fases posibles dels procesos
+     * @return array|false
      */
     function getTodasActividadFases($a_id_tipo_proceso = [])
     {
@@ -50,7 +53,7 @@ class GestorActividadFase extends core\ClaseGestor
 
         $cond = '';
         // filtro por sf/sv
-        $miSfsv = core\ConfigGlobal::mi_sfsv();
+        $miSfsv = ConfigGlobal::mi_sfsv();
         switch ($miSfsv) {
             case 1: // sv
                 $cond = "(sv ='t') ";
@@ -92,8 +95,8 @@ class GestorActividadFase extends core\ClaseGestor
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
 
-        $oMiUsuario = new Usuario(core\ConfigGlobal::mi_id_usuario());
-        $miSfsv = core\ConfigGlobal::mi_sfsv();
+        $oMiUsuario = new Usuario(ConfigGlobal::mi_id_usuario());
+        $miSfsv = ConfigGlobal::mi_sfsv();
 
         $cond = '';
         if ($oMiUsuario->isRole('SuperAdmin')) { // Es administrador
@@ -152,12 +155,12 @@ class GestorActividadFase extends core\ClaseGestor
      *
      * @param array $aProcesos
      */
-    public function getArrayFasesProcesos($aProcesos = array())
+    public function getArrayFasesProcesos(array $aProcesos = array())
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
 
-        $miSfsv = core\ConfigGlobal::mi_sfsv();
+        $miSfsv = ConfigGlobal::mi_sfsv();
 
         $cond = '';
         // filtro por sf/sv
@@ -231,15 +234,15 @@ class GestorActividadFase extends core\ClaseGestor
      *
      * @param array optional lista de procesos.
      * @param boolean optional només les fases de les que sóc responsable.
-     * @return Desplegable Una Llista de fases comunes a tots els procesos
+     * @return false|Desplegable
      */
     function getListaActividadFases($aProcesos = array(), $bresp = false)
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
 
-        $oMiUsuario = new Usuario(core\ConfigGlobal::mi_id_usuario());
-        $miSfsv = core\ConfigGlobal::mi_sfsv();
+        $oMiUsuario = new Usuario(ConfigGlobal::mi_id_usuario());
+        $miSfsv = ConfigGlobal::mi_sfsv();
 
         if ($bresp) {
             //$miPerm=$oMiUsuario->getPerm_oficinas();
@@ -326,12 +329,12 @@ class GestorActividadFase extends core\ClaseGestor
      * retorna l'array d'objectes de tipus ActividadFase
      *
      * @param string sQuery la query a executar.
-     * @return array Una col·lecció d'objectes de tipus ActividadFase
+     * @return array|false
      */
     function getActividadFasesQuery($sQuery = '')
     {
         $oDbl = $this->getoDbl();
-        $oActividadFaseSet = new core\Set();
+        $oActividadFaseSet = new Set();
         if (($oDbl->query($sQuery)) === FALSE) {
             $sClauError = 'GestorActividadFase.query';
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
@@ -350,23 +353,23 @@ class GestorActividadFase extends core\ClaseGestor
      *
      * @param array aWhere associatiu amb els valors de les variables amb les quals farem la query
      * @param array aOperators associatiu amb els valors dels operadors que cal aplicar a cada variable
-     * @return array Una col·lecció d'objectes de tipus ActividadFase
+     * @return array|void
      */
     function getActividadFases($aWhere = array(), $aOperators = array())
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
-        $oActividadFaseSet = new core\Set();
-        $oCondicion = new core\Condicion();
+        $oActividadFaseSet = new Set();
+        $oCondicion = new Condicion();
         $aCondi = array();
         foreach ($aWhere as $camp => $val) {
-            if ($camp == '_ordre') continue;
+            if ($camp === '_ordre') continue;
             $sOperador = isset($aOperators[$camp]) ? $aOperators[$camp] : '';
             if ($a = $oCondicion->getCondicion($camp, $sOperador, $val)) $aCondi[] = $a;
             // operadores que no requieren valores
-            if ($sOperador == 'BETWEEN' || $sOperador == 'IS NULL' || $sOperador == 'IS NOT NULL' || $sOperador == 'OR') unset($aWhere[$camp]);
-            if ($sOperador == 'IN' || $sOperador == 'NOT IN') unset($aWhere[$camp]);
-            if ($sOperador == 'TXT') unset($aWhere[$camp]);
+            if ($sOperador === 'BETWEEN' || $sOperador === 'IS NULL' || $sOperador === 'IS NOT NULL' || $sOperador === 'OR') unset($aWhere[$camp]);
+            if ($sOperador === 'IN' || $sOperador === 'NOT IN') unset($aWhere[$camp]);
+            if ($sOperador === 'TXT') unset($aWhere[$camp]);
         }
         $sCondi = implode(' AND ', $aCondi);
         if ($sCondi != '') $sCondi = " WHERE " . $sCondi;

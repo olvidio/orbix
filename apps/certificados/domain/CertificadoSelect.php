@@ -5,10 +5,10 @@ namespace certificados\domain;
 use certificados\domain\repositories\CertificadoRepository;
 use core\ConfigGlobal;
 use personas\model\entity\Persona;
-use ubis\model\entity\GestorDelegacion;
-use usuarios\model\entity\Local;
 use web\Hash;
 use web\Lista;
+use ubis\model\entity\GestorDelegacion;
+use usuarios\model\entity\Local;
 use function core\is_true;
 
 class CertificadoSelect

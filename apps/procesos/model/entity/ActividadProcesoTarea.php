@@ -5,9 +5,12 @@ namespace procesos\model\entity;
 use actividades\model\entity\Actividad;
 use actividades\model\entity\ActividadAll;
 use cambios\model\GestorAvisoCambios;
+use core\ClasePropiedades;
 use core\ConfigGlobal;
+use core\DatosCampo;
+use core\Set;
+use ReflectionClass;
 use function core\is_true;
-use core;
 use menus\model\PermisoMenu;
 
 /**
@@ -29,7 +32,7 @@ use menus\model\PermisoMenu;
  * @version 1.0
  * @created 06/12/2018
  */
-class ActividadProcesoTarea extends core\ClasePropiedades
+class ActividadProcesoTarea extends ClasePropiedades
 {
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
@@ -208,7 +211,7 @@ class ActividadProcesoTarea extends core\ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'id_item') && $val_id !== '') $this->iid_item = (int)$val_id; 
+                if (($nom_id === 'id_item') && $val_id !== '') $this->iid_item = (int)$val_id;
             }
         } else {
             if (isset($a_id) && $a_id !== '') {
@@ -248,7 +251,7 @@ class ActividadProcesoTarea extends core\ClasePropiedades
         $aDades['observ'] = $this->sobserv;
         array_walk($aDades, 'core\poner_null');
         //para el caso de los boolean FALSE, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
-        if (core\is_true($aDades['completado'])) {
+        if (is_true($aDades['completado'])) {
             $aDades['completado'] = 'true';
         } else {
             $aDades['completado'] = 'false';
@@ -294,7 +297,7 @@ class ActividadProcesoTarea extends core\ClasePropiedades
                     || ($statusActividad == ActividadAll::STATUS_ACTUAL && $statusProceso < ActividadAll::STATUS_ACTUAL)) {
                     // para dl y dlf:
                     $dl_org_no_f = preg_replace('/(\.*)f$/', '\1', $dl_org);
-                    if ($dl_org == core\ConfigGlobal::mi_delef() || $dl_org_no_f == core\ConfigGlobal::mi_dele()) {
+                    if ($dl_org == ConfigGlobal::mi_delef() || $dl_org_no_f == ConfigGlobal::mi_dele()) {
                         if ($_SESSION['oPerm']->have_perm_oficina('des')) {
                             $oActividad->setStatus($statusProceso);
                             $oActividad->DBGuardar();
@@ -305,7 +308,7 @@ class ActividadProcesoTarea extends core\ClasePropiedades
                             $permitido = FALSE;
                         }
                     } else { // para el resto.
-                        if ($id_tabla == 'dl') {
+                        if ($id_tabla === 'dl') {
                             // No se puede modificar una actividad de otra dl
                             echo sprintf(_("no se puede modificar el status de una actividad de otra dl (%s)"), $dl_org);
                             $permitido = FALSE;
@@ -315,11 +318,11 @@ class ActividadProcesoTarea extends core\ClasePropiedades
                         }
                     }
                 } else {
-                    if ($dl_org == core\ConfigGlobal::mi_delef()) {
+                    if ($dl_org == ConfigGlobal::mi_delef()) {
                         $oActividad->setStatus($statusProceso);
                         $oActividad->DBGuardar();
                     } else {
-                        if ($id_tabla == 'dl') {
+                        if ($id_tabla === 'dl') {
                             // No se puede modificar una actividad de otra dl
                             echo sprintf(_("no se puede modificar el status de una actividad de otra dl (%s)"), $dl_org);
                             //$permitido = FALSE;
@@ -351,10 +354,10 @@ class ActividadProcesoTarea extends core\ClasePropiedades
                         $oActividad->setStatus($statusActividad);
                         $oActividad->DBGuardar();
                         return FALSE;
-                    } elseif (core\ConfigGlobal::is_app_installed('cambios')) {
+                    } elseif (ConfigGlobal::is_app_installed('cambios')) {
                         if (empty($quiet)) {
                             $oGestorCanvis = new GestorAvisoCambios();
-                            $shortClassName = (new \ReflectionClass($this))->getShortName();
+                            $shortClassName = (new ReflectionClass($this))->getShortName();
                             $oGestorCanvis->addCanvi($shortClassName, 'FASE', $this->iid_activ, $aDades, $this->aDadesActuals);
                         }
                     }
@@ -393,7 +396,7 @@ class ActividadProcesoTarea extends core\ClasePropiedades
             // anotar cambio.
             if (empty($quiet)) {
                 $oGestorCanvis = new GestorAvisoCambios();
-                $shortClassName = (new \ReflectionClass($this))->getShortName();
+                $shortClassName = (new ReflectionClass($this))->getShortName();
                 $oGestorCanvis->addCanvi($shortClassName, 'FASE', $aDadesLast['id_activ'], $this->aDades, array());
             }
         }
@@ -452,9 +455,9 @@ class ActividadProcesoTarea extends core\ClasePropiedades
             return false;
         } else {
             // ho poso abans d'esborrar perque sino no trova cap valor. En el cas d'error s'hauria d'esborrar l'apunt.
-            if (core\ConfigGlobal::is_app_installed('cambios')) {
+            if (ConfigGlobal::is_app_installed('cambios')) {
                 $oGestorCanvis = new GestorAvisoCambios();
-                $shortClassName = (new \ReflectionClass($this))->getShortName();
+                $shortClassName = (new ReflectionClass($this))->getShortName();
                 $oGestorCanvis->addCanvi($shortClassName, 'FASE', $this->iid_activ, array(), $this->aDadesActuals);
             }
 
@@ -487,7 +490,7 @@ class ActividadProcesoTarea extends core\ClasePropiedades
         $aDades['observ'] = $this->sobserv;
         array_walk($aDades, 'core\poner_null');
         //para el caso de los boolean FALSE, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
-        if (core\is_true($aDades['completado'])) {
+        if (is_true($aDades['completado'])) {
             $aDades['completado'] = 'true';
         } else {
             $aDades['completado'] = 'false';
@@ -753,7 +756,7 @@ class ActividadProcesoTarea extends core\ClasePropiedades
     {
         $gesActividadProcesoTareas = new GestorActividadProcesoTarea();
         // buscar el id_tipo_proceso para esta actividad de la otra sección
-        if (core\ConfigGlobal::mi_sfsv() == 1) {
+        if (ConfigGlobal::mi_sfsv() == 1) {
             $gesActividadProcesoTareas->setNomTabla('a_actividad_proceso_sf');
         } else {
             $gesActividadProcesoTareas->setNomTabla('a_actividad_proceso_sv');
@@ -800,7 +803,7 @@ class ActividadProcesoTarea extends core\ClasePropiedades
      *
      * @param array $aDades
      */
-    function setAllAtributes($aDades)
+    function setAllAtributes(array $aDades)
     {
         if (!is_array($aDades)) return;
         if (array_key_exists('id_item', $aDades)) $this->setId_item($aDades['id_item']);
@@ -868,7 +871,7 @@ class ActividadProcesoTarea extends core\ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'id_item') && $val_id !== '') $this->iid_item = (int)$val_id; 
+                if (($nom_id === 'id_item') && $val_id !== '') $this->iid_item = (int)$val_id;
             }
         }
     }
@@ -1045,7 +1048,7 @@ class ActividadProcesoTarea extends core\ClasePropiedades
     /**
      * @param boolean $bForce
      */
-    public function setForce($bForce)
+    public function setForce(bool $bForce)
     {
         if (is_true($bForce)) {
             $this->bForce = TRUE;
@@ -1062,7 +1065,7 @@ class ActividadProcesoTarea extends core\ClasePropiedades
      */
     function getDatosCampos()
     {
-        $oActividadProcesoTareaSet = new core\Set();
+        $oActividadProcesoTareaSet = new Set();
 
         $oActividadProcesoTareaSet->add($this->getDatosId_tipo_proceso());
         $oActividadProcesoTareaSet->add($this->getDatosId_activ());
@@ -1078,12 +1081,12 @@ class ActividadProcesoTarea extends core\ClasePropiedades
      * Recupera les propietats de l'atribut iid_tipo_proceso de ActividadProcesoTarea
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosId_tipo_proceso()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_tipo_proceso'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_tipo_proceso'));
         $oDatosCampo->setEtiqueta(_("id_tipo_proceso"));
         $oDatosCampo->setAviso(FALSE);
         return $oDatosCampo;
@@ -1093,12 +1096,12 @@ class ActividadProcesoTarea extends core\ClasePropiedades
      * Recupera les propietats de l'atribut iid_activ de ActividadProcesoTarea
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosId_activ()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_activ'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_activ'));
         $oDatosCampo->setEtiqueta(_("id_activ"));
         $oDatosCampo->setAviso(FALSE);
         return $oDatosCampo;
@@ -1108,12 +1111,12 @@ class ActividadProcesoTarea extends core\ClasePropiedades
      * Recupera les propietats de l'atribut iid_fase de ActividadProcesoTarea
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosId_fase()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_fase'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_fase'));
         $oDatosCampo->setEtiqueta(_("id_fase"));
         $oDatosCampo->setAviso(FALSE);
         return $oDatosCampo;
@@ -1123,12 +1126,12 @@ class ActividadProcesoTarea extends core\ClasePropiedades
      * Recupera les propietats de l'atribut iid_tarea de ActividadProcesoTarea
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosId_tarea()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_tarea'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_tarea'));
         $oDatosCampo->setEtiqueta(_("id_tarea"));
         $oDatosCampo->setAviso(FALSE);
         return $oDatosCampo;
@@ -1138,12 +1141,12 @@ class ActividadProcesoTarea extends core\ClasePropiedades
      * Recupera les propietats de l'atribut bcompletado de ActividadProcesoTarea
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosCompletado()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'completado'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'completado'));
         $oDatosCampo->setEtiqueta(_("completado"));
         return $oDatosCampo;
     }
@@ -1152,12 +1155,12 @@ class ActividadProcesoTarea extends core\ClasePropiedades
      * Recupera les propietats de l'atribut sobserv de ActividadProcesoTarea
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosObserv()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'observ'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'observ'));
         $oDatosCampo->setEtiqueta(_("observ"));
         return $oDatosCampo;
     }

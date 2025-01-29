@@ -18,10 +18,11 @@ class ModulosConfig
 
     private $a_mods_todos = [];
     private $a_apps_todas = [];
-    private $cMods = [];
-    private $cApps = [];
+    private $cMods;
+    private $cApps;
 
     private $a_mods_installed = [];
+    private array|false $cModsInstalados;
 
     public function __construct()
     {

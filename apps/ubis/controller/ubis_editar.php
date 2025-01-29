@@ -1,11 +1,14 @@
 <?php
 
-use usuarios\model\entity as usuarios;
-use ubis\model\entity\GestorDelegacion;
 use core\ConfigGlobal;
-use ubis\model\entity\GestorRegion;
+use core\ViewPhtml;
 use ubis\model\entity\CasaDl;
 use ubis\model\entity\CentroDl;
+use ubis\model\entity\GestorDelegacion;
+use ubis\model\entity\GestorRegion;
+use usuarios\model\entity\Usuario;
+use web\Desplegable;
+use web\Hash;
 use function core\is_true;
 
 /**
@@ -151,8 +154,8 @@ $oDesplRegiones = $gesReiones->getListaRegiones();
 $oDesplRegiones->setNombre('region');
 
 //----------------------------------Permisos según el usuario
-$oMiUsuario = new usuarios\Usuario(core\ConfigGlobal::mi_id_usuario());
-$miSfsv = core\ConfigGlobal::mi_sfsv();
+$oMiUsuario = new Usuario(ConfigGlobal::mi_id_usuario());
+$miSfsv = ConfigGlobal::mi_sfsv();
 
 $botones = 0;
 /*
@@ -190,7 +193,7 @@ if ($tipo_ubi === "ctrdl" || $tipo_ubi === "ctrex" || $tipo_ubi === "ctrsf") {
 if ($tipo_ubi === "cdcdl" || $tipo_ubi === "cdcex") {
     $camposForm .= '!tipo_casa!plazas!plazas_min!num_sacd!sf!sv';
 }
-$oHash = new web\Hash();
+$oHash = new Hash();
 $oHash->setcamposNo('que!' . $campos_chk);
 $oHash->setCamposForm($camposForm);
 $a_camposHidden = array(
@@ -202,7 +205,7 @@ $a_camposHidden = array(
 $oHash->setArraycamposHidden($a_camposHidden);
 
 
-$oView = new core\View('ubis/controller');
+$oView = new ViewPhtml('ubis/controller');
 
 switch ($tipo_ubi) {
     case "ctrdl":
@@ -220,8 +223,8 @@ switch ($tipo_ubi) {
         $n_buzon = $oUbi->getN_buzon();
         $observ = $oUbi->getObserv();
 
-        $dl = empty($dl) ? core\ConfigGlobal::mi_delef() : $dl;
-        $region = empty($region) ? core\ConfigGlobal::mi_region() : $region;
+        $dl = empty($dl) ? ConfigGlobal::mi_delef() : $dl;
+        $region = empty($region) ? ConfigGlobal::mi_region() : $region;
 
         $GesCentro = new ubis\model\entity\GestorCentro();
         if (!empty($dl)) {
@@ -238,7 +241,7 @@ switch ($tipo_ubi) {
 
         $oTiposCentro = new ubis\model\entity\GestorTipoCentro();
         $oTiposCentroOpciones = $oTiposCentro->getListaTiposCentro();
-        $oDesplegableTiposCentro = new web\Desplegable('tipo_ctr', $oTiposCentroOpciones, $tipo_ctr, true);
+        $oDesplegableTiposCentro = new Desplegable('tipo_ctr', $oTiposCentroOpciones, $tipo_ctr, true);
 
         $oDesplDelegaciones->setOpcion_sel($dl);
         $oDesplRegiones->setOpcion_sel($region);
@@ -291,7 +294,7 @@ switch ($tipo_ubi) {
 
         $oTiposCentro = new ubis\model\entity\GestorTipoCentro();
         $oTiposCentroOpciones = $oTiposCentro->getListaTiposCentro();
-        $oDesplegableTiposCentro = new web\Desplegable('tipo_ctr', $oTiposCentroOpciones, $tipo_ctr, true);
+        $oDesplegableTiposCentro = new Desplegable('tipo_ctr', $oTiposCentroOpciones, $tipo_ctr, true);
 
         $oDesplDelegaciones->setOpcion_sel($dl);
         $oDesplRegiones->setOpcion_sel($region);
@@ -318,8 +321,8 @@ switch ($tipo_ubi) {
     case "cdcex":
         // OJO LAS CASAS pueden ser comunes. la dl es sin 'f'.
         if ($tipo_ubi == "cdcdl") {
-            $dl = empty($dl) ? core\ConfigGlobal::mi_dele() : $dl;
-            $region = empty($region) ? core\ConfigGlobal::mi_region() : $region;
+            $dl = empty($dl) ? ConfigGlobal::mi_dele() : $dl;
+            $region = empty($region) ? ConfigGlobal::mi_region() : $region;
         }
 
         $tipo_casa = $oUbi->getTipo_casa();
@@ -333,7 +336,7 @@ switch ($tipo_ubi) {
         $sf_chk = is_true($sf)? 'checked' : '';
         $oTiposCasa = new ubis\model\entity\GestorTipoCasa();
         $oTiposCasaOpciones = $oTiposCasa->getListaTiposCasa();
-        $oDesplegableTiposCasa = new web\Desplegable('tipo_casa', $oTiposCasaOpciones, $tipo_casa, true);
+        $oDesplegableTiposCasa = new Desplegable('tipo_casa', $oTiposCasaOpciones, $tipo_casa, true);
 
         $oDesplDelegaciones->setOpcion_sel($dl);
         $oDesplRegiones->setOpcion_sel($region);

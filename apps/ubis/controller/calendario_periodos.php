@@ -8,6 +8,10 @@
  *
  */
 // INICIO Cabecera global de URL de controlador *********************************
+use core\ConfigGlobal;
+use core\ViewPhtml;
+use web\Hash;
+
 require_once("apps/core/global_header.inc");
 // Archivos requeridos por esta url **********************************************
 
@@ -29,19 +33,19 @@ $oForm->setAction('');
 
 $oFormAny = new web\PeriodoQue();
 
-$url_ajax = core\ConfigGlobal::getWeb() . '/apps/ubis/controller/calendario_periodos_ajax.php';
+$url_ajax = ConfigGlobal::getWeb() . '/apps/ubis/controller/calendario_periodos_ajax.php';
 
-$oHash = new web\Hash();
+$oHash = new Hash();
 $oHash->setUrl($url_ajax);
 $oHash->setCamposForm('que!id_ubi!year');
 $h_ver = $oHash->linkSinVal();
 
-$oHashNew = new web\Hash();
+$oHashNew = new Hash();
 $oHashNew->setUrl($url_ajax);
 $oHashNew->setCamposForm('que!id_ubi!year');
 $h_nuevo = $oHashNew->linkSinVal();
 
-$oHashMod = new web\Hash();
+$oHashMod = new Hash();
 $oHashMod->setUrl($url_ajax);
 $oHashMod->setCamposForm('que!id_item');
 $h_modificar = $oHashMod->linkSinVal();
@@ -54,5 +58,5 @@ $a_campos = ['oPosicion' => $oPosicion,
     'oFormAny' => $oFormAny,
 ];
 
-$oView = new core\View('ubis/controller');
+$oView = new ViewPhtml('ubis/controller');
 $oView->renderizar('calendario_periodos.phtml', $a_campos);

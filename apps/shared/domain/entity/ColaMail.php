@@ -1,10 +1,11 @@
 <?php
 
 namespace shared\domain\entity;
-	use shared\domain\ColaMailId;
-    use web\DateTimeLocal;
-	use web\NullDateTimeLocal;
-/**
+	use web\DateTimeLocal;
+    use web\NullDateTimeLocal;
+    use shared\domain\ColaMailId;
+
+    /**
  * Clase que implementa la entidad cola_mails
  *
  * @package orbix

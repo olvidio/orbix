@@ -2,7 +2,10 @@
 
 namespace usuarios\model\entity;
 
-use core;
+use core\ClasePropiedades;
+use core\DatosCampo;
+use core\Set;
+use function core\is_true;
 
 /**
  * Fitxer amb la Classe que accedeix a la taula aux_roles
@@ -23,7 +26,7 @@ use core;
  * @version 1.0
  * @created 16/01/2014
  */
-class Role extends core\ClasePropiedades
+class Role extends ClasePropiedades
 {
 
     // pau constants.
@@ -118,7 +121,7 @@ class Role extends core\ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'id_role') && $val_id !== '') $this->iid_role = (int)$val_id; 
+                if (($nom_id === 'id_role') && $val_id !== '') $this->iid_role = (int)$val_id;
             }
         } else {
             if (isset($a_id) && $a_id !== '') {
@@ -155,17 +158,17 @@ class Role extends core\ClasePropiedades
         $aDades['dmz'] = $this->bdmz;
         array_walk($aDades, 'core\poner_null');
         //para el caso de los boolean FALSE, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
-        if (core\is_true($aDades['sf'])) {
+        if (is_true($aDades['sf'])) {
             $aDades['sf'] = 'true';
         } else {
             $aDades['sf'] = 'false';
         }
-        if (core\is_true($aDades['sv'])) {
+        if (is_true($aDades['sv'])) {
             $aDades['sv'] = 'true';
         } else {
             $aDades['sv'] = 'false';
         }
-        if (core\is_true($aDades['dmz'])) {
+        if (is_true($aDades['dmz'])) {
             $aDades['dmz'] = 'true';
         } else {
             $aDades['dmz'] = 'false';
@@ -213,7 +216,7 @@ class Role extends core\ClasePropiedades
                     return false;
                 }
             }
-            $this->id_role = $oDbl->lastInsertId('aux_roles_id_role_seq');
+            $this->iid_role = $oDbl->lastInsertId('aux_roles_id_role_seq');
         }
         $this->setAllAtributes($aDades);
         return true;
@@ -281,7 +284,7 @@ class Role extends core\ClasePropiedades
      *
      * @param array $aDades
      */
-    function setAllAtributes($aDades)
+    function setAllAtributes(array $aDades)
     {
         if (!is_array($aDades)) return;
         if (array_key_exists('id_schema', $aDades)) $this->setId_schema($aDades['id_schema']);
@@ -347,7 +350,7 @@ class Role extends core\ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'id_role') && $val_id !== '') $this->iid_role = (int)$val_id; 
+                if (($nom_id === 'id_role') && $val_id !== '') $this->iid_role = (int)$val_id;
             }
         }
     }
@@ -497,7 +500,7 @@ class Role extends core\ClasePropiedades
      */
     function getDatosCampos()
     {
-        $oRoleSet = new core\Set();
+        $oRoleSet = new Set();
 
         $oRoleSet->add($this->getDatosRole());
         $oRoleSet->add($this->getDatosSf());
@@ -512,12 +515,12 @@ class Role extends core\ClasePropiedades
      * Recupera les propietats de l'atribut srole de Role
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosRole()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'role'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'role'));
         $oDatosCampo->setEtiqueta(_("role"));
         return $oDatosCampo;
     }
@@ -526,12 +529,12 @@ class Role extends core\ClasePropiedades
      * Recupera les propietats de l'atribut bsf de Role
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosSf()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'sf'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'sf'));
         $oDatosCampo->setEtiqueta(_("sf"));
         return $oDatosCampo;
     }
@@ -540,12 +543,12 @@ class Role extends core\ClasePropiedades
      * Recupera les propietats de l'atribut bsv de Role
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosSv()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'sv'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'sv'));
         $oDatosCampo->setEtiqueta(_("sv"));
         return $oDatosCampo;
     }
@@ -554,12 +557,12 @@ class Role extends core\ClasePropiedades
      * Recupera les propietats de l'atribut spau de Role
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosPau()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'pau'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'pau'));
         $oDatosCampo->setEtiqueta(_("pau"));
         return $oDatosCampo;
     }
@@ -568,12 +571,12 @@ class Role extends core\ClasePropiedades
      * Recupera les propietats de l'atribut bdmz de Role
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosDmz()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'dmz'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'dmz'));
         $oDatosCampo->setEtiqueta(_("dmz"));
         return $oDatosCampo;
     }

@@ -4,17 +4,15 @@ namespace cambios\model;
 
 use actividadcargos\model\entity\GestorActividadCargo;
 use actividades\model\entity\Actividad;
-use asistentes\model\entity\GestorAsistenteDl;
 use cambios\model\entity\CambioAnotado;
 use cambios\model\entity\CambioUsuario;
 use cambios\model\entity\GestorCambioAnotado;
 use cambios\model\entity\GestorCambioUsuario;
-use function cambios\model\generarTablaAvisos\soy_encargado;
 use core\ConfigGlobal;
 use permisos\model\PermisosActividades;
+use web\DateTimeLocal;
 use usuarios\model\entity\Role;
 use usuarios\model\entity\Usuario;
-use web\DateTimeLocal;
 use zonassacd\model\entity\GestorZona;
 use zonassacd\model\entity\GestorZonaSacd;
 use function core\is_true;
@@ -306,11 +304,11 @@ class Avisos
      * @param string $propiedad
      * @param integer $id_activ
      * @param integer $id_nom
-     * @param integer $valor_old_cmb
-     * @param integer $valor_new_cmb
+     * @param mixed $valor_old_cmb
+     * @param mixed $valor_new_cmb
      * @return boolean
      */
-    private function tengoPermiso($propiedad, $id_activ, $id_nom, $valor_old_cmb, $valor_new_cmb)
+    private function tengoPermiso(string $propiedad, int $id_activ, int $id_nom, mixed $valor_old_cmb, mixed $valor_new_cmb)
     {
         switch ($this->sObjeto) {
             case 'Actividad':
@@ -337,7 +335,7 @@ class Avisos
             case 'ActividadCargoNoSacd':
                 // si lo que cambia es el id_nom, compruebo que el valor old o new sean de algun sacd de la zona.
                 // y tenga permiso.
-                if ($propiedad == 'id_nom'
+                if ($propiedad === 'id_nom'
                     && (($valor_old_cmb == $id_nom) || ($valor_new_cmb == $id_nom))
                     && $this->permCargo($id_activ)
                 ) {
@@ -348,7 +346,7 @@ class Avisos
             case 'ActividadCargoSacd':
                 // si lo que cambia es el id_nom, compruebo que el valor old o new sean de algun sacd de la zona.
                 // y tenga permiso.
-                if ($propiedad == 'id_nom'
+                if ($propiedad === 'id_nom'
                     && (($valor_old_cmb == $id_nom) || ($valor_new_cmb == $id_nom))
                     && $this->permCargoSacd($id_activ)
                 ) {
@@ -357,9 +355,9 @@ class Avisos
                 return FALSE;
                 break;
             case 'Asistente':
-                // si lo que cambia es el id_nom, compruebo que el valor old o new sean de algun sacd de la zona.
+                // si lo que cambia es el id_nom, compruebo que el valor old o new sean de algún sacd de la zona.
                 // y tenga permiso.
-                if ($propiedad == 'id_nom'
+                if ($propiedad === 'id_nom'
                     && (($valor_old_cmb == $id_nom) || ($valor_new_cmb == $id_nom))
                     && $this->permAsiste($id_activ)
                 ) {

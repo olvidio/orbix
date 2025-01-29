@@ -1,6 +1,8 @@
 <?php
 
+use core\ConfigGlobal;
 use core\DBPropiedades;
+use web\Hash;
 
 // INICIO Cabecera global de URL de controlador *********************************
 require_once("apps/core/global_header.inc");
@@ -21,11 +23,11 @@ $Qseguro = empty($Qseguro) ? 2 : $Qseguro;
 $Qtodos = empty($Qtodos) ? 2 : $Qtodos;
 
 if ($Qseguro == 2) {
-    if (core\ConfigGlobal::mi_dele() == 'dlb') {
+    if (ConfigGlobal::mi_dele() == 'dlb') {
         echo _("casi seguro que no quieres hacerlo");
         echo "<br>";
 
-        $go1 = web\Hash::link('apps/menus/controller/menus_importar.php?' . http_build_query(array('seguro' => 1, 'todos' => 1)));
+        $go1 = Hash::link('apps/menus/controller/menus_importar.php?' . http_build_query(array('seguro' => 1, 'todos' => 1)));
         $html = "Esto pondrá los menus por defecto. Para todas las dl";
         $html = "tarda mucho (3min para 10 dl), pero acaba bien (creo)";
         $html .= "<br>";
@@ -34,7 +36,7 @@ if ($Qseguro == 2) {
         echo $html;
     }
 
-    $go = web\Hash::link('apps/menus/controller/menus_importar.php?' . http_build_query(array('seguro' => 1)));
+    $go = Hash::link('apps/menus/controller/menus_importar.php?' . http_build_query(array('seguro' => 1)));
     $html = "Esto pondrá los menus por defecto. Se eliminaran todas las modificaciones que se hayan hecho en los menus y grupos de menu";
     $html .= "<br>";
     $html .= "<span class=\"link\" onclick=\"fnjs_update_div('#main','$go');\">" . _("continuar") . "</span>";
@@ -53,7 +55,7 @@ if ($Qseguro == 1) {
         $oDBPropiedades = new DBPropiedades();
         $aEsquemas = $oDBPropiedades->array_posibles_esquemas();
     } else { // solo un esquema
-        $mi_region_dl = core\ConfigGlobal::mi_region_dl();
+        $mi_region_dl = ConfigGlobal::mi_region_dl();
         $aEsquemas[] = $mi_region_dl;
     }
 

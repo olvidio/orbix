@@ -2,14 +2,15 @@
 
 namespace actividadcargos\model;
 
-use actividades\model\entity as actividades;
-use actividadcargos\model\entity as actividadcargos;
-use dossiers\model as dossiers;
-use personas\model\entity as personas;
-use core;
-use web;
-use web\Hash;
+use actividadcargos\model\entity\Cargo;
+use actividadcargos\model\entity\GestorActividadCargo;
+use actividades\model\entity\Actividad;
 use core\ConfigGlobal;
+use core\ViewPhtml;
+use dossiers\model\PermDossier;
+use personas\model\entity\Persona;
+use web\Hash;
+use web\Lista;
 use function core\is_true;
 
 /**
@@ -105,37 +106,37 @@ class Select3102
 
     private function getTabla()
     {
-        $oCargosEnActividad = new actividadcargos\GestorActividadCargo();
+        $oCargosEnActividad = new GestorActividadCargo();
 
         // Permisos según el tipo de actividad
-        $oActividad = new actividades\Actividad($this->id_pau);
+        $oActividad = new Actividad($this->id_pau);
         $id_tipo_activ = $oActividad->getId_tipo_activ();
-        $oPermDossier = new dossiers\PermDossier();
+        $oPermDossier = new PermDossier();
         $a_ref_perm = $oPermDossier->perm_pers_activ($id_tipo_activ);
         $this->a_ref_perm = $a_ref_perm;
 
         $c = 0;
         $a_valores = array();
         $cCargosEnActividad = $oCargosEnActividad->getActividadCargos(array('id_activ' => $this->id_pau));
-        $mi_sfsv = core\ConfigGlobal::mi_sfsv();
+        $mi_sfsv = ConfigGlobal::mi_sfsv();
         foreach ($cCargosEnActividad as $oActividadCargo) {
             $c++;
             $id_schema = $oActividadCargo->getId_schema();
             $id_item = $oActividadCargo->getId_item();
             $id_nom = $oActividadCargo->getId_nom();
             $id_cargo = $oActividadCargo->getId_cargo();
-            $oCargo = new actividadcargos\Cargo(array('id_cargo' => $id_cargo));
+            $oCargo = new Cargo(array('id_cargo' => $id_cargo));
             $tipo_cargo = $oCargo->getTipo_cargo();
             // para los sacd en sf
             if ($tipo_cargo === 'sacd' && $mi_sfsv == 2) {
                 continue;
             }
-            $oPersona = personas\Persona::NewPersona($id_nom);
+            $oPersona = Persona::NewPersona($id_nom);
             if (!is_object($oPersona)) {
                 $this->msg_err .= "<br>$oPersona con id_nom: $id_nom en  " . __FILE__ . ": line " . __LINE__;
                 continue;
             }
-            $oCargo = new actividadcargos\Cargo($id_cargo);
+            $oCargo = new Cargo($id_cargo);
 
             $nom = $oPersona->getPrefApellidosNombre();
 
@@ -209,7 +210,7 @@ class Select3102
         $oHashSelect->setArraycamposHidden($a_camposHidden);
 
         //Hay que ponerlo antes, para que calcule los chk.
-        $oTabla = new web\Lista();
+        $oTabla = new Lista();
         $oTabla->setId_tabla('select3102');
         $oTabla->setCabeceras($this->getCabeceras());
         $oTabla->setBotones($this->getBotones());
@@ -225,7 +226,7 @@ class Select3102
             'bloque' => $this->bloque,
         ];
 
-        $oView = new core\View(__NAMESPACE__);
+        $oView = new ViewPhtml(__NAMESPACE__);
         $oView->renderizar('select3102.phtml', $a_campos);
     }
 
@@ -251,7 +252,7 @@ class Select3102
                 if (is_array($aQuery)) {
                     array_walk($aQuery, 'core\poner_empty_on_null');
                 }
-                $pagina = web\Hash::link('apps/actividadcargos/controller/form_3102.php?' . http_build_query($aQuery));
+                $pagina = Hash::link('apps/actividadcargos/controller/form_3102.php?' . http_build_query($aQuery));
                 $nom2 = sprintf(_("añadir %s"), $nom);
                 $this->aLinks_dl[$nom2] = $pagina;
             }

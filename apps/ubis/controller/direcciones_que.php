@@ -1,6 +1,8 @@
 <?php
 
-use ubis\model\entity as ubis;
+use core\ViewPhtml;
+use ubis\model\entity\Ubi;
+use web\Hash;
 
 // INICIO Cabecera global de URL de controlador *********************************
 require_once("apps/core/global_header.inc");
@@ -13,7 +15,7 @@ require_once("apps/core/global_object.inc");
 $Qid_ubi = (integer)filter_input(INPUT_POST, 'id_ubi');
 $Qobj_dir = (string)filter_input(INPUT_POST, 'obj_dir');
 
-$oUbi = ubis\Ubi::newUbi($Qid_ubi);
+$oUbi = Ubi::newUbi($Qid_ubi);
 $nombre_ubi = $oUbi->getNombre_ubi();
 $dl = $oUbi->getDl();
 $region = $oUbi->getRegion();
@@ -21,7 +23,7 @@ $tipo_ubi = $oUbi->getTipo_ubi();
 
 $tituloGros = ucfirst(_("introduzca un valor para buscar una dirección existente"));
 
-$oHash = new web\Hash();
+$oHash = new Hash();
 $oHash->setCamposForm('c_p!ciudad!id_ubi!obj_dir!pais');
 $a_camposHidden = array(
     'obj_dir' => $Qobj_dir,
@@ -34,5 +36,5 @@ $a_campos = ['oPosicion' => $oPosicion,
     'tipo_ubi' => $tipo_ubi,
 ];
 
-$oView = new core\View('ubis\controller');
+$oView = new ViewPhtml('ubis\controller');
 $oView->renderizar('direcciones_que.phtml', $a_campos);

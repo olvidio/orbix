@@ -1,13 +1,13 @@
 <?php
 
 use core\ConfigGlobal;
-use usuarios\model\entity as usuarios;
+use core\ViewPhtml;
+use usuarios\model\entity\Usuario;
 use web\Hash;
 use web\Lista;
 use web\Posicion;
 use function core\urlsafe_b64decode;
 use function core\urlsafe_b64encode;
-use function core\strtoupper_dlb;
 
 /**
  * Esta página muestra una tabla con los ubis seleccionados.
@@ -32,7 +32,7 @@ require_once("apps/core/global_object.inc");
 $oPosicion->recordar();
 
 
-$oMiUsuario = new usuarios\Usuario(ConfigGlobal::mi_id_usuario());
+$oMiUsuario = new Usuario(ConfigGlobal::mi_id_usuario());
 $miSfsv = ConfigGlobal::mi_sfsv();
 
 //Si vengo por medio de Posicion, borro la última
@@ -68,7 +68,7 @@ $Qcmb = (string)filter_input(INPUT_POST, 'cmb');
 
 $tipo_ubi = $Qtipo . $Qloc;
 // si es sf, el tipi_ubi = ctrsf
-if ($tipo_ubi == 'ctrdl' && ConfigGlobal::mi_sfsv() == 2) {
+if ($tipo_ubi === 'ctrdl' && ConfigGlobal::mi_sfsv() == 2) {
     $tipo_ubi = 'ctrsf';
 }
 
@@ -223,13 +223,13 @@ if (empty($sWhere)) {
                         case 1: // sv
                             if (($_SESSION['oPerm']->have_perm_oficina('vcsd')) || ($_SESSION['oPerm']->have_perm_oficina('des'))) {
                                 ///// FALTA ARREGLAR ESTO /////
-                                //$cond="(u.dl!='".core\ConfigGlobal::$dele."' OR dl is null)";
-                                $aWhere['dl']=core\ConfigGlobal::$dele;
+                                //$cond="(u.dl!='".ConfigGlobal::$dele."' OR dl is null)";
+                                $aWhere['dl']=ConfigGlobal::$dele;
                                 $aWhere['sv']='t';
                                 $aWhere['tipo_ubi']='ctrsf';
                                 $aOperador['tipo_ubi']='!=';
                             } else {
-                                $aWhere['dl']=core\ConfigGlobal::$dele;
+                                $aWhere['dl']=ConfigGlobal::$dele;
                                 $aOperador['dl']='!=';
                                 $aWhere['sv']='t';
                                 $aWhere['tipo_ubi']='ctrsf';
@@ -237,7 +237,7 @@ if (empty($sWhere)) {
                             }
                             break;
                         case 2:
-                            $aWhere['dl']=core\ConfigGlobal::$dele;
+                            $aWhere['dl']=ConfigGlobal::$dele;
                             $aOperador['dl']='!=';
                             $aWhere['sf']='t';
                             break;
@@ -258,7 +258,7 @@ if (empty($sWhere)) {
                             }
                             break;
                         case 2:
-                            $aWhere['dl']=core\ConfigGlobal::$dele;
+                            $aWhere['dl']=ConfigGlobal::$dele;
                             $aOperador['dl']='!=';
                             $aWhere['sf']='t';
                             break;
@@ -375,7 +375,7 @@ $pagina_link = '';
 if ($Qtipo === "tot" || $Qloc === "tot") {
     if (is_array($cUbisTot) && count($cUbisTot) == 0) {
         $nueva_ficha = 'especificar';
-        $pagina_link = web\Hash::link('apps/ubis/controller/ubis_buscar.php?' . http_build_query(array('simple' => '2')));
+        $pagina_link = Hash::link('apps/ubis/controller/ubis_buscar.php?' . http_build_query(array('simple' => '2')));
     }
 } else {
     $nueva_ficha = 'nueva';
@@ -406,7 +406,7 @@ if (is_array($cUbisTot) && count($cUbisTot) == 0) {
 					); 
 	
 	if ($Qtipo=="tot" || $Qloc=="tot") {
-	    $pagina=web\Hash::link('apps/ubis/controller/ubis_buscar.php?'.http_build_query(array('simple'=>'2'))); 
+	    $pagina=Hash::link('apps/ubis/controller/ubis_buscar.php?'.http_build_query(array('simple'=>'2'))); 
 	    ?>
 	    <span style="font-size:large">
 		<?= _("no existe este centro o casa"); ?>.<br>
@@ -541,5 +541,5 @@ $a_campos = [
     'pagina_link' => $pagina_link,
 ];
 
-$oView = new core\View('ubis\controller');
+$oView = new ViewPhtml('ubis\controller');
 $oView->renderizar('ubis_tabla.phtml', $a_campos);

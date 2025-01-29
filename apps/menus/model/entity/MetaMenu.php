@@ -1,7 +1,9 @@
 <?php
 namespace menus\model\entity;
 
-use core;
+use core\ClasePropiedades;
+use core\DatosCampo;
+use core\Set;
 
 /**
  * Fitxer amb la Classe que accedeix a la taula $nom_tabla
@@ -22,7 +24,7 @@ use core;
  * @version 1.0
  * @created 23/12/2013
  */
-class MetaMenu extends core\ClasePropiedades
+class MetaMenu extends ClasePropiedades
 {
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
@@ -96,7 +98,7 @@ class MetaMenu extends core\ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'id_metamenu') && $val_id !== '') $this->iid_metamenu = (int)$val_id; 
+                if (($nom_id === 'id_metamenu') && $val_id !== '') $this->iid_metamenu = (int)$val_id;
             }
         } else {
             if (isset($a_id) && $a_id !== '') {
@@ -173,7 +175,7 @@ class MetaMenu extends core\ClasePropiedades
                     return false;
                 }
             }
-            $this->id_metamenu = $oDbl->lastInsertId('metamenus_id_metamenu_seq');
+            $this->iid_metamenu = $oDbl->lastInsertId('metamenus_id_metamenu_seq');
         }
         $this->setAllAtributes($aDades);
         return true;
@@ -241,7 +243,7 @@ class MetaMenu extends core\ClasePropiedades
      *
      * @param array $aDades
      */
-    function setAllAtributes($aDades)
+    function setAllAtributes(array $aDades)
     {
         if (!is_array($aDades)) return;
         if (array_key_exists('id_schema', $aDades)) $this->setId_schema($aDades['id_schema']);
@@ -258,7 +260,7 @@ class MetaMenu extends core\ClasePropiedades
      */
     function setNullAllAtributes()
     {
-        $this->setId_schema('');
+        $this->setId_schema();
         $this->setId_metamenu('');
         $this->setId_mod('');
         $this->setUrl('');
@@ -304,7 +306,7 @@ class MetaMenu extends core\ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'id_metamenu') && $val_id !== '') $this->iid_metamenu = (int)$val_id; 
+                if (($nom_id === 'id_metamenu') && $val_id !== '') $this->iid_metamenu = (int)$val_id;
             }
         }
     }
@@ -431,7 +433,7 @@ class MetaMenu extends core\ClasePropiedades
      */
     function getDatosCampos()
     {
-        $oMetamenuSet = new core\Set();
+        $oMetamenuSet = new Set();
 
         $oMetamenuSet->add($this->getDatosModulo());
         $oMetamenuSet->add($this->getDatosUrl());
@@ -445,12 +447,12 @@ class MetaMenu extends core\ClasePropiedades
      * Recupera les propietats de l'atribut iid_mod de Metamenu
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosModulo()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_mod'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_mod'));
         $oDatosCampo->setEtiqueta(_("modulo"));
         $oDatosCampo->setTipo('opciones');
         $oDatosCampo->setArgument('devel\model\entity\Modulo'); // nombre del objeto relacionado
@@ -463,12 +465,12 @@ class MetaMenu extends core\ClasePropiedades
      * Recupera les propietats de l'atribut surl de Metamenu
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosUrl()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'url'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'url'));
         $oDatosCampo->setEtiqueta(_("url"));
         $oDatosCampo->setTipo('texto');
         $oDatosCampo->setArgument(60);
@@ -479,12 +481,12 @@ class MetaMenu extends core\ClasePropiedades
      * Recupera les propietats de l'atribut sparametros de Metamenu
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosParametros()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'parametros'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'parametros'));
         $oDatosCampo->setEtiqueta(_("parametros"));
         $oDatosCampo->setTipo('texto');
         $oDatosCampo->setArgument(30);
@@ -495,12 +497,12 @@ class MetaMenu extends core\ClasePropiedades
      * Recupera les propietats de l'atribut sdescripcion de Metamenu
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosDescripcion()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'descripcion'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'descripcion'));
         $oDatosCampo->setEtiqueta(_("descripción"));
         $oDatosCampo->setTipo('texto');
         $oDatosCampo->setArgument(50);

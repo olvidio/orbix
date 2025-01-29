@@ -8,11 +8,13 @@
 
 namespace notas\model;
 
-use asignaturas\model\entity as asignaturas;
+use asignaturas\model\entity\Asignatura;
+use asignaturas\model\entity\GestorAsignatura;
+use core\ViewPhtml;
+use personas\model\entity\Persona;
+use web\DateTimeLocal;
+use web\Posicion;
 use function core\is_true;
-use core;
-use web;
-use personas\model\entity as personas;
 
 /**
  * Description of tessera
@@ -24,8 +26,8 @@ class Tesera
 
     private $id_nom;
     private string $curso_txt;
-    private web\DateTimeLocal $oInicio;
-    private web\DateTimeLocal $oFin;
+    private DateTimeLocal $oInicio;
+    private DateTimeLocal $oFin;
 
     private function getCurso()
     {
@@ -49,8 +51,8 @@ class Tesera
             $fin = "$any-$fin_m-$fin_d";
             $this->curso_txt = "$any2-$any";
         }
-        $this->oInicio = new web\DateTimeLocal($inicio);
-        $this->oFin = new web\DateTimeLocal($fin);
+        $this->oInicio = new DateTimeLocal($inicio);
+        $this->oFin = new DateTimeLocal($fin);
     }
 
     private function getTitulo($id_nivel)
@@ -113,7 +115,7 @@ class Tesera
     {
         $this->getCurso();
         // Asignaturas posibles:
-        $GesAsignaturas = new asignaturas\GestorAsignatura();
+        $GesAsignaturas = new GestorAsignatura();
         $aWhere = array();
         $aOperador = array();
         $aWhere['status'] = 't';
@@ -142,7 +144,7 @@ class Tesera
             $oF_acta = $oPersonaNota->getF_acta();
             $id_situacion = $oPersonaNota->getId_situacion();
             $bAprobada = $oPersonaNota->isAprobada();
-            $oAsig = new asignaturas\Asignatura($id_asignatura);
+            $oAsig = new Asignatura($id_asignatura);
             if ($id_asignatura > 3000) {
                 $id_nivel_asig = $id_nivel;
             } else {
@@ -169,7 +171,7 @@ class Tesera
     public function verTesera($id_nom)
     {
 
-        $oPersona = personas\Persona::NewPersona($id_nom);
+        $oPersona = Persona::NewPersona($id_nom);
         $ap_nom = $oPersona->getPrefApellidosNombre();
         $centro = $oPersona->getCentro_o_dl();
 
@@ -282,7 +284,7 @@ class Tesera
             */
         }
 
-        $oPosicion = new \web\Posicion();
+        $oPosicion = new Posicion();
 
         $a_campos = ['oPosicion' => $oPosicion,
             'ap_nom' => $ap_nom,
@@ -297,7 +299,7 @@ class Tesera
             'numcred_year' => $numcred_year,
         ];
 
-        $oView = new core\View(__NAMESPACE__);
+        $oView = new ViewPhtml(__NAMESPACE__);
         $oView->renderizar('tesera_ver.phtml', $a_campos);
     }
 }

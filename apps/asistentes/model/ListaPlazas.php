@@ -2,17 +2,20 @@
 
 namespace asistentes\model;
 
-use actividadcargos\model\entity as actividadcargos;
-use actividades\model\entity as actividades;
+use actividadcargos\model\entity\Cargo;
+use actividadcargos\model\entity\GestorActividadCargo;
+use actividades\model\entity\GestorActividad;
 use actividadescentro\model\entity\GestorCentroEncargado;
 use actividadplazas\model\GestorResumenPlazas;
-use asistentes\model\entity as asistentes;
+use asistentes\model\entity\Asistente;
+use asistentes\model\entity\GestorAsistente;
 use core\ConfigGlobal;
-use function core\strtoupper_dlb;
-use personas\model\entity as personas;
-use ubis\model\entity as ubis;
+use personas\model\entity\Persona;
+use ubis\model\entity\Casa;
+use ubis\model\entity\Ubi;
 use web\Lista;
 use web\TiposActividades;
+use function core\strtoupper_dlb;
 
 /**
  * Lista los asistentes de una relación de actividades seleccionada
@@ -85,7 +88,7 @@ class ListaPlazas
         $sasistentes = $oTipoActiv->getAsistentesText();
         $sactividad = $oTipoActiv->getActividadText();
 
-        $GesActividades = new actividades\GestorActividad();
+        $GesActividades = new GestorActividad();
         $cActividades = $GesActividades->getActividades($this->aWhere, $this->aOperador);
 
         if (is_array($cActividades) && count($cActividades) < 1) {
@@ -129,7 +132,7 @@ class ListaPlazas
             $plazas_min = '';
             $plazas_casa = '';
             if (!empty($id_ubi_casa)) {
-                $oCasaDl = new ubis\Casa($id_ubi_casa);
+                $oCasaDl = new Casa($id_ubi_casa);
                 $plazas_max = !empty($plazas) ? $plazas : $oCasaDl->getPlazas();
                 $plazas_min = $oCasaDl->getPlazas_min();
                 $plazas_casa .= !empty($plazas_max) ? $plazas_max : '';
@@ -149,7 +152,7 @@ class ListaPlazas
                         $c++;
                         $num_orden = $oCentroEncargado->getNum_orden();
                         $id_ubi = $oCentroEncargado->getId_ubi();
-                        $Centro = new ubis\Ubi($id_ubi);
+                        $Centro = Ubi::NewUbi($id_ubi);
                         $ctr = $Centro->getNombre_ubi();
                         if ($c > 1) $txt_ctr .= '; ';
                         $txt_ctr .= $ctr;
@@ -163,7 +166,7 @@ class ListaPlazas
             if (!($sasistentes == "sss+" and $sactividad == "cv")) {
                 if (ConfigGlobal::is_app_installed('actividadcargos')) {
                     //selecciono el cl
-                    $oGesActividadCargos = new actividadcargos\GestorActividadCargo();
+                    $oGesActividadCargos = new GestorActividadCargo();
                     $cActividadCargos = $oGesActividadCargos->getActividadCargos(array('id_activ' => $id_pau));
                     $cl = 0;
                     $num = 0; //número total de asistentes
@@ -173,9 +176,9 @@ class ListaPlazas
                         $id_nom = $oActividadCargo->getId_nom();
                         $aIdCargos[] = $id_nom;
                         $id_cargo = $oActividadCargo->getId_cargo();
-                        $oCargo = new actividadcargos\Cargo($id_cargo);
+                        $oCargo = new Cargo($id_cargo);
                         $cargo_cl = $oCargo->getCargo();
-                        $oPersona = personas\Persona::NewPersona($id_nom);
+                        $oPersona = Persona::NewPersona($id_nom);
                         if (!is_object($oPersona)) {
                             $msg_err .= "<br>$oPersona con id_nom: $id_nom para la actividad $nom_activ";
                             $msg_err .= "<br>en  " . __FILE__ . ": line " . __LINE__;
@@ -191,7 +194,7 @@ class ListaPlazas
                         $ctr_dl = $oPersona->getCentro_o_dl();
 
                         // ahora miro si también asiste:
-                        $oGesAsistentes = new asistentes\GestorAsistente();
+                        $oGesAsistentes = new GestorAsistente();
                         $cAsistentes = $oGesAsistentes->getAsistentes(array('id_activ' => $id_pau, 'id_nom' => $id_nom));
 
                         if (is_array($cAsistentes) && count($cAsistentes) > 0) {
@@ -207,12 +210,12 @@ class ListaPlazas
                     }
                 }
 
-                $oGesAsistentes = new asistentes\GestorAsistente();
+                $oGesAsistentes = new GestorAsistente();
                 $cAsistentes = $oGesAsistentes->getAsistentesDeActividad($id_pau);
                 foreach ($cAsistentes as $oAsistente) {
                     $id_nom = $oAsistente->getId_nom();
                     if (in_array($id_nom, $aIdCargos)) continue; // si ya está como cargo, no lo pongo.
-                    $oPersona = personas\Persona::NewPersona($id_nom);
+                    $oPersona = Persona::NewPersona($id_nom);
                     if (!is_object($oPersona)) {
                         $msg_err .= "<br>$oPersona con id_nom: $id_nom en  " . __FILE__ . ": line " . __LINE__;
                         continue;
@@ -234,7 +237,7 @@ class ListaPlazas
 
                     if (ConfigGlobal::is_app_installed('actividadplazas')) {
                         // pedidas y 'en espera'
-                        if ($oAsistente->getPlaza() < asistentes\Asistente::PLAZA_ASIGNADA) {
+                        if ($oAsistente->getPlaza() < Asistente::PLAZA_ASIGNADA) {
                             // Sólo los de mi dl
                             if ($dl != $this->smi_dele) {
                                 continue;

@@ -18,12 +18,12 @@ use actividades\model\entity\ActividadAll;
 use actividades\model\entity\GestorTipoDeActividad;
 use core\ConfigGlobal;
 use core\ViewTwig;
-use procesos\model\entity\GestorActividadFase;
-use ubis\model\entity\GestorDelegacion;
-use usuarios\model\entity\Usuario;
 use web\Hash;
 use web\PeriodoQue;
 use web\Posicion;
+use procesos\model\entity\GestorActividadFase;
+use ubis\model\entity\GestorDelegacion;
+use usuarios\model\entity\Usuario;
 use function core\is_true;
 
 // INICIO Cabecera global de URL de controlador *********************************
@@ -68,7 +68,7 @@ $Qfases_off = (array)filter_input(INPUT_POST, 'fases_off', FILTER_DEFAULT, FILTE
 $Qlistar_asistentes = (string)filter_input(INPUT_POST, 'listar_asistentes');
 $Qpublicado = (integer)filter_input(INPUT_POST, 'publicado');
 
-$isfsv = core\ConfigGlobal::mi_sfsv();
+$isfsv = ConfigGlobal::mi_sfsv();
 $permiso_des = FALSE;
 if (($_SESSION['oPerm']->have_perm_oficina('vcsd')) || ($_SESSION['oPerm']->have_perm_oficina('des'))) {
     $permiso_des = TRUE;
@@ -124,7 +124,7 @@ if ($Qmodo === 'publicar') {
     $oDesplDelegacionesOrg->setBlanco(false);
 }
 // para cambiar el listado de fases si no el la dl_propia
-if (core\ConfigGlobal::is_app_installed('procesos')) {
+if (ConfigGlobal::is_app_installed('procesos')) {
     $oDesplDelegacionesOrg->setAction('fnjs_actualizar_fases();');
 }
 
@@ -167,7 +167,7 @@ $oFormP->setEmpiezaMax($Qempiezamax);
 $oHash = new Hash();
 $oHash->setCamposForm('dl_org!empiezamax!empiezamin!filtro_lugar!extendida!iactividad_val!iasistentes_val!id_tipo_activ!inom_tipo_val!isfsv_val!id_ubi!nom_activ!periodo!status!year!publicado');
 $camposNo = 'id_ubi!nom_activ';
-if (core\ConfigGlobal::is_app_installed('procesos')) {
+if (ConfigGlobal::is_app_installed('procesos')) {
     $camposNo .= '!fases_on!fases_off';
 }
 $oHash->setcamposNo($camposNo);
@@ -179,7 +179,7 @@ $a_camposHidden = array(
 $oHash->setArraycamposHidden($a_camposHidden);
 
 $oHash1 = new Hash();
-$oHash1->setUrl(core\ConfigGlobal::getWeb() . '/apps/actividades/controller/actividad_tipo_get.php');
+$oHash1->setUrl(ConfigGlobal::getWeb() . '/apps/actividades/controller/actividad_tipo_get.php');
 $oHash1->setCamposForm('extendida!modo!salida!entrada!opcion_sel!isfsv');
 $h = $oHash1->linkSinVal();
 
@@ -188,7 +188,7 @@ $aQuery = array('que' => $Qque, 'sactividad' => $Qsactividad, 'sasistentes' => $
 if (is_array($aQuery)) {
     array_walk($aQuery, 'core\poner_empty_on_null');
 }
-$Link_borrar = web\Hash::link('apps/actividades/controller/actividad_que.php?' . http_build_query($aQuery));
+$Link_borrar = Hash::link('apps/actividades/controller/actividad_que.php?' . http_build_query($aQuery));
 
 switch ($Qmodo) {
     case 'importar':
@@ -209,19 +209,19 @@ las páginas que los generan*/
 switch ($Qque) {
     case "list_activ" :
     case "list_activ_compl" :
-        $accion = core\ConfigGlobal::getWeb() . '/apps/actividades/controller/lista_activ.php';
+        $accion = ConfigGlobal::getWeb() . '/apps/actividades/controller/lista_activ.php';
         /*es el caso de querer sacar tablas
         de un grupo de actividades*/
         break;
     case "list_cjto" :
     case "list_cjto_sacd" :
-        $accion = core\ConfigGlobal::getWeb() . '/apps/asistentes/controller/lista_asis_conjunto_activ.php';
+        $accion = ConfigGlobal::getWeb() . '/apps/asistentes/controller/lista_asis_conjunto_activ.php';
         /*es el caso de querer sacar
         los asistentes o cargos
         de un conjunto de actividades*/
         break;
     default;
-        $accion = core\ConfigGlobal::getWeb() . '/apps/actividades/controller/actividad_select.php';
+        $accion = ConfigGlobal::getWeb() . '/apps/actividades/controller/actividad_select.php';
         /*es el caso de todo el resto
         de listados que pasan por un listado
         previo con los links */
@@ -262,7 +262,7 @@ $url_actualizar_fases = '';
 $h_actualizar_fases = '';
 $CuadrosFasesOn = '';
 $CuadrosFasesOff = '';
-if (core\ConfigGlobal::is_app_installed('procesos')) {
+if (ConfigGlobal::is_app_installed('procesos')) {
     $proceso_installed = TRUE;
     $url_actualizar_fases = ConfigGlobal::getWeb() . '/apps/procesos/controller/actividad_que_fases_ajax.php';
     $oHash1 = new Hash();

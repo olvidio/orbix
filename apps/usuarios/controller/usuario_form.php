@@ -1,27 +1,30 @@
 <?php
 
 use actividades\model\entity\ActividadAll;
-use cambios\model\GestorAvisoCambios;
 use cambios\model\entity\CambioUsuarioObjetoPref;
 use cambios\model\entity\GestorCambioUsuarioObjetoPref;
 use cambios\model\entity\GestorCambioUsuarioPropiedadPref;
+use cambios\model\GestorAvisoCambios;
 use core\ConfigGlobal;
+use core\ViewPhtml;
 use personas\model\entity\GestorPersonaAgd;
 use personas\model\entity\GestorPersonaDl;
 use personas\model\entity\GestorPersonaN;
+use web\DesplegableArray;
+use web\Hash;
+use web\Lista;
+use web\TiposActividades;
 use procesos\model\CuadrosFases;
-use procesos\model\PermAccion;
-use procesos\model\PermAfectados;
 use procesos\model\entity\ActividadFase;
 use procesos\model\entity\GestorPermUsuarioActividad;
+use procesos\model\PermAccion;
+use procesos\model\PermAfectados;
 use ubis\model\entity\GestorCasaDl;
 use ubis\model\entity\GestorCentroDl;
 use ubis\model\entity\GestorCentroEllas;
 use usuarios\model\entity\GestorRole;
 use usuarios\model\entity\Role;
 use usuarios\model\entity\Usuario;
-use web\Lista;
-use web\TiposActividades;
 
 // INICIO Cabecera global de URL de controlador *********************************
 
@@ -254,7 +257,7 @@ if ($miRole < 4) {
             $oOpcionesCasas = $oGCasas->getPosiblesCasas($cond);
             //$oDesplCasas = new Desplegable(array('oOpciones'=>$oOpcionesCasas));
 
-            $oSelects = new web\DesplegableArray($id_pau, $oOpcionesCasas, 'casas');
+            $oSelects = new DesplegableArray($id_pau, $oOpcionesCasas, 'casas');
             $oSelects->setBlanco('t');
             $oSelects->setAccionConjunto('fnjs_mas_casas(event)');
             $camposMas = 'casas!casas_mas!casas_num';
@@ -332,7 +335,7 @@ if ($miRole < 4) {
     //$camposForm = 'que!usuario!nom_usuario!password!email!id_role!id_ctr!id_sacd!casas';
     $camposForm = 'que!usuario!nom_usuario!password!email!id_role';
     $camposForm = !empty($camposMas) ? $camposForm . '!' . $camposMas : $camposForm;
-    $oHash = new web\Hash();
+    $oHash = new Hash();
     $oHash->setCamposForm($camposForm);
     $oHash->setcamposNo('pass!password!id_ctr!id_nom!casas');
     $a_camposHidden = array(
@@ -342,14 +345,14 @@ if ($miRole < 4) {
     $oHash->setArraycamposHidden($a_camposHidden);
 
     $url_usuario_ajax = ConfigGlobal::getWeb() . '/apps/usuarios/controller/usuario_ajax.php';
-    $oHash1 = new web\Hash();
+    $oHash1 = new Hash();
     $oHash1->setUrl($url_usuario_ajax);
     $oHash1->setCamposForm('que!id_usuario');
     $oHash1->setCamposNo('scroll_id');
     $h1 = $oHash1->linkSinVal();
 
     $url_usuario_update = ConfigGlobal::getWeb() . '/apps/usuarios/controller/usuario_update.php';
-    $oHash2 = new web\Hash();
+    $oHash2 = new Hash();
     $oHash2->setUrl($url_usuario_update);
     $oHash2->setCamposForm('que!id_usuario!usuario!password');
     $h2 = $oHash2->linkSinVal();
@@ -380,7 +383,7 @@ if ($miRole < 4) {
         'txt_eliminar' => $txt_eliminar,
     ];
 
-    $oView = new core\View('usuarios/controller');
+    $oView = new ViewPhtml('usuarios/controller');
     $oView->renderizar('usuario_form.phtml', $a_campos);
 
     //////////// Permisos de grupos ////////////
@@ -428,7 +431,7 @@ if ($miRole < 4) {
                     'oPermAccion' => $oPermAccion,
                 ];
 
-                $oView = new core\View('usuarios/controller');
+                $oView = new ViewPhtml('usuarios/controller');
                 $oView->renderizar('perm_ctr_form.phtml', $a_campos);
             }
         }
@@ -445,7 +448,7 @@ if ($miRole < 4) {
                 'oPermAccion' => $oPermAccion,
             ];
 
-            $oView = new core\View('usuarios/controller');
+            $oView = new ViewPhtml('usuarios/controller');
             $oView->renderizar('perm_activ_form.phtml', $a_campos);
         }
     }
@@ -456,7 +459,7 @@ if ($miRole < 4) {
 if ((ConfigGlobal::is_app_installed('cambios')) && (!empty($Qid_usuario)) && ($Qquien == 'usuario')) {
 
     $url_usuario_ajax = ConfigGlobal::getWeb() . '/apps/usuarios/controller/usuario_ajax.php';
-    $oHashAvisos = new web\Hash();
+    $oHashAvisos = new Hash();
     $oHashAvisos->setUrl($url_usuario_ajax);
     $oHashAvisos->setCamposNo('sel!scroll_id!salida');
     $a_camposHidden = array(
@@ -474,6 +477,6 @@ if ((ConfigGlobal::is_app_installed('cambios')) && (!empty($Qid_usuario)) && ($Q
         'oTablaAvisos' => $oTablaAvisos,
     ];
 
-    $oView = new core\View('cambios/controller');
+    $oView = new ViewPhtml('cambios/controller');
     $oView->renderizar('usuario_form_avisos.phtml', $a_camposAvisos);
 }

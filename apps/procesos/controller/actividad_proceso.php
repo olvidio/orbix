@@ -1,6 +1,9 @@
 <?php
 
 use actividades\model\entity\ActividadAll;
+use core\ConfigGlobal;
+use core\ViewTwig;
+use web\Hash;
 
 // INICIO Cabecera global de URL de controlador *********************************
 require_once("apps/core/global_header.inc");
@@ -30,7 +33,7 @@ $aQuery = array('pau' => 'a',
 if (is_array($aQuery)) {
     array_walk($aQuery, 'core\poner_empty_on_null');
 }
-$godossiers = web\Hash::link('apps/dossiers/controller/dossiers_ver.php?' . http_build_query($aQuery));
+$godossiers = Hash::link('apps/dossiers/controller/dossiers_ver.php?' . http_build_query($aQuery));
 
 $alt = _("ver dossiers");
 $dos = _("dossiers");
@@ -43,7 +46,7 @@ if (($_SESSION['oPerm']->have_perm_oficina('calendario')) || ($_SESSION['oPerm']
     $permiso_calendario = TRUE;
 }
 
-$oHashGenerar = new web\Hash();
+$oHashGenerar = new Hash();
 $a_camposHiddenG = array(
     'que' => 'generar',
     'id_activ' => $Qid_activ,
@@ -51,7 +54,7 @@ $a_camposHiddenG = array(
 $oHashGenerar->setArraycamposHidden($a_camposHiddenG);
 $param_generar = $oHashGenerar->getParamAjax();
 
-$oHashActualizar = new web\Hash();
+$oHashActualizar = new Hash();
 $a_camposHiddenA = array(
     'que' => 'get',
     'id_activ' => $Qid_activ,
@@ -59,8 +62,8 @@ $a_camposHiddenA = array(
 $oHashActualizar->setArraycamposHidden($a_camposHiddenA);
 $param_actualizar = $oHashActualizar->getParamAjax();
 
-$oHash1 = new web\Hash();
-$oHash1->setUrl(core\ConfigGlobal::getWeb() . '/apps/procesos/controller/actividad_proceso_ajax.php');
+$oHash1 = new Hash();
+$oHash1->setUrl(ConfigGlobal::getWeb() . '/apps/procesos/controller/actividad_proceso_ajax.php');
 $oHash1->setCamposForm('force!que!id_item!completado!observ');
 $h_update = $oHash1->linkSinVal();
 
@@ -73,7 +76,7 @@ $a_campos = ['oPosicion' => $oPosicion,
     'dos' => $dos,
     'nom_activ' => $nom_activ,
     'permiso_calendario' => $permiso_calendario,
-    'web_icons' => core\ConfigGlobal::getWeb_icons(),
+    'web_icons' => ConfigGlobal::getWeb_icons(),
     'url_ajax' => $url_ajax,
     'id_activ' => $Qid_activ,
     'param_generar' => $param_generar,
@@ -82,5 +85,5 @@ $a_campos = ['oPosicion' => $oPosicion,
     'txt_confirm' => $txt_confirm,
 ];
 
-$oView = new core\ViewTwig('procesos/controller');
+$oView = new ViewTwig('procesos/controller');
 $oView->renderizar('actividad_proceso.html.twig', $a_campos);

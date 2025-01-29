@@ -2,7 +2,10 @@
 
 namespace zonassacd\model\entity;
 
-use core;
+use core\ClasePropiedades;
+use core\DatosCampo;
+use core\Set;
+use function core\is_true;
 
 /**
  * Fitxer amb la Classe que accedeix a la taula zonas_sacd
@@ -23,7 +26,7 @@ use core;
  * @version 1.0
  * @created 01/03/2019
  */
-class ZonaSacd extends core\ClasePropiedades
+class ZonaSacd extends ClasePropiedades
 {
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
@@ -114,7 +117,7 @@ class ZonaSacd extends core\ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'id_item') && $val_id !== '') $this->iid_item = (int)$val_id; 
+                if (($nom_id === 'id_item') && $val_id !== '') $this->iid_item = (int)$val_id;
             }
         } else {
             if (isset($a_id) && $a_id !== '') {
@@ -156,42 +159,42 @@ class ZonaSacd extends core\ClasePropiedades
         $aDades['dw7'] = $this->bdw7;
         array_walk($aDades, 'core\poner_null');
         //para el caso de los boolean FALSE, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
-        if (core\is_true($aDades['propia'])) {
+        if (is_true($aDades['propia'])) {
             $aDades['propia'] = 'true';
         } else {
             $aDades['propia'] = 'false';
         }
-        if (core\is_true($aDades['dw1'])) {
+        if (is_true($aDades['dw1'])) {
             $aDades['dw1'] = 'true';
         } else {
             $aDades['dw1'] = 'false';
         }
-        if (core\is_true($aDades['dw2'])) {
+        if (is_true($aDades['dw2'])) {
             $aDades['dw2'] = 'true';
         } else {
             $aDades['dw2'] = 'false';
         }
-        if (core\is_true($aDades['dw3'])) {
+        if (is_true($aDades['dw3'])) {
             $aDades['dw3'] = 'true';
         } else {
             $aDades['dw3'] = 'false';
         }
-        if (core\is_true($aDades['dw4'])) {
+        if (is_true($aDades['dw4'])) {
             $aDades['dw4'] = 'true';
         } else {
             $aDades['dw4'] = 'false';
         }
-        if (core\is_true($aDades['dw5'])) {
+        if (is_true($aDades['dw5'])) {
             $aDades['dw5'] = 'true';
         } else {
             $aDades['dw5'] = 'false';
         }
-        if (core\is_true($aDades['dw6'])) {
+        if (is_true($aDades['dw6'])) {
             $aDades['dw6'] = 'true';
         } else {
             $aDades['dw6'] = 'false';
         }
-        if (core\is_true($aDades['dw7'])) {
+        if (is_true($aDades['dw7'])) {
             $aDades['dw7'] = 'true';
         } else {
             $aDades['dw7'] = 'false';
@@ -244,7 +247,7 @@ class ZonaSacd extends core\ClasePropiedades
                     return FALSE;
                 }
             }
-            $this->id_item = $oDbl->lastInsertId('zonas_sacd_id_item_seq');
+            $this->iid_item = $oDbl->lastInsertId('zonas_sacd_id_item_seq');
         }
         $this->setAllAtributes($aDades);
         return TRUE;
@@ -312,7 +315,7 @@ class ZonaSacd extends core\ClasePropiedades
      *
      * @param array $aDades
      */
-    function setAllAtributes($aDades)
+    function setAllAtributes(array $aDades)
     {
         if (!is_array($aDades)) return;
         if (array_key_exists('id_item', $aDades)) $this->setId_item($aDades['id_item']);
@@ -388,7 +391,7 @@ class ZonaSacd extends core\ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'id_item') && $val_id !== '') $this->iid_item = (int)$val_id; 
+                if (($nom_id === 'id_item') && $val_id !== '') $this->iid_item = (int)$val_id;
             }
         }
     }
@@ -648,7 +651,7 @@ class ZonaSacd extends core\ClasePropiedades
      */
     function getDatosCampos()
     {
-        $oZonaSacdSet = new core\Set();
+        $oZonaSacdSet = new Set();
 
         $oZonaSacdSet->add($this->getDatosId_nom());
         $oZonaSacdSet->add($this->getDatosId_zona());
@@ -661,12 +664,12 @@ class ZonaSacd extends core\ClasePropiedades
      * Recupera les propietats de l'atribut iid_nom de ZonaSacd
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosId_nom()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_nom'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_nom'));
         $oDatosCampo->setEtiqueta(_("id_nom"));
         return $oDatosCampo;
     }
@@ -675,12 +678,12 @@ class ZonaSacd extends core\ClasePropiedades
      * Recupera les propietats de l'atribut iid_zona de ZonaSacd
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosId_zona()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_zona'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_zona'));
         $oDatosCampo->setEtiqueta(_("id_zona"));
         return $oDatosCampo;
     }
@@ -689,12 +692,12 @@ class ZonaSacd extends core\ClasePropiedades
      * Recupera les propietats de l'atribut bpropia de ZonaSacd
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosPropia()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'propia'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'propia'));
         $oDatosCampo->setEtiqueta(_("propia"));
         return $oDatosCampo;
     }

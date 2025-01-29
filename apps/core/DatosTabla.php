@@ -2,9 +2,6 @@
 
 namespace core;
 
-use core;
-use web;
-
 /**
  * Fitxer amb la Classe que accedeix a la taula d_dossiers_abiertos
  *
@@ -145,7 +142,7 @@ class DatosTabla
         $c = 0;
         foreach ($this->Coleccion as $oFila) {
             $v = 0;
-            $pks = core\urlsafe_b64encode(serialize($oFila->getPrimary_key()));
+            $pks = urlsafe_b64encode(serialize($oFila->getPrimary_key()));
             //$pks=str_replace('"','\"',$pks);
             //echo "sel: $pks<br>";
             $a_valores[$c]['sel'] = $pks;

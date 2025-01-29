@@ -38,6 +38,8 @@ class CentrosQue
 
 
     /* CONSTRUCTOR -------------------------------------------------------------- */
+    private mixed $sBoton;
+    private mixed $sAntes;
 
     /**
      * Constructor de la classe.

@@ -27,9 +27,20 @@
  *
  */
 
-use actividades\model\entity as actividades;
-use asistentes\model\entity as asistentes;
-use personas\model\entity as personas;
+use actividades\model\entity\Actividad;
+use actividadplazas\model\GestorResumenPlazas;
+use asistentes\model\entity\Asistente;
+use asistentes\model\entity\GestorAsistente;
+use core\ConfigGlobal;
+use core\ViewPhtml;
+use personas\model\entity\GestorPersonaAgd;
+use personas\model\entity\GestorPersonaEx;
+use personas\model\entity\GestorPersonaN;
+use personas\model\entity\GestorPersonaNax;
+use personas\model\entity\GestorPersonaS;
+use personas\model\entity\GestorPersonaSSSC;
+use personas\model\entity\Persona;
+use web\Hash;
 use function core\is_true;
 
 // INICIO Cabecera global de URL de controlador *********************************
@@ -67,16 +78,16 @@ if (empty($Qid_activ)) {
 }
 
 
-$gesAsistentes = new asistentes\GestorAsistente();
+$gesAsistentes = new GestorAsistente();
 
 $obj = 'asistentes\\model\\entity\\Asistente';
 
 /* Mirar si la actividad es mia o no */
-$oActividad = new actividades\Actividad($Qid_activ);
+$oActividad = new Actividad($Qid_activ);
 
 if (!empty($Qid_nom)) { //caso de modificar
     $mod = "editar";
-    $oPersona = personas\Persona::NewPersona($Qid_nom);
+    $oPersona = Persona::NewPersona($Qid_nom);
     if (!is_object($oPersona)) {
         $msg_err = "<br>$oPersona con id_nom: $Qid_nom en  " . __FILE__ . ": line " . __LINE__;
         exit($msg_err);
@@ -120,11 +131,11 @@ if (!empty($Qid_nom)) { //caso de modificar
     $plaza = $oAsistente->getPlaza();
     $propietario = $oAsistente->getPropietario();
 
-    if (core\ConfigGlobal::is_app_installed('actividadplazas')) {
+    if (ConfigGlobal::is_app_installed('actividadplazas')) {
         if (!empty($propietario)) {
             $padre = strtok($propietario, '>');
             $child = strtok('>');
-            if ($obj_pau != 'PersonaEx' && $child != core\ConfigGlobal::mi_delef()) {
+            if ($obj_pau !== 'PersonaEx' && $child != ConfigGlobal::mi_delef()) {
                 exit (sprintf(_("los datos de asistencia los modifica el propietario de la plaza: %s"), $child));
             }
         }
@@ -137,7 +148,7 @@ if (!empty($Qid_nom)) { //caso de modificar
     $propio = "t"; //valor por defecto
     $observ = ""; //valor por defecto
     $observ_est = ""; //valor por defecto
-    $plaza = asistentes\Asistente::PLAZA_PEDIDA; //valor por defecto
+    $plaza = Asistente::PLAZA_PEDIDA; //valor por defecto
     $propietario = ''; //valor por defecto
     $Qobj_pau = !empty($Qobj_pau) ? urldecode($Qobj_pau) : '';
     $obj_pau = $Qobj_pau;
@@ -145,38 +156,38 @@ if (!empty($Qid_nom)) { //caso de modificar
     $na_val = 'p' . $Qna;
     switch ($obj_pau) {
         case 'PersonaN':
-            $oPersonas = new personas\GestorPersonaN();
+            $oPersonas = new GestorPersonaN();
             $oDesplegablePersonas = $oPersonas->getListaPersonas();
             $oDesplegablePersonas->setNombre('id_nom');
             break;
         case 'PersonaNax':
-            $oPersonas = new personas\GestorPersonaNax();
+            $oPersonas = new GestorPersonaNax();
             $oDesplegablePersonas = $oPersonas->getListaPersonas();
             $oDesplegablePersonas->setNombre('id_nom');
             break;
         case 'PersonaAgd':
-            $oPersonas = new personas\GestorPersonaAgd();
+            $oPersonas = new GestorPersonaAgd();
             $oDesplegablePersonas = $oPersonas->getListaPersonas();
             $oDesplegablePersonas->setNombre('id_nom');
             break;
         case 'PersonaS':
-            $oPersonas = new personas\GestorPersonaS();
+            $oPersonas = new GestorPersonaS();
             $oDesplegablePersonas = $oPersonas->getListaPersonas();
             $oDesplegablePersonas->setNombre('id_nom');
             break;
         case 'PersonaSSSC':
-            $oPersonas = new personas\GestorPersonaSSSC();
+            $oPersonas = new GestorPersonaSSSC();
             $oDesplegablePersonas = $oPersonas->getListaPersonas();
             $oDesplegablePersonas->setNombre('id_nom');
             break;
         case 'PersonaEx':
-            $oPersonas = new personas\GestorPersonaEx();
+            $oPersonas = new GestorPersonaEx();
             $oDesplegablePersonas = $oPersonas->getListaPersonas($na_val);
             $oDesplegablePersonas->setNombre('id_nom');
             $obj_pau = 'PersonaEx';
             break;
     }
-    if (core\ConfigGlobal::is_app_installed('actividadplazas')) {
+    if (ConfigGlobal::is_app_installed('actividadplazas')) {
         $oDesplegablePersonas->setAction('fnjs_cmb_propietario()');
     }
 }
@@ -184,7 +195,7 @@ $propio_chk = (!empty($propio) && is_true($propio)) ? 'checked' : '';
 $falta_chk = (!empty($falta) && is_true($falta)) ? 'checked' : '';
 $est_chk = (!empty($est_ok) && is_true($est_ok)) ? 'checked' : '';
 
-if (core\ConfigGlobal::is_app_installed('actividadplazas')) {
+if (ConfigGlobal::is_app_installed('actividadplazas')) {
     $oDesplegablePlaza = $gesAsistentes->getPosiblesPlaza();
     $oDesplegablePlaza->setNombre('plaza');
     $oDesplegablePlaza->setOpcion_sel($plaza);
@@ -195,14 +206,14 @@ if (core\ConfigGlobal::is_app_installed('actividadplazas')) {
             $dl_de_paso = $oPersona->getDl();
         }
     }
-    $gesActividadPlazas = new \actividadplazas\model\GestorResumenPlazas();
+    $gesActividadPlazas = new GestorResumenPlazas();
     $gesActividadPlazas->setId_activ($Qid_activ);
     $oDesplPosiblesPropietarios = $gesActividadPlazas->getPosiblesPropietarios($dl_de_paso);
     $oDesplPosiblesPropietarios->setNombre('propietario');
     $oDesplPosiblesPropietarios->setOpcion_sel($propietario);
 
-    $url_ajax = core\ConfigGlobal::getWeb() . '/apps/actividadplazas/controller/gestion_plazas_ajax.php';
-    $oHash1 = new web\Hash();
+    $url_ajax = ConfigGlobal::getWeb() . '/apps/actividadplazas/controller/gestion_plazas_ajax.php';
+    $oHash1 = new Hash();
     $oHash1->setUrl($url_ajax);
     $oHash1->setCamposForm('que!id_activ!id_nom');
     $h1 = $oHash1->linkSinVal();
@@ -213,9 +224,9 @@ if (core\ConfigGlobal::is_app_installed('actividadplazas')) {
     $oDesplPosiblesPropietarios = '';
 }
 
-$oHash = new web\Hash();
+$oHash = new Hash();
 $camposForm = 'observ!observ_est';
-if (core\ConfigGlobal::is_app_installed('actividadplazas')) {
+if (ConfigGlobal::is_app_installed('actividadplazas')) {
     $camposForm .= '!plaza!propietario';
 }
 $a_camposHidden = array(
@@ -255,5 +266,5 @@ $a_campos = ['obj' => $obj,
     'oDesplPosiblesPropietarios' => $oDesplPosiblesPropietarios,
 ];
 
-$oView = new core\View('asistentes/controller');
+$oView = new ViewPhtml('asistentes/controller');
 $oView->renderizar('form_3101.phtml', $a_campos);

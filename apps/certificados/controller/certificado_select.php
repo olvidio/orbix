@@ -12,6 +12,7 @@
 
 use certificados\domain\CertificadoSelect;
 use core\ConfigGlobal;
+use core\ViewPhtml;
 use function core\curso_est;
 
 // INICIO Cabecera global de URL de controlador *********************************
@@ -80,5 +81,5 @@ $a_campos['oPosicion'] = $oPosicion;
 $a_campos['titulo'] = $titulo;
 $a_campos['txt_eliminar'] = $txt_eliminar;
 
-$oView = new core\View('certificados/controller');
+$oView = new ViewPhtml('certificados/controller');
 $oView->renderizar('certificado_select.phtml', $a_campos);

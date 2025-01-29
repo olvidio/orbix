@@ -1,11 +1,14 @@
 <?php
 
-use actividades\model\entity as actividades;
-use actividadcargos\model\entity as actividadcargos;
-use actividadestudios\model\entity as actividadestudios;
-use asignaturas\model\entity as asignaturas;
-use asistentes\model\entity as asistentes;
-use personas\model\entity as personas;
+use actividadcargos\model\entity\GestorActividadCargo;
+use actividadcargos\model\entity\GestorCargo;
+use actividades\model\entity\Actividad;
+use actividadestudios\model\entity\GestorActividadAsignaturaDl;
+use actividadestudios\model\entity\GestorMatricula;
+use asignaturas\model\entity\Asignatura;
+use asistentes\model\entity\GestorAsistente;
+use core\ViewPhtml;
+use personas\model\entity\Persona;
 use function core\is_true;
 
 // INICIO Cabecera global de URL de controlador *********************************
@@ -31,14 +34,14 @@ if (!empty($a_sel)) { //vengo de un checkbox
 $msg_err = '';
 
 // nombre de la actividad
-$oActividad = new actividades\Actividad($id_activ);
+$oActividad = new Actividad($id_activ);
 $nom_activ = $oActividad->getNom_activ();
 
 //director de estudios
-$GesCargos = new actividadcargos\GestorCargo();
+$GesCargos = new GestorCargo();
 $cCargos = $GesCargos->getCargos(array('cargo' => 'd.est.'));
 $id_cargo = $cCargos[0]->getId_cargo(); // solo hay un cargo de director de estudios.
-$GesActividadCargos = new actividadcargos\GestorActividadCargo();
+$GesActividadCargos = new GestorActividadCargo();
 $cActividadCargos = $GesActividadCargos->getActividadCargos(array('id_activ' => $id_activ, 'id_cargo' => $id_cargo));
 if (is_array($cActividadCargos) && count($cActividadCargos) > 0) {
     $id_nom_dtor_est = $cActividadCargos[0]->getId_nom(); // Imagino que sólo hay uno.
@@ -49,7 +52,7 @@ if (is_array($cActividadCargos) && count($cActividadCargos) > 0) {
 if (empty($id_nom_dtor_est)) {
     $nom_director_est = _("para nombrarlo, ir al dossier de cargos de la actividad");
 } else {
-    $oPersona = personas\Persona::NewPersona($id_nom_dtor_est);
+    $oPersona = Persona::NewPersona($id_nom_dtor_est);
     if (!is_object($oPersona)) {
         $msg_err .= "<br>$oPersona con id_nom: $id_nom_dtor_est en  " . __FILE__ . ": line " . __LINE__;
         $nom_director_est = '';
@@ -64,7 +67,7 @@ $aPreceptores = array();
 $aProfesores = array();
 $a = 0;
 $tipo_old = 0;
-$GesActividadAsignaturas = new actividadestudios\GestorActividadAsignaturaDl();
+$GesActividadAsignaturas = new GestorActividadAsignaturaDl();
 $cActividadAsignaturas = $GesActividadAsignaturas->getActividadAsignaturas(array('id_activ' => $id_activ, '_ordre' => 'tipo'));
 foreach ($cActividadAsignaturas as $oActividadAsignatura) {
     $a++;
@@ -72,12 +75,12 @@ foreach ($cActividadAsignaturas as $oActividadAsignatura) {
     $id_profesor = $oActividadAsignatura->getId_profesor();
     $tipo = $oActividadAsignatura->getTipo();
 
-    $oAsignatura = new asignaturas\Asignatura($id_asignatura);
+    $oAsignatura = new Asignatura($id_asignatura);
     $nombre_corto = $oAsignatura->getNombre_corto();
     $creditos = $oAsignatura->getCreditos();
 
     if (!empty($id_profesor)) {
-        $oPersona = personas\Persona::NewPersona($id_profesor);
+        $oPersona = Persona::NewPersona($id_profesor);
         if (!is_object($oPersona)) {
             $msg_err .= "<br>$oPersona con id_nom: $id_profesor en  " . __FILE__ . ": line " . __LINE__;
             continue;
@@ -99,7 +102,7 @@ foreach ($cActividadAsignaturas as $oActividadAsignatura) {
 }
 
 //buco los asistentes:
-$GesAsistentes = new asistentes\GestorAsistente();
+$GesAsistentes = new GestorAsistente();
 $cAsistentes = $GesAsistentes->getAsistentesDeActividad($id_activ);
 $a = 0;
 $a_old = 0;
@@ -111,7 +114,7 @@ foreach ($cAsistentes as $oAsistente) {
     $a++;
     $id_nom = $oAsistente->getId_nom();
     $observ_est = $oAsistente->getObserv_est();
-    $oPersona = personas\Persona::NewPersona($id_nom);
+    $oPersona = Persona::NewPersona($id_nom);
     if (!is_object($oPersona)) {
         $msg_err .= "<br>$oPersona con id_nom: $id_nom en  " . __FILE__ . ": line " . __LINE__;
         continue;
@@ -120,7 +123,7 @@ foreach ($cAsistentes as $oAsistente) {
     $ctr = $oPersona->getCentro_o_dl();
     $stgr = $oPersona->getStgr();
     // busco las asignaturas de esta persona
-    $GesMatriculas = new actividadestudios\GestorMatricula();
+    $GesMatriculas = new GestorMatricula();
     $cMatriculas = $GesMatriculas->getMatriculas(array('id_nom' => $id_nom, 'id_activ' => $id_activ));
     // si no tiene asignaturas, miro si está de repaso
     if (is_array($cMatriculas) && count($cMatriculas) == 0) {
@@ -146,7 +149,7 @@ foreach ($cAsistentes as $oAsistente) {
             $id_asignatura = $oMatricula->getId_asignatura();
             $preceptor = $oMatricula->getPreceptor();
 
-            $oAsignatura = new asignaturas\Asignatura($id_asignatura);
+            $oAsignatura = new Asignatura($id_asignatura);
             $nombre_corto = $oAsignatura->getNombre_corto();
             $creditos = $oAsignatura->getCreditos();
             $preceptor = is_true($preceptor)? "(" . _("preceptor") . ")" : '';
@@ -175,5 +178,5 @@ $a_campos = ['oPosicion' => $oPosicion,
     'aAlumnos' => $aAlumnos,
 ];
 
-$oView = new core\View('actividadestudios/controller');
+$oView = new ViewPhtml('actividadestudios/controller');
 $oView->renderizar('plan_estudios_ca.phtml', $a_campos);

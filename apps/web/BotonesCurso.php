@@ -8,7 +8,7 @@
 
 namespace web;
 
-use core;
+use function core\curso_est;
 
 /**
  * Description of botonescurso
@@ -52,8 +52,8 @@ class BotonesCurso
         } else {
             $any = date('Y');
         }
-        $inicurs_ca = core\curso_est("inicio", $any)->format('Y-m-d');
-        $fincurs_ca = core\curso_est("fin", $any)->format('Y-m-d');
+        $inicurs_ca = curso_est("inicio", $any)->format('Y-m-d');
+        $fincurs_ca = curso_est("fin", $any)->format('Y-m-d');
 
         $this->aWhere = array();
         $this->aOperator = array();

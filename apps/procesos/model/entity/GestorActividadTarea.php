@@ -2,7 +2,9 @@
 
 namespace procesos\model\entity;
 
-use core;
+use core\ClaseGestor;
+use core\Condicion;
+use core\Set;
 use web\Desplegable;
 
 /**
@@ -16,7 +18,7 @@ use web\Desplegable;
  * @version 1.0
  * @created 07/12/2018
  */
-class GestorActividadTarea extends core\ClaseGestor
+class GestorActividadTarea extends ClaseGestor
 {
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
@@ -42,7 +44,7 @@ class GestorActividadTarea extends core\ClaseGestor
      * les posibles tareas d'una fase
      *
      * @param integer iid_fase la fase a la que pertany.
-     * @return \web\Desplegable
+     * @return false|Desplegable
      */
     function getListaActividadTareas($iid_fase)
     {
@@ -74,12 +76,12 @@ class GestorActividadTarea extends core\ClaseGestor
      * retorna l'array d'objectes de tipus ActividadTarea
      *
      * @param string sQuery la query a executar.
-     * @return array Una col·lecció d'objectes de tipus ActividadTarea
+     * @return array|false
      */
     function getActividadTareasQuery($sQuery = '')
     {
         $oDbl = $this->getoDbl();
-        $oActividadTareaSet = new core\Set();
+        $oActividadTareaSet = new Set();
         if (($oDbl->query($sQuery)) === FALSE) {
             $sClauError = 'GestorActividadTarea.query';
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
@@ -98,23 +100,23 @@ class GestorActividadTarea extends core\ClaseGestor
      *
      * @param array aWhere associatiu amb els valors de les variables amb les quals farem la query
      * @param array aOperators associatiu amb els valors dels operadors que cal aplicar a cada variable
-     * @return array Una col·lecció d'objectes de tipus ActividadTarea
+     * @return array|void
      */
     function getActividadTareas($aWhere = array(), $aOperators = array())
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
-        $oActividadTareaSet = new core\Set();
-        $oCondicion = new core\Condicion();
+        $oActividadTareaSet = new Set();
+        $oCondicion = new Condicion();
         $aCondi = array();
         foreach ($aWhere as $camp => $val) {
-            if ($camp == '_ordre') continue;
+            if ($camp === '_ordre') continue;
             $sOperador = isset($aOperators[$camp]) ? $aOperators[$camp] : '';
             if ($a = $oCondicion->getCondicion($camp, $sOperador, $val)) $aCondi[] = $a;
             // operadores que no requieren valores
-            if ($sOperador == 'BETWEEN' || $sOperador == 'IS NULL' || $sOperador == 'IS NOT NULL' || $sOperador == 'OR') unset($aWhere[$camp]);
-            if ($sOperador == 'IN' || $sOperador == 'NOT IN') unset($aWhere[$camp]);
-            if ($sOperador == 'TXT') unset($aWhere[$camp]);
+            if ($sOperador === 'BETWEEN' || $sOperador === 'IS NULL' || $sOperador === 'IS NOT NULL' || $sOperador === 'OR') unset($aWhere[$camp]);
+            if ($sOperador === 'IN' || $sOperador === 'NOT IN') unset($aWhere[$camp]);
+            if ($sOperador === 'TXT') unset($aWhere[$camp]);
         }
         $sCondi = implode(' AND ', $aCondi);
         if ($sCondi != '') $sCondi = " WHERE " . $sCondi;

@@ -4,18 +4,17 @@ namespace shared\infrastructure;
 
 use core\ClaseRepository;
 use core\Condicion;
+use core\ConverterDate;
 use core\Set;
 use PDO;
 use PDOException;
-
+use web\DateTimeLocal;
+use web\Desplegable;
+use web\NullDateTimeLocal;
 use shared\domain\entity\ColaMail;
 use shared\domain\repositories\ColaMailRepositoryInterface;
-use web\Desplegable;
 
 
-use web\DateTimeLocal;
-use web\NullDateTimeLocal;
-use core\ConverterDate;
 /**
  * Clase que adapta la tabla cola_mails a la interfaz del repositorio
  *

@@ -1,10 +1,13 @@
 <?php
+
 namespace asistentes\model\entity;
 
 use cambios\model\GestorAvisoCambios;
-use core;
-use personas\model\entity as personas;
-use profesores\model\entity as profesores;
+use personas\model\entity\Persona;
+use personas\model\entity\PersonaOut;
+use profesores\model\entity\GestorProfesor;
+use ReflectionClass;
+use function core\is_true;
 
 /**
  * Fitxer amb la Classe que accedeix a la taula d_asistentes_out
@@ -54,8 +57,8 @@ class AsistenteOut extends AsistentePub
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'id_activ') && $val_id !== '') $this->iid_activ = (int)$val_id;
-                if (($nom_id == 'id_nom') && $val_id !== '') $this->iid_nom = (int)$val_id;
+                if (($nom_id === 'id_activ') && $val_id !== '') $this->iid_activ = (int)$val_id;
+                if (($nom_id === 'id_nom') && $val_id !== '') $this->iid_nom = (int)$val_id;
             }
         }
         $this->setoDbl($oDbl);
@@ -94,22 +97,22 @@ class AsistenteOut extends AsistentePub
         $aDades['propietario'] = $this->spropietario;
         array_walk($aDades, 'core\poner_null');
         //para el caso de los boolean FALSE, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
-        if (core\is_true($aDades['propio'])) {
+        if (is_true($aDades['propio'])) {
             $aDades['propio'] = 'true';
         } else {
             $aDades['propio'] = 'false';
         }
-        if (core\is_true($aDades['est_ok'])) {
+        if (is_true($aDades['est_ok'])) {
             $aDades['est_ok'] = 'true';
         } else {
             $aDades['est_ok'] = 'false';
         }
-        if (core\is_true($aDades['cfi'])) {
+        if (is_true($aDades['cfi'])) {
             $aDades['cfi'] = 'true';
         } else {
             $aDades['cfi'] = 'false';
         }
-        if (core\is_true($aDades['falta'])) {
+        if (is_true($aDades['falta'])) {
             $aDades['falta'] = 'true';
         } else {
             $aDades['falta'] = 'false';
@@ -148,7 +151,7 @@ class AsistenteOut extends AsistentePub
             // Anoto el cambio.
             if (empty($quiet)) {
                 $oGestorCanvis = new GestorAvisoCambios();
-                $shortClassName = (new \ReflectionClass($this))->getShortName();
+                $shortClassName = (new ReflectionClass($this))->getShortName();
                 $oGestorCanvis->addCanvi($shortClassName, 'UPDATE', $this->iid_activ, $aDades, $this->aDadesActuals);
             }
             $this->setAllAtributes($aDades);
@@ -185,27 +188,27 @@ class AsistenteOut extends AsistentePub
             // Anoto el cambio.
             if (empty($quiet)) {
                 $oGestorCanvis = new GestorAvisoCambios();
-                $shortClassName = (new \ReflectionClass($this))->getShortName();
+                $shortClassName = (new ReflectionClass($this))->getShortName();
                 $oGestorCanvis->addCanvi($shortClassName, 'INSERT', $aDadesLast['id_activ'], $this->aDades, array());
             }
             // Hay que copiar los datos del asistente a PersonaOut
             // Excepto en el caso de estar copiando dossiers por traslado
-            if ($this->btraslado == 'f') {
-                $oPersona = personas\Persona::NewPersona($this->iid_nom);
+            if (!is_true($this->btraslado)) {
+                $oPersona = Persona::NewPersona($this->iid_nom);
                 if (!is_object($oPersona)) {
-                    $msg_err = "<br>$oPersona con id_nom: $id_nom en  " . __FILE__ . ": line " . __LINE__;
+                    $msg_err = "<br>$oPersona con id_nom: $this->iid_nom en  " . __FILE__ . ": line " . __LINE__;
                     exit($msg_err);
                 }
                 $oPersona->DBCarregar();
                 // No para los de paso:
                 $nom_tablaP = $oPersona->getNomTabla();
-                if ($nom_tablaP != 'p_de_paso_out') {
-                    $oPersonaOut = new personas\PersonaOut($this->iid_nom);
+                if ($nom_tablaP !== 'p_de_paso_out') {
+                    $oPersonaOut = new PersonaOut($this->iid_nom);
                     $oPersonaOut->import($oPersona);
                     $oPersonaOut->DBGuardar();
                     // miro si es profesor
                     $cProfesores = array();
-                    $gesProfesores = new profesores\GestorProfesor();
+                    $gesProfesores = new GestorProfesor();
                     $cProfesores = $gesProfesores->getProfesores(array('id_nom' => $this->iid_nom, 'f_cese' => ''), array('f_cese' => 'IS NULL'));
                     if (count($cProfesores) > 0) {
                         $oPersonaOut->setProfesor_stgr('t');

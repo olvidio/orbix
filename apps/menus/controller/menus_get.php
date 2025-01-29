@@ -1,14 +1,17 @@
 <?php
 
-use menus\model\entity as menusEntity;
-use usuarios\model\entity\Usuario;
 use core\ConfigGlobal;
+use core\ViewPhtml;
+use menus\model\entity\GestorGrupMenu;
+use menus\model\entity\GestorMenuDb;
+use menus\model\entity\GestorMetaMenu;
+use menus\model\entity\MenuDb;
+use usuarios\model\entity\Usuario;
+use web\Hash;
 
 // INICIO Cabecera global de URL de controlador *********************************
 require_once("apps/core/global_header.inc");
 // Archivos requeridos por esta url **********************************************
-//require_once ("classes/personas/aux_menus_gestor.class");
-//require_once ("classes/personas/ext_aux_menus_ext_gestor.class");
 
 // Crea los objetos de uso global **********************************************
 require_once("apps/core/global_object.inc");
@@ -23,16 +26,16 @@ $Qfiltro_grupo = (string)filter_input(INPUT_POST, 'filtro_grupo');
 $Qnuevo = (string)filter_input(INPUT_POST, 'nuevo');
 $Qid_menu = (string)filter_input(INPUT_POST, 'id_menu');
 
-$oGesMetamenu = new menusEntity\GestorMetaMenu();
+$oGesMetamenu = new GestorMetaMenu();
 $oDesplMeta = $oGesMetamenu->getListaMetamenus();
 $oDesplMeta->setNombre('id_metamenu');
 
-$oListaGM = new menusEntity\GestorGrupMenu();
+$oListaGM = new GestorGrupMenu();
 
 $oDesplGM = $oListaGM->getListaMenus();
 $oDesplGM->setNombre('gm_new');
 
-$oHash3 = new web\Hash();
+$oHash3 = new Hash();
 $a_camposHidden = array(
     'filtro_grupo' => $Qfiltro_grupo,
     'nuevo' => 1
@@ -41,7 +44,7 @@ $oHash3->setArraycamposHidden($a_camposHidden);
 
 if (!empty($Qid_menu) || !empty($Qnuevo)) {
     if (!empty($Qid_menu)) {
-        $oMenuDb = new menusEntity\MenuDb();
+        $oMenuDb = new MenuDb();
         // para modificar los valores de un menu.
         $oMenuDb->setId_menu($Qid_menu);
 
@@ -79,7 +82,7 @@ if (!empty($Qid_menu) || !empty($Qnuevo)) {
         $campos_chk = 'ok';
     }
 
-    $oHash = new web\Hash();
+    $oHash = new Hash();
     $oHash->setCamposForm("$campos_chk!orden!txt_menu!id_metamenu!parametros!perm_menu");
     $oHash->setcamposNo($campos_chk);
     $a_camposHidden = array(
@@ -89,7 +92,7 @@ if (!empty($Qid_menu) || !empty($Qnuevo)) {
     );
     $oHash->setArraycamposHidden($a_camposHidden);
 
-    $oHash2 = new web\Hash();
+    $oHash2 = new Hash();
     $a_camposHidden = array(
         'id_menu' => $Qid_menu,
         'filtro_grupo' => $Qfiltro_grupo,
@@ -97,13 +100,13 @@ if (!empty($Qid_menu) || !empty($Qnuevo)) {
     );
     $oHash2->setArraycamposHidden($a_camposHidden);
 
-    $oHash4 = new web\Hash();
+    $oHash4 = new Hash();
     $a_camposHidden = array(
         'filtro_grupo' => $Qfiltro_grupo
     );
     $oHash4->setArraycamposHidden($a_camposHidden);
 
-    $oHash5 = new web\Hash();
+    $oHash5 = new Hash();
     $oHash5->setCamposForm("gm_new");
     $a_camposHidden = array(
         'id_menu' => $Qid_menu,
@@ -112,7 +115,7 @@ if (!empty($Qid_menu) || !empty($Qnuevo)) {
     );
     $oHash5->setArraycamposHidden($a_camposHidden);
 
-    $oHash6 = new web\Hash();
+    $oHash6 = new Hash();
     $oHash6->setCamposForm("gm_new");
     $a_camposHidden = array(
         'id_menu' => $Qid_menu,
@@ -140,20 +143,20 @@ if (!empty($Qid_menu) || !empty($Qnuevo)) {
         'oHash6' => $oHash6,
     ];
 
-    $oView = new core\View('menus/controller');
+    $oView = new ViewPhtml('menus/controller');
     $oView->renderizar('menus_get.phtml', $a_campos);
 } else {
     // para ver el listado de todos los menus de un grupo
     $oMenuDbs = array();
     if (!empty($Qfiltro_grupo)) {
         $aWhere = array('id_grupmenu' => $Qfiltro_grupo, '_ordre' => 'orden');
-        $oLista = new menusEntity\GestorMenuDb();
+        $oLista = new GestorMenuDb();
         $oMenuDbs = $oLista->getMenuDbs($aWhere);
     }
 
     // para el script
-    $url = core\ConfigGlobal::getWeb() . '/apps/menus/controller/menus_get.php';
-    $oHash2 = new web\Hash();
+    $url = ConfigGlobal::getWeb() . '/apps/menus/controller/menus_get.php';
+    $oHash2 = new Hash();
     $oHash2->setUrl($url);
     $oHash2->setCamposForm('filtro_grupo!id_menu');
     $h2 = $oHash2->linkSinVal();
@@ -166,6 +169,6 @@ if (!empty($Qid_menu) || !empty($Qnuevo)) {
         'oMenuDbs' => $oMenuDbs,
     ];
 
-    $oView = new core\View('menus/controller');
+    $oView = new ViewPhtml('menus/controller');
     $oView->renderizar('menus_get_lista.phtml', $a_campos);
 }

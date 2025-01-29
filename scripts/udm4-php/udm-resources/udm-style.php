@@ -13,12 +13,12 @@ namespace core;
 // INICIO Cabecera global de URL de controlador *********************************
 require_once ("apps/core/global_header.inc");
 // Archivos requeridos por esta url **********************************************
-use usuarios\model\entity as usuarios;
+use usuarios\model\entity\GestorPreferencia;
 
 // Crea los objetos de uso global **********************************************
 require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
-$oGesPref = new usuarios\GestorPreferencia();
+$oGesPref = new GestorPreferencia();
 
 $id_usuario= ConfigGlobal::mi_id_usuario();
 $aPref = $oGesPref->getPreferencias(array('id_usuario'=>$id_usuario,'tipo'=>'estilo'));

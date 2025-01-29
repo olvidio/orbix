@@ -2,7 +2,9 @@
 
 namespace cambios\model\entity;
 
-use core;
+use core\ClaseGestor;
+use core\Condicion;
+use core\Set;
 
 /**
  * GestorCambioAnotado
@@ -15,7 +17,7 @@ use core;
  * @version 1.0
  * @created 2/5/2019
  */
-class GestorCambioAnotado extends core\ClaseGestor
+class GestorCambioAnotado extends ClaseGestor
 {
     /* ATRIBUTOS ----------------------------------------------------------------- */
     /**
@@ -49,10 +51,10 @@ class GestorCambioAnotado extends core\ClaseGestor
     public function setTabla($ubicacion)
     {
         $this->ubicacion = $ubicacion;
-        if ($ubicacion == 'sv') {
+        if ($ubicacion === 'sv') {
             $this->setNomTabla('av_cambios_anotados_dl');
         }
-        if ($ubicacion == 'sf') {
+        if ($ubicacion === 'sf') {
             $this->setNomTabla('av_cambios_anotados_dl_sf');
         }
     }
@@ -61,12 +63,12 @@ class GestorCambioAnotado extends core\ClaseGestor
      * retorna l'array d'objectes de tipus CambioAnotado
      *
      * @param string sQuery la query a executar.
-     * @return array Una col·lecció d'objectes de tipus CambioAnotado
+     * @return array|false
      */
     function getCambiosAnotadosQuery($sQuery = '')
     {
         $oDbl = $this->getoDbl();
-        $oCambioAnotadoSet = new core\Set();
+        $oCambioAnotadoSet = new Set();
         if (($oDbl->query($sQuery)) === FALSE) {
             $sClauError = 'GestorCambioAnotado.query';
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
@@ -86,23 +88,23 @@ class GestorCambioAnotado extends core\ClaseGestor
      *
      * @param array aWhere associatiu amb els valors de les variables amb les quals farem la query
      * @param array aOperators associatiu amb els valors dels operadors que cal aplicar a cada variable
-     * @return array Una col·lecció d'objectes de tipus CambioAnotado
+     * @return array|void
      */
     function getCambiosAnotados($aWhere = array(), $aOperators = array())
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        $oCambioAnotadoSet = new core\Set();
-        $oCondicion = new core\Condicion();
+        $oCambioAnotadoSet = new Set();
+        $oCondicion = new Condicion();
         $aCondi = array();
         foreach ($aWhere as $camp => $val) {
-            if ($camp == '_ordre') continue;
+            if ($camp === '_ordre') continue;
             $sOperador = isset($aOperators[$camp]) ? $aOperators[$camp] : '';
             if ($a = $oCondicion->getCondicion($camp, $sOperador, $val)) $aCondi[] = $a;
             // operadores que no requieren valores
-            if ($sOperador == 'BETWEEN' || $sOperador == 'IS NULL' || $sOperador == 'IS NOT NULL' || $sOperador == 'OR') unset($aWhere[$camp]);
-            if ($sOperador == 'IN' || $sOperador == 'NOT IN') unset($aWhere[$camp]);
-            if ($sOperador == 'TXT') unset($aWhere[$camp]);
+            if ($sOperador === 'BETWEEN' || $sOperador === 'IS NULL' || $sOperador === 'IS NOT NULL' || $sOperador === 'OR') unset($aWhere[$camp]);
+            if ($sOperador === 'IN' || $sOperador === 'NOT IN') unset($aWhere[$camp]);
+            if ($sOperador === 'TXT') unset($aWhere[$camp]);
         }
         $sCondi = implode(' AND ', $aCondi);
         if ($sCondi != '') $sCondi = " WHERE " . $sCondi;

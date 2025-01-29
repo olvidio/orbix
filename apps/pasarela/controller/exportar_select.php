@@ -6,13 +6,13 @@ use actividadtarifas\model\entity\GestorTipoActivTarifa;
 use actividadtarifas\model\entity\TipoTarifa;
 use core\ConfigGlobal;
 use pasarela\model\Conversiones;
-use ubis\model\entity\GestorCasaDl;
-use ubis\model\entity\GestorCentroDl;
-use ubis\model\entity\GestorTarifaUbi;
 use web\DateTimeLocal;
 use web\Lista;
 use web\Periodo;
 use web\TiposActividades;
+use ubis\model\entity\GestorCasaDl;
+use ubis\model\entity\GestorCentroDl;
+use ubis\model\entity\GestorTarifaUbi;
 
 // INICIO Cabecera global de URL de controlador *********************************
 require_once("apps/core/global_header.inc");

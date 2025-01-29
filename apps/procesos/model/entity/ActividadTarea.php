@@ -2,7 +2,9 @@
 
 namespace procesos\model\entity;
 
-use core;
+use core\ClasePropiedades;
+use core\DatosCampo;
+use core\Set;
 
 /**
  * Fitxer amb la Classe que accedeix a la taula a_tareas
@@ -23,7 +25,7 @@ use core;
  * @version 1.0
  * @created 07/12/2018
  */
-class ActividadTarea extends core\ClasePropiedades
+class ActividadTarea extends ClasePropiedades
 {
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
@@ -96,7 +98,7 @@ class ActividadTarea extends core\ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'id_tarea') && $val_id !== '') $this->iid_tarea = (int)$val_id; 
+                if (($nom_id === 'id_tarea') && $val_id !== '') $this->iid_tarea = (int)$val_id;
             }
         } else {
             if (isset($a_id) && $a_id !== '') {
@@ -169,7 +171,7 @@ class ActividadTarea extends core\ClasePropiedades
                     return FALSE;
                 }
             }
-            $this->id_tarea = $oDbl->lastInsertId('a_tareas_id_tarea_seq');
+            $this->iid_tarea = $oDbl->lastInsertId('a_tareas_id_tarea_seq');
         }
         $this->setAllAtributes($aDades);
         return TRUE;
@@ -243,7 +245,7 @@ class ActividadTarea extends core\ClasePropiedades
      *
      * @param array $aDades
      */
-    function setAllAtributes($aDades)
+    function setAllAtributes(array $aDades)
     {
         if (!is_array($aDades)) return;
         if (array_key_exists('id_fase', $aDades)) $this->setId_fase($aDades['id_fase']);
@@ -303,7 +305,7 @@ class ActividadTarea extends core\ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'id_tarea') && $val_id !== '') $this->iid_tarea = (int)$val_id; 
+                if (($nom_id === 'id_tarea') && $val_id !== '') $this->iid_tarea = (int)$val_id;
             }
         }
     }
@@ -384,7 +386,7 @@ class ActividadTarea extends core\ClasePropiedades
      */
     function getDatosCampos()
     {
-        $oActividadTareaSet = new core\Set();
+        $oActividadTareaSet = new Set();
 
         $oActividadTareaSet->add($this->getDatosId_fase());
         $oActividadTareaSet->add($this->getDatosDesc_tarea());
@@ -396,12 +398,12 @@ class ActividadTarea extends core\ClasePropiedades
      * Recupera les propietats de l'atribut iid_fase de ActividadTarea
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosId_fase()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_fase'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_fase'));
         $oDatosCampo->setEtiqueta(_("fase a la que pertenece"));
         $oDatosCampo->setTipo('opciones');
         $oDatosCampo->setArgument('procesos\model\entity\ActividadFase'); // nombre del objeto relacionado
@@ -414,12 +416,12 @@ class ActividadTarea extends core\ClasePropiedades
      * Recupera les propietats de l'atribut sdesc_tarea de ActividadTarea
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosDesc_tarea()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'desc_tarea'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'desc_tarea'));
         $oDatosCampo->setEtiqueta(_("descripción de la tarea"));
         $oDatosCampo->setTipo('texto');
         $oDatosCampo->setArgument('30');

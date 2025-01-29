@@ -235,7 +235,7 @@
 
 
         // guardar cambios en DB
-        request = $.ajax({
+          let request = $.ajax({
             url: 'apps/misas/controller/cuadricula_update.php',
             type: 'post',
             data: parametros_update,
@@ -303,7 +303,7 @@
         let url_desplegable_sacd = '{{ url_desplegable_sacd }}';
 	    let id_zona = '{{ id_zona }}';
 	    var parametros= 'id_zona=' + id_zona + '&id_sacd=' + ii2 + '&seleccion=' + seleccion + '&dia=' + dia + ' & {{ h_desplegable_sacd|raw }} ';
-        request = $.ajax({
+          let request = $.ajax({
 		    url: url_desplegable_sacd,
 		    data: parametros,
 		    type: 'post',

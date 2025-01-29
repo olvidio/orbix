@@ -2,8 +2,6 @@
 
 namespace core;
 
-use web;
-
 /* No vale el underscore en el nombre */
 
 abstract class DatosInfo
@@ -220,7 +218,7 @@ abstract class DatosInfo
         if (!empty($v2)) {
             $oDepende = new GestorDescTeleco();
             $aOpciones=$oDepende->getListaDescTelecoUbis($v1);
-            $oDesplegable=new web\Desplegable('',$aOpciones,$v2,true);
+            $oDesplegable=new Desplegable('',$aOpciones,$v2,true);
             $despl_depende = $oDesplegable->options();
         } else {
             $despl_depende = "<option></option>";
@@ -237,7 +235,7 @@ abstract class DatosInfo
             if ($this->accion == 'desc_teleco') {
                 $oDepende = new GestorDescTeleco();
                 $aOpciones = $oDepende->getListaDescTelecoUbis($valor_depende);
-                $oDesplegable = new web\Desplegable('',$aOpciones,'',true);
+                $oDesplegable = new Desplegable('',$aOpciones,'',true);
                 $despl_depende = $oDesplegable->options();
             }
         }

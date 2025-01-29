@@ -2,7 +2,10 @@
 
 namespace ubis\model\entity;
 
-use core;
+use core\ClasePropiedades;
+use core\DatosCampo;
+use core\Set;
+use function core\is_true;
 
 /**
  * Clase que implementa la entidad xd_desc_teleco
@@ -13,7 +16,7 @@ use core;
  * @version 1.0
  * @created 01/10/2010
  */
-class DescTeleco extends core\ClasePropiedades
+class DescTeleco extends ClasePropiedades
 {
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
@@ -130,12 +133,12 @@ class DescTeleco extends core\ClasePropiedades
         $aDades['persona'] = $this->bpersona;
         array_walk($aDades, 'core\poner_null');
         //para el caso de los boolean FALSE, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
-        if (core\is_true($aDades['ubi'])) {
+        if (is_true($aDades['ubi'])) {
             $aDades['ubi'] = 'true';
         } else {
             $aDades['ubi'] = 'false';
         }
-        if (core\is_true($aDades['persona'])) {
+        if (is_true($aDades['persona'])) {
             $aDades['persona'] = 'true';
         } else {
             $aDades['persona'] = 'false';
@@ -251,7 +254,7 @@ class DescTeleco extends core\ClasePropiedades
      *
      * @param array $aDades
      */
-    function setAllAtributes($aDades)
+    function setAllAtributes(array $aDades)
     {
         if (!is_array($aDades)) return;
         if (array_key_exists('id_item', $aDades)) $this->setId_item($aDades['id_item']);
@@ -466,7 +469,7 @@ class DescTeleco extends core\ClasePropiedades
      */
     function getDatosCampos()
     {
-        $oDescTelecoSet = new core\Set();
+        $oDescTelecoSet = new Set();
 
         $oDescTelecoSet->add($this->getDatosOrden());
         $oDescTelecoSet->add($this->getDatosTipo_teleco());
@@ -481,12 +484,12 @@ class DescTeleco extends core\ClasePropiedades
      * Recupera les propietats de l'atribut iorden de DescTeleco
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosOrden()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'orden'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'orden'));
         $oDatosCampo->setEtiqueta(_("orden"));
         return $oDatosCampo;
     }
@@ -495,12 +498,12 @@ class DescTeleco extends core\ClasePropiedades
      * Recupera les propietats de l'atribut stipo_teleco de DescTeleco
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosTipo_teleco()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'tipo_teleco'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'tipo_teleco'));
         $oDatosCampo->setEtiqueta(_("tipo de teleco"));
         return $oDatosCampo;
     }
@@ -509,12 +512,12 @@ class DescTeleco extends core\ClasePropiedades
      * Recupera les propietats de l'atribut sdesc_teleco de DescTeleco
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosDesc_teleco()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'desc_teleco'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'desc_teleco'));
         $oDatosCampo->setEtiqueta(_("descripción"));
         return $oDatosCampo;
     }
@@ -523,12 +526,12 @@ class DescTeleco extends core\ClasePropiedades
      * Recupera les propietats de l'atribut bubi de DescTeleco
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosUbi()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'ubi'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'ubi'));
         $oDatosCampo->setEtiqueta(_("ubi"));
         return $oDatosCampo;
     }
@@ -537,12 +540,12 @@ class DescTeleco extends core\ClasePropiedades
      * Recupera les propietats de l'atribut bpersona de DescTeleco
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosPersona()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'persona'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'persona'));
         $oDatosCampo->setEtiqueta(_("persona"));
         return $oDatosCampo;
     }

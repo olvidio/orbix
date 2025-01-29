@@ -1,9 +1,16 @@
 <?php
 namespace actividades\model\entity;
 
-use core;
-use web;
+use core\ClaseGestor;
+use core\Condicion;
+use core\ConfigGlobal;
+use core\Set;
+use DateInterval;
+use planning\domain\PlanningStyle;
+use web\DateTimeLocal;
 use web\Desplegable;
+use web\TiposActividades;
+use function core\curso_est;
 
 /**
  * GestorActividadAll
@@ -16,7 +23,7 @@ use web\Desplegable;
  * @version 1.0
  * @created 01/10/2010
  */
-class GestorActividadAll extends core\ClaseGestor
+class GestorActividadAll extends ClaseGestor
 {
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
@@ -48,11 +55,11 @@ class GestorActividadAll extends core\ClaseGestor
      * Se requiere del array $_SESSION['oPermActividades'] para saber si se tiene permisos para ver...
      *
      * @param integer $id_ubi
-     * @param web\DateTimeLocal $oFini
-     * @param web\DateTimeLocal $oFfin
+     * @param DateTimeLocal $oFini
+     * @param DateTimeLocal $oFfin
      * @return string[][]|boolean array con las actividades o false
      */
-    public function actividadesDeUnaCasa($id_ubi, $oFini, $oFfin, $cdc_sel = 0)
+    public function actividadesDeUnaCasa(int $id_ubi, DateTimeLocal $oFini, DateTimeLocal $oFfin, $cdc_sel = 0)
     {
         $oIniPlanning = $oFini;
         $a = 0;
@@ -91,9 +98,9 @@ class GestorActividadAll extends core\ClaseGestor
             $h_fin = $oActividad->getH_fin();
             $dl_org = $oActividad->getDl_org();
             $nom_activ = $oActividad->getNom_activ();
-            $css = web\PlanningStyle::clase($id_tipo_activ, '', '',$oActividad->getStatus());
+            $css = PlanningStyle::clase($id_tipo_activ, '', '',$oActividad->getStatus());
 
-            $oTipoActividad = new web\TiposActividades($id_tipo_activ);
+            $oTipoActividad = new TiposActividades($id_tipo_activ);
             $ssfsv = $oTipoActividad->getSfsvText();
 
             //para el caso de que la actividad comience antes
@@ -160,7 +167,7 @@ class GestorActividadAll extends core\ClaseGestor
      *
      * @param object Actividad
      * @param string salida. 'bool' para que retorne true/false, 'array' para que retorne la lista.
-     * @return bool,array una llista de id_activ.
+     * @return array|bool
      */
     function getCoincidencia($oActividad, $salida = 'bool')
     {
@@ -176,10 +183,10 @@ class GestorActividadAll extends core\ClaseGestor
         $oFini1 = clone $oFini0;
         $oFfin0 = $oActividad->getF_fin();
         $oFfin1 = clone $oFfin0;
-        $oFini0->sub(new \DateInterval($interval));
-        $oFini1->add(new \DateInterval($interval));
-        $oFfin0->sub(new \DateInterval($interval));
-        $oFfin1->add(new \DateInterval($interval));
+        $oFini0->sub(new DateInterval($interval));
+        $oFini1->add(new DateInterval($interval));
+        $oFfin0->sub(new DateInterval($interval));
+        $oFfin1->add(new DateInterval($interval));
         $sql_ini = "f_ini between '" . $oFini0->format('Y-m-d') . "' and '" . $oFini1->format('Y-m-d') . "'";
         $sql_fin = "f_fin between '" . $oFfin0->format('Y-m-d') . "' and '" . $oFfin1->format('Y-m-d') . "'";
         if ($salida == 'array') {
@@ -215,13 +222,13 @@ class GestorActividadAll extends core\ClaseGestor
      *
      * @param array aWhere associatiu amb els valors de les variables amb les quals farem la query
      * @param array aOperators associatiu amb els valors dels operadors que cal aplicar a cada variable
-     * @return array una llista de id_ubi.
+     * @return array|void
      */
     function getUbis($aWhere = array(), $aOperators = array())
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
-        $oCondicion = new core\Condicion();
+        $oCondicion = new Condicion();
         $aCondi = array();
         $aUbis = array();
         foreach ($aWhere as $camp => $val) {
@@ -229,9 +236,9 @@ class GestorActividadAll extends core\ClaseGestor
             $sOperador = isset($aOperators[$camp]) ? $aOperators[$camp] : '';
             if ($a = $oCondicion->getCondicion($camp, $sOperador, $val)) $aCondi[] = $a;
             // operadores que no requieren valores
-            if ($sOperador == 'BETWEEN' || $sOperador == 'IS NULL' || $sOperador == 'IS NOT NULL' || $sOperador == 'OR') unset($aWhere[$camp]);
-            if ($sOperador == 'IN' || $sOperador == 'NOT IN') unset($aWhere[$camp]);
-            if ($sOperador == 'TXT') unset($aWhere[$camp]);
+            if ($sOperador === 'BETWEEN' || $sOperador === 'IS NULL' || $sOperador === 'IS NOT NULL' || $sOperador === 'OR') unset($aWhere[$camp]);
+            if ($sOperador === 'IN' || $sOperador === 'NOT IN') unset($aWhere[$camp]);
+            if ($sOperador === 'TXT') unset($aWhere[$camp]);
         }
         $sCondi = implode(' AND ', $aCondi);
         if ($sCondi != '') $sCondi = " WHERE " . $sCondi;
@@ -266,7 +273,7 @@ class GestorActividadAll extends core\ClaseGestor
      *
      * @param string sTipo
      * @param string scondicion Condicion adicional a sTipo (debe empezar con AND).
-     * @return Desplegable
+     * @return false|Desplegable
      */
     function getListaActividadesDeTipo($sid_tipo = '......', $scondicion = '')
     {
@@ -281,14 +288,14 @@ class GestorActividadAll extends core\ClaseGestor
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
             return false;
         }
-        return new web\Desplegable('', $oDblSt, '', true);
+        return new Desplegable('', $oDblSt, '', true);
     }
 
     /**
      * retorna un Desplegable d'activitats
      *
      * @param string scondicion (debe empezar con AND)
-     * @return array Una Llista.
+     * @return array|false
      */
     function getListaActividadesEstudios($scondicion = '')
     {
@@ -297,7 +304,7 @@ class GestorActividadAll extends core\ClaseGestor
         $cond_nivel_stgr = "(nivel_stgr < 6 OR nivel_stgr=11)";
         if (empty($scondicion)) {
             $any = $_SESSION['oConfig']->any_final_curs('est') - 2;
-            $inicurs = core\curso_est("inicio", $any, "est")->format('Y-m-d');
+            $inicurs = curso_est("inicio", $any, "est")->format('Y-m-d');
             $scondicion = "AND f_ini > '$inicurs'";
         }
         $sQuery = "SELECT id_activ, nom_activ
@@ -315,7 +322,7 @@ class GestorActividadAll extends core\ClaseGestor
             $val = $aClave[1];
             $aOpciones[$clave] = $val;
         }
-        return new web\Desplegable('', $aOpciones, '', true);
+        return new Desplegable('', $aOpciones, '', true);
     }
 
     /**
@@ -323,23 +330,23 @@ class GestorActividadAll extends core\ClaseGestor
      *
      * @param array aWhere associatiu amb els valors de les variables amb les quals farem la query
      * @param array aOperators associatiu amb els valors dels operadors que cal aplicar a cada variable
-     * @return array de id_actividad intger
+     * @return array|void
      */
     function getArrayIds($aWhere = array(), $aOperators = array())
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $aListaId = array();
-        $oCondicion = new core\Condicion();
+        $oCondicion = new Condicion();
         $aCondi = array();
         foreach ($aWhere as $camp => $val) {
             if ($camp === '_ordre') continue;
             $sOperador = isset($aOperators[$camp]) ? $aOperators[$camp] : '';
             if ($a = $oCondicion->getCondicion($camp, $sOperador, $val)) $aCondi[] = $a;
             // operadores que no requieren valores
-            if ($sOperador == 'BETWEEN' || $sOperador == 'IS NULL' || $sOperador == 'IS NOT NULL' || $sOperador == 'OR') unset($aWhere[$camp]);
-            if ($sOperador == 'IN' || $sOperador == 'NOT IN') unset($aWhere[$camp]);
-            if ($sOperador == 'TXT') unset($aWhere[$camp]);
+            if ($sOperador === 'BETWEEN' || $sOperador === 'IS NULL' || $sOperador === 'IS NOT NULL' || $sOperador === 'OR') unset($aWhere[$camp]);
+            if ($sOperador === 'IN' || $sOperador === 'NOT IN') unset($aWhere[$camp]);
+            if ($sOperador === 'TXT') unset($aWhere[$camp]);
         }
         $sCondi = implode(' AND ', $aCondi);
         if ($sCondi != '') $sCondi = " WHERE " . $sCondi;
@@ -374,12 +381,12 @@ class GestorActividadAll extends core\ClaseGestor
      * retorna l'array d'objectes de tipus Actividad
      *
      * @param string sQuery la query a executar.
-     * @return array Una col·lecció d'objectes de tipus Actividad
+     * @return array|false
      */
     function getActividadesQuery($sQuery = '')
     {
         $oDbl = $this->getoDbl();
-        $oActividadSet = new core\Set();
+        $oActividadSet = new Set();
         if (($oDbl->query($sQuery)) === false) {
             $sClauError = 'GestorActividadAll.query';
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
@@ -393,7 +400,7 @@ class GestorActividadAll extends core\ClaseGestor
             $a_pkey = array('id_activ' => $aDades['id_activ']);
             $dl = $aDades['dl_org'];
             $id_tabla = $aDades['id_tabla'];
-            if ($dl == core\ConfigGlobal::mi_delef()) {
+            if ($dl == ConfigGlobal::mi_delef()) {
                 $oActividad = new ActividadDl($a_pkey);
             } else {
                 if ($id_tabla == 'dl') {
@@ -419,23 +426,23 @@ class GestorActividadAll extends core\ClaseGestor
      *
      * @param array aWhere associatiu amb els valors de les variables amb les quals farem la query
      * @param array aOperators associatiu amb els valors dels operadors que cal aplicar a cada variable
-     * @return array Una col·lecció d'objectes de tipus Actividad
+     * @return array|void
      */
     function getActividades($aWhere = array(), $aOperators = array())
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
-        $oActividadSet = new core\Set();
-        $oCondicion = new core\Condicion();
+        $oActividadSet = new Set();
+        $oCondicion = new Condicion();
         $aCondi = array();
         foreach ($aWhere as $camp => $val) {
             if ($camp === '_ordre') continue;
             $sOperador = isset($aOperators[$camp]) ? $aOperators[$camp] : '';
             if ($a = $oCondicion->getCondicion($camp, $sOperador, $val)) $aCondi[] = $a;
             // operadores que no requieren valores
-            if ($sOperador == 'BETWEEN' || $sOperador == 'IS NULL' || $sOperador == 'IS NOT NULL' || $sOperador == 'OR') unset($aWhere[$camp]);
-            if ($sOperador == 'IN' || $sOperador == 'NOT IN') unset($aWhere[$camp]);
-            if ($sOperador == 'TXT') unset($aWhere[$camp]);
+            if ($sOperador === 'BETWEEN' || $sOperador === 'IS NULL' || $sOperador === 'IS NOT NULL' || $sOperador === 'OR') unset($aWhere[$camp]);
+            if ($sOperador === 'IN' || $sOperador === 'NOT IN') unset($aWhere[$camp]);
+            if ($sOperador === 'TXT') unset($aWhere[$camp]);
         }
         $sCondi = implode(' AND ', $aCondi);
         if ($sCondi != '') $sCondi = " WHERE " . $sCondi;
@@ -466,10 +473,10 @@ class GestorActividadAll extends core\ClaseGestor
             $dl_org = $aDades['dl_org'];
             // para dl y dlf:
             $dl_org_no_f = preg_replace('/(\.*)f$/', '\1', $dl_org);
-            if ($dl_org_no_f == core\ConfigGlobal::mi_dele()) {
+            if ($dl_org_no_f == ConfigGlobal::mi_dele()) {
                 $oActividad = new ActividadDl($a_pkey);
             } else {
-                if ($id_tabla == 'dl') {
+                if ($id_tabla === 'dl') {
                     $oActividad = new ActividadPub($a_pkey);
                 } else {
                     $oActividad = new ActividadEx($a_pkey);

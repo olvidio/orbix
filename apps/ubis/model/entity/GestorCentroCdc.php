@@ -1,9 +1,7 @@
 <?php
 namespace ubis\model\entity;
 
-use core;
-use web;
-use core\ConfigGlobal;
+use core\ClaseGestor;
 
 /**
  * GestorCentro
@@ -16,7 +14,7 @@ use core\ConfigGlobal;
  * @version 1.0
  * @created 28/09/2010
  */
-class GestorCentroCdc extends core\ClaseGestor
+class GestorCentroCdc extends ClaseGestor
 {
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
@@ -42,7 +40,7 @@ class GestorCentroCdc extends core\ClaseGestor
      * retorna un objecte del tipus Desplegable
      * Els posibles centres
      *
-     * @return array
+     * @return array|false
      */
     function getOpcionesCentrosCdc($sCondicion = '')
     {

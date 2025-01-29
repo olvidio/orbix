@@ -1,3 +1,8 @@
+<?php
+
+use web\Hash;
+
+?>
 <script type="text/javascript" src="<?= 'apps/actividades/controller/actividades.js?' . rand(); ?>"></script>
 <script>
     fnjs_borrar = function (formulario, que_val) {
@@ -8,7 +13,7 @@
                 url = "apps/actividades/controller/actividad_update.php";
                 datos = $(formulario).serialize();
 
-                request = $.ajax({
+                 let request = $.ajax({
                     data: datos,
                     url: url,
                     method: 'POST',
@@ -72,7 +77,7 @@
             foreach ($aTiposActiv as $txt_id => $idTipoActiv) {
                 ?>
                 <td><span class="link titulo"
-                          onclick="fnjs_update_div('#main','<?= web\Hash::link('apps/actividades/controller/actividad_ver.php?' . http_build_query(array('id_tipo_activ' => $idTipoActiv))) ?>')">
+                          onclick="fnjs_update_div('#main','<?= Hash::link('apps/actividades/controller/actividad_ver.php?' . http_build_query(array('id_tipo_activ' => $idTipoActiv))) ?>')">
 		<?= _("nueva actividad $txt_id") ?></span></td>
             <?php }
             echo '</tr></table>';

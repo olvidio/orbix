@@ -2,8 +2,10 @@
 
 namespace cambios\model\entity;
 
+use core\ClasePropiedades;
+use core\DatosCampo;
+use core\Set;
 use function core\is_true;
-use core;
 use ubis\model\entity\Ubi;
 
 /**
@@ -25,7 +27,7 @@ use ubis\model\entity\Ubi;
  * @version 1.0
  * @created 17/4/2019
  */
-class CambioUsuarioPropiedadPref extends core\ClasePropiedades
+class CambioUsuarioPropiedadPref extends ClasePropiedades
 {
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
@@ -121,7 +123,7 @@ class CambioUsuarioPropiedadPref extends core\ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'id_item') && $val_id !== '') $this->iid_item = (int)$val_id; 
+                if (($nom_id === 'id_item') && $val_id !== '') $this->iid_item = (int)$val_id;
             }
         } else {
             if (isset($a_id) && $a_id !== '') {
@@ -158,12 +160,12 @@ class CambioUsuarioPropiedadPref extends core\ClasePropiedades
         $aDades['valor_new'] = $this->bvalor_new;
         array_walk($aDades, 'core\poner_null');
         //para el caso de los boolean FALSE, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
-        if (core\is_true($aDades['valor_old'])) {
+        if (is_true($aDades['valor_old'])) {
             $aDades['valor_old'] = 'true';
         } else {
             $aDades['valor_old'] = 'false';
         }
-        if (core\is_true($aDades['valor_new'])) {
+        if (is_true($aDades['valor_new'])) {
             $aDades['valor_new'] = 'true';
         } else {
             $aDades['valor_new'] = 'false';
@@ -212,7 +214,7 @@ class CambioUsuarioPropiedadPref extends core\ClasePropiedades
                     return FALSE;
                 }
             }
-            $this->id_item = $oDbl->lastInsertId('av_cambios_usuario_propiedades_pref_id_item_seq');
+            $this->iid_item = $oDbl->lastInsertId('av_cambios_usuario_propiedades_pref_id_item_seq');
         }
         $this->setAllAtributes($aDades);
         return TRUE;
@@ -289,10 +291,10 @@ class CambioUsuarioPropiedadPref extends core\ClasePropiedades
         if (is_true($this->getValor_old())) $sText .= _("valor actual");
         $sText .= ' ';
         $sText .= _("es");
-        if ($this->getOperador() == '=') $sText .= ' = ' . _("a");
-        if ($this->getOperador() == '>') $sText .= ' > ' . _("que");
-        if ($this->getOperador() == '<') $sText .= ' < ' . _("que");
-        if ($this->getOperador() == 'regexp') $sText .= ' regexp ' . _("a");
+        if ($this->getOperador() === '=') $sText .= ' = ' . _("a");
+        if ($this->getOperador() === '>') $sText .= ' > ' . _("que");
+        if ($this->getOperador() === '<') $sText .= ' < ' . _("que");
+        if ($this->getOperador() === 'regexp') $sText .= ' regexp ' . _("a");
 
         //$sText .= ' '.$this->getValor();
         switch ($this->getPropiedad()) {
@@ -322,7 +324,7 @@ class CambioUsuarioPropiedadPref extends core\ClasePropiedades
      *
      * @param array $aDades
      */
-    function setAllAtributes($aDades)
+    function setAllAtributes(array $aDades)
     {
         if (!is_array($aDades)) return;
         if (array_key_exists('id_item', $aDades)) $this->setId_item($aDades['id_item']);
@@ -390,7 +392,7 @@ class CambioUsuarioPropiedadPref extends core\ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'id_item') && $val_id !== '') $this->iid_item = (int)$val_id; 
+                if (($nom_id === 'id_item') && $val_id !== '') $this->iid_item = (int)$val_id;
             }
         }
     }
@@ -563,7 +565,7 @@ class CambioUsuarioPropiedadPref extends core\ClasePropiedades
      */
     function getDatosCampos()
     {
-        $oCambioUsuarioPropiedadPrefSet = new core\Set();
+        $oCambioUsuarioPropiedadPrefSet = new Set();
 
         $oCambioUsuarioPropiedadPrefSet->add($this->getDatosId_item_usuario_objeto());
         $oCambioUsuarioPropiedadPrefSet->add($this->getDatosPropiedad());
@@ -579,12 +581,12 @@ class CambioUsuarioPropiedadPref extends core\ClasePropiedades
      * Recupera les propietats de l'atribut iid_item_usuario_objeto de CambioUsuarioPropiedadPref
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosId_item_usuario_objeto()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_item_usuario_objeto'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_item_usuario_objeto'));
         $oDatosCampo->setEtiqueta(_("id_item_usuario_objeto"));
         return $oDatosCampo;
     }
@@ -593,12 +595,12 @@ class CambioUsuarioPropiedadPref extends core\ClasePropiedades
      * Recupera les propietats de l'atribut spropiedad de CambioUsuarioPropiedadPref
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosPropiedad()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'propiedad'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'propiedad'));
         $oDatosCampo->setEtiqueta(_("propiedad"));
         return $oDatosCampo;
     }
@@ -607,12 +609,12 @@ class CambioUsuarioPropiedadPref extends core\ClasePropiedades
      * Recupera les propietats de l'atribut soperador de CambioUsuarioPropiedadPref
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosOperador()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'operador'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'operador'));
         $oDatosCampo->setEtiqueta(_("operador"));
         return $oDatosCampo;
     }
@@ -621,12 +623,12 @@ class CambioUsuarioPropiedadPref extends core\ClasePropiedades
      * Recupera les propietats de l'atribut svalor de CambioUsuarioPropiedadPref
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosValor()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'valor'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'valor'));
         $oDatosCampo->setEtiqueta(_("valor"));
         return $oDatosCampo;
     }
@@ -635,12 +637,12 @@ class CambioUsuarioPropiedadPref extends core\ClasePropiedades
      * Recupera les propietats de l'atribut bvalor_old de CambioUsuarioPropiedadPref
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosValor_old()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'valor_old'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'valor_old'));
         $oDatosCampo->setEtiqueta(_("valor_old"));
         return $oDatosCampo;
     }
@@ -649,12 +651,12 @@ class CambioUsuarioPropiedadPref extends core\ClasePropiedades
      * Recupera les propietats de l'atribut bvalor_new de CambioUsuarioPropiedadPref
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosValor_new()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'valor_new'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'valor_new'));
         $oDatosCampo->setEtiqueta(_("valor_new"));
         return $oDatosCampo;
     }

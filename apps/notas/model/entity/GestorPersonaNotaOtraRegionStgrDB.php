@@ -7,9 +7,8 @@ use core\ConfigGlobal;
 use core\DBConnection;
 use core\Set;
 use notas\model\PersonaNota;
-use personas\model\entity\GestorPersona;
-use stdClass;
 use web\DateTimeLocal;
+use stdClass;
 
 class GestorPersonaNotaOtraRegionStgrDB extends GestorPersonaNotaDB
 {
@@ -103,7 +102,7 @@ class GestorPersonaNotaOtraRegionStgrDB extends GestorPersonaNotaDB
         }
     }
 
-    private function getPersonaNotasConCertificado(?string $certificado, ?string $estado = null): array
+    private function getPersonaNotasConCertificado(?string $certificado, ?string $estado = null): false
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();

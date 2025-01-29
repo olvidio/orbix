@@ -5,12 +5,12 @@ use actividadtarifas\model\entity\GestorTipoTarifa;
 use actividadtarifas\model\entity\TipoActivTarifa;
 use actividadtarifas\model\entity\TipoTarifa;
 use core\ConfigGlobal;
-use ubis\model\entity\GestorTarifaUbi;
-use ubis\model\entity\TarifaUbi;
 use web\Desplegable;
 use web\Hash;
 use web\Lista;
 use web\TiposActividades;
+use ubis\model\entity\GestorTarifaUbi;
+use ubis\model\entity\TarifaUbi;
 
 // INICIO Cabecera global de URL de controlador *********************************
 require_once("apps/core/global_header.inc");
@@ -260,7 +260,7 @@ switch ($Qque) {
         }
         break;
     case "tarifas":
-        //$oMiUsuario = new Usuario(\core\ConfigGlobal::mi_id_usuario());
+        //$oMiUsuario = new Usuario(\ConfigGlobal::mi_id_usuario());
         $a_seccion = array(1 => _("sv"), 2 => _("sf"));
         $a_opciones = array(0 => _("por dia"), 1 => _("total"));
         $oGesTipoTarifa = new GestorTipoTarifa();

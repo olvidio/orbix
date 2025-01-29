@@ -1,12 +1,15 @@
 <?php
 
-use actividadestudios\model\entity as actividadestudios;
-use asignaturas\model\entity as asignaturas;
+use actividadestudios\model\entity\ActividadAsignaturaDl;
+use asignaturas\model\entity\GestorAsignatura;
 use core\ConfigGlobal;
-use notas\model\entity as notas;
-use personas\model\entity as personas;
+use core\ViewPhtml;
+use notas\model\entity\Acta;
+use notas\model\entity\GestorActa;
+use notas\model\entity\GestorActaTribunal;
+use notas\model\entity\GestorActaTribunalDl;
+use personas\model\entity\PersonaDl;
 use web\Hash;
-use web\Posicion;
 
 /**
  * Esta página muestra un formulario para modificar los datos de un acta.
@@ -65,17 +68,17 @@ if (empty($notas) && empty($Qnotas)) {
 //$acta=urldecode($acta);
 //últimos
 $any = date('y');
-$mi_dele = core\ConfigGlobal::mi_delef();
+$mi_dele = ConfigGlobal::mi_delef();
 
 /* TODO Aclararse. Ahora pongo crAcse...
 // para las regiones no es 'crA', sino 'A'.
 $a_reg = explode('-',$_SESSION['session_auth']['esquema']);
 $dlEsquema = substr($a_reg[1],0,-1); // quito la v o la f.
-$dl = ($dlEsquema=='cr')? core\ConfigGlobal::mi_region() : $mi_dele;
+$dl = ($dlEsquema=='cr')? ConfigGlobal::mi_region() : $mi_dele;
 */
 $dl = $mi_dele;
 
-$GesActas = new notas\GestorActa();
+$GesActas = new GestorActa();
 $ult_lib = $GesActas->getUltimoLibro();
 $ult_pag = $GesActas->getUltimaPagina($ult_lib);
 $ult_lin = $GesActas->getUltimaLinea($ult_lib);
@@ -125,7 +128,7 @@ if ($notas !== 'nuevo' && $Qmod !== 'nueva' && !empty($acta_actual)) { //signifi
         $observ = (string)filter_input(INPUT_POST, 'observ');
         $permiso = (integer)filter_input(INPUT_POST, 'permiso');
     } else {
-        $oActa = new notas\Acta($acta_actual);
+        $oActa = new Acta($acta_actual);
         $id_asignatura = $oActa->getId_asignatura();
         $id_activ = $oActa->getId_activ();
         $f_acta = $oActa->getF_acta()->getFromLocal();
@@ -151,12 +154,12 @@ if ($notas !== 'nuevo' && $Qmod !== 'nueva' && !empty($acta_actual)) { //signifi
         $Qid_asignatura = (string)filter_input(INPUT_POST, 'id_asignatura');
         $id_asignatura_actual = empty($id_asignatura) ? $Qid_asignatura : $id_asignatura;
         // Busco al profesor como examinador principal.
-        $oActividadAsignatura = new actividadestudios\ActividadAsignaturaDl();
+        $oActividadAsignatura = new ActividadAsignaturaDl();
         $oActividadAsignatura->setId_activ($id_activ);
         $oActividadAsignatura->setId_asignatura($id_asignatura_actual);
         $oActividadAsignatura->DBCarregar();
         $id_profesor = $oActividadAsignatura->getId_profesor();
-        $oPersonaDl = new personas\PersonaDl($id_profesor);
+        $oPersonaDl = new PersonaDl($id_profesor);
         $ap_nom = $oPersonaDl->getTituloNombre();
         $examinador = $ap_nom;
     } else { // estoy actualizando la página
@@ -196,9 +199,9 @@ if (!empty($ult_acta)) {
 if (!empty($acta_actual)) {
     // Si es cr, se mira en todas:
     if (ConfigGlobal::mi_ambito() == 'rstgr') {
-        $GesTribunal = new notas\GestorActaTribunal();
+        $GesTribunal = new GestorActaTribunal();
     } else {
-        $GesTribunal = new notas\GestorActaTribunalDl();
+        $GesTribunal = new GestorActaTribunalDl();
     }
     $cTribunal = $GesTribunal->getActasTribunales(array('acta' => $acta_actual, '_ordre' => 'orden'));
 } else {
@@ -207,7 +210,7 @@ if (!empty($acta_actual)) {
 
 $nombre_asignatura = '';
 if (!empty($id_asignatura_actual)) {
-    $GesAsignaturas = new asignaturas\GestorAsignatura();
+    $GesAsignaturas = new GestorAsignatura();
     $cAsignatura = $GesAsignaturas->getAsignaturas(['id_asignatura' => $id_asignatura_actual]);
     if (!empty($cAsignatura)) {
         $oAsignatura = $cAsignatura[0];
@@ -320,5 +323,5 @@ $a_campos = ['obj' => $obj,
     'soy_rstgr' => $soy_rstgr,
 ];
 
-$oView = new core\View('notas/controller');
+$oView = new ViewPhtml('notas/controller');
 $oView->renderizar('acta_ver.phtml', $a_campos);

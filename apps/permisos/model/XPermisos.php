@@ -92,7 +92,7 @@ abstract class XPermisos
      * @param string $p nom del permís: ocupado|ver|modificar|crear|borrar
      * @return boolean
      */
-    public function have_perm_activ($p)
+    public function have_perm_activ(string $p)
     {
         $pageperm = preg_split('/,/', $p);
         list ($ok0, $pagebits) = $this->permsum($pageperm);
@@ -111,7 +111,7 @@ abstract class XPermisos
      * @param string $p el nom de la oficina
      * @return boolean
      */
-    public function have_perm_oficina($p)
+    public function have_perm_oficina(string $p)
     {
         $pageperm = preg_split('/,/', $p);
         list ($ok0, $pagebits) = $this->permsum($pageperm);
@@ -132,7 +132,7 @@ abstract class XPermisos
      * @param string $p nom del permís: ocupado|ver|modificar|crear|borrar
      * @return boolean
      */
-    public function have_perm_action($p)
+    public function have_perm_action(string $p)
     {
         $pageperm = preg_split('/,/', $p);
         list ($ok0, $pagebits) = $this->permsum($pageperm);
@@ -153,7 +153,7 @@ abstract class XPermisos
      * @param string $p nom del permís: ocupado|ver|modificar|crear|borrar
      * @return boolean
      */
-    public function only_perm($p)
+    public function only_perm(string $p)
     {
         $pageperm = preg_split('/,/', $p);
 
@@ -239,8 +239,8 @@ abstract class XPermisos
         foreach ($permlist as $a => $b) {
             if ($look_for === $b) {
                 return true;
-            };
-        };
+            }
+        }
         return false;
     }
 

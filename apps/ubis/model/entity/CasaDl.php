@@ -2,7 +2,7 @@
 
 namespace ubis\model\entity;
 
-use core;
+use function core\is_true;
 
 /**
  * Clase que implementa la entidad u_cdc_dl
@@ -88,17 +88,17 @@ class CasaDl extends Casa
         $aDades['plazas_min'] = $this->iplazas_min;
         array_walk($aDades, 'core\poner_null');
         //para el caso de los boolean FALSE, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
-        if (core\is_true($aDades['status'])) {
+        if (is_true($aDades['status'])) {
             $aDades['status'] = 'true';
         } else {
             $aDades['status'] = 'false';
         }
-        if (core\is_true($aDades['sv'])) {
+        if (is_true($aDades['sv'])) {
             $aDades['sv'] = 'true';
         } else {
             $aDades['sv'] = 'false';
         }
-        if (core\is_true($aDades['sf'])) {
+        if (is_true($aDades['sf'])) {
             $aDades['sf'] = 'true';
         } else {
             $aDades['sf'] = 'false';
@@ -225,7 +225,7 @@ class CasaDl extends Casa
      *
      * @param array $aDades
      */
-    function setAllAtributes($aDades, $convert = FALSE)
+    function setAllAtributes(array $aDades, $convert = FALSE)
     {
         if (!is_array($aDades)) return;
         if (array_key_exists('id_schema', $aDades)) $this->setId_schema($aDades['id_schema']);

@@ -1,5 +1,6 @@
 <?php
 
+use core\ViewTwig;
 use web\Hash;
 
 // INICIO Cabecera global de URL de controlador *********************************
@@ -21,35 +22,35 @@ $aQuery = ['sf' => 0];
 if (is_array($aQuery)) {
     array_walk($aQuery, 'core\poner_empty_on_null');
 }
-$url_lista_a = web\Hash::link('apps/encargossacd/controller/listas_a.php?' . http_build_query($aQuery));
+$url_lista_a = Hash::link('apps/encargossacd/controller/listas_a.php?' . http_build_query($aQuery));
 $aQuery = ['sf' => 1];
 if (is_array($aQuery)) {
     array_walk($aQuery, 'core\poner_empty_on_null');
 }
-$url_lista_af = web\Hash::link('apps/encargossacd/controller/listas_a.php?' . http_build_query($aQuery));
+$url_lista_af = Hash::link('apps/encargossacd/controller/listas_a.php?' . http_build_query($aQuery));
 
 $aQuery = ['sf' => 0];
 // el hppt_build_query no pasa los valores null
 if (is_array($aQuery)) {
     array_walk($aQuery, 'core\poner_empty_on_null');
 }
-$url_lista_b = web\Hash::link('apps/encargossacd/controller/listas_b.php?' . http_build_query($aQuery));
+$url_lista_b = Hash::link('apps/encargossacd/controller/listas_b.php?' . http_build_query($aQuery));
 $aQuery = ['sf' => 1];
 if (is_array($aQuery)) {
     array_walk($aQuery, 'core\poner_empty_on_null');
 }
-$url_lista_bf = web\Hash::link('apps/encargossacd/controller/listas_b.php?' . http_build_query($aQuery));
+$url_lista_bf = Hash::link('apps/encargossacd/controller/listas_b.php?' . http_build_query($aQuery));
 
-$url_lista_c = web\Hash::link('apps/encargossacd/controller/listas_c.php');
+$url_lista_c = Hash::link('apps/encargossacd/controller/listas_c.php');
 
 $aQuery = ['sf' => 0];
 // el hppt_build_query no pasa los valores null
 if (is_array($aQuery)) {
     array_walk($aQuery, 'core\poner_empty_on_null');
 }
-$url_lista_d = web\Hash::link('apps/encargossacd/controller/listas_d.php?' . http_build_query($aQuery));
+$url_lista_d = Hash::link('apps/encargossacd/controller/listas_d.php?' . http_build_query($aQuery));
 $aQuery = ['sf' => 1];
-$url_lista_df = web\Hash::link('apps/encargossacd/controller/listas_d.php?' . http_build_query($aQuery));
+$url_lista_df = Hash::link('apps/encargossacd/controller/listas_d.php?' . http_build_query($aQuery));
 
 
 $aQuery = ['ctr_igl' => 'ctr'];
@@ -57,41 +58,41 @@ $aQuery = ['ctr_igl' => 'ctr'];
 if (is_array($aQuery)) {
     array_walk($aQuery, 'core\poner_empty_on_null');
 }
-$url_lista_ctr = web\Hash::link('apps/encargossacd/controller/listas_exigencia_ctr.php?' . http_build_query($aQuery));
+$url_lista_ctr = Hash::link('apps/encargossacd/controller/listas_exigencia_ctr.php?' . http_build_query($aQuery));
 $aQuery = ['ctr_igl' => 'ctr', 'sf' => 1];
 if (is_array($aQuery)) {
     array_walk($aQuery, 'core\poner_empty_on_null');
 }
-$url_lista_ctrf = web\Hash::link('apps/encargossacd/controller/listas_exigencia_ctr.php?' . http_build_query($aQuery));
+$url_lista_ctrf = Hash::link('apps/encargossacd/controller/listas_exigencia_ctr.php?' . http_build_query($aQuery));
 $aQuery = ['ctr_igl' => 'igl'];
 if (is_array($aQuery)) {
     array_walk($aQuery, 'core\poner_empty_on_null');
 }
-$url_lista_igl = web\Hash::link('apps/encargossacd/controller/listas_exigencia_ctr.php?' . http_build_query($aQuery));
+$url_lista_igl = Hash::link('apps/encargossacd/controller/listas_exigencia_ctr.php?' . http_build_query($aQuery));
 
 $aQuery = ['sel' => 'nagd'];
 if (is_array($aQuery)) {
     array_walk($aQuery, 'core\poner_empty_on_null');
 }
-$url_lista_com_sacd_na = web\Hash::link('apps/encargossacd/controller/listas_com_sacd.php?' . http_build_query($aQuery));
+$url_lista_com_sacd_na = Hash::link('apps/encargossacd/controller/listas_com_sacd.php?' . http_build_query($aQuery));
 $aQuery = ['sel' => 'sssc'];
 if (is_array($aQuery)) {
     array_walk($aQuery, 'core\poner_empty_on_null');
 }
-$url_lista_com_sacd_sss = web\Hash::link('apps/encargossacd/controller/listas_com_sacd.php?' . http_build_query($aQuery));
+$url_lista_com_sacd_sss = Hash::link('apps/encargossacd/controller/listas_com_sacd.php?' . http_build_query($aQuery));
 
 $aQuery = ['sfsv' => 'sv'];
 if (is_array($aQuery)) {
     array_walk($aQuery, 'core\poner_empty_on_null');
 }
-$url_lista_com_ctr_sv = web\Hash::link('apps/encargossacd/controller/listas_com_ctr.php?' . http_build_query($aQuery));
+$url_lista_com_ctr_sv = Hash::link('apps/encargossacd/controller/listas_com_ctr.php?' . http_build_query($aQuery));
 $aQuery = ['sfsv' => 'sf'];
 if (is_array($aQuery)) {
     array_walk($aQuery, 'core\poner_empty_on_null');
 }
-$url_lista_com_ctr_sf = web\Hash::link('apps/encargossacd/controller/listas_com_ctr.php?' . http_build_query($aQuery));
+$url_lista_com_ctr_sf = Hash::link('apps/encargossacd/controller/listas_com_ctr.php?' . http_build_query($aQuery));
 
-$url_lista_com_txt = web\Hash::link('apps/encargossacd/controller/listas_com_txt.php');
+$url_lista_com_txt = Hash::link('apps/encargossacd/controller/listas_com_txt.php');
 
 
 $a_campos = ['oPosicion' => $oPosicion,
@@ -114,5 +115,5 @@ $a_campos = ['oPosicion' => $oPosicion,
     'url_lista_com_txt' => $url_lista_com_txt,
 ];
 
-$oView = new core\ViewTwig('encargossacd/controller');
+$oView = new ViewTwig('encargossacd/controller');
 $oView->renderizar('listas_index.html.twig', $a_campos);

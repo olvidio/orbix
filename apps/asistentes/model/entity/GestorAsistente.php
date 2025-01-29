@@ -1,11 +1,12 @@
 <?php
 namespace asistentes\model\entity;
 
-use core;
-use web;
-use actividades\model\entity as actividades;
-use personas\model\entity as personas;
+use actividades\model\entity\Actividad;
+use actividades\model\entity\GestorActividad;
+use core\ClaseGestor;
 use core\ConfigGlobal;
+use personas\model\entity\Persona;
+use web\Desplegable;
 
 /**
  * GestorAsistente
@@ -18,7 +19,7 @@ use core\ConfigGlobal;
  * @version 1.0
  * @created 11/03/2014
  */
-class GestorAsistente extends core\ClaseGestor
+class GestorAsistente extends ClaseGestor
 {
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
@@ -41,7 +42,7 @@ class GestorAsistente extends core\ClaseGestor
      * retorna un objecte del tipus Desplegable
      * Les posibles asignatures
      *
-     * @return object del tipus Desplegable
+     * @return array|object
      */
     function getOpcionesPosiblesPlaza()
     {
@@ -62,7 +63,7 @@ class GestorAsistente extends core\ClaseGestor
     function getPosiblesPlaza()
     {
         $aOpciones = $this->getOpcionesPosiblesPlaza();
-        return new web\Desplegable('', $aOpciones, '', true);
+        return new Desplegable('', $aOpciones, '', true);
     }
 
     /*
@@ -92,7 +93,7 @@ class GestorAsistente extends core\ClaseGestor
         $namespace = __NAMESPACE__;
         $cAsistencias = $this->getConjunt($a_Clases, $namespace, $aWhereNom, $aOperadorNom);
         // seleccionar las actividades segun los criterios de búsqueda.
-        $GesActividades = new actividades\GestorActividad();
+        $GesActividades = new GestorActividad();
         $aListaIds = $GesActividades->getArrayIds($aWhere, $aOperators);
 
         return $this->arreglarAsistencias($cAsistencias, $aListaIds, $reverse);
@@ -112,7 +113,7 @@ class GestorAsistente extends core\ClaseGestor
             }
             if (in_array($id_activ, $aListaIds)) {
                 $i++;
-                $oActividad = new actividades\Actividad($id_activ);
+                $oActividad = new Actividad($id_activ);
                 $oF_ini = $oActividad->getF_ini();
                 $f_ini_iso = $oF_ini->format('Y-m-d') . '#' . $i; // Añado $i por si empezan el mismo dia.
                 $oAsistente->DBCarregar();
@@ -138,9 +139,9 @@ class GestorAsistente extends core\ClaseGestor
      */
     function getPlazasOcupadasPorDl($iid_activ, $sdl = '', $dl_hub = '')
     {
-        $mi_dele = core\ConfigGlobal::mi_delef();
+        $mi_dele = ConfigGlobal::mi_delef();
         /* Mirar si la actividad es mia o no */
-        $oActividad = new actividades\Actividad($iid_activ);
+        $oActividad = new Actividad($iid_activ);
         $dl_org = $oActividad->getDl_org();
         $id_tabla = $oActividad->getId_tabla();
         $aWhere['id_activ'] = $iid_activ;
@@ -189,7 +190,7 @@ class GestorAsistente extends core\ClaseGestor
             //if ($sdl != $mi_dele) {
             if (!empty($dl_hub) && $dl_hub != $padre) continue;
             if ($sdl != $child) continue;
-            $oPersona = personas\Persona::NewPersona($id_nom);
+            $oPersona = Persona::NewPersona($id_nom);
             if (!is_object($oPersona)) {
                 $msg_err .= "<br>$oPersona con id_nom: $id_nom en  " . __FILE__ . ": line " . __LINE__;
                 $msg_err .= "<br>" . _("borro la asistencia");
@@ -229,7 +230,7 @@ class GestorAsistente extends core\ClaseGestor
         */
 
         /* Mirar si la actividad es mia o no */
-        $oActividad = new actividades\Actividad($iid_activ);
+        $oActividad = new Actividad($iid_activ);
         $id_tabla = $oActividad->getId_tabla();
         // si es de la sf quito la 'f'
         $dl = preg_replace('/f$/', '', $oActividad->getDl_org());
@@ -238,14 +239,14 @@ class GestorAsistente extends core\ClaseGestor
         $aOperators = array();
 
         $msg_err = '';
-        if ($dl == core\ConfigGlobal::mi_delef()) {
+        if ($dl == ConfigGlobal::mi_delef()) {
             // Todos los asistentes
             /* Buscar en los tres tipos de asistente: Dl, IN y Out. */
             $a_Clases[] = array('clase' => 'AsistenteDl', 'get' => 'getAsistentesDl');
             $a_Clases[] = array('clase' => 'AsistenteIn', 'get' => 'getAsistentesIn');
             $a_Clases[] = array('clase' => 'AsistenteOut', 'get' => 'getAsistentesOut');
         } else {
-            if ($id_tabla == 'dl') {
+            if ($id_tabla === 'dl') {
                 $a_Clases[] = array('clase' => 'AsistenteOut', 'get' => 'getAsistentesOut');
             } else {
                 $a_Clases[] = array('clase' => 'AsistenteOut', 'get' => 'getAsistentesOut');
@@ -258,7 +259,7 @@ class GestorAsistente extends core\ClaseGestor
         $cAsistentesOk = array();
         foreach ($cAsistentes as $oAsistente) {
             $id_nom = $oAsistente->getId_nom();
-            $oPersona = personas\Persona::NewPersona($id_nom);
+            $oPersona = Persona::NewPersona($id_nom);
             if (!is_object($oPersona)) {
                 $msg_err .= "<br>$oPersona con id_nom: $id_nom en  " . __FILE__ . ": line " . __LINE__;
                 continue;
@@ -284,11 +285,11 @@ class GestorAsistente extends core\ClaseGestor
     {
         /* Mirar si la actividad es mia o no */
         $iid_activ = $aWhere['id_activ'];
-        $oActividad = new actividades\Actividad($iid_activ);
+        $oActividad = new Actividad($iid_activ);
         // si es de la sf quito la 'f'
         $dl = preg_replace('/f$/', '', $oActividad->getDl_org());
         $id_tabla = $oActividad->getId_tabla();
-        if ($dl == core\ConfigGlobal::mi_delef()) {
+        if ($dl == ConfigGlobal::mi_delef()) {
             // Todos los asistentes
             /* Buscar en los tres tipos de asistente: Dl, IN y Out. */
             $a_Clases[] = array('clase' => 'AsistenteDl', 'get' => 'getAsistentesDl');

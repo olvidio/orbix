@@ -45,7 +45,7 @@ class GestorCargoOAsistente
      * retorna l'array d'objectes tipus CargoOAsistente
      *
      * @param integer id_nom
-     * @return array Una col·lecció d'objectes de tipus CargoOAsistente
+     * @return array|false
      */
     function getCargoOAsistente($iid_nom)
     {

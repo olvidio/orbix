@@ -2,7 +2,9 @@
 
 namespace actividadplazas\model\entity;
 
-use core;
+use core\ClasePropiedades;
+use core\DatosCampo;
+use core\Set;
 
 /**
  * Fitxer amb la Classe que accedeix a la taula da_plazas
@@ -23,7 +25,7 @@ use core;
  * @version 1.0
  * @created 09/11/2016
  */
-class ActividadPlazas extends core\ClasePropiedades
+class ActividadPlazas extends ClasePropiedades
 {
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
@@ -119,9 +121,9 @@ class ActividadPlazas extends core\ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'id_activ') && $val_id !== '') $this->iid_activ = (int)$val_id; 
-                if (($nom_id == 'id_dl') && $val_id !== '') $this->iid_dl = (int)$val_id; 
-                if (($nom_id == 'dl_tabla') && $val_id !== '') $this->sdl_tabla = (string)$val_id; // evitem SQL injection fent cast a string
+                if (($nom_id === 'id_activ') && $val_id !== '') $this->iid_activ = (int)$val_id;
+                if (($nom_id === 'id_dl') && $val_id !== '') $this->iid_dl = (int)$val_id;
+                if (($nom_id === 'dl_tabla') && $val_id !== '') $this->sdl_tabla = (string)$val_id; // evitem SQL injection fent cast a string
             }
         }
         $this->setoDbl($oDbl);
@@ -258,7 +260,7 @@ class ActividadPlazas extends core\ClasePropiedades
      *
      * @param array $aDades
      */
-    function setAllAtributes($aDades)
+    function setAllAtributes(array $aDades)
     {
         if (!is_array($aDades)) return;
         if (array_key_exists('id_schema', $aDades)) $this->setId_schema($aDades['id_schema']);
@@ -326,9 +328,9 @@ class ActividadPlazas extends core\ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'id_activ') && $val_id !== '') $this->iid_activ = (int)$val_id; 
-                if (($nom_id == 'id_dl') && $val_id !== '') $this->iid_dl = (int)$val_id; 
-                if (($nom_id == 'dl_tabla') && $val_id !== '') $this->sdl_tabla = $val_id;
+                if (($nom_id === 'id_activ') && $val_id !== '') $this->iid_activ = (int)$val_id;
+                if (($nom_id === 'id_dl') && $val_id !== '') $this->iid_dl = (int)$val_id;
+                if (($nom_id === 'dl_tabla') && $val_id !== '') $this->sdl_tabla = $val_id;
             }
         }
     }
@@ -464,7 +466,7 @@ class ActividadPlazas extends core\ClasePropiedades
     /**
      * Establece el valor del atributo ocedidas de actividadPlazas
      *
-     * @param json ocedidas='' optional
+     * @param object json ocedidas='' optional
      */
     function setCedidas($ocedidas = '')
     {
@@ -478,7 +480,7 @@ class ActividadPlazas extends core\ClasePropiedades
      */
     function getDatosCampos()
     {
-        $oactividadPlazasSet = new core\Set();
+        $oactividadPlazasSet = new Set();
 
         $oactividadPlazasSet->add($this->getDatosId_schema());
         $oactividadPlazasSet->add($this->getDatosPlazas());
@@ -491,12 +493,12 @@ class ActividadPlazas extends core\ClasePropiedades
      * Recupera les propietats de l'atribut iid_schema de actividadPlazas
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosId_schema()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_schema'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_schema'));
         $oDatosCampo->setEtiqueta(_("id_schema"));
         return $oDatosCampo;
     }
@@ -505,12 +507,12 @@ class ActividadPlazas extends core\ClasePropiedades
      * Recupera les propietats de l'atribut iplazas de actividadPlazas
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosPlazas()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'plazas'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'plazas'));
         $oDatosCampo->setEtiqueta(_("plazas"));
         return $oDatosCampo;
     }
@@ -519,12 +521,12 @@ class ActividadPlazas extends core\ClasePropiedades
      * Recupera les propietats de l'atribut scl de actividadPlazas
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosCl()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'cl'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'cl'));
         $oDatosCampo->setEtiqueta(_("cl"));
         return $oDatosCampo;
     }

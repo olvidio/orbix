@@ -2,11 +2,13 @@
 
 namespace actividades\model\entity;
 
+use core\ClaseGestor;
+use core\Condicion;
 use core\ConfigGlobal;
-use function core\is_true;
-use core;
+use core\Set;
 use web\Desplegable;
 use web\TiposActividades;
+use function core\is_true;
 
 /**
  * GestorTipoDeActividad
@@ -19,7 +21,7 @@ use web\TiposActividades;
  * @version 1.0
  * @created 09/11/2018
  */
-class GestorTipoDeActividad extends core\ClaseGestor
+class GestorTipoDeActividad extends ClaseGestor
 {
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
@@ -43,9 +45,9 @@ class GestorTipoDeActividad extends core\ClaseGestor
      * obtener una lista de los tipos de actividad, para el dossier de históricos.
      *
      * @param string $sid_tipo_activ
-     * @return boolean[]
+     * @return boolean[]|Desplegable
      */
-    public function getListaTiposActividad($sid_tipo_activ = '......')
+    public function getListaTiposActividad(string $sid_tipo_activ = '......')
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
@@ -71,7 +73,7 @@ class GestorTipoDeActividad extends core\ClaseGestor
      * @param string sid_tipo_activ
      * @param boolean dl_propia
      * @param string ssfsv ( '',1,2,all)
-     * @return array Una llista de id_tipo_proceso
+     * @return array|false
      */
     function getTiposDeProcesos($sid_tipo_activ = '......', $bdl_propia = true, $sfsv = '')
     {
@@ -183,11 +185,11 @@ class GestorTipoDeActividad extends core\ClaseGestor
     /**
      *
      * @param integer $num_digitos Número de digitos que se toman (1 o 2)
-     * @param string $aText
+     * @param array $aText
      * @param string $expr_txt
      * @return string[]
      */
-    public function getActividadesPosibles($num_digitos, $aText, $expr_txt)
+    public function getActividadesPosibles(int $num_digitos, array $aText, string $expr_txt)
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
@@ -218,12 +220,12 @@ class GestorTipoDeActividad extends core\ClaseGestor
      * retorna l'array d'objectes de tipus TipoDeActividad
      *
      * @param string sQuery la query a executar.
-     * @return array Una col·lecció d'objectes de tipus TipoDeActividad
+     * @return array|false
      */
     function getTiposDeActividadesQuery($sQuery = '')
     {
         $oDbl = $this->getoDbl();
-        $oTipoDeActividadSet = new core\Set();
+        $oTipoDeActividadSet = new Set();
         if (($oDbl->query($sQuery)) === false) {
             $sClauError = 'GestorTipoDeActividad.query';
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
@@ -242,23 +244,23 @@ class GestorTipoDeActividad extends core\ClaseGestor
      *
      * @param array aWhere associatiu amb els valors de les variables amb les quals farem la query
      * @param array aOperators associatiu amb els valors dels operadors que cal aplicar a cada variable
-     * @return array Una col·lecció d'objectes de tipus TipoDeActividad
+     * @return array|void
      */
     function getTiposDeActividades($aWhere = array(), $aOperators = array())
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
-        $oTipoDeActividadSet = new core\Set();
-        $oCondicion = new core\Condicion();
+        $oTipoDeActividadSet = new Set();
+        $oCondicion = new Condicion();
         $aCondi = array();
         foreach ($aWhere as $camp => $val) {
-            if ($camp == '_ordre') continue;
+            if ($camp === '_ordre') continue;
             $sOperador = isset($aOperators[$camp]) ? $aOperators[$camp] : '';
             if ($a = $oCondicion->getCondicion($camp, $sOperador, $val)) $aCondi[] = $a;
             // operadores que no requieren valores
-            if ($sOperador == 'BETWEEN' || $sOperador == 'IS NULL' || $sOperador == 'IS NOT NULL' || $sOperador == 'OR') unset($aWhere[$camp]);
-            if ($sOperador == 'IN' || $sOperador == 'NOT IN') unset($aWhere[$camp]);
-            if ($sOperador == 'TXT') unset($aWhere[$camp]);
+            if ($sOperador === 'BETWEEN' || $sOperador === 'IS NULL' || $sOperador === 'IS NOT NULL' || $sOperador === 'OR') unset($aWhere[$camp]);
+            if ($sOperador === 'IN' || $sOperador === 'NOT IN') unset($aWhere[$camp]);
+            if ($sOperador === 'TXT') unset($aWhere[$camp]);
         }
         $sCondi = implode(' AND ', $aCondi);
         if ($sCondi != '') $sCondi = " WHERE " . $sCondi;

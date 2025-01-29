@@ -1,6 +1,9 @@
 <?php
 
-use menus\model\entity as menus;
+use core\ConfigGlobal;
+use core\ViewPhtml;
+use menus\model\entity\GestorGrupMenu;
+use web\Hash;
 
 // INICIO Cabecera global de URL de controlador *********************************
 require_once("apps/core/global_header.inc");
@@ -14,15 +17,15 @@ $oPosicion->recordar();
 
 $Qfiltro_grupo = (string)filter_input(INPUT_POST, 'filtro_grupo');
 
-$oLista = new menus\GestorGrupMenu();
+$oLista = new GestorGrupMenu();
 
 $oDespl = $oLista->getListaMenus();
 $oDespl->setOpcion_sel($Qfiltro_grupo);
 $oDespl->setAction('fnjs_lista_menus()');
 $oDespl->setNombre('filtro_grupo');
 
-$url = core\ConfigGlobal::getWeb() . '/apps/menus/controller/menus_get.php';
-$oHash1 = new web\Hash();
+$url = ConfigGlobal::getWeb() . '/apps/menus/controller/menus_get.php';
+$oHash1 = new Hash();
 $oHash1->setUrl($url);
 $oHash1->setCamposForm('filtro_grupo');
 $h1 = $oHash1->linkSinVal();
@@ -32,5 +35,5 @@ $a_campos = ['url' => $url,
     'oDespl' => $oDespl,
 ];
 
-$oView = new core\View('menus/controller');
+$oView = new ViewPhtml('menus/controller');
 $oView->renderizar('menus_que.phtml', $a_campos);

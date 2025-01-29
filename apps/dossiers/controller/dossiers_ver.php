@@ -5,6 +5,7 @@ use core\ConfigGlobal;
 use dossiers\model\entity\TipoDossier;
 use personas\model\entity\Persona;
 use web\Hash;
+use web\Lista;
 use web\Posicion;
 
 /**
@@ -159,7 +160,7 @@ switch ($pau) {
         // según de donde venga, debo volver al mismo sitio...
         if (!empty($_SESSION['session_go_to']['sel']['pag'])) {
             $pag = $_SESSION['session_go_to']['sel']['pag']; //=>"lista_actividades_sg.php",
-            $dir = $_SESSION['session_go_to']['sel']['dir_pag']; //=>core\ConfigGlobal::$directorio."/sg",
+            $dir = $_SESSION['session_go_to']['sel']['dir_pag']; //=>ConfigGlobal::$directorio."/sg",
             $dir = str_replace(ConfigGlobal::$directorio,'',$dir);
             $form_action=Hash::link(ConfigGlobal::getWeb()."$dir/$pag");
         } else {
@@ -275,10 +276,10 @@ if (empty($Qid_dossier)) { // enseña la lista de dossiers.
             );
             $aQuery['obj_pau'] = $Qobj_pau;
             $sQuery = http_build_query($aQuery);
-            $Qgo_to = web\Hash::link(core\ConfigGlobal::getWeb() . "/apps/dossiers/controller/dossiers_ver.php?$sQuery");
+            $Qgo_to = Hash::link(ConfigGlobal::getWeb() . "/apps/dossiers/controller/dossiers_ver.php?$sQuery");
             $oDatosTabla->setAction_tabla($Qgo_to);
 
-            $oHashSelect = new web\Hash();
+            $oHashSelect = new Hash();
             $oHashSelect->setCamposForm('mod');
             $oHashSelect->setCamposNo('sel!mod!scroll_id!refresh');
             $a_camposHidden = array(
@@ -300,7 +301,7 @@ if (empty($Qid_dossier)) { // enseña la lista de dossiers.
             $html .= $oHashSelect->getCamposHtml();
             $html .= "<input type='hidden' id='mod' name='mod' value=''>";
 
-            $oTabla = new web\Lista();
+            $oTabla = new Lista();
             $oTabla->setId_tabla('datos_sql' . $id_dossier);
             $oTabla->setCabeceras($oDatosTabla->getCabeceras());
             $oTabla->setBotones($oDatosTabla->getBotones());

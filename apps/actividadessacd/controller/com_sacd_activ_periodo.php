@@ -1,9 +1,9 @@
 <?php
 
-use function core\strtoupper_dlb;
+use core\ConfigGlobal;
+use core\ViewTwig;
 use web\Hash;
 use web\PeriodoQue;
-use core\ConfigGlobal;
 use usuarios\model\entity\Usuario;
 
 /**
@@ -103,5 +103,5 @@ $a_campos = ['oPosicion' => $oPosicion,
     'url_com_txt' => $url_com_txt,
 ];
 
-$oView = new core\ViewTwig('actividadessacd/controller');
+$oView = new ViewTwig('actividadessacd/controller');
 $oView->renderizar('com_sacd_activ_periodo.html.twig', $a_campos);

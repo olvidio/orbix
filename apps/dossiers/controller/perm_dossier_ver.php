@@ -1,8 +1,11 @@
 <?php
 
-use function core\is_true;
-use dossiers\model\PermisoDossier;
+use core\ConfigGlobal;
+use core\ViewPhtml;
 use dossiers\model\entity\TipoDossier;
+use dossiers\model\PermisoDossier;
+use web\Hash;
+use function core\is_true;
 
 /**
  * Página de visualización de los permisos de los dossiers
@@ -30,7 +33,7 @@ $Qtipo = (string)filter_input(INPUT_POST, 'tipo');
 $Qid_tipo_dossier = (integer)filter_input(INPUT_POST, 'id_tipo_dossier');
 
 $a_dataUrl = array('tipo' => $Qtipo);
-$go_to = web\Hash::link(core\ConfigGlobal::getWeb() . '/apps/dossiers/controller/perm_dossiers.php?' . http_build_query($a_dataUrl));
+$go_to = Hash::link(ConfigGlobal::getWeb() . '/apps/dossiers/controller/perm_dossiers.php?' . http_build_query($a_dataUrl));
 
 $url_update = "apps/dossiers/controller/perm_dossier_update.php";
 
@@ -53,7 +56,7 @@ $oCuadros = new PermisoDossier();
 $chk = (is_true($depende_modificar)) ? 'checked' : '';
 $campos_chk = 'depende_modificar!permiso_lectura!permiso_escritura';
 
-$oHash = new web\Hash();
+$oHash = new Hash();
 $oHash->setCamposForm('id_tipo_dossier!id_tipo_dossier_rel!tabla_from!tabla_to!campo_to!descripcion!app!class');
 $oHash->setcamposNo('que!' . $campos_chk);
 $a_camposHidden = array(
@@ -85,5 +88,5 @@ $a_campos = [
     'go_to' => $go_to,
 ];
 
-$oView = new core\View('dossiers\controller');
+$oView = new ViewPhtml('dossiers\controller');
 $oView->renderizar('perm_dossier_pres.phtml', $a_campos);

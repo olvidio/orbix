@@ -2,11 +2,11 @@
 
 namespace zonassacd\model;
 
-use core;
-
 /* No vale el underscore en el nombre */
 
-class InfoZonaGrupo extends core\DatosInfo
+use core\DatosInfo;
+
+class InfoZonaGrupo extends DatosInfo
 {
 
     public function __construct()

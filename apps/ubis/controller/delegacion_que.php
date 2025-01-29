@@ -1,5 +1,6 @@
 <?php
 
+use core\ViewTwig;
 use ubis\model\entity\GestorDelegacion;
 
 // INICIO Cabecera global de URL de controlador *********************************
@@ -22,5 +23,5 @@ $a_campos = [
     'oDesplDelegaciones' => $oDesplDelegaciones,
 ];
 
-$oView = new core\ViewTwig('ubis/controller');
+$oView = new ViewTwig('ubis/controller');
 $oView->renderizar('delegaciones.html.twig', $a_campos);

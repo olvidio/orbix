@@ -2,11 +2,12 @@
 
 namespace ubis\model;
 
-use core;
 
 /* No vale el underscore en el nombre */
 
-class InfoDelegaciones extends core\DatosInfo
+use core\DatosInfo;
+
+class InfoDelegaciones extends DatosInfo
 {
 
     public function __construct()

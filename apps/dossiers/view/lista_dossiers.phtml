@@ -1,3 +1,8 @@
+<?php
+
+use core\ConfigGlobal;
+
+?>
 <table border="1" aria-describedby="relación de dossiers">
     <tr>
         <th scope="col" colspan=2>
@@ -5,9 +10,9 @@
         </th>
     </tr>
     <?php
-    $pencil = core\ConfigGlobal::getWeb_icons() . '/pencil.png';
-    $eye = core\ConfigGlobal::getWeb_icons() . '/eye.png';
-    $deny = core\ConfigGlobal::getWeb_icons() . '/deny.png';
+    $pencil = ConfigGlobal::getWeb_icons() . '/pencil.png';
+    $eye = ConfigGlobal::getWeb_icons() . '/eye.png';
+    $deny = ConfigGlobal::getWeb_icons() . '/deny.png';
     foreach ($a_filas as $fila) {
         ?>
         <tr class="<?= $fila['clase'] ?>">

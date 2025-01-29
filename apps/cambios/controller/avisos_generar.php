@@ -6,11 +6,12 @@ use cambios\model\entity\CambioUsuario;
 use cambios\model\entity\CambioUsuarioObjetoPref;
 use cambios\model\entity\GestorCambioUsuario;
 use core\ConfigGlobal;
-use menus\model\PermisoMenu;
+use core\ViewTwig;
+use web\Desplegable;
+use web\Hash;
+use web\Lista;
 use usuarios\model\entity\GestorUsuario;
 use usuarios\model\entity\Usuario;
-use web\Desplegable;
-use web\Lista;
 
 // INICIO Cabecera global de URL de controlador *********************************
 
@@ -136,7 +137,7 @@ if (!empty($Qid_usuario)) {
     $oTabla->setDatos($a_valores);
 
     $stack = $oPosicion->getStack();
-    $oHash = new web\Hash();
+    $oHash = new Hash();
     $oHash->setArrayCamposHidden(['que' => 'eliminar',
         'id_usuario' => $Qid_usuario,
         'aviso_tipo' => $Qaviso_tipo,
@@ -152,7 +153,7 @@ if (!empty($Qid_usuario)) {
 
 } else {
     $stack = $oPosicion->getStack();
-    $oHashCond = new web\Hash();
+    $oHashCond = new Hash();
     $oHashCond->setArrayCamposHidden(['Gstack' => $stack]);
     $oHashCond->setCamposForm("id_usuario!aviso_tipo");
 
@@ -163,9 +164,9 @@ if (!empty($Qid_usuario)) {
         'oDesplTiposAviso' => $oDesplTiposAviso,
     ];
 
-    $oView = new core\ViewTwig('cambios/controller');
+    $oView = new ViewTwig('cambios/controller');
     $oView->renderizar('avisos_generar_condicion.html.twig', $a_camposCond);
 }
 
-$oView = new core\ViewTwig('cambios/controller');
+$oView = new ViewTwig('cambios/controller');
 $oView->renderizar('avisos_generar_lista.html.twig', $a_campos);

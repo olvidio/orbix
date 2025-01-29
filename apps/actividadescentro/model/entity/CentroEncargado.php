@@ -3,7 +3,11 @@
 namespace actividadescentro\model\entity;
 
 use cambios\model\GestorAvisoCambios;
-use core;
+use core\ClasePropiedades;
+use core\ConfigGlobal;
+use core\DatosCampo;
+use core\Set;
+use ReflectionClass;
 
 /**
  * Fitxer amb la Classe que accedeix a la taula da_ctr_encargados
@@ -24,7 +28,7 @@ use core;
  * @version 1.0
  * @created 07/01/2019
  */
-class CentroEncargado extends core\ClasePropiedades
+class CentroEncargado extends ClasePropiedades
 {
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
@@ -110,8 +114,8 @@ class CentroEncargado extends core\ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'id_activ') && $val_id !== '') $this->iid_activ = (int)$val_id; 
-                if (($nom_id == 'id_ubi') && $val_id !== '') $this->iid_ubi = (int)$val_id; 
+                if (($nom_id === 'id_activ') && $val_id !== '') $this->iid_activ = (int)$val_id;
+                if (($nom_id === 'id_ubi') && $val_id !== '') $this->iid_ubi = (int)$val_id;
             }
         }
         $this->setoDbl($oDbl);
@@ -162,9 +166,9 @@ class CentroEncargado extends core\ClasePropiedades
                 }
             }
             // Anoto el cambio
-            if (empty($quiet) && core\ConfigGlobal::is_app_installed('cambios')) {
+            if (empty($quiet) && ConfigGlobal::is_app_installed('cambios')) {
                 $oGestorCanvis = new GestorAvisoCambios();
-                $shortClassName = (new \ReflectionClass($this))->getShortName();
+                $shortClassName = (new ReflectionClass($this))->getShortName();
                 $oGestorCanvis->addCanvi($shortClassName, 'UPDATE', $this->iid_activ, $aDades, $this->aDadesActuals);
             }
             $this->setAllAtributes($aDades);
@@ -197,9 +201,9 @@ class CentroEncargado extends core\ClasePropiedades
             $this->aDades = $aDadesLast;
             $this->setAllAtributes($aDadesLast);
             // Anoto el cambio
-            if (empty($quiet) && core\ConfigGlobal::is_app_installed('cambios')) {
+            if (empty($quiet) && ConfigGlobal::is_app_installed('cambios')) {
                 $oGestorCanvis = new GestorAvisoCambios();
-                $shortClassName = (new \ReflectionClass($this))->getShortName();
+                $shortClassName = (new ReflectionClass($this))->getShortName();
                 $oGestorCanvis->addCanvi($shortClassName, 'INSERT', $aDadesLast['id_activ'], $this->aDades, array());
             }
         }
@@ -254,12 +258,12 @@ class CentroEncargado extends core\ClasePropiedades
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         // que tenga el módulo de 'cambios'
-        if (core\ConfigGlobal::is_app_installed('cambios')) {
+        if (ConfigGlobal::is_app_installed('cambios')) {
             // per carregar les dades a $this->aDadesActuals i poder posar-les als canvis.
             $this->DBCarregar('guardar');
             // ho poso abans d'esborrar perque sino no trova cap valor. En el cas d'error s'hauria d'esborrar l'apunt.
             $oGestorCanvis = new GestorAvisoCambios();
-            $shortClassName = (new \ReflectionClass($this))->getShortName();
+            $shortClassName = (new ReflectionClass($this))->getShortName();
             $oGestorCanvis->addCanvi($shortClassName, 'DELETE', $this->iid_activ, [], $this->aDadesActuals);
         }
         if (($oDbl->exec("DELETE FROM $nom_tabla WHERE id_activ='$this->iid_activ' AND id_ubi='$this->iid_ubi'")) === FALSE) {
@@ -278,7 +282,7 @@ class CentroEncargado extends core\ClasePropiedades
      *
      * @param array $aDades
      */
-    function setAllAtributes($aDades)
+    function setAllAtributes(array $aDades)
     {
         if (!is_array($aDades)) return;
         if (array_key_exists('id_activ', $aDades)) $this->setId_activ($aDades['id_activ']);
@@ -340,8 +344,8 @@ class CentroEncargado extends core\ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'id_activ') && $val_id !== '') $this->iid_activ = (int)$val_id; 
-                if (($nom_id == 'id_ubi') && $val_id !== '') $this->iid_ubi = (int)$val_id; 
+                if (($nom_id === 'id_activ') && $val_id !== '') $this->iid_activ = (int)$val_id;
+                if (($nom_id === 'id_ubi') && $val_id !== '') $this->iid_ubi = (int)$val_id;
             }
         }
     }
@@ -445,7 +449,7 @@ class CentroEncargado extends core\ClasePropiedades
      */
     function getDatosCampos()
     {
-        $oCentroEncargadoSet = new core\Set();
+        $oCentroEncargadoSet = new Set();
 
         $oCentroEncargadoSet->add($this->getDatosId_ubi());
         $oCentroEncargadoSet->add($this->getDatosNum_orden());
@@ -458,12 +462,12 @@ class CentroEncargado extends core\ClasePropiedades
      * Recupera les propietats de l'atribut iid_ubi de CentroEncargado
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosId_ubi()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_ubi'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_ubi'));
         $oDatosCampo->setEtiqueta(_("centro"));
         $oDatosCampo->setTipo('opciones');
         $oDatosCampo->setArgument('ubis\model\entity\CentroDl'); // nombre del objeto relacionado
@@ -477,12 +481,12 @@ class CentroEncargado extends core\ClasePropiedades
      * Recupera les propietats de l'atribut inum_orden de CentroEncargado
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosNum_orden()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'num_orden'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'num_orden'));
         $oDatosCampo->setEtiqueta(_("número de orden"));
         $oDatosCampo->setTipo('texto');
         $oDatosCampo->setArgument(3);
@@ -493,12 +497,12 @@ class CentroEncargado extends core\ClasePropiedades
      * Recupera les propietats de l'atribut sencargo de CentroEncargado
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosEncargo()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'encargo'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'encargo'));
         $oDatosCampo->setEtiqueta(_("encargo"));
         $oDatosCampo->setTipo('texto');
         $oDatosCampo->setArgument(30);

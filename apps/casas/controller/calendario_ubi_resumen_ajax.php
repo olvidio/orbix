@@ -4,12 +4,12 @@ use actividades\model\entity\GestorActividad;
 use actividadtarifas\model\entity\GestorTipoTarifa;
 use casas\model\entity\GestorUbiGasto;
 use casas\model\entity\Ingreso;
+use web\DateTimeLocal;
+use web\Hash;
+use web\TiposActividades;
 use ubis\model\entity\CasaDl;
 use ubis\model\entity\GestorCasaPeriodo;
 use ubis\model\entity\GestorTarifaUbi;
-use ubis\model\entity\TarifaUbi;
-use web\TiposActividades;
-use web\DateTimeLocal;
 
 // INICIO Cabecera global de URL de controlador *********************************
 require_once("apps/core/global_header.inc");
@@ -107,7 +107,7 @@ if (empty($a_resumen[0]['gasto'])) {
     if (is_array($aQuery)) {
         array_walk($aQuery, 'core\poner_empty_on_null');
     }
-    $pagina = web\Hash::link('apps/casas/controller/casa_que.php?' . http_build_query($aQuery));
+    $pagina = Hash::link('apps/casas/controller/casa_que.php?' . http_build_query($aQuery));
 
     $link = "<span class=link onclick=\"fnjs_update_div('#main','$pagina');\">$any_anterior</span>";
 

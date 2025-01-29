@@ -2,6 +2,8 @@
 
 namespace core;
 
+use PDO;
+
 class DBConnection
 {
 
@@ -56,7 +58,7 @@ class DBConnection
         $dsn = 'pgsql:host=' . $host . ';port=' . $port . ';dbname=\'' . $dbname . '\';user=\'' . $user . '\';password=\'' . $password . '\';' . $str_conexio;
 
         $esquema = $this->config['schema'];
-        $oDB = new \PDO($dsn);
+        $oDB = new PDO($dsn);
         $oDB->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
         $oDB->exec("SET search_path TO \"$esquema\"");
         /* le paso la gestión a la clase web\datetimelocal */
@@ -110,12 +112,12 @@ class DBConnection
 
         // con odbc:
         //$str_conexio = $config['driver'] . ":" . $config['dbname'];
-        //$oDB = new \PDO($str_conexio, $config['user'], $config['password'], array(\PDO::ATTR_ERRMODE => \PDO::ERRMODE_WARNING, \PDO::ATTR_TIMEOUT => 3));
+        //$oDB = new PDO($str_conexio, $config['user'], $config['password'], array(\PDO::ATTR_ERRMODE => \PDO::ERRMODE_WARNING, \PDO::ATTR_TIMEOUT => 3));
 
         // con sqlsrv
         // A partir del driver 18, poner: Encrypt = no;
         $options = ['LoginTimeout' => 3];
-        $oDB = new \PDO("sqlsrv:server = " . $config['host'] . "; Database = " . $config['dbname'] . "; Encrypt = no;", $config['user'], $config['password'],  $options);
+        $oDB = new PDO("sqlsrv:server = " . $config['host'] . "; Database = " . $config['dbname'] . "; Encrypt = no;", $config['user'], $config['password'],  $options);
 
         return $oDB;
     }

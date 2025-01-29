@@ -1,7 +1,10 @@
 <?php
 namespace profesores\model\entity;
 
-use core;
+use core\ClasePropiedades;
+use core\DatosCampo;
+use core\Set;
+use function core\is_true;
 
 /**
  * Fitxer amb la Classe que accedeix a la taula d_profesor_latin
@@ -22,7 +25,7 @@ use core;
  * @version 1.0
  * @created 08/04/2014
  */
-class ProfesorLatin extends core\ClasePropiedades
+class ProfesorLatin extends ClasePropiedades
 {
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
@@ -88,7 +91,7 @@ class ProfesorLatin extends core\ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'id_nom') && $val_id !== '') $this->iid_nom = (int)$val_id; 
+                if (($nom_id === 'id_nom') && $val_id !== '') $this->iid_nom = (int)$val_id;
             }
         } else {
             if (isset($a_id) && $a_id !== '') {
@@ -120,7 +123,7 @@ class ProfesorLatin extends core\ClasePropiedades
         $aDades['latin'] = $this->blatin;
         array_walk($aDades, 'core\poner_null');
         //para el caso de los boolean FALSE, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
-        if (core\is_true($aDades['latin'])) {
+        if (is_true($aDades['latin'])) {
             $aDades['latin'] = 'true';
         } else {
             $aDades['latin'] = 'false';
@@ -232,7 +235,7 @@ class ProfesorLatin extends core\ClasePropiedades
      *
      * @param array $aDades
      */
-    function setAllAtributes($aDades)
+    function setAllAtributes(array $aDades)
     {
         if (!is_array($aDades)) return;
         if (array_key_exists('id_schema', $aDades)) $this->setId_schema($aDades['id_schema']);
@@ -292,7 +295,7 @@ class ProfesorLatin extends core\ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'id_nom') && $val_id !== '') $this->iid_nom = (int)$val_id; 
+                if (($nom_id === 'id_nom') && $val_id !== '') $this->iid_nom = (int)$val_id;
             }
         }
     }
@@ -350,7 +353,7 @@ class ProfesorLatin extends core\ClasePropiedades
      */
     function getDatosCampos()
     {
-        $oProfesorLatinSet = new core\Set();
+        $oProfesorLatinSet = new Set();
 
         $oProfesorLatinSet->add($this->getDatosLatin());
         return $oProfesorLatinSet->getTot();
@@ -361,12 +364,12 @@ class ProfesorLatin extends core\ClasePropiedades
      * Recupera les propietats de l'atribut blatin de ProfesorLatin
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosLatin()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'latin'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'latin'));
         $oDatosCampo->setEtiqueta(_("latín"));
         $oDatosCampo->setTipo('check');
         return $oDatosCampo;

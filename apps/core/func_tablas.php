@@ -112,6 +112,7 @@ function strsinacentocmp($str1, $str2): int
 
     $str1 = str_replace($acentos, $sin, $str1);
     $str2 = str_replace($acentos, $sin, $str2);
+
     return strnatcasecmp($str1, $str2);
 }
 

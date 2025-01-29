@@ -3,8 +3,8 @@
 namespace shared\infrastructure;
 
 use DateInterval;
-use shared\domain\repositories\ColaMailRepository;
 use web\DateTimeLocal;
+use shared\domain\repositories\ColaMailRepository;
 
 class consumirColaMail
 {

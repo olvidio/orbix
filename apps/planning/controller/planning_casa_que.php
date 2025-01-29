@@ -1,8 +1,13 @@
 <?php
 
 use core\ConfigGlobal;
-use usuarios\model\entity as usuarios;
+use core\ViewPhtml;
+use web\CasasQue;
+use web\Hash;
+use web\PeriodoQue;
 use web\Posicion;
+use usuarios\model\entity\Usuario;
+use function core\strtoupper_dlb;
 
 /**
  * Página que presentará los formularios de los distintos plannings
@@ -41,8 +46,8 @@ if (isset($_POST['stack'])) {
     }
 }
 
-$oMiUsuario = new usuarios\Usuario(core\ConfigGlobal::mi_id_usuario());
-$miSfsv = core\ConfigGlobal::mi_sfsv();
+$oMiUsuario = new Usuario(ConfigGlobal::mi_id_usuario());
+$miSfsv = ConfigGlobal::mi_sfsv();
 
 $mes = date('m');
 $fin_m = $_SESSION['oConfig']->getMesFinStgr();
@@ -51,6 +56,7 @@ if ($mes > $fin_m) {
 } else {
     $periodo_txt = sprintf(_("(por defecto: periodo desde 1/6 hasta 30/%s)"), $fin_m + 1);
 }
+$Qpropuesta_calendario = (string)filter_input(INPUT_POST, 'propuesta_calendario');
 $Qtipo = (string)filter_input(INPUT_POST, 'tipo');
 $Qobj_pau = (string)filter_input(INPUT_POST, 'obj_pau');
 $Qna = (string)filter_input(INPUT_POST, 'na');
@@ -58,7 +64,7 @@ $Qna = (string)filter_input(INPUT_POST, 'na');
 $Qsin_activ = (integer)filter_input(INPUT_POST, 'sin_activ');
 $chk_actividad_no = 'checked';
 $chk_actividad_si = '';
-if (!empty($Qsin_activ && $Qsin_activ === 1)) {
+if ($Qsin_activ === 1) {
     $chk_actividad_no = '';
     $chk_actividad_si = 'checked';
 }
@@ -71,7 +77,7 @@ $Qempiezamin = (string)filter_input(INPUT_POST, 'empiezamin');
 $QsSeleccionados = (string)filter_input(INPUT_POST, 'sSeleccionados');
 
 //personas
-$oHash = new web\Hash();
+$oHash = new Hash();
 $oHash->setCamposForm('nombre!apellido1!apellido2!centro!empiezamax!empiezamin!extendida!iactividad_val!iasistentes_val!periodo!year');
 $oHash->setcamposNo('modelo');
 $a_camposHidden = array(
@@ -81,7 +87,7 @@ $a_camposHidden = array(
 );
 $oHash->setArraycamposHidden($a_camposHidden);
 // centros
-$oHash1 = new web\Hash();
+$oHash1 = new Hash();
 $oHash1->setCamposForm('sacd!ctr!empiezamax!empiezamin!extendida!iactividad_val!iasistentes_val!periodo!year');
 $oHash1->setcamposNo('todos_n!todos_agd!todos_s!modelo');
 $a_camposHidden1 = array(
@@ -90,11 +96,12 @@ $a_camposHidden1 = array(
 );
 $oHash1->setArraycamposHidden($a_camposHidden1);
 //casas
-$oHash2 = new web\Hash();
+$oHash2 = new Hash();
 $oHash2->setCamposForm('cdc_sel!id_cdc_mas!id_cdc_num!empiezamax!empiezamin!iactividad_val!iasistentes_val!periodo!year');
 $oHash2->setcamposNo('id_cdc!sin_activ!modelo');
 $a_camposHidden2 = array(
     'tipo' => $Qtipo,
+    'propuesta_calendario' => $Qpropuesta_calendario,
     'obj_pau' => $Qobj_pau
 );
 $oHash2->setArraycamposHidden($a_camposHidden2);
@@ -108,9 +115,9 @@ $aOpciones = array(
     'separador' => '---------',
     'otro' => _("otro")
 );
-$oFormP = new web\PeriodoQue();
+$oFormP = new PeriodoQue();
 $oFormP->setFormName('que');
-$oFormP->setTitulo(core\strtoupper_dlb(_("periodo del planning actividades")));
+$oFormP->setTitulo(strtoupper_dlb(_("periodo del planning actividades")));
 $oFormP->setPosiblesPeriodos($aOpciones);
 $oFormP->setDesplPeriodosOpcion_sel($Qperiodo);
 if (empty($Qyear)) {
@@ -122,47 +129,44 @@ $oFormP->setEmpiezaMin($Qempiezamin);
 $oFormP->setEmpiezaMax($Qempiezamax);
 
 
-if ($Qtipo === 'planning_cdc') {
-    $oForm = new web\CasasQue();
-    $oForm->setTitulo(core\strtoupper_dlb(_("búsqueda de casas cuyo planning interesa")));
-    // miro que rol tengo. Si soy casa, sólo veo la mía
-    if ($oMiUsuario->isRolePau('cdc')) {
-        $id_pau = $oMiUsuario->getId_pau();
-        $sDonde = str_replace(",", " OR id_ubi=", $id_pau);
-        //formulario para casas cuyo calendario de actividades interesa 
-        $donde = "WHERE status='t' AND (id_ubi=$sDonde)";
-        $oForm->setCasas('casa');
+$oForm = new CasasQue();
+$oForm->setTitulo(strtoupper_dlb(_("búsqueda de casas cuyo planning interesa")));
+// miro que rol tengo. Si soy casa, sólo veo la mía
+if ($oMiUsuario->isRolePau('cdc')) {
+    $id_pau = $oMiUsuario->getId_pau(); //pueden ser varios separados por comas
+    //$sDonde = str_replace(",", " OR id_ubi=", $id_pau);
+    //$donde = "WHERE status='t' AND (id_ubi=$sDonde)";
+    //formulario para casas cuyo calendario de actividades interesa
+    $donde = "WHERE status='t' AND id_ubi IN ($id_pau)";
+    $oForm->setCasas('casa');
+} else {
+    if ($_SESSION['oPerm']->have_perm_oficina('des') || $_SESSION['oPerm']->have_perm_oficina('vcsd')) {
+        $oForm->setCasas('all');
+        $donde = "WHERE status='t'";
     } else {
-        if ($_SESSION['oPerm']->have_perm_oficina('des') || $_SESSION['oPerm']->have_perm_oficina('vcsd')) {
-            $oForm->setCasas('all');
-            $donde = "WHERE status='t'";
-        } else {
-            if ($miSfsv == 1) {
-                $oForm->setCasas('sv');
-                $donde = "WHERE status='t' AND sv='t'";
-            }
-            if ($miSfsv == 2) {
-                $oForm->setCasas('sf');
-                $donde = "WHERE status='t' AND sf='t'";
-            }
+        if ($miSfsv === 1) {
+            $oForm->setCasas('sv');
+            $donde = "WHERE status='t' AND sv='t'";
+        }
+        if ($miSfsv === 2) {
+            $oForm->setCasas('sf');
+            $donde = "WHERE status='t' AND sf='t'";
         }
     }
-    $oForm->setPosiblesCasas($donde);
-    $oForm->setCdcSel($Qcdc_sel);
-    $oForm->setSeleccionados($QsSeleccionados);
-
-    $a_campos = ['oPosicion' => $oPosicion,
-        'oHash2' => $oHash2,
-        'oFormP' => $oFormP,
-        'oForm' => $oForm,
-        'locale_us' => ConfigGlobal::is_locale_us(),
-        'chk_actividad_no' => $chk_actividad_no,
-        'chk_actividad_si' => $chk_actividad_si,
-    ];
-
-    $oView = new core\View('actividades/controller');
-    $oView->renderizar('planning_casa_que.phtml', $a_campos);
-} else {
-    $err_switch = sprintf(_("opción no definida en %s, linea %s"), __FILE__, __LINE__);
-    exit ($err_switch);
 }
+$oForm->setPosiblesCasas($donde);
+$oForm->setCdcSel($Qcdc_sel);
+$oForm->setSeleccionados($QsSeleccionados);
+
+$a_campos = ['oPosicion' => $oPosicion,
+    'propuesta_calendario' => $Qpropuesta_calendario,
+    'oHash2' => $oHash2,
+    'oFormP' => $oFormP,
+    'oForm' => $oForm,
+    'locale_us' => ConfigGlobal::is_locale_us(),
+    'chk_actividad_no' => $chk_actividad_no,
+    'chk_actividad_si' => $chk_actividad_si,
+];
+
+$oView = new ViewPhtml('planning/controller');
+$oView->renderizar('planning_casa_que.phtml', $a_campos);

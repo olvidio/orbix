@@ -7,17 +7,20 @@ use actividades\model\entity\GestorNivelStgr;
 use actividades\model\entity\GestorRepeticion;
 use actividadtarifas\model\entity\GestorTipoTarifa;
 use cambios\model\GestorAvisoCambios;
+use core\ClasePropiedades;
 use core\ConfigGlobal;
+use core\ConverterDate;
 use core\ConverterJson;
+use core\DatosCampo;
+use core\Set;
 use JsonException;
-use function core\is_true;
-use core;
-use stdClass;
 use personas\model\entity\PersonaSacd;
-use procesos\model\entity\GestorActividadFase;
-use ubis\model\entity\Ubi;
 use web\DateTimeLocal;
 use web\NullDateTimeLocal;
+use procesos\model\entity\GestorActividadFase;
+use stdClass;
+use ubis\model\entity\Ubi;
+use function core\is_true;
 
 /**
  * Fitxer amb la Classe que accedeix a la taula av_cambios
@@ -38,7 +41,7 @@ use web\NullDateTimeLocal;
  * @version 1.0
  * @created 17/4/2019
  */
-class Cambio extends core\ClasePropiedades
+class Cambio extends ClasePropiedades
 {
 
     //  tipo cambio constants.
@@ -300,7 +303,7 @@ class Cambio extends core\ClasePropiedades
                 }
             }
             $id_seq = $nom_tabla . "_id_item_cambio_seq";
-            $this->id_item_cambio = $oDbl->lastInsertId($id_seq);
+            $this->iid_item_cambio = $oDbl->lastInsertId($id_seq);
         }
         $this->setAllAtributes($aDades);
         // Creo que solo hay que disparar el generador de avisos en las dl que tengan el módulo.
@@ -684,7 +687,7 @@ class Cambio extends core\ClasePropiedades
      *
      * @param array $aDades
      */
-    function setAllAtributes($aDades, $convert = FALSE)
+    function setAllAtributes(array $aDades, $convert = FALSE)
     {
         if (!is_array($aDades)) return;
         if (array_key_exists('id_schema', $aDades)) $this->setId_schema($aDades['id_schema']);
@@ -896,7 +899,7 @@ class Cambio extends core\ClasePropiedades
      * @param boolean $bArray si hay que devolver un array en vez de un objeto.
      * @throws JsonException
      */
-    function getJson_fases_sf($bArray = FALSE): array|stdClass|null
+    function getJson_fases_sf(bool $bArray = FALSE): array|stdClass|null
     {
         if (!isset($this->json_fases_sf) && !$this->bLoaded) {
             $this->DBCarregar();
@@ -1100,7 +1103,7 @@ class Cambio extends core\ClasePropiedades
     /**
      * Recupera el atributo itiimestamp de Cambio
      *
-     * @return DateTimeLocal itimestamp
+     * @return DateTimeLocal|NullDateTimeLocal
      */
     function getTimestamp_cambio()
     {
@@ -1110,7 +1113,7 @@ class Cambio extends core\ClasePropiedades
         if (empty($this->itimestamp_cambio)) {
             return new NullDateTimeLocal();
         }
-        $oConverter = new core\ConverterDate('timestamp', $this->itimestamp_cambio);
+        $oConverter = new ConverterDate('timestamp', $this->itimestamp_cambio);
         return $oConverter->fromPg();
     }
 
@@ -1125,7 +1128,7 @@ class Cambio extends core\ClasePropiedades
     function setTimestamp_cambio($itimestamp_cambio = '', $convert = false)
     {
         if ($convert === true && !empty($itimestamp_cambio)) {
-            $oConverter = new core\ConverterDate('datetime', $itimestamp_cambio);
+            $oConverter = new ConverterDate('datetime', $itimestamp_cambio);
             $this->itimestamp_cambio = $oConverter->toPg();
         } else {
             $this->itimestamp_cambio = $itimestamp_cambio;
@@ -1139,7 +1142,7 @@ class Cambio extends core\ClasePropiedades
      */
     function getDatosCampos()
     {
-        $oCambioSet = new core\Set();
+        $oCambioSet = new Set();
 
         $oCambioSet->add($this->getDatosId_tipo_cambio());
         $oCambioSet->add($this->getDatosId_activ());
@@ -1161,12 +1164,12 @@ class Cambio extends core\ClasePropiedades
      * Recupera les propietats de l'atribut iid_tipo_cambio de Cambio
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosId_tipo_cambio()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_tipo_cambio'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_tipo_cambio'));
         $oDatosCampo->setEtiqueta(_("id_tipo_cambio"));
         return $oDatosCampo;
     }
@@ -1175,12 +1178,12 @@ class Cambio extends core\ClasePropiedades
      * Recupera les propietats de l'atribut iid_activ de Cambio
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosId_activ()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_activ'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_activ'));
         $oDatosCampo->setEtiqueta(_("id_activ"));
         return $oDatosCampo;
     }
@@ -1189,12 +1192,12 @@ class Cambio extends core\ClasePropiedades
      * Recupera les propietats de l'atribut iid_tipo_activ de Cambio
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosId_tipo_activ()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_tipo_activ'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_tipo_activ'));
         $oDatosCampo->setEtiqueta(_("id_tipo_activ"));
         return $oDatosCampo;
     }
@@ -1203,12 +1206,12 @@ class Cambio extends core\ClasePropiedades
      * Recupera les propietats de l'atribut json_fases_sv de Cambio
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosJson_fases_sv()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'json_fases_sv'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'json_fases_sv'));
         $oDatosCampo->setEtiqueta(_("id fase sv"));
         return $oDatosCampo;
     }
@@ -1217,12 +1220,12 @@ class Cambio extends core\ClasePropiedades
      * Recupera les propietats de l'atribut json_fases_sf de Cambio
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosJson_fases_sf()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'json_fases_sf'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'json_fases_sf'));
         $oDatosCampo->setEtiqueta(_("id fase sf"));
         return $oDatosCampo;
     }
@@ -1231,12 +1234,12 @@ class Cambio extends core\ClasePropiedades
      * Recupera les propietats de l'atribut iid_status de Cambio
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosId_status()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_status'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_status'));
         $oDatosCampo->setEtiqueta(_("id_status"));
         return $oDatosCampo;
     }
@@ -1245,12 +1248,12 @@ class Cambio extends core\ClasePropiedades
      * Recupera les propietats de l'atribut sdl_org de Cambio
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosDl_org()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'dl_org'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'dl_org'));
         $oDatosCampo->setEtiqueta(_("dl_org"));
         return $oDatosCampo;
     }
@@ -1259,12 +1262,12 @@ class Cambio extends core\ClasePropiedades
      * Recupera les propietats de l'atribut sobjeto de Cambio
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosObjeto()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'objeto'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'objeto'));
         $oDatosCampo->setEtiqueta(_("objeto"));
         return $oDatosCampo;
     }
@@ -1273,12 +1276,12 @@ class Cambio extends core\ClasePropiedades
      * Recupera les propietats de l'atribut spropiedad de Cambio
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosPropiedad()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'propiedad'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'propiedad'));
         $oDatosCampo->setEtiqueta(_("propiedad"));
         return $oDatosCampo;
     }
@@ -1287,12 +1290,12 @@ class Cambio extends core\ClasePropiedades
      * Recupera les propietats de l'atribut svalor_old de Cambio
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosValor_old()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'valor_old'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'valor_old'));
         $oDatosCampo->setEtiqueta(_("valor_old"));
         return $oDatosCampo;
     }
@@ -1301,12 +1304,12 @@ class Cambio extends core\ClasePropiedades
      * Recupera les propietats de l'atribut svalor_new de Cambio
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosValor_new()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'valor_new'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'valor_new'));
         $oDatosCampo->setEtiqueta(_("valor_new"));
         return $oDatosCampo;
     }
@@ -1315,12 +1318,12 @@ class Cambio extends core\ClasePropiedades
      * Recupera les propietats de l'atribut iquien_cambia de Cambio
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosQuien_cambia()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'quien_cambia'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'quien_cambia'));
         $oDatosCampo->setEtiqueta(_("quien_cambia"));
         return $oDatosCampo;
     }
@@ -1329,12 +1332,12 @@ class Cambio extends core\ClasePropiedades
      * Recupera les propietats de l'atribut isfsv_quien_cambia de Cambio
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosSfsv_quien_cambia()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'sfsv_quien_cambia'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'sfsv_quien_cambia'));
         $oDatosCampo->setEtiqueta(_("sección de quien cambia"));
         return $oDatosCampo;
     }
@@ -1343,12 +1346,12 @@ class Cambio extends core\ClasePropiedades
      * Recupera les propietats de l'atribut itimestamp_cambio de Cambio
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosTimestamp_cambio()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'timestamp_cambio'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'timestamp_cambio'));
         $oDatosCampo->setEtiqueta(_("timestamp_cambio"));
         return $oDatosCampo;
     }

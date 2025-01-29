@@ -4,12 +4,14 @@ namespace actividadcargos\model;
 
 use actividadcargos\model\entity\Cargo;
 use actividadcargos\model\entity\GestorActividadCargo;
-use actividades\model\entity as actividades;
-use core;
-use dossiers\model as dossiers;
-use personas\model\entity as personas;
-use web;
+use actividades\model\entity\Actividad;
+use core\ConfigGlobal;
+use core\ViewPhtml;
+use dossiers\model\PermDossier;
+use personas\model\entity\Persona;
+use web\BotonesCurso;
 use web\Hash;
+use web\Lista;
 use function core\is_true;
 
 /**
@@ -71,6 +73,15 @@ class Select1302
     // ------ Variables para mantener la selección de la grid al volver atras
     private $Qid_sel;
     private $Qscroll_id;
+    private BotonesCurso $oBotonesCurso;
+    /**
+     * @var array|mixed
+     */
+    private mixed $aLinks_dl;
+    /**
+     * @var array|mixed
+     */
+    private mixed $aLinks_otros;
 
     private function getBotones()
     {
@@ -101,13 +112,13 @@ class Select1302
 
     private function getTabla()
     {
-        $mi_sfsv = core\ConfigGlobal::mi_sfsv();
+        $mi_sfsv = ConfigGlobal::mi_sfsv();
 
-        $this->oBotonesCurso = new web\BotonesCurso($this->modo_curso);
+        $this->oBotonesCurso = new BotonesCurso($this->modo_curso);
         $aWhere = $this->oBotonesCurso->getWhere();
         $aOperator = $this->oBotonesCurso->getOperator();
 
-        $oPersona = personas\Persona::NewPersona($this->id_pau);
+        $oPersona = Persona::NewPersona($this->id_pau);
         if (!is_object($oPersona)) {
             $this->msg_err = "<br>$oPersona con id_nom: $this->id_pau en  " . __FILE__ . ": line " . __LINE__;
             exit ($this->msg_err);
@@ -115,7 +126,7 @@ class Select1302
 
         // permisos Según el tipo de persona: n, agd, s
         $id_tabla = $oPersona->getId_tabla();
-        $oPermDossier = new dossiers\PermDossier();
+        $oPermDossier = new PermDossier();
         $ref_perm = $oPermDossier->perm_activ_pers($id_tabla);
         $this->ref_perm = $ref_perm;
 
@@ -146,7 +157,7 @@ class Select1302
                 continue;
             }
 
-            $oActividad = new actividades\Actividad($id_activ);
+            $oActividad = new Actividad($id_activ);
             $nom_activ = $oActividad->getNom_activ();
             $id_tipo_activ = $oActividad->getId_tipo_activ();
 
@@ -211,7 +222,7 @@ class Select1302
         $oHashSelect->setArraycamposHidden($a_camposHidden);
 
         //Hay que ponerlo antes, para que calcule los chk.
-        $oTabla = new web\Lista();
+        $oTabla = new Lista();
         $oTabla->setId_tabla('select1302');
         $oTabla->setCabeceras($this->getCabeceras());
         $oTabla->setBotones($this->getBotones());
@@ -229,7 +240,7 @@ class Select1302
             'bloque' => $this->bloque,
         ];
 
-        $oView = new core\View(__NAMESPACE__);
+        $oView = new ViewPhtml(__NAMESPACE__);
         $oView->renderizar('select1302.phtml', $a_campos);
     }
 
@@ -241,7 +252,7 @@ class Select1302
         if (empty($ref_perm)) { // si es nulo, no tengo permisos de ningún tipo
             return '';
         }
-        $mi_dele = core\ConfigGlobal::mi_delef();
+        $mi_dele = ConfigGlobal::mi_delef();
         reset($ref_perm);
         foreach ($ref_perm as $clave => $val) {
             $permis = $val["perm"];
@@ -258,7 +269,7 @@ class Select1302
                 if (is_array($aQuery)) {
                     array_walk($aQuery, 'core\poner_empty_on_null');
                 }
-                $pagina = web\Hash::link('apps/actividadcargos/controller/form_1302.php?' . http_build_query($aQuery));
+                $pagina = Hash::link('apps/actividadcargos/controller/form_1302.php?' . http_build_query($aQuery));
                 $this->aLinks_dl[$nom] = $pagina;
             }
         }
@@ -277,7 +288,7 @@ class Select1302
                 if (is_array($aQuery)) {
                     array_walk($aQuery, 'core\poner_empty_on_null');
                 }
-                $pagina = web\Hash::link('apps/actividadcargos/controller/form_1302.php?' . http_build_query($aQuery));
+                $pagina = Hash::link('apps/actividadcargos/controller/form_1302.php?' . http_build_query($aQuery));
                 $this->aLinks_otros[$nom] = $pagina;
             }
         }

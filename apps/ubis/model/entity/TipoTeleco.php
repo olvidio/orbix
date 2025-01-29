@@ -1,7 +1,10 @@
 <?php
 namespace ubis\model\entity;
 
-use core;
+use core\ClasePropiedades;
+use core\DatosCampo;
+use core\Set;
+use function core\is_true;
 
 /**
  * Clase que implementa la entidad xd_tipo_teleco
@@ -12,7 +15,7 @@ use core;
  * @version 1.0
  * @created 01/10/2010
  */
-class TipoTeleco extends core\ClasePropiedades
+class TipoTeleco extends ClasePropiedades
 {
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
@@ -115,12 +118,12 @@ class TipoTeleco extends core\ClasePropiedades
         $aDades['persona'] = $this->bpersona;
         array_walk($aDades, 'core\poner_null');
         //para el caso de los boolean FALSE, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
-        if (core\is_true($aDades['ubi'])) {
+        if (is_true($aDades['ubi'])) {
             $aDades['ubi'] = 'true';
         } else {
             $aDades['ubi'] = 'false';
         }
-        if (core\is_true($aDades['persona'])) {
+        if (is_true($aDades['persona'])) {
             $aDades['persona'] = 'true';
         } else {
             $aDades['persona'] = 'false';
@@ -234,7 +237,7 @@ class TipoTeleco extends core\ClasePropiedades
      *
      * @param array $aDades
      */
-    function setAllAtributes($aDades)
+    function setAllAtributes(array $aDades)
     {
         if (!is_array($aDades)) return;
         if (array_key_exists('tipo_teleco', $aDades)) $this->setTipo_teleco($aDades['tipo_teleco']);
@@ -399,7 +402,7 @@ class TipoTeleco extends core\ClasePropiedades
      */
     function getDatosCampos()
     {
-        $oTipoTelecoSet = new core\Set();
+        $oTipoTelecoSet = new Set();
 
         $oTipoTelecoSet->add($this->getDatosUbi());
         $oTipoTelecoSet->add($this->getDatosPersona());
@@ -411,12 +414,12 @@ class TipoTeleco extends core\ClasePropiedades
      * Recupera les propietats de l'atribut bubi de TipoTeleco
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosUbi()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'ubi'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'ubi'));
         $oDatosCampo->setEtiqueta(_("ubi"));
         return $oDatosCampo;
     }
@@ -425,12 +428,12 @@ class TipoTeleco extends core\ClasePropiedades
      * Recupera les propietats de l'atribut bpersona de TipoTeleco
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosPersona()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'persona'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'persona'));
         $oDatosCampo->setEtiqueta(_("persona"));
         return $oDatosCampo;
     }

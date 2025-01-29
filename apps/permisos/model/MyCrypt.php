@@ -29,7 +29,7 @@ class MyCrypt
      *       $jsondata['success'] = true|false;
      *       $jsondata['mensaje'] = 'ok';
      */
-    public function is_valid_password($user, $password, $fullname = '')
+    public function is_valid_password(string $user, string $password, string $fullname = '')
     {
 
         $cmd_cracklib_check = shell_exec(sprintf("command -v cracklib-check"));
@@ -59,8 +59,8 @@ class MyCrypt
          *Any Unicode character that is categorized as an alphabetic character but is not uppercase or lowercase. This includes Unicode characters from Asian languages.
          */
 
-        $lower_user = strtolower($user);
-        $lower_pwd = strtolower($password);
+        $lower_user = strtolower($user?? '');
+        $lower_pwd = strtolower($password?? '');
         $txt_err = '';
 
         if (strpos($lower_pwd, '"') !== false) {

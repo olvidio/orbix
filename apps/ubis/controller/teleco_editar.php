@@ -1,7 +1,10 @@
 <?php
 
-use usuarios\model\entity as usuarios;
+use core\ConfigGlobal;
+use core\ViewPhtml;
+use usuarios\model\entity\Usuario;
 use web\Desplegable;
+use web\Hash;
 
 /**
  * Es el frame inferior. Muestra la ficha de los ubis
@@ -85,8 +88,8 @@ if ($Qmod == 'nuevo') {
 }
 
 //----------------------------------Permisos según el usuario
-$oMiUsuario = new usuarios\Usuario(core\ConfigGlobal::mi_id_usuario());
-$miSfsv = core\ConfigGlobal::mi_sfsv();
+$oMiUsuario = new Usuario(ConfigGlobal::mi_id_usuario());
+$miSfsv = ConfigGlobal::mi_sfsv();
 
 $botones = 0;
 /*
@@ -101,7 +104,7 @@ switch ($Qobj_pau) {
         $objfull = 'ubis\\model\\entity\\' . $Qobj_pau;
         $oUbi = new $objfull($Qid_ubi);
         $dl = $oUbi->getDl();
-        if ($dl == core\ConfigGlobal::mi_delef()) {
+        if ($dl == ConfigGlobal::mi_delef()) {
             // ----- sv sólo a scl -----------------
             if ($_SESSION['oPerm']->have_perm_oficina('scdl')) {
                 $botones = "1,3";
@@ -134,13 +137,13 @@ $oDesplegableDescTeleco->setNombre('desc_teleco');
 $oDesplegableDescTeleco->setOpcion_sel($desc_teleco);
 $oDesplegableDescTeleco->setBlanco(true);
 
-$url_actualizar = core\ConfigGlobal::getWeb() . '/apps/ubis/controller/teleco_ajax.php';
-$oHash1 = new web\Hash();
+$url_actualizar = ConfigGlobal::getWeb() . '/apps/ubis/controller/teleco_ajax.php';
+$oHash1 = new Hash();
 $oHash1->setUrl($url_actualizar);
 $oHash1->setCamposForm('tipo_teleco');
 $h_actualizar = $oHash1->linkSinVal();
 
-$oHash = new web\Hash();
+$oHash = new Hash();
 $oHash->setCamposForm('mod!tipo_teleco!desc_teleco!num_teleco!observ');
 $oHash->setcamposNo('mod!' . $campos_chk);
 $a_camposHidden = array(
@@ -164,5 +167,5 @@ $a_campos = ['obj' => $obj,
     'h_actualizar' => $h_actualizar,
 ];
 
-$oView = new core\View('ubis\controller');
+$oView = new ViewPhtml('ubis\controller');
 $oView->renderizar('teleco_form.phtml', $a_campos);

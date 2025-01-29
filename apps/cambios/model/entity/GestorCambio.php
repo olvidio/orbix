@@ -2,8 +2,11 @@
 
 namespace cambios\model\entity;
 
-use core;
-use core\ConfigGlobal;
+use core\ClaseGestor;
+use core\Condicion;
+use core\Set;
+use DateInterval;
+use DateTime;
 
 /**
  * GestorCambio
@@ -16,7 +19,7 @@ use core\ConfigGlobal;
  * @version 1.0
  * @created 17/4/2019
  */
-class GestorCambio extends core\ClaseGestor
+class GestorCambio extends ClaseGestor
 {
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
@@ -49,7 +52,7 @@ class GestorCambio extends core\ClaseGestor
      *
      * @param string $str_interval
      */
-    public function borrarCambios($str_interval = 'P1Y')
+    public function borrarCambios(string $str_interval = 'P1Y')
     {
         $this->borrarCambiosP($str_interval);
         $this->borrarCambiosAnotados();
@@ -91,7 +94,7 @@ class GestorCambio extends core\ClaseGestor
         $this->setoDbl($oDbl);
         $this->setNomTabla('av_cambios');
 
-        if (getenv('UBICACION') == 'sv') {
+        if (getenv('UBICACION') === 'sv') {
             $nom_tabla_anotados = 'av_cambios_anotados_dl';
         } else {
             $nom_tabla_anotados = 'av_cambios_anotados_dl_sf';
@@ -122,8 +125,8 @@ class GestorCambio extends core\ClaseGestor
         $oDbl = $GLOBALS['oDBC'];
         $nom_tabla = $this->getNomTabla();
 
-        $interval = new \DateInterval($str_interval);
-        $oDateTime = new \DateTime();
+        $interval = new DateInterval($str_interval);
+        $oDateTime = new DateTime();
         $timestamp = $oDateTime->sub($interval)->format('Y-m-d 00:00:00');
 
         $sQry = "DELETE FROM public.$nom_tabla
@@ -142,15 +145,15 @@ class GestorCambio extends core\ClaseGestor
      * retorna l'array d'objectes de tipus Cambio
      * Que no s'hagin apuntat a la dl.
      *
-     * @return array Una col·lecció d'objectes de tipus Cambio
+     * @return array|false
      */
     function getCambiosNuevos()
     {
         $oDbl = $this->getoDbl();
         $oDbl = $GLOBALS['oDBC'];
-        $oCambioSet = new core\Set();
+        $oCambioSet = new Set();
 
-        if (getenv('UBICACION') == 'sv') {
+        if (getenv('UBICACION') === 'sv') {
             $nom_tabla_anotados = 'av_cambios_anotados_dl';
         } else {
             $nom_tabla_anotados = 'av_cambios_anotados_dl_sf';
@@ -208,13 +211,13 @@ class GestorCambio extends core\ClaseGestor
      * retorna l'array d'objectes de tipus Cambio
      *
      * @param string sQuery la query a executar.
-     * @return array Una col·lecció d'objectes de tipus Cambio
+     * @return array|false
      */
     function getCambiosQuery($sQuery = '')
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        $oCambioSet = new core\Set();
+        $oCambioSet = new Set();
         if (($oDbl->query($sQuery)) === FALSE) {
             $sClauError = 'GestorCambio.query';
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
@@ -222,7 +225,7 @@ class GestorCambio extends core\ClaseGestor
         }
         foreach ($oDbl->query($sQuery) as $aDades) {
             $a_pkey = array('id_item_cambio' => $aDades['id_item_cambio']);
-            if ($nom_tabla == 'av_cambios_dl') {
+            if ($nom_tabla === 'av_cambios_dl') {
                 $oCambio = new CambioDl($a_pkey);
             } else {
                 $oCambio = new Cambio($a_pkey);
@@ -237,23 +240,23 @@ class GestorCambio extends core\ClaseGestor
      *
      * @param array aWhere associatiu amb els valors de les variables amb les quals farem la query
      * @param array aOperators associatiu amb els valors dels operadors que cal aplicar a cada variable
-     * @return array Una col·lecció d'objectes de tipus Cambio
+     * @return array|void
      */
     function getCambios($aWhere = array(), $aOperators = array())
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        $oCambioSet = new core\Set();
-        $oCondicion = new core\Condicion();
+        $oCambioSet = new Set();
+        $oCondicion = new Condicion();
         $aCondi = array();
         foreach ($aWhere as $camp => $val) {
-            if ($camp == '_ordre') continue;
+            if ($camp === '_ordre') continue;
             $sOperador = isset($aOperators[$camp]) ? $aOperators[$camp] : '';
             if ($a = $oCondicion->getCondicion($camp, $sOperador, $val)) $aCondi[] = $a;
             // operadores que no requieren valores
-            if ($sOperador == 'BETWEEN' || $sOperador == 'IS NULL' || $sOperador == 'IS NOT NULL' || $sOperador == 'OR') unset($aWhere[$camp]);
-            if ($sOperador == 'IN' || $sOperador == 'NOT IN') unset($aWhere[$camp]);
-            if ($sOperador == 'TXT') unset($aWhere[$camp]);
+            if ($sOperador === 'BETWEEN' || $sOperador === 'IS NULL' || $sOperador === 'IS NOT NULL' || $sOperador === 'OR') unset($aWhere[$camp]);
+            if ($sOperador === 'IN' || $sOperador === 'NOT IN') unset($aWhere[$camp]);
+            if ($sOperador === 'TXT') unset($aWhere[$camp]);
         }
         $sCondi = implode(' AND ', $aCondi);
         if ($sCondi != '') $sCondi = " WHERE " . $sCondi;
@@ -279,7 +282,7 @@ class GestorCambio extends core\ClaseGestor
         }
         foreach ($oDblSt as $aDades) {
             $a_pkey = array('id_item_cambio' => $aDades['id_item_cambio']);
-            if ($nom_tabla == 'av_cambios_dl') {
+            if ($nom_tabla === 'av_cambios_dl') {
                 $oCambio = new CambioDl($a_pkey);
             } else {
                 $oCambio = new Cambio($a_pkey);

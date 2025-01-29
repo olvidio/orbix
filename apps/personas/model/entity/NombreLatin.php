@@ -1,7 +1,9 @@
 <?php
 namespace personas\model\entity;
 
-use core;
+use core\ClasePropiedades;
+use core\DatosCampo;
+use core\Set;
 
 /**
  * Fitxer amb la Classe que accedeix a la taula xe_nombre_latin
@@ -22,7 +24,7 @@ use core;
  * @version 1.0
  * @created 07/04/2014
  */
-class NombreLatin extends core\ClasePropiedades
+class NombreLatin extends ClasePropiedades
 {
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
@@ -100,7 +102,7 @@ class NombreLatin extends core\ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'id_item') && $val_id !== '') $this->iid_item = (int)$val_id; // evitem SQL injection fent cast a string
+                if (($nom_id === 'id_item') && $val_id !== '') $this->iid_item = (int)$val_id; // evitem SQL injection fent cast a string
             }
         } else {
             if (isset($a_id) && $a_id !== '') {
@@ -242,7 +244,7 @@ class NombreLatin extends core\ClasePropiedades
      *
      * @param array $aDades
      */
-    function setAllAtributes($aDades)
+    function setAllAtributes(array $aDades)
     {
         if (!is_array($aDades)) return;
         if (array_key_exists('nom', $aDades)) $this->setNom($aDades['nom']);
@@ -302,7 +304,7 @@ class NombreLatin extends core\ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'id_item') && $val_id !== '') $this->iid_item = (int)$val_id; 
+                if (($nom_id === 'id_item') && $val_id !== '') $this->iid_item = (int)$val_id;
             }
         }
     }
@@ -396,7 +398,7 @@ class NombreLatin extends core\ClasePropiedades
      */
     function getDatosCampos()
     {
-        $oNombreLatinSet = new core\Set();
+        $oNombreLatinSet = new Set();
 
         $oNombreLatinSet->add($this->getDatosNom());
         $oNombreLatinSet->add($this->getDatosNominativo());
@@ -409,12 +411,12 @@ class NombreLatin extends core\ClasePropiedades
      * Recupera les propietats de l'atribut snom de NombreLatin
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosNom()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'nom'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'nom'));
         $oDatosCampo->setEtiqueta(_("vernácula"));
         $oDatosCampo->setTipo('texto');
         $oDatosCampo->setArgument('50');
@@ -425,12 +427,12 @@ class NombreLatin extends core\ClasePropiedades
      * Recupera les propietats de l'atribut snominativo de NombreLatin
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosNominativo()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'nominativo'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'nominativo'));
         $oDatosCampo->setEtiqueta(_("nominativo"));
         $oDatosCampo->setTipo('texto');
         $oDatosCampo->setArgument('50');
@@ -441,12 +443,12 @@ class NombreLatin extends core\ClasePropiedades
      * Recupera les propietats de l'atribut sgenitivo de NombreLatin
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosGenitivo()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'genitivo'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'genitivo'));
         $oDatosCampo->setEtiqueta(_("genitivo"));
         $oDatosCampo->setTipo('texto');
         $oDatosCampo->setArgument('50');

@@ -68,7 +68,7 @@ class Config
      * @param string $username
      * @return boolean
      */
-    public function is_jefeCalendario($username = '')
+    public function is_jefeCalendario(string $username = '')
     {
         $parametro = 'jefe_calendario';
         $oConfigSchema = new ConfigSchema($parametro);

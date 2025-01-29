@@ -7,13 +7,13 @@ use asistentes\model\entity\GestorAsistente;
 use core\ConfigGlobal;
 use dossiers\model\PermisoDossier;
 use permisos\model\PermisosActividadesTrue;
+use web\Lista;
+use web\Periodo;
+use web\TiposActividades;
 use ubis\model\entity\Casa;
 use ubis\model\entity\Centro;
 use ubis\model\entity\CentroDl;
 use ubis\model\entity\GestorCasaDl;
-use web\Lista;
-use web\Periodo;
-use web\TiposActividades;
 
 /**
  * Esta página muestra
@@ -269,12 +269,12 @@ foreach (array_keys($aGrupos) as $key) {
             }
 
             // mirar permisos.
-            if (core\ConfigGlobal::is_app_installed('procesos')) {
+            if (ConfigGlobal::is_app_installed('procesos')) {
                 $_SESSION['oPermActividades']->setActividad($id_activ, $id_tipo_activ, $dl_org);
                 $oPermActiv = $_SESSION['oPermActividades']->getPermisoActual('datos');
                 $oPermCtr = $_SESSION['oPermActividades']->getPermisoActual('ctr');
             } else {
-                $oPermActividades = new PermisosActividadesTrue(core\ConfigGlobal::mi_id_usuario());
+                $oPermActividades = new PermisosActividadesTrue(ConfigGlobal::mi_id_usuario());
                 $oPermActiv = $oPermActividades->getPermisoActual('datos');
                 $oPermCtr = $oPermActividades->getPermisoActual('ctr');
             }

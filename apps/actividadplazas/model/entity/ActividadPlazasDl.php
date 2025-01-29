@@ -41,22 +41,12 @@ class ActividadPlazasDl extends ActividadPlazas
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'id_activ') && $val_id !== '') $this->iid_activ = (int)$val_id; 
-                if (($nom_id == 'id_dl') && $val_id !== '') $this->iid_dl = (int)$val_id; 
-                if (($nom_id == 'dl_tabla') && $val_id !== '') $this->sdl_tabla = (string)$val_id; // evitem SQL injection fent cast a string
-            }
-        } else {
-            if (isset($a_id) && $a_id !== '') {
-                $this->sacta = (integer)$a_id; 
-                $this->aPrimary_key = array('iitem' => $this->iitem);
+                if (($nom_id === 'id_activ') && $val_id !== '') $this->iid_activ = (int)$val_id;
+                if (($nom_id === 'id_dl') && $val_id !== '') $this->iid_dl = (int)$val_id;
+                if (($nom_id === 'dl_tabla') && $val_id !== '') $this->sdl_tabla = (string)$val_id;
             }
         }
         $this->setoDbl($oDbl);
         $this->setNomTabla('da_plazas_dl');
     }
-
-    /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
-    /* OTROS MÉTODOS  ----------------------------------------------------------*/
-    /* MÉTODOS PRIVADOS ----------------------------------------------------------*/
-    /* MÉTODOS GET y SET --------------------------------------------------------*/
 }

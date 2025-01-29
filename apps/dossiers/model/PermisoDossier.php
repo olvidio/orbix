@@ -2,8 +2,8 @@
 
 namespace dossiers\model;
 
-use permisos\model as permisos;
-use core;
+use core\ConfigGlobal;
+use permisos\model\XPermisos;
 
 /**
  * Classe per saber els permisos d'un usuari sobre els menus.
@@ -14,7 +14,7 @@ use core;
  * @version 1.0
  * @created 4/12/2010
  */
-class PermisoDossier extends permisos\XPermisos
+class PermisoDossier extends XPermisos
 {
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
@@ -41,8 +41,8 @@ class PermisoDossier extends permisos\XPermisos
 
     private function omplir()
     {
-        if (core\ConfigGlobal::mi_sfsv() == 1) $permissions['adl'] = 1;
-        if (core\ConfigGlobal::mi_sfsv() == 2) $permissions['pr'] = 1;
+        if (ConfigGlobal::mi_sfsv() == 1) $permissions['adl'] = 1;
+        if (ConfigGlobal::mi_sfsv() == 2) $permissions['pr'] = 1;
 
         $permissions['agd'] = 1 << 1; // 2
         $permissions['aop'] = 1 << 2; //4,

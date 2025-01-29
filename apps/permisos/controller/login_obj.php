@@ -6,7 +6,7 @@ use core\ConfigDB;
 use core\ConfigGlobal;
 use core\DBConnection;
 use core\DBPropiedades;
-use core\View;
+use core\ViewPhtml;
 use permisos\model\MyCrypt;
 
 
@@ -60,7 +60,7 @@ function cambiar_idioma($idioma = '')
     }
     //$idioma=  str_replace('UTF-8', 'utf8', $idioma);
     $domain = "orbix";
-//	echo "dir: ".core\ConfigGlobal::$dir_languages."<br>";
+//	echo "dir: ".ConfigGlobal::$dir_languages."<br>";
 //	echo "domain: $domain, id: $idioma<br>";
     setlocale(LC_ALL, "");
     putenv("LC_ALL=''");
@@ -168,7 +168,7 @@ function logout($ubicacion, $idioma, $esquema, $error, $esquema_web = '')
     $a_campos['DesplRegiones'] = $oDBPropiedades->posibles_esquemas($esquema);
     $a_campos['idioma'] = $idioma;
     $a_campos['url'] = ConfigGlobal::getWeb();
-    $oView = new View(__NAMESPACE__);
+    $oView = new ViewPhtml(__NAMESPACE__);
     $oView->renderizar('login_form2.phtml', $a_campos);
 }
 

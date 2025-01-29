@@ -2,7 +2,9 @@
 
 namespace personas\model\entity;
 
-use core;
+use core\ClasePropiedades;
+use core\DatosCampo;
+use core\Set;
 
 /**
  * Fitxer amb la Classe que accedeix a la taula xp_situacion
@@ -23,7 +25,7 @@ use core;
  * @version 1.0
  * @created 18/03/2014
  */
-class Situacion extends core\ClasePropiedades
+class Situacion extends ClasePropiedades
 {
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
@@ -77,7 +79,7 @@ class Situacion extends core\ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'situacion') && $val_id !== '') $this->ssituacion = (string)$val_id; // evitem SQL injection fent cast a string
+                if (($nom_id === 'situacion') && $val_id !== '') $this->ssituacion = (string)$val_id; // evitem SQL injection fent cast a string
             }
         } else {
             if (isset($a_id) && $a_id !== '') {
@@ -215,7 +217,7 @@ class Situacion extends core\ClasePropiedades
      *
      * @param array $aDades
      */
-    function setAllAtributes($aDades)
+    function setAllAtributes(array $aDades)
     {
         if (!is_array($aDades)) return;
         if (array_key_exists('situacion', $aDades)) $this->setSituacion($aDades['situacion']);
@@ -272,7 +274,7 @@ class Situacion extends core\ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'situacion') && $val_id !== '') $this->ssituacion = $val_id;
+                if (($nom_id === 'situacion') && $val_id !== '') $this->ssituacion = $val_id;
             }
         }
     }
@@ -330,7 +332,7 @@ class Situacion extends core\ClasePropiedades
      */
     function getDatosCampos()
     {
-        $oSituacionSet = new core\Set();
+        $oSituacionSet = new Set();
 
         $oSituacionSet->add($this->getDatosNombre_situacion());
         return $oSituacionSet->getTot();
@@ -341,12 +343,12 @@ class Situacion extends core\ClasePropiedades
      * Recupera les propietats de l'atribut snombre_situacion de Situacion
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosNombre_situacion()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'nombre_situacion'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'nombre_situacion'));
         $oDatosCampo->setEtiqueta(_("nombre situación"));
         return $oDatosCampo;
     }

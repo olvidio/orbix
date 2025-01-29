@@ -1,10 +1,14 @@
 <?php
 
-use usuarios\model\entity as usuarios;
-use permisos\model\entity as permisos;
-use menus\model\entity as menus;
+use core\ConfigGlobal;
+use core\ViewPhtml;
+use menus\model\entity\GestorGrupMenuRole;
+use menus\model\entity\GrupMenu;
+use usuarios\model\entity\Usuario;
 use web\Desplegable;
 use usuarios\model\entity\Role;
+use web\Hash;
+use web\Lista;
 
 // INICIO Cabecera global de URL de controlador *********************************
 require_once("apps/core/global_header.inc");
@@ -51,7 +55,7 @@ if (isset($_POST['stack'])) {
 }
 $oPosicion->setParametros(array('id_role' => $Qid_role), 1);
 
-$oMiUsuario = new usuarios\Usuario(core\ConfigGlobal::mi_id_usuario());
+$oMiUsuario = new Usuario(ConfigGlobal::mi_id_usuario());
 $miRole = $oMiUsuario->getId_role();
 // Sólo puede manipular los roles el superadmin (id_role=1).
 $permiso = 0;
@@ -68,7 +72,7 @@ $txt_guardar = _("guardar datos rol");
 $txt_sfsv = '';
 if (!empty($Qid_role)) {
     $que_user = 'guardar';
-    $oRole = new usuarios\Role(array('id_role' => $Qid_role));
+    $oRole = new Role(array('id_role' => $Qid_role));
     $role = $oRole->getRole();
     $sf = $oRole->getSf();
     if (!empty($sf)) {
@@ -111,7 +115,7 @@ $oDesplPau->setOpcion_sel($pau);
 $oTabla = '';
 if (!empty($Qid_role)) { // si no hay usuario, no puedo poner permisos.
     //grupo
-    $oGesGMRol = new menus\GestorGrupMenuRole();
+    $oGesGMRol = new GestorGrupMenuRole();
     $cGMR = $oGesGMRol->getGrupMenuRoles(array('id_role' => $Qid_role));
 
     $i = 0;
@@ -124,21 +128,21 @@ if (!empty($Qid_role)) { // si no hay usuario, no puedo poner permisos.
         $i++;
         $id_item = $oGrupMenuRole->getId_item();
         $id_grupmenu = $oGrupMenuRole->getId_grupmenu();
-        $oGrupMenu = new menus\GrupMenu($id_grupmenu);
+        $oGrupMenu = new GrupMenu($id_grupmenu);
 
         $grup_menu = $oGrupMenu->getGrup_menu($_SESSION['oConfig']->getAmbito());
 
         $a_valores[$i]['sel'] = "$id_item";
         $a_valores[$i][1] = $grup_menu;
     }
-    $oTabla = new web\Lista();
+    $oTabla = new Lista();
     $oTabla->setId_tabla('role_grupmenu');
     $oTabla->setCabeceras($a_cabeceras);
     $oTabla->setBotones($a_botones);
     $oTabla->setDatos($a_valores);
 }
 
-$oHash = new web\Hash();
+$oHash = new Hash();
 $oHash->setCamposForm('que!role!sf!sv!pau!dmz');
 $oHash->setcamposNo('sf!sv!dmz!refresh');
 $a_camposHidden = array(
@@ -146,7 +150,7 @@ $a_camposHidden = array(
 );
 $oHash->setArraycamposHidden($a_camposHidden);
 
-$oHash1 = new web\Hash();
+$oHash1 = new Hash();
 $oHash1->setCamposForm('que!sel');
 $oHash1->setcamposNo('scroll_id!refresh');
 $a_camposHidden = array(
@@ -175,5 +179,5 @@ $a_campos = [
     'nuevo' => $Qnuevo,
 ];
 
-$oView = new core\View('usuarios/controller');
+$oView = new ViewPhtml('usuarios/controller');
 $oView->renderizar('role_form.phtml', $a_campos);

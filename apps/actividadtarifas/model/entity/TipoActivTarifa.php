@@ -192,7 +192,7 @@ class TipoActivTarifa extends ClasePropiedades
                     return false;
                 }
             }
-            $this->id_item = $oDbl->lastInsertId('xa_tipo_activ_tarifa_id_item_seq');
+            $this->iid_item = $oDbl->lastInsertId('xa_tipo_activ_tarifa_id_item_seq');
         }
         $this->setAllAtributes($aDades);
         return true;
@@ -260,7 +260,7 @@ class TipoActivTarifa extends ClasePropiedades
      *
      * @param array $aDades
      */
-    function setAllAtributes($aDades)
+    function setAllAtributes(array $aDades)
     {
         if (!is_array($aDades)) return;
         if (array_key_exists('id_item', $aDades)) $this->setId_item($aDades['id_item']);
@@ -461,7 +461,7 @@ class TipoActivTarifa extends ClasePropiedades
         $oTipoActivTarifaSet = new Set();
 
         $oTipoActivTarifaSet->add($this->getDatosId_schema());
-        $oTipoActivTarifaSet->add($this->getDatosTarifa());
+        $oTipoActivTarifaSet->add($this->getDatosId_tarifa());
         $oTipoActivTarifaSet->add($this->getDatosId_tipo_activ());
         $oTipoActivTarifaSet->add($this->getDatosId_serie());
         return $oTipoActivTarifaSet->getTot();

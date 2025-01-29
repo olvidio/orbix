@@ -1,7 +1,7 @@
 <?php
 
 use core\ConfigGlobal;
-use menus\model\entity as menus;
+use core\ServerConf;
 
 // INICIO Cabecera global de URL de controlador *********************************
 require_once("apps/core/global_header.inc");
@@ -32,7 +32,7 @@ $oDevelPC = $oConexion->getPDO();
 $Qaccion = (string)filter_input(INPUT_POST, 'accion');
 
 //$dir_base = "/var/www/orbix";
-$dir_base = core\ConfigGlobal::DIR;
+$dir_base = ServerConf::DIR;
 $filename_base = "$dir_base/log/menus/tot_menus_base.sql";
 $filename = "$dir_base/log/menus/tot_menus.sql";
 $filelog = "$dir_base/log/menus/menus.log";

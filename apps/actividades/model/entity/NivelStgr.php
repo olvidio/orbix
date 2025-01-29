@@ -1,7 +1,9 @@
 <?php
 namespace actividades\model\entity;
 
-use core;
+use core\ClasePropiedades;
+use core\DatosCampo;
+use core\Set;
 
 /**
  * Clase que implementa la entidad $nom_tabla
@@ -12,7 +14,7 @@ use core;
  * @version 1.0
  * @created 01/12/2010
  */
-class NivelStgr extends core\ClasePropiedades
+class NivelStgr extends ClasePropiedades
 {
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
@@ -80,7 +82,7 @@ class NivelStgr extends core\ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'nivel_stgr') && $val_id !== '') $this->inivel_stgr = (int)$val_id;
+                if (($nom_id === 'nivel_stgr') && $val_id !== '') $this->inivel_stgr = (int)$val_id;
             }
         } else {
             if (isset($a_id) && $a_id !== '') {
@@ -223,7 +225,7 @@ class NivelStgr extends core\ClasePropiedades
      *
      * @param array $aDades
      */
-    function setAllAtributes($aDades)
+    function setAllAtributes(array $aDades)
     {
         if (!is_array($aDades)) return;
         if (array_key_exists('nivel_stgr', $aDades)) $this->setNivel_stgr($aDades['nivel_stgr']);
@@ -284,7 +286,7 @@ class NivelStgr extends core\ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'nivel_stgr') && $val_id !== '') $this->inivel_stgr = (int)$val_id;
+                if (($nom_id === 'nivel_stgr') && $val_id !== '') $this->inivel_stgr = (int)$val_id;
             }
         }
     }
@@ -388,7 +390,7 @@ class NivelStgr extends core\ClasePropiedades
      */
     function getDatosCampos()
     {
-        $oNivelStgrSet = new core\Set();
+        $oNivelStgrSet = new Set();
 
         $oNivelStgrSet->add($this->getDatosDesc_nivel());
         $oNivelStgrSet->add($this->getDatosDesc_breve());
@@ -406,7 +408,7 @@ class NivelStgr extends core\ClasePropiedades
     function getDatosDesc_nivel()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'desc_nivel'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'desc_nivel'));
         $oDatosCampo->setEtiqueta(_("desc_nivel"));
         return $oDatosCampo;
     }
@@ -420,7 +422,7 @@ class NivelStgr extends core\ClasePropiedades
     function getDatosDesc_breve()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'desc_breve'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'desc_breve'));
         $oDatosCampo->setEtiqueta(_("desc_breve"));
         return $oDatosCampo;
     }
@@ -434,7 +436,7 @@ class NivelStgr extends core\ClasePropiedades
     function getDatosOrden()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'orden'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'orden'));
         $oDatosCampo->setEtiqueta(_("orden"));
         return $oDatosCampo;
     }

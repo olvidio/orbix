@@ -11,6 +11,8 @@
  */
 
 // INICIO Cabecera global de URL de controlador *********************************
+use notas\model\Tesera;
+
 require_once("apps/core/global_header.inc");
 // Archivos requeridos por esta url **********************************************
 
@@ -33,7 +35,7 @@ if (!empty($a_sel)) { //vengo de un checkbox
 }
 
 
-$oTesera = new \notas\model\Tesera();
+$oTesera = new Tesera();
 $p = 0;
 foreach ($a_sel as $PersonaSel) {
     $p++;

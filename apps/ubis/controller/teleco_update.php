@@ -1,7 +1,8 @@
 <?php
 
+use core\ConfigGlobal;
+use usuarios\model\entity\Usuario;
 use function core\is_true;
-use usuarios\model\entity as usuarios;
 
 /**
  * Para asegurar que inicia la sesion, y poder acceder a los permisos
@@ -14,8 +15,8 @@ require_once("apps/core/global_header.inc");
 require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$oMiUsuario = new usuarios\Usuario(core\ConfigGlobal::mi_id_usuario());
-$miSfsv = core\ConfigGlobal::mi_sfsv();
+$oMiUsuario = new Usuario(ConfigGlobal::mi_id_usuario());
+$miSfsv = ConfigGlobal::mi_sfsv();
 
 $Qobj_pau = (string)filter_input(INPUT_POST, 'obj_pau');
 $Qmod = (string)filter_input(INPUT_POST, 'mod');

@@ -1,9 +1,14 @@
 <?php
 namespace ubis\model\entity;
 
+use Cassandra\Date;
+use core\ClasePropiedades;
+use core\ConverterDate;
+use core\DatosCampo;
+use core\Set;
+use web\DateTimeLocal;
+use web\NullDateTimeLocal;
 use function core\is_true;
-use core;
-use web;
 
 /**
  * Clase que implementa la entidad u_direcciones_global
@@ -14,7 +19,7 @@ use web;
  * @version 1.0
  * @created 01/10/2010
  */
-abstract class DireccionGlobal extends core\ClasePropiedades
+abstract class DireccionGlobal extends ClasePropiedades
 {
     /* ATRIBUTOS ----------------------------------------------------------------- */
     /**
@@ -83,7 +88,7 @@ abstract class DireccionGlobal extends core\ClasePropiedades
     /**
      * F_direccion de Direccion
      *
-     * @var web\DateTimeLocal
+     * @var DateTimeLocal
      */
     protected $df_direccion;
     /**
@@ -238,7 +243,7 @@ abstract class DireccionGlobal extends core\ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'id_direccion') && $val_id !== '') $this->iid_direccion = (int)$val_id; 
+                if (($nom_id === 'id_direccion') && $val_id !== '') $this->iid_direccion = (int)$val_id;
             }
         }
     }
@@ -407,7 +412,7 @@ abstract class DireccionGlobal extends core\ClasePropiedades
     /**
      * Recupera el atributo df_direccion de Direccion
      *
-     * @return web\DateTimeLocal df_direccion
+     * @return DateTimeLocal|NullDateTimeLocal
      */
     function getF_direccion()
     {
@@ -415,9 +420,9 @@ abstract class DireccionGlobal extends core\ClasePropiedades
             $this->DBCarregar();
         }
         if (empty($this->df_direccion)) {
-            return new web\NullDateTimeLocal();
+            return new NullDateTimeLocal();
         }
-        $oConverter = new core\ConverterDate('date', $this->df_direccion);
+        $oConverter = new ConverterDate('date', $this->df_direccion);
         return $oConverter->fromPg();
     }
 
@@ -432,7 +437,7 @@ abstract class DireccionGlobal extends core\ClasePropiedades
     function setF_direccion($df_direccion = '', $convert = true)
     {
         if ($convert === true && !empty($df_direccion)) {
-            $oConverter = new core\ConverterDate('date', $df_direccion);
+            $oConverter = new ConverterDate('date', $df_direccion);
             $this->df_direccion = $oConverter->toPg();
         } else {
             $this->df_direccion = $df_direccion;
@@ -698,7 +703,7 @@ abstract class DireccionGlobal extends core\ClasePropiedades
         $rtn = $salto_linea;
         $spc = $espacio;
         if (isset($this->sdireccion)) $txt .= $this->sdireccion . $rtn;
-        if (is_true($this->scp_dcha)) {
+        if (is_true($this->bcp_dcha)) {
             if (!empty($this->spoblacion)) $txt .= $this->spoblacion . $spc;
             if (!empty($this->sc_p)) $txt .= $this->sc_p;
         } else {
@@ -717,7 +722,7 @@ abstract class DireccionGlobal extends core\ClasePropiedades
      */
     function getDatosCampos()
     {
-        $oDireccionSet = new core\Set();
+        $oDireccionSet = new Set();
 
         $oDireccionSet->add($this->getDatosDireccion());
         $oDireccionSet->add($this->getDatosC_p());
@@ -741,12 +746,12 @@ abstract class DireccionGlobal extends core\ClasePropiedades
      * Recupera les propietats de l'atribut sdireccion de Direccion
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosDireccion()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'direccion'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'direccion'));
         $oDatosCampo->setEtiqueta(_("dirección"));
         return $oDatosCampo;
     }
@@ -755,12 +760,12 @@ abstract class DireccionGlobal extends core\ClasePropiedades
      * Recupera les propietats de l'atribut sc_p de Direccion
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosC_p()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'c_p'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'c_p'));
         $oDatosCampo->setEtiqueta(_("código postal"));
         return $oDatosCampo;
     }
@@ -769,12 +774,12 @@ abstract class DireccionGlobal extends core\ClasePropiedades
      * Recupera les propietats de l'atribut spoblacion de Direccion
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosPoblacion()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'poblacion'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'poblacion'));
         $oDatosCampo->setEtiqueta(_("población"));
         return $oDatosCampo;
     }
@@ -783,12 +788,12 @@ abstract class DireccionGlobal extends core\ClasePropiedades
      * Recupera les propietats de l'atribut sprovincia de Direccion
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosProvincia()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'provincia'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'provincia'));
         $oDatosCampo->setEtiqueta(_("provincia"));
         return $oDatosCampo;
     }
@@ -797,12 +802,12 @@ abstract class DireccionGlobal extends core\ClasePropiedades
      * Recupera les propietats de l'atribut sa_p de Direccion
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosA_p()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'a_p'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'a_p'));
         $oDatosCampo->setEtiqueta(_("ap. correos"));
         return $oDatosCampo;
     }
@@ -811,12 +816,12 @@ abstract class DireccionGlobal extends core\ClasePropiedades
      * Recupera les propietats de l'atribut spais de Direccion
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosPais()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'pais'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'pais'));
         $oDatosCampo->setEtiqueta(_("país"));
         return $oDatosCampo;
     }
@@ -825,12 +830,12 @@ abstract class DireccionGlobal extends core\ClasePropiedades
      * Recupera les propietats de l'atribut df_direccion de Direccion
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosF_direccion()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'f_direccion'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'f_direccion'));
         $oDatosCampo->setEtiqueta(_("fecha dirección"));
         $oDatosCampo->setTipo('fecha');
         return $oDatosCampo;
@@ -840,12 +845,12 @@ abstract class DireccionGlobal extends core\ClasePropiedades
      * Recupera les propietats de l'atribut sobserv de Direccion
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosObserv()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'observ'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'observ'));
         $oDatosCampo->setEtiqueta(_("observaciones"));
         return $oDatosCampo;
     }
@@ -854,12 +859,12 @@ abstract class DireccionGlobal extends core\ClasePropiedades
      * Recupera les propietats de l'atribut bcp_dcha de Direccion
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosCp_dcha()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'cp_dcha'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'cp_dcha'));
         $oDatosCampo->setEtiqueta(_("cp dcha"));
         return $oDatosCampo;
     }
@@ -868,12 +873,12 @@ abstract class DireccionGlobal extends core\ClasePropiedades
      * Recupera les propietats de l'atribut ilatitud de Direccion
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosLatitud()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'latitud'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'latitud'));
         $oDatosCampo->setEtiqueta(_("latitud"));
         return $oDatosCampo;
     }
@@ -882,12 +887,12 @@ abstract class DireccionGlobal extends core\ClasePropiedades
      * Recupera les propietats de l'atribut ilongitud de Direccion
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosLongitud()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'longitud'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'longitud'));
         $oDatosCampo->setEtiqueta(_("longitud"));
         return $oDatosCampo;
     }
@@ -896,12 +901,12 @@ abstract class DireccionGlobal extends core\ClasePropiedades
      * Recupera les propietats de l'atribut iplano_doc de Direccion
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosPlano_doc()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'plano_doc'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'plano_doc'));
         $oDatosCampo->setEtiqueta(_("plano documento"));
         return $oDatosCampo;
     }
@@ -910,12 +915,12 @@ abstract class DireccionGlobal extends core\ClasePropiedades
      * Recupera les propietats de l'atribut splano_extension de Direccion
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosPlano_extension()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'plano_extension'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'plano_extension'));
         $oDatosCampo->setEtiqueta(_("plano extensión"));
         return $oDatosCampo;
     }
@@ -924,12 +929,12 @@ abstract class DireccionGlobal extends core\ClasePropiedades
      * Recupera les propietats de l'atribut splano_nom de Direccion
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosPlano_nom()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'plano_nom'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'plano_nom'));
         $oDatosCampo->setEtiqueta(_("plano nombre"));
         return $oDatosCampo;
     }
@@ -938,12 +943,12 @@ abstract class DireccionGlobal extends core\ClasePropiedades
      * Recupera les propietats de l'atribut snom_sede de Direccion
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosNom_sede()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'nom_sede'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'nom_sede'));
         $oDatosCampo->setEtiqueta(_("nombre de la sede"));
         return $oDatosCampo;
     }

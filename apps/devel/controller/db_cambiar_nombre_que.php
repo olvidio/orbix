@@ -1,7 +1,11 @@
 <?php
 
+use core\ConfigGlobal;
 use core\DBPropiedades;
+use core\ViewPhtml;
 use ubis\model\entity\GestorRegion;
+use web\Desplegable;
+use web\Hash;
 
 // INICIO Cabecera global de URL de controlador *********************************
 require_once("apps/core/global_header.inc");
@@ -21,12 +25,12 @@ $oDesplRegiones = $oGesReg->getListaRegiones();
 $oDesplRegiones->setNombre('region');
 $oDesplRegiones->setAction('fnjs_dl()');
 
-$oHash = new web\Hash();
+$oHash = new Hash();
 $oHash->setCamposForm('esquema!region!dl!comun!sv!sf');
 $oHash->setcamposNo('comun!sv!sf');
 
-$oHash1 = new web\Hash();
-$oHash1->setUrl(core\ConfigGlobal::getWeb() . '/apps/devel/controller/db_ajax.php');
+$oHash1 = new Hash();
+$oHash1->setUrl(ConfigGlobal::getWeb() . '/apps/devel/controller/db_ajax.php');
 $oHash1->setCamposForm('salida!entrada');
 $h = $oHash1->linkSinVal();
 
@@ -36,17 +40,17 @@ $msg_falta_esquema = _("debe poner la delegación de referencia");
 // absorber
 $a_posibles_esquemas = $oDBPropiedades->array_posibles_esquemas(TRUE);
 
-$oDesplMatriz = new \web\Desplegable();
+$oDesplMatriz = new Desplegable();
 $oDesplMatriz->setNombre('esquema_matriz');
 $oDesplMatriz->setBlanco(TRUE);
 $oDesplMatriz->setOpciones($a_posibles_esquemas);
 
-$oDesplDel = new \web\Desplegable();
+$oDesplDel = new Desplegable();
 $oDesplDel->setNombre('esquema_del');
 $oDesplDel->setBlanco(TRUE);
 $oDesplDel->setOpciones($a_posibles_esquemas);
 
-$oHashAbsorber = new web\Hash();
+$oHashAbsorber = new Hash();
 $oHashAbsorber->setCamposForm('esquema_matriz!esquema_del');
 
 $a_campos = [
@@ -62,5 +66,5 @@ $a_campos = [
     'oHashAbsorber' => $oHashAbsorber,
 ];
 
-$oView = new core\View('devel/controller');
+$oView = new ViewPhtml('devel/controller');
 $oView->renderizar('db_cambiar_nombre_que.phtml', $a_campos);

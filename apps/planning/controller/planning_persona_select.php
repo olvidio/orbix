@@ -1,13 +1,20 @@
 <?php
 
-use personas\model\entity as personas;
-use ubis\model\entity as ubis;
-use web\Periodo;
+use core\ViewPhtml;
+use personas\model\entity\GestorPersonaAgd;
+use personas\model\entity\GestorPersonaDl;
+use personas\model\entity\GestorPersonaN;
+use personas\model\entity\GestorPersonaNax;
+use personas\model\entity\GestorPersonaS;
+use personas\model\entity\GestorPersonaSSSC;
+use ubis\model\entity\GestorCentroDl;
+use web\Hash;
+use web\Lista;
 
 /**
  * Página de selección de las personas para las que se trazará un planning
  * Presenta una lista de personas que cumplen la condición fijada en el formulario
- * podemos venir de la página plannig_que.php
+ * podemos venir de la página planning_que.php
  * Condiciones:
  *    por formulario:
  *        apellido1, apellido2, nombre, centro
@@ -111,7 +118,7 @@ if (isset($_POST['stack'])) {
 }
 
 if (!empty($aWhereCtr)) { // si busco por centro sólo puede ser de casa
-    $GesCentroDl = new ubis\GestorCentroDl();
+    $GesCentroDl = new GestorCentroDl();
     $cCentros = $GesCentroDl->getCentros($aWhereCtr, $aOperadorCtr);
     // por si hay más de uno.
     $cPersonas = array();
@@ -119,7 +126,7 @@ if (!empty($aWhereCtr)) { // si busco por centro sólo puede ser de casa
         $id_ubi = $oCentro->getId_ubi();
         $aWhere['id_ctr'] = $id_ubi;
         if (!isset($aOperador)) $aOperador = array();
-        $GesPersonas = new personas\GestorPersonaDl();
+        $GesPersonas = new GestorPersonaDl();
         $cPersonas2 = $GesPersonas->getPersonasDl($aWhere, $aOperador);
         if (is_array($cPersonas2) && count($cPersonas2) >= 1) {
             if (is_array($cPersonas)) {
@@ -132,25 +139,25 @@ if (!empty($aWhereCtr)) { // si busco por centro sólo puede ser de casa
 } else {
     switch ($Qobj_pau) {
         case 'PersonaN':
-            $GesPersonas = new personas\GestorPersonaN();
+            $GesPersonas = new GestorPersonaN();
             break;
         case 'PersonaAgd':
-            $GesPersonas = new personas\GestorPersonaAgd();
+            $GesPersonas = new GestorPersonaAgd();
             break;
         case 'PersonaNax':
-            $GesPersonas = new personas\GestorPersonaNax();
+            $GesPersonas = new GestorPersonaNax();
             break;
         case 'PersonaS':
-            $GesPersonas = new personas\GestorPersonaS();
+            $GesPersonas = new GestorPersonaS();
             break;
         case 'PersonaSSSC':
-            $GesPersonas = new personas\GestorPersonaSSSC();
+            $GesPersonas = new GestorPersonaSSSC();
             break;
         case 'PersonaDl':
-            $GesPersonas = new personas\GestorPersonaDl();
+            $GesPersonas = new GestorPersonaDl();
             break;
         default:
-            $GesPersonas = new personas\GestorPersonaDl();
+            $GesPersonas = new GestorPersonaDl();
     }
     $cPersonas = $GesPersonas->getPersonas($aWhere, $aOperador);
 }
@@ -202,14 +209,17 @@ foreach ($cPersonas as $oPersona) {
     $condicion_2 = "Where id_nom='" . $id_nom . "'";
     $condicion_2 = urlencode($condicion_2);
 
-    $aQuery = array('id_nom' => $id_nom,
+    $aQuery = [
+        'id_nom' => $id_nom,
         'condicion' => $condicion_2,
-        'id_tabla' => $id_tabla);
+        'obj_pau' => $Qobj_pau,
+        'id_tabla' => $id_tabla,
+    ];
     // el hppt_build_query no pasa los valores null
     if (is_array($aQuery)) {
         array_walk($aQuery, 'core\poner_empty_on_null');
     }
-    $pagina = web\Hash::link('apps/personas/controller/home_persona.php?' . http_build_query($aQuery));
+    $pagina = Hash::link('apps/personas/controller/home_persona.php?' . http_build_query($aQuery));
 
     $a_valores[$i]['sel'] = "$id_nom";
     $a_valores[$i][1] = $id_tabla;
@@ -217,7 +227,7 @@ foreach ($cPersonas as $oPersona) {
     $a_valores[$i][3] = $ctr_o_dl;
 }
 
-$oHash = new web\Hash();
+$oHash = new Hash();
 $oHash->setcamposNo('sel!scroll_id!modelo!que!id_dossier');
 $a_camposHidden = array(
     'tipo' => $Qtipo,
@@ -231,7 +241,7 @@ $a_camposHidden = array(
 );
 $oHash->setArraycamposHidden($a_camposHidden);
 
-$oTabla = new web\Lista();
+$oTabla = new Lista();
 $oTabla->setId_tabla('planning_select');
 $oTabla->setCabeceras($a_cabeceras);
 $oTabla->setBotones($a_botones);
@@ -243,5 +253,5 @@ $a_campos = ['oPosicion' => $oPosicion,
     'num_personas' => $i,
 ];
 
-$oView = new core\View('asistentes/controller');
-$oView->renderizar('planning_select.phtml', $a_campos);
+$oView = new ViewPhtml('planning/controller');
+$oView->renderizar('planning_persona_select.phtml', $a_campos);

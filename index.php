@@ -42,10 +42,10 @@ use menus\model\entity\GestorMenuDb;
 use menus\model\entity\GrupMenu;
 use menus\model\entity\MetaMenu;
 use menus\model\PermisoMenu;
+use web\Hash;
 use usuarios\model\entity\GestorPreferencia;
 use usuarios\model\entity\Role;
 use usuarios\model\entity\Usuario;
-use web\Hash;
 
 $oGesPref = new GestorPreferencia();
 
@@ -232,8 +232,8 @@ foreach ($oMenuDbs as $oMenuDb) {
     // hago las rutas absolutas, en vez de relativas:
     $full_url = '';
     if (!empty($url)) $full_url = ConfigGlobal::getWeb() . '/' . $url;
-    //$parametros = web\Hash::param($full_url,$parametros);
-    $parametros = web\Hash::add_hash($parametros, $full_url);
+    //$parametros = Hash::param($full_url,$parametros);
+    $parametros = Hash::add_hash($parametros, $full_url);
     // quito las llaves "{}"
     $orden = substr($orden, 1, -1);
     $array_orden = preg_split('/,/', $orden);

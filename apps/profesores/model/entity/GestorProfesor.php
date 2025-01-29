@@ -1,10 +1,15 @@
 <?php
 namespace profesores\model\entity;
 
-use core;
-use web;
-use asignaturas\model\entity as asignaturas;
-use personas\model\entity as personas;
+
+use asignaturas\model\entity\Asignatura;
+use asignaturas\model\entity\Sector;
+use core\ClaseGestor;
+use core\Condicion;
+use core\Set;
+use personas\model\entity\GestorPersonaPub;
+use personas\model\entity\PersonaDl;
+use web\Desplegable;
 
 /**
  * GestorProfesor
@@ -17,7 +22,7 @@ use personas\model\entity as personas;
  * @version 1.0
  * @created 07/04/2014
  */
-class GestorProfesor extends core\ClaseGestor
+class GestorProfesor extends ClaseGestor
 {
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
@@ -42,9 +47,9 @@ class GestorProfesor extends core\ClaseGestor
      */
     function getListaProfesoresAsignatura($id_asignatura)
     {
-        $oAsignatura = new asignaturas\Asignatura($id_asignatura);
+        $oAsignatura = new Asignatura($id_asignatura);
         $id_sector = $oAsignatura->getId_sector();
-        $oSector = new asignaturas\Sector($id_sector);
+        $oSector = new Sector($id_sector);
         $id_departamento = $oSector->getId_departamento();
         // Profesores departamento
         $aProfesoresDepartamento = $this->getListaProfesoresDepartamento($id_departamento);
@@ -63,13 +68,13 @@ class GestorProfesor extends core\ClaseGestor
      * retorna un objecte del tipus Desplegable
      * Els posibles professors per una asignatura
      *
-     * @return web\Desplegable
+     * @return Desplegable
      */
     function getDesplProfesoresAsignatura($id_asignatura)
     {
-        $oAsignatura = new asignaturas\Asignatura($id_asignatura);
+        $oAsignatura = new Asignatura($id_asignatura);
         $id_sector = $oAsignatura->getId_sector();
-        $oSector = new asignaturas\Sector($id_sector);
+        $oSector = new Sector($id_sector);
         $id_departamento = $oSector->getId_departamento();
         // Profesores departamento
         $aProfesoresDepartamento = $this->getListaProfesoresDepartamento($id_departamento);
@@ -79,7 +84,7 @@ class GestorProfesor extends core\ClaseGestor
 
         $AllOpciones = $aProfesoresDepartamento + array("----------") + $aProfesoresAmpliacion;
 
-        return new web\Desplegable('', $AllOpciones, '', true);
+        return new Desplegable('', $AllOpciones, '', true);
 
     }
 
@@ -98,10 +103,10 @@ class GestorProfesor extends core\ClaseGestor
         $aNom = array();
         foreach ($gesProfesores as $oProfesor) {
             $id_nom = $oProfesor->getId_nom();
-            $oPersonaDl = new personas\PersonaDl($id_nom);
+            $oPersonaDl = new PersonaDl($id_nom);
             // comprobar situación
             $situacion = $oPersonaDl->getSituacion();
-            if ($situacion != 'A') {
+            if ($situacion !== 'A') {
                 continue;
             }
             $ap_nom = $oPersonaDl->getPrefApellidosNombre();
@@ -139,7 +144,7 @@ class GestorProfesor extends core\ClaseGestor
      */
     function getListaProfesoresPub()
     {
-        $gesPersonaPub = new personas\GestorPersonaPub();
+        $gesPersonaPub = new GestorPersonaPub();
         $cPersonasPub = $gesPersonaPub->getPersonas(array('profesor_stgr' => 't'));
 
         $aProfesores = array();
@@ -150,7 +155,7 @@ class GestorProfesor extends core\ClaseGestor
             $id_nom = $oPersona->getId_nom();
             // comprobar situación
             $situacion = $oPersona->getSituacion();
-            if ($situacion != 'A') {
+            if ($situacion !== 'A') {
                 continue;
             }
             $ap_nom = $oPersona->getPrefApellidosNombre();
@@ -196,10 +201,10 @@ class GestorProfesor extends core\ClaseGestor
         $aNom = array();
         foreach ($gesProfesores as $oProfesor) {
             $id_nom = $oProfesor->getId_nom();
-            $oPersonaDl = new personas\PersonaDl($id_nom);
+            $oPersonaDl = new PersonaDl($id_nom);
             // comprobar situación
             $situacion = $oPersonaDl->getSituacion();
-            if ($situacion != 'A') {
+            if ($situacion !== 'A') {
                 continue;
             }
             $ap_nom = $oPersonaDl->getPrefApellidosNombre();
@@ -235,11 +240,11 @@ class GestorProfesor extends core\ClaseGestor
      * retorna un objecte del tipus Desplegable
      * Els posibles professors
      *
-     * @return array Una Llista
+     * @return array|Desplegable
      */
     function getListaProfesores()
     {
-        return new web\Desplegable('', $this->getListaProfesoresDl(), '', true);
+        return new Desplegable('', $this->getListaProfesoresDl(), '', true);
     }
 
     public function getListaProfesoresDl()
@@ -248,10 +253,10 @@ class GestorProfesor extends core\ClaseGestor
         $aProfesores = array();
         foreach ($gesProfesores as $oProfesor) {
             $id_nom = $oProfesor->getId_nom();
-            $oPersonaDl = new personas\PersonaDl($id_nom);
+            $oPersonaDl = new PersonaDl($id_nom);
             // comprobar situación
             $situacion = $oPersonaDl->getSituacion();
-            if ($situacion != 'A') {
+            if ($situacion !== 'A') {
                 continue;
             }
             $ap_nom = $oPersonaDl->getPrefApellidosNombre();
@@ -266,12 +271,12 @@ class GestorProfesor extends core\ClaseGestor
      * retorna l'array d'objectes de tipus Profesor
      *
      * @param string sQuery la query a executar.
-     * @return array Una col·lecció d'objectes de tipus Profesor
+     * @return array|false
      */
     function getProfesoresQuery($sQuery = '')
     {
         $oDbl = $this->getoDbl();
-        $oProfesorSet = new core\Set();
+        $oProfesorSet = new Set();
         if (($oDblSt = $oDbl->query($sQuery)) === false) {
             $sClauError = 'GestorProfesor.query';
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
@@ -292,23 +297,23 @@ class GestorProfesor extends core\ClaseGestor
      *
      * @param array aWhere associatiu amb els valors de les variables amb les quals farem la query
      * @param array aOperators associatiu amb els valors dels operadors que cal aplicar a cada variable
-     * @return array Una col·lecció d'objectes de tipus Profesor
+     * @return array|void
      */
     function getProfesores($aWhere = array(), $aOperators = array())
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        $oProfesorSet = new core\Set();
-        $oCondicion = new core\Condicion();
+        $oProfesorSet = new Set();
+        $oCondicion = new Condicion();
         $aCondi = array();
         foreach ($aWhere as $camp => $val) {
-            if ($camp == '_ordre') continue;
+            if ($camp === '_ordre') continue;
             $sOperador = isset($aOperators[$camp]) ? $aOperators[$camp] : '';
             if ($a = $oCondicion->getCondicion($camp, $sOperador, $val)) $aCondi[] = $a;
             // operadores que no requieren valores
-            if ($sOperador == 'BETWEEN' || $sOperador == 'IS NULL' || $sOperador == 'IS NOT NULL' || $sOperador == 'OR') unset($aWhere[$camp]);
-            if ($sOperador == 'IN' || $sOperador == 'NOT IN') unset($aWhere[$camp]);
-            if ($sOperador == 'TXT') unset($aWhere[$camp]);
+            if ($sOperador === 'BETWEEN' || $sOperador === 'IS NULL' || $sOperador === 'IS NOT NULL' || $sOperador === 'OR') unset($aWhere[$camp]);
+            if ($sOperador === 'IN' || $sOperador === 'NOT IN') unset($aWhere[$camp]);
+            if ($sOperador === 'TXT') unset($aWhere[$camp]);
         }
         $sCondi = implode(' AND ', $aCondi);
         if ($sCondi != '') $sCondi = " WHERE " . $sCondi;

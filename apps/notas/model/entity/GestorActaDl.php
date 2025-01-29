@@ -1,8 +1,6 @@
 <?php
 namespace notas\model\entity;
 
-use core;
-
 /**
  * GestorActa
  *
@@ -16,12 +14,6 @@ use core;
  */
 class GestorActaDl extends GestorActa
 {
-    /* ATRIBUTOS ----------------------------------------------------------------- */
-
-    /* CONSTRUCTOR -------------------------------------------------------------- */
-
-
-    
     function __construct()
     {
         $oDbl = $GLOBALS['oDB'];
@@ -29,12 +21,4 @@ class GestorActaDl extends GestorActa
         $this->setNomTabla('e_actas_dl');
     }
 
-
-    /* MÉTODOS PÚBLICOS -----------------------------------------------------------*/
-
-    /* MÉTODOS PROTECTED --------------------------------------------------------*/
-
-    /* MÉTODOS GET y SET --------------------------------------------------------*/
 }
-
-?>

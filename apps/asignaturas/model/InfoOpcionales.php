@@ -2,11 +2,11 @@
 
 namespace asignaturas\model;
 
-use core;
+use core\DatosInfo;
 
 /* No vale el underscore en el nombre */
 
-class InfoOpcionales extends core\DatosInfo
+class InfoOpcionales extends DatosInfo
 {
 
     public function __construct()

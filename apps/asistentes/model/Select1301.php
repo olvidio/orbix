@@ -2,12 +2,17 @@
 
 namespace asistentes\model;
 
-use actividades\model\entity as actividades;
-use personas\model\entity as personas;
-use asistentes\model\entity as asistentes;
-use dossiers\model as dossiers;
-use core;
-use web;
+use actividades\model\entity\Actividad;
+use asistentes\model\entity\GestorAsistente;
+use core\ConfigGlobal;
+use core\ViewPhtml;
+use dossiers\model\PermDossier;
+use personas\model\entity\Persona;
+use web\BotonesCurso;
+use web\Hash;
+use web\Lista;
+use web\Posicion;
+use web\TiposActividades;
 use function core\is_true;
 
 /**
@@ -67,7 +72,7 @@ class Select1301
     // ------ Variables para mantener la selección de la grid al volver atras
     private $Qid_sel;
     private $Qscroll_id;
-    private web\BotonesCurso $oBotonesCurso;
+    private BotonesCurso $oBotonesCurso;
     /**
      * @var array|mixed
      */
@@ -76,6 +81,7 @@ class Select1301
      * @var array|mixed
      */
     private mixed $aLinks_otros;
+    private mixed $status;
 
     private function getBotones()
     {
@@ -108,21 +114,21 @@ class Select1301
 
     private function getTabla()
     {
-        $mi_sfsv = core\ConfigGlobal::mi_sfsv();
+        $mi_sfsv = ConfigGlobal::mi_sfsv();
 
-        $this->oBotonesCurso = new web\BotonesCurso($this->modo_curso);
+        $this->oBotonesCurso = new BotonesCurso($this->modo_curso);
         $aWhere = $this->oBotonesCurso->getWhere();
         $aOperator = $this->oBotonesCurso->getOperator();
 
-        $gesAsistente = new asistentes\GestorAsistente();
-        $oPersona = personas\Persona::newPersona($this->id_pau);
+        $gesAsistente = new GestorAsistente();
+        $oPersona = Persona::newPersona($this->id_pau);
         if (!is_object($oPersona)) {
             $this->msg_err = "<br>$oPersona con id_nom: $this->id_pau en  " . __FILE__ . ": line " . __LINE__;
             exit($this->msg_err);
         }
         // permisos Según el tipo de persona: n, agd, s
         $id_tabla = $oPersona->getId_tabla();
-        $oPermDossier = new dossiers\PermDossier();
+        $oPermDossier = new PermDossier();
         $this->ref_perm = $oPermDossier->perm_activ_pers($id_tabla);
 
         $i = 0;
@@ -134,7 +140,7 @@ class Select1301
             $i++;
             $id_activ = $oAsistente->getId_activ();
             $id_tabla_asist = $oAsistente->getId_tabla();
-            $oActividad = new actividades\Actividad($id_activ);
+            $oActividad = new Actividad($id_activ);
             $nom_activ = $oActividad->getNom_activ();
             $id_tipo_activ = $oActividad->getId_tipo_activ();
             $dl_org = $oActividad->getDl_org();
@@ -146,7 +152,7 @@ class Select1301
             $est_ok = $oAsistente->getEst_ok();
             $observ = $oAsistente->getObserv();
 
-            $oTipoActividad = new web\TiposActividades($id_tipo_activ);
+            $oTipoActividad = new TiposActividades($id_tipo_activ);
             $isfsv = $oTipoActividad->getSfsvId();
             // para ver el nombre en caso de la otra sección
             if ($mi_sfsv != $isfsv && !($_SESSION['oPerm']->have_perm_oficina('des'))) {
@@ -164,9 +170,9 @@ class Select1301
                 $permiso = 1;
             }
 
-            is_true($propio)? $chk_propio = "si" : $chk_propio = "no";
-            is_true($falta)? $chk_falta = "si" : $chk_falta = "no";
-            is_true($est_ok)? $chk_est_ok = "si" : $chk_est_ok = "no";
+            is_true($propio) ? $chk_propio = "si" : $chk_propio = "no";
+            is_true($falta) ? $chk_falta = "si" : $chk_falta = "no";
+            is_true($est_ok) ? $chk_est_ok = "si" : $chk_est_ok = "no";
 
             if ($permiso == 3) {
                 $a_valores[$i]['sel'] = "$id_activ";
@@ -198,10 +204,10 @@ class Select1301
     {
         $this->txt_eliminar = _("¿Está seguro que desea borrar a esta persona de esta actividad?");
         // En el caso de actualizar la misma página (fnjs_actualizar) solo me quedo con la última (stack=0).
-        $oPosicion = new web\Posicion();
+        $oPosicion = new Posicion();
         $stack = $oPosicion->getStack(0);
 
-        $oHashSelect = new web\Hash();
+        $oHashSelect = new Hash();
         $oHashSelect->setCamposForm('modo_curso');
         $oHashSelect->setCamposNo('sel!mod!scroll_id!refresh');
         $a_camposHidden = array(
@@ -216,7 +222,7 @@ class Select1301
         $oHashSelect->setArraycamposHidden($a_camposHidden);
 
         //Hay que ponerlo antes, para que calcule los chk.
-        $oTabla = new web\Lista();
+        $oTabla = new Lista();
         $oTabla->setId_tabla('select1301');
         $oTabla->setCabeceras($this->getCabeceras());
         $oTabla->setBotones($this->getBotones());
@@ -234,7 +240,7 @@ class Select1301
             'bloque' => $this->bloque,
         ];
 
-        $oView = new core\View(__NAMESPACE__);
+        $oView = new ViewPhtml(__NAMESPACE__);
         $oView->renderizar('select1301.phtml', $a_campos);
     }
 
@@ -246,7 +252,7 @@ class Select1301
         if (empty($ref_perm)) { // si es nulo, no tengo permisos de ningún tipo
             return '';
         }
-        $mi_dele = core\ConfigGlobal::mi_delef();
+        $mi_dele = ConfigGlobal::mi_delef();
         reset($ref_perm);
         foreach ($ref_perm as $clave => $val) {
             $permis = $val["perm"];
@@ -263,7 +269,7 @@ class Select1301
                 if (is_array($aQuery)) {
                     array_walk($aQuery, 'core\poner_empty_on_null');
                 }
-                $pagina = web\Hash::link('apps/asistentes/controller/form_1301.php?' . http_build_query($aQuery));
+                $pagina = Hash::link('apps/asistentes/controller/form_1301.php?' . http_build_query($aQuery));
                 $this->aLinks_dl[$nom] = $pagina;
             }
         }
@@ -282,7 +288,7 @@ class Select1301
                 if (is_array($aQuery)) {
                     array_walk($aQuery, 'core\poner_empty_on_null');
                 }
-                $pagina = web\Hash::link('apps/asistentes/controller/form_1301.php?' . http_build_query($aQuery));
+                $pagina = Hash::link('apps/asistentes/controller/form_1301.php?' . http_build_query($aQuery));
                 $this->aLinks_otros[$nom] = $pagina;
             }
         }

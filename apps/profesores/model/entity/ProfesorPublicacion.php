@@ -2,8 +2,13 @@
 
 namespace profesores\model\entity;
 
-use core;
-use web;
+use core\ClasePropiedades;
+use core\ConverterDate;
+use core\DatosCampo;
+use core\Set;
+use web\DateTimeLocal;
+use web\NullDateTimeLocal;
+use function core\is_true;
 
 /**
  * Fitxer amb la Classe que accedeix a la taula d_publicaciones
@@ -24,7 +29,7 @@ use web;
  * @version 1.0
  * @created 04/09/2015
  */
-class ProfesorPublicacion extends core\ClasePropiedades
+class ProfesorPublicacion extends ClasePropiedades
 {
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
@@ -88,7 +93,7 @@ class ProfesorPublicacion extends core\ClasePropiedades
     /**
      * F_publicacion de ProfesorPublicacion
      *
-     * @var web\DateTimeLocal
+     * @var DateTimeLocal
      */
     private $df_publicacion;
     /**
@@ -144,8 +149,8 @@ class ProfesorPublicacion extends core\ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'id_item') && $val_id !== '') $this->iid_item = (int)$val_id; 
-                if (($nom_id == 'id_nom') && $val_id !== '') $this->iid_nom = (int)$val_id; 
+                if (($nom_id === 'id_item') && $val_id !== '') $this->iid_item = (int)$val_id;
+                if (($nom_id === 'id_nom') && $val_id !== '') $this->iid_nom = (int)$val_id;
             }
         }
         $this->setoDbl($oDbl);
@@ -180,7 +185,7 @@ class ProfesorPublicacion extends core\ClasePropiedades
         $aDades['observ'] = $this->sobserv;
         array_walk($aDades, 'core\poner_null');
         //para el caso de los boolean FALSE, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
-        if (core\is_true($aDades['pendiente'])) {
+        if (is_true($aDades['pendiente'])) {
             $aDades['pendiente'] = 'true';
         } else {
             $aDades['pendiente'] = 'false';
@@ -233,7 +238,7 @@ class ProfesorPublicacion extends core\ClasePropiedades
                     return false;
                 }
             }
-            $this->id_item = $oDbl->lastInsertId('d_publicaciones_id_item_seq');
+            $this->iid_item = $oDbl->lastInsertId('d_publicaciones_id_item_seq');
         }
         $this->setAllAtributes($aDades);
         return true;
@@ -301,7 +306,7 @@ class ProfesorPublicacion extends core\ClasePropiedades
      *
      * @param array $aDades
      */
-    function setAllAtributes($aDades, $convert = FALSE)
+    function setAllAtributes(array $aDades, $convert = FALSE)
     {
         if (!is_array($aDades)) return;
         if (array_key_exists('id_schema', $aDades)) $this->setId_schema($aDades['id_schema']);
@@ -379,7 +384,7 @@ class ProfesorPublicacion extends core\ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'id_item') && $val_id !== '') $this->iid_item = (int)$val_id; 
+                if (($nom_id === 'id_item') && $val_id !== '') $this->iid_item = (int)$val_id;
             }
         }
     }
@@ -525,7 +530,7 @@ class ProfesorPublicacion extends core\ClasePropiedades
     /**
      * Recupera el atributo df_publicacion de ProfesorPublicacion
      *
-     * @return web\DateTimeLocal df_publicacion
+     * @return DateTimeLocal|NullDateTimeLocal
      */
     function getF_publicacion()
     {
@@ -533,9 +538,9 @@ class ProfesorPublicacion extends core\ClasePropiedades
             $this->DBCarregar();
         }
         if (empty($this->df_publicacion)) {
-            return new web\NullDateTimeLocal();
+            return new NullDateTimeLocal();
         }
-        $oConverter = new core\ConverterDate('date', $this->df_publicacion);
+        $oConverter = new ConverterDate('date', $this->df_publicacion);
         return $oConverter->fromPg();
     }
 
@@ -544,13 +549,13 @@ class ProfesorPublicacion extends core\ClasePropiedades
      * Si df_publicacion es string, y convert=true se convierte usando el formato webDateTimeLocal->getFormat().
      * Si convert es false, df_publicacion debe ser un string en formato ISO (Y-m-d). Corresponde al pgstyle de la base de datos.
      *
-     * @param date|string df_publicacion='' optional.
+     * @param DateTimeLocal|string df_publicacion='' optional.
      * @param boolean convert=true optional. Si es false, df_publicacion debe ser un string en formato ISO (Y-m-d).
      */
     function setF_publicacion($df_publicacion = '', $convert = true)
     {
         if ($convert === true && !empty($df_publicacion)) {
-            $oConverter = new core\ConverterDate('date', $df_publicacion);
+            $oConverter = new ConverterDate('date', $df_publicacion);
             $this->df_publicacion = $oConverter->toPg();
         } else {
             $this->df_publicacion = $df_publicacion;
@@ -656,7 +661,7 @@ class ProfesorPublicacion extends core\ClasePropiedades
      */
     function getDatosCampos()
     {
-        $oProfesorPublicacionSet = new core\Set();
+        $oProfesorPublicacionSet = new Set();
 
         $oProfesorPublicacionSet->add($this->getDatosTipo_publicacion());
         $oProfesorPublicacionSet->add($this->getDatosTitulo());
@@ -675,12 +680,12 @@ class ProfesorPublicacion extends core\ClasePropiedades
      * Recupera les propietats de l'atribut stipo_publicacion de ProfesorPublicacion
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosTipo_publicacion()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'tipo_publicacion'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'tipo_publicacion'));
         $oDatosCampo->setEtiqueta(_("tipo de publicación"));
         $oDatosCampo->setTipo('texto');
         $oDatosCampo->setArgument(15);
@@ -691,12 +696,12 @@ class ProfesorPublicacion extends core\ClasePropiedades
      * Recupera les propietats de l'atribut stitulo de ProfesorPublicacion
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosTitulo()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'titulo'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'titulo'));
         $oDatosCampo->setEtiqueta(_("título"));
         $oDatosCampo->setTipo('texto');
         $oDatosCampo->setArgument(100);
@@ -707,12 +712,12 @@ class ProfesorPublicacion extends core\ClasePropiedades
      * Recupera les propietats de l'atribut seditorial de ProfesorPublicacion
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosEditorial()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'editorial'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'editorial'));
         $oDatosCampo->setEtiqueta(_("editorial"));
         $oDatosCampo->setTipo('texto');
         $oDatosCampo->setArgument(50);
@@ -723,12 +728,12 @@ class ProfesorPublicacion extends core\ClasePropiedades
      * Recupera les propietats de l'atribut scoleccion de ProfesorPublicacion
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosColeccion()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'coleccion'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'coleccion'));
         $oDatosCampo->setEtiqueta(_("colección"));
         $oDatosCampo->setTipo('texto');
         $oDatosCampo->setArgument(50);
@@ -739,12 +744,12 @@ class ProfesorPublicacion extends core\ClasePropiedades
      * Recupera les propietats de l'atribut df_publicacion de ProfesorPublicacion
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosF_publicacion()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'f_publicacion'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'f_publicacion'));
         $oDatosCampo->setEtiqueta(_("fecha de la publicación"));
         $oDatosCampo->setTipo('fecha');
         return $oDatosCampo;
@@ -754,12 +759,12 @@ class ProfesorPublicacion extends core\ClasePropiedades
      * Recupera les propietats de l'atribut bpendiente de ProfesorPublicacion
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosPendiente()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'pendiente'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'pendiente'));
         $oDatosCampo->setEtiqueta(_("pendiente"));
         $oDatosCampo->setTipo('check');
         return $oDatosCampo;
@@ -769,12 +774,12 @@ class ProfesorPublicacion extends core\ClasePropiedades
      * Recupera les propietats de l'atribut sreferencia de ProfesorPublicacion
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosReferencia()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'referencia'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'referencia'));
         $oDatosCampo->setEtiqueta(_("referencia"));
         $oDatosCampo->setTipo('texto');
         $oDatosCampo->setArgument(50);
@@ -785,12 +790,12 @@ class ProfesorPublicacion extends core\ClasePropiedades
      * Recupera les propietats de l'atribut slugar de ProfesorPublicacion
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosLugar()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'lugar'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'lugar'));
         $oDatosCampo->setEtiqueta(_("lugar"));
         $oDatosCampo->setTipo('texto');
         $oDatosCampo->setArgument(100);
@@ -801,12 +806,12 @@ class ProfesorPublicacion extends core\ClasePropiedades
      * Recupera les propietats de l'atribut sobserv de ProfesorPublicacion
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosObserv()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'observ'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'observ'));
         $oDatosCampo->setEtiqueta(_("observaciones"));
         $oDatosCampo->setTipo('texto');
         $oDatosCampo->setArgument(100);

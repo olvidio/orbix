@@ -1,6 +1,9 @@
 <?php
 
+use core\ViewPhtml;
 use devel\model\entity;
+use web\Hash;
+use web\Lista;
 
 /**
  * Esta página muestra una tabla con los modulos de la aplicación
@@ -135,13 +138,13 @@ if (isset($Qscroll_id) && !empty($Qscroll_id)) {
     $a_valores['scroll_id'] = $Qscroll_id;
 }
 
-$oTabla = new web\Lista();
+$oTabla = new Lista();
 $oTabla->setId_tabla("modulos_select");
 $oTabla->setCabeceras($a_cabeceras);
 $oTabla->setBotones($a_botones);
 $oTabla->setDatos($a_valores);
 
-$oHash = new web\Hash();
+$oHash = new Hash();
 $oHash->setCamposForm('sel!mod');
 $oHash->setcamposNo('scroll_id!sel!refresh');
 
@@ -153,5 +156,5 @@ $a_campos = ['oPosicion' => $oPosicion,
     'txt_eliminar' => $txt_eliminar,
 ];
 
-$oView = new core\View('devel/controller');
+$oView = new ViewPhtml('devel/controller');
 $oView->renderizar('modulos_select.phtml', $a_campos);

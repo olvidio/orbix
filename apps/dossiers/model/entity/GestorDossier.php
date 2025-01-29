@@ -1,7 +1,10 @@
 <?php
 namespace dossiers\model\entity;
 
-use core;
+use core\ClaseGestor;
+use core\Condicion;
+use core\ConfigGlobal;
+use core\Set;
 
 /**
  * GestorDossier
@@ -14,7 +17,7 @@ use core;
  * @version 1.0
  * @created 25/11/2014
  */
-class GestorDossier extends core\ClaseGestor
+class GestorDossier extends ClaseGestor
 {
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
@@ -36,13 +39,13 @@ class GestorDossier extends core\ClaseGestor
      * retorna l'array d'objectes de tipus Dossier
      *
      * @param string sQuery la query a executar.
-     * @return array Una col·lecció d'objectes de tipus Dossier
+     * @return array|false
      */
     function DossiersNotEmpty($pau = '', $id = '')
     {
-        $esquema = core\ConfigGlobal::mi_region_dl();
+        $esquema = ConfigGlobal::mi_region_dl();
         $oDbl = $this->getoDbl();
-        $oDossierSet = new core\Set();
+        $oDossierSet = new Set();
         $gesTipoDossier = new GestorTipoDossier();
         $cTiposDossier = $gesTipoDossier->getTiposDossiers(array('tabla_from' => $pau));
         $db_anterior = 0;
@@ -93,12 +96,12 @@ class GestorDossier extends core\ClaseGestor
      * retorna l'array d'objectes de tipus Dossier
      *
      * @param string sQuery la query a executar.
-     * @return array Una col·lecció d'objectes de tipus Dossier
+     * @return array|false
      */
     function getDossiersQuery($sQuery = '')
     {
         $oDbl = $this->getoDbl();
-        $oDossierSet = new core\Set();
+        $oDossierSet = new Set();
         if (($oDbl->query($sQuery)) === false) {
             $sClauError = 'GestorDossier.query';
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
@@ -119,23 +122,23 @@ class GestorDossier extends core\ClaseGestor
      *
      * @param array aWhere associatiu amb els valors de les variables amb les quals farem la query
      * @param array aOperators associatiu amb els valors dels operadors que cal aplicar a cada variable
-     * @return array Una col·lecció d'objectes de tipus Dossier
+     * @return array|void
      */
     function getDossiers($aWhere = array(), $aOperators = array())
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        $oDossierSet = new core\Set();
-        $oCondicion = new core\Condicion();
+        $oDossierSet = new Set();
+        $oCondicion = new Condicion();
         $aCondi = array();
         foreach ($aWhere as $camp => $val) {
-            if ($camp == '_ordre') continue;
+            if ($camp === '_ordre') continue;
             $sOperador = isset($aOperators[$camp]) ? $aOperators[$camp] : '';
             if ($a = $oCondicion->getCondicion($camp, $sOperador, $val)) $aCondi[] = $a;
             // operadores que no requieren valores
-            if ($sOperador == 'BETWEEN' || $sOperador == 'IS NULL' || $sOperador == 'IS NOT NULL' || $sOperador == 'OR') unset($aWhere[$camp]);
-            if ($sOperador == 'IN' || $sOperador == 'NOT IN') unset($aWhere[$camp]);
-            if ($sOperador == 'TXT') unset($aWhere[$camp]);
+            if ($sOperador === 'BETWEEN' || $sOperador === 'IS NULL' || $sOperador === 'IS NOT NULL' || $sOperador === 'OR') unset($aWhere[$camp]);
+            if ($sOperador === 'IN' || $sOperador === 'NOT IN') unset($aWhere[$camp]);
+            if ($sOperador === 'TXT') unset($aWhere[$camp]);
         }
         $sCondi = implode(' AND ', $aCondi);
         if ($sCondi != '') $sCondi = " WHERE " . $sCondi;

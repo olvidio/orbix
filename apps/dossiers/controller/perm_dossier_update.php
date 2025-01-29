@@ -1,7 +1,7 @@
 <?php
 
+use dossiers\model\entity\TipoDossier;
 use function core\is_true;
-use dossiers\model\entity as dossiers;
 
 /**
  * Para asegurar que inicia la sesion, y poder acceder a los permisos
@@ -20,7 +20,7 @@ $Qcampos_chk = (string)filter_input(INPUT_POST, 'campos_chk');
 
 switch ($Qque) {
     case 'eliminar':
-        $oTipoDossier = new dossiers\TipoDossier($Qid_tipo_dossier);
+        $oTipoDossier = new TipoDossier($Qid_tipo_dossier);
         if ($oTipoDossier->DBEliminar() === false) {
             echo _("hay un error, no se ha eliminado");
             echo "\n" . $oTipoDossier->getErrorTxt();
@@ -29,7 +29,7 @@ switch ($Qque) {
         die();
         break;
     case 'guardar':
-        $oTipoDossier = new dossiers\TipoDossier($Qid_tipo_dossier);
+        $oTipoDossier = new TipoDossier($Qid_tipo_dossier);
         break;
 }
 
@@ -40,8 +40,8 @@ $cDatosCampo = $oTipoDossier->getDatosCampos();
 foreach ($cDatosCampo as $oDatosCampo) {
     $camp = $oDatosCampo->getNom_camp();
     $valor = empty($_POST[$camp]) ? '' : $_POST[$camp];
-    if ($oDatosCampo->datos_campo($oDbl, 'tipo') == "bool") { //si es un campo boolean, cambio los valores on, off... por true, false...
-        if ($valor == "on") {
+    if ($oDatosCampo->datos_campo($oDbl, 'tipo') === "bool") { //si es un campo boolean, cambio los valores on, off... por true, false...
+        if ($valor === "on") {
             $valor = 't';
             $a_values_o[$camp] = $valor;
         } else {
@@ -55,7 +55,7 @@ foreach ($cDatosCampo as $oDatosCampo) {
         if (!isset($_POST[$camp]) && !empty($Qid_tipo_dossier)) continue; // sólo si no es nuevo
 
         //cuando el campo es permiso_lectura, se pasa un array que hay que convertirlo en número.
-        if ($camp == "permiso_lectura") {
+        if ($camp === "permiso_lectura") {
             $byte = 0;
             foreach ($_POST[$camp] as $bit) {
                 $byte = $byte + $bit;
@@ -63,7 +63,7 @@ foreach ($cDatosCampo as $oDatosCampo) {
             $valor = $byte;
         }
         //cuando el campo es permiso_escritura, se pasa un array que hay que convertirlo en número.
-        if ($camp == "permiso_escritura") {
+        if ($camp === "permiso_escritura") {
             $byte = 0;
             foreach ($_POST[$camp] as $bit) {
                 $byte = $byte + $bit;

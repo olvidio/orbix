@@ -2,7 +2,8 @@
 
 namespace actividades\model\entity;
 
-use core;
+use core\ConfigGlobal;
+use function core\is_true;
 
 /**
  * Clase que implementa la entidad a_actividades_dl
@@ -83,7 +84,7 @@ class Actividad extends ActividadAll
         $aDades['plazas'] = $this->iplazas;
         array_walk($aDades, 'core\poner_null');
         //para el caso de los boolean FALSE, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
-        if (core\is_true($aDades['publicado'])) {
+        if (is_true($aDades['publicado'])) {
             $aDades['publicado'] = 'true';
         } else {
             $aDades['publicado'] = 'false';
@@ -92,13 +93,13 @@ class Actividad extends ActividadAll
         $a_pkey = $this->aPrimary_key;
         $dl_org = $aDades['dl_org'];
         $id_tabla = $this->sid_tabla;
-        if ($dl_org == core\ConfigGlobal::mi_delef()) {
+        if ($dl_org == ConfigGlobal::mi_delef()) {
             $oActividad = new ActividadDl($a_pkey);
         } else {
             if ($id_tabla === 'dl') {
                 // caso especial dre puede cambiar las actividades de sf:
                 $dl_org_no_f = preg_replace('/(\.*)f$/', '\1', $dl_org);
-                if ($dl_org_no_f == core\ConfigGlobal::mi_delef() && $_SESSION['oPerm']->have_perm_oficina('des')) {
+                if ($dl_org_no_f == ConfigGlobal::mi_delef() && $_SESSION['oPerm']->have_perm_oficina('des')) {
                     $oActividad = new ActividadDl($a_pkey);
                 } else {
                     // No se puede modificar una actividad de otra dl
@@ -143,7 +144,7 @@ class Actividad extends ActividadAll
                 case 'guardar':
                     if (!$oDblSt->rowCount()) return false;
                     // Hay que guardar los boolean de la misma manera que al guardar los datos ('false','true'):
-                    if (core\is_true($aDades['publicado'])) {
+                    if (is_true($aDades['publicado'])) {
                         $aDades['publicado'] = 'true';
                     } else {
                         $aDades['publicado'] = 'false';
@@ -176,12 +177,12 @@ class Actividad extends ActividadAll
 
         // para des => dl y dlf:
         $dl_org_no_f = preg_replace('/(\.*)f$/', '\1', $dl_org);
-        $dl_propia = (core\ConfigGlobal::mi_dele() == $dl_org_no_f) ? TRUE : FALSE;
+        $dl_propia = (ConfigGlobal::mi_dele() == $dl_org_no_f) ? TRUE : FALSE;
 
         if ($dl_propia) {
             $oActividadAll = new ActividadDl($a_pkey);
         } else {
-            if ($id_tabla == 'dl') {
+            if ($id_tabla === 'dl') {
                 // No se puede eliminar una actividad de otra dl. Hay que borrarla como importada
                 $oImportada = new Importada($a_pkey);
                 $oImportada->DBEliminar();

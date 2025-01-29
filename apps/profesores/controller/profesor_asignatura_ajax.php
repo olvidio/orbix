@@ -1,9 +1,11 @@
 <?php
 
-use profesores\model\entity as profesores;
-use personas\model\entity as personas;
-use profesores\model\entity\GestorProfesorDocenciaStgr;
 use core\ConfigGlobal;
+use personas\model\entity\GestorTelecoPersonaDl;
+use personas\model\entity\PersonaDl;
+use profesores\model\entity\GestorProfesor;
+use profesores\model\entity\GestorProfesorDocenciaStgr;
+use web\Lista;
 
 // INICIO Cabecera global de URL de controlador *********************************
 require_once("apps/core/global_header.inc");
@@ -15,7 +17,7 @@ require_once("apps/core/global_object.inc");
 
 $Qid_asignatura = (integer)filter_input(INPUT_POST, 'id_asignatura');
 
-$GesProfesores = new profesores\GestorProfesor();
+$GesProfesores = new GestorProfesor();
 $cProfesores = $GesProfesores->getListaProfesoresAsignatura($Qid_asignatura);
 /* $cProfesores es un array amb dos llistes:
 	$Opciones['departamento']
@@ -38,9 +40,9 @@ $i = 0;
 $a_valores = array();
 foreach ($cProfesores['departamento'] as $id_nom => $ap_nom) {
     $i++;
-    $oPersonaDl = new personas\PersonaDl($id_nom);
+    $oPersonaDl = new PersonaDl($id_nom);
     // Para el caso de ser region del stgr, poner la dl
-    if (ConfigGlobal::mi_ambito() == 'rstgr') {
+    if (ConfigGlobal::mi_ambito() === 'rstgr') {
         $centro = $oPersonaDl->getDl() . " - " . $oPersonaDl->getCentro_o_dl();
     } else {
         $centro = $oPersonaDl->getCentro_o_dl();
@@ -61,7 +63,7 @@ foreach ($cProfesores['departamento'] as $id_nom => $ap_nom) {
         $txt_docencia .= $curso;
     }
     // Telecos
-    $gesTelecoPersona = new personas\GestorTelecoPersonaDl();
+    $gesTelecoPersona = new GestorTelecoPersonaDl();
     $cTelecoPersona = $gesTelecoPersona->getTelecos(array('id_nom' => $id_nom));
     $telfs = '';
     $mails = '';
@@ -95,7 +97,7 @@ foreach ($cProfesores['departamento'] as $id_nom => $ap_nom) {
 // Para añadir los de apmpliación
 foreach ($cProfesores['ampliacion'] as $id_nom => $ap_nom) {
     $i++;
-    $oPersonaDl = new personas\PersonaDl($id_nom);
+    $oPersonaDl = new PersonaDl($id_nom);
     $centro = $oPersonaDl->getCentro_o_dl();
     // Actividad docente
     $oGesDocencia = new GestorProfesorDocenciaStgr();
@@ -113,7 +115,7 @@ foreach ($cProfesores['ampliacion'] as $id_nom => $ap_nom) {
         $txt_docencia .= $curso;
     }
     // Telecos
-    $gesTelecoPersona = new personas\GestorTelecoPersonaDl();
+    $gesTelecoPersona = new GestorTelecoPersonaDl();
     $cTelecoPersona = $gesTelecoPersona->getTelecos(array('id_nom' => $id_nom));
     $telfs = '';
     $mails = '';
@@ -146,7 +148,7 @@ foreach ($cProfesores['ampliacion'] as $id_nom => $ap_nom) {
 
 }
 
-$oTabla = new web\Lista();
+$oTabla = new Lista();
 $oTabla->setId_tabla('list_profe_asig');
 $oTabla->setCabeceras($a_cabeceras);
 $oTabla->setBotones($a_botones);

@@ -1,6 +1,7 @@
 <?php
 
 use core\ConfigGlobal;
+use core\ViewTwig;
 use web\DesplegableArray;
 use web\Hash;
 
@@ -88,5 +89,5 @@ $a_campos = [
     'oSelCiudades' => $oSelCiudades,
 ];
 
-$oView = new core\ViewTwig('cartaspresentacion/controller');
+$oView = new ViewTwig('cartaspresentacion/controller');
 $oView->renderizar('cartas_presentacion_que.html.twig', $a_campos);

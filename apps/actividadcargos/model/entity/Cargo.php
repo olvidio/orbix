@@ -1,7 +1,10 @@
 <?php
 namespace actividadcargos\model\entity;
 
-use core;
+use core\ClasePropiedades;
+use core\DatosCampo;
+use core\Set;
+use function core\is_true;
 
 /**
  * Fitxer amb la Classe que accedeix a la taula xd_orden_cargo
@@ -22,7 +25,7 @@ use core;
  * @version 1.0
  * @created 19/11/2014
  */
-class Cargo extends core\ClasePropiedades
+class Cargo extends ClasePropiedades
 {
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
@@ -113,7 +116,7 @@ class Cargo extends core\ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'id_cargo') && $val_id !== '') $this->iid_cargo = (int)$val_id; 
+                if (($nom_id === 'id_cargo') && $val_id !== '') $this->iid_cargo = (int)$val_id;
             }
         } else {
             if (isset($a_id) && $a_id !== '') {
@@ -150,12 +153,12 @@ class Cargo extends core\ClasePropiedades
         $aDades['tipo_cargo'] = $this->stipo_cargo;
         array_walk($aDades, 'core\poner_null');
         //para el caso de los boolean FALSE, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
-        if (core\is_true($aDades['sf'])) {
+        if (is_true($aDades['sf'])) {
             $aDades['sf'] = 'true';
         } else {
             $aDades['sf'] = 'false';
         }
-        if (core\is_true($aDades['sv'])) {
+        if (is_true($aDades['sv'])) {
             $aDades['sv'] = 'true';
         } else {
             $aDades['sv'] = 'false';
@@ -203,7 +206,7 @@ class Cargo extends core\ClasePropiedades
                     return false;
                 }
             }
-            $this->id_cargo = $oDbl->lastInsertId('xd_orden_cargo_id_cargo_seq');
+            $this->iid_cargo = $oDbl->lastInsertId('xd_orden_cargo_id_cargo_seq');
         }
         $this->setAllAtributes($aDades);
         return true;
@@ -271,7 +274,7 @@ class Cargo extends core\ClasePropiedades
      *
      * @param array $aDades
      */
-    function setAllAtributes($aDades)
+    function setAllAtributes(array $aDades)
     {
         if (!is_array($aDades)) return;
         if (array_key_exists('id_cargo', $aDades)) $this->setId_cargo($aDades['id_cargo']);
@@ -337,7 +340,7 @@ class Cargo extends core\ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'id_cargo') && $val_id !== '') $this->iid_cargo = (int)$val_id; 
+                if (($nom_id === 'id_cargo') && $val_id !== '') $this->iid_cargo = (int)$val_id;
             }
         }
     }
@@ -487,7 +490,7 @@ class Cargo extends core\ClasePropiedades
      */
     function getDatosCampos()
     {
-        $ocargoSet = new core\Set();
+        $ocargoSet = new Set();
 
         $ocargoSet->add($this->getDatosCargo());
         $ocargoSet->add($this->getDatosOrden_cargo());
@@ -507,7 +510,7 @@ class Cargo extends core\ClasePropiedades
     function getDatosCargo()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'cargo'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'cargo'));
         $oDatosCampo->setEtiqueta(_("cargo"));
         return $oDatosCampo;
     }
@@ -521,7 +524,7 @@ class Cargo extends core\ClasePropiedades
     function getDatosOrden_cargo()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'orden_cargo'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'orden_cargo'));
         $oDatosCampo->setEtiqueta(_("orden cargo"));
         return $oDatosCampo;
     }
@@ -535,7 +538,7 @@ class Cargo extends core\ClasePropiedades
     function getDatosSf()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'sf'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'sf'));
         $oDatosCampo->setEtiqueta(_("sf"));
         return $oDatosCampo;
     }
@@ -549,7 +552,7 @@ class Cargo extends core\ClasePropiedades
     function getDatosSv()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'sv'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'sv'));
         $oDatosCampo->setEtiqueta(_("sv"));
         return $oDatosCampo;
     }
@@ -563,7 +566,7 @@ class Cargo extends core\ClasePropiedades
     function getDatosTipo_cargo()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'tipo_cargo'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'tipo_cargo'));
         $oDatosCampo->setEtiqueta(_("tipo de cargo"));
         return $oDatosCampo;
     }

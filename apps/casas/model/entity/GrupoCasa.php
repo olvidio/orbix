@@ -2,7 +2,9 @@
 
 namespace casas\model\entity;
 
-use core;
+use core\ClasePropiedades;
+use core\DatosCampo;
+use core\Set;
 
 /**
  * Fitxer amb la Classe que accedeix a la taula du_grupos_dl
@@ -23,7 +25,7 @@ use core;
  * @version 1.0
  * @created 1/7/2019
  */
-class GrupoCasa extends core\ClasePropiedades
+class GrupoCasa extends ClasePropiedades
 {
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
@@ -96,7 +98,7 @@ class GrupoCasa extends core\ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'id_item') && $val_id !== '') $this->iid_item = (int)$val_id;
+                if (($nom_id === 'id_item') && $val_id !== '') $this->iid_item = (int)$val_id;
             }
         } else {
             if (isset($a_id) && $a_id !== '') {
@@ -169,7 +171,7 @@ class GrupoCasa extends core\ClasePropiedades
                     return FALSE;
                 }
             }
-            $this->id_item = $oDbl->lastInsertId('du_grupos_dl_id_item_seq');
+            $this->iid_item = $oDbl->lastInsertId('du_grupos_dl_id_item_seq');
         }
         $this->setAllAtributes($aDades);
         return TRUE;
@@ -237,7 +239,7 @@ class GrupoCasa extends core\ClasePropiedades
      *
      * @param array $aDades
      */
-    function setAllAtributes($aDades)
+    function setAllAtributes(array $aDades)
     {
         if (!is_array($aDades)) return;
         if (array_key_exists('id_item', $aDades)) $this->setId_item($aDades['id_item']);
@@ -297,7 +299,7 @@ class GrupoCasa extends core\ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'id_item') && $val_id !== '') $this->iid_item = (int)$val_id;
+                if (($nom_id === 'id_item') && $val_id !== '') $this->iid_item = (int)$val_id;
             }
         }
     }
@@ -378,7 +380,7 @@ class GrupoCasa extends core\ClasePropiedades
      */
     function getDatosCampos()
     {
-        $oGrupoCasaSet = new core\Set();
+        $oGrupoCasaSet = new Set();
 
         $oGrupoCasaSet->add($this->getDatosId_ubi_padre());
         $oGrupoCasaSet->add($this->getDatosId_ubi_hijo());
@@ -390,12 +392,12 @@ class GrupoCasa extends core\ClasePropiedades
      * Recupera les propietats de l'atribut iid_ubi_padre de GrupoCasa
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosId_ubi_padre()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_ubi_padre'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_ubi_padre'));
         $oDatosCampo->setEtiqueta(_("id_ubi_padre"));
         return $oDatosCampo;
     }
@@ -404,12 +406,12 @@ class GrupoCasa extends core\ClasePropiedades
      * Recupera les propietats de l'atribut iid_ubi_hijo de GrupoCasa
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosId_ubi_hijo()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_ubi_hijo'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_ubi_hijo'));
         $oDatosCampo->setEtiqueta(_("id_ubi_hijo"));
         return $oDatosCampo;
     }

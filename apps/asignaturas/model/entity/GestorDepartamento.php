@@ -1,8 +1,10 @@
 <?php
 namespace asignaturas\model\entity;
 
-use core;
-use web;
+use core\ClaseGestor;
+use core\Condicion;
+use core\Set;
+use web\Desplegable;
 
 /**
  * GestorDepartamento
@@ -15,7 +17,7 @@ use web;
  * @version 1.0
  * @created 01/12/2010
  */
-class GestorDepartamento extends core\ClaseGestor
+class GestorDepartamento extends ClaseGestor
 {
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
@@ -43,7 +45,7 @@ class GestorDepartamento extends core\ClaseGestor
      * retorna un objecte del tipus Desplegable
      * Els posibles departaments.
      *
-     * @return array Una Llista
+     * @return false|Desplegable
      */
     function getListaDepartamentos()
     {
@@ -61,20 +63,20 @@ class GestorDepartamento extends core\ClaseGestor
             $val = $aClave[1];
             $aOpciones[$clave] = $val;
         }
-        return new web\Desplegable('', $aOpciones, '', true);
+        return new Desplegable('', $aOpciones, '', true);
     }
 
     /**
      * retorna l'array d'objectes de tipus Departamento
      *
      * @param string sQuery la query a executar.
-     * @return array Una col·lecció d'objectes de tipus Departamento
+     * @return array|false
      */
     function getDepartamentosQuery($sQuery = '')
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        $oDepartamentoSet = new core\Set();
+        $oDepartamentoSet = new Set();
         if (($oDblSt = $oDbl->query($sQuery)) === false) {
             $sClauError = 'GestorDepartamento.query';
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
@@ -93,23 +95,23 @@ class GestorDepartamento extends core\ClaseGestor
      *
      * @param array aWhere associatiu amb els valors de les variables amb les quals farem la query
      * @param array aOperators associatiu amb els valors dels operadors que cal aplicar a cada variable
-     * @return array Una col·lecció d'objectes de tipus Departamento
+     * @return array|void
      */
     function getDepartamentos($aWhere = array(), $aOperators = array())
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
-        $oDepartamentoSet = new core\Set();
-        $oCondicion = new core\Condicion();
+        $oDepartamentoSet = new Set();
+        $oCondicion = new Condicion();
         $aCondi = array();
         foreach ($aWhere as $camp => $val) {
             if ($camp === '_ordre') continue;
             $sOperador = isset($aOperators[$camp]) ? $aOperators[$camp] : '';
             if ($a = $oCondicion->getCondicion($camp, $sOperador, $val)) $aCondi[] = $a;
             // operadores que no requieren valores
-            if ($sOperador == 'BETWEEN' || $sOperador == 'IS NULL' || $sOperador == 'IS NOT NULL' || $sOperador == 'OR') unset($aWhere[$camp]);
-            if ($sOperador == 'IN' || $sOperador == 'NOT IN') unset($aWhere[$camp]);
-            if ($sOperador == 'TXT') unset($aWhere[$camp]);
+            if ($sOperador === 'BETWEEN' || $sOperador === 'IS NULL' || $sOperador === 'IS NOT NULL' || $sOperador === 'OR') unset($aWhere[$camp]);
+            if ($sOperador === 'IN' || $sOperador === 'NOT IN') unset($aWhere[$camp]);
+            if ($sOperador === 'TXT') unset($aWhere[$camp]);
         }
         $sCondi = implode(' AND ', $aCondi);
         if ($sCondi != '') $sCondi = " WHERE " . $sCondi;

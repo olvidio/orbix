@@ -1,11 +1,10 @@
 <?php
 
+use asignaturas\model\entity\GestorAsignatura;
+use core\ConfigGlobal;
+use web\Lista;
 use profesores\model\entity\GestorProfesor;
 use profesores\model\entity\GestorProfesorDocenciaStgr;
-use asignaturas\model\entity\GestorAsignatura;
-use web\Lista;
-use core\ConfigGlobal;
-use personas\model\entity\PersonaDl;
 
 /**
  * Funciones más comunes de la aplicación

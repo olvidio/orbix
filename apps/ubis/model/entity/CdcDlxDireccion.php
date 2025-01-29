@@ -1,7 +1,6 @@
 <?php
 namespace ubis\model\entity;
 
-use core;
 
 /**
  * Fitxer amb la Classe que accedeix a la taula u_cross_cdc_dl_dir

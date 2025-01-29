@@ -1,4 +1,5 @@
-<?php use core\ConfigGlobal; ?>
+<?php use core\ConfigGlobal;
+use dossiers\model\PermDossier; ?>
     <h2 class=titulo><?= ucfirst(_("relación de dossiers")); ?></h2>
 <?php
 $lista_doss = "SELECT * 
@@ -38,7 +39,7 @@ foreach ($oDBSt_d_lista->fetchAll() as $row) {
     $clase = "imp";
     $i % 2 ? 0 : $clase = "par";
     $i++;
-    $perm_a = permiso($permiso_lectura, $permiso_escritura, $depende_modificar, $pau, $id_pau);
+    $perm_a = PermDossier::permiso($permiso_lectura, $permiso_escritura, $depende_modificar, $pau, $id_pau);
 
     $href_ver = ConfigGlobal::getWeb() . '/programas/dossiers/dossiers_ver.php?pau=' . $pau . '&id_pau=' . $id_pau . '&tabla_pau=' . $tabla_pau . '&id_dossier=' . $id_dossier . '&permiso=' . $perm_a . '&depende=' . $depende_modificar;
     $href_abrir = ConfigGlobal::getWeb() . '/programas/dossiers/dossier_abrir.php?pau=' . $pau . '&id_pau=' . $id_pau . '&tabla_pau=' . $tabla_pau . '&id_dossier=' . $id_dossier . '&tabla_to=' . $tabla_to . '&permiso=' . $perm_a;

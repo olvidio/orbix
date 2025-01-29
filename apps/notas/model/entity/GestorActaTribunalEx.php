@@ -1,8 +1,6 @@
 <?php
 namespace notas\model\entity;
 
-use core;
-
 /**
  * GestorActaTribunalEx
  *
@@ -31,5 +29,3 @@ class GestorActaTribunalEx extends GestorActaTribunal
 
 
 }
-
-?>

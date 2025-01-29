@@ -1,6 +1,7 @@
 <?php
 
 use actividadessacd\model\entity\GestorAtnActivSacdTexto;
+use core\ViewTwig;
 use web\Desplegable;
 use web\Hash;
 
@@ -82,5 +83,5 @@ $a_campos = ['oPosicion' => $oPosicion,
     'oDesplIdiomas' => $oDesplIdiomas,
 ];
 
-$oView = new core\ViewTwig('actividadessacd/controller');
+$oView = new ViewTwig('actividadessacd/controller');
 $oView->renderizar('com_sacd_txt.html.twig', $a_campos);

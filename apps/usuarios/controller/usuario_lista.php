@@ -1,6 +1,12 @@
 <?php
 
-use usuarios\model\entity as usuarios;
+use core\ConfigGlobal;
+use core\ViewPhtml;
+use usuarios\model\entity\GestorUsuario;
+use usuarios\model\entity\Role;
+use usuarios\model\entity\Usuario;
+use web\Hash;
+use web\Lista;
 
 // INICIO Cabecera global de URL de controlador *********************************
 require_once("apps/core/global_header.inc");
@@ -34,9 +40,9 @@ $Qusername = (string)filter_input(INPUT_POST, 'username');
 
 $oPosicion->setParametros(array('username' => $Qusername), 1);
 
-$oMiUsuario = new usuarios\Usuario(core\ConfigGlobal::mi_id_usuario());
+$oMiUsuario = new Usuario(ConfigGlobal::mi_id_usuario());
 $miRole = $oMiUsuario->getId_role();
-$miSfsv = core\ConfigGlobal::mi_sfsv();
+$miSfsv = ConfigGlobal::mi_sfsv();
 
 if ($miRole > 3) exit(_("no tiene permisos para ver esto")); // no es administrador
 $aWhere = array();
@@ -53,8 +59,8 @@ if (!empty($Qusername)) {
 }
 $aWhere['_ordre'] = 'usuario';
 
-$oRole = new usuarios\Role();
-$oGesUsuarios = new usuarios\GestorUsuario();
+$oRole = new Role();
+$oGesUsuarios = new GestorUsuario();
 $oUsuarioColeccion = $oGesUsuarios->getUsuarios($aWhere, $aOperador);
 /*
    *** FASES ***
@@ -106,7 +112,7 @@ foreach ($oUsuarioColeccion as $oUsuario) {
         $role = '?';
     }
 
-    $pagina = web\Hash::link(core\ConfigGlobal::getWeb() . '/apps/usuarios/controller/usuario_form.php?' . http_build_query(array('quien' => 'usuario', 'id_usuario' => $id_usuario)));
+    $pagina = Hash::link(ConfigGlobal::getWeb() . '/apps/usuarios/controller/usuario_form.php?' . http_build_query(array('quien' => 'usuario', 'id_usuario' => $id_usuario)));
 
     $a_valores[$i]['sel'] = "$id_usuario#";
     $a_valores[$i][1] = $usuario;
@@ -122,24 +128,26 @@ if (isset($Qscroll_id) && !empty($Qscroll_id)) {
     $a_valores['scroll_id'] = $Qscroll_id;
 }
 
-$oTabla = new web\Lista();
+$oTabla = new Lista();
 $oTabla->setId_tabla('usuario_lista');
 $oTabla->setCabeceras($a_cabeceras);
 $oTabla->setBotones($a_botones);
 $oTabla->setDatos($a_valores);
 
-$oHash = new web\Hash();
+$oHash = new Hash();
 $oHash->setCamposForm('username');
 $oHash->setcamposNo('scroll_id');
 $oHash->setArraycamposHidden(array('quien' => 'usuario'));
 
-$oHash1 = new web\Hash();
+$oHash1 = new Hash();
 $oHash1->setCamposForm('sel');
 $oHash1->setcamposNo('scroll_id');
 $oHash1->setArraycamposHidden(array('que' => 'eliminar'));
 
 $aQuery = ['nuevo' => 1, 'quien' => 'usuario'];
-$url_nuevo = web\Hash::link(core\ConfigGlobal::getWeb() . '/apps/usuarios/controller/usuario_form.php?' . http_build_query($aQuery));
+$url_nuevo = Hash::link(ConfigGlobal::getWeb() . '/apps/usuarios/controller/usuario_form.php?' . http_build_query($aQuery));
+
+$url = Hash::link(ConfigGlobal::getWeb() . '/apps/usuarios/controller/usuario_lista.php');
 
 $a_campos = [
     'oHash' => $oHash,
@@ -148,7 +156,8 @@ $a_campos = [
     'oTabla' => $oTabla,
     'permiso' => $permiso,
     'url_nuevo' => $url_nuevo,
+    'url' => $url,
 ];
 
-$oView = new core\View('usuarios/controller');
+$oView = new ViewPhtml('usuarios/controller');
 $oView->renderizar('usuario_lista.phtml', $a_campos);

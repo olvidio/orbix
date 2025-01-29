@@ -1,8 +1,10 @@
 <?php
 
-use ubis\model\entity\GestorCasaPeriodo;
-use ubis\model\entity\CasaPeriodo;
 use web\DateTimeLocal;
+use ubis\model\entity\CasaPeriodo;
+use ubis\model\entity\GestorCasaPeriodo;
+use web\Hash;
+use web\Lista;
 
 // INICIO Cabecera global de URL de controlador *********************************
 require_once("apps/core/global_header.inc");
@@ -55,7 +57,7 @@ switch ($Qque) {
             }
         }
 
-        $oHash = new web\Hash();
+        $oHash = new Hash();
         $a_camposHidden = array(
             'que' => 'guardar',
             'id_ubi' => $Qid_ubi,
@@ -101,7 +103,7 @@ switch ($Qque) {
             $sel_res = "";
         }
 
-        $oHash = new web\Hash();
+        $oHash = new Hash();
         $a_camposHidden = array(
             'que' => 'update',
             'id_item' => $Qid_item,
@@ -190,7 +192,7 @@ switch ($Qque) {
                 $a_valores[$i][3] = $ssfsv;
             }
         }
-        $oLista = new web\Lista();
+        $oLista = new Lista();
         $oLista->setCabeceras($a_cabeceras);
         $oLista->setDatos($a_valores);
         echo $oLista->lista();
@@ -215,7 +217,7 @@ switch ($Qque) {
         $GesCasaPeriodos = new GestorCasaPeriodo();
         $cCasaPeriodos = $GesCasaPeriodos->getCasaPeriodos(array('id_ubi' => $Qid_ubi, '_ordre' => 'f_ini'));
 
-        $oHash = new web\Hash();
+        $oHash = new Hash();
         $i = 0;
         $txt = '';
         foreach ($cCasaPeriodos as $oCasaPeriodo) {

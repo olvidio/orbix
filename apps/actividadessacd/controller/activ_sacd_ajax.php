@@ -1,9 +1,9 @@
 <?php
 
-use actividadcargos\model\GestorCargoOAsistente;
 use actividadcargos\model\entity\ActividadCargo;
 use actividadcargos\model\entity\GestorActividadCargo;
 use actividadcargos\model\entity\GestorCargo;
+use actividadcargos\model\GestorCargoOAsistente;
 use actividades\model\entity\Actividad;
 use actividades\model\entity\ActividadAll;
 use actividades\model\entity\ActividadDl;
@@ -11,14 +11,14 @@ use actividades\model\entity\GestorActividadDl;
 use actividadescentro\model\entity\GestorCentroEncargado;
 use asistentes\model\entity\AsistenteDl;
 use core\ConfigGlobal;
-use function core\is_true;
 use encargossacd\model\entity\GestorEncargo;
 use encargossacd\model\entity\GestorEncargoSacd;
 use personas\model\entity\GestorPersona;
 use personas\model\entity\Persona;
+use web\Periodo;
 use procesos\model\entity\ActividadFase;
 use procesos\model\entity\GestorActividadProcesoTarea;
-use web\Periodo;
+use function core\is_true;
 
 /**
  * Esta página sirve para ejecutar las operaciones de guardar, eliminar, listar...
@@ -439,7 +439,6 @@ switch ($Qque) {
                     $oEnc = new GestorCentroEncargado();
                     $ctrs = "";
                     foreach ($oEnc->getCentrosEncargadosActividad($id_activ) as $oUbi) {
-                        ;
                         $ctrs .= $oUbi->getNombre_ubi() . ", ";
                     }
                     $ctrs = substr($ctrs, 0, -2);
@@ -459,7 +458,6 @@ switch ($Qque) {
                     $GesCargoActiv = new GestorActividadCargo();
                     $cCargosActividad = $GesCargoActiv->getActividadCargos($aWhere, $aOperador);
                     foreach ($cCargosActividad as $oActividadCargo) {
-                        ;
                         $id_nom = $oActividadCargo->getId_nom();
                         // OJO puede ser de la dl o de_paso
                         $oPersona = Persona::NewPersona($id_nom);

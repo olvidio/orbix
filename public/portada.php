@@ -2,8 +2,8 @@
 namespace core;
 
 use menus\model\entity\GrupMenu;
-use tablonanuncios\domain\TablonAnunciosParaGM;
 use web\Hash;
+use tablonanuncios\domain\TablonAnunciosParaGM;
 
 // INICIO Cabecera global de URL de controlador *********************************
 require_once("apps/core/global_header.inc");

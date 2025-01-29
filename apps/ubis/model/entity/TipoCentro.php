@@ -1,7 +1,9 @@
 <?php
 namespace ubis\model\entity;
 
-use core;
+use core\ClasePropiedades;
+use core\DatosCampo;
+use core\Set;
 
 /**
  * Clase que implementa la entidad xu_tipo_ctr
@@ -12,7 +14,7 @@ use core;
  * @version 1.0
  * @created 01/10/2010
  */
-class TipoCentro extends core\ClasePropiedades
+class TipoCentro extends ClasePropiedades
 {
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
@@ -201,7 +203,7 @@ class TipoCentro extends core\ClasePropiedades
      *
      * @param array $aDades
      */
-    function setAllAtributes($aDades)
+    function setAllAtributes(array $aDades)
     {
         if (!is_array($aDades)) return;
         if (array_key_exists('tipo_ctr', $aDades)) $this->setTipo_ctr($aDades['tipo_ctr']);
@@ -317,7 +319,7 @@ class TipoCentro extends core\ClasePropiedades
      */
     function getDatosCampos()
     {
-        $oTipoCentroSet = new core\Set();
+        $oTipoCentroSet = new Set();
 
         $oTipoCentroSet->add($this->getDatosTipo_ctr());
         $oTipoCentroSet->add($this->getDatosNombre_tipo_ctr());
@@ -328,12 +330,12 @@ class TipoCentro extends core\ClasePropiedades
      * Recupera les propietats de l'atribut stipo_ctr de TipoCentro
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosTipo_ctr()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'tipo_ctr'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'tipo_ctr'));
         $oDatosCampo->setEtiqueta(_("tipo de centro"));
         $oDatosCampo->setTipo('texto');
         $oDatosCampo->setArgument(6);
@@ -344,12 +346,12 @@ class TipoCentro extends core\ClasePropiedades
      * Recupera les propietats de l'atribut snombre_tipo_ctr de TipoCentro
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosNombre_tipo_ctr()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'nombre_tipo_ctr'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'nombre_tipo_ctr'));
         $oDatosCampo->setEtiqueta(_("nombre de tipo centro"));
         $oDatosCampo->setTipo('texto');
         $oDatosCampo->setArgument(30);

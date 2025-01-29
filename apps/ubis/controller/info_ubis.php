@@ -1,5 +1,7 @@
 <?php
 // para que funcione bien la seguridad
+use core\ViewTwig;
+
 $_POST = $_GET;
 
 // INICIO Cabecera global de URL de controlador *********************************
@@ -12,5 +14,5 @@ require_once("apps/core/global_object.inc");
 
 
 
-$oView = new core\ViewTwig('ubis/controller');
+$oView = new ViewTwig('ubis/controller');
 $oView->renderizar('info_ubis.html.twig',[]);

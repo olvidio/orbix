@@ -3,8 +3,10 @@
 namespace actividades\model\entity;
 
 use cambios\model\GestorAvisoCambios;
-use core;
-use procesos\model\entity as procesos;
+use core\ConfigGlobal;
+use procesos\model\entity\GestorActividadProcesoTarea;
+use ReflectionClass;
+use function core\is_true;
 
 /**
  * Clase que implementa la entidad a_actividades_ex
@@ -136,9 +138,9 @@ class ActividadEx extends ActividadAll
             }
             // Aunque no tenga el módulo de 'cambios', quizá otra dl si lo tenga.
             // Anoto el cambio si la actividad está publicada
-            if (empty($quiet) && (core\ConfigGlobal::is_app_installed('cambios') || $aDades['publicado'] == TRUE)) {
+            if (empty($quiet) && (ConfigGlobal::is_app_installed('cambios') || is_true($aDades['publicado']))) {
                 $oGestorCanvis = new GestorAvisoCambios();
-                $shortClassName = (new \ReflectionClass($this))->getShortName();
+                $shortClassName = (new ReflectionClass($this))->getShortName();
                 $oGestorCanvis->addCanvi($shortClassName, 'UPDATE', $this->iid_activ, $aDades, $this->aDadesActuals);
             }
             $this->setAllAtributes($aDades);
@@ -174,17 +176,17 @@ class ActividadEx extends ActividadAll
             $this->setAllAtributes($aDadesLast);
 
             // generar proceso.
-            if (core\ConfigGlobal::is_app_installed('procesos')) {
-                $oGestorActividadProcesoTarea = new procesos\GestorActividadProcesoTarea();
+            if (ConfigGlobal::is_app_installed('procesos')) {
+                $oGestorActividadProcesoTarea = new GestorActividadProcesoTarea();
                 $oGestorActividadProcesoTarea->generarProceso($aDadesLast['id_activ']);
             }
 
             // anotar cambio.
             // Aunque no tenga el módulo de 'cambios', quizá otra dl si lo tenga.
             // Anoto el cambio si la actividad está publicada
-            if (empty($quiet) && (core\ConfigGlobal::is_app_installed('cambios') || $aDades['publicado'] == TRUE)) {
+            if (empty($quiet) && (ConfigGlobal::is_app_installed('cambios') || is_true($aDades['publicado']))) {
                 $oGestorCanvis = new GestorAvisoCambios();
-                $shortClassName = (new \ReflectionClass($this))->getShortName();
+                $shortClassName = (new ReflectionClass($this))->getShortName();
                 $oGestorCanvis->addCanvi($shortClassName, 'INSERT', $aDadesLast['id_activ'], $aDadesLast, array());
             }
         }
@@ -215,7 +217,7 @@ class ActividadEx extends ActividadAll
                 case 'guardar':
                     if (!$oDblSt->rowCount()) return false;
                     // Hay que guardar los boolean de la misma manera que al guardar los datos ('false','true'):
-                    if (core\is_true($aDades['publicado'])) {
+                    if (is_true($aDades['publicado'])) {
                         $aDades['publicado'] = 'true';
                     } else {
                         $aDades['publicado'] = 'false';
@@ -248,12 +250,12 @@ class ActividadEx extends ActividadAll
             // Si no existeix no cal eliminar-el.
             return false;
         } else {
-            if (empty($quiet) && (core\ConfigGlobal::is_app_installed('cambios') || $this->bpublicado === TRUE)) {
+            if (empty($quiet) && (ConfigGlobal::is_app_installed('cambios') || $this->bpublicado === TRUE)) {
                 // per carregar les dades a $this->aDadesActuals i poder posar-les als canvis.
                 $this->DBCarregar('guardar');
                 // ho poso abans d'esborrar perque sino no trova cap valor. En el cas d'error s'hauria d'esborrar l'apunt.
                 $oGestorCanvis = new GestorAvisoCambios();
-                $shortClassName = (new \ReflectionClass($this))->getShortName();
+                $shortClassName = (new ReflectionClass($this))->getShortName();
                 $oGestorCanvis->addCanvi($shortClassName, 'DELETE', $this->iid_activ, array(), $this->aDadesActuals);
             }
             if (($oDbl->exec("DELETE FROM $nom_tabla WHERE id_activ='$this->iid_activ'")) === false) {
@@ -265,6 +267,23 @@ class ActividadEx extends ActividadAll
         }
     }
 
+    /**
+     * Canvia el id_activ
+     *
+     */
+    public function DBCambioId($id_new)
+    {
+        $oDbl = $this->getoDbl();
+        $nom_tabla = $this->getNomTabla();
+
+        $id_actual = $this->getId_activ();
+        if (($oDbl->exec("UPDATE $nom_tabla SET id_activ=$id_new WHERE id_activ=$id_actual")) === false) {
+            $sClauError = 'ActividadEx.CambioId';
+            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+            return false;
+        }
+        return true;
+    }
     /* OTROS MÉTODOS  ----------------------------------------------------------*/
     /* MÉTODOS PRIVADOS ----------------------------------------------------------*/
 }

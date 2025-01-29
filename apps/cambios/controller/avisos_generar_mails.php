@@ -30,8 +30,8 @@ use cambios\model\entity\CambioDl;
 use cambios\model\entity\CambioUsuario;
 use cambios\model\entity\GestorCambioUsuario;
 use core\ConfigGlobal;
-use usuarios\model\entity\Usuario;
 use web\Lista;
+use usuarios\model\entity\Usuario;
 
 // INICIO Cabecera global de URL de controlador *********************************
 

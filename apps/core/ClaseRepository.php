@@ -175,7 +175,7 @@ abstract class ClaseRepository
                     $ordreCamp = $aa_ordre[0];
                     $get = 'get' . ucfirst($ordreCamp);
                     if (method_exists($oClass, $get)) {
-                        $a_ord[$key_o][$key_c] = strtolower($oClass->$get());
+                        $a_ord[$key_o][$key_c] = strtolower($oClass->$get() ?? '');
                         $a_ord_cond[$key_o] = SORT_ASC;
                         if (count($aa_ordre) > 1 && $aa_ordre[1] === 'DESC') {
                             $a_ord_cond[$key_o] = SORT_DESC;

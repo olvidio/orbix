@@ -248,7 +248,7 @@
         let url_desplegable_ctr = '{{ url_desplegable_ctr }}';
         let id_zona = $('#id_zona_ctr').val();
 	    var parametros= 'id_zona=' + id_zona + '&id_ctr=' + ctr_selected + '&ctr_otras_zonas=' + ctr_otras_zonas + '&{{ h_desplegable_ctr|raw }} ';
-        request = $.ajax({
+          let request = $.ajax({
 		    url: url_desplegable_ctr,
 		    data: parametros,
 		    type: 'post',

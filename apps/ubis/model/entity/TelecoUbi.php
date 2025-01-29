@@ -1,8 +1,6 @@
 <?php
 namespace ubis\model\entity;
 
-use core;
-
 /**
  * Clase que implementa la entidad d_teleco_ubis
  *

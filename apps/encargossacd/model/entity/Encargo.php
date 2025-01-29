@@ -2,7 +2,9 @@
 
 namespace encargossacd\model\entity;
 
-use core;
+use core\ClasePropiedades;
+use core\DatosCampo;
+use core\Set;
 
 /**
  * Fitxer amb la Classe que accedeix a la taula encargos
@@ -23,7 +25,7 @@ use core;
  * @version 1.0
  * @created 11/01/2019
  */
-class Encargo extends core\ClasePropiedades
+class Encargo extends ClasePropiedades
 {
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
@@ -145,7 +147,7 @@ class Encargo extends core\ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'id_enc') && $val_id !== '') $this->iid_enc = (int)$val_id;
+                if (($nom_id === 'id_enc') && $val_id !== '') $this->iid_enc = (int)$val_id;
             }
         } else {
             if (isset($a_id) && $a_id !== '') {
@@ -235,7 +237,7 @@ class Encargo extends core\ClasePropiedades
                     return FALSE;
                 }
             }
-            $this->id_enc = $oDbl->lastInsertId('encargos_id_enc_seq');
+            $this->iid_enc = $oDbl->lastInsertId('encargos_id_enc_seq');
         }
         $this->setAllAtributes($aDades);
         return TRUE;
@@ -348,7 +350,7 @@ class Encargo extends core\ClasePropiedades
      *
      * @param array $aDades
      */
-    function setAllAtributes($aDades)
+    function setAllAtributes(array $aDades)
     {
         if (!is_array($aDades)) return;
         if (array_key_exists('id_enc', $aDades)) $this->setId_enc($aDades['id_enc']);
@@ -422,7 +424,7 @@ class Encargo extends core\ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'id_enc') && $val_id !== '') $this->iid_enc = (int)$val_id;
+                if (($nom_id === 'id_enc') && $val_id !== '') $this->iid_enc = (int)$val_id;
             }
         }
     }
@@ -685,7 +687,7 @@ class Encargo extends core\ClasePropiedades
      */
     function getDatosCampos()
     {
-        $oEncargoSet = new core\Set();
+        $oEncargoSet = new Set();
 
         $oEncargoSet->add($this->getDatosId_enc());
         $oEncargoSet->add($this->getDatosSf_sv());
@@ -703,12 +705,12 @@ class Encargo extends core\ClasePropiedades
      * Recupera les propietats de l'atribut iid_enc de Encargo
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosId_enc()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_enc'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_enc'));
         $oDatosCampo->setEtiqueta(_("id_enc"));
         return $oDatosCampo;
     }
@@ -717,12 +719,12 @@ class Encargo extends core\ClasePropiedades
      * Recupera les propietats de l'atribut isf_sv de Encargo
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosSf_sv()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'sf_sv'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'sf_sv'));
         $oDatosCampo->setEtiqueta(_("sf_sv"));
         return $oDatosCampo;
     }
@@ -731,12 +733,12 @@ class Encargo extends core\ClasePropiedades
      * Recupera les propietats de l'atribut iid_ubi de Encargo
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosId_ubi()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_ubi'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_ubi'));
         $oDatosCampo->setEtiqueta(_("id_ubi"));
         return $oDatosCampo;
     }
@@ -745,12 +747,12 @@ class Encargo extends core\ClasePropiedades
      * Recupera les propietats de l'atribut iid_zona de Encargo
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosId_zona()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_zona'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_zona'));
         $oDatosCampo->setEtiqueta(_("id_zona"));
         return $oDatosCampo;
     }
@@ -759,12 +761,12 @@ class Encargo extends core\ClasePropiedades
      * Recupera les propietats de l'atribut sdesc_enc de Encargo
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosDesc_enc()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'desc_enc'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'desc_enc'));
         $oDatosCampo->setEtiqueta(_("desc_enc"));
         return $oDatosCampo;
     }
@@ -773,12 +775,12 @@ class Encargo extends core\ClasePropiedades
      * Recupera les propietats de l'atribut sidioma_enc de Encargo
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosIdioma_enc()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'idioma_enc'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'idioma_enc'));
         $oDatosCampo->setEtiqueta(_("idioma_enc"));
         return $oDatosCampo;
     }
@@ -787,12 +789,12 @@ class Encargo extends core\ClasePropiedades
      * Recupera les propietats de l'atribut sdesc_lugar de Encargo
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosDesc_lugar()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'desc_lugar'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'desc_lugar'));
         $oDatosCampo->setEtiqueta(_("desc_lugar"));
         return $oDatosCampo;
     }
@@ -801,12 +803,12 @@ class Encargo extends core\ClasePropiedades
      * Recupera les propietats de l'atribut sobserv de Encargo
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosObserv()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'observ'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'observ'));
         $oDatosCampo->setEtiqueta(_("observ"));
         return $oDatosCampo;
     }

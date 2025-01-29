@@ -3,9 +3,11 @@
 // INICIO Cabecera global de URL de controlador *********************************
 
 use core\ConfigGlobal;
+use core\ViewTwig;
+use web\Desplegable;
 use ubis\model\entity\GestorCasaDl;
 use usuarios\model\entity\Usuario;
-use web\Desplegable;
+use web\Hash;
 
 require_once("apps/core/global_header.inc");
 // Archivos requeridos por esta url **********************************************
@@ -46,7 +48,7 @@ $url_ajax = 'apps/casas/controller/calendario_ubi_resumen_ajax.php';
 $url_tarifas = 'apps/actividadtarifas/controller/tarifa_ajax.php';
 $param = 'que=get';
 
-$oHash = new web\Hash();
+$oHash = new Hash();
 $sCamposForm = 'id_ubi!que!G!inc_t!seccion';
 $oHash->setCamposForm($sCamposForm);
 
@@ -60,5 +62,5 @@ $a_campos = ['oPosicion' => $oPosicion,
     'oDesplCasas' => $oDesplCasas,
 ];
 
-$oView = new core\ViewTwig('casas/controller');
+$oView = new ViewTwig('casas/controller');
 $oView->renderizar('ubi_resumen.html.twig', $a_campos);

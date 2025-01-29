@@ -737,7 +737,7 @@ class TiposActividades
     /**
      * Retorna els posibles id_tipo en format de array
      *
-     * @param regexp expresió regular per tornar el id (substring('bla' from regexp) del postgresql).
+     * @param string regexp expresió regular per tornar el id (substring('bla' from regexp) del postgresql).
      * @return array
      */
     public function getId_tipoPosibles($regexp = '.*')
@@ -757,7 +757,7 @@ class TiposActividades
     /**
      * @param boolean $extendida
      */
-    public function setExtendida($extendida)
+    public function setExtendida(bool $extendida)
     {
         $this->extendida = $extendida;
     }

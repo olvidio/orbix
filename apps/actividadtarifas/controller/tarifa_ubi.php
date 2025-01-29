@@ -1,5 +1,9 @@
 <?php
 // INICIO Cabecera global de URL de controlador *********************************
+use core\ConfigGlobal;
+use core\ViewPhtml;
+use web\Hash;
+
 require_once("apps/core/global_header.inc");
 // Archivos requeridos por esta url **********************************************
 
@@ -9,7 +13,7 @@ require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
 $oForm = new web\CasasQue();
-$miSfsv = core\ConfigGlobal::mi_sfsv();
+$miSfsv = ConfigGlobal::mi_sfsv();
 
 // Sólo quiero ver las casas comunes.
 //$donde="WHERE status='t' AND sf='t' AND sv='t'";
@@ -32,18 +36,18 @@ $oForm->setAction('fnjs_ver()');
 $oFormAny = new web\PeriodoQue();
 $oFormAny->setAction('fnjs_ver()');
 
-$oHash = new web\Hash();
-$oHash->setUrl(core\ConfigGlobal::getWeb() . '/apps/actividadtarifas/controller/tarifa_ajax.php');
+$oHash = new Hash();
+$oHash->setUrl(ConfigGlobal::getWeb() . '/apps/actividadtarifas/controller/tarifa_ajax.php');
 $oHash->setCamposForm('que!id_ubi!year');
 $h_ver = $oHash->linkSinVal();
 
-$oHashNew = new web\Hash();
-$oHashNew->setUrl(core\ConfigGlobal::getWeb() . '/apps/actividadtarifas/controller/tarifa_ajax.php');
+$oHashNew = new Hash();
+$oHashNew->setUrl(ConfigGlobal::getWeb() . '/apps/actividadtarifas/controller/tarifa_ajax.php');
 $oHashNew->setCamposForm('que!id_ubi!year');
 $h_nuevo = $oHashNew->linkSinVal();
 
-$oHashMod = new web\Hash();
-$oHashMod->setUrl(core\ConfigGlobal::getWeb() . '/apps/actividadtarifas/controller/tarifa_ajax.php');
+$oHashMod = new Hash();
+$oHashMod->setUrl(ConfigGlobal::getWeb() . '/apps/actividadtarifas/controller/tarifa_ajax.php');
 $oHashMod->setCamposForm('que!id_item!letra');
 $h_modificar = $oHashMod->linkSinVal();
 
@@ -57,5 +61,5 @@ $a_campos = ['oPosicion' => $oPosicion,
     'txt_eliminar' => $txt_eliminar,
 ];
 
-$oView = new core\View('actividadtarifas/controller');
+$oView = new ViewPhtml('actividadtarifas/controller');
 $oView->renderizar('tarifa_ubi.phtml', $a_campos);

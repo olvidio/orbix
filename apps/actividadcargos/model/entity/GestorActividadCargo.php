@@ -4,8 +4,10 @@ namespace actividadcargos\model\entity;
 use actividades\model\entity\Actividad;
 use actividades\model\entity\GestorActividad;
 use asistentes\model\entity\GestorAsistente;
+use core\ClaseGestor;
+use core\Condicion;
 use core\ConfigGlobal;
-use core;
+use core\Set;
 use personas\model\entity\Persona;
 use personas\model\entity\PersonaSacd;
 
@@ -20,7 +22,7 @@ use personas\model\entity\PersonaSacd;
  * @version 1.0
  * @created 19/11/2014
  */
-class GestorActividadCargo extends core\ClaseGestor
+class GestorActividadCargo extends ClaseGestor
 {
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
@@ -44,7 +46,7 @@ class GestorActividadCargo extends core\ClaseGestor
      * retorna l'array de id_nom dels sacd que atenen l'activitat
      *
      * @param integer iid_activ l'id de l'activitat.
-     * @return array id_nom
+     * @return array|false
      */
     function getActividadIdSacds($iid_activ = '')
     {
@@ -76,7 +78,7 @@ class GestorActividadCargo extends core\ClaseGestor
      * retorna l'array d'objectes de tipus Persona
      *
      * @param integer iid_activ l'id de l'activitat.
-     * @return array Una col·lecció d'objectes de tipus Persona.
+     * @return array|false
      */
     function getActividadSacds($iid_activ = '')
     {
@@ -88,7 +90,7 @@ class GestorActividadCargo extends core\ClaseGestor
         // Los sacd los pongo en la base de datos comun.
         $oDbl = $GLOBALS['oDBC_Select'];
         $nom_tabla = 'c' . $this->getNomTabla();
-        $oPersonaSet = new core\Set();
+        $oPersonaSet = new Set();
         $sQuery = "SELECT id_nom, id_cargo
 				FROM $nom_tabla
 				WHERE id_activ=" . $iid_activ . " AND id_cargo IN ($txt_where_cargos)
@@ -171,7 +173,7 @@ class GestorActividadCargo extends core\ClaseGestor
      * @param array $aOperador para la asistencia (id_nom y plaza)
      * @param array $aWhereAct para la Actividad
      * @param array $aOperadorAct para la Actividad
-     * @return array Una col·lecció d'arrays: id_activ,id_nom,propio,id_cargo,plaza;
+     * @return array|false
      */
     function getAsistenteCargoDeActividad($aWhere, $aOperador = [], $aWhereAct = [], $aOperadorAct = [])
     {
@@ -236,7 +238,7 @@ class GestorActividadCargo extends core\ClaseGestor
      * @param array $aOperador para la asistencia (id_nom y plaza)
      * @param array $aWhereAct para la Actividad
      * @param array $aOperadorAct para la Actividad
-     * @return array Una col·lecció d'arrays: id_activ,id_nom,propio,id_cargo,plaza;
+     * @return array|false
      */
     function getCargoDeActividad($aWhere, $aOperador = [], $aWhereAct = [], $aOperadorAct = [])
     {
@@ -283,12 +285,12 @@ class GestorActividadCargo extends core\ClaseGestor
      * retorna l'array d'objectes de tipus ActividadCargo
      *
      * @param string sQuery la query a executar.
-     * @return array Una col·lecció d'objectes de tipus ActividadCargo
+     * @return array|false
      */
     function getActividadCargosQuery($sQuery = '')
     {
         $oDbl = $this->getoDbl();
-        $oActividadCargoSet = new core\Set();
+        $oActividadCargoSet = new Set();
         if (($oDbl->query($sQuery)) === false) {
             $sClauError = 'GestorActividadCargo.query';
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
@@ -307,23 +309,23 @@ class GestorActividadCargo extends core\ClaseGestor
      *
      * @param array aWhere associatiu amb els valors de les variables amb les quals farem la query
      * @param array aOperators associatiu amb els valors dels operadors que cal aplicar a cada variable
-     * @return array Una col·lecció d'objectes de tipus ActividadCargo
+     * @return array|void
      */
     function getActividadCargos($aWhere = array(), $aOperators = array())
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
-        $oActividadCargoSet = new core\Set();
-        $oCondicion = new core\Condicion();
+        $oActividadCargoSet = new Set();
+        $oCondicion = new Condicion();
         $aCondi = array();
         foreach ($aWhere as $camp => $val) {
-            if ($camp == '_ordre') continue;
+            if ($camp === '_ordre') continue;
             $sOperador = isset($aOperators[$camp]) ? $aOperators[$camp] : '';
             if ($a = $oCondicion->getCondicion($camp, $sOperador, $val)) $aCondi[] = 'a.' . $a;
             // operadores que no requieren valores
-            if ($sOperador == 'BETWEEN' || $sOperador == 'IS NULL' || $sOperador == 'IS NOT NULL' || $sOperador == 'OR') unset($aWhere[$camp]);
-            if ($sOperador == 'IN' || $sOperador == 'NOT IN') unset($aWhere[$camp]);
-            if ($sOperador == 'TXT') unset($aWhere[$camp]);
+            if ($sOperador === 'BETWEEN' || $sOperador === 'IS NULL' || $sOperador === 'IS NOT NULL' || $sOperador === 'OR') unset($aWhere[$camp]);
+            if ($sOperador === 'IN' || $sOperador === 'NOT IN') unset($aWhere[$camp]);
+            if ($sOperador === 'TXT') unset($aWhere[$camp]);
         }
         $sCondi = implode(' AND ', $aCondi);
         if ($sCondi != '') $sCondi = " WHERE " . $sCondi;

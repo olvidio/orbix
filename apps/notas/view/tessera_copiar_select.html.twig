@@ -10,7 +10,7 @@
 </form>
 <script>
     fnjs_copiar = function (formulario) {
-        request = $.ajax({
+          let request = $.ajax({
             data: $(formulario).serialize(),
             url: 'apps/notas/controller/tessera_copiar.php',
             method: 'POST',

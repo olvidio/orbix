@@ -2,9 +2,11 @@
 
 namespace core;
 
-use web;
-
 // INICIO Cabecera global de URL de controlador *********************************
+use web\Hash;
+use web\Lista;
+use web\Posicion;
+
 require_once("apps/core/global_header.inc");
 // Archivos requeridos por esta url **********************************************
 
@@ -30,7 +32,7 @@ if (isset($_POST['stack'])) {
     $stack = filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
     if ($stack != '') {
         // No me sirve el de global_object, sino el de la session
-        $oPosicion2 = new web\Posicion();
+        $oPosicion2 = new Posicion();
         if ($oPosicion2->goStack($stack)) { // devuelve false si no puede ir
             $Qid_sel = $oPosicion2->getParametro('id_sel');
             $Qscroll_id = $oPosicion2->getParametro('scroll_id');
@@ -78,7 +80,7 @@ $oDatosTabla->setColeccion($oInfoClase->getColeccion());
 $oDatosTabla->setId_sel($Qid_sel);
 $oDatosTabla->setScroll_id($Qscroll_id);
 
-$oHashBuscar = new web\Hash();
+$oHashBuscar = new Hash();
 $oHashBuscar->setCamposForm('k_buscar');
 $a_camposHiddenBuscar = array(
     'clase_info' => $Qclase_info,
@@ -88,7 +90,7 @@ $a_camposHiddenBuscar = array(
 );
 $oHashBuscar->setArraycamposHidden($a_camposHiddenBuscar);
 
-$oHashSelect = new web\Hash();
+$oHashSelect = new Hash();
 $oHashSelect->setCamposForm('sel');
 $oHashSelect->setCamposNo('mod!sel!scroll_id!refresh');
 $a_camposHiddenSelect = array(
@@ -127,7 +129,7 @@ $html .= "<form id='seleccionados' name='seleccionados' action='' method='post'>
 $html .= $oHashSelect->getCamposHtml();
 $html .= "<input type='hidden' id='mod' name='mod' value=''>";
 
-$oTabla = new web\Lista();
+$oTabla = new Lista();
 // para el id_tabla, convierto los posibles '/' y '\' en '_' y también quito '.php'
 //$oTabla->setId_tabla('datos_sql'.  $this->id_dossier);
 $id_tabla = str_replace('/', '_', $Qclase_info);

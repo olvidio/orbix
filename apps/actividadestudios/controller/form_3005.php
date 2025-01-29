@@ -1,10 +1,13 @@
 <?php
 
-use actividades\model\entity as actividades;
-use asignaturas\model\entity as asignaturas;
-use actividadestudios\model\entity as actividadestudios;
+use actividadestudios\model\entity\ActividadAsignaturaDl;
+use asignaturas\model\entity\Asignatura;
+use asignaturas\model\entity\GestorAsignatura;
 use core\ConfigGlobal;
-use profesores\model\entity as profesores;
+use core\ViewPhtml;
+use profesores\model\entity\GestorProfesor;
+use profesores\model\entity\GestorProfesorActividad;
+use web\Hash;
 
 // INICIO Cabecera global de URL de controlador *********************************
 require_once("apps/core/global_header.inc");
@@ -44,17 +47,17 @@ $oDesplAsignaturas = array();
 if (!empty($Qid_asignatura)) { //caso de modificar
     $mod = "editar";
 
-    $oActividadAsignatura = new actividadestudios\ActividadAsignaturaDl();
+    $oActividadAsignatura = new ActividadAsignaturaDl();
     $oActividadAsignatura->setId_activ($Qid_activ);
     $oActividadAsignatura->setId_asignatura($Qid_asignatura);
     $oActividadAsignatura->DBCarregar();
 
-    $GesProfesores = new profesores\GestorProfesor();
+    $GesProfesores = new GestorProfesor();
     $oDesplProfesores = $GesProfesores->getDesplProfesoresAsignatura($Qid_asignatura);
 
     $id_profesor = $oActividadAsignatura->getId_profesor();
     if (!empty($id_profesor)) {
-        $GesProfesores = new profesores\GestorProfesor();
+        $GesProfesores = new GestorProfesor();
         $aOpciones = $GesProfesores->getListaProfesoresPub();
         $oDesplProfesores->setOpciones($aOpciones);
         $oDesplProfesores->setOpcion_sel($id_profesor);
@@ -68,7 +71,7 @@ if (!empty($Qid_asignatura)) { //caso de modificar
     $f_ini = $oActividadAsignatura->getF_ini()->getFromLocal();
     $f_fin = $oActividadAsignatura->getF_fin()->getFromLocal();
 
-    $oAsignatura = new asignaturas\Asignatura($Qid_asignatura);
+    $oAsignatura = new Asignatura($Qid_asignatura);
     $nombre_corto = $oAsignatura->getNombre_corto();
     $creditos = $oAsignatura->getCreditos();
 
@@ -76,14 +79,14 @@ if (!empty($Qid_asignatura)) { //caso de modificar
 } else { //caso de nueva asignatura
     $mod = "nuevo";
     $nombre_corto = '';
-    $GesProfesores = new profesores\GestorProfesorActividad();
+    $GesProfesores = new GestorProfesorActividad();
     $oDesplProfesores = $GesProfesores->getListaProfesoresActividad(array($Qid_activ));
     $oDesplProfesores->setOpcion_sel(-1);
 
     $f_ini = '';
     $f_fin = '';
     if (!empty($Qid_activ)) {
-        $GesAsignaturas = new asignaturas\GestorAsignatura();
+        $GesAsignaturas = new GestorAsignatura();
         $oDesplAsignaturas = $GesAsignaturas->getListaAsignaturas(false);
         $oDesplAsignaturas->setNombre('id_asignatura');
         $oDesplAsignaturas->setAction("fnjs_mas_profes('asignatura')");
@@ -91,7 +94,7 @@ if (!empty($Qid_asignatura)) { //caso de modificar
         exit (_("debería haber un nombre de asignatura"));
         $id_dossier = (integer)filter_input(INPUT_POST, 'id_dossier');
         $tabla_pau = (string)filter_input(INPUT_POST, 'tabla_pau');
-        $go_to = urlencode(core\ConfigGlobal::getWeb() . "/apps/dossiers/controller/dossiers_ver.php?pau=a&id_pau=$Qid_activ&id_dossier=$id_dossier&tabla_pau=$tabla_pau&permiso=3");
+        $go_to = urlencode(ConfigGlobal::getWeb() . "/apps/dossiers/controller/dossiers_ver.php?pau=a&id_pau=$Qid_activ&id_dossier=$id_dossier&tabla_pau=$tabla_pau&permiso=3");
         $oPosicion2 = new web\Posicion();
         echo $oPosicion2->ir_a($go_to);
     }
@@ -100,7 +103,7 @@ if (!empty($Qid_asignatura)) { //caso de modificar
 $oDesplProfesores->setNombre('id_profesor');
 $oDesplProfesores->setBlanco('t');
 
-$oHash = new web\Hash();
+$oHash = new Hash();
 $camposForm = 'f_ini!f_fin!tipo!id_profesor';
 $oHash->setCamposNo('mod!avis_profesor');
 $a_camposHidden = array(
@@ -116,7 +119,7 @@ $oHash->setCamposForm($camposForm);
 $oHash->setArraycamposHidden($a_camposHidden);
 
 
-$oHashTipo = new web\Hash();
+$oHashTipo = new Hash();
 $oHashTipo->setUrl('apps/actividadestudios/controller/lista_profesores_ajax.php');
 $oHashTipo->setCamposForm('salida');
 $h = $oHashTipo->linkSinVal();
@@ -147,5 +150,5 @@ $a_campos = ['obj' => $obj,
     'locale_us' => ConfigGlobal::is_locale_us(),
 ];
 
-$oView = new core\View('actividadestudios/controller');
+$oView = new ViewPhtml('actividadestudios/controller');
 $oView->renderizar('form_3005.phtml', $a_campos);

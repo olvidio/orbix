@@ -7,9 +7,9 @@ use actividades\model\entity\ActividadEx;
 use cambios\model\entity\Cambio;
 use cambios\model\entity\CambioDl;
 use core\ConfigGlobal;
-use function core\is_true;
-use procesos\model\entity\GestorActividadProcesoTarea;
 use web\DateTimeLocal;
+use procesos\model\entity\GestorActividadProcesoTarea;
+use function core\is_true;
 
 /**
  * Classe para manejar los cambios
@@ -49,7 +49,7 @@ class GestorAvisoCambios
      * @param string $obj_txt nombre corto del objeto.
      * @return string
      */
-    public static function getFullPathObj($obj_txt)
+    public static function getFullPathObj(string $obj_txt)
     {
         $spath = '';
         switch ($obj_txt) {

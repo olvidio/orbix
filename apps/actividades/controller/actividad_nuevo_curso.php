@@ -16,8 +16,9 @@
  *
  */
 
-use actividades\model\entity\GestorActividadDl;
 use actividades\model\ActividadNuevoCurso;
+use actividades\model\entity\GestorActividadDl;
+use core\ConfigGlobal;
 use web\Hash;
 use function core\is_true;
 
@@ -57,7 +58,7 @@ if ($Qok == 1) {
     $aWhere = [];
     $aOperador = [];
     // las dos secciones dlb y dlbf
-    $aWhere['dl_org'] = '^' . core\ConfigGlobal::mi_dele();
+    $aWhere['dl_org'] = '^' . ConfigGlobal::mi_dele();
     $aOperador['dl_org'] = '~';
     // No las de proyecto(1) ni borrables(4) >> 2 y 3
     $aWhere['status'] = "2,3";
@@ -127,10 +128,10 @@ if ($Qok == 1) {
     $txt .= "<p>$txt_borrar.";
     $txt .= "<p>$txt_crear.";
     $txt .= "<p>$txt_estado.";
-    if (core\ConfigGlobal::is_app_installed('actividadescentro')) {
+    if (ConfigGlobal::is_app_installed('actividadescentro')) {
         $txt .= "<p>$txt_ctr.";
     }
-    if (core\ConfigGlobal::is_app_installed('procesos')) {
+    if (ConfigGlobal::is_app_installed('procesos')) {
         $txt .= "<p>$txt_fases.";
     }
     ?>

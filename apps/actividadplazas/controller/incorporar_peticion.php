@@ -3,16 +3,24 @@
  * Incorpora la primera petición como asistencia con plaza:
  *  'asignada' en el caso de actividades de la dl.
  *  'pedida' en actividades de otras dl.
- * No debe actualizar a las personas que ya tienen una aistencia a una actividad
+ * No debe actualizar a las personas que ya tienen una asistencia a una actividad
  * marcada como propia en el curso.
  *
  * @param string $sactividad
  * @param string $sasistentes
  */
 
-use actividades\model\entity as actividades;
-use asistentes\model\entity as asistentes;
-use personas\model\entity as personas;
+use actividades\model\entity\ActividadAll;
+use actividades\model\entity\GestorActividad;
+use actividades\model\entity\GestorActividadDl;
+use actividades\model\entity\GestorActividadPub;
+use actividadplazas\model\entity\GestorPlazaPeticion;
+use asistentes\model\entity\Asistente;
+use asistentes\model\entity\AsistenteDl;
+use asistentes\model\entity\AsistenteOut;
+use asistentes\model\entity\GestorAsistenteDl;
+use asistentes\model\entity\GestorAsistenteOut;
+use core\ConfigGlobal;
 
 // INICIO Cabecera global de URL de controlador *********************************
 require_once("apps/core/global_header.inc");
@@ -25,7 +33,7 @@ require_once("apps/core/global_object.inc");
 function tieneAistencia($id_nom, $aId_activ)
 {
     // Comprobar que no tienen alguna actividad ya asignada como propia
-    $GesAsistentes = new asistentes\GestorAsistenteDl();
+    $GesAsistentes = new GestorAsistenteDl();
     $cAsistentes = $GesAsistentes->getAsistentesDl(array('id_nom' => $id_nom, 'propio' => 't'));
     foreach ($cAsistentes as $oAsistente) {
         $id_activ = $oAsistente->getId_activ();
@@ -33,7 +41,7 @@ function tieneAistencia($id_nom, $aId_activ)
             return TRUE;
         }
     }
-    $GesAsistentesOut = new asistentes\GestorAsistenteOut();
+    $GesAsistentesOut = new GestorAsistenteOut();
     $cAsistentesOut = $GesAsistentesOut->getAsistentesOut(array('id_nom' => $id_nom, 'propio' => 't'));
     foreach ($cAsistentesOut as $oAsistente) {
         $id_activ = $oAsistente->getId_activ();
@@ -47,7 +55,7 @@ function tieneAistencia($id_nom, $aId_activ)
 $Qsactividad = (string)filter_input(INPUT_POST, 'sactividad');
 $Qsasistentes = (string)filter_input(INPUT_POST, 'sasistentes');
 
-$mi_sfsv = core\ConfigGlobal::mi_sfsv();
+$mi_sfsv = ConfigGlobal::mi_sfsv();
 if ($mi_sfsv == 1) {
     $ssfsv = 'sv';
 }
@@ -85,10 +93,10 @@ switch ($Qsactividad) {
         break;
 }
 
-$mi_dele = core\ConfigGlobal::mi_delef();
+$mi_dele = ConfigGlobal::mi_delef();
 //Actividades a las que afecta
 $cActividades = array();
-$aWhereA['status'] = actividades\ActividadAll::STATUS_ACTUAL;
+$aWhereA['status'] = ActividadAll::STATUS_ACTUAL;
 $aWhereA['f_ini'] = "'$inicurs','$fincurs'";
 $aOperadorA['f_ini'] = 'BETWEEN';
 switch ($Qsasistentes) {
@@ -100,12 +108,12 @@ switch ($Qsasistentes) {
 
         //inicialmente estaba sólo con las activiades publicadas.
         //Ahora añado las no publicadas de midl.
-        $GesActividadesDl = new actividades\GestorActividadDl();
+        $GesActividadesDl = new GestorActividadDl();
         $cActividadesDl = $GesActividadesDl->getActividades($aWhereA, $aOperadorA);
         // Añado la condición para que no duplique las de midele:
         $aWhereA['dl_org'] = $mi_dele;
         $aOperadorA['dl_org'] = '!=';
-        $GesActividadesPub = new actividades\GestorActividadPub();
+        $GesActividadesPub = new GestorActividadPub();
         $cActividadesPub = $GesActividadesPub->getActividades($aWhereA, $aOperadorA);
 
         $cActividades = array_merge($cActividadesDl, $cActividadesPub);
@@ -116,7 +124,7 @@ switch ($Qsasistentes) {
         $aWhereA['id_tipo_activ'] = $Qid_tipo_activ;
         $aOperadorA['id_tipo_activ'] = '~';
         // las de la dl + las importadas
-        $GesActividades = new actividades\GestorActividad();
+        $GesActividades = new GestorActividad();
         $cActividades1 = $GesActividades->getActividades($aWhereA, $aOperadorA);
         // Añadir las actividades de agd (puede hacer el propio al atender una actividad de agd).
         if (!empty($Qid_tipo_activ_sup)) {
@@ -140,7 +148,7 @@ foreach ($cActividades as $oActividad) {
     $aId_activ[$id_activ] = $dl_org;
 }
 //Miro las peticiones actuales
-$gesPlazasPeticion = new \actividadplazas\model\entity\GestorPlazaPeticion();
+$gesPlazasPeticion = new GestorPlazaPeticion();
 $aWhereP = ['orden' => 1, 'tipo' => $Qsactividad];
 $aWhereP['id_nom'] = '^\d{4}' . $filtro_id_nom;
 $aOperadorP = ['id_nom' => '~'];
@@ -164,9 +172,9 @@ foreach ($cPlazasPeticion as $oPlazaPeticion) {
     $dl_org = $aId_activ[$id_activ_new];
     $dl = preg_replace('/f$/', '', $dl_org);
     if ($dl == $mi_dele) {
-        $oAsistenteNew = new asistentes\AsistenteDl();
+        $oAsistenteNew = new AsistenteDl();
     } else {
-        $oAsistenteNew = new asistentes\AsistenteOut();
+        $oAsistenteNew = new AsistenteOut();
     }
     //asignar uno nuevo.
     $oAsistenteNew->setId_activ($id_activ_new);
@@ -174,7 +182,7 @@ foreach ($cPlazasPeticion as $oPlazaPeticion) {
     $oAsistenteNew->DBCarregar();
     $oAsistenteNew->setPropio('t');
     //1:pedida, 2:en espera, 3: denegada, 4:asignada, 5:confirmada
-    $oAsistenteNew->setPlaza(asistentes\Asistente::PLAZA_ASIGNADA);
+    $oAsistenteNew->setPlaza(Asistente::PLAZA_ASIGNADA);
     // IMPORTANT: Propietario del a plaza
     $oAsistenteNew->setPropietario("$dl>$mi_dele");
     $oAsistenteNew->setDl_responsable($mi_dele);

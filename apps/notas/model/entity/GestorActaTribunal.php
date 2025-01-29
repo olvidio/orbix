@@ -50,7 +50,7 @@ class GestorActaTribunal extends ClaseGestor
      * des del 2020 (perque els d'abans són amb llatí)
      *
      * @param string sQuery la query a executar.
-     * @return object Json
+     * @return false Json
      */
     function getJsonExaminadores($sQuery = '')
     {
@@ -88,7 +88,7 @@ class GestorActaTribunal extends ClaseGestor
      *
      * @param array aWhere associatiu amb els valors de les variables amb les quals farem la query
      * @param array aOperators associatiu amb els valors dels operadors que cal aplicar a cada variable
-     * @return array Una col·lecció d'objectes de tipus ActaTribunal
+     * @return false Una col·lecció d'objectes de tipus ActaTribunal
      */
     function getActasTribunales($aWhere = array(), $aOperators = array())
     {
@@ -98,7 +98,7 @@ class GestorActaTribunal extends ClaseGestor
         $oCondicion = new Condicion();
         $aCondi = array();
         foreach ($aWhere as $camp => $val) {
-            if ($camp == '_ordre') {
+            if ($camp === '_ordre') {
                 continue;
             }
             $sOperador = isset($aOperators[$camp]) ? $aOperators[$camp] : '';
@@ -106,13 +106,13 @@ class GestorActaTribunal extends ClaseGestor
                 $aCondi[] = $a;
             }
             // operadores que no requieren valores
-            if ($sOperador == 'BETWEEN' || $sOperador == 'IS NULL' || $sOperador == 'IS NOT NULL' || $sOperador == 'OR') {
+            if ($sOperador === 'BETWEEN' || $sOperador === 'IS NULL' || $sOperador === 'IS NOT NULL' || $sOperador === 'OR') {
                 unset($aWhere[$camp]);
             }
-            if ($sOperador == 'IN' || $sOperador == 'NOT IN') {
+            if ($sOperador === 'IN' || $sOperador === 'NOT IN') {
                 unset($aWhere[$camp]);
             }
-            if ($sOperador == 'TXT') {
+            if ($sOperador === 'TXT') {
                 unset($aWhere[$camp]);
             }
         }

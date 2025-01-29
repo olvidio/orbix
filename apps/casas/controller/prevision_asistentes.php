@@ -16,12 +16,15 @@
 use actividades\model\entity\GestorActividadDl;
 use casas\model\entity\Ingreso;
 use core\ConfigGlobal;
-use function core\strtoupper_dlb;
-use ubis\model\entity\CasaDl;
+use core\ViewTwig;
 use web\DateTimeLocal;
 use web\Desplegable;
+use web\Hash;
 use web\Periodo;
 use web\PeriodoQue;
+use ubis\model\entity\CasaDl;
+use web\TablaEditable;
+use function core\strtoupper_dlb;
 
 require_once("apps/core/global_header.inc");
 // Archivos requeridos por esta url **********************************************
@@ -165,14 +168,14 @@ if ($_SESSION['oConfig']->getGestionCalendario() == 'central') { // central => c
     $oFormP->setAntes($Antes);
 }
 
-$oTabla = new web\TablaEditable();
+$oTabla = new TablaEditable();
 $oTabla->setId_tabla('prevision_asistentes');
-$UpdateUrl = core\ConfigGlobal::getWeb() . '/apps/casas/controller/prevision_asistentes_ajax.php';
+$UpdateUrl = ConfigGlobal::getWeb() . '/apps/casas/controller/prevision_asistentes_ajax.php';
 $oTabla->setUpdateUrl($UpdateUrl);
 $oTabla->setCabeceras($a_cabeceras);
 $oTabla->setDatos($a_valores);
 
-$oHash = new web\Hash();
+$oHash = new Hash();
 $oHash->setCamposForm('empiezamax!empiezamin!extendida!iactividad_val!iasistentes_val!mi_of!periodo!year');
 $oHash->setCamposNo('!refresh');
 
@@ -195,5 +198,5 @@ $a_campos = ['oPosicion' => $oPosicion,
     'oHash' => $oHash,
 ];
 
-$oView = new core\ViewTwig('casas/controller');
+$oView = new ViewTwig('casas/controller');
 $oView->renderizar('prevision_asistentes.html.twig', $a_campos);

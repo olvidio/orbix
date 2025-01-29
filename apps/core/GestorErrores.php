@@ -1,8 +1,6 @@
 <?php
 namespace core;
 
-use web;
-
 /**
  * Clase para manejar los errores
  *
@@ -96,7 +94,7 @@ class GestorErrores
      * @param string $line
      * @param string $file
      */
-    function addErrorAppLastError(&$oDBSt, $sClauError, $line, $file)
+    function addErrorAppLastError(string &$oDBSt, string $sClauError, string $line, string $file)
     {
         // Cuando ejecuto algún controlador desde la linea de comandos, no existe la ip:
         $ip = empty($_SERVER['REMOTE_ADDR']) ? 'localhost' : $_SERVER['REMOTE_ADDR'];

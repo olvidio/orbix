@@ -1,5 +1,9 @@
 <?php
 // INICIO Cabecera global de URL de controlador *********************************
+use core\ConfigGlobal;
+use core\ViewPhtml;
+use web\Hash;
+
 require_once("apps/core/global_header.inc");
 // Archivos requeridos por esta url **********************************************
 
@@ -35,7 +39,7 @@ $lugar_nacimiento = $oPersona->getLugar_nacimiento();
 $f_nacimiento = $oPersona->getF_nacimiento()->getFromLocal();
 $txt_nacimiento = "$lugar_nacimiento ($f_nacimiento)";
 
-$dl_origen = core\ConfigGlobal::mi_delef();
+$dl_origen = ConfigGlobal::mi_delef();
 $dl_destino = $oPersona->getDl();
 
 $oActividad = new actividades\model\entity\Actividad($Qid_activ);
@@ -81,8 +85,8 @@ if ($matriculas > 0) {
     $msg_err .= _("no hay ninguna matrícula de esta persona");
 }
 
-$oHash = new web\Hash();
-$oHash->setUrl(core\ConfigGlobal::getWeb() . '/apps/actividadestudios/controller/e43_2_mpdf.php');
+$oHash = new Hash();
+$oHash->setUrl(ConfigGlobal::getWeb() . '/apps/actividadestudios/controller/e43_2_mpdf.php');
 $oHash->setCamposForm('id_nom!id_activ');
 $h = $oHash->linkSinVal();
 
@@ -104,5 +108,5 @@ $a_campos = ['oPosicion' => $oPosicion,
     'aAsignaturasMatriculadas' => $aAsignaturasMatriculadas,
 ];
 
-$oView = new core\View('actividadestudios/controller');
+$oView = new ViewPhtml('actividadestudios/controller');
 $oView->renderizar('e43.phtml', $a_campos);

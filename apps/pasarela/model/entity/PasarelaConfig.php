@@ -2,7 +2,7 @@
 
 namespace pasarela\model\entity;
 
-use core;
+use core\ClasePropiedades;
 use core\DatosCampo;
 use core\Set;
 use stdClass;
@@ -26,7 +26,7 @@ use stdClass;
  * @version 1.0
  * @created 21/9/2022
  */
-class PasarelaConfig extends core\ClasePropiedades
+class PasarelaConfig extends ClasePropiedades
 {
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
@@ -100,7 +100,7 @@ class PasarelaConfig extends core\ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'nom_parametro') && $val_id !== '') $this->snom_parametro = (string)$val_id; // evitem SQL injection fent cast a string
+                if (($nom_id === 'nom_parametro') && $val_id !== '') $this->snom_parametro = (string)$val_id; // evitem SQL injection fent cast a string
             }
         } else {
             if (isset($a_id) && $a_id !== '') {
@@ -239,7 +239,7 @@ class PasarelaConfig extends core\ClasePropiedades
      *
      * @param array $aDades
      */
-    function setAllAtributes($aDades)
+    function setAllAtributes(array $aDades)
     {
         if (!is_array($aDades)) return;
         if (array_key_exists('id_schema', $aDades)) $this->setId_schema($aDades['id_schema']);
@@ -297,7 +297,7 @@ class PasarelaConfig extends core\ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'nom_parametro') && $val_id !== '') $this->snom_parametro = (string)$val_id; // evitem SQL injection fent cast a string
+                if (($nom_id === 'nom_parametro') && $val_id !== '') $this->snom_parametro = (string)$val_id; // evitem SQL injection fent cast a string
             }
         } else {
             if (isset($a_id) && $a_id !== '') {
@@ -337,13 +337,13 @@ class PasarelaConfig extends core\ClasePropiedades
      * @param boolean $bArray si hay que devolver un array en vez de un objeto.
      * @return object JSON json_valor
      */
-    function getJson_valor($bArray = FALSE)
+    function getJson_valor(bool $bArray = FALSE)
     {
         if (!isset($this->json_valor) && !$this->bLoaded) {
             $this->DBCarregar();
         }
         $oJSON = json_decode($this->json_valor, $bArray);
-        if (empty($oJSON) || $oJSON == '[]') {
+        if (empty($oJSON) || $oJSON === '[]') {
             if ($bArray) {
                 $oJSON = [];
             } else {
@@ -360,7 +360,7 @@ class PasarelaConfig extends core\ClasePropiedades
      * @param boolean $db =FALSE optional. Para determinar la variable que se le pasa es ya un objeto json,
      *  o es una variable de php hay que convertirlo. En la base de datos ya es json.
      */
-    function setJson_valor($oJSON, $db = FALSE)
+    function setJson_valor($oJSON, bool $db = FALSE)
     {
         if ($db === FALSE) {
             $json = json_encode($oJSON);

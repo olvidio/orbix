@@ -1,10 +1,11 @@
 <?php
 
+use core\ViewTwig;
 use encargossacd\model\entity\Encargo;
 use encargossacd\model\entity\GestorEncargoHorario;
+use encargossacd\model\entity\GestorEncargoTipo;
 use web\Hash;
 use web\Lista;
-use encargossacd\model\entity\GestorEncargoTipo;
 
 // INICIO Cabecera global de URL de controlador *********************************
 require_once("apps/core/global_header.inc");
@@ -165,5 +166,5 @@ $a_campos = ['oPosicion' => $oPosicion,
     'div_para_nuevo' => $div_para_nuevo,
 ];
 
-$oView = new core\ViewTwig('encargossacd/controller');
+$oView = new ViewTwig('encargossacd/controller');
 $oView->renderizar('encargo_horario_select.html.twig', $a_campos);

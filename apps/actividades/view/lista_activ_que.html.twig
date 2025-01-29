@@ -83,7 +83,8 @@ $(function() { $( "#empiezamax" ).datepicker(); });
 <tr></tr>
 <tr>
 <th colspan=3 class=titulo_inv>{{ "asistentes a la actividad"|trans|raw }}:</th>
-</tr><td colspan=3>
+</tr>
+<tr><td colspan=3>
 {% if sr_sg == "sr" %}
     {% if permiso_des %}
         <input type="Checkbox" name="asist[]" value="7">{{ "sr"|trans|raw }}
@@ -108,3 +109,4 @@ $(function() { $( "#empiezamax" ).datepicker(); });
 
 <input TYPE="button" onclick=fnjs_listar('#modifica') VALUE="{{ "listar"|trans|raw }}">
 <input TYPE="reset" VALUE="{{ "borrar"|trans|raw }}">
+</form>

@@ -2,7 +2,9 @@
 
 namespace encargossacd\model\entity;
 
-use core;
+use core\ClasePropiedades;
+use core\DatosCampo;
+use core\Set;
 
 /**
  * Fitxer amb la Classe que accedeix a la taula encargo_datos_cgi
@@ -23,7 +25,7 @@ use core;
  * @version 1.0
  * @created 11/01/2019
  */
-class DatosCgi extends core\ClasePropiedades
+class DatosCgi extends ClasePropiedades
 {
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
@@ -108,7 +110,7 @@ class DatosCgi extends core\ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'id_item') && $val_id !== '') $this->iid_item = (int)$val_id; 
+                if (($nom_id === 'id_item') && $val_id !== '') $this->iid_item = (int)$val_id;
             }
         } else {
             if (isset($a_id) && $a_id !== '') {
@@ -185,7 +187,7 @@ class DatosCgi extends core\ClasePropiedades
                     return FALSE;
                 }
             }
-            $this->id_item = $oDbl->lastInsertId('encargo_datos_cgi_id_item_seq');
+            $this->iid_item = $oDbl->lastInsertId('encargo_datos_cgi_id_item_seq');
         }
         $this->setAllAtributes($aDades);
         return TRUE;
@@ -253,7 +255,7 @@ class DatosCgi extends core\ClasePropiedades
      *
      * @param array $aDades
      */
-    function setAllAtributes($aDades)
+    function setAllAtributes(array $aDades)
     {
         if (!is_array($aDades)) return;
         if (array_key_exists('id_item', $aDades)) $this->setId_item($aDades['id_item']);
@@ -317,7 +319,7 @@ class DatosCgi extends core\ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'id_item') && $val_id !== '') $this->iid_item = (int)$val_id; 
+                if (($nom_id === 'id_item') && $val_id !== '') $this->iid_item = (int)$val_id;
             }
         }
     }
@@ -444,7 +446,7 @@ class DatosCgi extends core\ClasePropiedades
      */
     function getDatosCampos()
     {
-        $oDatosCgiSet = new core\Set();
+        $oDatosCgiSet = new Set();
 
         $oDatosCgiSet->add($this->getDatosId_ubi());
         $oDatosCgiSet->add($this->getDatosCurso_ini_any());
@@ -458,12 +460,12 @@ class DatosCgi extends core\ClasePropiedades
      * Recupera les propietats de l'atribut iid_ubi de DatosCgi
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosId_ubi()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_ubi'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_ubi'));
         $oDatosCampo->setEtiqueta(_("id_ubi"));
         return $oDatosCampo;
     }
@@ -472,12 +474,12 @@ class DatosCgi extends core\ClasePropiedades
      * Recupera les propietats de l'atribut icurso_ini_any de DatosCgi
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosCurso_ini_any()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'curso_ini_any'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'curso_ini_any'));
         $oDatosCampo->setEtiqueta(_("año inicio curso"));
         return $oDatosCampo;
     }
@@ -486,12 +488,12 @@ class DatosCgi extends core\ClasePropiedades
      * Recupera les propietats de l'atribut icurso_fin_any de DatosCgi
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosCurso_fin_any()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'curso_fin_any'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'curso_fin_any'));
         $oDatosCampo->setEtiqueta(_("año fin curso"));
         return $oDatosCampo;
     }
@@ -500,12 +502,12 @@ class DatosCgi extends core\ClasePropiedades
      * Recupera les propietats de l'atribut inum_alum de DatosCgi
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosNum_alum()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'num_alum'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'num_alum'));
         $oDatosCampo->setEtiqueta(_("número de alumnos"));
         return $oDatosCampo;
     }

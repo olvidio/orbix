@@ -1,8 +1,10 @@
 <?php
 namespace profesores\model\entity;
 
-use core;
-use personas\model\entity as personas;
+use core\ClaseGestor;
+use core\Condicion;
+use core\Set;
+use personas\model\entity\PersonaDl;
 
 /**
  * GestorProfesorAmpliacion
@@ -15,7 +17,7 @@ use personas\model\entity as personas;
  * @version 1.0
  * @created 08/04/2014
  */
-class GestorProfesorAmpliacion extends core\ClaseGestor
+class GestorProfesorAmpliacion extends ClaseGestor
 {
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
@@ -48,7 +50,7 @@ class GestorProfesorAmpliacion extends core\ClaseGestor
         $aNom = array();
         foreach ($gesProfesores as $oProfesor) {
             $id_nom = $oProfesor->getId_nom();
-            $oPersonaDl = new personas\PersonaDl($id_nom);
+            $oPersonaDl = new PersonaDl($id_nom);
             $ap_nom = $oPersonaDl->getPrefApellidosNombre();
             $aProfesores[] = array('id_nom' => $id_nom, 'ap_nom' => $ap_nom);
             $aAp1[] = $oPersonaDl->getApellido1();
@@ -80,12 +82,12 @@ class GestorProfesorAmpliacion extends core\ClaseGestor
      * retorna l'array d'objectes de tipus ProfesorAmpliacion
      *
      * @param string sQuery la query a executar.
-     * @return array Una col·lecció d'objectes de tipus ProfesorAmpliacion
+     * @return array|false
      */
     function getProfesorAmpliacionesQuery($sQuery = '')
     {
         $oDbl = $this->getoDbl();
-        $oProfesorAmpliacionSet = new core\Set();
+        $oProfesorAmpliacionSet = new Set();
         if (($oDblSt = $oDbl->query($sQuery)) === false) {
             $sClauError = 'GestorProfesorAmpliacion.query';
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
@@ -105,23 +107,23 @@ class GestorProfesorAmpliacion extends core\ClaseGestor
      *
      * @param array aWhere associatiu amb els valors de les variables amb les quals farem la query
      * @param array aOperators associatiu amb els valors dels operadors que cal aplicar a cada variable
-     * @return array Una col·lecció d'objectes de tipus ProfesorAmpliacion
+     * @return array|void
      */
     function getProfesorAmpliaciones($aWhere = array(), $aOperators = array())
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        $oProfesorAmpliacionSet = new core\Set();
-        $oCondicion = new core\Condicion();
+        $oProfesorAmpliacionSet = new Set();
+        $oCondicion = new Condicion();
         $aCondi = array();
         foreach ($aWhere as $camp => $val) {
-            if ($camp == '_ordre') continue;
+            if ($camp === '_ordre') continue;
             $sOperador = isset($aOperators[$camp]) ? $aOperators[$camp] : '';
             if ($a = $oCondicion->getCondicion($camp, $sOperador, $val)) $aCondi[] = $a;
             // operadores que no requieren valores
-            if ($sOperador == 'BETWEEN' || $sOperador == 'IS NULL' || $sOperador == 'IS NOT NULL' || $sOperador == 'OR') unset($aWhere[$camp]);
-            if ($sOperador == 'IN' || $sOperador == 'NOT IN') unset($aWhere[$camp]);
-            if ($sOperador == 'TXT') unset($aWhere[$camp]);
+            if ($sOperador === 'BETWEEN' || $sOperador === 'IS NULL' || $sOperador === 'IS NOT NULL' || $sOperador === 'OR') unset($aWhere[$camp]);
+            if ($sOperador === 'IN' || $sOperador === 'NOT IN') unset($aWhere[$camp]);
+            if ($sOperador === 'TXT') unset($aWhere[$camp]);
         }
         $sCondi = implode(' AND ', $aCondi);
         if ($sCondi != '') $sCondi = " WHERE " . $sCondi;

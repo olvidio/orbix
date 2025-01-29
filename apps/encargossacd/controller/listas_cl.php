@@ -6,9 +6,9 @@
 */
 
 // INICIO Cabecera global de URL de controlador *********************************
+use core\ConfigGlobal;
 use encargossacd\model\EncargoFunciones;
 use web\DateTimeLocal;
-use core\ConfigGlobal;
 
 require_once("global_header.inc");
 // Archivos requeridos por esta url **********************************************
@@ -62,7 +62,7 @@ $Centre = "res";
         }
 
         table {
-            width: 680;
+            width: 680px;
         }
 
         td.derecha {

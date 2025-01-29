@@ -1,7 +1,8 @@
 <?php
 
 use core\ConfigGlobal;
-use ubis\model\entity as ubis;
+use core\ViewPhtml;
+use ubis\model\entity\Ubi;
 use web\Hash;
 use web\Posicion;
 
@@ -53,7 +54,7 @@ if (!empty($a_sel)) { //vengo de un checkbox
     $id_ubi = (integer)filter_input(INPUT_POST, 'id_ubi');
 }
 
-$oUbi = ubis\Ubi::NewUbi($id_ubi);
+$oUbi = Ubi::NewUbi($id_ubi);
 $nombre_ubi = $oUbi->getNombre_ubi();
 $dl = $oUbi->getDl();
 /* TODO no sé
@@ -167,5 +168,5 @@ $a_campos = ['oPosicion' => $oPosicion,
     'Qobj_pau' => $obj_pau
 ];
 
-$oView = new core\View('ubis/controller');
+$oView = new ViewPhtml('ubis/controller');
 $oView->renderizar('home_ubis.phtml', $a_campos);

@@ -2,16 +2,15 @@
 
 
 // INICIO Cabecera global de URL de controlador *********************************
+use core\ViewTwig;
 use encargossacd\model\entity\Encargo;
-use encargossacd\model\entity\EncargoTipo;
-use encargossacd\model\entity\GestorEncargoTipo;
 use encargossacd\model\entity\GestorEncargo;
+use encargossacd\model\entity\GestorEncargoTipo;
 use misas\domain\repositories\EncargoCtrRepository;
-use ubis\model\entity\GestorCentroDl;
-use ubis\model\entity\GestorCentroEllas;
-use ubis\model\entity\Ubi;
 use web\Desplegable;
 use web\Hash;
+use ubis\model\entity\GestorCentroDl;
+use ubis\model\entity\GestorCentroEllas;
 use zonassacd\model\entity\GestorZona;
 
 require_once("apps/core/global_header.inc");
@@ -185,5 +184,5 @@ $a_campos = ['oPosicion' => $oPosicion,
     'id_zona' => $Qid_zona,
 ];
 
-$oView = new core\ViewTwig('misas/controller');
+$oView = new ViewTwig('misas/controller');
 echo $oView->render('ver_encargos_centros.html.twig', $a_campos);

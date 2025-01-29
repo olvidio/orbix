@@ -2,7 +2,9 @@
 
 namespace personas\model\entity;
 
-use core;
+use core\DatosCampo;
+use core\Set;
+use function core\is_true;
 
 /**
  * Fitxer amb la Classe que accedeix a la taula p_numerarios
@@ -67,7 +69,7 @@ class PersonaN extends PersonaDl
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'id_nom') && $val_id !== '') $this->iid_nom = (int)$val_id; 
+                if (($nom_id === 'id_nom') && $val_id !== '') $this->iid_nom = (int)$val_id;
             }
         } else {
             if (isset($a_id) && $a_id !== '') {
@@ -126,7 +128,7 @@ class PersonaN extends PersonaDl
         $aDades['ce_lugar'] = $this->sce_lugar;
         array_walk($aDades, 'core\poner_null');
         //para el caso de los boolean FALSE, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
-        if (core\is_true($aDades['sacd'])) {
+        if (is_true($aDades['sacd'])) {
             $aDades['sacd'] = 'true';
         } else {
             $aDades['sacd'] = 'false';
@@ -288,7 +290,7 @@ class PersonaN extends PersonaDl
      *
      * @param array $aDades
      */
-    function setAllAtributes($aDades, $convert = FALSE)
+    function setAllAtributes(array $aDades, $convert = FALSE)
     {
         if (!is_array($aDades)) return;
         if (array_key_exists('id_schema', $aDades)) $this->setId_schema($aDades['id_schema']);
@@ -462,7 +464,7 @@ class PersonaN extends PersonaDl
      */
     function getDatosCampos()
     {
-        $oPersonaNSet = new core\Set();
+        $oPersonaNSet = new Set();
 
         $oPersonaNSet->add($this->getDatosId_cr());
         $oPersonaNSet->add($this->getDatosId_tabla());
@@ -498,12 +500,12 @@ class PersonaN extends PersonaDl
      * Recupera les propietats de l'atribut ice de PersonaN
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosCe()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'ce'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'ce'));
         $oDatosCampo->setEtiqueta(_("ce"));
         return $oDatosCampo;
     }
@@ -512,12 +514,12 @@ class PersonaN extends PersonaDl
      * Recupera les propietats de l'atribut ice_ini de PersonaN
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosCe_ini()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'ce_ini'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'ce_ini'));
         $oDatosCampo->setEtiqueta(_("ce_ini"));
         return $oDatosCampo;
     }
@@ -526,12 +528,12 @@ class PersonaN extends PersonaDl
      * Recupera les propietats de l'atribut ice_fin de PersonaN
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosCe_fin()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'ce_fin'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'ce_fin'));
         $oDatosCampo->setEtiqueta(_("ce_fin"));
         return $oDatosCampo;
     }
@@ -540,12 +542,12 @@ class PersonaN extends PersonaDl
      * Recupera les propietats de l'atribut sce_lugar de PersonaN
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosCe_lugar()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'ce_lugar'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'ce_lugar'));
         $oDatosCampo->setEtiqueta(_("ce_lugar"));
         return $oDatosCampo;
     }

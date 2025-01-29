@@ -2,7 +2,9 @@
 
 namespace devel\model\entity;
 
-use core;
+use core\ClasePropiedades;
+use core\DatosCampo;
+use core\Set;
 
 /**
  * Fitxer amb la Classe que accedeix a la taula map_id
@@ -23,7 +25,7 @@ use core;
  * @version 1.0
  * @created 9/3/2020
  */
-class MapId extends core\ClasePropiedades
+class MapId extends ClasePropiedades
 {
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
@@ -95,8 +97,8 @@ class MapId extends core\ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'objeto') && $val_id !== '') $this->sobjeto = (string)$val_id; // evitem SQL injection fent cast a string
-                if (($nom_id == 'id_resto') && $val_id !== '') $this->iid_resto = (int)$val_id; 
+                if (($nom_id === 'objeto') && $val_id !== '') $this->sobjeto = (string)$val_id; // evitem SQL injection fent cast a string
+                if (($nom_id === 'id_resto') && $val_id !== '') $this->iid_resto = (int)$val_id;
             }
         }
         $this->setoDbl($oDbl);
@@ -229,7 +231,7 @@ class MapId extends core\ClasePropiedades
      *
      * @param array $aDades
      */
-    function setAllAtributes($aDades)
+    function setAllAtributes(array $aDades)
     {
         if (!is_array($aDades)) return;
         if (array_key_exists('objeto', $aDades)) $this->setObjeto($aDades['objeto']);
@@ -287,8 +289,8 @@ class MapId extends core\ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'objeto') && $val_id !== '') $this->sobjeto = (string)$val_id; // evitem SQL injection fent cast a string
-                if (($nom_id == 'id_resto') && $val_id !== '') $this->iid_resto = (int)$val_id; 
+                if (($nom_id === 'objeto') && $val_id !== '') $this->sobjeto = (string)$val_id; // evitem SQL injection fent cast a string
+                if (($nom_id === 'id_resto') && $val_id !== '') $this->iid_resto = (int)$val_id;
             }
         }
     }
@@ -370,7 +372,7 @@ class MapId extends core\ClasePropiedades
      */
     function getDatosCampos()
     {
-        $oMapIdSet = new core\Set();
+        $oMapIdSet = new Set();
 
         $oMapIdSet->add($this->getDatosId_dl());
         return $oMapIdSet->getTot();
@@ -381,12 +383,12 @@ class MapId extends core\ClasePropiedades
      * Recupera les propietats de l'atribut iid_dl de MapId
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosId_dl()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_dl'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_dl'));
         $oDatosCampo->setEtiqueta(_("id_dl"));
         return $oDatosCampo;
     }

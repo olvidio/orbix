@@ -24,7 +24,9 @@
  *
  */
 
-use actividadcargos\model\entity as actividadcargos;
+use actividadcargos\model\entity\ActividadCargo;
+use actividadcargos\model\entity\GestorCargo;
+use core\ViewPhtml;
 use personas\model\entity\GestorPersonaAgd;
 use personas\model\entity\GestorPersonaEx;
 use personas\model\entity\GestorPersonaN;
@@ -82,7 +84,7 @@ $id_nom_real = '';
 $ape_nom = '';
 $oDesplegablePersonas = array();
 if (!empty($Qid_item)) { //caso de modificar
-    $oActividadCargo = new actividadcargos\ActividadCargo(array('id_item' => $Qid_item, 'id_schema' => $Qid_schema));
+    $oActividadCargo = new ActividadCargo(array('id_item' => $Qid_item, 'id_schema' => $Qid_schema));
     $Qid_activ = $oActividadCargo->getId_activ();
     $Qid_cargo = $oActividadCargo->getId_cargo();
     $Qid_nom = $oActividadCargo->getId_nom();
@@ -147,7 +149,7 @@ if (!empty($Qid_item)) { //caso de modificar
         echo $oPosicion->go_atras(1);
     }
 }
-$oCargos = new actividadcargos\GestorCargo();
+$oCargos = new GestorCargo();
 $oDesplegableCargos = $oCargos->getListaCargos();
 $oDesplegableCargos->setNombre('id_cargo');
 $oDesplegableCargos->setBlanco(false);
@@ -189,5 +191,5 @@ $a_campos = ['obj' => $obj,
     'Qmod' => $Qmod,
 ];
 
-$oView = new core\View('actividadcargos/model');
+$oView = new ViewPhtml('actividadcargos/model');
 $oView->renderizar('form_3102.phtml', $a_campos);

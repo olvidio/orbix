@@ -1,5 +1,7 @@
 <?php
 // para que funcione bien la seguridad
+use core\ConfigGlobal;
+
 $_POST = $_GET;
 
 $Qacta = $_POST['acta']; //OJO nOfunciona el fiter_input, porque realmente esá en el _GET
@@ -10,10 +12,10 @@ include(dirname(__FILE__) . '/acta_imprimir_mpdf.php');
 $content = ob_get_clean();
 
 // convert to PDF
-require_once(core\ConfigGlobal::$dir_libs . '/vendor/autoload.php');
+require_once(ConfigGlobal::$dir_libs . '/vendor/autoload.php');
 
 // quitar los acentos , ñ etc. del nombre
-$acta = web\QuitarAcentos::convert($acta);
+$acta =web\QuitarAcentos::convert($acta);
 
 //$mpdf = new \Mpdf\Mpdf(['','A4','','',10,10,10,10,6,3]);
 $config = ['mode' => 'utf-8',

@@ -2,11 +2,12 @@
 
 namespace personas\model\entity;
 
-use core;
+use core\ClaseGestor;
 use core\ConfigDB;
+use core\ConfigGlobal;
 use core\DBConnection;
-use profesores\model\entity\GestorProfesor;
 use web\DateTimeLocal;
+use profesores\model\entity\GestorProfesor;
 
 /**
  * GestorPersonaAll
@@ -16,7 +17,7 @@ use web\DateTimeLocal;
  * la persona en la delegación que se espera.
  *
  */
-class GestorPersonaAll extends core\ClaseGestor
+class GestorPersonaAll extends ClaseGestor
 {
     private int $id_nom;
 
@@ -43,7 +44,7 @@ class GestorPersonaAll extends core\ClaseGestor
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
 
-        $mi_id_schema = core\ConfigGlobal::mi_id_schema();
+        $mi_id_schema = ConfigGlobal::mi_id_schema();
         // buscar los 'A' de mi schema
         $sql = "SELECT * FROM $nom_tabla WHERE id_nom=$id_nom AND situacion = 'A' AND id_schema = $mi_id_schema ";
         if ($this->ejecutar($sql) !== FALSE) {

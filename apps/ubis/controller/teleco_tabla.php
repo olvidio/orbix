@@ -1,6 +1,9 @@
 <?php
 
-use ubis\model\entity as ubis;
+use core\ConfigGlobal;
+use core\ViewPhtml;
+use web\Hash;
+use web\Lista;
 use function core\is_true;
 
 // INICIO Cabecera global de URL de controlador *********************************
@@ -72,7 +75,7 @@ $botones = 0;
 if (strstr($Qobj_pau, 'Dl')) {
     $oUbi = new $obj_ubi($Qid_ubi);
     $dl = $oUbi->getDl();
-    if ($dl == core\ConfigGlobal::mi_delef()) {
+    if ($dl == ConfigGlobal::mi_delef()) {
         // ----- sv sólo a scl -----------------
         if ($_SESSION['oPerm']->have_perm_oficina('scdl')) {
             $botones = "1";
@@ -136,13 +139,13 @@ foreach ($Coleccion as $oFila) {
     }
     $c++;
 }
-$oTabla = new web\Lista();
+$oTabla = new Lista();
 $oTabla->setId_tabla('telecos_tabla');
 $oTabla->setCabeceras($a_cabeceras);
 $oTabla->setBotones($a_botones);
 $oTabla->setDatos($a_valores);
 
-$oHash = new web\Hash();
+$oHash = new Hash();
 $oHash->setCamposForm('mod!sel');
 $oHash->setcamposNo('mod!sel!scroll_id!refresh');
 $a_camposHidden = array(
@@ -160,5 +163,5 @@ $a_campos = ['botones' => $botones,
     'oTabla' => $oTabla,
 ];
 
-$oView = new core\View('ubis/controller');
+$oView = new ViewPhtml('ubis/controller');
 $oView->renderizar('teleco_tabla.phtml', $a_campos);

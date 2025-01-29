@@ -2,11 +2,17 @@
 
 namespace personas\model\entity;
 
-use core;
+use core\ClasePropiedades;
 use core\ConfigGlobal;
-use ubis\model\entity as ubis;
+use core\ConverterDate;
+use core\DatosCampo;
+use core\Set;
+use ReflectionClass;
+use ubis\model\entity\Centro;
+use ubis\model\entity\CentroDl;
 use ubis\model\entity\DescTeleco;
-use web;
+use web\DateTimeLocal;
+use web\NullDateTimeLocal;
 use function core\strtoupper_dlb;
 
 /**
@@ -28,7 +34,7 @@ use function core\strtoupper_dlb;
  * @version 1.0
  * @created 11/03/2014
  */
-abstract class PersonaGlobal extends core\ClasePropiedades
+abstract class PersonaGlobal extends ClasePropiedades
 {
 
     // Para que la variable stgr_posibles coja las traducciones, hay 
@@ -145,7 +151,7 @@ abstract class PersonaGlobal extends core\ClasePropiedades
     /**
      * F_nacimiento de PersonaGlobal
      *
-     * @var web\DateTimeLocal
+     * @varDateTimeLocal
      */
     protected $df_nacimiento;
     /**
@@ -163,7 +169,7 @@ abstract class PersonaGlobal extends core\ClasePropiedades
     /**
      * F_situacion de PersonaGlobal
      *
-     * @var web\DateTimeLocal
+     * @varDateTimeLocal
      */
     protected $df_situacion;
     /**
@@ -181,7 +187,7 @@ abstract class PersonaGlobal extends core\ClasePropiedades
     /**
      * F_inc de PersonaGlobal
      *
-     * @var web\DateTimeLocal
+     * @varDateTimeLocal
      */
     protected $df_inc;
     /**
@@ -319,7 +325,7 @@ abstract class PersonaGlobal extends core\ClasePropiedades
         $aWhere = [];
         $aWhere['id_nom'] = $id_nom;
         $aWhere['tipo_teleco'] = $tipo_teleco;
-        if ($desc_teleco != '*' && !empty($desc_teleco)) {
+        if ($desc_teleco !== '*' && !empty($desc_teleco)) {
             $aWhere['desc_teleco'] = $desc_teleco;
         }
         $GesTelecoPersonas = new GestorTelecoPersonaDl();
@@ -329,7 +335,7 @@ abstract class PersonaGlobal extends core\ClasePropiedades
         foreach ($cTelecos as $oTelecoPersona) {
             $iDescTel = $oTelecoPersona->getDesc_teleco();
             $num_teleco = $oTelecoPersona->getNum_teleco();
-            if ($desc_teleco == "*" && !empty($iDescTel) && $bDescripcion) {
+            if ($desc_teleco === "*" && !empty($iDescTel) && $bDescripcion) {
                 $oDescTel = new DescTeleco($iDescTel);
                 $tels .= $num_teleco . "(" . $oDescTel->getDesc_teleco() . ")" . $separador;
             } else {
@@ -382,7 +388,7 @@ abstract class PersonaGlobal extends core\ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'id_nom') && $val_id !== '') $this->iid_nom = (int)$val_id;
+                if (($nom_id === 'id_nom') && $val_id !== '') $this->iid_nom = (int)$val_id;
             }
         }
     }
@@ -643,7 +649,7 @@ abstract class PersonaGlobal extends core\ClasePropiedades
     /**
      * Recupera el atributo df_nacimiento de PersonaGlobal
      *
-     * @return web\DateTimeLocal df_nacimiento
+     * @returnDateTimeLocal df_nacimiento
      */
     function getF_nacimiento()
     {
@@ -651,9 +657,9 @@ abstract class PersonaGlobal extends core\ClasePropiedades
             $this->DBCarregar();
         }
         if (empty($this->df_nacimiento)) {
-            return new web\NullDateTimeLocal();
+            return new NullDateTimeLocal();
         }
-        $oConverter = new core\ConverterDate('date', $this->df_nacimiento);
+        $oConverter = new ConverterDate('date', $this->df_nacimiento);
         return $oConverter->fromPg();
     }
 
@@ -662,13 +668,13 @@ abstract class PersonaGlobal extends core\ClasePropiedades
      * Si df_nacimiento es string, y convert=true se convierte usando el formato webDateTimeLocal->getFormat().
      * Si convert es false, df_nacimiento debe ser un string en formato ISO (Y-m-d). Corresponde al pgstyle de la base de datos.
      *
-     * @param date|string df_nacimiento='' optional.
+     * @param DateTimeLocal|string df_nacimiento='' optional.
      * @param boolean convert=true optional. Si es false, df_nacimiento debe ser un string en formato ISO (Y-m-d).
      */
     function setF_nacimiento($df_nacimiento = '', $convert = true)
     {
         if ($convert === true && !empty($df_nacimiento)) {
-            $oConverter = new core\ConverterDate('date', $df_nacimiento);
+            $oConverter = new ConverterDate('date', $df_nacimiento);
             $this->df_nacimiento = $oConverter->toPg();
         } else {
             $this->df_nacimiento = $df_nacimiento;
@@ -724,7 +730,7 @@ abstract class PersonaGlobal extends core\ClasePropiedades
     /**
      * Recupera el atributo df_situacion de PersonaGlobal
      *
-     * @return web\DateTimeLocal df_situacion
+     * @returnDateTimeLocal df_situacion
      */
     function getF_situacion()
     {
@@ -732,9 +738,9 @@ abstract class PersonaGlobal extends core\ClasePropiedades
             $this->DBCarregar();
         }
         if (empty($this->df_situacion)) {
-            return new web\NullDateTimeLocal();
+            return new NullDateTimeLocal();
         }
-        $oConverter = new core\ConverterDate('date', $this->df_situacion);
+        $oConverter = new ConverterDate('date', $this->df_situacion);
         return $oConverter->fromPg();
     }
 
@@ -743,13 +749,13 @@ abstract class PersonaGlobal extends core\ClasePropiedades
      * Si df_situacion es string, y convert=true se convierte usando el formato webDateTimeLocal->getFormat().
      * Si convert es false, df_situacion debe ser un string en formato ISO (Y-m-d). Corresponde al pgstyle de la base de datos.
      *
-     * @param date|string df_situacion='' optional.
+     * @param DateTimeLocal|string df_situacion='' optional.
      * @param boolean convert=true optional. Si es false, df_situacion debe ser un string en formato ISO (Y-m-d).
      */
     function setF_situacion($df_situacion = '', $convert = true)
     {
         if ($convert === true && !empty($df_situacion)) {
-            $oConverter = new core\ConverterDate('date', $df_situacion);
+            $oConverter = new ConverterDate('date', $df_situacion);
             $this->df_situacion = $oConverter->toPg();
         } else {
             $this->df_situacion = $df_situacion;
@@ -805,7 +811,7 @@ abstract class PersonaGlobal extends core\ClasePropiedades
     /**
      * Recupera el atributo df_inc de PersonaGlobal
      *
-     * @return web\DateTimeLocal df_inc
+     * @returnDateTimeLocal df_inc
      */
     function getF_inc()
     {
@@ -813,9 +819,9 @@ abstract class PersonaGlobal extends core\ClasePropiedades
             $this->DBCarregar();
         }
         if (empty($this->df_inc)) {
-            return new web\NullDateTimeLocal();
+            return new NullDateTimeLocal();
         }
-        $oConverter = new core\ConverterDate('date', $this->df_inc);
+        $oConverter = new ConverterDate('date', $this->df_inc);
         return $oConverter->fromPg();
     }
 
@@ -824,13 +830,13 @@ abstract class PersonaGlobal extends core\ClasePropiedades
      * Si df_inc es string, y convert=true se convierte usando el formato webDateTimeLocal->getFormat().
      * Si convert es false, df_inc debe ser un string en formato ISO (Y-m-d). Corresponde al pgstyle de la base de datos.
      *
-     * @param date|string df_inc='' optional.
+     * @param DateTimeLocal|string df_inc='' optional.
      * @param boolean convert=true optional. Si es false, df_inc debe ser un string en formato ISO (Y-m-d).
      */
     function setF_inc($df_inc = '', $convert = true)
     {
         if ($convert === true && !empty($df_inc)) {
-            $oConverter = new core\ConverterDate('date', $df_inc);
+            $oConverter = new ConverterDate('date', $df_inc);
             $this->df_inc = $oConverter->toPg();
         } else {
             $this->df_inc = $df_inc;
@@ -956,7 +962,7 @@ abstract class PersonaGlobal extends core\ClasePropiedades
 
     public function getClassName()
     {
-        $shortClassName = (new \ReflectionClass($this))->getShortName();
+        $shortClassName = (new ReflectionClass($this))->getShortName();
         return $shortClassName;
     }
 
@@ -1192,9 +1198,9 @@ abstract class PersonaGlobal extends core\ClasePropiedades
                     break;
                 case 'PersonaGlobal':
                     if (ConfigGlobal::mi_ambito() === 'rstgr') {
-                        $oCentroDl = new ubis\Centro($this->getId_ctr());
+                        $oCentroDl = new Centro($this->getId_ctr());
                     } else {
-                        $oCentroDl = new ubis\CentroDl($this->getId_ctr());
+                        $oCentroDl = new CentroDl($this->getId_ctr());
                     }
                     $ctr = $oCentroDl->getNombre_ubi();
                     break;
@@ -1206,9 +1212,9 @@ abstract class PersonaGlobal extends core\ClasePropiedades
                 case 'PersonaSSSC':
                     // OJO CON las regiones de stgr
                     if (ConfigGlobal::mi_ambito() === 'rstgr') {
-                        $oCentro = new ubis\Centro($this->getId_ctr());
+                        $oCentro = new Centro($this->getId_ctr());
                     } else {
-                        $oCentro = new ubis\CentroDl($this->getId_ctr());
+                        $oCentro = new CentroDl($this->getId_ctr());
                     }
                     $ctr = $oCentro->getNombre_ubi();
                     break;
@@ -1234,7 +1240,7 @@ abstract class PersonaGlobal extends core\ClasePropiedades
      */
     function getDatosCampos()
     {
-        $oPersonaGlobalSet = new core\Set();
+        $oPersonaGlobalSet = new Set();
 
         $oPersonaGlobalSet->add($this->getDatosId_cr());
         $oPersonaGlobalSet->add($this->getDatosId_tabla());
@@ -1266,12 +1272,12 @@ abstract class PersonaGlobal extends core\ClasePropiedades
      * Recupera les propietats de l'atribut iid_cr de PersonaGlobal
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosId_cr()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_cr'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_cr'));
         $oDatosCampo->setEtiqueta(_("id_cr"));
         return $oDatosCampo;
     }
@@ -1280,12 +1286,12 @@ abstract class PersonaGlobal extends core\ClasePropiedades
      * Recupera les propietats de l'atribut sid_tabla de PersonaGlobal
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosId_tabla()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_tabla'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_tabla'));
         $oDatosCampo->setEtiqueta(_("id_tabla"));
         return $oDatosCampo;
     }
@@ -1294,12 +1300,12 @@ abstract class PersonaGlobal extends core\ClasePropiedades
      * Recupera les propietats de l'atribut sdl de PersonaGlobal
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosDl()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'dl'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'dl'));
         $oDatosCampo->setEtiqueta(_("dl"));
         return $oDatosCampo;
     }
@@ -1308,12 +1314,12 @@ abstract class PersonaGlobal extends core\ClasePropiedades
      * Recupera les propietats de l'atribut bsacd de PersonaGlobal
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosSacd()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'sacd'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'sacd'));
         $oDatosCampo->setEtiqueta(_("sacd"));
         $oDatosCampo->setTipo('check');
         return $oDatosCampo;
@@ -1323,12 +1329,12 @@ abstract class PersonaGlobal extends core\ClasePropiedades
      * Recupera les propietats de l'atribut strato de PersonaGlobal
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosTrato()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'trato'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'trato'));
         $oDatosCampo->setEtiqueta(_("trato"));
         return $oDatosCampo;
     }
@@ -1337,12 +1343,12 @@ abstract class PersonaGlobal extends core\ClasePropiedades
      * Recupera les propietats de l'atribut snom de PersonaGlobal
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosNom()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'nom'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'nom'));
         $oDatosCampo->setEtiqueta(_("nombre"));
         return $oDatosCampo;
     }
@@ -1351,12 +1357,12 @@ abstract class PersonaGlobal extends core\ClasePropiedades
      * Recupera les propietats de l'atribut snx1 de PersonaGlobal
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosNx1()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'nx1'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'nx1'));
         $oDatosCampo->setEtiqueta(_("nx1"));
         return $oDatosCampo;
     }
@@ -1365,12 +1371,12 @@ abstract class PersonaGlobal extends core\ClasePropiedades
      * Recupera les propietats de l'atribut sapellido1 de PersonaGlobal
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosApellido1()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'apellido1'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'apellido1'));
         $oDatosCampo->setEtiqueta(_("apellido1"));
         return $oDatosCampo;
     }
@@ -1379,12 +1385,12 @@ abstract class PersonaGlobal extends core\ClasePropiedades
      * Recupera les propietats de l'atribut snx2 de PersonaGlobal
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosNx2()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'nx2'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'nx2'));
         $oDatosCampo->setEtiqueta(_("nx2"));
         return $oDatosCampo;
     }
@@ -1393,12 +1399,12 @@ abstract class PersonaGlobal extends core\ClasePropiedades
      * Recupera les propietats de l'atribut sapellido2 de PersonaGlobal
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosApellido2()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'apellido2'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'apellido2'));
         $oDatosCampo->setEtiqueta(_("apellido2"));
         return $oDatosCampo;
     }
@@ -1407,12 +1413,12 @@ abstract class PersonaGlobal extends core\ClasePropiedades
      * Recupera les propietats de l'atribut df_nacimiento de PersonaGlobal
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosF_nacimiento()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'f_nacimiento'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'f_nacimiento'));
         $oDatosCampo->setEtiqueta(_("fecha nacimiento"));
         $oDatosCampo->setTipo('fecha');
         return $oDatosCampo;
@@ -1422,12 +1428,12 @@ abstract class PersonaGlobal extends core\ClasePropiedades
      * Recupera les propietats de l'atribut slengua de PersonaGlobal
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosLengua()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'lengua'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'lengua'));
         $oDatosCampo->setEtiqueta(_("lengua"));
         return $oDatosCampo;
     }
@@ -1436,12 +1442,12 @@ abstract class PersonaGlobal extends core\ClasePropiedades
      * Recupera les propietats de l'atribut ssituacion de PersonaGlobal
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosSituacion()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'situacion'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'situacion'));
         $oDatosCampo->setEtiqueta(_("situación"));
         return $oDatosCampo;
     }
@@ -1450,12 +1456,12 @@ abstract class PersonaGlobal extends core\ClasePropiedades
      * Recupera les propietats de l'atribut df_situacion de PersonaGlobal
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosF_situacion()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'f_situacion'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'f_situacion'));
         $oDatosCampo->setEtiqueta(_("fecha situación"));
         $oDatosCampo->setTipo('fecha');
         return $oDatosCampo;
@@ -1465,12 +1471,12 @@ abstract class PersonaGlobal extends core\ClasePropiedades
      * Recupera les propietats de l'atribut sapel_fam de PersonaGlobal
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosApel_fam()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'apel_fam'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'apel_fam'));
         $oDatosCampo->setEtiqueta(_("apelativo familiar"));
         return $oDatosCampo;
     }
@@ -1479,12 +1485,12 @@ abstract class PersonaGlobal extends core\ClasePropiedades
      * Recupera les propietats de l'atribut sinc de PersonaGlobal
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosInc()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'inc'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'inc'));
         $oDatosCampo->setEtiqueta(_("inc"));
         return $oDatosCampo;
     }
@@ -1493,12 +1499,12 @@ abstract class PersonaGlobal extends core\ClasePropiedades
      * Recupera les propietats de l'atribut df_inc de PersonaGlobal
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosF_inc()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'f_inc'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'f_inc'));
         $oDatosCampo->setEtiqueta(_("fecha incorporación"));
         $oDatosCampo->setTipo('fecha');
         return $oDatosCampo;
@@ -1508,12 +1514,12 @@ abstract class PersonaGlobal extends core\ClasePropiedades
      * Recupera les propietats de l'atribut sstgr de PersonaGlobal
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosStgr()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'stgr'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'stgr'));
         $oDatosCampo->setEtiqueta(_("stgr"));
         return $oDatosCampo;
     }
@@ -1522,12 +1528,12 @@ abstract class PersonaGlobal extends core\ClasePropiedades
      * Recupera les propietats de l'atribut sprofesion de PersonaGlobal
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosProfesion()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'profesion'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'profesion'));
         $oDatosCampo->setEtiqueta(_("profesión"));
         return $oDatosCampo;
     }
@@ -1536,12 +1542,12 @@ abstract class PersonaGlobal extends core\ClasePropiedades
      * Recupera les propietats de l'atribut seap de PersonaGlobal
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosEap()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'eap'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'eap'));
         $oDatosCampo->setEtiqueta(_("eap"));
         return $oDatosCampo;
     }
@@ -1550,12 +1556,12 @@ abstract class PersonaGlobal extends core\ClasePropiedades
      * Recupera les propietats de l'atribut sobserv de PersonaGlobal
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosObserv()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'observ'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'observ'));
         $oDatosCampo->setEtiqueta(_("observaciones"));
         return $oDatosCampo;
     }
@@ -1564,12 +1570,12 @@ abstract class PersonaGlobal extends core\ClasePropiedades
      * Recupera les propietats de l'atribut slugar_nacimiento de PersonaGlobal
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosLugar_nacimiento()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'lugar_nacimiento'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'lugar_nacimiento'));
         $oDatosCampo->setEtiqueta(_("lugar de nacimiento"));
         return $oDatosCampo;
     }

@@ -12,12 +12,14 @@
 // INICIO Cabecera global de URL de controlador *********************************
 
 use core\ConfigGlobal;
-use function core\strtoupper_dlb;
-use usuarios\model\entity\Usuario;
+use core\ViewTwig;
 use web\CasasQue;
 use web\DesplegableArray;
+use web\Hash;
 use web\PeriodoQue;
 use usuarios\model\entity\Role;
+use usuarios\model\entity\Usuario;
+use function core\strtoupper_dlb;
 
 require_once("apps/core/global_header.inc");
 // Archivos requeridos por esta url **********************************************
@@ -104,7 +106,7 @@ if ($Qperiodo === 'no') {
     $oFormP->setBoton("<input type=button name=\"buscar\" value=\"" . _('buscar') . "\" onclick=\"fnjs_ver();\">");
 }
 
-$oHash = new web\Hash();
+$oHash = new Hash();
 $sCamposForm = 'que!id_cdc!id_cdc_mas!id_cdc_num!empiezamax!empiezamin!iactividad_val!iasistentes_val!year';
 //$oHash->setcamposNo('id_cdc!modelo');
 
@@ -136,12 +138,12 @@ switch ($tipo_lista) {
 }
 $oHash->setCamposForm($sCamposForm);
 
-$oHashEdit = new web\Hash();
+$oHashEdit = new Hash();
 $oHashEdit->setUrl($url_ajax);
 $oHashEdit->setCamposForm('que!id_activ');
 $h_edit_a = $oHashEdit->linkSinVal();
 
-$oHashEditU = new web\Hash();
+$oHashEditU = new Hash();
 $oHashEditU->setUrl($url_ajax);
 $oHashEditU->setCamposForm('que!id_ubi');
 $h_edit_u = $oHashEditU->linkSinVal();
@@ -159,5 +161,5 @@ $a_campos = ['oPosicion' => $oPosicion,
     'id_ubi' => $Qid_ubi,
 ];
 
-$oView = new core\ViewTwig('casas/controller');
+$oView = new ViewTwig('casas/controller');
 $oView->renderizar('casa_que.html.twig', $a_campos);

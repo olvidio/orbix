@@ -2,9 +2,9 @@
 
 namespace tablonanuncios\domain\entity;
 
-use tablonanuncios\domain\AnuncioId;
 use web\DateTimeLocal;
 use web\NullDateTimeLocal;
+use tablonanuncios\domain\AnuncioId;
 
 class Anuncio
 {

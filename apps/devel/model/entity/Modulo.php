@@ -1,7 +1,9 @@
 <?php
 namespace devel\model\entity;
 
-use core;
+use core\ClasePropiedades;
+use core\DatosCampo;
+use core\Set;
 
 /**
  * Fitxer amb la Classe que accedeix a la taula m0_modulos
@@ -22,7 +24,7 @@ use core;
  * @version 1.0
  * @created 15/12/2014
  */
-class Modulo extends core\ClasePropiedades
+class Modulo extends ClasePropiedades
 {
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
@@ -106,7 +108,7 @@ class Modulo extends core\ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'id_mod') && $val_id !== '') $this->iid_mod = (int)$val_id;
+                if (($nom_id === 'id_mod') && $val_id !== '') $this->iid_mod = (int)$val_id;
             }
         } else {
             if (isset($a_id) && $a_id !== '') {
@@ -182,7 +184,7 @@ class Modulo extends core\ClasePropiedades
                     return false;
                 }
             }
-            $this->id_mod = $oDbl->lastInsertId('m0_modulos_id_mod_seq');
+            $this->iid_mod = $oDbl->lastInsertId('m0_modulos_id_mod_seq');
         }
         $this->setAllAtributes($aDades);
         return true;
@@ -250,7 +252,7 @@ class Modulo extends core\ClasePropiedades
      *
      * @param array $aDades
      */
-    function setAllAtributes($aDades)
+    function setAllAtributes(array $aDades)
     {
         if (!is_array($aDades)) return;
         if (array_key_exists('id_schema', $aDades)) $this->setId_schema($aDades['id_schema']);
@@ -316,7 +318,7 @@ class Modulo extends core\ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'id_mod') && $val_id !== '') $this->iid_mod = (int)$val_id;
+                if (($nom_id === 'id_mod') && $val_id !== '') $this->iid_mod = (int)$val_id;
             }
         }
     }
@@ -443,7 +445,7 @@ class Modulo extends core\ClasePropiedades
      */
     function getDatosCampos()
     {
-        $oModuloSet = new core\Set();
+        $oModuloSet = new Set();
 
         $oModuloSet->add($this->getDatosNom());
         $oModuloSet->add($this->getDatosDescripcion());
@@ -457,12 +459,12 @@ class Modulo extends core\ClasePropiedades
      * Recupera les propietats de l'atribut snom de Modulo
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosNom()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'nom'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'nom'));
         $oDatosCampo->setEtiqueta(_("nombre"));
         return $oDatosCampo;
     }
@@ -471,12 +473,12 @@ class Modulo extends core\ClasePropiedades
      * Recupera les propietats de l'atribut sdescripcion de Modulo
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosDescripcion()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'descripcion'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'descripcion'));
         $oDatosCampo->setEtiqueta(_("descripción"));
         return $oDatosCampo;
     }
@@ -485,12 +487,12 @@ class Modulo extends core\ClasePropiedades
      * Recupera les propietats de l'atribut smods_req de Modulo
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosMods_req()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'mods_req'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'mods_req'));
         $oDatosCampo->setEtiqueta(_("mods requeridos"));
         return $oDatosCampo;
     }
@@ -499,12 +501,12 @@ class Modulo extends core\ClasePropiedades
      * Recupera les propietats de l'atribut sapps_req de Modulo
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosApps_req()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'apps_req'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'apps_req'));
         $oDatosCampo->setEtiqueta(_("apps requeridas"));
         return $oDatosCampo;
     }

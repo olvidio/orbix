@@ -4,6 +4,7 @@ namespace actividadcargos\model\entity;
 
 use cambios\model\GestorAvisoCambios;
 use core\ConfigGlobal;
+use ReflectionClass;
 use function core\is_true;
 
 /**
@@ -79,7 +80,7 @@ class ActividadCargoSacd extends ActividadCargoAbstract
             // Anoto el cambio
             if (empty($quiet) && ConfigGlobal::is_app_installed('cambios')) {
                 $oGestorCanvis = new GestorAvisoCambios();
-                $shortClassName = (new \ReflectionClass($this))->getShortName();
+                $shortClassName = (new ReflectionClass($this))->getShortName();
                 $oGestorCanvis->addCanvi($shortClassName, 'UPDATE', $this->iid_activ, $aDades, $this->aDadesActuals);
             }
             $this->aDades = $aDades;
@@ -115,7 +116,7 @@ class ActividadCargoSacd extends ActividadCargoAbstract
             // Anoto el cambio
             if (empty($quiet) && ConfigGlobal::is_app_installed('cambios')) {
                 $oGestorCanvis = new GestorAvisoCambios();
-                $shortClassName = (new \ReflectionClass($this))->getShortName();
+                $shortClassName = (new ReflectionClass($this))->getShortName();
                 $oGestorCanvis->addCanvi($shortClassName, 'INSERT', $aDadesLast['id_activ'], $this->aDades, array());
             }
         }
@@ -141,7 +142,7 @@ class ActividadCargoSacd extends ActividadCargoAbstract
             $this->DBCarregar('guardar');
             // ho poso abans d'esborrar perque sino no trova cap valor. En el cas d'error s'hauria d'esborrar l'apunt.
             $oGestorCanvis = new GestorAvisoCambios();
-            $shortClassName = (new \ReflectionClass($this))->getShortName();
+            $shortClassName = (new ReflectionClass($this))->getShortName();
             $oGestorCanvis->addCanvi($shortClassName, 'DELETE', $this->iid_activ, array(), $this->aDadesActuals);
         }
         if (($oDbl->exec("DELETE FROM $nom_tabla WHERE id_item=$this->iid_item")) === false) {

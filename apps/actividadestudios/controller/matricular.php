@@ -10,10 +10,16 @@
  *
  */
 
-use actividadestudios\model\entity as actividadestudios;
-use asistentes\model\entity as asistentes;
-use notas\model\entity as notas;
-use personas\model\entity as personas;
+use actividadestudios\model\entity\GestorActividadAsignatura;
+use actividadestudios\model\entity\GestorMatriculaDl;
+use actividadestudios\model\entity\MatriculaDl;
+use asistentes\model\entity\AsistenteDl;
+use asistentes\model\entity\GestorAsistenteDl;
+use core\ConfigGlobal;
+use notas\model\entity\GestorPersonaNotaDB;
+use personas\model\entity\GestorPersonaDl;
+use personas\model\entity\GestorPersonaEx;
+use personas\model\entity\Persona;
 
 // INICIO Cabecera global de URL de controlador *********************************
 require_once("apps/core/global_header.inc");
@@ -56,17 +62,17 @@ if (!empty($Qid_nom)) {
     $aOperador['stgr'] = '!=';
     // miro si es de paso
 
-    $oPersona = personas\Persona::NewPersona($Qid_nom);
+    $oPersona = Persona::NewPersona($Qid_nom);
     if (is_string($oPersona)) {
         exit($oPersona);
     }
     $classname = str_replace("personas\\model\\entity\\", '', get_class($oPersona));
 
     if ($classname === 'PersonaEx') {
-        $GesPersonasDePaso = new personas\GestorPersonaEx();
+        $GesPersonasDePaso = new GestorPersonaEx();
         $cAlumnos = $GesPersonasDePaso->getPersonasEx($aWhere, $aOperador);
     } else {
-        $GesPersonasDl = new personas\GestorPersonaDl();
+        $GesPersonasDl = new GestorPersonaDl();
         $cAlumnos = $GesPersonasDl->getPersonasDl($aWhere, $aOperador);
     }
     if (empty($cAlumnos)) {
@@ -78,7 +84,7 @@ if (!empty($Qid_nom)) {
     $aWhere['situacion'] = 'A';
     $aWhere['stgr'] = 'r';
     $aOperador['stgr'] = '!=';
-    $GesPersonasDl = new personas\GestorPersonaDl();
+    $GesPersonasDl = new GestorPersonaDl();
     $cAlumnos = $GesPersonasDl->getPersonasDl($aWhere, $aOperador);
     $modo_aviso = '';
 }
@@ -91,19 +97,19 @@ $aOperadores = array();
 $aWhere['status'] = \actividades\model\entity\ActividadAll::STATUS_ACTUAL;
 $aWhere['f_ini'] = "'$inicurs_ca','$fincurs_ca'";
 $aOperadores['f_ini'] = 'BETWEEN';
-$aWhere['id_tipo_activ'] = '^' . core\ConfigGlobal::mi_sfsv() . '(122)|(222)|(332)';
+$aWhere['id_tipo_activ'] = '^' . ConfigGlobal::mi_sfsv() . '(122)|(222)|(332)';
 $aOperadores['id_tipo_activ'] = '~';
 foreach ($cAlumnos as $oPersonaDl) {
     $id_nom = $oPersonaDl->getId_nom();
     $cAsistencias = array();
     // después me interesa el id_activ, asi que lo busco primero:
     if (empty($Qid_activ)) {
-        $GesAsistentes = new asistentes\GestorAsistenteDl();
+        $GesAsistentes = new GestorAsistenteDl();
         $aWhereNom = array('id_nom' => $id_nom, 'propio' => 't');
         $aOperadorNom = [];
         $cAsistencias = $GesAsistentes->getActividadesDeAsistente($aWhereNom, $aOperadorNom, $aWhere, $aOperadores);
     } else { // puede ser que ya le pase la actividad
-        $oAsistenteDl = new asistentes\AsistenteDl(array('id_activ' => $Qid_activ, 'id_nom' => $id_nom));
+        $oAsistenteDl = new AsistenteDl(array('id_activ' => $Qid_activ, 'id_nom' => $id_nom));
         $oAsistenteDl->DBCarregar();
         $cAsistencias[0] = $oAsistenteDl;
     }
@@ -120,7 +126,7 @@ foreach ($cAlumnos as $oPersonaDl) {
             $est_ok = $oAsistenteDl->getEst_ok();
             if ($est_ok != 1) {
                 //borro el plan de estudios de esta persona.
-                $GesMatriculas = new actividadestudios\GestorMatriculaDl();
+                $GesMatriculas = new GestorMatriculaDl();
                 $cMatriculas = $GesMatriculas->getMatriculas(array('id_nom' => $id_nom, 'id_activ' => $id_activ_1));
                 foreach ($cMatriculas as $oMatricula) {
                     if ($oMatricula->DBEliminar() === false) {
@@ -130,14 +136,14 @@ foreach ($cAlumnos as $oPersonaDl) {
                 }
 
                 //busco las asignaturas que ya están aprobadas y las pongo en un array.
-                $GesPersonaNotas = new notas\GestorPersonaNotaDB();
+                $GesPersonaNotas = new GestorPersonaNotaDB();
                 $cPersonaNotas = $GesPersonaNotas->getPersonaNotasSuperadas($id_nom);
                 $a_aprobadas = array();
                 foreach ($cPersonaNotas as $oPersonaNota) {
                     $a_aprobadas[] = $oPersonaNota->getId_asignatura();
                 }
                 //busco las asignaturas de su ca
-                $GesAsignaturasCa = new actividadestudios\GestorActividadAsignatura();
+                $GesAsignaturasCa = new GestorActividadAsignatura();
                 // Ojo. Se ha ido cambiando:
                 //  1. que también coja las asig con preceptor...
                 //  2. Que no coja las asignaturas con preceptor...
@@ -156,7 +162,7 @@ foreach ($cAlumnos as $oPersonaDl) {
                                 $aOperadorNota['id_nivel'] = '~';
                                 $cPersonaNotas = $GesPersonaNotas->getPersonaNotas($aWhereNota, $aOperadorNota);
                                 if (is_array($cPersonaNotas) && count($cPersonaNotas) < 3) {
-                                    $oMatricula = new actividadestudios\MatriculaDl(array('id_activ' => $id_activ_1, 'id_asignatura' => $id_asignatura, 'id_nom' => $id_nom));
+                                    $oMatricula = new MatriculaDl(array('id_activ' => $id_activ_1, 'id_asignatura' => $id_asignatura, 'id_nom' => $id_nom));
                                     $oMatricula->setPreceptor($preceptor);
                                     if ($oMatricula->DBGuardar() === false) {
                                         echo _("error al guardar la matrícula");
@@ -169,7 +175,7 @@ foreach ($cAlumnos as $oPersonaDl) {
                                 $aOperadorNota['id_nivel'] = '~';
                                 $cPersonaNotas = $GesPersonaNotas->getPersonaNotas($aWhereNota, $aOperadorNota);
                                 if (is_array($cPersonaNotas) && count($cPersonaNotas) < 5) {
-                                    $oMatricula = new actividadestudios\MatriculaDl(array('id_activ' => $id_activ_1, 'id_asignatura' => $id_asignatura, 'id_nom' => $id_nom));
+                                    $oMatricula = new MatriculaDl(array('id_activ' => $id_activ_1, 'id_asignatura' => $id_asignatura, 'id_nom' => $id_nom));
                                     $oMatricula->setPreceptor($preceptor);
                                     if ($oMatricula->DBGuardar() === false) {
                                         echo _("error al guardar la matrícula");
@@ -182,7 +188,7 @@ foreach ($cAlumnos as $oPersonaDl) {
                                 $aOperadorNota['id_nivel'] = '~';
                                 $cPersonaNotas = $GesPersonaNotas->getPersonaNotas($aWhereNota, $aOperadorNota);
                                 if (is_array($cPersonaNotas) && count($cPersonaNotas) < 8) {
-                                    $oMatricula = new actividadestudios\MatriculaDl(array('id_activ' => $id_activ_1, 'id_asignatura' => $id_asignatura, 'id_nom' => $id_nom));
+                                    $oMatricula = new MatriculaDl(array('id_activ' => $id_activ_1, 'id_asignatura' => $id_asignatura, 'id_nom' => $id_nom));
                                     $oMatricula->setPreceptor($preceptor);
                                     if ($oMatricula->DBGuardar() === false) {
                                         echo _("error al guardar la matrícula");
@@ -191,7 +197,7 @@ foreach ($cAlumnos as $oPersonaDl) {
                                 break;
                         }
                     } else {
-                        $oMatricula = new actividadestudios\MatriculaDl(array('id_activ' => $id_activ_1, 'id_asignatura' => $id_asignatura, 'id_nom' => $id_nom));
+                        $oMatricula = new MatriculaDl(array('id_activ' => $id_activ_1, 'id_asignatura' => $id_asignatura, 'id_nom' => $id_nom));
                         $oMatricula->setPreceptor($preceptor);
                         if ($oMatricula->DBGuardar() === false) {
                             echo _("error al guardar la matrícula");

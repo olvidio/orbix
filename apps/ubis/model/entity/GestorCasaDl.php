@@ -1,9 +1,6 @@
 <?php
 namespace ubis\model\entity;
 
-use core;
-use web;
-
 /**
  * GestorCasaDl
  *

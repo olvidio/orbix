@@ -1,8 +1,8 @@
 <?php
 
-use actividadtarifas\model\entity\TipoTarifa;
 use actividadtarifas\model\entity\GestorTipoActivTarifa;
 use actividadtarifas\model\entity\TipoActivTarifa;
+use actividadtarifas\model\entity\TipoTarifa;
 use core\ConfigGlobal;
 use web\Lista;
 use web\TiposActividades;

@@ -1,7 +1,9 @@
 <?php
 namespace menus\model\entity;
 
-use core;
+use core\ClasePropiedades;
+use core\DatosCampo;
+use core\Set;
 
 /**
  * Fitxer amb la Classe que accedeix a la taula $nom_tabla
@@ -22,7 +24,7 @@ use core;
  * @version 1.0
  * @created 15/01/2014
  */
-class GrupMenu extends core\ClasePropiedades
+class GrupMenu extends ClasePropiedades
 {
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
@@ -97,7 +99,7 @@ class GrupMenu extends core\ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'id_grupmenu') && $val_id !== '') $this->iid_grupmenu = (int)$val_id;
+                if (($nom_id === 'id_grupmenu') && $val_id !== '') $this->iid_grupmenu = (int)$val_id;
             }
         } else {
             if (isset($a_id) && $a_id !== '') {
@@ -170,7 +172,7 @@ class GrupMenu extends core\ClasePropiedades
                     return false;
                 }
             }
-            $this->id_grupmenu = $oDbl->lastInsertId($nom_tabla . '_id_gm_seq');
+            $this->iid_grupmenu = $oDbl->lastInsertId($nom_tabla . '_id_gm_seq');
         }
         $this->setAllAtributes($aDades);
         return true;
@@ -238,7 +240,7 @@ class GrupMenu extends core\ClasePropiedades
      *
      * @param array $aDades
      */
-    function setAllAtributes($aDades)
+    function setAllAtributes(array $aDades)
     {
         if (!is_array($aDades)) return;
         if (array_key_exists('id_schema', $aDades)) $this->setId_schema($aDades['id_schema']);
@@ -299,7 +301,7 @@ class GrupMenu extends core\ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'id_grupmenu') && $val_id !== '') $this->iid_grupmenu = (int)$val_id;
+                if (($nom_id === 'id_grupmenu') && $val_id !== '') $this->iid_grupmenu = (int)$val_id;
             }
         }
     }
@@ -338,7 +340,7 @@ class GrupMenu extends core\ClasePropiedades
             $this->DBCarregar();
         }
         $sgrupmenu = $this->sgrup_menu;
-        if ($dl_r == 'r' || $dl_r == 'rstgr') {
+        if ($dl_r === 'r' || $dl_r === 'rstgr') {
             if (!empty($this->aEquivalencias[$this->sgrup_menu])) {
                 $sgrupmenu = $this->aEquivalencias[$this->sgrup_menu];
             }
@@ -386,7 +388,7 @@ class GrupMenu extends core\ClasePropiedades
      */
     function getDatosCampos()
     {
-        $oGrupMenuSet = new core\Set();
+        $oGrupMenuSet = new Set();
 
         $oGrupMenuSet->add($this->getDatosGrup_menu());
         $oGrupMenuSet->add($this->getDatosOrden());
@@ -398,12 +400,12 @@ class GrupMenu extends core\ClasePropiedades
      * Recupera les propietats de l'atribut sgrup_menu de GrupMenu
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosGrup_menu()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'grup_menu'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'grup_menu'));
         $oDatosCampo->setEtiqueta(_("grupmenu"));
         $oDatosCampo->setTipo('texto');
         $oDatosCampo->setArgument(30);
@@ -414,12 +416,12 @@ class GrupMenu extends core\ClasePropiedades
      * Recupera les propietats de l'atribut iorden de GrupMenu
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosOrden()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'orden'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'orden'));
         $oDatosCampo->setEtiqueta(_("orden"));
         $oDatosCampo->setTipo('texto');
         $oDatosCampo->setArgument(10);

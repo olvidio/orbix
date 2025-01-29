@@ -5,7 +5,6 @@ namespace core;
 class ConfigGlobal extends ServerConf
 {
 
-    public static $auth_method='database';
     // la region (sin cr), las dl en formato de DBU
     // Actualmente se usa para sincronizar con la BDU.
     // las dl de la bdu (sin esquema en orbix) se añaden a la región que tiene esquema en Orbix.
@@ -108,7 +107,7 @@ class ConfigGlobal extends ServerConf
      * @param integer $id_mod
      * @return boolean
      */
-    public static function is_mod_installed($id_mod)
+    public static function is_mod_installed(int $id_mod)
     {
         return array_key_exists($id_mod, $_SESSION['config']['mod_installed']);
     }
@@ -196,10 +195,10 @@ class ConfigGlobal extends ServerConf
      * (de momento he cambiado todo lo que  tiene que ver con dl_org de actividades)
      * Añado el parámetro: isfsv, para el caso de des, poder acceder a sf.
      *
-     * @param $isfsv
+     * @param string $isfsv
      * @return string
      */
-    public static function mi_delef($isfsv = '')
+    public static function mi_delef(string $isfsv = '')
     {
         $dl = self::mi_dele();
         if (!empty($isfsv)) {

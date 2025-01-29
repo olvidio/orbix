@@ -16,6 +16,7 @@ use notas\model\entity\PersonaNotaDB;
 use notas\model\entity\PersonaNotaDlDB;
 use notas\model\entity\PersonaNotaOtraRegionStgrDB;
 use personas\model\entity\Persona;
+use RuntimeException;
 use ubis\model\entity\GestorDelegacion;
 
 class EditarPersonaNota
@@ -47,7 +48,7 @@ class EditarPersonaNota
             $oPersonaNotaDB->setTipo_acta($this->tipo_acta);
             if ($oPersonaNotaDB->DBEliminar() === false) {
                 $err = end($_SESSION['errores']);
-                throw new \RuntimeException(sprintf(_("No se ha eliminado la Nota: %s"), $err));
+                throw new RunTimeException(sprintf(_("No se ha eliminado la Nota: %s"), $err));
             }
         }
     }
@@ -98,7 +99,7 @@ class EditarPersonaNota
                 if (!is_null($oPersonaNota2)) {
                     $oPersonaNota2->DBCarregar();
                     $err = _("Ya existe esta nota");
-                    throw new \RuntimeException($err);
+                    throw new RunTimeException($err);
                 }
             }
         }
@@ -139,7 +140,7 @@ class EditarPersonaNota
         $oPersonaNotaDB->setNota_max($nota_max);
         if ($guardar && $oPersonaNotaDB->DBGuardar() === false) {
             $err = end($_SESSION['errores']);
-            throw new \RuntimeException(sprintf(_("No se ha guardado la Nota: %s"), $err));
+            throw new RunTimeException(sprintf(_("No se ha guardado la Nota: %s"), $err));
         }
         $rta['nota'] = $oPersonaNotaDB;
         // si no está abierto, hay que abrir el dossier para esta persona
@@ -149,7 +150,7 @@ class EditarPersonaNota
             $oDossier->abrir();
             if ($oDossier->DBGuardar() === false) {
                 $err = end($_SESSION['errores']);
-                throw new \RuntimeException(sprintf(_("No al guardar el dossier: %s"), $err));
+                throw new RunTimeException(sprintf(_("No al guardar el dossier: %s"), $err));
             }
         }
 
@@ -201,7 +202,7 @@ class EditarPersonaNota
             $oPersonaNotaCertificadoDB->setNota_max($nota_max);
 
             if ($oPersonaNotaCertificadoDB->DBGuardar() === false) {
-                throw new \RuntimeException(_("hay un error, no se ha guardado. Nota Certificado"));
+                throw new RunTimeException(_("hay un error, no se ha guardado. Nota Certificado"));
             }
 
             // borrar la original (asegurarme que se ha guardado lo anterior)
@@ -277,7 +278,7 @@ class EditarPersonaNota
 
         if ($oPersonaNotaDB->DBGuardar() === false) {
             $err = end($_SESSION['errores']);
-            throw new \RuntimeException(sprintf(_("No se ha modificado la Nota: %s"), $err));
+            throw new RunTimeException(sprintf(_("No se ha modificado la Nota: %s"), $err));
         }
         $rta['nota'] = $oPersonaNotaDB;
 
@@ -307,7 +308,7 @@ class EditarPersonaNota
                         $err .= "\n" . _("Si ha guardado este acta anteriormente puede ignorar este aviso.");
                         $err .= "\n" . _("Si es la primera vez que 'guarda las notas en tessera' sería conveniente
                             revisar con su r la situación de esta persona");
-                        throw new \RuntimeException($err);
+                        throw new RunTimeException($err);
                     }
                 }
             }
@@ -332,7 +333,7 @@ class EditarPersonaNota
             $oPersonaNotaCertificadoDB->setNota_num($nota_num);
             $oPersonaNotaCertificadoDB->setNota_max($nota_max);
             if ($oPersonaNotaCertificadoDB->DBGuardar() === false) {
-                throw new \RuntimeException(_("hay un error, no se ha guardado. Nota Certificado"));
+                throw new RunTimeException(_("hay un error, no se ha guardado. Nota Certificado"));
             }
             $rta['certificado'] = $oPersonaNotaCertificadoDB;
         }
@@ -390,7 +391,7 @@ class EditarPersonaNota
         $nombre_schema_persona = $cSchemas[0]->getSchema();
         if (empty($nombre_schema_persona)) {
             $msg = sprintf(_("No se encuentra el nombre del esquema de la persona con id_nom: %s"), $id_schema_persona);
-            throw new \RuntimeException($msg);
+            throw new RunTimeException($msg);
         }
 
         if ($nombre_schema_persona === 'restov' || $nombre_schema_persona === 'restof') {
@@ -435,7 +436,7 @@ class EditarPersonaNota
         if (!is_object($oPersona)) {
             $msg_err = "$oPersona con id_nom: $this->id_nom en  " . __FILE__ . ": line " . __LINE__;
             // exit($msg_err);
-            throw new \RuntimeException($msg_err);
+            throw new RunTimeException($msg_err);
         }
         return $oPersona->getId_schema();
     }

@@ -1,7 +1,9 @@
 <?php
 namespace devel\model\entity;
 
-use core;
+use core\ClasePropiedades;
+use core\DatosCampo;
+use core\Set;
 
 /**
  * Fitxer amb la Classe que accedeix a la taula m0_apps
@@ -22,7 +24,7 @@ use core;
  * @version 1.0
  * @created 15/12/2014
  */
-class App extends core\ClasePropiedades
+class App extends ClasePropiedades
 {
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
@@ -94,7 +96,7 @@ class App extends core\ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'id_app') && $val_id !== '') $this->iid_app = (int)$val_id;
+                if (($nom_id === 'id_app') && $val_id !== '') $this->iid_app = (int)$val_id;
             }
         } else {
             if (isset($a_id) && $a_id !== '') {
@@ -166,7 +168,7 @@ class App extends core\ClasePropiedades
                     return false;
                 }
             }
-            $this->id_app = $oDbl->lastInsertId('m0_apps_id_app_seq');
+            $this->iid_app = $oDbl->lastInsertId('m0_apps_id_app_seq');
         }
         $this->setAllAtributes($aDades);
         return true;
@@ -234,7 +236,7 @@ class App extends core\ClasePropiedades
      *
      * @param array $aDades
      */
-    function setAllAtributes($aDades)
+    function setAllAtributes(array $aDades)
     {
         if (!is_array($aDades)) return;
         if (array_key_exists('id_schema', $aDades)) $this->setId_schema($aDades['id_schema']);
@@ -296,7 +298,7 @@ class App extends core\ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'id_app') && $val_id !== '') $this->iid_app = (int)$val_id;
+                if (($nom_id === 'id_app') && $val_id !== '') $this->iid_app = (int)$val_id;
             }
         }
     }
@@ -377,7 +379,7 @@ class App extends core\ClasePropiedades
      */
     function getDatosCampos()
     {
-        $oAppSet = new core\Set();
+        $oAppSet = new Set();
 
         $oAppSet->add($this->getDatosNom());
         $oAppSet->add($this->getDatosDb_prefix());
@@ -389,12 +391,12 @@ class App extends core\ClasePropiedades
      * Recupera les propietats de l'atribut snom de App
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosNom()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'nom'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'nom'));
         $oDatosCampo->setEtiqueta(_("nombre"));
         $oDatosCampo->setTipo('texto');
         $oDatosCampo->setArgument(30);
@@ -405,12 +407,12 @@ class App extends core\ClasePropiedades
      * Recupera les propietats de l'atribut sdb_prefix de App
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosDb_prefix()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'db_prefix'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'db_prefix'));
         $oDatosCampo->setEtiqueta(_("db prefix"));
         $oDatosCampo->setTipo('texto');
         $oDatosCampo->setArgument(30);

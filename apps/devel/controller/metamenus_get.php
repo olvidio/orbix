@@ -2,7 +2,8 @@
 
 namespace menus\controller;
 
-use menus\model\entity as menus;
+use menus\model\entity\GestorMetaMenu;
+use menus\model\entity\MetaMenu;
 
 // INICIO Cabecera global de URL de controlador *********************************
 require_once("apps/core/global_header.inc");
@@ -20,9 +21,9 @@ $Qid_menu = (integer)filter_input(INPUT_POST, 'id_menu');
 
 if (!empty($Qid_menu) || !empty($Qnuevo)) {
     if (!empty($Qid_menu)) {
-        $oMetamenu = new menus\MetaMenu();
+        $oMetamenu = new MetaMenu();
         // para modificar los valores de un menu.
-        $oMetamenu->setId_menu($Qid_menu);
+        $oMetamenu->setId_metamenu($Qid_menu);
     } else {
         $row['id_menu'] = '';
         $row['orden'] = '';
@@ -86,10 +87,10 @@ if (!empty($Qid_menu) || !empty($Qnuevo)) {
     // para ver el listado de todos los menus de un módulo
     if (!empty($Qfiltro_mod)) {
         $aWhere = array('modulo' => $Qfiltro_mod, '_ordre' => 'modulo,url');
-        $oLista = new menus\GestorMetaMenu();
+        $oLista = new GestorMetaMenu();
         $oMetamenus = $oLista->getMetamenus($aWhere);
     } else {
-        $oLista = new menus\GestorMetaMenu();
+        $oLista = new GestorMetaMenu();
         $oMetamenus = $oLista->getMetamenus();
     }
     $txt = "";
@@ -103,9 +104,9 @@ if (!empty($Qid_menu) || !empty($Qnuevo)) {
         $id_metamenu = $oMetamenu->getId_metamenu();
         //echo "m: $perm_menu,l: $perm_login, ";
         // hago las rutas absolutas, en vez de relativas:
-        //if (!empty($url)) $url=core\ConfigGlobal::getWeb()."/$url";
+        //if (!empty($url)) $url=ConfigGlobal::getWeb()."/$url";
         if (!empty($descripcion)) $descripcion = ' (' . $descripcion . ')';
-        //if (!empty($modulo)) $.=$url=core\ConfigGlobal::getWeb()."/$url";
+        //if (!empty($modulo)) $.=$url=ConfigGlobal::getWeb()."/$url";
         $txt .= "<li>$modulo: <span class='link' onclick=fnjs_ver_ficha('$id_metamenu')  >$url</span>  $descripcion";
         $txt .= "</li></ul>";
     }

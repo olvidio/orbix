@@ -2,8 +2,12 @@
 
 namespace personas\model\entity;
 
-use core;
-use web;
+use core\ClasePropiedades;
+use core\ConverterDate;
+use core\DatosCampo;
+use core\Set;
+use web\DateTimeLocal;
+use web\NullDateTimeLocal;
 
 /**
  * Fitxer amb la Classe que accedeix a la taula d_traslados
@@ -24,7 +28,7 @@ use web;
  * @version 1.0
  * @created 12/05/2014
  */
-class Traslado extends core\ClasePropiedades
+class Traslado extends ClasePropiedades
 {
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
@@ -64,7 +68,7 @@ class Traslado extends core\ClasePropiedades
     /**
      * F_traslado de Traslado
      *
-     * @var web\DateTimeLocal
+     * @varDateTimeLocal
      */
     private $df_traslado;
     /**
@@ -132,8 +136,8 @@ class Traslado extends core\ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'id_item') && $val_id !== '') $this->iid_item = (int)$val_id;
-                if (($nom_id == 'id_nom') && $val_id !== '') $this->iid_nom = (int)$val_id;
+                if (($nom_id === 'id_item') && $val_id !== '') $this->iid_item = (int)$val_id;
+                if (($nom_id === 'id_nom') && $val_id !== '') $this->iid_nom = (int)$val_id;
             }
         }
         $this->setoDbl($oDbl);
@@ -211,7 +215,7 @@ class Traslado extends core\ClasePropiedades
                     return false;
                 }
             }
-            $this->id_item = $oDbl->lastInsertId('d_traslados_id_item_seq');
+            $this->iid_item = $oDbl->lastInsertId('d_traslados_id_item_seq');
         }
         $this->setAllAtributes($aDades);
         return true;
@@ -279,7 +283,7 @@ class Traslado extends core\ClasePropiedades
      *
      * @param array $aDades
      */
-    function setAllAtributes($aDades, $convert = FALSE)
+    function setAllAtributes(array $aDades, $convert = FALSE)
     {
         if (!is_array($aDades)) return;
         if (array_key_exists('id_schema', $aDades)) $this->setId_schema($aDades['id_schema']);
@@ -353,7 +357,7 @@ class Traslado extends core\ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'id_item') && $val_id !== '') $this->iid_item = (int)$val_id;
+                if (($nom_id === 'id_item') && $val_id !== '') $this->iid_item = (int)$val_id;
             }
         }
     }
@@ -407,7 +411,7 @@ class Traslado extends core\ClasePropiedades
     /**
      * Recupera el atributo df_traslado de Traslado
      *
-     * @return web\DateTimeLocal df_traslado
+     * @returnDateTimeLocal df_traslado
      */
     function getF_traslado()
     {
@@ -415,9 +419,9 @@ class Traslado extends core\ClasePropiedades
             $this->DBCarregar();
         }
         if (empty($this->df_traslado)) {
-            return new web\NullDateTimeLocal();
+            return new NullDateTimeLocal();
         }
-        $oConverter = new core\ConverterDate('date', $this->df_traslado);
+        $oConverter = new ConverterDate('date', $this->df_traslado);
         return $oConverter->fromPg();
     }
 
@@ -426,13 +430,13 @@ class Traslado extends core\ClasePropiedades
      * Si df_traslado es string, y convert=true se convierte usando el formato webDateTimeLocal->getFormat().
      * Si convert es false, df_traslado debe ser un string en formato ISO (Y-m-d). Corresponde al pgstyle de la base de datos.
      *
-     * @param date|string df_traslado='' optional.
+     * @param DateTimeLocal|string df_traslado='' optional.
      * @param boolean convert=true optional. Si es false, df_traslado debe ser un string en formato ISO (Y-m-d).
      */
     function setF_traslado($df_traslado = '', $convert = true)
     {
         if ($convert === true && !empty($df_traslado)) {
-            $oConverter = new core\ConverterDate('date', $df_traslado);
+            $oConverter = new ConverterDate('date', $df_traslado);
             $this->df_traslado = $oConverter->toPg();
         } else {
             $this->df_traslado = $df_traslado;
@@ -584,7 +588,7 @@ class Traslado extends core\ClasePropiedades
      */
     function getDatosCampos()
     {
-        $oTrasladoSet = new core\Set();
+        $oTrasladoSet = new Set();
 
         $oTrasladoSet->add($this->getDatosF_traslado());
         $oTrasladoSet->add($this->getDatosTipo_cmb());
@@ -601,12 +605,12 @@ class Traslado extends core\ClasePropiedades
      * Recupera les propietats de l'atribut df_traslado de Traslado
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosF_traslado()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'f_traslado'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'f_traslado'));
         $oDatosCampo->setEtiqueta(_("fecha de traslado"));
         $oDatosCampo->setTipo('fecha');
         return $oDatosCampo;
@@ -616,12 +620,12 @@ class Traslado extends core\ClasePropiedades
      * Recupera les propietats de l'atribut stipo_cmb de Traslado
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosTipo_cmb()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'tipo_cmb'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'tipo_cmb'));
         $oDatosCampo->setEtiqueta(_("tipo"));
         $oDatosCampo->setTipo('array');
         $oDatosCampo->setLista(array("sede" => _("ctr sede"), "cr" => _("ctr cr"), "dl" => _("delegación")));
@@ -632,12 +636,12 @@ class Traslado extends core\ClasePropiedades
      * Recupera les propietats de l'atribut iid_ctr_origen de Traslado
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosId_ctr_origen()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_ctr_origen'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_ctr_origen'));
         $oDatosCampo->setEtiqueta(_("id origen"));
         $oDatosCampo->setTipo('texto');
         $oDatosCampo->setArgument(25);
@@ -648,12 +652,12 @@ class Traslado extends core\ClasePropiedades
      * Recupera les propietats de l'atribut sctr_origen de Traslado
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosCtr_origen()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'ctr_origen'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'ctr_origen'));
         $oDatosCampo->setEtiqueta(_("centro de origen"));
         $oDatosCampo->setTipo('texto');
         $oDatosCampo->setArgument(25);
@@ -664,12 +668,12 @@ class Traslado extends core\ClasePropiedades
      * Recupera les propietats de l'atribut iid_ctr_destino de Traslado
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosId_ctr_destino()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_ctr_destino'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_ctr_destino'));
         $oDatosCampo->setEtiqueta(_("id destino"));
         $oDatosCampo->setTipo('texto');
         $oDatosCampo->setArgument(25);
@@ -680,12 +684,12 @@ class Traslado extends core\ClasePropiedades
      * Recupera les propietats de l'atribut sctr_destino de Traslado
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosCtr_destino()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'ctr_destino'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'ctr_destino'));
         $oDatosCampo->setEtiqueta(_("centro de destino"));
         $oDatosCampo->setTipo('texto');
         $oDatosCampo->setArgument(25);
@@ -696,12 +700,12 @@ class Traslado extends core\ClasePropiedades
      * Recupera les propietats de l'atribut sobserv de Traslado
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosObserv()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'observ'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'observ'));
         $oDatosCampo->setEtiqueta(_("observaciones"));
         $oDatosCampo->setTipo('texto');
         $oDatosCampo->setArgument(50);

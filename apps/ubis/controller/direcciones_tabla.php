@@ -1,5 +1,10 @@
 <?php
 // INICIO Cabecera global de URL de controlador *********************************
+use core\ConfigGlobal;
+use core\ViewPhtml;
+use web\Hash;
+use web\Lista;
+
 require_once("apps/core/global_header.inc");
 // Archivos requeridos por esta url **********************************************
 
@@ -49,7 +54,7 @@ $cDirecciones = $oGesDir->getDirecciones($aWhere, $aOperador);
 foreach ($cDirecciones as $oDireccion) {
     $i++;
     $id_direccion = $oDireccion->getId_direccion();
-    $pagina = web\Hash::link(core\ConfigGlobal::getWeb() . '/apps/ubis/controller/direcciones_asignar.php?' . http_build_query(array('id_ubi' => $Qid_ubi, 'id_direccion' => $id_direccion, 'obj_dir' => $Qobj_dir, 'pais' => $Qpais)));
+    $pagina = Hash::link(ConfigGlobal::getWeb() . '/apps/ubis/controller/direcciones_asignar.php?' . http_build_query(array('id_ubi' => $Qid_ubi, 'id_direccion' => $id_direccion, 'obj_dir' => $Qobj_dir, 'pais' => $Qpais)));
     $a_valores[$i][1] = $id_direccion;
     $a_valores[$i][2] = array('ira' => $pagina, 'valor' => 'ok');
     $a_valores[$i][3] = $oDireccion->getDireccion();
@@ -62,9 +67,9 @@ foreach ($cDirecciones as $oDireccion) {
     $a_valores[$i][10] = $oDireccion->getObserv();
 }
 
-$url_nueva = web\Hash::link('apps/ubis/controller/direcciones_editar.php?' . http_build_query(array('mod' => 'nuevo', 'id_ubi' => $Qid_ubi, 'obj_dir' => $Qobj_dir)));
+$url_nueva = Hash::link('apps/ubis/controller/direcciones_editar.php?' . http_build_query(array('mod' => 'nuevo', 'id_ubi' => $Qid_ubi, 'obj_dir' => $Qobj_dir)));
 
-$oTabla = new web\Lista();
+$oTabla = new Lista();
 $oTabla->setId_tabla('direcciones_tabla');
 $oTabla->setCabeceras($a_cabeceras);
 $oTabla->setBotones($a_botones);
@@ -75,5 +80,5 @@ $a_campos = [
     'url_nueva' => $url_nueva,
 ];
 
-$oView = new core\View('ubis\controller');
+$oView = new ViewPhtml('ubis\controller');
 $oView->renderizar('direcciones_tabla.phtml', $a_campos);

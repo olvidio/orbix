@@ -1,7 +1,9 @@
 <?php
 namespace notas\model\entity;
 
-use core;
+use core\ClasePropiedades;
+use core\DatosCampo;
+use core\Set;
 
 /**
  * Fitxer amb la Classe que accedeix a la taula e_actas_tribunal_dl
@@ -22,7 +24,7 @@ use core;
  * @version 1.0
  * @created 07/04/2014
  */
-class ActaTribunal extends core\ClasePropiedades
+class ActaTribunal extends ClasePropiedades
 {
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
@@ -108,10 +110,10 @@ class ActaTribunal extends core\ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'id_schema') && $val_id !== '') {
+                if (($nom_id === 'id_schema') && $val_id !== '') {
                     $this->iid_schema = (int)$val_id;
                 }
-                if (($nom_id == 'id_item') && $val_id !== '') {
+                if (($nom_id === 'id_item') && $val_id !== '') {
                     $this->iid_item = (int)$val_id;
                 }
             }
@@ -250,7 +252,7 @@ class ActaTribunal extends core\ClasePropiedades
      *
      * @param string $nom_tabla
      */
-    public function cambiarTabla($nom_tabla)
+    public function cambiarTabla(string $nom_tabla)
     {
         $this->setNomTabla($nom_tabla);
     }
@@ -273,7 +275,7 @@ class ActaTribunal extends core\ClasePropiedades
      *
      * @param array $aDades
      */
-    function setAllAtributes($aDades)
+    function setAllAtributes(array $aDades)
     {
         if (!is_array($aDades)) {
             return;
@@ -351,10 +353,10 @@ class ActaTribunal extends core\ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'id_schema') && $val_id !== '') {
+                if (($nom_id === 'id_schema') && $val_id !== '') {
                     $this->iid_schema = (int)$val_id;
                 }
-                if (($nom_id == 'id_item') && $val_id !== '') {
+                if (($nom_id === 'id_item') && $val_id !== '') {
                     $this->iid_item = (int)$val_id;
                 }
             }
@@ -460,7 +462,7 @@ class ActaTribunal extends core\ClasePropiedades
      */
     function getDatosCampos()
     {
-        $oActaTribunalDlSet = new core\Set();
+        $oActaTribunalDlSet = new Set();
 
         $oActaTribunalDlSet->add($this->getDatosActa());
         $oActaTribunalDlSet->add($this->getDatosExaminador());
@@ -473,12 +475,12 @@ class ActaTribunal extends core\ClasePropiedades
      * Recupera les propietats de l'atribut sacta de ActaTribunalDl
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosActa()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'acta'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'acta'));
         $oDatosCampo->setEtiqueta(_("acta"));
         return $oDatosCampo;
     }
@@ -487,12 +489,12 @@ class ActaTribunal extends core\ClasePropiedades
      * Recupera les propietats de l'atribut sexaminador de ActaTribunalDl
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosExaminador()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'examinador'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'examinador'));
         $oDatosCampo->setEtiqueta(_("examinador"));
         return $oDatosCampo;
     }
@@ -501,12 +503,12 @@ class ActaTribunal extends core\ClasePropiedades
      * Recupera les propietats de l'atribut iorden de ActaTribunalDl
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosOrden()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'orden'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'orden'));
         $oDatosCampo->setEtiqueta(_("orden"));
         return $oDatosCampo;
     }

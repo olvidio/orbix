@@ -2,14 +2,10 @@
 
 
 // INICIO Cabecera global de URL de controlador *********************************
+use core\ViewTwig;
 use web\Desplegable;
-
-use misas\domain\repositories\InicialesSacdRepository;
-use personas\model\entity\PersonaSacd;
-use personas\model\entity\PersonaEx;
-use zonassacd\model\entity\GestorZona;
-use zonassacd\model\entity\GestorZonaSacd;
 use web\Hash;
+use zonassacd\model\entity\GestorZona;
 
 
 require_once("apps/core/global_header.inc");
@@ -36,6 +32,6 @@ $a_campos = ['oPosicion' => $oPosicion,
     'h_zona' => $h_zona,
 ];
 
-$oView = new core\ViewTwig('misas/controller');
+$oView = new ViewTwig('misas/controller');
 echo $oView->render('modificar_iniciales_sacd_zona.html.twig', $a_campos);
 

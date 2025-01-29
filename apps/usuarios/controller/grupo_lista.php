@@ -1,6 +1,11 @@
 <?php
 
-use usuarios\model\entity as usuarios;
+use core\ConfigGlobal;
+use core\ViewPhtml;
+use usuarios\model\entity\GestorGrupo;
+use usuarios\model\entity\Usuario;
+use web\Hash;
+use web\Lista;
 
 // INICIO Cabecera global de URL de controlador *********************************
 require_once("apps/core/global_header.inc");
@@ -29,9 +34,9 @@ if (isset($_POST['stack'])) {
     }
 }
 
-$oMiUsuario = new usuarios\Usuario(core\ConfigGlobal::mi_id_usuario());
+$oMiUsuario = new Usuario(ConfigGlobal::mi_id_usuario());
 $miRole = $oMiUsuario->getId_role();
-$sfsv = core\ConfigGlobal::mi_sfsv();
+$sfsv = ConfigGlobal::mi_sfsv();
 
 if ($miRole > 3) {
     exit(_("no tiene permisos para ver esto")); // no es administrador
@@ -50,7 +55,7 @@ if (!empty($Qusername)) {
 }
 $aWhere['_ordre'] = 'usuario';
 
-$oGesGrupos = new usuarios\GestorGrupo();
+$oGesGrupos = new GestorGrupo();
 $oGrupoColeccion = $oGesGrupos->getGrupos($aWhere, $aOperador);
 
 //default:
@@ -76,7 +81,7 @@ foreach ($oGrupoColeccion as $oGrupo) {
     $usuario = $oGrupo->getUsuario();
 
 
-    $pagina = web\Hash::link(core\ConfigGlobal::getWeb() . '/apps/usuarios/controller/grupo_form.php?' . http_build_query(array('quien' => 'grupo', 'id_usuario' => $id_usuario)));
+    $pagina = Hash::link(ConfigGlobal::getWeb() . '/apps/usuarios/controller/grupo_form.php?' . http_build_query(array('quien' => 'grupo', 'id_usuario' => $id_usuario)));
 
     $a_valores[$i]['sel'] = "$id_usuario#";
     $a_valores[$i][1] = $usuario;
@@ -90,24 +95,24 @@ if (isset($Qscroll_id) && !empty($Qscroll_id)) {
 }
 
 
-$oTabla = new web\Lista();
+$oTabla = new Lista();
 $oTabla->setId_tabla('usuario_grupo_lista');
 $oTabla->setCabeceras($a_cabeceras);
 $oTabla->setBotones($a_botones);
 $oTabla->setDatos($a_valores);
 
-$oHashBuscar = new web\Hash();
+$oHashBuscar = new Hash();
 $oHashBuscar->setCamposForm('username');
 $oHashBuscar->setcamposNo('scroll_id');
 $oHashBuscar->setArraycamposHidden(array('quien' => 'grupo'));
 
-$oHashSelect = new web\Hash();
+$oHashSelect = new Hash();
 $oHashSelect->setCamposForm('sel');
 $oHashSelect->setcamposNo('scroll_id');
 $oHashSelect->setArraycamposHidden(array('que' => 'eliminar_grupo'));
 
 $aQuery = ['nuevo' => 1, 'quien' => 'grupo'];
-$url_nuevo = web\Hash::link(core\ConfigGlobal::getWeb() . '/apps/usuarios/controller/grupo_form.php?' . http_build_query($aQuery));
+$url_nuevo = Hash::link(ConfigGlobal::getWeb() . '/apps/usuarios/controller/grupo_form.php?' . http_build_query($aQuery));
 
 $a_campos = [
     'oHashBuscar' => $oHashBuscar,
@@ -118,5 +123,5 @@ $a_campos = [
     'url_nuevo' => $url_nuevo,
 ];
 
-$oView = new core\View('usuarios/controller');
+$oView = new ViewPhtml('usuarios/controller');
 $oView->renderizar('grupo_lista.phtml', $a_campos);

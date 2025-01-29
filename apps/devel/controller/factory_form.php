@@ -1,5 +1,7 @@
 <?php
 // INICIO Cabecera global de URL de controlador *********************************
+use web\Hash;
+
 require_once("apps/core/global_header.inc");
 // Archivos requeridos por esta url **********************************************
 
@@ -8,7 +10,7 @@ require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
 
-$oHash = new web\Hash();
+$oHash = new Hash();
 $oHash->setCamposForm('db!tabla!clase!clase_plural!grupo!aplicacion');
 
 ?>

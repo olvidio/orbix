@@ -3,8 +3,8 @@
 namespace tablonanuncios\domain;
 
 use core\ConfigGlobal;
-use tablonanuncios\domain\repositories\AnuncioRepository;
 use web\Lista;
+use tablonanuncios\domain\repositories\AnuncioRepository;
 
 class TablonAnunciosParaGM
 {

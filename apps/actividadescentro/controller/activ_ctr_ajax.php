@@ -3,12 +3,13 @@
 use actividades\model\entity\GestorActividadDl;
 use actividadescentro\model\entity\CentroEncargado;
 use actividadescentro\model\entity\GestorCentroEncargado;
+use core\ConfigGlobal;
 use permisos\model\PermisosActividadesTrue;
+use web\DateTimeLocal;
+use web\Periodo;
 use ubis\model\entity\GestorCasa;
 use ubis\model\entity\GestorCentroDl;
 use ubis\model\entity\GestorCentroEllas;
-use web\DateTimeLocal;
-use web\Periodo;
 
 // INICIO Cabecera global de URL de controlador *********************************
 require_once("apps/core/global_header.inc");
@@ -359,12 +360,12 @@ switch ($Qque) {
             $f_fin = $oActividad->getF_fin()->getFromLocal();
             $id_ubi_actividad = $oActividad->getId_ubi();
             // mirar permisos.
-            if (core\ConfigGlobal::is_app_installed('procesos')) {
+            if (ConfigGlobal::is_app_installed('procesos')) {
                 $_SESSION['oPermActividades']->setActividad($id_activ, $id_tipo_activ, $dl_org);
                 $oPermActiv = $_SESSION['oPermActividades']->getPermisoActual('datos');
                 $oPermCtr = $_SESSION['oPermActividades']->getPermisoActual('ctr');
             } else {
-                $oPermActividades = new PermisosActividadesTrue(core\ConfigGlobal::mi_id_usuario());
+                $oPermActividades = new PermisosActividadesTrue(ConfigGlobal::mi_id_usuario());
                 $oPermActiv = $oPermActividades->getPermisoActual('datos');
                 $oPermCtr = $oPermActividades->getPermisoActual('ctr');
             }
@@ -413,7 +414,7 @@ switch ($Qque) {
 
         ?>
 
-        <p><h3><?= $titulo ?></h3></p>
+        <h3><?= $titulo ?></h3>
         <table>
             <tr>
                 <?php

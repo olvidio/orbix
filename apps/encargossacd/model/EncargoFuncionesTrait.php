@@ -11,8 +11,8 @@ use encargossacd\model\entity\GestorEncargoHorario;
 use encargossacd\model\entity\GestorEncargoSacd;
 use encargossacd\model\entity\GestorEncargoSacdHorario;
 use encargossacd\model\entity\GestorEncargoTexto;
-use ubis\model\entity\GestorCentroDl;
 use web\DateTimeLocal;
+use ubis\model\entity\GestorCentroDl;
 
 trait EncargoFuncionesTrait
 {

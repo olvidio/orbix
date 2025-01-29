@@ -27,12 +27,18 @@
  *
  */
 
-use actividades\model\entity as actividades;
-use asistentes\model\entity as asistentes;
-use asistentes\model\entity\AsistentePub;
-use core\ConfigGlobal;
-use personas\model\entity\PersonaEx;
 use actividades\model\entity\Actividad;
+use actividades\model\entity\ActividadAll;
+use actividades\model\entity\GestorActividad;
+use actividadplazas\model\GestorResumenPlazas;
+use asistentes\model\entity\Asistente;
+use asistentes\model\entity\AsistentePub;
+use asistentes\model\entity\GestorAsistente;
+use core\ConfigGlobal;
+use core\ViewPhtml;
+use personas\model\entity\PersonaEx;
+use web\Desplegable;
+use web\Hash;
 use function core\is_true;
 
 // INICIO Cabecera global de URL de controlador *********************************
@@ -101,14 +107,14 @@ if (!empty($id_activ)) { //caso de modificar
         $id_tipo = '^' . $id_tipo;
     }
 
-    $condicion = "AND status = " . actividades\ActividadAll::STATUS_ACTUAL;
+    $condicion = "AND status = " . ActividadAll::STATUS_ACTUAL;
     if (!empty($que_dl)) {
         $condicion .= " AND dl_org = '$que_dl'";
     } else {
         $condicion .= " AND dl_org != '" . ConfigGlobal::mi_delef() . "'";
     }
 
-    $oGesActividades = new actividades\GestorActividad();
+    $oGesActividades = new GestorActividad();
     $oDesplActividades = $oGesActividades->getListaActividadesDeTipo($id_tipo, $condicion);
     $oDesplActividades->setNombre('id_activ');
 
@@ -120,7 +126,7 @@ if (!empty($id_activ)) { //caso de modificar
     $falta = "f"; //valor por defecto
     $est_ok = "f"; //valor por defecto
     $observ = ""; //valor por defecto
-    $plaza = asistentes\Asistente::PLAZA_PEDIDA; //valor por defecto
+    $plaza = Asistente::PLAZA_PEDIDA; //valor por defecto
     $propietario = ''; //valor por defecto
 
     // supongo que es de mi dl
@@ -132,7 +138,7 @@ $falta_chk = (!empty($falta) && is_true($falta)) ? 'checked' : '';
 $est_chk = (!empty($est_ok) && is_true($est_ok)) ? 'checked' : '';
 
 if (ConfigGlobal::is_app_installed('actividadplazas')) {
-    $gesAsistentes = new asistentes\GestorAsistente();
+    $gesAsistentes = new GestorAsistente();
     $oDesplegablePlaza = $gesAsistentes->getPosiblesPlaza();
     $oDesplegablePlaza->setNombre('plaza');
     $oDesplegablePlaza->setOpcion_sel($plaza);
@@ -146,25 +152,25 @@ if (ConfigGlobal::is_app_installed('actividadplazas')) {
 
         }
     }
-    $gesActividadPlazas = new \actividadplazas\model\GestorResumenPlazas();
+    $gesActividadPlazas = new GestorResumenPlazas();
     if (!empty($id_activ)) {
         $gesActividadPlazas->setId_activ($id_activ);
         $oDesplPosiblesPropietarios = $gesActividadPlazas->getPosiblesPropietarios($dl_de_paso);
         $oDesplPosiblesPropietarios->setNombre('propietario');
         $oDesplPosiblesPropietarios->setOpcion_sel($propietario);
     } else {
-        $oDesplPosiblesPropietarios = new web\Desplegable('propietario', array(), '');
+        $oDesplPosiblesPropietarios = new Desplegable('propietario', array(), '');
     }
 
     $url_ajax = ConfigGlobal::getWeb() . '/apps/actividadplazas/controller/gestion_plazas_ajax.php';
-    $oHash1 = new web\Hash();
+    $oHash1 = new Hash();
     $oHash1->setUrl($url_ajax);
     $oHash1->setCamposForm('que!id_activ!id_nom');
     //$oHash1->setCamposNo('id_nom');
     $h1 = $oHash1->linkSinVal();
 }
 
-$oHash = new web\Hash();
+$oHash = new Hash();
 $camposForm = 'observ';
 if (ConfigGlobal::is_app_installed('actividadplazas')) {
     $camposForm .= '!plaza!propietario';
@@ -203,5 +209,5 @@ $a_campos = [
     'oDesplPosiblesPropietarios' => $oDesplPosiblesPropietarios,
 ];
 
-$oView = new core\View('asistentes/model');
+$oView = new ViewPhtml('asistentes/model');
 $oView->renderizar('form_1301.phtml', $a_campos);

@@ -1,8 +1,10 @@
 <?php
 
-use asignaturas\model\entity as asignaturas;
-use notas\model\entity as notas;
-use personas\model\entity as personas;
+use asignaturas\model\entity\Asignatura;
+use asignaturas\model\entity\GestorAsignatura;
+use core\ConfigGlobal;
+use notas\model\entity\GestorPersonaNotaDB;
+use personas\model\entity\Persona;
 use function core\is_true;
 
 /**
@@ -32,7 +34,7 @@ require_once("apps/core/global_object.inc");
 $id_nom = empty($_GET['id_nom']) ? '' : $_GET['id_nom'];
 $id_tabla = empty($_GET['id_tabla']) ? '' : $_GET['id_tabla'];
 
-$oPersona = personas\Persona::NewPersona($id_nom);
+$oPersona = Persona::NewPersona($id_nom);
 if (!is_object($oPersona)) {
     $msg_err = "<br>$oPersona con id_nom: $id_nom en  " . __FILE__ . ": line " . __LINE__;
     exit($msg_err);
@@ -204,7 +206,7 @@ $rowEmpty = [
 // -----------------------------  cabecera ---------------------------------
 ?>
 <head>
-    <?php include_once(core\ConfigGlobal::$dir_estilos . '/tessera_mpdf.css.php'); ?>
+    <?php include_once(ConfigGlobal::$dir_estilos . '/tessera_mpdf.css.php'); ?>
     <title></title>
 </head>
 <div class="A4">
@@ -222,7 +224,7 @@ $rowEmpty = [
         </tr>
         <?php
         // Asignaturas posibles:
-        $GesAsignaturas = new asignaturas\GestorAsignatura();
+        $GesAsignaturas = new GestorAsignatura();
         $aWhere = array();
         $aOperador = array();
         $aWhere['status'] = 't';
@@ -232,7 +234,7 @@ $rowEmpty = [
         $cAsignaturas = $GesAsignaturas->getAsignaturas($aWhere, $aOperador);
 
         // Asignaturas cursadas:
-        $GesNotas = new notas\GestorPersonaNotaDB();
+        $GesNotas = new GestorPersonaNotaDB();
         $aWhere = array();
         $aOperador = array();
         $aWhere['id_nom'] = $id_nom;
@@ -246,7 +248,7 @@ $rowEmpty = [
             $acta = $oPersonaNota->getActa();
             $f_acta = $oPersonaNota->getF_acta()->getFromLocal();
 
-            $oAsig = new asignaturas\Asignatura($id_asignatura);
+            $oAsig = new Asignatura($id_asignatura);
             if ($id_asignatura > 3000) {
                 $id_nivel_asig = $id_nivel;
             } else {

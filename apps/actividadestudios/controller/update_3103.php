@@ -1,11 +1,12 @@
 <?php
 
-use actividades\model\entity as actividades;
-use actividadestudios\model\entity as actividadestudios;
-use asistentes\model\entity as asistentes;
+use actividadestudios\model\entity\ActividadAsignaturaDl;
+use actividadestudios\model\entity\GestorActividadAsignatura;
+use actividadestudios\model\entity\GestorActividadAsignaturaDl;
+use actividadestudios\model\entity\GestorMatricula;
+use actividadestudios\model\entity\MatriculaDl;
 use asistentes\model\entity\AsistentePub;
-use dossiers\model\entity as dossiers;
-use personas\model\entity as personas;
+use dossiers\model\entity\Dossier;
 use function core\is_true;
 
 // INICIO Cabecera global de URL de controlador *********************************
@@ -78,7 +79,7 @@ switch ($Qmod) {
         $oAsistente->DBGuardar();
         break;
     case 'eliminar': //------------ BORRAR --------
-        if ($Qpau == "p") {
+        if ($Qpau === "p") {
             // Para borrar varios
             foreach ($a_sel as $sel) {
                 $id_activ = (integer)strtok($sel, '#');
@@ -92,35 +93,35 @@ switch ($Qmod) {
                     $id_nom = (integer)strtok('#');
                 }
 
-                $oMatricula = new actividadestudios\MatriculaDl(array('id_activ' => $id_activ, 'id_nom' => $id_nom, 'id_asignatura' => $id_asignatura));
+                $oMatricula = new MatriculaDl(array('id_activ' => $id_activ, 'id_nom' => $id_nom, 'id_asignatura' => $id_asignatura));
                 if ($oMatricula->DBEliminar() === false) {
                     $msg_err = _("hay un error, no se ha borrado");
                 }
                 // hay que cerrar el dossier para esta persona, si no tiene más actividades:
-                $oDossier = new dossiers\Dossier(array('tabla' => 'p', 'id_pau' => $id_nom, 'id_tipo_dossier' => 1303));
+                $oDossier = new Dossier(array('tabla' => 'p', 'id_pau' => $id_nom, 'id_tipo_dossier' => 1303));
                 $oDossier->abrir();
                 $oDossier->DBGuardar();
                 // Si la puse yo, hay que eliminar esta asignatura a las asignaturas que se dan en el ca
                 // si no hay nadie más matriculado:
-                $oGesActividadAsignatura = new actividadestudios\GestorActividadAsignaturaDl();
+                $oGesActividadAsignatura = new GestorActividadAsignaturaDl();
                 $cActividadAsignaturas = $oGesActividadAsignatura->getActividadAsignaturas(array('id_activ' => $Qid_activ, 'id_asignatura' => $Qid_asignatura));
-                if (count($cActividadAsignaturas) == 1) {
-                    $gesMatriculas = new actividadestudios\GestorMatricula();
+                if (count($cActividadAsignaturas) === 1) {
+                    $gesMatriculas = new GestorMatricula();
                     $cMatriculas = $gesMatriculas->getMatriculas(['id_activ' => $id_activ, 'id_asignatura' => $id_asignatura]);
-                    if (count($cMatriculas) == 0) {
+                    if (count($cMatriculas) === 0) {
                         $oActividadAsignatura = $cActividadAsignaturas[0];
                         $oActividadAsignatura->DBEliminar();
                     }
                 }
             }
         }
-        if ($Qpau == "a") {
-            $oMatricula = new actividadestudios\MatriculaDl(array('id_activ' => $id_activ, 'id_nom' => $id_nom, 'id_asignatura' => $id_asignatura));
+        if ($Qpau === "a") {
+            $oMatricula = new MatriculaDl(array('id_activ' => $id_activ, 'id_nom' => $id_nom, 'id_asignatura' => $id_asignatura));
             if ($oMatricula->DBEliminar() === false) {
                 $msg_err = _("hay un error, no se ha borrado");
             }
             // hay que cerrar el dossier para esta actividad, si no tiene más personas:
-            $oDossier = new dossiers\Dossier(array('tabla' => 'a', 'id_pau' => $id_activ, 'id_tipo_dossier' => 3103));
+            $oDossier = new Dossier(array('tabla' => 'a', 'id_pau' => $id_activ, 'id_tipo_dossier' => 3103));
             $oDossier->abrir();
             $oDossier->DBGuardar();
         }
@@ -130,11 +131,11 @@ switch ($Qmod) {
         if ($Qid_asignatura == '1') {
             $oGesAsignaturas = new asignaturas\model\entity\GestorAsignatura();
             $cAsignaturas = $oGesAsignaturas->getAsignaturas(array('id_nivel' => $Qid_nivel));
-            $oAsignatura = $cAsignaturas[0]; // sólo deberia haber una
+            $oAsignatura = $cAsignaturas[0]; // sólo debería haber una
             $Qid_asignatura = $oAsignatura->getId_asignatura();
         }
 
-        $oMatricula = new actividadestudios\MatriculaDl(array('id_activ' => $Qid_activ, 'id_nom' => $Qid_nom, 'id_asignatura' => $Qid_asignatura));
+        $oMatricula = new MatriculaDl(array('id_activ' => $Qid_activ, 'id_nom' => $Qid_nom, 'id_asignatura' => $Qid_asignatura));
         $oMatricula->setId_nivel($Qid_nivel);
         $oMatricula->setId_situacion($Qid_situacion);
         empty($Qpreceptor) ? $oMatricula->setPreceptor('f') : $oMatricula->setPreceptor('t');
@@ -143,23 +144,23 @@ switch ($Qmod) {
             $msg_err = _("hay un error, no se ha guardado");
         } else {
             // si no está abierto, hay que abrir el dossier para esta persona
-            $oDossier = new dossiers\Dossier(array('tabla' => 'p', 'id_pau' => $Qid_nom, 'id_tipo_dossier' => 1303));
+            $oDossier = new Dossier(array('tabla' => 'p', 'id_pau' => $Qid_nom, 'id_tipo_dossier' => 1303));
             $oDossier->abrir();
             $oDossier->DBGuardar();
             // ... y si es la primera persona, hay que abrir el dossier para esta actividad
-            $oDossier = new dossiers\Dossier(array('tabla' => 'a', 'id_pau' => $Qid_activ, 'id_tipo_dossier' => 3103));
+            $oDossier = new Dossier(array('tabla' => 'a', 'id_pau' => $Qid_activ, 'id_tipo_dossier' => 3103));
             $oDossier->abrir();
             $oDossier->DBGuardar();
 
             // hay que añadir esta asignatura a las asignaturas que se dan en el ca
             // compruebo que no existe:
-            $oGesActividadAsignatura = new actividadestudios\GestorActividadAsignatura();
+            $oGesActividadAsignatura = new GestorActividadAsignatura();
             $cActividadAsignaturas = $oGesActividadAsignatura->getActividadAsignaturas(array('id_activ' => $Qid_activ, 'id_asignatura' => $Qid_asignatura));
-            if (count($cActividadAsignaturas) == 0) {
-                $oActividadAsignatura = new actividadestudios\ActividadAsignaturaDl();
+            if (count($cActividadAsignaturas) === 0) {
+                $oActividadAsignatura = new ActividadAsignaturaDl();
                 $oActividadAsignatura->setId_activ($Qid_activ);
                 $oActividadAsignatura->setId_asignatura($Qid_asignatura);
-                if ($Qpreceptor == true) {
+                if (is_true($Qpreceptor)) {
                     $oActividadAsignatura->setId_profesor($Qid_preceptor);
                     $tipo = 'p';
                 } else {
@@ -171,7 +172,7 @@ switch ($Qmod) {
         }
         break;
     case 'editar':  //------------ EDITAR --------
-        $oMatricula = new actividadestudios\MatriculaDl(array('id_activ' => $Qid_activ, 'id_nom' => $Qid_nom, 'id_asignatura' => $Qid_asignatura));
+        $oMatricula = new MatriculaDl(array('id_activ' => $Qid_activ, 'id_nom' => $Qid_nom, 'id_asignatura' => $Qid_asignatura));
         isset($Qid_asignatura) ? $oMatricula->setId_asignatura($Qid_asignatura) : $oMatricula->setId_asignatura();
         isset($Qid_nivel) ? $oMatricula->setId_nivel($Qid_nivel) : $oMatricula->setId_nivel();
         isset($Qid_situacion) ? $oMatricula->setId_situacion($Qid_situacion) : $oMatricula->setId_situacion();

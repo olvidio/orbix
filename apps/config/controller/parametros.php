@@ -1,6 +1,7 @@
 <?php
 
 use config\model\entity\ConfigSchema;
+use core\ViewTwig;
 use web\Hash;
 use usuarios\model\entity\GestorLocal;
 
@@ -312,5 +313,5 @@ $a_campos['oHashC1'] = $oHashC1;
 $a_campos['ini_contador_certificados'] = $valor;
 
 
-$oView = new core\ViewTwig('config/controller');
+$oView = new ViewTwig('config/controller');
 $oView->renderizar('parametros.html.twig', $a_campos);

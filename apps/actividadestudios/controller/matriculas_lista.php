@@ -4,6 +4,7 @@ use actividades\model\entity\Actividad;
 use actividades\model\entity\GestorActividad;
 use actividadestudios\model\entity\GestorMatriculaDl;
 use asignaturas\model\entity\Asignatura;
+use core\ViewPhtml;
 use personas\model\entity\Persona;
 use web\DateTimeLocal;
 use web\Hash;
@@ -228,7 +229,7 @@ $oFormP->setEmpiezaMin($Qempiezamin);
 $oFormP->setDesplPeriodosOpcion_sel($Qperiodo);
 $oFormP->setBoton($boton);
 
-$oHashPeriodo = new web\Hash();
+$oHashPeriodo = new Hash();
 $oHashPeriodo->setCamposForm('empiezamax!empiezamin!periodo!year!iactividad_val!iasistentes_val');
 $oHashPeriodo->setCamposNo('!refresh');
 $a_camposHiddenP = array();
@@ -245,5 +246,5 @@ $a_campos = ['oPosicion' => $oPosicion,
     'oHashPeriodo' => $oHashPeriodo,
 ];
 
-$oView = new core\View('actividadestudios/controller');
+$oView = new ViewPhtml('actividadestudios/controller');
 $oView->renderizar('matriculas.phtml', $a_campos);

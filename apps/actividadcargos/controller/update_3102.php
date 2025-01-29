@@ -1,13 +1,12 @@
 <?php
 
-use actividadcargos\model\entity as actividadcargos;
-use actividades\model\entity as actividades;
-use asistentes\model\entity as asistentes;
+use actividadcargos\model\entity\ActividadCargo;
+use actividades\model\entity\Actividad;
 use asistentes\model\entity\AsistentePub;
-use dossiers\model\entity as dossiers;
-use personas\model\entity as personas;
-use function core\is_true;
 use core\ConfigGlobal;
+use dossiers\model\entity\Dossier;
+use personas\model\entity\Persona;
+use function core\is_true;
 
 /**
  * Actualiza los datos de un objeto ActividadCargo.
@@ -75,7 +74,7 @@ if (!empty($a_sel)) { //vengo de un checkbox
 switch ($Qmod) {
     //------------ BORRAR --------
     case "eliminar":
-        $oActividadCargo = new actividadcargos\ActividadCargo(array('id_item' => $Qid_item));
+        $oActividadCargo = new ActividadCargo(array('id_item' => $Qid_item));
         $Qid_activ = $oActividadCargo->getId_activ();
         $Qid_nom = $oActividadCargo->getId_nom();
 
@@ -85,12 +84,12 @@ switch ($Qmod) {
         }
 
         // hay que cerrar el dossier para esta persona, si no tiene más actividades:
-        $oDossier = new dossiers\Dossier(array('tabla' => 'p', 'id_pau' => $Qid_nom, 'id_tipo_dossier' => 1302));
+        $oDossier = new Dossier(array('tabla' => 'p', 'id_pau' => $Qid_nom, 'id_tipo_dossier' => 1302));
         $oDossier->cerrar();
         $oDossier->DBGuardar();
 
         // Borrar también la asistencia, también en el caso de actividades de s y sg
-        $oActividad = new actividades\Actividad($Qid_activ);
+        $oActividad = new Actividad($Qid_activ);
         $id_tipo_activ = $oActividad->getId_tipo_activ();
 
         $oTipoActiv = new web\TiposActividades($id_tipo_activ);
@@ -109,7 +108,7 @@ switch ($Qmod) {
                     $msg_err = _("hay un error, no se ha eliminado");
                 }
             }
-            $oDossier = new dossiers\Dossier(array('tabla' => 'p', 'id_pau' => $Qid_nom, 'id_tipo_dossier' => 1301));
+            $oDossier = new Dossier(array('tabla' => 'p', 'id_pau' => $Qid_nom, 'id_tipo_dossier' => 1301));
             $oDossier->cerrar();
             $oDossier->DBGuardar();
         }
@@ -117,7 +116,7 @@ switch ($Qmod) {
     case "nuevo":
         //------------ NUEVO --------
         // Ahora machaca un cargo existente. Quiza podria avisar que ya existe
-        $oActividadCargo = new actividadcargos\ActividadCargo();
+        $oActividadCargo = new ActividadCargo();
         $oActividadCargo->setId_activ($Qid_activ);
         $oActividadCargo->setId_cargo($Qid_cargo);
         $oActividadCargo->setId_nom($Qid_nom);
@@ -136,17 +135,17 @@ switch ($Qmod) {
         }
 
         // si no está abierto, hay que abrir el dossier para esta persona
-        $oDossier = new dossiers\Dossier(array('tabla' => 'p', 'id_pau' => $Qid_nom, 'id_tipo_dossier' => 1302));
+        $oDossier = new Dossier(array('tabla' => 'p', 'id_pau' => $Qid_nom, 'id_tipo_dossier' => 1302));
         $oDossier->abrir();
         $oDossier->DBGuardar();
         // ... y si es la primera persona, hay que abrir el dossier para esta actividad
-        $oDossier = new dossiers\Dossier(array('tabla' => 'a', 'id_pau' => $Qid_activ, 'id_tipo_dossier' => 3102));
+        $oDossier = new Dossier(array('tabla' => 'a', 'id_pau' => $Qid_activ, 'id_tipo_dossier' => 3102));
         $oDossier->abrir();
         $oDossier->DBGuardar();
 
         // También asiste:
         if (!empty($Qasis)) {
-            $oPersona = personas\Persona::NewPersona($Qid_nom);
+            $oPersona = Persona::NewPersona($Qid_nom);
             if (!is_object($oPersona)) {
                 $msg_err = "<br>$oPersona con id_nom: $Qid_nom en  " . __FILE__ . ": line " . __LINE__;
                 exit ($msg_err);
@@ -162,18 +161,18 @@ switch ($Qmod) {
                 $msg_err = _("hay un error, no se ha guardado");
             }
             // si no está abierto, hay que abrir el dossier para esta persona
-            $oDossier = new dossiers\Dossier(array('tabla' => 'p', 'id_pau' => $Qid_nom, 'id_tipo_dossier' => 1301));
+            $oDossier = new Dossier(array('tabla' => 'p', 'id_pau' => $Qid_nom, 'id_tipo_dossier' => 1301));
             $oDossier->abrir();
             $oDossier->DBGuardar();
             // ... y si es la primera persona, hay que abrir el dossier para esta actividad
-            $oDossier = new dossiers\Dossier(array('tabla' => 'a', 'id_pau' => $Qid_activ, 'id_tipo_dossier' => 3101));
+            $oDossier = new Dossier(array('tabla' => 'a', 'id_pau' => $Qid_activ, 'id_tipo_dossier' => 3101));
             $oDossier->abrir();
             $oDossier->DBGuardar();
         }
         break;
     case "editar":
         //------------ EDITAR --------
-        $oActividadCargo = new actividadcargos\ActividadCargo(array('id_item' => $Qid_item));
+        $oActividadCargo = new ActividadCargo(array('id_item' => $Qid_item));
 
         isset($Qid_activ) ? $oActividadCargo->setId_activ($Qid_activ) : '';
         isset($Qid_cargo) ? $oActividadCargo->setId_cargo($Qid_cargo) : '';
@@ -203,11 +202,11 @@ switch ($Qmod) {
                     $msg_err = _("hay un error, no se ha guardado");
                 }
                 // si no está abierto, hay que abrir el dossier para esta persona
-                $oDossier = new dossiers\Dossier(array('tabla' => 'p', 'id_pau' => $Qid_nom, 'id_tipo_dossier' => 1301));
+                $oDossier = new Dossier(array('tabla' => 'p', 'id_pau' => $Qid_nom, 'id_tipo_dossier' => 1301));
                 $oDossier->abrir();
                 $oDossier->DBGuardar();
                 // ... y si es la primera persona, hay que abrir el dossier para esta actividad
-                $oDossier = new dossiers\Dossier(array('tabla' => 'a', 'id_pau' => $Qid_activ, 'id_tipo_dossier' => 3101));
+                $oDossier = new Dossier(array('tabla' => 'a', 'id_pau' => $Qid_activ, 'id_tipo_dossier' => 3101));
                 $oDossier->abrir();
                 $oDossier->DBGuardar();
             }
@@ -217,11 +216,11 @@ switch ($Qmod) {
                     $msg_err = _("hay un error, no se ha eliminado");
                 }
                 // si no está abierto, hay que abrir el dossier para esta persona
-                $oDossier = new dossiers\Dossier(array('tabla' => 'p', 'id_pau' => $Qid_nom, 'id_tipo_dossier' => 1301));
+                $oDossier = new Dossier(array('tabla' => 'p', 'id_pau' => $Qid_nom, 'id_tipo_dossier' => 1301));
                 $oDossier->abrir();
                 $oDossier->DBGuardar();
                 // ... y si es la primera persona, hay que abrir el dossier para esta actividad
-                $oDossier = new dossiers\Dossier(array('tabla' => 'a', 'id_pau' => $Qid_activ, 'id_tipo_dossier' => 3101));
+                $oDossier = new Dossier(array('tabla' => 'a', 'id_pau' => $Qid_activ, 'id_tipo_dossier' => 3101));
                 $oDossier->abrir();
                 $oDossier->DBGuardar();
             }

@@ -36,7 +36,7 @@ namespace pruebas\apps {
     //permisos/login_inc
     use permisos\model\MyCrypt;
     use core\ClasePropiedades;
-    use core\DatosCampo;
+    use DatosCampo;
     use core\Condicion;
     use core\Set;
 

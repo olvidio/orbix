@@ -1,9 +1,8 @@
 <?php
 
 use actividades\model\entity\GestorTipoDeActividad;
-use procesos\model\entity\GestorActividadFase;
-use procesos\model\CuadrosFases;
 use web\Desplegable;
+use procesos\model\entity\GestorActividadFase;
 
 // INICIO Cabecera global de URL de controlador *********************************
 

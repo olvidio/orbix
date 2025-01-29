@@ -12,10 +12,10 @@ use actividadtarifas\model\entity\GestorTipoActivTarifa;
 use actividadtarifas\model\entity\GestorTipoTarifa;
 use core\ConfigGlobal;
 use core\ViewTwig;
-use ubis\model\entity\GestorDelegacion;
-use ubis\model\entity\Ubi;
 use web\Hash;
 use web\TiposActividades;
+use ubis\model\entity\GestorDelegacion;
+use ubis\model\entity\Ubi;
 use function core\is_true;
 
 // INICIO Cabecera global de URL de controlador *********************************
@@ -114,7 +114,7 @@ if (!empty($Qid_activ)) { // caso de modificar
 
     // Para incluir o no la dl 
     $Bdl = 't';
-    if (core\ConfigGlobal::is_app_installed('procesos')) {
+    if (ConfigGlobal::is_app_installed('procesos')) {
         if ($oPermActiv->have_perm_activ('ver')) {
             $Bdl = 't';
         } else {
@@ -124,12 +124,12 @@ if (!empty($Qid_activ)) { // caso de modificar
 
 } else { // caso de nueva actividad
     $Qmod = 'nuevo';
-    $isfsv = core\ConfigGlobal::mi_sfsv();
+    $isfsv = ConfigGlobal::mi_sfsv();
 
     $oActividad = new Actividad();
     $a_status = $oActividad->getArrayStatus();
     // Valores por defecto
-    $dl_org = core\ConfigGlobal::mi_delef();
+    $dl_org = ConfigGlobal::mi_delef();
     // si es nueva, obligatorio estado: proyecto (14.X.2011)
     $status = 1;
     $id_ubi = 0;
@@ -163,11 +163,11 @@ if (!empty($Qid_activ)) { // caso de modificar
         // En el caso de des puedo crear acrividades de sf.
         if ($isfsv == 1) {
             $ssfsv = 'sv';
-            $dl_org = core\ConfigGlobal::mi_dele();
+            $dl_org = ConfigGlobal::mi_dele();
         }
         if ($isfsv == 2) {
             $ssfsv = 'sf';
-            $dl_org = core\ConfigGlobal::mi_dele() . 'f';
+            $dl_org = ConfigGlobal::mi_dele() . 'f';
         }
     } else {
         if ($isfsv == 1) {
@@ -195,7 +195,7 @@ if (!empty($Qid_activ)) { // caso de modificar
 
     // Para incluir o no la dl
     $Bdl = 't';
-    if (core\ConfigGlobal::is_app_installed('procesos')) {
+    if (ConfigGlobal::is_app_installed('procesos')) {
         // Depende del proceso, para dl u otra
         // primera fase de los posibles procesos.
         // si no permiso para ninguno de los dos => die
@@ -297,7 +297,7 @@ $a_camposHidden = array(
 $oHash->setArraycamposHidden($a_camposHidden);
 
 $oHash1 = new Hash();
-$oHash1->setUrl(core\ConfigGlobal::getWeb() . '/apps/actividades/controller/actividad_select_ubi.php');
+$oHash1->setUrl(ConfigGlobal::getWeb() . '/apps/actividades/controller/actividad_select_ubi.php');
 $oHash1->setCamposForm('dl_org!ssfsv!isfsv');
 $h = $oHash1->linkSinVal();
 
@@ -316,7 +316,7 @@ if (($Qmod !== 'cambiar_tipo') && (strlen($id_tipo_activ) > 3)) {
     $extendida = FALSE;
 }
 
-$procesos_installed = core\ConfigGlobal::is_app_installed('procesos');
+$procesos_installed = ConfigGlobal::is_app_installed('procesos');
 
 $status_txt = $a_status[$status];
 $a_campos = ['oPosicion' => $oPosicion,

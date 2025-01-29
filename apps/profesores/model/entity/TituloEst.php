@@ -1,7 +1,10 @@
 <?php
 namespace profesores\model\entity;
 
-use core;
+use core\ClasePropiedades;
+use core\DatosCampo;
+use core\Set;
+use function core\is_true;
 
 /**
  * Fitxer amb la Classe que accedeix a la taula d_titulo_est
@@ -22,7 +25,7 @@ use core;
  * @version 1.0
  * @created 04/09/2015
  */
-class TituloEst extends core\ClasePropiedades
+class TituloEst extends ClasePropiedades
 {
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
@@ -112,8 +115,8 @@ class TituloEst extends core\ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'id_item') && $val_id !== '') $this->iid_item = (int)$val_id; 
-                if (($nom_id == 'id_nom') && $val_id !== '') $this->iid_nom = (int)$val_id; 
+                if (($nom_id === 'id_item') && $val_id !== '') $this->iid_item = (int)$val_id;
+                if (($nom_id === 'id_nom') && $val_id !== '') $this->iid_nom = (int)$val_id;
             }
         }
         $this->setoDbl($oDbl);
@@ -143,7 +146,7 @@ class TituloEst extends core\ClasePropiedades
         $aDades['year'] = $this->iyear;
         array_walk($aDades, 'core\poner_null');
         //para el caso de los boolean FALSE, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
-        if (core\is_true($aDades['eclesiastico'])) {
+        if (is_true($aDades['eclesiastico'])) {
             $aDades['eclesiastico'] = 'true';
         } else {
             $aDades['eclesiastico'] = 'false';
@@ -191,7 +194,7 @@ class TituloEst extends core\ClasePropiedades
                     return false;
                 }
             }
-            $this->id_item = $oDbl->lastInsertId('d_titulo_est_id_item_seq');
+            $this->iid_item = $oDbl->lastInsertId('d_titulo_est_id_item_seq');
         }
         $this->setAllAtributes($aDades);
         return true;
@@ -259,7 +262,7 @@ class TituloEst extends core\ClasePropiedades
      *
      * @param array $aDades
      */
-    function setAllAtributes($aDades)
+    function setAllAtributes(array $aDades)
     {
         if (!is_array($aDades)) return;
         if (array_key_exists('id_schema', $aDades)) $this->setId_schema($aDades['id_schema']);
@@ -327,8 +330,8 @@ class TituloEst extends core\ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'id_item') && $val_id !== '') $this->iid_item = (int)$val_id; 
-                if (($nom_id == 'id_nom') && $val_id !== '') $this->iid_nom = (int)$val_id; 
+                if (($nom_id === 'id_item') && $val_id !== '') $this->iid_item = (int)$val_id;
+                if (($nom_id === 'id_nom') && $val_id !== '') $this->iid_nom = (int)$val_id;
             }
         }
     }
@@ -478,7 +481,7 @@ class TituloEst extends core\ClasePropiedades
      */
     function getDatosCampos()
     {
-        $oTituloEstSet = new core\Set();
+        $oTituloEstSet = new Set();
 
         $oTituloEstSet->add($this->getDatosTitulo());
         $oTituloEstSet->add($this->getDatosCentro_dnt());
@@ -491,12 +494,12 @@ class TituloEst extends core\ClasePropiedades
      * Recupera les propietats de l'atribut stitulo de TituloEst
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosTitulo()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'titulo'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'titulo'));
         $oDatosCampo->setEtiqueta(_("título"));
         $oDatosCampo->setTipo('texto');
         $oDatosCampo->setArgument(25);
@@ -507,12 +510,12 @@ class TituloEst extends core\ClasePropiedades
      * Recupera les propietats de l'atribut scentro_dnt de TituloEst
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosCentro_dnt()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'centro_dnt'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'centro_dnt'));
         $oDatosCampo->setEtiqueta(_("centro docente"));
         $oDatosCampo->setTipo('texto');
         $oDatosCampo->setArgument(25);
@@ -523,12 +526,12 @@ class TituloEst extends core\ClasePropiedades
      * Recupera les propietats de l'atribut beclesiastico de TituloEst
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosEclesiastico()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'eclesiastico'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'eclesiastico'));
         $oDatosCampo->setEtiqueta(_("eclesiástico"));
         $oDatosCampo->setTipo('check');
         return $oDatosCampo;
@@ -538,12 +541,12 @@ class TituloEst extends core\ClasePropiedades
      * Recupera les propietats de l'atribut iyear de TituloEst
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosYear()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'year'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'year'));
         $oDatosCampo->setEtiqueta(_("año"));
         $oDatosCampo->setTipo('texto');
         $oDatosCampo->setArgument(5);

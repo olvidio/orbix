@@ -3,6 +3,7 @@
 use actividades\model\entity\GestorTipoDeActividad;
 use actividades\model\entity\TipoDeActividad;
 use core\ConfigGlobal;
+use web\Hash;
 use web\Lista;
 use web\TiposActividades;
 
@@ -49,7 +50,7 @@ switch ($Qque) {
         echo $oLista->lista();
         break;
     case 'form_nuevo':
-        $oHash = new web\Hash();
+        $oHash = new Hash();
         $camposForm = 'iactividad_val!iasistentes_val!id_nom_tipo_activ!isfsv_val!nom_tipo_activ';
         $oHash->setCamposForm($camposForm);
         $a_camposHidden = ['que' => 'nuevo'];
@@ -85,7 +86,7 @@ switch ($Qque) {
 
         $nom_tipo = $oTiposActividades->getNom_tipoText();
 
-        $oHash = new web\Hash();
+        $oHash = new Hash();
         $camposForm = 'nom_tipo_activ';
         $oHash->setCamposNo('que');
         $a_camposHidden = array(

@@ -2,12 +2,12 @@
 
 // INICIO Cabecera global de URL de controlador *********************************
 
-use web\Hash;
-use zonassacd\model\entity\GestorZona;
-use misas\domain\entity\EncargoDia;
+use core\ViewTwig;
 use web\DateTimeLocal;
 use web\Desplegable;
+use web\Hash;
 use web\PeriodoQue;
+use zonassacd\model\entity\GestorZona;
 
 require_once("apps/core/global_header.inc");
 // Archivos requeridos por esta url **********************************************
@@ -68,5 +68,5 @@ $a_campos = ['oPosicion' => $oPosicion,
     'h_zona_periodo' => $h_zona_periodo,
 ];
  
-$oView = new core\ViewTwig('misas/controller');
+$oView = new ViewTwig('misas/controller');
 echo $oView->render('modificar_plan_de_misas.html.twig', $a_campos);

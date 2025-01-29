@@ -1,7 +1,7 @@
 <?php
 
-use actividadtarifas\model\entity\TipoActivTarifa;
 use core\ConfigGlobal;
+use core\ViewTwig;
 use web\Desplegable;
 use web\Hash;
 
@@ -36,7 +36,7 @@ if ($Qid_item !== 'nuevo') {
     $isfsv = $oTipoActiv->getSfsvId();
 
     $oHash = new Hash();
-    $oHash->setUrl(core\ConfigGlobal::getWeb() . '/apps/actividadtarifas/controller/tarifa_ajax.php');
+    $oHash->setUrl(ConfigGlobal::getWeb() . '/apps/actividadtarifas/controller/tarifa_ajax.php');
     $oHash->setCamposForm('que!id_tarifa');
     $a_camposHidden = array(
         'id_tipo_activ' => $Qid_tipo_activ,
@@ -45,7 +45,7 @@ if ($Qid_item !== 'nuevo') {
     $oHash->setArraycamposHidden($a_camposHidden);
 
     $oHash1 = new Hash();
-    $oHash1->setUrl(core\ConfigGlobal::getWeb() . '/apps/actividadtarifas/controller/actividad_tipo_get.php');
+    $oHash1->setUrl(ConfigGlobal::getWeb() . '/apps/actividadtarifas/controller/actividad_tipo_get.php');
     $oHash1->setCamposForm('extendida!modo!salida!entrada!opcion_sel!isfsv');
     $h = $oHash1->linkSinVal();
 
@@ -59,7 +59,7 @@ if ($Qid_item !== 'nuevo') {
         'url_ajax' => $url_ajax,
     ];
 
-    $oView = new core\ViewTwig('pasarela/controller');
+    $oView = new ViewTwig('pasarela/controller');
     $oView->renderizar('nombre_form.html.twig', $a_campos);
 
 } else {
@@ -84,7 +84,7 @@ if ($Qid_item !== 'nuevo') {
 
 
     $oHash = new Hash();
-    $oHash->setUrl(core\ConfigGlobal::getWeb() . '/apps/actividadtarifas/controller/tarifa_ajax.php');
+    $oHash->setUrl(ConfigGlobal::getWeb() . '/apps/actividadtarifas/controller/tarifa_ajax.php');
     $oHash->setCamposForm('iactividad_val!iasistentes_val!id_tipo_activ!inom_tipo_val!isfsv_val!nombre_actividad');
     $oHash->setCamposNo('id_tipo_activ!que');
     $a_camposHidden = array(
@@ -94,7 +94,7 @@ if ($Qid_item !== 'nuevo') {
     $oHash->setArraycamposHidden($a_camposHidden);
 
     $oHash1 = new Hash();
-    $oHash1->setUrl(core\ConfigGlobal::getWeb() . '/apps/actividadtarifas/controller/actividad_tipo_get.php');
+    $oHash1->setUrl(ConfigGlobal::getWeb() . '/apps/actividadtarifas/controller/actividad_tipo_get.php');
     $oHash1->setCamposForm('extendida!modo!salida!entrada!opcion_sel!isfsv');
     $h = $oHash1->linkSinVal();
 
@@ -105,6 +105,6 @@ if ($Qid_item !== 'nuevo') {
         'oActividadTipo' => $oActividadTipo,
     ];
 
-    $oView = new core\ViewTwig('pasarela/controller');
+    $oView = new ViewTwig('pasarela/controller');
     $oView->renderizar('nombre_form_nuevo.html.twig', $a_campos);
 }

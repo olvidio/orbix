@@ -2,10 +2,10 @@
 
 namespace procesos\model;
 
-use permisos\model as permisos;
 use permisos\model\PermisosActividades;
+use permisos\model\XPermisos;
 
-class PermAfectados extends permisos\XPermisos
+class PermAfectados extends XPermisos
 {
     public static $classname = "CuadrosPermActiv";
 

@@ -2,7 +2,7 @@
 
 namespace web;
 
-use core;
+use core\ConfigGlobal;
 
 class Posicion
 {
@@ -43,7 +43,7 @@ class Posicion
      *
      * @var bool
      */
-    private $constructor = false;
+    private $constructor;
 
     /* CONSTRUCTOR ------------------------------ */
     function __construct($php_self = '', $vars = array())
@@ -70,12 +70,12 @@ class Posicion
     }
 
     /**
-     * coloca el cursor de posicion n posiciones atras.
+     * coloca el cursor de posicion n posiciones atrás.
      * para n=0, no se usa el valor en $_SESSION['position'], sino el actual.
      *
      * @var integer $n número de posiciones a retroceder.
      */
-    public function go($n = 0)
+    public function go(int $n = 0)
     {
         if ($n == 0 || !is_array($_SESSION['position'])) return;
 
@@ -107,9 +107,9 @@ class Posicion
     /**
      * coloca el cursor de posicion en stack.
      *
-     * @var integer $stack indice del array $_SESSION['position']);
+     * @var integer|string $stack indice del array $_SESSION['position']);
      */
-    public function goStack($stack = '*')
+    public function goStack(int|string $stack = '*')
     { //pongo '*' para distinguirlo del 0.
         if (isset($_SESSION['position'][$stack])) {
             $aPosition = $_SESSION['position'][$stack];
@@ -245,10 +245,10 @@ class Posicion
      * <div id="left_slide" class="left-slide">
      *        <span class=handle onClick="fnjs_ir_a('#ir_atras');"></span>
      *
-     * @param integer $n número de posiciones atras. Normalmente 1
+     * @param integer $n número de posiciones atrás. Normalmente 1
      * @return string Html= div (display_none)
      */
-    public function mostrar_left_slide($n = 0)
+    public function mostrar_left_slide(int $n = 0)
     {
         $this->go($n);
         // puede ser que no haya donde volver
@@ -283,10 +283,10 @@ class Posicion
      * retorna una imagen de flecha, con formulario para enviar datos a Posicion
      * onClick -> activa fnjs_ir_a(id_div)
      *
-     * @param integer $n número de posiciones atras. Normalmente 1
+     * @param integer $n número de posiciones atrás. Normalmente 1
      * @return string Html= div (display_none) + img(arrow)
      */
-    public function mostrar_back_arrow($n = 0)
+    public function mostrar_back_arrow(int $n = 0)
     {
         $this->go($n);
         // puede ser que no haya donde volver
@@ -308,7 +308,7 @@ class Posicion
         $html .= '	<input name="id_div" type="hidden" value="' . $bloque . '" size=70>';
         $html .= '</form>';
         $html .= '</div>';
-        $html .= "<img onclick=fnjs_ir_a('#$id_div') src=" . core\ConfigGlobal::getWeb_icons() . '/flechas/left.gif border=0 height=40>';
+        $html .= "<img onclick=fnjs_ir_a('#$id_div') src=" . ConfigGlobal::getWeb_icons() . '/flechas/left.gif border=0 height=40>';
 
         // vuelvo el cursor al final.
         $this->goEnd();
@@ -428,7 +428,7 @@ class Posicion
      */
     public function setParametros($aVars, $n = 0)
     {
-        // Si es del constructor no guardo los cambios aqui.
+        // Si es del constructor no guardo los cambios aquí.
         if ($this->constructor) {
             foreach ($aVars as $key => $value) {
                 $this->aParametros[$key] = $value;
@@ -481,13 +481,10 @@ class Posicion
      * una consulta con concatenaciones (||) es un lio.
      *
      * busca la página en el directorio actual. Para usar una referencia absoluta a una página,
-     * el $go_to deberia empezar por '#'.
+     * el $go_to debería empezar por '#'.
      */
     public function ir_a($go_to)
     {
-        if ($go_to == 'atras') {
-            return self::atras();
-        }
         $this->setId_div('ir_a');
         $url = '';
         $parametros = '';
@@ -524,13 +521,13 @@ class Posicion
         }
 
         $pagina = $pag_sin_param; // quito la doble barra
-        if (strpos($pagina, core\ConfigGlobal::getWeb()) !== false) { // Si es una referencia absoluta
+        if (strpos($pagina, ConfigGlobal::getWeb()) !== false) { // Si es una referencia absoluta
             $url = $pagina;
         } else {
             $_error_txt .= "pagina2: $pagina<br>";
             $dire = getcwd();
             $_error_txt .= "dire: $dire<br>";
-            $path = str_replace(core\ConfigGlobal::$directorio, "", $dire);
+            $path = str_replace(ConfigGlobal::$directorio, "", $dire);
             $_error_txt .= "path: $path<br>";
             if (substr($path, -1) != '/') {
                 $path .= '/';
@@ -553,10 +550,10 @@ class Posicion
             }
             $_error_txt .= "pagina4: $pagina<br>";
             //echo "pagina2: $pagina<br>";
-            $url = core\ConfigGlobal::getWeb() . $path . $pagina;
+            $url = ConfigGlobal::getWeb() . $path . $pagina;
         }
         /*
-        if (core\ConfigGlobal::mi_id_usuario() == 443) {
+        if (ConfigGlobal::mi_id_usuario() == 443) {
             echo "hola dani<br>";
             echo $_error_txt;
         }
@@ -595,9 +592,9 @@ class Posicion
         $pagina = strtok($pagina, "|");
         $frame = strtok("|");
 
-        $pagina = str_replace(core\ConfigGlobal::getWeb(), "", $pagina); //si la dirección ya es absoluta, la quito
+        $pagina = str_replace(ConfigGlobal::getWeb(), "", $pagina); //si la dirección ya es absoluta, la quito
         $dire = getcwd();
-        $path = str_replace(core\ConfigGlobal::$directorio, "", $dire);
+        $path = str_replace(ConfigGlobal::$directorio, "", $dire);
         if (substr($path, -1) != '/') {
             $path .= '/';
         } // me aseguro de que acabe en "/"
@@ -639,7 +636,7 @@ class Posicion
             //echo "cond2: $cond2<br>";
             $parametros = str_replace($cond1, $cond2, $parametros);
         }
-        $url = core\ConfigGlobal::getWeb() . $path . $pag;
+        $url = ConfigGlobal::getWeb() . $path . $pag;
         return "'" . $url . "?" . $parametros . "'";
     }
 }

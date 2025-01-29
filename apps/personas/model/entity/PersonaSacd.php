@@ -2,7 +2,8 @@
 
 namespace personas\model\entity;
 
-use core;
+use core\Set;
+use function core\is_true;
 
 /**
  * Fitxer amb la Classe que accedeix a la taula cp_sacd
@@ -45,7 +46,7 @@ class PersonaSacd extends PersonaGlobal
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'id_nom') && $val_id !== '') $this->iid_nom = (int)$val_id; 
+                if (($nom_id === 'id_nom') && $val_id !== '') $this->iid_nom = (int)$val_id;
             }
         } else {
             if (isset($a_id) && $a_id !== '') {
@@ -99,7 +100,7 @@ class PersonaSacd extends PersonaGlobal
         $aDades['lugar_nacimiento'] = $this->slugar_nacimiento;
         array_walk($aDades, 'core\poner_null');
         //para el caso de los boolean FALSE, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
-        if (core\is_true($aDades['sacd'])) {
+        if (is_true($aDades['sacd'])) {
             $aDades['sacd'] = 'true';
         } else {
             $aDades['sacd'] = 'false';
@@ -234,7 +235,7 @@ class PersonaSacd extends PersonaGlobal
      *
      * @param array $aDades
      */
-    function setAllAtributes($aDades, $convert = FALSE)
+    function setAllAtributes(array $aDades, $convert = FALSE)
     {
         if (!is_array($aDades)) return;
         if (array_key_exists('id_schema', $aDades)) $this->setId_schema($aDades['id_schema']);
@@ -307,7 +308,7 @@ class PersonaSacd extends PersonaGlobal
      */
     function getDatosCampos()
     {
-        $oPersonaPubSet = new core\Set();
+        $oPersonaPubSet = new Set();
 
         $oPersonaPubSet->add($this->getDatosId_cr());
         $oPersonaPubSet->add($this->getDatosId_tabla());

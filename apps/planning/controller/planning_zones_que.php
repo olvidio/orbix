@@ -1,9 +1,10 @@
 <?php
 
 use core\ConfigGlobal;
-use usuarios\model\entity\Usuario;
+use core\ViewTwig;
 use web\Hash;
 use web\Posicion;
+use usuarios\model\entity\Usuario;
 use zonassacd\model\entity\GestorZona;
 
 /**
@@ -179,7 +180,7 @@ if (($_SESSION['oPerm']->have_perm_oficina('des')) || ($_SESSION['oPerm']->have_
 
 $is_jefeCalendario = $_SESSION['oConfig']->is_jefeCalendario();
 
-$url = 'apps/zonassacd/controller/planning_zones_crida_calendari.php';
+$url = 'apps/planning/controller/planning_zones_select.php';
 
 $oHash = new Hash();
 $oHash->setUrl($url);
@@ -238,5 +239,5 @@ $a_campos = [
     'chk_trim_112' => $chk_trim_112,
 ];
 
-$oView = new core\ViewTwig('zonassacd/controller');
-$oView->renderizar('planning_zones.html.twig', $a_campos);
+$oView = new ViewTwig('planning/controller');
+$oView->renderizar('planning_zones_que.html.twig', $a_campos);

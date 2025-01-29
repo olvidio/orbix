@@ -2,9 +2,10 @@
 
 namespace notas\model;
 
+use core\ClasePropiedades;
 use core\ConfigGlobal;
-use core;
 use asignaturas\model\entity\GestorAsignatura;
+use function core\is_true;
 
 /**
  * Classe que
@@ -15,7 +16,7 @@ use asignaturas\model\entity\GestorAsignatura;
  * @version 1.0
  * @created 07/04/2014
  */
-class AsignaturasPendientes extends core\ClasePropiedades
+class AsignaturasPendientes extends ClasePropiedades
 {
     /* ATRIBUTOS ----------------------------------------------------------------- */
     /**
@@ -256,7 +257,7 @@ class AsignaturasPendientes extends core\ClasePropiedades
         $aId_nom = array();
         foreach ($oDbl->query($sql) as $row) {
             $id_nom = $row['id_nom'];
-            if ($lista == false) { // El numero de asignaturas que faltan
+            if (!is_true($lista)) { // El numero de asignaturas que faltan
                 $aId_nom[$id_nom] = $num_curso - $row['asignaturas'];
             } else { // El listado de asignaturas que faltan
                 $aAsignaturas = $this->asignaturasQueFaltanPersona($id_nom, $curso);
@@ -295,7 +296,7 @@ class AsignaturasPendientes extends core\ClasePropiedades
             $a_id_noms = $oDbl->query($query_tot);
             foreach ($a_id_noms as $row) {
                 $id_nom = $row['id_nom'];
-                if ($lista == false) { // El numero de asignaturas que faltan
+                if (!is_true($lista)) { // El numero de asignaturas que faltan
                     $aId_nom[$id_nom]++;
                 } else {
                     $aId_nom[$id_nom] = 'si';

@@ -2,8 +2,14 @@
 
 namespace actividades\model\entity;
 
-use core;
-use web;
+use core\ClasePropiedades;
+use core\ConfigGlobal;
+use core\ConverterDate;
+use core\DatosCampo;
+use core\Set;
+use web\DateTimeLocal;
+use web\NullDateTimeLocal;
+use function core\is_true;
 
 /**
  * Clase que implementa la entidad a_actividades_dl
@@ -14,7 +20,7 @@ use web;
  * @version 1.0
  * @created 01/10/2010
  */
-class ActividadAll extends core\ClasePropiedades
+class ActividadAll extends ClasePropiedades
 {
 
     // status constants.
@@ -93,7 +99,7 @@ class ActividadAll extends core\ClasePropiedades
     /**
      * F_ini de ActividadAll
      *
-     * @var web\DateTimeLocal
+     * @var DateTimeLocal
      */
     protected $df_ini;
     /**
@@ -105,7 +111,7 @@ class ActividadAll extends core\ClasePropiedades
     /**
      * F_fin de ActividadAll
      *
-     * @var web\DateTimeLocal
+     * @var DateTimeLocal
      */
     protected $df_fin;
     /**
@@ -285,7 +291,7 @@ class ActividadAll extends core\ClasePropiedades
         $aDades['plazas'] = $this->iplazas;
         array_walk($aDades, 'core\poner_null');
         //para el caso de los boolean FALSE, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
-        if (core\is_true($aDades['publicado'])) {
+        if (is_true($aDades['publicado'])) {
             $aDades['publicado'] = 'true';
         } else {
             $aDades['publicado'] = 'false';
@@ -294,10 +300,10 @@ class ActividadAll extends core\ClasePropiedades
         $a_pkey = $this->aPrimary_key;
         $dl = $aDades['dl_org'];
         $id_tabla = $aDades['id_tabla'];
-        if ($dl == core\ConfigGlobal::mi_delef()) {
+        if ($dl == ConfigGlobal::mi_delef()) {
             $oActividadAll = new ActividadDl($a_pkey);
         } else {
-            if ($id_tabla == 'dl') {
+            if ($id_tabla === 'dl') {
                 $oActividadAll = new ActividadPub($a_pkey);
             } else {
                 $oActividadAll = new ActividadEx($a_pkey);
@@ -334,7 +340,7 @@ class ActividadAll extends core\ClasePropiedades
                 case 'guardar':
                     if (!$oDblSt->rowCount()) return false;
                     // Hay que guardar los boolean de la misma manera que al guardar los datos ('false','true'):
-                    if (core\is_true($aDades['publicado'])) {
+                    if (is_true($aDades['publicado'])) {
                         $aDades['publicado'] = 'true';
                     } else {
                         $aDades['publicado'] = 'false';
@@ -362,12 +368,12 @@ class ActividadAll extends core\ClasePropiedades
     public function DBEliminar()
     {
         $a_pkey = $this->aPrimary_key;
-        $dl = $this->dl_org;
-        $id_tabla = $this->id_tabla;
-        if ($dl == core\ConfigGlobal::mi_delef()) {
+        $dl = $this->sdl_org;
+        $id_tabla = $this->sid_tabla;
+        if ($dl == ConfigGlobal::mi_delef()) {
             $oActividadAll = new ActividadDl($a_pkey);
         } else {
-            if ($id_tabla == 'dl') {
+            if ($id_tabla === 'dl') {
                 // No se puede eliminar una actividad de otra dl. Hay que borrarla como importada
                 $oImportada = new Importada($a_pkey);
                 $oImportada->DBEliminar();
@@ -402,7 +408,7 @@ class ActividadAll extends core\ClasePropiedades
      *
      * @param array $aDades
      */
-    function setAllAtributes($aDades, $convert = FALSE)
+    function setAllAtributes(array $aDades, $convert = FALSE)
     {
         if (!is_array($aDades)) {
             return;
@@ -529,7 +535,7 @@ class ActividadAll extends core\ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'id_activ') && $val_id !== '') $this->iid_activ = (int)$val_id;
+                if (($nom_id === 'id_activ') && $val_id !== '') $this->iid_activ = (int)$val_id;
             }
         }
     }
@@ -685,7 +691,7 @@ class ActividadAll extends core\ClasePropiedades
     /**
      * Recupera el atributo df_ini de ActividadAll
      *
-     * @return web\DateTimeLocal|web\NullDateTimeLocal df_ini
+     * @return DateTimeLocal|NullDateTimeLocal df_ini
      */
     function getF_ini()
     {
@@ -693,9 +699,9 @@ class ActividadAll extends core\ClasePropiedades
             $this->DBCarregar();
         }
         if (empty($this->df_ini)) {
-            return new web\NullDateTimeLocal();
+            return new NullDateTimeLocal();
         }
-        $oConverter = new core\ConverterDate('date', $this->df_ini);
+        $oConverter = new ConverterDate('date', $this->df_ini);
         return $oConverter->fromPg();
     }
 
@@ -710,7 +716,7 @@ class ActividadAll extends core\ClasePropiedades
     function setF_ini($df_ini = '', $convert = true)
     {
         if ($convert === true && !empty($df_ini)) {
-            $oConverter = new core\ConverterDate('date', $df_ini);
+            $oConverter = new ConverterDate('date', $df_ini);
             $this->df_ini = $oConverter->toPg();
         } else {
             $this->df_ini = $df_ini;
@@ -733,7 +739,7 @@ class ActividadAll extends core\ClasePropiedades
     /**
      * Establece el valor del atributo th_ini de ActividadAll
      *
-     * @param time th_ini='' optional
+     * @param string time th_ini='' optional
      */
     function setH_ini($th_ini = '')
     {
@@ -743,7 +749,7 @@ class ActividadAll extends core\ClasePropiedades
     /**
      * Recupera el atributo df_fin de ActividadAll
      *
-     * @return web\DateTimeLocal|web\NullDateTimeLocal df_fin
+     * @return DateTimeLocal|NullDateTimeLocal df_fin
      */
     function getF_fin()
     {
@@ -751,9 +757,9 @@ class ActividadAll extends core\ClasePropiedades
             $this->DBCarregar();
         }
         if (empty($this->df_fin)) {
-            return new web\NullDateTimeLocal();
+            return new NullDateTimeLocal();
         }
-        $oConverter = new core\ConverterDate('date', $this->df_fin);
+        $oConverter = new ConverterDate('date', $this->df_fin);
         return $oConverter->fromPg();
     }
 
@@ -768,7 +774,7 @@ class ActividadAll extends core\ClasePropiedades
     function setF_fin($df_fin = '', $convert = true)
     {
         if ($convert === true && !empty($df_fin)) {
-            $oConverter = new core\ConverterDate('date', $df_fin);
+            $oConverter = new ConverterDate('date', $df_fin);
             $this->df_fin = $oConverter->toPg();
         } else {
             $this->df_fin = $df_fin;
@@ -1123,11 +1129,11 @@ class ActividadAll extends core\ClasePropiedades
     /**
      * Recupera el atributo idias de ActividadAll
      *
-     * @param web\DateTimeLocal $oIniPeriodo
-     * @param web\DateTimeLocal $oFinPeriodo
+     * @param DateTimeLocal $oIniPeriodo
+     * @param DateTimeLocal $oFinPeriodo
      * @return integer idias
      */
-    function getDuracionEnPeriodo($oIniPeriodo, $oFinPeriodo)
+    function getDuracionEnPeriodo(DateTimeLocal $oIniPeriodo, DateTimeLocal $oFinPeriodo)
     {
         $num_dias = $this->getDuracionReal();
 
@@ -1292,7 +1298,7 @@ class ActividadAll extends core\ClasePropiedades
      */
     function getDatosCampos()
     {
-        $oActividadAllSet = new core\Set();
+        $oActividadAllSet = new Set();
 
         // Quito descripcion y tipo_horario para que no salgan a la hora de
         // avisar cambios. De momento parece que no se usan en ningun sitio.
@@ -1331,7 +1337,7 @@ class ActividadAll extends core\ClasePropiedades
     function getDatosId_tipo_activ()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_tipo_activ'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_tipo_activ'));
         $oDatosCampo->setEtiqueta(_("id_tipo_activ"));
         $oDatosCampo->setAviso(FALSE);
         return $oDatosCampo;
@@ -1346,7 +1352,7 @@ class ActividadAll extends core\ClasePropiedades
     function getDatosDl_org()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'dl_org'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'dl_org'));
         $oDatosCampo->setEtiqueta(_("dl_org"));
         $oDatosCampo->setAviso(FALSE);
         return $oDatosCampo;
@@ -1361,7 +1367,7 @@ class ActividadAll extends core\ClasePropiedades
     function getDatosNom_activ()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'nom_activ'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'nom_activ'));
         $oDatosCampo->setEtiqueta(_("nombre actividad"));
         return $oDatosCampo;
     }
@@ -1375,7 +1381,7 @@ class ActividadAll extends core\ClasePropiedades
     function getDatosId_ubi()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_ubi'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_ubi'));
         $oDatosCampo->setEtiqueta(_("id del Lugar"));
         return $oDatosCampo;
     }
@@ -1389,7 +1395,7 @@ class ActividadAll extends core\ClasePropiedades
     function getDatosDesc_activ()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'desc_activ'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'desc_activ'));
         $oDatosCampo->setEtiqueta(_("descripción"));
         return $oDatosCampo;
     }
@@ -1403,7 +1409,7 @@ class ActividadAll extends core\ClasePropiedades
     function getDatosF_ini()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'f_ini'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'f_ini'));
         $oDatosCampo->setEtiqueta(_("fecha inicio"));
         $oDatosCampo->setTipo('fecha');
         return $oDatosCampo;
@@ -1418,7 +1424,7 @@ class ActividadAll extends core\ClasePropiedades
     function getDatosH_ini()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'h_ini'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'h_ini'));
         $oDatosCampo->setEtiqueta(_("hora inicio"));
         return $oDatosCampo;
     }
@@ -1432,7 +1438,7 @@ class ActividadAll extends core\ClasePropiedades
     function getDatosF_fin()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'f_fin'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'f_fin'));
         $oDatosCampo->setEtiqueta(_("fecha fin"));
         $oDatosCampo->setTipo('fecha');
         return $oDatosCampo;
@@ -1447,7 +1453,7 @@ class ActividadAll extends core\ClasePropiedades
     function getDatosH_fin()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'h_fin'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'h_fin'));
         $oDatosCampo->setEtiqueta(_("hora fin"));
         return $oDatosCampo;
     }
@@ -1461,7 +1467,7 @@ class ActividadAll extends core\ClasePropiedades
     function getDatosTipo_horario()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'tipo_horario'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'tipo_horario'));
         $oDatosCampo->setEtiqueta(_("tipo de horario"));
         return $oDatosCampo;
     }
@@ -1475,7 +1481,7 @@ class ActividadAll extends core\ClasePropiedades
     function getDatosPrecio()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'precio'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'precio'));
         $oDatosCampo->setEtiqueta(_("precio"));
         $oDatosCampo->setRegExp("/^(\d+)[,.]?\d{0,2}$/");
         $txt = _("tiene un formato no válido.");
@@ -1499,7 +1505,7 @@ class ActividadAll extends core\ClasePropiedades
     function getDatosNum_asistentes()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'num_asistentes'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'num_asistentes'));
         $oDatosCampo->setEtiqueta(_("número de asistentes"));
         $oDatosCampo->setAviso(FALSE);
         return $oDatosCampo;
@@ -1515,7 +1521,7 @@ class ActividadAll extends core\ClasePropiedades
     {
         $a_status = $this->getArrayStatus();
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'status'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'status'));
         $oDatosCampo->setEtiqueta(_("status"));
         $oDatosCampo->setTipo('array');
         $oDatosCampo->setLista($a_status);
@@ -1531,7 +1537,7 @@ class ActividadAll extends core\ClasePropiedades
     function getDatosObserv()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'observ'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'observ'));
         $oDatosCampo->setEtiqueta(_("observaciones"));
         return $oDatosCampo;
     }
@@ -1545,7 +1551,7 @@ class ActividadAll extends core\ClasePropiedades
     function getDatosNivel_stgr()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'nivel_stgr'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'nivel_stgr'));
         $oDatosCampo->setEtiqueta(_("nivel de stgr"));
         return $oDatosCampo;
     }
@@ -1559,7 +1565,7 @@ class ActividadAll extends core\ClasePropiedades
     function getDatosObserv_material()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'observ_material'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'observ_material'));
         $oDatosCampo->setEtiqueta(_("observaciones material"));
         return $oDatosCampo;
     }
@@ -1573,7 +1579,7 @@ class ActividadAll extends core\ClasePropiedades
     function getDatosLugar_esp()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'lugar_esp'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'lugar_esp'));
         $oDatosCampo->setEtiqueta(_("lugar especial"));
         return $oDatosCampo;
     }
@@ -1587,7 +1593,7 @@ class ActividadAll extends core\ClasePropiedades
     function getDatosTarifa()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'tarifa'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'tarifa'));
         $oDatosCampo->setEtiqueta(_("tarifa"));
         return $oDatosCampo;
     }
@@ -1601,7 +1607,7 @@ class ActividadAll extends core\ClasePropiedades
     function getDatosId_repeticion()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_repeticion'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_repeticion'));
         $oDatosCampo->setEtiqueta(_("id repeticion"));
         return $oDatosCampo;
     }
@@ -1615,7 +1621,7 @@ class ActividadAll extends core\ClasePropiedades
     function getDatosPublicado()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'publicado'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'publicado'));
         $oDatosCampo->setEtiqueta(_("publicado"));
         return $oDatosCampo;
     }
@@ -1629,7 +1635,7 @@ class ActividadAll extends core\ClasePropiedades
     function getDatosId_tabla()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_tabla'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_tabla'));
         $oDatosCampo->setEtiqueta(_("id_tabla"));
         $oDatosCampo->setAviso(FALSE);
         return $oDatosCampo;
@@ -1644,7 +1650,7 @@ class ActividadAll extends core\ClasePropiedades
     function getDatosPlazas()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'plazas'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'plazas'));
         $oDatosCampo->setEtiqueta(_("plazas"));
         return $oDatosCampo;
     }

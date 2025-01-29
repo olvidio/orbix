@@ -1,9 +1,13 @@
 <?php
 
-use usuarios\model\entity as usuarios;
-use menus\model\entity as menus;
 use core\ConfigGlobal;
+use core\ViewPhtml;
 use menus\model\entity\GestorGrupMenu;
+use menus\model\entity\GestorGrupMenuRole;
+use usuarios\model\entity\GestorRole;
+use usuarios\model\entity\Usuario;
+use web\Hash;
+use web\Lista;
 
 // INICIO Cabecera global de URL de controlador *********************************
 require_once("apps/core/global_header.inc");
@@ -16,9 +20,9 @@ require_once("apps/core/global_object.inc");
 
 $oPosicion->recordar();
 
-$oMiUsuario = new usuarios\Usuario(core\ConfigGlobal::mi_id_usuario());
+$oMiUsuario = new Usuario(ConfigGlobal::mi_id_usuario());
 $miRole = $oMiUsuario->getId_role();
-$miSfsv = core\ConfigGlobal::mi_sfsv();
+$miSfsv = ConfigGlobal::mi_sfsv();
 // Sólo puede manipular los roles el superadmin (id_role=1).
 // y desde el sv
 $permiso = 0;
@@ -40,7 +44,7 @@ if (isset($_POST['stack'])) {
 }
 
 // todos los posibles GrupMenu
-$gesGrupMenu = new menus\GestorGrupMenu();
+$gesGrupMenu = new GestorGrupMenu();
 $cGM = $gesGrupMenu->getGrupMenus(array('_ordre' => 'grup_menu'));
 $aGrupMenus = array();
 foreach ($cGM as $oGrupMenu) {
@@ -49,7 +53,7 @@ foreach ($cGM as $oGrupMenu) {
     $aGrupMenus[$id_grupmenu] = $grup_menu;
 }
 
-$oGesRole = new usuarios\GestorRole();
+$oGesRole = new GestorRole();
 $cRoles = $oGesRole->getRoles(['_ordre' => 'role']);
 
 // Para admin, puede modificar los grupmenus que tiene cada rol, pero no 
@@ -87,7 +91,7 @@ foreach ($cRoles as $oRole) {
     }
     $i++;
 
-    $oGesGMRol = new menus\GestorGrupMenuRole();
+    $oGesGMRol = new GestorGrupMenuRole();
     $cGMR = $oGesGMRol->getGrupMenuRoles(array('id_role' => $id_role));
     // intentar ordenar por el nombre del grupmenu
     $a_GM = [];
@@ -121,18 +125,18 @@ if (isset($Qscroll_id) && !empty($Qscroll_id)) {
     $a_valores['scroll_id'] = $Qscroll_id;
 }
 
-$oTabla = new web\Lista();
+$oTabla = new Lista();
 $oTabla->setId_tabla('roles_lista');
 $oTabla->setCabeceras($a_cabeceras);
 $oTabla->setBotones($a_botones);
 $oTabla->setDatos($a_valores);
 
-$oHash = new web\Hash();
+$oHash = new Hash();
 $oHash->setCamposForm('');
 $oHash->setCamposNo('sel!scroll_id!que');
 
 
-$url_nuevo = web\Hash::link(core\ConfigGlobal::getWeb() . '/apps/usuarios/controller/role_form.php?' . http_build_query(array('nuevo' => 1)));
+$url_nuevo = Hash::link(ConfigGlobal::getWeb() . '/apps/usuarios/controller/role_form.php?' . http_build_query(array('nuevo' => 1)));
 
 $a_campos = ['oPosicion' => $oPosicion,
     'oHash' => $oHash,
@@ -141,5 +145,5 @@ $a_campos = ['oPosicion' => $oPosicion,
     'url_nuevo' => $url_nuevo,
 ];
 
-$oView = new core\View('usuarios/controller');
+$oView = new ViewPhtml('usuarios/controller');
 $oView->renderizar('role_lista.phtml', $a_campos);

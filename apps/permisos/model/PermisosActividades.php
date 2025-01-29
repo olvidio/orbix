@@ -5,11 +5,11 @@ namespace permisos\model;
 use actividades\model\entity\Actividad;
 use actividades\model\entity\GestorTipoDeActividad;
 use core\ConfigGlobal;
-use procesos\model\entity as procesos;
 use procesos\model\entity\ActividadFase;
+use procesos\model\entity\GestorActividadProcesoTarea;
 use procesos\model\entity\GestorTareaProceso;
 use procesos\model\PermAccion;
-use usuarios\model\entity as usuarios;
+use usuarios\model\entity\GestorUsuarioGrupo;
 use function core\is_true;
 
 /**
@@ -112,7 +112,7 @@ class PermisosActividades
         // permiso para el usuario
         $sCondicion_usuario = "u.id_usuario=$iid_usuario";
         // miro en els grups als que pertany
-        $oGesGrupos = new usuarios\GestorUsuarioGrupo();
+        $oGesGrupos = new GestorUsuarioGrupo();
         $oGrupos = $oGesGrupos->getUsuariosGrupos(array('id_usuario' => $iid_usuario));
         if (count($oGrupos) > 0) {
             foreach ($oGrupos as $oUsuarioGrupo) {
@@ -187,7 +187,7 @@ class PermisosActividades
      * @param string (opcional) $id_tipo_activ
      * @param string (opcional) $dl_org
      */
-    public function setActividad($id_activ, $id_tipo_activ = '', $dl_org = '')
+    public function setActividad(int $id_activ, $id_tipo_activ = '', $dl_org = '')
     {
         $this->btop = false;
         $this->iid_activ = $id_activ;
@@ -229,7 +229,7 @@ class PermisosActividades
                 return FALSE;
             }
         }
-        $oGesActiv = new procesos\GestorActividadProcesoTarea();
+        $oGesActiv = new GestorActividadProcesoTarea();
         $completada = $oGesActiv->faseCompletada($this->iid_activ, $id_fase);
         return $completada;
     }
@@ -244,9 +244,9 @@ class PermisosActividades
      * para dl, ex
      *
      * @param bool $dl_propia dl organizadora
-     * @return array [$of_responsable, $status]
+     * @return array|false
      */
-    public function getPermisoCrear($dl_propia)
+    public function getPermisoCrear(bool $dl_propia)
     {
         $this->bpropia = $dl_propia;
         $id_tipo_activ = $this->iid_tipo_activ;
@@ -298,10 +298,10 @@ class PermisosActividades
      * Devuelve el oPersonaNota PermAction para $iAfecta
      * Para la actividad $this->iidactiv y en la fase $this->id_fase
      *
-     * @param string|integer $iAfecta
-     * @return \procesos\model\PermAccion
+     * @param integer|string $iAfecta
+     * @return PermAccion
      */
-    public function getPermisoActual($iAfecta)
+    public function getPermisoActual(int|string $iAfecta)
     {
         // hay que poner a cero el id_tipo_activ, sino
         // aprovecha el que se ha buscado con el anterior iAfecta.
@@ -344,10 +344,10 @@ class PermisosActividades
      * Para la actividad $this->iidactiv
      * que esté con la $this->id_fase en 'on'.
      *
-     * @param string|integer $iAfecta
-     * @return \procesos\model\PermAccion
+     * @param integer|string $iAfecta
+     * @return PermAccion
      */
-    public function getPermisoOn($iAfecta)
+    public function getPermisoOn(int|string $iAfecta)
     {
         // hay que poner a cero el id_tipo_activ, sino
         // aprovecha el que se ha buscado con el anterior iAfecta.
@@ -427,16 +427,16 @@ class PermisosActividades
     }
 
     /**
-     * para saber si un sacd puede ver una actividad, segun sea el encargado, o asistente
+     * para saber si un sacd puede ver una actividad, según sea el encargado, o asistente
      * o los dos.
-     * los parametros provienen de la consulta:
+     * los parámetros provienen de la consulta:
      * $cAsistentes = $oGesActividadCargo ->getAsistenteCargoDeActividad();
      *
-     * @param integer $id_cargo
+     * @param ?integer $id_cargo
      * @param boolean $propio
      * @return boolean
      */
-    public function havePermisoSacd($id_cargo, $propio): bool
+    public function havePermisoSacd(?int $id_cargo, bool $propio): bool
     {
         $permiso_ver = FALSE;
         $oPermActiv = $this->getPermisoActual('datos');

@@ -1,7 +1,7 @@
 <?php
 
 use core\ConfigGlobal;
-use menus\model\entity as menusEntity;
+use menus\model\entity\MenuDb;
 use usuarios\model\entity\Usuario;
 
 // INICIO Cabecera global de URL de controlador *********************************
@@ -17,7 +17,7 @@ $Qid_menu = (integer)filter_input(INPUT_POST, 'id_menu');
 $Qque = (string)filter_input(INPUT_POST, 'que');
 $Qgm_new = (string)filter_input(INPUT_POST, 'gm_new');
 
-$oMenuDb = new menusEntity\MenuDb();
+$oMenuDb = new MenuDb();
 $oCuadros = new menus\model\PermisoMenu;
 
 $oMenuDb->setId_menu($Qid_menu);
@@ -84,7 +84,7 @@ switch ($Qque) {
         $id_metamenu = $oMenuDb->getId_metamenu();
         $perm_menu = $oMenuDb->getMenu_perm();
 
-        $oNewMenuDb = new menusEntity\MenuDb();
+        $oNewMenuDb = new MenuDb();
         $oNewMenuDb->setOrden($orden);
         $oNewMenuDb->setId_grupmenu($id_grupmenu);
         $oNewMenuDb->setMenu($txt_menu);

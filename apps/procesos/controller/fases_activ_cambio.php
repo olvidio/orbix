@@ -1,8 +1,9 @@
 <?php
 
+use core\ConfigGlobal;
+use core\ViewTwig;
 use web\Hash;
 use web\PeriodoQue;
-use core\ConfigGlobal;
 
 /**
  * Página para cambiar la fase a un grupo de actividades.
@@ -113,7 +114,7 @@ $oHashAct->setCamposForm('que!dl_propia!id_tipo_activ!id_fase_sel');
 $h_actualizar = $oHashAct->linkSinVal();
 
 $url_tipo = "apps/actividades/controller/actividad_tipo_get.php";
-$oHash1 = new web\Hash();
+$oHash1 = new Hash();
 //$oHash1->setUrl(ConfigGlobal::getWeb().'/apps/actividades/controller/actividad_tipo_get.php');
 $oHash1->setUrl($url_tipo);
 $oHash1->setCamposForm('extendida!modo!salida!entrada');
@@ -144,5 +145,5 @@ $a_campos = ['oPosicion' => $oPosicion,
     'id_fase_nueva' => $Qid_fase_nueva,
 ];
 
-$oView = new core\ViewTwig('procesos/controller');
+$oView = new ViewTwig('procesos/controller');
 $oView->renderizar('fases_activ_cambio.html.twig', $a_campos);

@@ -1,8 +1,9 @@
 <?php
 
 use core\ConfigGlobal;
-use procesos\model\entity\GestorProcesoTipo;
+use core\ViewTwig;
 use web\Hash;
+use procesos\model\entity\GestorProcesoTipo;
 
 /**
  * Esta página muestra el cuadro para seleccionar el proceso
@@ -56,22 +57,22 @@ $oHashClone->setUrl($url_ajax);
 $oHashClone->setCamposForm('que!id_tipo_proceso!id_tipo_proceso_ref');
 $h_clonar = $oHashClone->linkSinVal();
 
-$oHashDel = new web\Hash();
+$oHashDel = new Hash();
 $oHashDel->setUrl($url_ajax);
 $oHashDel->setCamposForm('que!id_item');
 $h_eliminar = $oHashDel->linkSinVal();
 
-$oHashNew = new web\Hash();
+$oHashNew = new Hash();
 $oHashNew->setUrl($url_ver);
 $oHashNew->setCamposForm('mod!id_tipo_proceso');
 $h_nuevo = $oHashNew->linkSinVal();
 
-$oHashMod = new web\Hash();
+$oHashMod = new Hash();
 $oHashMod->setUrl($url_ver);
 $oHashMod->setCamposForm('mod!id_item!id_tipo_proceso');
 $h_modificar = $oHashMod->linkSinVal();
 
-$oHashMover = new web\Hash();
+$oHashMover = new Hash();
 $oHashMover->setUrl($url_ajax);
 $oHashMover->setCamposForm('que!id_item!orden');
 $h_mover = $oHashMover->linkSinVal();
@@ -96,5 +97,5 @@ $a_campos = ['oPosicion' => $oPosicion,
     'pag_flowChart' => $pag_flowChart,
 ];
 
-$oView = new core\ViewTwig('procesos/controller');
+$oView = new ViewTwig('procesos/controller');
 $oView->renderizar('procesos_select.html.twig', $a_campos);

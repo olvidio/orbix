@@ -4,9 +4,12 @@ use actividadcargos\model\entity\GestorActividadCargo;
 use actividadcargos\model\entity\GestorCargo;
 use actividades\model\entity\ActividadAll;
 use actividades\model\entity\GestorActividad;
+use core\ConfigGlobal;
 use encargossacd\model\entity\Encargo;
 use encargossacd\model\entity\GestorEncargoSacdHorario;
 use personas\model\entity\PersonaSacd;
+use planning\domain\Planning;
+use planning\domain\PlanningStyle;
 use web\Hash;
 use web\TiposActividades;
 use zonassacd\model\entity\GestorZona;
@@ -287,7 +290,7 @@ foreach ($aa_zonas as $a_zonas) {
                     $nom_curt = $oTipoActividad->getAsistentesText() . " " . $oTipoActividad->getActividadText();
                     $nom_llarg = $nom_activ;
                 } else {
-                    if (core\ConfigGlobal::is_app_installed('procesos')) {
+                    if (ConfigGlobal::is_app_installed('procesos')) {
                         // Si tiene cargo sacd (se supone que planing_zonas sólo es para los sacd), que la fase 'ok_sacd' esté completada
                         // Si es asistente, que la fase ok_asistente esté completada.
                         $_SESSION['oPermActividades']->setActividad($id_activ, $id_tipo_activ, $dl_org);
@@ -312,7 +315,7 @@ foreach ($aa_zonas as $a_zonas) {
                     }
                 }
 
-                $css = web\PlanningStyle::clase($id_tipo_activ, $propio, $plaza, $oActividad->getStatus());
+                $css = PlanningStyle::clase($id_tipo_activ, $propio, $plaza, $oActividad->getStatus());
 
                 $aActivPersona[] = array(
                     'nom_curt' => $nom_curt,
@@ -420,12 +423,12 @@ if ($z === 1) {
     $titulo = _("planning por zonas");
 }
 
-$oPlanning = new web\Planning();
+$oPlanning = new Planning();
 $oPlanning->setDd(3);
 $oPlanning->setInicio($oIniPlanning);
 $oPlanning->setFin($oFinPlanning);
 
-$goLeyenda = Hash::link(core\ConfigGlobal::getWeb() . '/apps/zonassacd/controller/leyenda.php?' . http_build_query(array('id_item' => 1)));
+$goLeyenda = Hash::link(ConfigGlobal::getWeb() . '/apps/zonassacd/controller/leyenda.php?' . http_build_query(array('id_item' => 1)));
 // ---------------- html ---------------------------------------------
 
 echo $oPosicion->mostrar_left_slide(1);
@@ -438,10 +441,10 @@ switch ($Qmodelo) {
     case 2:
         $print = 1;
     case 1:
-        include_once(core\ConfigGlobal::$dir_estilos . '/calendario.css.php');
+        include_once(ConfigGlobal::$dir_estilos . '/calendario.css.php');
         break;
     case 3:
-        include_once(core\ConfigGlobal::$dir_estilos . '/calendario_grid.css.php');
+        include_once(ConfigGlobal::$dir_estilos . '/calendario_grid.css.php');
         include_once('apps/web/calendario_grid.php');
         break;
 }

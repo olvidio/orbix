@@ -2,7 +2,9 @@
 
 namespace permisos\model\entity;
 
-use core;
+use core\ClasePropiedades;
+use core\DatosCampo;
+use core\Set;
 use devel\model\AppDB;
 use function core\is_true;
 
@@ -25,7 +27,7 @@ use function core\is_true;
  * @version 1.0
  * @created 15/12/2014
  */
-class ModuloInstalado extends core\ClasePropiedades
+class ModuloInstalado extends ClasePropiedades
 {
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
@@ -104,7 +106,7 @@ class ModuloInstalado extends core\ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'id_mod') && $val_id !== '') $this->iid_mod = (int)$val_id; 
+                if (($nom_id === 'id_mod') && $val_id !== '') $this->iid_mod = (int)$val_id;
             }
         } else {
             if (isset($a_id) && $a_id !== '') {
@@ -139,7 +141,7 @@ class ModuloInstalado extends core\ClasePropiedades
         $aDades['param'] = $this->sparam;
         array_walk($aDades, 'core\poner_null');
         //para el caso de los boolean FALSE, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
-        if (core\is_true($aDades['status'])) {
+        if (is_true($aDades['status'])) {
             $aDades['status'] = 'true';
         } else {
             $aDades['status'] = 'false';
@@ -274,7 +276,7 @@ class ModuloInstalado extends core\ClasePropiedades
      *
      * @param array $aDades
      */
-    function setAllAtributes($aDades)
+    function setAllAtributes(array $aDades)
     {
         if (!is_array($aDades)) return;
         if (array_key_exists('id_schema', $aDades)) $this->setId_schema($aDades['id_schema']);
@@ -336,7 +338,7 @@ class ModuloInstalado extends core\ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'id_mod') && $val_id !== '') $this->iid_mod = (int)$val_id; 
+                if (($nom_id === 'id_mod') && $val_id !== '') $this->iid_mod = (int)$val_id;
             }
         }
     }
@@ -417,7 +419,7 @@ class ModuloInstalado extends core\ClasePropiedades
      */
     function getDatosCampos()
     {
-        $oModuloInstaladoSet = new core\Set();
+        $oModuloInstaladoSet = new Set();
 
         $oModuloInstaladoSet->add($this->getDatosId_mod());
         $oModuloInstaladoSet->add($this->getDatosStatus());
@@ -428,7 +430,7 @@ class ModuloInstalado extends core\ClasePropiedades
     function getDatosId_mod()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_mod'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_mod'));
         $oDatosCampo->setEtiqueta(_("nombre"));
         $oDatosCampo->setTipo('opciones');
         $oDatosCampo->setArgument('devel\model\entity\Modulo');
@@ -441,12 +443,12 @@ class ModuloInstalado extends core\ClasePropiedades
      * Recupera les propietats de l'atribut bstatus de ModuloInstalado
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosStatus()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'status'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'status'));
         $oDatosCampo->setEtiqueta(_("activo"));
         $oDatosCampo->setTipo('check');
         return $oDatosCampo;
@@ -456,12 +458,12 @@ class ModuloInstalado extends core\ClasePropiedades
      * Recupera les propietats de l'atribut sparam de ModuloInstalado
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosParam()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'param'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'param'));
         $oDatosCampo->setEtiqueta(_("parametros"));
         $oDatosCampo->setTipo('texto');
         $oDatosCampo->setArgument('50');

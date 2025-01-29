@@ -2,7 +2,8 @@
 
 namespace core;
 
-use web;
+use Exception;
+use web\DateTimeLocal;
 
 /**
  * @author dani
@@ -37,7 +38,7 @@ class PgTimestamp
     {
         $data = trim($this->data?? '');
         if ($data !== '') {
-            $oFecha = new web\DateTimeLocal($data);
+            $oFecha = new DateTimeLocal($data);
             //$fecha = $oFecha->createFromLocal($data);
         } else {
             $oFecha = null;
@@ -53,7 +54,7 @@ class PgTimestamp
      * @param string $type
      * @return string  Pg converted string for input.
      */
-    public function toPg($type)
+    public function toPg(string $type)
     {
         $rta = null;
         if ($this->data !== null) {
@@ -97,16 +98,16 @@ class PgTimestamp
      * Ensure a DateTime instance.
      *
      * @param mixed $data
-     * @return web\DateTimeLocal
+     * @return DateTimeLocal
      * @throws \Exception
      */
-    protected function checkData($data)
+    protected function checkData(mixed $data)
     {
         if (!$data instanceof \DateTimeInterface) {
             try {
-                $data = web\DateTimeLocal::createFromLocal($data);
+                $data = DateTimeLocal::createFromLocal($data);
             } catch (\Exception $e) {
-                throw new \Exception(
+                throw new Exception(
                     sprintf(
                         "Cannot convert data from invalid datetime representation '%s'.",
                         $data

@@ -30,13 +30,17 @@ use actividades\model\entity\GestorImportada;
 use actividadescentro\model\entity\GestorCentroEncargado;
 use actividadtarifas\model\entity\TipoTarifa;
 use core\ConfigGlobal;
+use core\ViewPhtml;
 use permisos\model\PermisosActividadesTrue;
 use procesos\model\entity\GestorActividadProcesoTarea;
-use ubis\model\entity\GestorCentroCdc;
-use usuarios\model\entity as usuarios;
-use web\DateTimeLocal;
-use web\Periodo;
 use ubis\model\entity\GestorCasa;
+use ubis\model\entity\GestorCentroCdc;
+use usuarios\model\entity\Preferencia;
+use usuarios\model\entity\Usuario;
+use web\DateTimeLocal;
+use web\Hash;
+use web\Lista;
+use web\Periodo;
 
 // INICIO Cabecera global de URL de controlador *********************************
 require_once("apps/core/global_header.inc");
@@ -50,8 +54,8 @@ require_once("apps/core/global_object.inc");
 // Declaración de variables ******************************************************
 $num_max_actividades = 200;
 
-$mi_dele = core\ConfigGlobal::mi_delef();
-$mi_sfsv = core\ConfigGlobal::mi_sfsv();
+$mi_dele = ConfigGlobal::mi_delef();
+$mi_sfsv = ConfigGlobal::mi_sfsv();
 
 $oPosicion->recordar();
 
@@ -235,7 +239,7 @@ if (!empty($Qmodo) && $Qmodo === 'publicar') {
 }
 
 // miro que rol tengo. Si soy casa, sólo veo la mía
-$oMiUsuario = new usuarios\Usuario(core\ConfigGlobal::mi_id_usuario());
+$oMiUsuario = new Usuario(ConfigGlobal::mi_id_usuario());
 
 if (!empty($Qmodo) && $Qmodo !== 'buscar') {
     $a_botones = [];
@@ -249,7 +253,7 @@ if (!empty($Qmodo) && $Qmodo !== 'buscar') {
         $a_botones[] = array('txt' => _("publicar"),
             'click' => "jsForm.update(\"#seleccionados\",\"publicar\")");
     }
-    if (core\ConfigGlobal::is_app_installed('asignaturas') && $_SESSION['oPerm']->have_perm_oficina('est')) {
+    if (ConfigGlobal::is_app_installed('asignaturas') && $_SESSION['oPerm']->have_perm_oficina('est')) {
         $a_botones[] = array('txt' => _("asignaturas"), 'click' => "jsForm.mandar(\"#seleccionados\",\"asig\")");
     }
 } else {
@@ -268,24 +272,24 @@ if (!empty($Qmodo) && $Qmodo !== 'buscar') {
             $a_botones[] = array('txt' => _("cambiar tipo"), 'click' => "jsForm.mandar(\"#seleccionados\",\"cambiar_tipo\")");
         }
 
-        if (core\ConfigGlobal::is_app_installed('actividadcargos')) {
+        if (ConfigGlobal::is_app_installed('actividadcargos')) {
             $a_botones[] = array('txt' => _("cargos"), 'click' => "jsForm.mandar(\"#seleccionados\",\"carg\")");
             $a_botones[] = array('txt' => _("lista cl"), 'click' => "jsForm.mandar(\"#seleccionados\",\"listcl\")");
         }
-        if (core\ConfigGlobal::is_app_installed('asistentes')) {
+        if (ConfigGlobal::is_app_installed('asistentes')) {
             $a_botones[] = array('txt' => _("asistentes"), 'click' => "jsForm.mandar(\"#seleccionados\",\"asis\")");
             $a_botones[] = array('txt' => _("otras peticiones"), 'click' => "jsForm.mandar(\"#seleccionados\",\"asis_peticiones\")");
             $a_botones[] = array('txt' => _("lista"), 'click' => "jsForm.mandar(\"#seleccionados\",\"list\")");
             //$a_botones[] = array( 'txt' => _("transferir sasistentes a históricos"), 'click' =>"jsForm.mandar(\"#seleccionados\",\"historicos\")");
         }
-        if (core\ConfigGlobal::is_app_installed('actividadplazas')) {
+        if (ConfigGlobal::is_app_installed('actividadplazas')) {
             $a_botones[] = array('txt' => _("plazas"), 'click' => "jsForm.mandar(\"#seleccionados\",\"plazas\")");
         }
-        if (core\ConfigGlobal::is_app_installed('procesos')) {
+        if (ConfigGlobal::is_app_installed('procesos')) {
             $a_botones[] = array('txt' => _("proceso"), 'click' => "jsForm.mandar(\"#seleccionados\",\"proceso\")");
         }
 
-        if (core\ConfigGlobal::is_app_installed('asignaturas')) {
+        if (ConfigGlobal::is_app_installed('asignaturas')) {
             if ($_SESSION['oPerm']->have_perm_oficina('est')) {
                 $a_botones[] = array('txt' => _("asignaturas"), 'click' => "jsForm.mandar(\"#seleccionados\",\"asig\")");
             }
@@ -341,8 +345,8 @@ $aWhere['_ordre'] = 'f_ini';
 $cActividades = $GesActividades->getActividades($aWhere, $aOperador);
 $num_activ = count($cActividades);
 if ($num_activ > $num_max_actividades && empty($Qcontinuar)) {
-    $go_avant = web\Hash::link(core\ConfigGlobal::getWeb() . '/apps/actividades/controller/actividad_select.php?' . http_build_query(array('continuar' => 'si', 'Gstack' => $oPosicion->getStack())));
-    $go_atras = web\Hash::link(core\ConfigGlobal::getWeb() . '/apps/actividades/controller/actividad_que.php?' . http_build_query(array('stack' => $oPosicion->getStack())));
+    $go_avant = Hash::link(ConfigGlobal::getWeb() . '/apps/actividades/controller/actividad_select.php?' . http_build_query(array('continuar' => 'si', 'Gstack' => $oPosicion->getStack())));
+    $go_atras = Hash::link(ConfigGlobal::getWeb() . '/apps/actividades/controller/actividad_que.php?' . http_build_query(array('stack' => $oPosicion->getStack())));
     echo "<h2>" . sprintf(_("son %s actividades a mostrar. ¿Seguro que quiere continuar?."), $num_activ) . '</h2>';
     echo "<input type='button' onclick=fnjs_update_div('#main','" . $go_avant . "') value=" . _("continuar") . ">";
     echo "<input type='button' onclick=fnjs_update_div('#main','" . $go_atras . "') value=" . _("volver") . ">";
@@ -365,9 +369,9 @@ $a_valores = [];
 $a_NombreCasa = [];
 $a_FechaIni = [];
 $sPrefs = '';
-$id_usuario = core\ConfigGlobal::mi_id_usuario();
+$id_usuario = ConfigGlobal::mi_id_usuario();
 $tipo = 'tabla_presentacion';
-$oPref = new usuarios\Preferencia(array('id_usuario' => $id_usuario, 'tipo' => $tipo));
+$oPref = new Preferencia(array('id_usuario' => $id_usuario, 'tipo' => $tipo));
 $sPrefs = $oPref->getPreferencia();
 foreach ($cActividades as $oActividad) {
     $id_activ = $oActividad->getId_activ();
@@ -390,12 +394,12 @@ foreach ($cActividades as $oActividad) {
         if ($cImportadas !== FALSE && !empty($cImportadas)) {
             continue;
         }
-        $oPermActividades = new PermisosActividadesTrue(core\ConfigGlobal::mi_id_usuario());
+        $oPermActividades = new PermisosActividadesTrue(ConfigGlobal::mi_id_usuario());
         $oPermActiv = $oPermActividades->getPermisoActual('datos');
         $oPermSacd = $oPermActividades->getPermisoActual('sacd');
     } else {
         // mirar permisos.
-        if (core\ConfigGlobal::is_app_installed('procesos')) {
+        if (ConfigGlobal::is_app_installed('procesos')) {
             //mirar por la seleccion
             if (!empty($Qfases_on) || !empty($Qfases_off)) {
                 $gesActividadProcesoTarea = new GestorActividadProcesoTarea();
@@ -437,12 +441,12 @@ foreach ($cActividades as $oActividad) {
     $sasistentes = $oTipoActividad->getAsistentesText();
     $sactividad = $oTipoActividad->getActividadText();
     $nom_tipo = $oTipoActividad->getNom_tipoText();
-    if (core\ConfigGlobal::is_app_installed('procesos') && $oPermActiv->have_perm_activ('ocupado') === false) {
+    if (ConfigGlobal::is_app_installed('procesos') && $oPermActiv->have_perm_activ('ocupado') === false) {
         // no tiene permisos ni para ver.
         $sin++;
         continue;
     }
-    if (core\ConfigGlobal::is_app_installed('procesos') && $oPermActiv->have_perm_activ('ver') === false) {
+    if (ConfigGlobal::is_app_installed('procesos') && $oPermActiv->have_perm_activ('ver') === false) {
         // sólo puede ver que està ocupado
         $a_valores[$i]['sel'] = '';
         $a_valores[$i]['select'] = '';
@@ -466,10 +470,10 @@ foreach ($cActividades as $oActividad) {
         }
 
     } else {
-        if (strlen($h_ini?? '')) {
+        if (strlen($h_ini ?? '')) {
             $h_ini = substr($h_ini, 0, (strlen($h_ini) - 3));
         }
-        if (strlen($h_fin?? '')) {
+        if (strlen($h_fin ?? '')) {
             $h_fin = substr($h_fin, 0, (strlen($h_fin) - 3));
         }
 
@@ -477,14 +481,14 @@ foreach ($cActividades as $oActividad) {
         $tarifa_letra = $oTarifa->getLetra();
 
         $sacds = "";
-        if (core\ConfigGlobal::is_app_installed('actividadessacd')) {
+        if (ConfigGlobal::is_app_installed('actividadessacd')) {
             // sólo si tiene permiso
             $aprobado = TRUE;
             if (ConfigGlobal::mi_sfsv() == 2) {
                 $gesActividadProcesoTarea = new GestorActividadProcesoTarea();
                 $aprobado = $gesActividadProcesoTarea->getSacdAprobado($id_activ);
             }
-            if (!core\ConfigGlobal::is_app_installed('procesos')
+            if (!ConfigGlobal::is_app_installed('procesos')
                 || ($oPermSacd->have_perm_activ('ver') === true && $aprobado)) {
                 $gesCargosActividad = new actividadcargos\model\entity\GestorActividadCargo();
                 foreach ($gesCargosActividad->getActividadSacds($id_activ) as $oPersona) {
@@ -495,7 +499,7 @@ foreach ($cActividades as $oActividad) {
         }
 
         $ctrs = "";
-        if (core\ConfigGlobal::is_app_installed('actividadescentro')) {
+        if (ConfigGlobal::is_app_installed('actividadescentro')) {
             $oEnc = new GestorCentroEncargado();
             $n = 0;
             foreach ($oEnc->getCentrosEncargadosActividad($id_activ) as $oEncargado) {
@@ -532,7 +536,7 @@ foreach ($cActividades as $oActividad) {
 
         if ($Qmodo !== 'importar') {
             if ($sPrefs === 'html') {
-                $pagina = web\Hash::link(core\ConfigGlobal::getWeb() . '/apps/dossiers/controller/dossiers_ver.php?' . http_build_query(array('pau' => 'a', 'id_pau' => $id_activ, 'obj_pau' => $obj_pau)));
+                $pagina = Hash::link(ConfigGlobal::getWeb() . '/apps/dossiers/controller/dossiers_ver.php?' . http_build_query(array('pau' => 'a', 'id_pau' => $id_activ, 'obj_pau' => $obj_pau)));
                 $a_valores[$i][3] = array('ira' => $pagina, 'valor' => $nom_activ . $con);
             } else {
                 $pagina = 'jsForm.mandar("#seleccionados","dossiers")';
@@ -589,7 +593,7 @@ if (!empty($a_valores)) {
     }
 }
 
-if (core\ConfigGlobal::is_app_installed('procesos')) {
+if (ConfigGlobal::is_app_installed('procesos')) {
     $resultado = sprintf(_("%s actividades encontradas (%s sin permiso)"), $num, $sin);
 } else {
     $resultado = sprintf(_("%s actividades encontradas"), $num);
@@ -601,7 +605,7 @@ $oF_qfin = new DateTimeLocal($finIso);
 $QfinLocal = $oF_qfin->getFromLocal();
 $resultado .= ' ' . sprintf(_("entre %s y %s"), $QinicioLocal, $QfinLocal);
 
-$oHash = new web\Hash();
+$oHash = new Hash();
 $oHash->setUrl('apps/actividades/controller/actividad_que.php');
 $a_camposHidden = array(
     'modo' => $Qmodo,
@@ -622,7 +626,7 @@ $a_camposHidden = array(
 $oHash->setArraycamposHidden($a_camposHidden);
 $oHash->setCamposNo('extendida!modo!id_tipo_activ!id_ubi!nom_activ!periodo!year!dl_org!status!empiezamin!empiezamax!filtro_lugar!fases_on!fases_off');
 
-$oHashSel = new web\Hash();
+$oHashSel = new Hash();
 $oHashSel->setCamposForm('!mod!queSel!id_dossier');
 $oHashSel->setcamposNo('continuar!sel!scroll_id!fases_on!fases_off');
 $a_camposHiddenSel = array(
@@ -633,7 +637,7 @@ $a_camposHiddenSel = array(
 );
 $oHashSel->setArraycamposHidden($a_camposHiddenSel);
 
-$oTabla = new web\Lista();
+$oTabla = new Lista();
 $oTabla->setId_tabla('actividad_select');
 $oTabla->setCabeceras($a_cabeceras);
 $oTabla->setBotones($a_botones);
@@ -668,5 +672,5 @@ $a_campos = ['oPosicion' => $oPosicion,
     'oTabla' => $oTabla,
 ];
 
-$oView = new core\View('actividades/controller');
+$oView = new ViewPhtml('actividades/controller');
 $oView->renderizar('actividad_select.phtml', $a_campos);

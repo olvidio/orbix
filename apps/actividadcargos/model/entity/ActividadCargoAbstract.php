@@ -3,9 +3,12 @@
 namespace actividadcargos\model\entity;
 
 use cambios\model\GestorAvisoCambios;
+use core\ClasePropiedades;
 use core\ConfigGlobal;
+use core\DatosCampo;
+use core\Set;
+use ReflectionClass;
 use function core\is_true;
-use core;
 
 /**
  * Fitxer amb la Classe que accedeix a la taula d_cargos_activ_dl
@@ -26,7 +29,7 @@ use core;
  * @version 1.0
  * @created 19/11/2014
  */
-abstract class ActividadCargoAbstract extends core\ClasePropiedades
+abstract class ActividadCargoAbstract extends ClasePropiedades
 {
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
@@ -171,7 +174,7 @@ abstract class ActividadCargoAbstract extends core\ClasePropiedades
         $aDades['observ'] = $this->sobserv;
         array_walk($aDades, 'core\poner_null');
         //para el caso de los boolean FALSE, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
-        if (core\is_true($aDades['puede_agd'])) {
+        if (is_true($aDades['puede_agd'])) {
             $aDades['puede_agd'] = 'true';
         } else {
             $aDades['puede_agd'] = 'false';
@@ -201,9 +204,9 @@ abstract class ActividadCargoAbstract extends core\ClasePropiedades
                 }
             }
             // Anoto el cambio
-            if (empty($quiet) && core\ConfigGlobal::is_app_installed('cambios')) {
+            if (empty($quiet) && ConfigGlobal::is_app_installed('cambios')) {
                 $oGestorCanvis = new GestorAvisoCambios();
-                $shortClassName = (new \ReflectionClass($this))->getShortName();
+                $shortClassName = (new ReflectionClass($this))->getShortName();
                 $oGestorCanvis->addCanvi($shortClassName, 'UPDATE', $this->iid_activ, $aDades, $this->aDadesActuals);
             }
             $this->setAllAtributes($aDades);
@@ -236,9 +239,9 @@ abstract class ActividadCargoAbstract extends core\ClasePropiedades
             $this->aDades = $aDadesLast;
             $this->setAllAtributes($aDadesLast);
             // Anoto el cambio
-            if (empty($quiet) && core\ConfigGlobal::is_app_installed('cambios')) {
+            if (empty($quiet) && ConfigGlobal::is_app_installed('cambios')) {
                 $oGestorCanvis = new GestorAvisoCambios();
-                $shortClassName = (new \ReflectionClass($this))->getShortName();
+                $shortClassName = (new ReflectionClass($this))->getShortName();
                 $oGestorCanvis->addCanvi($shortClassName, 'INSERT', $aDadesLast['id_activ'], $this->aDades, array());
             }
         }
@@ -255,7 +258,7 @@ abstract class ActividadCargoAbstract extends core\ClasePropiedades
         $nom_tabla = $this->getNomTabla();
         if (isset($this->iid_item)) {
             // necesario mirar el esquema en el caso de consultar las vistas de union para regiones stgr
-            $cond_schema = !empty($this->iid_schema) ? " AND id_schema=$this->id_schema" : '';
+            $cond_schema = !empty($this->iid_schema) ? " AND id_schema=$this->iid_schema" : '';
             if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_item=$this->iid_item $cond_schema")) === false) {
                 $sClauError = 'ActividadCargo.carregar';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
@@ -323,12 +326,12 @@ abstract class ActividadCargoAbstract extends core\ClasePropiedades
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         // que tenga el módulo de 'cambios'
-        if (core\ConfigGlobal::is_app_installed('cambios')) {
+        if (ConfigGlobal::is_app_installed('cambios')) {
             // per carregar les dades a $this->aDadesActuals i poder posar-les als canvis.
             $this->DBCarregar('guardar');
             // ho poso abans d'esborrar perque sino no trova cap valor. En el cas d'error s'hauria d'esborrar l'apunt.
             $oGestorCanvis = new GestorAvisoCambios();
-            $shortClassName = (new \ReflectionClass($this))->getShortName();
+            $shortClassName = (new ReflectionClass($this))->getShortName();
             $oGestorCanvis->addCanvi($shortClassName, 'DELETE', $this->iid_activ, array(), $this->aDadesActuals);
         }
         if (($oDbl->exec("DELETE FROM $nom_tabla WHERE id_item=$this->iid_item")) === false) {
@@ -347,7 +350,7 @@ abstract class ActividadCargoAbstract extends core\ClasePropiedades
      *
      * @param array $aDades
      */
-    function setAllAtributes($aDades)
+    function setAllAtributes(array $aDades)
     {
         if (!is_array($aDades)) return;
         if (array_key_exists('id_schema', $aDades)) $this->setId_schema($aDades['id_schema']);
@@ -586,7 +589,7 @@ abstract class ActividadCargoAbstract extends core\ClasePropiedades
      */
     function getDatosCampos()
     {
-        $oActividadCargoSet = new core\Set();
+        $oActividadCargoSet = new Set();
 
         $oActividadCargoSet->add($this->getDatosId_schema());
         $oActividadCargoSet->add($this->getDatosId_nom());
@@ -605,7 +608,7 @@ abstract class ActividadCargoAbstract extends core\ClasePropiedades
     function getDatosId_schema()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_schema'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_schema'));
         $oDatosCampo->setEtiqueta(_("id_schema"));
         return $oDatosCampo;
     }
@@ -619,7 +622,7 @@ abstract class ActividadCargoAbstract extends core\ClasePropiedades
     function getDatosId_nom()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_nom'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_nom'));
         $oDatosCampo->setEtiqueta(_("id_nom"));
         return $oDatosCampo;
     }
@@ -633,7 +636,7 @@ abstract class ActividadCargoAbstract extends core\ClasePropiedades
     function getDatosPuede_agd()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'puede_agd'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'puede_agd'));
         $oDatosCampo->setEtiqueta(_("¿Puede ser agd?"));
         return $oDatosCampo;
     }
@@ -647,7 +650,7 @@ abstract class ActividadCargoAbstract extends core\ClasePropiedades
     function getDatosObserv()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'observ'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'observ'));
         $oDatosCampo->setEtiqueta(_("observaciones"));
         return $oDatosCampo;
     }

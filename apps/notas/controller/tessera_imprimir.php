@@ -1,8 +1,5 @@
 <?php
 
-use asignaturas\model\entity as asignaturas;
-use notas\model\entity as notas;
-use personas\model\entity as personas;
 
 /**
  * Esta página sirve para la tessera de una persona.
@@ -19,6 +16,13 @@ use personas\model\entity as personas;
  * Funciones más comunes de la aplicación
  */
 // INICIO Cabecera global de URL de controlador *********************************
+use asignaturas\model\entity\Asignatura;
+use asignaturas\model\entity\GestorAsignatura;
+use core\ConfigGlobal;
+use notas\model\entity\GestorPersonaNotaDB;
+use personas\model\entity\Persona;
+use web\Hash;
+
 require_once("apps/core/global_header.inc");
 // Archivos requeridos por esta url **********************************************
 
@@ -27,7 +31,7 @@ require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
 echo "<script>fnjs_left_side_hide()</script>";
-include_once(core\ConfigGlobal::$dir_estilos . '/tessera.css.php');
+include_once(ConfigGlobal::$dir_estilos . '/tessera.css.php');
 
 // En el caso de actualizar la misma página (cara A-B) solo me quedo con la última.
 $Qrefresh = (integer)filter_input(INPUT_POST, 'refresh');
@@ -62,7 +66,7 @@ if (!empty($a_sel)) { //vengo de un checkbox
 $Qcara = (string)filter_input(INPUT_POST, 'cara');
 $Qcara = empty($Qcara) ? "A" : $Qcara;
 
-$oPersona = personas\Persona::NewPersona($id_nom);
+$oPersona = Persona::NewPersona($id_nom);
 if (!is_object($oPersona)) {
     $msg_err = "<br>$oPersona con id_nom: $id_nom en  " . __FILE__ . ": line " . __LINE__;
     exit($msg_err);
@@ -188,11 +192,11 @@ $rowEmpty = [
     'nota' => '',
 ];
 // -----------------------------  cabecera ---------------------------------
-$caraA = web\Hash::link('apps/notas/controller/tessera_imprimir.php?' . http_build_query(array('cara' => 'A', 'id_nom' => $id_nom, 'id_tabla' => $id_tabla, 'refresh' => 1)));
-$caraB = web\Hash::link('apps/notas/controller/tessera_imprimir.php?' . http_build_query(array('cara' => 'B', 'id_nom' => $id_nom, 'id_tabla' => $id_tabla, 'refresh' => 1)));
+$caraA = Hash::link('apps/notas/controller/tessera_imprimir.php?' . http_build_query(array('cara' => 'A', 'id_nom' => $id_nom, 'id_tabla' => $id_tabla, 'refresh' => 1)));
+$caraB = Hash::link('apps/notas/controller/tessera_imprimir.php?' . http_build_query(array('cara' => 'B', 'id_nom' => $id_nom, 'id_tabla' => $id_tabla, 'refresh' => 1)));
 
-$oHash = new web\Hash();
-$oHash->setUrl(core\ConfigGlobal::getWeb() . '/apps/notas/controller/tessera_2_mpdf.php');
+$oHash = new Hash();
+$oHash->setUrl(ConfigGlobal::getWeb() . '/apps/notas/controller/tessera_2_mpdf.php');
 $oHash->setCamposForm('id_nom!id_tabla');
 $h = $oHash->linkSinVal();
 
@@ -209,7 +213,7 @@ $h = $oHash->linkSinVal();
                                  onclick="fnjs_update_div('#main','<?= $caraB ?>')"><?= _("Cara B (detrás)"); ?></span>
         </td>
         <td align="center"><span class=link
-                                 onclick='window.open("<?= core\ConfigGlobal::getWeb() ?>/apps/notas/controller/tessera_2_mpdf.php?id_nom=<?= $id_nom ?>&id_tabla=<?= $id_tabla ?><?= $h ?>&PHPSESSID=<?= session_id(); ?>", "sele");'>
+                                 onclick='window.open("<?= ConfigGlobal::getWeb() ?>/apps/notas/controller/tessera_2_mpdf.php?id_nom=<?= $id_nom ?>&id_tabla=<?= $id_tabla ?><?= $h ?>&PHPSESSID=<?= session_id(); ?>", "sele");'>
 <?= _("PDF"); ?></span></td>
     </tr>
 </table>
@@ -240,7 +244,7 @@ $h = $oHash->linkSinVal();
     }
 
     // Asignaturas posibles:
-    $GesAsignaturas = new asignaturas\GestorAsignatura();
+    $GesAsignaturas = new GestorAsignatura();
     $aWhere = array();
     $aOperador = array();
     $aWhere['status'] = 't';
@@ -250,7 +254,7 @@ $h = $oHash->linkSinVal();
     $cAsignaturas = $GesAsignaturas->getAsignaturas($aWhere, $aOperador);
 
     // Asignaturas cursadas:
-    $GesNotas = new notas\GestorPersonaNotaDB();
+    $GesNotas = new GestorPersonaNotaDB();
     $aWhere = array();
     $aOperador = array();
     $aWhere['id_nom'] = $id_nom;
@@ -264,11 +268,11 @@ $h = $oHash->linkSinVal();
         $acta = $oPersonaNota->getActa();
         $f_acta = $oPersonaNota->getF_acta()->getFromLocal();
 
-        $oAsig = new asignaturas\Asignatura($id_asignatura);
+        $oAsig = new Asignatura($id_asignatura);
         if ($id_asignatura > 3000) {
             $id_nivel_asig = $id_nivel;
         } else {
-            if ($oAsig->getStatus() != 't') continue;
+            if ($oAsig->getStatus() !== 't') continue;
             $id_nivel_asig = $oAsig->getId_nivel();
         }
         $n = $id_nivel_asig;

@@ -1,10 +1,10 @@
 <?php
 namespace actividadcargos\model\entity;
 
-use core;
+use core\ClaseGestor;
 use core\Condicion;
 use core\Set;
-use web;
+use web\Desplegable;
 
 /**
  * GestorCargo
@@ -17,7 +17,7 @@ use web;
  * @version 1.0
  * @created 19/11/2014
  */
-class GestorCargo extends core\ClaseGestor
+class GestorCargo extends ClaseGestor
 {
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
@@ -41,9 +41,9 @@ class GestorCargo extends core\ClaseGestor
      * Retorna un array amb els id_cargo de un tipo de cargo.
      *
      * @param string $tipo_cargo
-     * @return array $aIdCargo[$id_cargo] = $cargo;
+     * @return array|false
      */
-    public function getArrayCargosDeTipo($tipo_cargo = 'sacd')
+    public function getArrayCargosDeTipo(string $tipo_cargo = 'sacd')
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
@@ -70,7 +70,7 @@ class GestorCargo extends core\ClaseGestor
      * retorna un objecte del tipus Desplegable
      * Els posibles cargos.
      *
-     * @return array Una Llista
+     * @return array|false
      */
     function getListaCargos()
     {
@@ -88,7 +88,7 @@ class GestorCargo extends core\ClaseGestor
             $val = $aClave[1];
             $aOpciones[$clave] = $val;
         }
-        return new web\Desplegable('', $aOpciones, '', true);
+        return new Desplegable('', $aOpciones, '', true);
     }
 
 
@@ -96,7 +96,7 @@ class GestorCargo extends core\ClaseGestor
      * retorna l'array d'objectes de tipus cargo
      *
      * @param string sQuery la query a executar.
-     * @return array Una col·lecció d'objectes de tipus cargo
+     * @return array|false
      */
     function getCargosQuery($sQuery = '')
     {
@@ -120,7 +120,7 @@ class GestorCargo extends core\ClaseGestor
      *
      * @param array aWhere associatiu amb els valors de les variables amb les quals farem la query
      * @param array aOperators associatiu amb els valors dels operadors que cal aplicar a cada variable
-     * @return array Una col·lecció d'objectes de tipus cargo
+     * @return array|void
      */
     function getCargos($aWhere = array(), $aOperators = array())
     {
@@ -130,13 +130,13 @@ class GestorCargo extends core\ClaseGestor
         $oCondicion = new Condicion();
         $aCondi = array();
         foreach ($aWhere as $camp => $val) {
-            if ($camp == '_ordre') continue;
+            if ($camp === '_ordre') continue;
             $sOperador = isset($aOperators[$camp]) ? $aOperators[$camp] : '';
             if ($a = $oCondicion->getCondicion($camp, $sOperador, $val)) $aCondi[] = $a;
             // operadores que no requieren valores
-            if ($sOperador == 'BETWEEN' || $sOperador == 'IS NULL' || $sOperador == 'IS NOT NULL' || $sOperador == 'OR') unset($aWhere[$camp]);
-            if ($sOperador == 'IN' || $sOperador == 'NOT IN') unset($aWhere[$camp]);
-            if ($sOperador == 'TXT') unset($aWhere[$camp]);
+            if ($sOperador === 'BETWEEN' || $sOperador === 'IS NULL' || $sOperador === 'IS NOT NULL' || $sOperador === 'OR') unset($aWhere[$camp]);
+            if ($sOperador === 'IN' || $sOperador === 'NOT IN') unset($aWhere[$camp]);
+            if ($sOperador === 'TXT') unset($aWhere[$camp]);
         }
         $sCondi = implode(' AND ', $aCondi);
         if ($sCondi != '') $sCondi = " WHERE " . $sCondi;

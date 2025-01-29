@@ -1,13 +1,14 @@
 <?php 
 // INICIO Cabecera global de URL de controlador *********************************
-	require_once ("apps/core/global_header.inc");
+	use core\ConfigGlobal;
+    require_once ("apps/core/global_header.inc");
 // Archivos requeridos por esta url **********************************************
 
 // Crea los objetos de uso global **********************************************
 	require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-include_once (core\ConfigGlobal::$dir_estilos.'/colores.php'); 
+include_once (ConfigGlobal::$dir_estilos.'/colores.php');
 ?>
 <!-- PAGINA DE ESTILO: <?= __FILE__; ?> -->
 <style>

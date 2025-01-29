@@ -2,11 +2,11 @@
 
 namespace devel\model;
 
-use core;
-
 /* No vale el underscore en el nombre */
 
-class InfoApps extends core\DatosInfo
+use core\DatosInfo;
+
+class InfoApps extends DatosInfo
 {
 
     public function __construct()

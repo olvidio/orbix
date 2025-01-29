@@ -209,7 +209,7 @@ class DBAlterSchema
      * @param array $aDefaults
      *       ['tabla' => 'a_actividad_proceso_sf', 'campo' => 'id_schema', 'valor' => "idschema('H-dlx'::text)"],
      */
-    public function setDefaults($aDefaults)
+    public function setDefaults(array $aDefaults)
     {
         foreach ($aDefaults as $cambio) {
             $tabla = $cambio['tabla'];
@@ -248,7 +248,7 @@ class DBAlterSchema
      * @param array $aDatos
      *   ['tabla' => 'u_centros_dl', 'campo' => 'id_zona'],
      */
-    public function setNullDatos($aDatos)
+    public function setNullDatos(array $aDatos)
     {
         $oDbl = $this->getoDbl();
         foreach ($aDatos as $cambio) {
@@ -281,7 +281,7 @@ class DBAlterSchema
      * @param array $aDatos
      *      ['tabla' => 'da_plazas_dl', 'campo' => 'id_dl', 'old' => "$id_dl_old", 'new' => "$id_dl_new"],
      */
-    public function updateDatos($aDatos)
+    public function updateDatos(array $aDatos)
     {
         foreach ($aDatos as $cambio) {
             $tabla = $cambio['tabla'];
@@ -320,7 +320,7 @@ class DBAlterSchema
      * @param array $aDatos
      *     ['tabla' => 'a_actividades_dl', 'campo' => 'dl_org', 'pattern' => "$dl_old(.*)", 'replacement' => "$DlNew\1"]
      */
-    public function updateDatosRegexp($aDatos)
+    public function updateDatosRegexp(array $aDatos)
     {
         foreach ($aDatos as $cambio) {
             $tabla = $cambio['tabla'];
@@ -416,7 +416,7 @@ class DBAlterSchema
      * @param array $aDatos
      *     ['tabla' => 'a_actividades_dl', 'campo' => 'dl_org', 'pattern' => "$dl_old(.*)", 'replacement' => "$DlNew\1"]
      */
-    public function updateDatosRegexpTodos($aDatos)
+    public function updateDatosRegexpTodos(array $aDatos)
     {
         foreach ($aDatos as $cambio) {
             $tabla = $cambio['tabla'];
@@ -436,7 +436,7 @@ class DBAlterSchema
      *
      * @param string $dl_new (dl_org)
      */
-    public function asistentesOut2Dl($dl_new)
+    public function asistentesOut2Dl(string $dl_new)
     {
         // conectar con DB comun:
         $oConfigDB = new ConfigDB('importar'); //de la database comun
@@ -671,7 +671,7 @@ class DBAlterSchema
      * @param string $esquema
      * @return boolean
      */
-    public function quitarHerencias($conexionDB, $esquema)
+    public function quitarHerencias(\PDO $conexionDB, string $esquema)
     {
 
         $sql = "SELECT c.relname AS child, p.relname AS parent, n1.nspname as schema_parent, n.nspname as schema_child 

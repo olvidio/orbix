@@ -6,6 +6,7 @@ use actividadplazas\model\entity\GestorPlazaPeticion;
 use asistentes\model\entity\Asistente;
 use asistentes\model\entity\GestorAsistente;
 use core\ConfigGlobal;
+use core\ViewTwig;
 use personas\model\entity\PersonaDl;
 use web\Hash;
 use web\Lista;
@@ -80,7 +81,7 @@ $id_tipo_activ = $oActividad->getId_tipo_activ();
 $oTipoActividad = new TiposActividades($id_tipo_activ);
 $sactividad = $oTipoActividad->getActividadText();
 
-$mi_dele = core\ConfigGlobal::mi_delef();
+$mi_dele = ConfigGlobal::mi_delef();
 $gesDelegacion = new GestorDelegacion();
 $cDelegaciones = $gesDelegacion->getDelegaciones(array('dl' => $mi_dele));
 $oDelegacion = $cDelegaciones[0];
@@ -178,5 +179,5 @@ $a_campos = ['oPosicion' => $oPosicion,
     'oTabla' => $oTabla,
 ];
 
-$oView = new core\ViewTwig('asistentes/controller');
+$oView = new ViewTwig('asistentes/controller');
 $oView->renderizar('tabla_peticiones.html.twig', $a_campos);

@@ -103,7 +103,7 @@ class Error extends \RuntimeException {
      */
     public function getStartColumn(string $code): int {
         if (!$this->hasColumnInfo()) {
-            throw new \RuntimeException('Error does not have column information');
+            throw new RunTimeException('Error does not have column information');
         }
 
         return $this->toColumn($code, $this->attributes['startFilePos']);
@@ -116,7 +116,7 @@ class Error extends \RuntimeException {
      */
     public function getEndColumn(string $code): int {
         if (!$this->hasColumnInfo()) {
-            throw new \RuntimeException('Error does not have column information');
+            throw new RunTimeException('Error does not have column information');
         }
 
         return $this->toColumn($code, $this->attributes['endFilePos']);
@@ -147,7 +147,7 @@ class Error extends \RuntimeException {
      */
     private function toColumn(string $code, int $pos): int {
         if ($pos > strlen($code)) {
-            throw new \RuntimeException('Invalid position information');
+            throw new RunTimeException('Invalid position information');
         }
 
         $lineStartPos = strrpos($code, "\n", $pos - strlen($code));

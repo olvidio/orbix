@@ -1,6 +1,6 @@
 <script>
     <?php
-    if (core\ConfigGlobal::is_app_installed('actividadplazas')) {
+    use core\ConfigGlobal;if (ConfigGlobal::is_app_installed('actividadplazas')) {
     ?>
     fnjs_cmb_plaza = function (formulario, plaza) {
         var form = $(formulario).attr('id');

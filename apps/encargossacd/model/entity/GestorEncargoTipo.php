@@ -2,7 +2,9 @@
 
 namespace encargossacd\model\entity;
 
-use core;
+use core\ClaseGestor;
+use core\Condicion;
+use core\Set;
 use encargossacd\model\EncargoFuncionesTrait;
 
 /**
@@ -16,7 +18,7 @@ use encargossacd\model\EncargoFuncionesTrait;
  * @version 1.0
  * @created 11/01/2019
  */
-class GestorEncargoTipo extends core\ClaseGestor
+class GestorEncargoTipo extends ClaseGestor
 {
     use EncargoFuncionesTrait;
 
@@ -47,7 +49,7 @@ class GestorEncargoTipo extends core\ClaseGestor
      *    Si un parámetro se omite, se pone un punto (.) para que la búsqueda sea qualquier número
      *    ejemplo: 12....
      */
-    public function id_tipo_encargo($grupo, $nom_tipo)
+    public static function id_tipo_encargo($grupo, $nom_tipo)
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
@@ -57,7 +59,7 @@ class GestorEncargoTipo extends core\ClaseGestor
         $condta3 = '..';
         $condta = $condta1 . $condta2 . $condta3;
 
-        if ($nom_tipo and $nom_tipo != "...") {
+        if ($nom_tipo and $nom_tipo !== "...") {
             $condicion = "id_tipo_enc::text ~ '" . $condta . "'";
             $query = "SELECT * FROM $nom_tabla where $condicion";
             if (($oDblSt = $oDbl->query($query)) === FALSE) {
@@ -98,7 +100,7 @@ class GestorEncargoTipo extends core\ClaseGestor
         $ta1 = substr($id_tipo_enc, 0, 1);
         $ta2 = substr($id_tipo_enc, 1, 3);
 
-        if ($ta1 == ".") {
+        if ($ta1 === ".") {
             ksort($ft_grupo);
             $grupo = $ft_grupo;
         } else {
@@ -114,7 +116,7 @@ class GestorEncargoTipo extends core\ClaseGestor
         }
 
         $nom_tipo = [];
-        if ($ta2 == "...") {
+        if ($ta2 === "...") {
             $i = 0;
             foreach ($oDblSt->fetchAll() as $row) {
                 $nom_tipo[$row["id_tipo_enc"]] = $row["tipo_enc"];
@@ -137,12 +139,12 @@ class GestorEncargoTipo extends core\ClaseGestor
      * retorna l'array d'objectes de tipus EncargoTipo
      *
      * @param string sQuery la query a executar.
-     * @return array Una col·lecció d'objectes de tipus EncargoTipo
+     * @return array|false
      */
     function getEncargoTiposQuery($sQuery = '')
     {
         $oDbl = $this->getoDbl();
-        $oEncargoTipoSet = new core\Set();
+        $oEncargoTipoSet = new Set();
         if (($oDbl->query($sQuery)) === FALSE) {
             $sClauError = 'GestorEncargoTipo.query';
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
@@ -161,23 +163,23 @@ class GestorEncargoTipo extends core\ClaseGestor
      *
      * @param array aWhere associatiu amb els valors de les variables amb les quals farem la query
      * @param array aOperators associatiu amb els valors dels operadors que cal aplicar a cada variable
-     * @return array Una col·lecció d'objectes de tipus EncargoTipo
+     * @return array|void
      */
     function getEncargoTipos($aWhere = array(), $aOperators = array())
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
-        $oEncargoTipoSet = new core\Set();
-        $oCondicion = new core\Condicion();
+        $oEncargoTipoSet = new Set();
+        $oCondicion = new Condicion();
         $aCondi = array();
         foreach ($aWhere as $camp => $val) {
-            if ($camp == '_ordre') continue;
+            if ($camp === '_ordre') continue;
             $sOperador = isset($aOperators[$camp]) ? $aOperators[$camp] : '';
             if ($a = $oCondicion->getCondicion($camp, $sOperador, $val)) $aCondi[] = $a;
             // operadores que no requieren valores
-            if ($sOperador == 'BETWEEN' || $sOperador == 'IS NULL' || $sOperador == 'IS NOT NULL' || $sOperador == 'OR') unset($aWhere[$camp]);
-            if ($sOperador == 'IN' || $sOperador == 'NOT IN') unset($aWhere[$camp]);
-            if ($sOperador == 'TXT') unset($aWhere[$camp]);
+            if ($sOperador === 'BETWEEN' || $sOperador === 'IS NULL' || $sOperador === 'IS NOT NULL' || $sOperador === 'OR') unset($aWhere[$camp]);
+            if ($sOperador === 'IN' || $sOperador === 'NOT IN') unset($aWhere[$camp]);
+            if ($sOperador === 'TXT') unset($aWhere[$camp]);
         }
         $sCondi = implode(' AND ', $aCondi);
         if ($sCondi != '') $sCondi = " WHERE " . $sCondi;

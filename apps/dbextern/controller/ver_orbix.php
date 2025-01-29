@@ -1,5 +1,8 @@
 <?php
 // INICIO Cabecera global de URL de controlador *********************************
+use core\ConfigGlobal;
+use web\Hash;
+
 require_once("apps/core/global_header.inc");
 // Archivos requeridos por esta url **********************************************
 
@@ -124,8 +127,8 @@ if ($max === 0) {
 
     $a_lista_bdu = $oSincroDB->posiblesBDU($id_nom_orbix);
 
-    $url_sincro_ver = core\ConfigGlobal::getWeb() . '/apps/dbextern/controller/ver_orbix.php';
-    $oHash = new web\Hash();
+    $url_sincro_ver = ConfigGlobal::getWeb() . '/apps/dbextern/controller/ver_orbix.php';
+    $oHash = new Hash();
     $oHash->setUrl($url_sincro_ver);
     $oHash->setcamposNo('mov');
     $a_camposHidden = array(
@@ -135,8 +138,8 @@ if ($max === 0) {
     );
     $oHash->setArraycamposHidden($a_camposHidden);
 
-    $url_sincro_ajax = core\ConfigGlobal::getWeb() . '/apps/dbextern/controller/sincro_ajax.php';
-    $oHash1 = new web\Hash();
+    $url_sincro_ajax = ConfigGlobal::getWeb() . '/apps/dbextern/controller/sincro_ajax.php';
+    $oHash1 = new Hash();
     $oHash1->setUrl($url_sincro_ajax);
     $oHash1->setCamposForm('que!region!dl!id_nom_listas!id!id_orbix!tipo_persona');
     $h1 = $oHash1->linkSinVal();

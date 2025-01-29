@@ -2,14 +2,16 @@
 
 use actividades\model\entity\GestorTipoDeActividad;
 use core\ConfigGlobal;
-use function core\is_true;
+use core\ViewTwig;
 use permisos\model\PermisosActividades;
-use procesos\model\PermAccion;
+use web\Desplegable;
+use web\Hash;
+use web\TiposActividades;
 use procesos\model\entity\GestorActividadFase;
 use procesos\model\entity\GestorPermUsuarioActividad;
+use procesos\model\PermAccion;
 use usuarios\model\entity\GrupoOUsuario;
-use web\Desplegable;
-use web\TiposActividades;
+use function core\is_true;
 
 // INICIO Cabecera global de URL de controlador *********************************
 require_once("apps/core/global_header.inc");
@@ -131,7 +133,7 @@ foreach ($aAfecta_a as $afecta_a_txt => $num) {
     $i++; // para que cuente los indices desde 0.
 }
 
-$oHash = new web\Hash();
+$oHash = new Hash();
 $oHash->setCamposForm('dl_propia!fase_ref!extendida!iactividad_val!iasistentes_val!inom_tipo_val!isfsv_val!perm_on!perm_off');
 $oHash->setCamposNo('afecta_a!id_tipo_activ');
 $a_camposHidden = array(
@@ -143,8 +145,8 @@ $a_camposHidden = array(
 $oHash->setArraycamposHidden($a_camposHidden);
 
 
-$url_actualizar = core\ConfigGlobal::getWeb() . '/apps/procesos/controller/usuario_perm_activ_ajax.php';
-$oHash1 = new web\Hash();
+$url_actualizar = ConfigGlobal::getWeb() . '/apps/procesos/controller/usuario_perm_activ_ajax.php';
+$oHash1 = new Hash();
 $oHash1->setUrl($url_actualizar);
 $oHash1->setCamposForm('dl_propia!id_tipo_activ');
 $h_actualizar = $oHash1->linkSinVal();
@@ -170,5 +172,5 @@ $a_campos = [
     'extendida' => TRUE,
 ];
 
-$oView = new core\ViewTwig('procesos/controller');
+$oView = new ViewTwig('procesos/controller');
 $oView->renderizar('usuario_perm_activ.html.twig', $a_campos);

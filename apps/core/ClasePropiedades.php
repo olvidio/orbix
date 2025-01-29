@@ -23,6 +23,10 @@ abstract class ClasePropiedades
      */
     protected $sErrorTxt;
     /* MÉTODOS GET y SET --------------------------------------------------------*/
+    /**
+     * @var mixed|string
+     */
+    private $iid_schema;
 
 
     /**
@@ -43,7 +47,7 @@ abstract class ClasePropiedades
      *
      * @param integer iid_schema='' optional
      */
-    function setId_schema($iid_schema = '')
+    function setId_schema($iid_schema = null)
     {
         $this->iid_schema = $iid_schema;
     }
@@ -126,7 +130,7 @@ abstract class ClasePropiedades
      * @param string $sErrorTxt
      * @return ClasePropiedades
      */
-    public function setErrorTxt($sErrorTxt)
+    public function setErrorTxt(string $sErrorTxt)
     {
         $this->sErrorTxt = $sErrorTxt;
         return $this;

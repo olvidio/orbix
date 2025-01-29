@@ -2,7 +2,7 @@
 
 namespace ubis\model\entity;
 
-use core;
+use core\ClasePropiedades;
 use core\DatosCampo;
 use core\Set;
 
@@ -25,7 +25,7 @@ use core\Set;
  * @version 1.0
  * @created 6/10/2022
  */
-class TarifaUbi extends core\ClasePropiedades
+class TarifaUbi extends ClasePropiedades
 {
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
@@ -212,7 +212,7 @@ class TarifaUbi extends core\ClasePropiedades
                     return FALSE;
                 }
             }
-            $this->id_item = $oDbl->lastInsertId('du_tarifas_id_item_seq');
+            $this->iid_item = $oDbl->lastInsertId('du_tarifas_id_item_seq');
         }
         $this->setAllAtributes($aDades);
         return TRUE;
@@ -280,7 +280,7 @@ class TarifaUbi extends core\ClasePropiedades
      *
      * @param array $aDades
      */
-    function setAllAtributes($aDades)
+    function setAllAtributes(array $aDades)
     {
         if (!is_array($aDades)) return;
         if (array_key_exists('id_schema', $aDades)) $this->setId_schema($aDades['id_schema']);

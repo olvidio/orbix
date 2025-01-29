@@ -1,10 +1,10 @@
 <?php
 
-use ubis\model\entity\GestorDelegacion;
-use ubis\model\entity\GestorDireccion;
-use ubis\model\entity\GestorRegion;
+use core\ViewTwig;
 use web\Hash;
+use ubis\model\entity\GestorDelegacion;
 use ubis\model\entity\GestorDireccionCtr;
+use ubis\model\entity\GestorRegion;
 
 /**
  * Es un formulario para introducir las condiciones de búsqueda de los ubis.
@@ -55,5 +55,5 @@ $a_campos = ['oPosicion' => $oPosicion,
     'oDesplDelegacion' => $oDesplDelegacion,
 ];
 
-$oView = new core\ViewTwig('cartaspresentacion/controller');
+$oView = new ViewTwig('cartaspresentacion/controller');
 $oView->renderizar('cartas_presentacion_buscar.html.twig', $a_campos);

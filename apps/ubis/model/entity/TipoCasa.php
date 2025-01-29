@@ -1,7 +1,9 @@
 <?php
 namespace ubis\model\entity;
 
-use core;
+use core\ClasePropiedades;
+use core\DatosCampo;
+use core\Set;
 
 /**
  * Clase que implementa la entidad xu_tipo_casa
@@ -12,7 +14,7 @@ use core;
  * @version 1.0
  * @created 01/10/2010
  */
-class TipoCasa extends core\ClasePropiedades
+class TipoCasa extends ClasePropiedades
 {
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
@@ -206,7 +208,7 @@ class TipoCasa extends core\ClasePropiedades
      *
      * @param array $aDades
      */
-    function setAllAtributes($aDades)
+    function setAllAtributes(array $aDades)
     {
         if (!is_array($aDades)) return;
         if (array_key_exists('tipo_casa', $aDades)) $this->setTipo_casa($aDades['tipo_casa']);
@@ -321,7 +323,7 @@ class TipoCasa extends core\ClasePropiedades
      */
     function getDatosCampos()
     {
-        $oTipoDeCasaSet = new core\Set();
+        $oTipoDeCasaSet = new Set();
 
         $oTipoDeCasaSet->add($this->getDatosTipo_casa());
         $oTipoDeCasaSet->add($this->getDatosNombre_tipo_casa());
@@ -333,12 +335,12 @@ class TipoCasa extends core\ClasePropiedades
      * Recupera les propietats de l'atribut stipo_casa de TipoDeCasa
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosTipo_casa()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'tipo_casa'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'tipo_casa'));
         $oDatosCampo->setEtiqueta(_("tipo de casa"));
         $oDatosCampo->setTipo('texto');
         $oDatosCampo->setArgument(6);
@@ -349,12 +351,12 @@ class TipoCasa extends core\ClasePropiedades
      * Recupera les propietats de l'atribut snombre_tipo_casa de TipoDeCasa
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosNombre_tipo_casa()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'nombre_tipo_casa'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'nombre_tipo_casa'));
         $oDatosCampo->setEtiqueta(_("nombre del tipo de casa"));
         $oDatosCampo->setTipo('texto');
         $oDatosCampo->setArgument(30);

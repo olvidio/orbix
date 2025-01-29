@@ -2,10 +2,15 @@
 namespace asistentes\model\entity;
 
 use actividades\model\entity\Actividad;
+use actividadplazas\model\GestorResumenPlazas;
 use cambios\model\GestorAvisoCambios;
+use core\ClasePropiedades;
 use core\ConfigGlobal;
-use core;
+use core\DatosCampo;
+use core\Set;
 use personas\model\entity\Persona;
+use ReflectionClass;
+use function core\is_true;
 
 /**
  * Fitxer amb la Classe que accedeix a la taula d_asistentes_de_paso
@@ -26,7 +31,7 @@ use personas\model\entity\Persona;
  * @version 1.0
  * @created 11/03/2014
  */
-class AsistentePub extends core\ClasePropiedades
+class AsistentePub extends ClasePropiedades
 {
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
@@ -180,7 +185,7 @@ class AsistentePub extends core\ClasePropiedades
      * @param integer $id_tabla de la actividad
      * @param integer optional $id_activ de la actividad
      */
-    public function getClaseAsistente($id_nom, $id_activ)
+    public function getClaseAsistente(string $id_nom, $id_activ)
     {
         $msg_err = '';
         // Comprobar si ya existe la asistencia.
@@ -200,7 +205,7 @@ class AsistentePub extends core\ClasePropiedades
         // si es de la sf quito la 'f'
         $dl = preg_replace('/f$/', '', $oActividad->getDl_org());
 
-        if ($dl == core\ConfigGlobal::mi_delef()) {
+        if ($dl == ConfigGlobal::mi_delef()) {
             switch ($obj_persona) {
                 case 'PersonaN':
                 case 'PersonaNax':
@@ -223,7 +228,7 @@ class AsistentePub extends core\ClasePropiedades
         } else {
             // Creo que en cualquier caso debe ser un asistente Out.
             // El Ex es solo para una persona Ex ?¿
-            if ($obj_persona == 'PersonaEx') {
+            if ($obj_persona === 'PersonaEx') {
                 $clase = 'asistentes\\model\\entity\\AsistenteEx';
             } else {
                 $clase = 'asistentes\\model\\entity\\AsistenteOut';
@@ -249,8 +254,8 @@ class AsistentePub extends core\ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'id_activ') && $val_id !== '') $this->iid_activ = (int)$val_id; 
-                if (($nom_id == 'id_nom') && $val_id !== '') $this->iid_nom = (int)$val_id; 
+                if (($nom_id === 'id_activ') && $val_id !== '') $this->iid_activ = (int)$val_id;
+                if (($nom_id === 'id_nom') && $val_id !== '') $this->iid_nom = (int)$val_id;
             }
         }
         $this->setoDbl($oDbl);
@@ -290,22 +295,22 @@ class AsistentePub extends core\ClasePropiedades
         //$aDades['id_tabla'] = $this->sid_tabla;
         array_walk($aDades, 'core\poner_null');
         //para el caso de los boolean FALSE, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
-        if (core\is_true($aDades['propio'])) {
+        if (is_true($aDades['propio'])) {
             $aDades['propio'] = 'true';
         } else {
             $aDades['propio'] = 'false';
         }
-        if (core\is_true($aDades['est_ok'])) {
+        if (is_true($aDades['est_ok'])) {
             $aDades['est_ok'] = 'true';
         } else {
             $aDades['est_ok'] = 'false';
         }
-        if (core\is_true($aDades['cfi'])) {
+        if (is_true($aDades['cfi'])) {
             $aDades['cfi'] = 'true';
         } else {
             $aDades['cfi'] = 'false';
         }
-        if (core\is_true($aDades['falta'])) {
+        if (is_true($aDades['falta'])) {
             $aDades['falta'] = 'true';
         } else {
             $aDades['falta'] = 'false';
@@ -345,7 +350,7 @@ class AsistentePub extends core\ClasePropiedades
             // Anoto el cambio si o si.
             if (empty($quiet)) {
                 $oGestorCanvis = new GestorAvisoCambios();
-                $shortClassName = (new \ReflectionClass($this))->getShortName();
+                $shortClassName = (new ReflectionClass($this))->getShortName();
                 $oGestorCanvis->addCanvi($shortClassName, 'UPDATE', $this->iid_activ, $aDades, $this->aDadesActuals);
             }
             $this->setAllAtributes($aDades);
@@ -382,7 +387,7 @@ class AsistentePub extends core\ClasePropiedades
             // Anoto el cambio si o si.
             if (empty($quiet)) {
                 $oGestorCanvis = new GestorAvisoCambios();
-                $shortClassName = (new \ReflectionClass($this))->getShortName();
+                $shortClassName = (new ReflectionClass($this))->getShortName();
                 $oGestorCanvis->addCanvi($shortClassName, 'INSERT', $aDadesLast['id_activ'], $this->aDades, array());
             }
         }
@@ -437,12 +442,12 @@ class AsistentePub extends core\ClasePropiedades
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         // que tenga el módulo de 'cambios'
-        if (core\ConfigGlobal::is_app_installed('cambios')) {
+        if (ConfigGlobal::is_app_installed('cambios')) {
             // per carregar les dades a $this->aDadesActuals i poder posar-les als canvis.
             $this->DBCarregar('guardar');
             // ho poso abans d'esborrar perque sino no trova cap valor. En el cas d'error s'hauria d'esborrar l'apunt.
             $oGestorCanvis = new GestorAvisoCambios();
-            $shortClassName = (new \ReflectionClass($this))->getShortName();
+            $shortClassName = (new ReflectionClass($this))->getShortName();
             $oGestorCanvis->addCanvi($shortClassName, 'DELETE', $this->iid_activ, array(), $this->aDadesActuals);
         }
         if (($oDbl->exec("DELETE FROM $nom_tabla WHERE id_activ='$this->iid_activ' AND id_nom=$this->iid_nom")) === false) {
@@ -461,7 +466,7 @@ class AsistentePub extends core\ClasePropiedades
      *
      * @param array $aDades
      */
-    function setAllAtributes($aDades)
+    function setAllAtributes(array $aDades)
     {
         if (!is_array($aDades)) return;
         if (array_key_exists('id_schema', $aDades)) $this->setId_schema($aDades['id_schema']);
@@ -862,7 +867,7 @@ class AsistentePub extends core\ClasePropiedades
         // tipos de actividad para los que no hay que comprobar la plaza
         // 132500 => agd ca sem invierno
         //$aId_tipo_activ_no = [132500,00000];
-        //$oActividad = new \actividades\model\entity\Actividad($this->iid_activ);
+        //$oActividad = new Actividad($this->iid_activ);
         //$id_tipo_activ = $oActividad->getId_tipo_activ();
         //if (in_array($id_tipo_activ, $aId_tipo_activ_no)) {
         //	return $this->setPlazaSinComprobar($iplaza);
@@ -872,7 +877,7 @@ class AsistentePub extends core\ClasePropiedades
         $plaza_actual = $this->getPlaza();
 
         if ($plaza_actual < Asistente::PLAZA_DENEGADA && $iplaza > Asistente::PLAZA_DENEGADA) {
-            $gesActividadPlazasR = new \actividadplazas\model\GestorResumenPlazas();
+            $gesActividadPlazasR = new GestorResumenPlazas();
             $gesActividadPlazasR->setId_activ($this->iid_activ);
             if ($gesActividadPlazasR->getLibres() > 0) {
                 $this->iplaza = $iplaza;
@@ -951,7 +956,7 @@ class AsistentePub extends core\ClasePropiedades
      */
     function getDatosCampos()
     {
-        $oAsistentePubSet = new core\Set();
+        $oAsistentePubSet = new Set();
 
         //$oAsistentePubSet->add($this->getDatosId_activ());
         $oAsistentePubSet->add($this->getDatosId_nom());
@@ -972,12 +977,12 @@ class AsistentePub extends core\ClasePropiedades
      * Recupera les propietats de l'atribut iid_activ de AsistentePub
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosId_activ()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_activ'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_activ'));
         $oDatosCampo->setEtiqueta(_("id actividad"));
         return $oDatosCampo;
     }
@@ -987,12 +992,12 @@ class AsistentePub extends core\ClasePropiedades
      * Recupera les propietats de l'atribut iid_nom de AsistentePub
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosId_nom()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_nom'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_nom'));
         $oDatosCampo->setEtiqueta(_("id nombre"));
         return $oDatosCampo;
     }
@@ -1001,12 +1006,12 @@ class AsistentePub extends core\ClasePropiedades
      * Recupera les propietats de l'atribut bpropio de AsistentePub
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosPropio()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'propio'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'propio'));
         $oDatosCampo->setEtiqueta(_("propio"));
         return $oDatosCampo;
     }
@@ -1015,12 +1020,12 @@ class AsistentePub extends core\ClasePropiedades
      * Recupera les propietats de l'atribut best_ok de AsistentePub
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosEst_ok()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'est_ok'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'est_ok'));
         $oDatosCampo->setEtiqueta(_("est_ok"));
         return $oDatosCampo;
     }
@@ -1029,12 +1034,12 @@ class AsistentePub extends core\ClasePropiedades
      * Recupera les propietats de l'atribut bcfi de AsistentePub
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosCfi()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'cfi'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'cfi'));
         $oDatosCampo->setEtiqueta(_("cfi"));
         $oDatosCampo->setAviso(FALSE);
         return $oDatosCampo;
@@ -1044,12 +1049,12 @@ class AsistentePub extends core\ClasePropiedades
      * Recupera les propietats de l'atribut icfi_con de AsistentePub
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosCfi_con()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'cfi_con'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'cfi_con'));
         $oDatosCampo->setEtiqueta(_("cfi con"));
         $oDatosCampo->setAviso(FALSE);
         return $oDatosCampo;
@@ -1059,12 +1064,12 @@ class AsistentePub extends core\ClasePropiedades
      * Recupera les propietats de l'atribut bfalta de AsistentePub
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosFalta()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'falta'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'falta'));
         $oDatosCampo->setEtiqueta(_("falta"));
         return $oDatosCampo;
     }
@@ -1073,12 +1078,12 @@ class AsistentePub extends core\ClasePropiedades
      * Recupera les propietats de l'atribut sencargo de AsistentePub
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosEncargo()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'encargo'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'encargo'));
         $oDatosCampo->setEtiqueta(_("encargo"));
         $oDatosCampo->setAviso(FALSE);
         return $oDatosCampo;
@@ -1088,12 +1093,12 @@ class AsistentePub extends core\ClasePropiedades
      * Recupera les propietats de l'atribut sdl_responsable de AsistentePub
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosdl_responsable()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'dl_responsable'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'dl_responsable'));
         $oDatosCampo->setEtiqueta(_("dl_responsable"));
         $oDatosCampo->setAviso(FALSE);
         return $oDatosCampo;
@@ -1103,12 +1108,12 @@ class AsistentePub extends core\ClasePropiedades
      * Recupera les propietats de l'atribut sobserv de AsistentePub
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosObserv()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'observ'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'observ'));
         $oDatosCampo->setEtiqueta(_("observaciones"));
         return $oDatosCampo;
     }
@@ -1117,12 +1122,12 @@ class AsistentePub extends core\ClasePropiedades
      * Recupera les propietats de l'atribut sobserv_est de AsistentePub
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosObserv_est()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'observ_est'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'observ_est'));
         $oDatosCampo->setEtiqueta(_("observaciones estudios"));
         return $oDatosCampo;
     }
@@ -1131,12 +1136,12 @@ class AsistentePub extends core\ClasePropiedades
      * Recupera les propietats de l'atribut iplaza de AsistentePub
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosPlaza()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'plaza'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'plaza'));
         $oDatosCampo->setEtiqueta(_("plaza"));
         return $oDatosCampo;
     }
@@ -1145,12 +1150,12 @@ class AsistentePub extends core\ClasePropiedades
      * Recupera les propietats de l'atribut spropietario de AsistentePub
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosPropietario()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'propietario'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'propietario'));
         $oDatosCampo->setEtiqueta(_("propietario"));
         return $oDatosCampo;
     }

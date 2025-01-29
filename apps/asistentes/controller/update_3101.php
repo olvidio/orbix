@@ -24,10 +24,10 @@
  *
  */
 
-use actividadestudios\model\entity as actividadestudios;
+use actividadestudios\model\entity\GestorMatricula;
 use asistentes\model\entity\AsistentePub;
 use core\ConfigGlobal;
-use dossiers\model\entity as dossiers;
+use dossiers\model\entity\Dossier;
 
 // INICIO Cabecera global de URL de controlador *********************************
 require_once("apps/core/global_header.inc");
@@ -76,12 +76,12 @@ function eliminar($id_activ, $id_nom)
         }
 
         // hay que cerrar el dossier para esta persona/actividad/ubi, si no tiene más:
-        $oDossier = new dossiers\Dossier(array('tabla' => 'p', 'id_pau' => $id_nom, 'id_tipo_dossier' => 1301));
+        $oDossier = new Dossier(array('tabla' => 'p', 'id_pau' => $id_nom, 'id_tipo_dossier' => 1301));
         $oDossier->cerrar();
         $oDossier->DBGuardar();
 
         // también borro las matriculas que pueda tener
-        $oGestorMatricula = new actividadestudios\GestorMatricula();
+        $oGestorMatricula = new GestorMatricula();
         foreach ($oGestorMatricula->getMatriculas(array('id_activ' => $id_activ, 'id_nom' => $id_nom)) as $oMatricula) {
             if ($oMatricula->DBEliminar() === false) {
                 $msg_err = _("hay un error, no se ha eliminado");
@@ -191,7 +191,7 @@ switch ($Qmod) {
     //------------ EDITAR --------
     case "nuevo":
         // hay que abrir el dossier para esta persona/actividad/ubi:
-        $oDossier = new dossiers\Dossier(array('tabla' => 'p', 'id_pau' => $Qid_nom, 'id_tipo_dossier' => 1301));
+        $oDossier = new Dossier(array('tabla' => 'p', 'id_pau' => $Qid_nom, 'id_tipo_dossier' => 1301));
         $oDossier->abrir();
         $oDossier->DBGuardar();
     case "editar":

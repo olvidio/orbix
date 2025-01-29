@@ -2,7 +2,6 @@
 
 namespace personas\model\entity;
 
-use core;
 use core\ConfigGlobal;
 use PDO;
 
@@ -54,7 +53,7 @@ class Persona
         }
 
         // para poder buscar sacd desde la sf
-        if (core\ConfigGlobal::mi_sfsv() == 2) {
+        if (ConfigGlobal::mi_sfsv() == 2) {
             if (substr($id_nom, 0, 1) == 1) {
                 $gesPersonaDl = new GestorPersonaSacd();
             }

@@ -13,11 +13,13 @@
 // INICIO Cabecera global de URL de controlador *********************************
 
 use core\ConfigGlobal;
-use function core\strtoupper_dlb;
-use usuarios\model\entity\Role;
-use usuarios\model\entity\Usuario;
+use core\ViewTwig;
 use web\CasasQue;
 use web\DesplegableArray;
+use usuarios\model\entity\Role;
+use usuarios\model\entity\Usuario;
+use web\Hash;
+use function core\strtoupper_dlb;
 
 require_once("apps/core/global_header.inc");
 // Archivos requeridos por esta url **********************************************
@@ -76,11 +78,11 @@ $oForm->setBoton("<input type=button name=\"buscar\" value=\"" . _('buscar') . "
 $url_ajax = 'apps/casas/controller/casa_ajax.php';
 $url_resumen = 'apps/casas/controller/casas_resumen_ajax.php';
 
-$oHash = new web\Hash();
+$oHash = new Hash();
 $sCamposForm = 'cdc_sel!id_cdc!id_cdc_mas!id_cdc_num!que';
 $oHash->setCamposForm($sCamposForm);
 
-$oHashEdit = new web\Hash();
+$oHashEdit = new Hash();
 $oHashEdit->setUrl($url_ajax);
 $oHashEdit->setCamposForm('que!id_activ');
 $h_edit = $oHashEdit->linkSinVal();
@@ -100,5 +102,5 @@ $a_campos = ['oPosicion' => $oPosicion,
     'periodo' => $Qperiodo,
 ];
 
-$oView = new core\ViewTwig('casas/controller');
+$oView = new ViewTwig('casas/controller');
 $oView->renderizar('casa_ec_que.html.twig', $a_campos);

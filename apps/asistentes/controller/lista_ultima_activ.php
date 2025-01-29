@@ -1,14 +1,14 @@
 <?php
 
 use actividades\model\entity\Actividad;
+use actividades\model\entity\GestorActividadDl;
 use asistentes\model\entity\GestorAsistente;
 use personas\model\entity\GestorPersonaS;
-use ubis\model\entity\CentroDl;
+use web\DateTimeLocal;
 use web\Lista;
 use web\TiposActividades;
+use ubis\model\entity\CentroDl;
 use ubis\model\entity\GestorCentroDl;
-use actividades\model\entity\GestorActividadDl;
-use web\DateTimeLocal;
 
 /**
  * Esta página lista las personas que asistieron hace x años a

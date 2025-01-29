@@ -2,6 +2,8 @@
 
 use personas\model\entity\GestorPersonaS;
 use ubis\model\entity\CentroDl;
+use web\Desplegable;
+use web\Hash;
 
 /**
  * Página para seleccionar el ctr de actividad pendiente
@@ -39,9 +41,9 @@ foreach ($aIdCentros as $id_ubi) {
 }
 natcasesort($aOpciones); // orenar por nombre ctr.
 $aOpciones['999'] = _("todos");
-$oDeplCentros = new web\Desplegable('id_ubi', $aOpciones, '', true);
+$oDeplCentros = new Desplegable('id_ubi', $aOpciones, '', true);
 
-$oHash = new web\Hash();
+$oHash = new Hash();
 $oHash->setCamposForm('id_ubi');
 $a_camposHidden = array(
     'que' => $Qque,

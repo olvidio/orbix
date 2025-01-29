@@ -3,10 +3,10 @@
 use actividades\model\entity\GestorTipoDeActividad;
 use actividades\model\entity\TipoDeActividad;
 use core\ConfigGlobal;
-use function core\is_true;
-use procesos\model\entity\GestorProcesoTipo;
 use web\Lista;
 use web\TiposActividades;
+use procesos\model\entity\GestorProcesoTipo;
+use function core\is_true;
 
 // INICIO Cabecera global de URL de controlador *********************************
 require_once("apps/core/global_header.inc");

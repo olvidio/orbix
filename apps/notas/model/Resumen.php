@@ -2,15 +2,17 @@
 
 namespace notas\model;
 
-use actividades\model\entity as actividades;
+use actividades\model\entity\Actividad;
+use actividades\model\entity\ActividadAll;
 use asignaturas\model\entity\Departamento;
 use asignaturas\model\entity\GestorAsignatura;
 use asignaturas\model\entity\GestorSector;
-use core;
+use core\ClasePropiedades;
 use core\ConfigGlobal;
 use notas\model\entity\GestorNota;
-use personas\model\entity as personas;
-use profesores\model\entity as profesores;
+use personas\model\entity\PersonaDl;
+use profesores\model\entity\GestorProfesorDirector;
+use function core\is_true;
 
 /**
  * Fitxer amb la Classe que accedeix a la taula e_notas_situacion
@@ -31,7 +33,7 @@ use profesores\model\entity as profesores;
  * @version 1.0
  * @created 07/04/2014
  */
-class Resumen extends core\ClasePropiedades
+class Resumen extends ClasePropiedades
 {
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
@@ -421,10 +423,10 @@ class Resumen extends core\ClasePropiedades
         $a_superadas = $gesNotas->getArrayNotasSuperadas();
         $Where_superada = "AND id_situacion IN (" . implode(',', $a_superadas) . ")";
         // Tengo que acceder a publicv, porque con los traslados las notas se cambian de esquema.
-        if (core\ConfigGlobal::mi_sfsv() == 1) {
+        if (ConfigGlobal::mi_sfsv() == 1) {
             $notas_vf = 'publicv.e_notas';
         }
-        if (core\ConfigGlobal::mi_sfsv() == 2) {
+        if (ConfigGlobal::mi_sfsv() == 2) {
             $notas_vf = 'publicf.e_notas';
         }
         $sqlLlenar = "INSERT INTO $notas
@@ -572,7 +574,7 @@ class Resumen extends core\ClasePropiedades
 		";
         $statement = $oDbl->query($ssql);
         $rta['num'] = $statement->rowCount();
-        if ($this->blista == true && $rta['num'] > 0) {
+        if (is_true($this->blista) && $rta['num'] > 0) {
             $rta['lista'] = $this->Lista($ssql, "nom,apellido1,apellido2,ctr", 1);
         } else {
             $rta['lista'] = '';
@@ -603,7 +605,7 @@ class Resumen extends core\ClasePropiedades
 				";
         $statement = $oDbl->query($ssql);
         $rta['num'] = $statement->rowCount();
-        if ($this->blista == true && $rta['num'] > 0) {
+        if (is_true($this->blista) && $rta['num'] > 0) {
             $rta['lista'] = $this->Lista($ssql, "nom,apellido1,apellido2,ctr", 1);
         } else {
             $rta['lista'] = '';
@@ -623,7 +625,7 @@ class Resumen extends core\ClasePropiedades
 		";
         $statement = $oDbl->query($ssql);
         $rta['num'] = $statement->rowCount();
-        if ($this->blista == true && $rta['num'] > 0) {
+        if (is_true($this->blista) && $rta['num'] > 0) {
             $rta['lista'] = $this->Lista($ssql, "nom,apellido1,apellido2,ctr", 1);
         } else {
             $rta['lista'] = '';
@@ -643,7 +645,7 @@ class Resumen extends core\ClasePropiedades
 		";
         $statement = $oDbl->query($ssql);
         $rta['num'] = $statement->rowCount();
-        if ($this->blista == true && $rta['num'] > 0) {
+        if (is_true($this->blista) && $rta['num'] > 0) {
             $rta['lista'] = $this->Lista($ssql, "nom,apellido1,apellido2,ctr,stgr", 1);
         } else {
             $rta['lista'] = '';
@@ -667,7 +669,7 @@ class Resumen extends core\ClasePropiedades
          
          $statement = $oDbl->query($ssql);
          $rta['num'] = $statement->rowCount();
-         if ($this->blista == true && $rta['num'] > 0) {
+         if (is_true($this->blista) && $rta['num'] > 0) {
          $rta['lista'] = $this->Lista($ssql,"nom,apellido1,apellido2",1);
          } else {
          $rta['lista'] = '';
@@ -722,7 +724,7 @@ class Resumen extends core\ClasePropiedades
         if ($nf >= 1) {
             $rta['error'] = true;
             $rta['num'] = $nf;
-            if ($this->blista == true && $rta['num'] > 0) {
+            if (is_true($this->blista) && $rta['num'] > 0) {
                 $rta['lista'] = $this->Lista($ssql, "nom,apellido1,apellido2,ce_lugar", 1);
             } else {
                 $rta['lista'] = '';
@@ -750,7 +752,7 @@ class Resumen extends core\ClasePropiedades
         //echo "sql: $ssql<br>";
         $statement = $oDbl->query($ssql);
         $rta['num'] = $statement->rowCount();
-        if ($this->blista == true && $rta['num'] > 0) {
+        if (is_true($this->blista) && $rta['num'] > 0) {
             $rta['lista'] = $this->Lista($ssql, "nom,apellido1,apellido2,ctr", 1);
         } else {
             $rta['lista'] = '';
@@ -764,10 +766,10 @@ class Resumen extends core\ClasePropiedades
         //$tabla = $this->getNomTabla();
         $tabla = 'p_numerarios';
         //$notas = $this->getNomNotas();
-        if (core\ConfigGlobal::mi_sfsv() == 1) {
+        if (ConfigGlobal::mi_sfsv() == 1) {
             $notas_vf = 'publicv.e_notas';
         }
-        if (core\ConfigGlobal::mi_sfsv() == 2) {
+        if (ConfigGlobal::mi_sfsv() == 2) {
             $notas_vf = 'publicf.e_notas';
         }
         $ce_lugar = $this->getCe_lugar();
@@ -798,7 +800,7 @@ class Resumen extends core\ClasePropiedades
 				";
         $statement = $oDbl->query($ssql);
         $rta['num'] = $statement->fetchColumn();
-        if ($this->blista == true && $rta['num'] > 0) {
+        if (is_true($this->blista) && $rta['num'] > 0) {
             $rta['lista'] = '';
         } else {
             $rta['lista'] = '';
@@ -824,7 +826,7 @@ class Resumen extends core\ClasePropiedades
 
         $statement = $oDbl->query($ssql);
         $rta['num'] = $statement->fetchColumn();
-        if ($this->blista == true && $rta['num'] > 0) {
+        if (is_true($this->blista) && $rta['num'] > 0) {
             $rta['lista'] = '';
         } else {
             $rta['lista'] = '';
@@ -855,7 +857,7 @@ class Resumen extends core\ClasePropiedades
 
         $statement = $oDbl->query($ssql);
         $rta['num'] = $statement->rowCount();
-        if ($this->blista == true && $rta['num'] > 0) {
+        if (is_true($this->blista) && $rta['num'] > 0) {
             $rta['lista'] = $this->Lista($ssql, "nom,apellido1,apellido2,ctr", 1);
         } else {
             $rta['lista'] = '';
@@ -885,7 +887,7 @@ class Resumen extends core\ClasePropiedades
         if ($nf >= 1) {
             $rta['error'] = true;
             $rta['num'] = $nf;
-            if ($this->blista == true && $rta['num'] > 0) {
+            if (is_true($this->blista) && $rta['num'] > 0) {
                 $rta['lista'] = $this->Lista($ssql, "nom,apellido1,apellido2,ctr,stgr", 1);
             } else {
                 $rta['lista'] = '';
@@ -912,7 +914,7 @@ class Resumen extends core\ClasePropiedades
 				";
         $statement = $oDbl->query($ssql);
         $rta['num'] = $statement->rowCount();
-        if ($this->blista == true && $rta['num'] > 0) {
+        if (is_true($this->blista) && $rta['num'] > 0) {
             $rta['lista'] = sprintf(_("total de asignaturas superadas en bienio %s"), $rta['num']);
             $rta['lista'] .= $this->Lista($ssql, "nom,apellido1,apellido2,ctr,nombre_corto,acta,preceptor", 1);
         } else {
@@ -944,7 +946,7 @@ class Resumen extends core\ClasePropiedades
          if ($nf >= 1){
          $rta['error'] = true;
          $rta['num'] = $nf;
-         if ($this->blista == true && $rta['num'] > 0) {
+         if (is_true($this->blista) && $rta['num'] > 0) {
          $rta['lista'] = $this->Lista($ssql,"nom,apellido1,apellido2,ctr",1);
          } else {
          $rta['lista'] = '';
@@ -967,7 +969,7 @@ class Resumen extends core\ClasePropiedades
 				";
         $statement = $oDbl->query($ssql);
         $rta['num'] = $statement->rowCount();
-        if ($this->blista == true && $rta['num'] > 0) {
+        if (is_true($this->blista) && $rta['num'] > 0) {
             $rta['lista'] = sprintf(_("total de asignaturas superadas en cuadrienio %s"), $rta['num']);
             $rta['lista'] .= $this->Lista($ssql, "nom,apellido1,apellido2,ctr,nombre_corto,acta,preceptor", 1);
         } else {
@@ -995,7 +997,7 @@ class Resumen extends core\ClasePropiedades
         //echo "qry: $ssql<br>";
         $statement = $oDbl->query($ssql);
         $rta['num'] = $statement->rowCount();
-        if ($this->blista == true && $rta['num'] > 0) {
+        if (is_true($this->blista) && $rta['num'] > 0) {
             $rta['lista'] = $this->Lista($ssql, "nom,apellido1,apellido2,ctr", 1);
         } else {
             $rta['lista'] = '';
@@ -1021,7 +1023,7 @@ class Resumen extends core\ClasePropiedades
         //echo "qry: $ssql<br>";
         $statement = $oDbl->query($ssql);
         $rta['num'] = $statement->rowCount();
-        if ($this->blista == true && $rta['num'] > 0) {
+        if (is_true($this->blista) && $rta['num'] > 0) {
             $rta['lista'] = $this->Lista($ssql, "nom,apellido1,apellido2,ctr", 1);
         } else {
             $rta['lista'] = '';
@@ -1047,7 +1049,7 @@ class Resumen extends core\ClasePropiedades
 
         $statement = $oDbl->query($ssql);
         $rta['num'] = $statement->rowCount();
-        if ($this->blista == true && $rta['num'] > 0) {
+        if (is_true($this->blista) && $rta['num'] > 0) {
             $rta['lista'] = $this->Lista($ssql, "nom,apellido1,apellido2,ctr", 1);
         } else {
             $rta['lista'] = '';
@@ -1073,7 +1075,7 @@ class Resumen extends core\ClasePropiedades
 
         $statement = $oDbl->query($ssql);
         $rta['num'] = $statement->rowCount();
-        if ($this->blista == true && $rta['num'] > 0) {
+        if (is_true($this->blista) && $rta['num'] > 0) {
             $rta['lista'] = $this->Lista($ssql, "nom,apellido1,apellido2,ctr", 1);
         } else {
             $rta['lista'] = '';
@@ -1096,7 +1098,7 @@ class Resumen extends core\ClasePropiedades
 
         $statement = $oDbl->query($ssql);
         $rta['num'] = $statement->rowCount();
-        if ($this->blista == true && $rta['num'] > 0) {
+        if (is_true($this->blista) && $rta['num'] > 0) {
             $rta['lista'] = $this->Lista($ssql, "nom,apellido1,apellido2,ctr", 1);
         } else {
             $rta['lista'] = '';
@@ -1119,7 +1121,7 @@ class Resumen extends core\ClasePropiedades
 
         $statement = $oDbl->query($ssql);
         $rta['num'] = $statement->rowCount();
-        if ($this->blista == true && $rta['num'] > 0) {
+        if (is_true($this->blista) && $rta['num'] > 0) {
             $rta['lista'] = $this->Lista($ssql, "nom,apellido1,apellido2,ctr", 1);
         } else {
             $rta['lista'] = '';
@@ -1142,7 +1144,7 @@ class Resumen extends core\ClasePropiedades
 
         $statement = $oDbl->query($ssql);
         $rta['num'] = $statement->rowCount();
-        if ($this->blista == true && $rta['num'] > 0) {
+        if (is_true($this->blista) && $rta['num'] > 0) {
             $rta['lista'] = $this->Lista($ssql, "nom,apellido1,apellido2,ctr", 1);
         } else {
             $rta['lista'] = '';
@@ -1166,7 +1168,7 @@ class Resumen extends core\ClasePropiedades
 
         $statement = $oDbl->query($ssql);
         $rta['num'] = $statement->rowCount();
-        if ($this->blista == true && $rta['num'] > 0) {
+        if (is_true($this->blista) && $rta['num'] > 0) {
             $rta['lista'] = $this->Lista($ssql, "nom,apellido1,apellido2,ctr", 1);
         } else {
             $rta['lista'] = '';
@@ -1206,7 +1208,7 @@ class Resumen extends core\ClasePropiedades
 
         $statement = $oDbl->query($ssql);
         $rta['num'] = $statement->rowCount();
-        if ($this->blista == true && $rta['num'] > 0) {
+        if (is_true($this->blista) && $rta['num'] > 0) {
             $rta['lista'] = $this->Lista($ssql, "nom,apellido1,apellido2,ctr", 1);
         } else {
             $rta['lista'] = '';
@@ -1266,7 +1268,7 @@ class Resumen extends core\ClasePropiedades
 				WHERE $where_tipo f_cese is null";
         $statement = $oDbl->query($ssql);
         $rta['num'] = $statement->rowCount();
-        if ($this->blista == true && $rta['num'] > 0) {
+        if (is_true($this->blista) && $rta['num'] > 0) {
             $rta['lista'] = $this->Lista($ssql, "nom,apellido1,apellido2,ctr", 1);
         } else {
             $rta['lista'] = '';
@@ -1284,7 +1286,7 @@ class Resumen extends core\ClasePropiedades
 				WHERE latin='t'";
         $statement = $oDbl->query($ssql);
         $rta['num'] = $statement->rowCount();
-        if ($this->blista == true && $rta['num'] > 0) {
+        if (is_true($this->blista) && $rta['num'] > 0) {
             $rta['lista'] = $this->Lista($ssql, "nom,apellido1,apellido2,ctr", 1);
         } else {
             $rta['lista'] = '';
@@ -1328,19 +1330,19 @@ class Resumen extends core\ClasePropiedades
                 . " FROM d_docencia_stgr d JOIN $asignaturas a USING (id_asignatura)"
                 . " WHERE d.id_nom=$id_nom AND curso_inicio=$curso_inicio AND d.tipo != 'p'";
             //echo "sql: $ssql<br>";
-            foreach ($oDbl->query($ssql) as $row) {
-                $id_nom = $row['id_nom'];
-                $id_activ = $row['id_activ'];
-                $id_sector = $row['id_sector'];
-                $nombre_corto = $row['nombre_corto'];
+            foreach ($oDbl->query($ssql) as $row2) {
+                $id_nom = $row2['id_nom'];
+                $id_activ = $row2['id_activ'];
+                $id_sector = $row2['id_sector'];
+                $nombre_corto = $row2['nombre_corto'];
                 if (in_array($id_sector, $a_sectores[$id_departamento])) {
                     $docencia_dep[$id_nom] = 1;
                 } else {
                     $docencia_no_dep[$id_nom] = 1;
                 }
 
-                if ($this->blista == true) {
-                    $oPersonaDl = new personas\PersonaDl($id_nom);
+                if (is_true($this->blista)) {
+                    $oPersonaDl = new PersonaDl($id_nom);
                     $nom = $oPersonaDl->getNom();
                     $apellido1 = $oPersonaDl->getApellido1();
                     $apellido2 = $oPersonaDl->getApellido2();
@@ -1348,10 +1350,10 @@ class Resumen extends core\ClasePropiedades
                     $nom_activ = '';
                     if (!empty($id_activ)) {
                         // En el caso cr-stgr, se consulta la tabla global.
-                        if (\core\ConfigGlobal::mi_region() === \core\ConfigGlobal::mi_delef()) {
-                            $oActividad = new actividades\ActividadAll($id_activ);
+                        if (ConfigGlobal::mi_region() === ConfigGlobal::mi_delef()) {
+                            $oActividad = new ActividadAll($id_activ);
                         } else {
-                            $oActividad = new actividades\Actividad($id_activ);
+                            $oActividad = new Actividad($id_activ);
                         }
                         $nom_activ = $oActividad->getNom_activ();
                     }
@@ -1371,7 +1373,7 @@ class Resumen extends core\ClasePropiedades
             $a_docencia = $docencia_dep;
         }
 
-        if ($this->blista == true && $rta['num'] > 0) {
+        if (is_true($this->blista) && $rta['num'] > 0) {
             //$rta['lista'] = $this->Lista($ssql,"nom,apellido1,apellido2",1);
             $camp = explode(',', 'nom,apellido1,apellido2,asignatura,actividad');
             $html = "<table>";
@@ -1414,7 +1416,7 @@ class Resumen extends core\ClasePropiedades
         //echo "$ssql<br>";
         $statement = $oDbl->query($ssql);
         $rta['num'] = $statement->rowCount();
-        if ($this->blista == true && $rta['num'] > 0) {
+        if (is_true($this->blista) && $rta['num'] > 0) {
             $rta['lista'] = $this->Lista($ssql, "nom,apellido1,apellido2,ctr", 1);
         } else {
             $rta['lista'] = '';
@@ -1435,7 +1437,7 @@ class Resumen extends core\ClasePropiedades
 				";
         $statement = $oDbl->query($ssql);
         $rta['num'] = $statement->rowCount();
-        if ($this->blista == true && $rta['num'] > 0) {
+        if (is_true($this->blista) && $rta['num'] > 0) {
             $rta['lista'] = $this->Lista($ssql, "nom,apellido1,apellido2,ctr", 1);
         } else {
             $rta['lista'] = '';
@@ -1456,7 +1458,7 @@ class Resumen extends core\ClasePropiedades
 				";
         $statement = $oDbl->query($ssql);
         $rta['num'] = $statement->rowCount();
-        if ($this->blista == true && $rta['num'] > 0) {
+        if (is_true($this->blista) && $rta['num'] > 0) {
             $rta['lista'] = $this->Lista($ssql, "nom,apellido1,apellido2,ctr", 1);
         } else {
             $rta['lista'] = '';
@@ -1470,18 +1472,18 @@ class Resumen extends core\ClasePropiedades
         $oDbl = $this->getoDbl();
         $tabla = $this->getNomTabla();
 
-        $oGesDirectores = new profesores\GestorProfesorDirector();
+        $oGesDirectores = new GestorProfesorDirector();
         $cDirectores = $oGesDirectores->getProfesoresDirectores(array('f_cese' => 1), array('f_cese' => 'IS NULL'));
 
         $rta['num'] = count($cDirectores);
-        if ($this->blista == true && $rta['num'] > 0) {
+        if (is_true($this->blista) && $rta['num'] > 0) {
             $html = '<table>';
             foreach ($cDirectores as $oDirector) {
                 $id_departamento = $oDirector->getId_departamento();
                 $id_nom = $oDirector->getId_nom();
                 $oDepartamento = new Departamento($id_departamento);
                 $nom_dep = $oDepartamento->getDepartamento();
-                $oPersonaDl = new personas\PersonaDl($id_nom);
+                $oPersonaDl = new PersonaDl($id_nom);
                 $nom_persona = $oPersonaDl->getPrefApellidosNombre();
                 $html .= "<tr><td>$nom_dep</td><td>$nom_persona</td></tr>";
             }

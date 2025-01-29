@@ -176,7 +176,7 @@ class Periodo
      *                 'default' -> 1-enero al 31-diciembre.
      *
      */
-    function setPeriodo($sPeriodo)
+    function setPeriodo(string $sPeriodo)
     {
         $any = empty($this->iany) ? date('Y') : $this->iany;
         $mes = date('m');

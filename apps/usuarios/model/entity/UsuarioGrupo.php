@@ -1,7 +1,8 @@
 <?php
 namespace usuarios\model\entity;
 
-use core;
+use core\ClasePropiedades;
+use core\Set;
 
 /**
  * Clase que implementa la entidad aux_cross_usuarios_grupos
@@ -12,7 +13,7 @@ use core;
  * @version 1.0
  * @created 25/10/2010
  */
-class UsuarioGrupo extends core\ClasePropiedades
+class UsuarioGrupo extends ClasePropiedades
 {
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
@@ -67,8 +68,8 @@ class UsuarioGrupo extends core\ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'id_usuario') && $val_id !== '') $this->iid_usuario = (int)$val_id; 
-                if (($nom_id == 'id_grupo') && $val_id !== '') $this->iid_grupo = (int)$val_id; 
+                if (($nom_id === 'id_usuario') && $val_id !== '') $this->iid_usuario = (int)$val_id;
+                if (($nom_id === 'id_grupo') && $val_id !== '') $this->iid_grupo = (int)$val_id;
             }
         }
         $this->setoDbl($oDbl);
@@ -201,7 +202,7 @@ class UsuarioGrupo extends core\ClasePropiedades
      *
      * @param array $aDades
      */
-    function setAllAtributes($aDades)
+    function setAllAtributes(array $aDades)
     {
         if (!is_array($aDades)) return;
         if (array_key_exists('id_schema', $aDades)) $this->setId_schema($aDades['id_schema']);
@@ -261,8 +262,8 @@ class UsuarioGrupo extends core\ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'id_usuario') && $val_id !== '') $this->iid_usuario = (int)$val_id; 
-                if (($nom_id == 'id_grupo') && $val_id !== '') $this->iid_grupo = (int)$val_id; 
+                if (($nom_id === 'id_usuario') && $val_id !== '') $this->iid_usuario = (int)$val_id;
+                if (($nom_id === 'id_grupo') && $val_id !== '') $this->iid_grupo = (int)$val_id;
             }
         }
     }
@@ -320,7 +321,7 @@ class UsuarioGrupo extends core\ClasePropiedades
      */
     function getDatosCampos()
     {
-        $oUsuarioGrupoSet = new core\Set();
+        $oUsuarioGrupoSet = new Set();
 
         return $oUsuarioGrupoSet->getTot();
     }

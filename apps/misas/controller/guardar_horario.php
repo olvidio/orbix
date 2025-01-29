@@ -3,7 +3,6 @@
 // INICIO Cabecera global de URL de controlador *********************************
 
 use encargossacd\model\entity\EncargoHorario;
-use misas\domain\repositories\PlantillaRepository;
 use web\DateTimeLocal;
 
 require_once("apps/core/global_header.inc");

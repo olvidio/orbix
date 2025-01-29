@@ -1,7 +1,9 @@
 <?php
 namespace menus\model\entity;
 
-use core;
+use core\ClasePropiedades;
+use core\DatosCampo;
+use core\Set;
 
 /**
  * Fitxer amb la Classe que accedeix a la taula $nom_tabla
@@ -22,7 +24,7 @@ use core;
  * @version 1.0
  * @created 15/01/2014
  */
-class GrupMenuRole extends core\ClasePropiedades
+class GrupMenuRole extends ClasePropiedades
 {
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
@@ -83,7 +85,7 @@ class GrupMenuRole extends core\ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'id_item') && $val_id !== '') $this->iid_item = (int)$val_id; 
+                if (($nom_id === 'id_item') && $val_id !== '') $this->iid_item = (int)$val_id;
             }
         } else {
             if (isset($a_id) && $a_id !== '') {
@@ -156,7 +158,7 @@ class GrupMenuRole extends core\ClasePropiedades
                     return false;
                 }
             }
-            $this->id_item = $oDbl->lastInsertId($nom_tabla . '_id_item_seq');
+            $this->iid_item = $oDbl->lastInsertId($nom_tabla . '_id_item_seq');
         }
         $this->setAllAtributes($aDades);
         return true;
@@ -224,7 +226,7 @@ class GrupMenuRole extends core\ClasePropiedades
      *
      * @param array $aDades
      */
-    function setAllAtributes($aDades)
+    function setAllAtributes(array $aDades)
     {
         if (!is_array($aDades)) return;
         if (array_key_exists('id_schema', $aDades)) $this->setId_schema($aDades['id_schema']);
@@ -286,7 +288,7 @@ class GrupMenuRole extends core\ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'id_item') && $val_id !== '') $this->iid_item = (int)$val_id; 
+                if (($nom_id === 'id_item') && $val_id !== '') $this->iid_item = (int)$val_id;
             }
         }
     }
@@ -367,7 +369,7 @@ class GrupMenuRole extends core\ClasePropiedades
      */
     function getDatosCampos()
     {
-        $oGrupMenuRoleSet = new core\Set();
+        $oGrupMenuRoleSet = new Set();
 
         $oGrupMenuRoleSet->add($this->getDatosId_grupmenu());
         $oGrupMenuRoleSet->add($this->getDatosId_role());
@@ -379,12 +381,12 @@ class GrupMenuRole extends core\ClasePropiedades
      * Recupera les propietats de l'atribut iid_grupmenu de GrupMenuRole
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosId_grupmenu()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_grupmenu'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_grupmenu'));
         $oDatosCampo->setEtiqueta(_("id_grupmenu"));
         return $oDatosCampo;
     }
@@ -393,12 +395,12 @@ class GrupMenuRole extends core\ClasePropiedades
      * Recupera les propietats de l'atribut iid_role de GrupMenuRole
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosId_role()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_role'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_role'));
         $oDatosCampo->setEtiqueta(_("id_role"));
         return $oDatosCampo;
     }

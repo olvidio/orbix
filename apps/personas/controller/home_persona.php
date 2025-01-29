@@ -1,6 +1,8 @@
 <?php
 
-use ubis\model\entity as ubis;
+use core\ViewPhtml;
+use ubis\model\entity\CentroDl;
+use web\Hash;
 
 /**
  * Esta página pone el titulo en el frame superior.
@@ -101,19 +103,19 @@ $situacion = $oPersona->getSituacion();
 $f_situacion = $oPersona->getF_situacion()->getFromLocal();
 $profesion = $oPersona->getProfesion();
 $stgr = $oPersona->getStgr();
-if ($Qobj_pau != 'PersonaEx' && $Qobj_pau != 'PersonaIn') {
+if ($Qobj_pau !== 'PersonaEx' && $Qobj_pau !== 'PersonaIn') {
     $id_ctr = $oPersona->getId_ctr();
-    $oCentroDl = new ubis\CentroDl($id_ctr);
+    $oCentroDl = new CentroDl($id_ctr);
     $ctr = $oCentroDl->getNombre_ubi();
 } else {
     $ctr = '';
 }
 
 $a_parametros = array('pau' => $pau, 'id_nom' => $id_nom, 'obj_pau' => $Qobj_pau);
-$gohome = web\Hash::link('apps/personas/controller/home_persona.php?' . http_build_query($a_parametros));
-$go_ficha = web\Hash::link('apps/personas/controller/personas_editar.php?' . http_build_query($a_parametros));
+$gohome = Hash::link('apps/personas/controller/home_persona.php?' . http_build_query($a_parametros));
+$go_ficha = Hash::link('apps/personas/controller/personas_editar.php?' . http_build_query($a_parametros));
 $a_parametros = array('pau' => $pau, 'id_pau' => $id_nom, 'obj_pau' => $Qobj_pau);
-$godossiers = web\Hash::link('apps/dossiers/controller/dossiers_ver.php?' . http_build_query($a_parametros));
+$godossiers = Hash::link('apps/dossiers/controller/dossiers_ver.php?' . http_build_query($a_parametros));
 
 $titulo = $nom;
 
@@ -150,5 +152,5 @@ $a_campos = [
     'Qobj_pau' => $Qobj_pau
 ];
 
-$oView = new core\View('personas/controller');
+$oView = new ViewPhtml('personas/controller');
 $oView->renderizar('home_persona.phtml', $a_campos);

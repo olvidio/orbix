@@ -1,7 +1,8 @@
 <?php
 
-use asignaturas\model\entity as asignaturas;
-use profesores\model\entity as profesores;
+use asignaturas\model\entity\GestorAsignatura;
+use core\ConfigGlobal;
+use web\Hash;
 
 // INICIO Cabecera global de URL de controlador *********************************
 require_once("apps/core/global_header.inc");
@@ -11,12 +12,12 @@ require_once("apps/core/global_header.inc");
 require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$GesAsignaturas = new asignaturas\GestorAsignatura();
+$GesAsignaturas = new GestorAsignatura();
 $oDesplAsignaturas = $GesAsignaturas->getListaAsignaturas();
 $oDesplAsignaturas->setNombre('id_asignatura');
 $oDesplAsignaturas->setAction("fnjs_profes()");
 
-$oHash = new web\Hash();
+$oHash = new Hash();
 $oHash->setUrl('apps/profesores/controller/profesor_asignatura_ajax.php');
 $oHash->setCamposForm('id_asignatura');
 $h = $oHash->linkSinVal();
@@ -26,7 +27,7 @@ $h = $oHash->linkSinVal();
 <!-- =========================== html =============================  -->
 <script>
     fnjs_profes = function () {
-        var url = '<?= core\ConfigGlobal::getWeb() . '/apps/profesores/controller/profesor_asignatura_ajax.php' ?>';
+        var url = '<?= ConfigGlobal::getWeb() . '/apps/profesores/controller/profesor_asignatura_ajax.php' ?>';
         id_asignatura = $("#id_asignatura").val();
         var parametros = 'id_asignatura=' + id_asignatura + '<?= $h ?>';
         $.ajax({

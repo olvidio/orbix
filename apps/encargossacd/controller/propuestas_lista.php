@@ -1,6 +1,8 @@
 <?php
 
 // INICIO Cabecera global de URL de controlador *********************************
+use core\ConfigGlobal;
+use core\ViewTwig;
 use encargossacd\model\entity\GestorEncargoTipo;
 use web\Desplegable;
 use web\Hash;
@@ -27,22 +29,22 @@ $oDesplGrupoCtrs->setAction("fnjs_lista_propuestas();");
 
 $url_ajax = "apps/encargossacd/controller/propuestas_ajax.php";
 $oHash = new Hash();
-$oHash->setUrl(core\ConfigGlobal::getWeb() . '/' . $url_ajax);
+$oHash->setUrl(ConfigGlobal::getWeb() . '/' . $url_ajax);
 $oHash->setCamposForm('que!filtro_ctr');
 $h = $oHash->linkSinVal();
 
 $oHash1 = new Hash();
-$oHash1->setUrl(core\ConfigGlobal::getWeb() . '/' . $url_ajax);
+$oHash1->setUrl(ConfigGlobal::getWeb() . '/' . $url_ajax);
 $oHash1->setCamposForm('que!tipo!id_item!id_enc!id_sacd');
 $h_cmb = $oHash1->linkSinVal();
 
 $oHash2 = new Hash();
-$oHash2->setUrl(core\ConfigGlobal::getWeb() . '/' . $url_ajax);
+$oHash2->setUrl(ConfigGlobal::getWeb() . '/' . $url_ajax);
 $oHash2->setCamposForm('que!id_sacd');
 $h_info = $oHash2->linkSinVal();
 
 $oHash3 = new Hash();
-$oHash3->setUrl(core\ConfigGlobal::getWeb() . '/' . $url_ajax);
+$oHash3->setUrl(ConfigGlobal::getWeb() . '/' . $url_ajax);
 $oHash3->setCamposForm('que!id_sacd!id_item!id_enc');
 $h_dedicacion = $oHash3->linkSinVal();
 
@@ -56,5 +58,5 @@ $a_campos = ['oPosicion' => $oPosicion,
     'oDesplGrupoCtrs' => $oDesplGrupoCtrs,
 ];
 
-$oView = new core\ViewTwig('encargossacd/controller');
+$oView = new ViewTwig('encargossacd/controller');
 $oView->renderizar('propuestas_lista.html.twig', $a_campos);

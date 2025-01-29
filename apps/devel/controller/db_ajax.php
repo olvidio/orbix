@@ -1,7 +1,7 @@
 <?php
 
-use ubis\model\entity\GestorDelegacion;
 use web\Desplegable;
+use ubis\model\entity\GestorDelegacion;
 
 /*
 * Devuelvo un desplegable con los valores posibles segun el valor de entrada.

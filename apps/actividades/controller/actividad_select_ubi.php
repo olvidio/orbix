@@ -6,6 +6,11 @@
  */
 
 // INICIO Cabecera global de URL de controlador *********************************
+use core\ConfigGlobal;
+use core\ViewPhtml;
+use web\Desplegable;
+use web\Hash;
+
 require_once("apps/core/global_header.inc");
 // Archivos requeridos por esta url **********************************************
 
@@ -43,7 +48,7 @@ if (!empty($_REQUEST['dl_org'])) {
     $sql_freq = "select distinct id_ubi,nombre_ubi from a_actividades_dl join u_cdc_dl using (id_ubi) where dl_org='" . $_REQUEST['dl_org'] . "' $donde_sfsv ORDER by nombre_ubi";
     $oDbl = $GLOBALS['oDBC'];
     $oDBSt_q_freq = $oDbl->query($sql_freq);
-    $oDesplFreq = new web\Desplegable();
+    $oDesplFreq = new Desplegable();
     $oDesplFreq->setNombre('id_ubi_1');
     $oDesplFreq->setOpciones($oDBSt_q_freq);
 }
@@ -58,7 +63,7 @@ $sql_u_lugar = $sql_dl_lugar . " UNION " . $sql_r_lugar . " ORDER BY 2";
 $oDBSt_dl_r_lugar = $oDbl->query($sql_u_lugar);
 //$oDBSt_dl_r_lugar=$oDbl->query($sql_dl_lugar);
 
-$oDesplRegion = new web\Desplegable();
+$oDesplRegion = new Desplegable();
 $oDesplRegion->setNombre('filtro_lugar');
 $oDesplRegion->setAction('fnjs_lugar()');
 $oDesplRegion->setOpciones($oDBSt_dl_r_lugar);
@@ -67,16 +72,16 @@ if (!empty($_REQUEST['dl_org'])) {
     $oDesplRegion->setOpcion_sel($dl);
 }
 
-$oHash = new web\Hash();
-$oHash->setUrl(core\ConfigGlobal::getWeb() . '/apps/actividades/controller/actividad_tipo_get.php');
+$oHash = new Hash();
+$oHash->setUrl(ConfigGlobal::getWeb() . '/apps/actividades/controller/actividad_tipo_get.php');
 $oHash->setCamposForm('extendida!modo!salida!entrada!isfsv');
 $h = $oHash->linkSinVal();
 
-$oHash1 = new web\Hash();
+$oHash1 = new Hash();
 $oHash1->setCamposForm('id_ubi_1');
-$oHash2 = new web\Hash();
+$oHash2 = new Hash();
 $oHash2->setCamposForm('filtro_lugar!lst_lugar');
-$oHash3 = new web\Hash();
+$oHash3 = new Hash();
 $oHash3->setCamposForm('nombre_ubi');
 $a_camposHidden = array(
     'tipo' => 'tot',
@@ -84,7 +89,7 @@ $a_camposHidden = array(
 );
 $oHash3->setArraycamposHidden($a_camposHidden);
 
-$oHash4 = new web\Hash();
+$oHash4 = new Hash();
 $oHash4->setCamposForm('frm_4_nombre_ubi');
 
 $txt_alert = _("no olvides ajustar el nombre de la actividad");
@@ -102,5 +107,5 @@ $a_campos = ['oPosicion' => $oPosicion,
     'txt_alert' => $txt_alert,
 ];
 
-$oView = new core\View('actividades/controller');
+$oView = new ViewPhtml('actividades/controller');
 $oView->renderizar('actividad_select_ubi.phtml', $a_campos);

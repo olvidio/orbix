@@ -1,7 +1,9 @@
 <?php
 namespace usuarios\model\entity;
 
-use core;
+use core\ClasePropiedades;
+use core\DatosCampo;
+use core\Set;
 
 /**
  * Fitxer amb la Classe que accedeix a la taula $nom_tabla
@@ -22,7 +24,7 @@ use core;
  * @version 1.0
  * @created 31/12/2013
  */
-class PermMenu extends core\ClasePropiedades
+class PermMenu extends ClasePropiedades
 {
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
@@ -83,7 +85,7 @@ class PermMenu extends core\ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'id_item') && $val_id !== '') $this->iid_item = (int)$val_id; 
+                if (($nom_id === 'id_item') && $val_id !== '') $this->iid_item = (int)$val_id;
             }
         } else {
             if (isset($a_id) && $a_id !== '') {
@@ -156,7 +158,7 @@ class PermMenu extends core\ClasePropiedades
                     return false;
                 }
             }
-            $this->id_item = $oDbl->lastInsertId('aux_grupo_menuperm_id_item_seq');
+            $this->iid_item = $oDbl->lastInsertId('aux_grupo_menuperm_id_item_seq');
         }
         $this->setAllAtributes($aDades);
         return true;
@@ -224,7 +226,7 @@ class PermMenu extends core\ClasePropiedades
      *
      * @param array $aDades
      */
-    function setAllAtributes($aDades)
+    function setAllAtributes(array $aDades)
     {
         if (!is_array($aDades)) return;
         if (array_key_exists('id_schema', $aDades)) $this->setId_schema($aDades['id_schema']);
@@ -286,7 +288,7 @@ class PermMenu extends core\ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'id_item') && $val_id !== '') $this->iid_item = (int)$val_id; 
+                if (($nom_id === 'id_item') && $val_id !== '') $this->iid_item = (int)$val_id;
             }
         }
     }
@@ -367,7 +369,7 @@ class PermMenu extends core\ClasePropiedades
      */
     function getDatosCampos()
     {
-        $oPermMenuSet = new core\Set();
+        $oPermMenuSet = new Set();
 
         $oPermMenuSet->add($this->getDatosId_usuario());
         $oPermMenuSet->add($this->getDatosMenu_perm());
@@ -379,12 +381,12 @@ class PermMenu extends core\ClasePropiedades
      * Recupera les propietats de l'atribut iid_usuario de PermMenu
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosId_usuario()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_usuario'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_usuario'));
         $oDatosCampo->setEtiqueta(_("id_usuario"));
         return $oDatosCampo;
     }
@@ -393,12 +395,12 @@ class PermMenu extends core\ClasePropiedades
      * Recupera les propietats de l'atribut imenu_perm de PermMenu
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosMenu_perm()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'menu_perm'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'menu_perm'));
         $oDatosCampo->setEtiqueta(_("menu_perm"));
         return $oDatosCampo;
     }

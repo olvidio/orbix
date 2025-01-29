@@ -2,13 +2,16 @@
 
 namespace actividadestudios\model;
 
-use actividades\model\entity as actividades;
-use asignaturas\model\entity as asignaturas;
-use asistentes\model\entity as asistentes;
-use personas\model\entity as personas;
-use core;
-use web;
+use actividades\model\entity\Actividad;
+use asignaturas\model\entity\Asignatura;
+use asistentes\model\entity\GestorAsistente;
 use core\ConfigGlobal;
+use core\ViewPhtml;
+use personas\model\entity\Persona;
+use personas\model\entity\PersonaDl;
+use web\Hash;
+use web\Lista;
+use function core\curso_est;
 use function core\is_true;
 
 /**
@@ -93,17 +96,17 @@ class Select1303
     {
         $this->id_activ = $oAsistente->getId_activ();
         $propio = $oAsistente->getPropio();
-        if (!core\is_true($propio)) {
+        if (!is_true($propio)) {
             echo _("no está como propio, no debería tener plan de estudios");
         }
 
         $est_ok = $oAsistente->getEst_ok();
         $observ_est = $oAsistente->getObserv_est();
-        $oActividad = new actividades\Actividad(array('id_activ' => $this->id_activ));
+        $oActividad = new Actividad(array('id_activ' => $this->id_activ));
         $nom_activ = $oActividad->getNom_activ();
 
         // el plan de estudios solo puede modificarlo la dl del alumno (a no ser que sea de paso)
-        $oAlumno = personas\Persona::NewPersona($this->id_pau);
+        $oAlumno = Persona::NewPersona($this->id_pau);
         $dl_alumno = $oAlumno->getDl();
         $classname = str_replace("personas\\model\\entity\\", '', get_class($oAlumno));
         $this->permiso = 3;
@@ -118,7 +121,7 @@ class Select1303
         $cMatriculas = $GesMatriculas->getMatriculas(array('id_nom' => $this->id_pau, 'id_activ' => $this->id_activ, '_ordre' => 'id_nivel'));
 
         $form = "seleccionados" . $ca_num;
-        if (core\is_true($est_ok)) {
+        if (is_true($est_ok)) {
             $chk_1 = "checked";
             $chk_2 = "";
         } else {
@@ -136,7 +139,7 @@ class Select1303
             $id_preceptor = $oMatricula->getId_preceptor();
             if (is_true($preceptor)) {
                 if (!empty($id_preceptor)) {
-                    $oPersona = personas\Persona::NewPersona($id_preceptor);
+                    $oPersona = Persona::NewPersona($id_preceptor);
                     if (!is_object($oPersona)) {
                         $msg_err .= "<br>$oPersona con id_nom: $id_preceptor (profesor) en  " . __FILE__ . ": line " . __LINE__;
                         $preceptor = 'x';
@@ -150,7 +153,7 @@ class Select1303
                 $preceptor = "";
             }
 
-            $oAsignatura = new asignaturas\Asignatura($id_asignatura);
+            $oAsignatura = new Asignatura($id_asignatura);
             $nombre_corto = $oAsignatura->getNombre_corto();
 
             $a_valores[$i]['sel'] = "$this->id_activ#$id_asignatura";
@@ -158,13 +161,13 @@ class Select1303
             $a_valores[$i][2] = $nombre_corto;
         }
 
-        $oTabla = new web\Lista();
+        $oTabla = new Lista();
         $oTabla->setId_tabla('sql_1303' . $ca_num);
         $oTabla->setCabeceras($this->getCabeceras());
         $oTabla->setBotones($this->getBotones($ca_num));
         $oTabla->setDatos($a_valores);
 
-        $oHashCa = new web\Hash();
+        $oHashCa = new Hash();
         $oHashCa->setCamposForm('est_ok!observ_est');
         $oHashCa->setCamposNo('sel!mod!scroll_id!refresh');
         $a_camposHiddenCa = array(
@@ -198,7 +201,7 @@ class Select1303
         if (!empty($msg_err)) {
             echo $msg_err;
         }
-        $oView = new core\View(__NAMESPACE__);
+        $oView = new ViewPhtml(__NAMESPACE__);
         $oView->renderizar('selectUnCa.phtml', $a_campos);
     }
 
@@ -213,9 +216,9 @@ class Select1303
         if (is_array($a_dataUrl)) {
             array_walk($a_dataUrl, 'core\poner_empty_on_null');
         }
-        $this->link_add = web\Hash::link(core\ConfigGlobal::getWeb() . '/apps/actividadestudios/controller/form_1303.php?' . http_build_query($a_dataUrl));
+        $this->link_add = Hash::link(ConfigGlobal::getWeb() . '/apps/actividadestudios/controller/form_1303.php?' . http_build_query($a_dataUrl));
         // --------------  boton matricular automáticamente ----------------------
-//		$this->link_matricular = web\Hash::link(core\ConfigGlobal::getWeb().'/apps/actividadestudios/controller/matricular.php?'.http_build_query($a_dataUrl));	
+//		$this->link_matricular = Hash::link(ConfigGlobal::getWeb().'/apps/actividadestudios/controller/matricular.php?'.http_build_query($a_dataUrl));	
 //		$this->link_matricular = "fnjs_matricular(this.form)";
     }
 
@@ -230,18 +233,18 @@ class Select1303
         } else {
             $any = date('Y');
         }
-        $inicurs_ca = core\curso_est("inicio", $any)->format('Y-m-d');
-        $fincurs_ca = core\curso_est("fin", $any)->format('Y-m-d');
+        $inicurs_ca = curso_est("inicio", $any)->format('Y-m-d');
+        $fincurs_ca = curso_est("fin", $any)->format('Y-m-d');
 
         $aviso = '';
         // Compruebo si está de repaso...
-        $oPersona = new personas\PersonaDl(array('id_nom' => $this->id_pau));
+        $oPersona = new PersonaDl(array('id_nom' => $this->id_pau));
         $stgr = $oPersona->getStgr();
         if ($stgr === 'r') $aviso .= _("está de repaso") . "<br>";
 
         $aWhere = array();
         $aOperadores = array();
-        $GesAsistentes = new asistentes\GestorAsistente();
+        $GesAsistentes = new GestorAsistente();
         if (!empty($this->Qid_activ)) {  // ¿? ya tengo una actividad concreta (vengo del dossier de esa actividad).
             $aWhere['id_activ'] = $this->Qid_activ;
             $aWhereNom = ['id_nom' => $this->id_pau, 'id_activ' => $this->Qid_activ];
@@ -253,7 +256,7 @@ class Select1303
                 $aOperadores['f_ini'] = 'BETWEEN';
             }
             // todas las actividades de estudios (no crt)
-            $aWhere['id_tipo_activ'] = '^' . core\ConfigGlobal::mi_sfsv() . '(122)|(222)|(332)|(123)'; // el 123 correponde al semestre de invierno.
+            $aWhere['id_tipo_activ'] = '^' . ConfigGlobal::mi_sfsv() . '(122)|(222)|(332)|(123)'; // el 123 correponde al semestre de invierno.
             $aOperadores['id_tipo_activ'] = '~';
 
             $aWhereNom = ['id_nom' => $this->id_pau, 'propio' => 't'];
@@ -263,7 +266,7 @@ class Select1303
         if (is_array($cAsistencias)) {
             $n = count($cAsistencias);
             if ($n == 0 && empty($this->todos)) {
-                $oHashA = new web\Hash();
+                $oHashA = new Hash();
 //				$oHashA->setCamposForm('sel');
                 $oHashA->setcamposNo('scroll_id');
                 $a_camposHiddenA = array(
@@ -290,10 +293,10 @@ class Select1303
             }
             if ($n > 1 && empty($this->todos)) {
                 $nn = 0;
-                $id_sem_inv = (int)core\ConfigGlobal::mi_sfsv() . '32500';
+                $id_sem_inv = (int)ConfigGlobal::mi_sfsv() . '32500';
                 foreach ($cAsistencias as $oAsistente) {
                     $id_activ = $oAsistente->getId_activ();
-                    $oActividad = new actividades\Actividad($id_activ);
+                    $oActividad = new Actividad($id_activ);
                     $id_tipo_activ = $oActividad->getId_tipo_activ();
                     if ($id_tipo_activ != $id_sem_inv) $nn++;
                 }
@@ -319,7 +322,7 @@ class Select1303
             'bloque' => $this->bloque,
         ];
 
-        $oView = new core\View(__NAMESPACE__);
+        $oView = new ViewPhtml(__NAMESPACE__);
         $html_script = $oView->renderizar('select1303.phtml', $a_campos);
 
         // para más de un ca

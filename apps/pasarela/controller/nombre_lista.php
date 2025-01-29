@@ -1,7 +1,6 @@
 <?php
 
 use core\ViewTwig;
-use pasarela\model\entity\PasarelaConfig;
 use web\Hash;
 
 // INICIO Cabecera global de URL de controlador *********************************

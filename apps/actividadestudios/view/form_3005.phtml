@@ -1,3 +1,8 @@
+<?php
+
+use core\ConfigGlobal;
+
+?>
 <script>
     $(function () {
         $("#f_ini").datepicker({
@@ -14,7 +19,7 @@
 
     });
     fnjs_mas_profes = function (filtro) {
-        var url = '<?= core\ConfigGlobal::getWeb() . '/apps/actividadestudios/controller/lista_profesores_ajax.php' ?>';
+        var url = '<?= ConfigGlobal::getWeb() . '/apps/actividadestudios/controller/lista_profesores_ajax.php' ?>';
         switch (filtro) {
             case 'asignatura':
                 id_asignatura = $("#id_asignatura").val();

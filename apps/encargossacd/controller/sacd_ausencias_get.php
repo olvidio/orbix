@@ -1,5 +1,6 @@
 <?php
 
+use core\ViewTwig;
 use encargossacd\model\entity\Encargo;
 use encargossacd\model\entity\GestorEncargo;
 use encargossacd\model\entity\GestorEncargoSacd;
@@ -158,5 +159,5 @@ $a_campos = ['oPosicion' => $oPosicion,
     'array_tipo_ausencias' => $array_tipo_ausencias,
 ];
 
-$oView = new core\ViewTwig('encargossacd/controller');
+$oView = new ViewTwig('encargossacd/controller');
 $oView->renderizar('sacd_ausencias_get.html.twig', $a_campos);

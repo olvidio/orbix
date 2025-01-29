@@ -2,23 +2,12 @@
 
 
 // INICIO Cabecera global de URL de controlador *********************************
-use encargossacd\model\EncargoConstants;
-use encargossacd\model\entity\GestorEncargo;
-use misas\domain\entity\InicialesSacd;
-use misas\domain\repositories\EncargoDiaRepository;
-use misas\domain\repositories\InicialesSacdRepository;
-use misas\model\EncargosZona;
-use personas\model\entity\GestorPersona;
-use personas\model\entity\PersonaEx;
-use personas\model\entity\PersonaSacd;
-use ubis\model\entity\CentroDl;
-use ubis\model\entity\GestorCentroDl;
-use ubis\model\entity\GestorCentroEllas;
-use ubis\model\entity\Ubi;
 use web\DateTimeLocal;
 use web\Desplegable;
 use web\Hash;
-use zonassacd\model\entity\GestorZonaSacd;
+use ubis\model\entity\GestorCentroDl;
+use ubis\model\entity\GestorCentroEllas;
+use ubis\model\entity\Ubi;
 
 require_once("apps/core/global_header.inc");
 // Archivos requeridos por esta url **********************************************

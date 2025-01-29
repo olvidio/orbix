@@ -1,8 +1,10 @@
 <?php
 
-use usuarios\model\entity as usuarios;
-use permisos\model as permisos;
-use menus\model\entity as menus;
+use core\ViewPhtml;
+use permisos\model\PermDl;
+use usuarios\model\entity\GrupoOUsuario;
+use usuarios\model\entity\PermMenu;
+use web\Hash;
 
 // INICIO Cabecera global de URL de controlador *********************************
 require_once("apps/core/global_header.inc");
@@ -11,7 +13,7 @@ require_once("apps/core/global_header.inc");
 // Crea los objetos de uso global **********************************************
 require_once("apps/core/global_object.inc");
 // Crea los objetos por esta url  **********************************************
-$oCuadros = new permisos\PermDl;
+$oCuadros = new PermDl;
 
 // FIN de  Cabecera global de URL de controlador ********************************
 
@@ -31,18 +33,18 @@ if (!empty($a_sel)) { //vengo de un checkbox
     $oPosicion->addParametro('scroll_id', $scroll_id, 1);
 }
 
-$oUsuario = new usuarios\GrupoOUsuario(array('id_usuario' => $Qid_usuario)); // La tabla y su heredada
+$oUsuario = new GrupoOUsuario(array('id_usuario' => $Qid_usuario)); // La tabla y su heredada
 $nombre = $oUsuario->getUsuario();
 
 if (!empty($Qid_item)) {
-    $oPermiso = new usuarios\PermMenu(array('id_item' => $Qid_item));
+    $oPermiso = new PermMenu(array('id_item' => $Qid_item));
     $menu_perm = $oPermiso->getMenu_perm();
 } else { // es nuevo
-    $oPermiso = new usuarios\PermMenu(array('id_usuario' => $Qid_usuario));
+    $oPermiso = new PermMenu(array('id_usuario' => $Qid_usuario));
     $menu_perm = 0;
 }
 
-$oHash = new web\Hash();
+$oHash = new Hash();
 $oHash->setCamposForm('menu_perm');
 $aCamposHidden = array(
     'id_usuario' => $Qid_usuario,
@@ -60,5 +62,5 @@ $a_campos = ['oPosicion' => $oPosicion,
     'menu_perm' => $menu_perm,
 ];
 
-$oView = new core\View('usuarios/controller');
+$oView = new ViewPhtml('usuarios/controller');
 $oView->renderizar('usuario_perm_menu.phtml', $a_campos);

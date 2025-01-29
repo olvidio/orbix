@@ -2,9 +2,12 @@
 
 namespace actividadplazas\model;
 
-use core;
+use actividades\model\entity\Actividad;
+use actividadplazas\model\entity\GestorActividadPlazas;
+use asistentes\model\entity\GestorAsistente;
 use core\ConfigGlobal;
-use This;
+use ubis\model\entity\GestorDelegacion;
+use web\Desplegable;
 use function core\is_true;
 
 /**
@@ -68,13 +71,13 @@ class GestorResumenPlazas
     public function getPosiblesPropietarios($dl_de_paso = FALSE)
     {
         $id_activ = $this->getId_activ();
-        $mi_dl = \core\ConfigGlobal::mi_delef();
+        $mi_dl = ConfigGlobal::mi_delef();
         $id_mi_dl = $this->getDlId($mi_dl);
         $dl_org = $this->getDl_org();
 
-        $gesAsistentes = new \asistentes\model\entity\GestorAsistente();
+        $gesAsistentes = new GestorAsistente();
         //Conseguidas
-        $gesActividadPlazas = new \actividadplazas\model\entity\GestorActividadPlazas();
+        $gesActividadPlazas = new GestorActividadPlazas();
         // plazas de calendario de cada dl
         $a_dl = array();
         $plazas_conseguidas = 0;
@@ -114,7 +117,7 @@ class GestorResumenPlazas
             //$a_dl["$dl_org>$dl_org"] = $dl_org;
             $a_dl["xxx"] = _("no disponibles");
         }
-        return new \web\Desplegable('', $a_dl, '', true);
+        return new Desplegable('', $a_dl, '', true);
     }
 
     /**
@@ -128,7 +131,7 @@ class GestorResumenPlazas
         $id_mi_dl = $this->getDlId($mi_dl);
         $dl_org = $this->getDl_org();
 
-        $gesActividadPlazas = new \actividadplazas\model\entity\GestorActividadPlazas();
+        $gesActividadPlazas = new GestorActividadPlazas();
         // plazas de calendario de cada dl
         $cActividadPlazas = $gesActividadPlazas->getActividadesPlazas(array('id_activ' => $id_activ, 'id_dl' => $id_mi_dl, 'dl_tabla' => $dl_org));
         $plazas_calendario = 0;
@@ -149,7 +152,7 @@ class GestorResumenPlazas
         $id_mi_dl = $this->getDlId($mi_dl);
         $dl_org = $this->getDl_org();
 
-        $gesActividadPlazas = new \actividadplazas\model\entity\GestorActividadPlazas();
+        $gesActividadPlazas = new GestorActividadPlazas();
         // plazas de calendario de cada dl
         $cActividadPlazas = $gesActividadPlazas->getActividadesPlazas(array('id_activ' => $id_activ, 'id_dl' => $id_mi_dl, 'dl_tabla' => $mi_dl));
         foreach ($cActividadPlazas as $oActividadPlazas) {
@@ -174,7 +177,7 @@ class GestorResumenPlazas
         $mi_dl = $dl;
         $dl_org = $this->getDl_org();
 
-        $gesActividadPlazas = new \actividadplazas\model\entity\GestorActividadPlazas();
+        $gesActividadPlazas = new GestorActividadPlazas();
         // plazas de calendario de cada dl
         $plazas_conseguidas = 0;
         $cActividadPlazas = $gesActividadPlazas->getActividadesPlazas(array('id_activ' => $id_activ));
@@ -217,7 +220,7 @@ class GestorResumenPlazas
     public function getPlazasTotales()
     {
         $id_activ = $this->getId_activ();
-        $oActividad = new \actividades\model\entity\Actividad($id_activ);
+        $oActividad = new Actividad($id_activ);
         $dl_org = $oActividad->getDl_org();
         $plazas_totales = $oActividad->getPlazas();
         if (empty($plazas_totales)) {
@@ -253,9 +256,9 @@ class GestorResumenPlazas
     {
         $a_plazas = array();
         $id_activ = $this->getId_activ();
-        $gesActividadPlazas = new \actividadplazas\model\entity\GestorActividadPlazas();
-        $gesAsistentes = new \asistentes\model\entity\GestorAsistente();
-        $oActividad = new \actividades\model\entity\Actividad($id_activ);
+        $gesActividadPlazas = new GestorActividadPlazas();
+        $gesAsistentes = new GestorAsistente();
+        $oActividad = new Actividad($id_activ);
         $dl_org = $oActividad->getDl_org();
         $plazas_totales = $this->getPlazasTotales();
         /*
@@ -404,10 +407,10 @@ class GestorResumenPlazas
      * @return integer numero de plazas libres para la dl
      *
      */
-    public function getLibres($dl = '')
+    public function getLibres(string $dl = '')
     {
         if (empty($dl)) {
-            $dl = core\ConfigGlobal::mi_delef();
+            $dl = ConfigGlobal::mi_delef();
         }
 
         $a_plazas = $this->getResumen();
@@ -426,7 +429,7 @@ class GestorResumenPlazas
      * usa clases externas:
      *    asistentes\model\entity\GestorAsistente();
      *    actividades\Actividad($id_activ);
-     *  actividadplazas\model\entity\GestorActividadPlazas();
+     *    GestorActividadPlazas();
      *
      * @return array $propiedad key = "dl_propietaria>dl_cedida", value = texto explicativo.
      *
@@ -436,11 +439,11 @@ class GestorResumenPlazas
         /*
         puede ser una plaza propia o una cedida.
          */
-        $gesAsistentes = new \asistentes\model\entity\GestorAsistente();
+        $gesAsistentes = new GestorAsistente();
         $err_txt = '';
 
         $id_activ = $this->getId_activ();
-        $mi_dl = \core\ConfigGlobal::mi_delef();
+        $mi_dl = ConfigGlobal::mi_delef();
 
         $propiedad = array();
         $pl_propias = $this->getPlazasPropias();
@@ -457,7 +460,7 @@ class GestorResumenPlazas
         // Si no quedan, ver si dispongo de otras
         if (empty($propiedad)) {
             //Conseguidas
-            $gesActividadPlazas = new \actividadplazas\model\entity\GestorActividadPlazas();
+            $gesActividadPlazas = new GestorActividadPlazas();
             // plazas de calendario de cada dl
             $cActividadPlazas = $gesActividadPlazas->getActividadesPlazas(array('id_activ' => $id_activ));
             foreach ($cActividadPlazas as $oActividadPlazas) {
@@ -499,16 +502,16 @@ class GestorResumenPlazas
     private function getPlazasPropias()
     {
         $id_activ = $this->getId_activ();
-        $mi_dl = \core\ConfigGlobal::mi_delef();
+        $mi_dl = ConfigGlobal::mi_delef();
 
-        $oActividad = new \actividades\model\entity\Actividad($id_activ);
+        $oActividad = new Actividad($id_activ);
         $publicado = $oActividad->getPublicado();
         // Si no está publicada no tiene plazas de calendario.
         // Se toman todas la de la actividad como propias.
         if (!is_true($publicado)) {
             $pl_propias = $this->getPlazasTotales();
         } else {
-            // las que me correponden por calendario - las cedidas
+            // las que me corresponden por calendario - las cedidas
             $pl_calendario = $this->getPlazasCalendario($mi_dl);
             $pl_cedidas = $this->getPlazasCedidas($mi_dl);
             $pl_propias = $pl_calendario - $pl_cedidas;
@@ -534,7 +537,7 @@ class GestorResumenPlazas
     {
         if (!isset($this->dl_org)) {
             $id_activ = $this->getId_activ();
-            $oActividad = new \actividades\model\entity\Actividad($id_activ);
+            $oActividad = new Actividad($id_activ);
             $this->dl_org = $oActividad->getDl_org();
         }
         return $this->dl_org;
@@ -544,7 +547,7 @@ class GestorResumenPlazas
     protected function setArrayDl()
     {
         if (!isset($this->a_dele)) {
-            $gesDelegacion = new \ubis\model\entity\GestorDelegacion();
+            $gesDelegacion = new GestorDelegacion();
             $cDelegaciones = $gesDelegacion->getDelegaciones(array('_ordre' => 'region,dl'));
             $this->a_dele = array();
             $this->a_id_dele = array();

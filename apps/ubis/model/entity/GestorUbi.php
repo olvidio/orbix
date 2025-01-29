@@ -1,8 +1,9 @@
 <?php
 namespace ubis\model\entity;
 
-use core;
-use web;
+
+use core\ClaseGestor;
+use web\Desplegable;
 
 /**
  * GestorUbi
@@ -15,7 +16,7 @@ use web;
  * @version 1.0
  * @created 01/10/2010
  */
-class GestorUbi extends core\ClaseGestor
+class GestorUbi extends ClaseGestor
 {
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
@@ -39,7 +40,7 @@ class GestorUbi extends core\ClaseGestor
      * Els posibles ubis
      *
      * @param string optional $sCondicion Condició de búsqueda (amb el WHERE).
-     * @return array Una Llista
+     * @return array|false
      */
     function getListaUbis($sCondicion = '')
     {
@@ -54,7 +55,7 @@ class GestorUbi extends core\ClaseGestor
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
             return false;
         }
-        return new web\Desplegable('', $oDblSt, '', true);
+        return new Desplegable('', $oDblSt, '', true);
     }
 
 

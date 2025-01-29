@@ -2,13 +2,14 @@
 
 namespace actividades\model;
 
+use actividades\model\entity\ActividadDl;
 use actividades\model\entity\GestorActividadDl;
 use actividades\model\entity\GestorRepeticion;
-use actividades\model\entity\ActividadDl;
-use core;
-use web;
-use procesos;
-use actividadescentro;
+use actividadescentro\model\entity\GestorCentroEncargado;
+use core\ConfigGlobal;
+use DateInterval;
+use procesos\model\entity\GestorActividadProcesoTarea;
+use web\DateTimeLocal;
 
 /**
  * Description of actividadlugar
@@ -73,7 +74,7 @@ class ActividadNuevoCurso
         $GesActividades = new GestorActividadDl();
         $sQry = "SELECT id_activ, to_char(f_ini,'YYYYMMDD')||COALESCE(to_char(h_ini,'HH24MISS'),'200000') as inicio 
                     FROM a_actividades_dl
-                    WHERE dl_org = '" . core\ConfigGlobal::mi_delef() . "' AND f_ini >= '$inicio' AND f_ini <= '$fin' AND status < 4 
+                    WHERE dl_org = '" . ConfigGlobal::mi_delef() . "' AND f_ini >= '$inicio' AND f_ini <= '$fin' AND status < 4 
                     ORDER BY inicio";
         $cActividades = $GesActividades->getActividadesQuery($sQry);
         $num_act = count($cActividades);
@@ -99,7 +100,7 @@ class ActividadNuevoCurso
 
             $dif = $oF_fin->diff($oF_ini);
             //echo $dif->format('%R%a %H');
-            if ($dif->format('%R') == '-') {
+            if ($dif->format('%R') === '-') {
                 //echo $dif->format('%R%a %H');
                 $txt .= _("hay un solape entre") . ':  ';
                 $txt .= $cActividades[$i]->getNom_activ();
@@ -184,18 +185,18 @@ class ActividadNuevoCurso
                 $inc_year = $this->iyear - $this->iyear_ref;
                 $num_dias = $inc_year * 364;
                 $periodo = "P" . $num_dias . "D";
-                $oFini->add(new \DateInterval($periodo));
-                $oFfin->add(new \DateInterval($periodo));
+                $oFini->add(new DateInterval($periodo));
+                $oFfin->add(new DateInterval($periodo));
                 break;
             case 2: // por dia del año
                 $inc_year = $this->iyear - $this->iyear_ref;
                 $periodo = "P" . $inc_year . "Y";
-                $oFini->add(new \DateInterval($periodo));
-                $oFfin->add(new \DateInterval($periodo));
+                $oFini->add(new DateInterval($periodo));
+                $oFfin->add(new DateInterval($periodo));
                 break;
             case 3: // por dia de domingo de pascua
-                $oDomingo_pascua = new web\DateTimeLocal();
-                $oDomingo_pascua_new = new web\DateTimeLocal();
+                $oDomingo_pascua = new DateTimeLocal();
+                $oDomingo_pascua_new = new DateTimeLocal();
                 $oDomingo_pascua->setTimestamp(easter_date($this->iyear_ref));
                 $oDomingo_pascua_new->setTimestamp(easter_date($this->iyear));
                 $dif_pascua = $oDomingo_pascua->diff($oDomingo_pascua_new);
@@ -250,9 +251,9 @@ class ActividadNuevoCurso
         // cojo el valor del último insert 
         $id_actividad_new = $oActividad->getId_activ();
 
-        if (core\ConfigGlobal::is_app_installed('actividadescentro')) {
+        if (ConfigGlobal::is_app_installed('actividadescentro')) {
             // También copio los centros encargados.
-            $GesEncargados = new actividadescentro\model\entity\GestorCentroEncargado();
+            $GesEncargados = new GestorCentroEncargado();
             $cEncargados = $GesEncargados->getCentrosEncargados(array('id_activ' => $oActividadOrigen->getId_activ()));
             foreach ($cEncargados as $oCentroEncargado) {
                 $newEncargado = clone $oCentroEncargado;
@@ -263,7 +264,7 @@ class ActividadNuevoCurso
                 }
             }
         }
-        if (core\ConfigGlobal::is_app_installed('procesos')) {
+        if (ConfigGlobal::is_app_installed('procesos')) {
             // También creo las fases-tareas
             $this->crear_fases($id_actividad_new);
         }
@@ -272,7 +273,7 @@ class ActividadNuevoCurso
     private function crear_fases($id_activ)
     {
         //echo "generando fases de $id_activ,$id_tipo_activ...<br>";
-        $oGesActividadProcesoTarea = new procesos\model\entity\GestorActividadProcesoTarea();
+        $oGesActividadProcesoTarea = new GestorActividadProcesoTarea();
         $oGesActividadProcesoTarea->generarProceso($id_activ);
     }
 
@@ -291,7 +292,7 @@ class ActividadNuevoCurso
      * @param bool $bQuiet
      * @return ActividadNuevoCurso
      */
-    public function setQuiet($bQuiet)
+    public function setQuiet(bool $bQuiet)
     {
         $this->bQuiet = $bQuiet;
         return $this;
@@ -311,7 +312,7 @@ class ActividadNuevoCurso
      * @param bool $bVer_lista
      * @return ActividadNuevoCurso
      */
-    public function setVer_lista($bVer_lista)
+    public function setVer_lista(bool $bVer_lista)
     {
         $this->bVer_lista = $bVer_lista;
         return $this;
@@ -331,7 +332,7 @@ class ActividadNuevoCurso
      * @param bool $iyear
      * @return ActividadNuevoCurso
      */
-    public function setYear($iyear)
+    public function setYear(bool $iyear)
     {
         $this->iyear = $iyear;
         return $this;
@@ -351,7 +352,7 @@ class ActividadNuevoCurso
      * @param bool $iyear_ref
      * @return ActividadNuevoCurso
      */
-    public function setYear_ref($iyear_ref)
+    public function setYear_ref(bool $iyear_ref)
     {
         $this->iyear_ref = $iyear_ref;
         return $this;

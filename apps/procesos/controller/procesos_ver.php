@@ -1,11 +1,13 @@
 <?php
 
 use actividades\model\entity\ActividadAll;
+use core\ViewTwig;
 use menus\model\PermisoMenu;
+use web\Desplegable;
 use procesos\model\entity\GestorActividadFase;
 use procesos\model\entity\GestorActividadTarea;
 use procesos\model\entity\TareaProceso;
-use web\Desplegable;
+use web\Hash;
 
 // INICIO Cabecera global de URL de controlador *********************************
 require_once("apps/core/global_header.inc");
@@ -117,7 +119,7 @@ if ($Qmod == 'nuevo') {
 $url_ajax = "apps/procesos/controller/procesos_ajax.php";
 
 
-$oHash = new web\Hash();
+$oHash = new Hash();
 $oHash->setCamposForm('dep_num!id_fase!id_fase_previa!id_tarea!id_tarea_previa!mensaje_requisito!id_of_responsable!status');
 $oHash->setCamposNo('que!id_fase_previa[]!id_tarea_previa[]!mensaje_requisito[]');
 $oHash->setCamposChk('id_tarea_previa');
@@ -144,5 +146,5 @@ $a_campos = ['oPosicion' => $oPosicion,
     'oDesplTareasPrevias' => $oDesplTareaPrevia,
 ];
 
-$oView = new core\ViewTwig('procesos/controller');
+$oView = new ViewTwig('procesos/controller');
 $oView->renderizar('procesos_ver.html.twig', $a_campos);

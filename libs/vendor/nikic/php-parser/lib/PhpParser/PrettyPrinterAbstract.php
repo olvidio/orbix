@@ -946,7 +946,7 @@ abstract class PrettyPrinterAbstract implements PrettyPrinter {
                 $pos = $itemEndPos + 1;
                 continue;
             } else {
-                throw new \Exception("Shouldn't happen");
+                throw new Exception("Shouldn't happen");
             }
 
             if (null !== $fixup && $arrItem->getAttribute('origNode') !== $origArrItem) {
@@ -1075,7 +1075,7 @@ abstract class PrettyPrinterAbstract implements PrettyPrinter {
                 }
                 break;
             default:
-                throw new \Exception('Cannot happen');
+                throw new Exception('Cannot happen');
         }
 
         // Nothing special to do

@@ -9,9 +9,9 @@ use core\ClaseGestor;
 use core\Condicion;
 use core\ConfigGlobal;
 use core\Set;
-use function core\is_true;
-use ubis\model\entity\Casa;
 use web\DateTimeLocal;
+use ubis\model\entity\Casa;
+use function core\is_true;
 
 /**
  * GestorActividadProcesoTarea
@@ -125,9 +125,9 @@ class GestorActividadProcesoTarea extends ClaseGestor
      * retorna un array amb les fases i el seu estat.
      *
      * @param integer $iid_activ
-     * @return array $aFasesEstado = [ id_fase => $completado ]
+     * @return array|false
      */
-    public function getListaFaseEstado($iid_activ)
+    public function getListaFaseEstado(int $iid_activ)
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
@@ -180,15 +180,15 @@ class GestorActividadProcesoTarea extends ClaseGestor
     }
 
     /**
-     * En gerneral genera los dos porcesos, para sv y sf.
-     * Si se le pasa el parametro isfsv, sólo genera el proceso correspondiente.
+     * En general genera los dos procesos, para sv y sf.
+     * Si se le pasa el parámetro isfsv, sólo genera el proceso correspondiente.
      *
      * @param string $iid_activ
-     * @param integer $isfsv
+     * @param integer|string $isfsv
      * @param boolean $force para forzar a borrar el proceso y generarlo de nuevo
-     * @return boolean|\procesos\model\entity\id_fase.
+     * @return boolean|int id_fase.
      */
-    public function generarProceso($iid_activ = '', $isfsv = '', $force = FALSE)
+    public function generarProceso(string $iid_activ = '', int|string $isfsv = '', bool $force = FALSE)
     {
         // Si se genera al crear una actividad Ex. El objeto Actividad no la encuentra
         // porque todavía no se ha importado (y no está en su grupo de actividades).
@@ -266,7 +266,7 @@ class GestorActividadProcesoTarea extends ClaseGestor
      * retorna un array amb les fases completades.
      *
      * @param integer iid_activ
-     * @return array
+     * @return array|false
      */
     function getFasesCompletadas($iid_activ = '')
     {
@@ -333,7 +333,6 @@ class GestorActividadProcesoTarea extends ClaseGestor
      * Borra el procés per l'activitat.
      *
      * @param integer iid_activ
-     * @return none.
      */
     private function borrar($iid_activ = '')
     {
@@ -355,7 +354,7 @@ class GestorActividadProcesoTarea extends ClaseGestor
      *
      * @param integer iid_activ
      * @param integer iid_tipo_proceso
-     * @return id_fase.
+     * @return int id_fase.
      */
     private function generar($iid_activ = '', $iid_tipo_proceso = '', $isfsv = '', $force = FALSE)
     {
@@ -418,8 +417,8 @@ class GestorActividadProcesoTarea extends ClaseGestor
             }
         } else {
             // Posterior.
-            // para el caso de frozar, pongo todo a 0.
-            if ($force == TRUE) {
+            // para el caso de forzar, pongo todo a 0.
+            if (is_true($force)) {
                 $p = 0;
                 $statusNew = '';
                 foreach ($cTareasProceso as $oTareaProceso) {
@@ -527,7 +526,7 @@ class GestorActividadProcesoTarea extends ClaseGestor
      * retorna l'array d'objectes de tipus ActividadProcesoTarea
      *
      * @param string sQuery la query a executar.
-     * @return array Una col·lecció d'objectes de tipus ActividadProcesoTarea
+     * @return array|false
      */
     function getActividadProcesoTareasQuery($sQuery = '')
     {
@@ -551,7 +550,7 @@ class GestorActividadProcesoTarea extends ClaseGestor
      *
      * @param array aWhere associatiu amb els valors de les variables amb les quals farem la query
      * @param array aOperators associatiu amb els valors dels operadors que cal aplicar a cada variable
-     * @return array Una col·lecció d'objectes de tipus ActividadProcesoTarea
+     * @return array|void
      */
     function getActividadProcesoTareas($aWhere = array(), $aOperators = array())
     {
@@ -561,13 +560,13 @@ class GestorActividadProcesoTarea extends ClaseGestor
         $oCondicion = new Condicion();
         $aCondi = array();
         foreach ($aWhere as $camp => $val) {
-            if ($camp == '_ordre') continue;
+            if ($camp === '_ordre') continue;
             $sOperador = isset($aOperators[$camp]) ? $aOperators[$camp] : '';
             if ($a = $oCondicion->getCondicion($camp, $sOperador, $val)) $aCondi[] = $a;
             // operadores que no requieren valores
-            if ($sOperador == 'BETWEEN' || $sOperador == 'IS NULL' || $sOperador == 'IS NOT NULL' || $sOperador == 'OR') unset($aWhere[$camp]);
-            if ($sOperador == 'IN' || $sOperador == 'NOT IN') unset($aWhere[$camp]);
-            if ($sOperador == 'TXT') unset($aWhere[$camp]);
+            if ($sOperador === 'BETWEEN' || $sOperador === 'IS NULL' || $sOperador === 'IS NOT NULL' || $sOperador === 'OR') unset($aWhere[$camp]);
+            if ($sOperador === 'IN' || $sOperador === 'NOT IN') unset($aWhere[$camp]);
+            if ($sOperador === 'TXT') unset($aWhere[$camp]);
         }
         $sCondi = implode(' AND ', $aCondi);
         if ($sCondi != '') $sCondi = " WHERE " . $sCondi;

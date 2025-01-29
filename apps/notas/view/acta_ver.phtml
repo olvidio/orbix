@@ -204,7 +204,7 @@
             //datos = $('#frm_upload').serialize();
             var datos = new FormData(document.getElementById("frm_upload"));
 
-            request = $.ajax({
+            let request = $.ajax({
                 data: datos,
                 url: 'apps/notas/controller/acta_pdf_upload.php',
                 method: 'POST',
@@ -227,7 +227,7 @@
                 event.preventDefault();
             }
             if (confirm("<?= _("¿Está seguro que desea borrar esta acta firmada?") ?>")) {
-                request = $.ajax({
+                let request = $.ajax({
                     data: '<?= $h_delete ?>',
                     url: '<?= $url_delete ?>',
                     method: 'POST',

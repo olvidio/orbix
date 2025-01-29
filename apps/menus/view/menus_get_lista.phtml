@@ -1,3 +1,8 @@
+<?php
+
+use core\ConfigGlobal;
+
+?>
 <script>
     fnjs_ver_ficha = function (id_menu) {
         var filtro_grupo = $('#filtro_grupo').val();
@@ -35,7 +40,7 @@
         //echo "m: $perm_menu,l: $perm_login, ";
         $perm_menu = $oCuadros->lista_txt2($menu_perm);
         // hago las rutas absolutas, en vez de relativas:
-        if (!empty($url)) $url = core\ConfigGlobal::getWeb() . '/$url';
+        if (!empty($url)) $url = ConfigGlobal::getWeb() . '/$url';
         // quito las llaves "{}"
         $orden = substr($orden, 1, -1);
         //$num_orden=

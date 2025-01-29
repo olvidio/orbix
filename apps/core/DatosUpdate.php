@@ -62,7 +62,7 @@ class DatosUpdate
             $msg_err = _("hay un error, no se ha guardado");
             return $msg_err;
         }
-        return true;;
+        return true;
     }
 
     public function getFicha()

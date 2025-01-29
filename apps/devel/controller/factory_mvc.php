@@ -3,6 +3,7 @@
 namespace devel\controller;
 
 use core;
+use core\ConfigGlobal;
 use web;
 
 /**
@@ -231,7 +232,7 @@ $err_bool = "";
 $a_auto = array();
 foreach ($oDbl->query($sql) as $row) {
     $nomcamp = $row['field'];
-    if ($nomcamp == 'id_schema') {
+    if ($nomcamp === 'id_schema') {
         continue;
     }
     $NomCamp = ucwords($nomcamp);
@@ -313,7 +314,7 @@ foreach ($oDbl->query($sql) as $row) {
 	 */
 	 private $' . $tip . $nomcamp . ';';
 
-    if ($tipo == 'date') {
+    if ($tipo === 'date') {
         $gets .= '
 	/**
 	 * Recupera l\'atribut ' . $tip . $nomcamp . ' de ' . $clase . '
@@ -357,7 +358,7 @@ foreach ($oDbl->query($sql) as $row) {
 		$this->' . $tip . $nomcamp . ' = $' . $tip . $nomcamp . ';
 	}';
     } else {
-        if ($tipo == 'date') {
+        if ($tipo === 'date') {
             $gets .= '
 	/**
 	 * estableix el valor de l\'atribut ' . $tip . $nomcamp . ' de ' . $clase . '
@@ -392,7 +393,7 @@ foreach ($oDbl->query($sql) as $row) {
 	 * Recupera les propietats de l\'atribut ' . $tip . $nomcamp . ' de ' . $clase . '
 	 * en una clase del tipus DatosCampo
 	 *
-	 * @return core\DatosCampo
+	 * @return DatosCampo
 	 */
 	function getDatos' . $NomCamp . '() {
 		$nom_tabla = $this->getNomTabla();
@@ -404,7 +405,7 @@ foreach ($oDbl->query($sql) as $row) {
 
     }
 
-    if ($tipo == 'date') {
+    if ($tipo === 'date') {
         $add_convert = TRUE;
         $exists .= "\n\t\t" . 'if (array_key_exists(\'' . $nomcamp . '\',$aDades)) $this->set' . $NomCamp . '($aDades[\'' . $nomcamp . '\'],$convert);';
         $ToEmpty .= "\n\t\t" . '$this->set' . $NomCamp . '(\'\');';
@@ -415,8 +416,8 @@ foreach ($oDbl->query($sql) as $row) {
 
     if (!in_array($nomcamp, $aClaus)) {
         if ($auto != 1) { // si tiene sequencia no pongo el campo en el update.
-            if ($tip == 'b') {
-                $err_bool .= "\n\t\t" . 'if ( core\is_true($aDades[\'' . $nomcamp . '\']) ) { $aDades[\'' . $nomcamp . '\']=\'true\'; } else { $aDades[\'' . $nomcamp . '\']=\'false\'; }';
+            if ($tip === 'b') {
+                $err_bool .= "\n\t\t" . 'if ( is_true($aDades[\'' . $nomcamp . '\']) ) { $aDades[\'' . $nomcamp . '\']=\'true\'; } else { $aDades[\'' . $nomcamp . '\']=\'false\'; }';
             }
             $guardar .= "\n\t\t" . '$aDades[\'' . $nomcamp . '\'] = $this->' . $tip . $nomcamp . ';';
             if ($cl > 0) $update .= ",\n";
@@ -468,7 +469,7 @@ $txt .= "
  * @version 1.0
  * @created $hoy
  */
-class $clase Extends core\ClasePropiedades {
+class $clase extends ClasePropiedades {
 	/* ATRIBUTOS ----------------------------------------------------------------- */
 ";
 $txt .= $atributs;
@@ -780,7 +781,7 @@ $txt .= '
 	 *
 	 */
 	function getDatosCampos() {
-		$o' . $clase . 'Set = new core\Set();
+		$o' . $clase . 'Set = new Set();
 ';
 $txt .= $altres_gets_set;
 $txt .= '
@@ -795,7 +796,7 @@ $txt .= '
 ';
 
 /* ESCRIURE LA CLASSSE ------------------------------------------------ */
-$filename = core\ConfigGlobal::DIR . '/apps/' . $grupo . '/model/entity/' . $Qclase . '.php';
+$filename = ConfigGlobal::DIR . '/apps/' . $grupo . '/model/entity/' . $Qclase . '.php';
 
 if (!$handle = fopen($filename, 'w')) {
     echo "Cannot open file ($filename)";
@@ -833,7 +834,7 @@ use core;
  * @created $hoy
  */
 
-class $gestor Extends core\ClaseGestor {
+class $gestor extends ClaseGestor {
 	/* ATRIBUTOS ----------------------------------------------------------------- */
 
 	/* CONSTRUCTOR -------------------------------------------------------------- */
@@ -866,7 +867,7 @@ $txt2 .= '
 	 */
 	function get' . $clase_plural . 'Query($sQuery=\'\') {
 		$oDbl = $this->getoDbl();
-		$o' . $clase . 'Set = new core\Set();
+		$o' . $clase . 'Set = new Set();
 		if (($oDbl->query($sQuery)) === FALSE) {
 			$sClauError = \'' . $gestor . '.query\';
 			$_SESSION[\'oGestorErrores\']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
@@ -894,8 +895,8 @@ $txt2 .= '
 	function get' . $clase_plural . '($aWhere=array(),$aOperators=array()) {
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
-		$o' . $clase . 'Set = new core\Set();
-		$oCondicion = new core\Condicion();
+		$o' . $clase . 'Set = new Set();
+		$oCondicion = new Condicion();
 		$aCondi = array();';
 $txt2 .= '
 		foreach ($aWhere as $camp => $val) {
@@ -947,7 +948,7 @@ $txt2 .= '
 }
 ';
 /* ESCRIURE LA CLASSSE ------------------------------------------------ */
-$filename = core\ConfigGlobal::DIR . '/apps/' . $grupo . '/model/entity/Gestor' . $Qclase . '.php';
+$filename = ConfigGlobal::DIR . '/apps/' . $grupo . '/model/entity/Gestor' . $Qclase . '.php';
 
 
 if (!$handle = fopen($filename, 'w')) {

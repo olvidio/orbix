@@ -1,7 +1,9 @@
 <?php
 namespace ubis\model\entity;
 
-use core;
+use core\DatosCampo;
+use core\Set;
+use function core\is_true;
 
 /**
  * Clase que implementa la entidad u_cdc
@@ -119,17 +121,17 @@ class Casa extends UbiGlobal
         $aDades['observ'] = $this->sobserv;
         array_walk($aDades, 'core\poner_null');
         //para el caso de los boolean FALSE, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
-        if (core\is_true($aDades['status'])) {
+        if (is_true($aDades['status'])) {
             $aDades['status'] = 'true';
         } else {
             $aDades['status'] = 'false';
         }
-        if (core\is_true($aDades['sv'])) {
+        if (is_true($aDades['sv'])) {
             $aDades['sv'] = 'true';
         } else {
             $aDades['sv'] = 'false';
         }
-        if (core\is_true($aDades['sf'])) {
+        if (is_true($aDades['sf'])) {
             $aDades['sf'] = 'true';
         } else {
             $aDades['sf'] = 'false';
@@ -255,7 +257,7 @@ class Casa extends UbiGlobal
      *
      * @param array $aDades
      */
-    function setAllAtributes($aDades, $convert = FALSE)
+    function setAllAtributes(array $aDades, $convert = FALSE)
     {
         if (!is_array($aDades)) return;
         if (array_key_exists('id_schema', $aDades)) $this->setId_schema($aDades['id_schema']);
@@ -452,7 +454,7 @@ class Casa extends UbiGlobal
      */
     function getDatosCampos()
     {
-        $oUbiSet = new core\Set();
+        $oUbiSet = new Set();
 
         $oUbiSet->add($this->getDatosTipo_ubi());
         $oUbiSet->add($this->getDatosNombre_ubi());
@@ -476,12 +478,12 @@ class Casa extends UbiGlobal
      * Recupera les propietats de l'atribut stipo_casa de Casa
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosTipo_casa()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'tipo_casa'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'tipo_casa'));
         $oDatosCampo->setEtiqueta(_("tipo de casa"));
         return $oDatosCampo;
     }
@@ -490,12 +492,12 @@ class Casa extends UbiGlobal
      * Recupera les propietats de l'atribut iplazas de Casa
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosPlazas()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'plazas'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'plazas'));
         $oDatosCampo->setEtiqueta(_("plazas"));
         return $oDatosCampo;
     }
@@ -504,12 +506,12 @@ class Casa extends UbiGlobal
      * Recupera les propietats de l'atribut iplazas_min de Casa
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosPlazas_min()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'plazas_min'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'plazas_min'));
         $oDatosCampo->setEtiqueta(_("plazas mínimo"));
         return $oDatosCampo;
     }
@@ -518,12 +520,12 @@ class Casa extends UbiGlobal
      * Recupera les propietats de l'atribut inum_sacd de Casa
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosNum_sacd()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'num_sacd'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'num_sacd'));
         $oDatosCampo->setEtiqueta(_("num sacd"));
         return $oDatosCampo;
     }
@@ -532,12 +534,12 @@ class Casa extends UbiGlobal
      * Recupera les propietats de l'atribut sbiblioteca de Casa
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosBiblioteca()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'biblioteca'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'biblioteca'));
         $oDatosCampo->setEtiqueta(_("biblioteca casa"));
         return $oDatosCampo;
     }
@@ -546,12 +548,12 @@ class Casa extends UbiGlobal
      * Recupera les propietats de l'atribut sobserv de Casa
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosObserv()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'observ'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'observ'));
         $oDatosCampo->setEtiqueta(_("observaciones"));
         return $oDatosCampo;
     }

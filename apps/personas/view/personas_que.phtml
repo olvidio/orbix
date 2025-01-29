@@ -1,3 +1,8 @@
+<?php
+
+use web\Hash;
+
+?>
 <form id="frm_personas_que" action="<?= $action ?>" method="post" onkeydown="fnjs_enviar(event,this);">
     <?= $oHash->getCamposHtml(); ?>
     <table>
@@ -18,7 +23,7 @@
                                  onclick="fnjs_enviar_formulario('#frm_personas_que')"
                                  value="<?= ucfirst(_("buscar")); ?>" class="btn_ok">
                 <input TYPE="reset"
-                       onclick="fnjs_update_div('#main','<?= web\Hash::link('apps/personas/controller/personas_que.php?' . http_build_query(array('tabla' => $tabla, 'tipo' => $tipo))) ?>')"
+                       onclick="fnjs_update_div('#main','<?= Hash::link('apps/personas/controller/personas_que.php?' . http_build_query(array('tabla' => $tabla, 'tipo' => $tipo))) ?>')"
                        value="<?= ucfirst(_("borrar")); ?>"></th>
         </tr>
         </tfoot>

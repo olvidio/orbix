@@ -2,11 +2,11 @@
 
 namespace menus\model;
 
-use core;
+use core\DatosInfo;
 
 /* No vale el underscore en el nombre */
 
-class InfoGrupMenus extends core\DatosInfo
+class InfoGrupMenus extends DatosInfo
 {
 
     public function __construct()

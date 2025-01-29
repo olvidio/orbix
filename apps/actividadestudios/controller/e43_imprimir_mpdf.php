@@ -1,8 +1,10 @@
 <?php
 // INICIO Cabecera global de URL de controlador *********************************
+use core\ConfigGlobal;
+
 require_once("apps/core/global_header.inc");
 // Archivos requeridos por esta url **********************************************
-include_once(core\ConfigGlobal::$dir_estilos . '/e43_mpdf.css.php');
+include_once(ConfigGlobal::$dir_estilos . '/e43_mpdf.css.php');
 // Crea los objetos de uso global **********************************************
 require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
@@ -19,7 +21,7 @@ $lugar_nacimiento = $oPersona->getLugar_nacimiento();
 $f_nacimiento = $oPersona->getF_nacimiento()->getFromLocal();
 $txt_nacimiento = "$lugar_nacimiento ($f_nacimiento)";
 
-$dl_origen = core\ConfigGlobal::mi_delef();
+$dl_origen = ConfigGlobal::mi_delef();
 $dl_destino = $oPersona->getDl();
 
 $oActividad = new actividades\model\entity\Actividad($id_activ);

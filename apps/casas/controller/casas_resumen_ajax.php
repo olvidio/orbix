@@ -23,14 +23,14 @@
 // INICIO Cabecera global de URL de controlador *********************************
 
 use actividades\model\entity\GestorActividad;
+use casas\model\entity\GestorGrupoCasa;
 use casas\model\entity\GestorUbiGasto;
 use casas\model\entity\Ingreso;
-use ubis\model\entity\GestorCasaDl;
-use ubis\model\entity\GestorCasaPeriodo;
 use web\DateTimeLocal;
 use web\Periodo;
+use ubis\model\entity\GestorCasaDl;
+use ubis\model\entity\GestorCasaPeriodo;
 use ubis\model\entity\GestorCentroEllas;
-use casas\model\entity\GestorGrupoCasa;
 
 require_once("apps/core/global_header.inc");
 // Archivos requeridos por esta url **********************************************
@@ -52,7 +52,7 @@ $Qque = (string)filter_input(INPUT_POST, 'que');
  * @param integer $delta_h horas a quitar a la fecha
  * @return string
  */
-function inicio_periodo($iso_ini, $delta_h = 4)
+function inicio_periodo(string $iso_ini, int $delta_h = 4)
 {
     $oInicio = DateTimeLocal::createFromFormat('Ymd', $iso_ini);
     // dia anterior a las 20:00h
@@ -68,7 +68,7 @@ function inicio_periodo($iso_ini, $delta_h = 4)
  * @param integer $delta_h horas a añadir a la fecha
  * @return string
  */
-function fin_periodo($iso_fin, $delta_h = 10)
+function fin_periodo(string $iso_fin, int $delta_h = 10)
 {
     $oFin = DateTimeLocal::createFromFormat('Ymd', $iso_fin);
     // dia siguiente a las 10:00h
@@ -146,8 +146,9 @@ function dias_ocupacion($aPeriodos, $oActividad, $oIniTot, $oFinTot)
 
     if ($oF_ini < $oIniTot) {
         $isoActivIni = $oIniTot->format('YmdHis');
-        $oLocal = new DateTimeLocal();
-        $oLocal->setDateTime($oIniTot);
+        //$oLocal = new DateTimeLocal();
+        //$oLocal->setDateTime($oIniTot);
+        $oLocal = clone $oIniTot;
         $num_dias = $oLocal->duracion($oF_fin);
     } else {
         $isoActivIni = $oF_ini->format('YmdHis');
@@ -155,8 +156,9 @@ function dias_ocupacion($aPeriodos, $oActividad, $oIniTot, $oFinTot)
     // lo mismo para el final:
     if ($oF_fin > $oFinTot) {
         $isoActivFin = $oFinTot->format('YmdHis');
-        $oLocal = new DateTimeLocal();
-        $oLocal->setDateTime($oF_ini);
+        //$oLocal = new DateTimeLocal();
+        //$oLocal->setDateTime($oF_ini);
+        $oLocal = clone $oF_fin;
         $num_dias = $oLocal->duracion($oFinTot);
     } else {
         $isoActivFin = $oF_fin->format('YmdHis');

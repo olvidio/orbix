@@ -25,7 +25,7 @@ use personas\model\entity\Persona;
 // INICIO Cabecera global de URL de controlador *********************************
 	require_once ("apps/core/global_header.inc");
 // Archivos requeridos por esta url **********************************************
-	include_once(core\ConfigGlobal::$dir_estilos.'/actas_mpdf.css.php'); 
+	include_once(ConfigGlobal::$dir_estilos.'/actas_mpdf.css.php'); 
 
 // Crea los objetos de uso global **********************************************
 	require_once ("apps/core/global_object.inc");

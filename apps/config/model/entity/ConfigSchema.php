@@ -2,7 +2,9 @@
 
 namespace config\model\entity;
 
-use core;
+use core\ClasePropiedades;
+use core\DatosCampo;
+use core\Set;
 
 /**
  * Fitxer amb la Classe que accedeix a la taula x_config_schema
@@ -23,7 +25,7 @@ use core;
  * @version 1.0
  * @created 7/5/2019
  */
-class ConfigSchema extends core\ClasePropiedades
+class ConfigSchema extends ClasePropiedades
 {
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
@@ -90,7 +92,7 @@ class ConfigSchema extends core\ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'parametro') && $val_id !== '') $this->sparametro = (string)$val_id; // evitem SQL injection fent cast a string
+                if (($nom_id === 'parametro') && $val_id !== '') $this->sparametro = (string)$val_id; // evitem SQL injection fent cast a string
             }
         } else {
             if (isset($a_id) && $a_id !== '') {
@@ -229,7 +231,7 @@ class ConfigSchema extends core\ClasePropiedades
      *
      * @param array $aDades
      */
-    function setAllAtributes($aDades)
+    function setAllAtributes(array $aDades)
     {
         if (!is_array($aDades)) return;
         if (array_key_exists('parametro', $aDades)) $this->setParametro($aDades['parametro']);
@@ -287,7 +289,7 @@ class ConfigSchema extends core\ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'parametro') && $val_id !== '') $this->sparametro = $val_id;
+                if (($nom_id === 'parametro') && $val_id !== '') $this->sparametro = $val_id;
             }
         }
     }
@@ -345,7 +347,7 @@ class ConfigSchema extends core\ClasePropiedades
      */
     function getDatosCampos()
     {
-        $oConfigSchemaSet = new core\Set();
+        $oConfigSchemaSet = new Set();
 
         $oConfigSchemaSet->add($this->getDatosValor());
         return $oConfigSchemaSet->getTot();
@@ -356,12 +358,12 @@ class ConfigSchema extends core\ClasePropiedades
      * Recupera les propietats de l'atribut svalor de ConfigSchema
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosValor()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'valor'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'valor'));
         $oDatosCampo->setEtiqueta(_("valor"));
         return $oDatosCampo;
     }

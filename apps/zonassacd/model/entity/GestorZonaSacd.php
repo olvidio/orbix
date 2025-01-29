@@ -2,7 +2,9 @@
 
 namespace zonassacd\model\entity;
 
-use core;
+use core\ClaseGestor;
+use core\Condicion;
+use core\Set;
 
 /**
  * GestorZonaSacd
@@ -15,7 +17,7 @@ use core;
  * @version 1.0
  * @created 01/03/2019
  */
-class GestorZonaSacd extends core\ClaseGestor
+class GestorZonaSacd extends ClaseGestor
 {
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
@@ -39,7 +41,7 @@ class GestorZonaSacd extends core\ClaseGestor
      * retorna l'array de id_nom dels sacd de la zona
      *
      * @param integer iid_zona.
-     * @return array id_nom
+     * @return array|false
      */
     function getSacdsZona($iid_zona = '')
     {
@@ -65,12 +67,12 @@ class GestorZonaSacd extends core\ClaseGestor
      * retorna l'array d'objectes de tipus ZonaSacd
      *
      * @param string sQuery la query a executar.
-     * @return array Una col·lecció d'objectes de tipus ZonaSacd
+     * @return array|false
      */
     function getZonasSacdsQuery($sQuery = '')
     {
         $oDbl = $this->getoDbl();
-        $oZonaSacdSet = new core\Set();
+        $oZonaSacdSet = new Set();
         if (($oDbl->query($sQuery)) === FALSE) {
             $sClauError = 'GestorZonaSacd.query';
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
@@ -89,23 +91,23 @@ class GestorZonaSacd extends core\ClaseGestor
      *
      * @param array aWhere associatiu amb els valors de les variables amb les quals farem la query
      * @param array aOperators associatiu amb els valors dels operadors que cal aplicar a cada variable
-     * @return array Una col·lecció d'objectes de tipus ZonaSacd
+     * @return array|void
      */
     function getZonasSacds($aWhere = array(), $aOperators = array())
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
-        $oZonaSacdSet = new core\Set();
-        $oCondicion = new core\Condicion();
+        $oZonaSacdSet = new Set();
+        $oCondicion = new Condicion();
         $aCondi = array();
         foreach ($aWhere as $camp => $val) {
-            if ($camp == '_ordre') continue;
+            if ($camp === '_ordre') continue;
             $sOperador = isset($aOperators[$camp]) ? $aOperators[$camp] : '';
             if ($a = $oCondicion->getCondicion($camp, $sOperador, $val)) $aCondi[] = $a;
             // operadores que no requieren valores
-            if ($sOperador == 'BETWEEN' || $sOperador == 'IS NULL' || $sOperador == 'IS NOT NULL' || $sOperador == 'OR') unset($aWhere[$camp]);
-            if ($sOperador == 'IN' || $sOperador == 'NOT IN') unset($aWhere[$camp]);
-            if ($sOperador == 'TXT') unset($aWhere[$camp]);
+            if ($sOperador === 'BETWEEN' || $sOperador === 'IS NULL' || $sOperador === 'IS NOT NULL' || $sOperador === 'OR') unset($aWhere[$camp]);
+            if ($sOperador === 'IN' || $sOperador === 'NOT IN') unset($aWhere[$camp]);
+            if ($sOperador === 'TXT') unset($aWhere[$camp]);
         }
         $sCondi = implode(' AND ', $aCondi);
         if ($sCondi != '') $sCondi = " WHERE " . $sCondi;

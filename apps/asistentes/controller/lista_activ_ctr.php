@@ -1,9 +1,12 @@
 <?php
 
-use actividades\model\entity as actividades;
-use asistentes\model\entity as asistentes;
-use personas\model\entity as personas;
-use ubis\model\entity as ubis;
+use actividades\model\entity\Actividad;
+use asistentes\model\entity\GestorAsistente;
+use core\ConfigGlobal;
+use core\ViewPhtml;
+use personas\model\entity\GestorPersonaDl;
+use personas\model\entity\GestorPersonaSSSC;
+use ubis\model\entity\GestorCentroDl;
 use web\Periodo;
 
 /**
@@ -31,14 +34,14 @@ $oPosicion->recordar();
 
 $Qssfsv = (string)filter_input(INPUT_POST, 'ssfsv');
 
-if (core\ConfigGlobal::mi_sfsv() == 1) {
-    if ($Qssfsv == 'sf' && (($_SESSION['oPerm']->have_perm_oficina('vcsd')) || ($_SESSION['oPerm']->have_perm_oficina('des')))) {
+if (ConfigGlobal::mi_sfsv() == 1) {
+    if ($Qssfsv === 'sf' && (($_SESSION['oPerm']->have_perm_oficina('vcsd')) || ($_SESSION['oPerm']->have_perm_oficina('des')))) {
         $ssfsv = 'sf';
     } else {
         $ssfsv = 'sv';
     }
 }
-if (core\ConfigGlobal::mi_sfsv() == 2) {
+if (ConfigGlobal::mi_sfsv() == 2) {
     $ssfsv = 'sf';
 }
 
@@ -51,7 +54,7 @@ $Qempiezamin = (string)filter_input(INPUT_POST, 'empiezamin');
 $Qempiezamax = (string)filter_input(INPUT_POST, 'empiezamax');
 
 //no me cabe el valor en el menú en sss+ (pasa de 100 caracteres), por tanto se lo damos por programa
-if ($Qn_agd == "sss") {
+if ($Qn_agd === "sss") {
     $Qsasistentes = "sss+";
 }
 
@@ -65,8 +68,8 @@ $condta = $oTipoActiv->getId_tipo_activ();
 
 //para el caso especial de n que hacen su ca en cv de agd:
 $condta_plus = '';
-if ($Qsasistentes == "n" && ($Qsactividad == "ca" || $Qsactividad == "crt")) {
-    if ($Qsactividad == "ca") {
+if ($Qsasistentes === "n" && ($Qsactividad === "ca" || $Qsactividad === "crt")) {
+    if ($Qsactividad === "ca") {
         $activ = "cv";
     } else {
         $activ = $Qsactividad;
@@ -80,7 +83,7 @@ if ($Qsasistentes == "n" && ($Qsactividad == "ca" || $Qsactividad == "crt")) {
 
 // para el caso de los ap. que han hecho el crt con sr.
 $condta_sr = '';
-if ($Qsactividad == "crt") {
+if ($Qsactividad === "crt") {
     $oTipoActiv = new web\TiposActividades();
     $oTipoActiv->setSfsvText($ssfsv);
     $oTipoActiv->setAsistentesText('sr');
@@ -145,7 +148,7 @@ switch ($Qn_agd) {
 $aWhere['status'] = 't';
 $aWhere['_ordre'] = 'nombre_ubi';
 // primero selecciono los centros y las personas que dependen de él
-$GesCentros = new ubis\GestorCentroDl();
+$GesCentros = new GestorCentroDl();
 $cCentros = $GesCentros->getCentros($aWhere, $aOperador);
 
 // Bucle para poder sacar los centros de la consulta anterior
@@ -156,11 +159,11 @@ foreach ($cCentros as $oCentro) {
     $id_ubi = $oCentro->getId_ubi();
     $nombre_ubi = $oCentro->getNombre_ubi();
     //consulta para buscar personas de cada ctr
-    if ($tabla == "p_sssc") {
-        $GesPersonas = new personas\GestorPersonaSSSC();
+    if ($tabla === "p_sssc") {
+        $GesPersonas = new GestorPersonaSSSC();
         $cPersonas = $GesPersonas->getPersonas(array('id_ctr' => $id_ubi, 'situacion' => 'A', '_ordre' => 'apellido1'));
     } else {
-        $GesPersonas = new personas\GestorPersonaDl();
+        $GesPersonas = new GestorPersonaDl();
         $cPersonas = $GesPersonas->getPersonas(array('id_ctr' => $id_ubi, 'situacion' => 'A', '_ordre' => 'apellido1,apellido2,nom'));
     }
 
@@ -179,7 +182,7 @@ foreach ($cCentros as $oCentro) {
         $aWhereAct['f_ini'] = "'$inicioIso','$finIso'";
         $aOperadorAct['f_ini'] = "BETWEEN";
 
-        $GesAsistencias = new asistentes\GestorAsistente();
+        $GesAsistencias = new GestorAsistente();
         $cAsistencias = $GesAsistencias->getActividadesDeAsistente($aWhereNom, $aOperadorNom, $aWhereAct, $aOperadorAct);
         $aActividades = array();
         if (is_array($cAsistencias) && count($cAsistencias) == 0) {
@@ -188,7 +191,7 @@ foreach ($cCentros as $oCentro) {
             $a = 0;
             foreach ($cAsistencias as $oAsistente) {
                 $id_activ = $oAsistente->getId_activ();
-                $oActividad = new actividades\Actividad($id_activ);
+                $oActividad = new Actividad($id_activ);
                 $nom_activ = $oActividad->getNom_activ();
                 $a++;
                 $aActividades[] = $nom_activ;
@@ -205,5 +208,5 @@ $a_campos = [
     'aCentros' => $aCentros,
 ];
 
-$oView = new core\View('asistentes/controller');
+$oView = new ViewPhtml('asistentes/controller');
 $oView->renderizar('lista_activ_ctr.phtml', $a_campos);

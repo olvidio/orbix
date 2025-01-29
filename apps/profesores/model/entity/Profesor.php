@@ -2,8 +2,12 @@
 
 namespace profesores\model\entity;
 
-use core;
-use web;
+use core\ClasePropiedades;
+use core\ConverterDate;
+use core\DatosCampo;
+use core\Set;
+use web\DateTimeLocal;
+use web\NullDateTimeLocal;
 
 /**
  * Fitxer amb la Classe que accedeix a la taula d_profesor_stgr
@@ -24,7 +28,7 @@ use web;
  * @version 1.0
  * @created 07/04/2014
  */
-class Profesor extends core\ClasePropiedades
+class Profesor extends ClasePropiedades
 {
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
@@ -76,7 +80,7 @@ class Profesor extends core\ClasePropiedades
     /**
      * F_nombramiento de Profesor
      *
-     * @var web\DateTimeLocal
+     * @varDateTimeLocal
      */
     private $df_nombramiento;
     /**
@@ -94,7 +98,7 @@ class Profesor extends core\ClasePropiedades
     /**
      * F_cese de Profesor
      *
-     * @var web\DateTimeLocal
+     * @varDateTimeLocal
      */
     private $df_cese;
     /* ATRIBUTOS QUE NO SON CAMPOS------------------------------------------------- */
@@ -126,9 +130,9 @@ class Profesor extends core\ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'id_item') && $val_id !== '') $this->iid_item = (int)$val_id;
-                if (($nom_id == 'id_nom') && $val_id !== '') $this->iid_nom = (int)$val_id;
-                if (($nom_id == 'id_departamento') && $val_id !== '') $this->iid_departamento = (int)$val_id;
+                if (($nom_id === 'id_item') && $val_id !== '') $this->iid_item = (int)$val_id;
+                if (($nom_id === 'id_nom') && $val_id !== '') $this->iid_nom = (int)$val_id;
+                if (($nom_id === 'id_departamento') && $val_id !== '') $this->iid_departamento = (int)$val_id;
             }
         }
         $this->setoDbl($oDbl);
@@ -202,7 +206,7 @@ class Profesor extends core\ClasePropiedades
                     return false;
                 }
             }
-            $this->id_item = $oDbl->lastInsertId('d_profesor_stgr_id_item_seq');
+            $this->iid_item = $oDbl->lastInsertId('d_profesor_stgr_id_item_seq');
         }
         $this->setAllAtributes($aDades);
         return true;
@@ -270,7 +274,7 @@ class Profesor extends core\ClasePropiedades
      *
      * @param array $aDades
      */
-    function setAllAtributes($aDades, $convert = FALSE)
+    function setAllAtributes(array $aDades, $convert = FALSE)
     {
         if (!is_array($aDades)) return;
         if (array_key_exists('id_schema', $aDades)) $this->setId_schema($aDades['id_schema']);
@@ -342,7 +346,7 @@ class Profesor extends core\ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'id_item') && $val_id !== '') $this->iid_item = (int)$val_id;
+                if (($nom_id === 'id_item') && $val_id !== '') $this->iid_item = (int)$val_id;
             }
         }
     }
@@ -442,7 +446,7 @@ class Profesor extends core\ClasePropiedades
     /**
      * Recupera el atributo df_nombramiento de Profesor
      *
-     * @return web\DateTimeLocal df_nombramiento
+     * @returnDateTimeLocal df_nombramiento
      */
     function getF_nombramiento()
     {
@@ -450,9 +454,9 @@ class Profesor extends core\ClasePropiedades
             $this->DBCarregar();
         }
         if (empty($this->df_nombramiento)) {
-            return new web\NullDateTimeLocal();
+            return new NullDateTimeLocal();
         }
-        $oConverter = new core\ConverterDate('date', $this->df_nombramiento);
+        $oConverter = new ConverterDate('date', $this->df_nombramiento);
         return $oConverter->fromPg();
     }
 
@@ -461,13 +465,13 @@ class Profesor extends core\ClasePropiedades
      * Si df_nombramiento es string, y convert=true se convierte usando el formato webDateTimeLocal->getFormat().
      * Si convert es false, df_nombramiento debe ser un string en formato ISO (Y-m-d). Corresponde al pgstyle de la base de datos.
      *
-     * @param date|string df_nombramiento='' optional.
+     * @param DateTimeLocal|string df_nombramiento='' optional.
      * @param boolean convert=true optional. Si es false, df_nombramiento debe ser un string en formato ISO (Y-m-d).
      */
     function setF_nombramiento($df_nombramiento = '', $convert = true)
     {
         if ($convert === true && !empty($df_nombramiento)) {
-            $oConverter = new core\ConverterDate('date', $df_nombramiento);
+            $oConverter = new ConverterDate('date', $df_nombramiento);
             $this->df_nombramiento = $oConverter->toPg();
         } else {
             $this->df_nombramiento = $df_nombramiento;
@@ -523,7 +527,7 @@ class Profesor extends core\ClasePropiedades
     /**
      * Recupera el atributo df_cese de Profesor
      *
-     * @return web\DateTimeLocal df_cese
+     * @returnDateTimeLocal df_cese
      */
     function getF_cese()
     {
@@ -531,9 +535,9 @@ class Profesor extends core\ClasePropiedades
             $this->DBCarregar();
         }
         if (empty($this->df_cese)) {
-            return new web\NullDateTimeLocal();
+            return new NullDateTimeLocal();
         }
-        $oConverter = new core\ConverterDate('date', $this->df_cese);
+        $oConverter = new ConverterDate('date', $this->df_cese);
         return $oConverter->fromPg();
     }
 
@@ -542,13 +546,13 @@ class Profesor extends core\ClasePropiedades
      * Si df_cese es string, y convert=true se convierte usando el formato webDateTimeLocal->getFormat().
      * Si convert es false, df_cese debe ser un string en formato ISO (Y-m-d). Corresponde al pgstyle de la base de datos.
      *
-     * @param date|string df_cese='' optional.
+     * @param DateTimeLocal|string df_cese='' optional.
      * @param boolean convert=true optional. Si es false, df_cese debe ser un string en formato ISO (Y-m-d).
      */
     function setF_cese($df_cese = '', $convert = true)
     {
         if ($convert === true && !empty($df_cese)) {
-            $oConverter = new core\ConverterDate('date', $df_cese);
+            $oConverter = new ConverterDate('date', $df_cese);
             $this->df_cese = $oConverter->toPg();
         } else {
             $this->df_cese = $df_cese;
@@ -562,7 +566,7 @@ class Profesor extends core\ClasePropiedades
      */
     function getDatosCampos()
     {
-        $oProfesorSet = new core\Set();
+        $oProfesorSet = new Set();
         $oProfesorSet->add($this->getDatosId_departamento());
         $oProfesorSet->add($this->getDatosEscrito_nombramiento());
         $oProfesorSet->add($this->getDatosF_nombramiento());
@@ -576,12 +580,12 @@ class Profesor extends core\ClasePropiedades
      * Recupera les propietats de l'atribut iid_departamento de Profesor
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosId_departamento()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_departamento'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_departamento'));
         $oDatosCampo->setEtiqueta(_("departamento"));
         $oDatosCampo->setTipo('opciones');
         $oDatosCampo->setArgument('asignaturas\model\entity\Departamento'); // nombre del objeto relacionado
@@ -594,12 +598,12 @@ class Profesor extends core\ClasePropiedades
      * Recupera les propietats de l'atribut sescrito_nombramiento de Profesor
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosEscrito_nombramiento()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'escrito_nombramiento'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'escrito_nombramiento'));
         $oDatosCampo->setEtiqueta(_("escrito de nombramiento"));
         $oDatosCampo->setTipo('texto');
         $oDatosCampo->setArgument(30);
@@ -610,12 +614,12 @@ class Profesor extends core\ClasePropiedades
      * Recupera les propietats de l'atribut df_nombramiento de Profesor
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosF_nombramiento()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'f_nombramiento'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'f_nombramiento'));
         $oDatosCampo->setEtiqueta(_("fecha de nombramiento"));
         $oDatosCampo->setTipo('fecha');
         return $oDatosCampo;
@@ -625,12 +629,12 @@ class Profesor extends core\ClasePropiedades
      * Recupera les propietats de l'atribut iid_tipo_profesor de Profesor
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosId_tipo_profesor()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_tipo_profesor'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_tipo_profesor'));
         $oDatosCampo->setEtiqueta(_("id_tipo_profesor"));
         $oDatosCampo->setTipo('opciones');
         $oDatosCampo->setArgument('profesores\model\entity\ProfesorTipo'); // nombre del objeto relacionado
@@ -643,12 +647,12 @@ class Profesor extends core\ClasePropiedades
      * Recupera les propietats de l'atribut sescrito_cese de Profesor
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosEscrito_cese()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'escrito_cese'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'escrito_cese'));
         $oDatosCampo->setEtiqueta(_("escrito de cese"));
         $oDatosCampo->setTipo('texto');
         $oDatosCampo->setArgument(30);
@@ -659,12 +663,12 @@ class Profesor extends core\ClasePropiedades
      * Recupera les propietats de l'atribut df_cese de Profesor
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosF_cese()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'f_cese'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'f_cese'));
         $oDatosCampo->setEtiqueta(_("fecha de cese"));
         $oDatosCampo->setTipo('fecha');
         return $oDatosCampo;

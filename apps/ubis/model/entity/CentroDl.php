@@ -2,7 +2,9 @@
 namespace ubis\model\entity;
 
 use core\ConfigGlobal;
-use core;
+use core\DatosCampo;
+use core\Set;
+use function core\is_true;
 
 /**
  * Clase que implementa la entidad u_centros_dl
@@ -156,27 +158,27 @@ class CentroDl extends Centro
         $aDades['num_cartas_mensuales'] = $this->inum_cartas_mensuales;
         array_walk($aDades, 'core\poner_null');
         //para el caso de los boolean FALSE, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
-        if (core\is_true($aDades['status'])) {
+        if (is_true($aDades['status'])) {
             $aDades['status'] = 'true';
         } else {
             $aDades['status'] = 'false';
         }
-        if (core\is_true($aDades['sv'])) {
+        if (is_true($aDades['sv'])) {
             $aDades['sv'] = 'true';
         } else {
             $aDades['sv'] = 'false';
         }
-        if (core\is_true($aDades['sf'])) {
+        if (is_true($aDades['sf'])) {
             $aDades['sf'] = 'true';
         } else {
             $aDades['sf'] = 'false';
         }
-        if (core\is_true($aDades['cdc'])) {
+        if (is_true($aDades['cdc'])) {
             $aDades['cdc'] = 'true';
         } else {
             $aDades['cdc'] = 'false';
         }
-        if (core\is_true($aDades['sede'])) {
+        if (is_true($aDades['sede'])) {
             $aDades['sede'] = 'true';
         } else {
             $aDades['sede'] = 'false';
@@ -321,7 +323,7 @@ class CentroDl extends Centro
     protected function borraDeComun($iid_ubi)
     {
         // para la sf (comienza por 2).
-        if (substr($this->id_ubi, 0, 1) == 2) {
+        if (substr($this->iid_ubi, 0, 1) == 2) {
             $oCentroEllas = new CentroEllas($iid_ubi);
             $oCentroEllas->DBEliminar();
         } else {
@@ -344,7 +346,7 @@ class CentroDl extends Centro
         unset($aDades['num_cartas_mensuales']);
 
         // para la sf (comienza por 2).
-        if (substr($this->id_ubi, 0, 1) == 2) {
+        if (substr($this->iid_ubi, 0, 1) == 2) {
             $oCentroEllas = new CentroEllas($this->iid_ubi);
             $oCentroEllas->setAllAtributes($aDades);
             $oCentroEllas->DBGuardar();
@@ -362,7 +364,7 @@ class CentroDl extends Centro
      *
      * @param array $aDades
      */
-    function setAllAtributes($aDades, $convert = FALSE)
+    function setAllAtributes(array $aDades, $convert = FALSE)
     {
         //print_r($aDades);
         if (!is_array($aDades)) return;
@@ -642,7 +644,7 @@ class CentroDl extends Centro
      */
     function getDatosCampos()
     {
-        $oCentroooDlSet = new core\Set();
+        $oCentroooDlSet = new Set();
 
         $oCentroooDlSet->add($this->getDatosTipo_ubi());
         $oCentroooDlSet->add($this->getDatosNombre_ubi());
@@ -672,12 +674,12 @@ class CentroDl extends Centro
      * Recupera les propietats de l'atribut in_buzon de CentroDl
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosN_buzon()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'n_buzon'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'n_buzon'));
         $oDatosCampo->setEtiqueta(_("número de buzón"));
         return $oDatosCampo;
     }
@@ -686,12 +688,12 @@ class CentroDl extends Centro
      * Recupera les propietats de l'atribut inum_pi de CentroDl
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosNum_pi()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'num_pi'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'num_pi'));
         $oDatosCampo->setEtiqueta(_("número de pi"));
         return $oDatosCampo;
     }
@@ -700,12 +702,12 @@ class CentroDl extends Centro
      * Recupera les propietats de l'atribut inum_cartas de CentroDl
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosNum_cartas()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'num_cartas'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'num_cartas'));
         $oDatosCampo->setEtiqueta(_("número de cartas"));
         return $oDatosCampo;
     }
@@ -714,12 +716,12 @@ class CentroDl extends Centro
      * Recupera les propietats de l'atribut sobserv de CentroDl
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosObserv()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'observ'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'observ'));
         $oDatosCampo->setEtiqueta(_("observaciones"));
         return $oDatosCampo;
     }
@@ -728,12 +730,12 @@ class CentroDl extends Centro
      * Recupera les propietats de l'atribut inum_habit_indiv de CentroDl
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosNum_habit_indiv()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'num_habit_indiv'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'num_habit_indiv'));
         $oDatosCampo->setEtiqueta(_("num_habit_indiv"));
         return $oDatosCampo;
     }
@@ -742,12 +744,12 @@ class CentroDl extends Centro
      * Recupera les propietats de l'atribut iplazas de CentroDl
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosPlazas()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'plazas'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'plazas'));
         $oDatosCampo->setEtiqueta(_("plazas"));
         return $oDatosCampo;
     }
@@ -756,12 +758,12 @@ class CentroDl extends Centro
      * Recupera les propietats de l'atribut iid_zona de CentroDl
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosId_zona()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_zona'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_zona'));
         $oDatosCampo->setEtiqueta(_("id_zona"));
         return $oDatosCampo;
     }
@@ -770,12 +772,12 @@ class CentroDl extends Centro
      * Recupera les propietats de l'atribut bsede de CentroDl
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosSede()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'sede'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'sede'));
         $oDatosCampo->setEtiqueta(_("sede"));
         return $oDatosCampo;
     }
@@ -784,12 +786,12 @@ class CentroDl extends Centro
      * Recupera les propietats de l'atribut inum_cartas_mensuales de CentroDl
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosNum_cartas_mensuales()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'num_cartas_mensuales'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'num_cartas_mensuales'));
         $oDatosCampo->setEtiqueta(_("número de cartas mensuales"));
         return $oDatosCampo;
     }

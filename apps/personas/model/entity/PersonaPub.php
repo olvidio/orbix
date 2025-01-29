@@ -2,8 +2,9 @@
 
 namespace personas\model\entity;
 
-use core;
 use core\ConfigGlobal;
+use core\DatosCampo;
+use core\Set;
 use function core\is_true;
 
 /**
@@ -58,7 +59,7 @@ class PersonaPub extends PersonaGlobal
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'id_nom') && $val_id !== '') $this->iid_nom = (int)$val_id; 
+                if (($nom_id === 'id_nom') && $val_id !== '') $this->iid_nom = (int)$val_id;
             }
         } else {
             if (isset($a_id) && $a_id !== '') {
@@ -113,12 +114,12 @@ class PersonaPub extends PersonaGlobal
         $aDades['profesor_stgr'] = $this->bprofesor_stgr;
         array_walk($aDades, 'core\poner_null');
         //para el caso de los boolean FALSE, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
-        if (core\is_true($aDades['sacd'])) {
+        if (is_true($aDades['sacd'])) {
             $aDades['sacd'] = 'true';
         } else {
             $aDades['sacd'] = 'false';
         }
-        if (core\is_true($aDades['profesor_stgr'])) {
+        if (is_true($aDades['profesor_stgr'])) {
             $aDades['profesor_stgr'] = 'true';
         } else {
             $aDades['profesor_stgr'] = 'false';
@@ -200,7 +201,7 @@ class PersonaPub extends PersonaGlobal
         }
         // Modifico la ficha en la BD-comun. En el caso de los de paso (ex) y dl = mi_dele
         // Cuando se va, cambio la dl y allí lo borro.
-        if (get_class($this) == 'personas\model\entity\PersonaEx' &&
+        if (get_class($this) === 'personas\model\entity\PersonaEx' &&
             is_true($this->bsacd) && $this->sdl == ConfigGlobal::mi_dele()) {
             $aDades = $this->aDades;
             $aDades['id_tabla'] = $this->sid_tabla;
@@ -285,7 +286,7 @@ class PersonaPub extends PersonaGlobal
      *
      * @param array $aDades
      */
-    function setAllAtributes($aDades, $convert = FALSE)
+    function setAllAtributes(array $aDades, $convert = FALSE)
     {
         if (!is_array($aDades)) return;
         if (array_key_exists('id_schema', $aDades)) $this->setId_schema($aDades['id_schema']);
@@ -363,7 +364,7 @@ class PersonaPub extends PersonaGlobal
     function setSacd($bsacd = 'f')
     {
         //para el caso de los boolean FALSE, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
-        if (core\is_true($this->bsacd)) {
+        if (is_true($this->bsacd)) {
             $bsacd_old = 'true';
         } else {
             $bsacd_old = 'false';
@@ -387,7 +388,7 @@ class PersonaPub extends PersonaGlobal
     function setDl($sdl = '')
     {
         //para el caso de los boolean FALSE, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
-        if (core\is_true($this->bsacd)) {
+        if (is_true($this->bsacd)) {
             $sacd = 'true';
         } else {
             $sacd = 'false';
@@ -395,7 +396,7 @@ class PersonaPub extends PersonaGlobal
         // Si un sacd de paso pasa a estar el dl, lo copio a cp_sacd.
         // (ya se hace al guardar)
         // Si un sacd de paso marcha de la dl, lo elimino de cp_sacd.
-        if (get_class($this) == 'personas\model\entity\PersonaEx' &&
+        if (get_class($this) === 'personas\model\entity\PersonaEx' &&
             is_true($sacd) &&
             $this->sdl == ConfigGlobal::mi_dele() &&
             $sdl != ConfigGlobal::mi_dele()) {
@@ -459,7 +460,7 @@ class PersonaPub extends PersonaGlobal
      */
     function getDatosCampos()
     {
-        $oPersonaPubSet = new core\Set();
+        $oPersonaPubSet = new Set();
 
         $oPersonaPubSet->add($this->getDatosId_cr());
         $oPersonaPubSet->add($this->getDatosId_tabla());
@@ -497,7 +498,7 @@ class PersonaPub extends PersonaGlobal
     function getDatosEdad()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'edad'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'edad'));
         $oDatosCampo->setEtiqueta(_("edad"));
         return $oDatosCampo;
     }
@@ -511,7 +512,7 @@ class PersonaPub extends PersonaGlobal
     function getDatosProfesor_stgr()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'profesor_stgr'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'profesor_stgr'));
         $oDatosCampo->setEtiqueta(_("profesor stgr"));
         $oDatosCampo->setTipo('check');
         return $oDatosCampo;

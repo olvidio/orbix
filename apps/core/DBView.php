@@ -136,7 +136,7 @@ class DBView
         $new_str = str_replace($search, $replace, $str);
         // espacios extra:
         $new_str = preg_replace('/\s\s+/', ' ', $new_str);
-        $lower = strtolower($new_str);
+        $lower = strtolower($new_str ?? '');
 
         $string = preg_replace('/[^[:print:]]/', '', $lower);
 

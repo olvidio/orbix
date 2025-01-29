@@ -1,8 +1,8 @@
 <?php
 
-use zonassacd\model\entity\GestorZona;
-use core\ConfigGlobal;
+use core\ViewTwig;
 use web\Hash;
+use zonassacd\model\entity\GestorZona;
 
 /**
  * Esta página sirve para asignar centros a una zona de Misas.
@@ -55,5 +55,5 @@ $a_campos = ['oPosicion' => $oPosicion,
     'oDesplZonas' => $oDesplZonas,
 ];
 
-$oView = new core\ViewTwig('zonassacd/controller');
+$oView = new ViewTwig('zonassacd/controller');
 $oView->renderizar('zona_ctr.html.twig', $a_campos);

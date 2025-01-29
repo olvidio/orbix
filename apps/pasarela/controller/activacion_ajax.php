@@ -1,6 +1,10 @@
 <?php
 
+use core\ConfigGlobal;
+use core\ViewTwig;
+use pasarela\model\Activacion;
 use web\Hash;
+use web\TiposActividades;
 
 // INICIO Cabecera global de URL de controlador *********************************
 require_once("apps/core/global_header.inc");
@@ -18,30 +22,30 @@ $url_ajax = "apps/pasarela/controller/activacion_ajax.php";
 switch ($Qque) {
     case 'eliminar':
         $Qid_tipo_activ = (string)filter_input(INPUT_POST, 'id_tipo_activ');
-        $oActivacion = new \pasarela\model\Activacion();
+        $oActivacion = new Activacion();
         $oActivacion->delActivacion($Qid_tipo_activ);
         break;
     case 'update':
     case 'nuevo':
         $Qid_tipo_activ = (string)filter_input(INPUT_POST, 'id_tipo_activ');
         $Qactivacion = (string)filter_input(INPUT_POST, 'activacion');
-        $oActivacion = new \pasarela\model\Activacion();
+        $oActivacion = new Activacion();
         $oActivacion->addActivacion($Qid_tipo_activ, $Qactivacion);
         break;
     case 'update_default':
         $Qdefault = (string)filter_input(INPUT_POST, 'default');
-        $oActivacion = new \pasarela\model\Activacion();
+        $oActivacion = new Activacion();
         $oActivacion->setDefault($Qdefault);
         break;
     case 'lista':
-        $oActivacion = new \pasarela\model\Activacion();
+        $oActivacion = new Activacion();
         echo $oActivacion->getLista();
         break;
     case 'form_default':
-        $oActivacion = new \pasarela\model\Activacion();
+        $oActivacion = new Activacion();
         $default = $oActivacion->getDefault();
         $oHash = new Hash();
-        $oHash->setUrl(core\ConfigGlobal::getWeb() . '/apps/pasarela/controller/activacion_ajax.php');
+        $oHash->setUrl(ConfigGlobal::getWeb() . '/apps/pasarela/controller/activacion_ajax.php');
         $oHash->setCamposForm('default');
         $oHash->setArrayCamposHidden(['que' => 'update_default']);
         $a_campos = ['oPosicion' => $oPosicion,
@@ -50,21 +54,21 @@ switch ($Qque) {
             'default' => $default,
         ];
 
-        $oView = new core\ViewTwig('pasarela/controller');
+        $oView = new ViewTwig('pasarela/controller');
         $oView->renderizar('activacion_default_form.html.twig', $a_campos);
         break;
     case 'form_modificar':
         $Qid_tipo_activ = (integer)filter_input(INPUT_POST, 'id_tipo_activ');
         $Qactivacion = (string)filter_input(INPUT_POST, 'activacion');
 
-        $oActividadTipo = new \web\TiposActividades($Qid_tipo_activ);
+        $oActividadTipo = new TiposActividades($Qid_tipo_activ);
         $svsf = $oActividadTipo->getSfsvText();
         $asistentes = $oActividadTipo->getAsistentesText();
         $actividad = $oActividadTipo->getActividadText();
         $tipo_txt = "$svsf $asistentes $actividad";
 
         $oHash = new Hash();
-        $oHash->setUrl(core\ConfigGlobal::getWeb() . '/apps/pasarela/controller/activacion_ajax.php');
+        $oHash->setUrl(ConfigGlobal::getWeb() . '/apps/pasarela/controller/activacion_ajax.php');
         $oHash->setCamposForm('id_tipo_activ!activacion');
         $oHash->setCamposNo('id_tipo_activ!que');
         $a_camposHidden = array(
@@ -80,7 +84,7 @@ switch ($Qque) {
             'activacion' => $Qactivacion,
         ];
 
-        $oView = new core\ViewTwig('pasarela/controller');
+        $oView = new ViewTwig('pasarela/controller');
         $oView->renderizar('activacion_form.html.twig', $a_campos);
         break;
     case 'form_nuevo':
@@ -99,7 +103,7 @@ switch ($Qque) {
 
 
         $oHash = new Hash();
-        $oHash->setUrl(core\ConfigGlobal::getWeb() . '/apps/pasarela/controller/activacion_ajax.php');
+        $oHash->setUrl(ConfigGlobal::getWeb() . '/apps/pasarela/controller/activacion_ajax.php');
         $oHash->setCamposForm('iactividad_val!iasistentes_val!id_tipo_activ!inom_tipo_val!isfsv_val!activacion');
         $oHash->setCamposNo('id_tipo_activ!que');
         $a_camposHidden = array(
@@ -114,7 +118,7 @@ switch ($Qque) {
             'oActividadTipo' => $oActividadTipo,
         ];
 
-        $oView = new core\ViewTwig('pasarela/controller');
+        $oView = new ViewTwig('pasarela/controller');
         $oView->renderizar('activacion_form_nuevo.html.twig', $a_campos);
         break;
 }

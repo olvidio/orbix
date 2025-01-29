@@ -9,6 +9,8 @@
  *
  */
 
+use core\ConfigGlobal;
+
 /**
  * Función para dibujar un plannig.
  *
@@ -56,7 +58,7 @@
  *
  * @return    mixed    no devuelve nada
  */
-function dibujar_calendario($dd, $cabecera, $oInicio, $oFin, $actividades, $mod, $nueva, $doble = 1)
+function dibujar_calendario(int $dd, string $cabecera, string $oInicio, string $oFin, array $actividades, int $mod, int $nueva, int $doble = 1)
 {
     global $colorColumnaUno, $colorColumnaDos, $table_border;
     $bgcolor = $colorColumnaUno;
@@ -214,7 +216,7 @@ function dibujar_calendario($dd, $cabecera, $oInicio, $oFin, $actividades, $mod,
                 continue;
             }
 
-            if (core\ConfigGlobal::is_app_installed('calendario')) {
+            if (ConfigGlobal::is_app_installed('calendario')) {
                 $oDBA = $GLOBALS['oDBA'];
                 if ($pau == "u") { // para los ubis...
                     $id_ubi = $id_pau;
@@ -467,7 +469,7 @@ function dibujar_calendario($dd, $cabecera, $oInicio, $oFin, $actividades, $mod,
                 for ($d = 1; $d < $total_dias + 1; $d++) {
                     $texto = "";
                     $reserva = "";
-                    if (core\ConfigGlobal::is_app_installed('calendario')) {
+                    if (ConfigGlobal::is_app_installed('calendario')) {
                         if ($pau == "u") {
                             $reserva = reservado($dd, $mini_0, $dini_0, $d, $aini_0, $id_ubi, $periodos_sv);
                         }

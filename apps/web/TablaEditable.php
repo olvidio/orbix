@@ -1,8 +1,8 @@
 <?php
 namespace web;
 
-use usuarios\model\entity as usuarios;
-use core;
+use core\ConfigGlobal;
+use usuarios\model\entity\Preferencia;
 use function core\is_true;
 
 /**
@@ -124,7 +124,7 @@ class TablaEditable
         return $this->mostrar_tabla_slickgrid();
         /*
         $sPrefs = '';
-        $id_usuario= core\ConfigGlobal::mi_id_usuario();
+        $id_usuario= ConfigGlobal::mi_id_usuario();
         $tipo = 'tabla_presentacion';
         $oPref = new usuarios\Preferencia(array('id_usuario'=>$id_usuario,'tipo'=>$tipo));
         $sPrefs=$oPref->getPreferencia();
@@ -195,7 +195,7 @@ class TablaEditable
         $chk = "";
         $b = 0;
         if (empty($a_valores)) {
-            return '<br \>' . _("no hay ninguna fila");
+            return '<br>' . _("no hay ninguna fila");
         }
         if (!empty($a_botones)) {
             if ($a_botones === "ninguno") {
@@ -208,15 +208,15 @@ class TablaEditable
             }
         }
 
-        $id_usuario = core\ConfigGlobal::mi_id_usuario();
-        $idioma = core\ConfigGlobal::mi_Idioma();
+        $id_usuario = ConfigGlobal::mi_id_usuario();
+        $idioma = ConfigGlobal::mi_Idioma();
         $tipo = 'slickGrid_' . $id_tabla . '_' . $idioma;
         $aUser = array(0 => $id_usuario, 1 => 44); // 44 es el id_usuario para default.
         $aColsVisible = '';
         $bPanelVis = false;
         for ($i = 0; $i < count($aUser); $i++) {
             $user = $aUser[$i];
-            $oPref = new usuarios\Preferencia(array('id_usuario' => $user, 'tipo' => $tipo));
+            $oPref = new Preferencia(array('id_usuario' => $user, 'tipo' => $tipo));
 
             if ($sPrefs = $oPref->getPreferencia()) {
                 ;

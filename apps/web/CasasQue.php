@@ -2,7 +2,7 @@
 
 namespace web;
 
-use ubis\model\entity as ubis;
+use ubis\model\entity\GestorCasaDl;
 
 /**
  * Classe que presenta un quadre per buscar diferents cases.
@@ -44,6 +44,8 @@ class CasasQue
 
     /* CONSTRUCTOR -------------------------------------------------------------- */
     private int $cdc_sel;
+    private mixed $sBoton;
+    private mixed $sAntes;
 
     /**
      * Constructor de la classe.
@@ -158,11 +160,11 @@ class CasasQue
                 $chk_cdc = 'checked';
             }
             if ($inum === 9) {
-                $sHtml .= '<tr><td><input type="radio" id="cdc_sel_' . $inum . '" name="cdc_sel" value="' . $inum . '" onClick="funjs_otro(1);" '.$chk_cdc.'>' . $sCasa . '</td>';
+                $sHtml .= '<tr><td><input type="radio" id="cdc_sel_' . $inum . '" name="cdc_sel" value="' . $inum . '" onClick="funjs_otro(1);" ' . $chk_cdc . '>' . $sCasa . '</td>';
                 // para seleccionar más de una casa
                 $sHtml .= '<td>' . $oSelects->ListaSelects() . '</td>';
             } else {
-                $sHtml .= '<tr><td><input type="radio" id="cdc_sel_' . $inum . '" name="cdc_sel" value="' . $inum . '" onClick="funjs_otro(0);" '.$chk_cdc.'>' . $sCasa . '</td></tr>';
+                $sHtml .= '<tr><td><input type="radio" id="cdc_sel_' . $inum . '" name="cdc_sel" value="' . $inum . '" onClick="funjs_otro(0);" ' . $chk_cdc . '>' . $sCasa . '</td></tr>';
             }
         }
         $sHtml .= '<tr><td> </td></tr>';
@@ -214,7 +216,7 @@ class CasasQue
             $oDesplCasas->setAction('funjs_otro(1)');
             $this->oDesplCasas = $oDesplCasas;
         }
-        $oGesCasas = new ubis\GestorCasaDl();
+        $oGesCasas = new GestorCasaDl();
         $oOpciones = $oGesCasas->getPosiblesCasas($sCondicion);
         $oDesplCasas->setOpciones($oOpciones);
         $this->oDesplCasas = $oDesplCasas;
@@ -228,7 +230,7 @@ class CasasQue
     function getDesplCasas()
     {
         if (!isset($this->oDesplCasas)) {
-            $oGesCasas = new ubis\GestorCasaDl();
+            $oGesCasas = new GestorCasaDl();
             $oOpciones = $oGesCasas->getPosiblesCasas();
             $oDesplCasas = new Desplegable();
             $oDesplCasas->setNombre('id_cdc');

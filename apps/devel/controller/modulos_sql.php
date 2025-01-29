@@ -26,7 +26,7 @@ if (!empty($a_sel)) { //vengo de un checkbox (caso de eliminar)
 $Qaccion = (string)filter_input(\INPUT_POST, 'accion');
 $Qaccion = 'crear';
 
-$oModulo = new \devel\model\entity\Modulo($Qid_mod);
+$oModulo = new devel\model\entity\Modulo($Qid_mod);
 $mod_nom = $oModulo->getNom();
 
 switch ($Qmod) {

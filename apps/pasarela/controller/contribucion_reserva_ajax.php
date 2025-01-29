@@ -1,7 +1,9 @@
 <?php
 
+use core\ViewTwig;
 use pasarela\model\ContribucionReserva;
 use web\Hash;
+use web\TiposActividades;
 
 // INICIO Cabecera global de URL de controlador *********************************
 require_once("apps/core/global_header.inc");
@@ -53,7 +55,7 @@ switch ($Qque) {
             'txt' => $txt,
         ];
 
-        $oView = new core\ViewTwig('pasarela/controller');
+        $oView = new ViewTwig('pasarela/controller');
         $oView->renderizar('contribucion_x_default_form.html.twig', $a_campos);
         break;
     case 'form_modificar':
@@ -61,7 +63,7 @@ switch ($Qque) {
         $Qid_tipo_activ = (integer)filter_input(INPUT_POST, 'id_tipo_activ');
         $Qcontribucion = (string)filter_input(INPUT_POST, 'contribucion');
 
-        $oActividadTipo = new \web\TiposActividades($Qid_tipo_activ);
+        $oActividadTipo = new TiposActividades($Qid_tipo_activ);
         $svsf = $oActividadTipo->getSfsvText();
         $asistentes = $oActividadTipo->getAsistentesText();
         $actividad = $oActividadTipo->getActividadText();
@@ -85,7 +87,7 @@ switch ($Qque) {
             'txt' => $txt,
         ];
 
-        $oView = new core\ViewTwig('pasarela/controller');
+        $oView = new ViewTwig('pasarela/controller');
         $oView->renderizar('contribucion_x_form.html.twig', $a_campos);
         break;
     case 'form_nuevo':
@@ -120,7 +122,7 @@ switch ($Qque) {
             'txt' => $txt,
         ];
 
-        $oView = new core\ViewTwig('pasarela/controller');
+        $oView = new ViewTwig('pasarela/controller');
         $oView->renderizar('contribucion_x_form_nuevo.html.twig', $a_campos);
         break;
 }

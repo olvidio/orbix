@@ -2,7 +2,8 @@
 
 namespace actividades\model\entity;
 
-use core;
+use core\ConfigGlobal;
+use function core\is_true;
 
 /**
  * Clase que implementa la entidad a_actividades_dl
@@ -83,7 +84,7 @@ class ActividadPub extends ActividadAll
         $aDades['plazas'] = $this->iplazas;
         array_walk($aDades, 'core\poner_null');
         //para el caso de los boolean FALSE, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
-        if (core\is_true($aDades['publicado'])) {
+        if (is_true($aDades['publicado'])) {
             $aDades['publicado'] = 'true';
         } else {
             $aDades['publicado'] = 'false';
@@ -92,10 +93,10 @@ class ActividadPub extends ActividadAll
         $a_pkey = $this->aPrimary_key;
         $dl = $aDades['dl_org'];
         $id_tabla = $this->sid_tabla;
-        if ($dl == core\ConfigGlobal::mi_delef()) {
+        if ($dl == ConfigGlobal::mi_delef()) {
             $oActividad = new ActividadDl($a_pkey);
         } else {
-            if ($id_tabla == 'dl') {
+            if ($id_tabla === 'dl') {
                 // No se puede guardar cambios en una actividad de otra dl
                 return false;
             } else {
@@ -130,7 +131,7 @@ class ActividadPub extends ActividadAll
                 case 'guardar':
                     if (!$oDblSt->rowCount()) return false;
                     // Hay que guardar los boolean de la misma manera que al guardar los datos ('false','true'):
-                    if (core\is_true($aDades['publicado'])) {
+                    if (is_true($aDades['publicado'])) {
                         $aDades['publicado'] = 'true';
                     } else {
                         $aDades['publicado'] = 'false';
@@ -159,11 +160,11 @@ class ActividadPub extends ActividadAll
     {
         $a_pkey = $this->aPrimary_key;
         $dl = $this->sdl_org;
-        $id_tabla = $this->id_tabla;
-        if ($dl == core\ConfigGlobal::mi_delef()) {
+        $id_tabla = $this->sid_tabla;
+        if ($dl == ConfigGlobal::mi_delef()) {
             $oActividadAll = new ActividadDl($a_pkey);
         } else {
-            if ($id_tabla == 'dl') {
+            if ($id_tabla === 'dl') {
                 //$oActividad = new ActividadPub($a_pkey);
                 // No se puede eliminar una actividad de otra dl
                 echo _("no se puede modificar una actividad de otra dl");

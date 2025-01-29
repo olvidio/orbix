@@ -2,7 +2,9 @@
 
 namespace usuarios\model\entity;
 
-use core;
+use core\ClasePropiedades;
+use core\DatosCampo;
+use core\Set;
 
 /**
  * Fitxer amb la Classe que accedeix a la taula aux_usuarios_ctr_perm
@@ -23,7 +25,7 @@ use core;
  * @version 1.0
  * @created 20/5/2019
  */
-class PermUsuarioCentro extends core\ClasePropiedades
+class PermUsuarioCentro extends ClasePropiedades
 {
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
@@ -102,7 +104,7 @@ class PermUsuarioCentro extends core\ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'id_item') && $val_id !== '') $this->iid_item = (int)$val_id;
+                if (($nom_id === 'id_item') && $val_id !== '') $this->iid_item = (int)$val_id;
             }
         } else {
             if (isset($a_id) && $a_id !== '') {
@@ -177,7 +179,7 @@ class PermUsuarioCentro extends core\ClasePropiedades
                     return FALSE;
                 }
             }
-            $this->id_item = $oDbl->lastInsertId('aux_usuarios_ctr_perm_id_item_seq');
+            $this->iid_item = $oDbl->lastInsertId('aux_usuarios_ctr_perm_id_item_seq');
         }
         $this->setAllAtributes($aDades);
         return TRUE;
@@ -245,7 +247,7 @@ class PermUsuarioCentro extends core\ClasePropiedades
      *
      * @param array $aDades
      */
-    function setAllAtributes($aDades)
+    function setAllAtributes(array $aDades)
     {
         if (!is_array($aDades)) return;
         if (array_key_exists('id_item', $aDades)) $this->setId_item($aDades['id_item']);
@@ -307,7 +309,7 @@ class PermUsuarioCentro extends core\ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'id_item') && $val_id !== '') $this->iid_item = (int)$val_id;
+                if (($nom_id === 'id_item') && $val_id !== '') $this->iid_item = (int)$val_id;
             }
         }
     }
@@ -411,7 +413,7 @@ class PermUsuarioCentro extends core\ClasePropiedades
      */
     function getDatosCampos()
     {
-        $oPermUsuarioCentroSet = new core\Set();
+        $oPermUsuarioCentroSet = new Set();
 
         $oPermUsuarioCentroSet->add($this->getDatosId_usuario());
         $oPermUsuarioCentroSet->add($this->getDatosId_ctr());
@@ -424,12 +426,12 @@ class PermUsuarioCentro extends core\ClasePropiedades
      * Recupera les propietats de l'atribut iid_usuario de PermUsuarioCentro
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosId_usuario()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_usuario'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_usuario'));
         $oDatosCampo->setEtiqueta(_("id_usuario"));
         return $oDatosCampo;
     }
@@ -438,12 +440,12 @@ class PermUsuarioCentro extends core\ClasePropiedades
      * Recupera les propietats de l'atribut iid_ctr de PermUsuarioCentro
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosId_ctr()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_ctr'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_ctr'));
         $oDatosCampo->setEtiqueta(_("id_ctr"));
         return $oDatosCampo;
     }
@@ -452,12 +454,12 @@ class PermUsuarioCentro extends core\ClasePropiedades
      * Recupera les propietats de l'atribut iperm_ctr de PermUsuarioCentro
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosPerm_ctr()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'perm_ctr'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'perm_ctr'));
         $oDatosCampo->setEtiqueta(_("perm_ctr"));
         return $oDatosCampo;
     }

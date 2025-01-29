@@ -2,7 +2,9 @@
 
 namespace dbextern\model\entity;
 
-use core;
+use core\ClasePropiedades;
+use core\DatosCampo;
+use core\Set;
 
 /**
  * Fitxer amb la Classe que accedeix a la taula conv_id_personas
@@ -23,7 +25,7 @@ use core;
  * @version 1.0
  * @created 28/02/2017
  */
-class IdMatchPersona extends core\ClasePropiedades
+class IdMatchPersona extends ClasePropiedades
 {
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
@@ -95,7 +97,7 @@ class IdMatchPersona extends core\ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'id_listas') && $val_id !== '') $this->iid_listas = (int)$val_id; 
+                if (($nom_id === 'id_listas') && $val_id !== '') $this->iid_listas = (int)$val_id;
             }
         } else {
             if (isset($a_id) && $a_id !== '') {
@@ -235,7 +237,7 @@ class IdMatchPersona extends core\ClasePropiedades
      *
      * @param array $aDades
      */
-    function setAllAtributes($aDades)
+    function setAllAtributes(array $aDades)
     {
         if (!is_array($aDades)) return;
         if (array_key_exists('id_schema', $aDades)) $this->setId_schema($aDades['id_schema']);
@@ -297,7 +299,7 @@ class IdMatchPersona extends core\ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'id_listas') && $val_id !== '') $this->iid_listas = (int)$val_id; 
+                if (($nom_id === 'id_listas') && $val_id !== '') $this->iid_listas = (int)$val_id;
             }
         }
     }
@@ -378,7 +380,7 @@ class IdMatchPersona extends core\ClasePropiedades
      */
     function getDatosCampos()
     {
-        $oIdMatchPersonaSet = new core\Set();
+        $oIdMatchPersonaSet = new Set();
 
         $oIdMatchPersonaSet->add($this->getDatosId_orbix());
         $oIdMatchPersonaSet->add($this->getDatosId_tabla());
@@ -390,12 +392,12 @@ class IdMatchPersona extends core\ClasePropiedades
      * Recupera les propietats de l'atribut iid_orbix de IdMatchPersona
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosId_orbix()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_orbix'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_orbix'));
         $oDatosCampo->setEtiqueta(_("id_orbix"));
         return $oDatosCampo;
     }
@@ -404,12 +406,12 @@ class IdMatchPersona extends core\ClasePropiedades
      * Recupera les propietats de l'atribut sid_tabla de IdMatchPersona
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosId_tabla()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_tabla'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_tabla'));
         $oDatosCampo->setEtiqueta(_("id_tabla"));
         return $oDatosCampo;
     }

@@ -1,3 +1,9 @@
+<?php
+
+use core\ConfigGlobal;
+use web\Hash;
+
+?>
 <script>
     fnjs_modificar = function (formulario) {
         rta = fnjs_solo_uno(formulario);
@@ -10,7 +16,7 @@
         rta = fnjs_solo_uno('#seleccionados');
         if (rta == 1) {
             if (confirm("<?= _("¿Está seguro que desea borrar este rol?");?>")) {
-                var url = '<?= core\ConfigGlobal::getWeb() ?>/apps/usuarios/controller/usuario_ajax.php';
+                var url = '<?= ConfigGlobal::getWeb() ?>/apps/usuarios/controller/usuario_ajax.php';
                 $('#que').val('eliminar_role');
                 $('#seleccionados').one("submit", function () {
                     $.ajax({
@@ -33,7 +39,7 @@
         }
     }
     fnjs_actualizar = function () {
-        var url = '<?= web\Hash::link(core\ConfigGlobal::getWeb() . '/apps/usuarios/controller/role_lista.php'); ?>';
+        var url = '<?= Hash::link(ConfigGlobal::getWeb() . '/apps/usuarios/controller/role_lista.php'); ?>';
         fnjs_update_div('#main', url);
     }
     fnjs_left_side_hide();

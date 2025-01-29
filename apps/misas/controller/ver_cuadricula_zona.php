@@ -1,28 +1,26 @@
 <?php
 
 // INICIO Cabecera global de URL de controlador *********************************
+use actividadcargos\model\entity\GestorActividadCargo;
 use actividades\model\entity\ActividadAll;
 use actividades\model\entity\GestorActividad;
-use actividadcargos\model\entity\GestorActividadCargo;
+use core\ViewTwig;
 use encargossacd\model\EncargoConstants;
 use encargossacd\model\entity\Encargo;
-use encargossacd\model\entity\GestorEncargo;
 use encargossacd\model\entity\GestorEncargoSacdHorario;
 use encargossacd\model\entity\GestorEncargoTipo;
-use misas\domain\repositories\EncargoDiaRepository;
-use misas\domain\repositories\InicialesSacdRepository;
-use misas\domain\entity\InicialesSacd;
 use misas\domain\entity\EncargoDia;
+use misas\domain\entity\InicialesSacd;
+use misas\domain\repositories\EncargoDiaRepository;
 use misas\model\EncargosZona;
-use personas\model\entity\PersonaSacd;
 use web\DateTimeLocal;
-//use web\Desplegable;
 use web\Hash;
 use web\TiposActividades;
 use zonassacd\model\entity\GestorZonaSacd;
+
+//use web\Desplegable;
 //use zonassacd\model\entity\GestorZonaSacd;
 //use personas\model\entity\GestorPersona;
-use personas\model\entity\PersonaEx;
 
 require_once("apps/core/global_header.inc");
 // Archivos requeridos por esta url **********************************************
@@ -882,5 +880,5 @@ $a_campos = ['oPosicion' => $oPosicion,
     'h_cuadricula_update' => $h_cuadricula_update,
 ];
 
-$oView = new core\ViewTwig('misas/controller');
+$oView = new ViewTwig('misas/controller');
 echo $oView->render('ver_cuadricula_zona.html.twig', $a_campos);

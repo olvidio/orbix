@@ -1,6 +1,8 @@
 <?php
 
+use core\ViewPhtml;
 use devel\model\ModulosConfig;
+use web\Hash;
 
 /**
  * Funciones más comunes de la aplicación
@@ -54,7 +56,7 @@ if ($Qmod == 'nuevo') {
         }
     }
 
-    $oModulo = new \devel\model\entity\Modulo($Qid_mod);
+    $oModulo = new devel\model\entity\Modulo($Qid_mod);
     $nom = $oModulo->getNom();
     $descripcion = $oModulo->getDescripcion();
     $mods_req = $oModulo->getMods_req();
@@ -86,7 +88,7 @@ if (!empty($apps_req)) {
 }
 
 
-$oHash = new web\Hash();
+$oHash = new Hash();
 $campos_chk = 'sel_mods!sel_apps';
 $camposForm = 'nom!descripcion!';
 
@@ -98,7 +100,7 @@ $a_camposHidden = array(
 );
 $oHash->setArraycamposHidden($a_camposHidden);
 
-$oHashActualizar = new web\Hash();
+$oHashActualizar = new Hash();
 $oHashActualizar->setCamposNo('refresh');
 $a_camposHiddenActualizar = array(
     'id_mod' => $Qid_mod,
@@ -122,5 +124,5 @@ $a_campos = [
     'mod' => $Qmod,
 ];
 
-$oView = new core\View('devel\controller');
+$oView = new ViewPhtml('devel\controller');
 $oView->renderizar('modulos_form.phtml', $a_campos);

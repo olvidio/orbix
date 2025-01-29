@@ -1,11 +1,12 @@
 <?php
 
+use core\ViewTwig;
 use personas\model\entity\GestorPersonaAgd;
-use personas\model\entity\GestorPersonaDl;
 use personas\model\entity\GestorPersonaN;
 use personas\model\entity\PersonaAgd;
 use personas\model\entity\PersonaN;
 use web\Desplegable;
+use web\Hash;
 
 /**
  * Esta página sirve para la tessera de una persona.
@@ -99,7 +100,7 @@ $oDesplPersonas->setNombre('id_nom_dst');
 $oDesplPersonas->setBlanco('true');
 $oDesplPersonas->setOpciones($a_posibles_personas);
 
-$oHash = new web\Hash();
+$oHash = new Hash();
 $oHash->setCamposForm('id_nom_dst');
 $a_camposHidden = array(
     'id_nom_org' => $id_nom,
@@ -115,5 +116,5 @@ $a_campos = [
 ];
 
 
-$oView = new core\ViewTwig('notas/controller');
+$oView = new ViewTwig('notas/controller');
 $oView->renderizar('tessera_copiar_select.html.twig', $a_campos);

@@ -1,7 +1,5 @@
 <?php
 
-use menus\model\entity as menus;
-
 // INICIO Cabecera global de URL de controlador *********************************
 require_once("apps/core/global_header.inc");
 // Archivos requeridos por esta url **********************************************
@@ -27,21 +25,21 @@ $str_conexio_restof = "pgsql:host=demo.moneders.net sslmode=require port=5432  d
 
 //Definir Conexiones
 // public para todo el muindo
-$oDemoPC = new \PDO($str_conexio_public);
-$oDemoRC = new \PDO($str_conexio_resto);
+$oDemoPC = new PDO($str_conexio_public);
+$oDemoRC = new PDO($str_conexio_resto);
 //comun
 $user_sfsv = $_SESSION['session_auth']['sfsv'];
 switch ($user_sfsv) {
     case 1: //sv
-        $oDemoP = new \PDO($str_conexio_publicv);
-        $oDemoR = new \PDO($str_conexio_restov);
+        $oDemoP = new PDO($str_conexio_publicv);
+        $oDemoR = new PDO($str_conexio_restov);
         //sf
-        $oDemoEP = new \PDO($str_conexio_publicf);
-        $oDemoER = new \PDO($str_conexio_restof);
+        $oDemoEP = new PDO($str_conexio_publicf);
+        $oDemoER = new PDO($str_conexio_restof);
         break;
     case 2: //sf
-        $oDemoP = new \PDO($str_conexio_publicf);
-        $oDemoR = new \PDO($str_conexio_restof);
+        $oDemoP = new PDO($str_conexio_publicf);
+        $oDemoR = new PDO($str_conexio_restof);
         //sv
         break;
 }

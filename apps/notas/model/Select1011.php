@@ -2,17 +2,19 @@
 
 namespace notas\model;
 
-use actividades\model\entity as actividades;
-use actividadestudios\model\entity\GestorMatricula as actividadestudios;
-use asignaturas\model\entity as asignaturas;
+use actividades\model\entity\ActividadAll;
+use actividadestudios\model\entity\GestorMatricula;
+use asignaturas\model\entity\Asignatura;
+use asignaturas\model\entity\GestorAsignatura;
 use core\ConfigGlobal;
-use core\View;
-use notas\model\entity as notas;
+use core\ViewPhtml;
+use notas\model\entity\GestorNota;
+use notas\model\entity\GestorPersonaNotaDlDB;
 use notas\model\entity\Nota;
-use personas\model\entity as personas;
+use personas\model\entity\Persona;
+use personas\model\entity\PersonaDl;
 use web\Hash;
 use web\Lista;
-use actividadestudios\model\entity\GestorMatricula;
 use function core\is_true;
 
 class Select1011
@@ -96,9 +98,9 @@ class Select1011
             foreach ($cMatriculasPendientes as $oMatricula) {
                 $id_activ = $oMatricula->getId_activ();
                 $id_asignatura = $oMatricula->getId_asignatura();
-                $oActividad = new actividades\ActividadAll($id_activ);
+                $oActividad = new ActividadAll($id_activ);
                 $nom_activ = $oActividad->getNom_activ();
-                $oAsignatura = new asignaturas\Asignatura($id_asignatura);
+                $oAsignatura = new Asignatura($id_asignatura);
                 $nombre_corto = $oAsignatura->getNombre_corto();
                 $msg .= empty($msg) ? '' : '<br>';
                 $msg .= sprintf(_("ca: %s, asignatura: %s"), $nom_activ, $nombre_corto);
@@ -109,12 +111,12 @@ class Select1011
         }
 
 
-        $gesPersonaNotas = new notas\GestorPersonaNotaDlDB();
+        $gesPersonaNotas = new GestorPersonaNotaDlDB();
         // Que si muestre el "fin bienio, fin cuadrienio".
         //$cPersonaNotas = $gesPersonaNotas->getPersonaNotas(array('id_nom'=>  $this->id_pau,'id_asignatura'=>9000,'_ordre'=>'id_nivel'),array('id_asignatura'=>'<'));
         $cPersonaNotas = $gesPersonaNotas->getPersonaNotas(array('id_nom' => $this->id_pau, '_ordre' => 'id_nivel'), array('id_asignatura' => '<'));
 
-        $gesNotas = new notas\GestorNota();
+        $gesNotas = new GestorNota();
         $cNotas = $gesNotas->getNotas();
         $a_notas = array();
         foreach ($cNotas as $oNota) {
@@ -125,7 +127,7 @@ class Select1011
 
 
         //Según el tipo de persona: n, agd, s
-        $oPersona = personas\Persona::NewPersona($this->id_pau);
+        $oPersona = Persona::NewPersona($this->id_pau);
         if (!is_object($oPersona)) {
             $msg_err = "<br>$oPersona con id_nom: $this->id_pau en  " . __FILE__ . ": line " . __LINE__;
             exit($msg_err);
@@ -151,7 +153,7 @@ class Select1011
 
             $nom_activ = '';
             if (!empty($id_activ)) {
-                $oActividad = new actividades\ActividadAll($id_activ);
+                $oActividad = new ActividadAll($id_activ);
                 $nom_activ = $oActividad->getNom_activ();
             }
             //$nota = $a_notas[$id_situacion];
@@ -160,13 +162,13 @@ class Select1011
                 $acta = '';
             }
 
-            $oAsignatura = new asignaturas\Asignatura($id_asignatura);
+            $oAsignatura = new Asignatura($id_asignatura);
             $nombre_corto = $oAsignatura->getNombre_corto();
             $id_sector = $oAsignatura->getId_sector();
 
             // opcionales
             if ($id_asignatura > 3000) {
-                $gesOpcionales = new asignaturas\GestorAsignatura();
+                $gesOpcionales = new GestorAsignatura();
                 $cOpcionales = $gesOpcionales->getAsignaturas(array('id_nivel' => $id_nivel));
                 if (empty($cOpcionales)) {
                     $nombre_corto = _("opcional de sobra");
@@ -180,7 +182,7 @@ class Select1011
             $preceptor = is_true($preceptor)? _("sí") : _("no");
             // preceptor
             if ($id_preceptor && is_true($preceptor)) {
-                $oPersonaDl = new personas\PersonaDl($id_preceptor);
+                $oPersonaDl = new PersonaDl($id_preceptor);
                 $nom_precptor = $oPersonaDl->getPrefApellidosNombre();
                 if (empty($nom_precptor)) {
                     $nom_precptor = _("no lo encuentro");
@@ -247,7 +249,7 @@ class Select1011
             'bloque' => $this->bloque,
         ];
 
-        $oView = new View(__NAMESPACE__);
+        $oView = new ViewPhtml(__NAMESPACE__);
         $oView->renderizar('select1011.phtml', $a_campos);
     }
 

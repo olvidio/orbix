@@ -6,7 +6,6 @@ use cartaspresentacion\model\entity\CartaPresentacionEx;
 use cartaspresentacion\model\entity\GestorCartaPresentacion;
 use cartaspresentacion\model\entity\GestorCartaPresentacionDl;
 use core\ConfigGlobal;
-use function core\is_true;
 use ubis\model\entity\Centro;
 use ubis\model\entity\CentroDl;
 use ubis\model\entity\DireccionCtr;
@@ -22,6 +21,7 @@ use ubis\model\entity\Ubi;
 use web\Desplegable;
 use web\Hash;
 use web\Lista;
+use function core\is_true;
 
 // INICIO Cabecera global de URL de controlador *********************************
 
@@ -276,7 +276,8 @@ switch ($Qque_mod) {
             $pres_telf = '';
             $pres_mail = '';
             $id_direccion = $oCartaPresentacion->getId_direccion();
-            llenar_dtor($oCartaPresentacion, $id_direccion);
+            //desactivado por que no se tiene acceso al fichero de cargos
+            //llenar_dtor($oCartaPresentacion, $id_direccion);
         }
         break;
     case "get_dl":
@@ -372,7 +373,7 @@ switch ($Qque_mod) {
                 }
                 //$a_valores[$c][2]="<input type=checkbox size=12 id=$id_ubi name=presentacion $chk onClick=\"fnjs_check($id_ubi)\">";
                 //$a_valores[$c][3]=$oPermActiv->cuadros_check('tipo_labor',$tipo_labor);
-                $orden_nom[$c] = strtolower($nombre_ubi);
+                $orden_nom[$c] = strtolower($nombre_ubi ?? '');
             }
         }
         // ordenar por nombre_ubi
@@ -460,7 +461,7 @@ switch ($Qque_mod) {
                 }
                 //$a_valores[$c][2]="<input type=checkbox size=12 id=$id_ubi name=presentacion $chk onClick=\"fnjs_check($id_ubi)\">";
                 //$a_valores[$c][3]=$oPermActiv->cuadros_check('tipo_labor',$tipo_labor);
-                $orden_nom[$c] = strtolower($nombre_ubi);
+                $orden_nom[$c] = strtolower($nombre_ubi ?? '');
             }
         }
         // ordenar por nombre_ubi

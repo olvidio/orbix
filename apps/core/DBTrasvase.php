@@ -36,6 +36,8 @@ class DBTrasvase extends DBAbstract
     private $sEsquema;
 
     /* CONSTRUCTOR -------------------------------------------------------------- */
+    private \PDO $oDbResto;
+    private string $serror;
 
     function __construct()
     {

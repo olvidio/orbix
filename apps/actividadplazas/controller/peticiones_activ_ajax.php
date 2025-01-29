@@ -5,7 +5,8 @@
  * acción (que): update|borrar
  */
 
-use actividadplazas\model\entity as actividadplazas;
+use actividadplazas\model\entity\GestorPlazaPeticion;
+use actividadplazas\model\entity\PlazaPeticion;
 
 // INICIO Cabecera global de URL de controlador *********************************
 require_once("apps/core/global_header.inc");
@@ -22,7 +23,7 @@ $Qque = (string)filter_input(INPUT_POST, 'que');
 switch ($Qque) {
     case "update":
         // borro todo y grabo lo nuevo:
-        $gesPlazasPeticion = new actividadplazas\GestorPlazaPeticion();
+        $gesPlazasPeticion = new GestorPlazaPeticion();
         $cPlazasPeticion = $gesPlazasPeticion->getPlazasPeticion(array('id_nom' => $Qid_nom, 'tipo' => $Qsactividad));
         foreach ($cPlazasPeticion as $oPlazaPeticion) {
             $oPlazaPeticion->DBEliminar();
@@ -35,7 +36,7 @@ switch ($Qque) {
                 continue;
             }
             $i++;
-            $oPlazaPeticion = new actividadplazas\PlazaPeticion(array('id_nom' => $Qid_nom, 'id_activ' => $id_activ));
+            $oPlazaPeticion = new PlazaPeticion(array('id_nom' => $Qid_nom, 'id_activ' => $id_activ));
             $oPlazaPeticion->setOrden($i);
             $oPlazaPeticion->setTipo($Qsactividad);
             $oPlazaPeticion->DBGuardar();
@@ -43,7 +44,7 @@ switch ($Qque) {
         echo $oPosicion->go_atras(1);
         break;
     case 'borrar';
-        $gesPlazasPeticion = new actividadplazas\GestorPlazaPeticion();
+        $gesPlazasPeticion = new GestorPlazaPeticion();
         $cPlazasPeticion = $gesPlazasPeticion->getPlazasPeticion(array('id_nom' => $Qid_nom, 'tipo' => $Qsactividad));
         foreach ($cPlazasPeticion as $oPlazaPeticion) {
             $oPlazaPeticion->DBEliminar();

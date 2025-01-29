@@ -4,10 +4,14 @@ namespace core;
 
 use config\model\Config;
 use menus\model\PermisoMenu;
-use permisos\model as permisos;
-use usuarios\model\entity as usuarios;
+use permisos\model\PermDl;
+use permisos\model\PermisosActividades;
+use permisos\model\PermisosActividadesTrue;
+use usuarios\model\entity\GestorPermMenu;
+use usuarios\model\entity\GestorUsuarioGrupo;
 use usuarios\model\entity\Usuario;
-use web;
+use web\Hash;
+use web\Posicion;
 use zonassacd\model\entity\GestorZona;
 
 if (session_status() !== PHP_SESSION_ACTIVE) {
@@ -83,7 +87,7 @@ $user_sfsv = $_SESSION['session_auth']['sfsv'];
 switch ($user_sfsv) {
     case 1: //sv
         $esquemav = $_SESSION['session_auth']['esquema'];
-        $esquema = \substr($esquemav, 0, -1);
+        $esquema = substr($esquemav, 0, -1);
         $esquemaf = $esquema . 'f';
         //común
         $oConfigDB->setDataBase('comun');
@@ -308,12 +312,12 @@ if ((ConfigGlobal::mi_region() === ConfigGlobal::mi_delef()) && !isset($_SESSION
 if (ConfigGlobal::is_app_installed('menus')) {
     if (empty($_SESSION['iPermMenus'])) { // con hacerlo una vez basta.
         // Grupos
-        $oGesGrupo = new usuarios\GestorUsuarioGrupo();
+        $oGesGrupo = new GestorUsuarioGrupo();
         $cGrupos = $oGesGrupo->getUsuariosGrupos(array('id_usuario' => ConfigGlobal::mi_id_usuario()));
         $iperm_menu = 0;
         foreach ($cGrupos as $UsuarioGrupo) {
             $id_grupo = $UsuarioGrupo->getId_grupo();
-            $oGesPermMenu = new usuarios\GestorPermMenu();
+            $oGesPermMenu = new GestorPermMenu();
             $cPermMenu = $oGesPermMenu->getPermMenus(array('id_usuario' => $id_grupo));
             foreach ($cPermMenu as $oPermMenu) {
                 // Or (inclusive or) 	Bits that are set in either $a or $b are set.
@@ -340,7 +344,7 @@ if (ConfigGlobal::is_app_installed('menus')) {
         }
         //echo "perms: $iperm_menu<br>";
         $_SESSION['iPermMenus'] = $iperm_menu;
-        $_SESSION['oPerm'] = new permisos\PermDl();
+        $_SESSION['oPerm'] = new PermDl();
         $_SESSION['oPerm']->setAccion($iperm_menu);
     }
 }
@@ -355,15 +359,15 @@ include_once('func_tablas.php');
 if (empty($_SESSION['oPermActividades'])) {
     if (ConfigGlobal::is_app_installed('procesos')) {
         //$_SESSION['oPermActividades'] = new permisos\PermisosActividadesTrue(ConfigGlobal::mi_id_usuario());
-        $_SESSION['oPermActividades'] = new permisos\PermisosActividades(ConfigGlobal::mi_id_usuario());
+        $_SESSION['oPermActividades'] = new PermisosActividades(ConfigGlobal::mi_id_usuario());
     } else {
-        $_SESSION['oPermActividades'] = new permisos\PermisosActividadesTrue(ConfigGlobal::mi_id_usuario());
+        $_SESSION['oPermActividades'] = new PermisosActividadesTrue(ConfigGlobal::mi_id_usuario());
     }
     //$oPermActividades = $_SESSION['oPermActividades'];
 }
 
 // Para validar los parámetros enviados via POST
-$oValidator = new web\Hash();
+$oValidator = new Hash();
 echo $oValidator->validatePost($_POST);
 
-$oPosicion = new web\Posicion($_SERVER['PHP_SELF'], $_POST);
+$oPosicion = new Posicion($_SERVER['PHP_SELF'], $_POST);

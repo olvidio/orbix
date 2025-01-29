@@ -2,7 +2,9 @@
 
 namespace actividadescentro\model\entity;
 
-use core;
+use core\ClaseGestor;
+use core\Condicion;
+use core\Set;
 use ubis\model\entity\CentroDl;
 use actividades\model\entity\ActividadDl;
 use core\ConfigGlobal;
@@ -19,7 +21,7 @@ use ubis\model\entity\CentroEllas;
  * @version 1.0
  * @created 07/01/2019
  */
-class GestorCentroEncargado extends core\ClaseGestor
+class GestorCentroEncargado extends ClaseGestor
 {
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
@@ -44,7 +46,7 @@ class GestorCentroEncargado extends core\ClaseGestor
      *     que se le pasa como parámetro. (o en negativo para una actividad anterior).
      *
      * @param integer id_ubi.
-     * @param date iso. fecha de referencia respecto a la que calcular la diferencia de dias.
+     * @param string iso. fecha de referencia respecto a la que calcular la diferencia de dias.
      * @return string dias de diferencia con la próxima/anterior actividad.
      */
     function getProximasActividadesDeCentro($id_ubi = '', $f_ini_act = '')
@@ -74,13 +76,13 @@ class GestorCentroEncargado extends core\ClaseGestor
      *
      * @param integer id_ubi.
      * @param string condicion a añadir (sin where): f_ini BETWEEN '1/1/2010' AND '1/8/2010'.
-     * @return array Una col·lecció d'objectes de tipus ActividadDl
+     * @return array|false
      */
     function getActividadesDeCentros($iid_ubi = '', $scondicion = '')
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
-        $oActividadSet = new core\Set();
+        $oActividadSet = new Set();
         if (!empty($scondicion)) $scondicion = ' AND ' . $scondicion;
         $sQuery = "SELECT d.id_activ FROM $nom_tabla d JOIN a_actividades_dl a USING (id_activ) WHERE d.id_ubi=$iid_ubi $scondicion ORDER BY f_ini";
         if (($oDbl->query($sQuery)) === false) {
@@ -101,13 +103,13 @@ class GestorCentroEncargado extends core\ClaseGestor
      * retorna l'array d'objectes de tipus Ubi
      *
      * @param integer id_actividad.
-     * @return array Una col·lecció d'objectes de tipus CentroDl
+     * @return array|false
      */
     function getCentrosEncargadosActividad($iid_activ = '')
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
-        $oUbiSet = new core\Set();
+        $oUbiSet = new Set();
         $sQuery = "SELECT * FROM $nom_tabla d WHERE id_activ=$iid_activ ORDER BY num_orden";
         if (($oDbl->query($sQuery)) === false) {
             $sClauError = 'GestorCentroEncargado.query';
@@ -135,12 +137,12 @@ class GestorCentroEncargado extends core\ClaseGestor
      * retorna l'array d'objectes de tipus CentroEncargado
      *
      * @param string sQuery la query a executar.
-     * @return array Una col·lecció d'objectes de tipus CentroEncargado
+     * @return array|false
      */
     function getCentrosEncargadosQuery($sQuery = '')
     {
         $oDbl = $this->getoDbl();
-        $oCentroEncargadoSet = new core\Set();
+        $oCentroEncargadoSet = new Set();
         if (($oDbl->query($sQuery)) === FALSE) {
             $sClauError = 'GestorCentroEncargado.query';
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
@@ -160,23 +162,23 @@ class GestorCentroEncargado extends core\ClaseGestor
      *
      * @param array aWhere associatiu amb els valors de les variables amb les quals farem la query
      * @param array aOperators associatiu amb els valors dels operadors que cal aplicar a cada variable
-     * @return array Una col·lecció d'objectes de tipus CentroEncargado
+     * @return array|void
      */
     function getCentrosEncargados($aWhere = array(), $aOperators = array())
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
-        $oCentroEncargadoSet = new core\Set();
-        $oCondicion = new core\Condicion();
+        $oCentroEncargadoSet = new Set();
+        $oCondicion = new Condicion();
         $aCondi = array();
         foreach ($aWhere as $camp => $val) {
-            if ($camp == '_ordre') continue;
+            if ($camp === '_ordre') continue;
             $sOperador = isset($aOperators[$camp]) ? $aOperators[$camp] : '';
             if ($a = $oCondicion->getCondicion($camp, $sOperador, $val)) $aCondi[] = $a;
             // operadores que no requieren valores
-            if ($sOperador == 'BETWEEN' || $sOperador == 'IS NULL' || $sOperador == 'IS NOT NULL' || $sOperador == 'OR') unset($aWhere[$camp]);
-            if ($sOperador == 'IN' || $sOperador == 'NOT IN') unset($aWhere[$camp]);
-            if ($sOperador == 'TXT') unset($aWhere[$camp]);
+            if ($sOperador === 'BETWEEN' || $sOperador === 'IS NULL' || $sOperador === 'IS NOT NULL' || $sOperador === 'OR') unset($aWhere[$camp]);
+            if ($sOperador === 'IN' || $sOperador === 'NOT IN') unset($aWhere[$camp]);
+            if ($sOperador === 'TXT') unset($aWhere[$camp]);
         }
         $sCondi = implode(' AND ', $aCondi);
         if ($sCondi != '') $sCondi = " WHERE " . $sCondi;

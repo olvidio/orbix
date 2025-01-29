@@ -2,6 +2,8 @@
 
 use ubis\model\entity\CentroDl;
 use usuarios\model\PermCtr;
+use web\Hash;
+use web\Lista;
 
 // propios
 $i = 0;
@@ -27,7 +29,7 @@ foreach ($cUsuarioPermCtr as $oUsuarioPermCtr) {
     $a_valores[$i][1] = $oCentroDl->getNombre_ubi();
     $a_valores[$i][2] = $a_perm_ctr[$perm_ctr];
 }
-$oHash3 = new web\Hash();
+$oHash3 = new Hash();
 $oHash3->setCamposForm('que!sel');
 $oHash3->setcamposNo('refresh!scroll_id');
 $a_camposHidden = array(
@@ -95,7 +97,7 @@ $oHash3->setArraycamposHidden($a_camposHidden);
     <?= $oHash3->getCamposHtml(); ?>
     <input type="hidden" id="perm_ctr_que" name="que" value=''>
     <?php
-    $oTabla = new web\Lista();
+    $oTabla = new Lista();
     $oTabla->setId_tabla('form_permisos_ctr');
     $oTabla->setCabeceras($a_cabeceras);
     $oTabla->setBotones($a_botones);

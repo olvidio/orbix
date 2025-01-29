@@ -2,8 +2,11 @@
 
 namespace actividadestudios\model\entity;
 
-use core;
+use core\ClasePropiedades;
+use core\DatosCampo;
+use core\Set;
 use notas\model\entity\Nota;
+use function core\is_true;
 
 /**
  * Fitxer amb la Classe que accedeix a la taula d_matriculas_activ
@@ -24,7 +27,7 @@ use notas\model\entity\Nota;
  * @version 1.0
  * @created 18/11/2014
  */
-class Matricula extends core\ClasePropiedades
+class Matricula extends ClasePropiedades
 {
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
@@ -152,9 +155,9 @@ class Matricula extends core\ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'id_activ') && $val_id !== '') $this->iid_activ = (int)$val_id;
-                if (($nom_id == 'id_asignatura') && $val_id !== '') $this->iid_asignatura = (int)$val_id;
-                if (($nom_id == 'id_nom') && $val_id !== '') $this->iid_nom = (int)$val_id;
+                if (($nom_id === 'id_activ') && $val_id !== '') $this->iid_activ = (int)$val_id;
+                if (($nom_id === 'id_asignatura') && $val_id !== '') $this->iid_asignatura = (int)$val_id;
+                if (($nom_id === 'id_nom') && $val_id !== '') $this->iid_nom = (int)$val_id;
             }
         }
         $this->setoDbl($oDbl);
@@ -188,7 +191,7 @@ class Matricula extends core\ClasePropiedades
         $aDades['acta'] = $this->sacta;
         array_walk($aDades, 'core\poner_null');
         //para el caso de los boolean FALSE, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
-        if (core\is_true($aDades['preceptor'])) {
+        if (is_true($aDades['preceptor'])) {
             $aDades['preceptor'] = 'true';
         } else {
             $aDades['preceptor'] = 'false';
@@ -307,7 +310,7 @@ class Matricula extends core\ClasePropiedades
      *
      * @param array $aDades
      */
-    function setAllAtributes($aDades)
+    function setAllAtributes(array $aDades)
     {
         if (!is_array($aDades)) return;
         if (array_key_exists('id_schema', $aDades)) $this->setId_schema($aDades['id_schema']);
@@ -383,9 +386,9 @@ class Matricula extends core\ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'id_activ') && $val_id !== '') $this->iid_activ = (int)$val_id;
-                if (($nom_id == 'id_asignatura') && $val_id !== '') $this->iid_asignatura = (int)$val_id;
-                if (($nom_id == 'id_nom') && $val_id !== '') $this->iid_nom = (int)$val_id;
+                if (($nom_id === 'id_activ') && $val_id !== '') $this->iid_activ = (int)$val_id;
+                if (($nom_id === 'id_asignatura') && $val_id !== '') $this->iid_asignatura = (int)$val_id;
+                if (($nom_id === 'id_nom') && $val_id !== '') $this->iid_nom = (int)$val_id;
             }
         }
     }
@@ -515,7 +518,7 @@ class Matricula extends core\ClasePropiedades
         if (!isset($this->bpreceptor) && !$this->bLoaded) {
             $this->DBCarregar();
         }
-        return core\is_true($this->bpreceptor);
+        return is_true($this->bpreceptor);
     }
 
     /**
@@ -627,7 +630,6 @@ class Matricula extends core\ClasePropiedades
         $nota_num = $this->getNota_num();
         $nota_max = $this->getNota_max();
         $nota_escala = empty($nota_num) ? '' : "$nota_num [$nota_max]";
-        //$nota_escala = empty($nota_num)? '' : "$nota_num "._("sobre")." $nota_max";
 
         return $nota_escala;
     }
@@ -674,7 +676,7 @@ class Matricula extends core\ClasePropiedades
      */
     function getDatosCampos()
     {
-        $oMatriculaSet = new core\Set();
+        $oMatriculaSet = new Set();
 
         $oMatriculaSet->add($this->getDatosId_schema());
         $oMatriculaSet->add($this->getDatosId_nivel());
@@ -691,12 +693,12 @@ class Matricula extends core\ClasePropiedades
      * Recupera les propietats de l'atribut iid_schema de Matricula
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosId_schema()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_schema'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_schema'));
         $oDatosCampo->setEtiqueta(_("id_schema"));
         return $oDatosCampo;
     }
@@ -705,12 +707,12 @@ class Matricula extends core\ClasePropiedades
      * Recupera les propietats de l'atribut iid_nivel de Matricula
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosId_nivel()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_nivel'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_nivel'));
         $oDatosCampo->setEtiqueta(_("id_nivel"));
         return $oDatosCampo;
     }
@@ -719,12 +721,12 @@ class Matricula extends core\ClasePropiedades
      * Recupera les propietats de l'atribut iid_situacion de Matricula
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosId_situacion()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_situacion'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_situacion'));
         $oDatosCampo->setEtiqueta(_("id_situacion"));
         return $oDatosCampo;
     }
@@ -733,12 +735,12 @@ class Matricula extends core\ClasePropiedades
      * Recupera les propietats de l'atribut bpreceptor de Matricula
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosPreceptor()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'preceptor'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'preceptor'));
         $oDatosCampo->setEtiqueta(_("preceptor"));
         return $oDatosCampo;
     }
@@ -747,12 +749,12 @@ class Matricula extends core\ClasePropiedades
      * Recupera les propietats de l'atribut iid_preceptor de Matricula
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosId_preceptor()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_preceptor'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_preceptor'));
         $oDatosCampo->setEtiqueta(_("nombre preceptor"));
         return $oDatosCampo;
     }
@@ -761,12 +763,12 @@ class Matricula extends core\ClasePropiedades
      * Recupera les propietats de l'atribut inota_num de PersonaNota
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosNota_num()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'nota_num'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'nota_num'));
         $oDatosCampo->setEtiqueta(_("nota num"));
         return $oDatosCampo;
     }
@@ -775,12 +777,12 @@ class Matricula extends core\ClasePropiedades
      * Recupera les propietats de l'atribut inota_max de PersonaNota
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosNota_max()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'nota_max'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'nota_max'));
         $oDatosCampo->setEtiqueta(_("nota max"));
         return $oDatosCampo;
     }
@@ -789,12 +791,12 @@ class Matricula extends core\ClasePropiedades
      * Recupera les propietats de l'atribut sacta de PersonaNota
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosActa()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'acta'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'acta'));
         $oDatosCampo->setEtiqueta(_("acta"));
         return $oDatosCampo;
     }

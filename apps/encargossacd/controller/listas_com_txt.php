@@ -1,5 +1,6 @@
 <?php
 
+use core\ViewTwig;
 use encargossacd\model\entity\GestorEncargoTexto;
 use web\Desplegable;
 use web\Hash;
@@ -85,5 +86,5 @@ $a_campos = ['oPosicion' => $oPosicion,
     'oDesplIdiomas' => $oDesplIdiomas,
 ];
 
-$oView = new core\ViewTwig('encargossacd/controller');
+$oView = new ViewTwig('encargossacd/controller');
 $oView->renderizar('listas_com_txt.html.twig', $a_campos);

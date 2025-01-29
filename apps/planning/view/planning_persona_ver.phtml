@@ -1,0 +1,12 @@
+<?php
+
+echo $oPosicion->mostrar_left_slide(1);
+
+echo "<button class='no_print' onclick=\"fnjs_exportar('html');\" >"._("Descargar html")."</button>";
+echo "<button class='no_print' onclick=\"window.open('$goLeyenda','leyenda','width=400,height=500,screenX=200,screenY=200,titlebar=yes');\" >"._("Ver leyenda")."</button>";
+
+echo "<div id=\"exportar\">";
+// ---------------- html ---------------------------------------------
+echo "<span id=\"span_exportar\"  title=\"$cabecera_title\">";
+echo $oPlanning->dibujar();
+echo "</div>"; //exportar

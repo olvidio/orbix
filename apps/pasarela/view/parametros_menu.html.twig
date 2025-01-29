@@ -32,7 +32,7 @@
             event.preventDefault();
         }
         datos = $(formulario).serialize();
-        request = $.ajax({
+          let request = $.ajax({
             data: datos,
             url: '{{ url }}',
             method: 'POST',

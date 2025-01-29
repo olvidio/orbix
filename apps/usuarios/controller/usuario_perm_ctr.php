@@ -1,11 +1,12 @@
 <?php
 
-use core\ConfigGlobal;
-use usuarios\model\entity\GrupoOUsuario;
+use core\ViewTwig;
 use web\Desplegable;
-use usuarios\model\PermCtr;
-use usuarios\model\entity\PermUsuarioCentro;
 use ubis\model\entity\GestorCentroDl;
+use usuarios\model\entity\GrupoOUsuario;
+use usuarios\model\entity\PermUsuarioCentro;
+use usuarios\model\PermCtr;
+use web\Hash;
 
 // INICIO Cabecera global de URL de controlador *********************************
 require_once("apps/core/global_header.inc");
@@ -61,7 +62,7 @@ $oDesplAccion->setNombre('perm_ctr');
 $oDesplAccion->setOpcion_sel($perm_ctr);
 
 
-$oHash = new web\Hash();
+$oHash = new Hash();
 $oHash->setCamposForm('perm_ctr!id_ctr');
 $a_camposHidden = array(
     'id_usuario' => $Qid_usuario,
@@ -80,5 +81,5 @@ $a_campos = [
     'oDesplCentros' => $oDesplCentros,
 ];
 
-$oView = new core\ViewTwig('usuarios/controller');
+$oView = new ViewTwig('usuarios/controller');
 $oView->renderizar('usuario_perm_ctr.html.twig', $a_campos);

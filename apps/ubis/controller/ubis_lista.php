@@ -1,6 +1,6 @@
 <?php
-use usuarios\model\entity as usuarios;
-use ubis\model\entity as ubis;
+use core\ConfigGlobal;
+use ubis\model\entity\GestorCasa;use ubis\model\entity\GestorCentro;use usuarios\model\entity\Usuario;
 /**
 * Esta página muestra una tabla con los ubis seleccionados.
  * Para "actividad_select_ubi.phtml"
@@ -21,8 +21,8 @@ use ubis\model\entity as ubis;
 // FIN de  Cabecera global de URL de controlador ********************************
 
 
-$oMiUsuario = new usuarios\Usuario(core\ConfigGlobal::mi_id_usuario());
-$miSfsv=core\ConfigGlobal::mi_sfsv();
+$oMiUsuario = new Usuario(ConfigGlobal::mi_id_usuario());
+$miSfsv=ConfigGlobal::mi_sfsv();
 
 $tabla="ubis";
 $tabla_dir="u_direcciones";
@@ -55,14 +55,14 @@ $aWhereCtr['cdc'] = 't';
 
 $a_ubis = array();
 //Casas
-$GesCasas = new ubis\GestorCasa();
+$GesCasas = new GestorCasa();
 $cCasas = $GesCasas->getCasas($aWhereCasa,$aOperadorCasa);
 foreach ($cCasas as $oCasa) {
 	$nombre_ubi = $oCasa->getNombre_ubi();
 	$a_ubis[$nombre_ubi] = $oCasa;
 }
 //Ctrs
-$GesCtr = new ubis\GestorCentro();
+$GesCtr = new GestorCentro();
 $cCtr = $GesCtr->getCentros($aWhereCtr,$aOperadorCtr);
 foreach ($cCtr as $oCentro) {
 	$nombre_ubi = $oCentro->getNombre_ubi();

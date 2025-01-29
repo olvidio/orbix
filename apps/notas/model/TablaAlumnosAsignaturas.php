@@ -9,7 +9,6 @@ use notas\model\entity\GestorPersonaNotaDlDB;
 use notas\model\entity\Nota;
 use personas\model\entity\GestorPersonaDl;
 use web\Lista;
-use ubis\model\entity\GestorDelegacion;
 
 /**
  * Classe que

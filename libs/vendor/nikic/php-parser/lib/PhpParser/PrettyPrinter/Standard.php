@@ -169,7 +169,7 @@ class Standard extends PrettyPrinterAbstract {
             case Scalar\String_::KIND_DOUBLE_QUOTED:
                 return '"' . $this->escapeString($node->value, '"') . '"';
         }
-        throw new \Exception('Invalid string kind');
+        throw new Exception('Invalid string kind');
     }
 
     protected function pScalar_InterpolatedString(Scalar\InterpolatedString $node): string {
@@ -218,7 +218,7 @@ class Standard extends PrettyPrinterAbstract {
             case Scalar\Int_::KIND_HEX:
                 return $sign . '0x' . base_convert($str, 10, 16);
         }
-        throw new \Exception('Invalid number kind');
+        throw new Exception('Invalid number kind');
     }
 
     protected function pScalar_Float(Scalar\Float_ $node): string {

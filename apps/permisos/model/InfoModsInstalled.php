@@ -2,11 +2,11 @@
 
 namespace permisos\model;
 
-use core;
+use core\DatosInfo;
 
 /* No vale el underscore en el nombre */
 
-class InfoModsInstalled extends core\DatosInfo
+class InfoModsInstalled extends DatosInfo
 {
 
     public function __construct()

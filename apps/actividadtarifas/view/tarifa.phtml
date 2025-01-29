@@ -1,7 +1,12 @@
+<?php
+
+use core\ConfigGlobal;
+
+?>
 <script>
     fnjs_ver = function () {
         /* obtener el listado */
-        var url = '<?= core\ConfigGlobal::getWeb() ?>/apps/actividadtarifas/controller/tarifa_ajax.php';
+        var url = '<?= ConfigGlobal::getWeb() ?>/apps/actividadtarifas/controller/tarifa_ajax.php';
         var parametros = 'que=tarifas<?= $h_ver ?>';
 
         $.ajax({
@@ -24,7 +29,7 @@
         document.getElementById("overlay").style.display = "block";
 
 
-        var url = '<?= core\ConfigGlobal::getWeb() ?>/apps/actividadtarifas/controller/tarifa_ajax.php';
+        var url = '<?= ConfigGlobal::getWeb() ?>/apps/actividadtarifas/controller/tarifa_ajax.php';
         var parametros = 'que=tar_form&id_tarifa=' + id_tarifa + '<?= $h_modificar ?>';
         fnjs_update_div('#div_modificar', url + '?' + parametros);
     }

@@ -1,10 +1,12 @@
 <?php
 namespace profesores\model\entity;
 
-use core;
-use web;
-use personas\model\entity as personas;
-use asistentes\model\entity as asistentes;
+
+use asistentes\model\entity\GestorAsistenteIn;
+use core\ClaseGestor;
+use personas\model\entity\Persona;
+use web\Desplegable;
+use function core\is_true;
 
 /**
  * GestorProfesor
@@ -17,7 +19,7 @@ use asistentes\model\entity as asistentes;
  * @version 1.0
  * @created 07/04/2014
  */
-class GestorProfesorActividad extends core\ClaseGestor
+class GestorProfesorActividad extends ClaseGestor
 {
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
@@ -32,7 +34,7 @@ class GestorProfesorActividad extends core\ClaseGestor
      * más los asistentes a actividades de otras dl o de paso que sean profesores
      *
      * @param array id_activ de las actividades seleccionadas (solo para profesores de paso).
-     * @return array Una Llista
+     * @return array|Desplegable
      */
     function getListaProfesoresActividad($aId_activ = array())
     {
@@ -42,14 +44,14 @@ class GestorProfesorActividad extends core\ClaseGestor
         $aProfesoresDl = $gesProfesoresDl->getListaProfesoresDl();
         // asistentes de otras dl que son profesores
         // asistentes de paso que son profesores
-        $gesAsistentesIn = new asistentes\GestorAsistenteIn();
+        $gesAsistentesIn = new GestorAsistenteIn();
         $aProfesoresEx = array();
         $aAp1 = array();
         $aAp2 = array();
         $aNom = array();
         $msg_err = '';
         foreach ($gesAsistentesIn->getListaAsistentesDistintos($aId_activ) as $id_nom) {
-            $oPersona = personas\Persona::NewPersona($id_nom);
+            $oPersona = Persona::NewPersona($id_nom);
             if (!is_object($oPersona)) {
                 $msg_err .= "<br>$oPersona con id_nom: $id_nom en  " . __FILE__ . ": line " . __LINE__;
                 continue;
@@ -59,7 +61,7 @@ class GestorProfesorActividad extends core\ClaseGestor
             if ($obj_persona === 'PersonaDl') { continue; }
             // solo puede ser PersonaEx o PersonaIN;
             $profesor_stgr = $oPersona->getProfesor_stgr();
-            if (!core\is_true($profesor_stgr)) { continue; }
+            if (!is_true($profesor_stgr)) { continue; }
 
             $ap_nom = $oPersona->getPrefApellidosNombre();
             //$ctr_dl=$oPersona->getCentro_o_dl();
@@ -93,7 +95,7 @@ class GestorProfesorActividad extends core\ClaseGestor
         if (!empty($msg_err)) {
             echo $msg_err;
         }
-        return new web\Desplegable('', $AllOpciones, '', true);
+        return new Desplegable('', $AllOpciones, '', true);
     }
 
 
@@ -101,5 +103,3 @@ class GestorProfesorActividad extends core\ClaseGestor
 
     /* MÉTODOS GET y SET --------------------------------------------------------*/
 }
-
-?>

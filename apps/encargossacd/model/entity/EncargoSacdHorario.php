@@ -2,8 +2,10 @@
 
 namespace encargossacd\model\entity;
 
-use core;
-use web;
+use core\ClasePropiedades;
+use core\ConverterDate;
+use core\DatosCampo;
+use core\Set;
 
 /**
  * Fitxer amb la Classe que accedeix a la taula encargo_sacd_horario
@@ -24,7 +26,7 @@ use web;
  * @version 1.0
  * @created 11/01/2019
  */
-class EncargoSacdHorario extends core\ClasePropiedades
+class EncargoSacdHorario extends ClasePropiedades
 {
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
@@ -70,13 +72,13 @@ class EncargoSacdHorario extends core\ClasePropiedades
     /**
      * F_ini de EncargoSacdHorario
      *
-     * @var web\DateTimeLocal
+     * @varDateTimeLocal
      */
     protected $df_ini;
     /**
      * F_fin de EncargoSacdHorario
      *
-     * @var web\DateTimeLocal
+     * @varDateTimeLocal
      */
     protected $df_fin;
     /**
@@ -244,11 +246,11 @@ class EncargoSacdHorario extends core\ClasePropiedades
                     return FALSE;
                 }
             }
-            if ($nom_tabla == 'encargo_sacd_horario') {
-                $this->id_item = $oDbl->lastInsertId('encargo_sacd_horario_id_item_seq');
+            if ($nom_tabla === 'encargo_sacd_horario') {
+                $this->iid_item = $oDbl->lastInsertId('encargo_sacd_horario_id_item_seq');
             }
-            if ($nom_tabla == 'propuesta_encargo_sacd_horario') {
-                $this->id_item = $oDbl->lastInsertId('propuesta_encargo_sacd_horario_id_item_seq');
+            if ($nom_tabla === 'propuesta_encargo_sacd_horario') {
+                $this->iid_item = $oDbl->lastInsertId('propuesta_encargo_sacd_horario_id_item_seq');
             }
         }
         $this->setAllAtributes($aDades);
@@ -317,7 +319,7 @@ class EncargoSacdHorario extends core\ClasePropiedades
      *
      * @param array $aDades
      */
-    function setAllAtributes($aDades, $convert = FALSE)
+    function setAllAtributes(array $aDades, $convert = FALSE)
     {
         if (!is_array($aDades)) return;
         if (array_key_exists('id_item', $aDades)) $this->setId_item($aDades['id_item']);
@@ -395,9 +397,9 @@ class EncargoSacdHorario extends core\ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'id_item') && $val_id !== '') $this->iid_item = (int)$val_id;
-                if (($nom_id == 'id_enc') && $val_id !== '') $this->iid_enc = (int)$val_id;
-                if (($nom_id == 'id_nom') && $val_id !== '') $this->iid_nom = (int)$val_id;
+                if (($nom_id === 'id_item') && $val_id !== '') $this->iid_item = (int)$val_id;
+                if (($nom_id === 'id_enc') && $val_id !== '') $this->iid_enc = (int)$val_id;
+                if (($nom_id === 'id_nom') && $val_id !== '') $this->iid_nom = (int)$val_id;
             }
         }
     }
@@ -474,14 +476,14 @@ class EncargoSacdHorario extends core\ClasePropiedades
     /**
      * Recupera el atributo df_ini de EncargoSacdHorario
      *
-     * @return web\DateTimeLocal df_ini
+     * @returnDateTimeLocal df_ini
      */
     function getF_ini()
     {
         if (!isset($this->df_ini) && !$this->bLoaded) {
             $this->DBCarregar();
         }
-        $oConverter = new core\ConverterDate('date', $this->df_ini);
+        $oConverter = new ConverterDate('date', $this->df_ini);
         return $oConverter->fromPg();
     }
 
@@ -490,13 +492,13 @@ class EncargoSacdHorario extends core\ClasePropiedades
      * Si df_ini es string, y convert=true se convierte usando el formato web\DateTimeLocal->getForamat().
      * Si convert es false, df_ini debe ser un string en formato ISO (Y-m-d). Corresponde al pgstyle de la base de datos.
      *
-     * @param web\DateTimeLocal|string df_ini='' optional.
+     * @paramDateTimeLocal|string df_ini='' optional.
      * @param boolean convert=TRUE optional. Si es false, df_ini debe ser un string en formato ISO (Y-m-d).
      */
     function setF_ini($df_ini = '', $convert = TRUE)
     {
         if ($convert === TRUE && !empty($df_ini)) {
-            $oConverter = new core\ConverterDate('date', $df_ini);
+            $oConverter = new ConverterDate('date', $df_ini);
             $this->df_ini = $oConverter->toPg();
         } else {
             $this->df_ini = $df_ini;
@@ -506,14 +508,14 @@ class EncargoSacdHorario extends core\ClasePropiedades
     /**
      * Recupera el atributo df_fin de EncargoSacdHorario
      *
-     * @return web\DateTimeLocal df_fin
+     * @returnDateTimeLocal df_fin
      */
     function getF_fin()
     {
         if (!isset($this->df_fin) && !$this->bLoaded) {
             $this->DBCarregar();
         }
-        $oConverter = new core\ConverterDate('date', $this->df_fin);
+        $oConverter = new ConverterDate('date', $this->df_fin);
         return $oConverter->fromPg();
     }
 
@@ -522,13 +524,13 @@ class EncargoSacdHorario extends core\ClasePropiedades
      * Si df_fin es string, y convert=true se convierte usando el formato web\DateTimeLocal->getForamat().
      * Si convert es false, df_fin debe ser un string en formato ISO (Y-m-d). Corresponde al pgstyle de la base de datos.
      *
-     * @param web\DateTimeLocal|string df_fin='' optional.
+     * @paramDateTimeLocal|string df_fin='' optional.
      * @param boolean convert=TRUE optional. Si es false, df_ini debe ser un string en formato ISO (Y-m-d).
      */
     function setF_fin($df_fin = '', $convert = TRUE)
     {
         if ($convert === TRUE && !empty($df_fin)) {
-            $oConverter = new core\ConverterDate('date', $df_fin);
+            $oConverter = new ConverterDate('date', $df_fin);
             $this->df_fin = $oConverter->toPg();
         } else {
             $this->df_fin = $df_fin;
@@ -703,7 +705,7 @@ class EncargoSacdHorario extends core\ClasePropiedades
      */
     function getDatosCampos()
     {
-        $oEncargoSacdHorarioSet = new core\Set();
+        $oEncargoSacdHorarioSet = new Set();
 
         $oEncargoSacdHorarioSet->add($this->getDatosF_ini());
         $oEncargoSacdHorarioSet->add($this->getDatosF_fin());
@@ -722,12 +724,12 @@ class EncargoSacdHorario extends core\ClasePropiedades
      * Recupera les propietats de l'atribut df_ini de EncargoSacdHorario
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosF_ini()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'f_ini'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'f_ini'));
         $oDatosCampo->setEtiqueta(_("f_ini"));
         return $oDatosCampo;
     }
@@ -736,12 +738,12 @@ class EncargoSacdHorario extends core\ClasePropiedades
      * Recupera les propietats de l'atribut df_fin de EncargoSacdHorario
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosF_fin()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'f_fin'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'f_fin'));
         $oDatosCampo->setEtiqueta(_("f_fin"));
         return $oDatosCampo;
     }
@@ -750,12 +752,12 @@ class EncargoSacdHorario extends core\ClasePropiedades
      * Recupera les propietats de l'atribut sdia_ref de EncargoSacdHorario
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosDia_ref()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'dia_ref'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'dia_ref'));
         $oDatosCampo->setEtiqueta(_("dia_ref"));
         return $oDatosCampo;
     }
@@ -764,12 +766,12 @@ class EncargoSacdHorario extends core\ClasePropiedades
      * Recupera les propietats de l'atribut idia_num de EncargoSacdHorario
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosDia_num()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'dia_num'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'dia_num'));
         $oDatosCampo->setEtiqueta(_("dia_num"));
         return $oDatosCampo;
     }
@@ -778,12 +780,12 @@ class EncargoSacdHorario extends core\ClasePropiedades
      * Recupera les propietats de l'atribut smas_menos de EncargoSacdHorario
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosMas_menos()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'mas_menos'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'mas_menos'));
         $oDatosCampo->setEtiqueta(_("mas_menos"));
         return $oDatosCampo;
     }
@@ -792,12 +794,12 @@ class EncargoSacdHorario extends core\ClasePropiedades
      * Recupera les propietats de l'atribut idia_inc de EncargoSacdHorario
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosDia_inc()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'dia_inc'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'dia_inc'));
         $oDatosCampo->setEtiqueta(_("dia_inc"));
         return $oDatosCampo;
     }
@@ -806,12 +808,12 @@ class EncargoSacdHorario extends core\ClasePropiedades
      * Recupera les propietats de l'atribut th_ini de EncargoSacdHorario
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosH_ini()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'h_ini'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'h_ini'));
         $oDatosCampo->setEtiqueta(_("h_ini"));
         return $oDatosCampo;
     }
@@ -820,12 +822,12 @@ class EncargoSacdHorario extends core\ClasePropiedades
      * Recupera les propietats de l'atribut th_fin de EncargoSacdHorario
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosH_fin()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'h_fin'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'h_fin'));
         $oDatosCampo->setEtiqueta(_("h_fin"));
         return $oDatosCampo;
     }
@@ -834,12 +836,12 @@ class EncargoSacdHorario extends core\ClasePropiedades
      * Recupera les propietats de l'atribut iid_item_tarea_sacd de EncargoSacdHorario
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosId_item_tarea_sacd()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_item_tarea_sacd'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_item_tarea_sacd'));
         $oDatosCampo->setEtiqueta(_("id_item_tarea_sacd"));
         return $oDatosCampo;
     }

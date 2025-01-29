@@ -2,8 +2,11 @@
 
 namespace casas\model\entity;
 
-use core;
-use web;
+use core\ClasePropiedades;
+use core\ConverterDate;
+use core\DatosCampo;
+use core\Set;
+use web\DateTimeLocal;
 
 /**
  * Fitxer amb la Classe que accedeix a la taula du_gastos_dl
@@ -24,7 +27,7 @@ use web;
  * @version 1.0
  * @created 26/6/2019
  */
-class UbiGasto extends core\ClasePropiedades
+class UbiGasto extends ClasePropiedades
 {
 
     // tipo constants.
@@ -70,7 +73,7 @@ class UbiGasto extends core\ClasePropiedades
     /**
      * F_gasto de UbiGasto
      *
-     * @var web\DateTimeLocal
+     * @var DateTimeLocal
      */
     private $df_gasto;
     /**
@@ -115,7 +118,7 @@ class UbiGasto extends core\ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'id_item') && $val_id !== '') $this->iid_item = (int)$val_id; 
+                if (($nom_id === 'id_item') && $val_id !== '') $this->iid_item = (int)$val_id;
             }
         } else {
             if (isset($a_id) && $a_id !== '') {
@@ -192,7 +195,7 @@ class UbiGasto extends core\ClasePropiedades
                     return FALSE;
                 }
             }
-            $this->id_item = $oDbl->lastInsertId('du_gastos_dl_id_item_seq');
+            $this->iid_item = $oDbl->lastInsertId('du_gastos_dl_id_item_seq');
         }
         $this->setAllAtributes($aDades);
         return TRUE;
@@ -260,7 +263,7 @@ class UbiGasto extends core\ClasePropiedades
      *
      * @param array $aDades
      */
-    function setAllAtributes($aDades, $convert = FALSE)
+    function setAllAtributes(array $aDades, $convert = FALSE)
     {
         if (!is_array($aDades)) return;
         if (array_key_exists('id_item', $aDades)) $this->setId_item($aDades['id_item']);
@@ -324,7 +327,7 @@ class UbiGasto extends core\ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'id_item') && $val_id !== '') $this->iid_item = (int)$val_id; 
+                if (($nom_id === 'id_item') && $val_id !== '') $this->iid_item = (int)$val_id;
             }
         }
     }
@@ -378,14 +381,14 @@ class UbiGasto extends core\ClasePropiedades
     /**
      * Recupera el atributo df_gasto de UbiGasto
      *
-     * @return web\DateTimeLocal df_gasto
+     * @return DateTimeLocal df_gasto
      */
     function getF_gasto()
     {
         if (!isset($this->df_gasto) && !$this->bLoaded) {
             $this->DBCarregar();
         }
-        $oConverter = new core\ConverterDate('date', $this->df_gasto);
+        $oConverter = new ConverterDate('date', $this->df_gasto);
         return $oConverter->fromPg();
     }
 
@@ -394,13 +397,13 @@ class UbiGasto extends core\ClasePropiedades
      * Si df_gasto es string, y convert=true se convierte usando el formato web\DateTimeLocal->getForamat().
      * Si convert es false, df_gasto debe ser un string en formato ISO (Y-m-d). Corresponde al pgstyle de la base de datos.
      *
-     * @param web\DateTimeLocal|string df_gasto='' optional.
+     * @param DateTimeLocal|string df_gasto='' optional.
      * @param boolean convert=TRUE optional. Si es false, df_ini debe ser un string en formato ISO (Y-m-d).
      */
     function setF_gasto($df_gasto = '', $convert = TRUE)
     {
         if ($convert === TRUE && !empty($df_gasto)) {
-            $oConverter = new core\ConverterDate('date', $df_gasto);
+            $oConverter = new ConverterDate('date', $df_gasto);
             $this->df_gasto = $oConverter->toPg();
         } else {
             $this->df_gasto = $df_gasto;
@@ -460,7 +463,7 @@ class UbiGasto extends core\ClasePropiedades
      */
     function getDatosCampos()
     {
-        $oUbiGastoSet = new core\Set();
+        $oUbiGastoSet = new Set();
 
         $oUbiGastoSet->add($this->getDatosId_ubi());
         $oUbiGastoSet->add($this->getDatosF_gasto());
@@ -474,12 +477,12 @@ class UbiGasto extends core\ClasePropiedades
      * Recupera les propietats de l'atribut iid_ubi de UbiGasto
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosId_ubi()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_ubi'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_ubi'));
         $oDatosCampo->setEtiqueta(_("id_ubi"));
         return $oDatosCampo;
     }
@@ -488,12 +491,12 @@ class UbiGasto extends core\ClasePropiedades
      * Recupera les propietats de l'atribut df_gasto de UbiGasto
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosF_gasto()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'f_gasto'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'f_gasto'));
         $oDatosCampo->setEtiqueta(_("f_gasto"));
         return $oDatosCampo;
     }
@@ -502,12 +505,12 @@ class UbiGasto extends core\ClasePropiedades
      * Recupera les propietats de l'atribut itipo de UbiGasto
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosTipo()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'tipo'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'tipo'));
         $oDatosCampo->setEtiqueta(_("tipo"));
         return $oDatosCampo;
     }
@@ -516,12 +519,12 @@ class UbiGasto extends core\ClasePropiedades
      * Recupera les propietats de l'atribut icantidad de UbiGasto
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosCantidad()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'cantidad'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'cantidad'));
         $oDatosCampo->setEtiqueta(_("cantidad"));
         return $oDatosCampo;
     }

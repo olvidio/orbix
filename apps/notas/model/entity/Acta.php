@@ -2,8 +2,14 @@
 
 namespace notas\model\entity;
 
-use core;
-use web;
+use core\ClasePropiedades;
+use core\ConverterDate;
+use core\DatosCampo;
+use core\Set;
+use PDO;
+use PDOException;
+use web\DateTimeLocal;
+use web\NullDateTimeLocal;
 
 /**
  * Fitxer amb la Classe que accedeix a la taula e_actas
@@ -24,7 +30,7 @@ use web;
  * @version 1.0
  * @created 07/04/2014
  */
-class Acta extends core\ClasePropiedades
+class Acta extends ClasePropiedades
 {
 
     /* ATRIBUTOS ----------------------------------------------------------------- */
@@ -71,7 +77,7 @@ class Acta extends core\ClasePropiedades
     /**
      * F_acta de Acta
      *
-     * @var web\DateTimeLocal
+     * @varDateTimeLocal
      */
     protected $df_acta;
     /**
@@ -139,7 +145,7 @@ class Acta extends core\ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'acta') && $val_id !== '') $this->sacta = (string)$val_id; // evitem SQL injection fent cast a string
+                if (($nom_id === 'acta') && $val_id !== '') $this->sacta = (string)$val_id; // evitem SQL injection fent cast a string
             }
         } else {
             if (isset($a_id) && $a_id !== '') {
@@ -206,18 +212,18 @@ class Acta extends core\ClasePropiedades
                 $observ = $aDades['observ'];
                 $pdf = $aDades['pdf'];
 
-                $oDblSt->bindParam(1, $id_asignatura, \PDO::PARAM_INT);
-                $oDblSt->bindParam(2, $id_activ, \PDO::PARAM_INT);
-                $oDblSt->bindParam(3, $f_acta, \PDO::PARAM_STR);
-                $oDblSt->bindParam(4, $libro, \PDO::PARAM_INT);
-                $oDblSt->bindParam(5, $pagina, \PDO::PARAM_INT);
-                $oDblSt->bindParam(6, $linea, \PDO::PARAM_INT);
-                $oDblSt->bindParam(7, $lugar, \PDO::PARAM_STR);
-                $oDblSt->bindParam(8, $observ, \PDO::PARAM_STR);
-                $oDblSt->bindParam(9, $pdf, \PDO::PARAM_STR);
+                $oDblSt->bindParam(1, $id_asignatura, PDO::PARAM_INT);
+                $oDblSt->bindParam(2, $id_activ, PDO::PARAM_INT);
+                $oDblSt->bindParam(3, $f_acta, PDO::PARAM_STR);
+                $oDblSt->bindParam(4, $libro, PDO::PARAM_INT);
+                $oDblSt->bindParam(5, $pagina, PDO::PARAM_INT);
+                $oDblSt->bindParam(6, $linea, PDO::PARAM_INT);
+                $oDblSt->bindParam(7, $lugar, PDO::PARAM_STR);
+                $oDblSt->bindParam(8, $observ, PDO::PARAM_STR);
+                $oDblSt->bindParam(9, $pdf, PDO::PARAM_STR);
                 try {
                     $oDblSt->execute($aDades);
-                } catch (\PDOException $e) {
+                } catch (PDOException $e) {
                     $err_txt = $e->errorInfo[2];
                     $this->setErrorTxt($err_txt);
                     $sClauError = 'Acta.update.execute';
@@ -247,19 +253,19 @@ class Acta extends core\ClasePropiedades
                 $observ = $aDades['observ'];
                 $pdf = $aDades['pdf'];
 
-                $oDblSt->bindParam(1, $acta, \PDO::PARAM_STR);
-                $oDblSt->bindParam(2, $id_asignatura, \PDO::PARAM_INT);
-                $oDblSt->bindParam(3, $id_activ, \PDO::PARAM_INT);
-                $oDblSt->bindParam(4, $f_acta, \PDO::PARAM_STR);
-                $oDblSt->bindParam(5, $libro, \PDO::PARAM_INT);
-                $oDblSt->bindParam(6, $pagina, \PDO::PARAM_INT);
-                $oDblSt->bindParam(7, $linea, \PDO::PARAM_INT);
-                $oDblSt->bindParam(8, $lugar, \PDO::PARAM_STR);
-                $oDblSt->bindParam(9, $observ, \PDO::PARAM_STR);
-                $oDblSt->bindParam(10, $pdf, \PDO::PARAM_STR);
+                $oDblSt->bindParam(1, $acta, PDO::PARAM_STR);
+                $oDblSt->bindParam(2, $id_asignatura, PDO::PARAM_INT);
+                $oDblSt->bindParam(3, $id_activ, PDO::PARAM_INT);
+                $oDblSt->bindParam(4, $f_acta, PDO::PARAM_STR);
+                $oDblSt->bindParam(5, $libro, PDO::PARAM_INT);
+                $oDblSt->bindParam(6, $pagina, PDO::PARAM_INT);
+                $oDblSt->bindParam(7, $linea, PDO::PARAM_INT);
+                $oDblSt->bindParam(8, $lugar, PDO::PARAM_STR);
+                $oDblSt->bindParam(9, $observ, PDO::PARAM_STR);
+                $oDblSt->bindParam(10, $pdf, PDO::PARAM_STR);
                 try {
                     $oDblSt->execute($aDades);
-                } catch (\PDOException $e) {
+                } catch (PDOException $e) {
                     $err_txt = $e->errorInfo[2];
                     $this->setErrorTxt($err_txt);
                     $sClauError = 'Acta.insertar.execute';
@@ -298,16 +304,16 @@ class Acta extends core\ClasePropiedades
                 return false;
             }
             $oDblSt->execute();
-            $oDblSt->bindColumn(1, $id_asignatura, \PDO::PARAM_INT);
-            $oDblSt->bindColumn(2, $id_activ, \PDO::PARAM_INT);
-            $oDblSt->bindColumn(3, $f_acta, \PDO::PARAM_STR);
-            $oDblSt->bindColumn(4, $libro, \PDO::PARAM_INT);
-            $oDblSt->bindColumn(5, $pagina, \PDO::PARAM_INT);
-            $oDblSt->bindColumn(6, $linea, \PDO::PARAM_INT);
-            $oDblSt->bindColumn(7, $lugar, \PDO::PARAM_STR);
-            $oDblSt->bindColumn(8, $observ, \PDO::PARAM_STR);
-            $oDblSt->bindColumn(9, $pdf, \PDO::PARAM_STR);
-            $oDblSt->fetch(\PDO::FETCH_BOUND);
+            $oDblSt->bindColumn(1, $id_asignatura, PDO::PARAM_INT);
+            $oDblSt->bindColumn(2, $id_activ, PDO::PARAM_INT);
+            $oDblSt->bindColumn(3, $f_acta, PDO::PARAM_STR);
+            $oDblSt->bindColumn(4, $libro, PDO::PARAM_INT);
+            $oDblSt->bindColumn(5, $pagina, PDO::PARAM_INT);
+            $oDblSt->bindColumn(6, $linea, PDO::PARAM_INT);
+            $oDblSt->bindColumn(7, $lugar, PDO::PARAM_STR);
+            $oDblSt->bindColumn(8, $observ, PDO::PARAM_STR);
+            $oDblSt->bindColumn(9, $pdf, PDO::PARAM_STR);
+            $oDblSt->fetch(PDO::FETCH_BOUND);
 
             $aDades = [
                 'id_asignatura' => $id_asignatura,
@@ -368,7 +374,7 @@ class Acta extends core\ClasePropiedades
      *
      * @param array $aDades
      */
-    function setAllAtributes($aDades, $convert = FALSE)
+    function setAllAtributes(array $aDades, $convert = FALSE)
     {
         if (!is_array($aDades)) return;
         if (array_key_exists('id_schema', $aDades)) $this->setId_schema($aDades['id_schema']);
@@ -445,7 +451,7 @@ class Acta extends core\ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'acta') && $val_id !== '') $this->sacta = $val_id;
+                if (($nom_id === 'acta') && $val_id !== '') $this->sacta = $val_id;
             }
         }
     }
@@ -467,7 +473,7 @@ class Acta extends core\ClasePropiedades
      * inventa el valor del acta, si no es correcto
      *
      */
-    public static function inventarActa(string $valor, web\DateTimeLocal|string $fecha): string
+    public static function inventarActa(string $valor,DateTimeLocal|string $fecha): string
     {
         $valor = trim($valor);
         // comprobar si hace falta, o ya está bien el acta como está
@@ -482,7 +488,7 @@ class Acta extends core\ClasePropiedades
                 if (is_object($fecha)) {
                     $oData = $fecha;
                 } else {
-                    $oData = web\DateTimeLocal::createFromLocal($fecha);
+                    $oData =DateTimeLocal::createFromLocal($fecha);
                 }
                 $any = $oData->format('y');
                 // inventar acta.
@@ -560,7 +566,7 @@ class Acta extends core\ClasePropiedades
     /**
      * Recupera el atributo df_acta de Acta
      *
-     * @return web\DateTimeLocal df_acta
+     * @returnDateTimeLocal df_acta
      */
     function getF_acta()
     {
@@ -568,9 +574,9 @@ class Acta extends core\ClasePropiedades
             $this->DBCarregar();
         }
         if (empty($this->df_acta)) {
-            return new web\NullDateTimeLocal();
+            return new NullDateTimeLocal();
         }
-        $oConverter = new core\ConverterDate('date', $this->df_acta);
+        $oConverter = new ConverterDate('date', $this->df_acta);
         return $oConverter->fromPg();
     }
 
@@ -579,13 +585,13 @@ class Acta extends core\ClasePropiedades
      * Si df_acta es string, y convert=true se convierte usando el formato webDateTimeLocal->getFormat().
      * Si convert es false, df_acta debe ser un string en formato ISO (Y-m-d). Corresponde al pgstyle de la base de datos.
      *
-     * @param date|string df_acta='' optional.
+     * @param DateTimeLocal|string df_acta='' optional.
      * @param boolean convert=true optional. Si es false, df_acta debe ser un string en formato ISO (Y-m-d).
      */
     function setF_acta($df_acta = '', $convert = true)
     {
         if ($convert === true && !empty($df_acta)) {
-            $oConverter = new core\ConverterDate('date', $df_acta);
+            $oConverter = new ConverterDate('date', $df_acta);
             $this->df_acta = $oConverter->toPg();
         } else {
             $this->df_acta = $df_acta;
@@ -745,7 +751,7 @@ class Acta extends core\ClasePropiedades
      */
     function getDatosCampos()
     {
-        $oActaSet = new core\Set();
+        $oActaSet = new Set();
 
         $oActaSet->add($this->getDatosActa());
         $oActaSet->add($this->getDatosId_asignatura());
@@ -763,12 +769,12 @@ class Acta extends core\ClasePropiedades
      * Recupera les propietats de l'atribut sacta de Acta
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosActa()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'acta'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'acta'));
         $oDatosCampo->setEtiqueta(_("acta"));
         // Las actas de otras r sólo tienen la sigla de la r
         $oDatosCampo->setRegExp("/^(\?|\w{1,8}\??)(\s+([0-9]{0,3})\/([0-9]{2})\??)?$/");
@@ -783,12 +789,12 @@ class Acta extends core\ClasePropiedades
      * Recupera les propietats de l'atribut iid_asignatura de Acta
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosId_asignatura()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_asignatura'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_asignatura'));
         $oDatosCampo->setEtiqueta(_("id_asignatura"));
         return $oDatosCampo;
     }
@@ -797,12 +803,12 @@ class Acta extends core\ClasePropiedades
      * Recupera les propietats de l'atribut iid_activ de Acta
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosId_activ()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_activ'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_activ'));
         $oDatosCampo->setEtiqueta(_("id_activ"));
         return $oDatosCampo;
     }
@@ -811,12 +817,12 @@ class Acta extends core\ClasePropiedades
      * Recupera les propietats de l'atribut df_acta de Acta
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosF_acta()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'f_acta'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'f_acta'));
         $oDatosCampo->setEtiqueta(_("fecha acta"));
         $oDatosCampo->setTipo('fecha');
         return $oDatosCampo;
@@ -826,12 +832,12 @@ class Acta extends core\ClasePropiedades
      * Recupera les propietats de l'atribut ilibro de Acta
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosLibro()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'libro'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'libro'));
         $oDatosCampo->setEtiqueta(_("libro"));
         return $oDatosCampo;
     }
@@ -840,12 +846,12 @@ class Acta extends core\ClasePropiedades
      * Recupera les propietats de l'atribut ipagina de Acta
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosPagina()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'pagina'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'pagina'));
         $oDatosCampo->setEtiqueta(_("página"));
         return $oDatosCampo;
     }
@@ -854,12 +860,12 @@ class Acta extends core\ClasePropiedades
      * Recupera les propietats de l'atribut ilinea de Acta
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosLinea()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'linea'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'linea'));
         $oDatosCampo->setEtiqueta(_("línea"));
         return $oDatosCampo;
     }
@@ -868,12 +874,12 @@ class Acta extends core\ClasePropiedades
      * Recupera les propietats de l'atribut slugar de Acta
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosLugar()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'lugar'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'lugar'));
         $oDatosCampo->setEtiqueta(_("lugar"));
         return $oDatosCampo;
     }
@@ -882,12 +888,12 @@ class Acta extends core\ClasePropiedades
      * Recupera les propietats de l'atribut sobserv de Acta
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosObserv()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'observ'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'observ'));
         $oDatosCampo->setEtiqueta(_("observaciones"));
         return $oDatosCampo;
     }

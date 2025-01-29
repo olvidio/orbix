@@ -1,8 +1,9 @@
 <?php
 
-namespace web;
+namespace planning\domain;
 
 use ubis\model\entity\GestorCasaPeriodo;
+use web\DateTimeLocal;
 
 /**
  * Esta página sólo tiene las funciones. Es para hacer incluir en la página que sea
@@ -601,7 +602,7 @@ class Planning
      * @param DateTimeLocal $oInicio
      * @return Planning
      */
-    public function setInicio($oInicio)
+    public function setInicio(DateTimeLocal $oInicio)
     {
         $this->oInicio = $oInicio;
         return $this;
@@ -621,7 +622,7 @@ class Planning
      * @param DateTimeLocal $oFin
      * @return Planning
      */
-    public function setFin($oFin)
+    public function setFin(DateTimeLocal $oFin)
     {
         $this->oFin = $oFin;
         return $this;
@@ -641,7 +642,7 @@ class Planning
      * @param string $scolorColumnaUno
      * @return Planning
      */
-    public function setColorColumnaUno($scolorColumnaUno)
+    public function setColorColumnaUno(string $scolorColumnaUno)
     {
         $this->scolorColumnaUno = $scolorColumnaUno;
         return $this;
@@ -661,7 +662,7 @@ class Planning
      * @param string $scolorColumnaDos
      * @return Planning
      */
-    public function setColorColumnaDos($scolorColumnaDos)
+    public function setColorColumnaDos(string $scolorColumnaDos)
     {
         $this->scolorColumnaDos = $scolorColumnaDos;
         return $this;
@@ -681,7 +682,7 @@ class Planning
      * @param string $stable_border
      * @return Planning
      */
-    public function setTable_border($stable_border)
+    public function setTable_border(string $stable_border)
     {
         $this->stable_border = $stable_border;
         return $this;
@@ -701,7 +702,7 @@ class Planning
      * @param integer $idd
      * @return Planning
      */
-    public function setDd($idd)
+    public function setDd(int $idd)
     {
         $this->idd = $idd;
         return $this;
@@ -721,7 +722,7 @@ class Planning
      * @param string $scabecera
      * @return Planning
      */
-    public function setCabecera($scabecera)
+    public function setCabecera(string $scabecera)
     {
         $this->scabecera = $scabecera;
         return $this;
@@ -741,7 +742,7 @@ class Planning
      * @param array $a_actividades
      * @return Planning
      */
-    public function setActividades($a_actividades)
+    public function setActividades(array $a_actividades)
     {
         $this->a_actividades = $a_actividades;
         return $this;
@@ -761,7 +762,7 @@ class Planning
      * @param integer $imod
      * @return Planning
      */
-    public function setMod($imod)
+    public function setMod(int $imod)
     {
         $this->imod = $imod;
         return $this;
@@ -781,7 +782,7 @@ class Planning
      * @param integer $inueva
      * @return Planning
      */
-    public function setNueva($inueva)
+    public function setNueva(int $inueva)
     {
         $this->inueva = $inueva;
         return $this;
@@ -801,7 +802,7 @@ class Planning
      * @param integer $idoble
      * @return Planning
      */
-    public function setDoble($idoble)
+    public function setDoble(int $idoble)
     {
         $this->idoble = $idoble;
         return $this;

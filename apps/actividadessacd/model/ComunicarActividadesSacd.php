@@ -10,14 +10,14 @@ use config\model\entity\ConfigSchema;
 use core\ConfigGlobal;
 use core\ValueObject\Uuid;
 use personas\model\entity\PersonaDl;
+use web\DateTimeLocal;
+use web\TiposActividades;
 use shared\domain\ColaMailId;
 use shared\domain\entity\ColaMail;
 use shared\domain\repositories\ColaMailRepository;
 use ubis\model\entity\CentroDl;
 use ubis\model\entity\Ubi;
 use usuarios\model\entity\GestorUsuario;
-use web\DateTimeLocal;
-use web\TiposActividades;
 use function core\is_true;
 
 class ComunicarActividadesSacd
@@ -118,7 +118,7 @@ class ComunicarActividadesSacd
                 $id_activ = $aAsistente['id_activ'];
                 $propio = $aAsistente['propio'];
                 //$plaza = $aAsistente['plaza'];
-                $id_cargo = empty($aAsistente['id_cargo']) ? '' : $aAsistente['id_cargo'];
+                $id_cargo = empty($aAsistente['id_cargo']) ? NULL : $aAsistente['id_cargo'];
 
                 $_SESSION['oPermActividades']->setId_activ($id_activ);
 
@@ -130,7 +130,7 @@ class ComunicarActividadesSacd
                     $permiso_ver = TRUE;
                 }
 
-                if ($permiso_ver === FALSE) {
+                if (!is_true($permiso_ver)) {
                     continue;
                 }
 

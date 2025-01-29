@@ -21,8 +21,9 @@
 
 use casas\model\entity\GestorUbiGasto;
 use casas\model\entity\UbiGasto;
-use ubis\model\entity\CasaDl;
 use web\DateTimeLocal;
+use ubis\model\entity\CasaDl;
+use web\Hash;
 
 require_once("apps/core/global_header.inc");
 // Archivos requeridos por esta url **********************************************
@@ -134,7 +135,7 @@ switch ($Qque) {
                 $sCamposForm .= "!g$m!ap_sv$m!ap_sf$m";
             }
 
-            $oHash = new web\Hash();
+            $oHash = new Hash();
             $oHash->setCamposForm($sCamposForm);
             $oHash->setCamposNo('que');
             $a_camposHidden = array(

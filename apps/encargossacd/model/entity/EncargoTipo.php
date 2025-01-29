@@ -2,7 +2,9 @@
 
 namespace encargossacd\model\entity;
 
-use core;
+use core\ClasePropiedades;
+use core\DatosCampo;
+use core\Set;
 
 /**
  * Fitxer amb la Classe que accedeix a la taula encargo_tipo
@@ -23,7 +25,7 @@ use core;
  * @version 1.0
  * @created 11/01/2019
  */
-class EncargoTipo extends core\ClasePropiedades
+class EncargoTipo extends ClasePropiedades
 {
     // modo horario constants.
     //1: opcional , 2:por módulos, 3: por horario
@@ -138,7 +140,7 @@ class EncargoTipo extends core\ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'id_tipo_enc') && $val_id !== '') $this->iid_tipo_enc = (int)$val_id; 
+                if (($nom_id === 'id_tipo_enc') && $val_id !== '') $this->iid_tipo_enc = (int)$val_id;
             }
         } else {
             if (isset($a_id) && $a_id !== '') {
@@ -279,7 +281,7 @@ class EncargoTipo extends core\ClasePropiedades
      *
      * @param array $aDades
      */
-    function setAllAtributes($aDades)
+    function setAllAtributes(array $aDades)
     {
         if (!is_array($aDades)) return;
         if (array_key_exists('id_tipo_enc', $aDades)) $this->setId_tipo_enc($aDades['id_tipo_enc']);
@@ -339,7 +341,7 @@ class EncargoTipo extends core\ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'id_tipo_enc') && $val_id !== '') $this->iid_tipo_enc = (int)$val_id; 
+                if (($nom_id === 'id_tipo_enc') && $val_id !== '') $this->iid_tipo_enc = (int)$val_id;
             }
         }
     }
@@ -420,7 +422,7 @@ class EncargoTipo extends core\ClasePropiedades
      */
     function getDatosCampos()
     {
-        $oEncargoTipoSet = new core\Set();
+        $oEncargoTipoSet = new Set();
 
         $oEncargoTipoSet->add($this->getDatosId_tipo_enc());
         $oEncargoTipoSet->add($this->getDatosTipo_enc());
@@ -433,12 +435,12 @@ class EncargoTipo extends core\ClasePropiedades
      * Recupera les propietats de l'atribut stipo_enc de EncargoTipo
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosId_tipo_enc()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_tipo_enc'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_tipo_enc'));
         $oDatosCampo->setEtiqueta(_("id tipo de encargo"));
         $oDatosCampo->setTipo('texto');
         $oDatosCampo->setArgument(10);
@@ -449,12 +451,12 @@ class EncargoTipo extends core\ClasePropiedades
      * Recupera les propietats de l'atribut stipo_enc de EncargoTipo
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosTipo_enc()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'tipo_enc'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'tipo_enc'));
         $oDatosCampo->setEtiqueta(_("tipo de encargo"));
         $oDatosCampo->setTipo('texto');
         $oDatosCampo->setArgument(30);
@@ -465,12 +467,12 @@ class EncargoTipo extends core\ClasePropiedades
      * Recupera les propietats de l'atribut imod_horario de EncargoTipo
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosMod_horario()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'mod_horario'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'mod_horario'));
         $oDatosCampo->setEtiqueta(_("tipo de horario"));
         $oDatosCampo->setTipo('array');
         $oDatosCampo->setLista(self::ARRAY_HORARIO_TXT);

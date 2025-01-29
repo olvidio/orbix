@@ -2,7 +2,10 @@
 
 namespace ubis\model\entity;
 
-use core;
+use core\ClasePropiedades;
+use core\DatosCampo;
+use core\Set;
+use function core\is_true;
 
 /**
  * Clase que implementa la entidad xu_region
@@ -13,7 +16,7 @@ use core;
  * @version 1.0
  * @created 20/11/2010
  */
-class Region extends core\ClasePropiedades
+class Region extends ClasePropiedades
 {
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
@@ -118,7 +121,7 @@ class Region extends core\ClasePropiedades
         $aDades['status'] = $this->bstatus;
         array_walk($aDades, 'core\poner_null');
         //para el caso de los boolean FALSE, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
-        if (core\is_true($aDades['status'])) {
+        if (is_true($aDades['status'])) {
             $aDades['status'] = 'true';
         } else {
             $aDades['status'] = 'false';
@@ -232,7 +235,7 @@ class Region extends core\ClasePropiedades
      *
      * @param array $aDades
      */
-    function setAllAtributes($aDades)
+    function setAllAtributes(array $aDades)
     {
         if (!is_array($aDades)) return;
         if (array_key_exists('id_region', $aDades)) $this->setId_region($aDades['id_region']);
@@ -293,7 +296,7 @@ class Region extends core\ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'id_region') && $val_id !== '') $this->iid_region = (int)$val_id;
+                if (($nom_id === 'id_region') && $val_id !== '') $this->iid_region = (int)$val_id;
             }
         }
     }
@@ -397,7 +400,7 @@ class Region extends core\ClasePropiedades
      */
     function getDatosCampos()
     {
-        $oRegionSet = new core\Set();
+        $oRegionSet = new Set();
 
         //$oRegionSet->add($this->getDatosId_region());
         $oRegionSet->add($this->getDatosRegion());
@@ -411,12 +414,12 @@ class Region extends core\ClasePropiedades
      * Recupera les propietats de l'atribut iid_region de Region
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosId_region()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_region'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_region'));
         $oDatosCampo->setEtiqueta(_("id_region"));
         $oDatosCampo->setTipo('ver');
         return $oDatosCampo;
@@ -426,12 +429,12 @@ class Region extends core\ClasePropiedades
      * Recupera les propietats de l'atribut iid_region de Region
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosRegion()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'region'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'region'));
         $oDatosCampo->setEtiqueta(_("sigla"));
         $oDatosCampo->setTipo('texto');
         $oDatosCampo->setArgument(6);
@@ -442,12 +445,12 @@ class Region extends core\ClasePropiedades
      * Recupera les propietats de l'atribut snombre_region de Region
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosNombre_region()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'nombre_region'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'nombre_region'));
         $oDatosCampo->setEtiqueta(_("nombre de la región"));
         $oDatosCampo->setTipo('texto');
         $oDatosCampo->setArgument(30);
@@ -458,12 +461,12 @@ class Region extends core\ClasePropiedades
      * Recupera les propietats de l'atribut bstatus de Region
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosStatus()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'status'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'status'));
         $oDatosCampo->setEtiqueta(_("en activo"));
         $oDatosCampo->setTipo('check');
         return $oDatosCampo;

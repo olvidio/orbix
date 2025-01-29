@@ -1,6 +1,8 @@
 <?php
 
+use core\ConfigGlobal;
 use dbextern\model\SincroDB;
+use web\Hash;
 
 // INICIO Cabecera global de URL de controlador *********************************
 require_once("apps/core/global_header.inc");
@@ -72,8 +74,8 @@ foreach ($a_ids_traslados as $id_nom_orbix) {
 }
 
 
-$url_sincro_ajax = core\ConfigGlobal::getWeb() . '/apps/dbextern/controller/sincro_ajax.php';
-$oHash = new web\Hash();
+$url_sincro_ajax = ConfigGlobal::getWeb() . '/apps/dbextern/controller/sincro_ajax.php';
+$oHash = new Hash();
 $oHash->setUrl($url_sincro_ajax);
 //$oHash->setArraycamposHidden($a_camposHidden);
 $oHash->setCamposForm('que!dl!id_nom_orbix!tipo_persona');

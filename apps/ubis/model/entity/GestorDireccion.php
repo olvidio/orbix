@@ -2,8 +2,8 @@
 
 namespace ubis\model\entity;
 
-use core;
-use web;
+use core\ClaseGestor;
+use web\Desplegable;
 
 /**
  * GestorDireccion
@@ -16,7 +16,7 @@ use web;
  * @version 1.0
  * @created 01/10/2010
  */
-class GestorDireccion extends core\ClaseGestor
+class GestorDireccion extends ClaseGestor
 {
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
@@ -39,7 +39,7 @@ class GestorDireccion extends core\ClaseGestor
      * retorna un objecte del tipus Desplegable
      * Els posibles poblacions
      *
-     * @return object Desplegable
+     * @return false|object
      */
     function getListaPoblacionesPorDl($sdl = '')
     {
@@ -54,14 +54,14 @@ class GestorDireccion extends core\ClaseGestor
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
             return false;
         }
-        return new web\Desplegable('', $oDblSt, '', true);
+        return new Desplegable('', $oDblSt, '', true);
     }
 
     /**
      * retorna un objecte del tipus Desplegable
      * Els posibles poblacions
      *
-     * @return object Desplegable
+     * @return false|object
      */
     function getListaPoblaciones($sCondicion = '')
     {
@@ -76,14 +76,14 @@ class GestorDireccion extends core\ClaseGestor
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
             return false;
         }
-        return new web\Desplegable('', $oDblSt, '', true);
+        return new Desplegable('', $oDblSt, '', true);
     }
 
     /**
      * retorna un objecte del tipus Desplegable
      * Els posibles paisos
      *
-     * @return object Desplegable
+     * @return false|object
      */
     function getListaPaises($sCondicion = '')
     {
@@ -98,7 +98,7 @@ class GestorDireccion extends core\ClaseGestor
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
             return false;
         }
-        return new web\Desplegable('', $oDblSt, '', true);
+        return new Desplegable('', $oDblSt, '', true);
     }
 
     /**

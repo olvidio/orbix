@@ -10,7 +10,9 @@ namespace actividades\model;
 
 use core\ConfigGlobal;
 use core\ViewTwig;
-use web;
+use web\Desplegable;
+use web\Hash;
+use web\TiposActividades;
 
 /**
  * Description of actividadtipo
@@ -46,7 +48,7 @@ class ActividadTipo
         }
 
         if (!empty($this->id_tipo_activ)) {
-            $oTipoActiv = new web\TiposActividades($this->id_tipo_activ, $extendida);
+            $oTipoActiv = new TiposActividades($this->id_tipo_activ, $extendida);
             $this->ssfsv = $oTipoActiv->getSfsvText();
             $this->sasistentes = $oTipoActiv->getAsistentesText();
             if ($extendida) {
@@ -57,7 +59,7 @@ class ActividadTipo
                 $this->snom_tipo = $oTipoActiv->getNom_tipoText();
             }
         } else {
-            $oTipoActiv = new web\TiposActividades();
+            $oTipoActiv = new TiposActividades();
             // puede ser que tenga parte del id_tipo_activ.
             if (!empty($this->ssfsv)) $oTipoActiv->setSfsvText($this->ssfsv);
             if (!empty($this->sasistentes)) $oTipoActiv->setAsistentesText($this->sasistentes);
@@ -125,13 +127,13 @@ class ActividadTipo
 
 
         // si es una búsqueda, también puedo buscar todos. (Excepto sf/sv)
-        if ($_SESSION['oConfig']->is_jefeCalendario() || ((isset($this->que) && $this->que == "buscar") || $this->bperm_jefe)) {
-            $oTipoActivB = new web\TiposActividades();
+        if ($_SESSION['oConfig']->is_jefeCalendario() || ((isset($this->que) && $this->que === "buscar") || $this->bperm_jefe)) {
+            $oTipoActivB = new TiposActividades();
             if ($this->ssfsv) $oTipoActivB->setSfsvText($this->ssfsv);
             $a_asistentes_posibles = $oTipoActivB->getAsistentesPosibles();
         } else {
             //$array1=$oTipoActiv->getAsistentesPosibles();
-            $oTipoActivB = new web\TiposActividades();
+            $oTipoActivB = new TiposActividades();
             if ($this->ssfsv) $oTipoActivB->setSfsvText($this->ssfsv);
             $array1 = $oTipoActivB->getAsistentesPosibles();
 
@@ -144,7 +146,7 @@ class ActividadTipo
         $inom_tipo = $oTipoActiv->getnom_tipoId();
 
 
-        $oDesplSfsv = new web\Desplegable();
+        $oDesplSfsv = new Desplegable();
         $oDesplSfsv->setNombre('isfsv_val');
         $oDesplSfsv->setOpciones($a_sfsv_posibles);
         $oDesplSfsv->setOpcion_sel($isfsv);
@@ -154,7 +156,7 @@ class ActividadTipo
         }
         $oDesplSfsv->setAction('fnjs_asistentes()');
 
-        $oDesplAsistentes = new web\Desplegable();
+        $oDesplAsistentes = new Desplegable();
         $oDesplAsistentes->setNombre('iasistentes_val');
         $oDesplAsistentes->setOpciones($a_asistentes_posibles);
         $oDesplAsistentes->setOpcion_sel($iasistentes);
@@ -162,7 +164,7 @@ class ActividadTipo
         $oDesplAsistentes->setValBlanco('.');
         $oDesplAsistentes->setAction('fnjs_actividad()');
 
-        $oDesplActividad = new web\Desplegable();
+        $oDesplActividad = new Desplegable();
         $oDesplActividad->setNombre('iactividad_val');
         $oDesplActividad->setOpciones($a_actividades_posibles);
         $oDesplActividad->setOpcion_sel($iactividad);
@@ -170,14 +172,14 @@ class ActividadTipo
         $oDesplActividad->setValBlanco($val_blanco_activ);
         $oDesplActividad->setAction('fnjs_nom_tipo()');
 
-        $oDesplNomTipo = new web\Desplegable();
+        $oDesplNomTipo = new Desplegable();
         $oDesplNomTipo->setNombre('inom_tipo_val');
         $oDesplNomTipo->setOpciones($a_nom_tipo_posibles);
         $oDesplNomTipo->setOpcion_sel($inom_tipo);
         $oDesplNomTipo->setBlanco('t');
         $oDesplNomTipo->setValBlanco($val_blanco_nom);
         if (isset($this->que)) {
-            if ($this->que == 'buscar') {
+            if ($this->que === 'buscar') {
                 $oDesplNomTipo->setAction('fnjs_id_activ()');
             } else {
                 $oDesplNomTipo->setAction('fnjs_act_id_activ()');
@@ -185,13 +187,13 @@ class ActividadTipo
         }
 
         $url = ConfigGlobal::getWeb() . '/apps/actividades/controller/actividad_tipo_get.php';
-        $oHashTipo = new web\Hash();
+        $oHashTipo = new Hash();
         $oHashTipo->setUrl('apps/actividades/controller/actividad_tipo_get.php');
         $oHashTipo->setCamposForm('extendida!modo!salida!entrada');
         $h = $oHashTipo->linkSinVal();
 
         $url_act = ConfigGlobal::getWeb() . '/apps/actividades/controller/actividad_ver.php';
-        $oHashAct = new web\Hash();
+        $oHashAct = new Hash();
         $oHashAct->setUrl('apps/actividades/controller/actividad_ver.php');
         $oHashAct->setCamposForm('id_tipo_activ!refresh');
         $h_act = $oHashAct->linkSinVal();

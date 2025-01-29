@@ -2,11 +2,12 @@
 
 namespace usuarios\model;
 
-use core;
 
 /* No vale el underscore en el nombre */
 
-class InfoRoles extends core\DatosInfo
+use core\DatosInfo;
+
+class InfoRoles extends DatosInfo
 {
 
     public function __construct()

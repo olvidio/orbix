@@ -2,7 +2,7 @@
 
 namespace pasarela\model\entity;
 
-use core;
+use core\ClaseGestor;
 use core\Condicion;
 use core\Set;
 
@@ -17,7 +17,7 @@ use core\Set;
  * @version 1.0
  * @created 21/9/2022
  */
-class GestorPasarelaConfig extends core\ClaseGestor
+class GestorPasarelaConfig extends ClaseGestor
 {
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
@@ -41,7 +41,7 @@ class GestorPasarelaConfig extends core\ClaseGestor
      * retorna l'array d'objectes de tipus PasarelaConfig
      *
      * @param string sQuery la query a executar.
-     * @return array Una col·lecció d'objectes de tipus PasarelaConfig
+     * @return array|false
      */
     function getPasarelaConfigesQuery($sQuery = '')
     {
@@ -66,7 +66,7 @@ class GestorPasarelaConfig extends core\ClaseGestor
      *
      * @param array aWhere associatiu amb els valors de les variables amb les quals farem la query
      * @param array aOperators associatiu amb els valors dels operadors que cal aplicar a cada variable
-     * @return array Una col·lecció d'objectes de tipus PasarelaConfig
+     * @return array|void
      */
     function getPasarelaConfiges($aWhere = array(), $aOperators = array())
     {
@@ -76,13 +76,13 @@ class GestorPasarelaConfig extends core\ClaseGestor
         $oCondicion = new Condicion();
         $aCondi = array();
         foreach ($aWhere as $camp => $val) {
-            if ($camp == '_ordre') continue;
+            if ($camp === '_ordre') continue;
             $sOperador = isset($aOperators[$camp]) ? $aOperators[$camp] : '';
             if ($a = $oCondicion->getCondicion($camp, $sOperador, $val)) $aCondi[] = $a;
             // operadores que no requieren valores
-            if ($sOperador == 'BETWEEN' || $sOperador == 'IS NULL' || $sOperador == 'IS NOT NULL' || $sOperador == 'OR') unset($aWhere[$camp]);
-            if ($sOperador == 'IN' || $sOperador == 'NOT IN') unset($aWhere[$camp]);
-            if ($sOperador == 'TXT') unset($aWhere[$camp]);
+            if ($sOperador === 'BETWEEN' || $sOperador === 'IS NULL' || $sOperador === 'IS NOT NULL' || $sOperador === 'OR') unset($aWhere[$camp]);
+            if ($sOperador === 'IN' || $sOperador === 'NOT IN') unset($aWhere[$camp]);
+            if ($sOperador === 'TXT') unset($aWhere[$camp]);
         }
         $sCondi = implode(' AND ', $aCondi);
         if ($sCondi != '') $sCondi = " WHERE " . $sCondi;

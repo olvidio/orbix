@@ -224,7 +224,7 @@ function parseOds($file)
     $path = $tmp . '/' . basename($file);
     $uid = uniqid('', true);
     if (!mkdir($concurrentDirectory = $tmp . '/' . $uid) && !is_dir($concurrentDirectory)) {
-        throw new \RuntimeException(sprintf('Directory "%s" was not created', $concurrentDirectory));
+        throw new RunTimeException(sprintf('Directory "%s" was not created', $concurrentDirectory));
     }
     shell_exec('unzip ' . escapeshellarg($path) . ' -d ' . escapeshellarg($tmp . '/' . $uid));
     $obj = new odf();

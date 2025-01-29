@@ -1,7 +1,11 @@
 <?php
 
-use devel\model\entity\GestorApp;
+use core\ConfigGlobal;
 use core\DBPropiedades;
+use core\ViewPhtml;
+use devel\model\entity\GestorApp;
+use web\Desplegable;
+use web\Hash;
 
 /**
  * La idea de esta página es poder crear y eliminar
@@ -29,11 +33,11 @@ foreach ($cApps as $oApp) {
     $a_apps[$id_app] = $nom_app;
 }
 
-$oDeslpApps = new web\Desplegable([], ['_ordre' => 'id_app']);
+$oDeslpApps = new Desplegable([], ['_ordre' => 'id_app']);
 $oDeslpApps->setNombre('id_app');
 $oDeslpApps->setOpciones($a_apps);
 
-$oHash = new web\Hash();
+$oHash = new Hash();
 $oHash->setCamposForm('id_app!esquema');
 $oHash->setcamposNo('accion');
 $oHash->setArraycamposHidden(['accion' => 'x']);
@@ -46,9 +50,9 @@ $a_campos = [
 ];
 
 $oDBPropiedades = new DBPropiedades();
-$esquema = core\ConfigGlobal::mi_region_dl();
+$esquema = ConfigGlobal::mi_region_dl();
 $a_campos['oDesplEsquemas'] = $oDBPropiedades->posibles_esquemas($esquema);
 
 
-$oView = new core\View('devel\controller');
+$oView = new ViewPhtml('devel\controller');
 $oView->renderizar('apptables.phtml', $a_campos);

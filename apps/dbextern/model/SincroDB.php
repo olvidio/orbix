@@ -303,7 +303,7 @@ class SincroDB
      * @param integer $id_nom_orbix
      * @return string[][]
      */
-    public function posiblesBDU($id_nom_orbix)
+    public function posiblesBDU(int $id_nom_orbix)
     {
         $oPersonaDl = new PersonaDl($id_nom_orbix);
         $oPersonaDl->DBCarregar();

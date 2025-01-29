@@ -2,7 +2,10 @@
 
 namespace cambios\model\entity;
 
-use core;
+use core\ClasePropiedades;
+use core\DatosCampo;
+use core\Set;
+use function core\is_true;
 
 /**
  * Fitxer amb la Classe que accedeix a la taula av_cambios_usuario
@@ -23,7 +26,7 @@ use core;
  * @version 1.0
  * @created 17/4/2019
  */
-class CambioUsuario extends core\ClasePropiedades
+class CambioUsuario extends ClasePropiedades
 {
 
     // aviso tipo constants.
@@ -124,7 +127,7 @@ class CambioUsuario extends core\ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'id_item') && $val_id !== '') $this->iid_item = (int)$val_id; 
+                if (($nom_id === 'id_item') && $val_id !== '') $this->iid_item = (int)$val_id;
             }
         } else {
             if (isset($a_id) && $a_id !== '') {
@@ -161,7 +164,7 @@ class CambioUsuario extends core\ClasePropiedades
         $aDades['avisado'] = $this->bavisado;
         array_walk($aDades, 'core\poner_null');
         //para el caso de los boolean FALSE, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
-        if (core\is_true($aDades['avisado'])) {
+        if (is_true($aDades['avisado'])) {
             $aDades['avisado'] = 'true';
         } else {
             $aDades['avisado'] = 'false';
@@ -210,7 +213,7 @@ class CambioUsuario extends core\ClasePropiedades
                     return FALSE;
                 }
             }
-            $this->id_item = $oDbl->lastInsertId('av_cambios_usuario_id_item_seq');
+            $this->iid_item_cambio = $oDbl->lastInsertId('av_cambios_usuario_id_item_seq');
         }
         $this->setAllAtributes($aDades);
         return TRUE;
@@ -278,7 +281,7 @@ class CambioUsuario extends core\ClasePropiedades
      *
      * @param array $aDades
      */
-    function setAllAtributes($aDades)
+    function setAllAtributes(array $aDades)
     {
         if (!is_array($aDades)) return;
         if (array_key_exists('id_item', $aDades)) $this->setId_item($aDades['id_item']);
@@ -346,7 +349,7 @@ class CambioUsuario extends core\ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'id_item') && $val_id !== '') $this->iid_item = (int)$val_id; 
+                if (($nom_id === 'id_item') && $val_id !== '') $this->iid_item = (int)$val_id;
             }
         }
     }
@@ -519,7 +522,7 @@ class CambioUsuario extends core\ClasePropiedades
      */
     function getDatosCampos()
     {
-        $oCambioUsuarioSet = new core\Set();
+        $oCambioUsuarioSet = new Set();
 
         $oCambioUsuarioSet->add($this->getDatosId_item_cambio());
         $oCambioUsuarioSet->add($this->getDatosId_schema_cambio());
@@ -535,12 +538,12 @@ class CambioUsuario extends core\ClasePropiedades
      * Recupera les propietats de l'atribut iid_schema_cambio de CambioUsuario
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosId_schema_cambio()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_schema_cambio'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_schema_cambio'));
         $oDatosCampo->setEtiqueta(_("id_schema_cambio"));
         return $oDatosCampo;
     }
@@ -549,12 +552,12 @@ class CambioUsuario extends core\ClasePropiedades
      * Recupera les propietats de l'atribut iid_item_cambio de CambioUsuario
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosId_item_cambio()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_item_cambio'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_item_cambio'));
         $oDatosCampo->setEtiqueta(_("id_item_cambio"));
         return $oDatosCampo;
     }
@@ -563,12 +566,12 @@ class CambioUsuario extends core\ClasePropiedades
      * Recupera les propietats de l'atribut iid_usuario de CambioUsuario
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosId_usuario()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_usuario'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_usuario'));
         $oDatosCampo->setEtiqueta(_("id_usuario"));
         return $oDatosCampo;
     }
@@ -577,12 +580,12 @@ class CambioUsuario extends core\ClasePropiedades
      * Recupera les propietats de l'atribut isfsv de CambioUsuario
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosSfsv()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'sfsv'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'sfsv'));
         $oDatosCampo->setEtiqueta(_("sfsv"));
         return $oDatosCampo;
     }
@@ -591,12 +594,12 @@ class CambioUsuario extends core\ClasePropiedades
      * Recupera les propietats de l'atribut iaviso_tipo de CambioUsuario
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosAviso_tipo()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'aviso_tipo'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'aviso_tipo'));
         $oDatosCampo->setEtiqueta(_("aviso_tipo"));
         return $oDatosCampo;
     }
@@ -605,12 +608,12 @@ class CambioUsuario extends core\ClasePropiedades
      * Recupera les propietats de l'atribut bavisado de CambioUsuario
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosAvisado()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'avisado'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'avisado'));
         $oDatosCampo->setEtiqueta(_("avisado"));
         return $oDatosCampo;
     }

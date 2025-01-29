@@ -1,5 +1,7 @@
 <?php
 // get the HTML
+use core\ConfigGlobal;
+
 $_POST = $_GET;
 
 $id_nom = (integer)filter_input(INPUT_POST, 'id_nom');
@@ -10,10 +12,10 @@ include(__DIR__ . '/tessera_imprimir_mpdf.php');
 $content = ob_get_clean();
 
 // convert to PDF
-require_once(core\ConfigGlobal::$dir_libs . '/vendor/autoload.php');
+require_once(ConfigGlobal::$dir_libs . '/vendor/autoload.php');
 
 // quitar los acentos , ñ etc. del nombre
-$nom = web\QuitarAcentos::convert($nom);
+$nom =web\QuitarAcentos::convert($nom);
 
 //$mpdf = new \Mpdf\Mpdf(['','A4','','',10,10,10,10,6,3]);
 $config = ['mode' => 'utf-8',

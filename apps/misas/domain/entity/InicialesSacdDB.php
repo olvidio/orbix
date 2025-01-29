@@ -17,9 +17,9 @@ class InicialesSacdDB
      * Establece el valor de todos los atributos
      *
      * @param array $aDatos
-     * @return InicialesSacd
+     * @return InicialesSacdDB|InicialesSacd
      */
-    public function setAllAttributes(array $aDatos): InicialesSacd
+    public function setAllAttributes(array $aDatos): InicialesSacdDB|InicialesSacd
     {
         if (array_key_exists('id_nom', $aDatos)) {
             $this->setId_nom($aDatos['id_nom']);

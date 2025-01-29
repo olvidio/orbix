@@ -2,10 +2,9 @@
 
 namespace pasarela\model;
 
-use pasarela\model\entity\GestorPasarelaConfig;
 use pasarela\model\entity\PasarelaConfig;
-use stdClass;
 use web\TiposActividades;
+use stdClass;
 
 class ContribucionReserva
 {

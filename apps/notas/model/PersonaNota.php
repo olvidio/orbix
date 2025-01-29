@@ -4,6 +4,7 @@ namespace notas\model;
 
 use notas\model\entity\GestorNota;
 use notas\model\entity\Nota;
+use NumberFormatter;
 use web\DateTimeLocal;
 use web\NullDateTimeLocal;
 
@@ -92,7 +93,7 @@ class PersonaNota
                 if (is_numeric($num) && is_numeric($max)) {
                     //$a = new \NumberFormatter("es_ES.UTF-8", \NumberFormatter::DECIMAL);
                     // SI dejo el locale en blanco coge el que se ha definido por defecto en el usuario.
-                    $a = new \NumberFormatter("", \NumberFormatter::DECIMAL);
+                    $a = new NumberFormatter("", \NumberFormatter::DECIMAL);
                     $num_local = $a->format($num);
                     $nota_txt = $num_local . '/' . $max;
                     if ($max >= 1) {

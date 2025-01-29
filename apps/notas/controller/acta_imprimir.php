@@ -3,6 +3,7 @@
 use asignaturas\model\entity\Asignatura;
 use asignaturas\model\entity\AsignaturaTipo;
 use core\ConfigGlobal;
+use core\ViewPhtml;
 use notas\model\entity\Acta;
 use notas\model\entity\GestorActaTribunal;
 use notas\model\entity\GestorActaTribunalDl;
@@ -180,5 +181,5 @@ $a_campos = [
     'linea' => $linea,
 ];
 
-$oView = new core\View('notas/controller');
+$oView = new ViewPhtml('notas/controller');
 $oView->renderizar('acta_imprimir.phtml', $a_campos);

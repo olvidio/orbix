@@ -1,6 +1,13 @@
 <?php
 
-use ubis\model\entity as ubis;
+use core\ViewPhtml;
+use ubis\model\entity\GestorDireccionCtr;
+use ubis\model\entity\GestorRegion;
+use ubis\model\entity\GestorTipoCasa;
+use ubis\model\entity\GestorTipoCentro;
+use web\Desplegable;
+use web\Hash;
+use function core\strtoupper_dlb;
 
 /**
  * Es un formulario para introducir las condiciones de búsqueda de los ubis.
@@ -21,28 +28,28 @@ require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
 //regiones posibles
-$GesRegion = new ubis\GestorRegion();
+$GesRegion = new GestorRegion();
 $oDesplRegion = $GesRegion->getListaRegiones();
 $oDesplRegion->setNombre('region');
 
 // tipo ctr
-$oDesplTipoCentro = new web\Desplegable();
-$GesTipoCentro = new ubis\GestorTipoCentro();
+$oDesplTipoCentro = new Desplegable();
+$GesTipoCentro = new GestorTipoCentro();
 $a_tipos_centro = $GesTipoCentro->getListaTiposCentro();
 $oDesplTipoCentro->setNombre('tipo_ctr');
 $oDesplTipoCentro->setBlanco(1);
 $oDesplTipoCentro->setOpciones($a_tipos_centro);
 
 // tipo casa
-$oDesplTipoCasa = new web\Desplegable();
-$GesTipoCasa = new ubis\GestorTipoCasa();
+$oDesplTipoCasa = new Desplegable();
+$GesTipoCasa = new GestorTipoCasa();
 $a_tipos_casa = $GesTipoCasa->getListaTiposCasa();
 $oDesplTipoCasa->setNombre('tipo_casa');
 $oDesplTipoCasa->setBlanco(1);
 $oDesplTipoCasa->setOpciones($a_tipos_casa);
 
 //paises posibles
-$GesPais = new ubis\GestorDireccionCtr();
+$GesPais = new GestorDireccionCtr();
 $oDesplPais = $GesPais->getListaPaises();
 $oDesplPais->setNombre('pais');
 
@@ -103,7 +110,7 @@ switch ($tipo) {
         break;
 }
 
-$oHash = new web\Hash();
+$oHash = new Hash();
 
 $s_camposForm = 'simple!nombre_ubi!opcion!ciudad';
 $oHash->setcamposNo('cmb!simple!tipo_ctr!tipo_casa');
@@ -121,9 +128,9 @@ $oHash->setCamposForm($s_camposForm);
 
 
 if ($simple == 1) {
-    $pagina = web\Hash::link('apps/ubis/controller/ubis_buscar.php?' . http_build_query(array('simple' => '2')));
+    $pagina = Hash::link('apps/ubis/controller/ubis_buscar.php?' . http_build_query(array('simple' => '2')));
 } else {
-    $pagina = web\Hash::link('apps/ubis/controller/ubis_buscar.php?' . http_build_query(array('simple' => '1')));
+    $pagina = Hash::link('apps/ubis/controller/ubis_buscar.php?' . http_build_query(array('simple' => '1')));
 }
 
 $a_campos = [
@@ -139,5 +146,5 @@ $a_campos = [
     'pagina' => $pagina,
 ];
 
-$oView = new core\View('ubis/controller');
+$oView = new ViewPhtml('ubis/controller');
 $oView->renderizar('ubis_buscar.phtml', $a_campos);

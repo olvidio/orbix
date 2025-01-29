@@ -2,8 +2,11 @@
 
 namespace procesos\model\entity;
 
-use core;
+use core\ClasePropiedades;
+use core\DatosCampo;
+use core\Set;
 use stdClass;
+use function core\is_true;
 
 /**
  * Fitxer amb la Classe que accedeix a la taula aux_usuarios_perm
@@ -24,7 +27,7 @@ use stdClass;
  * @version 1.0
  * @created 02/01/2019
  */
-class PermUsuarioActividad extends core\ClasePropiedades
+class PermUsuarioActividad extends ClasePropiedades
 {
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
@@ -127,7 +130,7 @@ class PermUsuarioActividad extends core\ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'id_item') && $val_id !== '') $this->iid_item = (int)$val_id; 
+                if (($nom_id === 'id_item') && $val_id !== '') $this->iid_item = (int)$val_id;
             }
         } else {
             if (isset($a_id) && $a_id !== '') {
@@ -166,7 +169,7 @@ class PermUsuarioActividad extends core\ClasePropiedades
         $aDades['perm_off'] = $this->iperm_off;
         array_walk($aDades, 'core\poner_null');
         //para el caso de los boolean FALSE, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
-        if (core\is_true($aDades['dl_propia'])) {
+        if (is_true($aDades['dl_propia'])) {
             $aDades['dl_propia'] = 'true';
         } else {
             $aDades['dl_propia'] = 'false';
@@ -216,7 +219,7 @@ class PermUsuarioActividad extends core\ClasePropiedades
                     return FALSE;
                 }
             }
-            $this->id_item = $oDbl->lastInsertId('aux_usuarios_perm_id_item_seq');
+            $this->iid_item = $oDbl->lastInsertId('aux_usuarios_perm_id_item_seq');
         }
         $this->setAllAtributes($aDades);
         return TRUE;
@@ -284,7 +287,7 @@ class PermUsuarioActividad extends core\ClasePropiedades
      *
      * @param array $aDades
      */
-    function setAllAtributes($aDades)
+    function setAllAtributes(array $aDades)
     {
         if (!is_array($aDades)) return;
         if (array_key_exists('id_item', $aDades)) $this->setId_item($aDades['id_item']);
@@ -354,7 +357,7 @@ class PermUsuarioActividad extends core\ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'id_item') && $val_id !== '') $this->iid_item = (int)$val_id; 
+                if (($nom_id === 'id_item') && $val_id !== '') $this->iid_item = (int)$val_id;
             }
         }
     }
@@ -550,7 +553,7 @@ class PermUsuarioActividad extends core\ClasePropiedades
      */
     function getDatosCampos()
     {
-        $oPermUsuarioActividadSet = new core\Set();
+        $oPermUsuarioActividadSet = new Set();
 
         $oPermUsuarioActividadSet->add($this->getDatosId_usuario());
         $oPermUsuarioActividadSet->add($this->getDatosDl_propia());
@@ -566,12 +569,12 @@ class PermUsuarioActividad extends core\ClasePropiedades
      * Recupera les propietats de l'atribut iid_usuario de PermUsuarioActividad
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosId_usuario()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_usuario'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_usuario'));
         $oDatosCampo->setEtiqueta(_("id_usuario"));
         return $oDatosCampo;
     }
@@ -580,12 +583,12 @@ class PermUsuarioActividad extends core\ClasePropiedades
      * Recupera les propietats de l'atribut bdl_propia de PermUsuarioActividad
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosDl_propia()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'dl_propia'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'dl_propia'));
         $oDatosCampo->setEtiqueta(_("dl_propia"));
         return $oDatosCampo;
     }
@@ -594,12 +597,12 @@ class PermUsuarioActividad extends core\ClasePropiedades
      * Recupera les propietats de l'atribut sid_tipo_activ_txt de PermUsuarioActividad
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosId_tipo_activ_txt()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_tipo_activ_txt'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_tipo_activ_txt'));
         $oDatosCampo->setEtiqueta(_("id_tipo_activ_txt"));
         return $oDatosCampo;
     }
@@ -608,12 +611,12 @@ class PermUsuarioActividad extends core\ClasePropiedades
      * Recupera les propietats de l'atribut ifase_ref de PermUsuarioActividad
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosFase_ref()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'fase_ref'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'fase_ref'));
         $oDatosCampo->setEtiqueta(_("Fase de referencia"));
         return $oDatosCampo;
     }
@@ -622,12 +625,12 @@ class PermUsuarioActividad extends core\ClasePropiedades
      * Recupera les propietats de l'atribut iafecta_a de PermUsuarioActividad
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosAfecta_a()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'afecta_a'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'afecta_a'));
         $oDatosCampo->setEtiqueta(_("afecta_a"));
         return $oDatosCampo;
     }
@@ -636,12 +639,12 @@ class PermUsuarioActividad extends core\ClasePropiedades
      * Recupera les propietats de l'atribut iperm_on de PermUsuarioActividad
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosPerm_on()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'perm_on'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'perm_on'));
         $oDatosCampo->setEtiqueta(_("perm_on"));
         return $oDatosCampo;
     }
@@ -650,12 +653,12 @@ class PermUsuarioActividad extends core\ClasePropiedades
      * Recupera les propietats de l'atribut iperm_off de PermUsuarioActividad
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosPerm_off()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'perm_off'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'perm_off'));
         $oDatosCampo->setEtiqueta(_("perm_off"));
         return $oDatosCampo;
     }

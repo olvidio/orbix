@@ -3,14 +3,15 @@
 use actividadessacd\model\ActividadesSacdFunciones;
 use actividadessacd\model\ComunicarActividadesSacd;
 use core\ConfigGlobal;
+use core\ViewPhtml;
 use personas\model\entity\GestorPersonaEx;
 use personas\model\entity\GestorPersonaSacd;
 use personas\model\entity\GestorPersonaSSSC;
 use personas\model\entity\PersonaSacd;
-use usuarios\model\entity\Usuario;
 use web\DateTimeLocal;
 use web\Hash;
 use web\Periodo;
+use usuarios\model\entity\Usuario;
 
 /**
  * Esta página muestra las actividades que tiene que atender un sacd.
@@ -185,10 +186,10 @@ if ($Qmail === 'no') {
             'periodo_txt' => $periodo_txt,
         ];
 
-        $oView = new core\View('actividadessacd/controller');
+        $oView = new ViewPhtml('actividadessacd/controller');
         $oView->renderizar('com_un_sacd_activ_print.phtml', $a_campos);
     } else {
-        $oView = new core\View('actividadessacd/controller');
+        $oView = new ViewPhtml('actividadessacd/controller');
         $oView->renderizar('com_sacd_activ_print.phtml', $a_campos);
     }
 }

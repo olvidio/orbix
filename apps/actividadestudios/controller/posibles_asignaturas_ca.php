@@ -14,6 +14,7 @@
 // INICIO Cabecera global de URL de controlador *********************************
 use asignaturas\model\entity\GestorAsignatura;
 use asistentes\model\entity\GestorAsistente;
+use core\ViewTwig;
 use notas\model\AsignaturasPendientes;
 use notas\model\entity\GestorPersonaNotaDB;
 use personas\model\entity\Persona;
@@ -140,5 +141,5 @@ $a_campos = ['oPosicion' => $oPosicion,
     'a_alumnos_fin_c' => $a_alumnos_fin_c,
 ];
 
-$oView = new core\ViewTwig('actividadestudios/controller');
+$oView = new ViewTwig('actividadestudios/controller');
 $oView->renderizar('posibles_asignaturas_ca.html.twig', $a_campos);

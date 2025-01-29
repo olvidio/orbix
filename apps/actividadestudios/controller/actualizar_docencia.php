@@ -1,11 +1,16 @@
 <?php
 
-use actividades\model\entity as actividades;
-use actividadestudios\model\entity as actividadestudios;
-use notas\model\entity as notas;
-use profesores\model\entity as profesores;
-use web\Periodo;
 use actividades\model\entity\ActividadAll;
+use actividades\model\entity\GestorActividad;
+use actividadestudios\model\entity\ActividadAsignatura;
+use actividadestudios\model\entity\GestorActividadAsignatura;
+use core\ConfigGlobal;
+use core\ViewPhtml;
+use notas\model\entity\GestorActa;
+use profesores\model\entity\GestorProfesorDocenciaStgr;
+use profesores\model\entity\ProfesorDocenciaStgr;
+use web\Hash;
+use web\Periodo;
 
 // INICIO Cabecera global de URL de controlador *********************************
 require_once("apps/core/global_header.inc");
@@ -50,7 +55,7 @@ if (empty($continuar)) {
     $oFormP->setEmpiezaMax($Qempiezamax);
     $oFormP->setEmpiezaMin($Qempiezamin);
     $oFormP->setBoton($boton);
-    $oHashPeriodo = new web\Hash();
+    $oHashPeriodo = new Hash();
     $oHashPeriodo->setCamposForm('empiezamax!empiezamin!periodo!year!iactividad_val!iasistentes_val');
     $oHashPeriodo->setCamposNo('!refresh');
     $a_camposHiddenP = array('continuar' => 1,
@@ -87,20 +92,20 @@ if (empty($continuar)) {
     $aOperador['f_ini'] = 'BETWEEN';
     $aWhere['status'] = ActividadAll::STATUS_TERMINADA;
 
-    $mi_sfsv = core\ConfigGlobal::mi_sfsv();
+    $mi_sfsv = ConfigGlobal::mi_sfsv();
     //$id_tipo='^'.$mi_sfsv.'[123][23]';   // OJO AÑADO sem inv.
     $id_tipo = '^' . $mi_sfsv . '[123][23]';
     $id_tipo_inv = '^' . $mi_sfsv . '325';
     $aWhere['id_tipo_activ'] = $id_tipo;
     $aOperador['id_tipo_activ'] = '~';
-    //$GesActividades = new actividades\GestorActividadDl();
+    //$GesActividades = new GestorActividadDl();
     // Lo cambio para actividades de todas las dl.
-    $GesActividades = new actividades\GestorActividad();
+    $GesActividades = new GestorActividad();
     $cActividades = $GesActividades->getActividades($aWhere, $aOperador);
     $ini_d = $_SESSION['oConfig']->getDiaIniStgr();
     $ini_m = $_SESSION['oConfig']->getMesIniStgr();
     // busco los profesores que han dado alguna asignatura en actividad.
-    $GesProfesorDocencia = new profesores\GestorProfesorDocenciaStgr();
+    $GesProfesorDocencia = new GestorProfesorDocenciaStgr();
     foreach ($cActividades as $oActividad) {
         $id_activ = $oActividad->getId_activ();
         $id_tipo_activ = $oActividad->getId_tipo_activ();
@@ -112,8 +117,8 @@ if (empty($continuar)) {
         } else {
             $ini_a = $any;
         }
-        //$GesAsignaturasCa = new actividadestudios\GestorActividadAsignaturaDl();
-        $GesAsignaturasCa = new actividadestudios\GestorActividadAsignatura();
+        //$GesAsignaturasCa = new GestorActividadAsignaturaDl();
+        $GesAsignaturasCa = new GestorActividadAsignatura();
         $cActivAsignaturas = $GesAsignaturasCa->getActividadAsignaturas(array('id_activ' => $id_activ), array('id_profesor' => 'IS NOT NULL'));
 
         foreach ($cActivAsignaturas as $oActividadAsignatura) {
@@ -125,13 +130,13 @@ if (empty($continuar)) {
             $tipo = $oActividadAsignatura->getTipo();
             // si no es con preceptor, pongo ca o inv
             if (empty($tipo)) {
-                $tipo = actividadestudios\ActividadAsignatura::TIPO_CA;
+                $tipo = ActividadAsignatura::TIPO_CA;
                 if (preg_match("/$id_tipo_inv/", $id_tipo_activ)) { // semestre de invierno (ca agd)
-                    $tipo = actividadestudios\ActividadAsignatura::TIPO_INV;
+                    $tipo = ActividadAsignatura::TIPO_INV;
                 }
             }
 
-            $GesActas = new notas\GestorActa();
+            $GesActas = new GestorActa();
             $cActas = $GesActas->getActas(array('id_activ' => $id_activ, 'id_asignatura' => $id_asignatura));
             if (is_array($cActas) && count($cActas) > 0) {
                 $acta = '';
@@ -154,7 +159,7 @@ if (empty($continuar)) {
                 $oProfesorDocencia->setActa($acta);
                 $oProfesorDocencia->DBGuardar();
             } else {
-                $oProfesorDocencia = new profesores\ProfesorDocenciaStgr();
+                $oProfesorDocencia = new ProfesorDocenciaStgr();
                 $oProfesorDocencia->setId_activ($id_activ);
                 $oProfesorDocencia->setId_asignatura($id_asignatura);
                 $oProfesorDocencia->setId_nom($id_profesor);
@@ -171,5 +176,5 @@ if (empty($continuar)) {
     );
 }
 
-$oView = new core\View('actividadestudios/controller');
+$oView = new ViewPhtml('actividadestudios/controller');
 $oView->renderizar('actualizar_docencia.phtml', $a_campos);

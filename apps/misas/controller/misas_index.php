@@ -1,5 +1,6 @@
 <?php
 
+use core\ViewTwig;
 use web\Hash;
 
 // INICIO Cabecera global de URL de controlador *********************************
@@ -34,5 +35,5 @@ $a_campos = ['oPosicion' => $oPosicion,
     'goStatus' => $goStatus,
 ];
 
-$oView = new core\ViewTwig('misas/controller');
+$oView = new ViewTwig('misas/controller');
 echo $oView->render('misas_index.html.twig', $a_campos);

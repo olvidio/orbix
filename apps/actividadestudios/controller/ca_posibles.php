@@ -1,12 +1,19 @@
 <?php
 
-use actividades\model\entity as actividades;
-use actividadestudios\model\entity as actividadestudios;
+use actividades\model\entity\ActividadAll;
+use actividades\model\entity\GestorActividadPub;
+use actividadestudios\model\entity\GestorActividadAsignatura;
+use actividadestudios\model\entity\PosiblesCa;
 use core\ConfigGlobal;
-use function core\is_true;
-use personas\model\entity as personas;
-use ubis\model\entity as ubis;
+use core\ViewPhtml;
+use personas\model\entity\GestorPersonaAgd;
+use personas\model\entity\GestorPersonaDl;
+use personas\model\entity\GestorPersonaN;
+use ubis\model\entity\CentroDl;
+use ubis\model\entity\GestorDelegacion;
+use web\Hash;
 use web\Periodo;
+use function core\is_true;
 
 /**
  * Esta página sirve para calcular los créditos cursables para cada alumno en cada ca.
@@ -27,7 +34,7 @@ require_once("apps/core/global_header.inc");
 require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$oPosiblesCa = new actividadestudios\PosiblesCa();
+$oPosiblesCa = new PosiblesCa();
 
 $oPosicion->recordar();
 //Si vengo por medio de Posicion, borro la última
@@ -60,7 +67,7 @@ if (!empty($a_sel)) { //vengo de un checkbox
     $Qgrupo_estudios = 'todos';
     $oHoy = new web\DateTimeLocal();
     $inicioIso = $oHoy->format("Y-m-d");
-    $ini_m = $_SESSION['oConfig']->getMesIniStgr();;
+    $ini_m = $_SESSION['oConfig']->getMesIniStgr();
     $year = date("Y");
     if (date("m") < $ini_m) {
         $finIso = date("Y-m-t", strtotime("$year-$ini_m-01"));
@@ -186,16 +193,16 @@ if (!empty($a_sel)) { //vengo de un checkbox
     $aWhere['_ordre'] = 'apellido1,apellido2,nom';
 
     $Qtexto = "image";
-    $GesPersonaDl = new personas\GestorPersonaDl();
+    $GesPersonaDl = new GestorPersonaDl();
 } else {
     switch ($id_tabla_persona) {
         case 'n':
             $aWhere['stgr'] = 'n';
             $aOperador['stgr'] = '<>';
-            $GesPersonaDl = new personas\GestorPersonaN();
+            $GesPersonaDl = new GestorPersonaN();
             break;
         case 'a':
-            $GesPersonaDl = new personas\GestorPersonaAgd();
+            $GesPersonaDl = new GestorPersonaAgd();
             break;
     }
     $aWhere['situacion'] = 'A';
@@ -211,8 +218,8 @@ $cPersonas = $GesPersonaDl->getPersonas($aWhere, $aOperador);
 $aWhereActividad['f_ini'] = "'$inicioIso','$finIso'";
 $aOperadorActividad['f_ini'] = 'BETWEEN';
 
-if ($Qgrupo_estudios != 'todos') {
-    $GesGrupoEst = new ubis\GestorDelegacion();
+if ($Qgrupo_estudios !== 'todos') {
+    $GesGrupoEst = new GestorDelegacion();
     $cDelegaciones = $GesGrupoEst->getDelegaciones(array('grupo_estudios' => $Qgrupo_estudios));
     if (count($cDelegaciones) > 1) $aOperadorActividad['dl_org'] = 'OR';
     $mi_grupo = '';
@@ -223,11 +230,11 @@ if ($Qgrupo_estudios != 'todos') {
     $aWhereActividad['dl_org'] = $mi_grupo;
 }
 
-$aWhereActividad['status'] = actividades\ActividadAll::STATUS_ACTUAL;
+$aWhereActividad['status'] = ActividadAll::STATUS_ACTUAL;
 $aWhereActividad['_ordre'] = 'nivel_stgr,f_ini';
 
 $cActividades = array();
-$GesActividades = new actividades\GestorActividadPub();
+$GesActividades = new GestorActividadPub();
 $cActividades = $GesActividades->getActividades($aWhereActividad, $aOperadorActividad);
 
 // per les lletres verticals
@@ -274,7 +281,7 @@ if (!empty($Qidca)) {
             $aAsignaturasCa = array("dd");
         } else {
             // por cada ca creo un array con las asignaturas y los créditos.
-            $GesActividadAsignaturas = new actividadestudios\GestorActividadAsignatura();
+            $GesActividadAsignaturas = new GestorActividadAsignatura();
             $aAsignaturasCa = $GesActividadAsignaturas->getAsignaturasCa($id_activ);
             if (count($aAsignaturasCa) == 0 && $nivel_stgr) {
                 $msg_txt .= sprintf(_("el ca: %s no tiene puesta ninguna asignatura.") . "<br>", $nom_activ);
@@ -322,7 +329,7 @@ if (!empty($a_sel)) { //vengo de un checkbox
     $cOrdPersonas = array();
     foreach ($cPersonas as $oPersonaDl) {
         $id_ubi = $oPersonaDl->getId_ctr();
-        $oUbi = new ubis\CentroDl($id_ubi);
+        $oUbi = new CentroDl($id_ubi);
         $Ctr = $oUbi->getNombre_ubi();
         // para ordenar paso a minúsculas.
         $ctr = strtolower($Ctr?? '');
@@ -335,7 +342,7 @@ if (!empty($a_sel)) { //vengo de un checkbox
     foreach ($cPersonas as $oPersonaDl) {
         $id_ubi = $oPersonaDl->getId_ctr();
         if ($id_ubi != $id_ubi_old) {
-            $oUbi = new ubis\CentroDl($id_ubi);
+            $oUbi = new CentroDl($id_ubi);
             $Ctr = $oUbi->getNombre_ubi();
             // para ordenar paso a minúsculas.
             $ctr = strtolower($Ctr?? '');
@@ -375,7 +382,7 @@ foreach ($cOrdPersonas as $ctr => $ctrPersonas) {
             $aAsignaturas = $datos_ca["aAsignaturas"];
 
             // para el caso especial de agd en el ceagd
-            if ($ce && $Qna == "agd") {
+            if ($ce && $Qna === "agd") {
                 $stgr = "ce";
             }
 
@@ -420,7 +427,7 @@ foreach ($cOrdPersonas as $ctr => $ctrPersonas) {
                     }
                     break;
                 case "r":
-                    if ($id_tabla_persona == 'n') {
+                    if ($id_tabla_persona === 'n') {
                         if ($nivel_stgr == 4) {
                             $creditos = "x";
                         } else {
@@ -462,7 +469,7 @@ foreach ($cOrdPersonas as $ctr => $ctrPersonas) {
 // -------------------------- si es una persona, saco una lista. -----------------------
 if (!empty($a_sel) && $alum == 1) { //vengo de un 'checkbox' => sólo una persona
     $aParamGo = array('que' => 'activ', 'pau' => 'p', 'id_pau' => $id_nom, 'obj_pau' => $obj_pau, 'id_dossier' => '1301y1302');
-    $pagina = web\Hash::link('apps/dossiers/controller/dossiers_ver.php?' . http_build_query($aParamGo));
+    $pagina = Hash::link('apps/dossiers/controller/dossiers_ver.php?' . http_build_query($aParamGo));
 
     // Errores y falta de información
     if (count($cuadro) > 1) {
@@ -489,7 +496,7 @@ if (!empty($a_sel) && $alum == 1) { //vengo de un 'checkbox' => sólo una person
         'pagina' => $pagina
     ];
 
-    $oView = new core\View('actividadestudios/controller');
+    $oView = new ViewPhtml('actividadestudios/controller');
     $oView->renderizar('ca_posibles_lista.phtml', $a_campos);
 } else {
     // -------------------------- si es para el centro/s saco una tabla -------------------------
@@ -513,7 +520,7 @@ if (!empty($a_sel) && $alum == 1) { //vengo de un 'checkbox' => sólo una person
             'aActividades' => $aActividades,
         ];
 
-        $oView = new core\View('actividadestudios/controller');
+        $oView = new ViewPhtml('actividadestudios/controller');
         $oView->renderizar('ca_posibles_cuadro.phtml', $a_campos);
     }
 } 

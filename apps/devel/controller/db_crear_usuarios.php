@@ -18,7 +18,7 @@ require_once("apps/core/global_object.inc");
  * @param integer $largo
  * @return string
  */
-function generar_password($largo)
+function generar_password(int $largo)
 {
     $cadena_base = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
     $cadena_base .= '0123456789';

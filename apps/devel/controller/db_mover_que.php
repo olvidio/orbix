@@ -1,6 +1,8 @@
 <?php
 
 use core\DBPropiedades;
+use core\ViewPhtml;
+use web\Hash;
 
 // INICIO Cabecera global de URL de controlador *********************************
 require_once("apps/core/global_header.inc");
@@ -27,7 +29,7 @@ $oDBPropiedades->setBlanco(TRUE);
 $desplTablas = $oDBPropiedades->posibles_tablas();
 
 
-$oHash = new web\Hash();
+$oHash = new Hash();
 $oHash->setCamposForm('tabla');
 
 $msg_falta_tabla = _("debe poner la tabla");
@@ -38,5 +40,5 @@ $a_campos = [
     'msg_falta_tabla' => $msg_falta_tabla,
 ];
 
-$oView = new core\View('devel/controller');
+$oView = new ViewPhtml('devel/controller');
 $oView->renderizar('db_mover_que.phtml', $a_campos);

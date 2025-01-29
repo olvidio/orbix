@@ -11,10 +11,12 @@
 
 // INICIO Cabecera global de URL de controlador *********************************
 use core\ConfigGlobal;
-use function core\strtoupper_dlb;
-use usuarios\model\entity\Role;
+use core\ViewPhtml;
 use web\CentrosQue;
 use web\DesplegableArray;
+use usuarios\model\entity\Role;
+use web\Hash;
+use function core\strtoupper_dlb;
 
 require_once("apps/core/global_header.inc");
 // Archivos requeridos por esta url **********************************************
@@ -143,7 +145,7 @@ if ($Qperiodo == 'no') {
 $url_ajax = ConfigGlobal::getWeb() . '/programas/centro_ajax.php';
 
 
-$oHash = new web\Hash();
+$oHash = new Hash();
 $oHash->setUrl($url);
 $oHash->setCamposForm('empiezamin!empiezamax!iactividad_val!iasistentes_val!id_ctr!id_ctr_mas!id_ctr_num!periodo!year');
 $oHash->setCamposNo('id_ctr');
@@ -159,5 +161,5 @@ $a_campos = ['oPosicion' => $oPosicion,
     'oFormP' => $oFormP,
 ];
 
-$oView = new core\View('actividades/controller');
+$oView = new ViewPhtml('actividades/controller');
 $oView->renderizar('actividades_centro_que.phtml', $a_campos);

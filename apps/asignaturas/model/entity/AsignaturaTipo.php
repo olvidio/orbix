@@ -1,7 +1,9 @@
 <?php
 namespace asignaturas\model\entity;
 
-use core;
+use core\ClasePropiedades;
+use core\DatosCampo;
+use core\Set;
 
 /**
  * Clase que implementa la entidad $nom_tabla
@@ -12,7 +14,7 @@ use core;
  * @version 1.0
  * @created 01/12/2010
  */
-class AsignaturaTipo extends core\ClasePropiedades
+class AsignaturaTipo extends ClasePropiedades
 {
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
@@ -85,7 +87,7 @@ class AsignaturaTipo extends core\ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'id_tipo') && $val_id !== '') $this->iid_tipo = (int)$val_id;
+                if (($nom_id === 'id_tipo') && $val_id !== '') $this->iid_tipo = (int)$val_id;
             }
         } else {
             if (isset($a_id) && $a_id !== '') {
@@ -230,7 +232,7 @@ class AsignaturaTipo extends core\ClasePropiedades
      *
      * @param array $aDades
      */
-    function setAllAtributes($aDades)
+    function setAllAtributes(array $aDades)
     {
         if (!is_array($aDades)) return;
         if (array_key_exists('id_schema', $aDades)) $this->setId_schema($aDades['id_schema']);
@@ -252,7 +254,7 @@ class AsignaturaTipo extends core\ClasePropiedades
         $this->setId_tipo('');
         $this->setTipo_asignatura('');
         $this->setTipo_breve('');
-        if (array_key_exists('año', $aDades)) $this->setAño($aDades['año']);
+        if (array_key_exists('año', $this->aDades)) $this->setAño($this->aDades['año']);
         $this->setTipo_latin('');
         $this->setPrimary_key($aPK);
     }
@@ -295,7 +297,7 @@ class AsignaturaTipo extends core\ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'id_tipo') && $val_id !== '') $this->iid_tipo = (int)$val_id;
+                if (($nom_id === 'id_tipo') && $val_id !== '') $this->iid_tipo = (int)$val_id;
             }
         }
     }
@@ -422,7 +424,7 @@ class AsignaturaTipo extends core\ClasePropiedades
      */
     function getDatosCampos()
     {
-        $oAsignaturaTipoSet = new core\Set();
+        $oAsignaturaTipoSet = new Set();
 
         $oAsignaturaTipoSet->add($this->getDatosTipo_asignatura());
         $oAsignaturaTipoSet->add($this->getDatosTipo_breve());
@@ -436,12 +438,12 @@ class AsignaturaTipo extends core\ClasePropiedades
      * Recupera les propietats de l'atribut stipo_asignatura de AsignaturaTipo
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosTipo_asignatura()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'tipo_asignatura'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'tipo_asignatura'));
         $oDatosCampo->setEtiqueta(_("tipo de asignatura"));
         return $oDatosCampo;
     }
@@ -450,12 +452,12 @@ class AsignaturaTipo extends core\ClasePropiedades
      * Recupera les propietats de l'atribut stipo_breve de AsignaturaTipo
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosTipo_breve()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'tipo_breve'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'tipo_breve'));
         $oDatosCampo->setEtiqueta(_("tipo breve"));
         return $oDatosCampo;
     }
@@ -464,12 +466,12 @@ class AsignaturaTipo extends core\ClasePropiedades
      * Recupera les propietats de l'atribut saño de AsignaturaTipo
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosAño()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'año'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'año'));
         $oDatosCampo->setEtiqueta(_("año"));
         return $oDatosCampo;
     }
@@ -478,12 +480,12 @@ class AsignaturaTipo extends core\ClasePropiedades
      * Recupera les propietats de l'atribut stipo_latin de AsignaturaTipo
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosTipo_latin()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'tipo_latin'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'tipo_latin'));
         $oDatosCampo->setEtiqueta(_("tipo_latin"));
         return $oDatosCampo;
     }

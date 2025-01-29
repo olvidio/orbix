@@ -1,8 +1,11 @@
 <?php
 
 use actividades\model\entity\GestorTipoDeActividad;
-use procesos\model\PermAccion;
+use core\ConfigGlobal;
 use procesos\model\entity\GestorActividadFase;
+use procesos\model\PermAccion;
+use web\Hash;
+use web\Lista;
 use function core\is_true;
 
 // propios
@@ -43,12 +46,12 @@ foreach ($cUsuarioPerm as $oUsuarioPerm) {
 
     if (is_true($dl_propia)) {
         if (substr($id_tipo_activ_txt, 0, 1) == 1) { //sv
-            $dl_propia_txt = core\ConfigGlobal::mi_dele();
+            $dl_propia_txt = ConfigGlobal::mi_dele();
         } else { //sf
             if (substr($id_tipo_activ_txt, 0, 1) == '.') { //sf y sv
-                $dl_propia_txt = core\ConfigGlobal::mi_dele() . ' - ' . core\ConfigGlobal::mi_dele() . 'f';
+                $dl_propia_txt = ConfigGlobal::mi_dele() . ' - ' . ConfigGlobal::mi_dele() . 'f';
             } else {
-                $dl_propia_txt = core\ConfigGlobal::mi_dele() . 'f';
+                $dl_propia_txt = ConfigGlobal::mi_dele() . 'f';
             }
         }
     } else {
@@ -83,7 +86,7 @@ foreach ($cUsuarioPerm as $oUsuarioPerm) {
     $id_tipo_activ_anterior = $id_tipo_activ;
     $dl_propia_anterior = $dl_propia;
 }
-$oHash3 = new web\Hash();
+$oHash3 = new Hash();
 $oHash3->setCamposForm('que!sel');
 $oHash3->setcamposNo('refresh!scroll_id');
 $a_camposHidden = array(
@@ -156,7 +159,7 @@ $oHash3->setPrefix('perm'); // prefijo par el id.
     <?= $oHash3->getCamposHtml(); ?>
     <input type="hidden" id="perm_activ_que" name="que" value=''>
     <?php
-    $oTabla = new web\Lista();
+    $oTabla = new Lista();
     $oTabla->setId_tabla('form_perm_activ');
     $oTabla->setCabeceras($a_cabeceras);
     $oTabla->setBotones($a_botones);

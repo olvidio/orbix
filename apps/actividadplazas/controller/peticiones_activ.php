@@ -1,8 +1,15 @@
 <?php
 
-use actividades\model\entity as actividades;
-use personas\model\entity as personas;
-use ubis\model\entity as ubis;
+use actividades\model\entity\ActividadAll;
+use actividades\model\entity\GestorActividadDl;
+use actividades\model\entity\GestorActividadPub;
+use actividadplazas\model\entity\GestorPlazaPeticion;
+use core\ConfigGlobal;
+use core\ViewPhtml;
+use personas\model\entity\PersonaDl;
+use ubis\model\entity\GestorDelegacion;
+use web\DesplegableArray;
+use web\Hash;
 
 // INICIO Cabecera global de URL de controlador *********************************
 require_once("apps/core/global_header.inc");
@@ -45,17 +52,17 @@ if (!empty($a_sel)) { //vengo de un checkbox
 
 }
 
-if (($Qna == 'a' || $Qna == 'agd') && $Qsactividad == 'ca') {
+if (($Qna === 'a' || $Qna === 'agd') && $Qsactividad === 'ca') {
     $Qsactividad = 'cv';
 }
 
-$oPersona = new personas\PersonaDl($Qid_nom);
+$oPersona = new PersonaDl($Qid_nom);
 $ap_nom = $oPersona->getPrefApellidosNombre();
 
 // Posibles:
 if (!empty($Qtodos) && $Qtodos != 1) {
     $grupo_estudios = $Qtodos;
-    $GesGrupoEst = new ubis\GestorDelegacion();
+    $GesGrupoEst = new GestorDelegacion();
     $cDelegaciones = $GesGrupoEst->getDelegaciones(array('grupo_estudios' => $grupo_estudios));
     if (count($cDelegaciones) > 1) $aOperador['dl_org'] = 'OR';
     $mi_grupo = '';
@@ -82,12 +89,12 @@ switch ($Qsactividad) {
 
 $aWhere['f_ini'] = "'$inicurs','$fincurs'";
 $aOperador['f_ini'] = 'BETWEEN';
-$aWhere['status'] = actividades\ActividadAll::STATUS_ACTUAL;
+$aWhere['status'] = ActividadAll::STATUS_ACTUAL;
 $aWhere['_ordre'] = 'f_ini,nivel_stgr';
 
 $cActividades = array();
-$sfsv = core\ConfigGlobal::mi_sfsv();
-$mi_dele = core\ConfigGlobal::mi_delef();
+$sfsv = ConfigGlobal::mi_sfsv();
+$mi_dele = ConfigGlobal::mi_delef();
 switch ($Qna) {
     case "agd":
     case "a":
@@ -110,12 +117,12 @@ switch ($Qna) {
         $aOperador['id_tipo_activ'] = '~';
         //inicialmente estaba sólo con las activiades publicadas.
         //Ahora añado las no publicadas de midl.
-        $GesActividadesDl = new actividades\GestorActividadDl();
+        $GesActividadesDl = new GestorActividadDl();
         $cActividadesDl = $GesActividadesDl->getActividades($aWhere, $aOperador);
         // Añado la condición para que no duplique las de midele:
         $aWhere['dl_org'] = $mi_dele;
         $aOperador['dl_org'] = '!=';
-        $GesActividadesPub = new actividades\GestorActividadPub();
+        $GesActividadesPub = new GestorActividadPub();
         $cActividadesPub = $GesActividadesPub->getActividades($aWhere, $aOperador);
 
         $cActividades = array_merge($cActividadesDl, array('-------'), $cActividadesPub);
@@ -139,12 +146,12 @@ switch ($Qna) {
         $aOperador['id_tipo_activ'] = '~';
         //inicialmente estaba sólo con las activiades publicadas.
         //Ahora añado las no publicadas de midl.
-        $GesActividadesDl = new actividades\GestorActividadDl();
+        $GesActividadesDl = new GestorActividadDl();
         $cActividadesDl = $GesActividadesDl->getActividades($aWhere, $aOperador);
         // Añado la condición para que no duplique las de midele:
         $aWhere['dl_org'] = $mi_dele;
         $aOperador['dl_org'] = '!=';
-        $GesActividadesPub = new actividades\GestorActividadPub();
+        $GesActividadesPub = new GestorActividadPub();
         $cActividadesPub = $GesActividadesPub->getActividades($aWhere, $aOperador);
 
         $cActividades = array_merge($cActividadesDl, array('-------'), $cActividadesPub);
@@ -166,7 +173,7 @@ foreach ($cActividades as $oActividad) {
 }
 
 //Miro los actuales
-$gesPlazasPeticion = new \actividadplazas\model\entity\GestorPlazaPeticion();
+$gesPlazasPeticion = new GestorPlazaPeticion();
 $cPlazasPeticion = $gesPlazasPeticion->getPlazasPeticion(array('id_nom' => $Qid_nom, 'tipo' => $Qsactividad, '_ordre' => 'orden'));
 $sid_activ = '';
 foreach ($cPlazasPeticion as $key => $oPlazaPeticion) {
@@ -180,14 +187,14 @@ foreach ($cPlazasPeticion as $key => $oPlazaPeticion) {
     }
 }
 
-$oSelects = new web\DesplegableArray($sid_activ, $aOpciones, 'actividades');
+$oSelects = new DesplegableArray($sid_activ, $aOpciones, 'actividades');
 $oSelects->setBlanco('t');
 $oSelects->setAccionConjunto('fnjs_mas_actividades(event)');
 
 // En el caso de actualizar la misma página (fnjs_actualizar) solo me quedo con la última.
 $stack = $oPosicion->getStack(0);
 
-$oHash = new web\Hash();
+$oHash = new Hash();
 $camposForm = 'actividades!actividades_mas!actividades_num';
 $oHash->setCamposForm($camposForm);
 $oHash->setcamposNo('que!actividades');
@@ -211,5 +218,5 @@ $a_campos = [
     'txt_guardar' => $txt_guardar,
 ];
 
-$oView = new core\View('actividadplazas/controller');
+$oView = new ViewPhtml('actividadplazas/controller');
 $oView->renderizar('peticiones_activ.phtml', $a_campos);

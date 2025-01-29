@@ -1,10 +1,10 @@
 <?php
 
+use web\Hash;
+use web\Lista;
 use ubis\model\CuadrosLabor;
 use ubis\model\entity\CentroDl;
 use ubis\model\entity\GestorCentroDl;
-use web\Hash;
-use web\Lista;
 use function core\is_true;
 
 // INICIO Cabecera global de URL de controlador *********************************

@@ -1,7 +1,7 @@
 <?php
 
-use usuarios\model\entity as usuarios;
-use menus\model\entity as menus;
+use menus\model\entity\GrupMenuRole;
+use usuarios\model\entity\Role;
 
 // INICIO Cabecera global de URL de controlador *********************************
 require_once("apps/core/global_header.inc");
@@ -22,7 +22,7 @@ switch ($Qque) {
             foreach ($a_sel as $sel) {
                 //$id_nom=$sel[0];
                 $id_item = (integer)strtok($sel, "#");
-                $oGrupMenuRole = new menus\GrupMenuRole($id_item);
+                $oGrupMenuRole = new GrupMenuRole($id_item);
                 if ($oGrupMenuRole->DBEliminar() === false) {
                     echo _("hay un error, no se ha eliminado");
                     echo "\n" . $oGrupMenuRole->getErrorTxt();
@@ -37,7 +37,7 @@ switch ($Qque) {
                 //$id_nom=$sel[0];
                 $id_role = strtok($sel, "#");
                 $id_grupmenu = strtok("#");
-                $oGrupMenuRole = new menus\GrupMenuRole();
+                $oGrupMenuRole = new GrupMenuRole();
                 $oGrupMenuRole->setId_role($id_role);
                 $oGrupMenuRole->setId_grupmenu($id_grupmenu);
                 if ($oGrupMenuRole->DBGuardar() === false) {
@@ -55,7 +55,7 @@ switch ($Qque) {
         $Qpau = (string)filter_input(INPUT_POST, 'pau');
         $Qdmz = (integer)filter_input(INPUT_POST, 'dmz');
         if ($Qrole) {
-            $oRole = new usuarios\Role(array('id_role' => $Qid_role));
+            $oRole = new Role(array('id_role' => $Qid_role));
             $oRole->setRole($Qrole);
             $sf = !empty($Qsf) ? '1' : 0;
             $oRole->setSf($sf);
@@ -79,7 +79,7 @@ switch ($Qque) {
         $Qpau = (string)filter_input(INPUT_POST, 'pau');
         $Qdmz = (integer)filter_input(INPUT_POST, 'dmz');
         if ($Qrole) {
-            $oRole = new usuarios\Role();
+            $oRole = new Role();
             $oRole->setRole($Qrole);
             $sf = !empty($Qsf) ? '1' : 0;
             $oRole->setSf($sf);

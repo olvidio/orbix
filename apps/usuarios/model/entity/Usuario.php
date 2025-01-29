@@ -2,8 +2,9 @@
 
 namespace usuarios\model\entity;
 
-use core;
-use core\ConfigGlobal;
+use core\ClasePropiedades;
+use core\DatosCampo;
+use core\Set;
 
 /**
  * Fitxer amb la Classe que accedeix a la taula aux_usuarios
@@ -24,7 +25,7 @@ use core\ConfigGlobal;
  * @version 1.0
  * @created 20/01/2014
  */
-class Usuario extends core\ClasePropiedades
+class Usuario extends ClasePropiedades
 {
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
@@ -122,7 +123,7 @@ class Usuario extends core\ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'id_usuario') && $val_id !== '') $this->iid_usuario = (int)$val_id; 
+                if (($nom_id === 'id_usuario') && $val_id !== '') $this->iid_usuario = (int)$val_id;
             }
         } else {
             if (isset($a_id) && $a_id !== '') {
@@ -208,7 +209,7 @@ class Usuario extends core\ClasePropiedades
                     return false;
                 }
             }
-            $this->id_usuario = $oDbl->lastInsertId('aux_grupos_y_usuarios_id_usuario_seq');
+            $this->iid_usuario = $oDbl->lastInsertId('aux_grupos_y_usuarios_id_usuario_seq');
         }
         $this->setAllAtributes($aDades);
         return true;
@@ -309,7 +310,7 @@ class Usuario extends core\ClasePropiedades
      *
      * @param array $aDades
      */
-    function setAllAtributes($aDades)
+    function setAllAtributes(array $aDades)
     {
         if (!is_array($aDades)) return;
         if (array_key_exists('id_schema', $aDades)) $this->setId_schema($aDades['id_schema']);
@@ -379,7 +380,7 @@ class Usuario extends core\ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'id_usuario') && $val_id !== '') $this->iid_usuario = (int)$val_id; 
+                if (($nom_id === 'id_usuario') && $val_id !== '') $this->iid_usuario = (int)$val_id;
             }
         }
     }
@@ -553,7 +554,7 @@ class Usuario extends core\ClasePropiedades
      */
     function getDatosCampos()
     {
-        $oUsuarioSet = new core\Set();
+        $oUsuarioSet = new Set();
 
         $oUsuarioSet->add($this->getDatosUsuario());
         $oUsuarioSet->add($this->getDatosPassword());
@@ -569,12 +570,12 @@ class Usuario extends core\ClasePropiedades
      * Recupera les propietats de l'atribut susuario de Usuario
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosUsuario()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'usuario'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'usuario'));
         $oDatosCampo->setEtiqueta(_("usuario"));
         return $oDatosCampo;
     }
@@ -583,12 +584,12 @@ class Usuario extends core\ClasePropiedades
      * Recupera les propietats de l'atribut spassword de Usuario
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosPassword()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'password'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'password'));
         $oDatosCampo->setEtiqueta(_("password"));
         return $oDatosCampo;
     }
@@ -597,12 +598,12 @@ class Usuario extends core\ClasePropiedades
      * Recupera les propietats de l'atribut semail de Usuario
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosEmail()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'email'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'email'));
         $oDatosCampo->setEtiqueta(_("email"));
         return $oDatosCampo;
     }
@@ -611,12 +612,12 @@ class Usuario extends core\ClasePropiedades
      * Recupera les propietats de l'atribut sid_pau de Usuario
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosId_pau()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_pau'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_pau'));
         $oDatosCampo->setEtiqueta(_("id_pau"));
         return $oDatosCampo;
     }
@@ -625,12 +626,12 @@ class Usuario extends core\ClasePropiedades
      * Recupera les propietats de l'atribut snom_usuario de Usuario
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosNom_usuario()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'nom_usuario'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'nom_usuario'));
         $oDatosCampo->setEtiqueta(_("nombre de usuario"));
         return $oDatosCampo;
     }
@@ -639,12 +640,12 @@ class Usuario extends core\ClasePropiedades
      * Recupera les propietats de l'atribut iid_role de Usuario
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosId_role()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_role'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_role'));
         $oDatosCampo->setEtiqueta(_("id_role"));
         return $oDatosCampo;
     }

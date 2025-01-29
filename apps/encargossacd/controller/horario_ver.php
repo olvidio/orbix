@@ -1,11 +1,12 @@
 <?php
 
-use encargossacd\model\entity\EncargoHorario;
-use encargossacd\model\entity\GestorEncargoTipo;
-use web\Hash;
-use web\Desplegable;
+use core\ViewTwig;
 use encargossacd\model\EncargoConstants;
+use encargossacd\model\entity\EncargoHorario;
 use encargossacd\model\entity\GestorEncargoHorarioExcepcion;
+use encargossacd\model\entity\GestorEncargoTipo;
+use web\Desplegable;
+use web\Hash;
 
 /**
  * Esta página muestra un formulario para crear un horario
@@ -153,5 +154,5 @@ $a_campos = ['oPosicion' => $oPosicion,
     'txt_btn' => $txt_btn,
 ];
 
-$oView = new core\ViewTwig('encargossacd/controller');
+$oView = new ViewTwig('encargossacd/controller');
 $oView->renderizar('horario_ver.html.twig', $a_campos);

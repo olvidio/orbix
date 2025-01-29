@@ -2,7 +2,9 @@
 
 namespace procesos\model\entity;
 
-use core;
+use core\ClaseGestor;
+use core\Condicion;
+use core\Set;
 use function core\is_true;
 
 /**
@@ -16,7 +18,7 @@ use function core\is_true;
  * @version 1.0
  * @created 07/12/2018
  */
-class GestorTareaProceso extends core\ClaseGestor
+class GestorTareaProceso extends ClaseGestor
 {
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
@@ -43,7 +45,7 @@ class GestorTareaProceso extends core\ClaseGestor
      * retorna array de fase#traea => fase_previa, tarea_previa.
      *
      * @param integer iid_tipo_proceso tipus de procés.
-     * @return array $aFases . $aFases[$fase_tarea] = ['id_fase' => $id_fase_previa, 'id_tarea' => $id_tarea_previa];
+     * @return array|false
      */
     public function getArrayFasesDependientes($iid_tipo_proceso)
     {
@@ -88,7 +90,7 @@ class GestorTareaProceso extends core\ClaseGestor
      * @param string $fase_tarea_org
      * @param array $aFase_previa
      */
-    private function add($fase_tarea_org, $aFase_previa)
+    private function add(string $fase_tarea_org, array $aFase_previa)
     {
         $fase_tarea = key($aFase_previa);
         $mensaje = current($aFase_previa);
@@ -102,7 +104,7 @@ class GestorTareaProceso extends core\ClaseGestor
      * @param string $fase_tarea_org
      * @param array $aaFase_previa
      */
-    private function ar($fase_tarea_org, $aaFase_previa)
+    private function ar(string $fase_tarea_org, array $aaFase_previa)
     {
         foreach ($aaFase_previa as $aFase_previa) {
             $fase_tarea_previa = key($aFase_previa);
@@ -124,7 +126,7 @@ class GestorTareaProceso extends core\ClaseGestor
      * @param integer $iid_tipo_proceso
      * @return array
      */
-    public function arbolPrevio($iid_tipo_proceso)
+    public function arbolPrevio(int $iid_tipo_proceso)
     {
         $this->aFases = $this->getArrayFasesDependientes($iid_tipo_proceso);
         foreach ($this->aFases as $fase_tarea_org => $aaFase_previa) {
@@ -141,9 +143,9 @@ class GestorTareaProceso extends core\ClaseGestor
      * @param integer id_fase.
      * @param integer id_tarea.
      * @param integer $f nº de fila
-     * @return array  $aFases = [$f => "$id_fase#$id_tarea"];
+     * @return array|false
      */
-    public function getListaFasesDependientes($iid_tipo_proceso, $id_fase, $id_tarea = 0, $f = 0)
+    public function getListaFasesDependientes($iid_tipo_proceso, $id_fase, $id_tarea = 0, int $f = 0)
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
@@ -219,7 +221,7 @@ class GestorTareaProceso extends core\ClaseGestor
      * retorna l'array amb la lista de fases ordenadas. Per utilitzar a 'a_fases_gestor.class'
      *
      * @param integer iid_tipo_proceso tipus de procés.
-     * @return array Una llista de fases.
+     * @return array|false
      */
     function getFasesProceso($iid_tipo_proceso = '')
     {
@@ -278,12 +280,12 @@ class GestorTareaProceso extends core\ClaseGestor
      * retorna l'array d'objectes de tipus TareaProceso
      *
      * @param string sQuery la query a executar.
-     * @return array Una col·lecció d'objectes de tipus TareaProceso
+     * @return array|false
      */
     function getTareasProcesosQuery($sQuery = '')
     {
         $oDbl = $this->getoDbl();
-        $oTareaProcesoSet = new core\Set();
+        $oTareaProcesoSet = new Set();
         if (($oDbl->query($sQuery)) === FALSE) {
             $sClauError = 'GestorTareaProceso.query';
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
@@ -302,23 +304,23 @@ class GestorTareaProceso extends core\ClaseGestor
      *
      * @param array aWhere associatiu amb els valors de les variables amb les quals farem la query
      * @param array aOperators associatiu amb els valors dels operadors que cal aplicar a cada variable
-     * @return array Una col·lecció d'objectes de tipus TareaProceso
+     * @return array|void
      */
     function getTareasProceso($aWhere = array(), $aOperators = array())
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
-        $oTareaProcesoSet = new core\Set();
-        $oCondicion = new core\Condicion();
+        $oTareaProcesoSet = new Set();
+        $oCondicion = new Condicion();
         $aCondi = array();
         foreach ($aWhere as $camp => $val) {
-            if ($camp == '_ordre') continue;
+            if ($camp === '_ordre') continue;
             $sOperador = isset($aOperators[$camp]) ? $aOperators[$camp] : '';
             if ($a = $oCondicion->getCondicion($camp, $sOperador, $val)) $aCondi[] = $a;
             // operadores que no requieren valores
-            if ($sOperador == 'BETWEEN' || $sOperador == 'IS NULL' || $sOperador == 'IS NOT NULL' || $sOperador == 'OR') unset($aWhere[$camp]);
-            if ($sOperador == 'IN' || $sOperador == 'NOT IN') unset($aWhere[$camp]);
-            if ($sOperador == 'TXT') unset($aWhere[$camp]);
+            if ($sOperador === 'BETWEEN' || $sOperador === 'IS NULL' || $sOperador === 'IS NOT NULL' || $sOperador === 'OR') unset($aWhere[$camp]);
+            if ($sOperador === 'IN' || $sOperador === 'NOT IN') unset($aWhere[$camp]);
+            if ($sOperador === 'TXT') unset($aWhere[$camp]);
         }
         $sCondi = implode(' AND ', $aCondi);
         if ($sCondi != '') $sCondi = " WHERE " . $sCondi;

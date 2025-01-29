@@ -1,6 +1,6 @@
 <?php
 
-namespace web;
+namespace planning\domain;
 
  use asistentes\model\entity\Asistente;
 

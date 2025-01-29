@@ -29,7 +29,7 @@ class ConfigMagik
 
     /**
      * @desc   Constructor of this class.
-     * @param string $path Path to ini-file to load at startup.
+     * @param string|null $path Path to ini-file to load at startup.
      * NOTE:   If the ini-file can not be found, it will try to generate a
      *         new empty one at the location indicated by path passed to
      *         constructor-method of this class.
@@ -37,7 +37,7 @@ class ConfigMagik
      * @param bool $process_sections TRUE or FALSE to enable or disable sections in your ini-file (enabled by default).
      * @return void Returns nothing, like any other constructor-method ¦¬] .
      */
-    function __construct($path = null, $synchronize = false, $process_sections = true)
+    function __construct(string $path = null, bool $synchronize = false, bool $process_sections = true)
     {
         // check whether to enable processing-sections or not
         if (isset($process_sections)) $this->PROCESS_SECTIONS = $process_sections;
@@ -77,14 +77,14 @@ class ConfigMagik
 
     /**
      * @desc                      Retrieves the value for a given key.
-     * @param string $key Key or name of directive to set in current config.
-     * @param string $section Name of section to set key/value-pair therein.
+     * @param string|null $key Key or name of directive to set in current config.
+     * @param string|null $section Name of section to set key/value-pair therein.
      * NOTE:                   Section must only be specified when sections are used in your ini-file.
      * @return mixed           Returns the value or NULL on failure.
      * NOTE:                   An empty directive will always return an empty string.
      *                         Only when directive can not be found, NULL is returned.
      */
-    function get($key = null, $section = null)
+    function get(string $key = null, string $section = null)
     {
         // if section was passed, change the PROCESS_SECTION-switch (FIX: 11/08/2004 BennyZaminga)
         if ($section) $this->PROCESS_SECTIONS = true;
@@ -107,11 +107,11 @@ class ConfigMagik
      * @desc   Sets the value for a given key (in given section, if any specified).
      * @param string $key Key or name of directive to set in current config.
      * @param mixed $value Value of directive to set in current config.
-     * @param string $section Name of section to set key/value-pair therein.
+     * @param string|null $section Name of section to set key/value-pair therein.
      * NOTE:   Section must only be specified when sections are enabled in your ini-file.
      * @return bool            Returns TRUE on success, FALSE on failure.
      */
-    function set($key, $value, $section = null)
+    function set(string $key, mixed $value, string $section = null)
     {
         // when sections are enabled and user tries to genarate non-sectioned vars,
         // throw an error, this is definitely not allowed.
@@ -138,10 +138,10 @@ class ConfigMagik
     /**
      * @desc   Remove a directive (key and it's value) from current config.
      * @param string $key Name of key to remove form current config.
-     * @param string $section Optional name of section (if used).
+     * @param string|null $section Optional name of section (if used).
      * @return bool            Returns TRUE on success, FALSE on failure.
      */
-    function removeKey($key, $section = null)
+    function removeKey(string $key, string $section = null)
     {
         // check if section was passed and it's valid
         if ($section != null) {
@@ -182,7 +182,7 @@ class ConfigMagik
      * @param string $section Name of section to remove.
      * @return bool            Returns TRUE on success, FALSE on failure.
      */
-    function removeSection($section)
+    function removeSection(string $section)
     {
         // check if section exists
         if (in_array($section, array_keys($this->VARS), true) === false) {
@@ -202,11 +202,11 @@ class ConfigMagik
 
     /**
      * @desc   Loads and parses ini-file from filesystem.
-     * @param string $path Optional path to ini-file to load.
+     * @param string|null $path Optional path to ini-file to load.
      * NOTE:   When not provided, path passed to constructor will be used.
      * @return bool Returns TRUE on success, FALSE on failure.
      */
-    function load($path = null)
+    function load(string $path = null)
     {
         // if path was specified, check if valid else abort
         if ($path != null and !is_file($path)) {
@@ -228,11 +228,11 @@ class ConfigMagik
 
     /**
      * @desc   Writes ini-file to filesystem as file.
-     * @param string $path Optional path to write ini-file to.
+     * @param string|null $path Optional path to write ini-file to.
      * NOTE:   When not provided, path passed to constructor will be used.
      * @return bool Returns TRUE on success, FALSE on failure.
      */
-    function save($path = null)
+    function save(string $path = null)
     {
         // if no path was specified, fall back to class-var
         if ($path == null) $path = $this->PATH;
@@ -292,7 +292,7 @@ class ConfigMagik
      * @param string $output_type Type of desired output. Can be 'TEXT' or 'HTML'.
      * @return string Returns a formatted string according to chosen output-type.
      */
-    function toString($output_type = 'TEXT')
+    function toString(string $output_type = 'TEXT')
     {
         // check requested output-type
         if (strtoupper($output_type) !== 'TEXT' and strtoupper($output_type) !== 'HTML') {
@@ -350,10 +350,10 @@ class ConfigMagik
 
     /**
      * @desc                   Lists all keys.
-     * @param string $section Optional section (needed only when using sections).
-     * @return array           Returns a numeric array containing the keys as string.
+     * @param string|null $section Optional section (needed only when using sections).
+     * @return array|false
      */
-    function listKeys($section = null)
+    function listKeys(string $section = null)
     {
         // check if section was passed
         if ($section !== null) {

@@ -1,9 +1,11 @@
 <?php
 
-use profesores\model\entity as profesores;
+use profesores\model\entity\GestorProfesor;
+use profesores\model\entity\GestorProfesorActividad;
+use web\Desplegable;
 
 /*
-* Devuelvo un desplegable con los valores posibles segun el valor de entrada.
+* Devuelvo un desplegable con los valores posibles según el valor de entrada.
 *
 */
 
@@ -20,7 +22,7 @@ $Qsalida = (string)filter_input(INPUT_POST, 'salida');
 switch ($Qsalida) {
     case "asignatura":
         $Qid_asignatura = (integer)filter_input(INPUT_POST, 'id_asignatura');
-        $GesProfesores = new profesores\GestorProfesor();
+        $GesProfesores = new GestorProfesor();
         $oDesplProfesores = $GesProfesores->getDesplProfesoresAsignatura($Qid_asignatura);
 
         $oDesplProfesores->setNombre('id_profesor');
@@ -31,7 +33,7 @@ switch ($Qsalida) {
         break;
     case "dl":
         $Qid_activ = (integer)filter_input(INPUT_POST, 'id_activ');
-        $GesProfesores = new profesores\GestorProfesorActividad();
+        $GesProfesores = new GestorProfesorActividad();
         $oDesplProfesores = $GesProfesores->getListaProfesoresActividad(array($Qid_activ));
 
         $oDesplProfesores->setNombre('id_profesor');
@@ -41,10 +43,10 @@ switch ($Qsalida) {
         echo $oDesplProfesores->desplegable();
         break;
     case "todos":
-        $GesProfesores = new profesores\GestorProfesor();
+        $GesProfesores = new GestorProfesor();
         $aOpciones = $GesProfesores->getListaProfesoresPub();
 
-        $oDesplProfesores = new web\Desplegable('', $aOpciones, '', true);
+        $oDesplProfesores = new Desplegable('', $aOpciones, '', true);
 
         $oDesplProfesores->setNombre('id_profesor');
         $oDesplProfesores->setBlanco('t');

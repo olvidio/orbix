@@ -1,9 +1,10 @@
 <?php
 
-use asignaturas\model\entity as asignaturas;
+use asignaturas\model\entity\GestorAsignatura;
+use notas\model\entity\GestorPersonaNotaDlDB;
+use notas\model\entity\Nota;
+use personas\model\entity\GestorPersonaDl;
 use function core\is_true;
-use notas\model\entity as notas;
-use personas\model\entity as personas;
 
 /**
  * Esta página sirve para generar un cuadro con el numero de alumnos que tienen
@@ -42,7 +43,7 @@ require_once("apps/core/global_object.inc");
 			
 */
 // Asignaturas posibles:
-$GesAsignaturas = new asignaturas\GestorAsignatura();
+$GesAsignaturas = new GestorAsignatura();
 $aWhere = array();
 $aOperador = array();
 $aWhere['status'] = 't';
@@ -103,10 +104,10 @@ $aWhere['id_tabla'] = '^[na]';
 $aOperador['id_tabla'] = '~';
 
 
-$GesPersonas = new personas\GestorPersonaDl();
+$GesPersonas = new GestorPersonaDl();
 $cPersonas = $GesPersonas->getPersonasDl($aWhere, $aOperador);
 $p = 0;
-$GesNotas = new notas\GestorPersonaNotaDlDB();
+$GesNotas = new GestorPersonaNotaDlDB();
 foreach ($cPersonas as $oPersona) {
     $p++;
     $id_nom = $oPersona->getId_nom();
@@ -142,7 +143,7 @@ foreach ($cPersonas as $oPersona) {
             $id_nivel_asig = $a_Asig_nivel[$id_asignatura];
         }
         $n = $id_nivel_asig;
-        $oNota = new notas\Nota($id_situacion);
+        $oNota = new Nota($id_situacion);
         $aAprobadas[$n]['nota'] = is_true($oNota->getSuperada()) ? '' : 2;
     }
 

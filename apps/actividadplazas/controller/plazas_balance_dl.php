@@ -1,6 +1,9 @@
 <?php
 
+use core\ConfigGlobal;
+use core\ViewPhtml;
 use ubis\model\entity\GestorDelegacion;
+use web\TablaEditable;
 
 /**
  * Muestra un cuadro (grid editable) con las actividades de la propia dl y
@@ -24,7 +27,7 @@ $Qid_tipo_activ = (integer)filter_input(INPUT_POST, 'id_tipo_activ');
 $oTipoActiv = new web\TiposActividades($Qid_tipo_activ);
 $sactividad = $oTipoActiv->getActividadText();
 
-$dlA = core\ConfigGlobal::mi_delef();
+$dlA = ConfigGlobal::mi_delef();
 if (empty($Qdl)) {
     die();
 } else {
@@ -53,7 +56,7 @@ switch ($sactividad) {
 $status = \actividades\model\entity\ActividadAll::STATUS_ACTUAL; //actual
 
 // Seleccionar los id_dl del mismo grupo de estudios
-$esquema = core\ConfigGlobal::mi_region_dl();
+$esquema = ConfigGlobal::mi_region_dl();
 $a_reg = explode('-', $esquema);
 $mi_dl = substr($a_reg[1], 0, -1); // quito la v o la f.
 $aWhere = array('region' => $a_reg[0], 'dl' => $mi_dl);
@@ -209,9 +212,9 @@ $a_cabeceras[] = array('name' => $dlB . '-l', 'title' => _("libres"), 'field' =>
 
 $a_botones = array();
 
-$oTabla = new web\TablaEditable();
+$oTabla = new TablaEditable();
 $oTabla->setId_tabla('plazas_balance');
-$UpdateUrl = core\ConfigGlobal::getWeb() . '/apps/actividadplazas/controller/gestion_plazas_ajax.php';
+$UpdateUrl = ConfigGlobal::getWeb() . '/apps/actividadplazas/controller/gestion_plazas_ajax.php';
 $oTabla->setUpdateUrl($UpdateUrl);
 $oTabla->setCabeceras($a_cabeceras);
 $oTabla->setBotones($a_botones);
@@ -227,5 +230,5 @@ $a_campos = [
     'oTabla' => $oTabla,
 ];
 
-$oView = new core\View('actividadplazas/controller');
+$oView = new ViewPhtml('actividadplazas/controller');
 $oView->renderizar('plazas_balance_dl.phtml', $a_campos);

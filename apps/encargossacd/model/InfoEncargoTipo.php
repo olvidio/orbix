@@ -2,12 +2,12 @@
 
 namespace encargossacd\model;
 
-use core;
+use core\DatosInfo;
 use encargossacd\model\entity\GestorEncargoTipo;
 
 /* No vale el underscore en el nombre */
 
-class InfoEncargoTipo extends core\DatosInfo
+class InfoEncargoTipo extends DatosInfo
 {
 
     public function __construct()

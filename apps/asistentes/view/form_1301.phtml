@@ -1,6 +1,6 @@
 <script>
     <?php
-    if (core\ConfigGlobal::is_app_installed('actividadplazas')) {
+    use core\ConfigGlobal;if (ConfigGlobal::is_app_installed('actividadplazas')) {
     ?>
     fnjs_cmb_propietario = function () {
         var id_activ = $('#id_activ').val();
@@ -86,7 +86,7 @@
                 <textarea id="observ" name="observ" cols="40" rows="5"><?= htmlspecialchars($observ ?? '') ?></textarea></td>
         </tr>
         <?php
-        if (core\ConfigGlobal::is_app_installed('actividadplazas')) {
+        if (ConfigGlobal::is_app_installed('actividadplazas')) {
             ?>
             <tr>
                 <td class=etiqueta><?= _("plaza") ?></td>

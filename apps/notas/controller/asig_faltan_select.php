@@ -3,6 +3,9 @@
 use core\ConfigGlobal;
 use notas\model\AsignaturasPendientes;
 use ubis\model\entity\CentroDl;
+use web\Hash;
+use web\Lista;
+use function core\is_true;
 
 /**
  * Esta página muestra una tabla con las personas que cumplen con la condicion.
@@ -157,9 +160,9 @@ foreach ($aId_nom as $id_nom => $aAsignaturas) {
 
     $condicion_2 = "Where id_nom='" . $id_nom . "'";
     $condicion_2 = urlencode($condicion_2);
-    $pagina = web\Hash::link(core\ConfigGlobal::getWeb() . '/apps/personas/controller/home_persona.php?' . http_build_query(array('id_nom' => $id_nom, 'obj_pau' => $obj_pau)));
+    $pagina = Hash::link(ConfigGlobal::getWeb() . '/apps/personas/controller/home_persona.php?' . http_build_query(array('id_nom' => $id_nom, 'obj_pau' => $obj_pau)));
 
-    if ($Qlista == true) { //Hacer un listado de las asignaturas que le faltan
+    if (is_true($Qlista)) { //Hacer un listado de las asignaturas que le faltan
         $as = '';
         foreach ($aAsignaturas as $asig) {
             $as .= empty($as) ? '' : " / ";
@@ -188,7 +191,7 @@ if (!empty($a_valores)) {
 }
 
 
-$oHash = new web\Hash();
+$oHash = new Hash();
 $oHash->setCamposForm('sel!scroll_id');
 $a_camposHidden = array(
     'pau' => 'p',
@@ -221,7 +224,7 @@ $oHash->setArraycamposHidden($a_camposHidden);
 <form id='seleccionados' name='seleccionados' action='' method='post'>
     <?= $oHash->getCamposHtml(); ?>
     <?php
-    $oTabla = new web\Lista();
+    $oTabla = new Lista();
     $oTabla->setId_tabla('asig_faltan_select');
     $oTabla->setCabeceras($a_cabeceras);
     $oTabla->setBotones($a_botones);

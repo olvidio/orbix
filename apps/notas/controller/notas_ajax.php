@@ -1,15 +1,18 @@
 <?php
 
-use actividades\model\entity\GestorActividad;
-use asignaturas\model\entity as asignaturas;
-use notas\model\entity as notas;
-use notas\model\entity\GestorActa;
-use profesores\model\entity as profesores;
-use ubis\model\entity\GestorDelegacion;
-use web\Hash;
 use actividades\model\entity\Actividad;
-use core\ConfigGlobal;
+use actividades\model\entity\GestorActividad;
 use asignaturas\model\entity\Asignatura;
+use asignaturas\model\entity\GestorAsignatura;
+use core\ConfigGlobal;
+use notas\model\entity\GestorActa;
+use notas\model\entity\GestorNota;
+use notas\model\entity\GestorPersonaNotaDB;
+use notas\model\entity\PersonaNotaDB;
+use profesores\model\entity\GestorProfesor;
+use web\Desplegable;
+use web\Hash;
+use ubis\model\entity\GestorDelegacion;
 
 // INICIO Cabecera global de URL de controlador *********************************
 require_once("apps/core/global_header.inc");
@@ -35,7 +38,7 @@ switch ($Qque) {
         $GesActas = new GestorActa();
         $cActas = $GesActas->getActas(['acta' => $Qacta]);
         $json = "{\"id_asignatura\":\"no\"}";
-        if (count($cActas) == 1) {
+        if (count($cActas) === 1) {
             $oActa = $cActas[0];
             $f_acta = $oActa->getF_acta()->getFromLocal();
             $id_asignatura = $oActa->getId_asignatura();
@@ -44,13 +47,13 @@ switch ($Qque) {
                 $oActividad = new Actividad($id_activ);
                 $nom_activ = $oActividad->getNom_activ();
                 $id_tipo_actividad = $oActividad->getId_tipo_activ();
-                $epoca = notas\PersonaNotaDB::EPOCA_CA;
-                if ($id_tipo_actividad == 132500) { //sem invierno
-                    $epoca = notas\PersonaNotaDB::EPOCA_INVIERNO;
+                $epoca = PersonaNotaDB::EPOCA_CA;
+                if ($id_tipo_actividad === 132500) { //sem invierno
+                    $epoca = PersonaNotaDB::EPOCA_INVIERNO;
                 }
             } else {
                 $nom_activ = '';
-                $epoca = notas\PersonaNotaDB::EPOCA_OTRO;
+                $epoca = PersonaNotaDB::EPOCA_OTRO;
             }
             // hace falta el id_nivel (para las no opcionales):
             $oAsignatura = new Asignatura($id_asignatura);
@@ -84,18 +87,18 @@ switch ($Qque) {
 
 
         if (!empty($Qf_acta_iso)) { // 3 meses cerca de la fecha del acta.
-            $oF_acta = new \DateTime($Qf_acta_iso);
-            $oData2 = new \DateTime($Qf_acta_iso);
-            $oF_acta->add(new \DateInterval('P3M'));
+            $oF_acta = new DateTime($Qf_acta_iso);
+            $oData2 = new DateTime($Qf_acta_iso);
+            $oF_acta->add(new DateInterval('P3M'));
             $f_fin_iso = $oF_acta->format('Y-m-d');
-            $oData2->sub(new \DateInterval('P3M'));
+            $oData2->sub(new DateInterval('P3M'));
             $f_ini_iso = $oData2->format('Y-m-d');
         } else { // desde hoy, 10 meses antes.
             $oData = new web\DateTimeLocal();
             $oData2 = clone $oData;
-            $oData->add(new \DateInterval('P1M'));
+            $oData->add(new DateInterval('P1M'));
             $f_fin_iso = $oData->format('Y-m-d');
-            $oData2->sub(new \DateInterval('P10M'));
+            $oData2->sub(new DateInterval('P10M'));
             $f_ini_iso = $oData2->format('Y-m-d');
         }
         $aWhere = array();
@@ -114,7 +117,7 @@ switch ($Qque) {
             $nom_activ = $oActividad->getNom_activ();
             $aActividades[$id_actividad] = $nom_activ;
         }
-        $oDesplActividades = new web\Desplegable();
+        $oDesplActividades = new Desplegable();
         $oDesplActividades->setOpciones($aActividades);
         $oDesplActividades->setBlanco(1);
         $oDesplActividades->setNombre('id_activ_sel');
@@ -154,10 +157,10 @@ switch ($Qque) {
         $aWhere['id_nivel'] = '3000,5000';
         $aOperador['id_nivel'] = 'BETWEEN';
         $aWhere['_ordre'] = 'nombre_corto';
-        $GesAsignaturas = new asignaturas\GestorAsignatura();
+        $GesAsignaturas = new GestorAsignatura();
         $cOpcionales = $GesAsignaturas->getAsignaturas($aWhere, $aOperador);
         // Asignaturas opcionales superadas
-        $GesNotas = new notas\GestorNota();
+        $GesNotas = new GestorNota();
         $cSuperadas = $GesNotas->getNotas(array('superada' => 't'));
         $cond = '';
         $c = 0;
@@ -173,7 +176,7 @@ switch ($Qque) {
         $aWhere['id_nom'] = $Qid_nom;
         $aWhere['id_asignatura'] = 3000;
         $aOperador['id_asignatura'] = '>';
-        $GesPersonaNotas = new notas\GestorPersonaNotaDB();
+        $GesPersonaNotas = new GestorPersonaNotaDB();
         $cAsignaturasOpSuperadas = $GesPersonaNotas->getPersonaNotas($aWhere, $aOperador);
         $aOpSuperadas = array();
         foreach ($cAsignaturasOpSuperadas as $oAsignatura) {
@@ -189,7 +192,7 @@ switch ($Qque) {
             $aFaltan[$id_asignatura] = $nombre_corto;
         }
 
-        $oDesplPosiblesOpcionales = new web\Desplegable();
+        $oDesplPosiblesOpcionales = new Desplegable();
         $oDesplPosiblesOpcionales->setNombre('id_asignatura');
         $oDesplPosiblesOpcionales->setOpciones($aFaltan);
 //		$oDesplPosiblesOpcionales->setOpcion_sel($Qid_asignatura);
@@ -198,7 +201,7 @@ switch ($Qque) {
         break;
 
     case 'posibles_preceptores':
-        $GesProfes = new profesores\GestorProfesor();
+        $GesProfes = new GestorProfesor();
         $oDesplProfesores = $GesProfes->getListaProfesores();
         $oDesplProfesores->setBlanco(1);
         $oDesplProfesores->setNombre('id_preceptor');
@@ -219,7 +222,7 @@ switch ($Qque) {
         }
         uasort($aProfesores,'core\strsinacentocmp');
 
-        $oDesplProfesores = new web\Desplegable();
+        $oDesplProfesores = new Desplegable();
         $oDesplProfesores->setOpciones($aProfesores);
         $oDesplProfesores->setBlanco(1);
         $oDesplProfesores->setNombre('id_preceptor');

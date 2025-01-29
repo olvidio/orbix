@@ -2,8 +2,10 @@
 
 namespace permisos\model\entity;
 
-use core;
-use web;
+use core\ClaseGestor;
+use core\Condicion;
+use core\Set;
+use web\Desplegable;
 
 /**
  * GestorModuloInstalado
@@ -16,7 +18,7 @@ use web;
  * @version 1.0
  * @created 15/12/2014
  */
-class GestorModuloInstalado extends core\ClaseGestor
+class GestorModuloInstalado extends ClaseGestor
 {
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
@@ -41,7 +43,7 @@ class GestorModuloInstalado extends core\ClaseGestor
      * retorna un objecte del tipus Desplegable
      * Els posibles modulos
      *
-     * @return array Una Llista
+     * @return array|false
      */
     function getListaModulosInstalados()
     {
@@ -55,19 +57,19 @@ class GestorModuloInstalado extends core\ClaseGestor
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
             return false;
         }
-        return new web\Desplegable('', $oDblSt, '', true);
+        return new Desplegable('', $oDblSt, '', true);
     }
 
     /**
      * retorna l'array d'objectes de tipus ModuloInstalado
      *
      * @param string sQuery la query a executar.
-     * @return array Una col·lecció d'objectes de tipus ModuloInstalado
+     * @return array|false
      */
     function getModulosInstaladosQuery($sQuery = '')
     {
         $oDbl = $this->getoDbl();
-        $oModuloInstaladoSet = new core\Set();
+        $oModuloInstaladoSet = new Set();
         if (($oDbl->query($sQuery)) === false) {
             $sClauError = 'GestorModuloInstalado.query';
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
@@ -86,23 +88,23 @@ class GestorModuloInstalado extends core\ClaseGestor
      *
      * @param array aWhere associatiu amb els valors de les variables amb les quals farem la query
      * @param array aOperators associatiu amb els valors dels operadors que cal aplicar a cada variable
-     * @return array Una col·lecció d'objectes de tipus ModuloInstalado
+     * @return array|void
      */
     function getModulosInstalados($aWhere = array(), $aOperators = array())
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
-        $oModuloInstaladoSet = new core\Set();
-        $oCondicion = new core\Condicion();
+        $oModuloInstaladoSet = new Set();
+        $oCondicion = new Condicion();
         $aCondi = array();
         foreach ($aWhere as $camp => $val) {
-            if ($camp == '_ordre') continue;
+            if ($camp === '_ordre') continue;
             $sOperador = isset($aOperators[$camp]) ? $aOperators[$camp] : '';
             if ($a = $oCondicion->getCondicion($camp, $sOperador, $val)) $aCondi[] = $a;
             // operadores que no requieren valores
-            if ($sOperador == 'BETWEEN' || $sOperador == 'IS NULL' || $sOperador == 'IS NOT NULL' || $sOperador == 'OR') unset($aWhere[$camp]);
-            if ($sOperador == 'IN' || $sOperador == 'NOT IN') unset($aWhere[$camp]);
-            if ($sOperador == 'TXT') unset($aWhere[$camp]);
+            if ($sOperador === 'BETWEEN' || $sOperador === 'IS NULL' || $sOperador === 'IS NOT NULL' || $sOperador === 'OR') unset($aWhere[$camp]);
+            if ($sOperador === 'IN' || $sOperador === 'NOT IN') unset($aWhere[$camp]);
+            if ($sOperador === 'TXT') unset($aWhere[$camp]);
         }
         $sCondi = implode(' AND ', $aCondi);
         if ($sCondi != '') $sCondi = " WHERE " . $sCondi;

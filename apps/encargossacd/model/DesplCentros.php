@@ -2,14 +2,14 @@
 
 namespace encargossacd\model;
 
+use web\Desplegable;
 use ubis\model\entity\GestorCentroDl;
 use ubis\model\entity\GestorCentroEllas;
-use web\Desplegable;
 
 class DesplCentros
 {
 
-    private $id_zona = null;
+    private int|null $id_zona = null;
     public function getDesplPorFiltro($filtro_ctr)
     {
         switch ($filtro_ctr) {
@@ -82,10 +82,7 @@ class DesplCentros
         return $oDesplCtr;
     }
 
-    /**
-     * @param mixed $id_zona
-     */
-    public function setIdZona($id_zona): void
+    public function setIdZona(?int $id_zona): void
     {
         $this->id_zona = $id_zona;
     }

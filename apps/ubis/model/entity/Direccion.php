@@ -1,7 +1,7 @@
 <?php
 namespace ubis\model\entity;
 
-use core;
+use core\ClasePropiedades;
 
 /**
  * Clase que implementa la entidad u_direcciones_global
@@ -12,7 +12,7 @@ use core;
  * @version 1.0
  * @created 01/10/2010
  */
-class Direccion extends core\ClasePropiedades
+class Direccion extends ClasePropiedades
 {
     /* ATRIBUTOS ----------------------------------------------------------------- */
     /* ATRIBUTOS QUE NO SON CAMPOS------------------------------------------------- */

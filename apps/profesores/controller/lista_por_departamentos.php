@@ -12,9 +12,11 @@
 
 // INICIO Cabecera global de URL de controlador *********************************
 use core\ConfigGlobal;
-use ubis\model\entity\GestorDelegacion;
+use core\ViewPhtml;
+use core\ViewTwig;
 use web\Desplegable;
 use web\Hash;
+use ubis\model\entity\GestorDelegacion;
 
 require_once("apps/core/global_header.inc");
 // Archivos requeridos por esta url **********************************************
@@ -58,7 +60,7 @@ if (ConfigGlobal::mi_ambito() === 'rstgr' && $Qfiltro != 1) {
         'oCuadros' => $oCuadros,
     ];
 
-    $oView = new core\ViewTwig('ubis/controller');
+    $oView = new ViewTwig('ubis/controller');
     $oView->renderizar('dl_rstgr_que.html.twig', $a_campos);
     exit();
 }
@@ -154,5 +156,5 @@ $a_campos = [
     'rstgr' => $rstgr,
 ];
 
-$oView = new core\View('profesores/controller');
+$oView = new ViewPhtml('profesores/controller');
 $oView->renderizar('lista_por_departamentos.phtml', $a_campos);

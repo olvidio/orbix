@@ -162,7 +162,7 @@ abstract class DBAbstract
      *
      * @param  $db 'comun'|'sfsv'
      */
-    protected function addPermisoGlobal($db)
+    protected function addPermisoGlobal(string $db)
     {
         switch ($db) {
             case 'comun':

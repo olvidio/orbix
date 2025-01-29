@@ -3,10 +3,10 @@
 use actividades\model\ActividadLugar;
 use actividadtarifas\model\entity\GestorTipoActivTarifa;
 use core\ConfigGlobal;
-use ubis\model\entity\GestorDelegacion;
 use web\Desplegable;
 use web\Lista;
 use web\TiposActividades;
+use ubis\model\entity\GestorDelegacion;
 use function core\is_true;
 
 /**

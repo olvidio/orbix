@@ -2,7 +2,9 @@
 
 namespace zonassacd\model\entity;
 
-use core;
+use core\ClasePropiedades;
+use core\DatosCampo;
+use core\Set;
 
 /**
  * Fitxer amb la Classe que accedeix a la taula zonas
@@ -23,7 +25,7 @@ use core;
  * @version 1.0
  * @created 01/03/2019
  */
-class Zona extends core\ClasePropiedades
+class Zona extends ClasePropiedades
 {
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
@@ -108,7 +110,7 @@ class Zona extends core\ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'id_zona') && $val_id !== '') $this->iid_zona = (int)$val_id;
+                if (($nom_id === 'id_zona') && $val_id !== '') $this->iid_zona = (int)$val_id;
             }
         } else {
             if (isset($a_id) && $a_id !== '') {
@@ -185,7 +187,7 @@ class Zona extends core\ClasePropiedades
                     return FALSE;
                 }
             }
-            $this->id_zona = $oDbl->lastInsertId('zonas_id_zona_seq');
+            $this->iid_zona = $oDbl->lastInsertId('zonas_id_zona_seq');
         }
         $this->setAllAtributes($aDades);
         return TRUE;
@@ -253,7 +255,7 @@ class Zona extends core\ClasePropiedades
      *
      * @param array $aDades
      */
-    function setAllAtributes($aDades)
+    function setAllAtributes(array $aDades)
     {
         if (!is_array($aDades)) return;
         if (array_key_exists('id_zona', $aDades)) $this->setId_zona($aDades['id_zona']);
@@ -317,7 +319,7 @@ class Zona extends core\ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'id_zona') && $val_id !== '') $this->iid_zona = (int)$val_id;
+                if (($nom_id === 'id_zona') && $val_id !== '') $this->iid_zona = (int)$val_id;
             }
         }
     }
@@ -444,7 +446,7 @@ class Zona extends core\ClasePropiedades
      */
     function getDatosCampos()
     {
-        $oZonaSet = new core\Set();
+        $oZonaSet = new Set();
 
         $oZonaSet->add($this->getDatosNombre_zona());
         $oZonaSet->add($this->getDatosOrden());
@@ -458,12 +460,12 @@ class Zona extends core\ClasePropiedades
      * Recupera les propietats de l'atribut snombre_zona de Zona
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosNombre_zona()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'nombre_zona'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'nombre_zona'));
         $oDatosCampo->setEtiqueta(_("nombre zona"));
         $oDatosCampo->setTipo('texto');
         $oDatosCampo->setArgument('30');
@@ -474,12 +476,12 @@ class Zona extends core\ClasePropiedades
      * Recupera les propietats de l'atribut iorden de Zona
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosOrden()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'orden'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'orden'));
         $oDatosCampo->setEtiqueta(_("orden"));
         $oDatosCampo->setTipo('texto');
         $oDatosCampo->setArgument('5');
@@ -490,12 +492,12 @@ class Zona extends core\ClasePropiedades
      * Recupera les propietats de l'atribut iid_grupo de Zona
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosId_grupo()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_grupo'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_grupo'));
         $oDatosCampo->setEtiqueta(_("grupo"));
         $oDatosCampo->setTipo('opciones');
         $oDatosCampo->setArgument('zonassacd\model\entity\ZonaGrupo'); // nombre del objeto relacionado
@@ -508,12 +510,12 @@ class Zona extends core\ClasePropiedades
      * Recupera les propietats de l'atribut iid_nom de Zona
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosId_nom()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_nom'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_nom'));
         $oDatosCampo->setEtiqueta(_("jefe zona"));
         $oDatosCampo->setTipo('opciones');
         $oDatosCampo->setArgument('personas\model\entity\PersonaDl'); // nombre del objeto relacionado

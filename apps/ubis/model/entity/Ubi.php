@@ -2,7 +2,6 @@
 
 namespace ubis\model\entity;
 
-use core;
 use core\ConfigGlobal;
 
 /**

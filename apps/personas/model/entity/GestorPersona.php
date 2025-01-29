@@ -2,7 +2,7 @@
 
 namespace personas\model\entity;
 
-use core;
+use core\ClaseGestor;
 
 /**
  * GestorPersona
@@ -15,7 +15,7 @@ use core;
  * @version 1.0
  * @created 11/03/2014
  */
-class GestorPersona extends core\ClaseGestor
+class GestorPersona extends ClaseGestor
 {
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
@@ -39,7 +39,7 @@ class GestorPersona extends core\ClaseGestor
      *
      * @param array $aClases
      */
-    public function setClases($aClases)
+    public function setClases(array $aClases)
     {
         $this->aClases = $aClases;
     }

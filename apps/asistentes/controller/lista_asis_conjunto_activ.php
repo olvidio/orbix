@@ -1,7 +1,8 @@
 <?php
 
-use actividades\model\entity as actividades;
+use actividades\model\entity\ActividadAll;
 use asistentes\model\ListaPlazas;
+use core\ConfigGlobal;
 use web\Periodo;
 
 /**
@@ -29,7 +30,7 @@ require_once("apps/core/global_object.inc");
 $Qque = (string)filter_input(INPUT_POST, 'que');
 
 $Qstatus = (integer)filter_input(INPUT_POST, 'status');
-$Qstatus = empty($Qstatus) ? actividades\ActividadAll::STATUS_ACTUAL : $Qstatus;
+$Qstatus = empty($Qstatus) ? ActividadAll::STATUS_ACTUAL : $Qstatus;
 $Qid_tipo_activ = (string)filter_input(INPUT_POST, 'id_tipo_activ');
 $Qid_ubi = (integer)filter_input(INPUT_POST, 'id_ubi');
 $Qnom_activ = (string)filter_input(INPUT_POST, 'nom_activ');
@@ -50,7 +51,7 @@ $aWhere = array();
 $aOperador = [];
 
 // Status
-if ($Qstatus != actividades\ActividadAll::STATUS_ALL) {
+if ($Qstatus != ActividadAll::STATUS_ALL) {
     $aWhere['status'] = $Qstatus;
 }
 // Id tipo actividad
@@ -123,7 +124,7 @@ $aWhere['_ordre'] = 'f_ini';
 
 //Para ver el tema plazas. Dos tablas:
 //Listar primero las que organiza la dl, después el resto
-$mi_dele = core\ConfigGlobal::mi_delef();
+$mi_dele = ConfigGlobal::mi_delef();
 
 /////////////// actividades de mi dl ///////////////////
 // si se ha puesto en condición de búsqueda

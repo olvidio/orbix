@@ -10,14 +10,15 @@ use actividadtarifas\model\entity\TipoTarifa;
 use casas\model\entity\Ingreso;
 use core\ConfigGlobal;
 use permisos\model\PermisosActividadesTrue;
+use web\Hash;
+use web\Lista;
+use web\Periodo;
+use web\TiposActividades;
 use procesos\model\entity\GestorActividadProcesoTarea;
 use ubis\model\entity\CasaDl;
 use ubis\model\entity\CentroDl;
 use ubis\model\entity\GestorTarifaUbi;
 use usuarios\model\entity\Role;
-use web\Lista;
-use web\Periodo;
-use web\TiposActividades;
 
 require_once("apps/core/global_header.inc");
 // Archivos requeridos por esta url **********************************************
@@ -83,7 +84,7 @@ switch ($Qque) {
         $num_asistentes = $oIngreso->getNum_asistentes();
         $observ = $oIngreso->getObserv();
 
-        $oHash = new web\Hash();
+        $oHash = new Hash();
         $oHash->setCamposForm('id_tarifa!precio!ingresos!num_asistentes!observ');
         $oHash->setCamposNo('que');
         $a_camposHidden = array(
@@ -500,13 +501,13 @@ switch ($Qque) {
                     $h_fin = substr($h_fin, 0, (strlen($h_fin) - 3));
                 }
                 // mirar permisos.
-                if (core\ConfigGlobal::is_app_installed('procesos')) {
+                if (ConfigGlobal::is_app_installed('procesos')) {
                     $_SESSION['oPermActividades']->setActividad($id_activ, $id_tipo_activ, $dl_org);
                     $oPermActiv = $_SESSION['oPermActividades']->getPermisoActual('datos');
                     $oPermCtr = $_SESSION['oPermActividades']->getPermisoActual('ctr');
                     $oPermSacd = $_SESSION['oPermActividades']->getPermisoActual('sacd');
                 } else {
-                    $oPermActividades = new PermisosActividadesTrue(core\ConfigGlobal::mi_id_usuario());
+                    $oPermActividades = new PermisosActividadesTrue(ConfigGlobal::mi_id_usuario());
                     $oPermActiv = $oPermActividades->getPermisoActual('datos');
                     $oPermCtr = $oPermActividades->getPermisoActual('ctr');
                     $oPermSacd = $oPermActividades->getPermisoActual('sacd');
@@ -537,7 +538,6 @@ switch ($Qque) {
                 if ($oPermCtr->have_perm_action('ver')) {
                     $oEnc = new GestorCentroEncargado();
                     foreach ($oEnc->getCentrosEncargadosActividad($id_activ) as $oCentroEncargado) {
-                        ;
                         $id_ctr = $oCentroEncargado->getId_ubi();
                         $Centro = new CentroDl($id_ctr);
                         $nombre_ctr = $Centro->getNombre_ubi();
@@ -546,14 +546,14 @@ switch ($Qque) {
                 }
 
                 $txt_sacds = '';
-                if (core\ConfigGlobal::is_app_installed('actividadessacd')) {
+                if (ConfigGlobal::is_app_installed('actividadessacd')) {
                     // sólo si tiene permiso
                     $aprobado = TRUE;
                     if (ConfigGlobal::mi_sfsv() == 2) {
                         $gesActividadProcesoTarea = new GestorActividadProcesoTarea();
                         $aprobado = $gesActividadProcesoTarea->getSacdAprobado($id_activ);
                     }
-                    if (!core\ConfigGlobal::is_app_installed('procesos')
+                    if (!ConfigGlobal::is_app_installed('procesos')
                         || ($oPermSacd->have_perm_activ('ver') === true && $aprobado)) {
                         $gesCargosActividad = new actividadcargos\model\entity\GestorActividadCargo();
                         foreach ($gesCargosActividad->getActividadSacds($id_activ) as $oPersona) {

@@ -2,7 +2,10 @@
 
 namespace cambios\model\entity;
 
-use core;
+use core\ClasePropiedades;
+use core\DatosCampo;
+use core\Set;
+use function core\is_true;
 
 /**
  * Fitxer amb la Classe que accedeix a la taula av_cambios_usuario_objeto_pref
@@ -23,7 +26,7 @@ use core;
  * @version 1.0
  * @created 17/4/2019
  */
-class CambioUsuarioObjetoPref extends core\ClasePropiedades
+class CambioUsuarioObjetoPref extends ClasePropiedades
 {
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
@@ -143,7 +146,7 @@ class CambioUsuarioObjetoPref extends core\ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'id_item_usuario_objeto') && $val_id !== '') $this->iid_item_usuario_objeto = (int)$val_id; 
+                if (($nom_id === 'id_item_usuario_objeto') && $val_id !== '') $this->iid_item_usuario_objeto = (int)$val_id;
             }
         } else {
             if (isset($a_id) && $a_id !== '') {
@@ -184,17 +187,17 @@ class CambioUsuarioObjetoPref extends core\ClasePropiedades
         $aDades['id_pau'] = $this->sid_pau;
         array_walk($aDades, 'core\poner_null');
         //para el caso de los boolean FALSE, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
-        if (core\is_true($aDades['aviso_off'])) {
+        if (is_true($aDades['aviso_off'])) {
             $aDades['aviso_off'] = 'true';
         } else {
             $aDades['aviso_off'] = 'false';
         }
-        if (core\is_true($aDades['aviso_on'])) {
+        if (is_true($aDades['aviso_on'])) {
             $aDades['aviso_on'] = 'true';
         } else {
             $aDades['aviso_on'] = 'false';
         }
-        if (core\is_true($aDades['aviso_outdate'])) {
+        if (is_true($aDades['aviso_outdate'])) {
             $aDades['aviso_outdate'] = 'true';
         } else {
             $aDades['aviso_outdate'] = 'false';
@@ -247,7 +250,7 @@ class CambioUsuarioObjetoPref extends core\ClasePropiedades
                     return FALSE;
                 }
             }
-            $this->id_item_usuario_objeto = $oDbl->lastInsertId('av_cambios_usuario_objeto_pref_id_item_usuario_objeto_seq');
+            $this->iid_item_usuario_objeto = $oDbl->lastInsertId('av_cambios_usuario_objeto_pref_id_item_usuario_objeto_seq');
         }
         $this->setAllAtributes($aDades);
         return TRUE;
@@ -331,7 +334,7 @@ class CambioUsuarioObjetoPref extends core\ClasePropiedades
      *
      * @param array $aDades
      */
-    function setAllAtributes($aDades)
+    function setAllAtributes(array $aDades)
     {
         if (!is_array($aDades)) return;
         if (array_key_exists('id_item_usuario_objeto', $aDades)) $this->setId_item_usuario_objeto($aDades['id_item_usuario_objeto']);
@@ -407,7 +410,7 @@ class CambioUsuarioObjetoPref extends core\ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'id_item_usuario_objeto') && $val_id !== '') $this->iid_item_usuario_objeto = (int)$val_id; 
+                if (($nom_id === 'id_item_usuario_objeto') && $val_id !== '') $this->iid_item_usuario_objeto = (int)$val_id;
             }
         }
     }
@@ -541,7 +544,7 @@ class CambioUsuarioObjetoPref extends core\ClasePropiedades
     /**
      * @param boolean $baviso_off
      */
-    public function setAviso_off($baviso_off)
+    public function setAviso_off(bool $baviso_off)
     {
         $this->baviso_off = $baviso_off;
     }
@@ -560,7 +563,7 @@ class CambioUsuarioObjetoPref extends core\ClasePropiedades
     /**
      * @param boolean $baviso_on
      */
-    public function setAviso_on($baviso_on)
+    public function setAviso_on(bool $baviso_on)
     {
         $this->baviso_on = $baviso_on;
     }
@@ -579,7 +582,7 @@ class CambioUsuarioObjetoPref extends core\ClasePropiedades
     /**
      * @param boolean $baviso_outdate
      */
-    public function setAviso_outdate($baviso_outdate)
+    public function setAviso_outdate(bool $baviso_outdate)
     {
         $this->baviso_outdate = $baviso_outdate;
     }
@@ -660,7 +663,7 @@ class CambioUsuarioObjetoPref extends core\ClasePropiedades
      */
     function getDatosCampos()
     {
-        $oCambioUsuarioObjetoPrefSet = new core\Set();
+        $oCambioUsuarioObjetoPrefSet = new Set();
 
         $oCambioUsuarioObjetoPrefSet->add($this->getDatosId_usuario());
         $oCambioUsuarioObjetoPrefSet->add($this->getDatosDl_org());
@@ -680,12 +683,12 @@ class CambioUsuarioObjetoPref extends core\ClasePropiedades
      * Recupera les propietats de l'atribut iid_usuario de CambioUsuarioObjetoPref
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosId_usuario()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_usuario'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_usuario'));
         $oDatosCampo->setEtiqueta(_("id_usuario"));
         return $oDatosCampo;
     }
@@ -694,12 +697,12 @@ class CambioUsuarioObjetoPref extends core\ClasePropiedades
      * Recupera les propietats de l'atribut sdl_org de CambioUsuarioObjetoPref
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosDl_org()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'dl_org'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'dl_org'));
         $oDatosCampo->setEtiqueta(_("dl_org"));
         return $oDatosCampo;
     }
@@ -708,12 +711,12 @@ class CambioUsuarioObjetoPref extends core\ClasePropiedades
      * Recupera les propietats de l'atribut sid_tipo_activ_txt de CambioUsuarioObjetoPref
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosId_tipo_activ_txt()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_tipo_activ_txt'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_tipo_activ_txt'));
         $oDatosCampo->setEtiqueta(_("id_tipo_activ_txt"));
         return $oDatosCampo;
     }
@@ -722,12 +725,12 @@ class CambioUsuarioObjetoPref extends core\ClasePropiedades
      * Recupera les propietats de l'atribut id_fase_ref de CambioUsuarioObjetoPref
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosId_fase_ref()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_fase_ref'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_fase_ref'));
         $oDatosCampo->setEtiqueta(_("Fase de referencia"));
         return $oDatosCampo;
     }
@@ -736,12 +739,12 @@ class CambioUsuarioObjetoPref extends core\ClasePropiedades
      * Recupera les propietats de l'atribut aviso_off de CambioUsuarioObjetoPref
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosAviso_off()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'aviso_off'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'aviso_off'));
         $oDatosCampo->setEtiqueta(_("aviso_off"));
         return $oDatosCampo;
     }
@@ -750,12 +753,12 @@ class CambioUsuarioObjetoPref extends core\ClasePropiedades
      * Recupera les propietats de l'atribut aviso_on de CambioUsuarioObjetoPref
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosAviso_on()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'aviso_on'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'aviso_on'));
         $oDatosCampo->setEtiqueta(_("aviso_on"));
         return $oDatosCampo;
     }
@@ -764,12 +767,12 @@ class CambioUsuarioObjetoPref extends core\ClasePropiedades
      * Recupera les propietats de l'atribut aviso_outdate de CambioUsuarioObjetoPref
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosAviso_outdate()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'aviso_outdate'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'aviso_outdate'));
         $oDatosCampo->setEtiqueta(_("aviso_outdate"));
         return $oDatosCampo;
     }
@@ -778,12 +781,12 @@ class CambioUsuarioObjetoPref extends core\ClasePropiedades
      * Recupera les propietats de l'atribut sobjeto de CambioUsuarioObjetoPref
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosObjeto()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'objeto'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'objeto'));
         $oDatosCampo->setEtiqueta(_("objeto"));
         return $oDatosCampo;
     }
@@ -792,12 +795,12 @@ class CambioUsuarioObjetoPref extends core\ClasePropiedades
      * Recupera les propietats de l'atribut iaviso_tipo de CambioUsuarioObjetoPref
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosAviso_tipo()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'aviso_tipo'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'aviso_tipo'));
         $oDatosCampo->setEtiqueta(_("aviso_tipo"));
         return $oDatosCampo;
     }
@@ -806,12 +809,12 @@ class CambioUsuarioObjetoPref extends core\ClasePropiedades
      * Recupera les propietats de l'atribut sid_pau de CambioUsuarioObjetoPref
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosId_pau()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_pau'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_pau'));
         $oDatosCampo->setEtiqueta(_("id_pau"));
         return $oDatosCampo;
     }

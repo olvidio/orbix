@@ -8,11 +8,11 @@ use core\DBPropiedades;
 use Exception;
 use personas\model\entity\Persona;
 use personas\model\entity\TrasladoDl;
+use web\DateTimeLocal;
 use tablonanuncios\domain\AnuncioId;
 use tablonanuncios\domain\entity\Anuncio;
 use tablonanuncios\domain\repositories\AnuncioRepository;
 use ubis\model\entity\GestorDelegacion;
-use web\DateTimeLocal;
 
 class CertificadoEnviar
 {

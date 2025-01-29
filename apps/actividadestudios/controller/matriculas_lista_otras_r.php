@@ -2,11 +2,10 @@
 
 use actividades\model\entity\Actividad;
 use asignaturas\model\entity\GestorAsignatura;
-use core\ConfigGlobal;
+use core\ViewPhtml;
 use notas\model\entity\GestorPersonaNotaOtraRegionStgrDB;
 use personas\model\entity\GestorPersonaStgr;
 use personas\model\entity\Persona;
-use ubis\model\entity\GestorDelegacion;
 use web\Hash;
 use web\Lista;
 use web\Posicion;
@@ -201,7 +200,7 @@ $oTabla->setBotones($a_botones);
 $oTabla->setDatos($a_valores);
 
 
-$oHashApellidos = new web\Hash();
+$oHashApellidos = new Hash();
 $oHashApellidos->setCamposForm('apellido1');
 $a_camposHiddenP = array();
 $oHashApellidos->setArraycamposHidden($a_camposHiddenP);
@@ -217,5 +216,5 @@ $a_campos = ['oPosicion' => $oPosicion,
     'Qapellido1' => $Qapellido1,
 ];
 
-$oView = new core\View('actividadestudios/controller');
+$oView = new ViewPhtml('actividadestudios/controller');
 $oView->renderizar('matriculas_otras_r.phtml', $a_campos);

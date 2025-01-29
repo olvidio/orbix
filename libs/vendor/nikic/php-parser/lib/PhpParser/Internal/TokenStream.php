@@ -109,7 +109,7 @@ class TokenStream {
 
         if (!$tokens[$pos]->is($skipTokenType)) {
             // Shouldn't happen. The skip token MUST be there
-            throw new \Exception('Encountered unexpected token');
+            throw new Exception('Encountered unexpected token');
         }
         $pos--;
 
@@ -127,7 +127,7 @@ class TokenStream {
 
         if (!$tokens[$pos]->is($skipTokenType)) {
             // Shouldn't happen. The skip token MUST be there
-            throw new \Exception('Encountered unexpected token');
+            throw new Exception('Encountered unexpected token');
         }
         $pos++;
 

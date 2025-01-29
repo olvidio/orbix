@@ -6,6 +6,7 @@
  */
 
 use core\ConfigGlobal;
+use web\Hash;
 
 // para que funcione bien la seguridad
 $_POST = $_REQUEST;
@@ -141,7 +142,7 @@ switch ($Qact) {
         break;
     case 'adjuntar':
         $url = ConfigGlobal::getWeb() . '/apps/ubis/controller/plano_bytea.php';
-        $oHashComprobar = new web\Hash();
+        $oHashComprobar = new Hash();
         $oHashComprobar->setUrl($url);
         /*
         $a_camposHidden = array(
@@ -154,7 +155,7 @@ switch ($Qact) {
         $oHashComprobar->setCamposForm('id_direccion!obj_dir!act');
         $h = $oHashComprobar->linkSinVal();
 
-        $oHash = new web\Hash();
+        $oHash = new Hash();
         $a_camposHidden = array(
             'id_direccion' => $Qid_direccion,
             'obj_dir' => $Qobj_dir,

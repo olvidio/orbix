@@ -11,6 +11,10 @@
  */
 
 // INICIO Cabecera global de URL de controlador *********************************
+use core\ConfigGlobal;
+use core\ViewPhtml;
+use web\Hash;
+
 require_once("apps/core/global_header.inc");
 // Archivos requeridos por esta url **********************************************
 
@@ -55,13 +59,13 @@ if (!empty($Qtabla)) {
     $nom_tabla = ucfirst(_("todos"));
 }
 if ($Qque == "telf") {
-    //$action= web\Hash::link(core\ConfigGlobal::getWeb().'/apps/personas/controller/personas_select_telf.php');
-    $action = core\ConfigGlobal::getWeb() . '/apps/personas/controller/personas_select_telf.php';
+    //$action= Hash::link(ConfigGlobal::getWeb().'/apps/personas/controller/personas_select_telf.php');
+    $action = ConfigGlobal::getWeb() . '/apps/personas/controller/personas_select_telf.php';
 } else {
-    //$action= web\Hash::link(core\ConfigGlobal::getWeb().'/apps/personas/controller/personas_select.php');
-    $action = core\ConfigGlobal::getWeb() . '/apps/personas/controller/personas_select.php';
+    //$action= Hash::link(ConfigGlobal::getWeb().'/apps/personas/controller/personas_select.php');
+    $action = ConfigGlobal::getWeb() . '/apps/personas/controller/personas_select.php';
 }
-$oHash = new web\Hash();
+$oHash = new Hash();
 $oHash->setCamposForm('nombre!apellido1!apellido2!centro!exacto!cmb');
 $oHash->setcamposNo('exacto!cmb');
 $a_camposHidden = array(
@@ -93,5 +97,5 @@ $a_campos = [
     'centro' => $Qcentro,
 ];
 
-$oView = new core\View('personas/controller');
+$oView = new ViewPhtml('personas/controller');
 $oView->renderizar('personas_que.phtml', $a_campos);

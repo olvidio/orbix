@@ -1,3 +1,8 @@
+<?php
+
+use core\ConfigGlobal;
+
+?>
 <script>
     fnjs_cerrar = function () {
         $('#div_modificar').html('');
@@ -51,7 +56,7 @@
         $('#div_modificar').height('auto');
         document.getElementById("overlay").style.display = "block";
 
-        var url = '<?= core\ConfigGlobal::getWeb() ?>/apps/ubis/controller/calendario_periodos_ajax.php';
+        var url = '<?= ConfigGlobal::getWeb() ?>/apps/ubis/controller/calendario_periodos_ajax.php';
         if (id_item) {
             var parametros = 'que=form_periodo&id_item=' + id_item + '<?= $h_modificar ?>';
         } else {
@@ -66,7 +71,7 @@
         id_ubi = $('#id_cdc').val();
         year = $('#year').val();
         // obtener el listado de periodos
-        var url = '<?= core\ConfigGlobal::getWeb() ?>/apps/ubis/controller/calendario_periodos_ajax.php';
+        var url = '<?= ConfigGlobal::getWeb() ?>/apps/ubis/controller/calendario_periodos_ajax.php';
         var parametros = 'que=get2&id_ubi=' + id_ubi + '&year=' + year + '<?= $h_ver ?>';
 
         $.ajax({

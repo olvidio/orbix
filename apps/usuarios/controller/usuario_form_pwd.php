@@ -1,7 +1,9 @@
 <?php
 
 use core\ConfigGlobal;
+use core\ViewPhtml;
 use usuarios\model\entity\Usuario;
+use web\Hash;
 
 /**
  * Formulario para cambiar el password por parte del usuario.
@@ -19,7 +21,7 @@ require_once("apps/core/global_object.inc");
 $expire = $_SESSION['session_auth']['expire'];
 
 
-$oMiUsuario = new Usuario(core\ConfigGlobal::mi_id_usuario());
+$oMiUsuario = new Usuario(ConfigGlobal::mi_id_usuario());
 $id_usuario = $oMiUsuario->getId_usuario();
 
 $txt_guardar = _("guardar datos");
@@ -31,7 +33,7 @@ $id_usuario = $oUsuario->getId_usuario();
 $usuario = $oUsuario->getUsuario();
 $pass = $oUsuario->getPassword();
 
-$oHash = new web\Hash();
+$oHash = new Hash();
 $oHash->setCamposForm('que!password!password1');
 $oHash->setcamposNo('que');
 $a_camposHidden = array(
@@ -43,7 +45,7 @@ $a_camposHidden = array(
 $oHash->setArraycamposHidden($a_camposHidden);
 
 $url_usuario_update = ConfigGlobal::getWeb() . '/apps/usuarios/controller/usuario_update.php';
-$oHash2 = new web\Hash();
+$oHash2 = new Hash();
 $oHash2->setUrl($url_usuario_update);
 $oHash2->setCamposForm('que!id_usuario!password');
 $h2 = $oHash2->linkSinVal();
@@ -58,5 +60,5 @@ $a_campos = [
     'txt_ok' => $txt_ok,
 ];
 
-$oView = new core\View('usuarios/controller');
+$oView = new ViewPhtml('usuarios/controller');
 $oView->renderizar('usuario_form_pwd.phtml', $a_campos);

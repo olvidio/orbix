@@ -1,7 +1,8 @@
 <?php
 
-use usuarios\model\entity as usuarios;
-use ubis\model\entity as ubis;
+use core\ConfigGlobal;
+use core\ViewPhtml;
+use usuarios\model\entity\Usuario;
 use web\Hash;
 use function core\is_true;
 
@@ -161,8 +162,8 @@ if ($Qmod == 'nuevo') {
 
 //----------------------------------Permisos según el usuario
 
-$oMiUsuario = new usuarios\Usuario(core\ConfigGlobal::mi_id_usuario());
-$miSfsv = core\ConfigGlobal::mi_sfsv();
+$oMiUsuario = new Usuario(ConfigGlobal::mi_id_usuario());
+$miSfsv = ConfigGlobal::mi_sfsv();
 
 $botones = 0;
 /*
@@ -172,7 +173,7 @@ $botones = 0;
 4: quitar direccion
 */
 if (strstr($Qobj_dir, 'Dl')) {
-    if ($dl == core\ConfigGlobal::mi_delef()) {
+    if ($dl == ConfigGlobal::mi_delef()) {
         // ----- sv sólo a scl -----------------
         if ($_SESSION['oPerm']->have_perm_oficina('scdl')) {
             $botones = "1,4,5";
@@ -221,7 +222,7 @@ $a_camposHidden = array(
 );
 $oHash->setArraycamposHidden($a_camposHidden);
 
-$goInfo = Hash::link(core\ConfigGlobal::getWeb() . '/apps/ubis/controller/info_ubis.php?' . http_build_query(array('id_item' => 1)));
+$goInfo = Hash::link(ConfigGlobal::getWeb() . '/apps/ubis/controller/info_ubis.php?' . http_build_query(array('id_item' => 1)));
 
 $a_campos = ['oPosicion' => $oPosicion,
     'oHash' => $oHash,
@@ -254,5 +255,5 @@ $a_campos = ['oPosicion' => $oPosicion,
     'goInfo' => $goInfo,
 ];
 
-$oView = new core\View('ubis\controller');
+$oView = new ViewPhtml('ubis\controller');
 $oView->renderizar('direccion_form.phtml', $a_campos);

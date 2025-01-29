@@ -2,8 +2,9 @@
 
 namespace actividadestudios\model\entity;
 
-use core;
-use notas\model\entity as notas;
+use core\ClasePropiedades;
+use notas\model\entity\GestorNota;
+use notas\model\entity\GestorPersonaNotaDB;
 
 /**
  *
@@ -13,7 +14,7 @@ use notas\model\entity as notas;
  * @version 1.0
  * @created 17/11/2016
  */
-class PosiblesCa extends core\ClasePropiedades
+class PosiblesCa extends ClasePropiedades
 {
     /* ATRIBUTOS ----------------------------------------------------------------- */
     /**
@@ -40,17 +41,17 @@ class PosiblesCa extends core\ClasePropiedades
      * @param array $aAsignaturas id_asignatura => array(nombre_asignatura, creditos)
      * @return array    [ 'suma'=> suma creditos,  'lista' => array(id_asignatura => datosAsignatura) ]
      */
-    function contar_creditos($id_nom, $aAsignaturas)
+    function contar_creditos(int $id_nom, array $aAsignaturas)
     {
         $suma_creditos = 0;
-        $GesNotas = new notas\GestorNota();
+        $GesNotas = new GestorNota();
         $cNotas = $GesNotas->getNotas(array('superada' => 't'));
         $aSuperadas = array();
         foreach ($cNotas as $oNota) {
             $id_situacion = $oNota->getId_situacion();
             $aSuperadas[$id_situacion] = 't';
         }
-        $GesPersonaNotas = new notas\GestorPersonaNotaDB();
+        $GesPersonaNotas = new GestorPersonaNotaDB();
         $cPersonaNotas = $GesPersonaNotas->getPersonaNotas(array('id_nom' => $id_nom));
         $num_opcionales = 0;
         $todas_asig_p = array();

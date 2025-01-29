@@ -6,6 +6,7 @@ use core\ClasePropiedades;
 use core\ConverterDate;
 use core\DatosCampo;
 use core\Set;
+use NumberFormatter;
 use web\DateTimeLocal;
 use web\NullDateTimeLocal;
 use function core\is_true;
@@ -400,7 +401,7 @@ class PersonaNotaDB extends ClasePropiedades
      *
      * @param array $aDades
      */
-    function setAllAtributes($aDades, $convert = FALSE)
+    function setAllAtributes(array $aDades, $convert = FALSE)
     {
         if (!is_array($aDades)) return;
         if (array_key_exists('id_schema', $aDades)) $this->setId_schema($aDades['id_schema']);
@@ -881,7 +882,7 @@ class PersonaNotaDB extends ClasePropiedades
                 if (is_numeric($num) && is_numeric($max)) {
                     //$a = new \NumberFormatter("es_ES.UTF-8", \NumberFormatter::DECIMAL);
                     // SI dejo el locale en blanco coje el que se ha definido por defecto en el usuario.
-                    $a = new \NumberFormatter("", \NumberFormatter::DECIMAL);
+                    $a = new NumberFormatter("", \NumberFormatter::DECIMAL);
                     $num_local = $a->format($num);
                     $nota_txt = $num_local . '/' . $max;
                     if ($max >= 1) {

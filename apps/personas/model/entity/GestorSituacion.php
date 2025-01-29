@@ -1,8 +1,10 @@
 <?php
 namespace personas\model\entity;
 
-use core;
-use web;
+use core\ClaseGestor;
+use core\Condicion;
+use core\Set;
+use web\Desplegable;
 
 /**
  * GestorSituacion
@@ -15,7 +17,7 @@ use web;
  * @version 1.0
  * @created 18/03/2014
  */
-class GestorSituacion extends core\ClaseGestor
+class GestorSituacion extends ClaseGestor
 {
     /* ATRIBUTOS ----------------------------------------------------------------- */
     /* CONSTRUCTOR -------------------------------------------------------------- */
@@ -36,7 +38,7 @@ class GestorSituacion extends core\ClaseGestor
      * retorna un objecte del tipus Desplegable
      * Els posibles situacions.
      *
-     * @return array Una Llista
+     * @return array|false
      */
     function getListaSituaciones($traslado = FALSE)
     {
@@ -58,19 +60,19 @@ class GestorSituacion extends core\ClaseGestor
             $val = $aClave[1];
             $aOpciones[$clave] = $val;
         }
-        return new web\Desplegable('', $aOpciones, '', true);
+        return new Desplegable('', $aOpciones, '', true);
     }
 
     /**
      * retorna l'array d'objectes de tipus Situacion
      *
      * @param string sQuery la query a executar.
-     * @return array Una col·lecció d'objectes de tipus Situacion
+     * @return array|false
      */
     function getSituacionesQuery($sQuery = '')
     {
         $oDbl = $this->getoDbl();
-        $oSituacionSet = new core\Set();
+        $oSituacionSet = new Set();
         if (($oDbl->query($sQuery)) === false) {
             $sClauError = 'GestorSituacion.query';
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
@@ -89,23 +91,23 @@ class GestorSituacion extends core\ClaseGestor
      *
      * @param array aWhere associatiu amb els valors de les variables amb les quals farem la query
      * @param array aOperators associatiu amb els valors dels operadors que cal aplicar a cada variable
-     * @return array Una col·lecció d'objectes de tipus Situacion
+     * @return array|void
      */
     function getSituaciones($aWhere = array(), $aOperators = array())
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        $oSituacionSet = new core\Set();
-        $oCondicion = new core\Condicion();
+        $oSituacionSet = new Set();
+        $oCondicion = new Condicion();
         $aCondi = array();
         foreach ($aWhere as $camp => $val) {
-            if ($camp == '_ordre') continue;
+            if ($camp === '_ordre') continue;
             $sOperador = isset($aOperators[$camp]) ? $aOperators[$camp] : '';
             if ($a = $oCondicion->getCondicion($camp, $sOperador, $val)) $aCondi[] = $a;
             // operadores que no requieren valores
-            if ($sOperador == 'BETWEEN' || $sOperador == 'IS NULL' || $sOperador == 'IS NOT NULL' || $sOperador == 'OR') unset($aWhere[$camp]);
-            if ($sOperador == 'IN' || $sOperador == 'NOT IN') unset($aWhere[$camp]);
-            if ($sOperador == 'TXT') unset($aWhere[$camp]);
+            if ($sOperador === 'BETWEEN' || $sOperador === 'IS NULL' || $sOperador === 'IS NOT NULL' || $sOperador === 'OR') unset($aWhere[$camp]);
+            if ($sOperador === 'IN' || $sOperador === 'NOT IN') unset($aWhere[$camp]);
+            if ($sOperador === 'TXT') unset($aWhere[$camp]);
         }
         $sCondi = implode(' AND ', $aCondi);
         if ($sCondi != '') $sCondi = " WHERE " . $sCondi;

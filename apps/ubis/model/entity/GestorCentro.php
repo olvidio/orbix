@@ -1,9 +1,11 @@
 <?php
 namespace ubis\model\entity;
 
-use core;
-use web;
+use core\ClaseGestor;
+use core\Condicion;
 use core\ConfigGlobal;
+use core\Set;
+use web\Desplegable;
 
 /**
  * GestorCentro
@@ -16,7 +18,7 @@ use core\ConfigGlobal;
  * @version 1.0
  * @created 28/09/2010
  */
-class GestorCentro extends core\ClaseGestor
+class GestorCentro extends ClaseGestor
 {
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
@@ -50,7 +52,7 @@ class GestorCentro extends core\ClaseGestor
     /**
      * retorna un array Els posibles centres
      *
-     * @return array
+     * @return array|false
      */
     function getArrayCentros()
     {
@@ -82,7 +84,7 @@ class GestorCentro extends core\ClaseGestor
      * retorna un objecte del tipus Desplegable
      * Els posibles centres
      *
-     * @return object Desplegable
+     * @return false|object
      */
     function getListaCentros($sCondicion = '', $orden = '')
     {
@@ -101,7 +103,7 @@ class GestorCentro extends core\ClaseGestor
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
             return false;
         }
-        return new web\Desplegable('', $oDblSt, '', true);
+        return new Desplegable('', $oDblSt, '', true);
     }
 
     /**
@@ -109,7 +111,7 @@ class GestorCentro extends core\ClaseGestor
      * Els posibles centres
      *
      * @param string optional $sCondicion Condició de búsqueda (amb el WHERE).
-     * @return object consulta PDO
+     * @return false|object
      */
     function getPosiblesCentros($sCondicion = '')
     {
@@ -124,7 +126,7 @@ class GestorCentro extends core\ClaseGestor
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
             return false;
         }
-        //return new web\Desplegable('',$oDblSt,'',true);
+        //return new Desplegable('',$oDblSt,'',true);
         return $oDblSt;
     }
 
@@ -132,13 +134,13 @@ class GestorCentro extends core\ClaseGestor
      * retorna l'array d'objectes de tipus Centro
      *
      * @param string sQuery la query a executar.
-     * @return array Una col·lecció d'objectes de tipus Centro
+     * @return array|false
      */
     function getCentrosQuery($sQuery = '')
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        $oCentroSet = new core\Set();
+        $oCentroSet = new Set();
         if (($oDblSt = $oDbl->query($sQuery)) === false) {
             $sClauError = 'GestorCentro.query';
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
@@ -168,23 +170,23 @@ class GestorCentro extends core\ClaseGestor
      *
      * @param array aWhere associatiu amb els valors de les variables amb les quals farem la query
      * @param array aOperators associatiu amb els valors dels operadors que cal aplicar a cada variable
-     * @return array Una col·lecció d'objectes de tipus Centro
+     * @return array|void
      */
     function getCentros($aWhere = array(), $aOperators = array())
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
-        $oCentroSet = new core\Set();
-        $oCondicion = new core\Condicion();
+        $oCentroSet = new Set();
+        $oCondicion = new Condicion();
         $aCondi = array();
         foreach ($aWhere as $camp => $val) {
             if ($camp === '_ordre') continue;
             $sOperador = isset($aOperators[$camp]) ? $aOperators[$camp] : '';
             if ($a = $oCondicion->getCondicion($camp, $sOperador, $val)) $aCondi[] = $a;
             // operadores que no requieren valores
-            if ($sOperador == 'BETWEEN' || $sOperador == 'IS NULL' || $sOperador == 'IS NOT NULL' || $sOperador == 'OR') unset($aWhere[$camp]);
-            if ($sOperador == 'IN' || $sOperador == 'NOT IN') unset($aWhere[$camp]);
-            if ($sOperador == 'TXT') unset($aWhere[$camp]);
+            if ($sOperador === 'BETWEEN' || $sOperador === 'IS NULL' || $sOperador === 'IS NOT NULL' || $sOperador === 'OR') unset($aWhere[$camp]);
+            if ($sOperador === 'IN' || $sOperador === 'NOT IN') unset($aWhere[$camp]);
+            if ($sOperador === 'TXT') unset($aWhere[$camp]);
         }
         $sCondi = implode(' AND ', $aCondi);
         if ($sCondi != '') $sCondi = " WHERE " . $sCondi;

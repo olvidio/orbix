@@ -2,7 +2,9 @@
 
 namespace actividadestudios\model\entity;
 
-use core;
+use core\ClaseGestor;
+use core\Condicion;
+use core\Set;
 use ubis\model\entity\GestorDelegacion;
 
 /**
@@ -16,7 +18,7 @@ use ubis\model\entity\GestorDelegacion;
  * @version 1.0
  * @created 18/11/2014
  */
-class GestorMatricula extends core\ClaseGestor
+class GestorMatricula extends ClaseGestor
 {
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
@@ -38,13 +40,13 @@ class GestorMatricula extends core\ClaseGestor
      * retorna l'array d'objectes de tipus Matricula
      *
      * @param integer id_nom
-     * @return array Una col·lecció d'objectes de tipus Matricula
+     * @return array|false
      */
     function getMatriculasPendientes($id_nom = '')
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        $oMatriculaSet = new core\Set();
+        $oMatriculaSet = new Set();
 
         if (!empty($id_nom)) {
             $sQry = "SELECT * FROM $nom_tabla Where id_nom = $id_nom AND id_situacion IS NULL";
@@ -71,7 +73,7 @@ class GestorMatricula extends core\ClaseGestor
      * retorna l'array d'objectes de tipus Matricula
      *
      * @param string sQuery la query a executar.
-     * @return array Una col·lecció d'objectes de tipus Matricula
+     * @return array|false
      */
     function getMatriculasQuery($sQuery = '')
     {
@@ -79,7 +81,7 @@ class GestorMatricula extends core\ClaseGestor
         $clasename = get_class($this);
         $nomClase = join('', array_slice(explode('\\', $clasename), -1));
 
-        $oMatriculaSet = new core\Set();
+        $oMatriculaSet = new Set();
         if (($oDbl->query($sQuery)) === false) {
             $sClauError = 'GestorMatricula.query';
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
@@ -107,7 +109,7 @@ class GestorMatricula extends core\ClaseGestor
      *
      * @param array aWhere associatiu amb els valors de les variables amb les quals farem la query
      * @param array aOperators associatiu amb els valors dels operadors que cal aplicar a cada variable
-     * @return array Una col·lecció d'objectes de tipus Matricula
+     * @return array|void
      */
     function getMatriculas($aWhere = array(), $aOperators = array())
     {
@@ -116,17 +118,17 @@ class GestorMatricula extends core\ClaseGestor
         $clasename = get_class($this);
         $nomClase = join('', array_slice(explode('\\', $clasename), -1));
 
-        $oMatriculaSet = new core\Set();
-        $oCondicion = new core\Condicion();
+        $oMatriculaSet = new Set();
+        $oCondicion = new Condicion();
         $aCondi = array();
         foreach ($aWhere as $camp => $val) {
-            if ($camp == '_ordre') continue;
+            if ($camp === '_ordre') continue;
             $sOperador = isset($aOperators[$camp]) ? $aOperators[$camp] : '';
             if ($a = $oCondicion->getCondicion($camp, $sOperador, $val)) $aCondi[] = $a;
             // operadores que no requieren valores
-            if ($sOperador == 'BETWEEN' || $sOperador == 'IS NULL' || $sOperador == 'IS NOT NULL' || $sOperador == 'OR') unset($aWhere[$camp]);
-            if ($sOperador == 'IN' || $sOperador == 'NOT IN') unset($aWhere[$camp]);
-            if ($sOperador == 'TXT') unset($aWhere[$camp]);
+            if ($sOperador === 'BETWEEN' || $sOperador === 'IS NULL' || $sOperador === 'IS NOT NULL' || $sOperador === 'OR') unset($aWhere[$camp]);
+            if ($sOperador === 'IN' || $sOperador === 'NOT IN') unset($aWhere[$camp]);
+            if ($sOperador === 'TXT') unset($aWhere[$camp]);
         }
         $sCondi = implode(' AND ', $aCondi);
         if ($sCondi != '') $sCondi = " WHERE " . $sCondi;

@@ -1,5 +1,6 @@
 <?php
 
+use core\ViewTwig;
 use web\Hash;
 
 // INICIO Cabecera global de URL de controlador *********************************
@@ -37,5 +38,5 @@ $a_campos = ['oPosicion' => $oPosicion,
     'txt_eliminar' => $txt_eliminar,
 ];
 
-$oView = new core\ViewTwig('actividades/controller');
+$oView = new ViewTwig('actividades/controller');
 $oView->renderizar('tipo_activ.html.twig', $a_campos);

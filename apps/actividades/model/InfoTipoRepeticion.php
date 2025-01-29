@@ -3,11 +3,11 @@
 namespace actividades\model;
 
 use actividades\model\entity\GestorRepeticion;
-use core;
+use core\DatosInfo;
 
 /* No vale el underscore en el nombre */
 
-class InfoTipoRepeticion extends core\DatosInfo
+class InfoTipoRepeticion extends DatosInfo
 {
 
     public function __construct()

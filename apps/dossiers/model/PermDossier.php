@@ -1,9 +1,9 @@
 <?php
 namespace dossiers\model;
 
-use core;
-use personas\model\entity as personas;
-use web;
+use core\ConfigGlobal;
+use personas\model\entity\Persona;
+use web\TiposActividades;
 use function core\is_true;
 
 /**
@@ -18,7 +18,7 @@ use function core\is_true;
 class PermDossier
 {
 
-    function permiso($r, $rw, $depende, $pau, $id_pau)
+    static function permiso($r, $rw, $depende, $pau, $id_pau)
     {
         /*	$r = número referente al bit de lectura en decimal
 			$rw = número referente al bit de lectura y escritura en decimal
@@ -51,7 +51,7 @@ class PermDossier
 
         if (is_true($depende) && $rta == 3 && $pau === "p") {
             // busco el id_tabla para saber de quién se trata y ver si es de mi oficina.
-            $oPersona = personas\Persona::NewPersona($id_pau);
+            $oPersona = Persona::NewPersona($id_pau);
             if (!is_object($oPersona)) {
                 $msg_err = "<br>$oPersona con id_nom: $id_pau en  " . __FILE__ . ": line " . __LINE__;
                 exit($msg_err);
@@ -115,12 +115,12 @@ class PermDossier
         // actividades (según el tipo: nº) según el tipo de persona de que se trate y
         // quién seamos nosotros.
 
-        $oTiposActividades = new web\TiposActividades();
+        $oTiposActividades = new TiposActividades();
         $a_posibles_tipos = $oTiposActividades->getId_tipoPosibles('^...'); // Que sólo devuelva los tres primeros dígitos
 
         //para no repetir los permisos comunes a sr,sg
         $sf = 2;
-        $sv = core\ConfigGlobal::mi_sfsv();
+        $sv = ConfigGlobal::mi_sfsv();
         $ref_perm_sg = array(
             $sv . "11" => array('nom' => "crt n", 'perm' => 0),
             $sv . "21" => array('nom' => "crt nax", 'perm' => 0),
@@ -508,7 +508,7 @@ class PermDossier
             "psssc" => array('nom' => "sss+ de paso", 'obj' => "PersonaEx&na=sssc", 'perm' => 0),
         );
 
-        $oTipoActiv = new web\TiposActividades($id_tipo_activ);
+        $oTipoActiv = new TiposActividades($id_tipo_activ);
         $asistentes = $oTipoActiv->getAsistentesText();
 
         switch ($asistentes) {

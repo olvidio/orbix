@@ -1,10 +1,10 @@
 <?php
 
 use core\ConfigGlobal;
+use web\Lista;
 use profesores\model\entity\GestorProfesor;
 use profesores\model\entity\GestorProfesorCongreso;
 use profesores\model\entity\ProfesorCongreso;
-use web\Lista;
 
 /**
  * Funciones más comunes de la aplicación

@@ -1,11 +1,18 @@
 <?php
 
+use core\ConfigGlobal;
+use core\ViewPhtml;
 use permisos\model\PermDl;
 use procesos\model\CuadrosFases;
+use procesos\model\entity\GestorPermUsuarioActividad;
 use procesos\model\PermAccion;
 use procesos\model\PermAfectados;
-use procesos\model\entity\GestorPermUsuarioActividad;
-use usuarios\model\entity as usuarios;
+use usuarios\model\entity\GestorPermMenu;
+use usuarios\model\entity\GestorRole;
+use usuarios\model\entity\Grupo;
+use usuarios\model\entity\Usuario;
+use web\Hash;
+use web\Lista;
 
 // INICIO Cabecera global de URL de controlador *********************************
 require_once("apps/core/global_header.inc");
@@ -61,9 +68,9 @@ if (isset($_POST['stack'])) {
 }
 $oPosicion->setParametros(array('id_usuario' => $Qid_usuario), 1);
 
-$oMiUsuario = new usuarios\Usuario(core\ConfigGlobal::mi_id_usuario());
+$oMiUsuario = new Usuario(ConfigGlobal::mi_id_usuario());
 $miRole = $oMiUsuario->getId_role();
-$miSfsv = core\ConfigGlobal::mi_sfsv();
+$miSfsv = ConfigGlobal::mi_sfsv();
 
 if ($Qquien === 'grupo') $obj = 'usuarios\\model\\entity\\Grupo';
 
@@ -84,21 +91,21 @@ switch ($miSfsv) {
         break;
 }
 
-$oGRoles = new usuarios\GestorRole();
+$oGRoles = new GestorRole();
 $oDesplRoles = $oGRoles->getListaRoles($cond_role);
 $oDesplRoles->setNombre('id_role');
 
 $txt_guardar = _("guardar datos grupo");
 if (!empty($Qid_usuario)) {
     $user_que = 'guardar';
-    $oUsuario = new usuarios\Grupo(array('id_usuario' => $Qid_usuario));
+    $oUsuario = new Grupo(array('id_usuario' => $Qid_usuario));
     $id_role = $oUsuario->getId_role();
     $oDesplRoles->setOpcion_sel($id_role);
     $usuario = $oUsuario->getUsuario();
-    $oGesPermMenu = new usuarios\GestorPermMenu();
+    $oGesPermMenu = new GestorPermMenu();
     $oGrupoGrupoPermMenu = $oGesPermMenu->getPermMenus(array('id_usuario' => $Qid_usuario));
 
-    if (core\ConfigGlobal::is_app_installed('procesos')) {
+    if (ConfigGlobal::is_app_installed('procesos')) {
         $oGesPerm = new GestorPermUsuarioActividad();
         $aWhere = ['id_usuario' => $Qid_usuario, '_ordre' => 'dl_propia DESC, id_tipo_activ_txt, afecta_a'];
         $aOperador = [];
@@ -110,7 +117,7 @@ if (!empty($Qid_usuario)) {
     $id_role = '';
     $Qid_usuario = '';
     $usuario = '';
-    if (core\ConfigGlobal::is_app_installed('procesos')) {
+    if (ConfigGlobal::is_app_installed('procesos')) {
         $cUsuarioPerm = [];
     }
 }
@@ -132,7 +139,7 @@ if (!empty($Qid_usuario)) { // si no hay usuario, no puedo poner permisos.
         $a_valores[$i][1] = $oCuadros->lista_txt($menu_perm);
     }
 
-    $oHashPermisos = new web\Hash();
+    $oHashPermisos = new Hash();
     $oHashPermisos->setCamposForm('que!sel');
     $oHashPermisos->setcamposNo('scroll_id!refresh');
     $a_camposHidden = array(
@@ -141,7 +148,7 @@ if (!empty($Qid_usuario)) { // si no hay usuario, no puedo poner permisos.
     );
     $oHashPermisos->setArraycamposHidden($a_camposHidden);
 
-    $oTablaPermMenu = new web\Lista();
+    $oTablaPermMenu = new Lista();
     $oTablaPermMenu->setId_tabla('form_perm_menu');
     $oTablaPermMenu->setCabeceras($a_cabeceras);
     $oTablaPermMenu->setBotones($a_botones);
@@ -149,7 +156,7 @@ if (!empty($Qid_usuario)) { // si no hay usuario, no puedo poner permisos.
 }
 
 
-$oHashG = new web\Hash();
+$oHashG = new Hash();
 $oHashG->setCamposForm('que!usuario');
 $oHashG->setcamposNo('id_ctr!id_sacd!casas!refresh');
 $a_camposHidden = array(
@@ -168,7 +175,7 @@ $a_camposG = [
     'txt_guardar' => $txt_guardar,
 ];
 
-$oView = new core\View('usuarios/controller');
+$oView = new ViewPhtml('usuarios/controller');
 $oView->renderizar('grupo_form.phtml', $a_camposG);
 
 //////////// Permisos de grupos ////////////
@@ -179,12 +186,12 @@ if (!empty($Qid_usuario)) { // si no hay usuario, no puedo poner permisos.
         'oTablaPermMenu' => $oTablaPermMenu,
     ];
 
-    $oView = new core\View('usuarios/controller');
+    $oView = new ViewPhtml('usuarios/controller');
     $oView->renderizar('perm_menu_form.phtml', $a_camposP);
 }
 
 //////////// Permisos en actividades ////////////
-if ((core\ConfigGlobal::is_app_installed('procesos')) && !empty($Qid_usuario)) { // si no hay usuario, no puedo poner permisos.
+if ((ConfigGlobal::is_app_installed('procesos')) && !empty($Qid_usuario)) { // si no hay usuario, no puedo poner permisos.
 
     $a_campos = [
         'quien' => $Qquien,
@@ -196,6 +203,6 @@ if ((core\ConfigGlobal::is_app_installed('procesos')) && !empty($Qid_usuario)) {
         'oPermAccion' => $oPermAccion,
     ];
 
-    $oView = new core\View('usuarios/controller');
+    $oView = new ViewPhtml('usuarios/controller');
     $oView->renderizar('perm_activ_form.phtml', $a_campos);
 }

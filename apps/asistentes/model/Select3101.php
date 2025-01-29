@@ -2,15 +2,19 @@
 
 namespace asistentes\model;
 
-use actividadcargos\model\entity as actividadcargos;
-use actividades\model\entity as actividades;
-use asistentes\model\entity as asistentes;
+use actividadcargos\model\entity\Cargo;
+use actividadcargos\model\entity\GestorActividadCargo;
+use actividades\model\entity\Actividad;
+use actividadplazas\model\GestorResumenPlazas;
+use asistentes\model\entity\Asistente;
+use asistentes\model\entity\GestorAsistente;
 use core\ConfigGlobal;
-use core\View;
-use dossiers\model as dossiers;
-use ubis;
-use web;
-use personas\model\entity as personas;
+use core\ViewPhtml;
+use dossiers\model\PermDossier;
+use personas\model\entity\Persona;
+use ubis\model\entity\Ubi;
+use web\Hash;
+use web\Lista;
 use function core\is_true;
 
 /**
@@ -100,6 +104,7 @@ class Select3101
     // ------ Variables para mantener la selección de la grid al volver atrás
     private $Qid_sel;
     private $Qscroll_id;
+    private mixed $status;
 
     private function incrementa(&$var)
     {
@@ -171,7 +176,7 @@ class Select3101
 
     private function getDatosActividad()
     {
-        $oActividad = new actividades\Actividad($this->id_pau);
+        $oActividad = new Actividad($this->id_pau);
         $this->id_tipo_activ = $oActividad->getId_tipo_activ();
         $this->dl_org = $oActividad->getDl_org();
         $this->plazas_totales = $oActividad->getPlazas();
@@ -183,7 +188,7 @@ class Select3101
     private function getTituloPlazas()
     {
         if (empty($this->plazas_totales)) {
-            $oCasa = ubis\model\entity\Ubi::NewUbi($this->id_ubi);
+            $oCasa = Ubi::NewUbi($this->id_ubi);
             // A veces por error se puede poner una actividad a un ctr...
             if (method_exists($oCasa, 'getPlazas')) {
                 $plazas_max = $oCasa->getPlazas();
@@ -212,7 +217,7 @@ class Select3101
         $a_plazas_resumen = array();
         $a_plazas_conseguidas = array();
 
-        $gesActividadPlazasR = new \actividadplazas\model\GestorResumenPlazas();
+        $gesActividadPlazasR = new GestorResumenPlazas();
         $gesActividadPlazasR->setId_activ($this->id_pau);
 
         $this->a_plazas_conseguidas = array();
@@ -232,17 +237,17 @@ class Select3101
     public function getCargos()
     {
         // Permisos según el tipo de actividad
-        $oPermDossier = new dossiers\PermDossier();
+        $oPermDossier = new PermDossier();
         $this->a_ref_perm = $oPermDossier->perm_pers_activ($this->id_tipo_activ);
 
         // primero el cl:
         // primero los cargos
-        $gesAsistentes = new asistentes\GestorAsistente();
+        $gesAsistentes = new GestorAsistente();
         $c = 0;
         $num = 0;
         $a_valores = array();
         $this->aListaCargos = array();
-        $GesCargosEnActividad = new actividadcargos\GestorActividadCargo();
+        $GesCargosEnActividad = new GestorActividadCargo();
         $cCargosEnActividad = $GesCargosEnActividad->getActividadCargos(array('id_activ' => $this->id_pau));
         $mi_sfsv = ConfigGlobal::mi_sfsv();
         foreach ($cCargosEnActividad as $oActividadCargo) {
@@ -252,20 +257,20 @@ class Select3101
             $id_nom = $oActividadCargo->getId_nom();
             $this->aListaCargos[] = $id_nom;
             $id_cargo = $oActividadCargo->getId_cargo();
-            $oCargo = new actividadcargos\Cargo(array('id_cargo' => $id_cargo));
+            $oCargo = new Cargo(array('id_cargo' => $id_cargo));
             $tipo_cargo = $oCargo->getTipo_cargo();
             // para los sacd en sf
-            if ($tipo_cargo == 'sacd' && $mi_sfsv == 2) {
+            if ($tipo_cargo === 'sacd' && $mi_sfsv == 2) {
                 continue;
             }
 
-            $oPersona = personas\Persona::NewPersona($id_nom);
+            $oPersona = Persona::NewPersona($id_nom);
             if (!is_object($oPersona)) {
                 $this->msg_err .= "<br>";
                 $this->msg_err .= sprintf(_("%s con id_nom: %s. En %s linea %s"), $oPersona, $id_nom, __FILE__, __LINE__);
                 continue;
             }
-            $oCargo = new actividadcargos\Cargo($id_cargo);
+            $oCargo = new Cargo($id_cargo);
 
             $nom = $oPersona->getPrefApellidosNombre();
             $nombre = $oPersona->getNom();
@@ -281,7 +286,6 @@ class Select3101
                 $telfs .= $telfs_fijo ?? '';
                 $telfs .= $telfs_movil ?? '';
             }
-            $mails = '';
             $mails = $oPersona->telecos_persona($id_nom, "e-mail", " / ", "*", FALSE);
 
             $cargo = $oCargo->getCargo();
@@ -302,7 +306,7 @@ class Select3101
             }
 
             // ahora miro si también asiste:
-            $plaza = asistentes\Asistente::PLAZA_PEDIDA;
+            $plaza = Asistente::PLAZA_PEDIDA;
             $aWhere = array('id_activ' => $this->id_pau, 'id_nom' => $id_nom);
             $aOperador = array('id_activ' => '=', 'id_nom' => '=');
             // me aseguro de que no sea un cargo vacio (sin id_nom)
@@ -322,7 +326,7 @@ class Select3101
                 $falta = $oAsistente->getFalta();
                 $est_ok = $oAsistente->getEst_ok();
                 $observ = $oAsistente->getObserv();
-                $plaza = empty($oAsistente->getPlaza()) ? asistentes\Asistente::PLAZA_PEDIDA : $oAsistente->getPlaza();
+                $plaza = empty($oAsistente->getPlaza()) ? Asistente::PLAZA_PEDIDA : $oAsistente->getPlaza();
 
                 // contar plazas
                 if (ConfigGlobal::is_app_installed('actividadplazas')) {
@@ -335,7 +339,7 @@ class Select3101
                     //si es de otra dl no distingo cedidas.
                     // no muestro ni cuento las que esten en estado distinto al asignado o confirmado (>3)
                     if ($padre != $this->mi_dele) {
-                        if ($plaza > asistentes\Asistente::PLAZA_DENEGADA) {
+                        if ($plaza > Asistente::PLAZA_DENEGADA) {
                             $this->incrementa($this->a_plazas_resumen[$padre][$dl]['ocupadas'][$plaza]);
                             if (!empty($child) && $child != $padre) {
                                 $this->incrementa($this->a_plazas_conseguidas[$child][$padre]['ocupadas'][$dl][$plaza]);
@@ -350,7 +354,7 @@ class Select3101
                     } else {  // En mi dl distingo las cedidas
                         // si no es de (la dl o de paso ) y no tiene la plaza asignada o confirmada no lo muestro
                         if ($child != $this->mi_dele) {
-                            if ($plaza < asistentes\Asistente::PLAZA_ASIGNADA) {
+                            if ($plaza < Asistente::PLAZA_ASIGNADA) {
                                 continue;
                             } else {
                                 $this->incrementa($this->a_plazas_conseguidas[$child][$padre]['ocupadas'][$dl][$plaza]);
@@ -374,8 +378,8 @@ class Select3101
                     $chk_propio = _("no");
                     $eliminar = 2;  //si no es propio, al eliminar el cargo, elimino la asistencia
                 }
-                is_true($falta)? $chk_falta = _("sí") : $chk_falta = _("no");
-                is_true($est_ok)? $chk_est_ok = _("sí") : $chk_est_ok = _("no");
+                is_true($falta) ? $chk_falta = _("sí") : $chk_falta = _("no");
+                is_true($est_ok) ? $chk_est_ok = _("sí") : $chk_est_ok = _("no");
                 $asis = "t";
 
                 if ($this->permiso == 3) {
@@ -425,7 +429,7 @@ class Select3101
      */
     public function getAsistentes()
     {
-        $gesAsistentes = new asistentes\GestorAsistente();
+        $gesAsistentes = new GestorAsistente();
         $this->a_asistentes = array();
         $cAsistentes = $gesAsistentes->getAsistentes(array('id_activ' => $this->id_pau));
         foreach ($cAsistentes as $oAsistente) {
@@ -437,7 +441,7 @@ class Select3101
                 continue;
             }
 
-            $oPersona = personas\Persona::NewPersona($id_nom);
+            $oPersona = Persona::NewPersona($id_nom);
             if (!is_object($oPersona)) {
                 $this->msg_err .= "<br>";
                 $this->msg_err .= sprintf(_("%s con id_nom: %s. En %s linea %s"), $oPersona, $id_nom, __FILE__, __LINE__);
@@ -460,19 +464,18 @@ class Select3101
                 $telfs .= $telfs_fijo ?? '';
                 $telfs .= $telfs_movil ?? '';
             }
-            $mails = '';
             $mails = $oPersona->telecos_persona($id_nom, "e-mail", " / ", "*", FALSE);
 
             $propio = $oAsistente->getPropio();
             $falta = $oAsistente->getFalta();
             $est_ok = $oAsistente->getEst_ok();
             $observ = $oAsistente->getObserv();
-            $plaza = asistentes\Asistente::PLAZA_PEDIDA;
+            $plaza = Asistente::PLAZA_PEDIDA;
 
             // contar plazas
-            //if (core\ConfigGlobal::is_app_installed('actividadplazas') && !empty($dl)) {
+            //if (ConfigGlobal::is_app_installed('actividadplazas') && !empty($dl)) {
             if (ConfigGlobal::is_app_installed('actividadplazas')) {
-                $plaza = empty($oAsistente->getPlaza()) ? asistentes\Asistente::PLAZA_PEDIDA : $oAsistente->getPlaza();
+                $plaza = empty($oAsistente->getPlaza()) ? Asistente::PLAZA_PEDIDA : $oAsistente->getPlaza();
                 // las cuento todas y a la hora de enseñar miro si soy la dl org o no.
                 // propiedad de la plaza:
                 $propietario = $oAsistente->getPropietario();
@@ -493,7 +496,7 @@ class Select3101
                 //si es de otra dl no distingo cedidas.
                 // no muestro ni cuento las que esten en estado distinto al asignado o confirmado (>3)
                 if ($padre != $this->mi_dele) {
-                    if ($plaza > asistentes\Asistente::PLAZA_DENEGADA) {
+                    if ($plaza > Asistente::PLAZA_DENEGADA) {
                         $this->incrementa($this->a_plazas_resumen[$padre][$dl]['ocupadas'][$plaza]);
                         if (!empty($child) && $child != $padre) {
                             $this->incrementa($this->a_plazas_conseguidas[$child][$padre]['ocupadas'][$dl][$plaza]);
@@ -508,7 +511,7 @@ class Select3101
                 } else {  // En mi dl distingo las cedidas
                     // si no es de (la dl o de paso ) y no tiene la plaza asignada o confirmada no lo muestro
                     if ($child != $this->mi_dele) {
-                        if ($plaza < asistentes\Asistente::PLAZA_ASIGNADA) {
+                        if ($plaza < Asistente::PLAZA_ASIGNADA) {
                             continue;
                         } else {
                             $this->incrementa($this->a_plazas_conseguidas[$child][$padre]['ocupadas'][$dl][$plaza]);
@@ -525,8 +528,8 @@ class Select3101
             } else {
                 $chk_propio = _("no");
             }
-            is_true($falta)? $chk_falta = _("sí") : $chk_falta = _("no");
-            is_true($est_ok)? $chk_est_ok = _("sí") : $chk_est_ok = _("no");
+            is_true($falta) ? $chk_falta = _("sí") : $chk_falta = _("no");
+            is_true($est_ok) ? $chk_est_ok = _("sí") : $chk_est_ok = _("no");
 
             if ($this->permiso == 3) {
                 $a_val['sel'] = "$id_nom";
@@ -597,7 +600,7 @@ class Select3101
 				}
 				</style>
 				";
-            $oGesAsistente = new asistentes\GestorAsistente();
+            $oGesAsistente = new GestorAsistente();
             $aOpciones = $oGesAsistente->getOpcionesPosiblesPlaza();
             foreach ($aOpciones as $plaza => $plaza_txt) {
                 $expl = "explicacion$plaza";
@@ -611,7 +614,7 @@ class Select3101
             if ($this->publicado === true) {
                 if (array_key_exists($this->mi_dele, $this->a_plazas_resumen)) {
                     foreach ($this->a_plazas_resumen as $padre => $aa) {
-                        if ($padre == 'total') {
+                        if ($padre === 'total') {
                             continue;
                         }
                         if ($padre != $this->mi_dele && $this->mi_dele != $this->dl_org) {
@@ -646,7 +649,7 @@ class Select3101
                         foreach ($a_cedidas as $dl2 => $numCedidas) {
                             $i++;
                             if (!empty($ocupadas_dl)) {
-                                $resumen_plazas .= ($continuacion) ? ' + ' : '';;
+                                $resumen_plazas .= ($continuacion) ? ' + ' : '';
                                 $resumen_plazas .= "$ocupadas_dl($dl2)";
                             }
                             $this->a_plazas_resumen[$padre]['cedidas'][$dl2] = array('ocupadas' => $ocupadas_dl);
@@ -736,13 +739,13 @@ class Select3101
                             $espera = 0;
                             $ocupadas_dl = 0;
                             foreach ($pl as $plaza => $num) {
-                                if ($plaza == asistentes\Asistente::PLAZA_PEDIDA) {
+                                if ($plaza == Asistente::PLAZA_PEDIDA) {
                                     $decidir += $num;
                                 }
-                                if ($plaza == asistentes\Asistente::PLAZA_EN_ESPERA) {
+                                if ($plaza == Asistente::PLAZA_EN_ESPERA) {
                                     $espera += $num;
                                 }
-                                if ($plaza > asistentes\Asistente::PLAZA_DENEGADA) {
+                                if ($plaza > Asistente::PLAZA_DENEGADA) {
                                     $ocupadas_dl += $num;
                                 }
                             }
@@ -791,7 +794,7 @@ class Select3101
             $val[1] = "-";
             // sólo numero los asignados y confirmados
             if (ConfigGlobal::is_app_installed('actividadplazas')) {
-                if ($val['clase'] == 'plaza4' || $val['clase'] == 'plaza5') {
+                if ($val['clase'] === 'plaza4' || $val['clase'] === 'plaza5') {
                     $n++;
                     $val[1] = "$n.-";
                 }
@@ -825,14 +828,14 @@ class Select3101
         }
         $this->getTabla(); // antes debe estar el contarPlazas
 
-        $oTabla = new web\Lista();
+        $oTabla = new Lista();
         $oTabla->setId_tabla('sql_3101');
         $oTabla->setCabeceras($this->getCabeceras());
         $oTabla->setBotones($this->getBotones());
         $oTabla->setDatos($this->getValores());
 
 
-        $oHash = new web\Hash();
+        $oHash = new Hash();
         $oHash->setCamposForm('');
         $oHash->setCamposNo('sel!scroll_id!mod!que!refresh');
         $a_camposHidden = array(
@@ -847,7 +850,7 @@ class Select3101
         $oHash->setArraycamposHidden($a_camposHidden);
 
         // para el hash de las matrículas. Hago otro formulario, pues cambio demasiadas cosas
-        $oHash1 = new web\Hash();
+        $oHash1 = new Hash();
         $oHash1->setCamposForm('');
         $oHash1->setCamposNo('sel!scroll_id!mod');
         $a_camposHidden = array(
@@ -861,17 +864,17 @@ class Select3101
         $oHash1->setArraycamposHidden($a_camposHidden);
 
         $url = ConfigGlobal::getWeb() . "/apps/dossiers/controller/dossiers_ver.php";
-        $oHash2 = new web\Hash();
+        $oHash2 = new Hash();
         $oHash2->setUrl($url);
         $oHash2->setCamposForm('depende!pau!obj_pau!id_pau!id_dossier!permiso');
         $h = $oHash2->linkSinVal();
 
-        $oHash3 = new web\Hash();
+        $oHash3 = new Hash();
         $oHash3->setUrl(ConfigGlobal::getWeb() . "/apps/asistentes/controller/form_mover.php");
         $oHash3->setCamposForm('id_pau!id_activ');
         $h3 = $oHash3->linkSinVal();
 
-        $oHash4 = new web\Hash();
+        $oHash4 = new Hash();
         $oHash4->setUrl(ConfigGlobal::getWeb() . "/apps/asistentes/controller/update_3101.php");
         $oHash4->setCamposForm('mod!plaza!lista_json!id_activ');
         $h4 = $oHash4->linkSinVal();
@@ -896,7 +899,7 @@ class Select3101
             'bloque' => $this->bloque,
         ];
 
-        $oView = new View(__NAMESPACE__);
+        $oView = new ViewPhtml(__NAMESPACE__);
 
         $oView->renderizar('select3101.phtml', $a_campos);
 
@@ -926,7 +929,7 @@ class Select3101
                 if (is_array($aQuery)) {
                     array_walk($aQuery, 'core\poner_empty_on_null');
                 }
-                $pagina = web\Hash::link('apps/asistentes/controller/form_3101.php?' . http_build_query($aQuery));
+                $pagina = Hash::link('apps/asistentes/controller/form_3101.php?' . http_build_query($aQuery));
                 $this->aLinks_dl[$nom] = $pagina;
             }
         }

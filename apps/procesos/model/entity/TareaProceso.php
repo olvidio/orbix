@@ -3,7 +3,9 @@
 namespace procesos\model\entity;
 
 use actividades\model\entity\ActividadAll;
-use core;
+use core\ClasePropiedades;
+use core\DatosCampo;
+use core\Set;
 use stdClass;
 use menus\model\PermisoMenu;
 
@@ -26,7 +28,7 @@ use menus\model\PermisoMenu;
  * @version 1.0
  * @created 07/12/2018
  */
-class TareaProceso extends core\ClasePropiedades
+class TareaProceso extends ClasePropiedades
 {
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
@@ -205,7 +207,7 @@ class TareaProceso extends core\ClasePropiedades
                     return FALSE;
                 }
             }
-            $this->id_item = $oDbl->lastInsertId('a_tareas_proceso_id_item_seq');
+            $this->iid_item = $oDbl->lastInsertId('a_tareas_proceso_id_item_seq');
         }
         $this->setAllAtributes($aDades);
         return TRUE;
@@ -299,9 +301,8 @@ class TareaProceso extends core\ClasePropiedades
      *
      * @param array $aDades
      */
-    function setAllAtributes($aDades)
+    function setAllAtributes(array $aDades)
     {
-        if (!is_array($aDades)) return;
         if (array_key_exists('id_item', $aDades)) $this->setId_item($aDades['id_item']);
         if (array_key_exists('id_tipo_proceso', $aDades)) $this->setId_tipo_proceso($aDades['id_tipo_proceso']);
         if (array_key_exists('id_fase', $aDades)) $this->setId_fase($aDades['id_fase']);
@@ -367,7 +368,7 @@ class TareaProceso extends core\ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'id_item') && $val_id !== '') $this->iid_item = (int)$val_id; 
+                if (($nom_id === 'id_item') && $val_id !== '') $this->iid_item = (int)$val_id;
             }
         }
     }
@@ -516,13 +517,13 @@ class TareaProceso extends core\ClasePropiedades
      * @param boolean $bArray si hay que devolver un array en vez de un objeto.
      * @return object $oFases
      */
-    function getJson_fases_previas($bArray = FALSE)
+    function getJson_fases_previas(bool $bArray = FALSE)
     {
         if (!isset($this->json_fases_previas) && !$this->bLoaded) {
             $this->DBCarregar();
         }
         $oFases = json_decode(json_decode($this->json_fases_previas), $bArray);
-        if (empty($oFases) || $oFases == '[]') {
+        if (empty($oFases) || $oFases === '[]') {
             if ($bArray) {
                 $oFases = [];
             } else {
@@ -535,9 +536,9 @@ class TareaProceso extends core\ClasePropiedades
     /**
      * Establece el valor del atributo json_fases_previas de TareaProceso
      *
-     * @param object $oFases
+     * @param string json $oFases
      */
-    function setJson_fases_previas($oFases)
+    function setJson_fases_previas(string $oFases)
     {
         $json_fases_previas = json_encode($oFases);
         $this->json_fases_previas = $json_fases_previas;
@@ -566,7 +567,7 @@ class TareaProceso extends core\ClasePropiedades
      */
     function getDatosCampos()
     {
-        $oTareaProcesoSet = new core\Set();
+        $oTareaProcesoSet = new Set();
 
         $oTareaProcesoSet->add($this->getDatosId_tipo_proceso());
         $oTareaProcesoSet->add($this->getDatosId_fase());
@@ -582,12 +583,12 @@ class TareaProceso extends core\ClasePropiedades
      * Recupera les propietats de l'atribut iid_tipo_proceso de TareaProceso
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosId_tipo_proceso()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_tipo_proceso'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_tipo_proceso'));
         $oDatosCampo->setEtiqueta(_("tipo de proceso"));
         $oDatosCampo->setTipo('opciones');
         $oDatosCampo->setArgument('ProcesoTipo'); // nombre del objeto relacionado
@@ -600,12 +601,12 @@ class TareaProceso extends core\ClasePropiedades
      * Recupera les propietats de l'atribut iid_fase de TareaProceso
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosId_fase()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_fase'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_fase'));
         $oDatosCampo->setEtiqueta(_("fase"));
         $oDatosCampo->setTipo('opciones');
         $oDatosCampo->setArgument('ActividadFase'); // nombre del objeto relacionado
@@ -619,12 +620,12 @@ class TareaProceso extends core\ClasePropiedades
      * Recupera les propietats de l'atribut iid_tarea de TareaProceso
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosId_tarea()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_tarea'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_tarea'));
         $oDatosCampo->setEtiqueta(_("tarea"));
         $oDatosCampo->setTipo('depende');
         $oDatosCampo->setArgument('ActividadTarea'); // nombre del objeto relacionado para ver en listados.
@@ -636,14 +637,14 @@ class TareaProceso extends core\ClasePropiedades
      * Recupera les propietats de l'atribut istatus de TareaProceso
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosStatus()
     {
         $oActividad = new ActividadAll();
         $a_status = $oActividad->getArrayStatus();
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'status'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'status'));
         $oDatosCampo->setEtiqueta(_("status"));
         $oDatosCampo->setTipo('array');
         $oDatosCampo->setLista($a_status);
@@ -655,12 +656,12 @@ class TareaProceso extends core\ClasePropiedades
      * Recupera les propietats de l'atribut iid_of_responsable de TareaProceso
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosId_of_responsable()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_of_responsable'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_of_responsable'));
         $oDatosCampo->setEtiqueta(_("oficina responsable"));
         $oDatosCampo->setTipo('texto');
         $oDatosCampo->setArgument('7');
@@ -671,12 +672,12 @@ class TareaProceso extends core\ClasePropiedades
      * Recupera les propietats de l'atribut json_fases_previas de TareaProceso
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosId_fase_previa()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_fase_previa'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_fase_previa'));
         $oDatosCampo->setEtiqueta(_("fase previa"));
         $oDatosCampo->setTipo('opciones');
         $oDatosCampo->setArgument('ActividadFase'); // nombre del objeto relacionado

@@ -2,7 +2,9 @@
 namespace profesores\model\entity;
 
 use actividadestudios\model\entity\ActividadAsignatura;
-use core;
+use core\ClasePropiedades;
+use core\DatosCampo;
+use core\Set;
 
 /**
  * Fitxer amb la Classe que accedeix a la taula d_docencia_stgr
@@ -23,7 +25,7 @@ use core;
  * @version 1.0
  * @created 28/10/2014
  */
-class ProfesorDocenciaStgr extends core\ClasePropiedades
+class ProfesorDocenciaStgr extends ClasePropiedades
 {
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
@@ -125,8 +127,8 @@ class ProfesorDocenciaStgr extends core\ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'id_item') && $val_id !== '') $this->iid_item = (int)$val_id;
-                if (($nom_id == 'id_nom') && $val_id !== '') $this->iid_nom = (int)$val_id;
+                if (($nom_id === 'id_item') && $val_id !== '') $this->iid_item = (int)$val_id;
+                if (($nom_id === 'id_nom') && $val_id !== '') $this->iid_nom = (int)$val_id;
             }
         }
         $this->setoDbl($oDbl);
@@ -200,7 +202,7 @@ class ProfesorDocenciaStgr extends core\ClasePropiedades
                     return false;
                 }
             }
-            $this->id_item = $oDbl->lastInsertId('d_docencia_stgr_id_item_seq');
+            $this->iid_item = $oDbl->lastInsertId('d_docencia_stgr_id_item_seq');
         }
         $this->setAllAtributes($aDades);
         return true;
@@ -268,7 +270,7 @@ class ProfesorDocenciaStgr extends core\ClasePropiedades
      *
      * @param array $aDades
      */
-    function setAllAtributes($aDades)
+    function setAllAtributes(array $aDades)
     {
         if (!is_array($aDades)) return;
         if (array_key_exists('id_schema', $aDades)) $this->setId_schema($aDades['id_schema']);
@@ -338,7 +340,7 @@ class ProfesorDocenciaStgr extends core\ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'id_item') && $val_id !== '') $this->iid_item = (int)$val_id;
+                if (($nom_id === 'id_item') && $val_id !== '') $this->iid_item = (int)$val_id;
             }
         }
     }
@@ -511,7 +513,7 @@ class ProfesorDocenciaStgr extends core\ClasePropiedades
      */
     function getDatosCampos()
     {
-        $oProfesorDocenciaStgrSet = new core\Set();
+        $oProfesorDocenciaStgrSet = new Set();
 
         $oProfesorDocenciaStgrSet->add($this->getDatosId_asignatura());
         $oProfesorDocenciaStgrSet->add($this->getDatosId_activ());
@@ -525,12 +527,12 @@ class ProfesorDocenciaStgr extends core\ClasePropiedades
      * Recupera les propietats de l'atribut iid_asignatura de ProfesorDocenciaStgr
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosId_asignatura()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_asignatura'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_asignatura'));
         $oDatosCampo->setEtiqueta(_("asignatura"));
         $oDatosCampo->setTipo('opciones');
         $oDatosCampo->setArgument('asignaturas\model\entity\Asignatura'); // nombre del objeto relacionado
@@ -543,12 +545,12 @@ class ProfesorDocenciaStgr extends core\ClasePropiedades
      * Recupera les propietats de l'atribut iid_activ de ProfesorDocenciaStgr
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosId_activ()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_activ'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_activ'));
         $oDatosCampo->setEtiqueta(_("actividad"));
         $oDatosCampo->setTipo('opciones');
         $oDatosCampo->setArgument('actividades\model\entity\Actividad'); // nombre del objeto relacionado
@@ -561,12 +563,12 @@ class ProfesorDocenciaStgr extends core\ClasePropiedades
      * Recupera les propietats de l'atribut stipo de ProfesorDocenciaStgr
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosTipo()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'tipo'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'tipo'));
         $oDatosCampo->setEtiqueta(_("tipo"));
         $oDatosCampo->setTipo('array');
         $oDatosCampo->setLista(array(ActividadAsignatura::TIPO_CA => _("ca/cv"),
@@ -579,12 +581,12 @@ class ProfesorDocenciaStgr extends core\ClasePropiedades
      * Recupera les propietats de l'atribut icurso_inicio de ProfesorDocenciaStgr
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosCurso_inicio()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'curso_inicio'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'curso_inicio'));
         $oDatosCampo->setEtiqueta(_("año inicio curso"));
         $oDatosCampo->setTipo('texto');
         $oDatosCampo->setArgument(5);
@@ -595,12 +597,12 @@ class ProfesorDocenciaStgr extends core\ClasePropiedades
      * Recupera les propietats de l'atribut sacta de ProfesorDocenciaStgr
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosActa()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'acta'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'acta'));
         $oDatosCampo->setEtiqueta(_("acta"));
         $oDatosCampo->setTipo('texto');
         $oDatosCampo->setArgument(30);

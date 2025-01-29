@@ -1,0 +1,28 @@
+<?php
+
+
+echo $oPosicion->mostrar_left_slide(1);
+if (!empty($msg_txt)) {
+    echo $msg_txt;
+}
+
+echo "<button class='no_print' onclick=\"fnjs_exportar('html');\" >"._("Descargar html")."</button>";
+echo "<button class='no_print' onclick=\"window.open('$goLeyenda','leyenda','width=400,height=500,screenX=200,screenY=200,titlebar=yes');\" >"._("Ver leyenda")."</button>";
+
+echo "<div id=\"exportar\">";
+echo "<span id=\"span_exportar\"  title=\"$cabecera_title\">";
+// Listo varios centros.
+uksort($a_actividades2, "strnatcasecmp"); // case insensitive
+foreach ($a_actividades2 as $nombre_ubi => $a_actividades) {
+    $cabecera = $nombre_ubi;
+    /*
+     lo que sigue es para que nos represente una linea en blanco al final:
+     esto permite visualizar correctamente las 3 divisiones en los días
+     en que todas las casas están ocupadas.
+     */
+    $a_actividades[] = array('###' => array());
+    $oPlanning->setCabecera($cabecera);
+    $oPlanning->setActividades($a_actividades);
+    echo $oPlanning->dibujar();
+}
+echo "</div>"; //exportar

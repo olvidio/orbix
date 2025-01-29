@@ -5,7 +5,6 @@
 use misas\domain\entity\EncargoCtr;
 use misas\domain\EncargoCtrId;
 use misas\domain\repositories\EncargoCtrRepository;
-use ubis\model\entity\Ubi;
 use Ramsey\Uuid\Uuid as RamseyUuid;
 
 require_once("apps/core/global_header.inc");

@@ -1,7 +1,10 @@
 <?php
 namespace usuarios\model\entity;
 
-use core;
+use core\ClasePropiedades;
+use core\DatosCampo;
+use core\Set;
+use function core\is_true;
 
 /**
  * Fitxer amb la Classe que accedeix a la taula x_locales
@@ -22,7 +25,7 @@ use core;
  * @version 1.0
  * @created 26/11/2014
  */
-class Local extends core\ClasePropiedades
+class Local extends ClasePropiedades
 {
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
@@ -107,7 +110,7 @@ class Local extends core\ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'id_locale') && $val_id !== '') $this->sid_locale = (string)$val_id; // evitem SQL injection fent cast a string
+                if (($nom_id === 'id_locale') && $val_id !== '') $this->sid_locale = (string)$val_id; // evitem SQL injection fent cast a string
             }
         } else {
             if (isset($a_id) && $a_id !== '') {
@@ -143,7 +146,7 @@ class Local extends core\ClasePropiedades
         $aDades['activo'] = $this->bactivo;
         array_walk($aDades, 'core\poner_null');
         //para el caso de los boolean FALSE, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
-        if (core\is_true($aDades['activo'])) {
+        if (is_true($aDades['activo'])) {
             $aDades['activo'] = 'true';
         } else {
             $aDades['activo'] = 'false';
@@ -258,7 +261,7 @@ class Local extends core\ClasePropiedades
      *
      * @param array $aDades
      */
-    function setAllAtributes($aDades)
+    function setAllAtributes(array $aDades)
     {
         if (!is_array($aDades)) return;
         if (array_key_exists('id_locale', $aDades)) $this->setId_locale($aDades['id_locale']);
@@ -322,7 +325,7 @@ class Local extends core\ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'id_locale') && $val_id !== '') $this->slocale = $val_id;
+                if (($nom_id === 'id_locale') && $val_id !== '') $this->sid_locale = $val_id;
             }
         }
     }
@@ -449,7 +452,7 @@ class Local extends core\ClasePropiedades
      */
     function getDatosCampos()
     {
-        $oLocalSet = new core\Set();
+        $oLocalSet = new Set();
 
         $oLocalSet->add($this->getDatosNom_Locale());
         $oLocalSet->add($this->getDatosIdioma());
@@ -463,12 +466,12 @@ class Local extends core\ClasePropiedades
      * Recupera les propietats de l'atribut snom_locale de Local
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosNom_Locale()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'nom_locale'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'nom_locale'));
         $oDatosCampo->setEtiqueta(_("nom_locale"));
         $oDatosCampo->setTipo('texto');
         $oDatosCampo->setArgument('50');
@@ -479,12 +482,12 @@ class Local extends core\ClasePropiedades
      * Recupera les propietats de l'atribut sidioma de Local
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosIdioma()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'idioma'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'idioma'));
         $oDatosCampo->setEtiqueta(_("idioma"));
         $oDatosCampo->setTipo('texto');
         $oDatosCampo->setArgument('50');
@@ -495,12 +498,12 @@ class Local extends core\ClasePropiedades
      * Recupera les propietats de l'atribut snom_idioma de Local
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosNom_idioma()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'nom_idioma'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'nom_idioma'));
         $oDatosCampo->setEtiqueta(_("nombre idioma"));
         $oDatosCampo->setTipo('texto');
         $oDatosCampo->setArgument('50');
@@ -511,12 +514,12 @@ class Local extends core\ClasePropiedades
      * Recupera les propietats de l'atribut bactivo de Local
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosActivo()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'activo'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'activo'));
         $oDatosCampo->setEtiqueta(_("activo"));
         $oDatosCampo->setTipo('check');
         return $oDatosCampo;

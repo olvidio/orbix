@@ -1,7 +1,11 @@
 <?php
 
-use notas\model\entity as notas;
+use core\ConfigGlobal;
 use notas\model\entity\Acta;
+use notas\model\entity\ActaDl;
+use notas\model\entity\ActaEx;
+use notas\model\entity\ActaTribunalDl;
+use notas\model\entity\GestorActaTribunalDl;
 
 // INICIO Cabecera global de URL de controlador *********************************
 require_once("apps/core/global_header.inc");
@@ -11,8 +15,8 @@ require_once("apps/core/global_header.inc");
 require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$mi_dele = core\ConfigGlobal::mi_delef();
-$mi_region = core\ConfigGlobal::mi_region();
+$mi_dele = ConfigGlobal::mi_delef();
+$mi_region = ConfigGlobal::mi_region();
 
 $a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 if (!empty($a_sel)) { //vengo de un checkbox
@@ -32,11 +36,11 @@ if (!empty($a_sel)) { //vengo de un checkbox (caso de eliminar)
 $dl_acta = strtok($Qacta, ' ');
 
 if ($dl_acta == $mi_dele || $dl_acta === "?") {
-    $oActa = new notas\ActaDl();
-    $oActaTribunal = new notas\ActaTribunalDl();
+    $oActa = new ActaDl();
+    $oActaTribunal = new ActaTribunalDl();
 } else {
     // Ojo si la dl ya existe no debería hacerse
-    $oActa = new notas\ActaEx();
+    $oActa = new ActaEx();
     switch ($Qmod) {
         case 'nueva':
             $msg = _("No puede generar un acta de otra dl");
@@ -126,7 +130,7 @@ switch ($Qmod) {
 }
 
 //borrar todos (y después poner los nuevos)
-$oGesActaTribunal = new notas\GestorActaTribunalDl();
+$oGesActaTribunal = new GestorActaTribunalDl();
 $cActaTribunal = $oGesActaTribunal->getActasTribunales(array('acta' => $Qacta));
 foreach ($cActaTribunal as $oActaTribunal) {
     if ($oActaTribunal->DBEliminar() === false) {
@@ -144,7 +148,7 @@ if (!empty($Qexaminadores)) {
         if (empty($examinador)) {
             continue;
         }
-        $oActaTribunal = new notas\ActaTribunalDl();
+        $oActaTribunal = new ActaTribunalDl();
         $oActaTribunal->setActa($Qacta);
         $oActaTribunal->setExaminador($examinador);
         $oActaTribunal->setOrden($i);

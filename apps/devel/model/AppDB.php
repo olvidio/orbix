@@ -2,6 +2,8 @@
 
 namespace devel\model;
 
+use devel\model\entity\Modulo;
+
 class AppDB
 {
 
@@ -12,7 +14,7 @@ class AppDB
     public function __construct($id_mod)
     {
         $this->id_mod = $id_mod;
-        $oModulo = new \devel\model\entity\Modulo($id_mod);
+        $oModulo = new Modulo($id_mod);
         $this->nom_mod = $oModulo->getNom();
 
         $this->oModuloConfig = new ModulosConfig();

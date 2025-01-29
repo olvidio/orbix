@@ -1,7 +1,9 @@
 <?php
 namespace asignaturas\model\entity;
 
-use core;
+use core\ClasePropiedades;
+use core\DatosCampo;
+use core\Set;
 
 /**
  * Fitxer amb la Classe que accedeix a la taula $nom_tabla
@@ -22,7 +24,7 @@ use core;
  * @version 1.0
  * @created 01/12/2010
  */
-class Sector extends core\ClasePropiedades
+class Sector extends ClasePropiedades
 {
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
@@ -224,7 +226,7 @@ class Sector extends core\ClasePropiedades
      *
      * @param array $aDades
      */
-    function setAllAtributes($aDades)
+    function setAllAtributes(array $aDades)
     {
         if (!is_array($aDades)) return;
         if (array_key_exists('id_sector', $aDades)) $this->setId_sector($aDades['id_sector']);
@@ -283,7 +285,7 @@ class Sector extends core\ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'id_sector') && $val_id !== '') $this->iid_sector = (int)$val_id;
+                if (($nom_id === 'id_sector') && $val_id !== '') $this->iid_sector = (int)$val_id;
             }
         }
     }
@@ -364,7 +366,7 @@ class Sector extends core\ClasePropiedades
      */
     function getDatosCampos()
     {
-        $oSectorSet = new core\Set();
+        $oSectorSet = new Set();
 
         $oSectorSet->add($this->getDatosId_departamento());
         $oSectorSet->add($this->getDatosSector());
@@ -376,12 +378,12 @@ class Sector extends core\ClasePropiedades
      * Recupera les propietats de l'atribut iid_departamento de Sector
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosId_departamento()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_departamento'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_departamento'));
         $oDatosCampo->setEtiqueta(_("departamento"));
         $oDatosCampo->setTipo('opciones');
         $oDatosCampo->setArgument('asignaturas\model\entity\Departamento');
@@ -394,12 +396,12 @@ class Sector extends core\ClasePropiedades
      * Recupera les propietats de l'atribut ssector de Sector
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosSector()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'sector'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'sector'));
         $oDatosCampo->setEtiqueta(_("sector"));
         $oDatosCampo->setTipo('texto');
         $oDatosCampo->setArgument(30);

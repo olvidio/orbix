@@ -1,7 +1,12 @@
+<?php
+
+use core\ConfigGlobal;
+
+?>
 <script>
     fnjs_dl = function () {
         var filtro_region = $('#region').val();
-        var url = '<?= core\ConfigGlobal::getWeb() . '/apps/devel/controller/db_ajax.php' ?>';
+        var url = '<?= ConfigGlobal::getWeb() . '/apps/devel/controller/db_ajax.php' ?>';
         var parametros = 'salida=lugar&entrada=' + filtro_region + '<?= $h ?>';
         $.ajax({
             url: url,

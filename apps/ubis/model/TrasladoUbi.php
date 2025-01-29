@@ -2,7 +2,8 @@
 
 namespace ubis\model;
 
-use core;
+use core\ConfigDB;
+use core\DBConnection;
 
 class TrasladoUbi
 {
@@ -46,10 +47,10 @@ class TrasladoUbi
     {
         $this->setId_ubi($id_ubi);
 
-        $oConfigDB = new core\ConfigDB('importar'); //de la database comun
+        $oConfigDB = new ConfigDB('importar'); //de la database comun
         $config = $oConfigDB->getEsquema('public'); //de la database comun
 
-        $oConexion = new core\DBConnection($config);
+        $oConexion = new DBConnection($config);
         $oDbl = $oConexion->getPDO();
         $this->setODbl($oDbl);
 
@@ -83,10 +84,10 @@ class TrasladoUbi
     {
         $this->setId_ubi($id_ubi);
 
-        $oConfigDB = new core\ConfigDB('importar'); //de la database sv
+        $oConfigDB = new ConfigDB('importar'); //de la database sv
         $config = $oConfigDB->getEsquema('publicv'); //de la database sv
 
-        $oConexion = new core\DBConnection($config);
+        $oConexion = new DBConnection($config);
         $oDbl = $oConexion->getPDO();
         $this->setODbl($oDbl);
 
@@ -116,7 +117,7 @@ class TrasladoUbi
         $oDbl = $this->getoDbl();
         $id_ubi = $this->getId_ubi();
 
-        if ($sv == 'v') {
+        if ($sv === 'v') {
             $tabla_ubi = 'u_centros_dl';
             $tabla_dir = 'u_dir_ctr_dl';
             $tabla_cross = 'u_cross_ctr_dl_dir';
@@ -286,7 +287,7 @@ class TrasladoUbi
     /**
      * @param string $esquema_dst
      */
-    public function setEsquema_dst($esquema_dst)
+    public function setEsquema_dst(string $esquema_dst)
     {
         $this->esquema_dst = $esquema_dst;
     }
@@ -302,7 +303,7 @@ class TrasladoUbi
     /**
      * @param string $esquema_org
      */
-    public function setEsquema_org($esquema_org)
+    public function setEsquema_org(string $esquema_org)
     {
         $this->esquema_org = $esquema_org;
     }
@@ -334,7 +335,7 @@ class TrasladoUbi
     /**
      * @param object $oDbl
      */
-    public function setODbl($oDbl)
+    public function setODbl(object $oDbl)
     {
         $this->oDbl = $oDbl;
     }

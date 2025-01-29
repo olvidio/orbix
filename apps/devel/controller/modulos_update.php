@@ -41,7 +41,7 @@ if (empty($Qsel_apps)) {
 
 switch ($Qmod) {
     case 'nuevo':
-        $oModulo = new \devel\model\entity\Modulo();
+        $oModulo = new devel\model\entity\Modulo();
         $oModulo->setNom($Qnom);
         $oModulo->setDescripcion($Qdescripcion);
         $oModulo->setMods_req($a_sel_mods);
@@ -49,14 +49,14 @@ switch ($Qmod) {
         $oModulo->DBGuardar();
         break;
     case 'eliminar':
-        $oModulo = new \devel\model\entity\Modulo($Qid_mod);
+        $oModulo = new devel\model\entity\Modulo($Qid_mod);
         if ($oModulo->DBEliminar() === false) {
             echo _("hay un error, no se ha eliminado");
             echo "\n" . $oModulo->getErrorTxt();
         }
         break;
     default :
-        $oModulo = new \devel\model\entity\Modulo($Qid_mod);
+        $oModulo = new devel\model\entity\Modulo($Qid_mod);
         $oModulo->DBCarregar();
         $oModulo->setNom($Qnom);
         $oModulo->setDescripcion($Qdescripcion);

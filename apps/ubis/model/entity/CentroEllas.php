@@ -2,7 +2,8 @@
 
 namespace ubis\model\entity;
 
-use core;
+use core\Set;
+use function core\is_true;
 
 /**
  * Clase que implementa la entidad u_centros
@@ -85,22 +86,22 @@ class CentroEllas extends Centro
         $aDades['id_zona'] = $this->iid_zona;
         array_walk($aDades, 'core\poner_null');
         //para el caso de los boolean FALSE, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
-        if (core\is_true($aDades['status'])) {
+        if (is_true($aDades['status'])) {
             $aDades['status'] = 'true';
         } else {
             $aDades['status'] = 'false';
         }
-        if (core\is_true($aDades['sv'])) {
+        if (is_true($aDades['sv'])) {
             $aDades['sv'] = 'true';
         } else {
             $aDades['sv'] = 'false';
         }
-        if (core\is_true($aDades['sf'])) {
+        if (is_true($aDades['sf'])) {
             $aDades['sf'] = 'true';
         } else {
             $aDades['sf'] = 'false';
         }
-        if (core\is_true($aDades['cdc'])) {
+        if (is_true($aDades['cdc'])) {
             $aDades['cdc'] = 'true';
         } else {
             $aDades['cdc'] = 'false';
@@ -228,7 +229,7 @@ class CentroEllas extends Centro
      *
      * @param array $aDades
      */
-    function setAllAtributes($aDades, $convert = FALSE)
+    function setAllAtributes(array $aDades, $convert = FALSE)
     {
         //print_r($aDades);
         if (!is_array($aDades)) return;
@@ -309,7 +310,7 @@ class CentroEllas extends Centro
      */
     function getDatosCampos()
     {
-        $oCentroooDlSet = new core\Set();
+        $oCentroooDlSet = new Set();
 
         $oCentroooDlSet->add($this->getDatosTipo_ubi());
         $oCentroooDlSet->add($this->getDatosNombre_ubi());
@@ -324,7 +325,6 @@ class CentroEllas extends Centro
         $oCentroooDlSet->add($this->getDatosTipo_labor());
         $oCentroooDlSet->add($this->getDatosCdc());
         $oCentroooDlSet->add($this->getDatosId_ctr_padre());
-        $oCentroooDlSet->add($this->getDatosId_zona());
         return $oCentroooDlSet->getTot();
     }
 

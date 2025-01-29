@@ -2,12 +2,16 @@
 
 namespace actividadestudios\model;
 
-use actividades\model\entity as actividades;
-use actividadestudios\model\entity as actividadestudios;
-use asignaturas\model\entity as asignaturas;
-use personas\model\entity as personas;
-use core;
-use web;
+use actividades\model\entity\Actividad;
+use actividadestudios\model\entity\GestorActividadAsignatura;
+use actividadestudios\model\entity\GestorActividadAsignaturaDl;
+use actividadestudios\model\entity\GestorMatriculaDl;
+use asignaturas\model\entity\Asignatura;
+use core\ConfigGlobal;
+use core\ViewPhtml;
+use personas\model\entity\Persona;
+use web\Hash;
+use web\Lista;
 
 /**
  * Gestiona el dossier 3103: Matriculas de una actividad.
@@ -98,17 +102,17 @@ class Select3103
 
     private function getTabla()
     {
-        $mi_dele = core\ConfigGlobal::mi_delef();
-        $oActividad = new actividades\Actividad($this->id_pau);
+        $mi_dele = ConfigGlobal::mi_delef();
+        $oActividad = new Actividad($this->id_pau);
         $this->nom_activ = $oActividad->getNom_activ();
         $dl_org = $oActividad->getDl_org();
 
         if ($mi_dele == $dl_org) {
             $this->permiso = 3;
-            $GesActivAsignaturas = new actividadestudios\GestorActividadAsignaturaDl();
+            $GesActivAsignaturas = new GestorActividadAsignaturaDl();
         } else {
             $this->permiso = 1;
-            $GesActivAsignaturas = new actividadestudios\GestorActividadAsignatura();
+            $GesActivAsignaturas = new GestorActividadAsignatura();
         }
         $cActividadAsignaturas = $GesActivAsignaturas->getActividadAsignaturas(array('id_activ' => $this->id_pau, '_ordre' => 'id_asignatura'));
 
@@ -126,7 +130,7 @@ class Select3103
             $id_profesor = $oActividadAsignatura->getId_profesor();
 
             if (!empty($id_profesor)) {
-                $oPersona = personas\Persona::NewPersona($id_profesor);
+                $oPersona = Persona::NewPersona($id_profesor);
                 if (!is_object($oPersona)) {
                     $msg_err .= "<br>$oPersona con id_nom: $id_profesor (profesor) en  " . __FILE__ . ": line " . __LINE__;
                     $nom_profesor = '';
@@ -137,18 +141,18 @@ class Select3103
                 $nom_profesor = '';
             }
 
-            $oAsignatura = new asignaturas\Asignatura($id_asignatura);
+            $oAsignatura = new Asignatura($id_asignatura);
             $nombre_corto = $oAsignatura->getNombre_corto();
             $aGrupos[$id_asignatura] = $nombre_corto;
 
             //busco los matriculados:
-            $GesMatriculas = new actividadestudios\GestorMatriculaDl();
+            $GesMatriculas = new GestorMatriculaDl();
             $cMatriculas = $GesMatriculas->getMatriculas(array('id_activ' => $this->id_pau, 'id_asignatura' => $id_asignatura));
             $m = 0;
             $a_valores = array();
             foreach ($cMatriculas as $oMatricula) {
                 $id_nom = $oMatricula->getId_nom();
-                $oPersona = personas\Persona::NewPersona($id_nom);
+                $oPersona = Persona::NewPersona($id_nom);
                 if (!is_object($oPersona)) {
                     $msg_err .= "<br>$oPersona con id_nom: $id_nom en  " . __FILE__ . ": line " . __LINE__;
                     continue;
@@ -180,7 +184,7 @@ class Select3103
     {
         $this->txt_eliminar = _("¿Está seguro que desea quitar esta matrícula?");
 
-        $oHashSelect = new web\Hash();
+        $oHashSelect = new Hash();
         $oHashSelect->setCamposForm('');
         $oHashSelect->setCamposNo('sel!mod!scroll_id!refresh');
         $a_camposHidden = array(
@@ -195,7 +199,7 @@ class Select3103
         $oHashSelect->setArraycamposHidden($a_camposHidden);
 
         //Hay que ponerlo antes, para que calcule los chk.
-        $oTabla = new web\Lista();
+        $oTabla = new Lista();
         $oTabla->setGrupos($this->getGrupos());
         $oTabla->setCabeceras($this->getCabeceras());
         $oTabla->setBotones($this->getBotones());
@@ -208,7 +212,7 @@ class Select3103
             'nom_activ' => $this->nom_activ,
         ];
 
-        $oView = new core\View('actividadestudios/model');
+        $oView = new ViewPhtml('actividadestudios/model');
         $oView->renderizar('select3103.phtml', $a_campos);
     }
 

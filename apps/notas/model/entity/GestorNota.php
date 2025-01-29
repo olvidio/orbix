@@ -1,8 +1,10 @@
 <?php
 namespace notas\model\entity;
 
-use core;
-use web;
+use core\ClaseGestor;
+use core\Condicion;
+use core\Set;
+use web\Desplegable;
 
 /**
  * GestorNota
@@ -15,7 +17,7 @@ use web;
  * @version 1.0
  * @created 07/04/2014
  */
-class GestorNota extends core\ClaseGestor
+class GestorNota extends ClaseGestor
 {
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
@@ -41,7 +43,7 @@ class GestorNota extends core\ClaseGestor
      * Els posibles tipus de nota superada
      *
      * @param string sWhere condicion con el WHERE.
-     * @return array llista de id_situacion
+     * @return false llista de id_situacion
      */
     function getArrayNotasSuperadas($bsuperada = 't')
     {
@@ -66,7 +68,7 @@ class GestorNota extends core\ClaseGestor
      * Els posibles tipus de nota
      *
      * @param string sWhere condicion con el WHERE.
-     * @return array Una Llista
+     * @return false Una Llista
      */
     function getListaNotas($sWhere = '')
     {
@@ -79,7 +81,7 @@ class GestorNota extends core\ClaseGestor
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
             return false;
         }
-        return new web\Desplegable('', $oDblSt, '', true);
+        return new Desplegable('', $oDblSt, '', true);
     }
 
 
@@ -87,12 +89,12 @@ class GestorNota extends core\ClaseGestor
      * retorna l'array d'objectes de tipus Nota
      *
      * @param string sQuery la query a executar.
-     * @return array Una col·lecció d'objectes de tipus Nota
+     * @return false Una col·lecció d'objectes de tipus Nota
      */
     function getNotasQuery($sQuery = '')
     {
         $oDbl = $this->getoDbl();
-        $oNotaSet = new core\Set();
+        $oNotaSet = new Set();
         if (($oDblSt = $oDbl->query($sQuery)) === false) {
             $sClauError = 'GestorNota.query';
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
@@ -111,23 +113,23 @@ class GestorNota extends core\ClaseGestor
      *
      * @param array aWhere associatiu amb els valors de les variables amb les quals farem la query
      * @param array aOperators associatiu amb els valors dels operadors que cal aplicar a cada variable
-     * @return array Una col·lecció d'objectes de tipus Nota
+     * @return void Una col·lecció d'objectes de tipus Nota
      */
     function getNotas($aWhere = array(), $aOperators = array())
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
-        $oNotaSet = new core\Set();
-        $oCondicion = new core\Condicion();
+        $oNotaSet = new Set();
+        $oCondicion = new Condicion();
         $aCondi = array();
         foreach ($aWhere as $camp => $val) {
-            if ($camp == '_ordre') continue;
+            if ($camp === '_ordre') continue;
             $sOperador = isset($aOperators[$camp]) ? $aOperators[$camp] : '';
             if ($a = $oCondicion->getCondicion($camp, $sOperador, $val)) $aCondi[] = $a;
             // operadores que no requieren valores
-            if ($sOperador == 'BETWEEN' || $sOperador == 'IS NULL' || $sOperador == 'IS NOT NULL' || $sOperador == 'OR') unset($aWhere[$camp]);
-            if ($sOperador == 'IN' || $sOperador == 'NOT IN') unset($aWhere[$camp]);
-            if ($sOperador == 'TXT') unset($aWhere[$camp]);
+            if ($sOperador === 'BETWEEN' || $sOperador === 'IS NULL' || $sOperador === 'IS NOT NULL' || $sOperador === 'OR') unset($aWhere[$camp]);
+            if ($sOperador === 'IN' || $sOperador === 'NOT IN') unset($aWhere[$camp]);
+            if ($sOperador === 'TXT') unset($aWhere[$camp]);
         }
         $sCondi = implode(' AND ', $aCondi);
         if ($sCondi != '') $sCondi = " WHERE " . $sCondi;

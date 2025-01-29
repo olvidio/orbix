@@ -1,10 +1,10 @@
 <?php
 
-use actividadestudios\model\entity as actividadestudios;
-use dossiers\model\entity as dossiers;
+use actividadestudios\model\entity\ActividadAsignaturaDl;
+use dossiers\model\entity\Dossier;
 
 /**
- * Para asegurar que inicia la sesion, y poder acceder a los permisos
+ * Para asegurar que inicia la sesión, y poder acceder a los permisos
  */
 // INICIO Cabecera global de URL de controlador *********************************
 require_once("apps/core/global_header.inc");
@@ -20,7 +20,7 @@ $Qpau = (string)filter_input(INPUT_POST, 'pau');
 
 $a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 if (!empty($a_sel)) { //vengo de un checkbox
-    if ($Qpau == "a") {
+    if ($Qpau === "a") {
         $Qid_activ = (integer)strtok($a_sel[0], "#");
         $Qid_asignatura = (integer)strtok("#");
     }
@@ -36,8 +36,8 @@ if (!empty($a_sel)) { //vengo de un checkbox
 $msg_err = '';
 switch ($Qmod) {
     case 'eliminar':  //------------ BORRAR --------
-        if ($Qpau == "a") {
-            $oActividadAsignatura = new actividadestudios\ActividadAsignaturaDl();
+        if ($Qpau === "a") {
+            $oActividadAsignatura = new ActividadAsignaturaDl();
             $oActividadAsignatura->setId_activ($Qid_activ);
             $oActividadAsignatura->setId_asignatura($Qid_asignatura);
             if ($oActividadAsignatura->DBEliminar() === false) {
@@ -62,7 +62,7 @@ switch ($Qmod) {
         }
         break;
     case 'nuevo': //------------ NUEVO --------
-        $oActividadAsignatura = new actividadestudios\ActividadAsignaturaDl();
+        $oActividadAsignatura = new ActividadAsignaturaDl();
         $oActividadAsignatura->setId_activ($Qid_activ);
         $oActividadAsignatura->setId_asignatura($Qid_asignatura);
 
@@ -81,7 +81,7 @@ switch ($Qmod) {
             $msg_err = _("hay un error, no se ha creado");
         }
         // si es la primera asignatura, hay que abrir el dossier para esta actividad
-        $oDossier = new dossiers\Dossier(array('tabla' => 'a', 'id_pau' => $Qid_activ, 'id_tipo_dossier' => 3005));
+        $oDossier = new Dossier(array('tabla' => 'a', 'id_pau' => $Qid_activ, 'id_tipo_dossier' => 3005));
         $oDossier->abrir();
         $oDossier->DBGuardar();
         break;
@@ -92,7 +92,7 @@ switch ($Qmod) {
         $Qf_ini = (string)filter_input(INPUT_POST, 'f_ini');
         $Qf_fin = (string)filter_input(INPUT_POST, 'f_fin');
 
-        $oActividadAsignatura = new actividadestudios\ActividadAsignaturaDl();
+        $oActividadAsignatura = new ActividadAsignaturaDl();
         $oActividadAsignatura->setId_activ($Qid_activ);
         $oActividadAsignatura->setId_asignatura($Qid_asignatura);
         $oActividadAsignatura->DBCarregar();

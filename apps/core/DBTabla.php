@@ -525,4 +525,9 @@ class DBTabla extends DBAbstract
         return $oConnection->getPDO();
     }
 
+    private function deleteFile($file)
+    {
+        $command = "/bin/rm -f " . $file;
+        passthru($command); // no output to capture so no need to store it
+    }
 }

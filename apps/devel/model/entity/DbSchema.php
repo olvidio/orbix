@@ -2,7 +2,9 @@
 
 namespace devel\model\entity;
 
-use core;
+use core\ClasePropiedades;
+use core\DatosCampo;
+use core\Set;
 
 /**
  * Fitxer amb la Classe que accedeix a la taula db_idschema
@@ -23,7 +25,7 @@ use core;
  * @version 1.0
  * @created 19/06/2018
  */
-class DbSchema extends core\ClasePropiedades
+class DbSchema extends ClasePropiedades
 {
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
@@ -89,7 +91,7 @@ class DbSchema extends core\ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'schema') && $val_id !== '') $this->sschema = (string)$val_id;
+                if (($nom_id === 'schema') && $val_id !== '') $this->sschema = (string)$val_id;
             }
         } else {
             if (isset($a_id) && $a_id !== '') {
@@ -251,7 +253,7 @@ class DbSchema extends core\ClasePropiedades
      *
      * @param array $aDades
      */
-    function setAllAtributes($aDades)
+    function setAllAtributes(array $aDades)
     {
         if (!is_array($aDades)) return;
         if (array_key_exists('schema', $aDades)) $this->setSchema($aDades['schema']);
@@ -309,7 +311,7 @@ class DbSchema extends core\ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'schema') && $val_id !== '') $this->sschema = $val_id;
+                if (($nom_id === 'schema') && $val_id !== '') $this->sschema = $val_id;
             }
         }
     }
@@ -367,7 +369,7 @@ class DbSchema extends core\ClasePropiedades
      */
     function getDatosCampos()
     {
-        $oDbSchemaSet = new core\Set();
+        $oDbSchemaSet = new Set();
 
         $oDbSchemaSet->add($this->getDatosId());
         return $oDbSchemaSet->getTot();
@@ -378,12 +380,12 @@ class DbSchema extends core\ClasePropiedades
      * Recupera les propietats de l'atribut iid de DbSchema
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosId()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id'));
         $oDatosCampo->setEtiqueta(_("id"));
         return $oDatosCampo;
     }

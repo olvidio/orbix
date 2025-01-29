@@ -1,16 +1,15 @@
 <?php
 
-use encargossacd\model\GestorPropuestas;
 use encargossacd\model\entity\Encargo;
 use encargossacd\model\entity\GestorPropuestaEncargoSacdHorario;
 use encargossacd\model\entity\GestorPropuestaEncargosSacd;
 use encargossacd\model\entity\PropuestaEncargoSacd;
 use encargossacd\model\entity\PropuestaEncargoSacdHorario;
+use encargossacd\model\GestorPropuestas;
 use personas\model\entity\GestorPersonaSacd;
+use personas\model\entity\PersonaSacd;
 use web\DateTimeLocal;
 use web\Hash;
-use personas\model\entity\PersonaSacd;
-use encargossacd\model\entity\GestorEncargoSacd;
 use function core\is_true;
 
 // INICIO Cabecera global de URL de controlador *********************************

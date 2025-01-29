@@ -74,7 +74,7 @@ class DateTimeLocal extends DateTime
      * @param string $separador separador entre dia, mes año
      * @return string
      */
-    static public function getFormat($separador = '/'): string
+    static public function getFormat(string $separador = '/'): string
     {
         $idioma = $_SESSION['session_auth']['idioma'];
         # Si no hemos encontrado ningún idioma que nos convenga, mostramos la web en el idioma por defecto
@@ -139,7 +139,7 @@ class DateTimeLocal extends DateTime
      * @param string $separador (.-/)
      * @return string
      */
-    public function getFromLocalHora($separador = '/')
+    public function getFromLocalHora(string $separador = '/')
     {
         $format = self::getFormat($separador);
         $format .= ' H:i:s';
@@ -165,7 +165,7 @@ class DateTimeLocal extends DateTime
      * @param string $separador (.-/)
      * @return string
      */
-    public function getFromLocal($separador = '/')
+    public function getFromLocal(string $separador = '/')
     {
         $format = self::getFormat($separador);
         return parent::format($format);
@@ -177,7 +177,7 @@ class DateTimeLocal extends DateTime
      * @param DateTimeZone|NULL $timezone
      * @return DateTime|false
      */
-    public static function createFromFormat($format='', $datetime='', $timezone = NULL): DateTimeLocal
+    public static function createFromFormat(string $format='', string $datetime='', DateTimeZone $timezone = NULL): DateTimeLocal
     {
         $extnd_dt = new static();
         $parent_dt = parent::createFromFormat($format, $datetime, $timezone);
@@ -193,7 +193,7 @@ class DateTimeLocal extends DateTime
      * @param string $format
      * @return string|array
      */
-    public function format($format=''): string
+    public function format(string $format=''): string
     {
         $english = array('Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday');
         $local = array(_("lunes"), _("martes"), _("miércoles"), _("jueves"), _("viernes"), _("sábado"), _("domingo"));
@@ -290,7 +290,7 @@ class DateTimeLocal extends DateTime
      * @param array $cPeriodos ['oInicio','oFin','Descripcion']
      * @return boolean|string
      */
-    public function comprobarSolapes($cPeriodos)
+    public function comprobarSolapes(array $cPeriodos)
     {
         $i = 0;
         $error_txt = '';

@@ -1,7 +1,9 @@
 <?php
 namespace asignaturas\model\entity;
 
-use core;
+use core\ClasePropiedades;
+use core\DatosCampo;
+use core\Set;
 
 /**
  * Fitxer amb la Classe que accedeix a la taula $nom_tabla
@@ -22,7 +24,7 @@ use core;
  * @version 1.0
  * @created 01/12/2010
  */
-class Departamento extends core\ClasePropiedades
+class Departamento extends ClasePropiedades
 {
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
@@ -216,7 +218,7 @@ class Departamento extends core\ClasePropiedades
      *
      * @param array $aDades
      */
-    function setAllAtributes($aDades)
+    function setAllAtributes(array $aDades)
     {
         if (!is_array($aDades)) return;
         if (array_key_exists('id_departamento', $aDades)) $this->setId_departamento($aDades['id_departamento']);
@@ -273,7 +275,7 @@ class Departamento extends core\ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'id_departamento') && $val_id !== '') $this->iid_departamento = (int)$val_id; 
+                if (($nom_id === 'id_departamento') && $val_id !== '') $this->iid_departamento = (int)$val_id;
             }
         }
     }
@@ -331,7 +333,7 @@ class Departamento extends core\ClasePropiedades
      */
     function getDatosCampos()
     {
-        $oDepartamentoSet = new core\Set();
+        $oDepartamentoSet = new Set();
 
         $oDepartamentoSet->add($this->getDatosDepartamento());
         return $oDepartamentoSet->getTot();
@@ -342,12 +344,12 @@ class Departamento extends core\ClasePropiedades
      * Recupera les propietats de l'atribut sdepartamento de Departamento
      * en una clase del tipus DatosCampo
      *
-     * @return core\DatosCampo
+     * @return DatosCampo
      */
     function getDatosDepartamento()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new core\DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'departamento'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'departamento'));
         $oDatosCampo->setEtiqueta(_("departamento"));
         $oDatosCampo->setTipo('texto');
         $oDatosCampo->setArgument(50);
