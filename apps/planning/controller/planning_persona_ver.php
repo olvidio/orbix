@@ -44,7 +44,6 @@ if (!empty($a_sel)) { //vengo de un checkbox
 $Qmodelo = (integer)filter_input(INPUT_POST, 'modelo');
 $goLeyenda = Hash::link(ConfigGlobal::getWeb() . '/apps/zonassacd/controller/leyenda.php?' . http_build_query(array('id_item' => 1)));
 
-$Qtipo = (string)filter_input(INPUT_POST, 'tipo');
 $Qyear = (integer)filter_input(INPUT_POST, 'year');
 $Qperiodo = (string)filter_input(INPUT_POST, 'periodo');
 $Qempiezamin = (string)filter_input(INPUT_POST, 'empiezamin');
@@ -95,7 +94,6 @@ $cPersonas = $oGesPersonas->getPersonas($aWhere, $aOperador);
 
 $aGoBackComun = array(
     'modelo' => $Qmodelo,
-    'tipo' => $Qtipo,
     'year' => $Qyear,
     'periodo' => $Qperiodo,
     'empiezamax' => $Qempiezamax,

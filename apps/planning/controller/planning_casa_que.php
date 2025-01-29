@@ -57,9 +57,6 @@ if ($mes > $fin_m) {
     $periodo_txt = sprintf(_("(por defecto: periodo desde 1/6 hasta 30/%s)"), $fin_m + 1);
 }
 $Qpropuesta_calendario = (string)filter_input(INPUT_POST, 'propuesta_calendario');
-$Qtipo = (string)filter_input(INPUT_POST, 'tipo');
-$Qobj_pau = (string)filter_input(INPUT_POST, 'obj_pau');
-$Qna = (string)filter_input(INPUT_POST, 'na');
 
 $Qsin_activ = (integer)filter_input(INPUT_POST, 'sin_activ');
 $chk_actividad_no = 'checked';
@@ -76,33 +73,12 @@ $Qempiezamax = (string)filter_input(INPUT_POST, 'empiezamax');
 $Qempiezamin = (string)filter_input(INPUT_POST, 'empiezamin');
 $QsSeleccionados = (string)filter_input(INPUT_POST, 'sSeleccionados');
 
-//personas
-$oHash = new Hash();
-$oHash->setCamposForm('nombre!apellido1!apellido2!centro!empiezamax!empiezamin!extendida!iactividad_val!iasistentes_val!periodo!year');
-$oHash->setcamposNo('modelo');
-$a_camposHidden = array(
-    'tipo' => $Qtipo,
-    'obj_pau' => $Qobj_pau,
-    'na' => $Qna
-);
-$oHash->setArraycamposHidden($a_camposHidden);
-// centros
-$oHash1 = new Hash();
-$oHash1->setCamposForm('sacd!ctr!empiezamax!empiezamin!extendida!iactividad_val!iasistentes_val!periodo!year');
-$oHash1->setcamposNo('todos_n!todos_agd!todos_s!modelo');
-$a_camposHidden1 = array(
-    'tipo' => $Qtipo,
-    'obj_pau' => $Qobj_pau,
-);
-$oHash1->setArraycamposHidden($a_camposHidden1);
 //casas
 $oHash2 = new Hash();
 $oHash2->setCamposForm('cdc_sel!id_cdc_mas!id_cdc_num!empiezamax!empiezamin!iactividad_val!iasistentes_val!periodo!year');
 $oHash2->setcamposNo('id_cdc!sin_activ!modelo');
 $a_camposHidden2 = array(
-    'tipo' => $Qtipo,
     'propuesta_calendario' => $Qpropuesta_calendario,
-    'obj_pau' => $Qobj_pau
 );
 $oHash2->setArraycamposHidden($a_camposHidden2);
 
@@ -132,6 +108,7 @@ $oFormP->setEmpiezaMax($Qempiezamax);
 $oForm = new CasasQue();
 $oForm->setTitulo(strtoupper_dlb(_("búsqueda de casas cuyo planning interesa")));
 // miro que rol tengo. Si soy casa, sólo veo la mía
+$donde = '';
 if ($oMiUsuario->isRolePau('cdc')) {
     $id_pau = $oMiUsuario->getId_pau(); //pueden ser varios separados por comas
     //$sDonde = str_replace(",", " OR id_ubi=", $id_pau);

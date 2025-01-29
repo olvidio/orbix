@@ -45,7 +45,6 @@ if (isset($_POST['stack'])) {
 $oMiUsuario = new Usuario(ConfigGlobal::mi_id_usuario());
 $miSfsv = ConfigGlobal::mi_sfsv();
 
-$Qtipo = (string)filter_input(INPUT_POST, 'tipo');
 $Qobj_pau = (string)filter_input(INPUT_POST, 'obj_pau');
 $Qna = (string)filter_input(INPUT_POST, 'na');
 
@@ -69,7 +68,6 @@ $oHash = new Hash();
 $oHash->setCamposForm('nombre!apellido1!apellido2!centro!empiezamax!empiezamin!iactividad_val!iasistentes_val!periodo!year');
 $oHash->setcamposNo('modelo');
 $a_camposHidden = array(
-    'tipo' => $Qtipo,
     'obj_pau' => $Qobj_pau,
     'na' => $Qna
 );
@@ -116,6 +114,9 @@ switch ($Qobj_pau) {
         break;
     case 'PersonaDl':
         $personas_txt = _("de la dl");
+        break;
+    case 'PersonaEx':
+        $personas_txt = _("de paso");
         break;
     default:
         $err_switch = sprintf(_("opción no definida en switch en %s, linea %s"), __FILE__, __LINE__);

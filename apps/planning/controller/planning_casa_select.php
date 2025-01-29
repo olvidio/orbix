@@ -60,7 +60,6 @@ $oPlanning->setColorColumnaDos($colorColumnaDos);
 $oPlanning->setTable_border($table_border);
 
 $Qcdc_sel = (integer)filter_input(INPUT_POST, 'cdc_sel');
-$Qtipo = (string)filter_input(INPUT_POST, 'tipo');
 $Qpropuesta_calendario = (string)filter_input(INPUT_POST, 'propuesta_calendario');
 $Qyear = (integer)filter_input(INPUT_POST, 'year');
 $Qperiodo = (string)filter_input(INPUT_POST, 'periodo');
@@ -126,15 +125,11 @@ if ($interval < 2) {
 }
 
 $cabecera = ucfirst(_("calendario de casas"));
-if ($Qtipo === 'casa') {
-    $cabecera = ucfirst(_("planning de casas"));
-}
 
 list($sCdc, $a_actividades) = ActividadesPorCasas::actividadesPorCasas($Qcdc_sel, $oIniPlanning, $oFinPlanning, $sin_activ, $fin_iso, $inicio_iso);
 
 $aGoBack = [
     'modelo' => $Qmodelo,
-    'tipo' => $Qtipo,
     'year' => $Qyear,
     'periodo' => $Qperiodo,
     'empiezamax' => $Qempiezamax,

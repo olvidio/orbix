@@ -3,6 +3,7 @@
 use core\ViewPhtml;
 use personas\model\entity\GestorPersonaAgd;
 use personas\model\entity\GestorPersonaDl;
+use personas\model\entity\GestorPersonaEx;
 use personas\model\entity\GestorPersonaN;
 use personas\model\entity\GestorPersonaNax;
 use personas\model\entity\GestorPersonaS;
@@ -46,7 +47,6 @@ if (isset($_POST['stack'])) {
     $stack = filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
     if ($stack != '') {
         $oPosicion->goStack($stack);
-        $Qtipo = $oPosicion->getParametro('tipo');
         $Qobj_pau = $oPosicion->getParametro('obj_pau');
         $Qna = $oPosicion->getParametro('na');
         $Qperiodo = $oPosicion->getParametro('periodo');
@@ -67,7 +67,6 @@ if (isset($_POST['stack'])) {
         $aOperadorCtr = unserialize(base64_decode($QsaOperadorCtr), ['allowed_classes' => false]);
     }
 } else { //si no vengo por goto.
-    $Qtipo = (string)filter_input(INPUT_POST, 'tipo');
     $Qobj_pau = (string)filter_input(INPUT_POST, 'obj_pau');
     $Qna = (string)filter_input(INPUT_POST, 'na');
     $Qyear = (string)filter_input(INPUT_POST, 'year');
@@ -156,6 +155,9 @@ if (!empty($aWhereCtr)) { // si busco por centro sólo puede ser de casa
         case 'PersonaDl':
             $GesPersonas = new GestorPersonaDl();
             break;
+        case 'PersonaEx':
+            $GesPersonas = new GestorPersonaEx();
+            break;
         default:
             $GesPersonas = new GestorPersonaDl();
     }
@@ -166,7 +168,6 @@ if (!empty($aWhereCtr)) { // si busco por centro sólo puede ser de casa
 * Defino un array con los datos actuales, para saber volver después de navegar un rato
 */
 $aGoBack = array(
-    'tipo' => $Qtipo,
     'obj_pau' => $Qobj_pau,
     'na' => $Qna,
     'periodo' => $Qperiodo,
@@ -230,7 +231,6 @@ foreach ($cPersonas as $oPersona) {
 $oHash = new Hash();
 $oHash->setcamposNo('sel!scroll_id!modelo!que!id_dossier');
 $a_camposHidden = array(
-    'tipo' => $Qtipo,
     'obj_pau' => $Qobj_pau,
     'na' => $Qna,
     'periodo' => $Qperiodo,
