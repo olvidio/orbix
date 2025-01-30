@@ -86,7 +86,7 @@ class Differ {
                 }
             }
         }
-        throw new Exception('Should not happen');
+        throw new \Exception('Should not happen');
     }
 
     /**

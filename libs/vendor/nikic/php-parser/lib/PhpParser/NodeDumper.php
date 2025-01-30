@@ -185,6 +185,15 @@ class NodeDumper {
         if ($flags & Modifiers::READONLY) {
             $strs[] = 'READONLY';
         }
+        if ($flags & Modifiers::PUBLIC_SET) {
+            $strs[] = 'PUBLIC_SET';
+        }
+        if ($flags & Modifiers::PROTECTED_SET) {
+            $strs[] = 'PROTECTED_SET';
+        }
+        if ($flags & Modifiers::PRIVATE_SET) {
+            $strs[] = 'PRIVATE_SET';
+        }
 
         if ($strs) {
             return implode(' | ', $strs) . ' (' . $flags . ')';
@@ -277,7 +286,7 @@ class NodeDumper {
     // Copied from Error class
     private function toColumn(string $code, int $pos): int {
         if ($pos > strlen($code)) {
-            throw new RunTimeException('Invalid position information');
+            throw new \RuntimeException('Invalid position information');
         }
 
         $lineStartPos = strrpos($code, "\n", $pos - strlen($code));

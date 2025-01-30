@@ -217,7 +217,7 @@ class ConstExprEvaluator {
             case '<=>': return $this->evaluate($l) <=> $this->evaluate($r);
         }
 
-        throw new Exception('Should not happen');
+        throw new \Exception('Should not happen');
     }
 
     /** @return mixed */
