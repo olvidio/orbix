@@ -21,6 +21,55 @@ require_once("apps/core/global_object.inc");
 
 $Qque = (string)filter_input(INPUT_POST, 'que');
 
+function dibujar_tree(array $aPadres)
+{
+    $html_tree = '<div id="tree">';
+    ksort($aPadres );
+    // supongo que el primero siempre es 0, (la fase previa)
+        foreach ($aPadres[0] as $i => $padre) {
+            $id_fase_i = $padre['id'];
+            $nom = $padre['nom'];
+            // si tiene hijos: branch
+            if (array_key_exists($id_fase_i, $aPadres)) {
+                $html_tree .= '<div class="branch">';
+                $html_tree .= '<div class="entry"><span>' . $nom . '</span>';
+                $html_tree .= '<div class="branch">';
+                $html_tree .= dibujar2($aPadres, $id_fase_i);
+                $html_tree .= "</div>";
+                $html_tree .= "</div>";
+            } else {
+                // si NO tiene hijos: entry
+                $html_tree .= '<div class="entry"><span>' . $nom . '</span></div>';
+
+            }
+        }
+    $html_tree .= '</div>'; //id="tree">';
+    return $html_tree;
+}
+
+function dibujar2($aPadres, $id_fase)
+{
+    $html = '';
+    foreach ($aPadres[$id_fase] as $i => $padre) {
+        $id_fase_i = $padre['id'];
+        $nom = $padre['nom'];
+        // si tiene hijos: branch
+        if (array_key_exists($id_fase_i, $aPadres)) {
+            $html .= '<div class="branch">';
+            $html .= '<div class="entry"><span>' . $nom . '</span>';
+            $html .= '<div class="branch">';
+            $html .= dibujar2($aPadres, $id_fase_i);
+            $html .= "</div>";
+            $html .= "</div>";
+        } else {
+            // si NO tiene hijos: entry
+            $html .= '<div class="entry"><span>' . $nom . '</span></div>';
+
+        }
+    }
+   return $html;
+}
+
 switch ($Qque) {
     case 'regenerar':
         // para cada fase del proceso
@@ -100,8 +149,8 @@ switch ($Qque) {
 
         $GesTareaPorceso = new GestorTareaProceso();
         $cTareasProceso = $GesTareaPorceso->getTareasProceso(['id_tipo_proceso' => $Qid_tipo_proceso, '_ordre' => 'status,id_of_responsable']);
-        $node = '[';
         $i = 0;
+        $aPadres = [];
         foreach ($cTareasProceso as $oTareaProceso) {
             $i++;
             $clase = ($i % 2 == 0) ? 'tono2' : 'tono4';
@@ -139,29 +188,13 @@ switch ($Qque) {
                 $tarea_previa_txt = empty($tarea_previa) ? '' : "($tarea_previa)";
             }
 
-            $id_fase_previa = empty($id_fase_previa) ? 'null' : $id_fase_previa;
-            $node .= ($i > 1) ? ',' : '';
-            $node .= "{id: $id_fase, title: '$fase $tarea_txt', parent: $id_fase_previa, optional: false, link: '$id_item'}";
-        }
-        $node .= ']';
+            $id_fase_previa = empty($id_fase_previa) ? 0 : $id_fase_previa;
 
-        $txt2 = "
-         <div class='workflow'>
-    </div>
-		<script>
-		$(function () {
-		    $('.workflow').workflowChart({
-                circleSize: 30,
-                textSize: 16,
-                chartColor: '#800080',
-                textColor: '#00D700',
-                height: 500,
-		        data: $node 
-		    })
-		});
-		    </script>
-        ";
-        echo $txt2;
+            $aPadres[$id_fase_previa][$i] = ['id' => $id_fase, 'nom' => $fase];
+
+        }
+
+        echo dibujar_tree($aPadres);
         break;
     case 'get_listado':
         $Qid_tipo_proceso = (integer)filter_input(INPUT_POST, 'id_tipo_proceso');

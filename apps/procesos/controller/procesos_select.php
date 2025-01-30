@@ -80,8 +80,6 @@ $h_mover = $oHashMover->linkSinVal();
 $txt_eliminar = _("¿Esta seguro que desea borrar esta fase?");
 $txt_clonar = _("No ha determinado para que proceso");
 
-$pag_flowChart = ConfigGlobal::getWeb_scripts() . '/dani_workflowChart.js';
-
 $a_campos = ['oPosicion' => $oPosicion,
     'h_actualizar' => $h_actualizar,
     'h_clonar' => $h_clonar,
@@ -94,7 +92,6 @@ $a_campos = ['oPosicion' => $oPosicion,
     'url_ver' => $url_ver,
     'txt_eliminar' => $txt_eliminar,
     'txt_clonar' => $txt_clonar,
-    'pag_flowChart' => $pag_flowChart,
 ];
 
 $oView = new ViewTwig('procesos/controller');
