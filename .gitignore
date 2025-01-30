@@ -58,12 +58,12 @@ log/*
 /package-lock.json
 
 # phpunit
-/phpunit.xml
+#/phpunit.xml
 # PhpStorm, intellij
 /.idea
 
 # Composer
-/libs/vendor/phpunit
+##/libs/vendor/phpunit
 
 # Apache Ant
 /.ant_targets
