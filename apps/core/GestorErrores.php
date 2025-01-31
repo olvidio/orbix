@@ -1,6 +1,8 @@
 <?php
 namespace core;
 
+use PDOStatement;
+
 /**
  * Clase para manejar los errores
  *
@@ -89,12 +91,12 @@ class GestorErrores
     /**
      * Añade un error al fichero
      *
-     * @param string $oDBSt Puede ser objeto PDO o PDOStatement
+     * @param PDOStatement $oDBSt Puede ser objeto PDO o PDOStatement
      * @param string $sClauError Un texto cualquiera para poner en el error
      * @param string $line
      * @param string $file
      */
-    function addErrorAppLastError(string &$oDBSt, string $sClauError, string $line, string $file)
+    function addErrorAppLastError(PDOStatement $oDBSt, string $sClauError, string $line, string $file)
     {
         // Cuando ejecuto algún controlador desde la linea de comandos, no existe la ip:
         $ip = empty($_SERVER['REMOTE_ADDR']) ? 'localhost' : $_SERVER['REMOTE_ADDR'];

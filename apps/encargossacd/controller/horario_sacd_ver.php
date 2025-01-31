@@ -78,7 +78,8 @@ if (!empty($id_item)) { //significa que no es nuevo
     $oDBSt_q = $oDbl->query($query);
     $row = $oDBSt_q->fetch(PDO::FETCH_ASSOC);
 
-    extract($row);
+    $f_ini_iso = $row['f_ini'];
+    $f_fin_iso = $row['f_fin'];
 }
 $titulo = _("horario de") . ": " . $desc_enc;
 ?>
@@ -91,12 +92,12 @@ $titulo = _("horario de") . ": " . $desc_enc;
     });
 
     fnjs_guardar_horario = function (tipo) {
-        var err = 0;
-        var formulario = $('#modifica');
-        var f_ini = $('#f_ini').val();
-        var h_ini = $('#h_ini').val();
-        var h_fin = $('#h_fin').val();
-        var dia = $('#dia').val();
+        let err = 0;
+        let formulario = $('#modifica');
+        let f_ini = $('#f_ini').val();
+        let h_ini = $('#h_ini').val();
+        let h_fin = $('#h_fin').val();
+        let dia = $('#dia').val();
 
         if (!f_ini) {
             alert("Debe llenar el campo fecha inicio");
@@ -115,18 +116,18 @@ $titulo = _("horario de") . ": " . $desc_enc;
             err = 1;
         }
 
-        var inc = 0;
-        var dia_sem = dia;
-        var dia_ref = $('#dia_ref').val();
-        var mas_menos = $('#mas_menos').val();
+        let inc = 0;
+        let dia_sem = dia;
+        let dia_ref = $('#dia_ref').val();
+        let mas_menos = $('#mas_menos').val();
 
         //Tengo que multiplicar por 1 (*1) para que me coja los valores como números
         if (dia_ref) {
-            if (mas_menos == "-") {
+            if (mas_menos === "-") {
                 if (dia_ref > dia_sem) inc = dia_ref * 1 - dia_sem * 1;
                 if (dia_ref < dia_sem) inc = dia_ref * 1 + (7 - dia_sem * 1);
             }
-            if (mas_menos == "+") {
+            if (mas_menos === "+") {
                 if (dia_ref > dia_sem) inc = (7 - dia_ref * 1) + dia_sem * 1;
                 if (dia_ref < dia_sem) inc = dia_sem * 1 - dia_ref * 1;
             }
@@ -134,7 +135,7 @@ $titulo = _("horario de") . ": " . $desc_enc;
             $('#dia_inc').val(inc);
         }
 
-        if (err != 1) {
+        if (err !== 1) {
             switch (tipo) {
                 case 4:
                     if (confirm("<?= _("¿Está seguro que desea borrar este horario?") ?>")) {
@@ -174,14 +175,14 @@ $titulo = _("horario de") . ": " . $desc_enc;
         <tr>
 
             <td class=etiqueta><?php echo ucfirst(_("activo desde")); ?>:</td>
-            <td><input class="fecha" size="11" id="f_ini" id="f_ini" name="f_ini" value="<?= $f_ini_iso ?>">
+            <td><input class="fecha" size="11" id="f_ini" name="f_ini" value="<?= $f_ini_iso ?>">
             <td class=etiqueta><?php echo ucfirst(_("hasta")); ?>:</td>
-            <td><input class="fecha" size="11" id="f_fin" id="f_fin" name="f_fin" value="<?= $f_fin_iso ?>">
+            <td><input class="fecha" size="11" id="f_fin" name="f_fin" value="<?= $f_fin_iso ?>">
         </tr>
         <tr>
             <td class=etiqueta><?php echo ucfirst(_("dia")); ?>:</td>
             <td><select class=contenido id="dia" name="dia">
-                    <option \>
+                    <option></option>
                         <?php
                         $dia = $oEncargoFunciones->calcular_dia($mas_menos, $dia_ref, $dia_inc);
                         reset($opciones_dia_semana);
@@ -203,7 +204,7 @@ $titulo = _("horario de") . ": " . $desc_enc;
                         $sel_menos = "selected";
                         $sel_mas = "";
                     }
-                    if ($mas_menos == "+") {
+                    if ($mas_menos === "+") {
                         $sel_mas = "selected";
                         $sel_menos = "";
                     }
@@ -215,7 +216,7 @@ $titulo = _("horario de") . ": " . $desc_enc;
             </td>
             <td>
                 <select class=contenido id="dia_num" name="dia_num">
-                    <option/>
+                    <option></option>
                     <?php
                     reset($opciones_ordinales);
                     foreach ($opciones_ordinales as $key => $d_ord) {
@@ -230,7 +231,7 @@ $titulo = _("horario de") . ": " . $desc_enc;
                 </select>
             </td>
             <td><select class=contenido id="dia_ref" name="dia_ref">
-                    <option/>
+                    <option></option>
                     <?php
                     reset($opciones_dia_ref);
                     foreach ($opciones_dia_ref as $key => $d_ref) {
@@ -265,7 +266,7 @@ $titulo = _("horario de") . ": " . $desc_enc;
     } else {
         echo "<input TYPE=\"button\" VALUE=\"" . ucfirst(_("crear horario")) . "\" onclick=\"javascript:guardar_horario(1)\"> ";
     }
-    // si NO es para uno nuevo, miro si tinen excepciones:
+    // si NO es para uno nuevo, miro si tienen excepciones:
     if (!empty($id_item)) {
         $sql_ex = "SELECT * FROM t_horario_sacd_excepcion WHERE id_item_h=$id_item";
         //echo "query: $sql_ex<br>";

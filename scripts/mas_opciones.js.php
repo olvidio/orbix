@@ -58,7 +58,7 @@ fnjs_mas_selects = function(evt,nom,ir_a_camp) {
 			var tab=8+n;
 			
 
-			txt='<select tabindex="'+tab+'" id=xcamp['+n+'] name=xcamp['+n+'] class=contenido onChange="fnjs_comprobar_selects(\'xcamp['+n+']\',\'+ir_a_camp+\');"><option />';
+			txt='<select tabindex="'+tab+'" id=xcamp['+n+'] name=xcamp['+n+'] class=contenido onChange="fnjs_comprobar_selects(\'xcamp['+n+']\',\'+ir_a_camp+\');"><option></option>';
 			txt += '<?=	$var_options ?>';
 			txt += '</select>';
 
