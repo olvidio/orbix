@@ -5,7 +5,13 @@ use actividades\model\entity\GestorActividad;
 use actividadestudios\model\entity\GestorActividadAsignaturaDl;
 use core\ConfigGlobal;
 use core\ViewPhtml;
+use personas\model\entity\GestorPersonaAgd;
 use personas\model\entity\GestorPersonaDl;
+use personas\model\entity\GestorPersonaEx;
+use personas\model\entity\GestorPersonaN;
+use personas\model\entity\GestorPersonaNax;
+use personas\model\entity\GestorPersonaS;
+use personas\model\entity\GestorPersonaSSSC;
 use planning\domain\Planning;
 use planning\domain\PlanningStyle;
 use ubis\model\entity\CentroDl;
@@ -41,6 +47,7 @@ if (!empty($a_sel)) { //vengo de un checkbox
     }
 }
 
+$Qobj_pau = (string)filter_input(INPUT_POST, 'obj_pau');
 $Qmodelo = (integer)filter_input(INPUT_POST, 'modelo');
 $goLeyenda = Hash::link(ConfigGlobal::getWeb() . '/apps/zonassacd/controller/leyenda.php?' . http_build_query(array('id_item' => 1)));
 
@@ -87,10 +94,34 @@ $Qtodos_s = '';
 $aWhere = [];
 $aOperador = [];
 $cabecera_title = ucfirst(_("persona seleccionada"));
-$oGesPersonas = new GestorPersonaDl();
 $aWhere['id_nom'] = implode(',', $aid_nom);
 $aOperador['id_nom'] = 'OR';
-$cPersonas = $oGesPersonas->getPersonas($aWhere, $aOperador);
+switch ($Qobj_pau) {
+        case 'PersonaN':
+            $GesPersonas = new GestorPersonaN();
+            break;
+        case 'PersonaAgd':
+            $GesPersonas = new GestorPersonaAgd();
+            break;
+        case 'PersonaNax':
+            $GesPersonas = new GestorPersonaNax();
+            break;
+        case 'PersonaS':
+            $GesPersonas = new GestorPersonaS();
+            break;
+        case 'PersonaSSSC':
+            $GesPersonas = new GestorPersonaSSSC();
+            break;
+        case 'PersonaDl':
+            $GesPersonas = new GestorPersonaDl();
+            break;
+        case 'PersonaEx':
+            $GesPersonas = new GestorPersonaEx();
+            break;
+        default:
+            $GesPersonas = new GestorPersonaDl();
+    }
+$cPersonas = $GesPersonas->getPersonas($aWhere, $aOperador);
 
 $aGoBackComun = array(
     'modelo' => $Qmodelo,
@@ -265,7 +296,7 @@ foreach ($cPersonas as $oPersona) {
         'todos_s' => $Qtodos_s,
         'id_ubi' => $Qid_ubi,
     );
-}//fin del else
+}
 
 $aGoBack = array_merge($aGoBackComun, $aGoBack1);
 $oPosicion->setParametros($aGoBack, 1);
