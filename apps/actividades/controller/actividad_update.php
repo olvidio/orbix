@@ -20,7 +20,6 @@ use actividades\model\entity\Importada;
 use actividadplazas\model\entity\ActividadPlazasDl;
 use actividadplazas\model\entity\GestorActividadPlazas;
 use core\ConfigGlobal;
-use http\Client\Response;
 use Illuminate\Http\JsonResponse;
 use procesos\model\entity\GestorActividadProcesoTarea;
 
@@ -153,9 +152,6 @@ switch ($Qmod) {
         } else {
             $jsondata['success'] = TRUE;
         }
-        //Aunque el content-type no sea un problema en la mayoría de casos, es recomendable especificarlo
-        //header('Content-type: application/json; charset=utf-8');
-        //echo json_encode($jsondata);
         (new JsonResponse($jsondata))->send();
         break;
     case "duplicar": // duplicar la actividad.
@@ -232,9 +228,7 @@ switch ($Qmod) {
         } else {
             $jsondata['success'] = TRUE;
         }
-        //Aunque el content-type no sea un problema en la mayoría de casos, es recomendable especificarlo
-        header('Content-type: application/json; charset=utf-8');
-        echo json_encode($jsondata);
+        (new JsonResponse($jsondata))->send();
         break;
     case "cambiar_tipo": // sólo cambio el tipo a una actividad existente //____________________________
         $Qid_tipo_activ = (integer)filter_input(INPUT_POST, 'id_tipo_activ');
@@ -464,9 +458,6 @@ switch ($Qmod) {
         } else {
             $jsondata['success'] = TRUE;
         }
-        //Aunque el content-type no sea un problema en la mayoría de casos, es recomendable especificarlo
-        //header('Content-type: application/json; charset=utf-8');
-        //echo json_encode($jsondata);
         (new JsonResponse($jsondata))->send();
         break;
     default:

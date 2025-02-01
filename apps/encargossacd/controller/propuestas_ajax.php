@@ -6,6 +6,7 @@ use encargossacd\model\entity\GestorPropuestaEncargosSacd;
 use encargossacd\model\entity\PropuestaEncargoSacd;
 use encargossacd\model\entity\PropuestaEncargoSacdHorario;
 use encargossacd\model\GestorPropuestas;
+use Illuminate\Http\JsonResponse;
 use personas\model\entity\GestorPersonaSacd;
 use personas\model\entity\PersonaSacd;
 use web\DateTimeLocal;
@@ -53,9 +54,7 @@ switch ($Qque) {
             $jsondata['success'] = TRUE;
             $jsondata['html'] = $html;
         }
-        //Aunque el content-type no sea un problema en la mayoría de casos, es recomendable especificarlo
-        header('Content-type: application/json; charset=utf-8');
-        echo json_encode($jsondata);
+        (new JsonResponse($jsondata))->send();
         exit();
         break;
     case "dedicacion_update":
@@ -121,9 +120,7 @@ switch ($Qque) {
         } else {
             $jsondata['success'] = TRUE;
         }
-        //Aunque el content-type no sea un problema en la mayoría de casos, es recomendable especificarlo
-        header('Content-type: application/json; charset=utf-8');
-        echo json_encode($jsondata);
+        (new JsonResponse($jsondata))->send();
         exit();
         break;
     case "dedicacion":
@@ -194,9 +191,7 @@ switch ($Qque) {
             $jsondata['success'] = TRUE;
             $jsondata['html'] = $html;
         }
-        //Aunque el content-type no sea un problema en la mayoría de casos, es recomendable especificarlo
-        header('Content-type: application/json; charset=utf-8');
-        echo json_encode($jsondata);
+        (new JsonResponse($jsondata))->send();
         exit();
         break;
     case "info":
@@ -229,9 +224,7 @@ switch ($Qque) {
             $jsondata['success'] = TRUE;
             $jsondata['html'] = $html;
         }
-        //Aunque el content-type no sea un problema en la mayoría de casos, es recomendable especificarlo
-        header('Content-type: application/json; charset=utf-8');
-        echo json_encode($jsondata);
+        (new JsonResponse($jsondata))->send();
         exit();
         break;
     case "cmb_sacd":
@@ -357,9 +350,7 @@ switch ($Qque) {
             $jsondata['id_sacd'] = $Qid_sacd;
             $jsondata['html'] = $html;
         }
-        //Aunque el content-type no sea un problema en la mayoría de casos, es recomendable especificarlo
-        header('Content-type: application/json; charset=utf-8');
-        echo json_encode($jsondata);
+        (new JsonResponse($jsondata))->send();
         exit();
         break;
     case "get_lista":
@@ -380,9 +371,7 @@ switch ($Qque) {
             $jsondata['success'] = TRUE;
             $jsondata['lista'] = $rta;
         }
-        //Aunque el content-type no sea un problema en la mayoría de casos, es recomendable especificarlo
-        header('Content-type: application/json; charset=utf-8');
-        echo json_encode($jsondata);
+        (new JsonResponse($jsondata))->send();
         exit();
         break;
     case "crear_tabla":
@@ -398,9 +387,7 @@ switch ($Qque) {
             $jsondata['success'] = TRUE;
             $jsondata['html'] = $html;
         }
-        //Aunque el content-type no sea un problema en la mayoría de casos, es recomendable especificarlo
-        header('Content-type: application/json; charset=utf-8');
-        echo json_encode($jsondata);
+        (new JsonResponse($jsondata))->send();
         exit();
         break;
 }

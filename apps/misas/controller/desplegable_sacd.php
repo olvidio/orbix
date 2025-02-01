@@ -3,6 +3,7 @@
 
 // INICIO Cabecera global de URL de controlador *********************************
 use encargossacd\model\entity\GestorEncargo;
+use Illuminate\Http\JsonResponse;
 use misas\domain\entity\InicialesSacd;
 use misas\domain\repositories\EncargoDiaRepository;
 use personas\model\entity\GestorPersona;
@@ -210,5 +211,4 @@ $desplegable_sacd.='</SELECT>';
 $jsondata['mensaje']='mensaje de desplegable';
 $jsondata['desplegable']=$desplegable_sacd;
 
-header('Content-type: application/json; charset=utf-8');
-echo json_encode($jsondata);
+(new JsonResponse($jsondata))->send();

@@ -55,13 +55,13 @@ class CartaPresentacion extends ClasePropiedades
      *
      * @var integer
      */
-    private $iid_direccion;
+    protected $iid_direccion;
     /**
      * Id_ubi de CartaPresentacion
      *
      * @var integer
      */
-    private $iid_ubi;
+    protected $iid_ubi;
     /**
      * Pres_nom de CartaPresentacion
      *

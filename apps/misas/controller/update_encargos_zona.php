@@ -3,6 +3,7 @@
 // INICIO Cabecera global de URL de controlador *********************************
 
 use encargossacd\model\entity\Encargo;
+use Illuminate\Http\JsonResponse;
 use ubis\model\entity\Ubi;
 
 require_once("apps/core/global_header.inc");
@@ -74,7 +75,5 @@ if (empty($error_txt)) {
     $jsondata['success'] = false;
     $jsondata['mensaje'] = $error_txt;
 }
-//Aunque el content-type no sea un problema en la mayoría de casos, es recomendable especificarlo
-header('Content-type: application/json; charset=utf-8');
-echo json_encode($jsondata);
+(new JsonResponse($jsondata))->send();
 exit();

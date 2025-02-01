@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Http\JsonResponse;
 use permisos\model\MyCrypt;
 use procesos\model\PermAfectados;
 use procesos\model\entity\GestorPermUsuarioActividad;
@@ -210,10 +211,7 @@ switch ($Qque) {
         if (!empty($Qpassword)) {
             $oCrypt = new MyCrypt();
             $jsondata = $oCrypt->is_valid_password($usuario, $Qpassword);
-
-            //Aunque el content-type no sea un problema en la mayoría de casos, es recomendable especificarlo
-            header('Content-type: application/json; charset=utf-8');
-            echo json_encode($jsondata);
+            (new JsonResponse($jsondata))->send();
             exit();
         }
         break;
@@ -232,9 +230,7 @@ switch ($Qque) {
             $jsondata = $oCrypt->is_valid_password($usuario, $Qpassword);
 
             if ($jsondata['success'] === FALSE) {
-                //Aunque el content-type no sea un problema en la mayoría de casos, es recomendable especificarlo
-                header('Content-type: application/json; charset=utf-8');
-                echo json_encode($jsondata);
+                (new JsonResponse($jsondata))->send();
                 exit();
             } else {
                 $my_passwd = $oCrypt->encode($Qpassword);

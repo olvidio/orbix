@@ -6,6 +6,7 @@ use certificados\domain\entity\Certificado;
 use certificados\domain\repositories\CertificadoRepository;
 use core\ConfigGlobal;
 use core\ServerConf;
+use Illuminate\Http\JsonResponse;
 use personas\model\entity\Persona;
 use web\DateTimeLocal;
 use function core\is_true;
@@ -93,7 +94,5 @@ if (empty($error_txt)) {
     $jsondata['success'] = FALSE;
     $jsondata['mensaje'] = $error_txt;
 }
-//Aunque el content-type no sea un problema en la mayoría de casos, es recomendable especificarlo
-header('Content-type: application/json; charset=utf-8');
-echo json_encode($jsondata);
+(new JsonResponse($jsondata))->send();
 exit();

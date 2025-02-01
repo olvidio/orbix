@@ -2,6 +2,7 @@
 // INICIO Cabecera global de URL de controlador *********************************
 
 use certificados\domain\CertificadoDelete;
+use Illuminate\Http\JsonResponse;
 
 require_once("apps/core/global_header.inc");
 // Archivos requeridos por esta url **********************************************
@@ -32,7 +33,5 @@ if (!empty($error_txt)) {
 } else {
     $jsondata['success'] = TRUE;
 }
-//Aunque el content-type no sea un problema en la mayoría de casos, es recomendable especificarlo
-header('Content-type: application/json; charset=utf-8');
-echo json_encode($jsondata);
+(new JsonResponse($jsondata))->send();
 exit();

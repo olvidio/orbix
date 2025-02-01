@@ -1,5 +1,6 @@
 <?php
 // INICIO Cabecera global de URL de controlador *********************************
+use Illuminate\Http\JsonResponse;
 use notas\model\entity\Acta;
 
 require_once("apps/core/global_header.inc");
@@ -32,7 +33,5 @@ if (!empty($error_txt)) {
 } else {
     $jsondata['success'] = TRUE;
 }
-//Aunque el content-type no sea un problema en la mayoría de casos, es recomendable especificarlo
-header('Content-type: application/json; charset=utf-8');
-echo json_encode($jsondata);
+(new JsonResponse($jsondata))->send();
 exit();

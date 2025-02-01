@@ -2,6 +2,7 @@
 
 
 // INICIO Cabecera global de URL de controlador *********************************
+use Illuminate\Http\JsonResponse;
 use web\DateTimeLocal;
 use web\Desplegable;
 use web\Hash;
@@ -52,5 +53,4 @@ $desplegable_ctr.='</SELECT>';
 $jsondata['mensaje']='mensaje de desplegable';
 $jsondata['desplegable']=$desplegable_ctr;
 
-header('Content-type: application/json; charset=utf-8');
-echo json_encode($jsondata);
+(new JsonResponse($jsondata))->send();

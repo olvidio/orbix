@@ -5,6 +5,7 @@
 use encargossacd\model\entity\Encargo;
 use encargossacd\model\entity\EncargoTipo;
 use encargossacd\model\entity\GestorEncargoHorario;
+use Illuminate\Http\JsonResponse;
 use misas\domain\EncargoDiaId;
 use misas\domain\EncargoDiaTend;
 use misas\domain\EncargoDiaTstart;
@@ -148,7 +149,5 @@ if (empty($error_txt)) {
     $jsondata['mensaje'] = 'ERROR: '.$error_txt;
 }
 
-//Aunque el content-type no sea un problema en la mayoría de casos, es recomendable especificarlo
-header('Content-type: application/json; charset=utf-8');
-echo json_encode($jsondata);
+(new JsonResponse($jsondata))->send();
 exit();
