@@ -35,30 +35,7 @@ require_once("apps/core/global_object.inc");
 
 $oPosicion->recordar();
 
-$aid_nom = array();
-
-
-$goLeyenda = Hash::link(ConfigGlobal::getWeb() . '/apps/zonassacd/controller/leyenda.php?' . http_build_query(array('id_item' => 1)));
-
 $Qmodelo = (integer)filter_input(INPUT_POST, 'modelo');
-switch ($Qmodelo) {
-    case 2:
-        $print = 1;
-    case 1:
-        include_once(ConfigGlobal::$dir_estilos . '/calendario.css.php');
-        //include_once('apps/web/calendario.php');
-        break;
-    case 3:
-        include_once(ConfigGlobal::$dir_estilos . '/calendario_grid.css.php');
-        include_once('apps/web/calendario_grid.php');
-        break;
-}
-// para los estilos. Las variables están en la página css.
-$oPlanning = new Planning();
-$oPlanning->setColorColumnaUno($colorColumnaUno);
-$oPlanning->setColorColumnaDos($colorColumnaDos);
-$oPlanning->setTable_border($table_border);
-
 $Qcdc_sel = (integer)filter_input(INPUT_POST, 'cdc_sel');
 $Qpropuesta_calendario = (string)filter_input(INPUT_POST, 'propuesta_calendario');
 $Qyear = (integer)filter_input(INPUT_POST, 'year');
@@ -167,6 +144,7 @@ $oHashVer = new Hash();
 $oHashVer->setUrl(ConfigGlobal::getWeb() . '/apps/planning/controller/planning_casa_ver.php');
 $a_camposHidden = array(
     'que' => 'get',
+    'modelo' => $Qmodelo,
     'dd' => $Qdd,
     'cabecera' => $cabecera,
     'sactividades' => $sactividades,

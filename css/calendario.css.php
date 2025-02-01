@@ -17,39 +17,7 @@ Se define un estilo, para la tabla.
  td.act		- las celdas que pone el nombre de la actividad
  td.nada	- las celdas que están vacías. (contienen un espacio)
 */
-
-
-bla,bla...
-El atributo FRAME controla las líneas perimetrales de la tabla y puede recibir los siguientes valores:
-
-VOID - ABOVE - BELOW - HSIDES - LHS - RHS - VSIDES - BOX - BORDER
-
-VOID: Ninguna línea. Este es el valor por omisión (default).
-ABOVE: La línea superior únicamente.
-BELOW: La línea inferior únicamente.
-LHS: La línea izquierda únicamente.
-RHS: La línea derecha únicamente.
-HSIDES: Las líneas superior e inferior únicamente.
-VSIDES: Las líneas derecha e izquierda únicamente.
-BOX: Las cuatro líneas.
-BORDER: Las cuatro líneas.
-
-El atributo RULES controla las líneas que aparecen entre celdas. Sus valores son:
-
-NONE - GROUPS - ROWS - COLS - ALL
-
-NONE: Ninguna línea. Este es el valor por omisión.
-GROUPS: Las líneas entre grupos de líneas y grupos de columnas.
-ROWS: Serán visibles las líneas que separan líneas (elemento TR).
-COLS: Serán visibles las líneas que separan columnas (elemento TD).
-ALL: Todas las líneas.
-
-El atributo BORDER indica en pixels el ancho del reborde de las tablas. BORDER = 3 dibujará un reborde de tres pixels de ancho.
-
 -->
-
-<!-- PAGINA DE ESTILO: <?= __FILE__; ?> -->
-
 <style>
 	table  {
      	border : solid;
@@ -69,15 +37,15 @@ El atributo BORDER indica en pixels el ancho del reborde de las tablas. BORDER =
     }
 
  	th.diumenge, th.diumengenum  {
-     	background-color : #EE5522;
+     	background-color: #EE5522;
     }
 
     th.lletra  {
-     	font-size : 9pt;
-     	border-style : solid;
-     	border-color : Maroon;
-     	border-width : 1px;
-     	border-bottom-width : 0px;
+     	font-size: 9pt;
+     	border-style: solid;
+     	border-color: Maroon;
+     	border-width: 1px;
+     	border-bottom-width: 0px;
     }
 
     th.num  {
@@ -361,8 +329,3 @@ td.proyectof  {
     }
 }
 </style>
-<?php
-$colorColumnaUno				= "#EEEEEE";
-$colorColumnaDos				= "#F6F6F6";
-$table_border=" frame=below rules=groups CELLSPACING=0";
-?>

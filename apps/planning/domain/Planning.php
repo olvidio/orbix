@@ -142,7 +142,7 @@ class Planning
             if ($m != $m_anterior || $c >= $total_dias_0) {
                 $inc_c = $this->idd * ($c - $c_anterior);
                 $lletra_mes = $mes[$m_anterior];
-                $txt_head .= "<th colspan=$inc_c style=\"widht: $ample%\" class=\"mes\" >$lletra_mes - $any</th>";
+                $txt_head .= "<th colspan=$inc_c style=\"width: $ample%\" class=\"mes\" >$lletra_mes - $any</th>";
                 $c_anterior = $c;
                 $m_anterior = $m;
             }
@@ -486,7 +486,7 @@ class Planning
                                         $conflicto = "link";
                                     }
                                     if (!empty($this->imod) && !empty($lnk[$a])) {
-                                        $texto = "<td colspan=\"$inc2\" class=\"$clase_act\" title=\"$nom[$a]\"><span class=\"texto $conflicto\" onclick=\"fnjs_cambiar_activ('$id_activ[$a]','$this->imod');\">$nom_curt[$a]</span></td>";
+                                        $texto = "<td colspan=\"$inc2\" class=\"$clase_act\" title=\"$nom[$a]\"><span class=\"texto $conflicto\" onclick=\"fnjs_cambiar_activ('$id_activ[$a]');\">$nom_curt[$a]</span></td>";
                                     } else {
                                         //$clase_act = $clase_act . "_nomod";
                                         $texto = "<td colspan=\"$inc2\" class=\"$clase_act\" title=\"$nom[$a]\"><span class='texto'>$nom_curt[$a]</span></td>";

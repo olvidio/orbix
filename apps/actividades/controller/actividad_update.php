@@ -155,7 +155,6 @@ switch ($Qmod) {
         header('Content-type: application/json; charset=utf-8');
         echo json_encode($jsondata);
         break;
-        break;
     case "duplicar": // duplicar la actividad.
         $a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
         if (!empty($a_sel)) {
@@ -317,6 +316,8 @@ switch ($Qmod) {
         }
         break;
     case "editar": // editar la actividad.
+        $error_txt = '';
+
         $Qid_tipo_activ = (integer)filter_input(INPUT_POST, 'id_tipo_activ');
         $Qid_ubi = (integer)filter_input(INPUT_POST, 'id_ubi');
         $Qnum_asistentes = (integer)filter_input(INPUT_POST, 'num_asistentes');
@@ -354,8 +355,8 @@ switch ($Qmod) {
             if (strpos($condta, '.') === false) {
                 $valor_id_tipo_activ = $condta;
             } else {
-                echo _("debe seleccionar un tipo de actividad") . "<br>";
-                die();
+                $error_txt = _("debe seleccionar un tipo de actividad") . "<br>";
+                die($error_txt);
             }
         } else {
             $valor_id_tipo_activ = $Qid_tipo_activ;
@@ -404,8 +405,8 @@ switch ($Qmod) {
         $oActividad->setPublicado($Qpublicado);
         $oActividad->setPlazas($Qplazas);
         if ($oActividad->DBGuardar() === false) {
-            echo _("hay un error, no se ha guardado");
-            echo "\n" . $oActividad->getErrorTxt();
+            $error_txt .= _("hay un error, no se ha guardado");
+            $error_txt .= "\n" . $oActividad->getErrorTxt();
         } else {
             // Si cambio de dl_propia a otra (o al revés), hay que cambiar el proceso. Se hace al final para que la actividad ya tenga puesta la nueva dl
             if (ConfigGlobal::is_app_installed('procesos')) {
@@ -446,13 +447,23 @@ switch ($Qmod) {
                         $oActividadPlazasDl->setPlazas($Qplazas);
 
                         if ($oActividadPlazasDl->DBGuardar() === false) {
-                            echo _("hay un error, no se ha guardado");
-                            echo "\n" . $oActividadPlazasDl->getErrorTxt();
+                            $error_txt .=  _("hay un error, no se ha guardado");
+                            $error_txt .= "\n" . $oActividadPlazasDl->getErrorTxt();
                         }
                     }
                 }
             }
         }
+
+        if (!empty($error_txt)) {
+            $jsondata['success'] = FALSE;
+            $jsondata['mensaje'] = $error_txt;
+        } else {
+            $jsondata['success'] = TRUE;
+        }
+        //Aunque el content-type no sea un problema en la mayoría de casos, es recomendable especificarlo
+        header('Content-type: application/json; charset=utf-8');
+        echo json_encode($jsondata);
         break;
     default:
         $err_switch = sprintf(_("opción no definida en switch en %s, linea %s"), __FILE__, __LINE__);

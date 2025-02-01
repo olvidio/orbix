@@ -13,10 +13,10 @@ use core\ConfigGlobal;
         var url = '<?= ConfigGlobal::getWeb() ?>/apps/actividades/controller/planning_casa_nueva.php';
         var parametros = 'id_ubi=' + id_ubi + "&<?= $param_new ?>";
 
-        fnjs_update_div('#div_modificar', url + '?' + parametros);
+        fnjs_update_div('#div_modificar', url + '?' + parametros, 1);
         //calendario_activ_nueva.php
     }
-    fnjs_cambiar_activ = function (id_activ, m) {
+    fnjs_cambiar_activ = function (id_activ) {
         $('#div_modificar').addClass('ventana');
         $('#div_modificar').width('auto');
         $('#div_modificar').height('auto');
@@ -25,7 +25,7 @@ use core\ConfigGlobal;
         var url = '<?= ConfigGlobal::getWeb() ?>/apps/actividades/controller/planning_casa_modificar.php';
         var parametros = 'id_activ=' + id_activ + "&<?= $param_mod ?>";
 
-        fnjs_update_div('#div_modificar', url + '?' + parametros);
+        fnjs_update_div('#div_modificar', url + '?' + parametros, 1);
     }
     fnjs_cerrar = function () {
         $('#div_modificar').html('');
@@ -33,10 +33,6 @@ use core\ConfigGlobal;
         $('#div_modificar').height('0');
         $('#div_modificar').removeClass('ventana');
         document.getElementById("overlay").style.display = "none";
-    }
-
-    fnjs_volver = function () {
-        <?= $oPosicion->js_atras(0) ?>;
     }
 
     fnjs_ver = function () {
@@ -60,6 +56,8 @@ use core\ConfigGlobal;
 
     $(document).ready(fnjs_ver());
 </script>
+<?= $oPosicion->mostrar_left_slide(1) ?>
+
 <div id='ficha'></div>
 <div id='div_modificar'></div>
 <div id='overlay'></div>

@@ -694,8 +694,10 @@ $h = $oHash->linkSinVal();
         }
     }
 
-    function fnjs_update_div(bloque, ref) {
-        fnjs_borrar_posibles_atras();
+    function fnjs_update_div(bloque, ref, mantener_atras=0) {
+        if (mantener_atras === 0) {
+            fnjs_borrar_posibles_atras();
+        }
         var path = ref.replace(/\?.*$/, '');
         var pattern = /\?/;
         if (pattern.test(ref)) {

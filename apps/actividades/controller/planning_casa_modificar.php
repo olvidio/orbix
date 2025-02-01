@@ -133,7 +133,8 @@ $procesos_installed = ConfigGlobal::is_app_installed('procesos');
 
 $status_txt = $a_status[$status];
 
-$accion = '';
+$titulo = _("modificar actividad");
+$accion = 'editar';
 $a_campos = [
     'oPosicion' => $oPosicion,
     'oHash' => $oHash,
@@ -143,6 +144,7 @@ $a_campos = [
     'mod' => $mod,
     'permiso_des' => $permiso_des,
     'accion' => $accion,
+    'titulo' => $titulo,
     'sasistentes' => $sasistentes,
     'sactividad' => $sactividad,
     'snom_tipo' => $snom_tipo,

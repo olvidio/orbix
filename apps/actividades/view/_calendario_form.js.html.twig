@@ -33,7 +33,7 @@ $("#f_fin").on("click", function() {
     }
 });
 /*
- * Para enviar los parametros por POST
+ * Para enviar los parámetros por POST
  * @type jQuery
  */
 fnjs_cambiar_ubi=function(){
@@ -93,15 +93,17 @@ fnjs_guardar=function(tipo=''){
 			$.ajax({
 				data: $(this).serialize(),
 				url: $(this).attr('action'),
-				type: 'post'
+				type: 'post',
+                dataType: 'json'
             })
-            .done(function( rta_txt ) {
-                if (rta_txt !== '' && rta_txt !== '\\n') {
-                    alert ('{{ "respuesta"|trans|raw }}: '+rta_txt);
+            .done(function( json ) {
+				 if (json.success !== true) {
+                    alert('{{ "respuesta"|trans|raw }}: ' + json.mensaje);
+                } else {
+					 // Esta función está en planning_casa_select.phtml
+					 fnjs_cerrar();
+					 fnjs_ver();
                 }
-                // Esta función está en calendario_planning.phtml 
-                fnjs_cerrar();
-                fnjs_volver();
             });
             return false;
         });
@@ -116,6 +118,6 @@ fnjs_tipo_actividad=function(){
 	$('#mod').val('cambiar_tipo');
 	fnjs_enviar_formulario('#modifica');
 };
-fnjs_left_side_hide();
+//fnjs_left_side_hide();
 </script>
 {% endblock %}

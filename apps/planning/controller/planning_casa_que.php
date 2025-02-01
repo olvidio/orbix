@@ -74,13 +74,13 @@ $Qempiezamin = (string)filter_input(INPUT_POST, 'empiezamin');
 $QsSeleccionados = (string)filter_input(INPUT_POST, 'sSeleccionados');
 
 //casas
-$oHash2 = new Hash();
-$oHash2->setCamposForm('cdc_sel!id_cdc_mas!id_cdc_num!empiezamax!empiezamin!iactividad_val!iasistentes_val!periodo!year');
-$oHash2->setcamposNo('id_cdc!sin_activ!modelo');
+$oHash = new Hash();
+$oHash->setCamposForm('cdc_sel!id_cdc_mas!id_cdc_num!empiezamax!empiezamin!iactividad_val!iasistentes_val!modelo!periodo!sin_activ!year');
+$oHash->setcamposNo('id_cdc');
 $a_camposHidden2 = array(
     'propuesta_calendario' => $Qpropuesta_calendario,
 );
-$oHash2->setArraycamposHidden($a_camposHidden2);
+$oHash->setArraycamposHidden($a_camposHidden2);
 
 $aOpciones = array(
     'tot_any' => _("todo el año"),
@@ -137,7 +137,7 @@ $oForm->setSeleccionados($QsSeleccionados);
 
 $a_campos = ['oPosicion' => $oPosicion,
     'propuesta_calendario' => $Qpropuesta_calendario,
-    'oHash2' => $oHash2,
+    'oHash' => $oHash,
     'oFormP' => $oFormP,
     'oForm' => $oForm,
     'locale_us' => ConfigGlobal::is_locale_us(),

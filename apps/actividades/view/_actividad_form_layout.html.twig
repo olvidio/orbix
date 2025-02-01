@@ -6,7 +6,8 @@ td { border:none; }
 </style>
 {% block scripts %}{% endblock %}
 {% block arrow %}{% endblock %}
-<div id="exportar" export_modo="formulario">
+{# pongo exportar2 porque en plannig ya existe, y se llama a este formulario #}
+<div id="exportar2" export_modo="formulario">
 <form id="modifica" name="modifica" action="" method="POST" >
 {% block head %}{% endblock %}
 {% block body %}{% endblock %}
