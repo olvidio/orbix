@@ -20,6 +20,8 @@ use actividades\model\entity\Importada;
 use actividadplazas\model\entity\ActividadPlazasDl;
 use actividadplazas\model\entity\GestorActividadPlazas;
 use core\ConfigGlobal;
+use http\Client\Response;
+use Illuminate\Http\JsonResponse;
 use procesos\model\entity\GestorActividadProcesoTarea;
 
 /**
@@ -152,8 +154,9 @@ switch ($Qmod) {
             $jsondata['success'] = TRUE;
         }
         //Aunque el content-type no sea un problema en la mayoría de casos, es recomendable especificarlo
-        header('Content-type: application/json; charset=utf-8');
-        echo json_encode($jsondata);
+        //header('Content-type: application/json; charset=utf-8');
+        //echo json_encode($jsondata);
+        (new JsonResponse($jsondata))->send();
         break;
     case "duplicar": // duplicar la actividad.
         $a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
@@ -462,8 +465,9 @@ switch ($Qmod) {
             $jsondata['success'] = TRUE;
         }
         //Aunque el content-type no sea un problema en la mayoría de casos, es recomendable especificarlo
-        header('Content-type: application/json; charset=utf-8');
-        echo json_encode($jsondata);
+        //header('Content-type: application/json; charset=utf-8');
+        //echo json_encode($jsondata);
+        (new JsonResponse($jsondata))->send();
         break;
     default:
         $err_switch = sprintf(_("opción no definida en switch en %s, linea %s"), __FILE__, __LINE__);
