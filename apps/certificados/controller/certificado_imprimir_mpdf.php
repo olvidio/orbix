@@ -8,6 +8,7 @@ use notas\model\entity\GestorPersonaNotaDB;
 use notas\model\entity\GestorPersonaNotaDlDB;
 use notas\model\PersonaNota;
 use personas\model\entity\Persona;
+use ubis\model\entity\GestorDelegacion;
 use web\DateTimeLocal;
 use function core\is_true;
 
@@ -80,7 +81,7 @@ if (!empty($idioma)) {
     $dir = ConfigGlobal::$dir_languages . '/' . $idioma;
     $filename_textos = $dir . '/' . "textos_certificados.php";
     if (!file_exists($filename_textos)) {
-        $msg = "<br>".sprintf(_("No existe un fichero con las traducciones para %s"), $idioma);
+        $msg = "<br>" . sprintf(_("No existe un fichero con las traducciones para %s"), $idioma);
         exit ($msg);
     }
 
@@ -108,6 +109,61 @@ if (!empty($idioma)) {
 $oHoy = new DateTimeLocal();
 $lugar_fecha = $lugar_firma . ",  " . $oHoy->getFechaLatin();
 $region = $region_latin;
+
+// Asignaturas posibles:
+$GesAsignaturas = new GestorAsignatura();
+$aWhere = array();
+$aOperador = array();
+$aWhere['status'] = 't';
+$aWhere['id_nivel'] = '1100,2500';
+$aOperador['id_nivel'] = 'BETWEEN';
+$aWhere['_ordre'] = 'id_nivel';
+$cAsignaturas = $GesAsignaturas->getAsignaturas($aWhere, $aOperador);
+
+// Asignaturas cursadas:
+// solamente las notas de mi región_stgr. Normalmente serian las notas_dl,
+// pero para casos como H-Hv...
+$region_stgr = ConfigGlobal::mi_dele();
+$mi_sfsv = ConfigGlobal::mi_sfsv();
+$gesDelegacion = new GestorDelegacion();
+$a_id_schemas_rstgr = $gesDelegacion->getArrayIdSchemaRegionStgr($region_stgr, $mi_sfsv);
+if (empty($a_id_schemas_rstgr)) {
+    $msg = _("Debe definir la región del stgr a la que pertenece");
+    die($msg);
+}
+$GesNotas = new GestorPersonaNotaDB();
+$aWhere = array();
+$aOperador = array();
+$aWhere['id_schema'] = implode(',', $a_id_schemas_rstgr);
+$aOperador['id_schema'] = 'IN';
+$aWhere['id_nom'] = $id_nom;
+$aWhere['id_nivel'] = '1100,2500';
+$aOperador['id_nivel'] = 'BETWEEN';
+$aWhere['tipo_acta'] = PersonaNota::FORMATO_ACTA;
+$cNotas = $GesNotas->getPersonaNotas($aWhere, $aOperador);
+$aAprobadas = array();
+foreach ($cNotas as $oPersonaNota) {
+    $id_asignatura = $oPersonaNota->getId_asignatura();
+    $id_nivel = $oPersonaNota->getId_nivel();
+
+    $oAsig = new Asignatura($id_asignatura);
+    if ($id_asignatura > 3000) {
+        $id_nivel_asig = $id_nivel;
+    } else {
+        if (!is_true($oAsig->getStatus())) {
+            continue;
+        }
+        $id_nivel_asig = $oAsig->getId_nivel();
+    }
+    $creditos = $oAsig->getCreditos();
+    $n = $id_nivel_asig;
+    $aAprobadas[$n]['id_nivel_asig'] = $id_nivel_asig;
+    $aAprobadas[$n]['id_nivel'] = $id_nivel;
+    $aAprobadas[$n]['id_asignatura'] = $id_asignatura;
+    $aAprobadas[$n]['nombre_asignatura'] = $oAsig->getNombre_asignatura();
+    $aAprobadas[$n]['creditos'] = number_format(($creditos * 2), 0);
+    $aAprobadas[$n]['nota_txt'] = $oPersonaNota->getNota_txt();
+}
 
 function titulo($id_asignatura){
 global $curso_filosofia, $curso_teologia, $ECTS, $iudicium, $any_I, $any_II, $any_III, $any_IV, $pie_ects;
@@ -269,48 +325,6 @@ case 2201:
                     <td class="subtitulo2" colspan="5"><?= $infra ?></td>
                 </tr>
                 <?php
-                // Asignaturas posibles:
-                $GesAsignaturas = new GestorAsignatura();
-                $aWhere = array();
-                $aOperador = array();
-                $aWhere['status'] = 't';
-                $aWhere['id_nivel'] = '1100,2500';
-                $aOperador['id_nivel'] = 'BETWEEN';
-                $aWhere['_ordre'] = 'id_nivel';
-                $cAsignaturas = $GesAsignaturas->getAsignaturas($aWhere, $aOperador);
-
-                // Asignaturas cursadas:
-                // solamente las notas de mi región_stgr. Normalmente serian las notas_dl,
-                // pero para casos como H-Hv se deben tener en cuenta todas las dl de H
-                $GesNotas = new GestorPersonaNotaDlDB();
-                $aWhere = array();
-                $aOperador = array();
-                $aWhere['id_nom'] = $id_nom;
-                $aWhere['id_nivel'] = '1100,2500';
-                $aOperador['id_nivel'] = 'BETWEEN';
-                $aWhere['tipo_acta'] = PersonaNota::FORMATO_ACTA;
-                $cNotas = $GesNotas->getPersonaNotas($aWhere, $aOperador);
-                $aAprobadas = array();
-                foreach ($cNotas as $oPersonaNota) {
-                    $id_asignatura = $oPersonaNota->getId_asignatura();
-                    $id_nivel = $oPersonaNota->getId_nivel();
-
-                    $oAsig = new Asignatura($id_asignatura);
-                    if ($id_asignatura > 3000) {
-                        $id_nivel_asig = $id_nivel;
-                    } else {
-                        if (!is_true($oAsig->getStatus())) { continue; }
-                        $id_nivel_asig = $oAsig->getId_nivel();
-                    }
-                    $creditos = $oAsig->getCreditos();
-                    $n = $id_nivel_asig;
-                    $aAprobadas[$n]['id_nivel_asig'] = $id_nivel_asig;
-                    $aAprobadas[$n]['id_nivel'] = $id_nivel;
-                    $aAprobadas[$n]['id_asignatura'] = $id_asignatura;
-                    $aAprobadas[$n]['nombre_asignatura'] = $oAsig->getNombre_asignatura();
-                    $aAprobadas[$n]['creditos'] = number_format(($creditos * 2), 0);
-                    $aAprobadas[$n]['nota_txt'] = $oPersonaNota->getNota_txt();
-                }
                 ksort($aAprobadas);
                 $num_asig = count($cAsignaturas);
 
@@ -341,7 +355,7 @@ case 2201:
                         $etcs = number_format(($creditos * 2), 0);
                         titulo($oAsignatura->getId_nivel());
                         ?>
-                        <tr  style="vertical-align: text-bottom">
+                        <tr style="vertical-align: text-bottom">
                             <td></td>
                             <td><?= $nombre_asignatura ?>&nbsp;</td>
                             <td class="dato"><?= $etcs ?>&nbsp;</td>
