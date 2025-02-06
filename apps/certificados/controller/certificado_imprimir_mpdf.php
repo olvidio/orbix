@@ -123,9 +123,11 @@ $cAsignaturas = $GesAsignaturas->getAsignaturas($aWhere, $aOperador);
 // Asignaturas cursadas:
 // solamente las notas de mi región_stgr. Normalmente serian las notas_dl,
 // pero para casos como H-Hv...
-$region_stgr = ConfigGlobal::mi_dele();
-$mi_sfsv = ConfigGlobal::mi_sfsv();
 $gesDelegacion = new GestorDelegacion();
+$mi_dl = ConfigGlobal::mi_dele();
+$a_mi_region_stgr = $gesDelegacion->mi_region_stgr($mi_dl);
+$region_stgr = $a_mi_region_stgr['region_stgr'];
+$mi_sfsv = ConfigGlobal::mi_sfsv();
 $a_id_schemas_rstgr = $gesDelegacion->getArrayIdSchemaRegionStgr($region_stgr, $mi_sfsv);
 if (empty($a_id_schemas_rstgr)) {
     $msg = _("Debe definir la región del stgr a la que pertenece");
