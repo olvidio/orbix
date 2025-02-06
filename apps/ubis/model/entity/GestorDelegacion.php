@@ -105,26 +105,31 @@ class GestorDelegacion extends ClaseGestor
         if (empty($dele)) {
             $dele = ConfigGlobal::mi_dele();
         }
-
-        $sQuery = "SELECT region_stgr, region
+        // caso especial de H:
+        if ($dele === 'H') {
+            $region_dele = 'H';
+            $region_stgr = 'H';
+        } else {
+            $sQuery = "SELECT region_stgr, region
                         FROM $nom_tabla
                         WHERE dl = '$dele'";
 
-        if (($oDblSt = $oDbl->query($sQuery)) === false) {
-            $sClauError = 'GestorDelegacion.region_stgr';
-            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
-            return false;
-        }
-        $aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);
-        if ($aDades === FALSE || empty($aDades)) {
-            $message = sprintf(_("No se encuentra información de la dl: %s"), $dele);
-            throw new RunTimeException($message);
-        }
-        $region_dele = $aDades['region'];
-        $region_stgr = $aDades['region_stgr'];
-        if (empty($aDades['region_stgr'])) {
-            $message = sprintf(_("falta indicar a que región del stgr pertenece la dl: %s"), $dele);
-            throw new RunTimeException($message);
+            if (($oDblSt = $oDbl->query($sQuery)) === false) {
+                $sClauError = 'GestorDelegacion.region_stgr';
+                $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+                return false;
+            }
+            $aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);
+            if ($aDades === FALSE || empty($aDades)) {
+                $message = sprintf(_("No se encuentra información de la dl: %s"), $dele);
+                throw new RunTimeException($message);
+            }
+            $region_dele = $aDades['region'];
+            $region_stgr = $aDades['region_stgr'];
+            if (empty($aDades['region_stgr'])) {
+                $message = sprintf(_("falta indicar a que región del stgr pertenece la dl: %s"), $dele);
+                throw new RunTimeException($message);
+            }
         }
         // nombre del esquema
         $esquema_dele = $region_dele . '-' . $dele;
