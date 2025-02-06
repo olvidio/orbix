@@ -63,7 +63,7 @@ use core\ConfigGlobal;
 <form id="frm" action="" method=post>
     <?= $oHash->getCamposHtml(); ?>
     <table>
-        <tr valign=top align=left>
+        <tr style="vertical-align=top; text-align: left">
             <td><?= _("esquema") ?>: <?= $oEsquemaRef ?> </td>
         </tr>
     </table>
@@ -73,7 +73,7 @@ use core\ConfigGlobal;
     Si no sale en la lista, hay que ir a "Global > Ubis > delegaciones" y añadir la dl, o cambiar el nombre a una
     existente. (idem con la region)
     <table>
-        <tr valign=top align=left>
+        <tr style="vertical-align=top; text-align: left">
             <td><?= _("región") ?>:</td>
             <td><?= $oDesplRegiones->desplegable() ?>
             </td>
@@ -118,7 +118,7 @@ use core\ConfigGlobal;
 <form id="frm_absorber" action="" method=post>
     <?= $oHashAbsorber->getCamposHtml(); ?>
     <table>
-        <tr valign=top align=left>
+        <tr style="vertical-align=top; text-align: left">
             <td><?= _("esquema matriz") ?>: <?= $oDesplMatriz->desplegable() ?> </td>
             <td><?= _("esquema a disolver") ?>: <?= $oDesplDel->desplegable() ?> </td>
         </tr>

@@ -102,7 +102,7 @@ class GestorPersonaNotaOtraRegionStgrDB extends GestorPersonaNotaDB
         }
     }
 
-    private function getPersonaNotasConCertificado(?string $certificado, ?string $estado = null): false
+    private function getPersonaNotasConCertificado(?string $certificado, ?string $estado = null): false|array
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();

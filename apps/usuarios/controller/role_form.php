@@ -169,7 +169,6 @@ $a_campos = [
     'que_user' => $que_user,
     'txt_sfsv' => $txt_sfsv,
     'permiso' => $permiso,
-    'role' => $role,
     'chk_sf' => $chk_sf,
     'chk_sv' => $chk_sv,
     'oDesplPau' => $oDesplPau,

@@ -22,6 +22,7 @@ use core\ConfigGlobal;
 use notas\model\entity\GestorPersonaNotaDB;
 use personas\model\entity\Persona;
 use web\Hash;
+use function core\is_true;
 
 require_once("apps/core/global_header.inc");
 // Archivos requeridos por esta url **********************************************
@@ -90,7 +91,7 @@ function titulo($id_asignatura)
 {
     $html = '';
     $cabecera = '<tr><td class="space"></td></tr>
-	 		<tr valign="bottom"><td style="width: 2%"></td>
+	 		<tr style="vertical-align=bottom"><td style="width: 2%"></td>
 			<td class="cabecera" style="width: 46%">DISCIPLIN&#198;</td>
 			<td class="cabecera" style="width: 25%">CUM NOTA</td>
 			<td class="cabecera" style="width: 1%"></td>
@@ -272,7 +273,7 @@ $h = $oHash->linkSinVal();
         if ($id_asignatura > 3000) {
             $id_nivel_asig = $id_nivel;
         } else {
-            if ($oAsig->getStatus() !== 't') continue;
+            if (!is_true($oAsig->getStatus())) continue;
             $id_nivel_asig = $oAsig->getId_nivel();
         }
         $n = $id_nivel_asig;

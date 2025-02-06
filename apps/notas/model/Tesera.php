@@ -60,8 +60,7 @@ class Tesera
         $html = "";
         switch ($id_nivel) {
             case 1101:
-                //$html = '<tr><td colspan="3" align="CENTER"><h3>'
-                $html = '<tr><td colspan="3" align="CENTER"><h3>'
+                $html = '<tr><td colspan="3" style="text-align: center;"><h3>'
                     . ucfirst(_("filosofía")) .
                     '</h3></td></tr> <tr><td colspan="3"><b>'
                     . ucfirst(_("año")) . ' I</b></td></tr>
@@ -73,7 +72,7 @@ class Tesera
 					';
                 break;
             case 2101:
-                $html = '<tr><td><br></td></tr> <tr><td colspan="4" align="CENTER"><h3>'
+                $html = '<tr><td><br></td></tr> <tr><td colspan="4" style="text-align: center;"><h3>'
                     . ucfirst(_("teología")) .
                     '</h3></td></tr> <tr><td colspan="3"><b>'
                     . ucfirst(_("año")) . ' I</b></td></tr>
@@ -82,10 +81,10 @@ class Tesera
             case 2201:
                 //pruebo de cerrar la tabla anidada -->
                 $html = '</table></td>
-				<td valign="TOP" width="50%">
-				<table class="semi">';
+				<td class="border semi">
+				<table style="width: 100%">';
 
-                $html .= '<tr><td colspan="3" align="CENTER"><h3>'
+                $html .= '<tr><td colspan="3" style="text-align: center;"><h3>'
                     . ucfirst(_("teología")) .
                     '</h3></td></tr> <tr><td colspan="3"><b>'
                     . ucfirst(_("año")) . ' II</b></td></tr>

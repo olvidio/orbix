@@ -5,6 +5,7 @@ use asignaturas\model\entity\GestorAsignatura;
 use certificados\domain\repositories\CertificadoRepository;
 use core\ConfigGlobal;
 use notas\model\entity\GestorPersonaNotaDB;
+use notas\model\entity\GestorPersonaNotaDlDB;
 use notas\model\PersonaNota;
 use personas\model\entity\Persona;
 use web\DateTimeLocal;
@@ -279,7 +280,9 @@ case 2201:
                 $cAsignaturas = $GesAsignaturas->getAsignaturas($aWhere, $aOperador);
 
                 // Asignaturas cursadas:
-                $GesNotas = new GestorPersonaNotaDB();
+                // solamente las notas de mi región_stgr. Normalmente serian las notas_dl,
+                // pero para casos como H-Hv se deben tener en cuenta todas las dl de H
+                $GesNotas = new GestorPersonaNotaDlDB();
                 $aWhere = array();
                 $aOperador = array();
                 $aWhere['id_nom'] = $id_nom;
