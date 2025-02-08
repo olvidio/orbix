@@ -590,7 +590,7 @@ class PersonaListas extends ClasePropiedades
         if (array_key_exists('Encargos', $aDades)) $this->setEncargos($aDades['Encargos']??'');
         if (array_key_exists('INCORP', $aDades)) $this->setIncorporacion($aDades['INCORP']);
         if (array_key_exists('pertenece_r', $aDades)) $this->setPertenece_r($aDades['pertenece_r']);
-        if (array_key_exists('camb_fic', $aDades)) $this->setCamb_fic($aDades['camb_fic']);
+        if (array_key_exists('camb_fic', $aDades)) $this->setCamb_fic($aDades['camb_fic']??'');
         if (array_key_exists('fecha_c_fic', $aDades)) $this->setFecha_c_fic($aDades['fecha_c_fic']);
         if (array_key_exists('compartida_con_r', $aDades)) $this->setCompartida_con_r($aDades['compartida_con_r']);
     }
