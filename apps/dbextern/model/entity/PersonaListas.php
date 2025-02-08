@@ -583,17 +583,17 @@ class PersonaListas extends ClasePropiedades
         if (array_key_exists('ctr', $aDades)) $this->setCtr($aDades['ctr']);
         if (array_key_exists('Lugar_Naci', $aDades)) $this->setLugar_Naci($aDades['Lugar_Naci']);
         if (array_key_exists('Fecha_Naci', $aDades)) $this->setFecha_Naci($aDades['Fecha_Naci']);
-        if (array_key_exists('Email', $aDades)) $this->setEmail($aDades['Email']);
-        if (array_key_exists('Tfno_Movil', $aDades)) $this->setTfno_Movil($aDades['Tfno_Movil']);
-        if (array_key_exists('Ce', $aDades)) $this->setCe($aDades['Ce']);
-        if (array_key_exists('Prof_Carg', $aDades)) $this->setProfesion_cargo($aDades['Prof_Carg']);
-        if (array_key_exists('Titu_Estu', $aDades)) $this->setTitulo_Estudios($aDades['Titu_Estu']);
+        if (array_key_exists('Email', $aDades)) $this->setEmail($aDades['Email']??'');
+        if (array_key_exists('Tfno_Movil', $aDades)) $this->setTfno_Movil($aDades['Tfno_Movil']??'');
+        if (array_key_exists('Ce', $aDades)) $this->setCe($aDades['Ce']??'');
+        if (array_key_exists('Prof_Carg', $aDades)) $this->setProfesion_cargo($aDades['Prof_Carg']??'');
+        if (array_key_exists('Titu_Estu', $aDades)) $this->setTitulo_Estudios($aDades['Titu_Estu']??'');
         if (array_key_exists('Encargos', $aDades)) $this->setEncargos($aDades['Encargos']??'');
         if (array_key_exists('INCORP', $aDades)) $this->setIncorporacion($aDades['INCORP']);
         if (array_key_exists('pertenece_r', $aDades)) $this->setPertenece_r($aDades['pertenece_r']);
         if (array_key_exists('camb_fic', $aDades)) $this->setCamb_fic($aDades['camb_fic']??'');
         if (array_key_exists('fecha_c_fic', $aDades)) $this->setFecha_c_fic($aDades['fecha_c_fic']);
-        if (array_key_exists('compartida_con_r', $aDades)) $this->setCompartida_con_r($aDades['compartida_con_r']);
+        if (array_key_exists('compartida_con_r', $aDades)) $this->setCompartida_con_r($aDades['compartida_con_r']??'');
     }
 
     /**
