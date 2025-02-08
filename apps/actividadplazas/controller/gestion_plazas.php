@@ -129,7 +129,6 @@ foreach ($cDelegaciones as $oDelegacion) {
     $aWhere = array('dl_org' => $dl,
         'id_tipo_activ' => $id_tipo_activ,
         'status' => $status,
-//					'publicado' 		=> 't',
         'f_ini' => "'$inicioIso','$finIso'",
         '_ordre' => 'publicado,f_ini');
     $aOperador = array('id_tipo_activ' => '~', 'f_ini' => 'BETWEEN');
@@ -261,7 +260,11 @@ $oFormP->setDesplPeriodosOpcion_sel($Qperiodo);
 $oFormP->setBoton($boton);
 
 $oHash = new Hash();
-$oHash->setCamposForm('empiezamax!empiezamin!extendida!iactividad_val!iasistentes_val!id_tipo_activ!periodo!year');
+$CamposForm = 'empiezamax!empiezamin!iactividad_val!iasistentes_val!id_tipo_activ!periodo!year';
+if ($extendida) {
+    $CamposForm .= '!extendida';
+}
+$oHash->setCamposForm($CamposForm);
 $oHash->setCamposNo('!refresh');
 $a_camposHidden = array(
     'id_tipo_activ' => $Qid_tipo_activ,

@@ -1,5 +1,6 @@
 <?php
 
+use encargossacd\model\EncargoConstants;
 use encargossacd\model\EncargoFunciones;
 use personas\model\entity\PersonaDl;
 
@@ -67,7 +68,15 @@ if (!empty($id_item)) { //significa que no es nuevo
     $oDBSt_q = $oDbl->query($query);
     $row = $oDBSt_q->fetch(PDO::FETCH_ASSOC);
 
-    extract($row);
+    $f_ini_iso = $row['f_ini'];
+    $f_fin_iso = $row['f_fin'];
+    $dia_ref = $row['dia_ref'];
+    $dia_num = $row['dia_num'];
+    $mas_menos = $row['mas_menos'];
+    $dia_inc = $row['dia_inc'];
+    $h_ini = $row['h_ini'];
+    $h_fin = $row['h_fin'];
+    $desc_enc = $row['desc_enc'];
 } else {   //es nuevo
     $titulo = _("nuevo") . " ";
     // cojo los valores por defecto de f_ini, f_fin del dossier de tareas
@@ -185,7 +194,7 @@ $titulo = _("horario de") . ": " . $desc_enc;
                     <option></option>
                         <?php
                         $dia = $oEncargoFunciones->calcular_dia($mas_menos, $dia_ref, $dia_inc);
-                        reset($opciones_dia_semana);
+                        $opciones_dia_semana = EncargoConstants::OPCIONES_DIA_SEMANA;
                         foreach ($opciones_dia_semana as $key => $d_semana) {
                             if ($dia == $key) {
                                 $selected = "selected";
@@ -200,6 +209,8 @@ $titulo = _("horario de") . ": " . $desc_enc;
             <td>
                 <select class=contenido id="mas_menos" name="mas_menos">
                     <?php
+                    $sel_mas = "";
+                    $sel_menos = "";
                     if ($mas_menos === "-") {
                         $sel_menos = "selected";
                         $sel_mas = "";
@@ -218,8 +229,8 @@ $titulo = _("horario de") . ": " . $desc_enc;
                 <select class=contenido id="dia_num" name="dia_num">
                     <option></option>
                     <?php
-                    reset($opciones_ordinales);
-                    foreach ($opciones_ordinales as $key => $d_ord) {
+                    $op_ordinales = EncargoConstants::OPCIONES_ORDINALES;
+                    foreach ($op_ordinales as $key => $d_ord) {
                         if ($dia_num == $key) {
                             $selected = "selected";
                         } else {
@@ -233,7 +244,7 @@ $titulo = _("horario de") . ": " . $desc_enc;
             <td><select class=contenido id="dia_ref" name="dia_ref">
                     <option></option>
                     <?php
-                    reset($opciones_dia_ref);
+                    $opciones_dia_ref = EncargoConstants::OPCIONES_DIA_REF;
                     foreach ($opciones_dia_ref as $key => $d_ref) {
                         if ($dia_ref == $key) {
                             $selected = "selected";
@@ -268,9 +279,9 @@ $titulo = _("horario de") . ": " . $desc_enc;
     }
     // si NO es para uno nuevo, miro si tienen excepciones:
     if (!empty($id_item)) {
-        $sql_ex = "SELECT * FROM t_horario_sacd_excepcion WHERE id_item_h=$id_item";
+        $sql_ex = "SELECT * FROM encargo_sacd_horario_excepcion WHERE id_item_h=$id_item";
         //echo "query: $sql_ex<br>";
-        $oDBSt_q = $oDB->query($sql_ex);
+        $oDBSt_q = $oDBE->query($sql_ex);
         if ($oDBSt_q->rowCount() > 0) {
             echo "</form>";
             include("horario_sacd_ex_select.php");

@@ -507,13 +507,13 @@ trait EncargoFuncionesTrait
     {
         $dia = empty($mas_menos) ? $dia_ref : '';
         if (!empty($dia_inc) && empty($dia)) {
-            if ($mas_menos == "-") {
+            if ($mas_menos === "-") {
                 $dia = $dia_ref - $dia_inc;
                 if ($dia < 0) {
                     $dia = 7 + $dia;
                 }
             }
-            if ($mas_menos == "+") {
+            if ($mas_menos === "+") {
                 $dia = $dia_ref + $dia_inc;
                 if ($dia > 7) {
                     $dia = $dia - 7;
@@ -525,9 +525,9 @@ trait EncargoFuncionesTrait
 
     function db_txt_h_sacd($id_enc, $id_nom)
     {
-        $oDB = $_SESSION['oDB'];
-        $sql = "SELECT * FROM t_horario_sacd WHERE id_enc=$id_enc AND id_nom=$id_nom";
-        $oDBSt_q_h = $oDB->query($sql);
+        $oDbl = $GLOBALS['oDBE'];
+        $sql = "SELECT * FROM encargo_sacd_horario WHERE id_enc=$id_enc AND id_nom=$id_nom";
+        $oDBSt_q_h = $oDbl->query($sql);
         $txt = "";
         $h = 0;
         foreach ($oDBSt_q_h->fetchAll() as $row_h) {
@@ -542,7 +542,7 @@ trait EncargoFuncionesTrait
     function texto_horario($mas_menos, $dia_ref, $dia_inc, $dia_num, $h_ini, $h_fin, $n_sacd = '')
     {
         $texto_horario = '';
-        // texto que describe el horario orgiginal
+        // texto que describe el horario original
         $dia_txt = '';
         $dia = $this->calcular_dia($mas_menos, $dia_ref, $dia_inc);
         if (empty($mas_menos)) {

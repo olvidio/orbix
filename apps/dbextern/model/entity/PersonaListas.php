@@ -587,7 +587,7 @@ class PersonaListas extends ClasePropiedades
         if (array_key_exists('Ce', $aDades)) $this->setCe($aDades['Ce']);
         if (array_key_exists('Prof_Carg', $aDades)) $this->setProfesion_cargo($aDades['Prof_Carg']);
         if (array_key_exists('Titu_Estu', $aDades)) $this->setTitulo_Estudios($aDades['Titu_Estu']);
-        if (array_key_exists('Encargos', $aDades)) $this->setEncargos($aDades['Encargos']);
+        if (array_key_exists('Encargos', $aDades)) $this->setEncargos($aDades['Encargos']??'');
         if (array_key_exists('INCORP', $aDades)) $this->setIncorporacion($aDades['INCORP']);
         if (array_key_exists('pertenece_r', $aDades)) $this->setPertenece_r($aDades['pertenece_r']);
         if (array_key_exists('camb_fic', $aDades)) $this->setCamb_fic($aDades['camb_fic']);
