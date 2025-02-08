@@ -8,6 +8,7 @@ use core\DatosCampo;
 use core\Set;
 use DateTime;
 use web\DateTimeLocal;
+use web\NullDateTimeLocal;
 
 class PersonaListas extends ClasePropiedades
 {
@@ -797,7 +798,7 @@ class PersonaListas extends ClasePropiedades
     /**
      * Establece el valor del atributo dFecha_Naci de Listas
      *
-     * @param DateTimeLocal dFecha_Naci
+     * @param null|string|DateTimeLocal dFecha_Naci
      */
     function setFecha_Naci($dFecha_Naci)
     {
@@ -982,11 +983,17 @@ class PersonaListas extends ClasePropiedades
     }
 
     /**
-     * @param DateTimeLocal $dfecha_c_fic
+     * @param null|string|DateTimeLocal $dfecha_c_fic
      */
-    public function setFecha_c_fic(DateTimeLocal $dfecha_c_fic)
+    public function setFecha_c_fic($dfecha_c_fic)
     {
-        $this->dfecha_c_fic = $dfecha_c_fic;
+        if (empty($dfecha_c_fic)) {
+            $this->dfecha_c_fic = new NullDateTimeLocal();
+        } else {
+            $oFecha = new DateTime($dfecha_c_fic);
+            $new_fecha = date_format($oFecha, 'j/m/Y');
+            $this->dfecha_c_fic = $new_fecha;
+        }
     }
 
     /**
