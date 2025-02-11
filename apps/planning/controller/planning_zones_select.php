@@ -423,11 +423,6 @@ if ($z === 1) {
     $titulo = _("planning por zonas");
 }
 
-$oPlanning = new Planning();
-$oPlanning->setDd(3);
-$oPlanning->setInicio($oIniPlanning);
-$oPlanning->setFin($oFinPlanning);
-
 $goLeyenda = Hash::link(ConfigGlobal::getWeb() . '/apps/zonassacd/controller/leyenda.php?' . http_build_query(array('id_item' => 1)));
 // ---------------- html ---------------------------------------------
 
@@ -448,11 +443,17 @@ switch ($Qmodelo) {
         include_once('apps/web/calendario_grid.php');
         break;
 }
-
-// para los estilos. Las variables están en la página css.
+// Las variables de color de las columnas están en la página css.
+include_once(ConfigGlobal::$dir_estilos . '/calendario_color_cols.css.php');
+$oPlanning = new Planning();
 $oPlanning->setColorColumnaUno($colorColumnaUno);
 $oPlanning->setColorColumnaDos($colorColumnaDos);
 $oPlanning->setTable_border($table_border);
+
+$oPlanning->setDd(3);
+$oPlanning->setInicio($oIniPlanning);
+$oPlanning->setFin($oFinPlanning);
+
 
 echo "<span id=\"span_exportar\"  title=\"$titulo\">";
 for ($i = 1; $i <= $z; $i++) {
