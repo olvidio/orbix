@@ -316,7 +316,8 @@ switch ($Qmodelo) {
         include_once('apps/web/calendario_grid.php');
         break;
 }
-// para los estilos. Las variables están en la página css.
+// Las variables de color de las columnas están en la página css.
+include_once(ConfigGlobal::$dir_estilos . '/calendario_color_cols.css.php');
 $oPlanning = new Planning();
 $oPlanning->setColorColumnaUno($colorColumnaUno);
 $oPlanning->setColorColumnaDos($colorColumnaDos);
