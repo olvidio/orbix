@@ -423,7 +423,8 @@ if ($z === 1) {
     $titulo = _("planning por zonas");
 }
 
-$goLeyenda = Hash::link(ConfigGlobal::getWeb() . '/apps/zonassacd/controller/leyenda.php?' . http_build_query(array('id_item' => 1)));
+$goLeyenda = Hash::link(ConfigGlobal::getWeb() . '/apps/planning/controller/leyenda.php?' . http_build_query(array('id_item' => 1)));
+
 // ---------------- html ---------------------------------------------
 
 echo $oPosicion->mostrar_left_slide(1);

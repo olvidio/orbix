@@ -49,7 +49,8 @@ if (!empty($a_sel)) { //vengo de un checkbox
 
 $Qobj_pau = (string)filter_input(INPUT_POST, 'obj_pau');
 $Qmodelo = (integer)filter_input(INPUT_POST, 'modelo');
-$goLeyenda = Hash::link(ConfigGlobal::getWeb() . '/apps/zonassacd/controller/leyenda.php?' . http_build_query(array('id_item' => 1)));
+$goLeyenda = Hash::link(ConfigGlobal::getWeb() . '/apps/planning/controller/leyenda.php?' . http_build_query(array('id_item' => 1)));
+
 
 $Qyear = (integer)filter_input(INPUT_POST, 'year');
 $Qperiodo = (string)filter_input(INPUT_POST, 'periodo');
