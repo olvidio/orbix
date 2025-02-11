@@ -1,6 +1,7 @@
 <?php
 
 use actividades\model\entity\ActividadAll;
+use actividades\model\entity\GestorActividadDl;
 use actividades\model\entity\GestorActividadPub;
 use actividadestudios\model\entity\GestorActividadAsignatura;
 use actividadestudios\model\entity\PosiblesCa;
@@ -235,9 +236,15 @@ $aWhereActividad['_ordre'] = 'nivel_stgr,f_ini';
 
 $cActividades = array();
 $GesActividades = new GestorActividadPub();
-$cActividades = $GesActividades->getActividades($aWhereActividad, $aOperadorActividad);
+$cActividades1 = $GesActividades->getActividades($aWhereActividad, $aOperadorActividad);
+// añadir las actividades de la dl aunque no estén publicadas
+$GesActividadesDl = new GestorActividadDl();
+$aWhereActividad['publicado'] = 'f';
+$cActividades2 = $GesActividadesDl->getActividades($aWhereActividad, $aOperadorActividad);
+$cActividades = $cActividades1 + $cActividades2;
 
-// per les lletres verticals
+
+// para las letras verticales
 $gruix = 20;
 
 // lista de ca con sus asignaturas
@@ -321,7 +328,7 @@ if (!empty($Qidca)) {
     $nc_cuadrienio = $nc_cuadrienio1 + $nc_cuadrienio2;
 }
 
-// ------------  El bucle: para cada alumno miro los creditos posibles para cada ca
+// ------------  El bucle: para cada alumno miro los créditos posibles para cada ca
 $a = 0;
 $cuadro = array();
 if (!empty($a_sel)) { //vengo de un checkbox
