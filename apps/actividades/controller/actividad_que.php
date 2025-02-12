@@ -18,12 +18,12 @@ use actividades\model\entity\ActividadAll;
 use actividades\model\entity\GestorTipoDeActividad;
 use core\ConfigGlobal;
 use core\ViewTwig;
-use web\Hash;
-use web\PeriodoQue;
-use web\Posicion;
 use procesos\model\entity\GestorActividadFase;
 use ubis\model\entity\GestorDelegacion;
 use usuarios\model\entity\Usuario;
+use web\Hash;
+use web\PeriodoQue;
+use web\Posicion;
 use function core\is_true;
 
 // INICIO Cabecera global de URL de controlador *********************************
@@ -165,7 +165,11 @@ $oFormP->setEmpiezaMin($Qempiezamin);
 $oFormP->setEmpiezaMax($Qempiezamax);
 
 $oHash = new Hash();
-$oHash->setCamposForm('dl_org!empiezamax!empiezamin!filtro_lugar!extendida!iactividad_val!iasistentes_val!id_tipo_activ!inom_tipo_val!isfsv_val!id_ubi!nom_activ!periodo!status!year!publicado');
+$sCamposForm = 'dl_org!empiezamax!empiezamin!filtro_lugar!extendida!iactividad_val!iasistentes_val!id_tipo_activ!inom_tipo_val!isfsv_val!id_ubi!nom_activ!periodo!status!year';
+if ($Qmodo !== 'importar') {
+    $sCamposForm .= '!publicado';
+}
+$oHash->setCamposForm($sCamposForm);
 $camposNo = 'id_ubi!nom_activ';
 if (ConfigGlobal::is_app_installed('procesos')) {
     $camposNo .= '!fases_on!fases_off';
