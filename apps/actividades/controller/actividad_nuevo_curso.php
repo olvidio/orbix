@@ -58,8 +58,8 @@ if ($Qok == 1) {
     $aWhere = [];
     $aOperador = [];
     // las dos secciones dlb y dlbf
-    $aWhere['dl_org'] = '^' . ConfigGlobal::mi_dele();
-    $aOperador['dl_org'] = '~';
+    $aWhere['dl_org'] = "'".ConfigGlobal::mi_dele()."','".ConfigGlobal::mi_dele()."f'";
+    $aOperador['dl_org'] = 'IN';
     // No las de proyecto(1) ni borrables(4) >> 2 y 3
     $aWhere['status'] = "2,3";
     $aOperador['status'] = 'IN';

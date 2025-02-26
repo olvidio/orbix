@@ -329,10 +329,10 @@ class ActividadNuevoCurso
 
     /**
      * iyear
-     * @param bool $iyear
+     * @param int $iyear
      * @return ActividadNuevoCurso
      */
-    public function setYear(bool $iyear)
+    public function setYear(int $iyear)
     {
         $this->iyear = $iyear;
         return $this;
@@ -349,10 +349,10 @@ class ActividadNuevoCurso
 
     /**
      * iyear_ref
-     * @param bool $iyear_ref
+     * @param int $iyear_ref
      * @return ActividadNuevoCurso
      */
-    public function setYear_ref(bool $iyear_ref)
+    public function setYear_ref(int $iyear_ref)
     {
         $this->iyear_ref = $iyear_ref;
         return $this;
