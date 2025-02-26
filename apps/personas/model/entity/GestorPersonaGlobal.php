@@ -284,6 +284,7 @@ abstract class GestorPersonaGlobal extends ClaseGestor
         foreach ($oDblSt as $aDades) {
             $a_pkey = array('id_nom' => $aDades['id_nom']);
             $oPersona = new $Obj($a_pkey);
+            $oPersona->setId_schema($aDades['id_schema']);
             $oPersonaSet->add($oPersona);
         }
         return $oPersonaSet->getTot();
