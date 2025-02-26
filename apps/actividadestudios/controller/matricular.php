@@ -46,14 +46,14 @@ if (!empty($a_sel)) { //vengo de un checkbox
 $mes = date('m');
 $fin_m = $_SESSION['oConfig']->getMesFinStgr();
 if ($mes > $fin_m) {
-    $any = date('Y') + 1;
+    $any = (int) date('Y') + 1;
 } else {
-    $any = date('Y');
+    $any = (int) date('Y');
 }
 $inicurs_ca = core\curso_est("inicio", $any)->format('Y-m-d');
 $fincurs_ca = core\curso_est("fin", $any)->format('Y-m-d');
 
-// no miro los de rapaso:
+// no miro los de repaso:
 //   " stgr != 'r' ";
 // si no hay id_nom, es para todos los alumnos
 if (!empty($Qid_nom)) {
@@ -145,12 +145,12 @@ foreach ($cAlumnos as $oPersonaDl) {
                 //busco las asignaturas de su ca
                 $GesAsignaturasCa = new GestorActividadAsignatura();
                 // Ojo. Se ha ido cambiando:
-                //  1. que también coja las asig con preceptor...
+                //  1. que también coja las asignaturas con preceptor...
                 //  2. Que no coja las asignaturas con preceptor...
                 $cAsignaturasCa = $GesAsignaturasCa->getActividadAsignaturas(array('id_activ' => $id_activ_1, 'tipo' => 'x'), array('tipo' => 'IS NULL'));
                 foreach ($cAsignaturasCa as $oActividadAsignatura) {
                     $id_asignatura = $oActividadAsignatura->getId_asignatura();
-                    $preceptor = ($oActividadAsignatura->getTipo() == 'p') ? 't' : 'f';
+                    $preceptor = ($oActividadAsignatura->getTipo() === 'p') ? 't' : 'f';
                     // compruebo que no la tenga ya aprobada:
                     if (in_array($id_asignatura, $a_aprobadas)) continue;
                     // Si es una opcional, compruebo que puede hacerla

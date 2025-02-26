@@ -44,14 +44,6 @@ class Persona
     public static function NewPersona($id_nom)
     {
 
-        if ($id_nom > 0) {
-            $gesPersonaAll = new GestorPersonaAll();
-            $oPersona = $gesPersonaAll->getPersonaByIdNom($id_nom);
-            if (is_object($oPersona)) {
-                return $oPersona;
-            }
-        }
-
         // para poder buscar sacd desde la sf
         if (ConfigGlobal::mi_sfsv() == 2) {
             if (substr($id_nom, 0, 1) == 1) {
@@ -80,6 +72,14 @@ class Persona
                         $oPersona = $cPersonasDl[0];
                     } else {
                         // o de otra dl.
+                        if ($id_nom > 0) {
+                            $gesPersonaAll = new GestorPersonaAll();
+                            $oPersona = $gesPersonaAll->getPersonaByIdNom($id_nom);
+                            if (is_object($oPersona)) {
+                                return $oPersona;
+                            }
+                        }
+
                         $gesPersonaIn = new GestorPersonaIn();
                         $cPersonasIn = $gesPersonaIn->getPersonasIn(array('id_nom' => $id_nom));
                         if (count($cPersonasIn) > 0) {

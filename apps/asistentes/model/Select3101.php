@@ -444,7 +444,7 @@ class Select3101
             $oPersona = Persona::NewPersona($id_nom);
             if (!is_object($oPersona)) {
                 $this->msg_err .= "<br>";
-                $this->msg_err .= sprintf(_("%s con id_nom: %s. En %s linea %s"), $oPersona, $id_nom, __FILE__, __LINE__);
+                $this->msg_err .= sprintf(_("%s. En %s linea %s"), $oPersona, $id_nom, __FILE__, __LINE__);
                 continue;
             }
             $obj_pau = $oPersona->getClassName();
