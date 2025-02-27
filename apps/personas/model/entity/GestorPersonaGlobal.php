@@ -1,8 +1,10 @@
 <?php
 namespace personas\model\entity;
 
+use config\model\Config;
 use core\ClaseGestor;
 use core\Condicion;
+use core\ConfigGlobal;
 use core\Set;
 use web\Desplegable;
 
@@ -166,7 +168,7 @@ abstract class GestorPersonaGlobal extends ClaseGestor
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         $clasename = get_class($this);
-        $nomClase = join('', array_slice(explode('\\', $clasename), -1));
+        $nomClase = implode('', array_slice(explode('\\', $clasename), -1));
 
         $oPersonaDlSet = new Set();
         $oCondicion = new Condicion();
@@ -192,6 +194,7 @@ abstract class GestorPersonaGlobal extends ClaseGestor
         if (isset($aWhere['_ordre']) && $aWhere['_ordre'] != '') $sOrdre = ' ORDER BY ' . $aWhere['_ordre'];
         if (isset($aWhere['_ordre'])) unset($aWhere['_ordre']);
         $sQry = "SELECT * FROM $nom_tabla " . $sCondi . $sOrdre . $sLimit;
+        if (ConfigGlobal::mi_id_usuario() === 443)
         //echo "query: $sQry<br>";
         if (($oDblSt = $oDbl->prepare($sQry)) === false) {
             $sClauError = 'GestorPersonaDl.llistar.prepare';

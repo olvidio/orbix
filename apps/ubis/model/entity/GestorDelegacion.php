@@ -179,8 +179,11 @@ class GestorDelegacion extends ClaseGestor
     public
     function getArrayIdSchemaRegionStgr($sRegionStgr, $mi_sfsv)
     {
+        $mi_sfsv_text = $mi_sfsv === 1 ? 'v' : 'f';
         $oDbl = $this->getoDbl_Select();
         $a_schemas = $this->getArraySchemasRegionStgr($sRegionStgr, $mi_sfsv);
+        // añadir la propia:
+        $a_schemas[] = $sRegionStgr . '-' . $sRegionStgr . $mi_sfsv_text;
 
         $list_dl = '';
         foreach ($a_schemas as $schema) {

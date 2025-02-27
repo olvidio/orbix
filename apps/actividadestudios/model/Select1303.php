@@ -333,7 +333,7 @@ class Select1303
             $html .= $this->getHtmlCa($oAsistente, $ca_num);
         }
         if (count($this->cAsistencias) == 0) {
-            $html .= _("no tiene ninguna actividad asignada");
+            $html .= _("no tiene ninguna actividad asignada. O no es de mi dl");
         }
         return $html_script . $html;
     }

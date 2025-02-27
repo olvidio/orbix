@@ -5,7 +5,6 @@ use asignaturas\model\entity\GestorAsignatura;
 use certificados\domain\repositories\CertificadoRepository;
 use core\ConfigGlobal;
 use notas\model\entity\GestorPersonaNotaDB;
-use notas\model\entity\GestorPersonaNotaDlDB;
 use notas\model\PersonaNota;
 use personas\model\entity\Persona;
 use ubis\model\entity\GestorDelegacion;
