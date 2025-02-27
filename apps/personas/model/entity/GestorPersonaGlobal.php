@@ -194,7 +194,6 @@ abstract class GestorPersonaGlobal extends ClaseGestor
         if (isset($aWhere['_ordre']) && $aWhere['_ordre'] != '') $sOrdre = ' ORDER BY ' . $aWhere['_ordre'];
         if (isset($aWhere['_ordre'])) unset($aWhere['_ordre']);
         $sQry = "SELECT * FROM $nom_tabla " . $sCondi . $sOrdre . $sLimit;
-        if (ConfigGlobal::mi_id_usuario() === 443)
         //echo "query: $sQry<br>";
         if (($oDblSt = $oDbl->prepare($sQry)) === false) {
             $sClauError = 'GestorPersonaDl.llistar.prepare';
