@@ -42,6 +42,7 @@ class PersonaIn extends PersonaPub
                 if (($nom_id === 'id_nom') && $val_id !== '') $this->iid_nom = (int)$val_id;
                 if (($nom_id === 'id_schema') && $val_id !== '') $this->iid_schema = (int)$val_id;
             }
+            $this->aPrimary_key = array('id_nom' => $this->iid_nom, 'id_schema' => $this->iid_schema);
         } else {
             if (isset($a_id) && $a_id !== '') {
                 $this->iid_nom = (integer)$a_id;
