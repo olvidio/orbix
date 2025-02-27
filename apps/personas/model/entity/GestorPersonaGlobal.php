@@ -212,6 +212,7 @@ abstract class GestorPersonaGlobal extends ClaseGestor
                     break;
                 case 'GestorPersonaIn':
                 case 'GestorPersonaStgr':
+                    $a_pkey['id_schema'] = $aDades['id_schema'];
                     $oPersonaDl = new PersonaIn($a_pkey);
                     break;
                 case 'GestorPersonaOut':
@@ -283,8 +284,10 @@ abstract class GestorPersonaGlobal extends ClaseGestor
         }
         foreach ($oDblSt as $aDades) {
             $a_pkey = array('id_nom' => $aDades['id_nom']);
+            if (str_contains($Obj,'PersonaIn')) {
+                $a_pkey['id_schema'] = $aDades['id_schema'];
+            }
             $oPersona = new $Obj($a_pkey);
-            $oPersona->setId_schema($aDades['id_schema']);
             $oPersonaSet->add($oPersona);
         }
         return $oPersonaSet->getTot();

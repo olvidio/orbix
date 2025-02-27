@@ -192,7 +192,7 @@ class GestorAsistente extends ClaseGestor
             if ($sdl != $child) continue;
             $oPersona = Persona::NewPersona($id_nom);
             if (!is_object($oPersona)) {
-                $msg_err .= "<br>$oPersona con id_nom: $id_nom en  " . __FILE__ . ": line " . __LINE__;
+                $msg_err .= "<br>$oPersona en  " . __FILE__ . ": line " . __LINE__;
                 $msg_err .= "<br>" . _("borro la asistencia");
                 $oAsistente->DBEliminar();
                 continue;

@@ -267,7 +267,7 @@ class Select3101
             $oPersona = Persona::NewPersona($id_nom);
             if (!is_object($oPersona)) {
                 $this->msg_err .= "<br>";
-                $this->msg_err .= sprintf(_("%s con id_nom: %s. En %s linea %s"), $oPersona, $id_nom, __FILE__, __LINE__);
+                $this->msg_err .= sprintf(_("%s. En %s linea %s"), $oPersona, __FILE__, __LINE__);
                 continue;
             }
             $oCargo = new Cargo($id_cargo);
@@ -444,7 +444,7 @@ class Select3101
             $oPersona = Persona::NewPersona($id_nom);
             if (!is_object($oPersona)) {
                 $this->msg_err .= "<br>";
-                $this->msg_err .= sprintf(_("%s. En %s linea %s"), $oPersona, $id_nom, __FILE__, __LINE__);
+                $this->msg_err .= sprintf(_("%s. En %s linea %s"), $oPersona,  __FILE__, __LINE__);
                 continue;
             }
             $obj_pau = $oPersona->getClassName();
@@ -494,7 +494,7 @@ class Select3101
                     }
                 }
                 //si es de otra dl no distingo cedidas.
-                // no muestro ni cuento las que esten en estado distinto al asignado o confirmado (>3)
+                // no muestro ni cuento las que estén en estado distinto al asignado o confirmado (>3)
                 if ($padre != $this->mi_dele) {
                     if ($plaza > Asistente::PLAZA_DENEGADA) {
                         $this->incrementa($this->a_plazas_resumen[$padre][$dl]['ocupadas'][$plaza]);

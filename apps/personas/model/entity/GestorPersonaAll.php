@@ -59,7 +59,7 @@ class GestorPersonaAll extends ClaseGestor
             }
             // Si hay más de uno, me quedo con el que tiene la fecha de cambio situación más reciente.
             // Es posible que no exista como personaOut y hay que crearla
-            $oPersonaIN = new PersonaIn($id_nom);
+            $oPersonaIN = new PersonaIn(['id_nom' => $id_nom, 'id_schema' => $id_schema_persona]);
             $nom = $oPersonaIN->getNom();
             if (!empty($nom)) {
                 return $oPersonaIN;
@@ -67,7 +67,7 @@ class GestorPersonaAll extends ClaseGestor
 
             // crear una nueva desde el esquema de la persona
             if ($this->nuevaPersonaOut($id_schema_persona)) {
-                return new PersonaIn($id_nom);
+                return new PersonaIn(['id_nom' => $id_nom, 'id_schema' => $id_schema_persona]);
             }
         }
 
