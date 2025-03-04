@@ -46,7 +46,7 @@ class GestorActa extends ClaseGestor
         $sRegion = ($sRegion === '?') ? "\\" . $sRegion : $sRegion;
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        $sQuery = "SELECT  (regexp_matches(acta, '^\w{1,6}\s+(\d+)/$any'))::numeric[] as num
+        $sQuery = "SELECT  (regexp_matches(acta, '^\w{1,8}\s+(\d+)/$any'))::numeric[] as num
 			FROM $nom_tabla WHERE acta ~* '^$sRegion\s+.*/$any'
 			ORDER BY num DESC
 			LIMIT 1";

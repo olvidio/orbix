@@ -15,29 +15,34 @@ use web\Posicion;
 use zonassacd\model\entity\GestorZona;
 
 if (session_status() !== PHP_SESSION_ACTIVE) {
-    // Para detectar el error: "Headers already sent"
-    //$file = $line = null; headers_sent($file, $line); die("$file:$line");
+    if (!empty($_COOKIE["PHPSESSID"])) {
+        session_id($_COOKIE['PHPSESSID']);
+        session_start();
+    } else {
+        // Para detectar el error: "Headers already sent"
+        //$file = $line = null; headers_sent($file, $line); die("$file:$line");
 
-    // Configure timeout to 30 minutes
-    $timeout = 1800;
-    $maxlifetime = time() + $timeout;
+        // Configure timeout to 30 minutes
+        $timeout = 1800;
+        $maxlifetime = time() + $timeout;
 
-    // Set the maxlifetime of session
-    ini_set("session.gc_maxlifetime", $timeout);
+        // Set the maxlifetime of session
+        ini_set("session.gc_maxlifetime", $timeout);
 
-    // Also set the session cookie timeout
-    ini_set("session.cookie_lifetime", $timeout);
+        // Also set the session cookie timeout
+        ini_set("session.cookie_lifetime", $timeout);
 
-    //$domain = ConfigGlobal::getDomain();
-    // Now start the session
-    session_set_cookie_params([
-        'lifetime' => $maxlifetime,
-        'Secure' => false,
-        'HttpOnly' => true,
-        'SameSite' => 'Strict',
-        //'Domain' => $domain
-    ]);
-    session_start();
+        //$domain = ConfigGlobal::getDomain();
+        // Now start the session
+        session_set_cookie_params([
+            'lifetime' => $maxlifetime,
+            'Secure' => false,
+            'HttpOnly' => true,
+            'SameSite' => 'Strict',
+            //'Domain' => $domain
+        ]);
+        session_start();
+    }
 }
 
 require_once('apps/permisos/controller/login_obj.php');
@@ -50,12 +55,12 @@ $_SESSION['oGestorErrores'] = new GestorErrores();
  * No conviene que las conexiones sean persistentes, pues en caso de algún bloqueo
  *  o error afectan a toda la aplicación.
  * De esta manera (no persistente) se cierra la conexión cada vez que acaba el script.
- * 
+ *
  */
 
 /*
-$oConfigDB = new ConfigDB('tramity'); //de la database comun 
-$config = $oConfigDB->getEsquema('public'); 
+$oConfigDB = new ConfigDB('tramity'); //de la database comun
+$config = $oConfigDB->getEsquema('public');
 $oConexion = new dbConnection($config);
 $oDBT = $oConexion->getPDO();
 */
@@ -102,16 +107,16 @@ switch ($user_sfsv) {
         //sv
         if (ConfigGlobal::is_dmz()) {
             /*
-            $oConfigDB->setDataBase('comun'); 
-            $config = $oConfigDB->getEsquema($esquemav); 
+            $oConfigDB->setDataBase('comun');
+            $config = $oConfigDB->getEsquema($esquemav);
             $oConexion = new dbConnection($config);
             $oDB = $oConexion->getPDO();
-            
-            $config = $oConfigDB->getEsquema('publicv'); 
+
+            $config = $oConfigDB->getEsquema('publicv');
             $oConexion = new dbConnection($config);
             $oDBP = $oConexion->getPDO();
 
-            $config = $oConfigDB->getEsquema('restov'); 
+            $config = $oConfigDB->getEsquema('restov');
             $oConexion = new dbConnection($config);
             $oDBR = $oConexion->getPDO();
             */
@@ -365,6 +370,7 @@ if (empty($_SESSION['oPermActividades'])) {
     }
     //$oPermActividades = $_SESSION['oPermActividades'];
 }
+session_write_close();
 
 // Para validar los parámetros enviados via POST
 $oValidator = new Hash();
