@@ -91,7 +91,7 @@ function getAppsPosibles()
     return $a_apps;
 }
 
-// MODULOS POSIBLES
+// MÓDULOS POSIBLES
 function getModsPosibles()
 {
     $oConfigDB = new ConfigDB('comun_select');
@@ -133,11 +133,12 @@ function getAppsMods($id_mod)
     $ajson = $a_mods[$id_mod]['mods_req'];
     if (preg_match('/^{(.*)}$/', $ajson, $matches)) {
         if (!empty($matches[1])) {
+            $apps_installed = [];
             $mod_in = str_getcsv($matches[1]);
             foreach ($mod_in as $mod) {
-                $appsi = getApps($mod);
-                $apps = array_merge($apps, $appsi);
+                $apps_installed[] = getApps($mod);
             }
+            $apps = array_merge(...array_values($apps_installed));
         }
     }
     return $apps;
@@ -274,11 +275,11 @@ if (!isset($_SESSION['session_auth'])) {
 
                 $a_mods_installed = getModsInstalados($oDB_Select);
                 foreach ($a_mods_installed as $id_mod => $param) {
-                    $ap1 = getAppsMods($id_mod);
-                    $ap2 = getApps($id_mod);
-                    $app_installed = array_merge($app_installed, $ap1, $ap2);
-                    $app_installed = array_unique($app_installed);
+                    $app[] = getAppsMods($id_mod);
+                    $app[] = getApps($id_mod);
                 }
+                $app_installed = array_merge(...array_values($app));
+                $app_installed = array_unique($app_installed);
 
                 // Idioma
                 $query_idioma = sprintf("select * from web_preferencias where id_usuario = '%s' and tipo = '%s' ", $id_usuario, "idioma");
@@ -388,6 +389,6 @@ if (!isset($_SESSION['session_auth'])) {
 
 if (!isset($_SESSION['session_go_to'])) {
     $_SESSION['session_go_to'] = "a";
-    // para que la primera vez vaya a la pagina de inicio personalizada:
+    // para que la primera vez vaya a la pagina de inicio personalizada (se mira en index.php):
     $primera = 1;
 }

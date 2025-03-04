@@ -25,7 +25,7 @@ $aPref = $oGesPref->getPreferencias(array('id_usuario'=>$id_usuario,'tipo'=>'est
 if (count($aPref) > 0) {
 	$oPreferencia = $aPref[0];
 	$preferencia = $oPreferencia->getPreferencia();
-	list($estilo_color,$tipo_menu) = preg_split('/#/',$preferencia);
+	list($estilo_color,$tipo_menu) = explode('#', $preferencia);
 } else {
 	// valores por defecto
 	$estilo_color='azul';
