@@ -63,7 +63,7 @@ $Qdd = 3;
 $mod = 0; // 0 u otro valor (1 ver, 2 modificar, 3 eliminar..) el valor se pasa a la página link.
 $nueva = 0; // 0 o 1 para asignar una nueva actividad.
 // mostrar encabezados arriba y abajo; derecha e izquierda.
-if (empty($print)) {
+if ($Qmodelo !== 2) {
     $doble = 1;
 } else {
     $doble = 0;
@@ -173,7 +173,6 @@ $a_actividades2 = ActividadesDePersona::actividadesPorPersona($cPersonas, $fin_i
 $goLeyenda = Hash::link(ConfigGlobal::getWeb() . '/apps/planning/controller/leyenda.php?' . http_build_query(array('id_item' => 1)));
 switch ($Qmodelo) {
     case 2:
-        $print = 1;
     case 1:
         include_once(ConfigGlobal::$dir_estilos . '/calendario.css.php');
         //include_once('apps/web/calendario.php');

@@ -208,9 +208,10 @@ td.proyectof  {
 
 
 @media print {
-    div { page-break-after: always; }
+    /* div { page-break-after: always; } */
     table  {
-	    /* width: 27.0cm; */
+        page-break-after: always;
+        /* width: 27.0cm; */
         width: 100%;
 		table-layout:fixed;
      }
@@ -220,8 +221,8 @@ td.proyectof  {
 	}
 
     th.cap  {     /* cabecera p. ej.:Planing de casas */
-     	font-size : 16pt;
-     	width : 10%;
+     	font-size : 14pt;
+     	width : 0.10%;
     }
 
     th.mes  {     /* nombre del mes */
@@ -231,16 +232,16 @@ td.proyectof  {
     }
 
     th.diumenge  {
-		border-width: 1px;
-		border-bottom-width: 0px;
+		border-width: 1pt;
+		border-bottom-width: 0;
 		border-collapse: collapse;
      	border-style : solid;
 		font-size : 7pt;
     }
 
     th.diumengenum  {
-		border-width: 1px;
-		border-top-width: 0px;
+		border-width: 1pt;
+		border-top-width: 0;
 		border-collapse: collapse;
      	border-style: solid;
 		font-size : 7pt;
@@ -249,13 +250,13 @@ td.proyectof  {
     th.lletra  {
      	font-size : 7pt;
      	font-weight : normal;
-     	border-width : 1px 0px 0px 1px;
+     	border-width : 1pt 0 0 1pt;
     }
 
     th.num  {
      	font-size : 6pt;
      	font-weight : normal;
-     	border-width : 0px 0px 1px 1px;
+     	border-width : 0 0 1pt 1pt;
     }
 
     tr  {
@@ -264,10 +265,10 @@ td.proyectof  {
 
     td.nom  {
      	font-size : 8pt;
-     	border-bottom-width : 1px;
-     	border-top-width : 1px;
-		border-right-width : 0px;
-		border-left-width : 0px;
+     	border-bottom-width : 1pt;
+     	border-top-width : 1pt;
+		border-right-width : 0;
+		border-left-width : 0;
 		border-style : solid;
     }
 
@@ -301,20 +302,20 @@ td.proyectof  {
 
 	td.diumenge1 {
 	    border-style: solid;
-		border-width: 0px 0px 1px 1px;
+		border-width: 0 0 1pt 1pt;
 		border-bottom-color: #BBBBBB;
 		border-left-color: #000000;
 	}
 
 	td.diumenge2 {
 	    border-style: solid;
-		border-width: 0px 0px 1px 0px;
+		border-width: 0 0 1pt 0;
 		border-color: #BBBBBB;
 	}
 
     td.nada1  {
 	    border-style: solid;
-		border-width: 0px 0px 1px 1px;
+		border-width: 0 0 1pt 1pt;
 		border-bottom-color: #BBBBBB;
 		border-left-style: dotted;
 		border-left-color: #BBBBBB;
@@ -323,7 +324,7 @@ td.proyectof  {
 
     td.nada2  {
 	    border-style: solid;
-		border-width: 0px 0px 1px 0px;
+		border-width: 0 0 1pt 0;
 		border-color: #BBBBBB;
      	font-size : 8pt;
     }

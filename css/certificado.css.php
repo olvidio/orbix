@@ -65,7 +65,7 @@ td.space_doble {
 td.dato {
 	color : black;
 	font-size : 8pt;
-	font-family : arial;
+    font-family: arial, sans-serif;
 	text-decoration : none;
 	text-align : center;
 }

@@ -90,7 +90,7 @@ if (is_true($Qpropuesta_calendario)) {
 }
 
 // mostrar encabezados arriba y abajo; derecha e izquierda.
-if (empty($print)) {
+if ($Qmodelo !== 2) {
     $doble = 1;
 } else {
     $doble = 0;
