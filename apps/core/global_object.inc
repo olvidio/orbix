@@ -15,13 +15,13 @@ use web\Posicion;
 use zonassacd\model\entity\GestorZona;
 
 if (session_status() !== PHP_SESSION_ACTIVE) {
+    // Para detectar el error: "Headers already sent"
+    //$file = $line = null; headers_sent($file, $line); die("$file:$line");
+
     if (!empty($_COOKIE["PHPSESSID"])) {
         session_id($_COOKIE['PHPSESSID']);
         session_start();
     } else {
-        // Para detectar el error: "Headers already sent"
-        //$file = $line = null; headers_sent($file, $line); die("$file:$line");
-
         // Configure timeout to 30 minutes
         $timeout = 1800;
         $maxlifetime = time() + $timeout;
@@ -370,10 +370,11 @@ if (empty($_SESSION['oPermActividades'])) {
     }
     //$oPermActividades = $_SESSION['oPermActividades'];
 }
-session_write_close();
 
+session_write_close();
 // Para validar los parámetros enviados via POST
 $oValidator = new Hash();
 echo $oValidator->validatePost($_POST);
 
 $oPosicion = new Posicion($_SERVER['PHP_SELF'], $_POST);
+

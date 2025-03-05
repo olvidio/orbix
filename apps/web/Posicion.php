@@ -56,12 +56,37 @@ class Posicion
     }
 
     /**
-     * coloca el cursor de posicion en la última posicion.
+     *
+     *
+     */
+    private function deleteFroward()
+    {
+        if (!is_array($_SESSION['position'])) {
+            return;
+        }
+        session_start();
+        $stack = $this->stack;
+        $num = count($_SESSION['position']);
+        $quitar = $num - $stack;
+        $ret = array_splice($_SESSION['position'], -$quitar);
+        // reindexar:
+        $_SESSION['position'] = array_values($_SESSION['position']);
+        foreach ($_SESSION['position'] as $key => $values) {
+            $_SESSION['position'][$key]['stack'] = $key;
+        }
+        $this->stack = $stack -1;
+        session_write_close();
+    }
+
+    /**
+     * coloca el cursor de position en la última posición.
      *
      */
     private function goEnd()
     {
-        if (!is_array($_SESSION['position'])) return;
+        if (!is_array($_SESSION['position'])) {
+            return;
+        }
         $aPosition = end($_SESSION['position']);
         $this->stack = key($_SESSION['position']);
         $this->surl = $aPosition['url'];
@@ -126,12 +151,13 @@ class Posicion
 
     public function olvidar($stack = '*')
     {
-        if ($stack != '*') { //pongo '*' para distinguirlo del 0.
+        if ($stack !== '*') { //pongo '*' para distinguirlo del 0.
             // hasta el final
             array_splice($_SESSION['position'], $stack + 1);
         } elseif (isset($this->stack)) { // borrar el actual
             array_splice($_SESSION['position'], $this->stack);
         }
+        $this->guardar();
     }
 
     /*
@@ -139,10 +165,11 @@ class Posicion
      */
     public function recordar($parar = 0)
     {
+        $this->stack = $this->aParametros['stack'] ?? '';
         //echo "<script>history.pushState({state:'new'},'New State','?new');</script>";
         // evitar que sea muy grande
         $this->limitar(20);
-        // poner en parametros el stack
+        // poner en parámetros el stack
         if (empty($this->stack)) { //OJO si es el primero tiene valor 0.
             if (isset($_SESSION['position']) && is_array($_SESSION['position'])) { //para la primera
                 end($_SESSION['position']);
@@ -155,6 +182,7 @@ class Posicion
                 $stack = 0;
             }
         } else {
+            $this->deleteFroward();
             if (empty($parar)) {
                 $stack = $this->stack + 1;
             } else {
@@ -163,7 +191,10 @@ class Posicion
         }
         $this->setParametro('stack', $stack);
         $aPosition = array('url' => $this->surl, 'bloque' => $this->sbloque, 'parametros' => $this->aParametros, 'stack' => $stack);
+
+        session_start();
         $_SESSION['position'][$stack] = $aPosition;
+        session_write_close();
     }
 
     private function guardar()
@@ -178,7 +209,9 @@ class Posicion
         } else {
             $stack = $this->stack;
         }
+        session_start();
         $_SESSION['position'][$stack] = array('url' => $this->surl, 'bloque' => $this->sbloque, 'parametros' => $this->aParametros, 'stack' => $stack);
+        session_write_close();
     }
 
     public function go_atras($n = 0)
@@ -318,15 +351,19 @@ class Posicion
     private function limitar($n = 10)
     {
         // Cuando hay el doble, borro $n.
-        if (isset($_SESSION['position'])) { // No sé poruqe no deja poner todo junto
-            if (is_array($_SESSION['position']) & (count($_SESSION['position']) > 2 * $n)) {
-                $eee = 'a borrra!!';
-                array_splice($_SESSION['position'], -$n); // negativo empieza por el final.
-                // hay que cambiar el indice stack
-                end($_SESSION['position']);
-                $stack = key($_SESSION['position']);
-                $this->stack = $stack;
-                //con los stack dentro de parammmmm
+        if (isset($_SESSION['position'])) { // No sé porque no deja poner todo junto
+            if (is_array($_SESSION['position'])) {
+                $max = 2 * $n;
+                $num = count($_SESSION['position']);
+                if ($num > $max) {
+                    $eee = 'a borrar!!';
+                    array_splice($_SESSION['position'], -$n); // negativo empieza por el final.
+                    // hay que cambiar el indice stack
+                    end($_SESSION['position']);
+                    $stack = key($_SESSION['position']);
+                    $this->stack = $stack;
+                    //con los stack dentro de parammmmm
+                }
             }
         }
     }
@@ -405,7 +442,6 @@ class Posicion
         if (!empty($_SESSION['position'])) {
             $this->go($n);
             $this->setParametro($nomParametre, $valor);
-            $this->guardar();
             $this->goEnd();
         }
     }
