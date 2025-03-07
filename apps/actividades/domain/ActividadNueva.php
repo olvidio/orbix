@@ -90,12 +90,15 @@ class ActividadNueva
         // para dl y dlf:
         $dl_org_no_f = preg_replace('/(\.*)f$/', '\1', $Qdl_org);
         $dl_propia = (ConfigGlobal::mi_dele() == $dl_org_no_f) ? TRUE : FALSE;
-        if (ConfigGlobal::is_app_installed('procesos') && $_SESSION['oPermActividades']->getPermisoCrear($dl_propia) === FALSE) {
-            $error_txt = _("No tiene permiso para crear una actividad de este tipo") . "<br>";
-            return $error_txt;
+        if (ConfigGlobal::is_app_installed('procesos')) {
+            $_SESSION['oPermActividades']->setId_tipo_activ($Qid_tipo_activ);
+            if ($_SESSION['oPermActividades']->getPermisoCrear($dl_propia) === FALSE) {
+                $error_txt = _("No tiene permiso para crear una actividad de este tipo") . "<br>";
+                return $error_txt;
+            }
         }
 
-        //Compruebo que estén todos los campos necesarios
+//Compruebo que estén todos los campos necesarios
         if (empty($Qnom_activ) || empty($Qf_ini) || empty($Qf_fin) || empty($Qstatus) || empty($Qdl_org)) {
             $error_txt = _("debe llenar todos los campos que tengan un (*)") . "<br>";
             return $error_txt;
@@ -120,7 +123,7 @@ class ActividadNueva
         }
         $oActividad->setNom_activ($Qnom_activ);
 
-        // En el caso de tener id_ubi (!=1) borro el campo lugar_esp.
+// En el caso de tener id_ubi (!=1) borro el campo lugar_esp.
         if (!empty($Qid_ubi) && $Qid_ubi != 1) {
             $oActividad->setId_ubi($Qid_ubi);
             $oActividad->setLugar_esp('');
@@ -136,7 +139,7 @@ class ActividadNueva
         $oActividad->setNum_asistentes($Qnum_asistentes);
         $oActividad->setStatus($Qstatus);
         $oActividad->setObserv($Qobserv);
-        // Si nivel_stgr está vacio, pongo el calculado.
+// Si nivel_stgr está vacio, pongo el calculado.
         if (empty($Qnivel_stgr)) {
             $Qnivel_stgr = $oActividad->generarNivelStgr();
         }
@@ -152,16 +155,16 @@ class ActividadNueva
             echo _("hay un error, no se ha guardado");
             echo "\n" . $oActividad->getErrorTxt();
         }
-        // si estoy creando una actividad de otra dl es porque la quiero importar.
+// si estoy creando una actividad de otra dl es porque la quiero importar.
         if ($Qdl_org != $mi_dele) {
             $id_activ = $oActividad->getId_activ();
             $oImportada = new Importada($id_activ);
             if ($oImportada->DBGuardar() === false) {
-                $error_txt =  _("hay un error, no se ha importado");
+                $error_txt = _("hay un error, no se ha importado");
                 $error_txt .= "\n" . $oActividad->getErrorTxt();
             }
         }
-        // Por defecto pongo todas las plazas en mi dl
+// Por defecto pongo todas las plazas en mi dl
         if (ConfigGlobal::is_app_installed('actividadplazas')) {
             if (!empty($Qplazas) && $Qdl_org == $mi_dele) {
                 $id_activ = $oActividad->getId_activ();
