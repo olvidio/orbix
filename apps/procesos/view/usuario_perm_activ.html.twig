@@ -1,102 +1,98 @@
 <script>
-fnjs_actualizar_fases=function(){
-	var dl_propia=$('input[name="dl_propia"]:checked').val();
-	var isfsv=$('#isfsv_val').val();
-	var iasistentes=$('#iasistentes_val').val();
-	var iactividad=$('#iactividad_val').val();
-	var inom_tipo=$('#inom_tipo_val').val();
-	
-	if (!iasistentes) iasistentes='.';
-	if (!iactividad) iactividad='.';
-	if (!inom_tipo) inom_tipo='...';
+    fnjs_actualizar_fases = function () {
+        var dl_propia = $('input[name="dl_propia"]:checked').val();
+        var isfsv = $('#isfsv_val').val();
+        var iasistentes = $('#iasistentes_val').val();
+        var iactividad = $('#iactividad_val').val();
+        var inom_tipo = $('#inom_tipo_val').val();
 
-	id_tipo_activ=isfsv+iasistentes+iactividad+inom_tipo;
+        if (!iasistentes) iasistentes = '.';
+        if (!iactividad) iactividad = '.';
+        if (!inom_tipo) inom_tipo = '...';
 
-	// desplegable 'desde'
-	var url='{{ url_actualizar }}';
-	var parametros='dl_propia='+dl_propia+'&id_tipo_activ='+id_tipo_activ+'{{ h_actualizar|raw }}';
-	$.ajax({
-		url: url,
-		type: 'post',
-		data: parametros
-	})
-	.done(function (rta_txt) {
-		$("select[name^='fase_ref']").each(function() {
-				$(this).html(rta_txt);			
-			});
-	});
-}
+        id_tipo_activ = isfsv + iasistentes + iactividad + inom_tipo;
 
-fnjs_grabar=function(formulario){
-	var err=0;
+        // desplegable 'desde'
+        var url = '{{ url_actualizar }}';
+        var parametros = 'dl_propia=' + dl_propia + '&id_tipo_activ=' + id_tipo_activ + '{{ h_actualizar|raw }}';
+        $.ajax({
+            url: url,
+            type: 'post',
+            data: parametros
+        })
+            .done(function (rta_txt) {
+                $("select[name^='fase_ref']").each(function () {
+                    $(this).html(rta_txt);
+                });
+            });
+    }
 
-	var afecta = $("input:checkbox[name^='afecta_a']:checked").map(function(){return $(this).val()}).get()
-	if (afecta.length == 0) { 
-		alert("{{ "debe indicar a qué afecta"|trans|raw }}"); err=1;
-	}
-	/*
-	var afases = $("select[name^='fases'] option:selected").map(function(){return $(this).val()}).get()
-	if (afases.length == 0) { 
-		alert("{{ "debe indicar las fases"|trans|raw }}"); err=1;
-	}
-	*/
-	
-	if (err==0) {
-        $(formulario).attr('action',"apps/usuarios/controller/usuario_update.php");
-        $(formulario).one("submit", function() {
-            $.ajax({
-                url: $(this).attr('action'),
-                type: 'post',
-                data: $(this).serialize()
-            })
-            .done(function (rta_txt) { 
-                if (rta_txt != '' && rta_txt != '\n') {
-                    alert ('respuesta: '+rta_txt);
+    fnjs_grabar = function (formulario) {
+        let err = 0;
+
+        let afecta = $("input:checkbox[name^='afecta_a']:checked").map(function () {
+            return $(this).val()
+        }).get();
+        if (afecta.length === 0) {
+            alert("{{ "debe indicar a qué afecta"|trans|raw }}");
+            err = 1;
+        }
+
+        if (err === 0) {
+            let datos = $(formulario).serialize();
+            let request = $.ajax({
+                data: datos,
+                url: 'apps/usuarios/controller/perm_activ_guardar.php',
+                method: 'POST',
+                dataType: 'json'
+            });
+            request.done(function (json) {
+                if (json.success !== true) {
+                    alert("{{ "respuesta"|trans|raw }}" + ': ' + json.mensaje);
                 } else {
                     {{ oPosicion.js_atras(1)|raw }}
                 }
             });
-            return false;
-        });
-        $(formulario).trigger("submit");
-        $(formulario).off();
-	}
-}
+        }
+    }
 </script>
-{{  oPosicion.mostrar_left_slide(1)|raw }}
-<h1>{{  "Añadir nuevo permiso a"|trans|raw }} {{ nombre }}</h1>
-<form id=perm_usuario  name=perm_usuario action="" method="post" >
-{{ oHash.getCamposHtml()|raw }}
-<input type='hidden' id='id_tipo_activ' name='id_tipo_activ'> </td>
-<h3>{{ "seleccionar un tipo de actividad"|trans|raw }}:</h3>
-<table>
-	<tr>
-		<td class=etiqueta>{{ "para actividades que organiza"|trans|raw }}:</td>
-		<td colspan=5>
-			<input type=radio name=dl_propia value='t' {{ chk_propia }} onchange='fnjs_actualizar_fases();' > {{ "la propia dl"|trans|raw }}
-			<input type=radio name=dl_propia value='f' {{ chk_otra }} onchange='fnjs_actualizar_fases();' > {{ "otras dl"|trans|raw }}
-		</td>
-	</tr>
-</table>
-{{ oActividadTipo.getHtml(extendida)|raw }}
-<br>
-<table>
-<tr>
-	<th>{{ "afecta a"|trans|raw }}:</th>
-	<th>{{ "fase de referencia"|trans|raw }}:</th>
-    <th>{{ "permiso off (sin marcar)"|trans|raw }}:</th>
-    <th>{{ "permiso on (marcado)"|trans|raw }}:</th>
-	</tr>
-{% for oPerm in aPerm %}
-<tr>
-	<td>
-	<input type="Checkbox" name="{{ oPerm.nameAfecta_a }}" value="{{ oPerm.num }}" {{ oPerm.chk }}>{{ oPerm.afecta_a }}</td>
-	<td> <span name=fases> {{ oPerm.oDesplFases.desplegable()|raw }} </span></td>
-	<td>{{ oPerm.oDesplPermOff.desplegable()|raw }}</td>
-	<td>{{ oPerm.oDesplPermOn.desplegable()|raw }}</td>
-</tr>
-{% endfor %}
-</table>
-<br>
-<input type=button onclick="fnjs_grabar(this.form);" value="{{ "guardar"|trans|raw }}">
+{{ oPosicion.mostrar_left_slide(1)|raw }}
+<h1>{{ titulo }} {{ nombre }}</h1>
+<form id=perm_usuario name=perm_usuario action="" method="post">
+    {{ oHash.getCamposHtml()|raw }}
+    <input type='hidden' id='id_tipo_activ' name='id_tipo_activ'> </td>
+    <h3>{{ "seleccionar un tipo de actividad"|trans|raw }}:</h3>
+    <table>
+        <tr>
+            <td class=etiqueta>{{ "para actividades que organiza"|trans|raw }}:</td>
+            <td colspan=5>
+                <input type=radio name=dl_propia value='t' {{ chk_propia }}
+                       onchange='fnjs_actualizar_fases();'> {{ "la propia dl"|trans|raw }}
+                <input type=radio name=dl_propia value='f' {{ chk_otra }}
+                       onchange='fnjs_actualizar_fases();'> {{ "otras dl"|trans|raw }}
+            </td>
+        </tr>
+    </table>
+    {{ oActividadTipo.getHtml(extendida)|raw }}
+    <br>
+    <table>
+        <tr>
+            <th>{{ "afecta a"|trans|raw }}:</th>
+            <th>{{ "fase de referencia"|trans|raw }}:</th>
+            <th>{{ "permiso off (sin marcar)"|trans|raw }}:</th>
+            <th>{{ "permiso on (marcado)"|trans|raw }}:</th>
+        </tr>
+        {% for oPerm in aPerm %}
+            <tr>
+                <td>
+                    <input type="Checkbox" name="{{ oPerm.nameAfecta_a }}"
+                           value="{{ oPerm.num }}" {{ oPerm.chk }}>{{ oPerm.afecta_a }}</td>
+                <td><span name=fases> {{ oPerm.oDesplFases.desplegable()|raw }} </span></td>
+                <td>{{ oPerm.oDesplPermOff.desplegable()|raw }}</td>
+                <td>{{ oPerm.oDesplPermOn.desplegable()|raw }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+    <br>
+    <input type=button onclick="fnjs_grabar(this.form);" value="{{ "guardar"|trans|raw }}">
 </form>

@@ -1,0 +1,83 @@
+<?php
+
+use core\ConfigGlobal;
+
+?>
+<script>
+    fnjs_lst_add_grup = function () {
+        var url = 'frontend/usuarios/controller/usuario_grupo_lst.php';
+        var parametros = 'id_usuario=<?= $id_usuario ?><?= $h_lst ?>';
+
+        $.ajax({
+            url: url,
+            type: 'post',
+            data: parametros
+        })
+            .done(function (rta_txt) {
+                $('#lst_grupos').html(rta_txt);
+            });
+    }
+    fnjs_lst_del_grup = function () {
+        var url = 'frontend/usuarios/controller/usuario_grupo_del_lst.php';
+        var parametros = 'id_usuario=<?= $id_usuario ?><?= $h_del_lst ?>';
+
+        $.ajax({
+            url: url,
+            type: 'post',
+            data: parametros
+        })
+            .done(function (rta_txt) {
+                $('#lst_grupos').html(rta_txt);
+            });
+    }
+    fnjs_add_grup = function (param) {
+        let url = '<?= ConfigGlobal::getWeb() ?>/apps/usuarios/controller/usuario_grupo_add.php';
+        let request = $.ajax({
+            data: param,
+            url: url,
+            method: 'POST',
+            dataType: 'json'
+        });
+        request.done(function (json) {
+            if (json.success !== true) {
+                alert("<?= _("respuesta") ?>" + ': ' + json.mensaje);
+            } else {
+                <?= $oPosicion->js_atras(0) ?>
+            }
+        });
+    }
+    fnjs_del_grup = function (param) {
+        let url = '<?= ConfigGlobal::getWeb() ?>/apps/usuarios/controller/usuario_grupo_del.php';
+        let request = $.ajax({
+            data: param,
+            url: url,
+            method: 'POST',
+            dataType: 'json'
+        });
+        request.done(function (json) {
+            if (json.success !== true) {
+                alert("<?= _("respuesta") ?>" + ': ' + json.mensaje);
+            } else {
+                <?= $oPosicion->js_atras(0) ?>
+            }
+        });
+    }
+</script>
+<br>
+<b><?= _("grupos") ?>: </b>
+<?php
+//////////// Aclaración permisos ////////////
+if (ConfigGlobal::is_app_installed('procesos')) {
+    ?>
+    <p class="comentario"><?= _("OJO: los permisos en los grupos no tienen una preferencia definida.") ?></p>
+    <p class="comentario"><?= _("Si hay más de uno, deberían ser independientes, sino no se sabe cual sobreescribirá a cual.") ?></p>
+    <?php
+} ?>
+<br>
+<p><?= $grupos_txt ?></p>
+<br>
+<input type=button onclick="fnjs_lst_add_grup();" value="<?= _("añadir un grupo de permisos") ?>">
+<input type=button onclick="fnjs_lst_del_grup();" value="<?= _("quitar de un grupo de permisos") ?>">
+<div id=lst_grupos></div>
+<br>
+<br>

@@ -406,7 +406,7 @@ class Role extends ClasePropiedades
      *
      * @return boolean bsf
      */
-    function getSf()
+    function isSf()
     {
         if (!isset($this->bsf) && !$this->bLoaded) {
             $this->DBCarregar();
@@ -429,7 +429,7 @@ class Role extends ClasePropiedades
      *
      * @return boolean bsv
      */
-    function getSv()
+    function isSv()
     {
         if (!isset($this->bsv) && !$this->bLoaded) {
             $this->DBCarregar();

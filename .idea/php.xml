@@ -60,7 +60,6 @@
       <path value="$PROJECT_DIR$/libs/vendor/sebastian/code-unit" />
       <path value="$PROJECT_DIR$/libs/vendor/sebastian/code-unit-reverse-lookup" />
       <path value="$PROJECT_DIR$/libs/vendor/staabm/side-effects-detector" />
-      <path value="$PROJECT_DIR$/libs/vendor/symfony/polyfill-php81" />
       <path value="$PROJECT_DIR$/libs/vendor/symfony/var-dumper" />
       <path value="$PROJECT_DIR$/libs/vendor/symfony/mime" />
       <path value="$PROJECT_DIR$/libs/vendor/symfony/polyfill-intl-normalizer" />

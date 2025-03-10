@@ -1,6 +1,7 @@
 <?php
 
 use core\ConfigGlobal;
+use usuarios\domain\usuarioEliminar;
 use usuarios\model\entity\GestorGrupo;
 use usuarios\model\entity\GestorUsuarioGrupo;
 use usuarios\model\entity\Grupo;
@@ -40,6 +41,7 @@ switch ($Qque) {
         }
         echo "{ que: '" . $Qque . "', txt: '$txt', error: '$error_txt' }";
         break;
+        /*
     case "grupo_lst":
         $Qid_usuario = (integer)filter_input(INPUT_POST, 'id_usuario');
         $oUsuario = new Usuario(array('id_usuario' => $Qid_usuario));
@@ -154,17 +156,11 @@ switch ($Qque) {
         $oPosicion = new web\Posicion();
         echo $oPosicion->ir_a($pagina);
         break;
+        */
     case "eliminar":
-        // elimna al usuario.
         $a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-        if (!empty($a_sel)) { //vengo de un checkbox
-            $id_usuario = (integer)strtok($a_sel[0], "#");
-        }
-        $oUsuario = new Usuario(array('id_usuario' => $id_usuario));
-        if ($oUsuario->DBEliminar() === false) {
-            echo _("hay un error, no se ha eliminado");
-            echo "\n" . $oUsuario->getErrorTxt();
-        }
+        usuarioEliminar::eliminarFromAray($a_sel);
+        /*
     case "eliminar_grupo":
         // elimna el grupo.
         $a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
@@ -177,6 +173,7 @@ switch ($Qque) {
             echo "\n" . $oUsuario->getErrorTxt();
         }
         break;
+        */
     case "eliminar_role":
         // elimna el role.
         $a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);

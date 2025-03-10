@@ -1,0 +1,48 @@
+<script>
+    fnjs_add_perm_activ = function () {
+        $('#frm_usuario').attr('action', "apps/procesos/controller/usuario_perm_activ.php");
+        fnjs_enviar_formulario('#frm_usuario');
+    }
+
+    fnjs_mod_perm_activ = function (formulario) {
+        rta = fnjs_solo_uno(formulario);
+        if (rta == 1) {
+            $(formulario).attr('action', 'apps/procesos/controller/usuario_perm_activ.php');
+            fnjs_enviar_formulario(formulario);
+        }
+    }
+
+    fnjs_del_perm_activ = function (formulario, que_val) {
+        rta = fnjs_solo_uno(formulario);
+        if (rta === 1) {
+            if (confirm("<?= _("¿Esta seguro que desea borrar este permiso?") ?>")) {
+                let datos = $(formulario).serialize();
+                let request = $.ajax({
+                    data: datos,
+                    url: 'apps/usuarios/controller/perm_activ_eliminar.php',
+                    method: 'POST',
+                    dataType: 'json'
+                });
+                request.done(function (json) {
+                    if (json.success !== true) {
+                        alert("<?= _("respuesta") ?>" + ': ' + json.mensaje);
+                    } else {
+                        <?= $oPosicion->js_atras(1) ?>
+                    }
+                });
+            }
+        }
+    }
+</script>
+<br>
+<h3><?= ucfirst(_("permisos en actividades")) ?>:</h3>
+<b><?= _("propios") ?>:</b>
+<p class="comentario"><?= _("manda el nivel más concreto: 'sv n crt' manda sobre 'sv n'") ?>.</p>
+<p class="comentario"><?= _("para un mismo nivel, los permisos propios sobreescriben a los de los grupos") ?>.</p>
+<br>
+<form id="permisos_activ" name="permisos_activ" action=''>
+    <?= $oHash->getCamposHtml() ?>
+    <input type="hidden" id="perm_activ_que" name="que" value=''>
+    <?= $oTabla->mostrar_tabla_html() ?>
+    <input type=button onclick="fnjs_add_perm_activ();" value="<?= _("añadir permiso") ?>">
+</form>

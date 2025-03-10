@@ -138,7 +138,6 @@ $oHash->setCamposForm('dl_propia!fase_ref!extendida!iactividad_val!iasistentes_v
 $oHash->setCamposNo('afecta_a!id_tipo_activ');
 $a_camposHidden = array(
     'id_usuario' => $Qid_usuario,
-    'que' => 'perm_update',
     'quien' => $Qquien,
     'extendida' => TRUE,
 );
@@ -159,6 +158,12 @@ if (is_true($Qdl_propia)) {
     $chk_otra = 'checked';
 }
 
+// titulo
+$titulo = _("Añadir nuevo permiso a");
+if (!empty($Qid_item)) {
+    $titulo = _("Modificar el permiso para");
+}
+
 $a_campos = [
     'oPosicion' => $oPosicion,
     'oHash' => $oHash,
@@ -170,6 +175,7 @@ $a_campos = [
     'oActividadTipo' => $oActividadTipo,
     'aPerm' => $aPerm,
     'extendida' => TRUE,
+    'titulo' => $titulo,
 ];
 
 $oView = new ViewTwig('procesos/controller');

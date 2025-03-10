@@ -45,7 +45,7 @@ class DesplegableArray extends Desplegable
      * Constructor de la classe.
      *
      */
-    function __construct($id, $Opciones, $Nom)
+    function __construct($id='', $Opciones='', $Nom='')
     {
         if (isset($id) && $id !== '') $this->sSeleccionados = $id;
         if (isset($Opciones) && $Opciones !== '') $this->oOpciones = $Opciones;
@@ -55,6 +55,27 @@ class DesplegableArray extends Desplegable
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
+    public function export()
+    {
+        $a_properties = parent::export();
+
+        $a_properties['Seleccionados'] = $this->sSeleccionados;
+        $a_properties['NomConjunto'] = $this->sNomConjunto;
+        $a_properties['AccionConjunto'] = $this->sAccionConjunto;
+        $a_properties['TabIndexIni'] = $this->iTabIndexIni;
+
+        return $a_properties;
+    }
+
+    public function import($data)
+    {
+        $this->sSeleccionados = $data['Seleccionados']?? '';
+        $this->sNomConjunto = $data['NomConjunto']?? '';
+        $this->sAccionConjunto = $data['AccionConjunto']?? '';
+        $this->iTabIndexIni = $data['TabIndexIni']?? 0;
+
+        parent::import($data);
+    }
 
     /**
      *

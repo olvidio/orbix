@@ -34,6 +34,45 @@ class Desplegable
         }
     }
 
+    public function export()
+    {
+        $multiple = $this->bMultiple ?? false;
+        $size = $this->iSize ?? 0;
+        $clase = $this->sClase ?? '';
+        $action = $this->sAction ?? '';
+        $nombre = $this->sNombre ?? '';
+        $blanco = $this->bBlanco ?? false;
+        $valorBlanco = $this->valorBlanco ?? '';
+        $opcion_sel = $this->sOpcion_sel?? '';
+        $options = $this->getArrayOpciones();
+
+
+        return [
+            'multiple' => $multiple,
+            'size' => $size,
+            'clase' => $clase,
+            'action' => $action,
+            'nombre' => $nombre,
+            'blanco' => $blanco,
+            'valorBlanco' => $valorBlanco,
+            'opcion_sel' => $opcion_sel,
+            'options' => $options,
+        ];
+    }
+
+    public function import($data)
+    {
+        $this->bMultiple = $data['multiple'] ?? false;
+        $this->iSize = $data['size'];
+        $this->sClase = $data['clase'];
+        $this->sAction = $data['action'];
+        $this->sNombre = $data['nombre'];
+        $this->bBlanco = $data['blanco'];
+        $this->valorBlanco = $data['valorBlanco'];
+        $this->sOpcion_sel = $data['opcion_sel'];
+        $this->oOpciones = $data['options'];
+    }
+
     public function desplegable()
     {
         $multiple = empty($this->bMultiple) ? '' : 'multiple';
@@ -50,10 +89,7 @@ class Desplegable
         return $sHtml;
     }
 
-    /**
-     * dibuja una lista de checkbox
-     *
-     */
+    /*
     public function cuadros_check()
     {
 
@@ -97,9 +133,54 @@ class Desplegable
 
         return $txt;
     }
+    */
 
+    public function getArrayOpciones()
+    {
+        $a_options = [];
+        if (is_object($this->oOpciones)) {
+            $this->oOpciones->execute();
+            foreach ($this->oOpciones as $row) {
+                if (!isset($row[1])) {
+                    $a = 0;
+                } else {
+                    $a = 1;
+                }
+
+                $a_options[$row[0]] = $row[$a];
+            }
+        } elseif (is_array($this->oOpciones)) {
+            $a_options = $this->oOpciones;
+        }
+        return $a_options;
+    }
 
     public function options()
+    {
+        $txt = '';
+        if (!empty($this->bBlanco)) {
+            if (!empty($this->valorBlanco)) {
+                $txt .= "<option value=\"$this->valorBlanco\"></option>";
+            } else {
+                $txt .= '<option></option>';
+            }
+        }
+        $a_opciones = $this->getArrayOpciones();
+        reset($a_opciones);
+        foreach ($a_opciones as $key => $val) {
+            if ((string)$key === (string)$this->sOpcion_sel) {
+                $sel = 'selected';
+            } else {
+                $sel = '';
+            }
+            if (!empty($this->aOpcion_no) && is_array($this->aOpcion_no) && in_array($key, $this->aOpcion_no)) continue;
+            $txt .= "<option value=\"$key\" $sel>$val</option>";
+        }
+        return $txt;
+    }
+
+    /*
+    public function options_old()
     {
         $txt = '';
         if (!empty($this->bBlanco)) {
@@ -142,6 +223,7 @@ class Desplegable
         }
         return $txt;
     }
+    */
 
     public function setNombre($sNombre)
     {

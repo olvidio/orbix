@@ -1,0 +1,79 @@
+<?php
+
+use core\ConfigGlobal;
+use web\Hash;
+
+?>
+<script>
+    fnjs_buscar = function () {
+        var url = '<?= ConfigGlobal::getWeb() ?>/frontend/usuarios/controller/grupo_lista.php';
+        $('#frm_buscar').attr('action', url);
+        fnjs_enviar_formulario('#frm_buscar');
+    }
+
+    /*
+    fnjs_modificar = function (formulario) {
+        rta = fnjs_solo_uno(formulario);
+        if (rta == 1) {
+            $('#que').val('');
+            $(formulario).attr('action', "frontend/usuarios/controller/grupo_form.php");
+            fnjs_enviar_formulario(formulario);
+        }
+    }
+
+     */
+    fnjs_eliminar = function (formulario) {
+        rta = fnjs_solo_uno('#seleccionados');
+        if (rta === 1) {
+            if (confirm("<?= _("¿Está seguro que desea borrar este grupo?") ?>")) {
+                var url = '<?= ConfigGlobal::getWeb() ?>/apps/usuarios/controller/grupo_eliminar.php';
+                let datos = $(formulario).serialize();
+                let request = $.ajax({
+                    data: datos,
+                    url: url,
+                    method: 'POST',
+                    dataType: 'json'
+                });
+                request.done(function (json) {
+                    if (json.success !== true) {
+                        alert("<?= _("respuesta") ?>" + ': ' + json.mensaje);
+                    } else {
+                        fnjs_actualizar();
+                    }
+                });
+            }
+        }
+    }
+    fnjs_actualizar = function () {
+        var url = '<?= Hash::link(ConfigGlobal::getWeb() . '/frontend/usuarios/controller/grupo_lista.php') ?>';
+        fnjs_update_div('#main', url);
+    }
+    fnjs_left_side_hide();
+</script>
+<h3><?= _("Buscar grupo") ?></h3>
+<form id=frm_buscar name=frm_buscar action="" method="post" onkeydown="fnjs_enviar(event,this);">
+    <?= $oHashBuscar->getCamposHtml() ?>
+    <?= ucfirst(_("nombre")) ?>:<input type=text name=username value="<?= $username ?>">
+    <input type="button" onclick="fnjs_buscar();" id="btn_ok" name="btn_ok" value="<?= ucfirst(_("buscar")) ?>"
+           class="btn_ok">
+</form>
+<br>
+<?php if (ConfigGlobal::is_app_installed('procesos')) { ?>
+    <?= _("Poner entre paréntesis si hace referencia a menus (m), permisos (p) o ambos (m+p)") ?>
+    <br>
+<?php } ?>
+<form id="seleccionados" name="seleccionados" action="" method="post">
+    <?= $oHashSelect->getCamposHtml() ?>
+    <?= $oTabla->mostrar_tabla() ?>
+</form>
+<br>
+<table>
+    <tr>
+        <th class="no_print">
+            <span class="link_inv"
+                  onclick="fnjs_update_div('#main','<?= $url_nuevo ?>');">
+                <?= core\strtoupper_dlb(_("nuevo grupo")) ?>
+            </span>
+        </th>
+    </tr>
+</table>

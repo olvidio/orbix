@@ -1,0 +1,62 @@
+<script>
+    fnjs_buscar = function () {
+        $('#frm_buscar').attr('action', '<?= $url_lista ?>');
+        fnjs_enviar_formulario('#frm_buscar');
+    }
+    fnjs_eliminar = function () {
+        rta = fnjs_solo_uno('#seleccionados');
+        if (rta === 1) {
+            if (confirm("<?= _("¿Está seguro que desea borrar este usuario?") ?>")) {
+                let url = '<?= $url_eliminar ?>';
+                datos = $('#seleccionados').serialize();
+
+                 let request = $.ajax({
+                    data: datos,
+                    url: url,
+                    method: 'POST',
+                    dataType: 'json'
+                });
+
+                request.done(function (json) {
+                    if (json.success !== true) {
+                        rta_txt = json.mensaje;
+                        alert('error: ' + rta_txt);
+                    } else {
+                        fnjs_actualizar();
+                    }
+                });
+            }
+        }
+    }
+    fnjs_actualizar = function () {
+        fnjs_update_div('#main', '<?= $url_lista ?>');
+    }
+    fnjs_left_side_hide();
+</script>
+
+<h3><?= _("Buscar usuario") ?></h3>
+<form id=frm_buscar name=frm_buscar action="" method="post" onkeydown="fnjs_enviar(event,this);">
+    <?= $oHash->getCamposHtml() ?>
+    <label for="username">
+        <?= ucfirst(_("nombre")) ?>:
+        <input type=text id=username name=username value="<?= $username ?>">
+    </label>
+    <input type="button" onclick="fnjs_buscar();" id="btn_ok" name="btn_ok" value="<?= ucfirst(_("buscar")) ?>"
+           class="btn_ok">
+    <br>
+    <br>
+</form>
+<form id=seleccionados name=seleccionados action="" method="post">
+    <?= $oHash1->getCamposHtml() ?>
+    <?= $oTabla->mostrar_tabla() ?>
+</form>
+<br>
+<table>
+    <tr>
+        <th class="no_print">
+            <span class="link_inv" onclick="fnjs_update_div('#main','<?= $url_nuevo ?>');">
+                <?= core\strtoupper_dlb(_("nuevo usuario")) ?>
+            </span>
+        </th>
+    </tr>
+</table>

@@ -1,0 +1,48 @@
+<?php
+
+use core\ConfigGlobal;
+
+?>
+<script>
+    fnjs_add_perm_menu = function () {
+        $('#frm_usuario').attr('action', "frontend/usuarios/controller/perm_menu_form.php");
+        fnjs_enviar_formulario('#frm_usuario');
+    }
+    fnjs_del_perm_menu = function (formulario) {
+        rta = fnjs_solo_uno(formulario);
+        if (rta === 1) {
+            if (confirm("<?= _("¿Está seguro?") ?>")) {
+                var url = '<?= ConfigGlobal::getWeb() ?>/apps/usuarios/controller/perm_menu_eliminar.php';
+                let datos = $(formulario).serialize();
+                let request = $.ajax({
+                    data: datos,
+                    url: url,
+                    method: 'POST',
+                    dataType: 'json'
+                });
+                request.done(function (json) {
+                    if (json.success !== true) {
+                        alert("<?= _("respuesta") ?>" + ': ' + json.mensaje);
+                    } else {
+                        fnjs_actualizar(formulario);
+                    }
+                });
+            }
+        }
+    }
+    fnjs_actualizar = function (formulario) {
+        var campo = '<input type="hidden" name="refresh" value=1>';
+        $(formulario).attr('action', "frontend/usuarios/controller/grupo_form.php");
+        $(formulario).append(campo);
+        fnjs_enviar_formulario(formulario, '#main');
+    }
+</script>
+<br>
+<h4><?= ucfirst(_("permisos de menús")) ?>:</h4>
+<form id="permisos_menu" name="permisos_menu" action="">
+    <?= $oHashPermisos->getCamposHtml() ?>
+    <input type="hidden" id="perm_menu_que" name="que" value="">
+    <?= $oTablaPermMenu->mostrar_tabla() ?>
+    <br>
+    <input type=button onclick="fnjs_add_perm_menu();" value="<?= _("añadir permiso") ?>">
+</form>

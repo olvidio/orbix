@@ -1,0 +1,143 @@
+<script>
+    fnjs_chk_passwd = function (formulario) {
+        var password = encodeURIComponent($('#password').val());
+        var usuario = encodeURIComponent($('#usuario').val());
+        var url = 'apps/usuarios/controller/usuario_check_pwd.php';
+        var parametros = 'id_usuario=<?= $id_usuario ?>&usuario=' + usuario + '&password=' + password + '<?= $h_pwd ?>';
+
+        var request = $.ajax({
+            data: parametros,
+            url: url,
+            type: 'post',
+            dataType: 'json'
+        });
+        request.done(function (json) {
+            if (json.success !== true) {
+                alert("password error:\n" + json.mensaje);
+                return false;
+            } else {
+                fnjs_guardar_datos(formulario);
+            }
+        });
+    }
+
+    fnjs_guardar = function (formulario) {
+        var password = $('#password').val();
+        // si es 0, no se cambia el password.
+        if (password) {
+            fnjs_chk_passwd(formulario);
+        } else {
+            fnjs_guardar_datos(formulario);
+        }
+    }
+
+    fnjs_guardar_datos = function (formulario) {
+        let rr = fnjs_comprobar_campos(formulario, '<?= addslashes($obj) ?>');
+        //alert ("EEE "+rr);
+        if (rr === 'ok') {
+            let datos = $(formulario).serialize();
+            let request = $.ajax({
+                data: datos,
+                url: '<?= $url_usuario_guardar ?>',
+                method: 'POST',
+                dataType: 'json'
+            });
+            request.done(function (json) {
+                if (json.success !== true) {
+                    alert("<?= "respuesta: " ?>" + json.mensaje);
+                } else {
+                   <?= $oPosicion->js_atras(1); ?>
+                }
+            });
+        }
+    }
+    <?php
+    if ($pau === 'cdc' && $quien === 'usuario') { //casa
+        ?>
+        fnjs_mas_casas = function (evt) {
+            if (evt == "x") {
+                var valor = 1;
+            } else {
+                var id_campo = evt.currentTarget.id;
+                var valor = $(id_campo).val();
+                evt.preventDefault();
+                evt.stopPropagation();
+            }
+            if (evt.keyCode === 9 || evt.type === "change" || evt === "x") {
+                if (valor !== 0) {
+                    <?php
+                    echo $oSelects->ListaSelectsJs();
+                    ?>
+                } else {
+                    ir_a('f_entrada');
+                }
+            }
+        }
+        <?php
+        echo $oSelects->ComprobarSelectJs();
+    }
+    ?>
+</script>
+<?= $oPosicion->mostrar_left_slide(1) ?>
+<h3><?= $usuario ?> FRONT</h3>
+<form id="frm_usuario" name="frm_usuario" action="" method="post">
+    <?= $oHash->getCamposHtml() ?>
+    <input type=hidden id=pass name=pass value='<?= $pass ?>'>
+    <input type=hidden id=que_user name=que value=''>
+    <br>
+    <?= ucfirst(_("login")) ?>:<input type=text id=usuario name=usuario value="<?= $usuario ?>" size=60>
+    <?php if ($quien === 'usuario') { ?>
+        <br>
+        <?= ucfirst(_("nombre a mostrar")) ?>:<input type=text name=nom_usuario value="<?= $nom_usuario ?>">
+    <?php } ?>
+    <?= ucfirst(_("role")) ?>:
+    <?= $oDesplRoles->desplegable() ?>
+    <br>
+    <?php
+    if ($pau === 'nom') {
+    ?>
+    <!--  --------------- Sacd --------------- -->
+    <tr>
+        <td class=etiqueta><?= _("persona") ?>:</td>
+        <td colspan=8 id="col_sacd">
+            <?php
+            echo $oSelects->desplegable();
+            echo "</td></tr>";
+            }
+            if ($pau === 'sacd') {
+            ?>
+            <!--  --------------- Sacd --------------- -->
+    <tr>
+        <td class=etiqueta><?= _("sacd") ?>:</td>
+        <td colspan=8 id="col_sacd">
+            <?php
+            echo $oSelects->desplegable();
+            echo "</td></tr>";
+            }
+            if ($pau === 'ctr') {
+            ?>
+            <!--  --------------- CENTROS --------------- -->
+    <tr>
+        <td class=etiqueta><?= _("centro") ?>:</td>
+        <td colspan=8 id="col_centros">
+            <?php
+            echo $oSelects->desplegable();
+            echo "</td></tr>";
+            }
+            if ($pau === 'cdc') {
+            ?>
+            <!--  --------------- CASAS --------------- -->
+    <tr>
+        <td class=etiqueta><?= _("casas") ?>:</td>
+        <td colspan=8 id="col_casas">
+            <?php
+            echo $oSelects->ListaSelects();
+            echo "</td></tr>";
+            }
+            ?>
+            <br>
+            <?= ucfirst(_("password")) ?>:<input type="password" id="password" name="password" size=30><br>
+            <?= ucfirst(_("email")) ?>:<input type=text name=email size=30 value="<?= $email ?>"><br>
+            <input type=button onclick="fnjs_guardar(this.form);" value="<?= $txt_guardar ?>">
+            <br>
+</form>

@@ -1,0 +1,66 @@
+<?php
+
+use core\ConfigGlobal;
+use web\Hash;
+
+?>
+<script>
+    fnjs_modificar = function (formulario) {
+        rta = fnjs_solo_uno(formulario);
+        if (rta === 1) {
+            $(formulario).attr('action', "frontend/usuarios/controller/role_form.php");
+            fnjs_enviar_formulario(formulario);
+        }
+    }
+    fnjs_eliminar = function (formulario) {
+        rta = fnjs_solo_uno(formulario);
+        if (rta === 1) {
+            if (confirm("<?= _("¿Está seguro que desea borrar este rol?");?>")) {
+                var url = '<?= ConfigGlobal::getWeb() ?>/apps/usuarios/controller/role_eliminar.php';
+                let datos = $(formulario).serialize();
+                let request = $.ajax({
+                    data: datos,
+                    url: url,
+                    method: 'POST',
+                    dataType: 'json'
+                });
+                request.done(function (json) {
+                    if (json.success !== true) {
+                        alert("<?= _("respuesta") ?>" + ': ' + json.mensaje);
+                    } else {
+                        fnjs_actualizar();
+                    }
+                });
+            }
+        }
+    }
+    fnjs_actualizar = function () {
+        var url = '<?= Hash::link(ConfigGlobal::getWeb() . '/frontend/usuarios/controller/role_lista.php') ?>';
+        fnjs_update_div('#main', url);
+    }
+    fnjs_left_side_hide();
+</script>
+<h1><?= _("listado de roles") ?></h1>
+<p class="comentario">
+    <?= _("Los roles son universales y solamente los puede modificar el superusuario.") ?>
+    <br>
+    <?= _("Los grupos de menus que se asignan a cada role son propios para cada dl (sv y sf distintos). Y los puede modificar el admin.") ?>
+</p>
+<br>
+<form id="seleccionados" name="seleccionados" action="" method="post">
+    <?= $oHash->getCamposHtml() ?>
+    <?= $oTabla->mostrar_tabla() ?>
+</form>
+<br>
+<?php if ($permiso === 1) { ?>
+    <table>
+        <tr>
+            <th class="no_print">
+                <span class="link_inv"
+                      onclick="fnjs_update_div('#main','<?= $url_nuevo ?>');">
+                    <?= core\strtoupper_dlb(_("nuevo rol")) ?>
+                </span>
+            </th>
+        </tr>
+    </table>
+<?php } ?>

@@ -1,0 +1,31 @@
+<?php
+
+use core\ConfigGlobal;
+
+?>
+<script>
+    fnjs_add_grupmenu = function (formulario) {
+        var url = '<?= ConfigGlobal::getWeb() ?>/apps/usuarios/controller/role_grupmenu_add.php';
+        let datos = $(formulario).serialize();
+        let request = $.ajax({
+            data: datos,
+            url: url,
+            method: 'POST',
+            dataType: 'json'
+        });
+        request.done(function (json) {
+            if (json.success !== true) {
+                alert("<?= _("respuesta") ?>" + ': ' + json.mensaje);
+            } else {
+                <?= $oPosicion->js_atras(1) ?>
+            }
+        });
+    }
+</script>
+<?= $oPosicion->mostrar_left_slide(1); ?>
+<h1><?= sprintf(_("añadir nuevo grupMenu a %s"), $role) ?></h1>
+<form id="from_grupmenu" name="from_grupmenu" action="" method="post">
+    <?= $oHash->getCamposHtml() ?>
+    <h4><?= ucfirst(_("grupos de menús")) ?>:</h4>
+    <?= $oTabla->mostrar_tabla() ?>
+</form>
