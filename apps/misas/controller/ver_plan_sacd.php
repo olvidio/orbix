@@ -127,7 +127,12 @@ $cEncargosDia = $EncargoDiaRepository->getEncargoDias($aWhere,$aOperador);
 
 foreach($cEncargosDia as $oEncargoDia) {
     $id_enc = $oEncargoDia->getId_enc();
-    $dia = $oEncargoDia->getTstart()->format('d-m-Y');
+    $date = $oEncargoDia->getTstart();
+//    $dia = $date->format('d-m-Y');
+    $num_dia = $date->format('j');
+    $num_mes = $date->format('n');
+    $dia_week = $date->format('N');
+    $dia=$a_dias_semana_breve[$dia_week].' '.$num_dia.'.'.$num_mes;
     $hora_ini = $oEncargoDia->getTstart()->format('H:i');
     $hora_fin = $oEncargoDia->getTend()->format('H:i');
     if ($hora_ini=='00:00')

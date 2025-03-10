@@ -107,6 +107,8 @@ switch ($Qperiodo) {
         $Qempiezamax_rep = $empiezamax->format('Y-m-d');
         break;
     default:
+        if ($Qempiezamin>$Qempiezamax)
+            $Qempiezamax=$Qempiezamin;
         $Qempiezamin_rep=str_replace('/','-',$Qempiezamin);
         $Qempiezamax_rep=str_replace('/','-',$Qempiezamax);
 }

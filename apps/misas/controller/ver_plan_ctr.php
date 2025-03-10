@@ -120,7 +120,8 @@ foreach ($date_range as $date) {
     $num_mes = $date->format('n');
     $dia_week = $date->format('N');
     $dia_week_sacd[$id_dia] = $date->format('N');
-    $nom_dia = $a_dias_semana_breve[$dia_week].$num_dia.$a_nombre_mes_breve[$num_mes];
+    $nom_dia=$a_dias_semana_breve[$dia_week].' '.$num_dia.'.'.$num_mes;
+//    $nom_dia = $a_dias_semana_breve[$dia_week].$num_dia.$a_nombre_mes_breve[$num_mes];
 
     $columns_cuadricula[] = [
         "id" => "$id_dia", 
