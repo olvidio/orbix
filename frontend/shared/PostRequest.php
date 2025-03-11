@@ -27,7 +27,8 @@ class PostRequest
             $cookieJar->setCookie($setCookie);
         }
 
-        $domain = 'docker.internal';
+        //$domain = 'docker.internal';
+        $domain = strtolower( parse_url( $url , PHP_URL_HOST ) );
         $jar = CookieJar::fromArray($cookies, $domain);
 
         // Use a specific cookie jar
@@ -61,7 +62,8 @@ class PostRequest
             $cookieJar->setCookie($setCookie);
         }
 
-        $domain = 'docker.internal';
+        //$domain = 'docker.internal';
+        $domain = strtolower( parse_url( $url , PHP_URL_HOST ) );
         $jar = CookieJar::fromArray($cookies, $domain);
 
         // Use a specific cookie jar
