@@ -292,7 +292,7 @@ if ($gm < 2) {
 $li_submenus .= "</ul>";
 
 $oHash = new Hash();
-$oHash->setUrl(ConfigGlobal::getWeb() . '/apps/usuarios/controller/personal_update.php');
+$oHash->setUrl(ConfigGlobal::getWeb() . '/apps/usuarios/controller/preferencias_guardar.php');
 $oHash->setCamposForm('que!tabla!sPrefs');
 $h = $oHash->linkSinVal();
 
@@ -526,7 +526,7 @@ $h = $oHash->linkSinVal();
             "heightGrid": heightGrid
         };
         sPrefs = JSON.stringify(oPrefs);
-        url = "<?= ConfigGlobal::getWeb() ?>/apps/usuarios/controller/personal_update.php";
+        url = "<?= ConfigGlobal::getWeb() ?>/apps/usuarios/controller/preferencias_guardar.php";
         parametros = 'que=slickGrid&tabla=' + tabla + '&sPrefs=' + sPrefs + '<?= $h ?>';
         $.ajax({
             url: url,
