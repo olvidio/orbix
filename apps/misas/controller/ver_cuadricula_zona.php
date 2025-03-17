@@ -41,6 +41,23 @@ $Qseleccion = (integer)filter_input(INPUT_POST, 'seleccion');
 
 $un_dia = new DateInterval('P1D');
 
+//Busco los sacd de la zona, para señalar si en la plantilla o en plan hay alguno que no es de la zona.
+$aWhere = [];
+$aWhere['id_zona'] = $Qid_zona;
+$aOperador = array();
+$GesZonasSacd = new GestorZonaSacd();
+$cZonaSacd = $GesZonasSacd->getZonasSacds($aWhere, $aOperador);
+$sacd_zona = [];
+foreach ($cZonaSacd as $oZonaSacd) {
+    $id_nom = $oZonaSacd->getId_nom();
+    $InicialesSacd = new InicialesSacd();
+    $nombre_sacd=$InicialesSacd->nombre_sacd($id_nom);
+    $sacd_zona[$id_nom] = $nombre_sacd;
+//    echo $id_nom.'===='.$nombre_sacd.'<br>';
+}
+
+
+
 switch ($Qperiodo) {
     case "esta_semana":
         $dia_week = date('N');
@@ -370,17 +387,28 @@ foreach ($cEncargosZona as $oEncargo) {
                 $hora_ini='';
             $InicialesSacd = new InicialesSacd();
             $iniciales=$InicialesSacd->iniciales($id_nom);
-            if ($estado==EncargoDia::STATUS_PROPUESTA)
+            $color='';
+            $texto='';
+            if (trim($QTipoPlantilla)==EncargoDia::PLAN_DE_MISAS)
             {
-                $color = 'rojoclaro';
+                if ($estado==EncargoDia::STATUS_PROPUESTA)
+                {
+                    $color = 'rojoclaro';
+                }
+                if ($estado==EncargoDia::STATUS_COMUNICADO_SACD)
+                {
+                    $color = 'amarilloclaro';
+                }
+                if ($estado==EncargoDia::STATUS_COMUNICADO_CTR)
+                {
+                    $color = 'verdeclaro';
+                }    
             }
-            if ($estado==EncargoDia::STATUS_COMUNICADO_SACD)
+
+            if (!isset($sacd_zona[$id_nom]))
             {
-                $color = 'amarilloclaro';
-            }
-            if ($estado==EncargoDia::STATUS_COMUNICADO_CTR)
-            {
-                $color = 'verdeclaro';
+                $color='amarillo';
+                $texto = 'No es de la zona';
             }
 
             $meta_dia["$num_dia"] = [
@@ -393,6 +421,7 @@ foreach ($cEncargosZona as $oEncargo) {
                 "id_enc" => $id_enc,
                 "dia" => $num_dia,
                 "tipo" => 'misas',
+                "texto" => $texto,
             ];
             // añadir '*' si tiene observaciones
             $iniciales .= " ".$hora_ini;
@@ -411,6 +440,7 @@ foreach ($cEncargosZona as $oEncargo) {
             $date3=new DateTime($num_dia2);
             $date3 -> add($interval3);
             $num_dia3 = $date3->format('Y-m-d');
+
             $meta_dia2["$num_dia"] = [
                 "uuid_item" => "",
                 "color" => "",
@@ -421,6 +451,7 @@ foreach ($cEncargosZona as $oEncargo) {
                 "id_enc" => $id_enc,
                 "dia" => $num_dia2,
                 "tipo" => 'misas',
+                "texto" => '',
             ];
             $meta_dia3["$num_dia"] = [
                 "uuid_item" => "",
@@ -432,6 +463,7 @@ foreach ($cEncargosZona as $oEncargo) {
                 "id_enc" => $id_enc,
                 "dia" => $num_dia3,
                 "tipo" => 'misas',
+                "texto" => '',
             ];
 
             // sobreescribir los que tengo datos:
@@ -462,7 +494,14 @@ foreach ($cEncargosZona as $oEncargo) {
                     $hora_ini='';
                 $InicialesSacd = new InicialesSacd();
                 $iniciales=$InicialesSacd->iniciales($id_nom);
-                $color = '';
+
+                $color='';
+                $texto='';
+                if (!isset($sacd_zona[$id_nom]))
+                {
+                    $color='amarillo';
+                    $texto = 'No es de la zona';
+                }
 
                 $meta_dia2["$num_dia"] = [
                     "uuid_item" => $oEncargoDia->getUuid_item()->value(),
@@ -473,9 +512,11 @@ foreach ($cEncargosZona as $oEncargo) {
                     "observ" => $oEncargoDia->getObserv(),
                     "id_enc" => $id_enc,
                     "dia" => $num_dia2,
+                    "tipo" => 'misas',
+                    "texto" => $texto,
                 ];
                 // añadir '*' si tiene observaciones
-                $iniciales .= " ".$hora_ini;
+                $iniciales .= $hora_ini;
                 $iniciales .= empty($oEncargoDia->getObserv())? '' : '*';
                 $data_cols2["$num_dia"] = $iniciales;
             }
@@ -501,8 +542,15 @@ foreach ($cEncargosZona as $oEncargo) {
                 if ($hora_ini=='00:00')
                     $hora_ini='';
                 $InicialesSacd = new InicialesSacd();
-                $iniciales=$InicialesSacd->iniciales($id_nom);
-                $color = '';
+                $iniciales=$InicialesSacd->iniciales($id_nom);  
+
+                $color='';
+                $texto='';
+                if (!isset($sacd_zona[$id_nom]))
+                {
+                    $color='amarillo';
+                    $texto = 'No es de la zona';
+                }
 
                 $meta_dia3["$num_dia"] = [
                     "uuid_item" => $oEncargoDia->getUuid_item()->value(),
@@ -513,6 +561,8 @@ foreach ($cEncargosZona as $oEncargo) {
                     "observ" => $oEncargoDia->getObserv(),
                     "id_enc" => $id_enc,
                     "dia" => $num_dia3,
+                    "tipo" => 'misas',
+                    "texto" => $texto,
                 ];
                 // añadir '*' si tiene observaciones
                 $iniciales .= " ".$hora_ini;
@@ -550,20 +600,18 @@ foreach ($cEncargosZona as $oEncargo) {
     }
 }
 
-$aWhere = [];
-$aWhere['id_zona'] = $Qid_zona;
-$aOperador = array();
-$GesZonasSacd = new GestorZonaSacd();
-$cZonaSacd = $GesZonasSacd->getZonasSacds($aWhere, $aOperador);
+//$aWhere = [];
+//$aWhere['id_zona'] = $Qid_zona;
+//$aOperador = array();
+//$GesZonasSacd = new GestorZonaSacd();
+//$cZonaSacd = $GesZonasSacd->getZonasSacds($aWhere, $aOperador);
 $contador_1a_sacd = [];
 $contador_total_sacd = [];
 $esta_sacd = [];
 $donde_esta_sacd = [];
-foreach ($cZonaSacd as $oZonaSacd) {
-    $id_nom = $oZonaSacd->getId_nom();
+foreach ($sacd_zona as $id_nom => $nombre_sacd) {
+//    echo $id_nom.'->'.$nombre_sacd.'<br>';
     $contador_sacd[$id_nom] = [];
-    $InicialesSacd = new InicialesSacd();
-    $nombre_sacd=$InicialesSacd->nombre_sacd($id_nom);
     $contador_sacd[$id_nom]['nombre']=$nombre_sacd;
     foreach ($date_range as $date) {
         $num_dia = $date->format('Y-m-d');

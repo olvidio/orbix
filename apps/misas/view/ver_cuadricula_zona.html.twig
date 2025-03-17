@@ -384,7 +384,7 @@ function formato_sacd(row, cell, value, columnDef, dataContext) {
     var color=data_sacd[row].meta[id_campo].color;
     var texto=data_sacd[row].meta[id_campo].texto;
 //alert('sacd: '+sacd+' id_campo: '+id_campo+'value: '+value+' texto: '+texto+' color '+color);
-      var rtn = { text: value, removeClasses: 'rd orange green' };
+      var rtn = { text: value, removeClasses: 'red orange green' };
       if (color !== null && color !== "") {
           rtn.addClasses =  color;
           rtn.toolTip = texto;
@@ -396,7 +396,6 @@ function formato_misas(row, cell, value, columnDef, dataContext) {
     var id_campo=columns[cell].field;
     var color=data[row].meta[id_campo].color;
       var rtn = { text: value, removeClasses: 'amarillo amarilloclaro azulclaro rojo rojoclaro verde verdeclaro violetaclaro' };
-
       if (color !== null && color !== "") {
           rtn.addClasses = color;
 //          rtn.toolTip = value;
@@ -429,11 +428,13 @@ function formato(row, cell, value, columnDef, dataContext) {
     }
     if (tipo=='misas') {
         color=data[row].meta[id_campo].color;
+        var texto=data[row].meta[id_campo].texto;
+        rtn.toolTip = texto;
     }
     if (tipo=='titulo') {
         color='titulo';
     }
- 
+
     if (color !== null && color !== "") {
           rtn.addClasses = color;
     }
