@@ -842,6 +842,14 @@ foreach($lista_sacd as $key => $nombre_sacd)
             $texto='Este día tiene dos Misas';
             $color_fondo='amarillo';
         }
+        if (($misas_dia==0) && ($esta_en_zona[$key][$dws])){
+            $texto='Este día no tiene ninguna Misa';
+            $color_fondo='verde';
+        }
+        if (($misas_dia==0) && (!$esta_en_zona[$key][$dws])){
+            $texto='Este día no tiene ninguna Misa';
+            $color_fondo='azulclaro';
+        }
         if ($misas_1a_hora==2){
             $texto='Tiene dos Misas a primera hora';
             $color_fondo='rojo';
