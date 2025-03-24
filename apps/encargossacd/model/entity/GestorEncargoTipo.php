@@ -49,7 +49,7 @@ class GestorEncargoTipo extends ClaseGestor
      *    Si un parámetro se omite, se pone un punto (.) para que la búsqueda sea qualquier número
      *    ejemplo: 12....
      */
-    public static function id_tipo_encargo($grupo, $nom_tipo)
+    public function id_tipo_encargo($grupo, $nom_tipo)
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();

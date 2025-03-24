@@ -75,7 +75,7 @@ switch ($Qque) {
         if (!empty($Qid_tipo_enc) and !strstr($Qid_tipo_enc, '.')) {
             $id_tipo_enc = $Qid_tipo_enc;
         } else {
-            $condta = GestorEncargoTipo::id_tipo_encargo($Qgrupo, $Qnom_tipo);
+            $condta = (new GestorEncargoTipo)->id_tipo_encargo($Qgrupo, $Qnom_tipo);
             if (!strstr($condta, '.')) {
                 $id_tipo_enc = $condta;
             } else {

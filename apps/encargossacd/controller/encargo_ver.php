@@ -8,6 +8,7 @@ use web\Desplegable;
 use web\Hash;
 use ubis\model\entity\CentroDl;
 use ubis\model\entity\CentroEllas;
+use zonassacd\model\entity\GestorZona;
 
 // INICIO Cabecera global de URL de controlador *********************************
 require_once("apps/core/global_header.inc");
@@ -42,7 +43,7 @@ if (!empty($a_sel)) { //vengo de un checkbox
 function filtro($id_ubi)
 {
     $id_ubi_str = (string)$id_ubi;
-    if ($id_ubi_str[0] == 2) {
+    if ($id_ubi_str[0] === 2) {
         $oCentro = new CentroEllas($id_ubi);
     } else {
         $oCentro = new CentroDl($id_ubi);
@@ -50,7 +51,7 @@ function filtro($id_ubi)
     $tipo_ubi = $oCentro->getTipo_ubi();
     $tipo_ctr = $oCentro->getTipo_ctr();
 
-    if ($tipo_ubi == "ctrsf") {
+    if ($tipo_ubi === "ctrsf") {
         $filtro_ctr = 2;
     } else {
         switch ($tipo_ctr) {
@@ -107,17 +108,15 @@ if (empty($Qque) || $Qque === 'editar') { //significa que no es nuevo
 
     $oEncargo = new Encargo($Qid_enc);
     $Qid_ubi = $oEncargo->getId_ubi();
+    $Qid_zona = $oEncargo->getId_zona();
     $Qid_tipo_enc = $oEncargo->getId_tipo_enc();
     $Qdesc_enc = $oEncargo->getDesc_enc();
     $Qdesc_lugar = $oEncargo->getDesc_lugar();
     $idioma_enc = $oEncargo->getIdioma_enc();
 
-
-    if (!empty($Qid_ubi)) {
+    $Qfiltro_ctr = $oEncargo->getSf_sv();
+    if (empty($Qfiltro_ctr) && !empty($Qid_ubi)) {
         $Qfiltro_ctr = filtro($Qid_ubi);
-    }
-    if (empty($Qfiltro_ctr)) {
-        $Qfiltro_ctr = $oEncargo->getSf_sv();
     }
 }
 
@@ -127,12 +126,12 @@ if (!empty($Qid_tipo_enc)) {
     $Qgrupo = $tipo['grupo'];
     //$nom_tipo=$tipo['nom_tipo'];
 } else {
-    $Qid_tipo_enc = GestorEncargoTipo::id_tipo_encargo($Qgrupo, '...');
+    $Qid_tipo_enc = (new GestorEncargoTipo)->id_tipo_encargo($Qgrupo, '...');
 }
 
 $ee = $oGesEncargoTipo->encargo_de_tipo($Qid_tipo_enc);
 // desplegable de grupos
-if (substr($Qid_tipo_enc, 0, 1) == '.') {
+if (substr($Qid_tipo_enc, 0, 1) === '.') {
     $grupo_posibles = $ee['grupo'];
 } else {
     $Qgrupo = substr($Qid_tipo_enc, 0, 1);
@@ -147,10 +146,7 @@ $oDesplGrupos->setOpcion_sel($Qgrupo);
 $oDesplGrupos->setBlanco(1);
 $oDesplGrupos->setAction("fnjs_lst_tipo_enc();");
 
-$Qgrupo='8...';
-
 if (!empty($Qgrupo)) {
-    echo 'Grupo:'.$Qgrupo.'<br>';
     $aWhere = [];
     $aOperador = [];
     $aWhere['id_tipo_enc'] = '^' . $Qgrupo;
@@ -182,6 +178,14 @@ $oDesplGrupoCtrs->setOpcion_sel($Qfiltro_ctr);
 $oDesplGrupoCtrs->setBlanco(1);
 $oDesplGrupoCtrs->setAction("fnjs_lista_ctrs();");
 
+$oGestorZona = new GestorZona();
+$oDesplZonas = $oGestorZona->getListaZonas();
+$oDesplZonas->setNombre('id_zona_sel');
+$oDesplZonas->setAction('fnjs_lista_ctrs_por_zona()');
+if(!empty($Qid_zona)) {
+    $oDesplZonas->setOpcion_sel($Qid_zona);
+}
+
 $oGrupoCtr = new DesplCentros();
 $oGrupoCtr->setIdZona($Qid_zona);
 $oDesplCtrs = $oGrupoCtr->getDesplPorFiltro($Qfiltro_ctr);
@@ -206,20 +210,27 @@ $aCamposHidden = [
 ];
 $oHashAct->setUrl($url_actualizar);
 if ($Qque === 'nuevo') {
-    $campos_form = 'desc_enc!desc_lugar!filtro_ctr!grupo!id_tipo_enc!idioma_enc';
+    $campos_form = 'desc_enc!desc_lugar!filtro_ctr!grupo!id_tipo_enc!id_zona!idioma_enc';
 } else {
-    $campos_form = 'desc_enc!desc_lugar!filtro_ctr!grupo!id_tipo_enc!idioma_enc';
+    $campos_form = 'desc_enc!desc_lugar!filtro_ctr!grupo!id_tipo_enc!id_zona!idioma_enc';
 }
 $oHashAct->setCamposForm($campos_form);
-$oHashAct->setcamposNo('lst_ctrs!refresh');
+$oHashAct->setcamposNo('id_zona!id_zona_sel!lst_ctrs!refresh');
 $oHashAct->setArrayCamposHidden($aCamposHidden);
+
+$url_zona = 'apps/encargossacd/controller/zonas_get_select.php';
+$oHashZona = new Hash();
+$oHashZona->setUrl($url_zona);
+$oHashZona->setCamposForm('id_zona');
+$h_zona = $oHashZona->linkSinVal();
 
 $url_ctr = 'apps/encargossacd/controller/ctr_get_select.php';
 $oHashCtr = new Hash();
 $oHashCtr->setUrl($url_ctr);
-$oHashCtr->setArrayCamposHidden(['id_zona' => $Qid_zona]);
-$oHashCtr->setCamposForm('filtro_ctr!id_ubi');
+$oHashCtr->setCamposForm('filtro_ctr');
 $h_ctr = $oHashCtr->linkSinVal();
+$oHashCtr->setCamposForm('id_zona');
+$h_ctr_zona = $oHashCtr->linkSinVal();
 
 $url_lst = 'apps/encargossacd/controller/encargo_ajax.php';
 $oHashLst = new Hash();
@@ -235,8 +246,11 @@ if ($Qque === 'nuevo') {
 
 $a_campos = ['oPosicion' => $oPosicion,
     'url_actualizar' => $url_actualizar,
+    'url_zona' => $url_zona,
+    'h_zona' => $h_zona,
     'url_ctr' => $url_ctr,
     'h_ctr' => $h_ctr,
+    'h_ctr_zona' => $h_ctr_zona,
     'url_lst' => $url_lst,
     'h_lst' => $h_lst,
     'oHash' => $oHashAct,
@@ -245,12 +259,14 @@ $a_campos = ['oPosicion' => $oPosicion,
     'oDesplGrupos' => $oDesplGrupos,
     'oDesplNoms' => $oDesplNoms,
     'oDesplGrupoCtrs' => $oDesplGrupoCtrs,
+    'oDesplZonas' => $oDesplZonas,
     'oDesplCtrs' => $oDesplCtrs,
     'oDesplIdiomas' => $oDesplIdiomas,
     'desc_enc' => $Qdesc_enc,
     'desc_lugar' => $Qdesc_lugar,
     'que' > $Qque,
     'txt_btn' => $txt_btn,
+    'grupo' => $Qgrupo,
 ];
 
 $oView = new ViewTwig('encargossacd/controller');

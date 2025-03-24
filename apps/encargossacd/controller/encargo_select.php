@@ -48,41 +48,9 @@ if (!empty($Qdesc_enc)) {
 if (!empty($Qid_tipo_enc)) {
     $aWhere['id_tipo_enc'] = $Qid_tipo_enc;
 }
-/*
-//si vengo por un go_to:
-$go=strtok($_POST['go_to'],"@");
-if ($go=="session" && isset($_SESSION['session_go_to']) ) {
-	$g=strtok("@");
-	empty($_SESSION['session_go_to'][$g]['condicion'])? $condicion='' : $condicion=$_SESSION['session_go_to'][$g]['condicion'];
-	empty($_SESSION['session_go_to'][$g]['titulo'])? $titulo='' : $titulo=$_SESSION['session_go_to'][$g]['titulo'];
-} else {
-	if (empty($condicion)) $condicion=$_POST["condicion"];
-	empty($_POST["titulo"])? $titulo="" : $titulo=$_POST["titulo"];
-}
-*/
-
 
 $GesEncargos = new GestorEncargo();
 $cEncargos = $GesEncargos->getEncargos($aWhere, $aOperador);
-
-/*
-* Defino un array con los datos actuales, para saber volver después de navegar un rato
-*/
-/*
-$session_sel=array (	'dir_pag'=>ConfigGlobal::$directorio."/des/tareas",
-				'pag'=>"encargo_select.php",
-				'target'=>"main",
-				'titulo'=>$titulo,
-				'condicion'=>$condicion,
-				 );
-$session_go_to["sel"]=$session_sel;
-$_SESSION['session_go_to']=$session_go_to;
-
-// Utilizo la @ como separador (con #_... he tenido problemas)
-$go_to="session@sel";
-
-*/
-
 
 $a_botones = array(array('txt' => _("horario"), 'click' => "fnjs_horario(\"#seleccionados\")"),
     array('txt' => _("modificar"), 'click' => "fnjs_modificar(\"#seleccionados\")"),

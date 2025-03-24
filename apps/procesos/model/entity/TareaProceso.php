@@ -536,9 +536,9 @@ class TareaProceso extends ClasePropiedades
     /**
      * Establece el valor del atributo json_fases_previas de TareaProceso
      *
-     * @param string json $oFases
+     * @param mixed json $oFases
      */
-    function setJson_fases_previas(string $oFases)
+    function setJson_fases_previas(mixed $oFases)
     {
         $json_fases_previas = json_encode($oFases);
         $this->json_fases_previas = $json_fases_previas;
