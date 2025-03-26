@@ -1,0 +1,51 @@
+<script>
+    fnjs_lista_docs = function (id_grupo, donde) {
+        switch (donde) {
+            case 'cabecera':
+                id_span = '#grupo_' + id_grupo;
+                break;
+            case 'docs':
+                id_span = '#docs_grupo_' + id_grupo;
+                break;
+        }
+        nom_grupo = '#sel_grupo_' + id_grupo;
+        id_equipaje = $('#id_equipaje').val();
+        id_lugar = $(nom_grupo).val();
+        pata = 'id_grupo=' + id_grupo + '&id_lugar=' + id_lugar + '&donde=' + donde + '&id_equipaje=' + id_equipaje;
+        <?php
+        echo "var url='/scdl/documentos/equipajes_ajax.php';\n";
+        echo "var parametros=pata+'&que=lista_docs&PHPSESSID=" . session_id() . "';\n";
+        ?>
+        $.ajax({
+            url: url,
+            type: 'post',
+            data: parametros,
+            success: function (rta_txt) {
+                if (rta_txt) {
+                    $(id_span).html(rta_txt);
+                }
+            }
+        });
+    }
+    fnjs_ver_movimientos = function () {
+        let parametros = $('#seleccionados').serialize();
+        let url = 'frontend/inventario/controller/equipajes_movimientos.php';
+        let request = $.ajax({
+            data: parametros,
+            url: url,
+            type: 'post'
+        });
+        request.done(function (rta_txt) {
+            $('#exportar').html(rta_txt);
+        });
+    }
+</script>
+<div id='seleccionar' class='no_print'>
+    <form id='seleccionados' name='seleccionados' action='' method='POST'>
+        <?= $oHash->getCamposHtml() ?>
+        <?= $oLista->mostrar_tabla_html() ?>
+    </form>
+</div>
+<div id='exportar'></div>
+<div id='div_modificar'></div>
+<div id='overlay'></div>

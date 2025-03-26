@@ -1,0 +1,62 @@
+<script>
+    fnjs_guardar = function (formulario) {
+        let datos = $(formulario).serialize();
+        let request = $.ajax({
+            data: datos,
+            url: "apps/inventario/controller/cabecera_pie_txt_guardar.php",
+            method: 'POST',
+            dataType: 'json'
+        });
+        request.done(function (json) {
+            if (json.success !== true) {
+                alert("<?= _("respuesta") ?>" + ': ' + json.mensaje);
+            } else {
+                alert("<?= _("textos guardados correctamente") ?>");
+            }
+        });
+    }
+</script>
+<?= $oPosicion->mostrar_left_slide(1) ?>
+<h1>Textos tipo para las cabeceras y pies de los equipajes</h1>
+<form id=textos name=textos action="">
+    <?= $oHash->getCamposHtml() ?>
+    <table>
+        <tr>
+            <td><?= _('cabecera tipo para equipajes') ?>:</td>
+        </tr>
+        <tr>
+            <td>
+                <textarea id="cabecera" name="cabecera" cols=100 rows=5><?= $cabecera ?></textarea>
+            </td>
+        </tr>
+        <tr>
+            <td><?= _('cabecera para equipajes tipo B) (que envia la dl)') ?>:</td>
+        </tr>
+        <tr>
+            <td>
+                <textarea id="cabecera" name="cabeceraB" cols=100 rows=5><?= $cabeceraB ?></textarea>
+            </td>
+        </tr>
+        <tr>
+            <td><?= _('pie tipo para equipajes') ?>:</td>
+        </tr>
+        <tr>
+            <td>
+                <textarea id="pie" name="pie" cols=100 rows=5><?= $pie ?></textarea>
+            </td>
+        </tr>
+        <tr>
+            <td><?= _('para la firma en equipajes') ?>:</td>
+        </tr>
+        <tr>
+            <td>
+                <textarea id="firma" name="firma" cols=100 rows=5><?= $firma ?></textarea>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <input type=button onclick="fnjs_guardar('#textos');" value=<?= _("guardar") ?>>
+            </td>
+        </tr>
+    </table>
+</form>

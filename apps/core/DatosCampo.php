@@ -30,6 +30,8 @@ class DatosCampo
      * @var string
      */
     private $snom_camp;
+    private $metodoGet;
+    private $metodoSet;
     /**
      * Etiqueta de DatosCampo
      *
@@ -541,6 +543,36 @@ class DatosCampo
     {
         $this->sRegExpText = $sRegExpText;
     }
-}
 
-?>
+    /**
+     * @return mixed
+     */
+    public function getMetodoGet()
+    {
+        return $this->metodoGet;
+    }
+
+    /**
+     * @param mixed $metodoGet
+     */
+    public function setMetodoGet($metodoGet): void
+    {
+        $this->metodoGet = $metodoGet;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMetodoSet()
+    {
+        return $this->metodoSet;
+    }
+
+    /**
+     * @param mixed $metodoSet
+     */
+    public function setMetodoSet($metodoSet): void
+    {
+        $this->metodoSet = $metodoSet;
+    }
+}

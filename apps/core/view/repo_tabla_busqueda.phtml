@@ -1,0 +1,18 @@
+<script>
+    <?= $script ?>
+</script>
+<form id="frm_buscar" name="frm_buscar" action="<?= $url ?>" method="post" onkeydown="fnjs_enviar(event,this);">
+    <?= $oHashBuscar->getCamposHtml() ?>
+    <table>
+        <thead>
+        <th class=titulo_inv colspan=4>
+            <?= $txt_buscar ?>&nbsp;&nbsp;&nbsp;
+            <input class=contenido id="frm_buscar_nom" name="k_buscar" size="25" value="<?= $k_buscar ?>">
+        </th>
+        <th colspan=4>
+            <input type="button" id="btn_ok" name="btn_ok" onclick="fnjs_enviar_formulario(this.form);"
+                   value="<?= _("buscar") ?>" class="btn_ok">
+        </th>
+        </thead>
+    </table>
+</form>

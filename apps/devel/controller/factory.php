@@ -4,8 +4,8 @@ namespace devel\controller;
 
 use core\ConfigGlobal;
 use core\ServerConf;
-use web\DateTimeLocal;
 use RuntimeException;
+use web\DateTimeLocal;
 use function core\is_true;
 
 /**
@@ -117,7 +117,7 @@ $aplicacion = !empty($Q_aplicacion) ? $Q_aplicacion : "delegación";
 
 // crear el directorio legacy si no existe
 $dir_legacy = ServerConf::DIR . '/apps/' . $grupo . '/legacy';
-if (!mkdir($dir_legacy) && !is_dir($dir_legacy)) {
+if (!is_dir($dir_legacy) && !mkdir($dir_legacy) && !is_dir($dir_legacy)) {
     throw new RunTimeException(sprintf('Directory "%s" was not created', $dir_legacy));
 }
 
@@ -817,9 +817,10 @@ $txt_repository = "<?php
 
 namespace $grupo\\domain\\repositories;
 
+use PDO;
 use web\Desplegable;
-$grupo\\domain\\entity\\$Q_clase;
-$grupo\\infrastructure\\$pg_clase;
+use $grupo\\domain\\entity\\$Q_clase;
+use $grupo\\infrastructure\\$pg_clase;
 ";
 $txt_repository .= "\n" . $use_txt;
 $txt_repository .= "
@@ -851,8 +852,9 @@ $txt_interface = "<?php
 
 namespace $grupo\\domain\\repositories;
 
+use PDO;
 use web\Desplegable;
-$grupo\\domain\\entity\\$Q_clase;
+use $grupo\\domain\\entity\\$Q_clase;
 ";
 $txt_interface .= "\n" . $use_txt;
 $txt_interface .= "
@@ -1385,18 +1387,18 @@ if ($id_seq || $id_seq2) {
 
     $txt_repository .= "\n\t";
     $txt_repository .= '
-    public function getNew' . ucfirst($nomcamp) . '()
+    public function getNewId()
     {
-        return $this->repository->getNew' . ucfirst($nomcamp) . '();
+        return $this->repository->getNewId();
     }';
 
     $txt_interface .= "\n\t";
     $txt_interface .= '
-    public function getNew' . ucfirst($nomcamp) . '();';
+    public function getNewId();';
 
     $txt_pgRepositorio .= "\n\t";
     $txt_pgRepositorio .= '
-    public function getNew' . ucfirst($nomcamp) . '()
+    public function getNewId()
     {
         $oDbl = $this->getoDbl();
         $sQuery = "select nextval(\'' . $id_seq . '\'::regclass)";
@@ -1412,7 +1414,7 @@ $txt_pgRepositorio .= "\n}";
 /* ESCRIURE LA CLASSSE  PG REPOSITORY  --------------------------------- */
 // crear el directorio infrastructure si no existe
 $dir_infra = ServerConf::DIR . '/apps/' . $grupo . '/infrastructure';
-if (!mkdir($dir_infra) && !is_dir($dir_infra)) {
+if ( !is_dir($dir_infra) && !mkdir($dir_infra) && !is_dir($dir_infra)) {
     throw new RunTimeException(sprintf('Directory "%s" was not created', $dir_infra));
 }
 $filename = $dir_infra . '/' . $pg_clase . '.php';
@@ -1430,7 +1432,7 @@ fclose($handle);
 
 /* ESCRIURE LA CLASSE  REPOSITORYINTERFACE  --------------------------------- */
 $dir_repositories = ServerConf::DIR . '/apps/' . $grupo . '/domain/repositories';
-if (!mkdir($dir_repositories) && !is_dir($dir_repositories)) {
+if (!is_dir($dir_repositories) && !mkdir($dir_repositories) && !is_dir($dir_repositories)) {
     throw new RunTimeException(sprintf('Directory "%s" was not created', $dir_repositories));
 }
 $filename = $dir_repositories . '/' . $clase_interface . '.php';

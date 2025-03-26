@@ -1,0 +1,313 @@
+<?php
+
+use core\ConfigGlobal;
+
+?>
+<script>
+    fnjs_guardar_listado = function (formulario) {
+        parametros = $(formulario).serialize();
+        let request = $.ajax({
+            url: 'apps/inventario/controller/equipajes_texto_listado_guardar.php',
+            type: 'post',
+            data: parametros,
+            dataType: 'json'
+        });
+        request.done(function (json) {
+            if (json.success !== true) {
+                alert("<?= _("respuesta") ?>" + ': ' + json.mensaje);
+            } else {
+                fnjs_cerrar();
+                fnjs_ver_2();
+            }
+        });
+    }
+
+    fnjs_mod_texto_equipaje = function (loc) {
+        $('#div_modificar').addClass('ventana');
+        $('#div_modificar').width('700');
+        $('#div_modificar').height('300');
+        $('#overlay').addClass('sombra');
+
+        var url = 'frontend/inventario/controller/equipajes_form_texto_listado.php';
+        id_equipaje = $('#id_equipaje').val();
+        var id = '#' + loc;
+        texto = $(id).html();
+        var parametros = 'loc=' + loc + '&texto=' + texto + '&id_equipaje=' + id_equipaje + '<?= $h_mod_txt ?>';
+        fnjs_update_div('#div_modificar', url + '?' + parametros);
+    }
+
+    fnjs_eliminar_equipaje = function () {
+        seguro = confirm("<?= _("¿Está seguro de borrar este equipaje?") ?>");
+        if (seguro) {
+            var url2 = 'frontend/inventario/controller/equipajes_ver.php';
+            let parametros = $('#seleccion').serialize();
+            let request = $.ajax({
+                url: 'apps/inventario/controller/equipajes_eliminar.php',
+                type: 'post',
+                data: parametros,
+                dataType: 'json'
+            });
+            request.done(function (json) {
+                if (json.success !== true) {
+                    alert("<?= _("respuesta") ?>" + ': ' + json.mensaje);
+                } else {
+                    fnjs_update_div('#main', url2 + '?' + parametros);
+                }
+            });
+        }
+    }
+
+    fnjs_del_doc = function (formulario, id_grupo) {
+        parametros = $(formulario).serialize();
+        let request = $.ajax({
+            url: 'apps/inventario/controller/equipajes_del_doc.php',
+            type: 'post',
+            data: parametros,
+            dataType: 'json'
+        });
+        request.done(function (json) {
+            if (json.success !== true) {
+                alert("<?= _("respuesta") ?>" + ': ' + json.mensaje);
+            } else {
+                fnjs_cerrar();
+                fnjs_lista_docs(id_grupo, 'docs');
+            }
+        });
+    }
+
+    fnjs_modificar_form_del = function (id_grupo) {
+        // que = quitar, form_del
+        $('#div_modificar').addClass('ventana');
+        $('#div_modificar').width('800');
+        $('#div_modificar').height('320');
+        $('#overlay').addClass('sombra');
+        document.getElementById("overlay").style.display = "block";
+
+        let formulario = '#form_docs_grupo_' + id_grupo;
+        let parametros = $(formulario).serialize();
+
+        var url = 'frontend/inventario/controller/equipajes_form_del.php';
+        fnjs_update_div('#div_modificar', url + '?' + parametros);
+    }
+
+    fnjs_add_doc = function (formulario, id_grupo) {
+        parametros = $(formulario).serialize();
+        let request = $.ajax({
+            url: 'apps/inventario/controller/equipajes_add_doc.php',
+            type: 'post',
+            data: parametros,
+            dataType: 'json'
+        });
+        request.done(function (json) {
+            if (json.success !== true) {
+                alert("<?= _("respuesta") ?>" + ': ' + json.mensaje);
+            } else {
+                fnjs_cerrar();
+                fnjs_lista_docs(id_grupo, 'docs');
+            }
+        });
+    }
+
+    fnjs_docs_libres = function () {
+        let formulario = '#frm_add';
+        let parametros = $(formulario).serialize();
+
+        // obtener el listado de docs libres
+        $.ajax({
+            url: 'frontend/inventario/controller/equipajes_docs_libres.php',
+            type: 'post',
+            data: parametros,
+            success: function (rta_txt) {
+                if (rta_txt) {
+                    $('#libres').html(rta_txt);
+                }
+            }
+        });
+    }
+    fnjs_modificar_form_add = function (id_grupo) {
+        // que = add, form_add
+        $('#div_modificar').addClass('ventana');
+        $('#div_modificar').width('500');
+        $('#div_modificar').height('320');
+        $('#overlay').addClass('sombra');
+        document.getElementById("overlay").style.display = "block";
+
+        let formulario = '#form_docs_grupo_' + id_grupo;
+        let parametros = $(formulario).serialize();
+
+        var url = 'frontend/inventario/controller/equipajes_form_add.php';
+        fnjs_update_div('#div_modificar', url + '?' + parametros);
+    }
+
+    fnjs_eliminar_grupo = function (id_grupo) {
+        seguro = confirm("<?= _("¿Está seguro de borrar este grupo?") ?>");
+        if (seguro) {
+            id_span = '#grupo_' + id_grupo;
+            $('#id_grupo').val(id_grupo);
+            let formulario = '#form_maletas';
+            parametros = $(formulario).serialize();
+            let request = $.ajax({
+                url: 'apps/inventario/controller/equipajes_eliminar_grupo.php',
+                type: 'post',
+                data: parametros,
+                dataType: 'json'
+            });
+            request.done(function (json) {
+                if (json.success !== true) {
+                    alert("<?= _("respuesta") ?>" + ': ' + json.mensaje);
+                } else {
+                    $(id_span).remove();
+                }
+            });
+        }
+    }
+
+    fnjs_update_grupo = function (id_grupo) {
+        let formulario = "#form_" + id_grupo;
+        parametros = $(formulario).serialize();
+        let request = $.ajax({
+            url: 'apps/inventario/controller/equipajes_update_grupo.php',
+            type: 'post',
+            data: parametros,
+            dataType: 'json'
+        });
+        request.done(function (json) {
+            if (json.success !== true) {
+                alert("<?= _("respuesta") ?>" + ': ' + json.mensaje);
+            } else {
+                fnjs_lista_docs(id_grupo, 'cabecera');
+            }
+        });
+    }
+
+    fnjs_lista_docs = function (id_grupo, donde) {
+        let formulario = "#form_" + id_grupo;
+        switch (donde) {
+            case 'cabecera':
+                id_span = '#grupo_' + id_grupo;
+                break;
+            case 'docs':
+                id_span = '#grupo_' + id_grupo;
+                formulario = "#form_docs_grupo_" + id_grupo;
+                break;
+        }
+        let parametros = $(formulario).serialize(); // equipaje y hash
+        $.ajax({
+            url: 'frontend/inventario/controller/equipajes_lista_docs.php',
+            type: 'post',
+            data: parametros,
+            success: function (rta_txt) {
+                if (rta_txt) {
+                    $(id_span).html(rta_txt);
+                }
+            }
+        });
+    }
+
+    fnjs_ver_docs = function (id_grupo) {
+        let formulario = "#form_ver_" + id_grupo;
+        let id_span = '#docs_grupo_' + id_grupo;
+
+        let parametros = $(formulario).serialize(); // equipaje y hash
+        $.ajax({
+            url: 'frontend/inventario/controller/equipajes_ver_docs.php',
+            type: 'post',
+            data: parametros,
+            success: function (rta_txt) {
+                if (rta_txt) {
+                    $(id_span).html(rta_txt);
+                }
+            }
+        });
+    }
+    fnjs_nuevo_grupo = function (formulario) {
+        parametros = $(formulario).serialize();
+        $.ajax({
+            url: 'frontend/inventario/controller/equipajes_posibles_maletas.php',
+            type: 'post',
+            data: parametros,
+            success: function (rta_txt) {
+                if (rta_txt) {
+                    $('#grupos').append(rta_txt);
+                }
+            }
+        });
+    }
+    fnjs_actualizar_lista_equipaje = function () {
+        parametros = $('#seleccion').serialize();
+        // obtener el listado de periodos
+        // que=lista_equipaje
+        $.ajax({
+            url: 'frontend/inventario/controller/equipajes_desplegable.php',
+            type: 'post',
+            data: parametros,
+            success: function (rta_txt) {
+                if (rta_txt) {
+                    $('#list_eq').html(rta_txt);
+                }
+            }
+        });
+
+    }
+    fnjs_cerrar = function () {
+        $('#div_modificar').html('');
+        $('#div_modificar').width('0');
+        $('#div_modificar').height('0');
+        $('#div_modificar').removeClass('ventana');
+        document.getElementById("overlay").style.display = "none";
+    }
+
+    //-------------------
+    fnjs_ver_1 = function () {
+        parametros = $('#seleccion').serialize();
+        let url = 'frontend/inventario/controller/equipajes_doc_casa.php';
+        $.ajax({
+            url: url,
+            type: 'post',
+            data: parametros,
+            success: function (rta_txt) {
+                if (rta_txt) {
+                    $('#exportar').html(rta_txt);
+                }
+            }
+        });
+    }
+    fnjs_ver_2 = function () {
+        parametros = $('#seleccion').serialize();
+        let url = 'frontend/inventario/controller/equipajes_imprimir.php';
+        $.ajax({
+            url: url,
+            type: 'post',
+            data: parametros,
+            success: function (rta_txt) {
+                if (rta_txt) {
+                    $('#exportar').html(rta_txt);
+                }
+            }
+        });
+    }
+</script>
+<div id='seleccionar' class='no_print'>
+    <form id=seleccion name=seleccion action="">
+        <?= $oHash->getCamposHtml() ?>
+        <input type='radio' <?= $chk_hoy ?> name='filtro' value='hoy' onclick="fnjs_actualizar_lista_equipaje();">
+        <?= _("desde hoy") ?>
+        <input type='radio' <?= $chk_curs ?> name='filtro' value='curs' onclick="fnjs_actualizar_lista_equipaje();">
+        <?= _("todo el curso") ?>
+        <input type='radio' <?= $chk_tot ?> name='filtro' value='tot' onclick="fnjs_actualizar_lista_equipaje();">
+        <?= _("todos") ?>
+        <br>
+        <?= _("escoger un equipaje") ?>:
+        <span id=list_eq>
+            <?= $oDesplEquipajes->desplegable() ?>
+        </span>
+        <?php
+        if (!empty($eliminar)) {
+            echo "   <input type='button' value='" . _('eliminar equipaje') . "' onclick=\"fnjs_eliminar_equipaje();\" >";
+        }
+        ?>
+    </form>
+</div>
+<div id='exportar'></div>
+<div id='div_modificar'></div>
+<div id='overlay'></div>

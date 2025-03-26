@@ -1,0 +1,96 @@
+<script>
+    fnjs_nombrar_equipaje = function () {
+        $('#div_modificar').addClass('ventana');
+        $('#div_modificar').width('600');
+        $('#div_modificar').height('220');
+        $('#overlay').addClass('sombra');
+
+        let parametros = $('#frm_sel_activ').serialize();
+        let url = 'frontend/inventario/controller/equipajes_form_nuevo.php';
+        $.ajax({
+            url: url,
+            type: 'post',
+            data: parametros,
+            success: function (rta_txt) {
+                if (rta_txt) {
+                    $('#div_modificar').html(rta_txt);
+                }
+            }
+        });
+    }
+
+    fnjs_cerrar = function () {
+        $('#div_modificar').html('');
+        $('#div_modificar').removeClass('ventana');
+        $('#overlay').removeClass('sombra');
+    }
+
+    fnjs_ver_casas = function (n) {
+        let parametros = $('#seleccion').serialize();
+        let url = 'frontend/inventario/controller/equipajes_casas_posibles.php';
+        $.ajax({
+            url: url,
+            type: 'post',
+            data: parametros,
+            success: function (rta_txt) {
+                if (rta_txt) {
+                    $('#exportar').html(rta_txt);
+                }
+            }
+        });
+    }
+
+
+    fnjs_ver_actividades_casa = function (n) {
+        let parametros = $('#seleccion').serialize();
+        let url = 'frontend/inventario/controller/equipajes_lista_activ_periodo.php';
+        let id_cdc = $('#id_cdc').val();
+        parametros += '&id_cdc=' + id_cdc;
+        $.ajax({
+            url: url,
+            type: 'post',
+            data: parametros,
+            success: function (rta_txt) {
+                if (rta_txt) {
+                    $('#exportar').html(rta_txt);
+                }
+            }
+        });
+    }
+
+    fnjs_guardar = function (formulario) {
+        let parametros = $(formulario).serialize();
+        let url = 'apps/inventario/controller/equipajes_nuevo_guardar.php';
+        let request = $.ajax({
+            data: parametros,
+            url: url,
+            type: 'post'
+        });
+        request.done(function (json) {
+            if (json.success !== true) {
+                alert("<?= _("respuesta") ?>" + ': ' + json.mensaje);
+            } else {
+                fnjs_cerrar();
+                fnjs_update_div('#main','<?= $url_ver_equipajes ?>');
+            }
+        });
+    }
+
+</script>
+<form id=seleccion name=seleccion action="">
+    <?= $oHash->getCamposHtml() ?>
+    <?php
+    if (isset($Qperiodo) && $Qperiodo === 'no') {
+        //echo $oForm->getHtmlTabla2();
+    } else {
+        echo $oFormP->getHtml();
+    }
+    ?>
+    <br>
+    <input type=button value="<?= _("ver las casas donde se realizan las actividades") ?>" onclick='fnjs_ver_casas()'>
+    <br>
+    <br>
+</form>
+<div id='exportar'></div>
+<div id='div_modificar'></div>
+<div id='overlay'></div>

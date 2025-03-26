@@ -1,0 +1,33 @@
+<script>
+    fnjs_go = function (url) {
+        $('#seleccionados').attr('action', url);
+        fnjs_enviar_formulario('#seleccionados');
+    }
+    fnjs_left_side_hide();
+</script>
+
+<form id=seleccionados name=seleccionados action='' method='POST'>
+    <?= $oHash->getCamposHtml() ?>
+    <?php
+    if (empty($inventario)) { ?>
+        <?= _('seleccione un tipo de documento') ?>: <?= $oDesplTipoDoc->desplegable(); ?>
+        <input type="button" id="okay3" name="okay3" value="<?= _("lista de asignados") ?>"
+               onclick="fnjs_go('<?= $url_asignados ?>')">
+        <input type="button" id="okay4" name="okay4" value="<?= _("lista de NO asignados") ?>"
+               onclick="fnjs_go('<?= $url_no_asignados ?>')">
+        <br>
+    <?php } ?>
+    <br>
+    <table>
+        <tr>
+            <td>
+                <input type="button" id="okay" name="okay" value="<?= _("Asignar a centros (sin especificar lugar)") ?>"
+                       onclick="fnjs_go('<?= $url_ctr ?>')">
+            </td>
+            <td>
+                <input type="button" id="okay2" name="okay2" value="<?= _("Asignar a dlb/casa (especificar lugar)") ?>"
+                       onclick="fnjs_go('<?= $url_dlb ?>')">
+            </td>
+        </tr>
+    </table>
+</form>

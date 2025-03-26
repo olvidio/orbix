@@ -1,0 +1,9 @@
+<form id='frm_listado'>
+    <?= $oHashForm->getCamposHtml() ?>
+    <h3> <?= $titulo ?></h3>
+    <textarea name='texto' cols=95 rows=5><?= $texto ?></textarea>
+    <br>
+    <br>
+    <input type="button" value="<?= _('guardar') ?>" onclick="fnjs_guardar_listado('#frm_listado');">
+    <input type="button" value="<?= _('cancel') ?>" onclick="fnjs_cerrar();">
+</form>

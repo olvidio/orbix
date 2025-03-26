@@ -44,6 +44,7 @@ class ContestarJson
         if (!empty($error_txt)) {
             $jsondata['success'] = FALSE;
             $jsondata['mensaje'] = $error_txt;
+            $jsondata['data'] = $data?? 'none';
         } else {
             $jsondata['success'] = TRUE;
             $jsondata['data'] = $data;

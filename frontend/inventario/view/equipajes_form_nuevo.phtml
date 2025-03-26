@@ -1,0 +1,9 @@
+<form id='frm_equipaje'>
+    <h3><?= _("equipaje") ?></h3>
+    <?= $oHashForm->getCamposHtml() ?>
+    <?= _("nombre del equipaje") ?>
+    <input type="text" size="40" name="nom_equipaje" value="<?= $nom_equipaje ?>">
+    <br><br>
+    <input type="button" value="<?= _('guardar') ?>" onclick="fnjs_guardar('#frm_equipaje','guardar');">
+    <input type="button" value="<?= _('cancel') ?>" onclick="fnjs_cerrar();">
+</form>

@@ -1,0 +1,61 @@
+<script>
+    fnjs_busca_docs = function () {
+        var parametros = $('#seleccionados').serialize();
+        let request = $.ajax({
+            data: parametros,
+            url: 'frontend/inventario/controller/traslado_doc_lista.php',
+            type: 'post',
+            dataType: 'html'
+        });
+        request.done(function (rta_txt) {
+            $('#lst_docs').html(rta_txt);
+        });
+    }
+
+    fnjs_guardar = function (formulario) {
+        var parametros = $(formulario).serialize();
+        let request = $.ajax({
+            data: parametros,
+            url: 'apps/inventario/controller/traslado_doc_guardar.php',
+            type: 'post',
+            dataType: 'json'
+        });
+        request.done(function (json) {
+            if (json.success !== true) {
+                alert("<?= _("respuesta") ?>" + ': ' + json.mensaje);
+            } else {
+                fnjs_busca_docs();
+            }
+        });
+    }
+
+</script>
+<form id="seleccionados" name="seleccionados" action="" method="post">
+    <?= $oHash->getCamposHtml() ?>
+    <table>
+        <thead>
+        <tr>
+            <th class=titulo_inv colspan=4>
+                <?= ucfirst(_("lista de documentos del centro")) ?>:
+                <?= $oDesplUbis->desplegable() ?>
+            </th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td colspan=4>
+                <div class=contenido id="lst_docs"></div>
+            </td>
+        </tr>
+        <tr>
+            <th class=titulo_inv colspan=3><?= ucfirst(_("asignar los documentos marcados al centro")) ?>:&nbsp;&nbsp;&nbsp;
+                <?= $oDesplUbisNew->desplegable() ?>
+            </th>
+            <th>
+                <input type="button" id="ok" name="ok" onclick="fnjs_guardar(this.form);"
+                       value="<?= ucfirst(_("asignar")) ?>">
+            </th>
+        </tr>
+        </tbody>
+    </table>
+</form>

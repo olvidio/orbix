@@ -1,0 +1,8 @@
+<h2><?= _("documentos en") . " " . $nombre_ubi ?></h2>
+<?= $oListaDocsCasa->Lista() ?>
+
+<h2><?= _("maletas para") . " $nombre_ubi" ?></h2>
+<form id="form_maletas">
+    <?= $oHash->getCamposHtml() ?>
+    <input type='button' value="<?= _("nueva valija") ?>" onclick="fnjs_nuevo_grupo('#form_maletas');">
+</form>

@@ -41,6 +41,7 @@ class Lista
      * @var array ( id => titulo)
      */
     protected $aGrupos;
+    protected $botones_grupo = FALSE;
 
     /**
      * aCabeceras de la Lista
@@ -143,17 +144,12 @@ class Lista
             $Html .= "<th>$cabecera</th>";
         }
         $Html .= "</tr>";
-        if (!empty($key)) {
-            if (isset($aDatos[$key]) && is_array($aDatos[$key])) {
-                $aDades = $aDatos[$key];
-            } else {
-                return "<p>" . _("no hay filas") . "</p>";
-            }
-        } else {
-            $aDades = $aDatos;
+
+        if (empty($aDatos)) {
+            return _("no hay ninguna fila");
         }
         $Html .= "<tbody class=\"$clase\">";
-        foreach ($aDades as $aFila) {
+        foreach ($aDatos as $aFila) {
             $Html .= "<tr>";
             $clase = 'lista';
             if (!empty($aFila['clase'])) {
@@ -234,10 +230,57 @@ class Lista
         reset($aGrupos);
         $Html = '';
         foreach ($aGrupos as $key => $titulo) {
+            $this->aDatos = $aDatos[$key];
             $this->ikey = $key;
             $Html .= "<div class=salta_pag>";
             $Html .= "<h2>$titulo</h2>";
             $Html .= $this->lista();
+            if (!empty($this->sPie)) {
+                $Html .= "<p>$this->sPie</p>";
+            }
+            $Html .= "</div>";
+        }
+        return $Html;
+    }
+
+    function mostrar_tabla_grupos()
+    {
+        $aGrupos = $this->aGrupos;
+        $a_botones = $this->aBotones;
+        $aDatos = $this->aDatos;
+        $id_tabla = $this->sid_tabla;
+        //------------------------------------ html ------------------------------
+        reset($aGrupos);
+        $Html = '';
+        if (!empty($a_botones)) {
+            $botones = '';
+            if ($a_botones === "ninguno") {
+                $b = 0;
+            } else {
+                $b = 0;
+                foreach ($a_botones as $a_boton) {
+                    $prefix = empty($a_boton['prefix']) ? '' : $a_boton['prefix'] . '_';
+                    $btn = $prefix . "btn" . $b++;
+                    $botones .= "<INPUT id='$btn' name='$btn' type=button value=\"" . $a_boton['txt'] . "\" onClick='" . $a_boton['click'] . "'>";
+                }
+                $botones .= "</td></tr>";
+            }
+            $cab = count($this->aCabeceras);
+            $botones = "<tr class=botones><td colspan='$cab'>" . $botones;
+            if ($b > 0) {
+                $this->botones_grupo = TRUE;
+                $Html .= "<table>$botones</table>\n";
+            }
+        }
+        $this->setBotones([]);
+        foreach ($aGrupos as $key => $titulo) {
+            $this->aDatos = $aDatos[$key];
+            $this->ikey = $key;
+            $id_tabla_key = $id_tabla.'_'.$key;
+            $this->setId_tabla($id_tabla_key);
+            $Html .= "<div class=salta_pag>";
+            $Html .= "<h3>$titulo</h3>";
+            $Html .= $this->mostrar_tabla_html();
             if (!empty($this->sPie)) {
                 $Html .= "<p>$this->sPie</p>";
             }
@@ -1015,6 +1058,10 @@ class Lista
                 $botones .= "</td></tr>";
             }
         }
+        // para los grupos
+        if ($this->botones_grupo) {
+            $b = 5; // número cualquiera, para que pinte el checkbox
+        }
 
         $cab = 1;
         foreach ($a_cabeceras as $Cabecera) {
@@ -1086,10 +1133,12 @@ class Lista
                         $id = $valor;
                     }
                     if (!empty($id)) {
-                        if (in_array($id, $a_valores_chk)) {
-                            $chk = 'checked';
-                        } else {
-                            $chk = '';
+                        if (!empty($a_valores_chk)) {
+                            if (in_array($id, $a_valores_chk)) {
+                                $chk = 'checked';
+                            } else {
+                                $chk = '';
+                            }
                         }
                         $tbody .= "<td tipo='sel' title='" . _("clic para seleccionar") . "'>";
                         $tbody .= "<input class='sel' type='checkbox' $chk  name='sel[]' id='a$id' value='$id'>";

@@ -1,0 +1,17 @@
+<span id='grupo_<?= $id_grupo ?>'>
+<form id='form_docs_grupo_<?= $id_grupo ?>'>
+    <?= $oHashGrupo->getCamposHtml() ?>
+    <h3>
+        <?= _("valija") . $id_grupo ?>:
+        <?= $nom_lugar ?>
+        <input type="button" value="<?= _('eliminar valija') ?>" onclick="fnjs_eliminar_grupo(<?= $id_grupo ?>);">
+        <input type="button" value="<?= _('añadir documento') ?>"
+               onclick="fnjs_modificar_form_add(<?= $id_grupo ?>);">
+        <input type="button" value="<?= _('quitar documento') ?>"
+               onclick="fnjs_modificar_form_del(<?= $id_grupo ?>);">
+    </h3>
+    <span id='docs_grupo_<?= $id_grupo ?>'>
+        <?= $oLista->Lista() ?>
+    </span>
+</form>
+</span>

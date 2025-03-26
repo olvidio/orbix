@@ -1,0 +1,24 @@
+<script>
+    fnjs_go = function (url) {
+        $('#seleccionados').attr('action', url);
+        fnjs_enviar_formulario('#seleccionados');
+    }
+    fnjs_left_side_hide();
+</script>
+
+<form id=seleccionados name=seleccionados action='' method='POST'>
+    <?= $oHash->getCamposHtml() ?>
+    <br>
+    <table>
+        <tr>
+            <td>
+                <input type="button" id="okay" name="okay" value="<?= _("inventario de centros") ?>"
+                       onclick="fnjs_go('<?= $url_ctr ?>')">
+            </td>
+            <td>
+                <input type="button" id="okay2" name="okay2" value="<?= _("inventario de dlb/casa") ?>"
+                       onclick="fnjs_go('<?= $url_dlb ?>')">
+            </td>
+        </tr>
+    </table>
+</form>

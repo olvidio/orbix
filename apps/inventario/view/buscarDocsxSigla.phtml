@@ -1,0 +1,131 @@
+<form id="frm_buscar" name="frm_buscar" action="<?= $url ?>" method="post" onkeydown="fnjs_enviar(event,this);">
+    <?= $oHashBuscar->getCamposHtml() ?>
+    <table>
+        <tr>
+            <td class=etiqueta>
+                <?= _("tipo de documento") ?>:
+            </td>
+            <td>
+                <?= $oDesplTiposDoc->desplegable() ?>
+            </td>
+        </tr>
+
+        <th colspan=4>
+            <input type="button" id="ok" name="ok" onclick="fnjs_enviar_formulario(this.form,'#exportar');"
+                   value="<?= ucfirst(_("buscar")) ?>" class="btn_ok">
+        </th>
+    </table>
+
+</form>
+<!-- para modificar por bloques -->
+<script>
+
+    fnjs_cerrar = function () {
+        $('#div_modificar').html('');
+        $('#div_modificar').hide();
+        $('#div_modificar').removeClass('ventana');
+        $('#resto').removeClass('sombra');
+    }
+
+    fnjs_mod_bloque = function (formulario) {
+        id_tipo_doc = $("#k_buscar").val();
+
+        let err = 0;
+        // comprobar: tipo de documento seleccionado
+        if (!id_tipo_doc) {
+            alert("<?= _("Debe seleccionar un tipo de documento") ?>");
+            err = 1;
+        }
+
+        // comprobar: algún documento seleccionado
+        /* selecciono los elementos con class="sel" de las tablas del id=formulario */
+        var documentos = '';
+        $('#' + formulario + ' input.sel').each(function () {
+            if ($(this).prop('checked') === true) {
+                var array_dir = $(this).val().split('#');
+                if (documentos !== '') {
+                    documentos += '#';
+                }
+                documentos += array_dir[0];
+            }
+        });
+        if (documentos === '') {
+            alert("<?= _("Debe seleccionar algún documento") ?>");
+            err = 1;
+        }
+
+        if (err !== 1) {
+            $('#div_modificar').show();
+            $('#div_modificar').addClass('ventana');
+            $('#div_modificar').width('500');
+            $('#div_modificar').height('360');
+            $('#resto').addClass('sombra');
+
+            var url = '<?= $url_bloque ?>';
+            var parametros = 'id_tipo_doc=' + id_tipo_doc + '&documentos=' + documentos + '<?= $h1 ?>';
+            fnjs_update_div('#div_modificar', url + '?' + parametros);
+        }
+    }
+
+    fnjs_guardar = function (formulario) {
+        var err = 0;
+
+        chk_f_recibido = $(formulario + ' input[name="chk_f_recibido"]').prop('checked');
+        if (chk_f_recibido === true) {
+            f_recibido = $(formulario + ' input[name="f_recibido"]').val();
+            // acepto el valor vacío para borrar
+            if (f_recibido.length > 0 && !fnjs_comprobar_fecha_val('#f_recibido')) {
+                err = 1;
+            }
+        }
+        chk_f_asignado = $(formulario + ' input[name="chk_f_asignado"]').prop('checked');
+        if (chk_f_asignado === true) {
+            f_asignado = $(formulario + ' input[name="f_asignado"]').val();
+            // acepto el valor vacío para borrar
+            if (f_asignado.length > 0 && !fnjs_comprobar_fecha_val('#f_asignado')) {
+                err = 1;
+            }
+        }
+        chk_f_eliminado = $(formulario + ' input[name="chk_f_eliminado"]').prop('checked');
+        if (chk_f_eliminado === true) {
+            f_eliminado = $(formulario + ' input[name="f_eliminado"]').val();
+            // acepto el valor vacío para borrar
+            if (f_eliminado.length > 0 && !fnjs_comprobar_fecha_val('#f_eliminado')) {
+                err = 1;
+            }
+        }
+
+        if (err !== 1) {
+            let datos = $(formulario).serialize();
+            let request = $.ajax({
+                data: datos,
+                url: 'apps/inventario/controller/documentos_guardar.php',
+                method: 'POST',
+                dataType: 'json'
+            });
+            request.done(function (json) {
+                if (json.success !== true) {
+                    alert("<?= _("respuesta") ?>" + ': ' + json.mensaje);
+                } else {
+                    $('#div_modificar').html('');
+                    $('#div_modificar').removeClass('ventana');
+                    $('#resto').removeClass('sombra');
+                    <?= $oPosicion->js_atras() ?>
+                }
+            });
+
+        }
+        $('#div_modificar').hide();
+    }
+
+
+</script>
+<input type="button" id="ok" name="ok" onclick="fnjs_mod_bloque('seleccionados');"
+       value="<?= ucfirst(_("modificar por bloques")) ?>">
+<input type="button" id="ok1" name="ok1" onclick="fnjs_selectAll('#seleccionados','sel[]','all')"
+       value="<?= ucfirst(_("marcar todos")) ?>">
+<input type="button" id="ok2" name="ok2" onclick="fnjs_selectAll('#seleccionados','sel[]','none')"
+       value="<?= ucfirst(_("desmarcar todos")) ?>">
+
+<div id='div_modificar'></div>
+<div id='resto'></div>

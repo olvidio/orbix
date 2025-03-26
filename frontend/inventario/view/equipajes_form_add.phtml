@@ -1,0 +1,10 @@
+<form id='frm_add'>
+    <?= $oHashForm->getCamposHtml() ?>
+    <h3> <?= _("tipo de documento") ?></h3>
+    <?= $oDesplTiposDoc->desplegable() ?>
+    <br>
+    <span id=libres></span>
+    <br>
+    <input type="button" value="<?= _('añadir') ?>" onclick="fnjs_add_doc('#frm_add',<?= $Qid_grupo ?>);">
+    <input type="button" value="<?= _('cancel') ?>" onclick="fnjs_cerrar();">
+</form>
