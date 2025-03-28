@@ -41,7 +41,7 @@ if (!empty($Qid_ubi)) {
     $tipo_ubi = $oCentro->getTipo_ubi();
     $tipo_ctr = $oCentro->getTipo_ctr();
 
-    if ($tipo_ubi == 'ctrsf') {
+    if ($tipo_ubi === 'ctrsf') {
         $Qfiltro_ctr = 2;
     } else {
         switch ($tipo_ctr) {

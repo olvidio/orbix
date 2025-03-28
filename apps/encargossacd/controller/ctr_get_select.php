@@ -23,6 +23,7 @@ $oGrupoCtr->setIdZona($Qid_zona);
 
 $oDesplCtr = $oGrupoCtr->getDesplPorFiltro($Qfiltro_ctr);
 $oDesplCtr->setNombre('lst_ctrs');
+$oDesplCtr->setAction('fnjs_ver_ficha()');
 $oDesplCtr->setOpcion_sel($Qid_ubi);
 
 echo $oDesplCtr->desplegable();
