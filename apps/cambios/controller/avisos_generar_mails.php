@@ -94,10 +94,8 @@ foreach ($cCambiosUsuario as $oCambioUsuario) {
         $oPref = new Preferencia(array('id_usuario' => $id_usuario, 'tipo' => 'zona_horaria'));
         $zona_horaria = $oPref->getPreferencia();
         if (!empty($zona_horaria)) {
-            $a_zonas_horarias = DateTimeZone::listIdentifiers();
-            $zona_horaria_txt = $a_zonas_horarias[$zona_horaria];
             try {
-                $DateTimeZone = new DateTimeZone($zona_horaria_txt);
+                $DateTimeZone = new DateTimeZone($zona_horaria);
             } catch (DateInvalidTimeZoneException $e) {
                 $DateTimeZone = new DateTimeZone('UTC');
             }

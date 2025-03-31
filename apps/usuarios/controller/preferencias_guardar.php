@@ -97,8 +97,11 @@ switch ($Qque) {
 
         // Guardar zona_horaria:
         $Qzona_horaria_nou = (string)filter_input(INPUT_POST, 'zona_horaria_nou');
+        // mejor guardar la zona en text, porque el identificador cambia según la versión de php
+        $a_zonas_horarias = DateTimeZone::listIdentifiers();
+        $zona_horaria_txt = $a_zonas_horarias[$Qzona_horaria_nou];
         $oPref = new Preferencia(array('id_usuario' => $id_usuario, 'tipo' => 'zona_horaria'));
-        $oPref->setPreferencia($Qzona_horaria_nou);
+        $oPref->setPreferencia($zona_horaria_txt);
         if ($oPref->DBGuardar() === false) {
             echo _("hay un error, no se ha guardado");
             echo "\n" . $oPref->getErrorTxt();
@@ -106,5 +109,5 @@ switch ($Qque) {
 
         // volver a la página de configuración
         $location = Hash::link(ConfigGlobal::getWeb() . '/index.php?' . http_build_query(array('PHPSESSID' => session_id())));
-        echo "<body onload=\"$location\";></body>";
+        echo "<body onload=\"$location\"></body>";
 }

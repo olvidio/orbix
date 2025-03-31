@@ -77,10 +77,8 @@ if (!empty($Qid_usuario)) {
 
     $DateTimeZone = new DateTimeZone('UTC');
     if (!empty($zona_horaria)) {
-        $a_zonas_horarias = DateTimeZone::listIdentifiers();
-        $zona_horaria_txt = $a_zonas_horarias[$zona_horaria];
         try {
-            $DateTimeZone = new DateTimeZone($zona_horaria_txt);
+            $DateTimeZone = new DateTimeZone($zona_horaria);
         } catch (DateInvalidTimeZoneException $e) {
             $DateTimeZone = new DateTimeZone('UTC');
         }

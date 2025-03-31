@@ -46,7 +46,7 @@ $tipo_tabla_h = $data['tipo_tabla_h'];
 $tipo_apellidos_ap_nom = $data['tipo_apellidos_ap_nom'];
 $tipo_apellidos_nom_ap = $data['tipo_apellidos_nom_ap'];
 $idioma = $data['idioma'];
-$zona_horaria = empty($data['zona_horaria'])? 418 : $data['zona_horaria']; // 418 = 'UTC'
+$zona_horaria = empty($data['zona_horaria'])? 'UTC' : $data['zona_horaria'];
 
 
 // ----------- Página de inicio -------------------
@@ -73,10 +73,11 @@ $oDesplLocales->setOpcion_sel($idioma);
 
 // ----------- Zona Horaria -------------------
 $opciones = DateTimeZone::listIdentifiers();
+$id_zona_sel = array_search($zona_horaria, $opciones);
 $oDesplZonaGMT = new Desplegable();
 $oDesplZonaGMT->setNombre('zona_horaria_nou');
 $oDesplZonaGMT->setOpciones($opciones);
-$oDesplZonaGMT->setOpcion_sel($zona_horaria);
+$oDesplZonaGMT->setOpcion_sel($id_zona_sel);
 
 
 $id_usuario = ConfigGlobal::mi_id_usuario();
