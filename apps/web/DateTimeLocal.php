@@ -15,7 +15,7 @@ use DateTimeZone;
  * @version 1.0
  * @created 26/11/2010
  */
-class DateTimeLocal extends DateTime
+class DateTimeLocal extends \DateTimeImmutable
 {
     private $oData;
 
