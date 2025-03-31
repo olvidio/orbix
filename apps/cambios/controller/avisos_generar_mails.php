@@ -30,8 +30,9 @@ use cambios\model\entity\CambioDl;
 use cambios\model\entity\CambioUsuario;
 use cambios\model\entity\GestorCambioUsuario;
 use core\ConfigGlobal;
-use web\Lista;
+use usuarios\model\entity\Preferencia;
 use usuarios\model\entity\Usuario;
+use web\Lista;
 
 // INICIO Cabecera global de URL de controlador *********************************
 
@@ -72,8 +73,10 @@ $cCambiosUsuario = $GesCambiosUsuario->getCambiosUsuario($aWhere);
 $i = 0;
 $id_usuario_anterior = '';
 $email = '';
+$zona_horaria = '';
 $a_datos = array();
 $a_id = array();
+$DateTimeZone = new DateTimeZone('UTC');
 foreach ($cCambiosUsuario as $oCambioUsuario) {
     $id_usuario = $oCambioUsuario->getId_usuario();
 
@@ -87,6 +90,18 @@ foreach ($cCambiosUsuario as $oCambioUsuario) {
         $oMiUsuario = new Usuario($id_usuario);
         $email = $oMiUsuario->getEmail();
         $id_usuario_anterior = $id_usuario;
+        // buscar la zona horaria
+        $oPref = new Preferencia(array('id_usuario' => $id_usuario, 'tipo' => 'zona_horaria'));
+        $zona_horaria = $oPref->getPreferencia();
+        if (!empty($zona_horaria)) {
+            $a_zonas_horarias = DateTimeZone::listIdentifiers();
+            $zona_horaria_txt = $a_zonas_horarias[$zona_horaria];
+            try {
+                $DateTimeZone = new DateTimeZone($zona_horaria_txt);
+            } catch (DateInvalidTimeZoneException $e) {
+                $DateTimeZone = new DateTimeZone('UTC');
+            }
+        }
     }
     if (empty($email)) {
         continue;
@@ -102,10 +117,13 @@ foreach ($cCambiosUsuario as $oCambioUsuario) {
     }
     $quien_cambia = $oCambio->getQuien_cambia();
     $sfsv_quien_cambia = $oCambio->getSfsv_quien_cambia();
-    $timestamp_cambio = $oCambio->getTimestamp_cambio()->getFromLocalHora();
-    $aviso_txt = $oCambio->getAvisoTxt();
-    if ($aviso_txt === false) continue;
+    $oTimestamp_cambio_GMT = $oCambio->getTimestamp_cambio();
+    $timestamp_cambio = $oTimestamp_cambio_GMT->setTimezone($DateTimeZone)->getFromLocalHora();
 
+    $aviso_txt = $oCambio->getAvisoTxt();
+    if ($aviso_txt === false) {
+        continue;
+    }
     $i++;
     // Quien cambia
     if ($id_schema_cmb === 3000) {

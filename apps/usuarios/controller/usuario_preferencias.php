@@ -107,6 +107,16 @@ if (is_array($aPref) && count($aPref) > 0) {
     $idioma = '';
 }
 
+// ----------- Zona Horaria -------------------
+$aPref = $oGesPref->getPreferencias(array('id_usuario' => $id_usuario, 'tipo' => 'zona_horaria'));
+if (is_array($aPref) && count($aPref) > 0) {
+    $oPreferencia = $aPref[0];
+    $preferencia = $oPreferencia->getPreferencia();
+    list($zona_horaria) = explode('#', $preferencia);
+} else {
+    $zona_horaria = '';
+}
+
 $data['inicio'] = $inicio;
 $data['oficina'] = $oficina;
 $data['oficinas_posibles'] = $oficinas_posibles;
@@ -120,6 +130,7 @@ $data['tipo_tabla_h'] = $tipo_tabla_h;
 $data['tipo_apellidos_ap_nom'] = $tipo_apellidos_ap_nom;
 $data['tipo_apellidos_nom_ap'] = $tipo_apellidos_nom_ap;
 $data['idioma'] = $idioma;
+$data['zona_horaria'] = $zona_horaria;
 
 
 ContestarJson::enviar($error_txt, $data);

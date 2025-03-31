@@ -84,6 +84,12 @@ if (ConfigGlobal::is_app_installed('cambios')) {
                 <?= $oDesplLocales->desplegable() ?>
             </td>
         </tr>
+        <tr>
+            <td><?= ucfirst(_("zona horaria")) ?>:</td>
+            <td>
+                <?= $oDesplZonaGMT->desplegable() ?>
+            </td>
+        </tr>
     </table>
     <br>
     <input type="button" onclick=fnjs_enviar_formulario('#preferencias') value="guardar preferencias">

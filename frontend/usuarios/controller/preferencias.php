@@ -46,6 +46,7 @@ $tipo_tabla_h = $data['tipo_tabla_h'];
 $tipo_apellidos_ap_nom = $data['tipo_apellidos_ap_nom'];
 $tipo_apellidos_nom_ap = $data['tipo_apellidos_nom_ap'];
 $idioma = $data['idioma'];
+$zona_horaria = $data['zona_horaria'];
 
 
 // ----------- Página de inicio -------------------
@@ -70,6 +71,13 @@ $oDesplLocales = $oGesLocales->getListaLocales();
 $oDesplLocales->setNombre('idioma_nou');
 $oDesplLocales->setOpcion_sel($idioma);
 
+// ----------- Zona Horaria -------------------
+$opciones = DateTimeZone::listIdentifiers();
+$oDesplZonaGMT = new Desplegable();
+$oDesplZonaGMT->setNombre('zona_horaria_nou');
+$oDesplZonaGMT->setOpciones($opciones);
+$oDesplZonaGMT->setOpcion_sel($zona_horaria);
+
 
 $id_usuario = ConfigGlobal::mi_id_usuario();
 $url_avisos = Hash::link(ConfigGlobal::getWeb() . '/apps/usuarios/controller/usuario_form.php?' . http_build_query(array('quien' => 'usuario', 'id_usuario' => $id_usuario)));
@@ -79,7 +87,7 @@ $url_cambio_password = Hash::link(ConfigGlobal::getWeb() . '/frontend/usuarios/c
 $url_cambio_mail = Hash::link(ConfigGlobal::getWeb() . '/frontend/usuarios/controller/usuario_form_mail.php');
 
 $oHash = new Hash();
-$oHash->setCamposForm('inicio!oficina!estilo_color!tipo_menu!tipo_tabla!ordenApellidos!idioma_nou');
+$oHash->setCamposForm('inicio!oficina!estilo_color!tipo_menu!tipo_tabla!ordenApellidos!idioma_nou!zona_horaria_nou');
 
 $a_campos = [
     'url_avisos' => $url_avisos,
@@ -98,6 +106,7 @@ $a_campos = [
     'tipo_apellidos_ap_nom' => $tipo_apellidos_ap_nom,
     'tipo_apellidos_nom_ap' => $tipo_apellidos_nom_ap,
     'oDesplLocales' => $oDesplLocales,
+    'oDesplZonaGMT' => $oDesplZonaGMT,
     'url_cambio_password' => $url_cambio_password,
     'url_cambio_mail' => $url_cambio_mail,
 ];

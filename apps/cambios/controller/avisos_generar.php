@@ -7,11 +7,12 @@ use cambios\model\entity\CambioUsuarioObjetoPref;
 use cambios\model\entity\GestorCambioUsuario;
 use core\ConfigGlobal;
 use core\ViewTwig;
+use usuarios\model\entity\GestorUsuario;
+use usuarios\model\entity\Preferencia;
+use usuarios\model\entity\Usuario;
 use web\Desplegable;
 use web\Hash;
 use web\Lista;
-use usuarios\model\entity\GestorUsuario;
-use usuarios\model\entity\Usuario;
 
 // INICIO Cabecera global de URL de controlador *********************************
 
@@ -70,8 +71,20 @@ $oPosicion->setParametros($aGoBack, 1);
 $a_campos = [];
 
 if (!empty($Qid_usuario)) {
-    //$Qid_usuario = 4128; // of1sm.
-    //$Qaviso_tipo = 1; // lista.
+    // buscar la zona horaria
+    $oPref = new Preferencia(array('id_usuario' => $Qid_usuario, 'tipo' => 'zona_horaria'));
+    $zona_horaria = $oPref->getPreferencia();
+
+    $DateTimeZone = new DateTimeZone('UTC');
+    if (!empty($zona_horaria)) {
+        $a_zonas_horarias = DateTimeZone::listIdentifiers();
+        $zona_horaria_txt = $a_zonas_horarias[$zona_horaria];
+        try {
+            $DateTimeZone = new DateTimeZone($zona_horaria_txt);
+        } catch (DateInvalidTimeZoneException $e) {
+            $DateTimeZone = new DateTimeZone('UTC');
+        }
+    }
 
     // seleccionar por usuario
     $mi_sfsv = ConfigGlobal::mi_sfsv();
@@ -95,14 +108,16 @@ if (!empty($Qid_usuario)) {
         }
         $quien_cambia = $oCambio->getQuien_cambia();
         $sfsv_quien_cambia = $oCambio->getSfsv_quien_cambia();
-        $timestamp_cambio = $oCambio->getTimestamp_cambio()->getFromLocalHora();
+        $oTimestamp_cambio_GMT = $oCambio->getTimestamp_cambio();
+        $timestamp_cambio = $oTimestamp_cambio_GMT->setTimezone($DateTimeZone)->getFromLocalHora();
         $timestamp_orden = $oCambio->getTimestamp_cambio()->format('YmdHis');
 
         $aviso_txt = $oCambio->getAvisoTxt();
-
-        if ($aviso_txt === false) continue;
+        if ($aviso_txt === false) {
+            continue;
+        }
         $i++;
-        if ($sfsv_quien_cambia == $mi_sfsv) {
+        if ($sfsv_quien_cambia === $mi_sfsv) {
             $oUsuarioCmb = new Usuario($quien_cambia);
             $quien = $oUsuarioCmb->getUsuario();
         } else {

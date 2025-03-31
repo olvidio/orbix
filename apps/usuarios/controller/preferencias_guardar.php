@@ -76,7 +76,7 @@ switch ($Qque) {
             echo "\n" . $oPref->getErrorTxt();
         }
 
-        // Guardar presentacion nombre Apellidos:
+        // Guardar presentación nombre Apellidos:
         $QordenApellidos = (string)filter_input(INPUT_POST, 'ordenApellidos');
         $oPref = new Preferencia(array('id_usuario' => $id_usuario, 'tipo' => 'ordenApellidos'));
         $oPref->setPreferencia($QordenApellidos);
@@ -90,6 +90,15 @@ switch ($Qque) {
         $Qidioma_nou = (string)filter_input(INPUT_POST, 'idioma_nou');
         $oPref = new Preferencia(array('id_usuario' => $id_usuario, 'tipo' => 'idioma'));
         $oPref->setPreferencia($Qidioma_nou);
+        if ($oPref->DBGuardar() === false) {
+            echo _("hay un error, no se ha guardado");
+            echo "\n" . $oPref->getErrorTxt();
+        }
+
+        // Guardar zona_horaria:
+        $Qzona_horaria_nou = (string)filter_input(INPUT_POST, 'zona_horaria_nou');
+        $oPref = new Preferencia(array('id_usuario' => $id_usuario, 'tipo' => 'zona_horaria'));
+        $oPref->setPreferencia($Qzona_horaria_nou);
         if ($oPref->DBGuardar() === false) {
             echo _("hay un error, no se ha guardado");
             echo "\n" . $oPref->getErrorTxt();
