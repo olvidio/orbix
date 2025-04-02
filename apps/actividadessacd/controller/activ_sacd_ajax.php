@@ -13,11 +13,12 @@ use asistentes\model\entity\AsistenteDl;
 use core\ConfigGlobal;
 use encargossacd\model\entity\GestorEncargo;
 use encargossacd\model\entity\GestorEncargoSacd;
+use permisos\model\PermisosActividadesTrue;
 use personas\model\entity\GestorPersona;
 use personas\model\entity\Persona;
-use web\Periodo;
 use procesos\model\entity\ActividadFase;
 use procesos\model\entity\GestorActividadProcesoTarea;
+use web\Periodo;
 use function core\is_true;
 
 /**
@@ -155,8 +156,12 @@ switch ($Qque) {
         break;
     case "get":
         // mirar permisos.
-        $_SESSION['oPermActividades']->setActividad($Qid_activ);
-        $oPermSacd = $_SESSION['oPermActividades']->getPermisoActual('sacd');
+        if (ConfigGlobal::is_app_installed('procesos')) {
+            $oPermActividades = $_SESSION['oPermActividades']->setActividad($Qid_activ);
+        } else {
+            $oPermActividades = new PermisosActividadesTrue(ConfigGlobal::mi_id_usuario());
+        }
+        $oPermSacd = $oPermActividades->getPermisoActual('sacd');
 
         $txt = '';
         if ($oPermSacd->have_perm_activ('ver') === true) { // sólo si tiene permiso
@@ -239,7 +244,7 @@ switch ($Qque) {
         if ($Qseleccion & 4) {
             $a_Clases[] = array('clase' => 'PersonaEx', 'get' => 'getPersonasEx');
         }
-        if ($Qseleccion & 8) { 
+        if ($Qseleccion & 8) {
             $a_Clases[] = array('clase' => 'PersonaSSSC', 'get' => 'getPersonas');
         }
         if ($Qseleccion & 16) {
@@ -405,12 +410,14 @@ switch ($Qque) {
             $f_ini = $oActividad->getF_ini()->getFromLocal();
             $f_fin = $oActividad->getF_fin()->getFromLocal();
             // mirar permisos.
-            //if(ConfigGlobal::is_app_installed('procesos')) {
-            $_SESSION['oPermActividades']->setActividad($id_activ, $id_tipo_activ, $dl_org);
-            $oPermActiv = $_SESSION['oPermActividades']->getPermisoActual('datos');
-            $oPermCtr = $_SESSION['oPermActividades']->getPermisoActual('ctr');
-            $oPermSacd = $_SESSION['oPermActividades']->getPermisoActual('sacd');
-            //}
+            if (ConfigGlobal::is_app_installed('procesos')) {
+                $oPermActividades = $_SESSION['oPermActividades']->setActividad($id_activ, $id_tipo_activ, $dl_org);
+            } else {
+                $oPermActividades = new PermisosActividadesTrue(ConfigGlobal::mi_id_usuario());
+            }
+            $oPermActiv = $oPermActividades->getPermisoActual('datos');
+            $oPermCtr = $oPermActividades->getPermisoActual('ctr');
+            $oPermSacd = $oPermActividades->getPermisoActual('sacd');
 
             if ($oPermActiv->have_perm_activ('ocupado') === false) {
                 $sin++;
