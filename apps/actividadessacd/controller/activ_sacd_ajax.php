@@ -429,8 +429,13 @@ switch ($Qque) {
                 $a_valores[$i][10] = $oPermSacd; // para no tener que recalcularlo después.
                 $a_valores[$i][1] = $nom_activ;
                 // Fase en la que se encuentra
-                $GesActividadProceso = new GestorActividadProcesoTarea();
-                $sacd_aprobado = $GesActividadProceso->getSacdAprobado($id_activ);
+                if (ConfigGlobal::is_app_installed('procesos')) {
+                    $GesActividadProceso = new GestorActividadProcesoTarea();
+                    $sacd_aprobado = $GesActividadProceso->getSacdAprobado($id_activ);
+                } else {
+                    $sacd_aprobado = TRUE;
+                }
+
                 if ($sacd_aprobado === TRUE) {
                     $clase = 'plaza4'; // color de plaza asignada.
                 } else {
@@ -483,7 +488,7 @@ switch ($Qque) {
                     }
                     // Para el listado de falta_sacd, sólo hay que mantener las que no tienen sacd,
                     // o si lo tienen, que no tengan la fase ok_sacd.
-                    if ($Qtipo == 'falta_sacd'
+                    if ($Qtipo === 'falta_sacd'
                         && !(!(is_true($sacd_aprobado) && !empty($sacds))
                             || empty($sacds)
                         )
