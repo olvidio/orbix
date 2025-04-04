@@ -4,10 +4,6 @@ namespace frontend\inventario\domain;
 
 use core\ConfigGlobal;
 use frontend\shared\PostRequest;
-use inventario\domain\repositories\ColeccionRepository;
-use inventario\domain\repositories\DocumentoRepository;
-use inventario\domain\repositories\TipoDocRepository;
-use inventario\domain\repositories\WhereisRepository;
 use web\Hash;
 
 class ListaAgrupar
@@ -15,9 +11,16 @@ class ListaAgrupar
     private string $texto = '';
     private array $aOpciones = [];
 
-    public function listaAgrupar($a_valores)
+    public function listaAgrupar($a_valores,$id_grupo=0)
     {
-        $html_g = '';
+        $pencil = ConfigGlobal::getWeb_icons() . '/pencil.png';
+
+        // para el grupo == 0, no añado la opción de modificar el texto.
+        if ($id_grupo > 0) {
+            $html_g = "<span id='docs_grupo_$id_grupo' >";
+        } else {
+            $html_g = '';
+        }
         $count = 1;
         $id_old = '';
         $id_tipo_old = '';
@@ -66,7 +69,7 @@ class ListaAgrupar
             }
             $id_tipo_old = $row[1];
             $id_old = $row[2];
-            $agrupar_old = empty($row[5])? '' : $row[5];
+            $agrupar_old = empty($row[5]) ? '' : $row[5];
             $count = 1;
             $ident_num = $id_old;
             $ident_txt = '';
@@ -74,10 +77,23 @@ class ListaAgrupar
         }
         // para el último.
         $html_g .= $this->escribir($ident_num, $count, $id_old, $ident_txt, $agrupar_old, $id_tipo_old, $id_col);
-        $html_g .= !empty($this->texto) ? $this->texto : '';
+
+        // para el grupo == 0, no añado la opción de modificar el texto.
+        if ($id_grupo > 0) {
+            $html_g .= "<div class=\"no_print\" style=\"margin-bottom: 10px\">";
+            $html_g .= "<img class=\"no_print\" style=\"float: left; margin-right: 10px; height:22px;\" src=\"$pencil\" 
+                title='" . _("modificar texto") . "''
+                alt='" . _("modificar texto") . "'
+                onClick=\"fnjs_mod_texto_equipaje('docs_grupo_$id_grupo')\" >";
+            $html_g .= empty($this->texto) ? _("introducir texto") : '';
+            $html_g .= "</div>";
+            $html_g .= $this->texto;
+            $html_g .= "</span>"; // id='docs_grupo_$id_grupo'
+        } else {
+            $html_g .= $this->texto;
+        }
+
         return $html_g;
-
-
     }
 
     private function escribir($ident_num, $count, $id_old, $ident_txt, $agrupar_old, $id_tipo_old, $id_col)

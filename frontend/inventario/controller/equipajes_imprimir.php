@@ -110,25 +110,24 @@ foreach ($a_egm as $aEgm) {
     $html_g .= _("valija") . $id_grupo . ":  ";
     $html_g .= $nom_lugar;
     $html_g .= "</h3>";
-    $html_g .= "<img class=\"no_print\" style=\"float: left; margin-right: 10px; height:22px;\" src=\"$pencil\" 
-        title='". _("modificar texto") ."''
-        alt='". _("modificar texto") ."'
-       onClick=\"fnjs_mod_texto_equipaje('docs_grupo_$id_grupo')\" >";
-    $html_g .= "<span id='docs_grupo_$id_grupo' >";
 
     $oLista = new ListaAgrupar();
     $oLista->setTexto($texto);
-    $html_g .= $oLista->listaAgrupar($docs_valores);
+    $html_g .= $oLista->listaAgrupar($docs_valores,$id_grupo);
+    $html_g .= "</span>"; // id='grupo_$id_grupo'
 }
 
 $html .= "<h1>$nombre_ubi: " . _("Inventario de publicaciones internas");
 $html .= "</h1>";
 $html .= "<p>$html_actividades</p>";
 $html .= "<br />";
+$html .= "<div class=\"no_print\" style=\"margin-bottom: 10px\">";
 $html .= "<img class=\"no_print\" style=\"float: left; margin-right: 10px; height:22px;\" src=\"$pencil\" 
         title='". _("modificar texto") ."''
         alt='". _("modificar texto") ."'
        onClick=\"fnjs_mod_texto_equipaje('cabecera')\" >";
+$html .= empty($cabecera)? _("introducir texto") : '';
+$html .= "</div>";
 $html .= "<span id='cabecera'>";
 $html .= "$cabecera";
 $html .= "</span>";
@@ -150,10 +149,13 @@ if (!empty($html_docs_ubi) && !empty($html_g)) {
     $html .= "<br /><h3>";
     $html .= _("B) Documentación que envía la Delegación.");
     $html .= "</h3>";
+    $html .= "<div class=\"no_print\" style=\"margin-bottom: 10px\">";
     $html .= "<img class=\"no_print\" style=\"float: left; margin-right: 10px; height:22px;\" src=\"$pencil\" 
         title='". _("modificar texto") ."''
         alt='". _("modificar texto") ."'
        onClick=\"fnjs_mod_texto_equipaje('cabeceraB')\" >";
+    $html .= empty($cabeceraB)? _("introducir texto") : '';
+    $html .= "</div>";
     $html .= "<span id='cabeceraB'>";
     $html .= "$cabeceraB";
     $html .= "</span>";
@@ -162,10 +164,13 @@ if (!empty($html_docs_ubi) && !empty($html_g)) {
 //$html .= "<docs>$html_g</docs>";
 $html .= "$html_g";
 $html .= "<hr>";
+$html .= "<div class=\"no_print\" style=\"margin-bottom: 10px\">";
 $html .= "<img class=\"no_print\" style=\"float: left; margin-right: 10px; height:22px;\" src=\"$pencil\" 
         title='". _("modificar texto") ."''
         alt='". _("modificar texto") ."'
        onClick=\"fnjs_mod_texto_equipaje('pie')\" >";
+$html .= empty($pie)? _("introducir texto") : '';
+$html .= "</div>";
 $html .= "<span class='salta_pag' id='pie' >";
 $html .= "<p>$pie</p>";
 $html .= "</span>";
@@ -174,4 +179,5 @@ $html .= "<span id='firma'>";
 $html .= "<p>$html_actividades_firma</p>";
 $html .= "</span>";
 
+$html .= "<script>fnjs_left_side_hide();</script>";
 echo $html;
