@@ -24,10 +24,10 @@ $isfsv = empty($_REQUEST['isfsv']) ? '' : $_REQUEST['isfsv'];
 $ssfsv = empty($_REQUEST['ssfsv']) ? '' : $_REQUEST['ssfsv'];
 
 if (empty($isfsv)) {
-    if ($ssfsv == 'sv') {
+    if ($ssfsv === 'sv') {
         $isfsv = 1;
     }
-    if ($ssfsv == 'sf') {
+    if ($ssfsv === 'sf') {
         $isfsv = 2;
     }
 }

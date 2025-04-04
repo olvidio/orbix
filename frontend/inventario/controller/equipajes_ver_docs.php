@@ -43,10 +43,12 @@ $oLista->setBotones($a_botones);
 
 $oHash = new Hash();
 $oHash->setCamposForm('sel');
+$oHash->setCamposNo('id_item_egm');
 $oHash->setArrayCamposHidden([
     'id_grupo' => $Qid_grupo,
     'id_equipaje' => $Qid_equipaje,
-    'id_lugar' => $Qid_lugar
+    'id_lugar' => $Qid_lugar,
+    'id_item_egm' => '',
 ]);
 
 

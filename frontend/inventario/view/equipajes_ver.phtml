@@ -1,8 +1,3 @@
-<?php
-
-use core\ConfigGlobal;
-
-?>
 <script>
     fnjs_guardar_listado = function (formulario) {
         parametros = $(formulario).serialize();
@@ -175,13 +170,16 @@ use core\ConfigGlobal;
             if (json.success !== true) {
                 alert("<?= _("respuesta") ?>" + ': ' + json.mensaje);
             } else {
-                fnjs_lista_docs(id_grupo, 'cabecera');
+                let dataAsObject = JSON.parse(json.data);
+                let id_item_egm = dataAsObject.id_item_egm;
+                fnjs_lista_docs(id_grupo, 'cabecera', id_item_egm);
             }
         });
     }
 
-    fnjs_lista_docs = function (id_grupo, donde) {
+    fnjs_lista_docs = function (id_grupo, donde, id_item_egm) {
         let formulario = "#form_" + id_grupo;
+        $(formulario+" input[name='id_item_egm']").val(id_item_egm);
         switch (donde) {
             case 'cabecera':
                 id_span = '#grupo_' + id_grupo;

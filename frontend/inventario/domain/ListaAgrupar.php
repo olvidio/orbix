@@ -4,15 +4,14 @@ namespace frontend\inventario\domain;
 
 use core\ConfigGlobal;
 use frontend\shared\PostRequest;
-use inventario\domain\Coleccion;
 use web\Hash;
 
 class ListaAgrupar
 {
-    private  string $texto = '';
-    private  array $aOpciones = [];
+    private string $texto = '';
+    private array $aOpciones = [];
 
-    public  function listaAgrupar($a_valores)
+    public function listaAgrupar($a_valores)
     {
         $html_g = '';
         $count = 1;
@@ -72,14 +71,12 @@ class ListaAgrupar
         // para el último.
         $html_g .= $this->escribir($ident_num, $count, $id_old, $ident_txt, $agrupar_old, $id_tipo_old, $id_col);
         $html_g .= !empty($this->texto) ? $this->texto : '';
-        $html_g .= "</span>";
-        $html_g .= "</span>";
         return $html_g;
 
 
     }
 
-    private  function escribir($ident_num, $count, $id_old, $ident_txt, $agrupar_old, $id_tipo_old, $id_col)
+    private function escribir($ident_num, $count, $id_old, $ident_txt, $agrupar_old, $id_tipo_old, $id_col)
     {
         $aColecciones = $this->getColecciones();
         $html_g = '';
@@ -99,17 +96,17 @@ class ListaAgrupar
             }
         }
         if (!empty($agrupar_old)) {
-            $txt_cartas = $aColecciones[$id_col]?? '????';
+            $txt_cartas = $aColecciones[$id_col] ?? '????';
             $html_g .= $txt_cartas . $ident_txt;
         } else {
             $html_g .= $id_tipo_old . $ident_txt;
         }
-        $html_g .= "<br />";
+        $html_g .= empty($html_g)? '' : "<br />";
         return $html_g;
 
     }
 
-    private  function getColecciones()
+    private function getColecciones()
     {
         if (empty($this->aOpciones)) {
             //-------- listado de colecciones -----------------------------------
@@ -127,7 +124,7 @@ class ListaAgrupar
         return $this->aOpciones;
     }
 
-    public  function setTexto(string $texto): void
+    public function setTexto(string $texto): void
     {
         $this->texto = $texto;
     }

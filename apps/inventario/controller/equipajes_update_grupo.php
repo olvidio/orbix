@@ -59,6 +59,7 @@ foreach ($a_sel as $id_doc) {
     }
 }
 
+$data['id_item_egm'] = $id_item_egm;
 
-ContestarJson::enviar($error_txt, 'ok');
+ContestarJson::enviar($error_txt, $data);
 

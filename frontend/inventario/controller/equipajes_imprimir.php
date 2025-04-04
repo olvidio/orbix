@@ -79,12 +79,7 @@ $a_valores = $data['a_valores'];
 $nombre_ubi = $data['nombre_ubi'];
 $id_ubi = $data['id_ubi'];
 
-$html_ubi = '';
-$html_ubi .= "<span id='ubi_$id_ubi'>";
-$html_ubi .= "<h2>" . _("documentos en") . " $nombre_ubi</h2>";
-$html_ubi .= "<span id='docs_ubi_$id_ubi'>";
-
-$html_ubi .= (new ListaAgrupar)->listaAgrupar($a_valores);
+$html_docs_ubi = (new ListaAgrupar)->listaAgrupar($a_valores);
 
 //-------- equipajes para la actividad -----------------------------------
 $url_lista_backend = Hash::link(ConfigGlobal::getWeb()
@@ -138,14 +133,20 @@ $html .= "<span id='cabecera'>";
 $html .= "$cabecera";
 $html .= "</span>";
 //$html .= "<br>";
-if (!empty($html_ubi)) {
+if (!empty($html_docs_ubi)) {
     $html .= "<br /><h3>";
     $html .= _("A) Documentación que pertenece a la casa y se queda siempre allí.");
     $html .= "</h3>";
-    $html .= $html_ubi;
+
+    $html .= "<span id='ubi_$id_ubi'>";
+    $html .= "<h2>" . _("documentos en") . " $nombre_ubi</h2>";
+    $html .= "<span id='docs_ubi_$id_ubi'>";
+    $html .= $html_docs_ubi;
+    $html .= "</span>";
+    $html .= "</span>";
     $html .= "<br />";
 }
-if (!empty($html_ubi) && !empty($html_g)) {
+if (!empty($html_docs_ubi) && !empty($html_g)) {
     $html .= "<br /><h3>";
     $html .= _("B) Documentación que envía la Delegación.");
     $html .= "</h3>";
