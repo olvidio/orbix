@@ -13,9 +13,11 @@ class ListaDocsGrupo
 {
     static public function lista_docs_grupo(int $id_equipaje, int $id_lugar, int $id_grupo)
     {
-
         $Repository = new ColeccionRepository();
-        $aColecciones = $Repository->getArrayColecciones();
+        $cColecciones = $Repository->getColecciones();
+        foreach ($cColecciones as $oColeccion) {
+            $aColeccion[$oColeccion->getId_coleccion()] = $oColeccion->isAgrupar();
+        }
 
         $LugarRepository = new LugarRepository();
         $TipoDocRepository = new TipoDocRepository();
@@ -61,10 +63,10 @@ class ListaDocsGrupo
                 $id_col = $oTipoDoc->getId_coleccion();
                 if (!empty($id_col)) {
                     $orden_col[$d] = $id_col;
-                    $bcarta = $aColecciones[$id_col];
-                    if (!empty($identificador) && !$bcarta) {
+                    $bAgrupar = $aColeccion[$id_col];
+                    if (!empty($identificador) && !$bAgrupar) {
                         $orden[$d] = 1;
-                    } elseif ($bcarta) {
+                    } elseif ($bAgrupar) {
                         $orden[$d] = 2;
                     } else {
                         $orden[$d] = 3;
@@ -72,11 +74,12 @@ class ListaDocsGrupo
                 } else { // documentos sin colección
                     $orden[$d] = 4;
                     $orden_col[$d] = 0;
-                    $bcarta = '';
+                    $bAgrupar = false;
                 }
-                $a_valores[$d][3] = empty($bcarta) ? false : $bcarta;
                 $a_valores[$d][4] = empty($id_col) ? false : $id_col;
-                $a_valores[$d][5] = false; // para ser compatible con los docs de la casa.
+                //$a_valores[$d][5] = false; // para ser compatible con los docs de la casa.
+                $a_valores[$d][3] = false; // ?¿?¿? para ser compatible con los docs de la casa.
+                $a_valores[$d][5] = $bAgrupar;
             }
             // ordenar por sigla
             if (!empty($a_valores)) {

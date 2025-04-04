@@ -4,6 +4,10 @@ namespace frontend\inventario\domain;
 
 use core\ConfigGlobal;
 use frontend\shared\PostRequest;
+use inventario\domain\repositories\ColeccionRepository;
+use inventario\domain\repositories\DocumentoRepository;
+use inventario\domain\repositories\TipoDocRepository;
+use inventario\domain\repositories\WhereisRepository;
 use web\Hash;
 
 class ListaAgrupar
@@ -34,7 +38,7 @@ class ListaAgrupar
                 $count++;
                 continue;
             }
-            if (($row[5] && $agrupar_old == $row[5])) {
+            if ((!empty($row[5]) && $agrupar_old == $row[5])) {
                 $id_col = !empty($row[4]) ? $row[4] : '';
                 if (!empty($ident_num) && !empty($row[2])) {
                     $ident_num .= ',' . $row[2];
@@ -62,7 +66,7 @@ class ListaAgrupar
             }
             $id_tipo_old = $row[1];
             $id_old = $row[2];
-            $agrupar_old = $row[5];
+            $agrupar_old = empty($row[5])? '' : $row[5];
             $count = 1;
             $ident_num = $id_old;
             $ident_txt = '';
@@ -101,7 +105,7 @@ class ListaAgrupar
         } else {
             $html_g .= $id_tipo_old . $ident_txt;
         }
-        $html_g .= empty($html_g)? '' : "<br />";
+        $html_g .= empty($html_g) ? '' : "<br />";
         return $html_g;
 
     }

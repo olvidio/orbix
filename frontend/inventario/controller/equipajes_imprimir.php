@@ -103,7 +103,7 @@ foreach ($a_egm as $aEgm) {
     $id_item_egm = $aEgm['id_item_egm'];
     $texto = $aEgm['texto'] ?? '';
 
-    $a_valores = $aEgm['a_valores'];
+    $docs_valores = $aEgm['a_valores'];
 
     $html_g .= "<span id='grupo_$id_grupo'>";
     $html_g .= "<h3>";
@@ -118,7 +118,7 @@ foreach ($a_egm as $aEgm) {
 
     $oLista = new ListaAgrupar();
     $oLista->setTexto($texto);
-    $html_g .= $oLista->listaAgrupar($a_valores);
+    $html_g .= $oLista->listaAgrupar($docs_valores);
 }
 
 $html .= "<h1>$nombre_ubi: " . _("Inventario de publicaciones internas");
