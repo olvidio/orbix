@@ -134,7 +134,7 @@ class Lugar {
         $oDatosCampo->setTipo('opciones');
         $oDatosCampo->setArgument('inventario\\domain\\repositories\\UbiInventarioRepository');
         $oDatosCampo->setArgument2('getNom_ubi');
-        $oDatosCampo->setArgument3('getListaUbisInventario');
+        $oDatosCampo->setArgument3('getArrayUbisInventario');
         return $oDatosCampo;
     }
     function getDatosNom_lugar()

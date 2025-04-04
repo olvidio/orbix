@@ -74,12 +74,20 @@ class DatosFormRepo
                     $var_3 = $oDatosCampo->getArgument3();
 
                     $RepoRelacionado = new $var_1();
-                    $oDesplegable = $RepoRelacionado->$var_3();
-                    $oDesplegable->setOpcion_sel($valor_camp);
+                    $a_opciones = $RepoRelacionado->$var_3();
 
                     $accion = empty($acc) ? '' : "onchange=\"fnjs_actualizar_depende('$nom_camp','$acc');\" ";
                     $formulario .= "<td class=contenido><select id=\"$nom_camp\" name=\"$nom_camp\" $accion>";
-                    $formulario .= $oDesplegable->options();
+                    $formulario .= "<option></option>";
+                    foreach ($a_opciones as $key => $val) {
+                        if ((string)$key === (string)$valor_camp) {
+                            $sel = 'selected';
+                        } else {
+                            $sel = '';
+                        }
+                        if (!empty($this->aOpcion_no) && is_array($this->aOpcion_no) && in_array($key, $this->aOpcion_no)) continue;
+                        $formulario .= "<option value=\"$key\" $sel>$val</option>";
+                    }
                     $formulario .= "</select></td></tr>";
                     break;
                 case "depende":
