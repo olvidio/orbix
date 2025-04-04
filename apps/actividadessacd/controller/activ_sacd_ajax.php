@@ -157,7 +157,8 @@ switch ($Qque) {
     case "get":
         // mirar permisos.
         if (ConfigGlobal::is_app_installed('procesos')) {
-            $oPermActividades = $_SESSION['oPermActividades']->setActividad($Qid_activ);
+            $_SESSION['oPermActividades']->setActividad($Qid_activ);
+            $oPermActividades = $_SESSION['oPermActividades'];
         } else {
             $oPermActividades = new PermisosActividadesTrue(ConfigGlobal::mi_id_usuario());
         }
@@ -411,7 +412,8 @@ switch ($Qque) {
             $f_fin = $oActividad->getF_fin()->getFromLocal();
             // mirar permisos.
             if (ConfigGlobal::is_app_installed('procesos')) {
-                $oPermActividades = $_SESSION['oPermActividades']->setActividad($id_activ, $id_tipo_activ, $dl_org);
+                $_SESSION['oPermActividades']->setActividad($id_activ, $id_tipo_activ, $dl_org);
+                $oPermActividades = $_SESSION['oPermActividades'];
             } else {
                 $oPermActividades = new PermisosActividadesTrue(ConfigGlobal::mi_id_usuario());
             }
