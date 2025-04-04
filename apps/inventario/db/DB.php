@@ -103,6 +103,7 @@ class DB extends DBAbstract
             f_recibido date,
             f_asignado date,
             observ text,
+            observ_ctr text,
             f_ult_comprobacion date,
             en_busqueda boolean DEFAULT false,
             perdido boolean DEFAULT false,

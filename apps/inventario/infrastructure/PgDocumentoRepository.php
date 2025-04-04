@@ -129,6 +129,7 @@ class PgDocumentoRepository extends ClaseRepository implements DocumentoReposito
 		$aDatos['id_ubi'] = $Documento->getId_ubi();
 		$aDatos['id_lugar'] = $Documento->getId_lugar();
 		$aDatos['observ'] = $Documento->getObserv();
+        $aDatos['observ_ctr'] = $Documento->getObservCtr();
 		$aDatos['en_busqueda'] = $Documento->isEn_busqueda();
 		$aDatos['perdido'] = $Documento->isPerdido();
 		$aDatos['eliminado'] = $Documento->isEliminado();
@@ -158,6 +159,7 @@ class PgDocumentoRepository extends ClaseRepository implements DocumentoReposito
 					f_recibido               = :f_recibido,
 					f_asignado               = :f_asignado,
 					observ                   = :observ,
+					observ_ctr               = :observ_ctr,
 					f_ult_comprobacion       = :f_ult_comprobacion,
 					en_busqueda              = :en_busqueda,
 					perdido                  = :perdido,
@@ -187,8 +189,8 @@ class PgDocumentoRepository extends ClaseRepository implements DocumentoReposito
 		} else {
 			// INSERT
 			$aDatos['id_doc'] = $Documento->getId_doc();
-			$campos="(id_doc,id_tipo_doc,id_ubi,id_lugar,f_recibido,f_asignado,observ,f_ult_comprobacion,en_busqueda,perdido,f_perdido,eliminado,f_eliminado,num_reg,num_ini,num_fin,identificador,num_ejemplares)";
-			$valores="(:id_doc,:id_tipo_doc,:id_ubi,:id_lugar,:f_recibido,:f_asignado,:observ,:f_ult_comprobacion,:en_busqueda,:perdido,:f_perdido,:eliminado,:f_eliminado,:num_reg,:num_ini,:num_fin,:identificador,:num_ejemplares)";		
+			$campos="(id_doc,id_tipo_doc,id_ubi,id_lugar,f_recibido,f_asignado,observ,observ_ctr,f_ult_comprobacion,en_busqueda,perdido,f_perdido,eliminado,f_eliminado,num_reg,num_ini,num_fin,identificador,num_ejemplares)";
+			$valores="(:id_doc,:id_tipo_doc,:id_ubi,:id_lugar,:f_recibido,:f_asignado,:observ,:observ_ctr,:f_ult_comprobacion,:en_busqueda,:perdido,:f_perdido,:eliminado,:f_eliminado,:num_reg,:num_ini,:num_fin,:identificador,:num_ejemplares)";
 			if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === FALSE) {
 				$sClaveError = 'PgDocumentoRepository.insertar.prepare';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);

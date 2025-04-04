@@ -65,6 +65,12 @@ class Documento
      */
     private string|null $sobserv = null;
     /**
+     * ObservCtr de Documento
+     *
+     * @var string|null
+     */
+    private string|null $sobservCtr = null;
+    /**
      * F_ult_comprobacion de Documento
      *
      * @var DateTimeLocal|NullDateTimeLocal|null
@@ -161,6 +167,9 @@ class Documento
         }
         if (array_key_exists('observ', $aDatos)) {
             $this->setObserv($aDatos['observ']);
+        }
+        if (array_key_exists('observ_ctr', $aDatos)) {
+            $this->setObservCtr($aDatos['observ_ctr']);
         }
         if (array_key_exists('f_ult_comprobacion', $aDatos)) {
             $this->setF_ult_comprobacion($aDatos['f_ult_comprobacion']);
@@ -322,6 +331,24 @@ class Documento
     public function setObserv(?string $sobserv = null): void
     {
         $this->sobserv = $sobserv;
+    }
+
+    /**
+     *
+     * @return string|null $sobserv_ctr
+     */
+    public function getObservCtr(): ?string
+    {
+        return $this->sobservCtr;
+    }
+
+    /**
+     *
+     * @param string|null $sobservCtr
+     */
+    public function setObservCtr(?string $sobservCtr = null): void
+    {
+        $this->sobservCtr = $sobservCtr;
     }
 
     /**
@@ -538,6 +565,7 @@ class Documento
         $oDocumentoSet->add($this->getDatosF_recibido());
         $oDocumentoSet->add($this->getDatosF_asignado());
         $oDocumentoSet->add($this->getDatosObserv());
+        $oDocumentoSet->add($this->getDatosObservCtr());
         $oDocumentoSet->add($this->getDatosF_ult_comprobacion());
         $oDocumentoSet->add($this->getDatosEn_busqueda());
         $oDocumentoSet->add($this->getDatosPerdido());
@@ -626,6 +654,18 @@ class Documento
         $oDatosCampo->setMetodoGet('getObserv');
         $oDatosCampo->setMetodoSet('setObserv');
         $oDatosCampo->setEtiqueta(_("observaciones"));
+        $oDatosCampo->setTipo('texto');
+        $oDatosCampo->setArgument(50);
+        return $oDatosCampo;
+    }
+
+    function getDatosObservCtr()
+    {
+        $oDatosCampo = new DatosCampo();
+        $oDatosCampo->setNom_camp('observ_ctr');
+        $oDatosCampo->setMetodoGet('getObservCtr');
+        $oDatosCampo->setMetodoSet('setObservCtr');
+        $oDatosCampo->setEtiqueta(_("observaciones para el centro"));
         $oDatosCampo->setTipo('texto');
         $oDatosCampo->setArgument(50);
         return $oDatosCampo;

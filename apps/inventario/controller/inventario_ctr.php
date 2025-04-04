@@ -46,7 +46,7 @@ foreach ($a_sel as $id_ubi) {
     foreach ($cDocumentos as $oDocumento) {
         $d++;
         $id_tipo_doc = $oDocumento->getId_tipo_doc();
-        $observ = $oDocumento->getObserv();
+        $observ = $oDocumento->getObservCtr();
         $num_ejemplares = $oDocumento->getNum_ejemplares();
         // guardo en una colección los tipos de doc para consultas posteriores (de otros lugares).
         if (array_key_exists($id_tipo_doc, $colTipoDoc)) {
