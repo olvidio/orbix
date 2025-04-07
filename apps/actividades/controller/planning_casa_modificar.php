@@ -120,7 +120,7 @@ $oHash->setCamposNo($camposNo);
 
 $oHash1 = new Hash();
 $oHash1->setUrl(ConfigGlobal::getWeb() . '/apps/actividades/controller/actividad_select_ubi.php');
-$oHash1->setCamposForm('dl_org!ssfsv');
+$oHash1->setCamposForm('dl_org!isfsv!ssfsv');
 $h = $oHash1->linkSinVal();
 
 $oActividadTipo = new actividades\model\ActividadTipo();
