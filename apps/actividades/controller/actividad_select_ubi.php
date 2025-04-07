@@ -44,6 +44,7 @@ switch ($isfsv) {
         $donde_sfsv = '';
 }
 
+$oDesplFreq = '';
 if (!empty($_REQUEST['dl_org'])) {
     $sql_freq = "select distinct id_ubi,nombre_ubi from a_actividades_dl join u_cdc_dl using (id_ubi) where dl_org='" . $_REQUEST['dl_org'] . "' $donde_sfsv ORDER by nombre_ubi";
     $oDbl = $GLOBALS['oDBC'];
