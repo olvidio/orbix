@@ -19,7 +19,8 @@
     "ext-xml": "*",
     "ramsey/uuid": "^4.7",
     "ext-intl": "*",
-    "illuminate/http": "^11.41"
+    "illuminate/http": "^11.41",
+    "erusev/parsedown": "^1.7"
   },
   "require-dev": {
     "roave/security-advisories": "dev-latest",

@@ -353,6 +353,16 @@ class ComposerStaticInitfe4939d609572947ee73ffcc0a42bf32
         0 => __DIR__ . '/../../..' . '/apps',
     );
 
+    public static $prefixesPsr0 = array (
+        'P' => 
+        array (
+            'Parsedown' => 
+            array (
+                0 => __DIR__ . '/..' . '/erusev/parsedown',
+            ),
+        ),
+    );
+
     public static $classMap = array (
         'Attribute' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/Attribute.php',
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
@@ -1601,6 +1611,7 @@ class ComposerStaticInitfe4939d609572947ee73ffcc0a42bf32
             $loader->prefixLengthsPsr4 = ComposerStaticInitfe4939d609572947ee73ffcc0a42bf32::$prefixLengthsPsr4;
             $loader->prefixDirsPsr4 = ComposerStaticInitfe4939d609572947ee73ffcc0a42bf32::$prefixDirsPsr4;
             $loader->fallbackDirsPsr4 = ComposerStaticInitfe4939d609572947ee73ffcc0a42bf32::$fallbackDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInitfe4939d609572947ee73ffcc0a42bf32::$prefixesPsr0;
             $loader->classMap = ComposerStaticInitfe4939d609572947ee73ffcc0a42bf32::$classMap;
 
         }, null, ClassLoader::class);
