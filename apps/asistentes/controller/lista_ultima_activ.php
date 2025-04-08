@@ -98,7 +98,7 @@ switch ($Qcurso) {
         break;
     default:
         // para los cel (3 años):
-        if ($Qque == "crt_cel" || $Qque == "crt_s") {
+        if ($Qque === "crt_cel" || $Qque === "crt_s") {
             $any_ini = $any - 4;
             $any_fin = $any - 1;
         } else {
@@ -115,7 +115,7 @@ $fecha_ini = $oDateIni->getFromLocal('-');
 $fecha_fin = $oDateFin->getFromLocal('-');
 $titulo_fecha = sprintf(_("entre %s y %s"), $fecha_ini, $fecha_fin);
 
-//// Tipo Actvividad
+//// Tipo Actividad
 $alert = '';
 switch ($Qque) {
     case "crt_s_sg":
@@ -219,7 +219,7 @@ foreach ($cPersonas as $oPersona) {
     $id_nom = $oPersona->getId_nom();
     $ape_nom = $oPersona->getPrefApellidosNombre();
 
-    //Buscar el ctr (si no está en la seleccion)
+    //Buscar el ctr (si no está en la selección)
     if ($Qid_ubi == 999 || empty($Qid_ubi)) {
         $nombre_ubi = '';
         $id_ctr = $oPersona->getId_ctr();
@@ -233,7 +233,7 @@ foreach ($cPersonas as $oPersona) {
     $aWhereNom = ['id_nom' => $id_nom];
     $aOperadorNom = [];
     $cAsistentes = $GesAsistente->getActividadesDeAsistente($aWhereNom, $aOperadorNom, $aWhereA, $aOperadorA, TRUE);
-    if (count($cAsistentes) > 0) {
+    if (!empty($cAsistentes)) {
         reset($cAsistentes);
         $oAsistente = current($cAsistentes);
         $id_activ = $oAsistente->getId_activ();

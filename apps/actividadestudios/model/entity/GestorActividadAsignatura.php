@@ -65,7 +65,11 @@ class GestorActividadAsignatura extends ClaseGestor
         $aAsignaturasCa = array();
         foreach ($cActividadAsignaturas as $oActividadAsignatura) {
             $id_asignatura = $oActividadAsignatura->getId_asignatura();
-            $aAsignaturasCa[$id_asignatura] = $aAsigDatos[$id_asignatura];
+            if (empty($aAsigDatos[$id_asignatura])) {
+                $aAsignaturasCa[$id_asignatura] = array('nombre_asignatura' => '??', 'creditos' => '??');
+            } else {
+                $aAsignaturasCa[$id_asignatura] = $aAsigDatos[$id_asignatura];
+            }
         }
         return $aAsignaturasCa;
     }

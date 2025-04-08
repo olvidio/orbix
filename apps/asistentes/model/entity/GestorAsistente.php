@@ -76,7 +76,7 @@ class GestorAsistente extends ClaseGestor
      * @param boolean reverse: TRUE->ordenar por fecha de nuevo a viejo.
      * @return array Una col·lecció d'objectes de tipus Asistente
      */
-    function getActividadesDeAsistente($aWhereNom, $aOperadorNom, $aWhere = array(), $aOperators = array(), $reverse = FALSE)
+    function getActividadesDeAsistente($aWhereNom, $aOperadorNom, $aWhere = [], $aOperador = [], $reverse = FALSE)
     {
         // todas las actividades de la persona
 
@@ -92,31 +92,32 @@ class GestorAsistente extends ClaseGestor
 
         $namespace = __NAMESPACE__;
         $cAsistencias = $this->getConjunt($a_Clases, $namespace, $aWhereNom, $aOperadorNom);
-        // seleccionar las actividades segun los criterios de búsqueda.
-        $GesActividades = new GestorActividad();
-        $aListaIds = $GesActividades->getArrayIds($aWhere, $aOperators);
 
-        return $this->arreglarAsistencias($cAsistencias, $aListaIds, $reverse);
+        return $this->arreglarAsistencias($cAsistencias, $aWhere, $aOperador, $reverse);
     }
 
-    private function arreglarAsistencias($cAsistencias, $aListaIds, $reverse)
+    private function arreglarAsistencias($cAsistencias, $aWhere, $aOperador, $reverse)
     {
-        // descarto los que no estan.
+        $GesActividades = new GestorActividad();
+        // descarto los que no están.
         $cActividadesOk = array();
         $i = 0;
         $id_actividad_old = 0;
         foreach ($cAsistencias as $oAsistente) {
             $id_activ = $oAsistente->getId_activ();
+            $oAsistente->DBCarregar();
             // Si es la misma actividad salto.
-            if ($id_activ == $id_actividad_old) {
+            if ($id_activ === $id_actividad_old) {
                 continue;
             }
-            if (in_array($id_activ, $aListaIds)) {
+            // seleccionar las actividades según los criterios de búsqueda.
+            $aWhere['id_activ'] = $id_activ;
+            $cActividades = $GesActividades->getActividades($aWhere, $aOperador);
+            if (!empty($cActividades)) {
                 $i++;
-                $oActividad = new Actividad($id_activ);
-                $oF_ini = $oActividad->getF_ini();
-                $f_ini_iso = $oF_ini->format('Y-m-d') . '#' . $i; // Añado $i por si empezan el mismo dia.
-                $oAsistente->DBCarregar();
+                $oActividad = $cActividades[0];
+                $f_ini_iso = $oActividad->getF_ini()->getIso(). '#' . $i; // Añado $i por si empiezan el mismo dia.
+                //$f_ini_iso = $oF_ini->format('Y-m-d')
                 $cActividadesOk[$f_ini_iso] = $oAsistente;
             }
             $id_actividad_old = $id_activ;
