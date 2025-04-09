@@ -50,7 +50,7 @@ class AsignarSacd
         $aWhere['status'] = 2;
 
         $oGesActividades = new GestorActividadDl();
-        $this->a_actividades = $oGesActividades->getArrayIds($aWhere, $aOperador);
+        $this->a_actividades = $oGesActividades->getArrayIdsWithKeyFini($aWhere, $aOperador);
 
         return $this->a_actividades;
     }

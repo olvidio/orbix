@@ -76,9 +76,11 @@ class GestorAsistente extends ClaseGestor
      * @param boolean reverse: TRUE->ordenar por fecha de nuevo a viejo.
      * @return array Una col·lecció d'objectes de tipus Asistente
      */
-    function getActividadesDeAsistente($aWhereNom, $aOperadorNom, $aWhere = [], $aOperador = [], $reverse = FALSE)
+    function getActividadesDeAsistente($aWhereNom, $aOperadorNom, $aWhereActividad = [], $aOperadorActividad = [], $reverse = FALSE)
     {
         // todas las actividades de la persona
+        $GesActividades = new GestorActividad();
+        $a_id_activ_f_ini = $GesActividades->getArrayIdsWithKeyFini($aWhereActividad, $aOperadorActividad);
 
         //Importa el orden, se queda con la primera.
         $a_Clases[] = array('clase' => 'AsistenteDl', 'get' => 'getAsistentesDl');
@@ -93,15 +95,33 @@ class GestorAsistente extends ClaseGestor
         $namespace = __NAMESPACE__;
         $cAsistencias = $this->getConjunt($a_Clases, $namespace, $aWhereNom, $aOperadorNom);
 
-        return $this->arreglarAsistencias($cAsistencias, $aWhere, $aOperador, $reverse);
+        return $this->ordenarAsistenciasPorFecha($cAsistencias, $a_id_activ_f_ini, $reverse);
     }
 
-    private function arreglarAsistencias($cAsistencias, $aWhere, $aOperador, $reverse)
+    function getAsistenciasPersonaDeActividades($id_nom, $a_id_activ_f_ini, $reverse = FALSE)
     {
-        $GesActividades = new GestorActividad();
+        $aWhereNom['id_nom'] = $id_nom;
+        $aOperadorNom = [];
+        //Importa el orden, se queda con la primera.
+        $a_Clases[] = array('clase' => 'AsistenteDl', 'get' => 'getAsistentesDl');
+        /*
+        $a_Clases[] = array('clase'=>'AsistenteIn','get'=>'getAsistentesIn');
+         *  El In es suma de Ex(de paso) + Out(de todas las dl menos de mi propia dl).
+        */
+        //$a_Clases[] = array('clase'=>'AsistenteIn','get'=>'getAsistentesIn');
+        $a_Clases[] = array('clase' => 'AsistenteOut', 'get' => 'getAsistentesOut');
+        $a_Clases[] = array('clase' => 'AsistenteEx', 'get' => 'getAsistentesEx');
+
+        $namespace = __NAMESPACE__;
+        $cAsistencias = $this->getConjunt($a_Clases, $namespace, $aWhereNom, $aOperadorNom);
+
+        return $this->ordenarAsistenciasPorFecha($cAsistencias, $a_id_activ_f_ini, $reverse);
+    }
+
+    private function ordenarAsistenciasPorFecha($cAsistencias, $a_id_activ_f_ini, $reverse)
+    {
         // descarto los que no están.
         $cActividadesOk = array();
-        $i = 0;
         $id_actividad_old = 0;
         foreach ($cAsistencias as $oAsistente) {
             $id_activ = $oAsistente->getId_activ();
@@ -110,15 +130,8 @@ class GestorAsistente extends ClaseGestor
             if ($id_activ === $id_actividad_old) {
                 continue;
             }
-            // seleccionar las actividades según los criterios de búsqueda.
-            $aWhere['id_activ'] = $id_activ;
-            $cActividades = $GesActividades->getActividades($aWhere, $aOperador);
-            if (!empty($cActividades)) {
-                $i++;
-                $oActividad = $cActividades[0];
-                $f_ini_iso = $oActividad->getF_ini()->getIso(). '#' . $i; // Añado $i por si empiezan el mismo dia.
-                //$f_ini_iso = $oF_ini->format('Y-m-d')
-                $cActividadesOk[$f_ini_iso] = $oAsistente;
+            if ($key = array_search($id_activ, $a_id_activ_f_ini)) {
+                $cActividadesOk[$key] = $oAsistente;
             }
             $id_actividad_old = $id_activ;
         }

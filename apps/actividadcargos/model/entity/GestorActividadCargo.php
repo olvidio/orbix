@@ -143,7 +143,7 @@ class GestorActividadCargo extends ClaseGestor
     {
         // seleccionar las actividades segun los criterios de búsqueda.
         $GesActividades = new GestorActividad();
-        $aListaIds = $GesActividades->getArrayIds($aWhere, $aOperators);
+        $aListaIds = $GesActividades->getArrayIdsWithKeyFini($aWhere, $aOperators);
 
         $cCargos = $this->getActividadCargos($aWhereNom);
         // descarto los que no estan.
@@ -189,7 +189,7 @@ class GestorActividadCargo extends ClaseGestor
         $cCargos = $this->getActividadCargos(array('id_nom' => $id_nom));
         // seleccionar las actividades segun los criterios de búsqueda.
         $GesActividades = new GestorActividad();
-        $aListaIds = $GesActividades->getArrayIds($aWhereAct, $aOperadorAct);
+        $aListaIds = $GesActividades->getArrayIdsWithKeyFini($aWhereAct, $aOperadorAct);
         // descarto los que no estan.
         $cActividadesOk = array();
         foreach ($cCargos as $oCargo) {
@@ -251,7 +251,7 @@ class GestorActividadCargo extends ClaseGestor
         $cCargos = $this->getActividadCargos(array('id_nom' => $id_nom));
         // seleccionar las actividades segun los criterios de búsqueda.
         $GesActividades = new GestorActividad();
-        $aListaIds = $GesActividades->getArrayIds($aWhereAct, $aOperadorAct);
+        $aListaIds = $GesActividades->getArrayIdsWithKeyFini($aWhereAct, $aOperadorAct);
         // descarto los que no están.
         $cActividadesOk = array();
         foreach ($cCargos as $oCargo) {

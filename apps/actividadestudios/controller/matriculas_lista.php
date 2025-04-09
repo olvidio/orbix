@@ -68,7 +68,7 @@ $aWhereActividad['f_ini'] = "'$inicioIso','$finIso'";
 $aOperadorActividad['f_ini'] = 'BETWEEN';
 
 $gesActividades = new GestorActividad();
-$a_IdActividades = $gesActividades->getArrayIds($aWhereActividad, $aOperadorActividad);
+$a_IdActividades = $gesActividades->getArrayIdsWithKeyFini($aWhereActividad, $aOperadorActividad);
 
 $str_actividades = "{" . implode(', ', $a_IdActividades) . "}";
 $aWhere = ['id_activ' => $str_actividades];

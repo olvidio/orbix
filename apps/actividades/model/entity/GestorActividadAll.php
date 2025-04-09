@@ -332,7 +332,7 @@ class GestorActividadAll extends ClaseGestor
      * @param array aOperators associatiu amb els valors dels operadors que cal aplicar a cada variable
      * @return array|void
      */
-    function getArrayIds($aWhere = array(), $aOperators = array())
+    function getArrayIdsWithKeyFini($aWhere = array(), $aOperators = array())
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
@@ -371,8 +371,11 @@ class GestorActividadAll extends ClaseGestor
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
             return false;
         }
+        $i = 0;
         foreach ($oDblSt as $aDades) {
-            $aListaId[] = $aDades['id_activ'];
+            $i++;
+            $f_ini_iso = $aDades['f_ini'] . '#' . $i; // Añado $i por si empiezan el mismo dia.
+            $aListaId[$f_ini_iso] = $aDades['id_activ'];
         }
         return $aListaId;
     }

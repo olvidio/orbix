@@ -1,6 +1,7 @@
 <?php
 
 use actividades\model\entity\Actividad;
+use actividades\model\entity\GestorActividad;
 use actividades\model\entity\GestorActividadDl;
 use asistentes\model\entity\GestorAsistente;
 use personas\model\entity\GestorPersonaS;
@@ -204,6 +205,10 @@ switch ($Qque) {
     default:
         exit (_("No sé en que tipo de actividad hay que mirar las asistencias"));
 }
+// Id de actividades posibles
+$aWhereA['_ordre'] = 'f_ini DESC';
+$GesActividades = new GestorActividad();
+$a_id_activ_f_ini = $GesActividades->getArrayIdsWithKeyFini($aWhereA, $aOperadorA);
 
 $titulo = $titulo_actividad . ' ' . $titulo_fecha;
 
@@ -214,6 +219,7 @@ $i = 0;
 $falta = 0;
 $a_valores = [];
 $gesCentros = new GestorCentroDl();
+$GesAsistente = new GestorAsistente();
 foreach ($cPersonas as $oPersona) {
     $i++;
     $id_nom = $oPersona->getId_nom();
@@ -229,10 +235,7 @@ foreach ($cPersonas as $oPersona) {
         }
     }
 
-    $GesAsistente = new GestorAsistente();
-    $aWhereNom = ['id_nom' => $id_nom];
-    $aOperadorNom = [];
-    $cAsistentes = $GesAsistente->getActividadesDeAsistente($aWhereNom, $aOperadorNom, $aWhereA, $aOperadorA, TRUE);
+    $cAsistentes = $GesAsistente->getAsistenciasPersonaDeActividades($id_nom, $a_id_activ_f_ini, true);
     if (!empty($cAsistentes)) {
         reset($cAsistentes);
         $oAsistente = current($cAsistentes);
