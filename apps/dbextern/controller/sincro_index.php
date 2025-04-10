@@ -204,7 +204,7 @@ $explicacion_txt .= _("al efectuar alguna acción dentro de las listas, las pers
 ?>
 <script>
     fnjs_refrescar = function () {
-        var url = 'dbextern/controller/refrescarTablaBdu.php';
+        var url = '<?= $url_refrescar ?>';
         var parametros = 'que=algo<?= $h2 ?>';
 
         $.ajax({

@@ -18,8 +18,8 @@ class CopiarBDU
         if (!empty($_SESSION['oDBListas']) && $_SESSION['oDBListas'] === 'error') {
             exit(_("no se puede conectar con la base de datos de Listas"));
         }
-        $this->oDbU = $GLOBALS['oDBListas'];
-        $this->oDbl = $GLOBALS['oDBC'];
+        $this->oDbU = $_SESSION['oDBListas'];
+        $this->oDbl = $_SESSION['oDBC'];
 
         $this->tabla_bdu = 'dbo.q_Aux_Dl';
     }
