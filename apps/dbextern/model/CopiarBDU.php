@@ -67,11 +67,12 @@ class CopiarBDU
         $fecha = new DateTimeLocal();
         foreach ($this->oDbU->query($sQuery) as $aDades) {
             $i++;
-            $aDades_slashed = array_map( 'addslashes', $aDades );
+            array_walk($aDades, 'core\poner_null');
+            $aDades_slashed = array_map('addslashes', $aDades);
             $values .= "('" . implode("','", $aDades_slashed) . "'),";
             if ($i > 1000) {
                 // remplazar vacíos por NULL
-                $values = str_replace("''",'NULL',$values);
+                $values = str_replace("''", 'NULL', $values);
                 // cambiar la ultima coma por punto y coma
                 $values = rtrim($values, ',');
                 // execute
@@ -82,18 +83,18 @@ class CopiarBDU
             }
         }
         // el último pack:
-       if (!empty($values)) {
-           // remplazar vacíos por NULL
-           $values = str_replace("''",'NULL',$values);
-           // cambiar la ultima coma por punto y coma
-           $values = rtrim($values, ',');
-           $sql = $sqlInsert . ' ' . $values . ';';
-           $this->oDbl->query($sql);
-       }
-       // añadir la fecha en que se ha realizado:
-       $fecha_iso = $fecha->format(DateTimeInterface::ATOM);
-       $sqlTime = "INSERT INTO $tabla (Identif, Apenom) VALUES (\"1111\" , \"$fecha_iso\");";
-       $this->oDbl->query($sqlTime);
-   }
+        if (!empty($values)) {
+            // remplazar vacíos por NULL
+            $values = str_replace("''", 'NULL', $values);
+            // cambiar la ultima coma por punto y coma
+            $values = rtrim($values, ',');
+            $sql = $sqlInsert . ' ' . $values . ';';
+            $this->oDbl->query($sql);
+        }
+        // añadir la fecha en que se ha realizado:
+        $fecha_iso = $fecha->format(DateTimeInterface::ATOM);
+        $sqlTime = "INSERT INTO $tabla (Identif, Apenom) VALUES (\"1111\" , \"$fecha_iso\");";
+        $this->oDbl->query($sqlTime);
+    }
 
 }
