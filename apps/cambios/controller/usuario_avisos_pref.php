@@ -45,7 +45,7 @@ $Qquien = (string)filter_input(INPUT_POST, 'quien');
 $Qsalida = (string)filter_input(INPUT_POST, 'salida');
 
 // Si empieza por 4 es usuario, por 5 es grupo
-if (substr($Qid_usuario, 0, 1) == 4) {
+if (substr((string)$Qid_usuario, 0, 1) === '4') {
     $oUsuario = new Usuario(array('id_usuario' => $Qid_usuario));
     $grupo = FALSE;
 } else {
@@ -114,7 +114,7 @@ if (ConfigGlobal::is_app_installed('procesos')) {
 } else {
     $oActividad = new ActividadAll();
     $a_status = $oActividad->getArrayStatus();
-    // Quitar el status 'qualquiera'
+    // Quitar el status 'cualquiera'
     unset($a_status[ActividadAll::STATUS_ALL]);
     $aStatusFlip = array_flip($a_status);
 
@@ -149,8 +149,8 @@ $oDesplArrayCasas->setAccionConjunto('fnjs_mas_casas(event)');
 if (!empty($id_tipo_activ)) {
     $oTipoActiv = new TiposActividades($id_tipo_activ);
 } else {
-    if ($mi_sfsv == 1) $ssfsv = 'sv';
-    if ($mi_sfsv == 2) $ssfsv = 'sf';
+    if ($mi_sfsv === 1) $ssfsv = 'sv';
+    if ($mi_sfsv === 2) $ssfsv = 'sf';
     // las casas, sf y sv
     if ($grupo === FALSE && $oUsuario->isRolePau(Role::PAU_CDC)) {
         $ssfsv = '';
@@ -181,7 +181,7 @@ $oActividadTipo->setQue('buscar');
 // y los sacd
 $perm_jefe = FALSE;
 if ($_SESSION['oConfig']->is_jefeCalendario()
-    || (($_SESSION['oPerm']->have_perm_oficina('des') || $_SESSION['oPerm']->have_perm_oficina('vcsd')) && $mi_sfsv == 1)
+    || (($_SESSION['oPerm']->have_perm_oficina('des') || $_SESSION['oPerm']->have_perm_oficina('vcsd')) && $mi_sfsv === 1)
     || ($grupo === FALSE && $oUsuario->isRolePau(Role::PAU_CDC))
     || ($grupo === FALSE && $oUsuario->isRolePau(Role::PAU_SACD))
     || ($_SESSION['oPerm']->have_perm_oficina('calendario'))

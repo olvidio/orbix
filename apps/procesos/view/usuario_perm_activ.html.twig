@@ -24,6 +24,7 @@
                 $("select[name^='fase_ref']").each(function () {
                     $(this).html(rta_txt);
                 });
+                alert("{{ "OJO! Comprobar la fase de referencia."|trans|raw }}");
             });
     }
 
@@ -87,7 +88,7 @@
                 <td>
                     <input type="Checkbox" name="{{ oPerm.nameAfecta_a }}"
                            value="{{ oPerm.num }}" {{ oPerm.chk }}>{{ oPerm.afecta_a }}</td>
-                <td><span name=fases> {{ oPerm.oDesplFases.desplegable()|raw }} </span></td>
+                <td><span name="fases"> {{ oPerm.oDesplFases.desplegable()|raw }} </span></td>
                 <td>{{ oPerm.oDesplPermOff.desplegable()|raw }}</td>
                 <td>{{ oPerm.oDesplPermOn.desplegable()|raw }}</td>
             </tr>

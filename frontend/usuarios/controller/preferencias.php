@@ -81,7 +81,8 @@ $oDesplZonaGMT->setOpcion_sel($id_zona_sel);
 
 
 $id_usuario = ConfigGlobal::mi_id_usuario();
-$url_avisos = Hash::link(ConfigGlobal::getWeb() . '/frontend/usuarios/controller/usuario_form.php?' . http_build_query(array('quien' => 'usuario', 'id_usuario' => $id_usuario)));
+//$url_avisos = Hash::link(ConfigGlobal::getWeb() . '/frontend/usuarios/controller/usuario_form.php?' . http_build_query(array('quien' => 'usuario', 'id_usuario' => $id_usuario)));
+$url_avisos = Hash::link(ConfigGlobal::getWeb() . '/frontend/cambios/controller/usuario_form_avisos.php?' . http_build_query(array('quien' => 'usuario', 'id_usuario' => $id_usuario)));
 $url_avisos_lista = Hash::link(ConfigGlobal::getWeb() . '/apps/cambios/controller/avisos_generar.php?' . http_build_query(array('id_usuario' => $id_usuario, 'aviso_tipo' => CambioUsuario::TIPO_LISTA)));
 $url_avisos_mails = Hash::link(ConfigGlobal::getWeb() . '/apps/cambios/controller/avisos_generar.php?' . http_build_query(array('id_usuario' => $id_usuario, 'aviso_tipo' => CambioUsuario::TIPO_MAIL)));
 $url_cambio_password = Hash::link(ConfigGlobal::getWeb() . '/frontend/usuarios/controller/usuario_form_pwd.php');

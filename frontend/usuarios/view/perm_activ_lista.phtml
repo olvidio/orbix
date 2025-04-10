@@ -1,7 +1,7 @@
 <script>
-    fnjs_add_perm_activ = function () {
-        $('#frm_usuario').attr('action', "apps/procesos/controller/usuario_perm_activ.php");
-        fnjs_enviar_formulario('#frm_usuario');
+    fnjs_add_perm_activ = function (formulario) {
+        $(formulario).attr('action', "apps/procesos/controller/usuario_perm_activ.php");
+        fnjs_enviar_formulario(formulario);
     }
 
     fnjs_mod_perm_activ = function (formulario) {
@@ -44,5 +44,5 @@
     <?= $oHash->getCamposHtml() ?>
     <input type="hidden" id="perm_activ_que" name="que" value=''>
     <?= $oTabla->mostrar_tabla_html() ?>
-    <input type=button onclick="fnjs_add_perm_activ();" value="<?= _("añadir permiso") ?>">
+    <input type=button onclick="fnjs_add_perm_activ(this.form);" value="<?= _("añadir permiso") ?>">
 </form>

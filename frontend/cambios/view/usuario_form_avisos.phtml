@@ -39,7 +39,9 @@
         fnjs_enviar_formulario('#avisos');
     }
 </script>
+<?= $oPosicion->mostrar_left_slide(1) ?>
 <br>
+<h3><?= $nombre_usuario ?></h3>
 <b><?= _("avisos de cambios") ?>:</b>
 <form id="avisos" name="avisos" action=''>
     <?= $oHashAvisos->getCamposHtml(); ?>

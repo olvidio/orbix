@@ -24,8 +24,13 @@
                 });
             // borrar el resto.
             $('#iasistentes_val').val(".");
-            $('#iactividad_val').val(".");
-            $('#inom_tipo_val').val("...");
+            if (extendida === "1") {
+                $('#iactividad_val').val("..");
+                $('#inom_tipo_val').val("..");
+            } else {
+                $('#iactividad_val').val(".");
+                $('#inom_tipo_val').val("...");
+            }
         }
     }
 
@@ -53,8 +58,14 @@
                 });
             // borrar el resto.
             $('#iasistentes_val').val(".");
-            $('#iactividad_val').val(".");
-            $('#inom_tipo_val').val("...");
+            // borrar el resto.
+            if (extendida === "1") {
+                $('#iactividad_val').val("..");
+                $('#inom_tipo_val').val("..");
+            } else {
+                $('#iactividad_val').val(".");
+                $('#inom_tipo_val').val("...");
+            }
             fnjs_actualizar_fases();
         }
     }
@@ -75,7 +86,11 @@
                 $('#lst_actividad').html(rta_txt);
             });
         // borrar el resto.
-        $('#inom_tipo_val').val("...");
+        if (extendida === "1") {
+            $('#inom_tipo_val').val("..");
+        } else {
+            $('#inom_tipo_val').val("...");
+        }
         fnjs_actualizar_fases();
     }
     fnjs_nom_tipo = function () {

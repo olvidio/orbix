@@ -3,9 +3,6 @@
 use core\ConfigGlobal;
 use core\ViewPhtml;
 use frontend\shared\PostRequest;
-use procesos\model\CuadrosFases;
-use procesos\model\PermAccion;
-use procesos\model\PermAfectados;
 use web\Desplegable;
 use web\DesplegableArray;
 use web\Hash;
@@ -18,9 +15,6 @@ require_once("apps/core/global_header.inc");
 // Crea los objetos de uso global **********************************************
 require_once("apps/core/global_object.inc");
 // Crea los objetos para esta url  **********************************************
-$oCuadrosAfecta = new PermAfectados();
-$oPermAccion = new PermAccion();
-$oCuadrosFases = new CuadrosFases();
 
 
 // FIN de  Cabecera global de URL de controlador ********************************
@@ -63,7 +57,6 @@ if (isset($_POST['stack'])) {
     }
 }
 $oPosicion->setParametros(array('id_usuario' => $Qid_usuario), 1);
-
 
 //////////////////////// Usuario o Grupo ///////////////////////////////////////////////////
 $url_usuario_form_backend = Hash::link(ConfigGlobal::getWeb()
@@ -163,8 +156,18 @@ if (ConfigGlobal::is_app_installed('procesos')) {
 
     $oHash = new Hash();
     $oHash->setUrl($url);
-    $oHash->setArrayCamposHidden(['id_usuario' => $Qid_usuario]);
+    $oHash->setArrayCamposHidden(['id_usuario' => $Qid_usuario, 'olvidar' => 1]);
     $hash_params = $oHash->getArrayCampos();
 
     echo PostRequest::getContent($url, $hash_params);
+}
+
+//////////// Condiciones para los avisos de cambios ////////////
+if (ConfigGlobal::is_app_installed('cambios')) {
+    $url_avisos = Hash::link(ConfigGlobal::getWeb() . '/frontend/cambios/controller/usuario_form_avisos.php?' . http_build_query(array('quien' => 'usuario', 'id_usuario' => $Qid_usuario)));
+
+    $a_campos['url_avisos'] = $url_avisos;
+
+    $oView = new ViewPhtml('../frontend/usuarios/controller');
+    $oView->renderizar('usuario_form_avisos.phtml', $a_campos);
 }

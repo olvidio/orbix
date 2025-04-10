@@ -24,8 +24,13 @@
                 });
             // borrar el resto.
             $('#iasistentes_val').val(".");
-            $('#iactividad_val').val(".");
-            $('#inom_tipo_val').val("...");
+            if (extendida === "1") {
+                $('#iactividad_val').val("..");
+                $('#inom_tipo_val').val("..");
+            } else {
+                $('#iactividad_val').val(".");
+                $('#inom_tipo_val').val("...");
+            }
         }
         // Si está el campo dl_org, Al cambiar sf/sv, también debe
         // cambiarse el desplegable de dl_org.

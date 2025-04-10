@@ -21,10 +21,14 @@ require_once("apps/core/global_object.inc");
 
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$oPosicion->recordar();
 
 $Qid_usuario = (integer)filter_input(INPUT_POST, 'id_usuario');
 $Qquien = (string)filter_input(INPUT_POST, 'quien');
+$Qolvidar = (string)filter_input(INPUT_POST, 'olvidar');
+
+if (empty($Qolvidar)) {
+    $oPosicion->recordar();
+}
 
 $url = Hash::link(ConfigGlobal::getWeb()
     . '/apps/usuarios/controller/perm_activ_lista.php'
@@ -44,7 +48,7 @@ $a_valores = $data['a_valores'];
 
 $oHash3 = new Hash();
 $oHash3->setCamposForm('que!sel');
-$oHash3->setcamposNo('refresh!scroll_id');
+$oHash3->setcamposNo('sel!refresh!scroll_id');
 $a_camposHidden = array(
     'id_usuario' => $Qid_usuario,
     'quien' => $Qquien

@@ -53,13 +53,15 @@ switch ($Qsalida) {
         $aux = $Qentrada . '....';
         $oTipoActiv = new TiposActividades($aux);
         $a_actividades_posibles = $oTipoActiv->getActividadesPosibles1Digito();
+        $opcion_blanco = '.';
         if ($extendida) {
             $a_actividades_posibles = $oTipoActiv->getActividadesPosibles2Digitos();
+            $opcion_blanco = '..';
         }
         $oDespl = new Desplegable('iactividad_val', $a_actividades_posibles, '', true);
         $oDespl->setAction('fnjs_nom_tipo()');
-        $oDespl->setValBlanco('.');
-        $oDespl->setOpcion_sel('.');
+        $oDespl->setValBlanco($opcion_blanco);
+        $oDespl->setOpcion_sel($opcion_blanco);
         echo $oDespl->desplegable();
         break;
     case "nom_tipo":
