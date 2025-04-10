@@ -144,7 +144,7 @@ class myTest extends TestCase
         if (ConfigGlobal::is_app_installed('dbextern') && !ConfigGlobal::is_dmz()) {
             // Para sincronizar con listas Madrid (SQLSERVER)
             // No en el caso de cr (H-Hv)
-            if ((ConfigGlobal::mi_region() != ConfigGlobal::mi_delef()) && !isset($_SESSION['oDBListas'])) {
+            if ((ConfigGlobal::mi_region() != ConfigGlobal::mi_delef()) && !isset($GLOBALS['oDBListas'])) {
                 try {
                     $oConfigDB = new ConfigDB('listas');
                     $config = $oConfigDB->getEsquema('public');
@@ -156,7 +156,7 @@ class myTest extends TestCase
                     echo _("No puedo conectar con la base de datos de listas") . ':<br>';
                     echo $e->getMessage();
                     echo "*/";
-                    $_SESSION['oDBListas'] = 'error';
+                    $oDBListas = 'error';
                 }
             }
         }

@@ -91,7 +91,7 @@ class DlListas extends ClasePropiedades
      */
     function __construct($a_id = '')
     {
-        if (!empty($_SESSION['oDBListas']) && $_SESSION['oDBListas'] === 'error') {
+        if (!empty($GLOBALS['oDBListas']) && $GLOBALS['oDBListas'] === 'error') {
             exit(_("no se puede conectar con la base de datos de Listas"));
         }
         $oDbl = $GLOBALS['oDBListas'];

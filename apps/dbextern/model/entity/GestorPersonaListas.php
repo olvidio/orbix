@@ -31,7 +31,7 @@ class GestorPersonaListas extends ClaseGestor
      */
     function __construct()
     {
-        if (!empty($_SESSION['oDBListas']) && $_SESSION['oDBListas'] === 'error') {
+        if (!empty($GLOBALS['oDBListas']) && $GLOBALS['oDBListas'] === 'error') {
             exit(_("no se puede conectar con la base de datos de Listas"));
         }
         $oDbl = $GLOBALS['oDBListas'];

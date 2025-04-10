@@ -15,11 +15,11 @@ class CopiarBDU
 
     function __construct()
     {
-        if (!empty($_SESSION['oDBListas']) && $_SESSION['oDBListas'] === 'error') {
+        if (!empty($GLOBALS['oDBListas']) && $GLOBALS['oDBListas'] === 'error') {
             exit(_("no se puede conectar con la base de datos de Listas"));
         }
-        $this->oDbU = $_SESSION['oDBListas'];
-        $this->oDbl = $_SESSION['oDBC'];
+        $this->oDbU = $GLOBALS['oDBListas'];
+        $this->oDbl = $GLOBALS['oDBC'];
 
         $this->tabla_bdu = 'dbo.q_Aux_Dl';
     }
