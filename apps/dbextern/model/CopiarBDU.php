@@ -56,8 +56,26 @@ class CopiarBDU
         $this->oDbl->query("CREATE INDEX IF NOT EXISTS $tabla" . "_dl" . " ON $tabla (Dl)");
         $this->oDbl->query($sqlDelete);
 
-        $campos = "Identif, Apenom, dl, ctr, Lugar_Naci, Fecha_Naci, Email, Tfno_Movil, Ce, Prof_Carg, Titu_Estu, Encargos, INCORP, pertenece_r, camb_fic, fecha_c_fic, compartida_con_r";
+        $campos = ['Identif', 'Apenom', 'dl', 'ctr', 'Lugar_Naci', 'Fecha_Naci', 'Email', 'Tfno_Movil', 'Ce', 'Prof_Carg', 'Titu_Estu', 'Encargos', 'INCORP', 'pertenece_r', 'camb_fic', 'fecha_c_fic', 'compartida_con_r'];
 
+        $nom_campos_select = implode(",", $campos);
+        $nom_campos = "(" . $nom_campos_select . ")";
+        $valores = "(:" . implode(",:", $campos) . ")";
+        if (($oDblSt = $this->oDbl->prepare("INSERT INTO $tabla $nom_campos VALUES $valores")) === false) {
+            $sClauError = 'ActividadDl.insertar.prepare';
+            $_SESSION['oGestorErrores']->addErrorAppLastError($this->oDbl, $sClauError, __LINE__, __FILE__);
+            return false;
+        }
+        // llenar:
+        $fecha = new DateTimeLocal();
+        $sQuery = "SELECT $nom_campos_select FROM dbo.q_dl_Estudios_b";
+        foreach ($this->oDbU->query($sQuery) as $aDades) {
+            array_walk($aDades, 'core\poner_null');
+            $oDblSt->execute($aDades);
+        }
+
+
+        /*
         // llenar:
         $sQuery = "SELECT $campos FROM dbo.q_dl_Estudios_b";
 
@@ -67,8 +85,7 @@ class CopiarBDU
         $fecha = new DateTimeLocal();
         foreach ($this->oDbU->query($sQuery) as $aDades) {
             $i++;
-            array_walk($aDades, 'core\poner_null');
-            $aDades_slashed = array_map('addslashes', $aDades);
+            $aDades_slashed = str_replace("'", "\'", $aDades);
             $values .= "('" . implode("','", $aDades_slashed) . "'),";
             if ($i > 1000) {
                 // remplazar vacíos por NULL
@@ -91,6 +108,8 @@ class CopiarBDU
             $sql = $sqlInsert . ' ' . $values . ';';
             $this->oDbl->query($sql);
         }
+        */
+
         // añadir la fecha en que se ha realizado:
         $fecha_iso = $fecha->format(DateTimeInterface::ATOM);
         $sqlTime = "INSERT INTO $tabla (Identif, Apenom) VALUES (\"1111\" , \"$fecha_iso\");";
