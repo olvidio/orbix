@@ -4,6 +4,7 @@ namespace dbextern\model;
 
 use core\ConfigGlobal;
 use DateTimeInterface;
+use PDO;
 use web\DateTimeLocal;
 
 class CopiarBDU
@@ -69,7 +70,9 @@ class CopiarBDU
         // llenar:
         $fecha = new DateTimeLocal();
         $sQuery = "SELECT $nom_campos_select FROM dbo.q_dl_Estudios_b";
-        foreach ($this->oDbU->query($sQuery) as $aDades) {
+        $stmt = $this->oDbU->query($sQuery);
+        $stmt->setFetchMode(PDO::FETCH_ASSOC);
+        foreach ($stmt as $aDades) {
             array_walk($aDades, 'core\poner_null');
             $oDblSt->execute($aDades);
         }
