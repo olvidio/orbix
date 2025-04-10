@@ -67,8 +67,11 @@ class CopiarBDU
         $fecha = new DateTimeLocal();
         foreach ($this->oDbU->query($sQuery) as $aDades) {
             $i++;
-            $values .= '("' . implode('","', $aDades) . '"),';
+            $aDades_slashed = array_map( 'addslashes', $aDades );
+            $values .= "('" . implode("','", $aDades_slashed) . "'),";
             if ($i > 1000) {
+                // remplazar vacíos por NULL
+                $values = str_replace("''",'NULL',$values);
                 // cambiar la ultima coma por punto y coma
                 $values = rtrim($values, ',');
                 // execute
@@ -80,6 +83,8 @@ class CopiarBDU
         }
         // el último pack:
        if (!empty($values)) {
+           // remplazar vacíos por NULL
+           $values = str_replace("''",'NULL',$values);
            // cambiar la ultima coma por punto y coma
            $values = rtrim($values, ',');
            $sql = $sqlInsert . ' ' . $values . ';';
