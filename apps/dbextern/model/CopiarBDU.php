@@ -8,10 +8,10 @@ use web\DateTimeLocal;
 
 class CopiarBDU
 {
-    private string $oDbU;
+    private object $oDbU;
     private string $tabla_bdu;
 
-    private string $oDbl;
+    private object $oDbl;
 
     function __construct()
     {
