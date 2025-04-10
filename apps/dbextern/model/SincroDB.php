@@ -488,7 +488,7 @@ class SincroDB
 
         $dl_listas = $oPersonaListas->getDl();
         $Ctr = $oPersonaListas->getCtr();
-        //por alguna razón puede no exitir el centro en la lista
+        //por alguna razón puede no existir el centro en la lista
         if (!empty($a_ctr[$Ctr])) {
             $id_ubi = $a_ctr[$Ctr];
         } else {

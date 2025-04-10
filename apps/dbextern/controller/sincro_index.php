@@ -189,6 +189,12 @@ $oHash1->setUrl($url_sincro_ajax);
 $oHash1->setCamposForm('que!region!dl_listas!tipo_persona');
 $h1 = $oHash1->linkSinVal();
 
+$url_refrescar = ConfigGlobal::getWeb() . '/apps/dbextern/controller/refrescarTablaBdu.php';
+$oHash2 = new Hash();
+$oHash2->setUrl($url_refrescar);
+$oHash2->setCamposForm('que');
+$h2 = $oHash2->linkSinVal();
+
 $explicacion_txt = _("en situación normal bastaría hacer click en 'ejecutar' del punto 1.");
 $explicacion_txt .= "<br>";
 $explicacion_txt .= _("el resto de puntos deberían tener valor 0. En situaciones especiales pueden tener otro valor, pero deben ser casos controlados.");
@@ -197,6 +203,21 @@ $explicacion_txt .= _("al efectuar alguna acción dentro de las listas, las pers
 
 ?>
 <script>
+    fnjs_refrescar = function () {
+        var url = 'dbextern/controller/refrescarTablaBdu.php';
+        var parametros = 'que=algo<?= $h2 ?>';
+
+        $.ajax({
+            url: url,
+            type: 'post',
+            data: parametros
+        })
+            .done(function (rta_txt) {
+                if (rta_txt !== '' && rta_txt !== '\\n') {
+                    alert('<?= _("respuesta") ?>: ' + rta_txt);
+                }
+            });
+    }
     fnjs_sincronizar = function () {
         var url = '<?= $url_sincro_ajax ?>';
         var parametros = 'que=syncro&region=<?= $region ?>&dl_listas=<?= $dl_listas ?>&tipo_persona=<?= $tipo_persona ?><?= $h1 ?>';
@@ -213,6 +234,7 @@ $explicacion_txt .= _("al efectuar alguna acción dentro de las listas, las pers
             });
     }
 </script>
+<h3><span class=link onclick="fnjs_refrescar()"><?= _("refrescar") ?></span></h3>
 <p>
     <?= $explicacion_txt ?>
 </p>
