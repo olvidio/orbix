@@ -20,7 +20,7 @@ class CopiarBDU
             exit(_("no se puede conectar con la base de datos de Listas"));
         }
         $this->oDbU = $GLOBALS['oDBListas'];
-        $this->oDbl = $GLOBALS['oDBC'];
+        $this->oDbl = $GLOBALS['oDBP'];
 
         $this->tabla_bdu = 'dbo.q_Aux_Dl';
     }
@@ -33,7 +33,7 @@ class CopiarBDU
 
         $sqlDelete = "TRUNCATE TABLE $tabla";
         $sqlCreate = "CREATE TABLE IF NOT EXISTS $tabla(
-                    Identif int4 NOT NULL PRIMARY KEY,
+                    Identif bigint NOT NULL PRIMARY KEY,
                     Apenom              text,
                     dl                  text,
                     ctr               	text,
