@@ -62,19 +62,20 @@ $txt_alert = _("se va a poner la fecha de hoy como fecha de traslado. Para cambi
 
         alert("<?= $txt_alert ?>");
 
-        $.ajax({
+        var request = $.ajax({
             url: url,
-            type: 'post',
-            data: parametros
-        })
-            .done(function (rta_txt) {
-                if (rta_txt !== '' && rta_txt !== '\\n') {
-                    alert('<?= _("respuesta") ?>: ' + rta_txt);
-                } else {
-                    //tachar la fila
-                    $("#fila" + fila).addClass('tachado');
-                }
-            });
+            data: parametros,
+            method: 'POST',
+            dataType: 'json'
+        });
+        request.done(function (json) {
+            if (json.success !== true) {
+                alert("<?= _("respuesta") ?>: " + json.mensaje);
+            } else {
+                //tachar la fila
+                $("#fila" + fila).addClass('tachado');
+            }
+        });
     }
 
 </script>

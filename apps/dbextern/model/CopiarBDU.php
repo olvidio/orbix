@@ -131,7 +131,7 @@ class CopiarBDU
 
         $Fecha = DateTimeLocal::createFromFormat(DateTimeInterface::ATOM, $fecha_iso);
 
-        return $Fecha->getFromLocal();
+        return $Fecha->getFromLocalHora();
     }
 
 }

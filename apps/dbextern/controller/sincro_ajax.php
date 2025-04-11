@@ -5,6 +5,7 @@ use dbextern\model\entity\GestorIdMatchPersona;
 use dbextern\model\entity\zGestorPersonaListas;
 use dbextern\model\entity\IdMatchPersona;
 use dbextern\model\SincroDB;
+use Illuminate\Http\JsonResponse;
 use ubis\model\entity\GestorCentroDl;
 use ubis\model\entity\GestorDelegacion;
 
@@ -218,7 +219,8 @@ switch ($que) {
         $oTrasladoDl->setF_dl($oHoy);
         $oTrasladoDl->setSituacion('L');
 
-        echo $oTrasladoDl->trasladar();
+        $jsondata = $oTrasladoDl->trasladar();
+        (new JsonResponse($jsondata))->send();
 
         break;
     case 'trasladarA':
@@ -261,7 +263,8 @@ switch ($que) {
         $oTrasladoDl->setF_dl($oHoy);
         $oTrasladoDl->setSituacion($situacion);
 
-        echo $oTrasladoDl->trasladar();
+        $jsondata = $oTrasladoDl->trasladar();
+        (new JsonResponse($jsondata))->send();
 
         break;
     case 'baja':

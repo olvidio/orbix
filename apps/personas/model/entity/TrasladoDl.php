@@ -355,7 +355,11 @@ class TrasladoDl
                 }
 
             }
-            return _("comprobar:") . " " . $msg;
+            $error_txt = _("comprobar:") . " " . $msg;
+
+            $jsondata['success'] = FALSE;
+            $jsondata['mensaje'] = $error_txt;
+            return $jsondata;
         }
 
         // Aviso si le faltan notas
@@ -367,39 +371,61 @@ class TrasladoDl
         // tener la misma persona en dos dl en la misma situación
         if ($this->cambiarFichaPersona() === false) {
             $msg = $this->serror;
-            return _("OJO: Debería cambiar el campo situación. No se ha hecho ningún cambio.") . $msg;
+            $error_txt = _("OJO: Debería cambiar el campo situación. No se ha hecho ningún cambio.") . $msg;
+            $jsondata['success'] = FALSE;
+            $jsondata['mensaje'] = $error_txt;
+            return $jsondata;
         }
 
         // Trasladar persona
         if ($this->copiarPersona() === false) {
             $msg = $this->serror;
-            return _("copiar persona.") . $msg;
+            $error_txt = _("copiar persona.") . $msg;
+            $jsondata['success'] = FALSE;
+            $jsondata['mensaje'] = $error_txt;
+            return $jsondata;
         }
 
         if ($this->copiarNotas() === false) {
             $msg = $this->serror;
-            return _("copiar notas") . $msg;
+            $error_txt = _("copiar notas") . $msg;
+            $jsondata['success'] = FALSE;
+            $jsondata['mensaje'] = $error_txt;
+            return $jsondata;
         }
         // apunto el traslado. Lo pongo antes para que se copie trasladar dossiers.
         if ($this->apuntar() === false) {
             $msg = $this->serror;
-            return _("apuntar traslado") . $msg;
+            $error_txt = _("apuntar traslado") . $msg;
+            $jsondata['success'] = FALSE;
+            $jsondata['mensaje'] = $error_txt;
+            return $jsondata;
         }
         if ($this->trasladarDossiers() === false) {
             $msg = $this->serror;
-            return _("copiar dossiers") . $msg;
+            $error_txt = _("copiar dossiers") . $msg;
+            $jsondata['success'] = FALSE;
+            $jsondata['mensaje'] = $error_txt;
+            return $jsondata;
         }
 
         if ($this->trasladarDossierCertificados() === false) {
             $msg = $this->serror;
-            return _("trasladar certificados") . $msg;
+            $error_txt = _("trasladar certificados") . $msg;
+            $jsondata['success'] = FALSE;
+            $jsondata['mensaje'] = $error_txt;
+            return $jsondata;
         }
 
         if ($this->copiarAsistencias() === false) {
             $msg = $this->serror;
-            return _("copiar asistencias") . $msg;
+            $error_txt = _("copiar asistencias") . $msg;
+            $jsondata['success'] = FALSE;
+            $jsondata['mensaje'] = $error_txt;
+            return $jsondata;
         }
-        return true;
+        $jsondata['success'] = TRUE;
+        return $jsondata;
     }
 
     private function comprobar()
