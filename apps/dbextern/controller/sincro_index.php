@@ -26,7 +26,7 @@ $dl_listas = $oSincroDB->dlOrbix2Listas($mi_dl);
 $tabla = 'tmp_bdu';
 // ultima actualización de la tabla:
 $oCopiarBDU = new CopiarBDU();
-$fecha_actualizacion = $oCopiarBDU->ultimaActualizacion();
+$fecha_actualizacion = $oCopiarBDU->ultimaActualizacion() . ' UTC';
 
 
 $id_tipo = 0;
@@ -201,6 +201,8 @@ $oHash2->setUrl($url_refrescar);
 $oHash2->setCamposForm('que');
 $h2 = $oHash2->linkSinVal();
 
+$url_actualizar = Hash::link(ConfigGlobal::getWeb() . '/apps/dbextern/controller/sincro_index.php');
+
 $explicacion_txt = _("en situación normal bastaría hacer click en 'ejecutar' del punto 1.");
 $explicacion_txt .= "<br>";
 $explicacion_txt .= _("el resto de puntos deberían tener valor 0. En situaciones especiales pueden tener otro valor, pero deben ser casos controlados.");
@@ -221,6 +223,8 @@ $explicacion_txt .= _("al efectuar alguna acción dentro de las listas, las pers
             .done(function (rta_txt) {
                 if (rta_txt !== '' && rta_txt !== '\\n') {
                     alert('<?= _("respuesta") ?>: ' + rta_txt);
+                } else {
+                    fnjs_update_div('#main', '<?= $url_actualizar ?>');
                 }
             });
     }
@@ -240,8 +244,9 @@ $explicacion_txt .= _("al efectuar alguna acción dentro de las listas, las pers
             });
     }
 </script>
-<p>Última actualización: <?= $fecha_actualizacion ?></p>
-<h3><span class=link onclick="fnjs_refrescar()"><?= _("refrescar") ?></span></h3>
+<p>Si a modificado datos en la BDU después de: <?= $fecha_actualizacion ?> debe
+    <span class=link onclick="fnjs_refrescar()"><?= _("refrescar") ?></span>. Esta operacion tardará
+    un par o tres de minutos</p>
 <p>
     <?= $explicacion_txt ?>
 </p>
