@@ -15,20 +15,20 @@ class PersonaBDU extends ClasePropiedades
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
     /*
-    Identif bigint NOTNULL
-    Apenom varchar (56)
+    identif bigint NOTNULL
+    apenom varchar (56)
     dl vachar (5)
     ctr varchar (40)
-    Lugar_Naci varchar (45)
-    Fecha_Naci date
-    Email varchar (50)
-    Tfno_Movil varchar(17)
-    Ce varchar (40)
-    Edad int (10)
-    Prof_Carg varchar(350)
-    Titu_Estu varchar(110)
-    Encargos varchar (150)
-    INCORP varchar (14)
+    lugar_naci varchar (45)
+    fecha_naci date
+    email varchar (50)
+    tfno_movil varchar(17)
+    ce varchar (40)
+    edad int (10)
+    prof_carg varchar(350)
+    titu_estu varchar(110)
+    encargos varchar (150)
+    incorp varchar (14)
     pertenece_r varchar(5)
     ---
     camb_fic varchar(1)
@@ -59,13 +59,13 @@ class PersonaBDU extends ClasePropiedades
     private $bLoaded = FALSE;
 
     /**
-     * Identif de Listas
+     * identif de Listas
      *
      * @var integer
      */
     private $iIdentif;
     /**
-     * Apenom de Listas
+     * apenom de Listas
      *
      * @var string
      */
@@ -83,55 +83,55 @@ class PersonaBDU extends ClasePropiedades
      */
     private $sctr;
     /**
-     * Lugar_Naci de Listas
+     * lugar_naci de Listas
      *
      * @var string
      */
     private $sLugar_Naci;
     /**
-     * Fecha_Naci de Listas
+     * fecha_naci de Listas
      *
      * @var DateTimeLocal
      */
     private $dFecha_Naci;
     /**
-     * Email de Listas
+     * email de Listas
      *
      * @var string
      */
     private $sEmail;
     /**
-     * Tfno_Movil de Listas
+     * tfno_movil de Listas
      *
      * @var string
      */
     private $sTfno_Movil;
     /**
-     * Ce de Listas
+     * ce de Listas
      *
      * @var string
      */
     private $sCe;
     /**
-     * Prof_Carg de Listas
+     * prof_carg de Listas
      *
      * @var string
      */
     private $sProfesion_cargo;
     /**
-     * Titu_Estu de Listas
+     * titu_estu de Listas
      *
      * @var string
      */
     private $sTitulo_Estudios;
     /**
-     * Encargos de Listas
+     * encargos de Listas
      *
      * @var string
      */
     private $sEncargos;
     /**
-     * INCORP de Listas
+     * incorp de Listas
      *
      * @var string
      */
@@ -246,7 +246,7 @@ class PersonaBDU extends ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id === 'Identif') && $val_id !== '') $this->iIdentif = (int)$val_id;
+                if (($nom_id === 'identif') && $val_id !== '') $this->iIdentif = (int)$val_id;
             }
         } else {
             if (isset($a_id) && $a_id !== '') {
@@ -276,18 +276,18 @@ class PersonaBDU extends ClasePropiedades
             $bInsert = false;
         }
         $aDades = array();
-        $aDades['Apenom'] = $this->sApenom;
+        $aDades['apenom'] = $this->sApenom;
         $aDades['dl'] = $this->sdl;
         $aDades['ctr'] = $this->sctr;
-        $aDades['Lugar_Naci'] = $this->sLugar_Naci;
-        $aDades['Fecha_Naci'] = $this->dFecha_Naci;
-        $aDades['Email'] = $this->sEmail;
-        $aDades['Tfno_Movil'] = $this->sTfno_Movil;
-        $aDades['Ce'] = $this->sCe;
-        $aDades['Prof_Carg'] = $this->sProfesion_cargo;
-        $aDades['Titu_Estu'] = $this->sTitulo_Estudios;
-        $aDades['Encargos'] = $this->sEncargos;
-        $aDades['INCORP'] = $this->sIncorporacion;
+        $aDades['lugar_naci'] = $this->sLugar_Naci;
+        $aDades['fecha_naci'] = $this->dFecha_Naci;
+        $aDades['email'] = $this->sEmail;
+        $aDades['tfno_movil'] = $this->sTfno_Movil;
+        $aDades['ce'] = $this->sCe;
+        $aDades['prof_carg'] = $this->sProfesion_cargo;
+        $aDades['titu_estu'] = $this->sTitulo_Estudios;
+        $aDades['encargos'] = $this->sEncargos;
+        $aDades['incorp'] = $this->sIncorporacion;
         $aDades['pertenece_r'] = $this->spertenece_r;
         $aDades['camb_fic'] = $this->scamb_fic;
         $aDades['fecha_c_fic'] = $this->dfecha_c_fic;
@@ -297,23 +297,23 @@ class PersonaBDU extends ClasePropiedades
         if ($bInsert === false) {
             //UPDATE
             $update = "
-					Apenom                  = :Apenom,
+					apenom                  = :apenom,
 					dl                     	= :dl,
 					ctr               		= :ctr,
-					Lugar_Naci              = :Lugar_Naci,
-					Fecha_Naci              = :Fecha_Naci,
-					Email              		= :Email,
-					Tfno_Movil              = :Tfno_Movil,
-					Ce              		= :Ce,
-                    Prof_Carg               = :Prof_Carg,
-                    Titu_Estu               = :Titu_Estu,
-                    Encargos                = :Encargos,
-                    INCORP                  = :INCORP,
+					lugar_naci              = :lugar_naci,
+					fecha_naci              = :fecha_naci,
+					email              		= :email,
+					tfno_movil              = :tfno_movil,
+					ce              		= :ce,
+                    prof_carg               = :prof_carg,
+                    titu_estu               = :titu_estu,
+                    encargos                = :encargos,
+                    incorp                  = :incorp,
                     pertenece_r             = :pertenece_r,
                     camb_fic                 = :camb_fic,
                     fecha_c_fic             = :fecha_c_fic,
                     compartida_con_r        = :compartida_con_r";
-            if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE Identif='$this->iIdentif'")) === false) {
+            if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE identif='$this->iIdentif'")) === false) {
                 $sClauError = 'Listas.update.prepare';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
                 return false;
@@ -330,8 +330,8 @@ class PersonaBDU extends ClasePropiedades
             }
         } else {
             // INSERT
-            $campos = "(Apenom,dl,ctr,Lugar_Naci,Fecha_Naci,Email,Tfno_Movil,Ce,Prof_Carg,Titu_Estu,Encargos,INCORP,pertenece_r,camb_fic,fecha_c_fic,compartida_con_r)";
-            $valores = "(:Apenom,:dl,:ctr,:Lugar_Naci,:Fecha_Naci,:Email,:Tfno_Movil,:Ce,:Prof_Carg,:Titu_Estu,:Encargos,:INCORP:pertenece_r,:camb_fic,:fecha_c_fic,:compartida_con_r)";
+            $campos = "(apenom,dl,ctr,lugar_naci,fecha_naci,email,tfno_movil,ce,prof_carg,titu_estu,encargos,incorp,pertenece_r,camb_fic,fecha_c_fic,compartida_con_r)";
+            $valores = "(:apenom,:dl,:ctr,:lugar_naci,:fecha_naci,:email,:tfno_movil,:ce,:prof_carg,:titu_estu,:encargos,:incorp:pertenece_r,:camb_fic,:fecha_c_fic,:compartida_con_r)";
             if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {
                 $sClauError = 'Listas.insertar.prepare';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
@@ -362,7 +362,7 @@ class PersonaBDU extends ClasePropiedades
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         if (isset($this->iIdentif)) {
-            if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE Identif='$this->iIdentif'")) === false) {
+            if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE identif='$this->iIdentif'")) === false) {
                 $sClauError = 'Listas.carregar';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
                 return false;
@@ -399,7 +399,7 @@ class PersonaBDU extends ClasePropiedades
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        if (($oDblSt = $oDbl->exec("DELETE FROM $nom_tabla WHERE Identif='$this->iIdentif'")) === false) {
+        if (($oDblSt = $oDbl->exec("DELETE FROM $nom_tabla WHERE identif='$this->iIdentif'")) === false) {
             $sClauError = 'Listas.eliminar';
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
             return false;
@@ -574,19 +574,19 @@ class PersonaBDU extends ClasePropiedades
     {
         if (!is_array($aDades)) return;
         if (array_key_exists('id_schema', $aDades)) $this->setId_schema($aDades['id_schema']);
-        if (array_key_exists('Identif', $aDades)) $this->setIdentif($aDades['Identif']);
-        if (array_key_exists('Apenom', $aDades)) $this->setApenom($aDades['Apenom']);
+        if (array_key_exists('identif', $aDades)) $this->setIdentif($aDades['identif']);
+        if (array_key_exists('apenom', $aDades)) $this->setApenom($aDades['apenom']);
         if (array_key_exists('dl', $aDades)) $this->setDl($aDades['dl']);
         if (array_key_exists('ctr', $aDades)) $this->setCtr($aDades['ctr']);
-        if (array_key_exists('Lugar_Naci', $aDades)) $this->setLugar_Naci($aDades['Lugar_Naci']);
-        if (array_key_exists('Fecha_Naci', $aDades)) $this->setFecha_Naci($aDades['Fecha_Naci']);
-        if (array_key_exists('Email', $aDades)) $this->setEmail($aDades['Email']??'');
-        if (array_key_exists('Tfno_Movil', $aDades)) $this->setTfno_Movil($aDades['Tfno_Movil']??'');
-        if (array_key_exists('Ce', $aDades)) $this->setCe($aDades['Ce']??'');
-        if (array_key_exists('Prof_Carg', $aDades)) $this->setProfesion_cargo($aDades['Prof_Carg']??'');
-        if (array_key_exists('Titu_Estu', $aDades)) $this->setTitulo_Estudios($aDades['Titu_Estu']??'');
-        if (array_key_exists('Encargos', $aDades)) $this->setEncargos($aDades['Encargos']??'');
-        if (array_key_exists('INCORP', $aDades)) $this->setIncorporacion($aDades['INCORP']);
+        if (array_key_exists('lugar_naci', $aDades)) $this->setLugar_Naci($aDades['lugar_naci']);
+        if (array_key_exists('fecha_naci', $aDades)) $this->setFecha_Naci($aDades['fecha_naci']);
+        if (array_key_exists('email', $aDades)) $this->setEmail($aDades['email']??'');
+        if (array_key_exists('tfno_movil', $aDades)) $this->setTfno_Movil($aDades['tfno_movil']??'');
+        if (array_key_exists('ce', $aDades)) $this->setCe($aDades['ce']??'');
+        if (array_key_exists('prof_carg', $aDades)) $this->setProfesion_cargo($aDades['prof_carg']??'');
+        if (array_key_exists('titu_estu', $aDades)) $this->setTitulo_Estudios($aDades['titu_estu']??'');
+        if (array_key_exists('encargos', $aDades)) $this->setEncargos($aDades['encargos']??'');
+        if (array_key_exists('incorp', $aDades)) $this->setIncorporacion($aDades['incorp']);
         if (array_key_exists('pertenece_r', $aDades)) $this->setPertenece_r($aDades['pertenece_r']);
         if (array_key_exists('camb_fic', $aDades)) $this->setCamb_fic($aDades['camb_fic']??'');
         if (array_key_exists('fecha_c_fic', $aDades)) $this->setFecha_c_fic($aDades['fecha_c_fic']);
@@ -644,7 +644,7 @@ class PersonaBDU extends ClasePropiedades
     function getPrimary_key()
     {
         if (!isset($this->aPrimary_key)) {
-            $this->aPrimary_key = array('Identif' => $this->iIdentif);
+            $this->aPrimary_key = array('identif' => $this->iIdentif);
         }
         return $this->aPrimary_key;
     }
@@ -659,7 +659,7 @@ class PersonaBDU extends ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id === 'Identif') && $val_id !== '') $this->iIdentif = (int)$val_id;
+                if (($nom_id === 'identif') && $val_id !== '') $this->iIdentif = (int)$val_id;
             }
         }
     }
@@ -1171,7 +1171,7 @@ class PersonaBDU extends ClasePropiedades
     function getDatosApenom()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'Apenom'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'apenom'));
         $oDatosCampo->setEtiqueta(_("apellidos, nombre"));
         return $oDatosCampo;
     }
@@ -1213,7 +1213,7 @@ class PersonaBDU extends ClasePropiedades
     function getDatosLugar_Naci()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'Lugar_Naci'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'lugar_naci'));
         $oDatosCampo->setEtiqueta(_("lugar de nacimiento"));
         return $oDatosCampo;
     }
@@ -1227,7 +1227,7 @@ class PersonaBDU extends ClasePropiedades
     function getDatosFecha_Naci()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'Fecha_Naci'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'fecha_naci'));
         $oDatosCampo->setEtiqueta(_("fecha de nacimiento"));
         $oDatosCampo->setTipo('fecha');
         return $oDatosCampo;
@@ -1242,7 +1242,7 @@ class PersonaBDU extends ClasePropiedades
     function getDatosEmail()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'Email'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'email'));
         $oDatosCampo->setEtiqueta(_("email"));
         return $oDatosCampo;
     }
@@ -1256,7 +1256,7 @@ class PersonaBDU extends ClasePropiedades
     function getDatosTfno_Movil()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'Tfno_Movil'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'tfno_movil'));
         $oDatosCampo->setEtiqueta(_("teléfono móvil"));
         return $oDatosCampo;
     }
@@ -1270,7 +1270,7 @@ class PersonaBDU extends ClasePropiedades
     function getDatosCe()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'Ce'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'ce'));
         $oDatosCampo->setEtiqueta(_("ce"));
         return $oDatosCampo;
     }
@@ -1284,7 +1284,7 @@ class PersonaBDU extends ClasePropiedades
     function getDatosProfesion_cargo()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'Prof_Carg'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'prof_carg'));
         $oDatosCampo->setEtiqueta(_("profesión cargo"));
         return $oDatosCampo;
     }
@@ -1298,7 +1298,7 @@ class PersonaBDU extends ClasePropiedades
     function getDatosEncargos()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'Encargos'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'encargos'));
         $oDatosCampo->setEtiqueta(_("encargos"));
         return $oDatosCampo;
     }
@@ -1312,7 +1312,7 @@ class PersonaBDU extends ClasePropiedades
     function getDatosTitulo_estudios()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'Titu_Estu'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'titu_estu'));
         $oDatosCampo->setEtiqueta(_("titulo estudios"));
         return $oDatosCampo;
     }
@@ -1326,7 +1326,7 @@ class PersonaBDU extends ClasePropiedades
     function getDatosIncorporacion()
     {
         $nom_tabla = $this->getNomTabla();
-        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'INCORP'));
+        $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'incorp'));
         $oDatosCampo->setEtiqueta(_("incorporación"));
         return $oDatosCampo;
     }

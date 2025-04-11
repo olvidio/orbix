@@ -7,9 +7,9 @@ use core\Condicion;
 use core\Set;
 
 /**
- * GestorPersonaListas
+ * GestorPersonaBDU
  *
- * Classe per gestionar la llista d'objectes de la clase PersonaListas
+ * Classe per gestionar la llista d'objectes de la clase PersonaBDU
  *
  * @package delegación
  * @subpackage model
@@ -26,7 +26,7 @@ class GestorPersonaBDU extends ClaseGestor
     /**
      * Constructor de la classe.
      *
-     * @return zGestorPersonaListas
+     * @return GestorPersonaBDU
      *
      */
     function __construct()
@@ -40,45 +40,45 @@ class GestorPersonaBDU extends ClaseGestor
     /* MÉTODOS PÚBLICOS -----------------------------------------------------------*/
 
     /**
-     * retorna l'array d'objectes de tipus PersonaListas
+     * retorna l'array d'objectes de tipus PersonaBDU
      *
      * @param string sQuery la query a executar.
-     * @return array Una col·lecció d'objectes de tipus PersonaListas
+     * @return array Una col·lecció d'objectes de tipus PersonaBDU
      */
     function getPersonaBDUQuery($sQuery = '')
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        $oPersonaListasSet = new Set();
+        $oPersonaBDUSet = new Set();
 
         /*
             if (($oDblSt = $oDbl->query($sQuery)) === false) {
-                $sClauError = 'GestorPersonaListas.query';
+                $sClauError = 'GestorPersonaBDU.query';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
                 return false;
             }
          *
          */
         foreach ($oDbl->query($sQuery) as $aDades) {
-            $a_pkey = array('Identif' => $aDades['Identif']);
-            $oPersonaListas = new zPersonaListas($a_pkey);
-            $oPersonaListasSet->add($oPersonaListas);
+            $a_pkey = array('Identif' => $aDades['identif']);
+            $oPersonaBDU = new PersonaBDU($a_pkey);
+            $oPersonaBDUSet->add($oPersonaBDU);
         }
-        return $oPersonaListasSet->getTot();
+        return $oPersonaBDUSet->getTot();
     }
 
     /**
-     * retorna l'array d'objectes de tipus PersonaListas
+     * retorna l'array d'objectes de tipus PersonaBDU
      *
      * @param array aWhere associatiu amb els valors de les variables amb les quals farem la query
      * @param array aOperators associatiu amb els valors dels operadors que cal aplicar a cada variable
      * @return array|void
      */
-    function getPersonaListas($aWhere = array(), $aOperators = array())
+    function getPersonaBDU($aWhere = array(), $aOperators = array())
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        $oPersonaListasSet = new Set();
+        $oPersonaBDUSet = new Set();
         $oCondicion = new Condicion();
         $aCondi = array();
         foreach ($aWhere as $camp => $val) {
@@ -104,21 +104,21 @@ class GestorPersonaBDU extends ClaseGestor
         $sQry = "SELECT * FROM $nom_tabla " . $sCondi . $sOrdre . $sLimit;
         //echo "qry: $sQry<br>";
         if (($oDblSt = $oDbl->prepare($sQry)) === false) {
-            $sClauError = 'GestorPersonaListas.llistar.prepare';
+            $sClauError = 'GestorPersonaBDU.llistar.prepare';
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
             return false;
         }
         if (($oDblSt->execute($aWhere)) === false) {
-            $sClauError = 'GestorPersonaListas.llistar.execute';
+            $sClauError = 'GestorPersonaBDU.llistar.execute';
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
             return false;
         }
         foreach ($oDblSt as $aDades) {
             $a_pkey = array('Identif' => $aDades['Identif']);
-            $oPersonaListas = new zPersonaListas($a_pkey);
-            $oPersonaListasSet->add($oPersonaListas);
+            $oPersonaBDU = new PersonaBDU($a_pkey);
+            $oPersonaBDUSet->add($oPersonaBDU);
         }
-        return $oPersonaListasSet->getTot();
+        return $oPersonaBDUSet->getTot();
     }
 
     /* MÉTODOS PROTECTED --------------------------------------------------------*/
