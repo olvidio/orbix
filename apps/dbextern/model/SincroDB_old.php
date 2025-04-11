@@ -5,9 +5,9 @@ namespace dbextern\model;
 use core\ConfigGlobal;
 use dbextern\model\entity\GestorDlListas;
 use dbextern\model\entity\GestorIdMatchPersona;
-use dbextern\model\entity\GestorPersonaBDU;
+use dbextern\model\entity\zGestorPersonaListas;
 use dbextern\model\entity\IdMatchPersona;
-use dbextern\model\entity\PersonaBDU;
+use dbextern\model\entity\zPersonaListas;
 use PDO;
 use personas\model\entity\GestorPersonaDl;
 use personas\model\entity\GestorTelecoPersonaDl;
@@ -21,7 +21,7 @@ use web\DateTimeLocal;
  *
  * @author Daniel Serrabou <dani@moneders.net>
  */
-class SincroDB
+class SincroDB_old
 {
 
     private $tipo_persona;    //'n', 'a', 's', 'sssc'.
@@ -36,13 +36,7 @@ class SincroDB
     private $aDlListas2Orbix;
     private $aDlOrbix2listas;
     private $path_ini;
-    private $tabla;
 
-    public function __construct()
-    {
-        //$this->tabla = 'dbo.q_dl_Estudios_b ';
-        $this->tabla = 'tmp_dbu';
-    }
 
     public function getTipo_persona()
     {
@@ -175,28 +169,29 @@ class SincroDB
     public function getPersonasListas()
     {
         if (empty($this->cPersonasListas)) {
-            $Query = "SELECT * FROM $this->tabla 
+            $Query = "SELECT * FROM dbo.q_dl_Estudios_b 
                         WHERE Identif LIKE '$this->id_tipo%' AND  Dl='$this->dl_listas' 
                             AND (pertenece_r='$this->region' OR compartida_con_r='$this->region') ";
             // todos los de listas
-            $gestorPersonaBDU = new GestorPersonaBDU();
-            $cPersonasBDU = $gestorPersonaBDU->getPersonaBDUQuery($Query);
+            $oGesListas = new zGestorPersonaListas();
+            $cPersonasListas = $oGesListas->getPersonaListasQuery($Query);
 
             // Añadir las delegaciones dependientes de la región (que no tienen esquema propio)
             if (array_key_exists($this->region, ConfigGlobal::REGIONES_CON_DL)) {
-                $cPersonasBDU_n = [];
+                $cPersonasListas_n = [];
                 foreach (ConfigGlobal::REGIONES_CON_DL[$this->region] as $dl_n) {
 
-                    $Query = "SELECT * FROM $this->tabla
+                    $Query = "SELECT * FROM dbo.q_dl_Estudios_b
                           WHERE Identif LIKE '$this->id_tipo%' AND  Dl='$dl_n'
                                AND (pertenece_r='$this->region' OR compartida_con_r='$this->region') ";
                     // todos los de listas
-                    $cPersonasBDU_n[] = $gestorPersonaBDU->getPersonaBDUQuery($Query);
+                    $oGesListas = new zGestorPersonaListas();
+                    $cPersonasListas_n[] = $oGesListas->getPersonaListasQuery($Query);
 
                 }
-                $cPersonasBDU = array_merge($cPersonasBDU, ...array_values($cPersonasBDU_n));
+                $cPersonasListas = array_merge($cPersonasListas, ...array_values($cPersonasListas_n));
             }
-            $this->cPersonasListas = $cPersonasBDU;
+            $this->cPersonasListas = $cPersonasListas;
         }
         return $this->cPersonasListas;
     }
@@ -242,6 +237,66 @@ class SincroDB
         return false;
     }
 
+    public function posiblesBDUOtrasDl($id_nom_orbix)
+    {
+        // posibles esquemas
+        /*
+         * @todo: filtrar por regiones?
+         */
+        $Query = "SELECT * FROM dbo.q_dl_Estudios_b 
+                        WHERE Identif LIKE '$this->id_tipo%' AND  Dl='$this->dl_listas' 
+                            AND (pertenece_r='$this->region' OR compartida_con_r='$this->region') ";
+        // todos los de listas
+        $oGesListas = new zGestorPersonaListas();
+        $cPersonasListas = $oGesListas->getPersonaListasQuery($Query);
+
+        $oDBR = $GLOBALS['oDBR'];
+        $qRs = $oDBR->query("SELECT DISTINCT schemaname FROM pg_stat_user_tables");
+        $aResultSql = $qRs->fetchAll(\PDO::FETCH_ASSOC);
+        $aEsquemas = $aResultSql;
+        //Utilizo la conexión oDBR para cambiar momentáneamente el search_path.
+        $oDBR = $GLOBALS['oDBR'];
+        $qRs = $oDBR->query('SHOW search_path');
+        $aPath = $qRs->fetch(\PDO::FETCH_ASSOC);
+        $path_org = addslashes($aPath['search_path']);
+        $a_posibles = [];
+        $e = 0;
+        foreach ($aEsquemas as $esquemaName) {
+            $esquema = $esquemaName['schemaname'];
+            //elimino el de H-H
+            if (strpos($esquema, '-')) {
+                $a_reg = explode('-', $esquema);
+                $reg = $a_reg[0];
+                $dl = substr($a_reg[1], 0, -1); // quito la v o la f.
+                if ($reg == $dl) {
+                    continue;
+                }
+            }
+            //elimino public, publicv, global
+            if ($esquema === 'global') {
+                continue;
+            }
+            if ($esquema === 'public') {
+                continue;
+            }
+            if ($esquema === 'publicv') {
+                continue;
+            }
+            if ($esquema === 'restov') {
+                continue;
+            }
+//			$esquema_slash = '"'.$esquema.'"';
+//			$oDBR->exec("SET search_path TO public,$esquema_slash");
+            // buscar en cada esquema
+            $a_lista_orbix = $this->posiblesOrbix($id_nom_listas, $esquema);
+            if (!empty($a_lista_orbix)) {
+                $e++;
+                $a_posibles[$e] = $a_lista_orbix;
+            }
+        }
+        return $a_posibles;
+    }
+
     /**
      * Posibles coincidencias en la BDU
      *
@@ -255,37 +310,37 @@ class SincroDB
 
         $apellido1 = $oPersonaDl->getApellido1();
 
-        $Query = "SELECT * FROM $this->tabla
+        $Query = "SELECT * FROM dbo.q_dl_Estudios_b
                         WHERE Identif LIKE '$this->id_tipo%' AND  ApeNom LIKE '%" . $apellido1 . "%'
                             AND (pertenece_r='$this->region' OR compartida_con_r='$this->region') ";
         // todos los de listas
-        $gestorPersonaBDU = new GestorPersonaBDU();
-        $cPersonasBDU = $gestorPersonaBDU->getPersonaBDUQuery($Query);
+        $oGesListas = new zGestorPersonaListas();
+        $cPersonasListas = $oGesListas->getPersonaListasQuery($Query);
 
         $i = 0;
         $a_lista_bdu = [];
-        foreach ($cPersonasBDU as $oPersonaBDU) {
-            $id_nom_listas = $oPersonaBDU->getIdentif();
+        foreach ($cPersonasListas as $oPersonaListas) {
+            $id_nom_listas = $oPersonaListas->getIdentif();
             $oGesMatch = new GestorIdMatchPersona();
             $cIdMatch = $oGesMatch->getIdMatchPersonas(array('id_listas' => $id_nom_listas));
             if (!empty($cIdMatch[0]) and count($cIdMatch) > 0) {
                 continue;
             }
-            $id_nom_listas = $oPersonaBDU->getIdentif();
-            $ape_nom = $oPersonaBDU->getApeNom();
-            $nombre = $oPersonaBDU->getNombre();
-            $apellido1 = $oPersonaBDU->getApellido1();
-            $nx1 = $oPersonaBDU->getNx1();
-            $apellido1_sinprep = $oPersonaBDU->getApellido1_sinprep();
-            $nx2 = $oPersonaBDU->getNx2();
-            $apellido2 = $oPersonaBDU->getApellido2();
-            $apellido2_sinprep = $oPersonaBDU->getApellido2_sinprep();
-            $f_nacimiento = $oPersonaBDU->getFecha_Naci();
-            $dl_persona = $oPersonaBDU->getDl();
-            $lugar_nacimiento = $oPersonaBDU->getLugar_Naci();
+            $id_nom_listas = $oPersonaListas->getIdentif();
+            $ape_nom = $oPersonaListas->getApeNom();
+            $nombre = $oPersonaListas->getNombre();
+            $apellido1 = $oPersonaListas->getApellido1();
+            $nx1 = $oPersonaListas->getNx1();
+            $apellido1_sinprep = $oPersonaListas->getApellido1_sinprep();
+            $nx2 = $oPersonaListas->getNx2();
+            $apellido2 = $oPersonaListas->getApellido2();
+            $apellido2_sinprep = $oPersonaListas->getApellido2_sinprep();
+            $f_nacimiento = $oPersonaListas->getFecha_Naci();
+            $dl_persona = $oPersonaListas->getDl();
+            $lugar_nacimiento = $oPersonaListas->getLugar_Naci();
             $f_nacimiento = empty($f_nacimiento) ? '??' : $f_nacimiento;
-            $pertenece_r = $oPersonaBDU->getPertenece_r();
-            $compartida_con_r = $oPersonaBDU->getCompartida_con_r();
+            $pertenece_r = $oPersonaListas->getPertenece_r();
+            $compartida_con_r = $oPersonaListas->getCompartida_con_r();
             $a_lista_bdu[$i] = [
                 'id_nom' => $id_nom_listas,
                 'ape_nom' => $ape_nom,
@@ -357,10 +412,10 @@ class SincroDB
 
     public function posiblesOrbix($id_nom_listas, $esquema = '')
     {
-        $oPersonaBDU = new PersonaBDU($id_nom_listas);
-        $oPersonaBDU->DBCarregar();
+        $oPersonaListas = new zPersonaListas($id_nom_listas);
+        $oPersonaListas->DBCarregar();
 
-        $apellido1_sinprep = $oPersonaBDU->getApellido1_sinprep();
+        $apellido1_sinprep = $oPersonaListas->getApellido1_sinprep();
         // Si tiene más de una palabra cojo la primera
         $tokens = explode(' ', $apellido1_sinprep);
         $apellido1_sinprep_c = $tokens[0];

@@ -10,7 +10,7 @@ use DateTime;
 use web\DateTimeLocal;
 use web\NullDateTimeLocal;
 
-class PersonaListas extends ClasePropiedades
+class PersonaBDU extends ClasePropiedades
 {
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
@@ -242,10 +242,7 @@ class PersonaListas extends ClasePropiedades
      */
     function __construct($a_id = '')
     {
-        if (!empty($GLOBALS['oDBListas']) && $GLOBALS['oDBListas'] === 'error') {
-            exit(_("no se puede conectar con la base de datos de Listas"));
-        }
-        $oDbl = $GLOBALS['oDBListas'];
+        $oDbl = $GLOBALS['oDBP'];
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
@@ -258,7 +255,7 @@ class PersonaListas extends ClasePropiedades
             }
         }
         $this->setoDbl($oDbl);
-        $this->setNomTabla('dbo.q_dl_Estudios_b');
+        $this->setNomTabla('tmp_bdu');
     }
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/

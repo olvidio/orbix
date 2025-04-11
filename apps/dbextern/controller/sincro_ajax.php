@@ -2,7 +2,7 @@
 
 use core\ConfigGlobal;
 use dbextern\model\entity\GestorIdMatchPersona;
-use dbextern\model\entity\GestorPersonaListas;
+use dbextern\model\entity\zGestorPersonaListas;
 use dbextern\model\entity\IdMatchPersona;
 use dbextern\model\SincroDB;
 use ubis\model\entity\GestorCentroDl;
@@ -32,7 +32,7 @@ switch ($que) {
         $Query = "SELECT * FROM dbo.q_dl_Estudios_b WHERE Identif = $id_nom_listas ";
         //AND camb_fic IS NULL";
         $oSincroDB = new SincroDB();
-        $oGesListas = new GestorPersonaListas();
+        $oGesListas = new zGestorPersonaListas();
         $cPersonasListas = $oGesListas->getPersonaListasQuery($Query);
         if ($cPersonasListas !== FALSE && count($cPersonasListas) == 1) {
             $oPersonaListas = $cPersonasListas[0];

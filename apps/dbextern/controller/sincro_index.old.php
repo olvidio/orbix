@@ -1,10 +1,9 @@
 <?php
 
 use core\ConfigGlobal;
-use dbextern\model\CopiarBDU;
 use dbextern\model\entity\GestorIdMatchPersona;
-use dbextern\model\entity\GestorPersonaBDU;
-use dbextern\model\entity\PersonaBDU;
+use dbextern\model\entity\zGestorPersonaListas;
+use dbextern\model\entity\zPersonaListas;
 use dbextern\model\SincroDB;
 use web\Hash;
 
@@ -22,12 +21,6 @@ $region = ConfigGlobal::mi_region();
 
 $oSincroDB = new SincroDB();
 $dl_listas = $oSincroDB->dlOrbix2Listas($mi_dl);
-
-$tabla = 'tmp_bdu';
-// ultima actualización de la tabla:
-$oCopiarBDU = new CopiarBDU();
-$fecha_actualizacion = $oCopiarBDU->ultimaActualizacion();
-
 
 $id_tipo = 0;
 switch ($tipo_persona) {
@@ -69,25 +62,26 @@ $obj = 'personas\\model\\entity\\' . $obj_pau;
 $GesPersonas = new $obj();
 
 //listas
-$Query = "SELECT * FROM $tabla
+$Query = "SELECT * FROM dbo.q_dl_Estudios_b
           WHERE Identif LIKE '$id_tipo%' AND  Dl='$dl_listas'
                AND (pertenece_r='$region' OR compartida_con_r='$region') ";
 // todos los de listas
-$oGesBDU = new GestorPersonaBDU();
-$cPersonasBDU = $oGesBDU->getPersonaBDUQuery($Query);
+$oGesListas = new zGestorPersonaListas();
+$cPersonasListas = $oGesListas->getPersonaListasQuery($Query);
 
 // Añadir las delegaciones dependientes de la región (que no tienen esquema propio)
 if (array_key_exists($region, ConfigGlobal::REGIONES_CON_DL)) {
-    $cPersonasBDU_n = [];
+    $cPersonasListas_n = [];
     foreach (ConfigGlobal::REGIONES_CON_DL[$region] as $dl_n) {
-        $Query = "SELECT * FROM $tabla
+        $Query = "SELECT * FROM dbo.q_dl_Estudios_b
           WHERE Identif LIKE '$id_tipo%' AND  Dl='$dl_n'
                AND (pertenece_r='$region' OR compartida_con_r='$region') ";
         // todos los de listas
-        $cPersonasBDU_n[] = $oGesBDU->getPersonaBDUQuery($Query);
+        $oGesListas = new zGestorPersonaListas();
+        $cPersonasListas_n[] = $oGesListas->getPersonaListasQuery($Query);
 
     }
-    $cPersonasBDU = array_merge($cPersonasBDU, ...array_values($cPersonasBDU_n));
+    $cPersonasListas = array_merge($cPersonasListas, ...array_values($cPersonasListas_n));
 }
 
 $p1_unidas_dl = 0;
@@ -100,8 +94,8 @@ $a_ids_desaparecidos_de_orbix = array();
 
 $oSincroDB = new SincroDB();
 $oSincroDB->setTipo_persona($tipo_persona);
-foreach ($cPersonasBDU as $oPersonaBDU) {
-    $id_nom_listas = $oPersonaBDU->getIdentif();
+foreach ($cPersonasListas as $oPersonaListas) {
+    $id_nom_listas = $oPersonaListas->getIdentif();
 
     $oGesMatch = new GestorIdMatchPersona();
     $cIdMatch = $oGesMatch->getIdMatchPersonas(array('id_listas' => $id_nom_listas));
@@ -161,13 +155,13 @@ foreach ($cPersonasOrbix as $oPersonaOrbix) {
     // Unidas a listas 7 y 8
     if (!empty($cIdMatch[0]) && count($cIdMatch) > 0) {
         $id_nom_listas = $cIdMatch[0]->getId_listas();
-        $oPersonaBDU = new PersonaBDU($id_nom_listas);
+        $oPersonaListas = new zPersonaListas($id_nom_listas);
         //8. No listas
-        if (empty($oPersonaBDU->getApeNom())) {
+        if (empty($oPersonaListas->getApeNom())) {
             $p8_orbix_unidas_desaparecidas++;
             $a_ids_desaparecidos_de_listas[] = $id_nom_orbix;
         } else {
-            $dl_persona = $oPersonaBDU->getDl();
+            $dl_persona = $oPersonaListas->getDl();
             //7. En otra dl en listas
             if ($dl_persona !== $dl_listas) {
                 $p7_orbix_unidas_otra_dl++;
@@ -240,7 +234,6 @@ $explicacion_txt .= _("al efectuar alguna acción dentro de las listas, las pers
             });
     }
 </script>
-<p>Última actualización: <?= $fecha_actualizacion ?></p>
 <h3><span class=link onclick="fnjs_refrescar()"><?= _("refrescar") ?></span></h3>
 <p>
     <?= $explicacion_txt ?>

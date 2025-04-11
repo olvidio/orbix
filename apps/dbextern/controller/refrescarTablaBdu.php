@@ -3,7 +3,7 @@
 use core\ConfigGlobal;
 use dbextern\model\CopiarBDU;
 use dbextern\model\entity\GestorIdMatchPersona;
-use dbextern\model\entity\GestorPersonaListas;
+use dbextern\model\entity\zGestorPersonaListas;
 use dbextern\model\entity\IdMatchPersona;
 use dbextern\model\SincroDB;
 use ubis\model\entity\GestorCentroDl;

@@ -17,7 +17,7 @@ use core\Set;
  * @version 1.0
  * @created 28/02/2017
  */
-class GestorPersonaListas extends ClaseGestor
+class GestorPersonaBDU extends ClaseGestor
 {
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
@@ -26,17 +26,14 @@ class GestorPersonaListas extends ClaseGestor
     /**
      * Constructor de la classe.
      *
-     * @return GestorPersonaListas
+     * @return zGestorPersonaListas
      *
      */
     function __construct()
     {
-        if (!empty($GLOBALS['oDBListas']) && $GLOBALS['oDBListas'] === 'error') {
-            exit(_("no se puede conectar con la base de datos de Listas"));
-        }
-        $oDbl = $GLOBALS['oDBListas'];
+        $oDbl = $GLOBALS['oDBP'];
         $this->setoDbl($oDbl);
-        $this->setNomTabla('dbo.q_dl_Estudios_b');
+        $this->setNomTabla('tmp_bdu');
     }
 
 
@@ -48,7 +45,7 @@ class GestorPersonaListas extends ClaseGestor
      * @param string sQuery la query a executar.
      * @return array Una col·lecció d'objectes de tipus PersonaListas
      */
-    function getPersonaListasQuery($sQuery = '')
+    function getPersonaBDUQuery($sQuery = '')
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
@@ -64,7 +61,7 @@ class GestorPersonaListas extends ClaseGestor
          */
         foreach ($oDbl->query($sQuery) as $aDades) {
             $a_pkey = array('Identif' => $aDades['Identif']);
-            $oPersonaListas = new PersonaListas($a_pkey);
+            $oPersonaListas = new zPersonaListas($a_pkey);
             $oPersonaListasSet->add($oPersonaListas);
         }
         return $oPersonaListasSet->getTot();
@@ -118,7 +115,7 @@ class GestorPersonaListas extends ClaseGestor
         }
         foreach ($oDblSt as $aDades) {
             $a_pkey = array('Identif' => $aDades['Identif']);
-            $oPersonaListas = new PersonaListas($a_pkey);
+            $oPersonaListas = new zPersonaListas($a_pkey);
             $oPersonaListasSet->add($oPersonaListas);
         }
         return $oPersonaListasSet->getTot();

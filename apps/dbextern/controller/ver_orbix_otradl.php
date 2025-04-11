@@ -2,7 +2,7 @@
 
 use core\ConfigGlobal;
 use dbextern\model\entity\GestorIdMatchPersona;
-use dbextern\model\entity\PersonaListas;
+use dbextern\model\entity\zPersonaListas;
 use web\Hash;
 
 // INICIO Cabecera global de URL de controlador *********************************
@@ -29,7 +29,7 @@ foreach ($a_ids_traslados_A as $id_nom_listas) {
     $id_nom_orbix = $cIdMatch[0]->getId_orbix();
 
     //Buscar en otras dl (formato: H-dlpv)
-    $oPersonaListas = new PersonaListas($id_nom_listas);
+    $oPersonaListas = new zPersonaListas($id_nom_listas);
 
     $a_persona_listas[$i]['id_nom_orbix'] = $id_nom_orbix;
     $a_persona_listas[$i]['id_nom_listas'] = $id_nom_listas;

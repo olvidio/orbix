@@ -29,7 +29,8 @@ class CopiarBDU
     {
         $dl = ConfigGlobal::mi_dele();
         $usuario = ConfigGlobal::mi_usuario();
-        $tabla = 'tmp_bdu_' . $dl . '_' . $usuario;
+        //$tabla = 'tmp_bdu_' . $dl . '_' . $usuario;
+        $tabla = 'tmp_bdu';
 
         $sqlDelete = "TRUNCATE TABLE $tabla";
         $sqlCreate = "CREATE TABLE IF NOT EXISTS $tabla(
@@ -115,8 +116,22 @@ class CopiarBDU
 
         // añadir la fecha en que se ha realizado:
         $fecha_iso = $fecha->format(DateTimeInterface::ATOM);
-        $sqlTime = "INSERT INTO $tabla (Identif, Apenom) VALUES (\"1111\" , \"$fecha_iso\");";
+        $sqlTime = "INSERT INTO $tabla (Identif, Apenom) VALUES ('1111' , '$fecha_iso');";
         $this->oDbl->query($sqlTime);
+    }
+
+    public function ultimaActualizacion()
+    {
+        $tabla = 'tmp_bdu';
+
+        $sqlTime = "SELECT Apenom FROM $tabla WHERE Identif = '1111';";
+        $sth = $this->oDbl->prepare($sqlTime);
+        $sth->execute();
+        $fecha_iso = $sth->fetchColumn();
+
+        $Fecha = DateTimeLocal::createFromFormat(DateTimeInterface::ATOM, $fecha_iso);
+
+        return $Fecha->getFromLocal();
     }
 
 }
