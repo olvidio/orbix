@@ -86,7 +86,9 @@ if (empty($id)) {
         $i++;
         $a_lista[$i] = $a_persona_bdu;
     }
+    session_start();
     $_SESSION['DBListas'] = $a_lista;
+    session_write_close();
 }
 
 $max = count($_SESSION['DBListas']);

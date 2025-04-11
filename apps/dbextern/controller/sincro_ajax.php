@@ -125,10 +125,12 @@ switch ($que) {
             echo "\n" . $oIdMatch->getErrorTxt();
         }
         //Elimino el valor del array
+        session_start();
         unset($_SESSION['DBListas'][$id]);
         array_filter($_SESSION['DBListas']);
         // reindexo el array
         $_SESSION['DBListas'] = array_values($_SESSION['DBListas']);
+        session_write_close();
 
         break;
     case 'desunir':

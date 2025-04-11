@@ -109,7 +109,9 @@ if (empty($id)) {
         $i++;
         $a_lista[$i] = $a_persona_orbix;
     }
+    session_start();
     $_SESSION['DBOrbix'] = $a_lista;
+    session_write_close();
 }
 
 
