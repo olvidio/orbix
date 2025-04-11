@@ -176,7 +176,7 @@ class SincroDB
     {
         if (empty($this->cPersonasListas)) {
             $Query = "SELECT * FROM $this->tabla 
-                        WHERE Identif LIKE '$this->id_tipo%' AND  Dl='$this->dl_listas' 
+                        WHERE Identif::text LIKE '$this->id_tipo%' AND  Dl='$this->dl_listas' 
                             AND (pertenece_r='$this->region' OR compartida_con_r='$this->region') ";
             // todos los de listas
             $gestorPersonaBDU = new GestorPersonaBDU();
@@ -188,7 +188,7 @@ class SincroDB
                 foreach (ConfigGlobal::REGIONES_CON_DL[$this->region] as $dl_n) {
 
                     $Query = "SELECT * FROM $this->tabla
-                          WHERE Identif LIKE '$this->id_tipo%' AND  Dl='$dl_n'
+                          WHERE Identif::text LIKE '$this->id_tipo%' AND  Dl='$dl_n'
                                AND (pertenece_r='$this->region' OR compartida_con_r='$this->region') ";
                     // todos los de listas
                     $cPersonasBDU_n[] = $gestorPersonaBDU->getPersonaBDUQuery($Query);
@@ -256,7 +256,7 @@ class SincroDB
         $apellido1 = $oPersonaDl->getApellido1();
 
         $Query = "SELECT * FROM $this->tabla
-                        WHERE Identif LIKE '$this->id_tipo%' AND  ApeNom LIKE '%" . $apellido1 . "%'
+                        WHERE Identif::text LIKE '$this->id_tipo%' AND  ApeNom LIKE '%" . $apellido1 . "%'
                             AND (pertenece_r='$this->region' OR compartida_con_r='$this->region') ";
         // todos los de listas
         $gestorPersonaBDU = new GestorPersonaBDU();
