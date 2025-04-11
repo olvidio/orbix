@@ -46,19 +46,20 @@ $h = $oHash->linkSinVal();
         var url = '<?= $url_sincro_ajax ?>';
         var parametros = 'que=desunir&id_nom_listas=' + id_listas + '&tipo_persona=<?= $tipo_persona ?><?= $h ?>';
 
-        $.ajax({
+        var request = $.ajax({
             url: url,
-            type: 'post',
-            data: parametros
-        })
-            .done(function (rta_txt) {
-                if (rta_txt !== '' && rta_txt !== '\\n') {
-                    alert('<?= _("respuesta") ?>: ' + rta_txt);
-                } else {
-                    //tachar la fila
-                    $("#fila" + fila).addClass('tachado');
-                }
-            });
+            data: parametros,
+            method: 'POST',
+            dataType: 'json'
+        });
+        request.done(function (json) {
+            if (json.success !== true) {
+                alert("<?= _("respuesta") ?>: " + json.mensaje);
+            } else {
+                //tachar la fila
+                $("#fila" + fila).addClass('tachado');
+            }
+        });
     }
 
 </script>

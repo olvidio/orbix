@@ -245,8 +245,9 @@ $explicacion_txt .= _("al efectuar alguna acción dentro de las listas, las pers
     }
 </script>
 <p>Si a modificado datos en la BDU después de: <?= $fecha_actualizacion ?> debe
-    <span class=link onclick="fnjs_refrescar()"><?= _("refrescar") ?></span>. Esta operacion tardará
+    <b><span class=link onclick="fnjs_refrescar()"><?= _("refrescar") ?></span></b>. Esta operación tardará
     un par o tres de minutos</p>
+<br>
 <p>
     <?= $explicacion_txt ?>
 </p>

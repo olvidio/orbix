@@ -141,10 +141,18 @@ switch ($que) {
         $oIdMatch = new IdMatchPersona($id_nom_listas);
         $oIdMatch->setId_tabla($tipo_persona);
 
+        $error_txt = '';
         if ($oIdMatch->DBEliminar() === false) {
-            echo _("hay un error, no se ha eliminado");
-            echo "\n" . $oIdMatch->getErrorTxt();
+            $error_txt = _("hay un error, no se ha eliminado");
+            $error_txt .= "\n" . $oIdMatch->getErrorTxt();
         }
+        if (!empty($error_txt)) {
+            $jsondata['success'] = FALSE;
+            $jsondata['mensaje'] = $error_txt;
+        } else {
+            $jsondata['success'] = TRUE;
+        }
+        (new JsonResponse($jsondata))->send();
         break;
     case 'syncro':
         $region = (string)filter_input(INPUT_POST, 'region');
@@ -287,11 +295,18 @@ switch ($que) {
         $oTrasladoDl->setF_dl($oHoy);
         $oTrasladoDl->setSituacion('B');
 
+        $error_txt = '';
         if ($oTrasladoDl->cambiarFichaPersona() === false) {
-            echo _("OJO: Debería cambiar el campo situación. No se ha hecho ningún cambio.");
-        } else {
-            echo true;
+            $error_txt = _("OJO: Debería cambiar el campo situación. No se ha hecho ningún cambio.");
         }
+
+        if (!empty($error_txt)) {
+            $jsondata['success'] = FALSE;
+            $jsondata['mensaje'] = $error_txt;
+        } else {
+            $jsondata['success'] = TRUE;
+        }
+        (new JsonResponse($jsondata))->send();
         break;
     case 'crear_todos':
         $region = (string)filter_input(INPUT_POST, 'region');
