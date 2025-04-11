@@ -41,7 +41,7 @@ class SincroDB
     public function __construct()
     {
         //$this->tabla = 'dbo.q_dl_Estudios_b ';
-        $this->tabla = 'tmp_dbu';
+        $this->tabla = 'tmp_bdu';
     }
 
     public function getTipo_persona()

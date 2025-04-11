@@ -2,6 +2,7 @@
 
 // INICIO Cabecera global de URL de controlador *********************************
 use core\ConfigGlobal;
+use dbextern\model\SincroDB;
 use web\Hash;
 
 require_once("apps/core/global_header.inc");
@@ -45,7 +46,7 @@ function otro($id, $mov, $max)
     }
 }
 
-$oSincroDB = new dbextern\model\SincroDB();
+$oSincroDB = new SincroDB();
 $oSincroDB->setTipo_persona($tipo_persona);
 $oSincroDB->setRegion($region);
 $oSincroDB->setDlListas($dl);
