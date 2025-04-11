@@ -172,7 +172,7 @@ class SincroDB
         }
     }
 
-    public function getPersonasListas()
+    public function getPersonasBDU()
     {
         if (empty($this->cPersonasListas)) {
             $Query = "SELECT * FROM $this->tabla 

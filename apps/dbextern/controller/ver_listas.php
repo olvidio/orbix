@@ -50,40 +50,40 @@ $oSincroDB->setTipo_persona($tipo_persona);
 $oSincroDB->setRegion($region);
 $oSincroDB->setDlListas($dl);
 
-$id_nom_listas = '';
+$id_nom_bdu = '';
 if (empty($id)) {
     $id = 1;
     // todos los de listas
-    $cPersonasListas = $oSincroDB->getPersonasListas();
+    $cPersonasBDU = $oSincroDB->getPersonasBDU();
 
     $i = 0;
     $cont_sync = 0;
     $a_lista = [];
-    foreach ($cPersonasListas as $oPersonaListas) {
-        $id_nom_listas = $oPersonaListas->getIdentif();
+    foreach ($cPersonasBDU as $oPersonaBDU) {
+        $id_nom_bdu = $oPersonaBDU->getIdentif();
 
         $oGesMatch = new dbextern\model\entity\GestorIdMatchPersona();
-        $cIdMatch = $oGesMatch->getIdMatchPersonas(array('id_listas' => $id_nom_listas));
+        $cIdMatch = $oGesMatch->getIdMatchPersonas(array('id_listas' => $id_nom_bdu));
         if (!empty($cIdMatch[0]) && count($cIdMatch) > 0) {
             continue;
         }
         // Sólo la primera vez (mov = ''):
-        if (empty($mov) && $oSincroDB->union_automatico($oPersonaListas)) {
+        if (empty($mov) && $oSincroDB->union_automatico($oPersonaBDU)) {
             $cont_sync++;
             continue;
         }
 
-        $a_persona_lista['id_nom_listas'] = $id_nom_listas;
-        $a_persona_lista['ape_nom'] = $oPersonaListas->getApeNom();
-        $a_persona_lista['nombre'] = $oPersonaListas->getNombre();
-        $a_persona_lista['apellido1'] = $oPersonaListas->getApellido1();
-        $a_persona_lista['apellido1_sinprep'] = $oPersonaListas->getApellido1_sinprep();
-        $a_persona_lista['apellido2'] = $oPersonaListas->getApellido2();
-        $a_persona_lista['apellido2_sinprep'] = $oPersonaListas->getApellido2_sinprep();
-        $a_persona_lista['f_nacimiento'] = $oPersonaListas->getFecha_Naci();
+        $a_persona_bdu['id_nom_listas'] = $id_nom_bdu;
+        $a_persona_bdu['ape_nom'] = $oPersonaBDU->getApeNom();
+        $a_persona_bdu['nombre'] = $oPersonaBDU->getNombre();
+        $a_persona_bdu['apellido1'] = $oPersonaBDU->getApellido1();
+        $a_persona_bdu['apellido1_sinprep'] = $oPersonaBDU->getApellido1_sinprep();
+        $a_persona_bdu['apellido2'] = $oPersonaBDU->getApellido2();
+        $a_persona_bdu['apellido2_sinprep'] = $oPersonaBDU->getApellido2_sinprep();
+        $a_persona_bdu['f_nacimiento'] = $oPersonaBDU->getFecha_Naci();
         // incremento antes para empezar en 1 y no en 0.
         $i++;
-        $a_lista[$i] = $a_persona_lista;
+        $a_lista[$i] = $a_persona_bdu;
     }
     $_SESSION['DBListas'] = $a_lista;
 }
@@ -98,15 +98,15 @@ if (!empty($max)) {
     $new_id = otro($id, $mov, $max);
 }
 // Buscar coincidentes en orix
-// assegurar que existe (al llegar al final)
+// asegurar que existe (al llegar al final)
 if (!empty($new_id) && isset($_SESSION['DBListas'][$new_id])) {
     $persona_listas = $_SESSION['DBListas'][$new_id];
-    $id_nom_listas = $persona_listas['id_nom_listas'];
+    $id_nom_bdu = $persona_listas['id_nom_listas'];
 
-    $a_lista_orbix = $oSincroDB->posiblesOrbix($id_nom_listas);
+    $a_lista_orbix = $oSincroDB->posiblesOrbix($id_nom_bdu);
     //si no encuentro, mirar en otras dl
     if (empty($a_lista_orbix)) {
-        $a_lista_orbix_otradl = $oSincroDB->posiblesOrbixOtrasDl($id_nom_listas);
+        $a_lista_orbix_otradl = $oSincroDB->posiblesOrbixOtrasDl($id_nom_bdu);
     }
 }
 
@@ -153,7 +153,7 @@ $html_reg = sprintf(_("registro %s de %s"), $new_id, $max);
 
     fnjs_crear = function () {
         var url = '<?= $url_sincro_ajax ?>';
-        var parametros = 'que=crear&region=<?= $region ?>&dl=<?= $dl ?>&id=<?= $new_id?>&id_nom_listas=<?= $id_nom_listas ?>&id_orbix=&tipo_persona=<?= $tipo_persona ?><?= $h1 ?>';
+        var parametros = 'que=crear&region=<?= $region ?>&dl=<?= $dl ?>&id=<?= $new_id?>&id_nom_listas=<?= $id_nom_bdu ?>&id_orbix=&tipo_persona=<?= $tipo_persona ?><?= $h1 ?>';
 
         $.ajax({
             url: url,
@@ -167,7 +167,7 @@ $html_reg = sprintf(_("registro %s de %s"), $new_id, $max);
 
     fnjs_unir = function (id_orbix) {
         var url = '<?= $url_sincro_ajax ?>';
-        var parametros = 'que=unir&region=<?= $region ?>&dl=<?= $dl ?>&id_orbix=' + id_orbix + '&id=<?= $new_id?>&id_nom_listas=<?= $id_nom_listas ?>&tipo_persona=<?= $tipo_persona ?><?= $h1 ?>';
+        var parametros = 'que=unir&region=<?= $region ?>&dl=<?= $dl ?>&id_orbix=' + id_orbix + '&id=<?= $new_id?>&id_nom_listas=<?= $id_nom_bdu ?>&tipo_persona=<?= $tipo_persona ?><?= $h1 ?>';
 
         $.ajax({
             url: url,

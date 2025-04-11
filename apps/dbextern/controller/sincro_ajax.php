@@ -168,7 +168,7 @@ switch ($que) {
         $oSincroDB->setCentros($a_centros);
 
         // todos los de listas
-        $cPersonasListas = $oSincroDB->getPersonasListas();
+        $cPersonasListas = $oSincroDB->getPersonasBDU();
         $i = 0;
         $msg = '';
         foreach ($cPersonasListas as $oPersonaListas) {
@@ -299,7 +299,7 @@ switch ($que) {
         $oSincroDB->setDlListas($dl);
 
         // todos los de listas
-        $cPersonasListas = $oSincroDB->getPersonasListas();
+        $cPersonasListas = $oSincroDB->getPersonasBDU();
 
         $i = 0;
         foreach ($cPersonasListas as $oPersonaListas) {
