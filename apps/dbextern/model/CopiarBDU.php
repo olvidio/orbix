@@ -116,7 +116,7 @@ class CopiarBDU
 
         // añadir la fecha en que se ha realizado:
         $fecha_iso = $fecha->format(DateTimeInterface::ATOM);
-        $sqlTime = "INSERT INTO $tabla (Identif, Apenom) VALUES ('1111' , '$fecha_iso');";
+        $sqlTime = "INSERT INTO $tabla (identif, apenom) VALUES ('1111' , '$fecha_iso');";
         $this->oDbl->query($sqlTime);
     }
 
@@ -124,7 +124,7 @@ class CopiarBDU
     {
         $tabla = 'tmp_bdu';
 
-        $sqlTime = "SELECT Apenom FROM $tabla WHERE Identif = '1111';";
+        $sqlTime = "SELECT apenom FROM $tabla WHERE identif = '1111';";
         $sth = $this->oDbl->prepare($sqlTime);
         $sth->execute();
         $fecha_iso = $sth->fetchColumn();

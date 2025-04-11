@@ -48,7 +48,6 @@ class GestorPersonaBDU extends ClaseGestor
     function getPersonaBDUQuery($sQuery = '')
     {
         $oDbl = $this->getoDbl();
-        $nom_tabla = $this->getNomTabla();
         $oPersonaBDUSet = new Set();
 
         /*
@@ -60,7 +59,7 @@ class GestorPersonaBDU extends ClaseGestor
          *
          */
         foreach ($oDbl->query($sQuery) as $aDades) {
-            $a_pkey = array('Identif' => $aDades['identif']);
+            $a_pkey = array('identif' => $aDades['identif']);
             $oPersonaBDU = new PersonaBDU($a_pkey);
             $oPersonaBDUSet->add($oPersonaBDU);
         }
@@ -114,7 +113,7 @@ class GestorPersonaBDU extends ClaseGestor
             return false;
         }
         foreach ($oDblSt as $aDades) {
-            $a_pkey = array('Identif' => $aDades['Identif']);
+            $a_pkey = array('identif' => $aDades['identif']);
             $oPersonaBDU = new PersonaBDU($a_pkey);
             $oPersonaBDUSet->add($oPersonaBDU);
         }

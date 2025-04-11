@@ -70,7 +70,7 @@ $GesPersonas = new $obj();
 
 //listas
 $Query = "SELECT * FROM $tabla
-          WHERE Identif::text LIKE '$id_tipo%' AND  Dl='$dl_listas'
+          WHERE identif::text LIKE '$id_tipo%' AND  Dl='$dl_listas'
                AND (pertenece_r='$region' OR compartida_con_r='$region') ";
 // todos los de listas
 $oGesBDU = new GestorPersonaBDU();
@@ -81,7 +81,7 @@ if (array_key_exists($region, ConfigGlobal::REGIONES_CON_DL)) {
     $cPersonasBDU_n = [];
     foreach (ConfigGlobal::REGIONES_CON_DL[$region] as $dl_n) {
         $Query = "SELECT * FROM $tabla
-          WHERE Identif::text LIKE '$id_tipo%' AND  Dl='$dl_n'
+          WHERE identif::text LIKE '$id_tipo%' AND  Dl='$dl_n'
                AND (pertenece_r='$region' OR compartida_con_r='$region') ";
         // todos los de listas
         $cPersonasBDU_n[] = $oGesBDU->getPersonaBDUQuery($Query);

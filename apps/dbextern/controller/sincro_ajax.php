@@ -19,6 +19,7 @@ require_once("apps/core/global_object.inc");
 $sfsv = ConfigGlobal::mi_sfsv();
 
 $que = (string)filter_input(INPUT_POST, 'que');
+$tabla = 'tmp_bdu';
 
 switch ($que) {
     // 4 casos:
@@ -29,7 +30,7 @@ switch ($que) {
         $id = (integer)filter_input(INPUT_POST, 'id');
         $tipo_persona = (string)filter_input(INPUT_POST, 'tipo_persona');
 
-        $Query = "SELECT * FROM dbo.q_dl_Estudios_b WHERE Identif = $id_nom_listas ";
+        $Query = "SELECT * FROM $tabla WHERE identif = $id_nom_listas ";
         //AND camb_fic IS NULL";
         $oSincroDB = new SincroDB();
         $oGesListas = new zGestorPersonaListas();
