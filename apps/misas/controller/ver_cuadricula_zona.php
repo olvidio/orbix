@@ -906,7 +906,7 @@ $json_data_cuadricula = json_encode($data_cuadricula);
 $url_cuadricula_update = 'apps/misas/controller/cuadricula_update.php';
 $oHash_cuadricula_update = new Hash();
 $oHash_cuadricula_update->setUrl($url_cuadricula_update);
-$oHash_cuadricula_update->setCamposForm('dia!id_enc!key!observ!tend!tstart!uuid_item');
+$oHash_cuadricula_update->setCamposForm('dia!id_enc!key!observ!tend!tstart!uuid_item!tipo_plantilla!id_zona');
 $h_cuadricula_update = $oHash_cuadricula_update->linkSinVal();
 
 $url_desplegable_sacd = 'apps/misas/controller/desplegable_sacd.php';

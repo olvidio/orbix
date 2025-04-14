@@ -231,11 +231,12 @@
 //        grid.render();
 
         let meta = data[row].meta[id_campo];
+        let id_zona = '{{id_zona}}';
         meta.dia = dia;
         // añadir el hash (se puede cambiar todo menos el encargo)
 //        const arr_h = { {{ array_h|raw }} };
 //        const mergedJSON = { ...meta, ...arr_h };
-        let parametros_update = 'id_enc=' + id_enc + '&uuid_item=' + uuid_item + '&key=' + key  + '&observ=' + observ + '&dia=' + dia + '&tend=' + tend + '&tstart=' + tstart + '{{ h_cuadricula_update|raw }}';
+        let parametros_update = 'id_enc=' + id_enc + '&uuid_item=' + uuid_item + '&key=' + key  + '&observ=' + observ + '&dia=' + dia + '&tipo_plantilla=' + tipo_plantilla + '&tend=' + tend + '&tstart=' + tstart + '&id_zona=' + id_zona+ '{{ h_cuadricula_update|raw }}';
 
 
         // guardar cambios en DB
@@ -256,7 +257,6 @@
                 alert("{{ "respuesta"|trans|raw }}: " + respuesta.mensaje);
             } else {
 //                alert('else');
-                let id_zona = '{{id_zona}}';
                 let tipo_plantilla = '{{tipo_plantilla}}';
                 let orden = '{{orden}}';
                 let periodo = '{{periodo}}';
@@ -273,16 +273,27 @@
            	    if (sacd_zona) seleccion=2;
 	            if (sacd_dl) seleccion=4;
             	if (sacd_depaso) seleccion=8;
-                let parametros = 'id_zona=' + id_zona + '&tipo_plantilla=' + tipo_plantilla + '&orden=' + orden  + '&seleccion=' + seleccion + '&periodo=' + periodo + '&empiezamin=' + empiezamin + '&empiezamax=' + empiezamax + '&fila=' + fila + '&columna=' + columna + '{{ h_ver_cuadricula_zona|raw }}';
-                $.ajax({
-                    url: url,
-                    type: 'post',
-                    data: parametros,
-                    dataType: 'html'
-                 })
-                .done(function (rta_txt) {
-                    $('#cuadriculas').html(rta_txt);
-                });
+//                let parametros = 'id_zona=' + id_zona + '&tipo_plantilla=' + tipo_plantilla + '&orden=' + orden  + '&seleccion=' + seleccion + '&periodo=' + periodo + '&empiezamin=' + empiezamin + '&empiezamax=' + empiezamax + '&fila=' + fila + '&columna=' + columna + '{{ h_ver_cuadricula_zona|raw }}';
+//                $.ajax({
+//                    url: url,
+//                    type: 'post',
+//                    data: parametros,
+//                    dataType: 'html'
+//                 })
+//                .done(function (rta_txt) {
+//                    $('#cuadriculas').html(rta_txt);
+//                });
+                modal.hide();
+                    id_sacd_anterior=respuesta.meta.id_sacd_anterior;
+                    i=0;
+                    while ((i<data.length) && (data[i]['id_nom']!=id_sacd_anterior))
+                    {
+                        i++;
+                    }
+                    data[i].meta[dia].color='amarillo';
+                    data[row][dia]=iniciales;
+                    grid.invalidateAllRows();
+                    grid.render();
             }
         });
     }
@@ -483,6 +494,7 @@ var meta;
     }
 
 //    var columns_sacd = {{ columns_sacd|raw }};
+    var tipo_plantilla = '{{ tipo_plantilla|raw}}';
 
       var options2 = {
     editable: true,
