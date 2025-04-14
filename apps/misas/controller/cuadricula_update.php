@@ -42,6 +42,8 @@ if ($oEncargoDia === null) {
     $oEncargoDia->setUuid_item($Uuid);
     $oEncargoDia->setId_enc($Qid_enc);
 }
+$id_sacd_anterior=$oEncargoDia->getId_nom();
+
 
 $flag_borrado = FALSE;
 if (empty($Qkey)) { // no hay ningún sacd
@@ -140,7 +142,8 @@ if (empty($error_txt)) {
             'key' => $Qkey,
             'tstart' => $QTstart->getHora(),
             'tend' => $QTend->getHora(),
-            'observ' => $Qobserv
+            'observ' => $Qobserv,
+            'id_sacd_anterior' => $id_sacd_anterior
         ];
     }
     $jsondata['meta'] = $a_meta;

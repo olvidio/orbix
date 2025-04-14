@@ -142,9 +142,9 @@ $a_nombre_mes_breve=[1=>'Ene', 2=>'feb', 3=>'mar', 4=>'abr', 5=>'may', 6=>'jun',
 //];
 $columns_cuadricula = "[
     {'id': 'encargo', 'name' : 'Encargo', 'field' : 'encargo', 'width' : 250, 'cssClass' : 'cell-title', 'formatter': formato_encargos}";
-$columns2 = [
-    ["id" => "sacerdote", "name" => "Sacerdote", "field" => "sacerdote", "width" => 250, "cssClass" => "cell-title"],
-];
+//$columns2 = [
+//    ["id" => "sacerdote", "name" => "Sacerdote", "field" => "sacerdote", "width" => 250, "cssClass" => "cell-title"],
+//];
 //$columns_sacd = "[
 //    {'id': 'sacerdote', 'name' : 'Sacerdote', 'field' : 'sacerdote', 'width' : 250, 'cssClass' : 'cell-title'}";
 
@@ -176,13 +176,13 @@ switch (trim($QTipoPlantilla)) {
             $titulo_sacd[$num_dia] = $nom_dia;
             $columns_cuadricula .= ",
             {'id' : '".$num_dia."', 'name' : '".$nom_dia."', 'field' : '".$num_dia."', 'width' : 60, 'formatter': formato}";
-            $columns2[] = [
-                "id" => "$num_dia", 
-                "name" => "$nom_dia", 
-                "field" => "$num_dia", 
-                "width" => 60, 
-                "cssClass" => "cell-title"
-            ];
+//            $columns2[] = [
+//                "id" => "$num_dia", 
+//                "name" => "$nom_dia", 
+//                "field" => "$num_dia", 
+//                "width" => 60, 
+//                "cssClass" => "cell-title"
+//            ];
         }
         break;
     case EncargoDia::PLANTILLA_DOMINGOS_UNO:
@@ -573,6 +573,7 @@ foreach ($cEncargosZona as $oEncargo) {
     }
 
     $data_cols["encargo"] = $desc_enc;
+    $data_cols["id_nom"] = '';
     if (substr($tipo_enc,0,2)==81)
     {
         $data_cols["color_encargo"] = 'azulclaro';
@@ -737,6 +738,7 @@ foreach ($sacd_zona as $id_nom => $nombre_sacd) {
 
 $data_cols = [];
 $data_cols['encargo']='Sacerdotes';
+$data_cols['id_nom']='';
 $data_cols["color_encargo"]='titulo';
 $meta = [];
 foreach ($date_range as $date) {
@@ -778,6 +780,7 @@ foreach($lista_sacd as $key => $nombre_sacd)
     $exp_key=explode('#',$key);
     $id_nom=$exp_key[1];
     $data_cols['encargo']=$nombre_sacd;
+    $data_cols['id_nom']=$id_nom;
 //    $data_cols['sacerdote']=$nombre_sacd;
 //    echo $nombre_sacd.$id_nom.'<br>';
     foreach ($date_range as $date) {
@@ -897,7 +900,7 @@ foreach($lista_sacd as $key => $nombre_sacd)
 //$json_columns_cuadricula = json_encode($columns_cuadricula);
 $json_data_cuadricula = json_encode($data_cuadricula);
 
-$json_columns2 = json_encode($columns2);
+//$json_columns2 = json_encode($columns2);
 //$json_data_sacd = json_encode($data_sacd);
 
 $url_cuadricula_update = 'apps/misas/controller/cuadricula_update.php';
@@ -921,7 +924,7 @@ $h_ver_cuadricula_zona = $oHash_ver_cuadricula_zona->linkSinVal();
 $a_campos = ['oPosicion' => $oPosicion,
     'columns_cuadricula' => $columns_cuadricula,
     'json_data_cuadricula' => $json_data_cuadricula,
-    'json_columns2' => $json_columns2,
+//    'json_columns2' => $json_columns2,
     'url_desplegable_sacd' =>$url_desplegable_sacd,
     'h_desplegable_sacd' => $h_desplegable_sacd,
     'url_ver_cuadricula_zona' => $url_ver_cuadricula_zona,
