@@ -56,7 +56,7 @@ switch ($tipo_persona) {
         }
         break;
     default:
-        $err_switch = sprintf(_("opción no definida en switch en %s, linea %s"), __FILE__, __LINE__);
+        $err_switch = sprintf(_("opción no definida en switch: '%s' en %s, linea %s"), $tipo_persona, __FILE__, __LINE__);
         exit ($err_switch);
 }
 
