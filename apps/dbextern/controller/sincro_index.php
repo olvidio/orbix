@@ -201,7 +201,7 @@ $oHash2->setUrl($url_refrescar);
 $oHash2->setCamposForm('que');
 $h2 = $oHash2->linkSinVal();
 
-$url_actualizar = Hash::link(ConfigGlobal::getWeb() . '/apps/dbextern/controller/sincro_index.php');
+$url_actualizar = Hash::link(ConfigGlobal::getWeb() . '/apps/dbextern/controller/sincro_index.php' . http_build_query(['tipo' => $tipo_persona]));
 
 $explicacion_txt = _("en situación normal bastaría hacer click en 'ejecutar' del punto 1.");
 $explicacion_txt .= "<br>";
