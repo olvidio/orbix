@@ -225,6 +225,10 @@
         data[row].meta[id_campo].tend = tend;
         data[row].meta[id_campo].observ = observ;
         data[row].meta[id_campo].id_enc = id_enc;
+//        data[row][id_campo]=iniciales;
+
+//        grid.invalidateAllRows();
+//        grid.render();
 
         let meta = data[row].meta[id_campo];
         meta.dia = dia;
@@ -243,11 +247,14 @@
         });
         request.done(function (json) {
 //            alert('json: '+json);
-//            alert('json.succes: '+json.success);
-//            alert('json.meta: '+json.meta.key);
-//            if (json.success !== true) {
-//                alert("{{ "respuesta"|trans|raw }}: " + json.mensaje);
-//            } else {
+            var respuesta=JSON.parse(json)
+//            alert('json.succes: '+respuesta.success);
+
+//            alert('json.meta: '+respuesta.meta.key);
+            if (respuesta.success !== true) {
+//                alert ('no true');
+                alert("{{ "respuesta"|trans|raw }}: " + respuesta.mensaje);
+            } else {
 //                alert('else');
                 let id_zona = '{{id_zona}}';
                 let tipo_plantilla = '{{tipo_plantilla}}';
@@ -276,7 +283,7 @@
                 .done(function (rta_txt) {
                     $('#cuadriculas').html(rta_txt);
                 });
-//            }
+            }
         });
     }
 
@@ -460,7 +467,7 @@ var meta;
 
     var grid_sacd;
 //    var data_sacd = {{ json_data_sacd|raw }};
-    var columns2 = {{ json_columns2|raw }};
+//    var columns2 = {{ json_columns2|raw }};
     var seleccion ={{ seleccion }};
     if (seleccion==1) {
         $('#sacd_libre').checked=true;
