@@ -290,7 +290,8 @@
                     {
                         i++;
                     }
-                    if (data[i]['id_nom']==id_sacd_anterior)
+//                    if (data[i]['id_nom']==id_sacd_anterior)
+                    if (i<data.length)
                     {
                         data[i].meta[dia].color=respuesta.meta.color_fondo_anterior;
                         data[i].meta[dia].texto=respuesta.meta.texto_anterior;
@@ -299,7 +300,8 @@
                     {
                         i++;
                     }
-                    if (data[i]['id_nom']==id_nom)
+//                    if (data[i]['id_nom']==id_nom)
+                    if (i<data.length)
                     {
                         data[i].meta[dia].color=respuesta.meta.color_fondo;
                         data[i].meta[dia].texto=respuesta.meta.texto;

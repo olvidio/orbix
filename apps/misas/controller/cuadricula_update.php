@@ -38,6 +38,8 @@ $Qid_zona = (integer)filter_input(INPUT_POST, 'id_zona');
 $sdia=$Qdia;
 $dia = new DateTimeLocal($Qdia);
 $dia_iso=$dia->getIso();
+//echo 'Qkey'.$Qkey.'<br>';
+$comprobacion='';
 
 $error_txt = '';
 
@@ -54,6 +56,7 @@ if ($oEncargoDia === null) {
     $oEncargoDia->setId_enc($Qid_enc);
 }
 $id_sacd_anterior=$oEncargoDia->getId_nom();
+//echo 'sacd_anterior:'.$id_sacd_anterior.'<br>';
 $estado= $oEncargoDia->getStatus();
 $zona= $Qid_zona;
 $color_misa='';
@@ -73,8 +76,7 @@ if (trim($QTipoPlantilla)==EncargoDia::PLAN_DE_MISAS)
     }    
 }
 
-
-
+$id_nom='';
 $flag_borrado = FALSE;
 if (empty($Qkey)) { // no hay ningún sacd
     if ($EncargoDiaRepository->Eliminar($oEncargoDia) === FALSE) {
@@ -87,7 +89,7 @@ if (empty($Qkey)) { // no hay ningún sacd
     $id_nom = $porciones[1];
 //    echo 'id nom: '.$id_nom.'<br>';
     $oEncargoDia->setId_nom($id_nom);
-    }
+    
 //    echo 'error_txt: '.$error_txt;
 
     $QTstart = new EncargoDiaTstart($Qdia, $Qtstart);
@@ -102,7 +104,7 @@ if (empty($Qkey)) { // no hay ningún sacd
     if ($EncargoDiaRepository->Guardar($oEncargoDia) === FALSE) {
         $error_txt .= $EncargoDiaRepository->getErrorTxt();
     }
-
+}
     $aWhere = [];
 $aWhere['id_zona'] = $zona;
 $aOperador = array();
@@ -110,11 +112,11 @@ $GesZonasSacd = new GestorZonaSacd();
 $cZonaSacd = $GesZonasSacd->getZonasSacds($aWhere, $aOperador);
 foreach ($cZonaSacd as $oZonaSacd) {
     $data_cols = [];
-    $id_nom = $oZonaSacd->getId_nom();
+    $id_nom_aux = $oZonaSacd->getId_nom();
     $InicialesSacd = new InicialesSacd();
-    $nombre_sacd=$InicialesSacd->nombre_sacd($id_nom);
-    $iniciales=$InicialesSacd->iniciales($id_nom);
-    $key =  $id_nom;
+    $nombre_sacd=$InicialesSacd->nombre_sacd($id_nom_aux);
+    $iniciales=$InicialesSacd->iniciales($id_nom_aux);
+    $key =  $id_nom_aux;
     $lista_sacd[$key]=$nombre_sacd;
     $esta_en_zona[$key]=array('', $oZonaSacd->getDw1(),$oZonaSacd->getDw2(),$oZonaSacd->getDw3(),$oZonaSacd->getDw4(),$oZonaSacd->getDw5(),$oZonaSacd->getDw6(),$oZonaSacd->getDw7());
 }
@@ -123,6 +125,7 @@ $esta_sacd_anterior = 1;
 $donde_esta_sacd_anterior = '';
 if ($id_sacd_anterior!='')
 {
+//    echo '--------------SACD ANTERIOR<br>';
     $aWhereAct = [];
     $aOperadorAct = [];
     $aWhereAct['f_ini'] = $dia_iso;
@@ -170,7 +173,7 @@ if ($id_sacd_anterior!='')
             // ++++++++++++++ Añado las ausencias +++++++++++++++
             $aWhereE = [];
             $aOperadorE = [];
-            $aWhereE['id_nom'] = $id_nom;
+            $aWhereE['id_nom'] = $id_sacd_anterior;
             $aWhereE['f_ini'] = "'$dia_iso'";
             $aOperadorE['f_ini'] = '<=';
             $aWhereE['f_fin'] = "'$dia_iso'";
@@ -210,7 +213,8 @@ if ($id_sacd_anterior!='')
     $esta_sacd = 1; 
     $donde_esta_sacd = '';
 
-
+//echo 'NUEVO SACD------------<br>';
+if ($id_nom!='') {
     $aWhereAct = [];
     $aOperadorAct = [];
     $aWhereAct['f_ini'] = $dia_iso;
@@ -294,9 +298,19 @@ if ($id_sacd_anterior!='')
                 }
                 $donde_esta_sacd = $nom_llarg;
             }
+}
 
-        $inicio_dia = $Qdia.' 00:00:00';
-        $fin_dia = $Qdia.' 23:59:59';
+//            echo 'conto misses SACD ANTERIOR---------<br>';
+            $texto_anterior='';
+            $texto_sacd_anterior='--';
+            $color_fondo_anterior='verdeclaro';
+
+            $inicio_dia = $Qdia.' 00:00:00';
+            $fin_dia = $Qdia.' 23:59:59';
+            $num_dia = $Qdia;
+            $dws = $dia->format('N');
+            
+if($id_sacd_anterior!=''){
 //echo $inicio_dia.'-'.$fin_dia.'<br>';
 //echo 'id nom: '.$id_nom.'<br>';
 
@@ -338,12 +352,10 @@ if ($id_sacd_anterior!='')
                     $misas_dia_zona++;
                 }
             }
- //           echo $misas_dia.$misas_1a_hora.'<br>';
+//            echo 'MD:'.$misas_dia.'M1:'.$misas_1a_hora.'<br>';
         }
- //       echo $misas_dia.$misas_1a_hora.'<br>';
-        $num_dia = $Qdia;
-        $dws = $dia->format('N');
-//echo $num_dia.'-'.$dws.'='.$esta_en_zona[$dws].'<br>';
+//        echo ' fin foreach MD:'.$misas_dia.'M1:'.$misas_1a_hora.'<br>';
+//echo 'num dia..dws..esta en zona: '.$num_dia.'-'.$dws.'='.$esta_en_zona[$id_sacd_anterior][$dws].'<br>';
         $esta_en_zona_anterior=$esta_en_zona[$id_sacd_anterior][$dws];
         $color_fondo_anterior='verdeclaro';
         $texto_anterior='';
@@ -388,14 +400,19 @@ if ($id_sacd_anterior!='')
             $texto_anterior='Está en '.$donde_esta_sacd;
             $texto_sacd_anterior = '--';
         }
-        $inicio_dia = $Qdia.' 00:00:00';
-        $fin_dia = $Qdia.' 23:59:59';
+//        $inicio_dia = $Qdia.' 00:00:00';
+//        $fin_dia = $Qdia.' 23:59:59';
 
         $comprobacion='MD:'.$misas_dia.' M1h:'.$misas_1a_hora.'MDZ:'.$misas_dia_zona.'Z:'.$esta_en_zona_anterior; 
-
-
+    }
         $texto='';
+        $texto_sacd='--';
         $color_fondo='verdeclaro';
+
+//echo 'id_nom: '.$id_nom.'<br>';
+//echo 'CONTO MISSES NOU MOSSEN------<br>';
+if ($id_nom!='')
+{
 
         $aWhere = [
             'id_nom' => $id_nom,
@@ -435,7 +452,7 @@ if ($id_sacd_anterior!='')
                     $misas_dia_zona++;
                 }
             }
- //           echo $misas_dia.$misas_1a_hora.'<br>';
+//            echo 'MD:'.$misas_dia.'M1:'.$misas_1a_hora.'<br>';
         }
 
 
@@ -443,6 +460,7 @@ if ($id_sacd_anterior!='')
 //        $num_dia = $date->format('Y-m-d');
 //        $dws = $dia_week_sacd[$num_dia];
 //echo $num_dia.'-'.$dws.'='.$esta_en_zona[$dws].'<br>';
+//echo 'num dia..dws..esta en zona: '.$num_dia.'-'.$dws.'='.$esta_en_zona[$id_nom][$dws].'<br>';
 $esta_en_zona_nuevo=$esta_en_zona[$id_nom][$dws];
 //        $texto='';
         if ($misas_dia>2){
@@ -492,6 +510,7 @@ $esta_en_zona_nuevo=$esta_en_zona[$id_nom][$dws];
 //            $data_cols[$num_dia] = '--';
         }
         $comprobacion.='----- MD:'.$misas_dia.' M1h:'.$misas_1a_hora.'MDZ:'.$misas_dia_zona.'Z:'.$esta_en_zona_nuevo; 
+}
 
 if (empty($error_txt)) {
     $jsondata['success'] = true;
