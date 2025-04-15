@@ -86,62 +86,9 @@ if (empty($Qkey)) { // no hay ningún sacd
     $iniciales = $porciones[0];
     $id_nom = $porciones[1];
 //    echo 'id nom: '.$id_nom.'<br>';
-
     $oEncargoDia->setId_nom($id_nom);
-
-    if (empty($Qtstart) || empty($Qtend)) {
-        // comprobar si es obligatorio
-        $oEncargo = new Encargo($Qid_enc);
-        $id_tipo_encargo = $oEncargo->getId_tipo_enc();
-        $oTipoEncargo = new EncargoTipo($id_tipo_encargo);
-        $modo_horario = $oTipoEncargo->getMod_horario();
-        if ($modo_horario === EncargoTipo::HORARIO_POR_HORAS) {
-            $oDia = new DateTimeLocal($Qdia);
-            $dia_week = $oDia->format('N'); // N: 1 (para lunes) hasta 7 (para domingo)
-            $h_ini = '';
-            $h_fin = '';
-            $aWhere = [
-                'dia_ref' => "$dia_week|A",
-                'id_enc' => $Qid_enc,
-                'f_ini' => $Qdia,
-                'f_fin' => 'x',
-            ];
-            $aOperador = [
-                'dia_ref' => '~',
-                'f_ini' => '<=',
-                'f_fin' => 'IS NULL'
-            ];
-            $gesEncargoHorario = new GestorEncargoHorario();
-            $cEncargoHorarios1 = $gesEncargoHorario->getEncargoHorarios($aWhere, $aOperador);
-            // añadir los que tienen f_fin pero en un futuro:
-            $aWhere['f_fin'] = $Qdia;
-            $aOperador['f_fin'] = '>=';
-            $cEncargoHorarios2 = $gesEncargoHorario->getEncargoHorarios($aWhere, $aOperador);
-            $cEncargoHorarios = array_merge($cEncargoHorarios1, $cEncargoHorarios2);
-            // TODO si hay varios?¿?¿
-            if (count($cEncargoHorarios) > 0) {            $aWhere = [
-                'id_enc' => $id_enc,
-                'tstart' => "'$inicio_dia_plantilla', '$fin_dia_plantilla'",
-            ];
-            $aOperador = [
-                'tstart' => 'BETWEEN',
-            ];
-            $EncargoDiaRepository = new EncargoDiaRepository();
-            $cEncargosDia = $EncargoDiaRepository->getEncargoDias($aWhere,$aOperador);
-
-            }
-            if (empty($Qtstart) && !empty($h_ini)) {
-                $Qtstart = $h_ini;
-            }
-            if (empty($Qtend) && !empty($h_fin)) {
-                $Qtend = $h_fin;
-            }
-        }
-        // poner por defecto el del encargo
-
-        //$Qtstart = (new DateTimeLocal(''))->format('H:i');
-
     }
+//    echo 'error_txt: '.$error_txt;
 
     $QTstart = new EncargoDiaTstart($Qdia, $Qtstart);
     $oEncargoDia->setTstart($QTstart);
@@ -172,14 +119,10 @@ foreach ($cZonaSacd as $oZonaSacd) {
     $esta_en_zona[$key]=array('', $oZonaSacd->getDw1(),$oZonaSacd->getDw2(),$oZonaSacd->getDw3(),$oZonaSacd->getDw4(),$oZonaSacd->getDw5(),$oZonaSacd->getDw6(),$oZonaSacd->getDw7());
 }
 
+$esta_sacd_anterior = 1; 
+$donde_esta_sacd_anterior = '';
 if ($id_sacd_anterior!='')
 {
-
-    $contador_1a_sacd_anterior = 0;    
-    $contador_total_sacd_anterior = 0;    
-    $esta_sacd_anterior = 1; 
-    $donde_esta_sacd_anterior = '';
-
     $aWhereAct = [];
     $aOperadorAct = [];
     $aWhereAct['f_ini'] = $dia_iso;
@@ -263,11 +206,7 @@ if ($id_sacd_anterior!='')
                 }
                 $donde_esta_sacd_anterior = $nom_llarg;
             }
-
-    }
 }
-    $contador_1a_sacd = 0;    
-    $contador_total_sacd = 0;    
     $esta_sacd = 1; 
     $donde_esta_sacd = '';
 
@@ -360,8 +299,6 @@ if ($id_sacd_anterior!='')
         $fin_dia = $Qdia.' 23:59:59';
 //echo $inicio_dia.'-'.$fin_dia.'<br>';
 //echo 'id nom: '.$id_nom.'<br>';
-        $texto='';
-        $color_fondo='';
 
         $aWhere = [
             'id_nom' => $id_sacd_anterior,
@@ -407,8 +344,107 @@ if ($id_sacd_anterior!='')
         $num_dia = $Qdia;
         $dws = $dia->format('N');
 //echo $num_dia.'-'.$dws.'='.$esta_en_zona[$dws].'<br>';
-        $color_fondo='verdeclaro';
+        $esta_en_zona_anterior=$esta_en_zona[$id_sacd_anterior][$dws];
+        $color_fondo_anterior='verdeclaro';
+        $texto_anterior='';
+        if ($misas_dia>2){
+            $texto_anterior='Este día tiene más de dos Misas';
+            $color_fondo_anterior='rojo';
+        }
+        if ($misas_dia==2){
+            $texto_anterior='Este día tiene dos Misas';
+            $color_fondo_anterior='amarillo';
+        }
+        if (($misas_dia==0) && ($esta_en_zona_anterior)){
+            $texto_anterior='Este día no tiene ninguna Misa';
+            $color_fondo_anterior='verde';
+        }
+        if (($misas_dia==0) && (!$esta_en_zona_anterior)){
+            $texto_anterior='Este día no tiene ninguna Misa';
+            $color_fondo_anterior='azulclaro';
+        }
+        if ($misas_1a_hora==2){
+            $texto_anterior='Tiene dos Misas a primera hora';
+            $color_fondo_anterior='rojo';
+        }
+
+
+        if ($esta_en_zona_anterior){
+            $texto_sacd_anterior = 'SI';    
+        } else {
+            if ($misas_1a_hora_zona>0){
+                $color_fondo_anterior='rojo';
+                $texto_anterior='No está en la zona y tiene Misa a primera hora';
+            }
+            $texto_sacd_anterior = 'NO';
+        }
+        if ($esta_sacd_anterior<1)
+        {
+//            echo $id_nom.' está en '.$donde_esta_sacd[$id_nom][$num_dia].$num_dia.'<br>';
+            if ($misas_1a_hora_zona>0){
+//                echo '1a: '.$misas_1a_hora.'<br>';
+                $color_fondo_anterior='rojo';
+            }
+            $texto_anterior='Está en '.$donde_esta_sacd;
+            $texto_sacd_anterior = '--';
+        }
+        $inicio_dia = $Qdia.' 00:00:00';
+        $fin_dia = $Qdia.' 23:59:59';
+
+        $comprobacion='MD:'.$misas_dia.' M1h:'.$misas_1a_hora.'MDZ:'.$misas_dia_zona.'Z:'.$esta_en_zona_anterior; 
+
+
         $texto='';
+        $color_fondo='verdeclaro';
+
+        $aWhere = [
+            'id_nom' => $id_nom,
+            'tstart' => "'$inicio_dia', '$fin_dia'",
+        ];
+        $aWhere['_ordre'] = 'tstart';
+        $aOperador = [
+            'tstart' => 'BETWEEN',
+        ];
+        $EncargoDiaRepository = new EncargoDiaRepository();
+        $cEncargosDia = $EncargoDiaRepository->getEncargoDias($aWhere,$aOperador);
+
+        $misas_dia=0;
+        $misas_1a_hora=0;
+        $misas_dia_zona=0;
+        $misas_1a_hora_zona=0;
+        foreach($cEncargosDia as $oEncargoDia) {
+            $id_enc = $oEncargoDia->getId_enc();
+//            echo 'id_enc: '.$id_enc.'<br>';
+            $oEncargo = new Encargo(array('id_enc' => $id_enc));
+            $id_tipo_enc = $oEncargo->getId_tipo_enc();
+            $id_zona_enc = $oEncargo->getId_zona();
+//            echo 'tipo: '.$id_tipo_enc.' zona: '.$id_zona_enc.'<br>';
+            if (substr($id_tipo_enc,1,1)=='1')
+            {
+                $misas_dia++;
+                $misas_1a_hora++;
+                if ($zona==$id_zona_enc){
+                    $misas_dia_zona++;
+                    $misas_1a_hora_zona++;
+                }
+            }
+            if (substr($id_tipo_enc,1,1)=='2')
+            {
+                $misas_dia++;
+                if ($zona==$id_zona_enc){
+                    $misas_dia_zona++;
+                }
+            }
+ //           echo $misas_dia.$misas_1a_hora.'<br>';
+        }
+
+
+ //       echo $misas_dia.$misas_1a_hora.'<br>';
+//        $num_dia = $date->format('Y-m-d');
+//        $dws = $dia_week_sacd[$num_dia];
+//echo $num_dia.'-'.$dws.'='.$esta_en_zona[$dws].'<br>';
+$esta_en_zona_nuevo=$esta_en_zona[$id_nom][$dws];
+//        $texto='';
         if ($misas_dia>2){
             $texto='Este día tiene más de dos Misas';
             $color_fondo='rojo';
@@ -417,11 +453,11 @@ if ($id_sacd_anterior!='')
             $texto='Este día tiene dos Misas';
             $color_fondo='amarillo';
         }
-        if (($misas_dia==0) && ($esta_en_zona)){
+        if (($misas_dia==0) && ($esta_en_zona_nuevo)){
             $texto='Este día no tiene ninguna Misa';
             $color_fondo='verde';
         }
-        if (($misas_dia==0) && (!$esta_en_zona)){
+        if (($misas_dia==0) && (!$esta_en_zona_nuevo)){
             $texto='Este día no tiene ninguna Misa';
             $color_fondo='azulclaro';
         }
@@ -431,14 +467,18 @@ if ($id_sacd_anterior!='')
         }
 
 
-        if ($esta_en_zona){
+        if ($esta_en_zona_nuevo){
+//            $data_cols[$num_dia]=$misas_dia*10+$misas_1a_hora;
             $texto_sacd = 'SI';    
+//            $data_cols[$num_dia] = 'SI';
         } else {
+//            $data_cols[$num_dia]=$misas_dia*10+$misas_1a_hora;
             if ($misas_1a_hora_zona>0){
                 $color_fondo='rojo';
                 $texto='No está en la zona y tiene Misa a primera hora';
             }
             $texto_sacd = 'NO';
+//            $data_cols[$num_dia] = 'NO';
         }
         if ($esta_sacd<1)
         {
@@ -449,228 +489,23 @@ if ($id_sacd_anterior!='')
             }
             $texto='Está en '.$donde_esta_sacd[$id_nom][$num_dia];
             $texto_sacd = '--';
-        }
-        $inicio_dia = $Qdia.' 00:00:00';
-        $fin_dia = $Qdia.' 23:59:59';
-//echo $inicio_dia.'-'.$fin_dia.'<br>';
-//echo 'id nom: '.$id_nom.'<br>';
-        $texto='';
-        $color_fondo='';
-
-        $aWhere = [
-            'id_nom' => $id_nom,
-            'tstart' => "'$inicio_dia', '$fin_dia'",
-        ];
-        $aWhere['_ordre'] = 'tstart';
-        $aOperador = [
-            'tstart' => 'BETWEEN',
-        ];
-        $EncargoDiaRepository = new EncargoDiaRepository();
-        $cEncargosDia = $EncargoDiaRepository->getEncargoDias($aWhere,$aOperador);
-
-        $misas_dia=0;
-        $misas_1a_hora=0;
-        $misas_dia_zona=0;
-        $misas_1a_hora_zona=0;
-        foreach($cEncargosDia as $oEncargoDia) {
-            $id_enc = $oEncargoDia->getId_enc();
-//            echo 'id_enc: '.$id_enc.'<br>';
-            $oEncargo = new Encargo(array('id_enc' => $id_enc));
-            $id_tipo_enc = $oEncargo->getId_tipo_enc();
-            $id_zona_enc = $oEncargo->getId_zona();
-//            echo 'tipo: '.$id_tipo_enc.' zona: '.$id_zona_enc.'<br>';
-            if (substr($id_tipo_enc,1,1)=='1')
-            {
-                $misas_dia++;
-                $misas_1a_hora++;
-                if ($zona==$id_zona_enc){
-                    $misas_dia_zona++;
-                    $misas_1a_hora_zona++;
-                }
-            }
-            if (substr($id_tipo_enc,1,1)=='2')
-            {
-                $misas_dia++;
-                if ($zona==$id_zona_enc){
-                    $misas_dia_zona++;
-                }
-            }
- //           echo $misas_dia.$misas_1a_hora.'<br>';
-        }
- //       echo $misas_dia.$misas_1a_hora.'<br>';
-//echo $num_dia.'-'.$dws.'='.$esta_en_zona[$dws].'<br>';
-        $color_fondo='verdeclaro';
-        $texto='';
-        if ($misas_dia>2){
-            $texto='Este día tiene más de dos Misas';
-            $color_fondo='rojo';
-        }
-        if ($misas_dia==2){
-            $texto='Este día tiene dos Misas';
-            $color_fondo='amarillo';
-        }
-        if (($misas_dia==0) && ($esta_en_zona)){
-            $texto='Este día no tiene ninguna Misa';
-            $color_fondo='verde';
-        }
-        if (($misas_dia==0) && (!$esta_en_zona)){
-            $texto='Este día no tiene ninguna Misa';
-            $color_fondo='azulclaro';
-        }
-        if ($misas_1a_hora==2){
-            $texto='Tiene dos Misas a primera hora';
-            $color_fondo='rojo';
-        }
-
-
-        if ($esta_en_zona){
-//            $data_cols[$num_dia]=$misas_dia*10+$misas_1a_hora;
-            $data_cols[$num_dia] = 'SI';    
-//            $data_cols[$num_dia] = 'SI';
-        } else {
-//            $data_cols[$num_dia]=$misas_dia*10+$misas_1a_hora;
-            if ($misas_1a_hora_zona>0){
-                $color_fondo='rojo';
-                $texto='No está en la zona y tiene Misa a primera hora';
-            }
-            $data_cols[$num_dia] = 'NO';
-//            $data_cols[$num_dia] = 'NO';
-        }
-        if ($esta_sacd<1)
-        {
-//            echo $id_nom.' está en '.$donde_esta_sacd[$id_nom][$num_dia].$num_dia.'<br>';
-            if ($misas_1a_hora_zona>0){
-//                echo '1a: '.$misas_1a_hora.'<br>';
-                $color_fondo='rojo';
-            }
-            $texto='Está en '.$donde_esta_sacd[$id_nom][$num_dia];
-            $data_cols[$num_dia] = '--';
 //            $data_cols[$num_dia] = '--';
         }
-
-        $inicio_dia = $sdia.' 00:00:00';
-        $fin_dia = $sdia.' 23:59:59';
-//echo $inicio_dia.'-'.$fin_dia.'<br>';
-//echo 'id nom: '.$id_nom.'<br>';
-        $texto='';
-        $color_fondo='';
-
-        $aWhere = [
-            'id_nom' => $id_nom,
-            'tstart' => "'$inicio_dia', '$fin_dia'",
-        ];
-        $aWhere['_ordre'] = 'tstart';
-        $aOperador = [
-            'tstart' => 'BETWEEN',
-        ];
-        $EncargoDiaRepository = new EncargoDiaRepository();
-        $cEncargosDia = $EncargoDiaRepository->getEncargoDias($aWhere,$aOperador);
-
-        $misas_dia=0;
-        $misas_1a_hora=0;
-        $misas_dia_zona=0;
-        $misas_1a_hora_zona=0;
-        foreach($cEncargosDia as $oEncargoDia) {
-            $id_enc = $oEncargoDia->getId_enc();
-//            echo 'id_enc: '.$id_enc.'<br>';
-            $oEncargo = new Encargo(array('id_enc' => $id_enc));
-            $id_tipo_enc = $oEncargo->getId_tipo_enc();
-            $id_zona_enc = $oEncargo->getId_zona();
-//            echo 'tipo: '.$id_tipo_enc.' zona: '.$id_zona_enc.'<br>';
-            if (substr($id_tipo_enc,1,1)=='1')
-            {
-                $misas_dia++;
-                $misas_1a_hora++;
-                if ($zona==$id_zona_enc){
-                    $misas_dia_zona++;
-                    $misas_1a_hora_zona++;
-                }
-            }
-            if (substr($id_tipo_enc,1,1)=='2')
-            {
-                $misas_dia++;
-                if ($zona==$id_zona_enc){
-                    $misas_dia_zona++;
-                }
-            }
- //           echo $misas_dia.$misas_1a_hora.'<br>';
-        }
- //       echo $misas_dia.$misas_1a_hora.'<br>';
-//        $num_dia = $date->format('Y-m-d');
-//        $dws = $dia_week_sacd[$num_dia];
-//echo $num_dia.'-'.$dws.'='.$esta_en_zona[$dws].'<br>';
-        $color_fondo='verdeclaro';
-        $texto='';
-        if ($misas_dia>2){
-            $texto='Este día tiene más de dos Misas';
-            $color_fondo='rojo';
-        }
-        if ($misas_dia==2){
-            $texto='Este día tiene dos Misas';
-            $color_fondo='amarillo';
-        }
-        if (($misas_dia==0) && ($esta_en_zona)){
-            $texto='Este día no tiene ninguna Misa';
-            $color_fondo='verde';
-        }
-        if (($misas_dia==0) && (!$esta_en_zona)){
-            $texto='Este día no tiene ninguna Misa';
-            $color_fondo='azulclaro';
-        }
-        if ($misas_1a_hora==2){
-            $texto='Tiene dos Misas a primera hora';
-            $color_fondo='rojo';
-        }
-
-
-        if ($esta_en_zona){
-//            $data_cols[$num_dia]=$misas_dia*10+$misas_1a_hora;
-            $data_cols[$num_dia] = 'SI';    
-//            $data_cols[$num_dia] = 'SI';
-        } else {
-//            $data_cols[$num_dia]=$misas_dia*10+$misas_1a_hora;
-            if ($misas_1a_hora_zona>0){
-                $color_fondo='rojo';
-                $texto='No está en la zona y tiene Misa a primera hora';
-            }
-            $data_cols[$num_dia] = 'NO';
-//            $data_cols[$num_dia] = 'NO';
-        }
-        if ($esta_sacd<1)
-        {
-//            echo $id_nom.' está en '.$donde_esta_sacd[$id_nom][$num_dia].$num_dia.'<br>';
-            if ($misas_1a_hora_zona>0){
-//                echo '1a: '.$misas_1a_hora.'<br>';
-                $color_fondo='rojo';
-            }
-            $texto='Está en '.$donde_esta_sacd[$id_nom][$num_dia];
-            $data_cols[$num_dia] = '--';
-//            $data_cols[$num_dia] = '--';
-        }
+        $comprobacion.='----- MD:'.$misas_dia.' M1h:'.$misas_1a_hora.'MDZ:'.$misas_dia_zona.'Z:'.$esta_en_zona_nuevo; 
 
 if (empty($error_txt)) {
     $jsondata['success'] = true;
-    if ($flag_borrado) {
-        $a_meta = [
-            'uuid-item' => '',
-            'key' => '',
-            'tstart' => '',
-            'tend' => '',
-            'observ' => '',
-            'color_misa' => '',
-            'id_sacd_anterior' => $id_sacd_anterior
-        ];
-    } else {
-        $a_meta = [
-            'uuid-item' => $Quuid_item,
-            'key' => $Qkey,
-            'tstart' => $QTstart->getHora(),
-            'tend' => $QTend->getHora(),
-            'observ' => $Qobserv,
+    $a_meta = [
             'color_misa' => $color_misa,
-            'id_sacd_anterior' => $id_sacd_anterior
-        ];
-    }
+            'id_sacd_anterior' => $id_sacd_anterior,
+            'texto_anterior' => $texto_anterior,
+            'color_fondo_anterior' => $color_fondo_anterior,
+            'texto_sacd_anterior' => $texto_sacd_anterior,
+            'texto' => $texto,
+            'color_fondo' => $color_fondo,
+            'texto_sacd'=> $texto_sacd,
+                'comprobacion' => $comprobacion,
+    ];
     $jsondata['meta'] = $a_meta;
 } else {
     $jsondata['success'] = false;

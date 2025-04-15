@@ -290,8 +290,26 @@
                     {
                         i++;
                     }
-                    data[i].meta[dia].color='amarillo';
-                    data[row][dia]=iniciales;
+                    if (data[i]['id_nom']==id_sacd_anterior)
+                    {
+                        data[i].meta[dia].color=respuesta.meta.color_fondo_anterior;
+                        data[i].meta[dia].texto=respuesta.meta.texto_anterior;
+                    }
+                    while ((i<data.length) && (data[i]['id_nom']!=id_nom))
+                    {
+                        i++;
+                    }
+                    if (data[i]['id_nom']==id_nom)
+                    {
+                        data[i].meta[dia].color=respuesta.meta.color_fondo;
+                        data[i].meta[dia].texto=respuesta.meta.texto;
+                    }
+                    if (iniciales!='') {
+                        data[row][dia]=iniciales;
+                    }
+                    else {
+                        data[row][dia]='--';
+                    }
                     grid.invalidateAllRows();
                     grid.render();
             }
