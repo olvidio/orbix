@@ -95,8 +95,8 @@ $p2_unidas_otradl = 0;
 $p3_unidas_desaparecidas = 0;
 $p456_listas_no_unidas = 0;
 
-$a_ids_traslados = array();
-$a_ids_desaparecidos_de_orbix = array();
+$a_ids_traslados = [];
+$a_ids_desaparecidos_de_orbix = [];
 
 $oSincroDB = new SincroDB();
 $oSincroDB->setTipo_persona($tipo_persona);
@@ -150,8 +150,8 @@ $p7_orbix_unidas_otra_dl = 0;
 $p8_orbix_unidas_desaparecidas = 0;
 $p910_orbix_no_unidas = 0;
 
-$a_ids_traslados_A = array();
-$a_ids_desaparecidos_de_listas = array();
+$a_ids_traslados_A = [];
+$a_ids_desaparecidos_de_listas = [];
 
 foreach ($cPersonasOrbix as $oPersonaOrbix) {
     $id_nom_orbix = $oPersonaOrbix->getId_nom();
@@ -244,7 +244,7 @@ $explicacion_txt .= _("al efectuar alguna acción dentro de las listas, las pers
             });
     }
 </script>
-<p>Si a modificado datos en la BDU después de: <?= $fecha_actualizacion ?> debe
+<p>Si ha modificado datos en la BDU después de: <?= $fecha_actualizacion ?> debe
     <b><span class=link onclick="fnjs_refrescar()"><?= _("refrescar") ?></span></b>. Esta operación tardará
     un par o tres de minutos</p>
 <br>
