@@ -293,9 +293,11 @@
 //                    if (data[i]['id_nom']==id_sacd_anterior)
                     if (i<data.length)
                     {
+//                        alert('id_sacd_anterior encontrado');
                         data[i].meta[dia].color=respuesta.meta.color_fondo_anterior;
                         data[i].meta[dia].texto=respuesta.meta.texto_anterior;
                     }
+                    i=0;
                     while ((i<data.length) && (data[i]['id_nom']!=id_nom))
                     {
                         i++;
@@ -303,9 +305,12 @@
 //                    if (data[i]['id_nom']==id_nom)
                     if (i<data.length)
                     {
+//                        alert('id_nom encontrado');
                         data[i].meta[dia].color=respuesta.meta.color_fondo;
                         data[i].meta[dia].texto=respuesta.meta.texto;
                     }
+                    data[row].meta[dia].color=respuesta.meta.color_misa;
+                    data[row].meta[dia].key=id_nom+'#'+iniciales;
                     if (iniciales!='') {
                         data[row][dia]=iniciales;
                     }
@@ -327,6 +332,7 @@
     }
 
     function prepara_select_sacd() {
+ //       alert ('prepara select sacd');
     	var sacd_libre=$('#sacd_libre').prop('checked');
     	var sacd_zona=$('#sacd_zona').prop('checked');
         var sacd_dl=$('#sacd_dl').prop('checked');
@@ -337,6 +343,7 @@
 	    if (sacd_dl) seleccion=4;
     	if (sacd_depaso) seleccion=8;
 	    var ii2=$('#id_sacd_inicial').val();
+//        alert ('ii2:'+ii2);
 
         let url_desplegable_sacd = '{{ url_desplegable_sacd }}';
 	    let id_zona = '{{ id_zona }}';
