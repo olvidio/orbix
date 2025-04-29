@@ -162,6 +162,7 @@ class PgPreferenciaRepository extends ClaseRepository implements PreferenciaRepo
             }
         } else {
             // INSERT
+            $aDatos['id_usuario'] = $id_usuario;
             $aDatos['tipo'] = $Preferencia->getTipo();
             $campos = "(tipo,preferencia,id_usuario)";
             $valores = "(:tipo,:preferencia,:id_usuario)";
