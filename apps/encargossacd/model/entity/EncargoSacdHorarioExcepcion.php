@@ -191,7 +191,7 @@ class EncargoSacdHorarioExcepcion extends ClasePropiedades
         } else {
             $bInsert = FALSE;
         }
-        $aDades = array();
+        $aDades = [];
         $aDades['id_item_h'] = $this->iid_item_h;
         $aDades['f_ini'] = $this->df_ini;
         $aDades['f_fin'] = $this->df_fin;

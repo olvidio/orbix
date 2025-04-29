@@ -134,7 +134,7 @@ foreach ($a_tipos_dossier as $id_tipo_dossier => $nom_dossier) {
 }
 
 $aWhere = array('id_nom' => $id_nom, '_ordre' => 'f_nombramiento');
-$aOperador = array();
+$aOperador = [];
 if (!empty($Qprint)) {
     $aWhere['f_cese'] = 'NULL';
     $aOperador['f_cese'] = 'IS NULL';
@@ -197,7 +197,7 @@ if (is_true($latin)) {
 
 $gesProfesor = new GestorProfesor();
 $cProfesores = $gesProfesor->getProfesores($aWhere, $aOperador);
-$a_nombramientos = array();
+$a_nombramientos = [];
 $dep = '';
 foreach ($cProfesores as $oProfesor) {
     $id_departamento = $oProfesor->getId_departamento();
@@ -224,7 +224,7 @@ if (empty($Qprint)) { // si no es para imprimir muestro todos los datos
     // director departamento (clase_info=1020)  //////////////////////////////////
     $gesProfesorDirector = new GestorProfesorDirector();
     $cDirectores = $gesProfesorDirector->getProfesoresDirectores($aWhere, $aOperador);
-    $a_director = array();
+    $a_director = [];
     foreach ($cDirectores as $oProfesorDirector) {
         $id_departamento = $oProfesorDirector->getId_departamento();
         $escrito_nombramiento = $oProfesorDirector->getEscrito_nombramiento();
@@ -250,7 +250,7 @@ if (empty($Qprint)) { // si no es para imprimir muestro todos los datos
     //publicaciones (clase_info=1012)  ///////////////////////////////////
     $gesProfesorPublicaciones = new GestorProfesorPublicacion();
     $cProfesorPublicaciones = $gesProfesorPublicaciones->getProfesorPublicaciones(array('id_nom' => $id_nom, '_ordre' => 'f_publicacion'));
-    $a_publicaciones = array();
+    $a_publicaciones = [];
     foreach ($cProfesorPublicaciones as $oProfesorPublicacion) {
         $pendiente = $oProfesorPublicacion->getPendiente();
         $tipo_publicacion = $oProfesorPublicacion->getTipo_publicacion();
@@ -272,7 +272,7 @@ if (empty($Qprint)) { // si no es para imprimir muestro todos los datos
 // Curriculum (clase_info=1017) ///////////////////
 $gesProfesorTituloEst = new GestorProfesorTituloEst();
 $cTitulosEst = $gesProfesorTituloEst->getTitulosEst(array('id_nom' => $id_nom, '_ordre' => 'year'));
-$a_curriculum = array();
+$a_curriculum = [];
 foreach ($cTitulosEst as $oProfesorTituloEst) {
     $eclesiastico = $oProfesorTituloEst->getEclesiastico();
     $titulo = $oProfesorTituloEst->getTitulo();
@@ -287,7 +287,7 @@ $go_cosas['curriculum'] = Hash::link(ConfigGlobal::getWeb() . '/apps/core/mod_ta
 // Nombramientos (clase_info=1018) ///////////////////////////
 $gesProfesor = new GestorProfesor();
 $cProfesores = $gesProfesor->getProfesores($aWhere, $aOperador);
-$a_nombramientos = array();
+$a_nombramientos = [];
 $id_departamento = '';
 foreach ($cProfesores as $oProfesor) {
     $id_departamento = $oProfesor->getId_departamento();
@@ -312,7 +312,7 @@ $go_cosas['nombramientos'] = Hash::link(ConfigGlobal::getWeb() . '/apps/core/mod
 // Ampliación docencia (clase_info=1019) ///////////////////
 $gesProfesorAmpliacion = new GestorProfesorAmpliacion();
 $cProfesorAmpliaciones = $gesProfesorAmpliacion->getProfesorAmpliaciones($aWhere, $aOperador);
-$a_ampliacion = array();
+$a_ampliacion = [];
 $id_departamento = '';
 foreach ($cProfesorAmpliaciones as $oProfesorAmpliacion) {
     $id_asignatura = $oProfesorAmpliacion->getId_asignatura();

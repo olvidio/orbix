@@ -79,10 +79,10 @@ class ViewTwig extends Environment
         $base_dir = ServerConf::DIR . $dir_apps;
 
         // reemplazo controller o model por view
-        $patterns = array();
+        $patterns = [];
         $patterns[0] = '/controller/';
         $patterns[1] = '/model/';
-        $replacements = array();
+        $replacements = [];
         $replacements[0] = 'view';
         $replacements[1] = 'view';
 

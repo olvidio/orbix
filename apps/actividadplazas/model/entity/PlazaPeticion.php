@@ -133,7 +133,7 @@ class PlazaPeticion extends ClasePropiedades
         } else {
             $bInsert = false;
         }
-        $aDades = array();
+        $aDades = [];
         $aDades['orden'] = $this->iorden;
         $aDades['tipo'] = $this->stipo;
         array_walk($aDades, 'core\poner_null');

@@ -59,7 +59,7 @@ class Actividad extends ActividadAll
      */
     public function DBGuardar($quiet = 0)
     {
-        $aDades = array();
+        $aDades = [];
         $aDades['id_tipo_activ'] = $this->iid_tipo_activ;
         $aDades['dl_org'] = $this->sdl_org;
         $aDades['nom_activ'] = $this->snom_activ;

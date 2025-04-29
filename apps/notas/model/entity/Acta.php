@@ -173,7 +173,7 @@ class Acta extends ClasePropiedades
         } else {
             $bInsert = false;
         }
-        $aDades = array();
+        $aDades = [];
         $aDades['id_asignatura'] = $this->iid_asignatura;
         $aDades['id_activ'] = $this->iid_activ;
         $aDades['f_acta'] = $this->df_acta;

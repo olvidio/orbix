@@ -63,7 +63,7 @@ switch ($Qque) {
                 $ap_nom = $oPersona->getPrefApellidosNombre();
                 $GesZonasSacd = new GestorZonaSacd();
                 $cZonaSacd = $GesZonasSacd->getZonasSacds(array('id_nom' => $id_nom));
-                $a_zonas = array();
+                $a_zonas = [];
                 if (is_array($cZonaSacd) && count($cZonaSacd) < 1) {
                     $a_valores[$i]['sel'] = $id_nom;
                     $a_valores[$i][1] = $ap_nom;
@@ -74,13 +74,13 @@ switch ($Qque) {
         } else {
             $aWhere = [];
             $aWhere['id_zona'] = $Qid_zona;
-            $aOperador = array();
+            $aOperador = [];
             $oZona = new Zona($Qid_zona);
             $nombre_zona = $oZona->getNombre_zona();
             $GesZonasSacd = new GestorZonaSacd();
             $cZonaSacd = $GesZonasSacd->getZonasSacds($aWhere, $aOperador);
-            $a_sacds = array();
-            $a_valores = array();
+            $a_sacds = [];
+            $a_valores = [];
             $i = 0;
             foreach ($cZonaSacd as $oZonaSacd) {
                 $id_nom = $oZonaSacd->getId_nom();
@@ -109,7 +109,7 @@ switch ($Qque) {
                 $i++;
             }
 
-            $multisort_args = array();
+            $multisort_args = [];
             $multisort_args[] = $aAp1;
             $multisort_args[] = SORT_ASC;
             $multisort_args[] = SORT_STRING;
@@ -150,7 +150,7 @@ switch ($Qque) {
             $ap_nom = $oPersona->getPrefApellidosNombre();
             $GesZonasSacd = new GestorZonaSacd();
             $cZonaSacd = $GesZonasSacd->getZonasSacds(array('id_nom' => $id_nom));
-            $a_zonas = array();
+            $a_zonas = [];
             foreach ($cZonaSacd as $oZonaSacd) {
                 $id_zona = $oZonaSacd->getId_zona();
                 $propia = $oZonaSacd->getPropia();

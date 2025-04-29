@@ -46,7 +46,7 @@ $nom_activ = $oActividad->getNom_activ();
 
 $GesAsignaturas = new GestorAsignatura();
 
-$oDesplProfesores = array();
+$oDesplProfesores = [];
 if (!empty($id_asignatura_real)) { //caso de modificar
     $mod = "editar";
     $oMatricula = new Matricula(array('id_nom' => $Qid_nom, 'id_activ' => $Qid_activ, 'id_asignatura' => $id_asignatura_real));
@@ -59,9 +59,9 @@ if (!empty($id_asignatura_real)) { //caso de modificar
     $id_asignatura = $id_asignatura_real;
 
     $chk_preceptor = ($preceptor === true) ? 'checked' : '';
-    $cOpcionales = array();
-    $aFaltan = array();
-    $oDesplNiveles = array();
+    $cOpcionales = [];
+    $aFaltan = [];
+    $oDesplNiveles = [];
     if (!empty($id_preceptor)) {
         $GesProfes = new profesores\model\entity\GestorProfesor();
         $oDesplProfesores = $GesProfes->getListaProfesores();
@@ -79,16 +79,16 @@ if (!empty($id_asignatura_real)) { //caso de modificar
     $epoca = '';
     $id_activ = '';
     // todas las asignaturas
-    $aWhere = array();
-    $aOperador = array();
+    $aWhere = [];
+    $aOperador = [];
     $aWhere['status'] = 't';
     $aWhere['id_nivel'] = 3000;
     $aOperador['id_nivel'] = '<';
     $aWhere['_ordre'] = 'id_nivel';
     $cAsignaturas = $GesAsignaturas->getAsignaturas($aWhere, $aOperador);
     // todas las opcionales
-    $aWhere = array();
-    $aOperador = array();
+    $aWhere = [];
+    $aOperador = [];
     $aWhere['status'] = 't';
     $aWhere['id_nivel'] = '3000,5000';
     $aOperador['id_nivel'] = 'BETWEEN';
@@ -104,8 +104,8 @@ if (!empty($id_asignatura_real)) { //caso de modificar
         $c++;
         $cond .= $Nota->getId_situacion();
     }
-    $aWhere = array();
-    $aOperador = array();
+    $aWhere = [];
+    $aOperador = [];
     $aWhere['id_situacion'] = $cond;
     $aOperador['id_situacion'] = '~';
     $aWhere['id_nom'] = $Qid_nom;
@@ -114,7 +114,7 @@ if (!empty($id_asignatura_real)) { //caso de modificar
     $aWhere['_ordre'] = 'id_nivel';
     $GesPersonaNotas = new GestorPersonaNotaDB();
     $cAsignaturasSuperadas = $GesPersonaNotas->getPersonaNotas($aWhere, $aOperador);
-    $aSuperadas = array();
+    $aSuperadas = [];
     foreach ($cAsignaturasSuperadas as $oAsignatura) {
         $id_nivel = $oAsignatura->getId_nivel();
         $id_asignatura = $oAsignatura->getId_asignatura();
@@ -123,14 +123,14 @@ if (!empty($id_asignatura_real)) { //caso de modificar
     // También quito las ya matriculadas
     $GesMatriculas = new GestorMatriculaDl();
     $cMatriculas = $GesMatriculas->getMatriculas(array('id_nom' => $Qid_nom, 'id_activ' => $Qid_activ));
-    $aMatriculadas = array();
+    $aMatriculadas = [];
     foreach ($cMatriculas as $oMatricula) {
         $id_asignatura = $oMatricula->getId_asignatura();
         $id_nivel = $oMatricula->getId_nivel();
         $aMatriculadas[$id_nivel] = $id_asignatura;
     }
     // asignaturas posibles
-    $aFaltan = array();
+    $aFaltan = [];
     foreach ($cAsignaturas as $oAsignatura) {
         $id_nivel = $oAsignatura->getId_nivel();
         $id_asignatura = $oAsignatura->getId_asignatura();
@@ -150,8 +150,8 @@ if (!empty($id_asignatura_real)) { //caso de modificar
 // miro cuales son las opcionales genéricas, para la funcion
 //  fnjs_cmb_opcional de javascript.
 // la condicion es que tengan id_sector=1
-$aWhere = array();
-$aOperador = array();
+$aWhere = [];
+$aOperador = [];
 $aWhere['status'] = 't';
 $aWhere['id_sector'] = 1;
 $aWhere['id_nivel'] = 3000;

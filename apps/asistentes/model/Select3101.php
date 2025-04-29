@@ -214,13 +214,13 @@ class Select3101
      */
     private function contarPlazas()
     {
-        $a_plazas_resumen = array();
-        $a_plazas_conseguidas = array();
+        $a_plazas_resumen = [];
+        $a_plazas_conseguidas = [];
 
         $gesActividadPlazasR = new GestorResumenPlazas();
         $gesActividadPlazasR->setId_activ($this->id_pau);
 
-        $this->a_plazas_conseguidas = array();
+        $this->a_plazas_conseguidas = [];
         $aaa = $gesActividadPlazasR->getResumen();
         $this->a_plazas_resumen = $aaa;
     }
@@ -245,8 +245,8 @@ class Select3101
         $gesAsistentes = new GestorAsistente();
         $c = 0;
         $num = 0;
-        $a_valores = array();
-        $this->aListaCargos = array();
+        $a_valores = [];
+        $this->aListaCargos = [];
         $GesCargosEnActividad = new GestorActividadCargo();
         $cCargosEnActividad = $GesCargosEnActividad->getActividadCargos(array('id_activ' => $this->id_pau));
         $mi_sfsv = ConfigGlobal::mi_sfsv();
@@ -430,7 +430,7 @@ class Select3101
     public function getAsistentes()
     {
         $gesAsistentes = new GestorAsistente();
-        $this->a_asistentes = array();
+        $this->a_asistentes = [];
         $cAsistentes = $gesAsistentes->getAsistentes(array('id_activ' => $this->id_pau));
         foreach ($cAsistentes as $oAsistente) {
             $this->num++;
@@ -731,7 +731,7 @@ class Select3101
                     $resumen_plazas2 = "$this->mi_dele: ";
                     $p = 0;
                     foreach ($a_dl_plazas as $dl2 => $pla) {
-                        $plazas = empty($pla['ocupadas']) ? array() : $pla['ocupadas'];
+                        $plazas = empty($pla['ocupadas']) ? [] : $pla['ocupadas'];
                         $pla['cedidas'] = empty($pla['cedidas']) ? '?' : $pla['cedidas'];
                         foreach ($plazas as $dl => $pl) {
                             $p++;
@@ -782,7 +782,7 @@ class Select3101
         } else {
             $c = 0;
             $this->num = 0;
-            $this->a_valores = array();
+            $this->a_valores = [];
         }
 
         $this->getAsistentes();
@@ -907,7 +907,7 @@ class Select3101
 
     public function setLinksInsert()
     {
-        $this->aLinks_dl = array();
+        $this->aLinks_dl = [];
         $ref_perm = $this->a_ref_perm;
         if (empty($ref_perm) || $this->permiso < 2 || ConfigGlobal::mi_ambito() === 'rstgr') { // si es nulo, no tengo permisos de ningún tipo
             return '';

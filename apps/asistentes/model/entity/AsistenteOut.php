@@ -83,7 +83,7 @@ class AsistenteOut extends AsistentePub
         } else {
             $bInsert = false;
         }
-        $aDades = array();
+        $aDades = [];
         $aDades['propio'] = $this->bpropio;
         $aDades['est_ok'] = $this->best_ok;
         $aDades['cfi'] = $this->bcfi;
@@ -207,7 +207,7 @@ class AsistenteOut extends AsistentePub
                     $oPersonaOut->import($oPersona);
                     $oPersonaOut->DBGuardar();
                     // miro si es profesor
-                    $cProfesores = array();
+                    $cProfesores = [];
                     $gesProfesores = new GestorProfesor();
                     $cProfesores = $gesProfesores->getProfesores(array('id_nom' => $this->iid_nom, 'f_cese' => ''), array('f_cese' => 'IS NULL'));
                     if (count($cProfesores) > 0) {

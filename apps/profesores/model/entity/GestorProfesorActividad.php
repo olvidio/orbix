@@ -45,10 +45,10 @@ class GestorProfesorActividad extends ClaseGestor
         // asistentes de otras dl que son profesores
         // asistentes de paso que son profesores
         $gesAsistentesIn = new GestorAsistenteIn();
-        $aProfesoresEx = array();
-        $aAp1 = array();
-        $aAp2 = array();
-        $aNom = array();
+        $aProfesoresEx = [];
+        $aAp1 = [];
+        $aAp2 = [];
+        $aNom = [];
         $msg_err = '';
         foreach ($gesAsistentesIn->getListaAsistentesDistintos($aId_activ) as $id_nom) {
             $oPersona = Persona::NewPersona($id_nom);
@@ -71,7 +71,7 @@ class GestorProfesorActividad extends ClaseGestor
             $aAp2[] = $oPersona->getApellido2();
             $aNom[] = $oPersona->getNom();
         }
-        $multisort_args = array();
+        $multisort_args = [];
         $multisort_args[] = $aAp1;
         $multisort_args[] = SORT_ASC;
         $multisort_args[] = SORT_STRING;
@@ -83,7 +83,7 @@ class GestorProfesorActividad extends ClaseGestor
         $multisort_args[] = SORT_STRING;
         $multisort_args[] = &$aProfesoresEx;   // finally add the source array, by reference
         call_user_func_array("array_multisort", $multisort_args);
-        $aOpciones = array();
+        $aOpciones = [];
         foreach ($aProfesoresEx as $aClave) {
             $clave = $aClave['id_nom'];
             $val = $aClave['ap_nom'];

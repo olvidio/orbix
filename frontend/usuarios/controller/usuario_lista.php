@@ -42,7 +42,7 @@ $url_lista = Hash::link(ConfigGlobal::getWeb()
 );
 
 $url_lista_backend = Hash::link(ConfigGlobal::getWeb()
-    . '/apps/usuarios/controller/usuario_lista.php'
+    . '/src/usuarios/infrastructure/controllers/usuario_lista.php'
 );
 
 $oHash = new Hash();

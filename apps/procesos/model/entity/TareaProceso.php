@@ -6,8 +6,8 @@ use actividades\model\entity\ActividadAll;
 use core\ClasePropiedades;
 use core\DatosCampo;
 use core\Set;
+use src\menus\domain\PermisoMenu;
 use stdClass;
-use menus\model\PermisoMenu;
 
 /**
  * Fitxer amb la Classe que accedeix a la taula a_tareas_proceso
@@ -155,7 +155,7 @@ class TareaProceso extends ClasePropiedades
         } else {
             $bInsert = FALSE;
         }
-        $aDades = array();
+        $aDades = [];
         $aDades['id_tipo_proceso'] = $this->iid_tipo_proceso;
         $aDades['id_fase'] = $this->iid_fase;
         $aDades['id_tarea'] = $this->iid_tarea;

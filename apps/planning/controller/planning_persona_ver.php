@@ -31,7 +31,7 @@ require_once("apps/core/global_object.inc");
 $oPosicion->recordar();
 
 $a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-$aid_nom = array();
+$aid_nom = [];
 if (!empty($a_sel)) { //vengo de un checkbox
     // puede ser más de uno
     if (is_array($a_sel) && count($a_sel) > 1) {
@@ -146,7 +146,7 @@ $persona = [];
 $a_actividades = [];
 $a_actividades2 = [];
 foreach ($cPersonas as $oPersona) {
-    $aActivPersona = array();
+    $aActivPersona = [];
     $id_nom = $oPersona->getId_nom();
     $nombre = $oPersona->getPrefApellidosNombre();
 
@@ -167,7 +167,7 @@ foreach ($cPersonas as $oPersona) {
     }
 
     // Seleccionar sólo las del periodo y actuales o terminadas
-    $aWhere = array();
+    $aWhere = [];
     $aOperador = [];
     $aWhere['f_ini'] = "'$fin_iso'";
     $aOperador['f_ini'] = '<=';

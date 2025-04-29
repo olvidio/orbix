@@ -67,7 +67,7 @@ class CentroEx extends Centro
         } else {
             $bInsert = false;
         }
-        $aDades = array();
+        $aDades = [];
         $aDades['tipo_ubi'] = $this->stipo_ubi;
         $aDades['nombre_ubi'] = $this->snombre_ubi;
         $aDades['dl'] = $this->sdl;

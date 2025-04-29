@@ -108,7 +108,7 @@ class Departamento extends ClasePropiedades
         } else {
             $bInsert = false;
         }
-        $aDades = array();
+        $aDades = [];
         $aDades['departamento'] = $this->sdepartamento;
         array_walk($aDades, 'core\poner_null');
 

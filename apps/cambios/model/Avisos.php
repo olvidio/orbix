@@ -10,9 +10,9 @@ use cambios\model\entity\GestorCambioAnotado;
 use cambios\model\entity\GestorCambioUsuario;
 use core\ConfigGlobal;
 use permisos\model\PermisosActividades;
+use src\usuarios\application\repositories\UsuarioRepository;
+use src\usuarios\domain\entity\Role;
 use web\DateTimeLocal;
-use usuarios\model\entity\Role;
-use usuarios\model\entity\Usuario;
 use zonassacd\model\entity\GestorZona;
 use zonassacd\model\entity\GestorZonaSacd;
 use function core\is_true;
@@ -206,10 +206,13 @@ class Avisos
     {
         //echo "usuario: $id_usuario, camp: $propiedad, id_activ: $id_activ <br>\n";
         // Si el usuario es una casa o un sacd, sólo ve los cambios que le afectan:
-        $oMiUsuario = new Usuario($this->id_usuario);
+        $UsuarioRepository = new UsuarioRepository();
+        $oMiUsuario = $UsuarioRepository->findById($this->id_usuario);
+        $oRole = new Role();
+        $oRole->setId_role($oMiUsuario->getId_role());
 
         //casa
-        if ($oMiUsuario->isRolePau(Role::PAU_CDC)) {
+        if ($oRole->isRolePau(Role::PAU_CDC)) {
             $mis_id_ubis = $oMiUsuario->getId_pau(); // puede ser una lista separada por comas.
             if (!empty($mis_id_ubis)) { //casa o un listado de ubis en la preferencia del aviso.
                 $a_mis_id_ubis = explode(',', $mis_id_ubis);
@@ -218,7 +221,7 @@ class Avisos
                 $id_ubi = $oActividad->getId_ubi(); // id ubi actual.
 
                 // si lo que cambia es el id_ubi, compruebo que el valor old o new sean de la casa.
-                if ($propiedad == 'id_ubi') {
+                if ($propiedad === 'id_ubi') {
                     return (in_array($valor_old_cmb, $a_mis_id_ubis) || in_array($id_ubi, $a_mis_id_ubis));
                 } else {
                     // si cambia qualquier otra cosa en mi id_ubi.
@@ -227,7 +230,7 @@ class Avisos
                             case 'ActividadCargoNoSacd':
                             case 'ActividadCargoSacd':
                                 // si lo que cambia es el campo observaciones, no hace falata informar.
-                                if ($propiedad == 'observ') {
+                                if ($propiedad === 'observ') {
                                     return FALSE;
                                 }
                         }
@@ -239,7 +242,7 @@ class Avisos
             }
         }
         // si soy un sacd.
-        if ($oMiUsuario->isRolePau(Role::PAU_SACD)) {
+        if ($oRole->isRolePau(Role::PAU_SACD)) {
             $id_nom_usuario = $oMiUsuario->getId_pau();
             // soy jefe zona?
             // si soy jefe de zona me afectan todos los sacd de la zona.

@@ -114,7 +114,7 @@ class Sector extends ClasePropiedades
         } else {
             $bInsert = false;
         }
-        $aDades = array();
+        $aDades = [];
         $aDades['id_departamento'] = $this->iid_departamento;
         $aDades['sector'] = $this->ssector;
         array_walk($aDades, 'core\poner_null');

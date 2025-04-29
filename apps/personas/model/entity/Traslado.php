@@ -160,7 +160,7 @@ class Traslado extends ClasePropiedades
         } else {
             $bInsert = false;
         }
-        $aDades = array();
+        $aDades = [];
         $aDades['f_traslado'] = $this->df_traslado;
         $aDades['tipo_cmb'] = $this->stipo_cmb;
         $aDades['id_ctr_origen'] = $this->iid_ctr_origen;

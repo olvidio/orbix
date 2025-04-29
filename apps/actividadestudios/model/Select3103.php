@@ -123,7 +123,7 @@ class Select3103
         // por cada asignatura
         $a = 0;
         $msg_err = '';
-        $aGrupos = array();
+        $aGrupos = [];
         foreach ($cActividadAsignaturas as $oActividadAsignatura) {
             $a++;
             $id_asignatura = $oActividadAsignatura->getId_asignatura();
@@ -149,7 +149,7 @@ class Select3103
             $GesMatriculas = new GestorMatriculaDl();
             $cMatriculas = $GesMatriculas->getMatriculas(array('id_activ' => $this->id_pau, 'id_asignatura' => $id_asignatura));
             $m = 0;
-            $a_valores = array();
+            $a_valores = [];
             foreach ($cMatriculas as $oMatricula) {
                 $id_nom = $oMatricula->getId_nom();
                 $oPersona = Persona::NewPersona($id_nom);

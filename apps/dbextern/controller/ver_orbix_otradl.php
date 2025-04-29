@@ -19,7 +19,7 @@ $ids_traslados_A = (string)filter_input(INPUT_POST, 'ids_traslados_A');
 
 $a_ids_traslados_A = json_decode(urldecode($ids_traslados_A));
 
-$a_persona_listas = array();
+$a_persona_listas = [];
 $i = 0;
 foreach ($a_ids_traslados_A as $id_nom_listas) {
     $i++;

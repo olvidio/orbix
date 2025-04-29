@@ -7,9 +7,8 @@ use cambios\model\entity\CambioUsuarioObjetoPref;
 use cambios\model\entity\GestorCambioUsuario;
 use core\ConfigGlobal;
 use core\ViewTwig;
-use usuarios\model\entity\GestorUsuario;
-use usuarios\model\entity\Preferencia;
-use usuarios\model\entity\Usuario;
+use src\usuarios\application\repositories\PreferenciaRepository;
+use src\usuarios\application\repositories\UsuarioRepository;
 use web\Desplegable;
 use web\Hash;
 use web\Lista;
@@ -38,17 +37,17 @@ $oDesplTiposAviso->setNombre('aviso_tipo');
 $oDesplTiposAviso->setBlanco('false');
 $oDesplTiposAviso->setOpciones($aTipos_aviso);
 
-$GesUsuarios = new GestorUsuario();
-$ListaUsuarios = $GesUsuarios->getListaUsuarios();
+$UsuarioRepository = new UsuarioRepository();
+$aUsuarios = $UsuarioRepository->getArrayUsuarios();
 
 $oDesplUsuarios = new Desplegable();
 $oDesplUsuarios->setNombre('id_usuario');
 $oDesplUsuarios->setBlanco('false');
-$oDesplUsuarios->setOpciones($ListaUsuarios);
+$oDesplUsuarios->setOpciones($aUsuarios);
 
 if ($_SESSION['oPerm']->only_perm('admin_sf') || $_SESSION['oPerm']->only_perm('admin_sv')) {
-    // sino en $Posicion. Le paso la referecia del stack donde está la información.
-    if (!empty($Qrefresh) && ($QGstack != '')) {
+    // sino en $Posicion. Le paso la referencia del stack donde está la información.
+    if (!empty($Qrefresh) && !empty($QGstack)) {
         $oPosicion->goStack($QGstack);
         $Qid_usuario = $oPosicion->getParametro('id_usuario');
         $Qaviso_tipo = $oPosicion->getParametro('aviso_tipo');
@@ -72,8 +71,13 @@ $a_campos = [];
 
 if (!empty($Qid_usuario)) {
     // buscar la zona horaria
-    $oPref = new Preferencia(array('id_usuario' => $Qid_usuario, 'tipo' => 'zona_horaria'));
-    $zona_horaria = $oPref->getPreferencia();
+    $PreferenciaRepository = new PreferenciaRepository();
+    $oPreferencia = $PreferenciaRepository->findById($Qid_usuario, 'zona_horaria');
+    if ($oPreferencia !== null) {
+        $zona_horaria = $oPreferencia->getPreferencia();
+    } else {
+        $zona_horaria = '';
+    }
 
     $DateTimeZone = new DateTimeZone('UTC');
     if (!empty($zona_horaria)) {
@@ -87,7 +91,7 @@ if (!empty($Qid_usuario)) {
     // seleccionar por usuario
     $mi_sfsv = ConfigGlobal::mi_sfsv();
 
-    $aWhere = array();
+    $aWhere = [];
     $aWhere['id_usuario'] = $Qid_usuario;
     $aWhere['sfsv'] = $mi_sfsv;
     $aWhere['aviso_tipo'] = $Qaviso_tipo;
@@ -99,7 +103,7 @@ if (!empty($Qid_usuario)) {
     foreach ($cCambiosUsuario as $oCambioUsuario) {
         $id_item_cmb = $oCambioUsuario->getId_item_cambio();
         $id_schema_cmb = $oCambioUsuario->getId_schema_cambio();
-        if ($id_schema_cmb == 3000) {
+        if ($id_schema_cmb === 3000) {
             $oCambio = new Cambio($id_item_cmb);
         } else {
             $oCambio = new CambioDl($id_item_cmb);
@@ -116,7 +120,7 @@ if (!empty($Qid_usuario)) {
         }
         $i++;
         if ($sfsv_quien_cambia === $mi_sfsv) {
-            $oUsuarioCmb = new Usuario($quien_cambia);
+            $oUsuarioCmb = $UsuarioRepository->findById($quien_cambia);
             $quien = $oUsuarioCmb->getUsuario();
         } else {
             $quien = $aSecciones[$sfsv_quien_cambia];

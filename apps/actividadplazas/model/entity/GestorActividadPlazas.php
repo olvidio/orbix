@@ -67,13 +67,13 @@ class GestorActividadPlazas extends ClaseGestor
      * @param array aOperators associatiu amb els valors dels operadors que cal aplicar a cada variable
      * @return array|void
      */
-    function getactividadesPlazas($aWhere = array(), $aOperators = array())
+    function getactividadesPlazas($aWhere = [], $aOperators = array())
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         $oactividadPlazasSet = new Set();
         $oCondicion = new Condicion();
-        $aCondi = array();
+        $aCondi = [];
         foreach ($aWhere as $camp => $val) {
             if ($camp === '_ordre') continue;
             $sOperador = isset($aOperators[$camp]) ? $aOperators[$camp] : '';

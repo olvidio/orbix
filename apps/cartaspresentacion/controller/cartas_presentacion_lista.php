@@ -59,8 +59,8 @@ switch ($Qque) {
         $Qregion = (string)filter_input(INPUT_POST, 'region');
         $Qdl = (string)filter_input(INPUT_POST, 'dl');
         // buscar los ctr y de allí mirar los que tienen cartas de presentacion.
-        $aWhere = array();
-        $aOperador = array();
+        $aWhere = [];
+        $aOperador = [];
         if (!empty($Qpais) || !empty($Qpoblacion)) {
             if (!empty($Qpoblacion)) {
                 $aWhere['poblacion'] = $Qpoblacion;
@@ -131,7 +131,7 @@ switch ($Qque) {
         }
         if (!empty($Qdl)) {
             $aWhere['dl'] = $Qdl;
-            $aOperador = array();
+            $aOperador = [];
 
             $GesCentros = new GestorCentro();
             $cCentros = $GesCentros->getCentros($aWhere, $aOperador);
@@ -183,7 +183,7 @@ function mega_array($oPresentacion, $oCentro, $ordenar_dl)
     $poblacion = '';
     $pais = '';
     $telf = '';
-    $a_direccion = array();
+    $a_direccion = [];
 
     $oDireccion = new DireccionCtr($id_direccion);
     $direccion = $oDireccion->getDireccion();
@@ -207,7 +207,7 @@ function mega_array($oPresentacion, $oCentro, $ordenar_dl)
         }
     }
 
-    $a_direccion = array();
+    $a_direccion = [];
     if (!empty($id_ctr_padre)) {
         $oCentro1 = new Centro($id_ctr_padre);
         $cDirecciones1 = $oCentro1->getDirecciones();

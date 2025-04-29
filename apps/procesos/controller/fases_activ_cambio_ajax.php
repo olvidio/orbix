@@ -106,7 +106,7 @@ switch ($Qque) {
         }
 
         $i = 0;
-        $a_cabeceras = array();
+        $a_cabeceras = [];
         $a_cabeceras[] = _("nom");
         $a_cabeceras[] = _("cumple requisito");
 
@@ -124,7 +124,7 @@ switch ($Qque) {
         ];
 
 
-        $a_valores = array();
+        $a_valores = [];
         $aWhere['_ordre'] = 'f_ini';
         $cActividades = $gesActividades->getActividades($aWhere, $aOperador);
         if (!is_array($cActividades)) {

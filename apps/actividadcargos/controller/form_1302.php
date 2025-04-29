@@ -75,7 +75,7 @@ $obj = 'actividadcargos\\model\\entity\\ActividadCargo';
 
 $id_activ_real = '';
 $nom_activ = '';
-$cActividades = array();
+$cActividades = [];
 if (!empty($Qid_item)) { //caso de modificar
     $oActividadCargo = new ActividadCargo(array('id_item' => $Qid_item));
     $id_activ = $oActividadCargo->getId_activ();

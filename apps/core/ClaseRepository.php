@@ -48,7 +48,7 @@ abstract class ClaseRepository
         return $this->oDbl;
     }
 
-    public function getoDbl_Select()
+    public function getoDbl_Select(): PDO
     {
         return $this->oDbl_Select;
     }
@@ -63,7 +63,7 @@ abstract class ClaseRepository
         $this->oDbl = $oDbl;
     }
 
-    public function setoDbl_Select($oDbl_Select)
+    public function setoDbl_Select(PDO $oDbl_Select): void
     {
         $this->oDbl_Select = $oDbl_Select;
     }
@@ -93,24 +93,6 @@ abstract class ClaseRepository
     {
         return $this->sErrorTxt;
     }
-
-    /*
-    public function __get($nombre)
-    {
-        $metodo = 'get' . ucfirst($nombre);
-        if (method_exists($this, $metodo)) {
-            return $this->$metodo();
-        }
-    }
-
-    public function __set($nombre, $valor)
-    {
-        $metodo = 'set' . ucfirst($nombre);
-        if (method_exists($this, $metodo)) {
-            $this->$metodo($valor);
-        }
-    }
-    */
 
     /**
      * Recupera el atributo iid_schema
@@ -154,8 +136,8 @@ abstract class ClaseRepository
             $Classe = $aClasse['clase'];
             $get = $aClasse['get'];
 
-            $a_ord[$Classe] = array();
-            $a_ord_cond[$Classe] = array();
+            $a_ord[$Classe] = [];
+            $a_ord_cond[$Classe] = [];
             $Gestor = $namespace . '\Gestor' . $Classe;
             $oGesClasse = new $Gestor;
             $cClasses = $oGesClasse->$get($aWhere, $aOperators);

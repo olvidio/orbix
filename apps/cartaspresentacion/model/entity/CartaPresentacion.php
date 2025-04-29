@@ -145,7 +145,7 @@ class CartaPresentacion extends ClasePropiedades
         } else {
             $bInsert = FALSE;
         }
-        $aDades = array();
+        $aDades = [];
         $aDades['pres_nom'] = $this->spres_nom;
         $aDades['pres_telf'] = $this->spres_telf;
         $aDades['pres_mail'] = $this->spres_mail;

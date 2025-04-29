@@ -2,7 +2,6 @@
 
 use core\ConfigGlobal;
 use core\ViewPhtml;
-use usuarios\model\entity\Usuario;
 use web\Hash;
 use web\Lista;
 use web\Posicion;
@@ -32,7 +31,6 @@ require_once("apps/core/global_object.inc");
 $oPosicion->recordar();
 
 
-$oMiUsuario = new Usuario(ConfigGlobal::mi_id_usuario());
 $miSfsv = ConfigGlobal::mi_sfsv();
 
 //Si vengo por medio de Posicion, borro la última
@@ -77,10 +75,10 @@ $Qdl = '';
 $Qregion = '';
 /*miro las condiciones. las variables son: nombre_ubi,ciudad,region,pais */
 if (empty($sWhere)) {
-    $aWhere = array();
-    $aOperador = array();
-    $aWhereD = array();
-    $aOperadorD = array();
+    $aWhere = [];
+    $aOperador = [];
+    $aWhereD = [];
+    $aOperadorD = [];
     $Qnombre_ubi = (string)filter_input(INPUT_POST, 'nombre_ubi');
     if (!empty($Qnombre_ubi)) {
         $nom_ubi = str_replace("+", "\+", $Qnombre_ubi); // para los centros de la sss+
@@ -306,26 +304,26 @@ if (!empty($aWhere)) {
     $oUbisGes = new $Gestor;
     $cUbis = $oUbisGes->$metodo($aWhere, $aOperador);
 } else {
-    $cUbis = array();
+    $cUbis = [];
 }
 if (!empty($aWhereD)) {
     $oDireccionesGes = new $GestorDir;
     $cDirecciones = $oDireccionesGes->getDirecciones($aWhereD, $aOperadorD);
-    $cUbisD = array();
+    $cUbisD = [];
     foreach ($cDirecciones as $oDireccion) {
         $cUbisD = array_merge($cUbisD, $oDireccion->getUbis());
     }
 }
 
 // Si hay las dos colleciones, hay que buscar la interseccion.
-$aUbisIntersec = array();
+$aUbisIntersec = [];
 if (isset($cUbis) && is_array($cUbis) && count($cUbis) && isset($cUbisD) && is_array($cUbisD) && count($cUbisD)) {
-    $aUbis = array();
+    $aUbis = [];
     foreach ($cUbis as $key => $oUbi) {
         $id_ubi = $oUbi->getId_ubi();
         $aUbis[] = $id_ubi;
     }
-    $aUbisD = array();
+    $aUbisD = [];
     foreach ($cUbisD as $key => $oUbi) {
         $id_ubi = $oUbi->getId_ubi();
         $aUbisD[] = $id_ubi;
@@ -344,8 +342,8 @@ if (isset($cUbis) && is_array($cUbis) && count($cUbis) && isset($cUbisD) && is_a
 
 
 // para descartar duplicados y ordenar
-$aUbis = array();
-$cUbisTot = array();
+$aUbis = [];
+$cUbisTot = [];
 $a_region = [];
 $a_nom = [];
 foreach ($cUbis as $key => $oUbi) {
@@ -469,7 +467,7 @@ $a_cabeceras = array(array('name' => ucfirst(_("nombre del centro")), 'formatter
     ucfirst(_("ciudad"))
 );
 
-$a_valores = array();
+$a_valores = [];
 if (isset($Qid_sel) && !empty($Qid_sel)) {
     $a_valores['select'] = $Qid_sel;
 }

@@ -1,0 +1,35 @@
+<script>
+    fnjs_importar = function (formulario) {
+        let url = 'src/menus/infrastructure/controllers/menus_importar.php';
+        let parametros = $(formulario).serialize();
+        let request = $.ajax({
+            url: url,
+            type: 'post',
+            data: parametros,
+            dataType: 'json'
+        });
+        request.done(function (json) {
+            if (json.success !== true) {
+                alert("<?= _("respuesta") ?>" + ': ' + json.mensaje);
+            } else {
+                let txt = "<?= _("menus importados") ?>";
+                txt += "\n";
+                txt += "<?= _("No olvide refrescar los menús") ?>";
+                alert(txt);
+            }
+        });
+    }
+</script>
+<form id="frm_menus" name="frm_menus" action="" onkeydown="fnjs_enviar(event,this);">
+    <?= $oHash->getCamposHtml() ?>
+    <table>
+        <tr>
+            <td><?= _("Escoger menus de referencia") ?></td>
+            <td>
+                <?= $oDesplTemplates->desplegable() ?>
+            </td>
+        </tr>
+    </table>
+    <input id="btn_ok" name="btn_ok" class="btn_ok" type="button" onclick="fnjs_importar('#frm_menus');"
+           value="<?= _("importar") ?>">
+</form>

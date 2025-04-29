@@ -38,7 +38,7 @@ class GestorPersonaDl extends GestorPersonaGlobal
      * @param array aOperators associatiu amb els valors dels operadors que cal aplicar a cada variable
      * @return array Una col·lecció d'objectes de tipus PersonaDl
      */
-    function getPersonasDl($aWhere = array(), $aOperators = array())
+    function getPersonasDl($aWhere = [], $aOperators = array())
     {
         return parent::getPersonasObj('personas\\model\entity\\PersonaDl', $aWhere, $aOperators);
     }

@@ -3,7 +3,7 @@
 namespace web;
 
 use core\ConfigGlobal;
-use usuarios\model\entity\Preferencia;
+use src\usuarios\application\repositories\PreferenciaRepository;
 use function core\is_true;
 
 //require_once ("classes/personas/ext_web_preferencias.class");
@@ -27,90 +27,92 @@ class Lista
      *
      * @var string
      */
-    protected $sNombre;
+    private $sNombre;
     /**
      * ikey del Lista
      *
      * @var integer ?
      */
-    protected $ikey;
+    private $ikey;
 
     /**
      * aGrupos de la Lista
      *
      * @var array ( id => titulo)
      */
-    protected $aGrupos;
-    protected $botones_grupo = FALSE;
+    private $aGrupos;
+    private $botones_grupo = FALSE;
 
     /**
      * aCabeceras de la Lista
      *
      * @var array
      */
-    protected $aCabeceras;
+    private $aCabeceras;
     /**
      * sPie de la Lista
      *
      * @var string
      */
-    protected $sPie;
+    private $sPie;
     /**
      * ssortcol de la Lista. Columna por la que se ordena la tabla inicialmente.
      *
      * @var string
      */
-    protected $ssortCol;
+    private $ssortCol;
     /**
      * aColVisible de la Lista. columnas visibles inicialmente.
      *
      * @var array
      */
-    protected $aColVisible = array();
+    private $aColVisible = [];
     /**
      * aDatos de la Lista
      *
      * @var array lista de arrays (id el del titulo) cada sub-array es la fila.
      */
-    protected $aDatos;
+    private $aDatos;
     /**
      * aBotones de la Lista
      *
      * @var array
      */
-    protected $aBotones;
+    private $aBotones;
     /**
      * sid_tabla de la Lista
      *
      * @var array
      */
-    protected $sid_tabla = 'uno';
+    private $sid_tabla = 'uno';
     /**
      * bFiltro de la Lista
      *
      * @var boolean
      */
-    protected $bFiltro = TRUE;
+    private $bFiltro = TRUE;
     /**
      * bColVis de la Lista
      *
      * @var boolean
      */
-    protected $bColVis = TRUE;
+    private $bColVis = TRUE;
     /**
      * brecordar de la lista
      *
      * @var boolean
      */
-    protected $brecordar = TRUE;
+    private $brecordar = TRUE;
     /**
      * formato_tabla de la lista
      *
      * @var string
      */
-    protected $formato_tabla = '';
+    private $formato_tabla = '';
 
-    protected mixed $bRecordar;
+    private mixed $bRecordar;
+
+    private PreferenciaRepository $preferenciaRepository;
 
     /* CONSTRUCTOR -------------------------------------------------------------- */
 
@@ -122,7 +124,7 @@ class Lista
      */
     function __construct()
     {
-        // constructor buit
+        $this->preferenciaRepository = new PreferenciaRepository();
     }
 
     /**
@@ -301,8 +303,12 @@ class Lista
         $id_usuario = ConfigGlobal::mi_id_usuario();
         $tipo = 'tabla_presentacion';
         if (empty($this->formato_tabla)) {
-            $oPref = new Preferencia(array('id_usuario' => $id_usuario, 'tipo' => $tipo));
-            $sPrefs = $oPref->getPreferencia();
+            $cPref = $this->preferenciaRepository->getPreferencias(['id_usuario' => $id_usuario, 'tipo' => $tipo]);
+            if (!empty($cPref)) {
+                $sPrefs = $cPref[0]->getPreferencia();
+            } else {
+                $sPrefs = '';
+            }
         } else {
             $sPrefs = $this->formato_tabla;
         }
@@ -364,7 +370,7 @@ class Lista
             $a_valores_chk = $a_valores['select'];
             unset($a_valores['select']);
         } else {
-            $a_valores_chk = array();
+            $a_valores_chk = [];
         }
         if (empty($a_valores)) {
             return _("no hay ninguna fila");
@@ -389,9 +395,9 @@ class Lista
         $bPanelVis = FALSE;
         for ($i = 0, $iMax = count($aUser); $i < $iMax; $i++) {
             $user = $aUser[$i];
-            $oPref = new Preferencia(array('id_usuario' => $user, 'tipo' => $tipo));
-
-            if ($sPrefs = $oPref->getPreferencia()) {
+            $cPref = $this->preferenciaRepository->getPreferencias(['id_usuario' => $user, 'tipo' => $tipo]);
+            if (!empty($cPref)) {
+                $sPrefs = $cPref[0]->getPreferencia();
                 $aPrefs = json_decode($sPrefs, TRUE, 512, JSON_THROW_ON_ERROR);
                 if (!empty($aPrefs['colVisible'])) {
                     $aColsVisible = $aPrefs['colVisible'];
@@ -417,7 +423,7 @@ class Lista
         $sColumns = '[';
         $sColumnsVisible = '[';
         $sColFilters = '[';
-        $aFields = array();
+        $aFields = [];
         if ($b !== 0 || $b === 'x') {
             $c++;
             $width = isset($aColsWidth['sel']) ? $aColsWidth['sel'] : 30;
@@ -491,7 +497,7 @@ class Lista
         // Para generar un id único
         $ahora = date("Hms");
         $f = 1;
-        $aFilas = array();
+        $aFilas = [];
         foreach ($a_valores as $num_fila => $fila) {
             $f++;
             $id_fila = $f . $ahora;
@@ -1095,7 +1101,7 @@ class Lista
             $a_valores_chk = $a_valores['select'];
             unset($a_valores['select']);
         } else {
-            $a_valores_chk = array();
+            $a_valores_chk = [];
         }
 
         unset($a_valores['scroll_id']);

@@ -121,7 +121,7 @@ switch ($Qque) {
         $i = 0;
         $txt = '';
         $error_txt = '';
-        $a_valores = array();
+        $a_valores = [];
         foreach ($cTarifas as $oTarifaUbi) {
             $i++;
             $id_item = $oTarifaUbi->getId_item();

@@ -117,8 +117,8 @@ if (empty($grupo_estudios)) {
 $gesActividadPlazas = new GestorActividadPlazas();
 // Seleccionar actividades exportadas de los id_dl
 
-$a_grupo = array();
-$cActividades = array();
+$a_grupo = [];
+$cActividades = [];
 $gesActividades = new actividades\model\entity\GestorActividad();
 $k = 0;
 foreach ($cDelegaciones as $oDelegacion) {
@@ -139,7 +139,7 @@ foreach ($cDelegaciones as $oDelegacion) {
 
 // Dibujar tabla de plazas por actividad
 $i = 0;
-$a_valores = array();
+$a_valores = [];
 foreach ($cActividades as $oActividad) {
     $i++;
     $id_tipo_activ = $oActividad->getId_tipo_activ();
@@ -225,7 +225,7 @@ foreach ($a_grupo as $dl => $id_dl) {
     $a_cabeceras[] = array('name' => $dl . '-c', 'title' => _("concedidas"), 'field' => $dl . "-c", 'width' => 15, 'editor' => 'Slick.Editors.Integer', 'formatter' => 'cssFormatter');
     $a_cabeceras[] = array('name' => $dl . '-p', 'title' => _("pedidas"), 'field' => $dl . "-p", 'width' => 15, 'editor' => 'Slick.Editors.Integer', 'formatter' => 'cssFormatter');
 }
-$a_botones = array();
+$a_botones = [];
 
 $oTabla = new TablaEditable();
 $oTabla->setId_tabla('gestion_plazas');

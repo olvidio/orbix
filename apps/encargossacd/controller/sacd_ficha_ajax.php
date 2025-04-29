@@ -143,8 +143,8 @@ switch ($Qque) {
 
             // horario del encargo (del ctr)
             $GesEncargoHorario = new GestorEncargoHorario();
-            $aWhere = array();
-            $aOperador = array();
+            $aWhere = [];
+            $aOperador = [];
             $aWhere['id_enc'] = $a_id_enc[$i];
             $aWhere['f_fin'] = 'x';
             $aOperador['f_fin'] = 'IS NULL';
@@ -205,8 +205,8 @@ switch ($Qque) {
 
             // horario
             //$sql_sacd_h="SELECT * FROM t_horario_sacd WHERE id_enc=$id_enc[$i] AND id_nom=".$_POST['id_nom']." AND ( f_fin is null OR f_fin > '$hoy' ) ";
-            $aWhere = array();
-            $aOperador = array();
+            $aWhere = [];
+            $aOperador = [];
             $GesHorario = new GestorEncargoSacdHorario();
             $aWhere['id_enc'] = $a_id_enc[$i];
             $aWhere['id_nom'] = $Qid_nom;
@@ -471,8 +471,8 @@ switch ($Qque) {
             if (!empty($QAid_enc[$i])) { // me aseguro que el encargo ya existe.
                 // busco el id_item de la tarea_sacd.
                 $GesEncargoSacd = new GestorEncargoSacd();
-                $aWhere = array();
-                $aOperador = array();
+                $aWhere = [];
+                $aOperador = [];
                 $aWhere['id_nom'] = $Qid_nom;
                 $aWhere['id_enc'] = $QAid_enc[$i];
                 $aWhere['modo'] = '(2|3|5)';

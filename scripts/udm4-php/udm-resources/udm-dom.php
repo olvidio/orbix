@@ -1,6 +1,7 @@
 <?php
 namespace core;
 
+use src\usuarios\application\repositories\PreferenciaRepository;
 use usuarios\model\entity as usuarios;
 
 /* Lo pongo como include!! en el index */
@@ -22,14 +23,13 @@ require_once ("apps/core/global_header.inc");
 require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$oGesPref = new usuarios\GestorPreferencia();
+$PreferenciaRepository = new PreferenciaRepository();
 
 $id_usuario= ConfigGlobal::mi_id_usuario();
-$aPref = $oGesPref->getPreferencias(array('id_usuario'=>$id_usuario,'tipo'=>'estilo'));
-if (count($aPref) > 0) {
-	$oPreferencia = $aPref[0];
+$oPreferencia = $PreferenciaRepository->findById($id_usuario,'estilo');
+if ($oPreferencia !== null) {
 	$preferencia = $oPreferencia->getPreferencia();
-	list($estilo_color,$tipo_menu) = preg_split('/#/',$preferencia);
+	[$estilo_color, $tipo_menu] = preg_split('/#/', $preferencia);
 } else {
 	// valores por defecto
 	$estilo_color='azul';

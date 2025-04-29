@@ -107,7 +107,7 @@ class Situacion extends ClasePropiedades
         } else {
             $bInsert = false;
         }
-        $aDades = array();
+        $aDades = [];
         $aDades['nombre_situacion'] = $this->snombre_situacion;
         array_walk($aDades, 'core\poner_null');
 

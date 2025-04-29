@@ -35,7 +35,7 @@ class GestorPersonaIn extends GestorPersonaPub
      * @param array aOperators associatiu amb els valors dels operadors que cal aplicar a cada variable
      * @return array Una col·lecció d'objectes de tipus PersonaIn
      */
-    function getPersonasIn($aWhere = array(), $aOperators = array())
+    function getPersonasIn($aWhere = [], $aOperators = array())
     {
         return parent::getPersonasObj('personas\\model\entity\\PersonaIn', $aWhere, $aOperators);
     }

@@ -104,8 +104,8 @@ if (is_array($cEncargos) && count($cEncargos) == 0) { // nuevo encargo
         $a_desc_enc[$e] = $oEncargo->getDesc_enc();
         // horario del encargo, según el tipo
         $GesEncargoHorario = new GestorEncargoHorario();
-        $aWhere = array();
-        $aOperador = array();
+        $aWhere = [];
+        $aOperador = [];
         $aWhere['id_enc'] = $a_id_enc[$e];
         $aWhere['f_fin'] = 'x';
         $aOperador['f_fin'] = 'IS NULL';
@@ -157,8 +157,8 @@ if (is_array($cEncargos) && count($cEncargos) == 0) { // nuevo encargo
 
         // sacd
         $GesEncargoSacd = new GestorEncargoSacd();
-        $aWhere = array();
-        $aOperador = array();
+        $aWhere = [];
+        $aOperador = [];
         $aWhere['id_enc'] = $a_id_enc[$e];
         $aWhere['f_fin'] = 'x';
         $aOperador['f_fin'] = 'IS NULL';
@@ -190,8 +190,8 @@ if (is_array($cEncargos) && count($cEncargos) == 0) { // nuevo encargo
                     $actual_id_sacd_titular[$e] = $oEncargoSacd->getId_nom();
                     // horario
                     $GesEncargoSacdHorario = new GestorEncargoSacdHorario();
-                    $aWhere = array();
-                    $aOperador = array();
+                    $aWhere = [];
+                    $aOperador = [];
                     $aWhere['id_enc'] = $a_id_enc[$e];
                     $aWhere['id_nom'] = $actual_id_sacd_titular[$e];
                     $aWhere['f_fin'] = 'x';
@@ -245,8 +245,8 @@ if (is_array($cEncargos) && count($cEncargos) == 0) { // nuevo encargo
                     $id_nom = $oEncargoSacd->getId_nom();
                     // horario
                     $GesEncargoSacdHorario = new GestorEncargoSacdHorario();
-                    $aWhere = array();
-                    $aOperador = array();
+                    $aWhere = [];
+                    $aOperador = [];
                     $aWhere['id_enc'] = $a_id_enc[$e];
                     $aWhere['id_nom'] = $id_nom;
                     $aWhere['f_fin'] = 'x';

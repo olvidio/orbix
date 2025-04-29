@@ -46,7 +46,7 @@ class PgAnuncioRepository extends ClaseRepository implements AnuncioRepositoryIn
         $nom_tabla = $this->getNomTabla();
         $AnuncioSet = new Set();
         $oCondicion = new Condicion();
-        $aCondicion = array();
+        $aCondicion = [];
         foreach ($aWhere as $camp => $val) {
             if ($camp === '_ordre') {
                 continue;

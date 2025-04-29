@@ -15,7 +15,7 @@ $oPosicion->recordar();
 
 // muestra los ctr que tienen el documento.
 $url_lista_backend = Hash::link(ConfigGlobal::getWeb()
-    . '/apps/inventario/controller/inventario_dlb.php'
+    . '/src/inventario/controller/inventario_dlb.php'
 );
 $oHash = new Hash();
 $oHash->setUrl($url_lista_backend);

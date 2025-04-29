@@ -148,7 +148,7 @@ class ProfesorDirector extends ClasePropiedades
         } else {
             $bInsert = false;
         }
-        $aDades = array();
+        $aDades = [];
         $aDades['id_departamento'] = $this->iid_departamento;
         $aDades['escrito_nombramiento'] = $this->sescrito_nombramiento;
         $aDades['f_nombramiento'] = $this->df_nombramiento;

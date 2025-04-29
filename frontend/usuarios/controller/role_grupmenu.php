@@ -1,9 +1,9 @@
 <?php
 
 use core\ViewPhtml;
-use menus\model\entity\GestorGrupMenu;
-use menus\model\entity\GestorGrupMenuRole;
-use usuarios\model\entity\Role;
+use src\menus\application\repositories\GrupMenuRepository;
+use src\menus\application\repositories\GrupMenuRoleRepository;
+use src\usuarios\application\repositories\RoleRepository;
 use web\Hash;
 use web\Lista;
 
@@ -30,21 +30,22 @@ if (!empty($a_sel)) { //vengo de un checkbox
     $oPosicion->addParametro('scroll_id', $scroll_id, 1);
 }
 
-$oRole = new Role(array('id_role' => $Qid_role));
+$RoleRepository = new RoleRepository();
+$oRole = $RoleRepository->findById($Qid_role);
 $role = $oRole->getRole();
 
 // los que ya tengo:
-$oGesGMRol = new GestorGrupMenuRole();
-$cGMR = $oGesGMRol->getGrupMenuRoles(array('id_role' => $Qid_role));
-$aGrupMenus = array();
+$GrupMenuRoleRepository = new GrupMenuRoleRepository();
+$cGMR = $GrupMenuRoleRepository->getGrupMenuRoles(array('id_role' => $Qid_role));
+$aGrupMenus = [];
 foreach ($cGMR as $oGrupMenuRole) {
     $id_grupmenu = $oGrupMenuRole->getId_grupmenu();
     $aGrupMenus[$id_grupmenu] = 'x';
 }
 
-$oGesGM = new GestorGrupMenu();
-$cGM = $oGesGM->getGrupMenus();
-$a_valores = array();
+$GrupMenuRepository = new GrupMenuRepository();
+$cGM = $GrupMenuRepository->getGrupMenus();
+$a_valores = [];
 $i = 0;
 foreach ($cGM as $oGrupMenu) {
     $i++;

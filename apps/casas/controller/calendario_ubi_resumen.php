@@ -6,7 +6,6 @@ use core\ConfigGlobal;
 use core\ViewTwig;
 use web\Desplegable;
 use ubis\model\entity\GestorCasaDl;
-use usuarios\model\entity\Usuario;
 use web\Hash;
 
 require_once("apps/core/global_header.inc");
@@ -23,7 +22,7 @@ $Qinc_t = (integer)filter_input(INPUT_POST, 'inc_t');
 $Qid_ubi = (integer)filter_input(INPUT_POST, 'id_ubi');
 
 // miro que rol tengo.
-$oMiUsuario = new Usuario(ConfigGlobal::mi_id_usuario());
+$oMiUsuario = ConfigGlobal::MiUsuario();
 // selecciono la lista de casas comunes: sf y sv.
 // o (ara) no:
 $GesCasas = new GestorCasaDl();

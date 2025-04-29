@@ -54,7 +54,7 @@ class GestorActividadAsignatura extends ClaseGestor
 
         // por cada ca creo un array con las asignaturas y los créditos.
         $aWhere['id_activ'] = $id_activ;
-        $aOperador = array();
+        $aOperador = [];
         if (empty($tipo)) {
             $aWhere['tipo'] = 'NULL';
             $aOperador['tipo'] = 'IS NULL';
@@ -62,7 +62,7 @@ class GestorActividadAsignatura extends ClaseGestor
             $aWhere['tipo'] = $tipo;
         }
         $cActividadAsignaturas = $this->getActividadAsignaturas($aWhere, $aOperador);
-        $aAsignaturasCa = array();
+        $aAsignaturasCa = [];
         foreach ($cActividadAsignaturas as $oActividadAsignatura) {
             $id_asignatura = $oActividadAsignatura->getId_asignatura();
             if (empty($aAsigDatos[$id_asignatura])) {
@@ -105,13 +105,13 @@ class GestorActividadAsignatura extends ClaseGestor
      * @param array aOperators associatiu amb els valors dels operadors que cal aplicar a cada variable
      * @return array|void
      */
-    function getActividadAsignaturas($aWhere = array(), $aOperators = array())
+    function getActividadAsignaturas($aWhere = [], $aOperators = array())
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         $oActividadAsignaturaSet = new Set();
         $oCondicion = new Condicion();
-        $aCondi = array();
+        $aCondi = [];
         foreach ($aWhere as $camp => $val) {
             if ($camp === '_ordre') {
                 continue;

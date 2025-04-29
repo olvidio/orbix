@@ -32,8 +32,8 @@ if (isset($_POST['stack'])) {
     }
 }
 
-$aWhere = array();
-$aOperador = array();
+$aWhere = [];
+$aOperador = [];
 
 $GesGrupoCasa = new GestorGrupoCasa();
 $cGrupoCasas = $GesGrupoCasa->getGrupoCasas($aWhere, $aOperador);
@@ -47,7 +47,7 @@ $a_cabeceras = [
 $a_botones = [];
 $a_botones[] = array('txt' => _("eliminar"), 'click' => "fnjs_eliminar(\"#seleccionados\")");
 
-$a_valores = array();
+$a_valores = [];
 $i = 0;
 foreach ($cGrupoCasas as $oGrupoCasa) {
     $i++;

@@ -231,7 +231,7 @@ if (!empty($Qid_activ)) { // caso de modificar
     }
     // Para el permiso del botón guardar, en el caso de editar. Cuando es nuevo
     // no se utiliza. Se inicializa para que no dé error.
-    $oPermActiv = array();
+    $oPermActiv = [];
 }
 
 

@@ -92,7 +92,7 @@ $aOperador['f_ini'] = 'BETWEEN';
 $aWhere['status'] = ActividadAll::STATUS_ACTUAL;
 $aWhere['_ordre'] = 'f_ini,nivel_stgr';
 
-$cActividades = array();
+$cActividades = [];
 $sfsv = ConfigGlobal::mi_sfsv();
 $mi_dele = ConfigGlobal::mi_delef();
 switch ($Qna) {
@@ -158,8 +158,8 @@ switch ($Qna) {
         break;
 }
 
-$aOpciones = array();
-$a_IdActividades = array();
+$aOpciones = [];
+$a_IdActividades = [];
 foreach ($cActividades as $oActividad) {
     // para el separador '-------'
     if (is_object($oActividad)) {

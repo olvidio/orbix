@@ -91,7 +91,7 @@ foreach ($cApps as $oApp) {
 }
 
 $i = 0;
-$a_valores = array();
+$a_valores = [];
 foreach ($cModulos as $oModulo) {
     $i++;
     $id_mod = $oModulo->getId_mod();

@@ -1,0 +1,36 @@
+<script>
+    fnjs_guardar = function (formulario) {
+        let url = 'src/menus/infrastructure/controllers/menus_exportar.php';
+        let parametros = $(formulario).serialize();
+        let request = $.ajax({
+            url: url,
+            type: 'post',
+            data: parametros,
+            dataType: 'json'
+        });
+        request.done(function (json) {
+            if (json.success !== true) {
+                if (json.mensaje === 'ya existe') {
+                    if (confirm("<?= _("Este nombre ya existe. ¿Desea reemplazarlo?") ?>")) {
+                        $('#sobreescribir').val('true');
+                        fnjs_guardar(formulario);
+                    }
+                } else {
+                    alert("<?= _("respuesta") ?>" + ': ' + json.mensaje);
+                }
+            } else {
+                alert("<?= _("menus exportados") ?>");
+            }
+        });
+    }
+</script>
+<form id="frm_menus" name="frm_menus" action="" onkeydown="fnjs_enviar(event,this);">
+    <?= $oHash->getCamposHtml() ?>
+    <table>
+        <tr>
+            <td><?= _("Guardar como") ?></td>
+            <td><input type="text" name="nombre" value=""></td>
+        </tr>
+    </table>
+    <input id="btn_ok" name="btn_ok" class="btn_ok" type="button" onclick="fnjs_guardar('#frm_menus');" value="<?= _("guardar") ?>">
+</form>

@@ -4,6 +4,7 @@ use core\ConfigGlobal;
 use core\DBPropiedades;
 use core\ViewPhtml;
 use personas\model\entity\PersonaGlobal;
+use src\usuarios\application\repositories\LocalRepository;
 use ubis\model\entity\Centro;
 use ubis\model\entity\CentroDl;
 use ubis\model\entity\GestorCentroDl;
@@ -115,7 +116,7 @@ if (!empty($Qnuevo)) {
             $oCentroDl = new CentroDl($id_ctr);
         }
         $nom_ctr = $oCentroDl->getNombre_ubi();
-        $oDesplCentroDl = array();
+        $oDesplCentroDl = [];
     } else {
         $nom_ctr = '';
     }
@@ -242,7 +243,7 @@ $botones = 0;
 if ($ok == 1) {
     $botones = '1';
     // de momento se lo permito a los de paso i cp
-    if ($Qobj_pau == 'PersonaEx') {
+    if ($Qobj_pau === 'PersonaEx') {
         $botones .= ',2';
     }
 }
@@ -257,9 +258,9 @@ $oDesplSituacion = $GesSituacion->getListaSituaciones();
 $oDesplSituacion->setNombre("situacion");
 $oDesplSituacion->setOpcion_sel($oPersona->getSituacion());
 
-$GesLocales = new usuarios\model\entity\GestorLocal();
-$oDesplLengua = $GesLocales->getListaIdiomas();
-$oDesplLengua->setNombre("lengua");
+$Localrepository = new LocalRepository();
+$a_locales = $Localrepository->getArrayLocales();
+$oDesplLengua = new Desplegable("lengua", $a_locales, '', true);
 $oDesplLengua->setOpcion_sel($oPersona->getLengua());
 
 //posibles valores de stgr
@@ -275,11 +276,11 @@ $campos_chk = 'sacd';
 $camposForm = 'que!id_ctr!apel_fam!apellido1!apellido2!dl!eap!f_inc!f_nacimiento!f_situacion!inc!lengua!nom!nx1!nx2!observ!profesion!situacion!stgr!trato!lugar_nacimiento!ce!ce_lugar!ce_ini!ce_fin';
 
 //Para la presentacion "de_sss" los campos un poco distintos:
-if ($Qobj_pau == 'PersonaSSSC') {
+if ($Qobj_pau === 'PersonaSSSC') {
     $camposForm = 'que!id_ctr!apel_fam!apellido1!apellido2!dl!eap!f_inc!f_nacimiento!f_situacion!inc!lengua!nom!nx1!nx2!observ!profesion!situacion!stgr!trato!lugar_nacimiento';
 }
 //Para la presentacion "de_paso" los campos un poco distintos:
-if ($Qobj_pau == 'PersonaEx') {
+if ($Qobj_pau === 'PersonaEx') {
     $campos_chk = 'sacd!profesor_stgr';
     $camposForm = 'que!id_tabla!apel_fam!apellido1!apellido2!dl!eap!f_inc!f_nacimiento!lugar_nacimiento!edad!f_situacion!inc!lengua!nom!nx1!nx2!observ!profesion!situacion!stgr!trato';
 }

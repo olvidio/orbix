@@ -128,7 +128,7 @@ $a_cabeceras = array(ucfirst(_("tipo")),
 $titulo = sprintf(_("lista de %s a los que faltan %d o menos asignaturas para finalizar el %s"), $gente, $Qnumero, $curso_txt);
 
 $i = 0;
-$a_valores = array();
+$a_valores = [];
 $obj = 'personas\\model\\entity\\' . $obj_pau;
 foreach ($aId_nom as $id_nom => $aAsignaturas) {
     $i++;

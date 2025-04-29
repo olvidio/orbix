@@ -169,7 +169,7 @@ class EncargoTipo extends ClasePropiedades
         } else {
             $bInsert = FALSE;
         }
-        $aDades = array();
+        $aDades = [];
         $aDades['tipo_enc'] = $this->stipo_enc;
         $aDades['mod_horario'] = $this->imod_horario;
         array_walk($aDades, 'core\poner_null');

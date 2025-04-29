@@ -6,7 +6,6 @@ use web\CasasQue;
 use web\Hash;
 use web\PeriodoQue;
 use web\Posicion;
-use usuarios\model\entity\Usuario;
 use function core\strtoupper_dlb;
 
 /**
@@ -46,7 +45,7 @@ if (isset($_POST['stack'])) {
     }
 }
 
-$oMiUsuario = new Usuario(ConfigGlobal::mi_id_usuario());
+$oMiUsuario = ConfigGlobal::MiUsuario();
 $miSfsv = ConfigGlobal::mi_sfsv();
 
 $mes = date('m');

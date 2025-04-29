@@ -2,11 +2,10 @@
 
 use core\ConfigGlobal;
 use core\ViewTwig;
+use src\usuarios\domain\entity\Role;
 use web\CasasQue;
 use web\Hash;
 use web\PeriodoQue;
-use usuarios\model\entity\Role;
-use usuarios\model\entity\Usuario;
 use function core\strtoupper_dlb;
 
 /**
@@ -35,7 +34,7 @@ $Qtipo = (string)filter_input(INPUT_POST, 'tipo');
 $Qsfsv = (string)filter_input(INPUT_POST, 'sfsv');
 
 
-$oMiUsuario = new Usuario(ConfigGlobal::mi_id_usuario());
+$oMiUsuario = ConfigGlobal::MiUsuario();
 $miSfsv = ConfigGlobal::mi_sfsv();
 $miRole = ConfigGlobal::mi_id_role();
 

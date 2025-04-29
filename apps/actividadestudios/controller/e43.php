@@ -55,7 +55,7 @@ $txt_actividad = "$lugar, $f_ini-$f_fin";
 $GesMatriculas = new actividadestudios\model\entity\GestorMatricula();
 $cMatriculas = $GesMatriculas->getMatriculas(array('id_nom' => $Qid_nom, 'id_activ' => $Qid_activ));
 $matriculas = count($cMatriculas);
-$aAsignaturasMatriculadas = array();
+$aAsignaturasMatriculadas = [];
 if ($matriculas > 0) {
     // para ordenar
     foreach ($cMatriculas as $oMatricula) {

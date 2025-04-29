@@ -2,9 +2,10 @@
 
 use core\ConfigGlobal;
 use core\ViewTwig;
+use src\usuarios\application\repositories\RoleRepository;
+use src\usuarios\application\repositories\UsuarioRepository;
 use web\Hash;
 use web\Posicion;
-use usuarios\model\entity\Usuario;
 use zonassacd\model\entity\GestorZona;
 
 /**
@@ -148,10 +149,17 @@ if (empty($Qtrimestre)) {
 }
 
 $id_nom_jefe = '';
-$id_usuario = ConfigGlobal::mi_id_usuario();
-$oMiUsuario = new Usuario($id_usuario);
 
-if ($oMiUsuario->isRole('p-sacd')) { //sacd
+$UsuarioRepository = new UsuarioRepository();
+$oMiUsuario = $UsuarioRepository->findById(ConfigGlobal::mi_id_usuario());
+$id_role = $oMiUsuario->getId_role();
+
+$RoleRepository = new RoleRepository();
+$aRoles = $RoleRepository->getArrayRoles();
+
+$cond = '';
+if (!empty($aRoles[$id_role]) && ($aRoles[$id_role] === 'p-sacd')) {
+
     if ($_SESSION['oConfig']->is_jefeCalendario()) {
         $id_nom_jefe = '';
     } else {

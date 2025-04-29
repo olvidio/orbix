@@ -101,8 +101,8 @@ switch ($Qque) {
             $oData2->sub(new DateInterval('P10M'));
             $f_ini_iso = $oData2->format('Y-m-d');
         }
-        $aWhere = array();
-        $aOperador = array();
+        $aWhere = [];
+        $aOperador = [];
         $aWhere['f_ini'] = "'$f_ini_iso','$f_fin_iso'";
         $aOperador['f_ini'] = 'BETWEEN';
         $aWhere['id_tipo_activ'] = '^1(12|33)';
@@ -111,7 +111,7 @@ switch ($Qque) {
         $aWhere['dl_org'] = $Qdl_org;
         $GesActividades = new GestorActividad();
         $cActividades = $GesActividades->getActividades($aWhere, $aOperador);
-        $aActividades = array();
+        $aActividades = [];
         foreach ($cActividades as $oActividad) {
             $id_actividad = $oActividad->getId_activ();
             $nom_activ = $oActividad->getNom_activ();
@@ -151,8 +151,8 @@ switch ($Qque) {
         break;
     case 'posibles_opcionales':
         // todas las opcionales
-        $aWhere = array();
-        $aOperador = array();
+        $aWhere = [];
+        $aOperador = [];
         $aWhere['status'] = 't';
         $aWhere['id_nivel'] = '3000,5000';
         $aOperador['id_nivel'] = 'BETWEEN';
@@ -169,8 +169,8 @@ switch ($Qque) {
             $c++;
             $cond .= $Nota->getId_situacion();
         }
-        $aWhere = array();
-        $aOperador = array();
+        $aWhere = [];
+        $aOperador = [];
         $aWhere['id_situacion'] = $cond;
         $aOperador['id_situacion'] = '~';
         $aWhere['id_nom'] = $Qid_nom;
@@ -178,13 +178,13 @@ switch ($Qque) {
         $aOperador['id_asignatura'] = '>';
         $GesPersonaNotas = new GestorPersonaNotaDB();
         $cAsignaturasOpSuperadas = $GesPersonaNotas->getPersonaNotas($aWhere, $aOperador);
-        $aOpSuperadas = array();
+        $aOpSuperadas = [];
         foreach ($cAsignaturasOpSuperadas as $oAsignatura) {
             $id_asignatura = $oAsignatura->getId_asignatura();
             $aOpSuperadas[$id_asignatura] = $id_asignatura;
         }
         // asignaturas opcionales posibles
-        $aFaltan = array();
+        $aFaltan = [];
         foreach ($cOpcionales as $oAsignatura) {
             $id_asignatura = $oAsignatura->getId_asignatura();
             $nombre_corto = $oAsignatura->getNombre_corto();
@@ -208,7 +208,7 @@ switch ($Qque) {
         echo $oDesplProfesores->desplegable();
         /*
         $cProfesores= $GesProfes->getProfesores();
-        $aProfesores=array();
+        $aProfesores=[];
         $msg_err = '';
         foreach ($cProfesores as $oProfesor) {
             $id_nom=$oProfesor->getId_nom();

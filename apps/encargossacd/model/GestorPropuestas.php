@@ -242,8 +242,8 @@ class GestorPropuestas
 
             // sacd
             $GesEncargoSacd = new GestorPropuestaEncargosSacd();
-            $aWhere = array();
-            $aOperador = array();
+            $aWhere = [];
+            $aOperador = [];
             $aWhere['id_enc'] = $a_id_enc[$e];
             $aWhere['f_fin'] = 'x';
             $aOperador['f_fin'] = 'IS NULL';
@@ -477,8 +477,8 @@ class GestorPropuestas
 
             // sacd
             $GesEncargoSacd = new GestorPropuestaEncargosSacd();
-            $aWhere = array();
-            $aOperador = array();
+            $aWhere = [];
+            $aOperador = [];
             $aWhere['id_enc'] = $a_id_enc[$e];
             $aWhere['f_fin'] = 'x';
             $aOperador['f_fin'] = 'IS NULL';

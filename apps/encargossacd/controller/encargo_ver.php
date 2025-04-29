@@ -4,10 +4,11 @@ use core\ViewTwig;
 use encargossacd\model\DesplCentros;
 use encargossacd\model\entity\Encargo;
 use encargossacd\model\entity\GestorEncargoTipo;
-use web\Desplegable;
-use web\Hash;
+use src\usuarios\application\repositories\LocalRepository;
 use ubis\model\entity\CentroDl;
 use ubis\model\entity\CentroEllas;
+use web\Desplegable;
+use web\Hash;
 use zonassacd\model\entity\GestorZona;
 
 // INICIO Cabecera global de URL de controlador *********************************
@@ -182,7 +183,7 @@ $oGestorZona = new GestorZona();
 $oDesplZonas = $oGestorZona->getListaZonas();
 $oDesplZonas->setNombre('id_zona_sel');
 $oDesplZonas->setAction('fnjs_lista_ctrs_por_zona()');
-if(!empty($Qid_zona)) {
+if (!empty($Qid_zona)) {
     $oDesplZonas->setOpcion_sel($Qid_zona);
 }
 
@@ -195,11 +196,9 @@ if (!empty($Qid_ubi)) {
     $oDesplCtrs->setOpcion_sel($Qid_ubi);
 }
 
-$GesLocales = new usuarios\model\entity\GestorLocal();
-$oDesplIdiomas = $GesLocales->getListaIdiomas();
-$oDesplIdiomas->setNombre("idioma_enc");
-$oDesplIdiomas->setOpcion_sel($idioma_enc);
-$oDesplIdiomas->setBlanco(1);
+$LocaleRepository = new LocalRepository();
+$a_locales = $LocaleRepository->getArrayLocales();
+$oDesplIdiomas = new Desplegable("idioma_enc", $a_locales, $idioma_enc, true);
 
 $url_actualizar = 'apps/encargossacd/controller/encargo_ver.php';
 $oHashAct = new Hash();

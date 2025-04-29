@@ -116,7 +116,7 @@ class Select3102
         $this->a_ref_perm = $a_ref_perm;
 
         $c = 0;
-        $a_valores = array();
+        $a_valores = [];
         $cCargosEnActividad = $oCargosEnActividad->getActividadCargos(array('id_activ' => $this->id_pau));
         $mi_sfsv = ConfigGlobal::mi_sfsv();
         foreach ($cCargosEnActividad as $oActividadCargo) {
@@ -232,7 +232,7 @@ class Select3102
 
     private function setLinksInsert()
     {
-        $this->aLinks_dl = array();
+        $this->aLinks_dl = [];
         $a_ref_perm = $this->a_ref_perm;
         if (empty($a_ref_perm) || ConfigGlobal::mi_ambito() === 'rstgr') { // si es nulo, no tengo permisos de ningún tipo
             return '';

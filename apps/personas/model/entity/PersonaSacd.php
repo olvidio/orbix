@@ -75,7 +75,7 @@ class PersonaSacd extends PersonaGlobal
         } else {
             $bInsert = false;
         }
-        $aDades = array();
+        $aDades = [];
         $aDades['id_cr'] = $this->iid_cr;
         $aDades['id_tabla'] = $this->sid_tabla;
         $aDades['dl'] = $this->sdl;

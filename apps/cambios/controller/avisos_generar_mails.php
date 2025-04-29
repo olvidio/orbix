@@ -30,8 +30,8 @@ use cambios\model\entity\CambioDl;
 use cambios\model\entity\CambioUsuario;
 use cambios\model\entity\GestorCambioUsuario;
 use core\ConfigGlobal;
-use usuarios\model\entity\Preferencia;
-use usuarios\model\entity\Usuario;
+use src\usuarios\application\repositories\PreferenciaRepository;
+use src\usuarios\application\repositories\UsuarioRepository;
 use web\Lista;
 
 // INICIO Cabecera global de URL de controlador *********************************
@@ -63,7 +63,7 @@ $aSecciones = array(1 => $dele, 2 => $delef);
 $aviso_tipo = CambioUsuario::TIPO_MAIL; //e-mail
 $mi_sfsv = ConfigGlobal::mi_sfsv();
 
-$aWhere = array();
+$aWhere = [];
 $aWhere['_ordre'] = 'id_usuario,id_item_cambio';
 $aWhere['aviso_tipo'] = $aviso_tipo;
 $aWhere['avisado'] = 'false';
@@ -74,9 +74,10 @@ $i = 0;
 $id_usuario_anterior = '';
 $email = '';
 $zona_horaria = '';
-$a_datos = array();
-$a_id = array();
+$a_datos = [];
+$a_id = [];
 $DateTimeZone = new DateTimeZone('UTC');
+$UsuarioRepository = new UsuarioRepository();
 foreach ($cCambiosUsuario as $oCambioUsuario) {
     $id_usuario = $oCambioUsuario->getId_usuario();
 
@@ -84,15 +85,20 @@ foreach ($cCambiosUsuario as $oCambioUsuario) {
         // solo en el primer caso no lo hago
         if (!empty($id_usuario_anterior)) {
             enviar_mail($email, $a_datos, $a_id);
-            $a_datos = array();
-            $a_id = array();
+            $a_datos = [];
+            $a_id = [];
         }
-        $oMiUsuario = new Usuario($id_usuario);
+        $oMiUsuario = $UsuarioRepository->findById($id_usuario);
         $email = $oMiUsuario->getEmail();
         $id_usuario_anterior = $id_usuario;
         // buscar la zona horaria
-        $oPref = new Preferencia(array('id_usuario' => $id_usuario, 'tipo' => 'zona_horaria'));
-        $zona_horaria = $oPref->getPreferencia();
+        $PreferenciaRepository = new PreferenciaRepository();
+        $oPreferencia = $PreferenciaRepository->findById($id_usuario, 'zona_horaria');
+        if ($oPreferencia !== null) {
+            $zona_horaria = $oPreferencia->getPreferencia();
+        } else {
+            $zona_horaria = '';
+        }
         if (!empty($zona_horaria)) {
             try {
                 $DateTimeZone = new DateTimeZone($zona_horaria);
@@ -128,7 +134,7 @@ foreach ($cCambiosUsuario as $oCambioUsuario) {
         $quien = $oCambio->getDl_org();
     } else {
         if ($sfsv_quien_cambia === $mi_sfsv) {
-            $oUsuarioCmb = new Usuario($quien_cambia);
+            $oUsuarioCmb = $UsuarioRepository->findById($quien_cambia);
             $quien = $oUsuarioCmb->getUsuario();
         } else {
             $quien = $aSecciones[$sfsv_quien_cambia];

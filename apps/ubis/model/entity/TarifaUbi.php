@@ -160,7 +160,7 @@ class TarifaUbi extends ClasePropiedades
         } else {
             $bInsert = FALSE;
         }
-        $aDades = array();
+        $aDades = [];
         $aDades['id_ubi'] = $this->iid_ubi;
         $aDades['id_tarifa'] = $this->iid_tarifa;
         $aDades['year'] = $this->iyear;

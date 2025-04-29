@@ -139,7 +139,7 @@ class ProfesorTituloEst extends ClasePropiedades
         } else {
             $bInsert = false;
         }
-        $aDades = array();
+        $aDades = [];
         $aDades['titulo'] = $this->stitulo;
         $aDades['centro_dnt'] = $this->scentro_dnt;
         $aDades['eclesiastico'] = $this->beclesiastico;

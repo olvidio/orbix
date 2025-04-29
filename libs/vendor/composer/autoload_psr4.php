@@ -7,6 +7,7 @@ $baseDir = dirname(dirname($vendorDir));
 
 return array(
     'voku\\' => array($vendorDir . '/voku/portable-ascii/src/voku'),
+    'src\\' => array($baseDir . '/src'),
     'setasign\\Fpdi\\' => array($vendorDir . '/setasign/fpdi/src'),
     'jblond\\' => array($vendorDir . '/jblond/twig-trans/src/jblond'),
     'frontend\\' => array($baseDir . '/frontend'),

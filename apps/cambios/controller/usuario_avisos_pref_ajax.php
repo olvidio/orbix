@@ -7,11 +7,10 @@ use cambios\model\entity\CambioUsuarioPropiedadPref;
 use cambios\model\entity\GestorCambioUsuarioPropiedadPref;
 use cambios\model\GestorAvisoCambios;
 use core\ConfigGlobal;
+use src\usuarios\domain\entity\Role;
 use web\DesplegableArray;
 use procesos\model\entity\GestorActividadFase;
 use ubis\model\entity\GestorCasaDl;
-use usuarios\model\entity\Role;
-use usuarios\model\entity\Usuario;
 use web\Hash;
 use function core\is_true;
 
@@ -26,7 +25,9 @@ require_once("apps/core/global_object.inc");
 
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$oMiUsuario = new Usuario(ConfigGlobal::mi_id_usuario());
+$oMiUsuario = ConfigGlobal::MiUsuario();
+$oRole = new Role();
+$oRole->setId_role($oMiUsuario->getId_role());
 $miSfsv = ConfigGlobal::mi_sfsv();
 
 $Qsalida = (string)filter_input(INPUT_POST, 'salida');
@@ -133,7 +134,7 @@ switch ($Qsalida) {
         $txt3 = '<input type="input" name="valor" value="' . $valor . '">';
         if ($Qpropiedad == 'id_ubi') {
             // miro que rol tengo. Si soy casa, sólo veo la mía
-            if ($oMiUsuario->isRolePau(Role::PAU_CDC)) { //casa
+            if ($oRole->isRolePau(Role::PAU_CDC)) { //casa
                 $id_pau = $oMiUsuario->getId_pau();
                 $sDonde = str_replace(",", " OR id_ubi=", $id_pau);
                 //formulario para casas cuyo calendario de actividades interesa
@@ -218,9 +219,9 @@ switch ($Qsalida) {
         $Qid_item_usuario_objeto = (string)filter_input(INPUT_POST, 'id_item_usuario_objeto');
         $Qobjeto = (string)filter_input(INPUT_POST, 'objeto');
 
-        $a_item_sel = array();
-        $a_propiedades_sel = array();
-        $a_condicion_sel = array();
+        $a_item_sel = [];
+        $a_propiedades_sel = [];
+        $a_condicion_sel = [];
         $a_cambio_propiedad_sel = [];
         if (!empty($Qid_item_usuario_objeto)) {
             $GesCambiosUsuarioPropiedadPref = new GestorCambioUsuarioPropiedadPref();
@@ -276,7 +277,7 @@ switch ($Qsalida) {
                 } else {
                     // para el caso de las casas y los sacd, sólo puede avisar de un cambio suyo.
                     // miro que rol tengo. Si soy casa, sólo veo la mía
-                    if ($nom_prop == 'id_ubi' && $oMiUsuario->isRolePau(Role::PAU_CDC)) {
+                    if ($nom_prop == 'id_ubi' && $oRole->isRolePau(Role::PAU_CDC)) {
                         $id_pau = $oMiUsuario->getId_pau();
                         $sDonde = str_replace(",", " OR id_ubi=", $id_pau);
 
@@ -451,7 +452,7 @@ switch ($Qsalida) {
         $Qid_item_usuario_objeto = (integer)filter_input(INPUT_POST, 'id_item_usuario_objeto_prop');
         $Qobjeto = (string)filter_input(INPUT_POST, 'objeto_prop');
 
-        $a_propiedades_sel = array();
+        $a_propiedades_sel = [];
         // Si es empty, no hay ninguna propiedad seleccionada, hay que borrar todas.
         if (!empty($_POST[$Qobjeto])) {
             foreach ($_POST[$Qobjeto] as $id_cond) {
@@ -492,8 +493,8 @@ switch ($Qsalida) {
             $GesCambiosUsuarioPropiedadPref = new GestorCambioUsuarioPropiedadPref();
             $cListaPropiedades = $GesCambiosUsuarioPropiedadPref->getCambioUsuarioPropiedadesPrefs(array('id_item_usuario_objeto' => $Qid_item_usuario_objeto));
             $c = 0;
-            $a_item_tot = array();
-            $a_propiedades_tot = array();
+            $a_item_tot = [];
+            $a_propiedades_tot = [];
             foreach ($cListaPropiedades as $oCambioUsuarioPropiedadPref) {
                 $c++;
                 $a_item_tot[$c] = $oCambioUsuarioPropiedadPref->getId_item();

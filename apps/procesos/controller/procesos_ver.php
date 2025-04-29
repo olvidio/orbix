@@ -2,11 +2,11 @@
 
 use actividades\model\entity\ActividadAll;
 use core\ViewTwig;
-use menus\model\PermisoMenu;
-use web\Desplegable;
 use procesos\model\entity\GestorActividadFase;
 use procesos\model\entity\GestorActividadTarea;
 use procesos\model\entity\TareaProceso;
+use src\menus\domain\PermisoMenu;
+use web\Desplegable;
 use web\Hash;
 
 // INICIO Cabecera global de URL de controlador *********************************
@@ -91,7 +91,7 @@ if ($Qmod == 'editar') {
         $oDesplFasePrevia->setBlanco(true);
         $aDesplFasesPrevias[] = $oDesplFasePrevia;
 
-        $oDesplTareaPrevia = new Desplegable('id_tarea_previa', array(), '', true);
+        $oDesplTareaPrevia = new Desplegable('id_tarea_previa', [], '', true);
         $aDesplTareasPrevias[] = $oDesplTareaPrevia;
         $aMensajes_requisitos[] = '';
     }
@@ -105,13 +105,13 @@ if ($Qmod == 'nuevo') {
     $oDesplFase->setNombre('id_fase');
     $oDesplFase->setAction('fnjs_get_depende(\'#id_fase\',\'#id_tarea\')');
     $oDesplFase->setBlanco(true);
-    $oDesplTarea = new Desplegable('id_tarea', array(), '', true);
+    $oDesplTarea = new Desplegable('id_tarea', [], '', true);
     $oDesplFasePrevia = $oGesFase->getListaActividadFases();
     $oDesplFasePrevia->setNombre('id_fase_previa[]');
     $oDesplFasePrevia->setAction('fnjs_get_depende(\'#id_fase_previa\',\'#id_tarea_previa\')');
     $oDesplFasePrevia->setBlanco(true);
     $aDesplFasesPrevias[] = $oDesplFasePrevia;
-    $oDesplTareaPrevia = new Desplegable('id_tarea_previa[]', array(), '', true);
+    $oDesplTareaPrevia = new Desplegable('id_tarea_previa[]', [], '', true);
     $aDesplTareasPrevias[] = $oDesplTareaPrevia;
     $aMensajes_requisitos[] = '';
 }

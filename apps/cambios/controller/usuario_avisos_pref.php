@@ -6,15 +6,16 @@ use cambios\model\entity\CambioUsuarioObjetoPref;
 use cambios\model\GestorAvisoCambios;
 use core\ConfigGlobal;
 use core\ViewTwig;
+use procesos\model\entity\GestorActividadFase;
+use src\usuarios\application\repositories\GrupoRepository;
+use src\usuarios\application\repositories\RoleRepository;
+use src\usuarios\application\repositories\UsuarioRepository;
+use src\usuarios\domain\entity\Role;
+use ubis\model\entity\GestorCasaDl;
 use web\Desplegable;
 use web\DesplegableArray;
 use web\Hash;
 use web\TiposActividades;
-use procesos\model\entity\GestorActividadFase;
-use ubis\model\entity\GestorCasaDl;
-use usuarios\model\entity\GrupoOUsuario;
-use usuarios\model\entity\Role;
-use usuarios\model\entity\Usuario;
 use function core\is_true;
 
 // INICIO Cabecera global de URL de controlador *********************************
@@ -46,13 +47,16 @@ $Qsalida = (string)filter_input(INPUT_POST, 'salida');
 
 // Si empieza por 4 es usuario, por 5 es grupo
 if (substr((string)$Qid_usuario, 0, 1) === '4') {
-    $oUsuario = new Usuario(array('id_usuario' => $Qid_usuario));
+    $UsuarioRepository = new UsuarioRepository();
+    $oUsuario = $UsuarioRepository->findById($Qid_usuario);
     $grupo = FALSE;
 } else {
-    $oUsuario = new GrupoOUsuario(array('id_usuario' => $Qid_usuario)); // La tabla y su heredada
+    $GrupoRepository = new GrupoRepository();
+    $oUsuario = $GrupoRepository->findById($Qid_usuario); // La tabla y su heredada
     $grupo = TRUE;
 }
 $nombre = $oUsuario->getUsuario();
+$id_role = $oUsuario->getId_role();
 
 $mi_sfsv = ConfigGlobal::mi_sfsv();
 
@@ -133,7 +137,10 @@ switch ($mi_sfsv) {
         break;
 }
 // miro que rol tengo. Si soy casa, sólo veo la mía
-if ($grupo === FALSE && $oUsuario->isRolePau(Role::PAU_CDC)) {
+$id_role = $oUsuario->getId_role();
+$oRole = new Role();
+$oRole->setId_role($id_role);
+if ($grupo === FALSE && $oRole->isRolePau(Role::PAU_CDC)) {
     $id_pau = $oUsuario->getId_pau();
     $sDonde = str_replace(",", " OR id_ubi=", $id_pau);
     //formulario para casas cuyo calendario de actividades interesa
@@ -152,7 +159,7 @@ if (!empty($id_tipo_activ)) {
     if ($mi_sfsv === 1) $ssfsv = 'sv';
     if ($mi_sfsv === 2) $ssfsv = 'sf';
     // las casas, sf y sv
-    if ($grupo === FALSE && $oUsuario->isRolePau(Role::PAU_CDC)) {
+    if ($grupo === FALSE && $oRole->isRolePau(Role::PAU_CDC)) {
         $ssfsv = '';
     }
     $oTipoActiv = new TiposActividades();
@@ -182,8 +189,8 @@ $oActividadTipo->setQue('buscar');
 $perm_jefe = FALSE;
 if ($_SESSION['oConfig']->is_jefeCalendario()
     || (($_SESSION['oPerm']->have_perm_oficina('des') || $_SESSION['oPerm']->have_perm_oficina('vcsd')) && $mi_sfsv === 1)
-    || ($grupo === FALSE && $oUsuario->isRolePau(Role::PAU_CDC))
-    || ($grupo === FALSE && $oUsuario->isRolePau(Role::PAU_SACD))
+    || ($grupo === FALSE && $oRole->isRolePau(Role::PAU_CDC))
+    || ($grupo === FALSE && $oRole->isRolePau(Role::PAU_SACD))
     || ($_SESSION['oPerm']->have_perm_oficina('calendario'))
 ) {
     $perm_jefe = TRUE;

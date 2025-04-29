@@ -27,7 +27,7 @@ $cCentros = $GesCentros->getCentros(array('tipo_ctr' => '^s[^s]', 'status' => 't
 
 $GesPersonas = new GestorPersonaS();
 $num_total_s = 0;
-$a_valores = array();
+$a_valores = [];
 $i = 0;
 foreach ($cCentros as $oCentro) {
     $i++;

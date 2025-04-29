@@ -3,6 +3,7 @@
 use core\ViewTwig;
 use encargossacd\model\entity\GestorEncargo;
 use encargossacd\model\entity\GestorEncargoTipo;
+use src\usuarios\application\repositories\LocalRepository;
 use web\Hash;
 use web\Lista;
 use ubis\model\entity\Ubi;
@@ -37,8 +38,8 @@ $Qid_tipo_enc = (integer)filter_input(INPUT_POST, 'id_tipo_enc');
 $Qdesc_enc = (string)filter_input(INPUT_POST, 'desc_enc');
 
 /*miro las condiciones. Si es la primera vez muestro las de este año */
-$aWhere = array();
-$aOperador = array();
+$aWhere = [];
+$aOperador = [];
 $aWhere['_ordre'] = 'desc_enc';
 if (!empty($Qdesc_enc)) {
     $aWhere['desc_enc'] = $Qdesc_enc;
@@ -60,7 +61,7 @@ $a_botones = array(array('txt' => _("horario"), 'click' => "fnjs_horario(\"#sele
 $a_cabeceras = array(_("sección"), array('name' => _("descripción"), 'formatter' => 'clickFormatter'), _("lugar"), _("descripción lugar"), _("idioma"));
 
 $i = 0;
-$a_valores = array();
+$a_valores = [];
 if (isset($Qid_sel) && !empty($Qid_sel)) {
     $a_valores['select'] = $Qid_sel;
 }
@@ -94,8 +95,8 @@ foreach ($cEncargos as $oEncargo) {
     }
 
     $idioma = '';
-    $GesLocales = new usuarios\model\entity\GestorLocal();
-    $cIdiomas = $GesLocales->getLocales(['idioma' => $idioma_enc]);
+    $LocalRepository = new LocalRepository();
+    $cIdiomas = $LocalRepository->getLocales(['idioma' => $idioma_enc]);
     if (is_array($cIdiomas) && count($cIdiomas) > 0) {
         $idioma = $cIdiomas[0]->getNom_idioma();
     }

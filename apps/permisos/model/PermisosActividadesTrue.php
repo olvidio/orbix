@@ -40,8 +40,8 @@ class PermisosActividadesTrue
      *
      * @var array
      */
-    protected $aPermDl = array();
-    protected $aPermOtras = array();
+    protected $aPermDl = [];
+    protected $aPermOtras = [];
     /**
      * Per saber a quina activitat fa referència.
      *

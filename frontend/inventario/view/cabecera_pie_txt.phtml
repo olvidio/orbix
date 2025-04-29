@@ -3,7 +3,7 @@
         let datos = $(formulario).serialize();
         let request = $.ajax({
             data: datos,
-            url: "apps/inventario/controller/cabecera_pie_txt_guardar.php",
+            url: "src/inventario/controller/cabecera_pie_txt_guardar.php",
             method: 'POST',
             dataType: 'json'
         });

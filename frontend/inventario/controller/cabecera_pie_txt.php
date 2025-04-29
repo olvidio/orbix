@@ -10,7 +10,7 @@ require_once("frontend/shared/global_header_front.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
 $url_lista_backend = Hash::link(ConfigGlobal::getWeb()
-    . '/apps/inventario/controller/cabecera_pie_txt.php'
+    . '/src/inventario/controller/cabecera_pie_txt.php'
 );
 $oHash = new Hash();
 $oHash->setUrl($url_lista_backend);

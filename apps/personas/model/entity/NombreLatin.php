@@ -130,7 +130,7 @@ class NombreLatin extends ClasePropiedades
         } else {
             $bInsert = false;
         }
-        $aDades = array();
+        $aDades = [];
         $aDades['nom'] = $this->snom;
         $aDades['nominativo'] = $this->snominativo;
         $aDades['genitivo'] = $this->sgenitivo;

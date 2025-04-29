@@ -6,6 +6,7 @@ use core\ViewTwig;
 use encargossacd\model\entity\EncargoTipo;
 use encargossacd\model\entity\GestorEncargo;
 use encargossacd\model\entity\GestorEncargoTipo;
+use src\usuarios\application\repositories\LocalRepository;
 use web\Desplegable;
 use web\Hash;
 use ubis\model\entity\GestorCentroDl;
@@ -57,8 +58,8 @@ foreach ($cEncargoTipos as $oEncargoTipo) {
 
 }
 
-$aWhere = array();
-$aOperador = array();
+$aWhere = [];
+$aOperador = [];
 $cond_tipo_enc = "{" . implode(', ', $a_tipo_enc) . "}";
 $aWhere['id_tipo_enc'] = $cond_tipo_enc;
 $aOperador['id_tipo_enc'] = 'ANY';
@@ -97,8 +98,8 @@ foreach ($cEncargos as $oEncargo) {
     }
 
     $nom_idioma = '';
-    $GesLocales = new usuarios\model\entity\GestorLocal();
-    $cIdiomas = $GesLocales->getLocales(['idioma' => $idioma_enc]);
+    $LocalRepository = new LocalRepository();
+    $cIdiomas = $LocalRepository->getLocales(['idioma' => $idioma_enc]);
     if (is_array($cIdiomas) && count($cIdiomas) > 0) {
         $nom_idioma = $cIdiomas[0]->getNom_idioma();
     }
@@ -147,8 +148,8 @@ $oHashNuevoEncargosZona->setUrl($url_update_encargos_zona);
 $oHashNuevoEncargosZona->setCamposForm('que!id_zona');
 $h_borrar_encargos_zona = $oHashBorrarEncargosZona->linkSinVal();
 
-$aWhere = array();
-$aOperador = array();
+$aWhere = [];
+$aOperador = [];
 $cond_tipo_enc = "{" . implode(', ', $a_tipo_enc) . "}";
 $aWhere['id_tipo_enc'] = $cond_tipo_enc;
 $aOperador['id_tipo_enc'] = 'ANY';
@@ -189,11 +190,9 @@ $oDesplCentros->setNombre('id_ubi');
 $oDesplCentros->setOpciones($aCentros);
 
 
-$GesLocales = new usuarios\model\entity\GestorLocal();
-$oDesplIdiomas = $GesLocales->getListaIdiomas();
-$oDesplIdiomas->setNombre("idioma_enc");
-$oDesplIdiomas->setOpcion_sel($idioma_enc);
-$oDesplIdiomas->setBlanco(1);
+$LocalRepository = new LocalRepository();
+$a_locales = $LocalRepository->getArrayLocales();
+$oDesplIdiomas = new Desplegable("idioma_enc", $a_locales, $idioma_enc, true);
 
 $a_campos = ['oPosicion' => $oPosicion,
     'json_columns_cuadricula' => $json_columns_cuadricula,

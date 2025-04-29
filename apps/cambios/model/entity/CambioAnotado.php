@@ -161,7 +161,7 @@ class CambioAnotado extends ClasePropiedades
         } else {
             $bInsert = FALSE;
         }
-        $aDades = array();
+        $aDades = [];
         $aDades['id_schema_cambio'] = $this->iid_schema_cambio;
         $aDades['id_item_cambio'] = $this->iid_item_cambio;
         $aDades['anotado'] = $this->banotado;

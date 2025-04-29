@@ -31,7 +31,7 @@ class GestorAsistenteIn extends GestorAsistentePub
      * @param array aOperators associatiu amb els valors dels operadors que cal aplicar a cada variable
      * @return array|void
      */
-    function getAsistentesIn($aWhere = array(), $aOperators = array())
+    function getAsistentesIn($aWhere = [], $aOperators = array())
     {
         // En la misma tabla también están los que son AsistenteOut de mi dl
         // Para saber los AsistentesIn debo quitar los que provienen de mi esquema.
@@ -44,7 +44,7 @@ class GestorAsistenteIn extends GestorAsistentePub
         $nom_tabla = $this->getNomTabla();
         $oAsistentePubSet = new Set();
         $oCondicion = new Condicion();
-        $aCondi = array();
+        $aCondi = [];
         foreach ($aWhere as $camp => $val) {
             if ($camp === '_ordre') continue;
             $sOperador = isset($aOperators[$camp]) ? $aOperators[$camp] : '';

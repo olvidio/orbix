@@ -127,7 +127,7 @@ class GrupoCasa extends ClasePropiedades
         } else {
             $bInsert = FALSE;
         }
-        $aDades = array();
+        $aDades = [];
         $aDades['id_ubi_padre'] = $this->iid_ubi_padre;
         $aDades['id_ubi_hijo'] = $this->iid_ubi_hijo;
         array_walk($aDades, 'core\poner_null');

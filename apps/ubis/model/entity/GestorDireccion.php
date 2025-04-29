@@ -108,7 +108,7 @@ class GestorDireccion extends ClaseGestor
      * @param array aOperators associatiu amb els valors dels operadors que cal aplicar a cada variable
      * @return array Una col·lecció d'objectes de tipus Direccion
      */
-    function getDirecciones($aWhere = array(), $aOperators = array())
+    function getDirecciones($aWhere = [], $aOperators = array())
     {
         $a_Clases[] = array('clase' => 'DireccionCdc', 'get' => 'getDirecciones');
         $a_Clases[] = array('clase' => 'DireccionCtr', 'get' => 'getDirecciones');

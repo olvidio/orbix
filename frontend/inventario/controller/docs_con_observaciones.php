@@ -12,7 +12,7 @@ require_once("frontend/shared/global_header_front.inc");
 
 // muestra los documentos en búsqueda.
 $url_lista_backend = Hash::link(ConfigGlobal::getWeb()
-    . '/apps/inventario/controller/lista_docs_con_observaciones.php'
+    . '/src/inventario/controller/lista_docs_con_observaciones.php'
 );
 $oHash = new Hash();
 $oHash->setUrl($url_lista_backend);

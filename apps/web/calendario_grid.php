@@ -398,8 +398,8 @@ function dibujar_calendario(int $dd, string $cabecera, string $oInicio, string $
             // La variable $fila_dia tiene que filas están ocupadas para cada día.
             // La variable $max_filas me sirve a la hora de dibujar, para saber cuántas filas tiene un persona.
             $max_filas = 0;
-            $fila = array();
-            $fila_dia_new = array(); //dimensiono el vector vacio
+            $fila = [];
+            $fila_dia_new = []; //dimensiono el vector vacio
             $fila_dia = array("v", "v", "v", "v", "v", "v", "v", "v", "v", "v", "v", "v", "v", "v", "v", "v", "v", "v", "v", "v"); //dimensiono el vector vacio con 20.
             for ($d = 1; $d < $total_dias; $d++) {
                 $n_act = 0; //numero de actividades para el dia $d.

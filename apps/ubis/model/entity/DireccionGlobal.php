@@ -194,7 +194,7 @@ abstract class DireccionGlobal extends ClasePropiedades
         $aWhere['id_direccion'] = $this->getId_direccion();
         $GesUbixDireccion = new GestorUbixDireccion();
         $cUbixDireccion = $GesUbixDireccion->getUbixDirecciones($aWhere);
-        $ubis = array();
+        $ubis = [];
         if ($cUbixDireccion !== false) {
             foreach ($cUbixDireccion as $oUbixDireccion) {
                 $id_ubi = $oUbixDireccion->getId_ubi();

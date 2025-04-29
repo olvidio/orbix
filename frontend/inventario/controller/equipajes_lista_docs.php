@@ -17,12 +17,12 @@ $Qid_item_egm = (int)filter_input(INPUT_POST, 'id_item_egm');
 
 if (!empty($Qid_lugar)) {
     $url_lista_backend = Hash::link(ConfigGlobal::getWeb()
-        . '/apps/inventario/controller/lista_docs_de_lugar.php'
+        . '/src/inventario/controller/lista_docs_de_lugar.php'
     );
 }
 if (!empty($Qid_item_egm)) {
     $url_lista_backend = Hash::link(ConfigGlobal::getWeb()
-        . '/apps/inventario/controller/lista_docs_de_egm.php'
+        . '/src/inventario/controller/lista_docs_de_egm.php'
     );
 }
 $oHash = new Hash();

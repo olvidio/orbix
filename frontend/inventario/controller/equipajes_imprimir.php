@@ -19,7 +19,7 @@ if (empty($Qid_equipaje)) {
 
 //-------- Textos cabecera y pie -----------------------------------
 $url_lista_backend = Hash::link(ConfigGlobal::getWeb()
-    . '/apps/inventario/controller/cabecera_pie_txt.php'
+    . '/src/inventario/controller/cabecera_pie_txt.php'
 );
 $oHash = new Hash();
 $oHash->setUrl($url_lista_backend);
@@ -36,7 +36,7 @@ $pencil = ConfigGlobal::getWeb_icons() . '/pencil.png';
 
 //-------- nombres de las actividades que deben comprobar el equipaje -----------------------------------
 $url_lista_backend = Hash::link(ConfigGlobal::getWeb()
-    . '/apps/inventario/controller/equipajes_lista_activ_equipaje.php'
+    . '/src/inventario/controller/equipajes_lista_activ_equipaje.php'
 );
 $oHash = new Hash();
 $oHash->setUrl($url_lista_backend);
@@ -64,7 +64,7 @@ foreach ($a_actividades as $nom_activ) {
 
 //-------- docs en la casa -----------------------------------
 $url_lista_backend = Hash::link(ConfigGlobal::getWeb()
-    . '/apps/inventario/controller/equipajes_doc_casa.php'
+    . '/src/inventario/controller/equipajes_doc_casa.php'
 );
 $oHash = new Hash();
 $oHash->setUrl($url_lista_backend);
@@ -83,7 +83,7 @@ $html_docs_ubi = (new ListaAgrupar)->listaAgrupar($a_valores);
 
 //-------- equipajes para la actividad -----------------------------------
 $url_lista_backend = Hash::link(ConfigGlobal::getWeb()
-    . '/apps/inventario/controller/equipajes_egm.php'
+    . '/src/inventario/controller/equipajes_egm.php'
 );
 $oHash = new Hash();
 $oHash->setUrl($url_lista_backend);

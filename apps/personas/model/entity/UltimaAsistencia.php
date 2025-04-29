@@ -154,7 +154,7 @@ class UltimaAsistencia extends ClasePropiedades
         } else {
             $bInsert = FALSE;
         }
-        $aDades = array();
+        $aDades = [];
         $aDades['id_tipo_activ'] = $this->iid_tipo_activ;
         $aDades['f_ini'] = $this->df_ini;
         $aDades['descripcion'] = $this->sdescripcion;

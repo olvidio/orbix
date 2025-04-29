@@ -30,8 +30,8 @@ $a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_A
 // Hay que usar isset y empty porque puede tener el valor =0.
 // Si vengo por medio de Posicion, borro la última
 if (isset($_POST['stack'])) {
-    $stack = filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
-    if ($stack != '') {
+    $stack = (int)filter_input(INPUT_POST, 'stack', FILTER_SANITIZE_NUMBER_INT);
+    if ($stack !== 0) {
         // No me sirve el de global_object, sino el de la session
         $oPosicion2 = new web\Posicion();
         if ($oPosicion2->goStack($stack)) { // devuelve false si no puede ir
@@ -60,7 +60,7 @@ $oPosicion->setParametros(array('id_usuario' => $Qid_usuario), 1);
 
 //////////////////////// Usuario o Grupo ///////////////////////////////////////////////////
 $url_usuario_form_backend = Hash::link(ConfigGlobal::getWeb()
-    . '/apps/usuarios/controller/usuario_form.php'
+    . '/src/usuarios/infrastructure/controllers/usuario_form.php'
 );
 
 $oHash = new Hash();
@@ -73,34 +73,46 @@ $hash_params = $oHash->getArrayCampos();
 
 $data = PostRequest::getData($url_usuario_form_backend, $hash_params);
 
-$a_campos = $data['a_campos'];
+$a_campos_src = $data['a_campos'];
 
 $txt_guardar = _("guardar datos usuario");
 $txt_eliminar = _("¿Está seguro que desea quitar este permiso?");
 
 
 // recomponer los campos desplegables.
-$oDesplRoles = new Desplegable();
-$oDesplRoles->import($a_campos['oDesplRoles']);
+$aOpcionesRoles = $a_campos_src['aOpcionesRoles'];
+$id_role = $a_campos_src['id_role'];
+$oDesplRoles = new Desplegable('id_role', $aOpcionesRoles, $id_role, true);
 $a_campos['oDesplRoles'] = $oDesplRoles;
 
 $oSelects = new DesplegableArray();
-$oSelects->import($a_campos['oSelects']);
+$oSelects->import($a_campos_src['oSelects']);
 $a_campos['oSelects'] = $oSelects;
 
 $oHash = new Hash();
-$oHash->import($a_campos['oHash']);
+$camposMas = $a_campos_src['camposMas'];
+$camposForm = 'que!usuario!nom_usuario!password!email!id_role';
+$camposForm = !empty($camposMas) ? $camposForm . '!' . $camposMas : $camposForm;
+$oHash->setCamposForm($camposForm);
+$oHash->setcamposNo('pass!password!id_ctr!id_nom!casas');
+$a_camposHidden = array(
+    'id_usuario' => $Qid_usuario,
+    'quien' => $Qquien
+);
+$oHash->setArraycamposHidden($a_camposHidden);
 $a_campos['oHash'] = $oHash;
+
+
 // añadir Posicion
 $a_campos['oPosicion'] = $oPosicion;
 $a_campos['txt_guardar'] = $txt_guardar;
 $a_campos['txt_eliminar'] = $txt_eliminar;
 $a_campos['url_usuario_guardar'] = Hash::link(ConfigGlobal::getWeb()
-    . '/apps/usuarios/controller/usuario_guardar.php'
+    . '/src/usuarios/infrastructure/controllers/usuario_guardar.php'
 );
 
 //$a_campos['url_usuario_ajax'] = '';
-//$url_usuario_ajax = ConfigGlobal::getWeb() . '/apps/usuarios/controller/usuario_ajax.php';
+//$url_usuario_ajax = ConfigGlobal::getWeb() . '/src/usuarios/infrastructure/controllers/usuario_ajax.php';
 
 $url = ConfigGlobal::getWeb() . '/frontend/usuarios/controller/usuario_grupo_lst.php';
 $oHash1 = new Hash();
@@ -118,19 +130,28 @@ $oHash2->setCamposNo('scroll_id');
 $h_del_lst = $oHash2->linkSinVal();
 $a_campos['h_del_lst'] = $h_del_lst;
 
-$url_usuario_update = ConfigGlobal::getWeb() . '/apps/usuarios/controller/usuario_check_pwd.php';
+$url_usuario_update = ConfigGlobal::getWeb() . '/src/usuarios/infrastructure/controllers/usuario_check_pwd.php';
 $oHash3 = new Hash();
 $oHash3->setUrl($url_usuario_update);
 $oHash3->setCamposForm('id_usuario!usuario!password');
 $h_pwd = $oHash3->linkSinVal();
 $a_campos['h_pwd'] = $h_pwd;
 
+$a_campos['id_usuario'] = $a_campos_src['id_usuario'];
+$a_campos['usuario'] = $a_campos_src['usuario'];
+$a_campos['quien'] = $a_campos_src['quien'];
+$a_campos['pau'] = $a_campos_src['pau'];
+$a_campos['nom_usuario'] = $a_campos_src['nom_usuario'];
+$a_campos['email'] = $a_campos_src['email'];
+$a_campos['obj'] = $a_campos_src['obj'];
+
+
 $oView = new ViewPhtml('../frontend/usuarios/controller');
 $oView->renderizar('usuario_form.phtml', $a_campos);
 
 //////////////////////// Grupos del usuario ///////////////////////////////////////////////////
 $url_usuario_form_backend = Hash::link(ConfigGlobal::getWeb()
-    . '/apps/usuarios/controller/usuario_info.php'
+    . '/src/usuarios/infrastructure/controllers/usuario_info.php'
 );
 
 $oHash = new Hash();

@@ -98,7 +98,7 @@ class TipoCasa extends ClasePropiedades
         } else {
             $bInsert = false;
         }
-        $aDades = array();
+        $aDades = [];
         $aDades['nombre_tipo_casa'] = $this->snombre_tipo_casa;
         array_walk($aDades, 'core\poner_null');
 

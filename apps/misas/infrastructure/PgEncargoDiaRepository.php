@@ -48,7 +48,7 @@ class PgEncargoDiaRepository extends ClaseRepository implements EncargoDiaReposi
         $nom_tabla = $this->getNomTabla();
         $EncargoDiaSet = new Set();
         $oCondicion = new Condicion();
-        $aCondicion = array();
+        $aCondicion = [];
         foreach ($aWhere as $camp => $val) {
             if ($camp === '_ordre') {
                 continue;

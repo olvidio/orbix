@@ -294,7 +294,7 @@ switch ($Qque_mod) {
         if (!empty($Qpoblacion_sel)) {
             $GesDirecciones = new GestorDireccionCtrDl();
             $cDirecciones = $GesDirecciones->getDirecciones(array('poblacion' => $Qpoblacion_sel), array('poblacion' => 'sin_acentos'));
-            $cDirCentros = array();
+            $cDirCentros = [];
             $txt_direccion = '';
             $d = 0;
             $cId_ubis = [];
@@ -320,7 +320,7 @@ switch ($Qque_mod) {
             $cCentrosDl = $oGesCentrosDl->getCentros($aWhere);
         }
         $c = 0;
-        $a_valores = array();
+        $a_valores = [];
         $orden_nom = [];
         foreach ($cDirCentros as $key => $Cen) {
             $txt_direccion = $Cen['dir'];
@@ -406,7 +406,7 @@ switch ($Qque_mod) {
         $aOperador = array('tipo_ctr' => '~');
         $cCentros = $oGesCentros->getCentros($aWhere, $aOperador);
         $c = 0;
-        $a_valores = array();
+        $a_valores = [];
         $orden_nom = [];
         foreach ($cCentros as $oCentro) {
             $c++;

@@ -229,7 +229,7 @@ $altres_gets = "";
 $altres_gets_set = "";
 $query_if = "";
 $err_bool = "";
-$a_auto = array();
+$a_auto = [];
 foreach ($oDbl->query($sql) as $row) {
     $nomcamp = $row['field'];
     if ($nomcamp === 'id_schema') {
@@ -580,7 +580,7 @@ $txt .= '
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
 		if ($this->DBCarregar(\'guardar\') === FALSE) { $bInsert=TRUE; } else { $bInsert=FALSE; }
-		$aDades=array();';
+		$aDades=[];';
 $txt .= $guardar;
 $txt .= '
 		array_walk($aDades, \'core\\poner_null\');';
@@ -892,12 +892,12 @@ $txt2 .= '
 	 * @param array aOperators associatiu amb els valors dels operadors que cal aplicar a cada variable
 	 * @return array Una col·lecció d\'objectes de tipus ' . $clase . '
 	 */
-	function get' . $clase_plural . '($aWhere=array(),$aOperators=array()) {
+	function get' . $clase_plural . '($aWhere=[],$aOperators=array()) {
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
 		$o' . $clase . 'Set = new Set();
 		$oCondicion = new Condicion();
-		$aCondi = array();';
+		$aCondi = [];';
 $txt2 .= '
 		foreach ($aWhere as $camp => $val) {
 			if ($camp == \'_ordre\') continue;

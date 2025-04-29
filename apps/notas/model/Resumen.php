@@ -1319,9 +1319,9 @@ class Resumen extends ClasePropiedades
         $a_sectores = $oGesSectores->getArraySectores();
         $asignaturas = $this->getNomAsignaturas();
         $a_profe_dept = $this->arrayProfesorDepartamento();
-        $docencia_dep = array();
-        $docencia_no_dep = array();
-        $nombres = array();
+        $docencia_dep = [];
+        $docencia_no_dep = [];
+        $nombres = [];
         foreach ($a_profe_dept as $row) {
             $id_nom = $row['id_nom'];
             $id_departamento = $row['id_departamento'];

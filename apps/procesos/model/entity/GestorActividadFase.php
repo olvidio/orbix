@@ -7,8 +7,9 @@ use core\Condicion;
 use core\ConfigGlobal;
 use core\Set;
 use permisos\model\PermDl;
+use src\usuarios\application\repositories\RoleRepository;
+use src\usuarios\application\repositories\UsuarioRepository;
 use web\Desplegable;
-use usuarios\model\entity\Usuario;
 
 /**
  * GestorActividadFase
@@ -28,7 +29,6 @@ class GestorActividadFase extends ClaseGestor
     /* CONSTRUCTOR -------------------------------------------------------------- */
 
 
-    
     function __construct()
     {
         $oDbl = $GLOBALS['oDBC'];
@@ -64,7 +64,7 @@ class GestorActividadFase extends ClaseGestor
         }
         $cond .= ' AND';
 
-        $aFases = array();
+        $aFases = [];
         foreach ($a_id_tipo_proceso as $idTipoProceso) {
             $sQuery = "SELECT f.id_fase, f.desc_fase
                     FROM $nom_tabla f JOIN a_tareas_proceso p USING (id_fase)
@@ -73,7 +73,7 @@ class GestorActividadFase extends ClaseGestor
 
             //echo "w: $sQuery<br>";
             if (($oDbl->query($sQuery)) === false) {
-                $sClauError = 'GestorRole.lista';
+                $sClauError = 'GestorActividadFase.lista';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
                 return false;
             }
@@ -95,11 +95,16 @@ class GestorActividadFase extends ClaseGestor
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
 
-        $oMiUsuario = new Usuario(ConfigGlobal::mi_id_usuario());
+        $UsuarioRepository = new UsuarioRepository();
+        $oMiUsuario = $UsuarioRepository->findById(ConfigGlobal::mi_id_usuario());
+        $id_role = $oMiUsuario->getId_role();
         $miSfsv = ConfigGlobal::mi_sfsv();
 
+        $RoleRepository = new RoleRepository();
+        $aRoles = $RoleRepository->getArrayRoles();
+
         $cond = '';
-        if ($oMiUsuario->isRole('SuperAdmin')) { // Es administrador
+        if (!empty($aRoles[$id_role]) && ($aRoles[$id_role] === 'SuperAdmin')) {
             $cond = "(sf = 't' OR sv ='t') ";
         } else {
             // filtro por sf/sv
@@ -186,7 +191,7 @@ class GestorActividadFase extends ClaseGestor
 					GROUP BY f.id_fase, f.desc_fase
 					ORDER BY desc_fase";
                 if (($oDblSt = $oDbl->query($sQuery)) === false) {
-                    $sClauError = 'GestorRole.lista';
+                    $sClauError = 'GestorActividadFase.lista';
                     $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
                     return false;
                 }
@@ -201,7 +206,7 @@ class GestorActividadFase extends ClaseGestor
 					WHERE $cond
 					ORDER BY desc_fase";
             if (($oDblSt = $oDbl->query($sQuery)) === false) {
-                $sClauError = 'GestorRole.lista';
+                $sClauError = 'GestorActividadFase.lista';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
                 return false;
             }
@@ -236,13 +241,18 @@ class GestorActividadFase extends ClaseGestor
      * @param boolean optional només les fases de les que sóc responsable.
      * @return false|Desplegable
      */
-    function getListaActividadFases($aProcesos = array(), $bresp = false)
+    function getListaActividadFases($aProcesos = [], $bresp = false)
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
 
-        $oMiUsuario = new Usuario(ConfigGlobal::mi_id_usuario());
+        $UsuarioRepository = new UsuarioRepository();
+        $oMiUsuario = $UsuarioRepository->findById(ConfigGlobal::mi_id_usuario());
+        $id_role = $oMiUsuario->getId_role();
         $miSfsv = ConfigGlobal::mi_sfsv();
+
+        $RoleRepository = new RoleRepository();
+        $aRoles = $RoleRepository->getArrayRoles();
 
         if ($bresp) {
             //$miPerm=$oMiUsuario->getPerm_oficinas();
@@ -250,7 +260,7 @@ class GestorActividadFase extends ClaseGestor
         }
 
         $cond = '';
-        if ($oMiUsuario->isRole('SuperAdmin')) { // Es administrador
+        if (!empty($aRoles[$id_role]) && ($aRoles[$id_role] === 'SuperAdmin')) {
             $cond = "(sf = 't' OR sv ='t') ";
         } else {
             // filtro por sf/sv
@@ -281,7 +291,7 @@ class GestorActividadFase extends ClaseGestor
 					ORDER BY desc_fase";
         }
         if (($oDblSt = $oDbl->query($sQuery)) === false) {
-            $sClauError = 'GestorRole.lista';
+            $sClauError = 'GestorActividadFase.lista';
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
             return false;
         }
@@ -290,7 +300,7 @@ class GestorActividadFase extends ClaseGestor
         if (empty($aProcesos)) {
             return new Desplegable('', $oDblSt, '', true);
         } else {
-            $aFasesComunes = array();
+            $aFasesComunes = [];
             foreach ($oDblSt as $aDades) {
                 $aFasesComunes[$aDades['id_fase']] = $aDades['desc_fase'];
             }
@@ -300,7 +310,7 @@ class GestorActividadFase extends ClaseGestor
             $id_tipo_proceso = current($aProcesos);
             $oGestorProceso = new GestorTareaProceso();
             $aFasesProceso = $oGestorProceso->getFasesProceso($id_tipo_proceso);
-            $aFasesProcesoDesc = array();
+            $aFasesProcesoDesc = [];
             foreach ($aFasesProceso as $id_item => $id_fase) {
                 // compruebo que está en la lista de las fases comunes.
                 if (array_key_exists($id_fase, $aFasesComunes)) {
@@ -355,13 +365,13 @@ class GestorActividadFase extends ClaseGestor
      * @param array aOperators associatiu amb els valors dels operadors que cal aplicar a cada variable
      * @return array|void
      */
-    function getActividadFases($aWhere = array(), $aOperators = array())
+    function getActividadFases($aWhere = [], $aOperators = array())
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $oActividadFaseSet = new Set();
         $oCondicion = new Condicion();
-        $aCondi = array();
+        $aCondi = [];
         foreach ($aWhere as $camp => $val) {
             if ($camp === '_ordre') continue;
             $sOperador = isset($aOperators[$camp]) ? $aOperators[$camp] : '';

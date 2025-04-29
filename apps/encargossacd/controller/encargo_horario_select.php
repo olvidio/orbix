@@ -62,7 +62,7 @@ $a_cabeceras = array(array('name' => ucfirst(_("id")), 'formatter' => 'clickForm
     _("texto")
 );
 
-$a_valores = array();
+$a_valores = [];
 $i = 0;
 if (isset($Qid_sel) && !empty($Qid_sel)) {
     $a_valores['select'] = $Qid_sel;

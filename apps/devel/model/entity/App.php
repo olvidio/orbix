@@ -124,7 +124,7 @@ class App extends ClasePropiedades
         } else {
             $bInsert = false;
         }
-        $aDades = array();
+        $aDades = [];
         $aDades['nom'] = $this->snom;
         $aDades['db_prefix'] = $this->sdb_prefix;
         array_walk($aDades, 'core\poner_null');

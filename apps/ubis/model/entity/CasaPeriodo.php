@@ -149,7 +149,7 @@ class CasaPeriodo extends ClasePropiedades
         } else {
             $bInsert = FALSE;
         }
-        $aDades = array();
+        $aDades = [];
         $aDades['id_ubi'] = $this->iid_ubi;
         $aDades['f_ini'] = $this->df_ini;
         $aDades['f_fin'] = $this->df_fin;

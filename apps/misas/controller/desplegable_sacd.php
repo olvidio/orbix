@@ -42,7 +42,7 @@ if ($Qid_sacd!=0)
     $desplegable_sacd.='<OPTION VALUE=""></OPTION>';
 }
 
-$lista_sacd=array();
+$lista_sacd=[];
 //libre
 if ($Qseleccion & 1) {
     $gesZonaSacd = new GestorZonaSacd();
@@ -65,8 +65,8 @@ if ($Qseleccion & 1) {
             $id_enc = $oEncargoDia->getId_enc();
             //miro si és Missa a primera hora.
 
-            $aWhere = array();
-            $aOperador = array();
+            $aWhere = [];
+            $aOperador = [];
             $aWhere['id_enc'] = $id_enc;
             
             $GesEncargos = new GestorEncargo();

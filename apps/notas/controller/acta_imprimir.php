@@ -99,7 +99,7 @@ $cPersonaNotas = getDatosActa::getNotas($acta);
 
 // para ordenar
 $errores = '';
-$aPersonasNotas = array();
+$aPersonasNotas = [];
 $oGesNomLatin = new GestorNombreLatin();
 foreach ($cPersonaNotas as $oPersonaNota) {
     $id_situacion = $oPersonaNota->getId_situacion();

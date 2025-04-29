@@ -6,13 +6,8 @@ use frontend\shared\PostRequest;
 use web\Hash;
 use web\Lista;
 
-// INICIO Cabecera global de URL de controlador *********************************
-require_once("apps/core/global_header.inc");
-// Archivos requeridos por esta url **********************************************
-
 // Crea los objetos de uso global **********************************************
-require_once("apps/core/global_object.inc");
-// Crea los objetos por esta url  **********************************************
+require_once("frontend/shared/global_header_front.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
 $oPosicion->recordar();
@@ -38,7 +33,7 @@ $oPosicion->setParametros(array('username' => $Qusername), 1);
 
 
 $url_lista_backend = Hash::link(ConfigGlobal::getWeb()
-    . '/apps/usuarios/controller/grupo_lista.php'
+    . '/src/usuarios/infrastructure/controllers/grupo_lista.php'
 );
 
 $oHash = new Hash();

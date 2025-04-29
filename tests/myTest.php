@@ -12,8 +12,8 @@ use permisos\model\PermDl;
 use permisos\model\PermisosActividades;
 use permisos\model\PermisosActividadesTrue;
 use PHPUnit\Framework\TestCase;
-use usuarios\model\entity\GestorPermMenu;
-use usuarios\model\entity\GestorUsuarioGrupo;
+use src\usuarios\application\repositories\PermMenuRepository;
+use src\usuarios\application\repositories\UsuarioGrupoRepository;
 
 class myTest extends TestCase
 {
@@ -257,13 +257,13 @@ class myTest extends TestCase
         if (ConfigGlobal::is_app_installed('menus')) {
             if (empty($_SESSION['iPermMenus'])) { // con hacerlo una vez basta.
                 // Grupos
-                $oGesGrupo = new GestorUsuarioGrupo();
-                $cGrupos = $oGesGrupo->getUsuariosGrupos(array('id_usuario' => ConfigGlobal::mi_id_usuario()));
+                $UsuarioGrupoRepository = new UsuarioGrupoRepository();
+                $cGrupos = $UsuarioGrupoRepository->getUsuariosGrupos(array('id_usuario' => ConfigGlobal::mi_id_usuario()));
                 $iperm_menu = 0;
                 foreach ($cGrupos as $UsuarioGrupo) {
                     $id_grupo = $UsuarioGrupo->getId_grupo();
-                    $oGesPermMenu = new GestorPermMenu();
-                    $cPermMenu = $oGesPermMenu->getPermMenus(array('id_usuario' => $id_grupo));
+                    $PermMenuRepository = new PermMenuRepository();
+                    $cPermMenu = $PermMenuRepository->getPermMenus(array('id_usuario' => $id_grupo));
                     foreach ($cPermMenu as $oPermMenu) {
                         // Or (inclusive or) 	Bits that are set in either $a or $b are set.
                         $iperm_menu = $iperm_menu | $oPermMenu->getMenu_perm();

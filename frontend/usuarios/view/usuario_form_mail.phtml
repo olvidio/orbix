@@ -3,7 +3,7 @@
         let datos = $(formulario).serialize();
         let request = $.ajax({
             data: datos,
-            url: 'apps/usuarios/controller/usuario_guardar_mail.php',
+            url: 'src/usuarios/infrastructure/controllers/usuario_guardar_mail.php',
             method: 'POST',
             dataType: 'json'
         });

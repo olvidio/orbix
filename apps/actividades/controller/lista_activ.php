@@ -271,7 +271,7 @@ if (!(($_SESSION['oPerm']->have_perm_oficina('sg'))
     $ver_tarifa = 0;
     $ver_sacd = 0;
 }
-$a_cabeceras = array();
+$a_cabeceras = [];
 if ($Qque == "list_activ_compl") {
     $a_cabeceras[] = ucfirst(_("común"));
 }
@@ -304,8 +304,8 @@ if (ConfigGlobal::is_dmz() === FALSE) {
     $a_cabeceras[] = array('name' => '', 'formatter' => 'clickFormatter');
 }
 
-$a_botones = array();
-$a_valores = array();
+$a_botones = [];
+$a_valores = [];
 $i = 0;
 foreach ($cActividades as $oActividad) {
     $i++;

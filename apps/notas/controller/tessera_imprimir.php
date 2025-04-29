@@ -246,8 +246,8 @@ $h = $oHash->linkSinVal();
 
     // Asignaturas posibles:
     $GesAsignaturas = new GestorAsignatura();
-    $aWhere = array();
-    $aOperador = array();
+    $aWhere = [];
+    $aOperador = [];
     $aWhere['status'] = 't';
     $aWhere['id_nivel'] = '1100,2500';
     $aOperador['id_nivel'] = 'BETWEEN';
@@ -256,13 +256,13 @@ $h = $oHash->linkSinVal();
 
     // Asignaturas cursadas:
     $GesNotas = new GestorPersonaNotaDB();
-    $aWhere = array();
-    $aOperador = array();
+    $aWhere = [];
+    $aOperador = [];
     $aWhere['id_nom'] = $id_nom;
     $aWhere['id_nivel'] = '1100,2500';
     $aOperador['id_nivel'] = 'BETWEEN';
     $cNotas = $GesNotas->getPersonaNotas($aWhere, $aOperador);
-    $aAprobadas = array();
+    $aAprobadas = [];
     foreach ($cNotas as $oPersonaNota) {
         $id_asignatura = $oPersonaNota->getId_asignatura();
         $id_nivel = $oPersonaNota->getId_nivel();

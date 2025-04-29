@@ -127,7 +127,7 @@ class ZonaGrupo extends ClasePropiedades
         } else {
             $bInsert = FALSE;
         }
-        $aDades = array();
+        $aDades = [];
         $aDades['nombre_grupo'] = $this->snombre_grupo;
         $aDades['orden'] = $this->iorden;
         array_walk($aDades, 'core\poner_null');

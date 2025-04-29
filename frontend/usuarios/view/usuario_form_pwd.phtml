@@ -1,7 +1,7 @@
 <script>
     fnjs_chk_passwd = function (formulario) {
         var password = encodeURIComponent($('#password').val());
-        var url = 'apps/usuarios/controller/usuario_check_pwd.php';
+        var url = 'src/usuarios/infrastructure/controllers/usuario_check_pwd.php';
         var parametros = 'id_usuario=<?= $id_usuario ?>&password=' + password + '<?= $h2 ?>';
 
         var request = $.ajax({
@@ -45,7 +45,7 @@
         let datos = $(formulario).serialize();
         let request = $.ajax({
             data: datos,
-            url: 'apps/usuarios/controller/usuario_guardar_pwd.php',
+            url: 'src/usuarios/infrastructure/controllers/usuario_guardar_pwd.php',
             method: 'POST',
             dataType: 'json'
         });

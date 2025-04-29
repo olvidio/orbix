@@ -259,8 +259,8 @@ case "get":
         $a_resumen[$id_ubi][2]['gasto'] = 0;
 
         $a=0;
-        $aWhere=array();
-        $aOperador=array();
+        $aWhere=[];
+        $aOperador=[];
         $aWhere['f_ini']=$fin;
         $aOperador['f_ini']='<=';
         $aWhere['f_fin']=$inicio;

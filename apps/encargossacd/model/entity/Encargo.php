@@ -176,7 +176,7 @@ class Encargo extends ClasePropiedades
         } else {
             $bInsert = FALSE;
         }
-        $aDades = array();
+        $aDades = [];
         $aDades['id_tipo_enc'] = $this->iid_tipo_enc;
         $aDades['sf_sv'] = $this->isf_sv;
         $aDades['id_ubi'] = $this->iid_ubi;

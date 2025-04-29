@@ -280,7 +280,7 @@ class AsistentePub extends ClasePropiedades
         } else {
             $bInsert = false;
         }
-        $aDades = array();
+        $aDades = [];
         $aDades['propio'] = $this->bpropio;
         $aDades['est_ok'] = $this->best_ok;
         $aDades['cfi'] = $this->bcfi;
@@ -448,7 +448,7 @@ class AsistentePub extends ClasePropiedades
             // ho poso abans d'esborrar perque sino no trova cap valor. En el cas d'error s'hauria d'esborrar l'apunt.
             $oGestorCanvis = new GestorAvisoCambios();
             $shortClassName = (new ReflectionClass($this))->getShortName();
-            $oGestorCanvis->addCanvi($shortClassName, 'DELETE', $this->iid_activ, array(), $this->aDadesActuals);
+            $oGestorCanvis->addCanvi($shortClassName, 'DELETE', $this->iid_activ, [], $this->aDadesActuals);
         }
         if (($oDbl->exec("DELETE FROM $nom_tabla WHERE id_activ='$this->iid_activ' AND id_nom=$this->iid_nom")) === false) {
             $sClauError = get_class($this) . '.eliminar';
@@ -518,7 +518,7 @@ class AsistentePub extends ClasePropiedades
      */
     function getAllAtributes()
     {
-        $aDades = array();
+        $aDades = [];
         $aDades['id_activ'] = $this->iid_activ;
         $aDades['id_nom'] = $this->iid_nom;
         $aDades['propio'] = $this->bpropio;

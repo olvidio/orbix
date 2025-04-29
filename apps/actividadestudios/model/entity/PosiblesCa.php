@@ -46,7 +46,7 @@ class PosiblesCa extends ClasePropiedades
         $suma_creditos = 0;
         $GesNotas = new GestorNota();
         $cNotas = $GesNotas->getNotas(array('superada' => 't'));
-        $aSuperadas = array();
+        $aSuperadas = [];
         foreach ($cNotas as $oNota) {
             $id_situacion = $oNota->getId_situacion();
             $aSuperadas[$id_situacion] = 't';
@@ -54,7 +54,7 @@ class PosiblesCa extends ClasePropiedades
         $GesPersonaNotas = new GestorPersonaNotaDB();
         $cPersonaNotas = $GesPersonaNotas->getPersonaNotas(array('id_nom' => $id_nom));
         $num_opcionales = 0;
-        $todas_asig_p = array();
+        $todas_asig_p = [];
         foreach ($cPersonaNotas as $oPersonaNota) {
             $id_situacion = $oPersonaNota->getId_situacion();
             $id_asignatura = $oPersonaNota->getId_asignatura();

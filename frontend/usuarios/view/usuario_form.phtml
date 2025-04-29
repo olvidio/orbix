@@ -2,7 +2,7 @@
     fnjs_chk_passwd = function (formulario) {
         var password = encodeURIComponent($('#password').val());
         var usuario = encodeURIComponent($('#usuario').val());
-        var url = 'apps/usuarios/controller/usuario_check_pwd.php';
+        var url = 'src/usuarios/infrastructure/controllers/usuario_check_pwd.php';
         var parametros = 'id_usuario=<?= $id_usuario ?>&usuario=' + usuario + '&password=' + password + '<?= $h_pwd ?>';
 
         var request = $.ajax({
@@ -82,7 +82,6 @@
 <h3><?= $usuario ?> FRONT</h3>
 <form id="frm_usuario" name="frm_usuario" action="" method="post">
     <?= $oHash->getCamposHtml() ?>
-    <input type=hidden id=pass name=pass value='<?= $pass ?>'>
     <input type=hidden id=que_user name=que value=''>
     <br>
     <?= ucfirst(_("login")) ?>:<input type=text id=usuario name=usuario value="<?= $usuario ?>" size=60>

@@ -3,9 +3,10 @@
 // INICIO Cabecera global de URL de controlador *********************************
 use certificados\domain\repositories\CertificadoDlRepository;
 use core\ViewTwig;
+use src\usuarios\application\repositories\LocalRepository;
 use web\DateTimeLocal;
+use web\Desplegable;
 use web\Hash;
-use usuarios\model\entity\GestorLocal;
 use function core\is_true;
 
 require_once("apps/core/global_header.inc");
@@ -58,11 +59,9 @@ $oHashCertificadoPdf->setArrayCamposHidden([
 ]);
 
 //Idiomas
-$gesIdiomas = new GestorLocal();
-$oDesplIdiomas = $gesIdiomas->getListaLocales();
-$oDesplIdiomas->setNombre('idioma');
-$oDesplIdiomas->setBlanco(TRUE);
-
+$LocalRepository = new LocalRepository();
+$a_locales = $LocalRepository->getArrayLocales();
+$oDesplIdiomas = new Desplegable('idioma', $a_locales,'',true);
 
 $a_campos = [
     'oPosicion' => $oPosicion,

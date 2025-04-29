@@ -5,7 +5,7 @@ use core\ConfigGlobal;
 ?>
 <script>
     fnjs_add_grupmenu = function (formulario) {
-        var url = '<?= ConfigGlobal::getWeb() ?>/apps/usuarios/controller/role_grupmenu_add.php';
+        var url = '<?= ConfigGlobal::getWeb() ?>/src/usuarios/infrastructure/controllers/role_grupmenu_add.php';
         let datos = $(formulario).serialize();
         let request = $.ajax({
             data: datos,

@@ -812,7 +812,7 @@ class TrasladoDl
             if (empty($class)) {
                 continue;
             }
-            $colection = array();
+            $colection = [];
             switch ($class) {
                 case 'TelecoPersonaDl':
                     $gestor = "$app\\model\\entity\\GestorTelecoPersonaDl";

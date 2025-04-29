@@ -8,6 +8,7 @@ use core\DBConnection;
 use core\DBPropiedades;
 use core\ViewPhtml;
 use permisos\model\MyCrypt;
+use src\usuarios\domain\entity\Usuario;
 
 
 // INICIO Cabecera global de URL de controlador *********************************
@@ -83,7 +84,7 @@ function getAppsPosibles()
     $oConexion = new DBConnection($config);
     $oDBP_Select = $oConexion->getPDO();
     $sQuery = "SELECT * FROM m0_apps";
-    $a_apps = array();
+    $a_apps = [];
     foreach ($oDBP_Select->query($sQuery) as $aDades) {
         $nom = $aDades['nom'];
         $a_apps[$nom] = $aDades['id_app'];
@@ -99,9 +100,9 @@ function getModsPosibles()
     $oConexion = new DBConnection($config);
     $oDBP_Select = $oConexion->getPDO();
     $sQuery = "SELECT * FROM m0_modulos";
-    $a_mods = array();
-    $a_mods_req = array();
-    $a_apps_req = array();
+    $a_mods = [];
+    $a_mods_req = [];
+    $a_apps_req = [];
     foreach ($oDBP_Select->query($sQuery) as $aDades) {
         $id_mod = $aDades['id_mod'];
         $nom = $aDades['nom'];
@@ -117,7 +118,7 @@ function getModsInstalados($oDB_Select)
 {
     $a_mods = getModsPosibles();
     $sQuery = "SELECT * FROM m0_mods_installed_dl WHERE status = 't'";
-    $a_mods_installed = array();
+    $a_mods_installed = [];
     foreach ($oDB_Select->query($sQuery) as $aDades) {
         $id_mod = $aDades['id_mod'];
         $nom_mod = $a_mods[$id_mod]['nom'];
@@ -128,7 +129,7 @@ function getModsInstalados($oDB_Select)
 
 function getAppsMods($id_mod)
 {
-    $apps = array();
+    $apps = [];
     $a_mods = getModsPosibles();
     $ajson = $a_mods[$id_mod]['mods_req'];
     if (preg_match('/^{(.*)}$/', $ajson, $matches)) {
@@ -146,7 +147,7 @@ function getAppsMods($id_mod)
 
 function getApps($id_mod)
 {
-    $apps = array();
+    $apps = [];
     $a_mods = getModsPosibles();
     $ajson = $a_mods[$id_mod]['apps_req'];
     if (preg_match('/^{(.*)}$/', $ajson, $matches)) {
@@ -230,6 +231,7 @@ if (!isset($_SESSION['session_auth'])) {
         $oCrypt = new MyCrypt();
         $oDBSt->bindColumn('password', $sPasswd, \PDO::PARAM_STR);
         if ($row = $oDBSt->fetch(\PDO::FETCH_ASSOC)) {
+            $MiUsuario = (new Usuario())->setAllAttributes($row);
             if ($oCrypt->encode($_POST['password'], $sPasswd) == $sPasswd) {
                 $id_usuario = $row['id_usuario'];
                 $id_role = $row['id_role'];
@@ -271,7 +273,7 @@ if (!isset($_SESSION['session_auth'])) {
 
                 $a_mods = getModsPosibles();
                 $a_apps = getAppsPosibles();
-                $app_installed = array();
+                $app_installed = [];
 
                 $a_mods_installed = getModsInstalados($oDB_Select);
                 foreach ($a_mods_installed as $id_mod => $param) {
@@ -304,6 +306,7 @@ if (!isset($_SESSION['session_auth'])) {
                 if (!isset($_SESSION['session_auth'])) {
                     $session_auth = array(
                         'id_usuario' => $id_usuario,
+                        'MiUsuario' => $MiUsuario,
                         'sfsv' => $sfsv,
                         'id_role' => $id_role,
                         'role_pau' => $role_pau,

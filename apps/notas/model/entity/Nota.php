@@ -197,7 +197,7 @@ class Nota extends ClasePropiedades
         } else {
             $bInsert = false;
         }
-        $aDades = array();
+        $aDades = [];
         $aDades['descripcion'] = $this->sdescripcion;
         $aDades['superada'] = $this->bsuperada;
         $aDades['breve'] = $this->sbreve;

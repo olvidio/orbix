@@ -34,13 +34,13 @@ use actividadescentro\model\entity\GestorCentroEncargado;
 use core\ConfigGlobal;
 use core\ViewPhtml;
 use permisos\model\PermisosActividadesTrue;
+use src\usuarios\application\repositories\PreferenciaRepository;
+use ubis\model\entity\Ubi;
 use web\Hash;
 use web\Lista;
 use web\Periodo;
 use web\PeriodoQue;
 use web\TiposActividades;
-use ubis\model\entity\Ubi;
-use usuarios\model\entity\Preferencia;
 use function core\strtoupper_dlb;
 
 require_once("apps/core/global_header.inc");
@@ -68,7 +68,7 @@ if (isset($_POST['stack'])) {
 
 //Si vengo de vuelta con el parámetro 'continuar', los datos no están en el POST,
 // sino en $Posicion. Le paso la referecia del stack donde está la información.
-if (!empty($Qcontinuar) && $Qcontinuar == 'si' && ($QGstack != '')) {
+if (!empty($Qcontinuar) && $Qcontinuar === 'si' && ($QGstack != '')) {
     $oPosicion->goStack($QGstack);
     $Qque = $oPosicion->getParametro('que');
     $Qstatus = $oPosicion->getParametro('status');
@@ -172,7 +172,7 @@ $oPeriodo->setPeriodo($Qperiodo);
 
 $inicioIso = $oPeriodo->getF_ini_iso();
 $finIso = $oPeriodo->getF_fin_iso();
-if (!empty($Qperiodo) && $Qperiodo == 'desdeHoy') {
+if (!empty($Qperiodo) && $Qperiodo === 'desdeHoy') {
     $aWhere['f_fin'] = "'$inicioIso','$finIso'";
     $aOperador['f_fin'] = 'BETWEEN';
 } else {
@@ -194,7 +194,7 @@ $a_botones = array(
     array('txt' => _('ctrs org'), 'click' => "jsForm.mandar(\"#seleccionados\",\"ctrs\")"),
 );
 
-$a_cabeceras = array();
+$a_cabeceras = [];
 $a_cabeceras[] = array('name' => _("inicio"), 'width' => 40, 'class' => 'fecha');
 $a_cabeceras[] = array('name' => _("fin"), 'width' => 40, 'class' => 'fecha');
 $a_cabeceras[] = array('name' => _("sf"), 'width' => 40);
@@ -219,12 +219,15 @@ if ($num_activ > $num_max_actividades && empty($Qcontinuar)) {
 
 $i = 0;
 $sin = 0;
-$a_valores = array();
+$a_valores = [];
 $sPrefs = '';
 $id_usuario = ConfigGlobal::mi_id_usuario();
 $tipo = 'tabla_presentacion';
-$oPref = new Preferencia(array('id_usuario' => $id_usuario, 'tipo' => $tipo));
-$sPrefs = $oPref->getPreferencia();
+$PreferenciaRepository = new PreferenciaRepository();
+$oPreferencia = $PreferenciaRepository->findById($id_usuario, $tipo);
+if ($oPreferencia !== null) {
+    $sPrefs = $oPreferencia->getPreferencia();
+}
 foreach ($cActividades as $oActividad) {
     $id_activ = $oActividad->getId_activ();
     $id_tipo_activ = $oActividad->getId_tipo_activ();

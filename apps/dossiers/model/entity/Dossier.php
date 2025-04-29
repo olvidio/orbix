@@ -156,7 +156,7 @@ class Dossier extends ClasePropiedades
         } else {
             $bInsert = false;
         }
-        $aDades = array();
+        $aDades = [];
         $aDades['f_ini'] = $this->df_ini;
         $aDades['f_camb_dossier'] = $this->df_camb_dossier;
         $aDades['status_dossier'] = $this->bstatus_dossier;

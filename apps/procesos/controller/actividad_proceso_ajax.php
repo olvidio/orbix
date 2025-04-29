@@ -1,13 +1,12 @@
 <?php
 
 use core\ConfigGlobal;
-use function core\is_true;
-use menus\model\PermisoMenu;
 use procesos\model\entity\ActividadFase;
 use procesos\model\entity\ActividadProcesoTarea;
 use procesos\model\entity\ActividadTarea;
 use procesos\model\entity\GestorActividadProcesoTarea;
 use procesos\model\entity\GestorTareaProceso;
+use function core\is_true;
 
 
 // INICIO Cabecera global de URL de controlador *********************************

@@ -82,7 +82,7 @@ switch ($Qque) {
         $a_cabeceras = array(_("centro"), _("zona"));
 
         $i = 0;
-        $a_valores = array();
+        $a_valores = [];
         foreach ($cCentros as $oCentro) {
             $i++;
             $id_ubi = "{$oCentro->getId_ubi()}"; // Para que lo coja como un string.

@@ -275,7 +275,7 @@ class PersonaBDU extends ClasePropiedades
         } else {
             $bInsert = false;
         }
-        $aDades = array();
+        $aDades = [];
         $aDades['apenom'] = $this->sApenom;
         $aDades['dl'] = $this->sdl;
         $aDades['ctr'] = $this->sctr;
@@ -410,7 +410,7 @@ class PersonaBDU extends ClasePropiedades
     /* OTROS MÉTODOS  ----------------------------------------------------------*/
     public function dividirIncorporacion()
     {
-        $matches = array();
+        $matches = [];
         $subject = $this->getIncorporacion();
         $pattern = '/^(\w+)\s*(\d*)-(\d*)-(\d*)/';
         if (preg_match($pattern, $subject, $matches)) {
@@ -430,7 +430,7 @@ class PersonaBDU extends ClasePropiedades
 
     public function dividirCe()
     {
-        $matches = array();
+        $matches = [];
         $this->ice_num = '';
         $this->sce_lugar = '';
         $this->ice_ini = '';
@@ -496,7 +496,7 @@ class PersonaBDU extends ClasePropiedades
         /* separar el apellidos completo en espacios */
         $tokens = explode(' ', trim($apellidos));
         /* array donde se guardan las "palabras" del apellidos */
-        $names = array();
+        $names = [];
         /* palabras de apellidos compuestos */
         // 27.3.2019 He quitado 'san', pues hay un apellido así
         $special_tokens = array('da', 'de', 'del', 'la', 'las', 'los', 'mac', 'mc', 'van', 'von', 'y', 'i', 'santa');

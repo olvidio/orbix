@@ -60,7 +60,7 @@ class TelecoCtrDl extends TelecoCtr
         } else {
             $bInsert = false;
         }
-        $aDades = array();
+        $aDades = [];
         $aDades['tipo_teleco'] = $this->stipo_teleco;
         $aDades['desc_teleco'] = $this->sdesc_teleco;
         $aDades['num_teleco'] = $this->snum_teleco;

@@ -244,7 +244,7 @@ class PersonaNotaDB extends ClasePropiedades
         } else {
             $bInsert = false;
         }
-        $aDades = array();
+        $aDades = [];
         $aDades['id_nivel'] = $this->iid_nivel;
         $aDades['id_asignatura'] = $this->iid_asignatura;
         $aDades['id_situacion'] = $this->iid_situacion;

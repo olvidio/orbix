@@ -5,7 +5,7 @@
             let datos = $(formulario).serialize();
             let request = $.ajax({
                 data: datos,
-                url: 'apps/usuarios/controller/grupo_guardar.php',
+                url: 'src/usuarios/infrastructure/controllers/grupo_guardar.php',
                 method: 'POST',
                 dataType: 'json'
             });

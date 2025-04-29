@@ -183,7 +183,7 @@ class EncargoHorario extends ClasePropiedades
         } else {
             $bInsert = FALSE;
         }
-        $aDades = array();
+        $aDades = [];
         $aDades['id_enc'] = $this->iid_enc;
         $aDades['f_ini'] = $this->df_ini;
         $aDades['f_fin'] = $this->df_fin;

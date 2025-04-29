@@ -2,7 +2,7 @@
     fnjs_guardar_listado = function (formulario) {
         parametros = $(formulario).serialize();
         let request = $.ajax({
-            url: 'apps/inventario/controller/equipajes_texto_listado_guardar.php',
+            url: 'src/inventario/controller/equipajes_texto_listado_guardar.php',
             type: 'post',
             data: parametros,
             dataType: 'json'
@@ -37,7 +37,7 @@
             var url2 = 'frontend/inventario/controller/equipajes_ver.php';
             let parametros = $('#seleccion').serialize();
             let request = $.ajax({
-                url: 'apps/inventario/controller/equipajes_eliminar.php',
+                url: 'src/inventario/controller/equipajes_eliminar.php',
                 type: 'post',
                 data: parametros,
                 dataType: 'json'
@@ -55,7 +55,7 @@
     fnjs_del_doc = function (formulario, id_grupo) {
         parametros = $(formulario).serialize();
         let request = $.ajax({
-            url: 'apps/inventario/controller/equipajes_del_doc.php',
+            url: 'src/inventario/controller/equipajes_del_doc.php',
             type: 'post',
             data: parametros,
             dataType: 'json'
@@ -88,7 +88,7 @@
     fnjs_add_doc = function (formulario, id_grupo) {
         parametros = $(formulario).serialize();
         let request = $.ajax({
-            url: 'apps/inventario/controller/equipajes_add_doc.php',
+            url: 'src/inventario/controller/equipajes_add_doc.php',
             type: 'post',
             data: parametros,
             dataType: 'json'
@@ -142,7 +142,7 @@
             let formulario = '#form_maletas';
             parametros = $(formulario).serialize();
             let request = $.ajax({
-                url: 'apps/inventario/controller/equipajes_eliminar_grupo.php',
+                url: 'src/inventario/controller/equipajes_eliminar_grupo.php',
                 type: 'post',
                 data: parametros,
                 dataType: 'json'
@@ -161,7 +161,7 @@
         let formulario = "#form_" + id_grupo;
         parametros = $(formulario).serialize();
         let request = $.ajax({
-            url: 'apps/inventario/controller/equipajes_update_grupo.php',
+            url: 'src/inventario/controller/equipajes_update_grupo.php',
             type: 'post',
             data: parametros,
             dataType: 'json'

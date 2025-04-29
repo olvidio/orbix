@@ -116,7 +116,7 @@ class AsignaturaTipo extends ClasePropiedades
         } else {
             $bInsert = false;
         }
-        $aDades = array();
+        $aDades = [];
         $aDades['tipo_asignatura'] = $this->stipo_asignatura;
         $aDades['tipo_breve'] = $this->stipo_breve;
         $aDades['año'] = $this->saño;

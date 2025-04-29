@@ -142,7 +142,7 @@ class ActividadFase extends ClasePropiedades
         } else {
             $bInsert = FALSE;
         }
-        $aDades = array();
+        $aDades = [];
         $aDades['desc_fase'] = $this->sdesc_fase;
         $aDades['sf'] = $this->bsf;
         $aDades['sv'] = $this->bsv;

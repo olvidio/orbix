@@ -78,8 +78,8 @@ foreach ($tipos_de_ctr as $tipo_ctr_que) {
     }
     if (!empty($txt_tipo_ctr))
 
-        $aWhere = array();
-    $aOperador = array();
+        $aWhere = [];
+    $aOperador = [];
     $aWhere['status'] = 't';
     $aWhere['tipo_ctr'] = "^$tipo_ctr_que";
     $aOperador['tipo_ctr'] = '~';
@@ -105,8 +105,8 @@ foreach ($tipos_de_ctr as $tipo_ctr_que) {
         /* DESACTIVADO CARGOS
         // busco los cargos del cl.
         $GesCargosCl = new GestorCargoCl();
-        $aWhereC = array();
-        $aOperadorC = array();
+        $aWhereC = [];
+        $aOperadorC = [];
         $aWhereC['id_ubi'] = $id_ubi;
         $aWhereC['f_cese'] = 'null';
         $aOperadorC['f_cese'] = 'IS NULL';
@@ -120,16 +120,16 @@ foreach ($tipos_de_ctr as $tipo_ctr_que) {
         }
         */
         $GesEncargo = new GestorEncargo();
-        $aWhere = array();
-        $aOperador = array();
+        $aWhere = [];
+        $aOperador = [];
         $aWhere['id_ubi'] = $id_ubi;
         $cEncargos = $GesEncargo->getEncargos($aWhere, $aOperador);
-        $sacds = array();
+        $sacds = [];
         foreach ($cEncargos as $oEncargo) {
             $id_enc = $oEncargo->getId_enc();
             $sacd_titular = "";
             $sacd_suplente = "";
-            $sacds_colaboradores = array();
+            $sacds_colaboradores = [];
             $aWhereT = [];
             $aOperadorT = [];
             $aWhereT['id_enc'] = $id_enc;

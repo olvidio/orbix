@@ -2,8 +2,9 @@
 
 use config\model\entity\ConfigSchema;
 use core\ViewTwig;
+use src\usuarios\application\repositories\LocalRepository;
+use web\Desplegable;
 use web\Hash;
-use usuarios\model\entity\GestorLocal;
 
 // INICIO Cabecera global de URL de controlador *********************************
 require_once("apps/core/global_header.inc");
@@ -238,10 +239,9 @@ $parametro = 'idioma_default';
 $oConfigSchema = new ConfigSchema($parametro);
 $valor = $oConfigSchema->getValor();
 
-$gesIdiomas = new GestorLocal();
-$oDeplIdiomas = $gesIdiomas->getListaLocales();
-$oDeplIdiomas->setNombre('valor');
-$oDeplIdiomas->setOpcion_sel($valor);
+$LocalRepository = new LocalRepository();
+$a_locales = $LocalRepository->getArrayLocales();
+$oDeplIdiomas = new Desplegable('valor', $a_locales,$valor,true);
 
 if (empty($valor)) {
     //$valor = "es_ES.UTF-8";
@@ -265,9 +265,9 @@ $valor = $oConfigSchema->getValor();
 if (empty($valor)) {
     $valor = "dl";
 }
-$chk_dl = ($valor == 'dl') ? 'checked' : '';
-$chk_r = ($valor == 'r') ? 'checked' : '';
-$chk_rstgr = ($valor == 'rstgr') ? 'checked' : '';
+$chk_dl = ($valor === 'dl') ? 'checked' : '';
+$chk_r = ($valor === 'r') ? 'checked' : '';
+$chk_rstgr = ($valor === 'rstgr') ? 'checked' : '';
 
 $oHashDLR = new Hash();
 $oHashDLR->setUrl($url);
@@ -287,8 +287,8 @@ $valor = $oConfigSchema->getValor();
 if (empty($valor)) {
     $valor = "central";
 }
-$chk_central = ($valor == 'central') ? 'checked' : '';
-$chk_of = ($valor == 'oficinas') ? 'checked' : '';
+$chk_central = ($valor === 'central') ? 'checked' : '';
+$chk_of = ($valor === 'oficinas') ? 'checked' : '';
 
 $oHashCal = new Hash();
 $oHashCal->setUrl($url);

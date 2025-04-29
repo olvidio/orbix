@@ -10,6 +10,7 @@ use config\model\entity\ConfigSchema;
 use core\ConfigGlobal;
 use core\ValueObject\Uuid;
 use personas\model\entity\PersonaDl;
+use src\usuarios\application\repositories\UsuarioRepository;
 use web\DateTimeLocal;
 use web\TiposActividades;
 use shared\domain\ColaMailId;
@@ -17,7 +18,6 @@ use shared\domain\entity\ColaMail;
 use shared\domain\repositories\ColaMailRepository;
 use ubis\model\entity\CentroDl;
 use ubis\model\entity\Ubi;
-use usuarios\model\entity\GestorUsuario;
 use function core\is_true;
 
 class ComunicarActividadesSacd
@@ -215,7 +215,7 @@ class ComunicarActividadesSacd
                     unset($array_actividades[$id_nom]);
                 }
             }
-            $ord_activ = array();
+            $ord_activ = [];
         } // fin del while de los sacd
 
 
@@ -247,8 +247,8 @@ class ComunicarActividadesSacd
         // pasar el valor de nombres separados por coma a array:
         $a_jefes_calendario = explode(',', $valor);
         $jefe_calendario = $a_jefes_calendario[0];
-        $gesUsuarios = new GestorUsuario();
-        $cUsuarios = $gesUsuarios->getUsuarios(['usuario' => $jefe_calendario]);
+        $UsuarioRepository = new UsuarioRepository();
+        $cUsuarios = $UsuarioRepository->getUsuarios(['usuario' => $jefe_calendario]);
         $oUsuarioJefe = $cUsuarios[0];
         $e_mail_jefe = $oUsuarioJefe->getEmail();
         if (empty($e_mail_jefe)) {

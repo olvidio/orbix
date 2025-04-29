@@ -20,7 +20,7 @@ if (empty($Qid_equipaje)) {
 
 //-------- docs en la casa -----------------------------------
 $url_lista_backend = Hash::link(ConfigGlobal::getWeb()
-    . '/apps/inventario/controller/equipajes_doc_casa.php'
+    . '/src/inventario/controller/equipajes_doc_casa.php'
 );
 $oHash = new Hash();
 $oHash->setUrl($url_lista_backend);
@@ -49,7 +49,7 @@ $oListaDocsCasa->setBotones($a_botones);
 
 //-------- equipajes para la actividad -----------------------------------
 $url_lista_backend = Hash::link(ConfigGlobal::getWeb()
-    . '/apps/inventario/controller/equipajes_egm.php'
+    . '/src/inventario/controller/equipajes_egm.php'
 );
 $oHash = new Hash();
 $oHash->setUrl($url_lista_backend);

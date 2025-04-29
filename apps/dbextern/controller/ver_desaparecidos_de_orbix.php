@@ -18,7 +18,7 @@ $ids_desaparecidos_de_orbix = (string)filter_input(INPUT_POST, 'ids_desaparecido
 $a_ids_desaparecidos_de_orbix = json_decode(urldecode($ids_desaparecidos_de_orbix));
 
 
-$a_persona_listas = array();
+$a_persona_listas = [];
 $i = 0;
 foreach ($a_ids_desaparecidos_de_orbix as $id_nom_listas) {
     $i++;

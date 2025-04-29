@@ -4,11 +4,7 @@ use cambios\model\entity\CambioUsuario;
 use core\ConfigGlobal;
 use core\ViewPhtml;
 use frontend\shared\PostRequest;
-use menus\model\entity\GestorGrupMenuRole;
-use menus\model\entity\GrupMenu;
-use usuarios\model\entity\GestorLocal;
-use usuarios\model\entity\GestorPreferencia;
-use usuarios\model\entity\Preferencia;
+use src\usuarios\application\repositories\LocalRepository;
 use web\Desplegable;
 use web\Hash;
 
@@ -24,7 +20,7 @@ require_once("apps/core/global_object.inc");
 $oPosicion->recordar();
 
 $url_lista_backend = Hash::link(ConfigGlobal::getWeb()
-    . '/apps/usuarios/controller/usuario_preferencias.php'
+    . '/src/usuarios/infrastructure/controllers/usuario_preferencias.php'
 );
 
 $oHash = new Hash();
@@ -46,7 +42,7 @@ $tipo_tabla_h = $data['tipo_tabla_h'];
 $tipo_apellidos_ap_nom = $data['tipo_apellidos_ap_nom'];
 $tipo_apellidos_nom_ap = $data['tipo_apellidos_nom_ap'];
 $idioma = $data['idioma'];
-$zona_horaria = empty($data['zona_horaria'])? 'UTC' : $data['zona_horaria'];
+$zona_horaria = empty($data['zona_horaria']) ? 'UTC' : $data['zona_horaria'];
 
 
 // ----------- Página de inicio -------------------
@@ -65,15 +61,21 @@ $oDesplInicio->setNombre('inicio');
 $oDesplInicio->setOpciones($aOpciones);
 $oDesplInicio->setOpcion_sel($inicio);
 
+// ----------- Oficinas -------------------
+$oDesplOficinas = new Desplegable();
+$oDesplOficinas->setNombre('oficina');
+$oDesplOficinas->setOpciones($oficinas_posibles);
+$oDesplOficinas->setOpcion_sel($oficina);
+$oDesplOficinas->setBlanco(true);
+
 // ----------- Idioma -------------------
-$oGesLocales = new GestorLocal();
-$oDesplLocales = $oGesLocales->getListaLocales();
-$oDesplLocales->setNombre('idioma_nou');
-$oDesplLocales->setOpcion_sel($idioma);
+$LocalRepository = new LocalRepository();
+$aOpciones = $LocalRepository->getArrayLocales();
+$oDesplLocales = new Desplegable('idioma_nou', $aOpciones, $idioma, true);
 
 // ----------- Zona Horaria -------------------
 $opciones = DateTimeZone::listIdentifiers();
-$id_zona_sel = array_search($zona_horaria, $opciones);
+$id_zona_sel = array_search($zona_horaria, $opciones, true);
 $oDesplZonaGMT = new Desplegable();
 $oDesplZonaGMT->setNombre('zona_horaria_nou');
 $oDesplZonaGMT->setOpciones($opciones);
@@ -97,7 +99,7 @@ $a_campos = [
     'url_avisos_mails' => $url_avisos_mails,
     'oHash' => $oHash,
     'oDesplInicio' => $oDesplInicio,
-    'oficinas_posibles' => $oficinas_posibles,
+    'oDesplOficinas' => $oDesplOficinas,
     'estilo_azul_selected' => $estilo_azul_selected,
     'estilo_naranja_selected' => $estilo_naranja_selected,
     'estilo_verde_selected' => $estilo_verde_selected,

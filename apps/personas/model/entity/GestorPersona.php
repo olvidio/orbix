@@ -51,7 +51,7 @@ class GestorPersona extends ClaseGestor
      * @param array aOperators associatiu amb els valors dels operadors que cal aplicar a cada variable
      * @return array Una col·lecció d'objectes de tipus Persona
      */
-    public function getPersonas($aWhere = array(), $aOperators = array())
+    public function getPersonas($aWhere = [], $aOperators = array())
     {
         $namespace = __NAMESPACE__;
 

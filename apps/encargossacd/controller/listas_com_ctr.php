@@ -87,7 +87,7 @@ foreach ($cCentros as $oCentro) {
     // sacd
     $GesEncargoSacd = new GestorEncargoSacd();
     $cEncargosSacd = $GesEncargoSacd->getEncargosSacd(array('id_enc' => $id_enc, 'f_fin' => 'x', '_ordre' => 'modo'), array('f_fin' => 'IS NULL'));
-    $sacd_colaborador = array();  // reset
+    $sacd_colaborador = [];  // reset
     foreach ($cEncargosSacd as $oEncargoSacd) {
         $id_nom = $oEncargoSacd->getId_nom();
         $oPersona = new PersonaDl($id_nom);

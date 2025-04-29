@@ -143,7 +143,7 @@ class DbSchema extends ClasePropiedades
         } else {
             $bInsert = false;
         }
-        $aDades = array();
+        $aDades = [];
         $aDades['id'] = $this->iid;
         array_walk($aDades, 'core\poner_null');
 

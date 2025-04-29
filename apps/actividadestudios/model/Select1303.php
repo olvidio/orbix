@@ -73,7 +73,7 @@ class Select1303
 
     public function getBotones($ca_num = 1)
     {
-        $a_botones = array();
+        $a_botones = [];
         if ($this->permiso == 3) {
             $a_botones = array(
                 array('txt' => _("modificar"), 'click' => "fnjs_modificar(this.form,$ca_num)"),
@@ -130,7 +130,7 @@ class Select1303
         }
 
         $i = 0;
-        $a_valores = array();
+        $a_valores = [];
         $msg_err = '';
         foreach ($cMatriculas as $oMatricula) {
             $i++;
@@ -242,8 +242,8 @@ class Select1303
         $stgr = $oPersona->getStgr();
         if ($stgr === 'r') $aviso .= _("está de repaso") . "<br>";
 
-        $aWhere = array();
-        $aOperadores = array();
+        $aWhere = [];
+        $aOperadores = [];
         $GesAsistentes = new GestorAsistente();
         if (!empty($this->Qid_activ)) {  // ¿? ya tengo una actividad concreta (vengo del dossier de esa actividad).
             $aWhere['id_activ'] = $this->Qid_activ;

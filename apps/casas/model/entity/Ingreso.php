@@ -145,7 +145,7 @@ class Ingreso extends ClasePropiedades
         } else {
             $bInsert = FALSE;
         }
-        $aDades = array();
+        $aDades = [];
         $aDades['ingresos'] = $this->iingresos;
         $aDades['num_asistentes'] = $this->inum_asistentes;
         $aDades['ingresos_previstos'] = $this->iingresos_previstos;

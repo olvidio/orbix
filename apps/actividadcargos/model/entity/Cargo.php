@@ -145,7 +145,7 @@ class Cargo extends ClasePropiedades
         } else {
             $bInsert = false;
         }
-        $aDades = array();
+        $aDades = [];
         $aDades['cargo'] = $this->scargo;
         $aDades['orden_cargo'] = $this->iorden_cargo;
         $aDades['sf'] = $this->bsf;

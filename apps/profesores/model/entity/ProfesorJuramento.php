@@ -124,7 +124,7 @@ class ProfesorJuramento extends ClasePropiedades
         } else {
             $bInsert = false;
         }
-        $aDades = array();
+        $aDades = [];
         $aDades['f_juramento'] = $this->df_juramento;
         array_walk($aDades, 'core\poner_null');
 

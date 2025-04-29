@@ -139,7 +139,7 @@ class DatosCgi extends ClasePropiedades
         } else {
             $bInsert = FALSE;
         }
-        $aDades = array();
+        $aDades = [];
         $aDades['id_ubi'] = $this->iid_ubi;
         $aDades['curso_ini_any'] = $this->icurso_ini_any;
         $aDades['curso_fin_any'] = $this->icurso_fin_any;

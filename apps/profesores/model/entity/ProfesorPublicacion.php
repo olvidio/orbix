@@ -173,7 +173,7 @@ class ProfesorPublicacion extends ClasePropiedades
         } else {
             $bInsert = false;
         }
-        $aDades = array();
+        $aDades = [];
         $aDades['tipo_publicacion'] = $this->stipo_publicacion;
         $aDades['titulo'] = $this->stitulo;
         $aDades['editorial'] = $this->seditorial;

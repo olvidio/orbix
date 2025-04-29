@@ -10,6 +10,7 @@ use actividadtarifas\model\entity\TipoTarifa;
 use casas\model\entity\Ingreso;
 use core\ConfigGlobal;
 use permisos\model\PermisosActividadesTrue;
+use src\usuarios\domain\entity\Role;
 use web\Hash;
 use web\Lista;
 use web\Periodo;
@@ -18,7 +19,6 @@ use procesos\model\entity\GestorActividadProcesoTarea;
 use ubis\model\entity\CasaDl;
 use ubis\model\entity\CentroDl;
 use ubis\model\entity\GestorTarifaUbi;
-use usuarios\model\entity\Role;
 
 require_once("apps/core/global_header.inc");
 // Archivos requeridos por esta url **********************************************
@@ -463,7 +463,7 @@ switch ($Qque) {
                 $aGrupos[$id_ubi] = $oCasa->getNombre_ubi();
             }
         }
-        $a_valores = array();
+        $a_valores = [];
         foreach ($aGrupos as $id_ubi => $Titulo) {
             $aWhere['id_ubi'] = $id_ubi;
             $aWhere['f_ini'] = "'$inicioIso','$finIso'";

@@ -116,7 +116,7 @@ class AsignaturasPendientes extends ClasePropiedades
             $cAsignaturasB = $gesAsignaturas->getAsignaturas(array('status' => 't', 'id_nivel' => '1100,1300'), array('id_nivel' => 'BETWEEN'));
 
             $this->iasignaturasB = count($cAsignaturasB);
-            $aIdNivel = array();
+            $aIdNivel = [];
             foreach ($cAsignaturasB as $oAsignatura) {
                 $aIdNivel[] = $oAsignatura->getId_nivel();
             }
@@ -137,7 +137,7 @@ class AsignaturasPendientes extends ClasePropiedades
             $cAsignaturasC = $gesAsignaturas->getAsignaturas(array('status' => 't', 'id_nivel' => '2100,2500'), array('id_nivel' => 'BETWEEN'));
 
             $this->iasignaturasC = count($cAsignaturasC);
-            $aIdNivel = array();
+            $aIdNivel = [];
             foreach ($cAsignaturasC as $oAsignatura) {
                 $aIdNivel[] = $oAsignatura->getId_nivel();
             }
@@ -157,7 +157,7 @@ class AsignaturasPendientes extends ClasePropiedades
             $gesAsignaturas = new GestorAsignatura();
             $cAsignaturasC1 = $gesAsignaturas->getAsignaturas(array('status' => 't', 'id_nivel' => '2100,2113'), array('id_nivel' => 'BETWEEN'));
             $this->iasignaturasC1 = count($cAsignaturasC1);
-            $aIdNivel = array();
+            $aIdNivel = [];
             foreach ($cAsignaturasC1 as $oAsignatura) {
                 $aIdNivel[] = $oAsignatura->getId_nivel();
             }
@@ -177,7 +177,7 @@ class AsignaturasPendientes extends ClasePropiedades
             $gesAsignaturas = new GestorAsignatura();
             $cAsignaturasC2 = $gesAsignaturas->getAsignaturas(array('status' => 't', 'id_nivel' => '2200,2500'), array('id_nivel' => 'BETWEEN'));
             $this->iasignaturasC2 = count($cAsignaturasC2);
-            $aIdNivel = array();
+            $aIdNivel = [];
             foreach ($cAsignaturasC2 as $oAsignatura) {
                 $aIdNivel[] = $oAsignatura->getId_nivel();
             }
@@ -254,7 +254,7 @@ class AsignaturasPendientes extends ClasePropiedades
             $sql = "$ssql ORDER BY 3,4,5";
         }
 
-        $aId_nom = array();
+        $aId_nom = [];
         foreach ($oDbl->query($sql) as $row) {
             $id_nom = $row['id_nom'];
             if (!is_true($lista)) { // El numero de asignaturas que faltan
@@ -269,7 +269,7 @@ class AsignaturasPendientes extends ClasePropiedades
 
     public function personasQueLesFaltaAsignatura($id_asignatura, $curso, $id_tipo_asignatura)
     {
-        $aId_nom = array();
+        $aId_nom = [];
         if (!empty($id_asignatura)) {
             $lista = $this->blista;
             $oDbl = $this->getoDbl();
@@ -329,7 +329,7 @@ class AsignaturasPendientes extends ClasePropiedades
         $query_tot = "$query UNION $query_op  ORDER BY 2";
         //echo "query asig: $query_tot<br>";
 
-        $a_nomAsignaturas = array();
+        $a_nomAsignaturas = [];
         foreach ($oDbl->query($query_tot) as $asig) {
             $a_nomAsignaturas[] = $asig["nombre_corto"];
         }

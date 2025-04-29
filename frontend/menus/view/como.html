@@ -1,0 +1,88 @@
+<h3>Es posible que haya que dar permisos de lectura al usuario www-pub para el directorio log/menus/*</h3>
+<p>>>>>> /var/www/orbix/log/menus# chmod 777 *
+</p>
+<ul>
+    <li>1.- exportar:<br>
+        Copia en la base de datos, los menus de 'sv.dlb' a 'comun.public'
+    </li>
+    <li>2.- exportar a ficheros:<br>
+        IMPORTANTE
+        Para tener permisos de escritura el directorio menus debe tener a+w
+        <p>
+            $dir_base = "/var/www/orbix";<br>
+            Ahora: ConfigGlobal::DIR==pruebas
+        </p>
+        <p>
+            Se exportan los valores de "comun.public" a ficheros
+        </p>
+        <p>
+            Genera Un fichero con las instrucciones sql para borrar (TRUNCATE) y copiar los nuevos:<br>
+            filename = "$dir_base/log/menus/tot_menus.sql";
+        </p>
+        <p>
+            Los ficheros donde están los valores de las tablas:
+        </p>
+        <p>
+            file_metamenus = "$dir_base/log/menus/comun.sql";<br>
+            file_refgrupmenu = "$dir_base/log/menus/refgrupmenu.sql";<br>
+            file_refgrupmenu_rol = "$dir_base/log/menus/refgrupmenu_rol.sql";<br>
+            file_refmenus = "$dir_base/log/menus/refmenus.sql";<br>
+        </p>
+    </li>
+    <hr>
+    <li>3. Copiar via ssh, o git Hub (commit) al directorio destino
+
+        <p>Cambiar los permisos de los ficheros *.sql
+            <br><em>/var/www/orbix/log/menus# chmod a+rw * </em>
+        </p>
+        <p> Ahora debería hacerlo bien. Comprobar: en el fichero /var/www/orbix/log/menus/tot_menus.sql, cambiar la ruta
+            de los ficheros:
+            <em>
+                <br>:%s /home\/dani\/orbix_local\/orbix/var\/www\/pruebas/
+                <br>:%s /home\/dani\/orbix_local\/orbix/var\/www\/orbix/
+            </em>
+        </p>
+    </li>
+    <hr>
+    <li>4. Pasar los archivos a la dmz, donde está la DB comun.
+        <br>
+        a) desde la aplicación del túnel ejecutar una vez el "importar desde ficheros" para que cambie la ruta en los
+        ficheros sql.
+        <br>
+        b) copiar los ficheros a la máquina de la dmz que tiene la base de datos comun, donde hay que poner los menus de
+        referencia:
+        <pre>
+                scp /var/www/orbix/log/menus/* aquinate@192.168.200.16:/var/www/orbix/log/menus/
+            </pre>
+        c) Volver a ejecutar el menú: "importar desde ficheros". Ahora debería poder ejecutar los nuevos ficheros de la
+        máquina dmz.
+    </li>
+    <hr>
+    <li>5. importar desde ficheros
+        <p>
+            Ejecuta lo que se ha grabado en <br>
+            filename = "$dir_base/log/menus/tot_menus.sql";
+        </p>
+        <p>
+            Es decir copia a 'comun.public' los menus de referencia.
+        </p>
+    </li>
+    <li>6. importar
+        <p>
+            Dos opciones:
+        </p>
+        <p>
+            a) todas las dl igual<br>
+            Copia todos los menus de comun.public a todos los esquemas (sv y sf).
+        </p>
+        <p>
+            b) ¿seguro?<br>
+            Copia todos los menus de comun.public al esquema actual (sv-sf distinto)
+        </p>
+    </li>
+    <li>
+        Para actualizar los de sf (ordenador exterior) hacerlo manualmente:
+        - crear el fichero log/menus/tot_menus.sql
+        - desde postgres ejecutarlo psql comun < tot_menus.sql
+    </li>
+</ul>

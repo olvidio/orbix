@@ -66,7 +66,7 @@ class GestorUbi extends ClaseGestor
      * @param array aOperators associatiu amb els valors dels operadors que cal aplicar a cada variable
      * @return array Una col·lecció d'objectes de tipus Ubi
      */
-    function getUbis($aWhere = array(), $aOperators = array())
+    function getUbis($aWhere = [], $aOperators = array())
     {
         $a_Clases[] = array('clase' => 'Casa', 'get' => 'getCasas');
         $a_Clases[] = array('clase' => 'Centro', 'get' => 'getCentros');

@@ -41,6 +41,7 @@ class ComposerStaticInitfe4939d609572947ee73ffcc0a42bf32
         ),
         's' => 
         array (
+            'src\\' => 4,
             'setasign\\Fpdi\\' => 14,
         ),
         'j' => 
@@ -138,6 +139,10 @@ class ComposerStaticInitfe4939d609572947ee73ffcc0a42bf32
         'voku\\' => 
         array (
             0 => __DIR__ . '/..' . '/voku/portable-ascii/src/voku',
+        ),
+        'src\\' => 
+        array (
+            0 => __DIR__ . '/../../..' . '/src',
         ),
         'setasign\\Fpdi\\' => 
         array (

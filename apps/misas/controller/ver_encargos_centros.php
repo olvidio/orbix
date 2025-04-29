@@ -108,9 +108,9 @@ foreach ($cEncargoTipos as $oEncargoTipo) {
     }
 }
 
-$aWhere = array();
-$aOperador = array();
-$aEncargos = array();
+$aWhere = [];
+$aOperador = [];
+$aEncargos = [];
 $cond_tipo_enc = "{" . implode(', ', $a_tipo_enc) . "}";
 $aWhere['id_tipo_enc'] = $cond_tipo_enc;
 $aOperador['id_tipo_enc'] = 'ANY';

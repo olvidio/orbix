@@ -400,7 +400,7 @@ switch ($Qque) {
 
         $i = 0;
         $sin = 0;
-        $a_valores = array();
+        $a_valores = [];
         foreach ($cActividades as $oActividad) {
             $i++;
             $id_activ = $oActividad->getId_activ();
@@ -460,7 +460,7 @@ switch ($Qque) {
                         $a_valores[$i][1] = $nom_activ . " [$ctrs]";
                     }
                 }
-                $sacds = array();
+                $sacds = [];
                 if ($oPermSacd->have_perm_activ('ver') === true) { // sólo si tiene permiso
                     //echo "<br>dani: $nom_activ<br>";
                     unset($aWhere);

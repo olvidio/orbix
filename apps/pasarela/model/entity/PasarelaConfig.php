@@ -129,7 +129,7 @@ class PasarelaConfig extends ClasePropiedades
         } else {
             $bInsert = FALSE;
         }
-        $aDades = array();
+        $aDades = [];
         $aDades['json_valor'] = $this->json_valor;
         array_walk($aDades, 'core\poner_null');
 

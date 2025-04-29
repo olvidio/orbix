@@ -118,7 +118,7 @@ class Select1011
 
         $gesNotas = new GestorNota();
         $cNotas = $gesNotas->getNotas();
-        $a_notas = array();
+        $a_notas = [];
         foreach ($cNotas as $oNota) {
             $id_situacion = $oNota->getId_situacion();
             $breve = $oNota->getBreve();
@@ -135,7 +135,7 @@ class Select1011
         $id_tabla = $oPersona->getId_Tabla();
 
         $i = 0;
-        $a_valores = array();
+        $a_valores = [];
         foreach ($cPersonaNotas as $oPersonaNota) {
             $i++;
             $id_nivel = $oPersonaNota->getId_nivel();

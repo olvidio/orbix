@@ -209,8 +209,8 @@ class SincroDB
         $f_nacimiento = $oPersonaListas->getFecha_Naci();
         $nombre = $oPersonaListas->getNombre();
 
-        $aWhere = array();
-        $aOperador = array();
+        $aWhere = [];
+        $aOperador = [];
         $aWhere['id_tabla'] = $this->tipo_persona;
         $aWhere['apellido1'] = $apellido1_sinprep;
         // Para los extranjeros que no tienen segundo apellido.
@@ -364,8 +364,8 @@ class SincroDB
         // Si tiene más de una palabra cojo la primera
         $tokens = explode(' ', $apellido1_sinprep);
         $apellido1_sinprep_c = $tokens[0];
-        $aWhere = array();
-        $aOperador = array();
+        $aWhere = [];
+        $aOperador = [];
         $aWhere['id_tabla'] = $this->tipo_persona;
         $aWhere['situacion'] = 'A';
         $aWhere['apellido1'] = $apellido1_sinprep_c;
@@ -379,7 +379,7 @@ class SincroDB
         }
         $cPersonasDl = $oGesPersonasDl->getPersonasDl($aWhere, $aOperador);
         $i = 0;
-        $a_lista_orbix = array();
+        $a_lista_orbix = [];
         foreach ($cPersonasDl as $oPersonaDl) {
             if (!empty($esquema)) {
                 $oPersonaDl->setoDbl($oDB);

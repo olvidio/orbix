@@ -1,7 +1,6 @@
 <?php
 
 use core\ConfigGlobal;
-use usuarios\model\entity\Usuario;
 use function core\is_true;
 
 /**
@@ -15,7 +14,7 @@ require_once("apps/core/global_header.inc");
 require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$oMiUsuario = new Usuario(ConfigGlobal::mi_id_usuario());
+$oMiUsuario = ConfigGlobal::MiUsuario();
 $miSfsv = ConfigGlobal::mi_sfsv();
 
 $Qobj_pau = (string)filter_input(INPUT_POST, 'obj_pau');
@@ -71,15 +70,15 @@ switch ($Qmod) {
         break;
 }
 
-$campos_chk = empty($Qcampos_chk) ? array() : explode(',', $Qcampos_chk);
+$campos_chk = empty($Qcampos_chk) ? [] : explode(',', $Qcampos_chk);
 $oUbi->DBCarregar();
 $oDbl = $oUbi->getoDbl();
 $cDatosCampo = $oUbi->getDatosCampos();
 foreach ($cDatosCampo as $oDatosCampo) {
     $camp = $oDatosCampo->getNom_camp();
     $valor = empty($_POST[$camp]) ? '' : $_POST[$camp];
-    if ($oDatosCampo->datos_campo($oDbl, 'tipo') == "bool") { //si es un campo boolean, cambio los valores on, off... por true, false...
-        if ($valor == "on") {
+    if ($oDatosCampo->datos_campo($oDbl, 'tipo') === "bool") { //si es un campo boolean, cambio los valores on, off... por true, false...
+        if ($valor === "on") {
             $valor = 't';
             $a_values_o[$camp] = $valor;
         } else {

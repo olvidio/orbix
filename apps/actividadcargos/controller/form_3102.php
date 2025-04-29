@@ -82,7 +82,7 @@ $obj = 'actividadcargos\\model\\entity\\ActividadCargo';
 
 $id_nom_real = '';
 $ape_nom = '';
-$oDesplegablePersonas = array();
+$oDesplegablePersonas = [];
 if (!empty($Qid_item)) { //caso de modificar
     $oActividadCargo = new ActividadCargo(array('id_item' => $Qid_item, 'id_schema' => $Qid_schema));
     $Qid_activ = $oActividadCargo->getId_activ();

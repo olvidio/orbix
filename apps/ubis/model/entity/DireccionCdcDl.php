@@ -71,7 +71,7 @@ class DireccionCdcDl extends DireccionCdc
         } else {
             $bInsert = false;
         }
-        $aDades = array();
+        $aDades = [];
         $aDades['direccion'] = $this->sdireccion;
         $aDades['c_p'] = $this->sc_p;
         $aDades['poblacion'] = $this->spoblacion;

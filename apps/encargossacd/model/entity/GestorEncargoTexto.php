@@ -67,13 +67,13 @@ class GestorEncargoTexto extends ClaseGestor
      * @param array aOperators associatiu amb els valors dels operadors que cal aplicar a cada variable
      * @return array|void
      */
-    function getEncargoTextos($aWhere = array(), $aOperators = array())
+    function getEncargoTextos($aWhere = [], $aOperators = array())
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $oEncargoTextoSet = new Set();
         $oCondicion = new Condicion();
-        $aCondi = array();
+        $aCondi = [];
         foreach ($aWhere as $camp => $val) {
             if ($camp === '_ordre') continue;
             $sOperador = isset($aOperators[$camp]) ? $aOperators[$camp] : '';

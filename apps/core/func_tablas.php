@@ -26,11 +26,48 @@ require_once("global_header.inc");
 // Crea los objetos de uso global **********************************************
 //require_once("global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
+
 /**
+ * para convertir los arrays de php para introducir en el postgresql.
  *
- *
- *
+ * @param array
+ * @return string pg_array
  */
+function array_php2pg($phpArray = [])
+{
+    if (!empty($phpArray) && is_array($phpArray)) {
+        $phpArray_filtered = array_filter($phpArray);
+    }
+    // el join no va si el array esta vacío
+    if (empty($phpArray_filtered)) {
+        return "{}";
+    } else {
+        return "{" . implode(",", $phpArray_filtered) . "}";
+    }
+}
+
+/**
+ * para convertir los arrays que provienen del postgresql a php.
+ * En este caso, el array es integer[]
+ *
+ * @param string $postgresArray
+ * @return array
+ */
+function array_pgInteger2php($postgresArray): array
+{
+    if (empty($postgresArray)) {
+        return [];
+    }
+    $str_csv = trim($postgresArray, "{}");
+    if (empty($str_csv)) {
+        $phpArray = [];
+    } else {
+        $phpArrayString = explode(',', $str_csv);
+        $phpArray = array_map('intval', $phpArrayString);
+    }
+    return $phpArray;
+}
+
 function urlsafe_b64encode($string)
 {
     $data = base64_encode($string);

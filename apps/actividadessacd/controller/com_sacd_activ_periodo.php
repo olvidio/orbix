@@ -2,9 +2,10 @@
 
 use core\ConfigGlobal;
 use core\ViewTwig;
+use src\usuarios\application\repositories\RoleRepository;
+use src\usuarios\application\repositories\UsuarioRepository;
 use web\Hash;
 use web\PeriodoQue;
-use usuarios\model\entity\Usuario;
 
 /**
  * Esta página muestra un formulario con las opciones para escoger el periodo.
@@ -32,7 +33,7 @@ $Qpropuesta = (string)filter_input(INPUT_POST, 'propuesta');
 // para el caso de un solo sacd
 $Qque = (string)filter_input(INPUT_POST, 'que');
 if ($Qque === 'un_sacd') {
-     $a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+    $a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
     if (!empty($a_sel)) { //vengo de un checkbox
         $Qid_nom = (integer)strtok($a_sel[0], "#");
         $Qid_tabla = strtok("#");
@@ -90,8 +91,15 @@ $oHash->setArraycamposHidden($a_camposHidden);
 $oHash->setCamposNo('mail');
 
 $perm_mod_txt = TRUE;
-$oMiUsuario = new Usuario(ConfigGlobal::mi_id_usuario());
-if ($oMiUsuario->isRole('p-sacd')) {
+
+$UsuarioRepository = new UsuarioRepository();
+$oMiUsuario = $UsuarioRepository->findById(ConfigGlobal::mi_id_usuario());
+$id_role = $oMiUsuario->getId_role();
+
+$RoleRepository = new RoleRepository();
+$aRoles = $RoleRepository->getArrayRoles();
+
+if (!empty($aRoles[$id_role]) && ($aRoles[$id_role] === 'p-sacd')) {
     $perm_mod_txt = FALSE;
 }
 

@@ -177,8 +177,8 @@ switch ($Qna) {
 // ----------------------- Selección de personas -----------------
 
 /* Según si selecciono por centros, o por personas individuales */
-$aWhere = array();
-$aOperador = array();
+$aWhere = [];
+$aOperador = [];
 $alum = 0;
 if (!empty($a_sel)) { //vengo de un checkbox
     $id_nom_lst = '';
@@ -234,7 +234,7 @@ if ($Qgrupo_estudios !== 'todos') {
 $aWhereActividad['status'] = ActividadAll::STATUS_ACTUAL;
 $aWhereActividad['_ordre'] = 'nivel_stgr,f_ini';
 
-$cActividades = array();
+$cActividades = [];
 $GesActividades = new GestorActividadPub();
 $cActividades1 = $GesActividades->getActividades($aWhereActividad, $aOperadorActividad);
 // añadir las actividades de la dl aunque no estén publicadas
@@ -254,7 +254,7 @@ $msg_txt = '';
 if (!empty($Qidca)) {
 
 } else { //no vengo del formulario: es para todos los ca de la zona.
-    $a_datos_ca = array();
+    $a_datos_ca = [];
     $i = 0;
     $max_len_activ = 1;
     $nc_bienio = 0;
@@ -264,7 +264,7 @@ if (!empty($Qidca)) {
     $nc_ce = 0;
     $nc_otros = 0;
     foreach ($cActividades as $oActividad) {
-        $aAsignaturasCa = array();
+        $aAsignaturasCa = [];
         $i++;
         $id_activ = $oActividad->getId_activ();
         $nom_activ = $oActividad->getNom_activ();
@@ -330,10 +330,10 @@ if (!empty($Qidca)) {
 
 // ------------  El bucle: para cada alumno miro los créditos posibles para cada ca
 $a = 0;
-$cuadro = array();
+$cuadro = [];
 if (!empty($a_sel)) { //vengo de un checkbox
     /* para hacerlo compatible con el caso de los centros. miro ahora el nombre del ctr */
-    $cOrdPersonas = array();
+    $cOrdPersonas = [];
     foreach ($cPersonas as $oPersonaDl) {
         $id_ubi = $oPersonaDl->getId_ctr();
         $oUbi = new CentroDl($id_ubi);
@@ -344,7 +344,7 @@ if (!empty($a_sel)) { //vengo de un checkbox
     }
 } else {
     /* para ordenar por orden alfabético de ctr */
-    $cOrdPersonas = array();
+    $cOrdPersonas = [];
     $id_ubi_old = '';
     foreach ($cPersonas as $oPersonaDl) {
         $id_ubi = $oPersonaDl->getId_ctr();
@@ -381,9 +381,9 @@ foreach ($cOrdPersonas as $ctr => $ctrPersonas) {
         //echo "persona: $id_nom,$nom,$ctr,$stgr<br>";
         $creditos = 0;
         // por cada ca:
-        $aActividades = array();
+        $aActividades = [];
         foreach ($a_datos_ca as $id_activ => $datos_ca) {
-            $aLista = array();
+            $aLista = [];
             $nom_activ = $datos_ca["nom_activ"];
             $nivel_stgr = $datos_ca["nivel_stgr"];
             $aAsignaturas = $datos_ca["aAsignaturas"];

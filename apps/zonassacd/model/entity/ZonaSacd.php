@@ -146,7 +146,7 @@ class ZonaSacd extends ClasePropiedades
         } else {
             $bInsert = FALSE;
         }
-        $aDades = array();
+        $aDades = [];
         $aDades['id_nom'] = $this->iid_nom;
         $aDades['id_zona'] = $this->iid_zona;
         $aDades['propia'] = $this->bpropia;

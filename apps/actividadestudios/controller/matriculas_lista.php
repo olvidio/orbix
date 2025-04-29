@@ -99,7 +99,7 @@ $a_cabeceras = array(
 );
 
 $i = 0;
-$a_valores = array();
+$a_valores = [];
 $msg_err = '';
 $id_nom_anterior = '';
 foreach ($cMatriculas as $oMatricula) {
@@ -232,7 +232,7 @@ $oFormP->setBoton($boton);
 $oHashPeriodo = new Hash();
 $oHashPeriodo->setCamposForm('empiezamax!empiezamin!periodo!year!iactividad_val!iasistentes_val');
 $oHashPeriodo->setCamposNo('!refresh');
-$a_camposHiddenP = array();
+$a_camposHiddenP = [];
 $oHashPeriodo->setArraycamposHidden($a_camposHiddenP);
 
 $a_campos = ['oPosicion' => $oPosicion,

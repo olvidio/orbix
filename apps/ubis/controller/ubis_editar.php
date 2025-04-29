@@ -6,7 +6,6 @@ use ubis\model\entity\CasaDl;
 use ubis\model\entity\CentroDl;
 use ubis\model\entity\GestorDelegacion;
 use ubis\model\entity\GestorRegion;
-use usuarios\model\entity\Usuario;
 use web\Desplegable;
 use web\Hash;
 use function core\is_true;
@@ -154,7 +153,7 @@ $oDesplRegiones = $gesReiones->getListaRegiones();
 $oDesplRegiones->setNombre('region');
 
 //----------------------------------Permisos según el usuario
-$oMiUsuario = new Usuario(ConfigGlobal::mi_id_usuario());
+$oMiUsuario = ConfigGlobal::MiUsuario();
 $miSfsv = ConfigGlobal::mi_sfsv();
 
 $botones = 0;

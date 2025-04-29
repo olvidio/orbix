@@ -127,7 +127,7 @@ class ActividadTarea extends ClasePropiedades
         } else {
             $bInsert = FALSE;
         }
-        $aDades = array();
+        $aDades = [];
         $aDades['id_fase'] = $this->iid_fase;
         $aDades['desc_tarea'] = $this->sdesc_tarea;
         array_walk($aDades, 'core\poner_null');

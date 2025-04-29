@@ -129,7 +129,7 @@ class Delegacion extends ClasePropiedades
         } else {
             $bInsert = false;
         }
-        $aDades = array();
+        $aDades = [];
         $aDades['id_dl'] = $this->iid_dl;
         $aDades['dl'] = $this->sdl;
         $aDades['region'] = $this->sregion;

@@ -151,7 +151,7 @@ class CambioUsuarioPropiedadPref extends ClasePropiedades
         } else {
             $bInsert = FALSE;
         }
-        $aDades = array();
+        $aDades = [];
         $aDades['id_item_usuario_objeto'] = $this->iid_item_usuario_objeto;
         $aDades['propiedad'] = $this->spropiedad;
         $aDades['operador'] = $this->soperador;

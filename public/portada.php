@@ -1,9 +1,9 @@
 <?php
 namespace core;
 
-use menus\model\entity\GrupMenu;
-use web\Hash;
+use src\menus\application\repositories\GrupMenuRepository;
 use tablonanuncios\domain\TablonAnunciosParaGM;
+use web\Hash;
 
 // INICIO Cabecera global de URL de controlador *********************************
 require_once("apps/core/global_header.inc");
@@ -15,11 +15,12 @@ require_once("apps/core/global_object.inc");
 
 // si vengo de actualizar tengo el valor en POST,
 // SINO: ES un include de index.php, tengo todas sus variables...
-$Qid_grupmenu = (string)filter_input(INPUT_POST, 'id_grupmenu');
+$Qid_grupmenu = (integer)filter_input(INPUT_POST, 'id_grupmenu');
 if (!empty($Qid_grupmenu)) {
     $id_grupmenu = $Qid_grupmenu;
 }
-$oGrupMenu = new GrupMenu($id_grupmenu);
+$GrupMenuRepository = new GrupMenuRepository();
+$oGrupMenu = $GrupMenuRepository->findById($id_grupmenu);
 // $grup_menu = $oGrupMenu->getGrup_menu($_SESSION['oConfig']->getAmbito());
 // Utilizo las siglas para la dl
 $grup_menu = $oGrupMenu->getGrup_menu('dl');

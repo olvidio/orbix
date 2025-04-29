@@ -237,8 +237,8 @@ function dias_ocupacion($aPeriodos, $oActividad, $oIniTot, $oFinTot)
     return $aOcupacion;
 }
 
-$aWhere = array();
-$aOperador = array();
+$aWhere = [];
+$aOperador = [];
 switch ($_POST['cdc_sel']) {
     case 1:
         $aWhere['sv'] = 't';
@@ -362,8 +362,8 @@ if (empty($Qque)) {
         $a_resumen[$id_ubi][2]['gasto'] = 0;
 
         $a = 0;
-        $aWhere = array();
-        $aOperador = array();
+        $aWhere = [];
+        $aOperador = [];
         $aWhere['f_ini'] = $finIso;
         $aOperador['f_ini'] = '<=';
         $aWhere['f_fin'] = $inicioIso;
@@ -789,8 +789,8 @@ if (empty($Qque)) {
             $a_resumen[$id_ubi][$any][2]['gasto'] = 0;
 
             $a = 0;
-            $aWhere = array();
-            $aOperador = array();
+            $aWhere = [];
+            $aOperador = [];
             $aWhere['f_ini'] = $fin;
             $aOperador['f_ini'] = '<=';
             $aWhere['f_fin'] = $inicio;

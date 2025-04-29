@@ -107,7 +107,7 @@ if (empty($Qkey)) { // no hay ningún sacd
 }
     $aWhere = [];
 $aWhere['id_zona'] = $zona;
-$aOperador = array();
+$aOperador = [];
 $GesZonasSacd = new GestorZonaSacd();
 $cZonaSacd = $GesZonasSacd->getZonasSacds($aWhere, $aOperador);
 foreach ($cZonaSacd as $oZonaSacd) {

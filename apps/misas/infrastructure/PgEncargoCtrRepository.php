@@ -103,7 +103,7 @@ class PgEncargoCtrRepository extends ClaseRepository implements EncargoCtrReposi
         $nom_tabla = $this->getNomTabla();
         $EncargoCtrSet = new Set();
         $oCondicion = new Condicion();
-        $aCondicion = array();
+        $aCondicion = [];
         foreach ($aWhere as $camp => $val) {
             if ($camp === '_ordre') {
                 continue;

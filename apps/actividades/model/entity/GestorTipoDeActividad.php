@@ -96,7 +96,7 @@ class GestorTipoDeActividad extends ClaseGestor
                 $a_sfsv = [$isfsv];
         }
 
-        $aTiposDeProcesos = array();
+        $aTiposDeProcesos = [];
         foreach ($a_sfsv as $isfsv) {
             if ($isfsv == 1) {
                 $nom_tipo_proceso = "id_tipo_proceso_sv";
@@ -246,13 +246,13 @@ class GestorTipoDeActividad extends ClaseGestor
      * @param array aOperators associatiu amb els valors dels operadors que cal aplicar a cada variable
      * @return array|void
      */
-    function getTiposDeActividades($aWhere = array(), $aOperators = array())
+    function getTiposDeActividades($aWhere = [], $aOperators = array())
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $oTipoDeActividadSet = new Set();
         $oCondicion = new Condicion();
-        $aCondi = array();
+        $aCondi = [];
         foreach ($aWhere as $camp => $val) {
             if ($camp === '_ordre') continue;
             $sOperador = isset($aOperators[$camp]) ? $aOperators[$camp] : '';

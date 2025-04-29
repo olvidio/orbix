@@ -112,7 +112,7 @@ class TipoTeleco extends ClasePropiedades
         } else {
             $bInsert = false;
         }
-        $aDades = array();
+        $aDades = [];
         $aDades['nombre_teleco'] = $this->snombre_teleco;
         $aDades['ubi'] = $this->bubi;
         $aDades['persona'] = $this->bpersona;

@@ -2,14 +2,15 @@
 
 use actividades\model\entity\ActividadAll;
 use core\ConfigGlobal;
-use menus\model\PermisoMenu;
 use procesos\model\entity\ActividadFase;
 use procesos\model\entity\ActividadTarea;
 use procesos\model\entity\GestorActividadProcesoTarea;
 use procesos\model\entity\GestorActividadTarea;
 use procesos\model\entity\GestorTareaProceso;
 use procesos\model\entity\TareaProceso;
-use usuarios\model\entity\Usuario;
+use src\menus\domain\PermisoMenu;
+use src\usuarios\application\repositories\RoleRepository;
+use src\usuarios\application\repositories\UsuarioRepository;
 
 // INICIO Cabecera global de URL de controlador *********************************
 require_once("apps/core/global_header.inc");
@@ -24,25 +25,25 @@ $Qque = (string)filter_input(INPUT_POST, 'que');
 function dibujar_tree(array $aPadres)
 {
     $html_tree = '<div id="tree">';
-    ksort($aPadres );
+    ksort($aPadres);
     // supongo que el primero siempre es 0, (la fase previa)
-        foreach ($aPadres[0] as $i => $padre) {
-            $id_fase_i = $padre['id'];
-            $nom = $padre['nom'];
-            // si tiene hijos: branch
-            if (array_key_exists($id_fase_i, $aPadres)) {
-                $html_tree .= '<div class="branch">';
-                $html_tree .= '<div class="entry"><span>' . $nom . '</span>';
-                $html_tree .= '<div class="branch">';
-                $html_tree .= dibujar2($aPadres, $id_fase_i);
-                $html_tree .= "</div>";
-                $html_tree .= "</div>";
-            } else {
-                // si NO tiene hijos: entry
-                $html_tree .= '<div class="entry"><span>' . $nom . '</span></div>';
+    foreach ($aPadres[0] as $i => $padre) {
+        $id_fase_i = $padre['id'];
+        $nom = $padre['nom'];
+        // si tiene hijos: branch
+        if (array_key_exists($id_fase_i, $aPadres)) {
+            $html_tree .= '<div class="branch">';
+            $html_tree .= '<div class="entry"><span>' . $nom . '</span>';
+            $html_tree .= '<div class="branch">';
+            $html_tree .= dibujar2($aPadres, $id_fase_i);
+            $html_tree .= "</div>";
+            $html_tree .= "</div>";
+        } else {
+            // si NO tiene hijos: entry
+            $html_tree .= '<div class="entry"><span>' . $nom . '</span></div>';
 
-            }
         }
+    }
     $html_tree .= '</div>'; //id="tree">';
     return $html_tree;
 }
@@ -67,7 +68,7 @@ function dibujar2($aPadres, $id_fase)
 
         }
     }
-   return $html;
+    return $html;
 }
 
 switch ($Qque) {
@@ -126,14 +127,19 @@ switch ($Qque) {
         $oActividad = new ActividadAll();
         $a_status = $oActividad->getArrayStatus();
 
-        $oMiUsuario = new Usuario(ConfigGlobal::mi_id_usuario());
+        $UsuarioRepository = new UsuarioRepository();
+        $oMiUsuario = $UsuarioRepository->findById(ConfigGlobal::mi_id_usuario());
+        $id_role = $oMiUsuario->getId_role();
         $miSfsv = ConfigGlobal::mi_sfsv();
+
+        $RoleRepository = new RoleRepository();
+        $aRoles = $RoleRepository->getArrayRoles();
 
         // para crear un desplegable de oficinas. Uso los de los menus
         $oPermMenus = new PermisoMenu;
         $aOpcionesOficinas = $oPermMenus->lista_array();
 
-        if ($oMiUsuario->isRole('SuperAdmin')) { // Es administrador
+        if (!empty($aRoles[$id_role]) && ($aRoles[$id_role] === 'SuperAdmin')) {
             $soy = 3;
         } else {
             // filtro por sf/sv
@@ -201,14 +207,20 @@ switch ($Qque) {
         $oActividad = new ActividadAll();
         $a_status = $oActividad->getArrayStatus();
 
-        $oMiUsuario = new Usuario(ConfigGlobal::mi_id_usuario());
+        $UsuarioRepository = new UsuarioRepository();
+        $oMiUsuario = $UsuarioRepository->findById(ConfigGlobal::mi_id_usuario());
+        $id_role = $oMiUsuario->getId_role();
         $miSfsv = ConfigGlobal::mi_sfsv();
+
+        $RoleRepository = new RoleRepository();
+        $aRoles = $RoleRepository->getArrayRoles();
+
 
         // para crear un desplegable de oficinas. Uso los de los menus
         $oPermMenus = new PermisoMenu;
         $aOpcionesOficinas = $oPermMenus->lista_array();
 
-        if ($oMiUsuario->isRole('SuperAdmin')) { // Es administrador
+        if (!empty($aRoles[$id_role]) && ($aRoles[$id_role] === 'SuperAdmin')) {
             $soy = 3;
         } else {
             // filtro por sf/sv

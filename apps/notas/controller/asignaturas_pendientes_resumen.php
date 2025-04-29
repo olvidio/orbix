@@ -44,8 +44,8 @@ require_once("apps/core/global_object.inc");
 */
 // Asignaturas posibles:
 $GesAsignaturas = new GestorAsignatura();
-$aWhere = array();
-$aOperador = array();
+$aWhere = [];
+$aOperador = [];
 $aWhere['status'] = 't';
 $aWhere['id_nivel'] = '1100,2500';
 $aOperador['id_nivel'] = 'BETWEEN';
@@ -75,7 +75,7 @@ foreach ($cAsignaturas as $oAsignatura) {
 }
 
 
-$a_cabeceras = array();
+$a_cabeceras = [];
 $a_cabeceras[0] = _("n/a");
 $a_cabeceras[1] = _("stgr");
 $a_cabeceras[2] = _("centro");
@@ -94,8 +94,8 @@ foreach ($cAsignaturasTodas as $oAsignatura) {
 }
 //print_r($a_Asig_nivel);
 
-$aWhere = array();
-$aOperador = array();
+$aWhere = [];
+$aOperador = [];
 $aWhere['situacion'] = 'A';
 $aWhere['stgr'] = 'b|c1|c2';
 $aOperador['stgr'] = '~';
@@ -119,14 +119,14 @@ foreach ($cPersonas as $oPersona) {
 
     // Asignaturas cursadas:
     /*
-    $aWhere=array();
-    $aOperador=array();
+    $aWhere=[];
+    $aOperador=[];
     $aWhere['id_nom'] = $id_nom;
     $aWhere['id_nivel'] = '1100,2500';
     $aOperador['id_nivel']='BETWEEN';
     */
     $cNotas = $GesNotas->getPersonaNotasSuperadas($id_nom, 't');
-    $aAprobadas = array();
+    $aAprobadas = [];
     foreach ($cNotas as $oPersonaNota) {
         $id_asignatura = $oPersonaNota->getId_asignatura();
         $id_nivel = $oPersonaNota->getId_nivel();

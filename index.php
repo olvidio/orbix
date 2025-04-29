@@ -3,8 +3,8 @@
 if (isset($_REQUEST['logout']) && $_REQUEST['logout'] === 'si') {
     session_start();
     // Destruir todas las variables de sesión.
-    $_SESSION = array();
-    //$GLOBALS = array();
+    $_SESSION = [];
+    //$GLOBALS = [];
     // Si se desea destruir la sesión completamente, borre también la cookie de sesión.
     // Nota: ¡Esto destruirá la sesión, y no la información de la sesión!
     if (ini_get("session.use_cookies")) {
@@ -34,23 +34,23 @@ require_once("apps/core/global_header.inc");
 require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-//$oUsuario = new Usuario(array('id_usuario'=>113));
-
 use core\ConfigGlobal;
-use menus\model\entity\GestorGrupMenuRole;
-use menus\model\entity\GestorMenuDb;
-use menus\model\entity\GrupMenu;
-use menus\model\entity\MetaMenu;
-use menus\model\PermisoMenu;
+use src\menus\application\repositories\GrupMenuRepository;
+use src\menus\application\repositories\GrupMenuRoleRepository;
+use src\menus\application\repositories\MenuDbRepository;
+use src\menus\application\repositories\MetaMenuRepository;
+use src\menus\domain\PermisoMenu;
+use src\usuarios\application\repositories\PreferenciaRepository;
+use src\usuarios\application\repositories\RoleRepository;
+use src\usuarios\application\repositories\UsuarioRepository;
 use web\Hash;
-use usuarios\model\entity\GestorPreferencia;
-use usuarios\model\entity\Role;
-use usuarios\model\entity\Usuario;
 
-$oGesPref = new GestorPreferencia();
+$PreferenciaRepository = new PreferenciaRepository();
+$UsuarioRepository = new UsuarioRepository();
+$RoleRepository = new RoleRepository();
 
 $id_usuario = ConfigGlobal::mi_id_usuario();
-$oUsuario = new Usuario(array('id_usuario' => $id_usuario));
+$oUsuario = $UsuarioRepository->findById($id_usuario);
 $id_role = $oUsuario->getId_role();
 
 $oPermisoMenu = new PermisoMenu();
@@ -58,18 +58,17 @@ $oPermisoMenu = new PermisoMenu();
 // ----------- Preferencias -------------------
 //Busco la página inicial en las preferencias:
 // ----------- Página de inicio -------------------
+$GrupMenuRoleRepository = new GrupMenuRoleRepository();
 $pag_ini = '';
-$aPref = $oGesPref->getPreferencias(array('id_usuario' => $id_usuario, 'tipo' => 'inicio'));
-if (is_array($aPref) && count($aPref) > 0) {
-    $oPreferencia = $aPref[0];
+$oPreferencia = $PreferenciaRepository->findById( $id_usuario, 'inicio');
+if ($oPreferencia !== null) {
     $preferencia = $oPreferencia->getPreferencia();
     [$inicio, $mi_id_grupmenu] = explode('#', $preferencia);
 } else {
     $inicio = '';
-    $GesGMR = new GestorGrupMenuRole();
-    $cGMR = $GesGMR->getGrupMenuRoles(array('id_role' => $id_role));
+    $cGMR = $GrupMenuRoleRepository->getGrupMenuRoles(array('id_role' => $id_role));
     if (empty($cGMR)) {
-        $oRole = new Role($id_role);
+        $oRole = $RoleRepository->findById($id_role);
         $nom_role = $oRole->getRole();
         $msg = sprintf(_("El role: '%s' no tiene ningún grupmenu asignado"), $nom_role);
         die ($msg);
@@ -119,9 +118,8 @@ if (ConfigGlobal::mi_usuario() === 'auxiliar') {
 $Qid_grupmenu = (integer)filter_input(INPUT_GET, 'id_grupmenu');
 $id_grupmenu = (integer)(empty($Qid_grupmenu) ? $mi_id_grupmenu : $Qid_grupmenu);
 
-$aPref = $oGesPref->getPreferencias(array('id_usuario' => $id_usuario, 'tipo' => 'estilo'));
-if (is_array(($aPref)) && count($aPref) > 0) {
-    $oPreferencia = $aPref[0];
+$oPreferencia = $PreferenciaRepository->findById( $id_usuario,  'estilo');
+if ($oPreferencia !== null) {
     $preferencia = $oPreferencia->getPreferencia();
     [$estilo_color, $tipo_menu] = explode('#', $preferencia);
 } else {
@@ -131,21 +129,21 @@ if (is_array(($aPref)) && count($aPref) > 0) {
 }
 
 $aWhere = array('id_role' => $oUsuario->getId_role());
-$gesGMR = new GestorGrupMenuRole();
-$cGrupMenuRoles = $gesGMR->getGrupMenuRoles($aWhere);
+$cGrupMenuRoles = $GrupMenuRoleRepository->getGrupMenuRoles($aWhere);
 $html_barra = "<ul id=\"menu\" class=\"menu\">";
 $gm = 0;
-$html_gm = array();
+$html_gm = [];
+$GrupMenusRepository = new GrupMenuRepository();
+$MenusDbRepository = new MenuDbRepository();
 foreach ($cGrupMenuRoles as $oGrupMenuRole) {
     $gm++;
     $id_gm = $oGrupMenuRole->getId_grupmenu();
     // comprobar que tiene algún submenú.
-    $gesMenuDb = new GestorMenuDb();
-    $cMenuDbs = $gesMenuDb->getMenuDbs(array('id_grupmenu' => $id_gm));
+    $cMenuDbs = $MenusDbRepository->getMenuDbs(array('id_grupmenu' => $id_gm));
     if (is_array($cMenuDbs) && count($cMenuDbs) < 1) {
         continue;
     }
-    $oGrupMenu = new GrupMenu($id_gm);
+    $oGrupMenu = $GrupMenusRepository->findById($id_gm);
     $grup_menu = $oGrupMenu->getGrup_menu($_SESSION['oConfig']->getAmbito());
     $iorden = $oGrupMenu->getOrden();
     if ($iorden < 1) continue;
@@ -166,20 +164,20 @@ if ($gm === 1) {
 }
 
 // El grupmenu 'Utilidades' es el 1, lo pongo siempre.
-$aWhere = array();
-$aOperador = array();
+$aWhere = [];
+$aOperador = [];
 $aWhere['id_grupmenu'] = "^1$|^$id_grupmenu$";
 $aOperador['id_grupmenu'] = "~";
 $aWhere['_ordre'] = 'orden';
-$oLista = new GestorMenuDb();
-$oMenuDbs = $oLista->getMenuDbs($aWhere, $aOperador);
+$cMenuDbs = $MenusDbRepository->getMenuDbs($aWhere, $aOperador);
 $li_submenus = "";
 $indice = 1;
 $indice_old = 1;
-$num_menu_1 = "";
+$num_menu_1 = 0;
 $m = 0;
 $raiz_pral = '';
-foreach ($oMenuDbs as $oMenuDb) {
+$MetaMenuReposiroty = new MetaMenuRepository();
+foreach ($cMenuDbs as $oMenuDb) {
     $m++;
     $orden = $oMenuDb->getOrden();
     $menu = $oMenuDb->getMenu();
@@ -189,11 +187,16 @@ foreach ($oMenuDbs as $oMenuDb) {
     $id_grupmenu = $oMenuDb->getId_grupmenu();
     //$ok = $oMenuDb->getOk ();
 
-    $oMetamenu = new MetaMenu($id_metamenu);
-    $url = $oMetamenu->getUrl();
-    //echo "m: $perm_menu,l: $perm_login, ".visible($perm_menu,$perm_login) ;
-    // primero si el módulo està instalado:
-    $id_mod = $oMetamenu->getId_Mod();
+    if (!empty($id_metamenu)) {
+        $oMetamenu = $MetaMenuReposiroty->findById($id_metamenu);
+        $url = $oMetamenu->getUrl();
+        //echo "m: $perm_menu,l: $perm_login, ".visible($perm_menu,$perm_login) ;
+        // primero si el módulo està instalado:
+        $id_mod = $oMetamenu->getId_Mod();
+    } else {
+        $url = '';
+        $id_mod = '';
+    }
     if (!empty($id_mod) && !ConfigGlobal::is_mod_installed($id_mod)) {
         continue;
     }
@@ -204,7 +207,7 @@ foreach ($oMenuDbs as $oMenuDb) {
         if ($rta === false) {
             echo _("error no hay menu");
         } else {
-            if ($rta == 1) {
+            if ($rta === 1) {
                 $url_app = $matches[1];
                 if (!ConfigGlobal::is_app_installed($url_app)) continue;
             } else {
@@ -214,6 +217,16 @@ foreach ($oMenuDbs as $oMenuDb) {
     }
     // compruebo que el menu raíz exista:
     if (!empty($orden)) {
+
+        $raiz = $orden[0];
+        if (count($orden) === 1) {
+            $raiz_pral = $raiz;
+        }
+        if ($raiz != $raiz_pral) {
+            continue;
+        }
+
+/*
         $a_matches = [];
         $rta2 = preg_match('/\{(\d+).*\}/', $orden, $a_matches);
         if ($rta2 === FALSE) {
@@ -227,6 +240,7 @@ foreach ($oMenuDbs as $oMenuDb) {
         if ($raiz != $raiz_pral) {
             continue;
         }
+*/
     }
 
     // hago las rutas absolutas, en vez de relativas:
@@ -235,17 +249,15 @@ foreach ($oMenuDbs as $oMenuDb) {
     //$parametros = Hash::param($full_url,$parametros);
     $parametros = Hash::add_hash($parametros, $full_url);
     // quito las llaves "{}"
-    $orden = substr($orden, 1, -1);
-    $array_orden = preg_split('/,/', $orden);
-    $indice = count($array_orden);
-    if ($array_orden[0] == $num_menu_1) {
-        continue;
+    $indice = count($orden);
+    if ($orden[0] === $num_menu_1) {
+       // continue;
     }
     if ($indice == 1 && !$oPermisoMenu->visible($menu_perm)) {
-        $num_menu_1 = $array_orden[0];
+        $num_menu_1 = $orden[0];
         continue;
     } else {
-        $num_menu_1 = "";
+        $num_menu_1 = 0;
         if (!$oPermisoMenu->visible($menu_perm)) {
             continue;
         }
@@ -332,7 +344,7 @@ $h = $oHash->linkSinVal();
           href='<?= ConfigGlobal::getWeb_NodeScripts() . '/jquery-ui/themes/base/all.css' ?>'/>
     <!-- ClockPicker Stylesheet -->
     <link rel="stylesheet" type="text/css"
-          href='<?= ConfigGlobal::getWeb_NodeScripts() . '/clockpicker/dist/jquery-clockpicker.css' ?>' />
+          href='<?= ConfigGlobal::getWeb_NodeScripts() . '/clockpicker/dist/jquery-clockpicker.css' ?>'/>
     <!-- jQuery -->
     <script type="text/javascript"
             src='<?= ConfigGlobal::getWeb_NodeScripts() . '/jquery/dist/jquery.min.js' ?>'></script>
@@ -694,7 +706,7 @@ $h = $oHash->linkSinVal();
         }
     }
 
-    function fnjs_update_div(bloque, ref, mantener_atras=0) {
+    function fnjs_update_div(bloque, ref, mantener_atras = 0) {
         if (mantener_atras === 0) {
             fnjs_borrar_posibles_atras();
         }

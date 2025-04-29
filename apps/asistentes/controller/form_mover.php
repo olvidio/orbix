@@ -114,7 +114,7 @@ if ($oAsistente->perm_modificar() === FALSE) {
 
         if (ConfigGlobal::is_app_installed('actividadplazas')) {
             //primero las que se han pedido
-            $cActividadesPreferidas = array();
+            $cActividadesPreferidas = [];
             //Miro los actuales
             $gesPlazasPeticion = new GestorPlazaPeticion();
             $cPlazasPeticion = $gesPlazasPeticion->getPlazasPeticion(array('id_nom' => $Qid_nom, 'tipo' => $sactividad, '_ordre' => 'orden'));
@@ -146,7 +146,7 @@ if ($oAsistente->perm_modificar() === FALSE) {
         $observ = ""; //valor por defecto
     }
 
-    $aOpciones = array();
+    $aOpciones = [];
     $i = 0;
     foreach ($cActividades as $oActividad) {
         $i++;

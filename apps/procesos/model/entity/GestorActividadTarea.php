@@ -51,7 +51,7 @@ class GestorActividadTarea extends ClaseGestor
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $where_txt = '';
-        $aOpciones = array();
+        $aOpciones = [];
         if (!empty($iid_fase)) {
             $where_txt = " WHERE id_fase = $iid_fase ";
             $sQuery = "SELECT  id_tarea, desc_tarea 
@@ -102,13 +102,13 @@ class GestorActividadTarea extends ClaseGestor
      * @param array aOperators associatiu amb els valors dels operadors que cal aplicar a cada variable
      * @return array|void
      */
-    function getActividadTareas($aWhere = array(), $aOperators = array())
+    function getActividadTareas($aWhere = [], $aOperators = array())
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $oActividadTareaSet = new Set();
         $oCondicion = new Condicion();
-        $aCondi = array();
+        $aCondi = [];
         foreach ($aWhere as $camp => $val) {
             if ($camp === '_ordre') continue;
             $sOperador = isset($aOperators[$camp]) ? $aOperators[$camp] : '';

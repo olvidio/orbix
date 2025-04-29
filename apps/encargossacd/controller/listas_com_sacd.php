@@ -82,7 +82,7 @@ switch ($Qsel) {
         $cPersonas = $GesPersonas->getPersonas($aWhere, $aOperador);
         break;
 }
-$array_modo = array();
+$array_modo = [];
 $s = 0;
 foreach ($cPersonas as $oPersona) {
     $s++;
@@ -190,8 +190,8 @@ foreach ($cPersonas as $oPersona) {
         }
 
         // horario
-        $aWhere = array();
-        $aOperador = array();
+        $aWhere = [];
+        $aOperador = [];
         $GesHorario = new GestorEncargoSacdHorario();
         $aWhere['id_enc'] = $id_enc;
         $aWhere['id_nom'] = $id_nom;

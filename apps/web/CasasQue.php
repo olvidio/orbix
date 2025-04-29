@@ -175,7 +175,7 @@ class CasasQue
 
     function setCasas($sQue)
     {
-        $this->aCasas = array();
+        $this->aCasas = [];
         switch ($sQue) {
             case 'all':
                 $this->aCasas[1] = _("casas sólo sv");

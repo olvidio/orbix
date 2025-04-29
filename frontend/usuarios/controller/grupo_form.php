@@ -65,7 +65,7 @@ $oPosicion->setParametros(array('id_usuario' => $Qid_usuario), 1);
 if (!empty($Qid_usuario)) {
     //////////// Nombre de grupo ////////////////////////////////////////////////////////
     $url = Hash::link(ConfigGlobal::getWeb()
-        . '/apps/usuarios/controller/grupo_info.php'
+        . '/src/usuarios/infrastructure/controllers/grupo_info.php'
     );
 
     $oHash = new Hash();
@@ -97,7 +97,7 @@ if (!empty($Qid_usuario)) {
 
     //////////// Permisos de grupos //////////////////////////////////////////////////
     $url = Hash::link(ConfigGlobal::getWeb()
-        . '/apps/usuarios/controller/perm_menu_lista.php'
+        . '/src/usuarios/infrastructure/controllers/perm_menu_lista.php'
     );
 
     $oHash = new Hash();

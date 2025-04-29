@@ -13,17 +13,16 @@ namespace core;
 // INICIO Cabecera global de URL de controlador *********************************
 require_once ("apps/core/global_header.inc");
 // Archivos requeridos por esta url **********************************************
-use usuarios\model\entity\GestorPreferencia;
+use src\usuarios\application\repositories\PreferenciaRepository;
 
 // Crea los objetos de uso global **********************************************
 require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
-$oGesPref = new GestorPreferencia();
+$PreferenciaRepository = new PreferenciaRepository();
 
 $id_usuario= ConfigGlobal::mi_id_usuario();
-$aPref = $oGesPref->getPreferencias(array('id_usuario'=>$id_usuario,'tipo'=>'estilo'));
-if (count($aPref) > 0) {
-	$oPreferencia = $aPref[0];
+$oPreferencia = $PreferenciaRepository->findById($id_usuario,'estilo');
+if ($oPreferencia !== null) {
 	$preferencia = $oPreferencia->getPreferencia();
 	list($estilo_color,$tipo_menu) = explode('#', $preferencia);
 } else {

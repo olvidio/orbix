@@ -1,6 +1,6 @@
 <?php
 
-use usuarios\domain\usuarioEliminar;
+use src\usuarios\application\usuarioEliminar;
 
 require_once("apps/core/global_header.inc");
 require_once("apps/core/global_object.inc");

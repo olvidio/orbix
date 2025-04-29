@@ -27,7 +27,7 @@ $cProfesores = $GesProfesores->getListaProfesoresAsignatura($Qid_asignatura);
 
 // De momento no se hace ninguna accion
 //$a_botones=array( array( 'txt' => _("modificar"), 'click' =>"fnjs_modificar(this.form)" ) );
-$a_botones = array();
+$a_botones = [];
 
 $a_cabeceras = [];
 $a_cabeceras[] = array('name' => ucfirst(_("apellidos, nombre")), 'formatter' => 'clickFormatter');
@@ -37,7 +37,7 @@ $a_cabeceras[] = ucfirst(_("teléfono"));
 $a_cabeceras[] = ucfirst(_("mail"));
 
 $i = 0;
-$a_valores = array();
+$a_valores = [];
 foreach ($cProfesores['departamento'] as $id_nom => $ap_nom) {
     $i++;
     $oPersonaDl = new PersonaDl($id_nom);

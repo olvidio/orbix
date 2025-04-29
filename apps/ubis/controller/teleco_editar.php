@@ -2,7 +2,6 @@
 
 use core\ConfigGlobal;
 use core\ViewPhtml;
-use usuarios\model\entity\Usuario;
 use web\Desplegable;
 use web\Hash;
 
@@ -88,7 +87,6 @@ if ($Qmod == 'nuevo') {
 }
 
 //----------------------------------Permisos según el usuario
-$oMiUsuario = new Usuario(ConfigGlobal::mi_id_usuario());
 $miSfsv = ConfigGlobal::mi_sfsv();
 
 $botones = 0;

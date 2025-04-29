@@ -2,7 +2,6 @@
 
 use core\ConfigGlobal;
 use core\ViewPhtml;
-use usuarios\model\entity\Usuario;
 use web\Hash;
 use function core\is_true;
 
@@ -64,7 +63,7 @@ switch ($Qobj_dir) {
 }
 $obj = 'ubis\\model\\entity\\' . $Qobj_dir;
 
-if ($Qmod == 'nuevo') {
+if ($Qmod === 'nuevo') {
     $oUbi = new $obj_ubi($Qid_ubi);
     $sf = $oUbi->getSf();
     $dl = $oUbi->getDl();
@@ -105,8 +104,8 @@ if ($Qmod == 'nuevo') {
     $idx = (integer)filter_input(INPUT_POST, 'idx');
     $inc = (string)filter_input(INPUT_POST, 'inc');
 
-    if ($inc == 'mas' & $idx < $num_dir - 1) $idx++;
-    if ($inc == 'menos' & $idx > 0) $idx--;
+    if ($inc === 'mas' & $idx < $num_dir - 1) $idx++;
+    if ($inc === 'menos' & $idx > 0) $idx--;
 
     $id_direccion_actual = $a_id_direccion[$idx];
     $oDireccion = new $obj($a_id_direccion[$idx]);
@@ -157,12 +156,12 @@ if ($Qmod == 'nuevo') {
         'refresh' => 1,
     ];
     $oHashDir->setArrayCamposHidden($aCamposHidden);
-    $go_dir = $url.'?'.$oHashDir->linkConVal();
+    $go_dir = $url . '?' . $oHashDir->linkConVal();
 }
 
 //----------------------------------Permisos según el usuario
 
-$oMiUsuario = new Usuario(ConfigGlobal::mi_id_usuario());
+$oMiUsuario = ConfigGlobal::MiUsuario();
 $miSfsv = ConfigGlobal::mi_sfsv();
 
 $botones = 0;
@@ -203,7 +202,7 @@ if (empty($Qmod) & empty($Qid_direccion)) {
     die();
 }
 
-$chk_dcha = is_true($cp_dcha)? 'checked' : '';
+$chk_dcha = is_true($cp_dcha) ? 'checked' : '';
 $chk_propietario = is_true($propietario) ? 'checked' : '';
 $chk_principal = is_true($principal) ? 'checked' : '';
 

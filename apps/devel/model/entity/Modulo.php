@@ -136,7 +136,7 @@ class Modulo extends ClasePropiedades
         } else {
             $bInsert = false;
         }
-        $aDades = array();
+        $aDades = [];
         $aDades['nom'] = $this->snom;
         $aDades['descripcion'] = $this->sdescripcion;
         $aDades['mods_req'] = $this->smods_req;

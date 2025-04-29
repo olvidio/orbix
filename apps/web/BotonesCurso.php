@@ -55,8 +55,8 @@ class BotonesCurso
         $inicurs_ca = curso_est("inicio", $any)->format('Y-m-d');
         $fincurs_ca = curso_est("fin", $any)->format('Y-m-d');
 
-        $this->aWhere = array();
-        $this->aOperator = array();
+        $this->aWhere = [];
+        $this->aOperator = [];
         $this->aWhere['_ordre'] = 'f_ini';
 
         switch ($this->modo_curso) {

@@ -12,7 +12,7 @@ use core\ConfigGlobal;
         rta = fnjs_solo_uno(formulario);
         if (rta === 1) {
             if (confirm("<?= _("¿Está seguro?") ?>")) {
-                var url = '<?= ConfigGlobal::getWeb() ?>/apps/usuarios/controller/perm_menu_eliminar.php';
+                var url = '<?= ConfigGlobal::getWeb() ?>/src/usuarios/infrastructure/controllers/perm_menu_eliminar.php';
                 let datos = $(formulario).serialize();
                 let request = $.ajax({
                     data: datos,

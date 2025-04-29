@@ -263,7 +263,7 @@ $a_cabeceras[] = ucfirst(_("ciudad"));
 $a_cabeceras[] = ucfirst(_("teléfono"));
 
 $i = 0;
-$a_valores = array();
+$a_valores = [];
 if (isset($Qid_sel) && !empty($Qid_sel)) {
     $a_valores['select'] = $Qid_sel;
 }

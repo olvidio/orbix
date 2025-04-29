@@ -5,10 +5,10 @@ namespace certificados\domain;
 use certificados\domain\repositories\CertificadoRepository;
 use core\ConfigGlobal;
 use personas\model\entity\Persona;
+use src\usuarios\application\repositories\LocalRepository;
+use ubis\model\entity\GestorDelegacion;
 use web\Hash;
 use web\Lista;
-use ubis\model\entity\GestorDelegacion;
-use usuarios\model\entity\Local;
 use function core\is_true;
 
 class CertificadoSelect
@@ -18,8 +18,8 @@ class CertificadoSelect
     {
         $gesDelegacion = new GestorDelegacion();
         /*miro las condiciones. Si es la primera vez muestro las de este año */
-        $aWhere = array();
-        $aOperador = array();
+        $aWhere = [];
+        $aOperador = [];
         if (!empty($certificado)) {
             /* se cambia la lógica, por el cambio de nombre de la dl, no de las actas */
             $aWhere['certificado'] = $certificado;
@@ -76,7 +76,7 @@ class CertificadoSelect
         ];
 
         $i = 0;
-        $a_valores = array();
+        $a_valores = [];
         foreach ($cCertificados as $oCertificado) {
             $i++;
             $id_item = $oCertificado->getId_item();
@@ -91,7 +91,8 @@ class CertificadoSelect
             $fecha = $oCertificado->getF_enviado()->getFromLocal();
 
             if (!empty($idioma)) {
-                $oLocal = new Local($idioma);
+                $LocalRepository = new LocalRepository();
+                $oLocal = $LocalRepository->findById($idioma);
                 $idioma = $oLocal->getNom_idioma();
             }
 

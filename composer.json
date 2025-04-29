@@ -30,6 +30,7 @@
   "autoload": {
         "psr-4": {
           "frontend\\": "frontend/",
+          "src\\": "src/",
           "": "apps/"
         }
    },

@@ -60,7 +60,7 @@ abstract class GestorPersonaGlobal extends ClaseGestor
 			GROUP BY id_ctr
 		   	";
         //echo "qry: $sQuery<br>";
-        $aLista = array();
+        $aLista = [];
         foreach ($oDbl->query($sQuery) as $aDades) {
             $aLista[$aDades['id_ctr']] = $aDades['id_ctr'];
         }
@@ -163,7 +163,7 @@ abstract class GestorPersonaGlobal extends ClaseGestor
      * @param array aOperators associatiu amb els valors dels operadors que cal aplicar a cada variable
      * @return array|void
      */
-    function getPersonas($aWhere = array(), $aOperators = array())
+    function getPersonas($aWhere = [], $aOperators = array())
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
@@ -172,7 +172,7 @@ abstract class GestorPersonaGlobal extends ClaseGestor
 
         $oPersonaDlSet = new Set();
         $oCondicion = new Condicion();
-        $aCondi = array();
+        $aCondi = [];
         foreach ($aWhere as $camp => $val) {
             if ($camp === '_ordre') continue;
             $sOperador = isset($aOperators[$camp]) ? $aOperators[$camp] : '';
@@ -245,13 +245,13 @@ abstract class GestorPersonaGlobal extends ClaseGestor
      * @param string Nom del objecte
      * @return array|void
      */
-    function getPersonasObj($Obj, $aWhere = array(), $aOperators = array())
+    function getPersonasObj($Obj, $aWhere = [], $aOperators = array())
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         $oPersonaSet = new Set();
         $oCondicion = new Condicion();
-        $aCondi = array();
+        $aCondi = [];
         foreach ($aWhere as $camp => $val) {
             if ($camp === '_ordre') continue;
             $sOperador = isset($aOperators[$camp]) ? $aOperators[$camp] : '';

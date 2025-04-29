@@ -2,7 +2,6 @@
 
 use core\ConfigGlobal;
 use core\ViewPhtml;
-use usuarios\model\entity\Usuario;
 use web\Hash;
 use web\Posicion;
 
@@ -42,7 +41,7 @@ if (isset($_POST['stack'])) {
     }
 }
 
-$oMiUsuario = new Usuario(ConfigGlobal::mi_id_usuario());
+$oMiUsuario = ConfigGlobal::MiUsuario();
 $miSfsv = ConfigGlobal::mi_sfsv();
 
 $Qtipo = (string)filter_input(INPUT_POST, 'tipo');

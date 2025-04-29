@@ -13,7 +13,7 @@ class CuadrosFases
      *
      * @var array
      */
-    protected $permissions = array();
+    protected $permissions = [];
     /**
      * acciones posibles.
      *

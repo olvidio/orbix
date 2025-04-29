@@ -71,8 +71,8 @@ if (is_array($cMiDl) && !empty($cMiDl)) {
 // centros donde hay numerarios, aunque sean de agd
 $GesPersonas = new GestorPersonaN();
 $aListaCtr = $GesPersonas->getListaCtr();
-$aCentrosN = array();
-$aCentrosOrden = array();
+$aCentrosN = [];
+$aCentrosOrden = [];
 foreach ($aListaCtr as $id_ubi) {
     $oCentro = new CentroDl(array('id_ubi' => $id_ubi));
     $nombre_ubi = $oCentro->getNombre_ubi();
@@ -80,7 +80,7 @@ foreach ($aListaCtr as $id_ubi) {
 }
 uksort($aCentrosOrden, "core\strsinacentocmp");
 // No encuentro la manera de añadir las opciones sin desordenar el array de indice numérico
-$aCentrsoNExt = array();
+$aCentrsoNExt = [];
 $aCentrosNExt[1] = _("todos los ctr");
 $aCentrosNExt[2] = "----------";
 foreach ($aCentrosOrden as $aCentro) {
@@ -99,8 +99,8 @@ $oDesplCtrN->setAction("fnjs_n_a('n')");
 // centros donde hay agregados, aunque sean de n
 $GesPersonas = new GestorPersonaAgd();
 $aListaCtr = $GesPersonas->getListaCtr();
-$aCentrosAgd = array();
-$aCentrosOrden = array();
+$aCentrosAgd = [];
+$aCentrosOrden = [];
 foreach ($aListaCtr as $id_ubi) {
     $oCentro = new CentroDl(array('id_ubi' => $id_ubi));
     $nombre_ubi = $oCentro->getNombre_ubi();
@@ -108,7 +108,7 @@ foreach ($aListaCtr as $id_ubi) {
 }
 uksort($aCentrosOrden, "core\strsinacentocmp");
 // No encuentro la manera de añadir las opciones sin desordenar el array de indice numérico
-$aCentrsoAgdExt = array();
+$aCentrsoAgdExt = [];
 $aCentrosAgdExt[1] = _("todos los ctr");
 $aCentrosAgdExt[2] = "----------";
 foreach ($aCentrosOrden as $aCentro) {

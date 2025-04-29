@@ -128,6 +128,11 @@ class ConfigGlobal extends ServerConf
         }
     }
 
+    public static function MiUsuario()
+    {
+        return $_SESSION['session_auth']['MiUsuario'];
+    }
+
     public static function mi_id_usuario()
     {
         return $_SESSION['session_auth']['id_usuario'];

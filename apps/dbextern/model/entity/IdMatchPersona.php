@@ -125,7 +125,7 @@ class IdMatchPersona extends ClasePropiedades
         } else {
             $bInsert = false;
         }
-        $aDades = array();
+        $aDades = [];
         $aDades['id_orbix'] = $this->iid_orbix;
         $aDades['id_tabla'] = $this->sid_tabla;
         array_walk($aDades, 'core\poner_null');

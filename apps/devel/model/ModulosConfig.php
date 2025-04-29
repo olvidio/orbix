@@ -72,7 +72,7 @@ class ModulosConfig
 
     public function getAppsMods($id_mod)
     {
-        $apps = array();
+        $apps = [];
         if (empty($id_mod)) {
             return $apps;
         }
@@ -94,7 +94,7 @@ class ModulosConfig
 
     public function getApps($id_mod)
     {
-        $apps = array();
+        $apps = [];
         if (empty($id_mod)) {
             return $apps;
         }

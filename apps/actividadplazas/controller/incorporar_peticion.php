@@ -95,7 +95,7 @@ switch ($Qsactividad) {
 
 $mi_dele = ConfigGlobal::mi_delef();
 //Actividades a las que afecta
-$cActividades = array();
+$cActividades = [];
 $aWhereA['status'] = ActividadAll::STATUS_ACTUAL;
 $aWhereA['f_ini'] = "'$inicurs','$fincurs'";
 $aOperadorA['f_ini'] = 'BETWEEN';

@@ -142,7 +142,7 @@ switch ($Qn_agd) {
     case "c": //otro
         $tabla = "p_n_agd";
         $aWhere['id_ubi'] = $_POST['id_ubi'];
-        $aOperador['tipo_ctr'] = array();
+        $aOperador['tipo_ctr'] = [];
         break;
 }
 $aWhere['status'] = 't';
@@ -153,7 +153,7 @@ $cCentros = $GesCentros->getCentros($aWhere, $aOperador);
 
 // Bucle para poder sacar los centros de la consulta anterior
 $ctr = 0;
-$aCentros = array();
+$aCentros = [];
 foreach ($cCentros as $oCentro) {
     $ctr++;
     $id_ubi = $oCentro->getId_ubi();
@@ -170,7 +170,7 @@ foreach ($cCentros as $oCentro) {
     $aCentros[$id_ubi]['nombre_ubi'] = $nombre_ubi;
 
     $i = 0;
-    $aPersonasCtr = array();
+    $aPersonasCtr = [];
     $aWhereNom = [];
     foreach ($cPersonas as $oPersona) {
         $i++;
@@ -184,7 +184,7 @@ foreach ($cCentros as $oCentro) {
 
         $GesAsistencias = new GestorAsistente();
         $cAsistencias = $GesAsistencias->getActividadesDeAsistente($aWhereNom, $aOperadorNom, $aWhereAct, $aOperadorAct);
-        $aActividades = array();
+        $aActividades = [];
         if (is_array($cAsistencias) && count($cAsistencias) == 0) {
             $nom_activ = _("pendiente de solicitar");
         } else {

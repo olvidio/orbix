@@ -71,8 +71,8 @@ $cDelegaciones = $gesDelegacion->getDelegaciones(array('grupo_estudios' => $grup
 $gesActividadPlazas = new actividadplazas\model\entity\GestorActividadPlazas();
 // Seleccionar actividades exportadas de los id_dl
 
-$a_grupo = array();
-$cActividades = array();
+$a_grupo = [];
+$cActividades = [];
 $gesActividades = new actividades\model\entity\GestorActividad();
 
 function PlazasAB_por_actividad($dlA, $dlB, $clase)
@@ -99,7 +99,7 @@ function PlazasAB_por_actividad($dlA, $dlB, $clase)
     $aOperador = array('id_tipo_activ' => '~', 'f_ini' => 'BETWEEN');
     $cActividadesA = $gesActividades->getActividades($aWhereA, $aOperador);
     $i = 0;
-    $a_valores = array();
+    $a_valores = [];
     $sumaConcedidasA = 0;
     $sumaConcedidasB = 0;
     $dlA_c = $dlA . '-c';
@@ -210,7 +210,7 @@ $a_cabeceras[] = array('name' => $dlB . '-c', 'title' => _("concedidas"), 'field
 $a_cabeceras[] = array('name' => $dlB . '-l', 'title' => _("libres"), 'field' => $dlB . "-l", 'width' => 15, 'editor' => 'Slick.Editors.Integer', 'formatter' => 'cssFormatter');
 
 
-$a_botones = array();
+$a_botones = [];
 
 $oTabla = new TablaEditable();
 $oTabla->setId_tabla('plazas_balance');

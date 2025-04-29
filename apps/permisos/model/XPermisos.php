@@ -430,7 +430,7 @@ abstract class XPermisos
         if (empty($bin)) {
             $bin = 0;
         }
-        $txt = array();
+        $txt = [];
         $i = 0;
         foreach ($this->permissions as $nom => $num) {
             $i++;

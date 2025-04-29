@@ -187,7 +187,7 @@ class TipoDossier extends ClasePropiedades
         } else {
             $bInsert = false;
         }
-        $aDades = array();
+        $aDades = [];
         $aDades['descripcion'] = $this->sdescripcion;
         $aDades['tabla_from'] = $this->stabla_from;
         $aDades['tabla_to'] = $this->stabla_to;

@@ -65,7 +65,7 @@ class GestorCargoOAsistente
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
             return false;
         }
-        $aRepe = array();
+        $aRepe = [];
         $c = 0;
         foreach ($oDbl->query($sQuery) as $aDades) {
             if (in_array($aDades['id_activ'], $aRepe)) { // si está repetido, el primero tiene propio=true.

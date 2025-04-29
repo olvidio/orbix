@@ -10,8 +10,8 @@ use core\ConfigGlobal;
 use core\DatosCampo;
 use core\Set;
 use ReflectionClass;
+use src\menus\domain\PermisoMenu;
 use function core\is_true;
-use menus\model\PermisoMenu;
 
 /**
  * Fitxer amb la Classe que accedeix a la taula a_actividad_proceso_(sf/sv)
@@ -242,7 +242,7 @@ class ActividadProcesoTarea extends ClasePropiedades
         } else {
             $bInsert = FALSE;
         }
-        $aDades = array();
+        $aDades = [];
         $aDades['id_tipo_proceso'] = $this->iid_tipo_proceso;
         $aDades['id_activ'] = $this->iid_activ;
         $aDades['id_fase'] = $this->iid_fase;
@@ -458,7 +458,7 @@ class ActividadProcesoTarea extends ClasePropiedades
             if (ConfigGlobal::is_app_installed('cambios')) {
                 $oGestorCanvis = new GestorAvisoCambios();
                 $shortClassName = (new ReflectionClass($this))->getShortName();
-                $oGestorCanvis->addCanvi($shortClassName, 'FASE', $this->iid_activ, array(), $this->aDadesActuals);
+                $oGestorCanvis->addCanvi($shortClassName, 'FASE', $this->iid_activ, [], $this->aDadesActuals);
             }
 
             if (($oDbl->exec("DELETE FROM $nom_tabla WHERE id_item='$this->iid_item'")) === FALSE) {
@@ -481,7 +481,7 @@ class ActividadProcesoTarea extends ClasePropiedades
         $nom_tabla = $this->getNomTabla();
         $this->DBCarregar('guardar');
 
-        $aDades = array();
+        $aDades = [];
         $aDades['id_tipo_proceso'] = $this->iid_tipo_proceso;
         $aDades['id_activ'] = $this->iid_activ;
         $aDades['id_fase'] = $this->iid_fase;

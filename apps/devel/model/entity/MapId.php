@@ -121,7 +121,7 @@ class MapId extends ClasePropiedades
         } else {
             $bInsert = FALSE;
         }
-        $aDades = array();
+        $aDades = [];
         $aDades['id_dl'] = $this->iid_dl;
         array_walk($aDades, 'core\poner_null');
 

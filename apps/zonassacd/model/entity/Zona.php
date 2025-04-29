@@ -139,7 +139,7 @@ class Zona extends ClasePropiedades
         } else {
             $bInsert = FALSE;
         }
-        $aDades = array();
+        $aDades = [];
         $aDades['nombre_zona'] = $this->snombre_zona;
         $aDades['orden'] = $this->iorden;
         $aDades['id_grupo'] = $this->iid_grupo;

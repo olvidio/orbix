@@ -216,8 +216,8 @@ switch ($Qmod) {
 
         /* sacd */
         $GesEncargoSacd = new GestorEncargoSacd();
-        $aWhere = array();
-        $aOperador = array();
+        $aWhere = [];
+        $aOperador = [];
         $aWhere['id_enc'] = $Qid_enc;
         $aWhere['modo'] = '5';
         $aWhere['f_fin'] = 'x';
@@ -242,8 +242,8 @@ switch ($Qmod) {
                 }
             } else { // sacd titular
                 $GesEncargoSacd = new GestorEncargoSacd();
-                $aWhere = array();
-                $aOperador = array();
+                $aWhere = [];
+                $aOperador = [];
                 $aWhere['id_enc'] = $Qid_enc;
                 $aWhere['modo'] = '(2|3)';
                 $aWhere['f_fin'] = 'x';
@@ -294,8 +294,8 @@ switch ($Qmod) {
             if (!empty($QAid_sacd[$i])) { // si está vacío salto.
                 // busco el id_item de la tarea_sacd.
                 $GesEncargoSacd = new GestorEncargoSacd();
-                $aWhere = array();
-                $aOperador = array();
+                $aWhere = [];
+                $aOperador = [];
                 $aWhere['id_nom'] = $QAid_sacd[$i];
                 $aWhere['id_enc'] = $Qid_enc;
                 $aWhere['modo'] = '(2|3|5)';
@@ -317,8 +317,8 @@ switch ($Qmod) {
 
         if (!empty($Qid_sacd_suplente)) {
             $GesEncargoSacd = new GestorEncargoSacd();
-            $aWhere = array();
-            $aOperador = array();
+            $aWhere = [];
+            $aOperador = [];
             $aWhere['id_enc'] = $Qid_enc;
             $aWhere['modo'] = '4';
             $aWhere['f_fin'] = 'x';

@@ -12,9 +12,9 @@
 // INICIO Cabecera global de URL de controlador *********************************
 use core\ConfigGlobal;
 use core\ViewPhtml;
+use src\usuarios\domain\entity\Role;
 use web\CentrosQue;
 use web\DesplegableArray;
-use usuarios\model\entity\Role;
 use web\Hash;
 use function core\strtoupper_dlb;
 
@@ -39,7 +39,7 @@ $Qempiezamin = (string)filter_input(INPUT_POST, 'empiezamin');
 $oForm = new CentrosQue();
 // miro que rol tengo. Si soy centro, sólo veo la mía
 $miRolePau = ConfigGlobal::mi_role_pau();
-if ($miRolePau == Role::PAU_CTR) { //centro
+if ($miRolePau === Role::PAU_CTR) { //centro
     $id_pau = ConfigGlobal::mi_role_pau();
     $sDonde = str_replace(",", " OR id_ubi=", $id_pau);
     //formulario para centros cuyo calendario de actividades interesa
@@ -47,11 +47,11 @@ if ($miRolePau == Role::PAU_CTR) { //centro
     $oForm->setCentros('centro');
 } else {
     // para los listados de sg. sólo ctrs de sg
-    if ($Qtipo_ctr == 'sg') {
-        if (ConfigGlobal::mi_sfsv() == 1) {
+    if ($Qtipo_ctr === 'sg') {
+        if (ConfigGlobal::mi_sfsv() === 1) {
             $oForm->setCentros('sv');
             $donde = "WHERE status='t' AND sv='t' AND tipo_ctr ~ '^s[^s]'";
-        } elseif (ConfigGlobal::mi_sfsv() == 2) {
+        } elseif (ConfigGlobal::mi_sfsv() === 2) {
             $oForm->setCentros('sf');
             $donde = "WHERE status='t' AND sf='t' AND tipo_ctr ~ '^s[^s]'";
         }
@@ -63,10 +63,10 @@ if ($miRolePau == Role::PAU_CTR) { //centro
             $oForm->setCentros('all');
             $donde = "WHERE status='t'";
         } else {
-            if (ConfigGlobal::mi_sfsv() == 1) {
+            if (ConfigGlobal::mi_sfsv() === 1) {
                 $oForm->setCentros('sv');
                 $donde = "WHERE status='t' AND sv='t'";
-            } elseif (ConfigGlobal::mi_sfsv() == 2) {
+            } elseif (ConfigGlobal::mi_sfsv() === 2) {
                 $oForm->setCentros('sf');
                 $donde = "WHERE status='t' AND sf='t'";
             }
@@ -112,8 +112,8 @@ $oSelects = new DesplegableArray('', $aOpcionesCentros, 'id_ctr');
 $oSelects->setBlanco('t');
 $oSelects->setAccionConjunto('fnjs_mas_centros(event)');
 
-if ($Qperiodo == 'no') {
-    if ($Qtipo_lista == 'datosEc') $oForm->setTitulo(strtoupper_dlb(_("resumen económico")));
+if ($Qperiodo === 'no') {
+    if ($Qtipo_lista === 'datosEc') $oForm->setTitulo(strtoupper_dlb(_("resumen económico")));
     $oForm->setBoton("<input type=button name=\"buscar\" value=\"" . _('buscar') . "\" onclick=\"fnjs_ver();\">");
 } else {
     $aOpciones = array(

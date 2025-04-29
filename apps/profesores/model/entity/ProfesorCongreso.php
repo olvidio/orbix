@@ -160,7 +160,7 @@ class ProfesorCongreso extends ClasePropiedades
         } else {
             $bInsert = false;
         }
-        $aDades = array();
+        $aDades = [];
         $aDades['congreso'] = $this->scongreso;
         $aDades['lugar'] = $this->slugar;
         $aDades['f_ini'] = $this->df_ini;

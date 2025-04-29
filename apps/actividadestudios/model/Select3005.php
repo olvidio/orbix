@@ -66,7 +66,7 @@ class Select3005
 
     public function getBotones()
     {
-        $a_botones = array();
+        $a_botones = [];
         if ($this->permiso == 3) {
             $a_botones = array(
                 array('txt' => _("modificar"), 'click' => "fnjs_modificar(this.form)"),
@@ -109,7 +109,7 @@ class Select3005
         $mi_dele = ConfigGlobal::mi_delef();
         $gesDbSchemas = new GestorDbSchema();
         $c = 0;
-        $a_valores = array();
+        $a_valores = [];
         foreach ($cActivAsignaturas as $oActividadAsignatura) {
             $c++;
             $id_activ = $oActividadAsignatura->getId_activ();

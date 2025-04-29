@@ -30,7 +30,7 @@ class Posicion
      *
      * @var array
      */
-    private $aParametros = array();
+    private $aParametros = [];
     /**
      * stack de Posicion
      *
@@ -597,7 +597,7 @@ class Posicion
         if (empty($frame)) $frame = "#main";
 
         // passarlo a array para usar la funcion add_hash
-        $aParam = array();
+        $aParam = [];
         foreach (explode('&', $parametros) as $param) {
             $aa = explode('=', $param);
             $aParam[$aa[0]] = isset($aa[1]) ? $aa[1] : ''; //ojo con el empty y el 0.

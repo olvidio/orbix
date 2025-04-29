@@ -1,6 +1,5 @@
 <?php
-use core\ConfigGlobal;
-use ubis\model\entity\GestorCasa;use ubis\model\entity\GestorCentro;use usuarios\model\entity\Usuario;
+use core\ConfigGlobal;use ubis\model\entity\GestorCasa;use ubis\model\entity\GestorCentro;
 /**
 * Esta página muestra una tabla con los ubis seleccionados.
  * Para "actividad_select_ubi.phtml"
@@ -21,7 +20,7 @@ use ubis\model\entity\GestorCasa;use ubis\model\entity\GestorCentro;use usuarios
 // FIN de  Cabecera global de URL de controlador ********************************
 
 
-$oMiUsuario = new Usuario(ConfigGlobal::mi_id_usuario());
+$oMiUsuario = ConfigGlobal::MiUsuario();
 $miSfsv=ConfigGlobal::mi_sfsv();
 
 $tabla="ubis";
@@ -53,7 +52,7 @@ $aWhereCasa['status'] = 't';
 $aWhereCtr['status'] = 't';
 $aWhereCtr['cdc'] = 't';
 
-$a_ubis = array();
+$a_ubis = [];
 //Casas
 $GesCasas = new GestorCasa();
 $cCasas = $GesCasas->getCasas($aWhereCasa,$aOperadorCasa);
@@ -83,7 +82,7 @@ $a_cabeceras=array( ucfirst(_("nombre del centro")),
 				);
 
 $i=0;
-$a_valores = array();
+$a_valores = [];
 foreach ($a_ubis as $oUbi) {
 	$i++;
 	$id_ubi = $oUbi->getId_ubi();

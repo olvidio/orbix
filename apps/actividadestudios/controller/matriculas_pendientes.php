@@ -56,7 +56,7 @@ $a_botones = array(
 $a_cabeceras = array(_("actividad"), _("asignatura"), _("alumno"), _("p"));
 
 $i = 0;
-$a_valores = array();
+$a_valores = [];
 if (isset($Qid_sel) && !empty($Qid_sel)) {
     $a_valores['select'] = $Qid_sel;
 }

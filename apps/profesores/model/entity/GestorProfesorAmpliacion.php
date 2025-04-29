@@ -44,10 +44,10 @@ class GestorProfesorAmpliacion extends ClaseGestor
     function getListaProfesoresAsignatura($id_asignatura)
     {
         $gesProfesores = $this->getProfesorAmpliaciones(array('id_asignatura' => $id_asignatura, 'f_cese' => ''), array('f_cese' => 'IS NULL'));
-        $aProfesores = array();
-        $aAp1 = array();
-        $aAp2 = array();
-        $aNom = array();
+        $aProfesores = [];
+        $aAp1 = [];
+        $aAp2 = [];
+        $aNom = [];
         foreach ($gesProfesores as $oProfesor) {
             $id_nom = $oProfesor->getId_nom();
             $oPersonaDl = new PersonaDl($id_nom);
@@ -57,7 +57,7 @@ class GestorProfesorAmpliacion extends ClaseGestor
             $aAp2[] = $oPersonaDl->getApellido2();
             $aNom[] = $oPersonaDl->getNom();
         }
-        $multisort_args = array();
+        $multisort_args = [];
         $multisort_args[] = $aAp1;
         $multisort_args[] = SORT_ASC;
         $multisort_args[] = SORT_STRING;
@@ -69,7 +69,7 @@ class GestorProfesorAmpliacion extends ClaseGestor
         $multisort_args[] = SORT_STRING;
         $multisort_args[] = &$aProfesores;   // finally add the source array, by reference
         call_user_func_array("array_multisort", $multisort_args);
-        $aOpciones = array();
+        $aOpciones = [];
         foreach ($aProfesores as $aClave) {
             $clave = $aClave['id_nom'];
             $val = $aClave['ap_nom'];
@@ -109,13 +109,13 @@ class GestorProfesorAmpliacion extends ClaseGestor
      * @param array aOperators associatiu amb els valors dels operadors que cal aplicar a cada variable
      * @return array|void
      */
-    function getProfesorAmpliaciones($aWhere = array(), $aOperators = array())
+    function getProfesorAmpliaciones($aWhere = [], $aOperators = array())
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         $oProfesorAmpliacionSet = new Set();
         $oCondicion = new Condicion();
-        $aCondi = array();
+        $aCondi = [];
         foreach ($aWhere as $camp => $val) {
             if ($camp === '_ordre') continue;
             $sOperador = isset($aOperators[$camp]) ? $aOperators[$camp] : '';

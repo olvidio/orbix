@@ -24,7 +24,7 @@ class Set
      *
      * @var array
      */
-    private $aCollection = array();
+    private $aCollection = [];
     private $count = 0;
 
     /* CONSTRUCTOR -------------------------------------------------------------- */

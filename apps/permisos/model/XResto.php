@@ -23,7 +23,7 @@ class XResto
      *
      * @var array
      */
-    protected $aFases = array();
+    protected $aFases = [];
     /**
      * permis amb el que es contruyeix la clase. La resta es compara amb aquest.
      *
@@ -41,7 +41,7 @@ class XResto
      *
      * @var array  aDades[$iAfecta][$id_tipo_proceso][$iFase]=$iPerm;
      */
-    protected $aDades = array();
+    protected $aDades = [];
     /**
      * id d'usuari o grup que ha generat el permís.
      *

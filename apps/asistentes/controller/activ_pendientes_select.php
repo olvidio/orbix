@@ -109,7 +109,7 @@ $aWhereA['f_ini'] = "'$inicurs','$fincurs'";
 $aOperadorA['f_ini'] = 'BETWEEN';
 $GesActividades = new GestorActividad();
 $cActividades = $GesActividades->getActividades($aWhereA, $aOperadorA);
-$aAsistentes = array();
+$aAsistentes = [];
 foreach ($cActividades as $oActividad) {
     $id_activ = $oActividad->getId_activ();
     // Asistentes:
@@ -138,7 +138,7 @@ switch ($Qtipo_personas) {
         break;
 }
 
-$aFaltan = array();
+$aFaltan = [];
 foreach ($cPersonas as $oPersona) {
     $id_nomP = $oPersona->getId_nom();
     if (in_array($id_nomP, $aAsistentes)) continue;
@@ -159,7 +159,7 @@ $a_cabeceras = [_("nº"),
     _("nivel stgr"),
 ];
 $i = 0;
-$a_valores = array();
+$a_valores = [];
 foreach ($aFaltan as $ap_nom => $aDatos) {
     $i++;
     $id_nom = $aDatos['id_nom'];
@@ -202,7 +202,7 @@ switch ($Qtipo_personas) {
         break;
 }
 
-$aFaltanOtras = array();
+$aFaltanOtras = [];
 foreach ($cPersonasOtras as $oPersona) {
     $id_nomP = $oPersona->getId_nom();
     if (in_array($id_nomP, $aAsistentes)) continue;

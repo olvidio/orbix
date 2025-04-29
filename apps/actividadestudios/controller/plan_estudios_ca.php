@@ -63,8 +63,8 @@ if (empty($id_nom_dtor_est)) {
 
 //asignaturas: profesores y preceptores.
 // por cada asignatura
-$aPreceptores = array();
-$aProfesores = array();
+$aPreceptores = [];
+$aProfesores = [];
 $a = 0;
 $tipo_old = 0;
 $GesActividadAsignaturas = new GestorActividadAsignaturaDl();
@@ -106,7 +106,7 @@ $GesAsistentes = new GestorAsistente();
 $cAsistentes = $GesAsistentes->getAsistentesDeActividad($id_activ);
 $a = 0;
 $a_old = 0;
-$aAlumnos = array();
+$aAlumnos = [];
 foreach ($cAsistentes as $oAsistente) {
     if ($oAsistente->getPropio() === FALSE) {
         continue;
@@ -142,7 +142,7 @@ foreach ($cAsistentes as $oAsistente) {
         $aAlumnos[$a]['observ_est'] = $observ_est;
         $aAlumnos[$a]['aAsignaturas'] = $est;
     } else {
-        $aAsignaturas = array();
+        $aAsignaturas = [];
         $i = 0;
         foreach ($cMatriculas as $oMatricula) {
             $i++;

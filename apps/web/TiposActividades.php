@@ -172,10 +172,10 @@ class TiposActividades
     );
 
     //transpongo los vectores para buscar por números y no por el texto
-    private $afSfsv = array();
-    private $afAsistentes = array();
-    private $afActividad1Digito = array();
-    private $afActividad2Digitos = array();
+    private $afSfsv = [];
+    private $afAsistentes = [];
+    private $afActividad1Digito = [];
+    private $afActividad2Digitos = [];
 
     private $extendida = FALSE;
 

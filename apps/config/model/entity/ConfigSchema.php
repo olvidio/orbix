@@ -121,7 +121,7 @@ class ConfigSchema extends ClasePropiedades
         } else {
             $bInsert = FALSE;
         }
-        $aDades = array();
+        $aDades = [];
         $aDades['valor'] = $this->svalor;
         array_walk($aDades, 'core\poner_null');
 

@@ -3,9 +3,10 @@
 use core\ConfigGlobal;
 use core\ViewTwig;
 use personas\model\entity\Persona;
+use src\usuarios\application\repositories\LocalRepository;
 use web\DateTimeLocal;
+use web\Desplegable;
 use web\Hash;
-use usuarios\model\entity\GestorLocal;
 
 /**
  * Funciones más comunes de la aplicación
@@ -64,10 +65,9 @@ $lugar_firma = $_SESSION['oConfig']->getLugarFirma();
 // preguntar: nº, destino, idioma
 
 //Idiomas
-$gesIdiomas = new GestorLocal();
-$oDesplIdiomas = $gesIdiomas->getListaLocales();
-$oDesplIdiomas->setNombre('idioma');
-$oDesplIdiomas->setBlanco(TRUE);
+$LocalRepository = new LocalRepository();
+$a_locales = $LocalRepository->getArrayLocales();
+$oDesplIdiomas = new Desplegable('idioma', $a_locales, '', true);
 
 $oHoy = new DateTimeLocal();
 $f_certificado = $oHoy->getFromLocal();

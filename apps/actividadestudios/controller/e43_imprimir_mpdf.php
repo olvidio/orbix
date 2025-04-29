@@ -40,7 +40,7 @@ $cMatriculas = $GesMatriculas->getMatriculas(array('id_nom' => $id_nom, 'id_acti
 $matriculas = count($cMatriculas);
 if ($matriculas > 0) {
     // para ordenar
-    $aAsignaturasMatriculadas = array();
+    $aAsignaturasMatriculadas = [];
     foreach ($cMatriculas as $oMatricula) {
         $id_asignatura = $oMatricula->getId_asignatura();
         $oAsignatura = new asignaturas\model\entity\Asignatura($id_asignatura);

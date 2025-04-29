@@ -15,7 +15,7 @@ $aWhere = ['tabla_from' => $pau,
 $GesTipoDossier = new GestorTipoDossier();
 $cTipoDossier = $GesTipoDossier->getTiposDossiers($aWhere);
 $i = 0;
-$a_filas = array();
+$a_filas = [];
 $oPermDossier = new dossiers\model\PermDossier();
 foreach ($cTipoDossier as $oTipoDossier) {
     $id_tipo_dossier = $oTipoDossier->getId_tipo_dossier();

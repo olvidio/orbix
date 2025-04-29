@@ -183,7 +183,7 @@ class PermDossier
             $sf . ".." => array('nom' => "sf", 'perm' => 1)
         );
 
-        $ref_perm = array();
+        $ref_perm = [];
         switch ($id_tabla) {
             case "n" : //------------------------- numerarios -------------------
             case "pn":
@@ -481,7 +481,7 @@ class PermDossier
 
         //$ref_perm = $ref_perm_sg;
         // Quito los tipos que no existen
-        $ref_perm2 = array();
+        $ref_perm2 = [];
         foreach ($ref_perm as $key => $value) {
             if (!isset($a_posibles_tipos[$key])) { continue; }
             $ref_perm2[$key] = $value;
@@ -929,7 +929,7 @@ class PermDossier
      */
     function daniBoleanOr($ref_perm, $ref_perm_of)
     {
-        $ref_perm_or = array();
+        $ref_perm_or = [];
         foreach ($ref_perm as $asis => $a) {
             if (isset($ref_perm_of[$asis])) {
                 $b = $ref_perm_of[$asis];

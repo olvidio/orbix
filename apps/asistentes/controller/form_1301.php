@@ -68,7 +68,7 @@ if (!empty($a_sel)) { //vengo de un checkbox
     $id_activ = '';
 }
 
-$oDesplActividades = array();
+$oDesplActividades = [];
 if (!empty($id_activ)) { //caso de modificar
     $mod = "editar";
     $oActividad = new Actividad($id_activ);
@@ -159,7 +159,7 @@ if (ConfigGlobal::is_app_installed('actividadplazas')) {
         $oDesplPosiblesPropietarios->setNombre('propietario');
         $oDesplPosiblesPropietarios->setOpcion_sel($propietario);
     } else {
-        $oDesplPosiblesPropietarios = new Desplegable('propietario', array(), '');
+        $oDesplPosiblesPropietarios = new Desplegable('propietario', [], '');
     }
 
     $url_ajax = ConfigGlobal::getWeb() . '/apps/actividadplazas/controller/gestion_plazas_ajax.php';

@@ -48,7 +48,7 @@ class PgPlantillaRepository extends ClaseRepository implements PlantillaReposito
 		$nom_tabla = $this->getNomTabla();
 		$PlantillaSet = new Set();
 		$oCondicion = new Condicion();
-		$aCondicion = array();
+		$aCondicion = [];
 		foreach ($aWhere as $camp => $val) {
 			if ($camp === '_ordre') { continue; }
 			if ($camp === '_limit') { continue; }

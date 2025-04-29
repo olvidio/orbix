@@ -120,7 +120,7 @@ $oHash->setCamposForm('n_agd!empiezamax!empiezamin!periodo!year!iactividad_val!i
 $oHash->setcamposNo('id_ubi');
 $oHash->setArraycamposHidden($a_camposHidden);
 
-$oFormP = array();
+$oFormP = [];
 if ($Qlista === "list_activ" || $Qlista === "list_est") {
     $aOpciones = array(
         'curso_ca' => _("curso ca"),

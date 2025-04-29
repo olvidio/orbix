@@ -72,8 +72,8 @@ foreach ($tipos_de_ctr as $tipo_ctr_que) {
     }
     if (!empty($txt_tipo_ctr)) $Html .= "<div class=salta_pag><table><tr><td class=grupo colspan=2>$txt_tipo_ctr</td></tr>";
 
-    $aWhere = array();
-    $aOperador = array();
+    $aWhere = [];
+    $aOperador = [];
     $aWhere['status'] = 't';
     $aWhere['tipo_ctr'] = "^$tipo_ctr_que";
     $aOperador['tipo_ctr'] = '~';
@@ -98,8 +98,8 @@ foreach ($tipos_de_ctr as $tipo_ctr_que) {
         $nombre_ubi = $oCentro->getNombre_ubi();
         $tipo_ctr = $oCentro->getTipo_ctr();
         $GesEncargo = new GestorEncargo();
-        $aWhere = array();
-        $aOperador = array();
+        $aWhere = [];
+        $aOperador = [];
         $aWhere['id_ubi'] = $id_ubi;
         $aWhere['id_tipo_enc'] = '1[0123]0.';
         $aOperador['id_tipo_enc'] = '~';

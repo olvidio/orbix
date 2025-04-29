@@ -76,8 +76,8 @@ $aOperadorAct['f_ini'] = 'BETWEEN';
 $aWhereAct['id_tipo_activ'] = "^1(12|33)";
 $aOperadorAct['id_tipo_activ'] = "~";
 
-$aWhereCtr = array();
-$aOperadorCtr = array();
+$aWhereCtr = [];
+$aOperadorCtr = [];
 switch ($Qn_agd) {
     case "a":
         $tabla = "p_agregados";
@@ -107,7 +107,7 @@ switch ($Qn_agd) {
     case "c":
         $tabla = "p_n_agd";
         $aWhereCtr['id_ubi'] = $Qid_ubi;
-        $aOperadorCtr = array();
+        $aOperadorCtr = [];
         break;
     default:
         $tabla = "p_n_agd";
@@ -116,13 +116,13 @@ switch ($Qn_agd) {
 // primero selecciono los centros
 $GesCentrosDl = new GestorCentroDl();
 $cCentros = $GesCentrosDl->getCentros($aWhereCtr, $aOperadorCtr);
-$a_valores = array();
+$a_valores = [];
 foreach ($cCentros as $oCentroDl) {
     $id_ubi = $oCentroDl->getId_ubi();
     $aGrupos[$id_ubi] = $oCentroDl->getNombre_ubi();
 
-    $aWhere = array();
-    $aOperador = array();
+    $aWhere = [];
+    $aOperador = [];
     $aWhere['situacion'] = 'A';
     $aWhere['id_ctr'] = $id_ubi;
     $aWhere['_ordre'] = 'apellido1,apellido2,nom';

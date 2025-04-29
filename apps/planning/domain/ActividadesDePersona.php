@@ -35,7 +35,7 @@ class ActividadesDePersona
         $a_actividades = [];
         $a_actividades2 = [];
         foreach ($cPersonas as $oPersona) {
-            $aActivPersona = array();
+            $aActivPersona = [];
             $id_nom = $oPersona->getId_nom();
             $nombre = $oPersona->getPrefApellidosNombre();
 
@@ -52,7 +52,7 @@ class ActividadesDePersona
             $persona[$p] = "p#$id_nom#$nombre#$nombre_ubi";
 
             // Seleccionar sólo las del periodo y actuales o terminadas
-            $aWhere = array();
+            $aWhere = [];
             $aOperador = [];
             $aWhere['f_ini'] = "'$fin_iso'";
             $aOperador['f_ini'] = '<=';

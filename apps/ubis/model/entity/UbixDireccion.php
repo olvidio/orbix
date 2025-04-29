@@ -105,7 +105,7 @@ abstract class UbixDireccion extends ClasePropiedades
         } else {
             $bInsert = false;
         }
-        $aDades = array();
+        $aDades = [];
         $aDades['propietario'] = $this->bpropietario;
         $aDades['principal'] = $this->bprincipal;
         array_walk($aDades, 'core\poner_null');

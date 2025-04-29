@@ -18,7 +18,7 @@ require_once("apps/core/global_object.inc");
 $Qid_usuario = (integer)filter_input(INPUT_POST, 'id_usuario');
 
 $url_lista_backend = Hash::link(ConfigGlobal::getWeb()
-    . '/apps/usuarios/controller/usuario_grupo_del_lst.php'
+    . '/src/usuarios/infrastructure/controllers/usuario_grupo_del_lst.php'
 );
 
 $oHash = new Hash();

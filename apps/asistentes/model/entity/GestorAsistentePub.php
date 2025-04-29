@@ -57,7 +57,7 @@ class GestorAsistentePub extends ClaseGestor
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
             return false;
         }
-        $aId_nom = array();
+        $aId_nom = [];
         foreach ($oDbl->query($sQuery) as $aDades) {
             $aId_nom[] = $aDades['id_nom'];
         }
@@ -95,13 +95,13 @@ class GestorAsistentePub extends ClaseGestor
      * @param array aOperators associatiu amb els valors dels operadors que cal aplicar a cada variable
      * @return array|void
      */
-    function getAsistentesPub($aWhere = array(), $aOperators = array())
+    function getAsistentesPub($aWhere = [], $aOperators = array())
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $oAsistentePubSet = new Set();
         $oCondicion = new Condicion();
-        $aCondi = array();
+        $aCondi = [];
         foreach ($aWhere as $camp => $val) {
             if ($camp === '_ordre') continue;
             $sOperador = isset($aOperators[$camp]) ? $aOperators[$camp] : '';

@@ -4,13 +4,13 @@ use actividades\model\entity\GestorTipoDeActividad;
 use core\ConfigGlobal;
 use core\ViewTwig;
 use permisos\model\PermisosActividades;
-use web\Desplegable;
-use web\Hash;
-use web\TiposActividades;
 use procesos\model\entity\GestorActividadFase;
 use procesos\model\entity\GestorPermUsuarioActividad;
 use procesos\model\PermAccion;
-use usuarios\model\entity\GrupoOUsuario;
+use src\usuarios\application\repositories\GrupoRepository;
+use web\Desplegable;
+use web\Hash;
+use web\TiposActividades;
 use function core\is_true;
 
 // INICIO Cabecera global de URL de controlador *********************************
@@ -46,7 +46,8 @@ $Qdl_propia = is_true($Qdl_propia) ? 't' : 'f';
 $Qquien = (string)filter_input(INPUT_POST, 'quien');
 $Qque = (string)filter_input(INPUT_POST, 'que');
 
-$oUsuario = new GrupoOUsuario(array('id_usuario' => $Qid_usuario)); // La tabla y su heredada
+$GrupoRepository = new GrupoRepository();
+$oUsuario = $GrupoRepository->findById($Qid_usuario); // La tabla y su heredada
 $nombre = $oUsuario->getUsuario();
 
 $aAfecta_a = PermisosActividades::AFECTA;
@@ -76,7 +77,7 @@ $oActividadTipo->setNom_tipo($nom_tipo);
 $oActividadTipo->setPara('procesos');
 $perm_jefe = FALSE;
 if ($_SESSION['oConfig']->is_jefeCalendario()
-    || (($_SESSION['oPerm']->have_perm_oficina('des') || $_SESSION['oPerm']->have_perm_oficina('vcsd')) && ConfigGlobal::mi_sfsv() == 1)
+    || (($_SESSION['oPerm']->have_perm_oficina('des') || $_SESSION['oPerm']->have_perm_oficina('vcsd')) && ConfigGlobal::mi_sfsv() === 1)
     || ($_SESSION['oPerm']->have_perm_oficina('calendario'))
 ) {
     $perm_jefe = TRUE;
@@ -120,7 +121,7 @@ foreach ($aAfecta_a as $afecta_a_txt => $num) {
 
     $oDesplPermOn = new Desplegable('perm_on[]', $aOpcionesAction, $perm_on, false);
     $oDesplPermOff = new Desplegable('perm_off[]', $aOpcionesAction, $perm_off, false);
-    $chk = ($afecta_a == $num) ? 'checked' : '';
+    $chk = ($afecta_a === $num) ? 'checked' : '';
 
     $aPerm[] = ['afecta_a' => $afecta_a_txt,
         'nameAfecta_a' => "afecta_a[$i]",

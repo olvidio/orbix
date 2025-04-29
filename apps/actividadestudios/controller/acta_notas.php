@@ -85,7 +85,7 @@ $nom_activ = $oActividad->getNom_activ();
 $GesMatriculas = new GestorMatricula();
 $cMatriculados = $GesMatriculas->getMatriculas(array('id_asignatura' => $id_asignatura, 'id_activ' => $id_activ));
 $matriculados = count($cMatriculados);
-$aPersonasMatriculadas = array();
+$aPersonasMatriculadas = [];
 if ($matriculados > 0) {
     // para ordenar
     $msg_err = '';

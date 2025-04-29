@@ -165,7 +165,7 @@ switch ($que) {
         //$cCentros = $GesCentros->getCentros(array('tipo_ctr'=>'^'.$tipo_persona),array('tipo_ctr'=>'~'));
         //$cCentros = $GesCentros->getCentros(array('tipo_ctr'=>'^[na]'),array('tipo_ctr'=>'~'));
         $cCentros = $GesCentros->getCentros();
-        $a_centros = array();
+        $a_centros = [];
         foreach ($cCentros as $oCentro) {
             $id_ubi = $oCentro->getId_ubi();
             $ctr = $oCentro->getNombre_ubi();

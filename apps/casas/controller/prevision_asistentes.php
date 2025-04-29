@@ -123,7 +123,7 @@ foreach ($cActividades as $oActividad) {
     $a_valores[$i]['previstas'] = ['editable' => 'true', 'valor' => $num_asistentes_previstos];
 }
 
-$a_cabeceras = array();
+$a_cabeceras = [];
 $a_cabeceras[] = array('name' => _("id_activ"), 'field' => 'id', 'visible' => 'no');
 $a_cabeceras[] = array('name' => _("actividad"), 'field' => 'actividad', 'width' => 180);
 $a_cabeceras[] = array('name' => _("plazas"), 'title' => _("plazas de la casa"), 'field' => 'plazas', 'width' => 20);

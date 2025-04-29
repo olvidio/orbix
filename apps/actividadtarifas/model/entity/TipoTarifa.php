@@ -117,7 +117,7 @@ class TipoTarifa extends ClasePropiedades
         } else {
             $bInsert = false;
         }
-        $aDades = array();
+        $aDades = [];
         $aDades['modo'] = $this->imodo;
         $aDades['letra'] = $this->sletra;
         $aDades['sfsv'] = $this->isfsv;

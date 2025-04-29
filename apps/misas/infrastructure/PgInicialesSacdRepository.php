@@ -46,7 +46,7 @@ class PgInicialesSacdRepository extends ClaseRepository implements InicialesSacd
         $nom_tabla = $this->getNomTabla();
         $EncargoDiaSet = new Set();
         $oCondicion = new Condicion();
-        $aCondicion = array();
+        $aCondicion = [];
         foreach ($aWhere as $camp => $val) {
             if ($camp === '_ordre') {
                 continue;

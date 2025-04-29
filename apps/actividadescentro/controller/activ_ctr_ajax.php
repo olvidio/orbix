@@ -347,7 +347,7 @@ switch ($Qque) {
 
         $i = 0;
         $sin = 0;
-        $a_valores = array();
+        $a_valores = [];
         $a_NombreCasa = [];
         $a_FechaIni = [];
         foreach ($cActividades as $oActividad) {
@@ -383,7 +383,7 @@ switch ($Qque) {
 
                 $GesCtrEncargados = new GestorCentroEncargado();
                 $cCtrsEncargados = $GesCtrEncargados->getCentrosEncargadosActividad($id_activ);
-                $a_centros = array();
+                $a_centros = [];
                 if ($oPermCtr->have_perm_activ('ver') === true) { // sólo si tiene permiso
                     foreach ($cCtrsEncargados as $oCentro) {
                         $id_ubi = $oCentro->getId_ubi();

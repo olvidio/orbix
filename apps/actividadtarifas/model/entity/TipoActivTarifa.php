@@ -146,7 +146,7 @@ class TipoActivTarifa extends ClasePropiedades
         } else {
             $bInsert = false;
         }
-        $aDades = array();
+        $aDades = [];
         $aDades['id_tarifa'] = $this->iid_tarifa;
         $aDades['id_tipo_activ'] = $this->iid_tipo_activ;
         $aDades['id_serie'] = $this->iid_serie;

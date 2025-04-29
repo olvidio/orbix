@@ -153,7 +153,7 @@ if ($Qque === 3) { //paso las matrículas a notas definitivas (Grabar e imprimir
             $aWhere['_ordre'] = 'id_nivel DESC';
             $cPersonaNotas = $GesPersonaNotas->getPersonaNotas($aWhere, $aOperador);
             $id_op = '';
-            $aOpSuperadas = array();
+            $aOpSuperadas = [];
             $j = 0;
             $id_nivel = 0;
             foreach ($cPersonaNotas as $oPersonaNota1) {

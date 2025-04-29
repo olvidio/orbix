@@ -3,13 +3,15 @@
 namespace core;
 
 use config\model\Config;
-use menus\model\PermisoMenu;
 use permisos\model\PermDl;
 use permisos\model\PermisosActividades;
 use permisos\model\PermisosActividadesTrue;
-use usuarios\model\entity\GestorPermMenu;
-use usuarios\model\entity\GestorUsuarioGrupo;
-use usuarios\model\entity\Usuario;
+use src\menus\domain\PermisoMenu;
+use src\usuarios\application\repositories\GrupoRepository;
+use src\usuarios\application\repositories\PermMenuRepository;
+use src\usuarios\application\repositories\RoleRepository;
+use src\usuarios\application\repositories\UsuarioGrupoRepository;
+use src\usuarios\application\repositories\UsuarioRepository;
 use web\Hash;
 use web\Posicion;
 use zonassacd\model\entity\GestorZona;
@@ -317,13 +319,18 @@ if ((ConfigGlobal::mi_region() === ConfigGlobal::mi_delef()) && !isset($_SESSION
 if (ConfigGlobal::is_app_installed('menus')) {
     if (empty($_SESSION['iPermMenus'])) { // con hacerlo una vez basta.
         // Grupos
-        $oGesGrupo = new GestorUsuarioGrupo();
-        $cGrupos = $oGesGrupo->getUsuariosGrupos(array('id_usuario' => ConfigGlobal::mi_id_usuario()));
+        $UsuarioGrupoRepository = new UsuarioGrupoRepository();
+        $GrupoRepository = new GrupoRepository();
+        $UsuarioRepository = new UsuarioRepository();
+        $RoleRepository = new RoleRepository();
+        $aRoles = $RoleRepository->getArrayRoles();
+
+        $cGrupos = $UsuarioGrupoRepository->getUsuariosGrupos(array('id_usuario' => ConfigGlobal::mi_id_usuario()));
         $iperm_menu = 0;
+        $PermMenuRepository = new PermMenuRepository();
         foreach ($cGrupos as $UsuarioGrupo) {
             $id_grupo = $UsuarioGrupo->getId_grupo();
-            $oGesPermMenu = new GestorPermMenu();
-            $cPermMenu = $oGesPermMenu->getPermMenus(array('id_usuario' => $id_grupo));
+            $cPermMenu = $PermMenuRepository->getPermMenus(array('id_usuario' => $id_grupo));
             foreach ($cPermMenu as $oPermMenu) {
                 // Or (inclusive or) 	Bits that are set in either $a or $b are set.
                 $iperm_menu = $iperm_menu | $oPermMenu->getMenu_perm();
@@ -332,9 +339,9 @@ if (ConfigGlobal::is_app_installed('menus')) {
         // añadir el permiso de 'jefeZona'
         $isJefeZona = FALSE;
         $id_usuario = ConfigGlobal::mi_id_usuario();
-        $oMiUsuario = new Usuario($id_usuario);
-
-        if ($oMiUsuario->isRole('p-sacd')) { //sacd
+        $oMiUsuario = $UsuarioRepository->findById($id_usuario);
+        $id_role = $oMiUsuario->getId_role();
+        if (!empty($aRoles[$id_role]) && ($aRoles[$id_role] === 'p_sacd')) {
             $id_nom = $oMiUsuario->getId_pau();
             if (!empty($id_nom)) {
                 $oGesZonas = new GestorZona();

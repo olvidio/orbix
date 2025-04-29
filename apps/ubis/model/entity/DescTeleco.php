@@ -125,7 +125,7 @@ class DescTeleco extends ClasePropiedades
         } else {
             $bInsert = false;
         }
-        $aDades = array();
+        $aDades = [];
         $aDades['orden'] = $this->iorden;
         $aDades['tipo_teleco'] = $this->stipo_teleco;
         $aDades['desc_teleco'] = $this->sdesc_teleco;

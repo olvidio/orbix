@@ -86,7 +86,7 @@ class ActividadTipo
         }
 
 
-        $array2 = array();
+        $array2 = [];
         if ($_SESSION['oPerm']->have_perm_oficina('est')) {
             $array_n = array(1 => 'n', 3 => 'agd');
             $array2 = array_merge($array2, $array_n);

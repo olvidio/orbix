@@ -81,10 +81,10 @@ if (isset($_POST['stack'])) {
     $Qcentro = (string)filter_input(INPUT_POST, 'centro');
     $Qna = (string)filter_input(INPUT_POST, 'na');
 
-    $aWhere = array();
-    $aOperador = array();
-    $aWhereCtr = array();
-    $aOperadorCtr = array();
+    $aWhere = [];
+    $aOperador = [];
+    $aWhereCtr = [];
+    $aOperadorCtr = [];
     $aWhere['situacion'] = 'A';
     $aWhere['_ordre'] = 'apellido1,apellido2,nom';
     if (!empty($Qapellido1)) {
@@ -120,11 +120,11 @@ if (!empty($aWhereCtr)) { // si busco por centro sólo puede ser de casa
     $GesCentroDl = new GestorCentroDl();
     $cCentros = $GesCentroDl->getCentros($aWhereCtr, $aOperadorCtr);
     // por si hay más de uno.
-    $cPersonas = array();
+    $cPersonas = [];
     foreach ($cCentros as $oCentro) {
         $id_ubi = $oCentro->getId_ubi();
         $aWhere['id_ctr'] = $id_ubi;
-        if (!isset($aOperador)) $aOperador = array();
+        if (!isset($aOperador)) $aOperador = [];
         $GesPersonas = new GestorPersonaDl();
         $cPersonas2 = $GesPersonas->getPersonasDl($aWhere, $aOperador);
         if (is_array($cPersonas2) && count($cPersonas2) >= 1) {
@@ -194,7 +194,7 @@ $a_cabeceras = array(_("tipo"),
 );
 
 $i = 0;
-$a_valores = array();
+$a_valores = [];
 if (isset($Qid_sel) && !empty($Qid_sel)) {
     $a_valores['select'] = $Qid_sel;
 }

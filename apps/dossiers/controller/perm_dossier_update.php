@@ -33,7 +33,7 @@ switch ($Qque) {
         break;
 }
 
-$campos_chk = empty($Qcampos_chk) ? array() : explode('!', $Qcampos_chk);
+$campos_chk = empty($Qcampos_chk) ? [] : explode('!', $Qcampos_chk);
 $oTipoDossier->DBCarregar();
 $oDbl = $oTipoDossier->getoDbl();
 $cDatosCampo = $oTipoDossier->getDatosCampos();

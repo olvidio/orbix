@@ -120,7 +120,7 @@ foreach ($date_range as $date) {
 //        $data_sacd = [];
 $aWhere = [];
 $aWhere['id_zona'] = $Qid_zona;
-$aOperador = array();
+$aOperador = [];
 $GesZonasSacd = new GestorZonaSacd();
 $cZonaSacd = $GesZonasSacd->getZonasSacds($aWhere, $aOperador);
 $contador_1a_sacd = [];
@@ -273,7 +273,7 @@ foreach ($cEncargoTipos as $oEncargoTipo) {
 $data_cuadricula = [];
 $orden='prioridad';
 
-$hay_bendicion=array();
+$hay_bendicion=[];
 // Miro qué días hay bendición
 foreach ($date_range as $date) {
     $bendicion='NO';

@@ -3,7 +3,6 @@
 use core\ConfigGlobal;
 use core\ViewPhtml;
 use frontend\shared\PostRequest;
-use usuarios\model\entity\Usuario;
 use web\Hash;
 
 /**
@@ -20,12 +19,12 @@ require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
 
-$oMiUsuario = new Usuario(ConfigGlobal::mi_id_usuario());
+$oMiUsuario = ConfigGlobal::MiUsuario();
 $id_usuario = $oMiUsuario->getId_usuario();
 
 //////////////////////// Datos del usuario ///////////////////////////////////////////////////
 $url_usuario_form_backend = Hash::link(ConfigGlobal::getWeb()
-    . '/apps/usuarios/controller/usuario_info.php'
+    . '/src/usuarios/infrastructure/controllers/usuario_info.php'
 );
 
 $oHash = new Hash();
@@ -48,7 +47,7 @@ $a_camposHidden = array(
 );
 $oHash->setArraycamposHidden($a_camposHidden);
 
-$url_usuario_update = ConfigGlobal::getWeb() . '/apps/usuarios/controller/usuario_check_pwd.php';
+$url_usuario_update = ConfigGlobal::getWeb() . '/src/usuarios/infrastructure/controllers/usuario_check_pwd.php';
 $oHash2 = new Hash();
 $oHash2->setUrl($url_usuario_update);
 $oHash2->setCamposForm('id_usuario!password');

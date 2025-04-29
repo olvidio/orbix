@@ -17,7 +17,7 @@ $oPosicion->recordar();
 
 // muestra los ctr que NO tienen el documento.
 $url_lista_backend = Hash::link(ConfigGlobal::getWeb()
-    . '/apps/inventario/controller/lista_tipo_doc.php'
+    . '/src/inventario/controller/lista_tipo_doc.php'
 );
 $oHash = new Hash();
 $oHash->setUrl($url_lista_backend);

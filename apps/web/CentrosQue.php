@@ -157,7 +157,7 @@ class CentrosQue
 
     function setCentros($sQue)
     {
-        $this->aCentros = array();
+        $this->aCentros = [];
         switch ($sQue) {
             case 'all':
                 $this->aCentros[1] = _("centros sólo sv");

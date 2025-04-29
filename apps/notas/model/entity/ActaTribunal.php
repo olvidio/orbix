@@ -140,7 +140,7 @@ class ActaTribunal extends ClasePropiedades
         } else {
             $bInsert = false;
         }
-        $aDades = array();
+        $aDades = [];
         $aDades['acta'] = $this->sacta;
         $aDades['examinador'] = $this->sexaminador;
         $aDades['orden'] = $this->iorden;

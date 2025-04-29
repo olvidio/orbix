@@ -4,8 +4,6 @@ use core\ConfigGlobal;
 use core\ViewPhtml;
 use frontend\shared\PostRequest;
 use permisos\model\PermDl;
-use usuarios\model\entity\GrupoOUsuario;
-use usuarios\model\entity\PermMenu;
 use web\Hash;
 
 // INICIO Cabecera global de URL de controlador *********************************
@@ -35,7 +33,7 @@ if (!empty($a_sel)) { //vengo de un checkbox
 }
 
 $url = Hash::link(ConfigGlobal::getWeb()
-    . '/apps/usuarios/controller/perm_menu_info.php'
+    . '/src/usuarios/infrastructure/controllers/perm_menu_info.php'
 );
 
 $oHash = new Hash();

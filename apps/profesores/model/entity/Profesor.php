@@ -155,7 +155,7 @@ class Profesor extends ClasePropiedades
         } else {
             $bInsert = false;
         }
-        $aDades = array();
+        $aDades = [];
         $aDades['escrito_nombramiento'] = $this->sescrito_nombramiento;
         $aDades['f_nombramiento'] = $this->df_nombramiento;
         $aDades['id_tipo_profesor'] = $this->iid_tipo_profesor;

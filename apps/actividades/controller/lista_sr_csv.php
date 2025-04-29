@@ -15,11 +15,12 @@
 use actividades\model\entity\GestorActividad;
 use actividadescentro\model\entity\GestorCentroEncargado;
 use core\ConfigGlobal;
+use src\usuarios\application\repositories\PreferenciaRepository;
+use src\usuarios\domain\entity\Preferencia;
+use ubis\model\entity\Casa;
 use web\Lista;
 use web\Periodo;
 use web\TiposActividades;
-use ubis\model\entity\Casa;
-use usuarios\model\entity\Preferencia;
 use function core\is_true;
 
 require_once("apps/core/global_header.inc");
@@ -64,11 +65,17 @@ $aPref = ['status' => $json_status,
 $json_busqueda = json_encode($aPref);
 $id_usuario = ConfigGlobal::mi_id_usuario();
 $tipo = 'busqueda_activ_sr';
-$oPref = new Preferencia(array('id_usuario' => $id_usuario, 'tipo' => $tipo));
-$oPref->setPreferencia($json_busqueda);
-if ($oPref->DBGuardar() === false) {
+$PreferenciaRepository = new PreferenciaRepository();
+$oPreferencia = $PreferenciaRepository->findById($id_usuario, $tipo);
+if ($oPreferencia === null) {
+    $oPreferencia = new Preferencia();
+    $oPreferencia->setId_usuario($id_usuario);
+    $oPreferencia->setTipo($tipo);
+}
+$oPreferencia->setPreferencia($json_busqueda);
+if ($PreferenciaRepository->Guardar($oPreferencia) === false) {
     echo _("hay un error, no se ha guardado la preferencia");
-    echo "\n" . $oPref->getErrorTxt();
+    echo "\n" . $PreferenciaRepository->getErrorTxt();
 }
 
 // Condiciones de búsqueda.
@@ -127,7 +134,7 @@ $oPeriodo->setPeriodo($Qperiodo);
 $inicioIso = $oPeriodo->getF_ini_iso();
 $finIso = $oPeriodo->getF_fin_iso();
 // periodo.
-if (!empty($Qperiodo) && $Qperiodo == 'desdeHoy') {
+if (!empty($Qperiodo) && $Qperiodo === 'desdeHoy') {
     $aWhere['f_fin'] = "'$inicioIso','$finIso'";
     $aOperador['f_fin'] = 'BETWEEN';
 } else {
@@ -175,7 +182,7 @@ $cActividades = array_merge($cActividadesxTipo, $cActividadesxUbi);
 
 $titulo = ucfirst(_("listado de actividades"));
 
-$a_cabeceras = array();
+$a_cabeceras = [];
 $a_cabeceras[] = ucfirst(_("status"));
 $a_cabeceras[] = array('name' => ucfirst(_("empieza")), 'class' => 'fecha');
 $a_cabeceras[] = array('name' => ucfirst(_("termina")), 'class' => 'fecha');
@@ -186,7 +193,7 @@ $a_cabeceras[] = ucfirst(_("tipo actividad"));
 $a_cabeceras[] = ucfirst(_("lugar"));
 $a_cabeceras[] = ucfirst(_("centro"));
 
-$a_valores = array();
+$a_valores = [];
 $i = 0;
 foreach ($cActividades as $oActividad) {
     $i++;
@@ -222,7 +229,7 @@ foreach ($cActividades as $oActividad) {
             || ($_SESSION['oPerm']->have_perm_oficina('vcsd'))
             || ($_SESSION['oPerm']->have_perm_oficina('des'))) and !($_SESSION['oPerm']->have_perm_oficina('admin'))
     ) {
-        if ($snom_tipo == "(sin especificar)") {
+        if ($snom_tipo === "(sin especificar)") {
             $snom_tipo = "";
         }
     }
@@ -262,13 +269,13 @@ $oTabla->setId_tabla('lista_activ');
 $oTabla->setCabeceras($a_cabeceras);
 $oTabla->setDatos($a_valores);
 
-if ($Qque == 'file') {
+if ($Qque === 'file') {
     $filename = 'actividades_sr.csv';
     $oTabla->getCsv($filename);
     die();
 }
 
-if ($Qque == 'lista') {
+if ($Qque === 'lista') {
     $oPosicion->recordar();
 
     $html = $oTabla->mostrar_tabla();

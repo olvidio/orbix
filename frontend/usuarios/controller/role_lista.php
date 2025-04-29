@@ -33,7 +33,7 @@ if (isset($_POST['stack'])) {
 }
 
 $url_lista_backend = Hash::link(ConfigGlobal::getWeb()
-    . '/apps/usuarios/controller/role_lista.php'
+    . '/src/usuarios/infrastructure/controllers/role_lista.php'
 );
 
 $oHash = new Hash();

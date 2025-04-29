@@ -174,7 +174,7 @@ class CambioUsuarioObjetoPref extends ClasePropiedades
         } else {
             $bInsert = FALSE;
         }
-        $aDades = array();
+        $aDades = [];
         $aDades['id_usuario'] = $this->iid_usuario;
         $aDades['dl_org'] = $this->sdl_org;
         $aDades['id_tipo_activ_txt'] = $this->sid_tipo_activ_txt;

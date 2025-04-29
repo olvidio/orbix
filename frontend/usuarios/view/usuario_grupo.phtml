@@ -31,7 +31,7 @@ use core\ConfigGlobal;
             });
     }
     fnjs_add_grup = function (param) {
-        let url = '<?= ConfigGlobal::getWeb() ?>/apps/usuarios/controller/usuario_grupo_add.php';
+        let url = '<?= ConfigGlobal::getWeb() ?>/src/usuarios/infrastructure/controllers/usuario_grupo_add.php';
         let request = $.ajax({
             data: param,
             url: url,
@@ -47,7 +47,7 @@ use core\ConfigGlobal;
         });
     }
     fnjs_del_grup = function (param) {
-        let url = '<?= ConfigGlobal::getWeb() ?>/apps/usuarios/controller/usuario_grupo_del.php';
+        let url = '<?= ConfigGlobal::getWeb() ?>/src/usuarios/infrastructure/controllers/usuario_grupo_del.php';
         let request = $.ajax({
             data: param,
             url: url,

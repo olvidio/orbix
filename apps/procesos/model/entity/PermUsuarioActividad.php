@@ -159,7 +159,7 @@ class PermUsuarioActividad extends ClasePropiedades
         } else {
             $bInsert = FALSE;
         }
-        $aDades = array();
+        $aDades = [];
         $aDades['id_usuario'] = $this->iid_usuario;
         $aDades['dl_propia'] = $this->bdl_propia;
         $aDades['id_tipo_activ_txt'] = $this->sid_tipo_activ_txt;

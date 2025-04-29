@@ -5,7 +5,7 @@ namespace core;
  * Esta página sirve para comprobar que los valores de los campos de
  * un formulario, se corresponden con el tipo de datos de la base de datos.
  *
- * Se le debe pasar el parametro 'tabla'
+ * Se le debe pasar el parámetro 'tabla'
  *
  * @package    delegacion
  * @subpackage    actividades
@@ -14,7 +14,7 @@ namespace core;
  *
  */
 /**
- * Para asegurar que inicia la sesion, y poder acceder a los permisos
+ * Para asegurar que inicia la sesión, y poder acceder a los permisos
  */
 // INICIO Cabecera global de URL de controlador *********************************
 require_once("apps/core/global_header.inc");
@@ -26,6 +26,12 @@ require_once("apps/core/global_object.inc");
 $cDatosCampos = false;
 
 $Qcc_obj = (string)filter_input(INPUT_POST, 'cc_obj');
+
+// si es nuevo, ya lo hare con value objects:
+if (!empty($Qcc_obj) && str_contains($Qcc_obj,'src')) {
+    exit();
+}
+
 if (!empty($Qcc_obj)) {
     $Object = new $Qcc_obj;
     $oDbl = $Object->getoDbl();

@@ -36,7 +36,7 @@ class GestorPersonaOut extends GestorPersonaGlobal
      * @param array aOperators associatiu amb els valors dels operadors que cal aplicar a cada variable
      * @return array Una col·lecció d'objectes de tipus PersonaOut
      */
-    function getPersonasOut($aWhere = array(), $aOperators = array())
+    function getPersonasOut($aWhere = [], $aOperators = array())
     {
         return parent::getPersonasObj('personas\\model\entity\\PersonaOut', $aWhere, $aOperators);
 

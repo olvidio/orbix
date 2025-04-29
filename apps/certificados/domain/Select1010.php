@@ -109,7 +109,7 @@ class Select1010
         $cCertificados = $certificadoDlRepository->getCertificados($aWhere);
 
         $i = 0;
-        $a_valores = array();
+        $a_valores = [];
         foreach ($cCertificados as $oCertificado) {
             $i++;
 

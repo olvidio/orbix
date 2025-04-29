@@ -47,7 +47,7 @@ class GestorZonaSacd extends ClaseGestor
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
-        $aLista = array();
+        $aLista = [];
         $sQuery = "SELECT id_nom
 				FROM $nom_tabla
 				WHERE id_zona=$iid_zona
@@ -93,13 +93,13 @@ class GestorZonaSacd extends ClaseGestor
      * @param array aOperators associatiu amb els valors dels operadors que cal aplicar a cada variable
      * @return array|void
      */
-    function getZonasSacds($aWhere = array(), $aOperators = array())
+    function getZonasSacds($aWhere = [], $aOperators = array())
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $oZonaSacdSet = new Set();
         $oCondicion = new Condicion();
-        $aCondi = array();
+        $aCondi = [];
         foreach ($aWhere as $camp => $val) {
             if ($camp === '_ordre') continue;
             $sOperador = isset($aOperators[$camp]) ? $aOperators[$camp] : '';

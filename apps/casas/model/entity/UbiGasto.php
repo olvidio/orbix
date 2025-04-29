@@ -147,7 +147,7 @@ class UbiGasto extends ClasePropiedades
         } else {
             $bInsert = FALSE;
         }
-        $aDades = array();
+        $aDades = [];
         $aDades['id_ubi'] = $this->iid_ubi;
         $aDades['f_gasto'] = $this->df_gasto;
         $aDades['tipo'] = $this->itipo;

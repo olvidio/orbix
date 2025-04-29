@@ -146,7 +146,7 @@ class EncargoSacd extends ClasePropiedades
         } else {
             $bInsert = FALSE;
         }
-        $aDades = array();
+        $aDades = [];
         $aDades['id_enc'] = $this->iid_enc;
         $aDades['id_nom'] = $this->iid_nom;
         $aDades['modo'] = $this->imodo;

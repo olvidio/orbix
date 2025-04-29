@@ -133,7 +133,7 @@ class AtnActivSacdTexto extends ClasePropiedades
         } else {
             $bInsert = FALSE;
         }
-        $aDades = array();
+        $aDades = [];
         $aDades['idioma'] = $this->sidioma;
         $aDades['clave'] = $this->sclave;
         $aDades['texto'] = $this->stexto;

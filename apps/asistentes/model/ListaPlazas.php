@@ -111,7 +111,7 @@ class ListaPlazas
 
         $k = 0;
         $centros = '';
-        $aGrupos = array();
+        $aGrupos = [];
         $a_activ = [];
         $msg_err = '';
         $gesActividadPlazas = new GestorResumenPlazas();
@@ -171,7 +171,7 @@ class ListaPlazas
                     $cl = 0;
                     $num = 0; //número total de asistentes
                     $plazas_pedidas = 0; // plazas pedidas o 'en espera'
-                    $aIdCargos = array(); // id_nom de los cargos para no ponerlos como asistentes.
+                    $aIdCargos = []; // id_nom de los cargos para no ponerlos como asistentes.
                     foreach ($cActividadCargos as $oActividadCargo) {
                         $id_nom = $oActividadCargo->getId_nom();
                         $aIdCargos[] = $id_nom;

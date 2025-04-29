@@ -96,11 +96,11 @@ if ($botones == 1) {
         array('txt' => _("eliminar"), 'click' => "fnjs_eliminar(\"#seleccionados\")")
     );
 } else {
-    $a_botones = array();
+    $a_botones = [];
 }
 
-$a_cabeceras = array();
-$a_valores = array();
+$a_cabeceras = [];
+$a_valores = [];
 $c = 0;
 foreach ($Coleccion as $oFila) {
     $v = 0;

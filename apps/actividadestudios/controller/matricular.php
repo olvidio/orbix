@@ -91,8 +91,8 @@ if (!empty($Qid_nom)) {
 
 // para cada persona:
 $m = 0;
-$aWhere = array();
-$aOperadores = array();
+$aWhere = [];
+$aOperadores = [];
 // de estudios ca-n, cv-agd
 $aWhere['status'] = \actividades\model\entity\ActividadAll::STATUS_ACTUAL;
 $aWhere['f_ini'] = "'$inicurs_ca','$fincurs_ca'";
@@ -101,7 +101,7 @@ $aWhere['id_tipo_activ'] = '^' . ConfigGlobal::mi_sfsv() . '(122)|(222)|(332)';
 $aOperadores['id_tipo_activ'] = '~';
 foreach ($cAlumnos as $oPersonaDl) {
     $id_nom = $oPersonaDl->getId_nom();
-    $cAsistencias = array();
+    $cAsistencias = [];
     // después me interesa el id_activ, asi que lo busco primero:
     if (empty($Qid_activ)) {
         $GesAsistentes = new GestorAsistenteDl();
@@ -138,7 +138,7 @@ foreach ($cAlumnos as $oPersonaDl) {
                 //busco las asignaturas que ya están aprobadas y las pongo en un array.
                 $GesPersonaNotas = new GestorPersonaNotaDB();
                 $cPersonaNotas = $GesPersonaNotas->getPersonaNotasSuperadas($id_nom);
-                $a_aprobadas = array();
+                $a_aprobadas = [];
                 foreach ($cPersonaNotas as $oPersonaNota) {
                     $a_aprobadas[] = $oPersonaNota->getId_asignatura();
                 }

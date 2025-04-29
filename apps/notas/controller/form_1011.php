@@ -121,7 +121,7 @@ if (!empty($Qid_asignatura_real)) { //caso de modificar
 
     $GesProfes = new GestorProfesor();
     $cProfesores = $GesProfes->getProfesores();
-    $aProfesores = array();
+    $aProfesores = [];
     $msg_err = '';
     foreach ($cProfesores as $oProfesor) {
         $id_nom = $oProfesor->getId_nom();
@@ -141,9 +141,9 @@ if (!empty($Qid_asignatura_real)) { //caso de modificar
     $oDesplProfesores->setOpcion_sel($id_preceptor);
     $oDesplProfesores->setBlanco(1);
 
-    $cOpcionales = array();
-    $aFaltan = array();
-    $oDesplNiveles = array();
+    $cOpcionales = [];
+    $aFaltan = [];
+    $oDesplNiveles = [];
 } else { //caso de nueva asignatura
     $mod = "nuevo";
     $id_situacion = '';
@@ -158,18 +158,18 @@ if (!empty($Qid_asignatura_real)) { //caso de modificar
     $detalle = '';
     $epoca = '';
     $id_activ = '';
-    $oDesplProfesores = array();
+    $oDesplProfesores = [];
     // todas las asignaturas
-    $aWhere = array();
-    $aOperador = array();
+    $aWhere = [];
+    $aOperador = [];
     $aWhere['status'] = 't';
     $aWhere['id_nivel'] = 3000;
     $aOperador['id_nivel'] = '<';
     $aWhere['_ordre'] = 'id_nivel';
     $cAsignaturas = $GesAsignaturas->getAsignaturas($aWhere, $aOperador);
     // todas las opcionales
-    $aWhere = array();
-    $aOperador = array();
+    $aWhere = [];
+    $aOperador = [];
     $aWhere['status'] = 't';
     $aWhere['id_nivel'] = '3000,5000';
     $aOperador['id_nivel'] = 'BETWEEN';
@@ -185,8 +185,8 @@ if (!empty($Qid_asignatura_real)) { //caso de modificar
         $c++;
         $cond .= $Nota->getId_situacion();
     }
-    $aWhere = array();
-    $aOperador = array();
+    $aWhere = [];
+    $aOperador = [];
     $aWhere['id_situacion'] = $cond;
     $aOperador['id_situacion'] = '~';
     $aWhere['id_nom'] = $Qid_pau;
@@ -195,14 +195,14 @@ if (!empty($Qid_asignatura_real)) { //caso de modificar
     $aWhere['_ordre'] = 'id_nivel';
     $GesPersonaNotas = new GestorPersonaNotaDB();
     $cAsignaturasSuperadas = $GesPersonaNotas->getPersonaNotas($aWhere, $aOperador);
-    $aSuperadas = array();
+    $aSuperadas = [];
     foreach ($cAsignaturasSuperadas as $oAsignatura) {
         $id_nivel = $oAsignatura->getId_nivel();
         $id_asignatura = $oAsignatura->getId_asignatura();
         $aSuperadas[$id_nivel] = $id_asignatura;
     }
     // asignaturas posibles
-    $aFaltan = array();
+    $aFaltan = [];
     foreach ($cAsignaturas as $oAsignatura) {
         $id_nivel = $oAsignatura->getId_nivel();
         $id_asignatura = $oAsignatura->getId_asignatura();
@@ -283,8 +283,8 @@ if (!empty($id_activ)) {
 // miro cuales son las opcionales genéricas, para la funcion
 //  fnjs_cmb_opcional de javascript.
 // la condicion es que tengan id_sector=1
-$aWhere = array();
-$aOperador = array();
+$aWhere = [];
+$aOperador = [];
 $aWhere['status'] = 't';
 $aWhere['id_sector'] = 1;
 $aWhere['id_nivel'] = 3000;

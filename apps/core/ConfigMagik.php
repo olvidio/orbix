@@ -21,11 +21,11 @@ namespace core;
 class ConfigMagik
 {
     public $PATH = null;
-    public $VARS = array();
+    public $VARS = [];
     public $SYNCHRONIZE = false;
     public $PROCESS_SECTIONS = true;
     public $PROTECTED_MODE = true;
-    public $ERRORS = array();
+    public $ERRORS = [];
 
     /**
      * @desc   Constructor of this class.
@@ -365,7 +365,7 @@ class ConfigMagik
                 return false;
             }
             // list all keys in given section
-            $list = array();
+            $list = [];
             $all = array_keys($this->VARS[$section]);
             foreach ($all as $possible_key) {
                 if (!isset($this->VARS[$possible_key]) || !is_array($this->VARS[$possible_key])) {
@@ -386,7 +386,7 @@ class ConfigMagik
      */
     function listSections()
     {
-        $list = array();
+        $list = [];
         // separate sections from normal keys
         $all = array_keys($this->VARS);
         foreach ($all as $possible_section) {

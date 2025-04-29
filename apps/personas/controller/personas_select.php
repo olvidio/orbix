@@ -9,12 +9,11 @@ use personas\model\entity\GestorPersonaNax;
 use personas\model\entity\GestorPersonaS;
 use personas\model\entity\GestorPersonaSSSC;
 use personas\model\entity\PersonaDl;
+use src\usuarios\application\repositories\PreferenciaRepository;
+use src\usuarios\domain\entity\Role;
 use ubis\model\entity\Centro;
 use ubis\model\entity\CentroDl;
 use ubis\model\entity\GestorCentroDl;
-use usuarios\model\entity\Preferencia;
-use usuarios\model\entity\Role;
-use usuarios\model\entity\Usuario;
 use web\Hash;
 use web\Lista;
 
@@ -96,14 +95,14 @@ $aGoBack = array(
 $oPosicion->setParametros($aGoBack, 1);
 
 //Si soy una persona la que consulta
-$oMiUsuario = new Usuario(ConfigGlobal::mi_id_usuario());
+$oMiUsuario = ConfigGlobal::MiUsuario();
 $miRolePau = ConfigGlobal::mi_role_pau();
 if ($miRolePau == Role::PAU_NOM) { //persona
     $id_nom = $oMiUsuario->getId_pau();
     $aWhere = ['id_nom' => $id_nom];
-    $aOperador = array();
-    $aWhereCtr = array();
-    $aOperadorCtr = array();
+    $aOperador = [];
+    $aWhereCtr = [];
+    $aOperadorCtr = [];
     // Sólo válido para las personas de la dl.
     $oPersona = new PersonaDl($id_nom);
     $id_tabla = $oPersona->getId_tabla();
@@ -132,10 +131,10 @@ if ($miRolePau == Role::PAU_NOM) { //persona
 } else {
     /*miro las condiciones. las variables son: num, agd, sup, nombre, apellido1, apellido2 */
     if (empty($sWhere)) {
-        $aWhere = array();
-        $aOperador = array();
-        $aWhereCtr = array();
-        $aOperadorCtr = array();
+        $aWhere = [];
+        $aOperador = [];
+        $aWhereCtr = [];
+        $aOperadorCtr = [];
 
         if (!empty($Qapellido1)) {
             $aWhere['apellido1'] = $Qapellido1;
@@ -240,7 +239,7 @@ switch ($tabla) {
         $obj_pau = 'PersonaNax';
         $GesPersona = new GestorPersonaNax();
         if (($cPersonas = $GesPersona->getPersonasDl($aWhere, $aOperador)) === false) {
-            $cPersonas = array();
+            $cPersonas = [];
         }
         if ($_SESSION['oPerm']->have_perm_oficina('nax')) {
             $permiso = 3;
@@ -415,14 +414,17 @@ if (!empty($Qcmb)) {
 }
 
 $i = 0;
-$a_valores = array();
-$a_personas = array();
+$a_valores = [];
+$a_personas = [];
 
 $sPrefs = '';
 $id_usuario = ConfigGlobal::mi_id_usuario();
 $tipo = 'tabla_presentacion';
-$oPref = new Preferencia(array('id_usuario' => $id_usuario, 'tipo' => $tipo));
-$sPrefs = $oPref->getPreferencia();
+$PreferenciaRepository = new PreferenciaRepository();
+$oPreferencia = $PreferenciaRepository->findById($id_usuario, $tipo);
+if ($oPreferencia !== null) {
+    $sPrefs = $oPreferencia->getPreferencia();
+}
 foreach ($cPersonas as $oPersona) {
     $i++;
     $a_val = [];

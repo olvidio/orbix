@@ -8,10 +8,11 @@ use personas\model\entity\GestorPersonaEx;
 use personas\model\entity\GestorPersonaSacd;
 use personas\model\entity\GestorPersonaSSSC;
 use personas\model\entity\PersonaSacd;
+use src\usuarios\application\repositories\RoleRepository;
+use src\usuarios\application\repositories\UsuarioRepository;
 use web\DateTimeLocal;
 use web\Hash;
 use web\Periodo;
-use usuarios\model\entity\Usuario;
 
 /**
  * Esta página muestra las actividades que tiene que atender un sacd.
@@ -68,8 +69,14 @@ $oActividadesSacdFunciones = new ActividadesSacdFunciones();
 $poblacion = $oActividadesSacdFunciones->getLugar_dl();
 $lugar_fecha = "$poblacion, $hoy_local";
 
-$oMiUsuario = new Usuario(array('id_usuario' => ConfigGlobal::mi_id_usuario()));
-if ($oMiUsuario->isRole('p-sacd')) {
+$UsuarioRepository = new UsuarioRepository();
+$oMiUsuario = $UsuarioRepository->findById(ConfigGlobal::mi_id_usuario());
+$id_role = $oMiUsuario->getId_role();
+
+$RoleRepository = new RoleRepository();
+$aRoles = $RoleRepository->getArrayRoles();
+
+if (!empty($aRoles[$id_role]) && ($aRoles[$id_role] === 'p-sacd')) {
     $Qid_nom = $oMiUsuario->getId_pau();
     $Qque = 'un_sacd';
 }
@@ -175,7 +182,7 @@ if ($Qmail === 'no') {
         $oHash->setArraycamposHidden($a_camposHidden);
         $oHash->setCamposNo('mail');
 
-        $a_campos = [ 'oPosicion' => $oPosicion,
+        $a_campos = ['oPosicion' => $oPosicion,
             'oHash' => $oHash,
             'url' => $url,
             'array_actividades' => $array_actividades,

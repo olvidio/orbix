@@ -92,6 +92,25 @@ if (isset($Q_db)) {
                     break;
             }
             break;
+        case "sv-e":
+            $oDbl = $oDBE;
+            $oDB_txt = 'oDBE';
+            $prefix = '';
+            switch ($schema) {
+                case 'publicv':
+                case 'publicf':
+                    $oDB_txt = 'oDBEP';
+                    break;
+                case 'restov':
+                case 'restof':
+                    $oDB_txt = 'oDBER';
+                    break;
+                case 'H-dlbv':
+                case 'H-dlbf':
+                    $oDB_txt = 'oDBE';
+                    break;
+            }
+            break;
         default:
             exit("Ha de dir quina base de dades");
     }
@@ -117,7 +136,7 @@ $aplicacion = !empty($Q_aplicacion) ? $Q_aplicacion : "delegación";
 
 // crear el directorio legacy si no existe
 $dir_legacy = ServerConf::DIR . '/apps/' . $grupo . '/legacy';
-if (!is_dir($dir_legacy) && !mkdir($dir_legacy) && !is_dir($dir_legacy)) {
+if (!is_dir($dir_legacy) && !mkdir($dir_legacy, 0777, true) && !is_dir($dir_legacy)) {
     throw new RunTimeException(sprintf('Directory "%s" was not created', $dir_legacy));
 }
 
@@ -220,7 +239,7 @@ $guardar_time = "";
 $guardar_fechas = "";
 $guardar_json = "";
 $err_bool = "";
-$a_auto = array();
+$a_auto = [];
 // una primera vuelta para cargar excepciones...
 foreach ($oDbl->query($sql) as $row) {
     $nomcamp = $row['field'];
@@ -233,7 +252,7 @@ foreach ($oDbl->query($sql) as $row) {
         case '_int8':
         case '_int4':
         case '_int2':
-            $a_use_txt['array_pg2php'] = "use function core\array_pg2php";
+            $a_use_txt['array_pgInteger2php'] = "use function core\array_pgInteger2php";
             $a_use_txt['array_php2pg'] = "use function core\array_php2pg";
             break;
         case 'int8':
@@ -326,7 +345,7 @@ foreach ($oDbl->query($sql) as $row) {
             $tip = 'a_';
             $tip_val = '';
             $array_dades .= "\n\t\t\t";
-            $array_dades .= '$aDatos[\'' . $nomcamp . '\'] = array_pg2php($aDatos[\'' . $nomcamp . '\']);';
+            $array_dades .= '$aDatos[\'' . $nomcamp . '\'] = array_pgInteger2php($aDatos[\'' . $nomcamp . '\']);';
             break;
         case 'int8':
         case 'int4':
@@ -684,7 +703,7 @@ $hoy = $oHoy->getFromLocal();
 //------------------------------------ CLASE ENTIDAD -----------------------------------------------
 $txt_entidad = "<?php
 
-namespace $grupo\\domain\\entity;";
+namespace src\\$grupo\\domain\\entity;";
 if (!empty($a_use_txt['is_true'])) {
     $txt_entidad .= "\n\t" . 'use function core\is_true;';
 }
@@ -740,13 +759,13 @@ $txt_entidad .= "\n" . '}';
 // ESCRIBIR LA CLASE ---------  ENTIDAD
 
 // crear el directorio domain/entity si no existe
-$dir_entity = ServerConf::DIR . '/apps/' . $grupo . '/domain/entity';
+$dir_entity = ServerConf::DIR . '/src/' . $grupo . '/domain/entity';
 if (!is_dir($dir_entity)) {
-    if (!mkdir($dir_entity, 0774, TRUE) && !is_dir($dir_entity)) {
+    if (!mkdir($dir_entity, 0777, TRUE) && !is_dir($dir_entity)) {
         throw new RuntimeException(sprintf('Directory "%s" was not created', $dir_entity));
     }
 }
-$filename = ConfigGlobal::DIR . '/apps/' . $grupo . '/domain/entity/' . $Q_clase . '.php';
+$filename = ConfigGlobal::DIR . '/src/' . $grupo . '/domain/entity/' . $Q_clase . '.php';
 if (!$handle = fopen($filename, 'w')) {
     echo "Cannot open file ($filename)";
     die();
@@ -756,7 +775,7 @@ if (fwrite($handle, $txt_entidad) === FALSE) {
     echo "Cannot write to file ($filename)";
     die();
 }
-echo "<br>Success, wrote gestor to file ($filename)";
+echo "<br>Success, wrote entitie to file ($filename)";
 fclose($handle);
 
 // ---------------------- REPOSITORIO ------------------------------------------------
@@ -815,12 +834,12 @@ foreach ($a_use_txt as $use) {
 }
 $txt_repository = "<?php
 
-namespace $grupo\\domain\\repositories;
+namespace src\\$grupo\\application\\repositories;
 
 use PDO;
-use web\Desplegable;
-use $grupo\\domain\\entity\\$Q_clase;
-use $grupo\\infrastructure\\$pg_clase;
+use src\\$grupo\\domain\\entity\\$Q_clase;
+use src\\$grupo\\domain\\contracts\\$clase_interface;
+use src\\$grupo\\infrastructure\\repositories\\$pg_clase;
 ";
 $txt_repository .= "\n" . $use_txt;
 $txt_repository .= "
@@ -850,11 +869,10 @@ class $clase_repository implements $clase_interface
 
 $txt_interface = "<?php
 
-namespace $grupo\\domain\\repositories;
+namespace src\\$grupo\\domain\\contracts;
 
 use PDO;
-use web\Desplegable;
-use $grupo\\domain\\entity\\$Q_clase;
+use src\\$grupo\\domain\\entity\\$Q_clase;
 ";
 $txt_interface .= "\n" . $use_txt;
 $txt_interface .= "
@@ -873,7 +891,7 @@ interface $clase_interface
 
 $txt_pgRepositorio = "<?php
 
-namespace $grupo\\infrastructure;
+namespace src\\$grupo\\infrastructure\\repositories;
 
 use core\\ClaseRepository;
 use core\\Condicion;
@@ -883,9 +901,8 @@ use PDOException;
 ";
 
 $txt_pgRepositorio .= "
-use $grupo\\domain\\entity\\$Q_clase;
-use $grupo\\domain\\repositories\\$clase_interface;
-use web\\Desplegable;
+use src\\$grupo\\domain\\entity\\$Q_clase;
+use src\\$grupo\\domain\\contracts\\$clase_interface;
 ";
 
 $use_txt = '';
@@ -911,7 +928,14 @@ $txt_pgRepositorio .= '
     public function __construct()
     {
         $oDbl = $GLOBALS[\'' . $oDB_txt . '\'];
-        $this->setoDbl($oDbl);
+        $this->setoDbl($oDbl); ';
+if ($Q_db === 'sv-e' || $Q_db === 'comun') {
+    $oDB_txt2 = $oDB_txt.'_Select';
+    $txt_pgRepositorio .= '
+        $oDbl_Select = $GLOBALS[\'' . $oDB_txt2 . '\'];
+        $this->setoDbl_select($oDbl_Select); ';
+}
+$txt_pgRepositorio .= '
         $this->setNomTabla(\'' . $tabla . '\');
     }
 ';
@@ -972,12 +996,19 @@ if (!empty($a_use_txt['JsonException'])) {
 $txt_pgRepositorio .= "\n\t" . '
 	 */
 	public function get' . $clase_plural . '(array $aWhere=[], array $aOperators=[]): array|FALSE
-	{
-		$oDbl = $this->getoDbl();
+	{';
+if ($Q_db === 'sv-e' || $Q_db === 'comun') {
+    $txt_pgRepositorio .= '
+        $oDbl = $this->getoDbl_Select();';
+} else {
+    $txt_pgRepositorio .= '
+        $oDbl = $this->getoDbl();';
+}
+$txt_pgRepositorio .= '
 		$nom_tabla = $this->getNomTabla();
 		$' . $Q_clase . 'Set = new Set();
 		$oCondicion = new Condicion();
-		$aCondicion = array();';
+		$aCondicion = [];';
 $txt_pgRepositorio .= '
 		foreach ($aWhere as $camp => $val) {
 			if ($camp === \'_ordre\') { continue; }
@@ -1293,8 +1324,15 @@ if (!empty($a_use_txt['JsonException'])) {
 $txt_pgRepositorio .= "\n\t" . '
      */
     public function datosById(' . $clau_tip_txt . ' $' . $clau . '): array|bool
-    {
-        $oDbl = $this->getoDbl();
+    {';
+if ($Q_db === 'sv-e' || $Q_db === 'comun') {
+    $txt_pgRepositorio .= '
+        $oDbl = $this->getoDbl_Select();';
+} else {
+    $txt_pgRepositorio .= '
+        $oDbl = $this->getoDbl();';
+}
+$txt_pgRepositorio .= '
         $nom_tabla = $this->getNomTabla();
         if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE ' . $where . '")) === FALSE) {
 			$sClaveError = \'' . $pg_clase . '.getDatosById\';
@@ -1413,8 +1451,8 @@ $txt_pgRepositorio .= "\n}";
 
 /* ESCRIURE LA CLASSSE  PG REPOSITORY  --------------------------------- */
 // crear el directorio infrastructure si no existe
-$dir_infra = ServerConf::DIR . '/apps/' . $grupo . '/infrastructure';
-if ( !is_dir($dir_infra) && !mkdir($dir_infra) && !is_dir($dir_infra)) {
+$dir_infra = ServerConf::DIR . '/src/' . $grupo . '/infrastructure/repositories';
+if ( !is_dir($dir_infra) && !mkdir($dir_infra, 0777, true) && !is_dir($dir_infra)) {
     throw new RunTimeException(sprintf('Directory "%s" was not created', $dir_infra));
 }
 $filename = $dir_infra . '/' . $pg_clase . '.php';
@@ -1429,13 +1467,19 @@ if (fwrite($handle, $txt_pgRepositorio) === FALSE) {
 }
 echo "<br>Success, wrote (somecontent) to file ($filename)";
 fclose($handle);
+/* ESCRIURE EL DIRECTORI CONTROLLERS  --------------------------------- */
+// crear el directorio infrastructure si no existe
+$dir_infra = ServerConf::DIR . '/src/' . $grupo . '/infrastructure/controllers';
+if ( !is_dir($dir_infra) && !mkdir($dir_infra, 0777, true) && !is_dir($dir_infra)) {
+    throw new RunTimeException(sprintf('Directory "%s" was not created', $dir_infra));
+}
 
 /* ESCRIURE LA CLASSE  REPOSITORYINTERFACE  --------------------------------- */
-$dir_repositories = ServerConf::DIR . '/apps/' . $grupo . '/domain/repositories';
-if (!is_dir($dir_repositories) && !mkdir($dir_repositories) && !is_dir($dir_repositories)) {
-    throw new RunTimeException(sprintf('Directory "%s" was not created', $dir_repositories));
+$dir_contracts = ServerConf::DIR . '/src/' . $grupo . '/domain/contracts';
+if (!is_dir($dir_contracts) && !mkdir($dir_contracts, 0777, true) && !is_dir($dir_contracts)) {
+    throw new RunTimeException(sprintf('Directory "%s" was not created', $dir_contracts));
 }
-$filename = $dir_repositories . '/' . $clase_interface . '.php';
+$filename = $dir_contracts . '/' . $clase_interface . '.php';
 if (!$handle = fopen($filename, 'w')) {
     echo "Cannot open file ($filename)";
     die();
@@ -1447,11 +1491,39 @@ if (fwrite($handle, $txt_interface) === FALSE) {
 }
 echo "<br>Success, wrote (somecontent) to file ($filename)";
 fclose($handle);
+/* ESCRIURE VALUE OBJECTS  --------------------------------- */
+$dir_value = ServerConf::DIR . '/src/' . $grupo . '/domain/value_objects';
+if (!is_dir($dir_value) && !mkdir($dir_value, 0777, true) && !is_dir($dir_value)) {
+    throw new RunTimeException(sprintf('Directory "%s" was not created', $dir_value));
+}
+echo "<br>Success, create directory ($dir_value)";
+fclose($handle);
+/* ESCRIURE UN FITXER D'EXEMPLE  --------------------------------- */
+$dir_domain = ServerConf::DIR . '/src/' . $grupo . '/domain';
+if (!is_dir($dir_domain)) {
+    if (!mkdir($dir_domain, 0777, true) && !is_dir($dir_domain)) {
+        throw new \RuntimeException(sprintf('Directory "%s" was not created', $dir_domain));
+    }
+}
+$filename = $dir_domain . '/example.php';
+if (!$handle = fopen($filename, 'w')) {
+    echo "Cannot open file ($filename)";
+    die();
+}
+// Write $somecontent to our opened file.
+if (fwrite($handle, '<?php') === FALSE) {
+    echo "Cannot write to file ($filename)";
+    die();
+}
+echo "<br>Success, wrote (somecontent) to file ($filename)";
+fclose($handle);
 
 /* ESCRIURE LA CLASSE  REPOSITORY  --------------------------------- */
-$dir_repositories = ServerConf::DIR . '/apps/' . $grupo . '/domain/repositories';
+$dir_repositories = ServerConf::DIR . '/src/' . $grupo . '/application/repositories';
 if (!is_dir($dir_repositories)) {
-    mkdir($dir_repositories);
+    if (!mkdir($dir_repositories, 0777, true) && !is_dir($dir_repositories)) {
+        throw new \RuntimeException(sprintf('Directory "%s" was not created', $dir_repositories));
+    }
 }
 $filename = $dir_repositories . '/' . $clase_repository . '.php';
 if (!$handle = fopen($filename, 'w')) {
@@ -1460,6 +1532,26 @@ if (!$handle = fopen($filename, 'w')) {
 }
 // Write $somecontent to our opened file.
 if (fwrite($handle, $txt_repository) === FALSE) {
+    echo "Cannot write to file ($filename)";
+    die();
+}
+echo "<br>Success, wrote (somecontent) to file ($filename)";
+fclose($handle);
+
+/* ESCRIURE UN FITXER D'EXEMPLE  --------------------------------- */
+$dir_application = ServerConf::DIR . '/src/' . $grupo . '/application';
+if (!is_dir($dir_application)) {
+    if (!mkdir($dir_application, 0777, true) && !is_dir($dir_application)) {
+        throw new \RuntimeException(sprintf('Directory "%s" was not created', $dir_application));
+    }
+}
+$filename = $dir_application . '/example.php';
+if (!$handle = fopen($filename, 'w')) {
+    echo "Cannot open file ($filename)";
+    die();
+}
+// Write $somecontent to our opened file.
+if (fwrite($handle, '<?php') === FALSE) {
     echo "Cannot write to file ($filename)";
     die();
 }

@@ -14,10 +14,9 @@
 
 use core\ConfigGlobal;
 use core\ViewTwig;
+use src\usuarios\domain\entity\Role;
 use web\CasasQue;
 use web\DesplegableArray;
-use usuarios\model\entity\Role;
-use usuarios\model\entity\Usuario;
 use web\Hash;
 use function core\strtoupper_dlb;
 
@@ -38,7 +37,7 @@ $Qyear = (string)filter_input(INPUT_POST, 'year');
 
 $oForm = new CasasQue();
 // miro que rol tengo. Si soy casa, sólo veo la mía
-$oMiUsuario = new Usuario(ConfigGlobal::mi_id_usuario());
+$oMiUsuario = ConfigGlobal::MiUsuario();
 $miRolePau = ConfigGlobal::mi_role_pau();
 if ($miRolePau == Role::PAU_CDC) { //casa
     $id_pau = $oMiUsuario->getId_pau();

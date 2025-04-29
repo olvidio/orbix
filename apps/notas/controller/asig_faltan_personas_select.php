@@ -126,7 +126,7 @@ $a_cabeceras = array(ucfirst(_("tipo")),
 );
 
 $i = 0;
-$a_valores = array();
+$a_valores = [];
 if (isset($Qid_sel) && !empty($Qid_sel)) {
     $a_valores['select'] = $Qid_sel;
 }

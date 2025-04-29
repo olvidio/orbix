@@ -79,7 +79,7 @@ class GestorResumenPlazas
         //Conseguidas
         $gesActividadPlazas = new GestorActividadPlazas();
         // plazas de calendario de cada dl
-        $a_dl = array();
+        $a_dl = [];
         $plazas_conseguidas = 0;
         $cActividadPlazas = $gesActividadPlazas->getActividadesPlazas(array('id_activ' => $id_activ));
         foreach ($cActividadPlazas as $oActividadPlazas) {
@@ -254,7 +254,7 @@ class GestorResumenPlazas
      */
     public function getResumen()
     {
-        $a_plazas = array();
+        $a_plazas = [];
         $id_activ = $this->getId_activ();
         $gesActividadPlazas = new GestorActividadPlazas();
         $gesAsistentes = new GestorAsistente();
@@ -290,10 +290,10 @@ class GestorResumenPlazas
             $dl = $this->getDlText($id_dl);
             $dl_tabla = $oActividadPlazas->getDl_tabla();
             if (empty($a_plazas[$dl]['cedidas'])) {
-                $a_plazas[$dl]['cedidas'] = array();
+                $a_plazas[$dl]['cedidas'] = [];
             }
             if (empty($a_plazas[$dl]['conseguidas'])) {
-                $a_plazas[$dl]['conseguidas'] = array();
+                $a_plazas[$dl]['conseguidas'] = [];
             }
             //$a_plazas[$dl]['calendario'] = 0;
             if ($dl_org == $dl_tabla) {
@@ -332,7 +332,7 @@ class GestorResumenPlazas
                 $num_plazas_calendario = $aa['calendario'];
             }
             if (!array_key_exists('cedidas', $aa)) {
-                $aCedidas = array();
+                $aCedidas = [];
             } else {
                 $aCedidas = $aa['cedidas'];
             }
@@ -445,7 +445,7 @@ class GestorResumenPlazas
         $id_activ = $this->getId_activ();
         $mi_dl = ConfigGlobal::mi_delef();
 
-        $propiedad = array();
+        $propiedad = [];
         $pl_propias = $this->getPlazasPropias();
 
         if ($pl_propias > 0) {
@@ -549,8 +549,8 @@ class GestorResumenPlazas
         if (!isset($this->a_dele)) {
             $gesDelegacion = new GestorDelegacion();
             $cDelegaciones = $gesDelegacion->getDelegaciones(array('_ordre' => 'region,dl'));
-            $this->a_dele = array();
-            $this->a_id_dele = array();
+            $this->a_dele = [];
+            $this->a_id_dele = [];
             foreach ($cDelegaciones as $oDelegacion) {
                 $dl = $oDelegacion->getDl();
                 if (ConfigGlobal::mi_sfsv() == 2) {

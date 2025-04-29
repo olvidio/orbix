@@ -143,7 +143,7 @@ class Select1302
         $oCargosEnActividad = new GestorActividadCargo();
 
         $c = 0;
-        $a_valores = array();
+        $a_valores = [];
         $cCargosEnActividad = $oCargosEnActividad->getActividadCargosDeAsistente(array('id_nom' => $this->id_pau), $aWhere, $aOperator);
         foreach ($cCargosEnActividad as $oActividadCargo) {
             $c++;
@@ -246,8 +246,8 @@ class Select1302
 
     private function setLinksInsert()
     {
-        $this->aLinks_dl = array();
-        $this->aLinks_otros = array();
+        $this->aLinks_dl = [];
+        $this->aLinks_otros = [];
         $ref_perm = $this->ref_perm;
         if (empty($ref_perm)) { // si es nulo, no tengo permisos de ningún tipo
             return '';

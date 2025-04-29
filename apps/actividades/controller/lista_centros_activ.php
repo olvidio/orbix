@@ -79,7 +79,7 @@ if (empty($Qid_ctr_num)) {
 
 $c = 0;
 $a_centros = [];
-$a_actividades = array();
+$a_actividades = [];
 $GesEncargados = new GestorCentroEncargado();
 foreach ($cCentros as $oCentro) {
     $c++;

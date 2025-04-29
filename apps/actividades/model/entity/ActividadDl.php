@@ -70,7 +70,7 @@ class ActividadDl extends ActividadAll
         } else {
             $bInsert = false;
         }
-        $aDades = array();
+        $aDades = [];
         $aDades['id_tipo_activ'] = $this->iid_tipo_activ;
         $aDades['dl_org'] = $this->sdl_org;
         $aDades['nom_activ'] = $this->snom_activ;
@@ -262,7 +262,7 @@ class ActividadDl extends ActividadAll
                 // ho poso abans d'esborrar perque sino no trova cap valor. En el cas d'error s'hauria d'esborrar l'apunt.
                 $oGestorCanvis = new GestorAvisoCambios();
                 $shortClassName = (new ReflectionClass($this))->getShortName();
-                $oGestorCanvis->addCanvi($shortClassName, 'DELETE', $this->iid_activ, array(), $this->aDadesActuals);
+                $oGestorCanvis->addCanvi($shortClassName, 'DELETE', $this->iid_activ, [], $this->aDadesActuals);
             }
             if (($oDbl->exec("DELETE FROM $nom_tabla WHERE id_activ='$this->iid_activ'")) === false) {
                 $sClauError = 'ActividadDl.eliminar';

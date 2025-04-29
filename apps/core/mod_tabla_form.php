@@ -51,7 +51,7 @@ if (!empty($a_sel) && ($Qmod !== 'nuevo')) { //vengo de un checkbox (para el cas
     $aQuery['stack'] = $stack;
 } else { // si es nuevo
     $Qs_pkey = '';
-    $a_pkey = array();
+    $a_pkey = [];
 }
 
 $web_depende = ConfigGlobal::getWeb() . "/apps/core/mod_tabla_depende.php";

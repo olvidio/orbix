@@ -86,8 +86,8 @@ foreach ($cEncargosSacd as $oEncargoSacd) {
 
     // horario
     $GesHorario = new GestorEncargoSacdHorario();
-    $aWhereH = array();
-    $aOperadorH = array();
+    $aWhereH = [];
+    $aOperadorH = [];
     if ($Qhistorial == 1) {
         $aWhereH['id_enc'] = $id_enc[$i];
         $aWhereH['id_nom'] = $Qid_nom;

@@ -63,9 +63,9 @@ class GestorActividadAll extends ClaseGestor
     {
         $oIniPlanning = $oFini;
         $a = 0;
-        $a_cdc = array();
-        $aWhere = array();
-        $aOperador = array();
+        $a_cdc = [];
+        $aWhere = [];
+        $aOperador = [];
         if (empty($id_ubi) || $id_ubi == 1) { // en estos casos sólo miro las actividades de cada sección.
             if (empty($id_ubi)) {
                 $aOperador['id_ubi'] = 'IS NULL';
@@ -224,13 +224,13 @@ class GestorActividadAll extends ClaseGestor
      * @param array aOperators associatiu amb els valors dels operadors que cal aplicar a cada variable
      * @return array|void
      */
-    function getUbis($aWhere = array(), $aOperators = array())
+    function getUbis($aWhere = [], $aOperators = array())
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $oCondicion = new Condicion();
-        $aCondi = array();
-        $aUbis = array();
+        $aCondi = [];
+        $aUbis = [];
         foreach ($aWhere as $camp => $val) {
             if ($camp === '_ordre') continue;
             $sOperador = isset($aOperators[$camp]) ? $aOperators[$camp] : '';
@@ -316,7 +316,7 @@ class GestorActividadAll extends ClaseGestor
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
             return false;
         }
-        $aOpciones = array();
+        $aOpciones = [];
         foreach ($oDbl->query($sQuery) as $aClave) {
             $clave = $aClave[0];
             $val = $aClave[1];
@@ -332,13 +332,13 @@ class GestorActividadAll extends ClaseGestor
      * @param array aOperators associatiu amb els valors dels operadors que cal aplicar a cada variable
      * @return array|void
      */
-    function getArrayIdsWithKeyFini($aWhere = array(), $aOperators = array())
+    function getArrayIdsWithKeyFini($aWhere = [], $aOperators = array())
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
-        $aListaId = array();
+        $aListaId = [];
         $oCondicion = new Condicion();
-        $aCondi = array();
+        $aCondi = [];
         foreach ($aWhere as $camp => $val) {
             if ($camp === '_ordre') continue;
             $sOperador = isset($aOperators[$camp]) ? $aOperators[$camp] : '';
@@ -431,13 +431,13 @@ class GestorActividadAll extends ClaseGestor
      * @param array aOperators associatiu amb els valors dels operadors que cal aplicar a cada variable
      * @return array|void
      */
-    function getActividades($aWhere = array(), $aOperators = array())
+    function getActividades($aWhere = [], $aOperators = array())
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $oActividadSet = new Set();
         $oCondicion = new Condicion();
-        $aCondi = array();
+        $aCondi = [];
         foreach ($aWhere as $camp => $val) {
             if ($camp === '_ordre') continue;
             $sOperador = isset($aOperators[$camp]) ? $aOperators[$camp] : '';

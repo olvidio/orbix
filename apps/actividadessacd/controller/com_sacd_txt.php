@@ -2,6 +2,7 @@
 
 use actividadessacd\model\entity\GestorAtnActivSacdTexto;
 use core\ViewTwig;
+use src\usuarios\application\repositories\LocalRepository;
 use web\Desplegable;
 use web\Hash;
 
@@ -43,10 +44,9 @@ $oDesplClaves->setOpcion_sel('com_sacd');
 $oDesplClaves->setAction('fnjs_get_texto()');
 
 //Idiomas
-$GesLocales = new usuarios\model\entity\GestorLocal();
-$oDesplIdiomas = $GesLocales->getListaIdiomas();
-$oDesplIdiomas->setNombre("idioma");
-$oDesplIdiomas->setOpcion_sel('es');
+$LocaleRepository = new  LocalRepository();
+$a_locles = $LocaleRepository->getArrayLocales();
+$oDesplIdiomas = new Desplegable("idioma", $a_locles, 'es', true);
 $oDesplIdiomas->setAction('fnjs_get_texto()');
 
 // para que salga algo

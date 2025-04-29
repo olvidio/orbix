@@ -180,7 +180,7 @@ class Matricula extends ClasePropiedades
         } else {
             $bInsert = false;
         }
-        $aDades = array();
+        $aDades = [];
         //$aDades['id_schema'] = $this->iid_schema;
         $aDades['id_nivel'] = $this->iid_nivel;
         $aDades['id_situacion'] = $this->iid_situacion;

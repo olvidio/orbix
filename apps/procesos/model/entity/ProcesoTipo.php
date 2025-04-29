@@ -127,7 +127,7 @@ class ProcesoTipo extends ClasePropiedades
         } else {
             $bInsert = FALSE;
         }
-        $aDades = array();
+        $aDades = [];
         $aDades['nom_proceso'] = $this->snom_proceso;
         $aDades['sfsv'] = $this->isfsv;
         array_walk($aDades, 'core\poner_null');

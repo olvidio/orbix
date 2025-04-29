@@ -9,7 +9,7 @@ use procesos\model\entity\ActividadFase;
 use procesos\model\entity\GestorActividadProcesoTarea;
 use procesos\model\entity\GestorTareaProceso;
 use procesos\model\PermAccion;
-use usuarios\model\entity\GestorUsuarioGrupo;
+use src\usuarios\application\repositories\UsuarioGrupoRepository;
 use function core\is_true;
 
 /**
@@ -59,8 +59,8 @@ class PermisosActividades
      *
      * @var array
      */
-    private $aPermDl = array();
-    private $aPermOtras = array();
+    private $aPermDl = [];
+    private $aPermOtras = [];
     /**
      * Per saber a quina activitat fa referència.
      *
@@ -112,16 +112,16 @@ class PermisosActividades
         // permiso para el usuario
         $sCondicion_usuario = "u.id_usuario=$iid_usuario";
         // miro en els grups als que pertany
-        $oGesGrupos = new GestorUsuarioGrupo();
-        $oGrupos = $oGesGrupos->getUsuariosGrupos(array('id_usuario' => $iid_usuario));
-        if (count($oGrupos) > 0) {
-            foreach ($oGrupos as $oUsuarioGrupo) {
+        $UsuarioGrupoRepository = new UsuarioGrupoRepository();
+        $cGrupos = $UsuarioGrupoRepository->getUsuariosGrupos(array('id_usuario' => $iid_usuario));
+        if (count($cGrupos) > 0) {
+            foreach ($cGrupos as $oUsuarioGrupo) {
                 $id = $oUsuarioGrupo->getId_grupo();
                 $sCondicion_usuario .= " OR u.id_usuario=$id";
             }
             $sCondicion_usuario = "($sCondicion_usuario)";
         }
-        // carrego dues vegades, per la dl_propia i la resta.
+        // cargo dos veces, para la dl_propia i el resto.
         $this->carregar($sCondicion_usuario, 't');
         $this->carregar($sCondicion_usuario, 'f');
 

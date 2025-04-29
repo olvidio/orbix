@@ -47,7 +47,7 @@ class PgCertificadoDlRepository extends ClaseRepository implements CertificadoDl
         $nom_tabla = $this->getNomTabla();
         $CertificadoSet = new Set();
         $oCondicion = new Condicion();
-        $aCondicion = array();
+        $aCondicion = [];
         foreach ($aWhere as $camp => $val) {
             if ($camp === '_ordre') {
                 continue;

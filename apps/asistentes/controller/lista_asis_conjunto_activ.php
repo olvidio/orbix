@@ -47,7 +47,7 @@ if (empty($Qperiodo)) {
 }
 
 // Condiciones de búsqueda.
-$aWhere = array();
+$aWhere = [];
 $aOperador = [];
 
 // Status

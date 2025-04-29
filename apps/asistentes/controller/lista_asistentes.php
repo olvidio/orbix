@@ -114,8 +114,8 @@ function datos($oPersona)
 // primero el cl:
 $c = 0;
 $num = 0;
-$a_valores = array();
-$aListaCargos = array();
+$a_valores = [];
+$aListaCargos = [];
 $msg_err = '';
 // primero los cargos
 if (ConfigGlobal::is_app_installed('actividadcargos')) {
@@ -194,7 +194,7 @@ if (ConfigGlobal::is_app_installed('actividadcargos')) {
     }
 }
 // ahora los asistentes sin los cargos
-$asistentes = array();
+$asistentes = [];
 $msg_err = '';
 foreach ($gesAsistentes->getAsistentes(array('id_activ' => $id_pau)) as $oAsistente) {
     $c++;
@@ -255,11 +255,11 @@ foreach ($asistentes as $nom => $val) {
 
 // nuevo array parra pasar a la vista
 $txt_cl = '';
-$aAsistentes = array();
+$aAsistentes = [];
 foreach ($a_valores as $k => $val) {
     $c = $val[1];
     $oPersona = $val[7];
-    $a_datos_cl = array();
+    $a_datos_cl = [];
     if ($queSel === "listcl") {
         $a_datos_cl = datos($oPersona);
         // las observ no son las personales, sino de la asistencia:

@@ -42,7 +42,7 @@ if (!empty($a_sel)) { //vengo de un checkbox
 $chk_avisado = '';
 $chk_confirmado = '';
 $chk_preceptor = '';
-$oDesplAsignaturas = array();
+$oDesplAsignaturas = [];
 
 if (!empty($Qid_asignatura)) { //caso de modificar
     $mod = "editar";

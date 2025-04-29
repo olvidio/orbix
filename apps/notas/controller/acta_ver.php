@@ -205,7 +205,7 @@ if (!empty($acta_actual)) {
     }
     $cTribunal = $GesTribunal->getActasTribunales(array('acta' => $acta_actual, '_ordre' => 'orden'));
 } else {
-    $cTribunal = array();
+    $cTribunal = [];
 }
 
 $nombre_asignatura = '';
@@ -230,7 +230,7 @@ if (!empty($cTribunal)) {
 }
 $oHashActa->setCamposForm($sCamposForm);
 $oHashActa->setCamposNo('go_to!examinadores!notas!refresh');
-$a_camposHidden = array();
+$a_camposHidden = [];
 if ($Qmod == 'nueva' || $notas == "nuevo") {
     $a_camposHidden['mod'] = 'nueva';
     if (empty($id_activ)) {

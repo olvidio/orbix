@@ -101,7 +101,7 @@ class Importada extends ClasePropiedades
         } else {
             $bInsert = false;
         }
-        $aDades = array();
+        $aDades = [];
         $aDades['id_activ'] = $this->iid_activ;
 
         if ($bInsert === false) { // ya está importada

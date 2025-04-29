@@ -68,7 +68,7 @@ $equivalencias_gm_oficina = [
     'sr' => 'sr',
 ];
 
-$aGrupos = array();
+$aGrupos = [];
 
 $ver_ctr = empty($Qver_ctr) ? 'no' : $Qver_ctr;
 $aWhereCasa = [];
@@ -174,7 +174,7 @@ switch ($tipo) {
         exit ($err_switch);
 }
 
-$a_ubi_activ = array();
+$a_ubi_activ = [];
 foreach (array_keys($aGrupos) as $key) {
     $aWhere = [];
     $aOperador = [];

@@ -118,7 +118,7 @@ class ProfesorTipo extends ClasePropiedades
         } else {
             $bInsert = false;
         }
-        $aDades = array();
+        $aDades = [];
         $aDades['tipo_profesor'] = $this->stipo_profesor;
         array_walk($aDades, 'core\poner_null');
 

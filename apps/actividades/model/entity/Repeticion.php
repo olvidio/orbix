@@ -121,7 +121,7 @@ class Repeticion extends ClasePropiedades
         } else {
             $bInsert = false;
         }
-        $aDades = array();
+        $aDades = [];
         $aDades['repeticion'] = $this->srepeticion;
         $aDades['temporada'] = $this->stemporada;
         $aDades['tipo'] = $this->itipo;

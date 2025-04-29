@@ -49,7 +49,7 @@ class PgColaMailRepository extends ClaseRepository implements ColaMailRepository
 		$nom_tabla = $this->getNomTabla();
 		$ColaMailSet = new Set();
 		$oCondicion = new Condicion();
-		$aCondicion = array();
+		$aCondicion = [];
 		foreach ($aWhere as $camp => $val) {
 			if ($camp === '_ordre') { continue; }
 			if ($camp === '_limit') { continue; }

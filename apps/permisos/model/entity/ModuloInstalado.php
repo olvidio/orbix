@@ -136,7 +136,7 @@ class ModuloInstalado extends ClasePropiedades
             $bInsert = false;
         }
         $aPrevDades = $this->aDades;
-        $aDades = array();
+        $aDades = [];
         $aDades['status'] = $this->bstatus;
         $aDades['param'] = $this->sparam;
         array_walk($aDades, 'core\poner_null');

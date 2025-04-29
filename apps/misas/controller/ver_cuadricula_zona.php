@@ -44,7 +44,7 @@ $un_dia = new DateInterval('P1D');
 //Busco los sacd de la zona, para señalar si en la plantilla o en plan hay alguno que no es de la zona.
 $aWhere = [];
 $aWhere['id_zona'] = $Qid_zona;
-$aOperador = array();
+$aOperador = [];
 $GesZonasSacd = new GestorZonaSacd();
 $cZonaSacd = $GesZonasSacd->getZonasSacds($aWhere, $aOperador);
 $sacd_zona = [];
@@ -603,7 +603,7 @@ foreach ($cEncargosZona as $oEncargo) {
 
 //$aWhere = [];
 //$aWhere['id_zona'] = $Qid_zona;
-//$aOperador = array();
+//$aOperador = [];
 //$GesZonasSacd = new GestorZonaSacd();
 //$cZonaSacd = $GesZonasSacd->getZonasSacds($aWhere, $aOperador);
 $contador_1a_sacd = [];
@@ -760,7 +760,7 @@ $data_cuadricula[]=$data_cols;
 //$meta_sacd = [];
 $aWhere = [];
 $aWhere['id_zona'] = $Qid_zona;
-$aOperador = array();
+$aOperador = [];
 $GesZonasSacd = new GestorZonaSacd();
 $cZonaSacd = $GesZonasSacd->getZonasSacds($aWhere, $aOperador);
 foreach ($cZonaSacd as $oZonaSacd) {

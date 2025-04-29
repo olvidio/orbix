@@ -140,7 +140,7 @@ class CentroEncargado extends ClasePropiedades
         } else {
             $bInsert = FALSE;
         }
-        $aDades = array();
+        $aDades = [];
         $aDades['num_orden'] = $this->inum_orden;
         $aDades['encargo'] = $this->sencargo;
         array_walk($aDades, 'core\poner_null');

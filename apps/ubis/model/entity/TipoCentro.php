@@ -93,7 +93,7 @@ class TipoCentro extends ClasePropiedades
         } else {
             $bInsert = false;
         }
-        $aDades = array();
+        $aDades = [];
         $aDades['nombre_tipo_ctr'] = $this->snombre_tipo_ctr;
         array_walk($aDades, 'core\poner_null');
 

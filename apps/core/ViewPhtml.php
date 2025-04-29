@@ -50,10 +50,10 @@ class ViewPhtml
         $base_dir = $_SERVER['DOCUMENT_ROOT'] . $dir_apps;
 
         // reemplazo controller o model por view
-        $patterns = array();
+        $patterns = [];
         $patterns[0] = '/controller/';
         $patterns[1] = '/model/';
-        $replacements = array();
+        $replacements = [];
         $replacements[0] = 'view';
         $replacements[1] = 'view';
         $new_dir = preg_replace($patterns, $replacements, $this->snamespace);

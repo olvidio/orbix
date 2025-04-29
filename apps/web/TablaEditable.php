@@ -2,7 +2,7 @@
 namespace web;
 
 use core\ConfigGlobal;
-use usuarios\model\entity\Preferencia;
+use src\usuarios\application\repositories\PreferenciaRepository;
 use function core\is_true;
 
 /**
@@ -24,82 +24,83 @@ class TablaEditable
      *
      * @var string
      */
-    protected $sNombre;
+    private $sNombre;
     /**
      * ikey del Lista
      *
      * @var integer ?
      */
-    protected $ikey;
+    private $ikey;
 
     /**
      * aGrupos de la Lista
      *
      * @var array ( id => titulo)
      */
-    protected $aGrupos;
+    private $aGrupos;
 
     /**
      * aCabeceras de la Lista
      *
      * @var array
      */
-    protected $aCabeceras;
+    private $aCabeceras;
     /**
      * ssortcol de la Lista. Columna por la que se ordena la tabla inicialmente.
      *
      * @var string
      */
-    protected $ssortCol;
+    private $ssortCol;
     /**
      * aColVisible de la Lista. columnas visibles inicialmente.
      *
      * @var array
      */
-    protected $aColVisible = array();
+    private $aColVisible = [];
     /**
      * aDatos de la Lista
      *
      * @var array lista de arrays (id el del titulo) cada sub-array es la fila.
      */
-    protected $aDatos;
+    private $aDatos;
     /**
      * aBotones de la Lista
      *
      * @var array
      */
-    protected $aBotones;
+    private $aBotones;
     /**
      * sid_tabla de la Lista
      *
      * @var array
      */
-    protected $sid_tabla = 'uno';
+    private $sid_tabla = 'uno';
     /**
      * bFiltro de la Lista
      *
      * @var boolean
      */
-    protected $bFiltro = true;
+    private $bFiltro = true;
     /**
      * bColVis de la Lista
      *
      * @var boolean
      */
-    protected $bColVis = true;
+    private $bColVis = true;
     /**
      * bRecordar de la Lista
      *
      * @var boolean
      */
-    protected $bRecordar = true;
+    private $bRecordar = true;
     /**
      * supdateUrl de la Lista
      *
      * @var array
      */
-    protected $supdateUrl = '';
+    private $supdateUrl = '';
 
+    private PreferenciaRepository $preferenciaRepository;
     /* CONSTRUCTOR -------------------------------------------------------------- */
 
     /**
@@ -110,7 +111,7 @@ class TablaEditable
      */
     function __construct()
     {
-        // constructor buit
+        $this->preferenciaRepository = new PreferenciaRepository();
     }
 
     /**
@@ -216,10 +217,9 @@ class TablaEditable
         $bPanelVis = false;
         for ($i = 0; $i < count($aUser); $i++) {
             $user = $aUser[$i];
-            $oPref = new Preferencia(array('id_usuario' => $user, 'tipo' => $tipo));
-
-            if ($sPrefs = $oPref->getPreferencia()) {
-                ;
+            $cPref = $this->preferenciaRepository->getPreferencias(['id_usuario' => $user, 'tipo' => $tipo]);
+            if (!empty($cPref)) {
+                $sPrefs = $cPref[0]->getPreferencia();
                 $aPrefs = json_decode($sPrefs, true);
                 if (!empty($aPrefs['colVisible'])) {
                     $aColsVisible = empty($aPrefs['colVisible']) ? '*' : $aPrefs['colVisible'];
@@ -249,13 +249,13 @@ class TablaEditable
         // Para generar un id único
         $ahora = date("Hms");
         $f = 1;
-        $aFilas = array();
+        $aFilas = [];
         $scroll_id = !empty($a_valores['scroll_id']) ? $a_valores['scroll_id'] : 0;
         unset($a_valores['scroll_id']);
         if (isset($a_valores['select'])) {
             $a_valores_chk = $a_valores['select'];
         } else {
-            $a_valores_chk = array();
+            $a_valores_chk = [];
         }
         foreach ($a_valores as $num_fila => $fila) {
             $f++;
@@ -335,9 +335,9 @@ class TablaEditable
                         if (!empty($valor['span'])) {
                             $span = "$val";
                         }
-                        $aFilas[$num_fila][$col] = addslashes($val?? '');
+                        $aFilas[$num_fila][$col] = addslashes($val ?? '');
                     } else {
-                        $aFilas[$num_fila][$col] = addslashes($valor?? '');
+                        $aFilas[$num_fila][$col] = addslashes($valor ?? '');
                     }
                 }
             }
@@ -783,7 +783,7 @@ class TablaEditable
 		</form>
 		";
 
-         $tb = $ta . $tt;
+        $tb = $ta . $tt;
 
         return $tb;
     }

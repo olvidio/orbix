@@ -129,8 +129,8 @@ class DatosTabla
 
     private function getTabla()
     {
-        $a_cabeceras = array();
-        $a_valores = array();
+        $a_cabeceras = [];
+        $a_valores = [];
         $Qid_sel = $this->id_sel;
         $Qscroll_id = $this->scroll_id;
         if (isset($Qid_sel) && !empty($Qid_sel)) {

@@ -77,14 +77,14 @@ foreach ($cZonasGrupos as $oZonaGrupo) {
 }
 
 // por cada zona
-$all = array();
+$all = [];
 foreach ($cZonasGrupos as $oZonaGrupo) {
     $id_grupo = $oZonaGrupo->getId_grupo();
     $GesZonas = new GestorZona();
     $cZonas = $GesZonas->getZonas(array('id_grupo' => $id_grupo));
     //print_r($cZonas);
     $Html = '';
-    $a_sacd = array();
+    $a_sacd = [];
     foreach ($cZonas as $oZona) {
         $id_zona = $oZona->getId_zona();
         $GesCentrosDl = new GestorCentroDl();
@@ -103,9 +103,9 @@ foreach ($cZonasGrupos as $oZonaGrupo) {
                 $sf_txt = "";
                 $sssc_txt = "";
                 $otros_txt = "";
-                $sf_ctr = array();
-                $sf_cgi = array();
-                $a_dedicacion = array();
+                $sf_ctr = [];
+                $sf_cgi = [];
+                $a_dedicacion = [];
                 if (!empty($id_grupo)) {
                     $poblacion = $array_grupos[$id_grupo];
                 } else {

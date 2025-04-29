@@ -37,7 +37,7 @@ class GestorPersonaEx extends GestorPersonaGlobal
      * @param array aOperators associatiu amb els valors dels operadors que cal aplicar a cada variable
      * @return array Una col·lecció d'objectes de tipus PersonaEx
      */
-    function getPersonasEx($aWhere = array(), $aOperators = array())
+    function getPersonasEx($aWhere = [], $aOperators = array())
     {
         return parent::getPersonasObj('personas\\model\entity\\PersonaEx', $aWhere, $aOperators);
     }

@@ -17,7 +17,7 @@ $Qid_item_egm = (int)filter_input(INPUT_POST, 'id_item_egm');
 
 // posibles tipos de documento
 $url_lista_backend = Hash::link(ConfigGlobal::getWeb()
-    . '/apps/inventario/controller/lista_docs_de_egm.php'
+    . '/src/inventario/controller/lista_docs_de_egm.php'
 );
 $oHash = new Hash();
 $oHash->setUrl($url_lista_backend);

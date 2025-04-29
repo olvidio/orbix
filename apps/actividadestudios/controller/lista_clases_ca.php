@@ -67,7 +67,7 @@ $a = 0;
 $tipo_old = 0;
 $GesActividadAsignaturas = new GestorActividadAsignatura();
 $cActividadAsignaturas = $GesActividadAsignaturas->getActividadAsignaturas(array('id_activ' => $id_activ));
-$datos_asignatura = array();
+$datos_asignatura = [];
 foreach ($cActividadAsignaturas as $oActividadAsignatura) {
     $a++;
     $id_asignatura = $oActividadAsignatura->getId_asignatura();
@@ -101,7 +101,7 @@ foreach ($cActividadAsignaturas as $oActividadAsignatura) {
     // busco las matriculas
     $GesMatriculas = new GestorMatricula();
     $cMatriculas = $GesMatriculas->getMatriculas(array('id_activ' => $id_activ, 'id_asignatura' => $id_asignatura));
-    $aMatriculados = array();
+    $aMatriculados = [];
     foreach ($cMatriculas as $oMatricula) {
         $id_nom = $oMatricula->getId_nom();
         $oPersona = Persona::NewPersona($id_nom);

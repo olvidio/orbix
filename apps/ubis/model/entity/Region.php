@@ -114,7 +114,7 @@ class Region extends ClasePropiedades
         } else {
             $bInsert = false;
         }
-        $aDades = array();
+        $aDades = [];
         //$aDades['id_region'] = $this->iid_region;
         $aDades['region'] = $this->sregion;
         $aDades['nombre_region'] = $this->snombre_region;

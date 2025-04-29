@@ -132,7 +132,7 @@ class Select1301
         $this->ref_perm = $oPermDossier->perm_activ_pers($id_tabla);
 
         $i = 0;
-        $a_valores = array();
+        $a_valores = [];
         $aWhereNom = ['id_nom' => $this->id_pau];
         $aOperadorNom = [];
         $cActividadesAsistente = $gesAsistente->getActividadesDeAsistente($aWhereNom, $aOperadorNom, $aWhere, $aOperator, TRUE);
@@ -246,8 +246,8 @@ class Select1301
 
     private function setLinksInsert()
     {
-        $this->aLinks_dl = array();
-        $this->aLinks_otros = array();
+        $this->aLinks_dl = [];
+        $this->aLinks_otros = [];
         $ref_perm = $this->ref_perm;
         if (empty($ref_perm)) { // si es nulo, no tengo permisos de ningún tipo
             return '';

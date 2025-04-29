@@ -1,7 +1,6 @@
 <?php
 
 use core\ConfigGlobal;
-use usuarios\model\entity\Usuario;
 use function core\is_true;
 
 /**
@@ -20,7 +19,7 @@ $Qobj_pau = (string)filter_input(INPUT_POST, 'obj_pau');
 $Qque = (string)filter_input(INPUT_POST, 'que');
 $Qcampos_chk = (string)filter_input(INPUT_POST, 'campos_chk');
 
-$oMiUsuario = new Usuario(ConfigGlobal::mi_id_usuario());
+$oMiUsuario = ConfigGlobal::MiUsuario();
 $miSfsv = ConfigGlobal::mi_sfsv();
 
 switch ($Qque) {
@@ -29,7 +28,7 @@ switch ($Qque) {
         $oPersona = new $obj($Qid_nom);
         $dl = $oPersona->getDl();
         // solo lo dejo borrar si es de mi dl.
-        if (ConfigGlobal::mi_delef() == $dl) {
+        if (ConfigGlobal::mi_delef() === $dl) {
             if ($oPersona->DBEliminar() === false) {
                 echo _("hay un error, no se ha eliminado");
                 echo "\n" . $oPersona->getErrorTxt();
@@ -44,15 +43,15 @@ switch ($Qque) {
         break;
 }
 
-$campos_chk = empty($Qcampos_chk) ? array() : explode('!', $Qcampos_chk);
+$campos_chk = empty($Qcampos_chk) ? [] : explode('!', $Qcampos_chk);
 $oPersona->DBCarregar();
 $oDbl = $oPersona->getoDbl();
 $cDatosCampo = $oPersona->getDatosCampos();
 foreach ($cDatosCampo as $oDatosCampo) {
     $camp = $oDatosCampo->getNom_camp();
     $valor = empty($_POST[$camp]) ? '' : $_POST[$camp];
-    if ($oDatosCampo->datos_campo($oDbl, 'tipo') == "bool") { //si es un campo boolean, cambio los valores on, off... por true, false...
-        if ($valor == "on") {
+    if ($oDatosCampo->datos_campo($oDbl, 'tipo') === "bool") { //si es un campo boolean, cambio los valores on, off... por true, false...
+        if ($valor === "on") {
             $valor = 't';
             $a_values_o[$camp] = $valor;
         } else {

@@ -3,7 +3,7 @@
 use core\ConfigGlobal;
 use core\ViewPhtml;
 use frontend\shared\PostRequest;
-use usuarios\model\entity\Role;
+use src\usuarios\domain\entity\Role;
 use web\Desplegable;
 use web\Hash;
 use web\Lista;
@@ -52,7 +52,7 @@ $oPosicion->setParametros(array('id_role' => $Qid_role), 1);
 
 
 $url_lista_backend = Hash::link(ConfigGlobal::getWeb()
-    . '/apps/usuarios/controller/role_info.php'
+    . '/src/usuarios/infrastructure/controllers/role_info.php'
 );
 
 $oHash = new Hash();

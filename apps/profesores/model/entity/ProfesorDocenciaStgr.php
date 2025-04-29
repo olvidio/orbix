@@ -151,7 +151,7 @@ class ProfesorDocenciaStgr extends ClasePropiedades
         } else {
             $bInsert = false;
         }
-        $aDades = array();
+        $aDades = [];
         $aDades['id_asignatura'] = $this->iid_asignatura;
         $aDades['id_activ'] = $this->iid_activ;
         $aDades['tipo'] = $this->stipo;

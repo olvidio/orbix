@@ -160,7 +160,7 @@ abstract class UbiGlobal extends ClasePropiedades
         $aWhere['_ordre'] = $ordre;
         $GesUbixDireccion = new $obj();
         $cUbixDireccion = $GesUbixDireccion->getUbixDirecciones($aWhere);
-        $dirs = array();
+        $dirs = [];
         if ($cUbixDireccion !== false) {
             foreach ($cUbixDireccion as $oUbixDireccion) {
                 $id_direccion = $oUbixDireccion->getId_direccion();

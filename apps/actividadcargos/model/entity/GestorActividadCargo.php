@@ -58,7 +58,7 @@ class GestorActividadCargo extends ClaseGestor
         // Los sacd los pongo en la base de datos comun.
         $oDbl = $GLOBALS['oDBC_Select'];
         $nom_tabla = 'c' . $this->getNomTabla();
-        $aLista = array();
+        $aLista = [];
         $sQuery = "SELECT id_nom, id_cargo
 				FROM $nom_tabla
 				WHERE id_activ=" . $iid_activ . " AND id_cargo IN ($txt_where_cargos)
@@ -139,7 +139,7 @@ class GestorActividadCargo extends ClaseGestor
      * @param array aOperators associatiu amb els valors dels operadors que cal aplicar a cada variable
      * @return array Una col·lecció d'objectes de tipus ActividadCargo
      */
-    function getActividadCargosDeAsistente($aWhereNom, $aWhere = array(), $aOperators = array())
+    function getActividadCargosDeAsistente($aWhereNom, $aWhere = [], $aOperators = array())
     {
         // seleccionar las actividades segun los criterios de búsqueda.
         $GesActividades = new GestorActividad();
@@ -147,7 +147,7 @@ class GestorActividadCargo extends ClaseGestor
 
         $cCargos = $this->getActividadCargos($aWhereNom);
         // descarto los que no estan.
-        $cCargosOk = array();
+        $cCargosOk = [];
         $i = 0;
         foreach ($cCargos as $oActividadCargo) {
             $id_activ = $oActividadCargo->getId_activ();
@@ -191,7 +191,7 @@ class GestorActividadCargo extends ClaseGestor
         $GesActividades = new GestorActividad();
         $aListaIds = $GesActividades->getArrayIdsWithKeyFini($aWhereAct, $aOperadorAct);
         // descarto los que no estan.
-        $cActividadesOk = array();
+        $cActividadesOk = [];
         foreach ($cCargos as $oCargo) {
             $id_activ = $oCargo->getId_activ();
             if (in_array($id_activ, $aListaIds)) {
@@ -199,7 +199,7 @@ class GestorActividadCargo extends ClaseGestor
             }
         }
         // lista de id_activ ordenados.
-        $aAsis = array();
+        $aAsis = [];
         foreach ($cAsistentes as $f_ini_iso => $oAsistente) {
             $id_activ = $oAsistente->getId_activ();
             $propio = $oAsistente->getPropio();
@@ -253,7 +253,7 @@ class GestorActividadCargo extends ClaseGestor
         $GesActividades = new GestorActividad();
         $aListaIds = $GesActividades->getArrayIdsWithKeyFini($aWhereAct, $aOperadorAct);
         // descarto los que no están.
-        $cActividadesOk = array();
+        $cActividadesOk = [];
         foreach ($cCargos as $oCargo) {
             $id_activ = $oCargo->getId_activ();
             if (in_array($id_activ, $aListaIds)) {
@@ -261,7 +261,7 @@ class GestorActividadCargo extends ClaseGestor
             }
         }
         // lista de id_activ ordenados.
-        $aAsis = array();
+        $aAsis = [];
         foreach ($cActividadesOk as $id_activ => $oCargo) {
             $oCargo = $cActividadesOk[$id_activ];
             $id_cargo = $oCargo->getId_cargo();
@@ -311,13 +311,13 @@ class GestorActividadCargo extends ClaseGestor
      * @param array aOperators associatiu amb els valors dels operadors que cal aplicar a cada variable
      * @return array|void
      */
-    function getActividadCargos($aWhere = array(), $aOperators = array())
+    function getActividadCargos($aWhere = [], $aOperators = array())
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $oActividadCargoSet = new Set();
         $oCondicion = new Condicion();
-        $aCondi = array();
+        $aCondi = [];
         foreach ($aWhere as $camp => $val) {
             if ($camp === '_ordre') continue;
             $sOperador = isset($aOperators[$camp]) ? $aOperators[$camp] : '';

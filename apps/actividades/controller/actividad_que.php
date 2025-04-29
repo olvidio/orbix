@@ -19,8 +19,8 @@ use actividades\model\entity\GestorTipoDeActividad;
 use core\ConfigGlobal;
 use core\ViewTwig;
 use procesos\model\entity\GestorActividadFase;
+use src\usuarios\domain\entity\Role;
 use ubis\model\entity\GestorDelegacion;
-use usuarios\model\entity\Usuario;
 use web\Hash;
 use web\PeriodoQue;
 use web\Posicion;
@@ -134,7 +134,7 @@ $oDesplFiltroLugar->setAction('fnjs_lugar()');
 $oDesplFiltroLugar->setNombre('filtro_lugar');
 $oDesplFiltroLugar->setOpcion_sel($Qfiltro_lugar);
 
-$oDesplegableCasas = array();
+$oDesplegableCasas = [];
 if (!empty($Qfiltro_lugar)) {
     $oActividadLugar = new ActividadLugar();
     $oDesplegableCasas = $oActividadLugar->getLugaresPosibles($Qfiltro_lugar);
@@ -243,9 +243,12 @@ $oActividadTipo->setPerm_jefe($perm_jefe);
 $oActividadTipo->setSfsvAll(TRUE);
 
 
-$oUsuario = new Usuario(array('id_usuario' => ConfigGlobal::mi_id_usuario()));
+$oUsuario = ConfigGlobal::MiUsuario();
+$id_role = $oUsuario->getId_role();
+$oRole = new Role();
+$oRole->setId_role($id_role);
 $perm_ctr = FALSE;
-if (!$oUsuario->isRolePau('ctr')) {
+if (!$oRole->isRolePau('ctr')) {
     $perm_ctr = TRUE;
 }
 

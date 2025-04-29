@@ -27,7 +27,7 @@ if (ConfigGlobal::is_app_installed('cambios')) {
 }
 ?>
 <h2><?= ucfirst(_("preferencias personales")) ?><br></h2>
-<form id=preferencias name=preferencias action="apps/usuarios/controller/preferencias_guardar.php" method="post">
+<form id=preferencias name=preferencias action="src/usuarios/infrastructure/controllers/preferencias_guardar.php" method="post">
     <?= $oHash->getCamposHtml() ?>
     <table>
         <tr>
@@ -39,10 +39,7 @@ if (ConfigGlobal::is_app_installed('cambios')) {
         <tr>
             <td><?= ucfirst(_("menú principal de la oficina")) ?>:</td>
             <td>
-                <select name=oficina>
-                    <option></option>
-                    <?= $oficinas_posibles ?>
-                </select>
+                <?= $oDesplOficinas->desplegable() ?>
             </td>
         </tr>
         <tr>

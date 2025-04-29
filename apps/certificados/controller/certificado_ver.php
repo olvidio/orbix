@@ -6,8 +6,9 @@ use core\ConfigGlobal;
 use core\ServerConf;
 use core\ViewTwig;
 use personas\model\entity\Persona;
+use src\usuarios\application\repositories\LocalRepository;
+use web\Desplegable;
 use web\Hash;
-use usuarios\model\entity\GestorLocal;
 use function core\is_true;
 
 require_once("apps/core/global_header.inc");
@@ -50,11 +51,9 @@ $nom = empty($nom) ? $apellidos_nombre : $nom;
 
 
 //Idiomas (blanco para latín)
-$gesIdiomas = new GestorLocal();
-$oDesplIdiomas = $gesIdiomas->getListaLocales();
-$oDesplIdiomas->setNombre('idioma');
-$oDesplIdiomas->setBlanco(TRUE);
-$oDesplIdiomas->setOpcion_sel($idioma);
+$LocalRepository = new LocalRepository();
+$a_locales = $LocalRepository->getArrayLocales();
+$oDesplIdiomas = new Desplegable('idioma', $a_locales, $idioma, true);
 
 $oHashCertificadoPdf = new Hash();
 $oHashCertificadoPdf->setCamposForm('certificado_pdf!certificado!firmado!destino!f_certificado!idioma!nom!f_enviado');

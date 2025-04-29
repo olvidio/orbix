@@ -6,7 +6,7 @@ use web\Hash;
 ?>
     <script>
     fnjs_del_grupmenu = function (formulario) {
-        let url = '<?= ConfigGlobal::getWeb() ?>/apps/usuarios/controller/role_grupmenu_del.php';
+        let url = '<?= ConfigGlobal::getWeb() ?>/src/usuarios/infrastructure/controllers/role_grupmenu_del.php';
         let datos = $(formulario).serialize();
         let request = $.ajax({
             data: datos,
@@ -31,7 +31,7 @@ use web\Hash;
     fnjs_guardar = function (formulario) {
         let rr = fnjs_comprobar_campos(formulario, 'usuarios\\model\\entity\\Role');
         if (rr === 'ok') {
-            var url = '<?= ConfigGlobal::getWeb() ?>/apps/usuarios/controller/role_guardar.php';
+            var url = '<?= ConfigGlobal::getWeb() ?>/src/usuarios/infrastructure/controllers/role_guardar.php';
             let datos = $(formulario).serialize();
             let request = $.ajax({
                 data: datos,

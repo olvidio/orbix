@@ -93,9 +93,9 @@ if (empty($id)) {
 
 $max = count($_SESSION['DBListas']);
 
-$a_lista_orbix = array();
-$persona_listas = array();
-$a_lista_orbix_otradl = array();
+$a_lista_orbix = [];
+$persona_listas = [];
+$a_lista_orbix_otradl = [];
 $new_id = 0;
 if (!empty($max)) {
     $new_id = otro($id, $mov, $max);

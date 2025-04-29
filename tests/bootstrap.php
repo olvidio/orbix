@@ -1,4 +1,4 @@
 <?php
  putenv("UBICACION=sv");
 
-include('apps/core/global_header_orbix.inc');
+include('apps/core/global_header.inc');

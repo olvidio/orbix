@@ -151,7 +151,7 @@ class Asignatura extends ClasePropiedades
         } else {
             $bInsert = false;
         }
-        $aDades = array();
+        $aDades = [];
         $aDades['id_nivel'] = $this->iid_nivel;
         $aDades['nombre_asignatura'] = $this->snombre_asignatura;
         $aDades['nombre_corto'] = $this->snombre_corto;

@@ -146,7 +146,7 @@ class ActividadPlazas extends ClasePropiedades
         } else {
             $bInsert = false;
         }
-        $aDades = array();
+        $aDades = [];
         $aDades['plazas'] = $this->iplazas;
         $aDades['cl'] = $this->scl;
         $aDades['cedidas'] = $this->ocedidas;

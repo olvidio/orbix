@@ -115,8 +115,8 @@ class Tesera
         $this->getCurso();
         // Asignaturas posibles:
         $GesAsignaturas = new GestorAsignatura();
-        $aWhere = array();
-        $aOperador = array();
+        $aWhere = [];
+        $aOperador = [];
         $aWhere['status'] = 't';
         $aWhere['id_nivel'] = '1100,2500';
         $aOperador['id_nivel'] = 'BETWEEN';
@@ -130,13 +130,13 @@ class Tesera
     {
         // Asignaturas cursadas:
         $GesNotas = new entity\GestorPersonaNotaDB();
-        $aWhere = array();
-        $aOperador = array();
+        $aWhere = [];
+        $aOperador = [];
         $aWhere['id_nom'] = $id_nom;
         $aWhere['id_nivel'] = '1100,2500';
         $aOperador['id_nivel'] = 'BETWEEN';
         $cNotas = $GesNotas->getPersonaNotas($aWhere, $aOperador);
-        $aAprobadas = array();
+        $aAprobadas = [];
         foreach ($cNotas as $oPersonaNota) {
             $id_asignatura = $oPersonaNota->getId_asignatura();
             $id_nivel = $oPersonaNota->getId_nivel();
@@ -191,8 +191,8 @@ class Tesera
         $numasig_year = 0;
         $numcred_year = 0;
         reset($aAprobadas);
-        $tabla = array();
-        $tabla_dcha = array();
+        $tabla = [];
+        $tabla_dcha = [];
         while ($a < count($cAsignaturas)) {
             $oAsignatura = $cAsignaturas[$a++];
             $num_creditos_total += $oAsignatura->getCreditos();

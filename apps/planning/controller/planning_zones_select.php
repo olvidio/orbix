@@ -165,8 +165,8 @@ switch ($Qid_zona) {
         $aWhere['propia'] = 't';
         $GesZonasSacd = new GestorZonaSacd();
         $cZonasSacd = $GesZonasSacd->getZonasSacds($aWhere);
-        $a_zonas = array();
-        $a_zonas_o = array();
+        $a_zonas = [];
+        $a_zonas_o = [];
         foreach ($cZonasSacd as $oZonaSacd) {
             $id_zona = $oZonaSacd->getId_zona();
             if (array_key_exists($id_zona, $a_zonas)) {
@@ -210,7 +210,7 @@ foreach ($aa_zonas as $a_zonas) {
     $actividades = [];
     $persona = [];
     foreach ($cZonasSacd as $oZonaSacd) {
-        $aActivPersona = array(); //inicializo el vector para la siguiente persona
+        $aActivPersona = []; //inicializo el vector para la siguiente persona
         $id_nom = $oZonaSacd->getId_nom();
 
         $oSacd = new PersonaSacd($id_nom);
@@ -398,7 +398,7 @@ foreach ($aa_zonas as $a_zonas) {
             $actividades[$ap_nom] = array($persona[$p] => $aActivPersona);
             $p++;
         } else {
-            $a_nom = array();
+            $a_nom = [];
             // pongo el apellido como índice para poder ordenar por apellido.
             $actividades[$ap_nom] = array($persona[$p] => $a_nom);
             $p++;

@@ -1,7 +1,8 @@
 <?php
 
 namespace core;
-use usuarios\model\entity\GestorPreferencia;
+
+use src\usuarios\application\repositories\PreferenciaRepository;
 
 if (empty($estilo_color)) {
     // INICIO Cabecera global de URL de controlador *********************************
@@ -12,10 +13,10 @@ if (empty($estilo_color)) {
     // Crea los objetos de uso global **********************************************
     require_once("apps/core/global_object.inc");
     // FIN de  Cabecera global de URL de controlador ********************************
-    $oGesPref = new GestorPreferencia();
+    $PreferenciaRepository = new PreferenciaRepository();
 
     $id_usuario = ConfigGlobal::mi_id_usuario();
-    $aPref = $oGesPref->getPreferencias(array('id_usuario' => $id_usuario, 'tipo' => 'estilo'));
+    $aPref = $PreferenciaRepository->getPreferencias(array('id_usuario' => $id_usuario, 'tipo' => 'estilo'));
     if (count($aPref) > 0) {
         $oPreferencia = $aPref[0];
         $preferencia = $oPreferencia->getPreferencia();

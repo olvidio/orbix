@@ -68,7 +68,7 @@ if (ConfigGlobal::mi_ambito() === 'rstgr' && $Qfiltro != 1) {
 // tipos de profesores
 $oGesProfesorTipo = new profesores\model\entity\GestorProfesorTipo();
 $cProfesorTipo = $oGesProfesorTipo->getProfesorTipos();
-$cTipoProfesor = array();
+$cTipoProfesor = [];
 foreach ($cProfesorTipo as $oProfesorTipo) {
     $id_tipo = $oProfesorTipo->getId_tipo_profesor();
     $tipo = $oProfesorTipo->getTipo_profesor();
@@ -81,7 +81,7 @@ $cDepartamentos = $oGesDepartamentos->getDepartamentos(array('_ordre' => 'depart
 
 //por cada departamento:
 // orden alfabético personas.
-$aClaustro = array();
+$aClaustro = [];
 foreach ($cDepartamentos as $oDepartamento) {
     $id_departamento = $oDepartamento->getId_departamento();
     $departamento = $oDepartamento->getDepartamento();
@@ -99,8 +99,8 @@ foreach ($cDepartamentos as $oDepartamento) {
     }
 
     $cProfesorDirector = $oGesProfesorDirector->getProfesoresDirectores($aWhere, $aOperador);
-    $aProfesores = array();
-    $aDirs = array();
+    $aProfesores = [];
+    $aDirs = [];
     foreach ($cProfesorDirector as $oProfesorDirector) {
         $id_nom = $oProfesorDirector->getId_nom();
         $oPersonaDl = new personas\model\entity\PersonaDl($id_nom);
@@ -130,7 +130,7 @@ foreach ($cDepartamentos as $oDepartamento) {
         }
 
         $cProfesores = $oGesProfesor->getProfesores($aWhere, $aOperador);
-        $aProfes = array();
+        $aProfes = [];
         foreach ($cProfesores as $oProfesor) {
             $id_nom = $oProfesor->getId_nom();
             $oPersonaDl = new personas\model\entity\PersonaDl($id_nom);

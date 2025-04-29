@@ -95,7 +95,7 @@ if (!empty($Qapellido1)) {
 
     $titulo = _("Lista de alumnos de otras regiones pendientes de generar certificado");
     $i = 0;
-    $a_valores = array();
+    $a_valores = [];
     $msg_err = '';
     $str_asignaturas = '';
     $id_nom_anterior = '';
@@ -202,7 +202,7 @@ $oTabla->setDatos($a_valores);
 
 $oHashApellidos = new Hash();
 $oHashApellidos->setCamposForm('apellido1');
-$a_camposHiddenP = array();
+$a_camposHiddenP = [];
 $oHashApellidos->setArraycamposHidden($a_camposHiddenP);
 
 $a_campos = ['oPosicion' => $oPosicion,

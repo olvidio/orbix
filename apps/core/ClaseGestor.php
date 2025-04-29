@@ -80,8 +80,8 @@ abstract class ClaseGestor
      */
     protected function getConjunt($a_Clases, $namespace, $aWhere, $aOperators)
     {
-        $cClassesTot = array();
-        $ord_Tot = array();
+        $cClassesTot = [];
+        $ord_Tot = [];
 
         $paraOrdenar = '';
         if (isset($aWhere['_ordre']) && $aWhere['_ordre'] != '') {
@@ -92,8 +92,8 @@ abstract class ClaseGestor
             $Classe = $aClasse['clase'];
             $get = $aClasse['get'];
 
-            $a_ord[$Classe] = array();
-            $a_ord_cond[$Classe] = array();
+            $a_ord[$Classe] = [];
+            $a_ord_cond[$Classe] = [];
             $Gestor = $namespace . '\Gestor' . $Classe;
             $oGesClasse = new $Gestor;
             $cClasses = $oGesClasse->$get($aWhere, $aOperators);
@@ -119,7 +119,7 @@ abstract class ClaseGestor
                     }
                 }
             }
-            $multisort_args = array();
+            $multisort_args = [];
             $ord = 0;
             foreach ($a_ordre as $key_o => $ordre) {
                 $ord++;

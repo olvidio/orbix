@@ -5,7 +5,6 @@ use ubis\model\entity\CdcDlxDireccion;
 use ubis\model\entity\CdcExxDireccion;
 use ubis\model\entity\CtrDlxDireccion;
 use ubis\model\entity\CtrExxDireccion;
-use usuarios\model\entity\Usuario;
 use function core\is_true;
 
 /**
@@ -19,14 +18,14 @@ require_once("apps/core/global_header.inc");
 require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$oMiUsuario = new Usuario(ConfigGlobal::mi_id_usuario());
+$oMiUsuario = ConfigGlobal::MiUsuario();
 
 $Qque = (string)filter_input(INPUT_POST, 'que');
 $Qobj_pau = (string)filter_input(INPUT_POST, 'obj_pau');
 $Qid_ubi = (integer)filter_input(INPUT_POST, 'id_ubi');
 $Qcampos_chk = (string)filter_input(INPUT_POST, 'campos_chk');
 
-$campos_chk = empty($Qcampos_chk) ? array() : explode('!', $Qcampos_chk);
+$campos_chk = empty($Qcampos_chk) ? [] : explode('!', $Qcampos_chk);
 
 switch ($Qque) {
     case 'eliminar_ubi':
@@ -104,8 +103,8 @@ function guardarObjeto($oObjeto, $campos_chk)
     foreach ($cDatosCampo as $oDatosCampo) {
         $camp = $oDatosCampo->getNom_camp();
         $valor = empty($_POST[$camp]) ? '' : $_POST[$camp];
-        if ($oDatosCampo->datos_campo($oDbl, 'tipo') == "bool") { //si es un campo boolean, cambio los valores on, off... por true, false...
-            if ($valor == "on") {
+        if ($oDatosCampo->datos_campo($oDbl, 'tipo') === "bool") { //si es un campo boolean, cambio los valores on, off... por true, false...
+            if ($valor === "on") {
                 $valor = 't';
                 $a_values_o[$camp] = $valor;
             } else {

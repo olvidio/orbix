@@ -111,7 +111,7 @@ class NivelStgr extends ClasePropiedades
         } else {
             $bInsert = false;
         }
-        $aDades = array();
+        $aDades = [];
         $aDades['desc_nivel'] = $this->sdesc_nivel;
         $aDades['desc_breve'] = $this->sdesc_breve;
         $aDades['orden'] = $this->iorden;

@@ -153,7 +153,7 @@ class TipoDeActividad extends ClasePropiedades
         } else {
             $bInsert = false;
         }
-        $aDades = array();
+        $aDades = [];
         $aDades['nombre'] = $this->snombre;
         $aDades['id_tipo_proceso_sv'] = $this->iid_tipo_proceso_sv;
         $aDades['id_tipo_proceso_ex_sv'] = $this->iid_tipo_proceso_ex_sv;

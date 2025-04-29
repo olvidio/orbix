@@ -156,7 +156,7 @@ class ActividadAsignatura extends ClasePropiedades
         } else {
             $bInsert = false;
         }
-        $aDades = array();
+        $aDades = [];
         $aDades['id_profesor'] = $this->iid_profesor;
         $aDades['avis_profesor'] = $this->savis_profesor;
         $aDades['tipo'] = $this->stipo;

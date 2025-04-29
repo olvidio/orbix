@@ -39,7 +39,7 @@ class ActividadCargoSacd extends ActividadCargoAbstract
         } else {
             $bInsert = false;
         }
-        $aDades = array();
+        $aDades = [];
         //$aDades['id_schema'] = $this->iid_schema;
         $aDades['id_activ'] = $this->iid_activ;
         $aDades['id_cargo'] = $this->iid_cargo;
@@ -143,7 +143,7 @@ class ActividadCargoSacd extends ActividadCargoAbstract
             // ho poso abans d'esborrar perque sino no trova cap valor. En el cas d'error s'hauria d'esborrar l'apunt.
             $oGestorCanvis = new GestorAvisoCambios();
             $shortClassName = (new ReflectionClass($this))->getShortName();
-            $oGestorCanvis->addCanvi($shortClassName, 'DELETE', $this->iid_activ, array(), $this->aDadesActuals);
+            $oGestorCanvis->addCanvi($shortClassName, 'DELETE', $this->iid_activ, [], $this->aDadesActuals);
         }
         if (($oDbl->exec("DELETE FROM $nom_tabla WHERE id_item=$this->iid_item")) === false) {
             $sClauError = 'ActividadCargo.eliminar';

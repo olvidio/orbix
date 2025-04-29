@@ -140,7 +140,7 @@ if (!empty($Qid_nom)) { //caso de modificar
             }
         }
     }
-    $oDesplegablePersonas = array();
+    $oDesplegablePersonas = [];
 } else { //caso de nuevo asistente
     $mod = "nuevo";
     $id_nom_real = '';

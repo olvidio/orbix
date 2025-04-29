@@ -24,8 +24,8 @@ class ActividadesPorCasas
         $GesActividades = new GestorActividad();
         $sCdc = '';
         if ($Qcdc_sel < 10) { //Para buscar por casas.
-            $aWhere = array();
-            $aOperador = array();
+            $aWhere = [];
+            $aOperador = [];
             switch ($Qcdc_sel) {
                 case 1:
                     $aWhere['sv'] = 't';
@@ -80,7 +80,7 @@ class ActividadesPorCasas
             $cdc = [];
             $a_actividades = [];
             foreach ($cCasasDl as $oCasaDl) {
-                $a_cdc = array();
+                $a_cdc = [];
                 $id_ubi = $oCasaDl->getId_ubi();
                 $nombre_ubi = $oCasaDl->getNombre_ubi();
 
@@ -106,8 +106,8 @@ class ActividadesPorCasas
         } else { // cdc_sel > 10 Para buscar por actividades (todas).
             // busco todas las actividades del periodo y las agrupo por ubis.
             $oGesActividades = new GestorActividad();
-            $aWhere = array();
-            $aOperador = array();
+            $aWhere = [];
+            $aOperador = [];
             switch ($Qcdc_sel) {
                 case 11:
                     $aWhere['id_tipo_activ'] = '^1';
@@ -128,9 +128,9 @@ class ActividadesPorCasas
 
             $aUbis = $oGesActividades->getUbis($aWhere, $aOperador);
             $p = 0;
-            $a_actividades = array();
+            $a_actividades = [];
             foreach ($aUbis as $id_ubi) {
-                $a_cdc = array();
+                $a_cdc = [];
                 if (empty($id_ubi)) {
                     $nombre_ubi = _("por determinar");
                     $cdc[$p] = "u#2#$nombre_ubi"; // hay que poner un id_ubi para que vaya bien la función de dibujar el calendario.

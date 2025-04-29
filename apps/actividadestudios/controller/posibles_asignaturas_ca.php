@@ -79,8 +79,8 @@ foreach ($gesAsistentes->getAsistentes(array('id_activ' => $id_activ)) as $oAsis
     }
     // busco las asignaturas aprobadas
     $GesNotas = new GestorPersonaNotaDB();
-    $aWhere = array();
-    $aOperador = array();
+    $aWhere = [];
+    $aOperador = [];
     $aWhere['id_nom'] = $id_nom;
     $aWhere['id_nivel'] = '1100,2500';
     $aOperador['id_nivel'] = 'BETWEEN';

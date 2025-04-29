@@ -60,8 +60,8 @@ $aGoBack = array(
 $oPosicion->setParametros($aGoBack, 1);
 
 /*miro las condiciones. Si es la primera vez muestro las de este año */
-$aWhere = array();
-$aOperador = array();
+$aWhere = [];
+$aOperador = [];
 if (!empty($Qacta)) {
     /* se cambia la lógica, por el cambio de nombre de la dl, no de las actas */
     $aWhere['acta'] = $Qacta;
@@ -164,7 +164,7 @@ $a_asignaturas = $gesAsignatura->getArrayAsignaturas();
 
 
 $i = 0;
-$a_valores = array();
+$a_valores = [];
 foreach ($cActas as $oActa) {
     $i++;
     $acta = $oActa->getActa();

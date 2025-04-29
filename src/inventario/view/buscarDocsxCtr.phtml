@@ -1,0 +1,28 @@
+<form id="frm_buscar" name="frm_buscar" action="<?= $url ?>" method="post" onkeydown="fnjs_enviar(event,this);">
+    <?= $oHashBuscar->getCamposHtml() ?>
+    <table>
+        <tr>
+            <td
+            <label for="k_buscar">class=etiqueta>
+                <?= _("centro") ?>:
+            </label>
+            </td>
+            <td>
+                <input type="text" id="k_buscar" name="k_buscar" value="">
+            </td>
+        </tr>
+        <tr>
+            <td class=etiqueta colspan=2>
+                <label for="exacto"> <?= _("realizar una búsqueda exacta:") ?></label>
+                <input type="Radio" name="exacto" value=0 checked><?= _("no") ?>
+                <input type="Radio" name="exacto" value=1><?= _("sí") ?>
+            </td>
+        </tr>
+
+        <th colspan=4>
+            <input type="button" id="ok" name="ok" onclick="fnjs_enviar_formulario(this.form);"
+                   value="<?= ucfirst(_("buscar")) ?>" class="btn_ok">
+        </th>
+    </table>
+
+</form>

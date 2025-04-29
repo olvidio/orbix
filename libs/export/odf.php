@@ -28,7 +28,7 @@ class odf
 
     function __construct()
     {
-        $this->styles = array();
+        $this->styles = [];
         $this->fonts = array();
         $this->sheets = array();
         $this->currentRow = 0;

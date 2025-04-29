@@ -47,8 +47,8 @@ $a_cabeceras = array(_("id"),
     array('name' => ucfirst(_("última modif.")), 'class' => 'fecha'),
     _("observaciones")
 );
-$a_botones = array();
-$a_valores = array();
+$a_botones = [];
+$a_valores = [];
 $i = 0;
 $cDirecciones = $oGesDir->getDirecciones($aWhere, $aOperador);
 foreach ($cDirecciones as $oDireccion) {

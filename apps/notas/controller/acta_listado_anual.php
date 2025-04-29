@@ -42,8 +42,8 @@ $oPeriodo->setPeriodo($Qperiodo);
 $inicioIso = $oPeriodo->getF_ini_iso();
 $finIso = $oPeriodo->getF_fin_iso();
 
-$aWhere = array();
-$aOperador = array();
+$aWhere = [];
+$aOperador = [];
 $aWhere['f_acta'] = "'$inicioIso','$finIso'";
 $aOperador['f_acta'] = 'BETWEEN';
 
@@ -51,7 +51,7 @@ $GesActas = new GestorActaDl();
 $cActas = $GesActas->getActas($aWhere, $aOperador);
 
 $i = 0;
-$aActas = array();
+$aActas = [];
 $aFecha = [];
 $aNivel = [];
 foreach ($cActas as $oActa) {
@@ -112,7 +112,7 @@ $oFormP->setBoton($boton);
 $oHashPeriodo = new Hash();
 $oHashPeriodo->setCamposForm('empiezamax!empiezamin!periodo!year!iactividad_val!iasistentes_val');
 $oHashPeriodo->setCamposNo('!refresh');
-$a_camposHiddenP = array();
+$a_camposHiddenP = [];
 $oHashPeriodo->setArraycamposHidden($a_camposHiddenP);
 
 // Convertir las fechas inicio y fin a formato local:

@@ -31,7 +31,7 @@ if (empty($Qolvidar)) {
 }
 
 $url = Hash::link(ConfigGlobal::getWeb()
-    . '/apps/usuarios/controller/perm_activ_lista.php'
+    . '/src/usuarios/infrastructure/controllers/perm_activ_lista.php'
 );
 
 $oHash = new Hash();

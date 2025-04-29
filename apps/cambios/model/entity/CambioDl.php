@@ -71,7 +71,7 @@ class CambioDl extends Cambio
         } else {
             $bInsert = FALSE;
         }
-        $aDades = array();
+        $aDades = [];
         $aDades['id_tipo_cambio'] = $this->iid_tipo_cambio;
         $aDades['id_activ'] = $this->iid_activ;
         $aDades['id_tipo_activ'] = $this->iid_tipo_activ;

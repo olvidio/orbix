@@ -121,7 +121,7 @@ class GestorAsistente extends ClaseGestor
     private function ordenarAsistenciasPorFecha($cAsistencias, $a_id_activ_f_ini, $reverse)
     {
         // descarto los que no están.
-        $cActividadesOk = array();
+        $cActividadesOk = [];
         $id_actividad_old = 0;
         foreach ($cAsistencias as $oAsistente) {
             $id_activ = $oAsistente->getId_activ();
@@ -159,7 +159,7 @@ class GestorAsistente extends ClaseGestor
         $dl_org = $oActividad->getDl_org();
         $id_tabla = $oActividad->getId_tabla();
         $aWhere['id_activ'] = $iid_activ;
-        $aOperators = array();
+        $aOperators = [];
         $namespace = __NAMESPACE__;
         $msg_err = '';
 
@@ -180,7 +180,7 @@ class GestorAsistente extends ClaseGestor
             //return -1;
             //o si:
             if ($dl_org == $sdl) {
-                $cAsistentes = array();
+                $cAsistentes = [];
             } else {
                 if ($dl_org == $mi_dele) {
                     //parece que ya estan en IN. $a_Clases[] = array('clase'=>'AsistenteEx','get'=>'getAsistentesEx');
@@ -250,7 +250,7 @@ class GestorAsistente extends ClaseGestor
         $dl = preg_replace('/f$/', '', $oActividad->getDl_org());
 
         $aWhere['id_activ'] = $iid_activ;
-        $aOperators = array();
+        $aOperators = [];
 
         $msg_err = '';
         if ($dl == ConfigGlobal::mi_delef()) {
@@ -270,7 +270,7 @@ class GestorAsistente extends ClaseGestor
         $namespace = __NAMESPACE__;
         $cAsistentes = $this->getConjunt($a_Clases, $namespace, $aWhere, $aOperators);
 
-        $cAsistentesOk = array();
+        $cAsistentesOk = [];
         foreach ($cAsistentes as $oAsistente) {
             $id_nom = $oAsistente->getId_nom();
             $oPersona = Persona::NewPersona($id_nom);
@@ -295,7 +295,7 @@ class GestorAsistente extends ClaseGestor
      * @param array aOperators associatiu amb els valors dels operadors que cal aplicar a cada variable
      * @return array Una col·lecció d'objectes de tipus Asistente
      */
-    function getAsistentes($aWhere = array(), $aOperators = array())
+    function getAsistentes($aWhere = [], $aOperators = array())
     {
         /* Mirar si la actividad es mia o no */
         $iid_activ = $aWhere['id_activ'];
