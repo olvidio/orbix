@@ -102,10 +102,10 @@ if (!empty($Qid_menu) || !empty($Qnuevo)) {
     $oMiUsuario = $UsuarioRepository->findById(ConfigGlobal::mi_id_usuario());
     $id_role = $oMiUsuario->getId_role();
 
-    if (!empty($aRoles[$id_role]) && ($aRoles[$id_role] === 'SuperAdmin')) {
+    //if (!empty($aRoles[$id_role]) && ($aRoles[$id_role] === 'SuperAdmin')) {
         $txt_ok = "  es ok?<input type='checkbox' name='ok' $chk >";
         $campos_chk = 'ok';
-    }
+    //}
 
     $oHash = new Hash();
     $oHash->setCamposForm("$campos_chk!orden!txt_menu!id_metamenu!parametros!perm_menu");
