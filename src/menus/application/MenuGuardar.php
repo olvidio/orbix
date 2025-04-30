@@ -39,10 +39,10 @@ class MenuGuardar
         $oRole->setId_role($oMiUsuario->getId_role());
 
 
-        if ($oRole->isRole('SuperAdmin')) {
+        //if ($oRole->isRole('SuperAdmin')) {
             $ok = is_true($ok);
             $oMenuDb->setOk($ok);
-        }
+        //}
         $oMenuDb->setId_grupmenu($id_grupmenu);
         $oMenuDb->setMenu($txt_menu);
         $oMenuDb->setParametros($parametros);
