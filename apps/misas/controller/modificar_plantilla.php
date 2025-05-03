@@ -34,6 +34,17 @@ $oDesplTipoPlantilla->setOpciones($a_TiposPlantilla);
 $oDesplTipoPlantilla->setNombre('tipo_plantilla');
 $oDesplTipoPlantilla->setAction('fnjs_ver_plantilla_zona()');
 
+$url_importar_plantilla = 'apps/misas/controller/importar_plantilla.php';
+$oHashImportarPlantilla = new Hash();
+$oHashImportarPlantilla->setUrl($url_importar_plantilla);
+$oHashImportarPlantilla->setCamposForm('id_zona!tipo_plantilla_origen!tipo_plantilla_destino');
+$h_importar_plantilla = $oHashImportarPlantilla->linkSinVal();
+
+$oDesplImportarDePlantilla = new Desplegable();
+$oDesplImportarDePlantilla->setOpciones($a_TiposPlantilla);
+$oDesplImportarDePlantilla->setNombre('importar_de_plantilla');
+$oDesplImportarDePlantilla->setAction('fnjs_importar_de_plantilla_zona()');
+
 $a_Orden = array(
     'orden' => 'orden',
     'prioridad' => 'prioridad',
@@ -51,12 +62,21 @@ $oHashZonaTipo->setUrl($url_ver_cuadricula_zona);
 $oHashZonaTipo->setCamposForm('id_zona!tipo_plantilla!orden');
 $h_zona_tipo = $oHashZonaTipo->linkSinVal();
 
+$url_crear_nuevo_periodo = 'apps/misas/controller/crear_nuevo_periodo.php';
+$oHashNuevoPeriodo = new Hash();
+$oHashNuevoPeriodo->setUrl($url_crear_nuevo_periodo);
+$oHashNuevoPeriodo->setCamposForm('id_zona!tipoplantilla!periodo!empiezamin!empiezamax');
+$h_nuevo_periodo = $oHashNuevoPeriodo->linkSinVal();
+
 $a_campos = ['oPosicion' => $oPosicion,
     'oDesplZonas' => $oDesplZonas,
     'oDesplTipoPlantilla' => $oDesplTipoPlantilla,
+    'oDesplImportarDePlantilla' => $oDesplImportarDePlantilla,
     'oDesplOrden' => $oDesplOrden,
     'url_ver_cuadricula_zona' => $url_ver_cuadricula_zona,
+    'url_importar_plantilla' => $url_importar_plantilla,
     'h_zona_tipo' => $h_zona_tipo,
+    'h_importar_plantilla' => $h_importar_plantilla,
 ];
 
 $oView = new ViewTwig('misas/controller');
