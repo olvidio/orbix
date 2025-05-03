@@ -273,16 +273,6 @@
            	    if (sacd_zona) seleccion=2;
 	            if (sacd_dl) seleccion=4;
             	if (sacd_depaso) seleccion=8;
-//                let parametros = 'id_zona=' + id_zona + '&tipo_plantilla=' + tipo_plantilla + '&orden=' + orden  + '&seleccion=' + seleccion + '&periodo=' + periodo + '&empiezamin=' + empiezamin + '&empiezamax=' + empiezamax + '&fila=' + fila + '&columna=' + columna + '{{ h_ver_cuadricula_zona|raw }}';
-//                $.ajax({
-//                    url: url,
-//                    type: 'post',
-//                    data: parametros,
-//                    dataType: 'html'
-//                 })
-//                .done(function (rta_txt) {
-//                    $('#cuadriculas').html(rta_txt);
-//                });
                 modal.hide();
                     id_sacd_anterior=respuesta.meta.id_sacd_anterior;
                     i=0;
@@ -290,7 +280,6 @@
                     {
                         i++;
                     }
-//                    if (data[i]['id_nom']==id_sacd_anterior)
                     if (i<data.length)
                     {
 //                        alert('id_sacd_anterior encontrado');
@@ -302,7 +291,6 @@
                     {
                         i++;
                     }
-//                    if (data[i]['id_nom']==id_nom)
                     if (i<data.length)
                     {
 //                        alert('id_nom encontrado');
@@ -489,7 +477,6 @@ function formato(row, cell, value, columnDef, dataContext) {
 var meta;
     var grid;
     var data = {{ json_data_cuadricula|raw }};
-//    var columns = {{ json_columns_cuadricula|raw }};
     var columns = {{ columns_cuadricula|raw }};
     var options = {
         editable: false,
@@ -504,8 +491,6 @@ var meta;
     $('#empiezamax').val({{empiezamax}});
 
     var grid_sacd;
-//    var data_sacd = {{ json_data_sacd|raw }};
-//    var columns2 = {{ json_columns2|raw }};
     var seleccion ={{ seleccion }};
     if (seleccion==1) {
         $('#sacd_libre').checked=true;
@@ -532,7 +517,6 @@ var meta;
 
     $(function () {
         grid = new Slick.Grid("#myGrid", data, columns, options);
-//        grid_sacd = new Slick.Grid("#Grid_sacd", data_sacd, columns_sacd, options);
 
         grid.onClick.subscribe(function (e) {
             var cell = grid.getCellFromEvent(e);
