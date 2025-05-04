@@ -4,7 +4,6 @@ namespace procesos\db;
 
 use core\ConfigDB;
 use core\ConfigGlobal;
-use core\DBConnection;
 use devel\model\DBAbstract;
 
 /**
