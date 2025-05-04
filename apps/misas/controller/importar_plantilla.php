@@ -42,101 +42,85 @@ $a_dias_semana_breve=[1=>'L', 2=>'M', 3=>'X', 4=>'J', 5=>'V', 6=>'S', 7=>'D'];
 $a_nombre_mes_breve=[1=>'Ene', 2=>'feb', 3=>'mar', 4=>'abr', 5=>'may', 6=>'jun', 7=>'jul', 8=>'ago', 9=>'sep', 10=>'oct', 11=>'nov', 12=>'dic'];
 
 
-//FALTA periode propera setmana i proper mes
-//Funciona solament quan es dona data d'inici i final
+if(($QTipoPlantillaOrigen == EncargoDia::PLANTILLA_SEMANAL_UNO) || ($QTipoPlantillaOrigen== EncargoDia::PLANTILLA_SEMANAL_TRES)) {
+    $oInicioOrigen = new DateTimeLocal(EncargoDia::INICIO_SEMANAL_UNO);
+    $oFinOrigen = new DateTimeLocal(EncargoDia::FIN_SEMANAL_UNO);
+}
+
+if($QTipoPlantillaOrigen == EncargoDia::PLANTILLA_SEMANAL_TRES) {
+    $oInicioOrigen2 = new DateTimeLocal(EncargoDia::INICIO_SEMANAL_DOS);
+    $oFinOrigen2 = new DateTimeLocal(EncargoDia::FIN_SEMANAL_DOS);
+    $oInicioOrigen3 = new DateTimeLocal(EncargoDia::INICIO_SEMANAL_TRES);
+    $oFinOrigen3 = new DateTimeLocal(EncargoDia::FIN_SEMANAL_TRES);
+}
+
+if(($QTipoPlantillaOrigen == EncargoDia::PLANTILLA_DOMINGOS_UNO) || ($QTipoPlantillaOrigen == EncargoDia::PLANTILLA_DOMINGOS_TRES)) {
+    $oInicioOrigen = new DateTimeLocal(EncargoDia::INICIO_DOMINGOS_UNO);
+    $oFinOrigen = new DateTimeLocal(EncargoDia::FIN_DOMINGOS_UNO);
+}
+
+if($QTipoPlantillaOrigen == EncargoDia::PLANTILLA_DOMINGOS_TRES) {
+    $oInicioOrigen2 = new DateTimeLocal(EncargoDia::INICIO_DOMINGOS_DOS);
+    $oFinOrigen2 = new DateTimeLocal(EncargoDia::FIN_DOMINGOS_DOS);
+    $oInicioOrigen3 = new DateTimeLocal(EncargoDia::INICIO_DOMINGOS_TRES);
+    $oFinOrigen3 = new DateTimeLocal(EncargoDia::FIN_DOMINGOS_TRES);
+}
+
+if(($QTipoPlantillaOrigen == EncargoDia::PLANTILLA_MENSUAL_UNO) || ($QTipoPlantillaOrigen == EncargoDia::PLANTILLA_MENSUAL_TRES)) {
+    $oInicioOrigen = new DateTimeLocal(EncargoDia::INICIO_MENSUAL_UNO);
+    $oFinOrigen = new DateTimeLocal(EncargoDia::FIN_MENSUAL_UNO);
+}
+
+if($QTipoPlantillaOrigen == EncargoDia::PLANTILLA_MENSUAL_TRES) {
+    $oInicioOrigen = new DateTimeLocal(EncargoDia::INICIO_MENSUAL_DOS);
+    $oFinOrigen = new DateTimeLocal(EncargoDia::FIN_MENSUAL_DOS);
+    $oInicioOrigen = new DateTimeLocal(EncargoDia::INICIO_MENSUAL_TRES);
+    $oFinOrigen = new DateTimeLocal(EncargoDia::FIN_MENSUAL_TRES);
+}
 
 if(($QTipoPlantillaDestino== EncargoDia::PLANTILLA_SEMANAL_UNO) || ($QTipoPlantillaDestino== EncargoDia::PLANTILLA_SEMANAL_TRES)) {
-    $dia_week = $date->format('N');
-    $dia_plantilla = new DateTimeLocal(EncargoDia::INICIO_SEMANAL_UNO);
+    $oInicioDestino = new DateTimeLocal(EncargoDia::INICIO_SEMANAL_UNO);
+    $oFinDestino = new DateTimeLocal(EncargoDia::FIN_SEMANAL_UNO);
 }
 
 if($QTipoPlantillaDestino== EncargoDia::PLANTILLA_SEMANAL_TRES) {
-    $dia_week = $date->format('N');
-    $dia_plantilla2 = new DateTimeLocal(EncargoDia::INICIO_SEMANAL_DOS);
-    $intervalo_plantilla='P'.($dia_week-1).'D';
-    $dia_plantilla2->add(new DateInterval($intervalo_plantilla));
-
-    $dia_plantilla3 = new DateTimeLocal(EncargoDia::INICIO_SEMANAL_TRES);
-    $intervalo_plantilla='P'.($dia_week-1).'D';
-    $dia_plantilla3->add(new DateInterval($intervalo_plantilla));
+    $oInicioDestino2 = new DateTimeLocal(EncargoDia::INICIO_SEMANAL_DOS);
+    $oFinDestino2 = new DateTimeLocal(EncargoDia::FIN_SEMANAL_DOS);
+    $oInicioDestino3 = new DateTimeLocal(EncargoDia::INICIO_SEMANAL_TRES);
+    $oFinDestino3 = new DateTimeLocal(EncargoDia::FIN_SEMANAL_TRES);
 }
 
 if(($QTipoPlantillaDestino== EncargoDia::PLANTILLA_DOMINGOS_UNO) || ($QTipoPlantillaDestino== EncargoDia::PLANTILLA_DOMINGOS_TRES)) {
-    $dia_week = $date->format('N');
-    $dia_plantilla = new DateTimeLocal(EncargoDia::INICIO_DOMINGOS_UNO);
-
-    if ($dia_week==7){
-        $num_mes = $date->format('d');
-        $num_semana = intdiv($num_mes,7);
-        $intervalo_plantilla='P'.($dia_week+$num_semana-1).'D';
-    } else {
-        $intervalo_plantilla='P'.($dia_week-1).'D';
-    }
-    $dia_plantilla->add(new DateInterval($intervalo_plantilla));
+    $oInicioDestino = new DateTimeLocal(EncargoDia::INICIO_DOMINGOS_UNO);
+    $oFinDestino = new DateTimeLocal(EncargoDia::FIN_DOMINGOS_UNO);
 }
 
 if($QTipoPlantillaDestino== EncargoDia::PLANTILLA_DOMINGOS_TRES) {
-    $dia_week = $date->format('N');
-    $dia_plantilla2 = new DateTimeLocal(EncargoDia::INICIO_DOMINGOS_DOS);
-
-    if ($dia_week==7){
-        $num_mes = $date->format('d');
-        $num_semana = intdiv($num_mes,7);
-        $intervalo_plantilla='P'.($dia_week+$num_semana-1).'D';
-    } else {
-        $intervalo_plantilla='P'.($dia_week-1).'D';
-    }
-    $dia_plantilla2->add(new DateInterval($intervalo_plantilla));
-
-    $dia_plantilla3 = new DateTimeLocal(EncargoDia::INICIO_DOMINGOS_TRES);
-
-    if ($dia_week==7){
-        $num_mes = $date->format('d');
-        $num_semana = intdiv($num_mes,7);
-//                echo 'DOMINGO:'.$num_mes.'=>'.$num_semana.'<br>';
-        $intervalo_plantilla='P'.($dia_week+$num_semana-1).'D';
-    } else {
-        $intervalo_plantilla='P'.($dia_week-1).'D';
-    }
-    $dia_plantilla3->add(new DateInterval($intervalo_plantilla));
-//            echo 'DIA PLANTILLA3: '.$dia_plantilla3->format('d-m-Y').'<br>';
-
+    $oInicioDestino2 = new DateTimeLocal(EncargoDia::INICIO_DOMINGOS_DOS);
+    $oFinDestino2 = new DateTimeLocal(EncargoDia::FIN_DOMINGOS_DOS);
+    $oInicioDestino3 = new DateTimeLocal(EncargoDia::INICIO_DOMINGOS_TRES);
+    $oFinDestino3 = new DateTimeLocal(EncargoDia::FIN_DOMINGOS_TRES);
 }
 
 if(($QTipoPlantillaDestino== EncargoDia::PLANTILLA_MENSUAL_UNO) || ($QTipoPlantillaDestino== EncargoDia::PLANTILLA_MENSUAL_TRES)) {
-//            echo 'tipo mensual 1 ó 3 OK<br>';
-    $dia_week = $date->format('N');
-    $dia_plantilla = new DateTimeLocal(EncargoDia::INICIO_MENSUAL_UNO);
-    $num_mes = $date->format('d');
-    $num_semana = intdiv($num_mes,7);
-//            echo 'MENSUAL:'.$num_mes.'=>'.$num_semana.'<br>';
-    $intervalo_plantilla='P'.($dia_week+$num_semana-1).'D';
-    $dia_plantilla->add(new DateInterval($intervalo_plantilla));
-//            echo 'DIA PLANTILLA: '.$dia_plantilla->format('d-m-Y').'<br>';
+    $oInicioDestino = new DateTimeLocal(EncargoDia::INICIO_MENSUAL_UNO);
+    $oFinDestino = new DateTimeLocal(EncargoDia::FIN_MENSUAL_UNO);
 }
 
 if($QTipoPlantillaDestino== EncargoDia::PLANTILLA_MENSUAL_TRES) {
-//            echo 'tipo m2 OK<br>';
-    $dia_week = $date->format('N');
-    $dia_plantilla2 = new DateTimeLocal(EncargoDia::INICIO_MENSUAL_DOS);
-    $num_mes = $date->format('d');
-    $num_semana = intdiv($num_mes,7);
-//            echo 'MENSUAL:'.$num_mes.'=>'.$num_semana.'<br>';
-    $intervalo_plantilla='P'.($dia_week+$num_semana-1).'D';
-    $dia_plantilla2->add(new DateInterval($intervalo_plantilla));
-//            echo 'DIA PLANTILLA2: '.$dia_plantilla2->format('d-m-Y').'<br>';
-
-//            echo 'tipo s3 OK<br>';
-    $dia_plantilla3 = new DateTimeLocal(EncargoDia::INICIO_MENSUAL_TRES);
-    $num_mes = $date->format('d');
-    $num_semana = intdiv($num_mes,7);
-//            echo 'MENSUAL:'.$num_mes.'=>'.$num_semana.'<br>';
-    $intervalo_plantilla='P'.($dia_week+$num_semana-1).'D';
-    $dia_plantilla3->add(new DateInterval($intervalo_plantilla));
-//            echo 'DIA PLANTILLA3: '.$dia_plantilla3->format('d-m-Y').'<br>';
+    $oInicioDestino2 = new DateTimeLocal(EncargoDia::INICIO_MENSUAL_DOS);
+    $oFinDestino2 = new DateTimeLocal(EncargoDia::FIN_MENSUAL_DOS);
+    $oInicioDestino3 = new DateTimeLocal(EncargoDia::INICIO_MENSUAL_TRES);
+    $oFinDestino3 = new DateTimeLocal(EncargoDia::FIN_MENSUAL_TRES);
 }
+echo 'DIA INICIO PLANTILLA ORIGEN: '.$oInicioOrigen->format('d-m-Y').'<br>';
+echo 'DIA FIN PLANTILLA ORIGEN: '.$oFinOrigen->format('d-m-Y').'<br>';
+echo 'DIA INICIO PLANTILLA DESTINO: '.$oInicioDestino->format('d-m-Y').'<br>';
+echo 'DIA FIN PLANTILLA DESTINO: '.$oFinDestino->format('d-m-Y').'<br>';
+//echo 'DIA PLANTILLA2: '.$dia_plantilla2->format('d-m-Y').'<br>';
+//echo 'DIA PLANTILLA3: '.$dia_plantilla3->format('d-m-Y').'<br>';
 
-$oFin = new DateTimeLocal($sFin);
+
 $interval = new DateInterval('P1D');
 $date_range = new DatePeriod($oInicio, $interval, $oFin);
 $a_dias_semana = EncargoConstants::OPCIONES_DIA_SEMANA;
