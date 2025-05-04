@@ -33,7 +33,7 @@ class DBEsquema extends DBAbstract
         $host_sv = $config['host'];
         $port_sv = $config['port'];
         //coge los valores de public: 1.la database sv-e; 2.nombre superusuario; 3.pasword superusuario;
-        $configE = $oConfigDB->getEsquema('publicv-e');
+        $configE = $oConfigDB->getEsquema('public_select');
         $host_sve = $configE['host'];
         $port_sve = $configE['port'];
 
