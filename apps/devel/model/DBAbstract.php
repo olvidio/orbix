@@ -24,6 +24,38 @@ abstract class DBAbstract
      */
     private bool $bLoaded;
 
+    public static function refreshSubscription(DBAbstract $instance)
+    {
+        // comun_select
+        $instance->addPermisoGlobal('comun_select');
+        $a_sql = [];
+        $a_sql[] = "ALTER SUBSCRIPTION subpruebascomun REFRESH PUBLICATION;";
+        $instance->executeSql($a_sql);
+        $instance->delPermisoGlobal('comun_select');
+
+        // sv-e_select
+        $instance->addPermisoGlobal('sfsv-e_select');
+        $a_sql = [];
+        $a_sql[] = "ALTER SUBSCRIPTION subpruebassve REFRESH PUBLICATION;";
+        $instance->executeSql($a_sql);
+        $instance->delPermisoGlobal('sfsv-e_select');
+    }
+
+    public static function hasServerSelect()
+    {
+        // Si es el mismo servidor (portátil) me lo salto:
+        $oConfigDB = new ConfigDB('importar');
+        $config = $oConfigDB->getEsquema('public');
+        $host_sv = $config['host'];
+        $port_sv = $config['port'];
+        //coge los valores de public: 1.la database sv-e; 2.nombre superusuario; 3.pasword superusuario;
+        $configE = $oConfigDB->getEsquema('public_select');
+        $host_sve = $configE['host'];
+        $port_sve = $configE['port'];
+
+        return ($host_sv != $host_sve || $port_sv != $port_sve);
+    }
+
     /**
      * Define el objeto PDO de la base de datos
      */

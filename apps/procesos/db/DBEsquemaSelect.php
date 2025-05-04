@@ -3,6 +3,7 @@
 namespace procesos\db;
 
 use core\ConfigGlobal;
+use devel\model\DBAbstract;
 
 /**
  * crear las tablas necesarias para el esquema select,
@@ -31,8 +32,9 @@ class DBEsquemaSelect extends DBEsquema
         $this->create_a_tipos_procesos_selected();
         $this->create_a_tareas_proceso_selected();
         $this->create_aux_usuarios_perm_selected();
+        // renovar subscripciones
+        DBAbstract::refreshSubscription($this);
     }
-
 
     /**
      * En la BD Comun (esquema).

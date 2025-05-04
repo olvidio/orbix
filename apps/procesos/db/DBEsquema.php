@@ -2,7 +2,6 @@
 
 namespace procesos\db;
 
-use core\ConfigDB;
 use core\ConfigGlobal;
 use devel\model\DBAbstract;
 
@@ -25,21 +24,6 @@ class DBEsquema extends DBAbstract
         $this->role_vf = '"' . $esquema_sfsv . '"';
     }
 
-    private function hasServerSelect()
-    {
-        // Si es el mismo servidor (portátil) me lo salto:
-        $oConfigDB = new ConfigDB('importar');
-        $config = $oConfigDB->getEsquema('public');
-        $host_sv = $config['host'];
-        $port_sv = $config['port'];
-        //coge los valores de public: 1.la database sv-e; 2.nombre superusuario; 3.pasword superusuario;
-        $configE = $oConfigDB->getEsquema('public_select');
-        $host_sve = $configE['host'];
-        $port_sve = $configE['port'];
-
-        return ($host_sv != $host_sve || $port_sv != $port_sve);
-    }
-
     public function dropAll()
     {
         $this->eliminar_a_actividad_proceso('sv');
@@ -49,8 +33,8 @@ class DBEsquema extends DBAbstract
         $this->eliminar_a_fases();
         $this->eliminar_a_tareas();
         $this->eliminar_aux_usuarios_perm();
-        // crear las tablas en la DBSelect para la sincronización.
-        if ($this->hasServerSelect()) {
+        // eliminar las tablas en la DBSelect para la sincronización.
+        if (DBAbstract::hasServerSelect()) {
             $oDBEsquemaSelect = new DBEsquemaSelect();
             $oDBEsquemaSelect->dropAllSelect();
         }
@@ -66,7 +50,7 @@ class DBEsquema extends DBAbstract
         $this->create_a_tareas_proceso();
         $this->create_aux_usuarios_perm();
         // crear las tablas en la DBSelect para la sincronización.
-        if ($this->hasServerSelect()) {
+        if (DBAbstract::hasServerSelect()) {
             $oDBEsquemaSelect = new DBEsquemaSelect();
             $oDBEsquemaSelect->createAllSelect();
         }
