@@ -89,8 +89,8 @@ $oDBRol->setPwd($esquema_pwd);
 $oDBRol->crearUsuario();
 
 // sv-e
-// Los mismos parametros que para sv.
-// Si es el mismo servidor (portatil) me lo salto:
+// Los mismos parámetros que para sv.
+// Si es el mismo servidor (portátil) me lo salto:
 $host_sv = $config['host'];
 $port_sv = $config['port'];
 $oConfigDB = new core\ConfigDB('importar');

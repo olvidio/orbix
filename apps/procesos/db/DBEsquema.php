@@ -2,7 +2,9 @@
 
 namespace procesos\db;
 
+use core\ConfigDB;
 use core\ConfigGlobal;
+use core\DBConnection;
 use devel\model\DBAbstract;
 
 /**
@@ -24,6 +26,21 @@ class DBEsquema extends DBAbstract
         $this->role_vf = '"' . $esquema_sfsv . '"';
     }
 
+    private function hasServerSelect()
+    {
+        // Si es el mismo servidor (portátil) me lo salto:
+        $oConfigDB = new ConfigDB('importar');
+        $config = $oConfigDB->getEsquema('public');
+        $host_sv = $config['host'];
+        $port_sv = $config['port'];
+        //coge los valores de public: 1.la database sv-e; 2.nombre superusuario; 3.pasword superusuario;
+        $configE = $oConfigDB->getEsquema('publicv-e');
+        $host_sve = $configE['host'];
+        $port_sve = $configE['port'];
+
+        return ($host_sv != $host_sve || $port_sv != $port_sve);
+    }
+
     public function dropAll()
     {
         $this->eliminar_a_actividad_proceso('sv');
@@ -33,6 +50,11 @@ class DBEsquema extends DBAbstract
         $this->eliminar_a_fases();
         $this->eliminar_a_tareas();
         $this->eliminar_aux_usuarios_perm();
+        // crear las tablas en la DBSelect para la sincronización.
+        if ($this->hasServerSelect()) {
+            $oDBEsquemaSelect = new DBEsquemaSelect();
+            $oDBEsquemaSelect->dropAllSelect();
+        }
     }
 
     public function createAll()
@@ -44,6 +66,11 @@ class DBEsquema extends DBAbstract
         $this->create_a_tipos_procesos();
         $this->create_a_tareas_proceso();
         $this->create_aux_usuarios_perm();
+        // crear las tablas en la DBSelect para la sincronización.
+        if ($this->hasServerSelect()) {
+            $oDBEsquemaSelect = new DBEsquemaSelect();
+            $oDBEsquemaSelect->createAllSelect();
+        }
     }
 
     public function llenarAll()
@@ -59,7 +86,7 @@ class DBEsquema extends DBAbstract
 
     }
 
-    private function infoTable($tabla)
+    protected function infoTable($tabla)
     {
         $datosTabla = [];
         $datosTabla['tabla'] = $tabla;
@@ -120,10 +147,10 @@ class DBEsquema extends DBAbstract
         $this->addPermisoGlobal('comun');
 
         $tabla_padre = "a_actividad_proceso";
-        if ($seccion == 'sv') {
+        if ($seccion === 'sv') {
             $tabla = "a_actividad_proceso_sv";
         }
-        if ($seccion == 'sf') {
+        if ($seccion === 'sf') {
             $tabla = "a_actividad_proceso_sf";
         }
         $datosTabla = $this->infoTable($tabla);
@@ -204,10 +231,10 @@ class DBEsquema extends DBAbstract
         // (debe estar después de fijar el role)
         $this->addPermisoGlobal('comun');
 
-        if ($seccion == 'sv') {
+        if ($seccion === 'sv') {
             $tabla = "a_actividad_proceso_sv";
         }
-        if ($seccion == 'sf') {
+        if ($seccion === 'sf') {
             $tabla = "a_actividad_proceso_sf";
         }
         $datosTabla = $this->infoTable($tabla);
