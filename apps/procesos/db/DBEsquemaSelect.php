@@ -40,7 +40,7 @@ class DBEsquemaSelect extends DBEsquema
     public function create_a_actividad_proceso_selected($seccion)
     {
         // (debe estar después de fijar el role)
-        $this->addPermisoGlobal('comun');
+        $this->addPermisoGlobal('comun_select');
 
         $tabla_padre = "a_actividad_proceso";
         if ($seccion === 'sv') {
@@ -62,13 +62,13 @@ class DBEsquemaSelect extends DBEsquema
         $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->role";
 
         $this->executeSql($a_sql);
-        $this->delPermisoGlobal('comun');
+        $this->delPermisoGlobal('comun_select');
     }
 
     public function eliminar_a_actividad_proceso_selected($seccion)
     {
         // (debe estar después de fijar el role)
-        $this->addPermisoGlobal('comun');
+        $this->addPermisoGlobal('comun_select');
 
         if ($seccion === 'sv') {
             $tabla = "a_actividad_proceso_sv";
@@ -86,13 +86,13 @@ class DBEsquemaSelect extends DBEsquema
 
         $this->eliminar($nom_tabla);
 
-        $this->delPermisoGlobal('comun');
+        $this->delPermisoGlobal('comun_select');
     }
 
     public function create_a_tipos_procesos_selected()
     {
         // (debe estar después de fijar el role)
-        $this->addPermisoGlobal('comun');
+        $this->addPermisoGlobal('comun_select');
 
         $tabla = "a_tipos_proceso";
         $datosTabla = $this->infoTable($tabla);
@@ -110,13 +110,13 @@ class DBEsquemaSelect extends DBEsquema
 
         $this->executeSql($a_sql);
 
-        $this->delPermisoGlobal('comun');
+        $this->delPermisoGlobal('comun_select');
     }
 
     public function eliminar_a_tipos_proceso_selected()
     {
         // (debe estar después de fijar el role)
-        $this->addPermisoGlobal('comun');
+        $this->addPermisoGlobal('comun_select');
 
         $datosTabla = $this->infoTable("a_tipos_proceso");
 
@@ -128,13 +128,13 @@ class DBEsquemaSelect extends DBEsquema
 
         $this->eliminar($nom_tabla);
 
-        $this->delPermisoGlobal('comun');
+        $this->delPermisoGlobal('comun_select');
     }
 
     public function create_a_tareas_selected()
     {
         // (debe estar después de fijar el role)
-        $this->addPermisoGlobal('comun');
+        $this->addPermisoGlobal('comun_select');
 
         $tabla = "a_tareas";
         $datosTabla = $this->infoTable($tabla);
@@ -153,13 +153,13 @@ class DBEsquemaSelect extends DBEsquema
 
         $this->executeSql($a_sql);
 
-        $this->delPermisoGlobal('comun');
+        $this->delPermisoGlobal('comun_select');
     }
 
     public function eliminar_a_tareas_selected()
     {
         // (debe estar después de fijar el role)
-        $this->addPermisoGlobal('comun');
+        $this->addPermisoGlobal('comun_select');
 
         $datosTabla = $this->infoTable("a_tareas");
 
@@ -171,13 +171,13 @@ class DBEsquemaSelect extends DBEsquema
 
         $this->eliminar($nom_tabla);
 
-        $this->delPermisoGlobal('comun');
+        $this->delPermisoGlobal('comun_select');
     }
 
     public function create_a_fases_selected()
     {
         // (debe estar después de fijar el role)
-        $this->addPermisoGlobal('comun');
+        $this->addPermisoGlobal('comun_select');
 
         $tabla = "a_fases";
         $datosTabla = $this->infoTable($tabla);
@@ -195,13 +195,13 @@ class DBEsquemaSelect extends DBEsquema
 
         $this->executeSql($a_sql);
 
-        $this->delPermisoGlobal('comun');
+        $this->delPermisoGlobal('comun_select');
     }
 
     public function eliminar_a_fases_selected()
     {
         // (debe estar después de fijar el role)
-        $this->addPermisoGlobal('comun');
+        $this->addPermisoGlobal('comun_select');
 
         $datosTabla = $this->infoTable("a_fases");
 
@@ -213,13 +213,13 @@ class DBEsquemaSelect extends DBEsquema
 
         $this->eliminar($nom_tabla);
 
-        $this->delPermisoGlobal('comun');
+        $this->delPermisoGlobal('comun_select');
     }
 
     public function create_a_tareas_proceso_selected()
     {
         // (debe estar después de fijar el role)
-        $this->addPermisoGlobal('comun');
+        $this->addPermisoGlobal('comun_select');
 
         $tabla = "a_tareas_proceso";
         $datosTabla = $this->infoTable($tabla);
@@ -239,13 +239,13 @@ class DBEsquemaSelect extends DBEsquema
 
         $this->executeSql($a_sql);
 
-        $this->delPermisoGlobal('comun');
+        $this->delPermisoGlobal('comun_select');
     }
 
     public function eliminar_a_tareas_proceso_selected()
     {
         // (debe estar después de fijar el role)
-        $this->addPermisoGlobal('comun');
+        $this->addPermisoGlobal('comun_select');
 
         $datosTabla = $this->infoTable("a_tareas_proceso");
 
@@ -257,7 +257,7 @@ class DBEsquemaSelect extends DBEsquema
 
         $this->eliminar($nom_tabla);
 
-        $this->delPermisoGlobal('comun');
+        $this->delPermisoGlobal('comun_select');
     }
 
     /**
@@ -271,7 +271,7 @@ class DBEsquemaSelect extends DBEsquema
         $this->esquema = ConfigGlobal::mi_region_dl();
         $this->role = '"' . $this->esquema . '"';
         // (debe estar después de fijar el role)
-        $this->addPermisoGlobal('sfsv-e');
+        $this->addPermisoGlobal('sfsv-e_select');
 
         $tabla = "aux_usuarios_perm";
         $datosTabla = $this->infoTable($tabla);
@@ -292,7 +292,7 @@ class DBEsquemaSelect extends DBEsquema
 
         $this->executeSql($a_sql);
 
-        $this->delPermisoGlobal('sfsv-e');
+        $this->delPermisoGlobal('sfsv-e_select');
         // Devolver los valores al estado original
         $this->esquema = $esquema_org;
         $this->role = $role_org;
@@ -306,7 +306,7 @@ class DBEsquemaSelect extends DBEsquema
         $this->esquema = ConfigGlobal::mi_region_dl();
         $this->role = '"' . $this->esquema . '"';
         // (debe estar después de fijar el role)
-        $this->addPermisoGlobal('sfsv-e');
+        $this->addPermisoGlobal('sfsv-e_select');
 
         $datosTabla = $this->infoTable("aux_usuarios_perm");
 
@@ -318,7 +318,7 @@ class DBEsquemaSelect extends DBEsquema
 
         $this->eliminar($nom_tabla);
 
-        $this->delPermisoGlobal('sfsv-e');
+        $this->delPermisoGlobal('sfsv-e_select');
         // Devolver los valores al estado original
         $this->esquema = $esquema_org;
         $this->role = $role_org;

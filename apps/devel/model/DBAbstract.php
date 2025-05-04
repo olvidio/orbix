@@ -79,6 +79,46 @@ abstract class DBAbstract
     protected function delPermisoGlobal($db)
     {
         switch ($db) {
+            case 'sfsv-e_select':
+                // conectar con DB sv-e_select:
+                $oConfigDB = new ConfigDB('importar');
+                $config = $oConfigDB->getEsquema('publicv-e_select');
+                $oConexion = new DBConnection($config);
+                $this->oDbl = $oConexion->getPDO();
+
+                // Dar permisos al role H-dlbv de orbixv/f (para poder acceder a global)
+                if (ConfigGlobal::mi_sfsv() === 1) {
+                    $vf = 'v';
+                } else {
+                    $vf = 'f';
+                }
+                $this->user_orbix = 'orbix' . $vf;
+                $a_sql = [];
+                $a_sql[0] = "REVOKE $this->user_orbix FROM $this->role_vf GRANTED BY orbix_admindb;";
+
+                $this->executeSql($a_sql);
+                // Devuelve la conexión a origen.
+                // Conexión sv esquema.
+                $this->oDbl = $GLOBALS['oDBE_Select'];
+                break;
+            case 'comun_select':
+                // conectar con DB comun_select:
+                $oConfigDB = new ConfigDB('importar'); //de la database comun
+                $config = $oConfigDB->getEsquema('public_select'); //de la database comun
+                $oConexion = new DBConnection($config);
+                $this->oDbl = $oConexion->getPDO();
+
+                // Dar permisos al role H-dlb de orbix (para poder acceder a global)
+                $this->user_orbix = 'orbix';
+
+                $a_sql = [];
+                $a_sql[0] = "REVOKE $this->user_orbix FROM $this->role GRANTED BY orbix_admindb;";
+
+                $this->executeSql($a_sql);
+                // Devuelve la conexión a origen.
+                // Conexión Comun esquema.
+                $this->oDbl = $GLOBALS['oDBC_Select'];
+                break;
             case 'comun':
                 /*
                 // Conexión Comun public, para entrar como usuario orbix.
@@ -165,6 +205,46 @@ abstract class DBAbstract
     protected function addPermisoGlobal(string $db)
     {
         switch ($db) {
+            case 'sfsv-e_select':
+                // conectar con DB sv-e_select:
+                $oConfigDB = new ConfigDB('importar');
+                $config = $oConfigDB->getEsquema('publicv-e_select');
+                $oConexion = new DBConnection($config);
+                $this->oDbl = $oConexion->getPDO();
+
+                // Dar permisos al role H-dlbv de orbixv/f (para poder acceder a global)
+                if (ConfigGlobal::mi_sfsv() === 1) {
+                    $vf = 'v';
+                } else {
+                    $vf = 'f';
+                }
+                $this->user_orbix = 'orbix' . $vf;
+                $a_sql = [];
+                $a_sql[0] = "GRANT $this->user_orbix TO $this->role_vf GRANTED BY orbix_admindb;";
+
+                $this->executeSql($a_sql);
+                // Devuelve la conexión a origen.
+                // Conexión sv esquema.
+                $this->oDbl = $GLOBALS['oDBE_Select'];
+                break;
+            case 'comun_select':
+                // conectar con DB comun_select:
+                $oConfigDB = new ConfigDB('importar'); //de la database comun
+                $config = $oConfigDB->getEsquema('public_select'); //de la database comun
+                $oConexion = new DBConnection($config);
+                $this->oDbl = $oConexion->getPDO();
+
+                // Dar permisos al role H-dlb de orbix (para poder acceder a global)
+                $this->user_orbix = 'orbix';
+
+                $a_sql = [];
+                $a_sql[0] = "GRANT $this->user_orbix TO $this->role GRANTED BY orbix_admindb;";
+
+                $this->executeSql($a_sql);
+                // Devuelve la conexión a origen.
+                // Conexión Comun esquema.
+                $this->oDbl = $GLOBALS['oDBC_Select'];
+                break;
             case 'comun':
                 /*
                 // Conexión Comun public, para entrar como usuario orbix.
