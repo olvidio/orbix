@@ -18,10 +18,6 @@ use web\Hash;
 use web\TiposActividades;
 use zonassacd\model\entity\GestorZonaSacd;
 
-//use web\Desplegable;
-//use zonassacd\model\entity\GestorZonaSacd;
-//use personas\model\entity\GestorPersona;
-
 require_once("apps/core/global_header.inc");
 // Archivos requeridos por esta url **********************************************
 
@@ -137,16 +133,8 @@ $a_dias_semana_breve=[1=>'L', 2=>'M', 3=>'X', 4=>'J', 5=>'V', 6=>'S', 7=>'D'];
 $a_nombre_mes_breve=[1=>'Ene', 2=>'feb', 3=>'mar', 4=>'abr', 5=>'may', 6=>'jun', 7=>'jul', 8=>'ago', 9=>'sep', 10=>'oct', 11=>'nov', 12=>'dic'];
 
 
-//$columns_cuadricula = [
-//    ["id" => "encargo", "name" => "Encargo", "field" => "encargo", "width" => 250, "cssClass" => "cell-title"],
-//];
 $columns_cuadricula = "[
     {'id': 'encargo', 'name' : 'Encargo', 'field' : 'encargo', 'width' : 250, 'cssClass' : 'cell-title', 'formatter': formato_encargos}";
-//$columns2 = [
-//    ["id" => "sacerdote", "name" => "Sacerdote", "field" => "sacerdote", "width" => 250, "cssClass" => "cell-title"],
-//];
-//$columns_sacd = "[
-//    {'id': 'sacerdote', 'name' : 'Sacerdote', 'field' : 'sacerdote', 'width' : 250, 'cssClass' : 'cell-title'}";
 
 $titulo_sacd = [];
 $dia_week_sacd = [];
@@ -176,13 +164,6 @@ switch (trim($QTipoPlantilla)) {
             $titulo_sacd[$num_dia] = $nom_dia;
             $columns_cuadricula .= ",
             {'id' : '".$num_dia."', 'name' : '".$nom_dia."', 'field' : '".$num_dia."', 'width' : 60, 'formatter': formato}";
-//            $columns2[] = [
-//                "id" => "$num_dia", 
-//                "name" => "$nom_dia", 
-//                "field" => "$num_dia", 
-//                "width" => 60, 
-//                "cssClass" => "cell-title"
-//            ];
         }
         break;
     case EncargoDia::PLANTILLA_DOMINGOS_UNO:
@@ -270,10 +251,6 @@ switch (trim($QTipoPlantilla)) {
 } 
 
 $columns_cuadricula .= "]";
-//$columns_sacd .= "]";
-
-//echo $columns_cuadricula.'<br>';
-//echo $columns_sacd.'<br>';
 
 $data_cuadricula = [];
 
@@ -601,11 +578,6 @@ foreach ($cEncargosZona as $oEncargo) {
     }
 }
 
-//$aWhere = [];
-//$aWhere['id_zona'] = $Qid_zona;
-//$aOperador = [];
-//$GesZonasSacd = new GestorZonaSacd();
-//$cZonaSacd = $GesZonasSacd->getZonasSacds($aWhere, $aOperador);
 $contador_1a_sacd = [];
 $contador_total_sacd = [];
 $esta_sacd = [];
@@ -756,8 +728,6 @@ foreach ($date_range as $date) {
 $data_cols["meta"]=$meta;
 $data_cuadricula[]=$data_cols;
 
-//$data_sacd = [];
-//$meta_sacd = [];
 $aWhere = [];
 $aWhere['id_zona'] = $Qid_zona;
 $aOperador = [];
@@ -781,7 +751,6 @@ foreach($lista_sacd as $key => $nombre_sacd)
     $id_nom=$exp_key[1];
     $data_cols['encargo']=$nombre_sacd;
     $data_cols['id_nom']=$id_nom;
-//    $data_cols['sacerdote']=$nombre_sacd;
 //    echo $nombre_sacd.$id_nom.'<br>';
     foreach ($date_range as $date) {
         $inicio_dia = $date->format('Y-m-d').' 00:00:00';
@@ -860,28 +829,22 @@ foreach($lista_sacd as $key => $nombre_sacd)
 
 
         if ($esta_en_zona[$key][$dws]){
-//            $data_cols[$num_dia]=$misas_dia*10+$misas_1a_hora;
             $data_cols[$num_dia] = 'SI';    
-//            $data_cols[$num_dia] = 'SI';
         } else {
-//            $data_cols[$num_dia]=$misas_dia*10+$misas_1a_hora;
             if ($misas_1a_hora_zona>0){
                 $color_fondo='rojo';
                 $texto='No está en la zona y tiene Misa a primera hora';
             }
             $data_cols[$num_dia] = 'NO';
-//            $data_cols[$num_dia] = 'NO';
         }
         if ($esta_sacd[$id_nom][$num_dia]<1)
         {
-//            echo $id_nom.' está en '.$donde_esta_sacd[$id_nom][$num_dia].$num_dia.'<br>';
             if ($misas_1a_hora_zona>0){
 //                echo '1a: '.$misas_1a_hora.'<br>';
                 $color_fondo='rojo';
             }
             $texto='Está en '.$donde_esta_sacd[$id_nom][$num_dia];
             $data_cols[$num_dia] = '--';
-//            $data_cols[$num_dia] = '--';
         }
 //        echo $id_nom.'-'.$color_fondo.'-'.$texto.'<br>';
         $meta_sacd["$num_dia"] = [
@@ -897,11 +860,7 @@ foreach($lista_sacd as $key => $nombre_sacd)
 }
 
 
-//$json_columns_cuadricula = json_encode($columns_cuadricula);
 $json_data_cuadricula = json_encode($data_cuadricula);
-
-//$json_columns2 = json_encode($columns2);
-//$json_data_sacd = json_encode($data_sacd);
 
 $url_cuadricula_update = 'apps/misas/controller/cuadricula_update.php';
 $oHash_cuadricula_update = new Hash();
@@ -924,7 +883,6 @@ $h_ver_cuadricula_zona = $oHash_ver_cuadricula_zona->linkSinVal();
 $a_campos = ['oPosicion' => $oPosicion,
     'columns_cuadricula' => $columns_cuadricula,
     'json_data_cuadricula' => $json_data_cuadricula,
-//    'json_columns2' => $json_columns2,
     'url_desplegable_sacd' =>$url_desplegable_sacd,
     'h_desplegable_sacd' => $h_desplegable_sacd,
     'url_ver_cuadricula_zona' => $url_ver_cuadricula_zona,

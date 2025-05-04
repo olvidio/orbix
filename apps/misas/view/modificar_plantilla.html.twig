@@ -19,6 +19,11 @@
                     {{ oDesplOrden.desplegable|raw }}
                 </th> 
             </tr>
+            <tr>
+                <th class=titulo_inv colspan=4>{{ "Importar de la plantilla"|trans|capitalize }}:&nbsp;&nbsp;&nbsp;
+                    {{ oDesplImportarDePlantilla.desplegable|raw }}
+                </th>
+            </tr>
             </thead>
         </table>
     </form>
@@ -44,6 +49,36 @@
             })
                 .done(function (rta_txt) {
                     $('#div_cuadricula').html(rta_txt);
+                });
+        }
+    }
+
+    fnjs_importar_de_plantilla_zona = function () {
+        let id_zona = $('#id_zona').val();
+        let tipo_plantilla = $('#tipo_plantilla').val();
+        let importar_de_plantilla = $('#importar_de_plantilla').val();
+        let orden = $('#orden').val();
+        if (id_zona) {
+            let url_importar_plantilla = '{{ url_importar_plantilla }}';
+            let parametros = 'id_zona=' + id_zona + '&tipo_plantilla_destino=' + tipo_plantilla + '&tipo_plantilla_origen=' + importar_de_plantilla + '{{ h_importar_plantilla|raw }}';
+            $.ajax({
+                url: url_importar_plantilla,
+                type: 'post',
+                data: parametros,
+                dataType: 'html'
+            })
+                .done(function (rta_txt) {
+                    let url_ver_cuadricula_zona = '{{ url_ver_cuadricula_zona }}';
+                    let parametros = 'id_zona=' + id_zona + '&tipo_plantilla=' + tipo_plantilla + '&orden=' + orden + '{{ h_zona_tipo|raw }}';
+                    $.ajax({
+                        url: url_ver_cuadricula_zona,
+                        type: 'post',
+                        data: parametros,
+                        dataType: 'html'
+                    })
+                        .done(function (rta_txt) {
+                            $('#div_cuadricula').html(rta_txt);
+                        });
                 });
         }
     }
