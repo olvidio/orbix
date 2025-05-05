@@ -85,12 +85,7 @@ class DBEsquemaSelect extends DBEsquema
             $tabla = "a_actividad_proceso_sf";
         }
         $datosTabla = $this->infoTable($tabla);
-
         $nom_tabla = $datosTabla['nom_tabla'];
-
-        $a_sql = [];
-        $a_sql[0] = "DROP TABLE IF EXISTS $nom_tabla CASCADE;";
-        $this->executeSql($a_sql);
 
         $this->eliminar($nom_tabla);
 
@@ -128,12 +123,7 @@ class DBEsquemaSelect extends DBEsquema
         $this->addPermisoGlobal('comun_select');
 
         $datosTabla = $this->infoTable("a_tipos_proceso");
-
         $nom_tabla = $datosTabla['nom_tabla'];
-
-        $a_sql = [];
-        $a_sql[0] = "DROP TABLE IF EXISTS $nom_tabla CASCADE;";
-        $this->executeSql($a_sql);
 
         $this->eliminar($nom_tabla);
 
@@ -172,12 +162,7 @@ class DBEsquemaSelect extends DBEsquema
         $this->addPermisoGlobal('comun_select');
 
         $datosTabla = $this->infoTable("a_tareas");
-
         $nom_tabla = $datosTabla['nom_tabla'];
-
-        $a_sql = [];
-        $a_sql[0] = "DROP TABLE IF EXISTS $nom_tabla CASCADE;";
-        $this->executeSql($a_sql);
 
         $this->eliminar($nom_tabla);
 
@@ -215,12 +200,7 @@ class DBEsquemaSelect extends DBEsquema
         $this->addPermisoGlobal('comun_select');
 
         $datosTabla = $this->infoTable("a_fases");
-
         $nom_tabla = $datosTabla['nom_tabla'];
-
-        $a_sql = [];
-        $a_sql[0] = "DROP TABLE IF EXISTS $nom_tabla CASCADE;";
-        $this->executeSql($a_sql);
 
         $this->eliminar($nom_tabla);
 
@@ -260,12 +240,7 @@ class DBEsquemaSelect extends DBEsquema
         $this->addPermisoGlobal('comun_select');
 
         $datosTabla = $this->infoTable("a_tareas_proceso");
-
         $nom_tabla = $datosTabla['nom_tabla'];
-
-        $a_sql = [];
-        $a_sql[0] = "DROP TABLE IF EXISTS $nom_tabla CASCADE;";
-        $this->executeSql($a_sql);
 
         $this->eliminar($nom_tabla);
 
@@ -322,12 +297,7 @@ class DBEsquemaSelect extends DBEsquema
         $this->addPermisoGlobal('sfsv-e_select');
 
         $datosTabla = $this->infoTable("aux_usuarios_perm");
-
         $nom_tabla = $datosTabla['nom_tabla'];
-
-        $a_sql = [];
-        $a_sql[0] = "DROP TABLE IF EXISTS $nom_tabla CASCADE;";
-        $this->executeSql($a_sql);
 
         $this->eliminar($nom_tabla);
 

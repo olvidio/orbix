@@ -61,12 +61,7 @@ class DBEsquemaSelect extends DBEsquema
         $this->addPermisoGlobal('comun_select');
 
         $datosTabla = $this->infoTable("da_ctr_encargados");
-
         $nom_tabla = $datosTabla['nom_tabla'];
-
-        $a_sql = [];
-        $a_sql[0] = "DROP TABLE IF EXISTS $nom_tabla CASCADE;";
-        $this->executeSql($a_sql);
 
         $this->eliminar($nom_tabla);
 
