@@ -11,8 +11,9 @@ class DBRefresh
 
     public function refreshSubscriptionModulo(string $db)
     {
-       $fileLog = ConfigGlobal::$directorio . '/log/db/pg_error_modulos.sql';
+        $fileLog = ConfigGlobal::$directorio . '/log/db/pg_error_modulos.sql';
         //cambiar la conexión
+        // OJO en "importar" no está la Base de Datos de pruebas, pero aquí sólo hace falta el host.
         $oConfigDB = new ConfigDB('importar');
         if ($db === 'comun') {
             $config = $oConfigDB->getEsquema('public_select'); //de la database comun
@@ -40,6 +41,7 @@ class DBRefresh
         // ALTER SUBSCRIPTION subcomun REFRESH PUBLICATION;
         $command = "PGOPTIONS='--client-min-messages=warning' /usr/bin/psql -h $host -d $db -U postgres -q  -X -t --pset pager=off ";
         if (ServerConf::WEBDIR === 'pruebas') {
+            $command = "PGOPTIONS='--client-min-messages=warning' /usr/bin/psql -h $host -d pruebas-$db -U postgres -q  -X -t --pset pager=off ";
             if ($db === 'comun') {
                 $command .= "-c 'ALTER SUBSCRIPTION subpruebascomun REFRESH PUBLICATION;' ";
             }
@@ -47,6 +49,7 @@ class DBRefresh
                 $command .= "-c 'ALTER SUBSCRIPTION subpruebassve REFRESH PUBLICATION;' ";
             }
         } else {
+            $command = "PGOPTIONS='--client-min-messages=warning' /usr/bin/psql -h $host -d $db -U postgres -q  -X -t --pset pager=off ";
             if ($db === 'comun') {
                 $command .= "-c 'ALTER SUBSCRIPTION subcomun REFRESH PUBLICATION;' ";
             }
