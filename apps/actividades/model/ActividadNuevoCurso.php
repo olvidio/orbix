@@ -128,25 +128,27 @@ class ActividadNuevoCurso
         if ($GesActividades->getActividadesQuery($sql) === false) {
             $txt .= _("error al intentar borrar las actividades") . "<br>";
         }
-        // Borrar los procesos, No se puede crear una clave foránea a una tabla padre (a_actividades_all). Sólo
-        // se podría con la de la dl, pero quedarían todos los procesos de las otras actividades.
-        $sql = "DELETE FROM a_actividad_proceso_sv WHERE id_activ IN (
+        if (ConfigGlobal::is_app_installed('procesos')) {
+            // Borrar los procesos, No se puede crear una clave foránea a una tabla padre (a_actividades_all). Sólo
+            // se podría con la de la dl, pero quedarían todos los procesos de las otras actividades.
+            $sql = "DELETE FROM a_actividad_proceso_sv WHERE id_activ IN (
+                    SELECT DISTINCT d.id_activ 
+                    FROM a_actividad_proceso_sv d LEFT JOIN public.a_actividades_all a USING (id_activ)
+                    WHERE a.id_activ IS NULL
+                 )";
+            $GesActividades = new GestorActividadDl();
+            if ($GesActividades->getActividadesQuery($sql) === false) {
+                $txt .= _("error al borrar los procesos de la sv") . "<br>";
+            }
+            $sql = "DELETE FROM a_actividad_proceso_sf WHERE id_activ IN (
                     SELECT DISTINCT d.id_activ 
                     FROM a_actividad_proceso_sf d LEFT JOIN public.a_actividades_all a USING (id_activ)
                     WHERE a.id_activ IS NULL
                  )";
-        $GesActividades = new GestorActividadDl();
-        if ($GesActividades->getActividadesQuery($sql) === false) {
-            $txt .= _("error al borrar los procesos de la sv") . "<br>";
-        }
-        $sql = "DELETE FROM a_actividad_proceso_sf WHERE id_activ IN (
-                    SELECT DISTINCT d.id_activ 
-                    FROM a_actividad_proceso_sf d LEFT JOIN public.a_actividades_all a USING (id_activ)
-                    WHERE a.id_activ IS NULL
-                 )";
-        $GesActividades = new GestorActividadDl();
-        if ($GesActividades->getActividadesQuery($sql) === false) {
-            $txt .= _("error al borrar los procesos de la sf") . "<br>";
+            $GesActividades = new GestorActividadDl();
+            if ($GesActividades->getActividadesQuery($sql) === false) {
+                $txt .= _("error al borrar los procesos de la sf") . "<br>";
+            }
         }
 
         // comprobar que no quedan actividades en otro estado
