@@ -228,26 +228,6 @@ for ($i=1;$i<=7;$i++) {
 }
 
 
-$date_range = new DatePeriod($oInicioDestino, $interval, $oFinDestino);
-$a_dias_semana = EncargoConstants::OPCIONES_DIA_SEMANA;
-foreach ($date_range as $date) {
-}
-
-//        Crec que ho podré borrar
-$aWhere = [];
-$aWhere['id_zona'] = $Qid_zona;
-$aOperador = [];
-$GesZonasSacd = new GestorZonaSacd();
-$cZonaSacd = $GesZonasSacd->getZonasSacds($aWhere, $aOperador);
-foreach ($cZonaSacd as $oZonaSacd) {
-    $id_nom = $oZonaSacd->getId_nom();
-    $InicialesSacd = new InicialesSacd();
-    $nombre_sacd=$InicialesSacd->nombre_sacd($id_nom);
-    foreach ($date_range as $date) {
-        $num_dia = $date->format('Y-m-d');
-    }
-}
-
 $oGesEncargoTipo = new GestorEncargoTipo();
 
 $grupo = '8...';
@@ -290,106 +270,6 @@ foreach ($cEncargosZona as $oEncargo) {
     }
 }
 
-    foreach ($date_range as $date) {
-        $dia_completo=$date->format('Y-m-d');
-        echo 'DCDestino: '.$dia_completo.'<br>';
-
-        $num_dia = $date->format('Y-m-d');
-        $nom_dia = $date->format('D');
-            if(($QTipoPlantilla== EncargoDia::PLANTILLA_SEMANAL_UNO) || ($QTipoPlantilla== EncargoDia::PLANTILLA_SEMANAL_TRES)) {
-                $dia_week = $date->format('N');
-                $dia_plantilla = new DateTimeLocal(EncargoDia::INICIO_SEMANAL_UNO);
-                $intervalo_plantilla='P'.($dia_week-1).'D';
-                $dia_plantilla->add(new DateInterval($intervalo_plantilla));
-                echo 'DIA PLANTILLA: '.$dia_plantilla->format('d-m-Y').'<br>';
-            }
-    
-            if($QTipoPlantilla== EncargoDia::PLANTILLA_SEMANAL_TRES) {
-                $dia_week = $date->format('N');
-                $dia_plantilla2 = new DateTimeLocal(EncargoDia::INICIO_SEMANAL_DOS);
-                $intervalo_plantilla='P'.($dia_week-1).'D';
-                $dia_plantilla2->add(new DateInterval($intervalo_plantilla));
-    
-                $dia_plantilla3 = new DateTimeLocal(EncargoDia::INICIO_SEMANAL_TRES);
-                $intervalo_plantilla='P'.($dia_week-1).'D';
-                $dia_plantilla3->add(new DateInterval($intervalo_plantilla));
-            }
-    
-            if(($QTipoPlantilla== EncargoDia::PLANTILLA_DOMINGOS_UNO) || ($QTipoPlantilla== EncargoDia::PLANTILLA_DOMINGOS_TRES)) {
-                $dia_week = $date->format('N');
-                $dia_plantilla = new DateTimeLocal(EncargoDia::INICIO_DOMINGOS_UNO);
-    
-                if ($dia_week==7){
-                    $num_mes = $date->format('d');
-                    $num_semana = intdiv($num_mes,7);
-                    $intervalo_plantilla='P'.($dia_week+$num_semana-1).'D';
-                } else {
-                    $intervalo_plantilla='P'.($dia_week-1).'D';
-                }
-                $dia_plantilla->add(new DateInterval($intervalo_plantilla));
-            }
-    
-            if($QTipoPlantilla== EncargoDia::PLANTILLA_DOMINGOS_TRES) {
-                $dia_week = $date->format('N');
-                $dia_plantilla2 = new DateTimeLocal(EncargoDia::INICIO_DOMINGOS_DOS);
-    
-                if ($dia_week==7){
-                    $num_mes = $date->format('d');
-                    $num_semana = intdiv($num_mes,7);
-                    $intervalo_plantilla='P'.($dia_week+$num_semana-1).'D';
-                } else {
-                    $intervalo_plantilla='P'.($dia_week-1).'D';
-                }
-                $dia_plantilla2->add(new DateInterval($intervalo_plantilla));
-    
-                $dia_plantilla3 = new DateTimeLocal(EncargoDia::INICIO_DOMINGOS_TRES);
-    
-                if ($dia_week==7){
-                    $num_mes = $date->format('d');
-                    $num_semana = intdiv($num_mes,7);
-    //                echo 'DOMINGO:'.$num_mes.'=>'.$num_semana.'<br>';
-                    $intervalo_plantilla='P'.($dia_week+$num_semana-1).'D';
-                } else {
-                    $intervalo_plantilla='P'.($dia_week-1).'D';
-                }
-                $dia_plantilla3->add(new DateInterval($intervalo_plantilla));
-    //            echo 'DIA PLANTILLA3: '.$dia_plantilla3->format('d-m-Y').'<br>';
-    
-            }
-    
-            if(($QTipoPlantilla== EncargoDia::PLANTILLA_MENSUAL_UNO) || ($QTipoPlantilla== EncargoDia::PLANTILLA_MENSUAL_TRES)) {
-    //            echo 'tipo mensual 1 ó 3 OK<br>';
-                $dia_week = $date->format('N');
-                $dia_plantilla = new DateTimeLocal(EncargoDia::INICIO_MENSUAL_UNO);
-                $num_mes = $date->format('d');
-                $num_semana = intdiv($num_mes,7);
-    //            echo 'MENSUAL:'.$num_mes.'=>'.$num_semana.'<br>';
-                $intervalo_plantilla='P'.($dia_week+$num_semana-1).'D';
-                $dia_plantilla->add(new DateInterval($intervalo_plantilla));
-    //            echo 'DIA PLANTILLA: '.$dia_plantilla->format('d-m-Y').'<br>';
-            }
-    
-            if($QTipoPlantilla== EncargoDia::PLANTILLA_MENSUAL_TRES) {
-    //            echo 'tipo m2 OK<br>';
-                $dia_week = $date->format('N');
-                $dia_plantilla2 = new DateTimeLocal(EncargoDia::INICIO_MENSUAL_DOS);
-                $num_mes = $date->format('d');
-                $num_semana = intdiv($num_mes,7);
-    //            echo 'MENSUAL:'.$num_mes.'=>'.$num_semana.'<br>';
-                $intervalo_plantilla='P'.($dia_week+$num_semana-1).'D';
-                $dia_plantilla2->add(new DateInterval($intervalo_plantilla));
-    //            echo 'DIA PLANTILLA2: '.$dia_plantilla2->format('d-m-Y').'<br>';
-    
-    //            echo 'tipo s3 OK<br>';
-                $dia_plantilla3 = new DateTimeLocal(EncargoDia::INICIO_MENSUAL_TRES);
-                $num_mes = $date->format('d');
-                $num_semana = intdiv($num_mes,7);
-    //            echo 'MENSUAL:'.$num_mes.'=>'.$num_semana.'<br>';
-                $intervalo_plantilla='P'.($dia_week+$num_semana-1).'D';
-                $dia_plantilla3->add(new DateInterval($intervalo_plantilla));
-    //            echo 'DIA PLANTILLA3: '.$dia_plantilla3->format('d-m-Y').'<br>';
-            }
-    
     
             $inicio_dia_plantilla = $dia_plantilla->format('Y-m-d').' 00:00:00';
             $fin_dia_plantilla = $dia_plantilla->format('Y-m-d').' 23:59:59';
@@ -431,7 +311,6 @@ foreach ($cEncargosZona as $oEncargo) {
             if (count($cEncargosDia) === 1) {
                 $oEncargoDia = $cEncargosDia[0];
                 $id_nom = $oEncargoDia->getId_nom();
-                echo 'id_nom opcio 1:'.$id_nom.'<br>';
                 $hora_ini = $oEncargoDia->getTstart()->format('H:i');
                 $hora_fin = $oEncargoDia->getTend()->format('H:i');
                 $observ = $oEncargoDia->getObserv();
@@ -526,6 +405,6 @@ foreach ($cEncargosZona as $oEncargo) {
                 }  
             }
     
-        }
+        
         
 
