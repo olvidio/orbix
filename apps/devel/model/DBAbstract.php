@@ -8,7 +8,7 @@ use core\DBConnection;
 
 /**
  * Crear las tablas necesaria a nivel de aplicación (global).
- * Cada esquema deberá crear las suyas, heredaas de estas.
+ * Cada esquema deberá crear las suyas, heredadas de estas.
  */
 abstract class DBAbstract
 {
@@ -19,27 +19,6 @@ abstract class DBAbstract
     protected $role_vf;
     protected $oDbl;
     protected $user_orbix;
-    /**
-     * @var true
-     */
-    private bool $bLoaded;
-
-    public static function refreshSubscription(DBAbstract $instance)
-    {
-        // comun_select
-        $instance->addPermisoGlobal('comun_select');
-        $a_sql = [];
-        $a_sql[] = "ALTER SUBSCRIPTION subpruebascomun REFRESH PUBLICATION;";
-        $instance->executeSql($a_sql);
-        $instance->delPermisoGlobal('comun_select');
-
-        // sv-e_select
-        $instance->addPermisoGlobal('sfsv-e_select');
-        $a_sql = [];
-        $a_sql[] = "ALTER SUBSCRIPTION subpruebassve REFRESH PUBLICATION;";
-        $instance->executeSql($a_sql);
-        $instance->delPermisoGlobal('sfsv-e_select');
-    }
 
     public static function hasServerSelect()
     {
@@ -96,8 +75,6 @@ abstract class DBAbstract
             return FALSE;
         }
         $aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);
-        // Para evitar posteriores cargas
-        $this->bLoaded = TRUE;
         if ($aDades['to_regclass'] === $nom_tabla) {
             return TRUE;
         } else {

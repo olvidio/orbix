@@ -42,16 +42,16 @@ if (!empty($Qsv)) {
 
     $oTrasvase->ctr('dl2resto');
 
-    $oDBEsquema = new core\DBEsquema();
-    $oDBEsquema->setConfig($config);
-    $oDBEsquema->setRegionNew($RegionNew);
-    $oDBEsquema->setDlNew($DlNew);
-    $oDBEsquema->eliminar();
+    $oDBEsquemaCreate = new core\DBEsquemaCreate();
+    $oDBEsquemaCreate->setConfig($config);
+    $oDBEsquemaCreate->setRegionNew($RegionNew);
+    $oDBEsquemaCreate->setDlNew($DlNew);
+    $oDBEsquemaCreate->eliminar();
 
     // exterior: sv-e
     $config = $oConfigDB->getEsquema('publicv-e');
-    $oDBEsquema->setConfig($config);
-    $oDBEsquema->eliminar();
+    $oDBEsquemaCreate->setConfig($config);
+    $oDBEsquemaCreate->eliminar();
 }
 // SF
 if (!empty($Qsf)) {
@@ -78,11 +78,11 @@ if (!empty($Qsf)) {
 // Borrar esquema comun y usuarios.
 if (!empty($Qsv) && !empty($Qsf)) {
     $config = $oConfigDB->getEsquema('public');
-    $oDBEsquema = new core\DBEsquema();
-    $oDBEsquema->setConfig($config);
-    $oDBEsquema->setRegionNew($RegionNew);
-    $oDBEsquema->setDlNew($DlNew);
-    $oDBEsquema->eliminar();
+    $oDBEsquemaCreate = new core\DBEsquemaCreate();
+    $oDBEsquemaCreate->setConfig($config);
+    $oDBEsquemaCreate->setRegionNew($RegionNew);
+    $oDBEsquemaCreate->setDlNew($DlNew);
+    $oDBEsquemaCreate->eliminar();
     // Eliminar usuarios
 
     $oConexion = new core\DBConnection($config);

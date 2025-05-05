@@ -1,7 +1,8 @@
 <?php
 
 namespace core;
-class DBEsquema
+
+class DBEsquemaCreate
 {
     /**
      * Esquema de Referencia de Esquema
@@ -60,7 +61,7 @@ class DBEsquema
     private mixed $sDlNew;
     private mixed $sRegionNew;
     private mixed $sDbRef;
-    private array $config;
+    protected array $config;
 
     /**
      * Constructor de la classe.
@@ -354,28 +355,14 @@ class DBEsquema
             }
         }
 
+
         ///// REFRESCAR LA SUBSCRIPCIÓN ///////////
         /// No para develop
         if ($this->getHost() !== 'db') {
-            // (( para saber el nombre: SELECT oid, subdbid, subname, subconninfo, subpublications FROM pg_subscription; ))
-            // ALTER SUBSCRIPTION subcomun REFRESH PUBLICATION;
-            $command = "PGOPTIONS='--client-min-messages=warning' /usr/bin/psql -h " . $this->getHost() . " -d $db -U postgres -q  -X -t --pset pager=off ";
-            if ($db === 'comun') {
-                $command .= "-c 'ALTER SUBSCRIPTION subcomun REFRESH PUBLICATION;' ";
-            }
-            if ($db === 'sv-e') {
-                $command .= "-c 'ALTER SUBSCRIPTION subsve REFRESH PUBLICATION;' ";
-            }
-            $command .= "\"" . $dsn . "\"";
-            $command .= " > " . $this->getFileLog() . " 2>&1";
-            passthru($command); // no output to capture so no need to store it
-            // read the file, if empty all's well
-            $error = file_get_contents($this->getFileLog());
-            if (trim($error) != '') {
-                if (ConfigGlobal::is_debug_mode()) {
-                    echo sprintf(_("PSQL ERROR IN COMMAND(4): %s<br> mirar en: %s<br>"), $command, $this->getFileLog());
-                }
-            }
+            $host = $this->getHost();
+            $fileLog = $this->getFileLog();
+            $DBRefresh = new DBRefresh();
+            $DBRefresh->refreshSubscription($host, $db, $dsn, $fileLog);
         }
 
 
@@ -522,7 +509,7 @@ class DBEsquema
         if ($d === false) printf(_("error al escribir el fichero"));
     }
 
-    private function getConfigConexion($esq = 'ref')
+    protected function getConfigConexion($esq = 'ref')
     {
         // No he conseguido que funcione con ~/.pgpass.
         if ($esq === 'ref') {

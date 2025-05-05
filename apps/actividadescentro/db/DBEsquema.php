@@ -27,7 +27,7 @@ class DBEsquema extends DBAbstract
     public function dropAll()
     {
         $this->eliminar_da_ctr_encargados();
-          // eliminar las tablas en la DBSelect para la sincronización.
+        // eliminar las tablas en la DBSelect para la sincronización.
         if (DBAbstract::hasServerSelect()) {
             $oDBEsquemaSelect = new DBEsquemaSelect();
             $oDBEsquemaSelect->dropAllSelect();
@@ -37,7 +37,7 @@ class DBEsquema extends DBAbstract
     public function createAll()
     {
         $this->create_da_ctr_encargados();
-         // crear las tablas en la DBSelect para la sincronización.
+        // crear las tablas en la DBSelect para la sincronización.
         if (DBAbstract::hasServerSelect()) {
             $oDBEsquemaSelect = new DBEsquemaSelect();
             $oDBEsquemaSelect->createAllSelect();

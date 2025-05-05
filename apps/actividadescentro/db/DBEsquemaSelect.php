@@ -2,7 +2,7 @@
 
 namespace actividadescentro\db;
 
-use devel\model\DBAbstract;
+use core\DBRefresh;
 
 /**
  * crear las tablas necesarias para el esquema select,
@@ -20,7 +20,8 @@ class DBEsquemaSelect extends DBEsquema
     {
         $this->create_da_ctr_encargados_select();
         // renovar subscripciones
-        DBAbstract::refreshSubscription($this);
+        $DBRefresh = new DBRefresh();
+        $DBRefresh->refreshSubscriptionModulo('comun');
     }
 
     /**

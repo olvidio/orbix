@@ -50,13 +50,13 @@ if (!empty($Qcomun)) {
 
     $oDBRol->crearSchema();
 
-    $oDBEsquema = new core\DBEsquema();
-    $oDBEsquema->setConfig($config);
-    $oDBEsquema->setRegionRef($RegionRef);
-    $oDBEsquema->setDlRef($DlRef);
-    $oDBEsquema->setRegionNew($RegionNew);
-    $oDBEsquema->setDlNew($DlNew);
-    $oDBEsquema->crear();
+    $oDBEsquemaCreate = new core\DBEsquemaCreate();
+    $oDBEsquemaCreate->setConfig($config);
+    $oDBEsquemaCreate->setRegionRef($RegionRef);
+    $oDBEsquemaCreate->setDlRef($DlRef);
+    $oDBEsquemaCreate->setRegionNew($RegionNew);
+    $oDBEsquemaCreate->setDlNew($DlNew);
+    $oDBEsquemaCreate->crear();
 
     // Hay que quitar a los usuarios del grupo para que no tenga permisos para la tabla padre.
     $oDBRol->delGrupo('orbix');
@@ -77,13 +77,13 @@ if (!empty($Qcomun)) {
 
     $oDBRol->crearSchema();
 
-    $oDBEsquema = new core\DBEsquema();
-    $oDBEsquema->setConfig($config);
-    $oDBEsquema->setRegionRef($RegionRef);
-    $oDBEsquema->setDlRef($DlRef);
-    $oDBEsquema->setRegionNew($RegionNew);
-    $oDBEsquema->setDlNew($DlNew);
-    $oDBEsquema->crear_select('comun'); // los select son caso especial...
+    $oDBEsquemaCreate = new core\DBEsquemaCreate();
+    $oDBEsquemaCreate->setConfig($config);
+    $oDBEsquemaCreate->setRegionRef($RegionRef);
+    $oDBEsquemaCreate->setDlRef($DlRef);
+    $oDBEsquemaCreate->setRegionNew($RegionNew);
+    $oDBEsquemaCreate->setDlNew($DlNew);
+    $oDBEsquemaCreate->crear_select('comun'); // los select son caso especial...
 
     // Hay que quitar a los usuarios del grupo para que no tenga permisos para la tabla padre.
     $oDBRol->delGrupo('orbix');
@@ -109,13 +109,13 @@ if (!empty($Qsv)) {
     // Después hay que quitarlo para que no tenga permisos para la tabla padre.
     $oDBRol->addGrupo('orbixv');
     $oDBRol->crearSchema();
-    $oDBEsquema = new core\DBEsquema();
-    $oDBEsquema->setConfig($config);
-    $oDBEsquema->setRegionRef($RegionRef);
-    $oDBEsquema->setDlRef($DlRef);
-    $oDBEsquema->setRegionNew($RegionNew);
-    $oDBEsquema->setDlNew($DlNew);
-    $oDBEsquema->crear();
+    $oDBEsquemaCreate = new core\DBEsquemaCreate();
+    $oDBEsquemaCreate->setConfig($config);
+    $oDBEsquemaCreate->setRegionRef($RegionRef);
+    $oDBEsquemaCreate->setDlRef($DlRef);
+    $oDBEsquemaCreate->setRegionNew($RegionNew);
+    $oDBEsquemaCreate->setDlNew($DlNew);
+    $oDBEsquemaCreate->crear();
     // Hay que quitar a los usuarios del grupo para que no tenga permisos para la tabla padre.
     $oDBRol->delGrupo('orbixv');
 
@@ -136,13 +136,13 @@ if (!empty($Qsv)) {
     // Después hay que quitarlo para que no tenga permisos para la tabla padre.
     $oDBRol->addGrupo('orbixv');
     $oDBRol->crearSchema();
-    $oDBEsquema = new core\DBEsquema();
-    $oDBEsquema->setConfig($config);
-    $oDBEsquema->setRegionRef($RegionRef);
-    $oDBEsquema->setDlRef($DlRef);
-    $oDBEsquema->setRegionNew($RegionNew);
-    $oDBEsquema->setDlNew($DlNew);
-    $oDBEsquema->crear();
+    $oDBEsquemaCreate = new core\DBEsquemaCreate();
+    $oDBEsquemaCreate->setConfig($config);
+    $oDBEsquemaCreate->setRegionRef($RegionRef);
+    $oDBEsquemaCreate->setDlRef($DlRef);
+    $oDBEsquemaCreate->setRegionNew($RegionNew);
+    $oDBEsquemaCreate->setDlNew($DlNew);
+    $oDBEsquemaCreate->crear();
     // Hay que quitar a los usuarios del grupo para que no tenga permisos para la tabla padre.
     $oDBRol->delGrupo('orbixv');
 
@@ -158,13 +158,13 @@ if (!empty($Qsv)) {
     // Después hay que quitarlo para que no tenga permisos para la tabla padre.
     $oDBRol->addGrupo('orbixv');
     $oDBRol->crearSchema();
-    $oDBEsquema = new core\DBEsquema();
-    $oDBEsquema->setConfig($config);
-    $oDBEsquema->setRegionRef($RegionRef);
-    $oDBEsquema->setDlRef($DlRef);
-    $oDBEsquema->setRegionNew($RegionNew);
-    $oDBEsquema->setDlNew($DlNew);
-    $oDBEsquema->crear_select('sv-e');
+    $oDBEsquemaCreate = new core\DBEsquemaCreate();
+    $oDBEsquemaCreate->setConfig($config);
+    $oDBEsquemaCreate->setRegionRef($RegionRef);
+    $oDBEsquemaCreate->setDlRef($DlRef);
+    $oDBEsquemaCreate->setRegionNew($RegionNew);
+    $oDBEsquemaCreate->setDlNew($DlNew);
+    $oDBEsquemaCreate->crear_select('sv-e');
     // Hay que quitar a los usuarios del grupo para que no tenga permisos para la tabla padre.
     $oDBRol->delGrupo('orbixv');
 
@@ -188,13 +188,13 @@ if (!empty($Qsf)) {
     $oDBRol->addGrupo('orbixf');
     $oDBRol->crearSchema();
     // Copiar esquema
-    $oDBEsquema = new core\DBEsquema();
-    $oDBEsquema->setConfig($config);
-    $oDBEsquema->setRegionRef($RegionRef);
-    $oDBEsquema->setDlRef($DlRef);
-    $oDBEsquema->setRegionNew($RegionNew);
-    $oDBEsquema->setDlNew($DlNew);
-    $oDBEsquema->crear();
+    $oDBEsquemaCreate = new core\DBEsquemaCreate();
+    $oDBEsquemaCreate->setConfig($config);
+    $oDBEsquemaCreate->setRegionRef($RegionRef);
+    $oDBEsquemaCreate->setDlRef($DlRef);
+    $oDBEsquemaCreate->setRegionNew($RegionNew);
+    $oDBEsquemaCreate->setDlNew($DlNew);
+    $oDBEsquemaCreate->crear();
 
     // Hay que quitar a los usuarios del grupo para que no tenga permisos para la tabla padre.
     $oDBRol->delGrupo('orbixf');
