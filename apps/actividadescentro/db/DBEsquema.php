@@ -49,7 +49,7 @@ class DBEsquema extends DBAbstract
         //$this->llenar_da_ctr_encargados();
     }
 
-    private function infoTable($tabla)
+    protected function infoTable($tabla)
     {
         $datosTabla = [];
         $datosTabla['tabla'] = $tabla;

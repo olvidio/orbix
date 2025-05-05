@@ -2,9 +2,7 @@
 
 namespace actividadescentro\db;
 
-use core\ConfigGlobal;
 use devel\model\DBAbstract;
-use procesos\db\DBEsquema;
 
 /**
  * crear las tablas necesarias para el esquema select,
