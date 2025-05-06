@@ -33,6 +33,11 @@ class DBEsquema extends DBAbstract
         // la creo en cualquier caso, para que al sincronizar no tenga problemas
         $this->eliminar_av_cambios_anotados_sf();
         $this->eliminar_av_cambios_dl();
+        // eliminar las tablas en la DBSelect para la sincronización.
+        if (DBAbstract::hasServerSelect()) {
+            $oDBEsquemaSelect = new DBEsquemaSelect();
+            $oDBEsquemaSelect->dropAllSelect();
+        }
     }
 
     public function createAll()
@@ -44,6 +49,11 @@ class DBEsquema extends DBAbstract
         $this->create_av_cambios_usuario();
         $this->create_av_cambios_usuario_objeto_pref();
         $this->create_av_cambios_usuario_propiedades_pref();
+        // crear las tablas en la DBSelect para la sincronización.
+        if (DBAbstract::hasServerSelect()) {
+            $oDBEsquemaSelect = new DBEsquemaSelect();
+            $oDBEsquemaSelect->createAllSelect();
+        }
     }
 
     public function llenarAll()
@@ -53,7 +63,7 @@ class DBEsquema extends DBAbstract
         $this->borrar_usuarios_inexistentes();
     }
 
-    private function infoTable($tabla)
+    protected function infoTable($tabla)
     {
         $datosTabla = [];
         $datosTabla['tabla'] = $tabla;

@@ -29,6 +29,11 @@ class DBEsquema extends DBAbstract
         $this->eliminar_zonas();
         $this->eliminar_zonas_grupos();
         $this->eliminar_zonas_sacd();
+        // eliminar las tablas en la DBSelect para la sincronización.
+        if (DBAbstract::hasServerSelect()) {
+            $oDBEsquemaSelect = new DBEsquemaSelect();
+            $oDBEsquemaSelect->dropAllSelect();
+        }
     }
 
     public function createAll()
@@ -36,6 +41,11 @@ class DBEsquema extends DBAbstract
         $this->create_zonas();
         $this->create_zonas_grupos();
         $this->create_zonas_sacd();
+        // crear las tablas en la DBSelect para la sincronización.
+        if (DBAbstract::hasServerSelect()) {
+            $oDBEsquemaSelect = new DBEsquemaSelect();
+            $oDBEsquemaSelect->createAllSelect();
+        }
     }
 
     public function llenarAll()
@@ -44,7 +54,7 @@ class DBEsquema extends DBAbstract
         $this->llenar_zonas_grupos();
     }
 
-    private function infoTable($tabla)
+    protected function infoTable($tabla)
     {
         $datosTabla = [];
         $datosTabla['tabla'] = $tabla;

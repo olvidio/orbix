@@ -47,6 +47,17 @@ foreach ($oDBPC->query($sQry, PDO::FETCH_ASSOC) as $aDades) {
         }
     }
 }
+// Fix sequences
+try {
+    $sql_seq = "SELECT setval('aux_grupmenu_id_grupmenu_seq', (SELECT MAX(id_grupmenu) FROM aux_grupmenu))";
+    $oDB->query($sql_seq);
+} catch (PDOException $e) {
+    $err_txt = $e->errorInfo[2];
+    $sClauError = 'Importar.sequence.execute';
+    $_SESSION['oGestorErrores']->addError($err_txt, $sClauError, __LINE__, __FILE__);
+    $error_txt .= $sClauError;
+}
+
 //************ GRUPMENU_ROL**************
 // En el caso de la sf, los grupmenu asociados a los roles son distintos.
 // de momento no los copio. los dejo como están.
@@ -78,6 +89,17 @@ if ($sec === 'v') {
             }
         }
     }
+    // Fix sequences
+    try {
+        $sql_seq = "SELECT setval('aux_grupmenu_rol_id_item_seq', (SELECT MAX(id_item) FROM aux_grupmenu_rol))";
+        $oDB->query($sql_seq);
+    } catch (PDOException $e) {
+        $err_txt = $e->errorInfo[2];
+        $sClauError = 'Importar.sequence.execute';
+        $_SESSION['oGestorErrores']->addError($err_txt, $sClauError, __LINE__, __FILE__);
+        $error_txt .= $sClauError;
+    }
+
 }
 //************ MENUS**************
 $sql_del = 'TRUNCATE TABLE aux_menus RESTART IDENTITY CASCADE';
@@ -107,5 +129,17 @@ foreach ($oDBPC->query($sQry, PDO::FETCH_ASSOC) as $aDades) {
         }
     }
 }
+// Fix sequences
+try {
+    $sql_seq = "SELECT setval('aux_menus_id_menu_seq', (SELECT MAX(id_menu) FROM aux_menus))";
+    $oDB->query($sql_seq);
+} catch (PDOException $e) {
+    $err_txt = $e->errorInfo[2];
+    $sClauError = 'Importar.sequence.execute';
+    $_SESSION['oGestorErrores']->addError($err_txt, $sClauError, __LINE__, __FILE__);
+    $error_txt .= $sClauError;
+}
+
+
 
 ContestarJson::enviar($error_txt, 'ok');

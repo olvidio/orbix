@@ -29,6 +29,11 @@ class DBEsquema extends DBAbstract
         $this->eliminar_da_ingresos_dl();
         $this->eliminar_du_gastos_dl();
         $this->eliminar_du_grupos_dl();
+        // eliminar las tablas en la DBSelect para la sincronización.
+        if (DBAbstract::hasServerSelect()) {
+            $oDBEsquemaSelect = new DBEsquemaSelect();
+            $oDBEsquemaSelect->dropAllSelect();
+        }
     }
 
     public function createAll()
@@ -36,13 +41,18 @@ class DBEsquema extends DBAbstract
         $this->create_da_ingresos_dl();
         $this->create_du_gastos_dl();
         $this->create_du_grupos_dl();
+        // crear las tablas en la DBSelect para la sincronización.
+        if (DBAbstract::hasServerSelect()) {
+            $oDBEsquemaSelect = new DBEsquemaSelect();
+            $oDBEsquemaSelect->createAllSelect();
+        }
     }
 
     public function llenarAll()
     {
     }
 
-    private function infoTable($tabla)
+    protected function infoTable($tabla)
     {
         $datosTabla = [];
         $datosTabla['tabla'] = $tabla;

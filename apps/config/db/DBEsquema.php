@@ -27,11 +27,21 @@ class DBEsquema extends DBAbstract
     public function dropAll()
     {
         $this->eliminar_x_config_schema();
+        // eliminar las tablas en la DBSelect para la sincronización.
+        if (DBAbstract::hasServerSelect()) {
+            $oDBEsquemaSelect = new DBEsquemaSelect();
+            $oDBEsquemaSelect->dropAllSelect();
+        }
     }
 
     public function createAll()
     {
         $this->create_x_config_schema();
+        // crear las tablas en la DBSelect para la sincronización.
+        if (DBAbstract::hasServerSelect()) {
+            $oDBEsquemaSelect = new DBEsquemaSelect();
+            $oDBEsquemaSelect->createAllSelect();
+        }
     }
 
     public function llenarAll()
@@ -39,7 +49,7 @@ class DBEsquema extends DBAbstract
         $this->llenar_x_config_schema();
     }
 
-    private function infoTable($tabla)
+    protected function infoTable($tabla)
     {
         $datosTabla = [];
         $datosTabla['tabla'] = $tabla;

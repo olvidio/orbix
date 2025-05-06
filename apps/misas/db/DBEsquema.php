@@ -30,6 +30,11 @@ class DBEsquema extends DBAbstract
         $this->eliminar_cuadricula();
         $this->eliminar_iniciales();
         $this->eliminar_rel_encargo_ctr();
+        // eliminar las tablas en la DBSelect para la sincronización.
+        if (DBAbstract::hasServerSelect()) {
+            $oDBEsquemaSelect = new DBEsquemaSelect();
+            $oDBEsquemaSelect->dropAllSelect();
+        }
     }
 
     public function createAll()
@@ -37,6 +42,11 @@ class DBEsquema extends DBAbstract
         $this->create_cuadricula();
         $this->create_iniciales();
         $this->create_rel_encargo_ctr();
+        // crear las tablas en la DBSelect para la sincronización.
+        if (DBAbstract::hasServerSelect()) {
+            $oDBEsquemaSelect = new DBEsquemaSelect();
+            $oDBEsquemaSelect->createAllSelect();
+        }
     }
 
     public function llenarAll()
@@ -44,7 +54,7 @@ class DBEsquema extends DBAbstract
         //$this->llenar_plantillas();
     }
 
-    private function infoTable($tabla)
+    protected function infoTable($tabla)
     {
         $datosTabla = [];
         switch ($tabla) {
