@@ -1,6 +1,6 @@
 <?php
 
-namespace casas\db;
+namespace misas\db;
 
 use core\DBRefresh;
 
@@ -13,124 +13,124 @@ class DBEsquemaSelect extends DBEsquema
 
     public function dropAllSelect()
     {
-        $this->eliminar_da_ingresos_dl_select();
-        $this->eliminar_du_gastos_dl_select();
-        $this->eliminar_du_grupos_dl_select();
+        $this->eliminar_cuadricula_select();
+        $this->eliminar_iniciales_select();
+        $this->eliminar_rel_encargo_ctr_select();
     }
 
     public function createAllSelect()
     {
-        $this->create_da_ingresos_dl_select();
-        $this->create_du_gastos_dl_select();
-        $this->create_du_grupos_dl_select();
+        $this->create_cuadricula_select();
+        $this->create_iniciales_select();
+        $this->create_rel_encargo_ctr_select();
         // renovar subscripciones
         $DBRefresh = new DBRefresh();
         $DBRefresh->refreshSubscriptionModulo('comun');
     }
 
-    /** **************************************************
+    /**
      * En la BD Comun (esquema).
      */
-    public function create_da_ingresos_dl_select()
+    public function create_iniciales_select()
     {
         // (debe estar después de fijar el role)
         $this->addPermisoGlobal('comun_select');
 
-        $tabla_padre = "da_ingresos";
-        $tabla = "da_ingresos_dl";
+        $tabla = "misa_iniciales";
         $datosTabla = $this->infoTable($tabla);
 
         $nom_tabla = $datosTabla['nom_tabla'];
+        $campo_seq = $datosTabla['campo_seq'];
 
         $a_sql = [];
         $a_sql[] = "CREATE TABLE IF NOT EXISTS $nom_tabla (
                 ) 
-            INHERITS (global.$tabla_padre);";
+            INHERITS (global.$tabla);";
 
         $a_sql[] = "ALTER TABLE $nom_tabla ALTER id_schema SET DEFAULT public.idschema('$this->esquema'::text)";
-        $a_sql[] = "ALTER TABLE $nom_tabla ADD PRIMARY KEY (id_activ); ";
-        $a_sql[] = "CREATE INDEX {$tabla}_id_activ ON $nom_tabla USING btree (id_activ); ";
+        $a_sql[] = "ALTER TABLE $nom_tabla ADD PRIMARY KEY (id_nom); ";
         $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->role";
 
+
         $this->executeSql($a_sql);
+
         $this->delPermisoGlobal('comun_select');
     }
 
-    public function create_du_gastos_dl_select()
+    public function eliminar_iniciales_select()
     {
-        // (debe estar después de fijar el role)
-        $this->addPermisoGlobal('comun_select');
-
-        $tabla_padre = "du_gastos";
-        $tabla = "du_gastos_dl";
-        $datosTabla = $this->infoTable($tabla);
-
-        $nom_tabla = $datosTabla['nom_tabla'];
-
-        $a_sql = [];
-        $a_sql[] = "CREATE TABLE IF NOT EXISTS $nom_tabla (
-                ) 
-            INHERITS (global.$tabla_padre);";
-
-        $a_sql[] = "ALTER TABLE $nom_tabla ALTER id_schema SET DEFAULT public.idschema('$this->esquema'::text)";
-        $a_sql[] = "ALTER TABLE $nom_tabla ADD PRIMARY KEY (id_item); ";
-        $a_sql[] = "CREATE INDEX {$tabla}_id_ubi ON $nom_tabla USING btree (id_ubi); ";
-        $a_sql[] = "CREATE INDEX {$tabla}_f_gasto ON $nom_tabla USING btree (f_gasto); ";
-        $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->role";
-
-        $this->executeSql($a_sql);
-        $this->delPermisoGlobal('comun_select');
-    }
-
-    public function create_du_grupos_dl_select()
-    {
-        // (debe estar después de fijar el role)
-        $this->addPermisoGlobal('comun_select');
-
-        $tabla_padre = "du_grupos";
-        $tabla = "du_grupos_dl";
-        $datosTabla = $this->infoTable($tabla);
-
-        $nom_tabla = $datosTabla['nom_tabla'];
-
-        $a_sql = [];
-        $a_sql[] = "CREATE TABLE IF NOT EXISTS $nom_tabla (
-                ) 
-            INHERITS (global.$tabla_padre);";
-
-        $a_sql[] = "ALTER TABLE $nom_tabla ALTER id_schema SET DEFAULT public.idschema('$this->esquema'::text)";
-        $a_sql[] = "ALTER TABLE $nom_tabla ADD PRIMARY KEY (id_item); ";
-        $a_sql[] = "CREATE INDEX {$tabla}_id_ubi_padre ON $nom_tabla USING btree (id_ubi_padre); ";
-        $a_sql[] = "CREATE INDEX {$tabla}_id_ubi_hijo ON $nom_tabla USING btree (id_ubi_hijo); ";
-        $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->role";
-
-        $this->executeSql($a_sql);
-        $this->delPermisoGlobal('comun_select');
-    }
-
-    public function eliminar_da_ingresos_dl_select()
-    {
-        $datosTabla = $this->infoTable("da_ingresos_dl");
+        $datosTabla = $this->infoTable("misa_iniciales");
         $nom_tabla = $datosTabla['nom_tabla'];
 
         $this->eliminarDeComunSelect($nom_tabla);
     }
 
-    public function eliminar_du_gastos_dl_select()
+    public function create_cuadricula_select()
     {
-        $datosTabla = $this->infoTable("du_gastos_dl");
+        // (debe estar después de fijar el role)
+        $this->addPermisoGlobal('comun_select');
+
+        $tabla = "misa_cuadricula";
+        $datosTabla = $this->infoTable($tabla);
+
+        $nom_tabla = $datosTabla['nom_tabla'];
+        $campo_seq = $datosTabla['campo_seq'];
+
+        $a_sql = [];
+        $a_sql[] = "CREATE TABLE IF NOT EXISTS $nom_tabla (
+                ) 
+            INHERITS (global.$tabla);";
+
+        $a_sql[] = "ALTER TABLE $nom_tabla ALTER id_schema SET DEFAULT public.idschema('$this->esquema'::text)";
+        $a_sql[] = "ALTER TABLE $nom_tabla ADD PRIMARY KEY (uuid_item); ";
+        $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->role";
+
+
+        $this->executeSql($a_sql);
+
+        $this->delPermisoGlobal('comun_select');
+    }
+
+    public function eliminar_cuadricula_select()
+    {
+        $datosTabla = $this->infoTable("misa_cuadricula");
         $nom_tabla = $datosTabla['nom_tabla'];
 
         $this->eliminarDeComunSelect($nom_tabla);
     }
 
-    public function eliminar_du_grupos_dl_select()
+    public function create_rel_encargo_ctr_select()
     {
-        $datosTabla = $this->infoTable("du_grupos_dl");
+        // (debe estar después de fijar el role)
+        $this->addPermisoGlobal('comun_select');
+
+        $tabla = "misa_rel_encargo_ctr";
+        $datosTabla = $this->infoTable($tabla);
+
+        $nom_tabla = $datosTabla['nom_tabla'];
+        $campo_seq = $datosTabla['campo_seq'];
+
+        $a_sql = [];
+        $a_sql[] = "CREATE TABLE IF NOT EXISTS $nom_tabla (
+                ) 
+            INHERITS (global.$tabla);";
+
+        $a_sql[] = "ALTER TABLE $nom_tabla ALTER id_schema SET DEFAULT public.idschema('$this->esquema'::text)";
+        $a_sql[] = "ALTER TABLE $nom_tabla ADD PRIMARY KEY (uuid_item); ";
+        $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->role";
+
+
+        $this->executeSql($a_sql);
+
+        $this->delPermisoGlobal('comun_select');
+    }
+
+    public function eliminar_rel_encargo_ctr_select()
+    {
+        $datosTabla = $this->infoTable("misa_rel_encargo_ctr");
         $nom_tabla = $datosTabla['nom_tabla'];
 
         $this->eliminarDeComunSelect($nom_tabla);
     }
-
 
 }

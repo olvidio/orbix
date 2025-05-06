@@ -67,22 +67,10 @@ class DBEsquemaSelect extends DBEsquema
     public function eliminar_atn_sacd_textos_select()
     {
         // OJO Corresponde al esquema sf-e/sv-e, no al comun.
-        $esquema_org = $this->esquema;
-        $role_org = $this->role;
-        $this->esquema = ConfigGlobal::mi_region_dl();
-        $this->role = '"' . $this->esquema . '"';
-        // (debe estar después de fijar el role)
-        $this->addPermisoGlobal('sfsv-e_select');
-
         $datosTabla = $this->infoTable("a_sacd_textos");
         $nom_tabla = $datosTabla['nom_tabla'];
 
-        $this->eliminar($nom_tabla);
-
-        // Devolver los valores al estado original
-        $this->esquema = $esquema_org;
-        $this->role = $role_org;
-        $this->delPermisoGlobal('sfsv-e_select');
+        $this->eliminarDeSVESelect($nom_tabla);
     }
 
 }

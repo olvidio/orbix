@@ -375,4 +375,32 @@ abstract class DBAbstract
         return $this->executeSql($a_sql);
     }
 
+    protected function eliminarDeComunSelect($nom_tabla)
+    {
+        // (debe estar después de fijar el role)
+        $this->addPermisoGlobal('comun_select');
+
+        $this->eliminar($nom_tabla);
+
+        $this->delPermisoGlobal('comun_select');
+    }
+
+    protected function eliminarDeSVESelect($nom_tabla)
+    {
+        // OJO Corresponde al esquema sf-e/sv-e, no al comun.
+        $esquema_org = $this->esquema;
+        $role_org = $this->role;
+        $this->esquema = ConfigGlobal::mi_region_dl();
+        $this->role = '"' . $this->esquema . '"';
+        // (debe estar después de fijar el role)
+        $this->addPermisoGlobal('sfsv-e_select');
+
+        $this->eliminar($nom_tabla);
+
+        // Devolver los valores al estado original
+        $this->esquema = $esquema_org;
+        $this->role = $role_org;
+        $this->delPermisoGlobal('sfsv-e_select');
+    }
+
 }

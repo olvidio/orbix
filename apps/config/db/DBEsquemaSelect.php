@@ -1,6 +1,6 @@
 <?php
 
-namespace actividadescentro\db;
+namespace config\db;
 
 use core\DBRefresh;
 
@@ -13,26 +13,26 @@ class DBEsquemaSelect extends DBEsquema
 
     public function dropAllSelect()
     {
-        $this->eliminar_da_ctr_encargados_select();
+        $this->eliminar_x_config_schema_select();
     }
 
     public function createAllSelect()
     {
-        $this->create_da_ctr_encargados_select();
+        $this->create_x_config_schema_select();
         // renovar subscripciones
         $DBRefresh = new DBRefresh();
-        $DBRefresh->refreshSubscriptionModulo('comun');
+        $DBRefresh->refreshSubscriptionModulo('sv-e');
     }
 
     /**
-     * En la BD Comun (esquema).
+     * En la BD sv-e (esquema).
      */
-    public function create_da_ctr_encargados_select()
+    public function create_x_config_schema_select()
     {
-        // (debe estar después de fijar el role)
         $this->addPermisoGlobal('comun_select');
 
-        $tabla = "da_ctr_encargados";
+        $tabla = "x_config_schema";
+        $tabla_padre = "x_config_schema";
         $datosTabla = $this->infoTable($tabla);
 
         $nom_tabla = $datosTabla['nom_tabla'];
@@ -41,12 +41,10 @@ class DBEsquemaSelect extends DBEsquema
         $a_sql = [];
         $a_sql[] = "CREATE TABLE IF NOT EXISTS $nom_tabla (
                 ) 
-            INHERITS (global.$tabla);";
+            INHERITS (global.$tabla_padre);";
 
         $a_sql[] = "ALTER TABLE $nom_tabla ALTER id_schema SET DEFAULT public.idschema('$this->esquema'::text)";
-        $a_sql[] = "ALTER TABLE $nom_tabla ADD CONSTRAINT da_ctr_encargados_id_activ_id_ubi_key
-                    UNIQUE (id_activ, id_ubi); ";
-        $a_sql[] = "ALTER TABLE $nom_tabla ADD PRIMARY KEY (id_activ, id_ubi); ";
+        $a_sql[] = "ALTER TABLE $nom_tabla ADD PRIMARY KEY (parametro); ";
         $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->role";
 
 
@@ -55,9 +53,9 @@ class DBEsquemaSelect extends DBEsquema
         $this->delPermisoGlobal('comun_select');
     }
 
-    public function eliminar_da_ctr_encargados_select()
+    public function eliminar_x_config_schema_select()
     {
-        $datosTabla = $this->infoTable("da_ctr_encargados");
+        $datosTabla = $this->infoTable("x_config_schema");
         $nom_tabla = $datosTabla['nom_tabla'];
 
         $this->eliminarDeComunSelect($nom_tabla);
