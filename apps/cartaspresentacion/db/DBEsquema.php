@@ -85,10 +85,10 @@ class DBEsquema extends DBAbstract
         $id_seq = $datosTabla['id_seq'];
 
         $nom_tabla_parent = 'public';
-        if ($this->vf == 'v') {
+        if ($this->vf === 'v') {
             $nom_tabla_parent = 'publicv';
         }
-        if ($this->vf == 'f') {
+        if ($this->vf === 'f') {
             $nom_tabla_parent = 'publicf';
         }
 
@@ -101,8 +101,8 @@ class DBEsquema extends DBAbstract
 
         $a_sql[] = "ALTER TABLE $nom_tabla ADD PRIMARY KEY (id_ubi, id_direccion); ";
 
-        $a_sql[] = "ALTER TABLE $nom_tabla ADD CONSTRAINT du_presentacion_dl_ukey
-                    UNIQUE (id_ubi, id_direccion); ";
+        //$a_sql[] = "ALTER TABLE $nom_tabla ADD CONSTRAINT du_presentacion_dl_ukey
+        //            UNIQUE (id_ubi, id_direccion); ";
 
         $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->role; ";
 
