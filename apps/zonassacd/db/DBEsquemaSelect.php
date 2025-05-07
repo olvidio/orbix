@@ -75,9 +75,6 @@ class DBEsquemaSelect extends DBEsquema
     public function eliminar_zonas_select()
     {
         // OJO Corresponde al esquema sf-e/sv-e, no al comun.
-        //$datosTabla = $this->infoTable("zonas");
-        //$nom_tabla = $datosTabla['nom_tabla'];
-
         $this->eliminarDeSVESelect("zonas");
     }
 
@@ -123,10 +120,7 @@ class DBEsquemaSelect extends DBEsquema
     public function eliminar_zonas_grupos_select()
     {
         // OJO Corresponde al esquema sf-e/sv-e, no al comun.
-        $datosTabla = $this->infoTable("zonas_grupos");
-        $nom_tabla = $datosTabla['nom_tabla'];
-
-        $this->eliminarDeSVESelect($nom_tabla);
+        $this->eliminarDeSVESelect("zonas_grupos");
     }
 
     public function create_zonas_sacd_select()
@@ -171,10 +165,7 @@ class DBEsquemaSelect extends DBEsquema
     public function eliminar_zonas_sacd_select()
     {
         // OJO Corresponde al esquema sf-e/sv-e, no al comun.
-        $datosTabla = $this->infoTable("zonas_sacd");
-        $nom_tabla = $datosTabla['nom_tabla'];
-
-        $this->eliminarDeSVESelect($nom_tabla);
+        $this->eliminarDeSVESelect("zonas_sacd");
     }
 
 }

@@ -137,19 +137,13 @@ class DBEsquemaSelect extends DBEsquema
     public function eliminar_e_certificados_emitidos_select()
     {
         // OJO Corresponde al esquema sf-e/sv-e, no al comun.
-        $datosTabla = $this->infoTable("e_certificados_emitidos");
-        $nom_tabla = $datosTabla['nom_tabla'];
-
-        $this->eliminarDeSVESelect($nom_tabla);
+        $this->eliminarDeSVESelect("e_certificados_emitidos");
     }
 
     public function eliminar_e_certificados_recibidos_select()
     {
         // OJO Corresponde al esquema sf-e/sv-e, no al comun.
-        $datosTabla = $this->infoTable("e_certificados_recibidos");
-        $nom_tabla = $datosTabla['nom_tabla'];
-
-        $this->eliminarDeSVESelect($nom_tabla);
+        $this->eliminarDeSVESelect("e_certificados_recibidos");
     }
 
 }

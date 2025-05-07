@@ -69,10 +69,7 @@ class DBEsquemaSelect extends DBEsquema
     public function eliminar_atn_sacd_textos_select()
     {
         // OJO Corresponde al esquema sf-e/sv-e, no al comun.
-        $datosTabla = $this->infoTable("a_sacd_textos");
-        $nom_tabla = $datosTabla['nom_tabla'];
-
-        $this->eliminarDeSVESelect($nom_tabla);
+        $this->eliminarDeSVESelect("a_sacd_textos");
     }
 
 }

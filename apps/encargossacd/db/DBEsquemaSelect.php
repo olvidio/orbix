@@ -85,10 +85,7 @@ class DBEsquemaSelect extends DBEsquema
     public function eliminar_encargo_tipo_select()
     {
         // OJO Corresponde al esquema sf-e/sv-e, no al comun.
-        $datosTabla = $this->infoTable("encargo_tipo");
-        $nom_tabla = $datosTabla['nom_tabla'];
-
-        $this->eliminarDeSVESelect($nom_tabla);
+        $this->eliminarDeSVESelect("encargo_tipo");
     }
 
     public function create_encargos_select()
@@ -130,10 +127,7 @@ class DBEsquemaSelect extends DBEsquema
     public function eliminar_encargos_select()
     {
         // OJO Corresponde al esquema sf-e/sv-e, no al comun.
-        $datosTabla = $this->infoTable("encargos");
-        $nom_tabla = $datosTabla['nom_tabla'];
-
-        $this->eliminarDeSVESelect($nom_tabla);
+        $this->eliminarDeSVESelect("encargos");
     }
 
     public function create_encargo_horario_select()
@@ -178,10 +172,7 @@ class DBEsquemaSelect extends DBEsquema
     public function eliminar_encargo_horario_select()
     {
         // OJO Corresponde al esquema sf-e/sv-e, no al comun.
-        $datosTabla = $this->infoTable("encargo_horario");
-        $nom_tabla = $datosTabla['nom_tabla'];
-
-        $this->eliminarDeSVESelect($nom_tabla);
+        $this->eliminarDeSVESelect("encargo_horario");
     }
 
     public function create_encargo_horario_excepcion_select()
@@ -226,10 +217,7 @@ class DBEsquemaSelect extends DBEsquema
     public function eliminar_encargo_horario_excepcion_select()
     {
         // OJO Corresponde al esquema sf-e/sv-e, no al comun.
-        $datosTabla = $this->infoTable("encargo_horario_excepcion");
-        $nom_tabla = $datosTabla['nom_tabla'];
-
-        $this->eliminarDeSVESelect($nom_tabla);
+        $this->eliminarDeSVESelect("encargo_horario_excepcion");
     }
 
     public function create_encargo_sacd_horario_select()
@@ -278,10 +266,7 @@ class DBEsquemaSelect extends DBEsquema
     public function eliminar_encargo_sacd_horario_select()
     {
         // OJO Corresponde al esquema sf-e/sv-e, no al comun.
-        $datosTabla = $this->infoTable("encargo_sacd_horario");
-        $nom_tabla = $datosTabla['nom_tabla'];
-
-        $this->eliminarDeSVESelect($nom_tabla);
+        $this->eliminarDeSVESelect("encargo_sacd_horario");
     }
 
     public function create_encargo_sacd_horario_excepcion_select()
@@ -326,10 +311,7 @@ class DBEsquemaSelect extends DBEsquema
     public function eliminar_encargo_sacd_horario_excepcion_select()
     {
         // OJO Corresponde al esquema sf-e/sv-e, no al comun.
-        $datosTabla = $this->infoTable("encargo_sacd_horario_excepcion");
-        $nom_tabla = $datosTabla['nom_tabla'];
-
-        $this->eliminarDeSVESelect($nom_tabla);
+        $this->eliminarDeSVESelect("encargo_sacd_horario_excepcion");
     }
 
     public function create_encargo_sacd_observ_select()
@@ -373,10 +355,7 @@ class DBEsquemaSelect extends DBEsquema
     public function eliminar_encargo_sacd_observ_select()
     {
         // OJO Corresponde al esquema sf-e/sv-e, no al comun.
-        $datosTabla = $this->infoTable("encargo_sacd_observ");
-        $nom_tabla = $datosTabla['nom_tabla'];
-
-        $this->eliminarDeSVESelect($nom_tabla);
+        $this->eliminarDeSVESelect("encargo_sacd_observ");
     }
 
     public function create_encargos_sacd_select()
@@ -419,10 +398,7 @@ class DBEsquemaSelect extends DBEsquema
     public function eliminar_encargos_sacd_select()
     {
         // OJO Corresponde al esquema sf-e/sv-e, no al comun.
-        $datosTabla = $this->infoTable("encargos_sacd");
-        $nom_tabla = $datosTabla['nom_tabla'];
-
-        $this->eliminarDeSVESelect($nom_tabla);
+        $this->eliminarDeSVESelect("encargos_sacd");
     }
 
     public function create_encargo_datos_cgi_select()
@@ -466,10 +442,7 @@ class DBEsquemaSelect extends DBEsquema
     public function eliminar_encargo_datos_cgi_select()
     {
         // OJO Corresponde al esquema sf-e/sv-e, no al comun.
-        $datosTabla = $this->infoTable("encargo_datos_cgi");
-        $nom_tabla = $datosTabla['nom_tabla'];
-
-        $this->eliminarDeSVESelect($nom_tabla);
+        $this->eliminarDeSVESelect("encargo_datos_cgi");
     }
 
 
@@ -513,10 +486,7 @@ class DBEsquemaSelect extends DBEsquema
     public function eliminar_encargo_textos_select()
     {
         // OJO Corresponde al esquema sf-e/sv-e, no al comun.
-        $datosTabla = $this->infoTable("encargo_textos");
-        $nom_tabla = $datosTabla['nom_tabla'];
-
-        $this->eliminarDeSVESelect($nom_tabla);
+        $this->eliminarDeSVESelect("encargo_textos");
     }
 
 }

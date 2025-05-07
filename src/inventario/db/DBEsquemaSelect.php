@@ -81,10 +81,7 @@ class DBEsquemaSelect extends DBEsquema
     public function eliminar_colecciones_select()
     {
         // OJO Corresponde al esquema sf-e/sv-e, no al comun.
-        $datosTabla = $this->infoTable("i_colecciones");
-        $nom_tabla = $datosTabla['nom_tabla'];
-
-        $this->eliminarDeSVESelect($nom_tabla);
+        $this->eliminarDeSVESelect("i_colecciones");
     }
 
     public function create_documentos_select()
@@ -130,10 +127,7 @@ class DBEsquemaSelect extends DBEsquema
     public function eliminar_documentos_select()
     {
         // OJO Corresponde al esquema sf-e/sv-e, no al comun.
-        $datosTabla = $this->infoTable("i_documentos");
-        $nom_tabla = $datosTabla['nom_tabla'];
-
-        $this->eliminarDeSVESelect($nom_tabla);
+        $this->eliminarDeSVESelect("i_documentos");
     }
 
     public function create_egm_select()
@@ -176,10 +170,7 @@ class DBEsquemaSelect extends DBEsquema
     public function eliminar_egm_select()
     {
         // OJO Corresponde al esquema sf-e/sv-e, no al comun.
-        $datosTabla = $this->infoTable("i_egm");
-        $nom_tabla = $datosTabla['nom_tabla'];
-
-        $this->eliminarDeSVESelect($nom_tabla);
+        $this->eliminarDeSVESelect("i_egm");
     }
 
     public function create_equipajes_select()
@@ -221,10 +212,7 @@ class DBEsquemaSelect extends DBEsquema
     public function eliminar_equipajes_select()
     {
         // OJO Corresponde al esquema sf-e/sv-e, no al comun.
-        $datosTabla = $this->infoTable("i_equipajes");
-        $nom_tabla = $datosTabla['nom_tabla'];
-
-        $this->eliminarDeSVESelect($nom_tabla);
+        $this->eliminarDeSVESelect("i_equipajes");
     }
 
     public function create_lugares_select()
@@ -266,10 +254,7 @@ class DBEsquemaSelect extends DBEsquema
     public function eliminar_lugares_select()
     {
         // OJO Corresponde al esquema sf-e/sv-e, no al comun.
-        $datosTabla = $this->infoTable("i_lugares");
-        $nom_tabla = $datosTabla['nom_tabla'];
-
-        $this->eliminarDeSVESelect($nom_tabla);
+        $this->eliminarDeSVESelect("i_lugares");
     }
 
     public function create_tipo_documento_select()
@@ -311,10 +296,7 @@ class DBEsquemaSelect extends DBEsquema
     public function eliminar_tipo_documento_select()
     {
         // OJO Corresponde al esquema sf-e/sv-e, no al comun.
-        $datosTabla = $this->infoTable("i_tipo_documento");
-        $nom_tabla = $datosTabla['nom_tabla'];
-
-        $this->eliminarDeSVESelect($nom_tabla);
+        $this->eliminarDeSVESelect("i_tipo_documento");
     }
 
     public function create_ubis_select()
@@ -356,10 +338,7 @@ class DBEsquemaSelect extends DBEsquema
     public function eliminar_ubis_select()
     {
         // OJO Corresponde al esquema sf-e/sv-e, no al comun.
-        $datosTabla = $this->infoTable("i_ubis");
-        $nom_tabla = $datosTabla['nom_tabla'];
-
-        $this->eliminarDeSVESelect($nom_tabla);
+        $this->eliminarDeSVESelect("i_ubis");
     }
 
 
@@ -402,10 +381,7 @@ class DBEsquemaSelect extends DBEsquema
     public function eliminar_whereis_select()
     {
         // OJO Corresponde al esquema sf-e/sv-e, no al comun.
-        $datosTabla = $this->infoTable("i_whereis");
-        $nom_tabla = $datosTabla['nom_tabla'];
-
-        $this->eliminarDeSVESelect($nom_tabla);
+        $this->eliminarDeSVESelect("i_whereis");
     }
 
 }

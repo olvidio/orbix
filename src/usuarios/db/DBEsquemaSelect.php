@@ -69,9 +69,6 @@ class DBEsquemaSelect extends DBEsquema
     public function eliminar_aux_usuarios_ctr_perm_select()
     {
         // OJO Corresponde al esquema sf-e/sv-e, no al comun.
-        $datosTabla = $this->infoTable("aux_usuarios_ctr_perm");
-        $nom_tabla = $datosTabla['nom_tabla'];
-
-        $this->eliminarDeSVESelect($nom_tabla);
+        $this->eliminarDeSVESelect("aux_usuarios_ctr_perm");
     }
 }

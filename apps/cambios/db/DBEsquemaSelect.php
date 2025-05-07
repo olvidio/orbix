@@ -287,19 +287,13 @@ class DBEsquemaSelect extends DBEsquema
     public function eliminar_av_cambios_usuario_objeto_pref_select()
     {
         // OJO Corresponde al esquema sf-e/sv-e, no al comun.
-        $datosTabla = $this->infoTable("av_cambios_usuario_objeto_pref");
-        $nom_tabla = $datosTabla['nom_tabla'];
-
-        $this->eliminarDeSVESelect($nom_tabla);
+        $this->eliminarDeSVESelect("av_cambios_usuario_objeto_pref");
     }
 
     public function eliminar_av_cambios_usuario_propiedades_pref_select()
     {
         // OJO Corresponde al esquema sf-e/sv-e, no al comun.
-        $datosTabla = $this->infoTable("av_cambios_usuario_propiedades_pref");
-        $nom_tabla = $datosTabla['nom_tabla'];
-
-        $this->eliminarDeSVESelect($nom_tabla);
+        $this->eliminarDeSVESelect("av_cambios_usuario_propiedades_pref");
     }
 
 }
