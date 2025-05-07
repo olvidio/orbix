@@ -37,10 +37,13 @@ class DBEsquema extends DBAbstract
             $this->eliminar_e_certificados_recibidos();
         }
         // eliminar las tablas en la DBSelect para la sincronización.
+        // Solamente está en el servidor interno (NO sv-e)
+        /*
         if (DBAbstract::hasServerSelect()) {
             $oDBEsquemaSelect = new DBEsquemaSelect();
             $oDBEsquemaSelect->dropAllSelect();
         }
+        */
     }
 
     public function createAll(): void
@@ -56,10 +59,13 @@ class DBEsquema extends DBAbstract
             $this->create_e_certificados_recibidos();
         }
         // crear las tablas en la DBSelect para la sincronización.
+        // Solamente está en el servidor interno (NO sv-e)
+        /*
         if (DBAbstract::hasServerSelect()) {
             $oDBEsquemaSelect = new DBEsquemaSelect();
             $oDBEsquemaSelect->createAllSelect();
         }
+        */
     }
 
     public function llenarAll(): void
