@@ -587,8 +587,13 @@ class DBEsquema extends DBAbstract
         $filename = $datosTabla['filename'];
         $oDbl = $this->oDbl;
 
+        // crear tabla temporal
+        $tabla_tmp = $nom_tabla.'_tmp';
+
         $a_sql = [];
-        $a_sql[0] = "TRUNCATE $nom_tabla RESTART IDENTITY;";
+        $a_sql[0] = "CREATE TABLE IF NOT EXISTS $tabla_tmp AS
+                        SELECT * FROM $nom_tabla WITH NO DATA;";
+        $a_sql[1] = "TRUNCATE $tabla_tmp;";
         $this->executeSql($a_sql);
 
         $delimiter = "\t";
@@ -601,7 +606,14 @@ class DBEsquema extends DBAbstract
             exit ($msg);
         }
 
-        $oDbl->pgsqlCopyFromFile($nom_tabla, $filename, $delimiter, $null_as, $fields);
+        $oDbl->pgsqlCopyFromFile($tabla_tmp, $filename, $delimiter, $null_as, $fields);
+
+        $a_sql = [];
+        $a_sql[0] = "UPDATE $nom_tabla SET (id_tipo_proceso_sv,id_tipo_proceso_ex_sv,id_tipo_proceso_sf,id_tipo_proceso_ex_sf) =
+                    ( SELECT id_tipo_proceso_sv,id_tipo_proceso_ex_sv,id_tipo_proceso_sf,id_tipo_proceso_ex_sf FROM $tabla_tmp
+                     WHERE $tabla_tmp.id_tipo_activ = $nom_tabla.id_tipo_activ);";
+        $a_sql[1] = "DROP TABLE $tabla_tmp CASCADDE;";
+        $this->executeSql($a_sql);
 
     }
 
