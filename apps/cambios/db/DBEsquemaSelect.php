@@ -88,7 +88,7 @@ class DBEsquemaSelect extends DBEsquema
         $a_sql[] = "CREATE TABLE IF NOT EXISTS $nom_tabla (
                         CONSTRAINT $nompkey PRIMARY KEY ($campo_seq)
                 ) 
-            INHERITS (public.$tabla);";
+            INHERITS (global.$tabla);";
 
         $a_sql[] = "ALTER TABLE $nom_tabla ALTER id_schema SET DEFAULT public.idschema('$this->esquema'::text)";
         $a_sql[] = "CREATE UNIQUE INDEX IF NOT EXISTS {$tabla}_udx ON $nom_tabla USING btree (id_schema_cambio,id_item_cambio,id_usuario,sfsv,aviso_tipo); ";
@@ -120,7 +120,7 @@ class DBEsquemaSelect extends DBEsquema
         $a_sql[] = "CREATE TABLE IF NOT EXISTS $nom_tabla (
                         CONSTRAINT $nompkey PRIMARY KEY ($campo_seq)
                 ) 
-            INHERITS (public.$tabla_padre);";
+            INHERITS (global.$tabla_padre);";
 
         $a_sql[] = "ALTER TABLE $nom_tabla ALTER id_schema SET DEFAULT public.idschema('$this->esquema'::text)";
         $a_sql[] = "CREATE UNIQUE INDEX IF NOT EXISTS {$tabla}_udx ON $nom_tabla USING btree (server,id_schema_cambio,id_item_cambio); ";
