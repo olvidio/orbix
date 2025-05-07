@@ -379,9 +379,7 @@ abstract class DBAbstract
     {
         // (debe estar después de fijar el role)
         $this->addPermisoGlobal('comun_select');
-
         $this->eliminar($nom_tabla);
-
         $this->delPermisoGlobal('comun_select');
     }
 
@@ -394,13 +392,12 @@ abstract class DBAbstract
         $this->role = '"' . $this->esquema . '"';
         // (debe estar después de fijar el role)
         $this->addPermisoGlobal('sfsv-e_select');
-
         $this->eliminar($nom_tabla);
+        $this->delPermisoGlobal('sfsv-e_select');
 
         // Devolver los valores al estado original
         $this->esquema = $esquema_org;
         $this->role = $role_org;
-        $this->delPermisoGlobal('sfsv-e_select');
     }
 
 }
