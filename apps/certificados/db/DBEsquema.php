@@ -205,10 +205,6 @@ class DBEsquema extends DBAbstract
         $a_sql[] = "ALTER SEQUENCE $id_seq OWNER TO $this->role;";
 
         $a_sql[] = "ALTER TABLE $nom_tabla ALTER $campo_seq SET DEFAULT nextval('$id_seq'::regclass); ";
-
-
-        $a_sql[] = "ALTER TABLE $nom_tabla ADD CONSTRAINT e_certificados_dl_ukey
-                    UNIQUE (id_nom,f_certificado); ";
         $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->role;";
 
 
