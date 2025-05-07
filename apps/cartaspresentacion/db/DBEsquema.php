@@ -28,21 +28,13 @@ class DBEsquema extends DBAbstract
     public function dropAll()
     {
         $this->eliminar_presentacion();
-        // eliminar las tablas en la DBSelect para la sincronización.
-        if (DBAbstract::hasServerSelect()) {
-            $oDBEsquemaSelect = new DBEsquemaSelect();
-            $oDBEsquemaSelect->dropAllSelect();
-        }
     }
 
     public function createAll()
     {
         $this->create_presentacion();
-        // crear las tablas en la DBSelect para la sincronización.
-        if (DBAbstract::hasServerSelect()) {
-            $oDBEsquemaSelect = new DBEsquemaSelect();
-            $oDBEsquemaSelect->createAllSelect();
-        }
+        // NO crear las tablas en la DBSelect para la sincronización.
+        // Las tablas están en el servidor interno
     }
 
     public function llenarAll()
