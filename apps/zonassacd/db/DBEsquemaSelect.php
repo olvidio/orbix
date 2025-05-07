@@ -75,10 +75,10 @@ class DBEsquemaSelect extends DBEsquema
     public function eliminar_zonas_select()
     {
         // OJO Corresponde al esquema sf-e/sv-e, no al comun.
-        $datosTabla = $this->infoTable("zonas");
-        $nom_tabla = $datosTabla['nom_tabla'];
+        //$datosTabla = $this->infoTable("zonas");
+        //$nom_tabla = $datosTabla['nom_tabla'];
 
-        $this->eliminarDeSVESelect($nom_tabla);
+        $this->eliminarDeSVESelect("zonas");
     }
 
     public function create_zonas_grupos_select()
