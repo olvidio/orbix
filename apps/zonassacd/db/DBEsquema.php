@@ -101,9 +101,16 @@ class DBEsquema extends DBAbstract
         $nom_tabla = $datosTabla['nom_tabla'];
         $campo_seq = $datosTabla['campo_seq'];
         $id_seq = $datosTabla['id_seq'];
+        $nompkey = $tabla . '_pkey';
+        /* Los constraint de 'primary key' y 'foreign key' deben estar en la creación de la tabla,
+         *  que permite la clausula 'IF EXISTS'.  De otro modo da error cuando se está activando un módulo
+         *  que ya había sido instalado y se había desactivado, pero no borrado.
+         */
+
 
         $a_sql = [];
         $a_sql[] = "CREATE TABLE IF NOT EXISTS $nom_tabla (
+                        CONSTRAINT $nompkey PRIMARY KEY (id_zona)
                 )
             INHERITS (global.$tabla);";
 
@@ -119,10 +126,6 @@ class DBEsquema extends DBAbstract
         $a_sql[] = "ALTER SEQUENCE $id_seq OWNER TO $this->role;";
 
         $a_sql[] = "ALTER TABLE $nom_tabla ALTER $campo_seq SET DEFAULT nextval('$id_seq'::regclass); ";
-
-
-        $a_sql[] = "ALTER TABLE $nom_tabla ADD PRIMARY KEY (id_zona); ";
-
         $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->role; ";
 
         /* Finalmente no se puede tampoco con sv, porque las zonas estan en sv-e, i los centros en sv.
@@ -184,9 +187,15 @@ class DBEsquema extends DBAbstract
         $nom_tabla = $datosTabla['nom_tabla'];
         $campo_seq = $datosTabla['campo_seq'];
         $id_seq = $datosTabla['id_seq'];
+        $nompkey = $tabla . '_pkey';
+        /* Los constraint de 'primary key' y 'foreign key' deben estar en la creación de la tabla,
+         *  que permite la clausula 'IF EXISTS'.  De otro modo da error cuando se está activando un módulo
+         *  que ya había sido instalado y se había desactivado, pero no borrado.
+         */
 
         $a_sql = [];
         $a_sql[] = "CREATE TABLE IF NOT EXISTS $nom_tabla (
+                        CONSTRAINT $nompkey PRIMARY KEY (id_grupo)
                 )
             INHERITS (global.$tabla);";
 
@@ -202,10 +211,6 @@ class DBEsquema extends DBAbstract
         $a_sql[] = "ALTER SEQUENCE $id_seq OWNER TO $this->role;";
 
         $a_sql[] = "ALTER TABLE $nom_tabla ALTER $campo_seq SET DEFAULT nextval('$id_seq'::regclass); ";
-
-
-        $a_sql[] = "ALTER TABLE $nom_tabla ADD PRIMARY KEY (id_grupo); ";
-
         $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->role; ";
 
         $this->executeSql($a_sql);
@@ -259,10 +264,21 @@ class DBEsquema extends DBAbstract
         $nom_tabla = $datosTabla['nom_tabla'];
         $campo_seq = $datosTabla['campo_seq'];
         $id_seq = $datosTabla['id_seq'];
+        $nompkey = $tabla . '_pkey';
+        /* Los constraint de 'primary key' y 'foreign key' deben estar en la creación de la tabla,
+         *  que permite la clausula 'IF EXISTS'.  De otro modo da error cuando se está activando un módulo
+         *  que ya había sido instalado y se había desactivado, pero no borrado.
+         */
 
         $a_sql = [];
         $a_sql[] = "CREATE TABLE IF NOT EXISTS $nom_tabla (
+                        CONSTRAINT $nompkey PRIMARY KEY (id_item),
+                        CONSTRAINT zonas_sacd_id_nom_key UNIQUE (id_nom, id_zona),
+                        CONSTRAINT zonas_sacd_id_zona_fkey FOREIGN KEY (id_zona) 
+                            REFERENCES zonas(id_zona) ON DELETE CASCADE
+
                 )
+    
             INHERITS (global.$tabla);";
 
         $a_sql[] = "ALTER TABLE $nom_tabla ALTER id_schema SET DEFAULT public.idschema('$this->esquema'::text)";
@@ -277,20 +293,9 @@ class DBEsquema extends DBAbstract
         $a_sql[] = "ALTER SEQUENCE $id_seq OWNER TO $this->role;";
 
         $a_sql[] = "ALTER TABLE $nom_tabla ALTER $campo_seq SET DEFAULT nextval('$id_seq'::regclass); ";
-
-
-        $a_sql[] = "ALTER TABLE $nom_tabla ADD PRIMARY KEY (id_item); ";
-
         $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->role; ";
 
-        $a_sql[] = "ALTER TABLE $nom_tabla
-                        ADD CONSTRAINT zonas_sacd_id_nom_key UNIQUE (id_nom, id_zona); ";
-
-        $a_sql[] = "ALTER TABLE $nom_tabla
-                        ADD CONSTRAINT zonas_sacd_id_zona_fkey FOREIGN KEY (id_zona) REFERENCES zonas(id_zona) ON DELETE CASCADE; ";
-
         $this->executeSql($a_sql);
-
         $this->delPermisoGlobal('sfsv-e');
         // Devolver los valores al estado original
         $this->esquema = $esquema_org;

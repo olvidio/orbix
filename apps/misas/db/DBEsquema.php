@@ -93,18 +93,20 @@ class DBEsquema extends DBAbstract
         $datosTabla = $this->infoTable($tabla);
 
         $nom_tabla = $datosTabla['nom_tabla'];
-
         $nom_tabla_parent = 'global';
+        $nompkey = $tabla . '_pkey';
+        /* Los constraint de 'primary key' y 'foreign key' deben estar en la creación de la tabla,
+         *  que permite la clausula 'IF EXISTS'.  De otro modo da error cuando se está activando un módulo
+         *  que ya había sido instalado y se había desactivado, pero no borrado.
+         */
 
         $a_sql = [];
         $a_sql[] = "CREATE TABLE IF NOT EXISTS $nom_tabla (
+                        CONSTRAINT $nompkey PRIMARY KEY (id_nom)
                 )
             INHERITS ($nom_tabla_parent.$tabla);";
 
         $a_sql[] = "ALTER TABLE $nom_tabla ALTER id_schema SET DEFAULT public.idschema('$this->esquema'::text)";
-
-        $a_sql[] = "ALTER TABLE $nom_tabla ADD PRIMARY KEY (id_nom); ";
-
         $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->role; ";
 
         $this->executeSql($a_sql);
@@ -136,16 +138,19 @@ class DBEsquema extends DBAbstract
 
         $nom_tabla = $datosTabla['nom_tabla'];
         $nom_tabla_parent = 'global';
+        $nompkey = $tabla . '_pkey';
+        /* Los constraint de 'primary key' y 'foreign key' deben estar en la creación de la tabla,
+         *  que permite la clausula 'IF EXISTS'.  De otro modo da error cuando se está activando un módulo
+         *  que ya había sido instalado y se había desactivado, pero no borrado.
+         */
 
         $a_sql = [];
         $a_sql[] = "CREATE TABLE IF NOT EXISTS $nom_tabla (
+                        CONSTRAINT $nompkey PRIMARY KEY (uuid_item)
                 )
             INHERITS ($nom_tabla_parent.$tabla);";
 
         $a_sql[] = "ALTER TABLE $nom_tabla ALTER id_schema SET DEFAULT public.idschema('$this->esquema'::text)";
-
-        $a_sql[] = "ALTER TABLE $nom_tabla ADD PRIMARY KEY (uuid_item); ";
-
         $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->role; ";
 
         $this->executeSql($a_sql);
@@ -177,16 +182,19 @@ class DBEsquema extends DBAbstract
 
         $nom_tabla = $datosTabla['nom_tabla'];
         $nom_tabla_parent = 'global';
+        $nompkey = $tabla . '_pkey';
+        /* Los constraint de 'primary key' y 'foreign key' deben estar en la creación de la tabla,
+         *  que permite la clausula 'IF EXISTS'.  De otro modo da error cuando se está activando un módulo
+         *  que ya había sido instalado y se había desactivado, pero no borrado.
+         */
 
         $a_sql = [];
         $a_sql[] = "CREATE TABLE IF NOT EXISTS $nom_tabla (
+                        CONSTRAINT $nompkey PRIMARY KEY (uuid_item)
                 )
             INHERITS ($nom_tabla_parent.$tabla);";
 
         $a_sql[] = "ALTER TABLE $nom_tabla ALTER id_schema SET DEFAULT public.idschema('$this->esquema'::text)";
-
-        $a_sql[] = "ALTER TABLE $nom_tabla ADD PRIMARY KEY (uuid_item); ";
-
         $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->role; ";
 
         $this->executeSql($a_sql);

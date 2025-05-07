@@ -134,8 +134,15 @@ class DBEsquema extends DBAbstract
          * los 'id_item_cambio' del servidor1 empiezan por 1, los del servidor2 por 2.
          */
 
+        $nompkey = $tabla . '_pkey';
+        /* Los constraint de 'primary key' y 'foreign key' deben estar en la creación de la tabla,
+         *  que permite la clausula 'IF EXISTS'.  De otro modo da error cuando se está activando un módulo
+         *  que ya había sido instalado y se había desactivado, pero no borrado.
+         */
+
         $a_sql = [];
         $a_sql[] = "CREATE TABLE IF NOT EXISTS $nom_tabla (
+                        CONSTRAINT $nompkey PRIMARY KEY ($campo_seq)
                 ) 
             INHERITS (public.$tabla_padre);";
 
@@ -151,9 +158,6 @@ class DBEsquema extends DBAbstract
         $a_sql[] = "ALTER SEQUENCE $id_seq OWNER TO $this->role;";
 
         $a_sql[] = "ALTER TABLE $nom_tabla ALTER COLUMN $campo_seq SET DEFAULT (((1)::text || (nextval('$id_seq'::regclass))::text))::integer ; ";
-
-        $a_sql[] = "ALTER TABLE $nom_tabla ADD PRIMARY KEY ($campo_seq); ";
-
         $a_sql[] = "CREATE INDEX IF NOT EXISTS {$tabla}_{$campo_seq}_idx ON $nom_tabla USING btree ($campo_seq); ";
         $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->role";
 
@@ -198,6 +202,12 @@ class DBEsquema extends DBAbstract
         $nom_tabla = $datosTabla['nom_tabla'];
         $campo_seq = $datosTabla['campo_seq'];
         $id_seq = $datosTabla['id_seq'];
+        $nompkey = $tabla . '_pkey';
+        /* Los constraint de 'primary key' y 'foreign key' deben estar en la creación de la tabla,
+         *  que permite la clausula 'IF EXISTS'.  De otro modo da error cuando se está activando un módulo
+         *  que ya había sido instalado y se había desactivado, pero no borrado.
+         */
+
 
         // Al ser de la DB comun, puede ser que al intentar crear como sf, las
         // tablas ya se hayan creado como sv (o al revés).
@@ -207,6 +217,7 @@ class DBEsquema extends DBAbstract
 
         $a_sql = [];
         $a_sql[] = "CREATE TABLE IF NOT EXISTS $nom_tabla (
+                        CONSTRAINT $nompkey PRIMARY KEY ($campo_seq)
                 ) 
             INHERITS (global.$tabla_padre);";
 
@@ -225,9 +236,6 @@ class DBEsquema extends DBAbstract
         $a_sql[] = "ALTER SEQUENCE $id_seq OWNER TO $this->role;";
 
         $a_sql[] = "ALTER TABLE $nom_tabla ALTER $campo_seq SET DEFAULT nextval('$id_seq'::regclass); ";
-
-        $a_sql[] = "ALTER TABLE $nom_tabla ADD PRIMARY KEY ($campo_seq); ";
-
         $a_sql[] = "CREATE UNIQUE INDEX IF NOT EXISTS {$tabla}_udx ON $nom_tabla USING btree (server,id_schema_cambio,id_item_cambio); ";
         /* No sirve con tablas heredadas
         $tabla1 = 'public.av_cambios'; //la de public
@@ -282,6 +290,11 @@ class DBEsquema extends DBAbstract
         $nom_tabla = $datosTabla['nom_tabla'];
         $campo_seq = $datosTabla['campo_seq'];
         $id_seq = $datosTabla['id_seq'];
+        $nompkey = $tabla . '_pkey';
+        /* Los constraint de 'primary key' y 'foreign key' deben estar en la creación de la tabla,
+         *  que permite la clausula 'IF EXISTS'.  De otro modo da error cuando se está activando un módulo
+         *  que ya había sido instalado y se había desactivado, pero no borrado.
+         */
 
         // Al ser de la DB comun, puede ser que al intentar crear como sf, las
         // tablas ya se hayan creado como sv (o al revés).
@@ -291,6 +304,7 @@ class DBEsquema extends DBAbstract
 
         $a_sql = [];
         $a_sql[] = "CREATE TABLE IF NOT EXISTS $nom_tabla (
+                        CONSTRAINT $nompkey PRIMARY KEY ($campo_seq)
                 ) 
             INHERITS (global.$tabla_padre);";
 
@@ -309,9 +323,6 @@ class DBEsquema extends DBAbstract
         $a_sql[] = "ALTER SEQUENCE $id_seq OWNER TO $this->role;";
 
         $a_sql[] = "ALTER TABLE $nom_tabla ALTER $campo_seq SET DEFAULT nextval('$id_seq'::regclass); ";
-
-        $a_sql[] = "ALTER TABLE $nom_tabla ADD PRIMARY KEY ($campo_seq); ";
-
         $a_sql[] = "CREATE UNIQUE INDEX IF NOT EXISTS {$tabla}_udx ON $nom_tabla USING btree (server,id_schema_cambio,id_item_cambio); ";
         /* No sirve con tablas heredadas
         $tabla1 = 'public.av_cambios'; //la de public
@@ -366,6 +377,11 @@ class DBEsquema extends DBAbstract
         $nom_tabla = $datosTabla['nom_tabla'];
         $campo_seq = $datosTabla['campo_seq'];
         $id_seq = $datosTabla['id_seq'];
+        $nompkey = $tabla . '_pkey';
+        /* Los constraint de 'primary key' y 'foreign key' deben estar en la creación de la tabla,
+         *  que permite la clausula 'IF EXISTS'.  De otro modo da error cuando se está activando un módulo
+         *  que ya había sido instalado y se había desactivado, pero no borrado.
+         */
 
         // Al ser de la DB comun, puede ser que al intentar crear como sf, las
         // tablas ya se hayan creado como sv (o al revés).
@@ -375,6 +391,7 @@ class DBEsquema extends DBAbstract
 
         $a_sql = [];
         $a_sql[] = "CREATE TABLE IF NOT EXISTS $nom_tabla (
+                        CONSTRAINT $nompkey PRIMARY KEY ($campo_seq)
                 ) 
             INHERITS (global.$tabla);";
 
@@ -393,9 +410,6 @@ class DBEsquema extends DBAbstract
 
         $a_sql[] = "ALTER TABLE $nom_tabla ALTER $campo_seq SET DEFAULT nextval('$id_seq'::regclass); ";
         $a_sql[] = "ALTER TABLE $nom_tabla ALTER sfsv SET DEFAULT 1;";
-
-        $a_sql[] = "ALTER TABLE $nom_tabla ADD PRIMARY KEY ($campo_seq); ";
-
         $a_sql[] = "CREATE UNIQUE INDEX IF NOT EXISTS {$tabla}_udx ON $nom_tabla USING btree (id_schema_cambio,id_item_cambio,id_usuario,sfsv,aviso_tipo); ";
         // FOREIGN KEYS
         /* No sirve con tablas heredadas
@@ -452,6 +466,10 @@ class DBEsquema extends DBAbstract
         $campo_seq = $datosTabla['campo_seq'];
         $id_seq = $datosTabla['id_seq'];
         $nompkey = $tabla . '_pkey';
+        /* Los constraint de 'primary key' y 'foreign key' deben estar en la creación de la tabla,
+         *  que permite la clausula 'IF EXISTS'.  De otro modo da error cuando se está activando un módulo
+         *  que ya había sido instalado y se había desactivado, pero no borrado.
+         */
 
         $a_sql = [];
         $a_sql[] = "CREATE TABLE IF NOT EXISTS $nom_tabla (
@@ -473,13 +491,6 @@ class DBEsquema extends DBAbstract
         $a_sql[] = "ALTER SEQUENCE $id_seq OWNER TO $this->role;";
 
         $a_sql[] = "ALTER TABLE $nom_tabla ALTER $campo_seq SET DEFAULT nextval('$id_seq'::regclass); ";
-
-        /* Los constraint de 'primary key' y 'foreign key' deben estar en la creación de la tabla,
-         *  que permite la clausaula 'IF EXISTS'.  De otro modo da error cuando se está activando un módulo
-         *  que ya había sido instalado y se había desactivado, pero no borrado. 
-         *  
-        $a_sql[] = "ALTER TABLE $nom_tabla ADD PRIMARY KEY ($campo_seq); ";
-         */
 
         // FOREIGN KEYS
         // con los usuarios no va porque estan en otra base de datos (sv). 

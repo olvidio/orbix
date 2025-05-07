@@ -114,9 +114,17 @@ class DBEsquema extends DBAbstract
         $nom_tabla = $datosTabla['nom_tabla'];
         $campo_seq = $datosTabla['campo_seq'];
         $id_seq = $datosTabla['id_seq'];
+        $nompkey = $tabla . '_pkey';
+        /* Los constraint de 'primary key' y 'foreign key' deben estar en la creación de la tabla,
+         *  que permite la clausula 'IF EXISTS'.  De otro modo da error cuando se está activando un módulo
+         *  que ya había sido instalado y se había desactivado, pero no borrado.
+         */
 
         $a_sql = [];
         $a_sql[] = "CREATE TABLE IF NOT EXISTS $nom_tabla (
+                        CONSTRAINT $nompkey PRIMARY KEY (id_item),
+                        CONSTRAINT e_certificados_rstgr_ukey
+                            UNIQUE (id_nom,f_certificado); 
                 )
             INHERITS ($nom_tabla_parent.$tabla);";
 
@@ -133,14 +141,7 @@ class DBEsquema extends DBAbstract
         $a_sql[] = "ALTER SEQUENCE $id_seq OWNER TO $this->role;";
 
         $a_sql[] = "ALTER TABLE $nom_tabla ALTER $campo_seq SET DEFAULT nextval('$id_seq'::regclass); ";
-
-        $a_sql[] = "ALTER TABLE $nom_tabla ADD PRIMARY KEY (id_item); ";
-
-        $a_sql[] = "ALTER TABLE $nom_tabla ADD CONSTRAINT e_certificados_rstgr_ukey
-                    UNIQUE (id_nom,f_certificado); ";
-
-        $a_sql[] = "CREATE INDEX e_certificados_rstgr_key ON $nom_tabla USING btree (certificado);";
-
+        $a_sql[] = "CREATE INDEX IF NOT EXISTS e_certificados_rstgr_key ON $nom_tabla USING btree (certificado);";
         $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->role;";
 
 
@@ -177,9 +178,17 @@ class DBEsquema extends DBAbstract
         $nom_tabla = $datosTabla['nom_tabla'];
         $campo_seq = $datosTabla['campo_seq'];
         $id_seq = $datosTabla['id_seq'];
+        $nompkey = $tabla . '_pkey';
+        /* Los constraint de 'primary key' y 'foreign key' deben estar en la creación de la tabla,
+         *  que permite la clausula 'IF EXISTS'.  De otro modo da error cuando se está activando un módulo
+         *  que ya había sido instalado y se había desactivado, pero no borrado.
+         */
 
         $a_sql = [];
         $a_sql[] = "CREATE TABLE IF NOT EXISTS $nom_tabla (
+                        CONSTRAINT $nompkey PRIMARY KEY (id_item),
+                        CONSTRAINT e_certificados_dl_ukey
+                            UNIQUE (id_nom,f_certificado)
                 )
             INHERITS ($nom_tabla_parent.$tabla);";
 
@@ -197,13 +206,9 @@ class DBEsquema extends DBAbstract
 
         $a_sql[] = "ALTER TABLE $nom_tabla ALTER $campo_seq SET DEFAULT nextval('$id_seq'::regclass); ";
 
-        $a_sql[] = "ALTER TABLE $nom_tabla ADD PRIMARY KEY (id_item); ";
 
         $a_sql[] = "ALTER TABLE $nom_tabla ADD CONSTRAINT e_certificados_dl_ukey
                     UNIQUE (id_nom,f_certificado); ";
-
-        $a_sql[] = "CREATE INDEX e_certificados_dl_key ON $nom_tabla USING btree (certificado);";
-
         $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->role;";
 
 

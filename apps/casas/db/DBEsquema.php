@@ -105,21 +105,24 @@ class DBEsquema extends DBAbstract
         $datosTabla = $this->infoTable($tabla);
 
         $nom_tabla = $datosTabla['nom_tabla'];
+        $nompkey = $tabla . '_pkey';
+        /* Los constraint de 'primary key' y 'foreign key' deben estar en la creación de la tabla,
+         *  que permite la clausula 'IF EXISTS'.  De otro modo da error cuando se está activando un módulo
+         *  que ya había sido instalado y se había desactivado, pero no borrado.
+         */
+        $datosTablaA = $this->infoTable('a_actividades_dl');
+        $nom_tabla_activ = $datosTablaA['nom_tabla'];
 
         $a_sql = [];
         $a_sql[] = "CREATE TABLE IF NOT EXISTS $nom_tabla (
+                        CONSTRAINT $nompkey PRIMARY KEY (id_activ),
+                        CONSTRAINT {$tabla}_id_activ_fk
+                            FOREIGN KEY (id_activ) REFERENCES $nom_tabla_activ(id_activ) ON DELETE CASCADE
                 ) 
             INHERITS (global.$tabla_padre);";
 
         $a_sql[] = "ALTER TABLE $nom_tabla ALTER id_schema SET DEFAULT public.idschema('$this->esquema'::text)";
-        $a_sql[] = "ALTER TABLE $nom_tabla ADD PRIMARY KEY (id_activ); ";
-        $a_sql[] = "CREATE INDEX {$tabla}_id_activ ON $nom_tabla USING btree (id_activ); ";
-
-        $datosTablaA = $this->infoTable('a_actividades_dl');
-        $nom_tabla_activ = $datosTablaA['nom_tabla'];
-        $a_sql[] = "ALTER TABLE $nom_tabla ADD CONSTRAINT {$tabla}_id_activ_fk
-                    FOREIGN KEY (id_activ) REFERENCES $nom_tabla_activ(id_activ) ON DELETE CASCADE; ";
-
+        $a_sql[] = "CREATE INDEX IF NOT EXISTS {$tabla}_id_activ ON $nom_tabla USING btree (id_activ); ";
         $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->role";
 
         $this->executeSql($a_sql);
@@ -153,9 +156,15 @@ class DBEsquema extends DBAbstract
         $nom_tabla = $datosTabla['nom_tabla'];
         $campo_seq = $datosTabla['campo_seq'];
         $id_seq = $datosTabla['id_seq'];
+        $nompkey = $tabla . '_pkey';
+        /* Los constraint de 'primary key' y 'foreign key' deben estar en la creación de la tabla,
+         *  que permite la clausula 'IF EXISTS'.  De otro modo da error cuando se está activando un módulo
+         *  que ya había sido instalado y se había desactivado, pero no borrado.
+         */
 
         $a_sql = [];
         $a_sql[] = "CREATE TABLE IF NOT EXISTS $nom_tabla (
+                        CONSTRAINT $nompkey PRIMARY KEY (id_item)
                     )
                 INHERITS (global.$tabla_padre);";
 
@@ -172,7 +181,6 @@ class DBEsquema extends DBAbstract
         $a_sql[] = "ALTER SEQUENCE $id_seq OWNER TO $this->role;";
 
         $a_sql[] = "ALTER TABLE $nom_tabla ALTER $campo_seq SET DEFAULT nextval('$id_seq'::regclass); ";
-        $a_sql[] = "ALTER TABLE $nom_tabla ADD PRIMARY KEY (id_item); ";
 
         $datosTablaA = $this->infoTable('u_cdc_dl');
         $nom_tabla_activ = $datosTablaA['nom_tabla'];
@@ -180,8 +188,8 @@ class DBEsquema extends DBAbstract
                     FOREIGN KEY (id_ubi) REFERENCES $nom_tabla_activ(id_ubi) ON DELETE CASCADE; ";
 
         // No va con tablas heredadas
-        $a_sql[] = "CREATE INDEX {$tabla}_id_ubi ON $nom_tabla USING btree (id_ubi); ";
-        $a_sql[] = "CREATE INDEX {$tabla}_f_gasto ON $nom_tabla USING btree (f_gasto); ";
+        $a_sql[] = "CREATE INDEX IF NOT EXISTS {$tabla}_id_ubi ON $nom_tabla USING btree (id_ubi); ";
+        $a_sql[] = "CREATE INDEX IF NOT EXISTS {$tabla}_f_gasto ON $nom_tabla USING btree (f_gasto); ";
         $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->role";
 
         $this->executeSql($a_sql);
@@ -219,9 +227,21 @@ class DBEsquema extends DBAbstract
         $nom_tabla = $datosTabla['nom_tabla'];
         $campo_seq = $datosTabla['campo_seq'];
         $id_seq = $datosTabla['id_seq'];
+        $nompkey = $tabla . '_pkey';
+        /* Los constraint de 'primary key' y 'foreign key' deben estar en la creación de la tabla,
+         *  que permite la clausula 'IF EXISTS'.  De otro modo da error cuando se está activando un módulo
+         *  que ya había sido instalado y se había desactivado, pero no borrado.
+         */
+        $datosTablaA = $this->infoTable('u_cdc_dl');
+        $nom_tabla_activ = $datosTablaA['nom_tabla'];
 
         $a_sql = [];
         $a_sql[] = "CREATE TABLE IF NOT EXISTS $nom_tabla (
+                        CONSTRAINT $nompkey PRIMARY KEY (id_item),
+                        CONSTRAINT {$tabla}_id_ubi_padre_fk
+                            FOREIGN KEY (id_ubi_padre) REFERENCES $nom_tabla_activ(id_ubi) ON DELETE CASCADE,
+                        CONSTRAINT {$tabla}_id_ubi_hijo_fk
+                            FOREIGN KEY (id_ubi_hijo) REFERENCES $nom_tabla_activ(id_ubi) ON DELETE CASCADE
                     )
                 INHERITS (global.$tabla_padre);";
 
@@ -236,20 +256,11 @@ class DBEsquema extends DBAbstract
                         START WITH 1
                         NO CYCLE;";
         $a_sql[] = "ALTER SEQUENCE $id_seq OWNER TO $this->role;";
-
         $a_sql[] = "ALTER TABLE $nom_tabla ALTER $campo_seq SET DEFAULT nextval('$id_seq'::regclass); ";
-        $a_sql[] = "ALTER TABLE $nom_tabla ADD PRIMARY KEY (id_item); ";
-
-        $datosTablaA = $this->infoTable('u_cdc_dl');
-        $nom_tabla_activ = $datosTablaA['nom_tabla'];
-        $a_sql[] = "ALTER TABLE $nom_tabla ADD CONSTRAINT {$tabla}_id_ubi_padre_fk
-                    FOREIGN KEY (id_ubi_padre) REFERENCES $nom_tabla_activ(id_ubi) ON DELETE CASCADE; ";
-        $a_sql[] = "ALTER TABLE $nom_tabla ADD CONSTRAINT {$tabla}_id_ubi_hijo_fk
-                    FOREIGN KEY (id_ubi_hijo) REFERENCES $nom_tabla_activ(id_ubi) ON DELETE CASCADE; ";
 
         // No va con tablas heredadas
-        $a_sql[] = "CREATE INDEX {$tabla}_id_ubi_padre ON $nom_tabla USING btree (id_ubi_padre); ";
-        $a_sql[] = "CREATE INDEX {$tabla}_id_ubi_hijo ON $nom_tabla USING btree (id_ubi_hijo); ";
+        $a_sql[] = "CREATE INDEX IF NOT EXISTS {$tabla}_id_ubi_padre ON $nom_tabla USING btree (id_ubi_padre); ";
+        $a_sql[] = "CREATE INDEX IF NOT EXISTS {$tabla}_id_ubi_hijo ON $nom_tabla USING btree (id_ubi_hijo); ";
         $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->role";
 
         $this->executeSql($a_sql);

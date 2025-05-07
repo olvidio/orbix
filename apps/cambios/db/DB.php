@@ -89,8 +89,8 @@ class DB extends DBAbstract
 
         $a_sql[] = "ALTER TABLE $nom_tabla ALTER $campo_seq SET DEFAULT nextval('$id_seq'::regclass); ";
 
-        $a_sql[] = "CREATE INDEX {$tabla}_{$campo_seq}_idx ON $nom_tabla USING btree ($campo_seq); ";
-        $a_sql[] = "CREATE INDEX {$tabla}_dl_org_idx ON $nom_tabla USING btree (dl_org); ";
+        $a_sql[] = "CREATE INDEX IF NOT EXISTS {$tabla}_{$campo_seq}_idx ON $nom_tabla USING btree ($campo_seq); ";
+        $a_sql[] = "CREATE INDEX IF NOT EXISTS {$tabla}_dl_org_idx ON $nom_tabla USING btree (dl_org); ";
 
         $a_sql[] = "CREATE UNIQUE INDEX {$tabla}_udx ON $nom_tabla USING btree (id_schema,id_item_cambio); ";
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace encargossacd\db;
+namespace src\inventario\db;
 
 use core\ConfigGlobal;
 use core\DBRefresh;
@@ -14,30 +14,26 @@ class DBEsquemaSelect extends DBEsquema
 
     public function dropAllSelect()
     {
-        $this->eliminar_encargos_sacd_select();
-        $this->eliminar_encargo_sacd_observ_select();
-        $this->eliminar_encargo_sacd_horario_excepcion_select();
-        $this->eliminar_encargo_sacd_horario_select();
-        $this->eliminar_encargo_horario_excepcion_select();
-        $this->eliminar_encargo_horario_select();
-        $this->eliminar_encargos_select();
-        $this->eliminar_encargo_tipo_select();
-        $this->eliminar_encargo_datos_cgi_select();
-        $this->eliminar_encargo_textos_select();
+        $this->eliminar_whereis_select();
+        $this->eliminar_ubis_select();
+        $this->eliminar_tipo_documento_select();
+        $this->eliminar_lugares_select();
+        $this->eliminar_egm_select();
+        $this->eliminar_equipajes_select();
+        $this->eliminar_documentos_select();
+        $this->eliminar_colecciones_select();
     }
 
     public function createAllSelect()
     {
-        $this->create_encargo_tipo_select();
-        $this->create_encargos_select();
-        $this->create_encargos_sacd_select(); // debe ir antes de los horarios foreign key
-        $this->create_encargo_horario_select();
-        $this->create_encargo_horario_excepcion_select();
-        $this->create_encargo_sacd_horario_select();
-        $this->create_encargo_sacd_horario_excepcion_select();
-        $this->create_encargo_sacd_observ_select();
-        $this->create_encargo_datos_cgi_select();
-        $this->create_encargo_textos_select();
+        $this->create_colecciones_select();
+        $this->create_documentos_select();
+        $this->create_equipajes_select();
+        $this->create_egm_select();
+        $this->create_lugares_select();
+        $this->create_tipo_documento_select();
+        $this->create_ubis_select();
+        $this->create_whereis_select();
         // renovar subscripciones
         $DBRefresh = new DBRefresh();
         $DBRefresh->refreshSubscriptionModulo('sv-e');
@@ -46,7 +42,7 @@ class DBEsquemaSelect extends DBEsquema
     /**
      * En la BD sv-e (esquema).
      */
-    public function create_encargo_tipo_select()
+    public function create_colecciones_select()
     {
         // OJO Corresponde al esquema sf-e/sv-e, no al comun.
         $esquema_org = $this->esquema;
@@ -56,293 +52,7 @@ class DBEsquemaSelect extends DBEsquema
         // (debe estar después de fijar el role)
         $this->addPermisoGlobal('sfsv-e_select');
 
-        $tabla = "encargo_tipo";
-        $datosTabla = $this->infoTable($tabla);
-
-        $nom_tabla = $datosTabla['nom_tabla'];
-        $nompkey = $tabla . '_pkey';
-        /* Los constraint de 'primary key' y 'foreign key' deben estar en la creación de la tabla,
-         *  que permite la clausula 'IF EXISTS'.  De otro modo da error cuando se está activando un módulo
-         *  que ya había sido instalado y se había desactivado, pero no borrado.
-         */
-
-        $a_sql = [];
-        $a_sql[] = "CREATE TABLE IF NOT EXISTS $nom_tabla (
-                        CONSTRAINT $nompkey PRIMARY KEY (id_tipo_enc)
-                )
-            INHERITS (global.$tabla);";
-
-        $a_sql[] = "ALTER TABLE $nom_tabla ALTER id_schema SET DEFAULT public.idschema('$this->esquema'::text)";
-        $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->role; ";
-
-        $this->executeSql($a_sql);
-        $this->delPermisoGlobal('sfsv-e_select');
-        // Devolver los valores al estado original
-        $this->esquema = $esquema_org;
-        $this->role = $role_org;
-    }
-
-    public function eliminar_encargo_tipo_select()
-    {
-        // OJO Corresponde al esquema sf-e/sv-e, no al comun.
-        $datosTabla = $this->infoTable("encargo_tipo");
-        $nom_tabla = $datosTabla['nom_tabla'];
-
-        $this->eliminarDeSVESelect($nom_tabla);
-    }
-
-    public function create_encargos_select()
-    {
-        // OJO Corresponde al esquema sf-e/sv-e, no al comun.
-        $esquema_org = $this->esquema;
-        $role_org = $this->role;
-        $this->esquema = ConfigGlobal::mi_region_dl();
-        $this->role = '"' . $this->esquema . '"';
-        // (debe estar después de fijar el role)
-        $this->addPermisoGlobal('sfsv-e_select');
-
-        $tabla = "encargos";
-        $datosTabla = $this->infoTable($tabla);
-
-        $nom_tabla = $datosTabla['nom_tabla'];
-        $nompkey = $tabla . '_pkey';
-        /* Los constraint de 'primary key' y 'foreign key' deben estar en la creación de la tabla,
-         *  que permite la clausula 'IF EXISTS'.  De otro modo da error cuando se está activando un módulo
-         *  que ya había sido instalado y se había desactivado, pero no borrado.
-         */
-
-        $a_sql = [];
-        $a_sql[] = "CREATE TABLE IF NOT EXISTS $nom_tabla (
-                        CONSTRAINT $nompkey PRIMARY KEY (id_enc)
-                )
-            INHERITS (global.$tabla);";
-
-        $a_sql[] = "ALTER TABLE $nom_tabla ALTER id_schema SET DEFAULT public.idschema('$this->esquema'::text)";
-        $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->role; ";
-
-        $this->executeSql($a_sql);
-        $this->delPermisoGlobal('sfsv-e_select');
-        // Devolver los valores al estado original
-        $this->esquema = $esquema_org;
-        $this->role = $role_org;
-    }
-
-    public function eliminar_encargos_select()
-    {
-        // OJO Corresponde al esquema sf-e/sv-e, no al comun.
-        $datosTabla = $this->infoTable("encargos");
-        $nom_tabla = $datosTabla['nom_tabla'];
-
-        $this->eliminarDeSVESelect($nom_tabla);
-    }
-
-    public function create_encargo_horario_select()
-    {
-        // OJO Corresponde al esquema sf-e/sv-e, no al comun.
-        $esquema_org = $this->esquema;
-        $role_org = $this->role;
-        $this->esquema = ConfigGlobal::mi_region_dl();
-        $this->role = '"' . $this->esquema . '"';
-        // (debe estar después de fijar el role)
-        $this->addPermisoGlobal('sfsv-e_select');
-
-        $tabla = "encargo_horario";
-        $datosTabla = $this->infoTable($tabla);
-
-        $nom_tabla = $datosTabla['nom_tabla'];
-        $nompkey = $tabla . '_pkey';
-        /* Los constraint de 'primary key' y 'foreign key' deben estar en la creación de la tabla,
-         *  que permite la clausula 'IF EXISTS'.  De otro modo da error cuando se está activando un módulo
-         *  que ya había sido instalado y se había desactivado, pero no borrado.
-         */
-
-        $a_sql = [];
-        $a_sql[] = "CREATE TABLE IF NOT EXISTS $nom_tabla (
-                        CONSTRAINT $nompkey PRIMARY KEY (id_enc,id_item_h)
-                )
-            INHERITS (global.$tabla);";
-
-        $a_sql[] = "ALTER TABLE $nom_tabla ALTER id_schema SET DEFAULT public.idschema('$this->esquema'::text)";
-        $a_sql[] = "CREATE INDEX IF NOT EXISTS encargo_horario_f_fin_idx ON $nom_tabla USING btree (f_fin); ";
-        $a_sql[] = "CREATE INDEX IF NOT EXISTS encargo_horario_f_ini_idx ON $nom_tabla USING btree (f_ini); ";
-        $a_sql[] = "CREATE UNIQUE INDEX encargo_horario_id_item_idx ON $nom_tabla USING btree (id_item_h); ";
-        $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->role; ";
-
-        $this->executeSql($a_sql);
-        $this->delPermisoGlobal('sfsv-e_select');
-        // Devolver los valores al estado original
-        $this->esquema = $esquema_org;
-        $this->role = $role_org;
-    }
-
-    public function eliminar_encargo_horario_select()
-    {
-        // OJO Corresponde al esquema sf-e/sv-e, no al comun.
-        $datosTabla = $this->infoTable("encargo_horario");
-        $nom_tabla = $datosTabla['nom_tabla'];
-
-        $this->eliminarDeSVESelect($nom_tabla);
-    }
-
-    public function create_encargo_horario_excepcion_select()
-    {
-        // OJO Corresponde al esquema sf-e/sv-e, no al comun.
-        $esquema_org = $this->esquema;
-        $role_org = $this->role;
-        $this->esquema = ConfigGlobal::mi_region_dl();
-        $this->role = '"' . $this->esquema . '"';
-        // (debe estar después de fijar el role)
-        $this->addPermisoGlobal('sfsv-e_select');
-
-        $tabla = "encargo_horario_excepcion";
-        $datosTabla = $this->infoTable($tabla);
-
-        $nom_tabla = $datosTabla['nom_tabla'];
-        $nompkey = $tabla . '_pkey';
-        /* Los constraint de 'primary key' y 'foreign key' deben estar en la creación de la tabla,
-         *  que permite la clausula 'IF EXISTS'.  De otro modo da error cuando se está activando un módulo
-         *  que ya había sido instalado y se había desactivado, pero no borrado.
-         */
-
-        $a_sql = [];
-        $a_sql[] = "CREATE TABLE IF NOT EXISTS $nom_tabla (
-                        CONSTRAINT $nompkey PRIMARY KEY (id_enc, id_item_ex)
-                )
-            INHERITS (global.$tabla);";
-
-        $a_sql[] = "ALTER TABLE $nom_tabla ALTER id_schema SET DEFAULT public.idschema('$this->esquema'::text)";
-        $a_sql[] = "CREATE INDEX IF NOT EXISTS encargo_horario_ex_f_fin_idx ON $nom_tabla USING btree (f_fin); ";
-        $a_sql[] = "CREATE INDEX IF NOT EXISTS encargo_horario_ex_f_ini_idx ON $nom_tabla USING btree (f_ini); ";
-        $a_sql[] = "CREATE UNIQUE INDEX encargo_horario_ex_id_item_idx ON $nom_tabla USING btree (id_item_ex); ";
-        $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->role; ";
-
-        $this->executeSql($a_sql);
-        $this->delPermisoGlobal('sfsv-e_select');
-        // Devolver los valores al estado original
-        $this->esquema = $esquema_org;
-        $this->role = $role_org;
-    }
-
-    public function eliminar_encargo_horario_excepcion_select()
-    {
-        // OJO Corresponde al esquema sf-e/sv-e, no al comun.
-        $datosTabla = $this->infoTable("encargo_horario_excepcion");
-        $nom_tabla = $datosTabla['nom_tabla'];
-
-        $this->eliminarDeSVESelect($nom_tabla);
-    }
-
-    public function create_encargo_sacd_horario_select()
-    {
-        // OJO Corresponde al esquema sf-e/sv-e, no al comun.
-        $esquema_org = $this->esquema;
-        $role_org = $this->role;
-        $this->esquema = ConfigGlobal::mi_region_dl();
-        $this->role = '"' . $this->esquema . '"';
-        // (debe estar después de fijar el role)
-        $this->addPermisoGlobal('sfsv-e_select');
-
-        $tabla = "encargo_sacd_horario";
-        $datosTabla = $this->infoTable($tabla);
-
-        $nom_tabla = $datosTabla['nom_tabla'];
-        $nompkey = $tabla . '_pkey';
-        /* Los constraint de 'primary key' y 'foreign key' deben estar en la creación de la tabla,
-         *  que permite la clausula 'IF EXISTS'.  De otro modo da error cuando se está activando un módulo
-         *  que ya había sido instalado y se había desactivado, pero no borrado.
-         */
-
-        $a_sql = [];
-        $a_sql[] = "CREATE TABLE IF NOT EXISTS $nom_tabla (
-                        CONSTRAINT $nompkey PRIMARY KEY (id_enc,id_item,id_nom)
-                )
-            INHERITS (global.$tabla);";
-
-        $a_sql[] = "ALTER TABLE $nom_tabla ALTER id_schema SET DEFAULT public.idschema('$this->esquema'::text)";
-        $a_sql[] = "CREATE INDEX IF NOT EXISTS encargo_sacd_horario_f_fin_idx ON $nom_tabla USING btree (f_fin); ";
-        $a_sql[] = "CREATE INDEX IF NOT EXISTS encargo_sacd_horario_f_ini_idx ON $nom_tabla USING btree (f_ini); ";
-        $a_sql[] = "CREATE INDEX IF NOT EXISTS encargo_sacd_horario_id_enc_idx ON $nom_tabla USING btree (id_enc); ";
-        $a_sql[] = "CREATE INDEX IF NOT EXISTS encargo_sacd_horario_id_nom_idx ON $nom_tabla USING btree (id_nom ); ";
-        $a_sql[] = "CREATE UNIQUE INDEX encargo_sacd_horario_id_item_idx ON $nom_tabla USING btree (id_item); ";
-
-
-        $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->role; ";
-
-        $this->executeSql($a_sql);
-        $this->delPermisoGlobal('sfsv-e_select');
-        // Devolver los valores al estado original
-        $this->esquema = $esquema_org;
-        $this->role = $role_org;
-    }
-
-    public function eliminar_encargo_sacd_horario_select()
-    {
-        // OJO Corresponde al esquema sf-e/sv-e, no al comun.
-        $datosTabla = $this->infoTable("encargo_sacd_horario");
-        $nom_tabla = $datosTabla['nom_tabla'];
-
-        $this->eliminarDeSVESelect($nom_tabla);
-    }
-
-    public function create_encargo_sacd_horario_excepcion_select()
-    {
-        // OJO Corresponde al esquema sf-e/sv-e, no al comun.
-        $esquema_org = $this->esquema;
-        $role_org = $this->role;
-        $this->esquema = ConfigGlobal::mi_region_dl();
-        $this->role = '"' . $this->esquema . '"';
-        // (debe estar después de fijar el role)
-        $this->addPermisoGlobal('sfsv-e_select');
-
-        $tabla = "encargo_sacd_horario_excepcion";
-        $datosTabla = $this->infoTable($tabla);
-
-        $nom_tabla = $datosTabla['nom_tabla'];
-        $nompkey = $tabla . '_pkey';
-        /* Los constraint de 'primary key' y 'foreign key' deben estar en la creación de la tabla,
-         *  que permite la clausula 'IF EXISTS'.  De otro modo da error cuando se está activando un módulo
-         *  que ya había sido instalado y se había desactivado, pero no borrado.
-         */
-
-        $a_sql = [];
-        $a_sql[] = "CREATE TABLE IF NOT EXISTS $nom_tabla (
-                        CONSTRAINT $nompkey PRIMARY KEY (id_enc,id_item_ex)
-                )
-            INHERITS (global.$tabla);";
-
-        $a_sql[] = "ALTER TABLE $nom_tabla ALTER id_schema SET DEFAULT public.idschema('$this->esquema'::text)";
-        $a_sql[] = "CREATE INDEX IF NOT EXISTS encargo_sacd_horario_ex_f_fin_idx ON $nom_tabla USING btree (f_fin); ";
-        $a_sql[] = "CREATE INDEX IF NOT EXISTS encargo_sacd_horario_ex_f_ini_idx ON $nom_tabla USING btree (f_ini); ";
-        $a_sql[] = "CREATE UNIQUE INDEX encargo_sacd_horario_ex_id_item_idx ON $nom_tabla USING btree (id_item_ex); ";
-        $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->role; ";
-
-        $this->executeSql($a_sql);
-        $this->delPermisoGlobal('sfsv-e_select');
-        // Devolver los valores al estado original
-        $this->esquema = $esquema_org;
-        $this->role = $role_org;
-    }
-
-    public function eliminar_encargo_sacd_horario_excepcion_select()
-    {
-        // OJO Corresponde al esquema sf-e/sv-e, no al comun.
-        $datosTabla = $this->infoTable("encargo_sacd_horario_excepcion");
-        $nom_tabla = $datosTabla['nom_tabla'];
-
-        $this->eliminarDeSVESelect($nom_tabla);
-    }
-
-    public function create_encargo_sacd_observ_select()
-    {
-        // OJO Corresponde al esquema sf-e/sv-e, no al comun.
-        $esquema_org = $this->esquema;
-        $role_org = $this->role;
-        $this->esquema = ConfigGlobal::mi_region_dl();
-        $this->role = '"' . $this->esquema . '"';
-        // (debe estar después de fijar el role)
-        $this->addPermisoGlobal('sfsv-e_select');
-
-        $tabla = "encargo_sacd_observ";
+        $tabla = "i_colecciones";
         $datosTabla = $this->infoTable($tabla);
 
         $nom_tabla = $datosTabla['nom_tabla'];
@@ -352,16 +62,14 @@ class DBEsquemaSelect extends DBEsquema
          *  que permite la clausula 'IF EXISTS'.  De otro modo da error cuando se está activando un módulo
          *  que ya había sido instalado y se había desactivado, pero no borrado.
          */
-
         $a_sql = [];
         $a_sql[] = "CREATE TABLE IF NOT EXISTS $nom_tabla (
-                        CONSTRAINT $nompkey PRIMARY KEY ($campo_seq)
-                )
+                        CONSTRAINT $nompkey PRIMARY KEY (id_coleccion)
+                ) 
             INHERITS (global.$tabla);";
 
         $a_sql[] = "ALTER TABLE $nom_tabla ALTER id_schema SET DEFAULT public.idschema('$this->esquema'::text)";
-        $a_sql[] = "CREATE UNIQUE INDEX encargo_sacd_observ_id_nom_idx ON $nom_tabla USING btree (id_nom); ";
-        $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->role; ";
+        $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->role";
 
         $this->executeSql($a_sql);
         $this->delPermisoGlobal('sfsv-e_select');
@@ -370,16 +78,16 @@ class DBEsquemaSelect extends DBEsquema
         $this->role = $role_org;
     }
 
-    public function eliminar_encargo_sacd_observ_select()
+    public function eliminar_colecciones_select()
     {
         // OJO Corresponde al esquema sf-e/sv-e, no al comun.
-        $datosTabla = $this->infoTable("encargo_sacd_observ");
+        $datosTabla = $this->infoTable("i_colecciones");
         $nom_tabla = $datosTabla['nom_tabla'];
 
         $this->eliminarDeSVESelect($nom_tabla);
     }
 
-    public function create_encargos_sacd_select()
+    public function create_documentos_select()
     {
         // OJO Corresponde al esquema sf-e/sv-e, no al comun.
         $esquema_org = $this->esquema;
@@ -389,7 +97,7 @@ class DBEsquemaSelect extends DBEsquema
         // (debe estar después de fijar el role)
         $this->addPermisoGlobal('sfsv-e_select');
 
-        $tabla = "encargos_sacd";
+        $tabla = "i_documentos";
         $datosTabla = $this->infoTable($tabla);
 
         $nom_tabla = $datosTabla['nom_tabla'];
@@ -399,15 +107,18 @@ class DBEsquemaSelect extends DBEsquema
          *  que permite la clausula 'IF EXISTS'.  De otro modo da error cuando se está activando un módulo
          *  que ya había sido instalado y se había desactivado, pero no borrado.
          */
-
         $a_sql = [];
         $a_sql[] = "CREATE TABLE IF NOT EXISTS $nom_tabla (
-                        CONSTRAINT $nompkey PRIMARY KEY ($campo_seq)
-                )
+                        CONSTRAINT $nompkey PRIMARY KEY (id_doc)
+                ) 
             INHERITS (global.$tabla);";
 
         $a_sql[] = "ALTER TABLE $nom_tabla ALTER id_schema SET DEFAULT public.idschema('$this->esquema'::text)";
-        $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->role; ";
+        $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->role";
+        $a_sql[] = "CREATE INDEX IF NOT EXISTS {$tabla}_id_lugar_key ON $nom_tabla USING btree (id_lugar); ";
+        $a_sql[] = "CREATE INDEX IF NOT EXISTS {$tabla}_id_tipo_doc ON $nom_tabla USING btree (id_tipo_doc); ";
+        $a_sql[] = "CREATE INDEX IF NOT EXISTS {$tabla}_id_ubi ON $nom_tabla USING btree (id_ubi); ";
+
 
         $this->executeSql($a_sql);
         $this->delPermisoGlobal('sfsv-e_select');
@@ -416,16 +127,16 @@ class DBEsquemaSelect extends DBEsquema
         $this->role = $role_org;
     }
 
-    public function eliminar_encargos_sacd_select()
+    public function eliminar_documentos_select()
     {
         // OJO Corresponde al esquema sf-e/sv-e, no al comun.
-        $datosTabla = $this->infoTable("encargos_sacd");
+        $datosTabla = $this->infoTable("i_documentos");
         $nom_tabla = $datosTabla['nom_tabla'];
 
         $this->eliminarDeSVESelect($nom_tabla);
     }
 
-    public function create_encargo_datos_cgi_select()
+    public function create_egm_select()
     {
         // OJO Corresponde al esquema sf-e/sv-e, no al comun.
         $esquema_org = $this->esquema;
@@ -435,7 +146,7 @@ class DBEsquemaSelect extends DBEsquema
         // (debe estar después de fijar el role)
         $this->addPermisoGlobal('sfsv-e_select');
 
-        $tabla = "encargo_datos_cgi";
+        $tabla = "i_egm";
         $datosTabla = $this->infoTable($tabla);
 
         $nom_tabla = $datosTabla['nom_tabla'];
@@ -445,16 +156,15 @@ class DBEsquemaSelect extends DBEsquema
          *  que permite la clausula 'IF EXISTS'.  De otro modo da error cuando se está activando un módulo
          *  que ya había sido instalado y se había desactivado, pero no borrado.
          */
-
         $a_sql = [];
         $a_sql[] = "CREATE TABLE IF NOT EXISTS $nom_tabla (
-                        CONSTRAINT $nompkey PRIMARY KEY ($campo_seq)
-                )
+                        CONSTRAINT $nompkey PRIMARY KEY (id_coleccion)
+                ) 
             INHERITS (global.$tabla);";
 
         $a_sql[] = "ALTER TABLE $nom_tabla ALTER id_schema SET DEFAULT public.idschema('$this->esquema'::text)";
-        $a_sql[] = "CREATE UNIQUE INDEX encargo_datos_cgi_id_ubi_idx ON $nom_tabla USING btree (id_ubi); ";
-        $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->role; ";
+        $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->role";
+       $a_sql[] = "CREATE INDEX IF NOT EXISTS {$tabla}_id_equipaje_id_grup ON $nom_tabla USING btree (id_equipaje, id_grupo); ";
 
         $this->executeSql($a_sql);
         $this->delPermisoGlobal('sfsv-e_select');
@@ -463,17 +173,16 @@ class DBEsquemaSelect extends DBEsquema
         $this->role = $role_org;
     }
 
-    public function eliminar_encargo_datos_cgi_select()
+    public function eliminar_egm_select()
     {
         // OJO Corresponde al esquema sf-e/sv-e, no al comun.
-        $datosTabla = $this->infoTable("encargo_datos_cgi");
+        $datosTabla = $this->infoTable("i_egm");
         $nom_tabla = $datosTabla['nom_tabla'];
 
         $this->eliminarDeSVESelect($nom_tabla);
     }
 
-
-    public function create_encargo_textos_select()
+    public function create_equipajes_select()
     {
         // OJO Corresponde al esquema sf-e/sv-e, no al comun.
         $esquema_org = $this->esquema;
@@ -483,7 +192,7 @@ class DBEsquemaSelect extends DBEsquema
         // (debe estar después de fijar el role)
         $this->addPermisoGlobal('sfsv-e_select');
 
-        $tabla = "encargo_textos";
+        $tabla = "i_equipajes";
         $datosTabla = $this->infoTable($tabla);
 
         $nom_tabla = $datosTabla['nom_tabla'];
@@ -493,15 +202,14 @@ class DBEsquemaSelect extends DBEsquema
          *  que permite la clausula 'IF EXISTS'.  De otro modo da error cuando se está activando un módulo
          *  que ya había sido instalado y se había desactivado, pero no borrado.
          */
-
         $a_sql = [];
         $a_sql[] = "CREATE TABLE IF NOT EXISTS $nom_tabla (
-                        CONSTRAINT $nompkey PRIMARY KEY ($campo_seq)
-                )
+                        CONSTRAINT $nompkey PRIMARY KEY (id_equipaje)
+                ) 
             INHERITS (global.$tabla);";
 
         $a_sql[] = "ALTER TABLE $nom_tabla ALTER id_schema SET DEFAULT public.idschema('$this->esquema'::text)";
-        $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->role; ";
+        $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->role";
 
         $this->executeSql($a_sql);
         $this->delPermisoGlobal('sfsv-e_select');
@@ -510,10 +218,191 @@ class DBEsquemaSelect extends DBEsquema
         $this->role = $role_org;
     }
 
-    public function eliminar_encargo_textos_select()
+    public function eliminar_equipajes_select()
     {
         // OJO Corresponde al esquema sf-e/sv-e, no al comun.
-        $datosTabla = $this->infoTable("encargo_textos");
+        $datosTabla = $this->infoTable("i_equipajes");
+        $nom_tabla = $datosTabla['nom_tabla'];
+
+        $this->eliminarDeSVESelect($nom_tabla);
+    }
+
+    public function create_lugares_select()
+    {
+        // OJO Corresponde al esquema sf-e/sv-e, no al comun.
+        $esquema_org = $this->esquema;
+        $role_org = $this->role;
+        $this->esquema = ConfigGlobal::mi_region_dl();
+        $this->role = '"' . $this->esquema . '"';
+        // (debe estar después de fijar el role)
+        $this->addPermisoGlobal('sfsv-e_select');
+
+        $tabla = "i_lugares";
+        $datosTabla = $this->infoTable($tabla);
+
+        $nom_tabla = $datosTabla['nom_tabla'];
+        $campo_seq = $datosTabla['campo_seq'];
+        $nompkey = $tabla . '_pkey';
+        /* Los constraint de 'primary key' y 'foreign key' deben estar en la creación de la tabla,
+         *  que permite la clausula 'IF EXISTS'.  De otro modo da error cuando se está activando un módulo
+         *  que ya había sido instalado y se había desactivado, pero no borrado.
+         */
+        $a_sql = [];
+        $a_sql[] = "CREATE TABLE IF NOT EXISTS $nom_tabla (
+                        CONSTRAINT $nompkey PRIMARY KEY (id_lugar)
+                ) 
+            INHERITS (global.$tabla);";
+
+        $a_sql[] = "ALTER TABLE $nom_tabla ALTER id_schema SET DEFAULT public.idschema('$this->esquema'::text)";
+        $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->role";
+
+        $this->executeSql($a_sql);
+        $this->delPermisoGlobal('sfsv-e_select');
+        // Devolver los valores al estado original
+        $this->esquema = $esquema_org;
+        $this->role = $role_org;
+    }
+
+    public function eliminar_lugares_select()
+    {
+        // OJO Corresponde al esquema sf-e/sv-e, no al comun.
+        $datosTabla = $this->infoTable("i_lugares");
+        $nom_tabla = $datosTabla['nom_tabla'];
+
+        $this->eliminarDeSVESelect($nom_tabla);
+    }
+
+    public function create_tipo_documento_select()
+    {
+        // OJO Corresponde al esquema sf-e/sv-e, no al comun.
+        $esquema_org = $this->esquema;
+        $role_org = $this->role;
+        $this->esquema = ConfigGlobal::mi_region_dl();
+        $this->role = '"' . $this->esquema . '"';
+        // (debe estar después de fijar el role)
+        $this->addPermisoGlobal('sfsv-e_select');
+
+        $tabla = "i_tipo_documento";
+        $datosTabla = $this->infoTable($tabla);
+
+        $nom_tabla = $datosTabla['nom_tabla'];
+        $campo_seq = $datosTabla['campo_seq'];
+        $nompkey = $tabla . '_pkey';
+        /* Los constraint de 'primary key' y 'foreign key' deben estar en la creación de la tabla,
+         *  que permite la clausula 'IF EXISTS'.  De otro modo da error cuando se está activando un módulo
+         *  que ya había sido instalado y se había desactivado, pero no borrado.
+         */
+        $a_sql = [];
+        $a_sql[] = "CREATE TABLE IF NOT EXISTS $nom_tabla (
+                        CONSTRAINT $nompkey PRIMARY KEY (id_tipo_doc)
+                ) 
+            INHERITS (global.$tabla);";
+
+        $a_sql[] = "ALTER TABLE $nom_tabla ALTER id_schema SET DEFAULT public.idschema('$this->esquema'::text)";
+        $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->role";
+
+        $this->executeSql($a_sql);
+        $this->delPermisoGlobal('sfsv-e_select');
+        // Devolver los valores al estado original
+        $this->esquema = $esquema_org;
+        $this->role = $role_org;
+    }
+
+    public function eliminar_tipo_documento_select()
+    {
+        // OJO Corresponde al esquema sf-e/sv-e, no al comun.
+        $datosTabla = $this->infoTable("i_tipo_documento");
+        $nom_tabla = $datosTabla['nom_tabla'];
+
+        $this->eliminarDeSVESelect($nom_tabla);
+    }
+
+    public function create_ubis_select()
+    {
+        // OJO Corresponde al esquema sf-e/sv-e, no al comun.
+        $esquema_org = $this->esquema;
+        $role_org = $this->role;
+        $this->esquema = ConfigGlobal::mi_region_dl();
+        $this->role = '"' . $this->esquema . '"';
+        // (debe estar después de fijar el role)
+        $this->addPermisoGlobal('sfsv-e_select');
+
+        $tabla = "i_ubis";
+        $datosTabla = $this->infoTable($tabla);
+
+        $nom_tabla = $datosTabla['nom_tabla'];
+        $campo_seq = $datosTabla['campo_seq'];
+        $nompkey = $tabla . '_pkey';
+        /* Los constraint de 'primary key' y 'foreign key' deben estar en la creación de la tabla,
+         *  que permite la clausula 'IF EXISTS'.  De otro modo da error cuando se está activando un módulo
+         *  que ya había sido instalado y se había desactivado, pero no borrado.
+         */
+        $a_sql = [];
+        $a_sql[] = "CREATE TABLE IF NOT EXISTS $nom_tabla (
+                        CONSTRAINT $nompkey PRIMARY KEY (id_ubi)
+                ) 
+            INHERITS (global.$tabla);";
+
+        $a_sql[] = "ALTER TABLE $nom_tabla ALTER id_schema SET DEFAULT public.idschema('$this->esquema'::text)";
+        $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->role";
+
+        $this->executeSql($a_sql);
+        $this->delPermisoGlobal('sfsv-e_select');
+        // Devolver los valores al estado original
+        $this->esquema = $esquema_org;
+        $this->role = $role_org;
+    }
+
+    public function eliminar_ubis_select()
+    {
+        // OJO Corresponde al esquema sf-e/sv-e, no al comun.
+        $datosTabla = $this->infoTable("i_ubis");
+        $nom_tabla = $datosTabla['nom_tabla'];
+
+        $this->eliminarDeSVESelect($nom_tabla);
+    }
+
+
+    public function create_whereis_select()
+    {
+        // OJO Corresponde al esquema sf-e/sv-e, no al comun.
+        $esquema_org = $this->esquema;
+        $role_org = $this->role;
+        $this->esquema = ConfigGlobal::mi_region_dl();
+        $this->role = '"' . $this->esquema . '"';
+        // (debe estar después de fijar el role)
+        $this->addPermisoGlobal('sfsv-e_select');
+
+        $tabla = "i_whereis";
+        $datosTabla = $this->infoTable($tabla);
+
+        $nom_tabla = $datosTabla['nom_tabla'];
+        $campo_seq = $datosTabla['campo_seq'];
+        $nompkey = $tabla . '_pkey';
+        /* Los constraint de 'primary key' y 'foreign key' deben estar en la creación de la tabla,
+         *  que permite la clausula 'IF EXISTS'.  De otro modo da error cuando se está activando un módulo
+         *  que ya había sido instalado y se había desactivado, pero no borrado.
+         */
+        $a_sql = [];
+        $a_sql[] = "CREATE TABLE IF NOT EXISTS $nom_tabla (
+                        CONSTRAINT $nompkey PRIMARY KEY (id_item_whereis)
+                ) 
+            INHERITS (global.$tabla);";
+
+        $a_sql[] = "ALTER TABLE $nom_tabla ALTER id_schema SET DEFAULT public.idschema('$this->esquema'::text)";
+        $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->role";
+
+        $this->executeSql($a_sql);
+        $this->delPermisoGlobal('sfsv-e_select');
+        // Devolver los valores al estado original
+        $this->esquema = $esquema_org;
+        $this->role = $role_org;
+    }
+
+    public function eliminar_whereis_select()
+    {
+        // OJO Corresponde al esquema sf-e/sv-e, no al comun.
+        $datosTabla = $this->infoTable("i_whereis");
         $nom_tabla = $datosTabla['nom_tabla'];
 
         $this->eliminarDeSVESelect($nom_tabla);

@@ -1,6 +1,6 @@
 <?php
 
-namespace usuarios\db;
+namespace src\usuarios\db;
 
 use core\ConfigGlobal;
 use devel\model\DBAbstract;
@@ -46,7 +46,6 @@ class DBEsquema extends DBAbstract
 
     public function llenarAll()
     {
-        //$this->llenar_aux_usuarios_ctr_perm();
     }
 
     protected function infoTable($tabla)
@@ -86,9 +85,16 @@ class DBEsquema extends DBAbstract
         $nom_tabla = $datosTabla['nom_tabla'];
         $campo_seq = $datosTabla['campo_seq'];
         $id_seq = $datosTabla['id_seq'];
+        $nompkey = $tabla . '_pkey';
+        /* Los constraint de 'primary key' y 'foreign key' deben estar en la creación de la tabla,
+         *  que permite la clausula 'IF EXISTS'.  De otro modo da error cuando se está activando un módulo
+         *  que ya había sido instalado y se había desactivado, pero no borrado.
+         */
+
 
         $a_sql = [];
         $a_sql[] = "CREATE TABLE IF NOT EXISTS $nom_tabla (
+                        CONSTRAINT $nompkey PRIMARY KEY (id_item)
                 )
             INHERITS (global.$tabla);";
 
@@ -104,17 +110,11 @@ class DBEsquema extends DBAbstract
         $a_sql[] = "ALTER SEQUENCE $id_seq OWNER TO $this->role;";
 
         $a_sql[] = "ALTER TABLE $nom_tabla ALTER $campo_seq SET DEFAULT nextval('$id_seq'::regclass); ";
-
-
-        $a_sql[] = "ALTER TABLE $nom_tabla ADD PRIMARY KEY (id_item); ";
-
-        $a_sql[] = "CREATE INDEX {$tabla}_id_usuario ON $nom_tabla USING btree (id_usuario); ";
-        $a_sql[] = "CREATE INDEX {$tabla}_id_ctr ON $nom_tabla USING btree (id_ctr); ";
-
+        $a_sql[] = "CREATE INDEX IF NOT EXISTS {$tabla}_id_usuario ON $nom_tabla USING btree (id_usuario); ";
+        $a_sql[] = "CREATE INDEX IF NOT EXISTS {$tabla}_id_ctr ON $nom_tabla USING btree (id_ctr); ";
         $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->role; ";
 
         $this->executeSql($a_sql);
-
         $this->delPermisoGlobal('sfsv-e');
         // Devolver los valores al estado original
         $this->esquema = $esquema_org;
@@ -147,50 +147,4 @@ class DBEsquema extends DBAbstract
         $this->esquema = $esquema_org;
         $this->role = $role_org;
     }
-
-    public function llenar_aux_usuarios_ctr_perm()
-    {
-        // OJO Corresponde al esquema sf-e/sv-e, no al comun.
-        $esquema_org = $this->esquema;
-        $role_org = $this->role;
-        $this->esquema = ConfigGlobal::mi_region_dl();
-        $this->role = '"' . $this->esquema . '"';
-        // (debe estar después de fijar el role)
-        $this->addPermisoGlobal('sfsv-e');
-        $this->setConexion('sfsv-e');
-
-        $datosTabla = $this->infoTable("aux_usuarios_ctr_perm");
-
-        $nom_tabla = $datosTabla['nom_tabla'];
-        $campo_seq = $datosTabla['campo_seq'];
-        $id_seq = $datosTabla['id_seq'];
-        $filename = $datosTabla['filename'];
-        $oDbl = $this->oDbl;
-
-        $a_sql = [];
-        $a_sql[0] = "TRUNCATE $nom_tabla RESTART IDENTITY;";
-        $this->executeSql($a_sql);
-
-        $delimiter = "\t";
-        $null_as = "\\\\N";
-        $fields = "id_item, id_usuario, id_ctr, perm_ctr";
-
-        // Comprobar que existe el fichero (la ruta esta bien...
-        if (!file_exists($filename)) {
-            $msg = sprintf(_("no existe el fichero: %s"), $filename);
-            exit ($msg);
-        }
-
-        $oDbl->pgsqlCopyFromFile($nom_tabla, $filename, $delimiter, $null_as, $fields);
-
-        // Fix sequences
-        $a_sql[0] = "SELECT SETVAL('$id_seq', (SELECT MAX($campo_seq) FROM $nom_tabla) )";
-        $this->executeSql($a_sql);
-
-        $this->delPermisoGlobal('sfsv-e');
-        // Devolver los valores al estado original
-        $this->esquema = $esquema_org;
-        $this->role = $role_org;
-    }
 }
-    

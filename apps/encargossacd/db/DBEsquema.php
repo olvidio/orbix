@@ -3,6 +3,7 @@
 namespace encargossacd\db;
 
 use core\ConfigGlobal;
+use core\ServerConf;
 use devel\model\DBAbstract;
 
 /**
@@ -12,7 +13,7 @@ use devel\model\DBAbstract;
 class DBEsquema extends DBAbstract
 {
 
-    private $dir_base = ConfigGlobal::DIR . "/apps/encargossacd/db";
+    private $dir_base = ServerConf::DIR . "/apps/encargossacd/db";
 
     public function __construct($esquema_sfsv = NULL)
     {
@@ -150,19 +151,19 @@ class DBEsquema extends DBAbstract
         $nom_tabla = $datosTabla['nom_tabla'];
         $campo_seq = $datosTabla['campo_seq'];
         $id_seq = $datosTabla['id_seq'];
+        $nompkey = $tabla . '_pkey';
+        /* Los constraint de 'primary key' y 'foreign key' deben estar en la creación de la tabla,
+         *  que permite la clausula 'IF EXISTS'.  De otro modo da error cuando se está activando un módulo
+         *  que ya había sido instalado y se había desactivado, pero no borrado.
+         */
 
         $a_sql = [];
         $a_sql[] = "CREATE TABLE IF NOT EXISTS $nom_tabla (
+                        CONSTRAINT $nompkey PRIMARY KEY (id_tipo_enc)
                 ) 
             INHERITS (global.$tabla);";
 
         $a_sql[] = "ALTER TABLE $nom_tabla ALTER id_schema SET DEFAULT public.idschema('$this->esquema'::text)";
-
-        $a_sql[] = "ALTER TABLE $nom_tabla ADD CONSTRAINT encargo_tipo_ukey
-                    UNIQUE (id_tipo_enc); ";
-
-        $a_sql[] = "ALTER TABLE $nom_tabla ADD PRIMARY KEY (id_tipo_enc); ";
-
         $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->role";
 
         $this->executeSql($a_sql);
@@ -210,9 +211,15 @@ class DBEsquema extends DBAbstract
         $nom_tabla = $datosTabla['nom_tabla'];
         $campo_seq = $datosTabla['campo_seq'];
         $id_seq = $datosTabla['id_seq'];
+        $nompkey = $tabla . '_pkey';
+        /* Los constraint de 'primary key' y 'foreign key' deben estar en la creación de la tabla,
+         *  que permite la clausula 'IF EXISTS'.  De otro modo da error cuando se está activando un módulo
+         *  que ya había sido instalado y se había desactivado, pero no borrado.
+         */
 
         $a_sql = [];
         $a_sql[] = "CREATE TABLE IF NOT EXISTS $nom_tabla (
+                        CONSTRAINT $nompkey PRIMARY KEY (id_enc)
                 ) 
             INHERITS (global.$tabla);";
 
@@ -229,12 +236,6 @@ class DBEsquema extends DBAbstract
         $a_sql[] = "ALTER SEQUENCE $id_seq OWNER TO $this->role;";
 
         $a_sql[] = "ALTER TABLE $nom_tabla ALTER $campo_seq SET DEFAULT nextval('$id_seq'::regclass); ";
-
-        $a_sql[] = "ALTER TABLE $nom_tabla ADD CONSTRAINT encargos_ukey
-                    UNIQUE (id_enc); ";
-
-        $a_sql[] = "ALTER TABLE $nom_tabla ADD PRIMARY KEY (id_enc); ";
-
         $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->role";
 
         $this->executeSql($a_sql);
@@ -282,9 +283,18 @@ class DBEsquema extends DBAbstract
         $nom_tabla = $datosTabla['nom_tabla'];
         $campo_seq = $datosTabla['campo_seq'];
         $id_seq = $datosTabla['id_seq'];
+        $nompkey = $tabla . '_pkey';
+        /* Los constraint de 'primary key' y 'foreign key' deben estar en la creación de la tabla,
+         *  que permite la clausula 'IF EXISTS'.  De otro modo da error cuando se está activando un módulo
+         *  que ya había sido instalado y se había desactivado, pero no borrado.
+         */
 
+        $nom_tabla_ref = $this->getNomTabla("encargos");
         $a_sql = [];
         $a_sql[] = "CREATE TABLE IF NOT EXISTS $nom_tabla (
+                        CONSTRAINT $nompkey PRIMARY KEY (id_enc, id_item_h),
+                        CONSTRAINT encargo_horario_id_enc_fkey FOREIGN KEY (id_enc)
+                            REFERENCES $nom_tabla_ref(id_enc) ON DELETE CASCADE
                 ) 
             INHERITS (global.$tabla);";
 
@@ -301,26 +311,12 @@ class DBEsquema extends DBAbstract
         $a_sql[] = "ALTER SEQUENCE $id_seq OWNER TO $this->role;";
 
         $a_sql[] = "ALTER TABLE $nom_tabla ALTER $campo_seq SET DEFAULT nextval('$id_seq'::regclass); ";
-
-        $a_sql[] = "ALTER TABLE $nom_tabla ADD CONSTRAINT encargo_horario_ukey
-                    UNIQUE (id_enc, id_item_h); ";
-
-        $a_sql[] = "ALTER TABLE $nom_tabla ADD PRIMARY KEY (id_enc, id_item_h); ";
-
-        $a_sql[] = "CREATE INDEX encargo_horario_f_fin_idx ON $nom_tabla USING btree (f_fin); ";
-
-        $a_sql[] = "CREATE INDEX encargo_horario_f_ini_idx ON $nom_tabla USING btree (f_ini); ";
-
+        $a_sql[] = "CREATE INDEX IF NOT EXISTS encargo_horario_f_fin_idx ON $nom_tabla USING btree (f_fin); ";
+        $a_sql[] = "CREATE INDEX IF NOT EXISTS encargo_horario_f_ini_idx ON $nom_tabla USING btree (f_ini); ";
         $a_sql[] = "CREATE UNIQUE INDEX encargo_horario_id_item_idx ON $nom_tabla USING btree (id_item_h); ";
-
-        $nom_tabla_ref = $this->getNomTabla("encargos");
-        $a_sql[] = "ALTER TABLE ONLY $nom_tabla
-            ADD CONSTRAINT encargo_horario_id_enc_fkey FOREIGN KEY (id_enc) REFERENCES $nom_tabla_ref(id_enc) ON DELETE CASCADE; ";
-
         $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->role";
 
         $this->executeSql($a_sql);
-
         $this->delPermisoGlobal('sfsv-e');
     }
 
@@ -364,9 +360,21 @@ class DBEsquema extends DBAbstract
         $nom_tabla = $datosTabla['nom_tabla'];
         $campo_seq = $datosTabla['campo_seq'];
         $id_seq = $datosTabla['id_seq'];
+        $nompkey = $tabla . '_pkey';
+        /* Los constraint de 'primary key' y 'foreign key' deben estar en la creación de la tabla,
+         *  que permite la clausula 'IF EXISTS'.  De otro modo da error cuando se está activando un módulo
+         *  que ya había sido instalado y se había desactivado, pero no borrado.
+         */
 
+        $nom_tabla_ref = $this->getNomTabla("encargos");
+        $nom_tabla_ref2 = $this->getNomTabla("encargo_horario");
         $a_sql = [];
         $a_sql[] = "CREATE TABLE IF NOT EXISTS $nom_tabla (
+                        CONSTRAINT $nompkey PRIMARY KEY (id_enc,id_item_ex),
+                        CONSTRAINT encargo_horario_ex_id_enc_fkey FOREIGN KEY (id_enc) 
+                            REFERENCES $nom_tabla_ref(id_enc) ON DELETE CASCADE,
+                        CONSTRAINT encargo_horario_ex_id_item_h_fk FOREIGN KEY (id_item_h)
+                            REFERENCES $nom_tabla_ref2(id_item_h) ON DELETE CASCADE
                 ) 
             INHERITS (global.$tabla);";
 
@@ -383,26 +391,9 @@ class DBEsquema extends DBAbstract
         $a_sql[] = "ALTER SEQUENCE $id_seq OWNER TO $this->role;";
 
         $a_sql[] = "ALTER TABLE $nom_tabla ALTER $campo_seq SET DEFAULT nextval('$id_seq'::regclass); ";
-
-        $a_sql[] = "ALTER TABLE $nom_tabla ADD CONSTRAINT encargo_horario_ex_ukey
-                    UNIQUE (id_enc, id_item_ex); ";
-
-        $a_sql[] = "ALTER TABLE $nom_tabla ADD PRIMARY KEY (id_enc, id_item_ex); ";
-
-        $a_sql[] = "CREATE INDEX encargo_horario_ex_f_fin_idx ON $nom_tabla USING btree (f_fin); ";
-
-        $a_sql[] = "CREATE INDEX encargo_horario_ex_f_ini_idx ON $nom_tabla USING btree (f_ini); ";
-
+        $a_sql[] = "CREATE INDEX IF NOT EXISTS encargo_horario_ex_f_fin_idx ON $nom_tabla USING btree (f_fin); ";
+        $a_sql[] = "CREATE INDEX IF NOT EXISTS encargo_horario_ex_f_ini_idx ON $nom_tabla USING btree (f_ini); ";
         $a_sql[] = "CREATE UNIQUE INDEX encargo_horario_ex_id_item_idx ON $nom_tabla USING btree (id_item_ex); ";
-
-        $nom_tabla_ref = $this->getNomTabla("encargos");
-        $a_sql[] = "ALTER TABLE ONLY $nom_tabla
-            ADD CONSTRAINT encargo_horario_ex_id_enc_fkey FOREIGN KEY (id_enc) REFERENCES $nom_tabla_ref(id_enc) ON DELETE CASCADE; ";
-
-        $nom_tabla_ref = $this->getNomTabla("encargo_horario");
-        $a_sql[] = "ALTER TABLE ONLY $nom_tabla
-        ADD CONSTRAINT encargo_horario_ex_id_item_h_fk FOREIGN KEY (id_item_h) REFERENCES $nom_tabla_ref(id_item_h) ON DELETE CASCADE; ";
-
         $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->role";
 
         $this->executeSql($a_sql);
@@ -450,9 +441,21 @@ class DBEsquema extends DBAbstract
         $nom_tabla = $datosTabla['nom_tabla'];
         $campo_seq = $datosTabla['campo_seq'];
         $id_seq = $datosTabla['id_seq'];
+        $nompkey = $tabla . '_pkey';
+        /* Los constraint de 'primary key' y 'foreign key' deben estar en la creación de la tabla,
+         *  que permite la clausula 'IF EXISTS'.  De otro modo da error cuando se está activando un módulo
+         *  que ya había sido instalado y se había desactivado, pero no borrado.
+         */
 
+        $nom_tabla_ref = $this->getNomTabla("encargos_sacd");
+        $nom_tabla_ref2 = $this->getNomTabla("encargos");
         $a_sql = [];
         $a_sql[] = "CREATE TABLE IF NOT EXISTS $nom_tabla (
+                        CONSTRAINT $nompkey PRIMARY KEY (id_enc, id_item, id_nom),
+                        CONSTRAINT encargo_sacd_horario_id_item_tarea_sacd_fkey FOREIGN KEY (id_item_tarea_sacd) 
+                            REFERENCES $nom_tabla_ref(id_item) ON DELETE CASCADE,
+                        CONSTRAINT encargo_sacd_horario_id_enc_fkey FOREIGN KEY (id_enc) 
+                            REFERENCES $nom_tabla_ref2(id_enc) ON DELETE CASCADE
                 ) 
             INHERITS (global.$tabla);";
 
@@ -469,27 +472,11 @@ class DBEsquema extends DBAbstract
         $a_sql[] = "ALTER SEQUENCE $id_seq OWNER TO $this->role;";
 
         $a_sql[] = "ALTER TABLE $nom_tabla ALTER $campo_seq SET DEFAULT nextval('$id_seq'::regclass); ";
-
-        $a_sql[] = "ALTER TABLE $nom_tabla
-            ADD CONSTRAINT encargo_sacd_horario_ukey UNIQUE (id_enc, id_item, id_nom); ";
-
-        $a_sql[] = "ALTER TABLE $nom_tabla ADD PRIMARY KEY (id_enc, id_item, id_nom); ";
-
-        $a_sql[] = "CREATE INDEX encargo_sacd_horario_f_fin_idx ON $nom_tabla USING btree (f_fin); ";
-
-        $a_sql[] = "CREATE INDEX encargo_sacd_horario_f_ini_idx ON $nom_tabla USING btree (f_ini); ";
-        $a_sql[] = "CREATE INDEX encargo_sacd_horario_id_enc_idx ON $nom_tabla USING btree (id_enc); ";
-        $a_sql[] = "CREATE INDEX encargo_sacd_horario_id_nom_idx ON $nom_tabla USING btree (id_nom ); ";
+        $a_sql[] = "CREATE INDEX IF NOT EXISTS encargo_sacd_horario_f_fin_idx ON $nom_tabla USING btree (f_fin); ";
+        $a_sql[] = "CREATE INDEX IF NOT EXISTS encargo_sacd_horario_f_ini_idx ON $nom_tabla USING btree (f_ini); ";
+        $a_sql[] = "CREATE INDEX IF NOT EXISTS encargo_sacd_horario_id_enc_idx ON $nom_tabla USING btree (id_enc); ";
+        $a_sql[] = "CREATE INDEX IF NOT EXISTS encargo_sacd_horario_id_nom_idx ON $nom_tabla USING btree (id_nom ); ";
         $a_sql[] = "CREATE UNIQUE INDEX encargo_sacd_horario_id_item_idx ON $nom_tabla USING btree (id_item); ";
-
-        $nom_tabla_ref = $this->getNomTabla("encargos_sacd");
-        $a_sql[] = "ALTER TABLE ONLY $nom_tabla
-            ADD CONSTRAINT encargo_sacd_horario_id_item_tarea_sacd_fkey FOREIGN KEY (id_item_tarea_sacd) REFERENCES $nom_tabla_ref(id_item) ON DELETE CASCADE; ";
-
-        $nom_tabla_ref = $this->getNomTabla("encargos");
-        $a_sql[] = "ALTER TABLE ONLY $nom_tabla
-            ADD CONSTRAINT encargo_sacd_horario_id_enc_fkey FOREIGN KEY (id_enc) REFERENCES $nom_tabla_ref(id_enc) ON DELETE CASCADE; ";
-
         $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->role";
 
         $this->executeSql($a_sql);
@@ -537,9 +524,21 @@ class DBEsquema extends DBAbstract
         $nom_tabla = $datosTabla['nom_tabla'];
         $campo_seq = $datosTabla['campo_seq'];
         $id_seq = $datosTabla['id_seq'];
+        $nompkey = $tabla . '_pkey';
+        /* Los constraint de 'primary key' y 'foreign key' deben estar en la creación de la tabla,
+         *  que permite la clausula 'IF EXISTS'.  De otro modo da error cuando se está activando un módulo
+         *  que ya había sido instalado y se había desactivado, pero no borrado.
+         */
 
+        $nom_tabla_ref = $this->getNomTabla("encargos");
+        $nom_tabla_ref2 = $this->getNomTabla("encargo_sacd_horario");
         $a_sql = [];
         $a_sql[] = "CREATE TABLE IF NOT EXISTS $nom_tabla (
+                        CONSTRAINT $nompkey PRIMARY KEY (id_enc, id_item_ex),
+                        CONSTRAINT encargo_sacd_horario_ex_id_item_h_fk FOREIGN KEY (id_item_h) 
+                            REFERENCES $nom_tabla_ref(id_item) ON DELETE CASCADE,
+                        CONSTRAINT encargo_sacd_horario_ex_id_item_h_fk FOREIGN KEY (id_item_h)
+                            REFERENCES $nom_tabla_ref2(id_item) ON DELETE CASCADE
                 ) 
             INHERITS (global.$tabla);";
 
@@ -556,26 +555,9 @@ class DBEsquema extends DBAbstract
         $a_sql[] = "ALTER SEQUENCE $id_seq OWNER TO $this->role;";
 
         $a_sql[] = "ALTER TABLE $nom_tabla ALTER $campo_seq SET DEFAULT nextval('$id_seq'::regclass); ";
-
-        $a_sql[] = "ALTER TABLE $nom_tabla ADD CONSTRAINT encargo_sacd_horario_ex_ukey
-                    UNIQUE (id_enc, id_item_ex); ";
-
-        $a_sql[] = "ALTER TABLE $nom_tabla ADD PRIMARY KEY (id_enc, id_item_ex); ";
-
-        $a_sql[] = "CREATE INDEX encargo_sacd_horario_ex_f_fin_idx ON $nom_tabla USING btree (f_fin); ";
-
-        $a_sql[] = "CREATE INDEX encargo_sacd_horario_ex_f_ini_idx ON $nom_tabla USING btree (f_ini); ";
-
+        $a_sql[] = "CREATE INDEX IF NOT EXISTS encargo_sacd_horario_ex_f_fin_idx ON $nom_tabla USING btree (f_fin); ";
+        $a_sql[] = "CREATE INDEX IF NOT EXISTS encargo_sacd_horario_ex_f_ini_idx ON $nom_tabla USING btree (f_ini); ";
         $a_sql[] = "CREATE UNIQUE INDEX encargo_sacd_horario_ex_id_item_idx ON $nom_tabla USING btree (id_item_ex); ";
-
-        $nom_tabla_ref = $this->getNomTabla("encargos");
-        $a_sql[] = "ALTER TABLE ONLY $nom_tabla
-            ADD CONSTRAINT encargo_sacd_horario_ex_id_enc_fkey FOREIGN KEY (id_enc) REFERENCES $nom_tabla_ref(id_enc) ON DELETE CASCADE; ";
-
-        $nom_tabla_ref = $this->getNomTabla("encargo_sacd_horario");
-        $a_sql[] = "ALTER TABLE ONLY $nom_tabla
-        ADD CONSTRAINT encargo_sacd_horario_ex_id_item_h_fk FOREIGN KEY (id_item_h) REFERENCES $nom_tabla_ref(id_item) ON DELETE CASCADE; ";
-
         $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->role";
 
         $this->executeSql($a_sql);
@@ -623,9 +605,15 @@ class DBEsquema extends DBAbstract
         $nom_tabla = $datosTabla['nom_tabla'];
         $campo_seq = $datosTabla['campo_seq'];
         $id_seq = $datosTabla['id_seq'];
+        $nompkey = $tabla . '_pkey';
+        /* Los constraint de 'primary key' y 'foreign key' deben estar en la creación de la tabla,
+         *  que permite la clausula 'IF EXISTS'.  De otro modo da error cuando se está activando un módulo
+         *  que ya había sido instalado y se había desactivado, pero no borrado.
+         */
 
         $a_sql = [];
         $a_sql[] = "CREATE TABLE IF NOT EXISTS $nom_tabla (
+                        CONSTRAINT $nompkey PRIMARY KEY ($campo_seq)
                 ) 
             INHERITS (global.$tabla);";
 
@@ -642,13 +630,7 @@ class DBEsquema extends DBAbstract
         $a_sql[] = "ALTER SEQUENCE $id_seq OWNER TO $this->role;";
 
         $a_sql[] = "ALTER TABLE $nom_tabla ALTER $campo_seq SET DEFAULT nextval('$id_seq'::regclass); ";
-
-        $a_sql[] = "ALTER TABLE $nom_tabla ADD CONSTRAINT encargo_sacd_observ_ukey
-                    UNIQUE ($campo_seq); ";
-
-        $a_sql[] = "ALTER TABLE $nom_tabla ADD PRIMARY KEY ($campo_seq); ";
         $a_sql[] = "CREATE UNIQUE INDEX encargo_sacd_observ_id_nom_idx ON $nom_tabla USING btree (id_nom); ";
-
         $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->role";
 
         $this->executeSql($a_sql);
@@ -696,9 +678,21 @@ class DBEsquema extends DBAbstract
         $nom_tabla = $datosTabla['nom_tabla'];
         $campo_seq = $datosTabla['campo_seq'];
         $id_seq = $datosTabla['id_seq'];
+        $nompkey = $tabla . '_pkey';
+        /* Los constraint de 'primary key' y 'foreign key' deben estar en la creación de la tabla,
+         *  que permite la clausula 'IF EXISTS'.  De otro modo da error cuando se está activando un módulo
+         *  que ya había sido instalado y se había desactivado, pero no borrado.
+         */
 
+        $nom_tabla_ref = $this->getNomTabla("encargos");
         $a_sql = [];
         $a_sql[] = "CREATE TABLE IF NOT EXISTS $nom_tabla (
+                        CONSTRAINT $nompkey PRIMARY KEY ($campo_seq),
+                        CONSTRAINT encargos_sacd_id_enc_ukey
+                            UNIQUE (id_enc, id_nom, modo, f_ini),
+                        CONSTRAINT encargos_sacd_id_enc_fkey FOREIGN KEY (id_enc) 
+                            REFERENCES $nom_tabla_ref(id_enc) ON DELETE CASCADE
+
                 ) 
             INHERITS (global.$tabla);";
 
@@ -715,18 +709,6 @@ class DBEsquema extends DBAbstract
         $a_sql[] = "ALTER SEQUENCE $id_seq OWNER TO $this->role;";
 
         $a_sql[] = "ALTER TABLE $nom_tabla ALTER $campo_seq SET DEFAULT nextval('$id_seq'::regclass); ";
-
-        $a_sql[] = "ALTER TABLE $nom_tabla ADD CONSTRAINT encargos_sacd_ukey
-                    UNIQUE ($campo_seq); ";
-        $a_sql[] = "ALTER TABLE $nom_tabla ADD PRIMARY KEY ($campo_seq); ";
-
-        $a_sql[] = "ALTER TABLE $nom_tabla ADD CONSTRAINT encargos_sacd_id_enc_ukey
-                    UNIQUE (id_enc, id_nom, modo, f_ini); ";
-
-        $nom_tabla_ref = $this->getNomTabla("encargos");
-        $a_sql[] = "ALTER TABLE ONLY $nom_tabla
-            ADD CONSTRAINT encargos_sacd_id_enc_fkey FOREIGN KEY (id_enc) REFERENCES $nom_tabla_ref(id_enc) ON DELETE CASCADE; ";
-
         $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->role";
 
         $this->executeSql($a_sql);
@@ -774,9 +756,19 @@ class DBEsquema extends DBAbstract
         $nom_tabla = $datosTabla['nom_tabla'];
         $campo_seq = $datosTabla['campo_seq'];
         $id_seq = $datosTabla['id_seq'];
+        $nompkey = $tabla . '_pkey';
+        /* Los constraint de 'primary key' y 'foreign key' deben estar en la creación de la tabla,
+         *  que permite la clausula 'IF EXISTS'.  De otro modo da error cuando se está activando un módulo
+         *  que ya había sido instalado y se había desactivado, pero no borrado.
+         */
 
         $a_sql = [];
         $a_sql[] = "CREATE TABLE IF NOT EXISTS $nom_tabla (
+                        CONSTRAINT $nompkey PRIMARY KEY ($campo_seq),
+                        CONSTRAINT encargo_datos_cgi_pkey
+                            UNIQUE ($campo_seq),
+                        CONSTRAINT encargo_datos_cgi_ukey
+                            UNIQUE (id_ubi,curso_ini_any) 
                 ) 
             INHERITS (global.$tabla);";
 
@@ -793,17 +785,7 @@ class DBEsquema extends DBAbstract
         $a_sql[] = "ALTER SEQUENCE $id_seq OWNER TO $this->role;";
 
         $a_sql[] = "ALTER TABLE $nom_tabla ALTER $campo_seq SET DEFAULT nextval('$id_seq'::regclass); ";
-
-        $a_sql[] = "ALTER TABLE $nom_tabla ADD CONSTRAINT encargo_datos_cgi_pkey
-                    UNIQUE ($campo_seq); ";
-
-        $a_sql[] = "ALTER TABLE $nom_tabla ADD CONSTRAINT encargo_datos_cgi_ukey
-                    UNIQUE (id_ubi,curso_ini_any); ";
-
-        $a_sql[] = "ALTER TABLE $nom_tabla ADD PRIMARY KEY ($campo_seq); ";
-
         $a_sql[] = "CREATE UNIQUE INDEX encargo_datos_cgi_id_ubi_idx ON $nom_tabla USING btree (id_ubi); ";
-
         $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->role";
 
         $this->executeSql($a_sql);
@@ -851,9 +833,17 @@ class DBEsquema extends DBAbstract
         $nom_tabla = $datosTabla['nom_tabla'];
         $campo_seq = $datosTabla['campo_seq'];
         $id_seq = $datosTabla['id_seq'];
+        $nompkey = $tabla . '_pkey';
+        /* Los constraint de 'primary key' y 'foreign key' deben estar en la creación de la tabla,
+         *  que permite la clausula 'IF EXISTS'.  De otro modo da error cuando se está activando un módulo
+         *  que ya había sido instalado y se había desactivado, pero no borrado.
+         */
 
         $a_sql = [];
         $a_sql[] = "CREATE TABLE IF NOT EXISTS $nom_tabla (
+                        CONSTRAINT $nompkey PRIMARY KEY (id_enc),
+                        CONSTRAINT encargo_textos_ukey
+                            UNIQUE (idioma,clave) 
                 ) 
             INHERITS (global.$tabla);";
 
@@ -870,12 +860,6 @@ class DBEsquema extends DBAbstract
         $a_sql[] = "ALTER SEQUENCE $id_seq OWNER TO $this->role;";
 
         $a_sql[] = "ALTER TABLE $nom_tabla ALTER $campo_seq SET DEFAULT nextval('$id_seq'::regclass); ";
-
-        $a_sql[] = "ALTER TABLE $nom_tabla ADD PRIMARY KEY ($campo_seq); ";
-
-        $a_sql[] = "ALTER TABLE $nom_tabla ADD CONSTRAINT encargo_textos_ukey
-                    UNIQUE (idioma,clave); ";
-
         $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->role";
 
         $this->executeSql($a_sql);

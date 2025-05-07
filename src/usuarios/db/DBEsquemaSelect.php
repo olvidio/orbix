@@ -1,6 +1,6 @@
 <?php
 
-namespace actividadessacd\db;
+namespace src\usuarios\db;
 
 use core\ConfigGlobal;
 use core\DBRefresh;
@@ -14,12 +14,12 @@ class DBEsquemaSelect extends DBEsquema
 
     public function dropAllSelect()
     {
-        $this->eliminar_atn_sacd_textos_select();
+        $this->eliminar_aux_usuarios_ctr_perm_select();
     }
 
     public function createAllSelect()
     {
-        $this->create_atn_sacd_textos_select();
+        $this->create_aux_usuarios_ctr_perm_select();
         // renovar subscripciones
         $DBRefresh = new DBRefresh();
         $DBRefresh->refreshSubscriptionModulo('sv-e');
@@ -28,7 +28,7 @@ class DBEsquemaSelect extends DBEsquema
     /**
      * En la BD sv-e (esquema).
      */
-    public function create_atn_sacd_textos_select()
+    public function create_aux_usuarios_ctr_perm_select()
     {
         // OJO Corresponde al esquema sf-e/sv-e, no al comun.
         $esquema_org = $this->esquema;
@@ -38,7 +38,7 @@ class DBEsquemaSelect extends DBEsquema
         // (debe estar después de fijar el role)
         $this->addPermisoGlobal('sfsv-e_select');
 
-        $tabla = "a_sacd_textos";
+        $tabla = "aux_usuarios_ctr_perm";
         $datosTabla = $this->infoTable($tabla);
 
         $nom_tabla = $datosTabla['nom_tabla'];
@@ -50,29 +50,28 @@ class DBEsquemaSelect extends DBEsquema
          */
         $a_sql = [];
         $a_sql[] = "CREATE TABLE IF NOT EXISTS $nom_tabla (
-                        CONSTRAINT $nompkey PRIMARY KEY (id_item),
-                        CONSTRAINT a_sacd_textos_ukey UNIQUE (idioma,clave)
+                        CONSTRAINT $nompkey PRIMARY KEY (id_item)
                 ) 
             INHERITS (global.$tabla);";
 
         $a_sql[] = "ALTER TABLE $nom_tabla ALTER id_schema SET DEFAULT public.idschema('$this->esquema'::text)";
+        $a_sql[] = "CREATE INDEX IF NOT EXISTS {$tabla}_id_usuario ON $nom_tabla USING btree (id_usuario); ";
+        $a_sql[] = "CREATE INDEX IF NOT EXISTS {$tabla}_id_ctr ON $nom_tabla USING btree (id_ctr); ";
         $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->role";
 
         $this->executeSql($a_sql);
-
         $this->delPermisoGlobal('sfsv-e_select');
         // Devolver los valores al estado original
         $this->esquema = $esquema_org;
         $this->role = $role_org;
     }
 
-    public function eliminar_atn_sacd_textos_select()
+    public function eliminar_aux_usuarios_ctr_perm_select()
     {
         // OJO Corresponde al esquema sf-e/sv-e, no al comun.
-        $datosTabla = $this->infoTable("a_sacd_textos");
+        $datosTabla = $this->infoTable("aux_usuarios_ctr_perm");
         $nom_tabla = $datosTabla['nom_tabla'];
 
         $this->eliminarDeSVESelect($nom_tabla);
     }
-
 }

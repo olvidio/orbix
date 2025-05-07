@@ -68,15 +68,20 @@ class DBEsquemaSelect extends DBEsquema
         if ($this->vf === 'f') {
             $nom_tabla_parent = 'publicf';
         }
+        $nompkey = $tabla . '_pkey';
+        /* Los constraint de 'primary key' y 'foreign key' deben estar en la creación de la tabla,
+         *  que permite la clausula 'IF EXISTS'.  De otro modo da error cuando se está activando un módulo
+         *  que ya había sido instalado y se había desactivado, pero no borrado.
+         */
 
         $a_sql = [];
         $a_sql[] = "CREATE TABLE IF NOT EXISTS $nom_tabla (
+                        CONSTRAINT $nompkey PRIMARY KEY (id_item)
                 )
             INHERITS ($nom_tabla_parent.$tabla);";
 
         $a_sql[] = "ALTER TABLE $nom_tabla ALTER id_schema SET DEFAULT public.idschema('$this->esquema'::text)";
-        $a_sql[] = "ALTER TABLE $nom_tabla ADD PRIMARY KEY (id_item); ";
-        $a_sql[] = "CREATE INDEX e_certificados_rstgr_key ON $nom_tabla USING btree (certificado);";
+        $a_sql[] = "CREATE INDEX IF NOT EXISTS e_certificados_rstgr_key ON $nom_tabla USING btree (certificado);";
         $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->role; ";
 
         $this->executeSql($a_sql);
@@ -107,15 +112,19 @@ class DBEsquemaSelect extends DBEsquema
         if ($this->vf === 'f') {
             $nom_tabla_parent = 'publicf';
         }
-
+        $nompkey = $tabla . '_pkey';
+        /* Los constraint de 'primary key' y 'foreign key' deben estar en la creación de la tabla,
+         *  que permite la clausula 'IF EXISTS'.  De otro modo da error cuando se está activando un módulo
+         *  que ya había sido instalado y se había desactivado, pero no borrado.
+         */
         $a_sql = [];
         $a_sql[] = "CREATE TABLE IF NOT EXISTS $nom_tabla (
+                        CONSTRAINT $nompkey PRIMARY KEY (id_item)
                 )
             INHERITS ($nom_tabla_parent.$tabla);";
 
         $a_sql[] = "ALTER TABLE $nom_tabla ALTER id_schema SET DEFAULT public.idschema('$this->esquema'::text)";
-        $a_sql[] = "ALTER TABLE $nom_tabla ADD PRIMARY KEY (id_item); ";
-        $a_sql[] = "CREATE INDEX e_certificados_dl_key ON $nom_tabla USING btree (certificado);";
+        $a_sql[] = "CREATE INDEX IF NOT EXISTS e_certificados_dl_key ON $nom_tabla USING btree (certificado);";
         $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->role; ";
 
         $this->executeSql($a_sql);

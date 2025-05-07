@@ -148,6 +148,10 @@ class DBEsquema extends DBAbstract
         $datosTablaT = $this->infoTable('a_tareas');
         $nom_tabla_tareas = $datosTablaT['nom_tabla'];
 
+        /* Los constraint de 'primary key' y 'foreign key' deben estar en la creación de la tabla,
+         *  que permite la clausula 'IF EXISTS'.  De otro modo da error cuando se está activando un módulo
+         *  que ya había sido instalado y se había desactivado, pero no borrado.
+         */
         $a_sql = [];
         $a_sql[] = "CREATE TABLE IF NOT EXISTS $nom_tabla (
                     CONSTRAINT $nompkey PRIMARY KEY ($campo_seq),
@@ -174,29 +178,6 @@ class DBEsquema extends DBAbstract
         $a_sql[] = "ALTER SEQUENCE $id_seq OWNER TO $this->role;";
 
         $a_sql[] = "ALTER TABLE $nom_tabla ALTER $campo_seq SET DEFAULT nextval('$id_seq'::regclass); ";
-
-        /* Los constraint de 'primary key' y 'foreign key' deben estar en la creación de la tabla,
-         *  que permite la clausaula 'IF EXISTS'.  De otro modo da error cuando se está activando un módulo
-         *  que ya había sido instalado y se había desactivado, pero no borrado.
-         *  
-        
-        $a_sql[] = "ALTER TABLE $nom_tabla ADD CONSTRAINT {$tabla}_id_tipo_proceso_key
-                    UNIQUE (id_tipo_proceso, id_activ, id_fase, id_tarea); ";
-        
-        $a_sql[] = "ALTER TABLE $nom_tabla ADD PRIMARY KEY (id_item); ";
-        
-        $datosTablaF = $this->infoTable('a_fases');
-        $nom_tabla_fases = $datosTablaF['nom_tabla'];
-        
-        $a_sql[] = "ALTER TABLE $nom_tabla ADD CONSTRAINT {$tabla}_id_fase_fk
-                    FOREIGN KEY (id_fase) REFERENCES $nom_tabla_fases(id_fase) ON DELETE CASCADE; ";
-        
-        $datosTablaT = $this->infoTable('a_tareas');
-        $nom_tabla_tareas = $datosTablaT['nom_tabla'];
-        
-        $a_sql[] = "ALTER TABLE $nom_tabla ADD CONSTRAINT {$tabla}_id_tarea
-                    FOREIGN KEY (id_tarea) REFERENCES $nom_tabla_tareas(id_tarea) ON DELETE CASCADE; ";
-        */
 
         // No va con tablas heredadas
         //$a_sql[] = "ALTER TABLE $nom_tabla ADD CONSTRAINT a_actividad_proceso_id_activ_fk
@@ -594,7 +575,7 @@ class DBEsquema extends DBAbstract
     /**
      * La tabla ya existe, pero hay que actualizar el tipo de proceso
      *  parar cada tipo de actividad.
-     *  Si hay algun añadido en los tipos de actividad se borrará.
+     *  Si hay algún añadido en los tipos de actividad se borrará.
      */
     public function llenar_a_tipos_actividad()
     {

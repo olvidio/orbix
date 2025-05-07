@@ -359,8 +359,8 @@ class AsignaturasPendientes extends ClasePropiedades
 
         $oDbl->query($sqlDelete);
         $oDbl->query($sqlCreate);
-        $oDbl->query("CREATE INDEX $asignaturas" . "_nivel" . " ON $asignaturas (id_nivel)");
-        $oDbl->query("CREATE INDEX $asignaturas" . "_id_asignatura" . " ON $asignaturas (id_asignatura)");
+        $oDbl->query("CREATE INDEX IF NOT EXISTS $asignaturas" . "_nivel" . " ON $asignaturas (id_nivel)");
+        $oDbl->query("CREATE INDEX IF NOT EXISTS $asignaturas" . "_id_asignatura" . " ON $asignaturas (id_asignatura)");
 
         $gesAsignaturas = new GestorAsignatura();
         $cAsignaturas = $gesAsignaturas->getAsignaturas(array('status' => 'true'));

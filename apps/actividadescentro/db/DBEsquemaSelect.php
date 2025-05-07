@@ -37,16 +37,19 @@ class DBEsquemaSelect extends DBEsquema
 
         $nom_tabla = $datosTabla['nom_tabla'];
         $campo_seq = $datosTabla['campo_seq'];
+        $nompkey = $tabla . '_pkey';
 
+        /* Los constraint de 'primary key' y 'foreign key' deben estar en la creación de la tabla,
+         *  que permite la clausula 'IF EXISTS'.  De otro modo da error cuando se está activando un módulo
+         *  que ya había sido instalado y se había desactivado, pero no borrado.
+         */
         $a_sql = [];
         $a_sql[] = "CREATE TABLE IF NOT EXISTS $nom_tabla (
+                        CONSTRAINT $nompkey PRIMARY KEY (id_activ, id_ubi)
                 ) 
             INHERITS (global.$tabla);";
 
         $a_sql[] = "ALTER TABLE $nom_tabla ALTER id_schema SET DEFAULT public.idschema('$this->esquema'::text)";
-        $a_sql[] = "ALTER TABLE $nom_tabla ADD CONSTRAINT da_ctr_encargados_id_activ_id_ubi_key
-                    UNIQUE (id_activ, id_ubi); ";
-        $a_sql[] = "ALTER TABLE $nom_tabla ADD PRIMARY KEY (id_activ, id_ubi); ";
         $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->role";
 
 

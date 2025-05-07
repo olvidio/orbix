@@ -80,27 +80,28 @@ class DB extends DBAbstract
 
         $nom_tabla = $this->esquema . '.' . "du_presentacion_ex";
         $nom_tabla_parent = 'public';
-        if ($this->vf == 'v') {
+        if ($this->vf === 'v') {
             $nom_tabla_parent = 'publicv';
         }
-        if ($this->vf == 'f') {
+        if ($this->vf === 'f') {
             $nom_tabla_parent = 'publicf';
         }
         $campo_seq = '';
         $id_seq = $nom_tabla . "_" . $campo_seq . "_seq";
+        $nompkey = $tabla . '_pkey';
+        /* Los constraint de 'primary key' y 'foreign key' deben estar en la creación de la tabla,
+         *  que permite la clausula 'IF EXISTS'.  De otro modo da error cuando se está activando un módulo
+         *  que ya había sido instalado y se había desactivado, pero no borrado.
+         */
+
 
         $a_sql = [];
         $a_sql[] = "CREATE TABLE IF NOT EXISTS $nom_tabla (
+                        CONSTRAINT $nompkey PRIMARY KEY (id_ubi,id_direccion)
                 )
             INHERITS ($nom_tabla_parent.$tabla);";
 
         $a_sql[] = "ALTER TABLE $nom_tabla ALTER id_schema SET DEFAULT public.idschema('$this->esquema'::text)";
-
-        $a_sql[] = "ALTER TABLE $nom_tabla ADD PRIMARY KEY (id_ubi,id_direccion); ";
-
-        $a_sql[] = "ALTER TABLE $nom_tabla ADD CONSTRAINT du_presentacion_ex_ukey
-                    UNIQUE (id_ubi, id_direccion); ";
-
         $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->role; ";
 
         $this->executeSql($a_sql);
