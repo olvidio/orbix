@@ -165,7 +165,7 @@ class DBEsquemaSelect extends DBEsquema
         $a_sql[] = "ALTER TABLE $nom_tabla ALTER id_schema SET DEFAULT public.idschema('$this->esquema'::text)";
         $a_sql[] = "CREATE INDEX IF NOT EXISTS encargo_horario_f_fin_idx ON $nom_tabla USING btree (f_fin); ";
         $a_sql[] = "CREATE INDEX IF NOT EXISTS encargo_horario_f_ini_idx ON $nom_tabla USING btree (f_ini); ";
-        $a_sql[] = "CREATE UNIQUE INDEX encargo_horario_id_item_idx ON $nom_tabla USING btree (id_item_h); ";
+        $a_sql[] = "CREATE UNIQUE INDEX IF NOT EXISTS encargo_horario_id_item_idx ON $nom_tabla USING btree (id_item_h); ";
         $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->role; ";
 
         $this->executeSql($a_sql);
@@ -213,7 +213,7 @@ class DBEsquemaSelect extends DBEsquema
         $a_sql[] = "ALTER TABLE $nom_tabla ALTER id_schema SET DEFAULT public.idschema('$this->esquema'::text)";
         $a_sql[] = "CREATE INDEX IF NOT EXISTS encargo_horario_ex_f_fin_idx ON $nom_tabla USING btree (f_fin); ";
         $a_sql[] = "CREATE INDEX IF NOT EXISTS encargo_horario_ex_f_ini_idx ON $nom_tabla USING btree (f_ini); ";
-        $a_sql[] = "CREATE UNIQUE INDEX encargo_horario_ex_id_item_idx ON $nom_tabla USING btree (id_item_ex); ";
+        $a_sql[] = "CREATE UNIQUE INDEX IF NOT EXISTS encargo_horario_ex_id_item_idx ON $nom_tabla USING btree (id_item_ex); ";
         $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->role; ";
 
         $this->executeSql($a_sql);
@@ -263,7 +263,7 @@ class DBEsquemaSelect extends DBEsquema
         $a_sql[] = "CREATE INDEX IF NOT EXISTS encargo_sacd_horario_f_ini_idx ON $nom_tabla USING btree (f_ini); ";
         $a_sql[] = "CREATE INDEX IF NOT EXISTS encargo_sacd_horario_id_enc_idx ON $nom_tabla USING btree (id_enc); ";
         $a_sql[] = "CREATE INDEX IF NOT EXISTS encargo_sacd_horario_id_nom_idx ON $nom_tabla USING btree (id_nom ); ";
-        $a_sql[] = "CREATE UNIQUE INDEX encargo_sacd_horario_id_item_idx ON $nom_tabla USING btree (id_item); ";
+        $a_sql[] = "CREATE UNIQUE INDEX IF NOT EXISTS encargo_sacd_horario_id_item_idx ON $nom_tabla USING btree (id_item); ";
 
 
         $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->role; ";
@@ -313,7 +313,7 @@ class DBEsquemaSelect extends DBEsquema
         $a_sql[] = "ALTER TABLE $nom_tabla ALTER id_schema SET DEFAULT public.idschema('$this->esquema'::text)";
         $a_sql[] = "CREATE INDEX IF NOT EXISTS encargo_sacd_horario_ex_f_fin_idx ON $nom_tabla USING btree (f_fin); ";
         $a_sql[] = "CREATE INDEX IF NOT EXISTS encargo_sacd_horario_ex_f_ini_idx ON $nom_tabla USING btree (f_ini); ";
-        $a_sql[] = "CREATE UNIQUE INDEX encargo_sacd_horario_ex_id_item_idx ON $nom_tabla USING btree (id_item_ex); ";
+        $a_sql[] = "CREATE UNIQUE INDEX IF NOT EXISTS encargo_sacd_horario_ex_id_item_idx ON $nom_tabla USING btree (id_item_ex); ";
         $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->role; ";
 
         $this->executeSql($a_sql);
@@ -360,7 +360,7 @@ class DBEsquemaSelect extends DBEsquema
             INHERITS (global.$tabla);";
 
         $a_sql[] = "ALTER TABLE $nom_tabla ALTER id_schema SET DEFAULT public.idschema('$this->esquema'::text)";
-        $a_sql[] = "CREATE UNIQUE INDEX encargo_sacd_observ_id_nom_idx ON $nom_tabla USING btree (id_nom); ";
+        $a_sql[] = "CREATE UNIQUE INDEX IF NOT EXISTS encargo_sacd_observ_id_nom_idx ON $nom_tabla USING btree (id_nom); ";
         $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->role; ";
 
         $this->executeSql($a_sql);
@@ -453,7 +453,7 @@ class DBEsquemaSelect extends DBEsquema
             INHERITS (global.$tabla);";
 
         $a_sql[] = "ALTER TABLE $nom_tabla ALTER id_schema SET DEFAULT public.idschema('$this->esquema'::text)";
-        $a_sql[] = "CREATE UNIQUE INDEX encargo_datos_cgi_id_ubi_idx ON $nom_tabla USING btree (id_ubi); ";
+        $a_sql[] = "CREATE UNIQUE INDEX IF NOT EXISTS encargo_datos_cgi_id_ubi_idx ON $nom_tabla USING btree (id_ubi); ";
         $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->role; ";
 
         $this->executeSql($a_sql);

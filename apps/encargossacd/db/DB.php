@@ -407,7 +407,6 @@ class DB extends DBAbstract
         $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->user_orbix";
 
         $this->executeSql($a_sql);
-
         $this->delPermisoGlobal('sfsv-e');
     }
 

@@ -313,7 +313,7 @@ class DBEsquema extends DBAbstract
         $a_sql[] = "ALTER TABLE $nom_tabla ALTER $campo_seq SET DEFAULT nextval('$id_seq'::regclass); ";
         $a_sql[] = "CREATE INDEX IF NOT EXISTS encargo_horario_f_fin_idx ON $nom_tabla USING btree (f_fin); ";
         $a_sql[] = "CREATE INDEX IF NOT EXISTS encargo_horario_f_ini_idx ON $nom_tabla USING btree (f_ini); ";
-        $a_sql[] = "CREATE UNIQUE INDEX encargo_horario_id_item_idx ON $nom_tabla USING btree (id_item_h); ";
+        $a_sql[] = "CREATE UNIQUE INDEX IF NOT EXISTS encargo_horario_id_item_idx ON $nom_tabla USING btree (id_item_h); ";
         $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->role";
 
         $this->executeSql($a_sql);
@@ -393,7 +393,7 @@ class DBEsquema extends DBAbstract
         $a_sql[] = "ALTER TABLE $nom_tabla ALTER $campo_seq SET DEFAULT nextval('$id_seq'::regclass); ";
         $a_sql[] = "CREATE INDEX IF NOT EXISTS encargo_horario_ex_f_fin_idx ON $nom_tabla USING btree (f_fin); ";
         $a_sql[] = "CREATE INDEX IF NOT EXISTS encargo_horario_ex_f_ini_idx ON $nom_tabla USING btree (f_ini); ";
-        $a_sql[] = "CREATE UNIQUE INDEX encargo_horario_ex_id_item_idx ON $nom_tabla USING btree (id_item_ex); ";
+        $a_sql[] = "CREATE UNIQUE INDEX IF NOT EXISTS encargo_horario_ex_id_item_idx ON $nom_tabla USING btree (id_item_ex); ";
         $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->role";
 
         $this->executeSql($a_sql);
@@ -476,7 +476,7 @@ class DBEsquema extends DBAbstract
         $a_sql[] = "CREATE INDEX IF NOT EXISTS encargo_sacd_horario_f_ini_idx ON $nom_tabla USING btree (f_ini); ";
         $a_sql[] = "CREATE INDEX IF NOT EXISTS encargo_sacd_horario_id_enc_idx ON $nom_tabla USING btree (id_enc); ";
         $a_sql[] = "CREATE INDEX IF NOT EXISTS encargo_sacd_horario_id_nom_idx ON $nom_tabla USING btree (id_nom ); ";
-        $a_sql[] = "CREATE UNIQUE INDEX encargo_sacd_horario_id_item_idx ON $nom_tabla USING btree (id_item); ";
+        $a_sql[] = "CREATE UNIQUE INDEX IF NOT EXISTS encargo_sacd_horario_id_item_idx ON $nom_tabla USING btree (id_item); ";
         $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->role";
 
         $this->executeSql($a_sql);
@@ -535,8 +535,8 @@ class DBEsquema extends DBAbstract
         $a_sql = [];
         $a_sql[] = "CREATE TABLE IF NOT EXISTS $nom_tabla (
                         CONSTRAINT $nompkey PRIMARY KEY (id_enc, id_item_ex),
-                        CONSTRAINT encargo_sacd_horario_ex_id_item_h_fk FOREIGN KEY (id_item_h) 
-                            REFERENCES $nom_tabla_ref(id_item) ON DELETE CASCADE,
+                        CONSTRAINT encargo_sacd_horario_ex_id_enc_fk FOREIGN KEY (id_enc) 
+                            REFERENCES $nom_tabla_ref(id_enc) ON DELETE CASCADE,
                         CONSTRAINT encargo_sacd_horario_ex_id_item_h_fk FOREIGN KEY (id_item_h)
                             REFERENCES $nom_tabla_ref2(id_item) ON DELETE CASCADE
                 ) 
@@ -557,7 +557,7 @@ class DBEsquema extends DBAbstract
         $a_sql[] = "ALTER TABLE $nom_tabla ALTER $campo_seq SET DEFAULT nextval('$id_seq'::regclass); ";
         $a_sql[] = "CREATE INDEX IF NOT EXISTS encargo_sacd_horario_ex_f_fin_idx ON $nom_tabla USING btree (f_fin); ";
         $a_sql[] = "CREATE INDEX IF NOT EXISTS encargo_sacd_horario_ex_f_ini_idx ON $nom_tabla USING btree (f_ini); ";
-        $a_sql[] = "CREATE UNIQUE INDEX encargo_sacd_horario_ex_id_item_idx ON $nom_tabla USING btree (id_item_ex); ";
+        $a_sql[] = "CREATE UNIQUE INDEX IF NOT EXISTS encargo_sacd_horario_ex_id_item_idx ON $nom_tabla USING btree (id_item_ex); ";
         $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->role";
 
         $this->executeSql($a_sql);
@@ -630,7 +630,7 @@ class DBEsquema extends DBAbstract
         $a_sql[] = "ALTER SEQUENCE $id_seq OWNER TO $this->role;";
 
         $a_sql[] = "ALTER TABLE $nom_tabla ALTER $campo_seq SET DEFAULT nextval('$id_seq'::regclass); ";
-        $a_sql[] = "CREATE UNIQUE INDEX encargo_sacd_observ_id_nom_idx ON $nom_tabla USING btree (id_nom); ";
+        $a_sql[] = "CREATE UNIQUE INDEX IF NOT EXISTS encargo_sacd_observ_id_nom_idx ON $nom_tabla USING btree (id_nom); ";
         $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->role";
 
         $this->executeSql($a_sql);
@@ -785,7 +785,7 @@ class DBEsquema extends DBAbstract
         $a_sql[] = "ALTER SEQUENCE $id_seq OWNER TO $this->role;";
 
         $a_sql[] = "ALTER TABLE $nom_tabla ALTER $campo_seq SET DEFAULT nextval('$id_seq'::regclass); ";
-        $a_sql[] = "CREATE UNIQUE INDEX encargo_datos_cgi_id_ubi_idx ON $nom_tabla USING btree (id_ubi); ";
+        $a_sql[] = "CREATE UNIQUE INDEX IF NOT EXISTS encargo_datos_cgi_id_ubi_idx ON $nom_tabla USING btree (id_ubi); ";
         $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->role";
 
         $this->executeSql($a_sql);
@@ -841,7 +841,7 @@ class DBEsquema extends DBAbstract
 
         $a_sql = [];
         $a_sql[] = "CREATE TABLE IF NOT EXISTS $nom_tabla (
-                        CONSTRAINT $nompkey PRIMARY KEY (id_enc),
+                        CONSTRAINT $nompkey PRIMARY KEY (id_item),
                         CONSTRAINT encargo_textos_ukey
                             UNIQUE (idioma,clave) 
                 ) 
