@@ -49,7 +49,7 @@ class DBEsquemaSelect extends DBEsquema
 
         $a_sql = [];
         $a_sql[] = "CREATE TABLE IF NOT EXISTS $nom_tabla (
-                        CONSTRAINT $nompkey PRIMARY KEY (id_item)
+                        CONSTRAINT $nompkey PRIMARY KEY (id_nom)
                 ) 
             INHERITS (global.$tabla);";
 
@@ -88,7 +88,7 @@ class DBEsquemaSelect extends DBEsquema
 
         $a_sql = [];
         $a_sql[] = "CREATE TABLE IF NOT EXISTS $nom_tabla (
-                        CONSTRAINT $nompkey PRIMARY KEY (uuid_id_item)
+                        CONSTRAINT $nompkey PRIMARY KEY (uuid_item)
                 ) 
             INHERITS (global.$tabla);";
 
