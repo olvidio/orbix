@@ -128,7 +128,7 @@ class DBEsquema extends DBAbstract
         /*
          * Para el servidor exterior a la hora de sincronizar 'av_cambios_dl'
          * ('av_cambios' no hace falta porque sólo se modifica desde dentro) hay un problema de simultaniedad:
-         * si se inserta una fila a la vez en el servidor1 y en el 2, cojen el mismo valor de la sequencia
+         * si se inserta una fila a la vez en el servidor1 y en el 2, cogen el mismo valor de la secuencia
          * (que es la clave primaria), y al sincronizar sólo queda una fila. Para evitarlo se genera un id_item
          * distinto en cada servidor, de manera que no sea posible conflicto:
          * los 'id_item_cambio' del servidor1 empiezan por 1, los del servidor2 por 2.
@@ -499,8 +499,10 @@ class DBEsquema extends DBAbstract
         $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->role";
 
         $this->executeSql($a_sql);
-
         $this->delPermisoGlobal('sfsv-e');
+        // Devolver los valores al estado original
+        $this->esquema = $esquema_org;
+        $this->role = $role_org;
     }
 
     public function eliminar_av_cambios_usuario_objeto_pref()
@@ -525,6 +527,9 @@ class DBEsquema extends DBAbstract
         $this->eliminar($nom_tabla);
 
         $this->delPermisoGlobal('sfsv-e');
+        // Devolver los valores al estado original
+        $this->esquema = $esquema_org;
+        $this->role = $role_org;
     }
 
     public function create_av_cambios_usuario_propiedades_pref()
@@ -583,8 +588,10 @@ class DBEsquema extends DBAbstract
         $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->role";
 
         $this->executeSql($a_sql);
-
         $this->delPermisoGlobal('sfsv-e');
+        // Devolver los valores al estado original
+        $this->esquema = $esquema_org;
+        $this->role = $role_org;
     }
 
     public function eliminar_av_cambios_usuario_propiedades_pref()
@@ -607,8 +614,10 @@ class DBEsquema extends DBAbstract
         $this->executeSql($a_sql);
 
         $this->eliminar($nom_tabla);
-
         $this->delPermisoGlobal('sfsv-e');
+        // Devolver los valores al estado original
+        $this->esquema = $esquema_org;
+        $this->role = $role_org;
     }
 
     public function llenar_av_cambios_usuario_objeto_pref()
