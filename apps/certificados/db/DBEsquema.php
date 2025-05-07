@@ -124,7 +124,7 @@ class DBEsquema extends DBAbstract
         $a_sql[] = "CREATE TABLE IF NOT EXISTS $nom_tabla (
                         CONSTRAINT $nompkey PRIMARY KEY (id_item),
                         CONSTRAINT e_certificados_rstgr_ukey
-                            UNIQUE (id_nom,f_certificado); 
+                            UNIQUE (id_nom,f_certificado) 
                 )
             INHERITS ($nom_tabla_parent.$tabla);";
 
