@@ -132,7 +132,7 @@ switch ($Qsalida) {
         $txt2 .= '</td></tr>';
         $txt2 .= '<tr><td>' . _("a") . ':';
         $txt3 = '<input type="input" name="valor" value="' . $valor . '">';
-        if ($Qpropiedad == 'id_ubi') {
+        if ($Qpropiedad === 'id_ubi') {
             // miro que rol tengo. Si soy casa, sólo veo la mía
             if ($oRole->isRolePau(Role::PAU_CDC)) { //casa
                 $id_pau = $oMiUsuario->getId_pau();

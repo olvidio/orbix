@@ -2,6 +2,7 @@
 
 use core\ConfigGlobal;
 use core\ViewPhtml;
+use src\usuarios\domain\entity\Role;
 use web\CasasQue;
 use web\Hash;
 use web\PeriodoQue;
@@ -46,6 +47,8 @@ if (isset($_POST['stack'])) {
 }
 
 $oMiUsuario = ConfigGlobal::MiUsuario();
+$oRole = new Role();
+$oRole->setId_role($oMiUsuario->getId_role());
 $miSfsv = ConfigGlobal::mi_sfsv();
 
 $mes = date('m');
@@ -108,7 +111,7 @@ $oForm = new CasasQue();
 $oForm->setTitulo(strtoupper_dlb(_("búsqueda de casas cuyo planning interesa")));
 // miro que rol tengo. Si soy casa, sólo veo la mía
 $donde = '';
-if ($oMiUsuario->isRolePau('cdc')) {
+if ($oRole->isRolePau(Role::PAU_CDC)) { //casa
     $id_pau = $oMiUsuario->getId_pau(); //pueden ser varios separados por comas
     //$sDonde = str_replace(",", " OR id_ubi=", $id_pau);
     //$donde = "WHERE status='t' AND (id_ubi=$sDonde)";
