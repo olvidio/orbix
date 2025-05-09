@@ -189,6 +189,11 @@ foreach ($cMenuDbs as $oMenuDb) {
 
     if (!empty($id_metamenu)) {
         $oMetamenu = $MetaMenuReposiroty->findById($id_metamenu);
+        if ($oMetamenu === null) {
+            echo sprintf(_("Este metamenu no existe (id): %s"), $id_metamenu);
+            echo "<br>";
+            continue;
+        }
         $url = $oMetamenu->getUrl();
         //echo "m: $perm_menu,l: $perm_login, ".visible($perm_menu,$perm_login) ;
         // primero si el módulo està instalado:
