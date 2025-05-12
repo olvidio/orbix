@@ -22,6 +22,9 @@
             <tr>
                 <th class=titulo_inv colspan=4>{{ "Importar de la plantilla"|trans|capitalize }}:&nbsp;&nbsp;&nbsp;
                     {{ oDesplImportarDePlantilla.desplegable|raw }}
+
+                    <input type=button name="importar" value="importar" onclick="fnjs_importar_de_plantilla_zona();"><br>
+                    Borrará todos los datos introducidos en la plantilla que ves!!
                 </th>
             </tr>
             </thead>

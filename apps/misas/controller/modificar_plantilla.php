@@ -43,7 +43,7 @@ $h_importar_plantilla = $oHashImportarPlantilla->linkSinVal();
 $oDesplImportarDePlantilla = new Desplegable();
 $oDesplImportarDePlantilla->setOpciones($a_TiposPlantilla);
 $oDesplImportarDePlantilla->setNombre('importar_de_plantilla');
-$oDesplImportarDePlantilla->setAction('fnjs_importar_de_plantilla_zona()');
+//$oDesplImportarDePlantilla->setAction('fnjs_importar_de_plantilla_zona()');
 
 $a_Orden = array(
     'orden' => 'orden',

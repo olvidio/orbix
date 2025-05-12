@@ -62,100 +62,234 @@ if($QTipoPlantillaOrigen == EncargoDia::PLANTILLA_DOMINGOS_TRES) {
 
 if(($QTipoPlantillaOrigen == EncargoDia::PLANTILLA_MENSUAL_UNO) || ($QTipoPlantillaOrigen == EncargoDia::PLANTILLA_MENSUAL_TRES)) {
     $oDiaOrigen = new DateTimeLocal(EncargoDia::INICIO_MENSUAL_UNO);
-    $oDiaOrigenS2 = new DateTimeLocal(EncargoDia::INICIO_MENSUAL_UNO);
-    $oDiaOrigenS2->add(new DateInterval('P7D'));
-    $oDiaOrigenS3 = new DateTimeLocal(EncargoDia::INICIO_MENSUAL_UNO);
-    $oDiaOrigenS3->add(new DateInterval('P14D'));
-    $oDiaOrigenS4 = new DateTimeLocal(EncargoDia::INICIO_MENSUAL_UNO);
-    $oDiaOrigenS4->add(new DateInterval('P21D'));
-    $oDiaOrigenS5 = new DateTimeLocal(EncargoDia::INICIO_MENSUAL_UNO);
-    $oDiaOrigenS5->add(new DateInterval('P28D'));
     $oFinOrigen = new DateTimeLocal(EncargoDia::FIN_MENSUAL_UNO);
 }
 
 if($QTipoPlantillaOrigen == EncargoDia::PLANTILLA_MENSUAL_TRES) {
     $oDiaOrigen2 = new DateTimeLocal(EncargoDia::INICIO_MENSUAL_DOS);
-    $oDiaOrigen2S2 = new DateTimeLocal(EncargoDia::INICIO_MENSUAL_UNO);
-    $oDiaOrigen2S2->add(new DateInterval('P7D'));
-    $oDiaOrigen2S3 = new DateTimeLocal(EncargoDia::INICIO_MENSUAL_UNO);
-    $oDiaOrigen2S3->add(new DateInterval('P14D'));
-    $oDiaOrigen2S4 = new DateTimeLocal(EncargoDia::INICIO_MENSUAL_UNO);
-    $oDiaOrigen2S4->add(new DateInterval('P21D'));
-    $oDiaOrigen2S5 = new DateTimeLocal(EncargoDia::INICIO_MENSUAL_UNO);
-    $oDiaOrigen2S5->add(new DateInterval('P28D'));
-    $oFinOrigen2 = new DateTimeLocal(EncargoDia::FIN_MENSUAL_DOS);
     $oDiaOrigen3 = new DateTimeLocal(EncargoDia::INICIO_MENSUAL_TRES);
-    $oDiaOrigen3S2 = new DateTimeLocal(EncargoDia::INICIO_MENSUAL_UNO);
-    $oDiaOrigen3S2->add(new DateInterval('P7D'));
-    $oDiaOrigen3S3 = new DateTimeLocal(EncargoDia::INICIO_MENSUAL_UNO);
-    $oDiaOrigen3S3->add(new DateInterval('P14D'));
-    $oDiaOrigen3S4 = new DateTimeLocal(EncargoDia::INICIO_MENSUAL_UNO);
-    $oDiaOrigen3S4->add(new DateInterval('P21D'));
-    $oDiaOrigen3S5 = new DateTimeLocal(EncargoDia::INICIO_MENSUAL_UNO);
-    $oDiaOrigen3S5->add(new DateInterval('P28D'));
-    $oFinOrigen3 = new DateTimeLocal(EncargoDia::FIN_MENSUAL_TRES);
 }
 
 if(($QTipoPlantillaDestino== EncargoDia::PLANTILLA_SEMANAL_UNO) || ($QTipoPlantillaDestino== EncargoDia::PLANTILLA_SEMANAL_TRES)) {
     $oDiaDestino = new DateTimeLocal(EncargoDia::INICIO_SEMANAL_UNO);
+    $oFinDestino = new DateTimeLocal(EncargoDia::FIN_SEMANAL_UNO);
+    $ndias=7;
 }
 
 if($QTipoPlantillaDestino== EncargoDia::PLANTILLA_SEMANAL_TRES) {
     $oDiaDestino2 = new DateTimeLocal(EncargoDia::INICIO_SEMANAL_DOS);
-    $oInicioDestino3 = new DateTimeLocal(EncargoDia::INICIO_SEMANAL_TRES);
+    $oDiaDestino3 = new DateTimeLocal(EncargoDia::INICIO_SEMANAL_TRES);
+    $oFinDestino = new DateTimeLocal(EncargoDia::FIN_SEMANAL_TRES);
 }
 
 if(($QTipoPlantillaDestino== EncargoDia::PLANTILLA_DOMINGOS_UNO) || ($QTipoPlantillaDestino== EncargoDia::PLANTILLA_DOMINGOS_TRES)) {
     $oDiaDestino = new DateTimeLocal(EncargoDia::INICIO_DOMINGOS_UNO);
+    $oFinDestino = new DateTimeLocal(EncargoDia::FIN_DOMINGOS_UNO);
+    $ndias=11;
 }
 
 if($QTipoPlantillaDestino== EncargoDia::PLANTILLA_DOMINGOS_TRES) {
     $oDiaDestino2 = new DateTimeLocal(EncargoDia::INICIO_DOMINGOS_DOS);
+//    $oFinDestino2 = new DateTimeLocal(EncargoDia::FIN_DOMINGOS_DOS);
     $oDiaDestino3 = new DateTimeLocal(EncargoDia::INICIO_DOMINGOS_TRES);
+    $oFinDestino = new DateTimeLocal(EncargoDia::FIN_DOMINGOS_TRES);
 }
 
 if(($QTipoPlantillaDestino== EncargoDia::PLANTILLA_MENSUAL_UNO) || ($QTipoPlantillaDestino== EncargoDia::PLANTILLA_MENSUAL_TRES)) {
     $oDiaDestino = new DateTimeLocal(EncargoDia::INICIO_MENSUAL_UNO);
-    $oDiaDestinoS2 = new DateTimeLocal(EncargoDia::INICIO_MENSUAL_UNO);
-    $oDiaDestinoS2->add(new DateInterval('P7D'));
-    $oDiaDestinoS3 = new DateTimeLocal(EncargoDia::INICIO_MENSUAL_UNO);
-    $oDiaDestinoS3->add(new DateInterval('P14D'));
-    $oDiaDestinoS4 = new DateTimeLocal(EncargoDia::INICIO_MENSUAL_UNO);
-    $oDiaDestinoS4->add(new DateInterval('P21D'));
-    $oDiaDestinoS5 = new DateTimeLocal(EncargoDia::INICIO_MENSUAL_UNO);
-    $oDiaDestinoS5->add(new DateInterval('P28D'));
     $oFinDestino = new DateTimeLocal(EncargoDia::FIN_MENSUAL_UNO);
+    $ndias=35;
 }
 
 if($QTipoPlantillaDestino== EncargoDia::PLANTILLA_MENSUAL_TRES) {
     $oDiaDestino2 = new DateTimeLocal(EncargoDia::INICIO_MENSUAL_UNO);
-    $oDiaDestino2S2 = new DateTimeLocal(EncargoDia::INICIO_MENSUAL_UNO);
-    $oDiaDestino2S2->add(new DateInterval('P7D'));
-    $oDiaDestino2S3 = new DateTimeLocal(EncargoDia::INICIO_MENSUAL_UNO);
-    $oDiaDestino2S3->add(new DateInterval('P14D'));
-    $oDiaDestino2S4 = new DateTimeLocal(EncargoDia::INICIO_MENSUAL_UNO);
-    $oDiaDestino2S4->add(new DateInterval('P21D'));
-    $oDiaDestino2S5 = new DateTimeLocal(EncargoDia::INICIO_MENSUAL_UNO);
-    $oDiaDestino2S5->add(new DateInterval('P28D'));
-    $oFinDestino2 = new DateTimeLocal(EncargoDia::FIN_MENSUAL_DOS);
     $oDiaDestino3 = new DateTimeLocal(EncargoDia::INICIO_MENSUAL_UNO);
-    $oDiaDestino3S2 = new DateTimeLocal(EncargoDia::INICIO_MENSUAL_UNO);
-    $oDiaDestino3S2->add(new DateInterval('P7D'));
-    $oDiaDestino3S3 = new DateTimeLocal(EncargoDia::INICIO_MENSUAL_UNO);
-    $oDiaDestino3S3->add(new DateInterval('P14D'));
-    $oDiaDestino3S4 = new DateTimeLocal(EncargoDia::INICIO_MENSUAL_UNO);
-    $oDiaDestino3S4->add(new DateInterval('P21D'));
-    $oDiaDestino3S5 = new DateTimeLocal(EncargoDia::INICIO_MENSUAL_UNO);
-    $oDiaDestino3S5->add(new DateInterval('P28D'));
-    $oFinDestino3 = new DateTimeLocal(EncargoDia::FIN_MENSUAL_TRES);
+    $oFinDestino = new DateTimeLocal(EncargoDia::FIN_MENSUAL_TRES);
 }
 
-$intervalo_dia = new DateInterval('P1D');
-$intervalo_semana = new DateInterval('P7D');
+$oGesEncargoTipo = new GestorEncargoTipo();
+
+$grupo = '8...';
+$aWhere = [];
+$aOperador = [];
+$aWhere['id_tipo_enc'] = '^' . $grupo;
+$aOperador['id_tipo_enc'] = '~';
+$oGesEncargoTipo = new GestorEncargoTipo();
+$cEncargoTipos = $oGesEncargoTipo->getEncargoTipos($aWhere, $aOperador);
+
+$a_tipo_enc = [];
+$posibles_encargo_tipo = [];
+foreach ($cEncargoTipos as $oEncargoTipo) {
+    if ($oEncargoTipo->getId_tipo_enc()>=8100) {
+        $a_tipo_enc[] = $oEncargoTipo->getId_tipo_enc();
+    }
+}        
+
+$sInicio_iso=$oDiaDestino->getIso();
+$sFin_iso=$oFinDestino->getIso();
+$orden='prioridad';
+
+$EncargosZona = new EncargosZona($Qid_zona, $oDiaDestino, $oFinDestino, $orden);
+$EncargosZona->setATipoEnc($a_tipo_enc);
+$cEncargosZona = $EncargosZona->getEncargos();
+foreach ($cEncargosZona as $oEncargo) {
+    $id_enc = $oEncargo->getId_enc();
+    $desc_enc = $oEncargo->getDesc_enc();
+
+    $aWhere = [
+        'id_enc' => $id_enc,
+        'tstart' => "'$sInicio_iso', '$sFin_iso'",
+    ];
+    $aOperador = [
+        'tstart' => 'BETWEEN',
+    ];
+
+    //Borro los encargos de la zona ya asignados en ese periodo
+    $EncargoDiaRepository = new EncargoDiaRepository();
+    $cEncargosaBorrar = $EncargoDiaRepository->getEncargoDias($aWhere,$aOperador);
+    foreach($cEncargosaBorrar as $oEncargoaBorrar) {
+        $EncargoDiaRepository->Eliminar($oEncargoaBorrar);
+    }
+}
+
+
+
+
+
+echo 'ndias: '.$ndias.'<br>';
+for ($i=0;$i<$ndias;$i++) {
+    echo 'I: '.$i.'<br>';
+    $num_dia=$oDiaDestino->format('d-m-Y');
+    echo 'destino: '.$oDiaDestino->format('d-m-Y').'<---';
+    if(($QTipoPlantillaOrigen == EncargoDia::PLANTILLA_SEMANAL_UNO) || ($QTipoPlantillaOrigen== EncargoDia::PLANTILLA_SEMANAL_TRES)) {
+        $oDiaOrigen = new DateTimeLocal(EncargoDia::INICIO_SEMANAL_UNO);
+        $iOrigen=$i;
+        //como se empieza el lunes, lunes+6 es domingo
+        if ((($i>6) && ($i<11)) && (($QTipoPlantillaDestino== EncargoDia::PLANTILLA_DOMINGOS_UNO) || ($QTipoPlantillaDestino== EncargoDia::PLANTILLA_DOMINGOS_TRES)))
+        {
+            $iOrigen=6;
+        } 
+        if (($i>6) && (($QTipoPlantillaDestino== EncargoDia::PLANTILLA_MENSUAL_UNO) || ($QTipoPlantillaDestino== EncargoDia::PLANTILLA_MENSUAL_TRES)))
+        {
+            $iOrigen=$i%7;
+        } 
+    }
+    if($QTipoPlantillaOrigen == EncargoDia::PLANTILLA_SEMANAL_TRES) {
+        $oDiaOrigen2 = new DateTimeLocal(EncargoDia::INICIO_SEMANAL_DOS);
+        $oDiaOrigen3 = new DateTimeLocal(EncargoDia::INICIO_SEMANAL_TRES);
+    }
+    
+    if(($QTipoPlantillaOrigen == EncargoDia::PLANTILLA_DOMINGOS_UNO) || ($QTipoPlantillaOrigen == EncargoDia::PLANTILLA_DOMINGOS_TRES)) {
+        $oDiaOrigen = new DateTimeLocal(EncargoDia::INICIO_DOMINGOS_UNO);
+        $iOrigen=$i;
+        //como se empieza el lunes, lunes+6 es domingo
+        if (($i>6) && (($QTipoPlantillaDestino== EncargoDia::PLANTILLA_MENSUAL_UNO) || ($QTipoPlantillaDestino== EncargoDia::PLANTILLA_MENSUAL_TRES)))
+        {
+            $iOrigen=$i%7;
+            if ($iOrigen==6) {
+                $iOrigen+=intdiv($i,7);
+            }
+        } 
+    }
+    if($QTipoPlantillaOrigen == EncargoDia::PLANTILLA_DOMINGOS_TRES) {
+        $oDiaOrigen2 = new DateTimeLocal(EncargoDia::INICIO_DOMINGOS_DOS);
+        $oDiaOrigen3 = new DateTimeLocal(EncargoDia::INICIO_DOMINGOS_TRES);
+    }
+    
+    if(($QTipoPlantillaOrigen == EncargoDia::PLANTILLA_MENSUAL_UNO) || ($QTipoPlantillaOrigen == EncargoDia::PLANTILLA_MENSUAL_TRES)) {
+        $oDiaOrigen = new DateTimeLocal(EncargoDia::INICIO_MENSUAL_UNO);
+        $iOrigen=$i;
+        if ((($i>6) && ($i<11)) && (($QTipoPlantillaDestino== EncargoDia::PLANTILLA_DOMINGOS_UNO) || ($QTipoPlantillaDestino== EncargoDia::PLANTILLA_DOMINGOS_TRES)))
+        {
+            $iOrigen=6+($i-6)*7;
+        } 
+    }
+    
+    if($QTipoPlantillaOrigen == EncargoDia::PLANTILLA_MENSUAL_TRES) {
+        $oDiaOrigen2 = new DateTimeLocal(EncargoDia::INICIO_MENSUAL_DOS);
+        $oDiaOrigen3 = new DateTimeLocal(EncargoDia::INICIO_MENSUAL_TRES);
+    }
+    echo 'i: '.$i.' iOrigen: '.$iOrigen.'<br>';
+    $oDiaOrigen->add(new DateInterval("P{$iOrigen}D"));
+    echo 'origen: '.$oDiaOrigen->format('d-m-Y').'<br>';
+    if (($QTipoPlantillaOrigen== EncargoDia::PLANTILLA_SEMANAL_TRES) || ($QTipoPlantillaDestino== EncargoDia::PLANTILLA_DOMINGOS_TRES)  || ($QTipoPlantillaOrigen == EncargoDia::PLANTILLA_MENSUAL_TRES)){
+        $oDiaOrigen2->add(new DateInterval("P{$iOrigen}D"));
+        echo 'origen2: '.$oDiaOrigen2->format('d-m-Y').'<br>';
+        $oDiaOrigen3->add(new DateInterval("P{$iOrigen}D"));
+        echo 'origen3: '.$oDiaOrigen3->format('d-m-Y').'<br>';
+    }
+
+    $inicio_dia_plantilla = $oDiaOrigen->format('Y-m-d').' 00:00:00';
+    $fin_dia_plantilla = $oDiaOrigen->format('Y-m-d').' 23:59:59';
+    
+    foreach ($cEncargosZona as $oEncargo) {
+        $id_enc = $oEncargo->getId_enc();
+        $desc_enc = $oEncargo->getDesc_enc();
+    
+        $aWhere = [
+            'id_enc' => $id_enc,
+            'tstart' => "'$inicio_dia_plantilla', '$fin_dia_plantilla'",
+        ];
+        $aOperador = [
+            'tstart' => 'BETWEEN',
+        ];
+        $EncargoDiaRepository = new EncargoDiaRepository();
+        $cEncargosDia = $EncargoDiaRepository->getEncargoDias($aWhere,$aOperador);
+        if (count($cEncargosDia) > 1) {
+            exit(_("sólo debería haber uno"));
+        }
+        if (count($cEncargosDia) === 1) {
+            $oEncargoDia = $cEncargosDia[0];
+            $id_nom = $oEncargoDia->getId_nom();
+            $hora_ini = $oEncargoDia->getTstart()->format('H:i');
+            $hora_fin = $oEncargoDia->getTend()->format('H:i');
+            $observ = $oEncargoDia->getObserv();
+            echo 'id_enc: '.$id_enc;
+            echo ' desc_enc: '.$desc_enc;
+            echo ' count:'.count($cEncargosDia);
+            echo ' id_nom: '.$id_nom.'<br>';
+            $oEncargoDia = new EncargoDia();
+            $Uuid = new EncargoDiaId(RamseyUuid::uuid4()->toString());
+            $oEncargoDia->setUuid_item($Uuid);
+            $oEncargoDia->setId_nom($id_nom);
+            $tstart = new EncargoDiaTstart($num_dia, $hora_ini);
+            $oEncargoDia->setTstart($tstart);
+    
+            $tend = new EncargoDiaTend($num_dia, $hora_fin);
+            $oEncargoDia->setTend($tend);
+    
+            if (isset($observ)) {
+                $oEncargoDia->setObserv($observ);
+            }
+            $oEncargoDia->setId_enc($id_enc);
+            if ($EncargoDiaRepository->Guardar($oEncargoDia) === FALSE) {
+                $error_txt .= $EncargoDiaRepository->getErrorTxt();
+            }  
+    
+        }
+
+    }
+
+
+    $oDiaDestino->add(new DateInterval('P1D'));
+    if (($QTipoPlantillaDestino== EncargoDia::PLANTILLA_SEMANAL_TRES) || ($QTipoPlantillaDestino== EncargoDia::PLANTILLA_DOMINGOS_TRES)  || ($QTipoPlantillaOrigen == EncargoDia::PLANTILLA_MENSUAL_TRES)){
+        $oDiaDestino2->add(new DateInterval('P1D'));
+        $oDiaDestino3->add(new DateInterval('P1D'));
+    }
+    echo 'I2: '.$i.'<br>';
+
+}
+
 
 for ($i=1;$i<=7;$i++) {
+    $num_dia=$oDiaDestino->format('d-m-Y');
     echo 'destino: '.$oDiaDestino->format('d-m-Y').'<---';
     echo 'origen: '.$oDiaOrigen->format('d-m-Y').'<br>';
+
+
+
+
+
     if (($i==7) && ($QTipoPlantillaDestino== EncargoDia::PLANTILLA_DOMINGOS_UNO) || ($QTipoPlantillaDestino== EncargoDia::PLANTILLA_DOMINGOS_TRES)) {
         for ($j=1;$j<5;$j++) {
             $oDiaDestino->add($intervalo_dia);
@@ -226,185 +360,4 @@ for ($i=1;$i<=7;$i++) {
     $oDiaOrigen->add($intervalo_dia);
     $oDiaDestino->add($intervalo_dia);
 }
-
-
-$oGesEncargoTipo = new GestorEncargoTipo();
-
-$grupo = '8...';
-$aWhere = [];
-$aOperador = [];
-$aWhere['id_tipo_enc'] = '^' . $grupo;
-$aOperador['id_tipo_enc'] = '~';
-$oGesEncargoTipo = new GestorEncargoTipo();
-$cEncargoTipos = $oGesEncargoTipo->getEncargoTipos($aWhere, $aOperador);
-
-$a_tipo_enc = [];
-$posibles_encargo_tipo = [];
-foreach ($cEncargoTipos as $oEncargoTipo) {
-    if ($oEncargoTipo->getId_tipo_enc()>=8100) {
-        $a_tipo_enc[] = $oEncargoTipo->getId_tipo_enc();
-    }
-}        
-
-$EncargosZona = new EncargosZona($Qid_zona, $oInicio, $oFin, $orden);
-$EncargosZona->setATipoEnc($a_tipo_enc);
-$cEncargosZona = $EncargosZona->getEncargos();
-foreach ($cEncargosZona as $oEncargo) {
-    $id_enc = $oEncargo->getId_enc();
-    $id_tipo = $oEncargo->getId_tipo_enc();
-    $desc_enc = $oEncargo->getDesc_enc();
-
-    $aWhere = [
-        'id_enc' => $id_enc,
-        'tstart' => "'$sInicio', '$sFin'",
-    ];
-    $aOperador = [
-        'tstart' => 'BETWEEN',
-    ];
-
-    //Borro los encargos de la zona ya asignados en ese periodo
-    $EncargoDiaRepository = new EncargoDiaRepository();
-    $cEncargosaBorrar = $EncargoDiaRepository->getEncargoDias($aWhere,$aOperador);
-    foreach($cEncargosaBorrar as $oEncargoaBorrar) {
-        $EncargoDiaRepository->Eliminar($oEncargoaBorrar);
-    }
-}
-
-    
-            $inicio_dia_plantilla = $dia_plantilla->format('Y-m-d').' 00:00:00';
-            $fin_dia_plantilla = $dia_plantilla->format('Y-m-d').' 23:59:59';
-            $aWhere = [
-                'id_enc' => $id_enc,
-                'tstart' => "'$inicio_dia_plantilla', '$fin_dia_plantilla'",
-            ];
-            $aOperador = [
-                'tstart' => 'BETWEEN',
-            ];
-    
-            if(($QTipoPlantilla== EncargoDia::PLANTILLA_SEMANAL_TRES) || ($QTipoPlantilla== EncargoDia::PLANTILLA_DOMINGOS_TRES) || ($QTipoPlantilla== EncargoDia::PLANTILLA_MENSUAL_TRES)) {
-                $inicio_dia_plantilla2 = $dia_plantilla2->format('Y-m-d').' 00:00:00';
-                $fin_dia_plantilla2 = $dia_plantilla2->format('Y-m-d').' 23:59:59';
-                $aWhere2 = [
-                    'id_enc' => $id_enc,
-                    'tstart' => "'$inicio_dia_plantilla2', '$fin_dia_plantilla2'",
-                ];
-                $aOperador2 = [
-                    'tstart' => 'BETWEEN',
-                ];
-                $inicio_dia_plantilla3 = $dia_plantilla3->format('Y-m-d').' 00:00:00';
-                $fin_dia_plantilla3 = $dia_plantilla3->format('Y-m-d').' 23:59:59';
-                $aWhere3 = [
-                    'id_enc' => $id_enc,
-                    'tstart' => "'$inicio_dia_plantilla3', '$fin_dia_plantilla3'",
-                ];
-                $aOperador3 = [
-                    'tstart' => 'BETWEEN',
-                ];
-            }
-    
-            $EncargoDiaRepository = new EncargoDiaRepository();
-            $cEncargosDia = $EncargoDiaRepository->getEncargoDias($aWhere,$aOperador);
-     //       echo $aWhere['tstart'].$aOperador['tstart'].$aWhere['id_enc'].'<br>';
-            if (count($cEncargosDia) > 1) {
-                exit(_("sólo debería haber uno"));
-            }
-            if (count($cEncargosDia) === 1) {
-                $oEncargoDia = $cEncargosDia[0];
-                $id_nom = $oEncargoDia->getId_nom();
-                $hora_ini = $oEncargoDia->getTstart()->format('H:i');
-                $hora_fin = $oEncargoDia->getTend()->format('H:i');
-                $observ = $oEncargoDia->getObserv();
-            }
-                
-    //si no hay nadie asignado para ese encargo vacio las variables
-            if (count($cEncargosDia) === 0) {
-                echo 'count encargosDia == 0: id_nom a NULL'.$id_nom.'<br>';
-                $id_nom = null;
-                $hora_ini = '';
-                $hora_fin = '';
-                $observ = '';
-            }
-    
-    
-            if((($QTipoPlantilla== EncargoDia::PLANTILLA_SEMANAL_TRES)||($QTipoPlantilla== EncargoDia::PLANTILLA_DOMINGOS_TRES)||($QTipoPlantilla== EncargoDia::PLANTILLA_MENSUAL_TRES))&&(!$ok_encargo))
-            {
-    //            echo 'SEGONA OPCIÓ<br>';
-    //            echo $aWhere2['tstart'].$aOperador2['tstart'].$aWhere2['id_enc'].'<br>';
-                $EncargoDiaRepository = new EncargoDiaRepository();
-                $cEncargosDia = $EncargoDiaRepository->getEncargoDias($aWhere2,$aOperador2);
-    
-                if (count($cEncargosDia) > 1) {
-                    exit(_("sólo debería haber uno"));
-                }
-                if (count($cEncargosDia) === 1) {
-                    $oEncargoDia = $cEncargosDia[0];
-                    $id_nom = $oEncargoDia->getId_nom();
-    //                echo 'id_nom segona opcio:'.$id_nom.'<br>';
-                    $hora_ini = $oEncargoDia->getTstart()->format('H:i');
-                    $hora_fin = $oEncargoDia->getTend()->format('H:i');
-                    $observ = $oEncargoDia->getObserv();
-                }
-                        
-            //si no hay nadie asignado para ese encargo vacio las variables
-                if (count($cEncargosDia) === 0) {
-                    $id_nom = null;
-    //                echo 'id_nom'.$id_nom.'<br>';
-                    $hora_ini = '';
-                    $hora_fin = '';
-                    $observ = '';
-                }
-            }
-    
-            if((($QTipoPlantilla== EncargoDia::PLANTILLA_SEMANAL_TRES)||($QTipoPlantilla== EncargoDia::PLANTILLA_DOMINGOS_TRES)||($QTipoPlantilla== EncargoDia::PLANTILLA_MENSUAL_TRES))&&(!$ok_encargo))
-            {
-    //            echo 'TERCERA OPCIÓN<br>';
-                $EncargoDiaRepository = new EncargoDiaRepository();
-                $cEncargosDia = $EncargoDiaRepository->getEncargoDias($aWhere3,$aOperador3);
-            
-                if (count($cEncargosDia) > 1) {
-                    exit(_("sólo debería haber uno"));
-                }
-                if (count($cEncargosDia) === 1) {
-                    $oEncargoDia = $cEncargosDia[0];
-                    $id_nom = $oEncargoDia->getId_nom();
-    //                echo 'id_nom tercera opcio:'.$id_nom.'<br>';
-                    $hora_ini = $oEncargoDia->getTstart()->format('H:i');
-                    $hora_fin = $oEncargoDia->getTend()->format('H:i');
-                    $observ = $oEncargoDia->getObserv();
-                }
-    
-        //si no hay nadie asignado para ese encargo vacio las variables
-                if (count($cEncargosDia) === 0) {
-                    $id_nom = null;
-    //                echo 'id_nom'.$id_nom.'<br>';
-                    $hora_ini = '';
-                    $hora_fin = '';
-                    $observ = '';
-                }
-            }
-        
-            if ($ok_encargo)
-            {
-                echo 'OOOKKK_ENCARGO<br>';
-                $oEncargoDia = new EncargoDia();
-                $Uuid = new EncargoDiaId(RamseyUuid::uuid4()->toString());
-                $oEncargoDia->setUuid_item($Uuid);
-                $oEncargoDia->setId_nom($id_nom);
-                $tstart = new EncargoDiaTstart($num_dia, $hora_ini);
-                $oEncargoDia->setTstart($tstart);
-            
-                $tend = new EncargoDiaTend($num_dia, $hora_fin);
-                $oEncargoDia->setTend($tend);
-    
-                if (isset($observ)) {
-                    $oEncargoDia->setObserv($observ);
-                }
-                $oEncargoDia->setId_enc($id_enc);
-                if ($EncargoDiaRepository->Guardar($oEncargoDia) === FALSE) {
-                    $error_txt .= $EncargoDiaRepository->getErrorTxt();
-                }  
-            }
-    
-        
-        
 
