@@ -284,7 +284,8 @@ class PgUsuarioRepository extends ClaseRepository implements UsuarioRepositoryIn
     public function getNewId()
     {
         $oDbl = $this->getoDbl();
-        $sQuery = "select nextval('aux_grupos_y_usuarios_id_usuario_seq'::regclass)";
+        $sQuery = "select (4::text || nextval('aux_grupos_y_usuarios_id_usuario_seq'::regclass))::numeric";
+
         return $oDbl->query($sQuery)->fetchColumn();
     }
 }

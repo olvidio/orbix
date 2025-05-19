@@ -216,7 +216,7 @@ class PgGrupoRepository extends ClaseRepository implements GrupoRepositoryInterf
     public function getNewId()
     {
         $oDbl = $this->getoDbl();
-        $sQuery = "select nextval('aux_grupos_y_usuarios_id_usuario_seq'::regclass)";
+        $sQuery = "select (5::text || nextval('aux_grupos_y_usuarios_id_usuario_seq'::regclass))::numeric";
         return $oDbl->query($sQuery)->fetchColumn();
     }
 }
