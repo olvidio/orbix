@@ -75,6 +75,12 @@ if (is_true($Qpropuesta_calendario)) {
     $nueva = 1; // 0 o 1 para asignar una nueva actividad.
 
     if (ConfigGlobal::is_app_installed('procesos')) {
+        /* Por el momento dejo a todos. Si añado el permiso de crear, como tiene
+         * que ser al nivel superior, porque todavía no se sabe que tipo de actividad va a ser
+         * quizá tenga consecuencias indeseadas. Si los menús me han llevado hasta aquí,
+         * seguramente tengo permiso.
+         */
+        /*
         // sv
         $_SESSION['oPermActividades']->setId_tipo_activ('1.....');
         $permCrearActivDl_sv = $_SESSION['oPermActividades']->getPermisoCrear(TRUE);
@@ -86,6 +92,7 @@ if (is_true($Qpropuesta_calendario)) {
             // no tiene permisos para crea una nueva
             $nueva = 0;
         }
+        */
     }
 }
 
