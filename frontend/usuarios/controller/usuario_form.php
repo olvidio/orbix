@@ -152,7 +152,7 @@ $oView->renderizar('usuario_form.phtml', $a_campos);
 
 // los nuevos no tienen lo que sigue.
 if (!empty($Qid_usuario)) {
-//////////////////////// Grupos del usuario ///////////////////////////////////////////////////
+    //////////////////////// Grupos del usuario ///////////////////////////////////////////////////
     $url_usuario_form_backend = Hash::link(ConfigGlobal::getWeb()
         . '/src/usuarios/infrastructure/controllers/usuario_info.php'
     );
@@ -172,7 +172,7 @@ if (!empty($Qid_usuario)) {
     $oView->renderizar('usuario_grupo.phtml', $a_campos);
 
 
-//////////// Permisos en actividades ////////////
+    //////////// Permisos en actividades ////////////
     if (ConfigGlobal::is_app_installed('procesos')) {
         $url = Hash::link(ConfigGlobal::getWeb()
             . '/frontend/usuarios/controller/perm_activ_lista.php'
@@ -186,13 +186,24 @@ if (!empty($Qid_usuario)) {
         echo PostRequest::getContent($url, $hash_params);
     }
 
-//////////// Condiciones para los avisos de cambios ////////////
+    //////////// Condiciones para los avisos de cambios ////////////
     if (ConfigGlobal::is_app_installed('cambios')) {
-        $url_avisos = Hash::link(ConfigGlobal::getWeb() . '/frontend/cambios/controller/usuario_form_avisos.php?' . http_build_query(array('quien' => 'usuario', 'id_usuario' => $Qid_usuario)));
+        $url_avisos = Hash::link(ConfigGlobal::getWeb()
+            . '/frontend/cambios/controller/usuario_form_avisos.php?'
+            . http_build_query(['quien' => 'usuario', 'id_usuario' => $Qid_usuario])
+        );
 
+        $oHash = new Hash();
+        $oHash->setUrl($url);
+        $oHash->setArrayCamposHidden(['id_usuario' => $Qid_usuario, 'quien' => 'usuario']);
+        $hash_params = $oHash->getArrayCampos();
+
+        echo PostRequest::getContent($url_avisos, $hash_params);
+        /*
         $a_campos['url_avisos'] = $url_avisos;
 
         $oView = new ViewPhtml('../frontend/usuarios/controller');
         $oView->renderizar('usuario_form_avisos.phtml', $a_campos);
+        */
     }
 }

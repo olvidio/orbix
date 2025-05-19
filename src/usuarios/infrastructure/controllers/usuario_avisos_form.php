@@ -123,9 +123,9 @@ if ((ConfigGlobal::is_app_installed('cambios')) && (!empty($Qid_usuario)) && ($Q
     $oTablaAvisos->setBotones($a_botones_avisos);
     $oTablaAvisos->setDatos($a_valores_avisos);
 
-    $url_usuario_ajax = ConfigGlobal::getWeb() . '/apps/usuarios/controller/usuario_ajax.php';
+    //$url_usuario_ajax = ConfigGlobal::getWeb() . '/apps/usuarios/controller/usuario_ajax.php';
     $oHashAvisos = new Hash();
-    $oHashAvisos->setUrl($url_usuario_ajax);
+    //$oHashAvisos->setUrl($url_usuario_ajax);
     $oHashAvisos->setCamposNo('sel!scroll_id!salida');
     $a_camposHidden = array(
         'id_usuario' => $Qid_usuario,

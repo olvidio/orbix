@@ -12,7 +12,7 @@ use devel\model\DBAbstract;
 class DBEsquema extends DBAbstract
 {
 
-    private $dir_base = ConfigGlobal::DIR . "/apps/usuarios/db";
+    private $dir_base = ConfigGlobal::DIR . "/src/usuarios/db";
 
     public function __construct($esquema_sfsv = NULL)
     {

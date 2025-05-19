@@ -43,7 +43,7 @@
             let datos = $(formulario).serialize();
             let request = $.ajax({
                 data: datos,
-                url: 'apps/usuarios/controller/perm_activ_guardar.php',
+                url: 'src/usuarios/infrastructure/controllers/perm_activ_guardar.php',
                 method: 'POST',
                 dataType: 'json'
             });

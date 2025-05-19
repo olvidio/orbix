@@ -53,7 +53,7 @@ $oTablaAvisos->setBotones($a_botones_avisos);
 $oTablaAvisos->setDatos($a_valores_avisos);
 
 
-$url_usuario_ajax = ConfigGlobal::getWeb() . '/apps/usuarios/controller/usuario_ajax.php';
+$url_usuario_ajax = ConfigGlobal::getWeb() . '/apps/cambios/controller/usuario_avisos_pref.php';
 $oHashAvisos = new web\Hash();
 $oHashAvisos->setUrl($url_usuario_ajax);
 $oHashAvisos->setCamposNo('sel!scroll_id!salida');

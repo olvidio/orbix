@@ -331,11 +331,7 @@ switch ($Qsalida) {
             $Qid_tipo_activ = (string)filter_input(INPUT_POST, 'id_tipo_activ');
             $Qid_usuario = (string)filter_input(INPUT_POST, 'id_usuario');
             $Qdl_propia = (string)filter_input(INPUT_POST, 'dl_propia');
-            if (is_true($Qdl_propia)) {
-                $dl_propia = TRUE;
-            } else {
-                $dl_propia = FALSE;
-            }
+            $dl_propia = is_true($Qdl_propia);
 
             if (ConfigGlobal::is_app_installed('procesos')) {
                 /* Ahora no tengo en cuenta el permiso: la idea es ver todas y comprobar
@@ -429,11 +425,11 @@ switch ($Qsalida) {
         $oCambioUsuarioObjeto->setObjeto($Qobjeto);
         $oCambioUsuarioObjeto->setAviso_tipo($Qaviso_tipo);
         $oCambioUsuarioObjeto->setId_fase_ref($Qid_fase_ref);
-        $aviso_off = is_true($Qaviso_off) ? 't' : 'f';
+        $aviso_off = is_true($Qaviso_off);
         $oCambioUsuarioObjeto->setAviso_off($aviso_off);
-        $aviso_on = is_true($Qaviso_on) ? 't' : 'f';
+        $aviso_on = is_true($Qaviso_on);
         $oCambioUsuarioObjeto->setAviso_on($aviso_on);
-        $aviso_outdate = is_true($Qaviso_outdate) ? 't' : 'f';
+        $aviso_outdate = is_true($Qaviso_outdate);
         $oCambioUsuarioObjeto->setAviso_outdate($aviso_outdate);
         // En el caso de filtrar por casas
         if (!empty($Qa_casas)) {

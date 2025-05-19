@@ -1035,7 +1035,7 @@ if ($gm > 1) {
 <div id="main" refe="<?= $pag_ini ?>">
     <?php
     if ($_SESSION['session_auth']['expire'] == 1) {
-        include("apps/usuarios/controller/usuario_form_pwd.php");
+        include("frontend/usuarios/controller/usuario_form_pwd.php");
     } else if (!empty($pag_ini)) {
         include($pag_ini);
     } else {
