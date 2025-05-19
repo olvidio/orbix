@@ -324,7 +324,7 @@ if (($_SESSION['oPerm']->have_perm_oficina('vcsd')) || ($_SESSION['oPerm']->have
     $a_cabeceras[] = array('name' => _("sf/sv"), 'width' => 40);
 }
 $a_cabeceras[] = array('name' => _("tar."), 'width' => 40);
-if (!empty($aRolesPau[$id_role]) && ($aRolesPau[$id_role] !== Role::PAU_CTR)) {
+if (empty($aRolesPau[$id_role]) || ($aRolesPau[$id_role] !== Role::PAU_CTR)) {
     $a_cabeceras[] = array('name' => ucfirst(_("sacd")), 'width' => 200);
     $a_cabeceras[] = array('name' => _("dl org"), 'width' => 50);
 }
@@ -469,7 +469,7 @@ foreach ($cActividades as $oActividad) {
             $a_valores[$i][6] = $ssfsv;
         }
         $a_valores[$i][7] = '';
-        if (!empty($aRolesPau[$id_role]) && ($aRolesPau[$id_role] !== Role::PAU_CTR)) {
+        if (empty($aRolesPau[$id_role]) || ($aRolesPau[$id_role] !== Role::PAU_CTR)) {
             $a_valores[$i][8] = '';
             $a_valores[$i][9] = '';
             $a_valores[$i][10] = '';
@@ -561,7 +561,7 @@ foreach ($cActividades as $oActividad) {
             $a_valores[$i][6] = $ssfsv;
         }
         $a_valores[$i][7] = $tarifa_letra;
-        if (!empty($aRolesPau[$id_role]) && ($aRolesPau[$id_role] !== Role::PAU_CTR)) {
+        if (empty($aRolesPau[$id_role]) || ($aRolesPau[$id_role] !== Role::PAU_CTR)) {
             $a_valores[$i][8] = $sacds;
             $a_valores[$i][9] = $dl_org;
             $a_valores[$i][10] = $ctrs;
@@ -654,7 +654,7 @@ $oTabla->setBotones($a_botones);
 $oTabla->setDatos($a_valores);
 
 $perm_nueva = FALSE;
-if (!empty($aRolesPau[$id_role]) && $aRolesPau[$id_role] !== Role::PAU_CDC && $aRolesPau[$id_role] !== Role::PAU_CTR) {
+if (empty($aRolesPau[$id_role]) || ($aRolesPau[$id_role] !== Role::PAU_CTR && $aRolesPau[$id_role] !== Role::PAU_CDC)) {
     $perm_nueva = TRUE;
 }
 
