@@ -232,7 +232,7 @@ if (!isset($_SESSION['session_auth'])) {
         $oDBSt->bindColumn('password', $sPasswd, \PDO::PARAM_STR);
         if ($row = $oDBSt->fetch(\PDO::FETCH_ASSOC)) {
             $MiUsuario = (new Usuario())->setAllAttributes($row);
-            if ($oCrypt->encode($_POST['password'], $sPasswd) == $sPasswd) {
+            if ($oCrypt->encode($_POST['password'], $sPasswd) === $sPasswd) {
                 $id_usuario = $row['id_usuario'];
                 $id_role = $row['id_role'];
                 $oConfigDB = new ConfigDB('comun_select');

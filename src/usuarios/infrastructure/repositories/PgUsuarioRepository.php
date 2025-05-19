@@ -166,8 +166,9 @@ class PgUsuarioRepository extends ClaseRepository implements UsuarioRepositoryIn
         $aDatos['email'] = $usuario->getEmail();
         $aDatos['id_pau'] = $usuario->getId_pau();
         $aDatos['nom_usuario'] = $usuario->getNom_usuario();
-        // para los bytea
-        $aDatos['password'] = bin2hex($usuario->getPassword());
+        // para los bytea, pero el passwd ya lo tengo en hex con MyCrypt
+        // $aDatos['password'] = bin2hex($usuario->getPassword());
+        $aDatos['password'] = $usuario->getPassword();
         array_walk($aDatos, 'core\poner_null');
 
         if ($bInsert === FALSE) {
