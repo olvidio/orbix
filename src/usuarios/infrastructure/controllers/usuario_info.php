@@ -18,34 +18,38 @@ require_once("apps/core/global_object.inc");
 $Qid_usuario = (integer)filter_input(INPUT_POST, 'id_usuario');
 
 $error_txt = '';
-
-// grupos:
-$GrupoRepository = new GrupoRepository();
-$UsuarioGrupoRepository = new UsuarioGrupoRepository();
-$cGrupos = $UsuarioGrupoRepository->getUsuariosGrupos(array('id_usuario' => $Qid_usuario));
-$i = 0;
-$txt = '';
-foreach ($cGrupos as $oUsuarioGrupo) {
-    $i++;
-    $id_grupo = $oUsuarioGrupo->getId_grupo();
-    $oGrupo = $GrupoRepository->findById($id_grupo);
-    if ($i > 1) {
-        $txt .= ", ";
+$data = [];
+if (empty($Qid_usuario)) {
+    $error_txt = _("Id de usuario no válido");
+} else {
+    // grupos:
+    $GrupoRepository = new GrupoRepository();
+    $UsuarioGrupoRepository = new UsuarioGrupoRepository();
+    $cGrupos = $UsuarioGrupoRepository->getUsuariosGrupos(array('id_usuario' => $Qid_usuario));
+    $i = 0;
+    $txt = '';
+    foreach ($cGrupos as $oUsuarioGrupo) {
+        $i++;
+        $id_grupo = $oUsuarioGrupo->getId_grupo();
+        $oGrupo = $GrupoRepository->findById($id_grupo);
+        if ($i > 1) {
+            $txt .= ", ";
+        }
+        $txt .= $oGrupo->getUsuario();
     }
-    $txt .= $oGrupo->getUsuario();
+
+    // datos personales usuario
+    $UsuarioRepository = new UsuarioRepository();
+    $oUsuario = $UsuarioRepository->findById($Qid_usuario);
+    $usuario = $oUsuario->getUsuario();
+    //$pass = $oUsuario->getPassword();
+    $email = $oUsuario->getEmail();
+
+    $data['grupos_txt'] = $txt;
+    $data['usuario'] = $usuario;
+    //$data['pass'] = $pass;
+    $data['email'] = $email;
 }
-
-// datos personales usuario
-$UsuarioRepository = new UsuarioRepository();
-$oUsuario = $UsuarioRepository->findById($Qid_usuario);
-$usuario = $oUsuario->getUsuario();
-//$pass = $oUsuario->getPassword();
-$email = $oUsuario->getEmail();
-
-$data['grupos_txt'] = $txt;
-$data['usuario'] = $usuario;
-//$data['pass'] = $pass;
-$data['email'] = $email;
 
 ContestarJson::enviar($error_txt, $data);
 

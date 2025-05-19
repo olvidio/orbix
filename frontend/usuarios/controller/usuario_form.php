@@ -114,6 +114,7 @@ $a_campos['url_usuario_guardar'] = Hash::link(ConfigGlobal::getWeb()
 //$a_campos['url_usuario_ajax'] = '';
 //$url_usuario_ajax = ConfigGlobal::getWeb() . '/src/usuarios/infrastructure/controllers/usuario_ajax.php';
 
+
 $url = ConfigGlobal::getWeb() . '/frontend/usuarios/controller/usuario_grupo_lst.php';
 $oHash1 = new Hash();
 $oHash1->setUrl($url);
@@ -149,46 +150,49 @@ $a_campos['obj'] = $a_campos_src['obj'];
 $oView = new ViewPhtml('../frontend/usuarios/controller');
 $oView->renderizar('usuario_form.phtml', $a_campos);
 
+// los nuevos no tienen lo que sigue.
+if (!empty($Qid_usuario)) {
 //////////////////////// Grupos del usuario ///////////////////////////////////////////////////
-$url_usuario_form_backend = Hash::link(ConfigGlobal::getWeb()
-    . '/src/usuarios/infrastructure/controllers/usuario_info.php'
-);
-
-$oHash = new Hash();
-$oHash->setUrl($url_usuario_form_backend);
-$oHash->setArrayCamposHidden(
-    ['id_usuario' => $Qid_usuario,
-    ]);
-$hash_params = $oHash->getArrayCampos();
-
-$data = PostRequest::getData($url_usuario_form_backend, $hash_params);
-
-$a_campos['grupos_txt'] = $data['grupos_txt'];
-
-$oView = new ViewPhtml('../frontend/usuarios/controller');
-$oView->renderizar('usuario_grupo.phtml', $a_campos);
-
-
-//////////// Permisos en actividades ////////////
-if (ConfigGlobal::is_app_installed('procesos')) {
-    $url = Hash::link(ConfigGlobal::getWeb()
-        . '/frontend/usuarios/controller/perm_activ_lista.php'
+    $url_usuario_form_backend = Hash::link(ConfigGlobal::getWeb()
+        . '/src/usuarios/infrastructure/controllers/usuario_info.php'
     );
 
     $oHash = new Hash();
-    $oHash->setUrl($url);
-    $oHash->setArrayCamposHidden(['id_usuario' => $Qid_usuario, 'olvidar' => 1]);
+    $oHash->setUrl($url_usuario_form_backend);
+    $oHash->setArrayCamposHidden(
+        ['id_usuario' => $Qid_usuario,
+        ]);
     $hash_params = $oHash->getArrayCampos();
 
-    echo PostRequest::getContent($url, $hash_params);
-}
+    $data = PostRequest::getData($url_usuario_form_backend, $hash_params);
 
-//////////// Condiciones para los avisos de cambios ////////////
-if (ConfigGlobal::is_app_installed('cambios')) {
-    $url_avisos = Hash::link(ConfigGlobal::getWeb() . '/frontend/cambios/controller/usuario_form_avisos.php?' . http_build_query(array('quien' => 'usuario', 'id_usuario' => $Qid_usuario)));
-
-    $a_campos['url_avisos'] = $url_avisos;
+    $a_campos['grupos_txt'] = $data['grupos_txt'];
 
     $oView = new ViewPhtml('../frontend/usuarios/controller');
-    $oView->renderizar('usuario_form_avisos.phtml', $a_campos);
+    $oView->renderizar('usuario_grupo.phtml', $a_campos);
+
+
+//////////// Permisos en actividades ////////////
+    if (ConfigGlobal::is_app_installed('procesos')) {
+        $url = Hash::link(ConfigGlobal::getWeb()
+            . '/frontend/usuarios/controller/perm_activ_lista.php'
+        );
+
+        $oHash = new Hash();
+        $oHash->setUrl($url);
+        $oHash->setArrayCamposHidden(['id_usuario' => $Qid_usuario, 'olvidar' => 1]);
+        $hash_params = $oHash->getArrayCampos();
+
+        echo PostRequest::getContent($url, $hash_params);
+    }
+
+//////////// Condiciones para los avisos de cambios ////////////
+    if (ConfigGlobal::is_app_installed('cambios')) {
+        $url_avisos = Hash::link(ConfigGlobal::getWeb() . '/frontend/cambios/controller/usuario_form_avisos.php?' . http_build_query(array('quien' => 'usuario', 'id_usuario' => $Qid_usuario)));
+
+        $a_campos['url_avisos'] = $url_avisos;
+
+        $oView = new ViewPhtml('../frontend/usuarios/controller');
+        $oView->renderizar('usuario_form_avisos.phtml', $a_campos);
+    }
 }

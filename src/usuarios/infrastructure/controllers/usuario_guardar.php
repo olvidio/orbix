@@ -3,6 +3,7 @@
 use permisos\model\MyCrypt;
 use src\usuarios\application\repositories\RoleRepository;
 use src\usuarios\application\repositories\UsuarioRepository;
+use src\usuarios\domain\entity\Usuario;
 use web\ContestarJson;
 
 // INICIO Cabecera global de URL de controlador *********************************
@@ -37,7 +38,14 @@ $Qcasas = (array)filter_input(INPUT_POST, 'casas', FILTER_DEFAULT, FILTER_REQUIR
 $RoleRepository = new RoleRepository();
 $UsuarioRepository = new UsuarioRepository();
 
-$oUsuario = $UsuarioRepository->findById($Qid_usuario);
+if (empty($Qid_usuario)) {
+    $UsuarioRepository = new UsuarioRepository();
+    $id_new_usuario = $UsuarioRepository->getNewId();
+    $oUsuario = new Usuario();
+    $oUsuario->setId_usuario($id_new_usuario);
+} else {
+    $oUsuario = $UsuarioRepository->findById($Qid_usuario);
+}
 $oUsuario->setUsuario($Qusuario);
 $oUsuario->setid_role($Qid_role);
 $oUsuario->setEmail($Qemail);
