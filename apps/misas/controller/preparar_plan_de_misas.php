@@ -2,8 +2,10 @@
 
 // INICIO Cabecera global de URL de controlador *********************************
 
+use core\ConfigGlobal;
 use core\ViewTwig;
 use misas\domain\entity\EncargoDia;
+use src\usuarios\application\repositories\PreferenciaRepository;
 use web\DateTimeLocal;
 use web\Desplegable;
 use web\Hash;
@@ -49,9 +51,23 @@ $a_TiposPlantilla = array(
     EncargoDia::PLANTILLA_MENSUAL_TRES=>'mensual tres opciones',
 );
 
+$PreferenciaRepository = new PreferenciaRepository();
+
+$id_usuario = ConfigGlobal::mi_id_usuario();
+$aPref = $PreferenciaRepository->getPreferencias(array('id_usuario' => $id_usuario, 'tipo' => 'ultima_plantilla'));
+if (count($aPref) > 0) {
+    $oPreferencia = $aPref[0];
+    $ultima_plantilla = $oPreferencia->getPreferencia();
+} else {
+    // valores por defecto
+    $ultima_plantilla=EncargoDia::PLANTILLA_SEMANAL_TRES;
+}
+
+
 $oDesplTipoPlantilla = new Desplegable();
 $oDesplTipoPlantilla->setOpciones($a_TiposPlantilla);
 $oDesplTipoPlantilla->setNombre('tipoplantilla');
+$oDesplTipoPlantilla->setOpcion_sel($ultima_plantilla);
 $oDesplTipoPlantilla->setAction('fnjs_ver_cuadricula_zona()');
 
 $a_Orden = array(

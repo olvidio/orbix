@@ -4,6 +4,7 @@
 use actividadcargos\model\entity\GestorActividadCargo;
 use actividades\model\entity\ActividadAll;
 use actividades\model\entity\GestorActividad;
+use core\ConfigGlobal;
 use core\ViewTwig;
 use encargossacd\model\EncargoConstants;
 use encargossacd\model\entity\Encargo;
@@ -13,6 +14,8 @@ use misas\domain\entity\EncargoDia;
 use misas\domain\entity\InicialesSacd;
 use misas\domain\repositories\EncargoDiaRepository;
 use misas\model\EncargosZona;
+use src\usuarios\application\repositories\PreferenciaRepository;
+use src\usuarios\domain\entity\Preferencia;
 use web\DateTimeLocal;
 use web\Hash;
 use web\TiposActividades;
@@ -36,6 +39,24 @@ $Qcolumna = (integer)filter_input(INPUT_POST, 'columna');
 $Qseleccion = (integer)filter_input(INPUT_POST, 'seleccion');
 
 $un_dia = new DateInterval('P1D');
+
+if ($QTipoPlantilla!='p')
+{
+    $id_usuario = ConfigGlobal::mi_id_usuario();
+    $PreferenciaRepository = new PreferenciaRepository();
+    $oPreferencia = $PreferenciaRepository->findById($id_usuario, 'ultima_plantilla');
+    if ($oPreferencia === null) {
+        $oPreferencia = new Preferencia();
+        $oPreferencia->setId_usuario($id_usuario);
+        $oPreferencia->setTipo('ultima_plantilla');
+    }
+    
+    $oPreferencia->setPreferencia($QTipoPlantilla);
+    if ($PreferenciaRepository->Guardar($oPreferencia) === false) {
+        echo _("hay un error, no se ha guardado");
+        echo "\n" . $PreferenciaRepository->getErrorTxt();
+    }
+}
 
 //Busco los sacd de la zona, para señalar si en la plantilla o en plan hay alguno que no es de la zona.
 $aWhere = [];
