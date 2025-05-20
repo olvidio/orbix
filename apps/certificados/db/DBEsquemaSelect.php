@@ -25,6 +25,10 @@ class DBEsquemaSelect extends DBEsquema
         if ($this->esquema !== 'H-H') {
             $this->eliminar_e_certificados_recibidos_select();
         }
+        // caso especial M-Mv
+        if ($this->esquema !== 'M-M') {
+            $this->eliminar_e_certificados_recibidos();
+        }
     }
 
     public function createAllSelect()
@@ -38,6 +42,10 @@ class DBEsquemaSelect extends DBEsquema
         // caso especial H-Hv
         if ($this->esquema !== 'H-H') {
             $this->create_e_certificados_recibidos_select();
+        }
+        // caso especial M-Mv
+        if ($this->esquema !== 'M-M') {
+            $this->eliminar_e_certificados_recibidos();
         }
         // renovar subscripciones
         $DBRefresh = new DBRefresh();

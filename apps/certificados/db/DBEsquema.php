@@ -36,6 +36,10 @@ class DBEsquema extends DBAbstract
         if ($this->esquema !== 'H-H') {
             $this->eliminar_e_certificados_recibidos();
         }
+        // caso especial M-Mv
+        if ($this->esquema !== 'M-M') {
+            $this->eliminar_e_certificados_recibidos();
+        }
         // eliminar las tablas en la DBSelect para la sincronización.
         // Solamente está en el servidor interno (NO sv-e)
         /*
@@ -57,6 +61,10 @@ class DBEsquema extends DBAbstract
         // caso especial H-Hv
         if ($this->esquema !== 'H-H') {
             $this->create_e_certificados_recibidos();
+        }
+        // caso especial M-Mv
+        if ($this->esquema !== 'M-M') {
+            $this->eliminar_e_certificados_recibidos();
         }
         // crear las tablas en la DBSelect para la sincronización.
         // Solamente está en el servidor interno (NO sv-e)

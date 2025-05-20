@@ -138,6 +138,10 @@ class GestorDelegacion extends ClaseGestor
         if ($region_stgr === 'H') {
             $esquema_region_stgr = 'H-H';
         }
+        // caso especial de M:
+        if ($region_stgr === 'M') {
+            $esquema_region_stgr = 'M-M';
+        }
         if (ConfigGlobal::mi_sfsv() === 2) {
             $esquema_region_stgr .= 'f';
             $esquema_dele .= 'f';
