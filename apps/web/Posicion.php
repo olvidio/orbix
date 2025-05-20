@@ -55,13 +55,23 @@ class Posicion
         $this->constructor = false;
     }
 
+    private function existsSession(): bool
+    {
+        return !$this->notExistsSession();
+    }
+
+    private function notExistsSession(): bool
+    {
+        return (!array_key_exists('position', $_SESSION) || !is_array($_SESSION['position']));
+    }
+
     /**
      *
      *
      */
     private function deleteFroward()
     {
-        if (!is_array($_SESSION['position'])) {
+        if ($this->notExistsSession()) {
             return;
         }
         session_start();
@@ -84,7 +94,7 @@ class Posicion
      */
     private function goEnd()
     {
-        if (!is_array($_SESSION['position'])) {
+        if ($this->notExistsSession()) {
             return;
         }
         $aPosition = end($_SESSION['position']);
@@ -102,7 +112,7 @@ class Posicion
      */
     public function go(int $n = 0)
     {
-        if ($n === 0 || empty($_SESSION['posicion']) || !is_array($_SESSION['position'])) {
+        if ($n === 0 || $this->notExistsSession()) {
             return;
         }
 
@@ -173,7 +183,7 @@ class Posicion
         $this->limitar(20);
         // poner en parámetros el stack
         if (empty($this->stack)) { //OJO si es el primero tiene valor 0.
-            if (isset($_SESSION['position']) && is_array($_SESSION['position'])) { //para la primera
+            if ($this->existsSession()) { //para la primera
                 end($_SESSION['position']);
                 if (empty($parar)) {
                     $stack = (int)key($_SESSION['position']) + 1;
@@ -202,7 +212,7 @@ class Posicion
     private function guardar()
     {
         if (!isset($this->stack)) { //OJO si es el primero tiene valor 0. (no usar empty)
-            if (is_array($_SESSION['position'])) {
+            if ($this->existsSession()) {
                 end($_SESSION['position']);
                 $stack = key($_SESSION['position']);
             } else {
@@ -250,7 +260,7 @@ class Posicion
     {
         $this->go($n);
         // puede ser que no haya donde volver
-        if (empty($this->surl) || empty($this->aParametros)) {
+        if (empty($this->surl)) {
             return '';
         }
         $id_div = $this->getId_div();
@@ -354,7 +364,7 @@ class Posicion
     {
         // Cuando hay el doble, borro $n.
         if (isset($_SESSION['position'])) { // No sé porque no deja poner todo junto
-            if (is_array($_SESSION['position'])) {
+            if ($this->existsSession()) {
                 $max = 2 * $n;
                 $num = count($_SESSION['position']);
                 if ($num > $max) {
