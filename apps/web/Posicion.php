@@ -36,7 +36,7 @@ class Posicion
      *
      * @var integer
      */
-    private $stack;
+    private int $stack;
     /**
      * constructor de Posicion.
      * Sirve para indicar si estoy dentro de _construct()
@@ -167,7 +167,7 @@ class Posicion
      */
     public function recordar($parar = 0)
     {
-        $this->stack = $this->aParametros['stack'] ?? '';
+        $this->stack = $this->aParametros['stack'] ?? 0;
         //echo "<script>history.pushState({state:'new'},'New State','?new');</script>";
         // evitar que sea muy grande
         $this->limitar(20);
@@ -176,9 +176,9 @@ class Posicion
             if (isset($_SESSION['position']) && is_array($_SESSION['position'])) { //para la primera
                 end($_SESSION['position']);
                 if (empty($parar)) {
-                    $stack = key($_SESSION['position']) + 1;
+                    $stack = (int)key($_SESSION['position']) + 1;
                 } else {
-                    $stack = key($_SESSION['position']);
+                    $stack = (int)key($_SESSION['position']);
                 }
             } else {
                 $stack = 0;
