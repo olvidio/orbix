@@ -67,6 +67,10 @@ class GestorDelegacion extends ClaseGestor
         if ($dele === 'H') {
             return true;
         }
+        // caso especial de M:
+        if ($dele === 'M') {
+            return true;
+        }
 
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
