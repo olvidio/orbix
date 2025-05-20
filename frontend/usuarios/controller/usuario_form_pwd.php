@@ -37,12 +37,12 @@ $hash_params = $oHash->getArrayCampos();
 $data = PostRequest::getData($url_usuario_form_backend, $hash_params);
 
 $usuario = $data['usuario'];
-$pass = $data['pass'];
+//$pass = $data['pass'];
 
 $oHash = new Hash();
 $oHash->setCamposForm('password!password1');
 $a_camposHidden = array(
-    'pass' => $pass,
+//    'pass' => $pass,
     'id_usuario' => $id_usuario,
 );
 $oHash->setArraycamposHidden($a_camposHidden);

@@ -95,14 +95,16 @@ class Posicion
     }
 
     /**
-     * coloca el cursor de posicion n posiciones atrás.
+     * coloca el cursor de Posicion n posiciones atrás.
      * para n=0, no se usa el valor en $_SESSION['position'], sino el actual.
      *
      * @var integer $n número de posiciones a retroceder.
      */
     public function go(int $n = 0)
     {
-        if ($n == 0 || !is_array($_SESSION['position'])) return;
+        if ($n === 0 || empty($_SESSION['posicion']) || !is_array($_SESSION['position'])) {
+            return;
+        }
 
         $aPosition = end($_SESSION['position']);
         for ($i = 0; $i < $n; $i++) {
@@ -130,7 +132,7 @@ class Posicion
     }
 
     /**
-     * coloca el cursor de posicion en stack.
+     * coloca el cursor de Posicion en stack.
      *
      * @var integer|string $stack indice del array $_SESSION['position']);
      */
@@ -248,7 +250,7 @@ class Posicion
     {
         $this->go($n);
         // puede ser que no haya donde volver
-        if (empty($this->surl)) {
+        if (empty($this->surl) || empty($this->aParametros)) {
             return '';
         }
         $id_div = $this->getId_div();

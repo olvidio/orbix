@@ -94,7 +94,7 @@ $camposMas = $a_campos_src['camposMas'];
 $camposForm = 'que!usuario!nom_usuario!password!email!id_role';
 $camposForm = !empty($camposMas) ? $camposForm . '!' . $camposMas : $camposForm;
 $oHash->setCamposForm($camposForm);
-$oHash->setcamposNo('pass!password!id_ctr!id_nom!casas');
+$oHash->setcamposNo('password!id_ctr!id_nom!casas');
 $a_camposHidden = array(
     'id_usuario' => $Qid_usuario,
     'quien' => $Qquien

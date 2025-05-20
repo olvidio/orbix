@@ -255,7 +255,8 @@ class PgUsuarioRepository extends ClaseRepository implements UsuarioRepositoryIn
         $oDblSt->bindColumn('password', $spassword, PDO::PARAM_STR);
         $aDatos = $oDblSt->fetch(PDO::FETCH_ASSOC);
         if ($aDatos !== FALSE) {
-            $aDatos['password'] = hex2bin($spassword ?? '');
+            //$aDatos['password'] = hex2bin($spassword ?? '');
+            $aDatos['password'] = $spassword ?? '';
         }
 
         /*

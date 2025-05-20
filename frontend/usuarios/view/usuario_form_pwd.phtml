@@ -11,7 +11,7 @@
             dataType: 'json'
         });
         request.done(function (json) {
-            if (json.success != true) {
+            if (json.success !== true) {
                 alert("password error:\n" + json.mensaje);
                 return false;
             } else {
@@ -53,7 +53,8 @@
             if (json.success !== true) {
                 alert("<?= _("respuesta") ?>" + ': ' + json.mensaje);
             } else {
-                <?= $oPosicion->js_atras(1); ?>
+                alert("<?= _("paswword guardado") ?>");
+                <?= $oPosicion->js_atras(1) ?>
             }
         });
     }
@@ -62,6 +63,7 @@
 <h3><?= $usuario ?></h3>
 <?php if ($expire === 1) { ?>
     <?= _("deberías cambiar el password") ?>
+    <br>
 <?php } ?>
 <br>
 <form id=frm_usuario name=frm_usuario action='' method="post">
@@ -84,6 +86,8 @@
             <li><?= _("Mayúsculas ('A' a 'Z')") ?></li>
             <li><?= _("Minúsculas ('a' a 'z')") ?></li>
             <li><?= _("Números ('0' a '9')") ?></li>
-            <li><?= _("(No pueden ser comillas dobles!!) Caracteres: ~!@#$%^&*_-+=`|(){}[]:;<>,.?/") ?></li>
+            <li><?= _("Caracteres especiales válidos (no pueden ser comillas dobles):") ?>
+                ~!@#$%^&*_-+=`|(){}[]:;<>,.?/
+            </li>
         </ul>
 </ol>
