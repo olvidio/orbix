@@ -27,7 +27,7 @@ switch ($que) {
     //	está en listas(midl), esta en orbix(otradl), está unido (si-no)
     //	está en listas(midl), y NO esta en orbix, está unido (si-no)
     case "crear":
-        $tabla = 'tmp_dbu';
+        $tabla = 'tmp_bdu';
         $id_nom_listas = (integer)filter_input(INPUT_POST, 'id_nom_listas');
         $id = (integer)filter_input(INPUT_POST, 'id');
         $tipo_persona = (string)filter_input(INPUT_POST, 'tipo_persona');
