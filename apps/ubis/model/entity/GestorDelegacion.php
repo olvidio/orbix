@@ -109,10 +109,10 @@ class GestorDelegacion extends ClaseGestor
         if (empty($dele)) {
             $dele = ConfigGlobal::mi_dele();
         }
-        // caso especial de H:
-        if ($dele === 'H') {
-            $region_dele = 'H';
-            $region_stgr = 'H';
+        // caso especial de H y M:
+        if ($dele === 'H' || $dele === 'M') {
+            $region_dele = $dele;
+            $region_stgr = $dele;
         } else {
             $sQuery = "SELECT region_stgr, region
                         FROM $nom_tabla
