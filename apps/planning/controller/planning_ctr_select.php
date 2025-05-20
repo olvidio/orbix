@@ -204,5 +204,5 @@ $a_campos = ['oPosicion' => $oPosicion,
     'goLeyenda' => $goLeyenda,
 ];
 
-$oView = new ViewPhtml('planning/controller');
+$oView = new ViewPhtml('planning\controller');
 $oView->renderizar('planning_ctr_select.phtml', $a_campos);

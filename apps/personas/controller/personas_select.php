@@ -518,5 +518,5 @@ $a_campos = ['oPosicion' => $oPosicion,
     'permiso' => $permiso,
 ];
 
-$oView = new ViewPhtml('personas/controller');
+$oView = new ViewPhtml('personas\controller');
 $oView->renderizar('personas_select.phtml', $a_campos);

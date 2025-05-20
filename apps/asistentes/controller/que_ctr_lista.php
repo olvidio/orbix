@@ -171,5 +171,5 @@ $a_campos = [
     'locale_us' => ConfigGlobal::is_locale_us(),
 ];
 
-$oView = new ViewPhtml('asistentes/controller');
+$oView = new ViewPhtml('asistentes\controller');
 $oView->renderizar('que_ctr_lista.phtml', $a_campos);

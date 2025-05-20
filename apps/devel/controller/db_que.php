@@ -45,5 +45,5 @@ $a_campos = [
     'msg_falta_esquema' => $msg_falta_esquema,
 ];
 
-$oView = new ViewPhtml('devel/controller');
+$oView = new ViewPhtml('devel\controller');
 $oView->renderizar('db_que.phtml', $a_campos);

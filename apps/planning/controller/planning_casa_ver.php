@@ -70,5 +70,5 @@ $a_campos = [
     'css' => $css,
 ];
 
-$oView = new ViewPhtml('planning/controller');
+$oView = new ViewPhtml('planning\controller');
 $oView->renderizar('planning_casa_ver.phtml', $a_campos);

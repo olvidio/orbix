@@ -225,6 +225,6 @@ if ($oAsistente->perm_modificar() === FALSE) {
 }
 
 
-$oView = new ViewPhtml('asistentes/model');
+$oView = new ViewPhtml('asistentes\model');
 
 $oView->renderizar('form_mover.phtml', $a_campos);

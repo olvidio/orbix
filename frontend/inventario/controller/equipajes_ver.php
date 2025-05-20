@@ -1,8 +1,8 @@
 <?php
 
 use core\ConfigGlobal;
-use core\ViewPhtml;
 use frontend\shared\PostRequest;
+use src\shared\ViewSrcPhtml;
 use web\Desplegable;
 use web\Hash;
 
@@ -28,7 +28,7 @@ if (!empty($Qfiltro)) {
         $chk_tot = 'checked';
     }
     if ($Qfiltro === 'curs') {
-        $any_anterior = (int)date('Y') -1 ;
+        $any_anterior = (int)date('Y') - 1;
         $f_ini_iso = (string)$any_anterior . '-10-01';
         $chk_hoy = '';
         $chk_curs = 'checked';
@@ -81,5 +81,5 @@ $a_campos = [
     'h_mod_txt' => $h_mod_txt,
 ];
 
-$oView = new ViewPhtml('../frontend/inventario/controller');
+$oView = new ViewSrcPhtml('frontend\inventario\controller');
 $oView->renderizar('equipajes_ver.phtml', $a_campos);

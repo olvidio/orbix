@@ -208,5 +208,5 @@ $a_campos = [
     'aCentros' => $aCentros,
 ];
 
-$oView = new ViewPhtml('asistentes/controller');
+$oView = new ViewPhtml('asistentes\controller');
 $oView->renderizar('lista_activ_ctr.phtml', $a_campos);

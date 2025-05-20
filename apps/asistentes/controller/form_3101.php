@@ -266,5 +266,5 @@ $a_campos = ['obj' => $obj,
     'oDesplPosiblesPropietarios' => $oDesplPosiblesPropietarios,
 ];
 
-$oView = new ViewPhtml('asistentes/controller');
+$oView = new ViewPhtml('asistentes\controller');
 $oView->renderizar('form_3101.phtml', $a_campos);

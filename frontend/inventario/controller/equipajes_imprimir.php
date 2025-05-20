@@ -23,6 +23,9 @@ $url_lista_backend = Hash::link(ConfigGlobal::getWeb()
 );
 $oHash = new Hash();
 $oHash->setUrl($url_lista_backend);
+$oHash->setArrayCamposHidden([
+    'id_equipaje' => $Qid_equipaje,
+]);
 $hash_params = $oHash->getArrayCampos();
 
 $data = PostRequest::getData($url_lista_backend, $hash_params);

@@ -416,5 +416,5 @@ $a_campos = ['oPosicion' => $oPosicion,
 ];
 
 
-$oView = new ViewPhtml('actividades/controller');
+$oView = new ViewPhtml('actividades\controller');
 $oView->renderizar('lista_actividades_sg.phtml', $a_campos);

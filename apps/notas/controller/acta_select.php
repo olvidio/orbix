@@ -226,5 +226,5 @@ $a_campos = ['oPosicion' => $oPosicion,
     'h_download' => $h_download,
 ];
 
-$oView = new ViewPhtml('notas/controller');
+$oView = new ViewPhtml('notas\controller');
 $oView->renderizar('acta_select.phtml', $a_campos);

@@ -146,5 +146,5 @@ $a_campos = [
     'pagina' => $pagina,
 ];
 
-$oView = new ViewPhtml('ubis/controller');
+$oView = new ViewPhtml('ubis\controller');
 $oView->renderizar('ubis_buscar.phtml', $a_campos);

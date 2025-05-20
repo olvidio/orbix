@@ -178,5 +178,5 @@ $a_campos = ['oPosicion' => $oPosicion,
     'aAlumnos' => $aAlumnos,
 ];
 
-$oView = new ViewPhtml('actividadestudios/controller');
+$oView = new ViewPhtml('actividadestudios\controller');
 $oView->renderizar('plan_estudios_ca.phtml', $a_campos);

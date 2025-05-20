@@ -1,8 +1,8 @@
 <?php
 
 use core\ConfigGlobal;
-use core\ViewPhtml;
 use frontend\shared\PostRequest;
+use src\shared\ViewSrcPhtml;
 use web\Hash;
 use web\Lista;
 
@@ -58,5 +58,5 @@ $a_campos = [
     'oLista' => $oLista,
 ];
 
-$oView = new ViewPhtml('../frontend/inventario/controller');
+$oView = new ViewSrcPhtml('frontend\inventario\controller');
 $oView->renderizar('equipajes_movimientos_que.phtml', $a_campos);

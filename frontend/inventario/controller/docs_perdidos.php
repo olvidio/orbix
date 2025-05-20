@@ -1,8 +1,8 @@
 <?php
 
 use core\ConfigGlobal;
-use core\ViewPhtml;
 use frontend\shared\PostRequest;
+use src\shared\ViewSrcPhtml;
 use web\Hash;
 use web\Lista;
 
@@ -28,7 +28,7 @@ $a_cabeceras = [
     ucfirst(_("documento")),
     ucfirst(_("número")),
     ucfirst(_("fecha perdido")),
-    ];
+];
 $oTabla = new Lista();
 $oTabla->setId_tabla('doc_perdido');
 $oTabla->setCabeceras($a_cabeceras);
@@ -38,5 +38,5 @@ $a_campos = [
     'oTabla' => $oTabla,
 ];
 
-$oView = new ViewPhtml('../frontend/inventario/controller');
+$oView = new ViewSrcPhtml('frontend\inventario\controller');
 $oView->renderizar('docs_perdidos.phtml', $a_campos);

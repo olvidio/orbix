@@ -503,7 +503,7 @@ if (!empty($a_sel) && $alum == 1) { //vengo de un 'checkbox' => sólo una person
         'pagina' => $pagina
     ];
 
-    $oView = new ViewPhtml('actividadestudios/controller');
+    $oView = new ViewPhtml('actividadestudios\controller');
     $oView->renderizar('ca_posibles_lista.phtml', $a_campos);
 } else {
     // -------------------------- si es para el centro/s saco una tabla -------------------------
@@ -527,7 +527,7 @@ if (!empty($a_sel) && $alum == 1) { //vengo de un 'checkbox' => sólo una person
             'aActividades' => $aActividades,
         ];
 
-        $oView = new ViewPhtml('actividadestudios/controller');
+        $oView = new ViewPhtml('actividadestudios\controller');
         $oView->renderizar('ca_posibles_cuadro.phtml', $a_campos);
     }
 } 

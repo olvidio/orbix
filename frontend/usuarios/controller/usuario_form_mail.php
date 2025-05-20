@@ -1,8 +1,8 @@
 <?php
 
 use core\ConfigGlobal;
-use core\ViewPhtml;
 use frontend\shared\PostRequest;
+use src\shared\ViewSrcPhtml;
 use web\Hash;
 
 /**
@@ -61,5 +61,5 @@ $a_campos = [
     'txt_ok' => $txt_ok,
 ];
 
-$oView = new ViewPhtml('../frontend/usuarios/controller');
+$oView = new ViewSrcPhtml('frontend\usuarios\controller');
 $oView->renderizar('usuario_form_mail.phtml', $a_campos);

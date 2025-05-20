@@ -1,8 +1,8 @@
 <?php
 
 use core\ConfigGlobal;
-use core\ViewPhtml;
 use frontend\shared\PostRequest;
+use src\shared\ViewSrcPhtml;
 use web\Hash;
 use web\Lista;
 
@@ -83,5 +83,5 @@ $a_campos = [
     'url_nuevo' => $url_nuevo,
 ];
 
-$oView = new ViewPhtml('../frontend/usuarios/controller');
+$oView = new ViewSrcPhtml('frontend\usuarios\controller');
 $oView->renderizar('grupo_lista.phtml', $a_campos);

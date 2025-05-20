@@ -128,5 +128,5 @@ $a_campos = ['aActas' => $aActas,
     'oHashPeriodo' => $oHashPeriodo,
 ];
 
-$oView = new ViewPhtml('notas/controller');
+$oView = new ViewPhtml('notas\controller');
 $oView->renderizar('acta_listado_anual.phtml', $a_campos);

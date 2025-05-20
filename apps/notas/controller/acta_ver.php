@@ -323,5 +323,5 @@ $a_campos = ['obj' => $obj,
     'soy_rstgr' => $soy_rstgr,
 ];
 
-$oView = new ViewPhtml('notas/controller');
+$oView = new ViewPhtml('notas\controller');
 $oView->renderizar('acta_ver.phtml', $a_campos);

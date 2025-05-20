@@ -92,5 +92,5 @@ $a_campos = ['oPosicion' => $oPosicion,
     'oDespl' => $oDespl,
 ];
 
-$oView = new ViewPhtml('personas/controller');
+$oView = new ViewPhtml('personas\controller');
 $oView->renderizar('stgr_cambio.phtml', $a_campos);

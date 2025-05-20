@@ -163,5 +163,5 @@ $a_campos = ['botones' => $botones,
     'oTabla' => $oTabla,
 ];
 
-$oView = new ViewPhtml('ubis/controller');
+$oView = new ViewPhtml('ubis\controller');
 $oView->renderizar('teleco_tabla.phtml', $a_campos);

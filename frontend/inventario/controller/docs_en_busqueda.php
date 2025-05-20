@@ -1,8 +1,8 @@
 <?php
 
 use core\ConfigGlobal;
-use core\ViewPhtml;
 use frontend\shared\PostRequest;
+use src\shared\ViewSrcPhtml;
 use web\Hash;
 use web\Lista;
 
@@ -26,8 +26,8 @@ $a_valores = $data['a_valores'];
 $a_cabeceras = [
     ucfirst(_("centro - lugar")),
     ucfirst(_("documento")),
-    ucfirst(_("número")),
-    ];
+    ucfirst(_("núm. reg.")),
+];
 $oTabla = new Lista();
 $oTabla->setId_tabla('doc_busqueda');
 $oTabla->setCabeceras($a_cabeceras);
@@ -37,5 +37,5 @@ $a_campos = [
     'oTabla' => $oTabla,
 ];
 
-$oView = new ViewPhtml('../frontend/inventario/controller');
+$oView = new ViewSrcPhtml('frontend\inventario\controller');
 $oView->renderizar('docs_en_busqueda.phtml', $a_campos);

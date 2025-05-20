@@ -1,6 +1,6 @@
 <?php
 
-namespace inventario\db;
+namespace src\inventario\db;
 
 use core\ConfigGlobal;
 use devel\model\DBAbstract;
@@ -195,7 +195,8 @@ class DB extends DBAbstract
             nom_equipaje text,
             cabecera text,
             pie text,
-            cabecerab text
+            cabecerab text,
+            firma text
             );";
         $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->user_orbix";
 

@@ -2,7 +2,7 @@
 
 
 // Crea los objetos de uso global **********************************************
-use core\ViewPhtml;
+use src\shared\ViewSrcPhtml;
 use web\Hash;
 use web\PeriodoQue;
 
@@ -49,5 +49,5 @@ $a_campos = [
     'url_ver_equipajes' => $url_ver_equipajes,
 ];
 
-$oView = new ViewPhtml('../frontend/inventario/controller');
+$oView = new ViewSrcPhtml('frontend\inventario\controller');
 $oView->renderizar('equipajes_nuevo.phtml', $a_campos);

@@ -1,9 +1,9 @@
 <?php
 
 use core\ConfigGlobal;
-use core\ViewPhtml;
 use frontend\shared\PostRequest;
 use permisos\model\PermDl;
+use src\shared\ViewSrcPhtml;
 use web\Hash;
 
 // INICIO Cabecera global de URL de controlador *********************************
@@ -62,5 +62,5 @@ $a_campos = ['oPosicion' => $oPosicion,
     'menu_perm' => $menu_perm,
 ];
 
-$oView = new ViewPhtml('../frontend/usuarios/controller');
+$oView = new ViewSrcPhtml('frontend\usuarios\controller');
 $oView->renderizar('perm_menu_form.phtml', $a_campos);

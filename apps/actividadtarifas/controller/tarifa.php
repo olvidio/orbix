@@ -30,5 +30,5 @@ $a_campos = ['oPosicion' => $oPosicion,
     'txt_eliminar' => $txt_eliminar,
 ];
 
-$oView = new ViewPhtml('actividadtarifas/controller');
+$oView = new ViewPhtml('actividadtarifas\controller');
 $oView->renderizar('tarifa.phtml', $a_campos);

@@ -209,5 +209,5 @@ $a_campos = [
     'oDesplPosiblesPropietarios' => $oDesplPosiblesPropietarios,
 ];
 
-$oView = new ViewPhtml('asistentes/model');
+$oView = new ViewPhtml('asistentes\model');
 $oView->renderizar('form_1301.phtml', $a_campos);

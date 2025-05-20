@@ -1,8 +1,8 @@
 <?php
 
 use core\ConfigGlobal;
-use core\ViewPhtml;
 use frontend\shared\PostRequest;
+use src\shared\ViewSrcPhtml;
 use web\Hash;
 use web\Lista;
 
@@ -67,7 +67,7 @@ $oHash->setcamposNo('scroll_id');
 
 $url_nuevo = Hash::link(ConfigGlobal::getWeb()
     . '/frontend/usuarios/controller/role_form.php?'
-    );
+);
 
 $a_campos = [
     'oHash' => $oHash,
@@ -76,5 +76,5 @@ $a_campos = [
     'url_nuevo' => $url_nuevo,
 ];
 
-$oView = new ViewPhtml('../frontend/usuarios/controller');
+$oView = new ViewSrcPhtml('frontend\usuarios\controller');
 $oView->renderizar('role_lista.phtml', $a_campos);

@@ -170,5 +170,5 @@ $a_campos = ['oPosicion' => $oPosicion,
     'nota_max_default' => $nota_max_default,
 ];
 
-$oView = new ViewPhtml('actividadestudios/controller');
+$oView = new ViewPhtml('actividadestudios\controller');
 $oView->renderizar('acta_notas.phtml', $a_campos);

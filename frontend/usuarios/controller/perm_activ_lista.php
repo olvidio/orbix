@@ -1,15 +1,10 @@
 <?php
 
-use actividades\model\entity\GestorTipoDeActividad;
 use core\ConfigGlobal;
-use core\ViewPhtml;
 use frontend\shared\PostRequest;
-use procesos\model\entity\GestorActividadFase;
-use procesos\model\PermAccion;
-use procesos\model\PermAfectados;
+use src\shared\ViewSrcPhtml;
 use web\Hash;
 use web\Lista;
-use function core\is_true;
 
 // INICIO Cabecera global de URL de controlador *********************************
 require_once("apps/core/global_header.inc");
@@ -68,5 +63,5 @@ $a_campos = [
     'oTabla' => $oTabla,
 ];
 
-$oView = new ViewPhtml('../frontend/usuarios/controller');
+$oView = new ViewSrcPhtml('frontend\usuarios\controller');
 $oView->renderizar('perm_activ_lista.phtml', $a_campos);

@@ -413,5 +413,5 @@ $a_campos = ['oPosicion' => $oPosicion,
     'h2' => $h2,
 ];
 
-$oView = new ViewPhtml('ubis/controller');
+$oView = new ViewPhtml('ubis\controller');
 $oView->renderizar('list_ctr.phtml', $a_campos);

@@ -181,5 +181,5 @@ $a_campos = [
     'linea' => $linea,
 ];
 
-$oView = new ViewPhtml('notas/controller');
+$oView = new ViewPhtml('notas\controller');
 $oView->renderizar('acta_imprimir.phtml', $a_campos);

@@ -62,5 +62,5 @@ $a_campos = [
     'desplDelegaciones' => $desplDelegaciones,
 ];
 
-$oView = new ViewPhtml('actividadplazas/controller');
+$oView = new ViewPhtml('actividadplazas\controller');
 $oView->renderizar('plazas_balance_que.phtml', $a_campos);

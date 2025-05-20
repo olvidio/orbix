@@ -81,5 +81,5 @@ $a_campos['oPosicion'] = $oPosicion;
 $a_campos['titulo'] = $titulo;
 $a_campos['txt_eliminar'] = $txt_eliminar;
 
-$oView = new ViewPhtml('certificados/controller');
+$oView = new ViewPhtml('certificados\controller');
 $oView->renderizar('certificado_select.phtml', $a_campos);

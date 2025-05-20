@@ -4,7 +4,6 @@ namespace src\shared;
 
 // INICIO Cabecera global de URL de controlador *********************************
 use core\ConfigGlobal;
-use core\ViewPhtml;
 use web\Hash;
 use web\Lista;
 use web\Posicion;
@@ -130,10 +129,10 @@ if (empty($Qk_buscar)) {
         $namespace = $oInfoClase->getBuscar_namespace();
         $a_campos = $oInfoClase->addCampos($a_campos);
         //include(ConfigGlobal::$directorio . '/' . $datos_buscar);
-        $oView = new ViewPhtml($namespace);
+        $oView = new ViewSrcPhtml($namespace);
         $oView->renderizar($datos_buscar, $a_campos);
     } else {
-        $oView = new ViewPhtml('core/view');
+        $oView = new ViewSrcPhtml('src\shared\view');
         $oView->renderizar('repo_tabla_busqueda.phtml', $a_campos);
     }
 }
@@ -148,5 +147,5 @@ $a_campos2 = [
     'permiso' => $Qpermiso,
 ];
 
-$oView = new ViewPhtml('core/view');
+$oView = new ViewSrcPhtml('src\shared\view');
 $oView->renderizar('repo_tabla_sql.phtml', $a_campos2);

@@ -147,5 +147,5 @@ $a_campos = ['oPosicion' => $oPosicion,
     'chk_actividad_si' => $chk_actividad_si,
 ];
 
-$oView = new ViewPhtml('planning/controller');
+$oView = new ViewPhtml('planning\controller');
 $oView->renderizar('planning_casa_que.phtml', $a_campos);

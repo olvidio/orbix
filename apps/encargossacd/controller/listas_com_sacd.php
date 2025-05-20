@@ -258,5 +258,5 @@ $a_campos = ['oPosicion' => $oPosicion,
     'lugar_fecha' => $lugar_fecha,
 ];
 
-$oView = new ViewPhtml('encargossacd/controller');
+$oView = new ViewPhtml('encargossacd\controller');
 $oView->renderizar('listas_com_sacd.phtml', $a_campos);

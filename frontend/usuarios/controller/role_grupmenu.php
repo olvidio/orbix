@@ -1,8 +1,8 @@
 <?php
 
-use core\ViewPhtml;
 use src\menus\application\repositories\GrupMenuRepository;
 use src\menus\application\repositories\GrupMenuRoleRepository;
+use src\shared\ViewSrcPhtml;
 use src\usuarios\application\repositories\RoleRepository;
 use web\Hash;
 use web\Lista;
@@ -82,5 +82,5 @@ $a_campos = ['oPosicion' => $oPosicion,
     'oTabla' => $oTabla,
 ];
 
-$oView = new ViewPhtml('../frontend/usuarios/controller');
+$oView = new ViewSrcPhtml('frontend\usuarios\controller');
 $oView->renderizar('role_grupmenu.phtml', $a_campos);

@@ -193,5 +193,5 @@ $a_campos = [
     'locale_us' => ConfigGlobal::is_locale_us(),
 ];
 
-$oView = new ViewPhtml('actividadestudios/controller');
+$oView = new ViewPhtml('actividadestudios\controller');
 $oView->renderizar('ca_posibles_que.phtml', $a_campos);

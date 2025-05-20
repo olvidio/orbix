@@ -176,5 +176,5 @@ if (empty($continuar)) {
     );
 }
 
-$oView = new ViewPhtml('actividadestudios/controller');
+$oView = new ViewPhtml('actividadestudios\controller');
 $oView->renderizar('actualizar_docencia.phtml', $a_campos);

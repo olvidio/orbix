@@ -97,5 +97,5 @@ $a_campos = [
     'centro' => $Qcentro,
 ];
 
-$oView = new ViewPhtml('personas/controller');
+$oView = new ViewPhtml('personas\controller');
 $oView->renderizar('personas_que.phtml', $a_campos);

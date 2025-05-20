@@ -193,10 +193,10 @@ if ($Qmail === 'no') {
             'periodo_txt' => $periodo_txt,
         ];
 
-        $oView = new ViewPhtml('actividadessacd/controller');
+        $oView = new ViewPhtml('actividadessacd\controller');
         $oView->renderizar('com_un_sacd_activ_print.phtml', $a_campos);
     } else {
-        $oView = new ViewPhtml('actividadessacd/controller');
+        $oView = new ViewPhtml('actividadessacd\controller');
         $oView->renderizar('com_sacd_activ_print.phtml', $a_campos);
     }
 }

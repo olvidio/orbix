@@ -132,5 +132,5 @@ $a_campos = ['oPosicion' => $oPosicion,
     'datos_asignatura' => $datos_asignatura,
 ];
 
-$oView = new ViewPhtml('actividadestudios/controller');
+$oView = new ViewPhtml('actividadestudios\controller');
 $oView->renderizar('lista_clases_ca.phtml', $a_campos);

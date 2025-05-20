@@ -242,5 +242,5 @@ $a_campos = ['oPosicion' => $oPosicion,
     'Qsel' => $Qsel,
 ];
 
-$oView = new ViewPhtml('encargossacd/controller');
+$oView = new ViewPhtml('encargossacd\controller');
 $oView->renderizar('propuestas_lista_sacd.phtml', $a_campos);

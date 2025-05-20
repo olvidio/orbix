@@ -161,5 +161,5 @@ $a_campos = ['oPosicion' => $oPosicion,
     'oFormP' => $oFormP,
 ];
 
-$oView = new ViewPhtml('actividades/controller');
+$oView = new ViewPhtml('actividades\controller');
 $oView->renderizar('actividades_centro_que.phtml', $a_campos);

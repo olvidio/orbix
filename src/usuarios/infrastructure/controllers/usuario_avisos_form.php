@@ -142,6 +142,6 @@ if ((ConfigGlobal::is_app_installed('cambios')) && (!empty($Qid_usuario)) && ($Q
         'oTablaAvisos' => $oTablaAvisos,
     ];
 
-    $oView = new ViewPhtml('cambios/controller');
+    $oView = new ViewPhtml('cambios\controller');
     $oView->renderizar('usuario_form_avisos.phtml', $a_camposAvisos);
 }

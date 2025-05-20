@@ -230,5 +230,5 @@ $a_campos = [
     'oTabla' => $oTabla,
 ];
 
-$oView = new ViewPhtml('actividadplazas/controller');
+$oView = new ViewPhtml('actividadplazas\controller');
 $oView->renderizar('plazas_balance_dl.phtml', $a_campos);

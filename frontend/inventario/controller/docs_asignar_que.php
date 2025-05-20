@@ -1,8 +1,8 @@
 <?php
 
 use core\ConfigGlobal;
-use core\ViewPhtml;
 use frontend\shared\PostRequest;
+use src\shared\ViewSrcPhtml;
 use web\Desplegable;
 use web\Hash;
 
@@ -27,7 +27,7 @@ $data = PostRequest::getData($url_lista_backend, $hash_params);
 
 $aOpciones = $data['a_opciones'];
 
-$oDesplTipoDoc = new Desplegable('',$aOpciones,'',true);
+$oDesplTipoDoc = new Desplegable('', $aOpciones, '', true);
 $oDesplTipoDoc->setNombre('id_tipo_doc');
 if (!empty($Qid_tipo_doc)) {
     $oDesplTipoDoc->setOpcion_sel($Qid_tipo_doc);
@@ -56,6 +56,6 @@ $a_campos = [
     'url_dlb' => $url_dlb,
 ];
 
-$oView = new ViewPhtml('../frontend/inventario/controller');
+$oView = new ViewSrcPhtml('frontend\inventario\controller');
 $oView->renderizar('docs_asignar_que.phtml', $a_campos);
 

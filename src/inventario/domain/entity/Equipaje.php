@@ -82,6 +82,8 @@ class Equipaje
      */
     private string|null $scabecerab = null;
 
+    private string|null $sfirma = null;
+
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
     /**
@@ -305,6 +307,16 @@ class Equipaje
         $this->scabecerab = $scabecerab;
     }
 
+    public function getFirma(): ?string
+    {
+        return $this->sfirma;
+    }
+
+    public function setFirma(?string $sfirma): void
+    {
+        $this->sfirma = $sfirma;
+    }
+
     /* ------------------- PARA el mod_tabla  -------------------------------*/
     public function getPrimary_key()
     {
@@ -416,5 +428,6 @@ class Equipaje
         $oDatosCampo->setEtiqueta(_("pie"));
         return $oDatosCampo;
     }
+
 
 }

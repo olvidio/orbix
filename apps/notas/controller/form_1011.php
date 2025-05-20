@@ -387,5 +387,5 @@ $a_campos = [
     'locale_us' => ConfigGlobal::is_locale_us(),
 ];
 
-$oView = new ViewPhtml('notas/model');
+$oView = new ViewPhtml('notas\model');
 $oView->renderizar('form_1011.phtml', $a_campos);

@@ -253,5 +253,5 @@ $a_campos = ['oPosicion' => $oPosicion,
     'num_personas' => $i,
 ];
 
-$oView = new ViewPhtml('planning/controller');
+$oView = new ViewPhtml('planning\controller');
 $oView->renderizar('planning_persona_select.phtml', $a_campos);

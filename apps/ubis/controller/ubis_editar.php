@@ -204,7 +204,7 @@ $a_camposHidden = array(
 $oHash->setArraycamposHidden($a_camposHidden);
 
 
-$oView = new ViewPhtml('ubis/controller');
+$oView = new ViewPhtml('ubis\controller');
 
 switch ($tipo_ubi) {
     case "ctrdl":

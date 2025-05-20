@@ -155,5 +155,5 @@ $a_campos = ['obj' => $obj,
     'Qmod' => $Qmod,
 ];
 
-$oView = new ViewPhtml('actividadcargos/model');
+$oView = new ViewPhtml('actividadcargos\model');
 $oView->renderizar('form_1302.phtml', $a_campos);

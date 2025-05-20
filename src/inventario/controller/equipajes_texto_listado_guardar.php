@@ -37,6 +37,14 @@ switch ($Qloc) {
             $error_txt .= "\n" . $EquipajeRepository->getErrorTxt();
         }
         break;
+    case 'firma':
+        $oEquipaje = $EquipajeRepository->findById($Qid_equipaje);
+        $oEquipaje->setFirma($Qtexto);
+        if ($EquipajeRepository->Guardar($oEquipaje) === false) {
+            $error_txt .= _("hay un error, no se ha guardado");
+            $error_txt .= "\n" . $EquipajeRepository->getErrorTxt();
+        }
+        break;
     case 'pie':
         $oEquipaje = $EquipajeRepository->findById($Qid_equipaje);
         $oEquipaje->setPie($Qtexto);

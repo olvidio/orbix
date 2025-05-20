@@ -29,7 +29,7 @@ class InfoDocsxCtr extends DatosInfoRepo
 
     public function getBuscar_namespace()
     {
-        return 'inventario\controller';
+        return __NAMESPACE__;
     }
     public function addCampos($aCampos)
     {

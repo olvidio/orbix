@@ -108,5 +108,5 @@ $a_campos = ['oPosicion' => $oPosicion,
     'aAsignaturasMatriculadas' => $aAsignaturasMatriculadas,
 ];
 
-$oView = new ViewPhtml('actividadestudios/controller');
+$oView = new ViewPhtml('actividadestudios\controller');
 $oView->renderizar('e43.phtml', $a_campos);

@@ -170,5 +170,5 @@ $a_campos = ['oPosicion' => $oPosicion,
     'param_new' => $param_new,
 ];
 
-$oView = new ViewPhtml('planning/controller');
+$oView = new ViewPhtml('planning\controller');
 $oView->renderizar('planning_casa_select.phtml', $a_campos);

@@ -66,5 +66,5 @@ $a_campos = [
     'oHashAbsorber' => $oHashAbsorber,
 ];
 
-$oView = new ViewPhtml('devel/controller');
+$oView = new ViewPhtml('devel\controller');
 $oView->renderizar('db_cambiar_nombre_que.phtml', $a_campos);

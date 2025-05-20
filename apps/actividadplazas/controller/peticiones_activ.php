@@ -218,5 +218,5 @@ $a_campos = [
     'txt_guardar' => $txt_guardar,
 ];
 
-$oView = new ViewPhtml('actividadplazas/controller');
+$oView = new ViewPhtml('actividadplazas\controller');
 $oView->renderizar('peticiones_activ.phtml', $a_campos);

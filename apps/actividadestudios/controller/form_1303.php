@@ -211,5 +211,5 @@ $a_campos = ['obj' => $obj,
     'oDesplProfesores' => $oDesplProfesores,
 ];
 
-$oView = new ViewPhtml('actividadestudios/controller');
+$oView = new ViewPhtml('actividadestudios\controller');
 $oView->renderizar('form_1303.phtml', $a_campos);

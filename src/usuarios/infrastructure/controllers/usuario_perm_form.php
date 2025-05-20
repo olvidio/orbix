@@ -1,9 +1,10 @@
 <?php
+
 use core\ConfigGlobal;
-use core\ViewPhtml;
 use procesos\model\CuadrosFases;
 use procesos\model\PermAccion;
 use procesos\model\PermAfectados;
+use src\shared\ViewSrcPhtml;
 use src\usuarios\application\repositories\GrupoRepository;
 use src\usuarios\application\repositories\UsuarioGrupoRepository;
 use src\usuarios\domain\entity\Role;
@@ -49,7 +50,7 @@ if (!empty($Qid_usuario)) { // si no hay usuario, no puedo poner permisos.
     <?php
     //////////// Permisos en centros ////////////
     if (ConfigGlobal::is_app_installed('ubis')) {
-        if ($pau == Role::PAU_NOM || $pau == Role::PAU_SACD) { //sacd //personas dl
+        if ($pau === Role::PAU_NOM || $pau === Role::PAU_SACD) { //sacd //personas dl
             $a_campos = [
                 'quien' => $Qquien,
                 'id_usuario' => $Qid_usuario,
@@ -59,7 +60,7 @@ if (!empty($Qid_usuario)) { // si no hay usuario, no puedo poner permisos.
                 'oPermAccion' => $oPermAccion,
             ];
 
-            $oView = new ViewPhtml('usuarios/controller');
+            $oView = new ViewSrcPhtml('src\usuarios\controller');
             $oView->renderizar('perm_ctr_form.phtml', $a_campos);
         }
     }
@@ -76,7 +77,7 @@ if (!empty($Qid_usuario)) { // si no hay usuario, no puedo poner permisos.
             'oPermAccion' => $oPermAccion,
         ];
 
-        $oView = new ViewPhtml('usuarios/controller');
+        $oView = new ViewSrcPhtml('src\usuarios\controller');
         $oView->renderizar('perm_activ_form.phtml', $a_campos);
     }
 

@@ -3,6 +3,7 @@
 use core\ConfigGlobal;
 use core\ViewPhtml;
 use frontend\shared\PostRequest;
+use src\shared\ViewSrcPhtml;
 use web\Hash;
 
 /**
@@ -67,5 +68,5 @@ $a_campos = [
     'expire' => $_SESSION['session_auth']['expire'],
 ];
 
-$oView = new ViewPhtml('../frontend/usuarios/controller');
+$oView = new ViewSrcPhtml('frontend\usuarios\controller');
 $oView->renderizar('usuario_form_pwd.phtml', $a_campos);

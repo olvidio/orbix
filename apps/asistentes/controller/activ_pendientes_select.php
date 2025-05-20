@@ -263,5 +263,5 @@ $a_campos = [
     'oTablaOtrasDl' => $oTablaOtrasDl,
 ];
 
-$oView = new ViewPhtml('asistentes/controller');
+$oView = new ViewPhtml('asistentes\controller');
 $oView->renderizar('activ_pendientes.phtml', $a_campos);

@@ -216,5 +216,5 @@ $a_campos = ['oPosicion' => $oPosicion,
     'Qapellido1' => $Qapellido1,
 ];
 
-$oView = new ViewPhtml('actividadestudios/controller');
+$oView = new ViewPhtml('actividadestudios\controller');
 $oView->renderizar('matriculas_otras_r.phtml', $a_campos);

@@ -103,5 +103,5 @@ $a_campos = [
     'oDesplDelegaciones' => $oDesplDelegaciones,
 ];
 
-$oView = new ViewPhtml('actividadplazas/controller');
+$oView = new ViewPhtml('actividadplazas\controller');
 $oView->renderizar('resumen_plazas.phtml', $a_campos);

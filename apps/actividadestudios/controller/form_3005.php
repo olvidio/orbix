@@ -150,5 +150,5 @@ $a_campos = ['obj' => $obj,
     'locale_us' => ConfigGlobal::is_locale_us(),
 ];
 
-$oView = new ViewPhtml('actividadestudios/controller');
+$oView = new ViewPhtml('actividadestudios\controller');
 $oView->renderizar('form_3005.phtml', $a_campos);

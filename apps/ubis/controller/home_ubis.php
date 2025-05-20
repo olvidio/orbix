@@ -168,5 +168,5 @@ $a_campos = ['oPosicion' => $oPosicion,
     'Qobj_pau' => $obj_pau
 ];
 
-$oView = new ViewPhtml('ubis/controller');
+$oView = new ViewPhtml('ubis\controller');
 $oView->renderizar('home_ubis.phtml', $a_campos);

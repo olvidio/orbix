@@ -129,5 +129,5 @@ $a_campos = ['oPosicion' => $oPosicion,
     'locale_us' => $locale_us,
 ];
 
-$oView = new ViewPhtml('planning/controller');
+$oView = new ViewPhtml('planning\controller');
 $oView->renderizar('planning_persona_que.phtml', $a_campos);

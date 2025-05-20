@@ -152,5 +152,5 @@ $a_campos = [
     'Qobj_pau' => $Qobj_pau
 ];
 
-$oView = new ViewPhtml('personas/controller');
+$oView = new ViewPhtml('personas\controller');
 $oView->renderizar('home_persona.phtml', $a_campos);

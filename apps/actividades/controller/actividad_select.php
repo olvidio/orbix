@@ -682,5 +682,5 @@ $a_campos = ['oPosicion' => $oPosicion,
     'oTabla' => $oTabla,
 ];
 
-$oView = new ViewPhtml('actividades/controller');
+$oView = new ViewPhtml('actividades\controller');
 $oView->renderizar('actividad_select.phtml', $a_campos);

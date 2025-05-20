@@ -109,6 +109,6 @@ if (ConfigGlobal::mi_ambito() !== 'rstgr' ||
         'rstgr' => $rstgr,
     ];
 
-    $oView = new ViewPhtml('notas/model');
+    $oView = new ViewPhtml('notas\model');
     $oView->renderizar('resumen_anual.phtml', $a_campos);
 }

@@ -277,5 +277,5 @@ $a_campos = ['oPosicion' => $oPosicion,
     'oHash' => $oHash,
 ];
 
-$oView = new ViewPhtml('actividadplazas/controller');
+$oView = new ViewPhtml('actividadplazas\controller');
 $oView->renderizar('gestion_plazas.phtml', $a_campos);

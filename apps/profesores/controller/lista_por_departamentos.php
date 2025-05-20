@@ -156,5 +156,5 @@ $a_campos = [
     'rstgr' => $rstgr,
 ];
 
-$oView = new ViewPhtml('profesores/controller');
+$oView = new ViewPhtml('profesores\controller');
 $oView->renderizar('lista_por_departamentos.phtml', $a_campos);

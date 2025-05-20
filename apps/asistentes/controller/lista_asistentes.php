@@ -278,5 +278,5 @@ $a_campos = [
     'aAsistentes' => $aAsistentes,
 ];
 
-$oView = new ViewPhtml('asistentes/controller');
+$oView = new ViewPhtml('asistentes\controller');
 $oView->renderizar('lista_asistentes.phtml', $a_campos);

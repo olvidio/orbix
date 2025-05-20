@@ -133,5 +133,5 @@ $a_campos = ['oPosicion' => $oPosicion,
     'chk_todos_s' => $chk_todos_s,
 ];
 
-$oView = new ViewPhtml('planning/controller');
+$oView = new ViewPhtml('planning\controller');
 $oView->renderizar('planning_ctr_que.phtml', $a_campos);

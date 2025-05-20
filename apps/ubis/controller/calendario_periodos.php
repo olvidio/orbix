@@ -58,5 +58,5 @@ $a_campos = ['oPosicion' => $oPosicion,
     'oFormAny' => $oFormAny,
 ];
 
-$oView = new ViewPhtml('ubis/controller');
+$oView = new ViewPhtml('ubis\controller');
 $oView->renderizar('calendario_periodos.phtml', $a_campos);

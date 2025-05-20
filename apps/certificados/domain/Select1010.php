@@ -186,7 +186,7 @@ class Select1010
             'h_download' => $h_download,
         ];
 
-        $oView = new ViewPhtml('certificados/view');
+        $oView = new ViewPhtml('certificados\view');
         $oView->renderizar('select1010.phtml', $a_campos);
     }
 

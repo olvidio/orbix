@@ -156,5 +156,5 @@ $a_campos = ['oPosicion' => $oPosicion,
     'txt_eliminar' => $txt_eliminar,
 ];
 
-$oView = new ViewPhtml('devel/controller');
+$oView = new ViewPhtml('devel\controller');
 $oView->renderizar('modulos_select.phtml', $a_campos);

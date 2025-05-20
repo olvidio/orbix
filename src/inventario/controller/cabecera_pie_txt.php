@@ -1,6 +1,7 @@
 <?php
 
 use core\ConfigMagik;
+use src\inventario\domain\repositories\EquipajeRepository;
 use web\ContestarJson;
 
 // INICIO Cabecera global de URL de controlador *********************************
@@ -13,16 +14,33 @@ require_once("apps/core/global_object.inc");
 
 $error_txt = '';
 
+$Qid_equipaje = (integer)filter_input(INPUT_POST, 'id_equipaje');
+
+
+$cabecera = null;
+$cabeceraB = null;
+$firma = null;
+$pie = null;
+// Comprobar que no tiene textos propios:
+$EquipajeRepository = new EquipajeRepository();
+$oEquipaje = $EquipajeRepository->findById($Qid_equipaje);
+if (!empty($oEquipaje)) {
+    $cabecera = $oEquipaje->getCabecera();
+    $cabeceraB = $oEquipaje->getCabecerab();
+    $firma = $oEquipaje->getFirma();
+    $pie = $oEquipaje->getPie();
+}
+
 // create new ConfigMagik-Object
 $file = "../domain/cabecera_pie_textos.ini";
-$Config = new ConfigMagik( $file, true, true);
-$Config->SYNCHRONIZE      = false;
+$Config = new ConfigMagik($file, true, true);
+$Config->SYNCHRONIZE = false;
 
 
-$cabecera=$Config->get( "cabecera","texto_tipo");
-$cabeceraB=$Config->get( "cabeceraB","texto_tipo");
-$firma=$Config->get( "firma","texto_tipo");
-$pie=$Config->get( "pie","texto_tipo");
+$cabecera = $cabecera ?? $Config->get("cabecera", "texto_tipo");
+$cabeceraB = $cabeceraB ?? $Config->get("cabeceraB", "texto_tipo");
+$firma = $firma ?? $Config->get("firma", "texto_tipo");
+$pie = $pie ?? $Config->get("pie", "texto_tipo");
 
 $data = [
     'cabecera' => $cabecera,

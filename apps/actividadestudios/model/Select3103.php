@@ -212,7 +212,7 @@ class Select3103
             'nom_activ' => $this->nom_activ,
         ];
 
-        $oView = new ViewPhtml('actividadestudios/model');
+        $oView = new ViewPhtml('actividadestudios\model');
         $oView->renderizar('select3103.phtml', $a_campos);
     }
 

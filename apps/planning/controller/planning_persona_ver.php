@@ -340,5 +340,5 @@ $a_campos = ['oPosicion' => $oPosicion,
     'a_actividades2' => $a_actividades2,
 ];
 
-$oView = new ViewPhtml('planning/controller');
+$oView = new ViewPhtml('planning\controller');
 $oView->renderizar('planning_persona_ver.phtml', $a_campos);

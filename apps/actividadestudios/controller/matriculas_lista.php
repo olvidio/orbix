@@ -246,5 +246,5 @@ $a_campos = ['oPosicion' => $oPosicion,
     'oHashPeriodo' => $oHashPeriodo,
 ];
 
-$oView = new ViewPhtml('actividadestudios/controller');
+$oView = new ViewPhtml('actividadestudios\controller');
 $oView->renderizar('matriculas.phtml', $a_campos);

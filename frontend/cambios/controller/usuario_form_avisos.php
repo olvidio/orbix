@@ -3,8 +3,8 @@
 
 // Crea los objetos de uso global **********************************************
 use core\ConfigGlobal;
-use core\ViewPhtml;
 use frontend\shared\PostRequest;
+use src\shared\ViewSrcPhtml;
 use web\Hash;
 use web\Lista;
 
@@ -73,5 +73,5 @@ $a_camposAvisos = [
     'nombre_usuario' => $nombre_usuario,
 ];
 
-$oView = new ViewPhtml('../frontend/cambios/controller');
+$oView = new ViewSrcPhtml('frontend\cambios\controller');
 $oView->renderizar('usuario_form_avisos.phtml', $a_camposAvisos);

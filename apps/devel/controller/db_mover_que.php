@@ -40,5 +40,5 @@ $a_campos = [
     'msg_falta_tabla' => $msg_falta_tabla,
 ];
 
-$oView = new ViewPhtml('devel/controller');
+$oView = new ViewPhtml('devel\controller');
 $oView->renderizar('db_mover_que.phtml', $a_campos);

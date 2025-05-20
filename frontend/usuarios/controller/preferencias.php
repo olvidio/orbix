@@ -2,8 +2,8 @@
 
 use cambios\model\entity\CambioUsuario;
 use core\ConfigGlobal;
-use core\ViewPhtml;
 use frontend\shared\PostRequest;
+use src\shared\ViewSrcPhtml;
 use src\usuarios\application\repositories\LocalRepository;
 use web\Desplegable;
 use web\Hash;
@@ -115,5 +115,5 @@ $a_campos = [
     'url_cambio_mail' => $url_cambio_mail,
 ];
 
-$oView = new ViewPhtml('../frontend/usuarios/controller');
+$oView = new ViewSrcPhtml('frontend\usuarios\controller');
 $oView->renderizar('preferencias.phtml', $a_campos);

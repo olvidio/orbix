@@ -88,5 +88,5 @@ $a_campos = ['oPosicion' => $oPosicion,
     'chk_lista' => $chk_lista,
 ];
 
-$oView = new ViewPhtml('notas/controller');
+$oView = new ViewPhtml('notas\controller');
 $oView->renderizar('asig_faltan_que.phtml', $a_campos);
