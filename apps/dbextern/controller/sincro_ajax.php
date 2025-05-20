@@ -2,6 +2,7 @@
 
 use core\ConfigGlobal;
 use dbextern\model\entity\GestorIdMatchPersona;
+use dbextern\model\entity\GestorPersonaBDU;
 use dbextern\model\entity\zGestorPersonaListas;
 use dbextern\model\entity\IdMatchPersona;
 use dbextern\model\SincroDB;
@@ -20,13 +21,13 @@ require_once("apps/core/global_object.inc");
 $sfsv = ConfigGlobal::mi_sfsv();
 
 $que = (string)filter_input(INPUT_POST, 'que');
-$tabla = 'tmp_bdu';
 
 switch ($que) {
     // 4 casos:
     //	está en listas(midl), esta en orbix(otradl), está unido (si-no)
     //	está en listas(midl), y NO esta en orbix, está unido (si-no)
     case "crear":
+        $tabla = 'tmp_dbu';
         $id_nom_listas = (integer)filter_input(INPUT_POST, 'id_nom_listas');
         $id = (integer)filter_input(INPUT_POST, 'id');
         $tipo_persona = (string)filter_input(INPUT_POST, 'tipo_persona');
@@ -34,8 +35,8 @@ switch ($que) {
         $Query = "SELECT * FROM $tabla WHERE identif = $id_nom_listas ";
         //AND camb_fic IS NULL";
         $oSincroDB = new SincroDB();
-        $oGesListas = new zGestorPersonaListas();
-        $cPersonasListas = $oGesListas->getPersonaListasQuery($Query);
+        $oGesListas = new GestorPersonaBDU();
+        $cPersonasListas = $oGesListas->getPersonaBDUQuery($Query);
         if ($cPersonasListas !== FALSE && count($cPersonasListas) == 1) {
             $oPersonaListas = $cPersonasListas[0];
             $id_nom_listas = $oPersonaListas->getIdentif();
