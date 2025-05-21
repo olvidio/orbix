@@ -494,7 +494,7 @@ foreach ($cActividades as $oActividad) {
         if (ConfigGlobal::is_app_installed('actividadessacd')) {
             // sólo si tiene permiso
             $aprobado = TRUE;
-            if (ConfigGlobal::mi_sfsv() == 2) {
+            if (ConfigGlobal::mi_sfsv() === 2 && ConfigGlobal::is_app_installed('procesos')) {
                 $gesActividadProcesoTarea = new GestorActividadProcesoTarea();
                 $aprobado = $gesActividadProcesoTarea->getSacdAprobado($id_activ);
             }
