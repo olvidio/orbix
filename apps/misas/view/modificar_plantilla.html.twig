@@ -38,6 +38,16 @@
 
 <script>
     fnjs_ver_plantilla_zona = function () {
+        tipo_actual=$('#tipo_plantilla').val().substr(0,1);
+        $('#importar_de_plantilla option').each(function() {
+            var valor=$(this).val();
+            if (valor.substr(0,1)==tipo_actual) {
+                $(this).attr('disabled',true);
+            }
+            else {
+                $(this).attr('disabled',false);
+            }
+        });
         let id_zona = $('#id_zona').val();
         let tipo_plantilla = $('#tipo_plantilla').val();
         let orden = $('#orden').val();
@@ -85,4 +95,16 @@
                 });
         }
     }
+
+    tipo_actual=$('#tipo_plantilla').val().substr(0,1);
+    $('#importar_de_plantilla option').each(function() {
+        var valor=$(this).val();
+        if (valor.substr(0,1)==tipo_actual) {
+            $(this).attr('disabled',true);
+        }
+        else {
+            $(this).attr('disabled',false);
+        }
+    });
+
 </script>
