@@ -14,7 +14,7 @@ class ConfigGlobal extends ServerConf
 
     public static function getWebPort()
     {
-        $private = getenv('PRIVATE');
+        $private = $_SESSION['private'];
         if (!empty($private) && $private === 'sf') {
             return self::$web_port_sf;
         } else {
@@ -69,7 +69,7 @@ class ConfigGlobal extends ServerConf
     {
         $dmz = self::$dmz; // heredada de ServerConf (FALSE), TRUE En la instalación exterior
         if ($dmz) {
-            $private = getenv('PRIVATE');
+            $private = $_SESSION['private'];
             if (!empty($private) && $private === 'sf') {
                 $dmz = FALSE;
             }
