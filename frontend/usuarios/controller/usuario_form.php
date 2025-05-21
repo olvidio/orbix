@@ -107,7 +107,7 @@ $a_campos['oHash'] = $oHash;
 $a_campos['oPosicion'] = $oPosicion;
 $a_campos['txt_guardar'] = $txt_guardar;
 $a_campos['txt_eliminar'] = $txt_eliminar;
-$a_campos['url_usuario_guardar'] = Hash::cmd(ConfigGlobal::getWeb()
+$a_campos['url_usuario_guardar'] = Hash::link(ConfigGlobal::getWeb()
     . '/src/usuarios/infrastructure/controllers/usuario_guardar.php'
 );
 
