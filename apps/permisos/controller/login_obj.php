@@ -181,7 +181,6 @@ $ubicacion = getenv('UBICACION');
 $private = getenv('PRIVATE');
 
 $_SESSION['sfsv'] = $ubicacion;
-$_SESSION['private'] = $private;
 
 if (!empty($esquema_web)) {
     $oDBPropiedades = new DBPropiedades();
@@ -196,6 +195,7 @@ if (!isset($_SESSION['session_auth'])) {
     //el segon cop tinc el nom i el password
     $idioma = '';
     if (isset($_POST['username']) && isset($_POST['password'])) {
+        $_SESSION['private'] = $private;
         $mail = '';
 
         $aWhere = array('usuario' => $_POST['username']);

@@ -14,7 +14,7 @@ class ConfigGlobal extends ServerConf
 
     public static function getWebPort()
     {
-        $private = $_SESSION['private'];
+        $private = empty($_SESSION['private'])? '' : $_SESSION['private'];
         if (!empty($private) && $private === 'sf') {
             return self::$web_port_sf;
         } else {
