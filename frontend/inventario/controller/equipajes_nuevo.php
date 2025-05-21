@@ -41,7 +41,7 @@ $sCamposForm = 'empiezamax!empiezamin!periodo!year!iactividad_val!iasistentes_va
 $oHash->setCamposForm($sCamposForm);
 $oHash->setCamposNo('id_cdc');
 
-$url_ver_equipajes = Hash::link('frontend/inventario/controller/equipajes_ver.php');
+$url_ver_equipajes = Hash::cmd('frontend/inventario/controller/equipajes_ver.php');
 
 $a_campos = [
     'oHash' => $oHash,

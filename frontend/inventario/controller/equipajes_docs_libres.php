@@ -13,7 +13,7 @@ $Qid_tipo_doc = (string)filter_input(INPUT_POST, 'id_tipo_doc');
 
 
 // posibles tipos de documento
-$url_lista_backend = Hash::link(ConfigGlobal::getWeb()
+$url_lista_backend = Hash::cmd(ConfigGlobal::getWeb()
     . '/src/inventario/controller/lista_docs_libres.php'
 );
 $oHash = new Hash();

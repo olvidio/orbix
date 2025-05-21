@@ -28,7 +28,7 @@ if (!empty($Qfiltro)) {
 
 }
 
-$url_lista_backend = Hash::link(ConfigGlobal::getWeb()
+$url_lista_backend = Hash::cmd(ConfigGlobal::getWeb()
     . '/src/inventario/controller/lista_equipajes_desde_fecha.php'
 );
 $oHash = new Hash();

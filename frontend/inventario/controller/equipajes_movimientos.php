@@ -10,7 +10,7 @@ require_once("frontend/shared/global_header_front.inc");
 
 $a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 
-$url_lista_backend = Hash::link(ConfigGlobal::getWeb()
+$url_lista_backend = Hash::cmd(ConfigGlobal::getWeb()
     . '/src/inventario/controller/equipajes_movimientos.php'
 );
 $oHash = new Hash();

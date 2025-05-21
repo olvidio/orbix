@@ -19,7 +19,7 @@ $str_selected_id = rawurlencode(json_encode($a_sel));
 $oPosicion->recordar();
 
 // muestra los ctr que tienen el documento.
-$url_lista_backend = Hash::link(ConfigGlobal::getWeb()
+$url_lista_backend = Hash::cmd(ConfigGlobal::getWeb()
     . '/src/inventario/controller/lista_docs_asignar_dlb.php'
 );
 $oHash = new Hash();

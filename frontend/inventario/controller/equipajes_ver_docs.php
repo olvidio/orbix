@@ -16,7 +16,7 @@ $Qnom_grupo = (string)filter_input(INPUT_POST, 'nom_grupo');
 $Qid_lugar = (int)filter_input(INPUT_POST, $Qnom_grupo);
 
 
-$url_lista_backend = Hash::link(ConfigGlobal::getWeb()
+$url_lista_backend = Hash::cmd(ConfigGlobal::getWeb()
     . '/src/inventario/controller/lista_docs_de_lugar.php'
 );
 $oHash = new Hash();

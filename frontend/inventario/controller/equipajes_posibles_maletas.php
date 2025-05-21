@@ -11,7 +11,7 @@ require_once("frontend/shared/global_header_front.inc");
 
 $Qid_equipaje = (string)filter_input(INPUT_POST, 'id_equipaje');
 
-$url_lista_backend = Hash::link(ConfigGlobal::getWeb()
+$url_lista_backend = Hash::cmd(ConfigGlobal::getWeb()
     . '/src/inventario/controller/lista_equipajes_posibles_maletas.php'
 );
 $oHash = new Hash();
