@@ -37,7 +37,7 @@ $Qusername = (string)filter_input(INPUT_POST, 'username');
 $oPosicion->setParametros(array('username' => $Qusername), 1);
 
 
-$url_lista = Hash::cmd(ConfigGlobal::getWeb()
+$url_lista = Hash::link(ConfigGlobal::getWeb()
     . '/frontend/usuarios/controller/usuario_lista.php'
 );
 
