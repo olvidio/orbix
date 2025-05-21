@@ -30,6 +30,15 @@ $a_TiposPlantilla = array(
     EncargoDia::PLANTILLA_DOMINGOS_TRES=>'semanal y domingos tres opciones',
     EncargoDia::PLANTILLA_MENSUAL_TRES=>'mensual tres opciones',
 );
+$a_TiposPlantilla2 = array(
+    '-'=>'',
+    EncargoDia::PLANTILLA_SEMANAL_UNO=>'semanal una opción',
+    EncargoDia::PLANTILLA_DOMINGOS_UNO=>'semanal y domingos una opción',
+    EncargoDia::PLANTILLA_MENSUAL_UNO=>'mensual una opción',
+    EncargoDia::PLANTILLA_SEMANAL_TRES=>'semanal tres opciones',
+    EncargoDia::PLANTILLA_DOMINGOS_TRES=>'semanal y domingos tres opciones',
+    EncargoDia::PLANTILLA_MENSUAL_TRES=>'mensual tres opciones',
+);
 
 $PreferenciaRepository = new PreferenciaRepository();
 
@@ -57,7 +66,7 @@ $oHashImportarPlantilla->setCamposForm('id_zona!tipo_plantilla_origen!tipo_plant
 $h_importar_plantilla = $oHashImportarPlantilla->linkSinVal();
 
 $oDesplImportarDePlantilla = new Desplegable();
-$oDesplImportarDePlantilla->setOpciones($a_TiposPlantilla);
+$oDesplImportarDePlantilla->setOpciones($a_TiposPlantilla2);
 $oDesplImportarDePlantilla->setNombre('importar_de_plantilla');
 //$oDesplImportarDePlantilla->setAction('fnjs_importar_de_plantilla_zona()');
 
