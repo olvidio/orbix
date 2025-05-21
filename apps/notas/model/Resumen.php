@@ -691,7 +691,7 @@ class Resumen extends ClasePropiedades
         $oDbl = $this->getoDbl();
         //$tabla = $this->getNomTabla();
         $tabla = 'p_numerarios';
-        $ce_lugar = $this->getCe_lugar();
+        //$ce_lugar = $this->getCe_lugar();
         $any = $this->getAnyFiCurs();
 
         $rta = [];
@@ -739,8 +739,8 @@ class Resumen extends ClasePropiedades
     {
         $oDbl = $this->getoDbl();
         $tabla = $this->getNomTabla();
-        $ce_lugar = $this->getCe_lugar();
-        $any = $this->getAnyFiCurs();
+        //$ce_lugar = $this->getCe_lugar();
+        //$any = $this->getAnyFiCurs();
 
         $ssql = "SELECT p.nom, p.apellido1, p.apellido2, p.ctr
             FROM $tabla p
@@ -813,8 +813,8 @@ class Resumen extends ClasePropiedades
         $oDbl = $this->getoDbl();
         $tabla = $this->getNomTabla();
         $notas = $this->getNomNotas();
-        $ce_lugar = $this->getCe_lugar();
-        $any = $this->getAnyFiCurs();
+        //$ce_lugar = $this->getCe_lugar();
+        //$any = $this->getAnyFiCurs();
 
         $ssql = "SELECT count(*)
 			FROM $tabla p, $notas n

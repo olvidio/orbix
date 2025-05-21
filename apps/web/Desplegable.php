@@ -89,7 +89,6 @@ class Desplegable
         return $sHtml;
     }
 
-    /*
     public function cuadros_check()
     {
 
@@ -133,7 +132,6 @@ class Desplegable
 
         return $txt;
     }
-    */
 
     public function getArrayOpciones()
     {

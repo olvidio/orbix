@@ -102,6 +102,7 @@ class Config
             $nom_param = _("lugar ce");
             $this->msg .= "<br><br>";
             $this->msg .= sprintf(_("falta el parámetro: %s"), $nom_param);
+            $this->msg .= "<br>". _("se puede poner una lista separada por comas");
             exit ($this->msg);
         } else {
             return $valor;

@@ -1,6 +1,7 @@
 <?php
 
 use core\ConfigGlobal;
+use notas\model\CentroEstudios;
 use notas\model\Resumen;
 use ubis\model\entity\GestorDelegacion;
 
@@ -24,7 +25,24 @@ require_once("apps/core/global_header.inc");
 require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$ce_lugar = $_SESSION['oConfig']->getCe_lugar();
+$Qdl = (array)filter_input(INPUT_POST, 'dl', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+
+if (!empty($Qdl)) {
+    $CentroEstudios = new CentroEstudios;
+    $ce_lugar = $CentroEstudios->getFromDl($Qdl);
+} else {
+    $dele = ConfigGlobal::mi_dele();
+    // si soy supra región stgr, todos los de las dependientes:
+    // caso especial de H y M:
+    if ($dele === 'H' || $dele === 'M') {
+        $gesDelegacion = new GestorDelegacion();
+        $a_delegacionesStgr = $gesDelegacion->getArrayDlRegionStgr([$dele]);
+        $CentroEstudios = new CentroEstudios;
+        $ce_lugar = $CentroEstudios->getFromDl(array_keys($a_delegacionesStgr));
+    } else {
+        $ce_lugar = $_SESSION['oConfig']->getCe_lugar();
+    }
+}
 
 if (empty($ce_lugar)) {
     echo _("No está definido el ce para esta dl/r");

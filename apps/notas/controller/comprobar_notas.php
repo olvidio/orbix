@@ -30,11 +30,11 @@ require_once("apps/core/global_object.inc");
 $Qactualizar = (string)filter_input(INPUT_POST, 'actualizar');
 $Qid_tabla = (string)filter_input(INPUT_POST, 'id_tabla');
 
-if ($Qid_tabla == 'n') {
+if ($Qid_tabla === 'n') {
     $tabla = 'p_numerarios';
     $tabla_txt = 'Numerarios';
 }
-if ($Qid_tabla == 'a') {
+if ($Qid_tabla === 'a') {
     $tabla = 'p_agregados';
     $tabla_txt = 'Agregados';
 }
@@ -43,7 +43,7 @@ $oDB = $GLOBALS['oDB'];
 
 $superada = "(n.id_situacion = " . Nota::NUMERICA . " OR n.id_situacion::text ~ '[1345]')";
 
-if ($Qactualizar == 'c1') {
+if ($Qactualizar === 'c1') {
     $ssql = "SELECT p.id_nom
 		FROM $tabla p LEFT JOIN e_notas_dl n USING (id_nom)
 		WHERE p.stgr != 'b' AND p.stgr !='c1' AND p.stgr !='n'
@@ -63,7 +63,7 @@ if ($Qactualizar == 'c1') {
         $oDBSt_sql_1 = $oDB->query($ssql_1);
     }
 }
-if ($Qactualizar == 'c2') {
+if ($Qactualizar === 'c2') {
     $ssql = "SELECT p.id_nom
 		FROM $tabla p LEFT JOIN e_notas_dl n USING (id_nom)
 		WHERE p.stgr != 'b' AND p.stgr !='c2' AND p.stgr !='n'
@@ -85,7 +85,7 @@ if ($Qactualizar == 'c2') {
         $oDBSt_sql_1 = $oDB->query($ssql_1);
     }
 }
-if ($Qactualizar == 'r') {
+if ($Qactualizar === 'r') {
     $ssql = "SELECT p.id_nom
 		FROM $tabla p LEFT JOIN e_notas_dl n USING (id_nom)
 		WHERE p.stgr != 'r' AND n.id_asignatura = 9998 
@@ -104,7 +104,7 @@ if ($Qactualizar == 'r') {
         $oDBSt_sql_1 = $oDB->query($ssql_1);
     }
 }
-if ($Qactualizar == 'borrar_cursada') {
+if ($Qactualizar === 'borrar_cursada') {
 
     $Qid_nom = (string)filter_input(INPUT_POST, 'id_nom');
     $Qid_asignatura = (string)filter_input(INPUT_POST, 'id_asignatura');
@@ -117,7 +117,7 @@ if ($Qactualizar == 'borrar_cursada') {
 
     $oDBSt_sql = $oDB->query($ssql);
 }
-if ($Qactualizar == 'caduca_cursada') {
+if ($Qactualizar === 'caduca_cursada') {
     $caduca_cursada = $_SESSION['oConfig']->getCaduca_cursada();
     $oHoy = new DateTimeLocal();
     $interval = 'P' . $caduca_cursada . 'Y';
