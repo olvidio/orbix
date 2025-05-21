@@ -64,7 +64,7 @@ $oPosicion->setParametros(array('id_usuario' => $Qid_usuario), 1);
 
 if (!empty($Qid_usuario)) {
     //////////// Nombre de grupo ////////////////////////////////////////////////////////
-    $url = Hash::link(ConfigGlobal::getWeb()
+    $url = Hash::cmd(ConfigGlobal::getWeb()
         . '/src/usuarios/infrastructure/controllers/grupo_info.php'
     );
 
@@ -96,7 +96,7 @@ if (!empty($Qid_usuario)) {
     $oView->renderizar('grupo_form.phtml', $a_camposG);
 
     //////////// Permisos de grupos //////////////////////////////////////////////////
-    $url = Hash::link(ConfigGlobal::getWeb()
+    $url = Hash::cmd(ConfigGlobal::getWeb()
         . '/src/usuarios/infrastructure/controllers/perm_menu_lista.php'
     );
 
@@ -138,7 +138,7 @@ if (!empty($Qid_usuario)) {
 
     //////////// Permisos en actividades ////////////////////////////////////////////////
     if (ConfigGlobal::is_app_installed('procesos')) {
-        $url = Hash::link(ConfigGlobal::getWeb()
+        $url = Hash::cmd(ConfigGlobal::getWeb()
             . '/frontend/usuarios/controller/perm_activ_lista.php'
         );
 

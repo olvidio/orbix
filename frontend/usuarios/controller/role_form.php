@@ -51,7 +51,7 @@ if (isset($_POST['stack'])) {
 $oPosicion->setParametros(array('id_role' => $Qid_role), 1);
 
 
-$url_lista_backend = Hash::link(ConfigGlobal::getWeb()
+$url_lista_backend = Hash::cmd(ConfigGlobal::getWeb()
     . '/src/usuarios/infrastructure/controllers/role_info.php'
 );
 

@@ -37,11 +37,11 @@ $Qusername = (string)filter_input(INPUT_POST, 'username');
 $oPosicion->setParametros(array('username' => $Qusername), 1);
 
 
-$url_lista = Hash::link(ConfigGlobal::getWeb()
+$url_lista = Hash::cmd(ConfigGlobal::getWeb()
     . '/frontend/usuarios/controller/usuario_lista.php'
 );
 
-$url_lista_backend = Hash::link(ConfigGlobal::getWeb()
+$url_lista_backend = Hash::cmd(ConfigGlobal::getWeb()
     . '/src/usuarios/infrastructure/controllers/usuario_lista.php'
 );
 
@@ -80,12 +80,12 @@ $oHash1->setcamposNo('scroll_id');
 $oHash1->setArraycamposHidden(array('que' => 'eliminar'));
 
 $aQuery = ['nuevo' => 1, 'quien' => 'usuario'];
-$url_nuevo = Hash::link(ConfigGlobal::getWeb()
+$url_nuevo = Hash::cmd(ConfigGlobal::getWeb()
     . '/frontend/usuarios/controller/usuario_form.php?'
     . http_build_query($aQuery)
 );
 
-$url_eliminar = Hash::link(ConfigGlobal::getWeb()
+$url_eliminar = Hash::cmd(ConfigGlobal::getWeb()
     . '/frontend/usuarios/controller/usuario_eliminar.php'
 );
 

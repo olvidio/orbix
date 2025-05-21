@@ -15,7 +15,7 @@ $oPosicion->recordar();
 $Qfiltro_grupo = (string)filter_input(INPUT_POST, 'filtro_grupo');
 
 
-$url_lista_backend = Hash::link(ConfigGlobal::getWeb()
+$url_lista_backend = Hash::cmd(ConfigGlobal::getWeb()
     . '/src/menus/infrastructure/controllers/lista_grup_menus.php'
 );
 $oHash = new Hash();
@@ -42,5 +42,5 @@ $a_campos = ['url' => $url,
     'oDesplGM' => $oDesplGM,
 ];
 
-$oView = new ViewSrcPhtml('frontend\menus\controller');
+$oView = new ViewSrcPhtml('frontend/menus/controller');
 $oView->renderizar('menus_que.phtml', $a_campos);

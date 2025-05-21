@@ -32,7 +32,7 @@ $Qusername = (string)filter_input(INPUT_POST, 'username');
 $oPosicion->setParametros(array('username' => $Qusername), 1);
 
 
-$url_lista_backend = Hash::link(ConfigGlobal::getWeb()
+$url_lista_backend = Hash::cmd(ConfigGlobal::getWeb()
     . '/src/usuarios/infrastructure/controllers/grupo_lista.php'
 );
 
@@ -71,7 +71,7 @@ $oHashSelect->setcamposNo('scroll_id');
 $oHashSelect->setArraycamposHidden(array('que' => 'eliminar_grupo'));
 
 $aQuery = ['nuevo' => 1, 'quien' => 'grupo'];
-$url_nuevo = Hash::link(ConfigGlobal::getWeb()
+$url_nuevo = Hash::cmd(ConfigGlobal::getWeb()
     . '/frontend/usuarios/controller/grupo_form.php?'
     . http_build_query($aQuery));
 

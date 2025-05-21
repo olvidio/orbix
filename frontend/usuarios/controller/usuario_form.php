@@ -59,7 +59,7 @@ if (isset($_POST['stack'])) {
 $oPosicion->setParametros(array('id_usuario' => $Qid_usuario), 1);
 
 //////////////////////// Usuario o Grupo ///////////////////////////////////////////////////
-$url_usuario_form_backend = Hash::link(ConfigGlobal::getWeb()
+$url_usuario_form_backend = Hash::cmd(ConfigGlobal::getWeb()
     . '/src/usuarios/infrastructure/controllers/usuario_form.php'
 );
 
@@ -107,7 +107,7 @@ $a_campos['oHash'] = $oHash;
 $a_campos['oPosicion'] = $oPosicion;
 $a_campos['txt_guardar'] = $txt_guardar;
 $a_campos['txt_eliminar'] = $txt_eliminar;
-$a_campos['url_usuario_guardar'] = Hash::link(ConfigGlobal::getWeb()
+$a_campos['url_usuario_guardar'] = Hash::cmd(ConfigGlobal::getWeb()
     . '/src/usuarios/infrastructure/controllers/usuario_guardar.php'
 );
 
@@ -153,7 +153,7 @@ $oView->renderizar('usuario_form.phtml', $a_campos);
 // los nuevos no tienen lo que sigue.
 if (!empty($Qid_usuario)) {
     //////////////////////// Grupos del usuario ///////////////////////////////////////////////////
-    $url_usuario_form_backend = Hash::link(ConfigGlobal::getWeb()
+    $url_usuario_form_backend = Hash::cmd(ConfigGlobal::getWeb()
         . '/src/usuarios/infrastructure/controllers/usuario_info.php'
     );
 
@@ -174,7 +174,7 @@ if (!empty($Qid_usuario)) {
 
     //////////// Permisos en actividades ////////////
     if (ConfigGlobal::is_app_installed('procesos')) {
-        $url = Hash::link(ConfigGlobal::getWeb()
+        $url = Hash::cmd(ConfigGlobal::getWeb()
             . '/frontend/usuarios/controller/perm_activ_lista.php'
         );
 
@@ -188,7 +188,7 @@ if (!empty($Qid_usuario)) {
 
     //////////// Condiciones para los avisos de cambios ////////////
     if (ConfigGlobal::is_app_installed('cambios')) {
-        $url_avisos = Hash::link(ConfigGlobal::getWeb()
+        $url_avisos = Hash::cmd(ConfigGlobal::getWeb()
             . '/frontend/cambios/controller/usuario_form_avisos.php?'
             . http_build_query(['quien' => 'usuario', 'id_usuario' => $Qid_usuario])
         );
