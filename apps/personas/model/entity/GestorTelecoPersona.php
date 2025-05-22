@@ -87,8 +87,8 @@ class GestorTelecoPersona extends ClaseGestor
                 'id_nom' => $aDades['id_nom']);
             switch ($nom_tabla) {
                 case 'd_teleco_personas':
-                    $sClauError = 'GestorTelecoPersona.llistar';
-                    exit("$sClauError, __LINE__, __FILE__");
+                    $a_pkey['id_schema'] = $aDades['id_schema'];
+                    $oTelecoPersona = new TelecoPersona($a_pkey);
                     break;
                 case 'd_teleco_personas_dl':
                     $oTelecoPersona = new TelecoPersonaDl($a_pkey);
@@ -96,6 +96,9 @@ class GestorTelecoPersona extends ClaseGestor
                 case 'd_teleco_personas_ex':
                     $oTelecoPersona = new TelecoPersonaEx($a_pkey);
                     break;
+                default:
+                    $sClauError = 'GestorTelecoPersona.llistar';
+                    exit("$sClauError, linea: " . __LINE__ . ", en fichero: " . __FILE__);
             }
             $oTelecoPersonaSet->add($oTelecoPersona);
         }

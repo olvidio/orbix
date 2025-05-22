@@ -78,14 +78,6 @@ abstract class TelecoPersonaGlobal extends ClasePropiedades
     /* ATRIBUTOS QUE NO SON CAMPOS------------------------------------------------- */
     /* CONSTRUCTOR -------------------------------------------------------------- */
 
-    /**
-     * Constructor de la classe vuit.
-     *
-     */
-    function __construct($a_id = '')
-    {
-    }
-
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
     /* OTROS MÉTODOS  ----------------------------------------------------------*/

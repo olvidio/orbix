@@ -302,7 +302,7 @@ abstract class PersonaGlobal extends ClasePropiedades
         $aWhere['_ordre'] = 'desc_teleco';
 
         $e_mail = '';
-        $GesTelecoPersonas = new GestorTelecoPersonaDl();
+        $GesTelecoPersonas = new GestorTelecoPersona();
         $cTelecos = $GesTelecoPersonas->getTelecos($aWhere);
         if (!empty($cTelecos) && count($cTelecos) > 0) {
             $oTeleco = $cTelecos[0];
@@ -328,7 +328,7 @@ abstract class PersonaGlobal extends ClasePropiedades
         if ($desc_teleco !== '*' && !empty($desc_teleco)) {
             $aWhere['desc_teleco'] = $desc_teleco;
         }
-        $GesTelecoPersonas = new GestorTelecoPersonaDl();
+        $GesTelecoPersonas = new GestorTelecoPersona();
         $cTelecos = $GesTelecoPersonas->getTelecos($aWhere);
         $tels = '';
         $separador = empty($separador) ? ".-<br>" : $separador;
