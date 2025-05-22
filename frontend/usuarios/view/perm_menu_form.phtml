@@ -23,7 +23,7 @@ use core\ConfigGlobal;
     }
 </script>
 <?= $oPosicion->mostrar_left_slide(1); ?>
-<h1>Añadir nuevo permiso a <?= $nombre ?>FRONT</h1>
+<h1><?= sprintf(_("Añadir nuevo permiso a %s"), $nombre) ?></h1>
 <form id=pem_usuario name=perm_usuario action="" method="post">
     <?= $oHash->getCamposHtml(); ?>
     <br>

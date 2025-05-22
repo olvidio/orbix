@@ -1,6 +1,6 @@
 <script>
     fnjs_guardar = function (formulario) {
-        let rr = fnjs_comprobar_campos(formulario, 'usuarios\\model\\entity\\Grupo');
+        let rr = fnjs_comprobar_campos(formulario, '\\src\\usuarios\\domain\\entity\\Grupo');
         if (rr === 'ok') {
             let datos = $(formulario).serialize();
             let request = $.ajax({

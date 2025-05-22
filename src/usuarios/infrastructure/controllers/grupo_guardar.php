@@ -1,6 +1,7 @@
 <?php
 
 use src\usuarios\application\repositories\GrupoRepository;
+use src\usuarios\domain\entity\Grupo;
 use web\ContestarJson;
 
 // INICIO Cabecera global de URL de controlador *********************************
@@ -19,13 +20,17 @@ $error_txt = '';
 if (empty($Qusuario)) {
     $error_txt .= _("debe poner un nombre");
 }
-$Qid_role = (integer)filter_input(INPUT_POST, 'id_role');
 $Qid_usuario = (integer)filter_input(INPUT_POST, 'id_usuario');
 
 $GrupoRepository = new GrupoRepository();
-$oGrupo = $GrupoRepository->findById($Qid_usuario);
+if (empty($Qid_usuario)) {
+    $id_usuario_new = $GrupoRepository->getNewId();
+    $oGrupo = new Grupo();
+    $oGrupo->setId_usuario($id_usuario_new);
+} else {
+    $oGrupo = $GrupoRepository->findById($Qid_usuario);
+}
 $oGrupo->setUsuario($Qusuario);
-$oGrupo->setid_role($Qid_role);
 
 if ($GrupoRepository->Guardar($oGrupo) === false) {
     $error_txt .= _("hay un error, no se ha guardado");

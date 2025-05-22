@@ -17,7 +17,7 @@ $oCuadros = new PermDl;
 
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$oPosicion->recordar();
+//$oPosicion->recordar();
 
 $Qid_usuario = (integer)filter_input(INPUT_POST, 'id_usuario');
 $Qid_item = (integer)filter_input(INPUT_POST, 'id_item');
