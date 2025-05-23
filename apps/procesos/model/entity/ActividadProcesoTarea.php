@@ -555,7 +555,7 @@ class ActividadProcesoTarea extends ClasePropiedades
 
     private function marcar($fase_tarea)
     {
-        // Cuando un proceso está mal y se da el caso de referencias circulares en las dependecias,
+        // Cuando un proceso está mal y se da el caso de referencias circulares en las dependencias,
         // se emplea una variable global para poder detectar cuando se está intentando marcar una fase por segunda vez.
         if (in_array($fase_tarea, $this->aStack)) {
             $msg = _("Hay un error en el diseño del proceso: referencias circulares.");
@@ -563,6 +563,7 @@ class ActividadProcesoTarea extends ClasePropiedades
         }
         $this->aStack[] = $fase_tarea;
         // comprobar si hay dependencias insatisfechas
+        $this->setForce(TRUE);
         $rta = $this->comprobar_dependencia($fase_tarea);
         if ($rta['marcada'] === FALSE) {
             // No se puede marcar por alguna razón.
@@ -629,6 +630,7 @@ class ActividadProcesoTarea extends ClasePropiedades
         $id_fase = strtok($fase_tarea, '#');
 
         $oFase = new ActividadFase($id_fase);
+        $oFase->DBCarregar();
         $descFase = $oFase->getDesc_fase();
         switch ($para) {
             case 'marcar':

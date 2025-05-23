@@ -432,10 +432,10 @@ class GestorActividadProcesoTarea extends ClaseGestor
                     $oActividadProcesoTarea->setId_activ($iid_activ);
                     $oActividadProcesoTarea->setId_fase($id_fase);
                     $oActividadProcesoTarea->setId_tarea($id_tarea);
-                    if ($p == 1) {
+                    if ($p === 1) {
                         $oActividadProcesoTarea->setCompletado('t'); // Marco la primera fase como completado.
                         // marco el status correspondiente en la actividad. Hay que hacerlo al final para no entrar en
-                        // un bucle recurente al modifiar una actividad nueva que todavía no tinen el proceso.
+                        // un bucle recurrente al modificar una actividad nueva que todavía no tienen el proceso.
                         $statusNew = $statusFase;
                     }
                     if (($oActividadProcesoTarea->DBGuardar(1)) === false) {
@@ -454,7 +454,7 @@ class GestorActividadProcesoTarea extends ClaseGestor
                 }
             } else {
                 // conservo el status
-                // al hacer 'insert' no marca dependecias (sólo con 'update').
+                // al hacer 'insert' no marca dependencias (sólo con 'update').
                 // por tanto doy dos vueltas, una para crear las fases y otra para marcar las completadas
                 foreach ($cTareasProceso as $oTareaProceso) {
                     $id_fase = $oTareaProceso->getId_fase();
@@ -515,7 +515,7 @@ class GestorActividadProcesoTarea extends ClaseGestor
 
             $msg = sprintf(_("error al generar el proceso de la actividad: '%s'. Tipo de proceso: '%s' para sf/sv: %s."), $nom_activ, $nom_proceso, $isfsv);
             $msg .= "\n";
-            $msg .= _("Probablemente no esté defindo el proceso");
+            $msg .= _("Probablemente no esté definido el proceso");
             $msg .= "\n";
             $msg .= "<br>";
             echo $msg;
