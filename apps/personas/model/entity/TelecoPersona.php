@@ -72,7 +72,7 @@ class TelecoPersona extends TelecoPersonaGlobal
 					desc_teleco              = :desc_teleco,
 					num_teleco               = :num_teleco,
 					observ                   = :observ";
-            if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_item=$this->iid_item")) === false) {
+            if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_schema=$this->iid_schema AND id_item=$this->iid_item")) === false) {
                 $sClauError = 'TelecoPersonaDl.update.prepare';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
                 return false;
@@ -107,7 +107,7 @@ class TelecoPersona extends TelecoPersonaGlobal
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         if (!empty($this->iid_item) && is_numeric($this->iid_item)) {
-            if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_item=$this->iid_item")) === false) {
+            if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_schema=$this->iid_schema AND id_item=$this->iid_item")) === false) {
                 $sClauError = 'TelecoPersonaDl.carregar';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
                 return false;
@@ -144,7 +144,7 @@ class TelecoPersona extends TelecoPersonaGlobal
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        if (($oDbl->exec("DELETE FROM $nom_tabla WHERE id_item=$this->iid_item")) === false) {
+        if (($oDbl->exec("DELETE FROM $nom_tabla WHERE id_schema=$this->iid_schema AND id_item=$this->iid_item")) === false) {
             $sClauError = 'TelecoPersonaDl.eliminar';
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
             return false;
@@ -192,5 +192,3 @@ class TelecoPersona extends TelecoPersonaGlobal
 
     /* MÉTODOS GET y SET --------------------------------------------------------*/
 }
-
-?>
