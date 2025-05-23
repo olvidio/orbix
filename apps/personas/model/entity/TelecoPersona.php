@@ -106,7 +106,7 @@ class TelecoPersona extends TelecoPersonaGlobal
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        if (!empty($this->iid_item) && is_numeric($this->iid_item)) {
+        if (!empty($this->iid_schema) && !empty($this->iid_item) && is_numeric($this->iid_item)) {
             if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_schema=$this->iid_schema AND id_item=$this->iid_item")) === false) {
                 $sClauError = 'TelecoPersonaDl.carregar';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);

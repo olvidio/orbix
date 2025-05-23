@@ -45,6 +45,7 @@ abstract class TelecoPersonaGlobal extends ClasePropiedades
      * @var integer
      */
     protected $iid_nom;
+    protected $iid_schema;
     /**
      * Id_item de TelecoPersona
      *
@@ -120,6 +121,7 @@ abstract class TelecoPersonaGlobal extends ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
+                if (($nom_id === 'id_schema') && $val_id !== '') $this->iid_schema = (int)$val_id;
                 if (($nom_id === 'id_item') && $val_id !== '') $this->iid_item = (int)$val_id;
             }
         }
