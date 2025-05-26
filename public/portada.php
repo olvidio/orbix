@@ -4,6 +4,7 @@ namespace core;
 use src\menus\application\repositories\GrupMenuRepository;
 use tablonanuncios\domain\TablonAnunciosParaGM;
 use web\Hash;
+use web\Lista;
 
 // INICIO Cabecera global de URL de controlador *********************************
 require_once("apps/core/global_header.inc");
@@ -17,23 +18,24 @@ require_once("apps/core/global_object.inc");
 // SINO: ES un include de index.php, tengo todas sus variables...
 $Qid_grupmenu = (integer)filter_input(INPUT_POST, 'id_grupmenu');
 if (!empty($Qid_grupmenu)) {
-    $id_grupmenu = $Qid_grupmenu;
-}
-$GrupMenuRepository = new GrupMenuRepository();
-$oGrupMenu = $GrupMenuRepository->findById($id_grupmenu);
+    $GrupMenuRepository = new GrupMenuRepository();
+    $oGrupMenu = $GrupMenuRepository->findById($Qid_grupmenu);
 // $grup_menu = $oGrupMenu->getGrup_menu($_SESSION['oConfig']->getAmbito());
 // Utilizo las siglas para la dl
-$grup_menu = $oGrupMenu->getGrup_menu('dl');
+    $grup_menu = $oGrupMenu->getGrup_menu('dl');
 
-$tablonAnuncios = new TablonAnunciosParaGM($grup_menu);
-$oTabla = $tablonAnuncios->getTabla();
+    $tablonAnuncios = new TablonAnunciosParaGM($grup_menu);
+    $oTabla = $tablonAnuncios->getTabla();
+} else {
+    $oTabla = new Lista();
+}
 
 $txt_eliminar = _("esto borrará los anuncios seleccionados");
 
 $oHash = new Hash();
 $oHash->setCamposForm('sel!mod');
 $oHash->setCamposNo('sel!scroll_id!refresh!mod');
-$oHash->setArrayCamposHidden(['id_grupmenu' => $id_grupmenu]);
+$oHash->setArrayCamposHidden(['id_grupmenu' => $Qid_grupmenu]);
 ?>
 
 <script>

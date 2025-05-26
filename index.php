@@ -32,6 +32,7 @@ require_once("apps/core/global_header.inc");
 
 // Crea los objetos de uso global **********************************************
 require_once("apps/core/global_object.inc");
+
 // FIN de  Cabecera global de URL de controlador ********************************
 
 use core\ConfigGlobal;
@@ -60,7 +61,7 @@ $oPermisoMenu = new PermisoMenu();
 // ----------- Página de inicio -------------------
 $GrupMenuRoleRepository = new GrupMenuRoleRepository();
 $pag_ini = '';
-$oPreferencia = $PreferenciaRepository->findById( $id_usuario, 'inicio');
+$oPreferencia = $PreferenciaRepository->findById($id_usuario, 'inicio');
 if ($oPreferencia !== null) {
     $preferencia = $oPreferencia->getPreferencia();
     [$inicio, $mi_id_grupmenu] = explode('#', $preferencia);
@@ -118,7 +119,7 @@ if (ConfigGlobal::mi_usuario() === 'auxiliar') {
 $Qid_grupmenu = (integer)filter_input(INPUT_GET, 'id_grupmenu');
 $id_grupmenu = (integer)(empty($Qid_grupmenu) ? $mi_id_grupmenu : $Qid_grupmenu);
 
-$oPreferencia = $PreferenciaRepository->findById( $id_usuario,  'estilo');
+$oPreferencia = $PreferenciaRepository->findById($id_usuario, 'estilo');
 if ($oPreferencia !== null) {
     $preferencia = $oPreferencia->getPreferencia();
     [$estilo_color, $tipo_menu] = explode('#', $preferencia);
@@ -231,21 +232,21 @@ foreach ($cMenuDbs as $oMenuDb) {
             continue;
         }
 
-/*
-        $a_matches = [];
-        $rta2 = preg_match('/\{(\d+).*\}/', $orden, $a_matches);
-        if ($rta2 === FALSE) {
-            echo _("error en orden menus");
-        } else {
-            $raiz = '{' . $a_matches[1] . '}';
-            if ($a_matches[0] == $raiz) {
-                $raiz_pral = $raiz;
-            }
-        }
-        if ($raiz != $raiz_pral) {
-            continue;
-        }
-*/
+        /*
+                $a_matches = [];
+                $rta2 = preg_match('/\{(\d+).*\}/', $orden, $a_matches);
+                if ($rta2 === FALSE) {
+                    echo _("error en orden menus");
+                } else {
+                    $raiz = '{' . $a_matches[1] . '}';
+                    if ($a_matches[0] == $raiz) {
+                        $raiz_pral = $raiz;
+                    }
+                }
+                if ($raiz != $raiz_pral) {
+                    continue;
+                }
+        */
     }
 
     // hago las rutas absolutas, en vez de relativas:
@@ -256,7 +257,7 @@ foreach ($cMenuDbs as $oMenuDb) {
     // quito las llaves "{}"
     $indice = count($orden);
     if ($orden[0] === $num_menu_1) {
-       // continue;
+        // continue;
     }
     if ($indice == 1 && !$oPermisoMenu->visible($menu_perm)) {
         $num_menu_1 = $orden[0];
@@ -312,6 +313,17 @@ $oHash = new Hash();
 $oHash->setUrl(ConfigGlobal::getWeb() . '/src/usuarios/infrastructure/controllers/preferencias_guardar.php');
 $oHash->setCamposForm('que!tabla!sPrefs');
 $h = $oHash->linkSinVal();
+
+////////////// antes de enviar headers
+ob_start();
+if ($_SESSION['session_auth']['expire'] == 1) {
+    include ("frontend/usuarios/controller/usuario_form_pwd.php");
+} else if (!empty($pag_ini)) {
+    include($pag_ini);
+} else {
+    include("public/portada.php");
+}
+$portada_html = ob_get_clean();
 
 // ------------- Html -------------------
 ?>
@@ -1033,15 +1045,7 @@ if ($gm > 1) {
     <span class=handle onClick="fnjs_ir_a('#ir_atras');"></span>
 </div>
 <div id="main" refe="<?= $pag_ini ?>">
-    <?php
-    if ($_SESSION['session_auth']['expire'] == 1) {
-        include("frontend/usuarios/controller/usuario_form_pwd.php");
-    } else if (!empty($pag_ini)) {
-        include($pag_ini);
-    } else {
-        include("public/portada.php");
-    }
-    ?>
+    <?php echo $portada_html ?>
     <script>
         $(function () {
             fnjs_cambiar_base_link();

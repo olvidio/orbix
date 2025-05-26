@@ -48,8 +48,8 @@ $zona_horaria = empty($data['zona_horaria']) ? 'UTC' : $data['zona_horaria'];
 // ----------- Página de inicio -------------------
 $aOpciones = ['exterior' => ucfirst(_("home")),
     'oficina' => ucfirst(_("oficina")),
-    'personal' => ucfirst(_("personal")),
-    'aniversarios' => ucfirst(_("aniversarios")),
+    //'personal' => ucfirst(_("personal")),
+    //'aniversarios' => ucfirst(_("aniversarios")),
 ];
 if (ConfigGlobal::is_app_installed('cambios')) {
     $aOpciones['avisos'] = ucfirst(_("avisos cambios actividades"));

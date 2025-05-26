@@ -204,6 +204,7 @@ class Posicion
         $this->setParametro('stack', $stack);
         $aPosition = array('url' => $this->surl, 'bloque' => $this->sbloque, 'parametros' => $this->aParametros, 'stack' => $stack);
 
+        //$file = $line = null; headers_sent($file, $line); die("$file:$line");
         session_start();
         $_SESSION['position'][$stack] = $aPosition;
         session_write_close();
