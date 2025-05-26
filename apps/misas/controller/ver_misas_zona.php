@@ -6,7 +6,8 @@ use core\ViewTwig;
 use encargossacd\model\EncargoConstants;
 use misas\domain\repositories\EncargoDiaRepository;
 use misas\model\EncargosZona;
-use personas\model\entity\GestorPersona;
+//use personas\model\entity\GestorPersona;
+use personas\model\entity\GestorPersonaSacd;
 use personas\model\entity\PersonaSacd;
 use web\DateTimeLocal;
 use web\Desplegable;
@@ -51,16 +52,27 @@ if ($Qseleccion & 2) {
     }
 }
 if ($Qseleccion & 4) {
-    $a_Clases = [];
-    $a_Clases[] = array('clase' => 'PersonaN', 'get' => 'getPersonas');
-    $a_Clases[] = array('clase' => 'PersonaAgd', 'get' => 'getPersonas');
+//    $a_Clases = [];
+//    $a_Clases[] = array('clase' => 'PersonaN', 'get' => 'getPersonas');
+//    $a_Clases[] = array('clase' => 'PersonaAgd', 'get' => 'getPersonas');
+//    $aWhere = [];
+//    $aOperador = [];
+//    $aWhere['sacd'] = 't';
+//    $aWhere['situacion'] = 'A';
+//    $aWhere['_ordre'] = 'apellido1,apellido2,nom';
+//    $GesPersonas = new GestorPersona();
+//    $GesPersonas->setClases($a_Clases);
+
+
     $aWhere = [];
     $aOperador = [];
     $aWhere['sacd'] = 't';
     $aWhere['situacion'] = 'A';
+    $aWhere['id_tabla'] = "'n','a'";
+    $aOperador['id_tabla'] = 'IN';
     $aWhere['_ordre'] = 'apellido1,apellido2,nom';
-    $GesPersonas = new GestorPersona();
-    $GesPersonas->setClases($a_Clases);
+    $GesPersonas = new GestorPersonaSacd();
+
     $cPersonas = $GesPersonas->getPersonas($aWhere, $aOperador);
     foreach ($cPersonas as $oPersona) {
         $id_nom = $oPersona->getId_nom();
@@ -80,15 +92,26 @@ if ($Qseleccion & 4) {
     }
 }
 if ($Qseleccion & 8) { 
-    $a_Clases = [];
-    $a_Clases[] = array('clase' => 'PersonaEx', 'get' => 'getPersonasEx');
+//    $a_Clases = [];
+//    $a_Clases[] = array('clase' => 'PersonaEx', 'get' => 'getPersonasEx');
+//    $aWhere = [];
+//    $aOperador = [];
+//    $aWhere['sacd'] = 't';
+//    $aWhere['situacion'] = 'A';
+//    $aWhere['_ordre'] = 'apellido1,apellido2,nom';
+//    $GesPersonas = new GestorPersona();
+//    $GesPersonas->setClases($a_Clases);
+
+
     $aWhere = [];
     $aOperador = [];
     $aWhere['sacd'] = 't';
     $aWhere['situacion'] = 'A';
+//    $aWhere['id_tabla'] = "'n','a'";
+//    $aOperador['id_tabla'] = 'IN';
     $aWhere['_ordre'] = 'apellido1,apellido2,nom';
-    $GesPersonas = new GestorPersona();
-    $GesPersonas->setClases($a_Clases);
+    $GesPersonas = new GestorPersonaSacd();
+
     $cPersonas = $GesPersonas->getPersonas($aWhere, $aOperador);
     foreach ($cPersonas as $oPersona) {
         $id_nom = $oPersona->getId_nom();

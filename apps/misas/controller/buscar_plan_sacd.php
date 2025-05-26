@@ -4,7 +4,7 @@
 
 use core\ViewTwig;
 use misas\domain\entity\InicialesSacd;
-use personas\model\entity\GestorPersona;
+//use personas\model\entity\GestorPersona;
 use personas\model\entity\GestorPersonaSacd;
 use web\DateTimeLocal;
 use web\Desplegable;
