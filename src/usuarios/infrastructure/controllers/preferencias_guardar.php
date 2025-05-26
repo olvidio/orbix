@@ -6,7 +6,6 @@ use core\ConfigGlobal;
 use src\usuarios\application\repositories\PreferenciaRepository;
 use src\usuarios\domain\entity\Preferencia;
 use web\ContestarJson;
-use web\Hash;
 
 require_once("apps/core/global_header.inc");
 // Archivos requeridos por esta url **********************************************
@@ -23,7 +22,7 @@ $Qque = (string)filter_input(INPUT_POST, 'que');
 
 $PreferenciaRepository = new PreferenciaRepository();
 
-$error_txt='';
+$error_txt = '';
 if ($Qque === "slickGrid") {
     $Qtabla = (string)filter_input(INPUT_POST, 'tabla');
     $QsPrefs = (string)filter_input(INPUT_POST, 'sPrefs');
@@ -59,6 +58,11 @@ if ($Qque === "slickGrid") {
     // Guardar página de inicio:
     $inicio = $Qinicio . "#" . $Qoficina;
     $oPreferencia = $PreferenciaRepository->findById($id_usuario, 'inicio');
+    if ($oPreferencia === null) {
+        $oPreferencia = new Preferencia();
+        $oPreferencia->setId_usuario($id_usuario);
+        $oPreferencia->setTipo('inicio');
+    }
     $oPreferencia->setPreferencia($inicio);
     if ($PreferenciaRepository->Guardar($oPreferencia) === false) {
         $error_txt .= _("hay un error, no se ha guardado");
@@ -70,6 +74,11 @@ if ($Qque === "slickGrid") {
     $Qtipo_menu = (string)filter_input(INPUT_POST, 'tipo_menu');
     $estilo = $Qestilo_color . "#" . $Qtipo_menu;
     $oPreferencia = $PreferenciaRepository->findById($id_usuario, 'estilo');
+    if ($oPreferencia === null) {
+        $oPreferencia = new Preferencia();
+        $oPreferencia->setId_usuario($id_usuario);
+        $oPreferencia->setTipo('estilo');
+    }
     $oPreferencia->setPreferencia($estilo);
     if ($PreferenciaRepository->Guardar($oPreferencia) === false) {
         $error_txt .= _("hay un error, no se ha guardado");
@@ -79,6 +88,11 @@ if ($Qque === "slickGrid") {
     // Guardar presentación tablas:
     $Qtipo_tabla = (string)filter_input(INPUT_POST, 'tipo_tabla');
     $oPreferencia = $PreferenciaRepository->findById($id_usuario, 'tabla_presentacion');
+    if ($oPreferencia === null) {
+        $oPreferencia = new Preferencia();
+        $oPreferencia->setId_usuario($id_usuario);
+        $oPreferencia->setTipo('tabla_presentacion');
+    }
     $oPreferencia->setPreferencia($Qtipo_tabla);
     if ($PreferenciaRepository->Guardar($oPreferencia) === false) {
         $error_txt .= _("hay un error, no se ha guardado");
@@ -88,6 +102,11 @@ if ($Qque === "slickGrid") {
     // Guardar presentación nombre Apellidos:
     $QordenApellidos = (string)filter_input(INPUT_POST, 'ordenApellidos');
     $oPreferencia = $PreferenciaRepository->findById($id_usuario, 'ordenApellidos');
+    if ($oPreferencia === null) {
+        $oPreferencia = new Preferencia();
+        $oPreferencia->setId_usuario($id_usuario);
+        $oPreferencia->setTipo('ordenApellidos');
+    }
     $oPreferencia->setPreferencia($QordenApellidos);
     if ($PreferenciaRepository->Guardar($oPreferencia) === false) {
         $error_txt .= _("hay un error, no se ha guardado");
@@ -98,6 +117,11 @@ if ($Qque === "slickGrid") {
     // Guardar idioma:
     $Qidioma_nou = (string)filter_input(INPUT_POST, 'idioma_nou');
     $oPreferencia = $PreferenciaRepository->findById($id_usuario, 'idioma');
+    if ($oPreferencia === null) {
+        $oPreferencia = new Preferencia();
+        $oPreferencia->setId_usuario($id_usuario);
+        $oPreferencia->setTipo('idioma');
+    }
     $oPreferencia->setPreferencia($Qidioma_nou);
     if ($PreferenciaRepository->Guardar($oPreferencia) === false) {
         $error_txt .= _("hay un error, no se ha guardado");
@@ -110,6 +134,11 @@ if ($Qque === "slickGrid") {
     $a_zonas_horarias = DateTimeZone::listIdentifiers();
     $zona_horaria_txt = $a_zonas_horarias[$Qzona_horaria_nou];
     $oPreferencia = $PreferenciaRepository->findById($id_usuario, 'zona_horaria');
+    if ($oPreferencia === null) {
+        $oPreferencia = new Preferencia();
+        $oPreferencia->setId_usuario($id_usuario);
+        $oPreferencia->setTipo('zona_horaria');
+    }
     $oPreferencia->setPreferencia($zona_horaria_txt);
     if ($PreferenciaRepository->Guardar($oPreferencia) === false) {
         $error_txt .= _("hay un error, no se ha guardado");
