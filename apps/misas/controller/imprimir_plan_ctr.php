@@ -103,10 +103,9 @@ $a_nombre_mes_breve=[1=>'Ene', 2=>'feb', 3=>'mar', 4=>'abr', 5=>'may', 6=>'jun',
 $columns_cuadricula = [
     ["id" => "encargo", "name" => "Encargo", "field" => "encargo", "width" => 250, "cssClass" => "cell-title"],
 ];
-echo '<TABLE style="width: 100%">';
+echo '<TABLE>';
 echo '<TR>';
-//echo '<TH class="cell-title" style:"width:500px">Encargo</TH>';
-echo '<TH class="cell-title" style:"width:10%">Encargo</TH>';
+echo '<TH class="cell-title" style:"width:250px">Encargo</TH>';
 
 $dia_week_sacd = [];
 $oInicio = new DateTimeLocal($Qempiezamin_rep);
@@ -118,6 +117,7 @@ $date_range = new DatePeriod($oInicio, $interval, $oFin);
 $inicio_dia = $Qempiezamin_rep.' 00:00:00';
 $fin_dia = $Qempiezamax_rep.' 23:59:59';
 
+
 foreach ($date_range as $date) {
     $id_dia = $date->format('Y-m-d');
     $num_dia = $date->format('j');
@@ -125,7 +125,7 @@ foreach ($date_range as $date) {
     $dia_week = $date->format('N');
     $dia_week_sacd[$id_dia] = $date->format('N');
     $nom_dia=$a_dias_semana_breve[$dia_week].' '.$num_dia.'.'.$num_mes;
-    $nom_dia2=$a_dias_semana_breve[$dia_week].'<br>'.$num_dia.'.'.$num_mes;
+    $nom_dia2=$a_dias_semana_breve[$dia_week].'<br>'.$dia_mes.'.'.$num_mes;
     //    $nom_dia = $a_dias_semana_breve[$dia_week].$num_dia.$a_nombre_mes_breve[$num_mes];
 
     $columns_cuadricula[] = [
@@ -135,7 +135,7 @@ foreach ($date_range as $date) {
         "width" => 80, 
         "cssClass" => "cell-title"
     ];
-    echo '<TH class=cell-title style:"width:60px">'.$nom_dia2.'</TH>';
+    echo '<TH class=cell-title style:"width:60">'.$nom_dia2.'</TH>';
 }
 $data_cuadricula = [];
 
@@ -153,10 +153,6 @@ foreach ($cEncargosCtr as $oEncargoCtr) {
     $prioridad = $oEncargo->getPrioridad();
     $observ = $oEncargo->getObserv();
 
-    $data_cols["encargo"] = $desc_enc;
-    echo '</TR>';
-    echo '<TR><TD>'.$desc_enc.'</TD>';
-
     if (!empty($id_ubi)) {
         $oUbi = Ubi::newUbi($id_ubi);
         $nombre_ubi = $oUbi->getNombre_ubi();
@@ -172,8 +168,6 @@ foreach ($cEncargosCtr as $oEncargoCtr) {
     }
 
     foreach ($date_range as $date) {
-        $iniciales=' -- ';
-
         $id_dia = $date->format('Y-m-d');
     
         $inicio_dia = $id_dia.' 00:00:00';
@@ -226,24 +220,23 @@ foreach ($cEncargosCtr as $oEncargoCtr) {
             $iniciales .= " ".$hora_ini;
             $iniciales .= empty($oEncargoDia->getObserv())? '' : '*';
             $data_cols["$id_dia"] = $iniciales;
+
+
         }
-        echo '<TD>'.$iniciales.'</TD>';
 
 //        $data_cols["dia"] = $dia_y_hora;
 //        $data_cols["observaciones"] = $observ;
 
-//        $oEncargo = new Encargo($id_enc);
-//        $desc_enc = $oEncargo->getDesc_enc();
+        $oEncargo = new Encargo($id_enc);
+        $desc_enc = $oEncargo->getDesc_enc();
 
-//        $data_cols["encargo"] = $desc_enc;
+        $data_cols["encargo"] = $desc_enc;
 
 
     }
     $data_cuadricula[] = $data_cols;
 }
 
-echo '</TR>';
-echo '</TABLE>';
 
 
 
@@ -257,5 +250,5 @@ $a_campos = ['oPosicion' => $oPosicion,
     'json_data_cuadricula' => $json_data_cuadricula,
 ];
 
-//$oView = new ViewTwig('misas/controller');
-//echo $oView->render('ver_plan_ctr.html.twig', $a_campos);
+$oView = new ViewTwig('misas/controller');
+echo $oView->render('ver_plan_ctr.html.twig', $a_campos);

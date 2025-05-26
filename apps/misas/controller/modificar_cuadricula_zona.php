@@ -157,10 +157,6 @@ $a_nombre_mes_breve=[1=>'Ene', 2=>'feb', 3=>'mar', 4=>'abr', 5=>'may', 6=>'jun',
 $columns_cuadricula = "[
     {'id': 'encargo', 'name' : 'Encargo', 'field' : 'encargo', 'width' : 250, 'cssClass' : 'cell-title', 'formatter': formato_encargos}";
 
-echo '<TABLE>';
-echo '<TR>';
-echo '<TH class="cell-title" style:"width:250px">Encargo</TH>';
-    
 $titulo_sacd = [];
 $dia_week_sacd = [];
 switch (trim($QTipoPlantilla)) {
@@ -189,8 +185,6 @@ switch (trim($QTipoPlantilla)) {
             $titulo_sacd[$num_dia] = $nom_dia;
             $columns_cuadricula .= ",
             {'id' : '".$num_dia."', 'name' : '".$nom_dia."', 'field' : '".$num_dia."', 'width' : 60, 'formatter': formato}";
-
-            echo '<TH class=cell-title style:"width:60">'.$nom_dia.'</TH>';
         }
         break;
     case EncargoDia::PLANTILLA_DOMINGOS_UNO:
@@ -224,8 +218,6 @@ switch (trim($QTipoPlantilla)) {
             $columns_cuadricula .= ",
             {'id' : '".$num_dia."', 'name' : '".$nom_dia."', 'field' : '".$num_dia."', 'width' : 60, 'formatter': formato}";
 
-            echo '<TH class=cell-title style:"width:60">'.$nom_dia.'</TH>';
-
             $titulo_sacd[$num_dia] = $nom_dia;
         }
         break;
@@ -255,8 +247,6 @@ switch (trim($QTipoPlantilla)) {
             $columns_cuadricula .= ",
             {'id' : '".$num_dia."', 'name' : '".$nom_dia."', 'field' : '".$num_dia."', 'width' : 60, 'formatter': formato}";
 
-            echo '<TH class=cell-title style:"width:60">'.$nom_dia.'</TH>';
-
             $titulo_sacd[$num_dia] = $nom_dia;
         }
         break;
@@ -273,11 +263,8 @@ switch (trim($QTipoPlantilla)) {
             $dia_mes = $date->format('d');
             $num_mes = $date->format('m');
             $nom_dia=$a_dias_semana_breve[$dia_week].' '.$dia_mes.'.'.$num_mes;
-            $nom_dia2=$a_dias_semana_breve[$dia_week].'<br>'.$dia_mes.'.'.$num_mes;
             $columns_cuadricula .= ",
             {'id' : '".$num_dia."', 'name' : '".$nom_dia."', 'field' : '".$num_dia."', 'width' : 60, 'formatter': formato}";
-
-            echo '<TH class=cell-title style:"width:60">'.$nom_dia2.'</TH>';
 
             $titulo_sacd[$num_dia] = $nom_dia;
         }
@@ -320,10 +307,6 @@ foreach ($cEncargosZona as $oEncargo) {
         $data_cols3= [];
         $meta_dia3 = [];        
     }
-
-    echo '</TR>';
-    echo '<TR><TD>'.$desc_enc.'</TD>';
-
     foreach ($date_range as $date) {
 //        $d++;
         $num_dia = $date->format('Y-m-d');
@@ -359,7 +342,6 @@ foreach ($cEncargosZona as $oEncargo) {
         $nom_dia = $date->format('D');
 //echo $num_dia.'<br>';
         $data_cols["$num_dia"] = " -- ";
-        $iniciales=' -- ';
 
         $meta_dia["$num_dia"] = [
             "uuid_item" => "",
@@ -445,7 +427,6 @@ foreach ($cEncargosZona as $oEncargo) {
             $data_cols["$num_dia"] = $iniciales;
 //            $data_cols[$num_dia] = $iniciales;
         }
-        echo '<TD>'.$iniciales.'</TD>';
 
         if (($QTipoPlantilla == EncargoDia::PLANTILLA_SEMANAL_TRES) || ($QTipoPlantilla == EncargoDia::PLANTILLA_DOMINGOS_TRES) || ($QTipoPlantilla == EncargoDia::PLANTILLA_MENSUAL_TRES)) {
             $data_cols2["$num_dia"] = " -- ";
@@ -617,8 +598,6 @@ foreach ($cEncargosZona as $oEncargo) {
         $data_cuadricula[] = $data_cols3;
     }
 }
-echo '</TR>';
-//echo '</TABLE>';
 
 $contador_1a_sacd = [];
 $contador_total_sacd = [];
@@ -750,10 +729,6 @@ foreach ($sacd_zona as $id_nom => $nombre_sacd) {
             }
 }
 
-//echo '<TABLE>';
-echo '<TR>';
-echo '<TH class="cell-title" style:"width:250px">Sacerdote</TH>';
-
 $data_cols = [];
 $data_cols['encargo']='Sacerdotes';
 $data_cols['id_nom']='';
@@ -770,9 +745,7 @@ foreach ($date_range as $date) {
         "texto" => $num_dia,
         "tipo" => 'titulo',
     ];
-    echo '<TH class=cell-title style:"width:60">'.$titulo_sacd[$num_dia].'</TH>';
 }
-echo '</TR>';
 $data_cols["meta"]=$meta;
 $data_cuadricula[]=$data_cols;
 
@@ -798,7 +771,6 @@ foreach($lista_sacd as $key => $nombre_sacd)
     $exp_key=explode('#',$key);
     $id_nom=$exp_key[1];
     $data_cols['encargo']=$nombre_sacd;
-    echo '<TR><TD>'.$nombre_sacd.'</TD>';
     $data_cols['id_nom']=$id_nom;
 //    echo $nombre_sacd.$id_nom.'<br>';
     foreach ($date_range as $date) {
@@ -903,14 +875,11 @@ foreach($lista_sacd as $key => $nombre_sacd)
         ];
 
 //        echo $num_dia.$meta_sacd["$num_dia"]['tipo'].$meta_sacd["$num_dia"]['color'].$meta_sacd["$num_dia"]['texto'].'<br>';
-        echo '<TD>'.$data_cols["$num_dia"].'</TD>';
     }
     $data_cols["meta"]=$meta_sacd;
     $data_cuadricula[]=$data_cols;
-    echo '</TR>';
 }
 
-echo '</TABLE>';
 
 $json_data_cuadricula = json_encode($data_cuadricula);
 
@@ -951,5 +920,5 @@ $a_campos = ['oPosicion' => $oPosicion,
     'h_cuadricula_update' => $h_cuadricula_update,
 ];
 
-//$oView = new ViewTwig('misas/controller');
-//echo $oView->render('ver_cuadricula_zona.html.twig', $a_campos);
+$oView = new ViewTwig('misas/controller');
+echo $oView->render('ver_cuadricula_zona.html.twig', $a_campos);

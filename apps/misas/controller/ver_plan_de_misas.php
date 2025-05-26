@@ -29,7 +29,7 @@ $oFormP = new PeriodoQue();
 $oFormP->setFormName('frm_nuevo_periodo');
 $oFormP->setTitulo(core\strtoupper_dlb(_("seleccionar un periodo")));
 $oFormP->setPosiblesPeriodos($aOpciones);
-$oFormP->setDesplPeriodosOpcion_sel('proximo_mes');
+$oFormP->setDesplPeriodosOpcion_sel('este_mes');
 $oFormP->setisDesplAnysVisible(FALSE);
 
 $ohoy = new DateTimeLocal(date('Y-m-d'));
@@ -41,7 +41,7 @@ $oFormP->setEmpiezaMax($shoy);
 $oGestorZona = new GestorZona();
 $oDesplZonas = $oGestorZona->getListaZonas();
 $oDesplZonas->setNombre('id_zona');
-$oDesplZonas->setAction('fnjs_modificar_cuadricula_zona()');
+$oDesplZonas->setAction('fnjs_ver_cuadricula_zona()');
 
 $a_Orden = array(
     'orden' => 'orden',
@@ -52,11 +52,11 @@ $a_Orden = array(
 $oDesplOrden = new Desplegable();
 $oDesplOrden->setOpciones($a_Orden);
 $oDesplOrden->setNombre('orden');
-$oDesplOrden->setAction('fnjs_modificar_cuadricula_zona()');
+$oDesplOrden->setAction('fnjs_ver_cuadricula_zona()');
 
-$url_modificar_cuadricula_zona = 'apps/misas/controller/modificar_cuadricula_zona.php';
+$url_ver_cuadricula_zona = 'apps/misas/controller/ver_cuadricula_zona.php';
 $oHashZonaPeriodo = new Hash();
-$oHashZonaPeriodo->setUrl($url_modificar_cuadricula_zona);
+$oHashZonaPeriodo->setUrl($url_ver_cuadricula_zona);
 $oHashZonaPeriodo->setCamposForm('id_zona!periodo!empiezamin!empiezamax!orden!tipo_plantilla');
 $h_zona_periodo = $oHashZonaPeriodo->linkSinVal();
 
@@ -64,9 +64,9 @@ $a_campos = ['oPosicion' => $oPosicion,
     'oDesplZonas' => $oDesplZonas,
     'oDesplOrden' => $oDesplOrden,
     'oFormP' => $oFormP,
-    'url_modificar_cuadricula_zona' => $url_modificar_cuadricula_zona,
+    'url_ver_cuadricula_zona' => $url_ver_cuadricula_zona,
     'h_zona_periodo' => $h_zona_periodo,
 ];
  
 $oView = new ViewTwig('misas/controller');
-echo $oView->render('modificar_plan_de_misas.html.twig', $a_campos);
+echo $oView->render('ver_plan_de_misas.html.twig', $a_campos);

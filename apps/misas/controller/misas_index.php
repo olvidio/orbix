@@ -16,6 +16,7 @@ require_once("apps/core/global_object.inc");
 $goModificarPlantilla = Hash::link('apps/misas/controller/modificar_plantilla.php');
 $goPrepararPlanDeMisas = Hash::link('apps/misas/controller/preparar_plan_de_misas.php');
 $goModificarPlanDeMisas = Hash::link('apps/misas/controller/modificar_plan_de_misas.php');
+$goVerPlanDeMisas = Hash::link('apps/misas/controller/ver_plan_de_misas.php');
 $goBuscarPlanSacd = Hash::link('apps/misas/controller/buscar_plan_sacd.php');
 $goBuscarPlanCtr = Hash::link('apps/misas/controller/buscar_plan_ctr.php');
 $goModificarEncargos = Hash::link('apps/misas/controller/modificar_encargos.php');
@@ -27,6 +28,7 @@ $a_campos = ['oPosicion' => $oPosicion,
     'goModificarPlantilla' => $goModificarPlantilla,
     'goPrepararPlanDeMisas' => $goPrepararPlanDeMisas,
     'goModificarPlanDeMisas' => $goModificarPlanDeMisas,
+    'goVerPlanDeMisas' => $goVerPlanDeMisas,
     'goBuscarPlanSacd' => $goBuscarPlanSacd,
     'goBuscarPlanCtr' => $goBuscarPlanCtr,
     'goModificarEncargos' => $goModificarEncargos,

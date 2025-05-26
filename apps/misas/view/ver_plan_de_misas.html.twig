@@ -5,7 +5,7 @@
             <thead>
             <tr>
                 <th class=titulo_inv colspan=12>
-                    {{ "Modificar Plan de Misas"|trans|capitalize }}
+                    {{ "Ver Plan de Misas"|trans|capitalize }}
                 </th>
             </tr>
             <tr>
@@ -32,10 +32,10 @@
 </div>
 
 <script>
-    fnjs_modificar_cuadricula_zona = function () {
+    fnjs_ver_cuadricula_zona = function () {
         let id_zona = $('#id_zona').val();
         if (id_zona) {
-            let url = '{{ url_modificar_cuadricula_zona }}';
+            let url = '{{ url_ver_cuadricula_zona }}';
 	        var zona=$('#sacd_zona').prop('checked');
     	    var periodo=$('#periodo').val();
     	    var empiezamax=$('#empiezamax').val();
@@ -56,8 +56,8 @@
         }
     }
 
-	$(document).ready($('#periodo').change(function(){funjs_activar_fecha();fnjs_modificar_cuadricula_zona();}));
-	$(document).ready($('#empiezamin').change(function(){funjs_activar_fecha();fnjs_modificar_cuadricula_zona();}));
-	$(document).ready($('#empiezamax').change(function(){funjs_activar_fecha();fnjs_modificar_cuadricula_zona();}));
+	$(document).ready($('#periodo').change(function(){funjs_activar_fecha();fnjs_ver_cuadricula_zona();}));
+	$(document).ready($('#empiezamin').change(function(){funjs_activar_fecha();fnjs_ver_cuadricula_zona();}));
+	$(document).ready($('#empiezamax').change(function(){funjs_activar_fecha();fnjs_ver_cuadricula_zona();}));
 
 </script>

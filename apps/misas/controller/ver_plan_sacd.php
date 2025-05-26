@@ -101,6 +101,12 @@ $columns_cuadricula = [
     ["id" => "encargo", "name" => "Encargo", "field" => "encargo", "width" => 250, "cssClass" => "cell-title"],
     ["id" => "observaciones", "name" => "Observaciones", "field" => "observaciones", "width" => 250, "cssClass" => "cell-title"],
 ];
+echo '<TABLE>';
+echo '<TR>';
+//echo '<TH class="cell-title" style:"width:500px">Encargo</TH>';
+echo '<TH class="cell-title" style:"width:10%">Dia</TH>';
+echo '<TH class="cell-title" style:"width:30%">Encargo</TH>';
+echo '<TH class="cell-title" style:"width:30%">Observaciones</TH>';
 
 $dia_week_sacd = [];
 $oInicio = new DateTimeLocal($Qempiezamin_rep);
@@ -157,8 +163,14 @@ foreach($cEncargosDia as $oEncargoDia) {
     $data_cols["encargo"] = $desc_enc;
 
     $data_cuadricula[] = $data_cols;
+    echo '</TR>';
+    echo '<TR><TD>'.$dia_y_hora.'</TD>';
+    echo '<TD>'.$desc_enc.'</TD>';
+    echo '<TD>'.$observ.'</TD>';
 }
 
+echo '</TR>';
+echo '</TABLE>';
 
 
 $json_columns_cuadricula = json_encode($columns_cuadricula);
@@ -170,5 +182,5 @@ $a_campos = ['oPosicion' => $oPosicion,
     'json_data_cuadricula' => $json_data_cuadricula,
 ];
 
-$oView = new ViewTwig('misas/controller');
-echo $oView->render('ver_plan_sacd.html.twig', $a_campos);
+//$oView = new ViewTwig('misas/controller');
+//echo $oView->render('ver_plan_sacd.html.twig', $a_campos);
