@@ -5,6 +5,7 @@
 use core\ConfigGlobal;
 use src\usuarios\application\repositories\PreferenciaRepository;
 use src\usuarios\domain\entity\Preferencia;
+use web\ContestarJson;
 use web\Hash;
 
 require_once("apps/core/global_header.inc");
@@ -22,6 +23,7 @@ $Qque = (string)filter_input(INPUT_POST, 'que');
 
 $PreferenciaRepository = new PreferenciaRepository();
 
+$error_txt='';
 if ($Qque === "slickGrid") {
     $Qtabla = (string)filter_input(INPUT_POST, 'tabla');
     $QsPrefs = (string)filter_input(INPUT_POST, 'sPrefs');
@@ -44,8 +46,8 @@ if ($Qque === "slickGrid") {
 
     $oPreferencia->setPreferencia($QsPrefs);
     if ($PreferenciaRepository->Guardar($oPreferencia) === false) {
-        echo _("hay un error, no se ha guardado");
-        echo "\n" . $PreferenciaRepository->getErrorTxt();
+        $error_txt .= _("hay un error, no se ha guardado");
+        $error_txt .= "\n" . $PreferenciaRepository->getErrorTxt();
     }
 } else {
     $Qoficina = (string)filter_input(INPUT_POST, 'oficina');
@@ -59,8 +61,8 @@ if ($Qque === "slickGrid") {
     $oPreferencia = $PreferenciaRepository->findById($id_usuario, 'inicio');
     $oPreferencia->setPreferencia($inicio);
     if ($PreferenciaRepository->Guardar($oPreferencia) === false) {
-        echo _("hay un error, no se ha guardado");
-        echo "\n" . $PreferenciaRepository->getErrorTxt();
+        $error_txt .= _("hay un error, no se ha guardado");
+        $error_txt .= "\n" . $PreferenciaRepository->getErrorTxt();
     }
 
     // Guardar estilo:
@@ -70,8 +72,8 @@ if ($Qque === "slickGrid") {
     $oPreferencia = $PreferenciaRepository->findById($id_usuario, 'estilo');
     $oPreferencia->setPreferencia($estilo);
     if ($PreferenciaRepository->Guardar($oPreferencia) === false) {
-        echo _("hay un error, no se ha guardado");
-        echo "\n" . $PreferenciaRepository->getErrorTxt();
+        $error_txt .= _("hay un error, no se ha guardado");
+        $error_txt .= "\n" . $PreferenciaRepository->getErrorTxt();
     }
 
     // Guardar presentación tablas:
@@ -79,8 +81,8 @@ if ($Qque === "slickGrid") {
     $oPreferencia = $PreferenciaRepository->findById($id_usuario, 'tabla_presentacion');
     $oPreferencia->setPreferencia($Qtipo_tabla);
     if ($PreferenciaRepository->Guardar($oPreferencia) === false) {
-        echo _("hay un error, no se ha guardado");
-        echo "\n" . $PreferenciaRepository->getErrorTxt();
+        $error_txt .= _("hay un error, no se ha guardado");
+        $error_txt .= "\n" . $PreferenciaRepository->getErrorTxt();
     }
 
     // Guardar presentación nombre Apellidos:
@@ -88,8 +90,8 @@ if ($Qque === "slickGrid") {
     $oPreferencia = $PreferenciaRepository->findById($id_usuario, 'ordenApellidos');
     $oPreferencia->setPreferencia($QordenApellidos);
     if ($PreferenciaRepository->Guardar($oPreferencia) === false) {
-        echo _("hay un error, no se ha guardado");
-        echo "\n" . $PreferenciaRepository->getErrorTxt();
+        $error_txt .= _("hay un error, no se ha guardado");
+        $error_txt .= "\n" . $PreferenciaRepository->getErrorTxt();
     }
     $_SESSION['session_auth']['ordenApellidos'] = $QordenApellidos;
 
@@ -98,8 +100,8 @@ if ($Qque === "slickGrid") {
     $oPreferencia = $PreferenciaRepository->findById($id_usuario, 'idioma');
     $oPreferencia->setPreferencia($Qidioma_nou);
     if ($PreferenciaRepository->Guardar($oPreferencia) === false) {
-        echo _("hay un error, no se ha guardado");
-        echo "\n" . $PreferenciaRepository->getErrorTxt();
+        $error_txt .= _("hay un error, no se ha guardado");
+        $error_txt .= "\n" . $PreferenciaRepository->getErrorTxt();
     }
 
     // Guardar zona_horaria:
@@ -110,11 +112,10 @@ if ($Qque === "slickGrid") {
     $oPreferencia = $PreferenciaRepository->findById($id_usuario, 'zona_horaria');
     $oPreferencia->setPreferencia($zona_horaria_txt);
     if ($PreferenciaRepository->Guardar($oPreferencia) === false) {
-        echo _("hay un error, no se ha guardado");
-        echo "\n" . $PreferenciaRepository->getErrorTxt();
+        $error_txt .= _("hay un error, no se ha guardado");
+        $error_txt .= "\n" . $PreferenciaRepository->getErrorTxt();
     }
 
-    // volver a la página de configuración
-    $location = Hash::link(ConfigGlobal::getWeb() . '/index.php?' . http_build_query(array('PHPSESSID' => session_id())));
-    echo "<body onload=\"$location\"></body>";
+
+    ContestarJson::enviar($error_txt, 'ok');
 }
