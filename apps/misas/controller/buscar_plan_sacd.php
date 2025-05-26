@@ -5,6 +5,7 @@
 use core\ViewTwig;
 use misas\domain\entity\InicialesSacd;
 use personas\model\entity\GestorPersona;
+use personas\model\entity\GestorPersonaSacd;
 use web\DateTimeLocal;
 use web\Desplegable;
 use web\Hash;
@@ -53,16 +54,14 @@ $shoy = $ohoy ->format('d/m/Y');
 $oFormP->setEmpiezaMin($shoy);
 $oFormP->setEmpiezaMax($shoy);
 
-$a_Clases = [];
-$a_Clases[] = array('clase' => 'PersonaN', 'get' => 'getPersonas');
-$a_Clases[] = array('clase' => 'PersonaAgd', 'get' => 'getPersonas');
 $aWhere = [];
 $aOperador = [];
 $aWhere['sacd'] = 't';
 $aWhere['situacion'] = 'A';
+$aWhere['id_tabla'] = "'n','a'";
+$aOperador['id_tabla'] = 'IN';
 $aWhere['_ordre'] = 'apellido1,apellido2,nom';
-$GesPersonas = new GestorPersona();
-$GesPersonas->setClases($a_Clases);
+$GesPersonas = new GestorPersonaSacd();
 $cPersonas = $GesPersonas->getPersonas($aWhere, $aOperador);
 foreach ($cPersonas as $oPersona) {
     $id_nom = $oPersona->getId_nom();
