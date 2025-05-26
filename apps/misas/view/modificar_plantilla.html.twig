@@ -52,7 +52,7 @@
         let tipo_plantilla = $('#tipo_plantilla').val();
         let orden = $('#orden').val();
         if (id_zona) {
-            let url = '{{ url_ver_cuadricula_zona }}';
+            let url = '{{ url_modificar_cuadricula_zona }}';
             let parametros = 'id_zona=' + id_zona + '&tipo_plantilla=' + tipo_plantilla + '&orden=' + orden + '{{ h_zona_tipo|raw }}';
             $.ajax({
                 url: url,
@@ -81,10 +81,10 @@
                 dataType: 'html'
             })
                 .done(function (rta_txt) {
-                    let url_ver_cuadricula_zona = '{{ url_ver_cuadricula_zona }}';
+                    let url_modificar_cuadricula_zona = '{{ url_modificar_cuadricula_zona }}';
                     let parametros = 'id_zona=' + id_zona + '&tipo_plantilla=' + tipo_plantilla + '&orden=' + orden + '{{ h_zona_tipo|raw }}';
                     $.ajax({
-                        url: url_ver_cuadricula_zona,
+                        url: url_modificar_cuadricula_zona,
                         type: 'post',
                         data: parametros,
                         dataType: 'html'
