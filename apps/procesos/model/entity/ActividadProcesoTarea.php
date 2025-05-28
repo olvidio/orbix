@@ -2,7 +2,6 @@
 
 namespace procesos\model\entity;
 
-use actividades\model\entity\Actividad;
 use actividades\model\entity\ActividadAll;
 use cambios\model\GestorAvisoCambios;
 use core\ClasePropiedades;
@@ -215,7 +214,7 @@ class ActividadProcesoTarea extends ClasePropiedades
             }
         } else {
             if (isset($a_id) && $a_id !== '') {
-                $this->iid_item = (integer)$a_id; 
+                $this->iid_item = (integer)$a_id;
                 $this->aPrimary_key = array('id_item' => $this->iid_item);
             }
         }
@@ -261,7 +260,7 @@ class ActividadProcesoTarea extends ClasePropiedades
             // comprobar si hay que cambiar el estado (status) de la actividad.
             // en caso de completar la fase. Si se quita el 'completado' habría que buscar la fase anterior para saber que status corresponde.
             $permitido = TRUE;
-            $oActividad = new Actividad($this->iid_activ);
+            $oActividad = new ActividadAll($this->iid_activ);
             $statusActividad = $oActividad->getStatus();
             $GesTareaProcesos = new GestorTareaProceso();
             $cTareasProceso = $GesTareaProcesos->getTareasProceso(['id_tipo_proceso' => $this->iid_tipo_proceso, 'id_fase' => $this->iid_fase, 'id_tarea' => $this->iid_tarea]);

@@ -1,6 +1,6 @@
 <?php
 
-use actividades\model\entity\Actividad;
+use actividades\model\entity\ActividadAll;
 use actividadestudios\model\entity\GestorMatricula;
 use asignaturas\model\entity\Asignatura;
 use asistentes\model\entity\GestorAsistente;
@@ -155,7 +155,7 @@ foreach ($cCentros as $oCentroDl) {
         foreach ($cAsistentes as $oAsistente) {
             $a++;
             $id_activ = $oAsistente->getId_activ();
-            $oActividad = new Actividad($id_activ);
+            $oActividad = new ActividadAll($id_activ);
             $nom_activ = $oActividad->getNom_activ();
 
             $oF_ini = $oActividad->getF_ini();

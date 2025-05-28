@@ -22,7 +22,7 @@
  *
  */
 
-use actividades\model\entity\Actividad;
+use actividades\model\entity\ActividadAll;
 use actividades\model\entity\GestorActividad;
 use asignaturas\model\entity\Asignatura;
 use asignaturas\model\entity\GestorAsignatura;
@@ -273,7 +273,7 @@ if (!empty($epoca)) {
 }
 
 if (!empty($id_activ)) {
-    $oActividad = new Actividad($id_activ);
+    $oActividad = new ActividadAll($id_activ);
     $nom_activ = $oActividad->getNom_activ();
 } else {
     $nom_activ = '';

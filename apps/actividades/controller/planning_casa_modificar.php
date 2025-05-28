@@ -25,7 +25,7 @@ if (($_SESSION['oPerm']->have_perm_oficina('vcsd')) || ($_SESSION['oPerm']->have
     $permiso_des = TRUE;
 }
 
-$oActividad = new actividades\model\entity\Actividad($Qid_activ);
+$oActividad = new actividades\model\entity\ActividadAll($Qid_activ);
 $a_status = $oActividad->getArrayStatus();
 
 $id_tipo_activ = $oActividad->getId_tipo_activ();

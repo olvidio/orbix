@@ -553,7 +553,7 @@ class ProfesorDocenciaStgr extends ClasePropiedades
         $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_activ'));
         $oDatosCampo->setEtiqueta(_("actividad"));
         $oDatosCampo->setTipo('opciones');
-        $oDatosCampo->setArgument('actividades\model\entity\Actividad'); // nombre del objeto relacionado
+        $oDatosCampo->setArgument('actividades\model\entity\ActividadAll'); // nombre del objeto relacionado
         $oDatosCampo->setArgument2('getNom_activ'); // método para obtener el valor a mostrar del objeto relacionado.
         $oDatosCampo->setArgument3('getListaActividadesEstudios'); // método con que crear la lista de opciones del Gestor objeto relacionado.
         return $oDatosCampo;

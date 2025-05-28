@@ -2,7 +2,7 @@
 
 namespace asistentes\model;
 
-use actividades\model\entity\Actividad;
+use actividades\model\entity\ActividadAll;
 use asistentes\model\entity\GestorAsistente;
 use core\ConfigGlobal;
 use core\ViewPhtml;
@@ -140,7 +140,7 @@ class Select1301
             $i++;
             $id_activ = $oAsistente->getId_activ();
             $id_tabla_asist = $oAsistente->getId_tabla();
-            $oActividad = new Actividad($id_activ);
+            $oActividad = new ActividadAll($id_activ);
             $nom_activ = $oActividad->getNom_activ();
             $id_tipo_activ = $oActividad->getId_tipo_activ();
             $dl_org = $oActividad->getDl_org();

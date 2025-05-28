@@ -1,6 +1,6 @@
 <?php
 
-use actividades\model\entity\Actividad;
+use actividades\model\entity\ActividadAll;
 use actividadplazas\model\entity\GestorActividadPlazas;
 use actividadplazas\model\entity\GestorPlazaPeticion;
 use asistentes\model\entity\Asistente;
@@ -8,10 +8,10 @@ use asistentes\model\entity\GestorAsistente;
 use core\ConfigGlobal;
 use core\ViewTwig;
 use personas\model\entity\PersonaDl;
+use ubis\model\entity\GestorDelegacion;
 use web\Hash;
 use web\Lista;
 use web\TiposActividades;
-use ubis\model\entity\GestorDelegacion;
 
 //probar github
 
@@ -38,7 +38,7 @@ if (!empty($a_sel)) { //vengo de un checkbox
     $oPosicion->addParametro('scroll_id', $scroll_id, 1);
 } else {
     $id_activ_old = (integer)filter_input(INPUT_POST, 'id_activ_old');
-    $oActividad = new Actividad($id_activ_old);
+    $oActividad = new ActividadAll($id_activ_old);
     $nom_activ = $oActividad->getNom_activ();
 }
 
@@ -75,7 +75,7 @@ $a_botones = [];
 $gesAsistentes = new GestorAsistente();
 $cAsistentes = $gesAsistentes->getAsistentesDeActividad($id_activ_old);
 
-$oActividad = new Actividad($id_activ_old);
+$oActividad = new ActividadAll($id_activ_old);
 $id_tipo_activ = $oActividad->getId_tipo_activ();
 
 $oTipoActividad = new TiposActividades($id_tipo_activ);
@@ -103,7 +103,7 @@ foreach ($cAsistentes as $oAsistente) {
         $id_activ = $oPlazaPeticion->getId_activ();
         $nom_activ_i = '';
         if (!empty($id_activ)) {
-            $oActividadPosible = new Actividad($id_activ);
+            $oActividadPosible = new ActividadAll($id_activ);
             $nom_activ_i = $oActividadPosible->getNom_activ();
             $dl_org = $oActividad->getDl_org();
             // añadir plazas libres sobre totales

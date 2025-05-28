@@ -24,6 +24,7 @@
  */
 
 use actividades\model\entity\Actividad;
+use actividades\model\entity\ActividadAll;
 use actividades\model\entity\GestorActividad;
 use actividades\model\entity\GestorActividadPub;
 use actividades\model\entity\GestorImportada;
@@ -130,7 +131,7 @@ if (!empty($Qcontinuar) && $Qcontinuar === 'si' && ($QGstack != '')) {
         $Qperiodo = 'actual';
     }
 
-    $Qstatus = empty($Qstatus) ? Actividad::STATUS_ACTUAL : $Qstatus;
+    $Qstatus = empty($Qstatus) ? ActividadAll::STATUS_ACTUAL : $Qstatus;
 
     $aGoBack = array(
         'modo' => $Qmodo,

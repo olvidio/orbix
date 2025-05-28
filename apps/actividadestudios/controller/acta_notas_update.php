@@ -1,6 +1,6 @@
 <?php
 
-use actividades\model\entity\Actividad;
+use actividades\model\entity\ActividadAll;
 use actividadestudios\model\entity\ActividadAsignaturaDl;
 use actividadestudios\model\entity\GestorMatricula;
 use actividadestudios\model\entity\Matricula;
@@ -39,7 +39,7 @@ if ($Qque === 3) { //paso las matrículas a notas definitivas (Grabar e imprimir
     $GesActas = new GestorActa();
     $cActas = $GesActas->getActas(array('id_activ' => $Qid_activ, 'id_asignatura' => $Qid_asignatura));
     // miro la epoca
-    $oActividad = new Actividad($Qid_activ);
+    $oActividad = new ActividadAll($Qid_activ);
     $id_tipo_activ = $oActividad->getId_tipo_activ();
     $iepoca = PersonaNotaDB::EPOCA_CA;
     $oTipoActividad = new TiposActividades($id_tipo_activ);

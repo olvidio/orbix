@@ -1,6 +1,6 @@
 <?php
 
-use actividades\model\entity\Actividad;
+use actividades\model\entity\ActividadAll;
 use actividadestudios\model\entity\GestorMatriculaDl;
 use actividadestudios\model\entity\Matricula;
 use asignaturas\model\entity\Asignatura;
@@ -41,7 +41,7 @@ if (!empty($a_sel)) { //vengo de un checkbox
     $oPosicion->addParametro('scroll_id', $scroll_id, 1);
 }
 
-$oActividad = new Actividad($Qid_activ);
+$oActividad = new ActividadAll($Qid_activ);
 $nom_activ = $oActividad->getNom_activ();
 
 $GesAsignaturas = new GestorAsignatura();

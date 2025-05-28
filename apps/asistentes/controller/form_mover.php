@@ -1,6 +1,5 @@
 <?php
 
-use actividades\model\entity\Actividad;
 use actividades\model\entity\ActividadAll;
 use actividades\model\entity\GestorActividad;
 use actividadestudios\model\entity\GestorActividadAsignaturaDl;
@@ -67,7 +66,7 @@ if ($oAsistente->perm_modificar() === FALSE) {
         $mod = "mover";
 
         //del mismo tipo que la anterior
-        $oActividad = new Actividad(array('id_activ' => $Qid_activ_old));
+        $oActividad = new ActividadAll(array('id_activ' => $Qid_activ_old));
         $id_tipo = $oActividad->getId_tipo_activ();
 
         // IMPORTANT: Propietario del a plaza
@@ -121,7 +120,7 @@ if ($oAsistente->perm_modificar() === FALSE) {
             $sid_activ = '';
             foreach ($cPlazasPeticion as $oPlazaPeticion) {
                 $id_activ = $oPlazaPeticion->getId_activ();
-                $oActividad = new Actividad($id_activ);
+                $oActividad = new ActividadAll($id_activ);
                 // Asegurar que es una actividad actual (No terminada)
                 if ($oActividad->getStatus() != ActividadAll::STATUS_ACTUAL) {
                     continue;

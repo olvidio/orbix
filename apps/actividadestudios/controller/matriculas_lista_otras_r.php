@@ -1,6 +1,6 @@
 <?php
 
-use actividades\model\entity\Actividad;
+use actividades\model\entity\ActividadAll;
 use asignaturas\model\entity\GestorAsignatura;
 use core\ViewPhtml;
 use notas\model\entity\GestorPersonaNotaOtraRegionStgrDB;
@@ -129,7 +129,7 @@ if (!empty($Qapellido1)) {
         $id_activ = $oPersonaNotaOtraRegionDB->getId_activ();
 
         $nom_asignatura = $a_asignaturas[$id_asignatura];
-        $oActividad = new Actividad($id_activ);
+        $oActividad = new ActividadAll($id_activ);
         $nom_activ = $oActividad->getNom_activ();
         $dl_org = $oActividad->getDl_org();
 

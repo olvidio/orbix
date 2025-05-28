@@ -1,7 +1,7 @@
 <?php
 namespace asistentes\model\entity;
 
-use actividades\model\entity\Actividad;
+use actividades\model\entity\ActividadAll;
 use actividades\model\entity\GestorActividad;
 use core\ClaseGestor;
 use core\ConfigGlobal;
@@ -24,7 +24,6 @@ class GestorAsistente extends ClaseGestor
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
     /* CONSTRUCTOR -------------------------------------------------------------- */
-
 
 
     function __construct()
@@ -155,7 +154,7 @@ class GestorAsistente extends ClaseGestor
     {
         $mi_dele = ConfigGlobal::mi_delef();
         /* Mirar si la actividad es mia o no */
-        $oActividad = new Actividad($iid_activ);
+        $oActividad = new ActividadAll($iid_activ);
         $dl_org = $oActividad->getDl_org();
         $id_tabla = $oActividad->getId_tabla();
         $aWhere['id_activ'] = $iid_activ;
@@ -198,7 +197,7 @@ class GestorAsistente extends ClaseGestor
         $numAsis = 0;
         foreach ($cAsistentes as $oAsistente) {
             $id_nom = $oAsistente->getId_nom();
-            $propietario = $oAsistente->getPropietario()?? '';
+            $propietario = $oAsistente->getPropietario() ?? '';
             $padre = strtok($propietario, '>');
             $child = strtok('>');
             //if ($sdl != $mi_dele) {
@@ -244,7 +243,7 @@ class GestorAsistente extends ClaseGestor
         */
 
         /* Mirar si la actividad es mia o no */
-        $oActividad = new Actividad($iid_activ);
+        $oActividad = new ActividadAll($iid_activ);
         $id_tabla = $oActividad->getId_tabla();
         // si es de la sf quito la 'f'
         $dl = preg_replace('/f$/', '', $oActividad->getDl_org());
@@ -299,7 +298,7 @@ class GestorAsistente extends ClaseGestor
     {
         /* Mirar si la actividad es mia o no */
         $iid_activ = $aWhere['id_activ'];
-        $oActividad = new Actividad($iid_activ);
+        $oActividad = new ActividadAll($iid_activ);
         // si es de la sf quito la 'f'
         $dl = preg_replace('/f$/', '', $oActividad->getDl_org());
         $id_tabla = $oActividad->getId_tabla();

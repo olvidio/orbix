@@ -2,7 +2,7 @@
 
 namespace actividadplazas\model;
 
-use actividades\model\entity\Actividad;
+use actividades\model\entity\ActividadAll;
 use actividadplazas\model\entity\GestorActividadPlazas;
 use asistentes\model\entity\GestorAsistente;
 use core\ConfigGlobal;
@@ -220,7 +220,7 @@ class GestorResumenPlazas
     public function getPlazasTotales()
     {
         $id_activ = $this->getId_activ();
-        $oActividad = new Actividad($id_activ);
+        $oActividad = new ActividadAll($id_activ);
         $dl_org = $oActividad->getDl_org();
         $plazas_totales = $oActividad->getPlazas();
         if (empty($plazas_totales)) {
@@ -258,7 +258,7 @@ class GestorResumenPlazas
         $id_activ = $this->getId_activ();
         $gesActividadPlazas = new GestorActividadPlazas();
         $gesAsistentes = new GestorAsistente();
-        $oActividad = new Actividad($id_activ);
+        $oActividad = new ActividadAll($id_activ);
         $dl_org = $oActividad->getDl_org();
         $plazas_totales = $this->getPlazasTotales();
         /*
@@ -504,7 +504,7 @@ class GestorResumenPlazas
         $id_activ = $this->getId_activ();
         $mi_dl = ConfigGlobal::mi_delef();
 
-        $oActividad = new Actividad($id_activ);
+        $oActividad = new ActividadAll($id_activ);
         $publicado = $oActividad->getPublicado();
         // Si no está publicada no tiene plazas de calendario.
         // Se toman todas la de la actividad como propias.
@@ -537,7 +537,7 @@ class GestorResumenPlazas
     {
         if (!isset($this->dl_org)) {
             $id_activ = $this->getId_activ();
-            $oActividad = new Actividad($id_activ);
+            $oActividad = new ActividadAll($id_activ);
             $this->dl_org = $oActividad->getDl_org();
         }
         return $this->dl_org;

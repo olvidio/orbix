@@ -6,6 +6,7 @@
 
 use actividades\model\ActividadTipo;
 use actividades\model\entity\Actividad;
+use actividades\model\entity\ActividadAll;
 use actividades\model\entity\GestorNivelStgr;
 use actividades\model\entity\GestorRepeticion;
 use actividadtarifas\model\entity\GestorTipoActivTarifa;
@@ -72,7 +73,7 @@ if (!empty($Qid_activ)) { // caso de modificar
         $Qmod = 'editar';
     }
 
-    $oActividad = new Actividad($Qid_activ);
+    $oActividad = new ActividadAll($Qid_activ);
     $a_status = $oActividad->getArrayStatus();
 
     $id_tipo_activ = $oActividad->getId_tipo_activ();
@@ -126,7 +127,7 @@ if (!empty($Qid_activ)) { // caso de modificar
     $Qmod = 'nuevo';
     $isfsv = ConfigGlobal::mi_sfsv();
 
-    $oActividad = new Actividad();
+    $oActividad = new ActividadAll();
     $a_status = $oActividad->getArrayStatus();
     // Valores por defecto
     $dl_org = ConfigGlobal::mi_delef();

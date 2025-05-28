@@ -2,7 +2,7 @@
 
 namespace cambios\model\entity;
 
-use actividades\model\entity\Actividad;
+use actividades\model\entity\ActividadAll;
 use actividades\model\entity\GestorNivelStgr;
 use actividades\model\entity\GestorRepeticion;
 use actividadtarifas\model\entity\GestorTipoTarifa;
@@ -15,11 +15,11 @@ use core\DatosCampo;
 use core\Set;
 use JsonException;
 use personas\model\entity\PersonaSacd;
-use web\DateTimeLocal;
-use web\NullDateTimeLocal;
 use procesos\model\entity\GestorActividadFase;
 use stdClass;
 use ubis\model\entity\Ubi;
+use web\DateTimeLocal;
+use web\NullDateTimeLocal;
 use function core\is_true;
 
 /**
@@ -403,7 +403,7 @@ class Cambio extends ClasePropiedades
         $sValor_old = $this->getValor_old();
         $sValor_new = $this->getValor_new();
 
-        $oActividad = new Actividad($iId);
+        $oActividad = new ActividadAll($iId);
         $DatosCampoStatus = $oActividad->getDatosStatus();
         $aStatus = $DatosCampoStatus->getLista();
 
@@ -882,13 +882,13 @@ class Cambio extends ClasePropiedades
             $this->DBCarregar();
         }
 
-         return (new ConverterJson($this->json_fases_sv, $bArray))->fromPg();
+        return (new ConverterJson($this->json_fases_sv, $bArray))->fromPg();
     }
 
     /**
      * @throws JsonException
      */
-    public function setJson_fases_sv(string|array|null $oJSON, bool $db = FALSE):void
+    public function setJson_fases_sv(string|array|null $oJSON, bool $db = FALSE): void
     {
         $this->json_fases_sv = (new ConverterJson($oJSON, FALSE))->toPg($db);
     }
@@ -911,7 +911,7 @@ class Cambio extends ClasePropiedades
     /**
      * @throws JsonException
      */
-    public function setJson_fases_sf(string|array|null $oJSON, bool $db = FALSE):void
+    public function setJson_fases_sf(string|array|null $oJSON, bool $db = FALSE): void
     {
         $this->json_fases_sf = (new ConverterJson($oJSON, FALSE))->toPg($db);
     }

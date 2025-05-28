@@ -4,7 +4,6 @@ use actividadcargos\model\entity\ActividadCargo;
 use actividadcargos\model\entity\GestorActividadCargo;
 use actividadcargos\model\entity\GestorCargo;
 use actividadcargos\model\GestorCargoOAsistente;
-use actividades\model\entity\Actividad;
 use actividades\model\entity\ActividadAll;
 use actividades\model\entity\ActividadDl;
 use actividades\model\entity\GestorActividadDl;
@@ -337,7 +336,7 @@ switch ($Qque) {
         $aWhere['f_ini'] = "'$inicioIso','$finIso'";
         $aOperador['f_ini'] = 'BETWEEN';
 
-        $aWhere['status'] = Actividad::STATUS_TERMINADA;
+        $aWhere['status'] = ActividadAll::STATUS_TERMINADA;
         $aOperador['status'] = "<";
 
         $txt_fase_ok_sacd = '';
@@ -601,7 +600,7 @@ switch ($Qque) {
         $aWhere['f_ini'] = "'$inicioIso','$finIso'";
         $aOperador['f_ini'] = 'BETWEEN';
 
-        $aWhere['status'] = Actividad::STATUS_TERMINADA;
+        $aWhere['status'] = ActividadAll::STATUS_TERMINADA;
         $aOperador['status'] = "<";
 
         $aWhere['_ordre'] = 'f_ini';
@@ -652,11 +651,11 @@ switch ($Qque) {
             $a_nom_activ = [];
             $id_ubi_anterior = '';
             foreach ($aId_activ as $id_activ) {
-                $oActividad = new Actividad($id_activ);
+                $oActividad = new ActividadAll($id_activ);
                 $nom_activ = $oActividad->getNom_activ();
                 $id_ubi = $oActividad->getId_ubi();
                 $status = $oActividad->getStatus();
-                // Fase en la que se en cuentra
+                // Fase en la que se encuentra
                 $GesActividadProceso = new GestorActividadProcesoTarea();
                 $sacd_aprobado = $GesActividadProceso->getSacdAprobado($id_activ);
                 if ($sacd_aprobado === TRUE) {

@@ -2,13 +2,13 @@
 
 namespace cambios\model;
 
-use actividades\model\entity\Actividad;
+use actividades\model\entity\ActividadAll;
 use actividades\model\entity\ActividadEx;
 use cambios\model\entity\Cambio;
 use cambios\model\entity\CambioDl;
 use core\ConfigGlobal;
-use web\DateTimeLocal;
 use procesos\model\entity\GestorActividadProcesoTarea;
+use web\DateTimeLocal;
 use function core\is_true;
 
 /**
@@ -56,7 +56,7 @@ class GestorAvisoCambios
             case 'Actividad':
             case 'ActividadDl':
             case 'ActividadEx':
-                $spath = 'actividades\\model\\entity\\Actividad';
+                $spath = 'actividades\\model\\entity\\ActividadAll';
                 break;
             case 'ActividadCargoSacd':
                 $spath = 'actividadcargos\\model\\entity\\ActividadCargoSacd';
@@ -124,7 +124,7 @@ class GestorAvisoCambios
                 if ($iid_activ < 0) {
                     $oActividad = new ActividadEx($iid_activ);
                 } else {
-                    $oActividad = new Actividad($iid_activ);
+                    $oActividad = new ActividadAll($iid_activ);
                 }
                 $iId_tipo_activ = $oActividad->getId_tipo_activ();
                 $dl_org = $oActividad->getDl_org();

@@ -1,15 +1,15 @@
 <?php
 
-use actividades\model\entity\Actividad;
+use actividades\model\entity\ActividadAll;
 use actividades\model\entity\GestorActividad;
 use actividades\model\entity\GestorActividadDl;
 use asistentes\model\entity\GestorAsistente;
 use personas\model\entity\GestorPersonaS;
+use ubis\model\entity\CentroDl;
+use ubis\model\entity\GestorCentroDl;
 use web\DateTimeLocal;
 use web\Lista;
 use web\TiposActividades;
-use ubis\model\entity\CentroDl;
-use ubis\model\entity\GestorCentroDl;
 
 /**
  * Esta página lista las personas que asistieron hace x años a
@@ -240,7 +240,7 @@ foreach ($cPersonas as $oPersona) {
         reset($cAsistentes);
         $oAsistente = current($cAsistentes);
         $id_activ = $oAsistente->getId_activ();
-        $oActividad = new Actividad($id_activ);
+        $oActividad = new ActividadAll($id_activ);
         $id_tipo_activ = $oActividad->getId_tipo_activ();
         $oFini = $oActividad->getF_ini();
         $f_ini_iso = $oFini->getIso();

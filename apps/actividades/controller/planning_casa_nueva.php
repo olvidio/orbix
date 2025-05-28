@@ -9,7 +9,7 @@ require_once("apps/core/global_object.inc");
 
 // FIN de  Cabecera global de URL de controlador ********************************
 
-use actividades\model\entity\Actividad;
+use actividades\model\entity\ActividadAll;
 use actividades\model\entity\GestorNivelStgr;
 use actividades\model\entity\GestorRepeticion;
 use actividadtarifas\model\entity\GestorTipoTarifa;
@@ -27,7 +27,7 @@ if (($_SESSION['oPerm']->have_perm_oficina('vcsd')) || ($_SESSION['oPerm']->have
     $permiso_des = TRUE;
 }
 
-$oActividad = new Actividad();
+$oActividad = new ActividadAll();
 $a_status = $oActividad->getArrayStatus();
 
 $id_tipo_activ = $oActividad->getId_tipo_activ();

@@ -2,7 +2,6 @@
 
 namespace notas\model;
 
-use actividades\model\entity\Actividad;
 use actividades\model\entity\ActividadAll;
 use asignaturas\model\entity\Departamento;
 use asignaturas\model\entity\GestorAsignatura;
@@ -1353,7 +1352,7 @@ class Resumen extends ClasePropiedades
                         if (ConfigGlobal::mi_region() === ConfigGlobal::mi_delef()) {
                             $oActividad = new ActividadAll($id_activ);
                         } else {
-                            $oActividad = new Actividad($id_activ);
+                            $oActividad = new ActividadAll($id_activ);
                         }
                         $nom_activ = $oActividad->getNom_activ();
                     }

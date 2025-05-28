@@ -2,10 +2,10 @@
 
 use actividadcargos\model\entity\Cargo;
 use actividadcargos\model\entity\GestorActividadCargo;
+use actividades\model\entity\ActividadAll;
 use asistentes\model\entity\GestorAsistente;
 use core\ConfigGlobal;
 use core\ViewPhtml;
-use actividades\model\entity\Actividad;
 use personas\model\entity\Persona;
 use function core\is_true;
 
@@ -44,7 +44,7 @@ if (!empty($a_sel)) { //vengo de un checkbox
     $oPosicion->addParametro('scroll_id', $scroll_id, 1);
 } else {
     $id_pau = (integer)filter_input(INPUT_POST, 'id_pau');
-    $oActividad = new Actividad($id_pau);
+    $oActividad = new ActividadAll($id_pau);
     $nom_activ = $oActividad->getNom_activ();
 }
 
@@ -148,7 +148,7 @@ if (ConfigGlobal::is_app_installed('actividadcargos')) {
         $observ_c = $oActividadCargo->getObserv();
         $ctr_dl = $oPersona->getCentro_o_dl();
 
-        is_true($puede_agd)? $chk_puede_agd = "si" : $chk_puede_agd = "no";
+        is_true($puede_agd) ? $chk_puede_agd = "si" : $chk_puede_agd = "no";
 
         // ahora miro si también asiste:
         $aWhere = array('id_activ' => $id_pau, 'id_nom' => $id_nom);
@@ -174,8 +174,8 @@ if (ConfigGlobal::is_app_installed('actividadcargos')) {
             } else {
                 $chk_propio = _("no");
             }
-            is_true($falta)? $chk_falta = _("sí") : $chk_falta = _("no");
-            is_true($est_ok)? $chk_est_ok = _("sí") : $chk_est_ok = _("no");
+            is_true($falta) ? $chk_falta = _("sí") : $chk_falta = _("no");
+            is_true($est_ok) ? $chk_est_ok = _("sí") : $chk_est_ok = _("no");
             $asis = "t";
             $a_valores[$c][3] = $chk_propio;
             $a_valores[$c][4] = $chk_est_ok;
@@ -228,8 +228,8 @@ foreach ($gesAsistentes->getAsistentes(array('id_activ' => $id_pau)) as $oAsiste
     } else {
         $chk_propio = _("no");
     }
-    is_true($falta)? $chk_falta = _("sí") : $chk_falta = _("no");
-    is_true($est_ok)? $chk_est_ok = _("sí") : $chk_est_ok = _("no");
+    is_true($falta) ? $chk_falta = _("sí") : $chk_falta = _("no");
+    is_true($est_ok) ? $chk_est_ok = _("sí") : $chk_est_ok = _("no");
 
     $a_val[2] = "$nom  ($ctr_dl)";
     $a_val[3] = $chk_propio;

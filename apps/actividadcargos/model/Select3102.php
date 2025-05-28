@@ -4,7 +4,7 @@ namespace actividadcargos\model;
 
 use actividadcargos\model\entity\Cargo;
 use actividadcargos\model\entity\GestorActividadCargo;
-use actividades\model\entity\Actividad;
+use actividades\model\entity\ActividadAll;
 use core\ConfigGlobal;
 use core\ViewPhtml;
 use dossiers\model\PermDossier;
@@ -109,7 +109,7 @@ class Select3102
         $oCargosEnActividad = new GestorActividadCargo();
 
         // Permisos según el tipo de actividad
-        $oActividad = new Actividad($this->id_pau);
+        $oActividad = new ActividadAll($this->id_pau);
         $id_tipo_activ = $oActividad->getId_tipo_activ();
         $oPermDossier = new PermDossier();
         $a_ref_perm = $oPermDossier->perm_pers_activ($id_tipo_activ);
@@ -155,7 +155,7 @@ class Select3102
             } else {
                 $permiso = 3;
             }
-            is_true($puede_agd)? $chk_puede_agd = "si" : $chk_puede_agd = "no";
+            is_true($puede_agd) ? $chk_puede_agd = "si" : $chk_puede_agd = "no";
 
             // Para los de des, elimino el cargo y la asistencia. Para el resto, sólo el cargo (no la asistencia).
             $this->txt_eliminar = _("¿Está seguro que desea quitar este cargo a esta persona?");

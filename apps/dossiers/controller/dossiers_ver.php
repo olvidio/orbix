@@ -1,6 +1,6 @@
 <?php
 
-use actividades\model\entity\Actividad;
+use actividades\model\entity\ActividadAll;
 use core\ConfigGlobal;
 use dossiers\model\entity\TipoDossier;
 use personas\model\entity\Persona;
@@ -150,7 +150,7 @@ switch ($pau) {
         $goHome = Hash::link(ConfigGlobal::getWeb() . "/apps/ubis/controller/home_ubis.php?$sQuery");
         break;
     case 'a':
-        $oActividad = new Actividad($id_pau);
+        $oActividad = new ActividadAll($id_pau);
         $nom_cabecera = $oActividad->getNom_activ();
 
         $sQuery = http_build_query(array('id_activ' => $id_pau, 'obj_pau' => $Qobj_pau));

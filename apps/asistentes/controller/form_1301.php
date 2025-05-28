@@ -27,7 +27,6 @@
  *
  */
 
-use actividades\model\entity\Actividad;
 use actividades\model\entity\ActividadAll;
 use actividades\model\entity\GestorActividad;
 use actividadplazas\model\GestorResumenPlazas;
@@ -71,7 +70,7 @@ if (!empty($a_sel)) { //vengo de un checkbox
 $oDesplActividades = [];
 if (!empty($id_activ)) { //caso de modificar
     $mod = "editar";
-    $oActividad = new Actividad($id_activ);
+    $oActividad = new ActividadAll($id_activ);
     $nom_activ = $oActividad->getNom_activ();
 
     $oAsistentePub = new AsistentePub();

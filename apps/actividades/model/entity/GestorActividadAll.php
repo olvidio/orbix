@@ -98,7 +98,7 @@ class GestorActividadAll extends ClaseGestor
             $h_fin = $oActividad->getH_fin();
             $dl_org = $oActividad->getDl_org();
             $nom_activ = $oActividad->getNom_activ();
-            $css = PlanningStyle::clase($id_tipo_activ, '', '',$oActividad->getStatus());
+            $css = PlanningStyle::clase($id_tipo_activ, '', '', $oActividad->getStatus());
 
             $oTipoActividad = new TiposActividades($id_tipo_activ);
             $ssfsv = $oTipoActividad->getSfsvText();
@@ -417,7 +417,7 @@ class GestorActividadAll extends ClaseGestor
         */
         foreach ($oDbl->query($sQuery) as $aDades) {
             $a_pkey = array('id_tipo_activ' => $aDades['id_activ']);
-            $oActividad = new Actividad($a_pkey);
+            $oActividad = new ActividadAll($a_pkey);
             $oActividad->setAllAtributes($aDades);
             $oActividadSet->add($oActividad);
         }

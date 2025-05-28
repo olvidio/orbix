@@ -1,6 +1,6 @@
 <?php
 
-use actividades\model\entity\Actividad;
+use actividades\model\entity\ActividadAll;
 use actividadestudios\model\entity\GestorActividadAsignatura;
 use actividadestudios\model\entity\GestorMatricula;
 use core\ConfigGlobal;
@@ -79,7 +79,7 @@ $GesNotas = new GestorNota();
 $oDesplNotas = $GesNotas->getListaNotas();
 $oDesplNotas->setNombre('id_situacion[]');
 
-$oActividad = new Actividad($id_activ);
+$oActividad = new ActividadAll($id_activ);
 $nom_activ = $oActividad->getNom_activ();
 
 $GesMatriculas = new GestorMatricula();

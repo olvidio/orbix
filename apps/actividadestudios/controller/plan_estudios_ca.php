@@ -2,7 +2,7 @@
 
 use actividadcargos\model\entity\GestorActividadCargo;
 use actividadcargos\model\entity\GestorCargo;
-use actividades\model\entity\Actividad;
+use actividades\model\entity\ActividadAll;
 use actividadestudios\model\entity\GestorActividadAsignaturaDl;
 use actividadestudios\model\entity\GestorMatricula;
 use asignaturas\model\entity\Asignatura;
@@ -34,7 +34,7 @@ if (!empty($a_sel)) { //vengo de un checkbox
 $msg_err = '';
 
 // nombre de la actividad
-$oActividad = new Actividad($id_activ);
+$oActividad = new ActividadAll($id_activ);
 $nom_activ = $oActividad->getNom_activ();
 
 //director de estudios
@@ -152,7 +152,7 @@ foreach ($cAsistentes as $oAsistente) {
             $oAsignatura = new Asignatura($id_asignatura);
             $nombre_corto = $oAsignatura->getNombre_corto();
             $creditos = $oAsignatura->getCreditos();
-            $preceptor = is_true($preceptor)? "(" . _("preceptor") . ")" : '';
+            $preceptor = is_true($preceptor) ? "(" . _("preceptor") . ")" : '';
 
             $aAsignaturas[$i]['nombre_corto'] = $nombre_corto;
             $aAsignaturas[$i]['creditos'] = $creditos;

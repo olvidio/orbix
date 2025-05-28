@@ -2,7 +2,7 @@
 
 use actividadcargos\model\entity\GestorActividadCargo;
 use actividadcargos\model\entity\GestorCargo;
-use actividades\model\entity\Actividad;
+use actividades\model\entity\ActividadAll;
 use actividadestudios\model\entity\GestorActividadAsignatura;
 use actividadestudios\model\entity\GestorMatricula;
 use asignaturas\model\entity\Asignatura;
@@ -32,7 +32,7 @@ if (!empty($a_sel)) { //vengo de un checkbox
 $msg_err = '';
 
 // nombre de la actividad
-$oActividad = new Actividad($id_activ);
+$oActividad = new ActividadAll($id_activ);
 $nom_activ = $oActividad->getNom_activ();
 $dl_org = $oActividad->getDl_org();
 

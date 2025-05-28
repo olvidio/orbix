@@ -4,7 +4,7 @@ namespace asistentes\model;
 
 use actividadcargos\model\entity\Cargo;
 use actividadcargos\model\entity\GestorActividadCargo;
-use actividades\model\entity\Actividad;
+use actividades\model\entity\ActividadAll;
 use actividadplazas\model\GestorResumenPlazas;
 use asistentes\model\entity\Asistente;
 use asistentes\model\entity\GestorAsistente;
@@ -176,7 +176,7 @@ class Select3101
 
     private function getDatosActividad()
     {
-        $oActividad = new Actividad($this->id_pau);
+        $oActividad = new ActividadAll($this->id_pau);
         $this->id_tipo_activ = $oActividad->getId_tipo_activ();
         $this->dl_org = $oActividad->getDl_org();
         $this->plazas_totales = $oActividad->getPlazas();
@@ -444,7 +444,7 @@ class Select3101
             $oPersona = Persona::NewPersona($id_nom);
             if (!is_object($oPersona)) {
                 $this->msg_err .= "<br>";
-                $this->msg_err .= sprintf(_("%s. En %s linea %s"), $oPersona,  __FILE__, __LINE__);
+                $this->msg_err .= sprintf(_("%s. En %s linea %s"), $oPersona, __FILE__, __LINE__);
                 continue;
             }
             $obj_pau = $oPersona->getClassName();

@@ -42,7 +42,7 @@ $txt_nacimiento = "$lugar_nacimiento ($f_nacimiento)";
 $dl_origen = ConfigGlobal::mi_delef();
 $dl_destino = $oPersona->getDl();
 
-$oActividad = new actividades\model\entity\Actividad($Qid_activ);
+$oActividad = new actividades\model\entity\ActividadAll($Qid_activ);
 $nom_activ = $oActividad->getNom_activ();
 $id_ubi = $oActividad->getId_ubi();
 $f_ini = $oActividad->getF_ini()->getFromLocal();

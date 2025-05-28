@@ -15,6 +15,7 @@
 
 use actividades\domain\ActividadNueva;
 use actividades\model\entity\Actividad;
+use actividades\model\entity\ActividadAll;
 use actividades\model\entity\ActividadDl;
 use actividades\model\entity\Importada;
 use actividadplazas\model\entity\ActividadPlazasDl;
@@ -82,7 +83,7 @@ switch ($Qmod) {
         if (!empty($a_sel)) { // puedo seleccionar más de uno.
             foreach ($a_sel as $id) {
                 $id_activ = (integer)strtok($id, '#');
-                $oActividad = new Actividad($id_activ);
+                $oActividad = new ActividadAll($id_activ);
                 $oActividad->DBCarregar();
                 $oActividad->setPublicado('t');
                 if ($oActividad->DBGuardar() === false) {
@@ -158,7 +159,7 @@ switch ($Qmod) {
         $a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
         if (!empty($a_sel)) {
             $id_activ = (integer)strtok($a_sel[0], '#');
-            $oActividadAll = new Actividad($id_activ);
+            $oActividadAll = new ActividadAll($id_activ);
             $dl = $oActividadAll->getDl_org();
             // des si puede duplicar sf.
             if ($dl == ConfigGlobal::mi_delef() ||
@@ -186,7 +187,7 @@ switch ($Qmod) {
         if (!empty($a_sel)) { // puedo seleccionar más de uno.
             foreach ($a_sel as $id) {
                 $id_activ = (integer)strtok($id, '#');
-                $oActividad = new Actividad($id_activ);
+                $oActividad = new ActividadAll($id_activ);
                 $id_tipo_activ = $oActividad->getId_tipo_activ();
                 $dl_org = $oActividad->getDl_org();
 
@@ -205,7 +206,7 @@ switch ($Qmod) {
         }
         // si vengo desde la presentación del planning, ya tengo el id_activ.
         if (!empty($Qid_activ)) {
-            $oActividad = new Actividad($Qid_activ);
+            $oActividad = new ActividadAll($Qid_activ);
             $id_tipo_activ = $oActividad->getId_tipo_activ();
             $dl_org = $oActividad->getDl_org();
 
@@ -274,7 +275,7 @@ switch ($Qmod) {
                 die();
             }
         }
-        $oActividad = new Actividad($Qid_activ);
+        $oActividad = new ActividadAll($Qid_activ);
         $oActividad->DBCarregar();
         $oActividad->setId_tipo_activ($valor_id_tipo_activ);
         if (isset($Qdl_org)) {
@@ -360,7 +361,7 @@ switch ($Qmod) {
         }
 
 
-        $oActividad = new Actividad($Qid_activ);
+        $oActividad = new ActividadAll($Qid_activ);
         $oActividad->DBCarregar();
         $plazas_old = $oActividad->getPlazas();
 
@@ -444,7 +445,7 @@ switch ($Qmod) {
                         $oActividadPlazasDl->setPlazas($Qplazas);
 
                         if ($oActividadPlazasDl->DBGuardar() === false) {
-                            $error_txt .=  _("hay un error, no se ha guardado");
+                            $error_txt .= _("hay un error, no se ha guardado");
                             $error_txt .= "\n" . $oActividadPlazasDl->getErrorTxt();
                         }
                     }

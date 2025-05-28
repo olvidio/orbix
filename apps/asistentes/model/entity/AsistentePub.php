@@ -1,7 +1,7 @@
 <?php
 namespace asistentes\model\entity;
 
-use actividades\model\entity\Actividad;
+use actividades\model\entity\ActividadAll;
 use actividadplazas\model\GestorResumenPlazas;
 use cambios\model\GestorAvisoCambios;
 use core\ClasePropiedades;
@@ -201,7 +201,7 @@ class AsistentePub extends ClasePropiedades
         $obj_persona = get_class($oPersona);
         $obj_persona = str_replace("personas\\model\\entity\\", '', $obj_persona);
         // hay que averiguar si la actividad es de la dl o de fuera.
-        $oActividad = new Actividad($id_activ);
+        $oActividad = new ActividadAll($id_activ);
         // si es de la sf quito la 'f'
         $dl = preg_replace('/f$/', '', $oActividad->getDl_org());
 
@@ -574,8 +574,8 @@ class AsistentePub extends ClasePropiedades
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
             foreach ($a_id as $nom_id => $val_id) {
-                if (($nom_id == 'id_activ') && $val_id !== '') $this->iid_activ = (int)$val_id; 
-                if (($nom_id == 'id_nom') && $val_id !== '') $this->iid_nom = (int)$val_id; 
+                if (($nom_id == 'id_activ') && $val_id !== '') $this->iid_activ = (int)$val_id;
+                if (($nom_id == 'id_nom') && $val_id !== '') $this->iid_nom = (int)$val_id;
             }
         }
     }

@@ -4,20 +4,20 @@ namespace actividadessacd\model;
 
 use actividadcargos\model\entity\GestorActividadCargo;
 use actividadcargos\model\entity\GestorCargo;
-use actividades\model\entity\Actividad;
+use actividades\model\entity\ActividadAll;
 use actividadescentro\model\entity\GestorCentroEncargado;
 use config\model\entity\ConfigSchema;
 use core\ConfigGlobal;
 use core\ValueObject\Uuid;
 use personas\model\entity\PersonaDl;
-use src\usuarios\application\repositories\UsuarioRepository;
-use web\DateTimeLocal;
-use web\TiposActividades;
 use shared\domain\ColaMailId;
 use shared\domain\entity\ColaMail;
 use shared\domain\repositories\ColaMailRepository;
+use src\usuarios\application\repositories\UsuarioRepository;
 use ubis\model\entity\CentroDl;
 use ubis\model\entity\Ubi;
+use web\DateTimeLocal;
+use web\TiposActividades;
 use function core\is_true;
 
 class ComunicarActividadesSacd
@@ -134,7 +134,7 @@ class ComunicarActividadesSacd
                     continue;
                 }
 
-                $oActividad = new Actividad($id_activ);
+                $oActividad = new ActividadAll($id_activ);
                 $id_tipo_activ = $oActividad->getId_tipo_activ();
                 $id_ubi = $oActividad->getId_ubi();
                 $lugar_esp = $oActividad->getLugar_esp();
@@ -173,7 +173,9 @@ class ComunicarActividadesSacd
                 $GesCentroEncargado = new GestorCentroEncargado();
                 $ctrs = '';
                 foreach ($GesCentroEncargado->getCentrosEncargadosActividad($id_activ) as $oCentro) {
-                    if (!empty($ctrs)) { $ctrs .= ", "; }
+                    if (!empty($ctrs)) {
+                        $ctrs .= ", ";
+                    }
                     $ctrs .= $oCentro->getNombre_ubi();
                 }
 
@@ -288,7 +290,7 @@ class ComunicarActividadesSacd
             $e_mail_ctr = $oCentroDl->emailPrincipalOPrimero();
 
             $email = $e_mail_jefe;
-            $email .= empty($e_mail_sacd)? '' : ", $e_mail_sacd";
+            $email .= empty($e_mail_sacd) ? '' : ", $e_mail_sacd";
 
             $body_cabecera = "<div style='clear: both; display: block; width: 25cm; page-break-after: always; font-family: sans-serif; font-size: 12pt;'>
                 <br><!-- si no pongo esta linea, no me imprime el nombre (a partir de la 2ª página -->
@@ -366,8 +368,8 @@ class ComunicarActividadesSacd
             $body_pie .= "</div>";
 
             // mail. Distingo para el sacd y para el ctr:
-            $body_sacd = $body_cabecera.$body_sacd.$body_pie;
-            $body_ctr = $body_cabecera.$body_ctr.$body_pie;
+            $body_sacd = $body_cabecera . $body_sacd . $body_pie;
+            $body_ctr = $body_cabecera . $body_ctr . $body_pie;
 
             //Envío en formato HTML
             $headers = "MIME-Version: 1.0\r\n";

@@ -2,7 +2,7 @@
 
 
 // INICIO Cabecera global de URL de controlador *********************************
-use actividades\model\entity\Actividad;
+use actividades\model\entity\ActividadAll;
 use ubis\model\entity\Ubi;
 use web\ContestarJson;
 
@@ -25,10 +25,10 @@ $nombre_ubi = empty($oUbi->getNombre_ubi()) ? 'sin determinar' : $oUbi->getNombr
 $a = 0;
 $ids_activ = '';
 foreach ($a_sel as $id_activ) {
-    $ids_activ .= empty($ids_activ)? '' : ',';
+    $ids_activ .= empty($ids_activ) ? '' : ',';
     $ids_activ .= $id_activ;
     $a++;
-    $oActividad = new Actividad($id_activ);
+    $oActividad = new ActividadAll($id_activ);
     $iso_ini = $oActividad->getF_ini()->getIso();
     $aF_ini[$iso_ini] = $oActividad->getF_ini()->getFromLocal();
     $iso_fin = $oActividad->getF_fin()->getIso();

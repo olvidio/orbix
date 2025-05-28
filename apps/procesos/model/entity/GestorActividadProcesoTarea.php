@@ -2,15 +2,15 @@
 
 namespace procesos\model\entity;
 
-use actividades\model\entity\Actividad;
+use actividades\model\entity\ActividadAll;
 use actividades\model\entity\ActividadEx;
 use actividades\model\entity\TipoDeActividad;
 use core\ClaseGestor;
 use core\Condicion;
 use core\ConfigGlobal;
 use core\Set;
-use web\DateTimeLocal;
 use ubis\model\entity\Casa;
+use web\DateTimeLocal;
 use function core\is_true;
 
 /**
@@ -41,7 +41,7 @@ class GestorActividadProcesoTarea extends ClaseGestor
         $this->sNomTabla = $sNomTabla;
     }
 
-    
+
     function __construct()
     {
         $oDbl = $GLOBALS['oDBC'];
@@ -197,14 +197,14 @@ class GestorActividadProcesoTarea extends ClaseGestor
         if ($iid_activ < 0) {
             $oActividad = new ActividadEx(array('id_activ' => $iid_activ));
         } else {
-            $oActividad = new Actividad(array('id_activ' => $iid_activ));
+            $oActividad = new ActividadAll(array('id_activ' => $iid_activ));
         }
         $iid_tipo_activ = $oActividad->getId_tipo_activ();
         $oTipo = new TipoDeActividad(array('id_tipo_activ' => $iid_tipo_activ));
 
         // Creo que cuando pasa es que no existe la actividad (pero se tiene el id_activ)
         if (empty($oActividad) || empty($iid_tipo_activ)) {
-            echo sprintf(_("La actividad: %s ya no existe"), $iid_activ). "\n";
+            echo sprintf(_("La actividad: %s ya no existe"), $iid_activ) . "\n";
             return TRUE;
         }
         $dl_org = $oActividad->getDl_org();
@@ -375,13 +375,13 @@ class GestorActividadProcesoTarea extends ClaseGestor
         // Para las posteriores, sólo la primera fase del status.
         // Vamos a establecer la fecha de hoy como criterio para distinguir entre 
         // actividades anteriores y posteriores.
-        $oActividad = new Actividad($iid_activ);
+        $oActividad = new ActividadAll($iid_activ);
         $oActividad->DBCarregar();
         $nom_activ = $oActividad->getNom_activ();
         $statusActividad = $oActividad->getStatus();
 
         // Si es borrable, hay que ver que hacemos: de momento nada.
-        if ($statusActividad == Actividad::STATUS_BORRABLE) {
+        if ($statusActividad == ActividadAll::STATUS_BORRABLE) {
             $nom_activ = empty($nom_activ) ? $iid_activ : $nom_activ;
             $msg = sprintf(_("error al generar el proceso de la actividad: '%s'. Está para borrar."), $nom_activ);
             $msg .= "\n";
@@ -480,17 +480,17 @@ class GestorActividadProcesoTarea extends ClaseGestor
                     $id_fase = $oActividadProcesoTarea->getId_fase();
                     $completado = 'f';
                     // marco el status correspondiente en la actividad.
-                    if ($statusActividad == Actividad::STATUS_PROYECTO) {
+                    if ($statusActividad == ActividadAll::STATUS_PROYECTO) {
                         if ($id_fase <= ActividadFase::FASE_PROYECTO) {
                             $completado = 't';
                         }
                     }
-                    if ($statusActividad == Actividad::STATUS_ACTUAL) {
+                    if ($statusActividad == ActividadAll::STATUS_ACTUAL) {
                         if ($id_fase <= ActividadFase::FASE_APROBADA) {
                             $completado = 't';
                         }
                     }
-                    if ($statusActividad == Actividad::STATUS_TERMINADA) {
+                    if ($statusActividad == ActividadAll::STATUS_TERMINADA) {
                         if ($id_fase <= ActividadFase::FASE_TERMINADA) {
                             $completado = 't';
                         }

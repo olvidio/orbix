@@ -2,7 +2,7 @@
 
 namespace permisos\model;
 
-use actividades\model\entity\Actividad;
+use actividades\model\entity\ActividadAll;
 use actividades\model\entity\GestorTipoDeActividad;
 use core\ConfigGlobal;
 use procesos\model\entity\ActividadFase;
@@ -194,12 +194,12 @@ class PermisosActividades
         $this->btop = false;
         $this->iid_activ = $id_activ;
 
-        $oActividad = new Actividad($id_activ);
+        $oActividad = new ActividadAll($id_activ);
         $id_tipo_activ = $oActividad->getId_tipo_activ();
         $dl_org = $oActividad->getDl_org();
         $dl_org_no_f = preg_replace('/(\.*)f$/', '\1', $dl_org);
 
-        $this->sid_tipo_activ = (string) $id_tipo_activ;
+        $this->sid_tipo_activ = (string)$id_tipo_activ;
 
         if ($dl_org === ConfigGlobal::mi_delef() || $dl_org_no_f === ConfigGlobal::mi_dele()) {
             $this->bpropia = true;

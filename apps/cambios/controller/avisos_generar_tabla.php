@@ -53,20 +53,18 @@ $dir_web = $_SERVER['DIRWEB'];
 $path = "$document_root/$dir_web";
 set_include_path(get_include_path() . PATH_SEPARATOR . $path);
 
-use actividades\model\entity\Actividad;
+use actividades\model\entity\ActividadAll;
 use actividades\model\entity\GestorImportada;
+use actividades\model\entity\GestorTipoDeActividad;
 use cambios\model\Avisos;
 use cambios\model\entity\GestorCambio;
 use cambios\model\entity\GestorCambioUsuarioObjetoPref;
 use cambios\model\entity\GestorCambioUsuarioPropiedadPref;
 use core\ConfigGlobal;
-use function core\is_true;
 use permisos\model\PermisosActividades;
 use personas\model\entity\PersonaSacd;
-use procesos\model\entity\GestorProcesoTipo;
-use actividades\model\entity\GestorTipoDeActividad;
-use procesos\model\entity\TareaProceso;
 use procesos\model\entity\GestorTareaProceso;
+use function core\is_true;
 
 // INICIO Cabecera global de URL de controlador *********************************
 
@@ -215,7 +213,7 @@ while ($num_cambios) {
             $fase_correcta = 0;
             /////////////////// COMPARAR DATE //////////////////////////////////////////
             if (!is_true($aviso_outdate)) {
-                $oActividad = new Actividad($id_activ);
+                $oActividad = new ActividadAll($id_activ);
                 $oF_fin = $oActividad->getF_fin();
                 if ($oF_cmb > $oF_fin) {
                     continue;
@@ -272,7 +270,7 @@ while ($num_cambios) {
                         } else {
                             //Yo no tengo instalado el modulo procesos, pero la dl que ha hecho el cambio si.
                             // miro que esté en el status.
-                            $oActividad = new Actividad($id_activ);
+                            $oActividad = new ActividadAll($id_activ);
                             $status = $oActividad->getStatus();
                             foreach ($aFases_cmb as $id_fase) {
                                 if ($status == $id_fase) {

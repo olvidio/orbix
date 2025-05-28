@@ -2,7 +2,7 @@
 
 namespace actividadestudios\model;
 
-use actividades\model\entity\Actividad;
+use actividades\model\entity\ActividadAll;
 use actividadestudios\model\entity\GestorActividadAsignatura;
 use actividadestudios\model\entity\GestorActividadAsignaturaDl;
 use actividadestudios\model\entity\GestorMatriculaDl;
@@ -103,7 +103,7 @@ class Select3103
     private function getTabla()
     {
         $mi_dele = ConfigGlobal::mi_delef();
-        $oActividad = new Actividad($this->id_pau);
+        $oActividad = new ActividadAll($this->id_pau);
         $this->nom_activ = $oActividad->getNom_activ();
         $dl_org = $oActividad->getDl_org();
 

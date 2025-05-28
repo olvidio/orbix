@@ -1,6 +1,6 @@
 <?php
 
-use actividades\model\entity\Actividad;
+use actividades\model\entity\ActividadAll;
 use asistentes\model\entity\GestorAsistente;
 use core\ConfigGlobal;
 use core\ViewPhtml;
@@ -191,7 +191,7 @@ foreach ($cCentros as $oCentro) {
             $a = 0;
             foreach ($cAsistencias as $oAsistente) {
                 $id_activ = $oAsistente->getId_activ();
-                $oActividad = new Actividad($id_activ);
+                $oActividad = new ActividadAll($id_activ);
                 $nom_activ = $oActividad->getNom_activ();
                 $a++;
                 $aActividades[] = $nom_activ;

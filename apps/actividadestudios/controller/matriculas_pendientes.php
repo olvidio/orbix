@@ -1,6 +1,6 @@
 <?php
 
-use actividades\model\entity\Actividad;
+use actividades\model\entity\ActividadAll;
 use actividadestudios\model\entity\GestorMatriculaDl;
 use asignaturas\model\entity\Asignatura;
 use personas\model\entity\Persona;
@@ -70,12 +70,12 @@ foreach ($cMatriculasPendientes as $oMatricula) {
     $id_activ = $oMatricula->getId_activ();
     $id_asignatura = $oMatricula->getId_asignatura();
     $preceptor = $oMatricula->getPreceptor();
-    $preceptor = is_true($preceptor)? 'x' : '';
+    $preceptor = is_true($preceptor) ? 'x' : '';
 
     //echo "id_activ: $id_activ<br>";
     //echo "id_asignatura: $id_asignatura<br>";
 
-    $oActividad = new Actividad($id_activ);
+    $oActividad = new ActividadAll($id_activ);
     $nom_activ = $oActividad->getNom_activ();
     $oPersona = Persona::newPersona($id_nom);
     if (!is_object($oPersona)) {

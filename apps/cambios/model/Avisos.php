@@ -3,7 +3,7 @@
 namespace cambios\model;
 
 use actividadcargos\model\entity\GestorActividadCargo;
-use actividades\model\entity\Actividad;
+use actividades\model\entity\ActividadAll;
 use cambios\model\entity\CambioAnotado;
 use cambios\model\entity\CambioUsuario;
 use cambios\model\entity\GestorCambioAnotado;
@@ -217,7 +217,7 @@ class Avisos
             if (!empty($mis_id_ubis)) { //casa o un listado de ubis en la preferencia del aviso.
                 $a_mis_id_ubis = explode(',', $mis_id_ubis);
 
-                $oActividad = new Actividad($id_activ);
+                $oActividad = new ActividadAll($id_activ);
                 $id_ubi = $oActividad->getId_ubi(); // id ubi actual.
 
                 // si lo que cambia es el id_ubi, compruebo que el valor old o new sean de la casa.
@@ -273,19 +273,19 @@ class Avisos
         if (!empty($id_pau)) { //casa o un listado de ubis en la preferencia del aviso.
             $a_id_pau = explode(',', $id_pau);
 
-            $oActividad = new Actividad($id_activ);
+            $oActividad = new ActividadAll($id_activ);
             $id_ubi = $oActividad->getId_ubi(); // id ubi actual.
             // si lo que cambia es el id_ubi, compruebo que el valor old o new sean de la casa.
-            if ($propiedad == 'id_ubi') {
+            if ($propiedad === 'id_ubi') {
                 return (in_array($valor_old_cmb, $a_id_pau) || in_array($id_ubi, $a_id_pau));
             } else {
-                // si cambia qualquier otra cosa en mi id_ubi.
+                // si cambia cualquier otra cosa en mi id_ubi.
                 if (in_array($id_ubi, $a_id_pau)) {
                     switch ($this->sObjeto) {
                         case 'ActividadCargoNoSacd':
                         case 'ActividadCargoSacd':
-                            // si lo que cambia es el campo observaciones, no hace falata informar.
-                            if ($propiedad == 'observ') {
+                            // si lo que cambia es el campo observaciones, no hace falta informar.
+                            if ($propiedad === 'observ') {
                                 return FALSE;
                             }
                     }

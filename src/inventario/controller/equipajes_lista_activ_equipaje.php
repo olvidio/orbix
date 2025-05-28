@@ -2,7 +2,7 @@
 
 
 // INICIO Cabecera global de URL de controlador *********************************
-use actividades\model\entity\Actividad;
+use actividades\model\entity\ActividadAll;
 use src\inventario\domain\repositories\EquipajeRepository;
 use web\ContestarJson;
 
@@ -27,7 +27,7 @@ $a = 0;
 $a_actividades = [];
 foreach ($aId_activ as $id_activ) {
     $a++;
-    $oActividad = new Actividad($id_activ);
+    $oActividad = new ActividadAll($id_activ);
     $nom_activ = $oActividad->getNom_activ();
     if (empty($nom_activ)) {
         $nom_activ = sprintf(_("OJO! No se encuentra la actividad con id: %s"), $id_activ);

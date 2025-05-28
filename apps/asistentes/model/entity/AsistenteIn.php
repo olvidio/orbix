@@ -2,7 +2,7 @@
 
 namespace asistentes\model\entity;
 
-use actividades\model\entity\Actividad;
+use actividades\model\entity\ActividadAll;
 use personas\model\entity\PersonaEx;
 use function core\is_true;
 
@@ -78,7 +78,7 @@ class AsistenteIn extends AsistentePub
             $id_activ = $this->getId_activ();
             $oPersona = new PersonaEx($id_nom);
             $ape_nom = $oPersona->getApellidosNombre();
-            $oActividad = new Actividad($id_activ);
+            $oActividad = new ActividadAll($id_activ);
             $nom_activ = $oActividad->getNom_activ();
 
             $error_txt = _("el asistente es de otra dl. Se debe modificar en la dl origen.");

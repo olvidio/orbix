@@ -27,7 +27,7 @@
  *
  */
 
-use actividades\model\entity\Actividad;
+use actividades\model\entity\ActividadAll;
 use actividadplazas\model\GestorResumenPlazas;
 use asistentes\model\entity\Asistente;
 use asistentes\model\entity\GestorAsistente;
@@ -83,7 +83,7 @@ $gesAsistentes = new GestorAsistente();
 $obj = 'asistentes\\model\\entity\\Asistente';
 
 /* Mirar si la actividad es mia o no */
-$oActividad = new Actividad($Qid_activ);
+$oActividad = new ActividadAll($Qid_activ);
 
 if (!empty($Qid_nom)) { //caso de modificar
     $mod = "editar";

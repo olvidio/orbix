@@ -1,18 +1,18 @@
 <?php
 
-use actividades\model\entity\Actividad;
+use actividades\model\entity\ActividadAll;
 use actividades\model\entity\GestorActividad;
 use actividades\model\entity\GestorActividadDl;
 use actividades\model\entity\GestorTipoDeActividad;
 use actividades\model\entity\TipoDeActividad;
 use core\ConfigGlobal;
-use web\Hash;
-use web\Lista;
-use web\Periodo;
 use procesos\model\entity\ActividadProcesoTarea;
 use procesos\model\entity\GestorActividadFase;
 use procesos\model\entity\GestorActividadProcesoTarea;
 use procesos\model\entity\GestorTareaProceso;
+use web\Hash;
+use web\Lista;
+use web\Periodo;
 use function core\is_true;
 
 // INICIO Cabecera global de URL de controlador *********************************
@@ -254,7 +254,7 @@ switch ($Qque) {
             $cListaSel = $gesActividadProcesoTareas->getActividadProcesoTareas(array('id_activ' => $id_activ, 'id_fase' => $Qid_fase_nueva));
             if (empty($cListaSel)) {
                 // No se encuentra esta fase para esta actividad
-                $oActividad = new Actividad($id_activ);
+                $oActividad = new ActividadAll($id_activ);
                 $nom_activ = $oActividad->getNom_activ();
                 $txt = sprintf(_("No se encuentra esta fase %s para esta actividad %s(%s)"), $Qid_fase_nueva, $nom_activ, $id_activ);
                 $txt .= '<br>';

@@ -1,6 +1,6 @@
 <?php
 
-use actividades\model\entity\Actividad;
+use actividades\model\entity\ActividadAll;
 use actividadplazas\model\GestorResumenPlazas;
 use core\ConfigGlobal;
 use core\DBPropiedades;
@@ -46,7 +46,7 @@ $oDesplDelegaciones->setOpciones($aOpcionesDl);
 
 // comprobar que la actividad está publicada, sino: avisar!
 $publicado = '';
-$oActividad = new Actividad($id_activ);
+$oActividad = new ActividadAll($id_activ);
 $publicado = $oActividad->getPublicado();
 // Si no es una actividad de la dl, publicado da NULL (igual que todos los campos)
 if (!is_true($publicado) || $publicado === null) {

@@ -1,6 +1,6 @@
 <?php
 
-use actividades\model\entity\Actividad;
+use actividades\model\entity\ActividadAll;
 use actividades\model\entity\GestorActividad;
 use actividadestudios\model\entity\GestorMatriculaDl;
 use asignaturas\model\entity\Asignatura;
@@ -132,7 +132,7 @@ foreach ($cMatriculas as $oMatricula) {
     //echo "id_activ: $id_activ<br>";
     //echo "id_asignatura: $id_asignatura<br>";
 
-    $oActividad = new Actividad($id_activ);
+    $oActividad = new ActividadAll($id_activ);
     $nom_activ = $oActividad->getNom_activ();
 
     if ($id_nom != $id_nom_anterior) {

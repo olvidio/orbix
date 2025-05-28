@@ -4,7 +4,7 @@ namespace actividadcargos\model;
 
 use actividadcargos\model\entity\Cargo;
 use actividadcargos\model\entity\GestorActividadCargo;
-use actividades\model\entity\Actividad;
+use actividades\model\entity\ActividadAll;
 use core\ConfigGlobal;
 use core\ViewPhtml;
 use dossiers\model\PermDossier;
@@ -157,7 +157,7 @@ class Select1302
                 continue;
             }
 
-            $oActividad = new Actividad($id_activ);
+            $oActividad = new ActividadAll($id_activ);
             $nom_activ = $oActividad->getNom_activ();
             $id_tipo_activ = $oActividad->getId_tipo_activ();
 
@@ -166,7 +166,7 @@ class Select1302
             $puede_agd = $oActividadCargo->getPuede_agd();
             $observ = $oActividadCargo->getObserv();
 
-            is_true($puede_agd)? $chk_puede_agd = "si" : $chk_puede_agd = "no";
+            is_true($puede_agd) ? $chk_puede_agd = "si" : $chk_puede_agd = "no";
 
             // para modificar.
             $id_tipo = substr($id_tipo_activ, 0, 3); //cojo los 3 primeros dígitos

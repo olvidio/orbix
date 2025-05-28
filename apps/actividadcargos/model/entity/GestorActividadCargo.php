@@ -1,7 +1,8 @@
 <?php
+
 namespace actividadcargos\model\entity;
 
-use actividades\model\entity\Actividad;
+use actividades\model\entity\ActividadAll;
 use actividades\model\entity\GestorActividad;
 use asistentes\model\entity\GestorAsistente;
 use core\ClaseGestor;
@@ -29,7 +30,6 @@ class GestorActividadCargo extends ClaseGestor
     /* CONSTRUCTOR -------------------------------------------------------------- */
 
 
-    
     function __construct()
     {
         $oDbl = $GLOBALS['oDBE'];
@@ -116,7 +116,7 @@ class GestorActividadCargo extends ClaseGestor
                     // Si es de otra dl, ya es lo que toca: No tengo acceso a la tablas de cp_sacd.
                     // Desde dentro accedo a PersonaIn, pero desde fuera NO.
                     // nom actividad:
-                    $oActividad = new Actividad($iid_activ);
+                    $oActividad = new ActividadAll($iid_activ);
                     $nom_activ = $oActividad->getNom_activ();
                     $msg = sprintf(_("No se tiene acceso al nombre de (es de otra dl o el sacd no está en DB-comun) id_nom: %s"), $id_nom);
                     $msg .= '<br>';
@@ -153,7 +153,7 @@ class GestorActividadCargo extends ClaseGestor
             $id_activ = $oActividadCargo->getId_activ();
             if (in_array($id_activ, $aListaIds)) {
                 $i++;
-                $oActividad = new Actividad($id_activ);
+                $oActividad = new ActividadAll($id_activ);
                 $oF_ini = $oActividad->getF_ini();
                 $f_ini_iso = $oF_ini->format('Y-m-d') . '#' . $i; // Añado $i por si empezan el mismo dia.
                 $oActividadCargo->DBCarregar();

@@ -2,7 +2,7 @@
 
 // INICIO Cabecera global de URL de controlador *********************************
 
-use actividades\model\entity\Actividad;
+use actividades\model\entity\ActividadAll;
 use actividades\model\entity\GestorActividad;
 use actividadescentro\model\entity\GestorCentroEncargado;
 use actividadtarifas\model\entity\GestorTipoTarifa;
@@ -10,15 +10,15 @@ use actividadtarifas\model\entity\TipoTarifa;
 use casas\model\entity\Ingreso;
 use core\ConfigGlobal;
 use permisos\model\PermisosActividadesTrue;
+use procesos\model\entity\GestorActividadProcesoTarea;
 use src\usuarios\domain\entity\Role;
+use ubis\model\entity\CasaDl;
+use ubis\model\entity\CentroDl;
+use ubis\model\entity\GestorTarifaUbi;
 use web\Hash;
 use web\Lista;
 use web\Periodo;
 use web\TiposActividades;
-use procesos\model\entity\GestorActividadProcesoTarea;
-use ubis\model\entity\CasaDl;
-use ubis\model\entity\CentroDl;
-use ubis\model\entity\GestorTarifaUbi;
 
 require_once("apps/core/global_header.inc");
 // Archivos requeridos por esta url **********************************************
@@ -54,7 +54,7 @@ switch ($Qque) {
         break;
     case 'form_ingreso':
         $Qid_activ = (integer)filter_input(INPUT_POST, 'id_activ');
-        $oActividad = new Actividad($Qid_activ);
+        $oActividad = new ActividadAll($Qid_activ);
         $nom_activ = $oActividad->getNom_activ();
         $id_tipo_activ = $oActividad->getId_tipo_activ();
         $dl_org = $oActividad->getDl_org();
@@ -400,7 +400,7 @@ switch ($Qque) {
         $Qobserv = (string)filter_input(INPUT_POST, 'observ');
         // también los datos en la actividad.
         if (!empty($Qid_activ)) {
-            $oActividad = new Actividad($Qid_activ);
+            $oActividad = new ActividadAll($Qid_activ);
             $oActividad->DBCarregar();
             isset($Q_id_tarifa) ? $oActividad->setTarifa($Q_id_tarifa) : '';
             if (isset($Qprecio)) {

@@ -1,6 +1,6 @@
 <?php
 
-use actividades\model\entity\Actividad;
+use actividades\model\entity\ActividadAll;
 use actividades\model\entity\GestorActividad;
 use asignaturas\model\entity\Asignatura;
 use asignaturas\model\entity\GestorAsignatura;
@@ -10,9 +10,9 @@ use notas\model\entity\GestorNota;
 use notas\model\entity\GestorPersonaNotaDB;
 use notas\model\entity\PersonaNotaDB;
 use profesores\model\entity\GestorProfesor;
+use ubis\model\entity\GestorDelegacion;
 use web\Desplegable;
 use web\Hash;
-use ubis\model\entity\GestorDelegacion;
 
 // INICIO Cabecera global de URL de controlador *********************************
 require_once("apps/core/global_header.inc");
@@ -44,7 +44,7 @@ switch ($Qque) {
             $id_asignatura = $oActa->getId_asignatura();
             $id_activ = $oActa->getId_activ();
             if (!empty($id_activ)) {
-                $oActividad = new Actividad($id_activ);
+                $oActividad = new ActividadAll($id_activ);
                 $nom_activ = $oActividad->getNom_activ();
                 $id_tipo_actividad = $oActividad->getId_tipo_activ();
                 $epoca = PersonaNotaDB::EPOCA_CA;

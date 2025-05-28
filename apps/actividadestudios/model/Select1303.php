@@ -2,7 +2,7 @@
 
 namespace actividadestudios\model;
 
-use actividades\model\entity\Actividad;
+use actividades\model\entity\ActividadAll;
 use asignaturas\model\entity\Asignatura;
 use asistentes\model\entity\GestorAsistente;
 use core\ConfigGlobal;
@@ -102,7 +102,7 @@ class Select1303
 
         $est_ok = $oAsistente->getEst_ok();
         $observ_est = $oAsistente->getObserv_est();
-        $oActividad = new Actividad(array('id_activ' => $this->id_activ));
+        $oActividad = new ActividadAll(array('id_activ' => $this->id_activ));
         $nom_activ = $oActividad->getNom_activ();
 
         // el plan de estudios solo puede modificarlo la dl del alumno (a no ser que sea de paso)
@@ -296,7 +296,7 @@ class Select1303
                 $id_sem_inv = (int)ConfigGlobal::mi_sfsv() . '32500';
                 foreach ($cAsistencias as $oAsistente) {
                     $id_activ = $oAsistente->getId_activ();
-                    $oActividad = new Actividad($id_activ);
+                    $oActividad = new ActividadAll($id_activ);
                     $id_tipo_activ = $oActividad->getId_tipo_activ();
                     if ($id_tipo_activ != $id_sem_inv) $nn++;
                 }
