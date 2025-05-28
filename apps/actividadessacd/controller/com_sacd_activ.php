@@ -81,6 +81,17 @@ if (!empty($aRoles[$id_role]) && ($aRoles[$id_role] === 'p-sacd')) {
     $Qque = 'un_sacd';
 }
 
+// periodo.
+$oPeriodo = new Periodo();
+$oPeriodo->setDefaultAny('next');
+$oPeriodo->setAny($Qyear);
+$oPeriodo->setEmpiezaMin($Qempiezamin);
+$oPeriodo->setEmpiezaMax($Qempiezamax);
+$oPeriodo->setPeriodo($Qperiodo);
+
+$inicioIso = $oPeriodo->getF_ini_iso();
+$finIso = $oPeriodo->getF_fin_iso();
+
 // Si vengo de la página personas_select.php, sólo quiero ver la lista de un sacd.
 if ($Qque === "un_sacd") {
     $a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
@@ -98,22 +109,16 @@ if ($Qque === "un_sacd") {
         $Qid_tabla = (integer)filter_input(INPUT_POST, 'id_tabla');
     }
     // periodo por defecto:
-    if (empty($Qperiodo)) {
-        $Qperiodo = 'curso_crt';
-        $Qyear = date('Y');
-    }
+    // Cambiado dlp 28-5-2025
+    /*
+    $Qperiodo = 'curso_crt';
+    $Qyear = date('Y');
+    */
+    $Qyear = date('Y');
+    $inicioIso = (string)((int)$Qyear -1) .'-07-01';
+    $finIso = (string)((int)$Qyear +1) .'-06-30';
 }
 
-// periodo.
-$oPeriodo = new Periodo();
-$oPeriodo->setDefaultAny('next');
-$oPeriodo->setAny($Qyear);
-$oPeriodo->setEmpiezaMin($Qempiezamin);
-$oPeriodo->setEmpiezaMax($Qempiezamax);
-$oPeriodo->setPeriodo($Qperiodo);
-
-$inicioIso = $oPeriodo->getF_ini_iso();
-$finIso = $oPeriodo->getF_fin_iso();
 
 // lista de actividades posibles en el periodo.
 if (empty($inicioIso) || empty($finIso)) {
