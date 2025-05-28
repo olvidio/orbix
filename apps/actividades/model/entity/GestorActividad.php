@@ -33,7 +33,7 @@ class GestorActividad extends GestorActividadAll
         $this->setoDbl_Select($oDbl_Select);
         $this->setNomTabla('av_actividades');
 
-        $oDbl_Select->query(" REFRESH MATERIALIZED VIEW");
+        $oDbl_Select->query(" REFRESH MATERIALIZED VIEW ".$this->getNomTabla());
     }
 
 
