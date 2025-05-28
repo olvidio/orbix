@@ -80,12 +80,12 @@ $oHash1->setcamposNo('scroll_id');
 $oHash1->setArraycamposHidden(array('que' => 'eliminar'));
 
 $aQuery = ['nuevo' => 1, 'quien' => 'usuario'];
-$url_nuevo = Hash::cmd(ConfigGlobal::getWeb()
+$url_nuevo = Hash::link(ConfigGlobal::getWeb()
     . '/frontend/usuarios/controller/usuario_form.php?'
     . http_build_query($aQuery)
 );
 
-$url_eliminar = Hash::cmd(ConfigGlobal::getWeb()
+$url_eliminar = Hash::link(ConfigGlobal::getWeb()
     . '/frontend/usuarios/controller/usuario_eliminar.php'
 );
 
