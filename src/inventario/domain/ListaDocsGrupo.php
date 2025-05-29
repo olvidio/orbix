@@ -2,12 +2,12 @@
 
 namespace src\inventario\domain;
 
-use src\inventario\domain\repositories\ColeccionRepository;
-use src\inventario\domain\repositories\DocumentoRepository;
-use src\inventario\domain\repositories\EgmRepository;
-use src\inventario\domain\repositories\LugarRepository;
-use src\inventario\domain\repositories\TipoDocRepository;
-use src\inventario\domain\repositories\WhereisRepository;
+use src\inventario\application\repositories\ColeccionRepository;
+use src\inventario\application\repositories\DocumentoRepository;
+use src\inventario\application\repositories\EgmRepository;
+use src\inventario\application\repositories\LugarRepository;
+use src\inventario\application\repositories\TipoDocRepository;
+use src\inventario\application\repositories\WhereisRepository;
 
 class ListaDocsGrupo
 {
