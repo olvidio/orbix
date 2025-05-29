@@ -314,7 +314,7 @@ class TipoDoc
         $oDatosCampo->setMetodoSet('setId_coleccion');
         $oDatosCampo->setEtiqueta(_("coleccion"));
         $oDatosCampo->setTipo('opciones');
-        $oDatosCampo->setArgument('src\\inventario\\domain\\repositories\\ColeccionRepository');
+        $oDatosCampo->setArgument('src\\inventario\\application\\repositories\\ColeccionRepository');
         $oDatosCampo->setArgument2('getNom_coleccion');
         $oDatosCampo->setArgument3('getArrayColecciones');
 

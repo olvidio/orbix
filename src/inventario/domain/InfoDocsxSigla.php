@@ -28,7 +28,7 @@ class InfoDocsxSigla extends DatosInfoRepo
 
     public function getBuscar_view()
     {
-        return 'buscarDocsxSigla.phtml';
+        return '../view/buscarDocsxSigla.phtml';
     }
 
     public function getBuscar_namespace()

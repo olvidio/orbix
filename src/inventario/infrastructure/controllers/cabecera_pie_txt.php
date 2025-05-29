@@ -32,7 +32,7 @@ if (!empty($oEquipaje)) {
 }
 
 // create new ConfigMagik-Object
-$file = "../domain/cabecera_pie_textos.ini";
+$file = "../cabecera_pie_textos.ini";
 $Config = new ConfigMagik($file, true, true);
 $Config->SYNCHRONIZE = false;
 

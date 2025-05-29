@@ -33,7 +33,7 @@ switch ($Qloc) {
         $id_grupo = $matches[1];
 
         $url_lista_backend = Hash::cmd(ConfigGlobal::getWeb()
-            . '/src/inventario/controller/texto_de_egm.php'
+            . '/src/inventario/infrastructure/controllers/texto_de_egm.php'
         );
         $oHash = new Hash();
         $oHash->setUrl($url_lista_backend);

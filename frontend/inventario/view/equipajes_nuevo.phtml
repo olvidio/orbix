@@ -60,7 +60,7 @@
 
     fnjs_guardar = function (formulario) {
         let parametros = $(formulario).serialize();
-        let url = 'src/inventario/controller/equipajes_nuevo_guardar.php';
+        let url = 'src/inventario/infrastructure/controllers/equipajes_nuevo_guardar.php';
         let request = $.ajax({
             data: parametros,
             url: url,

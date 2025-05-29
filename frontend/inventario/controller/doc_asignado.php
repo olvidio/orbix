@@ -17,7 +17,7 @@ $oPosicion->recordar();
 
 // muestra los ctr que tienen el documento.
 $url_lista_backend = Hash::cmd(ConfigGlobal::getWeb()
-    . '/src/inventario/controller/lista_docs_asignados_por_tipo.php'
+    . '/src/inventario/infrastructure/controllers/lista_docs_asignados_por_tipo.php'
 );
 $oHash = new Hash();
 $oHash->setUrl($url_lista_backend);

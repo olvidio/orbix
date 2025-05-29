@@ -20,7 +20,7 @@ $oPosicion->recordar();
 
 // muestra los ctr que tienen el documento.
 $url_lista_backend = Hash::cmd(ConfigGlobal::getWeb()
-    . '/src/inventario/controller/lista_docs_asignar_dlb.php'
+    . '/src/inventario/infrastructure/controllers/lista_docs_asignar_dlb.php'
 );
 $oHash = new Hash();
 $oHash->setUrl($url_lista_backend);
@@ -51,7 +51,7 @@ $oTabla->setCabeceras($a_cabeceras);
 $oTabla->setDatos($a_valores);
 
 //9
-$url_guardar = ConfigGlobal::getWeb() . '/src/inventario/controller/doc_asignar_dlb_guardar.php?';
+$url_guardar = ConfigGlobal::getWeb() . '/src/inventario/infrastructure/controllers/doc_asignar_dlb_guardar.php?';
 
 $oHash = new Hash();
 $sCamposForm .= "!f_recibido!f_asignado";

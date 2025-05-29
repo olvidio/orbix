@@ -132,7 +132,7 @@ class Lugar {
         $oDatosCampo->setMetodoSet('setId_ubi');
         $oDatosCampo->setEtiqueta(_("centro/casa"));
         $oDatosCampo->setTipo('opciones');
-        $oDatosCampo->setArgument('src\\inventario\\domain\\repositories\\UbiInventarioRepository');
+        $oDatosCampo->setArgument('src\\inventario\\application\\repositories\\UbiInventarioRepository');
         $oDatosCampo->setArgument2('getNom_ubi');
         $oDatosCampo->setArgument3('getArrayUbisInventario');
         return $oDatosCampo;

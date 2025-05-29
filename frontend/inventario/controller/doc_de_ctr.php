@@ -21,7 +21,7 @@ $oPosicion->setParametros($aGoBack, 1);
 
 // muestra los ctr que tienen el documento.
 $url_lista_backend = Hash::cmd(ConfigGlobal::getWeb()
-    . '/src/inventario/controller/lista_de_ctr_con_docs.php'
+    . '/src/inventario/infrastructure/controllers/lista_de_ctr_con_docs.php'
 );
 $oHash = new Hash();
 $oHash->setUrl($url_lista_backend);

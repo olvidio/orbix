@@ -16,7 +16,7 @@ $Qnom_equip = (string)filter_input(INPUT_POST, 'nom_equip');
 
 // posibles tipos de documento
 $url_lista_backend = Hash::cmd(ConfigGlobal::getWeb()
-    . '/src/inventario/controller/equipajes_lista_activ_sel.php'
+    . '/src/inventario/infrastructure/controllers/equipajes_lista_activ_sel.php'
 );
 $oHash = new Hash();
 $oHash->setUrl($url_lista_backend);

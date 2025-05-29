@@ -16,7 +16,7 @@
         var parametros = $(formulario).serialize();
         let request = $.ajax({
             data: parametros,
-            url: 'src/inventario/controller/traslado_doc_guardar.php',
+            url: 'src/inventario/infrastructure/controllers/traslado_doc_guardar.php',
             type: 'post',
             dataType: 'json'
         });

@@ -18,7 +18,7 @@ $Qinicio = (string)filter_input(INPUT_POST, 'inicio');
 $Qfin = (string)filter_input(INPUT_POST, 'fin');
 
 $url_lista_backend = Hash::cmd(ConfigGlobal::getWeb()
-    . '/src/inventario/controller/lista_casas_posibles_periodo.php'
+    . '/src/inventario/infrastructure/controllers/lista_casas_posibles_periodo.php'
 );
 $oHash = new Hash();
 $oHash->setUrl($url_lista_backend);

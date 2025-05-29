@@ -589,7 +589,7 @@ class Documento
         $oDatosCampo->setMetodoSet('setId_tipo_doc');
         $oDatosCampo->setEtiqueta(_("documento tipo"));
         $oDatosCampo->setTipo('opciones');
-        $oDatosCampo->setArgument('src\\inventario\\domain\\repositories\\TipoDocRepository');
+        $oDatosCampo->setArgument('src\\inventario\\application\\repositories\\TipoDocRepository');
         $oDatosCampo->setArgument2('getSigla');
         $oDatosCampo->setArgument3('getArrayTipoDoc');
         return $oDatosCampo;
@@ -603,7 +603,7 @@ class Documento
         $oDatosCampo->setMetodoSet('setId_ubi');
         $oDatosCampo->setEtiqueta(_("centro/casa"));
         $oDatosCampo->setTipo('opciones');
-        $oDatosCampo->setArgument('src\\inventario\\domain\\repositories\\UbiInventarioRepository');
+        $oDatosCampo->setArgument('src\\inventario\\application\\repositories\\UbiInventarioRepository');
         $oDatosCampo->setArgument2('getNom_ubi');
         $oDatosCampo->setArgument3('getArrayUbisInventario');
         $oDatosCampo->setAccion('id_lugar'); // campo que hay que actualizar al cambiar este.
@@ -618,7 +618,7 @@ class Documento
         $oDatosCampo->setMetodoSet('setId_lugar');
         $oDatosCampo->setEtiqueta(_("lugar"));
         $oDatosCampo->setTipo('depende');
-        $oDatosCampo->setArgument('src\\inventario\\domain\\repositories\\LugarRepository');
+        $oDatosCampo->setArgument('src\\inventario\\application\\repositories\\LugarRepository');
         $oDatosCampo->setArgument2('getNom_lugar');
         $oDatosCampo->setArgument3('getArrayLugares');
         $oDatosCampo->setDepende('id_ubi');

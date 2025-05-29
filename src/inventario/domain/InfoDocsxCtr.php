@@ -23,14 +23,16 @@ class InfoDocsxCtr extends DatosInfoRepo
         $this->setPau('p');
     }
 
-    public function getBuscar_view(){
-        return 'buscarDocsxCtr.phtml';
+    public function getBuscar_view()
+    {
+        return '../view/buscarDocsxCtr.phtml';
     }
 
     public function getBuscar_namespace()
     {
         return __NAMESPACE__;
     }
+
     public function addCampos($aCampos)
     {
         /*
