@@ -96,7 +96,7 @@ foreach ($a_sel as $id_lugar) {
         array_multisort($a_lugar, SORT_ASC,
             $a_llave, SORT_NUMERIC, SORT_DESC,
             $a_nom_coleccion, SORT_ASC,
-            $a_tipo, SORT_ASC,
+            $a_tipo, SORT_ASC, SORT_NATURAL,
             $a_valores);
 
         $a_ubi_valores[$lugar] = $a_valores;

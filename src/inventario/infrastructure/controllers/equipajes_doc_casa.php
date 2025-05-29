@@ -92,7 +92,10 @@ if (is_array($cUbsiInventario) && !empty($cUbsiInventario)) {
     //array_multisort($a_lugar, SORT_ASC, $a_tipo, SORT_ASC, $a_valores);
     // ordenar por sigla
     if (!empty($a_valores)) {
-        array_multisort($a_lugar, SORT_ASC, $orden, SORT_ASC, $a_num, SORT_ASC, $a_valores);
+        array_multisort($a_lugar, SORT_ASC,
+                            $orden, SORT_ASC,
+                            $a_num, SORT_ASC,
+                        $a_valores);
     }
 
 }
