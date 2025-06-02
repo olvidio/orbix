@@ -11,7 +11,7 @@ class ListaAgrupar
     private string $texto = '';
     private array $aOpciones = [];
 
-    public function listaAgrupar($a_valores,$id_grupo=0)
+    public function listaAgrupar($a_valores, $id_grupo = 0)
     {
         $pencil = ConfigGlobal::getWeb_icons() . '/pencil.png';
 
@@ -25,6 +25,7 @@ class ListaAgrupar
         $id_old = '';
         $id_tipo_old = '';
         $agrupar_old = '';
+        $coleccion_old = '';
         $lugar_old = '';
         $ident_num = '';
         $ident_txt = '';
@@ -41,7 +42,7 @@ class ListaAgrupar
                 $count++;
                 continue;
             }
-            if ((!empty($row[5]) && $agrupar_old == $row[5])) {
+            if (!empty($row[5]) && ($agrupar_old == $row[5]) && ($coleccion_old == $row[4])) {
                 $id_col = !empty($row[4]) ? $row[4] : '';
                 if (!empty($ident_num) && !empty($row[2])) {
                     $ident_num .= ',' . $row[2];
@@ -52,6 +53,7 @@ class ListaAgrupar
                     $id_tipo_old = $row[1];
                     $id_old = $row[2];
                     $agrupar_old = $row[5];
+                    $coleccion_old = $row[4];
                     $count = 1;
                     $ident_num = $id_old;
                     $ident_txt = '';
@@ -70,6 +72,7 @@ class ListaAgrupar
             $id_tipo_old = $row[1];
             $id_old = $row[2];
             $agrupar_old = empty($row[5]) ? '' : $row[5];
+            $coleccion_old = empty($row[4]) ? '' : $row[4];
             $count = 1;
             $ident_num = $id_old;
             $ident_txt = '';

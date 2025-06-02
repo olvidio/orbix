@@ -35,15 +35,24 @@ class ListaDocsGrupo
                 $d++;
                 $id_doc = $oWhereis->getId_doc();
                 $oDocumento = $DocumentoRepository->findById($id_doc);
+                if ($oDocumento === null) {
+                    throw new \Exception("Documento no encontrado con ID: " . $id_doc);
+                }
                 $identificador = $oDocumento->getIdentificador();
                 $num_ejemplares = $oDocumento->getNum_ejemplares();
                 $observ = $oDocumento->getObserv();
                 $id_tipo_doc = $oDocumento->getId_tipo_doc();
                 $oTipoDoc = $TipoDocRepository->findById($id_tipo_doc);
+                if ($oTipoDoc === null) {
+                    throw new \Exception("Documento no encontrado con ID: " . $id_tipo_doc);
+                }
                 $id_lugar_doc = $oDocumento->getId_lugar();
                 $lugar = '';
                 if ($id_lugar != $id_lugar_doc) { // Debo cogerlo de otro sitio.
                     $oLugar = $LugarRepository->findById($id_lugar_doc);
+                    if ($oLugar === null) {
+                        throw new \Exception("Lugar no encontrado con ID: " . $id_lugar_doc);
+                    }
                     $lugar = $oLugar->getNom_lugar();
                     $identificador = _("de") . " $lugar: $identificador";
                 }
@@ -60,10 +69,10 @@ class ListaDocsGrupo
                 //$tipo[$d] = $a_valores[$d][1];
                 $num[$d] = $a_valores[$d][2];
 
-                $id_col = $oTipoDoc->getId_coleccion();
-                if (!empty($id_col)) {
-                    $orden_col[$d] = $id_col;
-                    $bAgrupar = $aColeccion[$id_col];
+                $id_coleccion = $oTipoDoc->getId_coleccion();
+                if (!empty($id_coleccion)) {
+                    $orden_col[$d] = $id_coleccion;
+                    $bAgrupar = $aColeccion[$id_coleccion];
                     if (!empty($identificador) && !$bAgrupar) {
                         $orden[$d] = 1;
                     } elseif ($bAgrupar) {
@@ -76,14 +85,14 @@ class ListaDocsGrupo
                     $orden_col[$d] = 0;
                     $bAgrupar = false;
                 }
-                $a_valores[$d][4] = empty($id_col) ? false : $id_col;
+                $a_valores[$d][4] = empty($id_coleccion) ? false : $id_coleccion;
                 //$a_valores[$d][5] = false; // para ser compatible con los docs de la casa.
                 $a_valores[$d][3] = false; // ?¿?¿? para ser compatible con los docs de la casa.
                 $a_valores[$d][5] = $bAgrupar;
             }
             // ordenar por sigla
             if (!empty($a_valores)) {
-                array_multisort($orden, SORT_ASC, $num, SORT_ASC, $a_valores);
+                array_multisort($orden, SORT_ASC, $orden_col, SORT_ASC, $num, SORT_ASC,  $a_valores);
             }
         } else {
             $a_valores = [];
