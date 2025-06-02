@@ -213,7 +213,6 @@ class PgEquipajeRepository extends ClaseRepository implements EquipajeRepository
         $aDatos['cabecera'] = $Equipaje->getCabecera();
         $aDatos['pie'] = $Equipaje->getPie();
         $aDatos['cabecerab'] = $Equipaje->getCabecerab();
-        $aDatos['firma'] = $Equipaje->getFirma();
         // para las fechas
         $aDatos['f_ini'] = (new ConverterDate('date', $Equipaje->getF_ini()))->toPg();
         $aDatos['f_fin'] = (new ConverterDate('date', $Equipaje->getF_fin()))->toPg();
@@ -230,8 +229,7 @@ class PgEquipajeRepository extends ClaseRepository implements EquipajeRepository
 					nom_equipaje             = :nom_equipaje,
 					cabecera                 = :cabecera,
 					pie                      = :pie,
-					cabecerab                = :cabecerab,
-                    firma                    = :firma";
+					cabecerab                = :cabecerab";
             if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_equipaje = $id_equipaje")) === FALSE) {
                 $sClaveError = 'PgEquipajeRepository.update.prepare';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
@@ -250,8 +248,8 @@ class PgEquipajeRepository extends ClaseRepository implements EquipajeRepository
         } else {
             // INSERT
             $aDatos['id_equipaje'] = $Equipaje->getId_equipaje();
-            $campos = "(id_equipaje,ids_activ,lugar,f_ini,f_fin,id_ubi_activ,nom_equipaje,cabecera,pie,cabecerab,firma)";
-            $valores = "(:id_equipaje,:ids_activ,:lugar,:f_ini,:f_fin,:id_ubi_activ,:nom_equipaje,:cabecera,:pie,:cabecerab,:firma)";
+            $campos = "(id_equipaje,ids_activ,lugar,f_ini,f_fin,id_ubi_activ,nom_equipaje,cabecera,pie,cabecerab)";
+            $valores = "(:id_equipaje,:ids_activ,:lugar,:f_ini,:f_fin,:id_ubi_activ,:nom_equipaje,:cabecera,:pie,:cabecerab)";
             if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === FALSE) {
                 $sClaveError = 'PgEquipajeRepository.insertar.prepare';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);

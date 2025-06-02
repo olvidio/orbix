@@ -27,7 +27,6 @@ $oEquipaje = $EquipajeRepository->findById($Qid_equipaje);
 if (!empty($oEquipaje)) {
     $cabecera = $oEquipaje->getCabecera();
     $cabeceraB = $oEquipaje->getCabecerab();
-    $firma = $oEquipaje->getFirma();
     $pie = $oEquipaje->getPie();
 }
 

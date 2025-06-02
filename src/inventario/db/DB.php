@@ -195,8 +195,7 @@ class DB extends DBAbstract
             nom_equipaje text,
             cabecera text,
             pie text,
-            cabecerab text,
-            firma text
+            cabecerab text
             );";
         $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->user_orbix";
 
