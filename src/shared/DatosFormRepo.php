@@ -1,8 +1,10 @@
 <?php
 
-namespace core;
+namespace src\shared;
 
+use core\ConfigGlobal;
 use web\Desplegable;
+use function core\is_true;
 
 /**
  * Clase que implementa la entidad d_dossiers_abiertos
@@ -23,7 +25,7 @@ class DatosFormRepo
     private $camposNo;
 
     private $oFicha;
-    private $despl_depende;
+    private array $aOpciones_txt;
     private $mod = '';
 
     public function getFormulario()
@@ -93,7 +95,7 @@ class DatosFormRepo
                 case "depende":
                     $formulario .= "<tr><td class=etiqueta>" . ucfirst($eti) . "</td>";
                     $formulario .= "<td class=contenido><select id=\"$nom_camp\" name=\"$nom_camp\">";
-                    $formulario .= $this->despl_depende;  // solo útil en el caso de nuevo. En el resto se actualiza desde el campo del que depende.
+                    $formulario .= $this->aOpciones_txt[$nom_camp];  // solo útil en el caso de nuevo. En el resto se actualiza desde el campo del que depende.
                     $formulario .= "</select></td></tr>";
                     break;
                 case "array":
@@ -172,9 +174,9 @@ class DatosFormRepo
         return $this->oFicha;
     }
 
-    public function setDespl_depende($despl_depende)
+    public function setArrayOpcionesTxt($aOpciones_txt)
     {
-        $this->despl_depende = $despl_depende;
+        $this->aOpciones_txt = $aOpciones_txt;
     }
 
     /**

@@ -3,8 +3,10 @@
 namespace src\inventario\domain;
 
 use src\inventario\application\repositories\DocumentoRepository;
+use src\inventario\application\repositories\LugarRepository;
 use src\inventario\application\repositories\UbiInventarioRepository;
 use src\shared\DatosInfoRepo;
+use web\Desplegable;
 
 /* No vale el underscore en el nombre */
 
@@ -95,4 +97,24 @@ class InfoDocsxCtr extends DatosInfoRepo
 
         return $Coleccion;
     }
+
+    public function getOpcionesParaCondicion($pKeyRepository,$valor_depende, $opcion_sel=null)
+    {
+        $valor_depende = empty($valor_depende) ? 0 : $valor_depende;
+        //caso de actualizar el campo depende
+        $LugarRepository = new LugarRepository();
+        $aOpciones = $LugarRepository->getArrayLugares($valor_depende);
+        $oDesplegable = new Desplegable('', $aOpciones, $opcion_sel, true);
+        $opciones_txt = $oDesplegable->options();
+
+        return $opciones_txt;
+    }
+
+    public function getArrayCamposDepende()
+    {
+        // key -> campo pKeyRepository (campo llave del repository)
+        // value -> campo que se debe llenar con valores del repository
+        return ['id_ubi' =>'id_lugar'];
+    }
+
 }

@@ -55,7 +55,7 @@ if (!empty($a_sel) && ($Qmod !== 'nuevo')) { //vengo de un checkbox (para el cas
     $a_pkey = [];
 }
 
-$web_depende = ConfigGlobal::getWeb() . "/src/shared/mod_tabla_depende.php";
+$web_depende = ConfigGlobal::getWeb() . "/src/shared/repo_tabla_depende.php";
 /* generar url go_to para volver a la tabla */
 $aQuery['s_pkey'] = $Qs_pkey;
 // para los dossiers
@@ -76,12 +76,19 @@ $oInfoClase->setMod($Qmod);
 $oInfoClase->setA_pkey($a_pkey);
 $oInfoClase->setObj_pau($Qobj_pau);
 $oFicha = $oInfoClase->getFicha();
-$despl_depende = $oInfoClase->getDespl_depende();
-//$clasname = get_class($oFicha);
+$aCamposDepende = $oInfoClase->getArrayCamposDepende();
+$aOpciones_txt = [];
+foreach ($aCamposDepende as $pKeyRepository => $campoDepende) {
+    $bbb = 'get' . ucfirst($pKeyRepository);
+    $id_pau = $oFicha->$bbb();
+    $aaa = 'get' . ucfirst($campoDepende);
+    $valor_campo_depende = $oFicha->$aaa();
+    $aOpciones_txt[$campoDepende] = $oInfoClase->getOpcionesParaCondicion($campoDepende,$id_pau,$valor_campo_depende);
+}
 
-$oDatosForm = new core\DatosFormRepo();
+$oDatosForm = new \src\shared\DatosFormRepo();
 $oDatosForm->setFicha($oFicha);
-$oDatosForm->setDespl_depende($despl_depende);
+$oDatosForm->setArrayOpcionesTxt($aOpciones_txt);
 $oDatosForm->setMod($Qmod);
 
 $tit_txt = $oInfoClase->getTxtTitulo();

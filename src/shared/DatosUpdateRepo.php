@@ -1,9 +1,10 @@
 <?php
 
-namespace core;
+namespace src\shared;
 
 use web\DateTimeLocal;
 use web\NullDateTimeLocal;
+use function core\is_true;
 
 /**
  * Classe que implementa
@@ -97,7 +98,10 @@ class DatosUpdateRepo
 
             $metodo = $oDatosCampo->getMetodoSet();
             // cambiar las cadenas vacías por null (va bien cuando el dato que se espera en un integer)
-            $aCampos[$nom_camp] = empty($aCampos[$nom_camp])? null: $aCampos[$nom_camp];
+            // pero en el caso de los check, espera false (no null)
+            if ($tipo !== 'check' && empty($aCampos[$nom_camp])) {
+                $aCampos[$nom_camp] = null;
+            }
             $oFicha->$metodo($aCampos[$nom_camp]);
         }
 

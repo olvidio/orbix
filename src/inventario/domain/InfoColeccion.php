@@ -14,7 +14,7 @@ class InfoColeccion extends DatosInfoRepo
     {
         $this->setTxtTitulo(_("colecciones"));
         $this->setTxtEliminar(_("¿Está seguro que desea eliminar esta colección?"));
-        $this->setTxtBuscar();
+        $this->setTxtBuscar(_("buscar en 'nombre colección'"));
         $this->setTxtExplicacion();
 
         $this->setClase('src\\inventario\\domain\\entity\\Coleccion');

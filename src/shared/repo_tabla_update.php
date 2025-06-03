@@ -1,7 +1,7 @@
 <?php
 
 // INICIO Cabecera global de URL de controlador *********************************
-use core\DatosUpdateRepo;
+use src\shared\DatosUpdateRepo;
 
 require_once("apps/core/global_header.inc");
 // Archivos requeridos por esta url **********************************************

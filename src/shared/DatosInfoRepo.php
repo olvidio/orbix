@@ -221,47 +221,25 @@ abstract class DatosInfoRepo
         return $oFicha;
     }
 
-    public function getDespl_depende()
-    {
-        $despl_depende = "<option></option>";
-        return $despl_depende;
-        /* Debe sobreescribirse el método, esto es un ejemlpo
-        $oFicha =  $this->getFicha();
-        // para el desplegable depende
-        $v1=$oFicha->tipo_teleco;
-        $v2=$oFicha->desc_teleco;
-        if (!empty($v2)) {
-            $oDepende = new GestorDescTeleco();
-            $aOpciones=$oDepende->getListaDescTelecoUbis($v1);
-            $oDesplegable=new Desplegable('',$aOpciones,$v2,true);
-            $despl_depende = $oDesplegable->options();
-        } else {
-            $despl_depende = "<option></option>";
-        }
-         *
-         */
-    }
-
-    public function getAccion($valor_depende)
+    public function getOpcionesParaCondicion($pKeyRepository, $valor_depende, $opcion_sel = null)
     {
         //caso de actualizar el campo depende
         /* Debe sobreescribirse el método, esto es un ejemlpo
-        if (isset($this->accion)) {
-            if ($this->accion == 'desc_teleco') {
-                $oDepende = new GestorDescTeleco();
-                $aOpciones = $oDepende->getListaDescTelecoUbis($valor_depende);
-                $oDesplegable = new Desplegable('',$aOpciones,'',true);
-                $despl_depende = $oDesplegable->options();
-            }
-        }
+        $valor_depende = empty($valor_depende) ? 0 : $valor_depende;
+        //caso de actualizar el campo depende
+        $LugarRepository = new LugarRepository();
+        $aOpciones = $LugarRepository->getArrayLugares($valor_depende);
+        $oDesplegable = new Desplegable('', $aOpciones, $opcion_sel, true);
+        $opciones_txt = $oDesplegable->options();
 
-        return $despl_depende;
-         *
-         */
+        return $opciones_txt;
+        */
     }
 
-    public function setAccion($accion)
+    public function getArrayCamposDepende()
     {
-        $this->accion = $accion;
+        // key -> campo pKeyRepository (campo llave del repository)
+        // value -> campo que se debe llenar con valores del repository
+        return [];
     }
 }
