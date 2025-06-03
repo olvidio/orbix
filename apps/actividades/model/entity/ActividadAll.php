@@ -300,7 +300,8 @@ class ActividadAll extends ClasePropiedades
         $a_pkey = $this->aPrimary_key;
         $dl = $aDades['dl_org'];
         $id_tabla = $aDades['id_tabla'];
-        if ($dl == ConfigGlobal::mi_delef()) {
+        $isfsv = (int)substr($this->iid_tipo_activ, 0, 1);
+        if ($dl === ConfigGlobal::mi_delef($isfsv)) {
             $oActividadAll = new ActividadDl($a_pkey);
         } else {
             if ($id_tabla === 'dl') {

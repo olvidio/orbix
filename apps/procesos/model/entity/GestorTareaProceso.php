@@ -263,13 +263,13 @@ class GestorTareaProceso extends ClaseGestor
             $oTareaProceso->setAllAtributes($aDades);
         }
         if ($i == 0) {
-            $txt = _("No se puede encontrar una fase independiente para el proceso: %s");
+            $txt = _("No se puede encontrar una fase independiente (que no tenga fase previa) para el proceso: %s");
             $msg = sprintf($txt, $id_tipo_proceso);
             echo $msg;
             return false;
         }
         if ($i > 1) {
-            $txt = _("No debería haber más de una fase independiente en un proceso. Hay %s para el id_proceso: %s");
+            $txt = _("No debería haber más de una fase independiente (que no tenga fase previa) en un proceso. Hay %s para el id_proceso: %s");
             $msg = sprintf($txt, $i, $id_tipo_proceso);
             echo $msg;
         }
