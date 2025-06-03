@@ -19,7 +19,7 @@ $QcabeceraB = (string)filter_input(INPUT_POST, 'cabeceraB');
 $Qfirma = (string)filter_input(INPUT_POST, 'firma');
 $Qpie = (string)filter_input(INPUT_POST, 'pie');
 
-$file = "../domain/cabecera_pie_textos.ini";
+$file = "../cabecera_pie_textos.ini";
 $Config = new ConfigMagik($file, true, true);
 $Config->SYNCHRONIZE = false;
 
