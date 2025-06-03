@@ -146,7 +146,7 @@ class DatosTablaRepo
         $c = 0;
         foreach ($this->Coleccion as $oFila) {
             $v = 0;
-            $pks1 = 'get'.ucfirst($oFila->getPrimary_key());
+            $pks1 = 'get' . ucfirst($oFila->getPrimary_key());
             $val_pks = $oFila->$pks1();
             //$pks = urlsafe_b64encode(serialize($val_pks));
             $pks = urlsafe_b64encode(json_encode($val_pks, JSON_THROW_ON_ERROR));
@@ -179,9 +179,13 @@ class DatosTablaRepo
                     case 'opciones':
                         $RepoRelacionado = new $var_1();
                         $oRelacionado = $RepoRelacionado->findById($valor_camp);
-                        $var = $oRelacionado->$var_2();
-                        if (empty($var)) {
-                            $var = $valor_camp;
+                        if ($oRelacionado !== null) {
+                            $var = $oRelacionado->$var_2();
+                            if (empty($var)) {
+                                $var = $valor_camp;
+                            }
+                        } else {
+                            $var = '?';
                         }
                         $a_valores[$c][$v] = $var;
                         break;
