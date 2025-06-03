@@ -16,10 +16,15 @@ require_once("apps/core/global_object.inc");
 
 // si vengo de actualizar tengo el valor en POST,
 // SINO: ES un include de index.php, tengo todas sus variables...
-$Qid_grupmenu = (integer)filter_input(INPUT_POST, 'id_grupmenu');
-if (!empty($Qid_grupmenu)) {
+if (!empty($id_grupmenu)) {
+    $id_grupmenu =  (integer)filter_input(INPUT_POST, 'id_grupmenu');
+    if (empty($id_grupmenu)) {
+        $id_grupmenu =  (integer)filter_input(INPUT_GET, 'id_grupmenu');
+    }
+}
+if (!empty($id_grupmenu)) {
     $GrupMenuRepository = new GrupMenuRepository();
-    $oGrupMenu = $GrupMenuRepository->findById($Qid_grupmenu);
+    $oGrupMenu = $GrupMenuRepository->findById($id_grupmenu);
 // $grup_menu = $oGrupMenu->getGrup_menu($_SESSION['oConfig']->getAmbito());
 // Utilizo las siglas para la dl
     $grup_menu = $oGrupMenu->getGrup_menu('dl');
@@ -35,7 +40,7 @@ $txt_eliminar = _("esto borrará los anuncios seleccionados");
 $oHash = new Hash();
 $oHash->setCamposForm('sel!mod');
 $oHash->setCamposNo('sel!scroll_id!refresh!mod');
-$oHash->setArrayCamposHidden(['id_grupmenu' => $Qid_grupmenu]);
+$oHash->setArrayCamposHidden(['id_grupmenu' => $id_grupmenu]);
 ?>
 
 <script>
