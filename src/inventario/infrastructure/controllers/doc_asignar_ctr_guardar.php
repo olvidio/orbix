@@ -1,6 +1,7 @@
 <?php
 
 use src\inventario\application\repositories\DocumentoRepository;
+use src\inventario\domain\entity\Documento;
 use web\ContestarJson;
 use web\DateTimeLocal;
 
@@ -30,13 +31,18 @@ foreach ($selected_id as $id_ubi) {
     $var_num = "num_" . $id_ubi;
     $num = $_POST[$var_num];
     $cDocumentos = $DocumentoRepository->getDocumentos(['id_ubi' => $id_ubi, 'id_tipo_doc' => $Qid_tipo_doc]);
-    if (count($cDocumentos) === 1) {
-        $oDocumento = $cDocumentos[0];
+    if (empty($cDocumentos)) {
+        $DocumentoRepository = new DocumentoRepository();
+        $id_new = $DocumentoRepository->getNewId();
+        $oDocumento = new Documento();
+        $oDocumento->setId_doc($id_new);
+        $oDocumento->setId_ubi($id_ubi);
+        $oDocumento->setId_tipo_doc($Qid_tipo_doc);
     } else {
-        $error_txt .= _("No se encuentra el documento");
-        $error_txt .= "\\n";
+        $oDocumento = $cDocumentos[0];
     }
-    if (!empty($numerado)) {
+
+    if (!empty($Qnumerado)) {
         $oDocumento->setNum_reg($num);
     } else {
         $oDocumento->setNum_ejemplares($num);

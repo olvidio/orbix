@@ -44,8 +44,10 @@ foreach ($cUbisInventario as $oUbiInventario) {
         continue;
     }
     $i++;
+    $explicacion_txt ='';
     if ($isNumerado) {
         $num = $ultimo + $i;
+        $explicacion_txt = ' <span class="explicacion_txt">'._("Ya es el número: último + 1").'</span>';
     } else {
         // es el número de ejemplares
         $cDocumentos = $DocumentoRepository->getDocumentos(array('id_tipo_doc' => $Qid_tipo_doc, 'id_ubi' => $id_ubi));
@@ -57,7 +59,7 @@ foreach ($cUbisInventario as $oUbiInventario) {
         $num = $num_ej;
     }
     $a_valores[$i][1] = $nom_ubi;
-    $a_valores[$i][2] = "<input type=text name='num_$id_ubi' size=5 value=$num>";
+    $a_valores[$i][2] = "<input type=text name='num_$id_ubi' size=5 value=$num>".$explicacion_txt;
     $sCamposForm .= empty($sCamposForm)? '' : '!';
     $sCamposForm .= "num_$id_ubi";
 }
