@@ -23,11 +23,7 @@ if (!empty($a_sel)) { //vengo de un checkbox
     $Qid_item = (integer)filter_input(INPUT_POST, 'id_item');
 }
 
-if ($Qid_item < 0) {
-    $error_txt = _("Es una persona de paso. No se puede enviar. Hay que imprimir.");
-} else {
-    $error_txt = CertificadoEnviar::enviar($Qid_item);
-}
+$error_txt = CertificadoEnviar::enviar($Qid_item);
 
 if (!empty($error_txt)) {
     $jsondata['success'] = FALSE;

@@ -8,11 +8,11 @@ use core\DBPropiedades;
 use Exception;
 use personas\model\entity\Persona;
 use personas\model\entity\TrasladoDl;
-use web\DateTimeLocal;
 use tablonanuncios\domain\AnuncioId;
 use tablonanuncios\domain\entity\Anuncio;
 use tablonanuncios\domain\repositories\AnuncioRepository;
 use ubis\model\entity\GestorDelegacion;
+use web\DateTimeLocal;
 
 class CertificadoEnviar
 {
@@ -26,36 +26,42 @@ class CertificadoEnviar
         $CertificadoRepository = new CertificadoRepository();
         $oCertificado = $CertificadoRepository->findById($id_item);
 
-        $id_nom = $oCertificado->getId_nom();
-        $certificado = $oCertificado->getCertificado();
-
         $error_txt = '';
-        // destino?
-        $gesPersona = new Persona();
-        /*     $a_lista = [
-                            'esquema' => $esquema,
-                            'id_nom' => $id_nom,
-                            'ape_nom' => $ape_nom,
-                            'nombre' => $nombre,
-                            'dl_persona' => $dl_persona,
-                            'apellido1' => $apellido1,
-                            'apellido2' => $apellido2,
-                            'situacion' => $situacion,
-                         ]
-        */
-        $a_lista = $gesPersona->buscarEnTodasRegiones($id_nom);
+        $id_nom = $oCertificado->getId_nom();
         $b_saltar = FALSE;
-        if (empty($a_lista)) {
-            $error_txt .= "<br>No encuentro a nadie con id_nom: $id_nom en  " . __FILE__ . ": line " . __LINE__;
+
+        if ($id_nom < 0) {
+            $error_txt = _("Es una persona de paso. No se puede enviar. Hay que imprimir.");
             $b_saltar = TRUE;
-        }
-        if (count($a_lista) > 1) {
-            $error_txt .= "Existe más de una persona con este id, dado de alta:";
-            foreach ($a_lista as $dl) {
-                $error_txt .= "\n";
-                $error_txt .= $dl['esquema'];
+        } else {
+            $certificado = $oCertificado->getCertificado();
+
+            // destino?
+            $gesPersona = new Persona();
+            /*     $a_lista = [
+                                'esquema' => $esquema,
+                                'id_nom' => $id_nom,
+                                'ape_nom' => $ape_nom,
+                                'nombre' => $nombre,
+                                'dl_persona' => $dl_persona,
+                                'apellido1' => $apellido1,
+                                'apellido2' => $apellido2,
+                                'situacion' => $situacion,
+                             ]
+            */
+            $a_lista = $gesPersona->buscarEnTodasRegiones($id_nom);
+            if (empty($a_lista)) {
+                $error_txt .= "<br>No encuentro a nadie con id_nom: $id_nom en  " . __FILE__ . ": line " . __LINE__;
+                $b_saltar = TRUE;
             }
-            $b_saltar = TRUE;
+            if (count($a_lista) > 1) {
+                $error_txt .= "Existe más de una persona con este id, dado de alta:";
+                foreach ($a_lista as $dl) {
+                    $error_txt .= "\n";
+                    $error_txt .= $dl['esquema'];
+                }
+                $b_saltar = TRUE;
+            }
         }
 
         if (!$b_saltar) {
