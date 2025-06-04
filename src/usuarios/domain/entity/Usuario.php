@@ -57,6 +57,18 @@ class Usuario
      * @var string|null
      */
     private string|null $snom_usuario = null;
+    /**
+     * Indica si el usuario tiene habilitada la autenticación de dos factores
+     *
+     * @var bool
+     */
+    private bool $bhas_2fa = false;
+    /**
+     * Clave secreta para la autenticación de dos factores
+     *
+     * @var string|null
+     */
+    private string|null $ssecret_2fa = null;
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
@@ -88,6 +100,12 @@ class Usuario
         }
         if (array_key_exists('nom_usuario', $aDatos)) {
             $this->setNom_usuario($aDatos['nom_usuario']);
+        }
+        if (array_key_exists('has_2fa', $aDatos)) {
+            $this->setHas2fa($aDatos['has_2fa']);
+        }
+        if (array_key_exists('secret_2fa', $aDatos)) {
+            $this->setSecret2fa($aDatos['secret_2fa']);
         }
         return $this;
     }
@@ -216,5 +234,45 @@ class Usuario
     public function setNom_usuario(?string $snom_usuario = null): void
     {
         $this->snom_usuario = $snom_usuario;
+    }
+
+    /**
+     * Obtiene si el usuario tiene habilitada la autenticación de dos factores
+     *
+     * @return bool
+     */
+    public function has2fa(): bool
+    {
+        return $this->bhas_2fa;
+    }
+
+    /**
+     * Establece si el usuario tiene habilitada la autenticación de dos factores
+     *
+     * @param bool $bhas_2fa
+     */
+    public function setHas2fa(bool $bhas_2fa): void
+    {
+        $this->bhas_2fa = $bhas_2fa;
+    }
+
+    /**
+     * Obtiene la clave secreta para la autenticación de dos factores
+     *
+     * @return string|null
+     */
+    public function getSecret2fa(): ?string
+    {
+        return $this->ssecret_2fa;
+    }
+
+    /**
+     * Establece la clave secreta para la autenticación de dos factores
+     *
+     * @param string|null $ssecret_2fa
+     */
+    public function setSecret2fa(?string $ssecret_2fa = null): void
+    {
+        $this->ssecret_2fa = $ssecret_2fa;
     }
 }

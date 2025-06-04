@@ -1,0 +1,196 @@
+<?php
+
+use core\ConfigGlobal;
+
+// Define default values for variables that might be undefined
+$usuario = $usuario ?? 'Usuario';
+$has_2fa = $has_2fa ?? false;
+$secret_2fa = $secret_2fa ?? '';
+$qr_url = $qr_url ?? '';
+$txt_guardar = $txt_guardar ?? 'Guardar';
+$txt_ok = $txt_ok ?? 'Configuración actualizada';
+$oHashUpdate = $oHashUpdate ?? null;
+$oPosicion = $oPosicion ?? null;
+
+
+?>
+<script>
+    // Check if jQuery is already loaded, if not, load it
+    if (typeof jQuery === 'undefined') {
+        try {
+            document.write('<script src="<?= ConfigGlobal::getWeb_NodeScripts() ?>/jquery/dist/jquery.min.js"><\/script>');
+        } catch (e) {
+            // Fallback to a CDN if ConfigGlobal is not available
+            document.write('<script src="https://code.jquery.com/jquery-3.5.1.min.js"><\/script>');
+        }
+    }
+
+    function fnjs_enviar(evt, objeto) {
+        var frm = objeto.id;
+        if (evt.keyCode === 13 && evt.type === "keydown") {
+            //alert ('hola33 '+evt.keyCode+' '+evt.type);
+            // buscar el botón 'ok'
+            var b = $('#' + frm + ' input.btn_ok');
+            if (b[0]) {
+                b[0].onclick();
+            }
+            evt.preventDefault(); // que no siga pasando el evento a submit.
+            evt.stopPropagation();
+            return false;
+        }
+    }
+
+    fnjs_guardar = function (formulario) {
+        // Verificar el código si se está activando 2FA
+        var enable_2fa = $('#enable_2fa').is(':checked');
+
+        if (enable_2fa) {
+            var verification_code = $('#verification_code').val().trim();
+
+            if (!verification_code) {
+                alert("<?= _("Error: Debe ingresar un código de verificación para activar 2FA") ?>");
+                return false;
+            }
+
+            // Verificar el código de verificación
+            var url = '<?= $url_2fa_verify ?>';
+            var secret = $('#secret_2fa').val();
+            var parametros = 'verification_code=' + verification_code + '&secret_2fa=' + secret + '<?= $h_2fa_verify ?>';
+
+            var request = $.ajax({
+                data: parametros,
+                url: url,
+                type: 'post',
+                dataType: 'json',
+                async: false
+            });
+
+            var valid = false;
+            request.done(function (json) {
+                if (json.success !== true) {
+                    alert("<?= _("Error: Código de verificación inválido") ?>");
+                    valid = false;
+                } else {
+                    valid = true;
+                }
+            });
+
+            if (!valid) {
+                return false;
+            }
+        }
+
+        fnjs_guardar_datos(formulario);
+    }
+
+    fnjs_guardar_datos = function (formulario) {
+        var url = '<?= $url_2fa_update ?>';
+        let datos = $(formulario).serialize();
+        let request = $.ajax({
+            data: datos,
+            url: url,
+            method: 'POST',
+            dataType: 'json'
+        });
+        request.done(function (json) {
+            if (json.success !== true) {
+                alert("<?= _("respuesta") ?>" + ': ' + json.mensaje);
+            } else {
+                alert("<?= $txt_ok ?>");
+                <?php if ($go_to === 'atras'): ?>
+                    <?= $oPosicion->js_atras(1) ?>
+                <?php else: ?>
+                    // Redirigir a la página de inicio
+                    window.location.href = '<?= $go_to ?>';
+                <?php endif; ?>
+            }
+        });
+    }
+
+    // Mostrar/ocultar la sección de configuración según el estado del checkbox
+    //window.onload(function() {
+    document.addEventListener("DOMContentLoaded", function (event) {
+        function updateConfigSection() {
+            if ($('#enable_2fa').is(':checked')) {
+                $('#config_2fa_section').show();
+            } else {
+                $('#config_2fa_section').hide();
+            }
+        }
+
+        // Inicializar
+        updateConfigSection();
+
+        // Actualizar cuando cambie el checkbox
+        $('#enable_2fa').change(function () {
+            updateConfigSection();
+        });
+    });
+</script>
+
+<h3><?= $usuario ?></h3>
+<h2><?= _("Configuración de autenticación de dos factores (2FA)") ?></h2>
+
+<?php if (!empty($msg_2fa)): ?>
+    <div style="background-color: #ffe0b2; border: 1px solid #ffb74d; padding: 10px; margin: 10px 0; border-radius: 4px;">
+        <strong><?= $msg_2fa ?></strong>
+    </div>
+<?php endif; ?>
+
+<form id="frm_2fa" name="frm_2fa" action="" method="post" action="" onkeydown="fnjs_enviar(event,this);">
+    <?php if ($oHashUpdate !== null): ?>
+        <?= $oHashUpdate->getCamposHtml() ?>
+    <?php endif; ?>
+    <input type="hidden" id="secret_2fa" name="secret_2fa" value="<?= $secret_2fa ?>">
+
+    <div>
+        <label>
+            <input type="checkbox" id="enable_2fa" name="enable_2fa" value="1" <?= $has_2fa ? 'checked' : '' ?>>
+            <?= _("Activar autenticación de dos factores") ?>
+        </label>
+    </div>
+
+    <div id="config_2fa_section" style="margin-top: 20px; <?= $has_2fa ? '' : 'display: none;' ?>">
+        <h3><?= _("Configuración") ?></h3>
+
+        <p><?= _("Para configurar la autenticación de dos factores, siga estos pasos:") ?></p>
+        <ol>
+            <li><?= _("Descargue una aplicación de autenticación como Google Authenticator, Microsoft Authenticator o Authy en su dispositivo móvil.") ?></li>
+            <li><?= _("Escanee el código QR con la aplicación o ingrese la clave secreta manualmente.") ?></li>
+            <li><?= _("Ingrese el código de verificación generado por la aplicación para confirmar la configuración.") ?></li>
+            <li><?= _("Guarde la configuración.") ?></li>
+        </ol>
+
+        <div style="margin: 20px 0;">
+            <h4><?= _("Código QR") ?></h4>
+            <img src="<?= $qr_url ?>" alt="QR Code">
+        </div>
+
+        <div style="margin: 20px 0;">
+            <h4><?= _("Clave secreta") ?></h4>
+            <p><?= _("Si no puede escanear el código QR, ingrese esta clave secreta en su aplicación de autenticación:") ?></p>
+            <code style="font-size: 18px; background: #f5f5f5; padding: 10px; display: block;"><?= $secret_2fa ?></code>
+        </div>
+
+        <div style="margin: 20px 0;">
+            <h4><?= _("Verificación") ?></h4>
+            <p><?= _("Ingrese el código de verificación generado por su aplicación de autenticación:") ?></p>
+            <input type="text" id="verification_code" name="verification_code"
+                   placeholder="<?= _("Código de verificación") ?>">
+        </div>
+    </div>
+
+    <div style="margin-top: 20px;">
+        <input type="button" onclick="fnjs_guardar(this.form);" id="btn_ok" name="btn_ok"  value="<?= $txt_guardar ?>"
+           class="btn_ok">
+    </div>
+</form>
+
+<div style="margin-top: 30px;">
+    <h3><?= _("Información importante") ?></h3>
+    <ul>
+        <li><?= _("La autenticación de dos factores añade una capa adicional de seguridad a su cuenta.") ?></li>
+        <li><?= _("Cada vez que inicie sesión, necesitará ingresar su contraseña y un código de verificación generado por su aplicación de autenticación.") ?></li>
+        <li><?= _("Guarde su clave secreta en un lugar seguro. La necesitará si pierde acceso a su dispositivo.") ?></li>
+    </ul>
+</div>

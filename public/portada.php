@@ -16,7 +16,7 @@ require_once("apps/core/global_object.inc");
 
 // si vengo de actualizar tengo el valor en POST,
 // SINO: ES un include de index.php, tengo todas sus variables...
-if (!empty($id_grupmenu)) {
+if (empty($id_grupmenu)) {
     $id_grupmenu =  (integer)filter_input(INPUT_POST, 'id_grupmenu');
     if (empty($id_grupmenu)) {
         $id_grupmenu =  (integer)filter_input(INPUT_GET, 'id_grupmenu');

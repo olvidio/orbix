@@ -222,6 +222,7 @@
         <?php } ?>
         <input type="text" name="username" placeholder="<?= _("nombre de usuario") ?>" required="" autofocus=""/>
         <input type="password" name="password" placeholder="Password" required=""/>
+        <input type="text" name="verification_code" placeholder="<?= _("código de verificación (2FA)") ?>" autocomplete="off" />
         <br>
         <input type="submit" value="<?= ucfirst(_("iniciar sesión")) ?>"/>
         <br>
@@ -246,6 +247,28 @@
         <tr>
             <td colspan=2><font color=red><b>
                         <?= _("Este usuario no puede entrar desde esta instalación") ?>
+                    </b></font></td>
+        </tr>
+    </table>
+<?php } ?>
+
+
+<?php if (isset($error) && $error == 3) { ?>
+    <p>
+    <table>
+        <tr>
+            <td colspan=2><font color=red><b>
+                        <?= _("Se requiere código de verificación 2FA") ?>
+                    </b></font></td>
+        </tr>
+    </table>
+<?php } ?>
+<?php if (isset($error) && $error == 4) { ?>
+    <p>
+    <table>
+        <tr>
+            <td colspan=2><font color=red><b>
+                        <?= _("Código de verificación 2FA inválido") ?>
                     </b></font></td>
         </tr>
     </table>
