@@ -84,7 +84,8 @@ if (isset($primera)) {
     $oUsuario = $UsuarioRepository->findById($id_usuario);
     $has_2fa = $oUsuario->has2fa();
 
-    if (!$has_2fa && ServerConf::$dmz) { // la función "Configglobal::is_dmz()" se desactiva para la sf
+    //if (!$has_2fa && ServerConf::$dmz) { // la función "Configglobal::is_dmz()" se desactiva para la sf
+    if (!$has_2fa) { // la función "Configglobal::is_dmz()" se desactiva para la sf
         // Redirigir a la página de verificación de 2FA para usuarios nuevos
         $url_check_2fa = ConfigGlobal::getWeb() . '/src/usuarios/infrastructure/controllers/check_first_login_2fa.php';
         header("Location: $url_check_2fa");
