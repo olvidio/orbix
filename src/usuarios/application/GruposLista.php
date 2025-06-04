@@ -16,6 +16,9 @@ class GruposLista
         if (!empty($username)) {
             $aWhere['usuario'] = $username;
             $aOperador['usuario'] = 'sin_acentos';
+        } else {
+            $aWhere['id_usuario'] = '^5';
+            $aOperador['id_usuario'] = '~';
         }
         $aWhere['_ordre'] = 'usuario';
 
