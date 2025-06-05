@@ -15,7 +15,7 @@ $Qloc = (string)filter_input(INPUT_POST, 'loc');
 $Qid_equipaje = (int)filter_input(INPUT_POST, 'id_equipaje');
 
 $titulo = '';
-$texto = $Qtexto;
+$texto = htmlspecialchars_decode($Qtexto);
 switch ($Qloc) {
     case 'cabecera':
         $titulo = _("cabecera");

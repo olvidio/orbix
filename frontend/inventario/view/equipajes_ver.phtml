@@ -26,7 +26,7 @@
         var url = 'frontend/inventario/controller/equipajes_form_texto_listado.php';
         id_equipaje = $('#id_equipaje').val();
         var id = '#' + loc;
-        texto = $(id).html();
+        texto = encodeURIComponent($(id).html());
         var parametros = 'loc=' + loc + '&texto=' + texto + '&id_equipaje=' + id_equipaje + '<?= $h_mod_txt ?>';
         fnjs_update_div('#div_modificar', url + '?' + parametros);
     }
