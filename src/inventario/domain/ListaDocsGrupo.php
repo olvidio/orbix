@@ -69,22 +69,32 @@ class ListaDocsGrupo
                 //$tipo[$d] = $a_valores[$d][1];
                 $num[$d] = $a_valores[$d][2];
 
+                $bAgrupar = false;
+                $orden_coleccion[$d] = 0;
                 $id_coleccion = $oTipoDoc->getId_coleccion();
                 if (!empty($id_coleccion)) {
-                    $orden_col[$d] = $id_coleccion;
+                    $orden_coleccion[$d] = $id_coleccion;
                     $bAgrupar = $aColeccion[$id_coleccion];
-                    if (!empty($identificador) && !$bAgrupar) {
+                }
+                if (!empty($identificador)) {
+                    if (!$bAgrupar) {
                         $orden[$d] = 1;
-                    } elseif ($bAgrupar) {
-                        $orden[$d] = 2;
+                        $orden_coleccion[$d] = 0;
                     } else {
+                        $orden[$d] = 4;
+                    }
+                } else { // sin identificador
+                    if (!empty($id_coleccion)) {
+                        if (!$bAgrupar) {
+                            $orden[$d] = 2;
+                        } else {
+                            $orden[$d] = 4;
+                        }
+                    } else { // documentos sin colección
                         $orden[$d] = 3;
                     }
-                } else { // documentos sin colección
-                    $orden[$d] = 4;
-                    $orden_col[$d] = 0;
-                    $bAgrupar = false;
                 }
+
                 $a_valores[$d][4] = empty($id_coleccion) ? false : $id_coleccion;
                 //$a_valores[$d][5] = false; // para ser compatible con los docs de la casa.
                 $a_valores[$d][3] = false; // ?¿?¿? para ser compatible con los docs de la casa.
@@ -92,7 +102,10 @@ class ListaDocsGrupo
             }
             // ordenar por sigla
             if (!empty($a_valores)) {
-                array_multisort($orden, SORT_ASC, $orden_col, SORT_ASC, $num, SORT_ASC,  $a_valores);
+                array_multisort($orden, SORT_ASC,
+                                    $orden_coleccion, SORT_ASC, SORT_NUMERIC,
+                                    $num, SORT_ASC, SORT_NATURAL,
+                                $a_valores);
             }
         } else {
             $a_valores = [];
