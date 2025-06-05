@@ -146,6 +146,9 @@ if ($oPreferencia !== null) {
     $tipo_menu = 'horizontal';
 }
 
+// Layout variable to control menu display
+$layout = isset($_GET['layout']) ? $_GET['layout'] : 'new';
+
 $aWhere = array('id_role' => $oUsuario->getId_role());
 $cGrupMenuRoles = $GrupMenuRoleRepository->getGrupMenuRoles($aWhere);
 $html_barra = "<ul id=\"menu\" class=\"menu\">";
@@ -358,13 +361,34 @@ $portada_html = ob_get_clean();
     <?php
     include_once(ConfigGlobal::$dir_estilos . '/todo_en_uno.css.php');
     include_once(ConfigGlobal::$dir_estilos . '/slickgrid_orbix.css.php');
-    switch ($tipo_menu) {
-        case "horizontal":
-            include_once(ConfigGlobal::$dir_estilos . '/menu_horizontal.css.php');
-            break;
-        case "vertical":
-            include_once(ConfigGlobal::$dir_estilos . '/menu_vertical.css.php');
-            break;
+    if ($layout === 'new') {
+        // New layout with grupmenus in a column on the left
+        include_once(ConfigGlobal::$dir_estilos . '/menu_vertical.css.php');
+        // Additional CSS for the new layout
+        echo '<style>
+            #submenu { 
+                float: left; 
+                width: 20%; 
+                min-height: 500px;
+            }
+            #main { 
+                margin-left: 22%; 
+                width: 78%;
+            }
+            .left-slide {
+                display: none;
+            }
+        </style>';
+    } else {
+        // Legacy layout (current behavior)
+        switch ($tipo_menu) {
+            case "horizontal":
+                include_once(ConfigGlobal::$dir_estilos . '/menu_horizontal.css.php');
+                break;
+            case "vertical":
+                include_once(ConfigGlobal::$dir_estilos . '/menu_vertical.css.php');
+                break;
+        }
     }
     ?>
     <style>
@@ -1029,24 +1053,47 @@ $portada_html = ob_get_clean();
 
 </script>
 <?php
-if ($gm > 1) {
-    echo $html_barra;
+if ($layout === 'new') {
+    // New layout with grupmenus in a column on the left
+    ?>
+    <!-- menu tree for new layout -->
+    <div id="submenu">
+        <!-- PHP generated menu script [must come *before* any other modules or extensions] -->
+        <script>
+            <?php
+            require_once(ConfigGlobal::$dir_scripts . "/udm4-php/udm-resources/udm-dom.php");
+            ?>
+        </script>
+        <!-- keyboard navigation module -->
+        <!-- <script type="text/javascript" src="/udm4-php/udm-resources/udm-mod-keyboard.js"></script> -->
+        <ul id="udm" class="udm">
+            <?= $li_submenus ?>
+        </ul>
+    </div>
+    <?php
+} else {
+    // Legacy layout (current behavior)
+    if ($gm > 1) {
+        echo $html_barra;
+    }
+    ?>
+    <!-- menu tree for legacy layout -->
+    <div id="submenu">
+        <!-- PHP generated menu script [must come *before* any other modules or extensions] -->
+        <script>
+            <?php
+            require_once(ConfigGlobal::$dir_scripts . "/udm4-php/udm-resources/udm-dom.php");
+            ?>
+        </script>
+        <!-- keyboard navigation module -->
+        <!-- <script type="text/javascript" src="/udm4-php/udm-resources/udm-mod-keyboard.js"></script> -->
+        <ul id="udm" class="udm">
+            <?= $li_submenus ?>
+        </ul>
+    </div>
+<?php
 }
 ?>
-<!-- menu tree -->
-<div id="submenu">
-    <!-- PHP generated menu script [must come *before* any other modules or extensions] -->
-    <script>
-        <?php
-        require_once(ConfigGlobal::$dir_scripts . "/udm4-php/udm-resources/udm-dom.php");
-        ?>
-    </script>
-    <!-- keyboard navigation module -->
-    <!-- <script type="text/javascript" src="/udm4-php/udm-resources/udm-mod-keyboard.js"></script> -->
-    <ul id="udm" class="udm">
-        <?= $li_submenus ?>
-    </ul>
-</div>
 <div id="iframe_export" style="display: none;">
     <form id="frm_export" method="POST" action="libs/export/export.php">
         <input type="hidden" id="frm_export_orientation" name="frm_export_orientation"/>
