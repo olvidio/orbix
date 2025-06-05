@@ -26,17 +26,24 @@ $data = PostRequest::getData($url_lista_backend, $hash_params);
 $a_opciones = $data['a_opciones'];
 
 $oDesplUbis = new Desplegable('id_ubi', $a_opciones, '', true);
-$oDesplUbis->setAction('fnjs_busca_docs()');
+$oDesplUbis->setAction('fnjs_busca_lugares_origen()');
 $oDesplUbisNew = new Desplegable('id_ubi_new', $a_opciones, '', true);
+$oDesplUbisNew->setAction('fnjs_busca_lugares_destino()');
 
 $oHash = new Hash();
 $oHash->setCamposForm('id_ubi!id_ubi_new!sel');
-$oHash->setCamposNo('sel');
+$oHash->setCamposNo('sel!id_lugar!id_lugar_new');
+
+$oHashLugar = new Hash();
+$oHashLugar->setUrl(ConfigGlobal::getWeb(). '/src/inventario/infrastructure/controllers/lista_lugares_de_ubi.php');
+$oHashLugar->setCamposForm('id_ubi');
+$h_lugar = $oHashLugar->linkSinVal();
 
 $a_campos = [
     'oHash' => $oHash,
     'oDesplUbis' => $oDesplUbis,
     'oDesplUbisNew' => $oDesplUbisNew,
+    'h_lugar' => $h_lugar,
 ];
 
 $oView = new ViewSrcPhtml('frontend\inventario\controller');

@@ -10,6 +10,7 @@ require_once("frontend/shared/global_header_front.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
 $Qid_ubi = (integer)filter_input(INPUT_POST, 'id_ubi');
+$Qid_lugar = (integer)filter_input(INPUT_POST, 'id_lugar');
 
 $oPosicion->recordar();
 
@@ -20,7 +21,7 @@ $url_lista_backend = Hash::cmd(ConfigGlobal::getWeb()
 );
 $oHash = new Hash();
 $oHash->setUrl($url_lista_backend);
-$oHash->setArrayCamposHidden(['id_ubi' => $Qid_ubi]);
+$oHash->setArrayCamposHidden(['id_ubi' => $Qid_ubi, 'id_lugar' => $Qid_lugar]);
 $hash_params = $oHash->getArrayCampos();
 
 $data = PostRequest::getData($url_lista_backend, $hash_params);

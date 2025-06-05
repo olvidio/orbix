@@ -16,6 +16,7 @@ require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
 $Qid_ubi = (integer)filter_input(INPUT_POST, 'id_ubi');
+$Qid_lugar = (integer)filter_input(INPUT_POST, 'id_lugar');
 $error_txt = '';
 
 $colTipoDoc = [];
@@ -26,8 +27,16 @@ $TipoDocRepository = new TipoDocRepository();
 $ColeccionRepository = new ColeccionRepository();
 $LugarRepository = new LugarRepository();
 
+$aWhere = [];
+if (!empty($Qid_ubi)) {
+    $aWhere['id_ubi'] = $Qid_ubi;
+}
+if (!empty($Qid_lugar)) {
+    $aWhere['id_lugar'] = $Qid_lugar;
+}
+
 $DocumentoRepository = new DocumentoRepository();
-$cDocumentos = $DocumentoRepository->getDocumentos(['id_ubi' => $Qid_ubi]);
+$cDocumentos = $DocumentoRepository->getDocumentos($aWhere);
 
 $d = 0;
 $a_valores = [];
@@ -40,6 +49,7 @@ foreach ($cDocumentos as $oDocumento) {
     $id_doc = $oDocumento->getId_doc();
     $id_tipo_doc = $oDocumento->getId_tipo_doc();
     $observ = $oDocumento->getObserv();
+    $num_reg = $oDocumento->getNum_reg();
     $num_ejemplares = $oDocumento->getNum_ejemplares();
     // guardo en una colección los tipos de doc para consultas posteriores (de otros lugares).
     if (array_key_exists($id_tipo_doc, $colTipoDoc)) {

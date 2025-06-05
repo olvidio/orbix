@@ -1,4 +1,117 @@
 <script>
+    function fnjs_crearSelectDesdeJson(dataArray, selectId, placeholderText = 'Seleccione una opción') {
+        // Crea el elemento select
+        const $select = $('<select>').attr('name', selectId).attr('id', selectId).addClass('form-control'); // Puedes ajustar las clases CSS según tu framework (ej. Bootstrap)
+
+        // Añade una opción predeterminada (placeholder) si se proporciona
+        if (placeholderText) {
+            $select.append($('<option>').val('').text(placeholderText).prop('disabled', true).prop('selected', true));
+        }
+
+        // Itera sobre el array JSON para añadir las opciones
+        $.each(dataArray, function (index, item) {
+            // Asume que cada objeto en el array tiene 'value' y 'text'
+            // Puedes personalizar esto si tus propiedades JSON tienen otros nombres (ej. item.id, item.nombre)
+            const optionValue = item.value || item.id; // Usa 'value' o 'id' por defecto
+            const optionText = item.text || item.name; // Usa 'text' o 'name' por defecto
+
+            if (optionValue !== undefined && optionText !== undefined) {
+                $select.append($('<option>').val(optionValue).text(optionText));
+            } else {
+                console.warn("Advertencia: Objeto JSON incompleto para la opción.", item);
+            }
+        });
+
+        return $select; // Devuelve el elemento select de jQuery
+    }
+
+    fnjs_put_desplegable_lugares = function (campoPadre, data) {
+        let campo = '';
+        let lst = '';
+        if (campoPadre === 'id_ubi') {
+            campo = 'id_lugar';
+            lst = '#lst_lugares';
+        }
+        if (campoPadre === 'id_ubi_new') {
+            campo = 'id_lugar_new';
+            lst = '#lst_lugares_new';
+        }
+        let desplegable = fnjs_crearSelectDesdeJson(data, campo, "<?= _("seleccione un lugar") ?>");
+        $(lst).html(desplegable);
+    }
+
+    fnjs_busca_lugares = function (campoPadre) {
+        let id_ubi = '';
+        let h_lugar = '<?= $h_lugar ?>';
+        if (campoPadre === 'id_ubi') {
+            id_ubi = $('#' + campoPadre).val();
+        }
+        if (campoPadre === 'id_ubi_new') {
+            id_ubi = $('#' + campoPadre).val();
+        }
+
+        let parametros = 'id_ubi=' + id_ubi + h_lugar;
+        // Still return the Promise from $.ajax
+        return $.ajax({
+            data: parametros,
+            url: 'src/inventario/infrastructure/controllers/lista_lugares_de_ubi.php',
+            type: 'post',
+            dataType: 'json'
+        });
+    }
+
+    // Mark the function as async
+    fnjs_busca_lugares_destino = async function () {
+        try {
+            console.log("Buscando lugares de destino...");
+            // Await the promise to resolve
+            const jsonResponse = await fnjs_busca_lugares('id_ubi_new');
+
+            if (jsonResponse.success !== true) {
+                alert("<?= _("respuesta") ?>" + ': ' + jsonResponse.mensaje);
+                // Throw an error to be caught by the catch block
+                throw new Error(jsonResponse.mensaje || "Error en la respuesta del servidor.");
+            } else {
+                let data = JSON.parse(jsonResponse.data);
+                if (Object.keys(data).length !== 0) {
+                    fnjs_put_desplegable_lugares('id_ubi_new', data);
+                } else {
+                    console.log("No se encontraron lugares para el destino.");
+                    fnjs_put_desplegable_lugares('id_ubi_new', {});
+                }
+            }
+        } catch (error) {
+            console.error("Error en fnjs_busca_lugares_destino:", error);
+            alert("<?= _("Error al cargar lugares de destino") ?>");
+            fnjs_put_desplegable_lugares('id_ubi_new', {});
+        }
+    }
+
+    // Mark the function as async
+    fnjs_busca_lugares_origen = async function () {
+        try {
+            console.log("Buscando lugares de origen...");
+            const jsonResponse = await fnjs_busca_lugares('id_ubi');
+
+            if (jsonResponse.success !== true) {
+                alert("<?= _("respuesta") ?>" + ': ' + jsonResponse.mensaje);
+                throw new Error(jsonResponse.mensaje || "Error en la respuesta del servidor.");
+            } else {
+                let data = JSON.parse(jsonResponse.data);
+                if (Object.keys(data).length !== 0) {
+                    fnjs_put_desplegable_lugares('id_ubi', data);
+                } else {
+                    console.log("No se encontraron lugares para el origen.");
+                    //fnjs_put_desplegable_lugares('id_ubi', {});
+                }
+            }
+        } catch (error) {
+            console.error("Error en fnjs_busca_lugares_origen:", error);
+            alert("<?= _("Error al cargar lugares de origen") ?>");
+            //fnjs_put_desplegable_lugares('id_ubi', {});
+        }
+    }
+
     fnjs_busca_docs = function () {
         var parametros = $('#seleccionados').serialize();
         let request = $.ajax({
@@ -39,6 +152,13 @@
                 <?= ucfirst(_("lista de documentos del centro")) ?>:
                 <?= $oDesplUbis->desplegable() ?>
             </th>
+            <th>
+                <div id="lst_lugares"></div>
+            </th>
+            <th>
+                <input type="button" id="ok" name="ok" onclick="fnjs_busca_docs();"
+                       value="<?= ucfirst(_("buscar")) ?>">
+            </th>
         </tr>
         </thead>
         <tbody>
@@ -48,8 +168,11 @@
             </td>
         </tr>
         <tr>
-            <th class=titulo_inv colspan=3><?= ucfirst(_("asignar los documentos marcados al centro")) ?>:&nbsp;&nbsp;&nbsp;
+            <th class=titulo_inv colspan=4><?= ucfirst(_("asignar los documentos marcados al centro")) ?>:&nbsp;&nbsp;&nbsp;
                 <?= $oDesplUbisNew->desplegable() ?>
+            </th>
+            <th>
+                <div id="lst_lugares_new"></div>
             </th>
             <th>
                 <input type="button" id="ok" name="ok" onclick="fnjs_guardar(this.form);"
