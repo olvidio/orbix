@@ -357,7 +357,6 @@ class BurgerLayout implements LayoutInterface
                     $onClick = "fnjs_link_submenu('$full_url','$parametros');";
                 }
             }
-            $onClick = '';
 
             $indexedNodes[$pathKey] = [
                 'name' => $itemObject->getMenu(),
