@@ -13,7 +13,7 @@ include_once (ConfigGlobal::$dir_estilos.'/colores.php');
 <style> /*  ################ IMPRESORA ####################
 @page { size: 21cm 29.7cm; margin: 0cm } */
 @media print {
-	div.A4 { 
+	div.A4 {
          position:absolute;
          z-index:15;
          top:2%;
@@ -38,7 +38,7 @@ include_once (ConfigGlobal::$dir_estilos.'/colores.php');
 	}
 	BODY {text-align : left;
 			margin: 0pt;
-			background: white; 
+			background: white;
 		}
 	#main {text-align : left;
             margin: 0pt;
@@ -55,11 +55,11 @@ include_once (ConfigGlobal::$dir_estilos.'/colores.php');
 		font-size : 14pt;
 	}
 	TABLE { border-color : Black; }
-	TABLE.A4 { width: 680pt; 
+	TABLE.A4 { width: 680pt;
 				border-style : solid;
 				border-color : Black;
 			}
-	
+
 
 	table.ca_posibles  {
 		border-color: black;
@@ -117,7 +117,7 @@ include_once (ConfigGlobal::$dir_estilos.'/colores.php');
 		border-top-width: thin;
 		vertical-align: top;
 	}
-		
+
 	 .titulo  {
 		font-family : Arial;
 		font-size : 14pt;
@@ -134,7 +134,7 @@ include_once (ConfigGlobal::$dir_estilos.'/colores.php');
 	 }
 	.etiqueta  {
       	font-family : Verdana;
-		font-weight : bold;	
+		font-weight : bold;
       	font-size : 10pt;
 		}
 
@@ -158,7 +158,7 @@ include_once (ConfigGlobal::$dir_estilos.'/colores.php');
 	tr.impar  {
  		background-color : White;
  	}
- 
+
  	tr.par  {
  		background-color : White;
  	}
@@ -195,19 +195,19 @@ div.ventana z-index: 160;
 	h2 {
 		font-size : 14pt;
 	}
-	
+
 	input:read-only {
 	  background-color: #ddd !important;
 	}
-	
+
 	/* Flex box */
-	
+
 	.flex-container {
         display: flex;
         flex-direction: column;
     }
-	
-	
+
+
 	/* Help Tip in line */
 	/*-------------------------
 		Inline help tip
@@ -284,8 +284,8 @@ div.ventana z-index: 160;
 	}
 
 	@-webkit-keyframes fadeIn {
-		0% { 
-			opacity:0; 
+		0% {
+			opacity:0;
 			transform: scale(0.6);
 		}
 
@@ -299,7 +299,7 @@ div.ventana z-index: 160;
 		0% { opacity:0; }
 		100% { opacity:100%; }
 	}
-	
+
 	/* input disabled */
 	input[type=checkbox]:disabled + span {
   		color:#8c8c8c;
@@ -512,7 +512,7 @@ div.ventana z-index: 160;
 	.contenido  {
 		font-family : Arial;
 		font-size : 10pt;
-		font-weight : bold;		
+		font-weight : bold;
 		color : <?= $letras;?>;
 	}
 	.contenido_especial  {
@@ -633,10 +633,10 @@ div.ventana z-index: 160;
 	}
 	tr.par  {
 	   background-color : <?= $fondo_dos; ?>;
-	} 
+	}
 	tr.sf  {
 	   background-color : <?= $fondo_tres; ?>;
-	} 
+	}
 	tr.botones  {
 	   text-align : center;
 	   background-color : <?= $fondo_uno; ?>;
@@ -716,33 +716,67 @@ div.ventana z-index: 160;
 	div#ir_atras {
 		display: none;
 	}
-	div.left-slide {
-		display: none;
-		line-height: 1px;
-		position: fixed;
-		height: 286px;
-		top: 200px;
-		left: -3px;
-		background-color: <?= $fondo_claro ?>;
-		background-position: center;
-		background-repeat: no-repeat no-repeat;
-		width: 40px;
-		height: 230px;
-	}
-	.handle {
-		width: 0px;
-		height: 0px;
-		border-style: solid;
-		border-width: 80px 35px 80px 0px;
-		border-color: transparent <?= $medio ?> transparent transparent;
 
-		opacity: .75; /* opacidad para Firefox */
-		text-indent: -99999px;
-		outline: none;
-		position: relative;
-		top: 33px;
-		right: -3px;
+    /* ===========================================
+       MAIN
+       =========================================== */
+
+    /* Div que contendrá el fijo a la izquierda y el resto */
+    #contenido_sin_menus {
+        flex-grow: 1; /* Ocupa todo el espacio restante dentro del div-principal */
+        display: flex; /* Para organizar el div fijo y el resto */
+        padding: 5px; /* Espacio alrededor del contenido */
+        overflow: hidden; /* Oculta cualquier desbordamiento inicial */
+        height: 100vh;
+    }
+
+    #main {
+        flex-grow: 1; /* Ocupa todo el espacio restante */
+        padding: 10px;
+        margin: 0;
+        background-color: <?= $fondo_claro ?>;
+        border: none;
+        overflow-y: auto; /* Permite scroll si el contenido es muy largo */
+    }
+
+    /* Div fijo a la izquierda dentro del contenido */
+    #left_slide {
+        width: 40px; /* Ancho fijo para el div dentro del contenido */
+        background-color: <?= $fondo_claro ?>;
+        padding: 1px;
+        margin-right: 5px; /* Espacio entre el fijo y el resto */
+        flex-shrink: 0; /* Evita que se encoja */
+        /*overflow-y: auto;  Permite scroll si el contenido es muy largo */
+        border: none;
+    }
+
+	.handle {
+        position: relative;
+		top: 200px;
+        width: 0;
+        height: 0;
+        border-top: 90px solid transparent;
+        border-bottom: 90px solid transparent;
+        border-right: 40px solid <?= $medio ?>;
+        display: inline-block;
 	}
+
+    /* div cargando */
+    #cargando {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        position: absolute;
+        left: 300px;
+        top: 200px;
+        background-color: white;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        max-width: 500px;
+    }
+
 	/*	### e43 ### */
 	table.calif {
 		font-size : 12pt;

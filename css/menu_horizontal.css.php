@@ -20,7 +20,7 @@
         margin-top: 0px;
         padding-top: 6px;
         padding-bottom: 6px;
-        background-color: <?= $medio ?>;
+        background-color: <?= $GLOBALS['medio'] ?>;
     }
 
     #submenu {
@@ -54,7 +54,7 @@
     #menu {
         font-family: Arial;
         font-size: 12pt;
-        background-color: <?= $claro ?>;
+        background-color: <?= $GLOBALS['claro'] ?>;
         border-style: none;
         height: auto;
         line-height: 2.5em;
@@ -64,14 +64,14 @@
     #menu li:hover, #menu li:active, #menu li.selec {
         border-style: none;
         cursor: pointer;
-        background-color: <?= $medio ?>;
-        color: <?= $claro ?>;
+        background-color: <?= $GLOBALS['medio'] ?>;
+        color: <?= $GLOBALS['claro'] ?>;
     }
 
     #menu li {
         display: inline;
-        background-color: <?= $claro ?>;
-        color: <?= $oscuro ?>;
+        background-color: <?= $GLOBALS['claro'] ?>;
+        color: <?= $GLOBALS['oscuro'] ?>;
         font-family: verdana, serif;
         font-weight: bold;
         font-size: 12pt;

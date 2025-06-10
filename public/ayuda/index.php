@@ -18,7 +18,6 @@ if (ConfigGlobal::$web_path === '/pruebas' || ConfigGlobal::$web_path === '/prue
 }
 
 include_once(ConfigGlobal::$dir_estilos.'/todo_en_uno.css.php');
-include_once(ConfigGlobal::$dir_estilos.'/menu_horizontal.css.php');
 
 $aQuery = [ 'pau' => 'a' ];
 // el hppt_build_query no pasa los valores null

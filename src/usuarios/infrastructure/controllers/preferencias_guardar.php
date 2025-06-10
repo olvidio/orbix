@@ -49,6 +49,20 @@ if ($Qque === "slickGrid") {
         $error_txt .= "\n" . $PreferenciaRepository->getErrorTxt();
     }
 } else {
+    // Guardar Layout:
+    $Qlayout = (string)filter_input(INPUT_POST, 'layout');
+    $oPreferencia = $PreferenciaRepository->findById($id_usuario, 'layout');
+    if ($oPreferencia === null) {
+        $oPreferencia = new Preferencia();
+        $oPreferencia->setId_usuario($id_usuario);
+        $oPreferencia->setTipo('layout');
+    }
+    $oPreferencia->setPreferencia($Qlayout);
+    if ($PreferenciaRepository->Guardar($oPreferencia) === false) {
+        $error_txt .= _("hay un error, no se ha guardado");
+        $error_txt .= "\n" . $PreferenciaRepository->getErrorTxt();
+    }
+
     $Qoficina = (string)filter_input(INPUT_POST, 'oficina');
     $Qinicio = (string)filter_input(INPUT_POST, 'inicio');
 

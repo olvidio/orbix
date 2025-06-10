@@ -29,6 +29,7 @@ $hash_params = $oHash->getArrayCampos();
 
 $data = PostRequest::getData($url_lista_backend, $hash_params);
 
+$layout = $data['layout'];
 $inicio = $data['inicio'];
 $oficina = $data['oficina'];
 $oficinas_posibles = $data['oficinas_posibles'];
@@ -54,6 +55,12 @@ $aOpciones = ['exterior' => ucfirst(_("home")),
 if (ConfigGlobal::is_app_installed('cambios')) {
     $aOpciones['avisos'] = ucfirst(_("avisos cambios actividades"));
 }
+
+// ----------- LayOut -------------------
+$oDesplLayout = new Desplegable();
+$oDesplLayout->setNombre('layout');
+$oDesplLayout->setOpciones(['legacy' => "Legacy", 'burger' => "Burger"]);
+$oDesplLayout->setOpcion_sel($layout);
 
 // ----------- Inicio -------------------
 $oDesplInicio = new Desplegable();
@@ -91,13 +98,14 @@ $url_cambio_mail = Hash::cmd(ConfigGlobal::getWeb() . '/frontend/usuarios/contro
 $url_2fa_settings = Hash::cmd(ConfigGlobal::getWeb() . '/frontend/usuarios/controller/usuario_form_2fa.php');
 
 $oHash = new Hash();
-$oHash->setCamposForm('inicio!oficina!estilo_color!tipo_menu!tipo_tabla!ordenApellidos!idioma_nou!zona_horaria_nou');
+$oHash->setCamposForm('layout!inicio!oficina!estilo_color!tipo_menu!tipo_tabla!ordenApellidos!idioma_nou!zona_horaria_nou');
 
 $a_campos = [
     'url_avisos' => $url_avisos,
     'url_avisos_lista' => $url_avisos_lista,
     'url_avisos_mails' => $url_avisos_mails,
     'oHash' => $oHash,
+    'oDesplLayout' => $oDesplLayout,
     'oDesplInicio' => $oDesplInicio,
     'oDesplOficinas' => $oDesplOficinas,
     'estilo_azul_selected' => $estilo_azul_selected,

@@ -47,6 +47,12 @@ if (ConfigGlobal::is_app_installed('cambios')) {
     <?= $oHash->getCamposHtml() ?>
     <table>
         <tr>
+            <td><?= ucfirst(_("layout")) ?>:</td>
+            <td>
+                <?= $oDesplLayout->desplegable() ?>
+            </td>
+        </tr>
+        <tr>
             <td><?= ucfirst(_("página central de inicio")) ?>:</td>
             <td>
                 <?= $oDesplInicio->desplegable() ?>
