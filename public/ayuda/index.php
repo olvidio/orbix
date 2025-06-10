@@ -47,11 +47,7 @@ $goMisas = Hash::link('apps/misas/controller/misas_index.php?' . http_build_quer
       (por ejemplo actividades de sg, cuando no se usa para sg)</p>
 <?php
   if  ($esquemav  === 'H-dlbv') {
-  ?>
-  <h1>Misas</h1>
-  <br>
-      <span class="link" onclick="fnjs_update_div('#main','<?= $goMisas ?>')">index de misas</span></h2>
-  <?php
+      include_once('./regionesEnOrbix.html');
   }
 ?>
   <br>
