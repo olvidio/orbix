@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title><?= _("Ayuda de acceso") ?></title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+        h1 {
+            color: #333;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 10px;
+        }
+        h2 {
+            color: #444;
+            margin-top: 20px;
+        }
+        .problem {
+            margin-bottom: 30px;
+            padding: 15px;
+            background-color: #fff;
+            border-left: 4px solid #37a69b;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .solution {
+            margin-top: 10px;
+            padding-left: 20px;
+        }
+        .btn {
+            display: inline-block;
+            padding: 8px 15px;
+            background-color: #37a69b;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            margin-top: 10px;
+        }
+        .btn:hover {
+            background-color: #2d8a80;
+        }
+        .back-link {
+            margin-top: 30px;
+            display: block;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1><?= _("¿Tiene problemas para acceder?") ?></h1>
+        
+        <div class="problem">
+            <h2><?= _("Olvidé mi contraseña") ?></h2>
+            <div class="solution">
+                <p><?= _("Si ha olvidado su contraseña, puede solicitar un correo electrónico para restablecerla.") ?></p>
+                <a href="<?= $linkEnviarMailPasswd ?>"
+                     class="btn">
+                    <?= _("Recibir correo de recuperación") ?> en <?= $emailOfuscado ?>
+                </a>
+            </div>
+        </div>
+        
+        <div class="problem">
+            <h2><?= _("Problemas con la autenticación de doble factor (2FA)") ?></h2>
+            <div class="solution">
+                <p><?= _("Si tiene problemas con la autenticación de doble factor, puede solicitar ayuda al administrador.") ?></p>
+                <a href="<?= $linkAyuda2FA ?>" class="btn">
+                    <?= _("Solicitar ayuda con 2FA") ?>
+                </a>
+            </div>
+        </div>
+        
+        <div class="problem">
+            <h2><?= _("Otros problemas de acceso") ?></h2>
+            <div class="solution">
+                <p><?= _("Si tiene otros problemas para acceder a su cuenta, puede contactar directamente con el administrador del sistema.") ?></p>
+                <a href="mailto:<?= $mail_admin ?>" class="btn">
+                    <?= _("Contactar al administrador") ?>
+                </a>
+                <p><?= $mail_admin ?></p>
+            </div>
+        </div>
+        
+        <a href="<?= $url_index ?>" class="back-link"><?= _("Volver a la página de inicio") ?></a>
+    </div>
+</body>
+</html>

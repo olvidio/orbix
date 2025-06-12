@@ -34,6 +34,7 @@ if (!empty($Qpassword)) {
     } else {
         $my_passwd = $oCrypt->encode($Qpassword);
         $oUsuario->setPassword($my_passwd);
+        $oUsuario->setCambio_password(FALSE);
     }
 } else {
     $oUsuario->setPassword($Qpass);

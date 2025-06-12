@@ -244,7 +244,7 @@ function getApps($id_mod)
     return $apps;
 }
 
-function logout($ubicacion, $idioma, $esquema, $error, $esquema_web = '')
+function logout($username, $ubicacion, $idioma, $esquema, $error, $esquema_web = '')
 {
     $oDBPropiedades = new DBPropiedades();
     $a_campos = [];
@@ -253,6 +253,7 @@ function logout($ubicacion, $idioma, $esquema, $error, $esquema_web = '')
     $a_campos['esquema_web'] = $esquema_web;
     $a_campos['DesplRegiones'] = $oDBPropiedades->posibles_esquemas($esquema);
     $a_campos['idioma'] = $idioma;
+    $a_campos['username'] = $username;
     $a_campos['url'] = ConfigGlobal::getWeb();
     $oView = new ViewPhtml(__NAMESPACE__);
     $oView->renderizar('login_form2.phtml', $a_campos);
@@ -321,6 +322,13 @@ if (!isset($_SESSION['session_auth'])) {
 
             // Verificación de contraseña exitosa
             if ($oCrypt->encode($_POST['password'], $sPasswd) === $sPasswd) {
+
+                $expire = ""; //de moment, per fer servir més endevant...
+                // Para obligar a cambiar el password
+                if ($MiUsuario->isCambio_password() || $_POST['password'] === '1ªVegada') {
+                    $expire = 1;
+                }
+
                 // Verificar el código 2FA si está habilitado para el usuario
                 $has_2fa = $row['has_2fa'] ?? false;
 
@@ -328,7 +336,7 @@ if (!isset($_SESSION['session_auth'])) {
                     // Si el usuario tiene 2FA habilitado, verificar el código
                     if (empty($_POST['verification_code'])) {
                         $error = 3; // Código de error para 2FA requerido
-                        logout($ubicacion, $idioma, $esquema, $error, $esquema_web);
+                        logout($_POST['username'],$ubicacion, $idioma, $esquema, $error, $esquema_web);
                         die();
                     }
 
@@ -339,7 +347,7 @@ if (!isset($_SESSION['session_auth'])) {
                     // Verificar el código TOTP
                     if (!verify_2fa_code($verification_code, $user_secret)) {
                         $error = 4; // Código de error para código 2FA inválido
-                        logout($ubicacion, $idioma, $esquema, $error, $esquema_web);
+                        logout($_POST['username'],$ubicacion, $idioma, $esquema, $error, $esquema_web);
                         die();
                     }
                 }
@@ -366,19 +374,13 @@ if (!isset($_SESSION['session_auth'])) {
                     $role_dmz = $row2['dmz'];
                     if (empty($role_dmz)) {
                         $error = 2;
-                        logout($ubicacion, $idioma, $esquema, $error, $esquema_web);
+                        logout($_POST['username'],$ubicacion, $idioma, $esquema, $error, $esquema_web);
                         die();
                     }
                 }
 
                 // si no tiene mail interior, cojo el exterior.
                 $mail = empty($mail) ? $row['email'] : $mail;
-                $expire = ""; //de moment, per fer servir més endevant...
-                // Para obligar a cambiar el password
-                if ($_POST['password'] === '1ªVegada') {
-                    $expire = 1;
-                }
-
 
                 $a_mods = getModsPosibles();
                 $a_apps = getAppsPosibles();
@@ -477,12 +479,12 @@ if (!isset($_SESSION['session_auth'])) {
                 //header("Location: ".ConfigGlobal::getWeb(), true, 301);
             } else {
                 $error = 1;
-                logout($ubicacion, $idioma, $esquema, $error, $esquema_web);
+                logout($_POST['username'],$ubicacion, $idioma, $esquema, $error, $esquema_web);
                 die();
             }
         } else {
             $error = 1;
-            logout($ubicacion, $idioma, $esquema, $error, $esquema_web);
+            logout($_POST['username'],$ubicacion, $idioma, $esquema, $error, $esquema_web);
             die();
         }
     } else { // el primer cop
@@ -490,7 +492,7 @@ if (!isset($_SESSION['session_auth'])) {
         $idioma = (!isset($_COOKIE["idioma"])) ? "" : $_COOKIE["idioma"];
         cambiar_idioma($idioma);
         $error = 0;
-        logout($ubicacion, $idioma, $esquema, $error, $esquema_web);
+        logout('',$ubicacion, $idioma, $esquema, $error, $esquema_web);
         die();
     }
 } else {

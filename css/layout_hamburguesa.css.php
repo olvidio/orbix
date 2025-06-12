@@ -105,7 +105,7 @@ body.otro {
     height: 42px;
     background-color: var(--mobile-btn-bg);
     border-bottom: 1px solid var(--sidebar-border-color);
-    margin-bottom: 1px;
+    margin-bottom: 2px;
 }
 
 .sidebar-header h2 {

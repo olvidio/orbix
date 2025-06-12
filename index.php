@@ -79,9 +79,18 @@ if ($oPreferencia !== null) {
 }
 
 if (isset($primera)) {
+    $oUsuario = $UsuarioRepository->findById($id_usuario);
+    // Verificar si ha de cambiar el password
+    $isCambio_password = $oUsuario->isCambio_password();
+    if ($isCambio_password) {
+        // Redirigir a la página de verificación de 2FA para usuarios nuevos
+        $url_cambio_password = Hash::link(ConfigGlobal::getWeb() . '/frontend/usuarios/controller/usuario_form_pwd.php');
+        header("Location: $url_cambio_password");
+        exit();
+    }
+
     // Verificar si el usuario tiene 2FA habilitado
     // Si no lo tiene, redirigir a la página de configuración de 2FA
-    $oUsuario = $UsuarioRepository->findById($id_usuario);
     $has_2fa = $oUsuario->has2fa();
 
     //if (!$has_2fa && ServerConf::$dmz) { // la función "Configglobal::is_dmz()" se desactiva para la sf

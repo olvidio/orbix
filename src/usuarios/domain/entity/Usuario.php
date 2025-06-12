@@ -69,6 +69,12 @@ class Usuario
      * @var string|null
      */
     private string|null $ssecret_2fa = null;
+    /**
+     * Indica si el usuario debe cambiar el password
+     *
+     * @var bool
+     */
+    private bool $bcambio_password = false;
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
@@ -106,6 +112,9 @@ class Usuario
         }
         if (array_key_exists('secret_2fa', $aDatos)) {
             $this->setSecret2fa($aDatos['secret_2fa']);
+        }
+        if (array_key_exists('cambio_password', $aDatos)) {
+            $this->setCambio_password($aDatos['cambio_password']);
         }
         return $this;
     }
@@ -274,5 +283,15 @@ class Usuario
     public function setSecret2fa(?string $ssecret_2fa = null): void
     {
         $this->ssecret_2fa = $ssecret_2fa;
+    }
+
+    public function isCambio_password(): bool
+    {
+        return $this->bcambio_password;
+    }
+
+    public function setCambio_password(bool $bcambio_password): void
+    {
+        $this->bcambio_password = $bcambio_password;
     }
 }

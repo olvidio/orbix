@@ -1,4 +1,6 @@
 <?php
+// para que funcione bien la seguridad
+$_POST = (empty($_POST))? $_GET : $_POST;
 
 use core\ConfigGlobal;
 use core\ViewPhtml;
@@ -48,14 +50,18 @@ $a_camposHidden = array(
 );
 $oHash->setArraycamposHidden($a_camposHidden);
 
-$url_usuario_update = ConfigGlobal::getWeb() . '/src/usuarios/infrastructure/controllers/usuario_check_pwd.php';
+$url_usuario_guardar = ConfigGlobal::getWeb() . '/src/usuarios/infrastructure/controllers/usuario_guardar_pwd.php';
+$url_usuario_chk = ConfigGlobal::getWeb() . '/src/usuarios/infrastructure/controllers/usuario_check_pwd.php';
 $oHash2 = new Hash();
-$oHash2->setUrl($url_usuario_update);
+$oHash2->setUrl($url_usuario_chk);
 $oHash2->setCamposForm('id_usuario!password');
 $h2 = $oHash2->linkSinVal();
 
 $txt_guardar = _("guardar datos");
 $txt_ok = _("se ha cambiado el password");
+
+$url_jquery = ConfigGlobal::getWeb_NodeScripts() . '/jquery/dist/jquery.min.js';
+$url_index = ConfigGlobal::getWeb() . '/index.php';
 
 $a_campos = [
     'oPosicion' => $oPosicion,
@@ -66,6 +72,10 @@ $a_campos = [
     'txt_guardar' => $txt_guardar,
     'txt_ok' => $txt_ok,
     'expire' => $_SESSION['session_auth']['expire'],
+    'url_jquery' => $url_jquery,
+    'url_usuario_chk' => $url_usuario_chk,
+    'url_usuario_guardar' => $url_usuario_guardar,
+    'url_index' => $url_index,
 ];
 
 $oView = new ViewSrcPhtml('frontend\usuarios\controller');

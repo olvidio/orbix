@@ -1,6 +1,7 @@
 <?php
 
 use core\ConfigGlobal;
+use core\ServerConf;
 use Endroid\QrCode\Builder\Builder;
 use Endroid\QrCode\Encoding\Encoding;
 use Endroid\QrCode\ErrorCorrectionLevel;
@@ -67,7 +68,15 @@ if (empty($secret_2fa)) {
 }
 
 // Generar la URL para el código QR
-$qr_url = get_qr_code_data($usuario, $secret_2fa);
+// poner un nombre según la instalación:
+$appName = 'Orbix';
+if (ConfigGlobal::WEBDIR === 'pruebas') {
+    $appName .= '-pruebas';
+}
+if (!ServerConf::$dmz) {
+    $appName .= '-interior';
+}
+$qr_url = get_qr_code_data($usuario, $secret_2fa, $appName);
 
 // Configurar el formulario
 $oHashUpdate = new Hash();

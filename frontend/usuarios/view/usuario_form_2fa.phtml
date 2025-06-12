@@ -11,6 +11,12 @@ $txt_guardar = $txt_guardar ?? 'Guardar';
 $txt_ok = $txt_ok ?? 'Configuración actualizada';
 $oHashUpdate = $oHashUpdate ?? null;
 $oPosicion = $oPosicion ?? null;
+$url_2fa_verify = $url_2fa_verify ?? '#';
+$h_2fa_verify = $h_2fa_verify ?? '';
+$url_2fa_update = $url_2fa_update ?? '#';
+$go_to = $go_to ?? 'atras';
+$id_usuario = $id_usuario ?? 0;
+$msg_2fa = $msg_2fa ?? '';
 
 
 ?>
@@ -185,6 +191,19 @@ $oPosicion = $oPosicion ?? null;
            class="btn_ok">
     </div>
 </form>
+
+<?php if ($has_2fa): ?>
+<div style="margin-top: 20px;">
+    <h3><?= _("¿Ha perdido acceso a su aplicación de autenticación?") ?></h3>
+    <p><?= _("Si ha perdido acceso a su aplicación de autenticación (por ejemplo, si ha borrado la aplicación o cambiado de dispositivo), puede restablecer su configuración de 2FA.") ?></p>
+    <form id="frm_reset_2fa" action="<?= ConfigGlobal::getWeb() ?>/frontend/usuarios/controller/usuario_reset_2fa.php" method="post">
+        <input type="hidden" name="id_usuario" value="<?= $id_usuario ?>">
+        <input type="submit" value="<?= _("Restablecer configuración 2FA") ?>" class="btn_warning" style="background-color: #f44336; color: white; padding: 8px 16px; border: none; border-radius: 4px; cursor: pointer;">
+    </form>
+    <p><small><?= _("Nota: Al restablecer su configuración de 2FA, se desactivará temporalmente la autenticación de dos factores para su cuenta. Deberá configurarla nuevamente para volver a activarla.") ?></small></p>
+    <p><a href="<?= ConfigGlobal::getWeb() ?>/frontend/usuarios/controller/ayuda_2fa_reset.php" target="_blank"><?= _("Más información sobre cómo restablecer 2FA") ?></a></p>
+</div>
+<?php endif; ?>
 
 <div style="margin-top: 30px;">
     <h3><?= _("Información importante") ?></h3>

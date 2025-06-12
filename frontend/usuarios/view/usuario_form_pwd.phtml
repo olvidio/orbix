@@ -1,7 +1,29 @@
 <script>
+    /* Cuando se muestra al entrar, no tengo el jQuery */
+    document.addEventListener('DOMContentLoaded', () => {
+        if (typeof jQuery === 'undefined') {
+            const script = document.createElement('script');
+            script.src = '<?= $url_jquery ?>';
+            document.head.appendChild(script);
+            script.onload = () => {
+                //console.log('jQuery cargado dinámicamente.');
+            };
+
+        } else if (typeof window.jQuery !== 'undefined') {
+            // jQuery está cargado y accesible a través de jQuery
+            //console.log('jQuery YA está cargado (acceso: jQuery). Versión:', jQuery.fn.jquery);
+        } else if (typeof window.$ !== 'undefined' && typeof window.$.fn === 'object' && typeof window.$.fn.jquery === 'string') {
+            // jQuery está cargado y accesible a través de $ (y confirmamos que es jQuery)
+            //console.log('jQuery YA está cargado (acceso: $). Versión:', $.fn.jquery);
+        } else {
+            // $ está definido pero no parece ser jQuery (otra librería lo está usando)
+            //console.log('Una librería diferente está usando el alias $. jQuery NO está cargado.');
+        }
+    });
+
     fnjs_chk_passwd = function (formulario) {
         var password = encodeURIComponent($('#password').val());
-        var url = 'src/usuarios/infrastructure/controllers/usuario_check_pwd.php';
+        var url = '<?= $url_usuario_chk ?>';
         var parametros = 'id_usuario=<?= $id_usuario ?>&password=' + password + '<?= $h2 ?>';
 
         var request = $.ajax({
@@ -42,10 +64,11 @@
     }
 
     fnjs_guardar_datos = function (formulario) {
+        var url = '<?= $url_usuario_guardar ?>';
         let datos = $(formulario).serialize();
         let request = $.ajax({
             data: datos,
-            url: 'src/usuarios/infrastructure/controllers/usuario_guardar_pwd.php',
+            url: url,
             method: 'POST',
             dataType: 'json'
         });
@@ -54,10 +77,16 @@
                 alert("<?= _("respuesta") ?>" + ': ' + json.mensaje);
             } else {
                 alert("<?= _("paswword guardado") ?>");
-                <?= $oPosicion->js_atras(1) ?>
+                fnjs_logout();
             }
         });
     }
+
+    function fnjs_logout() {
+        var parametros = 'logout=si&PHPSESSID=<?= session_id() ?>';
+        top.location.href = '<?= $url_index ?>?' + parametros;
+    }
+
 </script>
 
 <h3><?= $usuario ?></h3>
@@ -72,12 +101,13 @@
     <?= ucfirst(_("confirma password")) ?>:<input type="password" id="password1" name="password1"><br>
     <br>
     <input type=button onclick="fnjs_guardar(this.form);" value="<?= $txt_guardar ?>">
+    <?= _("deberá volver a entrar") ?>
     <br>
 </form>
 <br>
 <?= _("Requerimientos del password") ?>:<br>
 <ol>
-    <li><?= _("Los passwords no pueden contener el valor del \"login\" o de qualquiera de las palabras del \"nombre\". (no tiene en cuenta mayúsculas/minúsculas)") ?>
+    <li><?= _("Los passwords no pueden contener el valor del \"login\" o de cualquiera de las palabras del \"nombre\". (no tiene en cuenta mayúsculas/minúsculas)") ?>
         .
     </li>
     <li><?= _("El password ha de tener más de 8 caracteres") ?>.</li>

@@ -17,6 +17,7 @@ class DB extends DBAbstract
      *
       ALTER TABLE "H-dlbv".aux_usuarios ADD COLUMN has_2fa boolean default false;
       ALTER TABLE "H-dlbv".aux_usuarios ADD COLUMN secret_2fa text;
+      ALTER TABLE "H-dlbv".aux_usuarios ADD COLUMN cambio_password boolean default false;
      *
      */
     public function __construct()

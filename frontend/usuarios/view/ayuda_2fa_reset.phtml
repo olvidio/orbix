@@ -1,0 +1,88 @@
+<h1><?= _("Ayuda: Restablecer la autenticación de dos factores (2FA)") ?></h1>
+
+<div class="container">
+    <div class="section">
+        <h2><?= _("¿Qué hacer si he perdido acceso a mi aplicación de autenticación?") ?></h2>
+        
+        <p><?= _("Si ha borrado la aplicación Google Authenticator (u otra aplicación de autenticación) de su dispositivo o ha cambiado de dispositivo y ya no puede generar códigos de verificación, siga estos pasos:") ?></p>
+        
+        <ol>
+            <li><?= _("Le puedo enviar un mail.") ?></li>
+        </ol>
+        <a href="<?= $linkEnviarMail2fa ?>"
+                     class="btn">
+                    <?= _("Recibir correo de recuperación") ?> en <?= $emailOfuscado ?>
+                </a>
+    </div>
+    
+    <div class="section">
+        <h2><?= _("Recomendaciones de seguridad") ?></h2>
+        
+        <ul>
+            <li><?= _("Siempre guarde su clave secreta de 2FA en un lugar seguro, como un gestor de contraseñas.") ?></li>
+            <li><?= _("Considere la posibilidad de hacer una captura de pantalla del código QR y guardarla en un lugar seguro.") ?></li>
+            <li><?= _("Si utiliza Google Authenticator, considere la posibilidad de utilizar la función de copia de seguridad de la aplicación para evitar perder el acceso a sus códigos si cambia de dispositivo.") ?></li>
+            <li><?= _("Después de restablecer su configuración de 2FA, active nuevamente esta función lo antes posible para mantener la seguridad de su cuenta.") ?></li>
+        </ul>
+    </div>
+    
+    <div class="section">
+        <h2><?= _("¿No puede acceder a su cuenta?") ?></h2>
+        
+        <p><?= _("Si no puede iniciar sesión en su cuenta porque ha perdido acceso a su aplicación de autenticación y no puede generar códigos de verificación, póngase en contacto con el administrador del sistema para que le ayude a restablecer su configuración de 2FA.") ?></p>
+    </div>
+    
+    <div class="footer">
+        <p><a href="<?= $url_index ?>"><?= _("Volver al inicio") ?></a></p>
+    </div>
+</div>
+
+<style>
+    .container {
+        max-width: 800px;
+        margin: 0 auto;
+        font-family: Arial, sans-serif;
+        line-height: 1.6;
+    }
+    
+    .section {
+        margin-bottom: 30px;
+        padding: 20px;
+        background-color: #f9f9f9;
+        border-radius: 5px;
+        border-left: 4px solid #4285f4;
+    }
+    
+    h1 {
+        color: #333;
+        border-bottom: 2px solid #4285f4;
+        padding-bottom: 10px;
+    }
+    
+    h2 {
+        color: #4285f4;
+        margin-top: 0;
+    }
+    
+    ol, ul {
+        padding-left: 20px;
+    }
+    
+    li {
+        margin-bottom: 10px;
+    }
+    
+    .footer {
+        margin-top: 30px;
+        text-align: center;
+    }
+    
+    a {
+        color: #4285f4;
+        text-decoration: none;
+    }
+    
+    a:hover {
+        text-decoration: underline;
+    }
+</style>
