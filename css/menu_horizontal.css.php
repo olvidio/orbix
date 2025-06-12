@@ -54,11 +54,11 @@
     #menu {
         font-family: Arial;
         font-size: 12pt;
-        background-color: <?= $GLOBALS['claro'] ?>;
+        background-color: <?= $GLOBALS['fondo_claro'] ?>;
         border-style: none;
         height: auto;
-        line-height: 2.5em;
-        margin: -10px -10px 0px;
+        line-height: 2em;
+        margin: -10px -10px 0;
     }
 
     #menu li:hover, #menu li:active, #menu li.selec {
@@ -70,16 +70,26 @@
 
     #menu li {
         display: inline;
-        background-color: <?= $GLOBALS['claro'] ?>;
+        background-color: <?= $GLOBALS['fondo_claro'] ?>;
         color: <?= $GLOBALS['oscuro'] ?>;
         font-family: verdana, serif;
         font-weight: bold;
         font-size: 12pt;
-        border-style: none;
         padding-top: 0.2em;
-        padding-right: 0.2em;
-        padding-left: 0.2em;
+        padding-right: 0.4em;
+        padding-left: 0.4em;
         padding-bottom: 1em;
+
+        border-color: <?= $GLOBALS['medio'] ?>;
+        border-top-left-radius: 6px;
+        border-top-right-radius: 6px;
+
+        border-top-style: none;
+        border-left-style: solid;
+        border-left-width: 1px;
+        border-right-style: none;
+
+        margin-bottom: -4px;
     }
 
 }
