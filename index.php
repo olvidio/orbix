@@ -36,6 +36,7 @@ require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
 use core\ConfigGlobal;
+use core\ServerConf;
 use src\menus\application\repositories\GrupMenuRepository;
 use src\menus\application\repositories\GrupMenuRoleRepository;
 use src\menus\application\repositories\MenuDbRepository;
@@ -93,13 +94,14 @@ if (isset($primera)) {
     // Si no lo tiene, redirigir a la página de configuración de 2FA
     $has_2fa = $oUsuario->has2fa();
 
-    //if (!$has_2fa && ServerConf::$dmz) { // la función "Configglobal::is_dmz()" se desactiva para la sf
-    if (!$has_2fa) { // la función "Configglobal::is_dmz()" se desactiva para la sf
+    /* OBLIGAR a los de la dmz a usar el doble factor.
+    if (!$has_2fa && ServerConf::$dmz) { // no sirve la función "Configglobal::is_dmz()" porque para la sf (puerto 10936) no da true
         // Redirigir a la página de verificación de 2FA para usuarios nuevos
         $url_check_2fa = ConfigGlobal::getWeb() . '/src/usuarios/infrastructure/controllers/check_first_login_2fa.php';
         header("Location: $url_check_2fa");
         exit();
     }
+    */
 
     // Obtener la oficina del menú de la sesión
     $mi_oficina_menu = isset($_SESSION['session_auth']['mi_oficina_menu']) ? $_SESSION['session_auth']['mi_oficina_menu'] : '';
