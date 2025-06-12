@@ -100,8 +100,8 @@
       <path value="$PROJECT_DIR$/libs/vendor/psr/simple-cache" />
       <path value="$PROJECT_DIR$/libs/vendor/erusev/parsedown" />
       <path value="$PROJECT_DIR$/libs/vendor/dasprid/enum" />
-      <path value="$PROJECT_DIR$/libs/vendor/bacon/bacon-qr-code" />
       <path value="$PROJECT_DIR$/libs/vendor/endroid/qr-code" />
+      <path value="$PROJECT_DIR$/libs/vendor/bacon/bacon-qr-code" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="8.2">

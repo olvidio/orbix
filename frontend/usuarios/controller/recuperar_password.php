@@ -31,6 +31,7 @@ $Qusername = (string)filter_input(INPUT_GET, 'username');
 $Qubicacion = (string)filter_input(INPUT_GET, 'ubicacion');
 $Qesquema = (string)filter_input(INPUT_GET, 'esquema');
 $Qesquema_web = (string)filter_input(INPUT_GET, 'esquema_web');
+$Qurl_index = (string)filter_input(INPUT_GET,'url_index');
 
 // Si no hay username, redirigir a la página de ayuda
 if (empty($Qusername)) {
@@ -156,6 +157,7 @@ $a_campos = [
     'username' => $Qusername,
     'esquema' => $Qesquema,
     'email' => $email,
+    'url-index' => $Qurl_index,
 ];
 
 // Renderizar la vista
