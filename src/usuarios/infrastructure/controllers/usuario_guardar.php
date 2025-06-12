@@ -35,6 +35,9 @@ $Qid_nom = (integer)filter_input(INPUT_POST, 'id_nom');
 $Qid_ctr = (integer)filter_input(INPUT_POST, 'id_ctr');
 $Qcasas = (array)filter_input(INPUT_POST, 'casas', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 
+$Qcambio_password = (bool)filter_input(INPUT_POST, 'cambio_password');
+$Qhas_2fa = (bool)filter_input(INPUT_POST, 'has_2fa');
+
 $RoleRepository = new RoleRepository();
 $UsuarioRepository = new UsuarioRepository();
 
@@ -50,6 +53,8 @@ $oUsuario->setUsuario($Qusuario);
 $oUsuario->setid_role($Qid_role);
 $oUsuario->setEmail($Qemail);
 $oUsuario->setNom_usuario($Qnom_usuario);
+$oUsuario->setCambio_password($Qcambio_password);
+$oUsuario->setHas2fa($Qhas_2fa);
 if (!empty($Qpassword)) {
     $oCrypt = new MyCrypt();
     $my_passwd = $oCrypt->encode($Qpassword);

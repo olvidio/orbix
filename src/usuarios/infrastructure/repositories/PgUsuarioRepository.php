@@ -9,6 +9,7 @@ use PDO;
 use PDOException;
 use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
 use src\usuarios\domain\entity\Usuario;
+use function core\is_true;
 
 
 /**
@@ -166,10 +167,24 @@ class PgUsuarioRepository extends ClaseRepository implements UsuarioRepositoryIn
         $aDatos['email'] = $usuario->getEmail();
         $aDatos['id_pau'] = $usuario->getId_pau();
         $aDatos['nom_usuario'] = $usuario->getNom_usuario();
+        $aDatos['has_2fa'] = $usuario->has2fa();
+        $aDatos['secret_2fa'] = $usuario->getSecret2fa();
+        $aDatos['cambio_password'] = $usuario->isCambio_password();
         // para los bytea, pero el passwd ya lo tengo en hex con MyCrypt
         // $aDatos['password'] = bin2hex($usuario->getPassword());
         $aDatos['password'] = $usuario->getPassword();
         array_walk($aDatos, 'core\poner_null');
+        //para el caso de los boolean FALSE, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
+        if (is_true($aDatos['has_2fa'])) {
+            $aDatos['has_2fa'] = 'true';
+        } else {
+            $aDatos['has_2fa'] = 'false';
+        }
+        if (is_true($aDatos['cambio_password'])) {
+            $aDatos['cambio_password'] = 'true';
+        } else {
+            $aDatos['cambio_password'] = 'false';
+        }
 
         if ($bInsert === FALSE) {
             //UPDATE
@@ -179,7 +194,10 @@ class PgUsuarioRepository extends ClaseRepository implements UsuarioRepositoryIn
 					password                 = :password,
 					email                    = :email,
 					id_pau                   = :id_pau,
-					nom_usuario              = :nom_usuario";
+					nom_usuario              = :nom_usuario,
+					has_2fa                  = :has_2fa,
+					secret_2fa               = :secret_2fa,
+                    cambio_password          = :cambio_password";
             if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_usuario = $id_usuario")) === FALSE) {
                 $sClaveError = 'PgusuarioRepository.update.prepare';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
@@ -198,8 +216,8 @@ class PgUsuarioRepository extends ClaseRepository implements UsuarioRepositoryIn
         } else {
             // INSERT
             $aDatos['id_usuario'] = $usuario->getId_usuario();
-            $campos = "(id_usuario,usuario,id_role,password,email,id_pau,nom_usuario)";
-            $valores = "(:id_usuario,:usuario,:id_role,:password,:email,:id_pau,:nom_usuario)";
+            $campos = "(id_usuario,usuario,id_role,password,email,id_pau,nom_usuario,has_2fa,secret_2fa,cambio_password))";
+            $valores = "(:id_usuario,:usuario,:id_role,:password,:email,:id_pau,:nom_usuario,:has_2fa,:secret_2fa,:cambio_password)";
             if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === FALSE) {
                 $sClaveError = 'PgusuarioRepository.insertar.prepare';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);

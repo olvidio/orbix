@@ -6,6 +6,7 @@ use core\ConfigDB;
 use core\ConfigGlobal;
 use core\DBConnection;
 use core\DBPropiedades;
+use core\ServerConf;
 use core\ViewPhtml;
 use permisos\model\MyCrypt;
 use src\usuarios\domain\entity\Usuario;
@@ -20,6 +21,89 @@ require_once("apps/core/global_object.inc");
 // Crea los objetos por esta url  **********************************************
 // 
 // FIN de  Cabecera global de URL de controlador ********************************
+
+
+/**
+ * Verifica un código de autenticación de doble factor (2FA)
+ *
+ * @param string $code Código ingresado por el usuario
+ * @param string $secret Clave secreta del usuario
+ * @return bool True si el código es válido, False en caso contrario
+ */
+function verify_2fa_code($code, $secret) {
+    // Eliminar espacios y convertir a mayúsculas
+    $code = strtoupper(str_replace(' ', '', $code));
+
+    // Obtener el tiempo actual en intervalos de 30 segundos
+    $time = floor(time() / 30);
+
+    // Verificar el código actual y los adyacentes (para compensar desincronización)
+    for ($i = -1; $i <= 1; $i++) {
+        $timeSlice = $time + $i;
+        if (calculate_totp($secret, $timeSlice) === $code) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+/**
+ * Calcula un código TOTP basado en una clave secreta y un intervalo de tiempo
+ *
+ * @param string $secret Clave secreta del usuario
+ * @param int $timeSlice Intervalo de tiempo
+ * @return string Código TOTP generado
+ */
+function calculate_totp($secret, $timeSlice) {
+    // Convertir el tiempo a bytes (big-endian)
+    $time = chr(0).chr(0).chr(0).chr(0).pack('N*', $timeSlice);
+
+    // Convertir la clave secreta de base32 a binario
+    $secretkey = base32_decode($secret);
+
+    // Calcular HMAC-SHA1
+    $hash = hash_hmac('sha1', $time, $secretkey, true);
+
+    // Extraer 4 bytes basados en el offset
+    $offset = ord(substr($hash, -1)) & 0x0F;
+    $value = ((ord(substr($hash, $offset)) & 0x7F) << 24) |
+        ((ord(substr($hash, $offset + 1)) & 0xFF) << 16) |
+        ((ord(substr($hash, $offset + 2)) & 0xFF) << 8) |
+        (ord(substr($hash, $offset + 3)) & 0xFF);
+
+    // Generar código de 6 dígitos
+    $modulo = pow(10, 6);
+    $code = $value % $modulo;
+    return str_pad($code, 6, '0', STR_PAD_LEFT);
+}
+
+/**
+ * Decodifica una cadena en base32
+ *
+ * @param string $secret Cadena en base32
+ * @return string Datos binarios decodificados
+ */
+function base32_decode($secret) {
+    $base32chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
+    $secret = strtoupper($secret);
+    $n = 0;
+    $j = 0;
+    $binary = '';
+
+    for ($i = 0; $i < strlen($secret); $i++) {
+        $n = $n << 5;
+        $n = $n + strpos($base32chars, $secret[$i]);
+        $j = $j + 5;
+
+        if ($j >= 8) {
+            $j = $j - 8;
+            $binary .= chr(($n & (0xFF << $j)) >> $j);
+        }
+    }
+
+    return $binary;
+}
 
 function cambiar_idioma($idioma = '')
 {
@@ -160,7 +244,7 @@ function getApps($id_mod)
     return $apps;
 }
 
-function logout($ubicacion, $idioma, $esquema, $error, $esquema_web = '')
+function logout($username, $ubicacion, $idioma, $esquema, $error, $esquema_web = '')
 {
     $oDBPropiedades = new DBPropiedades();
     $a_campos = [];
@@ -169,6 +253,7 @@ function logout($ubicacion, $idioma, $esquema, $error, $esquema_web = '')
     $a_campos['esquema_web'] = $esquema_web;
     $a_campos['DesplRegiones'] = $oDBPropiedades->posibles_esquemas($esquema);
     $a_campos['idioma'] = $idioma;
+    $a_campos['username'] = $username;
     $a_campos['url'] = ConfigGlobal::getWeb();
     $oView = new ViewPhtml(__NAMESPACE__);
     $oView->renderizar('login_form2.phtml', $a_campos);
@@ -234,9 +319,43 @@ if (!isset($_SESSION['session_auth'])) {
         $oDBSt->bindColumn('password', $sPasswd, \PDO::PARAM_STR);
         if ($row = $oDBSt->fetch(\PDO::FETCH_ASSOC)) {
             $MiUsuario = (new Usuario())->setAllAttributes($row);
+
+            // Verificación de contraseña exitosa
             if ($oCrypt->encode($_POST['password'], $sPasswd) === $sPasswd) {
+
+                $expire = ""; //de moment, per fer servir més endevant...
+                // Para obligar a cambiar el password
+                if ($MiUsuario->isCambio_password() || $_POST['password'] === '1ªVegada') {
+                    $expire = 1;
+                }
+
+                // Verificar el código 2FA si está habilitado para el usuario
+                $has_2fa = $row['has_2fa'] ?? false;
+
+                if ($has_2fa) {
+                    // Si el usuario tiene 2FA habilitado, verificar el código
+                    if (empty($_POST['verification_code'])) {
+                        $error = 3; // Código de error para 2FA requerido
+                        logout($_POST['username'],$ubicacion, $idioma, $esquema, $error, $esquema_web);
+                        die();
+                    }
+
+                    // Verificar el código 2FA
+                    $verification_code = $_POST['verification_code'];
+                    $user_secret = $row['secret_2fa']; // Clave secreta almacenada para el usuario
+
+                    // Verificar el código TOTP
+                    if (!verify_2fa_code($verification_code, $user_secret)) {
+                        $error = 4; // Código de error para código 2FA inválido
+                        logout($_POST['username'],$ubicacion, $idioma, $esquema, $error, $esquema_web);
+                        die();
+                    }
+                }
+
+                // Continuar con el proceso de login normal
                 $id_usuario = $row['id_usuario'];
                 $id_role = $row['id_role'];
+                // ... resto del código existente
                 $oConfigDB = new ConfigDB('comun_select');
                 $config = $oConfigDB->getEsquema('public');
                 $oConexion = new DBConnection($config);
@@ -255,23 +374,13 @@ if (!isset($_SESSION['session_auth'])) {
                     $role_dmz = $row2['dmz'];
                     if (empty($role_dmz)) {
                         $error = 2;
-                        logout($ubicacion, $idioma, $esquema, $error, $esquema_web);
+                        logout($_POST['username'],$ubicacion, $idioma, $esquema, $error, $esquema_web);
                         die();
                     }
                 }
 
-                $perms_activ = '';
-                $mi_oficina = '';
-                $mi_oficina_menu = '';
-
                 // si no tiene mail interior, cojo el exterior.
                 $mail = empty($mail) ? $row['email'] : $mail;
-                $expire = ""; //de moment, per fer servir més endevant...
-                // Para obligar a cambiar el password
-                if ($_POST['password'] === '1ªVegada') {
-                    $expire = 1;
-                }
-
 
                 $a_mods = getModsPosibles();
                 $a_apps = getAppsPosibles();
@@ -284,6 +393,10 @@ if (!isset($_SESSION['session_auth'])) {
                 }
                 $app_installed = array_merge(...array_values($app));
                 $app_installed = array_unique($app_installed);
+
+                $perms_activ = '';
+                $mi_oficina = '';
+                $mi_oficina_menu = '';
 
                 // Idioma
                 $query_idioma = sprintf("select * from web_preferencias where id_usuario = '%s' and tipo = '%s' ", $id_usuario, "idioma");
@@ -366,12 +479,12 @@ if (!isset($_SESSION['session_auth'])) {
                 //header("Location: ".ConfigGlobal::getWeb(), true, 301);
             } else {
                 $error = 1;
-                logout($ubicacion, $idioma, $esquema, $error, $esquema_web);
+                logout($_POST['username'],$ubicacion, $idioma, $esquema, $error, $esquema_web);
                 die();
             }
         } else {
             $error = 1;
-            logout($ubicacion, $idioma, $esquema, $error, $esquema_web);
+            logout($_POST['username'],$ubicacion, $idioma, $esquema, $error, $esquema_web);
             die();
         }
     } else { // el primer cop
@@ -379,7 +492,7 @@ if (!isset($_SESSION['session_auth'])) {
         $idioma = (!isset($_COOKIE["idioma"])) ? "" : $_COOKIE["idioma"];
         cambiar_idioma($idioma);
         $error = 0;
-        logout($ubicacion, $idioma, $esquema, $error, $esquema_web);
+        logout('',$ubicacion, $idioma, $esquema, $error, $esquema_web);
         die();
     }
 } else {

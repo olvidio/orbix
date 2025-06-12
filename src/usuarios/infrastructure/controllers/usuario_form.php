@@ -14,6 +14,7 @@ use ubis\model\entity\GestorCentroDl;
 use ubis\model\entity\GestorCentroEllas;
 use web\DesplegableArray;
 use web\Hash;
+use function core\is_true;
 
 // INICIO Cabecera global de URL de controlador *********************************
 
@@ -81,6 +82,10 @@ if ($miRole < 4) { // es administrador
         $usuario = $oUsuario->getUsuario();
         $nom_usuario = $oUsuario->getNom_usuario();
         $pass = $oUsuario->getPassword();
+        $cambio_password = $oUsuario->isCambio_password();
+        $chk_cambio_password = is_true($cambio_password)? 'checked' : '';
+        $has_2fa = $oUsuario->has2fa();
+        $chk_has_2fa = is_true($has_2fa)? 'checked' : '';
         $email = $oUsuario->getEmail();
         $id_role = $oUsuario->getId_role();
         $oRole = $RoleRepository->findById($id_role);
@@ -169,6 +174,8 @@ if ($miRole < 4) { // es administrador
         $seccion = '';
         $email = '';
         $pau = '';
+        $chk_cambio_password = '';
+        $chk_has_2fa = '';
     }
 
     $camposForm = 'que!usuario!nom_usuario!password!email!id_role';
@@ -201,6 +208,8 @@ if ($miRole < 4) { // es administrador
         'cUsuarioPermCtr' => $cUsuarioPermCtr,
         'email' => $email,
         'camposMas' => $camposMas,
+        'chk_cambio_password' => $chk_cambio_password,
+        'chk_has_2fa' => $chk_has_2fa,
     ];
 
 } // fin solo administradores.

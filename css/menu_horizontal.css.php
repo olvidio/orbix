@@ -20,7 +20,7 @@
         margin-top: 0px;
         padding-top: 6px;
         padding-bottom: 6px;
-        background-color: <?= $medio ?>;
+        background-color: <?= $GLOBALS['medio'] ?>;
     }
 
     #submenu {
@@ -54,32 +54,42 @@
     #menu {
         font-family: Arial;
         font-size: 12pt;
-        background-color: <?= $claro ?>;
+        background-color: <?= $GLOBALS['fondo_claro'] ?>;
         border-style: none;
         height: auto;
-        line-height: 2.5em;
-        margin: -10px -10px 0px;
+        line-height: 2em;
+        margin: -10px -10px 0;
     }
 
     #menu li:hover, #menu li:active, #menu li.selec {
         border-style: none;
         cursor: pointer;
-        background-color: <?= $medio ?>;
-        color: <?= $claro ?>;
+        background-color: <?= $GLOBALS['medio'] ?>;
+        color: <?= $GLOBALS['claro'] ?>;
     }
 
     #menu li {
         display: inline;
-        background-color: <?= $claro ?>;
-        color: <?= $oscuro ?>;
+        background-color: <?= $GLOBALS['fondo_claro'] ?>;
+        color: <?= $GLOBALS['oscuro'] ?>;
         font-family: verdana, serif;
         font-weight: bold;
         font-size: 12pt;
-        border-style: none;
         padding-top: 0.2em;
-        padding-right: 0.2em;
-        padding-left: 0.2em;
+        padding-right: 0.4em;
+        padding-left: 0.4em;
         padding-bottom: 1em;
+
+        border-color: <?= $GLOBALS['medio'] ?>;
+        border-top-left-radius: 6px;
+        border-top-right-radius: 6px;
+
+        border-top-style: none;
+        border-left-style: solid;
+        border-left-width: 1px;
+        border-right-style: none;
+
+        margin-bottom: -4px;
     }
 
 }

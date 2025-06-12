@@ -47,6 +47,12 @@ if (ConfigGlobal::is_app_installed('cambios')) {
     <?= $oHash->getCamposHtml() ?>
     <table>
         <tr>
+            <td><?= ucfirst(_("layout")) ?>:</td>
+            <td>
+                <?= $oDesplLayout->desplegable() ?>
+            </td>
+        </tr>
+        <tr>
             <td><?= ucfirst(_("página central de inicio")) ?>:</td>
             <td>
                 <?= $oDesplInicio->desplegable() ?>
@@ -114,4 +120,8 @@ if (ConfigGlobal::is_app_installed('cambios')) {
 <br><span class="link"
           onclick="fnjs_update_div('#main','<?= $url_cambio_password ?>');">
     <?= _("cambiar el password") ?>
+</span><br>
+<br><span class="link"
+          onclick="fnjs_update_div('#main','<?= $url_2fa_settings ?>');">
+    <?= _("configurar autenticación de dos factores (2FA)") ?>
 </span><br>

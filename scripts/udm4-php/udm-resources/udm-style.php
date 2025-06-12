@@ -412,6 +412,6 @@ header("Content-Type: text/css");
 echo("/* UDMv4.6 */\n/***************************************************************\\\n\n  ULTIMATE DROP DOWN MENU Version 4.6 by Brothercake\n  http://www.udm4.com/\n\n  This script may not be used or distributed without license\n\n\\***************************************************************/\n\n/***************************************************************/\n/* Generated CSS - do not edit this directly                   */\n/***************************************************************/\n\n");
 
 //output CSS
-foreach($umr as $umv) { echo("$umv\n"); }
-
-?>
+foreach($umr as $umv) {
+	echo("$umv\n");
+}

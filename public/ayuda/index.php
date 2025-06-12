@@ -18,7 +18,6 @@ if (ConfigGlobal::$web_path === '/pruebas' || ConfigGlobal::$web_path === '/prue
 }
 
 include_once(ConfigGlobal::$dir_estilos.'/todo_en_uno.css.php');
-include_once(ConfigGlobal::$dir_estilos.'/menu_horizontal.css.php');
 
 $aQuery = [ 'pau' => 'a' ];
 // el hppt_build_query no pasa los valores null
@@ -47,13 +46,7 @@ $goMisas = Hash::link('apps/misas/controller/misas_index.php?' . http_build_quer
       otra dl que si está en aquinate, pero que no las va a introducir en su dl
       (por ejemplo actividades de sg, cuando no se usa para sg)</p>
 <?php
-  if  ($esquemav  === 'H-dlbv') {
-  ?>
-  <h1>Misas</h1>
-  <br>
-      <span class="link" onclick="fnjs_update_div('#main','<?= $goMisas ?>')">index de misas</span></h2>
-  <?php
-  }
+  include_once('./regionesEnOrbix.html');
 ?>
   <br>
     <h1>Tutoriales</h1>

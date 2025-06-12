@@ -1,4 +1,7 @@
 <!DOCTYPE html>
+<?php
+
+?>
 <link rel="shortcut icon" type="image/x-icon" href="favicon.ico"/>
 <style>
     html {
@@ -196,6 +199,38 @@
 
 </style>
 <script type="text/javascript">
+    fnjs_goHelp = async function () {
+        const form = document.getElementById('frm_login');
+        const formData = new FormData(form); // Captura todos los campos del formulario
+        const url = 'frontend/usuarios/controller/ayuda_acceso.php'; // La URL a la que se enviará la petición
+
+        try {
+            const response = await fetch(url, {
+                method: 'POST',
+                body: formData // fetch maneja FormData automáticamente para multipart/form-data
+            });
+
+            if (!response.ok) { // `response.ok` es true para códigos de estado 200-299
+                const errorText = await response.text(); // O .json() si esperas JSON de error
+                throw new Error(`HTTP error! status: ${response.status} - ${errorText}`);
+            }
+
+            const responseData = await response.text(); // O .json() si esperas JSON
+            //console.log('Respuesta del servidor (éxito):', responseData);
+            document.body.innerHTML = responseData;
+            /*
+            alert('Formulario enviado con éxito: ' + responseData);
+            // Aquí puedes actualizar la UI, limpiar el formulario, etc.
+            form.reset();
+
+             */
+
+        } catch (error) {
+            console.error('Error al enviar el formulario con Fetch:', error);
+            alert('Error al enviar el formulario: ' + error.message);
+        }
+    }
+
     fnjs_goTop = function () {
         menu = document.getElementById("menu");
         if (menu) {
@@ -210,7 +245,7 @@
     <?php
     $PHP_SELF = $_SERVER['PHP_SELF'];
     ?>
-    <form class="form-signin" action="<?= $PHP_SELF ?>" method=post>
+    <form id="frm_login" class="form-signin" action="<?= $PHP_SELF ?>" method=post>
         <input type="hidden" name="idioma" value="<?= $idioma ?>"/>
         <h2>Aquinate</h2>
         <h1>(orbix)</h1>
@@ -220,33 +255,45 @@
         <?php } else { ?>
             <input type="hidden" name="esquema" value="<?= $esquema_web ?>"/>
         <?php } ?>
-        <input type="text" name="username" placeholder="<?= _("nombre de usuario") ?>" required="" autofocus=""/>
+        <input type="text" name="username" placeholder="<?= _("nombre de usuario") ?>" required="" autofocus=""
+               value="<?= $username ?>"/>
         <input type="password" name="password" placeholder="Password" required=""/>
+        <input type="text" name="verification_code" placeholder="<?= _("código de verificación (2FA)") ?>"
+               autocomplete="off"/>
         <br>
         <input type="submit" value="<?= ucfirst(_("iniciar sesión")) ?>"/>
         <br>
     </form>
-    <div id="version">v 1.0</div>
+    <div id="version">v 1.2</div>
+<?php
+if (!empty($error)) { ?>
+    <div style="position: fixed; top: 10%; margin-left: -50px;
+        border-style: solid; border-color: gray; border-radius: 10px; padding: 10px;
+        background-color: #fadbaf; ">
+        <div style="color: red; " >
+            <?php
+            if ($error == 1) {
+                echo _("El nombre de usuario, o el password no son válidos");
+                echo "<br>";
+                echo _("Por favor, vuelva a intentarlo");
+            }
+            if ($error == 2) {
+                echo _("Este usuario no puede entrar desde esta instalación");
+            }
+            if ($error == 3) {
+                echo _("Se requiere código de verificación 2FA");
+            }
+            if ($error == 4) {
+                echo _("Código de verificación 2FA inválido");
+            }
+            ?>
+        </div>
+        <div style="text-align: center; margin-top: 10px;">
+            <a href="#" onclick="fnjs_goHelp()"
+               style="color: #37a69b; text-decoration: none; font-size: 18px;">
+                <?= _("¿Tiene problemas para acceder?") ?>
+            </a>
+        </div>
+    </div>
+<?php } ?>
 </div>
-<?php if (isset($error) && $error == 1) { ?>
-    <p>
-    <table>
-        <tr>
-            <td colspan=2><font color=red><b>
-                        <?= _("El nombre de usuario, o el password no son válidos") ?>
-                        <br>
-                        <?= _("Por favor, vuelva a intentarlo") ?>
-                    </b></font></td>
-        </tr>
-    </table>
-<?php } ?>
-<?php if (isset($error) && $error == 2) { ?>
-    <p>
-    <table>
-        <tr>
-            <td colspan=2><font color=red><b>
-                        <?= _("Este usuario no puede entrar desde esta instalación") ?>
-                    </b></font></td>
-        </tr>
-    </table>
-<?php } ?>

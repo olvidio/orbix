@@ -23,6 +23,15 @@ $preferenciaRepository = new PreferenciaRepository();
 
 $id_usuario = ConfigGlobal::mi_id_usuario();
 $id_role = ConfigGlobal::mi_id_role();
+
+// ----------- Layout -------------------
+$oPreferencia = $preferenciaRepository->findById($id_usuario, 'layout');
+if ($oPreferencia !== null) {
+    $layout = $oPreferencia->getPreferencia();
+} else {
+    $layout = '';
+}
+
 // ----------- Página de inicio -------------------
 $oPreferencia = $preferenciaRepository->findById($id_usuario, 'inicio');
 if ($oPreferencia !== null) {
@@ -114,6 +123,7 @@ if ($oPreferencia !== null) {
     $zona_horaria = '';
 }
 
+$data['layout'] = $layout;
 $data['inicio'] = $inicio;
 $data['oficina'] = $oficina;
 $data['oficinas_posibles'] = $oficinas_posibles;

@@ -119,10 +119,15 @@ class ComposerStaticInitfe4939d609572947ee73ffcc0a42bf32
             'Fruitcake\\Cors\\' => 15,
             'Faker\\' => 6,
         ),
+        'E' => 
+        array (
+            'Endroid\\QrCode\\' => 15,
+        ),
         'D' => 
         array (
             'Doctrine\\Inflector\\' => 19,
             'DeepCopy\\' => 9,
+            'DASPRiD\\Enum\\' => 13,
         ),
         'C' => 
         array (
@@ -132,6 +137,7 @@ class ComposerStaticInitfe4939d609572947ee73ffcc0a42bf32
         'B' => 
         array (
             'Brick\\Math\\' => 11,
+            'BaconQrCode\\' => 12,
         ),
     );
 
@@ -332,6 +338,10 @@ class ComposerStaticInitfe4939d609572947ee73ffcc0a42bf32
         array (
             0 => __DIR__ . '/..' . '/fakerphp/faker/src/Faker',
         ),
+        'Endroid\\QrCode\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/endroid/qr-code/src',
+        ),
         'Doctrine\\Inflector\\' => 
         array (
             0 => __DIR__ . '/..' . '/doctrine/inflector/lib/Doctrine/Inflector',
@@ -339,6 +349,10 @@ class ComposerStaticInitfe4939d609572947ee73ffcc0a42bf32
         'DeepCopy\\' => 
         array (
             0 => __DIR__ . '/..' . '/myclabs/deep-copy/src/DeepCopy',
+        ),
+        'DASPRiD\\Enum\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/dasprid/enum/src',
         ),
         'Carbon\\Doctrine\\' => 
         array (
@@ -351,6 +365,10 @@ class ComposerStaticInitfe4939d609572947ee73ffcc0a42bf32
         'Brick\\Math\\' => 
         array (
             0 => __DIR__ . '/..' . '/brick/math/src',
+        ),
+        'BaconQrCode\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/bacon/bacon-qr-code/src',
         ),
     );
 

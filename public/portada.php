@@ -16,14 +16,27 @@ require_once("apps/core/global_object.inc");
 
 // si vengo de actualizar tengo el valor en POST,
 // SINO: ES un include de index.php, tengo todas sus variables...
-if (!empty($id_grupmenu)) {
+if (empty($id_grupmenu)) {
     $id_grupmenu =  (integer)filter_input(INPUT_POST, 'id_grupmenu');
     if (empty($id_grupmenu)) {
         $id_grupmenu =  (integer)filter_input(INPUT_GET, 'id_grupmenu');
+        // pede venir de la presentacion 'burger'
+        if (empty($id_grupmenu)) {
+            $grupmenu =  (string)filter_input(INPUT_POST, 'grupmenu');
+        }
     }
 }
+
+$GrupMenuRepository = new GrupMenuRepository();
+if (!empty($grupmenu)) {
+    $cGrupMenu = $GrupMenuRepository->getGrupMenus(['grup_menu' => $grupmenu]);
+    $oGrupMenu = $cGrupMenu[0];
+    if (!empty($oGrupMenu)) {
+        $id_grupmenu = $oGrupMenu->getId_grupmenu();
+    }
+
+}
 if (!empty($id_grupmenu)) {
-    $GrupMenuRepository = new GrupMenuRepository();
     $oGrupMenu = $GrupMenuRepository->findById($id_grupmenu);
 // $grup_menu = $oGrupMenu->getGrup_menu($_SESSION['oConfig']->getAmbito());
 // Utilizo las siglas para la dl

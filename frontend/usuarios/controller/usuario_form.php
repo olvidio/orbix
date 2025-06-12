@@ -94,7 +94,7 @@ $camposMas = $a_campos_src['camposMas'];
 $camposForm = 'que!usuario!nom_usuario!password!email!id_role';
 $camposForm = !empty($camposMas) ? $camposForm . '!' . $camposMas : $camposForm;
 $oHash->setCamposForm($camposForm);
-$oHash->setcamposNo('password!id_ctr!id_nom!casas');
+$oHash->setcamposNo('password!id_ctr!id_nom!casas!cambio_password!has_2fa');
 $a_camposHidden = array(
     'id_usuario' => $Qid_usuario,
     'quien' => $Qquien
@@ -144,6 +144,8 @@ $a_campos['quien'] = $a_campos_src['quien'];
 $a_campos['pau'] = $a_campos_src['pau'];
 $a_campos['nom_usuario'] = $a_campos_src['nom_usuario'];
 $a_campos['email'] = $a_campos_src['email'];
+$a_campos['chk_cambio_password'] = $a_campos_src['chk_cambio_password'];
+$a_campos['chk_has_2fa'] = $a_campos_src['chk_has_2fa'];
 $a_campos['obj'] = $a_campos_src['obj'];
 
 

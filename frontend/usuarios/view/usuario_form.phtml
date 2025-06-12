@@ -134,9 +134,17 @@
             echo "</td></tr>";
             }
             ?>
+    <!--  --------------- Password y email --------------- -->
             <br>
-            <?= ucfirst(_("password")) ?>:<input type="password" id="password" name="password" size=30><br>
-            <?= ucfirst(_("email")) ?>:<input type=text name=email size=30 value="<?= $email ?>"><br>
+            <?= ucfirst(_("password")) ?>:<input type="password" id="password" name="password" size=30>
+            <br>
+            <?= ucfirst(_("cambio password")) ?>:<input type="checkbox" id="cambio_password" name="cambio_password" <?= $chk_cambio_password ?> >
+            <?= _("(se requiere cambiar password al entrar)") ?>
+            <br>
+            <?= ucfirst(_("¿tiene doble factor activado?")) ?>:<input type="checkbox" id="has_2fa" name="has_2fa" <?= $chk_has_2fa ?> >
+            <br>
+            <?= ucfirst(_("email")) ?>:<input type=text name=email size=30 value="<?= $email ?>">
+            <br>
             <input type=button onclick="fnjs_guardar(this.form);" value="<?= $txt_guardar ?>">
             <br>
 </form>
