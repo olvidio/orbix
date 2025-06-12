@@ -99,15 +99,22 @@ if ($row = $oDBSt->fetch(\PDO::FETCH_ASSOC)) {
             // Enviar email con la nueva contraseña
             $subject = _("Recuperación de contraseña");
             $message = sprintf(_("Hola %s,\n\nHas solicitado recuperar tu contraseña. Tu nueva contraseña temporal es: %s\n\nPor razones de seguridad, deberás cambiar esta contraseña la próxima vez que inicies sesión.\n\nSaludos,\nEl equipo de administración"), $Qusername, $new_password);
-            
+
+            //Dirección del remitente
+            $headers = "From: Aquinate <no-Reply@moneders.net>\r\n";
+            // Por cambios en la política de gmail, para evitar conflictos con
+            // SPF y DKIM, el From debe ser igual que el Return-path.
+            // Parece que el no-Reply también lo acepta.
+
             // Crear un nuevo email en la cola
+            $write_by = basename(__FILE__);
             $ColaMailId = new ColaMailId(Uuid::random());
             $oColaMail = new ColaMail();
             $oColaMail->setUuid_item($ColaMailId);
             $oColaMail->setMail_to($email);
             $oColaMail->setSubject($subject);
             $oColaMail->setMessage($message);
-            $oColaMail->setWrited_by('system');
+            $oColaMail->setWrited_by($write_by);
             
             // Guardar el email en la cola
             $oConfigDB = new ConfigDB('comun');
@@ -157,7 +164,7 @@ $a_campos = [
     'username' => $Qusername,
     'esquema' => $Qesquema,
     'email' => $email,
-    'url-index' => $Qurl_index,
+    'url_index' => $Qurl_index,
 ];
 
 // Renderizar la vista
