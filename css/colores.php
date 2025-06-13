@@ -63,12 +63,10 @@ switch ($estilo_color) {
         $border = 0;
 
         $medio = "#5482D4";
-        //$claro="#5D91F1";
         $claro = "#FFFFFF";
         $oscuro = "#325081";
 
         $fondo_oscuro = "#000066";
-        //$fondo_claro="white";
         $fondo_claro = "beige";
         $letras = "black";
         $letras_link = "navy";
