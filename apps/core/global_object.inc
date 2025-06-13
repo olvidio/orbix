@@ -212,6 +212,10 @@ if (ConfigGlobal::is_app_installed('dbextern') && !ConfigGlobal::is_dmz()) {
             $config = $oConfigDB->getEsquema('public');
             $oConexion = new DBConnection($config);
             $oDBListas = $oConexion->getPDOListas();
+        } catch (\InvalidArgumentException $e) {
+            // Esto capturará el error si la configuración está incompleta
+            echo $e->getMessage() . "<br>";
+            $oDBListas = 'error';
         } catch (\PDOException $e) {
             //Hay que poner el mensaje entre /* ... */ para que el script que carga a continuación lo interprete como un comentario.
             echo "/*";

@@ -99,8 +99,8 @@ class DBConnection
 
         $password_encoded = urlencode($password);
         $dsn = "postgresql://$user:$password_encoded@$host:$port/" . $dbname . $str_conexio;
-        if ($host === '/var/run/postgresql' ) {
-            $dsn ="postgresql:///$dbname?host=$host";
+        if ($host === '/var/run/postgresql') {
+            $dsn = "postgresql:///$dbname?host=$host";
         }
 
         return $dsn;
@@ -117,7 +117,13 @@ class DBConnection
         // con sqlsrv
         // A partir del driver 18, poner: Encrypt = no;
         $options = ['LoginTimeout' => 3];
-        $oDB = new PDO("sqlsrv:server = " . $config['host'] . "; Database = " . $config['dbname'] . "; Encrypt = no;", $config['user'], $config['password'],  $options);
+        if (empty($config['host'])
+            || empty($config['dbname'])
+            || empty($config['user'])
+            || empty($config['password'])) {
+            throw new \InvalidArgumentException(_("Error de configuración: faltan parámetros para conectar con la BDU."));
+        }
+        $oDB = new PDO("sqlsrv:server = " . $config['host'] . "; Database = " . $config['dbname'] . "; Encrypt = no;", $config['user'], $config['password'], $options);
 
         return $oDB;
     }

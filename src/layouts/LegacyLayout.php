@@ -215,8 +215,8 @@ class LegacyLayout implements LayoutInterface
         }
 
         // Add exit link to the top menu
-        $html_exit = "<li onclick=\"fnjs_logout();\" >| " . ucfirst(_("salir")) . "</li>";
-        $html_exit .= "<li> (login as: " . $oUsuario->getUsuario() . '[' . ConfigGlobal::mi_region_dl() . "])</li>";
+        $html_exit = "<li onclick=\"fnjs_logout();\" >" . ucfirst(_("salir"));
+        $html_exit .= " (login as: " . $oUsuario->getUsuario() . '[' . ConfigGlobal::mi_region_dl() . "])</li>";
         $html_barra .= $html_exit;
         $html_barra .= "</ul>";
 
