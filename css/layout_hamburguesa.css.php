@@ -10,8 +10,8 @@
     --accent-color: <?= $GLOBALS['oscuro'] ?>;
 
     /* Sidebar - Menú lateral */
-    --sidebar-bg-start: <?= $GLOBALS['oscuro'] ?>; /* Using oscuro for a darker start */
-    --sidebar-bg-end: <?= $GLOBALS['medio'] ?>; /* Using medio for a slightly lighter end */
+    --sidebar-bg-start: <?= $GLOBALS['muy_oscuro1'] ?>; /* Using oscuro for a darker start */
+    --sidebar-bg-end: <?= $GLOBALS['muy_oscuro2'] ?>; /* Using medio for a slightly lighter end */
     --sidebar-header-bg: rgba(0, 0, 0, 0.2);
     --sidebar-text-color: #ecf0f1; /* Keeping white/off-white for contrast */
     --sidebar-text-active-color:  <?= $GLOBALS['lineas'] ?>;

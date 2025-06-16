@@ -30,41 +30,15 @@ if (empty($estilo_color)) {
 
 $gris_claro = "#EEEEEE";
 switch ($estilo_color) {
-    case  "navy":
-        $border = 0;
-
-        $medio = "#000066";
-        //$claro="#5D91F1";
-        $claro = "#FFFFFF";
-        $oscuro = "#000000";
-
-        $fondo_oscuro = "#000066";
-        $fondo_claro = "beige";
-        $letras = "black";
-        $letras_link = "navy";
-        $letras_hover = "#00CCFF";
-        $lineas = "#CCCCCC";
-        $cru = "#FFFCF2";
-        $fondo_uno = "#CCCCCC";
-        $fondo_dos = "#DDDDDD";
-        $fondo_tres = "#EECCCC";
-
-        $fondo_menu = "#AAAAFF";
-        $udm_flecha = "right-navblue.gif";
-        $tono1 = "#ccccff";
-        $tono2 = "#b3b3ff";
-        $tono3 = "#9999ff";
-        $tono4 = "#8080ff";
-        $tono5 = "#6666ff";
-        $tono6 = "#4d4dff";
-        $tono7 = "#3333ff";
-        break;
     case  "azul":
         $border = 0;
+        $fondo_menu = "#AAAAFF";
 
-        $medio = "#5482D4";
         $claro = "#FFFFFF";
+        $medio = "#5482D4";
         $oscuro = "#325081";
+        $muy_oscuro1 = "#021c46";
+        $muy_oscuro2 = "#032766";
 
         $fondo_oscuro = "#000066";
         $fondo_claro = "beige";
@@ -77,7 +51,6 @@ switch ($estilo_color) {
         $fondo_dos = "#DDDDDD";
         $fondo_tres = "#EECCCC";
 
-        $fondo_menu = "#AAAAFF";
         $udm_flecha = "right-navblue.gif";
         $tono1 = "#ebf0fa";
         $tono2 = "#d6e1f5";
@@ -92,10 +65,11 @@ switch ($estilo_color) {
         $border = 0;
         $fondo_menu = "#AAFFAA";
 
-        $oscuro = "#363";
         $claro = "#F8FBD0";
-        //$oscuro2="#64915E";
         $medio = "#699F62";
+        $oscuro = "#363";
+        $muy_oscuro1 = "#012803";
+        $muy_oscuro2 = "#014d22";
 
         $fondo_oscuro = $oscuro;
         $fondo_claro = $claro;
@@ -120,10 +94,13 @@ switch ($estilo_color) {
         break;
     case "naranja":
         $border = 0;
+        $fondo_menu = "#FFAAAA";
 
-        $medio = "#FF6600";
         $claro = "white";
+        $medio = "#FF6600";
         $oscuro = "#C73800";
+        $muy_oscuro1 = "#461202";
+        $muy_oscuro2 = "#661a03";
 
         $fondo_oscuro = "#FF6600";
         $fondo_claro = "oldlace";
@@ -136,7 +113,6 @@ switch ($estilo_color) {
         $fondo_dos = "#FFDDAA";
         $fondo_tres = "#EECCCC";
 
-        $fondo_menu = "#FFAAAA";
         $udm_flecha = "right-navorange.gif";
         $tono1 = "#fff0e6";
         $tono2 = "#ffe0cc";
