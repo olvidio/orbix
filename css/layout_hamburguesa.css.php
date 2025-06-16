@@ -63,11 +63,31 @@
 /* ===========================================
    ESTILOS BASE
    =========================================== */
-* {
+/* {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
+
+ */
+
+.top-menu * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.mobile-toggle * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+.sidebar * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
 
 body.otro {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;

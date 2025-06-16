@@ -207,7 +207,6 @@ div.ventana z-index: 160;
         flex-direction: column;
     }
 
-
 	/* Help Tip in line */
 	/*-------------------------
 		Inline help tip
