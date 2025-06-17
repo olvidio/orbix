@@ -2,7 +2,7 @@
 
 use core\ConfigGlobal;
 use frontend\shared\PostRequest;
-use src\shared\ViewSrcPhtml;
+use frontend\shared\ViewPhtml;
 use web\Desplegable;
 use web\DesplegableArray;
 use web\Hash;
@@ -162,7 +162,7 @@ $a_campos['chk_has_2fa'] = $a_campos_src['chk_has_2fa'];
 $a_campos['obj'] = $a_campos_src['obj'];
 
 
-$oView = new ViewSrcPhtml('frontend\usuarios\controller');
+$oView = new ViewPhtml('frontend\usuarios\controller');
 $oView->renderizar('usuario_form.phtml', $a_campos);
 
 // los nuevos no tienen lo que sigue.
@@ -183,7 +183,7 @@ if (!empty($Qid_usuario)) {
 
     $a_campos['grupos_txt'] = $data['grupos_txt'];
 
-    $oView = new ViewSrcPhtml('frontend\usuarios\controller');
+    $oView = new ViewPhtml('frontend\usuarios\controller');
     $oView->renderizar('usuario_grupo.phtml', $a_campos);
 
 

@@ -7,7 +7,7 @@ use permisos\model\MyCrypt;
 use shared\domain\ColaMailId;
 use shared\domain\entity\ColaMail;
 use shared\domain\repositories\ColaMailRepository;
-use src\shared\ViewSrcPhtml;
+use frontend\shared\ViewPhtml;
 use src\usuarios\domain\entity\Usuario;
 use web\DateTimeLocal;
 
@@ -78,23 +78,23 @@ if ($row = $oDBSt->fetch(\PDO::FETCH_ASSOC)) {
     $MiUsuario = (new Usuario())->setAllAttributes($row);
     $id_usuario = $MiUsuario->getId_usuario();
     $email = $MiUsuario->getEmailAsString();
-    
+
     if (empty($email)) {
         $error_txt = _("No hay email asociado a este usuario");
     } else {
         // Generar una contraseña aleatoria
         $new_password = generateRandomPassword();
-        
+
         // Encriptar la contraseña
         $oCrypt = new MyCrypt();
         $hashed_password = $oCrypt->encode($new_password);
-        
+
         // Actualizar la contraseña en la base de datos y marcar que debe cambiarla
         $update_query = "UPDATE aux_usuarios SET password = :password, cambio_password = TRUE WHERE id_usuario = :id_usuario";
         $stmt = $oDB->prepare($update_query);
         $stmt->bindParam(':password', $hashed_password);
         $stmt->bindParam(':id_usuario', $id_usuario);
-        
+
         if ($stmt->execute()) {
             // Enviar email con la nueva contraseña
             $subject = _("Recuperación de contraseña");
@@ -115,7 +115,7 @@ if ($row = $oDBSt->fetch(\PDO::FETCH_ASSOC)) {
             $oColaMail->setSubject($subject);
             $oColaMail->setMessage($message);
             $oColaMail->setWrited_by($write_by);
-            
+
             // Guardar el email en la cola
             $oConfigDB = new ConfigDB('comun');
             $config = $oConfigDB->getEsquema('public');
@@ -141,18 +141,18 @@ if ($row = $oDBSt->fetch(\PDO::FETCH_ASSOC)) {
 function generateRandomPassword($length = 10) {
     $chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()';
     $password = '';
-    
+
     // Asegurar que la contraseña tenga al menos una letra mayúscula, una minúscula, un número y un carácter especial
     $password .= $chars[random_int(26, 51)]; // Mayúscula
     $password .= $chars[random_int(0, 25)]; // Minúscula
     $password .= $chars[random_int(52, 61)]; // Número
     $password .= $chars[random_int(62, strlen($chars) - 1)]; // Carácter especial
-    
+
     // Completar el resto de la contraseña
     for ($i = 4; $i < $length; $i++) {
         $password .= $chars[random_int(0, strlen($chars) - 1)];
     }
-    
+
     // Mezclar los caracteres para que no sigan un patrón predecible
     return str_shuffle($password);
 }
@@ -168,5 +168,5 @@ $a_campos = [
 ];
 
 // Renderizar la vista
-$oView = new ViewSrcPhtml('frontend\usuarios\view');
+$oView = new ViewPhtml('frontend\usuarios\view');
 $oView->renderizar('recuperar_password.phtml', $a_campos);

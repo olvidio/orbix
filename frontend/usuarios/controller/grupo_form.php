@@ -6,7 +6,7 @@ use permisos\model\PermDl;
 use procesos\model\CuadrosFases;
 use procesos\model\PermAccion;
 use procesos\model\PermAfectados;
-use src\shared\ViewSrcPhtml;
+use frontend\shared\ViewPhtml;
 use web\Hash;
 use web\Lista;
 
@@ -92,7 +92,7 @@ if (!empty($Qid_usuario)) {
         'txt_guardar' => $txt_guardar,
     ];
 
-    $oView = new ViewSrcPhtml('frontend\usuarios\controller');
+    $oView = new ViewPhtml('frontend\usuarios\controller');
     $oView->renderizar('grupo_form.phtml', $a_camposG);
 
     //////////// Permisos de grupos //////////////////////////////////////////////////
@@ -132,7 +132,7 @@ if (!empty($Qid_usuario)) {
             'oTablaPermMenu' => $oTablaPermMenu,
         ];
 
-        $oView = new ViewSrcPhtml('frontend\usuarios\controller');
+        $oView = new ViewPhtml('frontend\usuarios\controller');
         $oView->renderizar('perm_menu_lista.phtml', $a_camposP);
     }
 
@@ -166,6 +166,6 @@ if (!empty($Qid_usuario)) {
         'txt_guardar' => $txt_guardar,
     ];
 
-    $oView = new ViewSrcPhtml('frontend\usuarios\controller');
+    $oView = new ViewPhtml('frontend\usuarios\controller');
     $oView->renderizar('grupo_form.phtml', $a_camposG);
 }
