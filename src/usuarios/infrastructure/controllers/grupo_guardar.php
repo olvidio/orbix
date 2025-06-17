@@ -2,6 +2,7 @@
 
 use src\usuarios\application\repositories\GrupoRepository;
 use src\usuarios\domain\entity\Grupo;
+use src\usuarios\domain\value_objects\Username;
 use web\ContestarJson;
 
 // INICIO Cabecera global de URL de controlador *********************************
@@ -30,7 +31,7 @@ if (empty($Qid_usuario)) {
 } else {
     $oGrupo = $GrupoRepository->findById($Qid_usuario);
 }
-$oGrupo->setUsuario($Qusuario);
+$oGrupo->setUsuario(new Username($Qusuario));
 
 if ($GrupoRepository->Guardar($oGrupo) === false) {
     $error_txt .= _("hay un error, no se ha guardado");

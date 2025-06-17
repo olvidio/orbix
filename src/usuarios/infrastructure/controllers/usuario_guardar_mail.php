@@ -1,6 +1,7 @@
 <?php
 
 use src\usuarios\application\repositories\UsuarioRepository;
+use src\usuarios\domain\value_objects\Email;
 use web\ContestarJson;
 
 // INICIO Cabecera global de URL de controlador *********************************
@@ -20,8 +21,9 @@ $Qemail = (string)filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL);
 
 $Usuariorepository = new UsuarioRepository();
 $oUsuario = $Usuariorepository->findById($Qid_usuario);
-$usuario = $oUsuario->getUsuario();
-$oUsuario->setEmail($Qemail);
+
+$email = new Email($Qemail);
+$oUsuario->setEmail($email);
 if ($Usuariorepository->Guardar($oUsuario) === false) {
     $error_txt .= _("hay un error, no se ha guardado");
     $error_txt .= "\n" . $Usuariorepository->getErrorTxt();

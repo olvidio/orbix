@@ -36,7 +36,7 @@ class GruposLista
         foreach ($cGrupos as $oGrupo) {
             $i++;
             $id_usuario = $oGrupo->getId_usuario();
-            $usuario = $oGrupo->getUsuario();
+            $usuario = $oGrupo->getUsuarioAsString();
 
             $pagina = Hash::link(ConfigGlobal::getWeb() . '/frontend/usuarios/controller/grupo_form.php?'
                 . http_build_query(array('quien' => 'grupo', 'id_usuario' => $id_usuario))

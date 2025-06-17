@@ -162,17 +162,17 @@ class PgUsuarioRepository extends ClaseRepository implements UsuarioRepositoryIn
         $bInsert = $this->isNew($id_usuario);
 
         $aDatos = [];
-        $aDatos['usuario'] = $usuario->getUsuario();
+        $aDatos['usuario'] = $usuario->getUsuarioAsString();
         $aDatos['id_role'] = $usuario->getId_role();
-        $aDatos['email'] = $usuario->getEmail();
-        $aDatos['id_pau'] = $usuario->getId_pau();
-        $aDatos['nom_usuario'] = $usuario->getNom_usuario();
+        $aDatos['email'] = $usuario->getEmailAsString();
+        $aDatos['id_pau'] = $usuario->getId_pauAsString();
+        $aDatos['nom_usuario'] = $usuario->getNom_usuarioAsString();
         $aDatos['has_2fa'] = $usuario->has2fa();
-        $aDatos['secret_2fa'] = $usuario->getSecret2fa();
+        $aDatos['secret_2fa'] = $usuario->getSecret2faAsString();
         $aDatos['cambio_password'] = $usuario->isCambio_password();
         // para los bytea, pero el passwd ya lo tengo en hex con MyCrypt
         // $aDatos['password'] = bin2hex($usuario->getPassword());
-        $aDatos['password'] = $usuario->getPassword();
+        $aDatos['password'] = $usuario->getPasswordAsString();
         array_walk($aDatos, 'core\poner_null');
         //para el caso de los boolean FALSE, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
         if (is_true($aDatos['has_2fa'])) {
@@ -216,7 +216,7 @@ class PgUsuarioRepository extends ClaseRepository implements UsuarioRepositoryIn
         } else {
             // INSERT
             $aDatos['id_usuario'] = $usuario->getId_usuario();
-            $campos = "(id_usuario,usuario,id_role,password,email,id_pau,nom_usuario,has_2fa,secret_2fa,cambio_password))";
+            $campos = "(id_usuario,usuario,id_role,password,email,id_pau,nom_usuario,has_2fa,secret_2fa,cambio_password)";
             $valores = "(:id_usuario,:usuario,:id_role,:password,:email,:id_pau,:nom_usuario,:has_2fa,:secret_2fa,:cambio_password)";
             if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === FALSE) {
                 $sClaveError = 'PgusuarioRepository.insertar.prepare';

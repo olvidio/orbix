@@ -1,6 +1,10 @@
 <?php
 
 namespace src\usuarios\domain\entity;
+
+use src\usuarios\domain\value_objects\TipoPreferencia;
+use src\usuarios\domain\value_objects\ValorPreferencia;
+
 /**
  * Clase que implementa la entidad web_preferencias
  *
@@ -17,15 +21,15 @@ class Preferencia {
 	/**
 	 * Tipo de Preferencia
 	 *
-	 * @var string
+	 * @var TipoPreferencia
 	 */
-	 private string $stipo;
+	 private TipoPreferencia $stipo;
 	/**
 	 * Preferencia de Preferencia
 	 *
-	 * @var string|null
+	 * @var ValorPreferencia|null
 	 */
-	 private string|null $spreferencia = null;
+	 private ?ValorPreferencia $spreferencia = null;
 	/**
 	 * Id_usuario de Preferencia
 	 *
@@ -45,11 +49,25 @@ class Preferencia {
 	{
 		if (array_key_exists('tipo',$aDatos))
 		{
-			$this->setTipo($aDatos['tipo']);
+			// Check if it's already a TipoPreferencia object
+			if ($aDatos['tipo'] instanceof TipoPreferencia) {
+				$this->setTipo($aDatos['tipo']);
+			} else {
+				$this->setTipo(new TipoPreferencia($aDatos['tipo']));
+			}
 		}
 		if (array_key_exists('preferencia',$aDatos))
 		{
-			$this->setPreferencia($aDatos['preferencia']);
+			if ($aDatos['preferencia'] === null) {
+				$this->setPreferencia(null);
+			} else {
+				// Check if it's already a ValorPreferencia object
+				if ($aDatos['preferencia'] instanceof ValorPreferencia) {
+					$this->setPreferencia($aDatos['preferencia']);
+				} else {
+					$this->setPreferencia(new ValorPreferencia($aDatos['preferencia']));
+				}
+			}
 		}
 		if (array_key_exists('id_usuario',$aDatos))
 		{
@@ -59,35 +77,55 @@ class Preferencia {
 	}
 	/**
 	 *
-	 * @return string $stipo
+	 * @return TipoPreferencia
 	 */
-	public function getTipo(): string
+	public function getTipo(): TipoPreferencia
 	{
 		return $this->stipo;
 	}
 	/**
 	 *
-	 * @param string $stipo
+	 * @param TipoPreferencia $stipo
 	 */
-	public function setTipo(string $stipo): void
+	public function setTipo(TipoPreferencia $stipo): void
 	{
 		$this->stipo = $stipo;
 	}
+
+	/**
+	 * Get the preference type as a string
+	 *
+	 * @return string
+	 */
+	public function getTipoAsString(): string
+	{
+		return $this->stipo->value();
+	}
 	/**
 	 *
-	 * @return string|null $spreferencia
+	 * @return ValorPreferencia|null
 	 */
-	public function getPreferencia(): ?string
+	public function getPreferencia(): ?ValorPreferencia
 	{
 		return $this->spreferencia;
 	}
 	/**
 	 *
-	 * @param string|null $spreferencia
+	 * @param ValorPreferencia|null $spreferencia
 	 */
-	public function setPreferencia(?string $spreferencia = null): void
+	public function setPreferencia(?ValorPreferencia $spreferencia = null): void
 	{
 		$this->spreferencia = $spreferencia;
+	}
+
+	/**
+	 * Get the preference value as a string
+	 *
+	 * @return string|null
+	 */
+	public function getPreferenciaAsString(): ?string
+	{
+		return $this->spreferencia ? $this->spreferencia->value() : null;
 	}
 	/**
 	 *

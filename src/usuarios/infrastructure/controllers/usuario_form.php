@@ -71,25 +71,24 @@ if ($miRole < 4) { // es administrador
     $oGrupoGrupoPermMenu = [];
     $cUsuarioPerm = [];
     $cUsuarioPermCtr = [];
-    $oSelects = new DesplegableArray();
     $camposMas = '';
+    $aDataDespl = [];
     if (!empty($Qid_usuario)) {
         $que_user = 'guardar';
         $UsuarioRepository = new UsuarioRepository();
         $oUsuario = $UsuarioRepository->findById($Qid_usuario);
 
         $seccion = $miSfsv;
-        $usuario = $oUsuario->getUsuario();
-        $nom_usuario = $oUsuario->getNom_usuario();
-        $pass = $oUsuario->getPassword();
+        $usuario = $oUsuario->getUsuarioAsString();
+        $nom_usuario = $oUsuario->getNom_usuarioAsString();
         $cambio_password = $oUsuario->isCambio_password();
         $chk_cambio_password = is_true($cambio_password)? 'checked' : '';
         $has_2fa = $oUsuario->has2fa();
         $chk_has_2fa = is_true($has_2fa)? 'checked' : '';
-        $email = $oUsuario->getEmail();
+        $email = $oUsuario->getEmailAsString();
         $id_role = $oUsuario->getId_role();
         $oRole = $RoleRepository->findById($id_role);
-        $pau = $oRole->getPau();
+        $pau = $oRole->getPauAsString();
         $isSv = $oRole->isSv();
         $isSf = $oRole->isSf();
         if ($pau === Role::PAU_CDC) { //casa
@@ -106,55 +105,64 @@ if ($miRole < 4) { // es administrador
             $oGCasas = new GestorCasaDl();
             $oOpcionesCasas = $oGCasas->getPosiblesCasas($cond);
 
-            $oSelects = new DesplegableArray($id_pau, $oOpcionesCasas, 'casas');
-            $oSelects->setBlanco('t');
-            $oSelects->setAccionConjunto('fnjs_mas_casas(event)');
+            $aDataDespl['tipo'] = 'array';
+            $aDataDespl['nom'] = 'casas';
+            $aDataDespl['blanco'] = 't';
+            $aDataDespl['opciones'] = $oOpcionesCasas;
+            $aDataDespl['accionConjunto'] = 'fnjs_mas_casas(event)';
+            $aDataDespl['opcion_sel'] = $id_pau;
             $camposMas = 'casas!casas_mas!casas_num';
         }
         if ($pau === Role::PAU_CTR && $isSv) { //centroSv
-            $id_pau = $oUsuario->getId_pau();
+            $id_pau = $oUsuario->getId_pau()->value();
             $oGesCentrosDl = new GestorCentroDl();
-            $oSelects = $oGesCentrosDl->getListaCentros();
+            $aOpciones = $oGesCentrosDl->getArrayCentros();
 
-            $oSelects->setNombre('id_ctr');
-            $oSelects->setOpcion_sel($id_pau);
-            $oSelects->setBlanco('t');
+            $aDataDespl['tipo'] = 'simple';
+            $aDataDespl['nom'] = 'id_ctr';
+            $aDataDespl['aOpciones'] = $aOpciones;
+            $aDataDespl['blanco'] = 't';
+            $aDataDespl['opcion_sel'] = $id_pau;
             $camposMas = 'id_ctr';
         }
         if ($pau === Role::PAU_CTR && $isSf) { //centroSf
-            $id_pau = $oUsuario->getId_pau();
+            $id_pau = $oUsuario->getId_pau()->value();
             $oGesCentrosDl = new GestorCentroEllas();
-            $oSelects = $oGesCentrosDl->getListaCentros();
+            $aOpciones = $oGesCentrosDl->getArrayCentros();
 
-            $oSelects->setNombre('id_ctr');
-            $oSelects->setOpcion_sel($id_pau);
-            $oSelects->setBlanco('t');
+            $aDataDespl['tipo'] = 'simple';
+            $aDataDespl['nom'] = 'id_ctr';
+            $aDataDespl['aOpciones'] = $aOpciones;
+            $aDataDespl['blanco'] = 't';
+            $aDataDespl['opcion_sel'] = $id_pau;
             $camposMas = 'id_ctr';
         }
         if ($pau == Role::PAU_NOM || $pau == Role::PAU_SACD) { //sacd //personas dl
-            $id_pau = $oUsuario->getId_pau();
+            $id_pau = $oUsuario->getId_pau()->value();
 
-            $nom_role = $oRole->getRole();
+            $nom_role = $oRole->getRoleAsString();
             switch ($nom_role) {
                 case "p-agd":
                     $GesPersonas = new GestorPersonaAgd();
-                    $oSelects = $GesPersonas->getListaPersonas();
+                    $aDataDespl = $GesPersonas->getArrayPersonas();
                     break;
                 case "p-n":
                     $GesPersonas = new GestorPersonaN();
-                    $oSelects = $GesPersonas->getListaPersonas();
+                    $aDataDespl = $GesPersonas->getArrayPersonas();
                     break;
                 case "p-sacd":
                 case "p-sacdInt": // para hacer pruebas desde dentro (dmz=false)
                     $GesPersonas = new GestorPersonaDl();
                     // de momento sólo n y agd
-                    $oSelects = $GesPersonas->getListaSacd("AND id_tabla ~ '[na]'");
+                    $aOpciones = $GesPersonas->getArraySacd("AND id_tabla ~ '[na]'");
                     break;
             }
 
-            $oSelects->setNombre('id_nom');
-            $oSelects->setOpcion_sel($id_pau);
-            $oSelects->setBlanco('t');
+            $aDataDespl['tipo'] = 'simple';
+            $aDataDespl['nom'] = 'id_nom';
+            $aDataDespl['aOpciones'] = $aOpciones;
+            $aDataDespl['blanco'] = 't';
+            $aDataDespl['opcion_sel'] = $id_pau;
             $camposMas = 'id_nom';
         }
 
@@ -170,7 +178,6 @@ if ($miRole < 4) { // es administrador
         $Qid_usuario = '';
         $usuario = '';
         $nom_usuario = '';
-        $pass = '';
         $seccion = '';
         $email = '';
         $pau = '';
@@ -182,7 +189,7 @@ if ($miRole < 4) { // es administrador
     $camposForm = !empty($camposMas) ? $camposForm . '!' . $camposMas : $camposForm;
     $oHash = new Hash();
     $oHash->setCamposForm($camposForm);
-    $oHash->setcamposNo('pass!password!id_ctr!id_nom!casas');
+    $oHash->setcamposNo('password!id_ctr!id_nom!casas');
     $a_camposHidden = array(
         'id_usuario' => $Qid_usuario,
         'quien' => $Qquien
@@ -198,8 +205,7 @@ if ($miRole < 4) { // es administrador
         'que_user' => $que_user,
         'quien' => $Qquien,
         'pau' => $pau,
-        'oSelects' => $oSelects->export(),
-        //'pass' => $pass,
+        'aDataDespl' => $aDataDespl,
         'usuario' => $usuario,
         'nom_usuario' => $nom_usuario,
         'aOpcionesRoles' => $aOpcionesRoles,

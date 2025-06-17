@@ -85,9 +85,22 @@ $id_role = $a_campos_src['id_role'];
 $oDesplRoles = new Desplegable('id_role', $aOpcionesRoles, $id_role, true);
 $a_campos['oDesplRoles'] = $oDesplRoles;
 
-$oSelects = new DesplegableArray();
-$oSelects->import($a_campos_src['oSelects']);
-$a_campos['oSelects'] = $oSelects;
+if (!empty($a_campos_src['aDataDespl'])) {
+    $tipo = $a_campos_src['aDataDespl']['tipo'] = 'simple';
+    if ($tipo === 'simple') {
+        $oDesplArrayCtrCasas = new Desplegable();
+    } else {
+        $oDesplArrayCtrCasas = new DesplegableArray();
+        $oDesplArrayCtrCasas->setNombre($a_campos_src['aDataDespl']['accionConjunto']);
+    }
+    $oDesplArrayCtrCasas->setNombre($a_campos_src['aDataDespl']['nom']);
+    $oDesplArrayCtrCasas->setOpciones($a_campos_src['aDataDespl']['aOpciones']);
+    $oDesplArrayCtrCasas->setOpcion_sel($a_campos_src['aDataDespl']['opcion_sel']);
+    $oDesplArrayCtrCasas->setBlanco($a_campos_src['aDataDespl']['blanco']);
+} else {
+    $oDesplArrayCtrCasas = new Desplegable();
+}
+$a_campos['oDesplArrayCtrCasas'] = $oDesplArrayCtrCasas;
 
 $oHash = new Hash();
 $camposMas = $a_campos_src['camposMas'];

@@ -66,7 +66,7 @@ class rolesLista
         $i = 0;
         foreach ($cRoles as $oRole) {
             $id_role = $oRole->getId_role();
-            $role = $oRole->getRole();
+            $role = $oRole->getRoleAsString();
             $isSf = $oRole->isSf();
             $isSv = $oRole->isSv();
             $pau = $oRole->getPau();

@@ -3,6 +3,8 @@
 namespace src\usuarios\domain\entity;
 
 use src\usuarios\application\repositories\RoleRepository;
+use src\usuarios\domain\value_objects\RoleName;
+use src\usuarios\domain\value_objects\PauType;
 use function core\is_true;
 
 /**
@@ -41,9 +43,9 @@ class Role
     /**
      * Role de Role
      *
-     * @var string|null
+     * @var RoleName|null
      */
-    private string|null $srole = null;
+    private ?RoleName $srole = null;
     /**
      * Sf de Role
      *
@@ -59,9 +61,9 @@ class Role
     /**
      * Pau de Role
      *
-     * @var string|null
+     * @var PauType|null
      */
-    private string|null $spau = null;
+    private ?PauType $spau = null;
     /**
      * Dmz de Role
      *
@@ -101,7 +103,16 @@ class Role
             $this->setId_role($aDatos['id_role']);
         }
         if (array_key_exists('role', $aDatos)) {
-            $this->setRole($aDatos['role']);
+            if ($aDatos['role'] === null) {
+                $this->setRole(null);
+            } else {
+                // Check if it's already a RoleName object
+                if ($aDatos['role'] instanceof RoleName) {
+                    $this->setRole($aDatos['role']);
+                } else {
+                    $this->setRole(new RoleName($aDatos['role']));
+                }
+            }
         }
         if (array_key_exists('sf', $aDatos)) {
             $this->setSf(is_true($aDatos['sf']));
@@ -110,7 +121,16 @@ class Role
             $this->setSv(is_true($aDatos['sv']));
         }
         if (array_key_exists('pau', $aDatos)) {
-            $this->setPau($aDatos['pau']);
+            if ($aDatos['pau'] === null) {
+                $this->setPau(null);
+            } else {
+                // Check if it's already a PauType object
+                if ($aDatos['pau'] instanceof PauType) {
+                    $this->setPau($aDatos['pau']);
+                } else {
+                    $this->setPau(new PauType($aDatos['pau']));
+                }
+            }
         }
         if (array_key_exists('dmz', $aDatos)) {
             $this->setDmz(is_true($aDatos['dmz']));
@@ -138,20 +158,30 @@ class Role
 
     /**
      *
-     * @return string|null $srole
+     * @return RoleName|null
      */
-    public function getRole(): ?string
+    public function getRole(): ?RoleName
     {
         return $this->srole;
     }
 
     /**
      *
-     * @param string|null $srole
+     * @param RoleName|null $srole
      */
-    public function setRole(?string $srole = null): void
+    public function setRole(?RoleName $srole = null): void
     {
         $this->srole = $srole;
+    }
+
+    /**
+     * Get the role name as a string
+     *
+     * @return string|null
+     */
+    public function getRoleAsString(): ?string
+    {
+        return $this->srole ? $this->srole->value() : null;
     }
 
     /**
@@ -192,20 +222,30 @@ class Role
 
     /**
      *
-     * @return string|null $spau
+     * @return PauType|null
      */
-    public function getPau(): ?string
+    public function getPau(): ?PauType
     {
         return $this->spau;
     }
 
     /**
      *
-     * @param string|null $spau
+     * @param PauType|null $spau
      */
-    public function setPau(?string $spau = null): void
+    public function setPau(?PauType $spau = null): void
     {
         $this->spau = $spau;
+    }
+
+    /**
+     * Get the PAU type as a string
+     *
+     * @return string|null
+     */
+    public function getPauAsString(): ?string
+    {
+        return $this->spau ? $this->spau->value() : null;
     }
 
     /**

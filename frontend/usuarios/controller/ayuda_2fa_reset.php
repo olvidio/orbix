@@ -66,7 +66,7 @@ if ($row = $oDBSt->fetch(\PDO::FETCH_ASSOC)) {
     $MiUsuario = (new Usuario())->setAllAttributes($row);
 }
 
-$email = $MiUsuario->getEmail();
+$email = $MiUsuario->getEmailAsString();
 if (empty($email)) {
     $error_txt = _("No hay email asociado a este usuario");
     $emailOfuscado = '';

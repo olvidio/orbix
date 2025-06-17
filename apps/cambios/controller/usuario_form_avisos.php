@@ -31,7 +31,7 @@ if ((ConfigGlobal::is_app_installed('cambios')) && (!empty($Qid_usuario)) && ($Q
     // mando también el nombre del usuario
     $UsuarioRepository = new UsuarioRepository();
     $oUsuario = $UsuarioRepository->findById($Qid_usuario);
-    $nombre_usuario = $oUsuario->getUsuario();
+    $nombre_usuario = $oUsuario->getUsuarioAsString();
 
     $oActividad = new ActividadAll();
     $a_status = $oActividad->getArrayStatus();

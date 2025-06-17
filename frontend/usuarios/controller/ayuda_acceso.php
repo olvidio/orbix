@@ -70,7 +70,7 @@ if ($row = $oDBSt->fetch(\PDO::FETCH_ASSOC)) {
 }
 
 $error_txt = '';
-$email = $MiUsuario->getEmail();
+$email = $MiUsuario->getEmailAsString();
 if (empty($email)) {
     $error_txt = _("No hay email asociado a este usuario");
     $emailOfuscado = '';

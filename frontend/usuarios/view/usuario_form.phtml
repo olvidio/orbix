@@ -66,7 +66,7 @@
             if (evt.keyCode === 9 || evt.type === "change" || evt === "x") {
                 if (valor !== 0) {
                     <?php
-                    echo $oSelects->ListaSelectsJs();
+                    echo $oDesplArrayCtrCasas->ListaSelectsJs();
                     ?>
                 } else {
                     ir_a('f_entrada');
@@ -74,7 +74,7 @@
             }
         }
         <?php
-        echo $oSelects->ComprobarSelectJs();
+        echo $oDesplArrayCtrCasas->ComprobarSelectJs();
     }
     ?>
 </script>
@@ -100,7 +100,7 @@
         <td class=etiqueta><?= _("persona") ?>:</td>
         <td colspan=8 id="col_sacd">
             <?php
-            echo $oSelects->desplegable();
+            echo $oDesplArrayCtrCasas->desplegable();
             echo "</td></tr>";
             }
             if ($pau === 'sacd') {
@@ -110,7 +110,7 @@
         <td class=etiqueta><?= _("sacd") ?>:</td>
         <td colspan=8 id="col_sacd">
             <?php
-            echo $oSelects->desplegable();
+            echo $oDesplArrayCtrCasas->desplegable();
             echo "</td></tr>";
             }
             if ($pau === 'ctr') {
@@ -120,7 +120,7 @@
         <td class=etiqueta><?= _("centro") ?>:</td>
         <td colspan=8 id="col_centros">
             <?php
-            echo $oSelects->desplegable();
+            echo $oDesplArrayCtrCasas->desplegable();
             echo "</td></tr>";
             }
             if ($pau === 'cdc') {
@@ -130,7 +130,7 @@
         <td class=etiqueta><?= _("casas") ?>:</td>
         <td colspan=8 id="col_casas">
             <?php
-            echo $oSelects->ListaSelects();
+            echo $oDesplArrayCtrCasas->ListaSelects();
             echo "</td></tr>";
             }
             ?>

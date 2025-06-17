@@ -41,13 +41,11 @@ if (empty($Qid_usuario)) {
     // datos personales usuario
     $UsuarioRepository = new UsuarioRepository();
     $oUsuario = $UsuarioRepository->findById($Qid_usuario);
-    $usuario = $oUsuario->getUsuario();
-    //$pass = $oUsuario->getPassword();
-    $email = $oUsuario->getEmail();
+    $usuario = $oUsuario->getUsuarioAsString();
+    $email = $oUsuario->getEmailAsString();
 
     $data['grupos_txt'] = $txt;
     $data['usuario'] = $usuario;
-    //$data['pass'] = $pass;
     $data['email'] = $email;
 }
 

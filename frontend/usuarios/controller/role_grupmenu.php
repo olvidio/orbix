@@ -32,7 +32,7 @@ if (!empty($a_sel)) { //vengo de un checkbox
 
 $RoleRepository = new RoleRepository();
 $oRole = $RoleRepository->findById($Qid_role);
-$role = $oRole->getRole();
+$role = $oRole->getRoleAsString();
 
 // los que ya tengo:
 $GrupMenuRoleRepository = new GrupMenuRoleRepository();

@@ -1,6 +1,8 @@
 <?php
 
 namespace permisos\model;
+use src\usuarios\domain\value_objects\Username;
+
 class MyCrypt
 {
     /*
@@ -22,27 +24,27 @@ class MyCrypt
     /**
      * Devuelve un array con el mensaje.
      *
-     * @param string $user
+     * @param Username $user
      * @param string $password
-     * @param string $fullname
      * @return array
      *       $jsondata['success'] = true|false;
      *       $jsondata['mensaje'] = 'ok';
      */
-    public function is_valid_password(string $user, string $password, string $fullname = '')
+    public function is_valid_password(userName $user, string $password)
     {
 
+        $username = $user->value();
         $cmd_cracklib_check = shell_exec(sprintf("command -v cracklib-check"));
         $cmd_pwscore = shell_exec(sprintf("command -v pwscore"));
 
         if (!empty($cmd_cracklib_check) && !empty($cmd_pwscore)) {
-            return $this->is_valid_password_2($user, $password, 55);
+            return $this->is_valid_password_2($username, $password, 55);
         } else {
-            return $this->is_valid_password_1($user, $password);
+            return $this->is_valid_password_1($username, $password);
         }
     }
 
-    private function is_valid_password_1($user, $password, $fullname = '')
+    private function is_valid_password_1($username, $password)
     {
         /* Del Windows:
          * Enabling this policy setting requires passwords to meet the following requirements:
@@ -59,25 +61,25 @@ class MyCrypt
          *Any Unicode character that is categorized as an alphabetic character but is not uppercase or lowercase. This includes Unicode characters from Asian languages.
          */
 
-        $lower_user = strtolower($user?? '');
+        $lower_user = strtolower($username?? '');
         $lower_pwd = strtolower($password?? '');
         $txt_err = '';
 
         if (strpos($lower_pwd, '"') !== false) {
             $txt_err .= empty($txt_err) ? '' : "\n";
-            $txt_err .= "$user: password($password) ";
+            $txt_err .= "$username: password($password) ";
             $txt_err .= _("No se pueden usar las comillas en el password");
         }
 
         if (strpos($lower_pwd, $lower_user) !== false) {
             $txt_err .= empty($txt_err) ? '' : "\n";
-            $txt_err .= "$user: password($password) ";
+            $txt_err .= "$username: password($password) ";
             $txt_err .= _("El nombre de usuario No puede estar en el password");
         }
 
         if (strlen($password) < 8) {
             $txt_err .= empty($txt_err) ? '' : "\n";
-            $txt_err .= "$user: password($password) ";
+            $txt_err .= "$username: password($password) ";
             $txt_err .= _("Debe tener más de 8 caracteres");
         }
 
@@ -103,7 +105,7 @@ class MyCrypt
 
         if ($numCriteria < 3) {
             $txt_err .= empty($txt_err) ? '' : "\n";
-            $txt_err .= "$user: password($password) ";
+            $txt_err .= "$username: password($password) ";
             $txt_err .= _("Debe incluir como mínimo una letra mayúscula, un número y un caracter especial");
         }
         if (empty($txt_err)) {
@@ -116,13 +118,13 @@ class MyCrypt
         return $jsondata;
     }
 
-    private function is_valid_password_2($user, $pw, $score_ref = 55)
+    private function is_valid_password_2($username, $pw, $score_ref = 55)
     {
         //$CRACKLIB = "/usr/sbin/cracklib-check";
         //$PWSCORE = "/usr/bin/pwscore";
 
         $CRACKLIB = shell_exec(sprintf("command -v cracklib-check"));
-        $PWSCORE = shell_exec(sprintf("command -v pwscore")) . ' ' . $user;
+        $PWSCORE = shell_exec(sprintf("command -v pwscore")) . ' ' . $username;
 
         // prevent UTF-8 characters being stripped by escapeshellarg
         setlocale(LC_ALL, 'en_US.utf-8');

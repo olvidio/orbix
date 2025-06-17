@@ -68,7 +68,7 @@ class myTest extends TestCase
             $_SESSION['session_auth'] = $session_auth;
         }
 
-//si existe, registro la sesion con la configuración
+        //si existe, registro la sesión con la configuración
         if (!isset($_SESSION['config'])) {
             $session_config = array(
                 'id_role' => $id_role,
@@ -81,15 +81,15 @@ class myTest extends TestCase
                 'expire' => $expire,
                 'mail' => $mail,
                 'idioma' => $idioma,
-//        'app_installed' => $app_installed,
-//        'mod_installed' => $a_mods_installed,
-//        'a_apps' => $a_apps,
-//        'a_mods' => $a_mods,
+                // 'app_installed' => $app_installed,
+                // 'mod_installed' => $a_mods_installed,
+                // 'a_apps' => $a_apps,
+                // 'a_mods' => $a_mods,
             );
             $_SESSION['config'] = $session_config;
         }
 
-// public para todo el mundo
+        // public para todo el mundo
         $oConfigDB = new ConfigDB('comun'); //de la database comun
 
         $config = $oConfigDB->getEsquema('public');
@@ -100,7 +100,7 @@ class myTest extends TestCase
         $oConexion = new DBConnection($config);
         $GLOBALS['oDBRC'] = $oConexion->getPDO();
 
-// public para todo el mundo sólo lectura
+        // public para todo el mundo sólo lectura
         $oConfigDB = new ConfigDB('comun_select'); //de la database comun
 
         $config = $oConfigDB->getEsquema('public');
@@ -117,12 +117,12 @@ class myTest extends TestCase
         $esquemav = $_SESSION['session_auth']['esquema'];
         $esquema = \substr($esquemav, 0, -1);
         $esquemaf = $esquema . 'f';
-//común
+        //común
         $oConfigDB->setDataBase('comun');
         $config = $oConfigDB->getEsquema($esquema);
         $oConexion = new DBConnection($config);
         $GLOBALS['oDBC'] = $oConexion->getPDO();
-//común sólo lectura
+        //común sólo lectura
         $oConfigDB->setDataBase('comun_select');
         $config = $oConfigDB->getEsquema($esquema);
         $oConexion = new DBConnection($config);
@@ -132,6 +132,12 @@ class myTest extends TestCase
         $config = $oConfigDB->getEsquema($esquemav);
         $oConexion = new DBConnection($config);
         $GLOBALS['oDB'] = $oConexion->getPDO();
+
+        $oConfigDB->setDataBase('sv-e');
+        $config = $oConfigDB->getEsquema($esquemav);
+        $oConexion = new DBConnection($config);
+        $GLOBALS['oDBE'] = $oConexion->getPDO();
+        $GLOBALS['oDBE_Select'] = $oConexion->getPDO();
 
         $config = $oConfigDB->getEsquema('publicv');
         $oConexion = new DBConnection($config);

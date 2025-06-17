@@ -72,7 +72,7 @@ if ($oPreferencia !== null) {
     $cGMR = $GrupMenuRoleRepository->getGrupMenuRoles(array('id_role' => $id_role));
     if (empty($cGMR)) {
         $oRole = $RoleRepository->findById($id_role);
-        $nom_role = $oRole->getRole();
+        $nom_role = $oRole->getRoleAsString();
         $msg = sprintf(_("El role: '%s' no tiene ningún grupmenu asignado"), $nom_role);
         die ($msg);
     }

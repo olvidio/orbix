@@ -1,6 +1,14 @@
 <?php
 
 namespace src\usuarios\domain\entity;
+
+use src\usuarios\domain\value_objects\Username;
+use src\usuarios\domain\value_objects\Email;
+use src\usuarios\domain\value_objects\Password;
+use src\usuarios\domain\value_objects\IdPau;
+use src\usuarios\domain\value_objects\NombreUsuario;
+use src\usuarios\domain\value_objects\Secret2FA;
+
 /**
  * Clase que implementa la entidad aux_usuarios
  *
@@ -24,9 +32,9 @@ class Usuario
     /**
      * Usuario de usuario
      *
-     * @var string
+     * @var Username
      */
-    private string $susuario;
+    private Username $susuario;
     /**
      * Id_role de usuario
      *
@@ -36,27 +44,27 @@ class Usuario
     /**
      * Password de usuario
      *
-     * @var string|null
+     * @var Password|null
      */
-    private $spassword = null;
+    private ?Password $spassword = null;
     /**
      * Email de usuario
      *
-     * @var string|null
+     * @var Email|null
      */
-    private string|null $semail = null;
+    private ?Email $semail = null;
     /**
      * Id_pau de usuario
      *
-     * @var string|null
+     * @var IdPau|null
      */
-    private string|null $sid_pau = null;
+    private ?IdPau $sid_pau = null;
     /**
      * Nom_usuario de usuario
      *
-     * @var string|null
+     * @var NombreUsuario|null
      */
-    private string|null $snom_usuario = null;
+    private ?NombreUsuario $snom_usuario = null;
     /**
      * Indica si el usuario tiene habilitada la autenticación de dos factores
      *
@@ -66,9 +74,9 @@ class Usuario
     /**
      * Clave secreta para la autenticación de dos factores
      *
-     * @var string|null
+     * @var Secret2FA|null
      */
-    private string|null $ssecret_2fa = null;
+    private ?Secret2FA $ssecret_2fa = null;
     /**
      * Indica si el usuario debe cambiar el password
      *
@@ -90,28 +98,78 @@ class Usuario
             $this->setId_usuario($aDatos['id_usuario']);
         }
         if (array_key_exists('usuario', $aDatos)) {
-            $this->setUsuario($aDatos['usuario']);
+            // Check if it's already a Username object
+            if ($aDatos['usuario'] instanceof Username) {
+                $this->setUsuario($aDatos['usuario']);
+            } else {
+                $this->setUsuario(new Username($aDatos['usuario']));
+            }
         }
         if (array_key_exists('id_role', $aDatos)) {
             $this->setId_role($aDatos['id_role']);
         }
-        if (array_key_exists('password', $aDatos)) {
-            $this->setPassword($aDatos['password']);
+        if (array_key_exists('password', $aDatos) && !empty($aDatos['password'])) {
+            if ($aDatos['password'] === null) {
+                $this->setPassword(null);
+            } else {
+                // Check if it's already a Password object
+                if ($aDatos['password'] instanceof Password) {
+                    $this->setPassword($aDatos['password']);
+                } else {
+                    $this->setPassword(new Password($aDatos['password']));
+                }
+            }
         }
         if (array_key_exists('email', $aDatos)) {
-            $this->setEmail($aDatos['email']);
+            if ($aDatos['email'] === null) {
+                $this->setEmail(null);
+            } else {
+                // Check if it's already an Email object
+                if ($aDatos['email'] instanceof Email) {
+                    $this->setEmail($aDatos['email']);
+                } else {
+                    $this->setEmail(new Email($aDatos['email']));
+                }
+            }
         }
         if (array_key_exists('id_pau', $aDatos)) {
-            $this->setId_pau($aDatos['id_pau']);
+            if ($aDatos['id_pau'] === null) {
+                $this->setId_pau(null);
+            } else {
+                // Check if it's already an IdPau object
+                if ($aDatos['id_pau'] instanceof IdPau) {
+                    $this->setId_pau($aDatos['id_pau']);
+                } else {
+                    $this->setId_pau(new IdPau($aDatos['id_pau']));
+                }
+            }
         }
         if (array_key_exists('nom_usuario', $aDatos)) {
-            $this->setNom_usuario($aDatos['nom_usuario']);
+            if ($aDatos['nom_usuario'] === null) {
+                $this->setNom_usuario(null);
+            } else {
+                // Check if it's already a NombreUsuario object
+                if ($aDatos['nom_usuario'] instanceof NombreUsuario) {
+                    $this->setNom_usuario($aDatos['nom_usuario']);
+                } else {
+                    $this->setNom_usuario(new NombreUsuario($aDatos['nom_usuario']));
+                }
+            }
         }
         if (array_key_exists('has_2fa', $aDatos)) {
             $this->setHas2fa($aDatos['has_2fa']);
         }
         if (array_key_exists('secret_2fa', $aDatos)) {
-            $this->setSecret2fa($aDatos['secret_2fa']);
+            if ($aDatos['secret_2fa'] === null) {
+                $this->setSecret2fa(null);
+            } else {
+                // Check if it's already a Secret2FA object
+                if ($aDatos['secret_2fa'] instanceof Secret2FA) {
+                    $this->setSecret2fa($aDatos['secret_2fa']);
+                } else {
+                    $this->setSecret2fa(new Secret2FA($aDatos['secret_2fa']));
+                }
+            }
         }
         if (array_key_exists('cambio_password', $aDatos)) {
             $this->setCambio_password($aDatos['cambio_password']);
@@ -139,20 +197,30 @@ class Usuario
 
     /**
      *
-     * @return string $susuario
+     * @return Username
      */
-    public function getUsuario(): string
+    public function getUsuario(): Username
     {
         return $this->susuario;
     }
 
     /**
      *
-     * @param string $susuario
+     * @param Username $susuario
      */
-    public function setUsuario(string $susuario): void
+    public function setUsuario(Username $susuario): void
     {
         $this->susuario = $susuario;
+    }
+
+    /**
+     * Get the username as a string
+     *
+     * @return string
+     */
+    public function getUsuarioAsString(): string
+    {
+        return $this->susuario->value();
     }
 
     /**
@@ -175,74 +243,114 @@ class Usuario
 
     /**
      *
-     * @return string|null $spassword
+     * @return Password|null
      */
-    public function getPassword(): ?string
+    public function getPassword(): ?Password
     {
         return $this->spassword;
     }
 
     /**
      *
-     * @param string|null $spassword
+     * @param Password|null $spassword
      */
-    public function setPassword($spassword = null): void
+    public function setPassword(?Password $spassword = null): void
     {
         $this->spassword = $spassword;
     }
 
     /**
+     * Get the password as a string
      *
-     * @return string|null $semail
+     * @return string|null
      */
-    public function getEmail(): ?string
+    public function getPasswordAsString(): ?string
+    {
+        return $this->spassword ? $this->spassword->value() : null;
+    }
+
+    /**
+     *
+     * @return Email|null
+     */
+    public function getEmail(): ?Email
     {
         return $this->semail;
     }
 
     /**
      *
-     * @param string|null $semail
+     * @param Email|null $semail
      */
-    public function setEmail(?string $semail = null): void
+    public function setEmail(?Email $semail = null): void
     {
         $this->semail = $semail;
     }
 
     /**
+     * Get the email as a string
      *
-     * @return string|null $sid_pau
+     * @return string|null
      */
-    public function getId_pau(): ?string
+    public function getEmailAsString(): ?string
+    {
+        return $this->semail ? $this->semail->value() : null;
+    }
+
+    /**
+     *
+     * @return IdPau|null
+     */
+    public function getId_pau(): ?IdPau
     {
         return $this->sid_pau;
     }
 
     /**
      *
-     * @param string|null $sid_pau
+     * @param IdPau|null $sid_pau
      */
-    public function setId_pau(?string $sid_pau = null): void
+    public function setId_pau(?IdPau $sid_pau = null): void
     {
         $this->sid_pau = $sid_pau;
     }
 
     /**
+     * Get the PAU identifier as a string
      *
-     * @return string|null $snom_usuario
+     * @return string|null
      */
-    public function getNom_usuario(): ?string
+    public function getId_pauAsString(): ?string
+    {
+        return $this->sid_pau ? $this->sid_pau->value() : null;
+    }
+
+    /**
+     *
+     * @return NombreUsuario|null
+     */
+    public function getNom_usuario(): ?NombreUsuario
     {
         return $this->snom_usuario;
     }
 
     /**
      *
-     * @param string|null $snom_usuario
+     * @param NombreUsuario|null $snom_usuario
      */
-    public function setNom_usuario(?string $snom_usuario = null): void
+    public function setNom_usuario(?NombreUsuario $snom_usuario = null): void
     {
         $this->snom_usuario = $snom_usuario;
+    }
+
+    /**
+     * Get the user name as a string
+     *
+     * @return string|null
+     */
+    public function getNom_usuarioAsString(): ?string
+    {
+        return $this->snom_usuario ? $this->snom_usuario->value() : null;
     }
 
     /**
@@ -268,9 +376,9 @@ class Usuario
     /**
      * Obtiene la clave secreta para la autenticación de dos factores
      *
-     * @return string|null
+     * @return Secret2FA|null
      */
-    public function getSecret2fa(): ?string
+    public function getSecret2fa(): ?Secret2FA
     {
         return $this->ssecret_2fa;
     }
@@ -278,11 +386,21 @@ class Usuario
     /**
      * Establece la clave secreta para la autenticación de dos factores
      *
-     * @param string|null $ssecret_2fa
+     * @param Secret2FA|null $ssecret_2fa
      */
-    public function setSecret2fa(?string $ssecret_2fa = null): void
+    public function setSecret2fa(?Secret2FA $ssecret_2fa = null): void
     {
         $this->ssecret_2fa = $ssecret_2fa;
+    }
+
+    /**
+     * Get the 2FA secret as a string
+     *
+     * @return string|null
+     */
+    public function getSecret2faAsString(): ?string
+    {
+        return $this->ssecret_2fa ? $this->ssecret_2fa->value() : null;
     }
 
     public function isCambio_password(): bool
