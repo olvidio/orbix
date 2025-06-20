@@ -1,8 +1,8 @@
 <?php
 
 use core\ConfigGlobal;
+use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
-use src\shared\ViewSrcPhtml;
 use web\Desplegable;
 use web\Hash;
 
@@ -56,6 +56,6 @@ $a_campos = [
     'url_dlb' => $url_dlb,
 ];
 
-$oView = new ViewSrcPhtml('frontend\inventario\controller');
+$oView = new ViewNewPhtml('frontend\inventario\controller');
 $oView->renderizar('docs_asignar_que.phtml', $a_campos);
 

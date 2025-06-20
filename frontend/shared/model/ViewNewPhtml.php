@@ -1,6 +1,6 @@
 <?php
 
-namespace src\shared;
+namespace frontend\shared\model;
 
 
 use core\ConfigGlobal;
@@ -16,7 +16,7 @@ use core\ConfigGlobal;
  * @version 1.0
  * @created 22/9/2010
  */
-class ViewSrcPhtml
+class ViewNewPhtml
 {
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
@@ -48,7 +48,6 @@ class ViewSrcPhtml
         extract($variables);
 
         ob_start();
-        //$dir_apps = ConfigGlobal::$web_path . '/apps';
         $dir_apps = ConfigGlobal::$web_path;
         $base_dir = $_SERVER['DOCUMENT_ROOT'] . $dir_apps;
 
@@ -71,9 +70,6 @@ class ViewSrcPhtml
 
         ob_end_clean();
 
-//		var_dump($out2);
-        //$renderedView = ob_get_clean();
-        //return $renderedView;
         echo $out2;
     }
 }

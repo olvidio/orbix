@@ -2,8 +2,8 @@
 
 // Crea los objetos de uso global **********************************************
 use core\ConfigGlobal;
+use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
-use src\shared\ViewSrcPhtml;
 use web\Hash;
 use web\Lista;
 
@@ -73,7 +73,7 @@ $a_campos = [
     'oListaDocsCasa' => $oListaDocsCasa,
 ];
 
-$oView = new ViewSrcPhtml('frontend\inventario\controller');
+$oView = new ViewNewPhtml('frontend\inventario\controller');
 $oView->renderizar('equipajes_doc_casa.phtml', $a_campos);
 echo "<div id='grupos'>";
 
@@ -108,7 +108,7 @@ foreach ($a_egm as $aEgm) {
         'oHashGrupo' => $oHashGrupo,
     ];
 
-    $oView = new ViewSrcPhtml('frontend\inventario\controller');
+    $oView = new ViewNewPhtml('frontend\inventario\controller');
     $oView->renderizar('equipajes_doc_maleta.phtml', $a_campos);
 }
 echo "</div>"; // id='grupos'

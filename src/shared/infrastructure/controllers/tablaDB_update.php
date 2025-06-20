@@ -1,7 +1,8 @@
 <?php
 
 // INICIO Cabecera global de URL de controlador *********************************
-use src\shared\DatosUpdateRepo;
+use src\shared\domain\DatosUpdateRepo;
+use web\ContestarJson;
 
 require_once("apps/core/global_header.inc");
 // Archivos requeridos por esta url **********************************************
@@ -62,7 +63,8 @@ switch ($Qmod) {
         break;
 }
 
+$error_txt = '';
 if ($rta !== true) {
-    $msg_err = (string)$rta;
-    echo $msg_err;
+    $error_txt = (string)$rta;
 }
+ContestarJson::enviar($error_txt, 'ok');

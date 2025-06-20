@@ -3,10 +3,10 @@
 use core\ConfigDB;
 use core\DBConnection;
 use core\ValueObject\Uuid;
+use frontend\shared\model\ViewNewPhtml;
 use shared\domain\ColaMailId;
 use shared\domain\entity\ColaMail;
 use shared\domain\repositories\ColaMailRepository;
-use src\shared\ViewSrcPhtml;
 use src\usuarios\domain\entity\Usuario;
 
 /**
@@ -125,5 +125,5 @@ $a_campos = [
 ];
 
 // Renderizar la vista
-$oView = new ViewSrcPhtml('frontend\usuarios\view');
+$oView = new ViewNewPhtml('frontend\usuarios\view');
 $oView->renderizar('recuperar_2fa.phtml', $a_campos);

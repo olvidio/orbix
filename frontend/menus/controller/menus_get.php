@@ -1,9 +1,9 @@
 <?php
 
 use core\ConfigGlobal;
+use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use src\menus\application\repositories\MenuDbRepository;
-use src\shared\ViewSrcPhtml;
 use src\usuarios\application\repositories\RoleRepository;
 use src\usuarios\application\repositories\UsuarioRepository;
 use web\Desplegable;
@@ -168,7 +168,7 @@ if (!empty($Qid_menu) || !empty($Qnuevo)) {
         'oHash6' => $oHash6,
     ];
 
-    $oView = new ViewSrcPhtml('frontend\menus\controller');
+    $oView = new ViewNewPhtml('frontend\menus\controller');
     $oView->renderizar('menus_get.phtml', $a_campos);
 } else {
     // para ver el listado de todos los menus de un grupo
@@ -193,6 +193,6 @@ if (!empty($Qid_menu) || !empty($Qnuevo)) {
         'oMenuDbs' => $oMenuDbs,
     ];
 
-    $oView = new ViewSrcPhtml('frontend\menus\controller');
+    $oView = new ViewNewPhtml('frontend\menus\controller');
     $oView->renderizar('menus_get_lista.phtml', $a_campos);
 }

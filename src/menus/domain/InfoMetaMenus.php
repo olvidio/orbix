@@ -6,7 +6,7 @@ namespace src\menus\domain;
 /* No vale el underscore en el nombre */
 
 use src\menus\application\repositories\MetaMenuRepository;
-use src\shared\DatosInfoRepo;
+use src\shared\domain\DatosInfoRepo;
 
 class InfoMetaMenus extends DatosInfoRepo
 {

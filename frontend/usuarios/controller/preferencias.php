@@ -2,8 +2,8 @@
 
 use cambios\model\entity\CambioUsuario;
 use core\ConfigGlobal;
+use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
-use src\shared\ViewSrcPhtml;
 use src\usuarios\application\repositories\LocalRepository;
 use web\Desplegable;
 use web\Hash;
@@ -124,5 +124,5 @@ $a_campos = [
     'url_2fa_settings' => $url_2fa_settings,
 ];
 
-$oView = new ViewSrcPhtml('frontend\usuarios\controller');
+$oView = new ViewNewPhtml('frontend\usuarios\controller');
 $oView->renderizar('preferencias.phtml', $a_campos);

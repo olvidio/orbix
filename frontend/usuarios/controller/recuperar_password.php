@@ -3,13 +3,12 @@
 use core\ConfigDB;
 use core\DBConnection;
 use core\ValueObject\Uuid;
+use frontend\shared\model\ViewNewPhtml;
 use permisos\model\MyCrypt;
 use shared\domain\ColaMailId;
 use shared\domain\entity\ColaMail;
 use shared\domain\repositories\ColaMailRepository;
-use frontend\shared\ViewPhtml;
 use src\usuarios\domain\entity\Usuario;
-use web\DateTimeLocal;
 
 /**
  * Página para recuperar la contraseña de un usuario.
@@ -168,5 +167,5 @@ $a_campos = [
 ];
 
 // Renderizar la vista
-$oView = new ViewPhtml('frontend\usuarios\view');
+$oView = new ViewNewPhtml('frontend\usuarios\view');
 $oView->renderizar('recuperar_password.phtml', $a_campos);

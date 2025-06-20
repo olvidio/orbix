@@ -1,6 +1,6 @@
 <?php
 
-namespace src\shared;
+namespace src\shared\domain;
 
 
 use function core\is_true;
@@ -82,14 +82,15 @@ class DatosTablaRepo
 						$.ajax({
 							url: $(this).attr('action'),
 							type: 'post',
-							data: $(this).serialize()})
-						.done(function (rta_txt) {
-							if (rta_txt !== '' && rta_txt !== '\\n') {
-								alert (\"$respuesta: \"+rta_txt);
-							} else { 
-								fnjs_actualizar(formulario);
-							}
-						});
+							data: $(this).serialize()},
+							)
+                        .done(function (json) {
+                            if (json.success !== true) {
+                                alert(\"$respuesta\" + ': ' + json.mensaje);
+                            } else {
+                                fnjs_actualizar(formulario);
+                            }
+                        });
 						return false;
 					});
 					$(formulario).trigger(\"submit\");
@@ -98,7 +99,7 @@ class DatosTablaRepo
 			}
 		}
 		fnjs_actualizar=function(formulario){
-			var campo = '<input type=\"hidden\" name=\"refresh\" value=1>';
+			var campo = '<input name=\"refresh\" type=\"hidden\" value=1>';
 			$(formulario).attr('action',\"$action_tabla\");
 			$(formulario).append(campo);
 			fnjs_enviar_formulario(formulario,'#main');
@@ -210,7 +211,7 @@ class DatosTablaRepo
     public function getAction_form()
     {
         if (!isset($this->action_form)) {
-            $this->action_form = "src/shared/repo_tabla_form.php";
+            $this->action_form = "frontend/shared/controller/tablaDB_formulario_ver.php";
         }
         return $this->action_form;
     }
@@ -218,7 +219,7 @@ class DatosTablaRepo
     public function getAction_update()
     {
         if (!isset($this->action_update)) {
-            $this->action_update = "src/shared/repo_tabla_update.php";
+            $this->action_update = "src/shared/infrastructure/controllers/tablaDB_update.php";
         }
         return $this->action_update;
     }
@@ -226,7 +227,7 @@ class DatosTablaRepo
     public function getAction_tabla()
     {
         if (!isset($this->action_tabla)) {
-            $this->action_tabla = "src/shared/repo_tabla_sql.php";
+            $this->action_tabla = "frontend/shared/controller/tablaDB_lista_ver.php";
         }
         return $this->action_tabla;
     }

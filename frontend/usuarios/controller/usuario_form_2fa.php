@@ -7,8 +7,8 @@ use Endroid\QrCode\Encoding\Encoding;
 use Endroid\QrCode\ErrorCorrectionLevel;
 use Endroid\QrCode\RoundBlockSizeMode;
 use Endroid\QrCode\Writer\PngWriter;
+use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
-use src\shared\ViewSrcPhtml;
 use web\Hash;
 
 /**
@@ -129,7 +129,7 @@ $a_campos = [
     'go_to' => $go_to,
 ];
 
-$oView = new ViewSrcPhtml('frontend\usuarios\controller');
+$oView = new ViewNewPhtml('frontend\usuarios\controller');
 $oView->renderizar('usuario_form_2fa.phtml', $a_campos);
 
 /**

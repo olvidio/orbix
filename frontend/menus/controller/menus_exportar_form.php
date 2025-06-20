@@ -1,7 +1,7 @@
 <?php
 
 use core\ConfigGlobal;
-use src\shared\ViewSrcPhtml;
+use frontend\shared\model\ViewNewPhtml;
 use web\Hash;
 
 // Crea los objetos de uso global **********************************************
@@ -19,5 +19,5 @@ $a_campos = ['oPosicion' => $oPosicion,
     'oHash' => $oHash,
 ];
 
-$oView = new ViewSrcPhtml('frontend\menus\controller');
+$oView = new ViewNewPhtml('frontend\menus\controller');
 $oView->renderizar('menus_exportar_form.phtml', $a_campos);

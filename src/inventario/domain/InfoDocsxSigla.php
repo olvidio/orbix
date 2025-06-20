@@ -6,7 +6,7 @@ use core\ConfigGlobal;
 use src\inventario\application\repositories\DocumentoRepository;
 use src\inventario\application\repositories\LugarRepository;
 use src\inventario\application\repositories\TipoDocRepository;
-use src\shared\DatosInfoRepo;
+use src\shared\domain\DatosInfoRepo;
 use web\Desplegable;
 use web\Hash;
 

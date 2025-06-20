@@ -1,6 +1,6 @@
 <?php
 
-namespace src\shared;
+namespace src\shared\domain;
 
 use web\DateTimeLocal;
 use web\NullDateTimeLocal;

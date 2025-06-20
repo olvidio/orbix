@@ -1,8 +1,8 @@
 <?php
 
 use core\ConfigGlobal;
+use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
-use src\shared\ViewSrcPhtml;
 use web\Hash;
 use web\Lista;
 
@@ -63,5 +63,5 @@ $a_campos = [
     'oTabla' => $oTabla,
 ];
 
-$oView = new ViewSrcPhtml('frontend\usuarios\controller');
+$oView = new ViewNewPhtml('frontend\usuarios\controller');
 $oView->renderizar('perm_activ_lista.phtml', $a_campos);

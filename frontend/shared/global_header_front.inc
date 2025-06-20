@@ -46,4 +46,3 @@ $oValidator = new Hash();
 echo $oValidator->validatePost($_POST);
 
 $oPosicion = new Posicion($_SERVER['PHP_SELF'], $_POST);
-

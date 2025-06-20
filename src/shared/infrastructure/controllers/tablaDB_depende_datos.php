@@ -1,5 +1,7 @@
 <?php
 // INICIO Cabecera global de URL de controlador *********************************
+use web\ContestarJson;
+
 require_once("apps/core/global_header.inc");
 // Archivos requeridos por esta url **********************************************
 
@@ -19,4 +21,10 @@ $opcion_sel = (string)filter_input(INPUT_POST, 'opcion_sel');
 $obj = urldecode($Qclase_info);
 $oDatos = new $obj();
 
-echo $oDatos->getOpcionesParaCondicion($QpKeyRepository,$Qvalor_depende,$opcion_sel);
+$data['aOpciones'] = $oDatos->getOpcionesParaCondicion($QpKeyRepository,$Qvalor_depende,$opcion_sel);
+
+$error_txt = '';
+
+// envía una Response
+$jsondata = ContestarJson::respuestaPhp($error_txt, $data);
+ContestarJson::send($jsondata);

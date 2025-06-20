@@ -1,8 +1,8 @@
 <?php
 
 use core\ConfigGlobal;
+use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
-use src\shared\ViewSrcPhtml;
 use src\usuarios\domain\entity\Role;
 use web\Desplegable;
 use web\Hash;
@@ -124,5 +124,5 @@ $a_campos = [
     'oTabla' => $oTabla,
 ];
 
-$oView = new ViewSrcPhtml('frontend\usuarios\controller');
+$oView = new ViewNewPhtml('frontend\usuarios\controller');
 $oView->renderizar('role_form.phtml', $a_campos);

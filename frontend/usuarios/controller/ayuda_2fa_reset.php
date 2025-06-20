@@ -2,8 +2,8 @@
 
 use core\ConfigDB;
 use core\DBConnection;
+use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\OfuscarEmail;
-use frontend\shared\ViewPhtml;
 use src\usuarios\domain\entity\Usuario;
 
 // vengo por $GET
@@ -83,5 +83,5 @@ $a_campos = [
     'url_index' => $Qurl_index,
 ];
 
-$oView = new ViewPhtml('frontend\usuarios\view');
+$oView = new ViewNewPhtml('frontend\usuarios\view');
 $oView->renderizar('ayuda_2fa_reset.phtml', $a_campos);

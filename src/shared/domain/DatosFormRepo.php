@@ -1,6 +1,6 @@
 <?php
 
-namespace src\shared;
+namespace src\shared\domain;
 
 use core\ConfigGlobal;
 use web\Desplegable;
@@ -20,7 +20,6 @@ class DatosFormRepo
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
 
-    private $formulario;
     private $camposForm;
     private $camposNo;
 
@@ -28,11 +27,11 @@ class DatosFormRepo
     private array $aOpciones_txt;
     private $mod = '';
 
-    public function getFormulario()
+    public function getFormularioData()
     {
         $camposForm = '';
         $camposNo = '';
-        $formulario = '';
+        $formData = [];
 
         $oFicha = $this->getFicha();
         foreach ($oFicha->getDatosCampos() as $oDatosCampo) {
@@ -47,36 +46,109 @@ class DatosFormRepo
             }
             $var_1 = $oDatosCampo->getArgument();
             $eti = $oDatosCampo->getEtiqueta();
-            switch ($oDatosCampo->getTipo()) {
+            $tipo = $oDatosCampo->getTipo();
+
+            $field = [
+                'tipo' => $tipo,
+                'nombre' => $nom_camp,
+                'etiqueta' => $eti,
+                'valor' => $valor_camp,
+                'argument' => $var_1
+            ];
+
+            switch ($tipo) {
+                case "ver":
+                    if ($this->mod !== 'nuevo') {
+                        // No additional data needed for "ver" type
+                    }
+                    $camposNo .= empty($camposNo) ? $nom_camp : '!' . $nom_camp;
+                    break;
+                case "decimal":
+                case "texto":
+                    $field['size'] = $var_1;
+                    break;
+                case "fecha":
+                    $locale_us = ConfigGlobal::is_locale_us();
+                    // el valor_camp debe ser un objeto DateTimeLocal
+                    $field['valor_txt'] = $valor_camp->getFromLocal();
+                    $field['locale_us'] = $locale_us;
+                    break;
+                case "opciones":
+                    $acc = $oDatosCampo->getAccion();
+                    $var_3 = $oDatosCampo->getArgument3();
+
+                    $RepoRelacionado = new $var_1();
+                    $a_opciones = $RepoRelacionado->$var_3();
+
+                    $field['accion'] = $acc;
+                    $field['opciones'] = $a_opciones;
+                    $field['aOpcion_no'] = $this->aOpcion_no ?? [];
+                    break;
+                case "depende":
+                    $field['opciones_txt'] = $this->aOpciones_txt[$nom_camp] ?? '';
+                    break;
+                case "array":
+                    $aOpciones = $oDatosCampo->getLista();
+                    $oDesplegable = new Desplegable($nom_camp, $aOpciones, $valor_camp, true);
+                    $field['options_html'] = $oDesplegable->options();
+                    break;
+                case "check":
+                    $field['checked'] = is_true($valor_camp);
+                    //los check a falso no se pueden comprobar.
+                    $camposNo .= empty($camposNo) ? $nom_camp : '!' . $nom_camp;
+                    break;
+            }
+
+            $formData[] = $field;
+        }
+        $this->camposForm = $camposForm;
+        $this->camposNo = $camposNo;
+
+        return [
+            'fields' => $formData,
+            'camposForm' => $camposForm,
+            'camposNo' => $camposNo
+        ];
+    }
+
+    public function getFormulario()
+    {
+        // For backward compatibility, generate HTML from the data
+        $formData = $this->getFormularioData();
+        $formulario = '';
+
+        foreach ($formData['fields'] as $field) {
+            $tipo = $field['tipo'];
+            $nom_camp = $field['nombre'];
+            $eti = $field['etiqueta'];
+            $valor_camp = $field['valor'];
+
+            switch ($tipo) {
                 case "ver":
                     if ($this->mod !== 'nuevo') {
                         $formulario .= "<tr><td class=etiqueta>" . ucfirst($eti) . "</td>";
                         $formulario .= "<td class=contenido>" . htmlspecialchars($valor_camp ?? '') . "</td></tr>";
                         $formulario .= "<input type='hidden' name='$nom_camp' value=\"" . htmlspecialchars($valor_camp ?? '') . "\"></td></tr>";
                     }
-                    $camposNo .= empty($camposNo) ? $nom_camp : '!' . $nom_camp;
                     break;
                 case "decimal":
                 case "texto":
                     $formulario .= "<tr><td class=etiqueta>" . ucfirst($eti) . "</td>";
-                    $size = $var_1;
+                    $size = $field['size'];
                     $formulario .= "<td class=contenido><input type='text' name='$nom_camp' value=\"" . htmlspecialchars($valor_camp ?? '') . "\" size='$size'></td></tr>";
                     break;
                 case "fecha":
                     $formulario .= "<tr><td class=etiqueta>" . ucfirst($eti) . "</td>";
-                    $locale_us = ConfigGlobal::is_locale_us();
-                    // el valor_camp debe ser un objeto DateTimeLocal
-                    $valor_camp_txt = $valor_camp->getFromLocal();
+                    $locale_us = $field['locale_us'];
+                    $valor_camp_txt = $field['valor_txt'];
                     $formulario .= "<td class=contenido><input class=\"fecha\" type=\"text\" id=\"$nom_camp\" name=\"$nom_camp\" value=\"$valor_camp_txt\" 
 									onchange='fnjs_comprobar_fecha(\"#$nom_camp\",$locale_us)'>";
                     break;
                 case "opciones":
                     $formulario .= "<tr><td class=etiqueta>" . ucfirst($eti) . "</td>";
-                    $acc = $oDatosCampo->getAccion();
-                    $var_3 = $oDatosCampo->getArgument3();
-
-                    $RepoRelacionado = new $var_1();
-                    $a_opciones = $RepoRelacionado->$var_3();
+                    $acc = $field['accion'];
+                    $a_opciones = $field['opciones'];
+                    $aOpcion_no = $field['aOpcion_no'];
 
                     $accion = empty($acc) ? '' : "onchange=\"fnjs_actualizar_depende('$nom_camp','$acc');\" ";
                     $formulario .= "<td class=contenido><select id=\"$nom_camp\" name=\"$nom_camp\" $accion>";
@@ -87,7 +159,7 @@ class DatosFormRepo
                         } else {
                             $sel = '';
                         }
-                        if (!empty($this->aOpcion_no) && is_array($this->aOpcion_no) && in_array($key, $this->aOpcion_no)) continue;
+                        if (!empty($aOpcion_no) && is_array($aOpcion_no) && in_array($key, $aOpcion_no)) continue;
                         $formulario .= "<option value=\"$key\" $sel>$val</option>";
                     }
                     $formulario .= "</select></td></tr>";
@@ -95,35 +167,22 @@ class DatosFormRepo
                 case "depende":
                     $formulario .= "<tr><td class=etiqueta>" . ucfirst($eti) . "</td>";
                     $formulario .= "<td class=contenido><select id=\"$nom_camp\" name=\"$nom_camp\">";
-                    $formulario .= $this->aOpciones_txt[$nom_camp];  // solo útil en el caso de nuevo. En el resto se actualiza desde el campo del que depende.
+                    $formulario .= $field['opciones_txt'];  // solo útil en el caso de nuevo. En el resto se actualiza desde el campo del que depende.
                     $formulario .= "</select></td></tr>";
                     break;
                 case "array":
                     $formulario .= "<tr><td class=etiqueta>" . ucfirst($eti) . "</td>";
-//					$oDespl = new Desplegable();
-//					$oDespl->setOpciones($var_1);
-//					$oDespl->setOpcion_sel($valor_camp);
-                    $aOpciones = $oDatosCampo->getLista();
-                    $oDesplegable = new Desplegable($nom_camp, $aOpciones, $valor_camp, true);
                     $formulario .= "<td class=contenido><select name=\"$nom_camp\">";
-                    $formulario .= $oDesplegable->options();
+                    $formulario .= $field['options_html'];
                     $formulario .= "</select></td></tr>";
                     break;
                 case "check":
                     $formulario .= "<tr><td class=etiqueta>" . ucfirst($eti) . "</td>";
-                    if (is_true($valor_camp)) {
-                        $chk = "checked";
-                    } else {
-                        $chk = "";
-                    }
+                    $chk = $field['checked'] ? "checked" : "";
                     $formulario .= "<td class=contenido><input type='checkbox' name='$nom_camp' $chk>";
-                    //los check a falso no se pueden comprobar.
-                    $camposNo .= empty($camposNo) ? $nom_camp : '!' . $nom_camp;
                     break;
             }
         }
-        $this->camposForm = $camposForm;
-        $this->camposNo = $camposNo;
 
         return $formulario;
     }

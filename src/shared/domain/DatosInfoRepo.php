@@ -1,6 +1,6 @@
 <?php
 
-namespace src\shared;
+namespace src\shared\domain;
 
 /* No vale el underscore en el nombre */
 
@@ -36,6 +36,11 @@ abstract class DatosInfoRepo
     public function getBuscar_namespace()
     {
         return '';
+    }
+
+    public function addCampos()
+    {
+        return [];
     }
 
     public function getMetodoGestor()

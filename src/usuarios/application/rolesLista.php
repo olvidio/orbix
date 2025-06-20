@@ -69,7 +69,7 @@ class rolesLista
             $role = $oRole->getRoleAsString();
             $isSf = $oRole->isSf();
             $isSv = $oRole->isSv();
-            $pau = $oRole->getPau();
+            $pau = $oRole->getPauAsString();
             $dmz = $oRole->isDmz();
 
             if (($permiso != 1) && (($miSfsv == 2 && !$isSf) || ($miSfsv == 1 && !$isSv))) {

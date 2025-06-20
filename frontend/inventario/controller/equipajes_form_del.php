@@ -1,8 +1,8 @@
 <?php
 
 use core\ConfigGlobal;
+use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
-use src\shared\ViewSrcPhtml;
 use web\Hash;
 use web\Lista;
 
@@ -58,5 +58,5 @@ $a_campos = [
     'Qid_grupo' => $Qid_grupo,
 ];
 
-$oView = new ViewSrcPhtml('frontend\inventario\controller');
+$oView = new ViewNewPhtml('frontend\inventario\controller');
 $oView->renderizar('equipajes_form_del.phtml', $a_campos);

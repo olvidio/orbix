@@ -4,16 +4,15 @@ namespace src\shared;
 
 // INICIO Cabecera global de URL de controlador *********************************
 use core\ConfigGlobal;
+use frontend\shared\model\ViewNewPhtml;
+use frontend\shared\PostRequest;
 use web\Hash;
 use web\Lista;
 use web\Posicion;
 
-require_once("apps/core/global_header.inc");
 // Archivos requeridos por esta url **********************************************
-
+require_once("frontend/shared/global_header_front.inc");
 // Crea los objetos de uso global **********************************************
-require_once("apps/core/global_object.inc");
-// FIN de  Cabecera global de URL de controlador ********************************
 
 $Qrefresh = (integer)filter_input(INPUT_POST, 'refresh');
 $oPosicion->recordar($Qrefresh);
@@ -66,19 +65,79 @@ $oInfoClase = new $obj();
 $Qpau = (string)filter_input(INPUT_POST, 'pau');
 $Qid_pau = (integer)filter_input(INPUT_POST, 'id_pau');
 $Qobj_pau = (string)filter_input(INPUT_POST, 'obj_pau');
-$oInfoClase->setPau($Qpau);
-$oInfoClase->setId_pau($Qid_pau);
-$oInfoClase->setObj_pau($Qobj_pau);
 
-$oDatosTabla = new DatosTablaRepo();
-$oDatosTabla->setExplicacion_txt($oInfoClase->getTxtExplicacion());
-$oDatosTabla->setEliminar_txt($oInfoClase->getTxtEliminar());
+
+if (empty($Qk_buscar)) {
+    $url_lista_buscar_backend = Hash::cmd(ConfigGlobal::getWeb()
+        . '/src/shared/infrastructure/controllers/tablaDB_buscar_datos.php'
+    );
+
+    $a_campos = [
+        'clase_info' => $Qclase_info,
+        'k_buscar' => $Qk_buscar,
+        'pau' => $Qpau,
+        'id_pau' => $Qid_pau,
+        'obj_pau' => $Qobj_pau,
+    ];
+    $oHash = new Hash();
+    $oHash->setUrl($url_lista_buscar_backend);
+    $oHash->setArrayCamposHidden($a_campos);
+    $hash_params = $oHash->getArrayCampos();
+
+    $data = PostRequest::getData($url_lista_buscar_backend, $hash_params);
+
+    $a_campos_buscar = $data['a_campos'];
+    $datos_buscar = empty($data['datos_buscar'])? '' : $data['datos_buscar'];
+    $namespace = empty($data['namespace'])? 'frontend\shared\view' : $data['namespace'];
+
+    $oHashBuscar = new Hash();
+    $oHashBuscar->setCamposForm('k_buscar');
+    $a_camposHiddenBuscar = array(
+        'clase_info' => $Qclase_info,
+        'aSerieBuscar' => $QaSerieBuscar,
+        'id_pau' => $Qid_pau,
+    );
+    $oHashBuscar->setArraycamposHidden($a_camposHiddenBuscar);
+    $a_campos_buscar['oHashBuscar'] = $oHashBuscar;
+
+    if (!empty($datos_buscar)) {
+        $oView = new ViewNewPhtml($namespace);
+        $oView->renderizar($datos_buscar, $a_campos_buscar);
+    } else {
+        $oView = new ViewNewPhtml('frontend\shared\view');
+        $oView->renderizar('tablaDB_busqueda.phtml', $a_campos_buscar);
+    }
+}
+
+$url_lista_backend = Hash::cmd(ConfigGlobal::getWeb()
+    . '/src/shared/infrastructure/controllers/tablaDB_lista_datos.php'
+);
+
+$a_campos = [
+    'clase_info' => $Qclase_info,
+    'k_buscar' => $Qk_buscar,
+    'pau' => $Qpau,
+    'id_pau' => $Qid_pau,
+    'obj_pau' => $Qobj_pau,
+];
+$oHash = new Hash();
+$oHash->setUrl($url_lista_backend);
+$oHash->setArrayCamposHidden($a_campos);
+$hash_params = $oHash->getArrayCampos();
+
+$data = PostRequest::getData($url_lista_backend, $hash_params);
+
+$txt_explicacion = $data['explicacion'];
+$txt_titulo = $data['titulo'];
+$script = $data['script'];
+$id_tabla = $data['id_tabla'];
+$a_cabeceras = $data['a_cabeceras'];
+$a_botones = $data['a_botones'];
+$a_valores = $data['a_valores'];
+
 if (!empty($Qk_buscar)) {
     $oInfoClase->setK_buscar($Qk_buscar);
 }
-$oDatosTabla->setColeccion($oInfoClase->getColeccion());
-$oDatosTabla->setId_sel($Qid_sel);
-$oDatosTabla->setScroll_id($Qscroll_id);
 
 $oHashBuscar = new Hash();
 $oHashBuscar->setCamposForm('k_buscar');
@@ -103,49 +162,20 @@ $a_camposHiddenSelect = array(
 $oHashSelect->setArraycamposHidden($a_camposHiddenSelect);
 
 $oTabla = new Lista();
-// para el id_tabla, convierto los posibles '/' y '\' en '_' y también quito '.php'
-//$oTabla->setId_tabla('datos_sql'.  $this->id_dossier);
-$id_tabla = str_replace(array('/', '\\', '.php'), array('_', '_', ''), $Qclase_info);
-$id_tabla = 'repo_tabla_sql_' . $id_tabla;
 $oTabla->setId_tabla($id_tabla);
-$oTabla->setCabeceras($oDatosTabla->getCabeceras());
-$oTabla->setBotones($oDatosTabla->getBotones());
-$oTabla->setDatos($oDatosTabla->getValores());
-
-$url = ConfigGlobal::getWeb() . "/src/shared/repo_tabla_sql.php";
-
-if (empty($Qk_buscar)) {
-    $a_campos = [
-        'oPosicion' => $oPosicion,
-        'script' => $oDatosTabla->getScript(),
-        'url' => $url,
-        'oHashBuscar' => $oHashBuscar,
-        'txt_buscar' => $oInfoClase->getTxtBuscar(),
-        'k_buscar' => $Qk_buscar,
-    ];
-
-    if (!empty($oInfoClase->getBuscar_view())) {
-        $datos_buscar = $oInfoClase->getBuscar_view();
-        $namespace = $oInfoClase->getBuscar_namespace();
-        $a_campos = $oInfoClase->addCampos($a_campos);
-        //include(ConfigGlobal::$directorio . '/' . $datos_buscar);
-        $oView = new ViewSrcPhtml($namespace);
-        $oView->renderizar($datos_buscar, $a_campos);
-    } else {
-        $oView = new ViewSrcPhtml('src\shared\view');
-        $oView->renderizar('repo_tabla_busqueda.phtml', $a_campos);
-    }
-}
+$oTabla->setCabeceras($a_cabeceras);
+$oTabla->setBotones($a_botones);
+$oTabla->setDatos($a_valores);
 
 $a_campos2 = [
     'oPosicion' => $oPosicion,
-    'script' => $oDatosTabla->getScript(),
-    'titulo' => $oInfoClase->getTxtTitulo(),
-    'explicacion' => $oInfoClase->getTxtExplicacion(),
+    'script' => $script,
+    'titulo' => $txt_titulo,
+    'explicacion' => $txt_explicacion,
     'oHashSelect' => $oHashSelect,
     'oTabla' => $oTabla,
     'permiso' => $Qpermiso,
 ];
 
-$oView = new ViewSrcPhtml('src\shared\view');
-$oView->renderizar('repo_tabla_sql.phtml', $a_campos2);
+$oView = new ViewNewPhtml('frontend\shared\view');
+$oView->renderizar('tablaDB_lista_ver.phtml', $a_campos2);

@@ -1,8 +1,8 @@
 <?php
 
 use core\ConfigGlobal;
+use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
-use src\shared\ViewSrcPhtml;
 use web\Desplegable;
 use web\Hash;
 
@@ -34,5 +34,5 @@ $a_campos = ['oPosicion' => $oPosicion,
     'oDesplTemplates' => $oDesplTemplates,
 ];
 
-$oView = new ViewSrcPhtml('frontend\menus\controller');
+$oView = new ViewNewPhtml('frontend\menus\controller');
 $oView->renderizar('menus_importar_form.phtml', $a_campos);
