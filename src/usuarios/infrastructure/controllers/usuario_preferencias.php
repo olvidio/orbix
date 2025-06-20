@@ -101,8 +101,8 @@ if ($oPreferencia !== null) {
 } else {
     $tipo_apellidos = '';
 }
-$tipo_apellidos_nom_ap = ($tipo_apellidos === "nom_ap") ? "selected" : '';
-$tipo_apellidos_ap_nom = ($tipo_apellidos === "ap_nom") ? "selected" : '';
+$tipo_apellidos_nom_ap = ($tipo_apellidos->value() === "nom_ap") ? "selected" : '';
+$tipo_apellidos_ap_nom = ($tipo_apellidos->value() === "ap_nom") ? "selected" : '';
 
 // ----------- Idioma -------------------
 //Tengo la variable $idioma en ConfigGlobal, pero vuelvo a consultarla
@@ -117,7 +117,7 @@ if ($oPreferencia !== null) {
 // ----------- Zona Horaria -------------------
 $oPreferencia = $preferenciaRepository->findById($id_usuario, 'zona_horaria');
 if ($oPreferencia !== null) {
-    $preferencia = $oPreferencia->getPreferencia();
+    $preferencia = $oPreferencia->getPreferencia()->value();
     [$zona_horaria] = explode('#', $preferencia);
 } else {
     $zona_horaria = '';

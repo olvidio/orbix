@@ -36,13 +36,11 @@ $hash_params = $oHash->getArrayCampos();
 $data = PostRequest::getData($url_usuario_form_backend, $hash_params);
 
 $usuario = $data['usuario'];
-$pass = $data['pass'];
 $email = $data['email'];
 
 $oHash = new Hash();
 $oHash->setCamposForm('email');
 $a_camposHidden = array(
-    'pass' => $pass,
     'id_usuario' => $id_usuario,
     'quien' => 'usuario',
 );

@@ -155,7 +155,7 @@ if ($Qque === "slickGrid") {
         $oPreferencia->setId_usuario($id_usuario);
         $oPreferencia->setTipo(new TipoPreferencia('zona_horaria'));
     }
-    $oPreferencia->setPreferencia($zona_horaria_txt);
+    $oPreferencia->setPreferencia(new ValorPreferencia($zona_horaria_txt));
     if ($PreferenciaRepository->Guardar($oPreferencia) === false) {
         $error_txt .= _("hay un error, no se ha guardado");
         $error_txt .= "\n" . $PreferenciaRepository->getErrorTxt();
