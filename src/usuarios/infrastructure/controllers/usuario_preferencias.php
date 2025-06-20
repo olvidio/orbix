@@ -123,7 +123,7 @@ if ($oPreferencia !== null) {
     $zona_horaria = '';
 }
 
-$data['layout'] = $layout;
+$data['layout'] = $layout->value();
 $data['inicio'] = $inicio;
 $data['oficina'] = $oficina;
 $data['oficinas_posibles'] = $oficinas_posibles;
