@@ -2,51 +2,54 @@
     /* ===========================================
        VARIABLES CSS - SISTEMA DE COLORES
        =========================================== */
+
 :root {
     /* Colores principales del tema */
-    --primary-color: #3498db;
-    --secondary-color: #f39c12;
-    --accent-color: #e74c3c;
+    --primary-color: <?= $GLOBALS['medio'] ?>;
+    --secondary-color: <?= $GLOBALS['claro'] ?>;
+    --accent-color: <?= $GLOBALS['oscuro'] ?>;
 
     /* Sidebar - Menú lateral */
-    --sidebar-bg-start: #2c3e50;
-    --sidebar-bg-end: #34495e;
+    --sidebar-bg-start: <?= $GLOBALS['muy_oscuro1'] ?>; /* Using oscuro for a darker start */
+    --sidebar-bg-end: <?= $GLOBALS['muy_oscuro2'] ?>; /* Using medio for a slightly lighter end */
     --sidebar-header-bg: rgba(0, 0, 0, 0.2);
-    --sidebar-text-color: #ecf0f1;
+    --sidebar-text-color: #ecf0f1; /* Keeping white/off-white for contrast */
+    --sidebar-text-active-color:  <?= $GLOBALS['lineas'] ?>;
     --sidebar-border-color: rgba(255, 255, 255, 0.1);
     --sidebar-hover-bg: rgba(255, 255, 255, 0.1);
-    --sidebar-active-bg: rgba(52, 152, 219, 0.2);
+    --sidebar-active-bg: rgba(52, 152, 219, 0.2); /* Consider using a dynamic color here if a specific "active" color is desired based on the theme */
     --sidebar-shadow: rgba(0, 0, 0, 0.1);
 
     /* Menú horizontal superior */
-    --top-menu-bg-start: #667eea;
-    --top-menu-bg-end: #764ba2;
+    --top-menu-bg-start: <?= $GLOBALS['oscuro'] ?>; /* Using a tono variable for a gradient start */
+    --top-menu-bg-end: <?= $GLOBALS['medio'] ?>; /* Using a darker tono for a gradient end */
     --top-menu-text-color: white;
     --top-menu-hover-bg: rgba(255, 255, 255, 0.1);
-    --top-menu-active-bg: rgba(255, 255, 255, 0.2);
-    --top-menu-border-hover: #f39c12;
-    --top-menu-shadow: rgba(0, 0, 0, 0.1);
+    /*--top-menu-active-bg: rgba(255, 255, 255, 0.2);*/
+    --top-menu-active-bg: rgba(255, 255, 255, 0.3);
+    --top-menu-border-hover: <?= $GLOBALS['medio'] ?>; /* Using medio for hover border */
+    --top-menu-shadow: rgba(0, 0, 0, 0.2);
 
     /* Dropdowns - Submenús */
     --dropdown-bg: white;
-    --dropdown-text-color: #5c7fa5;
-    --dropdown-hover-bg: #c6d2d8;
-    --dropdown-border-hover: #3498db;
+    --dropdown-text-color: <?= $GLOBALS['oscuro'] ?>; /* Using oscuro for dropdown text */
+    --dropdown-hover-bg: <?= $GLOBALS['tono1'] ?>; /* Using a light tono for hover */
+    --dropdown-border-hover: <?= $GLOBALS['medio'] ?>; /* Using medio for dropdown border hover */
     --dropdown-shadow: rgba(0, 0, 0, 0.15);
-    --submenu-arrow-color: #000000;
-    --submenu-arrow-color-white: #ffffff;
+    --submenu-arrow-color-white: #FFFFFF;
+    --submenu-arrow-color: <?= $GLOBALS['oscuro'] ?>;
 
     /* Contenido principal */
-    --content-bg: beige;
+    --content-bg: <?= $GLOBALS['fondo_claro'] ?>; /* Using fondo_claro from colores.php */
     --content-section-bg: white;
-    --content-title-color: #2c3e50;
-    --content-text-color: #666;
+    --content-title-color: <?= $GLOBALS['oscuro'] ?>; /* Using oscuro for content titles */
+    --content-text-color: <?= $GLOBALS['letras'] ?>; /* Using letras from colores.php */
     --content-shadow: rgba(0, 0, 0, 0.1);
 
     /* Botón móvil */
-    --mobile-btn-bg: #3498db;
+    --mobile-btn-bg: <?= $GLOBALS['medio'] ?>;
     --mobile-btn-color: white;
-    --mobile-btn-shadow: rgba(52, 152, 219, 0.3);
+    --mobile-btn-shadow: rgba(52, 152, 219, 0.3); /* This could also be dynamic based on $GLOBALS['medio'] */
 
     /* Overlay */
     --overlay-bg: rgba(0, 0, 0, 0.5);
@@ -56,14 +59,35 @@
     --mobile-dropdown-bg: rgba(255, 255, 255, 0.1);
 }
 
+
 /* ===========================================
    ESTILOS BASE
    =========================================== */
-* {
+/* {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
+
+ */
+
+.top-menu * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.mobile-toggle * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+.sidebar * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
 
 body.otro {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -152,7 +176,8 @@ body.otro {
 .group-menu a.active {
     background-color: var(--sidebar-active-bg);
     border-left-color: var(--primary-color);
-    color: var(--primary-color);
+    color: var(--sidebar-text-active-color);
+
 }
 
 /* ===========================================

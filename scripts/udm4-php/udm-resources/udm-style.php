@@ -123,7 +123,7 @@ $um['t']=array('margin-left:','padding-top:','@media screen,projection{','margin
 $j=0;$umr=array();
 $umad=($um['orientation'][1]=='right')?'left':'right';
 $umdra=($umdir=='right');
-$umr[$j++]='.udm,.udm li,.udm ul{margin:0;padding:0;list-style-type:none;}';
+$umr[$j++]='.udm,.udm li,.udm ul{margin:0;padding:0;list-style-type:none; border-left-style: ridge}';
 if($umdra)
 {
 if($um['orientation'][0]=='horizontal'&&$um['orientation'][3]=='relative'){$umr[$j++]='* html .udm{left:100%;left:expression(this.offsetWidth);left/**/:0 !important;}';}

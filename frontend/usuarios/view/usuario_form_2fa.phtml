@@ -113,24 +113,18 @@ $msg_2fa = $msg_2fa ?? '';
         });
     }
 
+    updateConfigSection = function () {
+        if ($('#enable_2fa').is(':checked')) {
+            $('#config_2fa_section').show();
+        } else {
+            $('#config_2fa_section').hide();
+        }
+    }
     // Mostrar/ocultar la sección de configuración según el estado del checkbox
     //window.onload(function() {
     document.addEventListener("DOMContentLoaded", function (event) {
-        function updateConfigSection() {
-            if ($('#enable_2fa').is(':checked')) {
-                $('#config_2fa_section').show();
-            } else {
-                $('#config_2fa_section').hide();
-            }
-        }
-
         // Inicializar
         updateConfigSection();
-
-        // Actualizar cuando cambie el checkbox
-        $('#enable_2fa').change(function () {
-            updateConfigSection();
-        });
     });
 </script>
 
@@ -147,11 +141,9 @@ $msg_2fa = $msg_2fa ?? '';
     <?php if ($oHashUpdate !== null): ?>
         <?= $oHashUpdate->getCamposHtml() ?>
     <?php endif; ?>
-    <input type="hidden" id="secret_2fa" name="secret_2fa" value="<?= $secret_2fa ?>">
-
     <div>
         <label>
-            <input type="checkbox" id="enable_2fa" name="enable_2fa" value="1" <?= $has_2fa ? 'checked' : '' ?>>
+            <input type="checkbox" id="enable_2fa" name="enable_2fa" value="1" onchange="updateConfigSection()" <?= $has_2fa ? 'checked' : '' ?>>
             <?= _("Activar autenticación de dos factores") ?>
         </label>
     </div>

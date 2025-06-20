@@ -379,7 +379,7 @@ echo $oLayout->renderHtml($htmlComponents, $renderParams);
         <div id="left_slide" class="left-slide">
             <span class=handle onClick="fnjs_ir_a('#ir_atras');"></span>
         </div>
-        <div id="main" refe="<?= $pag_ini ?>" >
+        <div class="main" id="main" refe="<?= $pag_ini ?>" >
             <?php echo $portada_html ?>
             <script>
                 $(function () {
