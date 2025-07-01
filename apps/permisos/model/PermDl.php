@@ -40,6 +40,7 @@ class PermDl extends XPermisos
         //$permission_users['actividades'] =  31735; //31735, // todos menos des(8) y vcsd(1024).
         $permission_users['calendario'] = 1 << 15; //32768,
         $permission_users['ctr'] = 1 << 16; //65536,
+        $permission_users['jefeZona'] = 1 << 17;
         $permission_users['sacd'] = 1 << 18;
         $permission_users['persona'] = 1 << 19;
         $permission_users['casa'] = 1 << 20;
