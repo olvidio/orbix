@@ -28,7 +28,7 @@ if (!isset($mod)) {
             if (json.success !== true) {
                 alert("<?= _("respuesta") ?>" + ': ' + json.mensaje);
             } else {
-                <?= $oPosicion->js_atras(); ?>
+                <?= $oPosicion->js_atras(1); ?>
             }
         });
     }

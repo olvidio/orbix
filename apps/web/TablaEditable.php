@@ -88,12 +88,6 @@ class TablaEditable
      */
     private $bColVis = true;
     /**
-     * bRecordar de la Lista
-     *
-     * @var boolean
-     */
-    private $bRecordar = true;
-    /**
      * supdateUrl de la Lista
      *
      * @var array
@@ -914,11 +908,6 @@ class TablaEditable
     public function setColVis($bColVis)
     {
         $this->bColVis = $bColVis;
-    }
-
-    public function setRecordar($bRecordar)
-    {
-        $this->bRecordar = $bRecordar;
     }
 
     public function getUpdateUrl()

@@ -2,7 +2,6 @@
 
 namespace Tests\integration\certificados;
 
-use certificados\domain\repositories\CertificadoRepository;
 use core\ConfigDB;
 use core\ConfigGlobal;
 use core\DBConnection;
@@ -12,8 +11,8 @@ use notas\model\entity\GestorPersonaNotaDlDB;
 use notas\model\entity\GestorPersonaNotaOtraRegionStgrDB;
 use notas\model\entity\Nota;
 use personas\model\entity\TrasladoDl;
+use src\certificados\application\repositories\CertificadoRepository;
 use Tests\factories\certificados\CertificadosFactory;
-use Tests\factories\notas\NotasFactory;
 use Tests\myTest;
 use ubis\model\entity\GestorDelegacion;
 

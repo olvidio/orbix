@@ -9,6 +9,8 @@ use web\Hash;
 require_once("frontend/shared/global_header_front.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
+$oPosicion->recordar();
+
 $Qclase_info = (string)filter_input(INPUT_POST, 'clase_info');
 $Qdatos_buscar = (string)filter_input(INPUT_POST, 'datos_buscar');
 $QaSerieBuscar = (string)filter_input(INPUT_POST, 'aSerieBuscar');
@@ -49,8 +51,6 @@ if (!empty($a_sel) && ($Qmod !== 'nuevo')) { //vengo de un checkbox (para el cas
     $Qs_pkey = '';
     $a_pkey = [];
 }
-
-$oPosicion->recordar();
 
 $web_depende = ConfigGlobal::getWeb() . "/src/shared/infrastructure/controllers/tablaDB_depende_datos.php";
 /* generar url go_to para volver a la tabla */

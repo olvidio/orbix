@@ -774,6 +774,7 @@ div.ventana z-index: 160;
         border-radius: 10px;
         box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
         max-width: 500px;
+        z-index: 1000;
     }
 
 	/*	### e43 ### */

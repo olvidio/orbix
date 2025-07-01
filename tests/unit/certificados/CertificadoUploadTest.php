@@ -2,16 +2,14 @@
 
 namespace Tests\unit\certificados;
 
-use certificados\domain\CertificadoUpload;
-use certificados\domain\entity\Certificado;
-use certificados\domain\repositories\CertificadoRepository;
 use core\ConfigDB;
 use core\ConfigGlobal;
 use core\DBConnection;
 use core\DBPropiedades;
 use Faker\Factory;
-use web\DateTimeLocal;
-use web\NullDateTimeLocal;
+use src\certificados\application\repositories\CertificadoRepository;
+use src\certificados\domain\CertificadoUpload;
+use src\certificados\domain\entity\Certificado;
 use Tests\factories\certificados\CertificadosFactory;
 use Tests\myTest;
 
@@ -50,7 +48,7 @@ class CertificadoUploadTest extends myTest
         $oDBdst = $this->setConexion('H-Hv');
         foreach ($this->cCertificados as $Certificado) {
             $CertificadoUpload = new CertificadoUpload();
-
+            $CertificadoUpload->setoDbl($oDBdst);
             // guardar uno nuevo
             $contenido_doc = $Certificado->getDocumento();
             $id_nom = $Certificado->getId_nom();
@@ -60,13 +58,13 @@ class CertificadoUploadTest extends myTest
             $oF_certificado = $Certificado->getF_certificado();
             $oF_enviado = $Certificado->getF_enviado();
             $destino = $Certificado->getDestino();
-            $CertificadoUpload::setoDbl($oDBdst);
-            $CertificadoDB = $CertificadoUpload::uploadNew($id_nom,$contenido_doc, $idioma,  $certificado, $firmado, $oF_certificado, $oF_enviado, $destino);
 
-            // cambiar le texto
+            $CertificadoDB = $CertificadoUpload->uploadNew($id_nom,$contenido_doc, $idioma,  $certificado, $firmado, $oF_certificado, $oF_enviado, $destino);
+
+            // cambiar el texto
             $contenido_doc_new = $faker->sentence(450);
-            $CertificadoUpload::setoDbl($oDBdst);
-            $CertificadoDB2 = $CertificadoUpload::uploadTxtFirmado($CertificadoDB->getId_item(), $contenido_doc_new);
+            // OJO! Al subir el texto firmado, automáticamente lo firma, por tanto NO hay que compararlo en assertEquals.
+            $CertificadoDB2 = $CertificadoUpload->uploadTxtFirmado($CertificadoDB->getId_item(), $contenido_doc_new);
 
             $this->assertInstanceOf(Certificado::class, $CertificadoDB2);
 
@@ -84,7 +82,9 @@ class CertificadoUploadTest extends myTest
             $this->assertEquals($CertificadoDB3->getDestino(), $Certificado->getDestino());
             $this->assertEquals($CertificadoDB3->getId_nom(), $Certificado->getId_nom());
             $this->assertEquals($CertificadoDB3->getIdioma(), $Certificado->getIdioma());
-            $this->assertEquals($CertificadoDB3->isFirmado(), $Certificado->isFirmado());
+
+            // borrar las pruebas
+            $CertificadoRepository->eliminar($CertificadoDB3);
         }
     }
 
@@ -93,6 +93,7 @@ class CertificadoUploadTest extends myTest
         $oDBdst = $this->setConexion('H-Hv');
         foreach ($this->cCertificados as $Certificado) {
             $CertificadoUpload = new CertificadoUpload();
+            $CertificadoUpload->setoDbl($oDBdst);
 
             $contenido_doc = $Certificado->getDocumento();
             $id_nom = $Certificado->getId_nom();
@@ -103,8 +104,7 @@ class CertificadoUploadTest extends myTest
             $oF_enviado = $Certificado->getF_enviado();
             $destino = $Certificado->getDestino();
 
-            $CertificadoUpload::setoDbl($oDBdst);
-            $CertificadoDB = $CertificadoUpload::uploadNew($id_nom,$contenido_doc, $idioma,  $certificado, $firmado, $oF_certificado, $oF_enviado, $destino);
+            $CertificadoDB = $CertificadoUpload->uploadNew($id_nom,$contenido_doc, $idioma,  $certificado, $firmado, $oF_certificado, $oF_enviado, $destino);
 
             $this->assertInstanceOf(Certificado::class, $CertificadoDB);
 
@@ -122,6 +122,9 @@ class CertificadoUploadTest extends myTest
             $this->assertEquals($CertificadoDB->getId_nom(), $CertificadoDB2->getId_nom());
             $this->assertEquals($CertificadoDB->getIdioma(), $CertificadoDB2->getIdioma());
             $this->assertEquals($CertificadoDB->isFirmado(), $CertificadoDB2->isFirmado());
+
+            // borrar las pruebas
+            $CertificadoRepository->eliminar($CertificadoDB);
         }
     }
 
