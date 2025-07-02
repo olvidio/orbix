@@ -127,10 +127,9 @@ class CopiarBDU
         $sqlTime = "SELECT apenom FROM $tabla WHERE identif = '1111';";
         $sth = $this->oDbl->prepare($sqlTime);
         $sth->execute();
-        if ($sth->rowCount() === 0) {
+        $fecha_iso = $sth->fetchColumn();
+        if ($fecha_iso === false) {
             $fecha_iso = (int)date('Y') - 5 . '0101'; // algo (5años para obligar a ejecutar la actualización)
-        } else {
-            $fecha_iso = $sth->fetchColumn();
         }
 
         $Fecha = DateTimeLocal::createFromFormat(DateTimeInterface::ATOM, $fecha_iso);
