@@ -216,7 +216,7 @@ class PgUsuarioRepository extends ClaseRepository implements UsuarioRepositoryIn
         } else {
             // INSERT
             $aDatos['id_usuario'] = $usuario->getId_usuario();
-            $campos = "(id_usuario,usuario,id_role,password,email,id_pau,nom_usuario,has_2fa,secret_2fa,cambio_password))";
+            $campos = "(id_usuario,usuario,id_role,password,email,id_pau,nom_usuario,has_2fa,secret_2fa,cambio_password)";
             $valores = "(:id_usuario,:usuario,:id_role,:password,:email,:id_pau,:nom_usuario,:has_2fa,:secret_2fa,:cambio_password)";
             if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === FALSE) {
                 $sClaveError = 'PgusuarioRepository.insertar.prepare';
