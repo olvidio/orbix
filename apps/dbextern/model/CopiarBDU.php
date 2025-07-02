@@ -128,6 +128,9 @@ class CopiarBDU
         $sth = $this->oDbl->prepare($sqlTime);
         $sth->execute();
         $fecha_iso = $sth->fetchColumn();
+        if ($fecha_iso === false) {
+            $fecha_iso = (int)date('Y') - 5 . '-01-01T00:00:00+00:00'; // algo (5años para obligar a ejecutar la actualización)
+        }
 
         $Fecha = DateTimeLocal::createFromFormat(DateTimeInterface::ATOM, $fecha_iso);
 
