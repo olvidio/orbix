@@ -105,10 +105,10 @@ class PostRequest
 
         if ($rta_json === null) {
             $msg = sprintf(_("No se obtiene respuesta de: %s"), $url);
-            exit ($msg);
+            return ['error' => $msg];
         }
         if (!$rta_json['success']) {
-            exit ($rta_json['mensaje']);
+            return ['error' => $rta_json['mensaje']];
         }
 
         return json_decode($rta_json['data'], true);

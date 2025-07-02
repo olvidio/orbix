@@ -60,37 +60,68 @@
                 let data = JSON.parse(json.data);
                 let item = data.item;
                 let url = "{{ pag_certificado_2_pdf }}" + '?guardar=1&id_item=' + item + '{{ h|raw }}';
-                open(url, "sele");
-                // Una vez descargado, hay que permitir cancelar y borrar si no está correcto
-                let msg = "{{ "¿Es correcto?"|trans|raw }}";
-                msg += "\n";
-                msg += "\n";
-                msg += "{{ "'Cancel' para eliminar el certificado recién creado"|trans|raw }}\n";
-                msg += "\n";
-                // el confirm normal no funciona con el Chrome, Si hace referencia a otra ventana o iframe,
-                // devuelve false siempre!
-                let isChromeAgent = false;
-                if (navigator.userAgent.includes("Chrome")) {
-                    isChromeAgent = true;
-                }
-                if (isChromeAgent) {
-                    // ok
-                    {{ oPosicion.js_atras(1)|raw }}
-                } else {
-                    if (confirm(msg)) {
-                        // ok
-                        {{ oPosicion.js_atras(1)|raw }}
-                    } else {
-                        // cancel
-                        let url2 = "{{ pag_certificado_eliminar }}" + '?id_item=' + item + '{{ h_eliminar|raw }}';
-                        fnjs_update_div('#main', url2);
-                        {{ oPosicion.js_atras(1)|raw }}
+
+                // Interceptar errores al abrir la ventana
+                let ventana = null;
+                try {
+                    ventana = open(url, "sele");
+
+                    if (!ventana || ventana.closed || typeof ventana.closed == 'undefined') {
+                        alert("{{ "No se pudo abrir la ventana del PDF. Verifique que los popups estén permitidos."|trans|raw }}");
+                        return;
                     }
+
+                    // Verificar si la ventana se abrió correctamente después de un delay
+                    setTimeout(function () {
+                        try {
+                            if (ventana.closed) {
+                                console.log("La ventana del PDF fue cerrada");
+                            } else {
+                                // La ventana está abierta, proceder con la confirmación
+                                procesarConfirmacion(item);
+                            }
+                        } catch (e) {
+                            console.log("No se puede acceder al estado de la ventana (normal si es cross-origin)");
+                            procesarConfirmacion(item);
+                        }
+                    }, 500);
+
+                } catch (error) {
+                    console.error("Error al abrir ventana:", error);
+                    alert("{{ "Error al abrir el PDF"|trans|raw }}");
+                    return;
                 }
             }
         });
     }
 
+    function procesarConfirmacion(item) {
+        // Una vez descargado, hay que permitir cancelar y borrar si no está correcto
+        let msg = "{{ "¿Es correcto?"|trans|raw }}";
+        msg += "\n";
+        msg += "\n";
+        msg += "{{ "'Cancel' para eliminar el certificado recién creado"|trans|raw }}\n";
+        msg += "\n";
+
+        let isChromeAgent = false;
+        if (navigator.userAgent.includes("Chrome")) {
+            isChromeAgent = true;
+        }
+        if (isChromeAgent) {
+            // ok
+            {{ oPosicion.js_atras(1)|raw }}
+        } else {
+            if (confirm(msg)) {
+                // ok
+                {{ oPosicion.js_atras(1)|raw }}
+            } else {
+                // cancel
+                let url2 = "{{ pag_certificado_eliminar }}" + '?id_item=' + item + '{{ h_eliminar|raw }}';
+                fnjs_update_div('#main', url2);
+                {{ oPosicion.js_atras(1)|raw }}
+            }
+        }
+    }
 
     $(function () {
         $("#f_certificado").datepicker({

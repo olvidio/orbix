@@ -37,7 +37,11 @@ $oF_certificado = $oCertificado->getF_certificado();
 // Se supone que si accedo a esta página es porque soy una región del stgr.
 $esquema_region_stgr = $_SESSION['session_auth']['esquema'];
 $gesPersonaNotaOtraRegionStgr = new GestorPersonaNotaOtraRegionStgrDB($esquema_region_stgr);
-$gesPersonaNotaOtraRegionStgr->addCertificado($Qid_nom, $Qcertificado, $oF_certificado);
+try {
+    $gesPersonaNotaOtraRegionStgr->addCertificado($Qid_nom, $Qcertificado, $oF_certificado);
+} catch (\Exception $e) {
+    $error_txt .= $e->getMessage();
+}
 
 
 $data['mensaje'] = 'ok';

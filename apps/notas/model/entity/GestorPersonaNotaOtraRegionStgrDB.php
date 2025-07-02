@@ -7,7 +7,6 @@ use core\ConfigGlobal;
 use core\DBConnection;
 use core\Set;
 use notas\model\PersonaNota;
-use web\DateTimeLocal;
 use stdClass;
 
 class GestorPersonaNotaOtraRegionStgrDB extends GestorPersonaNotaDB
@@ -29,7 +28,7 @@ class GestorPersonaNotaOtraRegionStgrDB extends GestorPersonaNotaDB
         $this->setNomTabla('e_notas_otra_region_stgr');
     }
 
-    public function addCertificado(int $id_nom, string $certificado,  $oF_certificado)
+    public function addCertificado(int $id_nom, string $certificado, $oF_certificado)
     {
         $cPersonaNotaOtraRegionStgr = $this->getPersonaNotas(['id_nom' => $id_nom]);
         foreach ($cPersonaNotaOtraRegionStgr as $oPersonaNotaOtraRegionStgr) {
@@ -47,10 +46,15 @@ class GestorPersonaNotaOtraRegionStgrDB extends GestorPersonaNotaDB
             $aWhere = ['id_nom' => $id_nom,
                 'id_nivel' => $oPersonaNotaOtraRegionStgr->getId_nivel(),
                 'id_asignatura' => $oPersonaNotaOtraRegionStgr->getId_asignatura(),
-                'tipo_acta' => PersonaNota::FORMATO_CERTIFICADO,
-                'id_situacion' => Nota::FALTA_CERTIFICADO,
+                //'tipo_acta' => PersonaNota::FORMATO_CERTIFICADO,
+                //'id_situacion' => Nota::FALTA_CERTIFICADO,
             ];
             $cPersonNotas = $gesPersonaNotas->getPersonaNotas($aWhere);
+            if (empty($cPersonNotas)) {
+                $id_asignatura = $oPersonaNotaOtraRegionStgr->getId_asignatura();
+                $msg = sprintf(_("Nota no encontrada. id_asignatura: %s, id_nom: %s"), $id_asignatura, $id_nom);
+                throw new \Exception($msg);
+            }
             $oPersonaNota = $cPersonNotas[0];
             if (!empty($oPersonaNota)) {
                 $oPersonaNota->DBCarregar();
@@ -87,7 +91,7 @@ class GestorPersonaNotaOtraRegionStgrDB extends GestorPersonaNotaDB
                         'acta' => $certificado,
                     ];
                     $personaNotasDB = $gesPersonaNotaDB->getPersonaNotas($aWhere);
-                    $oPersonaNotaDB = $personaNotasDB[0]?? '';
+                    $oPersonaNotaDB = $personaNotasDB[0] ?? '';
                     if (!empty($oPersonaNotaDB)) {
                         $oPersonaNotaDB->DBCarregar();
                         $oPersonaNotaDB->setId_situacion(Nota::FALTA_CERTIFICADO);

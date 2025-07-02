@@ -35,7 +35,8 @@ try {
     $mpdf->SetDisplayMode('fullpage');
 } catch (MpdfException $e) {
     $msg_err = $e->getMessage();
-    exit($msg_err);
+    echo($msg_err);
+    die();
 }
 $mpdf->list_indent_first_level = 0;    // 1 or 0 - whether to indent the first level of a list
 $mpdf->setHTMLFooter($footer);
@@ -43,13 +44,8 @@ try {
     $mpdf->WriteHTML($content);
 } catch (MpdfException $e) {
     $msg_err = $e->getMessage();
-    exit($msg_err);
-}
-try {
-    $mpdf->Output("certificado($nom).pdf", 'D');
-} catch (MpdfException $e) {
-    $msg_err = $e->getMessage();
-    exit($msg_err);
+    echo($msg_err);
+    die();
 }
 
 // grabar en la DB
@@ -58,7 +54,8 @@ if (!empty($Qguardar)) {
         $pdf = $mpdf->Output("certificado($nom).pdf", 'S');
     } catch (MpdfException $e) {
         $msg_err = $e->getMessage();
-        exit($msg_err);
+        echo($msg_err);
+        die();
     }
     /////////// Ejecutar en el backend ///////////////////
     ///
@@ -70,34 +67,27 @@ if (!empty($Qguardar)) {
 
     $oHash = new Hash();
     $oHash->setUrl($url_lista_backend);
-    $oHash->setCamposNo('pdf');
     $oHash->setArrayCamposHidden([
         'id_item' => $Qid_item,
         'id_nom' => $id_nom,
         'certificado' => $certificado,
-        'pdf' => '',
+        'pdf' => $pdf_base64,
     ]);
 
     $hash_params = $oHash->getArrayCampos();
-    $fields=[];
-    foreach ($hash_params as $key => $value) {
-        $fields[] = ['name' => $key, 'contents' => $value];
-    }
-    // añado el pdf:
-    /*
-    $fields[] = [
-        'name'     => 'pdf', // <-- MUY IMPORTANTE: El nombre del campo que espera el servidor
-        'contents' => $pdf_base64,
-        'headers'  => [
-            'Content-Type' => 'application/pdf', // <-- Especifica el tipo MIME del archivo
-                    ],
-    ];
-    */
-
-    $data = PostRequest::getDataMultipart($url_lista_backend, $fields);
+    $data = PostRequest::getData($url_lista_backend, $hash_params);
 
     if (!empty($data['error'])) {
-        exit($data['error']);
+        echo($data['error']);
+        die();
     }
+}
+
+// Poner la salida del pdf al final, para poder mostrar si hay errores al guardar.
+try {
+    $mpdf->Output("certificado($nom).pdf", 'D');
+} catch (MpdfException $e) {
+    $msg_err = $e->getMessage();
+    echo($msg_err);
 }
 
