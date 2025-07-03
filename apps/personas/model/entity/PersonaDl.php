@@ -3,7 +3,9 @@ namespace personas\model\entity;
 
 use core\DatosCampo;
 use core\Set;
+use web\DateTimeLocal;
 use function core\is_true;
+use function PHPUnit\Framework\isInstanceOf;
 
 /**
  * Fitxer amb la Classe que accedeix a la taula personas_dl
@@ -371,7 +373,7 @@ class PersonaDl extends PersonaGlobal
     function getEdad()
     {
         $oF_nacimiento = $this->getF_nacimiento();
-        if (!empty($oF_nacimiento)) {
+        if (!empty($oF_nacimiento) && is_a($oF_nacimiento,'DateTimeLocal')) {
             $m = (int) $oF_nacimiento->format('m');
             $a = (int) $oF_nacimiento->format('Y');
             $ah = (int) date("Y");
