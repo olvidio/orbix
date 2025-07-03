@@ -373,7 +373,7 @@ class PersonaDl extends PersonaGlobal
     function getEdad()
     {
         $oF_nacimiento = $this->getF_nacimiento();
-        if (!empty($oF_nacimiento) && is_a($oF_nacimiento,'DateTimeLocal')) {
+        if (!empty($oF_nacimiento) && ($oF_nacimiento instanceof DateTimeLocal)) {
             $m = (int) $oF_nacimiento->format('m');
             $a = (int) $oF_nacimiento->format('Y');
             $ah = (int) date("Y");
