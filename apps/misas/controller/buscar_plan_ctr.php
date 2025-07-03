@@ -2,7 +2,10 @@
 
 // INICIO Cabecera global de URL de controlador *********************************
 
+use core\ConfigGlobal;
 use core\ViewTwig;
+use src\usuarios\application\repositories\RoleRepository;
+use src\usuarios\application\repositories\UsuarioRepository;
 use web\DateTimeLocal;
 use web\Desplegable;
 use web\Hash;
@@ -20,8 +23,29 @@ require_once("apps/core/global_object.inc");
 
 $Qid_zona = (integer)filter_input(INPUT_POST, 'id_zona');
 
+$id_nom_jefe = '';
+
+$UsuarioRepository = new UsuarioRepository();
+$oMiUsuario = $UsuarioRepository->findById(ConfigGlobal::mi_id_usuario());
+$id_role = $oMiUsuario->getId_role();
+
+$RoleRepository = new RoleRepository();
+$aRoles = $RoleRepository->getArrayRoles();
+
+if (!empty($aRoles[$id_role]) && ($aRoles[$id_role] === 'p-sacd')) {
+
+    if ($_SESSION['oConfig']->is_jefeCalendario()) {
+        $id_nom_jefe = '';
+    } else {
+        $id_nom_jefe = $oMiUsuario->getId_pau();
+        if (empty($id_nom_jefe)) {
+            exit(_("No tiene permiso para ver esta página"));
+        }
+    }
+}
+
 $oGestorZona = new GestorZona();
-$oDesplZonas = $oGestorZona->getListaZonas();
+$oDesplZonas = $oGestorZona->getListaZonas($id_nom_jefe);
 $oDesplZonas->setNombre('id_zona');
 $oDesplZonas->setAction('fnjs_buscar_plan_ctr()');
 $oDesplZonas->setOpcion_sel($Qid_zona);
