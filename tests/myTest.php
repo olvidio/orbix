@@ -111,7 +111,6 @@ class myTest extends TestCase
         $oConexion = new DBConnection($config);
         $GLOBALS['oDBRC_Select'] = $oConexion->getPDO();
 
-
         $user_sfsv = $_SESSION['session_auth']['sfsv'];
 
         $esquemav = $_SESSION['session_auth']['esquema'];
@@ -128,16 +127,11 @@ class myTest extends TestCase
         $oConexion = new DBConnection($config);
         $GLOBALS['oDBC_Select'] = $oConexion->getPDO();
 
+        //sv
         $oConfigDB->setDataBase('sv');
         $config = $oConfigDB->getEsquema($esquemav);
         $oConexion = new DBConnection($config);
         $GLOBALS['oDB'] = $oConexion->getPDO();
-
-        $oConfigDB->setDataBase('sv-e');
-        $config = $oConfigDB->getEsquema($esquemav);
-        $oConexion = new DBConnection($config);
-        $GLOBALS['oDBE'] = $oConexion->getPDO();
-        $GLOBALS['oDBE_Select'] = $oConexion->getPDO();
 
         $config = $oConfigDB->getEsquema('publicv');
         $oConexion = new DBConnection($config);
@@ -146,6 +140,13 @@ class myTest extends TestCase
         $config = $oConfigDB->getEsquema('restov');
         $oConexion = new DBConnection($config);
         $GLOBALS['oDBR'] = $oConexion->getPDO();
+
+        //sv-e
+        $oConfigDB->setDataBase('sv-e');
+        $config = $oConfigDB->getEsquema($esquemav);
+        $oConexion = new DBConnection($config);
+        $GLOBALS['oDBE'] = $oConexion->getPDO();
+        $GLOBALS['oDBE_Select'] = $oConexion->getPDO();
 
         if (ConfigGlobal::is_app_installed('dbextern') && !ConfigGlobal::is_dmz()) {
             // Para sincronizar con listas Madrid (SQLSERVER)

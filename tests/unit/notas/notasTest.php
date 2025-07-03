@@ -2,7 +2,9 @@
 
 namespace Tests\unit\notas;
 
+use core\ConfigDB;
 use core\ConfigGlobal;
+use core\DBConnection;
 use Exception;
 use notas\model\EditarPersonaNota;
 use notas\model\entity\GestorPersonaNotaDB;
@@ -95,7 +97,7 @@ class notasTest extends myTest
         $a_ObjetosPersonaNota = $oEditarPersonaNota->getObjetosPersonaNota($datosRegionStgr, $id_schema_persona);
 
         $rta = $oEditarPersonaNota->crear_nueva_personaNota_para_cada_objeto_del_array($a_ObjetosPersonaNota);
-        $oPersonaNota = $rta['nota'];
+        $oPersonaNota = $rta['nota_real'];
         $oPersonaNota->DBCarregar(); // Importante: El PDO al hacer execute cambia los integer a string. Con esto vuelven al tipo original.
         $oPersonaNota->getPrimary_key(); // para que tenga el mismo valor que la otra
 
@@ -146,7 +148,7 @@ class notasTest extends myTest
         $a_ObjetosPersonaNota = $oEditarPersonaNota->getObjetosPersonaNota($datosRegionStgr, $id_schema_persona);
 
         $rta = $oEditarPersonaNota->crear_nueva_personaNota_para_cada_objeto_del_array($a_ObjetosPersonaNota);
-        $oPersonaNota = $rta['nota'];
+        $oPersonaNota = $rta['nota_real'];
         $oPersonaNota->DBCarregar(); // Importante: El PDO al hacer execute cambia los integer a string. Con esto vuelven al tipo original.
         $oPersonaNota->getPrimary_key(); // para que tenga el mismo valor que la otra
 
@@ -163,7 +165,7 @@ class notasTest extends myTest
         $oPersonaNota2->DBEliminar();
 
         // nota certificado (No debe existir)
-        $oPersonaNotaCertificadoDB = $rta['certificado'] ?? '';
+        $oPersonaNotaCertificadoDB = $rta['nota_certificado'] ?? '';
         $this->assertEquals('', $oPersonaNotaCertificadoDB);
 
     }
@@ -198,7 +200,7 @@ class notasTest extends myTest
         $a_ObjetosPersonaNota = $oEditarPersonaNota->getObjetosPersonaNota($datosRegionStgr, $id_schema_persona);
 
         $rta = $oEditarPersonaNota->crear_nueva_personaNota_para_cada_objeto_del_array($a_ObjetosPersonaNota);
-        $oPersonaNota = $rta['nota'];
+        $oPersonaNota = $rta['nota_real'];
         $oPersonaNota->DBCarregar(); // Importante: El PDO al hacer execute cambia los integer a string. Con esto vuelven al tipo original.
         $oPersonaNota->getPrimary_key(); // para que tenga el mismo valor que la otra
 
@@ -222,7 +224,7 @@ class notasTest extends myTest
         $oPersonaNota2->DBEliminar();
 
         // guardar certificado
-        $oPersonaNotaCertificadoDB = $rta['certificado'] ?? '';
+        $oPersonaNotaCertificadoDB = $rta['nota_certificado'] ?? '';
         $this->assertNotEquals('', $oPersonaNotaCertificadoDB);
 
         $oPersonaNotaCertificadoDB->DBCarregar(); // Importante: El PDO al hacer execute cambia los integer a string. Con esto vuelven al tipo original.
@@ -230,8 +232,8 @@ class notasTest extends myTest
 
         // Estoy en H-dlbv. La nota debe estar en GalBel-crGalBelv.
         // por tanto miro en la tabla padre y compruebo que el esquema es el que toca.
-        $gesPersonaNotDB = new GestorPersonaNotaDB();
-        $cPersonaNotaDB = $gesPersonaNotDB->getPersonaNotas(['id_nom' => $id_nom, 'id_asignatura' => $personaNota->getIdAsignatura()]);
+        $gesPersonaNotaDB = new GestorPersonaNotaDB();
+        $cPersonaNotaDB = $gesPersonaNotaDB->getPersonaNotas(['id_nom' => $id_nom, 'id_asignatura' => $personaNota->getIdAsignatura()]);
         $oPersonaNotaDB = $cPersonaNotaDB[0];
         $oPersonaNotaDB->DBCarregar();
 
@@ -241,6 +243,7 @@ class notasTest extends myTest
         $this->assertEquals($oPersonaNotaCertificadoDB->getId_nivel(), $oPersonaNotaDB->getId_nivel());
         $this->assertEquals($oPersonaNotaCertificadoDB->getId_asignatura(), $oPersonaNotaDB->getId_asignatura());
         $this->assertEquals($oPersonaNotaCertificadoDB->getNota_num(), $oPersonaNotaDB->getNota_num());
+        $this->assertEquals($id_schema_persona, $oPersonaNotaCertificadoDB->getId_schema());
         $this->assertEquals($id_schema_persona, $oPersonaNotaDB->getId_schema());
 
         $oPersonaNotaDB->DBEliminar();
@@ -274,7 +277,7 @@ class notasTest extends myTest
 
         $a_ObjetosPersonaNota = $oEditarPersonaNota->getObjetosPersonaNota($datosRegionStgr, $id_schema_persona);
 
-        $rta = $oEditarPersonaNota->crear_nueva_personaNota_para_cada_objeto_del_array($a_ObjetosPersonaNota);
+        $oEditarPersonaNota->crear_nueva_personaNota_para_cada_objeto_del_array($a_ObjetosPersonaNota);
         // No lo compruebo porque ya está el test de guardar.
         // Modifico la Nota:
         $nota_anterior = $personaNota->getNotaNum();
@@ -283,7 +286,7 @@ class notasTest extends myTest
         $rta = $oEditarPersonaNota->editar_personaNota_para_cada_objeto_del_array($a_ObjetosPersonaNota,$id_asignatura_real);
 
 
-        $oPersonaNota = $rta['nota'];
+        $oPersonaNota = $rta['nota_real'];
         $oPersonaNota->DBCarregar(); // Importante: El PDO al hacer execute cambia los integer a string. Con esto vuelven al tipo original.
         $oPersonaNota->getPrimary_key(); // para que tenga el mismo valor que la otra
 
@@ -307,7 +310,7 @@ class notasTest extends myTest
         $oPersonaNota2->DBEliminar();
 
         // guardar certificado
-        $oPersonaNotaCertificadoDB = $rta['certificado'] ?? '';
+        $oPersonaNotaCertificadoDB = $rta['nota_certificado'] ?? '';
         $this->assertNotEquals('', $oPersonaNotaCertificadoDB);
 
         $oPersonaNotaCertificadoDB->DBCarregar(); // Importante: El PDO al hacer execute cambia los integer a string. Con esto vuelven al tipo original.
@@ -317,8 +320,14 @@ class notasTest extends myTest
         // por tanto miro en la tabla padre y compruebo que el esquema es el que toca.
         $gesPersonaNotDB = new GestorPersonaNotaDB();
         $cPersonaNotaDB = $gesPersonaNotDB->getPersonaNotas(['id_nom' => $id_nom, 'id_asignatura' => $personaNota->getIdAsignatura()]);
-        $oPersonaNotaDB = $cPersonaNotaDB[0];
-        $oPersonaNotaDB->DBCarregar();
+        if (!empty($cPersonaNotaDB)) {
+            $oPersonaNotaDB = $cPersonaNotaDB[0];
+            if (!is_null($oPersonaNotaDB)) {
+                $oPersonaNotaDB->DBCarregar();
+            }
+        } else {
+            $oPersonaNotaDB = null;
+        }
 
         // Son dos clases distintas, no se pueden comparar. Miramos las propiedades
         $this->assertNotEquals($oPersonaNotaCertificadoDB, $oPersonaNotaDB);
@@ -359,7 +368,7 @@ class notasTest extends myTest
         $a_ObjetosPersonaNota = $oEditarPersonaNota->getObjetosPersonaNota($datosRegionStgr, $id_schema_persona);
 
         $rta = $oEditarPersonaNota->crear_nueva_personaNota_para_cada_objeto_del_array($a_ObjetosPersonaNota);
-        $oPersonaNota = $rta['nota'];
+        $oPersonaNota = $rta['nota_real'];
         $oPersonaNota->DBCarregar(); // Importante: El PDO al hacer execute cambia los integer a string. Con esto vuelven al tipo original.
         $oPersonaNota->getPrimary_key(); // para que tenga el mismo valor que la otra
 
@@ -387,7 +396,7 @@ class notasTest extends myTest
         $oPersonaNota2->DBEliminar();
 
         // guardar certificado
-        $oPersonaNotaCertificadoDB = $rta['certificado'] ?? '';
+        $oPersonaNotaCertificadoDB = $rta['nota_certificado'] ?? '';
         $this->assertEquals('', $oPersonaNotaCertificadoDB);
     }
 
@@ -418,7 +427,7 @@ class notasTest extends myTest
         $a_ObjetosPersonaNota = $oEditarPersonaNota->getObjetosPersonaNota($datosRegionStgr, $id_schema_persona);
 
         $rta = $oEditarPersonaNota->crear_nueva_personaNota_para_cada_objeto_del_array($a_ObjetosPersonaNota);
-        $oPersonaNota = $rta['nota'];
+        $oPersonaNota = $rta['nota_real'];
         $oPersonaNota->DBCarregar(); // Importante: El PDO al hacer execute cambia los integer a string. Con esto vuelven al tipo original.
         $oPersonaNota->getPrimary_key(); // para que tenga el mismo valor que la otra
 
@@ -431,7 +440,7 @@ class notasTest extends myTest
         $oPersonaNota2->DBEliminar();
 
         // nota certificado (No debe existir)
-        $oPersonaNotaCertificado = $rta['certificado'] ?? '';
+        $oPersonaNotaCertificado = $rta['nota_certificado'] ?? '';
         $this->assertEquals('', $oPersonaNotaCertificado);
 
     }

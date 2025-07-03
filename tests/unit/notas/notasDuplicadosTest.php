@@ -67,7 +67,7 @@ class notasDuplicadosTest extends myTest
         $a_ObjetosPersonaNota = $oEditarPersonaNota->getObjetosPersonaNota($datosRegionStgr, $id_schema_persona);
 
         $rta = $oEditarPersonaNota->crear_nueva_personaNota_para_cada_objeto_del_array($a_ObjetosPersonaNota);
-        $oPersonaNotaDB = $rta['nota'];
+        $oPersonaNotaDB = $rta['nota_real'];
         $oPersonaNotaDB->DBCarregar(); // Importante: El PDO al hacer execute cambia los integer a string. Con esto vuelven al tipo original.
         $oPersonaNotaDB->getPrimary_key(); // para que tenga el mismo valor que la otra
 

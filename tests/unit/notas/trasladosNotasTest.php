@@ -320,6 +320,15 @@ class trasladosNotasTest extends myTest
             $this->assertEquals('', $oPersonaNotaB);
         }
 
+        // 4.- borrar las pruebas
+        $oDBdst = $this->setConexion($esquemaA . 'v');
+        $gesPersonaNota = new GestorPersonaNotaDlDB();
+        $gesPersonaNota->setoDbl($oDBdst);
+        $cPersonaNotasC = $gesPersonaNota->getPersonaNotas(['id_nom' => $this->id_nom]);
+        foreach ($cPersonaNotasC as $oPersonaNotaC) {
+            $oPersonaNotaC->DBEliminar();
+        }
+
     }
     /////////// Traslado de notas de una región a otra región del stgr. ///////////
 
@@ -334,16 +343,16 @@ class trasladosNotasTest extends myTest
      */
     public function test_traslado_de_crA_a_crB(): void
     {
-        $_SESSION['session_auth']['esquema'] = 'M-crMv';
-        $_SESSION['session_auth']['mi_id_schema'] = 1027;
-        $this->id_schema_persona = 1027;
+        $_SESSION['session_auth']['esquema'] = 'L-crLv';
+        $_SESSION['session_auth']['mi_id_schema'] = 1030;
+        $this->id_schema_persona = 1030;
 
-        $dlA = 'crM'; // Doy por supuesto que estoy conectado como dlb.
+        $dlA = 'crL'; // Doy por supuesto que estoy conectado como dlb.
         $dlB = 'crGalBel';
 
         $sfsv_txt = (ConfigGlobal::mi_sfsv() === 1) ? 'v' : 'f';
 
-        $reg_dl_org = 'M-' . $dlA . $sfsv_txt;
+        $reg_dl_org = 'L-' . $dlA . $sfsv_txt;
         $Qnew_dl = 'GalBel-' . $dlB . $sfsv_txt;
 
         $this->sreg_dl_org = $reg_dl_org;
@@ -699,6 +708,10 @@ class trasladosNotasTest extends myTest
             case 'M-crM':
                 $this->id_nom = 10271837;
                 $this->id_schema_persona = 1027;
+                break;
+            case 'L-crL':
+                $this->id_nom = 103012;
+                $this->id_schema_persona = 1030;
                 break;
             case 'GalBel-crGalBel':
                 $this->id_nom = 102912;

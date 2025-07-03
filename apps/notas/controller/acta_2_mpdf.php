@@ -4,11 +4,11 @@ use core\ConfigGlobal;
 
 $_POST = $_GET;
 
-$Qacta = $_POST['acta']; //OJO nOfunciona el fiter_input, porque realmente esá en el _GET
+$Qacta = $_POST['acta']; //OJO NO funciona el fiter_input, porque realmente esá en el _GET
 $acta = empty($Qacta) ? '' : urldecode($Qacta);
 // get the HTML
 ob_start();
-include(dirname(__FILE__) . '/acta_imprimir_mpdf.php');
+include(__DIR__ . '/acta_imprimir_mpdf.php');
 $content = ob_get_clean();
 
 // convert to PDF
