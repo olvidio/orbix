@@ -6,6 +6,8 @@ use core\ConfigGlobal;
 use core\ViewTwig;
 use misas\domain\entity\EncargoDia;
 use src\usuarios\application\repositories\PreferenciaRepository;
+use src\usuarios\application\repositories\RoleRepository;
+use src\usuarios\application\repositories\UsuarioRepository;
 use web\DateTimeLocal;
 use web\Desplegable;
 use web\Hash;
@@ -37,8 +39,30 @@ $shoy = $ohoy ->format('d/m/Y');
 $oFormP->setEmpiezaMin($shoy);
 $oFormP->setEmpiezaMax($shoy);
 
+$id_nom_jefe = '';
+
+$UsuarioRepository = new UsuarioRepository();
+$oMiUsuario = $UsuarioRepository->findById(ConfigGlobal::mi_id_usuario());
+$id_role = $oMiUsuario->getId_role();
+
+$RoleRepository = new RoleRepository();
+$aRoles = $RoleRepository->getArrayRoles();
+
+if (!empty($aRoles[$id_role]) && ($aRoles[$id_role] === 'p-sacd')) {
+
+    if ($_SESSION['oConfig']->is_jefeCalendario()) {
+        $id_nom_jefe = '';
+    } else {
+        $id_nom_jefe = $oMiUsuario->getId_pau();
+        if (empty($id_nom_jefe)) {
+            exit(_("No tiene permiso para ver esta página"));
+        }
+    }
+}
+
 $oGestorZona = new GestorZona();
-$oDesplZonas = $oGestorZona->getListaZonas();
+//$oDesplZonas = $oGestorZona->getListaZonas();
+$oDesplZonas = $oGestorZona->getListaZonas($id_nom_jefe);
 $oDesplZonas->setNombre('id_zona');
 $oDesplZonas->setAction('fnjs_ver_cuadricula_zona()');
 
