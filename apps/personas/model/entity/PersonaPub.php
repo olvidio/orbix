@@ -5,6 +5,7 @@ namespace personas\model\entity;
 use core\ConfigGlobal;
 use core\DatosCampo;
 use core\Set;
+use web\DateTimeLocal;
 use function core\is_true;
 
 /**
@@ -413,10 +414,23 @@ class PersonaPub extends PersonaGlobal
      */
     function getEdad()
     {
-        if (!isset($this->iedad) && !$this->bLoaded) {
-            $this->DBCarregar();
+        $edad = "-";
+        $oF_nacimiento = $this->getF_nacimiento();
+        if (!empty($oF_nacimiento) && ($oF_nacimiento instanceof DateTimeLocal)) {
+            $m = (int) $oF_nacimiento->format('m');
+            $a = (int) $oF_nacimiento->format('Y');
+            $ah = (int) date("Y");
+            $mh = (int) date("m");
+            $inc_m = 0;
+            $mh >= $m ? 0 : $inc_m = 1;
+            $edad = $ah - $a - $inc_m;
+        } else {
+            if (!isset($this->iedad) && !$this->bLoaded) {
+                $this->DBCarregar();
+            }
+            $edad = $this->iedad;
         }
-        return $this->iedad;
+        return $edad;
     }
 
     /**

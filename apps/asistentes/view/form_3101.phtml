@@ -1,6 +1,7 @@
 <script>
     <?php
-    use core\ConfigGlobal;if (ConfigGlobal::is_app_installed('actividadplazas')) {
+    use core\ConfigGlobal;
+    if (ConfigGlobal::is_app_installed('actividadplazas')) {
     ?>
     /**
      * se ejecuta al cambiar el desplegable $oDesplegablePersonas
@@ -40,10 +41,18 @@
                         if (rta_txt !== '' && rta_txt !== '\\n') {
                             alert('<?= _("respuesta") ?>: ' + rta_txt);
                         } else {
-                            if (repetir == 1) {
+                            if (repetir === 1) {
                                 $('#id_nom').val(0);
+                                $('#propio').prop('checked', false);
+                                $('#falta').prop('checked', false);
+                                $('#est_ok').prop('checked', false);
+                                $('#observ').html('');
+                                $('#observ_est').html('');
+                                $('#plaza').val(1);
+                                $('propietario').val(0);
+
                                 $('#actualizar').val(1);
-                                fnjs_nuevo(formulario);
+                                //fnjs_nuevo(formulario);
                             } else {
                                 <?= $oPosicion->js_atras(1); ?>
                             }
@@ -125,7 +134,7 @@
     </table>
     <br>
     <input type="button" id="guardar" name="guardar" onclick="fnjs_guardar(this.form,0);"
-           value="<?= ucfirst(_("guardar datos del asistente")); ?>" align="MIDDLE">
+           value="<?= ucfirst(_("guardar datos del asistente")); ?>" >
     <input type="button" id="guardar2" name="guardar2" onclick="fnjs_guardar(this.form,1);"
-           value="<?= ucfirst(_("guardar y añadir otro asistente")); ?>" align="MIDDLE">
+           value="<?= ucfirst(_("guardar y añadir otro asistente")); ?>" >
 </form>

@@ -388,28 +388,6 @@ class PersonaIn extends PersonaPub
         $this->sdl = $sdl;
     }
 
-    /**
-     * Recupera el atributo iedad de PersonaPub
-     *
-     * @return integer iedad
-     */
-    function getEdad()
-    {
-        if (!isset($this->iedad) && !$this->bLoaded) {
-            $this->DBCarregar();
-        }
-        return $this->iedad;
-    }
-
-    /**
-     * Establece el valor del atributo iedad de PersonaPub
-     *
-     * @param integer iedad='' optional
-     */
-    function setEdad($iedad = '')
-    {
-        $this->iedad = $iedad;
-    }
 
     /**
      * Recupera el atributo bprofesor_stgr de PersonaPub
