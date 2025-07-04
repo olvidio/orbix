@@ -743,6 +743,14 @@ class Acta extends ClasePropiedades
         }
         return hex2bin($this->pdf ?? '');
     }
+
+    public function emptyPdf():bool
+    {
+        if (!isset($this->pdf) && !$this->bLoaded) {
+            $this->DBCarregar();
+        }
+        return empty($this->pdf);
+    }
     /* MÉTODOS GET y SET D'ATRIBUTOS QUE NO SON CAMPOS -----------------------------*/
 
     /**
