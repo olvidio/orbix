@@ -30,7 +30,7 @@ class ListaAgrupar
         $ident_num = '';
         $ident_txt = '';
         $que_cuento = '';
-        $id_col = '';
+        $id_coleccion = '';
         foreach ($a_valores as $row) {
             //si son iguales; contarlos. OJO hay que distinguir si es por colección o por documento
             if (($id_tipo_old == $row[1])) {
@@ -43,13 +43,13 @@ class ListaAgrupar
                 continue;
             }
             if (!empty($row[5]) && ($agrupar_old == $row[5]) && ($coleccion_old == $row[4])) {
-                $id_col = !empty($row[4]) ? $row[4] : '';
+                $id_coleccion = !empty($row[4]) ? $row[4] : '';
                 if (!empty($ident_num) && !empty($row[2])) {
                     $ident_num .= ',' . $row[2];
                 }
                 $ident_txt = empty($ident_num) ? "" : " ($ident_num)";
                 if ($que_cuento === 'tipo_doc') {
-                    $html_g .= $this->escribir($ident_num, $count, $id_old, $ident_txt, $agrupar_old, $id_tipo_old, $id_col);
+                    $html_g .= $this->escribir($ident_num, $count, $id_old, $ident_txt, $agrupar_old, $id_tipo_old, $id_coleccion);
                     $id_tipo_old = $row[1];
                     $id_old = $row[2];
                     $agrupar_old = $row[5];
@@ -63,7 +63,7 @@ class ListaAgrupar
                 continue;
             }
             if (!empty($id_tipo_old)) {
-                $html_g .= $this->escribir($ident_num, $count, $id_old, $ident_txt, $agrupar_old, $id_tipo_old, $id_col);
+                $html_g .= $this->escribir($ident_num, $count, $id_old, $ident_txt, $agrupar_old, $id_tipo_old, $id_coleccion);
             }
             if ((!empty($row[3]) && $lugar_old != $row[3])) {
                 $html_g .= '<u>' . $row[3] . '</u><br>';
@@ -76,10 +76,10 @@ class ListaAgrupar
             $count = 1;
             $ident_num = $id_old;
             $ident_txt = '';
-            $id_col = '';
+            $id_coleccion = '';
         }
         // para el último.
-        $html_g .= $this->escribir($ident_num, $count, $id_old, $ident_txt, $agrupar_old, $id_tipo_old, $id_col);
+        $html_g .= $this->escribir($ident_num, $count, $id_old, $ident_txt, $agrupar_old, $id_tipo_old, $id_coleccion);
 
         // para el grupo == 0, no añado la opción de modificar el texto.
         if ($id_grupo > 0) {
@@ -99,7 +99,7 @@ class ListaAgrupar
         return $html_g;
     }
 
-    private function escribir($ident_num, $count, $id_old, $ident_txt, $agrupar_old, $id_tipo_old, $id_col)
+    private function escribir($ident_num, $count, $id_old, $ident_txt, $agrupar_old, $id_tipo_old, $id_coleccion)
     {
         $aColecciones = $this->getColecciones();
         $html_g = '';
@@ -114,12 +114,12 @@ class ListaAgrupar
             $a_ident_txt = explode(',', $ident_txt2);
             $first = reset($a_ident_txt);
             $last = end($a_ident_txt);
-            if (($last - $first) === ($count - 1)) {
+            if (((int)$last - (int)$first) === ($count - 1)) {
                 $ident_txt = sprintf(_(" (del %d al %d)"), $first, $last);
             }
         }
         if (!empty($agrupar_old)) {
-            $txt_cartas = $aColecciones[$id_col] ?? '????';
+            $txt_cartas = $aColecciones[$id_coleccion] ?? '????';
             $html_g .= $txt_cartas . $ident_txt;
         } else {
             $html_g .= $id_tipo_old . $ident_txt;
