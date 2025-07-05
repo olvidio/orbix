@@ -2,14 +2,19 @@
 
 // INICIO Cabecera global de URL de controlador *********************************
 
+use core\ConfigGlobal;
 use core\ViewTwig;
 use misas\domain\entity\InicialesSacd;
 //use personas\model\entity\GestorPersona;
 use personas\model\entity\GestorPersonaSacd;
+use src\usuarios\application\repositories\RoleRepository;
+use src\usuarios\application\repositories\UsuarioRepository;
 use web\DateTimeLocal;
 use web\Desplegable;
 use web\Hash;
 use web\PeriodoQue;
+use zonassacd\model\entity\GestorZona;
+use zonassacd\model\entity\GestorZonaSacd;
 
 require_once("apps/core/global_header.inc");
 // Archivos requeridos por esta url **********************************************
@@ -54,6 +59,62 @@ $shoy = $ohoy ->format('d/m/Y');
 $oFormP->setEmpiezaMin($shoy);
 $oFormP->setEmpiezaMax($shoy);
 
+$id_nom_jefe = '';
+
+$UsuarioRepository = new UsuarioRepository();
+$oMiUsuario = $UsuarioRepository->findById(ConfigGlobal::mi_id_usuario());
+$id_role = $oMiUsuario->getId_role();
+echo 'id_role: '.$id_role.'<br>';
+
+
+$id_usuario = ConfigGlobal::mi_id_usuario();
+echo 'id_usuario: '.$id_usuario.'<br>';
+$id_sacd = $oMiUsuario->getId_pau();
+echo 'id_sacd: '.$id_sacd.'<br>';
+
+$RoleRepository = new RoleRepository();
+$aRoles = $RoleRepository->getArrayRoles();
+
+echo 'aRoles'.$aRoles[$id_role].'<br>';
+
+if (!empty($aRoles[$id_role]) && ($aRoles[$id_role] === 'p-sacd')) {
+
+    if ($_SESSION['oConfig']->is_jefeCalendario()) {
+        $id_nom_jefe = '';
+    } else {
+        $id_nom_jefe = $oMiUsuario->getId_pau();
+        if (empty($id_nom_jefe)) {
+            exit(_("No tiene permiso para ver esta página"));
+        }
+    }
+}
+echo 'jefe: '.$id_nom_jefe.'<br>';
+
+$GesZonas = new GestorZona();
+$cZonas = $GesZonas->getZonas(array('id_nom' => $id_sacd));
+echo 'count zonas: '.count($cZonas).'<br>';
+if (is_array($cZonas) && count($cZonas) > 0) {
+    $GesZonaSacd = new GestorZonaSacd();
+    foreach ($cZonas as $oZona) {
+        $id_zona = $oZona->getId_zona();
+        $cSacds = $GesZonaSacd->getSacdsZona($id_zona);
+        foreach ($cSacds as $id_nom) {
+            echo $id_nom.'<br>';
+            $InicialesSacd = new InicialesSacd();
+            $sacd=$InicialesSacd->nombre_sacd($id_nom);
+            $iniciales=$InicialesSacd->iniciales($id_nom);
+            $key = $id_nom . '#' . $iniciales;
+            $a_sacd[$key] = $sacd ?? '?';
+        }
+    }
+} else { // No soy jefe de zona
+    $InicialesSacd = new InicialesSacd();
+    $sacd=$InicialesSacd->nombre_sacd($id_sacd);
+    $iniciales=$InicialesSacd->iniciales($id_sacd);
+    $key = $id_sacd . '#' . $iniciales;
+    $a_sacd[$key] = $sacd ?? '?';
+}
+            
 $aWhere = [];
 $aOperador = [];
 $aWhere['sacd'] = 't';
@@ -69,7 +130,7 @@ foreach ($cPersonas as $oPersona) {
     $sacd=$InicialesSacd->nombre_sacd($id_nom);
     $iniciales=$InicialesSacd->iniciales($id_nom);
     $key = $id_nom . '#' . $iniciales;
-    $a_sacd[$key] = $sacd ?? '?';
+//    $a_sacd[$key] = $sacd ?? '?';
 }
 $oDesplSacd = new Desplegable();
 $oDesplSacd->setNombre('id_sacd');
