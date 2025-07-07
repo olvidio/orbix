@@ -51,31 +51,44 @@ if (is_array($cUbsiInventario) && !empty($cUbsiInventario)) {
     $a_tipo = [];
     $a_num = [];
     $a_lugar = [];
+    $a_orden_coleccion = [];
     foreach ($cDocumentos as $oDocumento) {
         $d++;
-        $id_tipo_doc = $oDocumento->getId_tipo_doc();
-        $id_lugar = $oDocumento->getId_lugar();
         $identificador = $oDocumento->getIdentificador();
+        $num_ejemplares = $oDocumento->getNum_ejemplares();
         $observ = $oDocumento->getObserv();
-
+        $id_tipo_doc = $oDocumento->getId_tipo_doc();
+        $id_lugar_doc = $oDocumento->getId_lugar();
         $oTipoDoc = $TipoDocRepository->findById($id_tipo_doc);
+        if ($oTipoDoc === null) {
+            throw new \Exception("Documento no encontrado con ID: " . $id_tipo_doc);
+        }
         $lugar = '';
-        if (!empty($id_lugar)) {
-            $oLugar = $LugarRepository->findById($id_lugar);
+        if (!empty($id_lugar_doc)) {
+            $oLugar = $LugarRepository->findById($id_lugar_doc);
+            if ($oLugar === null) {
+                throw new \Exception("Lugar no encontrado con ID: " . $id_lugar_doc);
+            }
             $lugar = $oLugar->getNom_lugar();
         }
-        //$a_valores[$d]['sel']=array('id'=>$id_activ,'select'=>'checked');
-        $a_valores[$d][1] = $oTipoDoc->getSigla() . " " . $oTipoDoc->getNom_doc() . " " . $observ;
+
+        if (!empty($num_ejemplares) && $num_ejemplares > 1) {
+            $a_valores[$d][1] = $num_ejemplares . ' ' . _("ejemplares de") . ' ';
+        } else {
+            $a_valores[$d][1] = '';
+        }
+        $a_valores[$d][1] .= $oTipoDoc->getSigla() . " " . $oTipoDoc->getNom_doc() . " " . $observ;
         $a_valores[$d][2] = $identificador;
         $a_valores[$d][3] = $lugar;
         //para poder ordenar
         $a_tipo[$d] = $a_valores[$d][1];
         $a_num[$d] = $a_valores[$d][2];
         $a_lugar[$d] = $a_valores[$d][3];
+
         // primero los que tienen identificador y no son cartas, cartas, sin identificador
-        $id_col = $oTipoDoc->getId_coleccion();
-        if ($id_col !== null) {
-            $bcarta = $aColeccion[$id_col];
+        $id_coleccion = $oTipoDoc->getId_coleccion();
+        if ($id_coleccion !== null) {
+            $bcarta = $aColeccion[$id_coleccion];
             if (!empty($identificador) && !$bcarta) {
                 $orden[$d] = 1;
             } elseif ($bcarta) {
@@ -87,13 +100,18 @@ if (is_array($cUbsiInventario) && !empty($cUbsiInventario)) {
             $orden[$d] = 4;
             $bcarta = '';
         }
+
+        $a_valores[$d][4] = empty($id_coleccion) ? false : $id_coleccion;
         $a_valores[$d][5] = empty($bcarta) ? false : $bcarta;
+        // para ordenar
+        $a_orden_coleccion[$d] = $a_valores[$d][4];
     }
     //array_multisort($a_lugar, SORT_ASC, $a_tipo, SORT_ASC, $a_valores);
     // ordenar por sigla
     if (!empty($a_valores)) {
         array_multisort($a_lugar, SORT_ASC,
             $orden, SORT_NUMERIC, SORT_DESC,
+            $a_orden_coleccion, SORT_NUMERIC, SORT_ASC,
             $a_num, SORT_NUMERIC, SORT_ASC,
             $a_tipo, SORT_ASC, SORT_NATURAL,
             $a_valores);

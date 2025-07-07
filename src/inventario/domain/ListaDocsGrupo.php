@@ -95,9 +95,8 @@ class ListaDocsGrupo
                     }
                 }
 
-                $a_valores[$d][4] = empty($id_coleccion) ? false : $id_coleccion;
-                //$a_valores[$d][5] = false; // para ser compatible con los docs de la casa.
                 $a_valores[$d][3] = false; // ?¿?¿? para ser compatible con los docs de la casa.
+                $a_valores[$d][4] = empty($id_coleccion) ? false : $id_coleccion;
                 $a_valores[$d][5] = $bAgrupar;
             }
             // ordenar por sigla
