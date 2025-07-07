@@ -18,7 +18,7 @@ require_once("apps/core/global_object.inc");
 
 $oPosicion->recordar();
 
-$url_lista_backend = Hash::cmd(ConfigGlobal::getWeb()
+$url_lista_backend = Hash::cmdSinParametros(ConfigGlobal::getWeb()
     . '/src/usuarios/infrastructure/controllers/usuario_preferencias.php'
 );
 
@@ -89,12 +89,12 @@ $oDesplZonaGMT->setOpcion_sel($id_zona_sel);
 
 
 $id_usuario = ConfigGlobal::mi_id_usuario();
-$url_avisos = Hash::cmd(ConfigGlobal::getWeb() . '/frontend/cambios/controller/usuario_form_avisos.php?' . http_build_query(array('quien' => 'usuario', 'id_usuario' => $id_usuario)));
-$url_avisos_lista = Hash::cmd(ConfigGlobal::getWeb() . '/apps/cambios/controller/avisos_generar.php?' . http_build_query(array('id_usuario' => $id_usuario, 'aviso_tipo' => CambioUsuario::TIPO_LISTA)));
-$url_avisos_mails = Hash::cmd(ConfigGlobal::getWeb() . '/apps/cambios/controller/avisos_generar.php?' . http_build_query(array('id_usuario' => $id_usuario, 'aviso_tipo' => CambioUsuario::TIPO_MAIL)));
-$url_cambio_password = Hash::cmd(ConfigGlobal::getWeb() . '/frontend/usuarios/controller/usuario_form_pwd.php');
-$url_cambio_mail = Hash::cmd(ConfigGlobal::getWeb() . '/frontend/usuarios/controller/usuario_form_mail.php');
-$url_2fa_settings = Hash::cmd(ConfigGlobal::getWeb() . '/frontend/usuarios/controller/usuario_form_2fa.php');
+$url_avisos = Hash::cmdSinParametros(ConfigGlobal::getWeb() . '/frontend/cambios/controller/usuario_form_avisos.php?' . http_build_query(array('quien' => 'usuario', 'id_usuario' => $id_usuario)));
+$url_avisos_lista = Hash::cmdSinParametros(ConfigGlobal::getWeb() . '/apps/cambios/controller/avisos_generar.php?' . http_build_query(array('id_usuario' => $id_usuario, 'aviso_tipo' => CambioUsuario::TIPO_LISTA)));
+$url_avisos_mails = Hash::cmdSinParametros(ConfigGlobal::getWeb() . '/apps/cambios/controller/avisos_generar.php?' . http_build_query(array('id_usuario' => $id_usuario, 'aviso_tipo' => CambioUsuario::TIPO_MAIL)));
+$url_cambio_password = Hash::cmdSinParametros(ConfigGlobal::getWeb() . '/frontend/usuarios/controller/usuario_form_pwd.php');
+$url_cambio_mail = Hash::cmdSinParametros(ConfigGlobal::getWeb() . '/frontend/usuarios/controller/usuario_form_mail.php');
+$url_2fa_settings = Hash::cmdSinParametros(ConfigGlobal::getWeb() . '/frontend/usuarios/controller/usuario_form_2fa.php');
 
 $oHash = new Hash();
 $oHash->setCamposForm('layout!inicio!oficina!estilo_color!tipo_menu!tipo_tabla!ordenApellidos!idioma_nou!zona_horaria_nou');

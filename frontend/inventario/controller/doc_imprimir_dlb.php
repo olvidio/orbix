@@ -14,7 +14,7 @@ $a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_A
 $oPosicion->recordar();
 
 // muestra los ctr que tienen el documento.
-$url_lista_backend = Hash::cmd(ConfigGlobal::getWeb()
+$url_lista_backend = Hash::cmdSinParametros(ConfigGlobal::getWeb()
     . '/src/inventario/infrastructure/controllers/inventario_dlb.php'
 );
 $oHash = new Hash();

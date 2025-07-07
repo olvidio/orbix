@@ -68,7 +68,7 @@ $Qobj_pau = (string)filter_input(INPUT_POST, 'obj_pau');
 
 
 if (empty($Qk_buscar)) {
-    $url_lista_buscar_backend = Hash::cmd(ConfigGlobal::getWeb()
+    $url_lista_buscar_backend = Hash::cmdSinParametros(ConfigGlobal::getWeb()
         . '/src/shared/infrastructure/controllers/tablaDB_buscar_datos.php'
     );
 
@@ -109,7 +109,7 @@ if (empty($Qk_buscar)) {
     }
 }
 
-$url_lista_backend = Hash::cmd(ConfigGlobal::getWeb()
+$url_lista_backend = Hash::cmdSinParametros(ConfigGlobal::getWeb()
     . '/src/shared/infrastructure/controllers/tablaDB_lista_datos.php'
 );
 

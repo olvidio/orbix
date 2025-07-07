@@ -42,7 +42,7 @@ if (!empty($a_sel)) { //vengo de un checkbox
 }
 
 /////////// Consulta al backend ///////////////////
-$url_lista_backend = Hash::cmd(ConfigGlobal::getWeb()
+$url_lista_backend = Hash::cmdSinParametros(ConfigGlobal::getWeb()
     . '/src/certificados/infrastructure/controllers/certificado_imprimir_datos.php'
 );
 
@@ -71,7 +71,7 @@ $contador = $data['contador'];
 
 //Idiomas
 /////////// Consulta al backend ///////////////////
-$url_lista_backend = Hash::cmd(ConfigGlobal::getWeb()
+$url_lista_backend = Hash::cmdSinParametros(ConfigGlobal::getWeb()
     . '/src/shared/infrastructure/controllers/locales_posibles.php'
 );
 

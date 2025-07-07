@@ -13,13 +13,6 @@ use function core\is_true;
 require_once("frontend/shared/global_header_front.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-require_once("apps/core/global_header.inc");
-// Archivos requeridos por esta url **********************************************
-
-// Crea los objetos de uso global **********************************************
-require_once("apps/core/global_object.inc");
-// FIN de  Cabecera global de URL de controlador ****************
-
 $a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 
 if (!empty($a_sel)) { //vengo de un checkbox
@@ -31,7 +24,7 @@ if (!empty($a_sel)) { //vengo de un checkbox
 }
 
 /////////// Consulta al backend ///////////////////
-$url_lista_backend = Hash::cmd(ConfigGlobal::getWeb()
+$url_lista_backend = Hash::cmdSinParametros(ConfigGlobal::getWeb()
     . '/src/certificados/infrastructure/controllers/certificado_ver_datos.php'
 );
 
@@ -58,6 +51,7 @@ if (is_true($firmado)) {
 } else {
     $chk_firmado = '';
 }
+$content_pdf = base64_decode($data['content']);
 
 $apellidos_nombre = $data['apellidos_nombre'];
 $nom = $data['nom'];
@@ -65,7 +59,7 @@ $nom = $data['nom'];
 
 //Idiomas (blanco para latín)
 /////////// Consulta al backend ///////////////////
-$url_lista_backend = Hash::cmd(ConfigGlobal::getWeb()
+$url_lista_backend = Hash::cmdSinParametros(ConfigGlobal::getWeb()
     . '/src/shared/infrastructure/controllers/locales_posibles.php'
 );
 
@@ -102,10 +96,11 @@ shell_exec($cmd_shell);
 $filename_sin_barra = str_replace('/', '_', $certificado);
 $filename_sin_espacio = str_replace(' ', '_', $filename_sin_barra);
 $filename_pdf = ServerConf::DIR . '/log/tmp/' . $filename_sin_espacio . '.pdf';
-if (is_file($filename_pdf)) {
+if (($file_handle = fopen($filename_pdf, 'wb')) !== false) {
+    fwrite($file_handle, $content_pdf);
+    fclose($file_handle);
+    //file_put_contents($filename_pdf, $content_pdf);
     $filename_pdf_web = ConfigGlobal::getWeb() . '/log/tmp/' . $filename_sin_espacio . '.pdf';
-    $content = $data['content'];
-    file_put_contents($filename_pdf, $content);
 } else {
     $filename_pdf_web = '';
 }

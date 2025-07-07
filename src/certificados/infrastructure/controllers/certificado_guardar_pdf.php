@@ -21,6 +21,7 @@ $Qcertificado = (string)filter_input(INPUT_POST, 'certificado');
 $Qpdf = $_POST['pdf'];
 
 $pdf_content = base64_decode($Qpdf);
+$certificado = base64_decode($Qcertificado);
 
 $error_txt = '';
 
@@ -38,7 +39,7 @@ $oF_certificado = $oCertificado->getF_certificado();
 $esquema_region_stgr = $_SESSION['session_auth']['esquema'];
 $gesPersonaNotaOtraRegionStgr = new GestorPersonaNotaOtraRegionStgrDB($esquema_region_stgr);
 try {
-    $gesPersonaNotaOtraRegionStgr->addCertificado($Qid_nom, $Qcertificado, $oF_certificado);
+    $gesPersonaNotaOtraRegionStgr->addCertificado($Qid_nom, $certificado, $oF_certificado);
 } catch (\Exception $e) {
     $error_txt .= $e->getMessage();
 }

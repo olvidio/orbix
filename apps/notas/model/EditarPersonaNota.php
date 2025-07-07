@@ -53,9 +53,16 @@ class EditarPersonaNota
         }
     }
 
+    public function nuevoSolamenteDl(): array
+    {
+        $a_ObjetosPersonaNota = $this->getObjetosPersonaNota($this->getDatosRegionStgr(), $this->getId_schema_persona());
+        unset($a_ObjetosPersonaNota['nota_real']);
+
+        return $this->crear_nueva_personaNota_para_cada_objeto_del_array($a_ObjetosPersonaNota);
+    }
+
     public function nuevo(): array
     {
-
         $a_ObjetosPersonaNota = $this->getObjetosPersonaNota($this->getDatosRegionStgr(), $this->getId_schema_persona());
 
         return $this->crear_nueva_personaNota_para_cada_objeto_del_array($a_ObjetosPersonaNota);
@@ -71,7 +78,6 @@ class EditarPersonaNota
     {
         $rta = [];
         $guardar = TRUE;
-        $oPersonaNotaDB = $a_ObjetosPersonaNota['nota_real'];
 
         $id_nom = $this->personaNota->getIdNom();
         $id_nivel = $this->personaNota->getIdNivel();
@@ -88,69 +94,72 @@ class EditarPersonaNota
         $nota_num = $this->personaNota->getNotaNum();
         $nota_max = $this->personaNota->getNotaMax();
 
-        // comprobar si existe, para lanzar un aviso y no hacer nada:
-        if ($oPersonaNotaDB instanceof PersonaNotaDlDB) {
-            $oDbl = $oPersonaNotaDB->getoDbl(); // asegurarme que estoy consultando en el mismo esquema
-            $gesPersonaNota = new GestorPersonaNotaDlDB();
-            $gesPersonaNota->setoDbl($oDbl);
-            $cPersonaNota = $gesPersonaNota->getPersonaNotas(['id_nom' => $id_nom, 'id_nivel' => $id_nivel]);
-            if (!empty($cPersonaNota)) {
-                $oPersonaNota2 = $cPersonaNota[0];
-                if (!is_null($oPersonaNota2)) {
-                    $oPersonaNota2->DBCarregar();
-                    $err = _("Ya existe esta nota");
-                    throw new RunTimeException($err);
+        // Pongo las notas en la dl de la persona, esperando al certificado
+        if (array_key_exists('nota_real', $a_ObjetosPersonaNota)) {
+            $oPersonaNotaDB = $a_ObjetosPersonaNota['nota_real'];
+            // comprobar si existe, para lanzar un aviso y no hacer nada:
+            if ($oPersonaNotaDB instanceof PersonaNotaDlDB) {
+                $oDbl = $oPersonaNotaDB->getoDbl(); // asegurarme que estoy consultando en el mismo esquema
+                $gesPersonaNota = new GestorPersonaNotaDlDB();
+                $gesPersonaNota->setoDbl($oDbl);
+                $cPersonaNota = $gesPersonaNota->getPersonaNotas(['id_nom' => $id_nom, 'id_nivel' => $id_nivel]);
+                if (!empty($cPersonaNota)) {
+                    $oPersonaNota2 = $cPersonaNota[0];
+                    if (!is_null($oPersonaNota2)) {
+                        $oPersonaNota2->DBCarregar();
+                        $err = _("Ya existe esta nota");
+                        throw new RunTimeException($err);
+                    }
                 }
             }
-        }
 
+            // En el caso de traslados, si el tipo de acta es un certificado,
+            if ($tipo_acta === PersonaNota::FORMATO_CERTIFICADO && !empty($esquema_region_stgr)) {
+                // puede ser que haga referencia a e_notas_dl o a e_notas_otra_region_stgr
+                if ($oPersonaNotaDB instanceof PersonaNotaOtraRegionStgrDB) {
+                    // Si es certificado debería de ser de otra región, y por tanto no guardo nada
+                    // en la tabla e_notas_otra_region_stgr de mi región stgr, ya lo tendrá la original
+                    $guardar = FALSE;
+                }
+            }
 
-        // En el caso de traslados, si el tipo de acta es un certificado,
-        if ($tipo_acta === PersonaNota::FORMATO_CERTIFICADO && !empty($esquema_region_stgr)) {
-            // puede ser que haga referencia a e_notas_dl o a e_notas_otra_region_stgr
-            if ($oPersonaNotaDB instanceof PersonaNotaOtraRegionStgrDB) {
-                // Si es certificado debería de ser de otra región, y por tanto no guardo nada
-                // en la tabla e_notas_otra_region_stgr de mi región stgr, ya lo tendrá la original
-                $guardar = FALSE;
+            $oPersonaNotaDB->setId_nom($id_nom);
+            $oPersonaNotaDB->setId_nivel($id_nivel);
+            $oPersonaNotaDB->setId_asignatura($id_asignatura);
+            $oPersonaNotaDB->setId_situacion($id_situacion);
+            $oPersonaNotaDB->setF_acta($f_acta);
+            $oPersonaNotaDB->setTipo_acta($tipo_acta);
+            // comprobar valor del acta
+            if (!empty($acta)) {
+                if ($tipo_acta === PersonaNotaDB::FORMATO_CERTIFICADO) {
+                    $oPersonaNotaDB->setActa($acta);
+                }
+                if ($tipo_acta === PersonaNotaDB::FORMATO_ACTA) {
+                    $valor = Acta::inventarActa($acta, $f_acta);
+                    $oPersonaNotaDB->setActa($valor);
+                }
             }
-        }
-
-        $oPersonaNotaDB->setId_nom($id_nom);
-        $oPersonaNotaDB->setId_nivel($id_nivel);
-        $oPersonaNotaDB->setId_asignatura($id_asignatura);
-        $oPersonaNotaDB->setId_situacion($id_situacion);
-        $oPersonaNotaDB->setF_acta($f_acta);
-        $oPersonaNotaDB->setTipo_acta($tipo_acta);
-        // comprobar valor del acta
-        if (!empty($acta)) {
-            if ($tipo_acta === PersonaNotaDB::FORMATO_CERTIFICADO) {
-                $oPersonaNotaDB->setActa($acta);
-            }
-            if ($tipo_acta === PersonaNotaDB::FORMATO_ACTA) {
-                $valor = Acta::inventarActa($acta, $f_acta);
-                $oPersonaNotaDB->setActa($valor);
-            }
-        }
-        $oPersonaNotaDB->setPreceptor($preceptor);
-        $oPersonaNotaDB->setId_preceptor($id_preceptor);
-        $oPersonaNotaDB->setDetalle($detalle);
-        $oPersonaNotaDB->setEpoca($epoca);
-        $oPersonaNotaDB->setId_activ($id_activ);
-        $oPersonaNotaDB->setNota_num($nota_num);
-        $oPersonaNotaDB->setNota_max($nota_max);
-        if ($guardar && $oPersonaNotaDB->DBGuardar() === false) {
-            $err = end($_SESSION['errores']);
-            throw new RunTimeException(sprintf(_("No se ha guardado la Nota: %s"), $err));
-        }
-        $rta['nota_real'] = $oPersonaNotaDB;
-        // si no está abierto, hay que abrir el dossier para esta persona
-        // si es una persona de paso, No hace falta
-        if ($id_nom > 0) {
-            $oDossier = new Dossier(array('tabla' => 'p', 'id_pau' => $id_nom, 'id_tipo_dossier' => 1303));
-            $oDossier->abrir();
-            if ($oDossier->DBGuardar() === false) {
+            $oPersonaNotaDB->setPreceptor($preceptor);
+            $oPersonaNotaDB->setId_preceptor($id_preceptor);
+            $oPersonaNotaDB->setDetalle($detalle);
+            $oPersonaNotaDB->setEpoca($epoca);
+            $oPersonaNotaDB->setId_activ($id_activ);
+            $oPersonaNotaDB->setNota_num($nota_num);
+            $oPersonaNotaDB->setNota_max($nota_max);
+            if ($guardar && $oPersonaNotaDB->DBGuardar() === false) {
                 $err = end($_SESSION['errores']);
-                throw new RunTimeException(sprintf(_("No al guardar el dossier: %s"), $err));
+                throw new RunTimeException(sprintf(_("No se ha guardado la Nota: %s"), $err));
+            }
+            $rta['nota_real'] = $oPersonaNotaDB;
+            // si no está abierto, hay que abrir el dossier para esta persona
+            // si es una persona de paso, No hace falta
+            if ($id_nom > 0) {
+                $oDossier = new Dossier(array('tabla' => 'p', 'id_pau' => $id_nom, 'id_tipo_dossier' => 1303));
+                $oDossier->abrir();
+                if ($oDossier->DBGuardar() === false) {
+                    $err = end($_SESSION['errores']);
+                    throw new RunTimeException(sprintf(_("No al guardar el dossier: %s"), $err));
+                }
             }
         }
 
@@ -158,7 +167,8 @@ class EditarPersonaNota
         if (array_key_exists('nota_certificado', $a_ObjetosPersonaNota)) {
             // en el caso de traslados, comprobar que no se tenga la nota real
             // buscarla en OtraRegionStgr (sobreescribo todos los valores por los originales)
-            if ($tipo_acta === PersonaNotaDB::FORMATO_CERTIFICADO && $oPersonaNotaDB instanceof PersonaNotaDB && !empty($esquema_region_stgr)) {
+            //???if ($tipo_acta === PersonaNotaDB::FORMATO_CERTIFICADO && $oPersonaNotaDB instanceof PersonaNotaDB && !empty($esquema_region_stgr)) {
+            if ($tipo_acta === PersonaNotaDB::FORMATO_CERTIFICADO && !empty($esquema_region_stgr)) {
                 $gesPersonaNotaOtraRegionDB = new GestorPersonaNotaOtraRegionStgrDB($esquema_region_stgr);
                 $cPersonaNotasOtraRegion = $gesPersonaNotaOtraRegionDB->getPersonaNotas(['id_nom' => $id_nom, 'id_asignatura' => $id_asignatura]);
                 if (!empty($cPersonaNotasOtraRegion)) {

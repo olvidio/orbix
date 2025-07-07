@@ -10,15 +10,6 @@ use function core\is_true;
 require_once("frontend/shared/global_header_front.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-require_once("apps/core/global_header.inc");
-// Archivos requeridos por esta url **********************************************
-
-// Crea los objetos de uso global **********************************************
-require_once("apps/core/global_object.inc");
-// Crea los objetos por esta url  **********************************************
-
-// FIN de  Cabecera global de URL de controlador ********************************
-
 // example of a PHP server code that is called in `uploadUrl` above
 // file-upload-batch script
 header('Content-Type: application/json'); // set json response headers

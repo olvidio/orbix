@@ -71,7 +71,7 @@ $oHash1->setUrl($web_depende);
 $oHash1->setCamposForm('clase_info!accion!valor_depende');
 $h = $oHash1->linkSinVal();
 
-$url_backend = Hash::cmd(ConfigGlobal::getWeb()
+$url_backend = Hash::cmdSinParametros(ConfigGlobal::getWeb()
     . '/src/shared/infrastructure/controllers/tablaDB_formulario_datos.php'
 );
 

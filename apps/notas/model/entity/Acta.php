@@ -744,7 +744,7 @@ class Acta extends ClasePropiedades
         return hex2bin($this->pdf ?? '');
     }
 
-    public function emptyPdf():bool
+    public function hasEmptyPdf():bool
     {
         if (!isset($this->pdf) && !$this->bLoaded) {
             $this->DBCarregar();

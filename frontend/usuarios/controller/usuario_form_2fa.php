@@ -29,7 +29,7 @@ $oMiUsuario = ConfigGlobal::MiUsuario();
 $id_usuario = $oMiUsuario->getId_usuario();
 
 //////////////////////// Datos del usuario ///////////////////////////////////////////////////
-$url_usuario_form_backend = Hash::cmd(ConfigGlobal::getWeb()
+$url_usuario_form_backend = Hash::cmdSinParametros(ConfigGlobal::getWeb()
     . '/src/usuarios/infrastructure/controllers/usuario_info.php'
 );
 
@@ -45,7 +45,7 @@ $data = PostRequest::getData($url_usuario_form_backend, $hash_params);
 $usuario = $data['usuario'];
 
 // Verificar si el usuario tiene 2FA habilitado
-$url_2fa_info_backend = Hash::cmd(ConfigGlobal::getWeb()
+$url_2fa_info_backend = Hash::cmdSinParametros(ConfigGlobal::getWeb()
     . '/src/usuarios/infrastructure/controllers/usuario_2fa_info.php'
 );
 

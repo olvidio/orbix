@@ -79,7 +79,7 @@
     }
     fnjs_actualizar = function (formulario) {
         let campo = '<input type="hidden" name="refresh" value=1>';
-        $(formulario).attr('action', "frontend/certificados/controller/certificado_select.php");
+        $(formulario).attr('action', "frontend/certificados/controller/certificado_lista.php");
         $(formulario).append(campo);
         fnjs_enviar_formulario(formulario, '#main');
     }

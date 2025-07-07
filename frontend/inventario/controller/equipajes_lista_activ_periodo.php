@@ -19,7 +19,7 @@ $Qempiezamax = (string)filter_input(INPUT_POST, 'empiezamax');
 $Qinicio = (string)filter_input(INPUT_POST, 'inicio');
 $Qfin = (string)filter_input(INPUT_POST, 'fin');
 
-$url_lista_backend = Hash::cmd(ConfigGlobal::getWeb()
+$url_lista_backend = Hash::cmdSinParametros(ConfigGlobal::getWeb()
     . '/src/inventario/infrastructure/controllers/equipajes_lista_activ_periodo.php'
 );
 $oHash = new Hash();

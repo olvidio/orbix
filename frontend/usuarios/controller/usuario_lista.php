@@ -41,7 +41,7 @@ $url_lista = Hash::link(ConfigGlobal::getWeb()
     . '/frontend/usuarios/controller/usuario_lista.php'
 );
 
-$url_lista_backend = Hash::cmd(ConfigGlobal::getWeb()
+$url_lista_backend = Hash::cmdSinParametros(ConfigGlobal::getWeb()
     . '/src/usuarios/infrastructure/controllers/usuario_lista.php'
 );
 

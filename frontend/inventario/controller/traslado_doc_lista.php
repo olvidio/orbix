@@ -16,7 +16,7 @@ $oPosicion->recordar();
 
 
 // muestra los ctr que tienen el documento.
-$url_lista_backend = Hash::cmd(ConfigGlobal::getWeb()
+$url_lista_backend = Hash::cmdSinParametros(ConfigGlobal::getWeb()
     . '/src/inventario/infrastructure/controllers/lista_docs_de_ctr.php'
 );
 $oHash = new Hash();

@@ -28,7 +28,7 @@ require_once("frontend/shared/global_header_front.inc");
 $Qid_item = empty($_GET['id_item']) ? '' : $_GET['id_item'];
 
 /////////// Consulta al backend ///////////////////
-$url_lista_backend = Hash::cmd(ConfigGlobal::getWeb()
+$url_lista_backend = Hash::cmdSinParametros(ConfigGlobal::getWeb()
     . '/src/certificados/infrastructure/controllers/certificado_imprimir_mpdf_datos.php'
 );
 

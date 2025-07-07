@@ -23,7 +23,7 @@ $Qfiltro_grupo = (string)filter_input(INPUT_POST, 'filtro_grupo');
 $Qnuevo = (string)filter_input(INPUT_POST, 'nuevo');
 $Qid_menu = (string)filter_input(INPUT_POST, 'id_menu');
 
-$url_lista_backend = Hash::cmd(ConfigGlobal::getWeb()
+$url_lista_backend = Hash::cmdSinParametros(ConfigGlobal::getWeb()
     . '/src/menus/infrastructure/controllers/lista_meta_menus.php'
 );
 $oHash = new Hash();
@@ -38,7 +38,7 @@ $oDesplMeta = new Desplegable('', $aOpciones, '', true);
 $oDesplMeta->setNombre('id_metamenu');
 
 
-$url_lista_backend = Hash::cmd(ConfigGlobal::getWeb()
+$url_lista_backend = Hash::cmdSinParametros(ConfigGlobal::getWeb()
     . '/src/menus/infrastructure/controllers/lista_grup_menus.php'
 );
 $oHash = new Hash();

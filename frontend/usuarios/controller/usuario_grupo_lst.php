@@ -17,7 +17,7 @@ require_once("apps/core/global_object.inc");
 
 $Qid_usuario = (integer)filter_input(INPUT_POST, 'id_usuario');
 
-$url_lista_backend = Hash::cmd(ConfigGlobal::getWeb()
+$url_lista_backend = Hash::cmdSinParametros(ConfigGlobal::getWeb()
     . '/src/usuarios/infrastructure/controllers/usuario_grupo_lst.php'
 );
 

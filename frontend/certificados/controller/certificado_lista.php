@@ -73,7 +73,7 @@ $oPosicion->setParametros($aGoBack, 1);
 
 
 /////////// Consulta al backend ///////////////////
-$url_lista_backend = Hash::cmd(ConfigGlobal::getWeb()
+$url_lista_backend = Hash::cmdSinParametros(ConfigGlobal::getWeb()
     . '/src/certificados/infrastructure/controllers/certificado_lista_datos.php'
 );
 

@@ -12,7 +12,7 @@ require_once("apps/core/global_header.inc");
 require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$Qid_item = (string)filter_input(INPUT_POST, 'id_item');
+$Qid_item = (int)filter_input(INPUT_POST, 'id_item');
 
 $error_txt = '';
 
@@ -27,7 +27,7 @@ $data['certificado'] = $oCertificado->getCertificado();
 $data['f_certificado'] = $oCertificado->getF_certificado()->getFromLocal();
 $data['f_enviado'] = $oCertificado->getF_enviado()->getFromLocal();
 $data['firmado'] = $oCertificado->isFirmado();
-$data['content'] = $oCertificado->getDocumento();
+$data['content'] = base64_encode($oCertificado->getDocumento());
 
 $oPersona = Persona::NewPersona($id_nom);
 $apellidos_nombre = $oPersona->getApellidosNombre();

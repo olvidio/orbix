@@ -136,7 +136,7 @@ if (!empty($Qapellido1)) {
         // comprobar si ya se ha subido el acta firmada
         $acta = $oPersonaNotaOtraRegionDB->getActa();
         $Acta = new Acta($acta);
-        if ($Acta->emptyPdf()) {
+        if ($Acta->hasEmptyPdf()) {
             $alert .= '!';
         }
 

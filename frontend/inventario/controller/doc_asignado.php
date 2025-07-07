@@ -16,7 +16,7 @@ $Qid_tipo_doc = (integer)filter_input(INPUT_POST, 'id_tipo_doc');
 $oPosicion->recordar();
 
 // muestra los ctr que tienen el documento.
-$url_lista_backend = Hash::cmd(ConfigGlobal::getWeb()
+$url_lista_backend = Hash::cmdSinParametros(ConfigGlobal::getWeb()
     . '/src/inventario/infrastructure/controllers/lista_docs_asignados_por_tipo.php'
 );
 $oHash = new Hash();
