@@ -54,9 +54,9 @@ class usuariosLista
         foreach ($cUsuarios as $oUsuario) {
             $i++;
             $id_usuario = $oUsuario->getId_usuario();
-            $usuario = $oUsuario->getUsuario();
-            $nom_usuario = $oUsuario->getNom_usuario();
-            $email = $oUsuario->getEmail();
+            $usuario = $oUsuario->getUsuarioAsString();
+            $nom_usuario = $oUsuario->getNom_usuarioAsString();
+            $email = $oUsuario->getEmailAsString();
             $id_role = $oUsuario->getId_role();
 
             $role = '?';
@@ -64,7 +64,7 @@ class usuariosLista
                 // Cuando se ha eliminado el Role, el usuario todavía tiene el id, pero no existe:
                 $oRole = $RoleRepository->findById($id_role);
                 if ($oRole !== null) {
-                    $role = $oRole->getRole();
+                    $role = $oRole->getRoleAsString();
                     // filtro por sf/sv
                     if ($miSfsv === 1 && !$oRole->isSv()) {
                         continue;

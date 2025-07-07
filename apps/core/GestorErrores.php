@@ -1,4 +1,5 @@
 <?php
+
 namespace core;
 
 use PDOStatement;
@@ -75,28 +76,21 @@ class GestorErrores
         $_SESSION['errores'][] = $error;
     }
 
-    function leerErrorAppLastError(&$oDBSt, $sClauError, $line, $file)
+    function leerErrorAppLastError()
     {
-        $user = ConfigGlobal::mi_usuario();
-        $ahora = date("Y/m/d H:i:s");
-        $err = $oDBSt->errorInfo();
-        $txt = "\n" . $ahora . " - " . $user . "->>  " . $err[2] . "\n $sClauError en linea $line de: $file\n";
-
-        $trimmed = file($this->filename, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
-        $linea2 = array_pop($trimmed);
-        $linea1 = array_pop($trimmed);
-        return $linea1 . "\n" . $linea2;
+        $a_errores = $_SESSION['errores'];
+        return end($a_errores);
     }
 
     /**
      * Añade un error al fichero
      *
-     * @param PDOStatement $oDBSt Puede ser objeto PDO o PDOStatement
+     * @param PDOStatement|\PDO $oDBSt Puede ser objeto PDO o PDOStatement
      * @param string $sClauError Un texto cualquiera para poner en el error
      * @param string $line
      * @param string $file
      */
-    function addErrorAppLastError(PDOStatement $oDBSt, string $sClauError, string $line, string $file)
+    function addErrorAppLastError(PDOStatement|\PDO $oDBSt, string $sClauError, string $line, string $file)
     {
         // Cuando ejecuto algún controlador desde la linea de comandos, no existe la ip:
         $ip = empty($_SERVER['REMOTE_ADDR']) ? 'localhost' : $_SERVER['REMOTE_ADDR'];
@@ -129,36 +123,4 @@ class GestorErrores
         fclose($handle);
     }
 
-    /*
-    function addErrorSec($err = '', $sClauError, $line, $file)
-    {
-        $filename = $this->filename;
-        $this->filename = ConfigGlobal::$directorio . '/log/security.log';
-        $this->addError($err, $sClauError, $line, $file);
-        $this->filename = $filename;
-    }
-
-    function addError($err = '', $sClauError, $line, $file)
-    {
-        // Cuando ejecuto algún controlador desde la linea de comandos, no existe la ip:
-        $ip = empty($_SERVER['REMOTE_ADDR']) ? 'localhost' : $_SERVER['REMOTE_ADDR'];
-        $user = ConfigGlobal::mi_usuario();
-        $esquema = ConfigGlobal::mi_region_dl();
-        $ahora = date("Y/m/d H:i:s");
-        $id_user = $user . "[$esquema]$ip ";
-        $txt = "\n" . $ahora . " - " . $id_user . "->>  " . $err . "\n $sClauError en linea $line de: $file\n";
-
-        $filename = $this->filename;
-        if (!$handle = fopen($filename, 'a')) {
-            echo "Cannot open file ($filename)";
-            die();
-        }
-        // Write $somecontent to our opened file.
-        if (fwrite($handle, $txt) === FALSE) {
-            echo "Cannot write to file ($filename)";
-            die();
-        }
-        fclose($handle);
-    }
-    */
 }

@@ -5,7 +5,7 @@ namespace src\inventario\domain;
 use src\inventario\application\repositories\DocumentoRepository;
 use src\inventario\application\repositories\LugarRepository;
 use src\inventario\application\repositories\UbiInventarioRepository;
-use src\shared\DatosInfoRepo;
+use src\shared\domain\DatosInfoRepo;
 use web\Desplegable;
 
 /* No vale el underscore en el nombre */

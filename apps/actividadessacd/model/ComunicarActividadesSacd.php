@@ -252,7 +252,7 @@ class ComunicarActividadesSacd
         $UsuarioRepository = new UsuarioRepository();
         $cUsuarios = $UsuarioRepository->getUsuarios(['usuario' => $jefe_calendario]);
         $oUsuarioJefe = $cUsuarios[0];
-        $e_mail_jefe = $oUsuarioJefe->getEmail();
+        $e_mail_jefe = $oUsuarioJefe->getEmailAsString();
         if (empty($e_mail_jefe)) {
             exit(_("No hay un mail (jefe calendario) para enviar los errores. No se procesan los mails."));
         }

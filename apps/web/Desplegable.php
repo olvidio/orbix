@@ -177,52 +177,6 @@ class Desplegable
         return $txt;
     }
 
-    /*
-    public function options_old()
-    {
-        $txt = '';
-        if (!empty($this->bBlanco)) {
-            if (!empty($this->valorBlanco)) {
-                $txt .= "<option value=\"$this->valorBlanco\"></option>";
-            } else {
-                $txt .= '<option></option>';
-            }
-        }
-        if (is_object($this->oOpciones)) {
-            $this->oOpciones->execute();
-            foreach ($this->oOpciones as $row) {
-                if (!isset($row[1])) {
-                    $a = 0;
-                } else {
-                    $a = 1;
-                } // para el caso de sólo tener un valor.
-                if ($row[0] == $this->sOpcion_sel) {
-                    $sel = 'selected';
-                } else {
-                    $sel = '';
-                }
-                if (!empty($this->aOpcion_no) && is_array($this->aOpcion_no) && in_array($row[0], $this->aOpcion_no)) continue;
-                $txt .= "<option value=\"$row[0]\" $sel>$row[$a]</option>";
-            }
-        } else if (is_array($this->oOpciones)) {
-            reset($this->oOpciones);
-            foreach ($this->oOpciones as $key => $val) {
-                if ((string)$key === (string)$this->sOpcion_sel) {
-                    $sel = 'selected';
-                } else {
-                    $sel = '';
-                }
-                if (!empty($this->aOpcion_no) && is_array($this->aOpcion_no) && in_array($row[0], $this->aOpcion_no)) continue;
-                $txt .= "<option value=\"$key\" $sel>$val</option>";
-            }
-        } else {
-            $msg_err = _("tiene que ser un array") . ": " . __FILE__ . ": line " . __LINE__;
-            exit ($msg_err);
-        }
-        return $txt;
-    }
-    */
-
     public function setNombre($sNombre)
     {
         $this->sNombre = $sNombre;

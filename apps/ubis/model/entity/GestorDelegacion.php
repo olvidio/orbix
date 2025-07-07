@@ -170,7 +170,7 @@ class GestorDelegacion extends ClaseGestor
                 throw new RunTimeException($message);
             }
             if ($aDades['schema'] === $esquema_region_stgr) {
-                $id_esquema_region_stgr = $aDades['id'];
+                //$id_esquema_region_stgr = $aDades['id'];
             }
             if ($aDades['schema'] === $esquema_dele) {
                 $id_esquema_dele = $aDades['id'];
@@ -178,7 +178,7 @@ class GestorDelegacion extends ClaseGestor
         }
         return ['region_stgr' => $region_stgr,
             'esquema_region_stgr' => $esquema_region_stgr,
-            'id_esquema_region_stgr' => $id_esquema_region_stgr,
+            //'id_esquema_region_stgr' => $id_esquema_region_stgr,
             'mi_id_schema' => $id_esquema_dele,
             'esquema_dl' => $esquema_dele,
         ];

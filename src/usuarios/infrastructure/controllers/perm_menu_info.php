@@ -19,7 +19,7 @@ $Qid_item = (int)filter_input(INPUT_POST, 'id_item');
 
 $GrupoRepository = new GrupoRepository();
 $oUsuario = $GrupoRepository->findById($Qid_usuario); // La tabla y su heredada
-$nombre = $oUsuario->getUsuario();
+$nombre = $oUsuario->getUsuarioAsString();
 
 if (!empty($Qid_item)) {
     $oPermiso = new PermMenu(array('id_item' => $Qid_item));

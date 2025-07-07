@@ -277,7 +277,7 @@ if (!empty($esquema_web)) {
 }
 
 if (!isset($_SESSION['session_auth'])) {
-    //el segon cop tinc el nom i el password
+    //la segunda vez tengo el nombre y el password
     $idioma = '';
     if (isset($_POST['username']) && isset($_POST['password'])) {
         $_SESSION['private'] = $private;
@@ -314,16 +314,17 @@ if (!isset($_SESSION['session_auth'])) {
         }
 
         $idioma = '';
-        $sPasswd = null;
+        $password_db = null;
         $oCrypt = new MyCrypt();
-        $oDBSt->bindColumn('password', $sPasswd, \PDO::PARAM_STR);
+        $oDBSt->bindColumn('password', $password_db, \PDO::PARAM_STR);
         if ($row = $oDBSt->fetch(\PDO::FETCH_ASSOC)) {
+            $row['password'] = $password_db;
             $MiUsuario = (new Usuario())->setAllAttributes($row);
 
             // Verificación de contraseña exitosa
-            if ($oCrypt->encode($_POST['password'], $sPasswd) === $sPasswd) {
+            if ($oCrypt->encode($_POST['password'], $password_db) === $password_db) {
 
-                $expire = ""; //de moment, per fer servir més endevant...
+                $expire = ""; //de momento, para utilizar mas adelante...
                 // Para obligar a cambiar el password
                 if ($MiUsuario->isCambio_password() || $_POST['password'] === '1ªVegada') {
                     $expire = 1;

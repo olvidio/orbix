@@ -1,8 +1,8 @@
 <?php
 
 use core\ConfigGlobal;
+use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
-use src\shared\ViewSrcPhtml;
 use web\Desplegable;
 use web\Hash;
 
@@ -42,5 +42,5 @@ $a_campos = ['url' => $url,
     'oDesplGM' => $oDesplGM,
 ];
 
-$oView = new ViewSrcPhtml('frontend/menus/controller');
+$oView = new ViewNewPhtml('frontend/menus/controller');
 $oView->renderizar('menus_que.phtml', $a_campos);

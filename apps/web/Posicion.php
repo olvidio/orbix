@@ -84,7 +84,7 @@ class Posicion
         foreach ($_SESSION['position'] as $key => $values) {
             $_SESSION['position'][$key]['stack'] = $key;
         }
-        $this->stack = $stack -1;
+        $this->stack = $stack - 1;
         session_write_close();
     }
 
@@ -137,7 +137,12 @@ class Posicion
         for ($i = 0; $i < $n; $i++) {
             $aPosition = prev($_SESSION['position']);
         }
-        $this->stack = key($_SESSION['position']);
+        $key = key($_SESSION['position']);
+        if (empty($key)) {
+            $this->stack = 0;
+        } else {
+            $this->stack = key($_SESSION['position']);
+        }
         return $this->stack;
     }
 
@@ -146,7 +151,8 @@ class Posicion
      *
      * @var integer|string $stack indice del array $_SESSION['position']);
      */
-    public function goStack(int|string $stack = '*')
+    public
+    function goStack(int|string $stack = '*')
     { //pongo '*' para distinguirlo del 0.
         if (isset($_SESSION['position'][$stack])) {
             $aPosition = $_SESSION['position'][$stack];
@@ -161,7 +167,8 @@ class Posicion
         }
     }
 
-    public function olvidar($stack = '*')
+    public
+    function olvidar($stack = '*')
     {
         if ($stack !== '*') { //pongo '*' para distinguirlo del 0.
             // hasta el final
@@ -175,7 +182,8 @@ class Posicion
     /*
      * @param $parar Para el incremento de la pila. por defecto 0. El 1 sirve par el caso de actualizar una misma página.
      */
-    public function recordar($parar = 0)
+    public
+    function recordar($parar = 0)
     {
         $this->stack = $this->aParametros['stack'] ?? 0;
         //echo "<script>history.pushState({state:'new'},'New State','?new');</script>";
@@ -210,7 +218,8 @@ class Posicion
         session_write_close();
     }
 
-    private function guardar()
+    private
+    function guardar()
     {
         if (!isset($this->stack)) { //OJO si es el primero tiene valor 0. (no usar empty)
             if ($this->existsSession()) {
@@ -227,7 +236,8 @@ class Posicion
         session_write_close();
     }
 
-    public function go_atras($n = 0)
+    public
+    function go_atras($n = 0)
     {
         $this->go($n);
         // puede ser que no haya donde volver
@@ -257,7 +267,8 @@ class Posicion
         return $html;
     }
 
-    public function js_atras($n = 0)
+    public
+    function js_atras($n = 0)
     {
         $this->go($n);
         // puede ser que no haya donde volver
@@ -294,7 +305,8 @@ class Posicion
      * @param integer $n número de posiciones atrás. Normalmente 1
      * @return string Html= div (display_none)
      */
-    public function mostrar_left_slide(int $n = 0)
+    public
+    function mostrar_left_slide(int $n = 0)
     {
         $this->go($n);
         // puede ser que no haya donde volver
@@ -332,7 +344,8 @@ class Posicion
      * @param integer $n número de posiciones atrás. Normalmente 1
      * @return string Html= div (display_none) + img(arrow)
      */
-    public function mostrar_back_arrow(int $n = 0)
+    public
+    function mostrar_back_arrow(int $n = 0)
     {
         $this->go($n);
         // puede ser que no haya donde volver
@@ -361,7 +374,8 @@ class Posicion
         return $html;
     }
 
-    private function limitar($n = 10)
+    private
+    function limitar($n = 10)
     {
         // Cuando hay el doble, borro $n.
         if (isset($_SESSION['position'])) { // No sé porque no deja poner todo junto
@@ -450,7 +464,8 @@ class Posicion
      * @param mixed nomParametre
      * @param mixed valor
      */
-    public function addParametro($nomParametre, $valor, $n = 0)
+    public
+    function addParametro($nomParametre, $valor, $n = 0)
     {
         if (!empty($_SESSION['position'])) {
             $this->go($n);
@@ -465,7 +480,8 @@ class Posicion
      * @param mixed nomParametre
      * @param mixed valor
      */
-    public function setParametro($nomParametre, $valor)
+    public
+    function setParametro($nomParametre, $valor)
     {
         $this->aParametros[$nomParametre] = $valor;
     }
@@ -475,7 +491,8 @@ class Posicion
      *
      * @param array aVars
      */
-    public function setParametros($aVars, $n = 0)
+    public
+    function setParametros($aVars, $n = 0)
     {
         // Si es del constructor no guardo los cambios aquí.
         if ($this->constructor) {
@@ -499,7 +516,8 @@ class Posicion
      *
      * @param string nomParametre
      */
-    public function getParametro($nomParametre, $n = 0)
+    public
+    function getParametro($nomParametre, $n = 0)
     {
         if ($n == 0) {
             if (!isset($this->aParametros[$nomParametre])) {
@@ -532,7 +550,8 @@ class Posicion
      * busca la página en el directorio actual. Para usar una referencia absoluta a una página,
      * el $go_to debería empezar por '#'.
      */
-    public function ir_a($go_to)
+    public
+    function ir_a($go_to)
     {
         $this->setId_div('ir_a');
         $url = '';
@@ -633,7 +652,8 @@ class Posicion
      * El parámetro $form sirve para indicar si se pone una direccion absoluta (http:...) o una relativa al $web (es para el caso del action de un formulario).
      *
      */
-    public function link_a($go_to, $form = '')
+    public
+    function link_a($go_to, $form = '')
     {
         $go = strtok($go_to, "@");
         $pag_sin_param = '';

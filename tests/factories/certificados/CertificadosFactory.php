@@ -2,8 +2,8 @@
 
 namespace Tests\factories\certificados;
 
-use certificados\domain\entity\Certificado;
 use Faker\Factory;
+use src\certificados\domain\entity\Certificado;
 use web\DateTimeLocal;
 use web\NullDateTimeLocal;
 

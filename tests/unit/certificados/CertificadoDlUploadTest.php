@@ -2,13 +2,13 @@
 
 namespace Tests\unit\certificados;
 
-use certificados\domain\CertificadoDlUpload;
-use certificados\domain\entity\CertificadoDl;
-use certificados\domain\repositories\CertificadoDlRepository;
 use core\ConfigDB;
 use core\ConfigGlobal;
 use core\DBConnection;
 use core\DBPropiedades;
+use src\certificados\application\repositories\CertificadoDlRepository;
+use src\certificados\domain\CertificadoDlUpload;
+use src\certificados\domain\entity\CertificadoDl;
 use Tests\factories\certificados\CertificadosFactory;
 use Tests\myTest;
 
@@ -47,6 +47,7 @@ class CertificadoDlUploadTest extends myTest
         $oDBdst = $this->setConexion('H-dlbv');
         foreach ($this->cCertificados as $Certificado) {
             $CertificadoUpload = new CertificadoDlUpload();
+            $CertificadoUpload->setoDbl($oDBdst);
 
             $id_item = 0;  // para que cree uno nuevo
             $contenido_doc = $Certificado->getDocumento();
@@ -58,8 +59,7 @@ class CertificadoDlUploadTest extends myTest
             $oF_recibido = $Certificado->getF_enviado();
             $destino = $Certificado->getDestino();
 
-            $CertificadoUpload::setoDbl($oDBdst);
-            $CertificadoDB = $CertificadoUpload::uploadNew($id_item, $id_nom, $contenido_doc, $idioma, $certificado, $firmado, $oF_certificado, $oF_recibido, $destino);
+            $CertificadoDB = $CertificadoUpload->uploadNew($id_item, $id_nom, $contenido_doc, $idioma, $certificado, $firmado, $oF_certificado, $oF_recibido, $destino);
 
             $this->assertInstanceOf(CertificadoDl::class, $CertificadoDB);
 
@@ -77,6 +77,9 @@ class CertificadoDlUploadTest extends myTest
             $this->assertEquals($CertificadoDB->getId_nom(), $CertificadoDB2->getId_nom());
             $this->assertEquals($CertificadoDB->getIdioma(), $CertificadoDB2->getIdioma());
             $this->assertEquals($CertificadoDB->isFirmado(), $CertificadoDB2->isFirmado());
+
+            // borrar las pruebas
+            $CertificadoRepository->eliminar($CertificadoDB);
         }
     }
 

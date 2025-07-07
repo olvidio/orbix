@@ -3,8 +3,8 @@
 
 use core\ConfigDB;
 use core\DBConnection;
+use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\OfuscarEmail;
-use src\shared\ViewSrcPhtml;
 use src\usuarios\domain\entity\Usuario;
 
 /**
@@ -70,7 +70,7 @@ if ($row = $oDBSt->fetch(\PDO::FETCH_ASSOC)) {
 }
 
 $error_txt = '';
-$email = $MiUsuario->getEmail();
+$email = $MiUsuario->getEmailAsString();
 if (empty($email)) {
     $error_txt = _("No hay email asociado a este usuario");
     $emailOfuscado = '';
@@ -105,5 +105,5 @@ $a_campos = [
     'url_index' => $url_index,
 ];
 
-$oView = new ViewSrcPhtml('frontend\usuarios\view');
+$oView = new ViewNewPhtml('frontend\usuarios\view');
 $oView->renderizar('ayuda_acceso.phtml', $a_campos);

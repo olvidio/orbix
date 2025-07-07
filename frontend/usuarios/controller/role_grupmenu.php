@@ -1,8 +1,8 @@
 <?php
 
+use frontend\shared\model\ViewNewPhtml;
 use src\menus\application\repositories\GrupMenuRepository;
 use src\menus\application\repositories\GrupMenuRoleRepository;
-use src\shared\ViewSrcPhtml;
 use src\usuarios\application\repositories\RoleRepository;
 use web\Hash;
 use web\Lista;
@@ -32,7 +32,7 @@ if (!empty($a_sel)) { //vengo de un checkbox
 
 $RoleRepository = new RoleRepository();
 $oRole = $RoleRepository->findById($Qid_role);
-$role = $oRole->getRole();
+$role = $oRole->getRoleAsString();
 
 // los que ya tengo:
 $GrupMenuRoleRepository = new GrupMenuRoleRepository();
@@ -82,5 +82,5 @@ $a_campos = ['oPosicion' => $oPosicion,
     'oTabla' => $oTabla,
 ];
 
-$oView = new ViewSrcPhtml('frontend\usuarios\controller');
+$oView = new ViewNewPhtml('frontend\usuarios\controller');
 $oView->renderizar('role_grupmenu.phtml', $a_campos);

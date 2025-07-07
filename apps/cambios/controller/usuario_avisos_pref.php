@@ -55,7 +55,7 @@ if (substr((string)$Qid_usuario, 0, 1) === '4') {
     $oUsuario = $GrupoRepository->findById($Qid_usuario); // La tabla y su heredada
     $grupo = TRUE;
 }
-$nombre = $oUsuario->getUsuario();
+$nombre = $oUsuario->getUsuarioAsString();
 $id_role = $oUsuario->getId_role();
 
 $mi_sfsv = ConfigGlobal::mi_sfsv();

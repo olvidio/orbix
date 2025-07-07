@@ -1,0 +1,133 @@
+{{ oPosicion.mostrar_left_slide(1)|raw }}
+
+{{ "Imprimir un certificado para"|trans|raw }}: {{ nombreApellidos }}
+<br>
+<br>
+<form id='frm_upload' action="" method="post" enctype="multipart/form-data">
+    {{ oHashCertificadoPdf.getCamposHtml()|raw }}
+    <br>
+    <label>
+        {{ "Número de certificado"|trans|raw }}:
+        <input type="text" name="certificado" value="{{ certificado }}"/>
+    </label>
+    <br>
+    <label>
+        {{ "Fecha del certificado"|trans|raw }}:
+        <input type="text" id="f_certificado" name="f_certificado" value="{{ f_certificado }}"/>
+    </label>
+    <br>
+    <label>
+        {{ "idioma del certificado"|trans|raw }}:
+        {{ oDesplIdiomas.desplegable|raw }}
+        ({{ "blanco = latín"|trans|raw }})
+    </label>
+    <br>
+    <label>
+        {{ "Destino"|trans|raw }}:
+        <input type="text" name="destino" value="{{ destino }}"/>
+    </label>
+    <br>
+    <label>
+        {{ "firmado digitalmente"|trans|raw }}:
+        <input type="checkbox" name="firmado"/>
+    </label>
+    <br>
+    <br>
+    <input type="button" onclick="fnjs_Guardar_y_descargar();" value="{{ "Guardar y descargar pdf"|trans|raw }}">
+</form>
+
+<script>
+    fnjs_Guardar_y_descargar = function () {
+        if (!fnjs_comprobar_fecha('#f_certificado', '{{ locale_us }}')) {
+            return;
+        }
+
+        if (typeof event !== 'undefined') {
+            event.preventDefault();
+        }
+
+        let datos = $('#frm_upload').serialize();
+        let request = $.ajax({
+            data: datos,
+            url: 'src/certificados/infrastructure/controllers/certificado_guardar.php',
+            method: 'POST',
+            dataType: 'json'
+        });
+        request.done(function (json) {
+            if (json.success !== true) {
+                alert("{{ "respuesta"|trans|raw }}: " + json.mensaje);
+            } else {
+                let data = JSON.parse(json.data);
+                let item = data.item;
+                let url = "{{ pag_certificado_2_pdf }}" + '?guardar=1&id_item=' + item + '{{ h|raw }}';
+
+                // Interceptar errores al abrir la ventana
+                let ventana = null;
+                try {
+                    ventana = open(url, "sele");
+
+                    if (!ventana || ventana.closed || typeof ventana.closed == 'undefined') {
+                        alert("{{ "No se pudo abrir la ventana del PDF. Verifique que los popups estén permitidos."|trans|raw }}");
+                        return;
+                    }
+
+                    // Verificar si la ventana se abrió correctamente después de un delay
+                    setTimeout(function () {
+                        try {
+                            if (ventana.closed) {
+                                console.log("La ventana del PDF fue cerrada");
+                            } else {
+                                // La ventana está abierta, proceder con la confirmación
+                                procesarConfirmacion(item);
+                            }
+                        } catch (e) {
+                            console.log("No se puede acceder al estado de la ventana (normal si es cross-origin)");
+                            procesarConfirmacion(item);
+                        }
+                    }, 500);
+
+                } catch (error) {
+                    console.error("Error al abrir ventana:", error);
+                    alert("{{ "Error al abrir el PDF"|trans|raw }}");
+                    return;
+                }
+            }
+        });
+    }
+
+    function procesarConfirmacion(item) {
+        // Una vez descargado, hay que permitir cancelar y borrar si no está correcto
+        let msg = "{{ "¿Es correcto?"|trans|raw }}";
+        msg += "\n";
+        msg += "\n";
+        msg += "{{ "'Cancel' para eliminar el certificado recién creado"|trans|raw }}\n";
+        msg += "\n";
+
+        let isChromeAgent = false;
+        if (navigator.userAgent.includes("Chrome")) {
+            isChromeAgent = true;
+        }
+        if (isChromeAgent) {
+            // ok
+            {{ oPosicion.js_atras(1)|raw }}
+        } else {
+            if (confirm(msg)) {
+                // ok
+                {{ oPosicion.js_atras(1)|raw }}
+            } else {
+                // cancel
+                let url2 = "{{ pag_certificado_eliminar }}" + '?id_item=' + item + '{{ h_eliminar|raw }}';
+                fnjs_update_div('#main', url2);
+                {{ oPosicion.js_atras(1)|raw }}
+            }
+        }
+    }
+
+    $(function () {
+        $("#f_certificado").datepicker({
+            numberOfMonths: 1,
+            showButtonPanel: true
+        });
+
+    });
+</script>

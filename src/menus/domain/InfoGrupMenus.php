@@ -6,7 +6,7 @@ namespace src\menus\domain;
 /* No vale el underscore en el nombre */
 
 use src\menus\application\repositories\GrupMenuRepository;
-use src\shared\DatosInfoRepo;
+use src\shared\domain\DatosInfoRepo;
 
 class InfoGrupMenus extends DatosInfoRepo
 {

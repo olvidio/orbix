@@ -3,9 +3,8 @@
 $_POST = (empty($_POST))? $_GET : $_POST;
 
 use core\ConfigGlobal;
-use core\ViewPhtml;
+use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
-use src\shared\ViewSrcPhtml;
 use web\Hash;
 
 /**
@@ -78,5 +77,5 @@ $a_campos = [
     'url_index' => $url_index,
 ];
 
-$oView = new ViewSrcPhtml('frontend\usuarios\controller');
+$oView = new ViewNewPhtml('frontend\usuarios\controller');
 $oView->renderizar('usuario_form_pwd.phtml', $a_campos);

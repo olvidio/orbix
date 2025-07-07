@@ -68,6 +68,33 @@ abstract class GestorPersonaGlobal extends ClaseGestor
     }
 
     /**
+     * retorna un array
+     * Els posibles Sacd
+     *
+     * @param string sdonde (condición del sql. debe empezar por AND).
+     * @return array|false
+     */
+    function getArraySacd($sdonde = '')
+    {
+        $oDbl = $this->getoDbl();
+        $nom_tabla = $this->getNomTabla();
+        $aSacd = [];
+        $sQuery = "SELECT id_nom, " . $this->sApeNom . " as ape_nom
+		   	FROM $nom_tabla
+		   	WHERE situacion='A' AND sacd='t' $sdonde
+		   	ORDER by apellido1,apellido2,nom";
+        //echo "qry: $sQuery<br>";
+        if (($oDblSt = $oDbl->query($sQuery)) === false) {
+            $sClauError = 'GestorPersonaDl.lista';
+            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+            return false;
+        }
+        foreach ($oDblSt as $aDades) {
+            $aSacd[$aDades['id_nom']] = $aDades['ape_nom'];
+        }
+        return $aSacd;
+    }
+    /**
      * retorna un objecte del tipus Desplegable
      * Els posibles Sacd
      *
@@ -91,6 +118,35 @@ abstract class GestorPersonaGlobal extends ClaseGestor
         return new Desplegable('', $oDblSt, '', true);
     }
 
+    function getArrayPersonas($id_tabla = '')
+    {
+        $oDbl = $this->getoDbl();
+        $nom_tabla = $this->getNomTabla();
+        $aPersonas = [];
+        if ($nom_tabla === 'p_de_paso_ex') {
+            $Qry_tabla = empty($id_tabla) ? '' : "AND id_tabla = '$id_tabla'";
+            $sQuery = "SELECT id_nom, " . $this->sApeNom . " || ' (' || p.dl || ')' as ape_nom
+				FROM $nom_tabla p 
+				WHERE p.situacion='A' $Qry_tabla
+				ORDER by apellido1,apellido2,nom";
+            //echo "qry: $sQuery<br>";
+        } else {
+            $sQuery = "SELECT id_nom, " . $this->sApeNom . " || ' (' ||   COALESCE(c.nombre_ubi, '-') || ')' as ape_nom
+				FROM $nom_tabla p LEFT JOIN u_centros_dl c ON (c.id_ubi=p.id_ctr)
+				WHERE p.situacion='A'
+				ORDER by apellido1,apellido2,nom";
+            //echo "qry: $sQuery<br>";
+        }
+        if (($oDblSt = $oDbl->query($sQuery)) === false) {
+            $sClauError = 'GestorPersonaDl.lista';
+            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+            return false;
+        }
+        foreach ($oDblSt as $aDades) {
+            $aPersonas[$aDades['id_nom']] = $aDades['ape_nom'];
+        }
+        return $aPersonas;
+    }
     /**
      * retorna una llista id_nom=>apellidosNombre
      *
@@ -121,39 +177,6 @@ abstract class GestorPersonaGlobal extends ClaseGestor
             return false;
         }
         return new Desplegable('', $oDblSt, '', true);
-    }
-
-    /**
-     * retorna l'array d'objectes de tipus PersonaDl
-     *
-     * @param string sQuery la query a executar.
-     * @return array|false
-     */
-    function getPersonasQuery($sQuery = '')
-    {
-        $oDbl = $this->getoDbl();
-        $clasename = get_class($this);
-        $nomClase = join('', array_slice(explode('\\', $clasename), -1));
-
-        $oPersonaDlSet = new Set();
-        if (($oDbl->query($sQuery)) === false) {
-            $sClauError = 'GestorPersonaDl.query';
-            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
-            return false;
-        }
-        foreach ($oDbl->query($sQuery) as $aDades) {
-            $a_pkey = array('id_nom' => $aDades['id_nom']);
-            switch ($nomClase) {
-                case 'GestorPersonaSacd':
-                    $oPersonaDl = new PersonaSacd($a_pkey);
-                    break;
-                default:
-                    $oPersonaDl = new PersonaDl($a_pkey);
-            }
-            $oPersonaDl = new PersonaDl($a_pkey);
-            $oPersonaDlSet->add($oPersonaDl);
-        }
-        return $oPersonaDlSet->getTot();
     }
 
     /**

@@ -2,8 +2,7 @@
 
 //////////// Permisos de grupos ////////////
 use core\ConfigGlobal;
-use core\ViewPhtml;
-use src\shared\ViewSrcPhtml;
+use frontend\shared\model\ViewNewPhtml;
 use src\usuarios\application\repositories\GrupoRepository;
 use src\usuarios\application\repositories\UsuarioGrupoRepository;
 use src\usuarios\domain\entity\Role;
@@ -54,7 +53,7 @@ if (!empty($Qid_usuario)) { // si no hay usuario, no puedo poner permisos.
                 'oPermAccion' => $oPermAccion,
             ];
 
-            $oView = new ViewSrcPhtml('src\usuarios\controller');
+            $oView = new ViewNewPhtml('src\usuarios\controller');
             $oView->renderizar('perm_ctr_form.phtml', $a_campos);
         }
     }

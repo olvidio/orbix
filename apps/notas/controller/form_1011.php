@@ -91,12 +91,20 @@ $GesAsignaturas = new GestorAsignatura();
 if (!empty($Qid_asignatura_real)) { //caso de modificar
     $mod = "editar";
     $id_asignatura = $Qid_asignatura_real;
+    // Ahora pueden existir 2.
+    // - Si es nota_real (tipo_acta = 1) puede estar en la tabla e_notas_otra_region...
+    // - Si es nota_certificado (tipo_acta = 2) en la tabla e_notas_dl
+    // Debería mostrar la de e_notas_dl. Ordeno por tipo_acta
+    $aWhere = [];
+    $aWhere['_ordre'] = 'tipo_acta DESC';
     $aWhere['id_nom'] = $Qid_pau;
     $aWhere['id_asignatura'] = $Qid_asignatura_real;
     $GesPersonaNotas = new GestorPersonaNotaDB();
     $cPersonaNotas = $GesPersonaNotas->getPersonaNotas($aWhere);
-
-    $oPersonaNota = $cPersonaNotas[0]; // solo deberia existir una.
+    if ($cPersonaNotas === false) {
+        exit("Error en la consulta a la base de datos en: ". __FILE__ . ": line " . __LINE__);
+    }
+    $oPersonaNota = $cPersonaNotas[0]; // solo debería existir una.
     $id_situacion = $oPersonaNota->getId_situacion();
     $nota_num = $oPersonaNota->getNota_num();
     $nota_max = $oPersonaNota->getNota_max();

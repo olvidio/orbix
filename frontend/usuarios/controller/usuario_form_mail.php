@@ -1,8 +1,8 @@
 <?php
 
 use core\ConfigGlobal;
+use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
-use src\shared\ViewSrcPhtml;
 use web\Hash;
 
 /**
@@ -36,13 +36,11 @@ $hash_params = $oHash->getArrayCampos();
 $data = PostRequest::getData($url_usuario_form_backend, $hash_params);
 
 $usuario = $data['usuario'];
-$pass = $data['pass'];
 $email = $data['email'];
 
 $oHash = new Hash();
 $oHash->setCamposForm('email');
 $a_camposHidden = array(
-    'pass' => $pass,
     'id_usuario' => $id_usuario,
     'quien' => 'usuario',
 );
@@ -61,5 +59,5 @@ $a_campos = [
     'txt_ok' => $txt_ok,
 ];
 
-$oView = new ViewSrcPhtml('frontend\usuarios\controller');
+$oView = new ViewNewPhtml('frontend\usuarios\controller');
 $oView->renderizar('usuario_form_mail.phtml', $a_campos);

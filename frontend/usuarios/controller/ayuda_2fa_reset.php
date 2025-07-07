@@ -2,8 +2,8 @@
 
 use core\ConfigDB;
 use core\DBConnection;
+use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\OfuscarEmail;
-use src\shared\ViewSrcPhtml;
 use src\usuarios\domain\entity\Usuario;
 
 // vengo por $GET
@@ -66,7 +66,7 @@ if ($row = $oDBSt->fetch(\PDO::FETCH_ASSOC)) {
     $MiUsuario = (new Usuario())->setAllAttributes($row);
 }
 
-$email = $MiUsuario->getEmail();
+$email = $MiUsuario->getEmailAsString();
 if (empty($email)) {
     $error_txt = _("No hay email asociado a este usuario");
     $emailOfuscado = '';
@@ -83,5 +83,5 @@ $a_campos = [
     'url_index' => $Qurl_index,
 ];
 
-$oView = new ViewSrcPhtml('frontend\usuarios\view');
+$oView = new ViewNewPhtml('frontend\usuarios\view');
 $oView->renderizar('ayuda_2fa_reset.phtml', $a_campos);

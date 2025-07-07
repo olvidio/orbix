@@ -1,0 +1,134 @@
+<?php
+
+use core\ConfigGlobal;
+
+// Make sure variables are defined
+if (!isset($oPosicion)) {
+    $oPosicion = new \web\Posicion($_SERVER['PHP_SELF'], $_POST);
+}
+if (!isset($fields)) {
+    $fields = [];
+}
+if (!isset($mod)) {
+    $mod = '';
+}
+
+?>
+<script>
+    fnjs_grabar = function (formulario) {
+        var url = '<?= ConfigGlobal::getWeb() ?>/src/shared/infrastructure/controllers/tablaDB_update.php';
+        let datos = $(formulario).serialize();
+        let request = $.ajax({
+            data: datos,
+            url: url,
+            method: 'POST',
+            dataType: 'json'
+        });
+        request.done(function (json) {
+            if (json.success !== true) {
+                alert("<?= _("respuesta") ?>" + ': ' + json.mensaje);
+            } else {
+                <?= $oPosicion->js_atras(1); ?>
+            }
+        });
+    }
+</script>
+<?= $oPosicion->mostrar_left_slide(1); ?>
+<h1><?= _("Formulario de datos") ?></h1>
+<form id="datos_form" name="datos_form" action="" method="post">
+<?= $oHashSelect->getCamposHtml() ?>
+ <h3 class=subtitulo><?= ucfirst($tit_txt) ?></h3>
+    <h4><?= ucfirst($explicacion_txt) ?></h4>
+    <table>
+        <?php foreach ($fields as $field): ?>
+            <?php
+            $tipo = $field['tipo'];
+            $nom_camp = $field['nombre'];
+            $eti = $field['etiqueta'];
+            $valor_camp = $field['valor'];
+
+            switch ($tipo):
+                case "ver":
+                    if ($mod !== 'nuevo'): ?>
+                        <tr>
+                            <td class="etiqueta"><?= ucfirst($eti) ?></td>
+                            <td class="contenido"><?= htmlspecialchars($valor_camp ?? '') ?></td>
+                        </tr>
+                        <input type='hidden' name='<?= $nom_camp ?>' value="<?= htmlspecialchars($valor_camp ?? '') ?>">
+                    <?php endif;
+                    break;
+                case "decimal":
+                case "texto": ?>
+                    <tr>
+                        <td class="etiqueta"><?= ucfirst($eti) ?></td>
+                        <td class="contenido">
+                            <input type='text' name='<?= $nom_camp ?>' value="<?= htmlspecialchars($valor_camp ?? '') ?>" size='<?= $field['size'] ?>'>
+                        </td>
+                    </tr>
+                    <?php break;
+                case "fecha": ?>
+                    <tr>
+                        <td class="etiqueta"><?= ucfirst($eti) ?></td>
+                        <td class="contenido">
+                            <input class="fecha" type="text" id="<?= $nom_camp ?>" name="<?= $nom_camp ?>" value="<?= $field['valor_txt'] ?>" 
+                                   onchange='fnjs_comprobar_fecha("#<?= $nom_camp ?>", <?= $field['locale_us'] ?>)'>
+                        </td>
+                    </tr>
+                    <?php break;
+                case "opciones": ?>
+                    <tr>
+                        <td class="etiqueta"><?= ucfirst($eti) ?></td>
+                        <td class="contenido">
+                            <?php 
+                            $acc = $field['accion'];
+                            $a_opciones = $field['opciones'];
+                            $aOpcion_no = $field['aOpcion_no'];
+
+                            $accion = empty($acc) ? '' : "onchange=\"fnjs_actualizar_depende('$nom_camp','$acc');\" ";
+                            ?>
+                            <select id="<?= $nom_camp ?>" name="<?= $nom_camp ?>" <?= $accion ?>>
+                                <option></option>
+                                <?php foreach ($a_opciones as $key => $val): 
+                                    $sel = ((string)$key === (string)$valor_camp) ? 'selected' : '';
+                                    if (!empty($aOpcion_no) && is_array($aOpcion_no) && in_array($key, $aOpcion_no)) continue;
+                                ?>
+                                    <option value="<?= $key ?>" <?= $sel ?>><?= $val ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                        </td>
+                    </tr>
+                    <?php break;
+                case "depende": ?>
+                    <tr>
+                        <td class="etiqueta"><?= ucfirst($eti) ?></td>
+                        <td class="contenido">
+                            <select id="<?= $nom_camp ?>" name="<?= $nom_camp ?>">
+                                <?= $field['opciones_txt'] ?>
+                            </select>
+                        </td>
+                    </tr>
+                    <?php break;
+                case "array": ?>
+                    <tr>
+                        <td class="etiqueta"><?= ucfirst($eti) ?></td>
+                        <td class="contenido">
+                            <select name="<?= $nom_camp ?>">
+                                <?= $field['options_html'] ?>
+                            </select>
+                        </td>
+                    </tr>
+                    <?php break;
+                case "check": ?>
+                    <tr>
+                        <td class="etiqueta"><?= ucfirst($eti) ?></td>
+                        <td class="contenido">
+                            <input type='checkbox' name='<?= $nom_camp ?>' <?= $field['checked'] ? 'checked' : '' ?>>
+                        </td>
+                    </tr>
+                    <?php break;
+            endswitch; ?>
+        <?php endforeach; ?>
+    </table>
+    <br>
+    <input type=button onclick="fnjs_grabar(this.form);" value=<?= _("guardar") ?>>
+</form>

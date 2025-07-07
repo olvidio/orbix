@@ -1,7 +1,13 @@
 <?php
 
 namespace src\usuarios\domain\entity;
-	use function core\is_true;
+
+use function core\is_true;
+use src\usuarios\domain\value_objects\IdLocale;
+use src\usuarios\domain\value_objects\NombreLocale;
+use src\usuarios\domain\value_objects\Idioma;
+use src\usuarios\domain\value_objects\NombreIdioma;
+
 /**
  * Clase que implementa la entidad x_locales
  *
@@ -18,27 +24,27 @@ class Local {
 	/**
 	 * Id_locale de Local
 	 *
-	 * @var string
+	 * @var IdLocale
 	 */
-	 private string $sid_locale;
+	 private IdLocale $sid_locale;
 	/**
 	 * Nom_locale de Local
 	 *
-	 * @var string|null
+	 * @var NombreLocale|null
 	 */
-	 private string|null $snom_locale = null;
+	 private ?NombreLocale $snom_locale = null;
 	/**
 	 * Idioma de Local
 	 *
-	 * @var string|null
+	 * @var Idioma|null
 	 */
-	 private string|null $sidioma = null;
+	 private ?Idioma $sidioma = null;
 	/**
 	 * Nom_idioma de Local
 	 *
-	 * @var string|null
+	 * @var NombreIdioma|null
 	 */
-	 private string|null $snom_idioma = null;
+	 private ?NombreIdioma $snom_idioma = null;
 	/**
 	 * Activo de Local
 	 *
@@ -58,19 +64,51 @@ class Local {
 	{
 		if (array_key_exists('id_locale',$aDatos))
 		{
-			$this->setId_locale($aDatos['id_locale']);
+			// Check if it's already an IdLocale object
+			if ($aDatos['id_locale'] instanceof IdLocale) {
+				$this->setId_locale($aDatos['id_locale']);
+			} else {
+				$this->setId_locale(new IdLocale($aDatos['id_locale']));
+			}
 		}
 		if (array_key_exists('nom_locale',$aDatos))
 		{
-			$this->setNom_locale($aDatos['nom_locale']);
+			if ($aDatos['nom_locale'] === null) {
+				$this->setNom_locale(null);
+			} else {
+				// Check if it's already a NombreLocale object
+				if ($aDatos['nom_locale'] instanceof NombreLocale) {
+					$this->setNom_locale($aDatos['nom_locale']);
+				} else {
+					$this->setNom_locale(new NombreLocale($aDatos['nom_locale']));
+				}
+			}
 		}
 		if (array_key_exists('idioma',$aDatos))
 		{
-			$this->setIdioma($aDatos['idioma']);
+			if ($aDatos['idioma'] === null) {
+				$this->setIdioma(null);
+			} else {
+				// Check if it's already an Idioma object
+				if ($aDatos['idioma'] instanceof Idioma) {
+					$this->setIdioma($aDatos['idioma']);
+				} else {
+					$this->setIdioma(new Idioma($aDatos['idioma']));
+				}
+			}
 		}
 		if (array_key_exists('nom_idioma',$aDatos))
 		{
-			$this->setNom_idioma($aDatos['nom_idioma']);
+			if ($aDatos['nom_idioma'] === null) {
+				$this->setNom_idioma(null);
+			} else {
+				// Check if it's already a NombreIdioma object
+				if ($aDatos['nom_idioma'] instanceof NombreIdioma) {
+					$this->setNom_idioma($aDatos['nom_idioma']);
+				} else {
+					$this->setNom_idioma(new NombreIdioma($aDatos['nom_idioma']));
+				}
+			}
 		}
 		if (array_key_exists('activo',$aDatos))
 		{
@@ -80,67 +118,107 @@ class Local {
 	}
 	/**
 	 *
-	 * @return string $sid_locale
+	 * @return IdLocale
 	 */
-	public function getId_locale(): string
+	public function getId_locale(): IdLocale
 	{
 		return $this->sid_locale;
 	}
 	/**
 	 *
-	 * @param string $sid_locale
+	 * @param IdLocale $sid_locale
 	 */
-	public function setId_locale(string $sid_locale): void
+	public function setId_locale(IdLocale $sid_locale): void
 	{
 		$this->sid_locale = $sid_locale;
 	}
+
+	/**
+	 * Get the locale identifier as a string
+	 *
+	 * @return string
+	 */
+	public function getId_localeAsString(): string
+	{
+		return $this->sid_locale->value();
+	}
 	/**
 	 *
-	 * @return string|null $snom_locale
+	 * @return NombreLocale|null
 	 */
-	public function getNom_locale(): ?string
+	public function getNom_locale(): ?NombreLocale
 	{
 		return $this->snom_locale;
 	}
 	/**
 	 *
-	 * @param string|null $snom_locale
+	 * @param NombreLocale|null $snom_locale
 	 */
-	public function setNom_locale(?string $snom_locale = null): void
+	public function setNom_locale(?NombreLocale $snom_locale = null): void
 	{
 		$this->snom_locale = $snom_locale;
 	}
+
+	/**
+	 * Get the locale name as a string
+	 *
+	 * @return string|null
+	 */
+	public function getNom_localeAsString(): ?string
+	{
+		return $this->snom_locale ? $this->snom_locale->value() : null;
+	}
 	/**
 	 *
-	 * @return string|null $sidioma
+	 * @return Idioma|null
 	 */
-	public function getIdioma(): ?string
+	public function getIdioma(): ?Idioma
 	{
 		return $this->sidioma;
 	}
 	/**
 	 *
-	 * @param string|null $sidioma
+	 * @param Idioma|null $sidioma
 	 */
-	public function setIdioma(?string $sidioma = null): void
+	public function setIdioma(?Idioma $sidioma = null): void
 	{
 		$this->sidioma = $sidioma;
 	}
+
+	/**
+	 * Get the language as a string
+	 *
+	 * @return string|null
+	 */
+	public function getIdiomaAsString(): ?string
+	{
+		return $this->sidioma ? $this->sidioma->value() : null;
+	}
 	/**
 	 *
-	 * @return string|null $snom_idioma
+	 * @return NombreIdioma|null
 	 */
-	public function getNom_idioma(): ?string
+	public function getNom_idioma(): ?NombreIdioma
 	{
 		return $this->snom_idioma;
 	}
 	/**
 	 *
-	 * @param string|null $snom_idioma
+	 * @param NombreIdioma|null $snom_idioma
 	 */
-	public function setNom_idioma(?string $snom_idioma = null): void
+	public function setNom_idioma(?NombreIdioma $snom_idioma = null): void
 	{
 		$this->snom_idioma = $snom_idioma;
+	}
+
+	/**
+	 * Get the language name as a string
+	 *
+	 * @return string|null
+	 */
+	public function getNom_idiomaAsString(): ?string
+	{
+		return $this->snom_idioma ? $this->snom_idioma->value() : null;
 	}
 	/**
 	 *

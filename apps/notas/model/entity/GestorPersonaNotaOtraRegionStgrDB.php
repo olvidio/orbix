@@ -6,8 +6,8 @@ use core\ConfigDB;
 use core\ConfigGlobal;
 use core\DBConnection;
 use core\Set;
+use notas\model\EditarPersonaNota;
 use notas\model\PersonaNota;
-use web\DateTimeLocal;
 use stdClass;
 
 class GestorPersonaNotaOtraRegionStgrDB extends GestorPersonaNotaDB
@@ -29,7 +29,7 @@ class GestorPersonaNotaOtraRegionStgrDB extends GestorPersonaNotaDB
         $this->setNomTabla('e_notas_otra_region_stgr');
     }
 
-    public function addCertificado(int $id_nom, string $certificado,  $oF_certificado)
+    public function addCertificado(int $id_nom, string $certificado, $oF_certificado)
     {
         $cPersonaNotaOtraRegionStgr = $this->getPersonaNotas(['id_nom' => $id_nom]);
         foreach ($cPersonaNotaOtraRegionStgr as $oPersonaNotaOtraRegionStgr) {
@@ -47,24 +47,53 @@ class GestorPersonaNotaOtraRegionStgrDB extends GestorPersonaNotaDB
             $aWhere = ['id_nom' => $id_nom,
                 'id_nivel' => $oPersonaNotaOtraRegionStgr->getId_nivel(),
                 'id_asignatura' => $oPersonaNotaOtraRegionStgr->getId_asignatura(),
-                'tipo_acta' => PersonaNota::FORMATO_CERTIFICADO,
-                'id_situacion' => Nota::FALTA_CERTIFICADO,
+                'tipo_acta' => PersonaNota::FORMATO_CERTIFICADO, // si no habrá 2, una con formato acta y otra certificado
+                //'id_situacion' => Nota::FALTA_CERTIFICADO,
             ];
             $cPersonNotas = $gesPersonaNotas->getPersonaNotas($aWhere);
-            $oPersonaNota = $cPersonNotas[0];
-            if (!empty($oPersonaNota)) {
-                $oPersonaNota->DBCarregar();
-                $oPersonaNota->setId_situacion($oPersonaNotaOtraRegionStgr->getId_situacion());
-                $oPersonaNota->setF_acta($oF_certificado);
-                $oPersonaNota->setActa($certificado);
-                //$oPersonaNota->setDetalle($detalle);
+            if (empty($cPersonNotas)) {
+                $id_asignatura = $oPersonaNotaOtraRegionStgr->getId_asignatura();
+                $msg = sprintf(_("Nota no encontrada. id_asignatura: %s, id_nom: %s"), $id_asignatura, $id_nom);
+                //throw new \Exception($msg);
+                $oPersonaNota = new PersonaNota();
+                $oPersonaNota->setIdNivel($oPersonaNotaOtraRegionStgr->getId_nivel());
+                $oPersonaNota->setIdAsignatura($id_asignatura);
+                $oPersonaNota->setIdNom($id_nom);
+                $oPersonaNota->setTipoActa(PersonaNota::FORMATO_CERTIFICADO);
+                $oPersonaNota->setIdSituacion($oPersonaNotaOtraRegionStgr->getId_situacion());
+                $oPersonaNota->setActa($oPersonaNotaOtraRegionStgr->getActa());
+                $oPersonaNota->setDetalle($oPersonaNotaOtraRegionStgr->getDetalle());
+                $oPersonaNota->setFacta($oF_certificado);
                 $oPersonaNota->setPreceptor($oPersonaNotaOtraRegionStgr->getPreceptor());
-                $oPersonaNota->setId_preceptor($oPersonaNotaOtraRegionStgr->getId_preceptor());
+                $oPersonaNota->setIdpreceptor($oPersonaNotaOtraRegionStgr->getId_preceptor());
                 $oPersonaNota->setEpoca($oPersonaNotaOtraRegionStgr->getEpoca());
-                $oPersonaNota->setId_activ($oPersonaNotaOtraRegionStgr->getId_activ());
-                $oPersonaNota->setNota_num($oPersonaNotaOtraRegionStgr->getNota_num());
-                $oPersonaNota->setNota_max($oPersonaNotaOtraRegionStgr->getNota_max());
+                $oPersonaNota->setIdactiv($oPersonaNotaOtraRegionStgr->getId_activ());
+                $oPersonaNota->setNotanum($oPersonaNotaOtraRegionStgr->getNota_num());
+                $oPersonaNota->setNotamax($oPersonaNotaOtraRegionStgr->getNota_max());
+
+                $oEditarPersonaNota = new EditarPersonaNota($oPersonaNota);
+                $rta = $oEditarPersonaNota->nuevoSolamenteDl();
+                $oPersonaNota = $rta['nota_certificado'];
+                $oPersonaNota->setActa($certificado);
+                $oPersonaNota->setId_situacion(NOTA::NUMERICA);
                 $oPersonaNota->DBGuardar();
+
+            } else {
+                $oPersonaNota = $cPersonNotas[0];
+                if (!empty($oPersonaNota)) {
+                    $oPersonaNota->DBCarregar();
+                    $oPersonaNota->setId_situacion($oPersonaNotaOtraRegionStgr->getId_situacion());
+                    $oPersonaNota->setF_acta($oF_certificado);
+                    $oPersonaNota->setActa($certificado);
+                    //$oPersonaNota->setDetalle($detalle); // dejo lo que hay
+                    $oPersonaNota->setPreceptor($oPersonaNotaOtraRegionStgr->getPreceptor());
+                    $oPersonaNota->setId_preceptor($oPersonaNotaOtraRegionStgr->getId_preceptor());
+                    $oPersonaNota->setEpoca($oPersonaNotaOtraRegionStgr->getEpoca());
+                    $oPersonaNota->setId_activ($oPersonaNotaOtraRegionStgr->getId_activ());
+                    $oPersonaNota->setNota_num($oPersonaNotaOtraRegionStgr->getNota_num());
+                    $oPersonaNota->setNota_max($oPersonaNotaOtraRegionStgr->getNota_max());
+                    $oPersonaNota->DBGuardar();
+                }
             }
         }
 
@@ -87,7 +116,7 @@ class GestorPersonaNotaOtraRegionStgrDB extends GestorPersonaNotaDB
                         'acta' => $certificado,
                     ];
                     $personaNotasDB = $gesPersonaNotaDB->getPersonaNotas($aWhere);
-                    $oPersonaNotaDB = $personaNotasDB[0]?? '';
+                    $oPersonaNotaDB = $personaNotasDB[0] ?? '';
                     if (!empty($oPersonaNotaDB)) {
                         $oPersonaNotaDB->DBCarregar();
                         $oPersonaNotaDB->setId_situacion(Nota::FALTA_CERTIFICADO);

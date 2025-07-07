@@ -2,18 +2,16 @@
 
 namespace Tests\unit\certificados;
 
-use certificados\domain\CertificadoDelete;
-use certificados\domain\CertificadoDlDelete;
-use certificados\domain\CertificadoDlUpload;
-use certificados\domain\CertificadoUpload;
-use certificados\domain\entity\Certificado;
-use certificados\domain\entity\CertificadoDl;
-use certificados\domain\repositories\CertificadoDlRepository;
 use core\ConfigDB;
 use core\ConfigGlobal;
 use core\DBConnection;
 use core\DBPropiedades;
 use RuntimeException;
+use src\certificados\application\repositories\CertificadoDlRepository;
+use src\certificados\application\repositories\CertificadoRepository;
+use src\certificados\domain\CertificadoDelete;
+use src\certificados\domain\CertificadoUpload;
+use src\certificados\domain\entity\Certificado;
 use Tests\factories\certificados\CertificadosFactory;
 use Tests\myTest;
 
@@ -28,7 +26,7 @@ class CertificadoDeleteTest extends myTest
 
     public function __construct(string $name)
     {
-        $this->generarCertificados('H-dlb');
+        $this->generarCertificados('H-H');
 
         parent::__construct($name);
     }
@@ -52,7 +50,9 @@ class CertificadoDeleteTest extends myTest
         $oDBdst = $this->setConexion('H-Hv');
         foreach ($this->cCertificados as $Certificado) {
             $CertificadoUpload = new CertificadoUpload();
+            $CertificadoUpload->setoDbl($oDBdst);
             $CertificadoDelete = new CertificadoDelete();
+            $CertificadoDelete->setoDbl($oDBdst);
 
             $contenido_doc = $Certificado->getDocumento();
             $id_nom = $Certificado->getId_nom();
@@ -63,18 +63,16 @@ class CertificadoDeleteTest extends myTest
             $oF_recibido = $Certificado->getF_enviado();
             $destino = $Certificado->getDestino();
 
-            $CertificadoUpload::setoDbl($oDBdst);
-            $CertificadoDB = $CertificadoUpload::uploadNew( $id_nom, $contenido_doc, $idioma, $certificado, $firmado, $oF_certificado, $oF_recibido, $destino);
+            $CertificadoDB = $CertificadoUpload->uploadNew($id_nom, $contenido_doc, $idioma, $certificado, $firmado, $oF_certificado, $oF_recibido, $destino);
 
             $this->assertInstanceOf(Certificado::class, $CertificadoDB);
 
             $id_item = $CertificadoDB->getId_item();
 
-            $CertificadoDelete::setoDbl($oDBdst);
-            $err_txt = $CertificadoDelete::delete($id_item);
+            $err_txt = $CertificadoDelete->delete($id_item);
             $this->assertEmpty($err_txt);
 
-            $CertificadoRepository = new CertificadoDlRepository();
+            $CertificadoRepository = new CertificadoRepository();
             $CertificadoRepository->setoDbl($oDBdst);
             $this->expectException(RuntimeException::class);
             $CertificadoRepository->findById($id_item);

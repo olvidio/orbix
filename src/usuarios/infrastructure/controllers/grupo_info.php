@@ -17,7 +17,7 @@ $Qid_usuario = (string)filter_input(INPUT_POST, 'id_usuario');
 
 $GrupoRepository = new GrupoRepository();
 $oGrupo = $GrupoRepository->findById($Qid_usuario);
-$nombre = $oGrupo->getUsuario();
+$nombre = $oGrupo->getUsuarioAsString();
 
 $error_txt = '';
 $data['nombre'] = $nombre;

@@ -1,8 +1,8 @@
 <?php
 
 use core\ConfigGlobal;
+use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
-use src\shared\ViewSrcPhtml;
 use web\Hash;
 
 // Crea los objetos de uso global **********************************************
@@ -35,5 +35,5 @@ $a_campos = [
     'oHash' => $oHash,
 ];
 
-$oView = new ViewSrcPhtml('frontend\inventario\controller');
+$oView = new ViewNewPhtml('frontend\inventario\controller');
 $oView->renderizar('cabecera_pie_txt.phtml', $a_campos);

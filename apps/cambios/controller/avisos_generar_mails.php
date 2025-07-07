@@ -89,7 +89,7 @@ foreach ($cCambiosUsuario as $oCambioUsuario) {
             $a_id = [];
         }
         $oMiUsuario = $UsuarioRepository->findById($id_usuario);
-        $email = $oMiUsuario->getEmail();
+        $email = $oMiUsuario->getEmailAsString();
         $id_usuario_anterior = $id_usuario;
         // buscar la zona horaria
         $PreferenciaRepository = new PreferenciaRepository();

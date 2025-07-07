@@ -98,19 +98,12 @@ class Lista
      */
     private $bColVis = TRUE;
     /**
-     * brecordar de la lista
-     *
-     * @var boolean
-     */
-    private $brecordar = TRUE;
-    /**
      * formato_tabla de la lista
      *
      * @var string
      */
     private $formato_tabla = '';
 
-    private mixed $bRecordar;
 
     private PreferenciaRepository $preferenciaRepository;
 
@@ -543,7 +536,7 @@ class Lista
                         $aFilas[$num_fila]["sel"] = '';
                     }
                 } else {
-                    if (is_array($valor)) {
+                    if (is_array($valor) && !empty($valor)) {
                         $val = $valor['valor'];
                         if (!empty($valor['clase'])) {
                             $ira = $valor['clase'];
@@ -1354,11 +1347,6 @@ class Lista
     public function setColVis($bColVis)
     {
         $this->bColVis = $bColVis;
-    }
-
-    public function setRecordar($bRecordar)
-    {
-        $this->bRecordar = $bRecordar;
     }
 
     public function setFormatoTabla($formatoTabla)

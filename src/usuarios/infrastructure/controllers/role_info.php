@@ -39,7 +39,7 @@ $txt_sfsv = '';
 if (!empty($Qid_role)) {
     $RoleRepository =  new RoleRepository();
     $oRole = $RoleRepository->findById($Qid_role);
-    $role = $oRole->getRole();
+    $role = $oRole->getRoleAsString();
     $sf = $oRole->isSf();
     if (!empty($sf)) {
         $chk_sf = 'checked';

@@ -1,8 +1,8 @@
 <?php
 
 use core\ConfigGlobal;
+use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
-use src\shared\ViewSrcPhtml;
 use web\Desplegable;
 use web\DesplegableArray;
 use web\Hash;
@@ -85,9 +85,22 @@ $id_role = $a_campos_src['id_role'];
 $oDesplRoles = new Desplegable('id_role', $aOpcionesRoles, $id_role, true);
 $a_campos['oDesplRoles'] = $oDesplRoles;
 
-$oSelects = new DesplegableArray();
-$oSelects->import($a_campos_src['oSelects']);
-$a_campos['oSelects'] = $oSelects;
+if (!empty($a_campos_src['aDataDespl'])) {
+    $tipo = $a_campos_src['aDataDespl']['tipo'] = 'simple';
+    if ($tipo === 'simple') {
+        $oDesplArrayCtrCasas = new Desplegable();
+    } else {
+        $oDesplArrayCtrCasas = new DesplegableArray();
+        $oDesplArrayCtrCasas->setNombre($a_campos_src['aDataDespl']['accionConjunto']);
+    }
+    $oDesplArrayCtrCasas->setNombre($a_campos_src['aDataDespl']['nom']);
+    $oDesplArrayCtrCasas->setOpciones($a_campos_src['aDataDespl']['aOpciones']);
+    $oDesplArrayCtrCasas->setOpcion_sel($a_campos_src['aDataDespl']['opcion_sel']);
+    $oDesplArrayCtrCasas->setBlanco($a_campos_src['aDataDespl']['blanco']);
+} else {
+    $oDesplArrayCtrCasas = new Desplegable();
+}
+$a_campos['oDesplArrayCtrCasas'] = $oDesplArrayCtrCasas;
 
 $oHash = new Hash();
 $camposMas = $a_campos_src['camposMas'];
@@ -149,7 +162,7 @@ $a_campos['chk_has_2fa'] = $a_campos_src['chk_has_2fa'];
 $a_campos['obj'] = $a_campos_src['obj'];
 
 
-$oView = new ViewSrcPhtml('frontend\usuarios\controller');
+$oView = new ViewNewPhtml('frontend\usuarios\controller');
 $oView->renderizar('usuario_form.phtml', $a_campos);
 
 // los nuevos no tienen lo que sigue.
@@ -170,7 +183,7 @@ if (!empty($Qid_usuario)) {
 
     $a_campos['grupos_txt'] = $data['grupos_txt'];
 
-    $oView = new ViewSrcPhtml('frontend\usuarios\controller');
+    $oView = new ViewNewPhtml('frontend\usuarios\controller');
     $oView->renderizar('usuario_grupo.phtml', $a_campos);
 
 

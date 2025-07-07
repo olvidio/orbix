@@ -2,8 +2,8 @@
 
 use cambios\model\entity\CambioUsuario;
 use core\ConfigGlobal;
+use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
-use src\shared\ViewSrcPhtml;
 use src\usuarios\application\repositories\LocalRepository;
 use web\Desplegable;
 use web\Hash;
@@ -11,7 +11,6 @@ use web\Hash;
 // INICIO Cabecera global de URL de controlador *********************************
 require_once("apps/core/global_header.inc");
 // Archivos requeridos por esta url **********************************************
-//	require_once ("classes/personas/ext_web_preferencias_gestor.class");
 
 // Crea los objetos de uso global **********************************************
 require_once("apps/core/global_object.inc");
@@ -124,5 +123,5 @@ $a_campos = [
     'url_2fa_settings' => $url_2fa_settings,
 ];
 
-$oView = new ViewSrcPhtml('frontend\usuarios\controller');
+$oView = new ViewNewPhtml('frontend\usuarios\controller');
 $oView->renderizar('preferencias.phtml', $a_campos);

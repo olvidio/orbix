@@ -3,7 +3,7 @@
 namespace src\inventario\domain;
 
 use src\inventario\application\repositories\LugarRepository;
-use src\shared\DatosInfoRepo;
+use src\shared\domain\DatosInfoRepo;
 
 /* No vale el underscore en el nombre */
 

@@ -43,7 +43,7 @@ foreach ($a_posibles_esquemas as $esquema) {
         $oUsuario->setoDbl($oDevelPC);
         $oUsuario->setoDbl_Select($oDevelPC);
         // poner de password el mismo login
-        $login = $oUsuario->getUsuario();
+        $login = $oUsuario->getUsuarioAsString();
         if (!empty($login) && ($login !== 'dani')) {
             $oCrypt = new MyCrypt();
             $my_passwd = $oCrypt->encode($login);

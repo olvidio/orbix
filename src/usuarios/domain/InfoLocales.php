@@ -4,8 +4,8 @@ namespace src\usuarios\domain;
 
 /* No vale el underscore en el nombre */
 
+use src\shared\domain\DatosInfoRepo;
 use src\usuarios\application\repositories\LocalRepository;
-use src\shared\DatosInfoRepo;
 
 class InfoLocales extends DatosInfoRepo
 {

@@ -4,6 +4,11 @@ use permisos\model\MyCrypt;
 use src\usuarios\application\repositories\RoleRepository;
 use src\usuarios\application\repositories\UsuarioRepository;
 use src\usuarios\domain\entity\Usuario;
+use src\usuarios\domain\value_objects\Username;
+use src\usuarios\domain\value_objects\Email;
+use src\usuarios\domain\value_objects\Password;
+use src\usuarios\domain\value_objects\IdPau;
+use src\usuarios\domain\value_objects\NombreUsuario;
 use web\ContestarJson;
 
 // INICIO Cabecera global de URL de controlador *********************************
@@ -49,26 +54,26 @@ if (empty($Qid_usuario)) {
 } else {
     $oUsuario = $UsuarioRepository->findById($Qid_usuario);
 }
-$oUsuario->setUsuario($Qusuario);
+$oUsuario->setUsuario(new Username($Qusuario));
 $oUsuario->setid_role($Qid_role);
-$oUsuario->setEmail($Qemail);
-$oUsuario->setNom_usuario($Qnom_usuario);
+$oUsuario->setEmail(!empty($Qemail) ? new Email($Qemail) : null);
+$oUsuario->setNom_usuario(!empty($Qnom_usuario) ? new NombreUsuario($Qnom_usuario) : null);
 $oUsuario->setCambio_password($Qcambio_password);
 $oUsuario->setHas2fa($Qhas_2fa);
 if (!empty($Qpassword)) {
     $oCrypt = new MyCrypt();
     $my_passwd = $oCrypt->encode($Qpassword);
-    $oUsuario->setPassword($my_passwd);
+    $oUsuario->setPassword(new Password($my_passwd));
 }
 $oRole = $RoleRepository->findById($Qid_role);
-$pau = $oRole->getPau();
+$pau = $oRole->getPauAsString();
 // sacd
 if (($pau === 'sacd' || $pau === 'nom') && !empty($Qid_nom)) {
-    $oUsuario->setId_pau($Qid_nom);
+    $oUsuario->setId_pau(new IdPau((string)$Qid_nom));
 }
 // centros (sv o sf)
 if (($pau === 'ctr') && !empty($Qid_ctr)) {
-    $oUsuario->setId_pau($Qid_ctr);
+    $oUsuario->setId_pau(new IdPau((string)$Qid_ctr));
 }
 // casas
 if ($pau === 'cdc' && !empty($Qcasas)) {
@@ -80,7 +85,7 @@ if ($pau === 'cdc' && !empty($Qcasas)) {
         if ($i > 1) $txt_casa .= ',';
         $txt_casa .= $id_ubi;
     }
-    $oUsuario->setId_pau($txt_casa);
+    $oUsuario->setId_pau(new IdPau($txt_casa));
 }
 
 if ($UsuarioRepository->Guardar($oUsuario) === false) {

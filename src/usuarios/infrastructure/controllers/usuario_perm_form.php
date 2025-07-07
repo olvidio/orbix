@@ -1,10 +1,10 @@
 <?php
 
 use core\ConfigGlobal;
+use frontend\shared\model\ViewNewPhtml;
 use procesos\model\CuadrosFases;
 use procesos\model\PermAccion;
 use procesos\model\PermAfectados;
-use src\shared\ViewSrcPhtml;
 use src\usuarios\application\repositories\GrupoRepository;
 use src\usuarios\application\repositories\UsuarioGrupoRepository;
 use src\usuarios\domain\entity\Role;
@@ -60,7 +60,7 @@ if (!empty($Qid_usuario)) { // si no hay usuario, no puedo poner permisos.
                 'oPermAccion' => $oPermAccion,
             ];
 
-            $oView = new ViewSrcPhtml('src\usuarios\controller');
+            $oView = new ViewNewPhtml('src\usuarios\controller');
             $oView->renderizar('perm_ctr_form.phtml', $a_campos);
         }
     }
@@ -77,7 +77,7 @@ if (!empty($Qid_usuario)) { // si no hay usuario, no puedo poner permisos.
             'oPermAccion' => $oPermAccion,
         ];
 
-        $oView = new ViewSrcPhtml('src\usuarios\controller');
+        $oView = new ViewNewPhtml('src\usuarios\controller');
         $oView->renderizar('perm_activ_form.phtml', $a_campos);
     }
 

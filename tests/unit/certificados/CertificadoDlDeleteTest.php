@@ -2,15 +2,15 @@
 
 namespace Tests\unit\certificados;
 
-use certificados\domain\CertificadoDlDelete;
-use certificados\domain\CertificadoDlUpload;
-use certificados\domain\entity\CertificadoDl;
-use certificados\domain\repositories\CertificadoDlRepository;
 use core\ConfigDB;
 use core\ConfigGlobal;
 use core\DBConnection;
 use core\DBPropiedades;
 use RuntimeException;
+use src\certificados\application\repositories\CertificadoDlRepository;
+use src\certificados\domain\CertificadoDlDelete;
+use src\certificados\domain\CertificadoDlUpload;
+use src\certificados\domain\entity\CertificadoDl;
 use Tests\factories\certificados\CertificadosFactory;
 use Tests\myTest;
 
@@ -49,7 +49,9 @@ class CertificadoDlDeleteTest extends myTest
         $oDBdst = $this->setConexion('H-dlbv');
         foreach ($this->cCertificados as $Certificado) {
             $CertificadoDlUpload = new CertificadoDlUpload();
+            $CertificadoDlUpload->setoDbl($oDBdst);
             $CertificadoDlDelete = new CertificadoDlDelete();
+            $CertificadoDlDelete->setoDbl($oDBdst);
 
             $id_item = 0;  // para que cree uno nuevo
             $contenido_doc = $Certificado->getDocumento();
@@ -61,15 +63,13 @@ class CertificadoDlDeleteTest extends myTest
             $oF_recibido = $Certificado->getF_enviado();
             $destino = $Certificado->getDestino();
 
-            $CertificadoDlUpload::setoDbl($oDBdst);
-            $CertificadoDB = $CertificadoDlUpload::uploadNew($id_item, $id_nom, $contenido_doc, $idioma, $certificado, $firmado, $oF_certificado, $oF_recibido, $destino);
+            $CertificadoDB = $CertificadoDlUpload->uploadNew($id_item, $id_nom, $contenido_doc, $idioma, $certificado, $firmado, $oF_certificado, $oF_recibido, $destino);
 
             $this->assertInstanceOf(CertificadoDl::class, $CertificadoDB);
 
             $id_item = $CertificadoDB->getId_item();
 
-            $CertificadoDlDelete::setoDbl($oDBdst);
-            $err_txt = $CertificadoDlDelete::delete($id_item);
+            $err_txt = $CertificadoDlDelete->delete($id_item);
             $this->assertEmpty($err_txt);
 
             $CertificadoRepository = new CertificadoDlRepository();
