@@ -32,7 +32,7 @@ switch ($Qloc) {
         preg_match('/docs_grupo_(.*)/', $Qloc, $matches);
         $id_grupo = $matches[1];
 
-        $url_lista_backend = Hash::cmd(ConfigGlobal::getWeb()
+        $url_lista_backend = Hash::cmdSinParametros(ConfigGlobal::getWeb()
             . '/src/inventario/infrastructure/controllers/texto_de_egm.php'
         );
         $oHash = new Hash();

@@ -25,7 +25,7 @@ if (empty($Qolvidar)) {
     $oPosicion->recordar();
 }
 
-$url = Hash::cmd(ConfigGlobal::getWeb()
+$url = Hash::cmdSinParametros(ConfigGlobal::getWeb()
     . '/src/usuarios/infrastructure/controllers/perm_activ_lista.php'
 );
 

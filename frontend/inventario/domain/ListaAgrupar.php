@@ -26,6 +26,7 @@ class ListaAgrupar
         $id_tipo_old = '';
         $agrupar_old = '';
         $coleccion_old = '';
+        $ejemplares_old = '';
         $lugar_old = '';
         $ident_num = '';
         $ident_txt = '';
@@ -33,53 +34,55 @@ class ListaAgrupar
         $id_coleccion = '';
         foreach ($a_valores as $row) {
             //si son iguales; contarlos. OJO hay que distinguir si es por colección o por documento
-            if (($id_tipo_old == $row[1])) {
+            if (($id_tipo_old === $row['nombre'])) {
                 $que_cuento = 'tipo_doc';
-                if (!empty($ident_num) && !empty($row[2])) {
-                    $ident_num .= ',' . $row[2];
+                if (!empty($ident_num) && !empty($row['identificador'])) {
+                    $ident_num .= ',' . $row['identificador'];
                 }
                 $ident_txt = empty($ident_num) ? "" : " ($ident_num)";
                 $count++;
                 continue;
             }
-            if (!empty($row[5]) && ($agrupar_old == $row[5]) && ($coleccion_old == $row[4])) {
-                $id_coleccion = !empty($row[4]) ? $row[4] : '';
-                if (!empty($ident_num) && !empty($row[2])) {
-                    $ident_num .= ',' . $row[2];
+            if (!empty($row['carta']) && ($agrupar_old == $row['carta']) && ($coleccion_old == $row['coleccion'])) {
+                $que_cuento = 'coleccion';
+                $id_coleccion = !empty($row['coleccion']) ? $row['coleccion'] : '';
+                if (!empty($ident_num) && !empty($row['identificador'])) {
+                    $ident_num .= ',' . $row['identificador'];
                 }
                 $ident_txt = empty($ident_num) ? "" : " ($ident_num)";
                 if ($que_cuento === 'tipo_doc') {
-                    $html_g .= $this->escribir($ident_num, $count, $id_old, $ident_txt, $agrupar_old, $id_tipo_old, $id_coleccion);
-                    $id_tipo_old = $row[1];
-                    $id_old = $row[2];
-                    $agrupar_old = $row[5];
-                    $coleccion_old = $row[4];
+                    $html_g .= $this->escribir($ident_num, $count, $id_old, $ident_txt, $agrupar_old, $id_tipo_old, $id_coleccion,$ejemplares_old);
+                    $id_tipo_old = $row['nombre'];
+                    $id_old = $row['identificador'];
+                    $agrupar_old = $row['carta'];
+                    $coleccion_old = $row['coleccion'];
+                    $ejemplares_old = $row['ejemplares'];
                     $count = 1;
                     $ident_num = $id_old;
                     $ident_txt = '';
                 }
-                $que_cuento = 'coleccion';
                 $count++;
                 continue;
             }
             if (!empty($id_tipo_old)) {
-                $html_g .= $this->escribir($ident_num, $count, $id_old, $ident_txt, $agrupar_old, $id_tipo_old, $id_coleccion);
+                $html_g .= $this->escribir($ident_num, $count, $id_old, $ident_txt, $agrupar_old, $id_tipo_old, $id_coleccion,$ejemplares_old);
             }
-            if ((!empty($row[3]) && $lugar_old != $row[3])) {
-                $html_g .= '<u>' . $row[3] . '</u><br>';
-                $lugar_old = $row[3];
+            if ((!empty($row['lugar']) && $lugar_old != $row['lugar'])) {
+                $html_g .= '<u>' . $row['lugar'] . '</u><br>';
+                $lugar_old = $row['lugar'];
             }
-            $id_tipo_old = $row[1];
-            $id_old = $row[2];
-            $agrupar_old = empty($row[5]) ? '' : $row[5];
-            $coleccion_old = empty($row[4]) ? '' : $row[4];
+            $id_tipo_old = $row['nombre'];
+            $id_old = $row['identificador'];
+            $agrupar_old = empty($row['carta']) ? '' : $row['carta'];
+            $coleccion_old = empty($row['coleccion']) ? '' : $row['coleccion'];
+            $ejemplares_old = $row['ejemplares'];
             $count = 1;
             $ident_num = $id_old;
             $ident_txt = '';
             $id_coleccion = '';
         }
         // para el último.
-        $html_g .= $this->escribir($ident_num, $count, $id_old, $ident_txt, $agrupar_old, $id_tipo_old, $id_coleccion);
+        $html_g .= $this->escribir($ident_num, $count, $id_old, $ident_txt, $agrupar_old, $id_tipo_old, $id_coleccion,$ejemplares_old);
 
         // para el grupo == 0, no añado la opción de modificar el texto.
         if ($id_grupo > 0) {
@@ -99,11 +102,14 @@ class ListaAgrupar
         return $html_g;
     }
 
-    private function escribir($ident_num, $count, $id_old, $ident_txt, $agrupar_old, $id_tipo_old, $id_coleccion)
+    private function escribir($ident_num, $count, $id_old, $ident_txt, $agrupar_old, $id_tipo_old, $id_coleccion, $ejemplares_old)
     {
         $aColecciones = $this->getColecciones();
         $html_g = '';
         if (!empty($ident_num) && $count > 1) {
+            if (!empty($ejemplares_old)) {
+                $html_g .= $ejemplares_old . ' x ';
+            }
             $html_g .= !empty($count) ? $count . ' ' . _("ejemplares") . ' ' : '';
         } else {
             $html_g .= !empty($id_old) ? "-" . $id_old . "- " : '';

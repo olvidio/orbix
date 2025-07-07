@@ -17,7 +17,7 @@ $Qquien = (string)filter_input(INPUT_POST, 'quien');
 
 $oPosicion->recordar();
 
-$url_lista_backend = Hash::cmd(ConfigGlobal::getWeb()
+$url_lista_backend = Hash::cmdSinParametros(ConfigGlobal::getWeb()
     . '/apps/cambios/controller/usuario_form_avisos.php'
 );
 $oHash = new Hash();

@@ -59,7 +59,7 @@ if (isset($_POST['stack'])) {
 $oPosicion->setParametros(array('id_usuario' => $Qid_usuario), 1);
 
 //////////////////////// Usuario o Grupo ///////////////////////////////////////////////////
-$url_usuario_form_backend = Hash::cmd(ConfigGlobal::getWeb()
+$url_usuario_form_backend = Hash::cmdSinParametros(ConfigGlobal::getWeb()
     . '/src/usuarios/infrastructure/controllers/usuario_form.php'
 );
 
@@ -155,7 +155,7 @@ $oView->renderizar('usuario_form.phtml', $a_campos);
 // los nuevos no tienen lo que sigue.
 if (!empty($Qid_usuario)) {
     //////////////////////// Grupos del usuario ///////////////////////////////////////////////////
-    $url_usuario_form_backend = Hash::cmd(ConfigGlobal::getWeb()
+    $url_usuario_form_backend = Hash::cmdSinParametros(ConfigGlobal::getWeb()
         . '/src/usuarios/infrastructure/controllers/usuario_info.php'
     );
 
@@ -176,7 +176,7 @@ if (!empty($Qid_usuario)) {
 
     //////////// Permisos en actividades ////////////
     if (ConfigGlobal::is_app_installed('procesos')) {
-        $url = Hash::cmd(ConfigGlobal::getWeb()
+        $url = Hash::cmdSinParametros(ConfigGlobal::getWeb()
             . '/frontend/usuarios/controller/perm_activ_lista.php'
         );
 
@@ -190,7 +190,7 @@ if (!empty($Qid_usuario)) {
 
     //////////// Condiciones para los avisos de cambios ////////////
     if (ConfigGlobal::is_app_installed('cambios')) {
-        $url_avisos = Hash::cmd(ConfigGlobal::getWeb()
+        $url_avisos = Hash::cmdSinParametros(ConfigGlobal::getWeb()
             . '/frontend/cambios/controller/usuario_form_avisos.php?'
             . http_build_query(['quien' => 'usuario', 'id_usuario' => $Qid_usuario])
         );

@@ -73,17 +73,19 @@ if (is_array($cUbsiInventario) && !empty($cUbsiInventario)) {
         }
 
         if (!empty($num_ejemplares) && $num_ejemplares > 1) {
-            $a_valores[$d][1] = $num_ejemplares . ' ' . _("ejemplares de") . ' ';
+            $a_valores[$d]['ejemplares'] = $num_ejemplares;
+            $a_valores[$d]['nombre'] = $num_ejemplares . ' ' . _("ejemplares de") . ' ';
         } else {
-            $a_valores[$d][1] = '';
+            $a_valores[$d]['ejemplares'] = '';
+            $a_valores[$d]['nombre'] = '';
         }
-        $a_valores[$d][1] .= $oTipoDoc->getSigla() . " " . $oTipoDoc->getNom_doc() . " " . $observ;
-        $a_valores[$d][2] = $identificador;
-        $a_valores[$d][3] = $lugar;
+        $a_valores[$d]['nombre'] .= $oTipoDoc->getSigla() . " " . $oTipoDoc->getNom_doc() . " " . $observ;
+        $a_valores[$d]['identificador'] = $identificador;
+        $a_valores[$d]['lugar'] = $lugar;
         //para poder ordenar
-        $a_tipo[$d] = $a_valores[$d][1];
-        $a_num[$d] = $a_valores[$d][2];
-        $a_lugar[$d] = $a_valores[$d][3];
+        $a_tipo[$d] = $a_valores[$d]['nombre'];
+        $a_num[$d] = $a_valores[$d]['identificador'];
+        $a_lugar[$d] = $a_valores[$d]['lugar'];
 
         // primero los que tienen identificador y no son cartas, cartas, sin identificador
         $id_coleccion = $oTipoDoc->getId_coleccion();
@@ -101,10 +103,10 @@ if (is_array($cUbsiInventario) && !empty($cUbsiInventario)) {
             $bcarta = '';
         }
 
-        $a_valores[$d][4] = empty($id_coleccion) ? false : $id_coleccion;
-        $a_valores[$d][5] = empty($bcarta) ? false : $bcarta;
+        $a_valores[$d]['coleccion'] = empty($id_coleccion) ? false : $id_coleccion;
+        $a_valores[$d]['carta'] = empty($bcarta) ? false : $bcarta;
         // para ordenar
-        $a_orden_coleccion[$d] = $a_valores[$d][4];
+        $a_orden_coleccion[$d] = $a_valores[$d]['coleccion'];
     }
     //array_multisort($a_lugar, SORT_ASC, $a_tipo, SORT_ASC, $a_valores);
     // ordenar por sigla

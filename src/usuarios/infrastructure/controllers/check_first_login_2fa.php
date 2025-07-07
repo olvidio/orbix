@@ -26,7 +26,7 @@ $has_2fa = $oUsuario->has2fa();
 // Si el usuario no tiene 2FA habilitado, redirigir a la página de configuración de 2FA
 if (!$has_2fa) {
     // Generar la URL para la página de configuración de 2FA
-    $url_2fa_settings = Hash::cmd(ConfigGlobal::getWeb() . '/frontend/usuarios/controller/usuario_form_2fa.php');
+    $url_2fa_settings = Hash::cmdSinParametros(ConfigGlobal::getWeb() . '/frontend/usuarios/controller/usuario_form_2fa.php');
     
     // Establecer un mensaje para informar al usuario
     session_start();

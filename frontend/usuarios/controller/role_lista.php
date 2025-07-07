@@ -32,7 +32,7 @@ if (isset($_POST['stack'])) {
     }
 }
 
-$url_lista_backend = Hash::cmd(ConfigGlobal::getWeb()
+$url_lista_backend = Hash::cmdSinParametros(ConfigGlobal::getWeb()
     . '/src/usuarios/infrastructure/controllers/role_lista.php'
 );
 
@@ -65,7 +65,7 @@ $oHash->setCamposForm('sel');
 $oHash->setcamposNo('scroll_id');
 
 
-$url_nuevo = Hash::cmd(ConfigGlobal::getWeb()
+$url_nuevo = Hash::cmdSinParametros(ConfigGlobal::getWeb()
     . '/frontend/usuarios/controller/role_form.php?'
 );
 

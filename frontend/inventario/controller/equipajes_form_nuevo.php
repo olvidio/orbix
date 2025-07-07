@@ -15,7 +15,7 @@ $Qid_cdc = (int)filter_input(INPUT_POST, 'id_cdc');
 $Qnom_equip = (string)filter_input(INPUT_POST, 'nom_equip');
 
 // posibles tipos de documento
-$url_lista_backend = Hash::cmd(ConfigGlobal::getWeb()
+$url_lista_backend = Hash::cmdSinParametros(ConfigGlobal::getWeb()
     . '/src/inventario/infrastructure/controllers/equipajes_lista_activ_sel.php'
 );
 $oHash = new Hash();

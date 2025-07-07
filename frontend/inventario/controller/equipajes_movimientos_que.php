@@ -12,7 +12,7 @@ require_once("frontend/shared/global_header_front.inc");
 
 $f_ini_iso = date('Y-m-d');
 
-$url_lista_backend = Hash::cmd(ConfigGlobal::getWeb()
+$url_lista_backend = Hash::cmdSinParametros(ConfigGlobal::getWeb()
     . '/src/inventario/infrastructure/controllers/lista_equipajes_desde_fecha.php'
 );
 $oHash = new Hash();

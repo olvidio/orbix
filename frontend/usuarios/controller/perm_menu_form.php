@@ -32,7 +32,7 @@ if (!empty($a_sel)) { //vengo de un checkbox
     $oPosicion->addParametro('scroll_id', $scroll_id, 1);
 }
 
-$url = Hash::cmd(ConfigGlobal::getWeb()
+$url = Hash::cmdSinParametros(ConfigGlobal::getWeb()
     . '/src/usuarios/infrastructure/controllers/perm_menu_info.php'
 );
 

@@ -11,7 +11,7 @@ require_once("frontend/shared/global_header_front.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
 // lista de menus disponibles:
-$url_lista_backend = Hash::cmd(ConfigGlobal::getWeb()
+$url_lista_backend = Hash::cmdSinParametros(ConfigGlobal::getWeb()
     . '/src/menus/infrastructure/controllers/lista_templates.php'
 );
 $oHash = new Hash();
