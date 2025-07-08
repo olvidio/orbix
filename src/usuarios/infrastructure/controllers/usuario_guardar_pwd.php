@@ -2,6 +2,7 @@
 
 use permisos\model\MyCrypt;
 use src\usuarios\application\repositories\UsuarioRepository;
+use src\usuarios\domain\value_objects\Password;
 use web\ContestarJson;
 
 // INICIO Cabecera global de URL de controlador *********************************
@@ -18,7 +19,6 @@ $error_txt = '';
 
 $Qid_usuario = (integer)filter_input(INPUT_POST, 'id_usuario');
 $Qpassword = (string)filter_input(INPUT_POST, 'password');
-$Qpass = (string)filter_input(INPUT_POST, 'pass');
 
 $UsuarioRepository = new UsuarioRepository();
 $oUsuario = $UsuarioRepository->findById($Qid_usuario);
@@ -33,16 +33,14 @@ if (!empty($Qpassword)) {
         exit();
     } else {
         $my_passwd = $oCrypt->encode($Qpassword);
-        $oUsuario->setPassword($my_passwd);
+        $oUsuario->setPassword(new Password($my_passwd));
         $oUsuario->setCambio_password(FALSE);
     }
-} else {
-    $oUsuario->setPassword($Qpass);
-}
 
-if ($UsuarioRepository->Guardar($oUsuario) === false) {
-    $error_txt .= _("hay un error, no se ha guardado");
-    $error_txt .= "\n" . $UsuarioRepository->getErrorTxt();
+    if ($UsuarioRepository->Guardar($oUsuario) === false) {
+        $error_txt .= _("hay un error, no se ha guardado");
+        $error_txt .= "\n" . $UsuarioRepository->getErrorTxt();
+    }
 }
 
 ContestarJson::enviar($error_txt, 'ok');
