@@ -12,13 +12,11 @@ use permisos\model\MyCrypt;
 use shared\domain\ColaMailId;
 use shared\domain\entity\ColaMail;
 use shared\domain\repositories\ColaMailRepository;
-use src\usuarios\domain\entity\Usuario;
 use web\ContestarJson;
 
 // INICIO Cabecera global de URL de controlador *********************************
 require_once("apps/core/global_header.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
-
 
 $Qusername = (string)filter_input(INPUT_POST, 'username');
 $Qubicacion = (string)filter_input(INPUT_POST, 'ubicacion');
@@ -26,6 +24,7 @@ $Qesquema = (string)filter_input(INPUT_POST, 'esquema');
 $Qesquema_web = (string)filter_input(INPUT_POST, 'esquema_web');
 $Qurl_index = (string)filter_input(INPUT_POST, 'url_index');
 
+$error_txt = '';
 $aWhere = array('usuario' => $Qusername);
 $esquema = empty($Qesquema) ? $Qesquema_web : $Qesquema;
 if (substr($esquema, -1) === 'v') {
@@ -49,19 +48,19 @@ $query = "SELECT * FROM aux_usuarios WHERE usuario = :usuario";
 if (($oDBSt = $oDB->prepare($query)) === false) {
     $sClauError = 'recuperar_password.prepare';
     $_SESSION['oGestorErrores']->addErrorAppLastError($oDB, $sClauError, __LINE__, __FILE__);
-    return false;
+    $error_txt .= _("Error al preparar la consulta");
 }
 
 if (($oDBSt->execute($aWhere)) === false) {
     $sClauError = 'recuperar_password.execute';
     $_SESSION['oGestorErrores']->addErrorAppLastError($oDB, $sClauError, __LINE__, __FILE__);
-    return false;
+    $error_txt .= _("Error al ejecutar la consulta");
 }
 
-$error_txt = '';
 $success = false;
+$email = '????';
 
-if ($row = $oDBSt->fetch(\PDO::FETCH_ASSOC)) {
+if (empty($error_txt) && ($row = $oDBSt->fetch(\PDO::FETCH_ASSOC))) {
     $id_usuario = $row['id_usuario'];
     $email = $row['email'];
 
