@@ -231,6 +231,11 @@
         }
     }
 
+    fnjs_hideErrors = function () {
+        let alerta = document.getElementById('div_error_login');
+        alerta.style.display = 'none';
+    }
+
     fnjs_goTop = function () {
         menu = document.getElementById("menu");
         if (menu) {
@@ -239,7 +244,7 @@
     }
     document.onload = fnjs_goTop();
 </script>
-<div class="login">
+<div class="login" onClick="fnjs_hideErrors();">
     <div class="ubicacion"><?= $ubicacion ?></div>
     <div class="esquema"><?= $esquema_web ?></div>
     <?php
@@ -267,7 +272,7 @@
     <div id="version">v 1.2</div>
 <?php
 if (!empty($error)) { ?>
-    <div style="position: fixed; top: 10%; margin-left: -50px;
+    <div id="div_error_login" style="position: fixed; top: 10%; margin-left: -50px;
         border-style: solid; border-color: gray; border-radius: 10px; padding: 10px;
         background-color: #fadbaf; ">
         <div style="color: red; " >
