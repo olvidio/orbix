@@ -36,7 +36,7 @@ foreach ($cListaGrupos as $oUsuarioGrupo) {
     $i++;
     $id_grupo = $oUsuarioGrupo->getId_grupo();
     $oGrupo = $GrupoRepository->findById($id_grupo);
-    $usuario = $oGrupo->getUsuario();
+    $usuario = $oGrupo->getUsuarioAsString();
     $seccion = $asfsv[$sfsv];
 
     /*

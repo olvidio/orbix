@@ -1,21 +1,17 @@
 <?php
 
 use core\ConfigGlobal;
-use src\usuarios\application\repositories\UsuarioRepository;
+use frontend\shared\PostRequest;
+use web\Hash;
 
 /**
  * Controlador para restablecer la configuración de autenticación de dos factores (2FA).
  * Este controlador se utiliza cuando un usuario ha perdido acceso a su aplicación de autenticación
  * y necesita desactivar 2FA para poder acceder a su cuenta.
+ *
  */
-// INICIO Cabecera global de URL de controlador *********************************
-require_once("apps/core/global_header.inc");
-// Archivos requeridos por esta url **********************************************
-
 // Crea los objetos de uso global **********************************************
-require_once("apps/core/global_object.inc");
-// Crea los objetos para esta url  **********************************************
-
+require_once("frontend/shared/global_header_front.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
 // Verificar que el usuario está autenticado
@@ -33,21 +29,26 @@ if ($id_usuario !== $Qid_usuario) {
     exit();
 }
 
-// Obtener el objeto de usuario
-$UsuarioRepository = new UsuarioRepository();
-$oUsuario = $UsuarioRepository->findById($id_usuario);
+//////////////////////// Datos del usuario ///////////////////////////////////////////////////
+$url_usuario_form_backend = Hash::cmdSinParametros(ConfigGlobal::getWeb()
+    . '/src/usuarios/infrastructure/controllers/usuario_guardar.php'
+);
 
-// Desactivar 2FA para el usuario
-$oUsuario->setHas2fa(false);
-// Mantener la clave secreta para una posible reactivación
+$oHash = new Hash();
+$oHash->setUrl($url_usuario_form_backend);
+$oHash->setArrayCamposHidden(
+    ['id_usuario' => $id_usuario,
+        'has_2fa' => 'false',
+    ]);
+$hash_params = $oHash->getArrayCampos();
 
-// Guardar los cambios
-if ($UsuarioRepository->Guardar($oUsuario) === false) {
-    $error_txt = _("Hay un error, no se ha guardado");
-    $error_txt .= "\n" . $UsuarioRepository->getErrorTxt();
-    
+$data = PostRequest::getData($url_usuario_form_backend, $hash_params);
+
+$usuario = $data['usuario'];
+
+if (isset($data['error'])) {
     // Mostrar mensaje de error
-    $_SESSION['msg_2fa'] = $error_txt;
+    $_SESSION['msg_2fa'] = $data['error'];
 } else {
     // Mostrar mensaje de éxito
     $_SESSION['msg_2fa'] = _("Se ha desactivado correctamente la autenticación de dos factores (2FA). Si desea volver a activarla, deberá configurarla nuevamente.");

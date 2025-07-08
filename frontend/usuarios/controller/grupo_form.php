@@ -3,27 +3,12 @@
 use core\ConfigGlobal;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
-use permisos\model\PermDl;
-use procesos\model\CuadrosFases;
-use procesos\model\PermAccion;
-use procesos\model\PermAfectados;
 use web\Hash;
 use web\Lista;
 
-// INICIO Cabecera global de URL de controlador *********************************
-require_once("apps/core/global_header.inc");
-// Archivos requeridos por esta url **********************************************
-
 // Crea los objetos de uso global **********************************************
-require_once("apps/core/global_object.inc");
-// Crea los objetos para esta url  **********************************************
-
+require_once("frontend/shared/global_header_front.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
-$oCuadros = new PermDl();
-$oCuadrosAfecta = new PermAfectados();
-$oPermAccion = new PermAccion();
-$oCuadrosFases = new CuadrosFases();
-
 
 $Qrefresh = (integer)filter_input(INPUT_POST, 'refresh');
 $oPosicion->recordar($Qrefresh);

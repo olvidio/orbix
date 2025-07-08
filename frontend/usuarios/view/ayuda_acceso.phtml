@@ -63,10 +63,15 @@
             <h2><?= _("Olvidé mi contraseña") ?></h2>
             <div class="solution">
                 <p><?= _("Si ha olvidado su contraseña, puede solicitar un correo electrónico para restablecerla.") ?></p>
+                <?php if (empty($emailOfuscado)) {
+                    echo $error_txt;
+                } else {
+                    ?>
                 <a href="<?= $linkEnviarMailPasswd ?>"
                      class="btn">
                     <?= _("Recibir correo de recuperación") ?> en <?= $emailOfuscado ?>
                 </a>
+                <?php } ?>
             </div>
         </div>
         

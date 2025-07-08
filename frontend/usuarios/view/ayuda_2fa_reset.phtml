@@ -9,10 +9,15 @@
         <ol>
             <li><?= _("Le puedo enviar un mail.") ?></li>
         </ol>
-        <a href="<?= $linkEnviarMail2fa ?>"
-                     class="btn">
-                    <?= _("Recibir correo de recuperación") ?> en <?= $emailOfuscado ?>
-                </a>
+        <?php if (empty($emailOfuscado)) {
+            echo $error_txt;
+        } else {
+        ?>
+            <a href="<?= $linkEnviarMail2fa ?>"
+                 class="btn">
+                <?= _("Recibir correo de recuperación") ?> en <?= $emailOfuscado ?>
+            </a>
+        <?php } ?>
     </div>
     
     <div class="section">

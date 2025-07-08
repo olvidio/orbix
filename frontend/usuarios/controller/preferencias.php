@@ -4,16 +4,11 @@ use cambios\model\entity\CambioUsuario;
 use core\ConfigGlobal;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
-use src\usuarios\application\repositories\LocalRepository;
 use web\Desplegable;
 use web\Hash;
 
-// INICIO Cabecera global de URL de controlador *********************************
-require_once("apps/core/global_header.inc");
-// Archivos requeridos por esta url **********************************************
-
 // Crea los objetos de uso global **********************************************
-require_once("apps/core/global_object.inc");
+require_once("frontend/shared/global_header_front.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
 $oPosicion->recordar();
@@ -75,9 +70,18 @@ $oDesplOficinas->setOpcion_sel($oficina);
 $oDesplOficinas->setBlanco(true);
 
 // ----------- Idioma -------------------
-$LocalRepository = new LocalRepository();
-$aOpciones = $LocalRepository->getArrayLocales();
-$oDesplLocales = new Desplegable('idioma_nou', $aOpciones, $idioma, true);
+/////////// Consulta al backend ///////////////////
+$url_lista_backend = Hash::cmdSinParametros(ConfigGlobal::getWeb()
+    . '/src/shared/infrastructure/controllers/locales_posibles.php'
+);
+
+$oHash = new Hash();
+$oHash->setUrl($url_lista_backend);
+$hash_params = $oHash->getArrayCampos();
+
+$data = PostRequest::getData($url_lista_backend, $hash_params);
+$a_locales = $data['a_locales'];
+$oDesplLocales = new Desplegable('idioma_nou', $a_locales, $idioma, true);
 
 // ----------- Zona Horaria -------------------
 $opciones = DateTimeZone::listIdentifiers();

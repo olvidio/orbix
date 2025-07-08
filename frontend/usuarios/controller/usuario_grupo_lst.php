@@ -1,18 +1,12 @@
 <?php
 
-
-// INICIO Cabecera global de URL de controlador *********************************
 use core\ConfigGlobal;
 use frontend\shared\PostRequest;
 use web\Hash;
 use web\Lista;
 
-require_once("apps/core/global_header.inc");
-// Archivos requeridos por esta url **********************************************
-
 // Crea los objetos de uso global **********************************************
-require_once("apps/core/global_object.inc");
-// Crea los objetos por esta url  **********************************************
+require_once("frontend/shared/global_header_front.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
 $Qid_usuario = (integer)filter_input(INPUT_POST, 'id_usuario');

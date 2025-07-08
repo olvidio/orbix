@@ -6,18 +6,10 @@ use frontend\shared\PostRequest;
 use permisos\model\PermDl;
 use web\Hash;
 
-// INICIO Cabecera global de URL de controlador *********************************
-require_once("apps/core/global_header.inc");
-// Archivos requeridos por esta url **********************************************
-
 // Crea los objetos de uso global **********************************************
-require_once("apps/core/global_object.inc");
-// Crea los objetos por esta url  **********************************************
-$oCuadros = new PermDl;
-
+require_once("frontend/shared/global_header_front.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
-
-//$oPosicion->recordar();
+$oCuadros = new PermDl;
 
 $Qid_usuario = (integer)filter_input(INPUT_POST, 'id_usuario');
 $Qid_item = (integer)filter_input(INPUT_POST, 'id_item');

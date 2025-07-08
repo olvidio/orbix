@@ -23,11 +23,15 @@ $UsuarioRepository = new UsuarioRepository();
 $oUsuario = $UsuarioRepository->findById($Qid_usuario);
 $id_role = $oUsuario->getId_role();
 $aWhere = [];
+$aOperador = [];
+// la tabla es de grupos y usuarios. Los grupos empiezan  por 5:
+$aWhere['id_usuario'] = '^5';
+$aOperador['id_usuario'] = '~';
 // Ahora mismo no sé porque hay que filtrar por role. Para añadir se tienen que ver...
 //$aWhere['id_role'] = $id_role;
 // listado de grupos posibles
 $GrupoRepository = new GrupoRepository();
-$cGrupos = $GrupoRepository->getGrupos($aWhere);
+$cGrupos = $GrupoRepository->getGrupos($aWhere,$aOperador);
 // no pongo los que ya tengo. Los pongo en un array
 $UsuarioGrupoRepository = new UsuarioGrupoRepository();
 $cListaGrupos = $UsuarioGrupoRepository->getUsuariosGrupos(array('id_usuario' => $Qid_usuario));
@@ -51,7 +55,7 @@ foreach ($cGrupos as $oGrupo) {
         continue;
     }
     $i++;
-    $nom_grupo = $oGrupo->getUsuario();
+    $nom_grupo = $oGrupo->getUsuarioAsString();
     $seccion = $asfsv[$sfsv];
 
     //$a_parametros = array('id_grupo' => $id_grupo, 'id_usuario' => $Qid_usuario);

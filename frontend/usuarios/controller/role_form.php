@@ -3,16 +3,12 @@
 use core\ConfigGlobal;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
-use src\usuarios\domain\entity\Role;
 use web\Desplegable;
 use web\Hash;
 use web\Lista;
 
-// INICIO Cabecera global de URL de controlador *********************************
-require_once("apps/core/global_header.inc");
-
 // Crea los objetos de uso global **********************************************
-require_once("apps/core/global_object.inc");
+require_once("frontend/shared/global_header_front.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
 $Qrefresh = (integer)filter_input(INPUT_POST, 'refresh');
@@ -76,8 +72,8 @@ $dmz = $data['dmz'];
 $chk_dmz = $data['chk_dmz'];
 $permiso = $data['permiso'];
 $txt_sfsv = $data['txt_sfsv'];
+$aOpcionesPau = $data['aOpcionesPau'];
 
-$aOpcionesPau = Role::ARRAY_PAU_TXT;
 $oDesplPau = new Desplegable();
 $oDesplPau->setNombre('pau');
 $oDesplPau->setBlanco(TRUE);

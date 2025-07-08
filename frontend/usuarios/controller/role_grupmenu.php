@@ -1,20 +1,13 @@
 <?php
 
+use core\ConfigGlobal;
 use frontend\shared\model\ViewNewPhtml;
-use src\menus\application\repositories\GrupMenuRepository;
-use src\menus\application\repositories\GrupMenuRoleRepository;
-use src\usuarios\application\repositories\RoleRepository;
+use frontend\shared\PostRequest;
 use web\Hash;
 use web\Lista;
 
-// INICIO Cabecera global de URL de controlador *********************************
-require_once("apps/core/global_header.inc");
-// Archivos requeridos por esta url **********************************************
-
 // Crea los objetos de uso global **********************************************
-require_once("apps/core/global_object.inc");
-// Crea los objetos por esta url  **********************************************
-
+require_once("frontend/shared/global_header_front.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
 $oPosicion->recordar();
@@ -30,37 +23,22 @@ if (!empty($a_sel)) { //vengo de un checkbox
     $oPosicion->addParametro('scroll_id', $scroll_id, 1);
 }
 
-$RoleRepository = new RoleRepository();
-$oRole = $RoleRepository->findById($Qid_role);
-$role = $oRole->getRoleAsString();
+/////////// Consulta al backend ///////////////////
+$url_lista_backend = Hash::cmdSinParametros(ConfigGlobal::getWeb()
+    . '/src/usuarios/infrastructure/controllers/role_grupmenu_info.php'
+);
 
-// los que ya tengo:
-$GrupMenuRoleRepository = new GrupMenuRoleRepository();
-$cGMR = $GrupMenuRoleRepository->getGrupMenuRoles(array('id_role' => $Qid_role));
-$aGrupMenus = [];
-foreach ($cGMR as $oGrupMenuRole) {
-    $id_grupmenu = $oGrupMenuRole->getId_grupmenu();
-    $aGrupMenus[$id_grupmenu] = 'x';
-}
+$oHash = new Hash();
+$oHash->setUrl($url_lista_backend);
+$oHash->setArrayCamposHidden(['id_role' => $Qid_role]);
+$hash_params = $oHash->getArrayCampos();
 
-$GrupMenuRepository = new GrupMenuRepository();
-$cGM = $GrupMenuRepository->getGrupMenus();
-$a_valores = [];
-$i = 0;
-foreach ($cGM as $oGrupMenu) {
-    $i++;
-    $id_grupmenu = $oGrupMenu->getId_grupmenu();
-    // que no lo tenga
-    if (array_key_exists($id_grupmenu, $aGrupMenus)) continue;
+$data = PostRequest::getData($url_lista_backend, $hash_params);
+$a_cabeceras = $data['a_cabeceras'];
+$a_botones = $data['a_botones'];
+$a_valores = $data['a_valores'];
+$role = $data['role'];
 
-    $grup_menu = $oGrupMenu->getGrup_menu($_SESSION['oConfig']->getAmbito());
-
-    $a_valores[$i]['sel'] = "$Qid_role#$id_grupmenu";
-    $a_valores[$i][1] = $grup_menu;
-}
-
-$a_cabeceras = array('grupmenu');
-$a_botones[] = array('txt' => _("añadir"), 'click' => "fnjs_add_grupmenu(\"#from_grupmenu\")");
 $oTabla = new Lista();
 $oTabla->setId_tabla('grupmenu');
 $oTabla->setCabeceras($a_cabeceras);

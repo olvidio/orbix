@@ -17,17 +17,14 @@ $error_txt = '';
 
 $Qid_usuario = (integer)filter_input(INPUT_POST, 'id_usuario');
 $Qsecret_2fa = (string)filter_input(INPUT_POST, 'secret_2fa');
-$Qenable_2fa = (string)filter_input(INPUT_POST, 'enable_2fa');
+$Qenable_2fa = (bool)filter_input(INPUT_POST, 'enable_2fa');
 $Qverification_code = (string)filter_input(INPUT_POST, 'verification_code');
-
-// Convertir el valor del checkbox a booleano
-$enable_2fa = ($Qenable_2fa === '1');
 
 $UsuarioRepository = new UsuarioRepository();
 $oUsuario = $UsuarioRepository->findById($Qid_usuario);
 
 // Si se está activando 2FA, verificar el código
-if ($enable_2fa) {
+if ($Qenable_2fa) {
     // Verificar que se haya proporcionado un código de verificación
     if (empty($Qverification_code)) {
         $error_txt = _("Se requiere un código de verificación para activar 2FA");

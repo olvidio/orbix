@@ -3,6 +3,7 @@
 use Illuminate\Http\JsonResponse;
 use permisos\model\MyCrypt;
 use src\usuarios\application\repositories\UsuarioRepository;
+use src\usuarios\domain\value_objects\Username;
 
 // INICIO Cabecera global de URL de controlador *********************************
 require_once("apps/core/global_header.inc");
@@ -20,7 +21,7 @@ $Qusuario = (string)filter_input(INPUT_POST, 'usuario');
 $Qpassword = (string)filter_input(INPUT_POST, 'password');
 
 if (!empty($Qusuario)) { // si es nuevo no tiene id
-    $usuario = $Qusuario;
+    $usuario = new Username($Qusuario);
 } elseif (!empty($Qid_usuario)) {
     $UsuarioReposiroty = new UsuarioRepository();
     $oUsuario = $UsuarioReposiroty->findById($Qid_usuario);

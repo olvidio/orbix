@@ -2,6 +2,8 @@
 
 use src\usuarios\application\repositories\RoleRepository;
 use src\usuarios\domain\entity\Role;
+use src\usuarios\domain\value_objects\PauType;
+use src\usuarios\domain\value_objects\RoleName;
 use web\ContestarJson;
 
 // INICIO Cabecera global de URL de controlador *********************************
@@ -33,12 +35,12 @@ if ($Qrole) {
         $oRole = new Role();
         $oRole->setId_role($id_role_new);
     }
-    $oRole->setRole($Qrole);
+    $oRole->setRole(new RoleName($Qrole));
     $sf = !empty($Qsf) ? '1' : 0;
     $oRole->setSf($sf);
     $sv = !empty($Qsv) ? '1' : 0;
     $oRole->setSv($sv);
-    $oRole->setPau($Qpau);
+    $oRole->setPau(new PauType($Qpau));
     $dmz = !empty($Qdmz) ? '1' : 0;
     $oRole->setDmz($dmz);
     if ($RoleRepository->Guardar($oRole) === false) {

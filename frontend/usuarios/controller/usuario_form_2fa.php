@@ -11,19 +11,9 @@ use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
 use web\Hash;
 
-/**
- * Formulario para configurar la autenticación de dos factores (2FA).
- */
-// INICIO Cabecera global de URL de controlador *********************************
-require_once("apps/core/global_header.inc");
-// Archivos requeridos por esta url **********************************************
-
 // Crea los objetos de uso global **********************************************
-require_once("apps/core/global_object.inc");
-// Crea los objetos para esta url  **********************************************
-
+require_once("frontend/shared/global_header_front.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
-
 
 $oMiUsuario = ConfigGlobal::MiUsuario();
 $id_usuario = $oMiUsuario->getId_usuario();
@@ -75,6 +65,9 @@ if (ConfigGlobal::WEBDIR === 'pruebas') {
 }
 if (!ServerConf::$dmz) {
     $appName .= '-interior';
+}
+if (ServerConf::SERVIDOR === 'orbix.docker') {
+    $appName .= '-docker';
 }
 $qr_url = get_qr_code_data($usuario, $secret_2fa, $appName);
 

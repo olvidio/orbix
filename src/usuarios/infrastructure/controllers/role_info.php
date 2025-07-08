@@ -5,6 +5,7 @@ use src\menus\application\repositories\GrupMenuRepository;
 use src\menus\application\repositories\GrupMenuRoleRepository;
 use src\usuarios\application\repositories\RoleRepository;
 use src\usuarios\application\repositories\UsuarioRepository;
+use src\usuarios\domain\entity\Role;
 use web\ContestarJson;
 
 // INICIO Cabecera global de URL de controlador *********************************
@@ -54,7 +55,7 @@ if (!empty($Qid_role)) {
     } else {
         $chk_sv = '';
     }
-    $pau = $oRole->getPau();
+    $pau = $oRole->getPauAsString();
     $dmz = $oRole->isDmz();
     $chk_dmz = !empty($dmz) ? 'checked' : '';
     $txt_sfsv = empty($txt_sfsv) ? '' : "($txt_sfsv)";
@@ -107,6 +108,7 @@ $data['chk_dmz'] = $chk_dmz;
 $data['a_cabeceras'] = $a_cabeceras;
 $data['a_botones'] = $a_botones;
 $data['a_valores'] = $a_valores;
+$data['aOpcionesPau'] = Role::ARRAY_PAU_TXT;
 
 ContestarJson::enviar($error_txt, $data);
 
