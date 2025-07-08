@@ -26,7 +26,7 @@ $id_role = ConfigGlobal::mi_id_role();
 // ----------- Layout -------------------
 $oPreferencia = $preferenciaRepository->findById($id_usuario, 'layout');
 if ($oPreferencia !== null) {
-    $layout = $oPreferencia->getPreferencia();
+    $layout = $oPreferencia->getPreferencia()->value();
 } else {
     $layout = '';
 }
@@ -122,7 +122,7 @@ if ($oPreferencia !== null) {
     $zona_horaria = '';
 }
 
-$data['layout'] = $layout->value();
+$data['layout'] = $layout;
 $data['inicio'] = $inicio;
 $data['oficina'] = $oficina;
 $data['oficinas_posibles'] = $oficinas_posibles;
