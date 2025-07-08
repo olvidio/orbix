@@ -1,13 +1,12 @@
 <?php
 
-
-// INICIO Cabecera global de URL de controlador *********************************
 use core\ConfigGlobal;
 use src\menus\application\repositories\GrupMenuRepository;
 use src\menus\application\repositories\GrupMenuRoleRepository;
 use src\usuarios\application\repositories\PreferenciaRepository;
 use web\ContestarJson;
 
+// INICIO Cabecera global de URL de controlador *********************************
 require_once("apps/core/global_header.inc");
 // Archivos requeridos por esta url **********************************************
 
@@ -97,12 +96,12 @@ $tipo_tabla_h = ($tipo_tabla === "html") ? "selected" : '';
 // ----------- Orden Apellidos en listas -------------------
 $oPreferencia = $preferenciaRepository->findById($id_usuario, 'ordenApellidos');
 if ($oPreferencia !== null) {
-    $tipo_apellidos = $oPreferencia->getPreferencia();
+    $tipo_apellidos = $oPreferencia->getPreferencia()->value();
 } else {
     $tipo_apellidos = '';
 }
-$tipo_apellidos_nom_ap = ($tipo_apellidos->value() === "nom_ap") ? "selected" : '';
-$tipo_apellidos_ap_nom = ($tipo_apellidos->value() === "ap_nom") ? "selected" : '';
+$tipo_apellidos_nom_ap = ($tipo_apellidos === "nom_ap") ? "selected" : '';
+$tipo_apellidos_ap_nom = ($tipo_apellidos === "ap_nom") ? "selected" : '';
 
 // ----------- Idioma -------------------
 //Tengo la variable $idioma en ConfigGlobal, pero vuelvo a consultarla
