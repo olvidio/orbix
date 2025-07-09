@@ -134,7 +134,8 @@ if ($max === 0) {
     $oHash->setUrl($url_sincro_ver);
     $oHash->setcamposNo('mov');
     $a_camposHidden = array(
-        //'dl' => $dl,
+        'region' => $region,
+        'dl' => $dl,
         'tipo_persona' => $tipo_persona,
         'id' => $new_id,
     );
