@@ -254,6 +254,7 @@ class SincroDB
         $oPersonaDl->DBCarregar();
 
         $apellido1 = $oPersonaDl->getApellido1();
+        $apellido1 = str_replace("'","''", $apellido1);
 
         $Query = "SELECT * FROM $this->tabla
                         WHERE identif::text LIKE '$this->id_tipo%' AND  ApeNom LIKE '%" . $apellido1 . "%'
