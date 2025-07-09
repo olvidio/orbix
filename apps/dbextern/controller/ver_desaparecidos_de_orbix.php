@@ -23,7 +23,7 @@ $i = 0;
 foreach ($a_ids_desaparecidos_de_orbix as $id_nom_listas) {
     $i++;
 
-    $oPersonaListas = new dbextern\model\entity\zPersonaListas($id_nom_listas);
+    $oPersonaListas = new dbextern\model\entity\PersonaBDU($id_nom_listas);
 
     $a_persona_listas[$i]['id_nom_listas'] = $id_nom_listas;
     $a_persona_listas[$i]['ape_nom'] = $oPersonaListas->getApeNom();
