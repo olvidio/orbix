@@ -46,10 +46,10 @@ $oHash2fa->setArrayCamposHidden(
     ]);
 $hash_2fa_params = $oHash2fa->getArrayCampos();
 
-$data_2fa = PostRequest::getData($url_2fa_info_backend, $hash_2fa_params);
+$data = PostRequest::getData($url_2fa_info_backend, $hash_2fa_params);
 
-$has_2fa = isset($data_2fa['has_2fa']) ? $data_2fa['has_2fa'] : false;
-$secret_2fa = isset($data_2fa['secret_2fa']) ? $data_2fa['secret_2fa'] : '';
+$has_2fa = isset($data['has_2fa']) ? $data['has_2fa'] : false;
+$secret_2fa = isset($data['secret_2fa']) ? $data['secret_2fa'] : '';
 
 // Si no hay clave secreta, generar una nueva
 if (empty($secret_2fa)) {
@@ -102,6 +102,14 @@ if (isset($_SESSION['msg_2fa'])) {
     $go_to = ConfigGlobal::getWeb() . "/index.php";
 }
 
+$url_index = $_SERVER['HTTP_REFERER'];
+$a_cosas = ['url_index' => $url_index,
+    'username' => $usuario,
+    'ubicacion' => '',
+    'esquema' => ConfigGlobal::mi_region_dl(),
+];
+$link_ayuda = 'frontend/usuarios/controller/ayuda_2fa_reset.php?' . http_build_query($a_cosas);
+
 // Acceder a la variable global $oPosicion
 global $oPosicion;
 
@@ -120,6 +128,7 @@ $a_campos = [
     'url_2fa_verify' => $url_2fa_verify,
     'url_2fa_update' => $url_2fa_update,
     'go_to' => $go_to,
+    'link_ayuda' => $link_ayuda,
 ];
 
 $oView = new ViewNewPhtml('frontend\usuarios\controller');

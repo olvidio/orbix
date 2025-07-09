@@ -1,6 +1,8 @@
 <?php
 
 use src\usuarios\application\repositories\UsuarioRepository;
+use src\usuarios\domain\value_objects\Secret2FA;
+use src\usuarios\domain\Verify2fa;
 use web\ContestarJson;
 
 // INICIO Cabecera global de URL de controlador *********************************
@@ -33,8 +35,7 @@ if ($Qenable_2fa) {
     }
     
     // Verificar el código 2FA
-    require_once("src/usuarios/infrastructure/controllers/usuario_2fa_verify.php");
-    if (!verify_2fa_code($Qverification_code, $Qsecret_2fa)) {
+    if (!Verify2fa::verify_2fa_code($Qverification_code, $Qsecret_2fa)) {
         $error_txt = _("Código de verificación inválido");
         ContestarJson::enviar($error_txt, []);
         exit();
@@ -42,7 +43,7 @@ if ($Qenable_2fa) {
     
     // Actualizar la configuración 2FA
     $oUsuario->setHas2fa(true);
-    $oUsuario->setSecret2fa($Qsecret_2fa);
+    $oUsuario->setSecret2fa(new Secret2FA($Qsecret_2fa));
 } else {
     // Desactivar 2FA
     $oUsuario->setHas2fa(false);

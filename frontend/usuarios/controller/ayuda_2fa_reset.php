@@ -18,11 +18,10 @@ $_POST = empty($_POST) ? $_GET : $_POST;
 
 require __DIR__ . '/../../../libs/vendor/autoload.php';
 
-$Qusername = (string)filter_input(INPUT_GET, 'username');
-$Qubicacion = (string)filter_input(INPUT_GET, 'ubicacion');
-$Qesquema = (string)filter_input(INPUT_GET, 'esquema');
-$Qesquema_web = (string)filter_input(INPUT_GET, 'esquema_web');
-$Qurl_index = (string)filter_input(INPUT_GET, 'url_index');
+$Qusername = (string)$_POST['username'];
+$Qubicacion = (string)$_POST['ubicacion'];
+$Qesquema = (string)$_POST['esquema'];
+$Qurl_index = (string)$_POST['url_index'];
 
 $a_cosas = ['url_index' => $Qurl_index, 'username' => $Qusername, 'ubicacion' => $Qubicacion, 'esquema' => $Qesquema];
 $linkEnviarMail2fa = 'recuperar_2fa.php?' . http_build_query($a_cosas);

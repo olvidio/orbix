@@ -193,7 +193,7 @@ $msg_2fa = $msg_2fa ?? '';
         <input type="submit" value="<?= _("Restablecer configuración 2FA") ?>" class="btn_warning" style="background-color: #f44336; color: white; padding: 8px 16px; border: none; border-radius: 4px; cursor: pointer;">
     </form>
     <p><small><?= _("Nota: Al restablecer su configuración de 2FA, se desactivará temporalmente la autenticación de dos factores para su cuenta. Deberá configurarla nuevamente para volver a activarla.") ?></small></p>
-    <p><a href="<?= ConfigGlobal::getWeb() ?>/frontend/usuarios/controller/ayuda_2fa_reset.php" target="_blank"><?= _("Más información sobre cómo restablecer 2FA") ?></a></p>
+    <p><a href="<?= $link_ayuda ?>" target="_blank"><?= _("Más información sobre cómo restablecer 2FA") ?></a></p>
 </div>
 <?php endif; ?>
 

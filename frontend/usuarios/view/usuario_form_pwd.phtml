@@ -42,7 +42,8 @@
         });
     }
 
-    fnjs_guardar = function (formulario) {
+    fnjs_guardar = function (event,formulario) {
+        event.preventDefault();
         // si es 0, no se cambia el password.
         var pwd = encodeURIComponent($("#password").val());
         var pwd1 = encodeURIComponent($("#password1").val());
@@ -95,12 +96,12 @@
     <br>
 <?php } ?>
 <br>
-<form id=frm_usuario name=frm_usuario action='' method="post">
+<form id="frm_usuario" name="frm_usuario" action="" method="post" onsubmit="fnjs_guardar(event,this);">
     <?= $oHash->getCamposHtml() ?>
     <?= ucfirst(_("password")) ?>:<input type="password" id="password" name="password"><br>
     <?= ucfirst(_("confirma password")) ?>:<input type="password" id="password1" name="password1"><br>
     <br>
-    <input type=submit onclick="fnjs_guardar(this.form);" value="<?= $txt_guardar ?>">
+    <input type="submit" value="<?= $txt_guardar ?>">
     <?= _("deberá volver a entrar") ?>
     <br>
 </form>
