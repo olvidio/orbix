@@ -58,16 +58,18 @@ class ListaDocsGrupo
                 }
 
                 if (!empty($num_ejemplares) && $num_ejemplares > 1) {
-                    $a_valores[$d][1] = $num_ejemplares . ' ' . _("ejemplares de") . ' ';
+                    $a_valores[$d]['ejemplares'] = $num_ejemplares;
+                    $a_valores[$d]['nombre'] = $num_ejemplares . ' ' . _("ejemplares de") . ' ';
                 } else {
-                    $a_valores[$d][1] = '';
+                    $a_valores[$d]['ejemplares'] = '';
+                    $a_valores[$d]['nombre'] = '';
                 }
-                $a_valores[$d][1] .= $oTipoDoc->getSigla() . " " . $oTipoDoc->getNom_doc() . " " . $observ;
+                $a_valores[$d]['nombre'] .= $oTipoDoc->getSigla() . " " . $oTipoDoc->getNom_doc() . " " . $observ;
 
-                $a_valores[$d][2] = $identificador;
+                $a_valores[$d]['identificador'] = $identificador;
                 //para poder ordenar
                 //$tipo[$d] = $a_valores[$d][1];
-                $num[$d] = $a_valores[$d][2];
+                $num[$d] = $a_valores[$d]['identificador'];
 
                 $bAgrupar = false;
                 $orden_coleccion[$d] = 0;
@@ -95,9 +97,9 @@ class ListaDocsGrupo
                     }
                 }
 
-                $a_valores[$d][3] = false; // ?¿?¿? para ser compatible con los docs de la casa.
-                $a_valores[$d][4] = empty($id_coleccion) ? false : $id_coleccion;
-                $a_valores[$d][5] = $bAgrupar;
+                $a_valores[$d]['lugar'] = false; // ?¿?¿? para ser compatible con los docs de la casa.
+                $a_valores[$d]['coleccion'] = empty($id_coleccion) ? false : $id_coleccion;
+                $a_valores[$d]['carta'] = $bAgrupar;
             }
             // ordenar por sigla
             if (!empty($a_valores)) {
