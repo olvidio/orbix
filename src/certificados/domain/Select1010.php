@@ -3,9 +3,9 @@
 namespace src\certificados\domain;
 
 use core\ConfigGlobal;
-use core\ViewPhtml;
+use frontend\shared\model\ViewNewPhtml;
 use personas\model\entity\Persona;
-use src\certificados\application\repositories\CertificadoDlRepository;
+use src\certificados\application\repositories\CertificadoRecibidoRepository;
 use web\Hash;
 use web\Lista;
 use web\Posicion;
@@ -105,8 +105,8 @@ class Select1010
             '_ordre' => 'f_certificado'
         ];
 
-        $certificadoDlRepository = new CertificadoDlRepository();
-        $cCertificados = $certificadoDlRepository->getCertificados($aWhere);
+        $certificadoRecibidoRepository = new CertificadoRecibidoRepository();
+        $cCertificados = $certificadoRecibidoRepository->getCertificados($aWhere);
 
         $i = 0;
         $a_valores = [];
@@ -171,12 +171,12 @@ class Select1010
         $oTabla->setDatos($this->getValores());
 
         $oHashDown = new Hash();
-        $oHashDown->setUrl('apps/certificados/controller/certificado_dl_pdf_download.php');
+        $oHashDown->setUrl('frontend/certificados/controller/certificado_recibido_pdf_download.php');
         $oHashDown->setCamposForm('key');
         $h_download = $oHashDown->linkSinVal();
 
         $aQuery = ['nuevo' => 1, 'id_nom' => $this->id_pau];
-        $url_nuevo = Hash::link(ConfigGlobal::getWeb() . '/apps/certificados/controller/certificado_dl_adjuntar.php?' . http_build_query($aQuery));
+        $url_nuevo = Hash::link(ConfigGlobal::getWeb() . '/frontend/certificados/controller/certificado_recibido_adjuntar.php?' . http_build_query($aQuery));
 
         $a_campos = [
             'oPosicion' => $oPosicion,
@@ -186,7 +186,7 @@ class Select1010
             'h_download' => $h_download,
         ];
 
-        $oView = new ViewPhtml('certificados\view');
+        $oView = new ViewNewPhtml('frontend\certificados\view');
         $oView->renderizar('select1010.phtml', $a_campos);
     }
 

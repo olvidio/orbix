@@ -3,7 +3,7 @@
 namespace Tests\factories\certificados;
 
 use Faker\Factory;
-use src\certificados\domain\entity\Certificado;
+use src\certificados\domain\entity\CertificadoEmitido;
 use web\DateTimeLocal;
 use web\NullDateTimeLocal;
 
@@ -67,7 +67,7 @@ class CertificadosFactory
                 $f_enviado = new NullDateTimeLocal();
             }
 
-            $Certificado = new Certificado();
+            $Certificado = new CertificadoEmitido();
             $Certificado->setId_item($id_item);
             $Certificado->setId_nom($id_nom_c);
             $Certificado->setNom($nom_c);

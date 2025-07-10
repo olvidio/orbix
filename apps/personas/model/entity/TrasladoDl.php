@@ -19,9 +19,9 @@ use dossiers\model\entity\GestorDossier;
 use dossiers\model\entity\TipoDossier;
 use notas\model\EditarPersonaNota;
 use notas\model\PersonaNota;
-use src\certificados\application\repositories\CertificadoDlRepository;
-use src\certificados\application\repositories\CertificadoRepository;
-use src\certificados\domain\entity\CertificadoDl;
+use src\certificados\application\repositories\CertificadoRecibidoRepository;
+use src\certificados\application\repositories\CertificadoEmitidoRepository;
+use src\certificados\domain\entity\CertificadoRecibido;
 use ubis\model\entity\GestorDelegacion;
 use web\DateTimeLocal;
 use web\NullDateTimeLocal;
@@ -936,9 +936,9 @@ class TrasladoDl
         $oDBorg = $this->conexionOrg();
         // si es una dl, hay que buscarlos en la region del stgr
 
-        $certificadoDlRepository = new CertificadoDlRepository();
-        $certificadoDlRepository->setoDbl($oDBorg);
-        $cCertificados = $certificadoDlRepository->getCertificados(['id_nom' => $this->iid_nom]);
+        $certificadoRecibidoRepository = new CertificadoRecibidoRepository();
+        $certificadoRecibidoRepository->setoDbl($oDBorg);
+        $cCertificados = $certificadoRecibidoRepository->getCertificados(['id_nom' => $this->iid_nom]);
         foreach ($cCertificados as $Certificado) {
             if (!$this->trasladar_certificados($Certificado)) {
                 $error .= '<br>' . $this->serror = $error;
@@ -952,29 +952,29 @@ class TrasladoDl
         return true;
     }
 
-    public function trasladar_certificados($CertificadoDl)
+    public function trasladar_certificados($CertificadoRecibido)
     {
         $error = '';
         $oDBorg = $this->conexionOrg();
         $oDBdst = $this->conexionDst();
 
-        $id_item = $CertificadoDl->getId_item();
+        $id_item = $CertificadoRecibido->getId_item();
         // para que ponga el suyo según la DB
 
-        $certificadoDlRepository = new CertificadoDlRepository();
-        $certificadoDlRepository->setoDbl($oDBdst);
-        $newId_item = $certificadoDlRepository->getNewId_item();
-        $CertificadoDl->setId_item($newId_item);
-        if ($certificadoDlRepository->Guardar($CertificadoDl) === FALSE) {
-            $error .= $certificadoDlRepository->getErrorTxt();
+        $certificadoRecibidoRepository = new CertificadoRecibidoRepository();
+        $certificadoRecibidoRepository->setoDbl($oDBdst);
+        $newId_item = $certificadoRecibidoRepository->getNewId_item();
+        $CertificadoRecibido->setId_item($newId_item);
+        if ($certificadoRecibidoRepository->Guardar($CertificadoRecibido) === FALSE) {
+            $error .= $certificadoRecibidoRepository->getErrorTxt();
         }
 
         // eliminar el original
-        $certificadoDlRepository2 = new CertificadoDlRepository();
-        $oCertificado = $certificadoDlRepository2->findById($id_item);
-        if (!empty($oCertificado)) {
-            $certificado = $oCertificado->getCertificado();
-            if ($certificadoDlRepository2->Eliminar($oCertificado) === FALSE) {
+        $certificadoRecibidoRepository2 = new CertificadoRecibidoRepository();
+        $oCertificadoRecibido = $certificadoRecibidoRepository2->findById($id_item);
+        if (!empty($oCertificadoRecibido)) {
+            $certificado = $oCertificadoRecibido->getCertificado();
+            if ($certificadoRecibidoRepository2->Eliminar($oCertificadoRecibido) === FALSE) {
                 $error .= _("Algo falló");
             }
         }
@@ -994,20 +994,20 @@ class TrasladoDl
 
         $id_item = $Certificado->getId_item();
         // para que ponga el suyo según la DB
-        $CertificadoDl = $this->copyCertificado2Dl($Certificado);
+        $CertificadoRecibido = $this->copyCertificado2Dl($Certificado);
 
-        $certificadoDlRepository = new CertificadoDlRepository();
-        $certificadoDlRepository->setoDbl($oDBdst);
-        $newId_item = $certificadoDlRepository->getNewId_item();
-        $CertificadoDl->setId_item($newId_item);
-        if ($certificadoDlRepository->Guardar($CertificadoDl) === FALSE) {
-            $error .= $certificadoDlRepository->getErrorTxt();
+        $certificadoRecibidoRepository = new CertificadoRecibidoRepository();
+        $certificadoRecibidoRepository->setoDbl($oDBdst);
+        $newId_item = $certificadoRecibidoRepository->getNewId_item();
+        $CertificadoRecibido->setId_item($newId_item);
+        if ($certificadoRecibidoRepository->Guardar($CertificadoRecibido) === FALSE) {
+            $error .= $certificadoRecibidoRepository->getErrorTxt();
         }
         // pongo fecha enviado
-        $certificadoRepository = new CertificadoRepository();
+        $certificadoEmitidoRepository = new CertificadoEmitidoRepository();
         $Certificado->setF_enviado(new DateTimeLocal());
-        if ($certificadoRepository->Guardar($Certificado) === FALSE) {
-            $error .= $certificadoRepository->getErrorTxt();
+        if ($certificadoEmitidoRepository->Guardar($Certificado) === FALSE) {
+            $error .= $certificadoEmitidoRepository->getErrorTxt();
         }
 
         if (!empty($error)) {
@@ -1107,19 +1107,19 @@ class TrasladoDl
 
     private function copyCertificado2Dl($Certificado)
     {
-        $oCertificadoDl = new CertificadoDl();
-        $oCertificadoDl->setId_nom($Certificado->getId_nom());
-        $oCertificadoDl->setNom($Certificado->getNom());
-        $oCertificadoDl->setIdioma($Certificado->getIdioma());
-        $oCertificadoDl->setDestino($Certificado->getDestino());
-        $oCertificadoDl->setCertificado($Certificado->getCertificado());
-        $oCertificadoDl->setF_certificado($Certificado->getF_certificado());
-        $oCertificadoDl->setEsquema_emisor($Certificado->getEsquema_emisor());
-        $oCertificadoDl->setFirmado($Certificado->isFirmado());
-        $oCertificadoDl->setDocumento($Certificado->getDocumento());
-        $oCertificadoDl->setF_recibido(new DateTimeLocal());
+        $oCertificadoRecibido = new CertificadoRecibido();
+        $oCertificadoRecibido->setId_nom($Certificado->getId_nom());
+        $oCertificadoRecibido->setNom($Certificado->getNom());
+        $oCertificadoRecibido->setIdioma($Certificado->getIdioma());
+        $oCertificadoRecibido->setDestino($Certificado->getDestino());
+        $oCertificadoRecibido->setCertificado($Certificado->getCertificado());
+        $oCertificadoRecibido->setF_certificado($Certificado->getF_certificado());
+        $oCertificadoRecibido->setEsquema_emisor($Certificado->getEsquema_emisor());
+        $oCertificadoRecibido->setFirmado($Certificado->isFirmado());
+        $oCertificadoRecibido->setDocumento($Certificado->getDocumento());
+        $oCertificadoRecibido->setF_recibido(new DateTimeLocal());
 
-        return $oCertificadoDl;
+        return $oCertificadoRecibido;
     }
 
 }

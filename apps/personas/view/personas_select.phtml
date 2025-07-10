@@ -120,7 +120,7 @@
             rta = fnjs_solo_uno(formulario);
             if (rta === 1) {
                 $('#id_dossier').val("1010");
-                $(formulario).attr('action', "apps/certificados/controller/certificado_select.php");
+                $(formulario).attr('action', "apps/dossiers/controller/dossiers_ver.php");
                 $(formulario).target = "main";
                 fnjs_enviar_formulario(formulario);
             }
@@ -130,7 +130,7 @@
         fnjs_imp_certificado = function (formulario) {
             rta = fnjs_solo_uno(formulario);
             if (rta === 1) {
-                $(formulario).attr('action', "frontend/certificados/controller/certificado_imprimir.php");
+                $(formulario).attr('action', "frontend/certificados/controller/certificado_emitido_imprimir.php");
                 $(formulario).target = "print";
                 fnjs_enviar_formulario(formulario);
             }
@@ -141,7 +141,7 @@
             rta = fnjs_solo_uno(formulario);
             if (rta === 1) {
                 $('#id_dossier').val("1010");
-                $(formulario).attr('action', "apps/certificados/controller/certificado_adjuntar.php");
+                $(formulario).attr('action', "frontend/certificados/controller/certificado_recibido_adjuntar.php");
                 $(formulario).target = "print";
                 fnjs_enviar_formulario(formulario);
             }

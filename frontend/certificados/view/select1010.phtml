@@ -6,7 +6,7 @@
                 $('#mod').val("eliminar");
                 let request = $.ajax({
                     data: $(formulario).serialize(),
-                    url: 'src/certificados/controller/certificado_dl_delete.php',
+                    url: 'src/certificados/infrastructure/controllers/certificado_recibido_delete.php',
                     method: 'POST',
                     dataType: 'json'
                 });
@@ -23,18 +23,18 @@
 
     fnjs_actualizar = function (formulario) {
         let campo = '<input type="hidden" name="refresh" value=1>';
-        $(formulario).attr('action', "frontend/dossiers/controller/dossiers_ver.php");
+        $(formulario).attr('action', "apps/dossiers/controller/dossiers_ver.php");
         $(formulario).append(campo);
         fnjs_enviar_formulario(formulario, '#main');
     }
 
     fnjs_upload_certificado = function (formulario) {
-        $(formulario).attr('action', "frontend/certificados/controller/certificado_dl_modificar.php");
+        $(formulario).attr('action', "frontend/certificados/controller/certificado_recibido_modificar.php");
         fnjs_enviar_formulario(formulario);
     }
 
     fnjs_nuevo_certificado = function () {
-        $(formulario).attr('action', "frontend/certificados/controller/certificado_dl_adjuntar.php");
+        $(formulario).attr('action', "frontend/certificados/controller/certificado_recibido_adjuntar.php");
         fnjs_enviar_formulario(formulario);
     }
 
@@ -45,7 +45,7 @@
             $(formulario + ' input.sel').each(function () {
                 if ($(this).prop('checked') === true) {
                     let key = $(this).prop('value');
-                    let url = "frontend/certificados/controller/certificado_dl_pdf_download.php";
+                    let url = "frontend/certificados/controller/certificado_recibido_pdf_download.php";
                     let url_download = url + '?key=' + key + '<?= $h_download ?>';
                     window.open(url_download);
                 }

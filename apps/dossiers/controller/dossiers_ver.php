@@ -205,17 +205,26 @@ if (empty($Qid_dossier)) { // enseña la lista de dossiers.
         echo "<div id=\"$nom_bloque\">";
         $oTipoDossier = new TipoDossier($id_dossier);
         $app = $oTipoDossier->getApp();
-
-        // Para presentaciones particulares
-        $nameFile = "../../$app/model/Select" . $id_dossier . ".php";
-        $nameFile2 = "../../$app/domain/Select" . $id_dossier . ".php";
-        if (realpath($nameFile) || realpath($nameFile2)) { //como file_exists
+        $db = $oTipoDossier->getDb();
+        $nameClaseSelect = '';
+        if ($db === 5) { // nuevas clases en /src
+            $nameFile = "../../../src/$app/domain/Select" . $id_dossier . ".php";
+            if (realpath($nameFile)) { //como file_exists
+                $nameClaseSelect = "src\\$app\\domain\\Select" . $id_dossier;
+            }
+        } else {
+            // Para presentaciones particulares
+            $nameFile = "../../$app/model/Select" . $id_dossier . ".php";
+            $nameFile2 = "../../$app/domain/Select" . $id_dossier . ".php";
             if (realpath($nameFile)) { //como file_exists
                 $nameClaseSelect = "$app\\model\\Select" . $id_dossier;
             }
             if (realpath($nameFile2)) { //como file_exists
                 $nameClaseSelect = "$app\\domain\\Select" . $id_dossier;
             }
+        }
+
+        if (!empty($nameClaseSelect)) {
             $claseSelect = new $nameClaseSelect();
             $claseSelect->setId_dossier($id_dossier);
             $claseSelect->setPau($pau);
@@ -251,6 +260,8 @@ if (empty($Qid_dossier)) { // enseña la lista de dossiers.
             // para presentación genérica, con la info tipo Info1012.php
             // datos del dossier:
             $oTipoDossier = new TipoDossier($id_dossier);
+            $clase = $oTipoDossier->getClass();
+
             $app = $oTipoDossier->getApp();
             // No sé porque no acepa aquí el '_' en el nombre de la clase.
             $clase_info = "$app\\model\\Info$id_dossier";
