@@ -69,8 +69,12 @@ class DatosFormRepo
                     break;
                 case "fecha":
                     $locale_us = ConfigGlobal::is_locale_us();
-                    // el valor_camp debe ser un objeto DateTimeLocal
-                    $field['valor_txt'] = $valor_camp->getFromLocal();
+                    if (!empty($valor_camp)) {
+                        // el valor_camp debe ser un objeto DateTimeLocal
+                        $field['valor_txt'] = $valor_camp->getFromLocal();
+                    } else {
+                        $field['valor_txt'] = $valor_camp;
+                    }
                     $field['locale_us'] = $locale_us;
                     break;
                 case "opciones":

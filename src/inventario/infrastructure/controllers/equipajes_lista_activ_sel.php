@@ -1,4 +1,4 @@
-<?php
+<?
 
 
 // INICIO Cabecera global de URL de controlador *********************************

@@ -37,25 +37,18 @@ class InfoDocsxSigla extends DatosInfoRepo
         return __NAMESPACE__;
     }
 
-    public function addCampos($aCampos)
+    public function addCamposFormBuscar()
     {
-        /*
-        $a_campos = [
-            'script' => $oDatosTabla->getScript(),
-            'url' => $url,
-            'oHashBuscar' => $oHashBuscar,
-            'txt_buscar' => $oInfoClase->getTxtBuscar(),
-            'k_buscar' => $Qk_buscar,
-        ];
-        */
-        $a_campos = $aCampos;
+        return '';
+    }
 
+    public function addCampos($a_campos = [])
+    {
         $Repository = new TipoDocRepository();
         $aOpciones = $Repository->getArrayTipoDoc();
-        $oDesplTiposDoc = new Desplegable('k_buscar',$aOpciones,'',true);
-        $a_campos['oDesplTiposDoc'] = $oDesplTiposDoc;
+        $a_campos['aOpcionesTiposDoc'] = $aOpciones;
 
-        $url_bloque = ConfigGlobal::getWeb().'/src/inventario/controller/documentos_form.php';
+        $url_bloque = ConfigGlobal::getWeb().'/src/inventario/infrastructure/controllers/documentos_form.php';
         $oHash = new Hash();
         $sCamposForm = 'id_tipo_doc!documentos';
         $oHash->setUrl($url_bloque);
@@ -75,12 +68,12 @@ class InfoDocsxSigla extends DatosInfoRepo
     public function getColeccion()
     {
         // Si se quiere listar una selección, $_POST['k_buscar']
-        if (empty($_POST['k_buscar'])) {
+        if (empty($this->k_buscar)) {
             // para evitar que salgan todos
             $aWhere = ['id_tipo_doc' => 0];
             $aOperador = [];
         } else {
-            $id_tipo_doc = $_POST['k_buscar'];
+            $id_tipo_doc = $this->k_buscar;
             $aWhere = ['id_tipo_doc' => $id_tipo_doc, '_ordre' => 'id_ubi,id_lugar'];
             $aOperador = [];
         }

@@ -35,40 +35,32 @@ class InfoDocsxCtr extends DatosInfoRepo
         return __NAMESPACE__;
     }
 
-    public function addCampos($aCampos)
+    /**
+     * campos del formulario a añadir al hashBuscar
+     *
+     * @return string
+     */
+    public function addCamposFormBuscar()
     {
-        /*
-        $a_campos = [
-            'script' => $oDatosTabla->getScript(),
-            'url' => $url,
-            'oHashBuscar' => $oHashBuscar,
-            'txt_buscar' => $oInfoClase->getTxtBuscar(),
-            'k_buscar' => $Qk_buscar,
-        ];
-        */
-        $a_campos = $aCampos;
+        return '!exacto';
+    }
 
-        $oHash = $aCampos['oHashBuscar'];
-        $camposForm = $oHash->getCamposForm();
-        $camposForm .= '!exacto';
-        $oHash->setCamposForm($camposForm);
-
-        $a_campos['oHashBuscar'] = $oHash;
-
+    public function addCampos($a_campos=[])
+    {
         return $a_campos;
     }
 
     public function getColeccion()
     {
-        // Si se quiere listar una selección, $_POST['k_buscar']
-        if (empty($_POST['k_buscar'])) {
+        // Si se quiere listar una selección, $k_buscar
+        if (empty($this->k_buscar)) {
             // para evitar que salgan todos
-            $aWhere = array('id_ubi' => 1, '_ordre' => 'id_ubi,id_lugar');
+            $aWhere = array('_limit' => 6, '_ordre' => 'id_ubi,id_lugar');
             $aOperador = [];
         } else {
-            $nom_ubi = str_replace("+", "\+", $_POST['k_buscar']); // para los centros de la sss+
+            $nom_ubi = str_replace("+", "\+", $this->k_buscar); // para los centros de la sss+
             $aWhereUbi = array('nom_ubi' => $nom_ubi);
-            if (!empty($_POST['exacto'])) {
+            if ($this->exacto) {
                 $aOperadorUbi = [];
             } else {
                 $aOperadorUbi = array('nom_ubi' => 'sin_acentos');
@@ -83,8 +75,7 @@ class InfoDocsxCtr extends DatosInfoRepo
             }
             // para evitar que salgan todos
             if (empty($lst_id_ubi)) {
-                $id_ubi = 1;
-                $aWhere = ['id_ubi' => $id_ubi];
+                $aWhere = ['_limit' => 6];
                 $aOperador = [];
             } else {
                 $aWhere = ['id_ubi' => $lst_id_ubi];

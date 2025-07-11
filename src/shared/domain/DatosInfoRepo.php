@@ -20,7 +20,8 @@ abstract class DatosInfoRepo
     protected $mod;
     protected $a_pkey;
 
-    protected $k_buscar;
+    protected string $k_buscar;
+    protected bool $exacto = false;
 
     protected $pau;
 
@@ -38,9 +39,14 @@ abstract class DatosInfoRepo
         return '';
     }
 
-    public function addCampos()
+    public function addCamposFormBuscar()
     {
-        return [];
+        return '';
+    }
+
+    public function addCampos(array $a_campos = [])
+    {
+        return $a_campos;
     }
 
     public function getMetodoGestor()

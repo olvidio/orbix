@@ -90,8 +90,10 @@ if (empty($Qk_buscar)) {
     $datos_buscar = empty($data['datos_buscar'])? '' : $data['datos_buscar'];
     $namespace = empty($data['namespace'])? 'frontend\shared\view' : $data['namespace'];
 
+    $camposFormBuscar = 'k_buscar';
+    $camposFormBuscar .= empty($a_campos_buscar['camposForm'])? '' : $a_campos_buscar['camposForm'];
     $oHashBuscar = new Hash();
-    $oHashBuscar->setCamposForm('k_buscar');
+    $oHashBuscar->setCamposForm($camposFormBuscar);
     $a_camposHiddenBuscar = array(
         'clase_info' => $Qclase_info,
         'aSerieBuscar' => $QaSerieBuscar,
@@ -99,6 +101,7 @@ if (empty($Qk_buscar)) {
     );
     $oHashBuscar->setArraycamposHidden($a_camposHiddenBuscar);
     $a_campos_buscar['oHashBuscar'] = $oHashBuscar;
+    $a_campos_buscar['oPosicion'] = $oPosicion;
 
     if (!empty($datos_buscar)) {
         $oView = new ViewNewPhtml($namespace);

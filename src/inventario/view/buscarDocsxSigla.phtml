@@ -6,7 +6,14 @@
                 <?= _("tipo de documento") ?>:
             </td>
             <td>
-                <?= $oDesplTiposDoc->desplegable() ?>
+                <select id="k_buscar" name="k_buscar" onchange="fnjs_enviar_formulario(this.form,'#exportar');">
+                    <option value=""></option>
+                    <?php
+                    foreach ($aOpcionesTiposDoc as $k => $v) {
+                        echo "<option value='$k'>$v</option>";
+                    }
+                    ?>
+                </select>
             </td>
         </tr>
 
@@ -99,7 +106,7 @@
             let datos = $(formulario).serialize();
             let request = $.ajax({
                 data: datos,
-                url: 'src/inventario/controller/documentos_guardar.php',
+                url: 'src/inventario/infrastructure/controllers/documentos_guardar.php',
                 method: 'POST',
                 dataType: 'json'
             });

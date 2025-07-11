@@ -30,26 +30,28 @@ $oFicha = $oInfoClase->getFicha();
 $aCamposDepende = $oInfoClase->getArrayCamposDepende();
 $aOpciones_txt = [];
 foreach ($aCamposDepende as $pKeyRepository => $campoDepende) {
-    $bbb = 'get' . ucfirst($pKeyRepository);
-    $id_pau = $oFicha->$bbb();
-    $aaa = 'get' . ucfirst($campoDepende);
-    $valor_campo_depende = $oFicha->$aaa();
+    if ($Qmod === 'nuevo') {
+       $id_pau = '';
+       $valor_campo_depende = '';
+    } else {
+        $bbb = 'get' . ucfirst($pKeyRepository);
+        $id_pau = $oFicha->$bbb();
+        $aaa = 'get' . ucfirst($campoDepende);
+        $valor_campo_depende = $oFicha->$aaa();
+    }
     $aOpciones_txt[$campoDepende] = $oInfoClase->getOpcionesParaCondicion($campoDepende,$id_pau,$valor_campo_depende);
 }
 
-$oDatosForm = new \src\shared\domain\DatosFormRepo();
-$oDatosForm->setFicha($oFicha);
-$oDatosForm->setArrayOpcionesTxt($aOpciones_txt);
-$oDatosForm->setMod($Qmod);
+$oDatosFormRepo = new DatosFormRepo();
+$oDatosFormRepo->setFicha($oFicha);
+$oDatosFormRepo->setArrayOpcionesTxt($aOpciones_txt);
+$oDatosFormRepo->setMod($Qmod);
 
 $tit_txt = $oInfoClase->getTxtTitulo();
 $explicacion_txt = $oInfoClase->getTxtExplicacion();
 
-$camposForm = $oDatosForm->getCamposForm();
-$camposNo = $oDatosForm->getCamposNo();
-
-// Create the DatosFormRepo object
-$oDatosFormRepo = new DatosFormRepo();
+$camposForm = $oDatosFormRepo->getCamposForm();
+$camposNo = $oDatosFormRepo->getCamposNo();
 
 // Set the properties
 if (!empty($oFicha)) {

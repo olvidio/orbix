@@ -49,9 +49,21 @@ class DatosUpdateRepo
                     $aCampos[$nom_camp] = is_true($aCampos[$nom_camp]);
                 }
             }
+            if ($tipo === 'fecha') {
+                if (empty($aCampos[$nom_camp])) {
+                    $aCampos[$nom_camp] = new NullDateTimeLocal();
+                } else {
+                    $aCampos[$nom_camp] = DateTimeLocal::createFromLocal($aCampos[$nom_camp]);
+                }
+            }
             // si es con decimales, cambio coma por punto
             if ($tipo === 'decimal' && !empty($aCampos[$nom_camp])) $aCampos[$nom_camp] = str_replace(',', '.', $aCampos[$nom_camp]);
             //$oFicha->$nom_camp = $aCampos[$nom_camp];
+
+            if (empty($aCampos[$nom_camp])) { // En general mejor null, por el tipado. puede venir '' para un integer
+                $aCampos[$nom_camp] = null;
+            }
+
 
             $metodo = $oDatosCampo->getMetodoSet();
             $oFicha->$metodo($aCampos[$nom_camp]);
@@ -59,7 +71,7 @@ class DatosUpdateRepo
 
         $oRepository = new $this->repository();
         $new_id = $oRepository->getNewID();
-        $pks1 = 'set'.ucfirst($oFicha->getPrimary_key());
+        $pks1 = 'set' . ucfirst($oFicha->getPrimary_key());
         $oFicha->$pks1($new_id);
 
         if ($oRepository->Guardar($oFicha) === FALSE) {

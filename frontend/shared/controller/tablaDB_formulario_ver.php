@@ -49,7 +49,7 @@ if (!empty($a_sel) && ($Qmod !== 'nuevo')) { //vengo de un checkbox (para el cas
     $aQuery['stack'] = $stack;
 } else { // si es nuevo
     $Qs_pkey = '';
-    $a_pkey = [];
+    $a_pkey = '';
 }
 
 $web_depende = ConfigGlobal::getWeb() . "/src/shared/infrastructure/controllers/tablaDB_depende_datos.php";
@@ -62,7 +62,7 @@ if (!empty($Qobj_pau)) {
     $Qgo_to = Hash::link(ConfigGlobal::getWeb() . "/apps/dossiers/controller/dossiers_ver.php?$sQuery");
 } else {
     $sQuery = http_build_query($aQuery);
-    $Qgo_to = Hash::link(ConfigGlobal::getWeb() . "/frontend/shared/controller/tablaDB_lista_datos.php?$sQuery");
+    $Qgo_to = Hash::link(ConfigGlobal::getWeb() . "/src/shared/infrastructure/controllers/tablaDB_lista_datos.php?$sQuery");
 }
 
 $clase_info = urlencode($Qclase_info);
