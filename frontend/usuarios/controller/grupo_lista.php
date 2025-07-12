@@ -71,7 +71,7 @@ $oHashSelect->setcamposNo('scroll_id');
 $oHashSelect->setArraycamposHidden(array('que' => 'eliminar_grupo'));
 
 $aQuery = ['nuevo' => 1, 'quien' => 'grupo'];
-$url_nuevo = Hash::cmdSinParametros(ConfigGlobal::getWeb()
+$url_nuevo = Hash::link(ConfigGlobal::getWeb()
     . '/frontend/usuarios/controller/grupo_form.php?'
     . http_build_query($aQuery));
 

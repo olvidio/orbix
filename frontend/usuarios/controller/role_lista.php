@@ -60,7 +60,7 @@ $oHash->setCamposForm('sel');
 $oHash->setcamposNo('scroll_id');
 
 
-$url_nuevo = Hash::cmdSinParametros(ConfigGlobal::getWeb()
+$url_nuevo = Hash::link(ConfigGlobal::getWeb()
     . '/frontend/usuarios/controller/role_form.php?'
 );
 
