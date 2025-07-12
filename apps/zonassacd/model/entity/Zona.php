@@ -5,6 +5,7 @@ namespace zonassacd\model\entity;
 use core\ClasePropiedades;
 use core\DatosCampo;
 use core\Set;
+use src\usuarios\domain\GrupoJefeZona;
 
 /**
  * Fitxer amb la Classe que accedeix a la taula zonas
@@ -190,6 +191,9 @@ class Zona extends ClasePropiedades
             $this->iid_zona = $oDbl->lastInsertId('zonas_id_zona_seq');
         }
         $this->setAllAtributes($aDades);
+        // repasar jefeZona
+        $GrupoJefeZona = new GrupoJefeZona();
+        $GrupoJefeZona->reAsignar();
         return TRUE;
     }
 
@@ -244,6 +248,9 @@ class Zona extends ClasePropiedades
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
             return FALSE;
         }
+        // Quitar del grupo jefeZona al id_nom
+        $GrupoJefeZona = new GrupoJefeZona();
+        $GrupoJefeZona->reAsignar();
         return TRUE;
     }
 
