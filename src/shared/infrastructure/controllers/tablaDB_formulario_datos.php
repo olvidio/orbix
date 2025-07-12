@@ -17,7 +17,6 @@ $Qclase_info = filter_input(INPUT_POST, 'clase_info');
 $a_pkey = filter_input(INPUT_POST, 'a_pkey');
 $Qobj_pau = filter_input(INPUT_POST, 'obj_pau');;
 $Qmod = filter_input(INPUT_POST, 'mod');
-//$QaOpciones_txt = (array)filter_input(INPUT_POST, 'aOpciones_txt', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 
 // Tiene que ser en dos pasos.
 $obj = urldecode($Qclase_info);
@@ -55,19 +54,12 @@ $camposNo = $oDatosFormRepo->getCamposNo();
 
 // Set the properties
 if (!empty($oFicha)) {
-    //$oDatosFormRepo->setFicha(unserialize($QoFicha, ['allowed_classes' => true]));
     $oDatosFormRepo->setFicha($oFicha);
 }
 
 if (!empty($Qmod)) {
     $oDatosFormRepo->setMod($Qmod);
 }
-
-/*
-if (!empty($QaOpciones_txt)) {
-    $oDatosFormRepo->setArrayOpcionesTxt($QaOpciones_txt);
-}
-*/
 
 // Get the form data
 $formData = $oDatosFormRepo->getFormularioData();

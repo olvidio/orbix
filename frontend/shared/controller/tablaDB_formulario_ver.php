@@ -53,6 +53,11 @@ if (!empty($a_sel) && ($Qmod !== 'nuevo')) { //vengo de un checkbox (para el cas
 }
 
 $web_depende = ConfigGlobal::getWeb() . "/src/shared/infrastructure/controllers/tablaDB_depende_datos.php";
+$oHashDepende = new Hash();
+$oHashDepende->setUrl($web_depende);
+$oHashDepende->setCamposForm('clase_info!accion!valor_depende');
+$h_depende = $oHashDepende->linkSinVal();
+
 /* generar url go_to para volver a la tabla */
 $aQuery['s_pkey'] = $Qs_pkey;
 // para los dossiers
@@ -65,16 +70,10 @@ if (!empty($Qobj_pau)) {
     $Qgo_to = Hash::link(ConfigGlobal::getWeb() . "/src/shared/infrastructure/controllers/tablaDB_lista_datos.php?$sQuery");
 }
 
-$clase_info = urlencode($Qclase_info);
-$oHash1 = new Hash();
-$oHash1->setUrl($web_depende);
-$oHash1->setCamposForm('clase_info!accion!valor_depende');
-$h = $oHash1->linkSinVal();
-
 $url_backend = Hash::cmdSinParametros(ConfigGlobal::getWeb()
     . '/src/shared/infrastructure/controllers/tablaDB_formulario_datos.php'
 );
-
+$clase_info = urlencode($Qclase_info);
 $oHash = new Hash();
 $oHash->setUrl($url_backend);
 $oHash->setArrayCamposHidden([
@@ -83,16 +82,14 @@ $oHash->setArrayCamposHidden([
     'obj_pau' => $Qobj_pau,
     'mod' => $Qmod,
 ]);
-
 $hash_params = $oHash->getArrayCampos();
-
 $data = PostRequest::getData($url_backend, $hash_params);
 
 $fields = $data['fields'];
+$tit_txt = $data['tit_txt'];
+$explicacion_txt = $data['explicacion_txt'];
 $camposForm = $data['camposForm'];
 $camposNo = $data['camposNo'];
-$explicacion_txt = $data['explicacion_txt'];
-$tit_txt = $data['tit_txt'];
 
 $oHashSelect = new Hash();
 $oHashSelect->setCamposForm($camposForm);
@@ -110,7 +107,6 @@ $a_camposHidden = array(
 );
 $oHashSelect->setArraycamposHidden($a_camposHidden);
 
-
 $a_campos = [
     'oPosicion' => $oPosicion,
     'fields' => $fields,
@@ -118,6 +114,9 @@ $a_campos = [
     'oHashSelect' => $oHashSelect,
     'tit_txt' => $tit_txt,
     'explicacion_txt' => $explicacion_txt,
+    'web_depende' => $web_depende,
+    'h_depende' => $h_depende,
+    'clase_info' => $clase_info,
 ];
 
 $oView = new ViewNewPhtml('frontend\shared\controller');

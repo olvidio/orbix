@@ -2,10 +2,8 @@
 
 namespace src\shared;
 
-use core\ConfigGlobal;
 use src\shared\domain\DatosTablaRepo;
 use web\ContestarJson;
-use web\Hash;
 
 // INICIO Cabecera global de URL de controlador *********************************
 require_once("apps/core/global_header.inc");
@@ -38,10 +36,8 @@ $oDatosTabla->setColeccion($oInfoClase->getColeccion());
 
 $camposForm = $oInfoClase->addCamposFormBuscar();
 
-$url = ConfigGlobal::getWeb() . "/frontend/shared/controller/tablaDB_lista_ver.php";
 $a_campos = [
     'script' => $oDatosTabla->getScript(),
-    'url' => $url,
     'txt_buscar' => $oInfoClase->getTxtBuscar(),
     'k_buscar' => $Qk_buscar,
     'camposForm' => $camposForm,
@@ -49,8 +45,8 @@ $a_campos = [
 
 $data['a_campos'] = $oInfoClase->addCampos($a_campos);
 if (!empty($oInfoClase->getBuscar_view())) {
-    $data['datos_buscar'] = $oInfoClase->getBuscar_view();
-    $data['namespace'] = $oInfoClase->getBuscar_namespace();
+    $data['buscar_view'] = $oInfoClase->getBuscar_view();
+    $data['namespace_view'] = $oInfoClase->getBuscar_namespace();
 }
 
 $error_txt = '';

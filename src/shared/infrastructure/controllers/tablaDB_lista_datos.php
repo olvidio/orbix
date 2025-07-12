@@ -35,7 +35,6 @@ if (!empty($Qk_buscar)) {
 }
 $oDatosTabla->setColeccion($oInfoClase->getColeccion());
 
-
 // para el id_tabla, convierto los posibles '/' y '\' en '_' y también quito '.php'
 $id_tabla = str_replace(array('/', '\\', '.php'), array('_', '_', ''), $Qclase_info);
 $id_tabla = 'repo_tabla_sql_' . $id_tabla;

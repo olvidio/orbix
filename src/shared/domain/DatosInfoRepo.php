@@ -26,6 +26,7 @@ abstract class DatosInfoRepo
     protected $pau;
 
     /**
+     * Ruta relativa al namespace
      * Para sobreescribir por la clase que si tenga
      * @return string empty
      */

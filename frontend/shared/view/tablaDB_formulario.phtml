@@ -2,17 +2,6 @@
 
 use core\ConfigGlobal;
 
-// Make sure variables are defined
-if (!isset($oPosicion)) {
-    $oPosicion = new \web\Posicion($_SERVER['PHP_SELF'], $_POST);
-}
-if (!isset($fields)) {
-    $fields = [];
-}
-if (!isset($mod)) {
-    $mod = '';
-}
-
 ?>
 <script>
     fnjs_grabar = function (formulario) {
@@ -32,12 +21,42 @@ if (!isset($mod)) {
             }
         });
     }
+    fnjs_cancelar = function () {
+        <?= $oPosicion->js_atras(1); ?>
+    }
+
+    fnjs_actualizar_depende = function (camp, accion) {
+        var valor_depende = $('#' + camp).val();
+        var parametros = 'clase_info=<?= $clase_info?>&accion=' + accion + '&valor_depende=' + valor_depende + '<?= $h_depende ?>';
+        var url = '<?= $web_depende ?>';
+        let request = $.ajax({
+            url: url,
+            type: 'post',
+            data: parametros,
+            dataType: 'json'
+        });
+        request.done(function (json) {
+            if (json.success !== true) {
+                alert("<?= _("respuesta") ?>" + ': ' + json.mensaje);
+            } else {
+                rta = JSON.parse(json.data);
+                rta_txt = rta.aOpciones;
+                $('#' + accion).html(rta_txt);
+            }
+        });
+    }
+
+    $('#datos_form').ready(function () {
+        $('#datos_form .fecha').each(function (i) {
+            $(this).datepicker();
+        });
+    });
 </script>
 <?= $oPosicion->mostrar_left_slide(1); ?>
 <h1><?= _("Formulario de datos") ?></h1>
 <form id="datos_form" name="datos_form" action="" method="post">
-<?= $oHashSelect->getCamposHtml() ?>
- <h3 class=subtitulo><?= ucfirst($tit_txt) ?></h3>
+    <?= $oHashSelect->getCamposHtml() ?>
+    <h3 class=subtitulo><?= ucfirst($tit_txt) ?></h3>
     <h4><?= ucfirst($explicacion_txt) ?></h4>
     <table>
         <?php foreach ($fields as $field): ?>
@@ -62,7 +81,8 @@ if (!isset($mod)) {
                     <tr>
                         <td class="etiqueta"><?= ucfirst($eti) ?></td>
                         <td class="contenido">
-                            <input type='text' name='<?= $nom_camp ?>' value="<?= htmlspecialchars($valor_camp ?? '') ?>" size='<?= $field['size'] ?>'>
+                            <input type='text' name='<?= $nom_camp ?>'
+                                   value="<?= htmlspecialchars($valor_camp ?? '') ?>" size='<?= $field['size'] ?>'>
                         </td>
                     </tr>
                     <?php break;
@@ -70,7 +90,8 @@ if (!isset($mod)) {
                     <tr>
                         <td class="etiqueta"><?= ucfirst($eti) ?></td>
                         <td class="contenido">
-                            <input class="fecha" type="text" id="<?= $nom_camp ?>" name="<?= $nom_camp ?>" value="<?= $field['valor_txt'] ?>" 
+                            <input class="fecha" type="text" id="<?= $nom_camp ?>" name="<?= $nom_camp ?>"
+                                   value="<?= $field['valor_txt'] ?>"
                                    onchange='fnjs_comprobar_fecha("#<?= $nom_camp ?>", <?= $field['locale_us'] ?>)'>
                         </td>
                     </tr>
@@ -79,7 +100,7 @@ if (!isset($mod)) {
                     <tr>
                         <td class="etiqueta"><?= ucfirst($eti) ?></td>
                         <td class="contenido">
-                            <?php 
+                            <?php
                             $acc = $field['accion'];
                             $a_opciones = $field['opciones'];
                             $aOpcion_no = $field['aOpcion_no'];
@@ -88,10 +109,10 @@ if (!isset($mod)) {
                             ?>
                             <select id="<?= $nom_camp ?>" name="<?= $nom_camp ?>" <?= $accion ?>>
                                 <option></option>
-                                <?php foreach ($a_opciones as $key => $val): 
+                                <?php foreach ($a_opciones as $key => $val):
                                     $sel = ((string)$key === (string)$valor_camp) ? 'selected' : '';
                                     if (!empty($aOpcion_no) && is_array($aOpcion_no) && in_array($key, $aOpcion_no)) continue;
-                                ?>
+                                    ?>
                                     <option value="<?= $key ?>" <?= $sel ?>><?= $val ?></option>
                                 <?php endforeach; ?>
                             </select>
@@ -131,4 +152,5 @@ if (!isset($mod)) {
     </table>
     <br>
     <input type=button onclick="fnjs_grabar(this.form);" value=<?= _("guardar") ?>>
+    <input type=button onclick="fnjs_cancelar();" value=<?= _("cancelar") ?>>
 </form>

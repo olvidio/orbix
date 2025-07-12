@@ -6,15 +6,6 @@ use web\DateTimeLocal;
 use web\NullDateTimeLocal;
 use function core\is_true;
 
-/**
- * Classe que implementa
- *
- * @package delegación
- * @subpackage model
- * @author Daniel Serrabou
- * @version 1.0
- * @created 09/04/2018
- */
 class DatosUpdateRepo
 {
     /* ATRIBUTOS ----------------------------------------------------------------- */
@@ -58,12 +49,10 @@ class DatosUpdateRepo
             }
             // si es con decimales, cambio coma por punto
             if ($tipo === 'decimal' && !empty($aCampos[$nom_camp])) $aCampos[$nom_camp] = str_replace(',', '.', $aCampos[$nom_camp]);
-            //$oFicha->$nom_camp = $aCampos[$nom_camp];
 
             if (empty($aCampos[$nom_camp])) { // En general mejor null, por el tipado. puede venir '' para un integer
                 $aCampos[$nom_camp] = null;
             }
-
 
             $metodo = $oDatosCampo->getMetodoSet();
             $oFicha->$metodo($aCampos[$nom_camp]);

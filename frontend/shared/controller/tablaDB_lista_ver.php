@@ -57,10 +57,6 @@ $Qclase_info = urldecode($Qclase_info);
 $QaSerieBuscar = urldecode($QaSerieBuscar);
 $Qk_buscar = urldecode($Qk_buscar);
 
-// Tiene que ser en dos pasos.
-$obj = $Qclase_info;
-$oInfoClase = new $obj();
-
 // si paso parámetros, definir la colección
 $Qpau = (string)filter_input(INPUT_POST, 'pau');
 $Qid_pau = (integer)filter_input(INPUT_POST, 'id_pau');
@@ -68,10 +64,14 @@ $Qobj_pau = (string)filter_input(INPUT_POST, 'obj_pau');
 
 
 if (empty($Qk_buscar)) {
+    /**********************************************************************
+     ********* mostrar formulario de búsqueda
+     **********************************************************************/
+
+    // pedir a Info los datos necesarios para mostrar el formulario de búsqueda
     $url_lista_buscar_backend = Hash::cmdSinParametros(ConfigGlobal::getWeb()
         . '/src/shared/infrastructure/controllers/tablaDB_buscar_datos.php'
     );
-
     $a_campos = [
         'clase_info' => $Qclase_info,
         'k_buscar' => $Qk_buscar,
@@ -83,12 +83,11 @@ if (empty($Qk_buscar)) {
     $oHash->setUrl($url_lista_buscar_backend);
     $oHash->setArrayCamposHidden($a_campos);
     $hash_params = $oHash->getArrayCampos();
-
     $data = PostRequest::getData($url_lista_buscar_backend, $hash_params);
 
     $a_campos_buscar = $data['a_campos'];
-    $datos_buscar = empty($data['datos_buscar'])? '' : $data['datos_buscar'];
-    $namespace = empty($data['namespace'])? 'frontend\shared\view' : $data['namespace'];
+    $datos_buscar = empty($data['buscar_view'])? '' : $data['buscar_view'];
+    $namespace = empty($data['namespace_view'])? 'frontend\shared\view' : $data['namespace_view'];
 
     $camposFormBuscar = 'k_buscar';
     $camposFormBuscar .= empty($a_campos_buscar['camposForm'])? '' : $a_campos_buscar['camposForm'];
@@ -102,6 +101,7 @@ if (empty($Qk_buscar)) {
     $oHashBuscar->setArraycamposHidden($a_camposHiddenBuscar);
     $a_campos_buscar['oHashBuscar'] = $oHashBuscar;
     $a_campos_buscar['oPosicion'] = $oPosicion;
+    $a_campos_buscar['url'] = ConfigGlobal::getWeb() . "/frontend/shared/controller/tablaDB_lista_ver.php";
 
     if (!empty($datos_buscar)) {
         $oView = new ViewNewPhtml($namespace);
@@ -112,10 +112,14 @@ if (empty($Qk_buscar)) {
     }
 }
 
+/**********************************************************************
+ ********* mostrar formulario de búsqueda
+ **********************************************************************/
+
+// pedir a Info los datos necesarios para mostrar la tabla
 $url_lista_backend = Hash::cmdSinParametros(ConfigGlobal::getWeb()
     . '/src/shared/infrastructure/controllers/tablaDB_lista_datos.php'
 );
-
 $a_campos = [
     'clase_info' => $Qclase_info,
     'k_buscar' => $Qk_buscar,
@@ -127,7 +131,6 @@ $oHash = new Hash();
 $oHash->setUrl($url_lista_backend);
 $oHash->setArrayCamposHidden($a_campos);
 $hash_params = $oHash->getArrayCampos();
-
 $data = PostRequest::getData($url_lista_backend, $hash_params);
 
 $txt_explicacion = $data['explicacion'];
@@ -137,19 +140,6 @@ $id_tabla = $data['id_tabla'];
 $a_cabeceras = $data['a_cabeceras'];
 $a_botones = $data['a_botones'];
 $a_valores = $data['a_valores'];
-
-if (!empty($Qk_buscar)) {
-    $oInfoClase->setK_buscar($Qk_buscar);
-}
-
-$oHashBuscar = new Hash();
-$oHashBuscar->setCamposForm('k_buscar');
-$a_camposHiddenBuscar = array(
-    'clase_info' => $Qclase_info,
-    'aSerieBuscar' => $QaSerieBuscar,
-    'id_pau' => $Qid_pau,
-);
-$oHashBuscar->setArraycamposHidden($a_camposHiddenBuscar);
 
 $oHashSelect = new Hash();
 $oHashSelect->setCamposForm('sel');
@@ -170,7 +160,7 @@ $oTabla->setCabeceras($a_cabeceras);
 $oTabla->setBotones($a_botones);
 $oTabla->setDatos($a_valores);
 
-$a_campos2 = [
+$a_campos_lista = [
     'oPosicion' => $oPosicion,
     'script' => $script,
     'titulo' => $txt_titulo,
@@ -181,4 +171,4 @@ $a_campos2 = [
 ];
 
 $oView = new ViewNewPhtml('frontend\shared\view');
-$oView->renderizar('tablaDB_lista_ver.phtml', $a_campos2);
+$oView->renderizar('tablaDB_lista_ver.phtml', $a_campos_lista);
