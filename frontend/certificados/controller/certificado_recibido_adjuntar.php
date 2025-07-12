@@ -16,6 +16,7 @@ require_once("frontend/shared/global_header_front.inc");
 $oPosicion->recordar();
 
 $id_nom = (integer)filter_input(INPUT_POST, 'id_nom');
+$Qnuevo = (integer)filter_input(INPUT_POST, 'nuevo');
 $oPersona = Persona::NewPersona($id_nom);
 $nom = $oPersona->getApellidosNombre();
 $idioma = '';
@@ -38,6 +39,7 @@ $oHashCertificadoPdf->setCamposNo('certificado_pdf!firmado!stack');
 //cambio el nombre, porque tiene el mismo id en el otro formulario
 $oHashCertificadoPdf->setArrayCamposHidden([
     'id_nom' => $id_nom,
+    'nuevo' => $Qnuevo,
     'refresh' => 1,
 ]);
 
