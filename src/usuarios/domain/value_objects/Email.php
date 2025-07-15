@@ -40,7 +40,7 @@ final class Email
         }
 
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            throw new \InvalidArgumentException('Invalid email format');
+            throw new \InvalidArgumentException('Invalid email format: ' . $email);
         }
     }
 
