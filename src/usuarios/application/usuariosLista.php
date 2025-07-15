@@ -3,6 +3,8 @@
 namespace src\usuarios\application;
 
 use core\ConfigGlobal;
+use Exception;
+use InvalidArgumentException;
 use src\usuarios\application\repositories\RoleRepository;
 use src\usuarios\application\repositories\UsuarioRepository;
 use web\ContestarJson;
@@ -26,6 +28,7 @@ class usuariosLista
         if ($miRole > 3) {
             // no es administrador
             $error_txt = _("no tiene permisos para ver esto");
+            return ContestarJson::respuestaPhp($error_txt, '');
         }
 
 
@@ -44,7 +47,17 @@ class usuariosLista
         $aWhere['_ordre'] = 'usuario';
 
         $RoleRepository = new RoleRepository();
-        $cUsuarios = $UsuarioRepository->getUsuarios($aWhere, $aOperador);
+         try {
+             $cUsuarios = $UsuarioRepository->getUsuarios($aWhere, $aOperador);
+        } catch (InvalidArgumentException $e) {
+            $error_txt .= _("Error (no debería ocurrir): Se capturó una InvalidArgumentException: ");
+            $error_txt .=  $e->getMessage() . "\n\n";
+             return ContestarJson::respuestaPhp($error_txt, '');
+        } catch (Exception $e) {
+            $error_txt .= _("Error: Se capturó una excepción genérica: ");
+            $error_txt .= $e->getMessage() . "\n\n";
+             return ContestarJson::respuestaPhp($error_txt, '');
+        }
 
         $a_cabeceras = array('usuario', 'nombre a mostrar', 'role', 'email', array('name' => 'accion', 'formatter' => 'clickFormatter'));
         $a_botones[] = array('txt' => _("borrar"), 'click' => "fnjs_eliminar()");
