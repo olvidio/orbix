@@ -32,20 +32,17 @@ $Qusername = (string)filter_input(INPUT_POST, 'username');
 $oPosicion->setParametros(array('username' => $Qusername), 1);
 
 
-$url_lista = Hash::link(ConfigGlobal::getWeb()
-    . '/frontend/usuarios/controller/usuario_lista.php'
-);
-
 $url_lista_backend = Hash::cmdSinParametros(ConfigGlobal::getWeb()
     . '/src/usuarios/infrastructure/controllers/usuario_lista.php'
 );
-
 $oHash = new Hash();
 $oHash->setUrl($url_lista_backend);
 $oHash->setArrayCamposHidden(['username' => $Qusername]);
 $hash_params = $oHash->getArrayCampos();
-
 $data = PostRequest::getData($url_lista_backend, $hash_params);
+if (!empty($data['error'])) {
+   exit($data['error']);
+}
 
 $a_cabeceras = $data['a_cabeceras'];
 $a_botones = $data['a_botones'];
@@ -80,6 +77,9 @@ $url_nuevo = Hash::link(ConfigGlobal::getWeb()
     . http_build_query($aQuery)
 );
 
+$url_lista = Hash::link(ConfigGlobal::getWeb()
+    . '/frontend/usuarios/controller/usuario_lista.php'
+);
 $url_eliminar = Hash::link(ConfigGlobal::getWeb()
     . '/src/usuarios/infrastructure/controllers/usuario_eliminar.php'
 );
