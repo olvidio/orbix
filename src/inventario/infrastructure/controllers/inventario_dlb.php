@@ -15,9 +15,11 @@ require_once("apps/core/global_header.inc");
 require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
-$error_txt = '';
+$sel = (string)filter_input(INPUT_POST, 'sel');
 
+$a_sel = json_decode($sel, true);
+
+$error_txt = '';
 $colTipoDoc = [];
 
 $UbiInventarioRepository = new UbiInventarioRepository();

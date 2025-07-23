@@ -19,8 +19,9 @@ $url_lista_backend = Hash::cmdSinParametros(ConfigGlobal::getWeb()
 );
 $oHash = new Hash();
 $oHash->setUrl($url_lista_backend);
+$sel_json = json_encode($a_sel);
 $oHash->setArrayCamposHidden([
-    'sel' => $a_sel,
+    'sel' => $sel_json,
 ]);
 $hash_params = $oHash->getArrayCampos();
 
