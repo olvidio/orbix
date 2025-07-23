@@ -1,5 +1,4 @@
-<?
-
+<?php
 
 // INICIO Cabecera global de URL de controlador *********************************
 use actividades\model\entity\ActividadAll;
