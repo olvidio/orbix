@@ -64,18 +64,18 @@ $id_nom_jefe = '';
 $UsuarioRepository = new UsuarioRepository();
 $oMiUsuario = $UsuarioRepository->findById(ConfigGlobal::mi_id_usuario());
 $id_role = $oMiUsuario->getId_role();
-echo 'id_role: '.$id_role.'<br>';
+//echo 'id_role: '.$id_role.'<br>';
 
 
 $id_usuario = ConfigGlobal::mi_id_usuario();
-echo 'id_usuario: '.$id_usuario.'<br>';
+//echo 'id_usuario: '.$id_usuario.'<br>';
 $id_sacd = $oMiUsuario->getId_pau();
-echo 'id_sacd: '.$id_sacd.'<br>';
+//echo 'id_sacd: '.$id_sacd.'<br>';
 
 $RoleRepository = new RoleRepository();
 $aRoles = $RoleRepository->getArrayRoles();
 
-echo 'aRoles'.$aRoles[$id_role].'<br>';
+//echo 'aRoles'.$aRoles[$id_role].'<br>';
 
 if (!empty($aRoles[$id_role]) && ($aRoles[$id_role] === 'p-sacd')) {
 
@@ -88,18 +88,18 @@ if (!empty($aRoles[$id_role]) && ($aRoles[$id_role] === 'p-sacd')) {
         }
     }
 }
-echo 'jefe: '.$id_nom_jefe.'<br>';
+//echo 'jefe: '.$id_nom_jefe.'<br>';
 
 $GesZonas = new GestorZona();
 $cZonas = $GesZonas->getZonas(array('id_nom' => $id_sacd));
-echo 'count zonas: '.count($cZonas).'<br>';
+//echo 'count zonas: '.count($cZonas).'<br>';
 if (is_array($cZonas) && count($cZonas) > 0) {
     $GesZonaSacd = new GestorZonaSacd();
     foreach ($cZonas as $oZona) {
         $id_zona = $oZona->getId_zona();
         $cSacds = $GesZonaSacd->getSacdsZona($id_zona);
         foreach ($cSacds as $id_nom) {
-            echo $id_nom.'<br>';
+//            echo $id_nom.'<br>';
             $InicialesSacd = new InicialesSacd();
             $sacd=$InicialesSacd->nombre_sacd($id_nom);
             $iniciales=$InicialesSacd->iniciales($id_nom);
@@ -108,29 +108,38 @@ if (is_array($cZonas) && count($cZonas) > 0) {
         }
     }
 } else { // No soy jefe de zona
-    $InicialesSacd = new InicialesSacd();
-    $sacd=$InicialesSacd->nombre_sacd($id_sacd);
-    $iniciales=$InicialesSacd->iniciales($id_sacd);
-    $key = $id_sacd . '#' . $iniciales;
-    $a_sacd[$key] = $sacd ?? '?';
+    if (!is_null($id_sacd))
+    {
+        $InicialesSacd = new InicialesSacd();
+//        echo is_null($id_sacd).'='.($id_sacd=='').'=='.$id_sacd.'<br>';
+        $sacd=$InicialesSacd->nombre_sacd($id_sacd);
+//        echo is_null($id_sacd).'-->'.$sacd.'<br>';
+        $iniciales=$InicialesSacd->iniciales($id_sacd);
+        $key = $id_sacd . '#' . $iniciales;
+        $a_sacd[$key] = $sacd ?? '?';
+    }
 }
-            
-$aWhere = [];
-$aOperador = [];
-$aWhere['sacd'] = 't';
-$aWhere['situacion'] = 'A';
-$aWhere['id_tabla'] = "'n','a'";
-$aOperador['id_tabla'] = 'IN';
-$aWhere['_ordre'] = 'apellido1,apellido2,nom';
-$GesPersonas = new GestorPersonaSacd();
-$cPersonas = $GesPersonas->getPersonas($aWhere, $aOperador);
-foreach ($cPersonas as $oPersona) {
-    $id_nom = $oPersona->getId_nom();
-    $InicialesSacd = new InicialesSacd();
-    $sacd=$InicialesSacd->nombre_sacd($id_nom);
-    $iniciales=$InicialesSacd->iniciales($id_nom);
-    $key = $id_nom . '#' . $iniciales;
-//    $a_sacd[$key] = $sacd ?? '?';
+
+if ($aRoles[$id_role]==='Oficial_dl')
+{
+    echo 'OFICIAL DL<br>';
+    $aWhere = [];
+    $aOperador = [];
+    $aWhere['sacd'] = 't';
+    $aWhere['situacion'] = 'A';
+    $aWhere['id_tabla'] = "'n','a'";
+    $aOperador['id_tabla'] = 'IN';
+    $aWhere['_ordre'] = 'apellido1,apellido2,nom';
+    $GesPersonas = new GestorPersonaSacd();
+    $cPersonas = $GesPersonas->getPersonas($aWhere, $aOperador);
+    foreach ($cPersonas as $oPersona) {
+        $id_nom = $oPersona->getId_nom();
+        $InicialesSacd = new InicialesSacd();
+        $sacd=$InicialesSacd->nombre_sacd($id_nom);
+        $iniciales=$InicialesSacd->iniciales($id_nom);
+        $key = $id_nom . '#' . $iniciales;
+        $a_sacd[$key] = $sacd ?? '?';
+    }
 }
 $oDesplSacd = new Desplegable();
 $oDesplSacd->setNombre('id_sacd');
