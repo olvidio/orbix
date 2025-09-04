@@ -386,7 +386,7 @@ class EditarPersonaNota
          *     - si es de mi región del stgr, en la tabla 'e_notas_dl' de mi dl/region
          */
 
-        /* region que está introduciendo la nota:
+        /* región que está introduciendo la nota:
          *    a) la que organiza los ca
          *    b) la propia del alumno mediante dossiers.
          */

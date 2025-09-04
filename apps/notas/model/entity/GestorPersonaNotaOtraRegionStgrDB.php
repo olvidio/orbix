@@ -73,10 +73,12 @@ class GestorPersonaNotaOtraRegionStgrDB extends GestorPersonaNotaDB
 
                 $oEditarPersonaNota = new EditarPersonaNota($oPersonaNota);
                 $rta = $oEditarPersonaNota->nuevoSolamenteDl();
-                $oPersonaNota = $rta['nota_certificado'];
-                $oPersonaNota->setActa($certificado);
-                $oPersonaNota->setId_situacion(NOTA::NUMERICA);
-                $oPersonaNota->DBGuardar();
+                if (!empty($rta['nota_certificado'])) {
+                    $oPersonaNota = $rta['nota_certificado'];
+                    $oPersonaNota->setActa($certificado);
+                    $oPersonaNota->setId_situacion(NOTA::NUMERICA);
+                    $oPersonaNota->DBGuardar();
+                }
 
             } else {
                 $oPersonaNota = $cPersonNotas[0];
