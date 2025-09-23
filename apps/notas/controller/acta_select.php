@@ -104,6 +104,8 @@ if (!empty($Qacta)) {
     }
     $titulo = $Qtitulo;
 } else {
+    // hay que limitar, porque en alguna región puede haber muchas actas.
+    // y agota la memoria del php.
     $mes = date('m');
     $fin_m = $_SESSION['oConfig']->getMesFinStgr();
     if ($mes > $fin_m) {
@@ -118,8 +120,9 @@ if (!empty($Qacta)) {
     $aWhere['f_acta'] = "'$inicurs_ca','$fincurs_ca'";
     $aOperador['f_acta'] = 'BETWEEN';
     $aWhere['_ordre'] = 'f_acta DESC, acta DESC';
+    $aWhere['_limit'] = 20;
 
-    $titulo = ucfirst(sprintf(_("lista de actas del curso %s"), $txt_curso));
+    $titulo = ucfirst(sprintf(_("lista de actas del curso %s. Máximo %s"), $txt_curso, $aWhere['_limit']));
     // Si es cr, se mira en todas:
     if (ConfigGlobal::mi_ambito() === 'rstgr') {
         $oGesDelegaciones = new GestorDelegacion();

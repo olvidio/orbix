@@ -164,6 +164,7 @@ class GestorActa extends ClaseGestor
         $aCondi = [];
         foreach ($aWhere as $camp => $val) {
             if ($camp === '_ordre') continue;
+            if ($camp === '_limit') continue;
             $sOperador = isset($aOperators[$camp]) ? $aOperators[$camp] : '';
             if ($a = $oCondicion->getCondicion($camp, $sOperador, $val)) $aCondi[] = $a;
             // operadores que no requieren valores
@@ -173,12 +174,10 @@ class GestorActa extends ClaseGestor
         }
         $sCondi = implode(' AND ', $aCondi);
         if ($sCondi != '') $sCondi = " WHERE " . $sCondi;
-        if (isset($GLOBALS['oGestorSessioDelegación'])) {
-            $sLimit = $GLOBALS['oGestorSessioDelegación']->getLimitPaginador('a_actividades', $sCondi, $aWhere);
-        } else {
-            $sLimit = '';
-        }
-        if ($sLimit === false) return;
+
+        $sLimit = '';
+        if (isset($aWhere['_limit']) && $aWhere['_limit'] != '') $sLimit = ' LIMIT ' . $aWhere['_limit'];
+        if (isset($aWhere['_limit'])) unset($aWhere['_limit']);
         $sOrdre = '';
         if (isset($aWhere['_ordre']) && $aWhere['_ordre'] != '') $sOrdre = ' ORDER BY ' . $aWhere['_ordre'];
         if (isset($aWhere['_ordre'])) unset($aWhere['_ordre']);
