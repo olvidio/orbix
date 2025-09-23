@@ -170,7 +170,7 @@ foreach ($cActas as $oActa) {
     $acta = $oActa->getActa();
     $f_acta = $oActa->getF_acta()->getFromLocal();
     $id_asignatura = $oActa->getId_asignatura();
-    $pdf = $oActa->getpdf();
+    $hasPdf = ($oActa->hasEmptyPdf())? '': _("Sí");
 
     if (empty($a_asignaturas[$id_asignatura])) {
         $nombre_corto = sprintf(_("nombre corto no definido para id asignatura: %s"), $id_asignatura);
@@ -187,7 +187,7 @@ foreach ($cActas as $oActa) {
     }
     $a_valores[$i][2] = $f_acta;
     $a_valores[$i][3] = $nombre_corto;
-    $a_valores[$i][4] = empty($pdf) ? '' : _("Sí");
+    $a_valores[$i][4] = $hasPdf;
 }
 if (isset($Qid_sel) && !empty($Qid_sel)) {
     $a_valores['select'] = $Qid_sel;

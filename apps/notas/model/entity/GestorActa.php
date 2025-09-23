@@ -3,6 +3,7 @@ namespace notas\model\entity;
 
 use core\ClaseGestor;
 use core\Condicion;
+use core\ConfigGlobal;
 use core\Set;
 
 /**
@@ -182,8 +183,10 @@ class GestorActa extends ClaseGestor
         if (isset($aWhere['_ordre']) && $aWhere['_ordre'] != '') $sOrdre = ' ORDER BY ' . $aWhere['_ordre'];
         if (isset($aWhere['_ordre'])) unset($aWhere['_ordre']);
         $sQry = "SELECT * FROM $nom_tabla " . $sCondi . $sOrdre . $sLimit;
-        //echo "Query: $sQry<br>";
-        //print_r($aWhere);
+        //if (ConfigGlobal::mi_usuario() === 'dani') {
+            //echo "Query: $sQry<br>";
+            //print_r($aWhere);
+        //}
         if (($oDblSt = $oDbl->prepare($sQry)) === false) {
             $sClauError = 'GestorActa.llistar.prepare';
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
