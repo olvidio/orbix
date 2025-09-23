@@ -36,11 +36,9 @@ require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
 use core\ConfigGlobal;
-use core\ServerConf;
 use src\menus\application\repositories\GrupMenuRepository;
 use src\menus\application\repositories\GrupMenuRoleRepository;
 use src\menus\application\repositories\MenuDbRepository;
-use src\menus\application\repositories\MetaMenuRepository;
 use src\menus\domain\PermisoMenu;
 use src\usuarios\application\repositories\PreferenciaRepository;
 use src\usuarios\application\repositories\RoleRepository;

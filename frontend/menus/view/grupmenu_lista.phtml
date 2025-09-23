@@ -1,0 +1,73 @@
+<?= $oPosicion->mostrar_left_slide(1) ?>
+<div id="exportar">
+    <script>
+        fnjs_nuevo = function (formulario) {
+            $('#mod').val("nuevo");
+            $(formulario).attr('action',"<?= $action_form ?>");
+            fnjs_enviar_formulario(formulario, 'main');
+        }
+        fnjs_modificar = function (formulario) {
+            rta = fnjs_solo_uno(formulario);
+            if (rta === 1) {
+                $('#mod').val("editar");
+                $(formulario).attr('action',"<?= $action_form ?>");
+                fnjs_enviar_formulario(formulario, 'main');
+            }
+        }
+        fnjs_eliminar = function (formulario) {
+            var err;
+            var eliminar = "<?= _("¿Está seguro que desea eliminar este registro?") ?>";
+            rta = fnjs_solo_uno(formulario);
+            if (rta === 1) {
+                if (confirm(eliminar)) {
+                    $('#mod').val("eliminar");
+                    $(formulario).attr('action',"<?= $action_eliminar ?>");
+                    $(formulario).one("submit", function() {
+                    $.ajax({
+                            url: $(this).attr('action'),
+                            type: 'post',
+                            data: $(this).serialize()
+                        },
+                    )
+                        .done(function (json) {
+                            if (json.success !== true) {
+                                alert("respuesta" + ': ' + json.mensaje);
+                            } else {
+                                fnjs_actualizar(formulario);
+                            }
+                        });
+                    return false;
+                }
+            )
+                ;
+                $(formulario).trigger("submit");
+                $(formulario).off();
+            }
+        }
+        }
+        fnjs_actualizar = function (formulario) {
+            var campo = '<input name="refresh" type="hidden" value=1>';
+            $(formulario).attr('action',"$action_tabla");
+            $(formulario).append(campo);
+            fnjs_enviar_formulario(formulario, '#main');
+        }
+    </script>
+
+    <h3 class=subtitulo><?= $titulo ?></h3>
+    <p class=comentario><?= $explicacion ?></p>
+    <form id='seleccionados' name='seleccionados' action='' method='post'>
+        <?= $oHash->getCamposHtml() ?>
+        <input type='hidden' id='mod' name='mod' value=''>
+        <?= $oTabla->mostrar_tabla() ?>
+
+        <br>
+        <table class=botones>
+            <tr class=botones>
+                <td class=botones>
+                    <input name="btn_new" type="button" value="<?= _("nuevo") ?>"
+                           onclick="fnjs_nuevo('#seleccionados');">
+                </td>
+            </tr>
+        </table>
+    </form>
+</div>

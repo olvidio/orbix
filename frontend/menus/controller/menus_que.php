@@ -16,7 +16,7 @@ $Qfiltro_grupo = (string)filter_input(INPUT_POST, 'filtro_grupo');
 
 
 $url_lista_backend = Hash::cmdSinParametros(ConfigGlobal::getWeb()
-    . '/src/menus/infrastructure/controllers/lista_grup_menus.php'
+    . '/src/menus/infrastructure/controllers/grupmenu_lista.php'
 );
 $oHash = new Hash();
 $oHash->setUrl($url_lista_backend);

@@ -124,8 +124,8 @@ if (!empty($Qacta)) {
     if (ConfigGlobal::mi_ambito() === 'rstgr') {
         $oGesDelegaciones = new GestorDelegacion();
         $aDl = $oGesDelegaciones->getArrayDlRegionStgr([$mi_dele]);
-        $sReg = implode("|", $aDl);
-        $Qacta = "^($sReg)";
+        $sReg = implode(" |", $aDl);
+        $Qacta = "^($sReg )";
         $aWhere['acta'] = $Qacta;
         $aOperador['acta'] = '~';
         $GesActas = new GestorActa();

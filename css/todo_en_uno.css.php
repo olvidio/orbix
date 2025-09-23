@@ -10,8 +10,7 @@ namespace core;
 
 include_once (ConfigGlobal::$dir_estilos.'/colores.php'); 
 ?>
-<style> /*  ################ IMPRESORA ####################
-@page { size: 21cm 29.7cm; margin: 0cm } */
+<style>
 @media print {
 	div.A4 {
          position:absolute;
@@ -37,17 +36,17 @@ include_once (ConfigGlobal::$dir_estilos.'/colores.php');
 		 padding-bottom: 10px;
 	}
 	BODY {text-align : left;
-			margin: 0pt;
+			margin: 0;
 			background: white;
 		}
 	#main {text-align : left;
-            margin: 0pt;
-            padding: 0pt;
+            margin: 0;
+            padding: 0;
             background: white;
         }
     #exportar {text-align : left;
-            margin: 0pt;
-            padding: 0pt;
+            margin: 0;
+            padding: 0;
             background: white;
         }
 
@@ -65,8 +64,8 @@ include_once (ConfigGlobal::$dir_estilos.'/colores.php');
 		border-color: black;
 		border-style: solid;
 		border-width: thin;
-		left : 0px;
-		top : 0px;
+		left : 0;
+		top : 0;
 	}
 	th.ca_posibles  {
 		color : black;
@@ -92,7 +91,7 @@ include_once (ConfigGlobal::$dir_estilos.'/colores.php');
 	}
 	th.nom,td.nom { width: 12em; }
 	th  {
-		font-family : Arial;
+        font-family: Arial, sans-serif;
 		font-size : 10pt;
 		color : black;
 		font-weight : bold;
@@ -100,14 +99,14 @@ include_once (ConfigGlobal::$dir_estilos.'/colores.php');
 	}
 	td { color : black;
 		font-size : 11pt;
-		font-family : Arial;
+		font-family : Arial, sans-serif;
 		padding-left: 1em;
 		padding-right: 1em;
 		}
 
 	td.tessera { color : black;
         font-size : 8pt;
-        font-family : Arial;
+        font-family : Arial, sans-serif;
         padding-left: 1em;
         padding-right: 1em;
         }
@@ -119,31 +118,31 @@ include_once (ConfigGlobal::$dir_estilos.'/colores.php');
 	}
 
 	 .titulo  {
-		font-family : Arial;
+		font-family : Arial, sans-serif;
 		font-size : 14pt;
 		text-align : left;
 		font-weight : bold;
 		color : black;
 	 }
 	 .titulo_inv  {
-		font-family : Arial;
+		font-family : Arial, sans-serif;
 		font-size : 14pt;
 		text-align : left;
 		font-weight : bold;
 		color : black;
 	 }
 	.etiqueta  {
-      	font-family : Verdana;
+      	font-family : Verdana, serif;
 		font-weight : bold;
       	font-size : 10pt;
 		}
 
 	.contenido  {
-      	font-family : Arial;
+      	font-family : Arial, sans-serif;
       	font-size : 9pt;
 		}
 	.contenido_especial  {
-      	font-family : Arial;
+      	font-family : Arial, sans-serif;
       	font-size : 8pt;
 		}
 	.derecha {
@@ -176,24 +175,13 @@ include_once (ConfigGlobal::$dir_estilos.'/colores.php');
 
 }
 
-/*  ################      PANTALLA    #################### */
-/* Planos del z-index (sólo afecta a los que engan posicion)
-* - Algo de la slickgrid está en 100 =>
-div.A4 z-index:15;
-#submenu z-index: 95;
-.help-tip z-index: 100;
-#overlay z-index: 150;
-div.ventana z-index: 160;
-#logout z-index: 22000;
-**/
-
 @media screen {
-	.d_visible { visibility : visible; }
-	.d_novisible { visibility : hidden; }
+	.d_visible { visibility: visible; }
+	.d_novisible { visibility: hidden; }
 
-	p { margin-top: 0; margin-bottom:0; }
+	p { margin-top: 0; margin-bottom: 0; }
 	h2 {
-		font-size : 14pt;
+		font-size: 14pt;
 	}
 
 	input:read-only {
@@ -221,7 +209,7 @@ div.ventana z-index: 160;
   		*/
 		text-align: center;
 		/* background-color: #BCDBEA; */
-		background-color : <?= $fondo_claro; ?>;
+		background-color : <?= $fondo_claro ?>;
 		border-radius: 50%;
 		width: 24px;
 		height: 24px;
@@ -234,12 +222,12 @@ div.ventana z-index: 160;
 	.help-tip:before {
 		content:'?';
 		font-weight: bold;
-		color:<?= $letras; ?>;
+		color:<?= $letras ?>;
 	}
 
 	.help-tip:hover p {
 		display: block;
-		transform-origin: 100% 0%;
+		transform-origin: 100% 0;
 
 		-webkit-animation: fadeIn 0.3s ease-in-out;
 		animation: fadeIn 0.3s ease-in-out;
@@ -306,25 +294,25 @@ div.ventana z-index: 160;
 
 	/* tonos de color */
 	.tono1 {
-		background-color : <?= $tono1; ?> !important;
+		background-color : <?= $tono1 ?> !important;
 	}
 	.tono2 {
-		background-color : <?= $tono2; ?> !important;
+		background-color : <?= $tono2 ?> !important;
 	}
 	.tono3 {
-		background-color : <?= $tono3; ?> !important;
+		background-color : <?= $tono3 ?> !important;
 	}
 	.tono4 {
-		background-color : <?= $tono4; ?> !important;
+		background-color : <?= $tono4 ?> !important;
 	}
 	.tono5 {
-		background-color : <?= $tono5; ?> !important;
+		background-color : <?= $tono5 ?> !important;
 	}
 	.tono6 {
-		background-color : <?= $tono6; ?> !important;
+		background-color : <?= $tono6 ?> !important;
 	}
 	.tono7 {
-		background-color : <?= $tono7; ?> !important;
+		background-color : <?= $tono7 ?> !important;
 	}
 	/* plazas */
 	/* pedida */
@@ -362,14 +350,14 @@ div.ventana z-index: 160;
 		position:absolute;
 		cursor: pointer;
 		z-index: 22000;
-		<?php if (ConfigGlobal::is_dmz() == FALSE) { ?>
+		<?php if (!ConfigGlobal::is_dmz()) { ?>
 			top:5px;
 			right:9px;
-			color : <?= $letras_hover; ?>;
+			color : <?= $letras_hover ?>;
 		<?php } else { ?>
 			top:14px;
 			right:14px;
-			color : <?= $fondo_claro; ?>;
+			color : <?= $fondo_claro ?>;
 		<?php } ?>
 	}
 	/* ventanas pop up */
@@ -417,13 +405,13 @@ div.ventana z-index: 160;
 	 }
 
 	body.otro  {
-		background-color : <?= $fondo_claro; ?>;
+		background-color : <?= $fondo_claro ?>;
 	 }
 
 	.vertical {
 		writing-mode:sideways-lr;
 		vertical-align: bottom;
-		bottom: 0px;
+		bottom: 0;
 	}
 	th.vertical2 {
 		 vertical-align:bottom;
@@ -432,27 +420,27 @@ div.ventana z-index: 160;
 	 /* link al ponerse encima*/
 	td.link:hover  {
 		text-decoration : none;
-		color : <?= $letras_hover; ?>;
+		color : <?= $letras_hover ?>;
 		cursor: pointer;
 	}
 	span.link:hover  {
 		text-decoration : none;
-		color : <?= $letras_hover; ?>;
+		color : <?= $letras_hover ?>;
 		cursor: pointer;
 	 }
 	.link:hover  {
 		text-decoration : none;
-		color : <?= $letras_hover; ?>;
+		color : <?= $letras_hover ?>;
 		cursor: pointer;
 	 }
 	.link  {
 		text-decoration : none;
-		color : <?= $letras_link; ?>;
+		color : <?= $letras_link ?>;
 		cursor: pointer;
 	 }
 	.link_inv  {
 		text-decoration : none;
-		color :  <?= $fondo_claro; ?>;
+		color :  <?= $fondo_claro ?>;
 		cursor: pointer;
 	}
 	.tachado {
@@ -468,72 +456,72 @@ div.ventana z-index: 160;
 	   text-align : left;
 	}
 	.titulo  {
-	   font-family : Arial;
+	   font-family : Arial, sans-serif;
 	   font-size : 14pt;
 	   text-align : left;
 	   font-weight : bold;
-	   color : <?= $fondo_oscuro; ?>;
+	   color : <?= $fondo_oscuro ?>;
 	}
 	.titulo_inv  {
-	   font-family : Arial;
+	   font-family : Arial, sans-serif;
 	   font-size : 14pt;
 	   text-align : left;
 	   font-weight : bold;
-	   color : <?= $fondo_claro; ?>;
+	   color : <?= $fondo_claro ?>;
 	}
 	.subtitulo {
-		font-family : Arial;
+		font-family : Arial, sans-serif;
 		font-size : 10pt;
-		color: <?= $fondo_oscuro; ?>;
+		color: <?= $fondo_oscuro ?>;
 		font-weight : bold;
 	}
 	.etiqueta  {
-		font-family : Arial;
+		font-family : Arial, sans-serif;
 		font-size : 10pt;
-		color : <?= $letras;?>;
+		color : <?= $letras ?>;
 		text-align: left;
 	}
 	.alerta  {
-		font-family : Arial;
+		font-family : Arial, sans-serif;
 		font-size : 10pt;
 		background-color : red;
 	}
 	.gris  {
-		font-family : Arial;
+		font-family : Arial, sans-serif;
 		font-size : 10pt;
-		background-color : <?= $gris_claro; ?>;
+		background-color : <?= $gris_claro ?>;
 	}
 	.comentario  {
-		font-family : Arial;
+		font-family : Arial, sans-serif;
 		font-size : 10pt;
 		font-style: italic;
 	}
 	.contenido  {
-		font-family : Arial;
+		font-family : Arial, sans-serif;
 		font-size : 10pt;
 		font-weight : bold;
-		color : <?= $letras;?>;
+		color : <?= $letras ?>;
 	}
 	.contenido_especial  {
-      	font-family : Arial;
+      	font-family : Arial, sans-serif;
       	font-size : 8pt;
 		}
 	.fecha {
-		font-family : Arial;
+		font-family : Arial, sans-serif;
 		font-size : 10pt;
 		font-weight : bold;
-		color : <?= $letras;?>;
+		color : <?= $letras ?>;
 	}
 	.fecha_hora {
-		font-family : Arial;
+		font-family : Arial, sans-serif;
 		font-size : 10pt;
 		font-weight : bold;
-		color : <?= $letras;?>;
+		color : <?= $letras ?>;
 	}
 	.slick-cell  {
-		font-family : Arial;
+		font-family : Arial, sans-serif;
 		font-size : 10pt;
-		color : <?= $letras;?>;
+		color : <?= $letras ?>;
 		text-align: left;
 	}
 	/* ### menu ### */
@@ -546,7 +534,7 @@ div.ventana z-index: 160;
 	}
 	A:hover  {
 		text-decoration : none;
-		color : <?= $letras_hover; ?>;
+		color : <?= $letras_hover ?>;
 	 }
 	A  {
 		text-decoration : none;
@@ -554,19 +542,19 @@ div.ventana z-index: 160;
 	 }
 	A.cabecera  {
 		text-decoration : none;
-		color : <?= $fondo_claro; ?>;
+		color : <?= $fondo_claro ?>;
 	 }
 
 	A.tab  {
 		text-decoration : none;
-		color : <?= $fondo_claro;?>;
+		color : <?= $fondo_claro ?>;
 	}
 	table  {
 		width : 900px;
-		left : 0px;
-		top : 0px;
-		border-color : <?= $lineas; ?>;
-		background : <?= $fondo_claro; ?>;
+		left : 0;
+		top : 0;
+		border-color : <?= $lineas ?>;
+		background : <?= $fondo_claro ?>;
 		empty-cells: show;
 	 }
 	table.semi  {
@@ -577,27 +565,27 @@ div.ventana z-index: 160;
 		border-style : groove;
 	}
 	table.botones  {
-		left : 0px;
-		top : 0px;
-		border-color : <?= $lineas; ?>;
-		background-color : <?= $lineas; ?>;
+		left : 0;
+		top : 0;
+		border-color : <?= $lineas ?>;
+		background-color : <?= $lineas ?>;
 	 }
 	table.ca_posibles  {
 		border-color: black;
 		border-style: solid;
 		border-width: thin;
-		left : 0px;
-		top : 0px;
-		background : <?= $fondo_claro; ?>;
+		left : 0;
+		top : 0;
+		background : <?= $fondo_claro ?>;
 	}
 	th.ca_posibles  {
 		color : black;
 		font-weight : bold;
-		background : <?= $fondo_claro; ?>;
+		background : <?= $fondo_claro ?>;
 	}
 	th.centrado  {
 		color : black;
-		background : <?= $fondo_claro; ?>;
+		background : <?= $fondo_claro ?>;
 		font-weight : bold;
 		border-color: black;
 		border-style: solid;
@@ -615,40 +603,40 @@ div.ventana z-index: 160;
 		border-width: thin;
 	}
 	th  {
-		font-family : Arial;
+		font-family : Arial, sans-serif;
 		font-size : 10pt;
-		color : <?= $fondo_claro; ?>;
+		color : <?= $fondo_claro ?>;
 		font-weight : bold;
-		background : <?= $fondo_oscuro; ?>;
+		background : <?= $fondo_oscuro ?>;
 	}
 	tr:hover  {
-	   background-color : <?= $lineas; ?>;
+	   background-color : <?= $lineas ?>;
 	}
 	tr.impar  {
-	   background-color : <?= $fondo_uno; ?>;
+	   background-color : <?= $fondo_uno ?>;
 	}
 	tr.imp  {
-	   background-color : <?= $fondo_uno; ?>;
+	   background-color : <?= $fondo_uno ?>;
 	}
 	tr.par  {
-	   background-color : <?= $fondo_dos; ?>;
+	   background-color : <?= $fondo_dos ?>;
 	}
 	tr.sf  {
-	   background-color : <?= $fondo_tres; ?>;
+	   background-color : <?= $fondo_tres ?>;
 	}
 	tr.botones  {
 	   text-align : center;
-	   background-color : <?= $fondo_uno; ?>;
+	   background-color : <?= $fondo_uno ?>;
 	}
 	tr.tab  {
 	   height : 15px;
 	   font-weight : bold;
-	   font-family : Arial;
+	   font-family : Arial, sans-serif;
 	   font-size : 12pt;
-	   background : <?= $fondo_oscuro;?>;
+	   background : <?= $fondo_oscuro ?>;
 	}
 	tr.tab td {
-		color : <?= $fondo_claro; ?>;
+		color : <?= $fondo_claro ?>;
 		cursor: pointer;
 	}
 	tr.delgada {
@@ -662,9 +650,9 @@ div.ventana z-index: 160;
 	   	font-size : 1pt;
 	}
 	td  {
-		font-family : Arial;
+		font-family : Arial, sans-serif;
 		font-size : 10pt;
-		color : <?= $letras;	?>;
+		color : <?= $letras ?>;
 		height : 15px;
 		vertical-align: top;
 	}
@@ -673,24 +661,24 @@ div.ventana z-index: 160;
 		border-top-width: thin;
 	}
 	td.botones  {
-		font-family : Arial;
+		font-family : Arial, sans-serif;
 		font-size : 10pt;
-		color : <?= $fondo_claro; ?>;
-		background-color : <?= $fondo_oscuro;?>;
+		color : <?= $fondo_claro ?>;
+		background-color : <?= $fondo_oscuro ?>;
 		height : 15px;
 	}
 	td.inactivo  {
-		font-family : Arial;
+		font-family : Arial, sans-serif;
 		font-size : 10pt;
-		color : <?= $letras; ?>;
+		color : <?= $letras ?>;
 		height : 15px;
-		background : <?= $fondo_uno; ?>;
+		background : <?= $fondo_uno ?>;
 	}
 	/* ## listas ## */
 	div.lista {
-		font-family : Arial;
+		font-family : Arial, sans-serif;
 		font-size : 9pt;
-		color : <?= $letras;?>;
+		color : <?= $letras ?>;
 	}
 	div.lista *.etiqueta {
 		font-size : 12pt;
@@ -712,9 +700,11 @@ div.ventana z-index: 160;
 		border: 0;
 	}
 
+    /*
 	div#ir_atras {
 		display: none;
 	}
+     */
 
     /* ===========================================
        MAIN

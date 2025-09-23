@@ -1,6 +1,6 @@
 <?php
 
-use src\menus\application\ListaGrupMenus;
+use src\menus\application\GrupMenuListaUseCase;
 use web\ContestarJson;
 
 // INICIO Cabecera global de URL de controlador *********************************
@@ -13,7 +13,7 @@ require_once("apps/core/global_object.inc");
 
 $error_txt = '';
 
-$ListaGrupMenus = new ListaGrupMenus();
+$ListaGrupMenus = new GrupMenuListaUseCase();
 $data = $ListaGrupMenus();
 
 // envía una Response
