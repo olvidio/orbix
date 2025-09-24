@@ -129,9 +129,11 @@ $esta_sacd = [];
 $donde_esta_sacd = [];
 foreach ($cZonaSacd as $oZonaSacd) {
     $id_nom = $oZonaSacd->getId_nom();
-    $contador_sacd[$id_nom] = [];
+    $contador_1a_sacd[$id_nom] = [];
+    $contador_total_sacd[$id_nom] = [];
     $InicialesSacd = new InicialesSacd();
     $nombre_sacd=$InicialesSacd->nombre_sacd($id_nom);
+    echo $id_nom.'->'.$nombre_sacd.'<br>';
     $contador_sacd[$id_nom]['nombre']=$nombre_sacd;
     foreach ($date_range as $date) {
         $num_dia = $date->format('Y-m-d');
@@ -617,9 +619,13 @@ foreach ($cEncargosZona as $oEncargo) {
                     echo 'ESTA > 0<br>';
                     if (($id_tipo>=8100) && ($id_tipo<8200)) {
                         //compruebo que no tenga otra misa por la mañana
-                        if ($contador_1a_sacd[$id_nom][$num_dia]>0) {   
-                            $ok_encargo=false;
-                            echo 'tendría dos misas por la mañana<br>';
+                        //si es de otra zona ya avisa que no está previsto
+                        if (!!isset($contador_sacd[$id_nom]))
+                        {
+                            if ($contador_1a_sacd[$id_nom][$num_dia]>0) {   
+                                $ok_encargo=false;
+                                echo 'tendría dos misas por la mañana<br>';
+                            }
                         }
                     }
                     if (($id_tipo>=8200) && ($id_tipo<8300)) {
@@ -766,14 +772,19 @@ foreach ($cEncargosZona as $oEncargo) {
                 if ($EncargoDiaRepository->Guardar($oEncargoDia) === FALSE) {
                     $error_txt .= $EncargoDiaRepository->getErrorTxt();
                 }  
-                if (($id_tipo>=8100) && ($id_tipo<8200)) {
-                    echo 'Missa a 1a<br>';
-                    $contador_1a_sacd[$id_nom][$num_dia]++;
-                    $contador_total_sacd[$id_nom][$num_dia]++;
-                }
-                if (($id_tipo>=8200) && ($id_tipo<8300)) {
-                    echo 'Missa durant el dia<br>';
-                    $contador_total_sacd[$id_nom][$num_dia]++;
+//si es de otra zona ya avisa que no está previsto
+                if (!!isset($contador_sacd[$id_nom]))
+                {
+
+                    if (($id_tipo>=8100) && ($id_tipo<8200)) {
+                        echo 'Missa a 1a<br>';
+                        $contador_1a_sacd[$id_nom][$num_dia]++;
+                        $contador_total_sacd[$id_nom][$num_dia]++;
+                    }
+                    if (($id_tipo>=8200) && ($id_tipo<8300)) {
+                        echo 'Missa durant el dia<br>';
+                        $contador_total_sacd[$id_nom][$num_dia]++;
+                    }
                 }
             }
             else {
