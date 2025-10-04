@@ -482,7 +482,7 @@ foreach ($cEncargosZona as $oEncargo) {
     
                 if ($dia_week==7){
                     $num_mes = $date->format('d');
-                    $num_semana = intdiv($num_mes,7);
+                    $num_semana = intdiv(($num_mes-1),7);
                     $intervalo_plantilla='P'.($dia_week+$num_semana-1).'D';
                 } else {
                     $intervalo_plantilla='P'.($dia_week-1).'D';
@@ -496,7 +496,7 @@ foreach ($cEncargosZona as $oEncargo) {
     
                 if ($dia_week==7){
                     $num_mes = $date->format('d');
-                    $num_semana = intdiv($num_mes,7);
+                    $num_semana = intdiv(($num_mes-1),7);
                     $intervalo_plantilla='P'.($dia_week+$num_semana-1).'D';
                 } else {
                     $intervalo_plantilla='P'.($dia_week-1).'D';
@@ -523,9 +523,9 @@ foreach ($cEncargosZona as $oEncargo) {
                 $dia_week = $date->format('N');
                 $dia_plantilla = new DateTimeLocal(EncargoDia::INICIO_MENSUAL_UNO);
                 $num_mes = $date->format('d');
-                $num_semana = intdiv($num_mes,7);
+                $num_semana = intdiv(($num_mes-1),7);
     //            echo 'MENSUAL:'.$num_mes.'=>'.$num_semana.'<br>';
-                $intervalo_plantilla='P'.($dia_week+$num_semana-1).'D';
+                $intervalo_plantilla='P'.($dia_week+$num_semana*7-1).'D';
                 $dia_plantilla->add(new DateInterval($intervalo_plantilla));
     //            echo 'DIA PLANTILLA: '.$dia_plantilla->format('d-m-Y').'<br>';
             }
@@ -535,18 +535,18 @@ foreach ($cEncargosZona as $oEncargo) {
                 $dia_week = $date->format('N');
                 $dia_plantilla2 = new DateTimeLocal(EncargoDia::INICIO_MENSUAL_DOS);
                 $num_mes = $date->format('d');
-                $num_semana = intdiv($num_mes,7);
+                $num_semana = intdiv(($num_mes-1),7);
     //            echo 'MENSUAL:'.$num_mes.'=>'.$num_semana.'<br>';
-                $intervalo_plantilla='P'.($dia_week+$num_semana-1).'D';
+                $intervalo_plantilla='P'.($dia_week+$num_semana*7-1).'D';
                 $dia_plantilla2->add(new DateInterval($intervalo_plantilla));
     //            echo 'DIA PLANTILLA2: '.$dia_plantilla2->format('d-m-Y').'<br>';
     
     //            echo 'tipo s3 OK<br>';
                 $dia_plantilla3 = new DateTimeLocal(EncargoDia::INICIO_MENSUAL_TRES);
                 $num_mes = $date->format('d');
-                $num_semana = intdiv($num_mes,7);
+                $num_semana = intdiv(($num_mes-1),7);
     //            echo 'MENSUAL:'.$num_mes.'=>'.$num_semana.'<br>';
-                $intervalo_plantilla='P'.($dia_week+$num_semana-1).'D';
+                $intervalo_plantilla='P'.($dia_week+$num_semana*7-1).'D';
                 $dia_plantilla3->add(new DateInterval($intervalo_plantilla));
     //            echo 'DIA PLANTILLA3: '.$dia_plantilla3->format('d-m-Y').'<br>';
             }
