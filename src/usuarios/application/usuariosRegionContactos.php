@@ -43,13 +43,15 @@ class usuariosRegionContactos
         foreach ($cUsuariosRegion as $oUsuario) {
             //$oUsuario->setoDbl($oDevelPC);
             $id_usuario = $oUsuario->getId_usuario();
-            $nom_usuario = $oUsuario->getNom_usuarioAsString();
+            $usuario = $oUsuario->getUsuarioAsString();
+            $nom_usuario = $oUsuario->getNom_usuarioAsString()?? $usuario;
             $email = $oUsuario->getEmailAsString() ?? 'no tiene email';
 
             // tiene permiso de est?
             $cGrupos = $UsuarioGrupoRepository->getUsuariosGrupos(array('id_usuario' => $id_usuario));
             $iperm_menu = 0;
             $PermMenuRepository = new PermMenuRepository();
+            $PermMenuRepository->setoDbl($oDevelPC);
             foreach ($cGrupos as $UsuarioGrupo) {
                 $id_grupo = $UsuarioGrupo->getId_grupo();
                 $cPermMenu = $PermMenuRepository->getPermMenus(array('id_usuario' => $id_grupo));
