@@ -21,27 +21,30 @@ class usuariosRegionContactos
     {
         $error_txt = '';
         $esquema = $region."v";
-        //$oConfigDB = new ConfigDB('importar');
         $oConfigDB = new ConfigDB('sv-e_select');
         $config = $oConfigDB->getEsquema($esquema);
         $oConexion = new DBConnection($config);
-        $oDevelPC = $oConexion->getPDO();
+        try {
+            $oDevelPC = $oConexion->getPDO();
+        } catch (\Throwable $e) {
+            $error_txt = 'Error al obtener la conexión a la base de datos: ' . $e->getMessage();
+            ContestarJson::enviar($error_txt, '');
+            return;
+        }
 
         // todos los usuarios de la region, y después mirar los permisos
         $UsuarioGrupoRepository = new UsuarioGrupoRepository();
+        $UsuarioGrupoRepository->setoDbl($oDevelPC);
         $UsuarioRepository = new UsuarioRepository();
-        $UsuarioRepository->setoDbl($oDevelPC);
+        $UsuarioRepository->setoDbl_select($oDevelPC);
         $cUsuariosRegion = $UsuarioRepository->getUsuarios(['id_role' => 3],['id_role' => '>']); // quitar los admin.
 
         $aContactos = [];
-        $i = 0;
         foreach ($cUsuariosRegion as $oUsuario) {
-            $i++;
+            //$oUsuario->setoDbl($oDevelPC);
             $id_usuario = $oUsuario->getId_usuario();
-            $usuario = $oUsuario->getUsuarioAsString();
             $nom_usuario = $oUsuario->getNom_usuarioAsString();
             $email = $oUsuario->getEmailAsString() ?? 'no tiene email';
-            $id_role = $oUsuario->getId_role();
 
             // tiene permiso de est?
             $cGrupos = $UsuarioGrupoRepository->getUsuariosGrupos(array('id_usuario' => $id_usuario));

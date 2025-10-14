@@ -19,6 +19,8 @@ $error_txt = '';
 $MailsRegion = new usuariosRegionContactos();
 $data = $MailsRegion->usuariosRegionContactos($Qregion);
 
+$error_txt = $data['error_txt'] ?? '';
+
 // envía una Response
 $jsondata = ContestarJson::respuestaPhp($error_txt, $data);
 ContestarJson::send($jsondata);
