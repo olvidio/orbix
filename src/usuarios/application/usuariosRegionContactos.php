@@ -34,7 +34,7 @@ class usuariosRegionContactos
 
         // todos los usuarios de la region, y después mirar los permisos
         $UsuarioGrupoRepository = new UsuarioGrupoRepository();
-        $UsuarioGrupoRepository->setoDbl($oDevelPC);
+        $UsuarioGrupoRepository->setoDbl_Select($oDevelPC);
         $UsuarioRepository = new UsuarioRepository();
         $UsuarioRepository->setoDbl_select($oDevelPC);
         $cUsuariosRegion = $UsuarioRepository->getUsuarios(['id_role' => 3],['id_role' => '>']); // quitar los admin.
@@ -51,7 +51,7 @@ class usuariosRegionContactos
             $cGrupos = $UsuarioGrupoRepository->getUsuariosGrupos(array('id_usuario' => $id_usuario));
             $iperm_menu = 0;
             $PermMenuRepository = new PermMenuRepository();
-            $PermMenuRepository->setoDbl($oDevelPC);
+            $PermMenuRepository->setoDbl_Select($oDevelPC);
             foreach ($cGrupos as $UsuarioGrupo) {
                 $id_grupo = $UsuarioGrupo->getId_grupo();
                 $cPermMenu = $PermMenuRepository->getPermMenus(array('id_usuario' => $id_grupo));
