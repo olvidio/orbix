@@ -41,11 +41,13 @@ class usuariosRegionContactos
 
         $aContactos = [];
         foreach ($cUsuariosRegion as $oUsuario) {
-            //$oUsuario->setoDbl($oDevelPC);
+            $email = $oUsuario->getEmailAsString();
+            if (empty($email)) {
+                continue;
+            }
             $id_usuario = $oUsuario->getId_usuario();
             $usuario = $oUsuario->getUsuarioAsString();
             $nom_usuario = $oUsuario->getNom_usuarioAsString()?? $usuario;
-            $email = $oUsuario->getEmailAsString() ?? 'no tiene email';
 
             // tiene permiso de est?
             $cGrupos = $UsuarioGrupoRepository->getUsuariosGrupos(array('id_usuario' => $id_usuario));
