@@ -17,7 +17,7 @@ class CopiarBDU
     function __construct()
     {
         if (!empty($GLOBALS['oDBListas']) && $GLOBALS['oDBListas'] === 'error') {
-            exit(_("no se puede conectar con la base de datos de Listas"));
+            exit(_("no se puede conectar con la base de datos de la BDU"));
         }
         $this->oDbU = $GLOBALS['oDBListas'];
         $this->oDbl = $GLOBALS['oDBP'];
