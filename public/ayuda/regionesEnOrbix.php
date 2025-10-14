@@ -27,7 +27,7 @@ $hash_params = $oHash->getParamAjaxEnArray();
    <tr><td>crEcs</td><td>Europa Central Norte</td><td><span class="link" onclick="fnjs_mostrar_modal('Ecs-crEcs')">ver contactos</span></td></tr>
    <tr><td>crEso</td><td>Europa del Noroeste</td><td><span class="link" onclick="fnjs_mostrar_modal('Eso-crEso')">ver contactos</span></td></tr>
    <tr><td>crEuc</td><td>Centroeuropa</td><td><span class="link" onclick="fnjs_mostrar_modal('Euc-crEuc')">ver contactos</span></td></tr>
-   <tr><td>crGalbel</td><td>Francia y Bélgica</td><td><span class="link" onclick="fnjs_mostrar_modal('GalBel-crGalBel')">ver contactos</span></td></tr>
+   <tr><td>crGalbel</td><td>Francia y Bélgica</td><td><span class="link" onclick="fnjs_mostrar_modal('Galbel-crGalbel')">ver contactos</span></td></tr>
    <tr><td>crH</td><td>España</td><td><span class="link" onclick="fnjs_mostrar_modal('H-crH')">ver contactos</span></td></tr>
    <tr><td>crI</td><td>Italia</td><td><span class="link" onclick="fnjs_mostrar_modal('I-crI')">ver contactos</span></td></tr>
    <tr><td>crL</td><td>Portugal</td><td><span class="link" onclick="fnjs_mostrar_modal('L-crL')">ver contactos</span></td></tr>
