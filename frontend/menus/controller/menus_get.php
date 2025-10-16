@@ -6,8 +6,8 @@ use frontend\shared\PostRequest;
 use src\menus\application\repositories\MenuDbRepository;
 use src\usuarios\application\repositories\RoleRepository;
 use src\usuarios\application\repositories\UsuarioRepository;
-use web\Desplegable;
-use web\Hash;
+use frontend\shared\web\Desplegable;
+use frontend\shared\web\Hash;
 
 
 // Crea los objetos de uso global **********************************************

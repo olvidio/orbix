@@ -2,7 +2,7 @@
 
 use core\ConfigGlobal;
 use frontend\shared\model\ViewNewPhtml;
-use web\Hash;
+use frontend\shared\web\Hash;
 
 // Crea los objetos de uso global **********************************************
 require_once("frontend/shared/global_header_front.inc");

@@ -6,6 +6,7 @@ use core\DBPropiedades;
 use core\ServerConf;
 use permisos\model\MyCrypt;
 use src\usuarios\application\repositories\UsuarioRepository;
+use web\ContestarJson;
 
 // INICIO Cabecera global de URL de controlador *********************************
 require_once("apps/core/global_header.inc");
@@ -17,15 +18,21 @@ require_once("apps/core/global_object.inc");
 
 // FIN de  Cabecera global de URL de controlador ********************************
 
+$error_txt = '';
+$data = [];
+
 // todos los esquemas
 $oDBPropiedades = new DBPropiedades();
 $a_posibles_esquemas = $oDBPropiedades->array_posibles_esquemas(TRUE, TRUE);
 // sólo para pruebas-sv-e
 if (ServerConf::WEBDIR !== 'pruebas') {
-    exit(_("Sólo se puede borrar en la base de datos de pruebas"));
+    ContestarJson::enviar(_("Sólo se puede borrar en la base de datos de pruebas"), $data);
+    return; // no continuar
 }
 $oConfigDB = new ConfigDB('sv-e');
 $UsuarioRepository = new UsuarioRepository();
+
+$actualizados = 0;
 foreach ($a_posibles_esquemas as $esquema) {
     $esquema .= 'v';
     $config = $oConfigDB->getEsquema($esquema);
@@ -49,9 +56,13 @@ foreach ($a_posibles_esquemas as $esquema) {
             $my_passwd = $oCrypt->encode($login);
             $oUsuario->setPassword($my_passwd);
             if ($UsuarioRepository->Guardar($oUsuario) === false) {
-                echo _("hay un error, no se ha guardado");
-                echo "\n" . $UsuarioRepository->getErrorTxt();
+                $error_txt .= (_("hay un error, no se ha guardado")) . "\n" . $UsuarioRepository->getErrorTxt() . "\n";
+            } else {
+                $actualizados++;
             }
         }
     }
 }
+
+$data['actualizados'] = $actualizados;
+ContestarJson::enviar($error_txt, $data);

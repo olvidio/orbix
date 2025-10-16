@@ -3,8 +3,8 @@
 use core\ConfigGlobal;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
-use web\Hash;
-use web\Lista;
+use frontend\shared\web\Hash;
+use frontend\shared\web\Lista;
 
 
 // Crea los objetos de uso global **********************************************
