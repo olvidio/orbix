@@ -24,16 +24,10 @@ if (!empty($a_sel)) { //vengo de un checkbox
 }
 
 /////////// Consulta al backend ///////////////////
-$url_lista_backend = Hash::cmdSinParametros(ConfigGlobal::getWeb()
-    . '/src/usuarios/infrastructure/controllers/role_grupmenu_info.php'
-);
+$url_backend = '/src/usuarios/infrastructure/controllers/role_grupmenu_info.php';
+$a_campos = ['id_role' => $Qid_role];
+$data = PostRequest::getDataFromUrl($url_backend, $a_campos);
 
-$oHash = new Hash();
-$oHash->setUrl($url_lista_backend);
-$oHash->setArrayCamposHidden(['id_role' => $Qid_role]);
-$hash_params = $oHash->getArrayCampos();
-
-$data = PostRequest::getData($url_lista_backend, $hash_params);
 $a_cabeceras = $data['a_cabeceras'];
 $a_botones = $data['a_botones'];
 $a_valores = $data['a_valores'];

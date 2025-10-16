@@ -19,17 +19,11 @@ if (empty($Qid_equipaje)) {
 }
 
 //-------- docs en la casa -----------------------------------
-$url_lista_backend = Hash::cmdSinParametros(ConfigGlobal::getWeb()
-    . '/src/inventario/infrastructure/controllers/equipajes_doc_casa.php'
-);
-$oHash = new Hash();
-$oHash->setUrl($url_lista_backend);
-$oHash->setArrayCamposHidden([
+$url_backend = '/src/inventario/infrastructure/controllers/equipajes_doc_casa.php';
+$a_campos = [
     'id_equipaje' => $Qid_equipaje,
-]);
-$hash_params = $oHash->getArrayCampos();
-
-$data = PostRequest::getData($url_lista_backend, $hash_params);
+];
+$data = PostRequest::getDataFromUrl($url_backend, $a_campos);
 
 $a_valores = $data['a_valores'];
 $nombre_ubi = $data['nombre_ubi'];
@@ -48,17 +42,11 @@ $oListaDocsCasa->setBotones($a_botones);
 
 
 //-------- equipajes para la actividad -----------------------------------
-$url_lista_backend = Hash::cmdSinParametros(ConfigGlobal::getWeb()
-    . '/src/inventario/infrastructure/controllers/equipajes_egm.php'
-);
-$oHash = new Hash();
-$oHash->setUrl($url_lista_backend);
-$oHash->setArrayCamposHidden([
+$url_backend = '/src/inventario/infrastructure/controllers/equipajes_egm.php';
+$a_campos = [
     'id_equipaje' => $Qid_equipaje,
-]);
-$hash_params = $oHash->getArrayCampos();
-
-$data = PostRequest::getData($url_lista_backend, $hash_params);
+];
+$data = PostRequest::getDataFromUrl($url_backend, $a_campos);
 
 $a_egm = $data['a_egm'];
 

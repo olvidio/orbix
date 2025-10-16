@@ -77,20 +77,13 @@ if (!(ConfigGlobal::mi_ambito() === 'rstgr' || ConfigGlobal::mi_ambito() === 'r'
 }
 
 /////////// Consulta al backend ///////////////////
-$url_lista_backend = Hash::cmdSinParametros(ConfigGlobal::getWeb()
-    . '/src/certificados/infrastructure/controllers/certificado_emitido_lista_datos.php'
-);
-
-$oHash = new Hash();
-$oHash->setUrl($url_lista_backend);
-$oHash->setArrayCamposHidden([
+$url_backend = '/src/certificados/infrastructure/controllers/certificado_emitido_lista_datos.php';
+$a_campos = [
     'certificado' => $Qcertificado,
     'inicurs_ca_iso' => $inicurs_ca_iso,
     'fincurs_ca_iso' => $fincurs_ca_iso,
-]);
-$hash_params = $oHash->getArrayCampos();
-
-$data = PostRequest::getData($url_lista_backend, $hash_params);
+];
+$data = PostRequest::getDataFromUrl($url_backend, $a_campos);
 
 $a_cabeceras = $data['a_cabeceras'];
 $a_valores = $data['a_valores'];

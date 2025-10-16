@@ -30,19 +30,12 @@ if ($id_usuario !== $Qid_usuario) {
 }
 
 //////////////////////// Datos del usuario ///////////////////////////////////////////////////
-$url_usuario_form_backend = Hash::cmdSinParametros(ConfigGlobal::getWeb()
-    . '/src/usuarios/infrastructure/controllers/usuario_guardar.php'
-);
-
-$oHash = new Hash();
-$oHash->setUrl($url_usuario_form_backend);
-$oHash->setArrayCamposHidden(
-    ['id_usuario' => $id_usuario,
+$url_backend = '/src/usuarios/infrastructure/controllers/usuario_guardar.php';
+$a_campos = [
+    'id_usuario' => $id_usuario,
         'has_2fa' => 'false',
-    ]);
-$hash_params = $oHash->getArrayCampos();
-
-$data = PostRequest::getData($url_usuario_form_backend, $hash_params);
+    ];
+$data = PostRequest::getDataFromUrl($url_backend, $a_campos);
 
 $usuario = $data['usuario'];
 

@@ -14,17 +14,11 @@ $a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_A
 $oPosicion->recordar();
 
 // muestra los ctr que tienen el documento.
-$url_lista_backend = Hash::cmdSinParametros(ConfigGlobal::getWeb()
-    . '/src/inventario/infrastructure/controllers/inventario_ctr.php'
-);
-$oHash = new Hash();
-$oHash->setUrl($url_lista_backend);
-$sel_json = json_encode($a_sel);
-$oHash->setArrayCamposHidden([
+$url_backend = '/src/inventario/infrastructure/controllers/inventario_ctr.php';
+$a_campos = [
     'sel' => $sel_json,
-]);
-$hash_params = $oHash->getArrayCampos();
-$data = PostRequest::getData($url_lista_backend, $hash_params);
+];
+$data = PostRequest::getDataFromUrl($url_backend, $a_campos);
 
 $a_ubi_valores = $data['a_valores'];
 $a_ubi_llave = $data['a_llave'];

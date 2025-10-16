@@ -16,15 +16,9 @@ $Qid_tipo_doc = (integer)filter_input(INPUT_POST, 'id_tipo_doc');
 $oPosicion->recordar();
 
 // muestra los ctr que tienen el documento.
-$url_lista_backend = Hash::cmdSinParametros(ConfigGlobal::getWeb()
-    . '/src/inventario/infrastructure/controllers/lista_docs_asignados_por_tipo.php'
-);
-$oHash = new Hash();
-$oHash->setUrl($url_lista_backend);
-$oHash->setArrayCamposHidden(['id_tipo_doc' => $Qid_tipo_doc]);
-$hash_params = $oHash->getArrayCampos();
-
-$data = PostRequest::getData($url_lista_backend, $hash_params);
+$url_backend = '/src/inventario/infrastructure/controllers/lista_docs_asignados_por_tipo.php';
+$a_campos = ['id_tipo_doc' => $Qid_tipo_doc];
+$data = PostRequest::getDataFromUrl($url_backend, $a_campos);
 
 $a_cabeceras = $data['a_cabeceras'];
 $a_botones = $data['a_botones'];

@@ -13,15 +13,8 @@ require_once("frontend/shared/global_header_front.inc");
 
 $oPosicion->recordar();
 
-$url_lista_backend = Hash::cmdSinParametros(ConfigGlobal::getWeb()
-    . '/src/usuarios/infrastructure/controllers/usuario_preferencias.php'
-);
-
-$oHash = new Hash();
-$oHash->setUrl($url_lista_backend);
-$hash_params = $oHash->getArrayCampos();
-
-$data = PostRequest::getData($url_lista_backend, $hash_params);
+$url_backend = '/src/usuarios/infrastructure/controllers/usuario_preferencias.php';
+$data = PostRequest::getDataFromUrl($url_backend);
 
 $layout = $data['layout'];
 $inicio = $data['inicio'];
@@ -71,15 +64,9 @@ $oDesplOficinas->setBlanco(true);
 
 // ----------- Idioma -------------------
 /////////// Consulta al backend ///////////////////
-$url_lista_backend = Hash::cmdSinParametros(ConfigGlobal::getWeb()
-    . '/src/shared/infrastructure/controllers/locales_posibles.php'
-);
+$url_backend = '/src/shared/infrastructure/controllers/locales_posibles.php';
+$data = PostRequest::getDataFromUrl($url_backend);
 
-$oHash = new Hash();
-$oHash->setUrl($url_lista_backend);
-$hash_params = $oHash->getArrayCampos();
-
-$data = PostRequest::getData($url_lista_backend, $hash_params);
 $a_locales = $data['a_locales'];
 $oDesplLocales = new Desplegable('idioma_nou', $a_locales, $idioma, true);
 

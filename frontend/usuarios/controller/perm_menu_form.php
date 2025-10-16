@@ -24,16 +24,9 @@ if (!empty($a_sel)) { //vengo de un checkbox
     $oPosicion->addParametro('scroll_id', $scroll_id, 1);
 }
 
-$url = Hash::cmdSinParametros(ConfigGlobal::getWeb()
-    . '/src/usuarios/infrastructure/controllers/perm_menu_info.php'
-);
-
-$oHash = new Hash();
-$oHash->setUrl($url);
-$oHash->setArrayCamposHidden(['id_usuario' => $Qid_usuario, 'id_item' => $Qid_item]);
-$hash_params = $oHash->getArrayCampos();
-
-$data = PostRequest::getData($url, $hash_params);
+$url_backend = '/src/usuarios/infrastructure/controllers/perm_menu_info.php';
+$a_campos = ['id_usuario' => $Qid_usuario, 'id_item' => $Qid_item];
+$data = PostRequest::getDataFromUrl($url_backend, $a_campos);
 
 $nombre = $data['nombre'];
 $menu_perm = $data['menu_perm'];

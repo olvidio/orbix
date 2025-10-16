@@ -16,21 +16,16 @@ $Qid_lugar = (int)filter_input(INPUT_POST, 'id_lugar');
 $Qid_item_egm = (int)filter_input(INPUT_POST, 'id_item_egm');
 
 if (!empty($Qid_lugar)) {
-    $url_lista_backend = Hash::cmdSinParametros(ConfigGlobal::getWeb()
-        . '/src/inventario/infrastructure/controllers/lista_docs_de_lugar.php'
-    );
+    $url_backend = '/src/inventario/infrastructure/controllers/lista_docs_de_lugar.php';
 }
 if (!empty($Qid_item_egm)) {
-    $url_lista_backend = Hash::cmdSinParametros(ConfigGlobal::getWeb()
-        . '/src/inventario/infrastructure/controllers/lista_docs_de_egm.php'
-    );
+    $url_backend = '/src/inventario/infrastructure/controllers/lista_docs_de_egm.php';
 }
-$oHash = new Hash();
-$oHash->setUrl($url_lista_backend);
-$oHash->setArrayCamposHidden(['id_lugar' => $Qid_lugar, 'id_item_egm' => $Qid_item_egm]);
-$hash_params = $oHash->getArrayCampos();
-
-$data = PostRequest::getData($url_lista_backend, $hash_params);
+$a_campos = [
+    'id_lugar' => $Qid_lugar,
+    'id_item_egm' => $Qid_item_egm
+];
+$data = PostRequest::getDataFromUrl($url_backend, $a_campos);
 
 $a_valores = $data['a_valores'];
 $nombre_valija = $data['nombre_valija'];

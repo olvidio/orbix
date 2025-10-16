@@ -17,15 +17,9 @@ $Qquien = (string)filter_input(INPUT_POST, 'quien');
 
 $oPosicion->recordar();
 
-$url_lista_backend = Hash::cmdSinParametros(ConfigGlobal::getWeb()
-    . '/apps/cambios/controller/usuario_form_avisos.php'
-);
-$oHash = new Hash();
-$oHash->setUrl($url_lista_backend);
-$oHash->setArrayCamposHidden(['id_usuario' => $Qid_usuario, 'quien' => $Qquien]);
-$hash_params = $oHash->getArrayCampos();
-
-$data = PostRequest::getData($url_lista_backend, $hash_params);
+$url_backend = '/apps/cambios/controller/usuario_form_avisos.php';
+$a_campos = ['id_usuario' => $Qid_usuario, 'quien' => $Qquien];
+$data = PostRequest::getDataFromUrl($url_backend, $a_campos);
 
 $a_valores_avisos = $data['a_valores'];
 $nombre_usuario = $data['nombre_usuario'];

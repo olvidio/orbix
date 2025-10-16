@@ -16,15 +16,12 @@ $oPosicion->recordar();
 
 
 // muestra los ctr que tienen el documento.
-$url_lista_backend = Hash::cmdSinParametros(ConfigGlobal::getWeb()
-    . '/src/inventario/infrastructure/controllers/lista_docs_de_ctr.php'
-);
-$oHash = new Hash();
-$oHash->setUrl($url_lista_backend);
-$oHash->setArrayCamposHidden(['id_ubi' => $Qid_ubi, 'id_lugar' => $Qid_lugar]);
-$hash_params = $oHash->getArrayCampos();
-
-$data = PostRequest::getData($url_lista_backend, $hash_params);
+$url_backend = '/src/inventario/infrastructure/controllers/lista_docs_de_ctr.php';
+$a_campos = [
+    'id_ubi' => $Qid_ubi,
+    'id_lugar' => $Qid_lugar
+];
+$data = PostRequest::getDataFromUrl($url_backend, $a_campos);
 
 $a_valores = $data['a_valores'];
 

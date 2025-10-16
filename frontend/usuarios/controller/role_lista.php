@@ -27,15 +27,8 @@ if (isset($_POST['stack'])) {
     }
 }
 
-$url_lista_backend = Hash::cmdSinParametros(ConfigGlobal::getWeb()
-    . '/src/usuarios/infrastructure/controllers/role_lista.php'
-);
-
-$oHash = new Hash();
-$oHash->setUrl($url_lista_backend);
-$hash_params = $oHash->getArrayCampos();
-
-$data = PostRequest::getData($url_lista_backend, $hash_params);
+$url_backend = '/src/usuarios/infrastructure/controllers/role_lista.php';
+$data = PostRequest::getDataFromUrl($url_backend);
 
 $a_cabeceras = $data['a_cabeceras'];
 $a_botones = $data['a_botones'];

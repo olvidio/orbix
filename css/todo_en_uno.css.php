@@ -731,7 +731,7 @@ div.ventana z-index: 160;
 
     #main {
         flex-grow: 1; /* Ocupa todo el espacio restante */
-        padding: 10px;
+        padding: 20px;
         margin: 0;
         background-color: <?= $fondo_claro ?>;
         border: none;

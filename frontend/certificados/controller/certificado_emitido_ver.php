@@ -24,18 +24,9 @@ if (!empty($a_sel)) { //vengo de un checkbox
 }
 
 /////////// Consulta al backend ///////////////////
-$url_lista_backend = Hash::cmdSinParametros(ConfigGlobal::getWeb()
-    . '/src/certificados/infrastructure/controllers/certificado_emitido_ver_datos.php'
-);
-
-$oHash = new Hash();
-$oHash->setUrl($url_lista_backend);
-$oHash->setArrayCamposHidden([
-    'id_item' => $Qid_item,
-]);
-$hash_params = $oHash->getArrayCampos();
-
-$data = PostRequest::getData($url_lista_backend, $hash_params);
+$url_backend = '/src/certificados/infrastructure/controllers/certificado_emitido_ver_datos.php';
+$a_campos = [ 'id_item' => $Qid_item ];
+$data = PostRequest::getDataFromUrl($url_backend, $a_campos);
 
 
 $id_nom = $data['id_nom'];
@@ -59,18 +50,10 @@ $nom = $data['nom'];
 
 //Idiomas (blanco para latín)
 /////////// Consulta al backend ///////////////////
-$url_lista_backend = Hash::cmdSinParametros(ConfigGlobal::getWeb()
-    . '/src/shared/infrastructure/controllers/locales_posibles.php'
-);
+$url_backend = '/src/shared/infrastructure/controllers/locales_posibles.php';
+$a_campos = [ 'id_nom' => $id_nom ];
+$data = PostRequest::getDataFromUrl($url_backend, $a_campos);
 
-$oHash = new Hash();
-$oHash->setUrl($url_lista_backend);
-$oHash->setArrayCamposHidden([
-    'id_nom' => $id_nom,
-]);
-$hash_params = $oHash->getArrayCampos();
-
-$data = PostRequest::getData($url_lista_backend, $hash_params);
 $a_locales = $data['a_locales'];
 
 $oDesplIdiomas = new Desplegable('idioma', $a_locales, $idioma, true);

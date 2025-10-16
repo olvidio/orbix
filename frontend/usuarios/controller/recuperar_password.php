@@ -28,19 +28,14 @@ if (empty($Qusername)) {
 
 $url_index = $_SERVER['HTTP_REFERER'];
 $url = str_replace('index.php', '', $url_index);
-$url_lista_backend = Hash::cmdSinParametros($url . 'src/usuarios/infrastructure/controllers/recuperar_password_mail.php');
-
-$oHash = new Hash();
-$oHash->setUrl($url_lista_backend);
-$oHash->setArrayCamposHidden([
+$url_backend = $url . 'src/usuarios/infrastructure/controllers/recuperar_password_mail.php';
+$a_campos = [
     'username' => $Qusername,
     'esquema' => $Qesquema,
     'ubicacion' => $Qubicacion,
     'esquema_web' => $Qesquema_web,
-]);
-$hash_params = $oHash->getArrayCampos();
-
-$data = PostRequest::getData($url_lista_backend, $hash_params);
+];
+$data = PostRequest::getDataFromUrl($url_backend, $a_campos);
 
 $error_txt = $data['error_txt'];
 $email = $data['email'];

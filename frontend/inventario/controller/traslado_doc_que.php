@@ -14,14 +14,8 @@ $oPosicion->recordar();
 
 
 // muestra los ctr que tienen el documento.
-$url_lista_backend = Hash::cmdSinParametros(ConfigGlobal::getWeb()
-    . '/src/inventario/infrastructure/controllers/lista_de_ctr.php'
-);
-$oHash = new Hash();
-$oHash->setUrl($url_lista_backend);
-$hash_params = $oHash->getArrayCampos();
-
-$data = PostRequest::getData($url_lista_backend, $hash_params);
+$url_backend = '/src/inventario/infrastructure/controllers/lista_de_ctr.php';
+$data = PostRequest::getDataFromUrl($url_backend);
 
 $a_opciones = $data['a_opciones'];
 

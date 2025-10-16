@@ -15,16 +15,10 @@ $oPosicion->recordar();
 $Qfiltro_grupo = (string)filter_input(INPUT_POST, 'filtro_grupo');
 
 
-$url_lista_backend = Hash::cmdSinParametros(ConfigGlobal::getWeb()
-    . '/src/menus/infrastructure/controllers/lista_grup_menus.php'
-);
-$oHash = new Hash();
-$oHash->setUrl($url_lista_backend);
-$hash_params = $oHash->getArrayCampos();
+$url_backend = '/src/menus/infrastructure/controllers/lista_grup_menus.php';
+$data = PostRequest::getDataFromUrl($url_backend);
 
-$data = PostRequest::getData($url_lista_backend, $hash_params);
-
-$aOpciones = $data['a_opciones'];
+$aOpciones = $data['a_lista'];
 
 $oDesplGM = new Desplegable('', $aOpciones, '', true);
 $oDesplGM->setOpcion_sel($Qfiltro_grupo);

@@ -28,18 +28,9 @@ require_once("frontend/shared/global_header_front.inc");
 $Qid_item = empty($_GET['id_item']) ? '' : $_GET['id_item'];
 
 /////////// Consulta al backend ///////////////////
-$url_lista_backend = Hash::cmdSinParametros(ConfigGlobal::getWeb()
-    . '/src/certificados/infrastructure/controllers/certificado_emitido_imprimir_mpdf_datos.php'
-);
-
-$oHash = new Hash();
-$oHash->setUrl($url_lista_backend);
-$oHash->setArrayCamposHidden([
-    'id_item' => $Qid_item,
-]);
-$hash_params = $oHash->getArrayCampos();
-
-$data = PostRequest::getData($url_lista_backend, $hash_params);
+$url_backend = '/src/certificados/infrastructure/controllers/certificado_emitido_imprimir_mpdf_datos.php';
+$a_campos = ['id_item' => $Qid_item ];
+$data = PostRequest::getDataFromUrl($url_backend, $a_campos);
 
 $error = $data['error'];
 if ($error) {

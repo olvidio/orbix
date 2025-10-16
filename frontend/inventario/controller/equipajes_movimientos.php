@@ -10,15 +10,9 @@ require_once("frontend/shared/global_header_front.inc");
 
 $a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 
-$url_lista_backend = Hash::cmdSinParametros(ConfigGlobal::getWeb()
-    . '/src/inventario/infrastructure/controllers/equipajes_movimientos.php'
-);
-$oHash = new Hash();
-$oHash->setUrl($url_lista_backend);
-$oHash->setArrayCamposHidden(['sel' => $a_sel]);
-$hash_params = $oHash->getArrayCampos();
-
-$data = PostRequest::getData($url_lista_backend, $hash_params);
+$url_backend = '/src/inventario/infrastructure/controllers/equipajes_movimientos.php';
+$a_campos = [ 'sel' => $a_sel];
+$data = PostRequest::getDataFromUrl($url_backend, $a_campos);
 
 $aCambios = $data['aCambios'];
 $aLugaresPorEgm = $data['aLugaresPorEgm'];

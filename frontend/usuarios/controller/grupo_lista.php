@@ -32,16 +32,9 @@ $Qusername = (string)filter_input(INPUT_POST, 'username');
 $oPosicion->setParametros(array('username' => $Qusername), 1);
 
 
-$url_lista_backend = Hash::cmdSinParametros(ConfigGlobal::getWeb()
-    . '/src/usuarios/infrastructure/controllers/grupo_lista.php'
-);
-
-$oHash = new Hash();
-$oHash->setUrl($url_lista_backend);
-$oHash->setArrayCamposHidden(['username' => $Qusername]);
-$hash_params = $oHash->getArrayCampos();
-
-$data = PostRequest::getData($url_lista_backend, $hash_params);
+$url_backend = '/src/usuarios/infrastructure/controllers/grupo_lista.php';
+$a_campos = ['username' => $Qusername];
+$data = PostRequest::getDataFromUrl($url_backend, $a_campos);
 
 $a_cabeceras = $data['a_cabeceras'];
 $a_botones = $data['a_botones'];

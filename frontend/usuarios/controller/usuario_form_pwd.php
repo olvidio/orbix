@@ -18,21 +18,11 @@ $oMiUsuario = ConfigGlobal::MiUsuario();
 $id_usuario = $oMiUsuario->getId_usuario();
 
 //////////////////////// Datos del usuario ///////////////////////////////////////////////////
-$url_usuario_form_backend = Hash::cmdSinParametros(ConfigGlobal::getWeb()
-    . '/src/usuarios/infrastructure/controllers/usuario_info.php'
-);
-
-$oHash = new Hash();
-$oHash->setUrl($url_usuario_form_backend);
-$oHash->setArrayCamposHidden(
-    ['id_usuario' => $id_usuario,
-    ]);
-$hash_params = $oHash->getArrayCampos();
-
-$data = PostRequest::getData($url_usuario_form_backend, $hash_params);
+$url_backend = '/src/usuarios/infrastructure/controllers/usuario_info.php';
+$a_campos = ['id_usuario' => $id_usuario];
+$data = PostRequest::getDataFromUrl($url_backend, $a_campos);
 
 $usuario = $data['usuario'];
-//$pass = $data['pass'];
 
 $oHash = new Hash();
 $oHash->setCamposForm('password!password1');

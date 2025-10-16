@@ -47,16 +47,9 @@ if (isset($_POST['stack'])) {
 $oPosicion->setParametros(array('id_role' => $Qid_role), 1);
 
 
-$url_lista_backend = Hash::cmdSinParametros(ConfigGlobal::getWeb()
-    . '/src/usuarios/infrastructure/controllers/role_info.php'
-);
-
-$oHash = new Hash();
-$oHash->setUrl($url_lista_backend);
-$oHash->setArrayCamposHidden(['id_role' => $Qid_role]);
-$hash_params = $oHash->getArrayCampos();
-
-$data = PostRequest::getData($url_lista_backend, $hash_params);
+$url_backend = '/src/usuarios/infrastructure/controllers/role_info.php';
+$a_campos = ['id_role' => $Qid_role];
+$data = PostRequest::getDataFromUrl($url_backend, $a_campos);
 
 $a_cabeceras = $data['a_cabeceras'];
 $a_botones = $data['a_botones'];

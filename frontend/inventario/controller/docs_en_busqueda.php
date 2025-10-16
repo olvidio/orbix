@@ -11,15 +11,8 @@ require_once("frontend/shared/global_header_front.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
 // muestra los documentos en búsqueda.
-$url_lista_backend = Hash::cmdSinParametros(ConfigGlobal::getWeb()
-    . '/src/inventario/infrastructure/controllers/lista_docs_en_busqueda.php'
-);
-$oHash = new Hash();
-$oHash->setUrl($url_lista_backend);
-//$oHash->setArrayCamposHidden(['id_tipo_doc' => $Qid_tipo_doc]);
-$hash_params = $oHash->getArrayCampos();
-
-$data = PostRequest::getData($url_lista_backend, $hash_params);
+$url_backend = '/src/inventario/infrastructure/controllers/lista_docs_en_busqueda.php';
+$data = PostRequest::getDataFromUrl($url_backend);
 
 $a_valores = $data['a_valores'];
 

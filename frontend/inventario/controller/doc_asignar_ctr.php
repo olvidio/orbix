@@ -19,18 +19,12 @@ $str_selected_id = rawurlencode(json_encode($a_sel));
 $oPosicion->recordar();
 
 // muestra los ctr que tienen el documento.
-$url_lista_backend = Hash::cmdSinParametros(ConfigGlobal::getWeb()
-    . '/src/inventario/infrastructure/controllers/lista_docs_asignar_ctr.php'
-);
-$oHash = new Hash();
-$oHash->setUrl($url_lista_backend);
-$oHash->setArrayCamposHidden([
+$url_backend = '/src/inventario/infrastructure/controllers/lista_docs_asignar_ctr.php';
+$a_campos = [
     'id_tipo_doc' => $Qid_tipo_doc,
     'sel' => $a_sel,
-]);
-$hash_params = $oHash->getArrayCampos();
-
-$data = PostRequest::getData($url_lista_backend, $hash_params);
+];
+$data = PostRequest::getDataFromUrl($url_backend, $a_campos);
 
 $a_valores = $data['a_valores'];
 $nombreDoc = $data['nombreDoc'];

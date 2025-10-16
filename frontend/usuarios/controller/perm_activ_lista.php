@@ -18,16 +18,9 @@ if (empty($Qolvidar)) {
     $oPosicion->recordar();
 }
 
-$url = Hash::cmdSinParametros(ConfigGlobal::getWeb()
-    . '/src/usuarios/infrastructure/controllers/perm_activ_lista.php'
-);
-
-$oHash = new Hash();
-$oHash->setUrl($url);
-$oHash->setArrayCamposHidden(['id_usuario' => $Qid_usuario]);
-$hash_params = $oHash->getArrayCampos();
-
-$data = PostRequest::getData($url, $hash_params);
+$url_backend = '/src/usuarios/infrastructure/controllers/perm_activ_lista.php';
+$a_campos = ['id_usuario' => $Qid_usuario];
+$data = PostRequest::getDataFromUrl($url_backend, $a_campos);
 
 $a_cabeceras = $data['a_cabeceras'];
 $a_botones = $data['a_botones'];

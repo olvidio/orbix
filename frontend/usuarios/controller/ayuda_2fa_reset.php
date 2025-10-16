@@ -27,17 +27,12 @@ $a_cosas = ['url_index' => $Qurl_index, 'username' => $Qusername, 'ubicacion' =>
 $linkEnviarMail2fa = 'recuperar_2fa.php?' . http_build_query($a_cosas);
 
 $url = str_replace('index.php', '', $Qurl_index);
-$url_lista_backend = Hash::cmdSinParametros($url . 'src/usuarios/infrastructure/controllers/usuario_ayuda_info.php');
-
-$oHash = new Hash();
-$oHash->setUrl($url_lista_backend);
-$oHash->setArrayCamposHidden([
+$url_backend = $url . 'src/usuarios/infrastructure/controllers/usuario_ayuda_info.php';
+$a_campos = [
     'username' => $Qusername,
     'esquema' => $Qesquema,
-]);
-$hash_params = $oHash->getArrayCampos();
-
-$data = PostRequest::getData($url_lista_backend, $hash_params);
+];
+$data = PostRequest::getDataFromUrl($url_backend, $a_campos);
 
 $errores = $data['errores'];
 $emailOfuscado = $data['emailOfuscado'];

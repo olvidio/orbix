@@ -62,22 +62,15 @@ if (!empty($Qguardar)) {
     // Codificar el PDF en base64 para envío seguro
     $pdf_base64 = base64_encode($pdf);
     $certificado_base64 = base64_encode($certificado);
-    $url_lista_backend = Hash::cmdSinParametros(ConfigGlobal::getWeb()
-        . '/src/certificados/infrastructure/controllers/certificado_emitido_guardar_pdf.php'
-    );
 
-    $oHash = new Hash();
-    $oHash->setUrl($url_lista_backend);
-    $oHash->setArrayCamposHidden([
+    $url_backend = '/src/certificados/infrastructure/controllers/certificado_emitido_guardar_pdf.php';
+    $a_campos = [
         'id_item' => $Qid_item,
         'id_nom' => $id_nom,
         'certificado' => $certificado_base64,
         'pdf' => $pdf_base64,
-    ]);
-    $oHash->setCamposNo('pdf');
-
-    $hash_params = $oHash->getArrayCampos();
-    $data = PostRequest::getData($url_lista_backend, $hash_params);
+    ];
+    $data = PostRequest::getDataFromUrl($url_backend, $a_campos);
 
     if (!empty($data['error'])) {
         echo($data['error']);

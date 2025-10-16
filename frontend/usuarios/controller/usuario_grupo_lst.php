@@ -11,16 +11,9 @@ require_once("frontend/shared/global_header_front.inc");
 
 $Qid_usuario = (integer)filter_input(INPUT_POST, 'id_usuario');
 
-$url_lista_backend = Hash::cmdSinParametros(ConfigGlobal::getWeb()
-    . '/src/usuarios/infrastructure/controllers/usuario_grupo_lst.php'
-);
-
-$oHash = new Hash();
-$oHash->setUrl($url_lista_backend);
-$oHash->setArrayCamposHidden(['id_usuario' => $Qid_usuario]);
-$hash_params = $oHash->getArrayCampos();
-
-$data = PostRequest::getData($url_lista_backend, $hash_params);
+$url_backend = '/src/usuarios/infrastructure/controllers/usuario_grupo_lst.php';
+$a_campos = ['id_usuario' => $Qid_usuario];
+$data = PostRequest::getDataFromUrl($url_backend, $a_campos);
 
 $a_cabeceras = $data['a_cabeceras'];
 $a_botones = $data['a_botones'];

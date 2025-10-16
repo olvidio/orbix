@@ -16,14 +16,8 @@ $Qid_equipaje = (int)filter_input(INPUT_POST, 'id_equipaje');
 $Qid_item_egm = (int)filter_input(INPUT_POST, 'id_item_egm');
 
 // posibles tipos de documento
-$url_lista_backend = Hash::cmdSinParametros(ConfigGlobal::getWeb()
-    . '/src/inventario/infrastructure/controllers/lista_tipo_doc.php'
-);
-$oHash = new Hash();
-$oHash->setUrl($url_lista_backend);
-$hash_params = $oHash->getArrayCampos();
-
-$data = PostRequest::getData($url_lista_backend, $hash_params);
+$url_backend = '/src/inventario/infrastructure/controllers/lista_tipo_doc.php';
+$data = PostRequest::getDataFromUrl($url_backend);
 
 $a_opciones = $data['a_opciones'];
 

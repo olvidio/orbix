@@ -19,34 +19,16 @@ $oMiUsuario = ConfigGlobal::MiUsuario();
 $id_usuario = $oMiUsuario->getId_usuario();
 
 //////////////////////// Datos del usuario ///////////////////////////////////////////////////
-$url_usuario_form_backend = Hash::cmdSinParametros(ConfigGlobal::getWeb()
-    . '/src/usuarios/infrastructure/controllers/usuario_info.php'
-);
-
-$oHash = new Hash();
-$oHash->setUrl($url_usuario_form_backend);
-$oHash->setArrayCamposHidden(
-    ['id_usuario' => $id_usuario,
-    ]);
-$hash_params = $oHash->getArrayCampos();
-
-$data = PostRequest::getData($url_usuario_form_backend, $hash_params);
+$url_backend = '/src/usuarios/infrastructure/controllers/usuario_info.php';
+$a_campos = [ 'id_usuario' => $id_usuario ];
+$data = PostRequest::getDataFromUrl($url_backend, $a_campos);
 
 $usuario = $data['usuario'];
 
 // Verificar si el usuario tiene 2FA habilitado
-$url_2fa_info_backend = Hash::cmdSinParametros(ConfigGlobal::getWeb()
-    . '/src/usuarios/infrastructure/controllers/usuario_2fa_info.php'
-);
-
-$oHash2fa = new Hash();
-$oHash2fa->setUrl($url_2fa_info_backend);
-$oHash2fa->setArrayCamposHidden(
-    ['id_usuario' => $id_usuario,
-    ]);
-$hash_2fa_params = $oHash2fa->getArrayCampos();
-
-$data = PostRequest::getData($url_2fa_info_backend, $hash_2fa_params);
+$url_backend = '/src/usuarios/infrastructure/controllers/usuario_2fa_info.php';
+$a_campos = [ 'id_usuario' => $id_usuario ];
+$data = PostRequest::getDataFromUrl($url_backend, $a_campos);
 
 $has_2fa = isset($data['has_2fa']) ? $data['has_2fa'] : false;
 $secret_2fa = isset($data['secret_2fa']) ? $data['secret_2fa'] : '';
@@ -66,7 +48,7 @@ if (ConfigGlobal::WEBDIR === 'pruebas') {
 if (!ServerConf::$dmz) {
     $appName .= '-interior';
 }
-if (ServerConf::SERVIDOR === 'orbix.docker') {
+if (preg_match('/(.*?)\.docker/',ServerConf::SERVIDOR )) {
     $appName .= '-docker';
 }
 $qr_url = get_qr_code_data($usuario, $secret_2fa, $appName);

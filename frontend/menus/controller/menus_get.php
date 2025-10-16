@@ -23,14 +23,8 @@ $Qfiltro_grupo = (string)filter_input(INPUT_POST, 'filtro_grupo');
 $Qnuevo = (string)filter_input(INPUT_POST, 'nuevo');
 $Qid_menu = (string)filter_input(INPUT_POST, 'id_menu');
 
-$url_lista_backend = Hash::cmdSinParametros(ConfigGlobal::getWeb()
-    . '/src/menus/infrastructure/controllers/lista_meta_menus.php'
-);
-$oHash = new Hash();
-$oHash->setUrl($url_lista_backend);
-$hash_params = $oHash->getArrayCampos();
-
-$data = PostRequest::getData($url_lista_backend, $hash_params);
+$url_backend = '/src/menus/infrastructure/controllers/lista_meta_menus.php';
+$data = PostRequest::getDataFromUrl($url_backend);
 
 $aOpciones = $data['a_opciones'];
 
@@ -38,16 +32,10 @@ $oDesplMeta = new Desplegable('', $aOpciones, '', true);
 $oDesplMeta->setNombre('id_metamenu');
 
 
-$url_lista_backend = Hash::cmdSinParametros(ConfigGlobal::getWeb()
-    . '/src/menus/infrastructure/controllers/lista_grup_menus.php'
-);
-$oHash = new Hash();
-$oHash->setUrl($url_lista_backend);
-$hash_params = $oHash->getArrayCampos();
+$url_backend = '/src/menus/infrastructure/controllers/lista_grup_menus.php';
+$data = PostRequest::getDataFromUrl($url_backend);
 
-$data = PostRequest::getData($url_lista_backend, $hash_params);
-
-$aOpciones = $data['a_opciones'];
+$aOpciones = $data['a_lista'];
 
 $oDesplGM = new Desplegable('', $aOpciones, '', true);
 $oDesplGM->setNombre('gm_new');

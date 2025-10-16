@@ -139,14 +139,8 @@ class ListaAgrupar
     {
         if (empty($this->aOpciones)) {
             //-------- listado de colecciones -----------------------------------
-            $url_lista_backend = Hash::link(ConfigGlobal::getWeb()
-                . '/src/inventario/infrastructure/controllers/lista_colecciones.php'
-            );
-            $oHash = new Hash();
-            $oHash->setUrl($url_lista_backend);
-            $hash_params = $oHash->getArrayCampos();
-
-            $data = PostRequest::getData($url_lista_backend, $hash_params);
+            $url_backend = '/src/inventario/infrastructure/controllers/lista_colecciones.php';
+            $data = PostRequest::getDataFromUrl($url_backend);
 
             $this->aOpciones = $data['a_opciones'];
         }

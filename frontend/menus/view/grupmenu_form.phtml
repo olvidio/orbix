@@ -1,0 +1,39 @@
+<script>
+    fnjs_cancelar=function(){
+        <?= $oPosicion->js_atras(1) ?>
+    }
+    fnjs_guardar = function (formulario) {
+        let rr = fnjs_comprobar_campos(formulario, '\\src\\menus\\domain\\entity\\GrupMenu');
+        if (rr === 'ok') {
+            let datos = $(formulario).serialize();
+            let request = $.ajax({
+                data: datos,
+                url: 'src/menus/infrastructure/controllers/grupmenu_guardar.php',
+                method: 'POST',
+                dataType: 'json'
+            });
+            request.done(function (json) {
+                if (json.success !== true) {
+                    alert("<?= _("respuesta") ?>" + ': ' + json.mensaje);
+                } else {
+                    <?= $oPosicion->js_atras(1); ?>
+                }
+            });
+        }
+    }
+</script>
+<?= $oPosicion->mostrar_left_slide(1); ?>
+<h3><?= _("grupmenú") ?>: <?= $grupmenu ?></h3>
+<form id="frm_grupmenu" name="frm_grupmenu" action="" method="post">
+    <?= $oHashG->getCamposHtml(); ?>
+    <input type=hidden id=grupmenu_que name=que value="">
+    <br>
+    <?= ucfirst(_("grupmenu")) ?>:<input type=text name=grupmenu value="<?= $grupmenu ?>">
+    <br>
+    <?= ucfirst(_("orden")) ?>:<input type=text name=orden value="<?= $orden ?>">
+    <br>
+    <br>
+    <input type=button onclick="fnjs_guardar(this.form);" value="<?= $txt_guardar ?>">
+    <input type=button onclick="fnjs_cancelar();" value="<?= _("Cancelar") ?>">
+    <br>
+</form>

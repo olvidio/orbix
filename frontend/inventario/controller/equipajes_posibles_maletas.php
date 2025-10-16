@@ -11,15 +11,9 @@ require_once("frontend/shared/global_header_front.inc");
 
 $Qid_equipaje = (string)filter_input(INPUT_POST, 'id_equipaje');
 
-$url_lista_backend = Hash::cmdSinParametros(ConfigGlobal::getWeb()
-    . '/src/inventario/infrastructure/controllers/lista_equipajes_posibles_maletas.php'
-);
-$oHash = new Hash();
-$oHash->setUrl($url_lista_backend);
-$oHash->setArrayCamposHidden(['id_equipaje' => $Qid_equipaje]);
-$hash_params = $oHash->getArrayCampos();
-
-$data = PostRequest::getData($url_lista_backend, $hash_params);
+$url_backend = '/src/inventario/infrastructure/controllers/lista_equipajes_posibles_maletas.php';
+$a_campos = [ 'id_equipaje' => $Qid_equipaje];
+$data = PostRequest::getDataFromUrl($url_backend, $a_campos);
 
 $a_opciones = $data['a_opciones'];
 $new_id_grupo = $data['new_id_grupo'];

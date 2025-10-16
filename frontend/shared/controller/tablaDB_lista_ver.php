@@ -69,9 +69,7 @@ if (empty($Qk_buscar)) {
      **********************************************************************/
 
     // pedir a Info los datos necesarios para mostrar el formulario de búsqueda
-    $url_lista_buscar_backend = Hash::cmdSinParametros(ConfigGlobal::getWeb()
-        . '/src/shared/infrastructure/controllers/tablaDB_buscar_datos.php'
-    );
+    $url_backend = '/src/shared/infrastructure/controllers/tablaDB_buscar_datos.php';
     $a_campos = [
         'clase_info' => $Qclase_info,
         'k_buscar' => $Qk_buscar,
@@ -79,11 +77,7 @@ if (empty($Qk_buscar)) {
         'id_pau' => $Qid_pau,
         'obj_pau' => $Qobj_pau,
     ];
-    $oHash = new Hash();
-    $oHash->setUrl($url_lista_buscar_backend);
-    $oHash->setArrayCamposHidden($a_campos);
-    $hash_params = $oHash->getArrayCampos();
-    $data = PostRequest::getData($url_lista_buscar_backend, $hash_params);
+    $data = PostRequest::getDataFromUrl($url_backend, $a_campos);
 
     $a_campos_buscar = $data['a_campos'];
     $datos_buscar = empty($data['buscar_view'])? '' : $data['buscar_view'];
@@ -117,9 +111,7 @@ if (empty($Qk_buscar)) {
  **********************************************************************/
 
 // pedir a Info los datos necesarios para mostrar la tabla
-$url_lista_backend = Hash::cmdSinParametros(ConfigGlobal::getWeb()
-    . '/src/shared/infrastructure/controllers/tablaDB_lista_datos.php'
-);
+$url_backend = '/src/shared/infrastructure/controllers/tablaDB_lista_datos.php';
 $a_campos = [
     'clase_info' => $Qclase_info,
     'k_buscar' => $Qk_buscar,
@@ -127,11 +119,7 @@ $a_campos = [
     'id_pau' => $Qid_pau,
     'obj_pau' => $Qobj_pau,
 ];
-$oHash = new Hash();
-$oHash->setUrl($url_lista_backend);
-$oHash->setArrayCamposHidden($a_campos);
-$hash_params = $oHash->getArrayCampos();
-$data = PostRequest::getData($url_lista_backend, $hash_params);
+$data = PostRequest::getDataFromUrl($url_backend, $a_campos);
 
 $txt_explicacion = $data['explicacion'];
 $txt_titulo = $data['titulo'];

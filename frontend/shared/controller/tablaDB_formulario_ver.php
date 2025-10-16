@@ -70,20 +70,14 @@ if (!empty($Qobj_pau)) {
     $Qgo_to = Hash::link(ConfigGlobal::getWeb() . "/src/shared/infrastructure/controllers/tablaDB_lista_datos.php?$sQuery");
 }
 
-$url_backend = Hash::cmdSinParametros(ConfigGlobal::getWeb()
-    . '/src/shared/infrastructure/controllers/tablaDB_formulario_datos.php'
-);
-$clase_info = urlencode($Qclase_info);
-$oHash = new Hash();
-$oHash->setUrl($url_backend);
-$oHash->setArrayCamposHidden([
-    'clase_info' => $clase_info,
+$url_backend = '/src/shared/infrastructure/controllers/tablaDB_formulario_datos.php';
+$parametros = [
+    'clase_info' => $Qclase_info,
     'a_pkey' => $a_pkey,
     'obj_pau' => $Qobj_pau,
     'mod' => $Qmod,
-]);
-$hash_params = $oHash->getArrayCampos();
-$data = PostRequest::getData($url_backend, $hash_params);
+];
+$data = PostRequest::getDataFromUrl($url_backend, $parametros);
 
 $fields = $data['fields'];
 $tit_txt = $data['tit_txt'];
@@ -116,7 +110,7 @@ $a_campos = [
     'explicacion_txt' => $explicacion_txt,
     'web_depende' => $web_depende,
     'h_depende' => $h_depende,
-    'clase_info' => $clase_info,
+    'clase_info' => $Qclase_info,
 ];
 
 $oView = new ViewNewPhtml('frontend\shared\controller');

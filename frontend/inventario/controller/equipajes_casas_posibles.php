@@ -17,12 +17,8 @@ $Qempiezamax = (string)filter_input(INPUT_POST, 'empiezamax');
 $Qinicio = (string)filter_input(INPUT_POST, 'inicio');
 $Qfin = (string)filter_input(INPUT_POST, 'fin');
 
-$url_lista_backend = Hash::cmdSinParametros(ConfigGlobal::getWeb()
-    . '/src/inventario/infrastructure/controllers/lista_casas_posibles_periodo.php'
-);
-$oHash = new Hash();
-$oHash->setUrl($url_lista_backend);
-$aCamposHidden = [
+$url_backend = '/src/inventario/infrastructure/controllers/lista_casas_posibles_periodo.php';
+$a_campos = [
     'periodo' => $Qperiodo,
     'year' => $Qyear,
     'empiezamin' => $Qempiezamin,
@@ -30,10 +26,7 @@ $aCamposHidden = [
     'incio' => $Qinicio,
     'fin' => $Qfin,
 ];
-$oHash->setArrayCamposHidden($aCamposHidden);
-$hash_params = $oHash->getArrayCampos();
-
-$data = PostRequest::getData($url_lista_backend, $hash_params);
+$data = PostRequest::getDataFromUrl($url_backend, $a_campos);
 
 $a_opciones = $data['a_opciones'];
 

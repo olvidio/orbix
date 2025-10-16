@@ -51,19 +51,12 @@ if (isset($_POST['stack'])) {
 $oPosicion->setParametros(array('id_usuario' => $Qid_usuario), 1);
 
 //////////////////////// Usuario o Grupo ///////////////////////////////////////////////////
-$url_usuario_form_backend = Hash::cmdSinParametros(ConfigGlobal::getWeb()
-    . '/src/usuarios/infrastructure/controllers/usuario_form.php'
-);
-
-$oHash = new Hash();
-$oHash->setUrl($url_usuario_form_backend);
-$oHash->setArrayCamposHidden(
-    ['id_usuario' => $Qid_usuario,
+$url_backend = '/src/usuarios/infrastructure/controllers/usuario_form.php';
+$a_campos = [
+        'id_usuario' => $Qid_usuario,
         'quien' => $Qquien
-    ]);
-$hash_params = $oHash->getArrayCampos();
-
-$data = PostRequest::getData($url_usuario_form_backend, $hash_params);
+    ];
+$data = PostRequest::getDataFromUrl($url_backend, $a_campos);
 
 $a_campos_src = $data['a_campos'];
 
@@ -160,18 +153,9 @@ $oView->renderizar('usuario_form.phtml', $a_campos);
 // los nuevos no tienen lo que sigue.
 if (!empty($Qid_usuario)) {
     //////////////////////// Grupos del usuario ///////////////////////////////////////////////////
-    $url_usuario_form_backend = Hash::cmdSinParametros(ConfigGlobal::getWeb()
-        . '/src/usuarios/infrastructure/controllers/usuario_info.php'
-    );
-
-    $oHash = new Hash();
-    $oHash->setUrl($url_usuario_form_backend);
-    $oHash->setArrayCamposHidden(
-        ['id_usuario' => $Qid_usuario,
-        ]);
-    $hash_params = $oHash->getArrayCampos();
-
-    $data = PostRequest::getData($url_usuario_form_backend, $hash_params);
+    $url_backend = '/src/usuarios/infrastructure/controllers/usuario_info.php';
+    $a_campos = [ 'id_usuario' => $Qid_usuario ];
+    $data = PostRequest::getDataFromUrl($url_backend, $a_campos);
 
     $a_campos['grupos_txt'] = $data['grupos_txt'];
 

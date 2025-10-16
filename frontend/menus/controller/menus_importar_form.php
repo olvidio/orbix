@@ -11,15 +11,8 @@ require_once("frontend/shared/global_header_front.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
 // lista de menus disponibles:
-$url_lista_backend = Hash::cmdSinParametros(ConfigGlobal::getWeb()
-    . '/src/menus/infrastructure/controllers/lista_templates.php'
-);
-$oHash = new Hash();
-$oHash->setUrl($url_lista_backend);
-$oHash->setArrayCamposHidden([]);
-$hash_params = $oHash->getArrayCampos();
-
-$data = PostRequest::getData($url_lista_backend, $hash_params);
+$url_backend = '/src/menus/infrastructure/controllers/lista_templates.php';
+$data = PostRequest::getDataFromUrl($url_backend);
 
 $a_opciones = $data['a_opciones'];
 $oDesplTemplates = new Desplegable('id_template_menu', $a_opciones, '', true);
