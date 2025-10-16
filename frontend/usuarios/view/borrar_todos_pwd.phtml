@@ -1,0 +1,52 @@
+<?php
+
+use core\ConfigGlobal;
+use frontend\shared\web\Hash;
+
+?>
+<script>
+    fnjs_borrar_todos_pwd = function (formulario) {
+        if (confirm("<?= _("¿Está seguro que desea poner el login como contraseña para todos los usuarios (excepto superusuario)?") ?>")) {
+            let url = '<?= ConfigGlobal::getWeb() ?>/src/usuarios/infrastructure/controllers/borrar_pwd.php';
+            let datos = $(formulario).serialize();
+            let request = $.ajax({
+                data: datos,
+                url: url,
+                method: 'POST',
+                dataType: 'json'
+            });
+            request.done(function (json) {
+                if (json.success !== true) {
+                    alert("<?= _("respuesta") ?>" + ': ' + json.mensaje);
+                } else {
+                    let info = '';
+                    try {
+                        // json.data puede venir como objeto ya decodificado por algunos flujos
+                        let data = (typeof json.data === 'string') ? JSON.parse(json.data) : json.data;
+                        if (data && typeof data.actualizados !== 'undefined') {
+                            info = '<?= _("Usuarios actualizados:") ?> ' + data.actualizados;
+                        }
+                    } catch (e) {
+                        // ignorar errores de parseo
+                    }
+                    if (info === '') {
+                        info = '<?= _("Operación completada") ?>';
+                    }
+                    alert(info);
+                }
+            });
+        }
+    }
+    fnjs_left_side_hide();
+</script>
+<h1><?= _("Borrar/Resetear contraseñas") ?></h1>
+<p class="comentario">
+    <?= _("Esta acción pondrá como contraseña el mismo valor que el login para todos los usuarios en todos los esquemas de pruebas (excepto el superusuario).") ?>
+</p>
+<br>
+<form id="frm_borrar_todos_pwd" name="frm_borrar_todos_pwd" action="" method="post">
+    <?= $oHash->getCamposHtml() ?>
+    <button type="button" class="btn btn-danger" onclick="fnjs_borrar_todos_pwd(this.form)">
+        <?= _("Borrar/Resetear todas las contraseñas (solo PRUEBAS)") ?>
+    </button>
+</form>
