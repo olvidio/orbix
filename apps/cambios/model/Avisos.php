@@ -49,8 +49,8 @@ class Avisos
             if (file_exists($filename)) {
                 $fileContent = file_get_contents($filename);
                 if (!empty($fileContent)) {
-                    // Comprobar que no sea por que el anterior ha dadao un error y 
-                    // no se ha borrado. Miaramos que sea de hace más de 15 min.
+                    // Comprobar que no sea por que el anterior ha dado un error y
+                    // no se ha borrado. Miramos que sea de hace más de 15 min.
                     $delta = 15;
                     $matches = [];
                     preg_match('@(\d+/\d+/\d+ \d+:\d+:\d+) -- .*@', $fileContent, $matches);
