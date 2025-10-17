@@ -124,9 +124,9 @@ class Avisos
             $oCambioUsuario->setId_usuario($this->id_usuario);
             $oCambioUsuario->setSfsv($sfsv);
             $oCambioUsuario->setAviso_tipo($aviso_tipo);
-            //echo "id_item_cmb: $id_item_cmb, id_usuario: $id_usuario, aviso_tipo: $aviso_tipo \n";
             if ($oCambioUsuario->DBGuardar() === false) {
-                echo ConfigGlobal::$web_server . '-->' . date('Y/m/d') . " " . _("Hay un error, no se ha guardado");
+                echo ConfigGlobal::$web_server . '-->' . date('c') . " " . _("Hay un error, no se ha guardado");
+                echo "<br>id_item_cmb: $this->id_item_cmb, id_usuario: $this->id_usuario, aviso_tipo: $aviso_tipo <br>\n";
             }
         }
         //anotado($id_item_cmb); // En principio ya lo hace al final de todo.
@@ -164,6 +164,7 @@ class Avisos
         if ($oCambioAnotado->DBGuardar(true) === false) { //'true' para que no genere la tabla de avisos.
             echo _("Hay un error, no se ha guardado");
             echo _("anotado");
+            echo "<br>";
         }
     }
 

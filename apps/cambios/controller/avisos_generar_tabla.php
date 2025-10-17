@@ -347,8 +347,8 @@ while ($num_cambios) {
 }
 
 if (!empty($err_fila)) {
-    $err_tabla = _("apuntar cambio usuario");
-    $err_tabla .= " " . ConfigGlobal::$web_server . '-->' . date('Y/m/d') . " " . _("Ya existe") . ": ";
+    $err_tabla = _("error al apuntar cambio usuario en");
+    $err_tabla .= " " . ConfigGlobal::$web_server . '-->' . date('c') . ": " . _("Ya existe") . "<br>";
     $err_tabla .= '<table><tr>';
     $err_tabla .= '<th>' . _("schema") . '</th>';
     $err_tabla .= '<th>' . _("id_item_cmb") . '</th>';
