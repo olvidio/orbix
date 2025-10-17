@@ -131,7 +131,7 @@ while ($num_cambios) {
         // Para las actividades, en el cambio se anota: 'ActividadDl' 'ActividadEx'
         // pero en las preferencias, solo 'Actividad'.
         // OJO strpos no sirve, porque me anula ActividadCargo
-        if ($sObjeto == 'Actividad' || $sObjeto == 'ActividadDl' || $sObjeto == 'ActividadEx') {
+        if ($sObjeto === 'Actividad' || $sObjeto === 'ActividadDl' || $sObjeto === 'ActividadEx') {
             $sObjeto = 'Actividad';
         }
         // Para los asistentes, en el cambio se anota: 'Asistente' 'AsistenteDl' 'AsistenteEx' 'AsistenteIn' 'AsistenteOut'
@@ -139,7 +139,7 @@ while ($num_cambios) {
         if (strpos($sObjeto, 'Asistente') !== false) {
             $sObjeto = 'Asistente';
             // Para el caso de los sacd, el permiso es 'asistentessacd'
-            if ($propiedad_cmb == 'id_nom') {
+            if ($propiedad_cmb === 'id_nom') {
                 $id_nom = empty($valor_new_cmb) ? $valor_old_cmb : $valor_new_cmb;
                 $oPersonaSacd = new PersonaSacd($id_nom);
                 if (is_true($oPersonaSacd->getSacd())) {
@@ -196,7 +196,7 @@ while ($num_cambios) {
             $id_usuario = $oCambioUsuarioObjetoPref->getId_usuario();
             $aviso_tipo = $oCambioUsuarioObjetoPref->getAviso_tipo();
             $oAvisos->setId_usuario($id_usuario);
-            // con que cumpla una condicion para un mismo usuario basta, salto al siguiente cambio.
+            // con que cumpla una condición para un mismo usuario basta, salto al siguiente cambio.
             if ($apuntar && ($aviso_tipo == $aviso_tipo_anterior) && ($id_usuario == $id_usuario_anterior)) {
                 $apuntar = false;
                 continue;

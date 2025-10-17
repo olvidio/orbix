@@ -31,7 +31,7 @@ if (!empty($aRoles[$id_role]) && ($aRoles[$id_role] === 'p-sacd')) {
     if ($_SESSION['oConfig']->is_jefeCalendario()) {
         $id_nom_jefe = '';
     } else {
-        $id_nom_jefe = $oMiUsuario->getId_pau();
+        $id_nom_jefe = $oMiUsuario->getId_pauAsString();
         if (empty($id_nom_jefe)) {
             exit(_("No tiene permiso para ver esta página"));
         }

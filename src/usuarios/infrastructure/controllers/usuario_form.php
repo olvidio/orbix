@@ -92,7 +92,7 @@ if ($miRole < 4) { // es administrador
         $isSv = $oRole->isSv();
         $isSf = $oRole->isSf();
         if ($pau === Role::PAU_CDC) { //casa
-            $id_pau = $oUsuario->getId_pau();
+            $id_pau = $oUsuario->getId_pauAsString();
             $cond = '';
             switch ($seccion) {
                 case 1:
