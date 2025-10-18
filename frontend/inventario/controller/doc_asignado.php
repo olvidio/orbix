@@ -17,8 +17,11 @@ $oPosicion->recordar();
 
 // muestra los ctr que tienen el documento.
 $url_backend = '/src/inventario/infrastructure/controllers/lista_docs_asignados_por_tipo.php';
-$a_campos = ['id_tipo_doc' => $Qid_tipo_doc];
-$data = PostRequest::getDataFromUrl($url_backend, $a_campos);
+$a_campos_backend = ['id_tipo_doc' => $Qid_tipo_doc];
+$data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
+if (isset($data['error'])) {
+    echo $data['error'];
+}
 
 $a_cabeceras = $data['a_cabeceras'];
 $a_botones = $data['a_botones'];

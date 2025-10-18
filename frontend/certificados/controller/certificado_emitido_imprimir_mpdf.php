@@ -29,8 +29,11 @@ $Qid_item = empty($_GET['id_item']) ? '' : $_GET['id_item'];
 
 /////////// Consulta al backend ///////////////////
 $url_backend = '/src/certificados/infrastructure/controllers/certificado_emitido_imprimir_mpdf_datos.php';
-$a_campos = ['id_item' => $Qid_item ];
-$data = PostRequest::getDataFromUrl($url_backend, $a_campos);
+$a_campos_backend = ['id_item' => $Qid_item ];
+$data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
+if (isset($data['error'])) {
+    echo $data['error'];
+}
 
 $error = $data['error'];
 if ($error) {

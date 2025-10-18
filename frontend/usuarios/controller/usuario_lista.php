@@ -33,8 +33,11 @@ $oPosicion->setParametros(array('username' => $Qusername), 1);
 
 
 $url_backend = '/src/usuarios/infrastructure/controllers/usuario_lista.php';
-$a_campos = ['username' => $Qusername];
-$data = PostRequest::getDataFromUrl($url_backend, $a_campos);
+$a_campos_backend = ['username' => $Qusername];
+$data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
+if (isset($data['error'])) {
+    echo $data['error'];
+}
 if (!empty($data['error'])) {
    exit($data['error']);
 }

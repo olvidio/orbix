@@ -17,8 +17,11 @@ $Qid_lugar = (int)filter_input(INPUT_POST, $Qnom_grupo);
 
 
 $url_backend = '/src/inventario/infrastructure/controllers/lista_docs_de_lugar.php';
-$a_campos = [ 'id_lugar' => $Qid_lugar];
-$data = PostRequest::getDataFromUrl($url_backend, $a_campos);
+$a_campos_backend = [ 'id_lugar' => $Qid_lugar];
+$data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
+if (isset($data['error'])) {
+    echo $data['error'];
+}
 
 $a_valores = $data['a_valores'];
 

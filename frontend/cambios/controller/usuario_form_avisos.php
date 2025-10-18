@@ -18,8 +18,11 @@ $Qquien = (string)filter_input(INPUT_POST, 'quien');
 $oPosicion->recordar();
 
 $url_backend = '/apps/cambios/controller/usuario_form_avisos.php';
-$a_campos = ['id_usuario' => $Qid_usuario, 'quien' => $Qquien];
-$data = PostRequest::getDataFromUrl($url_backend, $a_campos);
+$a_campos_backend = ['id_usuario' => $Qid_usuario, 'quien' => $Qquien];
+$data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
+if (isset($data['error'])) {
+    echo $data['error'];
+}
 
 $a_valores_avisos = $data['a_valores'];
 $nombre_usuario = $data['nombre_usuario'];

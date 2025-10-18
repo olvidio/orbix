@@ -154,9 +154,11 @@ $oView->renderizar('usuario_form.phtml', $a_campos);
 if (!empty($Qid_usuario)) {
     //////////////////////// Grupos del usuario ///////////////////////////////////////////////////
     $url_backend = '/src/usuarios/infrastructure/controllers/usuario_info.php';
-    $a_campos = [ 'id_usuario' => $Qid_usuario ];
-    $data = PostRequest::getDataFromUrl($url_backend, $a_campos);
-
+    $a_campos_backend = [ 'id_usuario' => $Qid_usuario ];
+    $data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
+    if (isset($data['error'])) {
+        echo $data['error'];
+    }
     $a_campos['grupos_txt'] = $data['grupos_txt'];
 
     $oView = new ViewNewPhtml('frontend\usuarios\controller');

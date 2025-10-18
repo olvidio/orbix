@@ -21,8 +21,11 @@ $oPosicion->setParametros($aGoBack, 1);
 
 // muestra los ctr que tienen el documento.
 $url_backend = '/src/inventario/infrastructure/controllers/lista_de_ctr_con_docs.php';
-$a_campos = [ 'id_tipo_doc' => $Qid_tipo_doc, 'inventario' => $Qinventario];
-$data = PostRequest::getDataFromUrl($url_backend, $a_campos);
+$a_campos_backend = [ 'id_tipo_doc' => $Qid_tipo_doc, 'inventario' => $Qinventario];
+$data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
+if (isset($data['error'])) {
+    echo $data['error'];
+}
 
 $a_valores = $data['a_valores'];
 $nombreDoc = $data['nombreDoc'];
