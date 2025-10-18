@@ -112,6 +112,7 @@ $num_cambios = count($cNuevosCambios);
 $err_fila = '';
 // Repito el proceso por si se han apuntado cambios mientras estaba realizando el proceso.
 while ($num_cambios) {
+    $num_cambios_inicial = $num_cambios;
     foreach ($cNuevosCambios as $oCambio) {
         $afecta = '';
         $id_item_cmb = $oCambio->getId_item_cambio();
@@ -335,11 +336,11 @@ while ($num_cambios) {
         // Si he mirado todas las pref de usuarios, marco el cambio como anotado, aunque no coincida con ninguno.
         $oAvisos->anotado();
     }
-    // Si algo falla, el $num_cambios es el mismo y se genera un bucle infinito.
-    $num_cambios_old = $num_cambios;
+    // Si algo falla, el $num_cambios_inicial es igual al actual y se genera un bucle infinito.
+    // Si se han producido nuevos cambios durante el proceso, $numcambios no será 0 y se repite el proceso.
     $cNuevosCambios = $GesCambios->getCambiosNuevos();
     $num_cambios = count($cNuevosCambios);
-    if ($num_cambios === $num_cambios_old) {
+    if ($num_cambios === $num_cambios_inicial) {
         // igualmente borro el pid
         $oAvisos->borrar_pid($username, $esquema);
         exit (_("Algo falla"));
