@@ -98,7 +98,14 @@ class Avisos
 
     public function fn_apuntar($aviso_tipo)
     {
+        $archivo_log = ConfigGlobal::$directorio . "/log/errores.log";
+
         $sfsv = ConfigGlobal::mi_sfsv();
+
+        // Log de entrada
+        $msg = "fn_apuntar: schema={$this->id_schema_cmb}, item={$this->id_item_cmb}, usuario={$this->id_usuario}, tipo={$aviso_tipo}, sfsv={$sfsv}";
+        (new \Symfony\Component\HttpKernel\Log\Logger)->info($msg, (array)3, $archivo_log);
+
         // Asegurar que no existe:
         $aWhere = [];
         $aWhere['id_schema_cambio'] = $this->id_schema_cmb;
@@ -106,11 +113,19 @@ class Avisos
         $aWhere['sfsv'] = $sfsv;
         $aWhere['id_usuario'] = $this->id_usuario;
         $aWhere['aviso_tipo'] = $aviso_tipo;
+
         $oGesCambiosUsuario = new GestorCambioUsuario();
         $cCambioUsuario = $oGesCambiosUsuario->getCambiosUsuario($aWhere);
+
+        // Log del resultado de búsqueda
+        $msg = "fn_apuntar: Encontrados " . count($cCambioUsuario) . " registros existentes";
+        (new \Symfony\Component\HttpKernel\Log\Logger)->info($msg, (array)3, $archivo_log);
+
         // ya existe
         $err_fila = '';
         if (count($cCambioUsuario) > 0) {
+            $msg = "fn_apuntar: DUPLICADO DETECTADO - No se insertará";
+            (new \Symfony\Component\HttpKernel\Log\Logger)->info($msg, (array)3, $archivo_log);
             $err_fila .= "<tr>";
             $err_fila .= "<td>" . $this->id_schema_cmb . "</td>";
             $err_fila .= "<td>" . $this->id_item_cmb . "</td>";
@@ -118,21 +133,29 @@ class Avisos
             $err_fila .= "<td>" . $aviso_tipo . "</td>";
             $err_fila .= "</tr>";
         } else {
+            $msg = "fn_apuntar: Insertando nuevo registro";
+            (new \Symfony\Component\HttpKernel\Log\Logger)->info($msg, (array)3, $archivo_log);
             $oCambioUsuario = new CambioUsuario();
             $oCambioUsuario->setId_schema_cambio($this->id_schema_cmb);
             $oCambioUsuario->setId_item_cambio($this->id_item_cmb);
-            $oCambioUsuario->setId_usuario($this->id_usuario);
             $oCambioUsuario->setSfsv($sfsv);
+            $oCambioUsuario->setId_usuario($this->id_usuario);
             $oCambioUsuario->setAviso_tipo($aviso_tipo);
-            if ($oCambioUsuario->DBGuardar() === false) {
+
+            $resultado = $oCambioUsuario->DBGuardar();
+            $msg = "fn_apuntar: Resultado DBGuardar: " . ($resultado ? 'SUCCESS' : 'FAILED');
+            (new \Symfony\Component\HttpKernel\Log\Logger)->info($msg, (array)3, $archivo_log);
+
+            if ($resultado === false) {
                 echo ConfigGlobal::$web_server . '-->' . date('c') . " " . _("Hay un error, no se ha guardado");
                 echo "<br>id_item_cmb: $this->id_item_cmb, id_usuario: $this->id_usuario, aviso_tipo: $aviso_tipo <br>\n";
             }
         }
-        //anotado($id_item_cmb); // En principio ya lo hace al final de todo.
+
         if (!empty($err_fila)) {
             return $err_fila;
         }
+        return '';
     }
 
     public function anotado()
