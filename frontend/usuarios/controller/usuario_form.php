@@ -78,16 +78,16 @@ $oDesplRoles = new Desplegable('id_role', $aOpcionesRoles, $id_role, true);
 $a_campos['oDesplRoles'] = $oDesplRoles;
 
 if (!empty($a_campos_src['aDataDespl'])) {
-    $tipo = $a_campos_src['aDataDespl']['tipo'] = 'simple';
+    $tipo = $a_campos_src['aDataDespl']['tipo'];
     if ($tipo === 'simple') {
         $oDesplArrayCtrCasas = new DesplegableArray();
     } else {
         $oDesplArrayCtrCasas = new DesplegableArray();
-        $oDesplArrayCtrCasas->setNombre($a_campos_src['aDataDespl']['accionConjunto']);
+        $oDesplArrayCtrCasas->setAccionConjunto($a_campos_src['aDataDespl']['accionConjunto']);
     }
-    $oDesplArrayCtrCasas->setNombre($a_campos_src['aDataDespl']['nom']);
+    $oDesplArrayCtrCasas->setNomConjunto($a_campos_src['aDataDespl']['nom']);
     $oDesplArrayCtrCasas->setOpciones($a_campos_src['aDataDespl']['aOpciones']);
-    $oDesplArrayCtrCasas->setOpcion_sel($a_campos_src['aDataDespl']['opcion_sel']);
+    $oDesplArrayCtrCasas->setSeleccionados($a_campos_src['aDataDespl']['opcion_sel']);
     $oDesplArrayCtrCasas->setBlanco($a_campos_src['aDataDespl']['blanco']);
 } else {
     $oDesplArrayCtrCasas = new DesplegableArray();
@@ -97,13 +97,17 @@ $a_campos['oDesplArrayCtrCasas'] = $oDesplArrayCtrCasas;
 $oHash = new Hash();
 $camposMas = $a_campos_src['camposMas'];
 $camposForm = 'que!usuario!nom_usuario!password!email!id_role';
-$camposForm = !empty($camposMas) ? $camposForm . '!' . $camposMas : $camposForm;
-$oHash->setCamposForm($camposForm);
-$oHash->setcamposNo('password!id_ctr!id_nom!casas!cambio_password!has_2fa');
 $a_camposHidden = array(
     'id_usuario' => $Qid_usuario,
     'quien' => $Qquien
 );
+if(!empty($camposMas)) {
+    $camposForm .= '!' . $camposMas;
+    //$a_camposHidden []= $camposMas;
+}
+//$camposForm = !empty($camposMas) ? $camposForm . '!' . $camposMas : $camposForm;
+$oHash->setCamposForm($camposForm);
+$oHash->setcamposNo('password!id_ctr!id_nom!casas!cambio_password!has_2fa');
 $oHash->setArraycamposHidden($a_camposHidden);
 $a_campos['oHash'] = $oHash;
 

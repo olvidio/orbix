@@ -1,3 +1,73 @@
+<?= $oPosicion->mostrar_left_slide(1) ?>
+<h3><?= $usuario ?></h3>
+<form id="frm_usuario" name="frm_usuario" action="" method="post">
+    <?= $oHash->getCamposHtml() ?>
+    <input type=hidden id=que_user name=que value=''>
+    <br>
+    <?= ucfirst(_("login")) ?>:<input type=text id=usuario name=usuario value="<?= $usuario ?>" size=60>
+    <?php if ($quien === 'usuario') { ?>
+        <br>
+        <?= ucfirst(_("nombre a mostrar")) ?>:<input type=text name=nom_usuario value="<?= $nom_usuario ?>">
+    <?php } ?>
+    <?= ucfirst(_("role")) ?>:
+    <?= $oDesplRoles->desplegable() ?>
+    <br>
+    <?php
+    if ($pau === 'nom') {
+    ?>
+    <!--  --------------- Sacd --------------- -->
+    <tr>
+        <td class=etiqueta><?= _("persona") ?>:</td>
+        <td colspan=8 id="col_sacd">
+            <?php
+            echo $oDesplArrayCtrCasas->desplegable();
+            echo "</td></tr>";
+    }
+    if ($pau === 'sacd') {
+    ?>
+    <!--  --------------- Sacd --------------- -->
+    <tr>
+        <td class=etiqueta><?= _("sacd") ?>:</td>
+        <td colspan=8 id="col_sacd">
+            <?php
+            echo $oDesplArrayCtrCasas->desplegable();
+            echo "</td></tr>";
+    }
+    if ($pau === 'ctr') {
+    ?>
+    <!--  --------------- CENTROS --------------- -->
+    <tr>
+        <td class=etiqueta><?= _("centro") ?>:</td>
+        <td colspan=8 id="col_centros">
+            <?php
+            echo $oDesplArrayCtrCasas->desplegable();
+            echo "</td></tr>";
+            }
+    if ($pau === 'cdc') {
+    ?>
+    <!--  --------------- CASAS --------------- -->
+    <tr>
+        <td class=etiqueta><?= _("casas") ?>:</td>
+        <td colspan=8 id="col_casas">
+            <?php
+            echo $oDesplArrayCtrCasas->ListaSelects();
+            echo "</td></tr>";
+    }
+    ?>
+    <!--  --------------- Password y email --------------- -->
+    <br>
+    <?= ucfirst(_("password")) ?>:<input type="password" id="password" name="password" size=30>
+    <br>
+    <?= ucfirst(_("cambio password")) ?>:<input type="checkbox" id="cambio_password" name="cambio_password" <?= $chk_cambio_password ?> >
+    <?= _("(se requiere cambiar password al entrar)") ?>
+    <br>
+    <?= ucfirst(_("¿tiene doble factor activado?")) ?>:<input type="checkbox" id="has_2fa" name="has_2fa" <?= $chk_has_2fa ?> >
+    <br>
+    <?= ucfirst(_("email")) ?>:<input type=text name=email size=30 value="<?= $email ?>">
+    <br>
+    <input type=button onclick="fnjs_guardar(this.form);" value="<?= $txt_guardar ?>">
+    <br>
+</form>
 <script>
     fnjs_chk_passwd = function (formulario) {
         var password = encodeURIComponent($('#password').val());
@@ -46,105 +116,35 @@
                 if (json.success !== true) {
                     alert("<?= "respuesta: " ?>" + json.mensaje);
                 } else {
-                   <?= $oPosicion->js_atras(1); ?>
+                    <?= $oPosicion->js_atras(1); ?>
                 }
             });
         }
     }
     <?php
     if ($pau === 'cdc' && $quien === 'usuario') { //casa
-        ?>
-        fnjs_mas_casas = function (evt) {
-            if (evt == "x") {
-                var valor = 1;
+    ?>
+    fnjs_mas_casas = function (evt) {
+        if (evt == "x") {
+            var valor = 1;
+        } else {
+            var id_campo = evt.currentTarget.id;
+            var valor = $(id_campo).val();
+            evt.preventDefault();
+            evt.stopPropagation();
+        }
+        if (evt.keyCode === 9 || evt.type === "change" || evt === "x") {
+            if (valor !== 0) {
+                <?php
+                echo $oDesplArrayCtrCasas->ListaSelectsJs();
+                ?>
             } else {
-                var id_campo = evt.currentTarget.id;
-                var valor = $(id_campo).val();
-                evt.preventDefault();
-                evt.stopPropagation();
-            }
-            if (evt.keyCode === 9 || evt.type === "change" || evt === "x") {
-                if (valor !== 0) {
-                    <?php
-                    echo $oDesplArrayCtrCasas->ListaSelectsJs();
-                    ?>
-                } else {
-                    ir_a('f_entrada');
-                }
+                ir_a('f_entrada');
             }
         }
-        <?php
-        echo $oDesplArrayCtrCasas->ComprobarSelectJs();
+    }
+    <?php
+    echo $oDesplArrayCtrCasas->ComprobarSelectJs();
     }
     ?>
 </script>
-<?= $oPosicion->mostrar_left_slide(1) ?>
-<h3><?= $usuario ?></h3>
-<form id="frm_usuario" name="frm_usuario" action="" method="post">
-    <?= $oHash->getCamposHtml() ?>
-    <input type=hidden id=que_user name=que value=''>
-    <br>
-    <?= ucfirst(_("login")) ?>:<input type=text id=usuario name=usuario value="<?= $usuario ?>" size=60>
-    <?php if ($quien === 'usuario') { ?>
-        <br>
-        <?= ucfirst(_("nombre a mostrar")) ?>:<input type=text name=nom_usuario value="<?= $nom_usuario ?>">
-    <?php } ?>
-    <?= ucfirst(_("role")) ?>:
-    <?= $oDesplRoles->desplegable() ?>
-    <br>
-    <?php
-    if ($pau === 'nom') {
-    ?>
-    <!--  --------------- Sacd --------------- -->
-    <tr>
-        <td class=etiqueta><?= _("persona") ?>:</td>
-        <td colspan=8 id="col_sacd">
-            <?php
-            echo $oDesplArrayCtrCasas->desplegable();
-            echo "</td></tr>";
-            }
-            if ($pau === 'sacd') {
-            ?>
-            <!--  --------------- Sacd --------------- -->
-    <tr>
-        <td class=etiqueta><?= _("sacd") ?>:</td>
-        <td colspan=8 id="col_sacd">
-            <?php
-            echo $oDesplArrayCtrCasas->desplegable();
-            echo "</td></tr>";
-            }
-            if ($pau === 'ctr') {
-            ?>
-            <!--  --------------- CENTROS --------------- -->
-    <tr>
-        <td class=etiqueta><?= _("centro") ?>:</td>
-        <td colspan=8 id="col_centros">
-            <?php
-            echo $oDesplArrayCtrCasas->desplegable();
-            echo "</td></tr>";
-            }
-            if ($pau === 'cdc') {
-            ?>
-            <!--  --------------- CASAS --------------- -->
-    <tr>
-        <td class=etiqueta><?= _("casas") ?>:</td>
-        <td colspan=8 id="col_casas">
-            <?php
-            echo $oDesplArrayCtrCasas->ListaSelects();
-            echo "</td></tr>";
-            }
-            ?>
-    <!--  --------------- Password y email --------------- -->
-            <br>
-            <?= ucfirst(_("password")) ?>:<input type="password" id="password" name="password" size=30>
-            <br>
-            <?= ucfirst(_("cambio password")) ?>:<input type="checkbox" id="cambio_password" name="cambio_password" <?= $chk_cambio_password ?> >
-            <?= _("(se requiere cambiar password al entrar)") ?>
-            <br>
-            <?= ucfirst(_("¿tiene doble factor activado?")) ?>:<input type="checkbox" id="has_2fa" name="has_2fa" <?= $chk_has_2fa ?> >
-            <br>
-            <?= ucfirst(_("email")) ?>:<input type=text name=email size=30 value="<?= $email ?>">
-            <br>
-            <input type=button onclick="fnjs_guardar(this.form);" value="<?= $txt_guardar ?>">
-            <br>
-</form>
