@@ -103,12 +103,12 @@ if ($miRole < 4) { // es administrador
                     break;
             }
             $oGCasas = new GestorCasaDl();
-            $oOpcionesCasas = $oGCasas->getPosiblesCasas($cond);
+            $aOpcionesCasas = $oGCasas->getArrayPosiblesCasas($cond);
 
             $aDataDespl['tipo'] = 'array';
             $aDataDespl['nom'] = 'casas';
             $aDataDespl['blanco'] = 't';
-            $aDataDespl['opciones'] = $oOpcionesCasas;
+            $aDataDespl['aOpciones'] = $aOpcionesCasas;
             $aDataDespl['accionConjunto'] = 'fnjs_mas_casas(event)';
             $aDataDespl['opcion_sel'] = $id_pau;
             $camposMas = 'casas!casas_mas!casas_num';
