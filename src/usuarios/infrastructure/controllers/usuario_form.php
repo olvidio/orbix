@@ -114,7 +114,7 @@ if ($miRole < 4) { // es administrador
             $camposMas = 'casas!casas_mas!casas_num';
         }
         if ($pau === Role::PAU_CTR && $isSv) { //centroSv
-            $id_pau = $oUsuario->getId_pau()->value();
+            $id_pau = $oUsuario->getId_pauAsString();
             $oGesCentrosDl = new GestorCentroDl();
             $aOpciones = $oGesCentrosDl->getArrayCentros();
 
@@ -126,7 +126,7 @@ if ($miRole < 4) { // es administrador
             $camposMas = 'id_ctr';
         }
         if ($pau === Role::PAU_CTR && $isSf) { //centroSf
-            $id_pau = $oUsuario->getId_pau()->value();
+            $id_pau = $oUsuario->getId_pauAsString();
             $oGesCentrosDl = new GestorCentroEllas();
             $aOpciones = $oGesCentrosDl->getArrayCentros();
 
@@ -138,7 +138,7 @@ if ($miRole < 4) { // es administrador
             $camposMas = 'id_ctr';
         }
         if ($pau == Role::PAU_NOM || $pau == Role::PAU_SACD) { //sacd //personas dl
-            $id_pau = $oUsuario->getId_pau()->value();
+            $id_pau = $oUsuario->getId_pauAsString();
 
             $nom_role = $oRole->getRoleAsString();
             switch ($nom_role) {
