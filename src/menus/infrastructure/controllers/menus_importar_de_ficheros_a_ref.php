@@ -22,14 +22,14 @@ $Qtodos = (integer)filter_input(INPUT_POST, 'todos');
 $Qseguro = empty($Qseguro) ? 2 : $Qseguro;
 $Qtodos = empty($Qtodos) ? 2 : $Qtodos;
 
-if ($Qseguro == 2) {
-    if (ConfigGlobal::mi_dele() == 'dlb') {
+if ($Qseguro === 2) {
+    if (ConfigGlobal::mi_dele() === 'dlb') {
         echo _("casi seguro que no quieres hacerlo");
         echo "<br>";
 
         $go1 = Hash::link('apps/menus/controller/menus_importar.php?' . http_build_query(array('seguro' => 1, 'todos' => 1)));
         $html = "Esto pondrá los menus por defecto. Para todas las dl";
-        $html = "tarda mucho (3min para 10 dl), pero acaba bien (creo)";
+        $html .= "tarda mucho (3min para 10 dl), pero acaba bien (creo)";
         $html .= "<br>";
         $html .= "<span class=\"link\" onclick=\"fnjs_update_div('#main','$go1');\">" . _("Poner todas las dl igual") . "</span>";
         $html .= "<br>";
@@ -49,9 +49,9 @@ if ($Qseguro == 2) {
     echo $html;
 }
 
-if ($Qseguro == 1) {
+if ($Qseguro === 1) {
     $aEsquemas = [];
-    if ($Qtodos == 1) {
+    if ($Qtodos === 1) {
         $oDBPropiedades = new DBPropiedades();
         $aEsquemas = $oDBPropiedades->array_posibles_esquemas();
     } else { // solo un esquema
@@ -60,16 +60,16 @@ if ($Qseguro == 1) {
     }
 
     foreach ($aEsquemas as $esquema) {
-        if ($esquema == "H-Hv") {
+        if ($esquema === "H-Hv") {
             continue;
         }
         echo ">>>>actualizando menus para $esquema<br>";
         $sec = substr($esquema, -1); // la 'v' o la 'f'.
         echo ">>>$sec>>actualizando menus para $esquema<br>";
-        if ($sec == 'v') {
+        if ($sec === 'v') {
             $oConfigDB = new core\ConfigDB('sv-e');
         }
-        if ($sec == 'f') {
+        if ($sec === 'f') {
             $oConfigDB = new core\ConfigDB('sf-e');
 
         }
@@ -81,7 +81,7 @@ if ($Qseguro == 1) {
 
         //************ GRUPMENU **************
         $sql_del = 'TRUNCATE TABLE aux_grupmenu RESTART IDENTITY CASCADE';
-        if ($oDblSt = $oDB->query($sql_del) === false) {
+        if (($oDblSt = $oDB->query($sql_del)) === false) {
             $sClauError = 'ExportarMenu.VaciarTabla';
             $_SESSION['oGestorErrores']->addError('truncate', $sClauError, __LINE__, __FILE__);
             return false;
@@ -110,9 +110,9 @@ if ($Qseguro == 1) {
         //************ GRUPMENU_ROL**************
         // En el caso de la sf, los grupmenu asociados a los roles son distintos.
         // de momento no los copio. los dejo como están.
-        if ($sec == 'v') {
+        if ($sec === 'v') {
             $sql_del = 'TRUNCATE TABLE aux_grupmenu_rol RESTART IDENTITY CASCADE';
-            if ($oDblSt = $oDB->query($sql_del) === false) {
+            if (($oDblSt = $oDB->query($sql_del)) === false) {
                 $sClauError = 'ExportarMenu.VaciarTabla';
                 $_SESSION['oGestorErrores']->addError('truncate', $sClauError, __LINE__, __FILE__);
                 return false;
@@ -141,7 +141,7 @@ if ($Qseguro == 1) {
         }
         //************ MENUS**************
         $sql_del = 'TRUNCATE TABLE aux_menus RESTART IDENTITY CASCADE';
-        if ($oDblSt = $oDB->query($sql_del) === false) {
+        if (($oDblSt = $oDB->query($sql_del)) === false) {
             $sClauError = 'ExportarMenu.VaciarTabla';
             $_SESSION['oGestorErrores']->addError('truncate', $sClauError, __LINE__, __FILE__);
             return false;
