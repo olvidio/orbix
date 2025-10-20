@@ -80,7 +80,7 @@ $a_campos['oDesplRoles'] = $oDesplRoles;
 if (!empty($a_campos_src['aDataDespl'])) {
     $tipo = $a_campos_src['aDataDespl']['tipo'] = 'simple';
     if ($tipo === 'simple') {
-        $oDesplArrayCtrCasas = new Desplegable();
+        $oDesplArrayCtrCasas = new DesplegableArray();
     } else {
         $oDesplArrayCtrCasas = new DesplegableArray();
         $oDesplArrayCtrCasas->setNombre($a_campos_src['aDataDespl']['accionConjunto']);
@@ -90,7 +90,7 @@ if (!empty($a_campos_src['aDataDespl'])) {
     $oDesplArrayCtrCasas->setOpcion_sel($a_campos_src['aDataDespl']['opcion_sel']);
     $oDesplArrayCtrCasas->setBlanco($a_campos_src['aDataDespl']['blanco']);
 } else {
-    $oDesplArrayCtrCasas = new Desplegable();
+    $oDesplArrayCtrCasas = new DesplegableArray();
 }
 $a_campos['oDesplArrayCtrCasas'] = $oDesplArrayCtrCasas;
 
