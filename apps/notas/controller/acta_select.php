@@ -104,6 +104,8 @@ if (!empty($Qacta)) {
     }
     $titulo = $Qtitulo;
 } else {
+    // hay que limitar, porque en alguna región puede haber muchas actas.
+    // y agota la memoria del php.
     $mes = date('m');
     $fin_m = $_SESSION['oConfig']->getMesFinStgr();
     if ($mes > $fin_m) {
@@ -118,14 +120,15 @@ if (!empty($Qacta)) {
     $aWhere['f_acta'] = "'$inicurs_ca','$fincurs_ca'";
     $aOperador['f_acta'] = 'BETWEEN';
     $aWhere['_ordre'] = 'f_acta DESC, acta DESC';
+    $aWhere['_limit'] = 20;
 
-    $titulo = ucfirst(sprintf(_("lista de actas del curso %s"), $txt_curso));
+    $titulo = ucfirst(sprintf(_("lista de actas del curso %s. Máximo %s"), $txt_curso, $aWhere['_limit']));
     // Si es cr, se mira en todas:
     if (ConfigGlobal::mi_ambito() === 'rstgr') {
         $oGesDelegaciones = new GestorDelegacion();
         $aDl = $oGesDelegaciones->getArrayDlRegionStgr([$mi_dele]);
-        $sReg = implode("|", $aDl);
-        $Qacta = "^($sReg)";
+        $sReg = implode(" |", $aDl);
+        $Qacta = "^($sReg )";
         $aWhere['acta'] = $Qacta;
         $aOperador['acta'] = '~';
         $GesActas = new GestorActa();
@@ -170,7 +173,7 @@ foreach ($cActas as $oActa) {
     $acta = $oActa->getActa();
     $f_acta = $oActa->getF_acta()->getFromLocal();
     $id_asignatura = $oActa->getId_asignatura();
-    $pdf = $oActa->getpdf();
+    $hasPdf = ($oActa->hasEmptyPdf())? '': _("Sí");
 
     if (empty($a_asignaturas[$id_asignatura])) {
         $nombre_corto = sprintf(_("nombre corto no definido para id asignatura: %s"), $id_asignatura);
@@ -187,7 +190,7 @@ foreach ($cActas as $oActa) {
     }
     $a_valores[$i][2] = $f_acta;
     $a_valores[$i][3] = $nombre_corto;
-    $a_valores[$i][4] = empty($pdf) ? '' : _("Sí");
+    $a_valores[$i][4] = $hasPdf;
 }
 if (isset($Qid_sel) && !empty($Qid_sel)) {
     $a_valores['select'] = $Qid_sel;

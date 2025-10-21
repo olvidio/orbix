@@ -112,6 +112,7 @@ $num_cambios = count($cNuevosCambios);
 $err_fila = '';
 // Repito el proceso por si se han apuntado cambios mientras estaba realizando el proceso.
 while ($num_cambios) {
+    $num_cambios_inicial = $num_cambios;
     foreach ($cNuevosCambios as $oCambio) {
         $afecta = '';
         $id_item_cmb = $oCambio->getId_item_cambio();
@@ -131,7 +132,7 @@ while ($num_cambios) {
         // Para las actividades, en el cambio se anota: 'ActividadDl' 'ActividadEx'
         // pero en las preferencias, solo 'Actividad'.
         // OJO strpos no sirve, porque me anula ActividadCargo
-        if ($sObjeto == 'Actividad' || $sObjeto == 'ActividadDl' || $sObjeto == 'ActividadEx') {
+        if ($sObjeto === 'Actividad' || $sObjeto === 'ActividadDl' || $sObjeto === 'ActividadEx') {
             $sObjeto = 'Actividad';
         }
         // Para los asistentes, en el cambio se anota: 'Asistente' 'AsistenteDl' 'AsistenteEx' 'AsistenteIn' 'AsistenteOut'
@@ -139,7 +140,7 @@ while ($num_cambios) {
         if (strpos($sObjeto, 'Asistente') !== false) {
             $sObjeto = 'Asistente';
             // Para el caso de los sacd, el permiso es 'asistentessacd'
-            if ($propiedad_cmb == 'id_nom') {
+            if ($propiedad_cmb === 'id_nom') {
                 $id_nom = empty($valor_new_cmb) ? $valor_old_cmb : $valor_new_cmb;
                 $oPersonaSacd = new PersonaSacd($id_nom);
                 if (is_true($oPersonaSacd->getSacd())) {
@@ -196,7 +197,7 @@ while ($num_cambios) {
             $id_usuario = $oCambioUsuarioObjetoPref->getId_usuario();
             $aviso_tipo = $oCambioUsuarioObjetoPref->getAviso_tipo();
             $oAvisos->setId_usuario($id_usuario);
-            // con que cumpla una condicion para un mismo usuario basta, salto al siguiente cambio.
+            // con que cumpla una condición para un mismo usuario basta, salto al siguiente cambio.
             if ($apuntar && ($aviso_tipo == $aviso_tipo_anterior) && ($id_usuario == $id_usuario_anterior)) {
                 $apuntar = false;
                 continue;
@@ -335,11 +336,11 @@ while ($num_cambios) {
         // Si he mirado todas las pref de usuarios, marco el cambio como anotado, aunque no coincida con ninguno.
         $oAvisos->anotado();
     }
-    // Si algo falla, el $num_cambios es el mismo y se genera un bucle infinito.
-    $num_cambios_old = $num_cambios;
+    // Si algo falla, el $num_cambios_inicial es igual al actual y se genera un bucle infinito.
+    // Si se han producido nuevos cambios durante el proceso, $numcambios no será 0 y se repite el proceso.
     $cNuevosCambios = $GesCambios->getCambiosNuevos();
     $num_cambios = count($cNuevosCambios);
-    if ($num_cambios === $num_cambios_old) {
+    if ($num_cambios === $num_cambios_inicial) {
         // igualmente borro el pid
         $oAvisos->borrar_pid($username, $esquema);
         exit (_("Algo falla"));
@@ -347,8 +348,8 @@ while ($num_cambios) {
 }
 
 if (!empty($err_fila)) {
-    $err_tabla = _("apuntar cambio usuario");
-    $err_tabla .= " " . ConfigGlobal::$web_server . '-->' . date('Y/m/d') . " " . _("Ya existe") . ": ";
+    $err_tabla = _("error al apuntar cambio usuario en");
+    $err_tabla .= " " . ConfigGlobal::$web_server . '-->' . date('c') . ": " . _("Ya existe") . "<br>";
     $err_tabla .= '<table><tr>';
     $err_tabla .= '<th>' . _("schema") . '</th>';
     $err_tabla .= '<th>' . _("id_item_cmb") . '</th>';

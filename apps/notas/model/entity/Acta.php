@@ -280,9 +280,77 @@ class Acta extends ClasePropiedades
 
     /**
      * Carga los campos de la base de datos como atributos de la clase.
-     *
+     *  Sin el Pdf, para aligerar...
      */
     public function DBCarregar($que = null)
+    {
+        $oDbl = $this->getoDbl();
+        $nom_tabla = $this->getNomTabla();
+        $id_asignatura = '';
+        $id_activ = '';
+        $f_acta = '';
+        $libro = '';
+        $pagina = '';
+        $linea = '';
+        $lugar = '';
+        $observ = '';
+        //$pdf = '';
+
+        if (isset($this->sacta)) {
+            if (($oDblSt = $oDbl->query("SELECT id_asignatura, id_activ, f_acta, libro, pagina, linea, lugar, observ, pdf
+							 FROM $nom_tabla WHERE acta='$this->sacta'")) === false) {
+                $sClauError = 'Acta.carregar';
+                $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+                return false;
+            }
+            $oDblSt->execute();
+            $oDblSt->bindColumn(1, $id_asignatura, PDO::PARAM_INT);
+            $oDblSt->bindColumn(2, $id_activ, PDO::PARAM_INT);
+            $oDblSt->bindColumn(3, $f_acta, PDO::PARAM_STR);
+            $oDblSt->bindColumn(4, $libro, PDO::PARAM_INT);
+            $oDblSt->bindColumn(5, $pagina, PDO::PARAM_INT);
+            $oDblSt->bindColumn(6, $linea, PDO::PARAM_INT);
+            $oDblSt->bindColumn(7, $lugar, PDO::PARAM_STR);
+            $oDblSt->bindColumn(8, $observ, PDO::PARAM_STR);
+            //  $oDblSt->bindColumn(9, $pdf, PDO::PARAM_STR);
+            $oDblSt->fetch(PDO::FETCH_BOUND);
+
+            $aDades = [
+                'id_asignatura' => $id_asignatura,
+                'id_activ' => $id_activ,
+                'f_acta' => $f_acta,
+                'libro' => $libro,
+                'pagina' => $pagina,
+                'linea' => $linea,
+                'lugar' => $lugar,
+                'observ' => $observ,
+                //    'pdf' => $pdf,
+            ];
+
+            // Para evitar posteriores cargas
+            $this->bLoaded = TRUE;
+            switch ($que) {
+                case 'tot':
+                    $this->aDades = $aDades;
+                    break;
+                case 'guardar':
+                    if (!$oDblSt->rowCount()) return false;
+                    break;
+                default:
+                    // En el caso de no existir esta fila, $aDades = FALSE:
+                    if ($aDades === FALSE) {
+                        $this->setNullAllAtributes();
+                    } else {
+                        $this->setAllAtributes($aDades);
+                    }
+            }
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function DBCarregarConPdf()
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
@@ -327,22 +395,10 @@ class Acta extends ClasePropiedades
                 'pdf' => $pdf,
             ];
 
-            // Para evitar posteriores cargas
-            $this->bLoaded = TRUE;
-            switch ($que) {
-                case 'tot':
-                    $this->aDades = $aDades;
-                    break;
-                case 'guardar':
-                    if (!$oDblSt->rowCount()) return false;
-                    break;
-                default:
-                    // En el caso de no existir esta fila, $aDades = FALSE:
-                    if ($aDades === FALSE) {
-                        $this->setNullAllAtributes();
-                    } else {
-                        $this->setAllAtributes($aDades);
-                    }
+            if ($aDades === FALSE) {
+                $this->setNullAllAtributes();
+            } else {
+                $this->setAllAtributes($aDades);
             }
             return true;
         } else {
@@ -473,7 +529,7 @@ class Acta extends ClasePropiedades
      * inventa el valor del acta, si no es correcto
      *
      */
-    public static function inventarActa(string $valor,DateTimeLocal|string $fecha): string
+    public static function inventarActa(string $valor, DateTimeLocal|string $fecha): string
     {
         $valor = trim($valor);
         // comprobar si hace falta, o ya está bien el acta como está
@@ -488,7 +544,7 @@ class Acta extends ClasePropiedades
                 if (is_object($fecha)) {
                     $oData = $fecha;
                 } else {
-                    $oData =DateTimeLocal::createFromLocal($fecha);
+                    $oData = DateTimeLocal::createFromLocal($fecha);
                 }
                 $any = $oData->format('y');
                 // inventar acta.
@@ -738,17 +794,13 @@ class Acta extends ClasePropiedades
 
     public function getpdf()
     {
-        if (!isset($this->pdf) && !$this->bLoaded) {
-            $this->DBCarregar();
-        }
+        $this->DBCarregarConPdf();
         return hex2bin($this->pdf ?? '');
     }
 
-    public function hasEmptyPdf():bool
+    public function hasEmptyPdf(): bool
     {
-        if (!isset($this->pdf) && !$this->bLoaded) {
-            $this->DBCarregar();
-        }
+        $this->DBCarregarConPdf();
         return empty($this->pdf);
     }
     /* MÉTODOS GET y SET D'ATRIBUTOS QUE NO SON CAMPOS -----------------------------*/

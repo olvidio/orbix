@@ -49,7 +49,7 @@ require_once("apps/core/global_object.inc");
  Comprobar que tengan e-mail
  */
 
-// para asegurar que coje los cambios de otras dl que no tengan instalado el módulo de cambios, 
+// para asegurar que coge los cambios de otras dl que no tengan instalado el módulo de cambios,
 // hay que ejecutar el generarTabla().
 $oCambio = new Cambio();
 $oCambio->generarTabla();

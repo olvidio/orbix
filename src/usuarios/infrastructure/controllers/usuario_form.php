@@ -92,7 +92,7 @@ if ($miRole < 4) { // es administrador
         $isSv = $oRole->isSv();
         $isSf = $oRole->isSf();
         if ($pau === Role::PAU_CDC) { //casa
-            $id_pau = $oUsuario->getId_pau();
+            $id_pau = $oUsuario->getId_pauAsString();
             $cond = '';
             switch ($seccion) {
                 case 1:
@@ -103,18 +103,18 @@ if ($miRole < 4) { // es administrador
                     break;
             }
             $oGCasas = new GestorCasaDl();
-            $oOpcionesCasas = $oGCasas->getPosiblesCasas($cond);
+            $aOpcionesCasas = $oGCasas->getArrayPosiblesCasas($cond);
 
             $aDataDespl['tipo'] = 'array';
             $aDataDespl['nom'] = 'casas';
             $aDataDespl['blanco'] = 't';
-            $aDataDespl['opciones'] = $oOpcionesCasas;
+            $aDataDespl['aOpciones'] = $aOpcionesCasas;
             $aDataDespl['accionConjunto'] = 'fnjs_mas_casas(event)';
             $aDataDespl['opcion_sel'] = $id_pau;
             $camposMas = 'casas!casas_mas!casas_num';
         }
         if ($pau === Role::PAU_CTR && $isSv) { //centroSv
-            $id_pau = $oUsuario->getId_pau()->value();
+            $id_pau = $oUsuario->getId_pauAsString();
             $oGesCentrosDl = new GestorCentroDl();
             $aOpciones = $oGesCentrosDl->getArrayCentros();
 
@@ -126,7 +126,7 @@ if ($miRole < 4) { // es administrador
             $camposMas = 'id_ctr';
         }
         if ($pau === Role::PAU_CTR && $isSf) { //centroSf
-            $id_pau = $oUsuario->getId_pau()->value();
+            $id_pau = $oUsuario->getId_pauAsString();
             $oGesCentrosDl = new GestorCentroEllas();
             $aOpciones = $oGesCentrosDl->getArrayCentros();
 
@@ -138,7 +138,7 @@ if ($miRole < 4) { // es administrador
             $camposMas = 'id_ctr';
         }
         if ($pau == Role::PAU_NOM || $pau == Role::PAU_SACD) { //sacd //personas dl
-            $id_pau = $oUsuario->getId_pau()->value();
+            $id_pau = $oUsuario->getId_pauAsString();
 
             $nom_role = $oRole->getRoleAsString();
             switch ($nom_role) {

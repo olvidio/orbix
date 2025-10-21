@@ -6,8 +6,11 @@ Hasta ahora, yo me manejaba con Access y tenía una manera de saber qué acta ib
 
 
 use asignaturas\model\entity\Asignatura;
+use core\ConfigGlobal;
 use core\ViewPhtml;
+use notas\model\entity\GestorActa;
 use notas\model\entity\GestorActaDl;
+use ubis\model\entity\GestorDelegacion;
 use web\DateTimeLocal;
 use web\Hash;
 use web\Periodo;
@@ -47,7 +50,23 @@ $aOperador = [];
 $aWhere['f_acta'] = "'$inicioIso','$finIso'";
 $aOperador['f_acta'] = 'BETWEEN';
 
-$GesActas = new GestorActaDl();
+ // Si es cr, se mira en todas (las suyas):
+$mi_dele = ConfigGlobal::mi_delef();
+$mi_region = ConfigGlobal::mi_region();
+if (ConfigGlobal::mi_ambito() === 'rstgr') {
+    $oGesDelegaciones = new GestorDelegacion();
+    $aDl = $oGesDelegaciones->getArrayDlRegionStgr([$mi_dele]);
+    $Qacta_dl = '';
+    foreach ($aDl as $dl) {
+        $Qacta_dl .= empty($Qacta_dl) ? '' : "|";
+        $Qacta_dl .= "$dl ";
+    }
+    $aWhere['acta'] = '^('.$Qacta_dl.')';
+    $aOperador['acta'] = '~';
+    $GesActas = new GestorActa();
+} else {
+    $GesActas = new GestorActaDl();
+}
 $cActas = $GesActas->getActas($aWhere, $aOperador);
 
 $i = 0;

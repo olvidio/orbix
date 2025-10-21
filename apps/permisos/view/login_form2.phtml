@@ -233,7 +233,9 @@
 
     fnjs_hideErrors = function () {
         let alerta = document.getElementById('div_error_login');
-        alerta.style.display = 'none';
+        if (alerta) {
+            alerta.style.display = 'none';
+        }
     }
 
     fnjs_goTop = function () {

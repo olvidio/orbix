@@ -68,9 +68,14 @@ class PermMenuRepository implements PermMenuRepositoryInterface
         return $this->repository->getoDbl();
     }
 
-	public function setoDbl(PDO $oDbl): void
+    public function setoDbl(PDO $oDbl): void
     {
         $this->repository->setoDbl($oDbl);
+    }
+
+    public function setoDbl_Select(PDO $oDbl): void
+    {
+        $this->repository->setoDbl_Select($oDbl);
     }
 
 	public function getNomTabla(): string

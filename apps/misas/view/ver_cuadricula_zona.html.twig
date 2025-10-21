@@ -90,6 +90,7 @@
       font-size: 13px;    }
     </style>
 </head>
+
 <div id="cuadriculas" style="position:relative">
     <input type="hidden" id="empiezamin" value=""/>
     <input type="hidden" id="empiezamax" value=""/>
@@ -537,4 +538,10 @@ var meta;
             donetext: 'Correcto!'
         }
     );
+    document.getElementById('contenido_sin_menus').style.height=(window.innerHeight-document.getElementById('contenido_sin_menus').getBoundingClientRect().top-40)+'px';
+    document.getElementById('contenido_sin_menus').style.width=(window.innerWidth-20)+'px';
+    document.getElementById('main').style.height=(window.innerHeight-document.getElementById('contenido_sin_menus').getBoundingClientRect().top-80)+'px';
+    document.getElementById('main').style.width=(window.innerWidth-20)+'px';
+    document.getElementById('main').style.overflowX= 'hidden';
+    document.getElementsByTagName('body')[0].style.margin.bottom='0px';
 </script>

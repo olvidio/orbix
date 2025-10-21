@@ -4,7 +4,7 @@
 // INICIO Cabecera global de URL de controlador *********************************
 use Illuminate\Http\JsonResponse;
 use personas\model\entity\PersonaSacd;
-use personas\model\entity\PersonaEx;
+//use personas\model\entity\PersonaEx;
 use zonassacd\model\entity\GestorZonaSacd;
 
 require_once("apps/core/global_header.inc");
@@ -30,13 +30,13 @@ $cZonaSacd = $GesZonasSacd->getZonasSacds($aWhere);
 if (empty ($cZonaSacd)) {
     $error_txt .= _("No existe");
 } else {
-    if ($Qid_sacd>0) {
+//    if ($Qid_sacd>0) {
         $oPersona = new PersonaSacd($Qid_sacd);
         $jsondata['nombre_sacd'] = empty($oPersona->getNombreApellidos())? '?' : $oPersona->getNombreApellidos();
-    } else {
-        $oPersona = new PersonaEx($Qid_sacd);
-        $jsondata['nombre_sacd'] = empty($oPersona->getNombreApellidos())? '?' : $oPersona->getNombreApellidos();
-    }
+//    } else {
+//        $oPersona = new PersonaEx($Qid_sacd);
+//        $jsondata['nombre_sacd'] = empty($oPersona->getNombreApellidos())? '?' : $oPersona->getNombreApellidos();
+//    }
 
     $oZonaSacd = $cZonaSacd[0];
     $jsondata['dw1'] = $oZonaSacd->getDw1();

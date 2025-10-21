@@ -49,8 +49,8 @@ class Avisos
             if (file_exists($filename)) {
                 $fileContent = file_get_contents($filename);
                 if (!empty($fileContent)) {
-                    // Comprobar que no sea por que el anterior ha dadao un error y 
-                    // no se ha borrado. Miaramos que sea de hace más de 15 min.
+                    // Comprobar que no sea por que el anterior ha dado un error y
+                    // no se ha borrado. Miramos que sea de hace más de 15 min.
                     $delta = 15;
                     $matches = [];
                     preg_match('@(\d+/\d+/\d+ \d+:\d+:\d+) -- .*@', $fileContent, $matches);
@@ -98,7 +98,14 @@ class Avisos
 
     public function fn_apuntar($aviso_tipo)
     {
+        $archivo_log = ConfigGlobal::$directorio . "/log/errores.log";
+
         $sfsv = ConfigGlobal::mi_sfsv();
+
+        // Log de entrada
+        $msg = "fn_apuntar: schema={$this->id_schema_cmb}, item={$this->id_item_cmb}, usuario={$this->id_usuario}, tipo={$aviso_tipo}, sfsv={$sfsv}";
+        (new \Symfony\Component\HttpKernel\Log\Logger)->info($msg, (array)3, $archivo_log);
+
         // Asegurar que no existe:
         $aWhere = [];
         $aWhere['id_schema_cambio'] = $this->id_schema_cmb;
@@ -106,11 +113,19 @@ class Avisos
         $aWhere['sfsv'] = $sfsv;
         $aWhere['id_usuario'] = $this->id_usuario;
         $aWhere['aviso_tipo'] = $aviso_tipo;
+
         $oGesCambiosUsuario = new GestorCambioUsuario();
         $cCambioUsuario = $oGesCambiosUsuario->getCambiosUsuario($aWhere);
+
+        // Log del resultado de búsqueda
+        $msg = "fn_apuntar: Encontrados " . count($cCambioUsuario) . " registros existentes";
+        (new \Symfony\Component\HttpKernel\Log\Logger)->info($msg, (array)3, $archivo_log);
+
         // ya existe
         $err_fila = '';
         if (count($cCambioUsuario) > 0) {
+            $msg = "fn_apuntar: DUPLICADO DETECTADO - No se insertará";
+            (new \Symfony\Component\HttpKernel\Log\Logger)->info($msg, (array)3, $archivo_log);
             $err_fila .= "<tr>";
             $err_fila .= "<td>" . $this->id_schema_cmb . "</td>";
             $err_fila .= "<td>" . $this->id_item_cmb . "</td>";
@@ -118,21 +133,29 @@ class Avisos
             $err_fila .= "<td>" . $aviso_tipo . "</td>";
             $err_fila .= "</tr>";
         } else {
+            $msg = "fn_apuntar: Insertando nuevo registro";
+            (new \Symfony\Component\HttpKernel\Log\Logger)->info($msg, (array)3, $archivo_log);
             $oCambioUsuario = new CambioUsuario();
             $oCambioUsuario->setId_schema_cambio($this->id_schema_cmb);
             $oCambioUsuario->setId_item_cambio($this->id_item_cmb);
-            $oCambioUsuario->setId_usuario($this->id_usuario);
             $oCambioUsuario->setSfsv($sfsv);
+            $oCambioUsuario->setId_usuario($this->id_usuario);
             $oCambioUsuario->setAviso_tipo($aviso_tipo);
-            //echo "id_item_cmb: $id_item_cmb, id_usuario: $id_usuario, aviso_tipo: $aviso_tipo \n";
-            if ($oCambioUsuario->DBGuardar() === false) {
-                echo ConfigGlobal::$web_server . '-->' . date('Y/m/d') . " " . _("Hay un error, no se ha guardado");
+
+            $resultado = $oCambioUsuario->DBGuardar();
+            $msg = "fn_apuntar: Resultado DBGuardar: " . ($resultado ? 'SUCCESS' : 'FAILED');
+            (new \Symfony\Component\HttpKernel\Log\Logger)->info($msg, (array)3, $archivo_log);
+
+            if ($resultado === false) {
+                echo ConfigGlobal::$web_server . '-->' . date('c') . " " . _("Hay un error, no se ha guardado");
+                echo "<br>id_item_cmb: $this->id_item_cmb, id_usuario: $this->id_usuario, aviso_tipo: $aviso_tipo <br>\n";
             }
         }
-        //anotado($id_item_cmb); // En principio ya lo hace al final de todo.
+
         if (!empty($err_fila)) {
             return $err_fila;
         }
+        return '';
     }
 
     public function anotado()
@@ -164,6 +187,7 @@ class Avisos
         if ($oCambioAnotado->DBGuardar(true) === false) { //'true' para que no genere la tabla de avisos.
             echo _("Hay un error, no se ha guardado");
             echo _("anotado");
+            echo "<br>";
         }
     }
 
@@ -213,7 +237,7 @@ class Avisos
 
         //casa
         if ($oRole->isRolePau(Role::PAU_CDC)) {
-            $mis_id_ubis = $oMiUsuario->getId_pau(); // puede ser una lista separada por comas.
+            $mis_id_ubis = $oMiUsuario->getId_pauAsString(); // puede ser una lista separada por comas.
             if (!empty($mis_id_ubis)) { //casa o un listado de ubis en la preferencia del aviso.
                 $a_mis_id_ubis = explode(',', $mis_id_ubis);
 
@@ -243,7 +267,7 @@ class Avisos
         }
         // si soy un sacd.
         if ($oRole->isRolePau(Role::PAU_SACD)) {
-            $id_nom_usuario = $oMiUsuario->getId_pau();
+            $id_nom_usuario = $oMiUsuario->getId_pauAsString();
             // soy jefe zona?
             // si soy jefe de zona me afectan todos los sacd de la zona.
             $rta = FALSE;

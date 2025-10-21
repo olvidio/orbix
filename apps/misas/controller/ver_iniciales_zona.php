@@ -4,7 +4,7 @@
 // INICIO Cabecera global de URL de controlador *********************************
 use core\ViewTwig;
 use misas\domain\repositories\InicialesSacdRepository;
-use personas\model\entity\PersonaEx;
+//use personas\model\entity\PersonaEx;
 use personas\model\entity\PersonaSacd;
 use web\DateTimeLocal;
 use web\Desplegable;
@@ -34,13 +34,13 @@ $a_Id_nom = $gesZonaSacd->getSacdsZona($Qid_zona);
 
 $a_datos_sacd = [];
 foreach ($a_Id_nom as $id_nom) {
-    if ($id_nom>0) {
+//    if ($id_nom>0) {
         $PersonaSacd = new PersonaSacd($id_nom);
         $sacd = $PersonaSacd->getNombreApellidos();
-    } else {
-        $PersonaEx = new PersonaEx($id_nom);
-        $sacd = $PersonaEx->getNombreApellidos();
-    }
+//    } else {
+//        $PersonaEx = new PersonaEx($id_nom);
+//        $sacd = $PersonaEx->getNombreApellidos();
+//    }
 
     $InicialesSacdRepository = new InicialesSacdRepository();
     $InicialesSacd = $InicialesSacdRepository->findById($id_nom);

@@ -349,7 +349,7 @@ if (ConfigGlobal::is_app_installed('menus')) {
         $oMiUsuario = $UsuarioRepository->findById($id_usuario);
         $id_role = $oMiUsuario->getId_role();
         if (!empty($aRoles[$id_role]) && ($aRoles[$id_role] === 'p_sacd')) {
-            $id_nom = $oMiUsuario->getId_pau();
+            $id_nom = $oMiUsuario->getId_pauAsString();
             if (!empty($id_nom)) {
                 $oGesZonas = new GestorZona();
                 $isJefeZona = $oGesZonas->isJefeZona($id_nom);

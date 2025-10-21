@@ -12,7 +12,7 @@ include_once (ConfigGlobal::$dir_estilos.'/colores.php');
 ?>
 <style>
 @media print {
-    .no_print { display :none; }
+    .no_print { display: none; }
 }
 
 #otro, #main { 

@@ -16,6 +16,8 @@ use misas\domain\repositories\EncargoDiaRepository;
 use misas\model\EncargosZona;
 use src\usuarios\application\repositories\PreferenciaRepository;
 use src\usuarios\domain\entity\Preferencia;
+use src\usuarios\domain\value_objects\TipoPreferencia;
+use src\usuarios\domain\value_objects\ValorPreferencia;
 use web\DateTimeLocal;
 use web\Hash;
 use web\TiposActividades;
@@ -48,10 +50,10 @@ if ($QTipoPlantilla!='p')
     if ($oPreferencia === null) {
         $oPreferencia = new Preferencia();
         $oPreferencia->setId_usuario($id_usuario);
-        $oPreferencia->setTipo('ultima_plantilla');
+        $oPreferencia->setTipo(new TipoPreferencia('ultima_plantilla'));
     }
     
-    $oPreferencia->setPreferencia($QTipoPlantilla);
+    $oPreferencia->setPreferencia(new ValorPreferencia($QTipoPlantilla));
     if ($PreferenciaRepository->Guardar($oPreferencia) === false) {
         echo _("hay un error, no se ha guardado");
         echo "\n" . $PreferenciaRepository->getErrorTxt();

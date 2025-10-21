@@ -46,7 +46,7 @@ $goMisas = Hash::link('apps/misas/controller/misas_index.php?' . http_build_quer
       otra dl que si está en aquinate, pero que no las va a introducir en su dl
       (por ejemplo actividades de sg, cuando no se usa para sg)</p>
 <?php
-  include_once('./regionesEnOrbix.html');
+  include_once('./regionesEnOrbix.php');
 ?>
   <br>
     <h1>Tutoriales</h1>
