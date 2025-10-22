@@ -3,6 +3,7 @@
 namespace src\menus\domain\entity;
 use core\DatosCampo;
 use core\Set;
+use src\menus\domain\value_objects\TemplateMenuName;
 
 /**
  * Clase que implementa la entidad aux_templates_menus
@@ -78,9 +79,9 @@ class TemplateMenu {
 	 *
 	 * @param string|null $snombre
 	 */
-	public function setNombre(?string $snombre = null): void
+	public function setNombre(string|TemplateMenuName|null $snombre = null): void
 	{
-		$this->snombre = $snombre;
+		$this->snombre = $snombre instanceof TemplateMenuName ? $snombre->value() : $snombre;
 	}
 
     /* ------------------- PARA el mod_tabla  -------------------------------*/

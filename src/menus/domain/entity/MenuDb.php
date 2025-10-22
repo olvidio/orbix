@@ -2,6 +2,8 @@
 
 namespace src\menus\domain\entity;
 	use function core\is_true;
+	use src\menus\domain\value_objects\MenuName;
+	use src\menus\domain\value_objects\MenuParametros;
 /**
  * Clase que implementa la entidad aux_menus
  *
@@ -152,9 +154,9 @@ class MenuDb {
 	 *
 	 * @param string|null $smenu
 	 */
-	public function setMenu(?string $smenu = null): void
+	public function setMenu(string|MenuName|null $smenu = null): void
 	{
-		$this->smenu = $smenu;
+		$this->smenu = $smenu instanceof MenuName ? $smenu->value() : $smenu;
 	}
 	/**
 	 *
@@ -168,9 +170,9 @@ class MenuDb {
 	 *
 	 * @param string|null $sparametros
 	 */
-	public function setParametros(?string $sparametros = null): void
+	public function setParametros(string|MenuParametros|null $sparametros = null): void
 	{
-		$this->sparametros = $sparametros;
+		$this->sparametros = $sparametros instanceof MenuParametros ? $sparametros->value() : $sparametros;
 	}
 	/**
 	 *

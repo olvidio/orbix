@@ -4,6 +4,9 @@ namespace src\menus\domain\entity;
 
 use core\DatosCampo;
 use core\Set;
+use src\menus\domain\value_objects\MetaMenuUrl;
+use src\menus\domain\value_objects\MetaMenuParametros;
+use src\menus\domain\value_objects\MetaMenuDescripcion;
 
 /**
  * Clase que implementa la entidad aux_metamenus
@@ -127,9 +130,9 @@ class MetaMenu
      *
      * @param string|null $surl
      */
-    public function setUrl(?string $surl = null): void
+    public function setUrl(string|MetaMenuUrl|null $surl = null): void
     {
-        $this->surl = $surl;
+        $this->surl = $surl instanceof MetaMenuUrl ? $surl->value() : $surl;
     }
 
     /**
@@ -145,9 +148,9 @@ class MetaMenu
      *
      * @param string|null $sparametros
      */
-    public function setParametros(?string $sparametros = null): void
+    public function setParametros(string|MetaMenuParametros|null $sparametros = null): void
     {
-        $this->sparametros = $sparametros;
+        $this->sparametros = $sparametros instanceof MetaMenuParametros ? $sparametros->value() : $sparametros;
     }
 
     /**
@@ -163,9 +166,9 @@ class MetaMenu
      *
      * @param string|null $sdescripcion
      */
-    public function setDescripcion(?string $sdescripcion = null): void
+    public function setDescripcion(string|MetaMenuDescripcion|null $sdescripcion = null): void
     {
-        $this->sdescripcion = $sdescripcion;
+        $this->sdescripcion = $sdescripcion instanceof MetaMenuDescripcion ? $sdescripcion->value() : $sdescripcion;
     }
 
     /* ------------------- PARA el mod_tabla  -------------------------------*/

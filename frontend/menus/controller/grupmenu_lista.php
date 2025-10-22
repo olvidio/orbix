@@ -17,7 +17,7 @@ $Qfiltro_grupo = (string)filter_input(INPUT_POST, 'filtro_grupo');
 $Qnuevo = (string)filter_input(INPUT_POST, 'nuevo');
 $Qid_menu = (string)filter_input(INPUT_POST, 'id_menu');
 
-$url_backend = '/src/menus/infrastructure/controllers/lista_grup_menus.php';
+$url_backend = '/src/menus/infrastructure/controllers/grupmenu_lista.php';
 $data = PostRequest::getDataFromUrl($url_backend);
 
 $a_valores = $data['a_valores'];

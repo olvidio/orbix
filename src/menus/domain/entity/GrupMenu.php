@@ -4,6 +4,7 @@ namespace src\menus\domain\entity;
 
 use core\DatosCampo;
 use core\Set;
+use src\menus\domain\value_objects\GrupMenuName;
 
 /**
  * Clase que implementa la entidad aux_grupmenu
@@ -111,9 +112,9 @@ class GrupMenu
      *
      * @param string $sgrup_menu
      */
-    public function setGrup_menu(string $sgrup_menu): void
+    public function setGrup_menu(string|GrupMenuName $sgrup_menu): void
     {
-        $this->sgrup_menu = $sgrup_menu;
+        $this->sgrup_menu = $sgrup_menu instanceof GrupMenuName ? $sgrup_menu->value() : $sgrup_menu;
     }
 
     /**

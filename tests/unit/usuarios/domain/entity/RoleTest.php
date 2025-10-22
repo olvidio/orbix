@@ -70,8 +70,9 @@ class RoleTest extends myTest
 
     public function test_get_pau()
     {
-        $this->assertNull($this->role->getPau());
-        $this->assertNull($this->role->getPauAsString());
+        // Default should normalize to PAU_NONE
+        $this->assertInstanceOf(PauType::class, $this->role->getPau());
+        $this->assertEquals(PauType::PAU_NONE, $this->role->getPauAsString());
     }
 
     public function test_set_and_get_pau()
@@ -133,6 +134,38 @@ class RoleTest extends myTest
         $this->assertFalse($role->isSv());
         $this->assertEquals(PauType::PAU_CDC, $role->getPauAsString());
         $this->assertTrue($role->isDmz());
+    }
+
+    public function test_set_all_attributes_with_null_pau_defaults_to_none()
+    {
+        $role = new Role();
+        $attributes = [
+            'id_role' => 3,
+            'role' => 'editor',
+            'sf' => false,
+            'sv' => true,
+            'pau' => null,
+            'dmz' => false
+        ];
+        $role->setAllAttributes($attributes);
+
+        $this->assertEquals(PauType::PAU_NONE, $role->getPauAsString());
+    }
+
+    public function test_set_all_attributes_with_empty_pau_defaults_to_none()
+    {
+        $role = new Role();
+        $attributes = [
+            'id_role' => 4,
+            'role' => 'viewer',
+            'sf' => false,
+            'sv' => false,
+            'pau' => '',
+            'dmz' => null
+        ];
+        $role->setAllAttributes($attributes);
+
+        $this->assertEquals(PauType::PAU_NONE, $role->getPauAsString());
     }
 
     // Note: The isRole and isRolePau methods depend on the RoleRepository,

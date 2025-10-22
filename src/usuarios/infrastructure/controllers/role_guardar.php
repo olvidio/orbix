@@ -40,7 +40,8 @@ if ($Qrole) {
     $oRole->setSf($sf);
     $sv = !empty($Qsv) ? '1' : 0;
     $oRole->setSv($sv);
-    $oRole->setPau(new PauType($Qpau));
+    $pauStr = ($Qpau === null || $Qpau === '') ? PauType::PAU_NONE : $Qpau;
+    $oRole->setPau(new PauType($pauStr));
     $dmz = !empty($Qdmz) ? '1' : 0;
     $oRole->setDmz($dmz);
     if ($RoleRepository->Guardar($oRole) === false) {

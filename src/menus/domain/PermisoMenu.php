@@ -5,7 +5,7 @@ namespace src\menus\domain;
 use permisos\model\XPermisos;
 
 /**
- * Classe per saber els permisos d'un usuari sobre els menus.
+ * Para saber los permisos de un usuario sobre los menus.
  *
  * @package delegación
  * @subpackage model
@@ -62,9 +62,9 @@ class PermisoMenu extends XPermisos
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
     /**
-     * Retorna true o false si és visible o no.
+     * devuelve true o false si és visible o no.
      *
-     * @param integer permís del menú.
+     * @param integer $perm_menu permiso del menú.
      * @return boolean
      */
     function visible($perm_menu)

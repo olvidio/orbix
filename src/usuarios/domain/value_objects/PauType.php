@@ -14,6 +14,7 @@ namespace src\usuarios\domain\value_objects;
 final class PauType
 {
     // PAU constants
+    public const PAU_NONE = 'none'; // Ninguno
     public const PAU_CDC = 'cdc'; // Casa
     public const PAU_CTR = 'ctr'; // Centro
     public const PAU_NOM = 'nom'; // Persona
@@ -46,6 +47,7 @@ final class PauType
         }
 
         $validPauTypes = [
+            self::PAU_NONE,
             self::PAU_CDC,
             self::PAU_CTR,
             self::PAU_NOM,

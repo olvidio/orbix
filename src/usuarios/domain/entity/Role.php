@@ -20,12 +20,14 @@ class Role
 {
 
     // pau constants.
+    const PAU_NONE = 'none'; // No corresponde a ninguna Persona o ubi.
     const PAU_CDC = 'cdc'; // Casa.
     const PAU_CTR = 'ctr'; // Centro.
     const PAU_NOM = 'nom'; // Persona.
     const PAU_SACD = 'sacd'; // Sacd.
 
     const ARRAY_PAU_TXT = [
+        self::PAU_NONE => 'none',
         self::PAU_CDC => 'cdc',
         self::PAU_CTR => 'ctr',
         self::PAU_NOM => 'nom',
@@ -121,15 +123,13 @@ class Role
             $this->setSv(is_true($aDatos['sv']));
         }
         if (array_key_exists('pau', $aDatos)) {
-            if ($aDatos['pau'] === null) {
-                $this->setPau(null);
+            $pauVal = $aDatos['pau'];
+            if ($pauVal instanceof PauType) {
+                $this->setPau($pauVal);
             } else {
-                // Check if it's already a PauType object
-                if ($aDatos['pau'] instanceof PauType) {
-                    $this->setPau($aDatos['pau']);
-                } else {
-                    $this->setPau(new PauType($aDatos['pau']));
-                }
+                // Normalize null/empty string to PAU_NONE
+                $pauStr = ($pauVal === null || $pauVal === '') ? PauType::PAU_NONE : (string)$pauVal;
+                $this->setPau(new PauType($pauStr));
             }
         }
         if (array_key_exists('dmz', $aDatos)) {
@@ -224,8 +224,12 @@ class Role
      *
      * @return PauType|null
      */
-    public function getPau(): ?PauType
+    public function getPau(): PauType
     {
+        // Normalize: never return null; default to PAU_NONE
+        if ($this->spau === null) {
+            $this->spau = new PauType(PauType::PAU_NONE);
+        }
         return $this->spau;
     }
 
@@ -235,7 +239,8 @@ class Role
      */
     public function setPau(?PauType $spau = null): void
     {
-        $this->spau = $spau;
+        // Normalize null to PAU_NONE
+        $this->spau = $spau ?? new PauType(PauType::PAU_NONE);
     }
 
     /**
@@ -243,9 +248,9 @@ class Role
      *
      * @return string|null
      */
-    public function getPauAsString(): ?string
+    public function getPauAsString(): string
     {
-        return $this->spau ? $this->spau->value() : null;
+        return $this->getPau()->value();
     }
 
     /**

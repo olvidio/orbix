@@ -7,6 +7,12 @@ use Tests\myTest;
 
 class PauTypeTest extends myTest
 {
+    public function test_create_valid_pau_type_none()
+    {
+        $pauType = new PauType(PauType::PAU_NONE);
+        $this->assertEquals(PauType::PAU_NONE, $pauType->value());
+    }
+
     public function test_create_valid_pau_type_cdc()
     {
         $pauType = new PauType(PauType::PAU_CDC);

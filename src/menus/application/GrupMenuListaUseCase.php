@@ -4,7 +4,7 @@ namespace src\menus\application;
 
 use src\menus\application\repositories\GrupMenuRepository;
 
-class ListaGrupMenus
+class GrupMenuListaUseCase
 {
     public function __invoke()
     {
