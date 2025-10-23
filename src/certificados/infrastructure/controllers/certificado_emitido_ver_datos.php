@@ -36,5 +36,4 @@ $data['apellidos_nombre'] = $apellidos_nombre;
 $data['id_nom'] = $id_nom;
 
 // envía una Response
-$jsondata = ContestarJson::respuestaPhp($error_txt, $data);
-ContestarJson::send($jsondata);
+ContestarJson::enviar($error_txt, $data);

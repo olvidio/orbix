@@ -26,5 +26,4 @@ $data['aOpciones'] = $oDatos->getOpcionesParaCondicion($QpKeyRepository,$Qvalor_
 $error_txt = '';
 
 // envía una Response
-$jsondata = ContestarJson::respuestaPhp($error_txt, $data);
-ContestarJson::send($jsondata);
+ContestarJson::enviar($error_txt, $data);

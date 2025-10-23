@@ -29,5 +29,4 @@ $CertificadoDelete = new CertificadoEmitidoDelete();
 $error_txt = $CertificadoDelete->delete($Qid_item);
 
 // envía una Response
-$jsondata = ContestarJson::respuestaPhp($error_txt, 'ok');
-ContestarJson::send($jsondata);
+ContestarJson::enviar($error_txt, 'ok');

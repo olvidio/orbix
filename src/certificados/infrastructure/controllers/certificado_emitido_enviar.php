@@ -27,5 +27,4 @@ if (!empty($a_sel)) { //vengo de un checkbox
 $error_txt = CertificadoEmitidoEnviar::enviar($Qid_item);
 
 // envía una Response
-$jsondata = ContestarJson::respuestaPhp($error_txt, 'ok');
-ContestarJson::send($jsondata);
+$jsondata = ContestarJson::enviar($error_txt, 'ok');

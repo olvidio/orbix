@@ -26,5 +26,4 @@ foreach ($cLugares as $oLugar) {
 }
 
 // envía una Response
-$jsondata = ContestarJson::respuestaPhp($error_txt, $a_valores);
-ContestarJson::send($jsondata);
+ContestarJson::enviar($error_txt, $a_valores);

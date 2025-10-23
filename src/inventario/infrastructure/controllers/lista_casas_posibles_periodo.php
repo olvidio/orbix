@@ -65,5 +65,4 @@ $data = [
 ];
 
 // envía una Response
-$jsondata = ContestarJson::respuestaPhp($error_txt, $data);
-ContestarJson::send($jsondata);
+ContestarJson::enviar($error_txt, $data);
