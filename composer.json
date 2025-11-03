@@ -32,6 +32,7 @@
         "psr-4": {
           "frontend\\": "frontend/",
           "src\\": "src/",
+          "config\\model\\": "src/config/domain/",
           "": "apps/"
         }
    },

@@ -2,7 +2,6 @@
 
 namespace frontend\shared\model;
 
-use core\ConfigGlobal;
 use core\ServerConf;
 use Exception;
 use jblond\TwigTrans\Translation;
@@ -10,104 +9,67 @@ use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
 use Twig\TwigFilter;
 
-require_once(ConfigGlobal::$dir_libs . '/vendor/autoload.php');
+require_once(\core\ConfigGlobal::$dir_libs . '/vendor/autoload.php');
 
 /**
+ * ViewNewTwig: motor de plantillas Twig para el árbol de frontend/
  *
- *
- * @package delegación
- * @subpackage model
- * @author
- * @version 1.0
- * @created 22/6/2020
+ * - Mantiene la misma API pública que core\ViewTwig (renderizar)
+ * - Resuelve rutas de plantillas bajo frontend/... sustituyendo controller|model por view
  */
 class ViewNewTwig extends Environment
 {
-    /* ATRIBUTOS ----------------------------------------------------------------- */
-
-    /**
-     * Namespace
-     *
-     * @var FilesystemLoader
-     */
+    /** @var FilesystemLoader */
     private $loader;
 
-
-    /* CONSTRUCTOR -------------------------------------------------------------- */
-    /**
-     * Constructor de la classe.
-     *
-     * param string  $dirname Es el directorio donde están las plantillas de twig
-     * param array $paths $namespace => $path los possibles directorios donde buscar plantillas, son el namespace. (se antepone @).
-     *
-     * return \Twig\Environment
-     */
-    function __construct($dirname, array $paths = [])
+    public function __construct(string $dirname, array $paths = [])
     {
-
         $abs_dir = $this->setAbsolutePath($dirname);
-
         $loader = new FilesystemLoader($abs_dir);
 
         foreach ($paths as $namespace => $path) {
-            $abs_dir = $this->setAbsolutePath($path);
-            $loader->addPath($abs_dir, $namespace);
+            $abs_path = $this->setAbsolutePath($path);
+            $loader->addPath($abs_path, $namespace);
         }
 
+        // añadir scripts globales
         $dir_js = $this->getJsPath();
         $loader->addPath($dir_js, 'global_js');
 
         $options = [
-            //'cache' => '/path/to/compilation_cache',
             'cache' => false,
             'debug' => true,
             'auto_reload' => true,
         ];
+
         $filter = new TwigFilter('trans', function (Environment $env, $context, $string) {
             return Translation::TransGetText($string, []);
         }, ['needs_context' => true, 'needs_environment' => true]);
 
         parent::__construct($loader, $options);
-        // load the i18n extension for using the translation tag for twig
-        // {% trans %}my string{% endtrans %}
         parent::addFilter($filter);
         parent::addExtension(new Translation());
-
     }
 
-    private function setAbsolutePath($dirname)
+    private function setAbsolutePath(string $dirname): string
     {
-        $dir_apps = '';
-        $base_dir = ServerConf::DIR . $dir_apps;
+        $base_dir = ServerConf::DIR . DIRECTORY_SEPARATOR . 'frontend';
 
         // reemplazo controller o model por view
-        $patterns = [];
-        $patterns[0] = '/controller/';
-        $patterns[1] = '/model/';
-        $replacements = [];
-        $replacements[0] = 'view';
-        $replacements[1] = 'view';
+        $patterns = ['/controller/', '/model/'];
+        $replacements = ['view', 'view'];
 
         $new_dir = preg_replace($patterns, $replacements, $dirname);
         $new_dir = str_replace('\\', DIRECTORY_SEPARATOR, $new_dir);
 
-        // dir_templates
         return $base_dir . DIRECTORY_SEPARATOR . $new_dir;
     }
 
-    private function getJsPath()
+    private function getJsPath(): string
     {
-        //$dir_apps = ConfigGlobal::$web_path.'/apps';
-        // en este caso ya esta en document_root
-        $dir_apps = '';
-        $base_dir = ServerConf::DIR . $dir_apps;
-        $new_dir = 'scripts';
-
-        // dir_templates
-        return $base_dir . DIRECTORY_SEPARATOR . $new_dir;
+        // scripts están en la raíz del proyecto
+        return ServerConf::DIR . DIRECTORY_SEPARATOR . 'scripts';
     }
-
-    /* MÉTODOS PÚBLICOS -----------------------------------------------------------*/
 
     public function renderizar($name, $context): void
     {
@@ -120,5 +82,4 @@ class ViewNewTwig extends Environment
 
         echo $tpl->render($context);
     }
-
 }
