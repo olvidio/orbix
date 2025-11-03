@@ -48,7 +48,7 @@ $Qobj_pau = (string)filter_input(INPUT_POST, 'obj_pau');
 $Qna = (string)filter_input(INPUT_POST, 'na');
 
 $mes = date('m');
-$fin_m = $_SESSION['oConfig']->getMesFinStgr();
+//$fin_m = $_SESSION['oConfig']->getMesFinStgr();
 if ($mes > $fin_m) {
     $periodo_txt = sprintf(_("(por defecto: periodo desde 1/%s hasta 31/5)"), $fin_m + 1);
 } else {
@@ -116,6 +116,9 @@ switch ($Qobj_pau) {
         break;
     case 'PersonaEx':
         $personas_txt = _("de paso");
+        break;
+    case 'PersonaSacd':
+        $personas_txt = _("sacd");
         break;
     default:
         $err_switch = sprintf(_("opción no definida en switch en %s, linea %s"), __FILE__, __LINE__);
