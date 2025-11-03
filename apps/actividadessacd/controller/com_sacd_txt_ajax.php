@@ -16,6 +16,10 @@ $Qque = (string)filter_input(INPUT_POST, 'que');
 $Qclave = (string)filter_input(INPUT_POST, 'clave');
 $Qidioma = (string)filter_input(INPUT_POST, 'idioma');
 
+// si es tipo ca_ES.UTF-8, quedarme sólo con 'es'
+$Qidioma = substr($Qidioma, 0, strpos($Qidioma, '_'));
+
+
 switch ($Qque) {
     case 'get_texto':
         $aWhere = [];
