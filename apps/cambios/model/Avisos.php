@@ -353,9 +353,11 @@ class Avisos
                     $propio = $aAsistente['propio'];
                     $id_cargo = empty($aAsistente['id_cargo']) ? '' : $aAsistente['id_cargo'];
 
-                    $oPermActividades = new PermisosActividades($this->id_usuario);
-                    $oPermActividades->setActividad($id_activ);
-                    $permiso_ver = $oPermActividades->havePermisoSacd($id_cargo, $propio);
+                    if (!empty($id_cargo)) {
+                        $oPermActividades = new PermisosActividades($this->id_usuario);
+                        $oPermActividades->setActividad($id_activ);
+                        $permiso_ver = $oPermActividades->havePermisoSacd($id_cargo, $propio);
+                    }
                 }
                 return $permiso_ver;
                 break;
