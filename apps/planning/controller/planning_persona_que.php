@@ -117,6 +117,9 @@ switch ($Qobj_pau) {
     case 'PersonaEx':
         $personas_txt = _("de paso");
         break;
+    case 'PersonaSacd':
+        $personas_txt = _("sacd");
+        break;
     default:
         $err_switch = sprintf(_("opción no definida en switch en %s, linea %s"), __FILE__, __LINE__);
         exit ($err_switch);

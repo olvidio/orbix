@@ -7,10 +7,12 @@ use personas\model\entity\GestorPersonaEx;
 use personas\model\entity\GestorPersonaN;
 use personas\model\entity\GestorPersonaNax;
 use personas\model\entity\GestorPersonaS;
+use personas\model\entity\GestorPersonaSacd;
 use personas\model\entity\GestorPersonaSSSC;
 use ubis\model\entity\GestorCentroDl;
 use web\Hash;
 use web\Lista;
+use function core\is_true;
 
 /**
  * Página de selección de las personas para las que se trazará un planning
@@ -157,6 +159,9 @@ if (!empty($aWhereCtr)) { // si busco por centro sólo puede ser de casa
             break;
         case 'PersonaEx':
             $GesPersonas = new GestorPersonaEx();
+            break;
+        case 'PersonaSacd':
+            $GesPersonas = new GestorPersonaSacd();
             break;
         default:
             $GesPersonas = new GestorPersonaDl();
