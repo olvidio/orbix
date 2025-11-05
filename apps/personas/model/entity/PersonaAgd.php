@@ -217,7 +217,7 @@ class PersonaAgd extends PersonaDl
             $this->setAllAtributes($aDadesLast);
         }
         // Modifico la ficha en la BD-comun
-        if ($this->bsacd) {
+        if (is_true($this->bsacd)) {
             $aDades = $this->aDades;
             $aDades['id_tabla'] = $this->sid_tabla;
             $this->copia2Comun($aDades);
