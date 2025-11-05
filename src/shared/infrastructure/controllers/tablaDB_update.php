@@ -31,7 +31,7 @@ if (!empty($a_sel)) { //vengo de un checkbox
 $a_pkey = json_decode(core\urlsafe_b64decode($Qs_pkey));
 
 // Tiene que ser en dos pasos.
-$obj = $Qclase_info;
+$obj = urldecode($Qclase_info);
 $oInfoClase = new $obj();
 $oInfoClase->setMod($Qmod);
 $oInfoClase->setA_pkey($a_pkey); //Para eliminar y editar

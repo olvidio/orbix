@@ -3,7 +3,7 @@
 use core\ConfigGlobal;
 use core\DBPropiedades;
 use core\ViewPhtml;
-use ubis\model\entity\GestorRegion;
+use src\ubis\application\services\RegionDropdown;
 use web\Desplegable;
 use web\Hash;
 
@@ -20,9 +20,7 @@ $oDBPropiedades = new DBPropiedades();
 $oDBPropiedades->setBlanco(TRUE);
 $oEsquemaRef = $oDBPropiedades->posibles_esquemas('');
 
-$oGesReg = new GestorRegion();
-$oDesplRegiones = $oGesReg->getListaRegiones();
-$oDesplRegiones->setNombre('region');
+$oDesplRegiones = RegionDropdown::activasOrdenNombre('region');
 $oDesplRegiones->setAction('fnjs_dl()');
 
 $oHash = new Hash();

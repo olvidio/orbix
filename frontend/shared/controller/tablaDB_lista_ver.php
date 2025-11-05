@@ -45,7 +45,12 @@ if (isset($_POST['stack'])) {
     $oPosicion->addParametro('scroll_id', $Qscroll_id, 1);
 }
 
+// en los menus esta sin codificar, pero a partir de aquí si:
 $Qclase_info = (string)filter_input(INPUT_POST, 'clase_info');
+if (urldecode($Qclase_info) === $Qclase_info) {
+    $Qclase_info = urlencode($Qclase_info);
+}
+
 $QaSerieBuscar = (string)filter_input(INPUT_POST, 'aSerieBuscar');
 $Qk_buscar = (string)filter_input(INPUT_POST, 'k_buscar');
 $Qpermiso = (integer)filter_input(INPUT_POST, 'permiso');
@@ -53,7 +58,6 @@ if (empty($Qpermiso)) {
     $Qpermiso = 3;
 }
 
-$Qclase_info = urldecode($Qclase_info);
 $QaSerieBuscar = urldecode($QaSerieBuscar);
 $Qk_buscar = urldecode($Qk_buscar);
 

@@ -21,7 +21,7 @@ $Qid_pau = (integer)filter_input(INPUT_POST, 'id_pau');
 $Qobj_pau = (string)filter_input(INPUT_POST, 'obj_pau');
 
 // Tiene que ser en dos pasos.
-$obj = $Qclase_info;
+$obj = urldecode($Qclase_info);
 $oInfoClase = new $obj();
 
 $oInfoClase->setPau($Qpau);

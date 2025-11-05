@@ -4,7 +4,7 @@ use core\ViewTwig;
 use web\Hash;
 use ubis\model\entity\GestorDelegacion;
 use ubis\model\entity\GestorDireccionCtr;
-use ubis\model\entity\GestorRegion;
+use src\ubis\application\services\RegionDropdown;
 
 /**
  * Es un formulario para introducir las condiciones de búsqueda de los ubis.
@@ -28,9 +28,7 @@ require_once("apps/core/global_object.inc");
 
 
 //regiones posibles
-$GesRegion = new GestorRegion();
-$oDesplRegion = $GesRegion->getListaRegiones();
-$oDesplRegion->setNombre('region');
+$oDesplRegion = RegionDropdown::activasOrdenNombre('region');
 //paises posibles
 $GesPais = new GestorDireccionCtr();
 $oDesplPais = $GesPais->getListaPaises();

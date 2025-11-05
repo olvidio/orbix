@@ -2,7 +2,7 @@
 
 use core\ViewPhtml;
 use ubis\model\entity\GestorDireccionCtr;
-use ubis\model\entity\GestorRegion;
+use src\ubis\application\services\RegionDropdown;
 use ubis\model\entity\GestorTipoCasa;
 use ubis\model\entity\GestorTipoCentro;
 use web\Desplegable;
@@ -28,9 +28,7 @@ require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
 //regiones posibles
-$GesRegion = new GestorRegion();
-$oDesplRegion = $GesRegion->getListaRegiones();
-$oDesplRegion->setNombre('region');
+$oDesplRegion = RegionDropdown::activasOrdenNombre('region');
 
 // tipo ctr
 $oDesplTipoCentro = new Desplegable();

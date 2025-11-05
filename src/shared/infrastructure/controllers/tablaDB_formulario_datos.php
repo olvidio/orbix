@@ -15,7 +15,7 @@ require_once("apps/core/global_object.inc");
 
 $Qclase_info = filter_input(INPUT_POST, 'clase_info');
 $a_pkey = filter_input(INPUT_POST, 'a_pkey');
-$Qobj_pau = filter_input(INPUT_POST, 'obj_pau');;
+$Qobj_pau = filter_input(INPUT_POST, 'obj_pau');
 $Qmod = filter_input(INPUT_POST, 'mod');
 
 // Tiene que ser en dos pasos.

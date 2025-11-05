@@ -20,7 +20,7 @@ $Qid_pau = (integer)filter_input(INPUT_POST, 'id_pau');
 $Qobj_pau = (string)filter_input(INPUT_POST, 'obj_pau');
 
 // Tiene que ser en dos pasos.
-$obj = $Qclase_info;
+$obj = urldecode($Qclase_info);
 $oInfoClase = new $obj();
 
 $oInfoClase->setPau($Qpau);
@@ -36,7 +36,7 @@ if (!empty($Qk_buscar)) {
 $oDatosTabla->setColeccion($oInfoClase->getColeccion());
 
 // para el id_tabla, convierto los posibles '/' y '\' en '_' y también quito '.php'
-$id_tabla = str_replace(array('/', '\\', '.php'), array('_', '_', ''), $Qclase_info);
+$id_tabla = str_replace(array('/', '\\', '.php'), array('_', '_', ''), $obj);
 $id_tabla = 'repo_tabla_sql_' . $id_tabla;
 
 $error_txt = '';
