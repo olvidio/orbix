@@ -1,0 +1,35 @@
+<style>
+    table {
+        width: 600px;
+    }
+
+    .contenido {
+        font-weight: bold;
+    }
+
+    .link {
+        text-decoration: none;
+        color: blue;
+        cursor: pointer;
+    }
+</style>
+<form id="modifica">
+    {{ oActividadTipo.getHtml()|raw }}
+    {{ oHash.getCamposHtml()|raw }}
+    <div class="flex-container">
+        <div>
+            <h3>
+                {{ "Nombre de actividad para"|trans|raw }}:
+                {{ tipo_txt|raw }}
+            </h3>
+        </div>
+        <div>
+            <input id="nombre_actividad" name="nombre_actividad" value="{{ nombre_actividad }}" \>
+        </div>
+    </div>
+    <br><br>
+    <br><br>
+    <input type="button" value="{{ "guardar"|trans|raw }}" onclick="fnjs_guardar('#modifica','update');">
+    <input type="button" value="{{ "eliminar"|trans|raw }}" onclick="fnjs_guardar('#modifica','eliminar');">
+    <input type="button" value="{{ "cancel"|trans|raw }}" onclick="fnjs_cerrar();">
+</form>

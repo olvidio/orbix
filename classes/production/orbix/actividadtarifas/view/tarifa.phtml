@@ -1,0 +1,86 @@
+<?php
+
+use core\ConfigGlobal;
+
+?>
+<script>
+    fnjs_ver = function () {
+        /* obtener el listado */
+        var url = '<?= ConfigGlobal::getWeb() ?>/apps/actividadtarifas/controller/tarifa_ajax.php';
+        var parametros = 'que=tarifas<?= $h_ver ?>';
+
+        $.ajax({
+            url: url,
+            type: 'post',
+            data: parametros
+        })
+            .done(function (rta_txt) {
+                if (rta_txt) {
+                    $('#ficha').html(rta_txt);
+                }
+            });
+        document.getElementById("overlay").style.display = "none";
+    }
+
+    fnjs_modificar = function (id_tarifa) {
+        $('#div_modificar').addClass('ventana');
+        $('#div_modificar').width('auto');
+        $('#div_modificar').height('auto');
+        document.getElementById("overlay").style.display = "block";
+
+
+        var url = '<?= ConfigGlobal::getWeb() ?>/apps/actividadtarifas/controller/tarifa_ajax.php';
+        var parametros = 'que=tar_form&id_tarifa=' + id_tarifa + '<?= $h_modificar ?>';
+        fnjs_update_div('#div_modificar', url + '?' + parametros);
+    }
+    fnjs_cerrar = function () {
+        $('#div_modificar').html('');
+        $('#div_modificar').width('0');
+        $('#div_modificar').height('0');
+        $('#div_modificar').removeClass('ventana');
+        document.getElementById("overlay").style.display = "none";
+    }
+
+    fnjs_guardar = function (formulario, que) {
+        var err = 0;
+        if (que === "tar_eliminar") {
+            seguro = confirm("<?= $txt_eliminar ?>");
+            if (seguro) {
+                err = 0;
+            } else {
+                err = 1;
+            }
+        }
+        if (err !== 1) {
+            $(formulario + ' input[name="que"]').val(que);
+            $(formulario).attr('action', "apps/actividadtarifas/controller/tarifa_ajax.php")
+            $(formulario).one("submit", function () {
+                $.ajax({
+                    url: $(this).attr('action'),
+                    type: 'post',
+                    data: $(this).serialize()
+                })
+                    .done(function (rta_txt) {
+                        if (rta_txt != '' && rta_txt != '\n') {
+                            alert(rta_txt);
+                        } else {
+                            $('#div_modificar').html('');
+                            $('#div_modificar').width('0');
+                            $('#div_modificar').height('0');
+                            $('#div_modificar').removeClass('ventana');
+                        }
+                        // OJO hay que actualizar el formulario de la lista, no el actual.
+                        fnjs_ver();
+                    });
+                return false;
+            });
+            $(formulario).trigger("submit");
+            $(formulario).off();
+        }
+    }
+
+    $(document).ready(fnjs_ver());
+</script>
+<div id="ficha"></div>
+<div id="div_modificar"></div>
+<div id="overlay"></div>

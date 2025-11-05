@@ -1,0 +1,39 @@
+<style>
+    table {
+        width: 600px;
+    }
+
+    .contenido {
+        font-weight: bold;
+    }
+
+    .link {
+        text-decoration: none;
+        color: blue;
+        cursor: pointer;
+    }
+</style>
+<form id="modifica">
+    {{ oActividadTipo.getHtml()|raw }}
+    {{ oHash.getCamposHtml()|raw }}
+    <div class="flex-container">
+        <div>
+            <h3>
+                {{ "Fecha de activación para"|trans|raw }}:
+                {{ tipo_txt|raw }}
+            </h3>
+             {{ "Número de días antes del inicio de la actividad"|trans|raw }},
+            <br>
+            {{ "o 'upload' para poner el día en que se hace la exportación"|trans|raw }}:
+            <br>
+        </div>
+        <div>
+            <input id="activacion" name="activacion" value="{{ activacion }}" \>
+        </div>
+    </div>
+    <br><br>
+    <br><br>
+    <input type="button" value="{{ "guardar"|trans|raw }}" onclick="fnjs_guardar('#modifica','update');">
+    <input type="button" value="{{ "eliminar"|trans|raw }}" onclick="fnjs_guardar('#modifica','eliminar');">
+    <input type="button" value="{{ "cancel"|trans|raw }}" onclick="fnjs_cerrar();">
+</form>

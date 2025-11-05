@@ -1,0 +1,51 @@
+<ul>
+    <?php if ($_SESSION['oPerm']->have_perm_oficina('est')) { ?>
+        <li><span class="link"
+                  onclick="fnjs_update_div('#main','<?= $go['comprobar_n'] ?>');"><?= _("comprobar los datos del fichero de notas para numerarios") ?></span>
+        </li>
+        <li><span class="link"
+                  onclick="fnjs_update_div('#main','<?= $go['comprobar_a'] ?>');"><?= _("comprobar los datos del fichero de notas para agregados") ?></span>
+        </li>
+    <?php }
+    if (($_SESSION['oPerm']->have_perm_oficina('est')) || ($_SESSION['oPerm']->have_perm_oficina('dtor'))) { ?>
+        <li><?php printf(_("informe anual del Studium Generale para <b>%s</b>"), _("numerarios")) ?>
+            <ul>
+                <li><span class="link"
+                          onclick="fnjs_update_div('#main','<?= $go['n_listado'] ?>');"><?= _("con listados") ?></span>
+                </li>
+                <li><span class="link"
+                          onclick="fnjs_update_div('#main','<?= $go['n_numeros'] ?>');"><?= _("sólo números") ?></span>
+                </li>
+            </ul>
+        </li>
+        <li><?php printf(_("informe anual del Studium Generale para <b>%s</b>"), _("agregados")) ?>
+            <ul>
+                <li><span class="link"
+                          onclick="fnjs_update_div('#main','<?= $go['agd_listado'] ?>');"><?= _("con listados") ?></span>
+                </li>
+                <li><span class="link"
+                          onclick="fnjs_update_div('#main','<?= $go['agd_numeros'] ?>');"><?= _("sólo números") ?></span>
+                </li>
+            </ul>
+        </li>
+        <li><?php printf(_("informe anual del Studium Generale para <b>%s</b>"), _("profesores")) ?>
+            <ul>
+                <li><span class="link"
+                          onclick="fnjs_update_div('#main','<?= $go['profesores_listado'] ?>');"><?= _("con listados") ?></span>
+                </li>
+                <li><span class="link"
+                          onclick="fnjs_update_div('#main','<?= $go['profesores_numeros'] ?>');"><?= _("sólo números") ?></span>
+                </li>
+            </ul>
+        </li>
+        <br><br>
+        <li><span class="link"
+                  onclick="fnjs_update_div('#main','<?= $go['asig_faltan'] ?>');"><?= _("listar por asignaturas que faltan (no se incluyen las cursadas sin examinar)") ?></span>
+        </li>
+    <?php } ?>
+</ul>
+<?php if ($rstgr) { ?>
+    <input type="button" onclick="fnjs_update_div('#main','<?= $go['filtro'] ?>');"
+           value="<?= _("filtrar por delegaciones") ?>">
+
+<?php } ?>

@@ -1,0 +1,86 @@
+datos del Horario encargo:
+
+<br>
+<input type='button' value="{{ "cancel"|trans|raw }}" onclick="fnjs_cerrar();">
+
+<br>
+<table>
+    <tr>
+        <th> {{ "f_ini" }} </th>
+        <th> {{ "f_fin" }} </th>
+        <th> {{ "dia_ref" }} </th>
+        <th> {{ "h_ini" }} </th>
+        <th> {{ "h_fin" }} </th>
+        <th></th>
+    </tr>
+    {% for horario_i in  a_horario %}
+
+        <form id="mod_{{ i }}" action="">
+            <tr>
+                <td><input type="text" name="f_ini" value="{{ horario_i.f_ini }}"></td>
+                <td><input type="text" name="f_fin" value="{{ horario_i.f_fin }}"></td>
+                <td><input type="text" name="dia_ref" value="{{ horario_i.dia_ref }}"></td>
+                <td><input type="text" name="h_ini" value="{{ horario_i.h_ini }}"></td>
+                <td><input type="text" name="h_fin" value="{{ horario_i.h_fin }}"></td>
+                <td>
+                    <input type="hidden" name="mod" value="editar">
+                    <input type="hidden" name="id_item_h" value="{{ horario_i.id_item_h }}"></td>
+                <input type="button" name="b_add" onclick="fnjs_mod_horario(this.form)">
+                </td>
+            </tr>
+        </form>
+
+    {% endfor %}
+</table>
+
+{{ "Añadir"|trans|raw }}
+<br>
+
+<form id="add" action="">
+<table>
+    <tr>
+        <th> {{ "f_ini" }} </th>
+        <th> {{ "f_fin" }} </th>
+        <th> {{ "dia_ref" }} </th>
+        <th> {{ "h_ini" }} </th>
+        <th> {{ "h_fin" }} </th>
+        <th></th>
+    </tr>
+    <tr>
+            <td><input type="text" name="f_ini" ></td>
+            <td><input type="text" name="f_fin"></td>
+            <td><input type="text" name="dia_ref" ></td>
+            <td><input type="text" name="h_ini" ></td>
+            <td><input type="text" name="h_fin" ></td>
+            <td>
+                {{ oHashAdd.getCamposHtml|raw }}
+                <input type="button" name="b_add" onclick="fnjs_add_horario(this.form)" form="add"
+                       value="{{ "añadir"|trans|raw }}">
+            </td>
+    </tr>
+</table>
+</form>
+
+<script>
+    fnjs_add_horario = function (formulario) {
+        var url = "apps/encargossacd/controller/horario_update.php";
+        var parametros = $(formulario).serialize();
+
+        var request = $.ajax({
+            url: url,
+            data: parametros,
+            type: 'post',
+            dataType: 'html'
+        });
+        request.done(function (rta_txt) {
+            if (rta_txt != '' && rta_txt != '\\n') {
+                alert('{{ "respuesta"|trans|raw }}: ' + rta_txt);
+            } else {
+                fnjs_cerrar();
+            }
+        });
+
+    }
+</script>
+
+

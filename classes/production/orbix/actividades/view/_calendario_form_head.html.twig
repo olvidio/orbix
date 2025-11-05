@@ -1,0 +1,13 @@
+{% block head %}
+{{  oHash.getCamposHtml|raw }}
+<input type='hidden' id='mod' name='mod' value="{{ mod }}">
+<table><tr><th class=titulo_inv>{{ titulo }}
+</th></tr>
+<tr><td class=subtitulo>{{ "escoger el tipo de actividad"|trans|capitalize }}
+</td></tr>
+<tr>
+    {{ oActividadTipo.getHtml|raw }}
+</tr>
+</table>
+<table><tr>
+{% endblock %}

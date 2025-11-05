@@ -1497,7 +1497,6 @@ if (!is_dir($dir_value) && !mkdir($dir_value, 0777, true) && !is_dir($dir_value)
     throw new RunTimeException(sprintf('Directory "%s" was not created', $dir_value));
 }
 echo "<br>Success, create directory ($dir_value)";
-fclose($handle);
 /* ESCRIURE UN FITXER D'EXEMPLE  --------------------------------- */
 $dir_domain = ServerConf::DIR . '/src/' . $grupo . '/domain';
 if (!is_dir($dir_domain)) {

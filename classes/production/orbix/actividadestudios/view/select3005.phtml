@@ -1,0 +1,90 @@
+<script>
+    fnjs_actas = function (formulario) {
+        rta = fnjs_solo_uno(formulario);
+        if (rta == 1) {
+            $(formulario).attr('action', "apps/actividadestudios/controller/acta_notas.php");
+            fnjs_enviar_formulario(formulario, '<?= $bloque ?>');
+        }
+    }
+    fnjs_modificar = function (formulario) {
+        rta = fnjs_solo_uno(formulario);
+        if (rta == 1) {
+            /* selecciono los elementos con class="sel" de las tablas del id=formulario */
+            $('#seleccionados' + ' input.sel').each(function () {
+                if ($(this).prop('checked') === true) {
+                    // como ya he comprobado que sólo está uno seleccionado, es este.
+                    var array_dir = $(this).val().split('#');
+                    permiso = array_dir[2];
+                }
+            });
+            if (permiso === 'false') {
+                alert("<?= $txt_no_permiso ?>");
+            } else {
+                $('#mod').val("editar");
+                $(formulario).attr('action', "apps/actividadestudios/controller/form_3005.php");
+                fnjs_enviar_formulario(formulario, '<?= $bloque ?>');
+            }
+        }
+    }
+    fnjs_borrar_asignatura = function (formulario) {
+        rta = fnjs_solo_uno(formulario);
+        if (rta == 1) {
+            /* selecciono los elementos con class="sel" de las tablas del id=formulario */
+            $('#seleccionados' + ' input.sel').each(function () {
+                if ($(this).prop('checked') === true) {
+                    // como ya he comprobado que sólo está uno seleccionado, es este.
+                    var array_dir = $(this).val().split('#');
+                    permiso = array_dir[2];
+                }
+            });
+            if (permiso === 'false') {
+                alert("<?= $txt_no_permiso ?>");
+            } else {
+                if (confirm("<?= $txt_eliminar ?>")) {
+                    $('#mod').val("eliminar");
+                    $(formulario).attr('action', "apps/actividadestudios/controller/update_3005.php");
+                    $(formulario).one("submit", function () {
+                        $.ajax({
+                            url: $(this).attr('action'),
+                            type: 'post',
+                            data: $(this).serialize()
+                        })
+                            .done(function (rta_txt) {
+                                if (rta_txt !== '' && rta_txt !== '\\n') {
+                                    alert('<?= _("respuesta") ?>: ' + rta_txt);
+                                } else {
+                                    fnjs_actualizar(formulario);
+                                }
+                            });
+                        return false;
+                    });
+                    $(formulario).trigger("submit");
+                    $(formulario).off();
+                }
+            }
+        }
+    }
+    fnjs_actualizar = function (formulario) {
+        var campo = '<input type="hidden" name="refresh" value=1>';
+        $(formulario).attr('action', "apps/dossiers/controller/dossiers_ver.php");
+        $(formulario).append(campo);
+        fnjs_enviar_formulario(formulario, '#main');
+    }
+</script>
+<h2 class=titulo><?= ucfirst(_("relación de asignaturas")) ?></h2>
+<form id="seleccionados" name="seleccionados" action="" method="post">
+    <?= $oHashSelect->getCamposHtml(); ?>
+    <input type='hidden' id='mod' name='mod' value=''>
+    <?= $oTabla->mostrar_tabla(); ?>
+</form>
+<?php
+// <!-- =========== boton insert ============  --> 
+if (!empty($link_insert)) { ?>
+    <br>
+    <table cellspacing=3 class=botones>
+        <tr class=botones>
+            <td class=botones><span class=link_inv onclick="fnjs_update_div('<?= $bloque ?>','<?= $link_insert ?>');">
+	<?= sprintf(_("añadir asignatura")) ?></span></td>
+        </tr>
+    </table>
+<?php } ?>

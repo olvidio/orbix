@@ -1,0 +1,126 @@
+<script>
+    fnjs_buscar = function (formulario) {
+        var err = 0;
+        var f = $('#periodo').val();
+        if (!f) {
+            err = 1;
+        }
+        if (f == 'otro') {
+            if (!fnjs_comprobar_fecha('#empiezamin',<?= $locale_us ?>)) {
+                err = 1;
+            }
+            if (!fnjs_comprobar_fecha('#empiezamax',<?= $locale_us ?>)) {
+                err = 1;
+            }
+        }
+
+        if (err == 1) {
+            if (!f) {
+                alert("<?= _("falta definir un periodo") ?>");
+            } else {
+                alert("<?= _("debe introducir las fechas inicio-fin del periodo") ?>");
+            }
+        } else {
+            fnjs_enviar_formulario(formulario);
+        }
+    }
+    fnjs_n_a = function (dd) {
+        $('#na').val(dd);
+        if (dd == 'agd') {
+            $('#id_ctr_n').val('');
+        } else {
+            $('#id_ctr_agd').val('');
+        }
+    }
+    fnjs_left_side_hide();
+</script>
+<form id="modifica" name="modifica" action="apps/actividadestudios/controller/ca_posibles.php" method="POST">
+    <?= $oHash->getCamposHtml(); ?>
+    <input type="hidden" id="na" name="na" value="<?= $na ?>">
+    <!-- Selección de centros -->
+    <table>
+        <tr>
+            <th colspan=2><?= ucfirst(_("ver cuadro de posibles ca")); ?></th>
+        </tr>
+        <tr>
+            <td>
+                <input type="checkbox" name="ca_estudios" <?= $chk_estudios ?> ><?= _("ca de estudios") ?>
+                <input type="checkbox" name="ca_repaso" <?= $chk_repaso ?>><?= _("ca de repaso") ?>
+                <input type="checkbox" name="ca_todos" <?= $chk_ca_todos ?>><?= _("todos los ca") ?>
+            </td>
+        </tr>
+        <tr>
+            <td colspan=2><?= _("nota: Para que salgan los ca en el cuadro deben tener introducidas las asignaturas y el campo de nivel de stgr"); ?></td>
+        </tr>
+        <tr>
+            <td>
+                <table style="width:250px">
+                    <tr>
+                        <th colspan=2><?= ucfirst(_("numerarios")); ?></th>
+                    </tr>
+                    <tr>
+                        <td colspan=2 align=center>
+                            <br>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><b><?= _("centro") ?></b></td>
+                        <td><?= $oDesplCtrN->desplegable(); ?></td>
+                    </tr>
+                    </td></tr>
+                </table>
+            </td>
+            <td>
+                <table style="width:250px">
+                    <tr>
+                        <th colspan=2><?= ucfirst(_("agregados")); ?></th>
+                    </tr>
+                    <tr>
+                        <td colspan=2 align=center>
+                            <br>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><b><?= _("centro") ?></b></td>
+                        <td><?= $oDesplCtrAgd->desplegable(); ?></td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+    <?= $oFormP->getHtml(); ?>
+    <table>
+        <tr>
+            <td><br></td>
+        </tr>
+        <tr>
+            <th colspan=5><?= _("selección por delegaciones"); ?></th>
+        </tr>
+        <tr>
+            <td colspan=4>
+                <input type="radio" name="grupo_estudios"
+                       value=<?= $grupo_estudios ?> <?= $chk_grupo ?>><?= $mi_grupo ?>
+                <input type="radio" name="grupo_estudios" value="todos" <?= $chk_todos ?>><?= _("todos") ?></td>
+        </tr>
+        <tr>
+            <td><br></td>
+        </tr>
+        <tr>
+            <th colspan=5><?= _("formato del cuadro"); ?></th>
+        </tr>
+        <tr>
+            <td><?= ucfirst(_("escrito de referencia")) . ":"; ?><input type="text" name="ref" value="<?= $ref ?>"></td>
+        </tr>
+        <tr>
+            <td><input type="Radio" name="texto" value="text"><?= ucfirst(_("texto cabecera horizontal (excel)")); ?>
+            </td>
+            <td colspan=4>
+                <input type="Radio" name="texto" value="image"
+                       checked><?= ucfirst(_("texto cabecera vertical (imprimir)")); ?></td>
+        </tr>
+        <tr>
+            <td>
+                <input name='btn1' type=button onclick="fnjs_buscar(this.form)" value="<?= _("ver cuadro") ?>">
+            </td>
+        </tr>
+    </table>

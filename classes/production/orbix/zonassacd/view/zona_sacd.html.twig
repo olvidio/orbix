@@ -1,0 +1,299 @@
+<style>
+    .item-details-form {
+        z-index: 1000;
+        display: inline-block;
+        border: 1px solid black;
+        margin: 8px;
+        padding: 10px;
+        background: #fbfbfb;
+        -moz-box-shadow: 0px 0px 15px black;
+        -webkit-box-shadow: 0px 0px 15px black;
+        box-shadow: 0px 0px 15px black;
+
+        position: absolute;
+        top: 10px;
+        left: 150px;
+    }
+
+    .item-details-form-buttons {
+        float: right;
+    }
+
+    .item-details-label {
+        margin-left: 10px;
+        margin-top: 20px;
+        display: block;
+        font-weight: bold;
+    }
+
+    .item-details-editor-container {
+        width: 300px;
+        height: 20px;
+        border: 1px solid silver;
+        background: white;
+        display: block;
+        margin: 10px;
+        margin-top: 4px;
+        padding: 0;
+        padding-left: 4px;
+        padding-right: 0px;
+    }
+</style>
+
+<form id="frm_zona_sacd" action="" method="post">
+    {{ oHash.getCamposHtml|raw }}
+    <table>
+        <thead>
+        <tr>
+            <th class=titulo_inv colspan=4>
+                <label for="lst_zonas">{{ "lista de sacd de la zona"|trans|capitalize }}:&nbsp;&nbsp;&nbsp;</label>
+                <select class=contenido name="id_zona" id="lst_zonas" onchange="fnjs_busca_sacds()">
+                    <option></option>
+                    <option value="no">{{ "sin asignar zona"|trans|raw }}</option>
+                    {{ oDesplZonas.options|raw }}
+                </select></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td colspan=2>
+                <div class=contenido id="lst_sacds"></div>
+            </td>
+        </tr>
+        {% if perm_des %}
+            <tr>
+                <th class=titulo_inv colspan=4>
+                    <label for="id_zona_new">{{ "asignar los sacd marcados a la zona"|trans|raw }}
+                        :&nbsp;&nbsp;&nbsp;</label>
+                    <select class=contenido id="id_zona_new" name="id_zona_new">
+                        <option></option>
+                        {{ oDesplZonas.options|raw }}
+                        <option value="no">{{ "sin asignar zona"|trans|raw }}</option>
+                    </select>
+                </th>
+            </tr>
+            <tr>
+                <th colspan=4>
+                    <input type="button" onclick="fnjs_guardar(this.form,1);" name="ok"
+                           value="{{ "cambiar asignación zona"|trans|raw }}">
+                    <input type="button" onclick="fnjs_guardar(this.form,2);" name="ok2"
+                           value="{{ "añadir asignación iglesia/cgi"|trans|raw }}">
+                </th>
+            </tr>
+        {% endif %}
+        </tbody>
+    </table>
+</form>
+<!---------------- MODAL ------------------>
+<div class='item-details-form' style="display: none">
+
+    <label id="titulo_modal">nom sacd</label>
+    <hr/>
+    <input type="hidden" id="id_sacd" value=""/>
+    <input type="hidden" id="id_zona" value=""/>
+    <input type="hidden" id="id_enc_selected" value=""/>
+
+    <div style="margin-top: 20px;">
+        <label for="dw1"> {{ "Lunes"|trans|raw }}: </label>
+        <input id="dw1" name="dw1" type="checkbox" class="form-control" >
+    </div>
+
+    <div style="margin-top: 20px;">
+        <label for="dw2"> {{ "Martes"|trans|raw }}: </label>
+        <input id="dw2" name="dw2" type="checkbox" class="form-control" >
+    </div>
+
+    <div style="margin-top: 20px;">
+        <label for="dw3"> {{ "Miércoles"|trans|raw }}: </label>
+        <input id="dw3" name="dw3" type="checkbox" class="form-control" >
+    </div>
+
+    <div style="margin-top: 20px;">
+        <label for="dw4"> {{ "Jueves"|trans|raw }}: </label>
+        <input id="dw4" name="dw4" type="checkbox" class="form-control" >
+    </div>
+
+    <div style="margin-top: 20px;">
+        <label for="dw5"> {{ "Viernes"|trans|raw }}: </label>
+        <input id="dw5" name="dw5" type="checkbox" class="form-control" >
+    </div>
+
+    <div style="margin-top: 20px;">
+        <label for="dw6"> {{ "Sábado"|trans|raw }}: </label>
+        <input id="dw6" name="dw6" type="checkbox" class="form-control" >
+    </div>
+
+    <div style="margin-top: 20px;">
+        <label for="dw7"> {{ "Domingo"|trans|raw }}: </label>
+        <input id="dw7" name="dw7" type="checkbox" class="form-control" >
+    </div>
+
+    <hr/>
+    <div class='item-details-form-buttons'>
+        <button data-action='save' class='slick-btn slick-btn-primary'>Grabar</button>
+        <button data-action='cancel' class='slick-btn slick-btn-default'>Cancel</button>
+    </div>
+</div>
+
+<script>
+    fnjs_busca_sacds = function () {
+        let id_zona = $('#lst_zonas').val();
+        if (id_zona) {
+            let url = '{{ url_ajax }}';
+            let parametros = 'que=get_lista&id_zona=' + id_zona + '{{ h_sacd|raw }}';
+            $.ajax({
+                url: url,
+                type: 'post',
+                data: parametros,
+                dataType: 'html'
+            })
+                .done(function (rta_txt) {
+                    $('#lst_sacds').html(rta_txt);
+                });
+        }
+    }
+    fnjs_guardar = function (formulario, n) {
+        $('#acumular').val(n);
+        $(formulario).attr('action', '{{ url_ajax }}');
+        $(formulario).one("submit", function () {
+            $.ajax({
+                url: $(this).attr('action'),
+                type: 'post',
+                data: $(this).serialize()
+            })
+                .done(function (rta_txt) {
+                    if (rta_txt !== '' && rta_txt !== '\n') {
+                        alert('{{ "respuesta"|trans|raw }}: ' + rta_txt);
+                    }
+                });
+            return false;
+        });
+        $(formulario).trigger("submit");
+        $(formulario).off();
+        fnjs_busca_sacds();
+    }
+
+    fnjs_modificar = function (formulario) {
+        rta = fnjs_solo_uno(formulario);
+        if (rta == 1) {
+            var form = $(formulario).attr('id');
+            /* selecciono los elementos input del id=formulario */
+            var selector=$('#'+form+' input');
+
+            $(selector).each(function (i, item) {
+                if ($(item).prop('checked') == true) {
+                    let id_sacd = $(item).val();
+                    fnjs_modal_zona_sacd_ver(id_sacd);
+                }
+            });
+        }
+    }
+
+    var modal = $(".item-details-form");
+
+    $(document).keydown(function (e) {
+        if(modal.css('display') != 'none') {
+            if (e.which == Slick.keyCode.ENTER) {
+                commitCurrentEdit();
+                e.stopPropagation();
+                e.preventDefault();
+            } else if (e.which == Slick.keyCode.ESCAPE) {
+                cancelCurrentEdit();
+                e.stopPropagation();
+                e.preventDefault();
+            }
+        }
+    });
+
+    modal.find("[data-action=save]").click(function () {
+        commitCurrentEdit();
+    });
+
+    modal.find("[data-action=cancel]").click(function () {
+        cancelCurrentEdit();
+    });
+
+    function cancelCurrentEdit() {
+        modal.hide();
+    }
+
+    fnjs_modal_zona_sacd_ver = function (id_sacd) {
+        let id_zona = $('#lst_zonas').val();
+
+        // añadir el hash (se puede cambiar)
+        parametros = 'id_zona=' + id_zona + '&id_sacd=' + id_sacd + '{{ h_url_get|raw }}';
+
+        // consultar datos en DB
+        var request = $.ajax({
+            url: 'apps/misas/controller/zona_sacd_datos_get.php',
+            method: 'POST',
+            data: parametros,
+            dataType: 'json'
+        });
+        request.done(function (json) {
+            if (json.success !== true) {
+                alert("{{ "respuesta"|trans|raw }}: " + json.mensaje);
+            } else {
+                $('#id_sacd').val(id_sacd);
+                $('#id_zona').val(id_zona);
+                $('#titulo_modal').html(json.nombre_sacd);
+                if (json.dw1 === true) { $('#dw1').prop('checked', true); }
+                else { $('#dw1').prop('checked', false); }
+                if (json.dw2 === true) { $('#dw2').prop('checked', true); }
+                else { $('#dw2').prop('checked', false); }
+                if (json.dw3 === true) { $('#dw3').prop('checked', true); }
+                else { $('#dw3').prop('checked', false); }
+                if (json.dw4 === true) { $('#dw4').prop('checked', true); }
+                else { $('#dw4').prop('checked', false); }
+                if (json.dw5 === true) { $('#dw5').prop('checked', true); }
+                else { $('#dw5').prop('checked', false); }
+                if (json.dw6 === true) { $('#dw6').prop('checked', true); }
+                else { $('#dw6').prop('checked', false); }
+                if (json.dw7 === true) { $('#dw7').prop('checked', true); }
+                else { $('#dw7').prop('checked', false); }
+                modal.show();
+            }
+        });
+    }
+
+    function commitCurrentEdit() {
+        let id_sacd = $('#id_sacd').val();
+        let id_zona = $('#id_zona').val();
+        let dw1 = $('#dw1').is(":checked");
+        let dw2 = $('#dw2').is(":checked");
+        let dw3 = $('#dw3').is(":checked");
+        let dw4 = $('#dw4').is(":checked");
+        let dw5 = $('#dw5').is(":checked");
+        let dw6 = $('#dw6').is(":checked");
+        let dw7 = $('#dw7').is(":checked");
+
+        // guardar datos en DB
+        parametros = 'id_zona=' + id_zona + '&id_sacd=' + id_sacd;
+        parametros += '&dw1=' + dw1;
+        parametros += '&dw2=' + dw2;
+        parametros += '&dw3=' + dw3;
+        parametros += '&dw4=' + dw4;
+        parametros += '&dw5=' + dw5;
+        parametros += '&dw6=' + dw6;
+        parametros += '&dw7=' + dw7;
+        parametros += '{{ h_url_put|raw }}';
+
+        var request = $.ajax({
+            url: 'apps/misas/controller/zona_sacd_datos_put.php',
+            method: 'POST',
+            data: parametros,
+            dataType: 'json'
+        });
+        request.done(function (json) {
+            if (json.success !== true) {
+                alert("{{ "respuesta"|trans|raw }}: " + json.mensaje);
+            } else {
+                modal.hide();
+                fnjs_busca_sacds();
+            }
+        });
+    }
+
+    fnjs_left_side_hide();
+    modal.hide();
+</script>

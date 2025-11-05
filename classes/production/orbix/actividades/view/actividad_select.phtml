@@ -1,0 +1,87 @@
+<?php
+
+use web\Hash;
+
+?>
+<script type="text/javascript" src="<?= 'apps/actividades/controller/actividades.js?' . rand(); ?>"></script>
+<script>
+    fnjs_borrar = function (formulario, que_val) {
+        rta = fnjs_solo_uno(formulario);
+        if (rta == 1) {
+            if (confirm("<?= _("¿Está seguro que desea borrar esta actividad?");?>")) {
+                $('#mod').val(que_val);
+                url = "apps/actividades/controller/actividad_update.php";
+                datos = $(formulario).serialize();
+
+                 let request = $.ajax({
+                    data: datos,
+                    url: url,
+                    method: 'POST',
+                    dataType: 'json'
+                });
+
+                request.done(function (json) {
+                    if (json.success != true) {
+                        rta_txt = json.mensaje;
+                        alert('error: ' + rta_txt);
+                    } else {
+                        $(formulario + ' input.sel').each(function (i) {
+                            if ($(this).prop('checked') === true) {
+                                $(this).parent().siblings().addClass('tachado');
+                                $(this).prop('checked', false);
+                            }
+                        });
+                    }
+                    return false;
+                });
+            }
+        }
+    };
+    fnjs_buscar = function () {
+        $('#modifica').attr('action', 'apps/actividades/controller/actividad_que.php');
+        $('#b_que').val("buscar");
+        fnjs_enviar_formulario('#modifica', '#main');
+    }
+</script>
+<?= $oPosicion->mostrar_left_slide(1); ?>
+<div id="condiciones" class="no_print">
+    <form id="modifica" name="modifica" action="">
+        <?= $oHash->getCamposHtml(); ?>
+        <table>
+            <tr>
+                <td class="derecha">
+                    <input id="b_buscar" name="b_buscar" TYPE="button" VALUE="<?= _("realizar otra búsqueda"); ?>"
+                           onclick="fnjs_buscar()">
+                </td>
+            </tr>
+        </table>
+    </form>
+</div>
+<div id="resultados">
+    <div id="exportar">
+        <span id="span_exportar" title="actividades"></span>
+        <h3><?= $resultado ?></h3>
+        <form id='seleccionados' name='seleccionados' action='' method='post'>
+            <?= $oHashSel->getCamposHtml(); ?>
+            <input type='hidden' id='queSel' name='queSel' value=''>
+            <input type='hidden' id='id_dossier' name='id_dossier' value="">
+            <input type='hidden' id='mod' name='mod' value="<?= $mod ?>">
+            <?= $oTabla->mostrar_tabla(); ?>
+        </form>
+    </div>
+    <div class="no_print">
+        <br>
+        <?php
+        if ($perm_nueva) { // Si no es: casa o centro
+            echo '<table><tr>';
+            foreach ($aTiposActiv as $txt_id => $idTipoActiv) {
+                ?>
+                <td><span class="link titulo"
+                          onclick="fnjs_update_div('#main','<?= Hash::link('apps/actividades/controller/actividad_ver.php?' . http_build_query(array('id_tipo_activ' => $idTipoActiv))) ?>')">
+		<?= _("nueva actividad $txt_id") ?></span></td>
+            <?php }
+            echo '</tr></table>';
+        }
+        ?>
+    </div>
+</div>

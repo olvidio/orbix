@@ -1,0 +1,215 @@
+{% block scripts %}
+<script>
+
+fnjs_comprobar_fase_no_duplicadas=function() {
+	var fases_on=[];
+	$('input[name="fases_on[]"]:checked').each(function() {
+		fases_on.push(parseInt($(this).val()));
+	});
+	var fases_off=[];
+	$('input[name="fases_off[]"]:checked').each(function() {
+		fases_off.push(parseInt($(this).val()));
+	});
+	
+	$.arrayIntersect = function(a, b) {
+	    return $.grep(a, function(i) {
+	        return $.inArray(i, b) > -1;
+	    });
+	};
+
+	rta = $.arrayIntersect(fases_on, fases_off);
+		
+	if (rta.length === 0) { 
+		return true;
+	} else {
+		return false;
+	}
+}
+
+fnjs_actualizar_fases=function(){
+	var dl_org=$('#dl_org').val();
+	if (dl_org == '{{ mi_dele }}' ) {
+		dl_propia = 't';
+	} else {
+		dl_propia = 'f';
+	}
+	var extendida=$('#extendida').val();
+	var isfsv=$('#isfsv_val').val();
+	var iasistentes=$('#iasistentes_val').val();
+	var iactividad=$('#iactividad_val').val();
+	var inom_tipo=$('#inom_tipo_val').val();
+	
+	if (!iasistentes) iasistentes='.';
+	if(!extendida) {
+		if (!iactividad) iactividad = '.';
+		if (!inom_tipo) inom_tipo = '...';
+	} else {
+		if (!iactividad || iactividad === '.') iactividad = '..';
+		if (!inom_tipo || inom_tipo === '...') inom_tipo = '..';
+	}
+
+	id_tipo_activ=isfsv+iasistentes+iactividad+inom_tipo;
+
+	id_usuario=$('#id_usuario').val();
+
+	// lista fases on
+	var url='{{ url_actualizar_fases }}';
+	var parametros='salida=fases_on&dl_propia='+dl_propia+'&id_tipo_activ='+id_tipo_activ+'{{ h_actualizar_fases|raw }}';
+	$.ajax({
+		url: url,
+		type: 'post',
+		data: parametros
+	})
+	.done(function (rta_txt) {
+		$('#td_fases_on').html(rta_txt);			
+	});
+	// lista fases off
+	var parametros='salida=fases_off&dl_propia='+dl_propia+'&id_tipo_activ='+id_tipo_activ+'{{ h_actualizar_fases|raw }}';
+	$.ajax({
+		url: url,
+		type: 'post',
+		data: parametros
+	})
+	.done(function (rta_txt) {
+		$('#td_fases_off').html(rta_txt);			
+	});
+}
+
+fnjs_buscar=function(act){
+	var err = 0;
+	var f=$('#periodo').val();	
+	if (f=='otro') {
+		if (!fnjs_comprobar_fecha('#empiezamin',{{ locale_us }})) {
+			 err=1;
+             alert("{{ "debe inrtoducir la fecha inicio del periodo"|trans|raw }}");
+         }
+		if (!fnjs_comprobar_fecha('#empiezamax',{{ locale_us }})) {
+			 err=1;
+             alert("{{ "debe introducir la fecha fin del periodo"|trans|raw }}");
+		}
+	}
+	// coprobar que no exista la misma fase en condición 'on' y 'off'
+    {% if proceso_installed %}
+		if (!fnjs_comprobar_fase_no_duplicadas()) { 
+			err=1; 
+            alert("{{ "No puede seleccionar la misma fase como 'marcada' y 'sin marcar'"|trans|raw }}"); 
+		}
+	{%  endif %}
+	
+	if (err != 1) {
+		/* genero el id_tipo_actividad */
+		var extendida=$('#extendida').val();
+		var isfsv=$('#isfsv_val').val();
+		var iasistentes=$('#iasistentes_val').val();
+		var iactividad=$('#iactividad_val').val();
+		var inom_tipo=$('#inom_tipo_val').val();
+		if (!isfsv) isfsv=".";
+		if (!iasistentes) iasistentes=".";
+		if(!extendida) {
+			if (!iactividad) iactividad = '.';
+			if (!inom_tipo) inom_tipo = '...';
+		} else {
+			if (!iactividad || iactividad === '.') iactividad = '..';
+			if (!inom_tipo || inom_tipo === '...') inom_tipo = '..';
+		}
+		var id=isfsv+iasistentes+iactividad+inom_tipo;
+
+		$('#id_tipo_activ').val(id);
+		$('#modifica').attr('action',act);
+		fnjs_enviar_formulario('#modifica');
+	}
+}
+fnjs_lugar=function(){
+	var opcion_sel='{{ Qid_ubi }}';
+	var extendida=$('#extendida').val();
+	var isfsv=$('#isfsv_val').val();
+	var filtro_lugar=$('#filtro_lugar').val();
+	var url='apps/actividades/controller/actividad_tipo_get.php';
+	var parametros='extendida=' + extendida + '&modo=buscar&salida=lugar&entrada='+filtro_lugar+'&opcion_sel='+opcion_sel+'&isfsv='+isfsv+'{{ h|raw }}';
+	$.ajax({
+		url: url,
+		type: 'post',
+		data: parametros,
+		dataType: 'html'
+	})
+	.done(function (rta_txt) {
+		$('#lst_lugar').html(rta_txt);
+	});
+}
+fnjs_left_side_hide();
+</script>
+{% endblock %}
+{% block body %}
+<div id="exportar" >
+<form id="modifica"name="modifica" action="" method="post" onkeydown="fnjs_enviar(event,this);" >
+{{ oHash.getCamposHtml()|raw }}
+<h3 class=subtitulo>{{ titulo }}</h3>
+<table>
+<tr><th colspan=3 class=titulo_inv>{{ "escoger el tipo de actividad"|trans|raw }}</th></tr>
+</table>
+{{ oActividadTipo.getHtml(extendida)|raw }}
+<table>
+<tr>
+<td class=etiqueta>{{ "estado"|trans|raw }}:</td>
+	<td><input type="Radio" id="status_1" name="status" value="{{ val_status_1 }}"{{ chk_status_1 }}>{{ "proyecto"|trans|raw }}</td>
+	<td><input type="Radio" id="status_2" name="status" value="{{ val_status_2 }}"{{ chk_status_2 }}>{{ "actual"|trans|raw }}</td>
+	<td><input type="Radio" id="status_3" name="status" value="{{ val_status_3 }}"{{ chk_status_3 }}>{{ "terminada"|trans|raw }}</td>
+	<td><input type="Radio" id="status_4" name="status" value="{{ val_status_4 }}"{{ chk_status_4 }}>{{ "borrable"|trans|raw }}</td>
+	<td><input type="Radio" id="status_0" name="status" value="{{ val_status_9 }}"{{ chk_status_9 }}>{{ "cualquiera"|trans|raw }}</td>
+<td><input type='hidden' id='id_tipo_activ' name='id_tipo_activ'> </td>
+</tr>
+</table>
+<br>
+{% if proceso_installed %}
+<table>
+<tr><th colspan=6 class=titulo_inv>{{ "según fases (depende del tipo de actividad y de organiza)"|trans|raw }}</th></tr>
+    <tr class="tono2" ><td class="etiqueta">{{ "marcadas"|trans|raw }}:</td>
+    	<td id=td_fases_on>
+            {{ CuadrosFasesOn|raw }}
+        </td>
+    	</tr>
+    <tr class="tono3" ><td class="etiqueta">{{ "sin marcar"|trans|raw }}:</td>
+    	<td id=td_fases_off>
+            {{ CuadrosFasesOff|raw }}
+        </td>
+    	</tr>
+</table>
+{% endif %}
+<table>
+<tr><th colspan=6 class=titulo_inv>{{ "escoger la actividad"|trans|raw }}</th></tr>
+<tr>
+    <td class=etiqueta>{{ "el nombre contiene"|trans|raw }}:</td>
+    <td colspan=6><input name="nom_activ" type="text" size="80" value="{{ Qnom_activ|raw }}"></td>
+</tr>
+{% if perm_ctr %}
+    <tr>
+        <td class=etiqueta>{{ "lugar según país o dl"|trans|raw }}:</td>
+        <td colspan=3>{{ oDesplFiltroLugar.desplegable()|raw }}</td>
+        <td class=etiqueta>{{ "lugar"|trans|raw }}</td>
+        <td id='lst_lugar' colspan=1>{{ oDesplegableCasas.desplegable()|raw }}</td>
+    </tr>
+    <tr>
+        <td class=etiqueta>{{ "organiza"|trans|raw }}:</td>
+        <td colspan=3>{{ oDesplDelegacionesOrg.desplegable()|raw }}</td>
+		{% if modo != 'importar' %}
+		<td>{{ "publicada"|trans }}:
+			<input type="radio" name="publicado" value="1" {{ chk_publicado_1 }}/>{{ "si"|trans }}
+			<input type="radio" name="publicado" value="2" {{ chk_publicado_2 }}/>{{ "no"|trans }}
+			<input type="radio" name="publicado" value="3" {{ chk_publicado_3 }}/>{{ "todas"|trans }}
+		</td>
+		{% endif %}
+    </tr>
+{% endif %}
+<tr><td class=etiqueta>{{ "periodo"|raw }}:</td>
+	{{ oFormP.getTd()|raw }}
+</tr>
+</table>
+<br>
+<input TYPE="button" onclick="fnjs_buscar('{{ accion }}')" id="btn_ok" name="btn_ok" value="{{ "buscar"|trans|raw }}" class="btn_ok">
+<input TYPE="reset" VALUE="borrar" onclick="fnjs_update_div('#main','{{ Link_borrar|raw }}')" >
+</form>
+<script>
+/*fnjs_lugar();*/ 
+</script>
+</div>
+{% endblock %}

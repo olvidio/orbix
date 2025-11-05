@@ -1,0 +1,110 @@
+<div id="div_select_zona">
+    <form id="frm_zona_ctr" name="frm_zona_ctr" action="" method="post">
+        {{ oHash.getCamposHtml|raw }}
+        <table>
+            <thead>
+            <tr>
+                <th class=titulo_inv colspan=12>
+                    {{ "Modificar plantilla"|trans|capitalize }}
+                </th>
+            </tr>
+            <tr>
+                <th class=titulo_inv colspan=4>{{ "Plantilla de la zona"|trans|capitalize }}:&nbsp;&nbsp;&nbsp;
+                    {{ oDesplZonas.desplegable|raw }}
+                </th>
+                <th class=titulo_inv colspan=4>{{ "Tipo de plantilla"|trans|capitalize }}:&nbsp;&nbsp;&nbsp;
+                    {{ oDesplTipoPlantilla.desplegable|raw }}
+                </th>
+                <th class=titulo_inv colspan=4>{{ "Orden"|trans|capitalize }}:&nbsp;&nbsp;&nbsp;
+                    {{ oDesplOrden.desplegable|raw }}
+                </th> 
+            </tr>
+            <tr>
+                <th class=titulo_inv colspan=4>{{ "Importar de la plantilla"|trans|capitalize }}:&nbsp;&nbsp;&nbsp;
+                    {{ oDesplImportarDePlantilla.desplegable|raw }}
+
+                    <input type=button name="importar" value="importar" onclick="fnjs_importar_de_plantilla_zona();"><br>
+                    Borrará todos los datos introducidos en la plantilla que ves!!
+                </th>
+            </tr>
+            </thead>
+        </table>
+    </form>
+</div>
+
+<br>
+<div id="div_cuadricula">
+</div>
+
+<script>
+    fnjs_ver_plantilla_zona = function () {
+        tipo_actual=$('#tipo_plantilla').val().substr(0,1);
+        $('#importar_de_plantilla option').each(function() {
+            var valor=$(this).val();
+            if (valor.substr(0,1)==tipo_actual) {
+                $(this).attr('disabled',true);
+            }
+            else {
+                $(this).attr('disabled',false);
+            }
+        });
+        let id_zona = $('#id_zona').val();
+        let tipo_plantilla = $('#tipo_plantilla').val();
+        let orden = $('#orden').val();
+        if (id_zona) {
+            let url = '{{ url_modificar_cuadricula_zona }}';
+            let parametros = 'id_zona=' + id_zona + '&tipo_plantilla=' + tipo_plantilla + '&orden=' + orden + '{{ h_zona_tipo|raw }}';
+            $.ajax({
+                url: url,
+                type: 'post',
+                data: parametros,
+                dataType: 'html'
+            })
+                .done(function (rta_txt) {
+                    $('#div_cuadricula').html(rta_txt);
+                });
+        }
+    }
+
+    fnjs_importar_de_plantilla_zona = function () {
+        let id_zona = $('#id_zona').val();
+        let tipo_plantilla = $('#tipo_plantilla').val();
+        let importar_de_plantilla = $('#importar_de_plantilla').val();
+        let orden = $('#orden').val();
+        if (id_zona) {
+            let url_importar_plantilla = '{{ url_importar_plantilla }}';
+            let parametros = 'id_zona=' + id_zona + '&tipo_plantilla_destino=' + tipo_plantilla + '&tipo_plantilla_origen=' + importar_de_plantilla + '{{ h_importar_plantilla|raw }}';
+            $.ajax({
+                url: url_importar_plantilla,
+                type: 'post',
+                data: parametros,
+                dataType: 'html'
+            })
+                .done(function (rta_txt) {
+                    let url_modificar_cuadricula_zona = '{{ url_modificar_cuadricula_zona }}';
+                    let parametros = 'id_zona=' + id_zona + '&tipo_plantilla=' + tipo_plantilla + '&orden=' + orden + '{{ h_zona_tipo|raw }}';
+                    $.ajax({
+                        url: url_modificar_cuadricula_zona,
+                        type: 'post',
+                        data: parametros,
+                        dataType: 'html'
+                    })
+                        .done(function (rta_txt) {
+                            $('#div_cuadricula').html(rta_txt);
+                        });
+                });
+        }
+    }
+
+    tipo_actual=$('#tipo_plantilla').val().substr(0,1);
+    $('#importar_de_plantilla option').each(function() {
+        var valor=$(this).val();
+        if (valor.substr(0,1)==tipo_actual) {
+            $(this).attr('disabled',true);
+        }
+        else {
+            $(this).attr('disabled',false);
+        }
+    });
+
+</script>

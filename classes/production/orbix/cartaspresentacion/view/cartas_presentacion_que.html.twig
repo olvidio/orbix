@@ -1,0 +1,166 @@
+<script>
+fnjs_ver_ubi=function(id_ubi){
+	var url='{{ url_ctr }}';
+	var parametros='bloque=ficha2&pau=u&id_ubi='+id_ubi+'{{ h_ctr|raw }}';
+	$.ajax({
+		url: url,
+		type: 'post',
+		data: parametros,
+		dataType: 'html'
+	})
+	.done(function (rta_txt) {
+		$('#ficha2').html(rta_txt);
+	});
+}
+
+fnjs_poblacion=function(){
+    $('#ficha2').html('');
+	var filtro=$('#que_mod').val();
+	if (filtro == 'get_r') {
+		$("#td_poblacion").hide();
+		$("#lst_lugar").hide();
+		return;
+	}
+	$("#td_poblacion").show();
+	$("#lst_lugar").show();
+	var url='{{ url_ajax }}';
+	var parametros='que_mod=poblaciones&filtro='+filtro+'{{ h_pob|raw }}';
+	$.ajax({
+		url: url,
+		type: 'post',
+		data: parametros,
+		dataType: 'html'
+	})
+	.done(function (rta_txt) {
+		$('#lst_lugar').html(rta_txt);
+	});
+}
+
+fnjs_cerrar=function(){
+	$('#div_modificar').html('');
+	$('#div_modificar').width('0');
+	$('#div_modificar').height('0');
+	$('#div_modificar').removeClass('ventana');
+	document.getElementById("overlay").style.display = "none";
+}
+
+fnjs_modificar=function(id_direccion,id_ubi){
+	$('#div_modificar').addClass('ventana');
+	$('#div_modificar').width('auto');
+	$('#div_modificar').height('auto');
+	document.getElementById("overlay").style.display = "block";
+	
+	var url='{{ url_ajax }}';
+	if (id_direccion) {
+		var parametros='que_mod=form_pres&id_direccion='+id_direccion+'&id_ubi='+id_ubi;
+	}
+	var parametros = parametros + '{{ h_update|raw }}';
+	fnjs_update_div('#div_modificar',url+'?'+parametros);
+}
+
+fnjs_ver=function(){
+	pata = $('#seleccion').serialize();
+	var url='{{ url_ajax }}';
+	var parametros=pata;
+	$.ajax({
+		url: url,
+		type: 'post',
+		data: parametros
+	})
+	.done(function (rta_txt) {
+		if (rta_txt) {
+			$('#ficha2').html(rta_txt);
+		}
+	});
+	document.getElementById("overlay").style.display = "none";
+}
+
+fnjs_eliminar_cp=function(id_direccion,id_ubi){
+    seguro=confirm("{{ "¿Está seguro que quiere quitar los datos de presentación de este centro?"|trans|raw }}");
+    if (seguro) { 
+        var url='{{ url_ajax }}';
+        var parametros='que_mod=eliminar&id_direccion='+id_direccion+'&id_ubi='+id_ubi+'{{ h_del|raw }}';
+        //alert ("param "+parametros);
+        $.ajax({
+            url: url,
+            type: 'post',
+            data: parametros
+		})
+		.done(function (rta_txt) {
+            if (rta_txt) {
+                alert ('respuesta: '+rta_txt);
+            }
+        });
+		fnjs_ver();
+    }
+}
+
+fnjs_guardar_cp=function(formulario){
+	var url='{{ url_ajax }}';
+    $(formulario).attr('action',url);
+    $(formulario).one("submit", function() {
+		$.ajax({
+			url: $(this).attr('action'),
+			type: 'post',
+			data: $(this).serialize()
+		})
+		.done(function (rta_txt) {
+			if (rta_txt != '' && rta_txt != '\n') {
+				alert (rta_txt);
+			} else {
+				$('#div_modificar').html('');
+				$('#div_modificar').width('0');
+				$('#div_modificar').height('0');
+				$('#div_modificar').removeClass('ventana');
+			}
+			// OJO hay que actualizar el formulario de la lista, no el actual.
+			fnjs_ver();
+        });
+        return false;
+    });
+    $(formulario).trigger("submit");
+    $(formulario).off();
+}
+
+/*
+fnjs_actualizar_dtor=function(){
+	var url='{{ url_ajax }}';
+	var parametros='que_mod=actualizar+'{{ h_pob|raw }}';
+	//alert ("param "+parametros);
+	$.ajax({
+		url: url,
+		type: 'post',
+		data: parametros
+	})
+	.done(function (rta_txt) {
+		if (rta_txt) {
+			alert ('respuesta: '+rta_txt);
+		}
+	});
+}
+*/
+
+fnjs_left_side_hide();
+</script>
+<form id=seleccion name=seleccion action="">
+{{ oHash.getCamposHtml|raw }}
+<table>
+<tr><th colspan=7 class=titulo_inv>{{ "seleccionar centros con cartas de presentación"|trans|raw }}</th></tr>
+<tr>
+	<td class=etiqueta>{{ "según dl"|trans|raw }}:</td>
+	<td colspan=3>
+	{{ oSelCiudades.desplegable|raw }}
+	</td>
+	<td class=etiqueta id="td_poblacion" >{{ "población"|trans|raw }}</td>
+	<td id='lst_lugar' colspan=1>
+	</td>
+	<td>
+<input type=button name="buscar" value="{{ "buscar"|trans|raw }}" onclick="fnjs_ver();">
+</td>
+</tr>
+</table>
+
+</form>
+<div id='ficha2'></div>
+<div id='div_modificar'></div>
+<div id='overlay'></div>

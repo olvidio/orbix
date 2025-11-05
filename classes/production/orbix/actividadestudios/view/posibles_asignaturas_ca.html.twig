@@ -1,0 +1,54 @@
+<script>
+fnjs_detalles=function(id_asignatura){
+	var id='#detalles_'+id_asignatura;
+	var span_id='#span_detalles_'+id_asignatura;
+	$(id).toggle();
+	$(span_id+' p').toggle();
+}
+</script>
+{% block arrow %}
+{{ oPosicion.mostrar_left_slide(1)|raw }}
+{% endblock %}
+
+<h3>{{ nom_activ }}</h3>
+<table>
+<tr>
+<th>{{ "asignatura"|trans|raw }}</th>
+<th>{{ "posibles alumnos"|trans|raw }}</th>
+<th>{{ "nombres"|trans|raw }}</th>
+<tr>
+
+{% for asignatura_alumno in aAsignaturas_alumnos %}
+    <tr>
+    <td class=etiqueta>
+    {{ asignatura_alumno.nom_asignatura }}
+    </td><td>
+    {{ asignatura_alumno.posibles_alumnos }}
+    </td>
+    <td>
+    <span id='span_detalles_{{ asignatura_alumno.id_asignatura }}' 
+    	class=link onclick="fnjs_detalles({{ asignatura_alumno.id_asignatura }})" >
+        <p>{{ "ver"|trans|raw }}</p>
+        <p style="display: none"><br>
+        {% for nombre_alumno in asignatura_alumno.aNombresAlumnos %}
+        	{{ nombre_alumno }}<br>
+        {% endfor %}
+        </p>
+    </span></td>
+    </td>
+    </tr>
+{% endfor %}
+</table>
+<hr>
+<h3>{{ "alumnos a los faltan 4 o menos asignaturas para teminar el cuadrienio" }}</h3>
+<table>
+{% for asignatura_alumno in a_alumnos_fin_c %}
+<tr><td>{{  asignatura_alumno.apellidos_nombre }}<td>
+    <td>
+        {% for asignatura in asignatura_alumno.asignaturas %}
+            {{ asignatura }}<br>
+        {% endfor %}
+    </td>
+</tr>
+{% endfor %}
+</table>

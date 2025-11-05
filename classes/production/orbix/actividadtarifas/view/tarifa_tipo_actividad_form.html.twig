@@ -1,0 +1,86 @@
+<style>
+    table {
+        width: 600px;
+    }
+</style>
+<script>
+    fnjs_guardar = function (formulario, que) {
+        if (que === "eliminar") {
+            seguro = confirm("{{ txt_eliminar }}");
+            if (seguro) {
+                err = 0;
+            } else {
+                err = 1;
+            }
+        }
+        var err = 0;
+        var tar = $('#id_tarifa').val();
+        var id_tipo_activ = $('#id_tipo_activ').val();
+        if (!id_tipo_activ) {
+            var isfsv = $('#isfsv_val').val();
+            var iasistentes = $('#iasistentes_val').val();
+            var iactividad = $('#iactividad_val').val();
+            var inom_tipo = $('#inom_tipo_val').val();
+            //alert ("s: "+sfsv+", as: "+asistentes+", act: "+actividad+", tip: "+id_tipo_activ);
+            if (!isfsv || !iasistentes || !iactividad) {
+                alert("{{ "debe indicar el tipo de actividad"|trans|raw }}");
+                err = 1;
+            }
+            if (!inom_tipo && !err) {
+                id_tipo_activ = isfsv + iasistentes + iactividad + "000";
+            } else {
+                id_tipo_activ = isfsv + iasistentes + iactividad + inom_tipo;
+            }
+            //alert ("tipo: "+id_tipo_activ +" err: "+err);
+        }
+        if (!tar) {
+            alert("{{ "debe indicar la tarifa"|trans|raw }}");
+            err = 1;
+        }
+        if (!err) {
+            $('#id_tipo_activ').val(id_tipo_activ);
+            $('#que').val(que);
+            $(formulario).attr('action', '{{ url_ajax }}');
+            $(formulario).one("submit", function () {
+                $.ajax({
+                    url: $(this).attr('action'),
+                    type: 'post',
+                    data: $(this).serialize()
+                })
+                    .done(function (rta_txt) {
+                        if (rta_txt != '' && rta_txt != '\n') {
+                            alert(rta_txt);
+                        } else {
+                            fnjs_ver();
+                            fnjs_cerrar();
+                        }
+                    });
+                return false;
+            });
+            $(formulario).trigger("submit");
+            $(formulario).off();
+        }
+    }
+</script>
+<form id="modifica">
+    {{ oActividadTipo.getHtml()|raw }}
+    {{ oHash.getCamposHtml()|raw }}
+    <input type=hidden id="que" name="que" value="">
+    <div class="flex-container">
+        <div>
+            {{ "tipo de actividad"|trans|raw }}:
+            <br>
+            <span style="font-weight: bold">
+            {{ oTipoActiv.getNom()|raw }}
+            </span>
+        </div>
+        <div style="margin-top: 20px">
+            {{ "tarifa"|trans|raw }}:
+            {{ oDesplPosiblesTipoTarifas.desplegable()|raw }}
+        </div>
+    </div>
+    <br><br>
+    <input type="button" value="{{ "guardar"|trans|raw }}" onclick="fnjs_guardar('#modifica','update');">
+    <input type="button" value="{{ "eliminar"|trans|raw }}" onclick="fnjs_guardar('#modifica','eliminar');">
+    <input type="button" value="{{ "cancel"|trans|raw }}" onclick="fnjs_cerrar();">
+</form>

@@ -1,0 +1,137 @@
+<?php
+
+use core\ConfigGlobal;
+
+?>
+<script>
+    fnjs_dl = function () {
+        var filtro_region = $('#region').val();
+        var url = '<?= ConfigGlobal::getWeb() . '/apps/devel/controller/db_ajax.php' ?>';
+        var parametros = 'salida=lugar&entrada=' + filtro_region + '<?= $h ?>';
+        $.ajax({
+            url: url,
+            type: 'post',
+            data: parametros,
+            dataType: 'html'
+        })
+            .done(function (rta_txt) {
+                $('#lst_dl').html(rta_txt);
+            });
+    }
+    fnjs_db_renombrar_esquema = function () {
+        err = '';
+        dl = $('#dl').val();
+        esquema = $('#esquema').val();
+
+        if (!dl) {
+            alert("<?= $msg_falta_dl ?>");
+            err = 1;
+        }
+        if (!esquema) {
+            alert("<?= $msg_falta_esquema ?>");
+            err = 1;
+        }
+
+        if (!err) {
+            $('#frm').attr('action', 'apps/devel/controller/db_renombrar_esquema.php');
+            fnjs_enviar_formulario('#frm', '#main');
+        }
+    }
+    fnjs_absorber_dl = function () {
+        err = '';
+        esquema_m = $('#esquema_matriz').val();
+        esquema_d = $('#esquema_del').val();
+
+        if (!esquema_m) {
+            alert("<?= $msg_falta_esquema ?>");
+            err = 1;
+        }
+        if (!esquema_d) {
+            alert("<?= $msg_falta_esquema ?>");
+            err = 1;
+        }
+
+        if (!err) {
+            $('#frm_absorber').attr('action', 'apps/devel/controller/db_absorber_esquema.php');
+            fnjs_enviar_formulario('#frm_absorber', '#main');
+        }
+    }
+</script>
+
+<h1><?= _("Cambiar nombre de un esquema (region-dl)") ?></h1>
+<h3><?= _("Esquema actual") ?></h3>
+<form id="frm" action="" method=post>
+    <?= $oHash->getCamposHtml(); ?>
+    <table>
+        <tr style="vertical-align=top; text-align: left">
+            <td><?= _("esquema") ?>: <?= $oEsquemaRef ?> </td>
+        </tr>
+    </table>
+    <br>
+
+    <h3><?= _("Nuevo nombre") ?></h3>
+    Si no sale en la lista, hay que ir a "Global > Ubis > delegaciones" y añadir la dl, o cambiar el nombre a una
+    existente. (idem con la region)
+    <table>
+        <tr style="vertical-align=top; text-align: left">
+            <td><?= _("región") ?>:</td>
+            <td><?= $oDesplRegiones->desplegable() ?>
+            </td>
+            <td><?= _("delegación") ?>:</td>
+            <td id="lst_dl">
+            </td>
+        </tr>
+    </table>
+    <br>
+
+    <table>
+        <tr>
+            <td colspan=3>
+                Para las bases de datos:
+            </td>
+        </tr>
+        <tr>
+            <td><?= _("comun") ?>: <input type="checkbox" value="1" checked name="comun">
+            </td>
+            <td><?= _("sv") ?>: <input type="checkbox" value="1" checked name="sv">
+            </td>
+            <td><?= _("sf") ?>: <input type="checkbox" value="1" name="sf">
+            </td>
+        </tr>
+    </table>
+    <br>
+    <br>
+    <table>
+        <tr>
+            <td>
+                <input type="button" name="bcrear" onclick="fnjs_db_renombrar_esquema()"
+                       value="<?= ("cambiar nombre Esquema") ?>"></td>
+            <td colspan=4>
+                Cambia el nombre del esquema, y todos los valores por defecto.
+            </td>
+        </tr>
+    </table>
+</form>
+
+<h1><?= _("Absorber un esquema (region-dl)") ?></h1>
+<h3><?= _("pasar los datos al Esquema matriz") ?></h3>
+<form id="frm_absorber" action="" method=post>
+    <?= $oHashAbsorber->getCamposHtml(); ?>
+    <table>
+        <tr style="vertical-align=top; text-align: left">
+            <td><?= _("esquema matriz") ?>: <?= $oDesplMatriz->desplegable() ?> </td>
+            <td><?= _("esquema a disolver") ?>: <?= $oDesplDel->desplegable() ?> </td>
+        </tr>
+    </table>
+    <br>
+    <br>
+    <table>
+        <tr>
+            <td>
+                <input type="button" name="bimportar" onclick="fnjs_absorber_dl()"
+                       value="<?= ("trasladar los datos al esquema matriz") ?>"></td>
+            <td colspan=4>
+                Todas las referencias a la dl importada desaparecen, y se cambia por la nueva dl.
+            </td>
+        </tr>
+    </table>

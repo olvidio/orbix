@@ -1,0 +1,139 @@
+<script>
+fnjs_ver_activ=function(formulario) {
+	var url = "apps/procesos/controller/actividad_proceso.php";
+	rta=fnjs_solo_uno(formulario);
+	if (rta == 1) {
+        $(formulario).attr('action',url);
+        $(formulario).one("submit", function() {
+            $.ajax({
+                url: $(this).attr('action'),
+                type: 'post',
+                data: $(this).serialize()
+			})
+			.done(function (rta_txt) {
+				if (rta_txt) {
+					fnjs_mostra_resposta(rta_txt,'#main'); 
+				}
+            });
+            return false;
+        });
+        $(formulario).trigger("submit");
+        $(formulario).off();
+	}
+}
+fnjs_cambiar=function(formulario){
+	var url='{{ url_ajax }}';
+	// segundo parametro permite multiple selección
+	rta=fnjs_solo_uno(formulario,true);
+	if (rta != 0 ) {
+        $(formulario).attr('action',url);
+        $(formulario).one("submit", function() {
+            $.ajax({
+                url: $(this).attr('action'),
+                type: 'post',
+                data: $(this).serialize()
+			})
+			.done(function (rta_txt) {
+				if (rta_txt) {
+					fnjs_mostra_resposta(rta_txt,'#main'); 
+				}
+				fnjs_lista();
+            });
+            return false;
+        });
+        $(formulario).trigger("submit");
+        $(formulario).off();
+	}
+}
+
+fnjs_lista=function(){
+	var dl_propia=$('input[name="dl_propia"]:checked').val();
+	var isfsv=$('#isfsv_val').val();
+	var iasistentes=$('#iasistentes_val').val();
+	var iactividad=$('#iactividad_val').val();
+	var inom_tipo=$('#inom_tipo_val').val();
+	
+	id_tipo_activ=isfsv+iasistentes+iactividad+inom_tipo;
+
+	var periodo=$('#periodo').val();
+	var year=$('#year').val();
+	var empiezamax=$('#empiezamax').val();
+	var empiezamin=$('#empiezamin').val();
+	var id_fase_nueva=$('#id_fase_nueva').val();
+	var accion=$('input[name=accion]:checked').val()
+
+	/* obtener el listado de fases */
+	var url='{{ url_ajax }}';
+	var parametros='que=lista&accion='+accion+'&dl_propia='+dl_propia+'&id_tipo_activ='+id_tipo_activ+'&id_fase_nueva='+id_fase_nueva+'&periodo='+periodo+'&year='+year+'&empiezamax='+empiezamax+'&empiezamin='+empiezamin+'{{ h_lista|raw }}';
+	$.ajax({
+		url: url,
+		type: 'post',
+		data: parametros,
+		dataType: 'html'
+	})
+	.done(function (rta_txt) {
+		$('#div_resultado').html(rta_txt);			
+	});
+}
+
+fnjs_actualizar_fases=function(id_fase_sel=''){
+	var dl_propia=$('input[name="dl_propia"]:checked').val();
+	var isfsv=$('#isfsv_val').val();
+	var iasistentes=$('#iasistentes_val').val();
+	var iactividad=$('#iactividad_val').val();
+	var inom_tipo=$('#inom_tipo_val').val();
+	
+	id_tipo_activ=isfsv+iasistentes+iactividad+inom_tipo;
+
+	/* obtener el listado de fases */
+	var url='{{ url_ajax }}';
+	var parametros='que=get&dl_propia='+dl_propia+'&id_tipo_activ='+id_tipo_activ+'&id_fase_sel='+id_fase_sel+'{{ h_actualizar|raw }}';
+	$.ajax({
+		url: url,
+		type: 'post',
+		data: parametros,
+		dataType: 'html'
+	})
+	.done(function (rta_txt) {
+		$('#div_proceso').html(rta_txt);			
+	});
+}
+ 
+$(document).ready(fnjs_actualizar_fases ({{ id_fase_nueva }}));
+</script>
+<h3>seleccionar un tipo de actividad:</h3>
+<div>
+    {{ oActividadTipo.getHtml(extendida)|raw }}
+</div>
+<table>
+<tr>
+	<td class=etiqueta>{{ "para actividades que organiza"|trans|capitalize }}:
+    <input onchange="fnjs_actualizar_fases();" type="radio" name="dl_propia" value="t" {{ chk_propia }}>{{ "la propia dl"|trans|raw }}
+    <input onchange="fnjs_actualizar_fases();" type="radio" name="dl_propia" value="f" {{ chk_no_propia }}>{{ "otras dl"|trans|raw }}
+	</td>
+</tr>
+</table>
+
+<input type="hidden" id="id_tipo_activ" name="id_tipo_activ" value="">
+<table>
+<tr><td class=etiqueta>{{ "periodo"|trans|raw }}:</td>
+{{ oFormP.getTd()|raw }}
+</tr>
+<tr><td class=etiqueta>{{ "fase"|trans|raw }}:</td>
+<td></td>
+<td><span id=div_proceso "></td>
+<td>
+<input type="radio" value="marcar" checked="true" name="accion" onchange="fnjs_lista();"> {{ "marcar"|trans|raw }}
+<input type="radio" value="desmarcar" name="accion" onchange="fnjs_lista();"> {{ "desmarcar"|trans|raw }}
+</td>
+
+</tr>
+</table>
+
+<table>
+<tfoot>
+<tr class=botones>
+<td><input TYPE="button" onclick="fnjs_lista();"  id="ok" name="ok" value="{{ "ver selección"|trans|raw }}" class="btn_ok"></td>
+</tr></tfoot>
+</table>
+<div id='div_resultado'></div>

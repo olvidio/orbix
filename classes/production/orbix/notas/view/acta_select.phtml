@@ -1,0 +1,131 @@
+<script>
+    fnjs_descargar_pdf = function (formulario) {
+        rta = fnjs_solo_uno(formulario);
+        if (rta == 1) {
+            /* selecciono los elementos con class="sel" de las tablas del id=formulario */
+            $(formulario + ' input.sel').each(function (i) {
+                if ($(this).prop('checked') == true) {
+                    key = $(this).prop('value');
+                    url = "apps/notas/controller/acta_pdf_download.php";
+                    url_download = url+'?key='+key+'<?= $h_download ?>';
+                    window.open(url_download);
+                }
+            });
+        }
+    }
+    fnjs_imprimir = function (formulario) {
+        rta = fnjs_solo_uno(formulario);
+        if (rta == 1) {
+            $(formulario).attr('action', "apps/notas/controller/acta_imprimir.php");
+            fnjs_enviar_formulario(formulario);
+        }
+    }
+    fnjs_nuevo = function (formulario) {
+        $('#mod').val("nueva");
+        $(formulario).attr('action', "apps/notas/controller/acta_ver.php");
+        fnjs_enviar_formulario(formulario, '#main');
+    }
+    fnjs_modificar = function (formulario) {
+        $('#mod').val("modificar");
+        rta = fnjs_solo_uno(formulario);
+        if (rta == 1) {
+            $(formulario).attr('action', "apps/notas/controller/acta_ver.php");
+            fnjs_enviar_formulario(formulario);
+        }
+    }
+    fnjs_eliminar = function (formulario) {
+        rta = fnjs_solo_uno(formulario);
+        if (rta == 1) {
+            if (confirm("<?= $txt_eliminar ?>")) {
+                $('#mod').val("eliminar");
+                $(formulario).attr('action', "apps/notas/controller/acta_update.php");
+                $(formulario).one("submit", function () {
+                    $.ajax({
+                        url: $(this).attr('action'),
+                        type: 'post',
+                        data: $(this).serialize()
+                    })
+                        .done(function (rta_txt) {
+                            if (rta_txt !== '' && rta_txt !== '\\n') {
+                                alert('<?= _("respuesta") ?>: ' + rta_txt);
+                            } else {
+                                fnjs_actualizar(formulario);
+                            }
+                        });
+                    return false;
+                });
+                $(formulario).trigger("submit");
+                $(formulario).off();
+            }
+        }
+    }
+    fnjs_actualizar = function (formulario) {
+        var campo = '<input type="hidden" name="refresh" value=1>';
+        $(formulario).attr('action', "apps/notas/controller/acta_select.php");
+        $(formulario).append(campo);
+        fnjs_enviar_formulario(formulario, '#main');
+    }
+    fnjs_left_side_hide();
+</script>
+<form id="frm_sin_nombre" name="frm_sin_nombre" action="apps/notas/controller/acta_select.php" method="post"
+      onkeydown="fnjs_enviar(event,this);">
+    <?= $oHash->getCamposHtml(); ?>
+
+    <p class="comentario"><?= _("<b>Ayuda para búsquedas</b>") ?>:<br>
+        - <?= _("En las <b>Delegaciones</b>, solo busca entre las actas de la propia delegación o Región. En las <b>Regiones que tienen delegaciones dependientes</b>, buscará entre todas las actas de todas sus delegaciones.") ?>
+        <br>
+        - <?= _("Si solo se utiliza el <b>formato nn/aa</b> (12/21, 7/19, etc.) buscará las actas del ámbito con esa numeración. En el caso de regiones con delegaciones devolvera las de todas las delegaciones con ese número. En el caso de Delegaciones o regiones sin delegaciones, devolverá el acta de ese ámbito con esa numeración.") ?>
+        <br>
+        - <?= _("Para buscar actas se puede utilizar <b>comodines</b> de la siguiente forma:") ?><br>
+        - <?= _("Un <b>punto</b> (.) significa cualquier carácter en esa posición.") ?><br>
+        - <?= _("Un <b>asterisco</b> (*) significa que el carácter precedente puede repetirse de forma indefinida en la cadena.") ?>
+        <br>
+        - <?= _("Por lo tanto, punto y asterisco (.*) significa que puede haber un numero indeterminado de caracteres en esa posición.") ?>
+        <br>
+        - <?= _("<b>Ejemplos</b>:") ?><br>
+        - <?= _("<b>dlm. 2/19</b>: devolverá, dlmE 2/19, dlmO 2/19, dlmH 2/19,... pero no devolvería dlM 2/19, porque faltaría un carácter entre la m y el espacio.") ?>
+        <br>
+        - <?= _("<b>dl.* 2/19</b>: devolverá, dlmE 2/19, dlmO 2/19, dlb 2/19, dlna 2/19, etc.") ?><br>
+        - <?= _("<b>dl.*/19</b>: devolverá todas las actas de todas las delegaciones del año 19 en el caso de ser una Región con delegaciones y en el caso de una Delegación devolverá las actas de esa delegación del año 19.") ?>
+        <br>
+        - <?= _("<b>dlp .*/20</b>: devolverá las actas de dlp del año 2020 ----- crC .*/21: devolverá todas las actas del año 21 de Canadá.") ?>
+        <br>
+        - <?= _("<b>dl.*/20</b>: devolverá las actas de la propia delegación (o de toda la Región si es una región con delegaciones). Puede ser útil para Delegaciones que han cambiado de nombre, porque buscará entre las actas a las que tiene acceso la delegación, incluyendo el nombre de la actual y el nombre antiguo. ") ?>
+        <br>
+
+    </p>
+
+    <table>
+        <th class=titulo_inv colspan=4><?= ucfirst(_("buscar un acta")); ?>
+            &nbsp;&nbsp;&nbsp;<input class=contenido id="acta" name="acta" size="30">
+            <div class="help-tip">
+                <p><?= _("ejemplos") ?>:<br>
+                    - <?= _("23/15 (sólo número) => busca en las actas de la r/dl.") ?><br>
+                    - <?= _("crX .* | dlx .* => todas las actas de crX o dlx. Hay que dejar espacio") ?><br>
+                    - <?= _("crX .*/15 | dlx .*/15 => todas las actas de crX o dlx del año 15") ?><br>
+                </p>
+            </div>
+        </th>
+        <th colspan=4><input type="button" id="btn_ok" name="btn_ok"
+                             onclick="fnjs_enviar_formulario('#frm_sin_nombre');" value="<?= ucfirst(_("buscar")); ?>"
+                             class="btn_ok">
+        </th>
+    </table>
+</form>
+
+<h3 class=subtitulo><?= $titulo ?></h3>
+<form id='seleccionados' name='seleccionados' action='' method='post'>
+    <?= $oHash1->getCamposHtml(); ?>
+    <input type='Hidden' id='mod' name='mod' value=''>
+    <?= $oTabla->mostrar_tabla(); ?>
+</form>
+<?php
+// -----------------------------------  Botones  ----------------------
+if (!empty($botones)) {
+    echo "<table><tr class=botones>";
+    $txt_g = ucwords(_("añadir acta"));
+    echo "<th class='link_inv' onclick='fnjs_nuevo(\"#seleccionados\")'>$txt_g</th>";
+    echo "</tr></table><br>";
+}
+// fin ----------------------------  Botones  ----------------------
+?>

@@ -1,0 +1,45 @@
+<?= $oPosicion->mostrar_left_slide(1); ?>
+<?php
+$ctr = 0;
+foreach ($aCentros as $Centro) {
+    $ctr++;
+    $nombre_ubi = $Centro['nombre_ubi'];
+    $aPersonasCtr = $Centro['personas'];
+    ?>
+    <div class='salta_pag'>
+        <table>
+            <tr>
+                <th colspan=4><?= $nombre_ubi ?></th>
+            </tr>
+            <tr>
+                <th><?= _("nombre") ?></th>
+                <th><?= _("actividades previstas") ?></th>
+            </tr>
+            <?php
+            foreach ($aPersonasCtr as $Persona) {
+                $ap_nom = $Persona['ap_nom'];
+                $aActividades = $Persona['actividades'];
+                if (empty($aActividades)) {
+                    $actividades_txt = _("pendiente de solicitar");
+                    $clase = 'alert';
+                } else {
+                    $clase = '';
+                    $actividades_txt = '';
+                    foreach ($aActividades as $actividad) {
+                        $actividades_txt .= empty($actividades_txt) ? '' : '<br>';
+                        $actividades_txt .= $actividad;
+                    }
+                }
+                ?>
+                <tr valign="TOP">
+                    <td><?= $ap_nom ?></td>
+                    <td class="<?= $clase ?>"><?= $actividades_txt ?></td>
+                </tr>
+                <?php
+            }
+            ?>
+        </table>
+    </div>
+    <?php
+}
+?>

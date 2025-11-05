@@ -1,0 +1,42 @@
+<script>
+    fnjs_buscar = function () {
+        var campo = '<input type="hidden" name="refresh" value=1>';
+        $('#periodo_form').attr('action', "apps/actividadestudios/controller/matriculas_lista.php");
+        $('#periodo_form').append(campo);
+        fnjs_enviar_formulario('#periodo_form', '#main');
+    }
+    fnjs_ver_ca = function (formulario, n) {
+        rta = fnjs_solo_uno(formulario);
+        if (rta == 1) {
+            var mod = "#mod";
+            //$(mod).val("editar");
+            $("#pau").val("a");
+            $(formulario).attr('action', "apps/dossiers/controller/dossiers_ver.php");
+            fnjs_enviar_formulario(formulario, '#main');
+        }
+    }
+
+    fnjs_borrar = function (formulario) {
+        var mensaje;
+        mensaje = "<?= $txt_eliminar ?>";
+        if (confirm(mensaje)) {
+            var mod = "#mod";
+            $(mod).val("eliminar");
+            $(formulario).attr('action', "apps/actividadestudios/controller/update_3103.php");
+            fnjs_enviar_formulario(formulario, '#main');
+        }
+    }
+    fnjs_left_side_hide();
+</script>
+<form id='periodo_form' action=''>
+    <?= $oHashPeriodo->getCamposHtml(); ?>
+    <?= $oFormP->getHtml(); ?>
+</form>
+<h2 class=titulo><?= $titulo ?></h2>
+<h3><?= $aviso; ?></h3>
+<form id="seleccionados" name="seleccionados" action="" method="post">
+    <?= $oHash->getCamposHtml(); ?>
+    <input type="hidden" id="pau" name="pau" value="p">
+    <input type="hidden" id="mod" name="mod" value="">
+    <?= $oTabla->mostrar_tabla(); ?>
+</form>

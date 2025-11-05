@@ -1,0 +1,27 @@
+<?php
+
+use core\ConfigGlobal;
+
+?>
+<script>
+    fnjs_comparativa = function () {
+        var filtro_dl = $('#dl').val();
+        var url = '<?= ConfigGlobal::getWeb() . '/apps/actividadplazas/controller/plazas_balance_dl.php' ?>';
+        var parametros = 'id_tipo_activ=<?= $Qid_tipo_activ ?>&dl=' + filtro_dl + '<?= $h ?>';
+        $.ajax({
+            url: url,
+            type: 'post',
+            data: parametros,
+            dataType: 'html'
+        })
+            .done(function (rta_txt) {
+                $('#comparativa').html(rta_txt);
+            });
+    }
+</script>
+<div id='select_dl'>
+    <?= $txt ?>
+    <?= $desplDelegaciones->desplegable(); ?>
+</div>
+<br>
+<div id='comparativa'></div>

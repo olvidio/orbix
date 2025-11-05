@@ -1,0 +1,63 @@
+<div id="div_select_zona" class="no_print">
+    <form id="frm_zona_ctr" name="frm_zona_ctr" action="" method="post">
+        {{ oHash.getCamposHtml|raw }}
+        <table>
+            <thead>
+            <tr>
+                <th class=titulo_inv colspan=12>
+                    {{ "Ver Plan de Misas"|trans|capitalize }}
+                </th>
+            </tr>
+            <tr>
+                <th class=titulo_inv colspan=4>{{ "Plan de Misas de la zona"|trans|capitalize }}:&nbsp;&nbsp;&nbsp;
+                    {{ oDesplZonas.desplegable|raw }}
+                </th>
+                <th class=titulo_inv colspan=4>{{ "Orden"|trans|capitalize }}:&nbsp;&nbsp;&nbsp;
+                    {{ oDesplOrden.desplegable|raw }}
+                </th> 
+            </tr>
+            <tr>
+                <td>
+                    {{ "Periodo"|trans|capitalize }}:&nbsp;&nbsp;&nbsp;
+                </td>
+                {{ oFormP.getTd()|raw }}   
+            </tr>
+            </thead>
+        </table>
+    </form>
+</div>
+
+<br>
+<div id="div_cuadricula">
+</div>
+
+<script>
+    fnjs_ver_cuadricula_zona = function () {
+        let id_zona = $('#id_zona').val();
+        if (id_zona) {
+            let url = '{{ url_ver_cuadricula_zona }}';
+	        var zona=$('#sacd_zona').prop('checked');
+    	    var periodo=$('#periodo').val();
+    	    var empiezamax=$('#empiezamax').val();
+    	    var empiezamin=$('#empiezamin').val();
+            let orden = $('#orden').val();
+
+            let parametros = 'id_zona=' + id_zona + '&periodo=' + periodo + '&empiezamin=' + empiezamin + '&empiezamax=' + empiezamax + '&orden=' + orden + '&tipo_plantilla=p' + '{{ h_zona_periodo|raw }}';
+
+            $.ajax({
+                url: url,
+                type: 'post',
+                data: parametros,
+                dataType: 'html'
+            })
+                .done(function (rta_txt) {
+                    $('#div_cuadricula').html(rta_txt);
+                });
+        }
+    }
+
+	$(document).ready($('#periodo').change(function(){funjs_activar_fecha();fnjs_ver_cuadricula_zona();}));
+	$(document).ready($('#empiezamin').change(function(){funjs_activar_fecha();fnjs_ver_cuadricula_zona();}));
+	$(document).ready($('#empiezamax').change(function(){funjs_activar_fecha();fnjs_ver_cuadricula_zona();}));
+
+</script>

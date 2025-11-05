@@ -1,0 +1,46 @@
+<div id='condiciones' class='no_print'>
+    <form id="seleccion" name="seleccion" action="<?= $url ?>" method="post">
+        <h3 class=subtitulo><?= $periodo_txt ?></h3>
+        <?= $oHash->getCamposHtml() ?>
+        <input type=button name="cancelar" value="<?= _("cancelar") ?>" onclick="fnjs_cancelar();">
+        <input type=button name="enviar" value="<?= _("enviar mail") ?>" onclick="fnjs_enviar_mails();">
+    </form>
+</div>
+
+<div id='exportar'>
+    <?php
+    include 'com_sacd_activ_print.phtml';
+    ?>
+</div>
+
+<script>
+    fnjs_enviar_mails = function () {
+        $('#mail').val('si');
+        let msg = "<?= _("- Se enviará a las 14:30 y a las 21:00.") ?>";
+        msg += "\r\n";
+        msg += "<?= _("- Se enviará una copia al jefe del calendario y al ctr del sacd.") ?>";
+        msg += "\r\n";
+        msg += "<?= _("- No se enviará a los sacd que no tengan actividades") ?>";
+        msg += "\r\n";
+
+        alert(msg);
+        var url = '<?= $url ?>';
+        var parametros = $('#seleccion').serialize();
+        $.ajax({
+            url: url,
+            type: 'post',
+            data: parametros
+        })
+            .done(function (rta_txt) {
+                if (rta_txt) {
+                    $('#exportar').html(rta_txt);
+                } else {
+                    fnjs_cancelar();
+                }
+            });
+    }
+    fnjs_cancelar=function(){
+        <?= $oPosicion->js_atras(1) ?>
+    }
+    fnjs_left_side_hide();
+</script>

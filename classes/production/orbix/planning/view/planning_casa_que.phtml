@@ -1,0 +1,71 @@
+<script>
+    fnjs_ver_planning = function (formulario, n) {
+        let err = 0;
+        let f = $('#periodo').val();
+        let num_casa = '';
+        let cdc = $('input[name=cdc_sel]:checked').val();
+
+        if (cdc === undefined) {
+            err = 2;
+        }
+        if (cdc === 9) {
+            num_casa = $('select[name*="id_cdc["]').filter(':visible').length;
+            if (num_casa === 0) {
+                err = 3;
+            }
+        }
+
+        if (!f) {
+            err = 1;
+        }
+        if (f === 'otro') {
+            if (!fnjs_comprobar_fecha('#empiezamin',<?= $locale_us ?>)) {
+                err = 1;
+            }
+            if (!fnjs_comprobar_fecha('#empiezamax',<?= $locale_us ?>)) {
+                err = 1;
+            }
+        }
+
+        if (err > 0) {
+            if (err === 1) {
+                if (!f) {
+                    alert("<?= _("falta definir un periodo") ?>");
+                } else {
+                    alert("<?= _("debe inrtoducir las fechas inicio-fin del periodo") ?>");
+                }
+            }
+            if (err === 2) {
+                alert("<?= _("debe seleccionar un grupo de casas") ?>");
+            }
+            if (err === 3) {
+                alert("<?= _("debe seleccionar una casa") ?>");
+            }
+        } else {
+            $('#modelo').val(n);
+            fnjs_enviar_formulario(formulario);
+        }
+    }
+    fnjs_left_side_hide();
+</script>
+<form name="que" id="que" action="apps/planning/controller/planning_casa_select.php" method="post">
+    <input type="hidden" id="modelo" name="modelo" value="">
+    <?= $oHash->getCamposHtml() ?>
+    <?= $oForm->getHtmlTabla() ?>
+    <?= _("incluir casas sin actividad:") ?>
+    <input type="Radio" name="sin_activ" value=0 <?= $chk_actividad_no ?> > <?= _("no") ?>
+    <input type="Radio" name="sin_activ" value=1 <?= $chk_actividad_si ?> > <?= _("sí") ?>
+    <?= $oFormP->getHtml() ?>
+    <table>
+        <tfoot>
+        <tr class=botones>
+            <td><input TYPE="button" onclick="fnjs_ver_planning(this.form,1)"
+                       value="<?= ucfirst(_("planning vista tabla")) ?>"></td>
+            <td><input TYPE="button" onclick="fnjs_ver_planning(this.form,3)"
+                       value="<?= ucfirst(_("planning vista grid")) ?>"></td>
+            <td colspan=2><input TYPE="button" onclick="fnjs_ver_planning(this.form,2)"
+                                 value="<?= _("vista para imprimir") ?>"></td>
+        </tr>
+        </tfoot>
+    </table>
+</form>

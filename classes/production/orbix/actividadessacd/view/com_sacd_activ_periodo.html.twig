@@ -1,0 +1,59 @@
+<div id='condiciones' class='no_print'>
+    {% if perm_mod_txt %}
+        <li>
+            <span class=link onclick="fnjs_update_div('#main','{{ url_com_txt|raw }}')">
+                {{ "click para modificar los textos de las comunicaciones"|trans|raw }}
+            </span>
+        </li>
+    {% endif %}
+
+    <form id="seleccion" name="seleccion" action="{{ url }}" method="post">
+        <h3 class=subtitulo>{{ "lista con la atención de actividades para mandar a los sacd"|trans|raw }}</h3>
+        {{ oHash.getCamposHtml()|raw }}
+        {{ oFormP.getHtml()|raw }}
+    </form>
+</div>
+<div id='exportar' refe='actividadessacd/view/com_sacd_activ_print.phtml'>
+</div>
+<script>
+    fnjs_ver = function () {
+        // obtener el listado de periodos
+        $('#mail').val('no');
+        var url = '{{ url|raw }}';
+        var parametros = $('#seleccion').serialize();
+        $.ajax({
+            url: url,
+            type: 'post',
+            data: parametros
+        })
+            .done(function (rta_txt) {
+                if (rta_txt) {
+                    $('#exportar').html(rta_txt);
+                }
+            });
+    }
+    fnjs_enviar_mails = function () {
+        $('#mail').val('si');
+        let msg = "{{ "- Se enviará a las 14:30 y a las 21:00."|trans|raw }}";
+        msg += "\r\n";
+        msg += "{{ "- Se enviará una copia al jefe del calendario y al ctr del sacd."|trans|raw }}";
+        msg += "\r\n";
+        msg += "{{ "- No se enviará a los sacd que no tengan actividades"|trans|raw }}";
+        msg += "\r\n";
+
+        alert(msg);
+        var url = '{{ url|raw }}';
+        var parametros = $('#seleccion').serialize();
+        $.ajax({
+            url: url,
+            type: 'post',
+            data: parametros
+        })
+            .done(function (rta_txt) {
+                if (rta_txt) {
+                    $('#exportar').html(rta_txt);
+                }
+            });
+    }
+    fnjs_left_side_hide();
+</script>

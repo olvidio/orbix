@@ -1,0 +1,155 @@
+<?php
+
+use core\ConfigGlobal;
+
+?>
+<script>
+    fnjs_dl = function () {
+        var filtro_region = $('#region').val();
+        var url = '<?= ConfigGlobal::getWeb() . '/apps/devel/controller/db_ajax.php' ?>';
+        var parametros = 'salida=lugar&entrada=' + filtro_region + '<?= $h ?>';
+        $.ajax({
+            url: url,
+            type: 'post',
+            data: parametros,
+            dataType: 'html'
+        })
+            .done(function (rta_txt) {
+                $('#lst_dl').html(rta_txt);
+            });
+    }
+    fnjs_db_crear_usuarios = function () {
+        dl = $('#dl').val();
+        if (!dl) {
+            alert("<?= $msg_falta_dl ?>");
+        } else {
+            $('#frm').attr('action', 'apps/devel/controller/db_crear_usuarios.php');
+            fnjs_enviar_formulario('#frm', '#main');
+        }
+    }
+    fnjs_db_crear_esquemas = function () {
+        err = '';
+        dl = $('#dl').val();
+        esquema = $('#esquema').val();
+
+        if (!dl) {
+            alert("<?= $msg_falta_dl ?>");
+            err = 1;
+        }
+        if (!esquema) {
+            alert("<?= $msg_falta_esquema ?>");
+            err = 1;
+        }
+
+        if (!err) {
+            $('#frm').attr('action', 'apps/devel/controller/db_crear_esquema.php');
+            fnjs_enviar_formulario('#frm', '#main');
+        }
+    }
+    fnjs_db_copiar = function () {
+        err = '';
+        dl = $('#dl').val();
+        esquema = $('#esquema').val();
+
+        if (!dl) {
+            alert("<?= $msg_falta_dl ?>");
+            err = 1;
+        }
+        if (!esquema) {
+            alert("<?= $msg_falta_esquema ?>");
+            err = 1;
+        }
+
+        if (!err) {
+            $('#frm').attr('action', 'apps/devel/controller/db_copiar.php');
+            fnjs_enviar_formulario('#frm', '#main');
+        }
+    }
+    fnjs_db_eliminar = function () {
+        dl = $('#dl').val();
+        if (!dl) {
+            alert("<?= $msg_falta_dl ?>");
+        } else {
+            $('#frm').attr('action', 'apps/devel/controller/db_eliminar.php');
+            fnjs_enviar_formulario('#frm', '#main');
+        }
+    }
+</script>
+
+<h1><?= _("nuevas dl") ?></h1>
+<form id="frm" action="" method=post>
+    <?= $oHash->getCamposHtml(); ?>
+    <table>
+        <tr style="vertical-align=top; text-align: left">
+            <td><?= _("región") ?>:</td>
+            <td><?= $oDesplRegiones->desplegable() ?>
+            </td>
+            <td><?= _("delegación") ?>:</td>
+            <td id="lst_dl">
+            </td>
+        </tr>
+    </table>
+    <br>
+
+    <p><?= _("hay que hacer los tres pasos") ?>:</p>
+    <br>
+    <table>
+        <tr>
+            <td>
+                <input type="button" name="bcrear" onclick="fnjs_db_crear_usuarios()"
+                       value="<?= (" 1º crear Usuarios") ?>"></td>
+            <td>
+                Crea los usuarios de las bases de datos tipo: "H-dlb", "H-dlbv", "H-dlbf" y
+                les asigna un password aleatorio que habrá que añadir al fichero de configuración.
+            </td>
+        </tr>
+    </table>
+
+    <h3><?= _("dl de referencia") ?></h3>
+    <form id="frm" action="" method=post>
+        <?= $oHash->getCamposHtml(); ?>
+        <table>
+            <tr style="vertical-align=top; text-align: left">
+                <td><?= _("esquema") ?>: <?= $oEsquemaRef ?> </td>
+            </tr>
+        </table>
+        <br>
+        <table>
+            <tr>
+                <td colspan=3>
+                    Para las bases de datos:
+                </td>
+            </tr>
+            <tr>
+                <td><?= _("comun") ?>: <input type="checkbox" value="1" checked name="comun">
+                </td>
+                <td><?= _("sv") ?>: <input type="checkbox" value="1" checked name="sv">
+                </td>
+                <td><?= _("sf") ?>: <input type="checkbox" value="1" name="sf">
+                </td>
+            </tr>
+            <tr>
+                <td align="right">
+                    <input type="button" name="bcrear" onclick="fnjs_db_crear_esquemas()"
+                           value="<?= (" 2º crear Esquema") ?>"></td>
+                <td colspan=4>
+                    Crea el esquema en la base de datos, y añade todas las tablas (de la dl de referencia).
+                </td>
+            </tr>
+            <tr>
+                <td align="right">
+                    <input type="button" name="bimportar" onclick="fnjs_db_copiar()"
+                           value="<?= ("3º importar datos de resto") ?>"></td>
+                <td colspan=4>
+                    Intenta llenar las tablas con datos que se tengan, y sobretodo eliminarlos de 'resto' para evitar
+                    confusiones.
+                </td>
+            </tr>
+        </table>
+        Si no va algo, OJO con los permisos del directorio: /var/www/orbix/log/db (el usuario y grupo= www-data) también
+        los archivos existentes (puede tener que sobreescribir alguno).
+        <hr>
+        <h1><?= _("Eliminar dl") ?></h1>
+        <br><input type="button" name="beliminar" onclick="fnjs_db_eliminar()"
+                   value="<?= ("passar datos a resto y eliminar esquema") ?>">
+    </form>

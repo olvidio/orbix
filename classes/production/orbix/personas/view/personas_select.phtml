@@ -1,0 +1,195 @@
+<?= $oPosicion->mostrar_left_slide(1) ?>
+    <script>
+        fnjs_home = function (formulario) {
+            rta = fnjs_solo_uno(formulario);
+            if (rta === 1) {
+                $(formulario).attr('action', 'apps/personas/controller/home_persona.php');
+                fnjs_enviar_formulario(formulario);
+            }
+        }
+        <?php if (!empty($script['fnjs_modificar_ctr'])) { ?>
+        fnjs_modificar_ctr = function (formulario) {
+            rta = fnjs_solo_uno(formulario);
+            if (rta === 1) {
+                $(formulario).attr('action', "apps/personas/controller/traslado_form.php");
+                fnjs_enviar_formulario(formulario);
+            }
+        }
+        <?php } ?>
+        <?php if (!empty($script['fnjs_dossiers'])) { ?>
+        fnjs_dossiers = function (formulario) {
+            rta = fnjs_solo_uno(formulario);
+            if (rta === 1) {
+                $(formulario).attr('action', "apps/dossiers/controller/dossiers_ver.php");
+                fnjs_enviar_formulario(formulario);
+            }
+        }
+        <?php } ?>
+        <?php if (!empty($script['fnjs_ficha'])) { ?>
+        fnjs_ficha = function (formulario) {
+            rta = fnjs_solo_uno(formulario);
+            if (rta === 1) {
+                $('#que').val("titulo");
+                $(formulario).attr('action', 'apps/personas/controller/personas_editar.php');
+                fnjs_enviar_formulario(formulario);
+            }
+        }
+        <?php } ?>
+        <?php if (!empty($script['fnjs_actividades'])) { ?>
+        fnjs_actividades = function (formulario) {
+            rta = fnjs_solo_uno(formulario);
+            if (rta === 1) {
+                $('#que').val("activ");
+                $('#id_dossier').val("1301y1302");
+                $(formulario).attr('action', "apps/dossiers/controller/dossiers_ver.php");
+                fnjs_enviar_formulario(formulario);
+            }
+        }
+        <?php } ?>
+        <?php if (!empty($script['fnjs_tessera'])) { ?>
+        fnjs_tessera = function (formulario) {
+            rta = fnjs_solo_uno(formulario, true);
+            if (rta != 0) {
+                $(formulario).attr('action', "apps/notas/controller/tessera_ver.php");
+                fnjs_enviar_formulario(formulario);
+            }
+        }
+        <?php } ?>
+        <?php if (!empty($script['fnjs_lista_activ'])) { ?>
+        fnjs_lista_activ = function (formulario) {
+            rta = fnjs_solo_uno(formulario);
+            if (rta === 1) {
+                $('#que').val("un_sacd");
+                $(formulario).attr('action', "apps/actividadessacd/controller/com_sacd_activ.php");
+                fnjs_enviar_formulario(formulario);
+            }
+        }
+        <?php } ?>
+        <?php if (!empty($script['fnjs_matriculas'])) { ?>
+        fnjs_matriculas = function (formulario) {
+            rta = fnjs_solo_uno(formulario);
+            if (rta === 1) {
+                $('#que').val("matriculas");
+                $('#id_dossier').val("1303");
+                $(formulario).attr('action', "apps/dossiers/controller/dossiers_ver.php");
+                fnjs_enviar_formulario(formulario);
+            }
+        }
+        <?php } ?>
+        <?php if (!empty($script['fnjs_posibles_ca'])) { ?>
+        fnjs_posibles_ca = function (formulario) {
+            rta = fnjs_solo_uno(formulario);
+            if (rta === 1) {
+                $(formulario).attr('action', "apps/actividadestudios/controller/ca_posibles.php");
+                fnjs_enviar_formulario(formulario);
+            }
+        }
+        <?php } ?>
+        <?php if (!empty($script['fnjs_posibles_activ'])) { ?>
+        fnjs_peticion_activ = function (formulario, sactividad) {
+            rta = fnjs_solo_uno(formulario);
+            if (rta === 1) {
+                $('#que').val(sactividad);
+                $(formulario).attr('action', "apps/actividadplazas/controller/peticiones_activ.php");
+                fnjs_enviar_formulario(formulario);
+            }
+        }
+        <?php } ?>
+        <?php if (!empty($script['fnjs_imp_tessera'])) { ?>
+        fnjs_imp_tessera = function (formulario) {
+            rta = fnjs_solo_uno(formulario);
+            if (rta === 1) {
+                $(formulario).attr('action', "apps/notas/controller/tessera_imprimir.php");
+                $(formulario).target = "print";
+                fnjs_enviar_formulario(formulario);
+            }
+        }
+        <?php } ?>
+        <?php if (!empty($script['fnjs_notas'])) { ?>
+        fnjs_notas = function (formulario) {
+            rta = fnjs_solo_uno(formulario);
+            if (rta === 1) {
+                $('#id_dossier').val("1011");
+                $(formulario).attr('action', "apps/dossiers/controller/dossiers_ver.php");
+                fnjs_enviar_formulario(formulario);
+            }
+        }
+        <?php } ?>
+        <?php if (!empty($script['fnjs_ver_certificados'])) { ?>
+        fnjs_ver_certificados = function (formulario) {
+            rta = fnjs_solo_uno(formulario);
+            if (rta === 1) {
+                $('#id_dossier').val("1010");
+                $(formulario).attr('action', "apps/certificados/controller/certificado_select.php");
+                $(formulario).target = "main";
+                fnjs_enviar_formulario(formulario);
+            }
+        }
+        <?php } ?>
+        <?php if (!empty($script['fnjs_imp_certificado'])) { ?>
+        fnjs_imp_certificado = function (formulario) {
+            rta = fnjs_solo_uno(formulario);
+            if (rta === 1) {
+                $(formulario).attr('action', "frontend/certificados/controller/certificado_imprimir.php");
+                $(formulario).target = "print";
+                fnjs_enviar_formulario(formulario);
+            }
+        }
+        <?php } ?>
+        <?php if (!empty($script['fnjs_upload_certificado'])) { ?>
+        fnjs_upload_certificado = function (formulario) {
+            rta = fnjs_solo_uno(formulario);
+            if (rta === 1) {
+                $('#id_dossier').val("1010");
+                $(formulario).attr('action', "apps/certificados/controller/certificado_adjuntar.php");
+                $(formulario).target = "print";
+                fnjs_enviar_formulario(formulario);
+            }
+        }
+        <?php } ?>
+        <?php if (!empty($script['fnjs_ficha_profe'])) { ?>
+        fnjs_ficha_profe = function (formulario) {
+            rta = fnjs_solo_uno(formulario);
+            if (rta === 1) {
+                $(formulario).attr('action', "apps/profesores/controller/ficha_profesor_stgr.php");
+                fnjs_enviar_formulario(formulario);
+            }
+        }
+        <?php } ?>
+        <?php if (!empty($script['fnjs_modificar'])) { ?>
+        fnjs_modificar = function (formulario) {
+            rta = fnjs_solo_uno(formulario);
+            if (rta === 1) {
+                $(formulario).attr('action', "apps/personas/controller/stgr_cambio.php");
+                fnjs_enviar_formulario(formulario);
+            }
+        }
+        <?php } ?>
+        <?php if (!empty($script['fnjs_copiar_tessera'])) { ?>
+        fnjs_copiar_tessera = function (formulario) {
+            rta = fnjs_solo_uno(formulario);
+            if (rta === 1) {
+                $(formulario).attr('action', "apps/notas/controller/tessera_copiar_select.php");
+                fnjs_enviar_formulario(formulario);
+            }
+        }
+        <?php } ?>
+    </script>
+    <h3><?= $resultado ?></h3>
+    <form id='seleccionados' name='seleccionados' action='' method='post'>
+        <?= $oHash->getCamposHtml() ?>
+        <input type='hidden' id='que' name='que' value=''>
+        <input type='hidden' id='id_dossier' name='id_dossier' value=''>
+        <?= $oTabla->mostrar_tabla() ?>
+    </form>
+    <br>
+<?php if ($permiso == 3) { ?>
+    <table>
+        <tr>
+            <th class="no_print">
+                <span class="link_inv"
+                      onclick="fnjs_update_div('#main','<?= $pagina ?>');"><?= core\strtoupper_dlb(_("añadir persona")) ?></span>
+            </th>
+        </tr>
+    </table>
+<?php } ?>

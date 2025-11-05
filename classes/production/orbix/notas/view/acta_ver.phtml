@@ -1,0 +1,308 @@
+<div id='acta'>
+    <style>
+        .ui-autocomplete {
+            max-height: 200px;
+            overflow-y: scroll;
+            overflow-x: hidden;
+        }
+    </style>
+    <script>
+        $(function () {
+            $("#f_acta").datepicker();
+        });
+
+        fnjs_add_examinador = function () {
+            var txt = "<input class='examinador' type='text'  size='60' name='examinadores[]' value='' >";
+            $("#examinador_span").append(txt);
+            fnjs_autocomplete_exam();
+        }
+
+        fnjs_nueva_convocatoria = function (formulario) {
+            $('#notas').val("nuevo");
+            $(formulario).attr('action', 'apps/notas/controller/acta_ver.php');
+            fnjs_enviar_formulario(formulario, '#acta');
+        }
+
+        fnjs_cmb_acta = function (formulario) {
+            var campo = '<input type="hidden" name="refresh" value=1>';
+            $(formulario).attr('action', 'apps/notas/controller/acta_ver.php');
+            $(formulario).append(campo);
+            fnjs_enviar_formulario(formulario, '#acta');
+        }
+
+        fnjs_guardar_acta = function (formulario) {
+            var rr = fnjs_comprobar_campos(formulario, '<?= addslashes($obj) ?>');
+            if (rr === 'ok') {
+                $(formulario).attr('action', 'apps/notas/controller/acta_update.php');
+                <?php if (!empty($notas) && $notas != 'nuevo') { ?>
+                $(formulario).one("submit", function () {
+                    $.ajax({
+                        url: $(this).attr('action'),
+                        type: 'post',
+                        data: $(this).serialize()
+                    })
+                        .done(function (rta_txt) {
+                            if (rta_txt !== '' && rta_txt !== '\\n') {
+                                alert('<?= _("respuesta") ?>: ' + rta_txt);
+                            }
+                        });
+                    return false;
+                });
+                $(formulario).trigger("submit");
+                $(formulario).off();
+                <?php } else { ?>
+                $(formulario).one("submit", function () {
+                    $.ajax({
+                        url: $(this).attr('action'),
+                        type: 'post',
+                        data: $(this).serialize()
+                    })
+                        .done(function (rta_txt) {
+                            if (rta_txt !== '' && rta_txt !== '\\n') {
+                                alert('<?= _("respuesta") ?>: ' + rta_txt);
+                            } else {
+                                <?= $oPosicion->js_atras(1); ?>
+                            }
+                        });
+                    return false;
+                });
+                $(formulario).trigger("submit");
+                $(formulario).off();
+                <?php } ?>
+            }
+        }
+    </script>
+    <?= $oPosicion->mostrar_left_slide(1); ?>
+    <form id="frm_acta" name="frm_acta" action="" method="POST">
+        <?= $oHashActa->getCamposHtml(); ?>
+        <table>
+            <tr>
+                <th colspan='3' class=titulo_inv><?= $titulo ?></Th>
+            <tr>
+                <td class=etiqueta><?= ucfirst(_("acta")); ?>:
+                </td>
+                <?php if ($mod == 'nueva' || $notas == "nuevo") {
+                    echo "<td colspan=8><input class=contenido size='25' id='acta' name='acta' value=\"$acta_new\">";
+                    echo "&nbsp;&nbsp;$ult_acta";
+                } else {
+                    echo "<td colspan=8 class=contenido >";
+                    if (is_array($a_actas)) {
+                        foreach ($a_actas as $acta_i) {
+                            $chk = ($acta_i == $acta_actual) ? 'checked' : '';
+                            echo "<input type='radio' name='acta' value='$acta_i' $chk onchange='fnjs_cmb_acta(this.form)'>$acta_i";
+                        }
+                    } else {
+                        echo "$acta_actual";
+                    }
+                } ?>
+                </td>
+            </tr>
+            <tr>
+                <td class=etiqueta><?= ucfirst(_("fecha acta")); ?>:</td>
+                <td><input <?= $readonly ?> class="fecha" size="11" id="f_acta" name="f_acta" value="<?= $f_acta; ?>">
+                </td>
+            </tr>
+            <tr></tr>
+            <tr>
+                <td class=etiqueta><?= ucfirst(_("libro")); ?>:</td>
+                <td colspan=2><input <?= $readonly ?> class=contenido size="10" id="libro" name="libro"
+                                                      value="<?= $libro ?>">&nbsp;&nbsp;<?= $ult_lib; ?></td>
+            </tr>
+            <tr>
+                <td class=etiqueta><?= ucfirst(_("página")); ?>:</td>
+                <td colspan=2><input <?= $readonly ?> class=contenido size="10" id="pagina" name="pagina"
+                                                      value="<?= $pagina ?>">&nbsp;&nbsp;<?= $ult_pag; ?></td>
+            </tr>
+            <tr>
+                <td class=etiqueta><?= ucfirst(_("línea")); ?>:</td>
+                <td colspan=2><input <?= $readonly ?> class=contenido size="10" id="linea" name="linea"
+                                                      value="<?= $linea ?>">&nbsp;&nbsp;<?= $ult_lin; ?></td>
+            </tr>
+            <tr>
+                <td class=etiqueta><?= ucfirst(_("lugar")); ?>:</td>
+                <td colspan=2><input <?= $readonly ?> class=contenido size="30" id="lugar" name="lugar"
+                                                      value="<?= htmlspecialchars($lugar ?? '') ?>"></td>
+            </tr>
+            <tr>
+                <td class=etiqueta><?= ucfirst(_("observaciones")); ?>:</td>
+                <td colspan=2><input <?= $readonly ?> class=contenido size="60" id="observ" name="observ"
+                                                      value="<?= htmlspecialchars($observ ?? '') ?>"></td>
+            </tr>
+            <tr>
+                <td class=etiqueta><?= ucfirst(_("asignatura")) ?>:</td>
+                <td><input <?= $readonly ?> class=contenido type='text' size='60' id='name_asignatura'
+                                            name='name_asignatura' value='<?= $nombre_asignatura ?>'>
+                    <input type='hidden' id='id_asignatura' name='id_asignatura' value='<?= $id_asignatura ?>'></td>
+            </tr>
+        </table>
+        <br>
+        <!--  --------------- TRIBUNAL --------------- -->
+        <table>
+            <tr>
+                <th class=titulo_inv colspan=4><?= ucfirst(_("tribunal")); ?></th>
+            </tr>
+            <tr>
+                <td class=subtitulo valign='TOP'><?= ucfirst(_("examinador")) ?>:</td>
+                <td colspan=8 id="col_examinador"><span id="examinador_span">
+		<?php
+        $i = 0;
+        foreach ($examinadores as $examinador) {
+            $i++;
+            ?>
+            <input <?= $readonly ?> class="examinador" type='text' size='60' name='examinadores[]'
+                                    value='<?= $examinador ?>'>
+            <?php
+        }
+        ?>
+			<input <?= $readonly ?> class="examinador" type='text' size='60' name='examinadores[]' value=''>
+		</span>
+
+                    <?php if (empty($readonly)) { ?>
+                        <input id="g3" TYPE="button" VALUE="<?= ucfirst(_("más")); ?>" onclick="fnjs_add_examinador()">
+                    <?php } ?>
+                </td>
+            </tr>
+        </table>
+        <br>
+        <?php if (empty($readonly) && $permiso == 3) { ?>
+            <input id="g1" TYPE="button" VALUE="<?= ucfirst(_("guardar cambios acta")); ?>"
+                   onclick="fnjs_guardar_acta(this.form)">
+            <?php
+            if (!empty($notas)) {
+                ?>
+                <input id="g2" TYPE="button" VALUE="<?= ucfirst(_("nueva acta convocatoria")); ?>"
+                       onclick="fnjs_nueva_convocatoria(this.form)">
+                <?php
+            }
+            ?>
+        <?php } ?>
+    </form>
+    <br>
+    <?php if (empty($readonly)) { ?>
+        <form id='frm_upload' action="" method="post" enctype="multipart/form-data">
+            <?= $oHashActaPdf->getCamposHtml(); ?>
+            <?= ucfirst(_("buscar el acta firmada")); ?>:
+            <br>
+            <input type="file" name="acta_pdf" id="fileToUpload">
+            <br>
+            <input type="button" onclick="fnjs_upload_pdf();" value="<?= ucfirst(_("subir pdf")); ?>">
+        </form>
+    <?php } else { ?>
+        <input type="button" onclick="window.open('<?= $url_download ?>');" value="<?= ucfirst(_("descargar pdf")); ?>">
+    <?php } ?>
+
+    <?php if (!empty($readonly) && $soy_rstgr) { ?>
+        <input type="button" onclick="fnjs_eliminar_pdf();" value="<?= ucfirst(_("eliminar pdf")); ?>">
+    <?php } ?>
+
+    <script type="text/javascript">
+
+        fnjs_upload_pdf = function () {
+            if (typeof event !== 'undefined') {
+                event.preventDefault();
+            }
+            //datos = $('#frm_upload').serialize();
+            var datos = new FormData(document.getElementById("frm_upload"));
+
+            let request = $.ajax({
+                data: datos,
+                url: 'apps/notas/controller/acta_pdf_upload.php',
+                method: 'POST',
+                dataType: 'json',
+                cache: false,
+                contentType: false,
+                processData: false
+            });
+            request.done(function (json) {
+                if (json.success != true) {
+                    alert("<?= _("respuesta") ?>: " + json.mensaje);
+                } else {
+                    <?= $oPosicion->js_atras(1); ?>
+                }
+            });
+        }
+
+        fnjs_eliminar_pdf = function () {
+            if (typeof event !== 'undefined') {
+                event.preventDefault();
+            }
+            if (confirm("<?= _("¿Está seguro que desea borrar esta acta firmada?") ?>")) {
+                let request = $.ajax({
+                    data: '<?= $h_delete ?>',
+                    url: '<?= $url_delete ?>',
+                    method: 'POST',
+                    dataType: 'json'
+                });
+                request.done(function (json) {
+                    if (json.success != true) {
+                        alert("<?= _("respuesta") ?>: " + json.mensaje);
+                    } else {
+                        <?= $oPosicion->js_atras(1); ?>
+                    }
+                });
+            }
+        }
+
+        fnjs_autocomplete_exam = function () {
+            $('.examinador').autocomplete({
+                source: function (request, response) {
+                    //Fetch data
+                    $.ajax({
+                        url: "<?= $url_ajax ?>",
+                        type: "POST",
+                        dataType: "json",
+                        data: {
+                            <?= $h_ajax ?>,
+                            que: 'examinadores',
+                            search: request.term
+                        },
+                        success: response
+                    });
+                },
+                minLength: 2
+            })
+                .autocomplete("instance")._renderItem = function (ul, item) {
+                return $("<li>")
+                    .append("<div>" + item.label + "</div>")
+                    .appendTo(ul);
+            };
+        }
+        $(document).ready(function () {
+            fnjs_autocomplete_exam();
+
+            $('#name_asignatura').autocomplete({
+                source: function (request, response) {
+                    //Fetch data
+                    $.ajax({
+                        url: "<?= $url_ajax ?>",
+                        type: "POST",
+                        dataType: "json",
+                        data: {
+                            <?= $h_ajax ?>,
+                            que: 'asignaturas',
+                            search: request.term
+                        },
+                        success: response
+                    });
+                },
+                select: function (event, ui) {
+                    // Set selection
+                    $('#id_asignatura').val(ui.item.value); // display the selected text
+                    $('#name_asignatura').val(ui.item.label); // display the selected text
+                    return false;
+                },
+                focus: function (event, ui) {
+                    $("#name_asignatura").val(ui.item.label);
+                    return false;
+                },
+                minLength: 2
+            })
+                .autocomplete("instance")._renderItem = function (ul, item) {
+                return $("<li>")
+                    .append("<div>" + item.label + "</div>")
+                    .appendTo(ul);
+            };
+
+        });
+    </script>
+</div>

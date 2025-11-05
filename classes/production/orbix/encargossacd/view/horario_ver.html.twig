@@ -1,0 +1,106 @@
+<script>
+fnjs_guardar=function(formulario){
+	var err=0;
+	var f_ini=$('#f_ini').val();
+	var h_ini=$('#h_ini').val();
+	var h_fin=$('#h_fin').val();
+	var n_sacd=$('#n_sacd').val();
+	var dia=$('#dia').val();
+	
+	if (!f_ini) { alert("Debe llenar el campo fecha inicio"); err=1; }
+	if (!h_ini) { alert("Debe llenar el hora de inicio"); err=1; }
+	if (!h_fin) { alert("Debe llenar el hora de finalización"); err=1; }
+	if (!n_sacd) { alert("Debe llenar el campo de número de sacd"); err=1; }
+	if (!dia) { alert("Debe llenar el campo dia"); err=1; }
+
+	var inc=0;
+	var dia_sem=dia;
+	var dia_ref=$('#dia_ref').val();
+	var mas_menos=$('#mas_menos').val();
+	
+	//Tengo que multiplicar por 1 (*1) para que me coja los valores como números
+	if (dia_ref) {
+	    if (mas_menos=="-"){
+		if (dia_ref > dia_sem) inc=dia_ref*1-dia_sem*1;
+		if (dia_ref < dia_sem) inc=dia_ref*1+(7-dia_sem*1);
+	    }
+	    if (mas_menos=="+"){
+		if (dia_ref > dia_sem) inc= (7-dia_ref*1)+dia_sem*1;
+		if (dia_ref < dia_sem) inc= dia_sem*1-dia_ref*1;
+	    }
+		if (inc==0) {
+			mas_menos="";
+		   	$('#mas_menos').val('');
+		}
+	    //alert ("mas: "+mas_menos+" el incremento es: "+inc);
+	   $('#dia_inc').val(inc);
+	}
+
+        if (err != 1) {
+            mod = $('#mod').val();
+            if (mod == 'excepcion') {
+                $(formulario).attr('action', 'des/tareas/horario_excepcion_ver.php');
+            }
+            fnjs_enviar_formulario('#modifica');
+            $(formulario).attr('action', 'apps/encargossacd/controller/horario_update.php');
+            $(formulario).one("submit", function () {
+                $.ajax({
+                    url: $(this).attr('action'),
+                    type: 'post',
+                    data: $(this).serialize()
+                })
+                    .done(function (rta_txt) {
+                        if (rta_txt !== '' && rta_txt !== '\\n') {
+                            alert('{{ "respuesta"|trans|raw }}: ' + rta_txt);
+                        } else {
+                            {{ oPosicion.js_atras(1)|raw }}
+                        }
+                    });
+                return false;
+            });
+            $(formulario).trigger("submit");
+            $(formulario).off();
+        }
+        return false;
+    }
+</script>
+<body>
+<form id="modifica" name="modifica" action="" method="post">
+{{ oHash.getCamposHtml|raw }}
+<table><tr><th class=titulo_inv>{{ titulo }}
+</th></tr>
+</table>
+<br>
+<table>
+<tr>
+
+<td class=etiqueta>{{ "activo desde"|trans|raw }}: </td>
+<td><input type=text id="f_ini" name="f_ini" size="12" value="{{ f_ini }}" class=fecha >
+<td class=etiqueta>{{ "hasta"|trans|raw }}: </td>
+<td><input type=text id="f_fin" name="f_fin" size="12" value="{{ f_fin }}" class=fecha >
+</tr>
+<tr><td class=etiqueta>{{ "dia"|trans|raw }}:</td>
+<td> {{ oDesplDia.desplegable()|raw }} </td>
+<td> {{ oDesplMas.desplegable()|raw }} </td>
+<td> {{ oDesplOrd.desplegable()|raw }} </td>
+<td> {{ oDesplRef.desplegable()|raw }} </td>
+</tr>
+<tr>
+<td class=etiqueta>{{ "hora inicio"|trans|raw }}: </td><td><input class=contenido size="11" id="h_ini"  name="h_ini" value="{{ h_ini }}">
+<td class=etiqueta>{{ "hora fin" |trans|raw }}: </td><td><input class=contenido size="11" id="h_fin" name="h_fin" value="{{ h_fin }}">
+</tr>
+<tr>
+<td class=etiqueta>{{ "nº de sacd"|trans|raw }}:</td><td colspan=7>
+  <input class=contenido size='5' id='n_sacd' name='n_sacd' value='{{ n_sacd }}'>
+</td>
+<td><input type=hidden id=dia_inc name=dia_inc>
+</td></tr>
+</table>
+<input TYPE="button" VALUE="{{ txt_btn }}" onclick="javascript:fnjs_guardar('#modifica')">
+<br><br>
+</form>
+
+<script>
+$(function() { $( "#f_ini" ).datepicker(); });
+$(function() { $( "#f_fin" ).datepicker(); });
+</script>

@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Permission denied</title>
+</head>
+
+<body bgcolor="#ffffff">
+<h1>Permis denegat</h1>
+La seva sessió <b><?php print $sess->id ?></b> ha estat identificada com
+un usuari de id <b><?php print $auth->auth["uid"] ?></b> y amb el nom
+de usuari <b><?php
+    print isset($auth->auth["uname"]) ? $auth->auth["uname"] : "(unknown)";
+    ?></b>.<p>
+
+    Per accedir a aquesta pàgina, fan falta els següents permisos:
+    <b><?php print $must_have ?></b>.<br>
+
+    Jo no puc deixar-te accedir a aquesta pàgina, perque tu tens aquests permisos:
+    <b><?php print $does_have ?></b>.
+<p>
+
+</body>
+</html>
+<!-- $Id: perminvalid.ihtml,v 1.1.1.1 2000/04/17 16:40:11 kk Exp $ -->

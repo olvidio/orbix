@@ -1,0 +1,81 @@
+<script>
+    fnjs_left_side_hide();
+</script>
+<form id="frm_asig_altan" action="apps/notas/controller/asig_faltan_select.php" method="post"
+      onkeydown="fnjs_enviar(event,this);">
+    <?= $oHash->getCamposHtml(); ?>
+    <table>
+        <thead>
+        <th class=titulo_inv colspan=4><?= ucfirst(_("búsqueda de personas por número de asignaturas")); ?></th>
+        </thead>
+        <tfoot>
+        <tr>
+            <th colspan=4><input type="button" onclick="fnjs_enviar_formulario('#frm_asig_altan')" id="btn_ok"
+                                 name="btn_ok" value="<?= ucfirst(_("buscar")); ?>" class="btn_ok">
+                <input TYPE="reset" value="<?= ucfirst(_("borrar")); ?>"></th>
+        </tr>
+        </tfoot>
+        <tbody>
+        <tr>
+            <td class=etiqueta width=25%><input type="Checkbox" name="personas_n"
+                                                value="n" <?= $chk_n ?>><?= _("numerarios"); ?></td>
+            <td class=etiqueta width=25%><input type="Checkbox" name="personas_agd"
+                                                value="agd" <?= $chk_agd ?>><?= _("agregados"); ?></td>
+            <td width=25%></td>
+            <td width=25%></td>
+        </tr>
+        <tr>
+            <td class=etiqueta><input type="Radio" name="b_c" value=b <?= $chk_b ?>><?= _("bienio"); ?></td>
+            <td class=etiqueta><input type="Radio" name="b_c" value=c <?= $chk_c ?>><?= _("cuadrienio"); ?></td>
+            <td class=etiqueta align="RIGHT"><input type="checkbox" name="c1" <?= $chk_c1 ?>><?= _("año I"); ?></td>
+            <td class=etiqueta align="RIGHT"><input type="checkbox" name="c2" <?= $chk_c2 ?>><?= _("año II-IV"); ?></td>
+        </tr>
+        <tr>
+            <td colspan=2 class=etiqueta>
+                <b><?= ucfirst(_("número de asignaturas que faltan (no se incluyen las cusradas sin examinar)")); ?></b>
+            </td>
+            <td><input class=contenido name="numero" size="3" value="<?= $numero ?>"></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td class=etiqueta colspan="4"><input type="checkbox" name="lista"><?= _("incluir lista de asignaturas"); ?>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</form>
+<br/>
+<form id="frm_asig_altan1" action="apps/notas/controller/asig_faltan_personas_select.php" method="post"
+      onkeydown="fnjs_enviar(event,this);">
+    <?= $oHash1->getCamposHtml(); ?>
+    <table>
+        <thead>
+        <th class=titulo_inv colspan=5><?= ucfirst(_("búsqueda de personas por asignatura")); ?></th>
+        </thead>
+        <tfoot>
+        <tr>
+            <th colspan=4><input type="button" onclick="fnjs_enviar_formulario('#frm_asig_altan1')" id="btn_ok"
+                                 name="btn_ok" value="<?= ucfirst(_("buscar")); ?>" class="btn_ok">
+                <input TYPE="reset" value="<?= ucfirst(_("borrar")); ?>"></th>
+        </tr>
+        </tfoot>
+        <tbody>
+        <tr>
+            <td class=etiqueta><input type="Checkbox" name="personas_n" value="n" <?= $chk_n ?>><?= _("numerarios"); ?>
+            </td>
+            <td class=etiqueta><input type="Checkbox" name="personas_agd"
+                                      value="agd" <?= $chk_agd ?>><?= _("agregados"); ?></td>
+        </tr>
+        <tr>
+            <td class=etiqueta><input type="Radio" name="b_c" value=b <?= $chk_b ?>><?= _("bienio"); ?></td>
+            <td class=etiqueta><input type="Radio" name="b_c" value=c <?= $chk_c ?>><?= _("cuadrienio"); ?></td>
+            <td class=etiqueta align="RIGHT"><input type="checkbox" name="c1" <?= $chk_c1 ?>><?= _("año I"); ?></td>
+            <td class=etiqueta align="RIGHT"><input type="checkbox" name="c2" <?= $chk_c2 ?>><?= _("año II-IV"); ?></td>
+        </tr>
+        <tr>
+            <td class=etiqueta><b><?= ucfirst(_("asignatura")); ?></b></td>
+            <td colspan="3"><?= $oDesplAsignaturas->desplegable(); ?></td>
+        </tr>
+        </tbody>
+    </table>
+</form>

@@ -1,0 +1,187 @@
+<style>
+    div.salta_pag {
+        clear: both;
+        display: block;
+        width: 17cm;
+        page-break-after: always;
+        font-family: 'Arial', serif;
+        font-size: 12pt;
+    }
+
+    table {
+        width: 17cm;
+        margin-bottom: 10mm;
+        border: 1px solid #000;
+        border-collapse: collapse;
+        padding: 6px;
+    }
+
+    td {
+        border: 1px solid #000;
+        border-collapse: collapse;
+    }
+
+    td.cabecera {
+        text-align: center;
+        font-weight: bold;
+    }
+
+    td.cabecera_izq {
+        text-align: left;
+        font-weight: bold;
+    }
+
+    td.centro {
+        text-align: center;
+    }
+
+    p {
+        margin: 0;
+    }
+
+    otros {
+        font-weight: bold;
+        margin-left: 0;
+    }
+
+    comunicacion {
+        display: block;
+        padding-left: 15mm;
+        padding-right: 10mm;
+        padding-top: 10mm;
+        padding-bottom: 10mm;
+    }
+
+    izquierda {
+        display: block;
+        float: left;
+        text-align: left;
+    }
+
+    derecha {
+        display: block;
+        float: right;
+        text-align: right;
+    }
+
+    cabecera {
+        display: block;
+    }
+
+    pie {
+        display: block;
+    }
+
+</style>
+<?php
+// sacd 
+$s = 0;
+foreach ($array_modo as $array_modo_sacd) {
+    $s++;
+    ?>
+    <div class="salta_pag">
+        <br/>
+        <cabecera>
+            <izquierda><?= $array_modo[$s]['nom_ap'] ?></izquierda>
+        </cabecera>
+        <?php
+        //  Encargos
+        if (is_array($array_modo_sacd)) {
+        ksort($array_modo_sacd);
+        if (!empty($array_modo_sacd['grupo'])) {
+        ksort($array_modo_sacd['grupo']);
+        foreach ($array_modo_sacd['grupo'] as $grupo => $vector) {
+        switch ($grupo) {
+        case 1:
+            $modo_txt = _("coordinador");
+            break;
+        case 2:
+        ?>
+        <table class=titular>
+            <tr>
+                <td class=cabecera_izq><?= $array_modo[$s]['txt']["t_titular"] ?></td>
+                <td class=cabecera><?= $array_modo[$s]['txt']["t_secc"] ?></td>
+                <td class=cabecera><?= $array_modo[$s]['txt']["t_mañanas"] ?></td>
+                <td class=cabecera><?= $array_modo[$s]['txt']["t_tardes1"] ?></td>
+                <td class=cabecera><?= $array_modo[$s]['txt']["t_tardes2"] ?></td>
+                <td class=cabecera_izq><?= $array_modo[$s]['txt']["t_suplente"] ?></td>
+            </tr>
+            <?php
+            break;
+            case 3:
+            /* cambio 13.8.07 */
+            /*
+            <table class=colaborador>
+            <tr><td class=cabecera_izq><?= $array_modo[$s]['txt']["t_colaborador"] ?></td>
+                <td class=cabecera><?= $array_modo[$s]['txt']["t_secc"] ?></td>
+            </tr>
+            */
+            ?>
+            <table class=colaborador>
+                <tr>
+                    <td class=cabecera_izq><?= $array_modo[$s]['txt']["t_colaborador"] ?></td>
+                    <td class=cabecera><?= $array_modo[$s]['txt']["t_secc"] ?></td>
+                    <td class=cabecera><?= $array_modo[$s]['txt']["t_mañanas"] ?></td>
+                    <td class=cabecera><?= $array_modo[$s]['txt']["t_tardes1"] ?></td>
+                    <td class=cabecera><?= $array_modo[$s]['txt']["t_tardes2"] ?></td>
+                </tr>
+                <?php
+                break;
+                case 4:
+                ?>
+                <table class=suplente>
+                    <tr>
+                        <td class=cabecera_izq><?= $array_modo[$s]['txt']["t_suplente"] ?></td>
+                        <td class=cabecera><?= $array_modo[$s]['txt']["t_secc"] ?></td>
+                        <td class=cabecera_izq><?= $array_modo[$s]['txt']["t_titular"] ?></td>
+                    </tr>
+                    <?php
+                    break;
+                    case 6:
+                    ?>
+                    <table>
+                        <tr>
+                            <td><b><?= $array_modo[$s]['txt']["t_otros"] ?></b></td>
+                        </tr>
+                        <?php
+                        break;
+                        }
+                        if (is_array($vector)) {
+                            foreach ($vector as $enc) {
+                                switch ($grupo) {
+                                    case 6:
+                                        echo "<tr><td>{$enc['desc_enc']}: </td><td>{$enc['dedic_m']}.</td></tr>";
+                                        break;
+                                    case 7:
+                                        if ($observ = $enc['desc_enc']) {
+                                            echo "<otros>" . $array_modo[$s]['txt']["t_observ"] . "</otros>";
+                                            echo "<p>$observ</p>";
+                                        }
+                                        break;
+                                    default:
+                                        ?>
+                                        <tr>
+                                            <td><?= $enc['nombre_ubi'] ?></td>
+                                            <td class=centro><?= $enc['seccion'] ?></td>
+                                            <?php if ($grupo == 2 || $grupo == 3) { ?>
+                                                <td class=centro><?= $enc['dedic_m'] ?></td>
+                                                <td class=centro><?= $enc['dedic_t'] ?></td>
+                                                <td class=centro><?= $enc['dedic_v'] ?></td>
+                                            <?php } ?>
+                                            <td width=50%><?= $enc['sup_tit'] ?></td>
+                                        </tr>
+                                    <?php
+                                }
+                            }
+                        }
+                        ?>
+                    </table>
+                    <?php
+                    }
+                    }
+                    }
+                    ?>
+    </div>
+    <?php
+}
+?>

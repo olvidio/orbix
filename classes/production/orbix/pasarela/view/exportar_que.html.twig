@@ -1,0 +1,34 @@
+<script>
+fnjs_lista=function(){
+	$('#modifica').attr('action','{{ url_ajax }}');
+	//$('#mod').val('cambiar_tipo');
+	fnjs_enviar_formulario('#modifica');
+};
+fnjs_left_side_hide();
+</script>
+<form id="modifica"name="modifica" action="" method="post" onkeydown="fnjs_enviar(event,this);" >
+{{ oHash.getCamposHtml()|raw }}
+<h3>{{ "seleccionar un tipo de actividad"|trans|raw }}:</h3>
+
+<div>
+    {{ oActividadTipo.getHtml|raw }}
+</div>
+
+<input type="hidden" id="id_tipo_activ" name="id_tipo_activ" value="">
+<table>
+<tr><td class=etiqueta>{{ "periodo"|trans|raw }}:</td>
+{{ oFormP.getTd()|raw }}
+</tr>
+</table>
+<div>
+    {{ oForm.getHtmlTabla|raw }}
+</div>
+</form>
+
+<table>
+<tfoot>
+<tr class=botones>
+<td><input TYPE="button" onclick="fnjs_lista();"  id="ok" name="ok" value="{{ "ver selección"|trans|raw }}" class="btn_ok"></td>
+</tr></tfoot>
+</table>
+<div id='div_resultado'></div>

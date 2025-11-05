@@ -1,0 +1,28 @@
+<style>
+    table {
+        width: 600px;
+    }
+
+    .contenido {
+        font-weight: bold;
+    }
+
+    .link {
+        text-decoration: none;
+        color: blue;
+        cursor: pointer;
+    }
+</style>
+<form id="nuevo">
+    {{ oActividadTipo.getHtml()|raw }}
+    {{ oHash.getCamposHtml()|raw }}
+    <div class="flex-container">
+        <div>
+            {{ txt }}:
+            <input id="contribucion" name="contribucion" \>
+        </div>
+    </div>
+    <br><br>
+    <input type="button" value="{{ "guardar"|trans|raw }}" onclick="fnjs_guardar_nuevo('#nuevo','update');">
+    <input type="button" value="{{ "cancel"|trans|raw }}" onclick="fnjs_cerrar();">
+</form>

@@ -1,0 +1,201 @@
+<script>
+    fnjs_lista_ctrs_por_zona = function () {
+        var id_zona_sel = $('#id_zona_sel').val();
+        $('#id_zona').val(id_zona_sel);
+
+        var url = '{{ url_ctr|raw }}';
+        var parametros = 'id_zona=' + id_zona_sel + '{{ h_ctr_zona|raw }}';
+        $.ajax({
+            url: url,
+            type: 'post',
+            data: parametros,
+            dataType: 'html'
+        })
+            .done(function (rta_txt) {
+                $('#centros').html(rta_txt);
+            });
+    }
+
+    fnjs_lista_zonas = function () {
+        var id_zona = $('#id_zona').val();
+        var url = '{{ url_zona|raw }}';
+        var parametros = 'id_zona=' + id_zona + '{{ h_zona|raw }}';
+        $.ajax({
+            url: url,
+            type: 'post',
+            data: parametros,
+            dataType: 'html'
+        })
+            .done(function (rta_txt) {
+                $('#zonas').html(rta_txt);
+            });
+    }
+
+    fnjs_lista_ctrs = function () {
+        var filtro_ctr = $('#filtro_ctr').val();
+
+        if (filtro_ctr === '8') { // zonas
+            fnjs_lista_zonas();
+        } else {
+            // borrar las zonas
+            $('#zonas').html('');
+
+            var url = '{{ url_ctr|raw }}';
+            var parametros = 'filtro_ctr=' + filtro_ctr + '{{ h_ctr|raw }}';
+            $.ajax({
+                url: url,
+                type: 'post',
+                data: parametros,
+                dataType: 'html'
+            })
+                .done(function (rta_txt) {
+                    $('#centros').html(rta_txt);
+                });
+        }
+    }
+
+    /*
+    fnjs_actualizar = function (formulario) {
+        var campo = '<input type="hidden" name="refresh" value=1>';
+        $(formulario).attr('action', '{{ url_actualizar|raw }}');
+        $(formulario).append(campo);
+        fnjs_enviar_formulario(formulario);
+    }
+    */
+
+    fnjs_guardar = function (formulario) {
+        var err = 0;
+        var desc_enc = $('#desc_enc').val();
+
+        if (!desc_enc) {
+            alert("Debe llenar el campo de Descripción del encargo");
+            err = 1;
+        }
+
+        if (err != 1) {
+            parametros = $(formulario).serialize();
+            $.ajax({
+                url: 'apps/encargossacd/controller/encargo_ajax.php',
+                type: 'post',
+                data: parametros
+            })
+                .done(function (rta_txt) {
+                    if (rta_txt !== '' && rta_txt !== '\\n') {
+                        alert('{{ "respuesta"|trans|raw }}: ' + rta_txt);
+                    } else {
+                        {{ oPosicion.js_atras(1)|raw }}
+                    }
+                });
+        }
+
+    }
+
+    fnjs_generarNomEnc = function (formulario) {
+        var sf = $('#filtro_ctr').val();
+        var id_ubi = $('#lst_ctrs').val();
+        var nom_tipo = '';
+
+        nom_tipo = $('#lst_tipo_enc :selected').text();
+        lloc = $('#lst_ctrs :selected').text();
+        if (sf == 2) {
+            sf = 'sf ';
+        } else {
+            sf = '';
+        }
+        tipus = sf + nom_tipo;
+        if (lloc == '') {
+            $('#desc_enc').val(tipus);
+        } else {
+            $('#desc_enc').val(tipus + ' (' + lloc + ')');
+        }
+    }
+
+    fnjs_lst_tipo_enc = function () {
+        var grupo = $('#grupo').val();
+        var nom_tipo = $('#nom_tipo').val();
+
+        var parametros = 'que=lst_tipo_enc&grupo=' + grupo + '{{ h_lst|raw }}';
+        var url = '{{ url_lst }}';
+        $.ajax({
+            url: url,
+            type: 'post',
+            data: parametros,
+            dataType: 'html'
+        })
+            .done(function (rta_txt) {
+                $('#lst_tipo_enc').html(rta_txt);
+            });
+    }
+</script>
+{{ oPosicion.mostrar_left_slide(1)|raw }}
+<form id="modifica" name="modifica" action="" method="post">
+    {{ oHash.getCamposHtml|raw }}
+    {% if not id_enc %}
+    <table>
+        <tr>
+            <th class=titulo_inv>{{ "nuevo encargo" }}</th>
+        </tr>
+        {% else %}
+        <table>
+            <tr>
+                <th class=titulo_inv>{{ "modificar encargo"|trans|capitalize }}</th>
+            </tr>
+
+            {% endif %}
+            <tr>
+                <td class=subtitulo>{{ "escoger el tipo de encargo" }}</td>
+            </tr>
+            <tr>
+                <td>
+                    <input type='hidden' id='id_tipo_enc' name='id_tipo_enc' size='5' value='{{ id_tipo_enc }}'>
+                    <table>
+                        <tr>
+                            <td class="etiqueta">{{ "grupo" }}</td>
+                            <td>
+                                {{ oDesplGrupos.desplegable()|raw }}
+                            </td>
+                            <td class="etiqueta">{{ "tipo encargo" }}</td>
+                            <td id="lst_tipo_enc">
+                                {{ oDesplNoms.desplegable()|raw }}
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+        <br>
+        <table>
+            <tr>
+                <td>{{ "grupo de ctrs" }}:</td>
+                <td>
+                    {{ oDesplGrupoCtrs.desplegable()|raw }}
+                </td>
+                <td id="zonas">
+                    {% if grupo == 8 %}
+                        {{ "zona" }} :
+                        {{ oDesplZonas.desplegable()|raw }}
+                    {% endif %}
+                </td>
+                <td> {{ "centro" }} :</td>
+                <td id="centros">
+                    {{ oDesplCtrs.desplegable()|raw }}
+                </td>
+            </tr>
+            <tr>
+                <td class=etiqueta>{{ "descripción" }}:</td>
+                <td colspan=7>
+                    <input class=contenido size='50' id='desc_enc' name='desc_enc' value="{{ desc_enc }}">&nbsp;&nbsp;&nbsp;
+                    <span class=link onclick="fnjs_generarNomEnc(document.modifica)">{{ "generar" }}</span>
+                </td>
+            </tr>
+            <tr>
+                <td class=etiqueta>{{ "lugar" }}:</td>
+                <td colspan=5><input class=contenido size="30" name="desc_lugar" value="{{ desc_lugar }}"></td>
+            </tr>
+            <tr>
+                <td class=etiqueta>{{ "idioma" }}:</td>
+                <td>{{ oDesplIdiomas.desplegable()|raw }}</td>
+            </tr>
+        </table>
+        <input TYPE="button" VALUE="{{ txt_btn }}" onclick="javascript:fnjs_guardar('#modifica')">
+</form>

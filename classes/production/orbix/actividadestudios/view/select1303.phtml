@@ -1,0 +1,109 @@
+<script>
+    fnjs_grabar_observ = function (formulario, n) {
+        var mod = "#mod" + n;
+        $(mod).val("observ_est");
+        $(formulario).attr('action', "apps/actividadestudios/controller/update_3103.php");
+        $(formulario).one("submit", function () {
+            $.ajax({
+                url: $(this).attr('action'),
+                type: 'post',
+                data: $(this).serialize()
+            })
+                .done(function (rta_txt) {
+                    if (rta_txt !== '' && rta_txt !== '\\n') {
+                        alert('<?= _("respuesta") ?>: ' + rta_txt);
+                    } else {
+                        fnjs_actualizar(formulario);
+                    }
+                });
+            return false;
+        });
+        $(formulario).trigger("submit");
+        $(formulario).off();
+    }
+    fnjs_grabar_est = function (formulario, n) {
+        var mod = "#mod" + n;
+        $(mod).val("plan");
+        $(formulario).attr('action', "apps/actividadestudios/controller/update_3103.php");
+        $(formulario).one("submit", function () {
+            $.ajax({
+                url: $(this).attr('action'),
+                type: 'post',
+                data: $(this).serialize()
+            })
+                .done(function (rta_txt) {
+                    if (rta_txt !== '' && rta_txt !== '\\n') {
+                        alert('<?= _("respuesta") ?>: ' + rta_txt);
+                    } else {
+                        fnjs_actualizar(formulario);
+                    }
+                });
+            return false;
+        });
+        $(formulario).trigger("submit");
+        $(formulario).off();
+    }
+    fnjs_modificar = function (formulario, n) {
+        rta = fnjs_solo_uno(formulario);
+        if (rta == 1) {
+            var mod = "#mod" + n;
+            $(mod).val("editar");
+            $(formulario).attr('action', "apps/actividadestudios/controller/form_1303.php");
+            fnjs_enviar_formulario(formulario, '<?= $bloque ?>');
+        }
+    }
+    fnjs_borrar = function (formulario, n) {
+        rta = fnjs_solo_uno(formulario);
+        if (rta == 1) {
+            if (confirm("<?= $txt_eliminar ?>")) {
+                var mod = "#mod" + n;
+                $(mod).val("eliminar");
+                $(formulario).attr('action', "apps/actividadestudios/controller/update_3103.php");
+                $(formulario).one("submit", function () {
+                    $.ajax({
+                        url: $(this).attr('action'),
+                        type: 'post',
+                        data: $(this).serialize()
+                    })
+                        .done(function (rta_txt) {
+                            if (rta_txt !== '' && rta_txt !== '\\n') {
+                                alert('<?= _("respuesta") ?>: ' + rta_txt);
+                            } else {
+                                fnjs_actualizar(formulario);
+                            }
+                        });
+                    return false;
+                });
+                $(formulario).trigger("submit");
+                $(formulario).off();
+            }
+        }
+    }
+    fnjs_matricular = function (formulario, n) {
+        var mod = "#mod" + n;
+        $(mod).val("matricular");
+        $(formulario).attr('action', "apps/actividadestudios/controller/matricular.php");
+        $(formulario).one("submit", function () {
+            $.ajax({
+                url: $(this).attr('action'),
+                type: 'post',
+                data: $(this).serialize()
+            })
+                .done(function (rta_txt) {
+                    if (rta_txt !== '' && rta_txt !== '\\n') {
+                        alert('<?= _("respuesta") ?>: ' + rta_txt);
+                    }
+                    fnjs_actualizar(formulario);
+                });
+            return false;
+        });
+        $(formulario).trigger("submit");
+        $(formulario).off();
+    }
+    fnjs_actualizar = function (formulario) {
+        var campo = '<input type="hidden" name="refresh" value=1>';
+        $(formulario).attr('action', "apps/dossiers/controller/dossiers_ver.php");
+        $(formulario).append(campo);
+        fnjs_enviar_formulario(formulario, '#main');
+    }
+</script>

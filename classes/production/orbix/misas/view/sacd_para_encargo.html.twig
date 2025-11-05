@@ -1,0 +1,15 @@
+<table>
+    <tr>
+        <td>
+            sacd encargados:
+        </td>
+        <td>
+            <form id="frm_lista_sacd">
+                {{ oHash.getCamposHtml|raw }}
+            {{ oDesplSacd.desplegable|raw }}
+            </form>
+        </td>
+    </tr>
+</table>
+<br>
+<input type='button' value="{{ "guardar"|trans|raw }}" onclick="fnjs_asignar_sacd('#frm_lista_sacd');">

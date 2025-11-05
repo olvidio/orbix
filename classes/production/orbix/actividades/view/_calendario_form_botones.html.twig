@@ -1,0 +1,4 @@
+{% block botones %}
+<input TYPE="button" VALUE="{{ "guardar cambios"|trans|capitalize }}"  onclick="fnjs_guardar('{{ accion }}')">
+<input type="button" value="{{ "cancel"|trans|raw }}" onclick="fnjs_cerrar();" >
+{% endblock %}

@@ -1,0 +1,113 @@
+<div id="div_plantilla">
+    <span class="link" onclick="fnjs_mostrar_modal('{{ pagina_crear_encargo|raw }}');">
+        {{ "Añadir Encargo de centro"|trans|raw }}
+    </span>
+    <br>
+    {{ oTabla.mostrar_tabla_html()|raw }}
+</div>
+
+<div id='div_modal' style="display: none">
+    <div id='div_cerrar'>
+        <span class="link" onclick="fnjs_cerrar()" style="float: right; margin-bottom: 5px;">
+            {{ "Cerrar"|trans|raw }} [x]
+        </span>
+    </div>
+    <div id='div_modificar5'></div>
+</div>
+<div id='overlay'></div>
+
+<script>
+
+    fnjs_quitar_sacd = function (data) {
+        var request = $.ajax({
+            data: data,
+            url: 'apps/misas/controller/asignar_sacd.php',
+            method: 'POST',
+            dataType: 'json'
+        });
+        request.done(function (json) {
+            if (json.success !== true) {
+                alert("{{ "respuesta"|trans|raw }}: " + json.mensaje);
+            } else {
+                fnjs_update_div('#div_plantilla', '{{ url_ver_plantilla_zona|raw }}');
+                fnjs_cerrar();
+            }
+        });
+    }
+
+    fnjs_asignar_sacd = function (formulario) {
+        var data = $(formulario).serialize();
+        var request = $.ajax({
+            data: data,
+            url: 'apps/misas/controller/asignar_sacd.php',
+            method: 'POST',
+            dataType: 'json'
+        });
+        request.done(function (json) {
+            if (json.success !== true) {
+                alert("{{ "respuesta"|trans|raw }}: " + json.mensaje);
+            } else {
+                fnjs_update_div('#div_plantilla', '{{ url_ver_plantilla_zona|raw }}');
+                fnjs_cerrar();
+            }
+        });
+    }
+
+    fnjs_guardar_horario = function (data) {
+        var t_start = $('#t_start').val();
+        var t_end = $('#t_end').val();
+        var dataNew = data + '&t_start=' + t_start + '&t_end=' + t_end;
+        var request = $.ajax({
+            data: dataNew,
+            url: 'apps/misas/controller/guardar_horario.php',
+            method: 'POST',
+            dataType: 'json'
+        });
+        request.done(function (json) {
+            if (json.success !== true) {
+                alert("{{ "respuesta"|trans|raw }}: " + json.mensaje);
+            } else {
+                fnjs_update_div('#div_plantilla', '{{ url_ver_plantilla_zona|raw }}');
+                fnjs_cerrar();
+            }
+        });
+    }
+
+    fnjs_quitar_horario = function (data) {
+        var request = $.ajax({
+            data: data,
+            url: 'apps/misas/controller/quitar_horario.php',
+            method: 'POST',
+            dataType: 'json'
+        });
+        request.done(function (json) {
+            if (json.success !== true) {
+                alert("{{ "respuesta"|trans|raw }}: " + json.mensaje);
+            } else {
+                fnjs_update_div('#div_plantilla', '{{ url_ver_plantilla_zona|raw }}');
+                fnjs_cerrar();
+            }
+        });
+    }
+
+
+    fnjs_cerrar = function () {
+        $('#div_modificar5').html('');
+        $('#div_modal').width('0');
+        $('#div_modal').height('0');
+        $('#div_modal').removeClass('ventana');
+        document.getElementById("overlay").style.display = "none";
+        document.getElementById("div_modal").style.display = "none";
+    }
+
+    fnjs_mostrar_modal = function (url) {
+        fnjs_update_div('#div_modificar5', url);
+
+        $('#div_modal').addClass('ventana');
+        $('#div_modal').width('auto');
+        $('#div_modal').height('auto');
+        document.getElementById("overlay").style.display = "block";
+        document.getElementById("div_modal").style.display = "block";
+    }
+
+</script>

@@ -1,0 +1,40 @@
+<script>
+    fnjs_left_side_hide();
+</script>
+<?php
+foreach ($aClaustro as $aDepartamento) {
+    $titulo = $aDepartamento['departamento'];
+    $aProfesores = $aDepartamento['profesores'];
+    ?>
+    <div class='salta_pag'>
+        <h3><?= $titulo ?></h3>
+        <table>
+            <?php
+            foreach ($aProfesores as $tipo => $aNoms) {
+                ?>
+                <tr>
+                    <td class='titulo'><?= $tipo ?></td>
+                    <td></td>
+                </tr>
+                <?php
+                $dl_anterior = '';
+                foreach ($aNoms as $id => $a_ap_nom) {
+                    foreach ($a_ap_nom as $dl => $ap_nom) {
+                        if ($rstgr && $dl_anterior != $dl) {
+                            echo "<tr><td></td><td class='subtitulo'>$dl</td></tr>";
+                        }
+                        $dl_anterior = $dl;
+                        ?>
+                        <tr>
+                            <td></td>
+                            <td><?= $ap_nom ?></td>
+                        </tr>
+                        <?php
+                    }
+                }
+            }
+            ?>
+        </table>
+    </div>
+    <?php
+}

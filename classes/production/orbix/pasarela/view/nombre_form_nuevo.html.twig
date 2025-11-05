@@ -1,0 +1,20 @@
+<style>
+<!--
+table { border:none; }
+td { border:none; }
+-->
+</style>
+
+<form id="nuevo">
+{{ oActividadTipo.getHtml()|raw  }}
+{{ oHash.getCamposHtml()|raw }}
+<div class="flex-container">
+    <div>
+    {{ "nombre actividad"|trans|raw }}:
+        <input id="nombre_actividad" name="nombre_actividad" \>
+   </div>
+</div>
+<br><br>
+<input type="button" value="{{ "guardar"|trans|raw }}" onclick="fnjs_guardar_nuevo('#nuevo','update');">
+<input type="button" value="{{ "cancel"|trans|raw }}" onclick="fnjs_cerrar();" >
+</form>

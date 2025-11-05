@@ -1,0 +1,44 @@
+<script>
+    fnjs_modificar = function (formulario) {
+        rta = fnjs_solo_uno(formulario);
+        if (rta == 1) {
+            $(formulario).attr('action', 'des/tareas/horario_ver.php');
+            fnjs_enviar_formulario(formulario);
+        }
+    }
+    fnjs_borrar = function (formulario) {
+        rta = fnjs_solo_uno(formulario);
+        var seguro;
+        if (rta == 1) {
+            seguro = confirm("{{ txt_eliminar }}");
+            if (seguro) {
+                $(formulario).attr('action', "des/tareas/horario_update.php");
+                fnjs_enviar_formulario(formulario);
+            }
+        }
+    }
+</script>
+<table>
+    <thead>
+    <tr>
+        <th class=titulo_inv colspan=5>{{ "horario de"|trans|raw }}: {{ desc_enc }}</th>
+    <tr>
+    </thead>
+</table>
+
+<h2 class=subtitulo>{{ titulo }}</h2>
+<form id="seleccionados" name="seleccionados" action="" method="post">
+    <input type='Hidden' id='mod' name='mod' value=''>
+    <input type='Hidden' id='origen' name='origen' value='{{ origen }}'>
+    <input type='Hidden' id='desc_enc' name='desc_enc' value='{{ desc_enc }}'>
+    {{ oTabla.mostrar_tabla()|raw }}
+</form>
+<br>
+<table class=botones>
+    <tr class=botones>
+        <td class=botones>
+	<span class=cabecera class=link onclick="fnjs_update_div('#{{ div_para_nuevo }}','{{ pagina_nuevo|raw }}')">
+	    {{ "añadir horario"|trans|raw }}
+	</span></td>
+    </tr>
+</table>

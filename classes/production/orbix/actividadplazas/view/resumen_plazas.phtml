@@ -1,0 +1,141 @@
+<?php
+
+use function core\is_true;
+
+?>
+<script>
+    fnjs_guardar = function (formulario) {
+        $('#que').value = 'ceder';
+        $(formulario).attr('action', "apps/actividadplazas/controller/resumen_plazas_update.php");
+        $(formulario).one("submit", function () {
+            $.ajax({
+                url: $(this).attr('action'),
+                type: 'post',
+                data: $(this).serialize()
+            })
+                .done(function (rta_txt) {
+                    if (rta_txt != '' && rta_txt != '\n') {
+                        alert(rta_txt);
+                    } else {
+                        fnjs_actualizar('#frm_actualizar');
+                    }
+                });
+            return false;
+        });
+        $(formulario).trigger("submit");
+        $(formulario).off();
+    }
+    fnjs_actualizar = function (formulario) {
+        var campo = '<input type="hidden" name="refresh" value=1>';
+        $(formulario).attr('action', 'apps/actividadplazas/controller/resumen_plazas.php');
+        $(formulario).append(campo);
+        fnjs_enviar_formulario(formulario, '#main');
+    }
+</script>
+<?= $oPosicion->mostrar_left_slide(1); ?>
+<form id='frm_actualizar'>
+    <?= $oHashActualizar->getCamposHtml(); ?>
+</form>
+<form id="frm_resumen" name="frm_resumen" action="" method="POST">
+    <?= $oHash->getCamposHtml(); ?>
+    <?= $nom_activ ?>
+    <?php if (is_true($otra_dl)) { ?>
+        <span class="alert"><?= _("Sólo se ven las ocupadas por la propia dl") ?></span>
+    <?php } ?>
+    <?php if (!is_true($publicado)) { ?>
+        <span class="alert"><?= _("OJO! Esta actividad no está publicada") ?></span>
+    <?php } ?>
+    <table border="1">
+        <tr>
+            <td>dl</td>
+            <td colspan="4"><?= _("plazas") ?></td>
+            <td><?= _("ocupadas") ?></td>
+            <td><?= _("libres") ?></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td><?= _("calendario") ?></td>
+            <td><?= _("cedidas") ?></td>
+            <td><?= _("conseguidas") ?></td>
+            <td><?= _("total") ?></td>
+            <td></td>
+            <td></td>
+        </tr>
+        <?php
+        //plazas
+        $d = 0;
+        $libres = 0;
+        foreach ($a_plazas as $dl => $pl) {
+            if ($dl == 'total') {
+                continue;
+            }
+            // evitar errores si no existe el indice.
+            $pl['calendario'] = empty($pl['calendario']) ? '-' : $pl['calendario'];
+            $pl['total_cedidas'] = empty($pl['total_cedidas']) ? '-' : $pl['total_cedidas'];
+            $pl['total_conseguidas'] = empty($pl['total_conseguidas']) ? '-' : $pl['total_conseguidas'];
+
+            $npl_total_disponibles = empty($pl['total_disponibles']) ? 0 : $pl['total_disponibles'];
+            $npl_total_ocupadas = empty($pl['total_ocupadas']) ? 0 : $pl['total_ocupadas'];
+            $pl['total_disponibles'] = empty($pl['total_disponibles']) ? '-' : $pl['total_disponibles'];
+            $pl['total_ocupadas'] = empty($pl['total_ocupadas']) ? '-' : $pl['total_ocupadas'];
+
+            $libres = $npl_total_disponibles - $npl_total_ocupadas;
+
+            $d++;
+            $clase = "tono$d";
+            echo "<tr class='$clase'>";
+            echo "<td>" . $dl . "</td><td>" . $pl['calendario'] . "</td>";
+            echo "<td>" . $pl['total_cedidas'] . "</td>";
+            echo "<td>" . $pl['total_conseguidas'] . "</td>";
+            echo "<td>" . $pl['total_disponibles'] . "</td>";
+            echo "<td>" . $pl['total_ocupadas'] . "</td>";
+            echo "<td>$libres</td>";
+            echo "</tr>";
+            if (!empty($pl['cedidas'])) {
+                $aCedidas = $pl['cedidas'];
+                foreach ($aCedidas as $dl_otra => $num_plazas) {
+                    echo "<tr class='$clase'><td></td><td></td><td>$num_plazas a $dl_otra</td>";
+                    if (!array_key_exists($dl_otra, $a_plazas)) {
+                        echo "<td></td><td>$num_plazas</td>";
+                        $ocupadas = empty($a_plazas[$dl][$dl_otra]['ocupadas']) ? 0 : $a_plazas[$dl][$dl_otra]['ocupadas'];
+                        echo "<td>$ocupadas</td><td></td></tr>";
+                    } else {
+                        echo "<td></td><td></td>";
+                        echo "<td></td><td></td></tr>";
+                    }
+                    echo "</tr>";
+                }
+            }
+            if (!empty($pl['conseguidas'])) {
+                $aCedidas = $pl['conseguidas'];
+                foreach ($aCedidas as $dl_otra => $num_plazas) {
+                    echo "<tr class='$clase'><td></td><td></td><td></td><td>$num_plazas de $dl_otra</td>";
+                    echo "<td></td><td></td><td></td></tr>";
+                }
+            } else {
+                echo "<tr class='$clase'><td></td><td></td><td></td><td></td>";
+                echo "<td></td><td></td><td></td></tr>";
+            }
+        }
+        // TOTALES
+        $tot_libres = $tot_disponibles - $tot_ocupadas;
+        echo "<tr>";
+        echo "<td>" . _("totales") . "</td><td>$tot_calendario ($plazas_totales)</td>";
+        echo "<td>" . $tot_cedidas . "</td>";
+        echo "<td>" . $tot_conseguidas . "</td>";
+        echo "<td>" . $tot_disponibles . "</td>";
+        echo "<td>" . $tot_ocupadas . "</td>";
+        echo "<td>$tot_libres</td>";
+        echo "</tr>";
+        ?>
+    </table>
+
+    <br><br>
+    <form id="ceder">
+        <?= _("ceder") ?>
+        <input name="num_plazas" type="text" size="2"/>
+        <?= _("plazas a") ?>
+        <?= $oDesplDelegaciones->desplegable() ?>
+        <input type="button" id="btn_ok" name="btn_ok" class="btn_ok" onclick="fnjs_guardar(this.form);"
+               value="<?= ucfirst(_("guardar")); ?>" align="MIDDLE"/>
+    </form>

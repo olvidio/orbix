@@ -1,0 +1,22 @@
+es	com_sacd	Adjuntamos el plan de actividades que hemos previsto que atiendas. Si tuvieras algún inconveniente, agradeceremos que nos lo hagas saber. Muchas gracias.
+ca	com_sacd	Adjuntem el pla d'activitats que hem previst que atenguis. Si tinguessis algun inconvenient, agrairem que ens ho facis saber. Moltes gràcies.
+es	t_propio	propio
+es	t_f_ini	inicio
+es	t_f_fin	final
+es	t_nombre_ubi	lugar
+es	t_sfsv	sección
+es	t_actividad	actv
+es	t_asistentes	asist
+es	t_encargado	ctr encargado
+es	t_observ	observaciones
+es	t_nom_tipo	tipo de actividad
+ca	t_propio	propi
+ca	t_f_ini	inici
+ca	t_f_fin	final
+ca	t_nombre_ubi	lloc
+ca	t_sfsv	secció
+ca	t_actividad	actv
+ca	t_asistentes	asist
+ca	t_encargado	ctr encarregat
+ca	t_observ	observacions
+ca	t_nom_tipo	tipus dactivitat

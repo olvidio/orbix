@@ -1,0 +1,13 @@
+<h3>{{ "Traladar a"|trans|raw }}:</h3>
+{{ oDesplDelegaciones.desplegable|raw }}
+<br><br>
+<input type="button" onclick="fnjs_cerrar()" value="{{ "Cancelar"|trans|raw }}" />
+<input type="button" onclick="fnjs_trasladar()" value="{{ "Trasladar"|trans|raw }}" />
+
+<script>
+/* pone el id de la dl en el campo hidden del formulario */
+fnjs_cmb_id_dl=function(){
+	var dl = $('#dl_destino').val();
+	$('#dl_dst').val(dl)
+}
+</script>

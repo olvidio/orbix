@@ -1,0 +1,270 @@
+<script>
+fnjs_actualizar_propiedades=function(id_item_usuario_objeto){
+	if (isNaN(id_item_usuario_objeto)) id_item_usuario_objeto=0;
+	var objeto=$('#objeto').val();
+	// desplegable 'propiedades'
+	var url='{{ url_actualizar }}';
+	var parametros='salida=propiedades&objeto='+objeto+'&id_item_usuario_objeto='+id_item_usuario_objeto+'{{ h_propiedades|raw }}';
+	$.ajax({
+		url: url,
+		type: 'post',
+		data: parametros,
+		success: function (rta_txt) {
+			//alert ('respuesta: '+rta_txt);
+			$('#tr_tabla').html(rta_txt);			
+		}
+	});
+
+}
+
+fnjs_actualizar_fases=function(){
+	var dl_propia=$('input[name="dl_propia"]:checked').val();
+	var isfsv=$('#isfsv_val').val();
+	var iasistentes=$('#iasistentes_val').val();
+	var iactividad=$('#iactividad_val').val();
+	var inom_tipo=$('#inom_tipo_val').val();
+	
+	if (!iasistentes) iasistentes='.';
+	if (!iactividad) iactividad='.';
+	if (!inom_tipo) inom_tipo='...';
+
+	id_tipo_activ=isfsv+iasistentes+iactividad+inom_tipo;
+
+	id_usuario=$('#id_usuario').val();
+	objeto=$('#objeto').val();
+
+	// desplegable 'desde'
+	var url='{{ url_actualizar }}';
+	var parametros='salida=av_fases&dl_propia='+dl_propia+'&id_tipo_activ='+id_tipo_activ+'&id_usuario='+id_usuario+'&objeto='+objeto+'{{ h_actualizar|raw }}';
+	$.ajax({
+		url: url,
+		type: 'post',
+		data: parametros
+	})
+	.done(function (rta_txt) {
+		$('#fases').html(rta_txt);			
+	});
+}
+
+fnjs_grabar_todo=function(formulario){
+	var err=0;
+	var isfsv=$('#isfsv_val').val();
+	var iasistentes=$('#iasistentes_val').val();
+	var iactividad=$('#iactividad_val').val();
+	var inom_tipo=$('#inom_tipo_val').val();
+	
+	if (!iasistentes) iasistentes='.';
+	if (!iactividad) iactividad='.';
+	if (!inom_tipo) inom_tipo='...';
+
+	var id_tipo_activ=isfsv+iasistentes+iactividad+inom_tipo;
+	$('#id_tipo_activ').val(id_tipo_activ);
+
+	// Comprobaciones
+	var obj=$('#objeto').val();
+	if (!obj) { 
+		alert("{{ "debe indicar dónde mirar los cambios"|trans|raw }}");
+		$('#objeto').trigger("focus");
+		err=1;
+	}
+	var id_fase_ref=$('#id_fase_ref').val();
+	if (!id_fase_ref) { 
+		alert("{{ "debe indicar la fase de referencia"|trans|raw }}"); err=1;
+	}
+
+	var tipo=$('#aviso_tipo').val();
+	if (!tipo) { 
+		alert("{{ "debe indicar por dónde avisar"|trans|raw }}");
+		$('#aviso_tipo').trigger("focus");
+		err=1;
+	}
+
+	if (err!=1){
+        var url='{{ url_actualizar|raw }}';
+        // guardar objeto
+        form_objeto = $('#usuario_pref'); 
+        $('#salida').val('guardar_objeto');
+        var data_obj = form_objeto.serializeArray();
+        $.ajax({
+            url: url,
+            type: 'post',
+            data: data_obj
+        })
+        .done(function (rta_txt) {
+            id_item_obj=rta_txt;
+            // guardar propiedades
+            // Lo hago en dos fases, porque al calcular el hash de las propiedades, depende del objeto
+            form_propiedades = $('#propiedades_obj'); 
+            //$('#salida_').val('guardar_propiedades');
+            $('#id_item_usuario_objeto_prop').val(id_item_obj);
+            var data_prop = form_propiedades.serializeArray();
+            $.ajax({
+                url: url,
+                type: 'post',
+                data: data_prop
+            })
+            .done(function (r_txt) {
+                if (r_txt) {
+                    alert (r_txt);
+                } else {
+                    {{ oPosicion.js_atras(1)|raw }}
+                }
+            });
+        });
+	}
+}
+
+fnjs_cerrar=function(){
+    $('#div_modificar').html('');
+    $('#div_modificar').width('0');
+    $('#div_modificar').height('0');
+    $('#div_modificar').removeClass('ventana');
+    document.getElementById("overlay").style.display = "none";
+
+	$('#inom_tipo_val').val('');
+}
+
+fnjs_modificar=function(objeto,propiedad,id_item){
+	if (isNaN(id_item)) id_item=0;
+    $('#div_modificar').addClass('ventana');
+    $('#div_modificar').width('auto');
+    $('#div_modificar').height('auto');
+    document.getElementById("overlay").style.display = "block";
+
+	var url='{{ url_actualizar|raw }}';
+	var parametros='salida=condicion&objeto='+objeto+'&propiedad='+propiedad+'&id_item='+id_item+'{{ h_mod|raw }}';;
+	fnjs_update_div('#div_modificar',url+'?'+parametros);
+}
+
+fnjs_guardar_cond=function(que){
+	var err=0;
+	$('#salida_cond').val(que);
+	if (que=="eliminar_cond") {
+		seguro=confirm("{{ "¿Está seguro de borrar esta condición?"|trans|raw }}");
+		if (seguro) { 
+			err=0;
+		} else {
+			err=1;
+		}
+	}
+	if (err!=1) {
+		objeto=$('#objeto_cond').val();
+		propiedad=$('#propiedad_cond').val();
+		td_cond='#td_'+objeto+'_'+propiedad+'_cond';
+        var url='{{ url_actualizar|raw }}';
+        form_cond = $('#frm_cond'); 
+        // guardar condicion
+        $.ajax({
+            url: url,
+            type: 'post',
+            data: form_cond.serialize()
+        })
+        .done(function (rta_txt) {
+            $(td_cond).html(rta_txt);			
+            fnjs_cerrar();
+        });
+	}
+}
+
+fnjs_actualizar_propiedades({{ id_item_usuario_objeto }});
+
+fnjs_mas_casas=function(e){
+	var code = (e.keyCode ? e.keyCode : e.which);
+	if(e=="x") {
+		var valor=1;
+	} else {
+		var id_campo='#'+e.currentTarget.id;
+		var valor=$(id_campo).val();
+		if(code!=9) {
+			e.preventDefault();
+			e.stopPropagation();
+		}
+	}
+	if ( code==9 || e.type=="change" || e=="x") {
+		if (valor!=0) {
+			{{ oDesplArrayCasas.ListaSelectsJs()|raw }}
+		}
+	}
+}
+{{ oDesplArrayCasa.ComprobarSelectJs()|raw }}
+</script>
+
+{{  oPosicion.mostrar_left_slide(1)|raw }}
+<div id='div_buscar'>
+<form id="usuario_pref"  name="usuario_pref" action="" method="post" >
+{{ oHash.getCamposHtml|raw }}
+<input type='hidden' id='id_tipo_activ' name='id_tipo_activ' value='{{ id_tipo_activ }}'>
+<input type='hidden' id='salida' name='salida'>
+
+<h1>Avisos para {{ nombre }}</h1>
+
+<h3>{{ "cambios en"|trans|raw }}:
+{{ oDesplObjetos.desplegable()|raw }}
+</h3>
+<table>
+<tr>
+<td class=etiqueta>{{ "para actividades que organiza"|trans|raw }}:</td>
+<td colspan=5>
+	<input type=radio name=dl_propia value='t' {{ chk_propia }} onchange='fnjs_actualizar_fases();' > {{ "la propia dl"|trans|raw }}
+	<input type=radio name=dl_propia value='f' {{ chk_otra }} onchange='fnjs_actualizar_fases();' > {{ "otras dl"|trans|raw }}
+</td></tr>
+</table>
+<table>
+<tr><td class=subtitulo>{{ "escoger el tipo de actividad"|trans|capitalize }}
+	</td></tr>
+	<tr>
+		{{ oActividadTipo.getHtml|raw }}
+	</tr>
+</table>
+<br>
+
+<h3>{{ "fase de referencia"|trans|raw }}:</h3>
+<span class="comentario">
+{{ "NOTA: Salen todas las fases posibles, aunque en algún proceso no existan.
+Para ver menos fases, debe limitar el tipo de actividad."|trans|raw }}
+<br>
+{{ "NOTA: Salen todas las fases, aunque no se tenga permiso.
+El permiso se comprueba cuando se genera el aviso."|trans|raw }}
+</span>
+<br>
+<span id=fases>
+{{ oDesplFases.desplegable()|raw }}
+</span>
+<br>
+<br>
+<input type="checkbox" {{ chk_off }} name="aviso_off"> {{ "avisar antes de que esté marcada (off)"|trans|raw }}
+<br>
+<input type="checkbox" {{ chk_on }} name="aviso_on">  {{ "avisar si está marcada (on)"|trans|raw }}
+<br>
+<input type="checkbox" {{ chk_outdate }} name="aviso_outdate">  {{ "avisar aunque la actividad haya finalizado (fecha cambio  > fecha fin actividad)"|trans|raw }}
+<br>
+<br>
+<h3>{{ "opciones"|trans|raw }}:</h3>
+<table>
+<tr><td colspan="2" class="subtitulo">{{ "ver cambios sólo de las casas"|trans|raw }}:</td>
+    <td id="col_casas" colspan=2>
+        {{ oDesplArrayCasas.ListaSelects|raw }}
+    </td></tr>
+<tr><td class="subtitulo">{{ "avisar por"|trans|raw }}:</td>
+    <td>{{ oDesplTiposAviso.desplegable|raw }}</td>
+</tr>
+</table>
+</form>
+
+
+<form id="propiedades_obj"  name="propiedades_obj" action="" method="post" >
+<h3>{{ "campos o propiedades"|trans|raw }}:</h3>
+<table class="tono3">
+    <tr id="tr_tabla"> </tr>
+</table>
+</form>
+
+<br>
+<input type=button onclick="fnjs_grabar_todo('#usuario_pref');" value="{{ "guardar"|trans|raw }}">
+</div>
+
+<hr>
+<br>
+<div id='div_modificar'></div>
+<div id='ficha'></div>
+<div id='overlay'></div>

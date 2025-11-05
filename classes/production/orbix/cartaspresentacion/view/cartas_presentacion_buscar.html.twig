@@ -1,0 +1,43 @@
+<script>
+fnjs_buscar=function(formulario){
+	var url='{{ url_lista }}';
+	// borro los posibles resultados anteriores
+	$('#resultados').html("");
+	$(formulario).attr('action',url);
+	fnjs_enviar_formulario(formulario,'#resultados');
+}
+
+</script>
+<div id="condiciones">
+<form id="frm_buscar_1" name="frm_buscar_1" action="" onkeydown="fnjs_enviar(event,this);" >
+{{ oHash.getCamposHtml|raw }}
+<table border=1>
+<thead><th class=titulo_inv colspan=4>{{ "Cartas de presentación"|trans|raw }}</th>
+</thead>
+<tfoot>
+<tr><td colspan=5 style="text-align:right;">
+	<input TYPE="button" onclick="fnjs_buscar('#frm_buscar_1')" id="btn_ok" name="btn_ok" value="{{ "buscar"|trans|raw }}" class="btn_ok">
+</td></tr>
+</tfoot>
+<tbody>
+<tr>
+	<td class=etiqueta>{{ "población"|trans|raw }}</td>
+	<td colspan="4"><input class=contenido id=poblacion name=poblacion size="60"></td>	
+</tr>
+<tr>
+	<td class=etiqueta>{{ "región"|trans|raw }}</td>
+	<td>{{ oDesplRegion.desplegable|raw }}</td>
+</tr>
+<tr>
+	<td class=etiqueta>{{ "país"|trans|raw }}</td>
+	<td>{{ oDesplPais.desplegable|raw }}</td>
+</tr>
+<tr>
+	<td class=etiqueta>{{ "delegación (H)"|trans|raw }}</td>
+	<td>{{ oDesplDelegacion.desplegable|raw }}</td>
+</tr>
+</tbody></table>
+</form>
+</div>
+<div id="resultados">
+</div>

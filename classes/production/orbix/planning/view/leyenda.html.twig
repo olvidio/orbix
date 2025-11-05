@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+   <link rel="stylesheet" href="css/calendario.css">
+  <style>
+    td.comment {
+      border: none;
+      text-align: left;
+      padding-left: 10px;
+    }
+    p {
+    font-size : 8pt;
+     	text-align : center;
+     	text-decoration : none;
+     	color : black;
+     	font-family : arial, helvetica, sans-serif;
+    }
+  </style>
+</head>
+<body>
+<h3>{{ "Leyenda"|trans|raw }}</h3>
+
+<table style="border: none">
+  <tr>
+    <td class="actsv_nomod">{{ "actividad sv" }}</td>
+    <td class="comment">{{ "para actividades de sv"|trans|raw }}</td>
+  </tr>
+  <tr>
+    <td class="actsf_nomod">{{ "actividad sf"|trans|raw }}</td>
+    <td class="comment">{{ "para actividades de sf"|trans|raw }}</td>
+  </tr>
+  <tr>
+    <td class="actotras_nomod">{{ "actividad otras"|trans|raw }}</td>
+    <td class="comment">{{ "para otras actividades"|trans|raw }}</td>
+  </tr>
+  <tr>
+    <td class="actpropio_nomod">{{ "actividad propia"|trans|raw }}</td>
+    <td class="comment">{{ "para actividades propias"|trans|raw }}</td>
+  </tr>
+  <tr>
+    <td class="actpersonal_nomod">{{ "actividad personal"|trans|raw }}</td>
+    <td class="comment">{{ "para actividades personales"|trans|raw }}</td>
+  </tr>
+  <tr>
+    <td class="provisional">{{ "actividad provisional"|trans|raw }}</td>
+    <td class="comment">{{ "si plaza es: Pedida, En espera o Denegada"|trans|raw }}</td>
+  </tr>
+  <tr>
+    <td class="proyecto">{{ "actividad en proyecto"|trans|raw }}</td>
+    <td class="comment">{{ "para actividades en proyecto"|trans|raw }}</td>
+  </tr>
+</table>
+</body>
+</html>

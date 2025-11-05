@@ -1,0 +1,37 @@
+{#
+{{ oTabla.mostrar_tabla_html|raw }}
+#}
+
+{{ oDesplCentros.desplegable|raw }}
+{{ oDesplTareas.desplegable|raw }}
+<hr>
+<input type='button' value="{{ "añadir"|trans|raw }}" onclick="fnjs_anadir_ctr_tarea();" >
+<input type='button' value="{{ "cancel"|trans|raw }}" onclick="fnjs_cerrar();" >
+
+<script>
+ 
+    fnjs_anadir_ctr_tarea= function () {
+        var id_ubi= $('#id_ubi').val();
+        var id_tarea= $('#id_tarea').val();
+        var url='apps/misas/controller/anadir_ctr_tarea.php';
+	    var parametros='id_ubi='+id_ubi+'&id_tarea='+id_tarea+'{{ h|raw }}';
+        var request = $.ajax({
+		    url: url,
+		    data: parametros,
+//		    type: 'post',
+//		    dataType: 'html'
+            method: 'POST',
+            dataType: 'json'
+        });
+
+        request.done(function (json) {
+            if (json.success !== true) {
+                alert("{{ "respuesta"|trans|raw }}: " + json.mensaje);
+            } else {
+                fnjs_update_div('#main', '{{ url_crear_plantilla|raw }}');
+                fnjs_cerrar();
+            }
+        });
+    }
+</script>
+ 

@@ -1,0 +1,15 @@
+<?= $oPosicion->mostrar_left_slide(1); ?>
+<h2 class=titulo><?= ucfirst(_("cambiar el stgr")); ?></h2>
+<form id="frm_sin_nombre" name="frm_sin_nombre" action="apps/personas/controller/stgr_update.php" method="POST">
+    <?= $oHash->getCamposHtml(); ?>
+    <table>
+        <tr>
+            <th class=etiqueta_inv><?= $nom; ?></th>
+            <td class=datos>
+                <?= $oDespl->desplegable(); ?>
+            </td>
+        </tr>
+        </td></tr></table>
+    <input type="button" id="guardar" name="guardar" onclick="fnjs_enviar_formulario('#frm_sin_nombre');"
+           value="<?php print(ucfirst(_("guardar"))); ?>">
+</form>

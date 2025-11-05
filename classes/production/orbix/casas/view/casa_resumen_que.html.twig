@@ -1,0 +1,21 @@
+<script>
+fnjs_detalles=function(id_ubi,any){
+	var id='#detalles_'+id_ubi+'_'+any;
+	var span_id='#span_detalles_'+id_ubi+'_'+any;
+	$(id).toggle();
+	$(span_id+' p').toggle();
+}
+
+fnjs_ver=function(formulario){
+	fnjs_enviar_formulario(formulario);
+}
+
+
+</script>
+<form name=que action="{{ url_ajax }}">
+{{ oHash.getCamposHtml|raw }}
+{{ oForm.getHtmlTabla()|raw }}
+{{ oFormP.getHtml()|raw }}
+<tfoot>
+<input TYPE="button" onclick="fnjs_ver(this.form)" value="{{ "buscar"|trans|raw }}" >
+</form>

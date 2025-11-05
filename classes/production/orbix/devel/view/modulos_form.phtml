@@ -1,0 +1,140 @@
+<script>
+    fnjs_sql = function (formulario) {
+        $(formulario).attr('action', 'apps/devel/controller/modulos_sql.php');
+        $(formulario).one("submit", function () {
+            $.ajax({
+                url: $(this).attr('action'),
+                type: 'post',
+                data: $(this).serialize()
+            })
+                .done(function (rta_txt) {
+                    if (rta_txt !== '' && rta_txt !== '\\n') {
+                        alert('<?= _("respuesta") ?>: ' + rta_txt);
+                    } else {
+                        <?= $oPosicion->js_atras(1); ?>
+                    }
+                });
+            return false;
+        });
+        $(formulario).trigger("submit");
+        $(formulario).off();
+    }
+    fnjs_guardar = function (formulario) {
+        $(formulario).attr('action', 'apps/devel/controller/modulos_update.php');
+        $(formulario).one("submit", function () {
+            $.ajax({
+                url: $(this).attr('action'),
+                type: 'post',
+                data: $(this).serialize()
+            })
+                .done(function (rta_txt) {
+                    if (rta_txt !== '' && rta_txt !== '\\n') {
+                        alert('<?= _("respuesta") ?>: ' + rta_txt);
+                    } else {
+                        <?= $oPosicion->js_atras(1); ?>
+                    }
+                });
+            return false;
+        });
+        $(formulario).trigger("submit");
+        $(formulario).off();
+    }
+    fnjs_cambio = function (formulario) {
+        $(formulario).attr('action', 'apps/devel/controller/modulos_update.php');
+        $(formulario).one("submit", function () {
+            $.ajax({
+                url: $(this).attr('action'),
+                type: 'post',
+                data: $(this).serialize()
+            })
+                .done(function (rta_txt) {
+                    if (rta_txt !== '' && rta_txt !== '\\n') {
+                        alert('<?= _("respuesta") ?>: ' + rta_txt);
+                    } else {
+                        fnjs_actualizar('#frm_actualizar');
+                    }
+                });
+            return false;
+        });
+        $(formulario).trigger("submit");
+        $(formulario).off();
+    }
+    fnjs_actualizar = function (formulario) {
+        var campo = '<input type="hidden" name="refresh" value=1>';
+        $(formulario).attr('action', 'apps/devel/controller/modulos_ver.php');
+        $(formulario).append(campo);
+        fnjs_enviar_formulario(formulario, '#main');
+    }
+</script>
+<?= $oPosicion->mostrar_left_slide(1); ?>
+<form id='frm_actualizar'>
+    <?= $oHashActualizar->getCamposHtml(); ?>
+</form>
+<!-- ============================== Ficha ============================= -->
+<form id='frm2'>
+    <?= $oHash->getCamposHtml(); ?>
+
+    <h3><?= _("módulo") ?>: <?= $nom ?></h3>
+
+    Nom: <input type="text" name="nom" value="<?= $nom ?>" size="15">
+    Decripción: <input type="text" name="descripcion" value="<?= $descripcion ?>" size="50"><br>
+
+    Mods requeridos: <?= $mods_req ?><br>
+    Apps requeridas: <?= $apps_req ?><br>
+
+    <br>
+    <fieldset onchange="fnjs_cambio(this.form);">
+        <?= _("módulos requeridos") ?>
+        <table>
+            <tr>
+                <?php
+                $c = 0;
+                foreach ($a_mods_todos as $id_mod => $a_modulo) {
+                    $nom_modulo = $a_modulo['nom'];
+                    if (!($c % 6)) {
+                        echo "</tr><tr>";
+                    }
+                    if (in_array($id_mod, $a_mods_req)) {
+                        $chk = 'checked';
+                    } else {
+                        $chk = '';
+                    }
+                    echo "<td><input type='checkbox' name='sel_mods[]' value=$id_mod  $chk>$nom_modulo</td>";
+                    $c++;
+                }
+                ?>
+            </tr>
+        </table>
+    </fieldset>
+    <fieldset>
+        <?= _("apps requeridas") ?>
+        <table>
+            <tr>
+                <?php
+                $c = 0;
+                foreach ($a_apps_todas as $id_app => $nom_app) {
+                    if (!($c % 6)) {
+                        echo "</tr><tr>";
+                    }
+                    if (in_array($id_app, $a_apps_mod)) {
+                        $disabled = 'disabled';
+                        $chk = 'checked';
+                    } else {
+                        $disabled = '';
+                        if (in_array($id_app, $a_apps_req)) {
+                            $chk = 'checked';
+                        } else {
+                            $chk = '';
+                        }
+                    }
+                    echo "<td><input type='checkbox' name='sel_apps[]' value=$id_app $chk $disabled ><span>$nom_app</span></td>";
+                    $c++;
+                }
+                ?>
+            </tr>
+        </table>
+    </fieldset>
+    <br>
+    <input id="g1" TYPE="button" VALUE="<?= ucfirst(_("guardar cambios")); ?>" onclick="fnjs_guardar(this.form)">
+    <input id="g2" TYPE="button" VALUE="<?= ucfirst(_("generar tablas")); ?>" onclick="fnjs_sql(this.form)">
+</form>

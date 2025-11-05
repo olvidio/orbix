@@ -1,0 +1,63 @@
+<script>
+fnjs_get_depende=function(id_campo,acc){
+	var valor=$(id_campo).val();
+	var url='{{ url_ajax }}';
+	var parametros='que=depende&acc='+acc+'&valor_depende='+valor;
+		 
+	$.ajax({
+		url: url,
+		type: 'post',
+		data: parametros
+	})
+	.done(function (rta_txt) {
+		if (rta_txt) {
+			/* añadir debajo de la actividad */
+			$(acc).html(rta_txt);
+		}
+	});
+}
+
+fnjs_mas_dependencias=function(){
+	var n=$('#dep_num').val();
+	var dedicacion;
+	++n;
+	
+    dedicacion='<tr><td>';
+    dedicacion+={{ aDesplFasesPrevias[n].desplegable()|json_encode|raw }};
+    dedicacion+='</td><td>';
+	dedicacion+={{ aDesplFasesPrevia[n].desplegable()|json_encode|raw }};
+    dedicacion+='</td><td>';
+    dedicacion+='<input colspan=2 type="text" size="50" name="mensaje_requisito[]" value="{{ mensaje_requisito }}" >';
+	dedicacion+='</td></tr>';
+
+	/* antes del desplegable de añadir */
+	$('#pie').before(dedicacion);
+	$('#dep_num').val(n);
+}
+</script>
+<form id=frm_proceso name=frm_proceso action=''>
+{{ oHash.getCamposHtml()|raw }}
+<input type="hidden" id="dep_num" name="dep_num" value="{{ dep_num }}">
+<table>
+<tr>
+<td>{{ "fase"|trans|raw }}:</td><td>{{  oDesplFase.desplegable()|raw }}</td>
+<td>{{ "tarea"|trans|raw }}: {{  oDesplTarea.desplegable()|raw }}</td>
+</tr>
+<tr><td>{{ "status"|trans|raw }}:</td><td>{{  oDesplStatus.desplegable()|raw }}</td>
+</tr>
+<tr><td>{{ "oficina responsable"|trans|raw }}:</td>
+<td>{{ oDesplOficinas.desplegable()|raw }}</td></tr>
+<tr><th colspan=4>{{ "Depende de"|trans|raw }}</th></tr>
+<tr><td>{{ "fase previa"|trans|raw }}:</td><td>{{ "tarea previa"|trans|raw }}:</td><td>{{ "mensaje requisito"|trans|raw }}:</td></tr>
+{% for j in range(0,dep_num-1) %}
+<tr><td>{{  aDesplFasesPrevias[j].desplegable()|raw }}</td>
+<td>{{  aDesplTareasPrevias[j].desplegable()|raw }}</td>
+<td><input colspan=2 type='text' size=50 name='mensaje_requisito[]' value='{{ aMensajes_requisitos[j] }}'></td>
+<tr>
+{% endfor %}
+<tr id=pie><td><span class="link" onclick='fnjs_mas_dependencias();'>{{ "añadir depende"|trans|raw }}</span>
+		</td></tr>
+</table>
+<input type='button' value='{{ "guardar"|trans|raw }}' onclick='fnjs_guardar(this.form);' >
+<input type='button' value='{{ "cancel"|trans|raw }}' onclick='fnjs_cerrar();' >
+</form>

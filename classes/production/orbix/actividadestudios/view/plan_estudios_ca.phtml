@@ -1,0 +1,66 @@
+<?= $oPosicion->mostrar_left_slide(1); ?>
+<table>
+    <tr>
+        <td colspan=3><h3><?= $nom_activ ?></h3></td>
+    </tr>
+    <tr>
+        <td></td>
+        <td class='contenido'><?= ucfirst(_("director de estudios")) ?>:</td>
+        <td><?= $nom_director_est ?></td>
+    </tr>
+    <tr>
+        <td></td>
+        <td class='contenido'><?= ucfirst(_("profesores")) ?>:</td>
+    </tr>
+    <?php
+    foreach ($aProfesores as $datos) {
+        echo "<tr><td></td>
+	   	<td>{$datos['nombre_corto']} ({$datos['creditos']})</td>
+		<td>{$datos['nom_profesor']}</td>
+	   	</tr>";
+    }
+    ?>
+    <tr>
+        <td></td>
+        <td class='contenido'><?= ucfirst(_("preceptores")) ?>:</td>
+    </tr>
+    <?php
+    foreach ($aPreceptores as $datos) {
+        echo "<tr><td></td>
+	   	<td>{$datos['nombre_corto']} ({$datos['creditos']})</td>
+		<td>{$datos['nom_profesor']}</td>
+	   	</tr>";
+    }
+    ?>
+
+    <tr>
+        <td></td>
+        <td class='contenido'><?= ucfirst(_("asistentes")) ?>:</td>
+    </tr>
+    <tr></tr>
+
+    <?php
+    $a = 0;
+    foreach ($aAlumnos as $datos) {
+        $a++;
+        $aAsignaturas = $datos['aAsignaturas'];
+        echo "<tr><td>$a</td><td>{$datos['nom_persona']} ({$datos['ctr']})";
+        if (!empty($datos['observ_est'])) {
+            echo "<br />*{$datos['observ_est']}";
+        }
+        echo "</td>";
+        if (is_array($aAsignaturas)) {
+            $asig = '';
+            $i = 0;
+            foreach ($aAsignaturas as $aAsignatura) {
+                $i++;
+                if ($i > 1) $asig .= '<br />';
+                $asig .= "{$aAsignatura['nombre_corto']} ({$aAsignatura['creditos']}) {$aAsignatura['preceptor']}";
+            }
+            echo "<td>$asig</td></tr>";
+        } else {
+            echo "<td>$aAsignaturas</td></tr>";
+        }
+    }
+    ?>
+</table>

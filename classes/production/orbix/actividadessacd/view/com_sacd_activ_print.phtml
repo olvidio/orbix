@@ -1,0 +1,174 @@
+<script>
+    fnjs_left_side_hide();
+</script>
+<style>
+    body {
+        size: landscape;
+    }
+
+    div.salta_pag {
+        clear: both;
+        display: block;
+        width: 25cm;
+        page-break-after: always;
+        font-family: 'Arial', serif;
+        font-size: 12pt;
+    }
+
+    table {
+        width: 25cm;
+    }
+
+    td.cabecera {
+        text-align: left;
+        font-weight: bold;
+    }
+
+    table.enc, table.enc td {
+        border: 1px solid #000;
+        border-collapse: collapse;
+        margin: 0;
+        margin-bottom: 1em;
+        padding: 6px;
+    }
+
+    table.enc td.cabecera {
+        text-align: center;
+        font-weight: bold;
+    }
+
+    table.enc td.cabecera_izq {
+        text-align: left;
+        font-weight: bold;
+    }
+
+    td.centro {
+        text-align: center;
+    }
+
+    p {
+        margin-left: 0;
+        font-weight: bold;
+    }
+
+    comunicacion {
+        display: block;
+        padding-left: 15mm;
+        padding-right: 10mm;
+        padding-top: 10mm;
+        padding-bottom: 10mm;
+    }
+
+    izquierda {
+        display: block;
+        float: left;
+        text-align: left;
+    }
+
+    derecha {
+        display: block;
+        float: right;
+        text-align: right;
+    }
+
+    cabecera {
+        display: block;
+    }
+
+    pie {
+        display: block;
+    }
+</style>
+<body>
+<span id="span_exportar" title="comunicacion_sacd">
+<?php
+
+use function core\is_true;
+
+$i = 0;
+foreach ($array_actividades as $id_nom => $vector) {
+    $i++;
+    $nom_ap = $array_actividades[$id_nom]['nom_ap'];
+
+    $propio = $array_actividades[$id_nom]['txt']['t_propio'];
+    $f_ini = $array_actividades[$id_nom]['txt']['t_f_ini'];
+    $f_fin = $array_actividades[$id_nom]['txt']['t_f_fin'];
+    $nombre_ubi = $array_actividades[$id_nom]['txt']['t_nombre_ubi'];
+    $sfsv = $array_actividades[$id_nom]['txt']['t_sfsv'];
+    $actividad = $array_actividades[$id_nom]['txt']['t_actividad'];
+    $asistentes = $array_actividades[$id_nom]['txt']['t_asistentes'];
+    $encargado = $array_actividades[$id_nom]['txt']['t_encargado'];
+    $observ = $array_actividades[$id_nom]['txt']['t_observ'];
+    $nom_tipo = $array_actividades[$id_nom]['txt']['t_nom_tipo'];
+
+    $txt = $array_actividades[$id_nom]['txt']['com_sacd'];
+    $a_actividades = $array_actividades[$id_nom]['actividades'];
+    ?>
+    <div class=salta_pag id="<?= $i ?>">
+        <br><!-- si no pongo esta linea, no me imprime el nombre (a partir de la 2ª página -->
+        <cabecera>
+            <izquierda><?= $nom_ap ?></izquierda>
+            <?php if (!is_true($propuesta)) { ?>
+            <?php if ($Qque === "nagd") { ?>
+                <derecha>vc-<?= $mi_dele ?></derecha>
+            <?php } ?>
+                </cabecera>
+                <comunicacion><?= $txt ?></comunicacion>
+            <?php } else { ?>
+                </cabecera>
+            <?php } ?>
+        <!-- Actividades -->
+        <table class=enc border=1>
+            <tr>
+                <td class=cabecera_izq><?= $f_ini ?></td>
+                <td class=cabecera_izq><?= $f_fin ?></td>
+                <td class=cabecera><?= $nombre_ubi ?></td>
+                <td class=cabecera><?= $sfsv ?></td>
+                <td class=cabecera><?= $actividad ?></td>
+                <td class=cabecera><?= $asistentes ?></td>
+                <td class=cabecera><?= $encargado ?></td>
+                <td class=cabecera><?= $observ ?></td>
+                <td class=cabecera><?= $nom_tipo ?></td>
+            </tr>
+            <?php
+            if (is_array($a_actividades)) {
+                foreach ($a_actividades as $act) {
+                    if (is_true($act['propio'])) {
+                        $marca = '*';
+                    } else {
+                        $marca = '';
+                    }
+                    if (!empty($act['cargo'])) {
+                        $cargo_observ = $act['cargo'] . '. ' . $act['observ'];
+                    } else {
+                        $cargo_observ = $act['observ'];
+                    }
+                    ?>
+                    <tr>
+                        <td><?= $marca ?><?= $act['f_ini'] ?></td>
+                        <td><?= $act['f_fin'] ?></td>
+                        <td class=centro><?= $act['nombre_ubi'] ?></td>
+                        <td class=centro><?= $act['sfsv'] ?></td>
+                        <td class=centro><?= $act['actividad'] ?></td>
+                        <td class=centro><?= $act['asistentes'] ?></td>
+                        <td class=centro><?= $act['encargado'] ?></td>
+                        <td class=centro><?= $cargo_observ ?></td>
+                        <td class=centro><?= $act['nom_tipo'] ?></td>
+                    </tr>
+                    <?php
+                }
+            }
+            ?>
+        </table>
+        <?php if ($propuesta != "true") { ?>
+            <pie>
+                <izquierda>*) <?= $propio ?></izquierda>
+                <derecha><?= $lugar_fecha ?></derecha>
+            </pie>
+        <?php } // fin propuesta?>
+    </div>
+    <?php
+}
+?>
+</span>
+</body>

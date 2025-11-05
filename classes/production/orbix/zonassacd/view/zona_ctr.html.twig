@@ -1,0 +1,72 @@
+<script>
+fnjs_busca_ctrs=function(){
+	var id_zona=$('#lst_zonas').val();
+	if (id_zona) {
+		var url='{{ url_ajax }}';
+		var parametros='que=get_lista&id_zona='+id_zona+'{{ h_ctr|raw }}';
+		$.ajax({
+			url: url,
+			type: 'post',
+			data: parametros,
+			dataType: 'html'
+		})
+		.done(function (rta_txt) {
+			$('#lst_ctrs').html(rta_txt);
+		});
+	}
+}
+fnjs_guardar=function(formulario){
+	$(formulario).attr('action','{{ url_ajax }}');
+	$(formulario).one("submit", function() {
+		$.ajax({
+			url: $(this).attr('action'),
+			type: 'post',
+			data: $(this).serialize()
+		})
+		.done(function (rta_txt) {
+			if (rta_txt != '' && rta_txt != '\n') {
+				alert ('{{ "respuesta"|trans|raw }}: '+rta_txt);
+			}
+		});
+		return false;
+	});
+	$(formulario).trigger("submit");
+	$(formulario).off();
+	fnjs_busca_ctrs();
+}
+fnjs_left_side_hide();
+</script>
+<form id="frm_zona_ctr" name="frm_zona_ctr" action="" method="post">
+{{ oHash.getCamposHtml|raw }}
+<table>
+<thead>
+<th class=titulo_inv colspan=4>{{ "lista de centros de la zona"|trans|capitalize }}:&nbsp;&nbsp;&nbsp;
+<select class=contenido id="lst_zonas" onchange="fnjs_busca_ctrs()">
+    <option></option>
+    <option value="no">{{ "sin asignar zona"|trans|raw }}</option>
+    {% if perm_des %}
+        <option value="no_sf">{{ "sin asignar zona sf"|trans|raw }}</option>
+    {% endif %}
+    {{ oDesplZonas.options|raw }}
+</select></th></tr>
+</thead>
+<tbody>
+<tr><td colspan=4>
+<div class=contenido id="lst_ctrs" ></div></td>
+</tr>
+{% if perm_des %}
+	<tr>
+	<th class=titulo_inv colspan=3>{{ "asignar los centros marcados a la zona"|trans|raw }}:&nbsp;&nbsp;&nbsp;
+	<select class=contenido id="id_zona_new" name="id_zona_new" >
+	<option></option>
+    {{ oDesplZonas.options|raw }}
+	<option value="no">{{ "sin asignar zona"|trans|raw }}</option>
+	</th>
+	<th>
+		<input type="button" id="ok" name="ok" onclick="fnjs_guardar(this.form);" value="{{ "asignar"|trans|raw }}">
+	</th>
+	</tr>
+{% endif %}
+</tbody>
+</table>
+</form>

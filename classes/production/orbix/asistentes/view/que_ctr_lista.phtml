@@ -1,0 +1,103 @@
+<?php
+
+use core\ConfigGlobal;
+
+?>
+<script>
+    fnjs_buscar = function (formulario) {
+        var err = 0;
+        var f = $('#periodo').val();
+        if (!f) {
+            err = 1;
+        }
+        if (f == 'otro') {
+            if (!fnjs_comprobar_fecha('#empiezamin',<?= $locale_us ?>)) {
+                err = 1;
+            }
+            if (!fnjs_comprobar_fecha('#empiezamax',<?= $locale_us ?>)) {
+                err = 1;
+            }
+        }
+
+        if (err == 1) {
+            if (!f) {
+                alert("<?= _("falta definir un periodo") ?>");
+            } else {
+                alert("<?= _("debe introducir las fechas inicio-fin del periodo") ?>");
+            }
+        } else {
+            fnjs_enviar_formulario(formulario);
+        }
+    }
+
+    fnjs_otro = function (v) {
+        if (v == 1) {
+            $('#oro').show();
+            $('#n_agd_4').checked = "true";
+        } else {
+            $('#oro').hide();
+        }
+    }
+    // por defecto escondido.
+    <?php if (empty($c)) { ?>
+    $('#oro').hide();
+    <?php } ?>
+</script>
+<div>
+    <h2 class="subtitulo"><?= $tituloGros ?></h2>
+    <form id="modifica" name="modifica" action="<?= $action ?>" method="POST">
+        <?= $oHash->getCamposHtml(); ?>
+        <table>
+            <thead>
+            <th class="titulo_inv" colspan=6><?= $titulo ?></th>
+            </thead>
+            <tbody>
+            <tr>
+                <td class="etiqueta" onclick="fnjs_otro(0);">
+                    <input type="radio" id="n_agd_1" name="n_agd"
+                           value="n" <?= $n ?> ><?= ucfirst(_("todos los numerarios")) ?></td>
+                <td class="etiqueta"><input type="radio" id="n_agd_11" name="n_agd"
+                                            value="nj" <?= $nj ?> ><?= ucfirst(_("todos ctr numerarios jóvenes")) ?>
+                </td>
+                <td class="etiqueta"><input type="radio" id="n_agd_12" name="n_agd"
+                                            value="nm" <?= $nm ?> ><?= ucfirst(_("todos ctr numerarios mayores")) ?>
+                </td>
+            </tr>
+            <tr>
+                <td class="etiqueta" onclick="fnjs_otro(0);">
+                    <input type="radio" id="n_agd_2" name="n_agd"
+                           value="a" <?= $a ?> ><?= ucfirst(_("todos los agregados")) ?></td>
+            </tr>
+            <?php
+            if (ConfigGlobal::mi_sfsv() == 1) { ?>
+                <tr>
+                    <td class="etiqueta" onclick="fnjs_otro(0);">
+                        <input type="radio" id="n_agd_3" name="n_agd"
+                               value="sssc" <?= $sssc ?> ><?= ucfirst(_("todos los de sss+")) ?></td>
+                </tr>
+            <?php } else { ?>
+                <tr>
+                    <td class="etiqueta" onclick="fnjs_otro(0);">
+                        <input type="radio" id="n_agd_3" name="n_agd"
+                               value="nax" <?= $nax ?> ><?= ucfirst(_("todos los de nax")) ?></td>
+                </tr>
+            <?php } ?>
+
+            <tr>
+                <td class="etiqueta">
+                    <input type="radio" id="n_agd_4" name="n_agd" value="c"
+                           onclick="fnjs_otro(1);" <?= $c ?> ><?= ucfirst(_("otro...")) ?></td>
+                <td><span id="oro" class=etiqueta " ><?= $oDesplCentros->desplegable(); ?></span></td>
+
+            </tbody>
+        </table>
+        <?= $oFormP->getHtml(); ?>
+        <table>
+            <tfoot>
+            <tr>
+                <th colspan=6><input type="button" id="btn_ok" name="btn_ok" class="btn_ok"
+                                     onclick="fnjs_buscar('#modifica');" value="<?= ucfirst(_("buscar")) ?>">
+                    <input TYPE="reset" value="<?= ucfirst(_("borrar")) ?>"></th>
+            </tr>
+            </tfoot>
+        </table>

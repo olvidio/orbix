@@ -1,0 +1,249 @@
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+    <link rel="shortcut icon" type="image/ico" href="favicon.ico"/>
+    <title>SlickGrid example: CompositeEditor</title>
+    <!--
+    <link rel="stylesheet" href="../dist/styles/css/slick-icons.css" type="text/css"/>
+    <link rel="stylesheet" href="../dist/styles/css/example-demo.css" type="text/css"/>
+    <link rel="stylesheet" href="../dist/styles/css/slick-alpine-theme.css" type="text/css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+  -->
+
+
+    <link type='text/css' rel='stylesheet'
+          href='node_modules/slickgrid/dist/styles/css/slick-icons.css'/>
+    <link type='text/css' rel='stylesheet'
+          href='node_modules/slickgrid/dist/styles/css/example-demo.css'/>
+    <link type='text/css' rel='stylesheet'
+          href='node_modules/slickgrid/dist/styles/css/slick-alpine-theme.css'/>
+
+    <style>
+        .cell-title {
+            font-weight: bold;
+        }
+
+        .cell-effort-driven {
+            justify-content: center;
+        }
+
+        .item-details-form {
+            z-index: 1000;
+            display: inline-block;
+            border: 1px solid black;
+            margin: 8px;
+            padding: 10px;
+            background: #fbfbfb;
+            -moz-box-shadow: 0px 0px 15px black;
+            -webkit-box-shadow: 0px 0px 15px black;
+            box-shadow: 0px 0px 15px black;
+
+            position: absolute;
+            top: 10px;
+            left: 150px;
+        }
+
+        .item-details-form-buttons {
+            float: right;
+        }
+
+        .item-details-label {
+            margin-left: 10px;
+            margin-top: 20px;
+            display: block;
+            font-weight: bold;
+        }
+
+        .item-details-editor-container {
+            width: 300px;
+            height: 20px;
+            border: 1px solid silver;
+            background: white;
+            display: block;
+            margin: 10px;
+            margin-top: 4px;
+            padding: 0;
+            padding-left: 4px;
+            padding-right: 0px;
+        }
+    </style>
+</head>
+<div style="position:relative">
+
+    <div style="width:100%;">
+        <div id="myGrid" class="slick-container" style="width:100%;height:500px;"></div>
+    </div>
+
+
+    <div class='item-details-form' style="display: none">
+
+        <label id="titulo_modal"></label>
+        <hr/>
+        <input type="hidden" id="cell_selected" value=""/>
+        <input type="hidden" id="row_selected" value=""/>
+        <input type="hidden" id="id_sacd" value=""/>
+
+        <div style="margin-top: 20px;">
+            <label for="iniciales"> {{ "Iniciales"|trans|raw }}: </label>
+            <input id="iniciales" type="text" class="form-control" size="20" value="">
+        </div>
+
+        <div style="margin-top: 20px;">
+            <label for="color"> {{ "Color"|trans|raw }}: </label>
+            <input id="color" type="text" class="form-control" size="20" value="">
+        </div>
+        <hr/>
+        <div class='item-details-form-buttons'>
+            <button data-action='save' class='slick-btn slick-btn-primary'>Grabar</button>
+            <button data-action='cancel' class='slick-btn slick-btn-default'>Cancel</button>
+        </div>
+    </div>
+
+</div>
+
+<script src="node_modules/slickgrid/dist/browser/slick.core.js"></script>
+<script src="node_modules/slickgrid/dist/browser/slick.interactions.js"></script>
+<script src="node_modules/slickgrid/dist/browser/slick.grid.js"></script>
+<script src="node_modules/slickgrid/dist/browser/plugins/slick.cellrangeselector.js"></script>
+<script src="node_modules/slickgrid/dist/browser/plugins/slick.cellselectionmodel.js"></script>
+<script src="node_modules/slickgrid/dist/browser/slick.formatters.js"></script>
+<script src="node_modules/slickgrid/dist/browser/slick.editors.js"></script>
+<script src="node_modules/slickgrid/dist/browser/slick.compositeeditor.js"></script>
+
+<script>
+
+    var modal = $(".item-details-form");
+
+    modal.keydown(function (e) {
+        if (e.which == Slick.keyCode.ENTER) {
+            commitCurrentEdit();
+            e.stopPropagation();
+            e.preventDefault();
+        } else if (e.which == Slick.keyCode.ESCAPE) {
+            cancelCurrentEdit();
+            e.stopPropagation();
+            e.preventDefault();
+        }
+    });
+
+    modal.find("[data-action=save]").click(function () {
+        commitCurrentEdit();
+    });
+
+    modal.find("[data-action=cancel]").click(function () {
+        cancelCurrentEdit();
+    });
+
+    function cancelCurrentEdit() {
+        modal.hide();
+    }
+
+    function commitCurrentEdit(cell) {
+        cell = $('#cell_selected').val();
+        row = $('#row_selected').val();
+        let id_sacd = $('#id_sacd').val();
+        let iniciales = $('#iniciales').val();
+        let color = $('#color').val();
+
+        // añadir el hash (se puede cambiar todo menos el encargo)
+        parametros='id_sacd=' + id_sacd + '&iniciales=' + iniciales + '&color=' + color + '{{ h_iniciales|raw }}';;
+
+        // guardar cambios en DB
+        var request = $.ajax({
+            url: 'apps/misas/controller/update_iniciales.php',
+            method: 'POST',
+            data: parametros,
+            dataType: 'json'
+        });
+        request.done(function (json) {
+            if (json.success !== true) {
+                alert("{{ "respuesta"|trans|raw }}: " + json.mensaje);
+            } else {
+                data[row]['id_sacd'] = id_sacd;
+                data[row]['iniciales'] = iniciales;
+                data[row]['color'] = color;
+                grid.updateRow(row);
+                modal.hide();
+                reset_campos_modal();
+            }
+        });
+    }
+
+    function reset_campos_modal() {
+        $('#titulo_modal').html('');
+        $('#id_sacd').val('');
+        $('#iniciales').val('');
+        $('#color').val('');
+    }
+
+
+    function openDetails(cell) {
+        const url = URL.createObjectURL(new Blob());
+        $('#cell_selected').val(cell.cell);
+        $('#row_selected').val(cell.row);
+
+        let sacd = data[cell.row].nombre_sacd;
+        let id_sacd = data[cell.row].id_sacd;
+        let iniciales = data[cell.row].iniciales;
+        let color = data[cell.row].color;
+
+        $('#titulo_modal').html(sacd);
+        $('#id_sacd').val(id_sacd);
+        $('#iniciales').val(iniciales);
+        $('#color').val(color);
+
+        modal.show();
+    }
+
+    function requiredFieldValidator(value) {
+        if (value == null || value == undefined || !value.length) {
+            return {valid: false, msg: "This is a required field"};
+        } else {
+            return {valid: true, msg: null};
+        }
+    }
+
+    var grid;
+    var data = {{ json_data_cuadricula|raw }};
+    var columns = {{ json_columns_cuadricula|raw }};
+    var options = {
+        editable: false,
+        enableAddRow: true,
+        enableCellNavigation: true,
+        asyncEditorLoading: false,
+        autoEdit: false
+    };
+
+
+    $(function () {
+        grid = new Slick.Grid("#myGrid", data, columns, options);
+
+        grid.onClick.subscribe(function (e) {
+            var cell = grid.getCellFromEvent(e);
+            openDetails(cell);
+            e.stopPropagation();
+        });
+
+        grid.setActiveCell(0, 0);
+    })
+
+
+    $('.clockpicker').clockpicker({
+            placement: 'bottom',
+            align: 'right',
+            donetext: 'Correcto!'
+        }
+    );
+
+    fnjs_generarNomEnc=function(formulario){
+	var nom_tipo='';
+    nom_tipo=$('#id_tipo_enc :selected').text();
+	lloc=$('#id_ubi :selected').text();
+    tipus=nom_tipo;
+    if (lloc == '') {
+    	$('#encargo').val(tipus);
+    } else {
+    	$('#encargo').val(tipus+' ('+lloc+')');
+	}
+}
+
+</script>

@@ -1,0 +1,74 @@
+<script>
+    fnjs_limpiar = function () {
+        $('#que_lista').val();
+        $('#modifica').attr('action', 'apps/ubis/controller/list_ctr.php');
+        fnjs_enviar_formulario('#modifica');
+    }
+
+    fnjs_actualizar = function () {
+        $('#modifica').attr('action', 'apps/ubis/controller/list_ctr.php');
+        fnjs_enviar_formulario('#modifica');
+    }
+
+    fnjs_modificar = function (formulario) {
+        rta = fnjs_solo_uno(formulario);
+        if (rta == 1) {
+            $(formulario).attr('action', "apps/ubis/controller/home_ubis.php");
+            fnjs_enviar_formulario(formulario);
+        }
+    }
+    fnjs_trasladar = function () {
+        fnjs_cerrar();
+        $('#seleccionados').attr('action', "apps/ubis/controller/trasladar_ubis.php");
+        fnjs_enviar_formulario('#seleccionados');
+    }
+
+    fnjs_ver_dl = function () {
+        $('#div_modificar').addClass('ventana');
+        $('#div_modificar').width('auto');
+        $('#div_modificar').height('auto');
+        document.getElementById("overlay").style.display = "block";
+
+        var url = 'apps/ubis/controller/delegacion_que.php<?= $h2 ?>';
+        fnjs_update_div('#div_modificar', url);
+    }
+
+    fnjs_cerrar = function () {
+        $('#div_modificar').html('');
+        $('#div_modificar').width('0');
+        $('#div_modificar').height('0');
+        $('#div_modificar').removeClass('ventana');
+        document.getElementById("overlay").style.display = "none";
+    }
+
+
+    fnjs_left_side_hide();
+</script>
+<form id=modifica name=modifica method="POST">
+    <?= $oHash->getCamposHtml(); ?>
+    <h3><?= ucfirst(_("listado de centros o casas")); ?></h3>
+    <table>
+        <tr>
+            <td class=etiqueta>
+                <?= ucfirst(_("localización")); ?>
+            </td>
+            <td>
+                <?= $oDesplDl->desplegable(); ?>
+            <td class=etiqueta>
+                <?= ucfirst(_("tipo de ubi")); ?>
+            </td>
+            <td class=contenido>
+                <?= $oDesplLista->desplegable(); ?>
+            </td>
+            <td>
+                <input type="button" value="<?= _("listar") ?>" onclick="fnjs_actualizar()">
+            </td>
+        </tr>
+    </table>
+</form>
+<form id="seleccionados" name="seleccionados" action="" method="post">
+    <?= $oHash1->getCamposHtml(); ?>
+    <?= $oTabla->mostrar_tabla(); ?>
+</form>
+<div id='div_modificar'></div>
+<div id='overlay'></div>

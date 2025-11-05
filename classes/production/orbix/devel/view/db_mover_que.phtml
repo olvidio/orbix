@@ -1,0 +1,30 @@
+<script>
+    fnjs_db_mover_tabla = function () {
+        tabla = $('#tabla').val();
+        if (!tabla) {
+            alert("<?= $msg_falta_tabla ?>");
+        } else {
+            $('#frm').attr('action', 'apps/devel/controller/db_mover.php');
+            fnjs_enviar_formulario('#frm', '#main');
+        }
+    }
+</script>
+
+<h1><?= _("mover tabla al exterior (sv-e)") ?></h1>
+<form id="frm" action="" method=post>
+    <?= $oHash->getCamposHtml(); ?>
+    <table>
+        <tr style="vertical-align=top; text-align: left">
+            <td><?= _("tabla") ?>:</td>
+            <td><?= $desplTablas ?></td>
+        </tr>
+        <tr>
+            <td>
+                <input type="button" name="bcrear" onclick="fnjs_db_mover_tabla()" value="<?= ("mover") ?>">
+            </td>
+        </tr>
+    </table>
+    <br>
+    Mueve una tabla de la base de datos sv (interior) a sv-e (en la dmz).
+</form>
+

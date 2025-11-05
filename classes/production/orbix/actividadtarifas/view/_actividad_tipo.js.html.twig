@@ -1,0 +1,85 @@
+<script>
+    fnjs_asistentes = function () {
+        var url = '{{ url }}';
+        var extendida = $('#extendida').val();
+        var isfsv = $('#isfsv_val').val();
+        if (isfsv == 3) {
+            $('#iasistentes_val').hide();
+            $('#iactividad_val').hide();
+            fnjs_nom_tipo();
+        } else {
+            var parametros = 'extendida=' + extendida + '&modo=buscar&salida=asistentes&entrada=' + isfsv + '{{ h|raw }}';
+
+            $.ajax({
+                url: url,
+                type: 'post',
+                data: parametros,
+                dataType: 'html'
+            })
+                .done(function (rta_txt) {
+                    $('#lst_asistentes').html(rta_txt);
+                });
+            // borrar el resto.
+            $('#iasistentes_val').val(".");
+            if (extendida === "1") {
+                $('#iactividad_val').val("..");
+                $('#inom_tipo_val').val("..");
+            } else {
+                $('#iactividad_val').val(".");
+                $('#inom_tipo_val').val("...");
+            }
+        }
+    }
+
+    fnjs_actividad = function () {
+        var url = '{{ url }}';
+        var extendida = $('#extendida').val();
+        var isfsv = $('#isfsv_val').val();
+        var iasistentes = $('#iasistentes_val').val();
+        var parametros = 'extendida=' + extendida + '&modo=buscar&salida=actividad&entrada=' + isfsv + iasistentes + '{{ h|raw }}';
+        $.ajax({
+            url: url,
+            type: 'post',
+            data: parametros,
+            dataType: 'html'
+        })
+            .done(function (rta_txt) {
+                $('#lst_actividad').html(rta_txt);
+            });
+        // borrar el resto.
+        if (extendida === "1") {
+            $('#inom_tipo_val').val("..");
+        } else {
+            $('#inom_tipo_val').val("...");
+        }
+    }
+    fnjs_nom_tipo = function () {
+        var url = '{{ url }}';
+        var extendida = $('#extendida').val();
+        var isfsv = $('#isfsv_val').val();
+        var iasistentes = $('#iasistentes_val').val();
+        var iactividad = $('#iactividad_val').val();
+        var parametros = 'extendida=' + extendida + '&modo=buscar&salida=nom_tipo&entrada=' + isfsv + iasistentes + iactividad + '{{ h|raw }}';
+        $.ajax({
+            url: url,
+            type: 'post',
+            data: parametros,
+            dataType: 'html'
+        })
+            .done(function (rta_txt) {
+                $('#lst_nom_tipo').html(rta_txt);
+            });
+    }
+    fnjs_act_id_activ = function () {
+        var url = '{{ url }}';
+        var que = $('#que').val();
+        var extendida = $('#extendida').val();
+        var isfsv = $('#isfsv_val').val();
+        var iasistentes = $('#iasistentes_val').val();
+        var iactividad = $('#iactividad_val').val();
+        var inom_tipo = $('#inom_tipo_val').val();
+        var id_tipo_activ = isfsv + iasistentes + iactividad + inom_tipo;
+
+        $('#id_tipo_activ').val(id_tipo_activ);
+    }
+</script>

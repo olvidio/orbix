@@ -1,0 +1,37 @@
+<form id="frm_dir_que" name="frm_dir_que" action="apps/ubis/controller/direcciones_tabla.php" method="POST"
+      onkeydown="fnjs_enviar(event,this);">
+    <?= $oHash->getCamposHtml(); ?>
+    <table>
+        <thead>
+        <th class=titulo_inv colspan=4>
+            <?= _("introduzca un valor para buscar una dirección existente"); ?>
+        </th>
+        </thead>
+        <tfoot>
+        <tr>
+            <th colspan=4><input type="button" id="btn_ok" name="btn_ok"
+                                 onclick="fnjs_enviar_formulario('#frm_dir_que','#ficha');"
+                                 value="<?= ucfirst(_("buscar")); ?>" class="btn_ok">
+                <input TYPE="reset" value="<?= ucfirst(_("borrar")); ?>"></th>
+        </tr>
+        </tfoot>
+        <tbody>
+        <tr>
+            <td class=etiqueta><?= ucfirst(_("código postal")); ?></td>
+            <td><input class=contenido id=c_p name=c_p></td>
+        </tr>
+        <tr>
+            <td class=etiqueta><?= ucfirst(_("población")); ?></td>
+            <td><input class=contenido id=ciudad name=ciudad></td>
+        </tr>
+        <?php if ($tipo_ubi == "ctrex" || $tipo_ubi == "cdcex") { ?>
+            <tr>
+                <td class=etiqueta><?= ucfirst(_("país")); ?></td>
+                <td colspan="2"><input class=contenido id=pais name=pais></td>
+            </tr>
+        <?php } else { ?>
+            <input type=hidden id=pais name=pais></td></tr>
+        <?php } ?>
+        </tbody>
+    </table>
+</form>
