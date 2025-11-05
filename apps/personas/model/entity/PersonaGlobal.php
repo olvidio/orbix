@@ -1192,6 +1192,15 @@ abstract class PersonaGlobal extends ClasePropiedades
                 $classname = $matches[1];
             }
             switch ($classname) {
+                case 'PersonaSacd':
+                    $ctr = $this->getDl();
+                    if ($ctr === ConfigGlobal::mi_dele()) {
+                        $oPersonasDl = new PersonaDl($this->getId_nom());
+                        $id_ctr = $oPersonasDl->getId_ctr();
+                        $oCentroDl = new CentroDl($id_ctr);
+                        $ctr = $oCentroDl->getNombre_ubi();
+                    }
+                    break;
                 case 'PersonaEx':
                 case 'PersonaIn':
                     $ctr = $this->getDl();
