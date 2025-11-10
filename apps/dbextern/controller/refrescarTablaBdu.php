@@ -7,7 +7,6 @@ use dbextern\model\entity\zGestorPersonaListas;
 use dbextern\model\entity\IdMatchPersona;
 use dbextern\model\SincroDB;
 use ubis\model\entity\GestorCentroDl;
-use ubis\model\entity\GestorDelegacion;
 
 // INICIO Cabecera global de URL de controlador *********************************
 require_once("apps/core/global_header.inc");

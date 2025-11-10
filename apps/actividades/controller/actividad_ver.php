@@ -15,7 +15,7 @@ use core\ConfigGlobal;
 use core\ViewTwig;
 use web\Hash;
 use web\TiposActividades;
-use ubis\model\entity\GestorDelegacion;
+use src\ubis\application\services\DelegacionDropdown;
 use ubis\model\entity\Ubi;
 use function core\is_true;
 
@@ -257,9 +257,7 @@ if (!empty($id_ubi) && $id_ubi != 1) {
     }
 }
 
-$oGesDl = new GestorDelegacion();
-$oDesplDelegacionesOrg = $oGesDl->getListaDelegacionesURegiones($isfsv, $Bdl);
-$oDesplDelegacionesOrg->setNombre('dl_org');
+$oDesplDelegacionesOrg = DelegacionDropdown::delegacionesURegiones($isfsv, $Bdl, 'dl_org');
 $oDesplDelegacionesOrg->setOpcion_sel($dl_org);
 
 $oGesTipoTarifa = new GestorTipoTarifa();

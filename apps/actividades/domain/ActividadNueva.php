@@ -169,10 +169,10 @@ class ActividadNueva
             if (!empty($Qplazas) && $Qdl_org == $mi_dele) {
                 $id_activ = $oActividad->getId_activ();
                 $id_dl = 0;
-                $gesDelegacion = new ubis\model\entity\GestorDelegacion();
-                $cDelegaciones = $gesDelegacion->getDelegaciones(array('dl' => $mi_dele));
+                $repoDelegacion = new \src\ubis\application\repositories\DelegacionRepository();
+                $cDelegaciones = $repoDelegacion->getDelegaciones(['dl' => $mi_dele]);
                 if (is_array($cDelegaciones) && count($cDelegaciones)) {
-                    $id_dl = $cDelegaciones[0]->getId_dl();
+                    $id_dl = $cDelegaciones[0]->getIdDlVo()->value();
                 }
                 //Si es la dl_org, son plazas concedidas, sino pedidas.
                 $oActividadPlazasDl = new ActividadPlazasDl(array('id_activ' => $id_activ, 'id_dl' => $id_dl, 'dl_tabla' => $mi_dele));

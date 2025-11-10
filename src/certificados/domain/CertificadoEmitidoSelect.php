@@ -6,7 +6,7 @@ use core\ConfigGlobal;
 use personas\model\entity\Persona;
 use src\certificados\application\repositories\CertificadoEmitidoRepository;
 use src\usuarios\application\repositories\LocalRepository;
-use ubis\model\entity\GestorDelegacion;
+use src\ubis\application\repositories\DelegacionRepository;
 use function core\is_true;
 
 class CertificadoEmitidoSelect
@@ -14,7 +14,7 @@ class CertificadoEmitidoSelect
 
     public static function getCamposVista(string $certificado, string $inicurs_ca_iso, string $fincurs_ca_iso): array
     {
-        $gesDelegacion = new GestorDelegacion();
+        $gesDelegacion = new DelegacionRepository();
         /*miro las condiciones. Si es la primera vez muestro las de este año */
         $aWhere = [];
         $aOperador = [];

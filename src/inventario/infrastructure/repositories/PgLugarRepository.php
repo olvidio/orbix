@@ -9,6 +9,7 @@ use PDO;
 use PDOException;
 use src\inventario\domain\contracts\LugarRepositoryInterface;
 use src\inventario\domain\entity\Lugar;
+use src\inventario\domain\value_objects\LugarId;
 
 
 /**
@@ -110,9 +111,9 @@ class PgLugarRepository extends ClaseRepository implements LugarRepositoryInterf
 
 /* -------------------- ENTIDAD --------------------------------------------- */
 
-	public function Eliminar(Lugar $Lugar): bool
+ public function Eliminar(Lugar $Lugar): bool
     {
-        $id_lugar = $Lugar->getId_lugar();
+        $id_lugar = $Lugar->getIdLugarVo()->value();
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         if (($oDbl->exec("DELETE FROM $nom_tabla WHERE id_lugar = $id_lugar")) === FALSE) {
@@ -128,29 +129,29 @@ class PgLugarRepository extends ClaseRepository implements LugarRepositoryInterf
 	 * Si no existe el registro, hace un insert, si existe, se hace el update.
 	
 	 */
-	public function Guardar(Lugar $Lugar): bool
+ public function Guardar(Lugar $Lugar): bool
     {
-        $id_lugar = $Lugar->getId_lugar();
+        $id_lugar = $Lugar->getIdLugarVo()->value();
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         $bInsert = $this->isNew($id_lugar);
 
-		$aDatos = [];
-		$aDatos['id_ubi'] = $Lugar->getId_ubi();
-		$aDatos['nom_lugar'] = $Lugar->getNom_lugar();
-		array_walk($aDatos, 'core\poner_null');
+        $aDatos = [];
+        $aDatos['id_ubi'] = $Lugar->getIdUbiVo()->value();
+        $aDatos['nom_lugar'] = $Lugar->getNomLugarVo()?->value();
+        array_walk($aDatos, 'core\poner_null');
 
-		if ($bInsert === FALSE) {
-			//UPDATE
-			$update="
-					id_ubi                   = :id_ubi,
-					nom_lugar                = :nom_lugar";
-			if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_lugar = $id_lugar")) === FALSE) {
-				$sClaveError = 'PgLugarRepository.update.prepare';
-				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-				return FALSE;
-			}
-				
+        if ($bInsert === FALSE) {
+            //UPDATE
+            $update="
+                    id_ubi                   = :id_ubi,
+                    nom_lugar                = :nom_lugar";
+            if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_lugar = $id_lugar")) === FALSE) {
+                $sClaveError = 'PgLugarRepository.update.prepare';
+                $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
+                return FALSE;
+            }
+            
             try {
                 $oDblSt->execute($aDatos);
             } catch ( PDOException $e) {
@@ -160,16 +161,16 @@ class PgLugarRepository extends ClaseRepository implements LugarRepositoryInterf
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
                 return FALSE;
             }
-		} else {
-			// INSERT
-			$aDatos['id_lugar'] = $Lugar->getId_lugar();
-			$campos="(id_lugar,id_ubi,nom_lugar)";
-			$valores="(:id_lugar,:id_ubi,:nom_lugar)";		
-			if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === FALSE) {
-				$sClaveError = 'PgLugarRepository.insertar.prepare';
-				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-				return FALSE;
-			}
+        } else {
+            // INSERT
+            $aDatos['id_lugar'] = $Lugar->getIdLugarVo()->value();
+            $campos="(id_lugar,id_ubi,nom_lugar)";
+            $valores="(:id_lugar,:id_ubi,:nom_lugar)";        
+            if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === FALSE) {
+                $sClaveError = 'PgLugarRepository.insertar.prepare';
+                $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
+                return FALSE;
+            }
             try {
                 $oDblSt->execute($aDatos);
             } catch ( PDOException $e) {
@@ -178,10 +179,10 @@ class PgLugarRepository extends ClaseRepository implements LugarRepositoryInterf
                 $sClaveError = 'PgLugarRepository.insertar.execute';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
                 return FALSE;
-			}
-		}
-		return TRUE;
-	}
+            }
+        }
+        return TRUE;
+    }
 	
     private function isNew(int $id_lugar): bool
     {
@@ -202,15 +203,16 @@ class PgLugarRepository extends ClaseRepository implements LugarRepositoryInterf
      * Devuelve los campos de la base de datos en un array asociativo.
      * Devuelve false si no existe la fila en la base de datos
      * 
-     * @param int $id_lugar
+     * @param LugarId $id_lugar
      * @return array|bool
 	
      */
-    public function datosById(int $id_lugar): array|bool
+    public function datosById(LugarId $id_lugar): array|bool
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_lugar = $id_lugar")) === FALSE) {
+        $id = $id_lugar->value();
+        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_lugar = $id")) === FALSE) {
 			$sClaveError = 'PgLugarRepository.getDatosById';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
             return FALSE;
@@ -219,12 +221,12 @@ class PgLugarRepository extends ClaseRepository implements LugarRepositoryInterf
         return $aDatos;
     }
     
-	
+    
     /**
      * Busca la clase con id_lugar en la base de datos .
 	
      */
-    public function findById(int $id_lugar): ?Lugar
+    public function findById(LugarId $id_lugar): ?Lugar
     {
         $aDatos = $this->datosById($id_lugar);
         if (empty($aDatos)) {

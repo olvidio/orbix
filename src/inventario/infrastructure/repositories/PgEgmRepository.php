@@ -9,6 +9,7 @@ use PDO;
 use PDOException;
 use src\inventario\domain\contracts\EgmRepositoryInterface;
 use src\inventario\domain\entity\Egm;
+use src\inventario\domain\value_objects\EgmItemId;
 
 
 /**
@@ -150,7 +151,7 @@ class PgEgmRepository extends ClaseRepository implements EgmRepositoryInterface
 
     public function Eliminar(Egm $Egm): bool
     {
-        $id_item = $Egm->getId_item();
+        $id_item = $Egm->getIdItemVo()->value();
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         if (($oDbl->exec("DELETE FROM $nom_tabla WHERE id_item = $id_item")) === FALSE) {
@@ -167,25 +168,25 @@ class PgEgmRepository extends ClaseRepository implements EgmRepositoryInterface
      */
     public function Guardar(Egm $Egm): bool
     {
-        $id_item = $Egm->getId_item();
+        $id_item = $Egm->getIdItemVo()->value();
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         $bInsert = $this->isNew($id_item);
 
         $aDatos = [];
-        $aDatos['id_equipaje'] = $Egm->getId_equipaje();
-        $aDatos['id_grupo'] = $Egm->getId_grupo();
-        $aDatos['id_lugar'] = $Egm->getId_lugar();
-        $aDatos['texto'] = $Egm->getTexto();
+        $aDatos['id_equipaje'] = $Egm->getIdEquipajeVo()?->value();
+        $aDatos['id_grupo'] = $Egm->getIdGrupoVo()?->value();
+        $aDatos['id_lugar'] = $Egm->getIdLugarVo()?->value();
+        $aDatos['texto'] = $Egm->getTextoVo()?->value();
         array_walk($aDatos, 'core\poner_null');
 
         if ($bInsert === FALSE) {
             //UPDATE
             $update = "
-					id_equipaje              = :id_equipaje,
-					id_grupo                 = :id_grupo,
-					id_lugar                 = :id_lugar,
-					texto                    = :texto";
+                    id_equipaje              = :id_equipaje,
+                    id_grupo                 = :id_grupo,
+                    id_lugar                 = :id_lugar,
+                    texto                    = :texto";
             if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_item = $id_item")) === FALSE) {
                 $sClaveError = 'PgEgmRepository.update.prepare';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
@@ -203,7 +204,7 @@ class PgEgmRepository extends ClaseRepository implements EgmRepositoryInterface
             }
         } else {
             // INSERT
-            $aDatos['id_item'] = $Egm->getId_item();
+            $aDatos['id_item'] = $Egm->getIdItemVo()->value();
             $campos = "(id_item,id_equipaje,id_grupo,id_lugar,texto)";
             $valores = "(:id_item,:id_equipaje,:id_grupo,:id_lugar,:texto)";
             if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === FALSE) {
@@ -243,14 +244,15 @@ class PgEgmRepository extends ClaseRepository implements EgmRepositoryInterface
      * Devuelve los campos de la base de datos en un array asociativo.
      * Devuelve false si no existe la fila en la base de datos
      *
-     * @param int $id_item
+     * @param EgmItemId $id_item
      * @return array|bool
      */
-    public function datosById(int $id_item): array|bool
+    public function datosById(EgmItemId $id_item): array|bool
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_item = $id_item")) === FALSE) {
+        $id = $id_item->value();
+        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_item = $id")) === FALSE) {
             $sClaveError = 'PgEgmRepository.getDatosById';
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
             return FALSE;
@@ -263,7 +265,7 @@ class PgEgmRepository extends ClaseRepository implements EgmRepositoryInterface
     /**
      * Busca la clase con id_item en la base de datos .
      */
-    public function findById(int $id_item): ?Egm
+    public function findById(EgmItemId $id_item): ?Egm
     {
         $aDatos = $this->datosById($id_item);
         if (empty($aDatos)) {

@@ -5,6 +5,7 @@ namespace src\inventario\application\repositories;
 use PDO;
 use src\inventario\domain\contracts\ColeccionRepositoryInterface;
 use src\inventario\domain\entity\Coleccion;
+use src\inventario\domain\value_objects\ColeccionId;
 use src\inventario\infrastructure\repositories\PgColeccionRepository;
 
 
@@ -86,11 +87,11 @@ class ColeccionRepository implements ColeccionRepositoryInterface
      * Devuelve los campos de la base de datos en un array asociativo.
      * Devuelve false si no existe la fila en la base de datos
      * 
-     * @param int $id_coleccion
+     * @param ColeccionId $id_coleccion
      * @return array|bool
 	
      */
-    public function datosById(int $id_coleccion): array|bool
+    public function datosById(ColeccionId $id_coleccion): array|bool
     {
         return $this->repository->datosById($id_coleccion);
     }
@@ -99,7 +100,7 @@ class ColeccionRepository implements ColeccionRepositoryInterface
      * Busca la clase con id_coleccion en el repositorio.
 	
      */
-    public function findById(int $id_coleccion): ?Coleccion
+    public function findById(ColeccionId $id_coleccion): ?Coleccion
     {
         return $this->repository->findById($id_coleccion);
     }

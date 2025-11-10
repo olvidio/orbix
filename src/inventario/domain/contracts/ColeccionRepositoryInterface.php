@@ -4,6 +4,7 @@ namespace src\inventario\domain\contracts;
 
 use PDO;
 use src\inventario\domain\entity\Coleccion;
+use src\inventario\domain\value_objects\ColeccionId;
 
 
 /**
@@ -51,17 +52,17 @@ interface ColeccionRepositoryInterface
      * Devuelve los campos de la base de datos en un array asociativo.
      * Devuelve false si no existe la fila en la base de datos
      * 
-     * @param int $id_coleccion
+     * @param ColeccionId $id_coleccion
      * @return array|bool
 	
      */
-    public function datosById(int $id_coleccion): array|bool;
+    public function datosById(ColeccionId $id_coleccion): array|bool;
 	
     /**
      * Busca la clase con id_coleccion en el repositorio.
 	
      */
-    public function findById(int $id_coleccion): ?Coleccion;
+    public function findById(ColeccionId $id_coleccion): ?Coleccion;
 	
     public function getNewId();
 }

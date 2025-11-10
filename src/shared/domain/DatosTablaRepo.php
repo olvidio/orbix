@@ -161,7 +161,12 @@ class DatosTablaRepo
                 }
                 $v++;
                 $metodo = $oDatosCampo->getMetodoGet();
-                $valor_camp = $oFila->$metodo();
+                // si eñ metodo obtiene un valueobject
+                if (substr($metodo,-2) === 'Vo') {
+                    $valor_camp = $oFila->$metodo()->value();
+                } else {
+                    $valor_camp = $oFila->$metodo();
+                }
                 if (!$valor_camp) {
                     $a_valores[$c][$v] = '';
                     continue;

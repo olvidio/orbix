@@ -4,6 +4,7 @@ namespace src\inventario\domain\contracts;
 
 use PDO;
 use src\inventario\domain\entity\Documento;
+use src\inventario\domain\value_objects\DocumentoId;
 
 
 /**
@@ -48,17 +49,17 @@ interface DocumentoRepositoryInterface
      * Devuelve los campos de la base de datos en un array asociativo.
      * Devuelve false si no existe la fila en la base de datos
      * 
-     * @param int $id_doc
+     * @param DocumentoId $id_doc
      * @return array|bool
 	
      */
-    public function datosById(int $id_doc): array|bool;
+    public function datosById(DocumentoId $id_doc): array|bool;
 	
     /**
      * Busca la clase con id_doc en el repositorio.
 	
      */
-    public function findById(int $id_doc): ?Documento;
+    public function findById(DocumentoId $id_doc): ?Documento;
 	
     public function getNewId();
 }

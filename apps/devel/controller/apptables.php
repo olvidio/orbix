@@ -29,7 +29,7 @@ $cApps = $oGesApps->getApps();
 $a_apps = [];
 foreach ($cApps as $oApp) {
     $id_app = $oApp->getId_app();
-    $nom_app = $oApp->getNom();
+    $nom_app = $oApp->getNombreApp();
     $a_apps[$id_app] = $nom_app;
 }
 

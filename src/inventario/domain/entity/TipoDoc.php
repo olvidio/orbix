@@ -5,6 +5,7 @@ namespace src\inventario\domain\entity;
 use core\DatosCampo;
 use core\Set;
 use function core\is_true;
+use src\inventario\domain\value_objects\{TipoDocId, TipoDocName, TipoDocSigla, TipoDocObserv, ColeccionId, TipoDocBajoLlave, TipoDocVigente, TipoDocNumerado};
 
 /**
  * Clase que implementa la entidad i_tipo_documento_dl
@@ -248,6 +249,88 @@ class TipoDoc
     public function setNumerado(bool $bnumerado): void
     {
         $this->bnumerado = $bnumerado;
+    }
+
+    // Value Object API (duplicada con legacy)
+    public function getIdTipoDocVo(): TipoDocId
+    {
+        return new TipoDocId($this->iid_tipo_doc);
+    }
+
+    public function setIdTipoDocVo(?TipoDocId $id = null): void
+    {
+        if ($id === null) { return; }
+        $this->iid_tipo_doc = $id->value();
+    }
+
+    public function getNomDocVo(): ?TipoDocName
+    {
+        return $this->snom_doc !== null && $this->snom_doc !== '' ? new TipoDocName($this->snom_doc) : null;
+    }
+
+    public function setNomDocVo(?TipoDocName $name = null): void
+    {
+        $this->snom_doc = $name?->value();
+    }
+
+    public function getSiglaVo(): ?TipoDocSigla
+    {
+        return isset($this->ssigla) && $this->ssigla !== '' ? new TipoDocSigla($this->ssigla) : null;
+    }
+
+    public function setSiglaVo(?TipoDocSigla $sigla = null): void
+    {
+        $this->ssigla = $sigla?->value() ?? '';
+    }
+
+    public function getObservVo(): ?TipoDocObserv
+    {
+        return $this->sobserv !== null && $this->sobserv !== '' ? new TipoDocObserv($this->sobserv) : null;
+    }
+
+    public function setObservVo(?TipoDocObserv $obs = null): void
+    {
+        $this->sobserv = $obs?->value();
+    }
+
+    public function getIdColeccionVo(): ?ColeccionId
+    {
+        return $this->iid_coleccion !== null ? new ColeccionId($this->iid_coleccion) : null;
+    }
+
+    public function setIdColeccionVo(?ColeccionId $id = null): void
+    {
+        $this->iid_coleccion = $id?->value();
+    }
+
+    public function getBajoLlaveVo(): ?TipoDocBajoLlave
+    {
+        return $this->bbajo_llave === null ? null : new TipoDocBajoLlave((bool)$this->bbajo_llave);
+    }
+
+    public function setBajoLlaveVo(?TipoDocBajoLlave $bajoLlave = null): void
+    {
+        $this->bbajo_llave = $bajoLlave?->value();
+    }
+
+    public function getVigenteVo(): ?TipoDocVigente
+    {
+        return $this->bvigente === null ? null : new TipoDocVigente((bool)$this->bvigente);
+    }
+
+    public function setVigenteVo(?TipoDocVigente $vigente = null): void
+    {
+        $this->bvigente = $vigente?->value();
+    }
+
+    public function getNumeradoVo(): TipoDocNumerado
+    {
+        return new TipoDocNumerado((bool)$this->bnumerado);
+    }
+
+    public function setNumeradoVo(TipoDocNumerado $numerado): void
+    {
+        $this->bnumerado = $numerado->value();
     }
 
     /* ------------------- PARA el mod_tabla  -------------------------------*/

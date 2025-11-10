@@ -5,7 +5,7 @@ use core\ViewPhtml;
 use personas\model\entity\GestorPersonaAgd;
 use personas\model\entity\GestorPersonaN;
 use ubis\model\entity\CentroDl;
-use ubis\model\entity\GestorDelegacion;
+use src\ubis\application\repositories\DelegacionRepository;
 use web\Desplegable;
 use web\Hash;
 use function core\is_true;
@@ -54,15 +54,15 @@ $Qca_todos = (string)filter_input(INPUT_POST, 'ca_todos');
 
 // Grupo de estudios
 $mi_dele = ConfigGlobal::mi_delef();
-$GesGrupoEst = new GestorDelegacion();
-$cMiDl = $GesGrupoEst->getDelegaciones(array('dl' => $mi_dele));
+$repoDelegacion = new DelegacionRepository();
+$cMiDl = $repoDelegacion->getDelegaciones(['dl' => $mi_dele]);
 if (is_array($cMiDl) && !empty($cMiDl)) {
-    $grupo_estudios = $cMiDl[0]->getGrupo_estudios();
-    $cDelegaciones = $GesGrupoEst->getDelegaciones(array('grupo_estudios' => $grupo_estudios));
+    $grupo_estudios = $cMiDl[0]->getGrupoEstudiosVo()->value();
+    $cDelegaciones = $repoDelegacion->getDelegaciones(['grupo_estudios' => $grupo_estudios]);
     $mi_grupo = '';
     foreach ($cDelegaciones as $oDelegacion) {
         $mi_grupo .= empty($mi_grupo) ? '' : ',';
-        $mi_grupo .= $oDelegacion->getDl();
+        $mi_grupo .= $oDelegacion->getDlVo()->value();
     }
 } else {
     $mi_grupo = _("no encuentro el grupo de estudios al que pertenece la dl");

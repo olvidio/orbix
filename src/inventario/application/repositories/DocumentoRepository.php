@@ -5,6 +5,7 @@ namespace src\inventario\application\repositories;
 use PDO;
 use src\inventario\domain\contracts\DocumentoRepositoryInterface;
 use src\inventario\domain\entity\Documento;
+use src\inventario\domain\value_objects\DocumentoId;
 use src\inventario\infrastructure\repositories\PgDocumentoRepository;
 
 
@@ -82,11 +83,11 @@ class DocumentoRepository implements DocumentoRepositoryInterface
      * Devuelve los campos de la base de datos en un array asociativo.
      * Devuelve false si no existe la fila en la base de datos
      * 
-     * @param int $id_doc
+     * @param DocumentoId $id_doc
      * @return array|bool
 	
      */
-    public function datosById(int $id_doc): array|bool
+    public function datosById(DocumentoId $id_doc): array|bool
     {
         return $this->repository->datosById($id_doc);
     }
@@ -95,7 +96,7 @@ class DocumentoRepository implements DocumentoRepositoryInterface
      * Busca la clase con id_doc en el repositorio.
 	
      */
-    public function findById(int $id_doc): ?Documento
+    public function findById(DocumentoId $id_doc): ?Documento
     {
         return $this->repository->findById($id_doc);
     }

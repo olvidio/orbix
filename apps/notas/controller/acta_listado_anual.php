@@ -10,7 +10,7 @@ use core\ConfigGlobal;
 use core\ViewPhtml;
 use notas\model\entity\GestorActa;
 use notas\model\entity\GestorActaDl;
-use ubis\model\entity\GestorDelegacion;
+use src\ubis\application\repositories\DelegacionRepository;
 use web\DateTimeLocal;
 use web\Hash;
 use web\Periodo;
@@ -54,8 +54,9 @@ $aOperador['f_acta'] = 'BETWEEN';
 $mi_dele = ConfigGlobal::mi_delef();
 $mi_region = ConfigGlobal::mi_region();
 if (ConfigGlobal::mi_ambito() === 'rstgr') {
-    $oGesDelegaciones = new GestorDelegacion();
-    $aDl = $oGesDelegaciones->getArrayDlRegionStgr([$mi_dele]);
+    $repoDelegacion = new DelegacionRepository();
+    $aDlMap = $repoDelegacion->getArrayDlRegionStgr([$mi_dele]); // [id_dl => dl]
+    $aDl = array_values($aDlMap);
     $Qacta_dl = '';
     foreach ($aDl as $dl) {
         $Qacta_dl .= empty($Qacta_dl) ? '' : "|";

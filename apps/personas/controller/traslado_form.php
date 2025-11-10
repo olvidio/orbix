@@ -5,7 +5,7 @@ use personas\model\entity\GestorSituacion;
 use personas\model\entity\Persona;
 use ubis\model\entity\CentroDl;
 use ubis\model\entity\GestorCentroDl;
-use ubis\model\entity\GestorDelegacion;
+use src\ubis\application\services\DelegacionDropdown;
 use web\Hash;
 
 // INICIO Cabecera global de URL de controlador *********************************
@@ -56,9 +56,7 @@ $sCondicion = "WHERE tipo_ctr !~ '^[(cgi)|(igl)]'";
 $oDesplCentroDl = $gesCentroDl->getListaCentros($sCondicion);
 $oDesplCentroDl->setNombre('new_ctr');
 
-$gesDl = new GestorDelegacion();
-$oDesplDlyR = $gesDl->getListaRegDele(FALSE); // False para no incluir mi propia dl en la lista
-$oDesplDlyR->setNombre('new_dl');
+$oDesplDlyR = DelegacionDropdown::listaRegDele(FALSE, 'new_dl'); // False para no incluir mi propia dl en la lista
 
 $GesSituacion = new GestorSituacion();
 $oDesplSituacion = $GesSituacion->getListaSituaciones($traslado = true);

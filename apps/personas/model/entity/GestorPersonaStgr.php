@@ -2,8 +2,6 @@
 
 namespace personas\model\entity;
 
-use ubis\model\entity\GestorDelegacion;
-
 /**
  * GestorPersonaEx
  *

@@ -7,7 +7,7 @@ use actividadplazas\model\entity\GestorPlazaPeticion;
 use core\ConfigGlobal;
 use core\ViewPhtml;
 use personas\model\entity\PersonaDl;
-use ubis\model\entity\GestorDelegacion;
+use src\ubis\application\repositories\DelegacionRepository;
 use web\DesplegableArray;
 use web\Hash;
 
@@ -62,13 +62,13 @@ $ap_nom = $oPersona->getPrefApellidosNombre();
 // Posibles:
 if (!empty($Qtodos) && $Qtodos != 1) {
     $grupo_estudios = $Qtodos;
-    $GesGrupoEst = new GestorDelegacion();
+    $GesGrupoEst = new DelegacionRepository();
     $cDelegaciones = $GesGrupoEst->getDelegaciones(array('grupo_estudios' => $grupo_estudios));
     if (count($cDelegaciones) > 1) $aOperador['dl_org'] = 'OR';
     $mi_grupo = '';
     foreach ($cDelegaciones as $oDelegacion) {
         $mi_grupo .= empty($mi_grupo) ? '' : ',';
-        $mi_grupo .= "'" . $oDelegacion->getDl() . "'";
+        $mi_grupo .= "'" . $oDelegacion->getDlVo()->value . "'";
     }
     $aWhere['dl_org'] = $mi_grupo;
 }

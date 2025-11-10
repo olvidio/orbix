@@ -1,6 +1,8 @@
 <?php
 
 namespace src\inventario\domain\entity;
+use src\inventario\domain\value_objects\{EquipajeId, UbiInventarioIdActiv,
+    EquipajeIdsActiv, EquipajeLugar, EquipajeNom, EquipajeCabecera, EquipajeCabecerab, EquipajePie};
 
 use core\DatosCampo;
 use core\Set;
@@ -303,6 +305,88 @@ class Equipaje
     public function setCabecerab(?string $scabecerab = null): void
     {
         $this->scabecerab = $scabecerab;
+    }
+
+    // Value Object API (duplicada con legacy)
+    public function getIdEquipajeVo(): EquipajeId
+    {
+        return new EquipajeId($this->iid_equipaje);
+    }
+
+    public function setIdEquipajeVo(?EquipajeId $id = null): void
+    {
+        if ($id === null) { return; }
+        $this->iid_equipaje = $id->value();
+    }
+
+    public function getIdsActivVo(): ?EquipajeIdsActiv
+    {
+        return EquipajeIdsActiv::fromNullableString($this->sids_activ);
+    }
+
+    public function setIdsActivVo(?EquipajeIdsActiv $ids = null): void
+    {
+        $this->sids_activ = $ids?->value();
+    }
+
+    public function getLugarVo(): ?EquipajeLugar
+    {
+        return EquipajeLugar::fromNullableString($this->slugar);
+    }
+
+    public function setLugarVo(?EquipajeLugar $lugar = null): void
+    {
+        $this->slugar = $lugar?->value();
+    }
+
+    public function getIdUbiActivVo(): ?UbiInventarioIdActiv
+    {
+        return $this->iid_ubi_activ !== null ? new UbiInventarioIdActiv($this->iid_ubi_activ) : null;
+    }
+
+    public function setIdUbiActivVo(?UbiInventarioIdActiv $id = null): void
+    {
+        $this->iid_ubi_activ = $id?->value();
+    }
+
+    public function getNomEquipajeVo(): ?EquipajeNom
+    {
+        return EquipajeNom::fromNullableString($this->snom_equipaje);
+    }
+
+    public function setNomEquipajeVo(?EquipajeNom $nom = null): void
+    {
+        $this->snom_equipaje = $nom?->value();
+    }
+
+    public function getCabeceraVo(): ?EquipajeCabecera
+    {
+        return EquipajeCabecera::fromNullableString($this->scabecera);
+    }
+
+    public function setCabeceraVo(?EquipajeCabecera $cabecera = null): void
+    {
+        $this->scabecera = $cabecera?->value();
+    }
+
+    public function getCabecerabVo(): ?EquipajeCabecerab
+    {
+        return EquipajeCabecerab::fromNullableString($this->scabecerab);
+    }
+
+    public function setCabecerabVo(?EquipajeCabecerab $cabecerab = null): void
+    {
+        $this->scabecerab = $cabecerab?->value();
+    }
+
+    public function getPieVo(): ?EquipajePie
+    {
+        return EquipajePie::fromNullableString($this->spie);
+    }
+
+    public function setPieVo(?EquipajePie $pie = null): void
+    {
+        $this->spie = $pie?->value();
     }
 
     /* ------------------- PARA el mod_tabla  -------------------------------*/

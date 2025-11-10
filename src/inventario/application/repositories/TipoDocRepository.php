@@ -5,6 +5,7 @@ namespace src\inventario\application\repositories;
 use PDO;
 use src\inventario\domain\contracts\TipoDocRepositoryInterface;
 use src\inventario\domain\entity\TipoDoc;
+use src\inventario\domain\value_objects\TipoDocId;
 use src\inventario\infrastructure\repositories\PgTipoDocRepository;
 
 
@@ -87,11 +88,11 @@ class TipoDocRepository implements TipoDocRepositoryInterface
      * Devuelve los campos de la base de datos en un array asociativo.
      * Devuelve false si no existe la fila en la base de datos
      * 
-     * @param int $id_tipo_doc
+     * @param TipoDocId $id_tipo_doc
      * @return array|bool
 	
      */
-    public function datosById(int $id_tipo_doc): array|bool
+    public function datosById(TipoDocId $id_tipo_doc): array|bool
     {
         return $this->repository->datosById($id_tipo_doc);
     }
@@ -100,7 +101,7 @@ class TipoDocRepository implements TipoDocRepositoryInterface
      * Busca la clase con id_tipo_doc en el repositorio.
 	
      */
-    public function findById(int $id_tipo_doc): ?TipoDoc
+    public function findById(TipoDocId $id_tipo_doc): ?TipoDoc
     {
         return $this->repository->findById($id_tipo_doc);
     }

@@ -11,7 +11,7 @@ use src\certificados\application\repositories\CertificadoEmitidoRepository;
 use tablonanuncios\domain\AnuncioId;
 use tablonanuncios\domain\entity\Anuncio;
 use tablonanuncios\domain\repositories\AnuncioRepository;
-use ubis\model\entity\GestorDelegacion;
+use src\ubis\application\repositories\DelegacionRepository;
 use web\DateTimeLocal;
 
 class CertificadoEmitidoEnviar
@@ -68,7 +68,7 @@ class CertificadoEmitidoEnviar
             $nombre_apellidos = $a_lista[0]['ape_nom'];
             $dl_destino = $a_lista[0]['dl_persona'];
 
-            $gesDelegacion = new GestorDelegacion();
+            $gesDelegacion = new DelegacionRepository();
             try {
                 $a_datos_region_stgr = $gesDelegacion->mi_region_stgr($dl_destino);
                 $esquema_region_stgr_dst = $a_datos_region_stgr['esquema_region_stgr'];

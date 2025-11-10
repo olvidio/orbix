@@ -20,7 +20,7 @@ use core\ConfigGlobal;
 use core\ViewTwig;
 use procesos\model\entity\GestorActividadFase;
 use src\usuarios\domain\entity\Role;
-use ubis\model\entity\GestorDelegacion;
+use src\ubis\application\services\DelegacionDropdown;
 use web\Hash;
 use web\PeriodoQue;
 use web\Posicion;
@@ -112,9 +112,7 @@ if (empty($Qstatus)) {
 
 $Qisfsv = substr($Qid_tipo_activ, 0, 1);
 $mi_dele = ConfigGlobal::mi_delef($Qisfsv);
-$oGesDl = new GestorDelegacion();
-$oDesplDelegacionesOrg = $oGesDl->getListaDelegacionesURegiones($Qisfsv);
-$oDesplDelegacionesOrg->setNombre('dl_org');
+$oDesplDelegacionesOrg = DelegacionDropdown::delegacionesURegiones($Qisfsv, true, 'dl_org');
 $oDesplDelegacionesOrg->setOpcion_sel($Qdl_org);
 if ($Qmodo === 'importar') {
     $oDesplDelegacionesOrg->setOpcion_no(array($mi_dele));
@@ -129,9 +127,8 @@ if (ConfigGlobal::is_app_installed('procesos')) {
 }
 
 
-$oDesplFiltroLugar = $oGesDl->getListaDlURegionesFiltro($Qisfsv);
+$oDesplFiltroLugar = DelegacionDropdown::dlURegionesFiltro($Qisfsv, 'filtro_lugar');
 $oDesplFiltroLugar->setAction('fnjs_lugar()');
-$oDesplFiltroLugar->setNombre('filtro_lugar');
 $oDesplFiltroLugar->setOpcion_sel($Qfiltro_lugar);
 
 $oDesplegableCasas = [];

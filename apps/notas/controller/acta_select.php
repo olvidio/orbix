@@ -18,7 +18,7 @@ use notas\model\entity\GestorActaDl;
 use notas\model\entity\GestorActaEx;
 use web\Hash;
 use web\Lista;
-use ubis\model\entity\GestorDelegacion;
+use src\ubis\application\repositories\DelegacionRepository;
 use function core\curso_est;
 
 // INICIO Cabecera global de URL de controlador *********************************
@@ -74,8 +74,9 @@ if (!empty($Qacta)) {
     if (!empty($matches[1])) {
         // Si es cr, se mira en todas (las suyas):
         if (ConfigGlobal::mi_ambito() === 'rstgr') {
-            $oGesDelegaciones = new GestorDelegacion();
-            $aDl = $oGesDelegaciones->getArrayDlRegionStgr([$mi_dele]);
+            $repoDelegacion = new DelegacionRepository();
+            $aDlMap = $repoDelegacion->getArrayDlRegionStgr([$mi_dele]); // [id_dl => dl]
+            $aDl = array_values($aDlMap);
             $Qacta_dl = '';
             foreach ($aDl as $dl) {
                 $Qacta_dl .= empty($Qacta_dl) ? '' : "|";
@@ -125,8 +126,9 @@ if (!empty($Qacta)) {
     $titulo = ucfirst(sprintf(_("lista de actas del curso %s. Máximo %s"), $txt_curso, $aWhere['_limit']));
     // Si es cr, se mira en todas:
     if (ConfigGlobal::mi_ambito() === 'rstgr') {
-        $oGesDelegaciones = new GestorDelegacion();
-        $aDl = $oGesDelegaciones->getArrayDlRegionStgr([$mi_dele]);
+        $repoDelegacion = new DelegacionRepository();
+        $aDlMap = $repoDelegacion->getArrayDlRegionStgr([$mi_dele]);
+        $aDl = array_values($aDlMap);
         $sReg = implode(" |", $aDl);
         $Qacta = "^($sReg )";
         $aWhere['acta'] = $Qacta;

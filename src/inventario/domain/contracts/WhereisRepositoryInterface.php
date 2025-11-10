@@ -4,6 +4,7 @@ namespace src\inventario\domain\contracts;
 
 use PDO;
 use src\inventario\domain\entity\Whereis;
+use src\inventario\domain\value_objects\WhereisItemId;
 
 
 /**
@@ -50,17 +51,17 @@ interface WhereisRepositoryInterface
      * Devuelve los campos de la base de datos en un array asociativo.
      * Devuelve false si no existe la fila en la base de datos
      * 
-     * @param int $id_item_whereis
+     * @param WhereisItemId $id_item_whereis
      * @return array|bool
 	
      */
-    public function datosById(int $id_item_whereis): array|bool;
+    public function datosById(WhereisItemId $id_item_whereis): array|bool;
 	
     /**
      * Busca la clase con id_item_whereis en el repositorio.
 	
      */
-    public function findById(int $id_item_whereis): ?Whereis;
+    public function findById(WhereisItemId $id_item_whereis): ?Whereis;
 	
     public function getNewId();
 }

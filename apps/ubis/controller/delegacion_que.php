@@ -1,7 +1,7 @@
 <?php
 
 use core\ViewTwig;
-use ubis\model\entity\GestorDelegacion;
+use src\ubis\application\services\DelegacionDropdown;
 
 // INICIO Cabecera global de URL de controlador *********************************
 
@@ -13,9 +13,7 @@ require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
 
-$gesDelegacion = new GestorDelegacion();
-$oDesplDelegaciones = $gesDelegacion->getListaRegDele(FALSE);
-$oDesplDelegaciones->setNombre('dl_destino');
+$oDesplDelegaciones = DelegacionDropdown::listaRegDele(FALSE, 'dl_destino');
 $oDesplDelegaciones->setAction("fnjs_cmb_id_dl()");
 
 

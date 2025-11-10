@@ -17,7 +17,7 @@ use notas\model\entity\PersonaNotaDlDB;
 use notas\model\entity\PersonaNotaOtraRegionStgrDB;
 use personas\model\entity\Persona;
 use RuntimeException;
-use ubis\model\entity\GestorDelegacion;
+use src\ubis\application\repositories\DelegacionRepository;
 
 class EditarPersonaNota
 {
@@ -355,7 +355,7 @@ class EditarPersonaNota
     function getDatosRegionStgr($dele = '')
     {
 
-        $gesDelegacion = new GestorDelegacion();
+        $gesDelegacion = new DelegacionRepository();
         try {
             $a_mi_region_stgr = $gesDelegacion->mi_region_stgr($dele);
         } catch (\RuntimeException $e) {

@@ -1,6 +1,7 @@
 <?php
 
 namespace src\inventario\domain\entity;
+use src\inventario\domain\value_objects\{EgmItemId, EgmEquipajeId, EgmGrupoId, EgmLugarId, EgmTexto};
 /**
  * Clase que implementa la entidad i_egm_dl
  *
@@ -157,6 +158,58 @@ class Egm {
 	{
 		$this->stexto = $stexto;
 	}
+
+    // Value Object API (duplicada con legacy)
+    public function getIdItemVo(): EgmItemId
+    {
+        return new EgmItemId($this->iid_item);
+    }
+
+    public function setIdItemVo(?EgmItemId $id = null): void
+    {
+        if ($id === null) { return; }
+        $this->iid_item = $id->value();
+    }
+
+    public function getIdEquipajeVo(): ?EgmEquipajeId
+    {
+        return $this->iid_equipaje !== null ? new EgmEquipajeId($this->iid_equipaje) : null;
+    }
+
+    public function setIdEquipajeVo(?EgmEquipajeId $id = null): void
+    {
+        $this->iid_equipaje = $id?->value();
+    }
+
+    public function getIdGrupoVo(): ?EgmGrupoId
+    {
+        return $this->iid_grupo !== null ? new EgmGrupoId($this->iid_grupo) : null;
+    }
+
+    public function setIdGrupoVo(?EgmGrupoId $id = null): void
+    {
+        $this->iid_grupo = $id?->value();
+    }
+
+    public function getIdLugarVo(): ?EgmLugarId
+    {
+        return $this->iid_lugar !== null ? new EgmLugarId($this->iid_lugar) : null;
+    }
+
+    public function setIdLugarVo(?EgmLugarId $id = null): void
+    {
+        $this->iid_lugar = $id?->value();
+    }
+
+    public function getTextoVo(): ?EgmTexto
+    {
+        return EgmTexto::fromNullableString($this->stexto);
+    }
+
+    public function setTextoVo(?EgmTexto $texto = null): void
+    {
+        $this->stexto = $texto?->value();
+    }
 
     /* ------------------- PARA el mod_tabla  -------------------------------*/
     public function getPrimary_key()

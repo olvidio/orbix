@@ -41,6 +41,8 @@ class DatosFormRepo
             $camposForm .= empty($camposForm) ? $nom_camp : '!' . $nom_camp;
             if ($this->mod === 'nuevo') {
                 $valor_camp = '';
+            } else if (substr($metodo,-2) === 'Vo') {
+                $valor_camp = $oFicha->$metodo()->value();
             } else {
                 $valor_camp = $oFicha->$metodo();
             }

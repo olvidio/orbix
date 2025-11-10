@@ -4,10 +4,12 @@ namespace src\ubis\infrastructure\repositories;
 
 use core\ClaseRepository;
 use core\Condicion;
+use core\ConfigGlobal;
 use core\Set;
 use PDO;
 use PDOException;
 
+use RuntimeException;
 use src\ubis\domain\entity\Delegacion;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 
@@ -33,7 +35,229 @@ class PgDelegacionRepository extends ClaseRepository implements DelegacionReposi
         $this->setNomTabla('xu_dl');
     }
 
-/* -------------------- GESTOR BASE ---------------------------------------- */
+
+    /* MÉTODOS PÚBLICOS -----------------------------------------------------------*/
+
+    public function soy_region_stgr($dele = ''): bool
+    {
+        if (empty($dele)) {
+            $dele = ConfigGlobal::mi_dele();
+        }
+
+        // caso especial de H:
+        if ($dele === 'H') {
+            return true;
+        }
+        // caso especial de M:
+        if ($dele === 'M') {
+            return true;
+        }
+
+        $oDbl = $this->getoDbl_Select();
+        $nom_tabla = $this->getNomTabla();
+
+        $sQuery = "SELECT region_stgr, region
+                        FROM $nom_tabla
+                        WHERE dl = '$dele'";
+
+        if (($oDblSt = $oDbl->query($sQuery)) === false) {
+            $sClauError = 'GestorDelegacion.region_stgr';
+            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+            return false;
+        }
+        $aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);
+        if ($aDades === FALSE || empty($aDades)) {
+            $message = sprintf(_("No se encuentra información de la dl: %s"), $dele);
+            throw new RunTimeException($message);
+        }
+        $region_stgr = 'cr' . $aDades['region_stgr'];
+        if (empty($aDades['region_stgr'])) {
+            $message = sprintf(_("falta indicar a que región del stgr pertenece la dl: %s"), $dele);
+            throw new RunTimeException($message);
+        }
+
+        return $dele === $region_stgr;
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function mi_region_stgr($dele = '')
+    {
+        $oDbl = $this->getoDbl_Select();
+        $nom_tabla = $this->getNomTabla();
+
+        if (empty($dele)) {
+            $dele = ConfigGlobal::mi_dele();
+        }
+        // caso especial de H y M:
+        if ($dele === 'H' || $dele === 'M') {
+            $region_dele = $dele;
+            $region_stgr = $dele;
+        } else {
+            $sQuery = "SELECT region_stgr, region
+                        FROM $nom_tabla
+                        WHERE dl = '$dele'";
+
+            if (($oDblSt = $oDbl->query($sQuery)) === false) {
+                $sClauError = 'GestorDelegacion.region_stgr';
+                $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+                return false;
+            }
+            $aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);
+            if ($aDades === FALSE || empty($aDades)) {
+                $message = sprintf(_("No se encuentra información de la dl: %s"), $dele);
+                throw new RunTimeException($message);
+            }
+            $region_dele = $aDades['region'];
+            $region_stgr = $aDades['region_stgr'];
+            if (empty($aDades['region_stgr'])) {
+                $message = sprintf(_("falta indicar a que región del stgr pertenece la dl: %s"), $dele);
+                throw new RunTimeException($message);
+            }
+        }
+        // nombre del esquema
+        $esquema_dele = $region_dele . '-' . $dele;
+        $esquema_region_stgr = $region_stgr . '-cr' . $region_stgr;
+        // caso especial de H:
+        if ($region_stgr === 'H') {
+            $esquema_region_stgr = 'H-H';
+        }
+        // caso especial de M:
+        if ($region_stgr === 'M') {
+            $esquema_region_stgr = 'M-M';
+        }
+        if (ConfigGlobal::mi_sfsv() === 2) {
+            $esquema_region_stgr .= 'f';
+            $esquema_dele .= 'f';
+        } else {
+            $esquema_region_stgr .= 'v';
+            $esquema_dele .= 'v';
+        }
+
+        // buscar el id_schema de $esquema_region_stgr y de $dele
+        $sQuery = "SELECT schema, id 
+                        FROM db_idschema
+                        WHERE schema = '$esquema_region_stgr' OR schema = '$esquema_dele'";
+
+        if (($oDblSt = $oDbl->query($sQuery)) === false) {
+            $sClauError = 'GestorDelegacion.region_stgr';
+            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+            return false;
+        }
+        foreach ($oDbl->query($sQuery) as $aDades) {
+            if ($aDades === FALSE) {
+                $message = sprintf(_("No se encuentra el id del esquema: %s"), $esquema_region_stgr);
+                throw new RunTimeException($message);
+            }
+            if ($aDades['schema'] === $esquema_region_stgr) {
+                //$id_esquema_region_stgr = $aDades['id'];
+            }
+            if ($aDades['schema'] === $esquema_dele) {
+                $id_esquema_dele = $aDades['id'];
+            }
+        }
+        return ['region_stgr' => $region_stgr,
+            'esquema_region_stgr' => $esquema_region_stgr,
+            //'id_esquema_region_stgr' => $id_esquema_region_stgr,
+            'mi_id_schema' => $id_esquema_dele,
+            'esquema_dl' => $esquema_dele,
+        ];
+    }
+
+    public
+    function getArrayIdSchemaRegionStgr($sRegionStgr, $mi_sfsv)
+    {
+        $mi_sfsv_text = $mi_sfsv === 1 ? 'v' : 'f';
+        $oDbl = $this->getoDbl_Select();
+        $a_schemas = $this->getArraySchemasRegionStgr($sRegionStgr, $mi_sfsv);
+        // añadir la propia:
+        $a_schemas[] = $sRegionStgr . '-' . $sRegionStgr . $mi_sfsv_text;
+
+        $list_dl = '';
+        foreach ($a_schemas as $schema) {
+            $list_dl .= empty($list_dl) ? '' : ", ";
+            $list_dl .= "'$schema'::character varying";
+        }
+        $where = "(db_idschema.schema)::text = any ((array[$list_dl])::text[])";
+
+        $sQuery = "SELECT schema, id FROM db_idschema 
+                 WHERE $where
+                ";
+        //echo "query: $sQuery";
+        $a_idschema = [];
+        foreach ($oDbl->query($sQuery) as $row) {
+            $schema = $row['schema'];
+            $id = $row['id'];
+            $a_idschema[$schema] = $id;
+        }
+        return $a_idschema;
+    }
+
+    /**
+     * retorna un Array [id_dl => "region-dl"], els esquemes d'una regió del stgr
+     *
+     * @param string region.
+     * @return array Una Llista d'esquemes.
+     */
+    function getArraySchemasRegionStgr($sRegionStgr, $mi_sfsv)
+    {
+        $oDbl = $this->getoDbl_Select();
+        $nom_tabla = $this->getNomTabla();
+
+        $sQuery = "SELECT u.id_dl, u.region, u.dl FROM $nom_tabla u 
+                 WHERE status = 't' AND region_stgr = '$sRegionStgr'
+                 ORDER BY region,dl";
+        //echo "query: $sQuery";
+        $a_schema = [];
+        foreach ($oDbl->query($sQuery) as $row) {
+            $id_dl = $row['id_dl'];
+            $region = $row['region'];
+            $dl = $row['dl'];
+            if ($mi_sfsv === 1) {
+                $dl .= 'v';
+            } elseif ($mi_sfsv === 2) {
+                $dl .= 'f';
+            }
+            $a_schema[$id_dl] = "$region-$dl";
+        }
+        return $a_schema;
+    }
+
+    /**
+     * retorna un Array, les dl d'una regió del stgr
+     *
+     * @param array optional lista de regions.
+     * @return array Una Llista de delegacions.
+     */
+    function getArrayDlRegionStgr($aRegiones = array())
+    {
+        $oDbl = $this->getoDbl_Select();
+        $nom_tabla = $this->getNomTabla();
+
+        $num_regiones = count($aRegiones);
+        if ($num_regiones > 0) {
+            $sCondicion = "WHERE status = 't' AND region_stgr = ";
+            $sReg = implode("'OR region_stgr = '", $aRegiones);
+            $sReg = "'" . $sReg . "'";
+            $sCondicion .= $sReg;
+            $sQuery = "SELECT u.id_dl,u.dl FROM $nom_tabla u 
+					$sCondicion
+					ORDER BY dl";
+        } else {
+            $sQuery = "SELECT id_dl, dl
+					FROM $nom_tabla
+					ORDER BY dl";
+        }
+        //echo "query: $sQuery";
+        $a_dl = [];
+        foreach ($oDbl->query($sQuery) as $row) {
+            $id_dl = $row['id_dl'];
+            $dl = $row['dl'];
+            $a_dl[$id_dl] = $dl;
+        }
+        return $a_dl;
+    }
 
 	/**
 	 * devuelve una colección (array) de objetos de tipo Delegacion
@@ -91,9 +315,9 @@ class PgDelegacionRepository extends ClaseRepository implements DelegacionReposi
 
 /* -------------------- ENTIDAD --------------------------------------------- */
 
-	public function Eliminar(Delegacion $Delegacion): bool
+    public function Eliminar(Delegacion $Delegacion): bool
     {
-        $dl = $Delegacion->getDl();
+        $dl = $Delegacion->getDlVo()?->value() ?? '';
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         if (($oDbl->exec("DELETE FROM $nom_tabla WHERE dl = '$dl'")) === FALSE) {
@@ -111,18 +335,18 @@ class PgDelegacionRepository extends ClaseRepository implements DelegacionReposi
 	 */
 	public function Guardar(Delegacion $Delegacion): bool
     {
-        $id_dl = $Delegacion->getId_dl();
+        $id_dl = $Delegacion->getIdDlVo()->value();
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         $bInsert = $this->isNew($id_dl);
 
 		$aDatos = [];
-		$aDatos['dl'] = $Delegacion->getDl();
-		$aDatos['region'] = $Delegacion->getRegion();
-		$aDatos['nombre_dl'] = $Delegacion->getNombre_dl();
-		$aDatos['status'] = $Delegacion->isStatus();
-		$aDatos['grupo_estudios'] = $Delegacion->getGrupo_estudios();
-		$aDatos['region_stgr'] = $Delegacion->getRegion_stgr();
+		$aDatos['dl'] = $Delegacion->getDlVo()?->value();
+		$aDatos['region'] = $Delegacion->getRegionVo()?->value();
+		$aDatos['nombre_dl'] = $Delegacion->getNombreDlVo()?->value();
+		$aDatos['status'] = $Delegacion->getStatusVo()?->value();
+		$aDatos['grupo_estudios'] = $Delegacion->getGrupoEstudiosVo()?->value();
+		$aDatos['region_stgr'] = $Delegacion->getRegionStgrVo()?->value();
 		array_walk($aDatos, 'core\poner_null');
 		//para el caso de los boolean FALSE, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
 		if ( is_true($aDatos['status']) ) { $aDatos['status']='true'; } else { $aDatos['status']='false'; }
@@ -153,7 +377,7 @@ class PgDelegacionRepository extends ClaseRepository implements DelegacionReposi
             }
 		} else {
 			// INSERT
-			$aDatos['id_dl'] = $Delegacion->getId_dl();
+			$aDatos['id_dl'] = $Delegacion->getIdDlVo()->value();
 			$campos="(id_dl,dl,region,nombre_dl,status,grupo_estudios,region_stgr)";
 			$valores="(:id_dl,:dl,:region,:nombre_dl,:status,:grupo_estudios,:region_stgr)";		
 			if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === FALSE) {

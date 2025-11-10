@@ -10,6 +10,7 @@ use PDO;
 use PDOException;
 use src\inventario\domain\contracts\DocumentoRepositoryInterface;
 use src\inventario\domain\entity\Documento;
+use src\inventario\domain\value_objects\DocumentoId;
 use function core\is_true;
 
 
@@ -97,7 +98,7 @@ class PgDocumentoRepository extends ClaseRepository implements DocumentoReposito
 
 	public function Eliminar(Documento $Documento): bool
     {
-        $id_doc = $Documento->getId_doc();
+        $id_doc = $Documento->getIdDocVo()->value();
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         if (($oDbl->exec("DELETE FROM $nom_tabla WHERE id_doc = $id_doc")) === FALSE) {
@@ -113,66 +114,66 @@ class PgDocumentoRepository extends ClaseRepository implements DocumentoReposito
 	 * Si no existe el registro, hace un insert, si existe, se hace el update.
 	
 	 */
-	public function Guardar(Documento $Documento): bool
+ public function Guardar(Documento $Documento): bool
     {
-        $id_doc = $Documento->getId_doc();
+        $id_doc = $Documento->getIdDocVo()->value();
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         $bInsert = $this->isNew($id_doc);
 
-		$aDatos = [];
-		$aDatos['id_tipo_doc'] = $Documento->getId_tipo_doc();
-		$aDatos['id_ubi'] = $Documento->getId_ubi();
-		$aDatos['id_lugar'] = $Documento->getId_lugar();
-		$aDatos['observ'] = $Documento->getObserv();
-        $aDatos['observ_ctr'] = $Documento->getObservCtr();
-		$aDatos['en_busqueda'] = $Documento->isEn_busqueda();
-		$aDatos['perdido'] = $Documento->isPerdido();
-		$aDatos['eliminado'] = $Documento->isEliminado();
-		$aDatos['num_reg'] = $Documento->getNum_reg();
-		$aDatos['num_ini'] = $Documento->getNum_ini();
-		$aDatos['num_fin'] = $Documento->getNum_fin();
-		$aDatos['identificador'] = $Documento->getIdentificador();
-		$aDatos['num_ejemplares'] = $Documento->getNum_ejemplares();
-		// para las fechas
-		$aDatos['f_recibido'] = (new ConverterDate('date', $Documento->getF_recibido()))->toPg();
-		$aDatos['f_asignado'] = (new ConverterDate('date', $Documento->getF_asignado()))->toPg();
-		$aDatos['f_ult_comprobacion'] = (new ConverterDate('date', $Documento->getF_ult_comprobacion()))->toPg();
-		$aDatos['f_perdido'] = (new ConverterDate('date', $Documento->getF_perdido()))->toPg();
-		$aDatos['f_eliminado'] = (new ConverterDate('date', $Documento->getF_eliminado()))->toPg();
-		array_walk($aDatos, 'core\poner_null');
-		//para el caso de los boolean FALSE, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
-		if ( is_true($aDatos['en_busqueda']) ) { $aDatos['en_busqueda']='true'; } else { $aDatos['en_busqueda']='false'; }
-		if ( is_true($aDatos['perdido']) ) { $aDatos['perdido']='true'; } else { $aDatos['perdido']='false'; }
-		if ( is_true($aDatos['eliminado']) ) { $aDatos['eliminado']='true'; } else { $aDatos['eliminado']='false'; }
+        $aDatos = [];
+        $aDatos['id_tipo_doc'] = $Documento->getIdTipoDocVo()->value();
+        $aDatos['id_ubi'] = $Documento->getIdUbiVo()->value();
+        $aDatos['id_lugar'] = $Documento->getIdLugarVo()?->value();
+        $aDatos['observ'] = $Documento->getObservVo()?->value();
+        $aDatos['observ_ctr'] = $Documento->getObservCtrVo()?->value();
+        $aDatos['en_busqueda'] = $Documento->getEnBusquedaVo()?->value();
+        $aDatos['perdido'] = $Documento->getPerdidoVo()?->value();
+        $aDatos['eliminado'] = $Documento->getEliminadoVo()?->value();
+        $aDatos['num_reg'] = $Documento->getNumRegVo()?->value();
+        $aDatos['num_ini'] = $Documento->getNumIniVo()?->value();
+        $aDatos['num_fin'] = $Documento->getNumFinVo()?->value();
+        $aDatos['identificador'] = $Documento->getIdentificadorVo()?->value();
+        $aDatos['num_ejemplares'] = $Documento->getNumEjemplaresVo()?->value();
+        // para las fechas (se mantienen utilitarios)
+        $aDatos['f_recibido'] = (new ConverterDate('date', $Documento->getF_recibido()))->toPg();
+        $aDatos['f_asignado'] = (new ConverterDate('date', $Documento->getF_asignado()))->toPg();
+        $aDatos['f_ult_comprobacion'] = (new ConverterDate('date', $Documento->getF_ult_comprobacion()))->toPg();
+        $aDatos['f_perdido'] = (new ConverterDate('date', $Documento->getF_perdido()))->toPg();
+        $aDatos['f_eliminado'] = (new ConverterDate('date', $Documento->getF_eliminado()))->toPg();
+        array_walk($aDatos, 'core\poner_null');
+        //para el caso de los boolean FALSE, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
+        if ( is_true($aDatos['en_busqueda']) ) { $aDatos['en_busqueda']='true'; } else { $aDatos['en_busqueda']='false'; }
+        if ( is_true($aDatos['perdido']) ) { $aDatos['perdido']='true'; } else { $aDatos['perdido']='false'; }
+        if ( is_true($aDatos['eliminado']) ) { $aDatos['eliminado']='true'; } else { $aDatos['eliminado']='false'; }
 
-		if ($bInsert === FALSE) {
-			//UPDATE
-			$update="
-					id_tipo_doc              = :id_tipo_doc,
-					id_ubi                   = :id_ubi,
-					id_lugar                 = :id_lugar,
-					f_recibido               = :f_recibido,
-					f_asignado               = :f_asignado,
-					observ                   = :observ,
-					observ_ctr               = :observ_ctr,
-					f_ult_comprobacion       = :f_ult_comprobacion,
-					en_busqueda              = :en_busqueda,
-					perdido                  = :perdido,
-					f_perdido                = :f_perdido,
-					eliminado                = :eliminado,
-					f_eliminado              = :f_eliminado,
-					num_reg                  = :num_reg,
-					num_ini                  = :num_ini,
-					num_fin                  = :num_fin,
-					identificador            = :identificador,
-					num_ejemplares           = :num_ejemplares";
-			if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_doc = $id_doc")) === FALSE) {
-				$sClaveError = 'PgDocumentoRepository.update.prepare';
-				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-				return FALSE;
-			}
-				
+        if ($bInsert === FALSE) {
+            //UPDATE
+            $update="
+                    id_tipo_doc              = :id_tipo_doc,
+                    id_ubi                   = :id_ubi,
+                    id_lugar                 = :id_lugar,
+                    f_recibido               = :f_recibido,
+                    f_asignado               = :f_asignado,
+                    observ                   = :observ,
+                    observ_ctr               = :observ_ctr,
+                    f_ult_comprobacion       = :f_ult_comprobacion,
+                    en_busqueda              = :en_busqueda,
+                    perdido                  = :perdido,
+                    f_perdido                = :f_perdido,
+                    eliminado                = :eliminado,
+                    f_eliminado              = :f_eliminado,
+                    num_reg                  = :num_reg,
+                    num_ini                  = :num_ini,
+                    num_fin                  = :num_fin,
+                    identificador            = :identificador,
+                    num_ejemplares           = :num_ejemplares";
+            if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_doc = $id_doc")) === FALSE) {
+                $sClaveError = 'PgDocumentoRepository.update.prepare';
+                $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
+                return FALSE;
+            }
+            
             try {
                 $oDblSt->execute($aDatos);
             } catch ( PDOException $e) {
@@ -182,16 +183,16 @@ class PgDocumentoRepository extends ClaseRepository implements DocumentoReposito
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
                 return FALSE;
             }
-		} else {
-			// INSERT
-			$aDatos['id_doc'] = $Documento->getId_doc();
-			$campos="(id_doc,id_tipo_doc,id_ubi,id_lugar,f_recibido,f_asignado,observ,observ_ctr,f_ult_comprobacion,en_busqueda,perdido,f_perdido,eliminado,f_eliminado,num_reg,num_ini,num_fin,identificador,num_ejemplares)";
-			$valores="(:id_doc,:id_tipo_doc,:id_ubi,:id_lugar,:f_recibido,:f_asignado,:observ,:observ_ctr,:f_ult_comprobacion,:en_busqueda,:perdido,:f_perdido,:eliminado,:f_eliminado,:num_reg,:num_ini,:num_fin,:identificador,:num_ejemplares)";
-			if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === FALSE) {
-				$sClaveError = 'PgDocumentoRepository.insertar.prepare';
-				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-				return FALSE;
-			}
+        } else {
+            // INSERT
+            $aDatos['id_doc'] = $Documento->getIdDocVo()->value();
+            $campos="(id_doc,id_tipo_doc,id_ubi,id_lugar,f_recibido,f_asignado,observ,observ_ctr,f_ult_comprobacion,en_busqueda,perdido,f_perdido,eliminado,f_eliminado,num_reg,num_ini,num_fin,identificador,num_ejemplares)";
+            $valores="(:id_doc,:id_tipo_doc,:id_ubi,:id_lugar,:f_recibido,:f_asignado,:observ,:observ_ctr,:f_ult_comprobacion,:en_busqueda,:perdido,:f_perdido,:eliminado,:f_eliminado,:num_reg,:num_ini,:num_fin,:identificador,:num_ejemplares)";        
+            if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === FALSE) {
+                $sClaveError = 'PgDocumentoRepository.insertar.prepare';
+                $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
+                return FALSE;
+            }
             try {
                 $oDblSt->execute($aDatos);
             } catch ( PDOException $e) {
@@ -200,10 +201,10 @@ class PgDocumentoRepository extends ClaseRepository implements DocumentoReposito
                 $sClaveError = 'PgDocumentoRepository.insertar.execute';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
                 return FALSE;
-			}
-		}
-		return TRUE;
-	}
+            }
+        }
+        return TRUE;
+    }
 	
     private function isNew(int $id_doc): bool
     {
@@ -224,15 +225,16 @@ class PgDocumentoRepository extends ClaseRepository implements DocumentoReposito
      * Devuelve los campos de la base de datos en un array asociativo.
      * Devuelve false si no existe la fila en la base de datos
      * 
-     * @param int $id_doc
+     * @param DocumentoId $id_doc
      * @return array|bool
 	
      */
-    public function datosById(int $id_doc): array|bool
+    public function datosById(DocumentoId $id_doc): array|bool
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_doc = $id_doc")) === FALSE) {
+        $id = $id_doc->value();
+        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_doc = $id")) === FALSE) {
 			$sClaveError = 'PgDocumentoRepository.getDatosById';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
             return FALSE;
@@ -249,12 +251,12 @@ class PgDocumentoRepository extends ClaseRepository implements DocumentoReposito
         return $aDatos;
     }
     
-	
+    
     /**
      * Busca la clase con id_doc en la base de datos .
 	
      */
-    public function findById(int $id_doc): ?Documento
+    public function findById(DocumentoId $id_doc): ?Documento
     {
         $aDatos = $this->datosById($id_doc);
         if (empty($aDatos)) {

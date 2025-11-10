@@ -5,6 +5,7 @@ namespace src\inventario\application\repositories;
 use PDO;
 use src\inventario\domain\contracts\LugarRepositoryInterface;
 use src\inventario\domain\entity\Lugar;
+use src\inventario\domain\value_objects\LugarId;
 use src\inventario\infrastructure\repositories\PgLugarRepository;
 
 
@@ -86,10 +87,10 @@ class LugarRepository implements LugarRepositoryInterface
      * Devuelve los campos de la base de datos en un array asociativo.
      * Devuelve false si no existe la fila en la base de datos
      *
-     * @param int $id_lugar
+     * @param LugarId $id_lugar
      * @return array|bool
      */
-    public function datosById(int $id_lugar): array|bool
+    public function datosById(LugarId $id_lugar): array|bool
     {
         return $this->repository->datosById($id_lugar);
     }
@@ -97,7 +98,7 @@ class LugarRepository implements LugarRepositoryInterface
     /**
      * Busca la clase con id_lugar en el repositorio.
      */
-    public function findById(int $id_lugar): ?Lugar
+    public function findById(LugarId $id_lugar): ?Lugar
     {
         return $this->repository->findById($id_lugar);
     }

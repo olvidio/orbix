@@ -29,7 +29,7 @@ final class RegionDropdown
         $opciones = [];
         foreach ($regiones as $region) {
             // value = sigla (region), label = nombre
-            $opciones[$region->getRegion()] = $region->getNombre_region();
+            $opciones[$region->getRegionVo()?->value() ?? ''] = $region->getNombre_region();
         }
 
         $despl = new Desplegable();

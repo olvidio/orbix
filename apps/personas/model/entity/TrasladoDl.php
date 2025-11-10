@@ -22,7 +22,8 @@ use notas\model\PersonaNota;
 use src\certificados\application\repositories\CertificadoRecibidoRepository;
 use src\certificados\application\repositories\CertificadoEmitidoRepository;
 use src\certificados\domain\entity\CertificadoRecibido;
-use ubis\model\entity\GestorDelegacion;
+use src\ubis\application\repositories\DelegacionRepository;
+use src\ubis\application\services\DelegacionUtils;
 use web\DateTimeLocal;
 use web\NullDateTimeLocal;
 
@@ -437,8 +438,14 @@ class TrasladoDl
             $rta = 1;
         }
         // Que la dl destino exista:
-        $gesDelegacion = new GestorDelegacion();
-        $a_dl = $gesDelegacion->getArrayDelegaciones();
+        $repoDelegacion = new DelegacionRepository();
+        $cDelegAll = $repoDelegacion->getDelegaciones(['status' => true]);
+        $a_dl = [];
+        if (is_array($cDelegAll)) {
+            foreach ($cDelegAll as $oDl) {
+                $a_dl[] = $oDl->getDlVo()->value();
+            }
+        }
         if (!empty($this->sdl_org) && !in_array($this->sdl_org, $a_dl, true)) {
             $error = _("No existe la dl origen. Ponerla bien en la ficha de la persona.");
             $rta = 2;
@@ -671,8 +678,9 @@ class TrasladoDl
         $ges->setoDbl($oDBorg);
         $colection = $ges->getPersonaNotas(array('id_nom' => $this->iid_nom));
         if (!empty($colection)) {
-            $gesDelegacion = new GestorDelegacion();
-            $new_dl = GestorDelegacion::getDlFromSchema($this->snew_esquema);
+            $new_dl = DelegacionUtils::getDlFromSchema($this->snew_esquema);
+            // Obtener datos de región STGR de la nueva dl mediante el repositorio
+            $gesDelegacion = new \src\ubis\application\repositories\DelegacionRepository();
             $a_mi_region_stgr = $gesDelegacion->mi_region_stgr($new_dl);
             $esquema_region_stgr = $a_mi_region_stgr['esquema_region_stgr'];
             // Para saber el nuevo id_schema de la dl destino:

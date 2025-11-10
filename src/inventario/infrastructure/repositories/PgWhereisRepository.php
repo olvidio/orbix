@@ -109,7 +109,7 @@ class PgWhereisRepository extends ClaseRepository implements WhereisRepositoryIn
 
 	public function Eliminar(Whereis $Whereis): bool
     {
-        $id_item_whereis = $Whereis->getId_item_whereis();
+        $id_item_whereis = $Whereis->getIdItemWhereisVo()->value();
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         if (($oDbl->exec("DELETE FROM $nom_tabla WHERE id_item_whereis = $id_item_whereis")) === FALSE) {
@@ -127,27 +127,27 @@ class PgWhereisRepository extends ClaseRepository implements WhereisRepositoryIn
 	 */
 	public function Guardar(Whereis $Whereis): bool
     {
-        $id_item_whereis = $Whereis->getId_item_whereis();
+        $id_item_whereis = $Whereis->getIdItemWhereisVo()->value();
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         $bInsert = $this->isNew($id_item_whereis);
 
-		$aDatos = [];
-		$aDatos['id_item_egm'] = $Whereis->getId_item_egm();
-		$aDatos['id_doc'] = $Whereis->getId_doc();
-		array_walk($aDatos, 'core\poner_null');
+        $aDatos = [];
+        $aDatos['id_item_egm'] = $Whereis->getIdItemEgmVo()?->value();
+        $aDatos['id_doc'] = $Whereis->getIdDocVo()?->value();
+        array_walk($aDatos, 'core\poner_null');
 
-		if ($bInsert === FALSE) {
-			//UPDATE
-			$update="
-					id_item_egm              = :id_item_egm,
-					id_doc                   = :id_doc";
-			if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_item_whereis = $id_item_whereis")) === FALSE) {
-				$sClaveError = 'PgWhereisRepository.update.prepare';
-				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-				return FALSE;
-			}
-				
+        if ($bInsert === FALSE) {
+            //UPDATE
+            $update="
+                    id_item_egm              = :id_item_egm,
+                    id_doc                   = :id_doc";
+            if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_item_whereis = $id_item_whereis")) === FALSE) {
+                $sClaveError = 'PgWhereisRepository.update.prepare';
+                $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
+                return FALSE;
+            }
+            
             try {
                 $oDblSt->execute($aDatos);
             } catch ( PDOException $e) {
@@ -157,16 +157,16 @@ class PgWhereisRepository extends ClaseRepository implements WhereisRepositoryIn
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
                 return FALSE;
             }
-		} else {
-			// INSERT
-			$aDatos['id_item_whereis'] = $Whereis->getId_item_whereis();
-			$campos="(id_item_whereis,id_item_egm,id_doc)";
-			$valores="(:id_item_whereis,:id_item_egm,:id_doc)";		
-			if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === FALSE) {
-				$sClaveError = 'PgWhereisRepository.insertar.prepare';
-				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-				return FALSE;
-			}
+        } else {
+            // INSERT
+            $aDatos['id_item_whereis'] = $Whereis->getIdItemWhereisVo()->value();
+            $campos="(id_item_whereis,id_item_egm,id_doc)";
+            $valores="(:id_item_whereis,:id_item_egm,:id_doc)";        
+            if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === FALSE) {
+                $sClaveError = 'PgWhereisRepository.insertar.prepare';
+                $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
+                return FALSE;
+            }
             try {
                 $oDblSt->execute($aDatos);
             } catch ( PDOException $e) {
@@ -175,10 +175,10 @@ class PgWhereisRepository extends ClaseRepository implements WhereisRepositoryIn
                 $sClaveError = 'PgWhereisRepository.insertar.execute';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
                 return FALSE;
-			}
-		}
-		return TRUE;
-	}
+            }
+        }
+        return TRUE;
+    }
 	
     private function isNew(int $id_item_whereis): bool
     {

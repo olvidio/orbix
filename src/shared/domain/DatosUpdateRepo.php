@@ -55,6 +55,10 @@ class DatosUpdateRepo
             }
 
             $metodo = $oDatosCampo->getMetodoSet();
+            // uso el método legacy
+            if (substr($metodo,-2) === 'Vo') {
+                $metodo = substr($metodo,0,-2);
+            }
             $oFicha->$metodo($aCampos[$nom_camp]);
         }
 
@@ -98,6 +102,11 @@ class DatosUpdateRepo
             }
 
             $metodo = $oDatosCampo->getMetodoSet();
+            // uso el método legacy
+            if (substr($metodo,-2) === 'Vo') {
+                $metodo = substr($metodo,0,-2);
+            }
+
             // cambiar las cadenas vacías por null (va bien cuando el dato que se espera en un integer)
             // pero en el caso de los check, espera false (no null)
             if ($tipo !== 'check' && empty($aCampos[$nom_camp])) {

@@ -5,6 +5,7 @@ namespace src\inventario\application\repositories;
 use PDO;
 use src\inventario\domain\contracts\EquipajeRepositoryInterface;
 use src\inventario\domain\entity\Equipaje;
+use src\inventario\domain\value_objects\EquipajeId;
 use src\inventario\infrastructure\repositories\PgEquipajeRepository;
 
 
@@ -92,10 +93,10 @@ class EquipajeRepository implements EquipajeRepositoryInterface
      * Devuelve los campos de la base de datos en un array asociativo.
      * Devuelve false si no existe la fila en la base de datos
      *
-     * @param int $id_equipaje
+     * @param EquipajeId $id_equipaje
      * @return array|bool
      */
-    public function datosById(int $id_equipaje): array|bool
+    public function datosById(EquipajeId $id_equipaje): array|bool
     {
         return $this->repository->datosById($id_equipaje);
     }
@@ -103,7 +104,7 @@ class EquipajeRepository implements EquipajeRepositoryInterface
     /**
      * Busca la clase con id_equipaje en el repositorio.
      */
-    public function findById(int $id_equipaje): ?Equipaje
+    public function findById(EquipajeId $id_equipaje): ?Equipaje
     {
         return $this->repository->findById($id_equipaje);
     }

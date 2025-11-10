@@ -2,7 +2,7 @@
 
 use core\ViewTwig;
 use web\Hash;
-use ubis\model\entity\GestorDelegacion;
+use src\ubis\application\services\DelegacionDropdown;
 use ubis\model\entity\GestorDireccionCtr;
 use src\ubis\application\services\RegionDropdown;
 
@@ -34,9 +34,7 @@ $GesPais = new GestorDireccionCtr();
 $oDesplPais = $GesPais->getListaPaises();
 $oDesplPais->setNombre('pais');
 //delegaciones de H. posibles
-$GesDelegacion = new GestorDelegacion();
-$oDesplDelegacion = $GesDelegacion->getListaDelegaciones(['H']);
-$oDesplDelegacion->setNombre('dl');
+$oDesplDelegacion = DelegacionDropdown::byRegiones(['H'], 'dl');
 
 $url_lista = 'apps/cartaspresentacion/controller/cartas_presentacion_lista.php';
 $oHash = new Hash();

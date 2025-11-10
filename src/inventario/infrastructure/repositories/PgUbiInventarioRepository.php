@@ -141,7 +141,7 @@ class PgUbiInventarioRepository extends ClaseRepository implements UbiInventario
 
 	public function Eliminar(UbiInventario $UbiInventario): bool
     {
-        $id_ubi = $UbiInventario->getId_ubi();
+        $id_ubi = $UbiInventario->getIdUbiVo()->value();
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         if (($oDbl->exec("DELETE FROM $nom_tabla WHERE id_ubi = $id_ubi")) === FALSE) {
@@ -159,27 +159,27 @@ class PgUbiInventarioRepository extends ClaseRepository implements UbiInventario
 	 */
 	public function Guardar(UbiInventario $UbiInventario): bool
     {
-        $id_ubi = $UbiInventario->getId_ubi();
+        $id_ubi = $UbiInventario->getIdUbiVo()->value();
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         $bInsert = $this->isNew($id_ubi);
 
-		$aDatos = [];
-		$aDatos['nom_ubi'] = $UbiInventario->getNom_ubi();
-		$aDatos['id_ubi_activ'] = $UbiInventario->getId_ubi_activ();
-		array_walk($aDatos, 'core\poner_null');
+        $aDatos = [];
+        $aDatos['nom_ubi'] = $UbiInventario->getNomUbiVo()?->value();
+        $aDatos['id_ubi_activ'] = $UbiInventario->getIdUbiActivVo()?->value();
+        array_walk($aDatos, 'core\poner_null');
 
-		if ($bInsert === FALSE) {
-			//UPDATE
-			$update="
-					nom_ubi                  = :nom_ubi,
-					id_ubi_activ             = :id_ubi_activ";
-			if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_ubi = $id_ubi")) === FALSE) {
-				$sClaveError = 'PgUbiInventarioRepository.update.prepare';
-				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-				return FALSE;
-			}
-				
+        if ($bInsert === FALSE) {
+            //UPDATE
+            $update="
+                    nom_ubi                  = :nom_ubi,
+                    id_ubi_activ             = :id_ubi_activ";
+            if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_ubi = $id_ubi")) === FALSE) {
+                $sClaveError = 'PgUbiInventarioRepository.update.prepare';
+                $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
+                return FALSE;
+            }
+            
             try {
                 $oDblSt->execute($aDatos);
             } catch ( PDOException $e) {
@@ -189,16 +189,16 @@ class PgUbiInventarioRepository extends ClaseRepository implements UbiInventario
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
                 return FALSE;
             }
-		} else {
-			// INSERT
-			$aDatos['id_ubi'] = $UbiInventario->getId_ubi();
-			$campos="(id_ubi,nom_ubi,id_ubi_activ)";
-			$valores="(:id_ubi,:nom_ubi,:id_ubi_activ)";		
-			if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === FALSE) {
-				$sClaveError = 'PgUbiInventarioRepository.insertar.prepare';
-				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-				return FALSE;
-			}
+        } else {
+            // INSERT
+            $aDatos['id_ubi'] = $UbiInventario->getIdUbiVo()->value();
+            $campos="(id_ubi,nom_ubi,id_ubi_activ)";
+            $valores="(:id_ubi,:nom_ubi,:id_ubi_activ)";        
+            if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === FALSE) {
+                $sClaveError = 'PgUbiInventarioRepository.insertar.prepare';
+                $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
+                return FALSE;
+            }
             try {
                 $oDblSt->execute($aDatos);
             } catch ( PDOException $e) {
@@ -207,10 +207,10 @@ class PgUbiInventarioRepository extends ClaseRepository implements UbiInventario
                 $sClaveError = 'PgUbiInventarioRepository.insertar.execute';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
                 return FALSE;
-			}
-		}
-		return TRUE;
-	}
+            }
+        }
+        return TRUE;
+    }
 	
     private function isNew(int $id_ubi): bool
     {

@@ -1,6 +1,7 @@
 <?php
 
 namespace src\inventario\domain\entity;
+use src\inventario\domain\value_objects\{WhereisItemId, WhereisItemEgmId, WhereisDocId};
 /**
  * Clase que implementa la entidad i_whereis_dl
  *
@@ -105,6 +106,38 @@ class Whereis {
 	{
 		$this->iid_doc = $iid_doc;
 	}
+
+    // Value Object API (duplicada con legacy)
+    public function getIdItemWhereisVo(): WhereisItemId
+    {
+        return new WhereisItemId($this->iid_item_whereis);
+    }
+
+    public function setIdItemWhereisVo(?WhereisItemId $id = null): void
+    {
+        if ($id === null) { return; }
+        $this->iid_item_whereis = $id->value();
+    }
+
+    public function getIdItemEgmVo(): ?WhereisItemEgmId
+    {
+        return $this->iid_item_egm !== null ? new WhereisItemEgmId($this->iid_item_egm) : null;
+    }
+
+    public function setIdItemEgmVo(?WhereisItemEgmId $id = null): void
+    {
+        $this->iid_item_egm = $id?->value();
+    }
+
+    public function getIdDocVo(): ?WhereisDocId
+    {
+        return $this->iid_doc !== null ? new WhereisDocId($this->iid_doc) : null;
+    }
+
+    public function setIdDocVo(?WhereisDocId $id = null): void
+    {
+        $this->iid_doc = $id?->value();
+    }
 
     /* ------------------- PARA el mod_tabla  -------------------------------*/
     public function getPrimary_key()

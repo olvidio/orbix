@@ -5,6 +5,7 @@ namespace src\inventario\application\repositories;
 use PDO;
 use src\inventario\domain\contracts\UbiInventarioRepositoryInterface;
 use src\inventario\domain\entity\UbiInventario;
+use src\inventario\domain\value_objects\UbiInventarioId;
 use src\inventario\infrastructure\repositories\PgUbiInventarioRepository;
 
 
@@ -93,11 +94,11 @@ class UbiInventarioRepository implements UbiInventarioRepositoryInterface
      * Devuelve los campos de la base de datos en un array asociativo.
      * Devuelve false si no existe la fila en la base de datos
      * 
-     * @param int $id_ubi
+     * @param UbiInventarioId $id_ubi
      * @return array|bool
 	
      */
-    public function datosById(int $id_ubi): array|bool
+    public function datosById(UbiInventarioId $id_ubi): array|bool
     {
         return $this->repository->datosById($id_ubi);
     }
@@ -106,7 +107,7 @@ class UbiInventarioRepository implements UbiInventarioRepositoryInterface
      * Busca la clase con id_ubi en el repositorio.
 	
      */
-    public function findById(int $id_ubi): ?UbiInventario
+    public function findById(UbiInventarioId $id_ubi): ?UbiInventario
     {
         return $this->repository->findById($id_ubi);
     }

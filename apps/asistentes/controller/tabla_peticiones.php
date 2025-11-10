@@ -8,7 +8,7 @@ use asistentes\model\entity\GestorAsistente;
 use core\ConfigGlobal;
 use core\ViewTwig;
 use personas\model\entity\PersonaDl;
-use ubis\model\entity\GestorDelegacion;
+use src\ubis\application\repositories\DelegacionRepository;
 use web\Hash;
 use web\Lista;
 use web\TiposActividades;
@@ -82,10 +82,10 @@ $oTipoActividad = new TiposActividades($id_tipo_activ);
 $sactividad = $oTipoActividad->getActividadText();
 
 $mi_dele = ConfigGlobal::mi_delef();
-$gesDelegacion = new GestorDelegacion();
-$cDelegaciones = $gesDelegacion->getDelegaciones(array('dl' => $mi_dele));
-$oDelegacion = $cDelegaciones[0];
-$id_dl = $oDelegacion->getId_dl();
+$repoDelegacion = new DelegacionRepository();
+$cDelegaciones = $repoDelegacion->getDelegaciones(['dl' => $mi_dele]);
+$oDelegacion = $cDelegaciones[0] ?? null;
+$id_dl = $oDelegacion?->getIdDlVo()->value() ?? 0;
 
 $a_valores = [];
 $i = 0;

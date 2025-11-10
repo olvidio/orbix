@@ -6,7 +6,7 @@ use actividades\model\entity\ActividadAll;
 use actividadplazas\model\entity\GestorActividadPlazas;
 use asistentes\model\entity\GestorAsistente;
 use core\ConfigGlobal;
-use ubis\model\entity\GestorDelegacion;
+use src\ubis\application\repositories\DelegacionRepository;
 use web\Desplegable;
 use function core\is_true;
 
@@ -547,16 +547,16 @@ class GestorResumenPlazas
     protected function setArrayDl()
     {
         if (!isset($this->a_dele)) {
-            $gesDelegacion = new GestorDelegacion();
+            $gesDelegacion = new DelegacionRepository();
             $cDelegaciones = $gesDelegacion->getDelegaciones(array('_ordre' => 'region,dl'));
             $this->a_dele = [];
             $this->a_id_dele = [];
             foreach ($cDelegaciones as $oDelegacion) {
-                $dl = $oDelegacion->getDl();
+                $dl = $oDelegacion->getDlVo()?->value() ?? '';
                 if (ConfigGlobal::mi_sfsv() == 2) {
                     $dl .= 'f';
                 }
-                $id_dl = $oDelegacion->getId_dl();
+                $id_dl = $oDelegacion->getIdDlVo()?->value() ?? 0;
                 $a_dele[$id_dl] = $dl;
                 $a_id_dele[$dl] = $id_dl;
             }

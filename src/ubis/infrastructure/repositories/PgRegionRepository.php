@@ -93,7 +93,7 @@ class PgRegionRepository extends ClaseRepository implements RegionRepositoryInte
 
 	public function Eliminar(Region $Region): bool
     {
-        $region = $Region->getRegion();
+        $region = $Region->getRegionVo()?->value() ?? '';
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         if (($oDbl->exec("DELETE FROM $nom_tabla WHERE region = '$region'")) === FALSE) {
@@ -111,13 +111,13 @@ class PgRegionRepository extends ClaseRepository implements RegionRepositoryInte
 	 */
 	public function Guardar(Region $Region): bool
     {
-        $id_region = $Region->getId_region();
+        $id_region = $Region->getIdRegionVo()?->value();
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         $bInsert = $this->isNew($id_region);
 
 		$aDatos = [];
-        $aDatos['region'] = $Region->getRegion();
+        $aDatos['region'] = $Region->getRegionVo()?->value() ?? '';
 		$aDatos['nombre_region'] = $Region->getNombre_region();
 		$aDatos['status'] = $Region->isStatus();
 		array_walk($aDatos, 'core\poner_null');
@@ -147,7 +147,7 @@ class PgRegionRepository extends ClaseRepository implements RegionRepositoryInte
             }
 		} else {
 			// INSERT
-			$aDatos['id_region'] = $Region->getId_region();
+   $aDatos['id_region'] = $Region->getIdRegionVo()?->value();
 			$campos="(id_region,region,nombre_region,status)";
 			$valores="(:id_region,:region,:nombre_region,:status)";		
 			if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === FALSE) {

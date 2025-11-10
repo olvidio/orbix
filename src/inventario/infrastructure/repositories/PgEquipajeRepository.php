@@ -10,6 +10,7 @@ use PDO;
 use PDOException;
 use src\inventario\domain\contracts\EquipajeRepositoryInterface;
 use src\inventario\domain\entity\Equipaje;
+use src\inventario\domain\value_objects\EquipajeId;
 
 
 /**
@@ -183,7 +184,7 @@ class PgEquipajeRepository extends ClaseRepository implements EquipajeRepository
 
     public function Eliminar(Equipaje $Equipaje): bool
     {
-        $id_equipaje = $Equipaje->getId_equipaje();
+        $id_equipaje = $Equipaje->getIdEquipajeVo()->value();
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         if (($oDbl->exec("DELETE FROM $nom_tabla WHERE id_equipaje = $id_equipaje")) === FALSE) {
@@ -200,19 +201,19 @@ class PgEquipajeRepository extends ClaseRepository implements EquipajeRepository
      */
     public function Guardar(Equipaje $Equipaje): bool
     {
-        $id_equipaje = $Equipaje->getId_equipaje();
+        $id_equipaje = $Equipaje->getIdEquipajeVo()->value();
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         $bInsert = $this->isNew($id_equipaje);
 
         $aDatos = [];
-        $aDatos['ids_activ'] = $Equipaje->getIds_activ();
-        $aDatos['lugar'] = $Equipaje->getLugar();
-        $aDatos['id_ubi_activ'] = $Equipaje->getId_ubi_activ();
-        $aDatos['nom_equipaje'] = $Equipaje->getNom_equipaje();
-        $aDatos['cabecera'] = $Equipaje->getCabecera();
-        $aDatos['pie'] = $Equipaje->getPie();
-        $aDatos['cabecerab'] = $Equipaje->getCabecerab();
+        $aDatos['ids_activ'] = $Equipaje->getIdsActivVo()?->value();
+        $aDatos['lugar'] = $Equipaje->getLugarVo()?->value();
+        $aDatos['id_ubi_activ'] = $Equipaje->getIdUbiActivVo()?->value();
+        $aDatos['nom_equipaje'] = $Equipaje->getNomEquipajeVo()?->value();
+        $aDatos['cabecera'] = $Equipaje->getCabeceraVo()?->value();
+        $aDatos['pie'] = $Equipaje->getPieVo()?->value();
+        $aDatos['cabecerab'] = $Equipaje->getCabecerabVo()?->value();
         // para las fechas
         $aDatos['f_ini'] = (new ConverterDate('date', $Equipaje->getF_ini()))->toPg();
         $aDatos['f_fin'] = (new ConverterDate('date', $Equipaje->getF_fin()))->toPg();
@@ -221,15 +222,15 @@ class PgEquipajeRepository extends ClaseRepository implements EquipajeRepository
         if ($bInsert === FALSE) {
             //UPDATE
             $update = "
-					ids_activ                = :ids_activ,
-					lugar                    = :lugar,
-					f_ini                    = :f_ini,
-					f_fin                    = :f_fin,
-					id_ubi_activ             = :id_ubi_activ,
-					nom_equipaje             = :nom_equipaje,
-					cabecera                 = :cabecera,
-					pie                      = :pie,
-					cabecerab                = :cabecerab";
+                    ids_activ                = :ids_activ,
+                    lugar                    = :lugar,
+                    f_ini                    = :f_ini,
+                    f_fin                    = :f_fin,
+                    id_ubi_activ             = :id_ubi_activ,
+                    nom_equipaje             = :nom_equipaje,
+                    cabecera                 = :cabecera,
+                    pie                      = :pie,
+                    cabecerab                = :cabecerab";
             if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_equipaje = $id_equipaje")) === FALSE) {
                 $sClaveError = 'PgEquipajeRepository.update.prepare';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
@@ -247,7 +248,7 @@ class PgEquipajeRepository extends ClaseRepository implements EquipajeRepository
             }
         } else {
             // INSERT
-            $aDatos['id_equipaje'] = $Equipaje->getId_equipaje();
+            $aDatos['id_equipaje'] = $Equipaje->getIdEquipajeVo()->value();
             $campos = "(id_equipaje,ids_activ,lugar,f_ini,f_fin,id_ubi_activ,nom_equipaje,cabecera,pie,cabecerab)";
             $valores = "(:id_equipaje,:ids_activ,:lugar,:f_ini,:f_fin,:id_ubi_activ,:nom_equipaje,:cabecera,:pie,:cabecerab)";
             if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === FALSE) {
@@ -287,14 +288,15 @@ class PgEquipajeRepository extends ClaseRepository implements EquipajeRepository
      * Devuelve los campos de la base de datos en un array asociativo.
      * Devuelve false si no existe la fila en la base de datos
      *
-     * @param int $id_equipaje
+     * @param EquipajeId $id_equipaje
      * @return array|bool
      */
-    public function datosById(int $id_equipaje): array|bool
+    public function datosById(EquipajeId $id_equipaje): array|bool
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_equipaje = $id_equipaje")) === FALSE) {
+        $id = $id_equipaje->value();
+        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_equipaje = $id")) === FALSE) {
             $sClaveError = 'PgEquipajeRepository.getDatosById';
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
             return FALSE;
@@ -312,7 +314,7 @@ class PgEquipajeRepository extends ClaseRepository implements EquipajeRepository
     /**
      * Busca la clase con id_equipaje en la base de datos .
      */
-    public function findById(int $id_equipaje): ?Equipaje
+    public function findById(EquipajeId $id_equipaje): ?Equipaje
     {
         $aDatos = $this->datosById($id_equipaje);
         if (empty($aDatos)) {

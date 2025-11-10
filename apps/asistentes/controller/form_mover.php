@@ -11,7 +11,7 @@ use asistentes\model\entity\AsistentePub;
 use asistentes\model\entity\GestorAsistente;
 use core\ConfigGlobal;
 use core\ViewPhtml;
-use ubis\model\entity\GestorDelegacion;
+use src\ubis\application\repositories\DelegacionRepository;
 use web\Desplegable;
 use web\Hash;
 
@@ -52,13 +52,13 @@ if ($oAsistente->perm_modificar() === FALSE) {
 
     $oPosiblesCa = new PosiblesCa();
 
-    $gesDelegacion = new GestorDelegacion();
+    $repoDelegacion = new DelegacionRepository();
     $gesActividadPlazas = new GestorActividadPlazas();
     $gesAsistentes = new GestorAsistente();
     $mi_dele = ConfigGlobal::mi_delef();
-    $cDelegaciones = $gesDelegacion->getDelegaciones(array('dl' => $mi_dele));
-    $oDelegacion = $cDelegaciones[0];
-    $id_dl = $oDelegacion->getId_dl();
+    $cDelegaciones = $repoDelegacion->getDelegaciones(['dl' => $mi_dele]);
+    $oDelegacion = $cDelegaciones[0] ?? null;
+    $id_dl = $oDelegacion?->getIdDlVo()->value() ?? 0;
 
     //borrar el actual y poner la nueva
     $propietario = '';

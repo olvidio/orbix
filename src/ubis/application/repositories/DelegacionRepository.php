@@ -87,4 +87,32 @@ class DelegacionRepository implements DelegacionRepositoryInterface
     {
         return $this->repository->findById($id_dl);
     }
+
+    /* -------------------- MÉTODOS ADICIONALES (legacy utilidades) ---------- */
+
+    public function soy_region_stgr($dele = ''): bool
+    {
+        return $this->repository->soy_region_stgr($dele);
+    }
+
+    public function mi_region_stgr($dele = '')
+    {
+        return $this->repository->mi_region_stgr($dele);
+    }
+
+    public function getArrayIdSchemaRegionStgr($sRegionStgr, $mi_sfsv)
+    {
+        return $this->repository->getArrayIdSchemaRegionStgr($sRegionStgr, $mi_sfsv);
+    }
+
+    public function getArraySchemasRegionStgr($sRegionStgr, $mi_sfsv)
+    {
+        return $this->repository->getArraySchemasRegionStgr($sRegionStgr, $mi_sfsv);
+    }
+
+    public function getArrayDlRegionStgr($aRegiones = array())
+    {
+        return $this->repository->getArrayDlRegionStgr($aRegiones);
+    }
+
 }

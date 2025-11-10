@@ -2,7 +2,7 @@
 
 use core\ConfigGlobal;
 use core\ViewPhtml;
-use ubis\model\entity\GestorDelegacion;
+use src\ubis\application\repositories\DelegacionRepository;
 use web\TablaEditable;
 
 /**
@@ -60,13 +60,13 @@ $esquema = ConfigGlobal::mi_region_dl();
 $a_reg = explode('-', $esquema);
 $mi_dl = substr($a_reg[1], 0, -1); // quito la v o la f.
 $aWhere = array('region' => $a_reg[0], 'dl' => $mi_dl);
-$gesDelegacion = new GestorDelegacion();
+$gesDelegacion = new DelegacionRepository();
 $cDelegaciones = $gesDelegacion->getDelegaciones($aWhere);
 $oMiDelegacion = $cDelegaciones[0];
-$grupo_estudios = $oMiDelegacion->getGrupo_estudios();
+$grupo_estudios = $oMiDelegacion->getGrupoEstudiosVo()->value();
 
-$gesDelegacion = new ubis\model\entity\GestorDelegacion();
-$cDelegaciones = $gesDelegacion->getDelegaciones(array('grupo_estudios' => $grupo_estudios, '_ordre' => 'region,dl'));
+$gesDelegacion = new DelegacionRepository();
+$cDelegaciones = $gesDelegacion->getDelegaciones(['grupo_estudios' => $grupo_estudios, '_ordre' => 'region,dl']);
 
 $gesActividadPlazas = new actividadplazas\model\entity\GestorActividadPlazas();
 // Seleccionar actividades exportadas de los id_dl
@@ -86,10 +86,10 @@ function PlazasAB_por_actividad($dlA, $dlB, $clase)
 
     $cDelegaciones = $gesDelegacion->getDelegaciones(array('dl' => $dlA));
     $oDelegacionA = $cDelegaciones[0];
-    $id_dlA = $oDelegacionA->getId_dl();
+    $id_dlA = $oDelegacionA->getIdDlVo()?->value() ?? 0;
     $cDelegaciones = $gesDelegacion->getDelegaciones(array('dl' => $dlB));
     $oDelegacionB = $cDelegaciones[0];
-    $id_dlB = $oDelegacionB->getId_dl();
+    $id_dlB = $oDelegacionB->getIdDlVo()?->value() ?? 0;
 
     $aWhereA = array('dl_org' => $dlA,
         'id_tipo_activ' => '^' . $Qid_tipo_activ,

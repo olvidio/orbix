@@ -86,7 +86,7 @@ $cApps = $gesApps->getApps();
 $a_apps_todas = [];
 foreach ($cApps as $oApp) {
     $id_app = $oApp->getId_app();
-    $nom_app = $oApp->getNom();
+    $nom_app = $oApp->getNombreApp();
     $a_apps_todas[$id_app] = $nom_app;
 }
 

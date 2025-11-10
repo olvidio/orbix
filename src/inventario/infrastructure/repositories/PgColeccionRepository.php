@@ -9,6 +9,7 @@ use PDO;
 use PDOException;
 use src\inventario\domain\contracts\ColeccionRepositoryInterface;
 use src\inventario\domain\entity\Coleccion;
+use src\inventario\domain\value_objects\ColeccionId;
 use function core\is_true;
 
 
@@ -111,7 +112,7 @@ class PgColeccionRepository extends ClaseRepository implements ColeccionReposito
 
 	public function Eliminar(Coleccion $Coleccion): bool
     {
-        $id_coleccion = $Coleccion->getId_coleccion();
+        $id_coleccion = $Coleccion->getIdColeccionVo()?->value() ?? $Coleccion->getId_coleccion();
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         if (($oDbl->exec("DELETE FROM $nom_tabla WHERE id_coleccion = $id_coleccion")) === FALSE) {
@@ -129,29 +130,29 @@ class PgColeccionRepository extends ClaseRepository implements ColeccionReposito
 	 */
 	public function Guardar(Coleccion $Coleccion): bool
     {
-        $id_coleccion = $Coleccion->getId_coleccion();
+        $id_coleccion = $Coleccion->getIdColeccionVo()?->value() ?? $Coleccion->getId_coleccion();
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         $bInsert = $this->isNew($id_coleccion);
 
-		$aDatos = [];
-		$aDatos['nom_coleccion'] = $Coleccion->getNom_coleccion();
-		$aDatos['agrupar'] = $Coleccion->isAgrupar();
-		array_walk($aDatos, 'core\poner_null');
-		//para el caso de los boolean FALSE, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
-		if ( is_true($aDatos['agrupar']) ) { $aDatos['agrupar']='true'; } else { $aDatos['agrupar']='false'; }
+        $aDatos = [];
+        $aDatos['nom_coleccion'] = $Coleccion->getNomColeccionVo()?->value();
+        $aDatos['agrupar'] = $Coleccion->getAgruparVo()?->value();
+        array_walk($aDatos, 'core\poner_null');
+        //para el caso de los boolean FALSE, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
+        if ( is_true($aDatos['agrupar']) ) { $aDatos['agrupar']='true'; } else { $aDatos['agrupar']='false'; }
 
-		if ($bInsert === FALSE) {
-			//UPDATE
-			$update="
-					nom_coleccion            = :nom_coleccion,
-					agrupar                  = :agrupar";
-			if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_coleccion = $id_coleccion")) === FALSE) {
-				$sClaveError = 'PgColeccionRepository.update.prepare';
-				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-				return FALSE;
-			}
-				
+        if ($bInsert === FALSE) {
+            //UPDATE
+            $update="
+                    nom_coleccion            = :nom_coleccion,
+                    agrupar                  = :agrupar";
+            if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_coleccion = $id_coleccion")) === FALSE) {
+                $sClaveError = 'PgColeccionRepository.update.prepare';
+                $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
+                return FALSE;
+            }
+            
             try {
                 $oDblSt->execute($aDatos);
             } catch ( PDOException $e) {
@@ -161,16 +162,16 @@ class PgColeccionRepository extends ClaseRepository implements ColeccionReposito
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
                 return FALSE;
             }
-		} else {
-			// INSERT
-			$aDatos['id_coleccion'] = $Coleccion->getId_coleccion();
-			$campos="(id_coleccion,nom_coleccion,agrupar)";
-			$valores="(:id_coleccion,:nom_coleccion,:agrupar)";		
-			if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === FALSE) {
-				$sClaveError = 'PgColeccionRepository.insertar.prepare';
-				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-				return FALSE;
-			}
+        } else {
+            // INSERT
+            $aDatos['id_coleccion'] = $Coleccion->getIdColeccionVo()?->value() ?? $Coleccion->getId_coleccion();
+            $campos="(id_coleccion,nom_coleccion,agrupar)";
+            $valores="(:id_coleccion,:nom_coleccion,:agrupar)";        
+            if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === FALSE) {
+                $sClaveError = 'PgColeccionRepository.insertar.prepare';
+                $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
+                return FALSE;
+            }
             try {
                 $oDblSt->execute($aDatos);
             } catch ( PDOException $e) {
@@ -179,10 +180,10 @@ class PgColeccionRepository extends ClaseRepository implements ColeccionReposito
                 $sClaveError = 'PgColeccionRepository.insertar.execute';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
                 return FALSE;
-			}
-		}
-		return TRUE;
-	}
+            }
+        }
+        return TRUE;
+    }
 	
     private function isNew(int $id_coleccion): bool
     {
@@ -203,15 +204,16 @@ class PgColeccionRepository extends ClaseRepository implements ColeccionReposito
      * Devuelve los campos de la base de datos en un array asociativo.
      * Devuelve false si no existe la fila en la base de datos
      * 
-     * @param int $id_coleccion
+     * @param ColeccionId $id_coleccion
      * @return array|bool
 	
      */
-    public function datosById(int $id_coleccion): array|bool
+    public function datosById(ColeccionId $id_coleccion): array|bool
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_coleccion = $id_coleccion")) === FALSE) {
+        $id = $id_coleccion->value();
+        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_coleccion = $id")) === FALSE) {
 			$sClaveError = 'PgColeccionRepository.getDatosById';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
             return FALSE;
@@ -220,12 +222,12 @@ class PgColeccionRepository extends ClaseRepository implements ColeccionReposito
         return $aDatos;
     }
     
-	
+    
     /**
      * Busca la clase con id_coleccion en la base de datos .
 	
      */
-    public function findById(int $id_coleccion): ?Coleccion
+    public function findById(ColeccionId $id_coleccion): ?Coleccion
     {
         $aDatos = $this->datosById($id_coleccion);
         if (empty($aDatos)) {

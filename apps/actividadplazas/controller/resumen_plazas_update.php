@@ -2,6 +2,7 @@
 
 use actividadplazas\model\entity\ActividadPlazasDl;
 use core\ConfigGlobal;
+use src\ubis\application\repositories\DelegacionRepository;
 
 // INICIO Cabecera global de URL de controlador *********************************
 require_once("apps/core/global_header.inc");
@@ -31,10 +32,10 @@ switch ($que) {
 
         // buscar el id de la dl
         $id_dl = 0;
-        $gesDelegacion = new ubis\model\entity\GestorDelegacion();
-        $cDelegaciones = $gesDelegacion->getDelegaciones(array('dl' => $dl_sigla));
+        $repoDelegacion = new DelegacionRepository();
+        $cDelegaciones = $repoDelegacion->getDelegaciones(['dl' => $dl_sigla]);
         if (is_array($cDelegaciones) && count($cDelegaciones)) {
-            $id_dl = $cDelegaciones[0]->getId_dl();
+            $id_dl = $cDelegaciones[0]->getIdDlVo()->value();
         }
         //Si es la dl_org, son plazas concedidas, sino pedidas.
         $oActividadPlazasDl = new ActividadPlazasDl(array('id_activ' => $id_activ, 'id_dl' => $id_dl, 'dl_tabla' => $mi_dele));

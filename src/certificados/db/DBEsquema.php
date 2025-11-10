@@ -4,7 +4,7 @@ namespace src\certificados\db;
 
 use core\ConfigGlobal;
 use devel\model\DBAbstract;
-use ubis\model\entity\GestorDelegacion;
+use src\ubis\application\repositories\DelegacionRepository;
 
 /**
  * crear las tablas necesarias para el esquema.
@@ -28,7 +28,7 @@ class DBEsquema extends DBAbstract
     {
         $a_reg = explode('-', $this->esquema);
         $dl = $a_reg[1];
-        $gesDelegeacion = new GestorDelegacion();
+        $gesDelegeacion = new DelegacionRepository();
         if ($gesDelegeacion->soy_region_stgr($dl)) {
             $this->eliminar_e_certificados_emitidos();
         }
@@ -54,7 +54,7 @@ class DBEsquema extends DBAbstract
     {
         $a_reg = explode('-', $this->esquema);
         $dl = $a_reg[1];
-        $gesDelegeacion = new GestorDelegacion();
+        $gesDelegeacion = new DelegacionRepository();
         if ($gesDelegeacion->soy_region_stgr($dl)) {
             $this->create_e_certificados_emitidos();
         }

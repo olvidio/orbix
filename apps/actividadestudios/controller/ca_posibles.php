@@ -11,7 +11,7 @@ use personas\model\entity\GestorPersonaAgd;
 use personas\model\entity\GestorPersonaDl;
 use personas\model\entity\GestorPersonaN;
 use ubis\model\entity\CentroDl;
-use ubis\model\entity\GestorDelegacion;
+use src\ubis\application\repositories\DelegacionRepository;
 use web\Hash;
 use web\Periodo;
 use function core\is_true;
@@ -220,13 +220,13 @@ $aWhereActividad['f_ini'] = "'$inicioIso','$finIso'";
 $aOperadorActividad['f_ini'] = 'BETWEEN';
 
 if ($Qgrupo_estudios !== 'todos') {
-    $GesGrupoEst = new GestorDelegacion();
-    $cDelegaciones = $GesGrupoEst->getDelegaciones(array('grupo_estudios' => $Qgrupo_estudios));
-    if (count($cDelegaciones) > 1) $aOperadorActividad['dl_org'] = 'OR';
+    $repoDelegacion = new DelegacionRepository();
+    $cDelegaciones = $repoDelegacion->getDelegaciones(['grupo_estudios' => $Qgrupo_estudios]);
+    if (is_array($cDelegaciones) && count($cDelegaciones) > 1) { $aOperadorActividad['dl_org'] = 'OR'; }
     $mi_grupo = '';
     foreach ($cDelegaciones as $oDelegacion) {
         $mi_grupo .= empty($mi_grupo) ? '' : ',';
-        $mi_grupo .= "'" . $oDelegacion->getDl() . "'";
+        $mi_grupo .= "'" . $oDelegacion->getDlVo()->value() . "'";
     }
     $aWhereActividad['dl_org'] = $mi_grupo;
 }

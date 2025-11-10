@@ -5,6 +5,7 @@ namespace src\ubis\domain\entity;
 use core\DatosCampo;
 use core\Set;
 use function core\is_true;
+use src\ubis\domain\value_objects\{DelegacionId, DelegacionCode, RegionCode, DelegacionName, DelegacionStatus, DelegacionGrupoEstudios, DelegacionRegionStgr};
 
 /**
  * Clase que implementa la entidad xu_dl
@@ -22,46 +23,32 @@ class Delegacion
 
     /**
      * Id_dl de Delegacion
-     *
-     * @var int|null
      */
-    private int|null $iid_dl = null;
+    private ?DelegacionId $idDl = null;
     /**
-     * Dl de Delegacion
-     *
-     * @var string
+     * Dl de Delegacion (sigla)
      */
-    private string $sdl;
+    private ?DelegacionCode $dl = null;
     /**
-     * Region de Delegacion
-     *
-     * @var string
+     * Region de Delegacion (código)
      */
-    private string $sregion;
+    private ?RegionCode $region = null;
     /**
-     * Nombre_dl de Delegacion
-     *
-     * @var string|null
+     * Nombre de la Delegacion
      */
-    private string|null $snombre_dl = null;
+    private ?DelegacionName $nombreDl = null;
     /**
      * Status de Delegacion
-     *
-     * @var bool|null
      */
-    private bool|null $bstatus = null;
+    private ?DelegacionStatus $status = null;
     /**
-     * Grupo_estudios de Delegacion
-     *
-     * @var string|null
+     * Grupo de estudios
      */
-    private string|null $sgrupo_estudios = null;
+    private ?DelegacionGrupoEstudios $grupoEstudios = null;
     /**
-     * Region_stgr de Delegacion
-     *
-     * @var string|null
+     * Región STGR
      */
-    private string|null $sregion_stgr = null;
+    private ?DelegacionRegionStgr $regionStgr = null;
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
@@ -74,162 +61,190 @@ class Delegacion
     public function setAllAttributes(array $aDatos): Delegacion
     {
         if (array_key_exists('id_dl', $aDatos)) {
-            $this->setId_dl($aDatos['id_dl']);
+            $this->setIdDlVo(isset($aDatos['id_dl']) ? new DelegacionId((int)$aDatos['id_dl']) : null);
         }
         if (array_key_exists('dl', $aDatos)) {
-            $this->setDl($aDatos['dl']);
+            $this->setDlVo(isset($aDatos['dl']) && $aDatos['dl'] !== '' ? new DelegacionCode((string)$aDatos['dl']) : null);
         }
         if (array_key_exists('region', $aDatos)) {
-            $this->setRegion($aDatos['region']);
+            $this->setRegionVo(isset($aDatos['region']) && $aDatos['region'] !== '' ? new RegionCode((string)$aDatos['region']) : null);
         }
         if (array_key_exists('nombre_dl', $aDatos)) {
-            $this->setNombre_dl($aDatos['nombre_dl']);
+            $this->setNombreDlVo(DelegacionName::fromNullableString($aDatos['nombre_dl'] ?? null));
         }
         if (array_key_exists('status', $aDatos)) {
-            $this->setStatus(is_true($aDatos['status']));
+            $this->setStatusVo(isset($aDatos['status']) ? DelegacionStatus::fromScalar($aDatos['status']) : null);
         }
         if (array_key_exists('grupo_estudios', $aDatos)) {
-            $this->setGrupo_estudios($aDatos['grupo_estudios']);
+            $this->setGrupoEstudiosVo(DelegacionGrupoEstudios::fromNullableString($aDatos['grupo_estudios'] ?? null));
         }
         if (array_key_exists('region_stgr', $aDatos)) {
-            $this->setRegion_stgr($aDatos['region_stgr']);
+            $this->setRegionStgrVo(DelegacionRegionStgr::fromNullableString($aDatos['region_stgr'] ?? null));
         }
         return $this;
     }
 
-    /**
-     *
-     * @return int|null $iid_dl
-     */
-    public function getId_dl(): ?int
+    // VO API
+    public function getIdDlVo(): ?DelegacionId
     {
-        return $this->iid_dl;
+        return $this->idDl;
     }
 
-    /**
-     *
-     * @param int|null $iid_dl
-     */
+    public function setIdDlVo(?DelegacionId $iid_dl = null): void
+    {
+        $this->idDl = $iid_dl;
+    }
+
+    // Legacy scalar API (kept for mod_tabla/UI)
+    public function getId_dl(): ?int
+    {
+        return $this->idDl?->value();
+    }
+
     public function setId_dl(?int $iid_dl = null): void
     {
-        $this->iid_dl = $iid_dl;
+        $this->idDl = $iid_dl !== null ? new DelegacionId($iid_dl) : null;
     }
 
     /**
      *
      * @return string $sdl
      */
+    // VO API
+    public function getDlVo(): ?DelegacionCode
+    {
+        return $this->dl;
+    }
+
+    public function setDlVo(?DelegacionCode $sdl): void
+    {
+        $this->dl = $sdl;
+    }
+
+    // Legacy scalar API (kept for mod_tabla/UI)
     public function getDl(): string
     {
-        return $this->sdl;
+        return $this->dl?->value() ?? '';
     }
 
-    /**
-     *
-     * @param string $sdl
-     */
     public function setDl(string $sdl): void
     {
-        $this->sdl = $sdl;
+        $this->dl = $sdl !== '' ? new DelegacionCode($sdl) : null;
     }
 
-    /**
-     *
-     * @return string $sregion
-     */
+    // VO API
+    public function getRegionVo(): ?RegionCode
+    {
+        return $this->region;
+    }
+
+    public function setRegionVo(?RegionCode $sregion): void
+    {
+        $this->region = $sregion;
+    }
+
+    // Legacy scalar API (kept for mod_tabla/UI)
     public function getRegion(): string
     {
-        return $this->sregion;
+        return $this->region?->value() ?? '';
     }
 
-    /**
-     *
-     * @param string $sregion
-     */
     public function setRegion(string $sregion): void
     {
-        $this->sregion = $sregion;
+        $this->region = $sregion !== '' ? new RegionCode($sregion) : null;
     }
 
-    /**
-     *
-     * @return string|null $snombre_dl
-     */
+    // VO API
+    public function getNombreDlVo(): ?DelegacionName
+    {
+        return $this->nombreDl;
+    }
+
+    public function setNombreDlVo(?DelegacionName $snombre_dl = null): void
+    {
+        $this->nombreDl = $snombre_dl;
+    }
+
+    // Legacy scalar API (kept for mod_tabla/UI)
     public function getNombre_dl(): ?string
     {
-        return $this->snombre_dl;
+        return $this->nombreDl?->value();
     }
 
-    /**
-     *
-     * @param string|null $snombre_dl
-     */
     public function setNombre_dl(?string $snombre_dl = null): void
     {
-        $this->snombre_dl = $snombre_dl;
+        $this->nombreDl = DelegacionName::fromNullableString($snombre_dl);
     }
 
-    /**
-     *
-     * @return bool|null $bstatus
-     */
+    // VO API
+    public function getStatusVo(): ?DelegacionStatus
+    {
+        return $this->status;
+    }
+
+    public function setStatusVo(?DelegacionStatus $bstatus = null): void
+    {
+        $this->status = $bstatus;
+    }
+
+    public function getGrupoEstudiosVo(): ?DelegacionGrupoEstudios
+    {
+        return $this->grupoEstudios;
+    }
+
+    public function setGrupoEstudiosVo(?DelegacionGrupoEstudios $sgrupo_estudios = null): void
+    {
+        $this->grupoEstudios = $sgrupo_estudios;
+    }
+
+    public function getRegionStgrVo(): ?DelegacionRegionStgr
+    {
+        return $this->regionStgr;
+    }
+
+    public function setRegionStgrVo(?DelegacionRegionStgr $sregion_stgr = null): void
+    {
+        $this->regionStgr = $sregion_stgr;
+    }
+
+    // Legacy scalar API (kept for mod_tabla/UI)
     public function isStatus(): ?bool
     {
-        return $this->bstatus;
+        return $this->status?->value();
     }
 
-    /**
-     *
-     * @param bool|null $bstatus
-     */
     public function setStatus(?bool $bstatus = null): void
     {
-        $this->bstatus = $bstatus;
+        $this->status = ($bstatus === null) ? null : DelegacionStatus::fromScalar($bstatus);
     }
 
-    /**
-     *
-     * @return string|null $sgrupo_estudios
-     */
     public function getGrupo_estudios(): ?string
     {
-        return $this->sgrupo_estudios;
+        return $this->grupoEstudios?->value();
     }
 
-    /**
-     *
-     * @param string|null $sgrupo_estudios
-     */
     public function setGrupo_estudios(?string $sgrupo_estudios = null): void
     {
-        $this->sgrupo_estudios = $sgrupo_estudios;
+        $this->grupoEstudios = DelegacionGrupoEstudios::fromNullableString($sgrupo_estudios);
     }
 
-    /**
-     *
-     * @return string|null $sregion_stgr
-     */
     public function getRegion_stgr(): ?string
     {
-        return $this->sregion_stgr;
+        return $this->regionStgr?->value();
     }
 
-    /**
-     *
-     * @param string|null $sregion_stgr
-     */
     public function setRegion_stgr(?string $sregion_stgr = null): void
     {
-        $this->sregion_stgr = $sregion_stgr;
+        $this->regionStgr = DelegacionRegionStgr::fromNullableString($sregion_stgr);
     }
 
     /* ------------------- PARA el mod_tabla  -------------------------------*/
-    public function getPrimary_key()
+    public function getPrimary_key(): string
     {
         return 'id_dl';
     }
 
-    public function getDatosCampos()
+    public function getDatosCampos():array
     {
         $oDelegacionSet = new Set();
 
@@ -247,7 +262,7 @@ class Delegacion
      * DatosCampo for campo 'dl'
      * @return DatosCampo
      */
-    public function getDatosDl()
+    public function getDatosDl(): DatosCampo
     {
         $oDatosCampo = new DatosCampo();
         $oDatosCampo->setNom_camp('dl');
@@ -262,7 +277,7 @@ class Delegacion
      * DatosCampo for campo 'nombre_dl'
      * @return DatosCampo
      */
-    public function getDatosNombre_dl()
+    public function getDatosNombre_dl(): DatosCampo
     {
         $oDatosCampo = new DatosCampo();
         $oDatosCampo->setNom_camp('nombre_dl');
@@ -278,7 +293,7 @@ class Delegacion
      * DatosCampo for campo 'region'
      * @return DatosCampo
      */
-    public function getDatosRegion()
+    public function getDatosRegion(): DatosCampo
     {
         $oDatosCampo = new DatosCampo();
         $oDatosCampo->setNom_camp('region');
@@ -293,7 +308,7 @@ class Delegacion
      * DatosCampo for campo 'grupo_estudios'
      * @return DatosCampo
      */
-    public function getDatosGrupo_estudios()
+    public function getDatosGrupo_estudios(): DatosCampo
     {
         $oDatosCampo = new DatosCampo();
         $oDatosCampo->setNom_camp('grupo_estudios');
@@ -309,7 +324,7 @@ class Delegacion
      * DatosCampo for campo 'region_stgr'
      * @return DatosCampo
      */
-    public function getDatosRegion_stgr()
+    public function getDatosRegion_stgr(): DatosCampo
     {
         $oDatosCampo = new DatosCampo();
         $oDatosCampo->setNom_camp('region_stgr');
@@ -325,7 +340,7 @@ class Delegacion
      * DatosCampo for campo 'status'
      * @return DatosCampo
      */
-    public function getDatosStatus()
+    public function getDatosStatus(): DatosCampo
     {
         $oDatosCampo = new DatosCampo();
         $oDatosCampo->setNom_camp('status');

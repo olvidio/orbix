@@ -10,7 +10,7 @@ use notas\model\entity\GestorNota;
 use notas\model\entity\GestorPersonaNotaDB;
 use notas\model\entity\PersonaNotaDB;
 use profesores\model\entity\GestorProfesor;
-use ubis\model\entity\GestorDelegacion;
+use src\ubis\application\services\DelegacionDropdown;
 use web\Desplegable;
 use web\Hash;
 
@@ -79,8 +79,7 @@ switch ($Qque) {
             $Qdl_org = ConfigGlobal::mi_delef();
         }
 
-        $oGesDl = new GestorDelegacion();
-        $oDesplDelegacionesOrg = $oGesDl->getListaDelegacionesURegiones();
+        $oDesplDelegacionesOrg = DelegacionDropdown::delegacionesURegiones();
         $oDesplDelegacionesOrg->setNombre('dl_org');
         $oDesplDelegacionesOrg->setOpcion_sel($Qdl_org);
         $oDesplDelegacionesOrg->setAction('fnjs_buscar_ca()');

@@ -10,7 +10,7 @@ final class DelegacionCode
     {
         $value = trim($value);
         $this->validate($value);
-        $this->value = strtoupper($value);
+        $this->value = $value;
     }
 
     private function validate(string $value): void
@@ -19,10 +19,11 @@ final class DelegacionCode
             throw new \InvalidArgumentException('DelegacionCode cannot be empty');
         }
         // By UI convention for codes, cap length to 6 unless otherwise specified
-        if (mb_strlen($value) > 6) {
+        if (mb_strlen($value) > 8) {
             throw new \InvalidArgumentException('DelegacionCode must be at most 6 characters');
         }
-        if (!preg_match('/^[A-Za-z0-9_-]+$/u', $value)) {
+        // incluir el '+' para csr+
+        if (!preg_match('/^[\+A-Za-z0-9_-]+$/u', $value)) {
             throw new \InvalidArgumentException('DelegacionCode has invalid characters');
         }
     }

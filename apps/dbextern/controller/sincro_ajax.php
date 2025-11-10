@@ -8,7 +8,7 @@ use dbextern\model\entity\IdMatchPersona;
 use dbextern\model\SincroDB;
 use Illuminate\Http\JsonResponse;
 use ubis\model\entity\GestorCentroDl;
-use ubis\model\entity\GestorDelegacion;
+use src\ubis\application\repositories\DelegacionRepository;
 
 // INICIO Cabecera global de URL de controlador *********************************
 require_once("apps/core/global_header.inc");
@@ -251,9 +251,9 @@ switch ($que) {
         } else {
             $dl_dst = 'cr'.$dl;
         }
-        $gesDl = new GestorDelegacion();
-        $cDl = $gesDl->getDelegaciones(['dl' => $dl_dst, 'status' => 't']);
-        $region_dst = $cDl[0]->getRegion();
+        $repoDelegacion = new \src\ubis\application\repositories\DelegacionRepository();
+        $cDl = $repoDelegacion->getDelegaciones(['dl' => $dl_dst, 'status' => 't']);
+        $region_dst = $cDl[0]->getRegionVo()->value();
 
         if ($region_dst !== ConfigGlobal::mi_region()) {
             echo "\n";

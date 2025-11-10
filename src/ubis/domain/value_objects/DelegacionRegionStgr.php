@@ -10,7 +10,7 @@ final class DelegacionRegionStgr
     {
         $value = trim($value);
         $this->validate($value);
-        $this->value = strtoupper($value);
+        $this->value = $value;
     }
 
     private function validate(string $value): void
@@ -18,7 +18,7 @@ final class DelegacionRegionStgr
         if ($value === '') {
             throw new \InvalidArgumentException('DelegacionRegionStgr cannot be empty');
         }
-        if (mb_strlen($value) > 5) {
+        if (mb_strlen($value) > 6) {
             throw new \InvalidArgumentException('DelegacionRegionStgr must be at most 5 characters');
         }
         if (!preg_match('/^[A-Za-z0-9_-]+$/u', $value)) {

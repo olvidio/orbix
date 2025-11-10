@@ -6,7 +6,7 @@ use core\ConfigGlobal;
 use web\Desplegable;
 use web\Lista;
 use web\TiposActividades;
-use ubis\model\entity\GestorDelegacion;
+use src\ubis\application\services\DelegacionDropdown;
 use function core\is_true;
 
 /**
@@ -135,20 +135,15 @@ switch ($Qsalida) {
     case "dl_org";
         $sfsv = $Qentrada;
         $dl_default = ConfigGlobal::mi_delef($sfsv);
-        $oGesDl = new GestorDelegacion();
-        $oDesplDelegacionesOrg = $oGesDl->getListaDelegacionesURegiones($sfsv);
-        $oDesplDelegacionesOrg->setNombre('dl_org');
+        $oDesplDelegacionesOrg = DelegacionDropdown::delegacionesURegiones($sfsv, true, 'dl_org');
         $oDesplDelegacionesOrg->setOpcion_sel($dl_default);
         echo $oDesplDelegacionesOrg->desplegable();
         break;
     case "filtro_lugar";
         $sfsv = $Qentrada;
         $dl_default = ConfigGlobal::mi_delef($sfsv);
-        $oGesDl = new GestorDelegacion();
-
-        $oDesplFiltroLugar = $oGesDl->getListaDlURegionesFiltro($sfsv);
+        $oDesplFiltroLugar = DelegacionDropdown::dlURegionesFiltro($sfsv, 'filtro_lugar');
         $oDesplFiltroLugar->setAction('fnjs_lugar()');
-        $oDesplFiltroLugar->setNombre('filtro_lugar');
         echo $oDesplFiltroLugar->desplegable();
         break;
     default:

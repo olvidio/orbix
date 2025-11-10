@@ -15,7 +15,7 @@ use core\ConfigGlobal;
 use core\ViewPhtml;
 use web\Hash;
 use web\Periodo;
-use ubis\model\entity\GestorDelegacion;
+use src\ubis\application\repositories\DelegacionRepository;
 use web\TablaEditable;
 
 require_once("apps/core/global_header.inc");
@@ -98,21 +98,21 @@ $status = \actividades\model\entity\ActividadAll::STATUS_ACTUAL; //actual
 $mi_reg = ConfigGlobal::mi_region();
 $mi_dl = ConfigGlobal::mi_delef();
 $aWhere = array('region' => $mi_reg, 'dl' => $mi_dl);
-$gesDelegacion = new GestorDelegacion();
-$cDelegaciones = $gesDelegacion->getDelegaciones($aWhere);
+$repoDelegacion = new DelegacionRepository();
+$cDelegaciones = $repoDelegacion->getDelegaciones($aWhere);
 if (empty($cDelegaciones)) {
     $msg = sprintf(_("No se ha definido ninguna dl='%s' en la región '%s'."),$mi_dl, $mi_reg);
     exit ($msg);
 }
 $oMiDelegacion = $cDelegaciones[0];
-$grupo_estudios = $oMiDelegacion->getGrupo_estudios();
+$grupo_estudios = $oMiDelegacion->getGrupoEstudiosVo()->value();
 
 $cDelegaciones = [];
 if (empty($grupo_estudios)) {
     $cDelegaciones[] = $oMiDelegacion;
 } else {
-    $gesDelegacion = new ubis\model\entity\GestorDelegacion();
-    $cDelegaciones = $gesDelegacion->getDelegaciones(array('grupo_estudios' => $grupo_estudios, '_ordre' => 'region,dl'));
+    $repoDelegacion = new DelegacionRepository();
+    $cDelegaciones = $repoDelegacion->getDelegaciones(['grupo_estudios' => $grupo_estudios, '_ordre' => 'region,dl']);
 }
 $gesActividadPlazas = new GestorActividadPlazas();
 // Seleccionar actividades exportadas de los id_dl
@@ -123,8 +123,8 @@ $gesActividades = new actividades\model\entity\GestorActividad();
 $k = 0;
 foreach ($cDelegaciones as $oDelegacion) {
     $k++;
-    $dl = $oDelegacion->getDl();
-    $id_dl = $oDelegacion->getId_dl();
+    $dl = $oDelegacion->getDlVo()?->value();
+    $id_dl = $oDelegacion->getIdDlVo()?->value() ?? 0;
     $a_grupo[$dl] = $id_dl;
     $aWhere = array('dl_org' => $dl,
         'id_tipo_activ' => $id_tipo_activ,

@@ -8,7 +8,7 @@ use src\usuarios\application\repositories\LocalRepository;
 use ubis\model\entity\Centro;
 use ubis\model\entity\CentroDl;
 use ubis\model\entity\GestorCentroDl;
-use ubis\model\entity\GestorDelegacion;
+use src\ubis\application\repositories\DelegacionRepository;
 use web\Desplegable;
 use web\Hash;
 
@@ -123,8 +123,15 @@ if (!empty($Qnuevo)) {
 }
 
 // para la dl
-$gesDl = new GestorDelegacion();
-$a_dl_todas = $gesDl->getArrayDelegacionesActuales();
+$repoDl = new DelegacionRepository();
+$cDeleg = $repoDl->getDelegaciones(['status' => true, '_ordre' => 'dl']);
+$a_dl_todas = [];
+if (is_array($cDeleg)) {
+    foreach ($cDeleg as $oDeleg) {
+        $dl_sigla = $oDeleg->getDlVo()->value();
+        $a_dl_todas[$dl_sigla] = $dl_sigla;
+    }
+}
 
 // si es nuevo de paso, solamente permito las dl que no están en aquinate.
 if ($Qnuevo === 1 && $Qobj_pau === 'PersonaEx') {

@@ -5,7 +5,7 @@ namespace actividadestudios\model\entity;
 use core\ClaseGestor;
 use core\Condicion;
 use core\Set;
-use ubis\model\entity\GestorDelegacion;
+use src\ubis\application\repositories\DelegacionRepository;
 
 /**
  * GestorMatricula
@@ -183,9 +183,11 @@ class GestorMatricula extends ClaseGestor
         $schema = $_SESSION['session_auth']['esquema'];
         $a_reg = explode('-', $schema);
         $RegionStgr = $a_reg[0];
-        $gesDl = new GestorDelegacion();
-        $a_dl_de_la_region_stgr = $gesDl->getArrayDlRegionStgr([$RegionStgr]);
-        $str_dl = "'" . implode("', '",$a_dl_de_la_region_stgr) ."'";
+        $repoDl = new DelegacionRepository();
+        $a_id_dl_dl = $repoDl->getArrayDlRegionStgr([$RegionStgr]); // [id_dl => dl]
+        // solo valores (siglas dl)
+        $a_dl_vals = array_values($a_id_dl_dl);
+        $str_dl = "'" . implode("', '", $a_dl_vals) . "'";
 
         // Personas de paso asistentes a las actividades
         $sqlA  = "SELECT m.id_nom, m.id_activ 

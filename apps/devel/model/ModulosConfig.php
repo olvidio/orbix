@@ -50,7 +50,7 @@ class ModulosConfig
     {
         foreach ($this->cApps as $oApp) {
             $id_app = $oApp->getId_app();
-            $nom_app = $oApp->getNom();
+            $nom_app = $oApp->getNombreApp();
             $this->a_apps_todas[$id_app] = $nom_app;
         }
         return $this->a_apps_todas;

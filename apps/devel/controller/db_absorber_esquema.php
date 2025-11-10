@@ -1,7 +1,7 @@
 <?php
 
 use devel\model\DBAlterSchema;
-use ubis\model\entity\GestorDelegacion;
+use src\ubis\application\repositories\DelegacionRepository;
 use ubis\model\entity\Delegacion;
 
 // INICIO Cabecera global de URL de controlador *********************************
@@ -234,11 +234,11 @@ $oAlterSchema->setInserts($aInserts);
 $region_old = strtok($QEsquemaDel, '-');
 $dl_old = strtok('-');
 
-$gesDelegaciones = new GestorDelegacion();
+$gesDelegaciones = new DelegacionRepository();
 $cDelegaciones = $gesDelegaciones->getDelegaciones(['dl' => $dl_old, 'region' => $region_old]);
-$id_dl_old = $cDelegaciones[0]->getId_dl();
+$id_dl_old = $cDelegaciones[0]->getIdDlVo()?->value() ?? 0;
 $cDelegaciones = $gesDelegaciones->getDelegaciones(['dl' => $dl_new, 'region' => $region_new]);
-$id_dl_new = $cDelegaciones[0]->getId_dl();
+$id_dl_new = $cDelegaciones[0]->getIdDlVo()?->value() ?? 0;
 
 $aDatos = [
     ['tabla' => 'da_plazas_dl', 'campo' => 'id_dl', 'old' => "$id_dl_old", 'new' => "$id_dl_new"],
@@ -312,10 +312,15 @@ $oAlterSchema->insertarCargos();
 
 // De las tablas de encargos y zonas, no hago nada....
 
-// Poner la dl en incativo:
-$oDelegacion = new Delegacion($id_dl_old);
+// Poner la dl en inactivo:
+$DelegacionRepository = new DelegacionRepository();
+$oDelegacion = $DelegacionRepository->findById($id_dl_old);
 $oDelegacion->setStatus(FALSE);
-$oDelegacion->DBGuardar();
+if ($DelegacionRepository->Guardar($oDelegacion) === false) {
+    $error_txt = _("hay un error, no se ha guardado");
+    $error_txt .= "\n" . $DelegacionRepository->getErrorTxt();
+}
+
 
 // cambiar nombre del esquema (para no borrar):
 $oDBRol = new core\DBRol();

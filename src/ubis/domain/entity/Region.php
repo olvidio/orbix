@@ -5,6 +5,8 @@ namespace src\ubis\domain\entity;
 use core\DatosCampo;
 use core\Set;
 use function core\is_true;
+use src\ubis\domain\value_objects\RegionCode;
+use src\ubis\domain\value_objects\RegionId;
 
 /**
  * Clase que implementa la entidad xu_region
@@ -88,6 +90,17 @@ class Region
         $this->iid_region = $iid_region;
     }
 
+    // Value Object API for id_region
+    public function getIdRegionVo(): ?RegionId
+    {
+        return $this->iid_region !== null ? new RegionId($this->iid_region) : null;
+    }
+
+    public function setIdRegionVo(?RegionId $id = null): void
+    {
+        $this->iid_region = $id?->value();
+    }
+
     /**
      *
      * @return string $sregion
@@ -104,6 +117,18 @@ class Region
     public function setRegion(string $sregion): void
     {
         $this->sregion = $sregion;
+    }
+
+    // Value Object API for region code (sigla)
+    public function getRegionVo(): ?RegionCode
+    {
+        // Return null if empty or unset to allow optional usage
+        return isset($this->sregion) && $this->sregion !== '' ? new RegionCode($this->sregion) : null;
+    }
+
+    public function setRegionVo(?RegionCode $code = null): void
+    {
+        $this->sregion = $code?->value() ?? '';
     }
 
     /**
@@ -143,7 +168,7 @@ class Region
     }
 
     /* ------------------- PARA el mod_tabla  -------------------------------*/
-    public function getPrimary_key()
+    public function getPrimary_key(): string
     {
         return 'id_region';
     }

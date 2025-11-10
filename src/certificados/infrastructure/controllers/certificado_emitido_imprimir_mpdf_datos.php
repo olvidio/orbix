@@ -8,7 +8,7 @@ use notas\model\entity\GestorPersonaNotaDB;
 use notas\model\PersonaNota;
 use personas\model\entity\Persona;
 use src\certificados\application\repositories\CertificadoEmitidoRepository;
-use ubis\model\entity\GestorDelegacion;
+use src\ubis\application\repositories\DelegacionRepository;
 use web\ContestarJson;
 use web\DateTimeLocal;
 use function core\is_true;
@@ -124,7 +124,7 @@ $data['cAsignaturas'] = $cAsignaturas;
 // Asignaturas cursadas:
 // solamente las notas de mi región_stgr. Normalmente serian las notas_dl,
 // pero para casos como H-Hv...
-$gesDelegacion = new GestorDelegacion();
+$gesDelegacion = new DelegacionRepository();
 $mi_dl = ConfigGlobal::mi_dele();
 $a_mi_region_stgr = $gesDelegacion->mi_region_stgr($mi_dl);
 $region_stgr = $a_mi_region_stgr['region_stgr'];

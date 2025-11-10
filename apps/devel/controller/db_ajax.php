@@ -1,7 +1,7 @@
 <?php
 
 use web\Desplegable;
-use ubis\model\entity\GestorDelegacion;
+use src\ubis\application\repositories\DelegacionRepository;
 
 /*
 * Devuelvo un desplegable con los valores posibles segun el valor de entrada.
@@ -24,16 +24,20 @@ switch ($Qsalida) {
 
         $region = $Qentrada;
 
-        $oGesDl = new GestorDelegacion();
-        $aOpcionesDl = $oGesDl->getArrayDelegaciones(array("$region"));
-        asort($aOpcionesDl);
+        $repoDl = new DelegacionRepository();
+        // Filtrar delegaciones por región si se facilita
+        $aWhere = ['status' => true];
+        if (!empty($region)) { $aWhere['region'] = $region; }
+        $cDelegaciones = $repoDl->getDelegaciones($aWhere, ['_ordre' => 'dl']);
         // poner el valor del desplegable igual al texto, no id.
         $aOpciones = [];
-        foreach ($aOpcionesDl as $value) {
-            $aOpciones[$value] = $value;
+        if (is_array($cDelegaciones)) {
+            foreach ($cDelegaciones as $oDeleg) {
+                $dl = $oDeleg->getDlVo()->value();
+                $aOpciones[$dl] = $dl;
+            }
         }
-        // Añadir cr y gestión
-        //$aOpciones['cr'] = _("personas de cr (no dl)");
+        // Añadir gestión global (region)
         $aOpciones[$region] = _("para gestión global");
 
         $oDesplDelegaciones = new Desplegable();

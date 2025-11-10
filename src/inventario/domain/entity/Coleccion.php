@@ -2,9 +2,12 @@
 
 namespace src\inventario\domain\entity;
 
-	use core\DatosCampo;
+ use core\DatosCampo;
     use core\Set;
     use function core\is_true;
+    use src\inventario\domain\value_objects\ColeccionId;
+    use src\inventario\domain\value_objects\ColeccionName;
+    use src\inventario\domain\value_objects\ColeccionAgrupar;
 /**
  * Clase que implementa la entidad i_colecciones_dl
  *
@@ -109,6 +112,41 @@ class Coleccion {
 	{
 		$this->bagrupar = $bagrupar;
 	}
+
+    // Value Object API (duplicada con legacy)
+    public function getIdColeccionVo(): ?ColeccionId
+    {
+        return isset($this->iid_coleccion) ? new ColeccionId($this->iid_coleccion) : null;
+    }
+
+    public function setIdColeccionVo(?ColeccionId $id = null): void
+    {
+        if ($id === null) {
+            // dejar como está; id puede ser seteado por repos
+            return;
+        }
+        $this->iid_coleccion = $id->value();
+    }
+
+    public function getNomColeccionVo(): ?ColeccionName
+    {
+        return isset($this->snom_coleccion) && $this->snom_coleccion !== '' ? new ColeccionName($this->snom_coleccion) : null;
+    }
+
+    public function setNomColeccionVo(?ColeccionName $name = null): void
+    {
+        $this->snom_coleccion = $name?->value() ?? '';
+    }
+
+    public function getAgruparVo(): ?ColeccionAgrupar
+    {
+        return isset($this->bagrupar) ? new ColeccionAgrupar((bool)$this->bagrupar) : null;
+    }
+
+    public function setAgruparVo(?ColeccionAgrupar $agrupar = null): void
+    {
+        $this->bagrupar = $agrupar?->value();
+    }
 
     /* ------------------- PARA el mod_tabla  -------------------------------*/
     public function getPrimary_key()

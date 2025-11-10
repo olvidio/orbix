@@ -418,10 +418,10 @@ switch ($Qmod) {
                 $mi_dele = ConfigGlobal::mi_delef();
                 if (!empty($Qplazas) && ($plazas_old != $Qplazas) && $Qdl_org == $mi_dele) {
                     $id_dl = 0;
-                    $gesDelegacion = new ubis\model\entity\GestorDelegacion();
-                    $cDelegaciones = $gesDelegacion->getDelegaciones(array('dl' => $mi_dele));
+                    $repoDelegacion = new src\ubis\application\repositories\DelegacionRepository();
+                    $cDelegaciones = $repoDelegacion->getDelegaciones(array('dl' => $mi_dele));
                     if (is_array($cDelegaciones) && count($cDelegaciones)) {
-                        $id_dl = $cDelegaciones[0]->getId_dl();
+                        $id_dl = $cDelegaciones[0]->getIdDlVo()?->value() ?? 0;
                     }
                     // si ya tengo algo, mejor no toco. (a no ser que tenga todas)
                     $oGesActividadPlazas = new GestorActividadPlazas();

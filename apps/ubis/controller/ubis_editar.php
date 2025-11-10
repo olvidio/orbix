@@ -4,8 +4,8 @@ use core\ConfigGlobal;
 use core\ViewPhtml;
 use ubis\model\entity\CasaDl;
 use ubis\model\entity\CentroDl;
-use ubis\model\entity\GestorDelegacion;
-use ubis\model\entity\GestorRegion;
+use src\ubis\application\services\DelegacionDropdown;
+use src\ubis\application\services\RegionDropdown;
 use web\Desplegable;
 use web\Hash;
 use function core\is_true;
@@ -117,7 +117,7 @@ if (!empty($Qnuevo)) {
     }
     // si es de la dl, poner que obj_pau sea dl:
     if ($es_de_dl) {
-        if ($tipo_ubi == 'ctrdl') {
+        if ($tipo_ubi === 'ctrdl') {
             $oUbi_new = new CentroDl($id_ubi);
             // comprobar que realmente es el mismo:
             $nombre_ubi_new = $oUbi_new->getNombre_ubi();
@@ -125,7 +125,7 @@ if (!empty($Qnuevo)) {
                 $Qobj_pau = 'CentroDl';
             }
         }
-        if ($tipo_ubi == 'cdcdl') {
+        if ($tipo_ubi === 'cdcdl') {
             $oUbi_new = new CasaDl($id_ubi);
             // comprobar que realmente es el mismo:
             $nombre_ubi_new = $oUbi_new->getNombre_ubi();
@@ -139,18 +139,14 @@ if (!empty($Qnuevo)) {
 $isfsv = ConfigGlobal::mi_sfsv();
 // Para incluir o no la propia dl
 $Bdl = 't';
-$oGesDl = new GestorDelegacion();
 // si es ctr, dlbf, si es casa dlb
-if ($Qobj_pau == 'CasaDl' || $Qobj_pau == 'Casa' || $Qobj_pau == 'CasaEx') {
-    $oDesplDelegaciones = $oGesDl->getListaDelegacionesURegiones(1, $Bdl);
+if ($Qobj_pau === 'CasaDl' || $Qobj_pau === 'Casa' || $Qobj_pau === 'CasaEx') {
+    $oDesplDelegaciones = DelegacionDropdown::delegacionesURegiones(1, $Bdl, 'dl');
 } else {
-    $oDesplDelegaciones = $oGesDl->getListaDelegacionesURegiones($isfsv, $Bdl);
+    $oDesplDelegaciones = DelegacionDropdown::delegacionesURegiones($isfsv, $Bdl, 'dl');
 }
-$oDesplDelegaciones->setNombre('dl');
 
-$gesReiones = new GestorRegion();
-$oDesplRegiones = $gesReiones->getListaRegiones();
-$oDesplRegiones->setNombre('region');
+$oDesplRegiones = RegionDropdown::activasOrdenNombre('region');
 
 //----------------------------------Permisos según el usuario
 $oMiUsuario = ConfigGlobal::MiUsuario();
@@ -319,7 +315,7 @@ switch ($tipo_ubi) {
     case "cdcdl":
     case "cdcex":
         // OJO LAS CASAS pueden ser comunes. la dl es sin 'f'.
-        if ($tipo_ubi == "cdcdl") {
+        if ($tipo_ubi === "cdcdl") {
             $dl = empty($dl) ? ConfigGlobal::mi_dele() : $dl;
             $region = empty($region) ? ConfigGlobal::mi_region() : $region;
         }

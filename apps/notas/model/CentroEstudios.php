@@ -4,7 +4,7 @@ namespace notas\model;
 
 use core\ConfigDB;
 use core\DBConnection;
-use ubis\model\entity\Delegacion;
+use src\ubis\application\repositories\DelegacionRepository;
 
 class CentroEstudios
 {
@@ -23,11 +23,12 @@ class CentroEstudios
     {
         $ce_lugar = '';
 
+        $DelegacionRepository = new DelegacionRepository();
         foreach ($aDl as $id_dl) {
             //conseguir nombre del esquema de cada dl
-            $Delegacion = new Delegacion($id_dl);
-            $dl = $Delegacion->getDl();
-            $region = $Delegacion->getRegion();
+            $Delegacion = $DelegacionRepository->findById($id_dl);
+            $dl = $Delegacion->getDlVo()?->value() ?? '';
+            $region = $Delegacion->getRegionVo()?->value() ?? '';
 
             $esquema = $region . '-' . $dl;
 

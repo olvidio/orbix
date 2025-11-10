@@ -3,6 +3,9 @@
 namespace src\inventario\domain\entity;
 use core\DatosCampo;
 use core\Set;
+use src\inventario\domain\value_objects\UbiInventarioId;
+use src\inventario\domain\value_objects\UbiInventarioName;
+use src\inventario\domain\value_objects\UbiInventarioIdActiv;
 
 /**
  * Clase que implementa la entidad i_ubis_dl
@@ -108,6 +111,38 @@ class UbiInventario {
 	{
 		$this->iid_ubi_activ = $iid_ubi_activ;
 	}
+
+    // Value Object API (duplicada con legacy)
+    public function getIdUbiVo(): ?UbiInventarioId
+    {
+        return isset($this->iid_ubi) ? new UbiInventarioId($this->iid_ubi) : null;
+    }
+
+    public function setIdUbiVo(?UbiInventarioId $id = null): void
+    {
+        if ($id === null) { return; }
+        $this->iid_ubi = $id->value();
+    }
+
+    public function getNomUbiVo(): ?UbiInventarioName
+    {
+        return isset($this->snom_ubi) && $this->snom_ubi !== '' ? new UbiInventarioName($this->snom_ubi) : null;
+    }
+
+    public function setNomUbiVo(?UbiInventarioName $name = null): void
+    {
+        $this->snom_ubi = $name?->value() ?? '';
+    }
+
+    public function getIdUbiActivVo(): ?UbiInventarioIdActiv
+    {
+        return isset($this->iid_ubi_activ) && $this->iid_ubi_activ !== null ? new UbiInventarioIdActiv($this->iid_ubi_activ) : null;
+    }
+
+    public function setIdUbiActivVo(?UbiInventarioIdActiv $id = null): void
+    {
+        $this->iid_ubi_activ = $id?->value();
+    }
 
     /* ------------------- PARA el mod_tabla  -------------------------------*/
     public function getPrimary_key()

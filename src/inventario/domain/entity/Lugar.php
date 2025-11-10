@@ -3,6 +3,9 @@
 namespace src\inventario\domain\entity;
 use core\DatosCampo;
 use core\Set;
+use src\inventario\domain\value_objects\LugarId;
+use src\inventario\domain\value_objects\UbiInventarioId;
+use src\inventario\domain\value_objects\LugarName;
 
 /**
  * Clase que implementa la entidad i_lugares_dl
@@ -108,6 +111,39 @@ class Lugar {
 	{
 		$this->snom_lugar = $snom_lugar;
 	}
+
+    // Value Object API (duplicada con legacy)
+    public function getIdLugarVo(): ?LugarId
+    {
+        return isset($this->iid_lugar) ? new LugarId($this->iid_lugar) : null;
+    }
+
+    public function setIdLugarVo(?LugarId $id = null): void
+    {
+        if ($id === null) { return; }
+        $this->iid_lugar = $id->value();
+    }
+
+    public function getIdUbiVo(): ?UbiInventarioId
+    {
+        return isset($this->iid_ubi) ? new UbiInventarioId($this->iid_ubi) : null;
+    }
+
+    public function setIdUbiVo(?UbiInventarioId $id = null): void
+    {
+        if ($id === null) { return; }
+        $this->iid_ubi = $id->value();
+    }
+
+    public function getNomLugarVo(): ?LugarName
+    {
+        return isset($this->snom_lugar) && $this->snom_lugar !== '' ? new LugarName($this->snom_lugar) : null;
+    }
+
+    public function setNomLugarVo(?LugarName $name = null): void
+    {
+        $this->snom_lugar = $name?->value() ?? '';
+    }
 
     /* ------------------- PARA el mod_tabla  -------------------------------*/
     public function getPrimary_key()

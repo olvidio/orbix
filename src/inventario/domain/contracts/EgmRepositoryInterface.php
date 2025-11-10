@@ -4,6 +4,7 @@ namespace src\inventario\domain\contracts;
 
 use PDO;
 use src\inventario\domain\entity\Egm;
+use src\inventario\domain\value_objects\EgmItemId;
 
 
 /**
@@ -51,17 +52,17 @@ interface EgmRepositoryInterface
      * Devuelve los campos de la base de datos en un array asociativo.
      * Devuelve false si no existe la fila en la base de datos
      * 
-     * @param int $id_item
+     * @param EgmItemId $id_item
      * @return array|bool
 	
      */
-    public function datosById(int $id_item): array|bool;
+    public function datosById(EgmItemId $id_item): array|bool;
 	
     /**
      * Busca la clase con id_item en el repositorio.
 	
      */
-    public function findById(int $id_item): ?Egm;
+    public function findById(EgmItemId $id_item): ?Egm;
 	
     public function getNewId();
 }

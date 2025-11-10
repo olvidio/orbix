@@ -13,6 +13,7 @@
 use core\ConfigGlobal;
 use core\ViewPhtml;
 use web\Hash;
+use src\ubis\application\services\DelegacionDropdown;
 
 require_once("apps/core/global_header.inc");
 // Archivos requeridos por esta url **********************************************
@@ -41,11 +42,8 @@ if (empty($Qid_tipo_activ)) {
     $Qid_tipo_activ = $oTipoActiv->getId_tipo_activ();
 }
 
-$aRegiones = array('H');
-$gesDelegacion = new ubis\model\entity\GestorDelegacion();
-$desplDelegaciones = $gesDelegacion->getListaDelegaciones($aRegiones);
-$desplDelegaciones->setNombre("dl");
-$desplDelegaciones->setAction("fnjs_comparativa()");
+$desplDelegaciones = DelegacionDropdown::activasOrdenNombre('dl');
+$desplDelegaciones->setAction("fnjs_comparativa()") ;
 
 $mi_dele = ConfigGlobal::mi_delef();
 $txt = sprintf(_("comparar %s con:"), $mi_dele);

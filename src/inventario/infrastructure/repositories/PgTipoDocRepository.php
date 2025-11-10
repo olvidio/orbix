@@ -116,7 +116,7 @@ class PgTipoDocRepository extends ClaseRepository implements TipoDocRepositoryIn
 
 	public function Eliminar(TipoDoc $TipoDoc): bool
     {
-        $id_tipo_doc = $TipoDoc->getId_tipo_doc();
+        $id_tipo_doc = $TipoDoc->getIdTipoDocVo()->value();
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         if (($oDbl->exec("DELETE FROM $nom_tabla WHERE id_tipo_doc = $id_tipo_doc")) === FALSE) {
@@ -134,41 +134,41 @@ class PgTipoDocRepository extends ClaseRepository implements TipoDocRepositoryIn
 	 */
 	public function Guardar(TipoDoc $TipoDoc): bool
     {
-        $id_tipo_doc = $TipoDoc->getId_tipo_doc();
+        $id_tipo_doc = $TipoDoc->getIdTipoDocVo()->value();
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         $bInsert = $this->isNew($id_tipo_doc);
 
-		$aDatos = [];
-		$aDatos['nom_doc'] = $TipoDoc->getNom_doc();
-		$aDatos['sigla'] = $TipoDoc->getSigla();
-		$aDatos['observ'] = $TipoDoc->getObserv();
-		$aDatos['id_coleccion'] = $TipoDoc->getId_coleccion();
-		$aDatos['bajo_llave'] = $TipoDoc->isBajo_llave();
-		$aDatos['vigente'] = $TipoDoc->isVigente();
-		$aDatos['numerado'] = $TipoDoc->isNumerado();
-		array_walk($aDatos, 'core\poner_null');
-		//para el caso de los boolean FALSE, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
-		if ( is_true($aDatos['bajo_llave']) ) { $aDatos['bajo_llave']='true'; } else { $aDatos['bajo_llave']='false'; }
-		if ( is_true($aDatos['vigente']) ) { $aDatos['vigente']='true'; } else { $aDatos['vigente']='false'; }
-		if ( is_true($aDatos['numerado']) ) { $aDatos['numerado']='true'; } else { $aDatos['numerado']='false'; }
+        $aDatos = [];
+        $aDatos['nom_doc'] = $TipoDoc->getNomDocVo()?->value();
+        $aDatos['sigla'] = $TipoDoc->getSiglaVo()?->value();
+        $aDatos['observ'] = $TipoDoc->getObservVo()?->value();
+        $aDatos['id_coleccion'] = $TipoDoc->getIdColeccionVo()?->value();
+        $aDatos['bajo_llave'] = $TipoDoc->getBajoLlaveVo()?->value();
+        $aDatos['vigente'] = $TipoDoc->getVigenteVo()?->value();
+        $aDatos['numerado'] = $TipoDoc->getNumeradoVo()->value();
+        array_walk($aDatos, 'core\poner_null');
+        //para el caso de los boolean FALSE, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
+        if ( is_true($aDatos['bajo_llave']) ) { $aDatos['bajo_llave']='true'; } else { $aDatos['bajo_llave']='false'; }
+        if ( is_true($aDatos['vigente']) ) { $aDatos['vigente']='true'; } else { $aDatos['vigente']='false'; }
+        if ( is_true($aDatos['numerado']) ) { $aDatos['numerado']='true'; } else { $aDatos['numerado']='false'; }
 
-		if ($bInsert === FALSE) {
-			//UPDATE
-			$update="
-					nom_doc                  = :nom_doc,
-					sigla                    = :sigla,
-					observ                   = :observ,
-					id_coleccion             = :id_coleccion,
-					bajo_llave               = :bajo_llave,
-					vigente                  = :vigente,
-					numerado                 = :numerado";
-			if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_tipo_doc = $id_tipo_doc")) === FALSE) {
-				$sClaveError = 'PgTipoDocRepository.update.prepare';
-				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-				return FALSE;
-			}
-				
+        if ($bInsert === FALSE) {
+            //UPDATE
+            $update="
+                    nom_doc                  = :nom_doc,
+                    sigla                    = :sigla,
+                    observ                   = :observ,
+                    id_coleccion             = :id_coleccion,
+                    bajo_llave               = :bajo_llave,
+                    vigente                  = :vigente,
+                    numerado                 = :numerado";
+            if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_tipo_doc = $id_tipo_doc")) === FALSE) {
+                $sClaveError = 'PgTipoDocRepository.update.prepare';
+                $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
+                return FALSE;
+            }
+            
             try {
                 $oDblSt->execute($aDatos);
             } catch ( PDOException $e) {
@@ -178,16 +178,16 @@ class PgTipoDocRepository extends ClaseRepository implements TipoDocRepositoryIn
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
                 return FALSE;
             }
-		} else {
-			// INSERT
-			$aDatos['id_tipo_doc'] = $TipoDoc->getId_tipo_doc();
-			$campos="(id_tipo_doc,nom_doc,sigla,observ,id_coleccion,bajo_llave,vigente,numerado)";
-			$valores="(:id_tipo_doc,:nom_doc,:sigla,:observ,:id_coleccion,:bajo_llave,:vigente,:numerado)";		
-			if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === FALSE) {
-				$sClaveError = 'PgTipoDocRepository.insertar.prepare';
-				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-				return FALSE;
-			}
+        } else {
+            // INSERT
+            $aDatos['id_tipo_doc'] = $TipoDoc->getIdTipoDocVo()->value();
+            $campos="(id_tipo_doc,nom_doc,sigla,observ,id_coleccion,bajo_llave,vigente,numerado)";
+            $valores="(:id_tipo_doc,:nom_doc,:sigla,:observ,:id_coleccion,:bajo_llave,:vigente,:numerado)";        
+            if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === FALSE) {
+                $sClaveError = 'PgTipoDocRepository.insertar.prepare';
+                $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
+                return FALSE;
+            }
             try {
                 $oDblSt->execute($aDatos);
             } catch ( PDOException $e) {
@@ -196,10 +196,10 @@ class PgTipoDocRepository extends ClaseRepository implements TipoDocRepositoryIn
                 $sClaveError = 'PgTipoDocRepository.insertar.execute';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
                 return FALSE;
-			}
-		}
-		return TRUE;
-	}
+            }
+        }
+        return TRUE;
+    }
 	
     private function isNew(int $id_tipo_doc): bool
     {

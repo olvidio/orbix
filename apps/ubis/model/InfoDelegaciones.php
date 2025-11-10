@@ -6,6 +6,7 @@ namespace ubis\model;
 /* No vale el underscore en el nombre */
 
 use core\DatosInfo;
+use src\ubis\application\repositories\DelegacionRepository;
 
 class InfoDelegaciones extends DatosInfo
 {
@@ -27,12 +28,12 @@ class InfoDelegaciones extends DatosInfo
         // Si se quiere listar una selección, $this->k_buscar
         if (empty($this->k_buscar)) {
             $aWhere = array('_ordre' => 'region');
-            $aOperador = '';
+            $aOperador = array();
         } else {
             $aWhere = array('dl' => $this->k_buscar);
             $aOperador = array('dl' => 'sin_acentos');
         }
-        $oLista = new entity\GestorDelegacion();
+        $oLista = new DelegacionRepository();
         $Coleccion = $oLista->getDelegaciones($aWhere, $aOperador);
 
         return $Coleccion;

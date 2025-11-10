@@ -7,6 +7,10 @@ use core\Set;
 use web\DateTimeLocal;
 use web\NullDateTimeLocal;
 use function core\is_true;
+use src\inventario\domain\value_objects\{DocumentoId, TipoDocId, UbiInventarioId, LugarId,
+    DocumentoObserv, DocumentoObservCtr, DocumentoIdentificador,
+    DocumentoNumReg, DocumentoNumIni, DocumentoNumFin, DocumentoNumEjemplares,
+    DocumentoEnBusqueda, DocumentoPerdido, DocumentoEliminado};
 
 /**
  * Clase que implementa la entidad i_documentos_dl
@@ -547,6 +551,150 @@ class Documento
     public function setNum_ejemplares(?int $inum_ejemplares = null): void
     {
         $this->inum_ejemplares = $inum_ejemplares;
+    }
+
+    // Value Object API (duplicada con legacy)
+    public function getIdDocVo(): DocumentoId
+    {
+        return new DocumentoId($this->iid_doc);
+    }
+
+    public function setIdDocVo(?DocumentoId $id = null): void
+    {
+        if ($id === null) { return; }
+        $this->iid_doc = $id->value();
+    }
+
+    public function getIdTipoDocVo(): TipoDocId
+    {
+        return new TipoDocId($this->iid_tipo_doc);
+    }
+
+    public function setIdTipoDocVo(?TipoDocId $id = null): void
+    {
+        if ($id === null) { return; }
+        $this->iid_tipo_doc = $id->value();
+    }
+
+    public function getIdUbiVo(): UbiInventarioId
+    {
+        return new UbiInventarioId($this->iid_ubi);
+    }
+
+    public function setIdUbiVo(?UbiInventarioId $id = null): void
+    {
+        if ($id === null) { return; }
+        $this->iid_ubi = $id->value();
+    }
+
+    public function getIdLugarVo(): ?LugarId
+    {
+        return $this->iid_lugar !== null ? new LugarId($this->iid_lugar) : null;
+    }
+
+    public function setIdLugarVo(?LugarId $id = null): void
+    {
+        $this->iid_lugar = $id?->value();
+    }
+
+    public function getObservVo(): ?DocumentoObserv
+    {
+        return DocumentoObserv::fromNullableString($this->sobserv);
+    }
+
+    public function setObservVo(?DocumentoObserv $obs = null): void
+    {
+        $this->sobserv = $obs?->value();
+    }
+
+    public function getObservCtrVo(): ?DocumentoObservCtr
+    {
+        return DocumentoObservCtr::fromNullableString($this->sobservCtr);
+    }
+
+    public function setObservCtrVo(?DocumentoObservCtr $obs = null): void
+    {
+        $this->sobservCtr = $obs?->value();
+    }
+
+    public function getIdentificadorVo(): ?DocumentoIdentificador
+    {
+        return DocumentoIdentificador::fromNullableString($this->sidentificador);
+    }
+
+    public function setIdentificadorVo(?DocumentoIdentificador $ident = null): void
+    {
+        $this->sidentificador = $ident?->value();
+    }
+
+    public function getNumRegVo(): ?DocumentoNumReg
+    {
+        return $this->inum_reg !== null ? new DocumentoNumReg($this->inum_reg) : null;
+    }
+
+    public function setNumRegVo(?DocumentoNumReg $num = null): void
+    {
+        $this->inum_reg = $num?->value();
+    }
+
+    public function getNumIniVo(): ?DocumentoNumIni
+    {
+        return $this->inum_ini !== null ? new DocumentoNumIni($this->inum_ini) : null;
+    }
+
+    public function setNumIniVo(?DocumentoNumIni $num = null): void
+    {
+        $this->inum_ini = $num?->value();
+    }
+
+    public function getNumFinVo(): ?DocumentoNumFin
+    {
+        return $this->inum_fin !== null ? new DocumentoNumFin($this->inum_fin) : null;
+    }
+
+    public function setNumFinVo(?DocumentoNumFin $num = null): void
+    {
+        $this->inum_fin = $num?->value();
+    }
+
+    public function getNumEjemplaresVo(): ?DocumentoNumEjemplares
+    {
+        return $this->inum_ejemplares !== null ? new DocumentoNumEjemplares($this->inum_ejemplares) : null;
+    }
+
+    public function setNumEjemplaresVo(?DocumentoNumEjemplares $num = null): void
+    {
+        $this->inum_ejemplares = $num?->value();
+    }
+
+    public function getEnBusquedaVo(): ?DocumentoEnBusqueda
+    {
+        return $this->ben_busqueda === null ? null : new DocumentoEnBusqueda((bool)$this->ben_busqueda);
+    }
+
+    public function setEnBusquedaVo(?DocumentoEnBusqueda $flag = null): void
+    {
+        $this->ben_busqueda = $flag?->value();
+    }
+
+    public function getPerdidoVo(): ?DocumentoPerdido
+    {
+        return $this->bperdido === null ? null : new DocumentoPerdido((bool)$this->bperdido);
+    }
+
+    public function setPerdidoVo(?DocumentoPerdido $flag = null): void
+    {
+        $this->bperdido = $flag?->value();
+    }
+
+    public function getEliminadoVo(): ?DocumentoEliminado
+    {
+        return $this->beliminado === null ? null : new DocumentoEliminado((bool)$this->beliminado);
+    }
+
+    public function setEliminadoVo(?DocumentoEliminado $flag = null): void
+    {
+        $this->beliminado = $flag?->value();
     }
 
     /* ------------------- PARA el mod_tabla  -------------------------------*/

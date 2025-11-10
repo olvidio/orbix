@@ -3,7 +3,7 @@
 use core\ConfigGlobal;
 use notas\model\CentroEstudios;
 use notas\model\Resumen;
-use ubis\model\entity\GestorDelegacion;
+use src\ubis\application\repositories\DelegacionRepository;
 
 /**
  * Esta página sirve para comprobar las notas de la tabla e_notas.
@@ -35,8 +35,8 @@ if (!empty($Qdl)) {
     // si soy supra región stgr, todos los de las dependientes:
     // caso especial de H y M:
     if ($dele === 'H' || $dele === 'M') {
-        $gesDelegacion = new GestorDelegacion();
-        $a_delegacionesStgr = $gesDelegacion->getArrayDlRegionStgr([$dele]);
+        $repoDelegacion = new DelegacionRepository();
+        $a_delegacionesStgr = $repoDelegacion->getArrayDlRegionStgr([$dele]);
         $CentroEstudios = new CentroEstudios;
         $ce_lugar = $CentroEstudios->getFromDl(array_keys($a_delegacionesStgr));
     } else {
@@ -83,11 +83,13 @@ $lista = empty($Qlista) ? false : true;
 $Resumen = new Resumen('numerarios');
 if (!empty($Qdl)) {
     $region_stgr = ConfigGlobal::mi_dele();
-    $gesDelegacion = new GestorDelegacion();
-    $a_delegacionesStgr = $gesDelegacion->getArrayDlRegionStgr([$region_stgr]);
+    $repoDelegacion = new DelegacionRepository();
+    $a_delegacionesStgr = $repoDelegacion->getArrayDlRegionStgr([$region_stgr]);
     $a_dl = [];
     foreach ($Qdl as $id_dl) {
-        $a_dl[] = $a_delegacionesStgr[$id_dl];
+        if (isset($a_delegacionesStgr[$id_dl])) {
+            $a_dl[] = $a_delegacionesStgr[$id_dl];
+        }
     }
     $Resumen->setArrayDl($a_dl);
 }
