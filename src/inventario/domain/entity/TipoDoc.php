@@ -245,9 +245,9 @@ class TipoDoc
      *
      * @param bool $bnumerado
      */
-    public function setNumerado(bool $bnumerado): void
+    public function setNumerado(?bool $bnumerado): void
     {
-        $this->bnumerado = $bnumerado;
+        $this->bnumerado = $bnumerado?? False;
     }
 
     /* ------------------- PARA el mod_tabla  -------------------------------*/
