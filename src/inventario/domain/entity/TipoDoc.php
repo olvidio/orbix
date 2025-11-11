@@ -246,9 +246,9 @@ class TipoDoc
      *
      * @param bool $bnumerado
      */
-    public function setNumerado(bool $bnumerado): void
+    public function setNumerado(?bool $bnumerado): void
     {
-        $this->bnumerado = $bnumerado;
+        $this->bnumerado = $bnumerado?? False;
     }
 
     // Value Object API (duplicada con legacy)
