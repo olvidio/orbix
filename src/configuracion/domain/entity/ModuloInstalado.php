@@ -4,6 +4,7 @@ namespace src\configuracion\domain\entity;
 
 use core\DatosCampo;
 use core\Set;
+use src\configuracion\domain\value_objects\ModuloId;
 use function core\is_true;
 
 /**
@@ -25,6 +26,7 @@ class ModuloInstalado
      *
      * @var int
      */
+    private ModuloId $idMod;
     private int $iid_mod;
     /**
      * Status de ModuloInstalado
@@ -44,7 +46,7 @@ class ModuloInstalado
     public function setAllAttributes(array $aDatos): ModuloInstalado
     {
         if (array_key_exists('id_mod', $aDatos)) {
-            $this->setId_mod($aDatos['id_mod']);
+            $this->setIdModVo(isset($aDatos['id_mod']) ? new ModuloId((int)$aDatos['id_mod']) : null);
         }
         if (array_key_exists('status', $aDatos)) {
             $this->setStatus(is_true($aDatos['status']));
@@ -52,22 +54,26 @@ class ModuloInstalado
         return $this;
     }
 
-    /**
-     *
-     * @return int $iid_mod
-     */
-    public function getId_mod(): int
+    // VO API
+    public function getIdModVo(): ModuloId
     {
-        return $this->iid_mod;
+        return $this->idMod;
     }
 
-    /**
-     *
-     * @param int $iid_mod
-     */
+    public function setIdModVo(ModuloId $id): void
+    {
+        $this->idMod = $id;
+    }
+
+    // Legacy scalar API (kept for mod_tabla/UI)
+    public function getId_mod(): int
+    {
+        return $this->idMod->value();
+    }
+
     public function setId_mod(int $iid_mod): void
     {
-        $this->iid_mod = $iid_mod;
+        $this->idMod = new ModuloId($iid_mod);
     }
 
     /**

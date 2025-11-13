@@ -136,7 +136,7 @@ class PgModuloInstaladoRepository extends ClaseRepository implements ModuloInsta
 
     public function Eliminar(ModuloInstalado $ModuloInstalado): bool
     {
-        $id_mod = $ModuloInstalado->getId_mod();
+        $id_mod = $ModuloInstalado->getIdModVo()->value();
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         if (($oDbl->exec("DELETE FROM $nom_tabla WHERE id_mod = $id_mod")) === FALSE) {
@@ -153,7 +153,7 @@ class PgModuloInstaladoRepository extends ClaseRepository implements ModuloInsta
      */
     public function Guardar(ModuloInstalado $ModuloInstalado): bool
     {
-        $id_mod = $ModuloInstalado->getId_mod();
+        $id_mod = $ModuloInstalado->getIdModVo()->value();
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         $bInsert = $this->isNew($id_mod);
@@ -189,7 +189,7 @@ class PgModuloInstaladoRepository extends ClaseRepository implements ModuloInsta
             }
         } else {
             // INSERT
-            $aDatos['id_mod'] = $ModuloInstalado->getId_mod();
+            $aDatos['id_mod'] = $ModuloInstalado->getIdModVo()->value();
             $campos = "(id_mod,status)";
             $valores = "(:id_mod,:status)";
             if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === FALSE) {
