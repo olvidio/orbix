@@ -8,6 +8,13 @@ use web\Hash;
 
 $Qguardar = empty($_GET['guardar']) ? '' : $_GET['guardar'];
 
+// defino estas variables vacias, para que el IDE no señale errores, pero se definen en el include
+$nom = '';
+$footer = '';
+$certificado = '';
+$Qid_item = '';
+$id_nom = '';
+
 ob_start();
 include(__DIR__ . '/certificado_emitido_imprimir_mpdf.php');
 $content = ob_get_clean();
@@ -74,12 +81,13 @@ if (!empty($Qguardar)) {
     if (!empty($data['error'])) {
         exit ($data['error']);
     }
-
-// Poner la salida del pdf al final, para poder mostrar si hay errores al guardar.
-try {
-    $mpdf->Output("certificado($nom).pdf", 'D');
-} catch (MpdfException $e) {
-    $msg_err = $e->getMessage();
-    echo($msg_err);
 }
+
+    // Poner la salida del pdf al final, para poder mostrar si hay errores al guardar.
+    try {
+        $mpdf->Output("certificado($nom).pdf", 'D');
+    } catch (MpdfException $e) {
+        $msg_err = $e->getMessage();
+        echo($msg_err);
+    }
 
