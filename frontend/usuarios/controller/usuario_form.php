@@ -57,7 +57,9 @@ $a_campos = [
         'quien' => $Qquien
     ];
 $data = PostRequest::getDataFromUrl($url_backend, $a_campos);
-
+if (!empty($data['error'])) {
+	exit ($data['error']);
+}
 $a_campos_src = $data['a_campos'];
 
 $txt_guardar = _("guardar datos usuario");
@@ -161,7 +163,7 @@ if (!empty($Qid_usuario)) {
     $a_campos_backend = [ 'id_usuario' => $Qid_usuario ];
     $data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
     if (isset($data['error'])) {
-        echo $data['error'];
+        exit($data['error']);
     }
     $a_campos['grupos_txt'] = $data['grupos_txt'];
 

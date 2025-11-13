@@ -84,7 +84,9 @@ $a_campos = [
     'fincurs_ca_iso' => $fincurs_ca_iso,
 ];
 $data = PostRequest::getDataFromUrl($url_backend, $a_campos);
-
+if (!empty($data['error'])) {
+	exit ($data['error']);
+}
 $a_cabeceras = $data['a_cabeceras'];
 $a_valores = $data['a_valores'];
 $a_botones = $data['a_botones'];

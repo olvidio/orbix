@@ -26,7 +26,9 @@ $a_campos = [
     'inventario' => $Qinventario
 ];
 $data = PostRequest::getDataFromUrl($url_backend, $a_campos);
-
+if (!empty($data['error'])) {
+	exit ($data['error']);
+}
 $a_valores = $data['a_valores'];
 $aGrupos = $data['aGrupos'];
 $nombreDoc = $data['nombreDoc'];

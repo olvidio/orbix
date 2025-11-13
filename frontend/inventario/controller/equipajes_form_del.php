@@ -20,7 +20,7 @@ $url_backend = '/src/inventario/infrastructure/controllers/lista_docs_de_egm.php
 $a_campos_backend = [ 'id_item_egm' => $Qid_item_egm];
 $data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
 if (isset($data['error'])) {
-    echo $data['error'];
+    exit($data['error']);
 }
 
 $a_valores = $data['a_valores'];

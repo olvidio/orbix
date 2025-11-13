@@ -15,7 +15,7 @@ $url_backend = '/src/inventario/infrastructure/controllers/lista_equipajes_posib
 $a_campos_backend = [ 'id_equipaje' => $Qid_equipaje];
 $data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
 if (isset($data['error'])) {
-    echo $data['error'];
+    exit($data['error']);
 }
 
 $a_opciones = $data['a_opciones'];

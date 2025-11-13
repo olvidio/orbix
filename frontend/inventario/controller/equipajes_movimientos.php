@@ -14,7 +14,7 @@ $url_backend = '/src/inventario/infrastructure/controllers/equipajes_movimientos
 $a_campos_backend = [ 'sel' => $a_sel];
 $data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
 if (isset($data['error'])) {
-    echo $data['error'];
+    exit($data['error']);
 }
 
 $aCambios = $data['aCambios'];

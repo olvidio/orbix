@@ -71,12 +71,9 @@ if (!empty($Qguardar)) {
         'pdf' => $pdf_base64,
     ];
     $data = PostRequest::getDataFromUrl($url_backend, $a_campos);
-
     if (!empty($data['error'])) {
-        echo($data['error']);
-        die();
+        exit ($data['error']);
     }
-}
 
 // Poner la salida del pdf al final, para poder mostrar si hay errores al guardar.
 try {

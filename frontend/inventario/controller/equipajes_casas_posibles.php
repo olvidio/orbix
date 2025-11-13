@@ -27,7 +27,9 @@ $a_campos = [
     'fin' => $Qfin,
 ];
 $data = PostRequest::getDataFromUrl($url_backend, $a_campos);
-
+if (!empty($data['error'])) {
+	exit ($data['error']);
+}
 $a_opciones = $data['a_opciones'];
 
 $oDesplUbis = new Desplegable();

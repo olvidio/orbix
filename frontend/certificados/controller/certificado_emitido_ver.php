@@ -28,7 +28,7 @@ $url_backend = '/src/certificados/infrastructure/controllers/certificado_emitido
 $a_campos_backend = [ 'id_item' => $Qid_item ];
 $data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
 if (isset($data['error'])) {
-    echo $data['error'];
+    exit($data['error']);
 }
 
 
@@ -57,7 +57,7 @@ $url_backend = '/src/shared/infrastructure/controllers/locales_posibles.php';
 $a_campos_backend = [ 'id_nom' => $id_nom ];
 $data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
 if (isset($data['error'])) {
-    echo $data['error'];
+    exit($data['error']);
 }
 
 $a_locales = $data['a_locales'];

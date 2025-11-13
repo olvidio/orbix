@@ -32,13 +32,7 @@ $url_backend = '/src/certificados/infrastructure/controllers/certificado_emitido
 $a_campos_backend = ['id_item' => $Qid_item ];
 $data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
 if (isset($data['error'])) {
-    echo $data['error'];
-}
-
-$error = $data['error'];
-if ($error) {
-    echo $error;
-    exit;
+    exit($data['error']);
 }
 
 $id_nom = $data['id_nom'];

@@ -52,7 +52,9 @@ if (!empty($Qid_usuario)) {
     $url_backend = '/src/usuarios/infrastructure/controllers/grupo_info.php';
     $a_campos = [ 'id_usuario' => $Qid_usuario];
     $data = PostRequest::getDataFromUrl($url_backend, $a_campos);
-
+    if (!empty($data['error'])) {
+        exit ($data['error']);
+    }
     $usuario = $data['nombre'];
 
     $oHashG = new Hash();
@@ -78,7 +80,9 @@ if (!empty($Qid_usuario)) {
     $url_backend = '/src/usuarios/infrastructure/controllers/perm_menu_lista.php';
     $a_campos = [ 'id_usuario' => $Qid_usuario];
     $data = PostRequest::getDataFromUrl($url_backend, $a_campos);
-
+    if (!empty($data['error'])) {
+        exit ($data['error']);
+    }
     $a_cabeceras = $data['a_cabeceras'];
     $a_botones = $data['a_botones'];
     $a_valores = $data['a_valores'];

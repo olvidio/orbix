@@ -25,7 +25,9 @@ $a_campos = [
     'sel' => $a_sel,
 ];
 $data = PostRequest::getDataFromUrl($url_backend, $a_campos);
-
+if (!empty($data['error'])) {
+	exit ($data['error']);
+}
 $a_valores = $data['a_valores'];
 $nombreDoc = $data['nombreDoc'];
 $isNumerado = $data['isNumerado'];

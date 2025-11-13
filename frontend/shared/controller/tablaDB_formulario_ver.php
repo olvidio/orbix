@@ -78,6 +78,9 @@ $parametros = [
     'mod' => $Qmod,
 ];
 $data = PostRequest::getDataFromUrl($url_backend, $parametros);
+if (!empty($data['error'])) {
+    exit ($data['error']);
+}
 
 $fields = $data['fields'];
 $tit_txt = $data['tit_txt'];

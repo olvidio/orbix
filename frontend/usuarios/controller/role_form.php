@@ -51,7 +51,7 @@ $url_backend = '/src/usuarios/infrastructure/controllers/role_info.php';
 $a_campos_backend = ['id_role' => $Qid_role];
 $data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
 if (isset($data['error'])) {
-    echo $data['error'];
+    exit($data['error']);
 }
 
 $a_cabeceras = $data['a_cabeceras'];

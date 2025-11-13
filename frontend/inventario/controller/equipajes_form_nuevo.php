@@ -21,7 +21,9 @@ $a_campos = [
     'sel' => $a_sel
 ];
 $data = PostRequest::getDataFromUrl($url_backend, $a_campos);
-
+if (!empty($data['error'])) {
+	exit ($data['error']);
+}
 $nombre_ubi = $data['nombre_ubi'];
 $ini = $data['ini'];
 $fin = $data['fin'];

@@ -1,12 +1,14 @@
 <?php
 
-namespace permisos\model;
+namespace src\configuracion\domain;
 
-use core\DatosInfo;
 
 /* No vale el underscore en el nombre */
 
-class InfoModsInstalled extends DatosInfo
+use src\configuracion\application\repositories\ModuloInstaladoRepository;
+use src\shared\domain\DatosInfoRepo;
+
+class InfoModsInstalled extends DatosInfoRepo
 {
 
     public function __construct()
@@ -16,7 +18,7 @@ class InfoModsInstalled extends DatosInfo
         $this->setTxtBuscar(_("buscar un módulo"));
         $this->setTxtExplicacion("Debe salir y volver a entrar en la aplicación parar que los cambios tengan efecto");
 
-        $this->setClase('permisos\\model\\entity\\ModuloInstalado');
+        $this->setClase('src\\configuracion\\domain\\entity\\ModuloInstalado');
         $this->setMetodoGestor('getModulosInstalados');
     }
 
@@ -26,13 +28,13 @@ class InfoModsInstalled extends DatosInfo
         // Si se quiere listar una selección, $this->k_buscar
         if (empty($this->k_buscar)) {
             $aWhere = array('_ordre' => 'id_mod');
-            $aOperador = '';
+            $aOperador = [];
         } else {
             $aWhere = array('id_mod' => $this->k_buscar);
-            $aOperador = '';
+            $aOperador = [];
         }
-        $oLista = new entity\GestorModuloInstalado();
-        $Coleccion = $oLista->getModulosInstalados($aWhere, $aOperador);
+        $oLista = new ModuloInstaladoRepository();
+        $Coleccion = $oLista->getModuloInstalados($aWhere, $aOperador);
 
         return $Coleccion;
     }

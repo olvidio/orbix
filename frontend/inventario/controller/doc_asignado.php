@@ -20,7 +20,7 @@ $url_backend = '/src/inventario/infrastructure/controllers/lista_docs_asignados_
 $a_campos_backend = ['id_tipo_doc' => $Qid_tipo_doc];
 $data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
 if (isset($data['error'])) {
-    echo $data['error'];
+    exit($data['error']);
 }
 
 $a_cabeceras = $data['a_cabeceras'];

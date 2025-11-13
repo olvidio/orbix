@@ -19,7 +19,9 @@ $a_campos = [
     'sel' => $sel_json,
 ];
 $data = PostRequest::getDataFromUrl($url_backend, $a_campos);
-
+if (!empty($data['error'])) {
+	exit ($data['error']);
+}
 $a_ubi_valores = $data['a_valores'];
 $a_ubi_llave = $data['a_llave'];
 $a_ubi_tipo = $data['a_tipo'];

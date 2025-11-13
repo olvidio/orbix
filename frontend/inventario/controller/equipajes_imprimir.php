@@ -23,7 +23,9 @@ $a_campos = [
     'id_equipaje' => $Qid_equipaje,
 ];
 $data = PostRequest::getDataFromUrl($url_backend, $a_campos);
-
+if (!empty($data['error'])) {
+	exit ($data['error']);
+}
 $cabecera = $data['cabecera'];
 $cabeceraB = $data['cabeceraB'];
 $firma = $data['firma'];
@@ -37,7 +39,9 @@ $a_campos = [
     'id_equipaje' => $Qid_equipaje,
 ];
 $data = PostRequest::getDataFromUrl($url_backend, $a_campos);
-
+if (!empty($data['error'])) {
+	exit ($data['error']);
+}
 $a_actividades = $data['a_actividades'];
 $html_actividades = '';
 $html_actividades_firma = '';
@@ -59,7 +63,9 @@ $a_campos = [
     'id_equipaje' => $Qid_equipaje,
 ];
 $data = PostRequest::getDataFromUrl($url_backend, $a_campos);
-
+if (!empty($data['error'])) {
+	exit ($data['error']);
+}
 $a_valores = $data['a_valores'];
 $nombre_ubi = $data['nombre_ubi'];
 $id_ubi = $data['id_ubi'];
@@ -72,7 +78,9 @@ $a_campos = [
     'id_equipaje' => $Qid_equipaje,
 ];
 $data = PostRequest::getDataFromUrl($url_backend, $a_campos);
-
+if (!empty($data['error'])) {
+	exit ($data['error']);
+}
 $a_egm = $data['a_egm'];
 $html_g = '';
 foreach ($a_egm as $aEgm) {

@@ -30,7 +30,9 @@ $a_campos = [
     'id_cdc' => $Qid_cdc,
 ];
 $data = PostRequest::getDataFromUrl($url_backend, $a_campos);
-
+if (!empty($data['error'])) {
+	exit ($data['error']);
+}
 $a_valores = $data['a_valores'];
 $nombre_ubi = $data['nombre_ubi'];
 

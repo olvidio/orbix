@@ -19,7 +19,9 @@ $a_campos = [
     'id_tipo_doc' => $Qid_tipo_doc
 ];
 $data = PostRequest::getDataFromUrl($url_backend, $a_campos);
-
+if (!empty($data['error'])) {
+	exit ($data['error']);
+}
 $a_valores = $data['a_valores'];
 
 $txt = '<br>';

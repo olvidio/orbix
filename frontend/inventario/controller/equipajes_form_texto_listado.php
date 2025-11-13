@@ -37,7 +37,9 @@ switch ($Qloc) {
             'id_equipaje' => $Qid_equipaje,
             'id_grupo' => $id_grupo];
         $data = PostRequest::getDataFromUrl($url_backend, $a_campos);
-
+        if (!empty($data['error'])) {
+            exit ($data['error']);
+        }
         $texto = $data['texto'];
         break;
 }

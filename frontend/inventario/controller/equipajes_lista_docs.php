@@ -26,7 +26,9 @@ $a_campos = [
     'id_item_egm' => $Qid_item_egm
 ];
 $data = PostRequest::getDataFromUrl($url_backend, $a_campos);
-
+if (!empty($data['error'])) {
+	exit ($data['error']);
+}
 $a_valores = $data['a_valores'];
 $nombre_valija = $data['nombre_valija'];
 

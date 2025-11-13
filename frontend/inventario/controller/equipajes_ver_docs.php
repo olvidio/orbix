@@ -20,7 +20,7 @@ $url_backend = '/src/inventario/infrastructure/controllers/lista_docs_de_lugar.p
 $a_campos_backend = [ 'id_lugar' => $Qid_lugar];
 $data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
 if (isset($data['error'])) {
-    echo $data['error'];
+    exit($data['error']);
 }
 
 $a_valores = $data['a_valores'];

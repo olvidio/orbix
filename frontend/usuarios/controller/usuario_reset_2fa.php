@@ -36,7 +36,9 @@ $a_campos = [
         'has_2fa' => 'false',
     ];
 $data = PostRequest::getDataFromUrl($url_backend, $a_campos);
-
+if (!empty($data['error'])) {
+	exit ($data['error']);
+}
 $usuario = $data['usuario'];
 
 if (isset($data['error'])) {

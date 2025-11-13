@@ -22,7 +22,9 @@ $a_campos = [
     'id_lugar' => $Qid_lugar
 ];
 $data = PostRequest::getDataFromUrl($url_backend, $a_campos);
-
+if (!empty($data['error'])) {
+	exit ($data['error']);
+}
 $a_valores = $data['a_valores'];
 
 $a_cabeceras[] = ucfirst(_("documento"));

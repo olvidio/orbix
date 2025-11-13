@@ -36,7 +36,9 @@ $a_campos = [
     'esquema_web' => $Qesquema_web,
 ];
 $data = PostRequest::getDataFromUrl($url_backend, $a_campos);
-
+if (!empty($data['error'])) {
+	exit ($data['error']);
+}
 $error_txt = $data['error_txt'];
 $email = $data['email'];
 $success = $data['success'];

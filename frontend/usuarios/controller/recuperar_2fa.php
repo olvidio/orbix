@@ -35,7 +35,9 @@ $a_campos = [
     'ubicacion' => $Qubicacion,
 ];
 $data = PostRequest::getDataFromUrl($url_backend, $a_campos);
-
+if (!empty($data['error'])) {
+	exit ($data['error']);
+}
 $error_txt = $data['errores'];
 $email = $data['email'];
 $success = $data['success'];
