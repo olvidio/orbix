@@ -1,10 +1,8 @@
 <?php
 namespace personas\model\entity;
 
-use config\model\Config;
 use core\ClaseGestor;
 use core\Condicion;
-use core\ConfigGlobal;
 use core\Set;
 use web\Desplegable;
 
@@ -36,7 +34,6 @@ abstract class GestorPersonaGlobal extends ClaseGestor
     /* CONSTRUCTOR -------------------------------------------------------------- */
 
 
-    
     function __construct()
     {
     }
@@ -94,6 +91,7 @@ abstract class GestorPersonaGlobal extends ClaseGestor
         }
         return $aSacd;
     }
+
     /**
      * retorna un objecte del tipus Desplegable
      * Els posibles Sacd
@@ -147,6 +145,7 @@ abstract class GestorPersonaGlobal extends ClaseGestor
         }
         return $aPersonas;
     }
+
     /**
      * retorna una llista id_nom=>apellidosNombre
      *
@@ -309,7 +308,7 @@ abstract class GestorPersonaGlobal extends ClaseGestor
         }
         foreach ($oDblSt as $aDades) {
             $a_pkey = array('id_nom' => $aDades['id_nom']);
-            if (str_contains($Obj,'PersonaIn')) {
+            if (str_contains($Obj, 'PersonaIn')) {
                 $a_pkey['id_schema'] = $aDades['id_schema'];
             }
             $oPersona = new $Obj($a_pkey);

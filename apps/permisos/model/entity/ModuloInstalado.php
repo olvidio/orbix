@@ -5,7 +5,7 @@ namespace permisos\model\entity;
 use core\ClasePropiedades;
 use core\DatosCampo;
 use core\Set;
-use devel\model\AppDB;
+use src\configuracion\domain\AppDB;
 use function core\is_true;
 
 /**

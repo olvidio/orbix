@@ -6,8 +6,8 @@ use actividades\model\entity\ActividadAll;
 use asignaturas\model\entity\Asignatura;
 use core\ConfigGlobal;
 use core\ViewPhtml;
-use devel\model\entity\GestorDbSchema;
 use personas\model\entity\Persona;
+use src\configuracion\domain\entity\GestorDbSchema;
 use web\Hash;
 use web\Lista;
 

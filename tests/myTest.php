@@ -2,7 +2,6 @@
 
 namespace Tests;
 
-use config\model\Config;
 use core\ConfigDB;
 use core\ConfigGlobal;
 use core\DBConnection;
@@ -12,6 +11,7 @@ use permisos\model\PermDl;
 use permisos\model\PermisosActividades;
 use permisos\model\PermisosActividadesTrue;
 use PHPUnit\Framework\TestCase;
+use src\configuracion\domain\entity\Config;
 use src\usuarios\application\repositories\PermMenuRepository;
 use src\usuarios\application\repositories\UsuarioGrupoRepository;
 

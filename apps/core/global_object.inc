@@ -2,10 +2,10 @@
 
 namespace core;
 
-use config\model\Config;
 use permisos\model\PermDl;
 use permisos\model\PermisosActividades;
 use permisos\model\PermisosActividadesTrue;
+use src\configuracion\domain\entity\Config;
 use src\menus\domain\PermisoMenu;
 use src\usuarios\application\repositories\GrupoRepository;
 use src\usuarios\application\repositories\PermMenuRepository;
@@ -384,6 +384,7 @@ if (empty($_SESSION['oPermActividades'])) {
     }
     //$oPermActividades = $_SESSION['oPermActividades'];
 }
+
 
 session_write_close();
 // Para validar los parámetros enviados via POST

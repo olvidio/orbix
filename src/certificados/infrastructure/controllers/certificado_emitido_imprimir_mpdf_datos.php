@@ -62,7 +62,7 @@ $lugar_fecha = $lugar_firma . ",  " . $oHoy->getFechaLatin();
 $region = $region_latin;
 
 // conversion
-$replace = config\model\Config::$replace;
+$replace = src\configuracion\domain\entity\Config::$replace;
 
 // para los distintos idiomas. Cargar el fichero:
 $filename_textos = __DIR__ . '/' . "textos_certificados.php";

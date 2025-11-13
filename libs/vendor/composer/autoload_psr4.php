@@ -11,7 +11,6 @@ return array(
     'setasign\\Fpdi\\' => array($vendorDir . '/setasign/fpdi/src'),
     'jblond\\' => array($vendorDir . '/jblond/twig-trans/src/jblond'),
     'frontend\\' => array($baseDir . '/frontend'),
-    'config\\model\\' => array($baseDir . '/src/config/domain'),
     'Twig\\' => array($vendorDir . '/twig/twig/src'),
     'Tests\\' => array($baseDir . '/tests'),
     'Symfony\\Polyfill\\Php83\\' => array($vendorDir . '/symfony/polyfill-php83'),

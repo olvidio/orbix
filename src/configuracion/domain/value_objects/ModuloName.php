@@ -23,7 +23,7 @@ final class ModuloName
             throw new \InvalidArgumentException('ModuloName must be at most 100 characters');
         }
         // Allow letters (incl. accents), numbers, spaces and common punctuation
-        if (!preg_match("/^[\p{L}0-9 .,'’\-()]+$/u", $value)) {
+        if (!preg_match("/^[\p{L}0-9 .,'’_\-()]+$/u", $value)) {
             throw new \InvalidArgumentException('ModuloName has invalid characters');
         }
     }

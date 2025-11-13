@@ -2,7 +2,7 @@
 
 namespace core;
 
-use devel\model\DBAbstract;
+use src\configuracion\domain\DBAbstract;
 
 class DBTabla extends DBAbstract
 {

@@ -138,7 +138,7 @@ class PgModuloRepository extends ClaseRepository implements ModuloRepositoryInte
 
     public function Eliminar(Modulo $Modulo): bool
     {
-        $id_mod = $Modulo->getId_mod();
+        $id_mod = $Modulo->getIdModVo()->value();
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         if (($oDbl->exec("DELETE FROM $nom_tabla WHERE id_mod = $id_mod")) === FALSE) {
@@ -155,17 +155,17 @@ class PgModuloRepository extends ClaseRepository implements ModuloRepositoryInte
      */
     public function Guardar(Modulo $Modulo): bool
     {
-        $id_mod = $Modulo->getId_mod();
+        $id_mod = $Modulo->getIdModVo()->value();
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         $bInsert = $this->isNew($id_mod);
 
         $aDatos = [];
         $aDatos['nom'] = $Modulo->getNom();
-        $aDatos['descripcion'] = $Modulo->getDescripcion();
+        $aDatos['descripcion'] = $Modulo->getDescripcionVo()?->value();
         // para los array
-        $aDatos['mods_req'] = array_php2pg($Modulo->getMods_req());
-        $aDatos['apps_req'] = array_php2pg($Modulo->getApps_req());
+        $aDatos['mods_req'] = array_php2pg($Modulo->getModsReqVo()?->toArray());
+        $aDatos['apps_req'] = array_php2pg($Modulo->getAppsReqVo()?->toArray());
         array_walk($aDatos, 'core\poner_null');
 
         if ($bInsert === FALSE) {
@@ -192,7 +192,7 @@ class PgModuloRepository extends ClaseRepository implements ModuloRepositoryInte
             }
         } else {
             // INSERT
-            $aDatos['id_mod'] = $Modulo->getId_mod();
+            $aDatos['id_mod'] = $Modulo->getIdModVo()->value();
             $campos = "(id_mod,nom,descripcion,mods_req,apps_req)";
             $valores = "(:id_mod,:nom,:descripcion,:mods_req,:apps_req)";
             if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === FALSE) {

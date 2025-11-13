@@ -5,7 +5,6 @@ namespace notas\model;
 use core\ConfigDB;
 use core\ConfigGlobal;
 use core\DBConnection;
-use devel\model\entity\GestorDbSchema;
 use dossiers\model\entity\Dossier;
 use notas\model\entity\Acta;
 use notas\model\entity\GestorPersonaNotaDlDB;
@@ -17,6 +16,7 @@ use notas\model\entity\PersonaNotaDlDB;
 use notas\model\entity\PersonaNotaOtraRegionStgrDB;
 use personas\model\entity\Persona;
 use RuntimeException;
+use src\configuracion\domain\entity\GestorDbSchema;
 use src\ubis\application\repositories\DelegacionRepository;
 
 class EditarPersonaNota

@@ -7,7 +7,9 @@ use actividades\model\entity\ActividadEx;
 use actividades\model\entity\GestorActividadDl;
 use actividades\model\entity\GestorActividadEx;
 use devel\model\DBAbstract;
-use devel\model\entity\MapId;
+use PDO;
+use src\utils_database\application\repositories\MapIdRepository;
+use src\utils_database\domain\value_objects\MapIdDl;
 use ubis\model\entity\CasaDl;
 use ubis\model\entity\CdcDlxDireccion;
 use ubis\model\entity\CentroDl;
@@ -117,7 +119,7 @@ class DBTrasvase extends DBAbstract
      *
      * @return object oDbl
      */
-    private function getoDbl()
+    private function getoDbl(): PDO
     {
         return $this->oDbl;
     }
@@ -243,7 +245,7 @@ class DBTrasvase extends DBAbstract
         switch ($que) {
             case 'resto2dl':
                 // via objetos, para no dar permisos especiales a las tablas:
-                if ($dl == 'cr') {
+                if ($dl === 'cr') {
                     $dl_org = $region;
                 } else {
                     $dl_org = $dl;
@@ -252,6 +254,8 @@ class DBTrasvase extends DBAbstract
                 $cActividades = $GesActividadesEx->getActividades(['dl_org' => $dl_org]);
                 $error = '';
                 if (!empty($cActividades)) {
+                    $MapIdRepository = new MapIdRepository();
+                    $MapIdRepository->setoDbl($oDbl);
                     foreach ($cActividades as $oActividad) {
                         $oActividad->DBCarregar();
                         $aDades = $oActividad->getTot();
@@ -266,10 +270,9 @@ class DBTrasvase extends DBAbstract
                         } else {
                             // Al hacer INSERT se genera un id_activ nuevo. Para conservar el original:
                             $id_old = $aDades['id_activ'];
-                            $pkey = ['objeto' => 'Actividad', 'id_resto' => $id_old];
-                            $oMapId = new MapId($pkey);
-                            $oMapId->setId_dl($oActividadDl->getId_activ());
-                            $oMapId->DBGuardar();
+                            $oMapId = $MapIdRepository->findById('Actividad', $id_old);
+                            $oMapId->setIdDlVo(MapIdDl::fromString($oActividadDl->getId_activ()));
+                            $MapIdRepository->Guardar($oMapId);
                             //borrar la origen:
                             $oActividad->DBEliminar();
                         }
@@ -331,6 +334,8 @@ class DBTrasvase extends DBAbstract
         $region = $this->getRegion();
         $tipoUbicacion = substr($dl, 0, 2); // puede ser: cr => comisión, dl => delegación, ci => centro interregional.
 
+        $MapIdRepository = new MapIdRepository();
+        $MapIdRepository->setoDbl($oDbl);
         switch ($que) {
             case 'resto2dl':
                 if ($tipoUbicacion === 'cr') { //no hay delegaciones.
@@ -357,10 +362,9 @@ class DBTrasvase extends DBAbstract
                         // Al hacer INSERT se genera un id_ubi nuevo. Para conservar el original:
                         $id_ubi = $oCasaDl->getId_ubi();
                         $id_ubi_old = $aDades['id_ubi'];
-                        $pkey = ['objeto' => 'Casa', 'id_resto' => $id_ubi_old];
-                        $oMapId = new MapId($pkey);
-                        $oMapId->setId_dl($id_ubi);
-                        $oMapId->DBGuardar();
+                        $oMapId = $MapIdRepository->findById('Casa', $id_ubi_old);
+                        $oMapId->setIdDlVo(MapIdDl::fromString($id_ubi));
+                        $MapIdRepository->Guardar($oMapId);
                         // Buscar la dirección
                         $gesCdcExxDireccion = new GestorCdcExxDireccion();
                         $cUbixDirecciones = $gesCdcExxDireccion->getCdcxDirecciones(['id_ubi' => $id_ubi_old]);
@@ -374,10 +378,9 @@ class DBTrasvase extends DBAbstract
                             $oDireccionCdcDl->setAllAtributes($aDades, FALSE);
                             $oDireccionCdcDl->DBGuardar();
                             $id_direccion = $oDireccionCdcDl->getId_direccion();
-                            $pkey = ['objeto' => 'Direccion', 'id_resto' => $id_direccion_old];
-                            $oMapId = new MapId($pkey);
-                            $oMapId->setId_dl($id_direccion);
-                            $oMapId->DBGuardar();
+                            $oMapId = $MapIdRepository->findById('Direccion', $id_direccion_old);
+                            $oMapId->setIdDlVo(MapIdDl::fromString($id_direccion));
+                            $MapIdRepository->Guardar($oMapId);
                             // cross Direccion
                             $pkey = ['id_ubi' => $id_ubi, 'id_direccion' => $id_direccion];
                             $oCrosDireccion = new CdcDlxDireccion($pkey);
@@ -464,6 +467,8 @@ class DBTrasvase extends DBAbstract
         $region = $this->getRegion();
         $tipoUbicacion = substr($dl, 0, 2); // puede ser: cr => cominsión, dl => delegacion, ci => centro interregional.
 
+        $MapIdRepository = new MapIdRepository();
+        $MapIdRepository->setoDbl($oDbl);
         switch ($que) {
             case 'resto2dl':
                 if ($tipoUbicacion === 'cr') { //no hay delegaciones.
@@ -493,10 +498,9 @@ class DBTrasvase extends DBAbstract
                         // Al hacer INSERT se genera un id_ubi nuevo. Para conservar el original:
                         $id_ubi = $oCentroDl->getId_ubi();
                         $id_ubi_old = $aDades['id_ubi'];
-                        $pkey = ['objeto' => 'Centro', 'id_resto' => $id_ubi_old];
-                        $oMapId = new MapId($pkey);
-                        $oMapId->setId_dl($id_ubi);
-                        $oMapId->DBGuardar();
+                        $oMapId = $MapIdRepository->findById('Centro', $id_ubi_old);
+                        $oMapId->setIdDlVo(MapIdDl::fromString($id_ubi));
+                        $MapIdRepository->Guardar($oMapId);
                         // Además hay que añadirlo a la copia en DB comun:
                         // para la sf (comienza por 2).
                         if (substr($id_ubi, 0, 1) == 2) {
@@ -524,9 +528,9 @@ class DBTrasvase extends DBAbstract
                             $oDireccionCtrDl->DBGuardar();
                             $id_direccion = $oDireccionCtrDl->getId_direccion();
                             $pkey = ['objeto' => 'Direccion', 'id_resto' => $id_direccion_old];
-                            $oMapId = new MapId($pkey);
-                            $oMapId->setId_dl($id_direccion);
-                            $oMapId->DBGuardar();
+                            $oMapId = $MapIdRepository->findById('Direccion', $id_direccion_old);
+                            $oMapId->setIdDlVo(MapIdDl::fromString($id_direccion));
+                            $MapIdRepository->Guardar($oMapId);
                             // cross Direccion
                             $pkey = ['id_ubi' => $id_ubi, 'id_direccion' => $id_direccion];
                             $oCrosDireccion = new CtrDlxDireccion($pkey);

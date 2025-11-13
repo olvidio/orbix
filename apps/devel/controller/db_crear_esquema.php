@@ -1,6 +1,6 @@
 <?php
 
-use devel\model\entity\GestorDbSchema;
+use src\utils_database\application\repositories\DbSchemaRepository;
 
 // INICIO Cabecera global de URL de controlador *********************************
 require_once("apps/core/global_header.inc");
@@ -90,8 +90,8 @@ if (!empty($Qcomun)) {
 
     // Llenar la tabla db_idschema (todos, aunque de momento no exista sv o sf).
     $schema = $RegionNew . '-' . $DlNew;
-    $oGesDbSchema = new GestorDbSchema();
-    $oGesDbSchema->llenarNuevo($schema, 'comun');
+    $DbSchemaRepository = new DbSchemaRepository();
+    $DbSchemaRepository->llenarNuevo($schema, 'comun');
 }
 
 // sv
@@ -121,8 +121,8 @@ if (!empty($Qsv)) {
 
     // Llenar la tabla db_idschema (todos, aunque de momento no exista sv o sf).
     $schema = $RegionNew . '-' . $DlNew;
-    $oGesDbSchema = new GestorDbSchema();
-    $oGesDbSchema->llenarNuevo($schema, 'sv');
+    $DbSchemaRepository = new DbSchemaRepository();
+    $DbSchemaRepository->llenarNuevo($schema, 'sv');
 
     // CREAR Esquema sv-e
     $config = $oConfigDB->getEsquema('publicv-e');
@@ -170,8 +170,8 @@ if (!empty($Qsv)) {
 
     // Llenar la tabla db_idschema (todos, aunque de momento no exista sv o sf).
     $schema = $RegionNew . '-' . $DlNew;
-    $oGesDbSchema = new GestorDbSchema();
-    $oGesDbSchema->llenarNuevo($schema, 'sv-e');
+    $DbSchemaRepository = new DbSchemaRepository();
+    $DbSchemaRepository->llenarNuevo($schema, 'sv-e');
 }
 // sf
 if (!empty($Qsf)) {
@@ -201,8 +201,8 @@ if (!empty($Qsf)) {
 
     // Llenar la tabla db_idschema (todos, aunque de momento no exista sv o sf).
     $schema = $RegionNew . '-' . $DlNew;
-    $oGesDbSchema = new GestorDbSchema();
-    $oGesDbSchema->llenarNuevo($schema, 'sf');
+    $DbSchemaRepository = new DbSchemaRepository();
+    $DbSchemaRepository->llenarNuevo($schema, 'sf');
 
     /*
 	// CREAR Esquema sf-e 
@@ -229,8 +229,8 @@ if (!empty($Qsf)) {
 	
     // Llenar la tabla db_idschema (todos, aunque de momento no exista sv o sf).
     $schema = $RegionNew.'-'.$DlNew;
-    $oGesDbSchema = new GestorDbSchema();
-    $oGesDbSchema->llenarNuevo($schema,'sf-e');
+    $DbSchemaRepository = new DbSchemaRepository();
+    $DbSchemaRepository->llenarNuevo($schema,'sf-e');
     */
 }
 

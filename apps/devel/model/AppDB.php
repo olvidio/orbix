@@ -2,7 +2,9 @@
 
 namespace devel\model;
 
-use devel\model\entity\Modulo;
+
+use src\configuracion\application\repositories\ModuloRepository;
+use src\configuracion\domain\ModulosConfig;
 
 class AppDB
 {
@@ -14,8 +16,9 @@ class AppDB
     public function __construct($id_mod)
     {
         $this->id_mod = $id_mod;
-        $oModulo = new Modulo($id_mod);
-        $this->nom_mod = $oModulo->getNom();
+        $ModuloRepository = new ModuloRepository();
+        $oModulo = $ModuloRepository->findById($id_mod);
+        $this->nom_mod = $oModulo->getNombreModVo()->value();
 
         $this->oModuloConfig = new ModulosConfig();
     }

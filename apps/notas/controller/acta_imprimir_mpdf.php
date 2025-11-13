@@ -32,7 +32,7 @@ use personas\model\entity\Persona;
 // FIN de  Cabecera global de URL de controlador ********************************
 
 // conversion
-$replace  = config\model\Config::$replace;
+$replace = src\configuracion\domain\entity\Config::$replace;
 $region_latin = $_SESSION['oConfig']->getNomRegionLatin();
 $nombre_prelatura = strtr("PRAELATURA SANCTAE CRUCIS ET OPERIS DEI", $replace);
 $reg_stgr = "Stgr".ConfigGlobal::mi_region();

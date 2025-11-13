@@ -4,7 +4,7 @@ namespace encargossacd\db;
 
 use core\ConfigGlobal;
 use core\ServerConf;
-use devel\model\DBAbstract;
+use src\configuracion\domain\DBAbstract;
 
 /**
  * crear las tablas necesarias para el esquema.

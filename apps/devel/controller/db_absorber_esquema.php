@@ -1,6 +1,6 @@
 <?php
 
-use devel\model\DBAlterSchema;
+use src\configuracion\domain\DBAlterSchema;
 use src\ubis\application\repositories\DelegacionRepository;
 use ubis\model\entity\Delegacion;
 

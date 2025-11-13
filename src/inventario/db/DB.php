@@ -3,7 +3,7 @@
 namespace src\inventario\db;
 
 use core\ConfigGlobal;
-use devel\model\DBAbstract;
+use src\configuracion\domain\DBAbstract;
 
 /**
  * Crear las tablas necesaria a nivel de aplicación (global).

@@ -6,13 +6,14 @@ use actividadcargos\model\entity\GestorActividadCargo;
 use actividadcargos\model\entity\GestorCargo;
 use actividades\model\entity\ActividadAll;
 use actividadescentro\model\entity\GestorCentroEncargado;
-use config\model\entity\ConfigSchema;
 use core\ConfigGlobal;
 use core\ValueObject\Uuid;
 use personas\model\entity\PersonaDl;
 use shared\domain\ColaMailId;
 use shared\domain\entity\ColaMail;
 use shared\domain\repositories\ColaMailRepository;
+use src\configuracion\application\repositories\ConfigSchemaRepository;
+use src\configuracion\domain\entity\ConfigSchema;
 use src\usuarios\application\repositories\UsuarioRepository;
 use ubis\model\entity\CentroDl;
 use ubis\model\entity\Ubi;
@@ -237,9 +238,10 @@ class ComunicarActividadesSacd
         $mi_dele = ConfigGlobal::mi_dele();
 
         // e-mail jefe calendario
+        $ConfigSchemaRepository = new ConfigSchemaRepository();
         $parametro = 'jefe_calendario';
-        $oConfigSchema = new ConfigSchema($parametro);
-        $valor = $oConfigSchema->getValor();
+        $oConfigSchema = $ConfigSchemaRepository->findById($parametro);
+        $valor = $oConfigSchema?->getValorVo()?->value();
 
         if (empty($valor)) {
             $error_txt = _("falta el definir el jefe de calendario");

@@ -3,7 +3,7 @@
 use core\ConfigGlobal;
 use core\DBPropiedades;
 use core\ViewPhtml;
-use devel\model\entity\GestorApp;
+use src\configuracion\application\repositories\AppRepository;
 use web\Desplegable;
 use web\Hash;
 
@@ -11,7 +11,7 @@ use web\Hash;
  * La idea de esta página es poder crear y eliminar
  * las tablas correspondientes a cada app.
  * Al activar un módulo, se debería crear las tablas en el esquema correspondiente,
- * pero por aqui se pueden grear en el esquema global y en otros.
+ * pero por aqui se pueden crear en el esquema global y en otros.
  *
  */
 
@@ -24,12 +24,12 @@ require_once("apps/core/global_header.inc");
 require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$oGesApps = new GestorApp();
-$cApps = $oGesApps->getApps();
+$AppRepository = new AppRepository();
+$cApps = $AppRepository->getApps();
 $a_apps = [];
 foreach ($cApps as $oApp) {
-    $id_app = $oApp->getId_app();
-    $nom_app = $oApp->getNombreApp();
+    $id_app = $oApp->getIdAppVo()->value();
+    $nom_app = $oApp->getNombreAppVo()->value();
     $a_apps[$id_app] = $nom_app;
 }
 

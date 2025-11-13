@@ -53,7 +53,7 @@ $nom=$trato.$nom_vernacula.$apellidos;
 $region_latin = $_SESSION['oConfig']->getNomRegionLatin();
 
 // conversion 
-$replace = config\model\Config::$replace;
+$replace = src\configuracion\domain\entity\Config::$replace;
 
 function titulo($id_asignatura){
     $cabecera = '<tr><td></td><td  colspan="7" class="space"></td></tr>

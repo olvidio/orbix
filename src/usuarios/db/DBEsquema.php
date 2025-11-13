@@ -3,7 +3,7 @@
 namespace src\usuarios\db;
 
 use core\ConfigGlobal;
-use devel\model\DBAbstract;
+use src\configuracion\domain\DBAbstract;
 
 /**
  * crear las tablas necesarias para el esquema.

@@ -3,7 +3,7 @@
 namespace src\certificados\db;
 
 use core\ConfigGlobal;
-use devel\model\DBAbstract;
+use src\configuracion\domain\DBAbstract;
 use src\ubis\application\repositories\DelegacionRepository;
 
 /**

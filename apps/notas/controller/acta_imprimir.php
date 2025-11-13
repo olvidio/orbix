@@ -51,7 +51,7 @@ $Qcara = (string)filter_input(INPUT_POST, 'cara');
 $cara = empty($Qcara) ? 'A' : $Qcara;
 
 // conversion
-$replace = config\model\Config::$replace;
+$replace = src\configuracion\domain\entity\Config::$replace;
 $region_latin = $_SESSION['oConfig']->getNomRegionLatin();
 $nombre_prelatura = strtr("PRAELATURA SANCTAE CRUCIS ET OPERIS DEI", $replace);
 $reg_stgr = "Stgr" . ConfigGlobal::mi_region();

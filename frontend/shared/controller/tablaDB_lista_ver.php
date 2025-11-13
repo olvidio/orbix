@@ -82,6 +82,9 @@ if (empty($Qk_buscar)) {
         'obj_pau' => $Qobj_pau,
     ];
     $data = PostRequest::getDataFromUrl($url_backend, $a_campos);
+    if (!empty($data['error'])) {
+        exit ($data['error']);
+    }
 
     $a_campos_buscar = $data['a_campos'];
     $datos_buscar = empty($data['buscar_view'])? '' : $data['buscar_view'];
@@ -124,7 +127,9 @@ $a_campos = [
     'obj_pau' => $Qobj_pau,
 ];
 $data = PostRequest::getDataFromUrl($url_backend, $a_campos);
-
+if (!empty($data['error'])) {
+    exit ($data['error']);
+}
 $txt_explicacion = $data['explicacion'];
 $txt_titulo = $data['titulo'];
 $script = $data['script'];

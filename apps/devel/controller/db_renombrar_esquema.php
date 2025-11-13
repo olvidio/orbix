@@ -1,9 +1,10 @@
 <?php
 
-use devel\model\DBAlterSchema;
-use devel\model\entity\GestorDbSchema;
 
 // INICIO Cabecera global de URL de controlador *********************************
+use devel\model\DBAlterSchema;
+use src\utils_database\application\repositories\DbSchemaRepository;
+
 require_once("apps/core/global_header.inc");
 // Archivos requeridos por esta url **********************************************
 
@@ -56,8 +57,8 @@ $oDBRol->renombrarUsuario($esquema_old); // reescribe el password que ya tenia.
 $oConfigDBComun->renombrarListaEsquema('comun', $esquema_old, $esquema);
 
 // Cambiar la tabla db_idschema. (pone el nombre de los tres esquemas, pero sólo en una base de datos)
-$oGesDbSchema = new GestorDbSchema();
-$oGesDbSchema->cambiarNombre($esquema_old, $esquema, 'comun');
+$DbSchemaRepository = new DbSchemaRepository();
+$DbSchemaRepository->cambiarNombre($esquema_old, $esquema, 'comun');
 
 /////////  para comun en interior (select)
 $configComunP = $oConfigDB->getEsquema('public_select');
@@ -92,8 +93,8 @@ $oDBRol->renombrarUsuario($esquema_oldv); // reescribe el password que ya tenia.
 $oConfigDBSv->renombrarListaEsquema('sv', $esquema_oldv, $esquemav);
 
 // Cambiar la tabla db_idschema. (pone el nombre de los tres esquemas, pero sólo en una base de datos)
-$oGesDbSchema = new GestorDbSchema();
-$oGesDbSchema->cambiarNombre($esquema_old, $esquema, 'sv');
+$DbSchemaRepository = new DbSchemaRepository();
+$DbSchemaRepository->cambiarNombre($esquema_old, $esquema, 'sv');
 
 //sv-e
 $configSveP = $oConfigDB->getEsquema('publicv-e');
@@ -113,8 +114,8 @@ $oDBRol->renombrarSchema($esquema_oldv); // Cambia el nombre del esquema
 $oConfigDBSve->renombrarListaEsquema('sv-e', $esquema_oldv, $esquemav);
 
 // Cambiar la tabla db_idschema. (pone el nombre de los tres esquemas, pero sólo en una base de datos)
-$oGesDbSchema = new GestorDbSchema();
-$oGesDbSchema->cambiarNombre($esquema_old, $esquema, 'sv-e');
+$DbSchemaRepository = new DbSchemaRepository();
+$DbSchemaRepository->cambiarNombre($esquema_old, $esquema, 'sv-e');
 
 //////////// sv-e para db interior (select) debería servir el de sv normal
 $oConfigDBSve->renombrarListaEsquema('sv-e_select', $esquema_oldv, $esquemav);
@@ -136,8 +137,8 @@ $oConfigDBSf = new core\ConfigDB('sf');
 $oConfigDBSf->renombrarListaEsquema('sf', $esquema_oldf, $esquemaf);
 
 // Cambiar la tabla db_idschema. (pone el nombre de los tres esquemas, pero sólo en una base de datos)
-$oGesDbSchema = new GestorDbSchema();
-$oGesDbSchema->cambiarNombre($esquema_old,$esquema,'sf');
+$DbSchemaRepository = new DbSchemaRepository();
+$DbSchemaRepository->cambiarNombre($esquema_old,$esquema,'sf');
 */
 
 // ESQUEMAS: CAMBIOS EN TABLAS ////////////////////////////////////////
@@ -441,8 +442,8 @@ if (!empty($Qsf)) {
 
     // Llenar la tabla db_idschema (todos, aunque de momento no exista sv o sf).
     $schema = $RegionNew.'-'.$DlNew;
-    $oGesDbSchema = new GestorDbSchema();
-    $oGesDbSchema->llenarNuevo($schema,'sf');
+    $DbSchemaRepository = new DbSchemaRepository();
+    $DbSchemaRepository->llenarNuevo($schema,'sf');
 
 }
 */
