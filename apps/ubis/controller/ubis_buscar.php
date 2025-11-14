@@ -1,9 +1,9 @@
 <?php
 
 use core\ViewPhtml;
-use ubis\model\entity\GestorDireccionCtr;
 use src\ubis\application\services\RegionDropdown;
-use ubis\model\entity\GestorTipoCasa;
+use src\ubis\application\services\TipoCasaDropdown;
+use ubis\model\entity\GestorDireccionCtr;
 use ubis\model\entity\GestorTipoCentro;
 use web\Desplegable;
 use web\Hash;
@@ -39,12 +39,7 @@ $oDesplTipoCentro->setBlanco(1);
 $oDesplTipoCentro->setOpciones($a_tipos_centro);
 
 // tipo casa
-$oDesplTipoCasa = new Desplegable();
-$GesTipoCasa = new GestorTipoCasa();
-$a_tipos_casa = $GesTipoCasa->getListaTiposCasa();
-$oDesplTipoCasa->setNombre('tipo_casa');
-$oDesplTipoCasa->setBlanco(1);
-$oDesplTipoCasa->setOpciones($a_tipos_casa);
+$oDesplTipoCasa = TipoCasaDropdown::listaTiposCasa(true, 'tipo_casa');
 
 //paises posibles
 $GesPais = new GestorDireccionCtr();

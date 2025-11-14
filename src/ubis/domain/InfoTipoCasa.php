@@ -1,12 +1,13 @@
 <?php
 
-namespace ubis\model;
+namespace src\ubis\domain;
 
-use core\DatosInfo;
+use src\shared\domain\DatosInfoRepo;
+use src\ubis\application\repositories\TipoCasaRepository;
 
 /* No vale el underscore en el nombre */
 
-class InfoTipoCasa extends DatosInfo
+class InfoTipoCasa extends DatosInfoRepo
 {
 
     public function __construct()
@@ -16,8 +17,8 @@ class InfoTipoCasa extends DatosInfo
         $this->setTxtBuscar(_("buscar un tipo de casa"));
         $this->setTxtExplicacion();
 
-        $this->setClase('ubis\\model\\entity\\TipoCasa');
-        $this->setMetodoGestor('getTiposCasa');
+        $this->setClase('src\\ubis\\domain\\entity\\TipoCasa');
+        $this->setMetodoGestor('getTipoCasas');
     }
 
     public function getColeccion()
@@ -26,13 +27,13 @@ class InfoTipoCasa extends DatosInfo
         // Si se quiere listar una selección, $this->k_buscar
         if (empty($this->k_buscar)) {
             $aWhere = array('_ordre' => 'nombre_tipo_casa');
-            $aOperador = '';
+            $aOperador = [];
         } else {
             $aWhere = array('nombre_tipo_casa' => $this->k_buscar);
             $aOperador = array('nombre_tipo_casa' => 'sin_acentos');
         }
-        $oLista = new entity\GestorTipoCasa();
-        $Coleccion = $oLista->getTiposCasa($aWhere, $aOperador);
+        $oLista = new TipoCasaRepository();
+        $Coleccion = $oLista->getTipoCasas($aWhere, $aOperador);
 
         return $Coleccion;
     }

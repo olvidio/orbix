@@ -2,6 +2,7 @@
 
 use core\ConfigGlobal;
 use core\ViewPhtml;
+use src\ubis\application\services\TipoCasaDropdown;
 use ubis\model\entity\CasaDl;
 use ubis\model\entity\CentroDl;
 use src\ubis\application\services\DelegacionDropdown;
@@ -329,9 +330,7 @@ switch ($tipo_ubi) {
 
         $sv_chk = is_true($sv)? 'checked' : '';
         $sf_chk = is_true($sf)? 'checked' : '';
-        $oTiposCasa = new ubis\model\entity\GestorTipoCasa();
-        $oTiposCasaOpciones = $oTiposCasa->getListaTiposCasa();
-        $oDesplegableTiposCasa = new Desplegable('tipo_casa', $oTiposCasaOpciones, $tipo_casa, true);
+        $oDesplegableTiposCasa = TipoCasaDropdown::listaTiposCasa(true, 'tipo_casa');
 
         $oDesplDelegaciones->setOpcion_sel($dl);
         $oDesplRegiones->setOpcion_sel($region);
