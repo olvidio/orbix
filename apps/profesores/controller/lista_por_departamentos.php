@@ -14,9 +14,10 @@
 use core\ConfigGlobal;
 use core\ViewPhtml;
 use core\ViewTwig;
+use src\asignaturas\application\repositories\DepartamentoRepository;
+use src\ubis\application\repositories\DelegacionRepository;
 use web\Desplegable;
 use web\Hash;
-use src\ubis\application\repositories\DelegacionRepository;
 
 require_once("apps/core/global_header.inc");
 // Archivos requeridos por esta url **********************************************
@@ -75,8 +76,8 @@ foreach ($cProfesorTipo as $oProfesorTipo) {
     $cTipoProfesor[$id_tipo] = $tipo;
 }
 //lista de departamentos.
-$oGesDepartamentos = new asignaturas\model\entity\GestorDepartamento();
-$cDepartamentos = $oGesDepartamentos->getDepartamentos(array('_ordre' => 'departamento'));
+$DepartamentoRepository = new DepartamentoRepository();
+$cDepartamentos = $DepartamentoRepository->getDepartamentos(['_ordre' => 'departamento']);
 
 
 //por cada departamento:

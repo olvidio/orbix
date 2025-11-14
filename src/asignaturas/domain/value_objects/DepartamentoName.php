@@ -1,8 +1,8 @@
 <?php
 
-namespace src\ubis\domain\value_objects;
+namespace src\asignaturas\domain\value_objects;
 
-final class TipoCentroName
+final class DepartamentoName
 {
     private string $value;
 
@@ -16,15 +16,15 @@ final class TipoCentroName
     private function validate(string $value): void
     {
         if ($value === '') {
-            throw new \InvalidArgumentException('TipoCentroName cannot be empty');
+            throw new \InvalidArgumentException('DepartamentoName cannot be empty');
         }
-        // UI shows max length 30 (see DatosCampo->setArgument(30))
-        if (mb_strlen($value) > 30) {
-            throw new \InvalidArgumentException('TipoCentroName must be at most 30 characters');
+        // UI shows max length 50 (see DatosCampo->setArgument(50))
+        if (mb_strlen($value) > 50) {
+            throw new \InvalidArgumentException('DepartamentoName must be at most 50 characters');
         }
-        // Allow common name characters including accents, spaces, apostrophes, hyphens
+        // Allow common name characters including accents, spaces, apostrophes, hyphens, underscore, plus, parentheses
         if (!preg_match("/^[\p{L}0-9 .,'’_\-()\+]+$/u", $value)) {
-            throw new \InvalidArgumentException('TipoCentroName has invalid characters');
+            throw new \InvalidArgumentException('DepartamentoName has invalid characters');
         }
     }
 
@@ -38,7 +38,7 @@ final class TipoCentroName
         return $this->value;
     }
 
-    public function equals(TipoCentroName $other): bool
+    public function equals(DepartamentoName $other): bool
     {
         return $this->value === $other->value();
     }

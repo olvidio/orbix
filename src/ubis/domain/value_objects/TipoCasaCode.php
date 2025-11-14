@@ -23,7 +23,7 @@ final class TipoCasaCode
             throw new \InvalidArgumentException('TipoCasaCode must be at most 6 characters');
         }
         // Allow letters, numbers, underscore and hyphen
-        if (!preg_match('/^[A-Za-z0-9_-]+$/u', $value)) {
+        if (!preg_match('/^[\p{L}0-9_.\- ]+$/u', $value)) {
             throw new \InvalidArgumentException('TipoCasaCode has invalid characters');
         }
     }

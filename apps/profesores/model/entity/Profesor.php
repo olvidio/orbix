@@ -588,9 +588,9 @@ class Profesor extends ClasePropiedades
         $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_departamento'));
         $oDatosCampo->setEtiqueta(_("departamento"));
         $oDatosCampo->setTipo('opciones');
-        $oDatosCampo->setArgument('asignaturas\model\entity\Departamento'); // nombre del objeto relacionado
+        $oDatosCampo->setArgument('src\\asignaturas\\application\\repositories\\DepartamentoRepository');
         $oDatosCampo->setArgument2('getDepartamento'); // método para obtener el valor a mostrar del objeto relacionado.
-        $oDatosCampo->setArgument3('getListaDepartamentos'); // método con que crear la lista de opciones del Gestor objeto relacionado.
+        $oDatosCampo->setArgument3('getArrayDepartamentos');
         return $oDatosCampo;
     }
 

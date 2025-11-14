@@ -32,7 +32,7 @@ class PgTipoCentroRepository extends ClaseRepository implements TipoCentroReposi
         $this->setNomTabla('xu_tipo_ctr');
     }
 
-    public function getArrayTiposCentro(): array
+    public function getArrayDeparatamentos(): array
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();

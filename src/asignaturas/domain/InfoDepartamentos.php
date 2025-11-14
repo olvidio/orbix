@@ -1,12 +1,14 @@
 <?php
 
-namespace asignaturas\model;
+namespace src\asignaturas\domain;
 
-use core\DatosInfo;
 
 /* No vale el underscore en el nombre */
 
-class InfoDepartamentos extends DatosInfo
+use src\asignaturas\application\repositories\DepartamentoRepository;
+use src\shared\domain\DatosInfoRepo;
+
+class InfoDepartamentos extends DatosInfoRepo
 {
 
     public function __construct()
@@ -16,7 +18,7 @@ class InfoDepartamentos extends DatosInfo
         $this->setTxtBuscar(_("buscar un departamento"));
         $this->setTxtExplicacion();
 
-        $this->setClase('asignaturas\\model\\entity\\Departamento');
+        $this->setClase('src\\asignaturas\\domain\\entity\\Departamento');
         $this->setMetodoGestor('getDepartamentos');
     }
 
@@ -26,12 +28,12 @@ class InfoDepartamentos extends DatosInfo
         // Si se quiere listar una selección, $this->k_buscar
         if (empty($this->k_buscar)) {
             $aWhere = array('_ordre' => 'departamento');
-            $aOperador = '';
+            $aOperador = [];
         } else {
             $aWhere = array('departamento' => $this->k_buscar);
             $aOperador = array('departamento' => 'sin_acentos');
         }
-        $oLista = new entity\GestorDepartamento();
+        $oLista = new DepartamentoRepository();
         $Coleccion = $oLista->getDepartamentos($aWhere, $aOperador);
 
         return $Coleccion;

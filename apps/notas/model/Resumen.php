@@ -3,7 +3,6 @@
 namespace notas\model;
 
 use actividades\model\entity\ActividadAll;
-use asignaturas\model\entity\Departamento;
 use asignaturas\model\entity\GestorAsignatura;
 use asignaturas\model\entity\GestorSector;
 use core\ClasePropiedades;
@@ -11,6 +10,7 @@ use core\ConfigGlobal;
 use notas\model\entity\GestorNota;
 use personas\model\entity\PersonaDl;
 use profesores\model\entity\GestorProfesorDirector;
+use src\asignaturas\application\repositories\DepartamentoRepository;
 use function core\is_true;
 
 /**
@@ -1473,6 +1473,7 @@ class Resumen extends ClasePropiedades
 
         $oGesDirectores = new GestorProfesorDirector();
         $cDirectores = $oGesDirectores->getProfesoresDirectores(array('f_cese' => 1), array('f_cese' => 'IS NULL'));
+        $DepartamentoRepository = new DepartamentoRepository();
 
         $rta['num'] = count($cDirectores);
         if (is_true($this->blista) && $rta['num'] > 0) {
@@ -1480,8 +1481,7 @@ class Resumen extends ClasePropiedades
             foreach ($cDirectores as $oDirector) {
                 $id_departamento = $oDirector->getId_departamento();
                 $id_nom = $oDirector->getId_nom();
-                $oDepartamento = new Departamento($id_departamento);
-                $nom_dep = $oDepartamento->getDepartamento();
+                $nom_dep = $DepartamentoRepository->findById($id_departamento)?->getNombreDepartamentoVo()->value();
                 $oPersonaDl = new PersonaDl($id_nom);
                 $nom_persona = $oPersonaDl->getPrefApellidosNombre();
                 $html .= "<tr><td>$nom_dep</td><td>$nom_persona</td></tr>";
