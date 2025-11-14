@@ -19,6 +19,7 @@ use dossiers\model\entity\GestorDossier;
 use dossiers\model\entity\TipoDossier;
 use notas\model\EditarPersonaNota;
 use notas\model\PersonaNota;
+use src\asignaturas\application\repositories\AsignaturaRepository;
 use src\certificados\application\repositories\CertificadoRecibidoRepository;
 use src\certificados\application\repositories\CertificadoEmitidoRepository;
 use src\certificados\domain\entity\CertificadoRecibido;
@@ -477,7 +478,10 @@ class TrasladoDl
             $id_asignatura = $oMatricula->getId_asignatura();
             $oActividad = new ActividadAll($id_activ);
             $nom_activ = $oActividad->getNom_activ();
-            $oAsignatura = new Asignatura($id_asignatura);
+            $oAsignatura = (new AsignaturaRepository())->findById($id_asignatura);
+            if ($oAsignatura === null) {
+                throw new \Exception(sprintf(_("No se ha encontrado la asignatura con id: %s"), $id_asignatura));
+            }
             $nombre_corto = $oAsignatura->getNombre_corto();
             $msg .= empty($msg) ? '' : "\n";
             $msg .= sprintf(_("ca: %s, asignatura: %s"), $nom_activ, $nombre_corto);

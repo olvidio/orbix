@@ -10,6 +10,8 @@ use notas\model\entity\GestorActaTribunalDl;
 use notas\model\getDatosActa;
 use personas\model\entity\GestorNombreLatin;
 use personas\model\entity\Persona;
+use src\asignaturas\application\repositories\AsignaturaRepository;
+use src\asignaturas\application\repositories\AsignaturaTipoRepository;
 use web\Hash;
 
 /**
@@ -67,14 +69,20 @@ $linea = $oActa->getLinea();
 $lugar = $oActa->getLugar();
 $observ = $oActa->getObserv();
 
-$oAsignatura = new Asignatura($id_asignatura);
+$oAsignatura = (new AsignaturaRepository())->findById($id_asignatura);
+if ($oAsignatura === null) {
+    throw new \Exception(sprintf(_("No se ha encontrado la asignatura con id: %s"), $id_asignatura));
+}
 $nombre_corto = $oAsignatura->getNombre_corto();
 $nombre_asignatura = strtr($oAsignatura->getNombre_asignatura(), $replace);
 $any = $oAsignatura->getYear();
 
 $id_tipo = $oAsignatura->getId_tipo();
-$oAsignaturaTipo = new AsignaturaTipo($id_tipo);
-$curso = strtr($oAsignaturaTipo->getTipo_latin() ?? '', $replace);
+$oAsignaturaTipo = (new AsignaturaTipoRepository())->findById($id_tipo);
+if ($oAsignatura === null) {
+    throw new \Exception(sprintf(_("No se ha encontrado el tipo de asignatura con id: %s"), $id_tipo));
+}
+$curso = strtr($oAsignaturaTipo->getTipoLatinVo()->value() ?? '', $replace);
 
 switch ($any) {
     case 1:

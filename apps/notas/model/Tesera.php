@@ -12,6 +12,7 @@ use asignaturas\model\entity\Asignatura;
 use asignaturas\model\entity\GestorAsignatura;
 use core\ViewPhtml;
 use personas\model\entity\Persona;
+use src\asignaturas\application\repositories\AsignaturaRepository;
 use web\DateTimeLocal;
 use web\Posicion;
 use function core\is_true;
@@ -114,14 +115,14 @@ class Tesera
     {
         $this->getCurso();
         // Asignaturas posibles:
-        $GesAsignaturas = new GestorAsignatura();
+        $AsignaturaRepository = new AsignaturaRepository();
         $aWhere = [];
         $aOperador = [];
         $aWhere['status'] = 't';
         $aWhere['id_nivel'] = '1100,2500';
         $aOperador['id_nivel'] = 'BETWEEN';
         $aWhere['_ordre'] = 'id_nivel';
-        $cAsignaturas = $GesAsignaturas->getAsignaturas($aWhere, $aOperador);
+        $cAsignaturas = $AsignaturaRepository->getAsignaturas($aWhere, $aOperador);
 
         return $cAsignaturas;
     }
@@ -143,18 +144,21 @@ class Tesera
             $oF_acta = $oPersonaNota->getF_acta();
             $id_situacion = $oPersonaNota->getId_situacion();
             $bAprobada = $oPersonaNota->isAprobada();
-            $oAsig = new Asignatura($id_asignatura);
+            $oAsignatura = (new AsignaturaRepository())->findById($id_asignatura);
+            if ($oAsignatura === null) {
+                throw new \Exception(sprintf(_("No se ha encontrado la asignatura con id: %s"), $id_asignatura));
+            }
             if ($id_asignatura > 3000) {
                 $id_nivel_asig = $id_nivel;
             } else {
-                if ($oAsig->getStatus() != 't') continue;
-                $id_nivel_asig = $oAsig->getId_nivel();
+                if (!$oAsignatura->isStatus()) continue;
+                $id_nivel_asig = $oAsignatura->getId_nivel();
             }
             $n = $id_nivel_asig;
             $aAprobadas[$n]['id_nivel_asig'] = $id_nivel_asig;
             $aAprobadas[$n]['id_nivel'] = $id_nivel;
             $aAprobadas[$n]['id_asignatura'] = $id_asignatura;
-            $aAprobadas[$n]['nombre_corto'] = $oAsig->getNombre_corto();
+            $aAprobadas[$n]['nombre_corto'] = $oAsignatura->getNombre_corto();
             $aAprobadas[$n]['fecha'] = $oF_acta;
             $aAprobadas[$n]['id_situacion'] = $id_situacion;
             $aAprobadas[$n]['bAprobada'] = $bAprobada;

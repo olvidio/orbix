@@ -6,6 +6,7 @@ use actividadestudios\model\entity\GestorMatriculaDl;
 use asignaturas\model\entity\Asignatura;
 use core\ViewPhtml;
 use personas\model\entity\Persona;
+use src\asignaturas\application\repositories\AsignaturaRepository;
 use web\DateTimeLocal;
 use web\Hash;
 use web\Lista;
@@ -151,7 +152,10 @@ foreach ($cMatriculas as $oMatricula) {
         }
     }
 
-    $oAsignatura = new Asignatura($id_asignatura);
+    $oAsignatura = (new AsignaturaRepository())->findById($id_asignatura);
+    if ($oAsignatura === null) {
+        throw new \Exception(sprintf(_("No se ha encontrado la asignatura con id: %s"), $id_asignatura));
+    }
     $nombre_corto = $oAsignatura->getNombre_corto();
 
     $a_valores[$i]['sel'] = "$id_activ#$id_asignatura#$id_nom";

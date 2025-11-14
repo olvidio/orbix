@@ -5,6 +5,7 @@ use asignaturas\model\entity\GestorAsignatura;
 use core\ClaseGestor;
 use core\Condicion;
 use core\Set;
+use src\asignaturas\application\repositories\AsignaturaRepository;
 
 /**
  * GestorActividadAsignatura
@@ -49,8 +50,8 @@ class GestorActividadAsignatura extends ClaseGestor
          * para no tener que consultar cada vez a la base de datos.
          *
          */
-        $GesAsignaturas = new GestorAsignatura();
-        $aAsigDatos = $GesAsignaturas->getArrayAsignaturasCreditos();
+        $AsignaturaRepository = new AsignaturaRepository();
+        $aAsigDatos = $AsignaturaRepository->getArrayAsignaturasCreditos();
 
         // por cada ca creo un array con las asignaturas y los créditos.
         $aWhere['id_activ'] = $id_activ;

@@ -13,6 +13,7 @@ use notas\model\entity\Nota;
 use notas\model\entity\PersonaNotaDB;
 use notas\model\PersonaNota;
 use personas\model\entity\Persona;
+use src\asignaturas\application\repositories\AsignaturaRepository;
 use web\TiposActividades;
 use function core\is_true;
 
@@ -183,7 +184,7 @@ if ($Qque === 3) { //paso las matrículas a notas definitivas (Grabar e imprimir
                 continue;
             }
         } else {
-            $oAsignatura = new Asignatura($Qid_asignatura);
+            $oAsignatura = (new AsignaturaRepository())->findById($Qid_asignatura);
             $id_nivel = $oAsignatura->getId_nivel();
         }
 

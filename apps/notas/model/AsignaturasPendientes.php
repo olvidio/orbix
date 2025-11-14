@@ -5,6 +5,7 @@ namespace notas\model;
 use core\ClasePropiedades;
 use core\ConfigGlobal;
 use asignaturas\model\entity\GestorAsignatura;
+use src\asignaturas\application\repositories\AsignaturaRepository;
 use function core\is_true;
 
 /**
@@ -112,8 +113,8 @@ class AsignaturasPendientes extends ClasePropiedades
     public function getAsignaturasB()
     {
         if (empty($this->iasignaturasB)) {
-            $gesAsignaturas = new GestorAsignatura();
-            $cAsignaturasB = $gesAsignaturas->getAsignaturas(array('status' => 't', 'id_nivel' => '1100,1300'), array('id_nivel' => 'BETWEEN'));
+            $AsignaturaRepository = new AsignaturaRepository();
+            $cAsignaturasB = $AsignaturaRepository->getAsignaturas(array('status' => 't', 'id_nivel' => '1100,1300'), array('id_nivel' => 'BETWEEN'));
 
             $this->iasignaturasB = count($cAsignaturasB);
             $aIdNivel = [];
@@ -133,8 +134,8 @@ class AsignaturasPendientes extends ClasePropiedades
     public function getAsignaturasC()
     {
         if (empty($this->iasignaturasC)) {
-            $gesAsignaturas = new GestorAsignatura();
-            $cAsignaturasC = $gesAsignaturas->getAsignaturas(array('status' => 't', 'id_nivel' => '2100,2500'), array('id_nivel' => 'BETWEEN'));
+            $AsignaturaRepository = new AsignaturaRepository();
+            $cAsignaturasC = $AsignaturaRepository->getAsignaturas(array('status' => 't', 'id_nivel' => '2100,2500'), array('id_nivel' => 'BETWEEN'));
 
             $this->iasignaturasC = count($cAsignaturasC);
             $aIdNivel = [];
@@ -154,8 +155,8 @@ class AsignaturasPendientes extends ClasePropiedades
     public function getAsignaturasC1()
     {
         if (empty($this->iasignaturasC1)) {
-            $gesAsignaturas = new GestorAsignatura();
-            $cAsignaturasC1 = $gesAsignaturas->getAsignaturas(array('status' => 't', 'id_nivel' => '2100,2113'), array('id_nivel' => 'BETWEEN'));
+            $AsignaturaRepository = new AsignaturaRepository();
+            $cAsignaturasC1 = $AsignaturaRepository->getAsignaturas(array('status' => 't', 'id_nivel' => '2100,2113'), array('id_nivel' => 'BETWEEN'));
             $this->iasignaturasC1 = count($cAsignaturasC1);
             $aIdNivel = [];
             foreach ($cAsignaturasC1 as $oAsignatura) {
@@ -174,8 +175,8 @@ class AsignaturasPendientes extends ClasePropiedades
     public function getAsignaturasC2()
     {
         if (empty($this->iasignaturasC2)) {
-            $gesAsignaturas = new GestorAsignatura();
-            $cAsignaturasC2 = $gesAsignaturas->getAsignaturas(array('status' => 't', 'id_nivel' => '2200,2500'), array('id_nivel' => 'BETWEEN'));
+            $AsignaturaRepository = new AsignaturaRepository();
+            $cAsignaturasC2 = $AsignaturaRepository->getAsignaturas(array('status' => 't', 'id_nivel' => '2200,2500'), array('id_nivel' => 'BETWEEN'));
             $this->iasignaturasC2 = count($cAsignaturasC2);
             $aIdNivel = [];
             foreach ($cAsignaturasC2 as $oAsignatura) {
@@ -362,8 +363,8 @@ class AsignaturasPendientes extends ClasePropiedades
         $oDbl->query("CREATE INDEX IF NOT EXISTS $asignaturas" . "_nivel" . " ON $asignaturas (id_nivel)");
         $oDbl->query("CREATE INDEX IF NOT EXISTS $asignaturas" . "_id_asignatura" . " ON $asignaturas (id_asignatura)");
 
-        $gesAsignaturas = new GestorAsignatura();
-        $cAsignaturas = $gesAsignaturas->getAsignaturas(array('status' => 'true'));
+        $AsignaturaRepository = new AsignaturaRepository();
+        $cAsignaturas = $AsignaturaRepository->getAsignaturas(array('status' => 'true'));
 
         $prep = $oDbl->prepare("INSERT INTO $asignaturas VALUES(:id_asignatura, :id_nivel, :nombre_asignatura, :nombre_corto, :creditos, :year, :id_sector, :status, :id_tipo)");
         foreach ($cAsignaturas as $oAsignatura) {

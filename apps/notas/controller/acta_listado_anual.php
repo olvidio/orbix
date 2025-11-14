@@ -10,6 +10,7 @@ use core\ConfigGlobal;
 use core\ViewPhtml;
 use notas\model\entity\GestorActa;
 use notas\model\entity\GestorActaDl;
+use src\asignaturas\application\repositories\AsignaturaRepository;
 use src\ubis\application\repositories\DelegacionRepository;
 use web\DateTimeLocal;
 use web\Hash;
@@ -50,7 +51,7 @@ $aOperador = [];
 $aWhere['f_acta'] = "'$inicioIso','$finIso'";
 $aOperador['f_acta'] = 'BETWEEN';
 
- // Si es cr, se mira en todas (las suyas):
+// Si es cr, se mira en todas (las suyas):
 $mi_dele = ConfigGlobal::mi_delef();
 $mi_region = ConfigGlobal::mi_region();
 if (ConfigGlobal::mi_ambito() === 'rstgr') {
@@ -62,7 +63,7 @@ if (ConfigGlobal::mi_ambito() === 'rstgr') {
         $Qacta_dl .= empty($Qacta_dl) ? '' : "|";
         $Qacta_dl .= "$dl ";
     }
-    $aWhere['acta'] = '^('.$Qacta_dl.')';
+    $aWhere['acta'] = '^(' . $Qacta_dl . ')';
     $aOperador['acta'] = '~';
     $GesActas = new GestorActa();
 } else {
@@ -80,8 +81,10 @@ foreach ($cActas as $oActa) {
     $oF_acta = $oActa->getF_acta();
     $f_acta = $oF_acta->getFromLocal();
     $id_asignatura = $oActa->getId_asignatura();
-
-    $oAsignatura = new Asignatura($id_asignatura);
+    $oAsignatura = (new AsignaturaRepository())->findById($id_asignatura);
+    if ($oAsignatura === null) {
+        throw new \Exception(sprintf(_("No se ha encontrado la asignatura con id: %s"), $id_asignatura));
+    }
     $nombre_corto = $oAsignatura->getNombre_corto();
     // puede ser una asignatura fantasma (que no exista)
     if ($nombre_corto === NULL) {

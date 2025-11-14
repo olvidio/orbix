@@ -7,6 +7,8 @@ use core\ConfigGlobal;
 use core\ViewPhtml;
 use profesores\model\entity\GestorProfesor;
 use profesores\model\entity\GestorProfesorActividad;
+use src\asignaturas\application\repositories\AsignaturaRepository;
+use web\Desplegable;
 use web\Hash;
 
 // INICIO Cabecera global de URL de controlador *********************************
@@ -71,7 +73,10 @@ if (!empty($Qid_asignatura)) { //caso de modificar
     $f_ini = $oActividadAsignatura->getF_ini()->getFromLocal();
     $f_fin = $oActividadAsignatura->getF_fin()->getFromLocal();
 
-    $oAsignatura = new Asignatura($Qid_asignatura);
+    $oAsignatura = (new AsignaturaRepository())->findById($Qid_asignatura);
+    if ($oAsignatura === null) {
+        throw new \Exception(sprintf(_("No se ha encontrado la asignatura con id: %s"), $Qid_asignatura));
+    }
     $nombre_corto = $oAsignatura->getNombre_corto();
     $creditos = $oAsignatura->getCreditos();
 
@@ -86,8 +91,9 @@ if (!empty($Qid_asignatura)) { //caso de modificar
     $f_ini = '';
     $f_fin = '';
     if (!empty($Qid_activ)) {
-        $GesAsignaturas = new GestorAsignatura();
-        $oDesplAsignaturas = $GesAsignaturas->getListaAsignaturas(false);
+        $AsignaturaRepository = new AsignaturaRepository();;
+        $aOpciones = $AsignaturaRepository->getArrayAsignaturasConSeparador(false);
+        $oDesplAsignaturas = new Desplegable('', $aOpciones, '', true);
         $oDesplAsignaturas->setNombre('id_asignatura');
         $oDesplAsignaturas->setAction("fnjs_mas_profes('asignatura')");
     } else {

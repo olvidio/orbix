@@ -10,6 +10,7 @@ use asignaturas\model\entity\Asignatura;
 use core\ConfigGlobal;
 use core\ViewPhtml;
 use personas\model\entity\Persona;
+use src\asignaturas\application\repositories\AsignaturaRepository;
 use web\Hash;
 use web\Lista;
 
@@ -141,7 +142,10 @@ class Select3103
                 $nom_profesor = '';
             }
 
-            $oAsignatura = new Asignatura($id_asignatura);
+            $oAsignatura = (new AsignaturaRepository())->findById($id_asignatura);
+            if ($oAsignatura === null) {
+                throw new \Exception(sprintf(_("No se ha encontrado la asignatura con id: %s"), $id_asignatura));
+            }
             $nombre_corto = $oAsignatura->getNombre_corto();
             $aGrupos[$id_asignatura] = $nombre_corto;
 

@@ -3,6 +3,7 @@
 use asignaturas\model\entity\GestorAsignatura;
 use notas\model\EditarPersonaNota;
 use notas\model\PersonaNota;
+use src\asignaturas\application\repositories\AsignaturaRepository;
 use web\DateTimeLocal;
 use web\NullDateTimeLocal;
 
@@ -55,10 +56,10 @@ $nota_num = (float)filter_input(INPUT_POST, 'nota_num', FILTER_SANITIZE_NUMBER_F
 $nota_max = (integer)filter_input(INPUT_POST, 'nota_max');
 
 if ($id_asignatura === 1) {
-    $oGesAsignaturas = new GestorAsignatura();
-    $cAsignaturas = $oGesAsignaturas->getAsignaturas(array('id_nivel' => $id_nivel));
+    $AsignaturaRepository = new AsignaturaRepository();
+    $cAsignaturas = $AsignaturaRepository->getAsignaturas(array('id_nivel' => $id_nivel));
     if (!is_array($cAsignaturas) || count($cAsignaturas) === 0) {
-        $msg_err = sprintf(_("No se encuentra una asignatura para le nivel: %s"), $id_nivel);
+        $msg_err = sprintf(_("No se encuentra una asignatura para el nivel: %s"), $id_nivel);
         exit ($msg_err);
     }
     $oAsignatura = $cAsignaturas[0]; // sólo debería haber una

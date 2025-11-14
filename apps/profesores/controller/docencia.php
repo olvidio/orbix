@@ -2,6 +2,7 @@
 
 use asignaturas\model\entity\GestorAsignatura;
 use core\ConfigGlobal;
+use src\asignaturas\application\repositories\AsignaturaRepository;
 use web\Lista;
 use profesores\model\entity\GestorProfesor;
 use profesores\model\entity\GestorProfesorDocenciaStgr;
@@ -19,8 +20,8 @@ require_once("apps/core/global_object.inc");
 
 $oPosicion->recordar();
 
-$gesAsignaturas = new GestorAsignatura();
-$cAsignaturas = $gesAsignaturas->getAsignaturas();
+$AsignaturaRepository = new AsignaturaRepository();
+$cAsignaturas = $AsignaturaRepository->getAsignaturas();
 $a_asignaturas = [];
 foreach ($cAsignaturas as $oAsignatura) {
     $a_asignaturas[$oAsignatura->getId_asignatura()] = $oAsignatura->getNombre_corto();

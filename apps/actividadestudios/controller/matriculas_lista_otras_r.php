@@ -7,6 +7,7 @@ use notas\model\entity\Acta;
 use notas\model\entity\GestorPersonaNotaOtraRegionStgrDB;
 use personas\model\entity\GestorPersonaStgr;
 use personas\model\entity\Persona;
+use src\asignaturas\application\repositories\AsignaturaRepository;
 use web\Hash;
 use web\Lista;
 use web\Posicion;
@@ -93,8 +94,8 @@ if (!empty($Qapellido1)) {
     $a_notas_otras_regiones_stgr_sin_cert = $gesPersonaNotaOtraRegionDB->getPersonaNotas($aWhere, $aOperador);
 
     // lista asignaturas
-    $gesAsignaturas = new GestorAsignatura();
-    $a_asignaturas = $gesAsignaturas->getArrayAsignaturas();
+    $AsignaturaRepository = new AsignaturaRepository();
+    $a_asignaturas = $AsignaturaRepository->getArrayAsignaturas();
 
     $titulo = _("Lista de alumnos de otras regiones pendientes de generar certificado");
     $i = 0;

@@ -9,6 +9,7 @@ use core\ConfigGlobal;
 use core\ViewPhtml;
 use notas\model\entity\GestorNota;
 use notas\model\entity\GestorPersonaNotaDB;
+use src\asignaturas\application\repositories\AsignaturaRepository;
 use web\Desplegable;
 use web\Hash;
 
@@ -44,7 +45,7 @@ if (!empty($a_sel)) { //vengo de un checkbox
 $oActividad = new ActividadAll($Qid_activ);
 $nom_activ = $oActividad->getNom_activ();
 
-$GesAsignaturas = new GestorAsignatura();
+$AsignaturaRepository = new AsignaturaRepository();
 
 $oDesplProfesores = [];
 if (!empty($id_asignatura_real)) { //caso de modificar
@@ -53,7 +54,10 @@ if (!empty($id_asignatura_real)) { //caso de modificar
     $id_situacion = $oMatricula->getId_situacion();
     $preceptor = $oMatricula->getPreceptor();
     $id_preceptor = $oMatricula->getId_preceptor();
-    $oAsignatura = new Asignatura($id_asignatura_real);
+    $oAsignatura = (new AsignaturaRepository())->findById($id_asignatura_real);
+    if ($oAsignatura === null) {
+        throw new \Exception(sprintf(_("No se ha encontrado la asignatura con id: %s"), $id_asignatura_real));
+    }
     $nombre_corto = $oAsignatura->getNombre_corto();
     $id_nivel = $id_asignatura_real;
     $id_asignatura = $id_asignatura_real;
@@ -85,7 +89,7 @@ if (!empty($id_asignatura_real)) { //caso de modificar
     $aWhere['id_nivel'] = 3000;
     $aOperador['id_nivel'] = '<';
     $aWhere['_ordre'] = 'id_nivel';
-    $cAsignaturas = $GesAsignaturas->getAsignaturas($aWhere, $aOperador);
+    $cAsignaturas = $AsignaturaRepository->getAsignaturas($aWhere, $aOperador);
     // todas las opcionales
     $aWhere = [];
     $aOperador = [];
@@ -93,7 +97,7 @@ if (!empty($id_asignatura_real)) { //caso de modificar
     $aWhere['id_nivel'] = '3000,5000';
     $aOperador['id_nivel'] = 'BETWEEN';
     $aWhere['_ordre'] = 'nombre_corto';
-    $cOpcionales = $GesAsignaturas->getAsignaturas($aWhere, $aOperador);
+    $cOpcionales = $AsignaturaRepository->getAsignaturas($aWhere, $aOperador);
     // Asignaturas superadas
     $GesNotas = new GestorNota();
     $cSuperadas = $GesNotas->getNotas(array('superada' => 't'));
@@ -157,7 +161,7 @@ $aWhere['id_sector'] = 1;
 $aWhere['id_nivel'] = 3000;
 $aOperador['id_nivel'] = '<';
 $aWhere['_ordre'] = 'nombre_corto';
-$cOpcionalesGenericas = $GesAsignaturas->getAsignaturas($aWhere, $aOperador);
+$cOpcionalesGenericas = $AsignaturaRepository->getAsignaturas($aWhere, $aOperador);
 $condicion = '';
 $lista_nivel_op = '';
 foreach ($cOpcionalesGenericas as $oOpcional) {

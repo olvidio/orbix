@@ -16,6 +16,7 @@ use core\ViewPhtml;
 use notas\model\entity\GestorActa;
 use notas\model\entity\GestorActaDl;
 use notas\model\entity\GestorActaEx;
+use src\asignaturas\application\repositories\AsignaturaRepository;
 use web\Hash;
 use web\Lista;
 use src\ubis\application\repositories\DelegacionRepository;
@@ -164,8 +165,8 @@ $a_cabeceras = [['name' => ucfirst(_("acta")), 'formatter' => 'clickFormatter'],
 ];
 
 
-$gesAsignatura = new GestorAsignatura();
-$a_asignaturas = $gesAsignatura->getArrayAsignaturas();
+$AsignaturaRepository = new AsignaturaRepository();
+$a_asignaturas = $AsignaturaRepository->getArrayAsignaturas();
 
 
 $i = 0;

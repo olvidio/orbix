@@ -8,6 +8,7 @@ use notas\model\entity\GestorPersonaNotaDB;
 use notas\model\entity\GestorPersonaNotaDlDB;
 use notas\model\entity\Nota;
 use personas\model\entity\GestorPersonaDl;
+use src\asignaturas\application\repositories\AsignaturaRepository;
 use web\Lista;
 
 /**
@@ -29,14 +30,14 @@ class TablaAlumnosAsignaturas
     {
 
         // Asignaturas posibles:
-        $GesAsignaturas = new GestorAsignatura();
+        $AsignaturaRepository = new AsignaturaRepository();
         $aWhere = [];
         $aOperador = [];
         $aWhere['status'] = 't';
         $aWhere['id_nivel'] = '1100,2500';
         $aOperador['id_nivel'] = 'BETWEEN';
         $aWhere['_ordre'] = 'id_nivel';
-        $cAsignaturas = $GesAsignaturas->getAsignaturas($aWhere, $aOperador);
+        $cAsignaturas = $AsignaturaRepository->getAsignaturas($aWhere, $aOperador);
 
         $a_cabeceras = [];
         $a_cabeceras[0] = _("n/a");
@@ -51,7 +52,7 @@ class TablaAlumnosAsignaturas
             $a_cabeceras[$a] = "$nom_asig ($creditos)";
         }
         //todas
-        $cAsignaturasTodas = $GesAsignaturas->getAsignaturas(array('_ordre' => 'id_asignatura'));
+        $cAsignaturasTodas = $AsignaturaRepository->getAsignaturas(array('_ordre' => 'id_asignatura'));
         foreach ($cAsignaturasTodas as $oAsignatura) {
             $id_asignatura = $oAsignatura->getId_asignatura();
             $a_Asig_nivel[$id_asignatura] = $oAsignatura->getId_nivel();
@@ -169,14 +170,14 @@ class TablaAlumnosAsignaturas
     public function getTablaDl()
     {
         // Asignaturas posibles:
-        $GesAsignaturas = new GestorAsignatura();
+        $AsignaturaRepository = new AsignaturaRepository();
         $aWhere = [];
         $aOperador = [];
         $aWhere['status'] = 't';
         $aWhere['id_nivel'] = '1100,2500';
         $aOperador['id_nivel'] = 'BETWEEN';
         $aWhere['_ordre'] = 'id_nivel';
-        $cAsignaturas = $GesAsignaturas->getAsignaturas($aWhere, $aOperador);
+        $cAsignaturas = $AsignaturaRepository->getAsignaturas($aWhere, $aOperador);
 
         $a_cabeceras = [];
         $a_cabeceras[0] = _("n/a");
@@ -191,7 +192,7 @@ class TablaAlumnosAsignaturas
             $a_cabeceras[$a] = "$nom_asig ($creditos)";
         }
         //todas
-        $cAsignaturasTodas = $GesAsignaturas->getAsignaturas(array('_ordre' => 'id_asignatura'));
+        $cAsignaturasTodas = $AsignaturaRepository->getAsignaturas(array('_ordre' => 'id_asignatura'));
         foreach ($cAsignaturasTodas as $oAsignatura) {
             $id_asignatura = $oAsignatura->getId_asignatura();
             $a_Asig_status[$id_asignatura] = $oAsignatura->getStatus();

@@ -1,12 +1,13 @@
 <?php
 
-namespace asignaturas\model;
+namespace src\asignaturas\domain;
 
-use core\DatosInfo;
+use src\asignaturas\application\repositories\AsignaturaRepository;
+use src\shared\domain\DatosInfoRepo;
 
 /* No vale el underscore en el nombre */
 
-class InfoAsignaturas extends DatosInfo
+class InfoAsignaturas extends DatosInfoRepo
 {
 
     public function __construct()
@@ -16,7 +17,7 @@ class InfoAsignaturas extends DatosInfo
         $this->setTxtBuscar(_("buscar en nombre largo"));
         $this->setTxtExplicacion();
 
-        $this->setClase('asignaturas\\model\\entity\\Asignatura');
+        $this->setClase('src\\asignaturas\\domain\\entity\\Asignatura');
         $this->setMetodoGestor('getAsignaturas');
     }
 
@@ -31,7 +32,7 @@ class InfoAsignaturas extends DatosInfo
         $aWhere['id_asignatura'] = 3000;
         $aOperador['id_asignatura'] = '<';
         $aWhere['_ordre'] = 'id_nivel';
-        $oLista = new entity\GestorAsignatura();
+        $oLista = new AsignaturaRepository();
         $Coleccion = $oLista->getAsignaturas($aWhere, $aOperador);
 
         return $Coleccion;

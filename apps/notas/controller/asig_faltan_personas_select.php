@@ -92,7 +92,10 @@ if (!empty($Qpersonas_n) && !empty($Qpersonas_agd)) {
     $obj_pau = 'PersonaDl';
 }
 
-$oAsignatura = new Asignatura($Qid_asignatura);
+$oAsignatura = (new AsignaturaRepository())->findById($Qid_asignatura)?? null;
+if ($oAsignatura === null) {
+    throw new \Exception(sprintf(_("No se ha encontrado la asignatura con id: %s"), $Qid_asignatura));
+}
 $nom_asignatura = $oAsignatura->getNombre_corto();
 $id_tipo_asignatura = $oAsignatura->getId_tipo(); // tipo 8 = OPCIONAL
 

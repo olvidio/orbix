@@ -16,6 +16,7 @@ use profesores\model\entity\GestorProfesorTituloEst;
 use profesores\model\entity\ProfesorJuramento;
 use profesores\model\entity\ProfesorLatin;
 use profesores\model\entity\ProfesorTipo;
+use src\asignaturas\application\repositories\AsignaturaRepository;
 use src\asignaturas\application\repositories\DepartamentoRepository;
 use ubis\model\entity\Centro;
 use ubis\model\entity\CentroDl;
@@ -320,7 +321,10 @@ foreach ($cProfesorAmpliaciones as $oProfesorAmpliacion) {
     $f_cese = $oProfesorAmpliacion->getF_cese()->getFromLocal();
     $escrito_cese = $oProfesorAmpliacion->getEscrito_cese();
 
-    $oAsignatura = new Asignatura(array('id_asignatura' => $id_asignatura));
+    $oAsignatura = (new AsignaturaRepository())->findById($id_asignatura);
+    if ($oAsignatura === null) {
+        throw new \Exception(sprintf(_("No se ha encontrado la asignatura con id: %s"), $id_asignatura));
+    }
     $nombre_corto = $oAsignatura->getNombre_corto();
 
 

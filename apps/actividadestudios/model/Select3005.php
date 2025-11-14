@@ -7,6 +7,7 @@ use asignaturas\model\entity\Asignatura;
 use core\ConfigGlobal;
 use core\ViewPhtml;
 use personas\model\entity\Persona;
+use src\asignaturas\application\repositories\AsignaturaRepository;
 use src\configuracion\domain\entity\GestorDbSchema;
 use web\Hash;
 use web\Lista;
@@ -114,7 +115,10 @@ class Select3005
             $c++;
             $id_activ = $oActividadAsignatura->getId_activ();
             $id_asignatura = $oActividadAsignatura->getId_asignatura();
-            $oAsignatura = new Asignatura($id_asignatura);
+            $oAsignatura = (new AsignaturaRepository())->findById($id_asignatura);
+            if ($oAsignatura === null) {
+                throw new \Exception(sprintf(_("No se ha encontrado la asignatura con id: %s"), $id_asignatura));
+            }
             $nombre_corto = $oAsignatura->getNombre_corto();
             $creditos = $oAsignatura->getCreditos();
             $id_schema = $oActividadAsignatura->getId_schema();

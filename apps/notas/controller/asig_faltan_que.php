@@ -11,6 +11,8 @@
 
 // INICIO Cabecera global de URL de controlador *********************************
 use core\ViewPhtml;
+use src\asignaturas\application\repositories\AsignaturaRepository;
+use web\Desplegable;
 use web\Hash;
 
 require_once("apps/core/global_header.inc");
@@ -59,9 +61,9 @@ $Qid_asignatura = (string)filter_input(INPUT_POST, 'id_asignatura');
 $Qlista = (string)filter_input(INPUT_POST, 'lista');
 $chk_lista = empty($Qlista) ? '' : 'checked';
 
-
-$GesAsignaturas = new asignaturas\model\entity\GestorAsignatura();
-$oDesplAsignaturas = $GesAsignaturas->getListaAsignaturas();
+$AsignaturaRepository = new AsignaturaRepository();;
+$aOpciones = $AsignaturaRepository->getArrayAsignaturasConSeparador();
+$oDesplAsignaturas = new Desplegable('', $aOpciones, '', true);
 $oDesplAsignaturas->setNombre('id_asignatura');
 $oDesplAsignaturas->setOpcion_sel($Qid_asignatura);
 

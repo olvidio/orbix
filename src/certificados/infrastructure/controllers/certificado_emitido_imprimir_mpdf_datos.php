@@ -7,6 +7,7 @@ use core\ConfigGlobal;
 use notas\model\entity\GestorPersonaNotaDB;
 use notas\model\PersonaNota;
 use personas\model\entity\Persona;
+use src\asignaturas\application\repositories\AsignaturaRepository;
 use src\certificados\application\repositories\CertificadoEmitidoRepository;
 use src\ubis\application\repositories\DelegacionRepository;
 use web\ContestarJson;
@@ -111,14 +112,14 @@ $data['fidem'] = $fidem;
 $data['reg_num'] = $reg_num;
 
 // Asignaturas posibles:
-$GesAsignaturas = new GestorAsignatura();
+$AsignaturaRepository = new AsignaturaRepository();
 $aWhere = [];
 $aOperador = [];
 $aWhere['status'] = 't';
 $aWhere['id_nivel'] = '1100,2500';
 $aOperador['id_nivel'] = 'BETWEEN';
 $aWhere['_ordre'] = 'id_nivel';
-$cAsignaturas = $GesAsignaturas->getAsignaturasAsJson($aWhere, $aOperador);
+$cAsignaturas = $AsignaturaRepository->getAsignaturasAsJson($aWhere, $aOperador);
 $data['cAsignaturas'] = $cAsignaturas;
 
 // Asignaturas cursadas:
@@ -150,21 +151,24 @@ if (empty($error_txt)) {
         $id_asignatura = $oPersonaNota->getId_asignatura();
         $id_nivel = $oPersonaNota->getId_nivel();
 
-        $oAsig = new Asignatura($id_asignatura);
+        $oAsignatura = (new AsignaturaRepository())->findById($id_asignatura);
+        if ($oAsignatura === null) {
+            throw new \Exception(sprintf(_("No se ha encontrado la asignatura con id: %s"), $id_asignatura));
+        }
         if ($id_asignatura > 3000) {
             $id_nivel_asig = $id_nivel;
         } else {
-            if (!is_true($oAsig->getStatus())) {
+            if (!$oAsignatura->isStatus()) {
                 continue;
             }
-            $id_nivel_asig = $oAsig->getId_nivel();
+            $id_nivel_asig = $oAsignatura->getId_nivel();
         }
-        $creditos = $oAsig->getCreditos();
+        $creditos = $oAsignatura->getCreditos();
         $n = $id_nivel_asig;
         $aAprobadas[$n]['id_nivel_asig'] = $id_nivel_asig;
         $aAprobadas[$n]['id_nivel'] = $id_nivel;
         $aAprobadas[$n]['id_asignatura'] = $id_asignatura;
-        $aAprobadas[$n]['nombre_asignatura'] = $oAsig->getNombre_asignatura();
+        $aAprobadas[$n]['nombre_asignatura'] = $oAsignatura->getNombre_asignatura();
         $aAprobadas[$n]['creditos'] = number_format(($creditos * 2), 0);
         $aAprobadas[$n]['nota_txt'] = $oPersonaNota->getNota_txt();
     }

@@ -13,6 +13,7 @@ use notas\model\entity\GestorPersonaNotaDlDB;
 use notas\model\entity\Nota;
 use personas\model\entity\Persona;
 use personas\model\entity\PersonaDl;
+use src\asignaturas\application\repositories\AsignaturaRepository;
 use web\Hash;
 use web\Lista;
 use function core\is_true;
@@ -100,7 +101,10 @@ class Select1011
                 $id_asignatura = $oMatricula->getId_asignatura();
                 $oActividad = new ActividadAll($id_activ);
                 $nom_activ = $oActividad->getNom_activ();
-                $oAsignatura = new Asignatura($id_asignatura);
+                $oAsignatura = (new AsignaturaRepository())->findById($id_asignatura);
+                if ($oAsignatura === null) {
+                    throw new \Exception(sprintf(_("No se ha encontrado la asignatura con id: %s"), $id_asignatura));
+                }
                 $nombre_corto = $oAsignatura->getNombre_corto();
                 $msg .= empty($msg) ? '' : '<br>';
                 $msg .= sprintf(_("ca: %s, asignatura: %s"), $nom_activ, $nombre_corto);
@@ -162,14 +166,17 @@ class Select1011
                 $acta = '';
             }
 
-            $oAsignatura = new Asignatura($id_asignatura);
+            $oAsignatura = (new AsignaturaRepository())->findById($id_asignatura);
+            if ($oAsignatura === null) {
+                throw new \Exception(sprintf(_("No se ha encontrado la asignatura con id: %s"), $id_asignatura));
+            }
             $nombre_corto = $oAsignatura->getNombre_corto();
             $id_sector = $oAsignatura->getId_sector();
 
             // opcionales
             if ($id_asignatura > 3000) {
-                $gesOpcionales = new GestorAsignatura();
-                $cOpcionales = $gesOpcionales->getAsignaturas(array('id_nivel' => $id_nivel));
+                $AsignaturaRepository = new AsignaturaRepository();
+                $cOpcionales = $AsignaturaRepository->getAsignaturas(array('id_nivel' => $id_nivel));
                 if (empty($cOpcionales)) {
                     $nombre_corto = _("opcional de sobra");
                 } else {

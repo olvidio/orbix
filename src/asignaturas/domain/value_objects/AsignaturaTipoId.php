@@ -2,7 +2,7 @@
 
 namespace src\asignaturas\domain\value_objects;
 
-final class DepartamentoId
+final class AsignaturaTipoId
 {
     private int $value;
 
@@ -14,8 +14,10 @@ final class DepartamentoId
 
     private function validate(int $value): void
     {
-        if ($value < 0) { // también puede ser 0
-            throw new \InvalidArgumentException('DepartamentoId must be a positive integer');
+        // Debe ser un entero positivo de 1 dígitos (tabla xa_tipo_asig)
+        $esRangoNormal = ($value >= 1 && $value <= 9);
+        if (!$esRangoNormal) {
+            throw new \InvalidArgumentException('AsignaturaTipoId must be a non-negative integer');
         }
     }
 
@@ -29,16 +31,8 @@ final class DepartamentoId
         return (string)$this->value;
     }
 
-    public function equals(DepartamentoId $other): bool
+    public function equals(AsignaturaTipoId $other): bool
     {
         return $this->value === $other->value();
-    }
-
-    public static function fromString(string $value): self
-    {
-        if (!ctype_digit($value)) {
-            throw new \InvalidArgumentException('DepartamentoId string must be digits');
-        }
-        return new self((int)$value);
     }
 }

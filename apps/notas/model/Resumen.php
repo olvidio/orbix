@@ -9,6 +9,7 @@ use core\ConfigGlobal;
 use notas\model\entity\GestorNota;
 use personas\model\entity\PersonaDl;
 use profesores\model\entity\GestorProfesorDirector;
+use src\asignaturas\application\repositories\AsignaturaRepository;
 use src\asignaturas\application\repositories\DepartamentoRepository;
 use src\asignaturas\application\repositories\SectorRepository;
 use function core\is_true;
@@ -458,8 +459,8 @@ class Resumen extends ClasePropiedades
         $oDbl->query("CREATE INDEX IF NOT EXISTS $asignaturas" . "_nivel" . " ON $asignaturas (id_nivel)");
         $oDbl->query("CREATE INDEX IF NOT EXISTS $asignaturas" . "_id_asignatura" . " ON $asignaturas (id_asignatura)");
 
-        $gesAsignaturas = new GestorAsignatura();
-        $cAsignaturas = $gesAsignaturas->getAsignaturas(array('status' => 'true'));
+        $AsignaturaRepository = new AsignaturaRepository();
+        $cAsignaturas = $AsignaturaRepository->getAsignaturas(array('status' => 'true'));
 
         $prep = $oDbl->prepare("INSERT INTO $asignaturas VALUES(:id_asignatura, :id_nivel, :nombre_asignatura, :nombre_corto, :creditos, :year, :id_sector, :status, :id_tipo)");
         foreach ($cAsignaturas as $oAsignatura) {

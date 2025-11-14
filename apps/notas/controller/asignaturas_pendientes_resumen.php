@@ -4,6 +4,7 @@ use asignaturas\model\entity\GestorAsignatura;
 use notas\model\entity\GestorPersonaNotaDlDB;
 use notas\model\entity\Nota;
 use personas\model\entity\GestorPersonaDl;
+use src\asignaturas\application\repositories\AsignaturaRepository;
 use function core\is_true;
 
 /**
@@ -43,14 +44,14 @@ require_once("apps/core/global_object.inc");
 			
 */
 // Asignaturas posibles:
-$GesAsignaturas = new GestorAsignatura();
+$AsignaturaRepository = new AsignaturaRepository();
 $aWhere = [];
 $aOperador = [];
 $aWhere['status'] = 't';
 $aWhere['id_nivel'] = '1100,2500';
 $aOperador['id_nivel'] = 'BETWEEN';
 $aWhere['_ordre'] = 'id_nivel';
-$cAsignaturas = $GesAsignaturas->getAsignaturas($aWhere, $aOperador);
+$cAsignaturas = $AsignaturaRepository->getAsignaturas($aWhere, $aOperador);
 
 
 foreach ($cAsignaturas as $oAsignatura) {
@@ -86,7 +87,7 @@ foreach ($cAsignaturas as $oAsignatura) {
     $a_cabeceras[$a] = $oAsignatura->getNombre_corto();
 }
 //todas
-$cAsignaturasTodas = $GesAsignaturas->getAsignaturas(array('_ordre' => 'id_asignatura'));
+$cAsignaturasTodas = $AsignaturaRepository->getAsignaturas(array('_ordre' => 'id_asignatura'));
 foreach ($cAsignaturasTodas as $oAsignatura) {
     $id_asignatura = $oAsignatura->getId_asignatura();
     $a_Asig_status[$id_asignatura] = $oAsignatura->getStatus();
@@ -132,10 +133,7 @@ foreach ($cPersonas as $oPersona) {
         $id_nivel = $oPersonaNota->getId_nivel();
         $id_situacion = $oPersonaNota->getId_situacion();
 
-        //$oAsig = new asignaturas\Asignatura($id_asignatura);
-        //if ($oAsig->getStatus() != 't') continue;
         if ($a_Asig_status[$id_asignatura] != 't') continue;
-
 
         if ($id_asignatura > 3000) {
             $id_nivel_asig = $id_nivel;

@@ -3,6 +3,7 @@
 use asignaturas\model\entity\Asignatura;
 use core\ConfigGlobal;
 use notas\model\entity\Nota;
+use src\asignaturas\application\repositories\AsignaturaRepository;
 use web\DateTimeLocal;
 use web\Hash;
 
@@ -358,7 +359,10 @@ foreach ($oDBSt_sql->fetchAll() as $algo) {
     $nom = $algo['apellido1'] . " " . $algo['apellido2'] . ", " . $algo['nom'];
     $fecha = $algo['f_acta'];
     $id_asignatura = $algo['id_asignatura'];
-    $oAsignatura = new Asignatura($id_asignatura);
+    $oAsignatura = (new AsignaturaRepository())->findById($id_asignatura);
+    if ($oAsignatura === null) {
+        throw new \Exception(sprintf(_("No se ha encontrado la asignatura con id: %s"), $id_asignatura));
+    }
     $asig = $oAsignatura->getNombre_corto();
     echo "<tr><td width=20></td>";
     echo "<td>$nom</td><td>$fecha</td><td>$asig</td></tr>";
@@ -480,7 +484,10 @@ foreach ($oDBSt_sql->fetchAll() as $algo) {
     $nom = $algo['apellido1'] . " " . $algo['apellido2'] . ", " . $algo['nom'];
     $fecha = $algo['f_acta'];
     $id_asignatura = $algo['id_asignatura'];
-    $oAsignatura = new Asignatura($id_asignatura);
+    $oAsignatura = (new AsignaturaRepository())->findById($id_asignatura);
+    if ($oAsignatura === null) {
+        throw new \Exception(sprintf(_("No se ha encontrado la asignatura con id: %s"), $id_asignatura));
+    }
     $asig = $oAsignatura->getNombre_corto();
     $id_nom = $algo['id_nom'];
 

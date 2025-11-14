@@ -19,6 +19,7 @@ use notas\model\AsignaturasPendientes;
 use notas\model\entity\GestorPersonaNotaDB;
 use personas\model\entity\Persona;
 use personas\model\entity\PersonaGlobal;
+use src\asignaturas\application\repositories\AsignaturaRepository;
 use ubis\model\entity\CentroDl;
 
 require_once("apps/core/global_header.inc");
@@ -107,8 +108,8 @@ $aWhereAsig = ['id_tipo' => 8,
     '_ordre' => 'id_nivel',
 ];
 $aOperadorAsig = ['id_tipo' => '!='];
-$gesAsignaturas = new GestorAsignatura();
-$cAsignaturas = $gesAsignaturas->getAsignaturas($aWhereAsig, $aOperadorAsig);
+$AsignaturaRepository = new AsignaturaRepository();
+$cAsignaturas = $AsignaturaRepository->getAsignaturas($aWhereAsig, $aOperadorAsig);
 
 $aAsignaturas_alumnos = [];
 foreach ($cAsignaturas as $oAsignatura) {

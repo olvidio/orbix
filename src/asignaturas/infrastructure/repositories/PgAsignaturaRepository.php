@@ -1,0 +1,464 @@
+<?php
+
+namespace src\asignaturas\infrastructure\repositories;
+
+use core\ClaseRepository;
+use core\Condicion;
+use core\Set;
+use PDO;
+use PDOException;
+use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
+use src\asignaturas\domain\entity\Asignatura;
+use web\Desplegable;
+use function core\is_true;
+
+
+/**
+ * Clase que adapta la tabla xa_asignaturas a la interfaz del repositorio
+ *
+ * @package orbix
+ * @subpackage model
+ * @author Daniel Serrabou
+ * @version 2.0
+ * @created 14/11/2025
+ */
+class PgAsignaturaRepository extends ClaseRepository implements AsignaturaRepositoryInterface
+{
+    public function __construct()
+    {
+        $oDbl = $GLOBALS['oDBPC'];
+        $this->setoDbl($oDbl);
+        $oDbl_Select = $GLOBALS['oDBPC_Select'];
+        $this->setoDbl_select($oDbl_Select);
+        $this->setNomTabla('xa_asignaturas');
+    }
+
+    /**
+     * retorna JSON llista d'Asignaturas
+     *
+     * @param string sQuery la query a executar.
+     * @return false|object
+     */
+    public function getJsonAsignaturas($aWhere): string
+    {
+        $oDbl = $this->getoDbl_Select();
+        $nom_tabla = $this->getNomTabla();
+        $sCondi = '';
+        foreach ($aWhere as $camp => $val) {
+            if ($camp === 'nombre_asignatura' && !empty($val)) {
+                $sCondi .= "WHERE status=true AND nombre_asignatura ILIKE '%$val%'";
+            }
+            if ($camp === 'id' && !empty($val)) {
+                if (!empty($sCondi)) {
+                    $sCondi .= " AND id_asignatura = $val";
+                } else {
+                    $sCondi .= "WHERE id_asignatura = $val";
+                }
+            }
+        }
+        $sOrdre = " ORDER BY id_nivel";
+        $sLimit = " LIMIT 25";
+        $sQuery = "SELECT DISTINCT id_asignatura,nombre_asignatura,id_nivel FROM $nom_tabla " . $sCondi . $sOrdre . $sLimit;
+        if (($oDblSt = $oDbl->query($sQuery)) === false) {
+            $sClauError = 'GestorAsignatura.lista';
+            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+            return false;
+        }
+        $json = '[';
+        $i = 0;
+        foreach ($oDbl->query($sQuery) as $aClave) {
+            $i++;
+            $id_asignatura = $aClave[0];
+            $nombre_asignatura = $aClave[1];
+            $nombre_asignatura = str_replace('"', '\\"', $nombre_asignatura);
+            $nombre_asignatura = str_replace("'", "\\'", $nombre_asignatura);
+            $json .= ($i > 1) ? ',' : '';
+            $json .= "{\"value\":\"$id_asignatura\",\"label\":\"$nombre_asignatura\"}";
+        }
+        $json .= ']';
+        return $json;
+    }
+
+    /**
+     * retorna un array del tipus: id_asignatura => array(nombre_asignatura, creditos)
+     *
+     * @return array|false
+     */
+    public function getArrayAsignaturasCreditos(): array
+    {
+        $oDbl = $this->getoDbl_Select();
+        $nom_tabla = $this->getNomTabla();
+        $sQuery = "SELECT id_asignatura, nombre_asignatura, creditos FROM $nom_tabla ORDER BY id_nivel";
+        if (($oDbl->query($sQuery)) === false) {
+            $sClauError = 'GestorAsignatura.lista';
+            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+            return false;
+        }
+        $aOpciones = [];
+        foreach ($oDbl->query($sQuery) as $row) {
+            $id_asignatrura = $row[0];
+            $nombre_asignatura = $row[1];
+            $creditos = $row[2];
+            $aOpciones[$id_asignatrura] = array('nombre_asignatura' => $nombre_asignatura, 'creditos' => $creditos);
+        }
+        return $aOpciones;
+    }
+
+    /**
+     * retorna un objecte del tipus Desplegable
+     * Les posibles asignatures
+     *
+     * @param bool $op_genericas listar o no opcionales genéricas (opcional I...)
+     * @return false|object
+     */
+    public function getArrayAsignaturasConSeparador(bool $op_genericas = true): array
+    {
+        $oDbl = $this->getoDbl_Select();
+        $nom_tabla = $this->getNomTabla();
+        $sWhere = "WHERE status = 't' ";
+        if (!$op_genericas) {
+            $genericas = $this->getListaOpGenericas('csv');
+            $sWhere .= " AND id_nivel NOT IN ($genericas)";
+        }
+        //para hacer listados que primero salgan las normales y después las opcionales:
+        //$sQuery="SELECT id_asignatura, nombre_asignatura FROM $nom_tabla $sWhere ORDER BY nombre_asignatura";
+        $sQuery = "SELECT id_asignatura, nombre_asignatura, CASE WHEN id_nivel < 3000 THEN xa_asignaturas.id_nivel ELSE 3001 END AS op FROM $nom_tabla $sWhere ORDER BY op,nombre_asignatura;";
+        if (($oDbl->query($sQuery)) === false) {
+            $sClauError = 'GestorAsignatura.lista';
+            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+            return false;
+        }
+        $aOpciones = [];
+        $c = 0;
+        foreach ($oDbl->query($sQuery) as $aClave) {
+            $clave = $aClave[0];
+            $val = $aClave[1];
+            $id_op = $aClave[2];
+            if ($id_op > 3000 && $c < 1) {
+                $aOpciones[3000] = '----------';
+                $c = 1;
+            }
+            $aOpciones[$clave] = $val;
+        }
+
+        return $aOpciones;
+    }
+
+    /**
+     * Devuelve una lista con los id_nivel de las opcionales.
+     *
+     * @param string $formato 'csv'
+     * @return string
+     */
+    public function getListaOpGenericas(string $formato = ''): string
+    {
+        switch ($formato) {
+            case 'json':
+                $genericas = "[\"1230\",\"1231\",\"1232\",\"2430\",\"2431\",\"2432\",\"2433\",\"2434\"]";
+                break;
+            case 'csv':
+            default:
+                $genericas = "1230,1231,1232,2430,2431,2432,2433,2434";
+        }
+        return $genericas;
+    }
+
+    public function getArrayAsignaturas(): array
+    {
+        $oDbl = $this->getoDbl_Select();
+        $nom_tabla = $this->getNomTabla();
+        $sQuery = "SELECT id_asignatura,nombre_corto FROM $nom_tabla ORDER BY id_asignatura";
+        try {
+            $oDblSt = $oDbl->query($sQuery);
+            foreach ($oDbl->query($sQuery) as $aClave) {
+                $id_sector = $aClave[0];
+                $id_departamento = $aClave[1];
+                $a_1 = isset($aOpciones[$id_departamento]) ? $aOpciones[$id_departamento] : [];
+                $aOpciones[$id_departamento] = array_merge($a_1, array($id_sector));
+            }
+        } catch (PDOException $e) {
+            $err_txt = $e->errorInfo[2];
+            $this->setErrorTxt($err_txt);
+            $sClaveError = 'PgAsignaturasRepository.array';
+            $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
+        }
+
+        return $aOpciones;
+    }
+
+    public function getAsignaturasAsJson($aWhere = [], $aOperators = array()): string
+    {
+        $oDbl = $this->getoDbl_Select();
+        $nom_tabla = $this->getNomTabla();
+        $jsonAsignaturas = [];
+        $oCondicion = new Condicion();
+        $aCondi = [];
+        foreach ($aWhere as $camp => $val) {
+            if ($camp === '_ordre') continue;
+            $sOperador = isset($aOperators[$camp]) ? $aOperators[$camp] : '';
+            if ($a = $oCondicion->getCondicion($camp, $sOperador, $val)) $aCondi[] = $a;
+            // operadores que no requieren valores
+            if ($sOperador === 'BETWEEN' || $sOperador === 'IS NULL' || $sOperador === 'IS NOT NULL' || $sOperador === 'OR') unset($aWhere[$camp]);
+            if ($sOperador === 'IN' || $sOperador === 'NOT IN') unset($aWhere[$camp]);
+            if ($sOperador === 'TXT') unset($aWhere[$camp]);
+        }
+        $sCondi = implode(' AND ', $aCondi);
+        if ($sCondi != '') $sCondi = " WHERE " . $sCondi;
+        if (isset($GLOBALS['oGestorSessioDelegación'])) {
+            $sLimit = $GLOBALS['oGestorSessioDelegación']->getLimitPaginador('a_actividades', $sCondi, $aWhere);
+        } else {
+            $sLimit = '';
+        }
+        if ($sLimit === false) return;
+        $sOrdre = '';
+        if (isset($aWhere['_ordre']) && $aWhere['_ordre'] != '') $sOrdre = ' ORDER BY ' . $aWhere['_ordre'];
+        if (isset($aWhere['_ordre'])) unset($aWhere['_ordre']);
+        $sQry = "SELECT * FROM $nom_tabla " . $sCondi . $sOrdre . $sLimit;
+        if (($oDblSt = $oDbl->prepare($sQry)) === false) {
+            $sClauError = 'GestorAsignatura.llistar.prepare';
+            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+            return false;
+        }
+        if (($oDblSt->execute($aWhere)) === false) {
+            $sClauError = 'GestorAsignatura.llistar.execute';
+            $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
+            return false;
+        }
+        foreach ($oDblSt as $aDades) {
+            $a_pkey = array('id_asignatura' => $aDades['id_asignatura']);
+            $oAsignatura = new Asignatura($a_pkey);
+            $oAsignatura->DBCarregar();
+            $oMin = new stdClass();
+            $oMin->id_asignatura = $oAsignatura->getId_asignatura();
+            $oMin->id_nivel = $oAsignatura->getId_nivel();
+            $oMin->nombre_asignatura = $oAsignatura->getNombre_asignatura();
+            $oMin->creditos = $oAsignatura->getCreditos();
+            $jsonAsignaturas[] = json_encode($oMin);
+        }
+        return json_encode($jsonAsignaturas);
+    }
+
+    /* -------------------- GESTOR BASE ---------------------------------------- */
+
+    /**
+     * devuelve una colección (array) de objetos de tipo Asignatura
+     *
+     * @param array $aWhere asociativo con los valores para cada campo de la BD.
+     * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
+     * @return array|FALSE Una colección de objetos de tipo Asignatura
+     */
+    public function getAsignaturas(array $aWhere = [], array $aOperators = []): array|false
+    {
+        $oDbl = $this->getoDbl_Select();
+        $nom_tabla = $this->getNomTabla();
+        $AsignaturaSet = new Set();
+        $oCondicion = new Condicion();
+        $aCondicion = [];
+        foreach ($aWhere as $camp => $val) {
+            if ($camp === '_ordre') {
+                continue;
+            }
+            if ($camp === '_limit') {
+                continue;
+            }
+            $sOperador = $aOperators[$camp] ?? '';
+            if ($a = $oCondicion->getCondicion($camp, $sOperador, $val)) {
+                $aCondicion[] = $a;
+            }
+            // operadores que no requieren valores
+            if ($sOperador === 'BETWEEN' || $sOperador === 'IS NULL' || $sOperador === 'IS NOT NULL' || $sOperador === 'OR') {
+                unset($aWhere[$camp]);
+            }
+            if ($sOperador === 'IN' || $sOperador === 'NOT IN') {
+                unset($aWhere[$camp]);
+            }
+            if ($sOperador === 'TXT') {
+                unset($aWhere[$camp]);
+            }
+        }
+        $sCondicion = implode(' AND ', $aCondicion);
+        if ($sCondicion !== '') {
+            $sCondicion = " WHERE " . $sCondicion;
+        }
+        $sOrdre = '';
+        $sLimit = '';
+        if (isset($aWhere['_ordre']) && $aWhere['_ordre'] !== '') {
+            $sOrdre = ' ORDER BY ' . $aWhere['_ordre'];
+        }
+        if (isset($aWhere['_ordre'])) {
+            unset($aWhere['_ordre']);
+        }
+        if (isset($aWhere['_limit']) && $aWhere['_limit'] !== '') {
+            $sLimit = ' LIMIT ' . $aWhere['_limit'];
+        }
+        if (isset($aWhere['_limit'])) {
+            unset($aWhere['_limit']);
+        }
+        $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
+        if (($oDblSt = $oDbl->prepare($sQry)) === FALSE) {
+            $sClaveError = 'PgAsignaturaRepository.listar.prepare';
+            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
+            return FALSE;
+        }
+        if (($oDblSt->execute($aWhere)) === FALSE) {
+            $sClaveError = 'PgAsignaturaRepository.listar.execute';
+            $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
+            return FALSE;
+        }
+
+        $filas = $oDblSt->fetchAll(PDO::FETCH_ASSOC);
+        foreach ($filas as $aDatos) {
+            $Asignatura = new Asignatura();
+            $Asignatura->setAllAttributes($aDatos);
+            $AsignaturaSet->add($Asignatura);
+        }
+        return $AsignaturaSet->getTot();
+    }
+
+    /* -------------------- ENTIDAD --------------------------------------------- */
+
+    public function Eliminar(Asignatura $Asignatura): bool
+    {
+        $id_asignatura = $Asignatura->getId_asignatura();
+        $oDbl = $this->getoDbl();
+        $nom_tabla = $this->getNomTabla();
+        if (($oDbl->exec("DELETE FROM $nom_tabla WHERE id_asignatura = $id_asignatura")) === FALSE) {
+            $sClaveError = 'PgAsignaturaRepository.eliminar';
+            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
+            return FALSE;
+        }
+        return TRUE;
+    }
+
+
+    /**
+     * Si no existe el registro, hace un insert, si existe, se hace el update.
+     */
+    public function Guardar(Asignatura $Asignatura): bool
+    {
+        $id_asignatura = $Asignatura->getId_asignatura();
+        $oDbl = $this->getoDbl();
+        $nom_tabla = $this->getNomTabla();
+        $bInsert = $this->isNew($id_asignatura);
+
+        $aDatos = [];
+        $aDatos['id_nivel'] = $Asignatura->getId_nivel();
+        $aDatos['nombre_asignatura'] = $Asignatura->getNombre_asignatura();
+        $aDatos['nombre_corto'] = $Asignatura->getNombre_corto();
+        $aDatos['creditos'] = $Asignatura->getCreditos();
+        $aDatos['year'] = $Asignatura->getYear();
+        $aDatos['id_sector'] = $Asignatura->getId_sector();
+        $aDatos['status'] = $Asignatura->isStatus();
+        $aDatos['id_tipo'] = $Asignatura->getId_tipo();
+        array_walk($aDatos, 'core\poner_null');
+        //para el caso de los boolean FALSE, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
+        if (is_true($aDatos['status'])) {
+            $aDatos['status'] = 'true';
+        } else {
+            $aDatos['status'] = 'false';
+        }
+
+        if ($bInsert === FALSE) {
+            //UPDATE
+            $update = "
+					id_nivel                 = :id_nivel,
+					nombre_asignatura        = :nombre_asignatura,
+					nombre_corto             = :nombre_corto,
+					creditos                 = :creditos,
+					year                     = :year,
+					id_sector                = :id_sector,
+					status                   = :status,
+					id_tipo                  = :id_tipo";
+            if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_asignatura = $id_asignatura")) === FALSE) {
+                $sClaveError = 'PgAsignaturaRepository.update.prepare';
+                $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
+                return FALSE;
+            }
+
+            try {
+                $oDblSt->execute($aDatos);
+            } catch (PDOException $e) {
+                $err_txt = $e->errorInfo[2];
+                $this->setErrorTxt($err_txt);
+                $sClaveError = 'PgAsignaturaRepository.update.execute';
+                $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
+                return FALSE;
+            }
+        } else {
+            // INSERT
+            $aDatos['id_asignatura'] = $Asignatura->getId_asignatura();
+            $campos = "(id_asignatura,id_nivel,nombre_asignatura,nombre_corto,creditos,year,id_sector,status,id_tipo)";
+            $valores = "(:id_asignatura,:id_nivel,:nombre_asignatura,:nombre_corto,:creditos,:year,:id_sector,:status,:id_tipo)";
+            if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === FALSE) {
+                $sClaveError = 'PgAsignaturaRepository.insertar.prepare';
+                $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
+                return FALSE;
+            }
+            try {
+                $oDblSt->execute($aDatos);
+            } catch (PDOException $e) {
+                $err_txt = $e->errorInfo[2];
+                $this->setErrorTxt($err_txt);
+                $sClaveError = 'PgAsignaturaRepository.insertar.execute';
+                $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
+                return FALSE;
+            }
+        }
+        return TRUE;
+    }
+
+    private function isNew(int $id_asignatura): bool
+    {
+        $oDbl = $this->getoDbl();
+        $nom_tabla = $this->getNomTabla();
+        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_asignatura = $id_asignatura")) === FALSE) {
+            $sClaveError = 'PgAsignaturaRepository.isNew';
+            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
+            return FALSE;
+        }
+        if (!$oDblSt->rowCount()) {
+            return TRUE;
+        }
+        return FALSE;
+    }
+
+    /**
+     * Devuelve los campos de la base de datos en un array asociativo.
+     * Devuelve false si no existe la fila en la base de datos
+     *
+     * @param int $id_asignatura
+     * @return array|bool
+     */
+    public function datosById(int $id_asignatura): array|bool
+    {
+        $oDbl = $this->getoDbl_Select();
+        $nom_tabla = $this->getNomTabla();
+        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_asignatura = $id_asignatura")) === FALSE) {
+            $sClaveError = 'PgAsignaturaRepository.getDatosById';
+            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
+            return FALSE;
+        }
+        $aDatos = $oDblSt->fetch(PDO::FETCH_ASSOC);
+        return $aDatos;
+    }
+
+
+    /**
+     * Busca la clase con id_asignatura en la base de datos .
+     */
+    public function findById(int $id_asignatura): ?Asignatura
+    {
+        $aDatos = $this->datosById($id_asignatura);
+        if (empty($aDatos)) {
+            return null;
+        }
+        return (new Asignatura())->setAllAttributes($aDatos);
+    }
+
+    public function getNewId()
+    {
+        $oDbl = $this->getoDbl();
+        $sQuery = "select nextval('xa_asignaturas_id_asignatura_seq'::regclass)";
+        return $oDbl->query($sQuery)->fetchColumn();
+    }
+}

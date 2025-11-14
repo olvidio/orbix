@@ -21,6 +21,7 @@ use asignaturas\model\entity\GestorAsignatura;
 use core\ConfigGlobal;
 use notas\model\entity\GestorPersonaNotaDB;
 use personas\model\entity\Persona;
+use src\asignaturas\application\repositories\AsignaturaRepository;
 use web\Hash;
 use function core\is_true;
 
@@ -245,14 +246,14 @@ $h = $oHash->linkSinVal();
     }
 
     // Asignaturas posibles:
-    $GesAsignaturas = new GestorAsignatura();
+    $AsignaturaRepository = new AsignaturaRepository();
     $aWhere = [];
     $aOperador = [];
     $aWhere['status'] = 't';
     $aWhere['id_nivel'] = '1100,2500';
     $aOperador['id_nivel'] = 'BETWEEN';
     $aWhere['_ordre'] = 'id_nivel';
-    $cAsignaturas = $GesAsignaturas->getAsignaturas($aWhere, $aOperador);
+    $cAsignaturas = $AsignaturaRepository->getAsignaturas($aWhere, $aOperador);
 
     // Asignaturas cursadas:
     $GesNotas = new GestorPersonaNotaDB();
@@ -269,18 +270,21 @@ $h = $oHash->linkSinVal();
         $acta = $oPersonaNota->getActa();
         $f_acta = $oPersonaNota->getF_acta()->getFromLocal();
 
-        $oAsig = new Asignatura($id_asignatura);
+        $oAsignatura = (new AsignaturaRepository())->findById($id_asignatura);
+        if ($oAsignatura === null) {
+            throw new \Exception(sprintf(_("No se ha encontrado la asignatura con id: %s"), $id_asignatura));
+        }
         if ($id_asignatura > 3000) {
             $id_nivel_asig = $id_nivel;
         } else {
-            if (!is_true($oAsig->getStatus())) continue;
-            $id_nivel_asig = $oAsig->getId_nivel();
+            if (!$oAsignatura->isStatus()) continue;
+            $id_nivel_asig = $oAsignatura->getId_nivel();
         }
         $n = $id_nivel_asig;
         $aAprobadas[$n]['id_nivel_asig'] = $id_nivel_asig;
         $aAprobadas[$n]['id_nivel'] = $id_nivel;
         $aAprobadas[$n]['id_asignatura'] = $id_asignatura;
-        $aAprobadas[$n]['nombre_asignatura'] = $oAsig->getNombre_asignatura();
+        $aAprobadas[$n]['nombre_asignatura'] = $oAsignatura->getNombre_asignatura();
         $aAprobadas[$n]['acta'] = $acta;
         $aAprobadas[$n]['fecha'] = $f_acta;
         //$oNota = new notas\Nota($id_situacion);

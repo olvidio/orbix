@@ -2,6 +2,8 @@
 
 use asignaturas\model\entity\GestorAsignatura;
 use core\ConfigGlobal;
+use src\asignaturas\application\repositories\AsignaturaRepository;
+use web\Desplegable;
 use web\Hash;
 
 // INICIO Cabecera global de URL de controlador *********************************
@@ -12,8 +14,10 @@ require_once("apps/core/global_header.inc");
 require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$GesAsignaturas = new GestorAsignatura();
-$oDesplAsignaturas = $GesAsignaturas->getListaAsignaturas();
+
+$AsignaturaRepository = new AsignaturaRepository();
+$aOpciones = $AsignaturaRepository->getArrayAsignaturasConSeparador();
+$oDesplAsignaturas = new Desplegable('', $aOpciones, '', true);
 $oDesplAsignaturas->setNombre('id_asignatura');
 $oDesplAsignaturas->setAction("fnjs_profes()");
 

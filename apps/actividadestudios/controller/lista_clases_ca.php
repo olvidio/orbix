@@ -9,6 +9,7 @@ use asignaturas\model\entity\Asignatura;
 use core\ConfigGlobal;
 use core\ViewPhtml;
 use personas\model\entity\Persona;
+use src\asignaturas\application\repositories\AsignaturaRepository;
 
 // INICIO Cabecera global de URL de controlador *********************************
 require_once("apps/core/global_header.inc");
@@ -74,7 +75,10 @@ foreach ($cActividadAsignaturas as $oActividadAsignatura) {
     $tipo = $oActividadAsignatura->getTipo();
     $id_profesor = $oActividadAsignatura->getId_profesor();
 
-    $oAsignatura = new Asignatura($id_asignatura);
+    $oAsignatura = (new AsignaturaRepository())->findById($id_asignatura);
+    if ($oAsignatura === null) {
+        throw new \Exception(sprintf(_("No se ha encontrado la asignatura con id: %s"), $id_asignatura));
+    }
     $nombre_corto = $oAsignatura->getNombre_corto();
     $creditos = $oAsignatura->getCreditos();
     if (!empty($id_profesor)) {

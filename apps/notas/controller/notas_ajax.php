@@ -10,6 +10,7 @@ use notas\model\entity\GestorNota;
 use notas\model\entity\GestorPersonaNotaDB;
 use notas\model\entity\PersonaNotaDB;
 use profesores\model\entity\GestorProfesor;
+use src\asignaturas\application\repositories\AsignaturaRepository;
 use src\ubis\application\services\DelegacionDropdown;
 use web\Desplegable;
 use web\Hash;
@@ -56,7 +57,10 @@ switch ($Qque) {
                 $epoca = PersonaNotaDB::EPOCA_OTRO;
             }
             // hace falta el id_nivel (para las no opcionales):
-            $oAsignatura = new Asignatura($id_asignatura);
+            $oAsignatura = (new AsignaturaRepository())->findById($id_asignatura);
+            if ($oAsignatura === null) {
+                throw new \Exception(sprintf(_("No se ha encontrado la asignatura con id: %s"), $id_asignatura));
+            }
             $id_nivel = $oAsignatura->getId_nivel();
             $json = "{\"id_asignatura\":\"$id_asignatura\",
                         \"id_nivel\":\"$id_nivel\",
@@ -156,8 +160,8 @@ switch ($Qque) {
         $aWhere['id_nivel'] = '3000,5000';
         $aOperador['id_nivel'] = 'BETWEEN';
         $aWhere['_ordre'] = 'nombre_corto';
-        $GesAsignaturas = new GestorAsignatura();
-        $cOpcionales = $GesAsignaturas->getAsignaturas($aWhere, $aOperador);
+        $AsignaturaRepository = new AsignaturaRepository();
+        $cOpcionales = $AsignaturaRepository->getAsignaturas($aWhere, $aOperador);
         // Asignaturas opcionales superadas
         $GesNotas = new GestorNota();
         $cSuperadas = $GesNotas->getNotas(array('superada' => 't'));

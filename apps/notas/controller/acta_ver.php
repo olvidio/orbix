@@ -9,6 +9,7 @@ use notas\model\entity\GestorActa;
 use notas\model\entity\GestorActaTribunal;
 use notas\model\entity\GestorActaTribunalDl;
 use personas\model\entity\PersonaDl;
+use src\asignaturas\application\repositories\AsignaturaRepository;
 use web\Hash;
 
 /**
@@ -198,7 +199,7 @@ if (!empty($ult_acta)) {
 
 if (!empty($acta_actual)) {
     // Si es cr, se mira en todas:
-    if (ConfigGlobal::mi_ambito() == 'rstgr') {
+    if (ConfigGlobal::mi_ambito() === 'rstgr') {
         $GesTribunal = new GestorActaTribunal();
     } else {
         $GesTribunal = new GestorActaTribunalDl();
@@ -210,8 +211,8 @@ if (!empty($acta_actual)) {
 
 $nombre_asignatura = '';
 if (!empty($id_asignatura_actual)) {
-    $GesAsignaturas = new GestorAsignatura();
-    $cAsignatura = $GesAsignaturas->getAsignaturas(['id_asignatura' => $id_asignatura_actual]);
+    $AsignaturaRepository = new AsignaturaRepository();
+    $cAsignatura = $AsignaturaRepository->getAsignaturas(['id_asignatura' => $id_asignatura_actual]);
     if (!empty($cAsignatura)) {
         $oAsignatura = $cAsignatura[0];
         $nombre_asignatura = $oAsignatura->getNombre_asignatura();
@@ -220,7 +221,7 @@ if (!empty($id_asignatura_actual)) {
 
 $oHashActa = new Hash();
 $sCamposForm = 'libro!linea!pagina!lugar!observ!id_asignatura!f_acta!acta!name_asignatura';
-if ($Qmod == 'nueva' || $notas == "nuevo") {
+if ($Qmod === 'nueva' || $notas === "nuevo") {
     $sCamposForm .= '!acta';
     $sCamposForm .= '!f_acta';
 }
@@ -231,7 +232,7 @@ if (!empty($cTribunal)) {
 $oHashActa->setCamposForm($sCamposForm);
 $oHashActa->setCamposNo('go_to!examinadores!notas!refresh');
 $a_camposHidden = [];
-if ($Qmod == 'nueva' || $notas == "nuevo") {
+if ($Qmod === 'nueva' || $notas === "nuevo") {
     $a_camposHidden['mod'] = 'nueva';
     if (empty($id_activ)) {
         echo _("no se guardará el ca/cv donde se cursó la asignatura");

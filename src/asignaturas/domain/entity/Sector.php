@@ -170,7 +170,7 @@ class Sector
         $oDatosCampo = new DatosCampo();
         $oDatosCampo->setNom_camp('id_departamento');
         $oDatosCampo->setMetodoGet('getId_departamento');
-        $oDatosCampo->setMetodoSet('setId_departamento');;;
+        $oDatosCampo->setMetodoSet('setId_departamento');
         $oDatosCampo->setEtiqueta(_("departamento"));
         $oDatosCampo->setTipo('opciones');
         $oDatosCampo->setArgument('src\\asignaturas\\application\\repositories\\DepartamentoRepository');
@@ -193,7 +193,7 @@ class Sector
         $oDatosCampo->setMetodoSet('setSector');
         $oDatosCampo->setEtiqueta(_("sector"));
         $oDatosCampo->setTipo('texto');
-        $oDatosCampo->setArgument(30);
+        $oDatosCampo->setArgument(50);
         return $oDatosCampo;
     }
 }

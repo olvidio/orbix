@@ -6,6 +6,7 @@ use asignaturas\model\entity\Asignatura;
 use asistentes\model\entity\GestorAsistente;
 use personas\model\entity\GestorPersonaDl;
 use personas\model\entity\Persona;
+use src\asignaturas\application\repositories\AsignaturaRepository;
 use ubis\model\entity\GestorCentroDl;
 use web\Lista;
 use web\Periodo;
@@ -179,7 +180,10 @@ foreach ($cCentros as $oCentroDl) {
                             $id_asignatura = $oMatricula->getId_asignatura();
                             $preceptor = $oMatricula->getPreceptor();
                             $id_preceptor = $oMatricula->getId_preceptor();
-                            $oAsignatura = new Asignatura($id_asignatura);
+                            $oAsignatura = (new AsignaturaRepository())->findById($id_asignatura);
+                            if ($oAsignatura === null) {
+                                throw new \Exception(sprintf(_("No se ha encontrado la asignatura con id: %s"), $id_asignatura));
+                            }
                             $nombre_corto = $oAsignatura->getNombre_corto();
                             $creditos = $oAsignatura->getCreditos();
                             if (is_true($preceptor)) {

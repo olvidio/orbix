@@ -4,6 +4,7 @@ use actividades\model\entity\ActividadAll;
 use actividadestudios\model\entity\GestorMatriculaDl;
 use asignaturas\model\entity\Asignatura;
 use personas\model\entity\Persona;
+use src\asignaturas\application\repositories\AsignaturaRepository;
 use web\Hash;
 use web\Lista;
 use web\Posicion;
@@ -83,7 +84,10 @@ foreach ($cMatriculasPendientes as $oMatricula) {
         continue;
     }
     $apellidos_nombre = $oPersona->getPrefApellidosNombre();
-    $oAsignatura = new Asignatura($id_asignatura);
+    $oAsignatura = (new AsignaturaRepository())->findById($id_asignatura);
+    if ($oAsignatura === null) {
+        throw new \Exception(sprintf(_("No se ha encontrado la asignatura con id: %s"), $id_asignatura));
+    }
     $nombre_corto = $oAsignatura->getNombre_corto();
 
     $a_valores[$i]['sel'] = "$id_activ#$id_asignatura#$id_nom";

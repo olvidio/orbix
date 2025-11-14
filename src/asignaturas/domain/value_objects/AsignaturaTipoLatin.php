@@ -2,7 +2,7 @@
 
 namespace src\asignaturas\domain\value_objects;
 
-final class SectorName
+final class AsignaturaTipoLatin
 {
     private string $value;
 
@@ -16,15 +16,13 @@ final class SectorName
     private function validate(string $value): void
     {
         if ($value === '') {
-            throw new \InvalidArgumentException('SectorName cannot be empty');
+            throw new \InvalidArgumentException('AsignaturaTipoLatin cannot be empty');
         }
-        // UI shows max length 50 (see DatosCampo->setArgument(50))
-        if (mb_strlen($value) > 50) {
-            throw new \InvalidArgumentException('SectorName must be at most 30 characters');
+        if (mb_strlen($value) > 25) {
+            throw new \InvalidArgumentException('AsignaturaTipoLatin must be at most 25 characters');
         }
-        // Allow common name characters including accents, spaces, apostrophes, hyphens, underscore, plus, parentheses
         if (!preg_match("/^[\p{L}0-9 .,'’_\-()\+]+$/u", $value)) {
-            throw new \InvalidArgumentException('SectorName has invalid characters');
+            throw new \InvalidArgumentException('AsignaturaTipoLatin has invalid characters');
         }
     }
 
@@ -36,16 +34,6 @@ final class SectorName
     public function __toString(): string
     {
         return $this->value;
-    }
-
-    public function equals(SectorName $other): bool
-    {
-        return $this->value === $other->value();
-    }
-
-    public static function fromString(string $value): self
-    {
-        return new self($value);
     }
 
     public static function fromNullableString(?string $value): ?self

@@ -9,6 +9,7 @@ use asignaturas\model\entity\Asignatura;
 use asistentes\model\entity\GestorAsistente;
 use core\ViewPhtml;
 use personas\model\entity\Persona;
+use src\asignaturas\application\repositories\AsignaturaRepository;
 use function core\is_true;
 
 // INICIO Cabecera global de URL de controlador *********************************
@@ -75,7 +76,10 @@ foreach ($cActividadAsignaturas as $oActividadAsignatura) {
     $id_profesor = $oActividadAsignatura->getId_profesor();
     $tipo = $oActividadAsignatura->getTipo();
 
-    $oAsignatura = new Asignatura($id_asignatura);
+    $oAsignatura = (new AsignaturaRepository())->findById($id_asignatura);
+    if ($oAsignatura === null) {
+        throw new \Exception(sprintf(_("No se ha encontrado la asignatura con id: %s"), $id_asignatura));
+    }
     $nombre_corto = $oAsignatura->getNombre_corto();
     $creditos = $oAsignatura->getCreditos();
 
@@ -149,7 +153,10 @@ foreach ($cAsistentes as $oAsistente) {
             $id_asignatura = $oMatricula->getId_asignatura();
             $preceptor = $oMatricula->getPreceptor();
 
-            $oAsignatura = new Asignatura($id_asignatura);
+            $oAsignatura = (new AsignaturaRepository())->findById($id_asignatura);
+            if ($oAsignatura === null) {
+                throw new \Exception(sprintf(_("No se ha encontrado la asignatura con id: %s"), $id_asignatura));
+            }
             $nombre_corto = $oAsignatura->getNombre_corto();
             $creditos = $oAsignatura->getCreditos();
             $preceptor = is_true($preceptor) ? "(" . _("preceptor") . ")" : '';
