@@ -20,7 +20,7 @@ $Qinicio = (string)filter_input(INPUT_POST, 'inicio');
 $Qfin = (string)filter_input(INPUT_POST, 'fin');
 
 $url_backend = '/src/inventario/infrastructure/controllers/equipajes_lista_activ_periodo.php';
-$a_campos = [
+$a_campos_backend = [
     'periodo' => $Qperiodo,
     'year' => $Qyear,
     'empiezamin' => $Qempiezamin,
@@ -29,10 +29,7 @@ $a_campos = [
     'fin' => $Qfin,
     'id_cdc' => $Qid_cdc,
 ];
-$data = PostRequest::getDataFromUrl($url_backend, $a_campos);
-if (!empty($data['error'])) {
-	exit ($data['error']);
-}
+$data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
 $a_valores = $data['a_valores'];
 $nombre_ubi = $data['nombre_ubi'];
 

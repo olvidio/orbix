@@ -18,7 +18,7 @@ $Qinicio = (string)filter_input(INPUT_POST, 'inicio');
 $Qfin = (string)filter_input(INPUT_POST, 'fin');
 
 $url_backend = '/src/inventario/infrastructure/controllers/lista_casas_posibles_periodo.php';
-$a_campos = [
+$a_campos_backend = [
     'periodo' => $Qperiodo,
     'year' => $Qyear,
     'empiezamin' => $Qempiezamin,
@@ -26,10 +26,7 @@ $a_campos = [
     'incio' => $Qinicio,
     'fin' => $Qfin,
 ];
-$data = PostRequest::getDataFromUrl($url_backend, $a_campos);
-if (!empty($data['error'])) {
-	exit ($data['error']);
-}
+$data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
 $a_opciones = $data['a_opciones'];
 
 $oDesplUbis = new Desplegable();

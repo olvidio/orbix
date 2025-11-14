@@ -14,9 +14,6 @@ $Qid_usuario = (integer)filter_input(INPUT_POST, 'id_usuario');
 $url_backend = '/src/usuarios/infrastructure/controllers/usuario_grupo_lst.php';
 $a_campos_backend = ['id_usuario' => $Qid_usuario];
 $data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
-if (isset($data['error'])) {
-    exit($data['error']);
-}
 
 $a_cabeceras = $data['a_cabeceras'];
 $a_botones = $data['a_botones'];

@@ -21,14 +21,11 @@ if (!empty($Qid_lugar)) {
 if (!empty($Qid_item_egm)) {
     $url_backend = '/src/inventario/infrastructure/controllers/lista_docs_de_egm.php';
 }
-$a_campos = [
+$a_campos_backend = [
     'id_lugar' => $Qid_lugar,
     'id_item_egm' => $Qid_item_egm
 ];
-$data = PostRequest::getDataFromUrl($url_backend, $a_campos);
-if (!empty($data['error'])) {
-	exit ($data['error']);
-}
+$data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
 $a_valores = $data['a_valores'];
 $nombre_valija = $data['nombre_valija'];
 

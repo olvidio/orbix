@@ -17,14 +17,11 @@ $oPosicion->recordar();
 
 // muestra los ctr que tienen el documento.
 $url_backend = '/src/inventario/infrastructure/controllers/lista_docs_de_ctr.php';
-$a_campos = [
+$a_campos_backend = [
     'id_ubi' => $Qid_ubi,
     'id_lugar' => $Qid_lugar
 ];
-$data = PostRequest::getDataFromUrl($url_backend, $a_campos);
-if (!empty($data['error'])) {
-	exit ($data['error']);
-}
+$data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
 $a_valores = $data['a_valores'];
 
 $a_cabeceras[] = ucfirst(_("documento"));

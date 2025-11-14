@@ -15,9 +15,6 @@ $f_ini_iso = date('Y-m-d');
 $url_backend = '/src/inventario/infrastructure/controllers/lista_equipajes_desde_fecha.php';
 $a_campos_backend = [ 'f_ini_iso' => $f_ini_iso];
 $data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
-if (isset($data['error'])) {
-    exit($data['error']);
-}
 
 $a_opciones = $data['a_opciones'];
 

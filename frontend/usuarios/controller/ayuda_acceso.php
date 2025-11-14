@@ -33,15 +33,12 @@ $linkAyuda2FA = 'frontend/usuarios/controller/ayuda_2fa_reset.php?' . http_build
 
 $url = str_replace('index.php', '', $url_index);
 $url_backend = $url.'src/usuarios/infrastructure/controllers/usuario_ayuda_info.php';
-$a_campos = [
+$a_campos_backend = [
     'username' => $Qusername,
     'esquema' => $Qesquema,
     'ubicacion' => $Qubicacion,
 ];
-$data = PostRequest::getDataFromUrl($url_backend, $a_campos);
-if (!empty($data['error'])) {
-	exit ($data['error']);
-}
+$data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
 $errores = $data['errores'];
 $emailOfuscado = $data['emailOfuscado'];
 $mail_admin = $data['mail_admin'];

@@ -78,15 +78,12 @@ if (!(ConfigGlobal::mi_ambito() === 'rstgr' || ConfigGlobal::mi_ambito() === 'r'
 
 /////////// Consulta al backend ///////////////////
 $url_backend = '/src/certificados/infrastructure/controllers/certificado_emitido_lista_datos.php';
-$a_campos = [
+$a_campos_backend = [
     'certificado' => $Qcertificado,
     'inicurs_ca_iso' => $inicurs_ca_iso,
     'fincurs_ca_iso' => $fincurs_ca_iso,
 ];
-$data = PostRequest::getDataFromUrl($url_backend, $a_campos);
-if (!empty($data['error'])) {
-	exit ($data['error']);
-}
+$data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
 $a_cabeceras = $data['a_cabeceras'];
 $a_valores = $data['a_valores'];
 $a_botones = $data['a_botones'];

@@ -23,9 +23,6 @@ $oPosicion->setParametros($aGoBack, 1);
 $url_backend = '/src/inventario/infrastructure/controllers/lista_de_ctr_con_docs.php';
 $a_campos_backend = [ 'id_tipo_doc' => $Qid_tipo_doc, 'inventario' => $Qinventario];
 $data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
-if (isset($data['error'])) {
-    exit($data['error']);
-}
 
 $a_valores = $data['a_valores'];
 $nombreDoc = $data['nombreDoc'];

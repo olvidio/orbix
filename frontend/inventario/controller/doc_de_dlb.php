@@ -21,14 +21,11 @@ $oPosicion->setParametros($aGoBack, 1);
 
 // muestra los ctr que tienen el documento.
 $url_backend = '/src/inventario/infrastructure/controllers/lista_docs_de_dlb.php';
-$a_campos = [
+$a_campos_backend = [
     'id_tipo_doc' => $Qid_tipo_doc,
     'inventario' => $Qinventario
 ];
-$data = PostRequest::getDataFromUrl($url_backend, $a_campos);
-if (!empty($data['error'])) {
-	exit ($data['error']);
-}
+$data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
 $a_valores = $data['a_valores'];
 $aGrupos = $data['aGrupos'];
 $nombreDoc = $data['nombreDoc'];

@@ -74,17 +74,14 @@ if (empty($Qk_buscar)) {
 
     // pedir a Info los datos necesarios para mostrar el formulario de búsqueda
     $url_backend = '/src/shared/infrastructure/controllers/tablaDB_buscar_datos.php';
-    $a_campos = [
+    $a_campos_backend = [
         'clase_info' => $Qclase_info,
         'k_buscar' => $Qk_buscar,
         'pau' => $Qpau,
         'id_pau' => $Qid_pau,
         'obj_pau' => $Qobj_pau,
     ];
-    $data = PostRequest::getDataFromUrl($url_backend, $a_campos);
-    if (!empty($data['error'])) {
-        exit ($data['error']);
-    }
+    $data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
 
     $a_campos_buscar = $data['a_campos'];
     $datos_buscar = empty($data['buscar_view'])? '' : $data['buscar_view'];
@@ -126,10 +123,7 @@ $a_campos = [
     'id_pau' => $Qid_pau,
     'obj_pau' => $Qobj_pau,
 ];
-$data = PostRequest::getDataFromUrl($url_backend, $a_campos);
-if (!empty($data['error'])) {
-    exit ($data['error']);
-}
+$data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
 $txt_explicacion = $data['explicacion'];
 $txt_titulo = $data['titulo'];
 $script = $data['script'];

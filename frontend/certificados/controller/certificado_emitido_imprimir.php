@@ -45,9 +45,6 @@ if (!empty($a_sel)) { //vengo de un checkbox
 $url_backend = '/src/certificados/infrastructure/controllers/certificado_emitido_imprimir_datos.php';
 $a_campos_backend = [ 'id_nom' => $id_nom ];
 $data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
-if (isset($data['error'])) {
-    exit($data['error']);
-}
 
 $nombreApellidos = $data['nombreApellidos'];
 $lugar_nacimiento = $data['lugar_nacimiento'];
@@ -67,9 +64,6 @@ $contador = $data['contador'];
 $url_backend = '/src/shared/infrastructure/controllers/locales_posibles.php';
 $a_campos_backend = [ 'id_nom' => $id_nom ];
 $data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
-if (isset($data['error'])) {
-    exit($data['error']);
-}
 
 $a_locales = $data['a_locales'];
 

@@ -27,9 +27,6 @@ if (!empty($a_sel)) { //vengo de un checkbox
 $url_backend = '/src/usuarios/infrastructure/controllers/perm_menu_info.php';
 $a_campos_backend = ['id_usuario' => $Qid_usuario, 'id_item' => $Qid_item];
 $data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
-if (isset($data['error'])) {
-    exit($data['error']);
-}
 
 $nombre = $data['nombre'];
 $menu_perm = $data['menu_perm'];

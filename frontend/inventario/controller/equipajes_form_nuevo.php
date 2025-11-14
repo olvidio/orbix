@@ -16,14 +16,11 @@ $Qnom_equip = (string)filter_input(INPUT_POST, 'nom_equip');
 
 // posibles tipos de documento
 $url_backend = '/src/inventario/infrastructure/controllers/equipajes_lista_activ_sel.php';
-$a_campos = [
+$a_campos_backend = [
     'id_cdc' => $Qid_cdc,
     'sel' => $a_sel
 ];
-$data = PostRequest::getDataFromUrl($url_backend, $a_campos);
-if (!empty($data['error'])) {
-	exit ($data['error']);
-}
+$data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
 $nombre_ubi = $data['nombre_ubi'];
 $ini = $data['ini'];
 $fin = $data['fin'];

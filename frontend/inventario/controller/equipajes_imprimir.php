@@ -19,13 +19,10 @@ if (empty($Qid_equipaje)) {
 
 //-------- Textos cabecera y pie -----------------------------------
 $url_backend = '/src/inventario/infrastructure/controllers/cabecera_pie_txt.php';
-$a_campos = [
+$a_campos_backend = [
     'id_equipaje' => $Qid_equipaje,
 ];
-$data = PostRequest::getDataFromUrl($url_backend, $a_campos);
-if (!empty($data['error'])) {
-	exit ($data['error']);
-}
+$data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
 $cabecera = $data['cabecera'];
 $cabeceraB = $data['cabeceraB'];
 $firma = $data['firma'];
@@ -38,10 +35,7 @@ $url_backend = '/src/inventario/infrastructure/controllers/equipajes_lista_activ
 $a_campos = [
     'id_equipaje' => $Qid_equipaje,
 ];
-$data = PostRequest::getDataFromUrl($url_backend, $a_campos);
-if (!empty($data['error'])) {
-	exit ($data['error']);
-}
+$data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
 $a_actividades = $data['a_actividades'];
 $html_actividades = '';
 $html_actividades_firma = '';
@@ -62,10 +56,7 @@ $url_backend = '/src/inventario/infrastructure/controllers/equipajes_doc_casa.ph
 $a_campos = [
     'id_equipaje' => $Qid_equipaje,
 ];
-$data = PostRequest::getDataFromUrl($url_backend, $a_campos);
-if (!empty($data['error'])) {
-	exit ($data['error']);
-}
+$data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
 $a_valores = $data['a_valores'];
 $nombre_ubi = $data['nombre_ubi'];
 $id_ubi = $data['id_ubi'];
@@ -77,10 +68,7 @@ $url_backend = '/src/inventario/infrastructure/controllers/equipajes_egm.php';
 $a_campos = [
     'id_equipaje' => $Qid_equipaje,
 ];
-$data = PostRequest::getDataFromUrl($url_backend, $a_campos);
-if (!empty($data['error'])) {
-	exit ($data['error']);
-}
+$data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
 $a_egm = $data['a_egm'];
 $html_g = '';
 foreach ($a_egm as $aEgm) {

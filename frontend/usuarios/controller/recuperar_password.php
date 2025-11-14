@@ -29,16 +29,13 @@ if (empty($Qusername)) {
 $url_index = $_SERVER['HTTP_REFERER'];
 $url = str_replace('index.php', '', $url_index);
 $url_backend = $url . 'src/usuarios/infrastructure/controllers/recuperar_password_mail.php';
-$a_campos = [
+$a_campos_backend = [
     'username' => $Qusername,
     'esquema' => $Qesquema,
     'ubicacion' => $Qubicacion,
     'esquema_web' => $Qesquema_web,
 ];
-$data = PostRequest::getDataFromUrl($url_backend, $a_campos);
-if (!empty($data['error'])) {
-	exit ($data['error']);
-}
+$data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
 $error_txt = $data['error_txt'];
 $email = $data['email'];
 $success = $data['success'];

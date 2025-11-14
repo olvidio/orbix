@@ -14,14 +14,11 @@ $Qid_tipo_doc = (string)filter_input(INPUT_POST, 'id_tipo_doc');
 
 // posibles tipos de documento
 $url_backend = '/src/inventario/infrastructure/controllers/lista_docs_libres.php';
-$a_campos = [
+$a_campos_backend = [
     'id_equipaje' => $Qid_equipaje,
     'id_tipo_doc' => $Qid_tipo_doc
 ];
-$data = PostRequest::getDataFromUrl($url_backend, $a_campos);
-if (!empty($data['error'])) {
-	exit ($data['error']);
-}
+$data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
 $a_valores = $data['a_valores'];
 
 $txt = '<br>';

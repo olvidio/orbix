@@ -15,13 +15,10 @@ $oPosicion->recordar();
 
 // muestra los ctr que tienen el documento.
 $url_backend = '/src/inventario/infrastructure/controllers/inventario_ctr.php';
-$a_campos = [
+$a_campos_backend = [
     'sel' => $sel_json,
 ];
-$data = PostRequest::getDataFromUrl($url_backend, $a_campos);
-if (!empty($data['error'])) {
-	exit ($data['error']);
-}
+$data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
 $a_ubi_valores = $data['a_valores'];
 $a_ubi_llave = $data['a_llave'];
 $a_ubi_tipo = $data['a_tipo'];

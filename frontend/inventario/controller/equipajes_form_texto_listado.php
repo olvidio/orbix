@@ -33,13 +33,10 @@ switch ($Qloc) {
         $id_grupo = $matches[1];
 
         $url_backend = '/src/inventario/infrastructure/controllers/texto_de_egm.php';
-        $a_campos = [
+        $a_campos_backend = [
             'id_equipaje' => $Qid_equipaje,
             'id_grupo' => $id_grupo];
-        $data = PostRequest::getDataFromUrl($url_backend, $a_campos);
-        if (!empty($data['error'])) {
-            exit ($data['error']);
-        }
+        $data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
         $texto = $data['texto'];
         break;
 }

@@ -28,14 +28,11 @@ $linkEnviarMail2fa = 'recuperar_2fa.php?' . http_build_query($a_cosas);
 
 $url = str_replace('index.php', '', $Qurl_index);
 $url_backend = $url . 'src/usuarios/infrastructure/controllers/usuario_ayuda_info.php';
-$a_campos = [
+$a_campos_backend = [
     'username' => $Qusername,
     'esquema' => $Qesquema,
 ];
-$data = PostRequest::getDataFromUrl($url_backend, $a_campos);
-if (!empty($data['error'])) {
-	exit ($data['error']);
-}
+$data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
 $errores = $data['errores'];
 $emailOfuscado = $data['emailOfuscado'];
 

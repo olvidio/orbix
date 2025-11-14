@@ -31,14 +31,11 @@ if ($id_usuario !== $Qid_usuario) {
 
 //////////////////////// Datos del usuario ///////////////////////////////////////////////////
 $url_backend = '/src/usuarios/infrastructure/controllers/usuario_guardar.php';
-$a_campos = [
+$a_campos_backend = [
     'id_usuario' => $id_usuario,
         'has_2fa' => 'false',
     ];
-$data = PostRequest::getDataFromUrl($url_backend, $a_campos);
-if (!empty($data['error'])) {
-	exit ($data['error']);
-}
+$data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
 $usuario = $data['usuario'];
 
 if (isset($data['error'])) {

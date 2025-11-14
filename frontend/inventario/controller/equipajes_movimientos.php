@@ -13,9 +13,6 @@ $a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_A
 $url_backend = '/src/inventario/infrastructure/controllers/equipajes_movimientos.php';
 $a_campos_backend = [ 'sel' => $a_sel];
 $data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
-if (isset($data['error'])) {
-    exit($data['error']);
-}
 
 $aCambios = $data['aCambios'];
 $aLugaresPorEgm = $data['aLugaresPorEgm'];

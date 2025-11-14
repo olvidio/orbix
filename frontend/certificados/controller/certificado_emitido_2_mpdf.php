@@ -8,7 +8,7 @@ use web\Hash;
 
 $Qguardar = empty($_GET['guardar']) ? '' : $_GET['guardar'];
 
-// defino estas variables vacias, para que el IDE no señale errores, pero se definen en el include
+// defino estas variables vacías, para que el IDE no señale errores, pero se definen en el include
 $nom = '';
 $footer = '';
 $certificado = '';
@@ -71,16 +71,13 @@ if (!empty($Qguardar)) {
     $certificado_base64 = base64_encode($certificado);
 
     $url_backend = '/src/certificados/infrastructure/controllers/certificado_emitido_guardar_pdf.php';
-    $a_campos = [
+    $a_campos_backend = [
         'id_item' => $Qid_item,
         'id_nom' => $id_nom,
         'certificado' => $certificado_base64,
         'pdf' => $pdf_base64,
     ];
-    $data = PostRequest::getDataFromUrl($url_backend, $a_campos);
-    if (!empty($data['error'])) {
-        exit ($data['error']);
-    }
+    $data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
 }
 
     // Poner la salida del pdf al final, para poder mostrar si hay errores al guardar.

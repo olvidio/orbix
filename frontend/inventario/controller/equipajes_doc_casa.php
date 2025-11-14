@@ -20,13 +20,10 @@ if (empty($Qid_equipaje)) {
 
 //-------- docs en la casa -----------------------------------
 $url_backend = '/src/inventario/infrastructure/controllers/equipajes_doc_casa.php';
-$a_campos = [
+$a_campos_backend = [
     'id_equipaje' => $Qid_equipaje,
 ];
-$data = PostRequest::getDataFromUrl($url_backend, $a_campos);
-if (!empty($data['error'])) {
-	exit ($data['error']);
-}
+$data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
 $a_valores = $data['a_valores'];
 $nombre_ubi = $data['nombre_ubi'];
 
@@ -48,10 +45,7 @@ $url_backend = '/src/inventario/infrastructure/controllers/equipajes_egm.php';
 $a_campos = [
     'id_equipaje' => $Qid_equipaje,
 ];
-$data = PostRequest::getDataFromUrl($url_backend, $a_campos);
-if (!empty($data['error'])) {
-	exit ($data['error']);
-}
+$data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
 $a_egm = $data['a_egm'];
 
 $oHash = new Hash();

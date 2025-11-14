@@ -21,9 +21,6 @@ if (empty($Qolvidar)) {
 $url_backend = '/src/usuarios/infrastructure/controllers/perm_activ_lista.php';
 $a_campos_backend = ['id_usuario' => $Qid_usuario];
 $data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
-if (isset($data['error'])) {
-    exit($data['error']);
-}
 
 $a_cabeceras = $data['a_cabeceras'];
 $a_botones = $data['a_botones'];

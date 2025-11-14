@@ -22,9 +22,6 @@ $id_usuario = $oMiUsuario->getId_usuario();
 $url_backend = '/src/usuarios/infrastructure/controllers/usuario_info.php';
 $a_campos_backend = [ 'id_usuario' => $id_usuario ];
 $data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
-if (isset($data['error'])) {
-    exit($data['error']);
-}
 
 $usuario = $data['usuario'];
 
@@ -32,9 +29,6 @@ $usuario = $data['usuario'];
 $url_backend = '/src/usuarios/infrastructure/controllers/usuario_2fa_info.php';
 $a_campos_backend = [ 'id_usuario' => $id_usuario ];
 $data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
-if (isset($data['error'])) {
-    exit($data['error']);
-}
 
 $has_2fa = isset($data['has_2fa']) ? $data['has_2fa'] : false;
 $secret_2fa = isset($data['secret_2fa']) ? $data['secret_2fa'] : '';

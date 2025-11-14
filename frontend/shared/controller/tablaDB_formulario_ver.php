@@ -71,16 +71,13 @@ if (!empty($Qobj_pau)) {
 }
 
 $url_backend = '/src/shared/infrastructure/controllers/tablaDB_formulario_datos.php';
-$parametros = [
+$a_campos_backend = [
     'clase_info' => $Qclase_info,
     'a_pkey' => $a_pkey,
     'obj_pau' => $Qobj_pau,
     'mod' => $Qmod,
 ];
-$data = PostRequest::getDataFromUrl($url_backend, $parametros);
-if (!empty($data['error'])) {
-    exit ($data['error']);
-}
+$data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
 
 $fields = $data['fields'];
 $tit_txt = $data['tit_txt'];

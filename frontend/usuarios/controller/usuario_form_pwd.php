@@ -21,9 +21,6 @@ $id_usuario = $oMiUsuario->getId_usuario();
 $url_backend = '/src/usuarios/infrastructure/controllers/usuario_info.php';
 $a_campos_backend = ['id_usuario' => $id_usuario];
 $data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
-if (isset($data['error'])) {
-    exit($data['error']);
-}
 
 $usuario = $data['usuario'];
 

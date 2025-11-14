@@ -74,7 +74,11 @@ class PostRequest
         }
         $hash_params = $oHash->getArrayCampos();
 
-        return self::getData($url_hased, $hash_params);
+        $data =  self::getData($url_hased, $hash_params);
+        if (!empty($data['error'])) {
+            exit ($data['error']);
+        }
+        return $data;
     }
 
     /**

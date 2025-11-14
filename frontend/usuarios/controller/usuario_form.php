@@ -52,14 +52,11 @@ $oPosicion->setParametros(array('id_usuario' => $Qid_usuario), 1);
 
 //////////////////////// Usuario o Grupo ///////////////////////////////////////////////////
 $url_backend = '/src/usuarios/infrastructure/controllers/usuario_form.php';
-$a_campos = [
+$a_campos_backend = [
         'id_usuario' => $Qid_usuario,
         'quien' => $Qquien
     ];
-$data = PostRequest::getDataFromUrl($url_backend, $a_campos);
-if (!empty($data['error'])) {
-	exit ($data['error']);
-}
+$data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
 $a_campos_src = $data['a_campos'];
 
 $txt_guardar = _("guardar datos usuario");
@@ -162,9 +159,6 @@ if (!empty($Qid_usuario)) {
     $url_backend = '/src/usuarios/infrastructure/controllers/usuario_info.php';
     $a_campos_backend = [ 'id_usuario' => $Qid_usuario ];
     $data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
-    if (isset($data['error'])) {
-        exit($data['error']);
-    }
     $a_campos['grupos_txt'] = $data['grupos_txt'];
 
     $oView = new ViewNewPhtml('frontend\usuarios\controller');

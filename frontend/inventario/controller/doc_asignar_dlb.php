@@ -20,14 +20,11 @@ $oPosicion->recordar();
 
 // muestra los ctr que tienen el documento.
 $url_backend = '/src/inventario/infrastructure/controllers/lista_docs_asignar_dlb.php';
-$a_campos = [
+$a_campos_backend = [
     'id_tipo_doc' => $Qid_tipo_doc,
     'sel' => $a_sel,
 ];
-$data = PostRequest::getDataFromUrl($url_backend, $a_campos);
-if (!empty($data['error'])) {
-	exit ($data['error']);
-}
+$data = PostRequest::getDataFromUrl($url_backend, $a_campos_backend);
 $a_valores = $data['a_valores'];
 $nombreDoc = $data['nombreDoc'];
 $isNumerado = $data['isNumerado'];
