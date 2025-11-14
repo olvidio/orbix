@@ -3,8 +3,8 @@
 use core\ViewPhtml;
 use src\ubis\application\services\RegionDropdown;
 use src\ubis\application\services\TipoCasaDropdown;
+use src\ubis\application\services\TipoCentroDropdown;
 use ubis\model\entity\GestorDireccionCtr;
-use ubis\model\entity\GestorTipoCentro;
 use web\Desplegable;
 use web\Hash;
 use function core\strtoupper_dlb;
@@ -31,12 +31,7 @@ require_once("apps/core/global_object.inc");
 $oDesplRegion = RegionDropdown::activasOrdenNombre('region');
 
 // tipo ctr
-$oDesplTipoCentro = new Desplegable();
-$GesTipoCentro = new GestorTipoCentro();
-$a_tipos_centro = $GesTipoCentro->getListaTiposCentro();
-$oDesplTipoCentro->setNombre('tipo_ctr');
-$oDesplTipoCentro->setBlanco(1);
-$oDesplTipoCentro->setOpciones($a_tipos_centro);
+$oDesplTipoCentro = TipoCentroDropdown::listaTiposCentro(true, 'tipo_ctr');
 
 // tipo casa
 $oDesplTipoCasa = TipoCasaDropdown::listaTiposCasa(true, 'tipo_casa');

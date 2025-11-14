@@ -45,9 +45,9 @@ class TipoCasaRepository implements TipoCasaRepositoryInterface
 	 * @return array|FALSE Una colección de objetos de tipo TipoCasa
 	
 	 */
-	public function getTipoCasas(array $aWhere=[], array $aOperators=[]): array|FALSE
+	public function getTiposCasa(array $aWhere=[], array $aOperators=[]): array|FALSE
 	{
-	    return $this->repository->getTipoCasas($aWhere, $aOperators);
+	    return $this->repository->getTiposCasa($aWhere, $aOperators);
 	}
 	
 /* -------------------- ENTIDAD --------------------------------------------- */

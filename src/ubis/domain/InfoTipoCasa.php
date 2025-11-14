@@ -18,7 +18,7 @@ class InfoTipoCasa extends DatosInfoRepo
         $this->setTxtExplicacion();
 
         $this->setClase('src\\ubis\\domain\\entity\\TipoCasa');
-        $this->setMetodoGestor('getTipoCasas');
+        $this->setMetodoGestor('getTiposCasa');
     }
 
     public function getColeccion()
@@ -33,7 +33,7 @@ class InfoTipoCasa extends DatosInfoRepo
             $aOperador = array('nombre_tipo_casa' => 'sin_acentos');
         }
         $oLista = new TipoCasaRepository();
-        $Coleccion = $oLista->getTipoCasas($aWhere, $aOperador);
+        $Coleccion = $oLista->getTiposCasa($aWhere, $aOperador);
 
         return $Coleccion;
     }

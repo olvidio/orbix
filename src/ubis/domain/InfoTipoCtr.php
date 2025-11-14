@@ -1,12 +1,13 @@
 <?php
 
-namespace ubis\model;
+namespace src\ubis\domain;
 
 /* No vale el underscore en el nombre */
 
-use core\DatosInfo;
+use src\shared\domain\DatosInfoRepo;
+use src\ubis\application\repositories\TipoCentroRepository;
 
-class InfoTipoCtr extends DatosInfo
+class InfoTipoCtr extends DatosInfoRepo
 {
 
     public function __construct()
@@ -16,7 +17,7 @@ class InfoTipoCtr extends DatosInfo
         $this->setTxtBuscar(_("buscar un tipo de centro"));
         $this->setTxtExplicacion();
 
-        $this->setClase('ubis\\model\\entity\\TipoCentro');
+        $this->setClase('src\\ubis\\domain\\entity\\TipoCentro');
         $this->setMetodoGestor('getTiposCentro');
     }
 
@@ -26,12 +27,12 @@ class InfoTipoCtr extends DatosInfo
         // Si se quiere listar una selección, $this->k_buscar
         if (empty($this->k_buscar)) {
             $aWhere = array('_ordre' => 'nombre_tipo_ctr');
-            $aOperador = '';
+            $aOperador = [];
         } else {
             $aWhere = array('nombre_tipo_ctr' => $this->k_buscar);
             $aOperador = array('nombre_tipo_ctr' => 'sin_acentos');
         }
-        $oLista = new entity\GestorTipoCentro();
+        $oLista = new TipoCentroRepository();
         $Coleccion = $oLista->getTiposCentro($aWhere, $aOperador);
 
         return $Coleccion;

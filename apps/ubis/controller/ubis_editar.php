@@ -3,6 +3,7 @@
 use core\ConfigGlobal;
 use core\ViewPhtml;
 use src\ubis\application\services\TipoCasaDropdown;
+use src\ubis\application\services\TipoCentroDropdown;
 use ubis\model\entity\CasaDl;
 use ubis\model\entity\CentroDl;
 use src\ubis\application\services\DelegacionDropdown;
@@ -235,9 +236,7 @@ switch ($tipo_ubi) {
         $oDesplCentros->setNombre($nnom);
         $oDesplCentros->setOpcion_sel($id_ctr_padre);
 
-        $oTiposCentro = new ubis\model\entity\GestorTipoCentro();
-        $oTiposCentroOpciones = $oTiposCentro->getListaTiposCentro();
-        $oDesplegableTiposCentro = new Desplegable('tipo_ctr', $oTiposCentroOpciones, $tipo_ctr, true);
+        $oDesplegableTiposCentro = TipoCentroDropdown::listaTiposCentro(true, 'tipo_ctr');
 
         $oDesplDelegaciones->setOpcion_sel($dl);
         $oDesplRegiones->setOpcion_sel($region);
@@ -288,9 +287,7 @@ switch ($tipo_ubi) {
         $oDesplCentros->setNombre($nnom);
         $oDesplCentros->setOpcion_sel($id_ctr_padre);
 
-        $oTiposCentro = new ubis\model\entity\GestorTipoCentro();
-        $oTiposCentroOpciones = $oTiposCentro->getListaTiposCentro();
-        $oDesplegableTiposCentro = new Desplegable('tipo_ctr', $oTiposCentroOpciones, $tipo_ctr, true);
+        $oDesplegableTiposCentro = TipoCentroDropdown::listaTiposCentro(true, 'tipo_ctr');
 
         $oDesplDelegaciones->setOpcion_sel($dl);
         $oDesplRegiones->setOpcion_sel($region);

@@ -8,12 +8,12 @@ use core\Set;
 use PDO;
 use PDOException;
 
-use src\ubis\domain\entity\TipoCasa;
-use src\ubis\domain\contracts\TipoCasaRepositoryInterface;
+use src\ubis\domain\entity\TipoCentro;
+use src\ubis\domain\contracts\TipoCentroRepositoryInterface;
 
 
 /**
- * Clase que adapta la tabla xu_tipo_casa a la interfaz del repositorio
+ * Clase que adapta la tabla xu_tipo_ctr a la interfaz del repositorio
  *
  * @package orbix
  * @subpackage model
@@ -21,7 +21,7 @@ use src\ubis\domain\contracts\TipoCasaRepositoryInterface;
  * @version 2.0
  * @created 14/11/2025
  */
-class PgTipoCasaRepository extends ClaseRepository implements TipoCasaRepositoryInterface
+class PgTipoCentroRepository extends ClaseRepository implements TipoCentroRepositoryInterface
 {
     public function __construct()
     {
@@ -29,15 +29,14 @@ class PgTipoCasaRepository extends ClaseRepository implements TipoCasaRepository
         $this->setoDbl($oDbl); 
         $oDbl_Select = $GLOBALS['oDBPC_Select'];
         $this->setoDbl_select($oDbl_Select); 
-        $this->setNomTabla('xu_tipo_casa');
+        $this->setNomTabla('xu_tipo_ctr');
     }
 
-
-    public function getArrayTiposCasa(): array
+    public function getArrayTiposCentro(): array
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
-        $sQuery = "SELECT tipo_casa, nombre_tipo_casa
+        $sQuery = "SELECT tipo_ctr, nombre_tipo_ctr
 				FROM $nom_tabla
 				ORDER BY tipo_casa";
         try {
@@ -54,21 +53,22 @@ class PgTipoCasaRepository extends ClaseRepository implements TipoCasaRepository
         return $aOpciones;
     }
 
-/* -------------------- GESTOR BASE ---------------------------------------- */
+
+    /* -------------------- GESTOR BASE ---------------------------------------- */
 
 	/**
-	 * devuelve una colección (array) de objetos de tipo TipoCasa
+	 * devuelve una colección (array) de objetos de tipo TipoCentro
 	 *
 	 * @param array $aWhere asociativo con los valores para cada campo de la BD.
 	 * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-	 * @return array|FALSE Una colección de objetos de tipo TipoCasa
+	 * @return array|FALSE Una colección de objetos de tipo TipoCentro
 	
 	 */
-	public function getTiposCasa(array $aWhere=[], array $aOperators=[]): array|FALSE
+	public function getTiposCentro(array $aWhere=[], array $aOperators=[]): array|FALSE
 	{
         $oDbl = $this->getoDbl_Select();
 		$nom_tabla = $this->getNomTabla();
-		$TipoCasaSet = new Set();
+		$TipoCentroSet = new Set();
 		$oCondicion = new Condicion();
 		$aCondicion = [];
 		foreach ($aWhere as $camp => $val) {
@@ -91,34 +91,34 @@ class PgTipoCasaRepository extends ClaseRepository implements TipoCasaRepository
 		if (isset($aWhere['_limit'])) { unset($aWhere['_limit']); }
 		$sQry = "SELECT * FROM $nom_tabla ".$sCondicion.$sOrdre.$sLimit;
 		if (($oDblSt = $oDbl->prepare($sQry)) === FALSE) {
-			$sClaveError = 'PgTipoCasaRepository.listar.prepare';
+			$sClaveError = 'PgTipoCentroRepository.listar.prepare';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
 			return FALSE;
 		}
 		if (($oDblSt->execute($aWhere)) === FALSE) {
-			$sClaveError = 'PgTipoCasaRepository.listar.execute';
+			$sClaveError = 'PgTipoCentroRepository.listar.execute';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
 			return FALSE;
 		}
 		
 		$filas = $oDblSt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
-            $TipoCasa = new TipoCasa();
-            $TipoCasa->setAllAttributes($aDatos);
-			$TipoCasaSet->add($TipoCasa);
+            $TipoCentro = new TipoCentro();
+            $TipoCentro->setAllAttributes($aDatos);
+			$TipoCentroSet->add($TipoCentro);
 		}
-		return $TipoCasaSet->getTot();
+		return $TipoCentroSet->getTot();
 	}
 
 /* -------------------- ENTIDAD --------------------------------------------- */
 
-	public function Eliminar(TipoCasa $TipoCasa): bool
+	public function Eliminar(TipoCentro $TipoCentro): bool
     {
-        $tipo_casa = $TipoCasa->getTipoCasaVo()?->value();
+        $tipo_ctr = $TipoCentro->getTipoCentroVo()->value();
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        if (($oDbl->exec("DELETE FROM $nom_tabla WHERE tipo_casa = '$tipo_casa'")) === FALSE) {
-            $sClaveError = 'PgTipoCasaRepository.eliminar';
+        if (($oDbl->exec("DELETE FROM $nom_tabla WHERE tipo_ctr = '$tipo_ctr'")) === FALSE) {
+            $sClaveError = 'PgTipoCentroRepository.eliminar';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
             return FALSE;
         }
@@ -130,23 +130,23 @@ class PgTipoCasaRepository extends ClaseRepository implements TipoCasaRepository
 	 * Si no existe el registro, hace un insert, si existe, se hace el update.
 	
 	 */
-	public function Guardar(TipoCasa $TipoCasa): bool
+	public function Guardar(TipoCentro $TipoCentro): bool
     {
-        $tipo_casa = $TipoCasa->getTipoCasaVo()?->value();
+        $tipo_ctr = $TipoCentro->getTipoCentroVo()->value();
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        $bInsert = $this->isNew($tipo_casa);
+        $bInsert = $this->isNew($tipo_ctr);
 
 		$aDatos = [];
-		$aDatos['nombre_tipo_casa'] = $TipoCasa->getNombreTipoCasaVo()?->value();
+		$aDatos['nombre_tipo_ctr'] = $TipoCentro->getNombreTipoCentroVo()?->value();
 		array_walk($aDatos, 'core\poner_null');
 
 		if ($bInsert === FALSE) {
 			//UPDATE
 			$update="
-					nombre_tipo_casa         = :nombre_tipo_casa";
-			if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE tipo_casa = '$tipo_casa'")) === FALSE) {
-				$sClaveError = 'PgTipoCasaRepository.update.prepare';
+					nombre_tipo_ctr          = :nombre_tipo_ctr";
+			if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE tipo_ctr = '$tipo_ctr'")) === FALSE) {
+				$sClaveError = 'PgTipoCentroRepository.update.prepare';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
 				return FALSE;
 			}
@@ -156,17 +156,17 @@ class PgTipoCasaRepository extends ClaseRepository implements TipoCasaRepository
             } catch ( PDOException $e) {
                 $err_txt=$e->errorInfo[2];
                 $this->setErrorTxt($err_txt);
-                $sClaveError = 'PgTipoCasaRepository.update.execute';
+                $sClaveError = 'PgTipoCentroRepository.update.execute';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
                 return FALSE;
             }
 		} else {
 			// INSERT
-			$aDatos['tipo_casa'] = $TipoCasa->getTipoCasaVo()->value();
-			$campos="(tipo_casa,nombre_tipo_casa)";
-			$valores="(:tipo_casa,:nombre_tipo_casa)";		
+			$aDatos['tipo_ctr'] = $TipoCentro->getTipoCentroVo()->value();
+			$campos="(tipo_ctr,nombre_tipo_ctr)";
+			$valores="(:tipo_ctr,:nombre_tipo_ctr)";		
 			if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === FALSE) {
-				$sClaveError = 'PgTipoCasaRepository.insertar.prepare';
+				$sClaveError = 'PgTipoCentroRepository.insertar.prepare';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
 				return FALSE;
 			}
@@ -175,7 +175,7 @@ class PgTipoCasaRepository extends ClaseRepository implements TipoCasaRepository
             } catch ( PDOException $e) {
                 $err_txt=$e->errorInfo[2];
                 $this->setErrorTxt($err_txt);
-                $sClaveError = 'PgTipoCasaRepository.insertar.execute';
+                $sClaveError = 'PgTipoCentroRepository.insertar.execute';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
                 return FALSE;
 			}
@@ -183,12 +183,12 @@ class PgTipoCasaRepository extends ClaseRepository implements TipoCasaRepository
 		return TRUE;
 	}
 	
-    private function isNew(string $tipo_casa): bool
+    private function isNew(string $tipo_ctr): bool
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE tipo_casa = '$tipo_casa'")) === FALSE) {
-			$sClaveError = 'PgTipoCasaRepository.isNew';
+        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE tipo_ctr = '$tipo_ctr'")) === FALSE) {
+			$sClaveError = 'PgTipoCentroRepository.isNew';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
             return FALSE;
         }
@@ -202,16 +202,16 @@ class PgTipoCasaRepository extends ClaseRepository implements TipoCasaRepository
      * Devuelve los campos de la base de datos en un array asociativo.
      * Devuelve false si no existe la fila en la base de datos
      * 
-     * @param string $tipo_casa
+     * @param string $tipo_ctr
      * @return array|bool
 	
      */
-    public function datosById(string $tipo_casa): array|bool
+    public function datosById(string $tipo_ctr): array|bool
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
-        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE tipo_casa = '$tipo_casa'")) === FALSE) {
-			$sClaveError = 'PgTipoCasaRepository.getDatosById';
+        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE tipo_ctr = '$tipo_ctr'")) === FALSE) {
+			$sClaveError = 'PgTipoCentroRepository.getDatosById';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
             return FALSE;
         }
@@ -221,15 +221,15 @@ class PgTipoCasaRepository extends ClaseRepository implements TipoCasaRepository
     
 	
     /**
-     * Busca la clase con tipo_casa en la base de datos .
+     * Busca la clase con tipo_ctr en la base de datos .
 	
      */
-    public function findById(string $tipo_casa): ?TipoCasa
+    public function findById(string $tipo_ctr): ?TipoCentro
     {
-        $aDatos = $this->datosById($tipo_casa);
+        $aDatos = $this->datosById($tipo_ctr);
         if (empty($aDatos)) {
             return null;
         }
-        return (new TipoCasa())->setAllAttributes($aDatos);
+        return (new TipoCentro())->setAllAttributes($aDatos);
     }
 }

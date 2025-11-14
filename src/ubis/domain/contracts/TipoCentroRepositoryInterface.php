@@ -3,11 +3,11 @@
 namespace src\ubis\domain\contracts;
 
 use PDO;
-use src\ubis\domain\entity\TipoCasa;
+use src\ubis\domain\entity\TipoCentro;
 
 
 /**
- * Interfaz de la clase TipoCasa y su Repositorio
+ * Interfaz de la clase TipoCentro y su Repositorio
  *
  * @package orbix
  * @subpackage model
@@ -15,28 +15,28 @@ use src\ubis\domain\entity\TipoCasa;
  * @version 2.0
  * @created 14/11/2025
  */
-interface TipoCasaRepositoryInterface
+interface TipoCentroRepositoryInterface
 {
 
-    public function getArrayTiposCasa(): array;
+    public function getArrayTiposCentro(): array;
 
 /* -------------------- GESTOR BASE ---------------------------------------- */
 
 	/**
-	 * devuelve una colección (array) de objetos de tipo TipoCasa
+	 * devuelve una colección (array) de objetos de tipo TipoCentro
 	 *
 	 * @param array $aWhere asociativo con los valores para cada campo de la BD.
 	 * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-	 * @return array|FALSE Una colección de objetos de tipo TipoCasa
+	 * @return array|FALSE Una colección de objetos de tipo TipoCentro
 	
 	 */
-	public function getTiposCasa(array $aWhere=[], array $aOperators=[]): array|FALSE;
+	public function getTiposCentro(array $aWhere=[], array $aOperators=[]): array|FALSE;
 	
 /* -------------------- ENTIDAD --------------------------------------------- */
 
-	public function Eliminar(TipoCasa $TipoCasa): bool;
+	public function Eliminar(TipoCentro $TipoCentro): bool;
 
-	public function Guardar(TipoCasa $TipoCasa): bool;
+	public function Guardar(TipoCentro $TipoCentro): bool;
 
 	public function getErrorTxt(): string;
 
@@ -50,15 +50,15 @@ interface TipoCasaRepositoryInterface
      * Devuelve los campos de la base de datos en un array asociativo.
      * Devuelve false si no existe la fila en la base de datos
      * 
-     * @param string $tipo_casa
+     * @param string $tipo_ctr
      * @return array|bool
 	
      */
-    public function datosById(string $tipo_casa): array|bool;
+    public function datosById(string $tipo_ctr): array|bool;
 	
     /**
-     * Busca la clase con tipo_casa en el repositorio.
+     * Busca la clase con tipo_ctr en el repositorio.
 	
      */
-    public function findById(string $tipo_casa): ?TipoCasa;
+    public function findById(string $tipo_ctr): ?TipoCentro;
 }
