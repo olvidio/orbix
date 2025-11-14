@@ -1,12 +1,14 @@
 <?php
 
-namespace asignaturas\model;
+namespace src\asignaturas\domain;
 
 /* No vale el underscore en el nombre */
 
-use core\DatosInfo;
 
-class InfoSectores extends DatosInfo
+use src\asignaturas\application\repositories\SectorRepository;
+use src\shared\domain\DatosInfoRepo;
+
+class InfoSectores extends DatosInfoRepo
 {
 
     public function __construct()
@@ -16,7 +18,7 @@ class InfoSectores extends DatosInfo
         $this->setTxtBuscar(_("buscar un sector"));
         $this->setTxtExplicacion();
 
-        $this->setClase('asignaturas\\model\\entity\\Sector');
+        $this->setClase('src\\asignaturas\\domain\\entity\\Sector');
         $this->setMetodoGestor('getSectores');
     }
 
@@ -26,12 +28,12 @@ class InfoSectores extends DatosInfo
         // Si se quiere listar una selección, $this->k_buscar
         if (empty($this->k_buscar)) {
             $aWhere = array('_ordre' => 'sector');
-            $aOperador = '';
+            $aOperador = [];
         } else {
             $aWhere = array('sector' => $this->k_buscar);
             $aOperador = array('sector' => 'sin_acentos');
         }
-        $oLista = new entity\GestorSector();
+        $oLista = new SectorRepository();
         $Coleccion = $oLista->getSectores($aWhere, $aOperador);
 
         return $Coleccion;

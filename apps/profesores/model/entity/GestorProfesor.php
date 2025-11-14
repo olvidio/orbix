@@ -9,6 +9,7 @@ use core\Condicion;
 use core\Set;
 use personas\model\entity\GestorPersonaPub;
 use personas\model\entity\PersonaDl;
+use src\asignaturas\application\repositories\SectorRepository;
 use web\Desplegable;
 
 /**
@@ -49,11 +50,11 @@ class GestorProfesor extends ClaseGestor
     {
         $oAsignatura = new Asignatura($id_asignatura);
         $id_sector = $oAsignatura->getId_sector();
-        $oSector = new Sector($id_sector);
-        $id_departamento = $oSector->getId_departamento();
+        $SectorRepository = new SectorRepository();
+        $id_departamento = $SectorRepository->findById($id_sector)?->getIdDepartamentoVo()?->value();
         // Profesores departamento
         $aProfesoresDepartamento = $this->getListaProfesoresDepartamento($id_departamento);
-        //profesor ampliacion
+        //profesor ampliación
         $gesProfesoresAmpliacion = new GestorProfesorAmpliacion();
         $aProfesoresAmpliacion = $gesProfesoresAmpliacion->getListaProfesoresAsignatura($id_asignatura);
 
@@ -74,11 +75,11 @@ class GestorProfesor extends ClaseGestor
     {
         $oAsignatura = new Asignatura($id_asignatura);
         $id_sector = $oAsignatura->getId_sector();
-        $oSector = new Sector($id_sector);
-        $id_departamento = $oSector->getId_departamento();
+        $SectorRepository = new SectorRepository();
+        $id_departamento = $SectorRepository->findById($id_sector)?->getIdDepartamentoVo()?->value();
         // Profesores departamento
         $aProfesoresDepartamento = $this->getListaProfesoresDepartamento($id_departamento);
-        //profesor ampliacion
+        //profesor ampliación
         $gesProfesoresAmpliacion = new GestorProfesorAmpliacion();
         $aProfesoresAmpliacion = $gesProfesoresAmpliacion->getListaProfesoresAsignatura($id_asignatura);
 

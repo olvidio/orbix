@@ -4,13 +4,13 @@ namespace notas\model;
 
 use actividades\model\entity\ActividadAll;
 use asignaturas\model\entity\GestorAsignatura;
-use asignaturas\model\entity\GestorSector;
 use core\ClasePropiedades;
 use core\ConfigGlobal;
 use notas\model\entity\GestorNota;
 use personas\model\entity\PersonaDl;
 use profesores\model\entity\GestorProfesorDirector;
 use src\asignaturas\application\repositories\DepartamentoRepository;
+use src\asignaturas\application\repositories\SectorRepository;
 use function core\is_true;
 
 /**
@@ -41,12 +41,12 @@ class Resumen extends ClasePropiedades
      *
      * @var boolean
      */
-    protected $blista;
+    protected bool $blista;
     /**
      *
      * @var array
      */
-    protected $a_dl;
+    protected array $a_dl;
 
     protected $dinicurso;
     protected $dfincurso;
@@ -194,7 +194,7 @@ class Resumen extends ClasePropiedades
     public function getAnyFiCurs()
     {
         if (empty($this->iany2)) {
-            $this->iany2 = $this->getAnyIniCurs() + 1;
+            $this->iany2 = (int)$this->getAnyIniCurs() + 1;
         }
         return $this->iany2;
     }
@@ -256,7 +256,7 @@ class Resumen extends ClasePropiedades
         $curs = $this->getCurso();
         $fincurs = $this->getFinCurso();
 
-        $any = $this->getAnyIniCurs() + 1; //para los incorporados a partir del 1-jun.
+        $any = (int)$this->getAnyIniCurs() + 1; //para los incorporados a partir del 1-jun.
 
         $sqlDelete = "TRUNCATE TABLE $tabla";
         $sqlCreate = "CREATE TABLE IF NOT EXISTS $tabla(
@@ -1314,8 +1314,8 @@ class Resumen extends ClasePropiedades
         $oDbl = $this->getoDbl();
         $any = $this->getAnyFiCurs();
         $curso_inicio = $any - 1;
-        $oGesSectores = new GestorSector();
-        $a_sectores = $oGesSectores->getArraySectores();
+        $SectorRepository = new SectorRepository();
+        $a_sectores = $SectorRepository->getArraySectores();
         $asignaturas = $this->getNomAsignaturas();
         $a_profe_dept = $this->arrayProfesorDepartamento();
         $docencia_dep = [];
