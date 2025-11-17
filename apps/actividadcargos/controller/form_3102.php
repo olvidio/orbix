@@ -27,12 +27,14 @@
 use actividadcargos\model\entity\ActividadCargo;
 use actividadcargos\model\entity\GestorCargo;
 use core\ViewPhtml;
+use frontend\shared\web\Desplegable;
 use personas\model\entity\GestorPersonaAgd;
 use personas\model\entity\GestorPersonaEx;
 use personas\model\entity\GestorPersonaN;
 use personas\model\entity\GestorPersonaNax;
 use personas\model\entity\GestorPersonaS;
 use personas\model\entity\Persona;
+use src\actividadcargos\application\repositories\CargoRepository;
 use web\Hash;
 use function core\is_true;
 
@@ -149,10 +151,12 @@ if (!empty($Qid_item)) { //caso de modificar
         echo $oPosicion->go_atras(1);
     }
 }
-$oCargos = new GestorCargo();
-$oDesplegableCargos = $oCargos->getListaCargos();
+$CargoRepository = new CargoRepository();
+$aOpciones = $CargoRepository->getArrayCargos();
+$oDesplegableCargos = new Desplegable();
 $oDesplegableCargos->setNombre('id_cargo');
 $oDesplegableCargos->setBlanco(false);
+$oDesplegableCargos->setOpciones($aOpciones);
 $oDesplegableCargos->setOpcion_sel($Qid_cargo);
 $chk = (!empty($puede_agd) && is_true($puede_agd)) ? 'checked' : '';
 

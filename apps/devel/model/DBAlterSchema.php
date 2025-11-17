@@ -6,6 +6,7 @@ use actividadcargos\model\entity\Cargo;
 use actividadcargos\model\entity\GestorCargo;
 use core\ConfigDB;
 use core\DBConnection;
+use src\actividadcargos\application\repositories\CargoRepository;
 
 class DBAlterSchema
 {
@@ -611,7 +612,7 @@ class DBAlterSchema
             return false;
         }
         // tipos de cargo:
-        $gesCargos = new GestorCargo();
+        $CargoRepository = new CargoRepository();
         foreach ($oDbl->query($sql) as $aDades) {
             $id_activ = $aDades['id_activ'];
             $id_cargo = $aDades['id_cargo'];
@@ -621,9 +622,9 @@ class DBAlterSchema
             if ($id_nom_matriz == $id_nom_del) {
                 continue;
             }
-            $oCargo = new Cargo($id_cargo);
-            $tipo_cargo = $oCargo->getTipo_cargo();
-            $cargos_de_tipo = $gesCargos->getArrayCargosDeTipo($tipo_cargo);
+            $oCargo = $CargoRepository->findById($id_cargo);
+            $tipo_cargo = $oCargo->getTipoCargoVo()?->value();
+            $cargos_de_tipo = $CargoRepository->getArrayCargos($tipo_cargo);
             $txt_ids = implode(',', array_keys($cargos_de_tipo));
             $condicion_cargo = " AND id_cargo IN ($txt_ids)";
             // buscar el id_cargo mayor (del mismo tipo) para la actividad:

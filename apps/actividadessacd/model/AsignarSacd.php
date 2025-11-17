@@ -9,6 +9,7 @@ use actividades\model\entity\GestorActividadDl;
 use actividadescentro\model\entity\GestorCentroEncargado;
 use encargossacd\model\entity\GestorEncargo;
 use encargossacd\model\entity\GestorEncargoSacd;
+use src\actividadcargos\application\repositories\CargoRepository;
 
 class AsignarSacd
 {
@@ -120,8 +121,8 @@ class AsignarSacd
     public function ActivSinSacd()
     {
         // valores del id_cargo de tipo_cargo = sacd:
-        $gesCargos = new GestorCargo();
-        $aIdCargos_sacd = $gesCargos->getArrayCargosDeTipo('sacd');
+        $CargoRepository = new CargoRepository();
+        $aIdCargos_sacd = $CargoRepository->getArrayCargos('sacd');
         $txt_where_cargos = implode(',', array_keys($aIdCargos_sacd));
 
         $aWhere = [];
@@ -166,8 +167,8 @@ class AsignarSacd
     public function AsignarSacd($id_activ)
     {
         // valores del id_cargo de tipo_cargo = sacd:
-        $gesCargos = new GestorCargo();
-        $aIdCargos_sacd = $gesCargos->getArrayCargosDeTipo('sacd');
+        $CargoRepository = new CargoRepository();
+        $aIdCargos_sacd = $CargoRepository->getArrayCargos('sacd');
         // Solo a partir de php 7.3: $id_cargo = array_key_first($aIdCargos_sacd);
         $id_cargo = key($aIdCargos_sacd);
 

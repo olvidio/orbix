@@ -9,6 +9,7 @@ use core\ConfigGlobal;
 use core\ViewPhtml;
 use dossiers\model\PermDossier;
 use personas\model\entity\Persona;
+use src\actividadcargos\application\repositories\CargoRepository;
 use web\BotonesCurso;
 use web\Hash;
 use web\Lista;
@@ -150,8 +151,9 @@ class Select1302
             $id_item = $oActividadCargo->getId_item();
             $id_activ = $oActividadCargo->getId_activ();
             $id_cargo = $oActividadCargo->getId_cargo();
-            $oCargo = new Cargo(array('id_cargo' => $id_cargo));
-            $tipo_cargo = $oCargo->getTipo_cargo();
+            $oCargo = (new CargoRepository())->findById($id_cargo);
+            $tipo_cargo = $oCargo->getTipoCargoVo()?->value();
+            $cargo = $oCargo->getCargoVo()->value();
             // para los sacd en sf
             if ($tipo_cargo === 'sacd' && $mi_sfsv == 2) {
                 continue;
@@ -161,8 +163,6 @@ class Select1302
             $nom_activ = $oActividad->getNom_activ();
             $id_tipo_activ = $oActividad->getId_tipo_activ();
 
-            $oCargo = new Cargo($id_cargo);
-            $cargo = $oCargo->getCargo();
             $puede_agd = $oActividadCargo->getPuede_agd();
             $observ = $oActividadCargo->getObserv();
 

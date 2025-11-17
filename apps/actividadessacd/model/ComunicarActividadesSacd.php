@@ -12,6 +12,7 @@ use personas\model\entity\PersonaDl;
 use shared\domain\ColaMailId;
 use shared\domain\entity\ColaMail;
 use shared\domain\repositories\ColaMailRepository;
+use src\actividadcargos\application\repositories\CargoRepository;
 use src\configuracion\application\repositories\ConfigSchemaRepository;
 use src\configuracion\domain\entity\ConfigSchema;
 use src\usuarios\application\repositories\UsuarioRepository;
@@ -69,8 +70,8 @@ class ComunicarActividadesSacd
     public function getArrayComunicacion()
     {
         // valores del id_cargo de tipo_cargo = sacd:
-        $gesCargos = new GestorCargo();
-        $aIdCargos_sacd = $gesCargos->getArrayCargosDeTipo('sacd');
+        $CargoRepository = new CargoRepository();
+        $aIdCargos_sacd = $CargoRepository->getArrayCargos('sacd');
 
         $oActividadesSacdFunciones = new ActividadesSacdFunciones();
         $s = 0;

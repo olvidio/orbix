@@ -12,6 +12,7 @@ use core\ConfigGlobal;
 use core\ViewPhtml;
 use dossiers\model\PermDossier;
 use personas\model\entity\Persona;
+use src\actividadcargos\application\repositories\CargoRepository;
 use ubis\model\entity\Ubi;
 use web\Hash;
 use web\Lista;
@@ -257,8 +258,9 @@ class Select3101
             $id_nom = $oActividadCargo->getId_nom();
             $this->aListaCargos[] = $id_nom;
             $id_cargo = $oActividadCargo->getId_cargo();
-            $oCargo = new Cargo(array('id_cargo' => $id_cargo));
-            $tipo_cargo = $oCargo->getTipo_cargo();
+            $oCargo = (new CargoRepository())->findById($id_cargo);
+            $tipo_cargo = $oCargo->getTipoCargoVo()?->value();
+            $cargo = $oCargo->getCargoVo()->value();
             // para los sacd en sf
             if ($tipo_cargo === 'sacd' && $mi_sfsv == 2) {
                 continue;
@@ -270,7 +272,6 @@ class Select3101
                 $this->msg_err .= sprintf(_("%s. En %s linea %s"), $oPersona, __FILE__, __LINE__);
                 continue;
             }
-            $oCargo = new Cargo($id_cargo);
 
             $nom = $oPersona->getPrefApellidosNombre();
             $nombre = $oPersona->getNom();
@@ -288,7 +289,6 @@ class Select3101
             }
             $mails = $oPersona->telecos_persona($id_nom, "e-mail", " / ", "*", FALSE);
 
-            $cargo = $oCargo->getCargo();
             $puede_agd = $oActividadCargo->getPuede_agd();
             $observ_cargo = $oActividadCargo->getObserv();
             $dl_asistente = $oPersona->getDl();

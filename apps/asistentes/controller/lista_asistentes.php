@@ -7,6 +7,7 @@ use asistentes\model\entity\GestorAsistente;
 use core\ConfigGlobal;
 use core\ViewPhtml;
 use personas\model\entity\Persona;
+use src\actividadcargos\application\repositories\CargoRepository;
 use function core\is_true;
 
 /**
@@ -128,8 +129,9 @@ if (ConfigGlobal::is_app_installed('actividadcargos')) {
         $id_nom = $oActividadCargo->getId_nom();
         $aListaCargos[] = $id_nom;
         $id_cargo = $oActividadCargo->getId_cargo();
-        $oCargo = new Cargo(array('id_cargo' => $id_cargo));
-        $tipo_cargo = $oCargo->getTipo_cargo();
+        $oCargo = (new CargoRepository())->findById($id_cargo);
+        $tipo_cargo = $oCargo->getTipoCargoVo()->value();
+        $cargo = $oCargo->getCargoVo()->value();
         // para los sacd en sf
         if ($tipo_cargo === 'sacd' && $mi_sfsv == 2) {
             continue;
@@ -140,10 +142,8 @@ if (ConfigGlobal::is_app_installed('actividadcargos')) {
             $msg_err .= "<br>$oPersona con id_nom: $id_nom en  " . __FILE__ . ": line " . __LINE__;
             continue;
         }
-        $oCargo = new Cargo($id_cargo);
         $nom = $oPersona->getPrefApellidosNombre();
 
-        $cargo = $oCargo->getCargo();
         $puede_agd = $oActividadCargo->getPuede_agd();
         $observ_c = $oActividadCargo->getObserv();
         $ctr_dl = $oPersona->getCentro_o_dl();

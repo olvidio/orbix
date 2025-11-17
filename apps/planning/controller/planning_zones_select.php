@@ -10,6 +10,7 @@ use encargossacd\model\entity\GestorEncargoSacdHorario;
 use personas\model\entity\PersonaSacd;
 use planning\domain\Planning;
 use planning\domain\PlanningStyle;
+use src\actividadcargos\application\repositories\CargoRepository;
 use web\Hash;
 use web\TiposActividades;
 use zonassacd\model\entity\GestorZona;
@@ -48,8 +49,8 @@ require_once("apps/core/global_object.inc");
 $oPosicion->recordar();
 
 // valores del id_cargo de tipo_cargo = sacd:
-$gesCargos = new GestorCargo();
-$aIdCargos_sacd = $gesCargos->getArrayCargosDeTipo('sacd');
+$CargoRepository = new CargoRepository();
+$aIdCargos_sacd = $CargoRepository->getArrayCargos('sacd');
 
 $Qmodelo = (integer)filter_input(INPUT_POST, 'modelo');
 $Qyear = (integer)filter_input(INPUT_POST, 'year');

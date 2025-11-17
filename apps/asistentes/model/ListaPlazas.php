@@ -11,10 +11,12 @@ use asistentes\model\entity\Asistente;
 use asistentes\model\entity\GestorAsistente;
 use core\ConfigGlobal;
 use personas\model\entity\Persona;
+use src\actividadcargos\application\repositories\CargoRepository;
 use ubis\model\entity\Casa;
 use ubis\model\entity\Ubi;
 use web\Lista;
 use web\TiposActividades;
+use function core\is_true;
 use function core\strtoupper_dlb;
 
 /**
@@ -163,7 +165,7 @@ class ListaPlazas
             $nom_activ = empty($txt_ctr) ? $nom_activ : "$nom_activ [$txt_ctr]";
             $nom_activ = empty($observ) ? $nom_activ : "$nom_activ $observ";
 
-            if (!($sasistentes == "sss+" and $sactividad == "cv")) {
+            if (!($sasistentes === "sss+" and $sactividad === "cv")) {
                 if (ConfigGlobal::is_app_installed('actividadcargos')) {
                     //selecciono el cl
                     $oGesActividadCargos = new GestorActividadCargo();
@@ -176,8 +178,7 @@ class ListaPlazas
                         $id_nom = $oActividadCargo->getId_nom();
                         $aIdCargos[] = $id_nom;
                         $id_cargo = $oActividadCargo->getId_cargo();
-                        $oCargo = new Cargo($id_cargo);
-                        $cargo_cl = $oCargo->getCargo();
+                        $cargo_cl = (new CargoRepository())->findById($id_cargo)?->getCargoVo()->value();
                         $oPersona = Persona::NewPersona($id_nom);
                         if (!is_object($oPersona)) {
                             $msg_err .= "<br>$oPersona con id_nom: $id_nom para la actividad $nom_activ";
@@ -185,7 +186,7 @@ class ListaPlazas
                             continue;
                         }
                         $sacd = $oPersona->getSacd();
-                        if ($this->bsacd && $sacd != 't') continue;
+                        if ($this->bsacd && !is_true($sacd)) { continue; }
 
                         $cl++;
                         $num++;

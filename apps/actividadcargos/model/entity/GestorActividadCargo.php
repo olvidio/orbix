@@ -11,6 +11,7 @@ use core\ConfigGlobal;
 use core\Set;
 use personas\model\entity\Persona;
 use personas\model\entity\PersonaSacd;
+use src\actividadcargos\application\repositories\CargoRepository;
 
 /**
  * GestorActividadCargo
@@ -51,8 +52,8 @@ class GestorActividadCargo extends ClaseGestor
     function getActividadIdSacds($iid_activ = '')
     {
         // valores del id_cargo de tipo_cargo = sacd:
-        $gesCargos = new GestorCargo();
-        $aIdCargos_sacd = $gesCargos->getArrayCargosDeTipo('sacd');
+        $CargoRepository = new CargoRepository();
+        $aIdCargos_sacd = $CargoRepository->getArrayCargos('sacd');
         $txt_where_cargos = implode(',', array_keys($aIdCargos_sacd));
 
         // Los sacd los pongo en la base de datos comun.
@@ -83,8 +84,8 @@ class GestorActividadCargo extends ClaseGestor
     function getActividadSacds($iid_activ = '')
     {
         // valores del id_cargo de tipo_cargo = sacd:
-        $gesCargos = new GestorCargo();
-        $aIdCargos_sacd = $gesCargos->getArrayCargosDeTipo('sacd');
+        $CargoREpository = new CargoRepository();
+        $aIdCargos_sacd = $CargoREpository->getArrayCargos('sacd');
         $txt_where_cargos = implode(',', array_keys($aIdCargos_sacd));
 
         // Los sacd los pongo en la base de datos comun.
@@ -339,8 +340,8 @@ class GestorActividadCargo extends ClaseGestor
         if (empty($aWhere['_ordre'])) {
             // Por defecto ordenar por orden_cargo:
             $aWhere['_ordre'] = 'orden_cargo';
-            $gesOrdenCargo = new GestorCargo();
-            $cOrdenCargo = $gesOrdenCargo->getCargos();
+            $CargoRepository = new CargoRepository();
+            $cOrdenCargo = $CargoRepository->getCargos();
             $csvNestIdCargo = '';
             $csvNestOrdenCargo = '';
             foreach ($cOrdenCargo as $oOrdenCargo) {

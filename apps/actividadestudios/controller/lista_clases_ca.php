@@ -9,6 +9,7 @@ use asignaturas\model\entity\Asignatura;
 use core\ConfigGlobal;
 use core\ViewPhtml;
 use personas\model\entity\Persona;
+use src\actividadcargos\application\repositories\CargoRepository;
 use src\asignaturas\application\repositories\AsignaturaRepository;
 
 // INICIO Cabecera global de URL de controlador *********************************
@@ -38,8 +39,8 @@ $nom_activ = $oActividad->getNom_activ();
 $dl_org = $oActividad->getDl_org();
 
 //director de estudios
-$GesCargos = new GestorCargo();
-$cCargos = $GesCargos->getCargos(array('cargo' => 'd.est.'));
+$CargoRepository = new CargoRepository();
+$cCargos = $CargoRepository->getCargos(array('cargo' => 'd.est.'));
 $id_cargo = $cCargos[0]->getId_cargo(); // solo hay un cargo de director de estudios.
 $GesActividadCargos = new GestorActividadCargo();
 $cActividadCargos = $GesActividadCargos->getActividadCargos(array('id_activ' => $id_activ, 'id_cargo' => $id_cargo));

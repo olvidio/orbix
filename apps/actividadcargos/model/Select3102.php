@@ -9,6 +9,7 @@ use core\ConfigGlobal;
 use core\ViewPhtml;
 use dossiers\model\PermDossier;
 use personas\model\entity\Persona;
+use src\actividadcargos\application\repositories\CargoRepository;
 use web\Hash;
 use web\Lista;
 use function core\is_true;
@@ -125,8 +126,9 @@ class Select3102
             $id_item = $oActividadCargo->getId_item();
             $id_nom = $oActividadCargo->getId_nom();
             $id_cargo = $oActividadCargo->getId_cargo();
-            $oCargo = new Cargo(array('id_cargo' => $id_cargo));
-            $tipo_cargo = $oCargo->getTipo_cargo();
+            $oCargo = (new CargoRepository())->findById($id_cargo);
+            $tipo_cargo = $oCargo->getTipoCargoVo()?->value();
+            $cargo = $oCargo->getCargoVo()->value();
             // para los sacd en sf
             if ($tipo_cargo === 'sacd' && $mi_sfsv == 2) {
                 continue;
@@ -136,11 +138,9 @@ class Select3102
                 $this->msg_err .= "<br>$oPersona con id_nom: $id_nom en  " . __FILE__ . ": line " . __LINE__;
                 continue;
             }
-            $oCargo = new Cargo($id_cargo);
 
             $nom = $oPersona->getPrefApellidosNombre();
 
-            $cargo = $oCargo->getCargo();
             $puede_agd = $oActividadCargo->getPuede_agd();
             $observ = $oActividadCargo->getObserv();
             $ctr_dl = $oPersona->getCentro_o_dl();

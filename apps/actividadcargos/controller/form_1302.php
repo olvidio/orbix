@@ -36,6 +36,8 @@ use actividades\model\entity\ActividadAll;
 use actividades\model\entity\GestorActividad;
 use core\ConfigGlobal;
 use core\ViewPhtml;
+use frontend\shared\web\Desplegable;
+use src\actividadcargos\application\repositories\CargoRepository;
 use web\Hash;
 use function core\is_true;
 
@@ -116,10 +118,12 @@ if (!empty($Qid_item)) { //caso de modificar
     $observ = ""; //valor por defecto
 }
 
-$oCargos = new GestorCargo();
-$oDesplegableCargos = $oCargos->getListaCargos();
+$CargoRepository = new CargoRepository();
+$aOpciones = $CargoRepository->getArrayCargos();
+$oDesplegableCargos = new Desplegable();
 $oDesplegableCargos->setNombre('id_cargo');
 $oDesplegableCargos->setBlanco(false);
+$oDesplegableCargos->setOpciones($aOpciones);
 $oDesplegableCargos->setOpcion_sel($id_cargo);
 $chk = (!empty($puede_agd) && is_true($puede_agd)) ? 'checked' : '';
 

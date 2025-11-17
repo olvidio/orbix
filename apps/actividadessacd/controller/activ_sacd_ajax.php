@@ -17,6 +17,7 @@ use personas\model\entity\GestorPersona;
 use personas\model\entity\Persona;
 use procesos\model\entity\ActividadFase;
 use procesos\model\entity\GestorActividadProcesoTarea;
+use src\actividadcargos\application\repositories\CargoRepository;
 use web\Periodo;
 use function core\is_true;
 
@@ -51,8 +52,8 @@ require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
 // valores del id_cargo de tipo_cargo = sacd:
-$gesCargos = new GestorCargo();
-$aIdCargos_sacd = $gesCargos->getArrayCargosDeTipo('sacd');
+$CargoRepository = new CargoRepository();
+$aIdCargos_sacd = $CargoRepository->getArrayCargos('sacd');
 $txt_where_cargos = implode(',', array_keys($aIdCargos_sacd));
 
 /**

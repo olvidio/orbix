@@ -9,6 +9,7 @@ use asignaturas\model\entity\Asignatura;
 use asistentes\model\entity\GestorAsistente;
 use core\ViewPhtml;
 use personas\model\entity\Persona;
+use src\actividadcargos\application\repositories\CargoRepository;
 use src\asignaturas\application\repositories\AsignaturaRepository;
 use function core\is_true;
 
@@ -39,8 +40,8 @@ $oActividad = new ActividadAll($id_activ);
 $nom_activ = $oActividad->getNom_activ();
 
 //director de estudios
-$GesCargos = new GestorCargo();
-$cCargos = $GesCargos->getCargos(array('cargo' => 'd.est.'));
+$CargoRepository = new CargoRepository();
+$cCargos = $CargoRepository->getCargos(array('cargo' => 'd.est.'));
 $id_cargo = $cCargos[0]->getId_cargo(); // solo hay un cargo de director de estudios.
 $GesActividadCargos = new GestorActividadCargo();
 $cActividadCargos = $GesActividadCargos->getActividadCargos(array('id_activ' => $id_activ, 'id_cargo' => $id_cargo));
