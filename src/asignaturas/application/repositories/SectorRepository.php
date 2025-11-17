@@ -31,6 +31,11 @@ class SectorRepository implements SectorRepositoryInterface
         $this->repository = new PgSectorRepository();
     }
 
+    public function getArraySectoresPorDepartamento(): array
+    {
+        return $this->repository->getArraySectoresPorDepartamento();
+    }
+
     public function getArraySectores(): array
     {
         return $this->repository->getArraySectores();

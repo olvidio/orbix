@@ -22,7 +22,7 @@ final class AsignaturaShortName
         if (mb_strlen($value) > 23) {
             throw new \InvalidArgumentException('AsignaturaShortName must be at most 30 characters');
         }
-        if (!preg_match("/^[\p{L}0-9 .,'’_\-()\+]+$/u", $value)) {
+        if (!preg_match("/^[\p{L}0-9 .,'’:_\-()\+]+$/u", $value)) {
             throw new \InvalidArgumentException('AsignaturaShortName has invalid characters');
         }
     }

@@ -23,7 +23,7 @@ final class AsignaturaName
             throw new \InvalidArgumentException('AsignaturaName must be at most 40 characters');
         }
         // Allow common name characters including accents, spaces, apostrophes, hyphens, underscore, plus, parentheses
-        if (!preg_match("/^[\p{L}0-9 .,'’_\-()\+]+$/u", $value)) {
+        if (!preg_match("/^[\p{L}0-9 .,'’:_\-()\+]+$/u", $value)) {
             throw new \InvalidArgumentException('AsignaturaName has invalid characters');
         }
     }

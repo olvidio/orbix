@@ -1316,7 +1316,7 @@ class Resumen extends ClasePropiedades
         $any = $this->getAnyFiCurs();
         $curso_inicio = $any - 1;
         $SectorRepository = new SectorRepository();
-        $a_sectores = $SectorRepository->getArraySectores();
+        $a_sectores = $SectorRepository->getArraySectoresPorDepartamento();
         $asignaturas = $this->getNomAsignaturas();
         $a_profe_dept = $this->arrayProfesorDepartamento();
         $docencia_dep = [];

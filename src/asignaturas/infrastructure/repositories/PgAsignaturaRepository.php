@@ -9,7 +9,7 @@ use PDO;
 use PDOException;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\asignaturas\domain\entity\Asignatura;
-use web\Desplegable;
+use stdClass;
 use function core\is_true;
 
 
@@ -203,16 +203,23 @@ class PgAsignaturaRepository extends ClaseRepository implements AsignaturaReposi
             if ($sOperador === 'TXT') unset($aWhere[$camp]);
         }
         $sCondi = implode(' AND ', $aCondi);
-        if ($sCondi != '') $sCondi = " WHERE " . $sCondi;
-        if (isset($GLOBALS['oGestorSessioDelegación'])) {
-            $sLimit = $GLOBALS['oGestorSessioDelegación']->getLimitPaginador('a_actividades', $sCondi, $aWhere);
-        } else {
-            $sLimit = '';
+        if ($sCondi != '') {
+            $sCondi = " WHERE " . $sCondi;
         }
-        if ($sLimit === false) return;
+        $sLimit = '';
         $sOrdre = '';
-        if (isset($aWhere['_ordre']) && $aWhere['_ordre'] != '') $sOrdre = ' ORDER BY ' . $aWhere['_ordre'];
-        if (isset($aWhere['_ordre'])) unset($aWhere['_ordre']);
+        if (isset($aWhere['_ordre']) && $aWhere['_ordre'] != '') {
+            $sOrdre = ' ORDER BY ' . $aWhere['_ordre'];
+        }
+        if (isset($aWhere['_ordre'])) {
+            unset($aWhere['_ordre']);
+        }
+        if (isset($aWhere['_limit']) && $aWhere['_limit'] !== '') {
+            $sLimit = ' LIMIT ' . $aWhere['_limit'];
+        }
+        if (isset($aWhere['_limit'])) {
+            unset($aWhere['_limit']);
+        }
         $sQry = "SELECT * FROM $nom_tabla " . $sCondi . $sOrdre . $sLimit;
         if (($oDblSt = $oDbl->prepare($sQry)) === false) {
             $sClauError = 'GestorAsignatura.llistar.prepare';
@@ -224,10 +231,10 @@ class PgAsignaturaRepository extends ClaseRepository implements AsignaturaReposi
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
             return false;
         }
-        foreach ($oDblSt as $aDades) {
-            $a_pkey = array('id_asignatura' => $aDades['id_asignatura']);
-            $oAsignatura = new Asignatura($a_pkey);
-            $oAsignatura->DBCarregar();
+
+        foreach ($oDblSt as $aDatos) {
+            $oAsignatura = new Asignatura();
+            $oAsignatura->setAllAttributes($aDatos);
             $oMin = new stdClass();
             $oMin->id_asignatura = $oAsignatura->getId_asignatura();
             $oMin->id_nivel = $oAsignatura->getId_nivel();

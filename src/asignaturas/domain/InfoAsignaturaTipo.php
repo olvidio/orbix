@@ -6,7 +6,6 @@ namespace src\asignaturas\domain;
 
 
 use src\asignaturas\application\repositories\AsignaturaTipoRepository;
-use src\asignaturas\application\repositories\SectorRepository;
 use src\shared\domain\DatosInfoRepo;
 
 class InfoAsignaturaTipo extends DatosInfoRepo
@@ -28,11 +27,11 @@ class InfoAsignaturaTipo extends DatosInfoRepo
         // para el datos_sql.php
         // Si se quiere listar una selección, $this->k_buscar
         if (empty($this->k_buscar)) {
-            $aWhere = array('_ordre' => 'sector');
+            $aWhere = array('_ordre' => 'tipo_asignatura');
             $aOperador = [];
         } else {
-            $aWhere = array('sector' => $this->k_buscar);
-            $aOperador = array('sector' => 'sin_acentos');
+            $aWhere = array('tipo_asignatura' => $this->k_buscar);
+            $aOperador = array('tipo_asignatura' => 'sin_acentos');
         }
         $oLista = new AsignaturaTipoRepository();
         $Coleccion = $oLista->getAsignaturaTipos($aWhere, $aOperador);

@@ -31,7 +31,7 @@ class PgSectorRepository extends ClaseRepository implements SectorRepositoryInte
         $this->setNomTabla('xe_sectores');
     }
 
-    public function getArraySectores(): array
+    public function getArraySectoresPorDepartamento(): array
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
@@ -41,10 +41,13 @@ class PgSectorRepository extends ClaseRepository implements SectorRepositoryInte
         try {
             $oDblSt = $oDbl->query($sQuery);
             foreach ($oDbl->query($sQuery) as $aClave) {
-                $id_sector = $aClave[0];
-                $id_departamento = $aClave[1];
-                $a_1 = isset($aOpciones[$id_departamento]) ? $aOpciones[$id_departamento] : [];
-                $aOpciones[$id_departamento] = array_merge($a_1, array($id_sector));
+                $id_sector = $aClave['id_sector'];
+                $id_departamento = $aClave['id_departamento'];
+                if (!isset($aOpciones[$id_departamento])) {
+                    $aOpciones[$id_departamento] = [];
+                }
+
+                $aOpciones[$id_departamento][] = $id_sector;
             }
         } catch (PDOException $e) {
             $err_txt = $e->errorInfo[2];
@@ -55,6 +58,26 @@ class PgSectorRepository extends ClaseRepository implements SectorRepositoryInte
 
         return $aOpciones;
     }
+
+    public function getArraySectores(): array
+    {
+        $oDbl = $this->getoDbl_Select();
+        $nom_tabla = $this->getNomTabla();
+        $sQuery = "SELECT id_sector,sector FROM $nom_tabla ORDER BY sector";
+        if (($oDblSt = $oDbl->query($sQuery)) === false) {
+            $sClauError = 'GestorSector.lista';
+            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+            return false;
+        }
+        $aOpciones = [];
+        foreach ($oDbl->query($sQuery) as $aClave) {
+            $clave = $aClave[0];
+            $val = $aClave[1];
+            $aOpciones[$clave] = $val;
+        }
+        return $aOpciones;
+    }
+
 
     /* -------------------- GESTOR BASE ---------------------------------------- */
 

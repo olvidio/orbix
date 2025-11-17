@@ -18,6 +18,7 @@ use src\asignaturas\domain\entity\Sector;
 interface SectorRepositoryInterface
 {
 
+    public function getArraySectoresPorDepartamento(): array;
     public function getArraySectores(): array;
 
 /* -------------------- GESTOR BASE ---------------------------------------- */

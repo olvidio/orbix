@@ -450,7 +450,7 @@ class Asignatura {
         $oDatosCampo->setMetodoSet('setId_tipo');
         $oDatosCampo->setEtiqueta(_("tipo"));
         $oDatosCampo->setTipo('opciones');
-        $oDatosCampo->setArgument('src\\asignaturas\\application\\repositories\\TipoAsignaturaRepository');
+        $oDatosCampo->setArgument('src\\asignaturas\\application\\repositories\\AsignaturaTipoRepository');
         $oDatosCampo->setArgument2('getTipo_asignatura'); // método para obtener el valor a mostrar del objeto relacionado.
         $oDatosCampo->setArgument3('getArrayAsignaturaTipos');
         return $oDatosCampo;
