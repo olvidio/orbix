@@ -7,6 +7,7 @@ use core\ClasePropiedades;
 use core\ConverterDate;
 use core\DatosCampo;
 use core\Set;
+use src\ubis\application\repositories\DescTelecoRepository;
 use web\DateTimeLocal;
 use web\NullDateTimeLocal;
 
@@ -263,13 +264,14 @@ abstract class UbiGlobal extends ClasePropiedades
         $tels = '';
         $separador = empty($separador) ? ".-<br>" : $separador;
         if ($cTelecos !== false) {
+            $DescTelecoRepository = new DescTelecoRepository();
             foreach ($cTelecos as $oTelecoUbi) {
                 $iDescTel = $oTelecoUbi->getDesc_teleco();
                 $num_teleco = trim($oTelecoUbi->getNum_teleco());
                 if ($desc_teleco === "*" && !empty($iDescTel)) {
-                    //$tels.=$num_teleco." (".$DescTel.")".$separador;
-                    $oDescTel = new DescTeleco($iDescTel);
-                    $tels .= $num_teleco . "(" . $oDescTel->getDesc_teleco() . ")" . $separador;
+                    $oDescTel = $DescTelecoRepository->findById((int)$iDescTel);
+                    $desc = $oDescTel?->getDescTelecoVo()?->value() ?? '';
+                    $tels .= $num_teleco . "(" . $desc . ")" . $separador;
                 } else {
                     $tels .= $num_teleco . $separador;
                 }

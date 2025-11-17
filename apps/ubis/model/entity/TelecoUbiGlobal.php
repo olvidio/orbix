@@ -308,7 +308,7 @@ abstract class TelecoUbiGlobal extends ClasePropiedades
         $oDatosCampo->setTipo('depende');
         $oDatosCampo->setArgument('ubis\model\entity\DescTeleco');
         $oDatosCampo->setArgument2('getDesc_teleco'); // método para obtener el valor a mostrar del objeto relacionado.
-        $oDatosCampo->setArgument3('getListaDescTelecoUbis');
+        $oDatosCampo->setArgument3('getArrayDescTelecoUbis');
         $oDatosCampo->setDepende('tipo_teleco');
         return $oDatosCampo;
     }

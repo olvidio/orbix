@@ -2,6 +2,7 @@
 
 use core\ConfigGlobal;
 use core\ViewPhtml;
+use src\ubis\application\repositories\DescTelecoRepository;
 use src\ubis\application\repositories\TipoTelecoRepository;
 use web\Desplegable;
 use web\Hash;
@@ -129,8 +130,8 @@ $oDesplegableTiposTeleco->setOpcion_sel($tipo_teleco);
 $oDesplegableTiposTeleco->setAction('fnjs_actualizar_descripcion()');
 $oDesplegableTiposTeleco->setBlanco(true);
 
-$oDescTeleco = new ubis\model\entity\GestorDescTeleco();
-$aOpciones = $oDescTeleco->getListaDescTelecoUbis($tipo_teleco);
+$oDescTeleco = new DescTelecoRepository();
+$aOpciones = $oDescTeleco->getArrayDescTelecoUbis($tipo_teleco);
 $oDesplegableDescTeleco = new Desplegable();
 $oDesplegableDescTeleco->setOpciones($aOpciones);
 $oDesplegableDescTeleco->setNombre('desc_teleco');

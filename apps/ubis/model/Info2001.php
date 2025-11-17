@@ -3,6 +3,7 @@
 namespace ubis\model;
 
 use core\DatosInfo;
+use src\ubis\application\repositories\DescTelecoRepository;
 use web\Desplegable;
 
 // necesario para los desplegables de 'depende'
@@ -63,8 +64,8 @@ class Info2001 extends DatosInfo
         $v1 = $oFicha->tipo_teleco;
         $v2 = $oFicha->desc_teleco;
         if (!empty($v2)) {
-            $oDepende = new entity\GestorDescTeleco();
-            $aOpciones = $oDepende->getListaDescTelecoUbis($v1);
+            $oDepende = new DescTelecoRepository();
+            $aOpciones = $oDepende->getArrayDescTelecoUbis($v1);
             $oDesplegable = new Desplegable('', $aOpciones, $v2, true);
             $despl_depende = $oDesplegable->options();
         } else {
@@ -77,9 +78,9 @@ class Info2001 extends DatosInfo
     {
         //caso de actualizar el campo depende
         if (isset($this->accion)) {
-            if ($this->accion == 'desc_teleco') {
-                $oDepende = new entity\GestorDescTeleco();
-                $aOpciones = $oDepende->getListaDescTelecoUbis($valor_depende);
+            if ($this->accion === 'desc_teleco') {
+                $oDepende = new DescTelecoRepository();
+                $aOpciones = $oDepende->getArrayDescTelecoUbis($valor_depende);
                 $oDesplegable = new Desplegable('', $aOpciones, '', true);
                 $despl_depende = $oDesplegable->options();
             }

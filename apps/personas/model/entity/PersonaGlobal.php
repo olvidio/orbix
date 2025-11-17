@@ -8,9 +8,9 @@ use core\ConverterDate;
 use core\DatosCampo;
 use core\Set;
 use ReflectionClass;
+use src\ubis\application\repositories\DescTelecoRepository;
 use ubis\model\entity\Centro;
 use ubis\model\entity\CentroDl;
-use ubis\model\entity\DescTeleco;
 use web\DateTimeLocal;
 use web\NullDateTimeLocal;
 use function core\strtoupper_dlb;
@@ -332,12 +332,14 @@ abstract class PersonaGlobal extends ClasePropiedades
         $cTelecos = $GesTelecoPersonas->getTelecos($aWhere);
         $tels = '';
         $separador = empty($separador) ? ".-<br>" : $separador;
+        $DescTelecoRepository = new DescTelecoRepository();
         foreach ($cTelecos as $oTelecoPersona) {
             $iDescTel = $oTelecoPersona->getDesc_teleco();
             $num_teleco = $oTelecoPersona->getNum_teleco();
             if ($desc_teleco === "*" && !empty($iDescTel) && $bDescripcion) {
-                $oDescTel = new DescTeleco($iDescTel);
-                $tels .= $num_teleco . "(" . $oDescTel->getDesc_teleco() . ")" . $separador;
+                $oDescTel = $DescTelecoRepository->findById((int)$iDescTel);
+                $desc = $oDescTel?->getDescTelecoVo()?->value() ?? '';
+                $tels .= $num_teleco . "(" . $desc . ")" . $separador;
             } else {
                 $tels .= $num_teleco . $separador;
             }
@@ -968,7 +970,7 @@ abstract class PersonaGlobal extends ClasePropiedades
 
     public function getPrefApellidosNombre()
     {
-        $Pref_ordenApellidos = ConfigGlobal::mi_ordenApellidos()?? '';
+        $Pref_ordenApellidos = ConfigGlobal::mi_ordenApellidos() ?? '';
 
         if ($Pref_ordenApellidos === 'nom_ap') {
             return $this->getNombreApellidos();
