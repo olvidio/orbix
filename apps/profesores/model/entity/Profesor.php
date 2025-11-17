@@ -639,7 +639,7 @@ class Profesor extends ClasePropiedades
         $oDatosCampo->setTipo('opciones');
         $oDatosCampo->setArgument('profesores\model\entity\ProfesorTipo'); // nombre del objeto relacionado
         $oDatosCampo->setArgument2('getTipo_profesor'); // método para obtener el valor a mostrar del objeto relacionado.
-        $oDatosCampo->setArgument3('getListaProfesorTipos'); // método con que crear la lista de opciones del Gestor objeto relacionado.
+        $oDatosCampo->setArgument3('getArrayProfesorTipos'); // método con que crear la lista de opciones del Gestor objeto relacionado.
         return $oDatosCampo;
     }
 
