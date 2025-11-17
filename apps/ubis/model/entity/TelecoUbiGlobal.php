@@ -295,7 +295,7 @@ abstract class TelecoUbiGlobal extends ClasePropiedades
         $oDatosCampo->setTipo('opciones');
         $oDatosCampo->setArgument('ubis\model\entity\TipoTeleco'); // nombre del objeto relacionado
         $oDatosCampo->setArgument2('getNombre_teleco'); // método para obtener el valor a mostrar del objeto relacionado.
-        $oDatosCampo->setArgument3('getListaTiposTelecoUbi'); // método con que crear la lista de opciones del Gestor objeto relacionado.
+        $oDatosCampo->setArgument3('getArrayTiposTelecoUbi'); // método con que crear la lista de opciones del Gestor objeto relacionado.
         $oDatosCampo->setAccion('desc_teleco'); // campo que hay que actualizar al cambiar este.
         return $oDatosCampo;
     }

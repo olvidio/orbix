@@ -2,6 +2,7 @@
 
 use core\ConfigGlobal;
 use core\ViewPhtml;
+use src\ubis\application\repositories\TipoTelecoRepository;
 use web\Desplegable;
 use web\Hash;
 
@@ -120,8 +121,9 @@ switch ($Qobj_pau) {
 
 $campos_chk = '';
 
-$oTiposTeleco = new ubis\model\entity\GestorTipoTeleco();
-$oDesplegableTiposTeleco = $oTiposTeleco->getListaTiposTelecoUbi();
+$TipoTelecoRepository = new TipoTelecoRepository();
+$aOpciones = $TipoTelecoRepository->getArrayTiposTelecoUbi();
+$oDesplegableTiposTeleco = new Desplegable();
 $oDesplegableTiposTeleco->setNombre('tipo_teleco');
 $oDesplegableTiposTeleco->setOpcion_sel($tipo_teleco);
 $oDesplegableTiposTeleco->setAction('fnjs_actualizar_descripcion()');
