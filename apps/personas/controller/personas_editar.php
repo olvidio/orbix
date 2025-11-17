@@ -4,6 +4,7 @@ use core\ConfigGlobal;
 use core\DBPropiedades;
 use core\ViewPhtml;
 use personas\model\entity\PersonaGlobal;
+use src\personas\application\repositories\SituacionRepository;
 use src\usuarios\application\repositories\LocalRepository;
 use ubis\model\entity\Centro;
 use ubis\model\entity\CentroDl;
@@ -260,8 +261,10 @@ if ($ok_txt == 1) {
 
 //------------------------------------------------------------------------
 
-$GesSituacion = new personas\model\entity\GestorSituacion();
-$oDesplSituacion = $GesSituacion->getListaSituaciones();
+$SituacionRepository = new SituacionRepository();
+$aOpciones = $SituacionRepository->getArraySituaciones();
+$oDesplSituacion = new Desplegable();
+$oDesplSituacion->setOpciones($aOpciones);
 $oDesplSituacion->setNombre("situacion");
 $oDesplSituacion->setOpcion_sel($oPersona->getSituacion());
 

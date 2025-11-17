@@ -3,7 +3,6 @@
 namespace notas\model;
 
 use actividades\model\entity\ActividadAll;
-use asignaturas\model\entity\GestorAsignatura;
 use core\ClasePropiedades;
 use core\ConfigGlobal;
 use notas\model\entity\GestorNota;

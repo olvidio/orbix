@@ -3,9 +3,11 @@
 use core\ViewPhtml;
 use personas\model\entity\GestorSituacion;
 use personas\model\entity\Persona;
+use src\personas\application\repositories\SituacionRepository;
 use ubis\model\entity\CentroDl;
 use ubis\model\entity\GestorCentroDl;
 use src\ubis\application\services\DelegacionDropdown;
+use web\Desplegable;
 use web\Hash;
 
 // INICIO Cabecera global de URL de controlador *********************************
@@ -58,8 +60,10 @@ $oDesplCentroDl->setNombre('new_ctr');
 
 $oDesplDlyR = DelegacionDropdown::listaRegDele(FALSE, 'new_dl'); // False para no incluir mi propia dl en la lista
 
-$GesSituacion = new GestorSituacion();
-$oDesplSituacion = $GesSituacion->getListaSituaciones($traslado = true);
+$SituacionRepository = new SituacionRepository();
+$aOpciones = $SituacionRepository->getArraySituaciones($traslado = true);
+$oDesplSituacion = new Desplegable();
+$oDesplSituacion->setOpciones($aOpciones);
 $oDesplSituacion->setNombre("situacion");
 
 
