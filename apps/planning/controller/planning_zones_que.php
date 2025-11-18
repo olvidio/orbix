@@ -4,6 +4,7 @@ use core\ConfigGlobal;
 use core\ViewTwig;
 use src\usuarios\application\repositories\RoleRepository;
 use src\usuarios\application\repositories\UsuarioRepository;
+use web\Desplegable;
 use web\Hash;
 use web\Posicion;
 use zonassacd\model\entity\GestorZona;
@@ -171,7 +172,7 @@ if (!empty($aRoles[$id_role]) && ($aRoles[$id_role] === 'p-sacd')) {
 }
 
 
-$GesZonas = new GestorZona();
+$oGestorZona = new GestorZona();
 $aOpciones = $oGestorZona->getArrayZonas($id_nom_jefe);
 $oDesplZonas = new Desplegable();
 $oDesplZonas->setOpciones($aOpciones);
