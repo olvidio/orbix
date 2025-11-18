@@ -180,8 +180,10 @@ $oDesplGrupoCtrs->setBlanco(1);
 $oDesplGrupoCtrs->setAction("fnjs_lista_ctrs();");
 
 $oGestorZona = new GestorZona();
-$oDesplZonas = $oGestorZona->getListaZonas();
-$oDesplZonas->setNombre('id_zona_sel');
+$aOpciones = $oGestorZona->getArrayZonas();
+$oDesplZonas = new Desplegable();
+$oDesplZonas->setOpciones($aOpciones);
+$oDesplZonas->setBlanco(FALSE);$oDesplZonas->setNombre('id_zona_sel');
 $oDesplZonas->setAction('fnjs_lista_ctrs_por_zona()');
 if (!empty($Qid_zona)) {
     $oDesplZonas->setOpcion_sel($Qid_zona);

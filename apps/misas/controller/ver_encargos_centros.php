@@ -129,7 +129,10 @@ $oDesplEncargos->setNombre('id_enc');
 $oDesplEncargos->setOpciones($aEncargos);
 
 $oGestorZonaCtr = new GestorZona();
-$oDesplZonasCtr = $oGestorZonaCtr->getListaZonas();
+$aOpciones = $oGestorZona->getArrayZonas($id_nom_jefe);
+$oDesplZonas = new Desplegable();
+$oDesplZonas->setOpciones($aOpciones);
+$oDesplZonas->setBlanco(FALSE);
 $oDesplZonasCtr->setNombre('id_zona_ctr');
 $oDesplZonasCtr->setOpcion_sel($Qid_zona);
 $oDesplZonasCtr->setAction('fnjs_prepara_select_ctr()');
