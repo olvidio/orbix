@@ -13,6 +13,7 @@
 
 // INICIO Cabecera global de URL de controlador *********************************
 use core\ConfigGlobal;
+use src\actividades\application\repositories\RepeticionRepository;
 use src\menus\application\repositories\MenuDbRepository;
 
 require_once("apps/core/global_header.inc");
@@ -35,8 +36,8 @@ foreach ($cMenus as $oMenuDb) {
 }
 
 // Añadir los tipos de repetición
-$oGesRepeticion = new actividades\model\entity\GestorRepeticion();
-$cRepeticion = $oGesRepeticion->getRepeticiones();
+$RepeticionRepository = new RepeticionRepository();
+$cRepeticion = $RepeticionRepository->getRepeticiones();
 
 $texto .= "//tipos de repetición actividades\n";
 foreach ($cRepeticion as $oRepeticion) {

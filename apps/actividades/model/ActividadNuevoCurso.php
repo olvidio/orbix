@@ -4,11 +4,11 @@ namespace actividades\model;
 
 use actividades\model\entity\ActividadDl;
 use actividades\model\entity\GestorActividadDl;
-use actividades\model\entity\GestorRepeticion;
 use actividadescentro\model\entity\GestorCentroEncargado;
 use core\ConfigGlobal;
 use DateInterval;
 use procesos\model\entity\GestorActividadProcesoTarea;
+use src\actividades\application\repositories\RepeticionRepository;
 use web\DateTimeLocal;
 
 /**
@@ -50,8 +50,8 @@ class ActividadNuevoCurso
     private function getRepetiones()
     {
         if (!isset($this->aRepeticion)) {
-            $GesRepeticion = new GestorRepeticion();
-            $cRepeticiones = $GesRepeticion->getRepeticiones();
+            $RepeticionRepository = new RepeticionRepository();
+            $cRepeticiones = $RepeticionRepository->getRepeticiones();
             $this->aRepeticion = [];
             foreach ($cRepeticiones as $oRepeticion) {
                 $id_repeticion = $oRepeticion->getId_repeticion();

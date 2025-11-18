@@ -4,7 +4,6 @@ namespace cambios\model\entity;
 
 use actividades\model\entity\ActividadAll;
 use actividades\model\entity\GestorNivelStgr;
-use actividades\model\entity\GestorRepeticion;
 use actividadtarifas\model\entity\GestorTipoTarifa;
 use cambios\model\GestorAvisoCambios;
 use core\ClasePropiedades;
@@ -16,6 +15,7 @@ use core\Set;
 use JsonException;
 use personas\model\entity\PersonaSacd;
 use procesos\model\entity\GestorActividadFase;
+use src\actividades\application\repositories\RepeticionRepository;
 use stdClass;
 use ubis\model\entity\Ubi;
 use web\DateTimeLocal;
@@ -467,8 +467,8 @@ class Cambio extends ClasePropiedades
                 $sValor_new = empty($sValor_new) ? $sValor_new : $aTarifas[$sValor_new];
             }
             if ($sPropiedad === 'id_repeticion') {
-                $gesRepeticion = new GestorRepeticion();
-                $aRepeticion = $gesRepeticion->getArrayRepeticion();
+                $RepeticionRepository = new RepeticionRepository();
+                $aRepeticion = $RepeticionRepository->getArrayRepeticion();
                 $sValor_old = empty($sValor_old) ? $sValor_old : $aRepeticion[$sValor_old];
                 $sValor_new = empty($sValor_new) ? $sValor_new : $aRepeticion[$sValor_new];
             }

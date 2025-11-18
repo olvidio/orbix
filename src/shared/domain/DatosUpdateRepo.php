@@ -59,7 +59,12 @@ class DatosUpdateRepo
             if (substr($metodo,-2) === 'Vo') {
                 $metodo = substr($metodo,0,-2);
             }
-            $oFicha->$metodo($aCampos[$nom_camp]);
+            try {
+                $oFicha->$metodo($aCampos[$nom_camp]);
+            } catch (\Throwable $e) {
+                // aquí decides qué hacer con el error: log, re-lanzar, devolver texto, etc.
+                return 'Error al ejecutar ' . $metodo . ' para el campo ' . $nom_camp . ': ' . $e->getMessage();
+            }
         }
 
         $oRepository = new $this->repository();

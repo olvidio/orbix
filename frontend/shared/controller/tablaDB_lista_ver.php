@@ -116,7 +116,7 @@ if (empty($Qk_buscar)) {
 
 // pedir a Info los datos necesarios para mostrar la tabla
 $url_backend = '/src/shared/infrastructure/controllers/tablaDB_lista_datos.php';
-$a_campos = [
+$a_campos_backend = [
     'clase_info' => $Qclase_info,
     'k_buscar' => $Qk_buscar,
     'pau' => $Qpau,

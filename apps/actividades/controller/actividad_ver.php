@@ -5,18 +5,18 @@
  */
 
 use actividades\model\ActividadTipo;
-use actividades\model\entity\Actividad;
 use actividades\model\entity\ActividadAll;
 use actividades\model\entity\GestorNivelStgr;
-use actividades\model\entity\GestorRepeticion;
 use actividadtarifas\model\entity\GestorTipoActivTarifa;
 use actividadtarifas\model\entity\GestorTipoTarifa;
 use core\ConfigGlobal;
 use core\ViewTwig;
-use web\Hash;
-use web\TiposActividades;
+use src\actividades\application\repositories\RepeticionRepository;
 use src\ubis\application\services\DelegacionDropdown;
 use ubis\model\entity\Ubi;
+use web\Desplegable;
+use web\Hash;
+use web\TiposActividades;
 use function core\is_true;
 
 // INICIO Cabecera global de URL de controlador *********************************
@@ -270,15 +270,17 @@ $oDesplNivelStgr = $oGesNivelStgr->getListaNivelesStgr();
 $oDesplNivelStgr->setNombre('nivel_stgr');
 $oDesplNivelStgr->setOpcion_sel($nivel_stgr);
 
-$oGesRepeticion = new GestorRepeticion();
-$oDesplRepeticion = $oGesRepeticion->getListaRepeticion();
+$RepeticionRepository = new RepeticionRepository();
+$aOpciones = $RepeticionRepository->getArrayRepeticion();
+$oDesplRepeticion = new Desplegable();
+$oDesplDelegacionesOrg->setOpciones($aOpciones);
 $oDesplRepeticion->setNombre('id_repeticion');
 $oDesplRepeticion->setOpcion_sel($id_repeticion);
 
 $oHash = new Hash();
 $camposForm = 'status!dl_org!f_fin!f_ini!h_fin!h_ini!id_repeticion!id_ubi!lugar_esp!mod!nivel_stgr!nom_activ!nombre_ubi!observ!precio!id_tarifa!publicado!plazas';
 $camposNo = 'mod';
-if ($Qmod === 'nuevo' OR $Qmod === 'cambiar_tipo') {
+if ($Qmod === 'nuevo' or $Qmod === 'cambiar_tipo') {
     $camposForm .= '!extendida!iactividad_val!iasistentes_val!inom_tipo_val!isfsv_val';
     $camposNo .= '!id_tipo_activ';
 } else {

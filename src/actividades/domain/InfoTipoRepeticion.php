@@ -1,13 +1,14 @@
 <?php
 
-namespace actividades\model;
+namespace  src\actividades\domain;
 
-use actividades\model\entity\GestorRepeticion;
-use core\DatosInfo;
 
 /* No vale el underscore en el nombre */
 
-class InfoTipoRepeticion extends DatosInfo
+use src\actividades\application\repositories\RepeticionRepository;
+use src\shared\domain\DatosInfoRepo;
+
+class InfoTipoRepeticion extends DatosInfoRepo
 {
 
     public function __construct()
@@ -17,7 +18,7 @@ class InfoTipoRepeticion extends DatosInfo
         $this->setTxtBuscar(_("buscar un tipo de repetición"));
         $this->setTxtExplicacion();
 
-        $this->setClase('actividades\\model\\entity\\Repeticion');
+        $this->setClase('src\\actividades\\domain\\entity\\Repeticion');
         $this->setMetodoGestor('getRepeticiones');
     }
 
@@ -31,8 +32,8 @@ class InfoTipoRepeticion extends DatosInfo
             $aWhere['repeticion'] = $this->k_buscar;
             $aOperador['repeticion'] = 'sin_acentos';
         }
-        $aWhere['_ordre'] = 'id_serie';
-        $oLista = new GestorRepeticion();
+        $aWhere['_ordre'] = 'temporada, repeticion';
+        $oLista = new RepeticionRepository();
         $Coleccion = $oLista->getRepeticiones($aWhere, $aOperador);
 
         return $Coleccion;

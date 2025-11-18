@@ -11,12 +11,13 @@ require_once("apps/core/global_object.inc");
 
 use actividades\model\entity\ActividadAll;
 use actividades\model\entity\GestorNivelStgr;
-use actividades\model\entity\GestorRepeticion;
 use actividadtarifas\model\entity\GestorTipoTarifa;
 use core\ConfigGlobal;
 use core\ViewTwig;
+use src\actividades\application\repositories\RepeticionRepository;
 use src\ubis\application\services\DelegacionDropdown;
 use ubis\model\entity\Ubi;
+use web\Desplegable;
 use web\Hash;
 
 $obj = 'actividades\\\\model\\\\entity\\\\ActividadDl';
@@ -95,8 +96,10 @@ $oDesplNivelStgr = $oGesNivelStgr->getListaNivelesStgr();
 $oDesplNivelStgr->setNombre('nivel_stgr');
 $oDesplNivelStgr->setOpcion_sel($nivel_stgr);
 
-$oGesRepeticion = new GestorRepeticion();
-$oDesplRepeticion = $oGesRepeticion->getListaRepeticion();
+$RepeticionRepository = new RepeticionRepository();
+$aOpciones = $RepeticionRepository->getArrayRepeticion();
+$oDesplRepeticion = new Desplegable();
+$oDesplDelegacionesOrg->setOpciones($aOpciones);
 $oDesplRepeticion->setNombre('id_repeticion');
 $oDesplRepeticion->setOpcion_sel($id_repeticion);
 

@@ -64,11 +64,20 @@ class Cargo
             $this->setId_cargo($aDatos['id_cargo']);
         }
         if (array_key_exists('cargo', $aDatos)) {
-            $valor = $aDatos['cargo'] ?? '';
-            $this->setCargoVo(new CargoCode((string)$valor));
+            $val = $aDatos['cargo'];
+            if ($val instanceof CargoCode) {
+                $this->setCargoVo($val);
+            } else {
+                $this->setCargo((string)$val);
+            }
         }
         if (array_key_exists('orden_cargo', $aDatos)) {
-            $this->setOrdenCargoVo(OrdenCargo::fromNullable(isset($aDatos['orden_cargo']) && $aDatos['orden_cargo'] !== '' ? (int)$aDatos['orden_cargo'] : null));
+            $val = $aDatos['orden_cargo'];
+            if ($val instanceof OrdenCargo) {
+                $this->setOrdenCargoVo($val);
+            } else {
+                $this->setOrden_cargo($val === '' ? null : ($val === null ? null : (int)$val));
+            }
         }
         if (array_key_exists('sf', $aDatos)) {
             $this->setSf(is_true($aDatos['sf']));
@@ -77,7 +86,13 @@ class Cargo
             $this->setSv(is_true($aDatos['sv']));
         }
         if (array_key_exists('tipo_cargo', $aDatos)) {
-            $this->setTipoCargoVo(TipoCargoCode::fromNullableString($aDatos['tipo_cargo'] ?? null));
+            $val = $aDatos['tipo_cargo'] ?? null;
+            if ($val instanceof TipoCargoCode) {
+                $this->setTipoCargoVo($val);
+            } else {
+                // admite null o string legacy
+                $this->setTipo_cargo($val === '' ? null : ($val === null ? null : (string)$val));
+            }
         }
         return $this;
     }
@@ -135,6 +150,9 @@ class Cargo
      *
      * @return string $scargo
      */
+    /**
+     * @deprecated usar getCargoVo()
+     */
     public function getCargo(): string
     {
         return $this->cargo->value();
@@ -143,6 +161,9 @@ class Cargo
     /**
      *
      * @param string $scargo
+     */
+    /**
+     * @deprecated usar setCargoVo(CargoCode $codigo)
      */
     public function setCargo(string $scargo): void
     {
@@ -154,6 +175,9 @@ class Cargo
      *
      * @return int|null $iorden_cargo
      */
+    /**
+     * @deprecated usar getOrdenCargoVo()
+     */
     public function getOrden_cargo(): ?int
     {
         return $this->ordenCargo?->value();
@@ -162,6 +186,9 @@ class Cargo
     /**
      *
      * @param int|null $iorden_cargo
+     */
+    /**
+     * @deprecated usar setOrdenCargoVo(?OrdenCargo $orden)
      */
     public function setOrden_cargo(?int $iorden_cargo = null): void
     {
@@ -208,6 +235,9 @@ class Cargo
      *
      * @return string|null $stipo_cargo
      */
+    /**
+     * @deprecated usar getTipoCargoVo()
+     */
     public function getTipo_cargo(): ?string
     {
         return $this->tipoCargo?->value();
@@ -216,6 +246,9 @@ class Cargo
     /**
      *
      * @param string|null $stipo_cargo
+     */
+    /**
+     * @deprecated usar setTipoCargoVo(?TipoCargoCode $tipo)
      */
     public function setTipo_cargo(?string $stipo_cargo = null): void
     {
@@ -259,7 +292,7 @@ class Cargo
         $oDatosCampo->setMetodoSet('setCargo');
         $oDatosCampo->setEtiqueta(_("cargo"));
         $oDatosCampo->setTipo('texto');
-        $oDatosCampo->setArgument(2);
+        $oDatosCampo->setArgument(8);
         return $oDatosCampo;
     }
 
@@ -277,7 +310,7 @@ class Cargo
         $oDatosCampo->setMetodoSet('setOrden_cargo');
         $oDatosCampo->setEtiqueta(_("orden cargo"));
         $oDatosCampo->setTipo('texto');
-        $oDatosCampo->setArgument(8);
+        $oDatosCampo->setArgument(2);
         return $oDatosCampo;
     }
 

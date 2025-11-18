@@ -1,8 +1,8 @@
 <?php
 
-namespace src\actividadcargos\domain\value_objects;
+namespace src\ubis\domain\value_objects;
 
-final class TipoCargoCode
+final class DescTelecoText
 {
     private string $value;
 
@@ -16,15 +16,15 @@ final class TipoCargoCode
     private function validate(string $value): void
     {
         if ($value === '') {
-            throw new \InvalidArgumentException('TipoCargoCode cannot be empty');
+            throw new \InvalidArgumentException('DescTelecoText cannot be empty');
         }
-        // Por UI, longitud máxima 8 (DatosCampo->setArgument(8))
-        if (mb_strlen($value) > 8) {
-            throw new \InvalidArgumentException('TipoCargoCode must be at most 8 characters');
+        // Por UI, longitud máxima 20 (DatosCampo->setArgument(20))
+        if (mb_strlen($value) > 20) {
+            throw new \InvalidArgumentException('DescTelecoText must be at most 20 characters');
         }
-        // Allow common name characters including accents, spaces, apostrophes, hyphens, underscore, plus, parentheses
+        // Caracteres comunes de nombre/etiqueta, en línea con TipoTelecoName
         if (!preg_match("/^[\p{L}0-9 .,'’:_\-()\+]+$/u", $value)) {
-            throw new \InvalidArgumentException('TipoCargoCode has invalid characters');
+            throw new \InvalidArgumentException('DescTelecoText has invalid characters');
         }
     }
 
@@ -38,14 +38,9 @@ final class TipoCargoCode
         return $this->value;
     }
 
-    public function equals(TipoCargoCode $other): bool
+    public function equals(DescTelecoText $other): bool
     {
         return $this->value === $other->value();
-    }
-
-    public static function fromString(string $value): self
-    {
-        return new self($value);
     }
 
     public static function fromNullableString(?string $value): ?self

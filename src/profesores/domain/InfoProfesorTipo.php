@@ -6,7 +6,6 @@ namespace src\profesores\domain;
 
 use src\profesores\application\repositories\ProfesorTipoRepository;
 use src\shared\domain\DatosInfoRepo;
-use src\ubis\application\repositories\TipoCentroRepository;
 
 class InfoProfesorTipo extends DatosInfoRepo
 {
@@ -30,8 +29,8 @@ class InfoProfesorTipo extends DatosInfoRepo
             $aWhere = array('_ordre' => 'tipo_profesor');
             $aOperador = [];
         } else {
-            $aWhere = array('profesor' => $this->k_buscar);
-            $aOperador = array('profesor' => 'sin_acentos');
+            $aWhere = array('tipo_profesor' => $this->k_buscar);
+            $aOperador = array('tipo_profesor' => 'sin_acentos');
         }
         $oLista = new ProfesorTipoRepository();
         $Coleccion = $oLista->getProfesorTipos($aWhere, $aOperador);

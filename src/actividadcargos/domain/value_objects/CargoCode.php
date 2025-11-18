@@ -18,12 +18,12 @@ final class CargoCode
         if ($value === '') {
             throw new \InvalidArgumentException('CargoCode cannot be empty');
         }
-        // Por UI, longitud máxima 2 (DatosCampo->setArgument(2))
-        if (mb_strlen($value) > 2) {
-            throw new \InvalidArgumentException('CargoCode must be at most 2 characters');
+        // Por UI, longitud máxima 8 (DatosCampo->setArgument(8))
+        if (mb_strlen($value) > 8) {
+            throw new \InvalidArgumentException('CargoCode must be at most 8 characters');
         }
-        // Permitimos letras, números, guion y guion bajo
-        if (!preg_match('/^[A-Za-z0-9_-]+$/u', $value)) {
+        // Allow common name characters including accents, spaces, apostrophes, hyphens, underscore, plus, parentheses
+        if (!preg_match("/^[\p{L}0-9 .,'’:_\-()\+]+$/u", $value)) {
             throw new \InvalidArgumentException('CargoCode has invalid characters');
         }
     }
