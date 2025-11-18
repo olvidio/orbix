@@ -6,10 +6,8 @@ use actividadestudios\model\entity\GestorMatricula;
 use core\ConfigGlobal;
 use core\ViewPhtml;
 use notas\model\entity\GestorActa;
-use notas\model\entity\GestorNota;
-use notas\model\entity\Nota;
 use personas\model\entity\Persona;
-use src\configuracion\domain\entity\GestorDbSchema;
+use src\notas\application\repositories\NotaRepository;
 use web\Desplegable;
 use web\Hash;
 use web\Posicion;
@@ -75,8 +73,10 @@ if ($mi_dele === $dl_matricula) {
     $permiso = 1;
 }
 
-$GesNotas = new GestorNota();
-$oDesplNotas = $GesNotas->getListaNotas();
+$NotaRepository = new NotaRepository();
+$aOpciones = $NotaRepository->getArrayNotas();
+$oDesplNotas = new Desplegable();
+$oDesplNotas->setOpciones($aOpciones);
 $oDesplNotas->setNombre('id_situacion[]');
 
 $oActividad = new ActividadAll($id_activ);

@@ -4,16 +4,13 @@ namespace notas\model;
 
 use actividades\model\entity\ActividadAll;
 use actividadestudios\model\entity\GestorMatricula;
-use asignaturas\model\entity\Asignatura;
-use asignaturas\model\entity\GestorAsignatura;
 use core\ConfigGlobal;
 use core\ViewPhtml;
-use notas\model\entity\GestorNota;
 use notas\model\entity\GestorPersonaNotaDlDB;
-use notas\model\entity\Nota;
 use personas\model\entity\Persona;
 use personas\model\entity\PersonaDl;
 use src\asignaturas\application\repositories\AsignaturaRepository;
+use src\notas\domain\entity\Nota;
 use web\Hash;
 use web\Lista;
 use function core\is_true;
@@ -120,16 +117,6 @@ class Select1011
         //$cPersonaNotas = $gesPersonaNotas->getPersonaNotas(array('id_nom'=>  $this->id_pau,'id_asignatura'=>9000,'_ordre'=>'id_nivel'),array('id_asignatura'=>'<'));
         $cPersonaNotas = $gesPersonaNotas->getPersonaNotas(array('id_nom' => $this->id_pau, '_ordre' => 'id_nivel'), array('id_asignatura' => '<'));
 
-        $gesNotas = new GestorNota();
-        $cNotas = $gesNotas->getNotas();
-        $a_notas = [];
-        foreach ($cNotas as $oNota) {
-            $id_situacion = $oNota->getId_situacion();
-            $breve = $oNota->getBreve();
-            $a_notas[$id_situacion] = $breve;
-        }
-
-
         //Según el tipo de persona: n, agd, s
         $oPersona = Persona::NewPersona($this->id_pau);
         if (!is_object($oPersona)) {
@@ -160,7 +147,6 @@ class Select1011
                 $oActividad = new ActividadAll($id_activ);
                 $nom_activ = $oActividad->getNom_activ();
             }
-            //$nota = $a_notas[$id_situacion];
             $nota = $oPersonaNota->getNota_txt();
             if ($acta == Nota::CURSADA) {
                 $acta = '';

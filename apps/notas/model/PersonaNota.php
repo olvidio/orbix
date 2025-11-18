@@ -2,9 +2,9 @@
 
 namespace notas\model;
 
-use notas\model\entity\GestorNota;
-use notas\model\entity\Nota;
 use NumberFormatter;
+use src\notas\application\repositories\NotaRepository;
+use src\notas\domain\entity\Nota;
 use web\DateTimeLocal;
 use web\NullDateTimeLocal;
 
@@ -130,23 +130,20 @@ class PersonaNota
     public function isAprobada()
     {
         $nota_corte = $_SESSION['oConfig']->getNota_corte();
-        $this->aprobada = 'f';
+        $this->aprobada = false;
         if ($this->id_situacion === Nota::NUMERICA) {
             $nota_num = $this->getNotaNum();
             $nota_max = $this->getNotaMax();
             // deben ser números.
             if (is_numeric($nota_num) && is_numeric($nota_max)) {
                 if ($nota_num / $nota_max >= $nota_corte) {
-                    $this->aprobada = 't';
+                    $this->aprobada = true;
                 }
             }
         } else {
-            $gesNotas = new GestorNota();
-            $cNotas = $gesNotas->getNotas(['id_situacion' => $this->id_situacion]);
-            if (is_array($cNotas) && !empty($cNotas)) {
-                $oNota = $cNotas[0];
-                $this->aprobada = $oNota->getSuperada();
-            }
+            $NotaRepository = new NotaRepository();
+            $aNotas = $NotaRepository->getArrayNotasSuperadas();
+            $this->aprobada = isset($aNotas[$this->id_situacion]);
         }
         return $this->aprobada;
     }

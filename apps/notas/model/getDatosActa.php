@@ -2,23 +2,22 @@
 
 namespace notas\model;
 
-use notas\model\entity\GestorNota;
 use notas\model\entity\GestorPersonaNotaDB;
+use src\notas\application\repositories\NotaRepository;
 
 class getDatosActa
 {
 
-    public static function getNotas(string $acta): array
+    public static function getNotasActa(string $acta): array
     {
         $aWhere = [];
         $aOperador = [];
 
-        $GesNotas = new GestorNota();
-        $aIdSuperadas = $GesNotas->getArrayNotasSuperadas();
-        $superadas_txt = "{" . implode(', ', $aIdSuperadas) . "}";
+        $NotaRepository = new NotaRepository();
+        $aIdSuperadas = $NotaRepository->getArrayNotasSuperadas();
 
-        $aWhere['id_situacion'] = $superadas_txt;
-        $aOperador['id_situacion'] = 'ANY';
+        $aWhere['id_situacion'] = implode(',', $aIdSuperadas);
+        $aOperador['id_situacion'] = 'IN';
         $aWhere['acta'] = $acta;
         $aWhere['tipo_acta'] = PersonaNota::FORMATO_ACTA;
 

@@ -75,7 +75,7 @@ switch ($any) {
 
 // -----------------------------
 
-$cPersonaNotas = getDatosActa::getNotas($acta);
+$cPersonaNotas = getDatosActa::getNotasActa($acta);
 
 // para ordenar
 $errores = '';

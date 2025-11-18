@@ -24,17 +24,15 @@
 
 use actividades\model\entity\ActividadAll;
 use actividades\model\entity\GestorActividad;
-use asignaturas\model\entity\Asignatura;
-use asignaturas\model\entity\GestorAsignatura;
 use core\ConfigGlobal;
 use core\ViewPhtml;
-use notas\model\entity\GestorNota;
 use notas\model\entity\GestorPersonaNotaDB;
-use notas\model\entity\Nota;
 use notas\model\entity\PersonaNotaDB;
 use personas\model\entity\Persona;
 use profesores\model\entity\GestorProfesor;
 use src\asignaturas\application\repositories\AsignaturaRepository;
+use src\notas\application\repositories\NotaRepository;
+use src\notas\domain\entity\Nota;
 use web\Desplegable;
 use web\Hash;
 
@@ -74,11 +72,13 @@ if (!empty($sel)) { //vengo de un checkbox
     }
 }
 
-$GesNotas = new GestorNota();
-$oDesplNotas = $GesNotas->getListaNotas();
+$NotaRepository = new NotaRepository();
+$aOpciones = $NotaRepository->getArrayNotas();
+$oDesplNotas = new Desplegable();
+$oDesplNotas->setOpciones($aOpciones);
 $oDesplNotas->setNombre('id_situacion');
 
-$cNotas = $GesNotas->getNotas(array('superada' => 'f'));
+$cNotas = $NotaRepository->getArrayNoSuperadas();
 $lista_situacion_no_acta = '"11"'; // Para el caso de 'exento', es superada pero sin acta.
 foreach ($cNotas as $oNota) {
     $id_situacion = $oNota->getId_situacion();
@@ -103,7 +103,7 @@ if (!empty($Qid_asignatura_real)) { //caso de modificar
     $GesPersonaNotas = new GestorPersonaNotaDB();
     $cPersonaNotas = $GesPersonaNotas->getPersonaNotas($aWhere);
     if ($cPersonaNotas === false) {
-        exit("Error en la consulta a la base de datos en: ". __FILE__ . ": line " . __LINE__);
+        exit("Error en la consulta a la base de datos en: " . __FILE__ . ": line " . __LINE__);
     }
     $oPersonaNota = $cPersonaNotas[0]; // solo debería existir una.
     $id_situacion = $oPersonaNota->getId_situacion();
@@ -188,19 +188,12 @@ if (!empty($Qid_asignatura_real)) { //caso de modificar
     $aWhere['_ordre'] = 'nombre_corto';
     $cOpcionales = $AsignaturaRepository->getAsignaturas($aWhere, $aOperador);
     // Asignaturas superadas
-    $GesNotas = new GestorNota();
-    $cSuperadas = $GesNotas->getNotas(array('superada' => 't'));
-    $cond = '';
-    $c = 0;
-    foreach ($cSuperadas as $Nota) {
-        if ($c > 0) $cond .= '|';
-        $c++;
-        $cond .= $Nota->getId_situacion();
-    }
+    $NotaRepository = new NotaRepository();
+    $aSuperadas = $NotaRepository->getArrayNotasSuperadas();
     $aWhere = [];
     $aOperador = [];
-    $aWhere['id_situacion'] = $cond;
-    $aOperador['id_situacion'] = '~';
+    $aWhere['id_situacion'] = implode(',', $aSuperadas);
+    $aOperador['id_situacion'] = 'IN';
     $aWhere['id_nom'] = $Qid_pau;
     $aWhere['id_nivel'] = 3000;
     $aOperador['id_nivel'] = '<';

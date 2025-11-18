@@ -35,7 +35,6 @@ $nota_max_default = $_SESSION['oConfig']->getNota_max();
 if ($Qque === 3) { //paso las matrículas a notas definitivas (Grabar e imprimir)
     $aNivelOpcionales = array(1230, 1231, 1232, 2430, 2431, 2432, 2433, 2434);
     $error = '';
-    //$aIdSuperadas = $GesNotas->getArrayNotasSuperadas();
     // miro el acta
     $GesActas = new GestorActa();
     $cActas = $GesActas->getActas(array('id_activ' => $Qid_activ, 'id_asignatura' => $Qid_asignatura));

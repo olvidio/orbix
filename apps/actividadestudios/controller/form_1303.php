@@ -3,13 +3,11 @@
 use actividades\model\entity\ActividadAll;
 use actividadestudios\model\entity\GestorMatriculaDl;
 use actividadestudios\model\entity\Matricula;
-use asignaturas\model\entity\Asignatura;
-use asignaturas\model\entity\GestorAsignatura;
 use core\ConfigGlobal;
 use core\ViewPhtml;
-use notas\model\entity\GestorNota;
 use notas\model\entity\GestorPersonaNotaDB;
 use src\asignaturas\application\repositories\AsignaturaRepository;
+use src\notas\application\repositories\NotaRepository;
 use web\Desplegable;
 use web\Hash;
 
@@ -99,14 +97,14 @@ if (!empty($id_asignatura_real)) { //caso de modificar
     $aWhere['_ordre'] = 'nombre_corto';
     $cOpcionales = $AsignaturaRepository->getAsignaturas($aWhere, $aOperador);
     // Asignaturas superadas
-    $GesNotas = new GestorNota();
-    $cSuperadas = $GesNotas->getNotas(array('superada' => 't'));
+    $NotaRepository = new NotaRepository();
+    $aSuperadas = $NotaRepository->getArrayNotasSuperadas();
     $cond = '';
     $c = 0;
-    foreach ($cSuperadas as $Nota) {
+    foreach ($aSuperadas as $id_situacion) {
         if ($c > 0) $cond .= '|';
         $c++;
-        $cond .= $Nota->getId_situacion();
+        $cond .= $id_situacion;
     }
     $aWhere = [];
     $aOperador = [];

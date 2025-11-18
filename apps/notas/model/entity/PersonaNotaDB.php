@@ -7,6 +7,7 @@ use core\ConverterDate;
 use core\DatosCampo;
 use core\Set;
 use NumberFormatter;
+use src\notas\application\repositories\NotaRepository;
 use web\DateTimeLocal;
 use web\NullDateTimeLocal;
 use function core\is_true;
@@ -468,12 +469,9 @@ class PersonaNotaDB extends ClasePropiedades
                 }
             }
         } else {
-            $gesNotas = new GestorNota();
-            $cNotas = $gesNotas->getNotas(['id_situacion' => $this->iid_situacion]);
-            if (is_array($cNotas) && !empty($cNotas)) {
-                $oNota = $cNotas[0];
-                $this->baprobada = $oNota->getSuperada();
-            }
+            $NotaRepository = new NotaRepository();
+            $aNotas = $NotaRepository->getArrayNotas();
+            $this->baprobada = $aNotas[$this->iid_situacion];
         }
         return $this->baprobada;
     }

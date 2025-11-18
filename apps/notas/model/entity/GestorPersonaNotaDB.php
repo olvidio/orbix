@@ -1,9 +1,11 @@
 <?php
+
 namespace notas\model\entity;
 
 use core\ClaseGestor;
 use core\Condicion;
 use core\Set;
+use src\notas\application\repositories\NotaRepository;
 use function core\is_true;
 
 /**
@@ -53,17 +55,11 @@ class GestorPersonaNotaDB extends ClaseGestor
             $cond_nivel = "AND id_nivel >= 1100 AND id_nivel <= 2500 ";
         }
 
-        $gesNotas = new GestorNota();
-        $cNotas = $gesNotas->getNotas(array('superada' => 't'));
-        $superadas_txt = '';
-        foreach ($cNotas as $oNota) {
-            $id_situacion = $oNota->getId_situacion();
-            $superadas_txt .= !empty($superadas_txt) ? '|' : '';
-            $superadas_txt .= $id_situacion;
-        }
+        $NotaRepository = new NotaRepository();
+        $aSuperadas = $NotaRepository->getArrayNotasSuperadas();
 
         $sQry = "SELECT * FROM  $nom_tabla
-				WHERE id_nom=$id_nom $cond_nivel AND id_situacion::text ~ '$superadas_txt' 
+				WHERE id_nom=$id_nom $cond_nivel AND id_situacion IN (" . implode($aSuperadas) . ") 
 				";
         if (($oDblSt = $oDbl->query($sQry)) === false) {
             $sClauError = 'GestorPersonaNota.llistar.prepare';

@@ -11,6 +11,7 @@ use actividadtarifas\model\entity\GestorTipoActivTarifa;
 use actividadtarifas\model\entity\GestorTipoTarifa;
 use core\ConfigGlobal;
 use core\ViewTwig;
+use src\actividades\application\repositories\NivelStgrRepository;
 use src\actividades\application\repositories\RepeticionRepository;
 use src\ubis\application\services\DelegacionDropdown;
 use ubis\model\entity\Ubi;
@@ -265,8 +266,10 @@ $oDesplPosiblesTipoTarifas = $oGesTipoTarifa->getListaTipoTarifas($isfsv);
 $oDesplPosiblesTipoTarifas->setNombre('id_tarifa');
 $oDesplPosiblesTipoTarifas->setOpcion_sel($tarifa);
 
-$oGesNivelStgr = new GestorNivelStgr();
-$oDesplNivelStgr = $oGesNivelStgr->getListaNivelesStgr();
+$NivelStgrRepository = new NivelStgrRepository();
+$aOpciones = $NivelStgrRepository->getArrayNivelesStgr();
+$oDesplNivelStgr = new Desplegable();
+$oDesplNivelStgr->setOpciones($aOpciones);
 $oDesplNivelStgr->setNombre('nivel_stgr');
 $oDesplNivelStgr->setOpcion_sel($nivel_stgr);
 

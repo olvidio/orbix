@@ -57,12 +57,7 @@ class GestorZona extends ClaseGestor
     }
 
 
-    /**
-     * retorna un objecte del tipus Desplegable
-     *
-     * @return false|object
-     */
-    function getListaZonas($iid_nom_jefe = '')
+    function getArrayZonas($iid_nom_jefe = ''): array
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
@@ -78,7 +73,13 @@ class GestorZona extends ClaseGestor
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
             return false;
         }
-        return new Desplegable('', $oDblSt, '', true);
+        $aOpciones = [];
+        foreach ($oDblSt as $aDades) {
+            $id_zona = $aDades['id_zona'];
+            $nombre_zona = $aDades['repeticion'];
+            $aOpciones[$id_zona] = $nombre_zona;
+        }
+        return $aOpciones;
     }
 
     /**

@@ -5,12 +5,12 @@ namespace notas\model;
 use actividades\model\entity\ActividadAll;
 use core\ClasePropiedades;
 use core\ConfigGlobal;
-use notas\model\entity\GestorNota;
 use personas\model\entity\PersonaDl;
 use profesores\model\entity\GestorProfesorDirector;
 use src\asignaturas\application\repositories\AsignaturaRepository;
 use src\asignaturas\application\repositories\DepartamentoRepository;
 use src\asignaturas\application\repositories\SectorRepository;
+use src\notas\application\repositories\NotaRepository;
 use function core\is_true;
 
 /**
@@ -418,8 +418,8 @@ class Resumen extends ClasePropiedades
         $oDbl->query("CREATE INDEX IF NOT EXISTS $notas" . "_nivel" . " ON $notas (id_nivel)");
         $oDbl->query($sqlDelete);
 
-        $gesNotas = new GestorNota();
-        $a_superadas = $gesNotas->getArrayNotasSuperadas();
+        $NotaRepository = new NotaRepository();
+        $a_superadas = $NotaRepository->getArrayNotasSuperadas();
         $Where_superada = "AND id_situacion IN (" . implode(',', $a_superadas) . ")";
         // Tengo que acceder a publicv, porque con los traslados las notas se cambian de esquema.
         if (ConfigGlobal::mi_sfsv() == 1) {
@@ -776,8 +776,8 @@ class Resumen extends ClasePropiedades
         $any = $this->getAnyFiCurs();
         $curs = $this->getCurso();
 
-        $gesNotas = new GestorNota();
-        $a_superadas = $gesNotas->getArrayNotasSuperadas();
+        $NotaRepository = new NotaRepository();
+        $a_superadas = $NotaRepository->getArrayNotasSuperadas();
         $Where_superada = "AND id_situacion IN (" . implode(',', $a_superadas) . ")";
         /*
         $ssql="SELECT count(*)

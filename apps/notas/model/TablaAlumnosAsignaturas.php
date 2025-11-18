@@ -2,13 +2,11 @@
 
 namespace notas\model;
 
-use asignaturas\model\entity\GestorAsignatura;
-use notas\model\entity\GestorNota;
 use notas\model\entity\GestorPersonaNotaDB;
 use notas\model\entity\GestorPersonaNotaDlDB;
-use notas\model\entity\Nota;
 use personas\model\entity\GestorPersonaDl;
 use src\asignaturas\application\repositories\AsignaturaRepository;
+use src\notas\application\repositories\NotaRepository;
 use web\Lista;
 
 /**
@@ -48,7 +46,7 @@ class TablaAlumnosAsignaturas
         foreach ($cAsignaturas as $oAsignatura) {
             $a++;
             $nom_asig = $oAsignatura->getNombre_corto();
-            $creditos = $oAsignatura->getCreditos()?? '';
+            $creditos = $oAsignatura->getCreditos() ?? '';
             $a_cabeceras[$a] = "$nom_asig ($creditos)";
         }
         //todas
@@ -59,12 +57,8 @@ class TablaAlumnosAsignaturas
         }
 
         // array de id_situacion que corresponde a superada
-        $GesNotas = new GestorNota();
-        $cNotas = $GesNotas->getNotas(['superada' => 't']);
-        $a_notas_superada = [];
-        foreach ($cNotas as $oNota) {
-            $a_notas_superada[] = $oNota->getId_situacion();
-        }
+        $NotaRepository = new NotaRepository();
+        $a_notas_superada = $NotaRepository->getArrayNotasSuperadas();
 
         $aWhere = [];
         $aOperador = [];
@@ -188,7 +182,7 @@ class TablaAlumnosAsignaturas
         foreach ($cAsignaturas as $oAsignatura) {
             $a++;
             $nom_asig = $oAsignatura->getNombre_corto();
-            $creditos = $oAsignatura->getCreditos()?? '';
+            $creditos = $oAsignatura->getCreditos() ?? '';
             $a_cabeceras[$a] = "$nom_asig ($creditos)";
         }
         //todas
@@ -200,12 +194,8 @@ class TablaAlumnosAsignaturas
         }
 
         // array de id_situacion que corresponde a superada
-        $GesNotas = new GestorNota();
-        $cNotas = $GesNotas->getNotas(['superada' => 't']);
-        $a_notas_superada = [];
-        foreach ($cNotas as $oNota) {
-            $a_notas_superada[] = $oNota->getId_situacion();
-        }
+        $NotaRepository = new NotaRepository();
+        $a_notas_superada = $NotaRepository->getArrayNotasSuperadas();
 
         $aWhere = [];
         $aOperador = [];

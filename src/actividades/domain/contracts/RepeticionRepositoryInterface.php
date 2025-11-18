@@ -1,0 +1,74 @@
+<?php
+
+namespace src\actividades\domain\contracts;
+
+use PDO;
+use src\actividades\domain\entity\Repeticion;
+use src\actividades\domain\value_objects\RepeticionId;
+
+
+/**
+ * Interfaz de la clase Repeticion y su Repositorio
+ *
+ * @package orbix
+ * @subpackage model
+ * @author Daniel Serrabou
+ * @version 2.0
+ * @created 18/11/2025
+ */
+interface RepeticionRepositoryInterface
+{
+
+    public function getArrayRepeticion(): array;
+
+/* -------------------- GESTOR BASE ---------------------------------------- */
+
+	/**
+	 * devuelve una colección (array) de objetos de tipo Repeticion
+	 *
+	 * @param array $aWhere asociativo con los valores para cada campo de la BD.
+	 * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
+	 * @return array|FALSE Una colección de objetos de tipo Repeticion
+	
+	 */
+	public function getRepeticiones(array $aWhere=[], array $aOperators=[]): array|FALSE;
+	
+/* -------------------- ENTIDAD --------------------------------------------- */
+
+	public function Eliminar(Repeticion $Repeticion): bool;
+
+	public function Guardar(Repeticion $Repeticion): bool;
+
+	public function getErrorTxt(): string;
+
+	public function getoDbl(): PDO;
+
+	public function setoDbl(PDO $oDbl): void;
+
+	public function getNomTabla(): string;
+	
+    /**
+     * Devuelve los campos de la base de datos en un array asociativo.
+     * Devuelve false si no existe la fila en la base de datos
+     * 
+     * @param int $id_repeticion
+     * @return array|bool
+	
+     */
+    public function datosById(int $id_repeticion): array|bool;
+
+    /**
+     * Nuevos métodos con Value Objects
+     */
+    public function datosByIdVO(RepeticionId $id): array|bool;
+	
+    /**
+     * Busca la clase con id_repeticion en el repositorio.
+	
+     */
+    public function findById(int $id_repeticion): ?Repeticion;
+    public function findByIdVO(RepeticionId $id): ?Repeticion;
+	
+    public function getNewId();
+    public function getNewIdVO(): RepeticionId;
+}

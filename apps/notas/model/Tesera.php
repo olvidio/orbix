@@ -13,6 +13,7 @@ use asignaturas\model\entity\GestorAsignatura;
 use core\ViewPhtml;
 use personas\model\entity\Persona;
 use src\asignaturas\application\repositories\AsignaturaRepository;
+use src\notas\application\repositories\NotaRepository;
 use web\DateTimeLocal;
 use web\Posicion;
 use function core\is_true;
@@ -185,8 +186,8 @@ class Tesera
         $num_creditos_total = 0;
 
         // array con los id_situacion correspondientes a notas 'superadas'
-        $GesNotas = new entity\GestorNota();
-        $aIdSuperadas = $GesNotas->getArrayNotasSuperadas(); // Ojo la numéricas
+        $NotaRepository = new NotaRepository();
+        $aIdSuperadas = $NotaRepository->getArrayNotasSuperadas(); // Ojo la numéricas
 
         $a = 0;
         $i = 0;

@@ -3,8 +3,8 @@
 namespace actividadestudios\model\entity;
 
 use core\ClasePropiedades;
-use notas\model\entity\GestorNota;
 use notas\model\entity\GestorPersonaNotaDB;
+use src\notas\application\repositories\NotaRepository;
 
 /**
  *
@@ -44,11 +44,10 @@ class PosiblesCa extends ClasePropiedades
     function contar_creditos(int $id_nom, array $aAsignaturas)
     {
         $suma_creditos = 0;
-        $GesNotas = new GestorNota();
-        $cNotas = $GesNotas->getNotas(array('superada' => 't'));
+        $NotaRepository = new NotaRepository();
+        $aNotas = $NotaRepository->getArrayNotasSuperadas();
         $aSuperadas = [];
-        foreach ($cNotas as $oNota) {
-            $id_situacion = $oNota->getId_situacion();
+        foreach ($aNotas as $id_situacion) {
             $aSuperadas[$id_situacion] = 't';
         }
         $GesPersonaNotas = new GestorPersonaNotaDB();
