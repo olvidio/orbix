@@ -39,7 +39,7 @@ class PgDescTelecoRepository extends ClaseRepository implements DescTelecoReposi
         $nom_tabla = $this->getNomTabla();
         $sQuery = "SELECT id_item, desc_teleco
 				FROM $nom_tabla
-				WHERE persona='t' AND tipo_teleco='$sdepende'
+				WHERE persona='t' AND id_tipo_teleco='$sdepende'
 				ORDER BY orden";
         if (($oDbl->query($sQuery)) === false) {
             $sClauError = 'GestorDescTeleco.lista';
@@ -62,7 +62,7 @@ class PgDescTelecoRepository extends ClaseRepository implements DescTelecoReposi
         $nom_tabla = $this->getNomTabla();
         $sQuery = "SELECT id_item, desc_teleco
 				FROM $nom_tabla
-				WHERE ubi='t' AND tipo_teleco='$sdepende'
+				WHERE ubi='t' AND id_tipo_teleco='$sdepende'
 				ORDER BY orden";
         if (($oDbl->query($sQuery)) === false) {
             $sClauError = 'GestorDescTeleco.lista';
@@ -165,7 +165,7 @@ class PgDescTelecoRepository extends ClaseRepository implements DescTelecoReposi
   $aDatos = [];
   // Usar la API basada en Value Objects
   $aDatos['orden'] = $DescTeleco->getOrdenVo()?->value();
-  $aDatos['tipo_teleco'] = $DescTeleco->getTipoTelecoVo()?->value();
+  $aDatos['id_tipo_teleco'] = $DescTeleco->getIdTipoTelecoVo()?->value();
   $aDatos['desc_teleco'] = $DescTeleco->getDescTelecoVo()?->value();
   $aDatos['ubi'] = $DescTeleco->isUbi();
   $aDatos['persona'] = $DescTeleco->isPersona();
@@ -178,7 +178,7 @@ class PgDescTelecoRepository extends ClaseRepository implements DescTelecoReposi
 			//UPDATE
 			$update="
 					orden                    = :orden,
-					tipo_teleco              = :tipo_teleco,
+					id_tipo_teleco           = :id_tipo_teleco,
 					desc_teleco              = :desc_teleco,
 					ubi                      = :ubi,
 					persona                  = :persona";
@@ -200,8 +200,8 @@ class PgDescTelecoRepository extends ClaseRepository implements DescTelecoReposi
 		} else {
 			// INSERT
 			$aDatos['id_item'] = $DescTeleco->getId_item();
-			$campos="(id_item,orden,tipo_teleco,desc_teleco,ubi,persona)";
-			$valores="(:id_item,:orden,:tipo_teleco,:desc_teleco,:ubi,:persona)";		
+			$campos="(id_item,orden,id_tipo_teleco,desc_teleco,ubi,persona)";
+			$valores="(:id_item,:orden,:id_tipo_teleco,:desc_teleco,:ubi,:persona)";
 			if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === FALSE) {
 				$sClaveError = 'PgDescTelecoRepository.insertar.prepare';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);

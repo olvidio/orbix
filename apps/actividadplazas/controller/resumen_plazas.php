@@ -39,7 +39,6 @@ if (!empty($a_sel)) { //vengo de un checkbox
 
 $oDesplDelegaciones = new Desplegable();
 $oDesplDelegaciones->setNombre('region_dl');
-//$gesDelegacion = new ubis\model\entity\GestorDelegacion();
 $oDBPropiedades = new DBPropiedades();
 $aOpcionesDl = $oDBPropiedades->array_posibles_esquemas(TRUE);
 $oDesplDelegaciones->setOpciones($aOpcionesDl);

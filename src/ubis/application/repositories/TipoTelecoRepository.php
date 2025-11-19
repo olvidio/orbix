@@ -41,6 +41,11 @@ class TipoTelecoRepository implements TipoTelecoRepositoryInterface
         return $this->repository->getArrayTiposTelecoUbi();
     }
 
+    public function getArrayTiposTeleco(): array
+    {
+        return $this->repository->getArrayTiposTeleco();
+    }
+
     /* -------------------- GESTOR BASE ---------------------------------------- */
 
     /**

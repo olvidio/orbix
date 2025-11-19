@@ -37,7 +37,7 @@ class PgTipoTelecoRepository extends ClaseRepository implements TipoTelecoReposi
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $oTipoCentroSet = new Set();
-        $sQuery = "SELECT tipo_teleco, nombre_teleco
+        $sQuery = "SELECT id, nombre_teleco
 				FROM $nom_tabla
 				WHERE persona='t'
 				ORDER BY nombre_teleco";
@@ -62,9 +62,33 @@ class PgTipoTelecoRepository extends ClaseRepository implements TipoTelecoReposi
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $oTipoCentroSet = new Set();
-        $sQuery = "SELECT tipo_teleco, nombre_teleco
+        $sQuery = "SELECT id, nombre_teleco
 				FROM $nom_tabla
 				WHERE ubi='t'
+				ORDER BY nombre_teleco";
+
+        if (($oDbl->query($sQuery)) === false) {
+            $sClauError = 'GestorTipoTeleco.lista';
+            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+            return false;
+        }
+        $aOpciones = [];
+        foreach ($oDbl->query($sQuery) as $aClave) {
+            $clave = $aClave[0];
+            $val = $aClave[1];
+            $aOpciones[$clave] = $val;
+        }
+
+        return $aOpciones;
+    }
+
+    public function getArrayTiposTeleco(): array
+    {
+        $oDbl = $this->getoDbl_Select();
+        $nom_tabla = $this->getNomTabla();
+        $oTipoCentroSet = new Set();
+        $sQuery = "SELECT id, nombre_teleco
+				FROM $nom_tabla
 				ORDER BY nombre_teleco";
 
         if (($oDbl->query($sQuery)) === false) {

@@ -1,7 +1,8 @@
 <?php
 
 use core\ConfigGlobal;
-use function core\is_true;
+use src\ubis\domain\entity\TelecoUbi;
+use function core\urlsafe_b64decode;
 
 /**
  * Para asegurar que inicia la sesion, y poder acceder a los permisos
@@ -24,16 +25,16 @@ $Qcampos_chk = (string)filter_input(INPUT_POST, 'campos_chk');
 
 switch ($Qobj_pau) {
     case 'CentroDl':
-        $obj = 'ubis\\model\\entity\\TelecoCtrDl';
+        $repo = 'src\\ubis\\application\\repositories\\TelecoCtrDlRepository';
         break;
     case 'CentroEx':
-        $obj = 'ubis\\model\\entity\\TelecoCtrEx';
+        $repo = 'src\\ubis\\application\\repositories\\TelecoCtrExRepository';
         break;
     case 'CasaDl':
-        $obj = 'ubis\\model\\entity\\TelecoCdcDl';
+        $repo = 'src\\ubis\\application\\repositories\\TelecoCdcDlRepository';
         break;
     case 'CasaEx':
-        $obj = 'ubis\\model\\entity\\TelecoCdcEx';
+        $repo = 'src\\ubis\\application\\repositories\\TelecoCdcExRepository';
         break;
 }
 
@@ -42,67 +43,41 @@ if (!empty($a_sel)) { //vengo de un checkbox
     $s_pkey = explode('#', $a_sel[0]);
     // he cambiado las comillas dobles por simples. Deshago el cambio.
     $s_pkey = str_replace("'", '"', $s_pkey[0]);
-    $a_pkey = unserialize(core\urlsafe_b64decode($s_pkey), ['allowed_classes' => false]);
+    $a_pkey = json_decode(urlsafe_b64decode($s_pkey));
 } else {
     $s_pkey = (string)filter_input(INPUT_POST, 's_pkey');
-    $a_pkey = unserialize(core\urlsafe_b64decode($s_pkey), ['allowed_classes' => false]);
+    $a_pkey = json_decode(urlsafe_b64decode($s_pkey));
 
 }
 
 switch ($Qmod) {
     case 'eliminar_teleco':
-        $oUbi = new $obj($a_pkey);
-        if ($oUbi->DBEliminar() === false) {
-            echo _("hay un error, no se ha eliminado");
-            echo "\n" . $oUbi->getErrorTxt();
-        }
-//		echo $oPosicion->go_atras(1);
+        $Repository = new $repo();
+        $TelecoUbi = $Repository->findById($a_pkey);
+        $Repository->Eliminar($TelecoUbi);
         die();
         break;
     case 'teleco':
+        $Qid_tipo_teleco = (integer)filter_input(INPUT_POST, 'id_tipo_teleco');
+        $Qdesc_teleco = (integer)filter_input(INPUT_POST, 'desc_teleco');
+        $Qnum_teleco = (string)filter_input(INPUT_POST, 'num_teleco');
+        $Qobserv = (string)filter_input(INPUT_POST, 'observ');
+
+        $Repository = new $repo();
         if (empty($a_pkey)) {
             // es nuevo
-            $oUbi = new $obj();
-            $oUbi->setId_ubi($Qid_ubi);
+            $newId = $Repository->getNewId();
+            $TelecoUbi = new TelecoUbi();
+            $TelecoUbi->setId_item($newId);
+            $TelecoUbi->setId_ubi($Qid_ubi);
         } else {
-            $oUbi = new $obj($a_pkey);
+            $TelecoUbi = $Repository->findById($a_pkey);
         }
+        $TelecoUbi->setId_tipo_teleco($Qid_tipo_teleco);
+        $TelecoUbi->setDesc_teleco($Qdesc_teleco);
+        $TelecoUbi->setNum_teleco($Qnum_teleco);
+        $TelecoUbi->setObserv($Qobserv);
+        $Repository->Guardar($TelecoUbi);
+
         break;
 }
-
-$campos_chk = empty($Qcampos_chk) ? [] : explode(',', $Qcampos_chk);
-$oUbi->DBCarregar();
-$oDbl = $oUbi->getoDbl();
-$cDatosCampo = $oUbi->getDatosCampos();
-foreach ($cDatosCampo as $oDatosCampo) {
-    $camp = $oDatosCampo->getNom_camp();
-    $valor = empty($_POST[$camp]) ? '' : $_POST[$camp];
-    if ($oDatosCampo->datos_campo($oDbl, 'tipo') === "bool") { //si es un campo boolean, cambio los valores on, off... por true, false...
-        if ($valor === "on") {
-            $valor = 't';
-            $a_values_o[$camp] = $valor;
-        } else {
-            // compruebo que esté en la lista de campos enviados
-            if (in_array($camp, $campos_chk)) {
-                $valor = 'f';
-                $a_values_o[$camp] = $valor;
-            }
-        }
-    } else {
-        if (!isset($_POST[$camp])) continue;
-        //pongo el valor nulo, sobretodo para las fechas.
-        if (!is_array($_POST[$camp]) && (empty($_POST[$camp]) || trim($_POST[$camp]) == "")) {
-            //si es un campo not null (y es null), pongo el valor por defecto
-            if (is_true($oDatosCampo->datos_campo($oDbl, 'nulo'))) {
-                $valor_predeterminado = $oDatosCampo->datos_campo($oDbl, 'valor');
-                $a_values_o[$camp] = $valor_predeterminado;
-            } else {
-                $a_values_o[$camp] = NULL;
-            }
-        } else {
-            $a_values_o[$camp] = $valor;
-        }
-    }
-}
-$oUbi->setAllAtributes($a_values_o);
-$oUbi->DBGuardar();

@@ -142,7 +142,7 @@ class DatosTabla
         $c = 0;
         foreach ($this->Coleccion as $oFila) {
             $v = 0;
-            $pks = urlsafe_b64encode(serialize($oFila->getPrimary_key()));
+            $pks = urlsafe_b64encode(json_encode($oFila->getPrimary_key()),  JSON_THROW_ON_ERROR);
             //$pks=str_replace('"','\"',$pks);
             //echo "sel: $pks<br>";
             $a_valores[$c]['sel'] = $pks;

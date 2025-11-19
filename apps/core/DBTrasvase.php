@@ -8,6 +8,10 @@ use actividades\model\entity\GestorActividadDl;
 use actividades\model\entity\GestorActividadEx;
 use devel\model\DBAbstract;
 use PDO;
+use src\ubis\application\repositories\TelecoCdcDlRepository;
+use src\ubis\application\repositories\TelecoCdcExRepository;
+use src\ubis\application\repositories\TelecoCtrDlRepository;
+use src\ubis\application\repositories\TelecoCtrExRepository;
 use src\utils_database\application\repositories\MapIdRepository;
 use src\utils_database\domain\value_objects\MapIdDl;
 use ubis\model\entity\CasaDl;
@@ -24,9 +28,6 @@ use ubis\model\entity\GestorCasaEx;
 use ubis\model\entity\GestorCdcExxDireccion;
 use ubis\model\entity\GestorCentroEx;
 use ubis\model\entity\GestorCtrExxDireccion;
-use ubis\model\entity\GestorTelecoCdcEx;
-use ubis\model\entity\GestorTelecoCtrEx;
-use ubis\model\entity\TelecoCdcDl;
 
 class DBTrasvase extends DBAbstract
 {
@@ -396,19 +397,18 @@ class DBTrasvase extends DBAbstract
                             $oUbixDireccion->DBEliminar();
                         }
                         // Buscar las telecos
-                        $gesTelecoCdcEx = new GestorTelecoCdcEx();
-                        $cTelecos = $gesTelecoCdcEx->getTelecos(['id_ubi' => $id_ubi_old]);
+                        $TelecoCdcExRepository = new TelecoCdcExRepository();
+                        $cTelecos = $TelecoCdcExRepository->getTelecos(['id_ubi' => $id_ubi_old]);
+                        $TelecoCdcDlRepository = new TelecoCdcDlRepository();
                         foreach ($cTelecos as $oTelecoCdcEx) {
-                            $oTelecoCdcEx->DBCarregar();
-                            $aDades = $oTelecoCdcEx->getTot();
-                            $oTelecoCdcDl = new TelecoCdcDl();
-                            $oTelecoCdcDl->setoDbl($oDbl);
-                            $oTelecoCdcDl->setAllAtributes($aDades, TRUE);
-                            if ($oTelecoCdcDl->DBGuardar() === FALSE) {
-                                $error .= '<br>' . _("no se ha guardado la casa");
+                            $newId = $TelecoCdcDlRepository->getNewId();
+                            $oTelecoCdcDl = clone $oTelecoCdcEx;
+                            $oTelecoCdcDl->setId_teleco($newId);
+                            if ($TelecoCdcDlRepository->Guardar($oTelecoCdcDl) === FALSE) {
+                                $error .= '<br>' . _("no se ha guardado la teleco de la casa");
                             } else {
                                 // Eliminar la teleco
-                                $oTelecoCdcEx->DBEliminar();
+                                $TelecoCdcExRepository->Eliminar($oTelecoCdcEx);
                             }
                         }
                         //borrar la origen:
@@ -546,19 +546,18 @@ class DBTrasvase extends DBAbstract
                             $oUbixDireccion->DBEliminar();
                         }
                         // Buscar las telecos
-                        $gesTelecoCtrEx = new GestorTelecoCtrEx();
-                        $cTelecos = $gesTelecoCtrEx->getTelecos(['id_ubi' => $id_ubi_old]);
+                        $TelecoCtrExRepository = new TelecoCtrExRepository();
+                        $cTelecos = $TelecoCtrExRepository->getTelecos(['id_ubi' => $id_ubi_old]);
+                        $TelecoCtrDlRepository = new TelecoCtrDlRepository();
                         foreach ($cTelecos as $oTelecoCtrEx) {
-                            $oTelecoCtrEx->DBCarregar();
-                            $aDades = $oTelecoCtrEx->getTot();
-                            $oTelecoCdcDl = new TelecoCdcDl();
-                            $oTelecoCdcDl->setoDbl($oDbl);
-                            $oTelecoCdcDl->setAllAtributes($aDades);
-                            if ($oTelecoCdcDl->DBGuardar() === FALSE) {
-                                $error .= '<br>' . _("no se ha guardado la casa");
+                            $newId = $TelecoCtrDlRepository->getNewId();
+                            $oTelecoCtrDl = clone $oTelecoCtrEx;
+                            $oTelecoCtrDl->setId_teleco($newId);
+                            if ($TelecoCtrDlRepository->Guardar($oTelecoCtrDl) === FALSE) {
+                                $error .= '<br>' . _("no se ha guardado la teleco el ctr");
                             } else {
                                 // Eliminar la teleco
-                                $oTelecoCtrEx->DBEliminar();
+                                $TelecoCtrExRepository->Eliminar($oTelecoCtrEx);
                             }
                         }
                         //borrar la origen:

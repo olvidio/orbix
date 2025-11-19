@@ -179,22 +179,22 @@ abstract class DatosInfoRepo
     {
         switch ($obj_pau) {
             case 'Centro':
-                $this->obj = 'ubis\\model\\entity\\TelecoCtr';
+                $this->obj = 'src\\ubis\\application\\repositories\\TelecoCtrRepository';
                 break;
             case 'CentroDl':
-                $this->obj = 'ubis\\model\\entity\\TelecoCtrDl';
+                $this->obj = 'src\\ubis\\application\\repositories\\TelecoCtrDlRepository';
                 break;
             case 'CentroEx':
-                $this->obj = 'ubis\\model\\entity\\TelecoCtrEx';
+                $this->obj = 'src\\ubis\\application\\repositories\\TelecoCtrExRepository';
                 break;
             case 'Casa':
-                $this->obj = 'ubis\\model\\entity\\TelecoCdc';
+                $this->obj = 'src\\ubis\\application\\repositories\\TelecoCdcRepository';
                 break;
             case 'CasaDl':
-                $this->obj = 'ubis\\model\\entity\\TelecoCdcDl';
+                $this->obj = 'src\\ubis\\application\\repositories\\TelecoCdcDlRepository';
                 break;
             case 'CasaEx':
-                $this->obj = 'ubis\\model\\entity\\TelecoCdcEx';
+                $this->obj = 'src\\ubis\\application\\repositories\\TelecoCdcExRepository';
                 break;
         }
     }

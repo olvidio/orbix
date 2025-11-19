@@ -127,7 +127,7 @@ abstract class UbiGlobal extends ClasePropiedades
      * @return array de objetos Direccion
      *
      */
-    function getDirecciones($ordre = 'principal DESC')
+    public function getDirecciones($ordre = 'principal DESC')
     {
         $aClassName = explode('\\', get_called_class());
         $childClassName = end($aClassName);
@@ -188,26 +188,29 @@ abstract class UbiGlobal extends ClasePropiedades
         $childClassName = end($aClassName);
         switch ($childClassName) {
             case 'Centro':
-                $obj = 'ubis\model\entity\GestorTelecoCtr';
+                $obj = 'src\ubis\application\repositories\TelecoCtrRepository';
                 break;
             case 'CentroDl':
-                $obj = 'ubis\model\entity\GestorTelecoCtrDl';
+                $obj = 'src\ubis\application\repositories\TelecoCtrDlRepository';
                 break;
             case 'CentroEx':
-                $obj = 'ubis\model\entity\GestorTelecoCtrEx';
+                $obj = 'src\ubis\application\repositories\TelecoCtrExRepository';
                 break;
             case 'Casa':
-                $obj = 'ubis\model\entity\GestorTelecoCdc';
+                $obj = 'src\ubis\application\repositories\TelecoCdcRepository';
                 break;
             case 'CasaDl':
-                $obj = 'ubis\model\entity\GestorTelecoCdcDl';
+                $obj = 'src\ubis\application\repositories\TelecoCdcDlRepository';
                 break;
             case 'CasaEx':
-                $obj = 'ubis\model\entity\GestorTelecoCdcEx';
+                $obj = 'src\ubis\application\repositories\TelecoCdcExRepository';
                 break;
         }
         $aWhere['id_ubi'] = $this->getId_ubi();
-        $aWhere['tipo_teleco'] = 'e-mail';
+        //case 'e-mail':
+        $id_tipo_teleco = 3;
+        $aWhere['id_tipo_teleco'] = $id_tipo_teleco;
+
         if ($desc_teleco !== 13) {
             $aWhere['desc_teleco'] = $desc_teleco;
         }
@@ -236,26 +239,37 @@ abstract class UbiGlobal extends ClasePropiedades
         $childClassName = end($aClassName);
         switch ($childClassName) {
             case 'Centro':
-                $obj = 'ubis\model\entity\GestorTelecoCtr';
+                $obj = 'src\ubis\application\repositories\TelecoCtrRepository';
                 break;
             case 'CentroDl':
-                $obj = 'ubis\model\entity\GestorTelecoCtrDl';
+                $obj = 'src\ubis\application\repositories\TelecoCtrDlRepository';
                 break;
             case 'CentroEx':
-                $obj = 'ubis\model\entity\GestorTelecoCtrEx';
+                $obj = 'src\ubis\application\repositories\TelecoCtrExRepository';
                 break;
             case 'Casa':
-                $obj = 'ubis\model\entity\GestorTelecoCdc';
+                $obj = 'src\ubis\application\repositories\TelecoCdcRepository';
                 break;
             case 'CasaDl':
-                $obj = 'ubis\model\entity\GestorTelecoCdcDl';
+                $obj = 'src\ubis\application\repositories\TelecoCdcDlRepository';
                 break;
             case 'CasaEx':
-                $obj = 'ubis\model\entity\GestorTelecoCdcEx';
+                $obj = 'src\ubis\application\repositories\TelecoCdcExRepository';
                 break;
         }
         $aWhere['id_ubi'] = $this->getId_ubi();
-        $aWhere['tipo_teleco'] = $tipo_teleco;
+        switch ($tipo_teleco) {
+            case 'telf':
+                $id_tipo_teleco = 1;
+                break;
+            case 'fax':
+                $id_tipo_teleco = 4;
+                break;
+            case 'e-mail':
+                $id_tipo_teleco = 3;
+                break;
+        }
+        $aWhere['id_tipo_teleco'] = $id_tipo_teleco;
         if ($desc_teleco !== '*' && !empty($desc_teleco)) {
             $aWhere['desc_teleco'] = $desc_teleco;
         }
@@ -287,7 +301,7 @@ abstract class UbiGlobal extends ClasePropiedades
      *
      * @return array aDades
      */
-    function getTot()
+    public function getTot()
     {
         if (!is_array($this->aDades)) {
             $this->DBCarregar('tot');

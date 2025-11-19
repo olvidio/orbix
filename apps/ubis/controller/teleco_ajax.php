@@ -13,11 +13,11 @@ require_once("apps/core/global_object.inc");
 
 $oPosicion->recordar();
 
-$Qtipo_teleco = (string)filter_input(INPUT_POST, 'tipo_teleco');
+$Qid_tipo_teleco = (string)filter_input(INPUT_POST, 'id_tipo_teleco');
 
 
 $oDescTeleco = new DescTelecoRepository();
-$aOpciones = $oDescTeleco->getArrayDescTelecoUbis($Qtipo_teleco);
+$aOpciones = $oDescTeleco->getArrayDescTelecoUbis($Qid_tipo_teleco);
 $oDesplegableDescTeleco = new Desplegable();
 $oDesplegableDescTeleco->setOpciones($aOpciones);
 $oDesplegableDescTeleco->setNombre('desc_teleco');

@@ -8,6 +8,7 @@ use core\ViewPhtml;
 use notas\model\entity\GestorActa;
 use personas\model\entity\Persona;
 use src\notas\application\repositories\NotaRepository;
+use src\notas\domain\entity\Nota;
 use web\Desplegable;
 use web\Hash;
 use web\Posicion;

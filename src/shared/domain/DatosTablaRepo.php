@@ -149,11 +149,7 @@ class DatosTablaRepo
             $v = 0;
             $pks1 = 'get' . ucfirst($oFila->getPrimary_key());
             $val_pks = $oFila->$pks1();
-            //$pks = urlsafe_b64encode(serialize($val_pks));
             $pks = urlsafe_b64encode(json_encode($val_pks, JSON_THROW_ON_ERROR));
-
-            //$pks=str_replace('"','\"',$pks);
-            //echo "sel: $pks<br>";
             $a_valores[$c]['sel'] = $pks;
             foreach ($oFila->getDatosCampos() as $oDatosCampo) {
                 if ($c == 0) {
@@ -161,7 +157,7 @@ class DatosTablaRepo
                 }
                 $v++;
                 $metodo = $oDatosCampo->getMetodoGet();
-                // si eñ metodo obtiene un valueobject
+                // si el metodo obtiene un valueobject
                 if (substr($metodo,-2) === 'Vo') {
                     $valor_camp = $oFila->$metodo()->value();
                 } else {
@@ -186,7 +182,11 @@ class DatosTablaRepo
                         $RepoRelacionado = new $var_1();
                         $oRelacionado = $RepoRelacionado->findById($valor_camp);
                         if ($oRelacionado !== null) {
-                            $var = $oRelacionado->$var_2();
+                            if (substr($var_2,-2) === 'Vo') {
+                                $var = $oRelacionado->$var_2()->value();
+                            } else {
+                                $var = $oRelacionado->$var_2();
+                            }
                             if (empty($var)) {
                                 $var = $valor_camp;
                             }

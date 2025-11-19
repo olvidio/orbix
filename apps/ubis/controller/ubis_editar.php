@@ -40,7 +40,7 @@ $es_de_dl = FALSE;
 if (!empty($Qnuevo)) {
     $tipo_ubi = (string)filter_input(INPUT_POST, 'tipo_ubi');
     $QsGestor = (string)filter_input(INPUT_POST, 'sGestor');
-    $Gestor = unserialize(core\urlsafe_b64decode($QsGestor), ['allowed_classes' => false]);
+    $Gestor = json_decode(core\urlsafe_b64decode($QsGestor));
     $obj = str_replace('Gestor', '', $Gestor);
     $oUbi = new $obj();
     $Qobj_pau = str_replace('ubis\\model\\entity\\', '', $obj);

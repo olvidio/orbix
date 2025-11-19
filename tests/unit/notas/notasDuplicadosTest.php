@@ -3,9 +3,9 @@
 namespace Tests\unit\notas;
 
 use notas\model\EditarPersonaNota;
+use src\ubis\application\services\DelegacionUtils;
 use Tests\factories\notas\NotasFactory;
 use Tests\myTest;
-use ubis\model\entity\GestorDelegacion;
 
 class notasDuplicadosTest extends myTest
 {
@@ -57,7 +57,7 @@ class notasDuplicadosTest extends myTest
         $id_schema_persona = 1029; // GalBelv
         $NotasFactory = new NotasFactory();
         $NotasFactory->setCount(1);
-        $dl = GestorDelegacion::getDlFromSchema($esquema);
+        $dl = DelegacionUtils::getDlFromSchema($esquema);
         $cPersonaNotas = $NotasFactory->create($id_nom, $dl);
         $personaNota = $cPersonaNotas[0];
 
@@ -87,7 +87,7 @@ class notasDuplicadosTest extends myTest
             //$msg_err .= "\r\n";
             //$msg_err .= $e->getMessage();
             $oPersonaNotaDB->DBEliminar();
-            $this->assertTrue(TRUE );
+            $this->assertTrue(TRUE);
         }
 
     }
@@ -112,7 +112,7 @@ class notasDuplicadosTest extends myTest
         $NotasFactory = new NotasFactory();
         $NotasFactory->setCount(10);
 
-        $dl = GestorDelegacion::getDlFromSchema($esquema);
+        $dl = DelegacionUtils::getDlFromSchema($esquema);
 
         $this->cPersonaNotas = $NotasFactory->create($this->id_nom, $dl);
     }

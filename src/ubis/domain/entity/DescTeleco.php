@@ -34,7 +34,7 @@ class DescTeleco
     /**
      * Tipo_teleco de DescTeleco (código)
      */
-    private ?TipoTelecoCode $tipoTeleco = null;
+    private TipoTelecoCode $idTipoTeleco;
     /**
      * Desc_teleco de DescTeleco (texto)
      */
@@ -69,9 +69,9 @@ class DescTeleco
             $valor = $aDatos['orden'] ?? null;
             $this->setOrdenVo(DescTelecoOrder::fromNullable(isset($valor) && $valor !== '' ? (int)$valor : null));
         }
-        if (array_key_exists('tipo_teleco', $aDatos)) {
-            $valor = $aDatos['tipo_teleco'] ?? '';
-            $this->setTipoTelecoVo(isset($valor) && $valor !== '' ? new TipoTelecoCode((string)$valor) : null);
+        if (array_key_exists('id_tipo_teleco', $aDatos)) {
+            $valor = $aDatos['id_tipo_teleco'] ?? '';
+            $this->setIdTipoTelecoVo(isset($valor) && $valor !== '' ? new TipoTelecoCode((string)$valor) : null);
         }
         if (array_key_exists('desc_teleco', $aDatos)) {
             $this->setDescTelecoVo(DescTelecoText::fromNullableString($aDatos['desc_teleco'] ?? null));
@@ -96,14 +96,14 @@ class DescTeleco
         $this->orden = $orden;
     }
 
-    public function getTipoTelecoVo(): ?TipoTelecoCode
+    public function getIdTipoTelecoVo(): TipoTelecoCode
     {
-        return $this->tipoTeleco;
+        return $this->idTipoTeleco;
     }
 
-    public function setTipoTelecoVo(?TipoTelecoCode $codigo = null): void
+    public function setIdTipoTelecoVo(TipoTelecoCode $codigo): void
     {
-        $this->tipoTeleco = $codigo;
+        $this->idTipoTeleco = $codigo;
     }
 
     public function getDescTelecoVo(): ?DescTelecoText
@@ -152,23 +152,14 @@ class DescTeleco
         $this->orden = DescTelecoOrder::fromNullable($iorden);
     }
 
-    /**
-     *
-     * @return string|null $stipo_teleco
-     */
-    public function getTipo_teleco(): ?string
+    public function getIdTipo_teleco(): int
     {
-        return $this->tipoTeleco?->value();
+        return $this->idTipoTeleco?->value();
     }
 
-    /**
-     *
-     * @param string|null $stipo_teleco
-     */
-    public function setTipo_teleco(?string $stipo_teleco = null): void
+    public function setIdTipo_teleco(int $id_tipo_teleco): void
     {
-        $stipo_teleco = $stipo_teleco !== null ? trim($stipo_teleco) : null;
-        $this->tipoTeleco = ($stipo_teleco === null || $stipo_teleco === '') ? null : new TipoTelecoCode($stipo_teleco);
+        $this->idTipoTeleco = new TipoTelecoCode($id_tipo_teleco);
     }
 
     /**
@@ -272,12 +263,14 @@ class DescTeleco
     function getDatosTipo_teleco()
     {
         $oDatosCampo = new DatosCampo();
-        $oDatosCampo->setNom_camp('tipo_teleco');
-        $oDatosCampo->setMetodoGet('getTipo_teleco');
-        $oDatosCampo->setMetodoSet('setTipo_teleco');
-        $oDatosCampo->setEtiqueta(_("tipo teleco"));
-        $oDatosCampo->setTipo('texto');
-        $oDatosCampo->setArgument(10);
+        $oDatosCampo->setNom_camp('id_tipo_teleco');
+        $oDatosCampo->setMetodoGet('getIdTipoTelecoVo');
+        $oDatosCampo->setMetodoSet('setId_tipo_teleco');
+        $oDatosCampo->setEtiqueta(_("nombre teleco"));
+        $oDatosCampo->setTipo('opciones');
+        $oDatosCampo->setArgument('src\\ubis\\application\\repositories\\TipoTelecoRepository'); // nombre del objeto relacionado
+        $oDatosCampo->setArgument2('getNombreTelecoVo'); // método para obtener el valor a mostrar del objeto relacionado.
+        $oDatosCampo->setArgument3('getArrayTiposTeleco'); // método con que crear la lista de opciones del Gestor objeto relacionado.
         return $oDatosCampo;
     }
 

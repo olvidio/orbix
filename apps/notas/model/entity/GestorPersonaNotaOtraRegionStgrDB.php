@@ -8,6 +8,7 @@ use core\DBConnection;
 use core\Set;
 use notas\model\EditarPersonaNota;
 use notas\model\PersonaNota;
+use src\notas\domain\entity\Nota;
 use stdClass;
 
 class GestorPersonaNotaOtraRegionStgrDB extends GestorPersonaNotaDB

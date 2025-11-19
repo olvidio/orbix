@@ -7,14 +7,14 @@ use core\ConfigGlobal;
 use core\DBConnection;
 use core\DBPropiedades;
 use notas\model\EditarPersonaNota;
-use notas\model\entity\GestorPersonaNotaDB;
 use notas\model\entity\GestorPersonaNotaDlDB;
 use notas\model\entity\GestorPersonaNotaOtraRegionStgrDB;
-use notas\model\entity\Nota;
 use personas\model\entity\TrasladoDl;
+use src\notas\domain\entity\Nota;
+use src\ubis\application\repositories\DelegacionRepository;
+use src\ubis\application\services\DelegacionUtils;
 use Tests\factories\notas\NotasFactory;
 use Tests\myTest;
-use ubis\model\entity\GestorDelegacion;
 
 class trasladosNotasTest extends myTest
 {
@@ -73,10 +73,10 @@ class trasladosNotasTest extends myTest
         // trasladar del crA a dlB
         $this->trasladar_notas($esquemaB, $esquemaA);
 
-        $gesDelegacion = new GestorDelegacion();
-        $a_mi_region_stgr = $gesDelegacion->mi_region_stgr($dlA);
+        $DelegacionRepository = new DelegacionRepository();
+        $a_mi_region_stgr = $DelegacionRepository->mi_region_stgr($dlA);
         $esquema_region_stgrA = $a_mi_region_stgr['esquema_region_stgr'];
-        $a_mi_region_stgr = $gesDelegacion->mi_region_stgr($dlB);
+        $a_mi_region_stgr = $DelegacionRepository->mi_region_stgr($dlB);
         $esquema_region_stgrB = $a_mi_region_stgr['esquema_region_stgr'];
 
         // 3.- Comprobar:
@@ -170,10 +170,10 @@ class trasladosNotasTest extends myTest
         // trasladar del crA a dlB
         $this->trasladar_notas($esquemaB, $esquemaA);
 
-        $gesDelegacion = new GestorDelegacion();
-        $a_mi_region_stgr = $gesDelegacion->mi_region_stgr($dlA);
+        $DelegacionRepository = new DelegacionRepository();
+        $a_mi_region_stgr = $DelegacionRepository->mi_region_stgr($dlA);
         $esquema_region_stgrA = $a_mi_region_stgr['esquema_region_stgr'];
-        $a_mi_region_stgr = $gesDelegacion->mi_region_stgr($dlB);
+        $a_mi_region_stgr = $DelegacionRepository->mi_region_stgr($dlB);
         $esquema_region_stgrB = $a_mi_region_stgr['esquema_region_stgr'];
 
         // 3.- Comprobar:
@@ -264,8 +264,8 @@ class trasladosNotasTest extends myTest
         $this->guardar_notas($esquemaA);
         $this->trasladar_notas($esquemaA, $esquemaB);
 
-        $gesDelegacion = new GestorDelegacion();
-        $a_mi_region_stgr = $gesDelegacion->mi_region_stgr($dlA);
+        $DelegacionRepository = new DelegacionRepository();
+        $a_mi_region_stgr = $DelegacionRepository->mi_region_stgr($dlA);
         $esquema_region_stgr = $a_mi_region_stgr['esquema_region_stgr'];
 
         // 3.- Comprobar:
@@ -611,9 +611,9 @@ class trasladosNotasTest extends myTest
     ///////////////////////////////////////////////////////////////////////
     private function guardar_notas($esquemaA)
     {
-        $gesDelegacion = new GestorDelegacion();
-        $dlA = GestorDelegacion::getDlFromSchema($esquemaA);
-        $a_mi_region_stgr = $gesDelegacion->mi_region_stgr($dlA);
+        $DelegacionRepository = new DelegacionRepository();
+        $dlA = DelegacionUtils::getDlFromSchema($esquemaA);
+        $a_mi_region_stgr = $DelegacionRepository->mi_region_stgr($dlA);
         $id_esquemaA = $a_mi_region_stgr['mi_id_schema'];
 
         $sfsv_txt = (ConfigGlobal::mi_sfsv() === 1) ? 'v' : 'f';
@@ -637,9 +637,9 @@ class trasladosNotasTest extends myTest
     private function trasladar_notas($esquemaA, $esquemaB)
     {
 
-        $gesDelegacion = new GestorDelegacion();
-        $dlA = GestorDelegacion::getDlFromSchema($esquemaA);
-        $a_mi_region_stgr = $gesDelegacion->mi_region_stgr($dlA);
+        $DelegacionRepository = new DelegacionRepository();
+        $dlA = DelegacionUtils::getDlFromSchema($esquemaA);
+        $a_mi_region_stgr = $DelegacionRepository->mi_region_stgr($dlA);
         $id_esquemaA = $a_mi_region_stgr['mi_id_schema'];
 
         $sfsv_txt = (ConfigGlobal::mi_sfsv() === 1) ? 'v' : 'f';
@@ -721,7 +721,7 @@ class trasladosNotasTest extends myTest
         $NotasFactory = new NotasFactory();
         $NotasFactory->setCount(10);
 
-        $dl = GestorDelegacion::getDlFromSchema($esquema);
+        $dl = DelegacionUtils::getDlFromSchema($esquema);
 
         $this->borrar_antes_de_crear_notas($this->id_nom, $esquema);
         $this->cPersonaNotas = $NotasFactory->create($this->id_nom, $dl);
@@ -729,7 +729,7 @@ class trasladosNotasTest extends myTest
 
     private function borrar_antes_de_crear_notas($id_nom, $esquema)
     {
-        $oDBdst = $this->setConexion($esquema.'v');
+        $oDBdst = $this->setConexion($esquema . 'v');
 
         $gesPersonaNotas = new GestorPersonaNotaDlDB();
         $gesPersonaNotas->setoDbl($oDBdst);
@@ -739,6 +739,7 @@ class trasladosNotasTest extends myTest
             $oPersonaNota->DBEliminar();
         }
     }
+
     private function conexionDst($exterior = FALSE): \PDO
     {
         $this->snew_esquema = $this->sreg_dl_dst;

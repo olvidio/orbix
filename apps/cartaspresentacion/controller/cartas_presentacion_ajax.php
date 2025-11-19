@@ -35,46 +35,6 @@ require_once("apps/core/global_object.inc");
 
 // OJO. con la variable poblacion hay conflictos al ir a la pagina del ubi. Ahora la llamo poblacion_sel
 
-/* desactivado por que no se tiene acceso al fichero de cargos:
-function llenar_dtor($oCartaPresentacion,$id_ubi) {
-	$GesCargoCl = new GestorCargoCl();
-	$cCargosCl = $GesCargoCl->getCargosCl(array('id_ubi'=>$id_ubi,'cargo'=>'d','f_cese'=>'x'),array('f_cese'=>'IS NULL'));
-	//solo deberia haber uno
-	if (!empty($cCargosCl[0])) {
-		$id_nom = $cCargosCl[0]->getId_nom();
-		$oPersona = Persona::newPersona($id_nom);
-		$pres_nom = $oPersona->getNombreApellidos();
-		$GesTelecoPersona = new GestorTelecoPersona();
-		$cTelecos = $GesTelecoPersona->getTelecos($aWhere=array('id_nom'=>$id_nom));
-		foreach ($cTelecos as $oTeleco) {
-			$tipo = $oTeleco->getTipo_teleco();
-			$num = $oTeleco->getNum_teleco();
-			switch ($tipo) {
-				case 'móvil':
-					$pres_telf = $num;
-					break;
-				case 'e-mail':
-					$pres_mail = $num;
-					break;
-			}
-		}
-		isset($pres_nom) ? $oCartaPresentacion->setPres_nom($pres_nom) : $oCartaPresentacion->setPres_nom('');
-		isset($pres_telf) ? $oCartaPresentacion->setPres_telf($pres_telf) : $oCartaPresentacion->setPres_telf('');
-		isset($pres_mail) ? $oCartaPresentacion->setPres_mail($pres_mail) : $oCartaPresentacion->setPres_mail('');
-		if ($oCartaPresentacion->DBGuardar() === false) {
-			echo _("Hay un error, no se ha guardado.");
-		}
-	} else { // En el caso de los apeaderos
-		$oCentro = new Centro($id_ubi);
-		$id_ctr_padre = $oCentro->getId_ctr_padre();
-		if (!empty($id_ctr_padre)) {
-			llenar_dtor($oCartaPresentacion,$id_ctr_padre);
-		}
-	}
-}
-*/
-
-
 $Qque_mod = (string)filter_input(INPUT_POST, 'que_mod');
 
 switch ($Qque_mod) {

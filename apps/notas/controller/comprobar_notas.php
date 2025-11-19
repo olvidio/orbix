@@ -1,9 +1,8 @@
 <?php
 
-use asignaturas\model\entity\Asignatura;
 use core\ConfigGlobal;
-use notas\model\entity\Nota;
 use src\asignaturas\application\repositories\AsignaturaRepository;
+use src\notas\domain\entity\Nota;
 use web\DateTimeLocal;
 use web\Hash;
 

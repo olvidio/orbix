@@ -7,7 +7,7 @@ use web\Desplegable;
 
 /**
  * Helper para construir desplegables (select) de Regiones
- * replicando el comportamiento legacy de GestorRegion::getListaRegiones().
+ * replicando el comportamiento legacy de getListaRegiones().
  *
  * - Muestra solo regiones activas (status = true)
  * - Ordenadas por nombre_region

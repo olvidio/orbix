@@ -26,7 +26,7 @@ $Qmod = (string)filter_input(INPUT_POST, 'mod');
 $Qnueva = (string)filter_input(INPUT_POST, 'nueva');
 $Qdoble = (string)filter_input(INPUT_POST, 'doble');
 
-$Qa_actividades = unserialize(base64_decode($Qsactividades), ['allowed_classes' => false]);
+$Qa_actividades = json_decode(core\urlsafe_b64decode($Qsactividades));
 $QoIniPlanning = unserialize(base64_decode($QsIniPlanning), ['allowed_classes' => true]);
 $QoFinPlanning = unserialize(base64_decode($QsFinPlanning), ['allowed_classes' => true]);
 

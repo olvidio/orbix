@@ -36,7 +36,6 @@ if (!empty($Qdocumentos)) {
     $Repository = new DocumentoRepository();
     foreach ($a_documentos as $s_pkey) {
         $s_pkey = strtok($s_pkey, '#');
-        //$a_pkey = unserialize(base64_decode($s_pkey),TRUE);
         $a_pkey = json_decode(base64_decode($s_pkey));
         $id_doc = $a_pkey;
         //echo $id_doc;

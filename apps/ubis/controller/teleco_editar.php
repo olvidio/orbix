@@ -36,7 +36,7 @@ if (!empty($a_sel)) { //vengo de un checkbox
     $s_pkey = explode('#', $a_sel[0]);
     // he cambiado las comillas dobles por simples. Deshago el cambio.
     $s_pkey = str_replace("'", '"', $s_pkey[0]);
-    $a_pkey = unserialize(core\urlsafe_b64decode($s_pkey), ['allowed_classes' => false]);
+    $a_pkey = json_decode(core\urlsafe_b64decode($s_pkey));
     // el scroll id es de la página anterior, hay que guardarlo allí
     $oPosicion->addParametro('id_sel', $a_sel, 1);
     $scroll_id = (integer)filter_input(INPUT_POST, 'scroll_id');
@@ -47,45 +47,38 @@ if (!empty($a_sel)) { //vengo de un checkbox
 
 switch ($Qobj_pau) {
     case 'Centro': // tipo dl pero no de la mia
-        $obj = 'ubis\\model\\entity\\TelecoCtr';
+        $repoName = 'src\\ubis\\application\\repositories\\TelecoCtrRepository';
         break;
     case 'CentroDl':
-        $obj = 'ubis\\model\\entity\\TelecoCtrDl';
+        $repoName = 'src\\ubis\\application\\repositories\\TelecoCtrDlRepository';
         break;
     case 'CentroEx':
-        $obj = 'ubis\\model\\entity\\TelecoCtrEx';
+        $repoName = 'src\\ubis\\application\\repositories\\TelecoCtrExRepository';
         break;
     case 'Casa': // tipo dl pero no de la mia
-        $obj = 'ubis\\model\\entity\\TelecoCdc';
+        $repoName = 'src\\ubis\\application\\repositories\\TelecoCdcRepository';
         break;
     case 'CasaDl':
-        $obj = 'ubis\\model\\entity\\TelecoCdcDl';
+        $repoName = 'src\\ubis\\application\\repositories\\TelecoCdcDlRepository';
         break;
     case 'CasaEx':
-        $obj = 'ubis\\model\\entity\\TelecoCdcEx';
+        $repoName = 'src\\ubis\\application\\repositories\\TelecoCdcExRepository';
         break;
 }
 
-if ($Qmod == 'nuevo') {
+if ($Qmod === 'nuevo') {
     $desc_teleco = '';
-    $tipo_teleco = '';
+    $id_tipo_teleco = '';
     $num_teleco = '';
     $observ = '';
-    $oUbi = new $obj();
-    $cDatosCampo = $oUbi->getDatosCampos();
-    $oDbl = $oUbi->getoDbl();
-    foreach ($cDatosCampo as $oDatosCampo) {
-        $camp = $oDatosCampo->getNom_camp();
-        $valor_predeterminado = $oDatosCampo->datos_campo($oDbl, 'valor');
-        $a_campos[$camp] = $valor_predeterminado;
-
-    }
 } else {
-    $oUbi = new $obj($a_pkey);
-    $desc_teleco = $oUbi->getDesc_teleco();
-    $tipo_teleco = $oUbi->getTipo_teleco();
-    $num_teleco = $oUbi->getNum_teleco();
-    $observ = $oUbi->getObserv();
+    $repo = new $repoName();
+    $TelecoUbi = $repo->findById($a_pkey);
+
+    $desc_teleco = $TelecoUbi->getDesc_teleco();
+    $id_tipo_teleco = $TelecoUbi->getId_tipo_teleco();
+    $num_teleco = $TelecoUbi->getNum_teleco();
+    $observ = $TelecoUbi->getObserv();
 }
 
 //----------------------------------Permisos según el usuario
@@ -125,13 +118,17 @@ $campos_chk = '';
 $TipoTelecoRepository = new TipoTelecoRepository();
 $aOpciones = $TipoTelecoRepository->getArrayTiposTelecoUbi();
 $oDesplegableTiposTeleco = new Desplegable();
-$oDesplegableTiposTeleco->setNombre('tipo_teleco');
-$oDesplegableTiposTeleco->setOpcion_sel($tipo_teleco);
+$oDesplegableTiposTeleco->setNombre('id_tipo_teleco');
+$oDesplegableTiposTeleco->setOpciones($aOpciones);
+$oDesplegableTiposTeleco->setOpcion_sel($id_tipo_teleco);
 $oDesplegableTiposTeleco->setAction('fnjs_actualizar_descripcion()');
 $oDesplegableTiposTeleco->setBlanco(true);
 
 $oDescTeleco = new DescTelecoRepository();
-$aOpciones = $oDescTeleco->getArrayDescTelecoUbis($tipo_teleco);
+$aOpciones = [];
+if (!empty($id_tipo_teleco)) {
+    $aOpciones = $oDescTeleco->getArrayDescTelecoUbis($id_tipo_teleco);
+}
 $oDesplegableDescTeleco = new Desplegable();
 $oDesplegableDescTeleco->setOpciones($aOpciones);
 $oDesplegableDescTeleco->setNombre('desc_teleco');
@@ -141,11 +138,11 @@ $oDesplegableDescTeleco->setBlanco(true);
 $url_actualizar = ConfigGlobal::getWeb() . '/apps/ubis/controller/teleco_ajax.php';
 $oHash1 = new Hash();
 $oHash1->setUrl($url_actualizar);
-$oHash1->setCamposForm('tipo_teleco');
+$oHash1->setCamposForm('id_tipo_teleco');
 $h_actualizar = $oHash1->linkSinVal();
 
 $oHash = new Hash();
-$oHash->setCamposForm('mod!tipo_teleco!desc_teleco!num_teleco!observ');
+$oHash->setCamposForm('mod!id_tipo_teleco!desc_teleco!num_teleco!observ');
 $oHash->setcamposNo('mod!' . $campos_chk);
 $a_camposHidden = array(
     'campos_chk' => $campos_chk,
@@ -156,7 +153,7 @@ $a_camposHidden = array(
 $oHash->setArraycamposHidden($a_camposHidden);
 
 
-$a_campos = ['obj' => $obj,
+$a_campos = ['obj' => $repoName,
     'oPosicion' => $oPosicion,
     'oHash' => $oHash,
     'oDesplegableTiposTeleco' => $oDesplegableTiposTeleco,

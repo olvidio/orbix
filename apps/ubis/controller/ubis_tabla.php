@@ -274,12 +274,12 @@ if (empty($sWhere)) {
     }
 
 } else {
-    $aWhere = unserialize(urlsafe_b64decode($sWhere), ['allowed_classes' => false]);
-    $aOperador = unserialize(urlsafe_b64decode($sOperador), ['allowed_classes' => false]);
-    $Gestor = unserialize(urlsafe_b64decode($sGestor), ['allowed_classes' => false]);
-    $aWhereD = unserialize(urlsafe_b64decode($sWhereD), ['allowed_classes' => false]);
-    $aOperadorD = unserialize(urlsafe_b64decode($sOperadorD), ['allowed_classes' => false]);
-    $GestorDir = unserialize(urlsafe_b64decode($sGestorDir), ['allowed_classes' => false]);
+    $aWhere = json_decode(core\urlsafe_b64decode($sWhere));
+    $aOperador = json_decode(core\urlsafe_b64decode($sOperador));
+    $Gestor = json_decode(core\urlsafe_b64decode($sGestor));
+    $aWhereD = json_decode(core\urlsafe_b64decode($sWhereD));
+    $aOperadorD = json_decode(core\urlsafe_b64decode($sOperadorD));
+    $GestorDir = json_decode(core\urlsafe_b64decode($sGestorDir));
 }
 
 if (empty($aWhere) && empty($aWhereD)) {
@@ -360,12 +360,12 @@ foreach ($cUbis as $key => $oUbi) {
     $a_nom[$key] = strtolower($oUbi->getNombre_ubi()?? '');
 }
 
-$sWhere = urlsafe_b64encode(serialize($aWhere));
-$sOperador = urlsafe_b64encode(serialize($aOperador));
-$sGestor = urlsafe_b64encode(serialize($Gestor));
-$sWhereD = urlsafe_b64encode(serialize($aWhereD));
-$sOperadorD = urlsafe_b64encode(serialize($aOperadorD));
-$sGestorDir = urlsafe_b64encode(serialize($GestorDir));
+$sWhere = urlsafe_b64encode(json_encode($aWhere),  JSON_THROW_ON_ERROR);
+$sOperador = urlsafe_b64encode(json_encode($aOperador),  JSON_THROW_ON_ERROR);
+$sGestor = urlsafe_b64encode(json_encode($Gestor),  JSON_THROW_ON_ERROR);
+$sWhereD = urlsafe_b64encode(json_encode($aWhereD),  JSON_THROW_ON_ERROR);
+$sOperadorD = urlsafe_b64encode(json_encode($aOperadorD),  JSON_THROW_ON_ERROR);
+$sGestorDir = urlsafe_b64encode(json_encode($GestorDir),  JSON_THROW_ON_ERROR);
 
 //si no existe la ficha, hacer una nueva	
 $nueva_ficha = '';

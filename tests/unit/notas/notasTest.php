@@ -2,9 +2,7 @@
 
 namespace Tests\unit\notas;
 
-use core\ConfigDB;
 use core\ConfigGlobal;
-use core\DBConnection;
 use Exception;
 use notas\model\EditarPersonaNota;
 use notas\model\entity\GestorPersonaNotaDB;
@@ -14,9 +12,10 @@ use notas\model\entity\PersonaNotaDB;
 use notas\model\entity\PersonaNotaDlDB;
 use notas\model\entity\PersonaNotaOtraRegionStgrDB;
 use RuntimeException;
+use src\ubis\application\repositories\DelegacionRepository;
+use src\ubis\application\services\DelegacionUtils;
 use Tests\factories\notas\NotasFactory;
 use Tests\myTest;
-use ubis\model\entity\GestorDelegacion;
 
 class notasTest extends myTest
 {
@@ -45,7 +44,7 @@ class notasTest extends myTest
         $this->expectException(RuntimeException::class);
 
         // dlB desde la que se ejecuta la operación de guardar nota.
-        $esquema =  'Pla-crPlav';
+        $esquema = 'Pla-crPlav';
         $_SESSION['session_auth']['esquema'] = $esquema;
 
         // persona de paso: id_nom negativo; esquema = -1001;
@@ -53,8 +52,8 @@ class notasTest extends myTest
         $id_schema_persona = '-1001'; // restov
         $NotasFactory = new NotasFactory();
         $NotasFactory->setCount(1);
-        $dl =  GestorDelegacion::getDlFromSchema($esquema);
-        $cPersonaNotas = $NotasFactory->create($id_nom,$dl);
+        $dl = DelegacionUtils::getDlFromSchema($esquema);
+        $cPersonaNotas = $NotasFactory->create($id_nom, $dl);
         $personaNota = $cPersonaNotas[0];
 
         $oEditarPersonaNota = new EditarPersonaNota($personaNota);
@@ -87,8 +86,8 @@ class notasTest extends myTest
         $id_schema_persona = '-1001'; // restov
         $NotasFactory = new NotasFactory();
         $NotasFactory->setCount(1);
-        $dl =  GestorDelegacion::getDlFromSchema($esquema);
-        $cPersonaNotas = $NotasFactory->create($id_nom,$dl);
+        $dl = DelegacionUtils::getDlFromSchema($esquema);
+        $cPersonaNotas = $NotasFactory->create($id_nom, $dl);
         $personaNota = $cPersonaNotas[0];
 
         $oEditarPersonaNota = new EditarPersonaNota($personaNota);
@@ -101,8 +100,8 @@ class notasTest extends myTest
         $oPersonaNota->DBCarregar(); // Importante: El PDO al hacer execute cambia los integer a string. Con esto vuelven al tipo original.
         $oPersonaNota->getPrimary_key(); // para que tenga el mismo valor que la otra
 
-        $gesDelegacion = new GestorDelegacion();
-        $a_mi_region_stgr = $gesDelegacion->mi_region_stgr();
+        $DelegacionRepository = new DelegacionRepository();
+        $a_mi_region_stgr = $DelegacionRepository->mi_region_stgr();
         $esquema_region_stgr = $a_mi_region_stgr['esquema_region_stgr'];
 
         $gesPersonaNota = new GestorPersonaNotaOtraRegionStgrDB($esquema_region_stgr);
@@ -138,8 +137,8 @@ class notasTest extends myTest
         $id_schema_persona = '-1001'; // restov
         $NotasFactory = new NotasFactory();
         $NotasFactory->setCount(1);
-        $dl =  GestorDelegacion::getDlFromSchema($esquema);
-        $cPersonaNotas = $NotasFactory->create($id_nom,$dl);
+        $dl = DelegacionUtils::getDlFromSchema($esquema);
+        $cPersonaNotas = $NotasFactory->create($id_nom, $dl);
         $personaNota = $cPersonaNotas[0];
 
         $oEditarPersonaNota = new EditarPersonaNota($personaNota);
@@ -152,8 +151,8 @@ class notasTest extends myTest
         $oPersonaNota->DBCarregar(); // Importante: El PDO al hacer execute cambia los integer a string. Con esto vuelven al tipo original.
         $oPersonaNota->getPrimary_key(); // para que tenga el mismo valor que la otra
 
-        $gesDelegacion = new GestorDelegacion();
-        $a_mi_region_stgr = $gesDelegacion->mi_region_stgr();
+        $DelegacionRepository = new DelegacionRepository();
+        $a_mi_region_stgr = $DelegacionRepository->mi_region_stgr();
         $esquema_region_stgr = $a_mi_region_stgr['esquema_region_stgr'];
 
         $gesPersonaNota = new GestorPersonaNotaOtraRegionStgrDB($esquema_region_stgr);
@@ -190,8 +189,8 @@ class notasTest extends myTest
         $id_schema_persona = 1029; // GalBelv
         $NotasFactory = new NotasFactory();
         $NotasFactory->setCount(1);
-        $dl =  GestorDelegacion::getDlFromSchema($esquema);
-        $cPersonaNotas = $NotasFactory->create($id_nom,$dl);
+        $dl = DelegacionUtils::getDlFromSchema($esquema);
+        $cPersonaNotas = $NotasFactory->create($id_nom, $dl);
         $personaNota = $cPersonaNotas[0];
 
         $oEditarPersonaNota = new EditarPersonaNota($personaNota);
@@ -204,15 +203,15 @@ class notasTest extends myTest
         $oPersonaNota->DBCarregar(); // Importante: El PDO al hacer execute cambia los integer a string. Con esto vuelven al tipo original.
         $oPersonaNota->getPrimary_key(); // para que tenga el mismo valor que la otra
 
-        $gesDelegacion = new GestorDelegacion();
-        $a_mi_region_stgr = $gesDelegacion->mi_region_stgr();
+        $DelegacionRepository = new DelegacionRepository();
+        $a_mi_region_stgr = $DelegacionRepository->mi_region_stgr();
         $esquema_region_stgr = $a_mi_region_stgr['esquema_region_stgr'];
 
         // Estoy en H-dlbv. La nota debe estar en GalBel-crGalBelv.
         // por tanto miro en la tabla padre y compruebo que el esquema es el que toca.
         $gesPersonaNota = new GestorPersonaNotaOtraRegionStgrDB($esquema_region_stgr);
         $cPersonaNota = $gesPersonaNota->getPersonaNotas(['id_nom' => $id_nom, 'id_asignatura' => $personaNota->getIdAsignatura()]);
-        if (!empty($cPersonaNota)) {
+        if ($cPersonaNota !== null) {
             $oPersonaNota2 = $cPersonaNota[0];
             if (!is_null($oPersonaNota2)) {
                 $oPersonaNota2->DBCarregar();
@@ -248,6 +247,7 @@ class notasTest extends myTest
 
         $oPersonaNotaDB->DBEliminar();
     }
+
     /**
      * Modificar nota de una persona dlA (presente en Aquinate) desde la dlB (que organiza la actividad)
      * que pertenecen a distintas regiones del stgr
@@ -259,7 +259,7 @@ class notasTest extends myTest
     public function test_modificar_nota_dl_persona_otra_region_desde_dl_stgr(): void
     {
         // dlB desde la que se ejecuta la operación de guardar nota.
-        $esquema =  'H-dlbv';
+        $esquema = 'H-dlbv';
         $_SESSION['session_auth']['esquema'] = $esquema;
         $_SESSION['session_auth']['mi_id_schema'] = 1001;
 
@@ -268,8 +268,8 @@ class notasTest extends myTest
         $id_schema_persona = 1029; // GalBelv
         $NotasFactory = new NotasFactory();
         $NotasFactory->setCount(1);
-        $dl =  GestorDelegacion::getDlFromSchema($esquema);
-        $cPersonaNotas = $NotasFactory->create($id_nom,$dl);
+        $dl = DelegacionUtils::getDlFromSchema($esquema);
+        $cPersonaNotas = $NotasFactory->create($id_nom, $dl);
         $personaNota = $cPersonaNotas[0];
 
         $oEditarPersonaNota = new EditarPersonaNota($personaNota);
@@ -281,24 +281,24 @@ class notasTest extends myTest
         // No lo compruebo porque ya está el test de guardar.
         // Modifico la Nota:
         $nota_anterior = $personaNota->getNotaNum();
-        $personaNota->setNotaNum($nota_anterior-0.5);
+        $personaNota->setNotaNum($nota_anterior - 0.5);
         $id_asignatura_real = $personaNota->getIdAsignatura();
-        $rta = $oEditarPersonaNota->editar_personaNota_para_cada_objeto_del_array($a_ObjetosPersonaNota,$id_asignatura_real);
+        $rta = $oEditarPersonaNota->editar_personaNota_para_cada_objeto_del_array($a_ObjetosPersonaNota, $id_asignatura_real);
 
 
         $oPersonaNota = $rta['nota_real'];
         $oPersonaNota->DBCarregar(); // Importante: El PDO al hacer execute cambia los integer a string. Con esto vuelven al tipo original.
         $oPersonaNota->getPrimary_key(); // para que tenga el mismo valor que la otra
 
-        $gesDelegacion = new GestorDelegacion();
-        $a_mi_region_stgr = $gesDelegacion->mi_region_stgr();
+        $DelegacionRepository = new DelegacionRepository();
+        $a_mi_region_stgr = $DelegacionRepository->mi_region_stgr();
         $esquema_region_stgr = $a_mi_region_stgr['esquema_region_stgr'];
 
         // Estoy en H-dlbv. La nota debe estar en GalBel-crGalBelv.
         // por tanto miro en la tabla padre y compruebo que el esquema es el que toca.
         $gesPersonaNota = new GestorPersonaNotaOtraRegionStgrDB($esquema_region_stgr);
         $cPersonaNota = $gesPersonaNota->getPersonaNotas(['id_nom' => $id_nom, 'id_asignatura' => $personaNota->getIdAsignatura()]);
-        if (!empty($cPersonaNota)) {
+        if ($cPersonaNota !== null) {
             $oPersonaNota2 = $cPersonaNota[0];
             if (!is_null($oPersonaNota2)) {
                 $oPersonaNota2->DBCarregar();
@@ -320,7 +320,7 @@ class notasTest extends myTest
         // por tanto miro en la tabla padre y compruebo que el esquema es el que toca.
         $gesPersonaNotDB = new GestorPersonaNotaDB();
         $cPersonaNotaDB = $gesPersonaNotDB->getPersonaNotas(['id_nom' => $id_nom, 'id_asignatura' => $personaNota->getIdAsignatura()]);
-        if (!empty($cPersonaNotaDB)) {
+        if ($cPersonaNotaDB !== null) {
             $oPersonaNotaDB = $cPersonaNotaDB[0];
             if (!is_null($oPersonaNotaDB)) {
                 $oPersonaNotaDB->DBCarregar();
@@ -339,6 +339,7 @@ class notasTest extends myTest
 
         $oPersonaNotaDB->DBEliminar();
     }
+
     /**
      * Guardar nota de una persona dlA desde la dlB (que organiza la actividad)
      * Si las dos pertenecen a la misma región del stgr
@@ -358,8 +359,8 @@ class notasTest extends myTest
         $id_schema_persona = 1006;
         $NotasFactory = new NotasFactory();
         $NotasFactory->setCount(1);
-        $dl =  GestorDelegacion::getDlFromSchema($esquema);
-        $cPersonaNotas = $NotasFactory->create($id_nom,$dl);
+        $dl = DelegacionUtils::getDlFromSchema($esquema);
+        $cPersonaNotas = $NotasFactory->create($id_nom, $dl);
         $personaNota = $cPersonaNotas[0];
 
         $oEditarPersonaNota = new EditarPersonaNota($personaNota);
@@ -376,7 +377,7 @@ class notasTest extends myTest
         // por tanto miro en la tabla padre y compruebo que el esquema es el que toca.
         $gesPersonaNota = new GestorPersonaNotaDB();
         $cPersonaNota = $gesPersonaNota->getPersonaNotas(['id_nom' => $id_nom, 'id_asignatura' => $personaNota->getIdAsignatura()]);
-        if (!empty($cPersonaNota)) {
+        if ($cPersonaNota !== null) {
             $oPersonaNota2 = $cPersonaNota[0];
             if (!is_null($oPersonaNota2)) {
                 $oPersonaNota2->DBCarregar();
@@ -417,8 +418,8 @@ class notasTest extends myTest
         $id_schema_persona = ConfigGlobal::mi_id_schema(); // El mismo que el de la _SESSION
         $NotasFactory = new NotasFactory();
         $NotasFactory->setCount(1);
-        $dl =  GestorDelegacion::getDlFromSchema($esquema);
-        $cPersonaNotas = $NotasFactory->create($id_nom,$dl);
+        $dl = DelegacionUtils::getDlFromSchema($esquema);
+        $cPersonaNotas = $NotasFactory->create($id_nom, $dl);
         $personaNota = $cPersonaNotas[0];
 
         $oEditarPersonaNota = new EditarPersonaNota($personaNota);
@@ -505,8 +506,8 @@ class notasTest extends myTest
         $id_nom = 100112345;
         $NotasFactory = new NotasFactory();
         $NotasFactory->setCount(1);
-        $dl =  GestorDelegacion::getDlFromSchema($esquema);
-        $cPersonaNotas = $NotasFactory->create($id_nom,$dl);
+        $dl = DelegacionUtils::getDlFromSchema($esquema);
+        $cPersonaNotas = $NotasFactory->create($id_nom, $dl);
         $personaNota = $cPersonaNotas[0];
 
         $oPersonaNotaDB->setId_nivel($personaNota->getIdNivel());

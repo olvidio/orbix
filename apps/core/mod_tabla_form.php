@@ -39,7 +39,7 @@ if (!empty($a_sel) && ($Qmod !== 'nuevo')) { //vengo de un checkbox (para el cas
     $Qs_pkey = explode('#', $a_sel[0]);
     // he cambiado las comillas dobles por simples. Deshago el cambio.
     $Qs_pkey = str_replace("'", '"', $Qs_pkey[0]);
-    $a_pkey = unserialize(core\urlsafe_b64decode($Qs_pkey), ['allowed_classes' => false]);
+    $a_pkey = json_decode(core\urlsafe_b64decode($Qs_pkey));
     // el scroll id es de la página anterior, hay que guardarlo allí
     $oPosicion->addParametro('id_sel', $a_sel, 1);
     $scroll_id = (integer)filter_input(INPUT_POST, 'scroll_id');

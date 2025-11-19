@@ -7,6 +7,7 @@ use planning\domain\Planning;
 use web\Hash;
 use web\Periodo;
 use function core\is_true;
+use function core\urlsafe_b64encode;
 
 /**
  * Esta página tiene la misión de realizar la llamada a calendario php;
@@ -143,9 +144,9 @@ $oHashNew->setArraycamposHidden($a_camposHidden);
 $oHashNew->setCamposForm('id_ubi');
 $param_new = $oHashNew->getParamAjax();
 
-$sactividades = base64_encode(serialize($a_actividades));
-$sIniPlanning = base64_encode(serialize($oIniPlanning));
-$sFinPlanning = base64_encode(serialize($oFinPlanning));
+$sactividades = urlsafe_b64encode(json_encode($a_actividades), JSON_THROW_ON_ERROR);
+$sIniPlanning = urlsafe_b64encode(json_encode($oIniPlanning), JSON_THROW_ON_ERROR);
+$sFinPlanning = urlsafe_b64encode(json_encode($oFinPlanning), JSON_THROW_ON_ERROR);
 
 $oHashVer = new Hash();
 $oHashVer->setUrl(ConfigGlobal::getWeb() . '/apps/planning/controller/planning_casa_ver.php');

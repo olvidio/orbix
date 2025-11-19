@@ -25,10 +25,10 @@
         }
     }
     fnjs_actualizar_descripcion = function () {
-        var tipo_teleco = $('#tipo_teleco').val();
+        var id_tipo_teleco = $('#id_tipo_teleco').val();
 
         var url = '<?= $url_actualizar ?>';
-        var parametros = 'tipo_teleco=' + tipo_teleco + '<?= $h_actualizar ?>';
+        var parametros = 'id_tipo_teleco=' + id_tipo_teleco + '<?= $h_actualizar ?>';
         $.ajax({
             url: url,
             type: 'post',

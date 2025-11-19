@@ -4,16 +4,15 @@ use actividades\model\entity\ActividadAll;
 use actividadestudios\model\entity\ActividadAsignaturaDl;
 use actividadestudios\model\entity\GestorMatricula;
 use actividadestudios\model\entity\Matricula;
-use asignaturas\model\entity\Asignatura;
 use notas\model\EditarPersonaNota;
 use notas\model\entity\Acta;
 use notas\model\entity\GestorActa;
 use notas\model\entity\GestorPersonaNotaDB;
-use notas\model\entity\Nota;
 use notas\model\entity\PersonaNotaDB;
 use notas\model\PersonaNota;
 use personas\model\entity\Persona;
 use src\asignaturas\application\repositories\AsignaturaRepository;
+use src\notas\domain\entity\Nota;
 use web\TiposActividades;
 use function core\is_true;
 

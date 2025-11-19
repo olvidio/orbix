@@ -11,6 +11,7 @@ use notas\model\entity\GestorActaTribunalDl;
 use personas\model\entity\PersonaDl;
 use src\asignaturas\application\repositories\AsignaturaRepository;
 use web\Hash;
+use function core\urlsafe_b64encode;
 
 /**
  * Esta página muestra un formulario para modificar los datos de un acta.
@@ -58,7 +59,7 @@ if (!empty($a_sel)) { //vengo de un checkbox
 $Qmod = (string)filter_input(INPUT_POST, 'mod');
 
 $Qsa_actas = (string)filter_input(INPUT_POST, 'sa_actas');
-$Qa_actas = unserialize(base64_decode($Qsa_actas), ['allowed_classes' => false]);
+$Qa_actas = json_decode(core\urlsafe_b64decode($Qsa_actas));
 $Qacta = (string)filter_input(INPUT_POST, 'acta');
 $Qnotas = (string)filter_input(INPUT_POST, 'notas');
 
@@ -243,7 +244,7 @@ if ($Qmod === 'nueva' || $notas === "nuevo") {
 //	$a_camposHidden['acta'] = $acta;
     $a_camposHidden['mod'] = '';
     $a_camposHidden['id_activ'] = $id_activ;
-    $a_camposHidden['sa_actas'] = \base64_encode(serialize($a_actas));
+    $a_camposHidden['sa_actas'] = urlsafe_b64encode(json_encode($a_actas), JSON_THROW_ON_ERROR);
     $a_camposHidden['notas'] = $notas;
 }
 $oHashActa->setArraycamposHidden($a_camposHidden);

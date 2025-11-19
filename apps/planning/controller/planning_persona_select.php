@@ -13,6 +13,7 @@ use ubis\model\entity\GestorCentroDl;
 use web\Hash;
 use web\Lista;
 use function core\is_true;
+use function core\urlsafe_b64encode;
 
 /**
  * Página de selección de las personas para las que se trazará un planning
@@ -63,10 +64,10 @@ if (isset($_POST['stack'])) {
         $Qscroll_id = $oPosicion->getParametro('scroll_id');
         $oPosicion->olvidar($stack); //limpio todos los estados hacia delante.
 
-        $aWhere = unserialize(base64_decode($QsaWhere), ['allowed_classes' => false]);
-        $aOperador = unserialize(base64_decode($QsaOperador), ['allowed_classes' => false]);
-        $aWhereCtr = unserialize(base64_decode($QsaWhereCtr), ['allowed_classes' => false]);
-        $aOperadorCtr = unserialize(base64_decode($QsaOperadorCtr), ['allowed_classes' => false]);
+        $aWhere = json_decode(core\urlsafe_b64decode($QsaWhere));
+        $aOperador = json_decode(core\urlsafe_b64decode($QsaOperador));
+        $aWhereCtr = json_decode(core\urlsafe_b64decode($QsaWhereCtr));
+        $aOperadorCtr = json_decode(core\urlsafe_b64decode($QsaOperadorCtr));
     }
 } else { //si no vengo por goto.
     $Qobj_pau = (string)filter_input(INPUT_POST, 'obj_pau');
@@ -112,10 +113,10 @@ if (isset($_POST['stack'])) {
     if (!empty($Qna)) {
         $aWhere['id_tabla'] = 'p' . $Qna;
     }
-    $QsaWhere = base64_encode(serialize($aWhere));
-    $QsaOperador = base64_encode(serialize($aOperador));
-    $QsaWhereCtr = base64_encode(serialize($aWhereCtr));
-    $QsaOperadorCtr = base64_encode(serialize($aOperadorCtr));
+    $QsaWhere = urlsafe_b64encode(json_encode($aWhere), JSON_THROW_ON_ERROR);
+    $QsaOperador = urlsafe_b64encode(json_encode($aOperador), JSON_THROW_ON_ERROR);
+    $QsaWhereCtr = urlsafe_b64encode(json_encode($aWhereCtr), JSON_THROW_ON_ERROR);
+    $QsaOperadorCtr = urlsafe_b64encode(json_encode($aOperadorCtr), JSON_THROW_ON_ERROR);
 }
 
 if (!empty($aWhereCtr)) { // si busco por centro sólo puede ser de casa

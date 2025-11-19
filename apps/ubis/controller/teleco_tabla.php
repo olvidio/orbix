@@ -5,6 +5,7 @@ use core\ViewPhtml;
 use web\Hash;
 use web\Lista;
 use function core\is_true;
+use function core\urlsafe_b64encode;
 
 // INICIO Cabecera global de URL de controlador *********************************
 require_once("apps/core/global_header.inc");
@@ -40,33 +41,33 @@ if (isset($_POST['stack'])) {
 
 switch ($Qobj_pau) {
     case 'Casa': // tipo dl pero no de la mia
-        $obj_ges_tel = 'ubis\\model\\entity\\GestorTelecoCdc';
+        $repoTeleco = 'src\\ubis\\application\\repositories\\TelecoCdcRepository';
         $obj_ubi = 'ubis\\model\\entity\\Casa';
         break;
     case 'CasaDl':
-        $obj_ges_tel = 'ubis\\model\\entity\\GestorTelecoCdcDl';
+        $repoTeleco = 'src\\ubis\\application\\repositories\\TelecoCdcDlRepository';
         $obj_ubi = 'ubis\\model\\entity\\CasaDl';
         break;
     case 'CasaEx':
-        $obj_ges_tel = 'ubis\\model\\entity\\GestorTelecoCdcEx';
+        $repoTeleco = 'src\\ubis\\application\\repositories\\TelecoCdcExRepository';
         $obj_ubi = 'ubis\\model\\entity\\CentroEx';
         break;
     case 'Centro': // tipo dl pero no de la mia
-        $obj_ges_tel = 'ubis\\model\\entity\\GestorTelecoCtr';
+        $repoTeleco = 'src\\ubis\\application\\repositories\\TelecoCtrRepository';
         $obj_ubi = 'ubis\\model\\entity\\Centro';
         break;
     case 'CentroDl':
-        $obj_ges_tel = 'ubis\\model\\entity\\GestorTelecoCtrDl';
+        $repoTeleco = 'src\\ubis\\application\\repositories\\TelecoCtrDlRepository';
         $obj_ubi = 'ubis\\model\\entity\\CentroDl';
         break;
     case 'CentroEx':
-        $obj_ges_tel = 'ubis\\model\\entity\\GestorTelecoCtrEx';
+        $repoTeleco = 'src\\ubis\\application\\repositories\\TelecoCtrExRepository';
         $obj_ubi = 'ubis\\model\\entity\\CentroEx';
         break;
 }
 
-$oLista = new $obj_ges_tel();
-$Coleccion = $oLista->getTelecos(array('id_ubi' => $Qid_ubi));
+$repoTeleco = new $repoTeleco();
+$Coleccion = $repoTeleco->getTelecos(['id_ubi' => $Qid_ubi]);
 
 $botones = 0;
 /*
@@ -104,26 +105,48 @@ $a_valores = [];
 $c = 0;
 foreach ($Coleccion as $oFila) {
     $v = 0;
-    $pks = core\urlsafe_b64encode(serialize($oFila->getPrimary_key()));
-    //$pks=str_replace('"','\"',$pks);
-    //echo "sel: $pks<br>";
+    $pks1 = 'get' . ucfirst($oFila->getPrimary_key());
+    $val_pks = $oFila->$pks1();
+    $pks = urlsafe_b64encode(json_encode($val_pks, JSON_THROW_ON_ERROR));
     $a_valores[$c]['sel'] = $pks;
     foreach ($oFila->getDatosCampos() as $oDatosCampo) {
-        if ($c == 0) $a_cabeceras[] = ucfirst($oDatosCampo->getEtiqueta());
+        if ($c == 0) {
+            $a_cabeceras[] = ucfirst($oDatosCampo->getEtiqueta());
+        }
         $v++;
-        $nom_camp = $oDatosCampo->getNom_camp();
-        $valor_camp = $oFila->$nom_camp;
+        $metodo = $oDatosCampo->getMetodoGet();
+        // si el metodo obtiene un valueobject
+        if (substr($metodo, -2) === 'Vo') {
+            $valor_camp = $oFila->$metodo()->value();
+        } else {
+            $valor_camp = $oFila->$metodo();
+        }
+        if (!$valor_camp) {
+            $a_valores[$c][$v] = '';
+            continue;
+        }
         $var_1 = $oDatosCampo->getArgument();
         $var_2 = $oDatosCampo->getArgument2();
         switch ($oDatosCampo->getTipo()) {
+            case "fecha":
+                $a_valores[$c][$v] = $valor_camp->getFromLocal();
+                break;
             case "array":
-                $a_valores[$c][$v] = $var_1[$valor_camp];
+                $lista = $oDatosCampo->getLista();
+                $a_valores[$c][$v] = $lista[$valor_camp];
                 break;
             case 'depende':
             case 'opciones':
-                $oRelacionado = new $var_1($valor_camp);
-                $var = $oRelacionado->$var_2();
-                if (empty($var)) $var = $valor_camp;
+                $RepoRelacionado = new $var_1();
+                $oRelacionado = $RepoRelacionado->findById($valor_camp);
+                if ($oRelacionado !== null) {
+                    $var = $oRelacionado->$var_2();
+                    if (empty($var)) {
+                        $var = $valor_camp;
+                    }
+                } else {
+                    $var = '?';
+                }
                 $a_valores[$c][$v] = $var;
                 break;
             case "check":

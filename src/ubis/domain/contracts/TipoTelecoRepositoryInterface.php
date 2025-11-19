@@ -21,6 +21,7 @@ interface TipoTelecoRepositoryInterface
 
     public function getArrayTiposTelecoPersona(): array;
     public function getArrayTiposTelecoUbi(): array;
+    public function getArrayTiposTeleco(): array;
 
 /* -------------------- GESTOR BASE ---------------------------------------- */
 

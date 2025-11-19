@@ -183,10 +183,10 @@ if ($miRolePau == Role::PAU_NOM) { //persona
             $aWhere['sacd'] = 't';
         }
     } else {
-        $aWhere = unserialize(core\urlsafe_b64decode($sWhere), ['allowed_classes' => false]);
-        $aOperador = unserialize(core\urlsafe_b64decode($sOperador), ['allowed_classes' => false]);
-        $aWhereCtr = unserialize(core\urlsafe_b64decode($sWhereCtr), ['allowed_classes' => false]);
-        $aOperadorCtr = unserialize(core\urlsafe_b64decode($sOperadorCtr), ['allowed_classes' => false]);
+        $aWhere = json_decode(core\urlsafe_b64decode($sWhere));
+        $aOperador = json_decode(core\urlsafe_b64decode($sOperador));
+        $aWhereCtr = json_decode(core\urlsafe_b64decode($sWhereCtr));
+        $aOperadorCtr = json_decode(core\urlsafe_b64decode($sOperadorCtr));
     }
 
     if (!empty($aWhereCtr)) {
@@ -275,10 +275,10 @@ switch ($tabla) {
         exit (_("No se encuentra ningún centro con esta condición"));
 }
 
-$sWhere = core\urlsafe_b64encode(serialize($aWhere));
-$sOperador = core\urlsafe_b64encode(serialize($aOperador));
-$sWhereCtr = core\urlsafe_b64encode(serialize($aWhereCtr));
-$sOperadorCtr = core\urlsafe_b64encode(serialize($aOperadorCtr));
+$sWhere = core\urlsafe_b64encode(json_encode($aWhere),  JSON_THROW_ON_ERROR);
+$sOperador = core\urlsafe_b64encode(json_encode($aOperador),  JSON_THROW_ON_ERROR);
+$sWhereCtr = core\urlsafe_b64encode(json_encode($aWhereCtr),  JSON_THROW_ON_ERROR);
+$sOperadorCtr = core\urlsafe_b64encode(json_encode($aOperadorCtr),  JSON_THROW_ON_ERROR);
 
 $a_botones = [];
 $script = [];
