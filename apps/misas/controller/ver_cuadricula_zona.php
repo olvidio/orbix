@@ -57,7 +57,30 @@ if ($QTipoPlantilla!='p')
         echo "\n" . $PreferenciaRepository->getErrorTxt();
     }
 }
+?>
 
+<STYLE>
+    .verdeclaro {
+      background-color: #d1e7dd;    }
+    .verde {
+      background-color: #00ff00;    }
+    .rojoclaro {
+      background-color: #f8d7da;    }
+    .rojo {
+      background-color: #ff0000;    }
+    .amarilloclaro {
+      background-color: #ffffaa;    }
+    .amarillo {
+      background-color: #ffff00;    }
+    .violetaclaro {
+      background-color: #e8a0e8;    }
+    .azulclaro2 {
+      background-color: #80e0e0;    }
+    .azulclaro {
+      background-color: #a0f0f0;    }
+</STYLE>
+
+<?php
 //Busco los sacd de la zona, para señalar si en la plantilla o en plan hay alguno que no es de la zona.
 $aWhere = [];
 $aWhere['id_zona'] = $Qid_zona;
@@ -394,6 +417,8 @@ foreach ($cEncargosZona as $oEncargo) {
             exit(_("sólo debería haber uno").'-'.$inicio_dia.'-'.$fin_dia.'-'.$id_enc);
         }
 
+        $color='';
+        $texto='';
         if (count($cEncargosDia) === 1) {
             $oEncargoDia = $cEncargosDia[0];
             $id_nom = $oEncargoDia->getId_nom();
@@ -403,8 +428,6 @@ foreach ($cEncargosZona as $oEncargo) {
                 $hora_ini='';
             $InicialesSacd = new InicialesSacd();
             $iniciales=$InicialesSacd->iniciales($id_nom);
-            $color='';
-            $texto='';
             if (trim($QTipoPlantilla)==EncargoDia::PLAN_DE_MISAS)
             {
                 if ($estado==EncargoDia::STATUS_PROPUESTA)
@@ -445,7 +468,7 @@ foreach ($cEncargosZona as $oEncargo) {
             $data_cols["$num_dia"] = $iniciales;
 //            $data_cols[$num_dia] = $iniciales;
         }
-        echo '<TD>'.$iniciales.'</TD>';
+        echo '<TD class='.$color.'>'.$iniciales.'</TD>';
 
         if (($QTipoPlantilla == EncargoDia::PLANTILLA_SEMANAL_TRES) || ($QTipoPlantilla == EncargoDia::PLANTILLA_DOMINGOS_TRES) || ($QTipoPlantilla == EncargoDia::PLANTILLA_MENSUAL_TRES)) {
             $data_cols2["$num_dia"] = " -- ";

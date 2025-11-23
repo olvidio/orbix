@@ -86,9 +86,6 @@ $columns_sacd = [
     ["id" => "sacerdote", "name" => "Sacerdote", "field" => "sacerdote", "width" => 150, "cssClass" => "cell-title"],
 ];
 
-//FALTA periode propera setmana i proper mes
-//Funciona solament quan es dona data d'inici i final
-
 $oInicio = new DateTimeLocal($sInicio);
 $oFin = new DateTimeLocal($sFin);
 $interval = new DateInterval('P1D');

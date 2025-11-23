@@ -60,26 +60,11 @@ if (!empty($aRoles[$id_role]) && ($aRoles[$id_role] === 'p-sacd')) {
     }
 }
 
-$id_nom_jefe = '';
+echo 'mi_id_usuario: '.ConfigGlobal::mi_id_usuario().'<br>';
+echo 'id_nom_jefe: '.$id_nom_jefe.'<br>';
+echo 'id_role: '.$id_role.'<br>';
+echo 'role: '.$aRoles[$id_role].'<br>';
 
-$UsuarioRepository = new UsuarioRepository();
-$oMiUsuario = $UsuarioRepository->findById(ConfigGlobal::mi_id_usuario());
-$id_role = $oMiUsuario->getId_role();
-
-$RoleRepository = new RoleRepository();
-$aRoles = $RoleRepository->getArrayRoles();
-
-if (!empty($aRoles[$id_role]) && ($aRoles[$id_role] === 'p-sacd')) {
-
-    if ($_SESSION['oConfig']->is_jefeCalendario()) {
-        $id_nom_jefe = '';
-    } else {
-        $id_nom_jefe = $oMiUsuario->getId_pauAsString();
-        if (empty($id_nom_jefe)) {
-            exit(_("No tiene permiso para ver esta página"));
-        }
-    }
-}
 
 $oGestorZona = new GestorZona();
 $aOpciones = $oGestorZona->getArrayZonas($id_nom_jefe);

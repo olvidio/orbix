@@ -1,0 +1,67 @@
+<div id="div_select_zona" class="no_print">
+    <table>
+        <tr>
+            <th class=titulo_inv colspan=6>
+                {{ "plan de misas de un centro" }}
+            </th>
+        </tr>
+        <tr>
+            <td>
+                {{ "Periodo:"|trans|capitalize }}:&nbsp;&nbsp;&nbsp;
+            </td>
+            {{ oFormP.getTd()|raw }}   
+        </tr>
+    </table>
+</div>
+
+
+<br>
+<div id="div_cuadricula">
+</div>
+
+<script>
+    fnjs_buscar_plan_ctr = function () {
+        let id_zona = $('#id_zona').val();
+            let url = '{{ url_buscar_plan_ctr }}';
+
+        if (id_zona) {
+            let parametros = 'id_zona=' + id_zona + '{{ h_buscar_plan_ctr|raw }}';
+            
+            $.ajax({
+                url: url,
+                type: 'post',
+                data: parametros,
+                dataType: 'html'
+            })
+                .done(function (rta_txt) {
+                $('#main').html(rta_txt);
+            });
+        }
+    }
+
+    fnjs_ver_plan_ctr = function () {
+        let id_ubi = '{{ id_ubi }}';
+        
+        if (id_ubi) {
+            let url = '{{ url_ver_plan_ctr }}';
+    	    var periodo=$('#periodo').val();
+    	    var empiezamax=$('#empiezamax').val();
+    	    var empiezamin=$('#empiezamin').val();
+
+            let parametros = 'id_zona=&id_ubi=' + id_ubi + '&periodo=' + periodo + '&empiezamin=' + empiezamin + '&empiezamax=' + empiezamax + '{{ h_plan_sacd|raw }}';
+            $.ajax({
+                url: url,
+                type: 'post',
+                data: parametros,
+                dataType: 'html'
+            })
+                .done(function (rta_txt) {
+                    $('#div_cuadricula').html(rta_txt);
+                });
+        }
+    }
+	$(document).ready($('#periodo').change(function(){funjs_activar_fecha();fnjs_ver_plan_ctr();}));
+	$(document).ready($('#empiezamin').change(function(){funjs_activar_fecha();fnjs_ver_plan_ctr();}));
+	$(document).ready($('#empiezamax').change(function(){funjs_activar_fecha();fnjs_ver_plan_ctr();}));
+    fnjs_ver_plan_ctr();
+</script>
