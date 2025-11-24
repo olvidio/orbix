@@ -244,7 +244,7 @@ class Matricula extends ClasePropiedades
                 }
             }
         }
-        $this->setAllAtributes($aDades);
+        $this->setAllAttributes($aDades);
         return true;
     }
 
@@ -277,7 +277,7 @@ class Matricula extends ClasePropiedades
                     if ($aDades === FALSE) {
                         $this->setNullAllAtributes();
                     } else {
-                        $this->setAllAtributes($aDades);
+                        $this->setAllAttributes($aDades);
                     }
             }
             return true;
@@ -310,7 +310,7 @@ class Matricula extends ClasePropiedades
      *
      * @param array $aDades
      */
-    function setAllAtributes(array $aDades)
+    function setAllAttributes(array $aDades)
     {
         if (!is_array($aDades)) return;
         if (array_key_exists('id_schema', $aDades)) $this->setId_schema($aDades['id_schema']);

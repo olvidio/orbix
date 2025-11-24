@@ -4,7 +4,7 @@
 
 use encargossacd\model\entity\Encargo;
 use Illuminate\Http\JsonResponse;
-use ubis\model\entity\Ubi;
+use src\ubis\domain\entity\Ubi;
 
 require_once("apps/core/global_header.inc");
 // Archivos requeridos por esta url **********************************************

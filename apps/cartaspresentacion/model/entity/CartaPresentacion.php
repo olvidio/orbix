@@ -197,7 +197,7 @@ class CartaPresentacion extends ClasePropiedades
                 }
             }
         }
-        $this->setAllAtributes($aDades);
+        $this->setAllAttributes($aDades);
         return TRUE;
     }
 
@@ -230,7 +230,7 @@ class CartaPresentacion extends ClasePropiedades
                     if ($aDades === FALSE) {
                         $this->setNullAllAtributes();
                     } else {
-                        $this->setAllAtributes($aDades);
+                        $this->setAllAttributes($aDades);
                     }
             }
             return TRUE;
@@ -263,7 +263,7 @@ class CartaPresentacion extends ClasePropiedades
      *
      * @param array $aDades
      */
-    function setAllAtributes(array $aDades)
+    function setAllAttributes(array $aDades)
     {
         if (!is_array($aDades)) return;
         if (array_key_exists('id_direccion', $aDades)) $this->setId_direccion($aDades['id_direccion']);

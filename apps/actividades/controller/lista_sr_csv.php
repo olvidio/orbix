@@ -15,9 +15,9 @@
 use actividades\model\entity\GestorActividad;
 use actividadescentro\model\entity\GestorCentroEncargado;
 use core\ConfigGlobal;
+use src\ubis\application\repositories\CasaRepository;
 use src\usuarios\application\repositories\PreferenciaRepository;
 use src\usuarios\domain\entity\Preferencia;
-use ubis\model\entity\Casa;
 use web\Lista;
 use web\Periodo;
 use web\TiposActividades;
@@ -205,16 +205,16 @@ foreach ($cActividades as $oActividad) {
     $f_ini = $oActividad->getF_ini()->getFromLocal();
     $f_fin = $oActividad->getF_fin()->getFromLocal();
 
-    $oUbi = new Casa($id_ubi);
+    $oUbi = (new CasaRepository())->findById($id_ubi);
 
     $nombre_ubi = $oUbi->getNombre_ubi();
-    if (is_true($oUbi->getSv())) {
+    if (is_true($oUbi->isSv())) {
         $comun = "sv";
     }
-    if (is_true($oUbi->getSf())) {
+    if (is_true($oUbi->isSf())) {
         $comun = "sf";
     }
-    if ((is_true($oUbi->getSv())) and (is_true($oUbi->getSf()))) {
+    if ((is_true($oUbi->isSv())) and (is_true($oUbi->isSf()))) {
         $comun = "comun";
     }
 

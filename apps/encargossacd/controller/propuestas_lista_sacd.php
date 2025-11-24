@@ -9,9 +9,8 @@ use encargossacd\model\entity\GestorPropuestaEncargoSacdHorario;
 use encargossacd\model\entity\GestorPropuestaEncargosSacd;
 use personas\model\entity\GestorPersonaDl;
 use personas\model\entity\PersonaDl;
-use web\DateTimeLocal;
-use ubis\model\entity\CentroDl;
-use ubis\model\entity\CentroEllas;
+use src\ubis\application\repositories\CentroDlRepository;
+use src\ubis\application\repositories\CentroEllasRepository;
 
 /**
  * Esta página muestra los encargos de un sacd.
@@ -130,9 +129,11 @@ foreach ($cPersonas as $oPersona) {
         if (!empty($id_ubi)) { // en algunos encargos no hay ubi
             //$oUbi = new Centro($id_ubi);
             if (substr($id_ubi, 0, 1) == 2) {
-                $oUbi = new CentroEllas($id_ubi);
+                $CentroEllasRepository = new CentroEllasRepository();
+                $oUbi = $CentroEllasRepository->findById($id_ubi);
             } else {
-                $oUbi = new CentroDl($id_ubi);
+                $CentroDlRepository = new CentroDlRepository();
+                $oUbi = $CentroDlRepository->findById($id_ubi);
             }
             $nombre_ubi = $oUbi->getNombre_ubi();
         } else {

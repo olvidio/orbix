@@ -4,7 +4,7 @@
 // INICIO Cabecera global de URL de controlador *********************************
 use actividades\model\entity\GestorActividad;
 use core\ConfigGlobal;
-use ubis\model\entity\Ubi;
+use src\ubis\domain\entity\Ubi;
 use web\ContestarJson;
 use web\Periodo;
 

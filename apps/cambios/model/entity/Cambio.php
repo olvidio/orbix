@@ -16,8 +16,8 @@ use JsonException;
 use personas\model\entity\PersonaSacd;
 use procesos\model\entity\GestorActividadFase;
 use src\actividades\application\repositories\RepeticionRepository;
+use src\ubis\domain\entity\Ubi;
 use stdClass;
-use ubis\model\entity\Ubi;
 use web\DateTimeLocal;
 use web\NullDateTimeLocal;
 use function core\is_true;
@@ -305,7 +305,7 @@ class Cambio extends ClasePropiedades
             $id_seq = $nom_tabla . "_id_item_cambio_seq";
             $this->iid_item_cambio = $oDbl->lastInsertId($id_seq);
         }
-        $this->setAllAtributes($aDades);
+        $this->setAllAttributes($aDades);
         // Creo que solo hay que disparar el generador de avisos en las dl que tengan el módulo.
         if (ConfigGlobal::is_app_installed('cambios')) {
             // Para el caso de poner anotado, no debo disparar el generador de avisos.
@@ -345,7 +345,7 @@ class Cambio extends ClasePropiedades
                     if ($aDades === FALSE) {
                         $this->setNullAllAtributes();
                     } else {
-                        $this->setAllAtributes($aDades);
+                        $this->setAllAttributes($aDades);
                     }
             }
             return TRUE;
@@ -687,7 +687,7 @@ class Cambio extends ClasePropiedades
      *
      * @param array $aDades
      */
-    function setAllAtributes(array $aDades, $convert = FALSE)
+    function setAllAttributes(array $aDades, $convert = FALSE)
     {
         if (!is_array($aDades)) return;
         if (array_key_exists('id_schema', $aDades)) $this->setId_schema($aDades['id_schema']);

@@ -13,6 +13,7 @@
 use actividadplazas\model\entity\GestorActividadPlazas;
 use core\ConfigGlobal;
 use core\ViewPhtml;
+use src\ubis\domain\entity\Ubi;
 use web\Hash;
 use web\Periodo;
 use src\ubis\application\repositories\DelegacionRepository;
@@ -149,7 +150,7 @@ foreach ($cActividades as $oActividad) {
     $plazas_totales = $oActividad->getPlazas();
     if (empty($plazas_totales)) {
         $id_ubi = $oActividad->getId_ubi();
-        $oCasa = ubis\model\entity\Ubi::NewUbi($id_ubi);
+        $oCasa = Ubi::NewUbi($id_ubi);
         // Si la casa es un ctr de otra dl, no sé las plazas
         if (method_exists($oCasa, 'getPlazas')) {
             $plazas_totales = $oCasa->getPlazas();

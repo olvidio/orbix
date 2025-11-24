@@ -8,9 +8,9 @@ use encargossacd\model\entity\GestorEncargoSacd;
 use encargossacd\model\entity\GestorEncargoSacdHorario;
 use encargossacd\model\entity\GestorEncargoTipo;
 use personas\model\entity\GestorPersona;
+use src\ubis\application\repositories\CentroDlRepository;
 use web\Desplegable;
 use web\Hash;
-use ubis\model\entity\CentroDl;
 
 /**
  * Esta página muestra la ficha de atención sacerdotal de un centro. Se inserta en ctr_ficha.php
@@ -40,8 +40,9 @@ $GesEncargoTipo = new GestorEncargoTipo();
 list($chk_prelatura, $chk_de_paso, $chk_sssc, $oDesplSacd) = getDesplegableSacdyCheckBox($Qseleccion_sacd);
 
 /* Miro el tipo de ctr. Si es el de oficiales dl, no pongo titular ni suplente. */
-$oCentro = new CentroDl($Qid_ubi);
-$tipo_centro = $oCentro->getTipo_ctr();
+$CentroDlRepository = new CentroDlRepository();
+$oCentroDl = $CentroDlRepository->findById($Qid_ubi);
+$tipo_centro = $oCentroDl->getTipo_ctr();
 
 $oEncargoTipo = new EncargoTipo();
 

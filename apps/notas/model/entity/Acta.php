@@ -274,7 +274,7 @@ class Acta extends ClasePropiedades
                 }
             }
         }
-        $this->setAllAtributes($aDades);
+        $this->setAllAttributes($aDades);
         return true;
     }
 
@@ -341,7 +341,7 @@ class Acta extends ClasePropiedades
                     if ($aDades === FALSE) {
                         $this->setNullAllAtributes();
                     } else {
-                        $this->setAllAtributes($aDades);
+                        $this->setAllAttributes($aDades);
                     }
             }
             return true;
@@ -398,7 +398,7 @@ class Acta extends ClasePropiedades
             if ($aDades === FALSE) {
                 $this->setNullAllAtributes();
             } else {
-                $this->setAllAtributes($aDades);
+                $this->setAllAttributes($aDades);
             }
             return true;
         } else {
@@ -430,7 +430,7 @@ class Acta extends ClasePropiedades
      *
      * @param array $aDades
      */
-    function setAllAtributes(array $aDades, $convert = FALSE)
+    function setAllAttributes(array $aDades, $convert = FALSE)
     {
         if (!is_array($aDades)) return;
         if (array_key_exists('id_schema', $aDades)) $this->setId_schema($aDades['id_schema']);

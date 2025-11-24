@@ -353,7 +353,7 @@ class AsistentePub extends ClasePropiedades
                 $shortClassName = (new ReflectionClass($this))->getShortName();
                 $oGestorCanvis->addCanvi($shortClassName, 'UPDATE', $this->iid_activ, $aDades, $this->aDadesActuals);
             }
-            $this->setAllAtributes($aDades);
+            $this->setAllAttributes($aDades);
         } else {
             // INSERT
             array_unshift($aDades, $this->iid_activ, $this->iid_nom);
@@ -381,7 +381,7 @@ class AsistentePub extends ClasePropiedades
             }
             $aDadesLast = $oDblSt->fetch(\PDO::FETCH_ASSOC);
             $this->aDades = $aDadesLast;
-            $this->setAllAtributes($aDadesLast);
+            $this->setAllAttributes($aDadesLast);
             // anotar cambio.
             // Aunque no tenga el módulo de 'cambios', quizá otra dl si lo tenga.
             // Anoto el cambio si o si.
@@ -424,7 +424,7 @@ class AsistentePub extends ClasePropiedades
                     if ($aDades === FALSE) {
                         $this->setNullAllAtributes();
                     } else {
-                        $this->setAllAtributes($aDades);
+                        $this->setAllAttributes($aDades);
                     }
             }
             return true;
@@ -466,7 +466,7 @@ class AsistentePub extends ClasePropiedades
      *
      * @param array $aDades
      */
-    function setAllAtributes(array $aDades)
+    function setAllAttributes(array $aDades)
     {
         if (!is_array($aDades)) return;
         if (array_key_exists('id_schema', $aDades)) $this->setId_schema($aDades['id_schema']);

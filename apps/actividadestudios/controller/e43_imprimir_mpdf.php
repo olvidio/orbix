@@ -1,6 +1,7 @@
 <?php
 // INICIO Cabecera global de URL de controlador *********************************
 use core\ConfigGlobal;
+use src\ubis\domain\entity\Ubi;
 
 require_once("apps/core/global_header.inc");
 // Archivos requeridos por esta url **********************************************
@@ -29,7 +30,7 @@ $nom_activ = $oActividad->getNom_activ();
 $id_ubi = $oActividad->getId_ubi();
 $f_ini = $oActividad->getF_ini()->getFromLocal();
 $f_fin = $oActividad->getF_fin()->getFromLocal();
-$oUbi = ubis\model\entity\Ubi::NewUbi($id_ubi);
+$oUbi = Ubi::NewUbi($id_ubi);
 $lugar = $oUbi->getNombre_ubi();
 
 $txt_actividad = "$lugar, $f_ini-$f_fin";

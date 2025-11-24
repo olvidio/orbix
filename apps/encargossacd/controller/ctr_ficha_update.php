@@ -4,9 +4,9 @@ use encargossacd\model\entity\Encargo;
 use encargossacd\model\entity\EncargoTipo;
 use encargossacd\model\entity\GestorEncargoSacd;
 use encargossacd\model\entity\GestorEncargoTipo;
+use src\ubis\application\repositories\CentroDlRepository;
+use src\ubis\application\repositories\CentroEllasRepository;
 use web\DateTimeLocal;
-use ubis\model\entity\CentroDl;
-use ubis\model\entity\CentroEllas;
 
 /**
  * Esta página actualiza la base de datos de los encargos.
@@ -79,7 +79,8 @@ switch ($Qmod) {
         $Qid_ubi_txt = (string)$Qid_ubi;
         if ($Qid_ubi_txt[0] == 2) { // sf
             $sf_sv = 2;
-            $oCentroSf = new CentroEllas($Qid_ubi);
+            $CentroEllasRepository = new CentroEllasRepository();
+            $oCentroSf = $CentroEllasRepository->findById($Qid_ubi);
             $nombre_ubi = $oCentroSf->getNombre_ubi();
             $tipo_ctr = $oCentroSf->getTipo_ctr();
             switch ($tipo_ctr) {
@@ -92,7 +93,8 @@ switch ($Qmod) {
             }
         } elseif ($Qid_ubi_txt[0] == 1) { //sv
             $sf_sv = 1;
-            $oCentroDl = new CentroDl($Qid_ubi);
+            $CentroDlRepository = new CentroDlRepository();
+            $oCentroDl = $CentroDlRepository->findById($Qid_ubi);
             $nombre_ubi = $oCentroDl->getNombre_ubi();
             $tipo_ctr = $oCentroDl->getTipo_ctr();
             switch ($tipo_ctr) {

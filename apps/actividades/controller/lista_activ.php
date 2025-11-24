@@ -32,11 +32,11 @@ use actividades\model\entity\GestorActividad;
 use actividadescentro\model\entity\GestorCentroEncargado;
 use actividadtarifas\model\entity\TipoTarifa;
 use core\ConfigGlobal;
+use src\ubis\application\repositories\CasaRepository;
 use web\Hash;
 use web\Lista;
 use web\Periodo;
 use web\TiposActividades;
-use ubis\model\entity\Casa;
 use function core\is_true;
 
 require_once("apps/core/global_header.inc");
@@ -61,7 +61,7 @@ if (isset($_POST['stack'])) {
 
 //Si vengo de vuelta con el parámetro 'continuar', los datos no están en el POST,
 // sino en $Posicion. Le paso la referecia del stack donde está la información.
-if (!empty($Qcontinuar) && $Qcontinuar == 'si' && ($QGstack != '')) {
+if (!empty($Qcontinuar) && $Qcontinuar === 'si' && ($QGstack != '')) {
     $oPosicion->goStack($QGstack);
 
     $Qque = $oPosicion->getParametro('que');
@@ -160,7 +160,7 @@ if (is_array($Qstatus)) {
 }
 // Id tipo actividad
 if (empty($Qid_tipo_activ)) {
-    if (($Qque == 'list_activ_inv_sg') || ($Qque == 'list_activ_sr')) {
+    if (($Qque === 'list_activ_inv_sg') || ($Qque === 'list_activ_sr')) {
         $codi_activ_v = [];
         foreach ($Qseccion as $seccion_temp) {
             foreach ($Qasist as $asist_temp) {
@@ -192,7 +192,7 @@ if (empty($Qid_tipo_activ)) {
         $oTipoActiv->setAsistentesText($sasistentes);
         $oTipoActiv->setActividadText($sactividad);
         $id_tipo_activ = $oTipoActiv->getId_tipo_activ();
-        if ($id_tipo_activ != '......') {
+        if ($id_tipo_activ !== '......') {
             $aWhere['id_tipo_activ'] = "^$id_tipo_activ";
             $aOperador['id_tipo_activ'] = '~';
         }
@@ -202,7 +202,7 @@ if (empty($Qid_tipo_activ)) {
     $ssfsv = $oTipoActiv->getSfsvText();
     $sasistentes = $oTipoActiv->getAsistentesText();
     $sactividad = $oTipoActiv->getActividadText();
-    if ($Qid_tipo_activ != '......') {
+    if ($Qid_tipo_activ !== '......') {
         $aWhere['id_tipo_activ'] = "^$Qid_tipo_activ";
         $aOperador['id_tipo_activ'] = '~';
     }
@@ -223,7 +223,7 @@ $oPeriodo->setPeriodo($Qperiodo);
 $inicioIso = $oPeriodo->getF_ini_iso();
 $finIso = $oPeriodo->getF_fin_iso();
 // periodo.
-if (!empty($Qperiodo) && $Qperiodo == 'desdeHoy') {
+if (!empty($Qperiodo) && $Qperiodo === 'desdeHoy') {
     $aWhere['f_fin'] = "'$inicioIso','$finIso'";
     $aOperador['f_fin'] = 'BETWEEN';
 } else {
@@ -240,7 +240,7 @@ $GesActividades = new GestorActividad();
 $cActividades = $GesActividades->getActividades($aWhere, $aOperador);
 
 // Titulo	
-if (($Qque == 'list_activ_inv_sg') || ($Qque == 'list_activ_sr')) {
+if (($Qque === 'list_active_inv_sg') || ($Qque === 'list_activ_sr')) {
     /*dicho paràmetro le viene del formulario que_lista_activ_sg.php
     o del que_lista_activ_sr*/
     $titulo = (string)filter_input(INPUT_POST, 'titulo');
@@ -251,9 +251,9 @@ if (($Qque == 'list_activ_inv_sg') || ($Qque == 'list_activ_sr')) {
 
 
 // Ver hora si...
-if (($Qque == "list_activ_compl")
-    || ($Qque == "list_activ_inv_sg")
-    || ($Qque == "list_activ_sr")
+if (($Qque === "list_activ_compl")
+    || ($Qque === "list_activ_inv_sg")
+    || ($Qque === "list_activ_sr")
     || ($_SESSION['oPerm']->have_perm_oficina('vcsd'))
     || ($_SESSION['oPerm']->have_perm_oficina('des'))
 ) {
@@ -263,8 +263,8 @@ if (($Qque == "list_activ_compl")
 }
 // ver id_tarifa y sacd si...
 if (!(($_SESSION['oPerm']->have_perm_oficina('sg'))
-    and ($Qque == "list_activ_inv_sg")
-    and !($_SESSION['oPerm']->have_perm_oficina('admin')))) {
+    && ($Qque === "list_activ_inv_sg")
+    &&  !($_SESSION['oPerm']->have_perm_oficina('admin')))) {
     $ver_tarifa = 1;
     $ver_sacd = 1;
 } else {
@@ -272,7 +272,7 @@ if (!(($_SESSION['oPerm']->have_perm_oficina('sg'))
     $ver_sacd = 0;
 }
 $a_cabeceras = [];
-if ($Qque == "list_activ_compl") {
+if ($Qque === "list_activ_compl") {
     $a_cabeceras[] = ucfirst(_("común"));
 }
 $a_cabeceras[] = array('name' => ucfirst(_("empieza")), 'class' => 'fecha');
@@ -321,16 +321,16 @@ foreach ($cActividades as $oActividad) {
     $tarifa = $oActividad->getTarifa();
     $observ = $oActividad->getObserv();
 
-    $oUbi = new Casa($id_ubi);
+    $oCasa = (new CasaRepository())->findById($id_ubi);
 
-    $nombre_ubi = $oUbi->getNombre_ubi();
-    if (is_true($oUbi->getSv())) {
+    $nombre_ubi = $oCasa->getNombre_ubi();
+    if (is_true($oCasa->isSv())) {
         $comun = "sv";
     }
-    if (is_true($oUbi->getSf())) {
+    if (is_true($oCasa->isSf())) {
         $comun = "sf";
     }
-    if ((is_true($oUbi->getSv())) and (is_true($oUbi->getSf()))) {
+    if ((is_true($oCasa->isSv())) && (is_true($oCasa->isSf()))) {
         $comun = "comun";
     }
 
@@ -343,13 +343,13 @@ foreach ($cActividades as $oActividad) {
 
     if ((($_SESSION['oPerm']->have_perm_oficina('sg'))
             || ($_SESSION['oPerm']->have_perm_oficina('vcsd'))
-            || ($_SESSION['oPerm']->have_perm_oficina('des'))) and !($_SESSION['oPerm']->have_perm_oficina('admin'))) {
-        if ($snom_tipo == "(sin especificar)") {
+            || ($_SESSION['oPerm']->have_perm_oficina('des'))) && !($_SESSION['oPerm']->have_perm_oficina('admin'))) {
+        if ($snom_tipo === "(sin especificar)") {
             $snom_tipo = "&nbsp;";
         }
     }
 
-    if ($Qque == "list_activ_compl") {
+    if ($Qque === "list_activ_compl") {
         $a_valores[$i][1] = $comun;
     }
     $a_valores[$i][2] = $f_ini;
@@ -401,7 +401,7 @@ foreach ($cActividades as $oActividad) {
 }
 // ----------------------------- html -----------------------------------
 ?>
-<?= $oPosicion->mostrar_left_slide(1); ?>
+<?= $oPosicion->mostrar_left_slide(1) ?>
     <h3><?= $titulo ?></h3>
 <?php
 $oTabla = new Lista();

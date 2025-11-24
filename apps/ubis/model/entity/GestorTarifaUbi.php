@@ -129,7 +129,7 @@ class GestorTarifaUbi extends ClaseGestor
         foreach ($oDblSt as $aDades) {
             $id_item = $aDades['id_item'];
             $oTarifa = new TarifaUbi($id_item);
-            $oTarifa->setAllAtributes($aDades);
+            $oTarifa->setAllAttributes($aDades);
             $oTarifaSet->add($oTarifa);
         }
         return $oTarifaSet->getTot();

@@ -14,7 +14,7 @@ use personas\model\entity\GestorPersonaS;
 use personas\model\entity\GestorPersonaSSSC;
 use planning\domain\Planning;
 use planning\domain\PlanningStyle;
-use ubis\model\entity\CentroDl;
+use src\ubis\application\repositories\CentroDlRepository;
 use web\Hash;
 use web\Periodo;
 use web\TiposActividades;
@@ -98,30 +98,30 @@ $cabecera_title = ucfirst(_("persona seleccionada"));
 $aWhere['id_nom'] = implode(',', $aid_nom);
 $aOperador['id_nom'] = 'OR';
 switch ($Qobj_pau) {
-        case 'PersonaN':
-            $GesPersonas = new GestorPersonaN();
-            break;
-        case 'PersonaAgd':
-            $GesPersonas = new GestorPersonaAgd();
-            break;
-        case 'PersonaNax':
-            $GesPersonas = new GestorPersonaNax();
-            break;
-        case 'PersonaS':
-            $GesPersonas = new GestorPersonaS();
-            break;
-        case 'PersonaSSSC':
-            $GesPersonas = new GestorPersonaSSSC();
-            break;
-        case 'PersonaDl':
-            $GesPersonas = new GestorPersonaDl();
-            break;
-        case 'PersonaEx':
-            $GesPersonas = new GestorPersonaEx();
-            break;
-        default:
-            $GesPersonas = new GestorPersonaDl();
-    }
+    case 'PersonaN':
+        $GesPersonas = new GestorPersonaN();
+        break;
+    case 'PersonaAgd':
+        $GesPersonas = new GestorPersonaAgd();
+        break;
+    case 'PersonaNax':
+        $GesPersonas = new GestorPersonaNax();
+        break;
+    case 'PersonaS':
+        $GesPersonas = new GestorPersonaS();
+        break;
+    case 'PersonaSSSC':
+        $GesPersonas = new GestorPersonaSSSC();
+        break;
+    case 'PersonaDl':
+        $GesPersonas = new GestorPersonaDl();
+        break;
+    case 'PersonaEx':
+        $GesPersonas = new GestorPersonaEx();
+        break;
+    default:
+        $GesPersonas = new GestorPersonaDl();
+}
 $cPersonas = $GesPersonas->getPersonas($aWhere, $aOperador);
 
 $aGoBackComun = array(
@@ -145,6 +145,7 @@ $p = 0;
 $persona = [];
 $a_actividades = [];
 $a_actividades2 = [];
+$CentroDlRepository = new CentroDlRepository();
 foreach ($cPersonas as $oPersona) {
     $aActivPersona = [];
     $id_nom = $oPersona->getId_nom();
@@ -155,8 +156,8 @@ foreach ($cPersonas as $oPersona) {
         if (empty($id_ubi)) {
             $nombre_ubi = "centro?";
         } elseif (!in_array($id_ubi, $aListaCtr)) {
-            $oCentro = new CentroDl($id_ubi);
-            $nombre_ubi = $oCentro->getNombre_ubi();
+            $oCentroDl = $CentroDlRepository->findById($id_ubi);
+            $nombre_ubi = $oCentroDl->getNombre_ubi();
             $aListaCtr[$id_ubi] = $nombre_ubi;
         } else {
             $nombre_ubi = $aListaCtr[$id_ubi];

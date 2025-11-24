@@ -10,7 +10,7 @@ use core\ViewPhtml;
 use personas\model\entity\GestorPersonaAgd;
 use personas\model\entity\GestorPersonaDl;
 use personas\model\entity\GestorPersonaN;
-use ubis\model\entity\CentroDl;
+use src\ubis\application\repositories\CentroDlRepository;
 use src\ubis\application\repositories\DelegacionRepository;
 use web\Hash;
 use web\Periodo;
@@ -73,7 +73,7 @@ if (!empty($a_sel)) { //vengo de un checkbox
     if (date("m") < $ini_m) {
         $finIso = date("Y-m-t", strtotime("$year-$ini_m-01"));
     } else {
-        $next_year = $year + 1;
+        $next_year = (int)$year + 1;
         $finIso = date("Y-m-t", strtotime("$next_year-$ini_m-01"));
     }
     // el scroll id es de la página anterior, hay que guardarlo allí
@@ -222,7 +222,9 @@ $aOperadorActividad['f_ini'] = 'BETWEEN';
 if ($Qgrupo_estudios !== 'todos') {
     $repoDelegacion = new DelegacionRepository();
     $cDelegaciones = $repoDelegacion->getDelegaciones(['grupo_estudios' => $Qgrupo_estudios]);
-    if (is_array($cDelegaciones) && count($cDelegaciones) > 1) { $aOperadorActividad['dl_org'] = 'OR'; }
+    if (is_array($cDelegaciones) && count($cDelegaciones) > 1) {
+        $aOperadorActividad['dl_org'] = 'OR';
+    }
     $mi_grupo = '';
     foreach ($cDelegaciones as $oDelegacion) {
         $mi_grupo .= empty($mi_grupo) ? '' : ',';
@@ -334,25 +336,27 @@ $cuadro = [];
 if (!empty($a_sel)) { //vengo de un checkbox
     /* para hacerlo compatible con el caso de los centros. miro ahora el nombre del ctr */
     $cOrdPersonas = [];
+    $CentroDlRepository = new CentroDlRepository();
     foreach ($cPersonas as $oPersonaDl) {
         $id_ubi = $oPersonaDl->getId_ctr();
-        $oUbi = new CentroDl($id_ubi);
-        $Ctr = $oUbi->getNombre_ubi();
+        $oCentroDl = $CentroDlRepository->findById($id_ubi);
+        $Ctr = $oCentroDl->getNombre_ubi();
         // para ordenar paso a minúsculas.
-        $ctr = strtolower($Ctr?? '');
+        $ctr = strtolower($Ctr ?? '');
         $cOrdPersonas[$ctr][] = array('Ctr' => $Ctr, 'oPersonaDl' => $oPersonaDl);
     }
 } else {
     /* para ordenar por orden alfabético de ctr */
     $cOrdPersonas = [];
     $id_ubi_old = '';
+    $CentroDlRepository = new CentroDlRepository();
     foreach ($cPersonas as $oPersonaDl) {
         $id_ubi = $oPersonaDl->getId_ctr();
         if ($id_ubi != $id_ubi_old) {
-            $oUbi = new CentroDl($id_ubi);
-            $Ctr = $oUbi->getNombre_ubi();
+            $oCentroDl = $CentroDlRepository->findById($id_ubi);
+            $Ctr = $oCentroDl->getNombre_ubi();
             // para ordenar paso a minúsculas.
-            $ctr = strtolower($Ctr?? '');
+            $ctr = strtolower($Ctr ?? '');
         }
         $cOrdPersonas[$ctr][] = array('Ctr' => $Ctr, 'oPersonaDl' => $oPersonaDl);
     }
@@ -366,11 +370,6 @@ foreach ($cOrdPersonas as $ctr => $ctrPersonas) {
         $id_nom = $oPersonaDl->getId_nom();
         $id_tabla_persona = $oPersonaDl->getId_tabla();
         $nom_persona = $oPersonaDl->getPrefApellidosNombre();
-        /*
-        $id_ubi=$oPersonaDl->getId_ctr();
-        $oUbi = new CentroDl($id_ubi);
-        $ctr = $oUbi->getNombre_ubi();
-        */
         $stgr = $oPersonaDl->getStgr(); //posibles: n,s,t,b,c1,c2,r
 
         if (method_exists($oPersonaDl, 'getCe')) {

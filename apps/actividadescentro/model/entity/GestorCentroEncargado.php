@@ -2,13 +2,13 @@
 
 namespace actividadescentro\model\entity;
 
+use actividades\model\entity\ActividadDl;
 use core\ClaseGestor;
 use core\Condicion;
-use core\Set;
-use ubis\model\entity\CentroDl;
-use actividades\model\entity\ActividadDl;
 use core\ConfigGlobal;
-use ubis\model\entity\CentroEllas;
+use core\Set;
+use src\ubis\application\repositories\CentroDlRepository;
+use src\ubis\domain\entity\CentroEllas;
 
 /**
  * GestorCentroEncargado
@@ -28,7 +28,6 @@ class GestorCentroEncargado extends ClaseGestor
     /* CONSTRUCTOR -------------------------------------------------------------- */
 
 
-    
     function __construct()
     {
         $oDbl = $GLOBALS['oDBC'];
@@ -93,7 +92,7 @@ class GestorCentroEncargado extends ClaseGestor
         foreach ($oDbl->query($sQuery) as $aDades) {
             $a_pkey = array('id_activ' => $aDades['id_activ']);
             $oActividad = new ActividadDl($a_pkey);
-            $oActividad->setAllAtributes($aDades);
+            $oActividad->setAllAttributes($aDades);
             $oActividadSet->add($oActividad);
         }
         return $oActividadSet->getTot();
@@ -118,15 +117,16 @@ class GestorCentroEncargado extends ClaseGestor
         }
         foreach ($oDbl->query($sQuery) as $aDades) {
             $id_ubi = $aDades['id_ubi'];
-            $a_pkey = array('id_ubi' => $id_ubi);
             $sfsv = substr($id_ubi, 0, 1);
             if (ConfigGlobal::mi_sfsv() == $sfsv) {
-                $oUbi = new CentroDl($a_pkey);
+                $CentroDlRepository = new CentroDlRepository();
+                $oUbi = $CentroDlRepository->findById($id_ubi);
             } else {
-                $oUbi = new CentroEllas($a_pkey);
+                $oUbi = new CentroEllas();
+                $oUbi->setId_ubi($id_ubi);
             }
 
-            $oUbi->setAllAtributes($aDades);
+            $oUbi->setAllAttributes($aDades);
             $oUbiSet->add($oUbi);
         }
         return $oUbiSet->getTot();

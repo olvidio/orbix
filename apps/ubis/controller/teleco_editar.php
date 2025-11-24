@@ -94,8 +94,8 @@ $botones = 0;
 switch ($Qobj_pau) {
     case 'CentroDl':
     case 'CasaDl':
-        $objfull = 'ubis\\model\\entity\\' . $Qobj_pau;
-        $oUbi = new $objfull($Qid_ubi);
+        $objfull = 'src\\ubis\\application\\repositories\\' . $Qobj_pau .'Repository';
+        $oUbi = (new $objfull())->findById($Qid_ubi);
         $dl = $oUbi->getDl();
         if ($dl == ConfigGlobal::mi_delef()) {
             // ----- sv sólo a scl -----------------

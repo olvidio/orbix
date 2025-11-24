@@ -199,7 +199,7 @@ class CasaPeriodo extends ClasePropiedades
             }
             $this->iid_item = $oDbl->lastInsertId('du_periodos_id_item_seq');
         }
-        $this->setAllAtributes($aDades);
+        $this->setAllAttributes($aDades);
         return TRUE;
     }
 
@@ -232,7 +232,7 @@ class CasaPeriodo extends ClasePropiedades
                     if ($aDades === FALSE) {
                         $this->setNullAllAtributes();
                     } else {
-                        $this->setAllAtributes($aDades);
+                        $this->setAllAttributes($aDades);
                     }
             }
             return TRUE;
@@ -265,7 +265,7 @@ class CasaPeriodo extends ClasePropiedades
      *
      * @param array $aDades
      */
-    function setAllAtributes(array $aDades, $convert = FALSE)
+    function setAllAttributes(array $aDades, $convert = FALSE)
     {
         if (!is_array($aDades)) return;
         if (array_key_exists('id_item', $aDades)) $this->setId_item($aDades['id_item']);

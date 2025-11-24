@@ -40,12 +40,12 @@ class ActividadCargo extends ActividadCargoAbstract
         switch ($tipo_cargo) {
             case 'sacd':
                 $oActividadCargoI = new ActividadCargoSacd($this->aPrimary_key);
-                $oActividadCargoI->setAllAtributes($aDades);
+                $oActividadCargoI->setAllAttributes($aDades);
                 return $oActividadCargoI->DBGuardar($quiet);
                 break;
             default:
                 $oActividadCargoI = new ActividadCargoNoSacd($this->aPrimary_key);
-                $oActividadCargoI->setAllAtributes($aDades);
+                $oActividadCargoI->setAllAttributes($aDades);
                 return $oActividadCargoI->DBGuardar($quiet);
                 break;
         }

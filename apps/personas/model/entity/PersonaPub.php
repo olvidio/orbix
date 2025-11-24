@@ -168,7 +168,7 @@ class PersonaPub extends PersonaGlobal
                     return false;
                 }
             }
-            $this->setAllAtributes($aDades);
+            $this->setAllAttributes($aDades);
             $this->aDades = $aDades;
         } else {
             // INSERT
@@ -198,7 +198,7 @@ class PersonaPub extends PersonaGlobal
             }
             $aDadesLast = $oDblSt->fetch(\PDO::FETCH_ASSOC);
             $this->aDades = $aDadesLast;
-            $this->setAllAtributes($aDadesLast);
+            $this->setAllAttributes($aDadesLast);
         }
         // Modifico la ficha en la BD-comun. En el caso de los de paso (ex) y dl = mi_dele
         // Cuando se va, cambio la dl y allí lo borro.
@@ -240,7 +240,7 @@ class PersonaPub extends PersonaGlobal
                     if ($aDades === FALSE) {
                         $this->setNullAllAtributes();
                     } else {
-                        $this->setAllAtributes($aDades);
+                        $this->setAllAttributes($aDades);
                     }
             }
             return true;
@@ -269,7 +269,7 @@ class PersonaPub extends PersonaGlobal
     protected function copia2Comun($aDades)
     {
         $oPersonaSacd = new PersonaSacd($this->iid_nom);
-        $oPersonaSacd->setAllAtributes($aDades);
+        $oPersonaSacd->setAllAttributes($aDades);
         $oPersonaSacd->DBGuardar();
 
     }
@@ -287,7 +287,7 @@ class PersonaPub extends PersonaGlobal
      *
      * @param array $aDades
      */
-    function setAllAtributes(array $aDades, $convert = FALSE)
+    function setAllAttributes(array $aDades, $convert = FALSE)
     {
         if (!is_array($aDades)) return;
         if (array_key_exists('id_schema', $aDades)) $this->setId_schema($aDades['id_schema']);

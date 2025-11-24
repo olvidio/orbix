@@ -167,7 +167,7 @@ class GestorPropuestaEncargosSacd extends ClaseGestor
         foreach ($oDbl->query($sQuery) as $aDades) {
             $a_pkey = array('id_item' => $aDades['id_item']);
             $oEncargoSacd = new PropuestaEncargoSacd($a_pkey);
-            $oEncargoSacd->setAllAtributes($aDades);
+            $oEncargoSacd->setAllAttributes($aDades);
             $oEncargoSacdSet->add($oEncargoSacd);
         }
         return $oEncargoSacdSet->getTot();
@@ -221,7 +221,7 @@ class GestorPropuestaEncargosSacd extends ClaseGestor
         foreach ($oDblSt as $aDades) {
             $a_pkey = array('id_item' => $aDades['id_item']);
             $oEncargoSacd = new PropuestaEncargoSacd($a_pkey);
-            $oEncargoSacd->setAllAtributes($aDades);
+            $oEncargoSacd->setAllAttributes($aDades);
             $oEncargoSacdSet->add($oEncargoSacd);
         }
         return $oEncargoSacdSet->getTot();

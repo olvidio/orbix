@@ -6,18 +6,15 @@ use cartaspresentacion\model\entity\CartaPresentacionEx;
 use cartaspresentacion\model\entity\GestorCartaPresentacion;
 use cartaspresentacion\model\entity\GestorCartaPresentacionDl;
 use core\ConfigGlobal;
-use ubis\model\entity\Centro;
-use ubis\model\entity\CentroDl;
-use ubis\model\entity\DireccionCtr;
-use ubis\model\entity\DireccionCtrDl;
-use ubis\model\entity\DireccionCtrEx;
-use ubis\model\entity\GestorCentroDl;
-use ubis\model\entity\GestorCentroEx;
-use ubis\model\entity\GestorCtrDlxDireccion;
-use ubis\model\entity\GestorCtrExxDireccion;
-use ubis\model\entity\GestorDireccionCtr;
-use ubis\model\entity\GestorDireccionCtrDl;
-use ubis\model\entity\Ubi;
+use src\ubis\application\repositories\CentroDlRepository;
+use src\ubis\application\repositories\RelacionCentroExDireccionRepository;
+use src\ubis\application\repositories\CentroExRepository;
+use src\ubis\application\repositories\CentroRepository;
+use src\ubis\application\repositories\DireccionCentroDlRepository;
+use src\ubis\application\repositories\DireccionCentroExRepository;
+use src\ubis\application\repositories\DireccionCentroRepository;
+use src\ubis\application\repositories\DireccionRepository;
+use src\ubis\domain\entity\Ubi;
 use web\Desplegable;
 use web\Hash;
 use web\Lista;
@@ -43,26 +40,30 @@ switch ($Qque_mod) {
         switch ($Qfiltro) {
             case 'get_H':
                 $sCondicion = "WHERE pais ILIKE 'españa'";
-                $GesDirecciones = new GestorDireccionCtr();
-                $oDesplPoblaciones = $GesDirecciones->getListaPoblaciones($sCondicion);
+                $DireccionRepository = new DireccionCentroRepository();
+                $aOpciones = $DireccionRepository->getArrayPoblaciones($sCondicion);
+                $oDesplPoblaciones = new Desplegable();
+                $oDesplPoblaciones->setOpciones($aOpciones);
                 break;
             case 'get_r':
                 $sCondicion = "WHERE pais NOT ILIKE 'españa'";
-                $GesDirecciones = new GestorDireccionCtr();
-                $oDesplPoblaciones = $GesDirecciones->getListaPoblaciones($sCondicion);
+                $GesDirecciones = new DireccionCentroRepository();
+                $aOpciones = $GesDirecciones->getArrayPoblaciones($sCondicion);
+                $oDesplPoblaciones = new Desplegable();
+                $oDesplPoblaciones->setOpciones($aOpciones);
                 break;
             case 'get_dl':
-                $oGesCentrosDl = new GestorCentroDl();
+                $oGesCentrosDl = new CentroDlRepository();
                 //$cCentrosDl = $oGesCentrosDl->getCentros(['status'=>'t']);
                 $cCentrosDl = $oGesCentrosDl->getCentros();
                 $aPoblaciones = [];
                 foreach ($cCentrosDl as $oCentroDl) {
                     $id_ubi = $oCentroDl->getId_ubi();
-                    $oGesCtrxDir = new GestorCtrDlxDireccion();
+                    $oGesCtrxDir = new DireccionCentroDlRepository();
                     $cCtrxDir = $oGesCtrxDir->getCtrxDirecciones(['id_ubi' => $id_ubi]);
                     foreach ($cCtrxDir as $oCtrxDir) {
                         $id_direccion = $oCtrxDir->getId_direccion();
-                        $oDireccion = new DireccionCtrDl($id_direccion);
+                        $oDireccion = new DireccionCentroDlRepository($id_direccion);
                         $poblacion = $oDireccion->getPoblacion();
                         if (!in_array($poblacion, $aPoblaciones)) {
                             $aPoblaciones[$poblacion] = $poblacion;
@@ -92,10 +93,12 @@ switch ($Qque_mod) {
         $Qid_direccion = (integer)filter_input(INPUT_POST, 'id_direccion');
         $Qid_ubi = (integer)filter_input(INPUT_POST, 'id_ubi');
 
-        $oDireccion = new DireccionCtr($Qid_direccion);
+        $DireccionRepository = new DireccionCentroRepository();
+        $oDireccion = $DireccionRepository->findById($Qid_direccion);
         $nom_sede = $oDireccion->getNom_sede();
         // Busco el ctr para saber si es de la dl o ex.
-        $oCentro = new Centro($Qid_ubi);
+        $CentroRepository = new CentroRepository();
+        $oCentro = $CentroRepository->findById($Qid_ubi);
         $nombre_ubi = $oCentro->getNombre_ubi();
         $nombre_ubi .= empty($nom_sede) ? '' : " ($nom_sede)";
 
@@ -193,7 +196,8 @@ switch ($Qque_mod) {
                 $oCartaPresentacion->DBCarregar();
             } else {
                 // Busco el ctr para saber si es de la dl o ex.
-                $oCentro = new Centro($Qid_ubi);
+                $CentroRepository = new CentroRepository();
+                $oCentro = $CentroRepository->findById($Qid_ubi);
                 $dl = $oCentro->getDl();
                 if ($dl === ConfigGlobal::mi_delef()) {
                     $oCartaPresentacion = new CartaPresentacionDl();
@@ -247,12 +251,12 @@ switch ($Qque_mod) {
 
         $Qpoblacion_sel = (string)filter_input(INPUT_POST, 'poblacion_sel');
         // listado de centros.
-        $oGesCentros = new GestorCentroDl();
+        $oGesCentros = new CentroDlRepository();
         $permiso = 'modificar';
 
         // si hay Qpoblacion, primero hay que buscar en las direcciones.
         if (!empty($Qpoblacion_sel)) {
-            $GesDirecciones = new GestorDireccionCtrDl();
+            $GesDirecciones = new DireccionCentroDlRepository();
             $cDirecciones = $GesDirecciones->getDirecciones(array('poblacion' => $Qpoblacion_sel), array('poblacion' => 'sin_acentos'));
             $cDirCentros = [];
             $txt_direccion = '';
@@ -265,9 +269,9 @@ switch ($Qque_mod) {
                 $nom_sede = $oDireccion->getNom_sede();
                 $cId_ubis = $oDireccion->getUbis();
                 $cCentros = [];
+                $CentroDlRepository = new CentroDlRepository();
                 foreach ($cId_ubis as $oUbi) {
-                    $oCentro = new CentroDl($oUbi->getId_ubi());
-                    $cCentros[] = $oCentro;
+                    $cCentros[] =$CentroDlRepository->findById($oUbi->getId_ubi());
                 }
                 $cDirCentros[$d] = ['dir' => $txt_direccion,
                     'colCentros' => $cCentros,
@@ -275,7 +279,7 @@ switch ($Qque_mod) {
                     'nom_sede' => $nom_sede];
             }
         } else {
-            $oGesCentrosDl = new GestorCentroDl();
+            $oGesCentrosDl = new CentroDlRepository();
             $aWhere = array('status' => 't', '_ordre' => 'nombre_ubi');
             $cCentrosDl = $oGesCentrosDl->getCentros($aWhere);
         }
@@ -360,7 +364,7 @@ switch ($Qque_mod) {
         break;
     case "get_r":
         // listado de centros.
-        $oGesCentros = new GestorCentroEx();
+        $oGesCentros = new CentroExRepository();
         $permiso = 'modificar';
         $aWhere = array('tipo_ctr' => 'cr|dl', 'status' => 't', '_ordre' => 'nombre_ubi');
         $aOperador = array('tipo_ctr' => '~');
@@ -376,13 +380,14 @@ switch ($Qque_mod) {
             $tipo_labor = $oCentro->getTipo_labor();
             $tipo_ubi = $oCentro->getTipo_ubi();
 
-            $oGesCtrxDir = new GestorCtrExxDireccion();
-            $cCtrxDir = $oGesCtrxDir->getCtrxDirecciones(['id_ubi' => $id_ubi]);
+            $oGesCtrxDir = new RelacionCentroExDireccionRepository();
+            $cCtrxDir = $oGesCtrxDir->getDireccionesPorUbi($id_ubi);
             $cDirCentros = [];
             $txt_direccion = '';
+            $DireccionRepository = new DireccionCentroExRepository();
             foreach ($cCtrxDir as $oCtrxDir) {
                 $id_direccion = $oCtrxDir->getId_direccion();
-                $oDireccion = new DireccionCtrEx($id_direccion);
+                $oDireccion = $DireccionRepository->findById($id_direccion);
                 $txt_direccion = $oDireccion->getDireccionPostal(" - ");
                 $nom_sede = $oDireccion->getNom_sede();
                 $nombre_ubi .= empty($nom_sede) ? '' : " ($nom_sede)";

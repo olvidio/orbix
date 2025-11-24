@@ -3,9 +3,9 @@
 namespace planning\domain;
 
 use actividades\model\entity\GestorActividad;
-use ubis\model\entity\GestorCasaDl;
-use ubis\model\entity\GestorCentroEllas;
-use ubis\model\entity\Ubi;
+use src\ubis\application\repositories\CasaDlRepository;
+use src\ubis\application\repositories\CentroEllasRepository;
+use src\ubis\domain\entity\Ubi;
 
 class ActividadesPorCasas
 {
@@ -51,7 +51,7 @@ class ActividadesPorCasas
                 case 6:
                     $aWhere['sf'] = 't';
                     // también los centros que son como cdc
-                    $GesCentrosSf = new GestorCentroEllas();
+                    $GesCentrosSf = new CentroEllasRepository();
                     $cCentrosSf = $GesCentrosSf->getCentros(array('cdc' => 't', '_ordre' => 'nombre_ubi'));
                     break;
                 case 9:
@@ -67,7 +67,7 @@ class ActividadesPorCasas
                     break;
             }
             $aWhere['_ordre'] = 'nombre_ubi';
-            $GesCasaDl = new GestorCasaDl();
+            $GesCasaDl = new CasaDlRepository();
             $cCasasDl = $GesCasaDl->getCasas($aWhere, $aOperador);
 
             if ($Qcdc_sel === 6) { //añado los ctr de sf

@@ -27,7 +27,7 @@
     fnjs_eliminar = function (formulario) {
         if (confirm("<?= _("¿Está seguro que desea borrar este centro?");?>")) {
             $('#que').val('eliminar_ubi');
-            $(formulario).attr('action', 'apps/ubis/controller/ubis_update.php');
+            $(formulario).attr('action', 'apps/ubis/controller/ubis_eliminar.php');
             $(formulario).one("submit", function () {
                 $.ajax({
                     url: $(this).attr('action'),

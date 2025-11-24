@@ -84,7 +84,7 @@ class ActividadCargoSacd extends ActividadCargoAbstract
                 $oGestorCanvis->addCanvi($shortClassName, 'UPDATE', $this->iid_activ, $aDades, $this->aDadesActuals);
             }
             $this->aDades = $aDades;
-            $this->setAllAtributes($aDades);
+            $this->setAllAttributes($aDades);
         } else {
             // INSERT
             $campos = "(id_activ,id_cargo,id_nom,puede_agd,observ)";
@@ -112,7 +112,7 @@ class ActividadCargoSacd extends ActividadCargoAbstract
             }
             $aDadesLast = $oDblSt->fetch(\PDO::FETCH_ASSOC);
             $this->aDades = $aDadesLast;
-            $this->setAllAtributes($aDadesLast);
+            $this->setAllAttributes($aDadesLast);
             // Anoto el cambio
             if (empty($quiet) && ConfigGlobal::is_app_installed('cambios')) {
                 $oGestorCanvis = new GestorAvisoCambios();
@@ -210,7 +210,7 @@ class ActividadCargoSacd extends ActividadCargoAbstract
                 }
             }
             $this->aDades = $aDades;
-            $this->setAllAtributes($aDades);
+            $this->setAllAttributes($aDades);
         } else {
             // INSERT
             unset($aDades['id_schema']);
@@ -234,7 +234,7 @@ class ActividadCargoSacd extends ActividadCargoAbstract
                 }
             }
             $this->aDades = $aDades;
-            $this->setAllAtributes($aDades);
+            $this->setAllAttributes($aDades);
         }
         return true;
     }

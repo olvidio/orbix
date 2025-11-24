@@ -2,7 +2,7 @@
 
 // INICIO Cabecera global de URL de controlador *********************************
 use actividades\model\entity\ActividadAll;
-use ubis\model\entity\Ubi;
+use src\ubis\domain\entity\Ubi;
 use web\ContestarJson;
 
 require_once("apps/core/global_header.inc");

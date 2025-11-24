@@ -155,7 +155,7 @@ class PersonaDl extends PersonaGlobal
                 }
             }
             $this->aDades = $aDades;
-            $this->setAllAtributes($aDades);
+            $this->setAllAttributes($aDades);
         } else {
             // INSERT
             $campos = "id_cr,dl,sacd,trato,nom,nx1,apellido1,nx2,apellido2,f_nacimiento,lengua,situacion,f_situacion,apel_fam,inc,f_inc,stgr,profesion,eap,observ,id_ctr,lugar_nacimiento";
@@ -191,7 +191,7 @@ class PersonaDl extends PersonaGlobal
             }
             $aDadesLast = $oDblSt->fetch(\PDO::FETCH_ASSOC);
             $this->aDades = $aDadesLast;
-            $this->setAllAtributes($aDadesLast);
+            $this->setAllAttributes($aDadesLast);
         }
         // Modifico la ficha en la BD-comun
         if (is_true($this->bsacd)) {
@@ -231,7 +231,7 @@ class PersonaDl extends PersonaGlobal
                     if ($aDades === FALSE) {
                         $this->setNullAllAtributes();
                     } else {
-                        $this->setAllAtributes($aDades);
+                        $this->setAllAttributes($aDades);
                     }
             }
             return true;
@@ -260,7 +260,7 @@ class PersonaDl extends PersonaGlobal
     protected function copia2Comun($aDades)
     {
         $oPersonaSacd = new PersonaSacd($this->iid_nom);
-        $oPersonaSacd->setAllAtributes($aDades);
+        $oPersonaSacd->setAllAttributes($aDades);
         $oPersonaSacd->DBGuardar();
 
     }
@@ -271,7 +271,7 @@ class PersonaDl extends PersonaGlobal
      *
      * @param array $aDades
      */
-    function setAllAtributes(array $aDades, $convert = FALSE)
+    function setAllAttributes(array $aDades, $convert = FALSE)
     {
         if (!is_array($aDades)) return;
         if (array_key_exists('id_schema', $aDades)) $this->setId_schema($aDades['id_schema']);

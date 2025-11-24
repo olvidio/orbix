@@ -37,35 +37,41 @@ $Qid_direccion = urldecode($Qid_direccion);
 
 switch ($Qobj_dir) {
     case 'DireccionCdc': // tipo dl pero no de la mia
-        $obj_x = 'ubis\\model\\entity\\CdcxDireccion';
-        $obj_ubi = 'ubis\\model\\entity\\Casa';
+        $obj_x = 'src\\ubis\\application\\repositories\\RelacionCasaDireccionRepository';
+        $repo_dir = 'src\ubis\application\repositories\DireccionCasaRepository';
+        $repo_ubi = 'src\\ubis\\application\\repositories\\CasaRepository';
         break;
     case 'DireccionCdcDl':
-        $obj_x = 'ubis\\model\\entity\\CdcDlxDireccion';
-        $obj_ubi = 'ubis\\model\\entity\\CasaDl';
+        $obj_x = 'src\\ubis\\application\\repositories\\RelacionCasaDlDireccionRepository';
+        $repo_dir = 'src\ubis\application\repositories\DireccionCasaDlRepository';
+        $repo_ubi = 'src\\ubis\\application\\repositories\\CasaDlRepository';
         break;
     case 'DireccionCdcEx':
-        $obj_x = 'ubis\\model\\entity\\CdcExxDireccion';
-        $obj_ubi = 'ubis\\model\\entity\\CasaEx';
+        $obj_x = 'src\\ubis\\application\\repositories\\RelacionCasaExDireccionRepository';
+        $repo_dir = 'src\ubis\application\repositories\DireccionCasaExRepository';
+        $repo_ubi = 'src\\ubis\\application\\repositories\\CasaExRepository';
         break;
-    case 'DireccionCtr': // tipo dl pero no de la mia
-        $obj_x = 'ubis\\model\\entity\\CtrxDireccion';
-        $obj_ubi = 'ubis\\model\\entity\\Centro';
+    case 'DireccionCentro': // tipo dl pero no de la mia
+        $obj_x = 'src\\ubis\\application\\repositories\\RelacionCentroDireccionRepository';
+        $repo_dir = 'src\ubis\application\repositories\DireccionCentroRepository';
+        $repo_ubi = 'src\\ubis\\application\\repositories\\CentroRepository';
         break;
-    case 'DireccionCtrDl':
-        $obj_x = 'ubis\\model\\entity\\CtrDlxDireccion';
-        $obj_ubi = 'ubis\\model\\entity\\CentroDl';
+    case 'DireccionCentroDl':
+        $obj_x = 'src\\ubis\\application\\repositories\\RelacionCentroDlDireccionRepository';
+        $repo_dir = 'src\ubis\application\repositories\DireccionCentroDlRepository';
+        $repo_ubi = 'src\\ubis\\application\\repositories\\CentroDlRepository';
         break;
-    case 'DireccionCtrEx':
-        $obj_x = 'ubis\\model\\entity\\CtrExxDireccion';
-        $obj_ubi = 'ubis\\model\\entity\\CentroEx';
+    case 'DireccionCentroEx':
+        $obj_x = 'src\\ubis\\application\\repositories\\RelacionCentroExDireccionRepository';
+        $repo_dir = 'src\ubis\application\repositories\DireccionCentroExRepository';
+        $repo_ubi = 'src\\ubis\\application\\repositories\\CentroExRepository';
         break;
 }
 $obj = 'ubis\\model\\entity\\' . $Qobj_dir;
 
 if ($Qmod === 'nuevo') {
-    $oUbi = new $obj_ubi($Qid_ubi);
-    $sf = $oUbi->getSf();
+    $oUbi = (new $repo_ubi())->findById($Qid_ubi);
+    $sf = $oUbi->isSf();
     $dl = $oUbi->getDl();
     $tipo_ubi = $oUbi->getTipo_ubi();
 
@@ -96,8 +102,14 @@ if ($Qmod === 'nuevo') {
     $mas = '';
     $menos = '';
     $h = '';
+    $h_asignar = '';
     $go_dir = '';
 } else {
+    $oUbi = (new $repo_ubi())->findById($Qid_ubi);
+    $sf = $oUbi->isSf();
+    $dl = $oUbi->getDl();
+    $tipo_ubi = $oUbi->getTipo_ubi();
+
     // puede haber más de una dirección
     $a_id_direccion = explode(',', $Qid_direccion);
     $num_dir = count($a_id_direccion);
@@ -108,15 +120,18 @@ if ($Qmod === 'nuevo') {
     if ($inc === 'menos' & $idx > 0) $idx--;
 
     $id_direccion_actual = $a_id_direccion[$idx];
-    $oDireccion = new $obj($a_id_direccion[$idx]);
 
-    $xDireccion = new $obj_x(array('id_ubi' => $Qid_ubi, 'id_direccion' => $a_id_direccion[$idx]));
+    $oUbi = (new $repo_ubi())->findById($Qid_ubi);
+    $oDireccionDetallada = $oUbi->getUnaDireccionDetallada($id_direccion_actual);
+    $oDireccion = $oDireccionDetallada->getDireccion();
+    $propietario = $oDireccionDetallada->isPropietario();
+    $principal = $oDireccionDetallada->isPrincipal();
 
     $nom_sede = $oDireccion->getNom_sede();
     $direccion = $oDireccion->getDireccion();
     $a_p = $oDireccion->getA_p();
     $c_p = $oDireccion->getC_p();
-    $cp_dcha = $oDireccion->getCp_dcha();
+    $cp_dcha = $oDireccion->isCp_dcha();
     $poblacion = $oDireccion->getPoblacion();
     $provincia = $oDireccion->getProvincia();
     $pais = $oDireccion->getPais();
@@ -124,21 +139,18 @@ if ($Qmod === 'nuevo') {
     $f_direccion = $oDireccion->getF_direccion()->getFromLocal();
     $latitud = $oDireccion->getLatitud();
     $longitud = $oDireccion->getLongitud();
-    $propietario = $xDireccion->getPropietario();
-    $principal = $xDireccion->getPrincipal();
-
-    $oUbi = new $obj_ubi($Qid_ubi);
-    $sf = $oUbi->getSf();
-    $dl = $oUbi->getDl();
-    $tipo_ubi = $oUbi->getTipo_ubi();
 
     $mas = ($idx < $num_dir - 1) ? 1 : 0;
     $menos = ($idx < 1) ? 0 : 1;
-    $idx = $idx;
     $id_direccion = $Qid_direccion;
-    $id_direccion_actual = $id_direccion_actual;
+    $id_direccion_actual = $id_direccion;
 
     $golistadir = Hash::link('apps/ubis/controller/direcciones_que.php?' . http_build_query(array('id_ubi' => $Qid_ubi, 'id_direccion' => $Qid_direccion, 'obj_dir' => $Qobj_dir)));
+
+    $oHashPlano = new Hash();
+    $oHashPlano->setUrl('apps/ubis/controller/direcciones_asignar.php');
+    $oHashPlano->setCamposForm('obj_dir!id_ubi!id_direccion');
+    $h_asignar = $oHashPlano->linkSinVal();
 
     $oHashPlano = new Hash();
     $oHashPlano->setUrl('apps/ubis/controller/plano_bytea.php');
@@ -150,10 +162,10 @@ if ($Qmod === 'nuevo') {
     $oHashDir->setUrl($url);
     $oHashDir->setCamposNo('inc');
     $aCamposHidden = ['id_ubi' => $Qid_ubi,
-        'id_direccion' => $Qid_direccion,
-        'obj_dir' => $Qobj_dir,
-        'idx' => $idx,
-        'refresh' => 1,
+            'id_direccion' => $Qid_direccion,
+            'obj_dir' => $Qobj_dir,
+            'idx' => $idx,
+            'refresh' => 1,
     ];
     $oHashDir->setArrayCamposHidden($aCamposHidden);
     $go_dir = $url . '?' . $oHashDir->linkConVal();
@@ -213,45 +225,46 @@ $oHash->setCamposForm('a_p!c_p!direccion!f_direccion!latitud!longitud!nom_sede!o
 $oHash->setcamposNo('que!inc');
 $oHash->setCamposChk($campos_chk);
 $a_camposHidden = array(
-    'campos_chk' => $campos_chk,
-    'obj_dir' => $Qobj_dir,
-    'id_direccion' => $id_direccion,
-    'idx' => $idx,
-    'id_ubi' => $Qid_ubi
+        'campos_chk' => $campos_chk,
+        'obj_dir' => $Qobj_dir,
+        'id_direccion' => $id_direccion,
+        'idx' => $idx,
+        'id_ubi' => $Qid_ubi
 );
 $oHash->setArraycamposHidden($a_camposHidden);
 
 $goInfo = Hash::link(ConfigGlobal::getWeb() . '/apps/ubis/controller/info_ubis.php?' . http_build_query(array('id_item' => 1)));
 
 $a_campos = ['oPosicion' => $oPosicion,
-    'oHash' => $oHash,
-    'id_ubi' => $Qid_ubi,
-    'id_direccion' => $id_direccion,
-    'obj' => $obj,
-    'obj_dir' => $Qobj_dir,
-    'idx' => $idx,
-    'nom_sede' => $nom_sede,
-    'chk_propietario' => $chk_propietario,
-    'direccion' => $direccion,
-    'chk_principal' => $chk_principal,
-    'a_p' => $a_p,
-    'chk_dcha' => $chk_dcha,
-    'c_p' => $c_p,
-    'poblacion' => $poblacion,
-    'provincia' => $provincia,
-    'pais' => $pais,
-    'observ' => $observ,
-    'f_direccion' => $f_direccion,
-    'latitud' => $latitud,
-    'longitud' => $longitud,
-    'botones' => $botones,
-    'id_direccion_actual' => $id_direccion_actual,
-    'golistadir' => $golistadir,
-    'go_dir' => $go_dir,
-    'mas' => $mas,
-    'menos' => $menos,
-    'h' => $h,
-    'goInfo' => $goInfo,
+        'oHash' => $oHash,
+        'id_ubi' => $Qid_ubi,
+        'id_direccion' => $id_direccion,
+        'obj' => $obj,
+        'obj_dir' => $Qobj_dir,
+        'idx' => $idx,
+        'nom_sede' => $nom_sede,
+        'chk_propietario' => $chk_propietario,
+        'direccion' => $direccion,
+        'chk_principal' => $chk_principal,
+        'a_p' => $a_p,
+        'chk_dcha' => $chk_dcha,
+        'c_p' => $c_p,
+        'poblacion' => $poblacion,
+        'provincia' => $provincia,
+        'pais' => $pais,
+        'observ' => $observ,
+        'f_direccion' => $f_direccion,
+        'latitud' => $latitud,
+        'longitud' => $longitud,
+        'botones' => $botones,
+        'id_direccion_actual' => $id_direccion_actual,
+        'golistadir' => $golistadir,
+        'go_dir' => $go_dir,
+        'mas' => $mas,
+        'menos' => $menos,
+        'h' => $h,
+        'h_asignar' => $h_asignar,
+        'goInfo' => $goInfo,
 ];
 
 $oView = new ViewPhtml('ubis\controller');

@@ -19,12 +19,12 @@ $Qc_p = (string)filter_input(INPUT_POST, 'c_p');
 $Qciudad = (string)filter_input(INPUT_POST, 'ciudad');
 $Qpais = (string)filter_input(INPUT_POST, 'pais');
 
-$obj = 'ubis\\model\\entity\\Gestor' . $Qobj_dir;
-$oGesDir = new $obj();
+$DireccionRepository_name = 'src\\ubis\\application\\repositories\\' . $Qobj_dir .'Repository';
+$DireccionRepository = new $DireccionRepository_name();
 
 /*miro las condiciones. las variables son: centro,ciudad */
 if (!empty($Qc_p)) {
-    $aWhere['c_p'] = $Qc_p;
+    $aWhere['c_p'] = '%'.$Qc_p.'%';
     $aOperador['c_p'] = 'LIKE';
 }
 if (!empty($Qciudad)) {
@@ -50,13 +50,14 @@ $a_cabeceras = array(_("id"),
 $a_botones = [];
 $a_valores = [];
 $i = 0;
-$cDirecciones = $oGesDir->getDirecciones($aWhere, $aOperador);
+$cDirecciones = $DireccionRepository->getDirecciones($aWhere, $aOperador);
 foreach ($cDirecciones as $oDireccion) {
     $i++;
     $id_direccion = $oDireccion->getId_direccion();
-    $pagina = Hash::link(ConfigGlobal::getWeb() . '/apps/ubis/controller/direcciones_asignar.php?' . http_build_query(array('id_ubi' => $Qid_ubi, 'id_direccion' => $id_direccion, 'obj_dir' => $Qobj_dir, 'pais' => $Qpais)));
+    //$pagina = Hash::link(ConfigGlobal::getWeb() . '/apps/ubis/controller/direcciones_asignar.php?' . http_build_query(array('id_ubi' => $Qid_ubi, 'id_direccion' => $id_direccion, 'obj_dir' => $Qobj_dir, 'pais' => $Qpais)));
+    $pagina = "fnjs_asignar_dir($Qid_ubi,\"$Qobj_dir\", $id_direccion)";
     $a_valores[$i][1] = $id_direccion;
-    $a_valores[$i][2] = array('ira' => $pagina, 'valor' => 'ok');
+    $a_valores[$i][2] = array('script' => $pagina, 'valor' => 'ok');
     $a_valores[$i][3] = $oDireccion->getDireccion();
     $a_valores[$i][4] = $oDireccion->getC_p();
     $a_valores[$i][5] = $oDireccion->getPoblacion();

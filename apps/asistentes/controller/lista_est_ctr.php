@@ -2,12 +2,11 @@
 
 use actividades\model\entity\ActividadAll;
 use actividadestudios\model\entity\GestorMatricula;
-use asignaturas\model\entity\Asignatura;
 use asistentes\model\entity\GestorAsistente;
 use personas\model\entity\GestorPersonaDl;
 use personas\model\entity\Persona;
 use src\asignaturas\application\repositories\AsignaturaRepository;
-use ubis\model\entity\GestorCentroDl;
+use src\ubis\application\repositories\CentroDlRepository;
 use web\Lista;
 use web\Periodo;
 use function core\is_true;
@@ -115,7 +114,7 @@ switch ($Qn_agd) {
 }
 
 // primero selecciono los centros
-$GesCentrosDl = new GestorCentroDl();
+$GesCentrosDl = new CentroDlRepository();
 $cCentros = $GesCentrosDl->getCentros($aWhereCtr, $aOperadorCtr);
 $a_valores = [];
 foreach ($cCentros as $oCentroDl) {

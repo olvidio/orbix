@@ -188,7 +188,7 @@ class ActaTribunal extends ClasePropiedades
                 }
             }
         }
-        $this->setAllAtributes($aDades);
+        $this->setAllAttributes($aDades);
         return true;
     }
 
@@ -223,7 +223,7 @@ class ActaTribunal extends ClasePropiedades
                     if ($aDades_local === FALSE) {
                         $this->setNullAllAtributes();
                     } else {
-                        $this->setAllAtributes($aDades_local);
+                        $this->setAllAttributes($aDades_local);
                     }
             }
             $rta = TRUE;
@@ -275,7 +275,7 @@ class ActaTribunal extends ClasePropiedades
      *
      * @param array $aDades
      */
-    function setAllAtributes(array $aDades)
+    function setAllAttributes(array $aDades)
     {
         if (!is_array($aDades)) {
             return;

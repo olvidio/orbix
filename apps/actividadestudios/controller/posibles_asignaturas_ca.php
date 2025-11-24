@@ -12,7 +12,6 @@
  */
 
 // INICIO Cabecera global de URL de controlador *********************************
-use asignaturas\model\entity\GestorAsignatura;
 use asistentes\model\entity\GestorAsistente;
 use core\ViewTwig;
 use notas\model\AsignaturasPendientes;
@@ -20,7 +19,6 @@ use notas\model\entity\GestorPersonaNotaDB;
 use personas\model\entity\Persona;
 use personas\model\entity\PersonaGlobal;
 use src\asignaturas\application\repositories\AsignaturaRepository;
-use ubis\model\entity\CentroDl;
 
 require_once("apps/core/global_header.inc");
 // Archivos requeridos por esta url **********************************************

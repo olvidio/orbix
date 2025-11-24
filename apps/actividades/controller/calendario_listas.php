@@ -7,13 +7,12 @@ use asistentes\model\entity\GestorAsistente;
 use core\ConfigGlobal;
 use dossiers\model\PermisoDossier;
 use permisos\model\PermisosActividadesTrue;
+use src\ubis\application\repositories\CasaDlRepository;
+use src\ubis\application\repositories\CasaRepository;
+use src\ubis\application\repositories\CentroDlRepository;
 use web\Lista;
 use web\Periodo;
 use web\TiposActividades;
-use ubis\model\entity\Casa;
-use ubis\model\entity\Centro;
-use ubis\model\entity\CentroDl;
-use ubis\model\entity\GestorCasaDl;
 
 /**
  * Esta página muestra
@@ -35,12 +34,10 @@ require_once("apps/core/global_object.inc");
 
 function nomUbi($id_ubi)
 {
-    $oCasa = new Casa($id_ubi);
-    $nombre_ubi  = $oCasa->getNombre_ubi();
+    $nombre_ubi  = (new CasaRepository())->findById($id_ubi)?->getNombre_ubi();
     if (empty($nombre_ubi)) {
         // probar con los ctr.
-        $oCasa = new Centro($id_ubi);
-        $nombre_ubi  = $oCasa->getNombre_ubi();
+        $nombre_ubi  = (new CentroRepository())->findById($id_ubi)?->getNombre_ubi();
     }
     return $nombre_ubi;
 }
@@ -146,8 +143,8 @@ $finIso = $oPeriodo->getF_fin_iso();
 
 switch ($tipo) {
     case "casa":
-        $GesCasas = new GestorCasaDl();
-        $cCasas = $GesCasas->getCasas($aWhereCasa, $aOperadorCasa);
+        $CasaDlRepository = new CasaDlRepository();
+        $cCasas = $CasaDlRepository->getCasas($aWhereCasa, $aOperadorCasa);
         foreach ($cCasas as $oCasa) {
             $aGrupos[$oCasa->getId_ubi()] = $oCasa->getNombre_ubi();
         }
@@ -318,8 +315,9 @@ foreach (array_keys($aGrupos) as $key) {
                 foreach ($cCtrsEncargados as $oCentroEncargado) {
                     $i++;
                     $id_ubi = $oCentroEncargado->getId_ubi();
-                    $Centro = new CentroDl($id_ubi);
-                    $nombre_ctr = $Centro->getNombre_ubi();
+                    $CentroDlRepository = new CentroDlRepository();
+                    $oCentroDl = $CentroDlRepository->findById($id_ubi);
+                    $nombre_ctr = $oCentroDl->getNombre_ubi();
                     $txt_ctr .= empty($txt_ctr) ? $nombre_ctr : "; $nombre_ctr";
                     $a_ubi_activ[$key][$a]['ctr_encargados'] = $txt_ctr;
                 }

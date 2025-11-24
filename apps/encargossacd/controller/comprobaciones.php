@@ -1,11 +1,9 @@
 <?php
 
-use ubis\model\entity\GestorCentroDl;
 use encargossacd\model\entity\GestorEncargo;
-use ubis\model\entity\GestorCentroEllas;
 use encargossacd\model\entity\GestorEncargoSacd;
-use ubis\model\entity\CentroDl;
-use ubis\model\entity\CentroEllas;
+use src\ubis\application\repositories\CentroDlRepository;
+use src\ubis\application\repositories\CentroEllasRepository;
 
 /**
  * Esta página limpia la base de datos de los encargos.
@@ -50,16 +48,18 @@ switch ($Qque) {
             $sfsv = substr($id_ubi, 0, 1);
             if ($sfsv == 1) {
                 // Ctr sv
-                $oCentroDl = new CentroDl($id_ubi);
-                $status = $oCentroDl->getStatus();
+                $CentroDlRepository = new CentroDlRepository();
+                $oCentroDl = $CentroDlRepository->findById($id_ubi);
+                $status = $oCentroDl->isStatus();
                 if ($status === FALSE || empty($status)) {
                     $ctrsv++;
                     $oEncargo->DBEliminar();
                 }
             } else {
                 // Ctr sf
-                $oCentroDl = new CentroEllas($id_ubi);
-                $status = $oCentroDl->getStatus();
+                $CentroEllasRepository = new CentroEllasRepository();
+                $oCentroDl = $CentroEllasRepository->findById($id_ubi);
+                $status = $oCentroDl->isStatus();
                 if ($status === FALSE || empty($status)) {
                     $ctrsf++;
                     $oEncargo->DBEliminar();

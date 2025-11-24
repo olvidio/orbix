@@ -647,7 +647,7 @@ if ($id_seq || $id_seq2) {
     $txt .= "\n\t\t\t" . '$this->' . $ccc . ' = $oDbl->lastInsertId(\'' . $id_seq . '\');';
 }
 $txt .= "\n\t\t" . '}
-		$this->setAllAtributes($aDades);
+		$this->setAllAttributes($aDades);
 		return TRUE;
 	}
 
@@ -679,7 +679,7 @@ $txt .= "\n\t\t" . '}
 					if ($aDades === FALSE) {
 						$this->setNullAllAtributes();
 					} else {
-						$this->setAllAtributes($aDades);
+						$this->setAllAttributes($aDades);
 					}
 			}
 			return TRUE;
@@ -714,9 +714,9 @@ $txt .= '	/* MÉTODOS PRIVADOS -------------------------------------------------
 	 * @param array $aDades
 	 */';
 if ($add_convert === TRUE) {
-    $txt .= "\n\t" . 'function setAllAtributes($aDades,$convert=FALSE) {';
+    $txt .= "\n\t" . 'function setAllAttributes($aDades,$convert=FALSE) {';
 } else {
-    $txt .= "\n\t" . 'function setAllAtributes($aDades) {';
+    $txt .= "\n\t" . 'function setAllAttributes($aDades) {';
 }
 $txt .= "\n\t\t" . 'if (!is_array($aDades)) return;
 		if (array_key_exists(\'id_schema\',$aDades)) $this->setId_schema($aDades[\'id_schema\']);';
@@ -877,7 +877,7 @@ $txt2 .= '
 $txt2 .= "\n\t\t\t" . '$a_pkey = array(' . $claus_txt2 . ');';
 $txt2 .= "\n\t\t\t" . '$o' . $clase . '= new ' . $clase . '($a_pkey);';
 $txt2 .= '
-			$o' . $clase . '->setAllAtributes($aDades);
+			$o' . $clase . '->setAllAttributes($aDades);
 			$o' . $clase . 'Set->add($o' . $clase . ');
 		}
 		return $o' . $clase . 'Set->getTot();
@@ -935,7 +935,7 @@ $txt2 .= "\n\t\t" . '$sCondi = implode(\' AND \',$aCondi);
 $txt2 .= "\n\t\t\t" . '$a_pkey = array(' . $claus_txt2 . ');';
 $txt2 .= "\n\t\t\t" . '$o' . $clase . '= new ' . $clase . '($a_pkey);';
 $txt2 .= '
-			$o' . $clase . '->setAllAtributes($aDades);
+			$o' . $clase . '->setAllAttributes($aDades);
 			$o' . $clase . 'Set->add($o' . $clase . ');
 		}
 		return $o' . $clase . 'Set->getTot();

@@ -2,7 +2,7 @@
 
 use core\ConfigGlobal;
 use core\ViewPhtml;
-use ubis\model\entity\Ubi;
+use src\ubis\domain\entity\Ubi;
 use web\Hash;
 use web\Posicion;
 
@@ -94,17 +94,17 @@ switch ($tipo_ubi) {
     case "ctrdl":
         if ($dl != $mi_dele) {
             $obj_pau = "Centro";
-            $obj_dir = "DireccionCtr";
+            $obj_dir = "DireccionCentro";
         } else {
             $obj_pau = "CentroDl";
-            $obj_dir = "DireccionCtrDl";
+            $obj_dir = "DireccionCentroDl";
         }
         $ubi = _("centro");
         $tipo = "ctr";
         break;
     case "ctrex":
         $obj_pau = "CentroEx";
-        $obj_dir = "DireccionCtrEx";
+        $obj_dir = "DireccionCentroEx";
         $ubi = _("centro");
         $tipo = "ctr";
         break;

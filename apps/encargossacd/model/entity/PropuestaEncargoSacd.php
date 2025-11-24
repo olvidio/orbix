@@ -132,7 +132,7 @@ class PropuestaEncargoSacd extends EncargoSacd
             }
             $this->iid_item = $oDbl->lastInsertId('propuesta_encargos_sacd_id_item_seq');
         }
-        $this->setAllAtributes($aDades);
+        $this->setAllAttributes($aDades);
         return TRUE;
     }
     /* MÉTODOS PRIVADOS ----------------------------------------------------------*/
@@ -142,7 +142,7 @@ class PropuestaEncargoSacd extends EncargoSacd
      *
      * @param array $aDades
      */
-    function setAllAtributes(array $aDades, $convert = FALSE)
+    function setAllAttributes(array $aDades, $convert = FALSE)
     {
         if (!is_array($aDades)) return;
         if (array_key_exists('id_item', $aDades)) $this->setId_item($aDades['id_item']);

@@ -1,12 +1,12 @@
 <?php
 
-use asignaturas\model\entity\Asignatura;
 use core\ConfigGlobal;
 use notas\model\AsignaturasPendientes;
+use src\asignaturas\application\repositories\AsignaturaRepository;
+use src\ubis\application\repositories\CentroDlRepository;
 use web\Hash;
 use web\Lista;
 use web\Posicion;
-use ubis\model\entity\CentroDl;
 
 /**
  * Esta página muestra una tabla con las personas que cumplen con la condicion.
@@ -92,7 +92,7 @@ if (!empty($Qpersonas_n) && !empty($Qpersonas_agd)) {
     $obj_pau = 'PersonaDl';
 }
 
-$oAsignatura = (new AsignaturaRepository())->findById($Qid_asignatura)?? null;
+$oAsignatura = (new AsignaturaRepository())->findById($Qid_asignatura) ?? null;
 if ($oAsignatura === null) {
     throw new \Exception(sprintf(_("No se ha encontrado la asignatura con id: %s"), $Qid_asignatura));
 }
@@ -108,24 +108,24 @@ $aId_nom = $Pendientes->personasQueLesFaltaAsignatura($Qid_asignatura, $curso, $
 * Defino un array con los datos actuales, para saber volver después de navegar un rato
 */
 $aGoBack = array(
-    'b_c' => $Qb_c,
-    'c1' => $Qc1,
-    'c2' => $Qc2,
-    'id_asignatura' => $Qid_asignatura,
-    'personas_n' => $Qpersonas_n,
-    'personas_agd' => $Qpersonas_agd);
+        'b_c' => $Qb_c,
+        'c1' => $Qc1,
+        'c2' => $Qc2,
+        'id_asignatura' => $Qid_asignatura,
+        'personas_n' => $Qpersonas_n,
+        'personas_agd' => $Qpersonas_agd);
 $oPosicion->setParametros($aGoBack, 1);
 
 $a_botones = array(array('txt' => _("modificar stgr"), 'click' => "fnjs_modificar(\"#seleccionados\")"),
-    array('txt' => _("ver tessera"), 'click' => "fnjs_tesera(\"#seleccionados\")")
+        array('txt' => _("ver tessera"), 'click' => "fnjs_tesera(\"#seleccionados\")")
 );
 
 $a_cabeceras = array(ucfirst(_("tipo")),
-    array('name' => _("nombre y apellidos"), 'formatter' => 'clickFormatter'),
-    ucfirst(_("centro")),
-    ucfirst(_("stgr")),
-    array('name' => _("telf."), 'width' => 80),
-    array('name' => _("mails"), 'width' => 100),
+        array('name' => _("nombre y apellidos"), 'formatter' => 'clickFormatter'),
+        ucfirst(_("centro")),
+        ucfirst(_("stgr")),
+        array('name' => _("telf."), 'width' => 80),
+        array('name' => _("mails"), 'width' => 100),
 );
 
 $i = 0;
@@ -149,7 +149,8 @@ foreach ($aId_nom as $id_nom => $aAsignaturas) {
         $nombre_ubi = $oPersona->getDl();
     } else {
         $id_ctr = $oPersona->getId_ctr();
-        $oCentroDl = new CentroDl($id_ctr);
+        $CentroDlRepository = new CentroDlRepository();
+        $oCentroDl = $CentroDlRepository->findById($id_ctr);
         $nombre_ubi = $oCentroDl->getNombre_ubi();
     }
 
@@ -192,8 +193,8 @@ $titulo = sprintf(_("lista de %s de %s a los que falta la asignatura %s (%s)"), 
 $oHash = new Hash();
 $oHash->setCamposForm('sel!scroll_id');
 $a_camposHidden = array(
-    'pau' => 'p',
-    'obj_pau' => $obj_pau
+        'pau' => 'p',
+        'obj_pau' => $obj_pau
 );
 $oHash->setArraycamposHidden($a_camposHidden);
 

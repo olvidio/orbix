@@ -4,14 +4,14 @@
 
 use core\ConfigGlobal;
 use core\ViewTwig;
+use src\ubis\application\repositories\CentroDlRepository;
+use src\ubis\application\repositories\CentroEllasRepository;
 use src\usuarios\application\repositories\RoleRepository;
 use src\usuarios\application\repositories\UsuarioRepository;
 use web\DateTimeLocal;
 use web\Desplegable;
 use web\Hash;
 use web\PeriodoQue;
-use ubis\model\entity\GestorCentroDl;
-use ubis\model\entity\GestorCentroEllas;
 use zonassacd\model\entity\GestorZona;
 
 require_once("apps/core/global_header.inc");
@@ -56,18 +56,18 @@ if (isset($Qid_zona)) {
     $aWhere['status'] = 't';
     $aWhere['id_zona'] = $Qid_zona;
     $aWhere['_ordre'] = 'nombre_ubi';
-    $GesCentrosDl = new GestorCentroDl();
+    $GesCentrosDl = new CentroDlRepository();
     $cCentrosDl = $GesCentrosDl->getCentros($aWhere);
-    $GesCentrosSf = new GestorCentroEllas();
+    $GesCentrosSf = new CentroEllasRepository();
     $cCentrosSf = $GesCentrosSf->getCentros($aWhere);
     $cCentros = array_merge($cCentrosDl, $cCentrosSf);
-    
+
     foreach ($cCentros as $oCentro) {
         $id_ubi = $oCentro->getId_ubi();
         $nombre_ubi = $oCentro->getNombre_ubi();
-    
+
         $aCentros[$id_ubi] = $nombre_ubi;
-    }    
+    }
 }
 
 $oDesplCentros = new Desplegable();
@@ -95,7 +95,7 @@ $oFormP->setDesplPeriodosOpcion_sel('esta_semana');
 $oFormP->setisDesplAnysVisible(FALSE);
 
 $ohoy = new DateTimeLocal(date('Y-m-d'));
-$shoy = $ohoy ->format('d/m/Y');
+$shoy = $ohoy->format('d/m/Y');
 
 $oFormP->setEmpiezaMin($shoy);
 $oFormP->setEmpiezaMax($shoy);
@@ -120,6 +120,6 @@ $a_campos = ['oPosicion' => $oPosicion,
     'url_ver_plan_ctr' => $url_ver_plan_ctr,
     'h_plan_ctr' => $h_plan_ctr,
 ];
- 
+
 $oView = new ViewTwig('misas/controller');
 echo $oView->render('buscar_plan_ctr.html.twig', $a_campos);

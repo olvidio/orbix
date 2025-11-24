@@ -143,7 +143,7 @@ class ActividadEx extends ActividadAll
                 $shortClassName = (new ReflectionClass($this))->getShortName();
                 $oGestorCanvis->addCanvi($shortClassName, 'UPDATE', $this->iid_activ, $aDades, $this->aDadesActuals);
             }
-            $this->setAllAtributes($aDades);
+            $this->setAllAttributes($aDades);
         } else {
             // INSERT
             //$campos="(id_tipo_activ,dl_org,nom_activ,id_ubi,desc_activ,f_ini,h_ini,f_fin,h_fin,tipo_horario,precio,num_asistentes,status,observ,nivel_stgr,observ_material,lugar_esp,tarifa,id_repeticion,publicado,id_tabla,plazas)";
@@ -173,7 +173,7 @@ class ActividadEx extends ActividadAll
             }
             $aDadesLast = $oDblSt->fetch(\PDO::FETCH_ASSOC);
             $this->aDades = $aDadesLast;
-            $this->setAllAtributes($aDadesLast);
+            $this->setAllAttributes($aDadesLast);
 
             // generar proceso.
             if (ConfigGlobal::is_app_installed('procesos')) {
@@ -229,7 +229,7 @@ class ActividadEx extends ActividadAll
                     if ($aDades === FALSE) {
                         $this->setNullAllAtributes();
                     } else {
-                        $this->setAllAtributes($aDades);
+                        $this->setAllAttributes($aDades);
                     }
             }
             return true;

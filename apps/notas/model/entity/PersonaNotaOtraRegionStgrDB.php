@@ -130,7 +130,7 @@ class PersonaNotaOtraRegionStgrDB extends PersonaNotaDB
                 }
             }
         }
-        $this->setAllAtributes($aDades);
+        $this->setAllAttributes($aDades);
         return true;
     }
 
@@ -139,7 +139,7 @@ class PersonaNotaOtraRegionStgrDB extends PersonaNotaDB
      *
      * @param array $aDades
      */
-    function setAllAtributes(array $aDades, $convert = FALSE)
+    function setAllAttributes(array $aDades, $convert = FALSE)
     {
         if (!is_array($aDades)) return;
         if (array_key_exists('id_schema', $aDades)) $this->setId_schema($aDades['id_schema']);

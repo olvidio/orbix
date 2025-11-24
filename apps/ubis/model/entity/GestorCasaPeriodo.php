@@ -5,6 +5,7 @@ namespace ubis\model\entity;
 use core\ClaseGestor;
 use core\Condicion;
 use core\Set;
+use src\ubis\application\repositories\CasaDlRepository;
 use web\DateTimeLocal;
 
 /**
@@ -69,9 +70,10 @@ class GestorCasaPeriodo extends ClaseGestor
         }
         // si no hi ha resultat miro que l'ubi sigui només sf o sv.
         if (count($a_periodos) == 0) {
-            $oCasa = new CasaDl($id_ubi);
-            $sf = $oCasa->getSf();
-            $sv = $oCasa->getSv();
+            $CasaDlRepository = new CasaDlRepository();
+            $oCasa = $CasaDlRepository->findById($id_ubi);
+            $sf = $oCasa->isSf();
+            $sv = $oCasa->isSv();
             $oInicio->setTime(0, 0, 0);
             $isoIni = $oInicio->format('Ymd');
             $oFin->setTime(23, 59, 59);

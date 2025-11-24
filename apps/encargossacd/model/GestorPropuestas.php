@@ -3,16 +3,15 @@
 namespace encargossacd\model;
 
 use encargossacd\model\entity\EncargoSacd;
+use encargossacd\model\entity\EncargoSacdHorario;
 use encargossacd\model\entity\EncargoTipo;
 use encargossacd\model\entity\GestorEncargo;
 use encargossacd\model\entity\GestorEncargoSacdHorario;
 use encargossacd\model\entity\GestorPropuestaEncargoSacdHorario;
 use encargossacd\model\entity\GestorPropuestaEncargosSacd;
 use personas\model\entity\PersonaSacd;
-use ubis\model\entity\GestorCentroDl;
-use ubis\model\entity\GestorCentroEllas;
-use encargossacd\model\entity\EncargoHorario;
-use encargossacd\model\entity\EncargoSacdHorario;
+use src\ubis\application\repositories\CentroDlRepository;
+use src\ubis\application\repositories\CentroEllasRepository;
 
 /**
  * GestorEncargoSacd
@@ -32,7 +31,6 @@ class GestorPropuestas
     /* CONSTRUCTOR -------------------------------------------------------------- */
 
 
-    
     function __construct()
     {
 
@@ -149,7 +147,7 @@ class GestorPropuestas
 
         switch ($filtro_ctr) {
             case 1:
-                $GesCentros = new GestorCentroDl();
+                $GesCentros = new CentroDlRepository();
                 // añado el ctr de oficiales de la dl (14.VIII.07).
                 $aWhere['tipo_ctr'] = '^a|n|s[^s]|of';
                 $aOperador['tipo_ctr'] = '~';
@@ -160,11 +158,11 @@ class GestorPropuestas
             case 2:
                 $aWhere['status'] = 't';
                 $aWhere['_ordre'] = 'nombre_ubi';
-                $GesCentros = new GestorCentroEllas();
+                $GesCentros = new CentroEllasRepository();
                 $cCentros = $GesCentros->getCentros($aWhere);
                 break;
             case 3:
-                $GesCentros = new GestorCentroDl();
+                $GesCentros = new CentroDlRepository();
                 $aWhere['tipo_ctr'] = '^ss';
                 $aOperador['tipo_ctr'] = '~';
                 $aWhere['status'] = 't';
@@ -172,7 +170,7 @@ class GestorPropuestas
                 $cCentros = $GesCentros->getCentros($aWhere, $aOperador);
                 break;
             case 4:
-                $GesCentros = new GestorCentroDl();
+                $GesCentros = new CentroDlRepository();
                 $aWhere['tipo_ctr'] = 'igl';
                 $aOperador['tipo_ctr'] = '~';
                 $aWhere['status'] = 't';
@@ -180,13 +178,13 @@ class GestorPropuestas
                 $cCentros = $GesCentros->getCentros($aWhere, $aOperador);
                 break;
             case 5:
-                $GesCentros = new GestorCentroDl();
+                $GesCentros = new CentroDlRepository();
                 $aWhere['tipo_ctr'] = 'cgioc|oc|cgi';
                 $aOperador['tipo_ctr'] = '~';
                 $aWhere['status'] = 't';
                 $aWhere['_ordre'] = 'nombre_ubi';
                 $cCentros_sv = $GesCentros->getCentros($aWhere, $aOperador);
-                $GesCentros = new GestorCentroEllas();
+                $GesCentros = new CentroEllasRepository();
                 $aWhere['tipo_ctr'] = 'cgioc|oc|cgi';
                 $aOperador['tipo_ctr'] = '~';
                 $aWhere['status'] = 't';
@@ -197,11 +195,11 @@ class GestorPropuestas
                 break;
             default:
                 $cCentros = [];
-                $GesCentros = new GestorCentroDl();
+                $GesCentros = new CentroDlRepository();
                 $aWhere['status'] = 't';
                 $aWhere['_ordre'] = 'tipo_ctr, nombre_ubi';
                 $cCentros_sv = $GesCentros->getCentros($aWhere);
-                $GesCentros = new GestorCentroEllas();
+                $GesCentros = new CentroEllasRepository();
                 $aWhere['status'] = 't';
                 $aWhere['_ordre'] = 'tipo_ctr, nombre_ubi';
                 $cCentros_sf = $GesCentros->getCentros($aWhere);
@@ -391,7 +389,7 @@ class GestorPropuestas
 
         switch ($filtro_ctr) {
             case 1:
-                $GesCentros = new GestorCentroDl();
+                $GesCentros = new CentroDlRepository();
                 // añado el ctr de oficiales de la dl (14.VIII.07).
                 $aWhere['tipo_ctr'] = '^a|n|s[^s]|of';
                 $aOperador['tipo_ctr'] = '~';
@@ -402,11 +400,11 @@ class GestorPropuestas
             case 2:
                 $aWhere['status'] = 't';
                 $aWhere['_ordre'] = 'nombre_ubi';
-                $GesCentros = new GestorCentroEllas();
+                $GesCentros = new CentroEllasRepository();
                 $cCentros = $GesCentros->getCentros($aWhere);
                 break;
             case 3:
-                $GesCentros = new GestorCentroDl();
+                $GesCentros = new CentroDlRepository();
                 $aWhere['tipo_ctr'] = '^ss';
                 $aOperador['tipo_ctr'] = '~';
                 $aWhere['status'] = 't';
@@ -414,7 +412,7 @@ class GestorPropuestas
                 $cCentros = $GesCentros->getCentros($aWhere, $aOperador);
                 break;
             case 4:
-                $GesCentros = new GestorCentroDl();
+                $GesCentros = new CentroDlRepository();
                 $aWhere['tipo_ctr'] = 'igl';
                 $aOperador['tipo_ctr'] = '~';
                 $aWhere['status'] = 't';
@@ -422,13 +420,13 @@ class GestorPropuestas
                 $cCentros = $GesCentros->getCentros($aWhere, $aOperador);
                 break;
             case 5:
-                $GesCentros = new GestorCentroDl();
+                $GesCentros = new CentroDlRepository();
                 $aWhere['tipo_ctr'] = 'cgioc|oc|cgi';
                 $aOperador['tipo_ctr'] = '~';
                 $aWhere['status'] = 't';
                 $aWhere['_ordre'] = 'nombre_ubi';
                 $cCentros_sv = $GesCentros->getCentros($aWhere, $aOperador);
-                $GesCentros = new GestorCentroEllas();
+                $GesCentros = new CentroEllasRepository();
                 $aWhere['tipo_ctr'] = 'cgioc|oc|cgi';
                 $aOperador['tipo_ctr'] = '~';
                 $aWhere['status'] = 't';

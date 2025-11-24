@@ -325,7 +325,7 @@ abstract class XPermisos
             } else {
                 $chk = "check-box-outline-blank.png";
             }
-            $txt .= "   <img src='http:" . ConfigGlobal::getWeb_icons() . "/" . $chk . "' width=10 height=10 border=0>$nom";
+            $txt .= "   <img src='" . ConfigGlobal::getWeb_icons() . "/" . $chk . "' width=10 height=10 border=0>$nom";
         }
         return $txt;
     }

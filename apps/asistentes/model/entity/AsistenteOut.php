@@ -154,7 +154,7 @@ class AsistenteOut extends AsistentePub
                 $shortClassName = (new ReflectionClass($this))->getShortName();
                 $oGestorCanvis->addCanvi($shortClassName, 'UPDATE', $this->iid_activ, $aDades, $this->aDadesActuals);
             }
-            $this->setAllAtributes($aDades);
+            $this->setAllAttributes($aDades);
         } else {
             // INSERT
             array_unshift($aDades, $this->iid_activ, $this->iid_nom);
@@ -182,7 +182,7 @@ class AsistenteOut extends AsistentePub
             }
             $aDadesLast = $oDblSt->fetch(\PDO::FETCH_ASSOC);
             $this->aDades = $aDadesLast;
-            $this->setAllAtributes($aDadesLast);
+            $this->setAllAttributes($aDadesLast);
             // anotar cambio.
             // Aunque no tenga el módulo de 'cambios', quizá otra dl si lo tenga.
             // Anoto el cambio.

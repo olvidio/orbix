@@ -152,7 +152,7 @@ class PersonaOut extends PersonaPub
                     return false;
                 }
             }
-            $this->setAllAtributes($aDades);
+            $this->setAllAttributes($aDades);
         } else {
             // INSERT
             array_unshift($aDades, $this->iid_nom);
@@ -181,7 +181,7 @@ class PersonaOut extends PersonaPub
             }
             $aDadesLast = $oDblSt->fetch(\PDO::FETCH_ASSOC);
             $this->aDades = $aDadesLast;
-            $this->setAllAtributes($aDadesLast);
+            $this->setAllAttributes($aDadesLast);
         }
         return true;
     }

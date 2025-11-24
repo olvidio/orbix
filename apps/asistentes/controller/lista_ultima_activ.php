@@ -5,8 +5,7 @@ use actividades\model\entity\GestorActividad;
 use actividades\model\entity\GestorActividadDl;
 use asistentes\model\entity\GestorAsistente;
 use personas\model\entity\GestorPersonaS;
-use ubis\model\entity\CentroDl;
-use ubis\model\entity\GestorCentroDl;
+use src\ubis\application\repositories\CentroDlRepository;
 use web\DateTimeLocal;
 use web\Lista;
 use web\TiposActividades;
@@ -47,8 +46,9 @@ $any = date("Y");
 $aWhereP = [];
 $aOperadorP = [];
 if (!empty($Qid_ubi) && ($Qid_ubi != 999)) {
-    $oCentro = new CentroDl($Qid_ubi);
-    $nombre_ubi = $oCentro->getNombre_ubi();
+    $CentroDlRepository = new CentroDlRepository();
+    $oCentroDl = $CentroDlRepository->findById($Qid_ubi);
+    $nombre_ubi = $oCentroDl->getNombre_ubi();
     $aWhereP['id_ctr'] = $Qid_ubi;
     $aWhereP['_ordre'] = 'apellido1, apellido2, nom';
 } else { //todos los crt
@@ -164,9 +164,9 @@ switch ($Qque) {
         $f_iso_final = "$any-$fin_m-$fin_d";
 
         $aWhereUltima = ['id_tipo_activ' => '1431',
-            'status' => 2,
-            'f_ini' => $f_iso_final,
-            '_ordre' => 'f_ini DESC',
+                'status' => 2,
+                'f_ini' => $f_iso_final,
+                '_ordre' => 'f_ini DESC',
         ];
         $aOperadorUltima = ['f_ini' => '<'];
         $gesActividades = new GestorActividadDl();
@@ -218,7 +218,7 @@ $cPersonas = $GesPersonasS->getPersonasDl($aWhereP, $aOperadorP);
 $i = 0;
 $falta = 0;
 $a_valores = [];
-$gesCentros = new GestorCentroDl();
+$gesCentros = new CentroDlRepository();
 $GesAsistente = new GestorAsistente();
 foreach ($cPersonas as $oPersona) {
     $i++;
@@ -269,9 +269,9 @@ foreach ($cPersonas as $oPersona) {
 }
 
 $a_cabeceras = [ucfirst(_("apellidos, nombre")),
-    ucfirst(_("centro")),
-    ucfirst(_("fecha última asistencia")),
-    ucfirst(_("tipo actividad")),
+        ucfirst(_("centro")),
+        ucfirst(_("fecha última asistencia")),
+        ucfirst(_("tipo actividad")),
 ];
 
 $oTabla = new Lista();

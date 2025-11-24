@@ -111,7 +111,7 @@ class TelecoPersonaDl extends TelecoPersonaGlobal
             }
             $aDades['id_item'] = $oDbl->lastInsertId('d_teleco_personas_dl_id_item_seq');
         }
-        $this->setAllAtributes($aDades);
+        $this->setAllAttributes($aDades);
         return true;
     }
 
@@ -144,7 +144,7 @@ class TelecoPersonaDl extends TelecoPersonaGlobal
                     if ($aDades === FALSE) {
                         $this->setNullAllAtributes();
                     } else {
-                        $this->setAllAtributes($aDades);
+                        $this->setAllAttributes($aDades);
                     }
             }
             return true;
@@ -177,7 +177,7 @@ class TelecoPersonaDl extends TelecoPersonaGlobal
      *
      * @param array $aDades
      */
-    function setAllAtributes(array $aDades)
+    function setAllAttributes(array $aDades)
     {
         if (!is_array($aDades)) return;
         if (array_key_exists('id_schema', $aDades)) $this->setId_schema($aDades['id_schema']);

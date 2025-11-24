@@ -19,7 +19,7 @@ use core\ViewPhtml;
 use personas\model\entity\GestorPersonaAgd;
 use personas\model\entity\GestorPersonaDl;
 use personas\model\entity\GestorPersonaN;
-use ubis\model\entity\CentroDl;
+use src\ubis\application\repositories\CentroDlRepository;
 use web\Hash;
 use web\Lista;
 
@@ -166,8 +166,9 @@ foreach ($aFaltan as $ap_nom => $aDatos) {
     $id_ubi = $aDatos['id_ubi'];
     $nivel_stgr = $aDatos['nivel_stgr'];
 
-    $oCentro = new CentroDl($id_ubi);
-    $nombre_ubi = $oCentro->getNombre_ubi();
+    $CentroDlRepository = new CentroDlRepository();
+    $oCentroDl = $CentroDlRepository->findById($id_ubi);
+    $nombre_ubi = $oCentroDl->getNombre_ubi();
 
     $aQuery = array('obj_pau' => $obj_pau, 'id_nom' => $id_nom);
     $pagina = Hash::link('apps/personas/controller/home_persona.php?' . http_build_query($aQuery));
@@ -220,8 +221,9 @@ foreach ($aFaltanOtras as $ap_nom => $aDatos) {
     $id_ubi = $aDatos['id_ubi'];
     $nivel_stgr = $aDatos['nivel_stgr'];
 
-    $oCentro = new CentroDl($id_ubi);
-    $nombre_ubi = $oCentro->getNombre_ubi();
+    $CentroDlRepository = new CentroDlRepository();
+    $oCentroDl = $CentroDlRepository->findById($id_ubi);
+    $nombre_ubi = $oCentroDl->getNombre_ubi();
 
     $aQuery = array('obj_pau' => $obj_pau, 'id_nom' => $id_nom);
     $pagina = Hash::link('apps/personas/controller/home_persona.php?' . http_build_query($aQuery));

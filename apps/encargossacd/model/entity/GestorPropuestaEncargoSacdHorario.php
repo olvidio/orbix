@@ -201,7 +201,7 @@ class GestorPropuestaEncargoSacdHorario extends ClaseGestor
         foreach ($oDblSt as $aDades) {
             $a_pkey = array('id_item' => $aDades['id_item']);
             $oEncargoSacdHorario = new PropuestaEncargoSacdHorario($a_pkey);
-            $oEncargoSacdHorario->setAllAtributes($aDades);
+            $oEncargoSacdHorario->setAllAttributes($aDades);
             $oEncargoSacdHorarioSet->add($oEncargoSacdHorario);
         }
         return $oEncargoSacdHorarioSet->getTot();

@@ -310,7 +310,7 @@ class ActividadAll extends ClasePropiedades
                 $oActividadAll = new ActividadEx($a_pkey);
             }
         }
-        $oActividadAll->setAllAtributes($aDades);
+        $oActividadAll->setAllAttributes($aDades);
 
         $oActividadAll->DBGuardar();
         return true;
@@ -353,7 +353,7 @@ class ActividadAll extends ClasePropiedades
                     if ($aDades === FALSE) {
                         $this->setNullAllAtributes();
                     } else {
-                        $this->setAllAtributes($aDades);
+                        $this->setAllAttributes($aDades);
                     }
             }
             return true;
@@ -409,7 +409,7 @@ class ActividadAll extends ClasePropiedades
      *
      * @param array $aDades
      */
-    function setAllAtributes(array $aDades, $convert = FALSE)
+    function setAllAttributes(array $aDades, $convert = FALSE)
     {
         if (!is_array($aDades)) {
             return;

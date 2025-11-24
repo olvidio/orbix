@@ -42,27 +42,27 @@ if (isset($_POST['stack'])) {
 switch ($Qobj_pau) {
     case 'Casa': // tipo dl pero no de la mia
         $repoTeleco = 'src\\ubis\\application\\repositories\\TelecoCdcRepository';
-        $obj_ubi = 'ubis\\model\\entity\\Casa';
+        $repo_ubi = 'src\\ubis\\application\\repositories\\CasaRepository';;
         break;
     case 'CasaDl':
         $repoTeleco = 'src\\ubis\\application\\repositories\\TelecoCdcDlRepository';
-        $obj_ubi = 'ubis\\model\\entity\\CasaDl';
+        $repo_ubi = 'src\\ubis\\application\\repositories\\CasaDlRepository';
         break;
     case 'CasaEx':
         $repoTeleco = 'src\\ubis\\application\\repositories\\TelecoCdcExRepository';
-        $obj_ubi = 'ubis\\model\\entity\\CentroEx';
+        $repo_ubi = 'src\\ubis\\application\\repositories\\CasaExRepository';
         break;
     case 'Centro': // tipo dl pero no de la mia
         $repoTeleco = 'src\\ubis\\application\\repositories\\TelecoCtrRepository';
-        $obj_ubi = 'ubis\\model\\entity\\Centro';
+        $repo_ubi = 'src\\ubis\\application\\repositories\\CenaRepository';
         break;
     case 'CentroDl':
         $repoTeleco = 'src\\ubis\\application\\repositories\\TelecoCtrDlRepository';
-        $obj_ubi = 'ubis\\model\\entity\\CentroDl';
+        $repo_ubi = 'src\\ubis\\application\\repositories\\CentroDlRepository';
         break;
     case 'CentroEx':
         $repoTeleco = 'src\\ubis\\application\\repositories\\TelecoCtrExRepository';
-        $obj_ubi = 'ubis\\model\\entity\\CentroEx';
+        $repo_ubi = 'src\ubis\application\repositories\CentroExRepository';
         break;
 }
 
@@ -74,7 +74,7 @@ $botones = 0;
 1: modificar,eliminar,nuevo
 */
 if (strstr($Qobj_pau, 'Dl')) {
-    $oUbi = new $obj_ubi($Qid_ubi);
+    $oUbi = (new $repo_ubi())->findById($Qid_ubi);
     $dl = $oUbi->getDl();
     if ($dl == ConfigGlobal::mi_delef()) {
         // ----- sv sólo a scl -----------------

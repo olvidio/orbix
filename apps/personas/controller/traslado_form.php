@@ -1,11 +1,9 @@
 <?php
 
 use core\ViewPhtml;
-use personas\model\entity\GestorSituacion;
 use personas\model\entity\Persona;
 use src\personas\application\repositories\SituacionRepository;
-use ubis\model\entity\CentroDl;
-use ubis\model\entity\GestorCentroDl;
+use src\ubis\application\repositories\CentroDlRepository;
 use src\ubis\application\services\DelegacionDropdown;
 use web\Desplegable;
 use web\Hash;
@@ -44,7 +42,7 @@ if (empty($Qobj_pau)) {
 }
 
 if (!is_object($oPersona)) {
-    $msg_err = "<br>$oPersona con id_nom: $id_pau en  " . __FILE__ . ": line " . __LINE__;
+    $msg_err = "<br>$oPersona con id_nom: $id_pau en " . __FILE__ . ": line " . __LINE__;
     exit($msg_err);
 }
 
@@ -53,10 +51,12 @@ if (get_class($oPersona) === 'personas\model\entity\PersonaEx'
     exit(_("con las personas de paso no tiene sentido."));
 }
 
-$gesCentroDl = new GestorCentroDl();
+$gesCentroDl = new CentroDlRepository();
 $sCondicion = "WHERE tipo_ctr !~ '^[(cgi)|(igl)]'";
-$oDesplCentroDl = $gesCentroDl->getListaCentros($sCondicion);
+$aOpciones = $gesCentroDl->getArrayCentros($sCondicion);
+$oDesplCentroDl = new Desplegable();
 $oDesplCentroDl->setNombre('new_ctr');
+$oDesplCentroDl->setOpciones($aOpciones);
 
 $oDesplDlyR = DelegacionDropdown::listaRegDele(FALSE, 'new_dl'); // False para no incluir mi propia dl en la lista
 
@@ -68,8 +68,9 @@ $oDesplSituacion->setNombre("situacion");
 
 
 $id_ctr = $oPersona->getId_ctr();
-$oUbi = new CentroDl($id_ctr);
-$nombre_ctr = $oUbi->getNombre_ubi();
+$CentroDlRepository = new CentroDlRepository();
+$oCentroDl = $CentroDlRepository->findById($id_ctr);
+$nombre_ctr = $oCentroDl->getNombre_ubi();
 $dl = $oPersona->getDl();
 
 $oHoy = new web\DateTimeLocal();

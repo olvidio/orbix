@@ -260,7 +260,7 @@ class GestorTareaProceso extends ClaseGestor
             $i++;
             $a_pkey = array('id_item' => $aDades['id_item']);
             $oTareaProceso = new TareaProceso($a_pkey);
-            $oTareaProceso->setAllAtributes($aDades);
+            $oTareaProceso->setAllAttributes($aDades);
         }
         if ($i == 0) {
             $txt = _("No se puede encontrar una fase independiente (que no tenga fase previa) para el proceso: %s");

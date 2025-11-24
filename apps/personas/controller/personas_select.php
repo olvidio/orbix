@@ -9,11 +9,10 @@ use personas\model\entity\GestorPersonaNax;
 use personas\model\entity\GestorPersonaS;
 use personas\model\entity\GestorPersonaSSSC;
 use personas\model\entity\PersonaDl;
+use src\ubis\application\repositories\CentroDlRepository;
+use src\ubis\application\repositories\CentroRepository;
 use src\usuarios\application\repositories\PreferenciaRepository;
 use src\usuarios\domain\entity\Role;
-use ubis\model\entity\Centro;
-use ubis\model\entity\CentroDl;
-use ubis\model\entity\GestorCentroDl;
 use web\Hash;
 use web\Lista;
 
@@ -190,7 +189,7 @@ if ($miRolePau == Role::PAU_NOM) { //persona
     }
 
     if (!empty($aWhereCtr)) {
-        $gesCentros = new GestorCentroDl();
+        $gesCentros = new CentroDlRepository();
         $cCentros = $gesCentros->getCentros($aWhereCtr, $aOperadorCtr);
         $aId_ctrs = [];
         foreach ($cCentros as $oCentro) {
@@ -275,10 +274,10 @@ switch ($tabla) {
         exit (_("No se encuentra ningún centro con esta condición"));
 }
 
-$sWhere = core\urlsafe_b64encode(json_encode($aWhere),  JSON_THROW_ON_ERROR);
-$sOperador = core\urlsafe_b64encode(json_encode($aOperador),  JSON_THROW_ON_ERROR);
-$sWhereCtr = core\urlsafe_b64encode(json_encode($aWhereCtr),  JSON_THROW_ON_ERROR);
-$sOperadorCtr = core\urlsafe_b64encode(json_encode($aOperadorCtr),  JSON_THROW_ON_ERROR);
+$sWhere = core\urlsafe_b64encode(json_encode($aWhere), JSON_THROW_ON_ERROR);
+$sOperador = core\urlsafe_b64encode(json_encode($aOperador), JSON_THROW_ON_ERROR);
+$sWhereCtr = core\urlsafe_b64encode(json_encode($aWhereCtr), JSON_THROW_ON_ERROR);
+$sOperadorCtr = core\urlsafe_b64encode(json_encode($aOperadorCtr), JSON_THROW_ON_ERROR);
 
 $a_botones = [];
 $script = [];
@@ -436,10 +435,11 @@ foreach ($cPersonas as $oPersona) {
         $id_ctr = $oPersona->getId_ctr();
 
         if (ConfigGlobal::mi_ambito() === 'rstgr') {
-            $oCentroDl = new Centro($id_ctr);
+            $CentroDlRepository = new CentroRepository();
         } else {
-            $oCentroDl = new CentroDl($id_ctr);
+            $CentroDlRepository = new CentroDlRepository();
         }
+        $oCentroDl = $CentroDlRepository->findById($id_ctr);
         $nombre_ubi = $oCentroDl->getNombre_ubi();
     } else {
         $nombre_ubi = $oPersona->getDl();

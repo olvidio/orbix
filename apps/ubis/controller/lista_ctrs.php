@@ -11,8 +11,8 @@
 
 // INICIO Cabecera global de URL de controlador *********************************
 use personas\model\entity\GestorPersonaS;
+use src\ubis\application\repositories\CentroDlRepository;
 use web\Lista;
-use ubis\model\entity\GestorCentroDl;
 
 require_once("apps/core/global_header.inc");
 // Archivos requeridos por esta url **********************************************
@@ -22,8 +22,8 @@ require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
 //Para los centros de la dlb
-$GesCentros = new GestorCentroDl();
-$cCentros = $GesCentros->getCentros(array('tipo_ctr' => '^s[^s]', 'status' => 't', '_ordre' => 'nombre_ubi'), array('tipo_ctr' => '~'));
+$CentroReposiory = new CentroDlRepository();
+$cCentros = $CentroReposiory->getCentros(array('tipo_ctr' => '^s[^s]', 'status' => 't', '_ordre' => 'nombre_ubi'), array('tipo_ctr' => '~'));
 
 $GesPersonas = new GestorPersonaS();
 $num_total_s = 0;

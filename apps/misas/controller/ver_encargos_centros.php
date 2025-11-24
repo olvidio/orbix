@@ -7,10 +7,10 @@ use encargossacd\model\entity\Encargo;
 use encargossacd\model\entity\GestorEncargo;
 use encargossacd\model\entity\GestorEncargoTipo;
 use misas\domain\repositories\EncargoCtrRepository;
+use src\ubis\application\repositories\CentroDlRepository;
+use src\ubis\application\repositories\CentroEllasRepository;
 use web\Desplegable;
 use web\Hash;
-use ubis\model\entity\GestorCentroDl;
-use ubis\model\entity\GestorCentroEllas;
 use zonassacd\model\entity\GestorZona;
 
 require_once("apps/core/global_header.inc");
@@ -38,9 +38,9 @@ if (isset($Qid_zona)) {
     $aWhere['status'] = 't';
     $aWhere['id_zona'] = $Qid_zona;
     $aWhere['_ordre'] = 'nombre_ubi';
-    $GesCentrosDl = new GestorCentroDl();
+    $GesCentrosDl = new CentroDlRepository();
     $cCentrosDl = $GesCentrosDl->getCentros($aWhere);
-    $GesCentrosSf = new GestorCentroEllas();
+    $GesCentrosSf = new CentroEllasRepository();
     $cCentrosSf = $GesCentrosSf->getCentros($aWhere);
     $cCentros = array_merge($cCentrosDl, $cCentrosSf);
     
@@ -138,9 +138,9 @@ $aWhere = [];
 $aWhere['status'] = 't';
 $aWhere['id_zona'] = $Qid_zona;
 $aWhere['_ordre'] = 'nombre_ubi';
-$GesCentrosDl = new GestorCentroDl();
+$GesCentrosDl = new CentroDlRepository();
 $cCentrosDl = $GesCentrosDl->getCentros($aWhere);
-$GesCentrosSf = new GestorCentroEllas();
+$GesCentrosSf = new CentroEllasRepository();
 $cCentrosSf = $GesCentrosSf->getCentros($aWhere);
 $cCentros = array_merge($cCentrosDl, $cCentrosSf);
 

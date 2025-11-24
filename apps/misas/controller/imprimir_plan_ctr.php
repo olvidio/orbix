@@ -8,9 +8,8 @@ use encargossacd\model\entity\EncargoTipo;
 use misas\domain\entity\InicialesSacd;
 use misas\domain\repositories\EncargoCtrRepository;
 use misas\domain\repositories\EncargoDiaRepository;
+use src\ubis\domain\entity\Ubi;
 use web\DateTimeLocal;
-use web\Hash;
-use ubis\model\entity\Ubi;
 
 //use personas\model\entity\GestorPersona;
 //use web\Desplegable;

@@ -6,13 +6,14 @@ use actividadtarifas\model\entity\GestorTipoActivTarifa;
 use actividadtarifas\model\entity\TipoTarifa;
 use core\ConfigGlobal;
 use pasarela\model\Conversiones;
+use src\ubis\application\repositories\CasaDlRepository;
+use src\ubis\application\repositories\CentroDlRepository;
+use src\ubis\domain\entity\Ubi;
+use ubis\model\entity\GestorTarifaUbi;
 use web\DateTimeLocal;
 use web\Lista;
 use web\Periodo;
 use web\TiposActividades;
-use ubis\model\entity\GestorCasaDl;
-use ubis\model\entity\GestorCentroDl;
-use ubis\model\entity\GestorTarifaUbi;
 
 // INICIO Cabecera global de URL de controlador *********************************
 require_once("apps/core/global_header.inc");
@@ -27,8 +28,8 @@ $Qid_tipo_activ = (string)filter_input(INPUT_POST, 'id_tipo_activ');
 
 $mi_sfsv = ConfigGlobal::mi_sfsv();
 
-$GesCasaDl = new GestorCasaDl();
-$aCasasDl = $GesCasaDl->getArrayPosiblesCasas();
+$CasaDlReposiroty = new CasaDlRepository();
+$aCasasDl = $CasaDlReposiroty->getArrayCasas();
 
 $aWhere = [];
 $aOperador = [];
@@ -95,7 +96,7 @@ if (!empty($Qaid_cdc)) {
 }
 
 // Posibles centros encargados
-$gesCentrosDl = new GestorCentroDl();
+$gesCentrosDl = new CentroDlRepository();
 $aCentrosPosibles = $gesCentrosDl->getArrayCentros();
 // Quitar el sg o agd del inicio del nombre del ctr
 $aCentrosPosiblesSinSgAgd = [];
@@ -156,12 +157,12 @@ foreach ($cActividades as $oActividad) {
     if (!empty($h_ini)) {
         $pattern = '/(\d+):(\d+):(\d+)/';
         $replacement = '$1:$2';
-        $h_ini = preg_replace($pattern, $replacement, $h_ini?? '');
+        $h_ini = preg_replace($pattern, $replacement, $h_ini ?? '');
     }
     if (!empty($h_fin)) {
         $pattern = '/(\d+):(\d+):(\d+)/';
         $replacement = '$1:$2';
-        $h_fin = preg_replace($pattern, $replacement, $h_fin?? '');
+        $h_fin = preg_replace($pattern, $replacement, $h_fin ?? '');
     }
     // calcular fecha activación
     $activacion = $aConversion_activacion[$id_tipo_activ];
@@ -189,7 +190,7 @@ foreach ($cActividades as $oActividad) {
     // plazas
     $plazas_totales = $oActividad->getPlazas();
     if (empty($plazas_totales)) {
-        $oCasa = ubis\model\entity\Ubi::NewUbi($id_ubi);
+        $oCasa = Ubi::NewUbi($id_ubi);
         // A veces por error se puede poner una actividad a un ctr...
         if (method_exists($oCasa, 'getPlazas')) {
             $plazas_max = $oCasa->getPlazas();

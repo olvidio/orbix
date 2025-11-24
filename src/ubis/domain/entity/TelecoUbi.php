@@ -140,6 +140,8 @@ class TelecoUbi
     /**
      *
      * @return int $iid_ubi
+     *
+     * @deprecated Usar `getIdUbiVo(): TelecoUbiId` en su lugar.
      */
     public function getId_ubi(): int
     {
@@ -149,6 +151,8 @@ class TelecoUbi
     /**
      *
      * @param int $iid_ubi
+     *
+     * @deprecated Usar `setIdUbiVo(TelecoUbiId $id): void` en su lugar.
      */
     public function setId_ubi(int $iid_ubi): void
     {
@@ -158,6 +162,8 @@ class TelecoUbi
     /**
      *
      * @return int $id_tipo_teleco
+     *
+     * @deprecated Usar `getIdTipoTelecoVo(): TipoTelecoId` en su lugar.
      */
     public function getId_tipo_teleco(): int
     {
@@ -167,6 +173,8 @@ class TelecoUbi
     /**
      *
      * @param int $id_tipo_teleco
+     *
+     * @deprecated Usar `setIdTipoTelecoVo(TipoTelecoId $id): void` en su lugar.
      */
     public function setId_tipo_teleco(int $id_tipo_teleco): void
     {
@@ -186,6 +194,8 @@ class TelecoUbi
     /**
      *
      * @return string|null $sdesc_teleco
+     *
+     * @deprecated Usar `getDescTelecoVo(): ?DescTelecoText` en su lugar.
      */
     public function getDesc_teleco(): ?string
     {
@@ -195,6 +205,8 @@ class TelecoUbi
     /**
      *
      * @param string|null $sdesc_teleco
+     *
+     * @deprecated Usar `setDescTelecoVo(?DescTelecoText $texto = null): void` en su lugar.
      */
     public function setDesc_teleco(?string $sdesc_teleco = null): void
     {
@@ -214,6 +226,8 @@ class TelecoUbi
     /**
      *
      * @return string $snum_teleco
+     *
+     * @deprecated Usar `getNumTelecoVo(): NumTelecoText` en su lugar.
      */
     public function getNum_teleco(): string
     {
@@ -223,6 +237,8 @@ class TelecoUbi
     /**
      *
      * @param string $snum_teleco
+     *
+     * @deprecated Usar `setNumTelecoVo(NumTelecoText $texto): void` en su lugar.
      */
     public function setNum_teleco(string $snum_teleco): void
     {
@@ -242,6 +258,8 @@ class TelecoUbi
     /**
      *
      * @return string|null $sobserv
+     *
+     * @deprecated Usar `getObservVo(): ?ObservTelecoText` en su lugar.
      */
     public function getObserv(): ?string
     {
@@ -251,6 +269,8 @@ class TelecoUbi
     /**
      *
      * @param string|null $sobserv
+     *
+     * @deprecated Usar `setObservVo(?ObservTelecoText $texto = null): void` en su lugar.
      */
     public function setObserv(?string $sobserv = null): void
     {
@@ -270,6 +290,8 @@ class TelecoUbi
     /**
      *
      * @return int $iid_item
+     *
+     * @deprecated Usar `getIdItemVo(): TelecoUbiItemId` en su lugar.
      */
     public function getId_item(): int
     {
@@ -279,6 +301,8 @@ class TelecoUbi
     /**
      *
      * @param int $iid_item
+     *
+     * @deprecated Usar `setIdItemVo(TelecoUbiItemId $id): void` en su lugar.
      */
     public function setId_item(int $iid_item): void
     {

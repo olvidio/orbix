@@ -1,9 +1,9 @@
 <?php
 
-use ubis\model\entity\CdcDlxDireccion;
-use ubis\model\entity\CdcExxDireccion;
-use ubis\model\entity\CtrDlxDireccion;
-use ubis\model\entity\CtrExxDireccion;
+use src\ubis\application\repositories\CasaDlRepository;
+use src\ubis\application\repositories\CasaExRepository;
+use src\ubis\application\repositories\CentroDlRepository;
+use src\ubis\application\repositories\CentroExRepository;
 
 /**
  * Esta página quita la dirección de un ubi.
@@ -34,22 +34,21 @@ $Qid_direccion = (string)filter_input(INPUT_POST, 'id_direccion');
 // puede haber más de una dirección
 $a_id_direccion = explode(',', $Qid_direccion);
 $id_direccion = $a_id_direccion[$Qidx];
-$a_pkey = array('id_ubi' => $Qid_ubi, 'id_direccion' => $id_direccion);
+
 switch ($Qobj_dir) {
-    case "DireccionCtrDl":
-        $oUbi = new CtrDlxDireccion($a_pkey);
+    case "DireccionCentroDl":
+        $UbiRepository = new CentroDlRepository();
         break;
-    case "DireccionCtrEx":
-        $oUbi = new CtrExxDireccion($a_pkey);
+    case "DireccionCentroEx":
+        $UbiRepository = new CentroExRepository();
         break;
     case "DireccionCdcDl":
-        $oUbi = new CdcDlxDireccion($a_pkey);
+        $UbiRepository = new CasaDlRepository();
         break;
     case "DireccionCdcEx":
-        $oUbi = new CdcExxDireccion($a_pkey);
+        $UbiRepository = new CasaExRepository();
         break;
 }
-if ($oUbi->DBEliminar() === false) {
-    echo _("hay un error, no se ha eliminado");
-    echo "\n" . $oUbi->getErrorTxt();
-}
+
+$oUbi = $UbiRepository->findById($Qid_ubi);
+$oUbi->removeDireccion($id_direccion);

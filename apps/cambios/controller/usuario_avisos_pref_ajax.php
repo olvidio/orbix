@@ -7,10 +7,10 @@ use cambios\model\entity\CambioUsuarioPropiedadPref;
 use cambios\model\entity\GestorCambioUsuarioPropiedadPref;
 use cambios\model\GestorAvisoCambios;
 use core\ConfigGlobal;
+use procesos\model\entity\GestorActividadFase;
+use src\ubis\application\repositories\CasaDlRepository;
 use src\usuarios\domain\entity\Role;
 use web\DesplegableArray;
-use procesos\model\entity\GestorActividadFase;
-use ubis\model\entity\GestorCasaDl;
 use web\Hash;
 use function core\is_true;
 
@@ -151,8 +151,8 @@ switch ($Qsalida) {
                     }
                 }
             }
-            $oGesCasas = new GestorCasaDl();
-            $oOpciones = $oGesCasas->getPosiblesCasas($donde);
+            $CasaDlRepository = new CasaDlRepository();
+            $oOpciones = $CasaDlRepository->getArrayCasas($donde);
 
             $oSelects = new DesplegableArray($valor, $oOpciones, 'id_ubi');
             //$oSelects->setOpciones($oOpciones);

@@ -6,10 +6,9 @@ use encargossacd\model\EncargoFunciones;
 use encargossacd\model\entity\Encargo;
 use encargossacd\model\entity\GestorEncargoSacd;
 use personas\model\entity\GestorPersonaDl;
+use src\ubis\application\repositories\CentroDlRepository;
+use src\ubis\application\repositories\CentroEllasRepository;
 use web\DateTimeLocal;
-use ubis\model\entity\CentroDl;
-use ubis\model\entity\CentroEllas;
-use ubis\model\entity\GestorCentroDl;
 use zonassacd\model\entity\GestorZona;
 use zonassacd\model\entity\GestorZonaGrupo;
 use function core\strtoupper_dlb;
@@ -87,7 +86,7 @@ foreach ($cZonasGrupos as $oZonaGrupo) {
     $a_sacd = [];
     foreach ($cZonas as $oZona) {
         $id_zona = $oZona->getId_zona();
-        $GesCentrosDl = new GestorCentroDl();
+        $GesCentrosDl = new CentroDlRepository();
         $cCentrosDl = $GesCentrosDl->getCentros(array('id_zona' => $id_zona));
         foreach ($cCentrosDl as $oCentroDl) {
             $id_ubi = $oCentroDl->getId_ubi();
@@ -126,10 +125,12 @@ foreach ($cZonasGrupos as $oZonaGrupo) {
                         $nombre_ubi = ''; // no tine encargo en ctr: descanso, estudio...
                     } else {
                         $iid = (string)$id_ubi_enc;
-                        if ($iid[0] == 2) {
-                            $oCentroEnc = new CentroEllas($id_ubi_enc);
+                        if ((int)$iid[0] === 2) {
+                            $CentroEllasRepository = new CentroEllasRepository();
+                            $oCentroEnc = $CentroEllasRepository->findById($id_ubi_enc);
                         } else {
-                            $oCentroEnc = new CentroDl($id_ubi_enc);
+                            $CentroDlRepository = new CentroDlRepository();
+                            $oCentroEnc = $CentroDlRepository->findById($id_ubi_enc);
                         }
                         $nombre_ubi = $oCentroEnc->getNombre_ubi();
                     }
@@ -159,7 +160,7 @@ foreach ($cZonasGrupos as $oZonaGrupo) {
                             $sv_txt .= trim(", $modo_txt: $nombre_ubi $dedicacion_txt");
                             break;
                         case 1200:
-                            if ($permiso_sf == "si") {
+                            if ($permiso_sf === "si") {
                                 $sf_txt .= trim(", $modo_txt: $nombre_ubi $dedicacion_txt");
                             } else {
                                 switch ($modo) {

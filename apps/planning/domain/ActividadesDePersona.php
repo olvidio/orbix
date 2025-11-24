@@ -5,7 +5,7 @@ namespace planning\domain;
 use actividadcargos\model\GestorCargoOAsistente;
 use actividades\model\entity\GestorActividad;
 use core\ConfigGlobal;
-use ubis\model\entity\CentroDl;
+use src\ubis\application\repositories\CentroDlRepository;
 use web\DateTimeLocal;
 use web\TiposActividades;
 
@@ -34,6 +34,7 @@ class ActividadesDePersona
         $persona = [];
         $a_actividades = [];
         $a_actividades2 = [];
+        $CentroDlRepository = new CentroDlRepository();
         foreach ($cPersonas as $oPersona) {
             $aActivPersona = [];
             $id_nom = $oPersona->getId_nom();
@@ -43,8 +44,8 @@ class ActividadesDePersona
             if (empty($id_ubi)) {
                 $nombre_ubi = "centro?";
             } elseif (!in_array($id_ubi, $aListaCtr)) {
-                $oCentro = new CentroDl($id_ubi);
-                $nombre_ubi = $oCentro->getNombre_ubi();
+                $oCentroDl = $CentroDlRepository->findById($id_ubi);
+                $nombre_ubi = $oCentroDl->getNombre_ubi();
                 $aListaCtr[$id_ubi] = $nombre_ubi;
             } else {
                 $nombre_ubi = $aListaCtr[$id_ubi];

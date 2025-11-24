@@ -17,12 +17,12 @@ use actividades\model\entity\GestorActividadDl;
 use casas\model\entity\Ingreso;
 use core\ConfigGlobal;
 use core\ViewTwig;
+use src\ubis\application\repositories\CasaDlRepository;
 use web\DateTimeLocal;
 use web\Desplegable;
 use web\Hash;
 use web\Periodo;
 use web\PeriodoQue;
-use ubis\model\entity\CasaDl;
 use web\TablaEditable;
 use function core\strtoupper_dlb;
 
@@ -102,6 +102,7 @@ $GesActividadesDl = new GestorActividadDl();
 $cActividades = $GesActividadesDl->getActividades($aWhere, $aOperador);
 $i = 0;
 $a_valores = [];
+$CasaDlRepository = new CasaDlRepository();
 foreach ($cActividades as $oActividad) {
     $i++;
     $id_activ = $oActividad->getId_activ();
@@ -111,7 +112,7 @@ foreach ($cActividades as $oActividad) {
     $Ingreso = new Ingreso($id_activ);
     $num_asistentes_previstos = $Ingreso->getNum_asistentes_previstos();
 
-    $Ubi = new CasaDl($id_ubi);
+    $Ubi = $CasaDlRepository->findById($id_ubi);
     $plazas = $Ubi->getPlazas();
     $plazas_min = $Ubi->getPlazas_min();
 

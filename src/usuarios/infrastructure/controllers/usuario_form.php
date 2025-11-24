@@ -6,13 +6,12 @@ use personas\model\entity\GestorPersonaAgd;
 use personas\model\entity\GestorPersonaDl;
 use personas\model\entity\GestorPersonaN;
 use procesos\model\entity\GestorPermUsuarioActividad;
+use src\ubis\application\repositories\CasaDlRepository;
+use src\ubis\application\repositories\CentroDlRepository;
+use src\ubis\application\repositories\CentroEllasRepository;
 use src\usuarios\application\repositories\RoleRepository;
 use src\usuarios\application\repositories\UsuarioRepository;
 use src\usuarios\domain\entity\Role;
-use ubis\model\entity\GestorCasaDl;
-use ubis\model\entity\GestorCentroDl;
-use ubis\model\entity\GestorCentroEllas;
-use web\DesplegableArray;
 use web\Hash;
 use function core\is_true;
 
@@ -82,9 +81,9 @@ if ($miRole < 4) { // es administrador
         $usuario = $oUsuario->getUsuarioAsString();
         $nom_usuario = $oUsuario->getNom_usuarioAsString();
         $cambio_password = $oUsuario->isCambio_password();
-        $chk_cambio_password = is_true($cambio_password)? 'checked' : '';
+        $chk_cambio_password = is_true($cambio_password) ? 'checked' : '';
         $has_2fa = $oUsuario->has2fa();
-        $chk_has_2fa = is_true($has_2fa)? 'checked' : '';
+        $chk_has_2fa = is_true($has_2fa) ? 'checked' : '';
         $email = $oUsuario->getEmailAsString();
         $id_role = $oUsuario->getId_role();
         $oRole = $RoleRepository->findById($id_role);
@@ -102,8 +101,8 @@ if ($miRole < 4) { // es administrador
                     $cond = "WHERE sf = 't'";
                     break;
             }
-            $oGCasas = new GestorCasaDl();
-            $aOpcionesCasas = $oGCasas->getArrayPosiblesCasas($cond);
+            $oGCasas = new CasaDlRepository();
+            $aOpcionesCasas = $oGCasas->getArrayCasas($cond);
 
             $aDataDespl['tipo'] = 'array';
             $aDataDespl['nom'] = 'casas';
@@ -115,8 +114,8 @@ if ($miRole < 4) { // es administrador
         }
         if ($pau === Role::PAU_CTR && $isSv) { //centroSv
             $id_pau = $oUsuario->getId_pauAsString();
-            $oGesCentrosDl = new GestorCentroDl();
-            $aOpciones = $oGesCentrosDl->getArrayCentros();
+            $CentroDlRepository = new CentroDlRepository();
+            $aOpciones = $CentroDlRepository->getArrayCentros();
 
             $aDataDespl['tipo'] = 'simple';
             $aDataDespl['nom'] = 'id_ctr';
@@ -127,7 +126,7 @@ if ($miRole < 4) { // es administrador
         }
         if ($pau === Role::PAU_CTR && $isSf) { //centroSf
             $id_pau = $oUsuario->getId_pauAsString();
-            $oGesCentrosDl = new GestorCentroEllas();
+            $oGesCentrosDl = new CentroEllasRepository();
             $aOpciones = $oGesCentrosDl->getArrayCentros();
 
             $aDataDespl['tipo'] = 'simple';

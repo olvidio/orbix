@@ -3,12 +3,12 @@
 use core\ConfigGlobal;
 use core\DBPropiedades;
 use core\ViewPhtml;
-use ubis\model\entity\GestorCasa;
-use ubis\model\entity\GestorCasaDl;
-use ubis\model\entity\GestorCasaEx;
-use ubis\model\entity\GestorCentro;
-use ubis\model\entity\GestorCentroDl;
-use ubis\model\entity\GestorCentroEx;
+use src\ubis\application\repositories\CasaDlRepository;
+use src\ubis\application\repositories\CasaExRepository;
+use src\ubis\application\repositories\CasaRepository;
+use src\ubis\application\repositories\CentroDlRepository;
+use src\ubis\application\repositories\CentroExRepository;
+use src\ubis\application\repositories\CentroRepository;
 use web\Desplegable;
 use web\Hash;
 use web\Lista;
@@ -168,7 +168,7 @@ if ($Qloc !== 'ex') {
             break;
     }
 }
-if ($Qloc == 'ex') {
+if ($Qloc === 'ex') {
     switch ($Qque_lista) {
         /*vamos a por los casos de la tabla u_centros_ex*/
         case "ctr_n":
@@ -213,28 +213,28 @@ if ($Qloc == 'ex') {
 
 switch ($obj) {
     case 'Centro':
-        $oGesCentros = new GestorCentro();
-        $cUbis = $oGesCentros->getCentros($aWhere, $aOperador);
+        $CentroRepository = new CentroRepository();
+        $cUbis = $CentroRepository->getCentros($aWhere, $aOperador);
         break;
     case 'CentroDl':
-        $oGesCentros = new GestorCentroDl();
-        $cUbis = $oGesCentros->getCentros($aWhere, $aOperador);
+        $CentroRepository = new CentroDlRepository();
+        $cUbis = $CentroRepository->getCentros($aWhere, $aOperador);
         break;
     case 'CentroEx':
-        $oGesCentros = new GestorCentroEx();
-        $cUbis = $oGesCentros->getCentros($aWhere, $aOperador);
+        $CentroRepository = new CentroExRepository();
+        $cUbis = $CentroRepository->getCentros($aWhere, $aOperador);
         break;
     case 'Casa':
-        $oGesCasas = new GestorCasa();
-        $cUbis = $oGesCasas->getCasas($aWhere, $aOperador);
+        $CasaRepository = new CasaRepository();
+        $cUbis = $CasaRepository->getCasas($aWhere, $aOperador);
         break;
     case 'CasaDl':
-        $oGesCasas = new GestorCasaDl();
-        $cUbis = $oGesCasas->getCasas($aWhere, $aOperador);
+        $CasaRepository = new CasaDlRepository();
+        $cUbis = $CasaRepository->getCasas($aWhere, $aOperador);
         break;
     case 'CasaEx':
-        $oGesCasas = new GestorCasaEx();
-        $cUbis = $oGesCasas->getCasas($aWhere, $aOperador);
+        $CasaRepository = new CasaExRepository();
+        $cUbis = $CasaRepository->getCasas($aWhere, $aOperador);
         break;
     case 'none':
         $cUbis = [];

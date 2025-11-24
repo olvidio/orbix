@@ -5,11 +5,11 @@ use actividadescentro\model\entity\CentroEncargado;
 use actividadescentro\model\entity\GestorCentroEncargado;
 use core\ConfigGlobal;
 use permisos\model\PermisosActividadesTrue;
+use src\ubis\application\repositories\CasaRepository;
+use src\ubis\application\repositories\CentroDlRepository;
+use src\ubis\application\repositories\CentroEllasRepository;
 use web\DateTimeLocal;
 use web\Periodo;
-use ubis\model\entity\GestorCasa;
-use ubis\model\entity\GestorCentroDl;
-use ubis\model\entity\GestorCentroEllas;
 
 // INICIO Cabecera global de URL de controlador *********************************
 require_once("apps/core/global_header.inc");
@@ -136,7 +136,7 @@ switch ($Qque) {
         $aWhere['tipo_ctr'] = '^s[^s]*';
         $aWhere['_ordre'] = 'nombre_ubi';
         $aOperador['tipo_ctr'] = '~';
-        $GesCentros = new GestorCentroDl();
+        $GesCentros = new CentroDlRepository();
         $cCentros = $GesCentros->getCentros($aWhere, $aOperador);
         $periodo = "f_ini BETWEEN '" . $Qinicio . "' AND '" . $Qfin . "'";
         $txt_ctr = '';
@@ -161,7 +161,7 @@ switch ($Qque) {
         $aWhere['status'] = 't';
         $aWhere['tipo_labor'] = '512'; //sg -> 512
         $aOperador['tipo_labor'] = '&';
-        $GesCentros = new GestorCentroDl();
+        $GesCentros = new CentroDlRepository();
         $cCentros = $GesCentros->getCentros($aWhere, $aOperador);
         $txt_ctr = '';
         foreach ($cCentros as $oCentro) {
@@ -177,7 +177,7 @@ switch ($Qque) {
         $aWhere['status'] = 't';
         $aWhere['tipo_ctr'] = '^[na]';
         $aOperador['tipo_ctr'] = '~';
-        $GesCentros = new GestorCentroDl();
+        $GesCentros = new CentroDlRepository();
         $cCentros = $GesCentros->getCentros($aWhere, $aOperador);
         $txt_ctr = '';
         foreach ($cCentros as $oCentro) {
@@ -193,7 +193,7 @@ switch ($Qque) {
         $aWhere['status'] = 't';
         $aWhere['tipo_ctr'] = '^sss';
         $aOperador['tipo_ctr'] = '~';
-        $GesCentros = new GestorCentroDl();
+        $GesCentros = new CentroDlRepository();
         $cCentros = $GesCentros->getCentros($aWhere, $aOperador);
         $txt_ctr = '';
         foreach ($cCentros as $oCentro) {
@@ -209,7 +209,7 @@ switch ($Qque) {
         $aWhere['status'] = 't';
         $aWhere['tipo_labor'] = '64'; //sg -> 64
         $aOperador['tipo_labor'] = '&';
-        $GesCentros = new GestorCentroEllas();
+        $GesCentros = new CentroEllasRepository();
         $cCentros = $GesCentros->getCentros($aWhere, $aOperador);
         $txt_ctr = '';
         foreach ($cCentros as $oCentro) {
@@ -225,7 +225,7 @@ switch ($Qque) {
         $aWhere['status'] = 't';
         $aWhere['tipo_labor'] = '512'; //sg -> 512
         $aOperador['tipo_labor'] = '&';
-        $GesCentros = new GestorCentroEllas();
+        $GesCentros = new CentroEllasRepository();
         $cCentros = $GesCentros->getCentros($aWhere, $aOperador);
         $txt_ctr = '';
         foreach ($cCentros as $oCentro) {
@@ -241,7 +241,7 @@ switch ($Qque) {
         $aWhere['status'] = 't';
         $aWhere['tipo_ctr'] = '^[na]';
         $aOperador['tipo_ctr'] = '~';
-        $GesCentros = new GestorCentroEllas();
+        $GesCentros = new CentroEllasRepository();
         $cCentros = $GesCentros->getCentros($aWhere, $aOperador);
         $txt_ctr = '';
         foreach ($cCentros as $oCentro) {
@@ -342,8 +342,8 @@ switch ($Qque) {
         $a_cabeceras[] = ucfirst(_("actividad"));
         $a_cabeceras[] = ucfirst(_("ctr encargados"));
 
-        $gesCasas = new GestorCasa();
-        $a_casas = $gesCasas->getArrayPosiblesCasas();
+        $CasaRepository = new CasaRepository();
+        $a_casas = $CasaRepository->getArrayCasas();
 
         $i = 0;
         $sin = 0;
@@ -407,9 +407,9 @@ switch ($Qque) {
         // ordenar
         if (!empty($a_valores)) {
             array_multisort(
-                $a_FechaIni, SORT_STRING,
-                $a_NombreCasa, SORT_STRING,
-                $a_valores);
+                    $a_FechaIni, SORT_STRING,
+                    $a_NombreCasa, SORT_STRING,
+                    $a_valores);
         }
 
         ?>

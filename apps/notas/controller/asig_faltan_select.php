@@ -2,7 +2,7 @@
 
 use core\ConfigGlobal;
 use notas\model\AsignaturasPendientes;
-use ubis\model\entity\CentroDl;
+use src\ubis\application\repositories\CentroDlRepository;
 use web\Hash;
 use web\Lista;
 use function core\is_true;
@@ -103,26 +103,26 @@ $aId_nom = $Pendientes->personasQueLesFalta($Qnumero, $curso);
 * Defino un array con los datos actuales, para saber volver después de navegar un rato
 */
 $aGoBack = array(
-    'numero' => $Qnumero,
-    'b_c' => $Qb_c,
-    'c1' => $Qc1,
-    'c2' => $Qc2,
-    'lista' => $Qlista,
-    'personas_n' => $Qpersonas_n,
-    'personas_agd' => $Qpersonas_agd);
+        'numero' => $Qnumero,
+        'b_c' => $Qb_c,
+        'c1' => $Qc1,
+        'c2' => $Qc2,
+        'lista' => $Qlista,
+        'personas_n' => $Qpersonas_n,
+        'personas_agd' => $Qpersonas_agd);
 $oPosicion->setParametros($aGoBack, 1);
 
 $a_botones = array(array('txt' => _("modificar stgr"), 'click' => "fnjs_modificar(\"#seleccionados\")"),
-    array('txt' => _("ver tessera"), 'click' => "fnjs_tesera(\"#seleccionados\")")
+        array('txt' => _("ver tessera"), 'click' => "fnjs_tesera(\"#seleccionados\")")
 );
 
 $a_cabeceras = array(ucfirst(_("tipo")),
-    array('name' => _("nombre y apellidos"), 'formatter' => 'clickFormatter'),
-    ucfirst(_("centro")),
-    ucfirst(_("stgr")),
-    ucfirst(_("asignaturas")),
-    array('name' => _("telf."), 'width' => 80),
-    array('name' => _("mails"), 'width' => 100),
+        array('name' => _("nombre y apellidos"), 'formatter' => 'clickFormatter'),
+        ucfirst(_("centro")),
+        ucfirst(_("stgr")),
+        ucfirst(_("asignaturas")),
+        array('name' => _("telf."), 'width' => 80),
+        array('name' => _("mails"), 'width' => 100),
 );
 
 $titulo = sprintf(_("lista de %s a los que faltan %d o menos asignaturas para finalizar el %s"), $gente, $Qnumero, $curso_txt);
@@ -142,7 +142,8 @@ foreach ($aId_nom as $id_nom => $aAsignaturas) {
         $nombre_ubi = $oPersona->getDl();
     } else {
         $id_ctr = $oPersona->getId_ctr();
-        $oCentroDl = new CentroDl($id_ctr);
+        $CentroDlRepository = new CentroDlRepository();
+        $oCentroDl = $CentroDlRepository->findById($id_ctr);
         $nombre_ubi = $oCentroDl->getNombre_ubi();
     }
 
@@ -194,8 +195,8 @@ if (!empty($a_valores)) {
 $oHash = new Hash();
 $oHash->setCamposForm('sel!scroll_id');
 $a_camposHidden = array(
-    'pau' => 'p',
-    'obj_pau' => $obj_pau,
+        'pau' => 'p',
+        'obj_pau' => $obj_pau,
 );
 $oHash->setArraycamposHidden($a_camposHidden);
 

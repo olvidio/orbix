@@ -214,7 +214,7 @@ class TarifaUbi extends ClasePropiedades
             }
             $this->iid_item = $oDbl->lastInsertId('du_tarifas_id_item_seq');
         }
-        $this->setAllAtributes($aDades);
+        $this->setAllAttributes($aDades);
         return TRUE;
     }
 
@@ -247,7 +247,7 @@ class TarifaUbi extends ClasePropiedades
                     if ($aDades === FALSE) {
                         $this->setNullAllAtributes();
                     } else {
-                        $this->setAllAtributes($aDades);
+                        $this->setAllAttributes($aDades);
                     }
             }
             return TRUE;
@@ -280,7 +280,7 @@ class TarifaUbi extends ClasePropiedades
      *
      * @param array $aDades
      */
-    function setAllAtributes(array $aDades)
+    function setAllAttributes(array $aDades)
     {
         if (!is_array($aDades)) return;
         if (array_key_exists('id_schema', $aDades)) $this->setId_schema($aDades['id_schema']);

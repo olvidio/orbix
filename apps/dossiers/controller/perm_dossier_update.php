@@ -84,5 +84,5 @@ foreach ($cDatosCampo as $oDatosCampo) {
         }
     }
 }
-$oTipoDossier->setAllAtributes($a_values_o, TRUE);
+$oTipoDossier->setAllAttributes($a_values_o, TRUE);
 $oTipoDossier->DBGuardar();

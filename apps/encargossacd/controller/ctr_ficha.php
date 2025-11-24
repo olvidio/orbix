@@ -3,10 +3,10 @@
 use core\ViewTwig;
 use encargossacd\model\DesplCentros;
 use encargossacd\model\entity\GestorEncargoTipo;
+use src\ubis\application\repositories\CentroDlRepository;
+use src\ubis\application\repositories\CentroEllasRepository;
 use web\Desplegable;
 use web\Hash;
-use ubis\model\entity\CentroDl;
-use ubis\model\entity\CentroEllas;
 
 /**
  * Esta página muestra la atención sacerdotal de un centro.
@@ -33,10 +33,12 @@ $Qfiltro_ctr = (string)filter_input(INPUT_POST, 'filtro_ctr');
 if (!empty($Qid_ubi)) {
     // si empieza por 2 es de la sf.
     $Qid_ubi_txt = (string)$Qid_ubi;
-    if ($Qid_ubi_txt[0] == 2) {
-        $oCentro = new CentroEllas($Qid_ubi);
+    if ((int)$Qid_ubi_txt[0] === 2) {
+        $CentroEllasRepository = new CentroEllasRepository();
+        $oCentro = $CentroEllasRepository->findById($Qid_ubi);
     } else {
-        $oCentro = new CentroDl($Qid_ubi);
+        $CentroDlRepository = new CentroDlRepository();
+        $oCentro = $CentroDlRepository->findById($Qid_ubi);
     }
     $tipo_ubi = $oCentro->getTipo_ubi();
     $tipo_ctr = $oCentro->getTipo_ctr();

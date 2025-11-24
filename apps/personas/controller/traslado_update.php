@@ -5,7 +5,7 @@ use dossiers\model\entity\Dossier;
 use personas\model\entity\PersonaDl;
 use personas\model\entity\Traslado;
 use personas\model\entity\TrasladoDl;
-use ubis\model\entity\Centro;
+use src\ubis\application\repositories\CentroRepository;
 
 /**
  * Para asegurar que inicia la sesión, y poder acceder a los permisos
@@ -33,7 +33,8 @@ if (!empty($Qnew_ctr) && !empty($Qf_ctr)) {
     $Qctr_o = (string)filter_input(INPUT_POST, 'ctr_o');
 
     $id_new_ctr = strtok($Qnew_ctr, "#");
-    $oCentro = new Centro($id_new_ctr);
+    $CentroRepository = new CentroRepository();
+    $oCentro = $CentroRepository->findById($id_new_ctr);
     $nom_new_ctr = $oCentro->getNombre_ubi();
 
     $oPersonaDl->setId_ctr($id_new_ctr);

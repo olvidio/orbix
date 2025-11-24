@@ -4,10 +4,10 @@ use actividades\model\entity\GestorActividad;
 use actividadtarifas\model\entity\GestorTipoTarifa;
 use casas\model\entity\GestorUbiGasto;
 use casas\model\entity\Ingreso;
+use src\ubis\application\repositories\CasaDlRepository;
 use web\DateTimeLocal;
 use web\Hash;
 use web\TiposActividades;
-use ubis\model\entity\CasaDl;
 use ubis\model\entity\GestorCasaPeriodo;
 use ubis\model\entity\GestorTarifaUbi;
 
@@ -40,7 +40,7 @@ $any_actual = date("Y");
 $any_anterior = $any_actual - 1;
 $any_prev = $any_actual + 1;
 
-$oCasa = new CasaDl($Qid_ubi);
+$oCasa = (new CasaDlRepository())->findById($Qid_ubi);
 $nombre_ubi = $oCasa->getNombre_ubi();
 $plazas_min = $oCasa->getPlazas_min();
 

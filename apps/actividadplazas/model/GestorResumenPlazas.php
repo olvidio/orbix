@@ -7,6 +7,7 @@ use actividadplazas\model\entity\GestorActividadPlazas;
 use asistentes\model\entity\GestorAsistente;
 use core\ConfigGlobal;
 use src\ubis\application\repositories\DelegacionRepository;
+use src\ubis\domain\entity\Ubi;
 use web\Desplegable;
 use function core\is_true;
 
@@ -227,7 +228,7 @@ class GestorResumenPlazas
             $id_ubi = $oActividad->getId_ubi();
             $plazas_totales = '';
             if (!empty($id_ubi)) {
-                $oCasa = \ubis\model\entity\Ubi::NewUbi($id_ubi);
+                $oCasa = Ubi::NewUbi($id_ubi);
                 // Si la casa es un ctr de otra dl, no sé las plazas
                 if (method_exists($oCasa, 'getPlazas')) {
                     $plazas_totales = $oCasa->getPlazas();
@@ -245,8 +246,8 @@ class GestorResumenPlazas
      * usa clases externas:
      *    asistentes\model\entity\GestorAsistente();
      *    actividades\Actividad($id_activ);
-     *    ubis\model\entity\Ubi::NewUbi($id_ubi);
-     *    ubis\model\entity\GestorDelegacion();
+     *    Ubi::NewUbi($id_ubi);
+     *    GestorDelegacion();
      *
      * @param integer $id_activ
      * @return array $a_plazas

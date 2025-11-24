@@ -173,7 +173,7 @@ class EncargoSacdObserv extends ClasePropiedades
             }
             $this->iid_item = $oDbl->lastInsertId('encargo_sacd_observ_id_item_seq');
         }
-        $this->setAllAtributes($aDades);
+        $this->setAllAttributes($aDades);
         return TRUE;
     }
 
@@ -206,7 +206,7 @@ class EncargoSacdObserv extends ClasePropiedades
                     if ($aDades === FALSE) {
                         $this->setNullAllAtributes();
                     } else {
-                        $this->setAllAtributes($aDades);
+                        $this->setAllAttributes($aDades);
                     }
             }
             return TRUE;
@@ -239,7 +239,7 @@ class EncargoSacdObserv extends ClasePropiedades
      *
      * @param array $aDades
      */
-    function setAllAtributes(array $aDades)
+    function setAllAttributes(array $aDades)
     {
         if (!is_array($aDades)) return;
         if (array_key_exists('id_item', $aDades)) $this->setId_item($aDades['id_item']);

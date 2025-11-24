@@ -7,11 +7,10 @@ use cambios\model\GestorAvisoCambios;
 use core\ConfigGlobal;
 use core\ViewTwig;
 use procesos\model\entity\GestorActividadFase;
+use src\ubis\application\repositories\CasaDlRepository;
 use src\usuarios\application\repositories\GrupoRepository;
-use src\usuarios\application\repositories\RoleRepository;
 use src\usuarios\application\repositories\UsuarioRepository;
 use src\usuarios\domain\entity\Role;
-use ubis\model\entity\GestorCasaDl;
 use web\Desplegable;
 use web\DesplegableArray;
 use web\Hash;
@@ -146,8 +145,8 @@ if ($grupo === FALSE && $oRole->isRolePau(Role::PAU_CDC)) {
     //formulario para casas cuyo calendario de actividades interesa
     $cond = "WHERE status='t' AND (id_ubi=$sDonde)";
 }
-$oGCasas = new GestorCasaDl();
-$oOpcionesCasas = $oGCasas->getPosiblesCasas($cond);
+$CasaDlRepository = new CasaDlRepository();
+$oOpcionesCasas = $CasaDlRepository->getArrayCasas($cond);
 
 $oDesplArrayCasas = new DesplegableArray($id_pau, $oOpcionesCasas, 'casas');
 $oDesplArrayCasas->setBlanco('t');

@@ -418,7 +418,7 @@ class GestorActividadAll extends ClaseGestor
         foreach ($oDbl->query($sQuery) as $aDades) {
             $a_pkey = array('id_tipo_activ' => $aDades['id_activ']);
             $oActividad = new ActividadAll($a_pkey);
-            $oActividad->setAllAtributes($aDades);
+            $oActividad->setAllAttributes($aDades);
             $oActividadSet->add($oActividad);
         }
         return $oActividadSet->getTot();
@@ -485,7 +485,7 @@ class GestorActividadAll extends ClaseGestor
                     $oActividad = new ActividadEx($a_pkey);
                 }
             }
-            $oActividad->setAllAtributes($aDades, FALSE);
+            $oActividad->setAllAttributes($aDades, FALSE);
             $oActividadSet->add($oActividad);
         }
         return $oActividadSet->getTot();

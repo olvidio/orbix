@@ -3,9 +3,9 @@
 use casas\model\entity\GestorGrupoCasa;
 use core\ConfigGlobal;
 use core\ViewTwig;
+use src\ubis\application\repositories\CasaDlRepository;
 use web\Hash;
 use web\Lista;
-use ubis\model\entity\CasaDl;
 
 require_once("apps/core/global_header.inc");
 // Archivos requeridos por esta url **********************************************
@@ -49,15 +49,16 @@ $a_botones[] = array('txt' => _("eliminar"), 'click' => "fnjs_eliminar(\"#selecc
 
 $a_valores = [];
 $i = 0;
+$CasaDlRepository = new CasaDlRepository();
 foreach ($cGrupoCasas as $oGrupoCasa) {
     $i++;
     $id_item = $oGrupoCasa->getId_item();
     $id_ubi_padre = $oGrupoCasa->getId_ubi_padre();
-    $oCasaPadre = new CasaDl($id_ubi_padre);
+    $oCasaPadre = $CasaDlRepository->findById($id_ubi_padre);
     $casa_padre = $oCasaPadre->getNombre_ubi();
 
     $id_ubi_hijo = $oGrupoCasa->getId_ubi_hijo();
-    $oCasaHijo = new CasaDl($id_ubi_hijo);
+    $oCasaHijo = $CasaDlRepository->findById($id_ubi_hijo);
     $casa_hijo = $oCasaHijo->getNombre_ubi();
 
 

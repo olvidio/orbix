@@ -9,10 +9,9 @@ use personas\model\entity\GestorPersonaNax;
 use personas\model\entity\GestorPersonaS;
 use personas\model\entity\GestorPersonaSacd;
 use personas\model\entity\GestorPersonaSSSC;
-use ubis\model\entity\GestorCentroDl;
+use src\ubis\application\repositories\CentroDlRepository;
 use web\Hash;
 use web\Lista;
-use function core\is_true;
 use function core\urlsafe_b64encode;
 
 /**
@@ -120,7 +119,7 @@ if (isset($_POST['stack'])) {
 }
 
 if (!empty($aWhereCtr)) { // si busco por centro sólo puede ser de casa
-    $GesCentroDl = new GestorCentroDl();
+    $GesCentroDl = new CentroDlRepository();
     $cCentros = $GesCentroDl->getCentros($aWhereCtr, $aOperadorCtr);
     // por si hay más de uno.
     $cPersonas = [];

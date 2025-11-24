@@ -2,9 +2,9 @@
 
 use casas\model\entity\GrupoCasa;
 use core\ViewTwig;
+use src\ubis\application\repositories\CasaDlRepository;
 use web\Desplegable;
 use web\Hash;
-use ubis\model\entity\GestorCasaDl;
 
 // INICIO Cabecera global de URL de controlador *********************************
 require_once("apps/core/global_header.inc");
@@ -29,11 +29,11 @@ if (!empty($Qid_item)) {
     $id_ubi_padre = '';
 }
 
-$GesCasaDl = new GestorCasaDl();
-$pdo_casas = $GesCasaDl->getPosiblesCasas("WHERE status = 't'");
+$CasaDlRepository = new CasaDlRepository();
+$aCasas = $CasaDlRepository->getArrayCasas("WHERE status = 't'");
 
-$oDesplCasaMadre = new Desplegable('id_ubi_padre', $pdo_casas, $id_ubi_padre, '');
-$oDesplCasaHija = new Desplegable('id_ubi_hijo', $pdo_casas, $id_ubi_hijo, '');
+$oDesplCasaMadre = new Desplegable('id_ubi_padre', $aCasas, $id_ubi_padre, '');
+$oDesplCasaHija = new Desplegable('id_ubi_hijo', $aCasas, $id_ubi_hijo, '');
 
 
 $url_ajax = 'apps/casas/controller/grupo_ajax.php';

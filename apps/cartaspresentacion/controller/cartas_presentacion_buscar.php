@@ -1,9 +1,10 @@
 <?php
 
 use core\ViewTwig;
+use src\ubis\application\repositories\DireccionCentroRepository;
+use web\Desplegable;
 use web\Hash;
 use src\ubis\application\services\DelegacionDropdown;
-use ubis\model\entity\GestorDireccionCtr;
 use src\ubis\application\services\RegionDropdown;
 
 /**
@@ -30,8 +31,10 @@ require_once("apps/core/global_object.inc");
 //regiones posibles
 $oDesplRegion = RegionDropdown::activasOrdenNombre('region');
 //paises posibles
-$GesPais = new GestorDireccionCtr();
-$oDesplPais = $GesPais->getListaPaises();
+$GesPais = new DireccionCentroRepository();
+$aOpciones = $GesPais->getArrayPaises();
+$oDesplPais = new Desplegable();
+$oDesplPais->setOpciones($aOpciones);
 $oDesplPais->setNombre('pais');
 //delegaciones de H. posibles
 $oDesplDelegacion = DelegacionDropdown::byRegiones(['H'], 'dl');

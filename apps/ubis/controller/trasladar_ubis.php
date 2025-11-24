@@ -1,8 +1,8 @@
 <?php
 
 use core\ConfigGlobal;
+use src\ubis\domain\entity\Ubi;
 use ubis\model\TrasladoUbi;
-use ubis\model\entity\Ubi;
 
 /**
  * Para asegurar que inicia la sesion, y poder acceder a los permisos

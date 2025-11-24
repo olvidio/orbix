@@ -173,7 +173,7 @@ class ProcesoTipo extends ClasePropiedades
             }
             $this->iid_tipo_proceso = $oDbl->lastInsertId('a_tipos_proceso_id_tipo_proceso_seq');
         }
-        $this->setAllAtributes($aDades);
+        $this->setAllAttributes($aDades);
         return TRUE;
     }
 
@@ -206,7 +206,7 @@ class ProcesoTipo extends ClasePropiedades
                     if ($aDades === FALSE) {
                         $this->setNullAllAtributes();
                     } else {
-                        $this->setAllAtributes($aDades);
+                        $this->setAllAttributes($aDades);
                     }
             }
             return TRUE;
@@ -239,7 +239,7 @@ class ProcesoTipo extends ClasePropiedades
      *
      * @param array $aDades
      */
-    function setAllAtributes(array $aDades)
+    function setAllAttributes(array $aDades)
     {
         if (!is_array($aDades)) return;
         if (array_key_exists('id_tipo_proceso', $aDades)) $this->setId_tipo_proceso($aDades['id_tipo_proceso']);

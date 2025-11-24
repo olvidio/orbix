@@ -5,9 +5,9 @@ use core\ViewPhtml;
 use personas\model\entity\GestorPersonaDl;
 use planning\domain\ActividadesDePersona;
 use planning\domain\Planning;
+use src\ubis\application\repositories\CentroDlRepository;
 use web\Hash;
 use web\Periodo;
-use ubis\model\entity\GestorCentroDl;
 
 /**
  * Esta página tiene la misión de realizar la llamada a calendario php;
@@ -111,7 +111,7 @@ if (!empty($Qctr)) {
     $nom_ubi = str_replace("+", "\+", $Qctr); // para los centros de la sss+
     $aWhere['nombre_ubi'] = '^' . $nom_ubi;
     $aOperador['nombre_ubi'] = 'sin_acentos';
-    $GesCentros = new GestorCentroDl();
+    $GesCentros = new CentroDlRepository();
     $cCentros = $GesCentros->getCentros($aWhere, $aOperador);
     if (!empty($cCentros)) {
         $cPersonas = []; // para unir todas las personas de más de un centro.

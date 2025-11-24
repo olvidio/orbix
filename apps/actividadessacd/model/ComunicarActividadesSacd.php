@@ -3,7 +3,6 @@
 namespace actividadessacd\model;
 
 use actividadcargos\model\entity\GestorActividadCargo;
-use actividadcargos\model\entity\GestorCargo;
 use actividades\model\entity\ActividadAll;
 use actividadescentro\model\entity\GestorCentroEncargado;
 use core\ConfigGlobal;
@@ -14,10 +13,9 @@ use shared\domain\entity\ColaMail;
 use shared\domain\repositories\ColaMailRepository;
 use src\actividadcargos\application\repositories\CargoRepository;
 use src\configuracion\application\repositories\ConfigSchemaRepository;
-use src\configuracion\domain\entity\ConfigSchema;
+use src\ubis\application\repositories\CentroDlRepository;
+use src\ubis\domain\entity\Ubi;
 use src\usuarios\application\repositories\UsuarioRepository;
-use ubis\model\entity\CentroDl;
-use ubis\model\entity\Ubi;
 use web\DateTimeLocal;
 use web\TiposActividades;
 use function core\is_true;
@@ -289,7 +287,8 @@ class ComunicarActividadesSacd
 
             // buscar el mail del ctr
             $id_ctr = $oPersona->getId_ctr();
-            $oCentroDl = new CentroDl($id_ctr);
+            $CentroDlRepository = new CentroDlRepository();
+            $oCentroDl = $CentroDlRepository->findById($id_ctr);
             $e_mail_ctr = $oCentroDl->emailPrincipalOPrimero();
 
             $email = $e_mail_jefe;

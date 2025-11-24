@@ -55,7 +55,7 @@ class GestorPasarelaConfig extends ClaseGestor
         foreach ($oDbl->query($sQuery) as $aDades) {
             $a_pkey = array('nom_parametro' => $aDades['nom_parametro']);
             $oPasarelaConfig = new PasarelaConfig($a_pkey);
-            $oPasarelaConfig->setAllAtributes($aDades);
+            $oPasarelaConfig->setAllAttributes($aDades);
             $oPasarelaConfigSet->add($oPasarelaConfig);
         }
         return $oPasarelaConfigSet->getTot();
@@ -109,7 +109,7 @@ class GestorPasarelaConfig extends ClaseGestor
         foreach ($oDblSt as $aDades) {
             $a_pkey = array('nom_parametro' => $aDades['nom_parametro']);
             $oPasarelaConfig = new PasarelaConfig($a_pkey);
-            $oPasarelaConfig->setAllAtributes($aDades);
+            $oPasarelaConfig->setAllAttributes($aDades);
             $oPasarelaConfigSet->add($oPasarelaConfig);
         }
         return $oPasarelaConfigSet->getTot();

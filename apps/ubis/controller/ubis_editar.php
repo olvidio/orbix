@@ -2,12 +2,13 @@
 
 use core\ConfigGlobal;
 use core\ViewPhtml;
-use src\ubis\application\services\TipoCasaDropdown;
-use src\ubis\application\services\TipoCentroDropdown;
-use ubis\model\entity\CasaDl;
-use ubis\model\entity\CentroDl;
+use src\ubis\application\repositories\CasaDlRepository;
+use src\ubis\application\repositories\CentroDlRepository;
+use src\ubis\application\repositories\CentroExRepository;
 use src\ubis\application\services\DelegacionDropdown;
 use src\ubis\application\services\RegionDropdown;
+use src\ubis\application\services\TipoCasaDropdown;
+use src\ubis\application\services\TipoCentroDropdown;
 use web\Desplegable;
 use web\Hash;
 use function core\is_true;
@@ -89,15 +90,15 @@ if (!empty($Qnuevo)) {
     $id_direccion = '';
     $status = true;
 } else {
-    $obj = 'ubis\\model\\entity\\' . $Qobj_pau;
-    $oUbi = new $obj($Qid_ubi);
+    $obj = 'src\\ubis\\application\\repositories\\' . $Qobj_pau . 'Repository';
+    $oUbi = (new $obj())->findById($Qid_ubi);
 
     $tipo_ubi = $oUbi->getTipo_ubi();
     $dl = $oUbi->getDl();
     $id_ubi = $oUbi->getId_ubi();
     $region = $oUbi->getRegion();
     $nombre_ubi = $oUbi->getNombre_ubi();
-    $status = $oUbi->getStatus();
+    $status = $oUbi->isStatus();
     $id_direccion = '';
 
     // para saber si es de la dl o no, diferente para ctr o cdc.
@@ -120,7 +121,7 @@ if (!empty($Qnuevo)) {
     // si es de la dl, poner que obj_pau sea dl:
     if ($es_de_dl) {
         if ($tipo_ubi === 'ctrdl') {
-            $oUbi_new = new CentroDl($id_ubi);
+            $oUbi_new = (new CentroDlRepository())->findById($id_ubi);
             // comprobar que realmente es el mismo:
             $nombre_ubi_new = $oUbi_new->getNombre_ubi();
             if ($nombre_ubi == $nombre_ubi_new) {
@@ -128,7 +129,7 @@ if (!empty($Qnuevo)) {
             }
         }
         if ($tipo_ubi === 'cdcdl') {
-            $oUbi_new = new CasaDl($id_ubi);
+            $oUbi_new = (new CasaDlRepository())->findById($id_ubi);
             // comprobar que realmente es el mismo:
             $nombre_ubi_new = $oUbi_new->getNombre_ubi();
             if ($nombre_ubi == $nombre_ubi_new) {
@@ -207,8 +208,8 @@ $oView = new ViewPhtml('ubis\controller');
 switch ($tipo_ubi) {
     case "ctrdl":
     case "ctrsf":
-        $cdc = $oUbi->getCdc();
-        $chk_cdc = is_true($cdc)? 'checked' : '';
+        $cdc = $oUbi->isCdc();
+        $chk_cdc = is_true($cdc) ? 'checked' : '';
         $tipo_labor = $oUbi->getTipo_labor();
         $id_ctr_padre = $oUbi->getId_ctr_padre();
         $tipo_ctr = $oUbi->getTipo_ctr();
@@ -223,7 +224,7 @@ switch ($tipo_ubi) {
         $dl = empty($dl) ? ConfigGlobal::mi_delef() : $dl;
         $region = empty($region) ? ConfigGlobal::mi_region() : $region;
 
-        $GesCentro = new ubis\model\entity\GestorCentro();
+        $CentroDlRepository = new CentroDlRepository();
         if (!empty($dl)) {
             $sWhere = "WHERE dl = '$dl'";
         } else if (!empty($region)) {
@@ -231,12 +232,15 @@ switch ($tipo_ubi) {
         } else {
             $sWhere = ''; // Hay muchos ctr que no tienen puesta la dl.
         }
-        $oDesplCentros = $GesCentro->getListaCentros($sWhere);
+        $aOpciones = $CentroDlRepository->getArrayCentros($sWhere);
+        $oDesplCentros = new Desplegable();
         $nnom = "id_ctr_padre";
         $oDesplCentros->setNombre($nnom);
+        $oDesplCentros->setOpciones($aOpciones);
         $oDesplCentros->setOpcion_sel($id_ctr_padre);
 
         $oDesplegableTiposCentro = TipoCentroDropdown::listaTiposCentro(true, 'tipo_ctr');
+        $oDesplegableTiposCentro->setOpcion_sel($tipo_ctr);
 
         $oDesplDelegaciones->setOpcion_sel($dl);
         $oDesplRegiones->setOpcion_sel($region);
@@ -268,13 +272,13 @@ switch ($tipo_ubi) {
         $oView->renderizar('ctrdl_form.phtml', $a_campos);
         break;
     case "ctrex":
-        $cdc = $oUbi->getCdc();
-        $chk_cdc = is_true($cdc)? 'checked' : '';
+        $cdc = $oUbi->isCdc();
+        $chk_cdc = is_true($cdc) ? 'checked' : '';
         $tipo_labor = $oUbi->getTipo_labor();
         $id_ctr_padre = $oUbi->getId_ctr_padre();
         $tipo_ctr = $oUbi->getTipo_ctr();
 
-        $GesCentro = new ubis\model\entity\GestorCentro();
+        $CentroExRepository = new CentroExRepository();
         if (!empty($dl)) {
             $sWhere = "WHERE dl = '$dl'";
         } else if (!empty($region)) {
@@ -282,12 +286,15 @@ switch ($tipo_ubi) {
         } else {
             $sWhere = ''; // Hay muchos ctr que no tienen puesta la dl.
         }
-        $oDesplCentros = $GesCentro->getListaCentros($sWhere);
+        $aOpciones = $CentroExRepository->getArrayCentros($sWhere);
+        $oDesplCentros = new Desplegable();
         $nnom = "id_ctr_padre";
         $oDesplCentros->setNombre($nnom);
+        $oDesplCentros->setOpciones($aOpciones);
         $oDesplCentros->setOpcion_sel($id_ctr_padre);
 
         $oDesplegableTiposCentro = TipoCentroDropdown::listaTiposCentro(true, 'tipo_ctr');
+        $oDesplegableTiposCentro->setOpcion_sel($tipo_ctr);
 
         $oDesplDelegaciones->setOpcion_sel($dl);
         $oDesplRegiones->setOpcion_sel($region);
@@ -322,15 +329,17 @@ switch ($tipo_ubi) {
         $plazas = $oUbi->getPlazas();
         $plazas_min = $oUbi->getPlazas_min();
         $num_sacd = $oUbi->getNum_sacd();
-        $sv = $oUbi->getSv();
-        $sf = $oUbi->getSf();
+        $sv = $oUbi->isSv();
+        $sf = $oUbi->isSf();
 
-        $sv_chk = is_true($sv)? 'checked' : '';
-        $sf_chk = is_true($sf)? 'checked' : '';
+        $sv_chk = is_true($sv) ? 'checked' : '';
+        $sf_chk = is_true($sf) ? 'checked' : '';
         $oDesplegableTiposCasa = TipoCasaDropdown::listaTiposCasa(true, 'tipo_casa');
+        $oDesplegableTiposCasa->setOpcion_sel($tipo_casa);
 
         $oDesplDelegaciones->setOpcion_sel($dl);
         $oDesplRegiones->setOpcion_sel($region);
+
         $a_campos = ['botones' => $botones,
             'oPosicion' => $oPosicion,
             'obj' => $obj,

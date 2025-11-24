@@ -103,7 +103,7 @@ class ActividadPub extends ActividadAll
                 $oActividad = new ActividadEx($a_pkey);
             }
         }
-        $oActividad->setAllAtributes($aDades);
+        $oActividad->setAllAttributes($aDades);
         $oActividad->DBGuardar($aDades);
         return true;
     }
@@ -143,7 +143,7 @@ class ActividadPub extends ActividadAll
                     if ($aDades === FALSE) {
                         $this->setNullAllAtributes();
                     } else {
-                        $this->setAllAtributes($aDades);
+                        $this->setAllAttributes($aDades);
                     }
             }
             return true;

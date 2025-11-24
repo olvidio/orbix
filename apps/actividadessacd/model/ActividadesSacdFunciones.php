@@ -3,17 +3,13 @@
 namespace actividadessacd\model;
 
 use actividadessacd\model\entity\GestorAtnActivSacdTexto;
-use ubis\model\entity\GestorCentroDl;
 use core\ConfigGlobal;
+use src\ubis\application\repositories\CentroDlRepository;
 
 class ActividadesSacdFunciones
 {
 
-    /**
-     *
-     * @var array
-     */
-    private $a_txt = [];
+    private array $a_txt = [];
 
     function getArrayTraducciones($idioma)
     {
@@ -61,17 +57,17 @@ class ActividadesSacdFunciones
         if (ConfigGlobal::is_dmz()) {
             return "xxxx";
         }
-        $oGesCentrosDl = new GestorCentroDl();
-        $cCentros = $oGesCentrosDl->getCentros(['tipo_ctr' => 'dl']);
+        $CentroDlRepository = new CentroDlRepository();
+        $cCentros = $CentroDlRepository->getCentros(['tipo_ctr' => 'dl']);
         $num_dl = count($cCentros);
         switch ($num_dl) {
             case 0:
                 // Puede ser el nombre de la región
-                $cCentros = $oGesCentrosDl->getCentros(['tipo_ctr' => 'cr']);
+                $cCentros = $CentroDlRepository->getCentros(['tipo_ctr' => 'cr']);
                 if (count($cCentros) > 0) {
                     $oCentro = $cCentros[0];
                 } else {
-                    // No existe el nombre de la delegacion ni región.
+                    // No existe el nombre de la delegación ni región.
                     return '?';
                 }
                 break;
@@ -81,7 +77,6 @@ class ActividadesSacdFunciones
             default:
                 // más de una dl?
                 exit (_("Más de un centro definido como dl"));
-                break;
         }
         // Buscar la direccion
         $cDirecciones = $oCentro->getDirecciones();

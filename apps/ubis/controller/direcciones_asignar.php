@@ -1,9 +1,9 @@
 <?php
 
-use ubis\model\entity\CdcDlxDireccion;
-use ubis\model\entity\CdcExxDireccion;
-use ubis\model\entity\CtrDlxDireccion;
-use ubis\model\entity\CtrExxDireccion;
+use src\ubis\application\repositories\CasaDlRepository;
+use src\ubis\application\repositories\CasaExRepository;
+use src\ubis\application\repositories\CentroDlRepository;
+use src\ubis\application\repositories\CentroExRepository;
 
 /**
  * Esta página sirve para asignar una dirección a un determinado ubi.
@@ -27,28 +27,24 @@ $Qid_ubi = (integer)filter_input(INPUT_POST, 'id_ubi');
 $Qobj_dir = (string)filter_input(INPUT_POST, 'obj_dir');
 $Qid_direccion = (integer)filter_input(INPUT_POST, 'id_direccion');
 
-$a_pkey = array('id_ubi' => $Qid_ubi, 'id_direccion' => $Qid_direccion);
 switch ($Qobj_dir) {
-    case "DireccionCtrDl":
-        $oUbi = new CtrDlxDireccion($a_pkey);
+    case "DireccionCentroDl":
+        $UbiRepository = new CentroDlRepository();
         break;
-    case "DireccionCtrEx":
-        $oUbi = new CtrExxDireccion($a_pkey);
+    case "DireccionCentroEx":
+        $UbiRepository = new CentroExRepository();
         break;
     case "DireccionCdcDl":
-        $oUbi = new CdcDlxDireccion($a_pkey);
+        $UbiRepository = new CasaDlRepository();
         break;
     case "DireccionCdcEx":
-        $oUbi = new CdcExxDireccion($a_pkey);
+        $UbiRepository = new CasaExRepository();
         break;
 }
 
-if ($oUbi->DBGuardar() === false) {
-    $msg_err = _("hay un error, no se ha guardado");
-}
+// por defecto:
+$principal = false;
+$propietario = true;
 
-if (!empty($msg_err)) {
-    echo $msg_err;
-} else {
-    echo $oPosicion->go_atras(1);
-}	
+$oUbi = $UbiRepository->findById($Qid_ubi);
+$oUbi->addDireccion($Qid_direccion, $principal, $propietario);

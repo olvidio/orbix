@@ -28,6 +28,7 @@ $cDatosCampos = false;
 $Qcc_obj = (string)filter_input(INPUT_POST, 'cc_obj');
 
 // si es nuevo, ya lo hare con value objects:
+exit();
 if (!empty($Qcc_obj) && str_contains($Qcc_obj,'src')) {
     exit();
 }

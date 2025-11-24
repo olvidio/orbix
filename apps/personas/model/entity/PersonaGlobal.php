@@ -8,9 +8,9 @@ use core\ConverterDate;
 use core\DatosCampo;
 use core\Set;
 use ReflectionClass;
+use src\ubis\application\repositories\CentroDlRepository;
+use src\ubis\application\repositories\CentroRepository;
 use src\ubis\application\repositories\DescTelecoRepository;
-use ubis\model\entity\Centro;
-use ubis\model\entity\CentroDl;
 use web\DateTimeLocal;
 use web\NullDateTimeLocal;
 use function core\strtoupper_dlb;
@@ -385,7 +385,7 @@ abstract class PersonaGlobal extends ClasePropiedades
      *
      * @return array aPrimary_key
      */
-    public function setPrimary_key($a_id = '')
+    public function setPrimary_key($a_id = ''): void
     {
         if (is_array($a_id)) {
             $this->aPrimary_key = $a_id;
@@ -1199,8 +1199,9 @@ abstract class PersonaGlobal extends ClasePropiedades
                     if ($ctr === ConfigGlobal::mi_dele()) {
                         $oPersonasDl = new PersonaDl($this->getId_nom());
                         $id_ctr = $oPersonasDl->getId_ctr();
-                        $oCentroDl = new CentroDl($id_ctr);
-                        $ctr = $oCentroDl->getNombre_ubi();
+                        $CentroDlRepository = new CentroDlRepository();
+                        $oCentroDl = $CentroDlRepository->findById($id_ctr);
+                        $ctr = $oCentroDl?->getNombre_ubi() ?? '?';
                     }
                     break;
                 case 'PersonaEx':
@@ -1209,11 +1210,13 @@ abstract class PersonaGlobal extends ClasePropiedades
                     break;
                 case 'PersonaGlobal':
                     if (ConfigGlobal::mi_ambito() === 'rstgr') {
-                        $oCentroDl = new Centro($this->getId_ctr());
+                        $CentroRepository = new CentroRepository();
+                        $oCentroDl = $CentroRepository->findById($this->getId_ctr());
                     } else {
-                        $oCentroDl = new CentroDl($this->getId_ctr());
+                        $CentroDlRepository = new CentroDlRepository();
+                        $oCentroDl = $CentroDlRepository->findById($this->getId_ctr());
                     }
-                    $ctr = $oCentroDl->getNombre_ubi();
+                    $ctr = $oCentroDl?->getNombre_ubi() ?? '?';
                     break;
                 case 'PersonaDl':
                 case 'PersonaAgd':
@@ -1223,11 +1226,13 @@ abstract class PersonaGlobal extends ClasePropiedades
                 case 'PersonaSSSC':
                     // OJO CON las regiones de stgr
                     if (ConfigGlobal::mi_ambito() === 'rstgr') {
-                        $oCentro = new Centro($this->getId_ctr());
+                        $CentroRepository = new CentroRepository();
+                        $oCentro = $CentroRepository->findById($this->getId_ctr());
                     } else {
-                        $oCentro = new CentroDl($this->getId_ctr());
+                        $CentroDlRepository = new CentroDlRepository();
+                        $oCentro = $CentroDlRepository->findById($this->getId_ctr());
                     }
-                    $ctr = $oCentro->getNombre_ubi();
+                    $ctr = $oCentro?->getNombre_ubi() ?? '?';
                     break;
             }
             $this->sCentro_o_dl = $ctr;

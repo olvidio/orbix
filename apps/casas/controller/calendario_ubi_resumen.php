@@ -4,8 +4,8 @@
 
 use core\ConfigGlobal;
 use core\ViewTwig;
+use src\ubis\application\repositories\CasaDlRepository;
 use web\Desplegable;
-use ubis\model\entity\GestorCasaDl;
 use web\Hash;
 
 require_once("apps/core/global_header.inc");
@@ -25,7 +25,7 @@ $Qid_ubi = (integer)filter_input(INPUT_POST, 'id_ubi');
 $oMiUsuario = ConfigGlobal::MiUsuario();
 // selecciono la lista de casas comunes: sf y sv.
 // o (ara) no:
-$GesCasas = new GestorCasaDl();
+$CasaDlRepository = new CasaDlRepository();
 
 if ($_SESSION['oPerm']->have_perm_oficina('des') || $_SESSION['oPerm']->have_perm_oficina('vcsd')) {
     $donde = "WHERE status='t'";
@@ -37,10 +37,10 @@ if ($_SESSION['oPerm']->have_perm_oficina('des') || $_SESSION['oPerm']->have_per
     }
 }
 
-$cCasas = $GesCasas->getPosiblesCasas($donde);
+$aCasas = $CasaDlRepository->getArrayCasas($donde);
 $oDesplCasas = new Desplegable();
 $oDesplCasas->setNombre('id_ubi');
-$oDesplCasas->setOpciones($cCasas);
+$oDesplCasas->setOpciones($aCasas);
 $oDesplCasas->setOpcion_sel($Qid_ubi);
 
 $url_ajax = 'apps/casas/controller/calendario_ubi_resumen_ajax.php';

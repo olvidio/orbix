@@ -4,7 +4,7 @@ use core\ConfigGlobal;
 use core\ViewPhtml;
 use personas\model\entity\GestorPersonaAgd;
 use personas\model\entity\GestorPersonaN;
-use ubis\model\entity\CentroDl;
+use src\ubis\application\repositories\CentroDlRepository;
 use src\ubis\application\repositories\DelegacionRepository;
 use web\Desplegable;
 use web\Hash;
@@ -73,9 +73,10 @@ $GesPersonas = new GestorPersonaN();
 $aListaCtr = $GesPersonas->getListaCtr();
 $aCentrosN = [];
 $aCentrosOrden = [];
+$CentroDlRepository = new CentroDlRepository();
 foreach ($aListaCtr as $id_ubi) {
-    $oCentro = new CentroDl(array('id_ubi' => $id_ubi));
-    $nombre_ubi = $oCentro->getNombre_ubi();
+    $oCentroDl = $CentroDlRepository->findById($id_ubi);
+    $nombre_ubi = $oCentroDl->getNombre_ubi();
     $aCentrosOrden[$nombre_ubi] = array($id_ubi => $nombre_ubi);
 }
 uksort($aCentrosOrden, "core\strsinacentocmp");
@@ -102,8 +103,8 @@ $aListaCtr = $GesPersonas->getListaCtr();
 $aCentrosAgd = [];
 $aCentrosOrden = [];
 foreach ($aListaCtr as $id_ubi) {
-    $oCentro = new CentroDl(array('id_ubi' => $id_ubi));
-    $nombre_ubi = $oCentro->getNombre_ubi();
+    $oCentroDl = $CentroDlRepository->findById($id_ubi);
+    $nombre_ubi = $oCentroDl->getNombre_ubi();
     $aCentrosOrden[$nombre_ubi] = array($id_ubi => $nombre_ubi);
 }
 uksort($aCentrosOrden, "core\strsinacentocmp");

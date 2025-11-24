@@ -2,7 +2,7 @@
 
 namespace web;
 
-use ubis\model\entity\GestorCasaDl;
+use src\ubis\application\repositories\CasaDlRepository;
 
 /**
  * Classe que presenta un quadre per buscar diferents cases.
@@ -216,8 +216,8 @@ class CasasQue
             $oDesplCasas->setAction('funjs_otro(1)');
             $this->oDesplCasas = $oDesplCasas;
         }
-        $oGesCasas = new GestorCasaDl();
-        $oOpciones = $oGesCasas->getPosiblesCasas($sCondicion);
+        $CasaDlRepository = new CasaDlRepository();
+        $oOpciones = $CasaDlRepository->getArrayCasas($sCondicion);
         $oDesplCasas->setOpciones($oOpciones);
         $this->oDesplCasas = $oDesplCasas;
     }
@@ -230,8 +230,8 @@ class CasasQue
     function getDesplCasas()
     {
         if (!isset($this->oDesplCasas)) {
-            $oGesCasas = new GestorCasaDl();
-            $oOpciones = $oGesCasas->getPosiblesCasas();
+            $casaDlRepository = new CasaDlRepository();
+            $oOpciones = $casaDlRepository->getArrayCasas();
             $oDesplCasas = new Desplegable();
             $oDesplCasas->setNombre('id_cdc');
             $oDesplCasas->setOpciones($oOpciones);

@@ -1,7 +1,7 @@
 <?php
 
 use core\ViewPhtml;
-use ubis\model\entity\Ubi;
+use src\ubis\domain\entity\Ubi;
 use web\Hash;
 
 // INICIO Cabecera global de URL de controlador *********************************

@@ -15,11 +15,10 @@ use profesores\model\entity\GestorProfesorPublicacion;
 use profesores\model\entity\GestorProfesorTituloEst;
 use profesores\model\entity\ProfesorJuramento;
 use profesores\model\entity\ProfesorLatin;
-use profesores\model\entity\ProfesorTipo;
 use src\asignaturas\application\repositories\AsignaturaRepository;
 use src\asignaturas\application\repositories\DepartamentoRepository;
-use ubis\model\entity\Centro;
-use ubis\model\entity\CentroDl;
+use src\ubis\application\repositories\CentroDlRepository;
+use src\ubis\application\repositories\CentroRepository;
 use web\Hash;
 use function core\is_true;
 
@@ -168,9 +167,9 @@ $sacd = $oPersona->getSacd();
 $id_ctr = $oPersona->getid_ctr();
 
 if (ConfigGlobal::mi_ambito() === 'rstgr') {
-    $oCentroDl = new Centro($id_ctr);
+    $oCentroDl = (new CentroRepository())->findById($id_ctr);
 } else {
-    $oCentroDl = new CentroDl($id_ctr);
+    $oCentroDl = (new CentroDlRepository())->findById($id_ctr);
 }
 $nombre_ubi = $oCentroDl->getNombre_ubi();
 
@@ -210,14 +209,14 @@ foreach ($cProfesores as $oProfesor) {
     $escrito_cese = $oProfesor->getEscrito_cese();
     $id_tipo_profesor = $oProfesor->getId_tipo_profesor();
 
-    $departamento  = $DepartamentoRepository->findById($id_departamento)->getNombreDepartamentoVo()->value();
+    $departamento = $DepartamentoRepository->findById($id_departamento)->getNombreDepartamentoVo()->value();
 
     $oProfesorTipo = new ProfesorTipo($id_tipo_profesor);
     $tipo_profesor = $oProfesorTipo->getTipo_profesor();
 
     $a_nombramientos[] = array('departamento' => $departamento, 'tipo_profesor' => $tipo_profesor, 'f_nombramiento' => $f_nombramiento, 'escrito_nombramiento' => $escrito_nombramiento);
     if (empty($f_cese)) {
-        $dep .= empty($dep)? '' : '; ';
+        $dep .= empty($dep) ? '' : '; ';
         $dep .= $departamento;
     }
 }
@@ -234,7 +233,7 @@ if (empty($Qprint)) { // si no es para imprimir muestro todos los datos
         $f_cese = $oProfesorDirector->getF_cese()->getFromLocal();
         $escrito_cese = $oProfesorDirector->getEscrito_cese();
 
-        $departamento  = $DepartamentoRepository->findById($id_departamento)->getNombreDepartamentoVo()->value();
+        $departamento = $DepartamentoRepository->findById($id_departamento)->getNombreDepartamentoVo()->value();
 
         $a_director[] = array('departamento' => $departamento, 'f_nombramiento' => $f_nombramiento, 'escrito_nombramiento' => $escrito_nombramiento, 'f_cese' => $f_cese, 'escrito_cese' => $escrito_cese);
     }
@@ -299,7 +298,7 @@ foreach ($cProfesores as $oProfesor) {
     $escrito_cese = $oProfesor->getEscrito_cese();
     $id_tipo_profesor = $oProfesor->getId_tipo_profesor();
 
-    $departamento  = $DepartamentoRepository->findById($id_departamento)->getNombreDepartamentoVo()->value();
+    $departamento = $DepartamentoRepository->findById($id_departamento)->getNombreDepartamentoVo()->value();
 
     $oProfesorTipo = new ProfesorTipo($id_tipo_profesor);
     $tipo_profesor = $oProfesorTipo->getTipo_profesor();

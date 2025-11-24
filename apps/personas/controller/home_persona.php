@@ -1,7 +1,7 @@
 <?php
 
 use core\ViewPhtml;
-use ubis\model\entity\CentroDl;
+use src\ubis\application\repositories\CentroDlRepository;
 use web\Hash;
 
 /**
@@ -105,7 +105,8 @@ $profesion = $oPersona->getProfesion();
 $stgr = $oPersona->getStgr();
 if ($Qobj_pau !== 'PersonaEx' && $Qobj_pau !== 'PersonaIn') {
     $id_ctr = $oPersona->getId_ctr();
-    $oCentroDl = new CentroDl($id_ctr);
+    $CentroDlRepository = new CentroDlRepository();
+    $oCentroDl = $CentroDlRepository->findById($id_ctr);
     $ctr = $oCentroDl->getNombre_ubi();
 } else {
     $ctr = '';
@@ -128,7 +129,6 @@ if (!empty($telfs_fijo) && !empty($telfs_movil)) {
     $telfs .= $telfs_fijo ?? '';
     $telfs .= $telfs_movil ?? '';
 }
-$mails = '';
 $mails = $oPersona->telecos_persona($id_nom, "e-mail", " / ", "*");
 
 

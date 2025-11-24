@@ -34,10 +34,11 @@ use core\ConfigGlobal;
 use core\ViewPhtml;
 use permisos\model\PermisosActividadesTrue;
 use procesos\model\entity\GestorActividadProcesoTarea;
+use src\ubis\application\repositories\CasaRepository;
+use src\ubis\application\repositories\CentroRepository;
 use src\usuarios\application\repositories\PreferenciaRepository;
 use src\usuarios\application\repositories\RoleRepository;
 use src\usuarios\domain\entity\Role;
-use ubis\model\entity\GestorCasa;
 use ubis\model\entity\GestorCentroCdc;
 use web\DateTimeLocal;
 use web\Hash;
@@ -362,11 +363,11 @@ if ($num_activ > $num_max_actividades && empty($Qcontinuar)) {
 }
 
 // casas de cv
-$gesCasas = new GestorCasa();
-$a_OpcionesCasas = $gesCasas->getArrayPosiblesCasas();
-// más los centros cdc
-$oGesCentros = new GestorCentroCdc();
-$a_OpcionesCentros = $oGesCentros->getOpcionesCentrosCdc();
+$CasaRepository = new CasaRepository();
+$a_OpcionesCasas = $CasaRepository->getArrayCasas();
+// más los centros que pueden ser cdc
+$CentroRepository = new CentroRepository();
+$a_OpcionesCentros = $CentroRepository->getArrayCentrosCdc();
 
 $a_casas = $a_OpcionesCasas + $a_OpcionesCentros;
 

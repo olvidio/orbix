@@ -13,7 +13,7 @@ use core\ViewPhtml;
 use dossiers\model\PermDossier;
 use personas\model\entity\Persona;
 use src\actividadcargos\application\repositories\CargoRepository;
-use ubis\model\entity\Ubi;
+use src\ubis\domain\entity\Ubi;
 use web\Hash;
 use web\Lista;
 use function core\is_true;

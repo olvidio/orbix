@@ -146,7 +146,7 @@ class PersonaSacd extends PersonaGlobal
                     return false;
                 }
             }
-            $this->setAllAtributes($aDades);
+            $this->setAllAttributes($aDades);
         } else {
             // INSERT
             // Aqui si hay que poner el id_nom, pues es copia de DB-sv
@@ -168,7 +168,7 @@ class PersonaSacd extends PersonaGlobal
                     return false;
                 }
             }
-            $this->setAllAtributes($aDades);
+            $this->setAllAttributes($aDades);
         }
         return true;
     }
@@ -202,7 +202,7 @@ class PersonaSacd extends PersonaGlobal
                     if ($aDades === FALSE) {
                         $this->setNullAllAtributes();
                     } else {
-                        $this->setAllAtributes($aDades);
+                        $this->setAllAttributes($aDades);
                     }
             }
             return true;
@@ -235,7 +235,7 @@ class PersonaSacd extends PersonaGlobal
      *
      * @param array $aDades
      */
-    function setAllAtributes(array $aDades, $convert = FALSE)
+    function setAllAttributes(array $aDades, $convert = FALSE)
     {
         if (!is_array($aDades)) return;
         if (array_key_exists('id_schema', $aDades)) $this->setId_schema($aDades['id_schema']);

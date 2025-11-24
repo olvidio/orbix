@@ -2,7 +2,6 @@
 
 namespace asistentes\model;
 
-use actividadcargos\model\entity\Cargo;
 use actividadcargos\model\entity\GestorActividadCargo;
 use actividades\model\entity\GestorActividad;
 use actividadescentro\model\entity\GestorCentroEncargado;
@@ -12,8 +11,8 @@ use asistentes\model\entity\GestorAsistente;
 use core\ConfigGlobal;
 use personas\model\entity\Persona;
 use src\actividadcargos\application\repositories\CargoRepository;
-use ubis\model\entity\Casa;
-use ubis\model\entity\Ubi;
+use src\ubis\application\repositories\CasaRepository;
+use src\ubis\domain\entity\Ubi;
 use web\Lista;
 use web\TiposActividades;
 use function core\is_true;
@@ -101,10 +100,10 @@ class ListaPlazas
             return $oLista;
         }
 
-        if (($sasistentes == "s") and ($sactividad == "cv")) {
+        if (($sasistentes === "s") and ($sactividad === "cv")) {
             $titulo = strtoupper_dlb(_("relación de cargos en las cv de s"));
         } else {
-            if (($sasistentes == "sss+") and ($sactividad == "cv")) {
+            if (($sasistentes === "sss+") and ($sactividad === "cv")) {
                 $titulo = strtoupper(_("propuesta de cl en cv de sss+"));
             } else {
                 $titulo = strtoupper_dlb(_("relación de asistentes a las actividades seleccionadas"));
@@ -134,7 +133,7 @@ class ListaPlazas
             $plazas_min = '';
             $plazas_casa = '';
             if (!empty($id_ubi_casa)) {
-                $oCasaDl = new Casa($id_ubi_casa);
+                $oCasaDl = (new CasaRepository())->findById($id_ubi_casa);
                 $plazas_max = !empty($plazas) ? $plazas : $oCasaDl->getPlazas();
                 $plazas_min = $oCasaDl->getPlazas_min();
                 $plazas_casa .= !empty($plazas_max) ? $plazas_max : '';
@@ -144,7 +143,7 @@ class ListaPlazas
             $id_pau = $id_activ;
             $txt_ctr = '';
             if (ConfigGlobal::is_app_installed('actividadcentros')) {
-                if ((($sasistentes == "s") || ($sasistentes == "sss+")) and ($sactividad == "cv")) {
+                if ((($sasistentes === "s") || ($sasistentes === "sss+")) and ($sactividad === "cv")) {
                     // para las cv de s y de sss+ consulto los ctr que organizan
                     $oGesEncargados = new GestorCentroEncargado();
                     $cCtrsEncargados = $oGesEncargados->getCentrosEncargados(array('id_activ' => $id_activ, '_ordre' => 'num_orden'));

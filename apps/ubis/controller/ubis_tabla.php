@@ -130,40 +130,40 @@ if (empty($sWhere)) {
             switch ($Qloc) {
                 case "dl":
                     $titulo = ucfirst(_("tabla de centros de la delegación"));
-                    $Gestor = "ubis\\model\\entity\\GestorCentroDl";
+                    $Gestor = "src\\ubis\\application\\repositories\\CentroDlRepository";
                     $metodo = 'getCentros';
-                    $GestorDir = "ubis\\model\\entity\\GestorDireccionCtrDl";
+                    $GestorDir = "src\\ubis\\application\\repositories\\DireccionCentroDlRepository";
                     // Añado una condición para el caso de no poner, que salgan todos.
                     // Si no se pone, dice que hay que poner algun criterio de busqueda
                     $aWhere['status'] = 't';
                     break;
                 case "ex":
-                    $Gestor = "ubis\\model\\entity\\GestorCentroEx";
+                    $Gestor = "src\\ubis\\application\\repositories\\CentroExRepository";
                     $metodo = 'getCentros';
-                    $GestorDir = 'ubis\model\entity\GestorDireccionCtrEx';
+                    $GestorDir = "src\\ubis\\application\\repositories\\DireccionCentroExRepository";
                     $titulo = ucfirst(_("tabla de centros de fuera de la delegación"));
                     break;
                 case "sf":
                     if (($_SESSION['oPerm']->have_perm_oficina('vcsd')) || ($_SESSION['oPerm']->have_perm_oficina('des'))) {
-                        $Gestor = "ubis\\model\\entity\\GestorCentroDl";
+                        $Gestor = "src\\ubis\\application\\repositories\\CentroDlRepository";
                         $Gestor->setoDbl($GLOBALS['oDBE']);
                         $metodo = 'getCentros';
-                        $GestorDir = 'ubis\\model\\entity\\GestorDireccionCtrDl';
+                        $GestorDir = "src\\ubis\\application\\repositories\\DireccionCentroDlRepository";
                         $titulo = ucfirst(_("tabla de centros de la delegación femenina"));
                     }
                     break;
                 case "tot":
-                    $Gestor = "ubis\\model\\entity\\GestorCentro";
+                    $Gestor = "src\\ubis\\application\\repositories\\CentroRepository";
                     $metodo = 'getCentros';
                     $titulo = ucfirst(_("tabla de toda las casas y centros"));
                     switch ($miSfsv) {
                         case 1: // sv
                             $aWhere['sv'] = 't';
-                            $GestorDir = 'ubis\\model\\entity\\GestorDireccionCtr';
+                            $GestorDir = "src\\ubis\\application\\repositories\\DireccionCentroRepository";
                             break;
                         case 2: //sf
                             $aWhere['sf'] = 't';
-                            $GestorDir = 'GestorDireccionSf';
+                            $GestorDir = "src\\ubis\\application\\repositories\\DireccionCentroSfRepository";
                             break;
                     }
                     break;
@@ -172,50 +172,50 @@ if (empty($sWhere)) {
         case "cdc":
             switch ($Qloc) {
                 case "dl":
-                    $Gestor = "ubis\\model\\entity\\GestorCasaDl";
+                    $Gestor = "src\\ubis\\application\\repositories\\CasaDlRepository";
                     $metodo = 'getCasas';
                     $titulo = ucfirst(_("tabla de casas de la delegación"));
-                    $GestorDir = "ubis\\model\\entity\\GestorDireccionCdcDl"; // Las casas tienen las mismas direcciones que sv.
+                    $GestorDir = "src\\ubis\\application\\repositories\\DireccionCasaDlRepository"; // Las casas tienen las mismas direcciones que sv.
                     // Añado una condición para el caso de no poner, que salgan todos.
                     // Si no se pone, dice que hay que poner algun criterio de busqueda
                     $aWhere['status'] = 't';
                     break;
                 case "ex":
-                    $Gestor = "ubis\\model\\entity\\GestorCasaEx";
+                    $Gestor = "src\\ubis\\application\\repositories\\CasaExRepository";
                     $metodo = 'getCasas';
                     $titulo = ucfirst(_("tabla de casas de fuera de la delegación"));
-                    $GestorDir = "ubis\\model\\entity\\GestorDireccionCdcEx";
+                    $GestorDir = "src\\ubis\\application\\repositories\\DireccionCasaExRepository";
                     break;
                 case "sf":
                     if (($_SESSION['oPerm']->have_perm_oficina('vcsd')) || ($_SESSION['oPerm']->have_perm_oficina('des'))) {
-                        $Gestor = "ubis\\model\\entity\\GestorCasaDl";
+                        $Gestor = "src\\ubis\\application\\repositories\\CasaDlRepository";
                         $metodo = 'getCasas';
-                        $GestorDir = "ubis\\model\\entity\\GestorDireccionCdcDl";
+                        $GestorDir = "src\\ubis\\application\\repositories\\DireccionCasaDlRepository";
                         $aWhere['sf'] = 't';
                         $titulo = ucfirst(_("tabla de casas de la sf"));
                     }
                     break;
                 case "tot":
-                    $Gestor = "ubis\\model\\entity\\GestorCasa";
+                    $Gestor = "src\\ubis\\application\\repositories\\CasaRepository";
                     $metodo = 'getCasas';
                     $titulo = ucfirst(_("tabla de toda las casas y centros"));
-                    $GestorDir = "ubis\\model\\entity\\GestorDireccionCdc";
+                    $GestorDir = "src\\ubis\\application\\repositories\\DireccionCasaRepository";
                     break;
             }
             break;
         case "tot":
             switch ($Qloc) {
                 case "dl":
-                    $Gestor = "ubis\\model\\entity\\GestorUbi";
+                    $Gestor = "src\\ubis\\application\\repositories\\UbiRepository";
                     $metodo = 'getUbis';
                     $titulo = ucfirst(_("tabla de casas y centros de la delegación"));
-                    $GestorDir = "ubis\\model\\entity\\GestorDireccion";
+                    $GestorDir = "src\\ubis\\application\\repositories\\DireccionRepository";
                     break;
                 case "ex":
-                    $Gestor = "ubis\\model\\entity\\GestorUbi";
+                    $Gestor = "src\\ubis\\application\\repositories\\UbiRepository";
                     $metodo = 'getUbis';
                     $titulo = ucfirst(_("tabla de casas y centros de fuera de la delegación"));
-                    $GestorDir = "ubis\\model\\entity\\GestorDireccion";
+                    $GestorDir = "src\\ubis\\application\\repositories\\DireccionRepository";
                     /*
                     switch ($miSfsv) {
                         case 1: // sv
@@ -264,9 +264,9 @@ if (empty($sWhere)) {
                     */
                     break;
                 case "tot":
-                    $Gestor = "ubis\\model\\entity\\GestorUbi";
+                    $Gestor = "src\\ubis\\application\\repositories\\UbiRepository";
                     $metodo = 'getUbis';
-                    $GestorDir = "ubis\\model\\entity\\GestorDireccion";
+                    $GestorDir = "src\\ubis\\application\\repositories\\DireccionRepository";
                     $titulo = ucfirst(_("tabla de toda las casas y centros"));
                     break;
             }

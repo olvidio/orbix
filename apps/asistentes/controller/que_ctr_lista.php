@@ -2,7 +2,7 @@
 
 use core\ConfigGlobal;
 use core\ViewPhtml;
-use ubis\model\entity\GestorCentroDl;
+use src\ubis\application\repositories\CentroDlRepository;
 use web\Hash;
 
 /**
@@ -108,7 +108,7 @@ switch ($Qn_agd) {
         break;
 }
 
-$oGesCentros = new GestorCentroDl();
+$oGesCentros = new CentroDlRepository();
 $oDesplCentros = $oGesCentros->getListaCentros("WHERE status = 't' AND tipo_ctr ~ '^a|^n' ");
 $oDesplCentros->setNombre('id_ubi');
 $oDesplCentros->setBlanco(true);

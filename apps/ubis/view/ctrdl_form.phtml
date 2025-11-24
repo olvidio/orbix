@@ -11,9 +11,9 @@
                     type: 'post',
                     data: $(this).serialize()
                 })
-                    .done(function (rta_txt) {
-                        if (rta_txt !== '' && rta_txt !== '\\n') {
-                            alert('<?= _("respuesta") ?>: ' + rta_txt);
+                    .done(function (json) {
+                        if (json.success !== true) {
+                            alert('<?= _("respuesta") ?>: ' + json.mensaje);
                         } else {
                             <?= $oPosicion->js_atras(1); ?>
                         }
@@ -27,16 +27,16 @@
     fnjs_eliminar = function (formulario) {
         if (confirm("<?= _("¿Está seguro que desea borrar este centro?");?>")) {
             $('#que').val('eliminar_ubi');
-            $(formulario).attr('action', 'apps/ubis/controller/ubis_update.php');
+            $(formulario).attr('action', 'apps/ubis/controller/ubis_eliminar.php');
             $(formulario).one("submit", function () {
                 $.ajax({
                     url: $(this).attr('action'),
                     type: 'post',
                     data: $(this).serialize()
                 })
-                    .done(function (rta_txt) {
-                        if (rta_txt !== '' && rta_txt !== '\\n') {
-                            alert('<?= _("respuesta") ?>: ' + rta_txt);
+                    .done(function (json) {
+                        if (json.success !== true) {
+                            alert('<?= _("respuesta") ?>: ' + json.mensaje);
                         } else {
                             <?= $oPosicion->js_atras(2); ?>
                         }

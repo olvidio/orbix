@@ -9,9 +9,9 @@ use encargossacd\model\entity\GestorEncargoSacdHorario;
 use encargossacd\model\entity\GestorEncargoSacdObserv;
 use personas\model\entity\GestorPersonaDl;
 use personas\model\entity\PersonaDl;
+use src\ubis\application\repositories\CentroDlRepository;
+use src\ubis\application\repositories\CentroEllasRepository;
 use web\DateTimeLocal;
-use ubis\model\entity\CentroDl;
-use ubis\model\entity\CentroEllas;
 
 /**
  * Esta página muestra los encargos de un sacd.
@@ -133,11 +133,12 @@ foreach ($cPersonas as $oPersona) {
         $desc_lugar = $oEncargo->getDesc_lugar();
         $grupo = $array_orden[$modo];
         if (!empty($id_ubi)) { // en algunos encargos no hay ubi
-            //$oUbi = new Centro($id_ubi);
             if (substr($id_ubi, 0, 1) == 2) {
-                $oUbi = new CentroEllas($id_ubi);
+                $CentroEllasRepository = new CentroEllasRepository();
+                $oUbi = $CentroEllasRepository->findById($id_ubi);
             } else {
-                $oUbi = new CentroDl($id_ubi);
+                $CentroDlRepository = new CentroDlRepository();
+                $oUbi = $CentroDlRepository->findById($id_ubi);
             }
             $nombre_ubi = $oUbi->getNombre_ubi();
         } else {
@@ -235,7 +236,7 @@ foreach ($cPersonas as $oPersona) {
         }
         if (!empty($id_enc)) {
             $nombre_ubi_lugar = $nombre_ubi;
-            $nombre_ubi_lugar .= empty($desc_lugar)? '' : ' ('.$desc_lugar.')';
+            $nombre_ubi_lugar .= empty($desc_lugar) ? '' : ' (' . $desc_lugar . ')';
             $array_enc = array("desc_enc" => $desc_enc,
                 "nombre_ubi" => $nombre_ubi_lugar,
                 "seccion" => $seccion,

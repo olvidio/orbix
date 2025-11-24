@@ -273,7 +273,7 @@ class EncargoHorarioExcepcion extends ClasePropiedades
             }
             $this->iid_item_ex = $oDbl->lastInsertId('encargo_horario_excepcion_id_item_ex_seq');
         }
-        $this->setAllAtributes($aDades);
+        $this->setAllAttributes($aDades);
         return TRUE;
     }
 
@@ -306,7 +306,7 @@ class EncargoHorarioExcepcion extends ClasePropiedades
                     if ($aDades === FALSE) {
                         $this->setNullAllAtributes();
                     } else {
-                        $this->setAllAtributes($aDades);
+                        $this->setAllAttributes($aDades);
                     }
             }
             return TRUE;
@@ -339,7 +339,7 @@ class EncargoHorarioExcepcion extends ClasePropiedades
      *
      * @param array $aDades
      */
-    function setAllAtributes(array $aDades, $convert = FALSE)
+    function setAllAttributes(array $aDades, $convert = FALSE)
     {
         if (!is_array($aDades)) return;
         if (array_key_exists('id_enc', $aDades)) $this->setId_enc($aDades['id_enc']);

@@ -111,7 +111,7 @@ class Actividad extends ActividadAll
                 $oActividad = new ActividadEx($a_pkey);
             }
         }
-        $oActividad->setAllAtributes($aDades);
+        $oActividad->setAllAttributes($aDades);
         if ($oActividad->DBGuardar() === FALSE) {
             $this->setErrorTxt($oActividad->getErrorTxt());
             return FALSE;
@@ -156,7 +156,7 @@ class Actividad extends ActividadAll
                     if ($aDades === FALSE) {
                         $this->setNullAllAtributes();
                     } else {
-                        $this->setAllAtributes($aDades);
+                        $this->setAllAttributes($aDades);
                     }
             }
             return true;

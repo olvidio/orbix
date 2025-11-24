@@ -3,11 +3,11 @@
 use actividades\model\ActividadTipo;
 use core\ConfigGlobal;
 use core\ViewTwig;
+use src\ubis\application\repositories\CasaDlRepository;
 use web\CasasQue;
 use web\Hash;
 use web\PeriodoQue;
 use web\Posicion;
-use ubis\model\entity\GestorCasaDl;
 
 /**
  * Página para cambiar la fase a un grupo de actividades.
@@ -116,8 +116,8 @@ $oForm = new CasasQue();
 $oForm->setTitulo('');
 
 // posible selección múltiple de casas
-$gesCasasDl = new GestorCasaDl();
-$aCasas = $gesCasasDl->getArrayPosiblesCasas();
+$CasaDlRepository = new CasaDlRepository();
+$aCasas = $CasaDlRepository->getArrayCasas();
 $a_id_ubi = array_keys($aCasas);
 $csv_id_ubi = implode(',', $a_id_ubi);
 $condicion = "WHERE status='t' AND id_ubi IN($csv_id_ubi)";

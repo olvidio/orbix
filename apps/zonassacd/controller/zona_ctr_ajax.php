@@ -1,10 +1,8 @@
 <?php
 
+use src\ubis\application\repositories\CentroDlRepository;
+use src\ubis\application\repositories\CentroEllasRepository;
 use web\Lista;
-use ubis\model\entity\CentroDl;
-use ubis\model\entity\CentroEllas;
-use ubis\model\entity\GestorCentroDl;
-use ubis\model\entity\GestorCentroEllas;
 use zonassacd\model\entity\Zona;
 
 /**
@@ -56,7 +54,7 @@ switch ($Qque) {
                 $aWhere['id_zona'] = '';
                 $aOperador['id_zona'] = 'IS NULL';
                 $aWhere['_ordre'] = 'nombre_ubi';
-                $GesCentros = new GestorCentroDl();
+                $GesCentros = new CentroDlRepository();
                 $cCentros = $GesCentros->getCentros($aWhere, $aOperador);
                 break;
             case "no_sf":
@@ -64,16 +62,16 @@ switch ($Qque) {
                 $aWhere['id_zona'] = '';
                 $aOperador['id_zona'] = 'IS NULL';
                 $aWhere['_ordre'] = 'nombre_ubi';
-                $GesCentros = new GestorCentroEllas();
+                $GesCentros = new CentroEllasRepository();
                 $cCentros = $GesCentros->getCentros($aWhere, $aOperador);
                 break;
             default:
                 $aWhere['status'] = 't';
                 $aWhere['id_zona'] = $Qid_zona;
                 $aWhere['_ordre'] = 'nombre_ubi';
-                $GesCentrosDl = new GestorCentroDl();
+                $GesCentrosDl = new CentroDlRepository();
                 $cCentrosDl = $GesCentrosDl->getCentros($aWhere);
-                $GesCentrosSf = new GestorCentroEllas();
+                $GesCentrosSf = new CentroEllasRepository();
                 $cCentrosSf = $GesCentrosSf->getCentros($aWhere);
                 $cCentros = array_merge($cCentrosDl, $cCentrosSf);
         }
@@ -110,37 +108,39 @@ switch ($Qque) {
         break;
     case 'update':
         if (!empty($Qid_zona_new)) {
-            if ($Qid_zona_new == "no") {
+            if ($Qid_zona_new === "no") {
                 $id_zona_new = "";
             } else {
                 $id_zona_new = $Qid_zona_new;
             }
             foreach ($QAsel as $id_ubi) {
                 $id_ubi = "{$id_ubi}"; // Para asegurarme que lo toma como string.
-                if ($id_ubi[0] == 1) {
-                    $oCentro = new CentroDl($id_ubi);
+                if ((int)$id_ubi[0] === 1) {
+                    $CentroDlRepository = new CentroDlRepository();
+                    $oCentro = $CentroDlRepository->findById($id_ubi);
                 }
-                if ($id_ubi[0] == 2) {
-                    $oCentro = new CentroEllas($id_ubi);
+                if ((int)$id_ubi[0] === 2) {
+                    $CentroDlRepository = new CentroEllasRepository();
+                    $oCentro = $CentroDlRepository->findById($id_ubi);
                 }
-                $oCentro->DBCarregar();
                 $oCentro->setId_zona($id_zona_new);
-                if ($oCentro->DBGuardar() === false) {
+                if ($CentroDlRepository->Guardar($oCentro) === false) {
                     echo _("hay un error, no se ha guardado.");
                 }
             }
         } else {
             foreach ($QAsel as $id_ubi) {
                 $id_ubi = "{$id_ubi}"; // Para asegurarme que lo toma como string.
-                if ($id_ubi[0] == 1) {
-                    $oCentro = new CentroDl($id_ubi);
+                if ((int)$id_ubi[0] === 1) {
+                    $CentroDlRepository = new CentroDlRepository();
+                    $oCentro = $CentroDlRepository->findById($id_ubi);
                 }
-                if ($id_ubi[0] == 2) {
-                    $oCentro = new CentroEllas($id_ubi);
+                if ((int)$id_ubi[0] === 2) {
+                    $CentroDlRepository = new CentroEllasRepository();
+                    $oCentro = $CentroDlRepository->findById($id_ubi);
                 }
-                $oCentro->DBCarregar();
                 $oCentro->setId_zona('');
-                if ($oCentro->DBGuardar() === false) {
+                if ($CentroDlRepository->Guardar($oCentro) === false) {
                     echo _("hay un error, no se ha guardado.");
                 }
             }

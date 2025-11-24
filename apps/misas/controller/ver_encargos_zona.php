@@ -6,12 +6,12 @@ use core\ViewTwig;
 use encargossacd\model\entity\EncargoTipo;
 use encargossacd\model\entity\GestorEncargo;
 use encargossacd\model\entity\GestorEncargoTipo;
+use src\ubis\application\repositories\CentroDlRepository;
+use src\ubis\application\repositories\CentroEllasRepository;
+use src\ubis\domain\entity\Ubi;
 use src\usuarios\application\repositories\LocalRepository;
 use web\Desplegable;
 use web\Hash;
-use ubis\model\entity\GestorCentroDl;
-use ubis\model\entity\GestorCentroEllas;
-use ubis\model\entity\Ubi;
 
 require_once("apps/core/global_header.inc");
 // Archivos requeridos por esta url **********************************************
@@ -51,7 +51,7 @@ $cEncargoTipos = $oGesEncargoTipo->getEncargoTipos($aWhere, $aOperador);
 $a_tipo_enc = [];
 $posibles_encargo_tipo = [];
 foreach ($cEncargoTipos as $oEncargoTipo) {
-    if ($oEncargoTipo->getId_tipo_enc()>=8100) {
+    if ($oEncargoTipo->getId_tipo_enc() >= 8100) {
         $a_tipo_enc[] = $oEncargoTipo->getId_tipo_enc();
         $posibles_encargo_tipo[$oEncargoTipo->getId_tipo_enc()] = $oEncargoTipo->getTipo_enc();
     }
@@ -171,9 +171,9 @@ $aWhere = [];
 $aWhere['status'] = 't';
 $aWhere['id_zona'] = $Qid_zona;
 $aWhere['_ordre'] = 'nombre_ubi';
-$GesCentrosDl = new GestorCentroDl();
+$GesCentrosDl = new CentroDlRepository();
 $cCentrosDl = $GesCentrosDl->getCentros($aWhere);
-$GesCentrosSf = new GestorCentroEllas();
+$GesCentrosSf = new CentroEllasRepository();
 $cCentrosSf = $GesCentrosSf->getCentros($aWhere);
 $cCentros = array_merge($cCentrosDl, $cCentrosSf);
 

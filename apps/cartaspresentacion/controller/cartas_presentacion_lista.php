@@ -4,14 +4,11 @@
 use cartaspresentacion\model\entity\GestorCartaPresentacion;
 use cartaspresentacion\model\entity\GestorCartaPresentacionDl;
 use core\ConfigGlobal;
-use ubis\model\entity\Centro;
-use ubis\model\entity\GestorCentro;
-use ubis\model\entity\GestorDireccionCtr;
+use src\ubis\application\repositories\RelacionCentroDireccionRepository;
+use src\ubis\application\repositories\CentroRepository;
+use src\ubis\application\repositories\DireccionCentroRepository;
 use ubis\model\CuadrosLabor;
-use ubis\model\entity\DireccionCtr;
-use ubis\model\entity\GestorCtrxDireccion;
 use function core\strtoupper_dlb;
-use function core\is_true;
 
 // INICIO Cabecera global de URL de controlador *********************************
 
@@ -42,7 +39,8 @@ switch ($Qque) {
         $a_mega_tmp = [];
         foreach ($colPresentacion as $oPresentacion) {
             $id_ubi = $oPresentacion->getId_ubi();
-            $oCentro = new Centro($id_ubi);
+            $CentroRepository = new CentroRepository();
+            $oCentro = $CentroRepository->findById($id_ubi);
             $dl = $oCentro->getDl();
             if ($solo_dl === 1 && $dl !== $mi_dele) {
                 continue;
@@ -71,16 +69,17 @@ switch ($Qque) {
                 $aOperador['pais'] = 'sin_acentos';
             }
 
-            $GesDirecciones = new GestorDireccionCtr();
+            $GesDirecciones = new DireccionCentroRepository();
             $cDirecciones = $GesDirecciones->getDirecciones($aWhere, $aOperador);
             $a_mega_tmp = [];
             foreach ($cDirecciones as $oDireccion) {
                 $id_direccion = $oDireccion->getId_direccion();
                 $cId_ubis = $oDireccion->getUbis();
                 $cCentros = [];
+                $CentroRepository = new CentroRepository();
                 foreach ($cId_ubis as $oUbi) {
-                    $oCentro = new Centro($oUbi->getId_ubi());
-                    if (is_true($oCentro->getStatus())) {
+                    $oCentro = $CentroRepository->findById($oUbi->getId_ubi());
+                    if ($oCentro->isStatus()) {
                         $cCentros[] = $oCentro;
                     }
                 }
@@ -100,9 +99,10 @@ switch ($Qque) {
                 $GesPresentacion = new GestorCartaPresentacion();
                 $colPresentacion = $GesPresentacion->getCartasPresentacion(array('zona' => $Qpoblacion), array('zona' => 'sin_acentos'));
                 $a_mega_tmp = [];
+                $CentroRepository = new CentroRepository();
                 foreach ($colPresentacion as $oPresentacion) {
                     $id_ubi = $oPresentacion->getId_ubi();
-                    $oCentro = new Centro($id_ubi);
+                    $oCentro = $CentroRepository->findById($id_ubi);
                     $a_mega_tmp[] = mega_array($oPresentacion, $oCentro, $ordenar_dl);
                 }
                 $a_mega = array_merge_recursive(...$a_mega_tmp);
@@ -115,8 +115,8 @@ switch ($Qque) {
             $aOperador = [];
             $aWhere['region'] = $Qregion;
 
-            $GesCentros = new GestorCentro();
-            $cCentros = $GesCentros->getCentros($aWhere, $aOperador);
+            $CentroRepository = new CentroRepository();
+            $cCentros = $CentroRepository->getCentros($aWhere, $aOperador);
             $a_mega_tmp = [];
             foreach ($cCentros as $oCentro) {
                 $id_ubi = $oCentro->getId_ubi();
@@ -133,8 +133,8 @@ switch ($Qque) {
             $aWhere['dl'] = $Qdl;
             $aOperador = [];
 
-            $GesCentros = new GestorCentro();
-            $cCentros = $GesCentros->getCentros($aWhere, $aOperador);
+            $CentroRepository = new CentroRepository();
+            $cCentros = $CentroRepository->getCentros($aWhere, $aOperador);
             $a_mega_tmp = [];
             foreach ($cCentros as $oCentro) {
                 $id_ubi = $oCentro->getId_ubi();
@@ -185,7 +185,8 @@ function mega_array($oPresentacion, $oCentro, $ordenar_dl)
     $telf = '';
     $a_direccion = [];
 
-    $oDireccion = new DireccionCtr($id_direccion);
+    $DireccionRepository = new DireccionCentroRepository();
+    $oDireccion = $DireccionRepository->findById($id_direccion);
     $direccion = $oDireccion->getDireccion();
     $poblacion = $oDireccion->getPoblacion();
     $c_p = $oDireccion->getC_p();
@@ -209,7 +210,8 @@ function mega_array($oPresentacion, $oCentro, $ordenar_dl)
 
     $a_direccion = [];
     if (!empty($id_ctr_padre)) {
-        $oCentro1 = new Centro($id_ctr_padre);
+        $CentroRepository = new CentroRepository();
+        $oCentro1 = $CentroRepository->findById($id_ctr_padre);
         $cDirecciones1 = $oCentro1->getDirecciones();
         if (!empty($cDirecciones1)) {
             $oDireccion1 = $cDirecciones1[0];
@@ -223,13 +225,14 @@ function mega_array($oPresentacion, $oCentro, $ordenar_dl)
         }
     }
     // Similar a ctr_padre: Si hay una segunda dirección del centro que sea la principal.
-    $GesCtrxDireccion = new GestorCtrxDireccion();
-    $cCtrxDirecciones = $GesCtrxDireccion->getCtrxDirecciones(['id_ubi' => $id_ubi, 'principal' => 't']);
+    $GesCtrxDireccion = new RelacionCentroDireccionRepository();
+    $cCtrxDirecciones = $GesCtrxDireccion->getDirecciones(['id_ubi' => $id_ubi, 'principal' => 't']);
     if (count($cCtrxDirecciones) > 0) {
+        $DirecccionRepository = new DireccionCentroRepository();
         foreach ($cCtrxDirecciones as $oCtrxDireccion) {
             $id_dir = $oCtrxDireccion->getId_direccion();
             if ($id_dir != $id_direccion) {
-                $oDireccion2 = new DireccionCtr($id_dir);
+                $oDireccion2 = $DireccionRepository->findById($id_dir);
                 //$telf1 .= 'fax:'.teleco($id_ctr_padre,"fax","*"," / ") ;
                 $a_direccion[] = array('direccion' => $oDireccion2->getDireccion(),
                     'a_p' => $oDireccion2->getA_p(),
@@ -439,7 +442,7 @@ function format_telf($number)
 {
     // The regular expression is set to a variable.
     $regex = "/^(\(?\d{3}\)?)?[- .]?(\d{3})[- .]?(\d{3})[- .]?( \(?.*\)?)?$/";
-    $a_telf = explode(" / ", $number?? '');
+    $a_telf = explode(" / ", $number ?? '');
     $formattedValue = [];
     foreach ($a_telf as $tel) {
         $formattedValue[] = preg_replace($regex, "\\1 \\2 \\3\\4", $tel);

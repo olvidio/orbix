@@ -173,7 +173,7 @@ class ActividadTarea extends ClasePropiedades
             }
             $this->iid_tarea = $oDbl->lastInsertId('a_tareas_id_tarea_seq');
         }
-        $this->setAllAtributes($aDades);
+        $this->setAllAttributes($aDades);
         return TRUE;
     }
 
@@ -206,7 +206,7 @@ class ActividadTarea extends ClasePropiedades
                     if ($aDades === FALSE) {
                         $this->setNullAllAtributes();
                     } else {
-                        $this->setAllAtributes($aDades);
+                        $this->setAllAttributes($aDades);
                     }
             }
             return TRUE;
@@ -245,7 +245,7 @@ class ActividadTarea extends ClasePropiedades
      *
      * @param array $aDades
      */
-    function setAllAtributes(array $aDades)
+    function setAllAttributes(array $aDades)
     {
         if (!is_array($aDades)) return;
         if (array_key_exists('id_fase', $aDades)) $this->setId_fase($aDades['id_fase']);

@@ -11,9 +11,9 @@ use casas\model\entity\Ingreso;
 use core\ConfigGlobal;
 use permisos\model\PermisosActividadesTrue;
 use procesos\model\entity\GestorActividadProcesoTarea;
+use src\ubis\application\repositories\CasaDlRepository;
+use src\ubis\application\repositories\CentroDlRepository;
 use src\usuarios\domain\entity\Role;
-use ubis\model\entity\CasaDl;
-use ubis\model\entity\CentroDl;
 use ubis\model\entity\GestorTarifaUbi;
 use web\Hash;
 use web\Lista;
@@ -170,8 +170,7 @@ switch ($Qque) {
         if (!empty($Qaid_cdc)) {
             foreach ($Qaid_cdc as $id_ubi) {
                 if (empty($id_ubi)) continue;
-                $oCasa = new CasaDl($id_ubi);
-                $aGrupos[$id_ubi] = $oCasa->getNombre_ubi();
+                $aGrupos[$id_ubi] = (new CasaDlRepository())->findById($id_ubi)->getNombreUbiVo()->value();
             }
         } else {
             exit (_("Debe seleccionar una casa."));
@@ -459,8 +458,7 @@ switch ($Qque) {
         if (!empty($_POST['id_cdc'])) {
             foreach ($_POST['id_cdc'] as $id_ubi) {
                 if (empty($id_ubi)) continue;
-                $oCasa = new CasaDl($id_ubi);
-                $aGrupos[$id_ubi] = $oCasa->getNombre_ubi();
+                $aGrupos[$id_ubi] = (new CasaDlRepository())->findById($id_ubi)->getNombreUbiVo()->value();
             }
         }
         $a_valores = [];
@@ -513,8 +511,7 @@ switch ($Qque) {
                     $oPermSacd = $oPermActividades->getPermisoActual('sacd');
                 }
 
-                $oCasa = new CasaDl($id_ubi);
-                $nombre_ubi = $oCasa->getNombre_ubi();
+                $nombre_ubi = (new CasaDlRepository())->findById($id_ubi)->getNombreUbiVo()->value();
                 if (!$oPermActiv->have_perm_action('ocupado')) {
                     continue;
                 } // no tiene permisos ni para ver.
@@ -539,8 +536,9 @@ switch ($Qque) {
                     $oEnc = new GestorCentroEncargado();
                     foreach ($oEnc->getCentrosEncargadosActividad($id_activ) as $oCentroEncargado) {
                         $id_ctr = $oCentroEncargado->getId_ubi();
-                        $Centro = new CentroDl($id_ctr);
-                        $nombre_ctr = $Centro->getNombre_ubi();
+                        $CentroDlRepository = new CentroDlRepository();
+                        $oCentroDl = $CentroDlRepository->findById($id_ctr);
+                        $nombre_ctr = $oCentroDl->getNombre_ubi();
                         $txt_ctr .= empty($txt_ctr) ? $nombre_ctr : "; $nombre_ctr";
                     }
                 }

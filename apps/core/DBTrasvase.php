@@ -8,26 +8,23 @@ use actividades\model\entity\GestorActividadDl;
 use actividades\model\entity\GestorActividadEx;
 use devel\model\DBAbstract;
 use PDO;
+use src\ubis\application\repositories\CasaDlRepository;
+use src\ubis\application\repositories\CasaExRepository;
+use src\ubis\application\repositories\CentroDlRepository;
+use src\ubis\application\repositories\CentroEllasRepository;
+use src\ubis\application\repositories\CentroEllosRepository;
+use src\ubis\application\repositories\CentroExRepository;
+use src\ubis\application\repositories\DireccionCasaDlRepository;
+use src\ubis\application\repositories\DireccionCasaExRepository;
+use src\ubis\application\repositories\DireccionRepository;
 use src\ubis\application\repositories\TelecoCdcDlRepository;
 use src\ubis\application\repositories\TelecoCdcExRepository;
 use src\ubis\application\repositories\TelecoCtrDlRepository;
 use src\ubis\application\repositories\TelecoCtrExRepository;
+use src\ubis\domain\entity\CentroEllas;
+use src\ubis\domain\entity\CentroEllos;
 use src\utils_database\application\repositories\MapIdRepository;
 use src\utils_database\domain\value_objects\MapIdDl;
-use ubis\model\entity\CasaDl;
-use ubis\model\entity\CdcDlxDireccion;
-use ubis\model\entity\CentroDl;
-use ubis\model\entity\CentroEllas;
-use ubis\model\entity\CentroEllos;
-use ubis\model\entity\CtrDlxDireccion;
-use ubis\model\entity\DireccionCdcDl;
-use ubis\model\entity\DireccionCdcEx;
-use ubis\model\entity\DireccionCtrDl;
-use ubis\model\entity\DireccionCtrEx;
-use ubis\model\entity\GestorCasaEx;
-use ubis\model\entity\GestorCdcExxDireccion;
-use ubis\model\entity\GestorCentroEx;
-use ubis\model\entity\GestorCtrExxDireccion;
 
 class DBTrasvase extends DBAbstract
 {
@@ -263,7 +260,7 @@ class DBTrasvase extends DBAbstract
                         //print_r($oActividad);
                         $oActividadDl = new ActividadDl();
                         $oActividadDl->setoDbl($oDbl);
-                        $oActividadDl->setAllAtributes($aDades, TRUE);
+                        $oActividadDl->setAllAttributes($aDades, TRUE);
                         $oActividadDl->setNoGenerarProceso(TRUE);
 
                         if ($oActividadDl->DBGuardar(1) === false) { // Pongo el param quiet=1 para que no anote cambios.
@@ -298,7 +295,7 @@ class DBTrasvase extends DBAbstract
                         //print_r($oActividad);
                         $oActividadEx = new ActividadEx();
                         $oActividadEx->setoDbl($oDbl);
-                        $oActividadEx->setAllAtributes($aDades, TRUE);
+                        $oActividadEx->setAllAttributes($aDades, TRUE);
                         $oActividadEx->setNoGenerarProceso(TRUE);
 
                         if ($oActividadEx->DBGuardar(1) === false) { // Pongo el param quiet=1 para que no anote cambios.
@@ -346,18 +343,18 @@ class DBTrasvase extends DBAbstract
                     $aWhere = ['dl' => $dl, 'region' => $region];
                     $aOperador = [];
                 }
-                $gesCasaEx = new GestorCasaEx();
-                $cCasasEx = $gesCasaEx->getCasas($aWhere, $aOperador);
+                $CasaExRepository = new CasaExRepository();
+                $cCasasEx = $CasaExRepository->getCasas($aWhere, $aOperador);
                 $error = '';
+                $CasaDlReposiroty = new CasaDlRepository();
                 foreach ($cCasasEx as $oCasaEx) {
-                    $oCasaEx->DBCarregar();
                     $aDades = $oCasaEx->getTot();
-                    $oCasaDl = new CasaDl();
-                    $oCasaDl->setoDbl($oDbl);
-                    $oCasaDl->setAllAtributes($aDades, TRUE);
+                    $oCasaDl = new Casa();
+                    $oCasaDl->setAllAttributes($aDades, TRUE);
                     // actualizar el tipo_ubi.
-                    $oCasaDl->setTipo_ubi('cdcdl');
-                    if ($oCasaDl->DBGuardar() === FALSE) {
+                    $oCasaDl->setTipo_casa('cdcdl');
+                    $CasaDlReposiroty->setoDbl($oDbl);
+                    if ($CasaDlReposiroty->Guardar($oCasaDl) === FALSE) {
                         $error .= '<br>' . _("no se ha guardado la casa");
                     } else {
                         // Al hacer INSERT se genera un id_ubi nuevo. Para conservar el original:
@@ -369,15 +366,12 @@ class DBTrasvase extends DBAbstract
                         // Buscar la dirección
                         $gesCdcExxDireccion = new GestorCdcExxDireccion();
                         $cUbixDirecciones = $gesCdcExxDireccion->getCdcxDirecciones(['id_ubi' => $id_ubi_old]);
+                        $DireccionCasaDlRepository = new DireccionCasaDlRepository();
+                        $DireccionCasaExRepository = new DireccionCasaExRepository();
                         foreach ($cUbixDirecciones as $oUbixDireccion) {
                             $id_direccion_old = $oUbixDireccion->getId_direccion();
-                            $oDireccion = new DireccionCdcEx($id_direccion_old);
-                            $oDireccion->DBCarregar();
-                            $aDades = $oDireccion->getTot();
-                            $oDireccionCdcDl = new DireccionCdcDl();
-                            $oDireccionCdcDl->setoDbl($oDbl);
-                            $oDireccionCdcDl->setAllAtributes($aDades, FALSE);
-                            $oDireccionCdcDl->DBGuardar();
+                            $oDireccion = $DireccionCasaExRepository->findById($id_direccion_old);
+                            $DireccionCasaDlRepository->Guardar($oDireccion);
                             $id_direccion = $oDireccionCdcDl->getId_direccion();
                             $oMapId = $MapIdRepository->findById('Direccion', $id_direccion_old);
                             $oMapId->setIdDlVo(MapIdDl::fromString($id_direccion));
@@ -478,9 +472,11 @@ class DBTrasvase extends DBAbstract
                     $aWhere = ['dl' => $dl, 'region' => $region];
                     $aOperador = [];
                 }
-                $gesCentroEx = new GestorCentroEx();
+                $gesCentroEx = new CentroExRepository();
                 $cCentroEx = $gesCentroEx->getCentros($aWhere, $aOperador);
                 $error = '';
+                $CentroEllasRepository = new CentroEllasRepository();
+                $CentroEllosRepository = new CentroEllosRepository();
                 foreach ($cCentroEx as $oCentroEx) {
                     $oCentroEx->DBCarregar();
                     $aDades = $oCentroEx->getTot();
@@ -489,11 +485,12 @@ class DBTrasvase extends DBAbstract
                     // Ahora uso la nomenclatura para dl tipo 'crA'
                     $aDades['dl'] = $dl;
 
+                    $CentroDlRepository = new CentroDlRepository();
+                    $CentroDlRepository->setoDbl($oDbl);
                     $oCentroDl = new CentroDl();
-                    $oCentroDl->setoDbl($oDbl);
-                    $oCentroDl->setAllAtributes($aDades, TRUE);
-                    if ($oCentroDl->DBGuardar() === FALSE) {
-                        $error .= '<br>' . _("no se ha guardado la casa");
+                    $oCentroDl->setAllAttributes($aDades, TRUE);
+                    if ($CentroDlRepository->Guardar($oCentroDl) === FALSE) {
+                        $error .= '<br>' . _("no se ha guardado el centro");
                     } else {
                         // Al hacer INSERT se genera un id_ubi nuevo. Para conservar el original:
                         $id_ubi = $oCentroDl->getId_ubi();
@@ -504,29 +501,31 @@ class DBTrasvase extends DBAbstract
                         // Además hay que añadirlo a la copia en DB comun:
                         // para la sf (comienza por 2).
                         if (substr($id_ubi, 0, 1) == 2) {
-                            $oCentroEllas = new CentroEllas($id_ubi);
-                            $oCentroEllas->setAllAtributes($aDades);
-                            $oCentroEllas->setoDbl($oDblC);
-                            $oCentroEllas->DBGuardar();
+                            $oCentroEllas = new CentroEllas();
+                            $oCentroEllas->setId_ubi($id_ubi);
+                            $oCentroEllas->setAllAttributes($aDades, TRUE);
+                            $CentroEllasRepository->setoDbl($oDblC);
+                            $CentroEllasRepository->Guardar($oCentroEllas);
                         } else {
-                            $oCentroEllos = new CentroEllos($id_ubi);
-                            $oCentroEllos->setAllAtributes($aDades);
-                            $oCentroEllos->setoDbl($oDblC);
-                            $oCentroEllos->DBGuardar();
+                            $oCentroEllos = new CentroEllos();
+                            $oCentroEllos->setId_ubi($id_ubi);
+                            $oCentroEllos->setAllAttributes($aDades);
+                            $CentroEllosRepository->setoDbl($oDblC);
+                            $CentroEllosRepository->Guardar($oCentroEllos);
                         }
                         // Buscar la dirección
                         $gesCtrExxDireccion = new GestorCtrExxDireccion();
                         $cUbixDirecciones = $gesCtrExxDireccion->getCtrxDirecciones(['id_ubi' => $id_ubi_old]);
                         foreach ($cUbixDirecciones as $oUbixDireccion) {
                             $id_direccion_old = $oUbixDireccion->getId_direccion();
-                            $oDireccion = new DireccionCtrEx($id_direccion_old);
+                            $oDireccion = new DireccionCentroEx($id_direccion_old);
                             $oDireccion->DBCarregar();
                             $aDades = $oDireccion->getTot();
-                            $oDireccionCtrDl = new DireccionCtrDl();
-                            $oDireccionCtrDl->setoDbl($oDbl);
-                            $oDireccionCtrDl->setAllAtributes($aDades, FALSE);
-                            $oDireccionCtrDl->DBGuardar();
-                            $id_direccion = $oDireccionCtrDl->getId_direccion();
+                            $oDireccionCentroDl = new DireccionCentroDl();
+                            $oDireccionCentroDl->setoDbl($oDbl);
+                            $oDireccionCentroDl->setAllAttributes($aDades, FALSE);
+                            $oDireccionCentroDl->DBGuardar();
+                            $id_direccion = $oDireccionCentroDl->getId_direccion();
                             $pkey = ['objeto' => 'Direccion', 'id_resto' => $id_direccion_old];
                             $oMapId = $MapIdRepository->findById('Direccion', $id_direccion_old);
                             $oMapId->setIdDlVo(MapIdDl::fromString($id_direccion));

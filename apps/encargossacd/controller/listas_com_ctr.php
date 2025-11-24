@@ -7,9 +7,9 @@ use encargossacd\model\entity\GestorEncargo;
 use encargossacd\model\entity\GestorEncargoSacd;
 use encargossacd\model\entity\GestorEncargoTexto;
 use personas\model\entity\PersonaDl;
+use src\ubis\application\repositories\CentroDlRepository;
+use src\ubis\application\repositories\CentroEllasRepository;
 use web\DateTimeLocal;
-use ubis\model\entity\GestorCentroDl;
-use ubis\model\entity\GestorCentroEllas;
 
 /**
  * Esta página muestra los encargos de un ctr.
@@ -57,12 +57,12 @@ $lugar_fecha = "$poblacion, $hoy_local";
 // los ctr
 switch ($Qsfsv) {
     case "sv":
-        $GesCentros = new GestorCentroDl();
+        $GesCentros = new CentroDlRepository();
         $cCentros = $GesCentros->getCentros(array('status' => 't', '_ordre' => 'tipo_ctr,nombre_ubi'));
         $origen_txt = ConfigGlobal::mi_dele();
         break;
     case "sf":
-        $GesCentros = new GestorCentroEllas();
+        $GesCentros = new CentroEllasRepository();
         $cCentros = $GesCentros->getCentros(array('status' => 't', '_ordre' => 'tipo_ctr,nombre_ubi'));
         $origen_txt = ConfigGlobal::mi_dele() . 'f';
         break;

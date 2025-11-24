@@ -173,7 +173,7 @@ class ZonaGrupo extends ClasePropiedades
             }
             $this->iid_grupo = $oDbl->lastInsertId('zonas_grupos_id_grupo_seq');
         }
-        $this->setAllAtributes($aDades);
+        $this->setAllAttributes($aDades);
         return TRUE;
     }
 
@@ -206,7 +206,7 @@ class ZonaGrupo extends ClasePropiedades
                     if ($aDades === FALSE) {
                         $this->setNullAllAtributes();
                     } else {
-                        $this->setAllAtributes($aDades);
+                        $this->setAllAttributes($aDades);
                     }
             }
             return TRUE;
@@ -239,7 +239,7 @@ class ZonaGrupo extends ClasePropiedades
      *
      * @param array $aDades
      */
-    function setAllAtributes(array $aDades)
+    function setAllAttributes(array $aDades)
     {
         if (!is_array($aDades)) return;
         if (array_key_exists('id_grupo', $aDades)) $this->setId_grupo($aDades['id_grupo']);

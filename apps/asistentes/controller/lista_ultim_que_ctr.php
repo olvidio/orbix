@@ -1,7 +1,7 @@
 <?php
 
 use personas\model\entity\GestorPersonaS;
-use ubis\model\entity\CentroDl;
+use src\ubis\application\repositories\CentroDlRepository;
 use web\Desplegable;
 use web\Hash;
 
@@ -33,9 +33,10 @@ $GesPersonasS = new GestorPersonaS();
 $aIdCentros = $GesPersonasS->getListaCtr();
 
 $aOpciones = [];
+$CentroDlRepository = new CentroDlRepository();
 foreach ($aIdCentros as $id_ubi) {
-    $oCentro = new CentroDl($id_ubi);
-    $nombre_ubi = $oCentro->getNombre_ubi();
+    $oCentroDl = $CentroDlRepository->findById($id_ubi);
+    $nombre_ubi = $oCentroDl->getNombre_ubi();
 
     $aOpciones[$id_ubi] = $nombre_ubi;
 }
@@ -46,8 +47,8 @@ $oDeplCentros = new Desplegable('id_ubi', $aOpciones, '', true);
 $oHash = new Hash();
 $oHash->setCamposForm('id_ubi');
 $a_camposHidden = array(
-    'que' => $Qque,
-    'curso' => $Qcurso,
+        'que' => $Qque,
+        'curso' => $Qcurso,
 );
 $oHash->setArraycamposHidden($a_camposHidden);
 ?>

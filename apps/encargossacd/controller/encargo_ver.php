@@ -4,9 +4,9 @@ use core\ViewTwig;
 use encargossacd\model\DesplCentros;
 use encargossacd\model\entity\Encargo;
 use encargossacd\model\entity\GestorEncargoTipo;
+use src\ubis\application\repositories\CentroDlRepository;
+use src\ubis\application\repositories\CentroEllasRepository;
 use src\usuarios\application\repositories\LocalRepository;
-use ubis\model\entity\CentroDl;
-use ubis\model\entity\CentroEllas;
 use web\Desplegable;
 use web\Hash;
 use zonassacd\model\entity\GestorZona;
@@ -44,10 +44,12 @@ if (!empty($a_sel)) { //vengo de un checkbox
 function filtro($id_ubi)
 {
     $id_ubi_str = (string)$id_ubi;
-    if ($id_ubi_str[0] === 2) {
-        $oCentro = new CentroEllas($id_ubi);
+    if ((int)$id_ubi_str[0] === 2) {
+        $CentroEllasRepository = new CentroEllasRepository();
+        $oCentro = $CentroEllasRepository->findById($id_ubi);
     } else {
-        $oCentro = new CentroDl($id_ubi);
+        $CentroDlRepository = new CentroDlRepository();
+        $oCentro = $CentroDlRepository->findById($id_ubi);
     }
     $tipo_ubi = $oCentro->getTipo_ubi();
     $tipo_ctr = $oCentro->getTipo_ctr();

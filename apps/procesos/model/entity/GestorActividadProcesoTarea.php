@@ -9,6 +9,7 @@ use core\ClaseGestor;
 use core\Condicion;
 use core\ConfigGlobal;
 use core\Set;
+use src\ubis\application\repositories\CasaRepository;
 use ubis\model\entity\Casa;
 use web\DateTimeLocal;
 use function core\is_true;
@@ -232,8 +233,7 @@ class GestorActividadProcesoTarea extends ClaseGestor
                 // - y no se hace en una casa de la dl.
                 if ($isfsv != $sfsv) {
                     $id_ubi = $oActividad->getId_ubi();
-                    $oUbi = new Casa($id_ubi);
-                    $dl_casa = $oUbi->getDl();
+                    $dl_casa = (new CasaRepository())->findById($id_ubi)?->getDl();
                     if ($dl_casa != ConfigGlobal::mi_dele()) {
                         continue;
                     }

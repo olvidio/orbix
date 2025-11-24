@@ -1,5 +1,9 @@
 <?php
-use core\ConfigGlobal;use ubis\model\entity\GestorCasa;use ubis\model\entity\GestorCentro;
+use core\ConfigGlobal;
+use src\ubis\application\repositories\CasaRepository;
+use src\ubis\application\repositories\CentroRepository;
+
+
 /**
 * Esta página muestra una tabla con los ubis seleccionados.
  * Para "actividad_select_ubi.phtml"
@@ -27,6 +31,8 @@ $tabla="ubis";
 $tabla_dir="u_direcciones";
 $oDbl = $GLOBALS['oDBPC'];
 $Qnombre_ubi = (string) filter_input(INPUT_POST, 'nombre_ubi');
+
+$aOperadorCasa = [];
 if (!empty($Qnombre_ubi)){
 	$nom_ubi = str_replace("+", "\+", $Qnombre_ubi); // para los centros de la sss+
 	$aWhereCasa['nombre_ubi'] = $nom_ubi;
@@ -34,6 +40,7 @@ if (!empty($Qnombre_ubi)){
 	$aWhereCtr['nombre_ubi'] = $nom_ubi;
 	$aOperadorCtr['nombre_ubi'] = 'sin_acentos';
 }
+
 switch ($miSfsv) {
 	case 1:
 		if (!($_SESSION['oPerm']->have_perm_oficina('vcsd') || $_SESSION['oPerm']->have_perm_oficina('des'))) {
@@ -54,15 +61,15 @@ $aWhereCtr['cdc'] = 't';
 
 $a_ubis = [];
 //Casas
-$GesCasas = new GestorCasa();
-$cCasas = $GesCasas->getCasas($aWhereCasa,$aOperadorCasa);
+$CasaRepository = new CasaRepository();
+$cCasas = $CasaRepository->getCasas($aWhereCasa,$aOperadorCasa);
 foreach ($cCasas as $oCasa) {
 	$nombre_ubi = $oCasa->getNombre_ubi();
 	$a_ubis[$nombre_ubi] = $oCasa;
 }
 //Ctrs
-$GesCtr = new GestorCentro();
-$cCtr = $GesCtr->getCentros($aWhereCtr,$aOperadorCtr);
+$CentroRepositorry = new CentroRepository();
+$cCtr = $CentroRepositorry->getCentros($aWhereCtr,$aOperadorCtr);
 foreach ($cCtr as $oCentro) {
 	$nombre_ubi = $oCentro->getNombre_ubi();
 	$a_ubis[$nombre_ubi] = $oCentro;

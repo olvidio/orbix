@@ -5,11 +5,10 @@ use core\DBPropiedades;
 use core\ViewPhtml;
 use personas\model\entity\PersonaGlobal;
 use src\personas\application\repositories\SituacionRepository;
-use src\usuarios\application\repositories\LocalRepository;
-use ubis\model\entity\Centro;
-use ubis\model\entity\CentroDl;
-use ubis\model\entity\GestorCentroDl;
+use src\ubis\application\repositories\CentroDlRepository;
+use src\ubis\application\repositories\CentroRepository;
 use src\ubis\application\repositories\DelegacionRepository;
+use src\usuarios\application\repositories\LocalRepository;
 use web\Desplegable;
 use web\Hash;
 
@@ -112,10 +111,11 @@ if (!empty($Qnuevo)) {
     // para el ctr hay que buscar el nombre
     if (!empty($id_ctr)) {
         if (ConfigGlobal::mi_ambito() === 'rstgr') {
-            $oCentroDl = new Centro($id_ctr);
+            $CentroDlRepository = new CentroRepository();
         } else {
-            $oCentroDl = new CentroDl($id_ctr);
+            $CentroDlRepository = new CentroDlRepository();
         }
+        $oCentroDl = $CentroDlRepository->findById($id_ctr);
         $nom_ctr = $oCentroDl->getNombre_ubi();
         $oDesplCentroDl = [];
     } else {
@@ -153,7 +153,7 @@ $oDesplDl->setBlanco(TRUE);
 
 // para el ctr, si es nuevo o está vacío
 if (empty($nom_ctr)) {
-    $GesCentroDl = new GestorCentroDl();
+    $GesCentroDl = new CentroDlRepository();
     $oDesplCentroDl = $GesCentroDl->getListaCentros();
     $oDesplCentroDl->setAction("fnjs_act_ctr('ctr')");
     $oDesplCentroDl->setNombre("id_ctr");

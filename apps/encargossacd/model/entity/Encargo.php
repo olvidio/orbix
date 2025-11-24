@@ -239,7 +239,7 @@ class Encargo extends ClasePropiedades
             }
             $this->iid_enc = $oDbl->lastInsertId('encargos_id_enc_seq');
         }
-        $this->setAllAtributes($aDades);
+        $this->setAllAttributes($aDades);
         return TRUE;
     }
 
@@ -272,7 +272,7 @@ class Encargo extends ClasePropiedades
                     if ($aDades === FALSE) {
                         $this->setNullAllAtributes();
                     } else {
-                        $this->setAllAtributes($aDades);
+                        $this->setAllAttributes($aDades);
                     }
             }
             return TRUE;
@@ -350,7 +350,7 @@ class Encargo extends ClasePropiedades
      *
      * @param array $aDades
      */
-    function setAllAtributes(array $aDades)
+    function setAllAttributes(array $aDades)
     {
         if (!is_array($aDades)) return;
         if (array_key_exists('id_enc', $aDades)) $this->setId_enc($aDades['id_enc']);

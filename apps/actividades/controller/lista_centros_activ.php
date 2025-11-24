@@ -11,9 +11,8 @@
 
 // INICIO Cabecera global de URL de controlador *********************************
 use actividadescentro\model\entity\GestorCentroEncargado;
-use web\DateTimeLocal;
+use src\ubis\application\repositories\CentroDlRepository;
 use web\Periodo;
-use ubis\model\entity\GestorCentroDl;
 
 require_once("apps/core/global_header.inc");
 // Archivos requeridos por esta url **********************************************
@@ -48,19 +47,19 @@ $oPeriodo->setPeriodo($Qperiodo);
 
 $inicioIso = $oPeriodo->getF_ini_iso();
 $finIso = $oPeriodo->getF_fin_iso();
-if (!empty($Qperiodo) && $Qperiodo == 'desdeHoy') {
+if (!empty($Qperiodo) && $Qperiodo === 'desdeHoy') {
     $condicion_periodo = "f_fin BETWEEN '$inicioIso' AND '$finIso'";
 } else {
     $condicion_periodo = "f_ini BETWEEN '$inicioIso' AND '$finIso'";
 }
 
 
-$GesCentros = new GestorCentroDl();
+$CentroRepository = new CentroDlRepository();
 if (empty($Qid_ctr_num)) {
     // Todos los ctr de sg
     $aWhere = ['tipo_ctr' => '^s[^s]', '_ordre' => 'nombre_ubi'];
     $aOperador = ['tipo_ctr' => '~'];
-    $cCentros = $GesCentros->getCentros($aWhere, $aOperador);
+    $cCentros = $CentroRepository->getCentros($aWhere, $aOperador);
 } else {
     // una lista de ctrs.
     $Qa_id_ctr = array_filter($Qa_id_ctr); // para quitar los elementos vacios.
@@ -71,9 +70,9 @@ if (empty($Qid_ctr_num)) {
         // Todos los ctr de sg
         $aWhere = ['tipo_ctr' => '^s[^s]', '_ordre' => 'nombre_ubi'];
         $aOperador = ['tipo_ctr' => '~'];
-        $cCentros = $GesCentros->getCentros($aWhere, $aOperador);
+        $cCentros = $CentroRepository->getCentros($aWhere, $aOperador);
     } else {
-        $cCentros = $GesCentros->getCentros($aWhere, $aOperador);
+        $cCentros = $CentroRepository->getCentros($aWhere, $aOperador);
     }
 }
 

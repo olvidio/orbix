@@ -71,7 +71,7 @@ if ($miRolePau === Role::PAU_CDC) { //casa
 $oForm->setPosiblesCasas($donde);
 $oForm->setAction('');
 // para seleccionar más de una casa
-$aOpcionesCasas = $oForm->getPosiblesCasas();
+$aOpcionesCasas = $oForm->getArrayCasas();
 $oSelects = new DesplegableArray('', $aOpcionesCasas, 'id_cdc');
 $oSelects->setBlanco('t');
 $oSelects->setAccionConjunto('fnjs_mas_casas(event)');

@@ -5,8 +5,8 @@ namespace cambios\model\entity;
 use core\ClasePropiedades;
 use core\DatosCampo;
 use core\Set;
+use src\ubis\domain\entity\Ubi;
 use function core\is_true;
-use ubis\model\entity\Ubi;
 
 /**
  * Fitxer amb la Classe que accedeix a la taula av_cambios_usuario_propiedades_pref
@@ -216,7 +216,7 @@ class CambioUsuarioPropiedadPref extends ClasePropiedades
             }
             $this->iid_item = $oDbl->lastInsertId('av_cambios_usuario_propiedades_pref_id_item_seq');
         }
-        $this->setAllAtributes($aDades);
+        $this->setAllAttributes($aDades);
         return TRUE;
     }
 
@@ -249,7 +249,7 @@ class CambioUsuarioPropiedadPref extends ClasePropiedades
                     if ($aDades === FALSE) {
                         $this->setNullAllAtributes();
                     } else {
-                        $this->setAllAtributes($aDades);
+                        $this->setAllAttributes($aDades);
                     }
             }
             return TRUE;
@@ -324,7 +324,7 @@ class CambioUsuarioPropiedadPref extends ClasePropiedades
      *
      * @param array $aDades
      */
-    function setAllAtributes(array $aDades)
+    function setAllAttributes(array $aDades)
     {
         if (!is_array($aDades)) return;
         if (array_key_exists('id_item', $aDades)) $this->setId_item($aDades['id_item']);

@@ -1,10 +1,9 @@
 <?php
 
+use src\ubis\application\repositories\CentroDlRepository;
+use ubis\model\CuadrosLabor;
 use web\Hash;
 use web\Lista;
-use ubis\model\CuadrosLabor;
-use ubis\model\entity\CentroDl;
-use ubis\model\entity\GestorCentroDl;
 use function core\is_true;
 
 // INICIO Cabecera global de URL de controlador *********************************
@@ -39,7 +38,8 @@ switch ($Qque) {
         break;
     case 'form_labor':
         $oPermActiv = new CuadrosLabor;
-        $oCentro = new CentroDl($Qid_ubi);
+        $CentroDlRepository = new CentroDlRepository();
+        $oCentro = $CentroDlRepository->findById($Qid_ubi);
         $nombre_ubi = $oCentro->getNombre_ubi();
         $tipo_ctr = $oCentro->getTipo_ctr();
         $tipo_labor = $oCentro->getTipo_labor();
@@ -70,7 +70,8 @@ switch ($Qque) {
         echo $txt;
         break;
     case 'form_num':
-        $oCentro = new CentroDl($Qid_ubi);
+        $CentroDlRepository = new CentroDlRepository();
+        $oCentro = $CentroDlRepository->findById($Qid_ubi);
         $nombre_ubi = $oCentro->getNombre_ubi();
         $n_buzon = $oCentro->getN_buzon();
         $num_pi = $oCentro->getNum_pi();
@@ -100,11 +101,12 @@ switch ($Qque) {
         echo $txt;
         break;
     case 'form_plazas':
-        $oCentro = new CentroDl($Qid_ubi);
+        $CentroDlRepository = new CentroDlRepository();
+        $oCentro = $CentroDlRepository->findById($Qid_ubi);
         $nombre_ubi = $oCentro->getNombre_ubi();
         $num_habit_indiv = $oCentro->getNum_habit_indiv();
         $plazas = $oCentro->getPlazas();
-        $sede = $oCentro->getSede();
+        $sede = $oCentro->isSede();
 
         $chk_sede = is_true($sede) ? 'checked' : '';
 
@@ -138,8 +140,8 @@ switch ($Qque) {
         if (!empty($Qid_ubi)) {
             $Qtipo_ctr = (string)filter_input(INPUT_POST, 'tipo_ctr');
 
-            $oCentro = new CentroDl($Qid_ubi);
-            $oCentro->DBCarregar();
+            $CentroDlRepository = new CentroDlRepository();
+            $oCentro = $CentroDlRepository->findById($Qid_ubi);
             $oCentro->setTipo_ctr($Qtipo_ctr);
             //cuando el campo es tipo_labor, se pasa un array que hay que convertirlo en número.
             if (isset($_POST['tipo_labor'])) {
@@ -149,7 +151,7 @@ switch ($Qque) {
                 }
                 $oCentro->setTipo_labor($byte);
             } else {
-                if (!empty($_POST['labor']) && $_POST['labor'] == 'si') {
+                if (!empty($_POST['labor']) && $_POST['labor'] === 'si') {
                     $oCentro->setTipo_labor(0);
                 }
             }
@@ -160,10 +162,10 @@ switch ($Qque) {
             isset($_POST['num_habit_indiv']) ? $oCentro->setNum_habit_indiv($_POST['num_habit_indiv']) : '';
             isset($_POST['plazas']) ? $oCentro->setPlazas($_POST['plazas']) : '';
             if (isset($_POST['sede'])) {
-                is_true($_POST['sede'])? $oCentro->setSede('t') : $oCentro->setSede('f');
+                is_true($_POST['sede']) ? $oCentro->setSede('t') : $oCentro->setSede('f');
             }
 
-            if ($oCentro->DBGuardar() === false) {
+            if ($CentroDlRepository->Guardar($oCentro) === false) {
                 echo _("Hay un error, no se ha guardado.");
             }
         }
@@ -172,7 +174,7 @@ switch ($Qque) {
         // listado de tipo centro y tipo labor.
         $permiso = 'modificar';
         $oPermActiv = new CuadrosLabor;
-        $oGesCentrosDl = new GestorCentroDl();
+        $oGesCentrosDl = new CentroDlRepository();
         $aWhere = array('status' => 't', '_ordre' => 'nombre_ubi');
         $cCentrosDl = $oGesCentrosDl->getCentros($aWhere);
         $c = 0;
@@ -184,7 +186,7 @@ switch ($Qque) {
             $tipo_ctr = $oCentro->getTipo_ctr();
             $tipo_labor = $oCentro->getTipo_labor();
 
-            if ($permiso == 'modificar') {
+            if ($permiso === 'modificar') {
                 $script = "fnjs_modificar($id_ubi,\"labor\")";
                 $a_valores[$c][1] = array('script' => $script, 'valor' => $nombre_ubi);
             } else {
@@ -209,7 +211,7 @@ switch ($Qque) {
         // listado de numeros de buzón, cartas i pi
         $permiso = 'modificar';
         $oPermActiv = new CuadrosLabor;
-        $oGesCentrosDl = new GestorCentroDl();
+        $oGesCentrosDl = new CentroDlRepository();
         $aWhere = array('status' => 't', '_ordre' => 'nombre_ubi');
         $cCentrosDl = $oGesCentrosDl->getCentros($aWhere);
         $c = 0;
@@ -224,7 +226,7 @@ switch ($Qque) {
             $num_pi = empty($num_pi) ? '0' : $num_pi;
             $num_cartas = empty($num_cartas) ? '0' : $num_cartas;
 
-            if ($permiso == 'modificar') {
+            if ($permiso === 'modificar') {
                 $script = "fnjs_modificar($id_ubi,\"num\")";
                 $a_valores[$c][1] = array('script' => $script, 'valor' => $nombre_ubi);
             } else {
@@ -250,7 +252,7 @@ switch ($Qque) {
         // listado de numeros de buzón, cartas i pi
         $permiso = 'modificar';
         $oPermActiv = new CuadrosLabor;
-        $oGesCentrosDl = new GestorCentroDl();
+        $oGesCentrosDl = new CentroDlRepository();
         $aWhere = array('status' => 't', '_ordre' => 'nombre_ubi');
         $cCentrosDl = $oGesCentrosDl->getCentros($aWhere);
         $c = 0;
@@ -260,9 +262,9 @@ switch ($Qque) {
             $nombre_ubi = $oCentro->getNombre_ubi();
             $num_habit_indiv = $oCentro->getNum_habit_indiv();
             $plazas = $oCentro->getPlazas();
-            $sede = ($oCentro->getSede()) ? _("si") : _("no");
+            $sede = ($oCentro->isSede()) ? _("si") : _("no");
 
-            if ($permiso == 'modificar') {
+            if ($permiso === 'modificar') {
                 $script = "fnjs_modificar($id_ubi,\"plazas\")";
                 $a_valores[$c][1] = array('script' => $script, 'valor' => $nombre_ubi);
             } else {
