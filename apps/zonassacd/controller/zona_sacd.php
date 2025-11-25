@@ -28,7 +28,10 @@ require_once("apps/core/global_object.inc");
 
 
 $GesZonas = new GestorZona();
-$oDesplZonas = $GesZonas->getListaZonas();
+$aOpciones = $oGestorZona->getArrayZonas();
+$oDesplZonas = new Desplegable();
+$oDesplZonas->setOpciones($aOpciones);
+$oDesplZonas->setBlanco(FALSE);
 $oDesplZonas->setBlanco(0);
 $url_ajax = 'apps/zonassacd/controller/zona_sacd_ajax.php';
 

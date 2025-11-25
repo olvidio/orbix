@@ -4,6 +4,7 @@ use core\ConfigGlobal;
 use core\ViewTwig;
 use src\usuarios\application\repositories\RoleRepository;
 use src\usuarios\application\repositories\UsuarioRepository;
+use web\Desplegable;
 use web\Hash;
 use web\Posicion;
 use zonassacd\model\entity\GestorZona;
@@ -171,8 +172,11 @@ if (!empty($aRoles[$id_role]) && ($aRoles[$id_role] === 'p-sacd')) {
 }
 
 
-$GesZonas = new GestorZona();
-$oDesplZonas = $GesZonas->getListaZonas($id_nom_jefe);
+$oGestorZona = new GestorZona();
+$aOpciones = $oGestorZona->getArrayZonas($id_nom_jefe);
+$oDesplZonas = new Desplegable();
+$oDesplZonas->setOpciones($aOpciones);
+$oDesplZonas->setBlanco(FALSE);
 $oDesplZonas->setBlanco(0);
 // miro si se tiene opción a ver alguna zona. La opción blanco tiene que ser 0, sino la rta es <option></option>.
 $algo = $oDesplZonas->options();
