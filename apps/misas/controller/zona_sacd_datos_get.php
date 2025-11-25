@@ -30,13 +30,8 @@ $cZonaSacd = $GesZonasSacd->getZonasSacds($aWhere);
 if (empty ($cZonaSacd)) {
     $error_txt .= _("No existe");
 } else {
-//    if ($Qid_sacd>0) {
-        $oPersona = new PersonaSacd($Qid_sacd);
-        $jsondata['nombre_sacd'] = empty($oPersona->getNombreApellidos())? '?' : $oPersona->getNombreApellidos();
-//    } else {
-//        $oPersona = new PersonaEx($Qid_sacd);
-//        $jsondata['nombre_sacd'] = empty($oPersona->getNombreApellidos())? '?' : $oPersona->getNombreApellidos();
-//    }
+    $oPersona = new PersonaSacd($Qid_sacd);
+    $jsondata['nombre_sacd'] = empty($oPersona->getNombreApellidos())? '?' : $oPersona->getNombreApellidos();
 
     $oZonaSacd = $cZonaSacd[0];
     $jsondata['dw1'] = $oZonaSacd->getDw1();

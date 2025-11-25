@@ -26,7 +26,10 @@ require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
 $GesZonas = new GestorZona();
-$oDesplZonas = $GesZonas->getListaZonas();
+$aOpciones = $oGestorZona->getArrayZonas();
+$oDesplZonas = new Desplegable();
+$oDesplZonas->setOpciones($aOpciones);
+$oDesplZonas->setBlanco(FALSE);
 $oDesplZonas->setBlanco(0);
 
 $url_ajax = 'apps/zonassacd/controller/zona_ctr_ajax.php';

@@ -63,7 +63,10 @@ if (!empty($aRoles[$id_role]) && ($aRoles[$id_role] === 'p-sacd')) {
 }
 
 $oGestorZona = new GestorZona();
-$oDesplZonas = $oGestorZona->getListaZonas($id_nom_jefe);
+$aOpciones = $oGestorZona->getArrayZonas($id_nom_jefe);
+$oDesplZonas = new Desplegable();
+$oDesplZonas->setOpciones($aOpciones);
+$oDesplZonas->setBlanco(FALSE);
 $oDesplZonas->setNombre('id_zona');
 $oDesplZonas->setAction('fnjs_ver_cuadricula_zona()');
 

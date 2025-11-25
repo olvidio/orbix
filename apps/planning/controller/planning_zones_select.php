@@ -187,7 +187,10 @@ switch ($Qid_zona) {
         break;
     case "todo":
         $GesZonas = new GestorZona();
-        $oDesplZonas = $GesZonas->getListaZonas();
+        $aOpciones = $oGestorZona->getArrayZonas($id_nom_jefe);
+        $oDesplZonas = new Desplegable();
+        $oDesplZonas->setOpciones($aOpciones);
+        $oDesplZonas->setBlanco(FALSE);
         $aa_zonas = $oDesplZonas->getOpciones()->fetchAll(PDO::FETCH_ASSOC);
         break;
     default:

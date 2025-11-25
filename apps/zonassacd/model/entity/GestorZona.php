@@ -76,7 +76,7 @@ class GestorZona extends ClaseGestor
         $aOpciones = [];
         foreach ($oDblSt as $aDades) {
             $id_zona = $aDades['id_zona'];
-            $nombre_zona = $aDades['repeticion'];
+            $nombre_zona = $aDades['nombre_zona'];
             $aOpciones[$id_zona] = $nombre_zona;
         }
         return $aOpciones;

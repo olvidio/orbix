@@ -13,8 +13,10 @@ require_once("apps/core/global_object.inc");
 $Qid_zona = (integer)filter_input(INPUT_POST, 'id_zona');
 
 $oGestorZona = new GestorZona();
-$oDesplZonas = $oGestorZona->getListaZonas();
-$oDesplZonas->setNombre('id_zona_sel');
+$aOpciones = $oGestorZona->getArrayZonas();
+$oDesplZonas = new Desplegable();
+$oDesplZonas->setOpciones($aOpciones);
+$oDesplZonas->setBlanco(FALSE);$oDesplZonas->setNombre('id_zona_sel');
 $oDesplZonas->setAction('fnjs_lista_ctrs_por_zona()');
 $oDesplZonas->setOpcion_sel($Qid_zona);
 

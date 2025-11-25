@@ -16,7 +16,10 @@ require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
 $oGestorZona = new GestorZona();
-$oDesplZonas = $oGestorZona->getListaZonas();
+$aOpciones = $oGestorZona->getArrayZonas();
+$oDesplZonas = new Desplegable();
+$oDesplZonas->setOpciones($aOpciones);
+$oDesplZonas->setBlanco(FALSE);
 $oDesplZonas->setNombre('id_zona');
 $oDesplZonas->setAction('fnjs_ver_iniciales_sacd_zona()');
 

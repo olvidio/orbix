@@ -24,6 +24,9 @@ require_once("apps/core/global_object.inc");
 $Qid_zona = (integer)filter_input(INPUT_POST, 'id_zona');
 
 $id_nom_jefe = '';
+$id_sacd='';
+$id_ubi='';
+
 
 $UsuarioRepository = new UsuarioRepository();
 $oMiUsuario = $UsuarioRepository->findById(ConfigGlobal::mi_id_usuario());
@@ -31,9 +34,20 @@ $id_role = $oMiUsuario->getId_role();
 
 $RoleRepository = new RoleRepository();
 $aRoles = $RoleRepository->getArrayRoles();
+echo $aRoles[$id_role];
 
 if (!empty($aRoles[$id_role]) && ($aRoles[$id_role] === 'p-sacd')) {
+    $id_sacd=$oMiUsuario->getId_pauAsString();
+}
 
+if (!empty($aRoles[$id_role]) && ($aRoles[$id_role] === 'Centro')) {
+    $id_ubi=$oMiUsuario->getId_pauAsString();
+}
+echo ConfigGlobal::mi_id_usuario();
+echo '-'.$id_sacd.'='.$id_ubi;
+
+
+if (!empty($aRoles[$id_role]) && ($aRoles[$id_role] === 'p-sacd')) {
     if ($_SESSION['oConfig']->is_jefeCalendario()) {
         $id_nom_jefe = '';
     } else {
@@ -45,7 +59,14 @@ if (!empty($aRoles[$id_role]) && ($aRoles[$id_role] === 'p-sacd')) {
 }
 
 $oGestorZona = new GestorZona();
-$oDesplZonas = $oGestorZona->getListaZonas($id_nom_jefe);
+$aOpciones = $oGestorZona->getArrayZonas($id_nom_jefe);
+if ($Qid_zona==0) {
+    $Qid_zona=array_key_first($aOpciones);
+}
+
+$oDesplZonas = new Desplegable();
+$oDesplZonas->setOpciones($aOpciones);
+$oDesplZonas->setBlanco(FALSE);
 $oDesplZonas->setNombre('id_zona');
 $oDesplZonas->setAction('fnjs_buscar_plan_ctr()');
 $oDesplZonas->setOpcion_sel($Qid_zona);
@@ -115,11 +136,15 @@ $h_plan_ctr = $oHashPlanCtr->linkSinVal();
 $a_campos = ['oPosicion' => $oPosicion,
     'oDesplZonas' => $oDesplZonas,
     'oDesplCentros' => $oDesplCentros,
+    'id_ubi' => $id_ubi,
     'oFormP' => $oFormP,
     'url_buscar_plan_ctr' => $url_buscar_plan_ctr,
     'url_ver_plan_ctr' => $url_ver_plan_ctr,
     'h_plan_ctr' => $h_plan_ctr,
 ];
-
+ 
 $oView = new ViewTwig('misas/controller');
-echo $oView->render('buscar_plan_ctr.html.twig', $a_campos);
+if ($aRoles[$id_role] === 'p-sacd')
+    echo $oView->render('buscar_plan_ctr.html.twig', $a_campos);
+if ($aRoles[$id_role] === 'Centro')
+    echo $oView->render('buscar_plan_un_ctr.html.twig', $a_campos);
