@@ -772,7 +772,14 @@ class Resumen extends ClasePropiedades
             $notas_vf = 'publicf.e_notas';
         }
         $ce_lugar = $this->getCe_lugar();
-        $ce_lugar_quote = "'" . str_replace(',', "','", $ce_lugar) . "'";
+        $a_lugares = explode(',', $ce_lugar);
+        $condiciones = [];
+        foreach ($a_lugares as $lugar) {
+            // Limpiar espacios en blanco alrededor de cada valor
+            $lugar_limpio = trim($lugar);
+            $condiciones[] = "p.ce_lugar LIKE '%" . $lugar_limpio . "%'";
+        }
+        $where_clause = implode(' OR ', $condiciones);
         $any = $this->getAnyFiCurs();
         $curs = $this->getCurso();
 
@@ -793,7 +800,7 @@ class Resumen extends ClasePropiedades
 			WHERE p.id_nom=n.id_nom
 				AND n.f_acta $curs
 				AND (n.id_nivel BETWEEN 1100 AND 1229 OR n.id_nivel BETWEEN 2100 AND 2429)
-                AND (p.ce_lugar IN ($ce_lugar_quote) AND p.ce_ini IS NOT NULL AND (p.ce_fin IS NULL OR p.ce_fin = '$any'))
+                AND ($where_clause) AND p.ce_ini IS NOT NULL AND (p.ce_fin IS NULL OR p.ce_fin = '$any'))
                 AND (p.situacion = 'A' OR p.situacion = 'D' OR p.situacion = 'L')
                 $Where_superada
 				";
