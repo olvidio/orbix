@@ -121,6 +121,8 @@ class GestorErrores
             die();
         }
         fclose($handle);
+
+        throw new \Exception($err[2]);
     }
 
 }
