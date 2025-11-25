@@ -4,7 +4,7 @@ namespace src\ubis\domain\entity;
 
 use src\ubis\application\services\UbiContactsTrait;
 use src\ubis\domain\value_objects\{CentroId,
-    DlCode,
+    DelegacionCode,
     PaisName,
     RegionNameText,
     TipoCentroCode,
@@ -50,7 +50,7 @@ class Centro
     /**
      * Dl de Centro (VO)
      */
-    private ?DlCode $sdl = null;
+    private ?DelegacionCode $sdl = null;
     /**
      * Pais de Centro (VO)
      */
@@ -134,7 +134,7 @@ class Centro
         }
         if (array_key_exists('dl', $aDatos)) {
             $valor = $aDatos['dl'] ?? null;
-            if ($valor instanceof DlCode || $valor === null) {
+            if ($valor instanceof DelegacionCode || $valor === null) {
                 $this->setDlVo($valor);
             } else {
                 $this->setDl($valor !== null ? (string)$valor : null);
@@ -293,7 +293,7 @@ class Centro
      * @return string|null $sdl
      */
     /**
-     * @deprecated Usar `getDlVo(): ?DlCode` en su lugar.
+     * @deprecated Usar `getDlVo(): ?DelegacionCode` en su lugar.
      */
     public function getDl(): ?string
     {
@@ -305,19 +305,19 @@ class Centro
      * @param string|null $sdl
      */
     /**
-     * @deprecated Usar `setDlVo(?DlCode $codigo = null): void` en su lugar.
+     * @deprecated Usar `setDlVo(?DelegacionCode $codigo = null): void` en su lugar.
      */
     public function setDl(?string $sdl = null): void
     {
-        $this->sdl = DlCode::fromNullableString($sdl);
+        $this->sdl = DelegacionCode::fromString($sdl);
     }
 
-    public function getDlVo(): ?DlCode
+    public function getDlVo(): ?DelegacionCode
     {
         return $this->sdl;
     }
 
-    public function setDlVo(?DlCode $codigo = null): void
+    public function setDlVo(?DelegacionCode $codigo = null): void
     {
         $this->sdl = $codigo;
     }

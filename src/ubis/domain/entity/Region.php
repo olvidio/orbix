@@ -76,6 +76,9 @@ class Region
      *
      * @return int|null $iid_region
      */
+    /**
+     * @deprecated Usar `getIdRegionVo(): ?RegionId` en su lugar.
+     */
     public function getId_region(): ?int
     {
         return $this->iid_region;
@@ -84,6 +87,9 @@ class Region
     /**
      *
      * @param int|null $iid_region
+     */
+    /**
+     * @deprecated Usar `setIdRegionVo(?RegionId $id): void` en su lugar.
      */
     public function setId_region(?int $iid_region = null): void
     {
@@ -105,6 +111,9 @@ class Region
      *
      * @return string $sregion
      */
+    /**
+     * @deprecated Usar `getRegionVo(): ?RegionCode` en su lugar.
+     */
     public function getRegion(): string
     {
         return $this->sregion;
@@ -113,6 +122,9 @@ class Region
     /**
      *
      * @param string $sregion
+     */
+    /**
+     * @deprecated Usar `setRegionVo(?RegionCode $code): void` en su lugar.
      */
     public function setRegion(string $sregion): void
     {

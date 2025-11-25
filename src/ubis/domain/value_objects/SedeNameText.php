@@ -2,7 +2,7 @@
 
 namespace src\ubis\domain\value_objects;
 
-final class DlCode
+final class SedeNameText
 {
     private string $value;
 
@@ -16,30 +16,19 @@ final class DlCode
     private function validate(string $value): void
     {
         if ($value === '') {
-            throw new \InvalidArgumentException('DlCode cannot be empty');
+            throw new \InvalidArgumentException('SedeNameText cannot be empty');
         }
-        if (mb_strlen($value) > 20) {
-            throw new \InvalidArgumentException('DlCode must be at most 20 characters');
+        if (mb_strlen($value) > 100) {
+            throw new \InvalidArgumentException('SedeNameText must be at most 100 characters');
         }
-        // Códigos alfanuméricos cortos con separadores comunes
-        if (!preg_match("/^[A-Za-z0-9._\-]+$/u", $value)) {
-            throw new \InvalidArgumentException('DlCode has invalid characters');
+        if (!preg_match("/^[\p{L}0-9 .,'´’:_\-()]+$/u", $value)) {
+            throw new \InvalidArgumentException('SedeNameText has invalid characters');
         }
     }
 
     public function value(): string
     {
         return $this->value;
-    }
-
-    public function __toString(): string
-    {
-        return $this->value;
-    }
-
-    public function equals(DlCode $other): bool
-    {
-        return $this->value === $other->value();
     }
 
     public static function fromNullableString(?string $value): ?self

@@ -102,6 +102,9 @@ class TipoTeleco
      *
      * @return string $stipo_teleco
      */
+    /**
+     * @deprecated Usar `getTipoTelecoVo(): ?TipoTelecoCode` en su lugar.
+     */
     public function getTipo_teleco(): string
     {
         return $this->tipoTeleco?->value();
@@ -110,6 +113,9 @@ class TipoTeleco
     /**
      *
      * @param string $stipo_teleco
+     */
+    /**
+     * @deprecated Usar `setTipoTelecoVo(?TipoTelecoCode $codigo): void` en su lugar.
      */
     public function setTipo_teleco(string $stipo_teleco): void
     {
@@ -121,6 +127,9 @@ class TipoTeleco
      *
      * @return string|null $snombre_teleco
      */
+    /**
+     * @deprecated Usar `getNombreTelecoVo(): ?TipoTelecoName` en su lugar.
+     */
     public function getNombre_teleco(): ?string
     {
         return $this->nombreTeleco?->value();
@@ -129,6 +138,9 @@ class TipoTeleco
     /**
      *
      * @param string|null $snombre_teleco
+     */
+    /**
+     * @deprecated Usar `setNombreTelecoVo(?TipoTelecoName $nombre): void` en su lugar.
      */
     public function setNombre_teleco(?string $snombre_teleco = null): void
     {

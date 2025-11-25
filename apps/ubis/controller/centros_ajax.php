@@ -139,31 +139,35 @@ switch ($Qque) {
         // también los datos en la actividad.
         if (!empty($Qid_ubi)) {
             $Qtipo_ctr = (string)filter_input(INPUT_POST, 'tipo_ctr');
+            $Qlabor = (string)filter_input(INPUT_POST, 'labor');
+            $aTipo_labor = (array)filter_input(INPUT_POST, 'tipo_labor', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+
+            $Qn_buzon = (integer)filter_input(INPUT_POST, 'n_buzon');
+            $Qnum_pi = (integer)filter_input(INPUT_POST, 'num_pi');
+            $Qnum_cartas = (integer)filter_input(INPUT_POST, 'num_cartas');
+            $Qnum_habit_indiv = (integer)filter_input(INPUT_POST, 'num_habit_indiv');
+            $Qplazas = (integer)filter_input(INPUT_POST, 'plazas');
+            $Qsede = (string)filter_input(INPUT_POST, 'sede');
+
 
             $CentroDlRepository = new CentroDlRepository();
             $oCentro = $CentroDlRepository->findById($Qid_ubi);
             $oCentro->setTipo_ctr($Qtipo_ctr);
             //cuando el campo es tipo_labor, se pasa un array que hay que convertirlo en número.
-            if (isset($_POST['tipo_labor'])) {
+            if (!empty($aTipo_labor) && (count($aTipo_labor) > 0)) {
                 $byte = 0;
-                foreach ($_POST['tipo_labor'] as $bit) {
+                foreach ($aTipo_labor as $bit) {
                     $byte = $byte + $bit;
                 }
-                $oCentro->setTipo_labor($byte);
-            } else {
-                if (!empty($_POST['labor']) && $_POST['labor'] === 'si') {
-                    $oCentro->setTipo_labor(0);
-                }
+                $valor = $byte;
+                $oCentro->setTipo_labor($valor);
             }
-
-            isset($_POST['n_buzon']) ? $oCentro->setN_buzon($_POST['n_buzon']) : '';
-            isset($_POST['num_pi']) ? $oCentro->setNum_pi($_POST['num_pi']) : '';
-            isset($_POST['num_cartas']) ? $oCentro->setNum_cartas($_POST['num_cartas']) : '';
-            isset($_POST['num_habit_indiv']) ? $oCentro->setNum_habit_indiv($_POST['num_habit_indiv']) : '';
-            isset($_POST['plazas']) ? $oCentro->setPlazas($_POST['plazas']) : '';
-            if (isset($_POST['sede'])) {
-                is_true($_POST['sede']) ? $oCentro->setSede('t') : $oCentro->setSede('f');
-            }
+            $oCentro->setN_buzon($Qn_buzon);
+            $oCentro->setNum_pi($Qnum_pi);
+            $oCentro->setNum_cartas($Qnum_cartas);
+            $oCentro->setNum_habit_indiv($Qnum_habit_indiv);
+            $oCentro->setPlazas($Qplazas);
+            $oCentro->setSede(is_true($Qsede));
 
             if ($CentroDlRepository->Guardar($oCentro) === false) {
                 echo _("Hay un error, no se ha guardado.");
@@ -249,7 +253,7 @@ switch ($Qque) {
         echo $oLista->mostrar_tabla();
         break;
     case "get_plazas":
-        // listado de numeros de buzón, cartas i pi
+        // listado de números de buzón, cartas i pi
         $permiso = 'modificar';
         $oPermActiv = new CuadrosLabor;
         $oGesCentrosDl = new CentroDlRepository();
