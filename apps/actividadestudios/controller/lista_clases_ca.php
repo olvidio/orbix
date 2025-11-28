@@ -1,16 +1,14 @@
 <?php
 
 use actividadcargos\model\entity\GestorActividadCargo;
-use actividadcargos\model\entity\GestorCargo;
 use actividades\model\entity\ActividadAll;
 use actividadestudios\model\entity\GestorActividadAsignatura;
 use actividadestudios\model\entity\GestorMatricula;
-use asignaturas\model\entity\Asignatura;
 use core\ConfigGlobal;
 use core\ViewPhtml;
 use personas\model\entity\Persona;
-use src\actividadcargos\application\repositories\CargoRepository;
-use src\asignaturas\application\repositories\AsignaturaRepository;
+use src\actividadcargos\domain\contracts\CargoRepositoryInterface;
+use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 
 // INICIO Cabecera global de URL de controlador *********************************
 require_once("apps/core/global_header.inc");
@@ -39,7 +37,7 @@ $nom_activ = $oActividad->getNom_activ();
 $dl_org = $oActividad->getDl_org();
 
 //director de estudios
-$CargoRepository = new CargoRepository();
+$CargoRepository = $GLOBALS['container']->get(CargoRepositoryInterface::class);
 $cCargos = $CargoRepository->getCargos(array('cargo' => 'd.est.'));
 $id_cargo = $cCargos[0]->getId_cargo(); // solo hay un cargo de director de estudios.
 $GesActividadCargos = new GestorActividadCargo();
@@ -70,13 +68,14 @@ $tipo_old = 0;
 $GesActividadAsignaturas = new GestorActividadAsignatura();
 $cActividadAsignaturas = $GesActividadAsignaturas->getActividadAsignaturas(array('id_activ' => $id_activ));
 $datos_asignatura = [];
+$AsignaturaRepository = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class);
 foreach ($cActividadAsignaturas as $oActividadAsignatura) {
     $a++;
     $id_asignatura = $oActividadAsignatura->getId_asignatura();
     $tipo = $oActividadAsignatura->getTipo();
     $id_profesor = $oActividadAsignatura->getId_profesor();
 
-    $oAsignatura = (new AsignaturaRepository())->findById($id_asignatura);
+    $oAsignatura = $AsignaturaRepository->findById($id_asignatura);
     if ($oAsignatura === null) {
         throw new \Exception(sprintf(_("No se ha encontrado la asignatura con id: %s"), $id_asignatura));
     }

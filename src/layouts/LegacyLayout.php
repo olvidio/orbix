@@ -3,8 +3,8 @@
 namespace src\layouts;
 
 use core\ConfigGlobal;
-use src\menus\application\repositories\MenuDbRepository;
-use src\menus\application\repositories\MetaMenuRepository;
+use src\menus\domain\contracts\MenuDbRepositoryInterface;
+use src\menus\domain\contracts\MetaMenuRepositoryInterface;
 use web\Hash;
 
 /**
@@ -23,7 +23,7 @@ class LegacyLayout implements LayoutInterface
      */
     public function generateMenuHtml(array $params): array
     {
-        $MenusDbRepository = new MenuDbRepository();
+        $MenusDbRepository = $GLOBALS['container']->get(MenuDbRepositoryInterface::class);
 
         $htmlComponents = [];
         $li_submenus = "";
@@ -45,7 +45,7 @@ class LegacyLayout implements LayoutInterface
         $num_menu_1 = 0;
         $m = 0;
         $raiz_pral = '';
-        $MetaMenuReposiroty = new MetaMenuRepository();
+        $MetaMenuReposiroty = $GLOBALS['container']->get(MetaMenuRepositoryInterface::class);
 
         // Process MenuDb objects to generate menu data
         $menuData = [];

@@ -17,8 +17,8 @@ use src\ubis\domain\value_objects\{CentroId,
     TipoLaborId,
     UbiNombreText,
     ZonaId};
-use src\ubis\infrastructure\repositories\PgCentroDlDireccionRepository;
-use src\ubis\infrastructure\repositories\PgDireccionCentroDlRepository;
+use src\ubis\domain\contracts\DireccionCentroDlRepositoryInterface;
+use src\ubis\domain\contracts\RelacionCentroDlDireccionRepositoryInterface;
 use web\DateTimeLocal;
 use web\NullDateTimeLocal;
 use function core\is_true;
@@ -159,8 +159,8 @@ class CentroDl
 
     public function __construct()
     {
-        $this->repoCasaDireccion = new PgCentroDlDireccionRepository();
-        $this->repoDireccion = new PgDireccionCentroDlRepository();
+        $this->repoCasaDireccion = $GLOBALS['container']->get(RelacionCentroDlDireccionRepositoryInterface::class);
+        $this->repoDireccion = $GLOBALS['container']->get(DireccionCentroDlRepositoryInterface::class);
     }
 
     /**
@@ -546,6 +546,10 @@ class CentroDl
     /**
      * @deprecated Mantener por compatibilidad UI; se usa DateTimeLocal/NullDateTimeLocal.
      */
+    /**
+     * @return DateTimeLocal|NullDateTimeLocal|null $df_status
+     * @deprecated El retorno null está deprecado. Este getter aplica fallback y no devolverá null en tiempo de ejecución.
+     */
     public function getF_status(): DateTimeLocal|NullDateTimeLocal|null
     {
         return $this->df_status ?? new NullDateTimeLocal;
@@ -558,9 +562,12 @@ class CentroDl
     /**
      * @deprecated Mantener por compatibilidad UI; se usa DateTimeLocal/NullDateTimeLocal.
      */
-    public function setF_status(DateTimeLocal|null $df_status = null): void
+    /**
+     * @param DateTimeLocal|NullDateTimeLocal|null $df_status
+     */
+    public function setF_status(DateTimeLocal|NullDateTimeLocal|null $df_status = null): void
     {
-        $this->df_status = $df_status;
+        $this->df_status = $df_status instanceof NullDateTimeLocal ? null : $df_status;
     }
 
     /**

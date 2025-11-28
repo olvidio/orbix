@@ -11,7 +11,7 @@ use notas\model\entity\GestorPersonaNotaDB;
 use notas\model\entity\PersonaNotaDB;
 use notas\model\PersonaNota;
 use personas\model\entity\Persona;
-use src\asignaturas\application\repositories\AsignaturaRepository;
+use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\notas\domain\entity\Nota;
 use web\TiposActividades;
 use function core\is_true;
@@ -52,6 +52,7 @@ if ($Qque === 3) { //paso las matrículas a notas definitivas (Grabar e imprimir
     $cMatriculados = $GesMatriculas->getMatriculas(array('id_asignatura' => $Qid_asignatura, 'id_activ' => $Qid_activ));
     $i = 0;
     $msg_err = '';
+    $AsignaturaRepository = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class);
     foreach ($cMatriculados as $oMatricula) {
         $i++;
         $aWhere = [];
@@ -82,7 +83,7 @@ if ($Qque === 3) { //paso las matrículas a notas definitivas (Grabar e imprimir
                 $error .= sprintf(_("nota no guardada para %s porque la nota (%s) no llega al mínimo: 6"), $oPersona->getNombreApellidos(), $nn) . "\n";
                 continue;
             }
-            if ($acta == Nota::CURSADA) {
+            if ((int)$acta === Nota::CURSADA) {
                 $error .= _("no se puede definir cursada con preceptor") . "\n";
                 exit($error);
             }
@@ -182,7 +183,7 @@ if ($Qque === 3) { //paso las matrículas a notas definitivas (Grabar e imprimir
                 continue;
             }
         } else {
-            $oAsignatura = (new AsignaturaRepository())->findById($Qid_asignatura);
+            $oAsignatura = $AsignaturaRepository->findById($Qid_asignatura);
             $id_nivel = $oAsignatura->getId_nivel();
         }
 
@@ -300,7 +301,7 @@ if ($Qque === 1) { // Grabar las notas en la matricula
         $oMatricula->setActa($Qacta[$n]);
         // cursada o examinada para el caso sin preceptor
         if ($preceptor === FALSE) {
-            if ($Qacta[$n] == 2) {
+            if ((int)$Qacta[$n] === 2) {
                 $oMatricula->setId_situacion(2);
                 // examinada
                 if ($Qnota_num[$n] > 1) {
@@ -316,7 +317,7 @@ if ($Qque === 1) { // Grabar las notas en la matricula
                 }
             }
         } else {
-            if ($Qacta[$n] == Nota::CURSADA && $preceptor === TRUE) {
+            if ((int)$Qacta[$n] === Nota::CURSADA && $preceptor === TRUE) {
                 $error = _("no se puede definir cursada con preceptor") . "\n";
                 exit($error);
             }

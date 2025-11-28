@@ -6,7 +6,6 @@ use PDO;
 use src\inventario\domain\entity\Lugar;
 use src\inventario\domain\value_objects\LugarId;
 
-
 /**
  * Interfaz de la clase Lugar y su Repositorio
  *
@@ -19,7 +18,6 @@ use src\inventario\domain\value_objects\LugarId;
 interface LugarRepositoryInterface
 {
 
-
     public function getArrayLugares(int $id_ubi):array;
 
 /* -------------------- GESTOR BASE ---------------------------------------- */
@@ -29,10 +27,10 @@ interface LugarRepositoryInterface
 	 *
 	 * @param array $aWhere asociativo con los valores para cada campo de la BD.
 	 * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-	 * @return array|FALSE Una colección de objetos de tipo Lugar
+	 * @return array|false Una colección de objetos de tipo Lugar
 	
 	 */
-	public function getLugares(array $aWhere=[], array $aOperators=[]): array|FALSE;
+	public function getLugares(array $aWhere=[], array $aOperators=[]): array|false;
 	
 /* -------------------- ENTIDAD --------------------------------------------- */
 

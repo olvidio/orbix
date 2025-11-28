@@ -69,7 +69,6 @@ class App
         $this->idApp = new AppId($iid_app);
     }
 
-
     // VO API
     public function getNombreAppVo(): AppName
     {
@@ -92,7 +91,6 @@ class App
         $this->nombreApp = AppName::fromString($snombre_app);
     }
 
-
     /* ------------------- PARA el mod_tabla  -------------------------------*/
     public function getPrimary_key(): string
     {
@@ -110,7 +108,6 @@ class App
         $oAppSet->add($this->getDatosNombreApp());
         return $oAppSet->getTot();
     }
-
 
     /**
      * Recupera les propietats de l'atribut snom de App

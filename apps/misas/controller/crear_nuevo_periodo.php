@@ -15,7 +15,7 @@ use misas\domain\EncargoDiaTend;
 use misas\domain\EncargoDiaTstart;
 use misas\domain\entity\EncargoDia;
 use misas\domain\entity\InicialesSacd;
-use misas\domain\repositories\EncargoDiaRepository;
+use misas\domain\repositories\EncargoDiaRepositoryInterface;
 use misas\model\EncargosZona;
 use web\DateTimeLocal;
 use web\Hash;
@@ -438,7 +438,7 @@ foreach ($cEncargosZona as $oEncargo) {
     ];
 
     //Borro los encargos de la zona ya asignados en ese periodo
-    $EncargoDiaRepository = new EncargoDiaRepository();
+    $EncargoDiaRepository = $GLOBALS['container']->get(EncargoDiaRepositoryInterface::class);
     $cEncargosaBorrar = $EncargoDiaRepository->getEncargoDias($aWhere,$aOperador);
     foreach($cEncargosaBorrar as $oEncargoaBorrar) {
         $EncargoDiaRepository->Eliminar($oEncargoaBorrar);
@@ -583,7 +583,7 @@ foreach ($cEncargosZona as $oEncargo) {
                 ];
             }
     
-            $EncargoDiaRepository = new EncargoDiaRepository();
+            $EncargoDiaRepository = $GLOBALS['container']->get(EncargoDiaRepositoryInterface::class);
             $cEncargosDia = $EncargoDiaRepository->getEncargoDias($aWhere,$aOperador);
      //       echo $aWhere['tstart'].$aOperador['tstart'].$aWhere['id_enc'].'<br>';
             if (count($cEncargosDia) > 1) {
@@ -646,7 +646,7 @@ foreach ($cEncargosZona as $oEncargo) {
             {
     //            echo 'SEGONA OPCIÓ<br>';
     //            echo $aWhere2['tstart'].$aOperador2['tstart'].$aWhere2['id_enc'].'<br>';
-                $EncargoDiaRepository = new EncargoDiaRepository();
+                $EncargoDiaRepository = $GLOBALS['container']->get(EncargoDiaRepositoryInterface::class);
                 $cEncargosDia = $EncargoDiaRepository->getEncargoDias($aWhere2,$aOperador2);
     
                 if (count($cEncargosDia) > 1) {
@@ -700,7 +700,7 @@ foreach ($cEncargosZona as $oEncargo) {
             if((($QTipoPlantilla== EncargoDia::PLANTILLA_SEMANAL_TRES)||($QTipoPlantilla== EncargoDia::PLANTILLA_DOMINGOS_TRES)||($QTipoPlantilla== EncargoDia::PLANTILLA_MENSUAL_TRES))&&(!$ok_encargo))
             {
     //            echo 'TERCERA OPCIÓN<br>';
-                $EncargoDiaRepository = new EncargoDiaRepository();
+                $EncargoDiaRepository = $GLOBALS['container']->get(EncargoDiaRepositoryInterface::class);
                 $cEncargosDia = $EncargoDiaRepository->getEncargoDias($aWhere3,$aOperador3);
             
                 if (count($cEncargosDia) > 1) {
@@ -820,7 +820,7 @@ foreach ($cEncargosZona as $oEncargo) {
             $aOperador = [
                 'tstart' => 'BETWEEN',
             ];
-            $EncargoDiaRepository = new EncargoDiaRepository();
+            $EncargoDiaRepository = $GLOBALS['container']->get(EncargoDiaRepositoryInterface::class);
             $cEncargosDia = $EncargoDiaRepository->getEncargoDias($aWhere,$aOperador);
     
             if (count($cEncargosDia) > 1) {

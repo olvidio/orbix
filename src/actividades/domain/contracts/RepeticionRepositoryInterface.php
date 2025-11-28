@@ -6,7 +6,6 @@ use PDO;
 use src\actividades\domain\entity\Repeticion;
 use src\actividades\domain\value_objects\RepeticionId;
 
-
 /**
  * Interfaz de la clase Repeticion y su Repositorio
  *
@@ -28,10 +27,10 @@ interface RepeticionRepositoryInterface
 	 *
 	 * @param array $aWhere asociativo con los valores para cada campo de la BD.
 	 * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-	 * @return array|FALSE Una colección de objetos de tipo Repeticion
+	 * @return array|false Una colección de objetos de tipo Repeticion
 	
 	 */
-	public function getRepeticiones(array $aWhere=[], array $aOperators=[]): array|FALSE;
+	public function getRepeticiones(array $aWhere=[], array $aOperators=[]): array|false;
 	
 /* -------------------- ENTIDAD --------------------------------------------- */
 

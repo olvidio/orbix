@@ -3,7 +3,7 @@
 namespace src\configuracion\domain\entity;
 
 use core\ConfigGlobal;
-use src\configuracion\application\repositories\ConfigSchemaRepository;
+use src\configuracion\domain\contracts\ConfigSchemaRepositoryInterface;
 
 /**
  * Classe
@@ -46,17 +46,15 @@ class Config
      * @var string
      */
     private $msg;
-    private ConfigSchemaRepository $repository;
-
+    private $repository;
 
     public function __construct()
     {
         $this->msg = _("Debe configurar el esquema en Menu: Sistema > Configuración > config esquema");
         // No se puede guardar el repository, porque guardamos la clase en la $_SESSION, y la
         // conexión PDO no se puede serializar.
-        //$this->repository = new ConfigSchemaRepository();
+        //$this->repository = $GLOBALS['container']->get(ConfigSchemaRepositoryInterface::class);
     }
-
 
     public function getGestionCalendario()
     {
@@ -66,7 +64,7 @@ class Config
     }
 
     /**
-     * Devuelve TRUR O FALSE si es o no jefe del calendario.
+     * Devuelve TRUR O false si es o no jefe del calendario.
      * Si no se le pasa ningun valor, compara con el usuario actual
      *
      * @param string $username
@@ -74,7 +72,7 @@ class Config
      */
     public function is_jefeCalendario(string $username = '')
     {
-        $this->repository = new ConfigSchemaRepository();
+        $this->repository = $GLOBALS['container']->get(ConfigSchemaRepositoryInterface::class);
         $parametro = 'jefe_calendario';
         $oConfigSchema = $this->repository->findById($parametro);
         $valor = $oConfigSchema?->getValorVo()?->value();
@@ -100,7 +98,7 @@ class Config
 
     public function getCe_lugar()
     {
-        $this->repository = new ConfigSchemaRepository();
+        $this->repository = $GLOBALS['container']->get(ConfigSchemaRepositoryInterface::class);
         $parametro = 'ce_lugar';
         
         $oConfigSchema = $this->repository->findById($parametro);
@@ -118,7 +116,7 @@ class Config
 
     public function getCe()
     {
-        $this->repository = new ConfigSchemaRepository();
+        $this->repository = $GLOBALS['container']->get(ConfigSchemaRepositoryInterface::class);
         $valor = $this->getCe_lugar();
         // pasar el valor de nombres separados por coma a array:
         $a_ce = explode(',', $valor);
@@ -127,7 +125,7 @@ class Config
 
     public function get_region_latin()
     {
-        $this->repository = new ConfigSchemaRepository();
+        $this->repository = $GLOBALS['container']->get(ConfigSchemaRepositoryInterface::class);
         $parametro = 'region_latin';
         
         $oConfigSchema = $this->repository->findById($parametro);
@@ -144,7 +142,7 @@ class Config
 
     public function getVstgr()
     {
-        $this->repository = new ConfigSchemaRepository();
+        $this->repository = $GLOBALS['container']->get(ConfigSchemaRepositoryInterface::class);
         $parametro = 'vstgr';
         
         $oConfigSchema = $this->repository->findById($parametro);
@@ -161,7 +159,7 @@ class Config
 
     public function getLugarFirma()
     {
-        $this->repository = new ConfigSchemaRepository();
+        $this->repository = $GLOBALS['container']->get(ConfigSchemaRepositoryInterface::class);
         $parametro = 'lugar_firma';
         
         $oConfigSchema = $this->repository->findById($parametro);
@@ -178,7 +176,7 @@ class Config
 
     public function getDirStgr()
     {
-        $this->repository = new ConfigSchemaRepository();
+        $this->repository = $GLOBALS['container']->get(ConfigSchemaRepositoryInterface::class);
         $parametro = 'dir_stgr';
         
         $oConfigSchema = $this->repository->findById($parametro);
@@ -195,7 +193,7 @@ class Config
 
     public function getAmbito()
     {
-        $this->repository = new ConfigSchemaRepository();
+        $this->repository = $GLOBALS['container']->get(ConfigSchemaRepositoryInterface::class);
         $parametro = 'ambito';
         
         $oConfigSchema = $this->repository->findById($parametro);
@@ -212,7 +210,7 @@ class Config
 
     public function getNotaCorte()
     {
-        $this->repository = new ConfigSchemaRepository();
+        $this->repository = $GLOBALS['container']->get(ConfigSchemaRepositoryInterface::class);
         $parametro = 'nota_corte';
         
         $oConfigSchema = $this->repository->findById($parametro);
@@ -229,7 +227,7 @@ class Config
 
     public function getNotaMax()
     {
-        $this->repository = new ConfigSchemaRepository();
+        $this->repository = $GLOBALS['container']->get(ConfigSchemaRepositoryInterface::class);
         $parametro = 'nota_max';
         
         $oConfigSchema = $this->repository->findById($parametro);
@@ -246,7 +244,7 @@ class Config
 
     public function getCaducaCursada()
     {
-        $this->repository = new ConfigSchemaRepository();
+        $this->repository = $GLOBALS['container']->get(ConfigSchemaRepositoryInterface::class);
         $parametro = 'caduca_cursada';
         
         $oConfigSchema = $this->repository->findById($parametro);
@@ -263,7 +261,7 @@ class Config
 
     public function setCursoStgr(): void
     {
-        $this->repository = new ConfigSchemaRepository();
+        $this->repository = $GLOBALS['container']->get(ConfigSchemaRepositoryInterface::class);
         $parametro = 'curso_stgr';
         
         $oConfigSchema = $this->repository->findById($parametro);
@@ -277,7 +275,7 @@ class Config
 
     public function setCursoCrt(): void
     {
-        $this->repository = new ConfigSchemaRepository();
+        $this->repository = $GLOBALS['container']->get(ConfigSchemaRepositoryInterface::class);
         $parametro = 'curso_crt';
         
         $oConfigSchema = $this->repository->findById($parametro);
@@ -317,6 +315,5 @@ class Config
             return $aCursoStgr['fin_mes'];
         }
     }
-
 
 }

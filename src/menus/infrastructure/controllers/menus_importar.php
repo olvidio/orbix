@@ -1,17 +1,8 @@
 <?php
 
-// INICIO Cabecera global de URL de controlador *********************************
 use web\ContestarJson;
 
-require_once("apps/core/global_header.inc");
-// Archivos requeridos por esta url **********************************************
-
-// Crea los objetos de uso global **********************************************
-require_once("apps/core/global_object.inc");
-// FIN de  Cabecera global de URL de controlador ********************************
-
 $Qid_template_menu = (integer)filter_input(INPUT_POST, 'id_template_menu');
-
 
 // Copiar de dlb a public roles-grupmenu, grupmenu, menus
 $oDB = $GLOBALS['oDBE'];
@@ -139,7 +130,5 @@ try {
     $_SESSION['oGestorErrores']->addError($err_txt, $sClauError, __LINE__, __FILE__);
     $error_txt .= $sClauError;
 }
-
-
 
 ContestarJson::enviar($error_txt, 'ok');

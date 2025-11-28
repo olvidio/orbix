@@ -10,7 +10,6 @@ use PDOException;
 use src\menus\domain\entity\TemplateMenu;
 use src\menus\domain\contracts\TemplateMenuRepositoryInterface;
 
-
 /**
  * Clase que adapta la tabla aux_templates_menus a la interfaz del repositorio
  *
@@ -55,7 +54,7 @@ class PgTemplateMenuRepository extends ClaseRepository implements TemplateMenuRe
      *
      * @param array $aWhere asociativo con los valores para cada campo de la BD.
      * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array|FALSE Una colección de objetos de tipo TemplateMenu
+     * @return array|false Una colección de objetos de tipo TemplateMenu
      */
     public function getTemplatesMenus(array $aWhere = [], array $aOperators = []): array|false
     {
@@ -105,15 +104,15 @@ class PgTemplateMenuRepository extends ClaseRepository implements TemplateMenuRe
             unset($aWhere['_limit']);
         }
         $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
-        if (($oDblSt = $oDbl->prepare($sQry)) === FALSE) {
+        if (($oDblSt = $oDbl->prepare($sQry)) === false) {
             $sClaveError = 'PgTemplateMenuRepository.listar.prepare';
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return FALSE;
+            return false;
         }
-        if (($oDblSt->execute($aWhere)) === FALSE) {
+        if (($oDblSt->execute($aWhere)) === false) {
             $sClaveError = 'PgTemplateMenuRepository.listar.execute';
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
-            return FALSE;
+            return false;
         }
 
         $filas = $oDblSt->fetchAll(PDO::FETCH_ASSOC);
@@ -132,14 +131,13 @@ class PgTemplateMenuRepository extends ClaseRepository implements TemplateMenuRe
         $id_template_menu = $TemplateMenu->getId_template_menu();
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        if (($oDbl->exec("DELETE FROM $nom_tabla WHERE id_template_menu = $id_template_menu")) === FALSE) {
+        if (($oDbl->exec("DELETE FROM $nom_tabla WHERE id_template_menu = $id_template_menu")) === false) {
             $sClaveError = 'PgTemplateMenuRepository.eliminar';
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return FALSE;
+            return false;
         }
         return TRUE;
     }
-
 
     /**
      * Si no existe el registro, hace un insert, si existe, se hace el update.
@@ -155,14 +153,14 @@ class PgTemplateMenuRepository extends ClaseRepository implements TemplateMenuRe
         $aDatos['nombre'] = $TemplateMenu->getNombre();
         array_walk($aDatos, 'core\poner_null');
 
-        if ($bInsert === FALSE) {
+        if ($bInsert === false) {
             //UPDATE
             $update = "
 					nombre                   = :nombre";
-            if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_template_menu = $id_template_menu")) === FALSE) {
+            if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_template_menu = $id_template_menu")) === false) {
                 $sClaveError = 'PgTemplateMenuRepository.update.prepare';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-                return FALSE;
+                return false;
             }
 
             try {
@@ -172,17 +170,17 @@ class PgTemplateMenuRepository extends ClaseRepository implements TemplateMenuRe
                 $this->setErrorTxt($err_txt);
                 $sClaveError = 'PgTemplateMenuRepository.update.execute';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
-                return FALSE;
+                return false;
             }
         } else {
             // INSERT
             $aDatos['id_template_menu'] = $TemplateMenu->getId_template_menu();
             $campos = "(id_template_menu,nombre)";
             $valores = "(:id_template_menu,:nombre)";
-            if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === FALSE) {
+            if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {
                 $sClaveError = 'PgTemplateMenuRepository.insertar.prepare';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-                return FALSE;
+                return false;
             }
             try {
                 $oDblSt->execute($aDatos);
@@ -191,7 +189,7 @@ class PgTemplateMenuRepository extends ClaseRepository implements TemplateMenuRe
                 $this->setErrorTxt($err_txt);
                 $sClaveError = 'PgTemplateMenuRepository.insertar.execute';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
-                return FALSE;
+                return false;
             }
         }
         return TRUE;
@@ -201,15 +199,15 @@ class PgTemplateMenuRepository extends ClaseRepository implements TemplateMenuRe
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_template_menu = $id_template_menu")) === FALSE) {
+        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_template_menu = $id_template_menu")) === false) {
             $sClaveError = 'PgTemplateMenuRepository.isNew';
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return FALSE;
+            return false;
         }
         if (!$oDblSt->rowCount()) {
             return TRUE;
         }
-        return FALSE;
+        return false;
     }
 
     /**
@@ -223,15 +221,14 @@ class PgTemplateMenuRepository extends ClaseRepository implements TemplateMenuRe
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_template_menu = $id_template_menu")) === FALSE) {
+        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_template_menu = $id_template_menu")) === false) {
             $sClaveError = 'PgTemplateMenuRepository.getDatosById';
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return FALSE;
+            return false;
         }
         $aDatos = $oDblSt->fetch(PDO::FETCH_ASSOC);
         return $aDatos;
     }
-
 
     /**
      * Busca la clase con id_template_menu en la base de datos .
@@ -249,10 +246,10 @@ class PgTemplateMenuRepository extends ClaseRepository implements TemplateMenuRe
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE nombre = '$nombre'")) === FALSE) {
+        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE nombre = '$nombre'")) === false) {
             $sClaveError = 'PgTemplateMenuRepository.getDatosById';
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return FALSE;
+            return false;
         }
         $aDatos = $oDblSt->fetch(PDO::FETCH_ASSOC);
         if (empty($aDatos)) {

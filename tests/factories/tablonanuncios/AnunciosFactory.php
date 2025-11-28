@@ -3,10 +3,10 @@
 namespace Tests\factories\tablonanuncios;
 
 use Faker\Factory;
+use src\tablonanuncios\domain\entity\Anuncio;
+use src\tablonanuncios\domain\value_objects\AnuncioId;
 use web\DateTimeLocal;
 use web\NullDateTimeLocal;
-use tablonanuncios\domain\AnuncioId;
-use tablonanuncios\domain\entity\Anuncio;
 
 class AnunciosFactory
 {

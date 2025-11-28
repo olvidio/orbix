@@ -21,7 +21,7 @@
 
 use casas\model\entity\GestorUbiGasto;
 use casas\model\entity\UbiGasto;
-use src\ubis\application\repositories\CasaDlRepository;
+use src\ubis\domain\contracts\CasaDlRepositoryInterface;
 use web\DateTimeLocal;
 use web\Hash;
 
@@ -92,7 +92,7 @@ switch ($Qque) {
         if (!empty($Qaid_cdc)) {
             foreach ($Qaid_cdc as $id_ubi) {
                 if (empty($id_ubi)) continue;
-                $aGrupos[$id_ubi] = (new CasaDlRepository())->findById($id_ubi)->getNombreUbiVo()->value();
+                $aGrupos[$id_ubi] = $GLOBALS['container']->get(CasaDlRepositoryInterface::class)->findById($id_ubi)->getNombreUbiVo()->value();
             }
         } else {
             exit (_("Debe seleccionar una casa."));

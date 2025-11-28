@@ -2,7 +2,7 @@
 
 namespace src\inventario\domain;
 
-use src\inventario\application\repositories\UbiInventarioRepository;
+use src\inventario\domain\contracts\UbiInventarioRepositoryInterface;
 use src\shared\domain\DatosInfoRepo;
 
 /* No vale el underscore en el nombre */
@@ -34,7 +34,7 @@ class InfoUbiInventario extends DatosInfoRepo
             $aOperador['nom_ubi'] = 'sin_acentos';
         }
 
-        $ColeccionRepository = new UbiInventarioRepository();
+        $ColeccionRepository = $GLOBALS['container']->get(UbiInventarioRepositoryInterface::class);
         $Coleccion = $ColeccionRepository->getUbisInventario($aWhere, $aOperador);
 
         return $Coleccion;

@@ -2,7 +2,6 @@
 
 namespace src\shared\domain;
 
-
 use function core\is_true;
 use function core\urlsafe_b64encode;
 
@@ -179,7 +178,7 @@ class DatosTablaRepo
                         break;
                     case 'depende':
                     case 'opciones':
-                        $RepoRelacionado = new $var_1();
+                        $RepoRelacionado = $GLOBALS['container']->get($var_1);
                         $oRelacionado = $RepoRelacionado->findById($valor_camp);
                         if ($oRelacionado !== null) {
                             if (substr($var_2,-2) === 'Vo') {
@@ -236,7 +235,6 @@ class DatosTablaRepo
         }
         return $this->action_tabla;
     }
-
 
     public function setAction_form($action_form)
     {

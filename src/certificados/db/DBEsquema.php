@@ -3,8 +3,8 @@
 namespace src\certificados\db;
 
 use core\ConfigGlobal;
-use src\configuracion\domain\DBAbstract;
-use src\ubis\application\repositories\DelegacionRepository;
+use devel\model\DBAbstract;
+use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 
 /**
  * crear las tablas necesarias para el esquema.
@@ -28,7 +28,7 @@ class DBEsquema extends DBAbstract
     {
         $a_reg = explode('-', $this->esquema);
         $dl = $a_reg[1];
-        $gesDelegeacion = new DelegacionRepository();
+        $gesDelegeacion = $GLOBALS['container']->get(DelegacionRepositoryInterface::class);
         if ($gesDelegeacion->soy_region_stgr($dl)) {
             $this->eliminar_e_certificados_emitidos();
         }
@@ -54,7 +54,7 @@ class DBEsquema extends DBAbstract
     {
         $a_reg = explode('-', $this->esquema);
         $dl = $a_reg[1];
-        $gesDelegeacion = new DelegacionRepository();
+        $gesDelegeacion = $GLOBALS['container']->get(DelegacionRepositoryInterface::class);
         if ($gesDelegeacion->soy_region_stgr($dl)) {
             $this->create_e_certificados_emitidos();
         }
@@ -158,7 +158,6 @@ class DBEsquema extends DBAbstract
         $a_sql[] = "CREATE INDEX IF NOT EXISTS e_certificados_rstgr_key ON $nom_tabla USING btree (certificado);";
         $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->role;";
 
-
         $this->executeSql($a_sql);
 
         $this->delPermisoGlobal('sfsv');
@@ -220,7 +219,6 @@ class DBEsquema extends DBAbstract
 
         $a_sql[] = "ALTER TABLE $nom_tabla ALTER $campo_seq SET DEFAULT nextval('$id_seq'::regclass); ";
         $a_sql[] = "ALTER TABLE $nom_tabla OWNER TO $this->role;";
-
 
         $this->executeSql($a_sql);
 

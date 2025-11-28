@@ -33,22 +33,45 @@ require_once("apps/core/global_header.inc");
 // Crea los objetos de uso global **********************************************
 require_once("apps/core/global_object.inc");
 
+
 // FIN de  Cabecera global de URL de controlador ********************************
 
 use core\ConfigGlobal;
-use src\menus\application\repositories\GrupMenuRepository;
-use src\menus\application\repositories\GrupMenuRoleRepository;
-use src\menus\application\repositories\MenuDbRepository;
+use DI\ContainerBuilder;
+use src\menus\domain\contracts\GrupMenuRepositoryInterface;
+use src\menus\domain\contracts\GrupMenuRoleRepositoryInterface;
+use src\menus\domain\contracts\MenuDbRepositoryInterface;
 use src\menus\domain\PermisoMenu;
-use src\usuarios\application\repositories\PreferenciaRepository;
-use src\usuarios\application\repositories\RoleRepository;
-use src\usuarios\application\repositories\UsuarioRepository;
+use src\usuarios\domain\contracts\PreferenciaRepositoryInterface;
+use src\usuarios\domain\contracts\RoleRepositoryInterface;
+use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
 use web\Hash;
 use src\layouts\LayoutFactory;
 
-$PreferenciaRepository = new PreferenciaRepository();
-$UsuarioRepository = new UsuarioRepository();
-$RoleRepository = new RoleRepository();
+// MODIFICACIÓN: Solo construimos el contenedor si no existe previamente
+if (!isset($container)) {
+    $builder = new ContainerBuilder();
+    // ACTIVAR CACHÉ DE COMPILACIÓN (Mejora drástica de rendimiento en Producción)
+    // Asumo que tienes una constante o función para saber si estás en debug/desarrollo
+    // Si estás en producción, PHP-DI escribirá un archivo PHP optimizado y no leerá las configs de nuevo.
+    if (!ConfigGlobal::is_debug_mode()) {
+        // Asegúrate de que esta carpeta exista y tenga permisos de escritura (www-data)
+        $cacheDir = __DIR__ . '/../../var/cache/php-di';
+        $builder->enableCompilation($cacheDir);
+        $builder->writeProxiesToFile(true, $cacheDir . '/proxies');
+    }
+
+    // Cargar configuración de módulos
+    $builder->addDefinitions(__DIR__ . '/../../src/ubis/config/dependencies.php');
+    $builder->addDefinitions(__DIR__ . '/../../src/usuarios/config/dependencies.php');
+
+    $container = $builder->build();
+}
+
+
+$PreferenciaRepository = $GLOBALS['container']->get(PreferenciaRepositoryInterface::class);
+$UsuarioRepository = $GLOBALS['container']->get(UsuarioRepositoryInterface::class);
+$RoleRepository = $GLOBALS['container']->get(RoleRepositoryInterface::class);
 
 $id_usuario = ConfigGlobal::mi_id_usuario();
 $oUsuario = $UsuarioRepository->findById($id_usuario);
@@ -59,7 +82,7 @@ $oPermisoMenu = new PermisoMenu();
 // ----------- Preferencias -------------------
 //Busco la página inicial en las preferencias:
 // ----------- Página de inicio -------------------
-$GrupMenuRoleRepository = new GrupMenuRoleRepository();
+$GrupMenuRoleRepository = $GLOBALS['container']->get(GrupMenuRoleRepositoryInterface::class);
 $pag_ini = '';
 $oPreferencia = $PreferenciaRepository->findById($id_usuario, 'inicio');
 if ($oPreferencia !== null) {
@@ -173,8 +196,8 @@ $cGrupMenuRoles = $GrupMenuRoleRepository->getGrupMenuRoles($aWhere);
 $gm = 0;
 $grupMenuData = [];
 $listaGrupMenu = [];
-$GrupMenusRepository = new GrupMenuRepository();
-$MenusDbRepository = new MenuDbRepository();
+$GrupMenusRepository = $GLOBALS['container']->get(GrupMenuRepositoryInterface::class);
+$MenusDbRepository = $GLOBALS['container']->get(MenuDbRepositoryInterface::class);
 foreach ($cGrupMenuRoles as $oGrupMenuRole) {
     $gm++;
     $id_gm = $oGrupMenuRole->getId_grupmenu();

@@ -1,7 +1,7 @@
 <?php
 
 use personas\model\entity\GestorPersonaS;
-use src\ubis\application\repositories\CentroDlRepository;
+use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use web\Desplegable;
 use web\Hash;
 
@@ -33,7 +33,7 @@ $GesPersonasS = new GestorPersonaS();
 $aIdCentros = $GesPersonasS->getListaCtr();
 
 $aOpciones = [];
-$CentroDlRepository = new CentroDlRepository();
+$CentroDlRepository = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
 foreach ($aIdCentros as $id_ubi) {
     $oCentroDl = $CentroDlRepository->findById($id_ubi);
     $nombre_ubi = $oCentroDl->getNombre_ubi();

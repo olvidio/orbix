@@ -8,7 +8,7 @@ use actividadescentro\model\entity\GestorCentroEncargado;
 use core\ConfigGlobal;
 use DateInterval;
 use procesos\model\entity\GestorActividadProcesoTarea;
-use src\actividades\application\repositories\RepeticionRepository;
+use src\actividades\domain\contracts\RepeticionRepositoryInterface;
 use web\DateTimeLocal;
 
 /**
@@ -50,7 +50,7 @@ class ActividadNuevoCurso
     private function getRepetiones()
     {
         if (!isset($this->aRepeticion)) {
-            $RepeticionRepository = new RepeticionRepository();
+            $RepeticionRepository = $GLOBALS['container']->get(RepeticionRepositoryInterface::class);
             $cRepeticiones = $RepeticionRepository->getRepeticiones();
             $this->aRepeticion = [];
             foreach ($cRepeticiones as $oRepeticion) {

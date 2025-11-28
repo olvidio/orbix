@@ -2,9 +2,10 @@
 
 namespace src\configuracion\domain;
 
-use permisos\model\entity\GestorModuloInstalado;
-use src\configuracion\application\repositories\AppRepository;
-use src\configuracion\application\repositories\ModuloRepository;
+
+use src\configuracion\domain\contracts\AppRepositoryInterface;
+use src\configuracion\domain\contracts\ModuloInstaladoRepositoryInterface;
+use src\configuracion\domain\contracts\ModuloRepositoryInterface;
 
 /**
  * Description of modulosconfig
@@ -24,13 +25,12 @@ class ModulosConfig
 
     public function __construct()
     {
-        $MooduloRepository = new ModuloRepository();
+        $MooduloRepository = $GLOBALS['container']->get(ModuloRepositoryInterface::class);
         $this->cMods = $MooduloRepository->getModulos();
 
-        $AppRepository = new AppRepository();
+        $AppRepository = $GLOBALS['container']->get(AppRepositoryInterface::class);
         $this->cApps = $AppRepository->getApps();
     }
-
 
     public function getModsAll()
     {
@@ -54,12 +54,11 @@ class ModulosConfig
         return $this->a_apps_todas;
     }
 
-
     // APLICACIONES INSTALADAS EN LA DL
     public function getModsInstalados()
     {
-        $GesModulosInstalados = new GestorModuloInstalado();
-        $this->cModsInstalados = $GesModulosInstalados->getModulosInstalados();
+        $ModuloInstaladoRepository = $GLOBALS['container']->get(ModuloInstaladoRepositoryInterface::class);
+        $this->cModsInstalados = $ModuloInstaladoRepository->getModulosInstalados();
         foreach ($this->cModsInstalados as $oMod) {
             $id_mod = $oMod->getId_mod();
             $nom_mod = $oMod->getNom();
@@ -114,6 +113,5 @@ class ModulosConfig
         }
         return $app_installed;
     }
-
 
 }

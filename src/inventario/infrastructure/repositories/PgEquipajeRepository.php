@@ -12,7 +12,6 @@ use src\inventario\domain\contracts\EquipajeRepositoryInterface;
 use src\inventario\domain\entity\Equipaje;
 use src\inventario\domain\value_objects\EquipajeId;
 
-
 /**
  * Clase que adapta la tabla i_equipajes_dl a la interfaz del repositorio
  *
@@ -99,7 +98,6 @@ class PgEquipajeRepository extends ClaseRepository implements EquipajeRepository
         return $aOpciones;
     }
 
-
     /* -------------------- GESTOR BASE ---------------------------------------- */
 
     /**
@@ -107,7 +105,7 @@ class PgEquipajeRepository extends ClaseRepository implements EquipajeRepository
      *
      * @param array $aWhere asociativo con los valores para cada campo de la BD.
      * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array|FALSE Una colección de objetos de tipo Equipaje
+     * @return array|false Una colección de objetos de tipo Equipaje
      */
     public function getEquipajes(array $aWhere = [], array $aOperators = []): array|false
     {
@@ -157,15 +155,15 @@ class PgEquipajeRepository extends ClaseRepository implements EquipajeRepository
             unset($aWhere['_limit']);
         }
         $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
-        if (($oDblSt = $oDbl->prepare($sQry)) === FALSE) {
+        if (($oDblSt = $oDbl->prepare($sQry)) === false) {
             $sClaveError = 'PgEquipajeRepository.listar.prepare';
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return FALSE;
+            return false;
         }
-        if (($oDblSt->execute($aWhere)) === FALSE) {
+        if (($oDblSt->execute($aWhere)) === false) {
             $sClaveError = 'PgEquipajeRepository.listar.execute';
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
-            return FALSE;
+            return false;
         }
 
         $filas = $oDblSt->fetchAll(PDO::FETCH_ASSOC);
@@ -187,14 +185,13 @@ class PgEquipajeRepository extends ClaseRepository implements EquipajeRepository
         $id_equipaje = $Equipaje->getIdEquipajeVo()->value();
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        if (($oDbl->exec("DELETE FROM $nom_tabla WHERE id_equipaje = $id_equipaje")) === FALSE) {
+        if (($oDbl->exec("DELETE FROM $nom_tabla WHERE id_equipaje = $id_equipaje")) === false) {
             $sClaveError = 'PgEquipajeRepository.eliminar';
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return FALSE;
+            return false;
         }
         return TRUE;
     }
-
 
     /**
      * Si no existe el registro, hace un insert, si existe, se hace el update.
@@ -219,7 +216,7 @@ class PgEquipajeRepository extends ClaseRepository implements EquipajeRepository
         $aDatos['f_fin'] = (new ConverterDate('date', $Equipaje->getF_fin()))->toPg();
         array_walk($aDatos, 'core\poner_null');
 
-        if ($bInsert === FALSE) {
+        if ($bInsert === false) {
             //UPDATE
             $update = "
                     ids_activ                = :ids_activ,
@@ -231,10 +228,10 @@ class PgEquipajeRepository extends ClaseRepository implements EquipajeRepository
                     cabecera                 = :cabecera,
                     pie                      = :pie,
                     cabecerab                = :cabecerab";
-            if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_equipaje = $id_equipaje")) === FALSE) {
+            if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_equipaje = $id_equipaje")) === false) {
                 $sClaveError = 'PgEquipajeRepository.update.prepare';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-                return FALSE;
+                return false;
             }
 
             try {
@@ -244,17 +241,17 @@ class PgEquipajeRepository extends ClaseRepository implements EquipajeRepository
                 $this->setErrorTxt($err_txt);
                 $sClaveError = 'PgEquipajeRepository.update.execute';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
-                return FALSE;
+                return false;
             }
         } else {
             // INSERT
             $aDatos['id_equipaje'] = $Equipaje->getIdEquipajeVo()->value();
             $campos = "(id_equipaje,ids_activ,lugar,f_ini,f_fin,id_ubi_activ,nom_equipaje,cabecera,pie,cabecerab)";
             $valores = "(:id_equipaje,:ids_activ,:lugar,:f_ini,:f_fin,:id_ubi_activ,:nom_equipaje,:cabecera,:pie,:cabecerab)";
-            if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === FALSE) {
+            if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {
                 $sClaveError = 'PgEquipajeRepository.insertar.prepare';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-                return FALSE;
+                return false;
             }
             try {
                 $oDblSt->execute($aDatos);
@@ -263,7 +260,7 @@ class PgEquipajeRepository extends ClaseRepository implements EquipajeRepository
                 $this->setErrorTxt($err_txt);
                 $sClaveError = 'PgEquipajeRepository.insertar.execute';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
-                return FALSE;
+                return false;
             }
         }
         return TRUE;
@@ -273,15 +270,15 @@ class PgEquipajeRepository extends ClaseRepository implements EquipajeRepository
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_equipaje = $id_equipaje")) === FALSE) {
+        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_equipaje = $id_equipaje")) === false) {
             $sClaveError = 'PgEquipajeRepository.isNew';
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return FALSE;
+            return false;
         }
         if (!$oDblSt->rowCount()) {
             return TRUE;
         }
-        return FALSE;
+        return false;
     }
 
     /**
@@ -296,20 +293,19 @@ class PgEquipajeRepository extends ClaseRepository implements EquipajeRepository
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         $id = $id_equipaje->value();
-        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_equipaje = $id")) === FALSE) {
+        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_equipaje = $id")) === false) {
             $sClaveError = 'PgEquipajeRepository.getDatosById';
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return FALSE;
+            return false;
         }
         $aDatos = $oDblSt->fetch(PDO::FETCH_ASSOC);
         // para las fechas del postgres (texto iso)
-        if ($aDatos !== FALSE) {
+        if ($aDatos !== false) {
             $aDatos['f_ini'] = (new ConverterDate('date', $aDatos['f_ini']))->fromPg();
             $aDatos['f_fin'] = (new ConverterDate('date', $aDatos['f_fin']))->fromPg();
         }
         return $aDatos;
     }
-
 
     /**
      * Busca la clase con id_equipaje en la base de datos .

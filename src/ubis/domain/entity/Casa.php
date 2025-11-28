@@ -3,6 +3,8 @@
 namespace src\ubis\domain\entity;
 
 use src\ubis\application\services\UbiContactsTrait;
+use src\ubis\domain\contracts\DireccionCasaRepositoryInterface;
+use src\ubis\domain\contracts\RelacionCasaDireccionRepositoryInterface;
 use web\DateTimeLocal;
 use web\NullDateTimeLocal;
 use function core\is_true;
@@ -93,7 +95,20 @@ class Casa
     private ?ObservCasaText $sobserv = null;
 
     private int $iid_auto;
+
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
+
+    /**
+     * Constructor para inyectar los repositorios necesarios.
+     *
+     * $repoCasaDireccion Repositorio de relación Casa-Dirección
+     * $repoDireccion Repositorio de Direcciones
+     */
+    public function __construct()
+    {
+        $this->repoCasaDireccion = $GLOBALS['container']->get(RelacionCasaDireccionRepositoryInterface::class);
+        $this->repoDireccion = $GLOBALS['container']->get(DireccionCasaRepositoryInterface::class);
+    }
 
     /**
      * Establece el valor de todos los atributos
@@ -461,6 +476,10 @@ class Casa
     /**
      * @deprecated Mantener por compatibilidad UI; se usa DateTimeLocal/NullDateTimeLocal.
      */
+    /**
+     * @return DateTimeLocal|NullDateTimeLocal|null $df_status
+     * @deprecated El retorno null está deprecado. Este getter aplica fallback y no devolverá null en tiempo de ejecución.
+     */
     public function getF_status(): DateTimeLocal|NullDateTimeLocal|null
     {
         return $this->df_status ?? new NullDateTimeLocal;
@@ -473,9 +492,12 @@ class Casa
     /**
      * @deprecated Mantener por compatibilidad UI; se usa DateTimeLocal/NullDateTimeLocal.
      */
-    public function setF_status(DateTimeLocal|null $df_status = null): void
+    /**
+     * @param DateTimeLocal|NullDateTimeLocal|null $df_status
+     */
+    public function setF_status(DateTimeLocal|NullDateTimeLocal|null $df_status = null): void
     {
-        $this->df_status = $df_status;
+        $this->df_status = $df_status instanceof NullDateTimeLocal ? null : $df_status;
     }
 
     /**

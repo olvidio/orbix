@@ -10,13 +10,14 @@ use asistentes\model\entity\Asistente;
 use asistentes\model\entity\GestorAsistente;
 use core\ConfigGlobal;
 use personas\model\entity\Persona;
-use src\actividadcargos\application\repositories\CargoRepository;
-use src\ubis\application\repositories\CasaRepository;
+use src\actividadcargos\domain\contracts\CargoRepositoryInterface;
+use src\ubis\domain\contracts\CasaRepositoryInterface;
 use src\ubis\domain\entity\Ubi;
 use web\Lista;
 use web\TiposActividades;
 use function core\is_true;
 use function core\strtoupper_dlb;
+use function DI\get;
 
 /**
  * Lista los asistentes de una relación de actividades seleccionada
@@ -133,7 +134,7 @@ class ListaPlazas
             $plazas_min = '';
             $plazas_casa = '';
             if (!empty($id_ubi_casa)) {
-                $oCasaDl = (new CasaRepository())->findById($id_ubi_casa);
+                $oCasaDl = $GLOBALS['container']-get(CasaRepositoryInterface::class)->findById($id_ubi_casa);
                 $plazas_max = !empty($plazas) ? $plazas : $oCasaDl->getPlazas();
                 $plazas_min = $oCasaDl->getPlazas_min();
                 $plazas_casa .= !empty($plazas_max) ? $plazas_max : '';
@@ -173,11 +174,12 @@ class ListaPlazas
                     $num = 0; //número total de asistentes
                     $plazas_pedidas = 0; // plazas pedidas o 'en espera'
                     $aIdCargos = []; // id_nom de los cargos para no ponerlos como asistentes.
+                    $CargoRepository = $GLOBALS['container']->get(CargoRepositoryInterface::class);
                     foreach ($cActividadCargos as $oActividadCargo) {
                         $id_nom = $oActividadCargo->getId_nom();
                         $aIdCargos[] = $id_nom;
                         $id_cargo = $oActividadCargo->getId_cargo();
-                        $cargo_cl = (new CargoRepository())->findById($id_cargo)?->getCargoVo()->value();
+                        $cargo_cl = $CargoRepository->findById($id_cargo)?->getCargoVo()->value();
                         $oPersona = Persona::NewPersona($id_nom);
                         if (!is_object($oPersona)) {
                             $msg_err .= "<br>$oPersona con id_nom: $id_nom para la actividad $nom_activ";

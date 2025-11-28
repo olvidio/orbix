@@ -4,8 +4,8 @@ use core\ConfigGlobal;
 use core\ViewPhtml;
 use personas\model\entity\GestorPersonaAgd;
 use personas\model\entity\GestorPersonaN;
-use src\ubis\application\repositories\CentroDlRepository;
-use src\ubis\application\repositories\DelegacionRepository;
+use src\ubis\domain\contracts\CentroDlRepositoryInterface;
+use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 use web\Desplegable;
 use web\Hash;
 use function core\is_true;
@@ -54,7 +54,7 @@ $Qca_todos = (string)filter_input(INPUT_POST, 'ca_todos');
 
 // Grupo de estudios
 $mi_dele = ConfigGlobal::mi_delef();
-$repoDelegacion = new DelegacionRepository();
+$repoDelegacion = $GLOBALS['container']->get(DelegacionRepositoryInterface::class);
 $cMiDl = $repoDelegacion->getDelegaciones(['dl' => $mi_dele]);
 if (is_array($cMiDl) && !empty($cMiDl)) {
     $grupo_estudios = $cMiDl[0]->getGrupoEstudiosVo()->value();
@@ -73,7 +73,7 @@ $GesPersonas = new GestorPersonaN();
 $aListaCtr = $GesPersonas->getListaCtr();
 $aCentrosN = [];
 $aCentrosOrden = [];
-$CentroDlRepository = new CentroDlRepository();
+$CentroDlRepository = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
 foreach ($aListaCtr as $id_ubi) {
     $oCentroDl = $CentroDlRepository->findById($id_ubi);
     $nombre_ubi = $oCentroDl->getNombre_ubi();

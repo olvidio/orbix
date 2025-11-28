@@ -4,9 +4,9 @@ namespace src\certificados\domain;
 
 use core\ConfigGlobal;
 use personas\model\entity\Persona;
-use src\certificados\application\repositories\CertificadoEmitidoRepository;
-use src\usuarios\application\repositories\LocalRepository;
-use src\ubis\application\repositories\DelegacionRepository;
+use src\certificados\domain\contracts\CertificadoEmitidoRepositoryInterface;
+use src\ubis\domain\contracts\DelegacionRepositoryInterface;
+use src\usuarios\domain\contracts\LocalRepositoryInterface;
 use function core\is_true;
 
 class CertificadoEmitidoSelect
@@ -14,7 +14,7 @@ class CertificadoEmitidoSelect
 
     public static function getCamposVista(string $certificado, string $inicurs_ca_iso, string $fincurs_ca_iso): array
     {
-        $gesDelegacion = new DelegacionRepository();
+        $gesDelegacion = $GLOBALS['container']->get(DelegacionRepositoryInterface::class);
         /*miro las condiciones. Si es la primera vez muestro las de este año */
         $aWhere = [];
         $aOperador = [];
@@ -49,7 +49,7 @@ class CertificadoEmitidoSelect
             $aOperador['f_enviado'] = 'IS NULL';
 
         }
-        $certificadoEmitidoRepository = new CertificadoEmitidoRepository();
+        $certificadoEmitidoRepository = $GLOBALS['container']->get(CertificadoEmitidoRepositoryInterface::class);
         $cCertificados = $certificadoEmitidoRepository->getCertificados($aWhere, $aOperador);
         if ($cCertificados === false) {
             return [
@@ -95,7 +95,7 @@ class CertificadoEmitidoSelect
             $fecha = $oCertificado->getF_enviado()->getFromLocal();
 
             if (!empty($idioma)) {
-                $LocalRepository = new LocalRepository();
+                $LocalRepository = $GLOBALS['container']->get(LocalRepositoryInterface::class);
                 $oLocal = $LocalRepository->findById($idioma);
                 $idioma = $oLocal->getNom_idiomaAsString();
             }
@@ -118,7 +118,6 @@ class CertificadoEmitidoSelect
             $a_valores[$i][7] = $destino;
             $a_valores[$i][8] = $fecha;
         }
-
 
         return [
             'success' => true,

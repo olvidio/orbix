@@ -2,7 +2,6 @@
 
 use actividadcargos\model\entity\ActividadCargo;
 use actividadcargos\model\entity\GestorActividadCargo;
-use actividadcargos\model\entity\GestorCargo;
 use actividadcargos\model\GestorCargoOAsistente;
 use actividades\model\entity\ActividadAll;
 use actividades\model\entity\ActividadDl;
@@ -17,7 +16,7 @@ use personas\model\entity\GestorPersona;
 use personas\model\entity\Persona;
 use procesos\model\entity\ActividadFase;
 use procesos\model\entity\GestorActividadProcesoTarea;
-use src\actividadcargos\application\repositories\CargoRepository;
+use src\actividadcargos\domain\contracts\CargoRepositoryInterface;
 use web\Periodo;
 use function core\is_true;
 
@@ -52,7 +51,7 @@ require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
 // valores del id_cargo de tipo_cargo = sacd:
-$CargoRepository = new CargoRepository();
+$CargoRepository = $GLOBALS['container']->get(CargoRepositoryInterface::class);
 $aIdCargos_sacd = $CargoRepository->getArrayCargos('sacd');
 $txt_where_cargos = implode(',', array_keys($aIdCargos_sacd));
 

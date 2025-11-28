@@ -42,7 +42,7 @@ foreach ($a_Id_nom as $id_nom) {
 //        $sacd = $PersonaEx->getNombreApellidos();
 //    }
 
-    $InicialesSacdRepository = new InicialesSacdRepository();
+    $InicialesSacdRepository = $GLOBALS['container']->get(InicialesSacdRepositoryInterface::class);
     $InicialesSacd = $InicialesSacdRepository->findById($id_nom);
     if ($InicialesSacd === null) {
         $iniciales = '';

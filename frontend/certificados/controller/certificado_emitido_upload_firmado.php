@@ -3,7 +3,7 @@
 // INICIO Cabecera global de URL de controlador *********************************
 use frontend\shared\model\ViewNewTwig;
 use personas\model\entity\Persona;
-use src\certificados\application\repositories\CertificadoEmitidoRepository;
+use src\certificados\domain\contracts\CertificadoEmitidoRepositoryInterface;
 use web\Hash;
 
 // Crea los objetos de uso global **********************************************
@@ -24,7 +24,7 @@ if (!empty($a_sel)) { //vengo de un checkbox
     $Qid_nom = (integer)filter_input(INPUT_POST, 'id_pau');
 }
 
-$certificadoEmitidoRepository = new CertificadoEmitidoRepository();
+$certificadoEmitidoRepository = $GLOBALS['container']->get(CertificadoEmitidoRepositoryInterface::class);
 $oCertificadoEmitido = $certificadoEmitidoRepository->findById($Qid_item);
 
 $id_nom = $oCertificadoEmitido->getId_nom();

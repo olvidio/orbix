@@ -5,6 +5,7 @@ use actividadestudios\model\entity\ActividadAsignatura;
 use core\ClasePropiedades;
 use core\DatosCampo;
 use core\Set;
+use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 
 /**
  * Fitxer amb la Classe que accedeix a la taula d_docencia_stgr
@@ -535,7 +536,7 @@ class ProfesorDocenciaStgr extends ClasePropiedades
         $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_asignatura'));
         $oDatosCampo->setEtiqueta(_("asignatura"));
         $oDatosCampo->setTipo('opciones');
-        $oDatosCampo->setArgument('asignaturas\model\entity\Asignatura'); // nombre del objeto relacionado
+        $oDatosCampo->setArgument(AsignaturaRepositoryInterface::class); // nombre del objeto relacionado
         $oDatosCampo->setArgument2('getNombre_corto'); // método para obtener el valor a mostrar del objeto relacionado.
         $oDatosCampo->setArgument3('getArrayAsignaturasConSeparador'); // método con que crear la lista de opciones del Gestor objeto relacionado.
         return $oDatosCampo;

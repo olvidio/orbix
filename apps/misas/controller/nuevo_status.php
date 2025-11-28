@@ -138,7 +138,7 @@ foreach ($cEncargosZona as $oEncargo) {
     ];
 
     //Modifico el status de los encargos de la zona en ese periodo
-    $EncargoDiaRepository = new EncargoDiaRepository();
+    $EncargoDiaRepository = $GLOBALS['container']->get(EncargoDiaRepositoryInterface::class);
     $cEncargosaCambiar = $EncargoDiaRepository->getEncargoDias($aWhere,$aOperador);
     foreach($cEncargosaCambiar as $oEncargoaCambiar) {
         $oEncargoaCambiar->setStatus($Qestado);

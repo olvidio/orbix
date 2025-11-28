@@ -8,7 +8,7 @@ use encargossacd\model\entity\GestorEncargoSacd;
 use encargossacd\model\entity\GestorEncargoSacdHorario;
 use encargossacd\model\entity\GestorEncargoTipo;
 use personas\model\entity\GestorPersona;
-use src\ubis\application\repositories\CentroDlRepository;
+use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use web\Desplegable;
 use web\Hash;
 
@@ -40,7 +40,7 @@ $GesEncargoTipo = new GestorEncargoTipo();
 list($chk_prelatura, $chk_de_paso, $chk_sssc, $oDesplSacd) = getDesplegableSacdyCheckBox($Qseleccion_sacd);
 
 /* Miro el tipo de ctr. Si es el de oficiales dl, no pongo titular ni suplente. */
-$CentroDlRepository = new CentroDlRepository();
+$CentroDlRepository = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
 $oCentroDl = $CentroDlRepository->findById($Qid_ubi);
 $tipo_centro = $oCentroDl->getTipo_ctr();
 

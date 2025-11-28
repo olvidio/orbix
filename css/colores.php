@@ -2,7 +2,8 @@
 
 namespace core;
 
-use src\usuarios\application\repositories\PreferenciaRepository;
+
+use src\usuarios\domain\contracts\PreferenciaRepositoryInterface;
 
 if (empty($estilo_color)) {
     // INICIO Cabecera global de URL de controlador *********************************
@@ -13,7 +14,7 @@ if (empty($estilo_color)) {
     // Crea los objetos de uso global **********************************************
     require_once("apps/core/global_object.inc");
     // FIN de  Cabecera global de URL de controlador ********************************
-    $PreferenciaRepository = new PreferenciaRepository();
+    $PreferenciaRepository = $GLOBALS['container']->get(PreferenciaRepositoryInterface::class);
 
     $id_usuario = ConfigGlobal::mi_id_usuario();
     $aPref = $PreferenciaRepository->getPreferencias(array('id_usuario' => $id_usuario, 'tipo' => 'estilo'));

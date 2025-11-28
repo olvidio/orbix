@@ -3,10 +3,8 @@
 namespace src\usuarios\domain;
 
 use src\menus\domain\PermisoMenu;
-use src\usuarios\application\repositories\PermMenuRepository;
-use src\usuarios\application\repositories\RoleRepository;
-use src\usuarios\application\repositories\UsuarioGrupoRepository;
-use src\usuarios\application\repositories\UsuarioRepository;
+use src\usuarios\domain\contracts\UsuarioGrupoRepositoryInterface;
+use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
 use src\usuarios\domain\entity\Role;
 use src\usuarios\domain\entity\UsuarioGrupo;
 use zonassacd\model\entity\GestorZona;
@@ -43,7 +41,7 @@ class GrupoJefeZona
     {
         $error_txt = '';
         // añado el grupo de permisos al usuario.
-        $UsuarioGrupoRepository = new UsuarioGrupoRepository();
+        $UsuarioGrupoRepository = $GLOBALS['container']->get(UsuarioGrupoRepositoryInterface::class);
         $oUsuarioGrupo = new UsuarioGrupo();
         $oUsuarioGrupo->setId_usuario($id_usuario);
         $oUsuarioGrupo->setId_grupo($id_grupo);
@@ -58,7 +56,7 @@ class GrupoJefeZona
     {
         $error_txt = '';
         // elimino el grupo de permisos al usuario.
-        $UsuarioGrupoRepository = new UsuarioGrupoRepository();
+        $UsuarioGrupoRepository = $GLOBALS['container']->get(UsuarioGrupoRepositoryInterface::class);
         $cUsuarioGrupo = $UsuarioGrupoRepository->getUsuariosGrupos(['id_usuario' => $id_usuario, 'id_grupo' => $id_grupo]);
         if (!empty($cUsuarioGrupo)) {
             $oUsuarioGrupo = $cUsuarioGrupo[0];
@@ -72,12 +70,12 @@ class GrupoJefeZona
 
     private function usuariosSacd()
     {
-        $RoleRepository = new RoleRepository();
+        $RoleRepository = $GLOBALS['container']->get(RoleRepositoryInterface::class);
         $cRoles = $RoleRepository->getRoles(['pau' => Role::PAU_SACD]);
         $RoleSacd = $cRoles[0];
         $id_role = $RoleSacd->getId_role();
 
-        $UsuarioRepository = new UsuarioRepository();
+        $UsuarioRepository = $GLOBALS['container']->get(UsuarioRepositoryInterface::class);
         $aWhere['id_role'] = $id_role;
         $aWhere['id_pau'] = 'x';
         $aOperador['id_pau'] = 'IS NOT NULL';
@@ -108,7 +106,7 @@ class GrupoJefeZona
     {
         $this->setIdGrupoConPermisoJefeZona();
 
-        $UsuarioRepository = new UsuarioRepository();
+        $UsuarioRepository = $GLOBALS['container']->get(UsuarioRepositoryInterface::class);
         $cUsuarios = $UsuarioRepository->getUsuarios(['id_usuario' => $this->id_grupo_jefe_zona]);
         $a_miembros_jefeZona = [];
         foreach ($cUsuarios as $oUsuario) {
@@ -123,8 +121,7 @@ class GrupoJefeZona
         $permissions = $oPermisoMenu->omplir();
         $perm_jefe_zona = $permissions['jefeZona'];
 
-
-        $PermMenuRepository = new PermMenuRepository();
+        $PermMenuRepository = $GLOBALS['container']->get(PermMenuRepositoryInterface::class);
         $cGruposPermMenu = $PermMenuRepository->getPermMenus();
         $id_grupo_jefe_zona = 0;
         foreach ($cGruposPermMenu as $permMenu) {

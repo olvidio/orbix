@@ -1,8 +1,7 @@
 <?php
 
-use asignaturas\model\entity\Asignatura;
 use core\ConfigGlobal;
-use src\asignaturas\application\repositories\AsignaturaRepository;
+use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 
 ?>
 <html>
@@ -172,12 +171,13 @@ use src\asignaturas\application\repositories\AsignaturaRepository;
             <td class=cabecera><?= _("modo") ?></td>
         </tr>
         <?php
+        $AsignaturaRepository = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class);
         foreach ($cDocencias as $oDocencia) {
             $id_asignatura = $oDocencia->getId_asignatura();
             $tipo = $oDocencia->getTipo();
             $curso_inicio = $oDocencia->getCurso_inicio();
             $array_tipo = $oDocencia->getDatosTipo()->getLista();
-            $oAsignatura = (new AsignaturaRepository())->findById($id_asignatura);
+            $oAsignatura = $AsignaturaRepository->findById($id_asignatura);
             if ($oAsignatura === null) {
                 throw new \Exception(sprintf(_("No se ha encontrado la asignatura con id: %s"), $id_asignatura));
             }

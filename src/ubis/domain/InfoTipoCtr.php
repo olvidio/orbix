@@ -5,7 +5,7 @@ namespace src\ubis\domain;
 /* No vale el underscore en el nombre */
 
 use src\shared\domain\DatosInfoRepo;
-use src\ubis\application\repositories\TipoCentroRepository;
+use src\ubis\domain\contracts\TipoCentroRepositoryInterface;
 
 class InfoTipoCtr extends DatosInfoRepo
 {
@@ -32,7 +32,7 @@ class InfoTipoCtr extends DatosInfoRepo
             $aWhere = array('nombre_tipo_ctr' => $this->k_buscar);
             $aOperador = array('nombre_tipo_ctr' => 'sin_acentos');
         }
-        $oLista = new TipoCentroRepository();
+        $oLista = $GLOBALS['container']->get(TipoCentroRepositoryInterface::class);
         $Coleccion = $oLista->getTiposCentro($aWhere, $aOperador);
 
         return $Coleccion;

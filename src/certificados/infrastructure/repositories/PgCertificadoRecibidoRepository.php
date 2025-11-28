@@ -13,7 +13,6 @@ use src\certificados\domain\contracts\CertificadoRecibidoRepositoryInterface;
 use src\certificados\domain\entity\CertificadoRecibido;
 use function core\is_true;
 
-
 /**
  * Clase que adapta la tabla e_certificados_dl a la interfaz del repositorio
  *
@@ -39,7 +38,7 @@ class PgCertificadoRecibidoRepository extends ClaseRepository implements Certifi
      *
      * @param array $aWhere asociativo con los valores para cada campo de la BD.
      * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array|FALSE Una colección de objetos de tipo Certificado
+     * @return array|false Una colección de objetos de tipo Certificado
      */
     public function getCertificados(array $aWhere = [], array $aOperators = []): array|bool
     {
@@ -89,15 +88,15 @@ class PgCertificadoRecibidoRepository extends ClaseRepository implements Certifi
             unset($aWhere['_limit']);
         }
         $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
-        if (($oDblSt = $oDbl->prepare($sQry)) === FALSE) {
+        if (($oDblSt = $oDbl->prepare($sQry)) === false) {
             $sClaveError = 'PgCertificadoRepository.listar.prepare';
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return FALSE;
+            return false;
         }
-        if (($oDblSt->execute($aWhere)) === FALSE) {
+        if (($oDblSt->execute($aWhere)) === false) {
             $sClaveError = 'PgCertificadoRepository.listar.execute';
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
-            return FALSE;
+            return false;
         }
 
         $filas = $oDblSt->fetchAll(PDO::FETCH_ASSOC);
@@ -127,14 +126,13 @@ class PgCertificadoRecibidoRepository extends ClaseRepository implements Certifi
         $id_item = $Certificado->getId_item();
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        if (($oDbl->exec("DELETE FROM $nom_tabla WHERE id_item = $id_item")) === FALSE) {
+        if (($oDbl->exec("DELETE FROM $nom_tabla WHERE id_item = $id_item")) === false) {
             $sClaveError = 'PgCertificadoRepository.eliminar';
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return FALSE;
+            return false;
         }
         return TRUE;
     }
-
 
     /**
      * Si no existe el registro, hace un insert, si existe, se hace el update.
@@ -160,14 +158,14 @@ class PgCertificadoRecibidoRepository extends ClaseRepository implements Certifi
         $aDatos['f_certificado'] = (new ConverterDate('date', $Certificado->getF_certificado()))->toPg();
         $aDatos['f_recibido'] = (new ConverterDate('date', $Certificado->getF_recibido()))->toPg();
         array_walk($aDatos, 'core\poner_null');
-        //para el caso de los boolean FALSE, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
+        //para el caso de los boolean false, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
         if (is_true($aDatos['firmado'])) {
             $aDatos['firmado'] = 'true';
         } else {
             $aDatos['firmado'] = 'false';
         }
 
-        if ($bInsert === FALSE) {
+        if ($bInsert === false) {
             //UPDATE
             $update = "
 					id_nom                   = :id_nom,
@@ -180,10 +178,10 @@ class PgCertificadoRecibidoRepository extends ClaseRepository implements Certifi
 					firmado                  = :firmado,
 					documento                = :documento,
                     f_recibido                = :f_recibido";
-            if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_item = $id_item")) === FALSE) {
+            if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_item = $id_item")) === false) {
                 $sClaveError = 'PgCertificadoRepository.update.prepare';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-                return FALSE;
+                return false;
             }
 
             try {
@@ -193,17 +191,17 @@ class PgCertificadoRecibidoRepository extends ClaseRepository implements Certifi
                 $this->setErrorTxt($err_txt);
                 $sClaveError = 'PgCertificadoRepository.update.execute';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
-                return FALSE;
+                return false;
             }
         } else {
             // INSERT
             $aDatos['id_item'] = $Certificado->getId_item();
             $campos = "(id_item,id_nom,nom,idioma,destino,certificado,f_certificado,esquema_emisor,firmado,documento,f_recibido)";
             $valores = "(:id_item,:id_nom,:nom,:idioma,:destino,:certificado,:f_certificado,:esquema_emisor,:firmado,:documento,:f_recibido)";
-            if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === FALSE) {
+            if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {
                 $sClaveError = 'PgCertificadoRepository.insertar.prepare';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-                return FALSE;
+                return false;
             }
             try {
                 $oDblSt->execute($aDatos);
@@ -212,7 +210,7 @@ class PgCertificadoRecibidoRepository extends ClaseRepository implements Certifi
                 $this->setErrorTxt($err_txt);
                 $sClaveError = 'PgCertificadoRepository.insertar.execute';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
-                return FALSE;
+                return false;
             }
         }
         return TRUE;
@@ -222,15 +220,15 @@ class PgCertificadoRecibidoRepository extends ClaseRepository implements Certifi
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_item = $id_item")) === FALSE) {
+        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_item = $id_item")) === false) {
             $sClaveError = 'PgCertificadoRepository.isNew';
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return FALSE;
+            return false;
         }
         if (!$oDblSt->rowCount()) {
             return TRUE;
         }
-        return FALSE;
+        return false;
     }
 
     /**
@@ -244,26 +242,25 @@ class PgCertificadoRecibidoRepository extends ClaseRepository implements Certifi
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_item = $id_item")) === FALSE) {
+        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_item = $id_item")) === false) {
             $sClaveError = 'PgCertificadoRepository.getDatosById';
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return FALSE;
+            return false;
         }
         // para los bytea, sobre escribo los valores:
         $sdocumento = '';
         $oDblSt->bindColumn('documento', $sdocumento, PDO::PARAM_STR);
         $aDatos = $oDblSt->fetch(PDO::FETCH_ASSOC);
-        if ($aDatos !== FALSE) {
+        if ($aDatos !== false) {
             $aDatos['documento'] = hex2bin($sdocumento ?? '');
         }
         // para las fechas del postgres (texto iso)
-        if ($aDatos !== FALSE) {
+        if ($aDatos !== false) {
             $aDatos['f_certificado'] = (new ConverterDate('date', $aDatos['f_certificado']))->fromPg();
             $aDatos['f_recibido'] = (new ConverterDate('date', $aDatos['f_recibido']))->fromPg();
         }
         return $aDatos;
     }
-
 
     /**
      * Busca la clase con id_item en la base de datos .

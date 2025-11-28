@@ -16,12 +16,10 @@
  * Funciones más comunes de la aplicación
  */
 // INICIO Cabecera global de URL de controlador *********************************
-use asignaturas\model\entity\Asignatura;
-use asignaturas\model\entity\GestorAsignatura;
 use core\ConfigGlobal;
 use notas\model\entity\GestorPersonaNotaDB;
 use personas\model\entity\Persona;
-use src\asignaturas\application\repositories\AsignaturaRepository;
+use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use web\Hash;
 use function core\is_true;
 
@@ -246,7 +244,7 @@ $h = $oHash->linkSinVal();
     }
 
     // Asignaturas posibles:
-    $AsignaturaRepository = new AsignaturaRepository();
+    $AsignaturaRepository = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class);
     $aWhere = [];
     $aOperador = [];
     $aWhere['status'] = 't';
@@ -264,13 +262,14 @@ $h = $oHash->linkSinVal();
     $aOperador['id_nivel'] = 'BETWEEN';
     $cNotas = $GesNotas->getPersonaNotas($aWhere, $aOperador);
     $aAprobadas = [];
+    $AsignaturaRepository = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class);
     foreach ($cNotas as $oPersonaNota) {
         $id_asignatura = $oPersonaNota->getId_asignatura();
         $id_nivel = $oPersonaNota->getId_nivel();
         $acta = $oPersonaNota->getActa();
         $f_acta = $oPersonaNota->getF_acta()->getFromLocal();
 
-        $oAsignatura = (new AsignaturaRepository())->findById($id_asignatura);
+        $oAsignatura = $AsignaturaRepository->findById($id_asignatura);
         if ($oAsignatura === null) {
             throw new \Exception(sprintf(_("No se ha encontrado la asignatura con id: %s"), $id_asignatura));
         }

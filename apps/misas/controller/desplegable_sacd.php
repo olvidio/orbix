@@ -60,7 +60,7 @@ if ($Qseleccion & 1) {
         $aOperador = [
             'tstart' => 'BETWEEN',
         ];
-        $EncargoDiaRepository = new EncargoDiaRepository();
+        $EncargoDiaRepository = $GLOBALS['container']->get(EncargoDiaRepositoryInterface::class);
         $cEncargosDia = $EncargoDiaRepository->getEncargoDias($aWhere,$aOperador);
         foreach ($cEncargosDia as $oEncargoDia) {
             $id_enc = $oEncargoDia->getId_enc();

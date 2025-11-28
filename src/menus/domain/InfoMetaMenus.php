@@ -2,10 +2,9 @@
 
 namespace src\menus\domain;
 
-
 /* No vale el underscore en el nombre */
 
-use src\menus\application\repositories\MetaMenuRepository;
+use src\menus\domain\contracts\MetaMenuRepositoryInterface;
 use src\shared\domain\DatosInfoRepo;
 
 class InfoMetaMenus extends DatosInfoRepo
@@ -33,7 +32,7 @@ class InfoMetaMenus extends DatosInfoRepo
             $aWhere = ['descripcion' => $this->k_buscar];
             $aOperador = ['descripcion' => 'sin_acentos'];
         }
-        $oLista = new MetaMenuRepository();
+        $oLista = $GLOBALS['container']->get(MetaMenuRepositoryInterface::class);
         $Coleccion = $oLista->getMetamenus($aWhere, $aOperador);
 
         return $Coleccion;

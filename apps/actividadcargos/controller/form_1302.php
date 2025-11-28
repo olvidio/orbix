@@ -30,14 +30,13 @@
 //Comentario para comprobar subidas desde Eclipse (2)
 
 use actividadcargos\model\entity\ActividadCargo;
-use actividadcargos\model\entity\GestorCargo;
 use actividades\model\entity\Actividad;
 use actividades\model\entity\ActividadAll;
 use actividades\model\entity\GestorActividad;
 use core\ConfigGlobal;
 use core\ViewPhtml;
 use frontend\shared\web\Desplegable;
-use src\actividadcargos\application\repositories\CargoRepository;
+use src\actividadcargos\domain\contracts\CargoRepositoryInterface;
 use web\Hash;
 use function core\is_true;
 
@@ -118,7 +117,7 @@ if (!empty($Qid_item)) { //caso de modificar
     $observ = ""; //valor por defecto
 }
 
-$CargoRepository = new CargoRepository();
+$CargoRepository = $GLOBALS['container']->get(CargoRepositoryInterface::class);
 $aOpciones = $CargoRepository->getArrayCargos();
 $oDesplegableCargos = new Desplegable();
 $oDesplegableCargos->setNombre('id_cargo');

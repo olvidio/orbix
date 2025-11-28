@@ -7,8 +7,8 @@ use notas\model\entity\GestorActa;
 use notas\model\entity\GestorPersonaNotaDB;
 use notas\model\entity\PersonaNotaDB;
 use profesores\model\entity\GestorProfesor;
-use src\asignaturas\application\repositories\AsignaturaRepository;
-use src\notas\application\repositories\NotaRepository;
+use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
+use src\notas\domain\contracts\NotaRepositoryInterface;
 use src\ubis\application\services\DelegacionDropdown;
 use web\Desplegable;
 use web\Hash;
@@ -55,7 +55,8 @@ switch ($Qque) {
                 $epoca = PersonaNotaDB::EPOCA_OTRO;
             }
             // hace falta el id_nivel (para las no opcionales):
-            $oAsignatura = (new AsignaturaRepository())->findById($id_asignatura);
+            $AsignaturaRepository = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class);
+            $oAsignatura = $AsignaturaRepository->findById($id_asignatura);
             if ($oAsignatura === null) {
                 throw new \Exception(sprintf(_("No se ha encontrado la asignatura con id: %s"), $id_asignatura));
             }
@@ -158,10 +159,10 @@ switch ($Qque) {
         $aWhere['id_nivel'] = '3000,5000';
         $aOperador['id_nivel'] = 'BETWEEN';
         $aWhere['_ordre'] = 'nombre_corto';
-        $AsignaturaRepository = new AsignaturaRepository();
+        $AsignaturaRepository = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class);
         $cOpcionales = $AsignaturaRepository->getAsignaturas($aWhere, $aOperador);
         // Asignaturas opcionales superadas
-        $NotaRepository = new NotaRepository();
+        $NotaRepository = $GLOBALS['container']->get(NotaRepositoryInterface::class);
         $aSuperadas = $NotaRepository->getArrayNotasSuperadas();
         $aWhere = [];
         $aOperador = [];

@@ -6,8 +6,8 @@ use actividadestudios\model\entity\Matricula;
 use core\ConfigGlobal;
 use core\ViewPhtml;
 use notas\model\entity\GestorPersonaNotaDB;
-use src\asignaturas\application\repositories\AsignaturaRepository;
-use src\notas\application\repositories\NotaRepository;
+use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
+use src\notas\domain\contracts\NotaRepositoryInterface;
 use web\Desplegable;
 use web\Hash;
 
@@ -43,7 +43,7 @@ if (!empty($a_sel)) { //vengo de un checkbox
 $oActividad = new ActividadAll($Qid_activ);
 $nom_activ = $oActividad->getNom_activ();
 
-$AsignaturaRepository = new AsignaturaRepository();
+$AsignaturaRepository = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class);
 
 $oDesplProfesores = [];
 if (!empty($id_asignatura_real)) { //caso de modificar
@@ -52,7 +52,7 @@ if (!empty($id_asignatura_real)) { //caso de modificar
     $id_situacion = $oMatricula->getId_situacion();
     $preceptor = $oMatricula->getPreceptor();
     $id_preceptor = $oMatricula->getId_preceptor();
-    $oAsignatura = (new AsignaturaRepository())->findById($id_asignatura_real);
+    $oAsignatura = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class)->findById($id_asignatura_real);
     if ($oAsignatura === null) {
         throw new \Exception(sprintf(_("No se ha encontrado la asignatura con id: %s"), $id_asignatura_real));
     }
@@ -97,7 +97,7 @@ if (!empty($id_asignatura_real)) { //caso de modificar
     $aWhere['_ordre'] = 'nombre_corto';
     $cOpcionales = $AsignaturaRepository->getAsignaturas($aWhere, $aOperador);
     // Asignaturas superadas
-    $NotaRepository = new NotaRepository();
+    $NotaRepository = $GLOBALS['container']->get(NotaRepositoryInterface::class);
     $aSuperadas = $NotaRepository->getArrayNotasSuperadas();
     $cond = '';
     $c = 0;

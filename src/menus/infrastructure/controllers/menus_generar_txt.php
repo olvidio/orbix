@@ -11,19 +11,11 @@
  *
  */
 
-// INICIO Cabecera global de URL de controlador *********************************
-use core\ConfigGlobal;
-use src\actividades\application\repositories\RepeticionRepository;
-use src\menus\application\repositories\MenuDbRepository;
+use core\ServerConf;
+use src\actividades\domain\contracts\RepeticionRepositoryInterface;
+use src\menus\domain\contracts\MenuDbRepositoryInterface;
 
-require_once("apps/core/global_header.inc");
-// Archivos requeridos por esta url **********************************************
-
-// Crea los objetos de uso global **********************************************
-require_once("apps/core/global_object.inc");
-// FIN de  Cabecera global de URL de controlador ********************************
-
-$MenusRepository = new MenuDbRepository();
+$MenusRepository = $GLOBALS['container']->get(MenuDbRepositoryInterface::class);
 $cMenus = $MenusRepository->getMenuDbs(['ok' => 't', '_ordre' => 'id_grupmenu,orden']);
 
 $texto = "<?php\n //Menus interiores\n";
@@ -36,7 +28,7 @@ foreach ($cMenus as $oMenuDb) {
 }
 
 // Añadir los tipos de repetición
-$RepeticionRepository = new RepeticionRepository();
+$RepeticionRepository = $GLOBALS['container']->get(RepeticionRepositoryInterface::class);
 $cRepeticion = $RepeticionRepository->getRepeticiones();
 
 $texto .= "//tipos de repetición actividades\n";
@@ -47,10 +39,9 @@ foreach ($cRepeticion as $oRepeticion) {
     }
 }
 
-
 //echo $texto;
 //$dir_base = "/var/www/orbix";
-$dir_base = ConfigGlobal::DIR;
+$dir_base = ServerConf::DIR;
 $filename = "$dir_base/frontend/menus/view/traducir_menu.phtml";
 $somecontent = $texto;
 

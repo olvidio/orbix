@@ -11,7 +11,7 @@ use encargossacd\model\entity\GestorEncargoHorario;
 use encargossacd\model\entity\GestorEncargoSacd;
 use encargossacd\model\entity\GestorEncargoSacdHorario;
 use encargossacd\model\entity\GestorEncargoTexto;
-use src\ubis\application\repositories\CentroDlRepository;
+use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use web\DateTimeLocal;
 
 trait EncargoFuncionesTrait
@@ -64,7 +64,7 @@ trait EncargoFuncionesTrait
 
     function getLugar_dl()
     {
-        $oGesCentrosDl = new CentroDlRepository();
+        $oGesCentrosDl = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
         $cCentros = $oGesCentrosDl->getCentros(['tipo_ctr' => 'dl']);
         $num_dl = count($cCentros);
         switch ($num_dl) {

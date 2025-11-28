@@ -1,6 +1,6 @@
 <?php
 
-use src\ubis\application\repositories\DescTelecoRepository;
+use src\ubis\domain\contracts\DescTelecoRepositoryInterface;
 use web\Desplegable;
 
 // INICIO Cabecera global de URL de controlador *********************************
@@ -16,7 +16,7 @@ $oPosicion->recordar();
 $Qid_tipo_teleco = (string)filter_input(INPUT_POST, 'id_tipo_teleco');
 
 
-$oDescTeleco = new DescTelecoRepository();
+$oDescTeleco = $GLOBALS['container']->get(DescTelecoRepositoryInterface::class);
 $aOpciones = $oDescTeleco->getArrayDescTelecoUbis($Qid_tipo_teleco);
 $oDesplegableDescTeleco = new Desplegable();
 $oDesplegableDescTeleco->setOpciones($aOpciones);

@@ -11,7 +11,6 @@ use src\inventario\domain\contracts\TipoDocRepositoryInterface;
 use src\inventario\domain\entity\TipoDoc;
 use function core\is_true;
 
-
 /**
  * Clase que adapta la tabla i_tipo_documento_dl a la interfaz del repositorio
  *
@@ -29,7 +28,6 @@ class PgTipoDocRepository extends ClaseRepository implements TipoDocRepositoryIn
         $this->setoDbl($oDbl);
         $this->setNomTabla('i_tipo_documento_dl');
     }
-
 
 	public function getArrayTipoDoc():array
     {
@@ -55,7 +53,6 @@ class PgTipoDocRepository extends ClaseRepository implements TipoDocRepositoryIn
 		return $aOpciones;
 	}
 
-
 /* -------------------- GESTOR BASE ---------------------------------------- */
 
 	/**
@@ -63,10 +60,10 @@ class PgTipoDocRepository extends ClaseRepository implements TipoDocRepositoryIn
 	 *
 	 * @param array $aWhere asociativo con los valores para cada campo de la BD.
 	 * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-	 * @return array|FALSE Una colección de objetos de tipo TipoDoc
+	 * @return array|false Una colección de objetos de tipo TipoDoc
 	
 	 */
-	public function getTipoDocs(array $aWhere=[], array $aOperators=[]): array|FALSE
+	public function getTipoDocs(array $aWhere=[], array $aOperators=[]): array|false
 	{
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
@@ -92,15 +89,15 @@ class PgTipoDocRepository extends ClaseRepository implements TipoDocRepositoryIn
 		if (isset($aWhere['_limit']) && $aWhere['_limit'] !== '') { $sLimit = ' LIMIT '.$aWhere['_limit']; }
 		if (isset($aWhere['_limit'])) { unset($aWhere['_limit']); }
 		$sQry = "SELECT * FROM $nom_tabla ".$sCondicion.$sOrdre.$sLimit;
-		if (($oDblSt = $oDbl->prepare($sQry)) === FALSE) {
+		if (($oDblSt = $oDbl->prepare($sQry)) === false) {
 			$sClaveError = 'PgTipoDocRepository.listar.prepare';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-			return FALSE;
+			return false;
 		}
-		if (($oDblSt->execute($aWhere)) === FALSE) {
+		if (($oDblSt->execute($aWhere)) === false) {
 			$sClaveError = 'PgTipoDocRepository.listar.execute';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
-			return FALSE;
+			return false;
 		}
 		
 		$filas = $oDblSt->fetchAll(PDO::FETCH_ASSOC);
@@ -119,10 +116,10 @@ class PgTipoDocRepository extends ClaseRepository implements TipoDocRepositoryIn
         $id_tipo_doc = $TipoDoc->getIdTipoDocVo()->value();
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        if (($oDbl->exec("DELETE FROM $nom_tabla WHERE id_tipo_doc = $id_tipo_doc")) === FALSE) {
+        if (($oDbl->exec("DELETE FROM $nom_tabla WHERE id_tipo_doc = $id_tipo_doc")) === false) {
             $sClaveError = 'PgTipoDocRepository.eliminar';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return FALSE;
+            return false;
         }
         return TRUE;
     }
@@ -148,12 +145,12 @@ class PgTipoDocRepository extends ClaseRepository implements TipoDocRepositoryIn
         $aDatos['vigente'] = $TipoDoc->getVigenteVo()?->value();
         $aDatos['numerado'] = $TipoDoc->getNumeradoVo()->value();
         array_walk($aDatos, 'core\poner_null');
-        //para el caso de los boolean FALSE, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
+        //para el caso de los boolean false, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
         if ( is_true($aDatos['bajo_llave']) ) { $aDatos['bajo_llave']='true'; } else { $aDatos['bajo_llave']='false'; }
         if ( is_true($aDatos['vigente']) ) { $aDatos['vigente']='true'; } else { $aDatos['vigente']='false'; }
         if ( is_true($aDatos['numerado']) ) { $aDatos['numerado']='true'; } else { $aDatos['numerado']='false'; }
 
-        if ($bInsert === FALSE) {
+        if ($bInsert === false) {
             //UPDATE
             $update="
                     nom_doc                  = :nom_doc,
@@ -163,10 +160,10 @@ class PgTipoDocRepository extends ClaseRepository implements TipoDocRepositoryIn
                     bajo_llave               = :bajo_llave,
                     vigente                  = :vigente,
                     numerado                 = :numerado";
-            if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_tipo_doc = $id_tipo_doc")) === FALSE) {
+            if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_tipo_doc = $id_tipo_doc")) === false) {
                 $sClaveError = 'PgTipoDocRepository.update.prepare';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-                return FALSE;
+                return false;
             }
             
             try {
@@ -176,17 +173,17 @@ class PgTipoDocRepository extends ClaseRepository implements TipoDocRepositoryIn
                 $this->setErrorTxt($err_txt);
                 $sClaveError = 'PgTipoDocRepository.update.execute';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
-                return FALSE;
+                return false;
             }
         } else {
             // INSERT
             $aDatos['id_tipo_doc'] = $TipoDoc->getIdTipoDocVo()->value();
             $campos="(id_tipo_doc,nom_doc,sigla,observ,id_coleccion,bajo_llave,vigente,numerado)";
             $valores="(:id_tipo_doc,:nom_doc,:sigla,:observ,:id_coleccion,:bajo_llave,:vigente,:numerado)";        
-            if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === FALSE) {
+            if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {
                 $sClaveError = 'PgTipoDocRepository.insertar.prepare';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-                return FALSE;
+                return false;
             }
             try {
                 $oDblSt->execute($aDatos);
@@ -195,7 +192,7 @@ class PgTipoDocRepository extends ClaseRepository implements TipoDocRepositoryIn
                 $this->setErrorTxt($err_txt);
                 $sClaveError = 'PgTipoDocRepository.insertar.execute';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
-                return FALSE;
+                return false;
             }
         }
         return TRUE;
@@ -205,15 +202,15 @@ class PgTipoDocRepository extends ClaseRepository implements TipoDocRepositoryIn
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_tipo_doc = $id_tipo_doc")) === FALSE) {
+        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_tipo_doc = $id_tipo_doc")) === false) {
 			$sClaveError = 'PgTipoDocRepository.isNew';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return FALSE;
+            return false;
         }
         if (!$oDblSt->rowCount()) {
             return TRUE;
         }
-        return FALSE;
+        return false;
     }
 	
     /**
@@ -228,10 +225,10 @@ class PgTipoDocRepository extends ClaseRepository implements TipoDocRepositoryIn
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_tipo_doc = $id_tipo_doc")) === FALSE) {
+        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_tipo_doc = $id_tipo_doc")) === false) {
 			$sClaveError = 'PgTipoDocRepository.getDatosById';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return FALSE;
+            return false;
         }
 		$aDatos = $oDblSt->fetch(PDO::FETCH_ASSOC);
         return $aDatos;

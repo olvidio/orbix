@@ -3,7 +3,7 @@
 namespace notas\model;
 
 use NumberFormatter;
-use src\notas\application\repositories\NotaRepository;
+use src\notas\domain\contracts\NotaRepositoryInterface;
 use src\notas\domain\entity\Nota;
 use web\DateTimeLocal;
 use web\NullDateTimeLocal;
@@ -141,7 +141,7 @@ class PersonaNota
                 }
             }
         } else {
-            $NotaRepository = new NotaRepository();
+            $NotaRepository = $GLOBALS['container']->get(NotaRepositoryInterface::class);
             $aNotas = $NotaRepository->getArrayNotasSuperadas();
             $this->aprobada = isset($aNotas[$this->id_situacion]);
         }

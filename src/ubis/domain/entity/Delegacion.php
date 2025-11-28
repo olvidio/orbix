@@ -5,7 +5,7 @@ namespace src\ubis\domain\entity;
 use core\DatosCampo;
 use core\Set;
 use function core\is_true;
-use src\ubis\domain\value_objects\{DelegacionId, DelegacionCode, RegionCode, DelegacionName, DelegacionStatus, DelegacionGrupoEstudios, DelegacionRegionStgr};
+use src\ubis\domain\value_objects\{DelegacionId, DelegacionCode, RegionCode, DelegacionName, DelegacionGrupoEstudios, DelegacionRegionStgr};
 
 /**
  * Clase que implementa la entidad xu_dl
@@ -38,9 +38,9 @@ class Delegacion
      */
     private ?DelegacionName $nombreDl = null;
     /**
-     * Status de Delegacion
+     * active de Delegacion
      */
-    private ?DelegacionStatus $status = null;
+    private bool $active = true;
     /**
      * Grupo de estudios
      */
@@ -72,8 +72,8 @@ class Delegacion
         if (array_key_exists('nombre_dl', $aDatos)) {
             $this->setNombreDlVo(DelegacionName::fromNullableString($aDatos['nombre_dl'] ?? null));
         }
-        if (array_key_exists('status', $aDatos)) {
-            $this->setStatusVo(isset($aDatos['status']) ? DelegacionStatus::fromScalar($aDatos['status']) : null);
+        if (array_key_exists('active', $aDatos)) {
+            $this->setActiveVo(isset($aDatos['active']) ? $aDatos['active'] : true);
         }
         if (array_key_exists('grupo_estudios', $aDatos)) {
             $this->setGrupoEstudiosVo(DelegacionGrupoEstudios::fromNullableString($aDatos['grupo_estudios'] ?? null));
@@ -177,14 +177,14 @@ class Delegacion
     }
 
     // VO API
-    public function getStatusVo(): ?DelegacionStatus
+    public function getActiveVo(): bool
     {
-        return $this->status;
+        return $this->active;
     }
 
-    public function setStatusVo(?DelegacionStatus $bstatus = null): void
+    public function setActiveVo(bool $active = true): void
     {
-        $this->status = $bstatus;
+        $this->active = $active;
     }
 
     public function getGrupoEstudiosVo(): ?DelegacionGrupoEstudios
@@ -208,14 +208,14 @@ class Delegacion
     }
 
     // Legacy scalar API (kept for mod_tabla/UI)
-    public function isStatus(): ?bool
+    public function isActive(): ?bool
     {
-        return $this->status?->value();
+        return $this->active;
     }
 
-    public function setStatus(?bool $bstatus = null): void
+    public function setActive(bool $active = true): void
     {
-        $this->status = ($bstatus === null) ? null : DelegacionStatus::fromScalar($bstatus);
+        $this->active = $active;
     }
 
     public function getGrupo_estudios(): ?string
@@ -254,7 +254,7 @@ class Delegacion
         $oDelegacionSet->add($this->getDatosNombre_dl());
         $oDelegacionSet->add($this->getDatosGrupo_estudios());
         $oDelegacionSet->add($this->getDatosRegion_stgr());
-        $oDelegacionSet->add($this->getDatosStatus());
+        $oDelegacionSet->add($this->getDatosactive());
         return $oDelegacionSet->getTot();
     }
 
@@ -337,15 +337,15 @@ class Delegacion
     }
 
     /**
-     * DatosCampo for campo 'status'
+     * DatosCampo for campo 'active'
      * @return DatosCampo
      */
-    public function getDatosStatus(): DatosCampo
+    public function getDatosActive(): DatosCampo
     {
         $oDatosCampo = new DatosCampo();
-        $oDatosCampo->setNom_camp('status');
-        $oDatosCampo->setMetodoGet('isStatus');
-        $oDatosCampo->setMetodoSet('setStatus');
+        $oDatosCampo->setNom_camp('active');
+        $oDatosCampo->setMetodoGet('isActive');
+        $oDatosCampo->setMetodoSet('setActive');
         $oDatosCampo->setEtiqueta(_("en activo"));
         $oDatosCampo->setTipo('check');
         return $oDatosCampo;

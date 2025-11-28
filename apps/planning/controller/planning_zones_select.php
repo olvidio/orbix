@@ -1,7 +1,6 @@
 <?php
 
 use actividadcargos\model\entity\GestorActividadCargo;
-use actividadcargos\model\entity\GestorCargo;
 use actividades\model\entity\ActividadAll;
 use actividades\model\entity\GestorActividad;
 use core\ConfigGlobal;
@@ -10,7 +9,8 @@ use encargossacd\model\entity\GestorEncargoSacdHorario;
 use personas\model\entity\PersonaSacd;
 use planning\domain\Planning;
 use planning\domain\PlanningStyle;
-use src\actividadcargos\application\repositories\CargoRepository;
+use src\actividadcargos\domain\contracts\CargoRepositoryInterface;
+use web\Desplegable;
 use web\Hash;
 use web\TiposActividades;
 use zonassacd\model\entity\GestorZona;
@@ -49,7 +49,7 @@ require_once("apps/core/global_object.inc");
 $oPosicion->recordar();
 
 // valores del id_cargo de tipo_cargo = sacd:
-$CargoRepository = new CargoRepository();
+$CargoRepository = $GLOBALS['container']->get(CargoRepositoryInterface::class);
 $aIdCargos_sacd = $CargoRepository->getArrayCargos('sacd');
 
 $Qmodelo = (integer)filter_input(INPUT_POST, 'modelo');

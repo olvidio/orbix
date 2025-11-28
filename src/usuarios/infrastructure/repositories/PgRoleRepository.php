@@ -11,7 +11,6 @@ use PDOException;
 use src\usuarios\domain\entity\Role;
 use src\usuarios\domain\contracts\RoleRepositoryInterface;
 
-
 use function core\is_true;
 /**
  * Clase que adapta la tabla aux_roles a la interfaz del repositorio
@@ -101,10 +100,10 @@ class PgRoleRepository extends ClaseRepository implements RoleRepositoryInterfac
 	 *
 	 * @param array $aWhere asociativo con los valores para cada campo de la BD.
 	 * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-	 * @return array|FALSE Una colección de objetos de tipo Role
+	 * @return array|false Una colección de objetos de tipo Role
 	
 	 */
-	public function getRoles(array $aWhere=[], array $aOperators=[]): array|FALSE
+	public function getRoles(array $aWhere=[], array $aOperators=[]): array|false
 	{
         $oDbl = $this->getoDbl_Select();
 		$nom_tabla = $this->getNomTabla();
@@ -130,15 +129,15 @@ class PgRoleRepository extends ClaseRepository implements RoleRepositoryInterfac
 		if (isset($aWhere['_limit']) && $aWhere['_limit'] !== '') { $sLimit = ' LIMIT '.$aWhere['_limit']; }
 		if (isset($aWhere['_limit'])) { unset($aWhere['_limit']); }
 		$sQry = "SELECT * FROM $nom_tabla ".$sCondicion.$sOrdre.$sLimit;
-		if (($oDblSt = $oDbl->prepare($sQry)) === FALSE) {
+		if (($oDblSt = $oDbl->prepare($sQry)) === false) {
 			$sClaveError = 'PgRoleRepository.listar.prepare';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-			return FALSE;
+			return false;
 		}
-		if (($oDblSt->execute($aWhere)) === FALSE) {
+		if (($oDblSt->execute($aWhere)) === false) {
 			$sClaveError = 'PgRoleRepository.listar.execute';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
-			return FALSE;
+			return false;
 		}
 		
 		$filas = $oDblSt->fetchAll(PDO::FETCH_ASSOC);
@@ -157,10 +156,10 @@ class PgRoleRepository extends ClaseRepository implements RoleRepositoryInterfac
         $id_role = $Role->getId_role();
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        if (($oDbl->exec("DELETE FROM $nom_tabla WHERE id_role = $id_role")) === FALSE) {
+        if (($oDbl->exec("DELETE FROM $nom_tabla WHERE id_role = $id_role")) === false) {
             $sClaveError = 'PgRoleRepository.eliminar';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return FALSE;
+            return false;
         }
         return TRUE;
     }
@@ -184,12 +183,12 @@ class PgRoleRepository extends ClaseRepository implements RoleRepositoryInterfac
 		$aDatos['pau'] = $Role->getPauAsString();
 		$aDatos['dmz'] = $Role->isDmz();
 		array_walk($aDatos, 'core\poner_null');
-		//para el caso de los boolean FALSE, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
+		//para el caso de los boolean false, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
 		if ( is_true($aDatos['sf']) ) { $aDatos['sf']='true'; } else { $aDatos['sf']='false'; }
 		if ( is_true($aDatos['sv']) ) { $aDatos['sv']='true'; } else { $aDatos['sv']='false'; }
 		if ( is_true($aDatos['dmz']) ) { $aDatos['dmz']='true'; } else { $aDatos['dmz']='false'; }
 
-		if ($bInsert === FALSE) {
+		if ($bInsert === false) {
 			//UPDATE
 			$update="
 					role                     = :role,
@@ -197,10 +196,10 @@ class PgRoleRepository extends ClaseRepository implements RoleRepositoryInterfac
 					sv                       = :sv,
 					pau                      = :pau,
 					dmz                      = :dmz";
-			if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_role = $id_role")) === FALSE) {
+			if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_role = $id_role")) === false) {
 				$sClaveError = 'PgRoleRepository.update.prepare';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-				return FALSE;
+				return false;
 			}
 				
             try {
@@ -210,17 +209,17 @@ class PgRoleRepository extends ClaseRepository implements RoleRepositoryInterfac
                 $this->setErrorTxt($err_txt);
                 $sClaveError = 'PgRoleRepository.update.execute';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
-                return FALSE;
+                return false;
             }
 		} else {
 			// INSERT
 			$aDatos['id_role'] = $Role->getId_role();
 			$campos="(id_role,role,sf,sv,pau,dmz)";
 			$valores="(:id_role,:role,:sf,:sv,:pau,:dmz)";		
-			if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === FALSE) {
+			if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {
 				$sClaveError = 'PgRoleRepository.insertar.prepare';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-				return FALSE;
+				return false;
 			}
             try {
                 $oDblSt->execute($aDatos);
@@ -229,7 +228,7 @@ class PgRoleRepository extends ClaseRepository implements RoleRepositoryInterfac
                 $this->setErrorTxt($err_txt);
                 $sClaveError = 'PgRoleRepository.insertar.execute';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
-                return FALSE;
+                return false;
 			}
 		}
 		return TRUE;
@@ -239,15 +238,15 @@ class PgRoleRepository extends ClaseRepository implements RoleRepositoryInterfac
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_role = $id_role")) === FALSE) {
+        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_role = $id_role")) === false) {
 			$sClaveError = 'PgRoleRepository.isNew';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return FALSE;
+            return false;
         }
         if (!$oDblSt->rowCount()) {
             return TRUE;
         }
-        return FALSE;
+        return false;
     }
 	
     /**
@@ -262,10 +261,10 @@ class PgRoleRepository extends ClaseRepository implements RoleRepositoryInterfac
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
-        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_role = $id_role")) === FALSE) {
+        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_role = $id_role")) === false) {
 			$sClaveError = 'PgRoleRepository.getDatosById';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return FALSE;
+            return false;
         }
 		$aDatos = $oDblSt->fetch(PDO::FETCH_ASSOC);
         return $aDatos;

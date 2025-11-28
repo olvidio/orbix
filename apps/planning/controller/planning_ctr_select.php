@@ -5,7 +5,7 @@ use core\ViewPhtml;
 use personas\model\entity\GestorPersonaDl;
 use planning\domain\ActividadesDePersona;
 use planning\domain\Planning;
-use src\ubis\application\repositories\CentroDlRepository;
+use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use web\Hash;
 use web\Periodo;
 
@@ -111,7 +111,7 @@ if (!empty($Qctr)) {
     $nom_ubi = str_replace("+", "\+", $Qctr); // para los centros de la sss+
     $aWhere['nombre_ubi'] = '^' . $nom_ubi;
     $aOperador['nombre_ubi'] = 'sin_acentos';
-    $GesCentros = new CentroDlRepository();
+    $GesCentros = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
     $cCentros = $GesCentros->getCentros($aWhere, $aOperador);
     if (!empty($cCentros)) {
         $cPersonas = []; // para unir todas las personas de más de un centro.

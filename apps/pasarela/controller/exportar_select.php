@@ -6,8 +6,8 @@ use actividadtarifas\model\entity\GestorTipoActivTarifa;
 use actividadtarifas\model\entity\TipoTarifa;
 use core\ConfigGlobal;
 use pasarela\model\Conversiones;
-use src\ubis\application\repositories\CasaDlRepository;
-use src\ubis\application\repositories\CentroDlRepository;
+use src\ubis\domain\contracts\CasaDlRepositoryInterface;
+use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use src\ubis\domain\entity\Ubi;
 use ubis\model\entity\GestorTarifaUbi;
 use web\DateTimeLocal;
@@ -28,7 +28,7 @@ $Qid_tipo_activ = (string)filter_input(INPUT_POST, 'id_tipo_activ');
 
 $mi_sfsv = ConfigGlobal::mi_sfsv();
 
-$CasaDlReposiroty = new CasaDlRepository();
+$CasaDlReposiroty = $GLOBALS['container']->get(CasaDlRepositoryInterface::class);
 $aCasasDl = $CasaDlReposiroty->getArrayCasas();
 
 $aWhere = [];
@@ -96,7 +96,7 @@ if (!empty($Qaid_cdc)) {
 }
 
 // Posibles centros encargados
-$gesCentrosDl = new CentroDlRepository();
+$gesCentrosDl = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
 $aCentrosPosibles = $gesCentrosDl->getArrayCentros();
 // Quitar el sg o agd del inicio del nombre del ctr
 $aCentrosPosiblesSinSgAgd = [];

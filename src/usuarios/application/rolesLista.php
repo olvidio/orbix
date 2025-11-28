@@ -3,10 +3,10 @@
 namespace src\usuarios\application;
 
 use core\ConfigGlobal;
-use src\menus\application\repositories\GrupMenuRepository;
-use src\menus\application\repositories\GrupMenuRoleRepository;
-use src\usuarios\application\repositories\RoleRepository;
-use src\usuarios\application\repositories\UsuarioRepository;
+use src\menus\domain\contracts\GrupMenuRepositoryInterface;
+use src\menus\domain\contracts\GrupMenuRoleRepositoryInterface;
+use src\usuarios\domain\contracts\RoleRepositoryInterface;
+use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
 use web\ContestarJson;
 
 class rolesLista
@@ -17,7 +17,7 @@ class rolesLista
         $error_txt = '';
         $jsondata = [];
 
-        $UsuarioRepository = new UsuarioRepository();
+        $UsuarioRepository = $GLOBALS['container']->get(UsuarioRepositoryInterface::class);
         $oMiUsuario = $UsuarioRepository->findById(ConfigGlobal::mi_id_usuario());
         $miRole = $oMiUsuario->getId_role();
         $miSfsv = ConfigGlobal::mi_sfsv();
@@ -29,7 +29,7 @@ class rolesLista
         }
 
         // todos los posibles GrupMenu
-        $GrupMuenuRepository = new GrupMenuRepository();
+        $GrupMuenuRepository = $GLOBALS['container']->get(GrupMenuRepositoryInterface::class);
         $cGM = $GrupMuenuRepository->getGrupMenus(array('_ordre' => 'grup_menu'));
         $aGrupMenus = [];
         foreach ($cGM as $oGrupMenu) {
@@ -38,12 +38,12 @@ class rolesLista
             $aGrupMenus[$id_grupmenu] = $grup_menu;
         }
 
-        $RoleRepository = new RoleRepository();
+        $RoleRepository = $GLOBALS['container']->get(RoleRepositoryInterface::class);
         $cRoles = $RoleRepository->getRoles(['_ordre' => 'role']);
 
         // Para admin, puede modificar los grupmenus que tiene cada rol, pero no
         // crear ni borrar
-        if ($miRole == 2) {
+        if ($miRole === 2) {
             $permiso = 2;
         }
 
@@ -72,12 +72,12 @@ class rolesLista
             $pau = $oRole->getPauAsString();
             $dmz = $oRole->isDmz();
 
-            if (($permiso != 1) && (($miSfsv == 2 && !$isSf) || ($miSfsv == 1 && !$isSv))) {
+            if (($permiso !== 1) && (($miSfsv === 2 && !$isSf) || ($miSfsv === 1 && !$isSv))) {
                 continue;
             }
             $i++;
 
-            $GrupMuenuRoleRepository = new GrupMenuRoleRepository();
+            $GrupMuenuRoleRepository = $GLOBALS['container']->get(GrupMenuRoleRepositoryInterface::class);
             $cGMR = $GrupMuenuRoleRepository->getGrupMenuRoles(array('id_role' => $id_role));
             // intentar ordenar por el nombre del grupmenu
             $a_GM = [];

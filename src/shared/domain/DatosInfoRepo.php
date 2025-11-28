@@ -175,30 +175,7 @@ abstract class DatosInfoRepo
         return $key_collection;
     }
 
-    public function setObj_pau($obj_pau)
-    {
-        switch ($obj_pau) {
-            case 'Centro':
-                $this->obj = 'src\\ubis\\application\\repositories\\TelecoCtrRepository';
-                break;
-            case 'CentroDl':
-                $this->obj = 'src\\ubis\\application\\repositories\\TelecoCtrDlRepository';
-                break;
-            case 'CentroEx':
-                $this->obj = 'src\\ubis\\application\\repositories\\TelecoCtrExRepository';
-                break;
-            case 'Casa':
-                $this->obj = 'src\\ubis\\application\\repositories\\TelecoCdcRepository';
-                break;
-            case 'CasaDl':
-                $this->obj = 'src\\ubis\\application\\repositories\\TelecoCdcDlRepository';
-                break;
-            case 'CasaEx':
-                $this->obj = 'src\\ubis\\application\\repositories\\TelecoCdcExRepository';
-                break;
-        }
-    }
-
+    /*
     public function getColeccion()
     {
         // para el datos_sql.php
@@ -210,15 +187,16 @@ abstract class DatosInfoRepo
 
         return $Coleccion;
     }
+    */
 
     public function getFicha()
     {
         $obj = $this->obj;
-        $repo = str_replace('domain\entity', 'application\repositories', $obj);
-        $repository = $repo . 'Repository';
+        $repo = str_replace('domain\entity', 'domain\contracts', $obj);
+        $RepositoryInterface = $repo . 'RepositoryInterface';
 
         $oFicha = null;
-        $oRepository = new $repository();
+        $oRepository = $GLOBALS['container']->get($RepositoryInterface);
         switch ($this->mod) {
             case 'nuevo':
                 $oFicha = new $this->obj($this->getKeyCollection());
@@ -239,7 +217,7 @@ abstract class DatosInfoRepo
         /* Debe sobreescribirse el método, esto es un ejemlpo
         $valor_depende = empty($valor_depende) ? 0 : $valor_depende;
         //caso de actualizar el campo depende
-        $LugarRepository = new LugarRepository();
+        $LugarRepository = $GLOBALS['container']->get(LugarRepositoryInterface::class);
         $aOpciones = $LugarRepository->getArrayLugares($valor_depende);
         $oDesplegable = new Desplegable('', $aOpciones, $opcion_sel, true);
         $opciones_txt = $oDesplegable->options();

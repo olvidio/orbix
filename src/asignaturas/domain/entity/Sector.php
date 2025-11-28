@@ -5,6 +5,7 @@ namespace src\asignaturas\domain\entity;
 use core\DatosCampo;
 use core\Set;
 use src\asignaturas\domain\value_objects\{SectorId, SectorName, DepartamentoId};
+use src\asignaturas\domain\contracts\DepartamentoRepositoryInterface;
 
 /**
  * Clase que implementa la entidad xe_sectores
@@ -158,7 +159,6 @@ class Sector
         return $oSectorSet->getTot();
     }
 
-
     /**
      * Recupera les propietats de l'atribut iid_departamento de Sector
      * en una clase del tipus DatosCampo
@@ -173,7 +173,7 @@ class Sector
         $oDatosCampo->setMetodoSet('setId_departamento');
         $oDatosCampo->setEtiqueta(_("departamento"));
         $oDatosCampo->setTipo('opciones');
-        $oDatosCampo->setArgument('src\\asignaturas\\application\\repositories\\DepartamentoRepository');
+        $oDatosCampo->setArgument(DepartamentoRepositoryInterface::class);
         $oDatosCampo->setArgument2('getDepartamento'); // método para obtener el valor a mostrar del objeto relacionado.
         $oDatosCampo->setArgument3('getArrayDepartamentos');
         return $oDatosCampo;

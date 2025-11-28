@@ -145,7 +145,7 @@ foreach ($cEncargosZona as $oEncargo) {
     ];
 
     //Borro los encargos de la zona ya asignados en ese periodo
-    $EncargoDiaRepository = new EncargoDiaRepository();
+    $EncargoDiaRepository = $GLOBALS['container']->get(EncargoDiaRepositoryInterface::class);
     $cEncargosaBorrar = $EncargoDiaRepository->getEncargoDias($aWhere,$aOperador);
     foreach($cEncargosaBorrar as $oEncargoaBorrar) {
         $EncargoDiaRepository->Eliminar($oEncargoaBorrar);
@@ -233,7 +233,7 @@ for ($i=0;$i<$ndias;$i++) {
         $aOperador = [
             'tstart' => 'BETWEEN',
         ];
-        $EncargoDiaRepository = new EncargoDiaRepository();
+        $EncargoDiaRepository = $GLOBALS['container']->get(EncargoDiaRepositoryInterface::class);
         $cEncargosDia = $EncargoDiaRepository->getEncargoDias($aWhere,$aOperador);
         if (count($cEncargosDia) > 1) {
             exit(_("sólo debería haber uno"));

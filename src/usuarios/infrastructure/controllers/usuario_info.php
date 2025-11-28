@@ -1,19 +1,9 @@
 <?php
 
-use src\usuarios\application\repositories\GrupoRepository;
-use src\usuarios\application\repositories\UsuarioGrupoRepository;
-use src\usuarios\application\repositories\UsuarioRepository;
+use src\usuarios\domain\contracts\GrupoRepositoryInterface;
+use src\usuarios\domain\contracts\UsuarioGrupoRepositoryInterface;
+use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
 use web\ContestarJson;
-
-// INICIO Cabecera global de URL de controlador *********************************
-require_once("apps/core/global_header.inc");
-// Archivos requeridos por esta url **********************************************
-
-// Crea los objetos de uso global **********************************************
-require_once("apps/core/global_object.inc");
-// Crea los objetos por esta url  **********************************************
-
-// FIN de  Cabecera global de URL de controlador ********************************
 
 $Qid_usuario = (integer)filter_input(INPUT_POST, 'id_usuario');
 
@@ -23,8 +13,8 @@ if (empty($Qid_usuario)) {
     $error_txt = _("Id de usuario no válido");
 } else {
     // grupos:
-    $GrupoRepository = new GrupoRepository();
-    $UsuarioGrupoRepository = new UsuarioGrupoRepository();
+    $GrupoRepository = $GLOBALS['container']->get(GrupoRepositoryInterface::class);
+    $UsuarioGrupoRepository = $GLOBALS['container']->get(UsuarioGrupoRepositoryInterface::class);
     $cGrupos = $UsuarioGrupoRepository->getUsuariosGrupos(array('id_usuario' => $Qid_usuario));
     $i = 0;
     $txt = '';
@@ -39,7 +29,7 @@ if (empty($Qid_usuario)) {
     }
 
     // datos personales usuario
-    $UsuarioRepository = new UsuarioRepository();
+    $UsuarioRepository = $GLOBALS['container']->get(UsuarioRepositoryInterface::class);
     $oUsuario = $UsuarioRepository->findById($Qid_usuario);
     $usuario = $oUsuario->getUsuarioAsString();
     $email = $oUsuario->getEmailAsString();

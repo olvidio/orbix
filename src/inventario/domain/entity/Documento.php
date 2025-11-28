@@ -4,6 +4,9 @@ namespace src\inventario\domain\entity;
 
 use core\DatosCampo;
 use core\Set;
+use src\inventario\domain\contracts\LugarRepositoryInterface;
+use src\inventario\domain\contracts\TipoDocRepositoryInterface;
+use src\inventario\domain\contracts\UbiInventarioRepositoryInterface;
 use web\DateTimeLocal;
 use web\NullDateTimeLocal;
 use function core\is_true;
@@ -286,6 +289,7 @@ class Documento
     /**
      *
      * @return DateTimeLocal|NullDateTimeLocal|null $df_recibido
+     * @deprecated El retorno null está deprecado. Este getter aplica fallback y no devolverá null en tiempo de ejecución.
      */
     public function getF_recibido(): DateTimeLocal|NullDateTimeLocal|null
     {
@@ -295,15 +299,17 @@ class Documento
     /**
      *
      * @param DateTimeLocal|NullDateTimeLocal|null $df_recibido
+     *        Si se pasa NullDateTimeLocal o null, se almacenará null internamente.
      */
     public function setF_recibido(DateTimeLocal|NullDateTimeLocal|null $df_recibido = null): void
     {
-        $this->df_recibido = $df_recibido;
+        $this->df_recibido = $df_recibido instanceof NullDateTimeLocal ? null : $df_recibido;
     }
 
     /**
      *
      * @return DateTimeLocal|NullDateTimeLocal|null $df_asignado
+     * @deprecated El retorno null está deprecado. Este getter aplica fallback y no devolverá null en tiempo de ejecución.
      */
     public function getF_asignado(): DateTimeLocal|NullDateTimeLocal|null
     {
@@ -313,10 +319,11 @@ class Documento
     /**
      *
      * @param DateTimeLocal|NullDateTimeLocal|null $df_asignado
+     *        Si se pasa NullDateTimeLocal o null, se almacenará null internamente.
      */
     public function setF_asignado(DateTimeLocal|NullDateTimeLocal|null $df_asignado = null): void
     {
-        $this->df_asignado = $df_asignado;
+        $this->df_asignado = $df_asignado instanceof NullDateTimeLocal ? null : $df_asignado;
     }
 
     /**
@@ -358,6 +365,7 @@ class Documento
     /**
      *
      * @return DateTimeLocal|NullDateTimeLocal|null $df_ult_comprobacion
+     * @deprecated El retorno null está deprecado. Este getter aplica fallback y no devolverá null en tiempo de ejecución.
      */
     public function getF_ult_comprobacion(): DateTimeLocal|NullDateTimeLocal|null
     {
@@ -367,17 +375,26 @@ class Documento
     /**
      *
      * @param DateTimeLocal|NullDateTimeLocal|null $df_ult_comprobacion
+     *        Si se pasa NullDateTimeLocal o null, se almacenará null internamente.
      */
     public function setF_ult_comprobacion(DateTimeLocal|NullDateTimeLocal|null $df_ult_comprobacion = null): void
     {
-        $this->df_ult_comprobacion = $df_ult_comprobacion;
+        $this->df_ult_comprobacion = $df_ult_comprobacion instanceof NullDateTimeLocal ? null : $df_ult_comprobacion;
     }
 
     /**
      *
      * @return bool|null $ben_busqueda
      */
+    /**
+     * @deprecated Usar `isEnBusqueda(): ?bool` en su lugar.
+     */
     public function isEn_busqueda(): ?bool
+    {
+        return $this->isEnBusqueda();
+    }
+
+    public function isEnBusqueda(): ?bool
     {
         return $this->ben_busqueda;
     }
@@ -386,9 +403,17 @@ class Documento
      *
      * @param bool|null $ben_busqueda
      */
+    /**
+     * @deprecated Usar `setEnBusqueda(?bool $enBusqueda = null): void` en su lugar.
+     */
     public function setEn_busqueda(?bool $ben_busqueda = null): void
     {
-        $this->ben_busqueda = $ben_busqueda;
+        $this->setEnBusqueda($ben_busqueda);
+    }
+
+    public function setEnBusqueda(?bool $enBusqueda = null): void
+    {
+        $this->ben_busqueda = $enBusqueda;
     }
 
     /**
@@ -412,6 +437,7 @@ class Documento
     /**
      *
      * @return DateTimeLocal|NullDateTimeLocal|null $df_perdido
+     * @deprecated El retorno null está deprecado. Este getter aplica fallback y no devolverá null en tiempo de ejecución.
      */
     public function getF_perdido(): DateTimeLocal|NullDateTimeLocal|null
     {
@@ -421,10 +447,11 @@ class Documento
     /**
      *
      * @param DateTimeLocal|NullDateTimeLocal|null $df_perdido
+     *        Si se pasa NullDateTimeLocal o null, se almacenará null internamente.
      */
     public function setF_perdido(DateTimeLocal|NullDateTimeLocal|null $df_perdido = null): void
     {
-        $this->df_perdido = $df_perdido;
+        $this->df_perdido = $df_perdido instanceof NullDateTimeLocal ? null : $df_perdido;
     }
 
     /**
@@ -448,6 +475,7 @@ class Documento
     /**
      *
      * @return DateTimeLocal|NullDateTimeLocal|null $df_eliminado
+     * @deprecated El retorno null está deprecado. Este getter aplica fallback y no devolverá null en tiempo de ejecución.
      */
     public function getF_eliminado(): DateTimeLocal|NullDateTimeLocal|null
     {
@@ -457,10 +485,11 @@ class Documento
     /**
      *
      * @param DateTimeLocal|NullDateTimeLocal|null $df_eliminado
+     *        Si se pasa NullDateTimeLocal o null, se almacenará null internamente.
      */
     public function setF_eliminado(DateTimeLocal|NullDateTimeLocal|null $df_eliminado = null): void
     {
-        $this->df_eliminado = $df_eliminado;
+        $this->df_eliminado = $df_eliminado instanceof NullDateTimeLocal ? null : $df_eliminado;
     }
 
     /**
@@ -728,7 +757,6 @@ class Documento
         return $oDocumentoSet->getTot();
     }
 
-
     function getDatosId_tipo_doc()
     {
         $oDatosCampo = new DatosCampo();
@@ -737,7 +765,7 @@ class Documento
         $oDatosCampo->setMetodoSet('setId_tipo_doc');
         $oDatosCampo->setEtiqueta(_("documento tipo"));
         $oDatosCampo->setTipo('opciones');
-        $oDatosCampo->setArgument('src\\inventario\\application\\repositories\\TipoDocRepository');
+        $oDatosCampo->setArgument(TipoDocRepositoryInterface::class);
         $oDatosCampo->setArgument2('getSigla');
         $oDatosCampo->setArgument3('getArrayTipoDoc');
         return $oDatosCampo;
@@ -751,7 +779,7 @@ class Documento
         $oDatosCampo->setMetodoSet('setId_ubi');
         $oDatosCampo->setEtiqueta(_("centro/casa"));
         $oDatosCampo->setTipo('opciones');
-        $oDatosCampo->setArgument('src\\inventario\\application\\repositories\\UbiInventarioRepository');
+        $oDatosCampo->setArgument(UbiInventarioRepositoryInterface::class);
         $oDatosCampo->setArgument2('getNom_ubi');
         $oDatosCampo->setArgument3('getArrayUbisInventario');
         $oDatosCampo->setAccion('id_lugar'); // campo que hay que actualizar al cambiar este.
@@ -766,7 +794,7 @@ class Documento
         $oDatosCampo->setMetodoSet('setId_lugar');
         $oDatosCampo->setEtiqueta(_("lugar"));
         $oDatosCampo->setTipo('depende');
-        $oDatosCampo->setArgument('src\\inventario\\application\\repositories\\LugarRepository');
+        $oDatosCampo->setArgument(LugarRepositoryInterface::class);
         $oDatosCampo->setArgument2('getNom_lugar');
         $oDatosCampo->setArgument3('getArrayLugares');
         $oDatosCampo->setDepende('id_ubi');

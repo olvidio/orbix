@@ -11,7 +11,6 @@ use PDOException;
 use src\profesores\domain\entity\ProfesorTipo;
 use src\profesores\domain\contracts\ProfesorTipoRepositoryInterface;
 
-
 /**
  * Clase que adapta la tabla xe_tipo_profesor_stgr a la interfaz del repositorio
  *
@@ -58,10 +57,10 @@ class PgProfesorTipoRepository extends ClaseRepository implements ProfesorTipoRe
 	 *
 	 * @param array $aWhere asociativo con los valores para cada campo de la BD.
 	 * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-	 * @return array|FALSE Una colección de objetos de tipo ProfesorTipo
+	 * @return array|false Una colección de objetos de tipo ProfesorTipo
 	
 	 */
-	public function getProfesorTipos(array $aWhere=[], array $aOperators=[]): array|FALSE
+	public function getProfesorTipos(array $aWhere=[], array $aOperators=[]): array|false
 	{
         $oDbl = $this->getoDbl_Select();
 		$nom_tabla = $this->getNomTabla();
@@ -87,15 +86,15 @@ class PgProfesorTipoRepository extends ClaseRepository implements ProfesorTipoRe
 		if (isset($aWhere['_limit']) && $aWhere['_limit'] !== '') { $sLimit = ' LIMIT '.$aWhere['_limit']; }
 		if (isset($aWhere['_limit'])) { unset($aWhere['_limit']); }
 		$sQry = "SELECT * FROM $nom_tabla ".$sCondicion.$sOrdre.$sLimit;
-		if (($oDblSt = $oDbl->prepare($sQry)) === FALSE) {
+		if (($oDblSt = $oDbl->prepare($sQry)) === false) {
 			$sClaveError = 'PgProfesorTipoRepository.listar.prepare';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-			return FALSE;
+			return false;
 		}
-		if (($oDblSt->execute($aWhere)) === FALSE) {
+		if (($oDblSt->execute($aWhere)) === false) {
 			$sClaveError = 'PgProfesorTipoRepository.listar.execute';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
-			return FALSE;
+			return false;
 		}
 		
 		$filas = $oDblSt->fetchAll(PDO::FETCH_ASSOC);
@@ -114,10 +113,10 @@ class PgProfesorTipoRepository extends ClaseRepository implements ProfesorTipoRe
         $id_tipo_profesor = $ProfesorTipo->getIdTipoProfesorVo()->value();
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        if (($oDbl->exec("DELETE FROM $nom_tabla WHERE id_tipo_profesor = $id_tipo_profesor")) === FALSE) {
+        if (($oDbl->exec("DELETE FROM $nom_tabla WHERE id_tipo_profesor = $id_tipo_profesor")) === false) {
             $sClaveError = 'PgProfesorTipoRepository.eliminar';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return FALSE;
+            return false;
         }
         return TRUE;
     }
@@ -138,14 +137,14 @@ class PgProfesorTipoRepository extends ClaseRepository implements ProfesorTipoRe
 		$aDatos['tipo_profesor'] = $ProfesorTipo->getTipoProfesorVo()?->value();
 		array_walk($aDatos, 'core\poner_null');
 
-		if ($bInsert === FALSE) {
+		if ($bInsert === false) {
 			//UPDATE
 			$update="
 					tipo_profesor            = :tipo_profesor";
-			if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_tipo_profesor = $id_tipo_profesor")) === FALSE) {
+			if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_tipo_profesor = $id_tipo_profesor")) === false) {
 				$sClaveError = 'PgProfesorTipoRepository.update.prepare';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-				return FALSE;
+				return false;
 			}
 				
             try {
@@ -155,17 +154,17 @@ class PgProfesorTipoRepository extends ClaseRepository implements ProfesorTipoRe
                 $this->setErrorTxt($err_txt);
                 $sClaveError = 'PgProfesorTipoRepository.update.execute';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
-                return FALSE;
+                return false;
             }
 		} else {
 			// INSERT
 			$aDatos['id_tipo_profesor'] = $ProfesorTipo->getIdTipoProfesorVo()->value();
 			$campos="(id_tipo_profesor,tipo_profesor)";
 			$valores="(:id_tipo_profesor,:tipo_profesor)";		
-			if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === FALSE) {
+			if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {
 				$sClaveError = 'PgProfesorTipoRepository.insertar.prepare';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-				return FALSE;
+				return false;
 			}
             try {
                 $oDblSt->execute($aDatos);
@@ -174,7 +173,7 @@ class PgProfesorTipoRepository extends ClaseRepository implements ProfesorTipoRe
                 $this->setErrorTxt($err_txt);
                 $sClaveError = 'PgProfesorTipoRepository.insertar.execute';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
-                return FALSE;
+                return false;
 			}
 		}
 		return TRUE;
@@ -184,15 +183,15 @@ class PgProfesorTipoRepository extends ClaseRepository implements ProfesorTipoRe
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_tipo_profesor = $id_tipo_profesor")) === FALSE) {
+        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_tipo_profesor = $id_tipo_profesor")) === false) {
 			$sClaveError = 'PgProfesorTipoRepository.isNew';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return FALSE;
+            return false;
         }
         if (!$oDblSt->rowCount()) {
             return TRUE;
         }
-        return FALSE;
+        return false;
     }
 	
     /**
@@ -207,10 +206,10 @@ class PgProfesorTipoRepository extends ClaseRepository implements ProfesorTipoRe
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
-        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_tipo_profesor = $id_tipo_profesor")) === FALSE) {
+        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_tipo_profesor = $id_tipo_profesor")) === false) {
 			$sClaveError = 'PgProfesorTipoRepository.getDatosById';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return FALSE;
+            return false;
         }
 		$aDatos = $oDblSt->fetch(PDO::FETCH_ASSOC);
         return $aDatos;

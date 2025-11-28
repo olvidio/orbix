@@ -2,7 +2,7 @@
 
 namespace src\ubis\application\services;
 
-use src\ubis\application\repositories\RegionRepository;
+use src\ubis\domain\contracts\RegionRepositoryInterface;
 use web\Desplegable;
 
 /**
@@ -23,7 +23,7 @@ final class RegionDropdown
      */
     public static function activasOrdenNombre(string $nombreCampo = 'region', bool $conBlanco = true): Desplegable
     {
-        $repo = new RegionRepository();
+        $repo = $GLOBALS['container']->get(RegionRepositoryInterface::class);
         $regiones = $repo->getRegiones(['status' => true, '_ordre' => 'nombre_region']);
 
         $opciones = [];

@@ -8,9 +8,9 @@ use core\ConverterDate;
 use core\DatosCampo;
 use core\Set;
 use ReflectionClass;
-use src\ubis\application\repositories\CentroDlRepository;
-use src\ubis\application\repositories\CentroRepository;
-use src\ubis\application\repositories\DescTelecoRepository;
+use src\ubis\domain\contracts\CentroDlRepositoryInterface;
+use src\ubis\domain\contracts\CentroRepositoryInterface;
+use src\ubis\domain\contracts\DescTelecoRepositoryInterface;
 use web\DateTimeLocal;
 use web\NullDateTimeLocal;
 use function core\strtoupper_dlb;
@@ -332,7 +332,7 @@ abstract class PersonaGlobal extends ClasePropiedades
         $cTelecos = $GesTelecoPersonas->getTelecos($aWhere);
         $tels = '';
         $separador = empty($separador) ? ".-<br>" : $separador;
-        $DescTelecoRepository = new DescTelecoRepository();
+        $DescTelecoRepository = $GLOBALS['container']->get(DescTelecoRepositoryInterface::class);
         foreach ($cTelecos as $oTelecoPersona) {
             $iDescTel = $oTelecoPersona->getDesc_teleco();
             $num_teleco = $oTelecoPersona->getNum_teleco();
@@ -1199,7 +1199,7 @@ abstract class PersonaGlobal extends ClasePropiedades
                     if ($ctr === ConfigGlobal::mi_dele()) {
                         $oPersonasDl = new PersonaDl($this->getId_nom());
                         $id_ctr = $oPersonasDl->getId_ctr();
-                        $CentroDlRepository = new CentroDlRepository();
+                        $CentroDlRepository = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
                         $oCentroDl = $CentroDlRepository->findById($id_ctr);
                         $ctr = $oCentroDl?->getNombre_ubi() ?? '?';
                     }
@@ -1210,10 +1210,10 @@ abstract class PersonaGlobal extends ClasePropiedades
                     break;
                 case 'PersonaGlobal':
                     if (ConfigGlobal::mi_ambito() === 'rstgr') {
-                        $CentroRepository = new CentroRepository();
+                        $CentroRepository = $GLOBALS['container']->get(CentroRepositoryInterface::class);
                         $oCentroDl = $CentroRepository->findById($this->getId_ctr());
                     } else {
-                        $CentroDlRepository = new CentroDlRepository();
+                        $CentroDlRepository = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
                         $oCentroDl = $CentroDlRepository->findById($this->getId_ctr());
                     }
                     $ctr = $oCentroDl?->getNombre_ubi() ?? '?';
@@ -1226,10 +1226,10 @@ abstract class PersonaGlobal extends ClasePropiedades
                 case 'PersonaSSSC':
                     // OJO CON las regiones de stgr
                     if (ConfigGlobal::mi_ambito() === 'rstgr') {
-                        $CentroRepository = new CentroRepository();
+                        $CentroRepository = $GLOBALS['container']->get(CentroRepositoryInterface::class);
                         $oCentro = $CentroRepository->findById($this->getId_ctr());
                     } else {
-                        $CentroDlRepository = new CentroDlRepository();
+                        $CentroDlRepository = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
                         $oCentro = $CentroDlRepository->findById($this->getId_ctr());
                     }
                     $ctr = $oCentro?->getNombre_ubi() ?? '?';

@@ -3,12 +3,12 @@
 namespace src\ubis\domain\entity;
 
 use core\ConfigGlobal;
-use src\ubis\application\repositories\CasaRepository;
-use src\ubis\application\repositories\CentroDlRepository;
-use src\ubis\application\repositories\CentroEllasRepository;
-use src\ubis\application\repositories\CentroEllosRepository;
-use src\ubis\application\repositories\CentroExRepository;
-use src\ubis\application\repositories\CentroRepository;
+use src\ubis\domain\contracts\CasaRepositoryInterface;
+use src\ubis\domain\contracts\CentroDlRepositoryInterface;
+use src\ubis\domain\contracts\CentroEllasRepositoryInterface;
+use src\ubis\domain\contracts\CentroEllosRepositoryInterface;
+use src\ubis\domain\contracts\CentroExRepositoryInterface;
+use src\ubis\domain\contracts\CentroRepositoryInterface;
 
 /**
  * Clase que implementa la entidad ubis
@@ -34,7 +34,6 @@ class Ubi
 
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
-
     public static function NewUbi($id_ubi)
     {
         // para la sf (comienza por 2).
@@ -42,17 +41,17 @@ class Ubi
             // Si soy sv solo tengo acceso a los de la dl,
             // En caso contrario puedo ver los de todas las regiones.
             if (ConfigGlobal::mi_sfsv() === 1) {
-                $CentroRepository = new CentroEllasRepository();
+                $CentroRepository = $GLOBALS['container']->get(CentroEllasRepositoryInterface::class);
             } else {
-                $CentroRepository = new CentroRepository();
+                $CentroRepository = $GLOBALS['container']->get(CentroRepositoryInterface::class);
             }
         } else {
             // Si soy sf solo tengo acceso a los de la dl,
             // En caso contrario puedo ver los de todas las regiones.
             if (ConfigGlobal::mi_sfsv() === 2) {
-                $CentroRepository = new CentroEllosRepository();
+                $CentroRepository = $GLOBALS['container']->get(CentroEllosRepositoryInterface::class);
             } else {
-                $CentroRepository = new CentroRepository();
+                $CentroRepository = $GLOBALS['container']->get(CentroRepositoryInterface::class);
             }
         }
         $oCentro = $CentroRepository->findById($id_ubi);
@@ -60,10 +59,10 @@ class Ubi
             $tipo_ubi = $oCentro->getTipo_ubi();
             switch ($tipo_ubi) {
                 case 'ctrdl':
-                    $oCentro = (new CentroDlRepository())->findById($id_ubi);
+                    $oCentro = $GLOBALS['container']->get(CentroDlRepositoryInterface::class)->findById($id_ubi);
                     break;
                 case 'ctrex':
-                    $oCentro = (new CentroExRepository())->findById($id_ubi);
+                    $oCentro = $GLOBALS['container']->get(CentroExRepositoryInterface::class)->findById($id_ubi);
                     break;
                 default:
                     $err_switch = sprintf(_("opción no definida en switch en %s, linea %s"), __FILE__, __LINE__);
@@ -71,7 +70,7 @@ class Ubi
             }
             $oUbi = $oCentro;
         } else {
-            $oUbi = (new CasaRepository())->findById($id_ubi);
+            $oUbi = $GLOBALS['container']->get(CasaRepositoryInterface::class)->findById($id_ubi);
         }
         return $oUbi;
     }

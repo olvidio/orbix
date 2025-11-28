@@ -8,6 +8,7 @@ use core\ConfigGlobal;
 use core\DatosCampo;
 use core\Set;
 use ReflectionClass;
+use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 
 /**
  * Fitxer amb la Classe que accedeix a la taula da_ctr_encargados
@@ -470,7 +471,7 @@ class CentroEncargado extends ClasePropiedades
         $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_ubi'));
         $oDatosCampo->setEtiqueta(_("centro"));
         $oDatosCampo->setTipo('opciones');
-        $oDatosCampo->setArgument('ubis\model\entity\CentroDl'); // nombre del objeto relacionado
+        $oDatosCampo->setArgument(CentroDlRepositoryInterface::class); // nombre del objeto relacionado
         $oDatosCampo->setArgument2('getNombre_ubi'); // método para obtener el valor a mostrar del objeto relacionado.
         $oDatosCampo->setArgument3('getListaCentros'); // método con que crear la lista de opciones del Gestor objeto relacionado.
 

@@ -1,10 +1,10 @@
 <?php
 
 use core\ViewPhtml;
-use src\ubis\application\repositories\DireccionCentroRepository;
 use src\ubis\application\services\RegionDropdown;
 use src\ubis\application\services\TipoCasaDropdown;
 use src\ubis\application\services\TipoCentroDropdown;
+use src\ubis\domain\contracts\DireccionCentroRepositoryInterface;
 use web\Desplegable;
 use web\Hash;
 use function core\strtoupper_dlb;
@@ -37,7 +37,7 @@ $oDesplTipoCentro = TipoCentroDropdown::listaTiposCentro(true, 'tipo_ctr');
 $oDesplTipoCasa = TipoCasaDropdown::listaTiposCasa(true, 'tipo_casa');
 
 //paises posibles
-$GesPais = new DireccionCentroRepository();
+$GesPais = $GLOBALS['container']->get(DireccionCentroRepositoryInterface::class);
 $aOpciones = $GesPais->getArrayPaises();
 $oDesplPais = new Desplegable();
 $oDesplPais->setOpciones($aOpciones);

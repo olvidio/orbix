@@ -235,7 +235,6 @@ class NivelStgr
         return $oNivelStgrSet->getTot();
     }
 
-
     /**
      * Recupera les propietats de l'atribut sdesc_nivel de NivelStgr
      * en una clase del tipus DatosCampo

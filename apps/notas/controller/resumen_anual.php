@@ -14,9 +14,9 @@
 use core\ConfigGlobal;
 use core\ViewPhtml;
 use core\ViewTwig;
+use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 use web\Desplegable;
 use web\Hash;
-use src\ubis\application\repositories\DelegacionRepository;
 
 require_once("apps/core/global_header.inc");
 // Archivos requeridos por esta url **********************************************
@@ -49,7 +49,7 @@ if (ConfigGlobal::mi_ambito() === 'rstgr' && $Qfiltro == 1) {
 
     $aChecked = $Qdl;
     $region_stgr = ConfigGlobal::mi_dele();
-    $repoDelegacion = new DelegacionRepository();
+    $repoDelegacion = $GLOBALS['container']->get(DelegacionRepositoryInterface::class);
     $a_delegacionesStgr = $repoDelegacion->getArrayDlRegionStgr([$region_stgr]);
 
     $oCuadros = new Desplegable();

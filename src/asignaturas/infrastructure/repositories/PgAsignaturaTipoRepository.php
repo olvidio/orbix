@@ -10,7 +10,6 @@ use PDOException;
 use src\asignaturas\domain\contracts\AsignaturaTipoRepositoryInterface;
 use src\asignaturas\domain\entity\AsignaturaTipo;
 
-
 /**
  * Clase que adapta la tabla xa_tipo_asig a la interfaz del repositorio
  *
@@ -57,7 +56,7 @@ class PgAsignaturaTipoRepository extends ClaseRepository implements AsignaturaTi
      *
      * @param array $aWhere asociativo con los valores para cada campo de la BD.
      * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array|FALSE Una colección de objetos de tipo AsignaturaTipo
+     * @return array|false Una colección de objetos de tipo AsignaturaTipo
      */
     public function getAsignaturaTipos(array $aWhere = [], array $aOperators = []): array|false
     {
@@ -107,15 +106,15 @@ class PgAsignaturaTipoRepository extends ClaseRepository implements AsignaturaTi
             unset($aWhere['_limit']);
         }
         $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
-        if (($oDblSt = $oDbl->prepare($sQry)) === FALSE) {
+        if (($oDblSt = $oDbl->prepare($sQry)) === false) {
             $sClaveError = 'PgAsignaturaTipoRepository.listar.prepare';
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return FALSE;
+            return false;
         }
-        if (($oDblSt->execute($aWhere)) === FALSE) {
+        if (($oDblSt->execute($aWhere)) === false) {
             $sClaveError = 'PgAsignaturaTipoRepository.listar.execute';
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
-            return FALSE;
+            return false;
         }
 
         $filas = $oDblSt->fetchAll(PDO::FETCH_ASSOC);
@@ -134,14 +133,13 @@ class PgAsignaturaTipoRepository extends ClaseRepository implements AsignaturaTi
         $id_tipo = $AsignaturaTipo->getId_tipo();
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        if (($oDbl->exec("DELETE FROM $nom_tabla WHERE id_tipo = $id_tipo")) === FALSE) {
+        if (($oDbl->exec("DELETE FROM $nom_tabla WHERE id_tipo = $id_tipo")) === false) {
             $sClaveError = 'PgAsignaturaTipoRepository.eliminar';
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return FALSE;
+            return false;
         }
         return TRUE;
     }
-
 
     /**
      * Si no existe el registro, hace un insert, si existe, se hace el update.
@@ -160,17 +158,17 @@ class PgAsignaturaTipoRepository extends ClaseRepository implements AsignaturaTi
         $aDatos['tipo_latin'] = $AsignaturaTipo->getTipoLatinVo()?->value();
         array_walk($aDatos, 'core\poner_null');
 
-        if ($bInsert === FALSE) {
+        if ($bInsert === false) {
             //UPDATE
             $update = "
 					tipo_asignatura          = :tipo_asignatura,
 					tipo_breve               = :tipo_breve,
 					año                     = :año,
 					tipo_latin               = :tipo_latin";
-            if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_tipo = $id_tipo")) === FALSE) {
+            if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_tipo = $id_tipo")) === false) {
                 $sClaveError = 'PgAsignaturaTipoRepository.update.prepare';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-                return FALSE;
+                return false;
             }
 
             try {
@@ -180,17 +178,17 @@ class PgAsignaturaTipoRepository extends ClaseRepository implements AsignaturaTi
                 $this->setErrorTxt($err_txt);
                 $sClaveError = 'PgAsignaturaTipoRepository.update.execute';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
-                return FALSE;
+                return false;
             }
         } else {
             // INSERT
             $aDatos['id_tipo'] = $AsignaturaTipo->getId_tipo();
             $campos = "(id_tipo,tipo_asignatura,tipo_breve,año,tipo_latin)";
             $valores = "(:id_tipo,:tipo_asignatura,:tipo_breve,:año,:tipo_latin)";
-            if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === FALSE) {
+            if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {
                 $sClaveError = 'PgAsignaturaTipoRepository.insertar.prepare';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-                return FALSE;
+                return false;
             }
             try {
                 $oDblSt->execute($aDatos);
@@ -199,7 +197,7 @@ class PgAsignaturaTipoRepository extends ClaseRepository implements AsignaturaTi
                 $this->setErrorTxt($err_txt);
                 $sClaveError = 'PgAsignaturaTipoRepository.insertar.execute';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
-                return FALSE;
+                return false;
             }
         }
         return TRUE;
@@ -209,15 +207,15 @@ class PgAsignaturaTipoRepository extends ClaseRepository implements AsignaturaTi
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_tipo = $id_tipo")) === FALSE) {
+        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_tipo = $id_tipo")) === false) {
             $sClaveError = 'PgAsignaturaTipoRepository.isNew';
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return FALSE;
+            return false;
         }
         if (!$oDblSt->rowCount()) {
             return TRUE;
         }
-        return FALSE;
+        return false;
     }
 
     /**
@@ -231,15 +229,14 @@ class PgAsignaturaTipoRepository extends ClaseRepository implements AsignaturaTi
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
-        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_tipo = $id_tipo")) === FALSE) {
+        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_tipo = $id_tipo")) === false) {
             $sClaveError = 'PgAsignaturaTipoRepository.getDatosById';
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return FALSE;
+            return false;
         }
         $aDatos = $oDblSt->fetch(PDO::FETCH_ASSOC);
         return $aDatos;
     }
-
 
     /**
      * Busca la clase con id_tipo en la base de datos .

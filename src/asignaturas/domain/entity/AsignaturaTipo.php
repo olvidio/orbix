@@ -181,7 +181,6 @@ class AsignaturaTipo
         return 'id_tipo';
     }
 
-
     function getDatosCampos()
     {
         $oAsignaturaTipoSet = new Set();
@@ -192,7 +191,6 @@ class AsignaturaTipo
         $oAsignaturaTipoSet->add($this->getDatosTipo_latin());
         return $oAsignaturaTipoSet->getTot();
     }
-
 
     /**
      * Recupera les propietats de l'atribut stipo_asignatura de AsignaturaTipo

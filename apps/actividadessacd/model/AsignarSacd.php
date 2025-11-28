@@ -4,12 +4,11 @@ namespace actividadessacd\model;
 
 use actividadcargos\model\entity\ActividadCargo;
 use actividadcargos\model\entity\GestorActividadCargo;
-use actividadcargos\model\entity\GestorCargo;
 use actividades\model\entity\GestorActividadDl;
 use actividadescentro\model\entity\GestorCentroEncargado;
 use encargossacd\model\entity\GestorEncargo;
 use encargossacd\model\entity\GestorEncargoSacd;
-use src\actividadcargos\application\repositories\CargoRepository;
+use src\actividadcargos\domain\contracts\CargoRepositoryInterface;
 
 class AsignarSacd
 {
@@ -121,7 +120,7 @@ class AsignarSacd
     public function ActivSinSacd()
     {
         // valores del id_cargo de tipo_cargo = sacd:
-        $CargoRepository = new CargoRepository();
+        $CargoRepository = $GLOBALS['container']->get(CargoRepositoryInterface::class);
         $aIdCargos_sacd = $CargoRepository->getArrayCargos('sacd');
         $txt_where_cargos = implode(',', array_keys($aIdCargos_sacd));
 
@@ -167,7 +166,7 @@ class AsignarSacd
     public function AsignarSacd($id_activ)
     {
         // valores del id_cargo de tipo_cargo = sacd:
-        $CargoRepository = new CargoRepository();
+        $CargoRepository = $GLOBALS['container']->get(CargoRepositoryInterface::class);
         $aIdCargos_sacd = $CargoRepository->getArrayCargos('sacd');
         // Solo a partir de php 7.3: $id_cargo = array_key_first($aIdCargos_sacd);
         $id_cargo = key($aIdCargos_sacd);

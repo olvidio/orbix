@@ -24,7 +24,7 @@ class EncargoCtrRepository implements EncargoCtrRepositoryInterface
 
     public function __construct()
     {
-        $this->repository = new PgEncargoCtrRepository();
+        $this->repository = $GLOBALS['container']->get(PgEncargoCtrRepositoryInterface::class);
     }
 
     public function getCentrosEncargo(int $id_enc): array|false

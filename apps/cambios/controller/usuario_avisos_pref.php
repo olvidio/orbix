@@ -7,9 +7,9 @@ use cambios\model\GestorAvisoCambios;
 use core\ConfigGlobal;
 use core\ViewTwig;
 use procesos\model\entity\GestorActividadFase;
-use src\ubis\application\repositories\CasaDlRepository;
-use src\usuarios\application\repositories\GrupoRepository;
-use src\usuarios\application\repositories\UsuarioRepository;
+use src\ubis\domain\contracts\CasaDlRepositoryInterface;
+use src\usuarios\domain\contracts\GrupoRepositoryInterface;
+use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
 use src\usuarios\domain\entity\Role;
 use web\Desplegable;
 use web\DesplegableArray;
@@ -46,11 +46,11 @@ $Qsalida = (string)filter_input(INPUT_POST, 'salida');
 
 // Si empieza por 4 es usuario, por 5 es grupo
 if (substr((string)$Qid_usuario, 0, 1) === '4') {
-    $UsuarioRepository = new UsuarioRepository();
+    $UsuarioRepository = $GLOBALS['container']->get(UsuarioRepositoryInterface::class);
     $oUsuario = $UsuarioRepository->findById($Qid_usuario);
     $grupo = FALSE;
 } else {
-    $GrupoRepository = new GrupoRepository();
+    $GrupoRepository = $GLOBALS['container']->get(GrupoRepositoryInterface::class);
     $oUsuario = $GrupoRepository->findById($Qid_usuario); // La tabla y su heredada
     $grupo = TRUE;
 }
@@ -145,7 +145,7 @@ if ($grupo === FALSE && $oRole->isRolePau(Role::PAU_CDC)) {
     //formulario para casas cuyo calendario de actividades interesa
     $cond = "WHERE status='t' AND (id_ubi=$sDonde)";
 }
-$CasaDlRepository = new CasaDlRepository();
+$CasaDlRepository = $GLOBALS['container']->get(CasaDlRepositoryInterface::class);
 $oOpcionesCasas = $CasaDlRepository->getArrayCasas($cond);
 
 $oDesplArrayCasas = new DesplegableArray($id_pau, $oOpcionesCasas, 'casas');

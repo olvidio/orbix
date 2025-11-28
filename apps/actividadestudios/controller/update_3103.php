@@ -7,6 +7,7 @@ use actividadestudios\model\entity\GestorMatricula;
 use actividadestudios\model\entity\MatriculaDl;
 use asistentes\model\entity\AsistentePub;
 use dossiers\model\entity\Dossier;
+use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use function core\is_true;
 
 // INICIO Cabecera global de URL de controlador *********************************
@@ -128,9 +129,9 @@ switch ($Qmod) {
         break;
     case 'nuevo': //------------ NUEVO --------
         // Si no es opcional, calculo el id_asignatura a partir del id_nivel
-        if ($Qid_asignatura == '1') {
-            $oGesAsignaturas = new asignaturas\model\entity\GestorAsignatura();
-            $cAsignaturas = $oGesAsignaturas->getAsignaturas(array('id_nivel' => $Qid_nivel));
+        if ($Qid_asignatura === 1) {
+            $AsignaturaRepository = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class);
+            $cAsignaturas = $AsignaturaRepository->getAsignaturas(array('id_nivel' => $Qid_nivel));
             $oAsignatura = $cAsignaturas[0]; // sólo debería haber una
             $Qid_asignatura = $oAsignatura->getId_asignatura();
         }

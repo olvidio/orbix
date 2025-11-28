@@ -107,7 +107,6 @@ class TipoCentro
         $this->nombreTipoCentro = TipoCentroName::fromNullableString($snombre_tipo_ctr);
     }
 
-
     /* ------------------- PARA el mod_tabla  -------------------------------*/
     public function getPrimary_key(): string
     {

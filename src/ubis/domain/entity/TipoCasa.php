@@ -123,7 +123,6 @@ class TipoCasa
         return $oTipoDeCasaSet->getTot();
     }
 
-
     /**
      * Recupera les propietats de l'atribut stipo_casa de TipoDeCasa
      * en una clase del tipus DatosCampo

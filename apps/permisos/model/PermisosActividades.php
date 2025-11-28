@@ -9,7 +9,7 @@ use procesos\model\entity\ActividadFase;
 use procesos\model\entity\GestorActividadProcesoTarea;
 use procesos\model\entity\GestorTareaProceso;
 use procesos\model\PermAccion;
-use src\usuarios\application\repositories\UsuarioGrupoRepository;
+use src\usuarios\domain\contracts\UsuarioGrupoRepositoryInterface;
 use function core\is_true;
 
 /**
@@ -112,7 +112,7 @@ class PermisosActividades
         // permiso para el usuario
         $sCondicion_usuario = "u.id_usuario=$iid_usuario";
         // miro en els grups als que pertany
-        $UsuarioGrupoRepository = new UsuarioGrupoRepository();
+        $UsuarioGrupoRepository = $GLOBALS['container']->get(UsuarioGrupoRepositoryInterface::class);
         $cGrupos = $UsuarioGrupoRepository->getUsuariosGrupos(array('id_usuario' => $iid_usuario));
         if (count($cGrupos) > 0) {
             foreach ($cGrupos as $oUsuarioGrupo) {

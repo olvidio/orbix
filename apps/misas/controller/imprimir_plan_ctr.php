@@ -138,7 +138,7 @@ foreach ($date_range as $date) {
 }
 $data_cuadricula = [];
 
-$EncargoCtrRepository = new EncargoCtrRepository();
+$EncargoCtrRepository = $GLOBALS['container']->get(EncargoCtrRepositoryInterface::class);
 $cEncargosCtr = $EncargoCtrRepository->getEncargosCentro($Qid_ubi);
 foreach ($cEncargosCtr as $oEncargoCtr) {
     $id_enc = $oEncargoCtr->getId_enc();
@@ -180,7 +180,7 @@ foreach ($cEncargosCtr as $oEncargoCtr) {
         $aOperador = [
             'tstart' => 'BETWEEN',
         ];
-        $EncargoDiaRepository = new EncargoDiaRepository();
+        $EncargoDiaRepository = $GLOBALS['container']->get(EncargoDiaRepositoryInterface::class);
         $cEncargosDia = $EncargoDiaRepository->getEncargoDias($aWhere,$aOperador);
 
         foreach($cEncargosDia as $oEncargoDia) {

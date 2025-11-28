@@ -16,7 +16,7 @@ require_once("apps/core/global_object.inc");
 
 $Qid_item = (integer)filter_input(INPUT_POST, 'id_item');
 
-$PlantillaRepository = new PlantillaRepository();
+$PlantillaRepository = $GLOBALS['container']->get(PlantillaRepositoryInterface::class);
 
 
 if (empty($Qid_item)) {

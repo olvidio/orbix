@@ -6,7 +6,6 @@ use PDO;
 use src\inventario\domain\entity\TipoDoc;
 use src\inventario\domain\value_objects\TipoDocId;
 
-
 /**
  * Interfaz de la clase TipoDoc y su Repositorio
  *
@@ -28,7 +27,7 @@ interface TipoDocRepositoryInterface
      *
      * @param array $aWhere asociativo con los valores para cada campo de la BD.
      * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array|FALSE Una colección de objetos de tipo TipoDoc
+     * @return array|false Una colección de objetos de tipo TipoDoc
      */
     public function getTipoDocs(array $aWhere = [], array $aOperators = []): array|false;
 

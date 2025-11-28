@@ -17,7 +17,7 @@ use actividades\model\entity\GestorActividadDl;
 use casas\model\entity\Ingreso;
 use core\ConfigGlobal;
 use core\ViewTwig;
-use src\ubis\application\repositories\CasaDlRepository;
+use src\ubis\domain\contracts\CasaDlRepositoryInterface;
 use web\DateTimeLocal;
 use web\Desplegable;
 use web\Hash;
@@ -102,7 +102,7 @@ $GesActividadesDl = new GestorActividadDl();
 $cActividades = $GesActividadesDl->getActividades($aWhere, $aOperador);
 $i = 0;
 $a_valores = [];
-$CasaDlRepository = new CasaDlRepository();
+$CasaDlRepository = $GLOBALS['container']->get(CasaDlRepositoryInterface::class);
 foreach ($cActividades as $oActividad) {
     $i++;
     $id_activ = $oActividad->getId_activ();

@@ -2,10 +2,9 @@
 
 namespace  src\actividades\domain;
 
-
 /* No vale el underscore en el nombre */
 
-use src\actividades\application\repositories\RepeticionRepository;
+use src\actividades\domain\contracts\RepeticionRepositoryInterface;
 use src\shared\domain\DatosInfoRepo;
 
 class InfoTipoRepeticion extends DatosInfoRepo
@@ -33,7 +32,7 @@ class InfoTipoRepeticion extends DatosInfoRepo
             $aOperador['repeticion'] = 'sin_acentos';
         }
         $aWhere['_ordre'] = 'temporada, repeticion';
-        $oLista = new RepeticionRepository();
+        $oLista = $GLOBALS['container']->get(RepeticionRepositoryInterface::class);
         $Coleccion = $oLista->getRepeticiones($aWhere, $aOperador);
 
         return $Coleccion;

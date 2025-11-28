@@ -4,8 +4,8 @@ use encargossacd\model\entity\Encargo;
 use encargossacd\model\entity\EncargoTipo;
 use encargossacd\model\entity\GestorEncargoSacd;
 use encargossacd\model\entity\GestorEncargoTipo;
-use src\ubis\application\repositories\CentroDlRepository;
-use src\ubis\application\repositories\CentroEllasRepository;
+use src\ubis\domain\contracts\CentroDlRepositoryInterface;
+use src\ubis\domain\contracts\CentroEllasRepositoryInterface;
 use web\DateTimeLocal;
 
 /**
@@ -79,7 +79,7 @@ switch ($Qmod) {
         $Qid_ubi_txt = (string)$Qid_ubi;
         if ($Qid_ubi_txt[0] == 2) { // sf
             $sf_sv = 2;
-            $CentroEllasRepository = new CentroEllasRepository();
+            $CentroEllasRepository = $GLOBALS['container']->get(CentroEllasRepositoryInterface::class);
             $oCentroSf = $CentroEllasRepository->findById($Qid_ubi);
             $nombre_ubi = $oCentroSf->getNombre_ubi();
             $tipo_ctr = $oCentroSf->getTipo_ctr();
@@ -93,7 +93,7 @@ switch ($Qmod) {
             }
         } elseif ($Qid_ubi_txt[0] == 1) { //sv
             $sf_sv = 1;
-            $CentroDlRepository = new CentroDlRepository();
+            $CentroDlRepository = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
             $oCentroDl = $CentroDlRepository->findById($Qid_ubi);
             $nombre_ubi = $oCentroDl->getNombre_ubi();
             $tipo_ctr = $oCentroDl->getTipo_ctr();

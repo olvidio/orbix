@@ -1,6 +1,6 @@
 <?php
 
-use src\ubis\application\repositories\CentroDlRepository;
+use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use ubis\model\CuadrosLabor;
 use web\Hash;
 use web\Lista;
@@ -38,7 +38,7 @@ switch ($Qque) {
         break;
     case 'form_labor':
         $oPermActiv = new CuadrosLabor;
-        $CentroDlRepository = new CentroDlRepository();
+        $CentroDlRepository = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
         $oCentro = $CentroDlRepository->findById($Qid_ubi);
         $nombre_ubi = $oCentro->getNombre_ubi();
         $tipo_ctr = $oCentro->getTipo_ctr();
@@ -70,7 +70,7 @@ switch ($Qque) {
         echo $txt;
         break;
     case 'form_num':
-        $CentroDlRepository = new CentroDlRepository();
+        $CentroDlRepository = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
         $oCentro = $CentroDlRepository->findById($Qid_ubi);
         $nombre_ubi = $oCentro->getNombre_ubi();
         $n_buzon = $oCentro->getN_buzon();
@@ -101,7 +101,7 @@ switch ($Qque) {
         echo $txt;
         break;
     case 'form_plazas':
-        $CentroDlRepository = new CentroDlRepository();
+        $CentroDlRepository = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
         $oCentro = $CentroDlRepository->findById($Qid_ubi);
         $nombre_ubi = $oCentro->getNombre_ubi();
         $num_habit_indiv = $oCentro->getNum_habit_indiv();
@@ -150,7 +150,7 @@ switch ($Qque) {
             $Qsede = (string)filter_input(INPUT_POST, 'sede');
 
 
-            $CentroDlRepository = new CentroDlRepository();
+            $CentroDlRepository = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
             $oCentro = $CentroDlRepository->findById($Qid_ubi);
             $oCentro->setTipo_ctr($Qtipo_ctr);
             //cuando el campo es tipo_labor, se pasa un array que hay que convertirlo en número.
@@ -178,7 +178,7 @@ switch ($Qque) {
         // listado de tipo centro y tipo labor.
         $permiso = 'modificar';
         $oPermActiv = new CuadrosLabor;
-        $oGesCentrosDl = new CentroDlRepository();
+        $oGesCentrosDl = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
         $aWhere = array('status' => 't', '_ordre' => 'nombre_ubi');
         $cCentrosDl = $oGesCentrosDl->getCentros($aWhere);
         $c = 0;
@@ -215,7 +215,7 @@ switch ($Qque) {
         // listado de numeros de buzón, cartas i pi
         $permiso = 'modificar';
         $oPermActiv = new CuadrosLabor;
-        $oGesCentrosDl = new CentroDlRepository();
+        $oGesCentrosDl = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
         $aWhere = array('status' => 't', '_ordre' => 'nombre_ubi');
         $cCentrosDl = $oGesCentrosDl->getCentros($aWhere);
         $c = 0;
@@ -256,7 +256,7 @@ switch ($Qque) {
         // listado de números de buzón, cartas i pi
         $permiso = 'modificar';
         $oPermActiv = new CuadrosLabor;
-        $oGesCentrosDl = new CentroDlRepository();
+        $oGesCentrosDl = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
         $aWhere = array('status' => 't', '_ordre' => 'nombre_ubi');
         $cCentrosDl = $oGesCentrosDl->getCentros($aWhere);
         $c = 0;

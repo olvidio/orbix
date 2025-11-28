@@ -2,8 +2,8 @@
 
 namespace encargossacd\model;
 
-use src\ubis\application\repositories\CentroDlRepository;
-use src\ubis\application\repositories\CentroEllasRepository;
+use src\ubis\domain\contracts\CentroDlRepositoryInterface;
+use src\ubis\domain\contracts\CentroEllasRepositoryInterface;
 use web\Desplegable;
 
 class DesplCentros
@@ -15,32 +15,32 @@ class DesplCentros
     {
         switch ($filtro_ctr) {
             case 1:
-                $GesCentros = new CentroDlRepository();
+                $GesCentros = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
                 // añado el ctr de oficiales de la dl (14.VIII.07).
                 //$sql_ctr="SELECT id_ubi,nombre_ubi FROM u_centros_dl WHERE tipo_ctr ~ 'a.|n.|s[j|m]|of' AND status='t' ORDER BY nombre_ubi";
                 $query = "WHERE tipo_ctr ~ '^a|n|s[^s]|of' AND status='t'";
                 $oDesplCtr = $GesCentros->getListaCentros($query);
                 break;
             case 2:
-                $GesCentros = new CentroEllasRepository();
+                $GesCentros = $GLOBALS['container']->get(CentroEllasRepositoryInterface::class);
                 $oDesplCtr = $GesCentros->getListaCentros();
                 break;
             case 3:
-                $GesCentros = new CentroDlRepository();
+                $GesCentros = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
                 $query = "WHERE tipo_ctr ~ '^ss' AND status='t'";
                 $oDesplCtr = $GesCentros->getListaCentros($query);
                 break;
             case 4:
-                $GesCentros = new CentroDlRepository();
+                $GesCentros = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
                 $query = "WHERE tipo_ctr ~ '^igl' AND status='t'";
                 $oDesplCtr = $GesCentros->getListaCentros($query);
                 break;
             case 5:
-                $GesCentros = new CentroDlRepository();
+                $GesCentros = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
                 $query = "WHERE tipo_ctr ~ 'cgioc|oc|cgi' AND status='t' ";
                 $oDesplCtr1 = $GesCentros->getListaCentros($query);
                 $opciones_sv = $oDesplCtr1->getOpciones()->fetchAll(\PDO::FETCH_ASSOC); // para pasarlo a un array
-                $GesCentros = new CentroEllasRepository();
+                $GesCentros = $GLOBALS['container']->get(CentroEllasRepositoryInterface::class);
                 $query = "WHERE tipo_ctr ~ 'cgioc|oc|cgi' AND status='t' ";
                 $oDesplCtr1 = $GesCentros->getListaCentros($query);
                 $opciones_sf = $oDesplCtr1->getOpciones()->fetchAll(\PDO::FETCH_ASSOC);
@@ -55,11 +55,11 @@ class DesplCentros
                 break;
             case 8:
                 if (!empty($this->id_zona)) {
-                    $GesCentrosDl = new CentroDlRepository();
+                    $GesCentrosDl = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
                     $query = "WHERE id_zona = $this->id_zona AND status='t' ";
                     $oDesplCtr1 = $GesCentrosDl->getListaCentros($query, 'nombre_ubi');
                     $opciones_sv = $oDesplCtr1->getOpciones()->fetchAll(\PDO::FETCH_ASSOC); // para pasarlo a un array
-                    $GesCentrosSf = new CentroEllasRepository();;
+                    $GesCentrosSf = $GLOBALS['container']->get(CentroEllasRepositoryInterface::class);;
                     $oDesplCtr1 = $GesCentrosSf->getListaCentros($query, 'nombre_ubi');
                     $opciones_sf = $oDesplCtr1->getOpciones()->fetchAll(\PDO::FETCH_ASSOC);
                     $a_opciones = array_merge($opciones_sv, $opciones_sf);

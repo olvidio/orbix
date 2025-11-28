@@ -30,8 +30,8 @@ use notas\model\entity\GestorPersonaNotaDB;
 use notas\model\entity\PersonaNotaDB;
 use personas\model\entity\Persona;
 use profesores\model\entity\GestorProfesor;
-use src\asignaturas\application\repositories\AsignaturaRepository;
-use src\notas\application\repositories\NotaRepository;
+use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
+use src\notas\domain\contracts\NotaRepositoryInterface;
 use src\notas\domain\entity\Nota;
 use web\Desplegable;
 use web\Hash;
@@ -72,7 +72,7 @@ if (!empty($sel)) { //vengo de un checkbox
     }
 }
 
-$NotaRepository = new NotaRepository();
+$NotaRepository = $GLOBALS['container']->get(NotaRepositoryInterface::class);
 $aOpciones = $NotaRepository->getArrayNotas();
 $oDesplNotas = new Desplegable();
 $oDesplNotas->setOpciones($aOpciones);
@@ -87,7 +87,7 @@ foreach ($cNotas as $oNota) {
 
 
 $GesActividades = new GestorActividad();
-$AsignaturaRepository = new AsignaturaRepository();
+$AsignaturaRepository = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class);
 
 if (!empty($Qid_asignatura_real)) { //caso de modificar
     $mod = "editar";
@@ -120,7 +120,8 @@ if (!empty($Qid_asignatura_real)) { //caso de modificar
     $epoca = $oPersonaNota->getEpoca();
     $id_activ = $oPersonaNota->getId_activ();
 
-    $oAsignatura = (new AsignaturaRepository())->findById($Qid_asignatura_real);
+    $AsignaturaRepository = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class);
+    $oAsignatura = $AsignaturaRepository->findById($Qid_asignatura_real);
     if ($oAsignatura === null) {
         throw new \Exception(sprintf(_("No se ha encontrado la asignatura con id: %s"), $Qid_asignatura_real));
     }
@@ -188,7 +189,7 @@ if (!empty($Qid_asignatura_real)) { //caso de modificar
     $aWhere['_ordre'] = 'nombre_corto';
     $cOpcionales = $AsignaturaRepository->getAsignaturas($aWhere, $aOperador);
     // Asignaturas superadas
-    $NotaRepository = new NotaRepository();
+    $NotaRepository = $GLOBALS['container']->get(NotaRepositoryInterface::class);
     $aSuperadas = $NotaRepository->getArrayNotasSuperadas();
     $aWhere = [];
     $aOperador = [];

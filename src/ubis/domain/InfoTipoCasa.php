@@ -3,7 +3,7 @@
 namespace src\ubis\domain;
 
 use src\shared\domain\DatosInfoRepo;
-use src\ubis\application\repositories\TipoCasaRepository;
+use src\ubis\domain\contracts\TipoCasaRepositoryInterface;
 
 /* No vale el underscore en el nombre */
 
@@ -32,7 +32,7 @@ class InfoTipoCasa extends DatosInfoRepo
             $aWhere = array('nombre_tipo_casa' => $this->k_buscar);
             $aOperador = array('nombre_tipo_casa' => 'sin_acentos');
         }
-        $oLista = new TipoCasaRepository();
+        $oLista = $GLOBALS['container']->get(TipoCasaRepositoryInterface::class);
         $Coleccion = $oLista->getTiposCasa($aWhere, $aOperador);
 
         return $Coleccion;

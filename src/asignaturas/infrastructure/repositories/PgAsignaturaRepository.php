@@ -12,7 +12,6 @@ use src\asignaturas\domain\entity\Asignatura;
 use stdClass;
 use function core\is_true;
 
-
 /**
  * Clase que adapta la tabla xa_asignaturas a la interfaz del repositorio
  *
@@ -252,7 +251,7 @@ class PgAsignaturaRepository extends ClaseRepository implements AsignaturaReposi
      *
      * @param array $aWhere asociativo con los valores para cada campo de la BD.
      * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array|FALSE Una colección de objetos de tipo Asignatura
+     * @return array|false Una colección de objetos de tipo Asignatura
      */
     public function getAsignaturas(array $aWhere = [], array $aOperators = []): array|false
     {
@@ -302,15 +301,15 @@ class PgAsignaturaRepository extends ClaseRepository implements AsignaturaReposi
             unset($aWhere['_limit']);
         }
         $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
-        if (($oDblSt = $oDbl->prepare($sQry)) === FALSE) {
+        if (($oDblSt = $oDbl->prepare($sQry)) === false) {
             $sClaveError = 'PgAsignaturaRepository.listar.prepare';
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return FALSE;
+            return false;
         }
-        if (($oDblSt->execute($aWhere)) === FALSE) {
+        if (($oDblSt->execute($aWhere)) === false) {
             $sClaveError = 'PgAsignaturaRepository.listar.execute';
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
-            return FALSE;
+            return false;
         }
 
         $filas = $oDblSt->fetchAll(PDO::FETCH_ASSOC);
@@ -329,14 +328,13 @@ class PgAsignaturaRepository extends ClaseRepository implements AsignaturaReposi
         $id_asignatura = $Asignatura->getId_asignatura();
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        if (($oDbl->exec("DELETE FROM $nom_tabla WHERE id_asignatura = $id_asignatura")) === FALSE) {
+        if (($oDbl->exec("DELETE FROM $nom_tabla WHERE id_asignatura = $id_asignatura")) === false) {
             $sClaveError = 'PgAsignaturaRepository.eliminar';
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return FALSE;
+            return false;
         }
         return TRUE;
     }
-
 
     /**
      * Si no existe el registro, hace un insert, si existe, se hace el update.
@@ -358,14 +356,14 @@ class PgAsignaturaRepository extends ClaseRepository implements AsignaturaReposi
         $aDatos['status'] = $Asignatura->isStatus();
         $aDatos['id_tipo'] = $Asignatura->getId_tipo();
         array_walk($aDatos, 'core\poner_null');
-        //para el caso de los boolean FALSE, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
+        //para el caso de los boolean false, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
         if (is_true($aDatos['status'])) {
             $aDatos['status'] = 'true';
         } else {
             $aDatos['status'] = 'false';
         }
 
-        if ($bInsert === FALSE) {
+        if ($bInsert === false) {
             //UPDATE
             $update = "
 					id_nivel                 = :id_nivel,
@@ -376,10 +374,10 @@ class PgAsignaturaRepository extends ClaseRepository implements AsignaturaReposi
 					id_sector                = :id_sector,
 					status                   = :status,
 					id_tipo                  = :id_tipo";
-            if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_asignatura = $id_asignatura")) === FALSE) {
+            if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_asignatura = $id_asignatura")) === false) {
                 $sClaveError = 'PgAsignaturaRepository.update.prepare';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-                return FALSE;
+                return false;
             }
 
             try {
@@ -389,17 +387,17 @@ class PgAsignaturaRepository extends ClaseRepository implements AsignaturaReposi
                 $this->setErrorTxt($err_txt);
                 $sClaveError = 'PgAsignaturaRepository.update.execute';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
-                return FALSE;
+                return false;
             }
         } else {
             // INSERT
             $aDatos['id_asignatura'] = $Asignatura->getId_asignatura();
             $campos = "(id_asignatura,id_nivel,nombre_asignatura,nombre_corto,creditos,year,id_sector,status,id_tipo)";
             $valores = "(:id_asignatura,:id_nivel,:nombre_asignatura,:nombre_corto,:creditos,:year,:id_sector,:status,:id_tipo)";
-            if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === FALSE) {
+            if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {
                 $sClaveError = 'PgAsignaturaRepository.insertar.prepare';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-                return FALSE;
+                return false;
             }
             try {
                 $oDblSt->execute($aDatos);
@@ -408,7 +406,7 @@ class PgAsignaturaRepository extends ClaseRepository implements AsignaturaReposi
                 $this->setErrorTxt($err_txt);
                 $sClaveError = 'PgAsignaturaRepository.insertar.execute';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
-                return FALSE;
+                return false;
             }
         }
         return TRUE;
@@ -418,15 +416,15 @@ class PgAsignaturaRepository extends ClaseRepository implements AsignaturaReposi
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_asignatura = $id_asignatura")) === FALSE) {
+        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_asignatura = $id_asignatura")) === false) {
             $sClaveError = 'PgAsignaturaRepository.isNew';
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return FALSE;
+            return false;
         }
         if (!$oDblSt->rowCount()) {
             return TRUE;
         }
-        return FALSE;
+        return false;
     }
 
     /**
@@ -440,15 +438,14 @@ class PgAsignaturaRepository extends ClaseRepository implements AsignaturaReposi
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
-        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_asignatura = $id_asignatura")) === FALSE) {
+        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_asignatura = $id_asignatura")) === false) {
             $sClaveError = 'PgAsignaturaRepository.getDatosById';
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return FALSE;
+            return false;
         }
         $aDatos = $oDblSt->fetch(PDO::FETCH_ASSOC);
         return $aDatos;
     }
-
 
     /**
      * Busca la clase con id_asignatura en la base de datos .

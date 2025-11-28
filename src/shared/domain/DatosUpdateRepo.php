@@ -12,13 +12,13 @@ class DatosUpdateRepo
 
     private $oFicha;
     private $Campos;
-    private mixed $repository;
+    private mixed $RepositoryInterface;
 
     public function eliminar()
     {
         $oFicha = $this->getFicha();
-        $oRepository = new $this->repository();
-        if ($oRepository->Eliminar($oFicha) === FALSE) {
+        $oRepository = $GLOBALS['container']->get($this->RepositoryInterface);
+        if ($oRepository->Eliminar($oFicha) === false) {
             $error_txt = $oRepository->getErrorTxt();
             return $error_txt;
         }
@@ -67,12 +67,12 @@ class DatosUpdateRepo
             }
         }
 
-        $oRepository = new $this->repository();
-        $new_id = $oRepository->getNewID();
+        $oRepository = $GLOBALS['container']->get($this->RepositoryInterface);
+        $new_id = $oRepository->getNewId();
         $pks1 = 'set' . ucfirst($oFicha->getPrimary_key());
         $oFicha->$pks1($new_id);
 
-        if ($oRepository->Guardar($oFicha) === FALSE) {
+        if ($oRepository->Guardar($oFicha) === false) {
             $error_txt = $oRepository->getErrorTxt();
             return $error_txt;
         }
@@ -117,11 +117,15 @@ class DatosUpdateRepo
             if ($tipo !== 'check' && empty($aCampos[$nom_camp])) {
                 $aCampos[$nom_camp] = null;
             }
-            $oFicha->$metodo($aCampos[$nom_camp]);
+            try {
+                $oFicha->$metodo($aCampos[$nom_camp]);
+            } catch (\Throwable $e) {
+                return 'Error al ejecutar ' . $metodo . ' para el campo ' . $nom_camp . ': ' . $e->getMessage();
+            }
         }
 
-        $oRepository = new $this->repository();
-        if ($oRepository->Guardar($oFicha) === FALSE) {
+        $oRepository = $GLOBALS['container']->get($this->RepositoryInterface);
+        if ($oRepository->Guardar($oFicha) === false) {
             $error_txt = $oRepository->getErrorTxt();
             return $error_txt;
         }
@@ -148,8 +152,8 @@ class DatosUpdateRepo
         $this->Campos = $Campos;
     }
 
-    public function setRepository($repository)
+    public function setRepositoryInterface($repository)
     {
-        $this->repository = $repository;
+        $this->RepositoryInterface = $repository;
     }
 }

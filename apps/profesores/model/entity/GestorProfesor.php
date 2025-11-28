@@ -2,15 +2,13 @@
 namespace profesores\model\entity;
 
 
-use asignaturas\model\entity\Asignatura;
-use asignaturas\model\entity\Sector;
 use core\ClaseGestor;
 use core\Condicion;
 use core\Set;
 use personas\model\entity\GestorPersonaPub;
 use personas\model\entity\PersonaDl;
-use src\asignaturas\application\repositories\AsignaturaRepository;
-use src\asignaturas\application\repositories\SectorRepository;
+use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
+use src\asignaturas\domain\contracts\SectorRepositoryInterface;
 use web\Desplegable;
 
 /**
@@ -49,12 +47,12 @@ class GestorProfesor extends ClaseGestor
      */
     function getListaProfesoresAsignatura($id_asignatura)
     {
-        $oAsignatura = (new AsignaturaRepository())->findById($id_asignatura);
+        $oAsignatura = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class)->findById($id_asignatura);
         if ($oAsignatura === null) {
             throw new \Exception(sprintf(_("No se ha encontrado la asignatura con id: %s"), $id_asignatura));
         }
         $id_sector = $oAsignatura->getId_sector();
-        $SectorRepository = new SectorRepository();
+        $SectorRepository = $GLOBALS['container']->get(SectorRepositoryInterface::class);
         $id_departamento = $SectorRepository->findById($id_sector)?->getIdDepartamentoVo()?->value();
         // Profesores departamento
         $aProfesoresDepartamento = $this->getListaProfesoresDepartamento($id_departamento);
@@ -77,12 +75,12 @@ class GestorProfesor extends ClaseGestor
      */
     function getDesplProfesoresAsignatura($id_asignatura)
     {
-        $oAsignatura = (new AsignaturaRepository())->findById($id_asignatura);
+        $oAsignatura = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class)->findById($id_asignatura);
         if ($oAsignatura === null) {
             throw new \Exception(sprintf(_("No se ha encontrado la asignatura con id: %s"), $id_asignatura));
         }
         $id_sector = $oAsignatura->getId_sector();
-        $SectorRepository = new SectorRepository();
+        $SectorRepository = $GLOBALS['container']->get(SectorRepositoryInterface::class);
         $id_departamento = $SectorRepository->findById($id_sector)?->getIdDepartamentoVo()?->value();
         // Profesores departamento
         $aProfesoresDepartamento = $this->getListaProfesoresDepartamento($id_departamento);

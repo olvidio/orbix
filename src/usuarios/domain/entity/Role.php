@@ -2,7 +2,7 @@
 
 namespace src\usuarios\domain\entity;
 
-use src\usuarios\application\repositories\RoleRepository;
+use src\usuarios\domain\contracts\RoleRepositoryInterface;
 use src\usuarios\domain\value_objects\RoleName;
 use src\usuarios\domain\value_objects\PauType;
 use function core\is_true;
@@ -77,7 +77,7 @@ class Role
 
     public function isRole(string $nom_role): bool
     {
-        $RoleRepository = new RoleRepository();
+        $RoleRepository = $GLOBALS['container']->get(RoleRepositoryInterface::class);
         $aPau = $RoleRepository->getArrayRoles();
 
         $nom_role = strtolower($nom_role ?? '');
@@ -86,7 +86,7 @@ class Role
 
     public function isRolePau(string $nom_pau): bool
     {
-        $RoleRepository = new RoleRepository();
+        $RoleRepository = $GLOBALS['container']->get(RoleRepositoryInterface::class);
         $aPauRoles = $RoleRepository->getArrayRolesPau();
 
         $nom_pau = strtolower($nom_pau ?? '');

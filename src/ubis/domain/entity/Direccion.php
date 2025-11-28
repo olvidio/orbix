@@ -504,6 +504,10 @@ class Direccion
      *
      * @return DateTimeLocal|NullDateTimeLocal|null $df_direccion
      */
+    /**
+     * @return DateTimeLocal|NullDateTimeLocal|null $df_direccion
+     * @deprecated El retorno null está deprecado. Este getter aplica fallback y no devolverá null en tiempo de ejecución.
+     */
     public function getF_direccion(): DateTimeLocal|NullDateTimeLocal|null
     {
         return $this->df_direccion ?? new NullDateTimeLocal;
@@ -513,9 +517,12 @@ class Direccion
      *
      * @param DateTimeLocal|null $df_direccion
      */
-    public function setF_direccion(DateTimeLocal|null $df_direccion = null): void
+    /**
+     * @param DateTimeLocal|NullDateTimeLocal|null $df_direccion
+     */
+    public function setF_direccion(DateTimeLocal|NullDateTimeLocal|null $df_direccion = null): void
     {
-        $this->df_direccion = $df_direccion;
+        $this->df_direccion = $df_direccion instanceof NullDateTimeLocal ? null : $df_direccion;
     }
 
     /**
@@ -556,7 +563,15 @@ class Direccion
      *
      * @return bool|null $bcp_dcha
      */
+    /**
+     * @deprecated Usar `isCpDcha(): ?bool` en su lugar.
+     */
     public function isCp_dcha(): ?bool
+    {
+        return $this->isCpDcha();
+    }
+
+    public function isCpDcha(): ?bool
     {
         return $this->bcp_dcha;
     }
@@ -565,9 +580,17 @@ class Direccion
      *
      * @param bool|null $bcp_dcha
      */
+    /**
+     * @deprecated Usar `setCpDcha(?bool $cpDcha = null): void` en su lugar.
+     */
     public function setCp_dcha(?bool $bcp_dcha = null): void
     {
-        $this->bcp_dcha = $bcp_dcha;
+        $this->setCpDcha($bcp_dcha);
+    }
+
+    public function setCpDcha(?bool $cpDcha = null): void
+    {
+        $this->bcp_dcha = $cpDcha;
     }
 
     /**

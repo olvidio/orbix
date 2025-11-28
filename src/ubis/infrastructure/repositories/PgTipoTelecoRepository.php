@@ -11,7 +11,6 @@ use src\ubis\domain\contracts\TipoTelecoRepositoryInterface;
 use src\ubis\domain\entity\TipoTeleco;
 use function core\is_true;
 
-
 /**
  * Clase que adapta la tabla xd_tipo_teleco a la interfaz del repositorio
  *
@@ -113,7 +112,7 @@ class PgTipoTelecoRepository extends ClaseRepository implements TipoTelecoReposi
      *
      * @param array $aWhere asociativo con los valores para cada campo de la BD.
      * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array|FALSE Una colección de objetos de tipo TipoTeleco
+     * @return array|false Una colección de objetos de tipo TipoTeleco
      */
     public function getTiposTeleco(array $aWhere = [], array $aOperators = []): array|false
     {
@@ -163,15 +162,15 @@ class PgTipoTelecoRepository extends ClaseRepository implements TipoTelecoReposi
             unset($aWhere['_limit']);
         }
         $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
-        if (($oDblSt = $oDbl->prepare($sQry)) === FALSE) {
+        if (($oDblSt = $oDbl->prepare($sQry)) === false) {
             $sClaveError = 'PgTipoTelecoRepository.listar.prepare';
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return FALSE;
+            return false;
         }
-        if (($oDblSt->execute($aWhere)) === FALSE) {
+        if (($oDblSt->execute($aWhere)) === false) {
             $sClaveError = 'PgTipoTelecoRepository.listar.execute';
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
-            return FALSE;
+            return false;
         }
 
         $filas = $oDblSt->fetchAll(PDO::FETCH_ASSOC);
@@ -190,14 +189,13 @@ class PgTipoTelecoRepository extends ClaseRepository implements TipoTelecoReposi
         $id = $TipoTeleco->getId();
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        if (($oDbl->exec("DELETE FROM $nom_tabla WHERE id = $id")) === FALSE) {
+        if (($oDbl->exec("DELETE FROM $nom_tabla WHERE id = $id")) === false) {
             $sClaveError = 'PgTipoTelecoRepository.eliminar';
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return FALSE;
+            return false;
         }
         return TRUE;
     }
-
 
     /**
      * Si no existe el registro, hace un insert, si existe, se hace el update.
@@ -215,7 +213,7 @@ class PgTipoTelecoRepository extends ClaseRepository implements TipoTelecoReposi
         $aDatos['ubi'] = $TipoTeleco->isUbi();
         $aDatos['persona'] = $TipoTeleco->isPersona();
         array_walk($aDatos, 'core\poner_null');
-        //para el caso de los boolean FALSE, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
+        //para el caso de los boolean false, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
         if (is_true($aDatos['ubi'])) {
             $aDatos['ubi'] = 'true';
         } else {
@@ -227,17 +225,17 @@ class PgTipoTelecoRepository extends ClaseRepository implements TipoTelecoReposi
             $aDatos['persona'] = 'false';
         }
 
-        if ($bInsert === FALSE) {
+        if ($bInsert === false) {
             //UPDATE
             $update = "
 					tipo_teleco              = :tipo_teleco,
 					nombre_teleco            = :nombre_teleco,
 					ubi                      = :ubi,
 					persona                  = :persona";
-            if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id = $id")) === FALSE) {
+            if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id = $id")) === false) {
                 $sClaveError = 'PgTipoTelecoRepository.update.prepare';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-                return FALSE;
+                return false;
             }
 
             try {
@@ -247,17 +245,17 @@ class PgTipoTelecoRepository extends ClaseRepository implements TipoTelecoReposi
                 $this->setErrorTxt($err_txt);
                 $sClaveError = 'PgTipoTelecoRepository.update.execute';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
-                return FALSE;
+                return false;
             }
         } else {
             // INSERT
             $aDatos['id'] = $TipoTeleco->getId();
             $campos = "(tipo_teleco,nombre_teleco,ubi,persona,id)";
             $valores = "(:tipo_teleco,:nombre_teleco,:ubi,:persona,:id)";
-            if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === FALSE) {
+            if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {
                 $sClaveError = 'PgTipoTelecoRepository.insertar.prepare';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-                return FALSE;
+                return false;
             }
             try {
                 $oDblSt->execute($aDatos);
@@ -266,7 +264,7 @@ class PgTipoTelecoRepository extends ClaseRepository implements TipoTelecoReposi
                 $this->setErrorTxt($err_txt);
                 $sClaveError = 'PgTipoTelecoRepository.insertar.execute';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
-                return FALSE;
+                return false;
             }
         }
         return TRUE;
@@ -276,15 +274,15 @@ class PgTipoTelecoRepository extends ClaseRepository implements TipoTelecoReposi
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id = $id")) === FALSE) {
+        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id = $id")) === false) {
             $sClaveError = 'PgTipoTelecoRepository.isNew';
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return FALSE;
+            return false;
         }
         if (!$oDblSt->rowCount()) {
             return TRUE;
         }
-        return FALSE;
+        return false;
     }
 
     /**
@@ -298,15 +296,14 @@ class PgTipoTelecoRepository extends ClaseRepository implements TipoTelecoReposi
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
-        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id = $id")) === FALSE) {
+        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id = $id")) === false) {
             $sClaveError = 'PgTipoTelecoRepository.getDatosById';
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return FALSE;
+            return false;
         }
         $aDatos = $oDblSt->fetch(PDO::FETCH_ASSOC);
         return $aDatos;
     }
-
 
     /**
      * Busca la clase con id en la base de datos .

@@ -5,7 +5,6 @@ namespace src\configuracion\domain\contracts;
 use PDO;
 use src\configuracion\domain\entity\ConfigSchema;
 
-
 /**
  * Interfaz de la clase ConfigSchema y su Repositorio
  *
@@ -25,10 +24,10 @@ interface ConfigSchemaRepositoryInterface
 	 *
 	 * @param array $aWhere asociativo con los valores para cada campo de la BD.
 	 * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-	 * @return array|FALSE Una colección de objetos de tipo ConfigSchema
+	 * @return array|false Una colección de objetos de tipo ConfigSchema
 	
 	 */
-	public function getConfigSchemas(array $aWhere=[], array $aOperators=[]): array|FALSE;
+	public function getConfigSchemas(array $aWhere=[], array $aOperators=[]): array|false;
 	
 /* -------------------- ENTIDAD --------------------------------------------- */
 

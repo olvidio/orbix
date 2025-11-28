@@ -6,9 +6,8 @@ use core\ViewTwig;
 use encargossacd\model\entity\Encargo;
 use encargossacd\model\entity\GestorEncargo;
 use encargossacd\model\entity\GestorEncargoTipo;
-use misas\domain\repositories\EncargoCtrRepository;
-use src\ubis\application\repositories\CentroDlRepository;
-use src\ubis\application\repositories\CentroEllasRepository;
+use src\ubis\domain\contracts\CentroDlRepositoryInterface;
+use src\ubis\domain\contracts\CentroEllasRepositoryInterface;
 use web\Desplegable;
 use web\Hash;
 use zonassacd\model\entity\GestorZona;
@@ -38,9 +37,9 @@ if (isset($Qid_zona)) {
     $aWhere['status'] = 't';
     $aWhere['id_zona'] = $Qid_zona;
     $aWhere['_ordre'] = 'nombre_ubi';
-    $GesCentrosDl = new CentroDlRepository();
+    $GesCentrosDl = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
     $cCentrosDl = $GesCentrosDl->getCentros($aWhere);
-    $GesCentrosSf = new CentroEllasRepository();
+    $GesCentrosSf = $GLOBALS['container']->get(CentroEllasRepositoryInterface::class);
     $cCentrosSf = $GesCentrosSf->getCentros($aWhere);
     $cCentros = array_merge($cCentrosDl, $cCentrosSf);
     
@@ -48,7 +47,7 @@ if (isset($Qid_zona)) {
         $id_ubi = $oCentro->getId_ubi();
         $nombre_ubi = $oCentro->getNombre_ubi();
 
-        $EncargoCtrRepository = new EncargoCtrRepository();
+        $EncargoCtrRepository = $GLOBALS['container']->get(EncargoCtrRepositoryInterface::class);
         $cEncargosCtr = $EncargoCtrRepository->getEncargosCentro($id_ubi);
         foreach ($cEncargosCtr as $oEncargo) {
             $id_enc = $oEncargo->getId_enc();
@@ -141,9 +140,9 @@ $aWhere = [];
 $aWhere['status'] = 't';
 $aWhere['id_zona'] = $Qid_zona;
 $aWhere['_ordre'] = 'nombre_ubi';
-$GesCentrosDl = new CentroDlRepository();
+$GesCentrosDl = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
 $cCentrosDl = $GesCentrosDl->getCentros($aWhere);
-$GesCentrosSf = new CentroEllasRepository();
+$GesCentrosSf = $GLOBALS['container']->get(CentroEllasRepositoryInterface::class);
 $cCentrosSf = $GesCentrosSf->getCentros($aWhere);
 $cCentros = array_merge($cCentrosDl, $cCentrosSf);
 

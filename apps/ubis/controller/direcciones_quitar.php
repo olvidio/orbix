@@ -1,9 +1,5 @@
 <?php
 
-use src\ubis\application\repositories\CasaDlRepository;
-use src\ubis\application\repositories\CasaExRepository;
-use src\ubis\application\repositories\CentroDlRepository;
-use src\ubis\application\repositories\CentroExRepository;
 
 /**
  * Esta página quita la dirección de un ubi.
@@ -18,6 +14,11 @@ use src\ubis\application\repositories\CentroExRepository;
  */
 
 // INICIO Cabecera global de URL de controlador *********************************
+use src\ubis\domain\contracts\CasaDlRepositoryInterface;
+use src\ubis\domain\contracts\CasaExRepositoryInterface;
+use src\ubis\domain\contracts\CentroDlRepositoryInterface;
+use src\ubis\domain\contracts\CentroExRepositoryInterface;
+
 require_once("apps/core/global_header.inc");
 // Archivos requeridos por esta url **********************************************
 
@@ -37,16 +38,16 @@ $id_direccion = $a_id_direccion[$Qidx];
 
 switch ($Qobj_dir) {
     case "DireccionCentroDl":
-        $UbiRepository = new CentroDlRepository();
+        $UbiRepository = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
         break;
     case "DireccionCentroEx":
-        $UbiRepository = new CentroExRepository();
+        $UbiRepository = $GLOBALS['container']->get(CentroExRepositoryInterface::class);
         break;
     case "DireccionCdcDl":
-        $UbiRepository = new CasaDlRepository();
+        $UbiRepository = $GLOBALS['container']->get(CasaDlRepositoryInterface::class);
         break;
     case "DireccionCdcEx":
-        $UbiRepository = new CasaExRepository();
+        $UbiRepository = $GLOBALS['container']->get(CasaExRepositoryInterface::class);
         break;
 }
 

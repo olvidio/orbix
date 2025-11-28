@@ -7,7 +7,7 @@ namespace personas\model;
 /* No vale el underscore en el nombre */
 
 use core\DatosInfo;
-use src\ubis\application\repositories\DescTelecoRepository;
+use src\ubis\domain\contracts\DescTelecoRepositoryInterface;
 use web\Desplegable;
 
 class Info1001 extends DatosInfo
@@ -57,7 +57,7 @@ class Info1001 extends DatosInfo
         $v1 = $oFicha->tipo_teleco;
         $v2 = $oFicha->desc_teleco;
         if (!empty($v2)) {
-            $oDepende = new DescTelecoRepository();
+            $oDepende = $GLOBALS['container']->get(DescTelecoRepositoryInterface::class);
             $aOpciones = $oDepende->getArrayDescTelecoPersonas($v1);
             $oDesplegable = new Desplegable('', $aOpciones, $v2, true);
             $despl_depende = $oDesplegable->options();
@@ -72,7 +72,7 @@ class Info1001 extends DatosInfo
         //caso de actualizar el campo depende
         if (isset($this->accion)) {
             if ($this->accion === 'desc_teleco') {
-                $oDepende = new DescTelecoRepository();
+                $oDepende = $GLOBALS['container']->get(DescTelecoRepositoryInterface::class);
                 $aOpciones = $oDepende->getArrayDescTelecoPersonas($valor_depende);
                 $oDesplegable = new Desplegable('', $aOpciones, '', true);
                 $despl_depende = $oDesplegable->options();

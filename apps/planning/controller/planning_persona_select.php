@@ -9,7 +9,7 @@ use personas\model\entity\GestorPersonaNax;
 use personas\model\entity\GestorPersonaS;
 use personas\model\entity\GestorPersonaSacd;
 use personas\model\entity\GestorPersonaSSSC;
-use src\ubis\application\repositories\CentroDlRepository;
+use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use web\Hash;
 use web\Lista;
 use function core\urlsafe_b64encode;
@@ -119,7 +119,7 @@ if (isset($_POST['stack'])) {
 }
 
 if (!empty($aWhereCtr)) { // si busco por centro sólo puede ser de casa
-    $GesCentroDl = new CentroDlRepository();
+    $GesCentroDl = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
     $cCentros = $GesCentroDl->getCentros($aWhereCtr, $aOperadorCtr);
     // por si hay más de uno.
     $cPersonas = [];

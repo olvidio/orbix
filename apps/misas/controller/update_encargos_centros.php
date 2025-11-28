@@ -27,7 +27,7 @@ $error_txt = '';
 if ($Qque === 'nuevo') {
 //    echo $Qid_enc.'-->'.$Qid_ctr.'<br>';
     $Uuid = new EncargoCtrId(RamseyUuid::uuid4()->toString());
-    $EncargoCtrRepository = new EncargoCtrRepository();
+    $EncargoCtrRepository = $GLOBALS['container']->get(EncargoCtrRepositoryInterface::class);
     $EncargoCtr = new EncargoCtr();
     $EncargoCtr->setUuid_item($Uuid);
     $EncargoCtr->setId_ubi($Qid_ctr);
@@ -41,7 +41,7 @@ if ($Qque === 'modificar') {
     $Uid_item = new EncargoCtrId($Qid_item);
 
     $EncargoCtr = new EncargoCtr();
-    $EncargoCtrRepository = new EncargoCtrRepository();
+    $EncargoCtrRepository = $GLOBALS['container']->get(EncargoCtrRepositoryInterface::class);
     $EncargoCtr = $EncargoCtrRepository->findById($Uid_item);
 
     $EncargoCtr->setId_ubi($Qid_ctr);
@@ -54,7 +54,7 @@ if ($Qque === 'modificar') {
 
 if ($Qque === 'borrar') {
     $Uid_item = new EncargoCtrId($Qid_item);
-    $EncargoCtrRepository = new EncargoCtrRepository();
+    $EncargoCtrRepository = $GLOBALS['container']->get(EncargoCtrRepositoryInterface::class);
     $EncargoCtr = $EncargoCtrRepository->findById($Uid_item);
     if ($EncargoCtrRepository->Eliminar($EncargoCtr) === FALSE) {
         $error_txt .= $EncargoCtrRepository->getErrorTxt();

@@ -3,16 +3,6 @@
 use src\shared\domain\DatosFormRepo;
 use web\ContestarJson;
 
-// INICIO Cabecera global de URL de controlador *********************************
-require_once("apps/core/global_header.inc");
-// Archivos requeridos por esta url **********************************************
-
-// Crea los objetos de uso global **********************************************
-require_once("apps/core/global_object.inc");
-// Crea los objetos por esta url  **********************************************
-
-// FIN de  Cabecera global de URL de controlador ********************************
-
 $Qclase_info = filter_input(INPUT_POST, 'clase_info');
 $a_pkey = filter_input(INPUT_POST, 'a_pkey');
 $Qobj_pau = filter_input(INPUT_POST, 'obj_pau');
@@ -24,7 +14,6 @@ $oInfoClase = new $obj();
 
 $oInfoClase->setMod($Qmod);
 $oInfoClase->setA_pkey($a_pkey);
-$oInfoClase->setObj_pau($Qobj_pau);
 $oFicha = $oInfoClase->getFicha();
 $aCamposDepende = $oInfoClase->getArrayCamposDepende();
 $aOpciones_txt = [];
@@ -68,6 +57,5 @@ $error_txt = '';
 $data = $formData;
 $data['explicacion_txt'] = $explicacion_txt;
 $data['tit_txt'] = $tit_txt;
-
 
 ContestarJson::enviar($error_txt, $data);

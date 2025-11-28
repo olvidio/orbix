@@ -7,11 +7,11 @@ use core\DBPropiedades;
 use Exception;
 use personas\model\entity\Persona;
 use personas\model\entity\TrasladoDl;
-use src\certificados\application\repositories\CertificadoEmitidoRepository;
-use tablonanuncios\domain\AnuncioId;
-use tablonanuncios\domain\entity\Anuncio;
-use tablonanuncios\domain\repositories\AnuncioRepository;
-use src\ubis\application\repositories\DelegacionRepository;
+use src\certificados\domain\contracts\CertificadoEmitidoRepositoryInterface;
+use src\tablonanuncios\domain\contracts\AnuncioRepositoryInterface;
+use src\tablonanuncios\domain\entity\Anuncio;
+use src\tablonanuncios\domain\value_objects\AnuncioId;
+use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 use web\DateTimeLocal;
 
 class CertificadoEmitidoEnviar
@@ -23,12 +23,12 @@ class CertificadoEmitidoEnviar
      */
     public static function enviar(int $id_item): string
     {
-        $certificadoEmitidoRepository = new CertificadoEmitidoRepository();
+        $certificadoEmitidoRepository = $GLOBALS['container']->get(CertificadoEmitidoRepositoryInterface::class);
         $oCertificadoEmitido = $certificadoEmitidoRepository->findById($id_item);
 
         $error_txt = '';
         $id_nom = $oCertificadoEmitido->getId_nom();
-        $b_saltar = FALSE;
+        $b_saltar = false;
 
         if ($id_nom < 0) {
             $error_txt = _("Es una persona de paso. No se puede enviar. Hay que imprimir.");
@@ -68,7 +68,7 @@ class CertificadoEmitidoEnviar
             $nombre_apellidos = $a_lista[0]['ape_nom'];
             $dl_destino = $a_lista[0]['dl_persona'];
 
-            $gesDelegacion = new DelegacionRepository();
+            $gesDelegacion = $GLOBALS['container']->get(DelegacionRepositoryInterface::class);
             try {
                 $a_datos_region_stgr = $gesDelegacion->mi_region_stgr($dl_destino);
                 $esquema_region_stgr_dst = $a_datos_region_stgr['esquema_region_stgr'];
@@ -81,7 +81,7 @@ class CertificadoEmitidoEnviar
             // comprobar que no es una dl que ya tiene su esquema
             $oDBPropiedades = new DBPropiedades();
             $a_posibles_esquemas = $oDBPropiedades->array_posibles_esquemas(TRUE, TRUE);
-            $is_dl_in_orbix = FALSE;
+            $is_dl_in_orbix = false;
             foreach ($a_posibles_esquemas as $esquema) {
                 $row = explode('-', $esquema);
                 if ($row[1] === $dl_destino) {
@@ -115,7 +115,7 @@ class CertificadoEmitidoEnviar
                 $Anuncio->setTanotado($tanotado);
                 $Anuncio->setCategoria(Anuncio::CAT_AVISO);
 
-                $AnuncioRepository = new AnuncioRepository();
+                $AnuncioRepository = $GLOBALS['container']->get(AnuncioRepositoryInterface::class);
                 $AnuncioRepository->Guardar($Anuncio);
 
             } else {

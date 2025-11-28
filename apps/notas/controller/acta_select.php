@@ -10,16 +10,15 @@
  *
  */
 
-use asignaturas\model\entity\GestorAsignatura;
 use core\ConfigGlobal;
 use core\ViewPhtml;
 use notas\model\entity\GestorActa;
 use notas\model\entity\GestorActaDl;
 use notas\model\entity\GestorActaEx;
-use src\asignaturas\application\repositories\AsignaturaRepository;
+use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
+use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 use web\Hash;
 use web\Lista;
-use src\ubis\application\repositories\DelegacionRepository;
 use function core\curso_est;
 
 // INICIO Cabecera global de URL de controlador *********************************
@@ -75,7 +74,7 @@ if (!empty($Qacta)) {
     if (!empty($matches[1])) {
         // Si es cr, se mira en todas (las suyas):
         if (ConfigGlobal::mi_ambito() === 'rstgr') {
-            $repoDelegacion = new DelegacionRepository();
+            $repoDelegacion = $GLOBALS['container']->get(DelegacionRepositoryInterface::class);
             $aDlMap = $repoDelegacion->getArrayDlRegionStgr([$mi_dele]); // [id_dl => dl]
             $aDl = array_values($aDlMap);
             $Qacta_dl = '';
@@ -127,7 +126,7 @@ if (!empty($Qacta)) {
     $titulo = ucfirst(sprintf(_("lista de actas del curso %s. Máximo %s"), $txt_curso, $aWhere['_limit']));
     // Si es cr, se mira en todas:
     if (ConfigGlobal::mi_ambito() === 'rstgr') {
-        $repoDelegacion = new DelegacionRepository();
+        $repoDelegacion = $GLOBALS['container']->get(DelegacionRepositoryInterface::class);
         $aDlMap = $repoDelegacion->getArrayDlRegionStgr([$mi_dele]);
         $aDl = array_values($aDlMap);
         $sReg = implode(" |", $aDl);
@@ -165,7 +164,7 @@ $a_cabeceras = [['name' => ucfirst(_("acta")), 'formatter' => 'clickFormatter'],
 ];
 
 
-$AsignaturaRepository = new AsignaturaRepository();
+$AsignaturaRepository = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class);
 $a_asignaturas = $AsignaturaRepository->getArrayAsignaturas();
 
 

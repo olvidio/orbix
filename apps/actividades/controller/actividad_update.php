@@ -23,6 +23,7 @@ use actividadplazas\model\entity\GestorActividadPlazas;
 use core\ConfigGlobal;
 use Illuminate\Http\JsonResponse;
 use procesos\model\entity\GestorActividadProcesoTarea;
+use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 
 /**
  * Para asegurar que inicia la sesion, y poder acceder a los permisos
@@ -418,7 +419,7 @@ switch ($Qmod) {
                 $mi_dele = ConfigGlobal::mi_delef();
                 if (!empty($Qplazas) && ($plazas_old != $Qplazas) && $Qdl_org == $mi_dele) {
                     $id_dl = 0;
-                    $repoDelegacion = new src\ubis\application\repositories\DelegacionRepository();
+                    $repoDelegacion = $GLOBALS['container']->get(DelegacionRepositoryInterface::class);
                     $cDelegaciones = $repoDelegacion->getDelegaciones(array('dl' => $mi_dele));
                     if (is_array($cDelegaciones) && count($cDelegaciones)) {
                         $id_dl = $cDelegaciones[0]->getIdDlVo()?->value() ?? 0;

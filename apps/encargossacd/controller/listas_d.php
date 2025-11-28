@@ -5,8 +5,8 @@ use encargossacd\model\EncargoFunciones;
 use encargossacd\model\entity\Encargo;
 use encargossacd\model\entity\GestorEncargoSacd;
 use personas\model\entity\GestorPersonaDl;
-use src\ubis\application\repositories\CentroDlRepository;
-use src\ubis\application\repositories\CentroEllasRepository;
+use src\ubis\domain\contracts\CentroDlRepositoryInterface;
+use src\ubis\domain\contracts\CentroEllasRepositoryInterface;
 use web\DateTimeLocal;
 use zonassacd\model\entity\GestorZona;
 use zonassacd\model\entity\GestorZonaGrupo;
@@ -86,7 +86,7 @@ foreach ($cZonasGrupos as $oZonaGrupo) {
     $a_sacd = [];
     foreach ($cZonas as $oZona) {
         $id_zona = $oZona->getId_zona();
-        $GesCentrosDl = new CentroDlRepository();
+        $GesCentrosDl = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
         $cCentrosDl = $GesCentrosDl->getCentros(array('id_zona' => $id_zona));
         foreach ($cCentrosDl as $oCentroDl) {
             $id_ubi = $oCentroDl->getId_ubi();
@@ -128,10 +128,10 @@ foreach ($cZonasGrupos as $oZonaGrupo) {
                     } else {
                         $iid = (string)$id_ubi_enc;
                         if ($iid[0] == 2) {
-                            $CentroEllasRepository = new CentroEllasRepository();
+                            $CentroEllasRepository = $GLOBALS['container']->get(CentroEllasRepositoryInterface::class);
                             $oCentroEnc = $CentroEllasRepository->findById($id_ubi);
                         } else {
-                            $CentroDlRepository = new CentroDlRepository();
+                            $CentroDlRepository = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
                             $oCentroEnc = $CentroDlRepository->findById($id_ubi_enc);
                         }
                         $nombre_ubi = $oCentroEnc->getNombre_ubi();

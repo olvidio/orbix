@@ -12,7 +12,6 @@ use shared\domain\entity\ColaMail;
 use shared\domain\repositories\ColaMailRepositoryInterface;
 use web\NullDateTimeLocal;
 
-
 /**
  * Clase que adapta la tabla cola_mails a la interfaz del repositorio
  *
@@ -38,7 +37,7 @@ class PgColaMailRepository extends ClaseRepository implements ColaMailRepository
      *
      * @param array $aWhere asociativo con los valores para cada campo de la BD.
      * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array|FALSE Una colección de objetos de tipo ColaMail
+     * @return array|false Una colección de objetos de tipo ColaMail
      */
     public function getColaMails(array $aWhere = [], array $aOperators = []): array|false
     {
@@ -88,15 +87,15 @@ class PgColaMailRepository extends ClaseRepository implements ColaMailRepository
             unset($aWhere['_limit']);
         }
         $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
-        if (($oDblSt = $oDbl->prepare($sQry)) === FALSE) {
+        if (($oDblSt = $oDbl->prepare($sQry)) === false) {
             $sClaveError = 'PgColaMailRepository.listar.prepare';
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return FALSE;
+            return false;
         }
-        if (($oDblSt->execute($aWhere)) === FALSE) {
+        if (($oDblSt->execute($aWhere)) === false) {
             $sClaveError = 'PgColaMailRepository.listar.execute';
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
-            return FALSE;
+            return false;
         }
 
         $filas = $oDblSt->fetchAll(PDO::FETCH_ASSOC);
@@ -117,10 +116,10 @@ class PgColaMailRepository extends ClaseRepository implements ColaMailRepository
 
         $sQry = "DELETE FROM $nom_tabla WHERE sended < '$date_iso'";
 
-        if (($oDblSt = $oDbl->query($sQry)) === FALSE) {
+        if (($oDblSt = $oDbl->query($sQry)) === false) {
             $sClaveError = 'PgColaMailRepository.listar.prepare';
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            //return FALSE;
+            //return false;
         }
     }
 
@@ -131,14 +130,13 @@ class PgColaMailRepository extends ClaseRepository implements ColaMailRepository
         $uuid_item = $ColaMail->getUuid_item();
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        if (($oDbl->exec("DELETE FROM $nom_tabla WHERE uuid_item = '$uuid_item'")) === FALSE) {
+        if (($oDbl->exec("DELETE FROM $nom_tabla WHERE uuid_item = '$uuid_item'")) === false) {
             $sClaveError = 'PgColaMailRepository.eliminar';
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return FALSE;
+            return false;
         }
         return TRUE;
     }
-
 
     /**
      * Si no existe el registro, hace un insert, si existe, se hace el update.
@@ -164,7 +162,7 @@ class PgColaMailRepository extends ClaseRepository implements ColaMailRepository
         }
         //array_walk($aDatos, 'core\poner_null');
 
-        if ($bInsert === FALSE) {
+        if ($bInsert === false) {
             //UPDATE
             $update = "
 					mail_to                  = :mail_to,
@@ -173,10 +171,10 @@ class PgColaMailRepository extends ClaseRepository implements ColaMailRepository
 					headers                  = :headers,
 					writed_by                 = :writed_by,
 					sended                   = :sended";
-            if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE uuid_item = '$uuid_item'")) === FALSE) {
+            if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE uuid_item = '$uuid_item'")) === false) {
                 $sClaveError = 'PgColaMailRepository.update.prepare';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-                return FALSE;
+                return false;
             }
 
             try {
@@ -186,17 +184,17 @@ class PgColaMailRepository extends ClaseRepository implements ColaMailRepository
                 $this->setErrorTxt($err_txt);
                 $sClaveError = 'PgColaMailRepository.update.execute';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
-                return FALSE;
+                return false;
             }
         } else {
             // INSERT
             $aDatos['uuid_item'] = $ColaMail->getUuid_item();
             $campos = "(uuid_item,mail_to,message,subject,headers,writed_by,sended)";
             $valores = "(:uuid_item,:mail_to,:message,:subject,:headers,:writed_by,:sended)";
-            if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === FALSE) {
+            if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {
                 $sClaveError = 'PgColaMailRepository.insertar.prepare';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-                return FALSE;
+                return false;
             }
             try {
                 $oDblSt->execute($aDatos);
@@ -205,7 +203,7 @@ class PgColaMailRepository extends ClaseRepository implements ColaMailRepository
                 $this->setErrorTxt($err_txt);
                 $sClaveError = 'PgColaMailRepository.insertar.execute';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
-                return FALSE;
+                return false;
             }
         }
         return TRUE;
@@ -215,15 +213,15 @@ class PgColaMailRepository extends ClaseRepository implements ColaMailRepository
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE uuid_item = '$uuid_item'")) === FALSE) {
+        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE uuid_item = '$uuid_item'")) === false) {
             $sClaveError = 'PgColaMailRepository.isNew';
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return FALSE;
+            return false;
         }
         if (!$oDblSt->rowCount()) {
             return TRUE;
         }
-        return FALSE;
+        return false;
     }
 
     /**
@@ -237,19 +235,18 @@ class PgColaMailRepository extends ClaseRepository implements ColaMailRepository
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE uuid_item = '$uuid_item'")) === FALSE) {
+        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE uuid_item = '$uuid_item'")) === false) {
             $sClaveError = 'PgColaMailRepository.getDatosById';
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return FALSE;
+            return false;
         }
         $aDatos = $oDblSt->fetch(PDO::FETCH_ASSOC);
         // para las fechas del postgres (texto iso)
-        if ($aDatos !== FALSE) {
+        if ($aDatos !== false) {
             $aDatos['sended'] = (new ConverterDate('timestamp', $aDatos['sended']))->fromPg();
         }
         return $aDatos;
     }
-
 
     /**
      * Busca la clase con uuid_item en la base de datos .

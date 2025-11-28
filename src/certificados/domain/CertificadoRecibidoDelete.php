@@ -3,7 +3,7 @@
 namespace src\certificados\domain;
 
 use PDO;
-use src\certificados\application\repositories\CertificadoRecibidoRepository;
+use src\certificados\domain\contracts\CertificadoRecibidoRepositoryInterface;
 
 class CertificadoRecibidoDelete
 {
@@ -28,12 +28,12 @@ class CertificadoRecibidoDelete
     {
         $error_txt = '';
         if (!empty($Qid_item)) {
-            $certificadoRecibidoRepository = new CertificadoRecibidoRepository();
+            $certificadoRecibidoRepository = $GLOBALS['container']->get(CertificadoRecibidoRepositoryInterface::class);
             if (isset($this->oDbl)) {
                 $certificadoRecibidoRepository->setoDbl($this->oDbl);
             }
             $oCertificadoRecibido = $certificadoRecibidoRepository->findById($Qid_item);
-            if ($certificadoRecibidoRepository->Eliminar($oCertificadoRecibido) === FALSE) {
+            if ($certificadoRecibidoRepository->Eliminar($oCertificadoRecibido) === false) {
                 $error_txt .= $certificadoRecibidoRepository->getErrorTxt();
             }
         } else {

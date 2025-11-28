@@ -11,7 +11,7 @@ use asistentes\model\entity\AsistentePub;
 use asistentes\model\entity\GestorAsistente;
 use core\ConfigGlobal;
 use core\ViewPhtml;
-use src\ubis\application\repositories\DelegacionRepository;
+use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 use web\Desplegable;
 use web\Hash;
 
@@ -52,7 +52,7 @@ if ($oAsistente->perm_modificar() === FALSE) {
 
     $oPosiblesCa = new PosiblesCa();
 
-    $repoDelegacion = new DelegacionRepository();
+    $repoDelegacion = $GLOBALS['container']->get(DelegacionRepositoryInterface::class);
     $gesActividadPlazas = new GestorActividadPlazas();
     $gesAsistentes = new GestorAsistente();
     $mi_dele = ConfigGlobal::mi_delef();

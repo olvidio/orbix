@@ -1,21 +1,11 @@
 <?php
 
-use src\menus\application\repositories\GrupMenuRepository;
+use src\menus\domain\contracts\GrupMenuRepositoryInterface;
 use web\ContestarJson;
-
-// INICIO Cabecera global de URL de controlador *********************************
-require_once("apps/core/global_header.inc");
-// Archivos requeridos por esta url **********************************************
-
-// Crea los objetos de uso global **********************************************
-require_once("apps/core/global_object.inc");
-// Crea los objetos por esta url  **********************************************
-
-// FIN de  Cabecera global de URL de controlador ********************************
 
 $Qid_grupmenu = (string)filter_input(INPUT_POST, 'id_grupmenu');
 
-$GrupMenuRepository = new GrupMenuRepository();
+$GrupMenuRepository = $GLOBALS['container']->get(GrupMenuRepositoryInterface::class);
 $oGrupo = $GrupMenuRepository->findById($Qid_grupmenu);
 $grupmenu = $oGrupo->getGrup_menu();
 $orden = $oGrupo->getOrden();
@@ -23,6 +13,5 @@ $orden = $oGrupo->getOrden();
 $error_txt = '';
 $data['grupmenu'] = $grupmenu;
 $data['orden'] = $orden;
-
 
 ContestarJson::enviar($error_txt, $data);

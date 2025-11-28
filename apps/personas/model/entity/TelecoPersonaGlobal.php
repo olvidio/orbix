@@ -4,6 +4,7 @@ namespace personas\model\entity;
 use core\ClasePropiedades;
 use core\DatosCampo;
 use core\Set;
+use src\ubis\domain\contracts\TipoTelecoRepositoryInterface;
 
 /**
  * Clase que implementa la entidad d_teleco_persona
@@ -288,7 +289,7 @@ abstract class TelecoPersonaGlobal extends ClasePropiedades
         $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'tipo_teleco'));
         $oDatosCampo->setEtiqueta(_("nombre teleco"));
         $oDatosCampo->setTipo('opciones');
-        $oDatosCampo->setArgument('src\\ubis\\application\\repositories\\TipoTelecoRepository');
+        $oDatosCampo->setArgument(TipoTelecoRepositoryInterface::class);
         $oDatosCampo->setArgument2('getNombre_teleco'); // método para obtener el valor a mostrar del objeto relacionado.
         $oDatosCampo->setArgument3('getArrayTiposTelecoPersona'); // método con que crear la lista de opciones del Gestor objeto relacionado.
         $oDatosCampo->setAccion('desc_teleco'); // campo que hay que actualizar al cambiar este.
@@ -301,7 +302,7 @@ abstract class TelecoPersonaGlobal extends ClasePropiedades
         $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'desc_teleco'));
         $oDatosCampo->setEtiqueta(_("descripción"));
         $oDatosCampo->setTipo('depende');
-        $oDatosCampo->setArgument('src\\ubis\\application\\repositories\\TipoTelecoRepository');
+        $oDatosCampo->setArgument(TipoTelecoRepositoryInterface::class);
         $oDatosCampo->setArgument2('getDesc_teleco'); // método para obtener el valor a mostrar del objeto relacionado.
         $oDatosCampo->setArgument3('getArrayDescTelecoPersonas');
         $oDatosCampo->setDepende('tipo_teleco');

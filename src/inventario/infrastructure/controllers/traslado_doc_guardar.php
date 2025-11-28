@@ -1,16 +1,7 @@
 <?php
 
-use src\inventario\application\repositories\DocumentoRepository;
+use src\inventario\domain\contracts\DocumentoRepositoryInterface;
 use web\ContestarJson;
-
-// INICIO Cabecera global de URL de controlador *********************************
-require_once("apps/core/global_header.inc");
-// Archivos requeridos por esta url **********************************************
-
-// Crea los objetos de uso global **********************************************
-require_once("apps/core/global_object.inc");
-// FIN de  Cabecera global de URL de controlador ********************************
-
 
 $a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 $Qid_ubi_new = (int)filter_input(INPUT_POST, 'id_ubi_new');
@@ -18,7 +9,7 @@ $Qid_lugar_new = (int)filter_input(INPUT_POST, 'id_lugar_new');
 
 $error_txt = '';
 
-$DocumentoRepository = new DocumentoRepository();
+$DocumentoRepository = $GLOBALS['container']->get(DocumentoRepositoryInterface::class);
 if (!empty($Qid_ubi_new)) {
     foreach ($a_sel as $id_doc) {
         $oDocumento = $DocumentoRepository->findById($id_doc);
@@ -41,7 +32,6 @@ if (!empty($Qid_ubi_new)) {
         }
     }
 }
-
 
 ContestarJson::enviar($error_txt, 'ok');
 

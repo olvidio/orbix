@@ -3,7 +3,7 @@
 namespace src\ubis\application\services;
 
 use core\ConfigGlobal;
-use src\ubis\application\repositories\DelegacionRepository;
+use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 use web\Desplegable;
 
 /**
@@ -27,7 +27,7 @@ final class DelegacionDropdown
         if ($sfsv === 0) { $sfsv = ConfigGlobal::mi_sfsv(); }
         $sf = ($sfsv == 2) ? 'f' : '';
 
-        $repo = new DelegacionRepository();
+        $repo = $GLOBALS['container']->get(DelegacionRepositoryInterface::class);
         $delegaciones = $repo->getDelegaciones(['status' => true]);
 
         $opciones = [];
@@ -53,7 +53,7 @@ final class DelegacionDropdown
      */
     public static function activasOrdenNombre(string $nombre = 'dl', bool $conBlanco = true): Desplegable
     {
-        $repo = new DelegacionRepository();
+        $repo = $GLOBALS['container']->get(DelegacionRepositoryInterface::class);
         $delegaciones = $repo->getDelegaciones(['status' => true, '_ordre' => 'nombre_dl']);
 
         $opciones = [];
@@ -76,7 +76,7 @@ final class DelegacionDropdown
      */
     public static function byRegiones(array $regiones, string $nombre = 'dl', bool $conBlanco = true): Desplegable
     {
-        $repo = new DelegacionRepository();
+        $repo = $GLOBALS['container']->get(DelegacionRepositoryInterface::class);
         $aWhere = ['status' => true, '_ordre' => 'nombre_dl'];
         $aOper = [];
         if (!empty($regiones)) {
@@ -111,7 +111,7 @@ final class DelegacionDropdown
         $sf = (ConfigGlobal::mi_sfsv() == 2) ? 'f' : '';
         $propia = ConfigGlobal::mi_dele();
 
-        $repo = new DelegacionRepository();
+        $repo = $GLOBALS['container']->get(DelegacionRepositoryInterface::class);
         $delegaciones = $repo->getDelegaciones(['status' => true]);
 
         $opciones = [];
@@ -142,7 +142,7 @@ final class DelegacionDropdown
         $sf = ($sfsv == 2) ? 'f' : '';
         $propia = ConfigGlobal::mi_dele();
 
-        $repo = new DelegacionRepository();
+        $repo = $GLOBALS['container']->get(DelegacionRepositoryInterface::class);
         $delegaciones = $repo->getDelegaciones(['status' => true]);
 
         $opciones = [];

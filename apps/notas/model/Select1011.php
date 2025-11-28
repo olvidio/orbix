@@ -9,7 +9,7 @@ use core\ViewPhtml;
 use notas\model\entity\GestorPersonaNotaDlDB;
 use personas\model\entity\Persona;
 use personas\model\entity\PersonaDl;
-use src\asignaturas\application\repositories\AsignaturaRepository;
+use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\notas\domain\entity\Nota;
 use web\Hash;
 use web\Lista;
@@ -93,12 +93,13 @@ class Select1011
         $cMatriculasPendientes = $gesMatriculas->getMatriculasPendientes($this->id_pau);
         if (count($cMatriculasPendientes) > 0) {
             $msg = '';
+            $AsignaturaRepository = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class);
             foreach ($cMatriculasPendientes as $oMatricula) {
                 $id_activ = $oMatricula->getId_activ();
                 $id_asignatura = $oMatricula->getId_asignatura();
                 $oActividad = new ActividadAll($id_activ);
                 $nom_activ = $oActividad->getNom_activ();
-                $oAsignatura = (new AsignaturaRepository())->findById($id_asignatura);
+                $oAsignatura = $AsignaturaRepository->findById($id_asignatura);
                 if ($oAsignatura === null) {
                     throw new \Exception(sprintf(_("No se ha encontrado la asignatura con id: %s"), $id_asignatura));
                 }
@@ -127,6 +128,7 @@ class Select1011
 
         $i = 0;
         $a_valores = [];
+        $AsignaturaRepository = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class);
         foreach ($cPersonaNotas as $oPersonaNota) {
             $i++;
             $id_nivel = $oPersonaNota->getId_nivel();
@@ -152,7 +154,7 @@ class Select1011
                 $acta = '';
             }
 
-            $oAsignatura = (new AsignaturaRepository())->findById($id_asignatura);
+            $oAsignatura = $AsignaturaRepository->findById($id_asignatura);
             if ($oAsignatura === null) {
                 throw new \Exception(sprintf(_("No se ha encontrado la asignatura con id: %s"), $id_asignatura));
             }
@@ -161,7 +163,7 @@ class Select1011
 
             // opcionales
             if ($id_asignatura > 3000) {
-                $AsignaturaRepository = new AsignaturaRepository();
+                $AsignaturaRepository = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class);
                 $cOpcionales = $AsignaturaRepository->getAsignaturas(array('id_nivel' => $id_nivel));
                 if (empty($cOpcionales)) {
                     $nombre_corto = _("opcional de sobra");

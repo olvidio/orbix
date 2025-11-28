@@ -6,10 +6,10 @@ use core\ViewTwig;
 use encargossacd\model\entity\EncargoTipo;
 use encargossacd\model\entity\GestorEncargo;
 use encargossacd\model\entity\GestorEncargoTipo;
-use src\ubis\application\repositories\CentroDlRepository;
-use src\ubis\application\repositories\CentroEllasRepository;
+use src\ubis\domain\contracts\CentroDlRepositoryInterface;
+use src\ubis\domain\contracts\CentroEllasRepositoryInterface;
 use src\ubis\domain\entity\Ubi;
-use src\usuarios\application\repositories\LocalRepository;
+use src\usuarios\domain\contracts\LocalRepositoryInterface;
 use web\Desplegable;
 use web\Hash;
 
@@ -98,7 +98,7 @@ foreach ($cEncargos as $oEncargo) {
     }
 
     $nom_idioma = '';
-    $LocalRepository = new LocalRepository();
+    $LocalRepository = $GLOBALS['container']->get(LocalRepositoryInterface::class);
     $cIdiomas = $LocalRepository->getLocales(['idioma' => $idioma_enc]);
     if (is_array($cIdiomas) && count($cIdiomas) > 0) {
         $nom_idioma = $cIdiomas[0]->getNom_idioma();
@@ -171,9 +171,9 @@ $aWhere = [];
 $aWhere['status'] = 't';
 $aWhere['id_zona'] = $Qid_zona;
 $aWhere['_ordre'] = 'nombre_ubi';
-$GesCentrosDl = new CentroDlRepository();
+$GesCentrosDl = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
 $cCentrosDl = $GesCentrosDl->getCentros($aWhere);
-$GesCentrosSf = new CentroEllasRepository();
+$GesCentrosSf = $GLOBALS['container']->get(CentroEllasRepositoryInterface::class);
 $cCentrosSf = $GesCentrosSf->getCentros($aWhere);
 $cCentros = array_merge($cCentrosDl, $cCentrosSf);
 
@@ -190,7 +190,7 @@ $oDesplCentros->setNombre('id_ubi');
 $oDesplCentros->setOpciones($aCentros);
 
 
-$LocalRepository = new LocalRepository();
+$LocalRepository = $GLOBALS['container']->get(LocalRepositoryInterface::class);
 $a_locales = $LocalRepository->getArrayLocales();
 $oDesplIdiomas = new Desplegable("idioma_enc", $a_locales, $idioma_enc, true);
 

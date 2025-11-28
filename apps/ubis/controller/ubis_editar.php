@@ -2,13 +2,13 @@
 
 use core\ConfigGlobal;
 use core\ViewPhtml;
-use src\ubis\application\repositories\CasaDlRepository;
-use src\ubis\application\repositories\CentroDlRepository;
-use src\ubis\application\repositories\CentroExRepository;
 use src\ubis\application\services\DelegacionDropdown;
 use src\ubis\application\services\RegionDropdown;
 use src\ubis\application\services\TipoCasaDropdown;
 use src\ubis\application\services\TipoCentroDropdown;
+use src\ubis\domain\contracts\CasaDlRepositoryInterface;
+use src\ubis\domain\contracts\CentroDlRepositoryInterface;
+use src\ubis\domain\contracts\CentroExRepositoryInterface;
 use web\Desplegable;
 use web\Hash;
 use function core\is_true;
@@ -121,7 +121,7 @@ if (!empty($Qnuevo)) {
     // si es de la dl, poner que obj_pau sea dl:
     if ($es_de_dl) {
         if ($tipo_ubi === 'ctrdl') {
-            $oUbi_new = (new CentroDlRepository())->findById($id_ubi);
+            $oUbi_new = $GLOBALS['container']->get(CentroDlRepositoryInterface::class)->findById($id_ubi);
             // comprobar que realmente es el mismo:
             $nombre_ubi_new = $oUbi_new->getNombre_ubi();
             if ($nombre_ubi == $nombre_ubi_new) {
@@ -129,7 +129,7 @@ if (!empty($Qnuevo)) {
             }
         }
         if ($tipo_ubi === 'cdcdl') {
-            $oUbi_new = (new CasaDlRepository())->findById($id_ubi);
+            $oUbi_new = $GLOBALS['container']->get(CasaDlRepositoryInterface::class)->findById($id_ubi);
             // comprobar que realmente es el mismo:
             $nombre_ubi_new = $oUbi_new->getNombre_ubi();
             if ($nombre_ubi == $nombre_ubi_new) {
@@ -224,7 +224,7 @@ switch ($tipo_ubi) {
         $dl = empty($dl) ? ConfigGlobal::mi_delef() : $dl;
         $region = empty($region) ? ConfigGlobal::mi_region() : $region;
 
-        $CentroDlRepository = new CentroDlRepository();
+        $CentroDlRepository = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
         if (!empty($dl)) {
             $sWhere = "WHERE dl = '$dl'";
         } else if (!empty($region)) {
@@ -278,7 +278,7 @@ switch ($tipo_ubi) {
         $id_ctr_padre = $oUbi->getId_ctr_padre();
         $tipo_ctr = $oUbi->getTipo_ctr();
 
-        $CentroExRepository = new CentroExRepository();
+        $CentroExRepository = $GLOBALS['container']->get(CentroExRepositoryInterface::class);
         if (!empty($dl)) {
             $sWhere = "WHERE dl = '$dl'";
         } else if (!empty($region)) {

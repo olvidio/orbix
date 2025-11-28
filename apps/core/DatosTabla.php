@@ -151,8 +151,13 @@ class DatosTabla
                     $a_cabeceras[] = ucfirst($oDatosCampo->getEtiqueta());
                 }
                 $v++;
-                $nom_camp = $oDatosCampo->getNom_camp();
-                $valor_camp = $oFila->$nom_camp;
+                if ($oDatosCampo->getMetodoGet() !== null) {
+                    $metodo = $oDatosCampo->getMetodoGet();
+                } else {
+                    $nom_camp = $oDatosCampo->getNom_camp();
+                    $metodo = 'get' . ucfirst($nom_camp);
+                }
+                $valor_camp = $oFila->$metodo();
                 if (!$valor_camp) {
                     $a_valores[$c][$v] = '';
                     continue;
@@ -169,7 +174,12 @@ class DatosTabla
                         break;
                     case 'depende':
                     case 'opciones':
-                        $oRelacionado = new $var_1($valor_camp);
+                        if (strpos($var_1, 'Interface') !== false) {
+                            $RepoRelacionado = $GLOBALS['container']->get($var_1);
+                            $oRelacionado = $RepoRelacionado->findById($valor_camp);
+                        } else {
+                            $oRelacionado = new $var_1($valor_camp);
+                        }
                         $var = $oRelacionado->$var_2();
                         if (empty($var)) {
                             $var = $valor_camp;

@@ -5,7 +5,7 @@ namespace src\ubis\domain;
 /* No vale el underscore en el nombre */
 
 use src\shared\domain\DatosInfoRepo;
-use src\ubis\application\repositories\RegionRepository;
+use src\ubis\domain\contracts\RegionRepositoryInterface;
 
 class InfoRegiones extends DatosInfoRepo
 {
@@ -31,7 +31,7 @@ class InfoRegiones extends DatosInfoRepo
             $aWhere = ['region' => $this->k_buscar];
             $aOperador = ['region' => 'sin_acentos'];
         }
-        $oLista = new RegionRepository();
+        $oLista = $GLOBALS['container']->get(RegionRepositoryInterface::class);
         $Coleccion = $oLista->getRegiones($aWhere, $aOperador);
 
         return $Coleccion;

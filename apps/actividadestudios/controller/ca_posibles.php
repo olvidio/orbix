@@ -10,8 +10,8 @@ use core\ViewPhtml;
 use personas\model\entity\GestorPersonaAgd;
 use personas\model\entity\GestorPersonaDl;
 use personas\model\entity\GestorPersonaN;
-use src\ubis\application\repositories\CentroDlRepository;
-use src\ubis\application\repositories\DelegacionRepository;
+use src\ubis\domain\contracts\CentroDlRepositoryInterface;
+use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 use web\Hash;
 use web\Periodo;
 use function core\is_true;
@@ -220,7 +220,7 @@ $aWhereActividad['f_ini'] = "'$inicioIso','$finIso'";
 $aOperadorActividad['f_ini'] = 'BETWEEN';
 
 if ($Qgrupo_estudios !== 'todos') {
-    $repoDelegacion = new DelegacionRepository();
+    $repoDelegacion = $GLOBALS['container']->get(DelegacionRepositoryInterface::class);
     $cDelegaciones = $repoDelegacion->getDelegaciones(['grupo_estudios' => $Qgrupo_estudios]);
     if (is_array($cDelegaciones) && count($cDelegaciones) > 1) {
         $aOperadorActividad['dl_org'] = 'OR';
@@ -336,7 +336,7 @@ $cuadro = [];
 if (!empty($a_sel)) { //vengo de un checkbox
     /* para hacerlo compatible con el caso de los centros. miro ahora el nombre del ctr */
     $cOrdPersonas = [];
-    $CentroDlRepository = new CentroDlRepository();
+    $CentroDlRepository = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
     foreach ($cPersonas as $oPersonaDl) {
         $id_ubi = $oPersonaDl->getId_ctr();
         $oCentroDl = $CentroDlRepository->findById($id_ubi);
@@ -349,7 +349,7 @@ if (!empty($a_sel)) { //vengo de un checkbox
     /* para ordenar por orden alfabético de ctr */
     $cOrdPersonas = [];
     $id_ubi_old = '';
-    $CentroDlRepository = new CentroDlRepository();
+    $CentroDlRepository = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
     foreach ($cPersonas as $oPersonaDl) {
         $id_ubi = $oPersonaDl->getId_ctr();
         if ($id_ubi != $id_ubi_old) {

@@ -5,8 +5,9 @@ namespace notas\model;
 use notas\model\entity\GestorPersonaNotaDB;
 use notas\model\entity\GestorPersonaNotaDlDB;
 use personas\model\entity\GestorPersonaDl;
-use src\asignaturas\application\repositories\AsignaturaRepository;
-use src\notas\application\repositories\NotaRepository;
+use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
+use src\notas\domain\contracts\NotaRepositoryInterface;
+use src\notas\domain\entity\Nota;
 use web\Lista;
 
 /**
@@ -28,7 +29,7 @@ class TablaAlumnosAsignaturas
     {
 
         // Asignaturas posibles:
-        $AsignaturaRepository = new AsignaturaRepository();
+        $AsignaturaRepository = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class);
         $aWhere = [];
         $aOperador = [];
         $aWhere['status'] = 't';
@@ -57,7 +58,7 @@ class TablaAlumnosAsignaturas
         }
 
         // array de id_situacion que corresponde a superada
-        $NotaRepository = new NotaRepository();
+        $NotaRepository = $GLOBALS['container']->get(NotaRepositoryInterface::class);
         $a_notas_superada = $NotaRepository->getArrayNotasSuperadas();
 
         $aWhere = [];
@@ -164,7 +165,7 @@ class TablaAlumnosAsignaturas
     public function getTablaDl()
     {
         // Asignaturas posibles:
-        $AsignaturaRepository = new AsignaturaRepository();
+        $AsignaturaRepository = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class);
         $aWhere = [];
         $aOperador = [];
         $aWhere['status'] = 't';
@@ -194,7 +195,7 @@ class TablaAlumnosAsignaturas
         }
 
         // array de id_situacion que corresponde a superada
-        $NotaRepository = new NotaRepository();
+        $NotaRepository = $GLOBALS['container']->get(NotaRepositoryInterface::class);
         $a_notas_superada = $NotaRepository->getArrayNotasSuperadas();
 
         $aWhere = [];

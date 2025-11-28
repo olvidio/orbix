@@ -2,7 +2,7 @@
 
 namespace src\menus\application;
 
-use src\menus\application\repositories\MenuDbRepository;
+use src\menus\domain\contracts\MenuDbRepositoryInterface;
 use src\menus\domain\entity\MenuDb;
 
 class MenuCopiar
@@ -11,7 +11,7 @@ class MenuCopiar
     {
         $error_txt = '';
 
-        $MenuDbRepository = new MenuDbRepository();
+        $MenuDbRepository = $GLOBALS['container']->get(MenuDbRepositoryInterface::class);
         $oMenuDb = $MenuDbRepository->findById($id_menu);
 
         if (empty($oMenuDb)) {

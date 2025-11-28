@@ -92,6 +92,6 @@ trait PlanoOperationsTrait
     /**
      * Método abstracto que debe ser implementado por los repositorios
      */
-    abstract protected function getoDbl(): \PDO;
-    abstract protected function getNomTabla(): string;
+    abstract public function getoDbl(): \PDO;
+    abstract public function getNomTabla(): string;
 }

@@ -1,8 +1,8 @@
 <?php
 namespace core;
 
-use src\menus\application\repositories\GrupMenuRepository;
-use tablonanuncios\domain\TablonAnunciosParaGM;
+use src\menus\domain\contracts\GrupMenuRepositoryInterface;
+use src\tablonanuncios\domain\TablonAnunciosParaGM;
 use web\Hash;
 use web\Lista;
 
@@ -27,7 +27,7 @@ if (empty($id_grupmenu)) {
     }
 }
 
-$GrupMenuRepository = new GrupMenuRepository();
+$GrupMenuRepository = $GLOBALS['container']->get(GrupMenuRepositoryInterface::class);
 if (!empty($grupmenu)) {
     $cGrupMenu = $GrupMenuRepository->getGrupMenus(['grup_menu' => $grupmenu]);
     $oGrupMenu = $cGrupMenu[0];

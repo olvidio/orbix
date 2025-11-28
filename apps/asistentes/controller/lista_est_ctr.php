@@ -5,8 +5,8 @@ use actividadestudios\model\entity\GestorMatricula;
 use asistentes\model\entity\GestorAsistente;
 use personas\model\entity\GestorPersonaDl;
 use personas\model\entity\Persona;
-use src\asignaturas\application\repositories\AsignaturaRepository;
-use src\ubis\application\repositories\CentroDlRepository;
+use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
+use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use web\Lista;
 use web\Periodo;
 use function core\is_true;
@@ -114,7 +114,7 @@ switch ($Qn_agd) {
 }
 
 // primero selecciono los centros
-$GesCentrosDl = new CentroDlRepository();
+$GesCentrosDl = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
 $cCentros = $GesCentrosDl->getCentros($aWhereCtr, $aOperadorCtr);
 $a_valores = [];
 foreach ($cCentros as $oCentroDl) {
@@ -175,11 +175,12 @@ foreach ($cCentros as $oCentroDl) {
                         $asignaturas = '';
                         $GesMatriculas = new GestorMatricula();
                         $cMatriculas = $GesMatriculas->getMatriculas(array('id_nom' => $id_nom, 'id_activ' => $id_activ));
+                        $AsignaturaRepository = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class);
                         foreach ($cMatriculas as $oMatricula) {
                             $id_asignatura = $oMatricula->getId_asignatura();
                             $preceptor = $oMatricula->getPreceptor();
                             $id_preceptor = $oMatricula->getId_preceptor();
-                            $oAsignatura = (new AsignaturaRepository())->findById($id_asignatura);
+                            $oAsignatura = $AsignaturaRepository->findById($id_asignatura);
                             if ($oAsignatura === null) {
                                 throw new \Exception(sprintf(_("No se ha encontrado la asignatura con id: %s"), $id_asignatura));
                             }

@@ -4,7 +4,7 @@ namespace src\personas\domain;
 
 /* No vale el underscore en el nombre */
 
-use src\personas\application\repositories\SituacionRepository;
+use src\personas\domain\contracts\SituacionRepositoryInterface;
 use src\shared\domain\DatosInfoRepo;
 
 class InfoSituacion extends DatosInfoRepo
@@ -32,7 +32,7 @@ class InfoSituacion extends DatosInfoRepo
             $aWhere = array('situacion' => $this->k_buscar);
             $aOperador = array('situacion' => 'sin_acentos');
         }
-        $oLista = new SituacionRepository();
+        $oLista = $GLOBALS['container']->get(SituacionRepositoryInterface::class);
         $Coleccion = $oLista->getSituaciones($aWhere, $aOperador);
 
         return $Coleccion;

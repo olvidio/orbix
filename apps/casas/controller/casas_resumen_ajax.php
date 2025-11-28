@@ -26,8 +26,8 @@ use actividades\model\entity\GestorActividad;
 use casas\model\entity\GestorGrupoCasa;
 use casas\model\entity\GestorUbiGasto;
 use casas\model\entity\Ingreso;
-use src\ubis\application\repositories\CasaDlRepository;
-use src\ubis\application\repositories\CentroEllasRepository;
+use src\ubis\domain\contracts\CasaDlRepositoryInterface;
+use src\ubis\domain\contracts\CentroEllasRepositoryInterface;
 use web\DateTimeLocal;
 use web\Periodo;
 use ubis\model\entity\GestorCasaPeriodo;
@@ -264,7 +264,7 @@ switch ($_POST['cdc_sel']) {
     case 6:
         $aWhere['sf'] = 't';
         // también los centros qeu son como cdc
-        $GesCentrosSf = new CentroEllasRepository();
+        $GesCentrosSf = $GLOBALS['container']->get(CentroEllasRepositoryInterface::class);
         $cCentrosSf = $GesCentrosSf->getCentros(array('cdc' => 't', '_ordre' => 'nombre_ubi'));
         break;
     case 9:
@@ -276,7 +276,7 @@ switch ($_POST['cdc_sel']) {
         break;
 }
 $aWhere['_ordre'] = 'nombre_ubi';
-$GesCasaDl = new CasaDlRepository();
+$GesCasaDl = $GLOBALS['container']->get(CasaDlRepositoryInterface::class);
 $cCasasDl = $GesCasaDl->getCasas($aWhere, $aOperador);
 
 if ($_POST['cdc_sel'] == 6) { //añado los ctr de sf

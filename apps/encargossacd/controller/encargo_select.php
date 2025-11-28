@@ -4,7 +4,7 @@ use core\ViewTwig;
 use encargossacd\model\entity\GestorEncargo;
 use encargossacd\model\entity\GestorEncargoTipo;
 use src\ubis\domain\entity\Ubi;
-use src\usuarios\application\repositories\LocalRepository;
+use src\usuarios\domain\contracts\LocalRepositoryInterface;
 use web\Hash;
 use web\Lista;
 
@@ -95,7 +95,7 @@ foreach ($cEncargos as $oEncargo) {
     }
 
     $idioma = '';
-    $LocalRepository = new LocalRepository();
+    $LocalRepository = $GLOBALS['container']->get(LocalRepositoryInterface::class);
     $cIdiomas = $LocalRepository->getLocales(['idioma' => $idioma_enc]);
     if (is_array($cIdiomas) && count($cIdiomas) > 0) {
         $idioma = $cIdiomas[0]->getNom_idioma();

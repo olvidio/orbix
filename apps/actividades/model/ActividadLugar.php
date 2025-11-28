@@ -9,9 +9,8 @@
 namespace actividades\model;
 
 use core\ConfigGlobal;
-use src\ubis\application\repositories\CasaRepository;
-use src\ubis\application\repositories\CentroRepository;
-use ubis\model\entity\GestorCentroCdc;
+use src\ubis\domain\contracts\CasaRepositoryInterface;
+use src\ubis\domain\contracts\CentroRepositoryInterface;
 use web\Desplegable;
 
 /**
@@ -30,7 +29,7 @@ class ActividadLugar
     {
 
         //dl|dlb,r|Aut
-        $oCasa = (new CasaRepository())->findById($id_ubi);
+        $oCasa = $GLOBALS['container']->get(CasaRepositoryInterface::class)->findById($id_ubi);
         $dl = $oCasa->getDl();
         $reg = $oCasa->getRegion();
 
@@ -89,7 +88,7 @@ class ActividadLugar
         } else {
             $donde = "WHERE status='t'";
         }
-        $CasaRepository = new CasaRepository();
+        $CasaRepository = $GLOBALS['container']->get(CasaRepositoryInterface::class);
         $oOpcionesCasas = $CasaRepository->getArrayCasas($donde);
 
         // Centros (hay una copia en BD comun)
@@ -104,7 +103,7 @@ class ActividadLugar
         }
         $donde_ctr .= $donde_sfsv;
 
-        $centroRepository = new CentroRepository();
+        $centroRepository = $GLOBALS['container']->get(CentroRepositoryInterface::class);
         $oOpcionesCentros = $centroRepository->getArrayCentrosCdc($donde_ctr);
 
         $oOpcionesTotal = $oOpcionesCasas + $oOpcionesCentros;

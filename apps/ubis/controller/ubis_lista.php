@@ -1,7 +1,5 @@
 <?php
-use core\ConfigGlobal;
-use src\ubis\application\repositories\CasaRepository;
-use src\ubis\application\repositories\CentroRepository;
+use core\ConfigGlobal;use src\ubis\domain\contracts\CasaRepositoryInterface;use src\ubis\domain\contracts\CentroRepositoryInterface;
 
 
 /**
@@ -61,14 +59,14 @@ $aWhereCtr['cdc'] = 't';
 
 $a_ubis = [];
 //Casas
-$CasaRepository = new CasaRepository();
+$CasaRepository = $GLOBALS['container']->get(CasaRepositoryInterface::class);
 $cCasas = $CasaRepository->getCasas($aWhereCasa,$aOperadorCasa);
 foreach ($cCasas as $oCasa) {
 	$nombre_ubi = $oCasa->getNombre_ubi();
 	$a_ubis[$nombre_ubi] = $oCasa;
 }
 //Ctrs
-$CentroRepositorry = new CentroRepository();
+$CentroRepositorry = $GLOBALS['container']->get(CentroRepositoryInterface::class);
 $cCtr = $CentroRepositorry->getCentros($aWhereCtr,$aOperadorCtr);
 foreach ($cCtr as $oCentro) {
 	$nombre_ubi = $oCentro->getNombre_ubi();

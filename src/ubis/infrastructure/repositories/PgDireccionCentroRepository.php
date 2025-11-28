@@ -12,7 +12,6 @@ use src\ubis\domain\contracts\DireccionRepositoryInterface;
 use src\ubis\domain\entity\Direccion;
 use function core\is_true;
 
-
 /**
  * Clase que adapta la tabla u_dir_ctr a la interfaz del repositorio
  *

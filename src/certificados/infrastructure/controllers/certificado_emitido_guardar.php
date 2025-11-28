@@ -1,24 +1,13 @@
 <?php
 
-
-// INICIO Cabecera global de URL de controlador *********************************
 use core\ConfigGlobal;
 use core\ServerConf;
 use personas\model\entity\Persona;
-use src\certificados\application\repositories\CertificadoEmitidoRepository;
+use src\certificados\domain\contracts\CertificadoEmitidoRepositoryInterface;
 use src\certificados\domain\entity\CertificadoEmitido;
 use web\ContestarJson;
 use web\DateTimeLocal;
 use function core\is_true;
-
-require_once("apps/core/global_header.inc");
-// Archivos requeridos por esta url **********************************************
-
-// Crea los objetos de uso global **********************************************
-require_once("apps/core/global_object.inc");
-// Crea los objetos por esta url  **********************************************
-
-// FIN de  Cabecera global de URL de controlador ********************************
 
 $Qnuevo = (integer)filter_input(INPUT_POST, 'nuevo');
 $Qid_item = (integer)filter_input(INPUT_POST, 'id_item');
@@ -41,7 +30,7 @@ $oF_enviado = DateTimeLocal::createFromLocal($Qf_enviado);
 
 $error_txt = '';
 
-$certificadoEmitidoRepository = new CertificadoEmitidoRepository();
+$certificadoEmitidoRepository = $GLOBALS['container']->get(CertificadoEmitidoRepositoryInterface::class);
 
 if (is_true($Qnuevo)) {
     $Qid_item = $certificadoEmitidoRepository->getNewId_item();
@@ -68,7 +57,7 @@ $oCertificadoEmitido->setCertificado($Qcertificado);
 if (is_true($Qfirmado)) {
     $firmado = TRUE;
 } else {
-    $firmado = FALSE;
+    $firmado = false;
 }
 $oCertificadoEmitido->setFirmado($firmado);
 $oCertificadoEmitido->setEsquema_emisor(ConfigGlobal::mi_region_dl());
@@ -77,7 +66,7 @@ if (!empty($oF_enviado)) {
     $oCertificadoEmitido->setF_enviado($oF_enviado);
 }
 
-if ($certificadoEmitidoRepository->Guardar($oCertificadoEmitido) === FALSE) {
+if ($certificadoEmitidoRepository->Guardar($oCertificadoEmitido) === false) {
     $error_txt .= $certificadoEmitidoRepository->getErrorTxt();
 }
 // borrar el pdf en log

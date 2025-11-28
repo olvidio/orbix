@@ -1,14 +1,14 @@
 <?php
 
 use core\ConfigGlobal;
-use src\ubis\application\repositories\CasaDlRepository;
-use src\ubis\application\repositories\CasaExRepository;
-use src\ubis\application\repositories\CentroDlRepository;
-use src\ubis\application\repositories\CentroExRepository;
-use src\ubis\application\repositories\DireccionCasaDlRepository;
-use src\ubis\application\repositories\DireccionCasaExRepository;
-use src\ubis\application\repositories\DireccionCentroDlRepository;
-use src\ubis\application\repositories\DireccionCentroExRepository;
+use src\ubis\domain\contracts\CasaDlRepositoryInterface;
+use src\ubis\domain\contracts\CasaExRepositoryInterface;
+use src\ubis\domain\contracts\CentroDlRepositoryInterface;
+use src\ubis\domain\contracts\CentroExRepositoryInterface;
+use src\ubis\domain\contracts\DireccionCasaDlRepositoryInterface;
+use src\ubis\domain\contracts\DireccionCasaExRepositoryInterface;
+use src\ubis\domain\contracts\DireccionCentroDlRepositoryInterface;
+use src\ubis\domain\contracts\DireccionCentroExRepositoryInterface;
 use src\ubis\domain\entity\Direccion;
 use web\DateTimeLocal;
 use function core\is_true;
@@ -54,20 +54,20 @@ $oF_direccion = new DateTimeLocal($Qf_direccion);
 
 switch ($Qobj_dir) {
     case "DireccionCentroDl":
-        $DireccionRepository = new DireccionCentroDlRepository();
-        $UbiRepository = new CentroDlRepository();
+        $DireccionRepository = $GLOBALS['container']->get(DireccionCentroDlRepositoryInterface::class);
+        $UbiRepository = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
         break;
     case "DireccionCentroEx":
-        $DireccionRepository = new DireccionCentroExRepository();
-        $UbiRepository = new CentroExRepository();
+        $DireccionRepository = $GLOBALS['container']->get(DireccionCentroExRepositoryInterface::class);
+        $UbiRepository = $GLOBALS['container']->get(CentroExRepositoryInterface::class);
         break;
     case "DireccionCdcDl":
-        $DireccionRepository = new DireccionCasaDlRepository();
-        $UbiRepository = new CasaDlRepository();
+        $DireccionRepository = $GLOBALS['container']->get(DireccionCasaDlRepositoryInterface::class);
+        $UbiRepository = $GLOBALS['container']->get(CasaDlRepositoryInterface::class);
         break;
     case "DireccionCdcEx":
-        $DireccionRepository = new DireccionCasaExRepository();
-        $UbiRepository = new CasaExRepository();
+        $DireccionRepository = $GLOBALS['container']->get(DireccionCasaExRepositoryInterface::class);
+        $UbiRepository = $GLOBALS['container']->get(CasaExRepositoryInterface::class);
         break;
 }
 

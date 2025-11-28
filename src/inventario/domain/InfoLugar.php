@@ -2,7 +2,7 @@
 
 namespace src\inventario\domain;
 
-use src\inventario\application\repositories\LugarRepository;
+use src\inventario\domain\contracts\LugarRepositoryInterface;
 use src\shared\domain\DatosInfoRepo;
 
 /* No vale el underscore en el nombre */
@@ -34,7 +34,7 @@ class InfoLugar extends DatosInfoRepo
             $aOperador['nom_lugar'] = 'sin_acentos';
         }
 
-        $ColeccionRepository = new LugarRepository();
+        $ColeccionRepository = $GLOBALS['container']->get(LugarRepositoryInterface::class);
         $Coleccion = $ColeccionRepository->getLugares($aWhere, $aOperador);
 
         return $Coleccion;

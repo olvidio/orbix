@@ -4,6 +4,7 @@ namespace src\inventario\domain\entity;
 
 use core\DatosCampo;
 use core\Set;
+use src\inventario\domain\contracts\ColeccionRepositoryInterface;
 use function core\is_true;
 use src\inventario\domain\value_objects\{TipoDocId, TipoDocName, TipoDocSigla, TipoDocObserv, ColeccionId, TipoDocBajoLlave, TipoDocVigente, TipoDocNumerado};
 
@@ -201,7 +202,15 @@ class TipoDoc
      *
      * @return bool|null $bbajo_llave
      */
+    /**
+     * @deprecated Usar `isBajoLlave(): ?bool` en su lugar.
+     */
     public function isBajo_llave(): ?bool
+    {
+        return $this->isBajoLlave();
+    }
+
+    public function isBajoLlave(): ?bool
     {
         return $this->bbajo_llave;
     }
@@ -210,9 +219,17 @@ class TipoDoc
      *
      * @param bool|null $bbajo_llave
      */
+    /**
+     * @deprecated Usar `setBajoLlave(?bool $bajoLlave = null): void` en su lugar.
+     */
     public function setBajo_llave(?bool $bbajo_llave = null): void
     {
-        $this->bbajo_llave = $bbajo_llave;
+        $this->setBajoLlave($bbajo_llave);
+    }
+
+    public function setBajoLlave(?bool $bajoLlave = null): void
+    {
+        $this->bbajo_llave = $bajoLlave;
     }
 
     /**
@@ -397,7 +414,7 @@ class TipoDoc
         $oDatosCampo->setMetodoSet('setId_coleccion');
         $oDatosCampo->setEtiqueta(_("coleccion"));
         $oDatosCampo->setTipo('opciones');
-        $oDatosCampo->setArgument('src\\inventario\\application\\repositories\\ColeccionRepository');
+        $oDatosCampo->setArgument(ColeccionRepositoryInterface::class);
         $oDatosCampo->setArgument2('getNom_coleccion');
         $oDatosCampo->setArgument3('getArrayColecciones');
 

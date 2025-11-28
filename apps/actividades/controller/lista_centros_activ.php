@@ -11,7 +11,7 @@
 
 // INICIO Cabecera global de URL de controlador *********************************
 use actividadescentro\model\entity\GestorCentroEncargado;
-use src\ubis\application\repositories\CentroDlRepository;
+use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use web\Periodo;
 
 require_once("apps/core/global_header.inc");
@@ -54,7 +54,7 @@ if (!empty($Qperiodo) && $Qperiodo === 'desdeHoy') {
 }
 
 
-$CentroRepository = new CentroDlRepository();
+$CentroRepository = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
 if (empty($Qid_ctr_num)) {
     // Todos los ctr de sg
     $aWhere = ['tipo_ctr' => '^s[^s]', '_ordre' => 'nombre_ubi'];

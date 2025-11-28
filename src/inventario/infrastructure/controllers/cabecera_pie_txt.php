@@ -1,28 +1,19 @@
 <?php
 
 use core\ConfigMagik;
-use src\inventario\application\repositories\EquipajeRepository;
+use src\inventario\domain\contracts\EquipajeRepositoryInterface;
 use web\ContestarJson;
-
-// INICIO Cabecera global de URL de controlador *********************************
-require_once("apps/core/global_header.inc");
-// Archivos requeridos por esta url **********************************************
-
-// Crea los objetos de uso global **********************************************
-require_once("apps/core/global_object.inc");
-// FIN de  Cabecera global de URL de controlador ********************************
 
 $error_txt = '';
 
 $Qid_equipaje = (integer)filter_input(INPUT_POST, 'id_equipaje');
-
 
 $cabecera = null;
 $cabeceraB = null;
 $firma = null;
 $pie = null;
 // Comprobar que no tiene textos propios:
-$EquipajeRepository = new EquipajeRepository();
+$EquipajeRepository = $GLOBALS['container']->get(EquipajeRepositoryInterface::class);
 $oEquipaje = $EquipajeRepository->findById($Qid_equipaje);
 if (!empty($oEquipaje)) {
     $cabecera = $oEquipaje->getCabecera();
@@ -34,7 +25,6 @@ if (!empty($oEquipaje)) {
 $file = "../cabecera_pie_textos.ini";
 $Config = new ConfigMagik($file, true, true);
 $Config->SYNCHRONIZE = false;
-
 
 $cabecera = $cabecera ?? $Config->get("cabecera", "texto_tipo");
 $cabeceraB = $cabeceraB ?? $Config->get("cabeceraB", "texto_tipo");

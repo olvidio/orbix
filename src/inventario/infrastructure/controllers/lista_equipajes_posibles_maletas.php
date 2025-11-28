@@ -1,17 +1,9 @@
 <?php
 
-use src\inventario\application\repositories\EgmRepository;
-use src\inventario\application\repositories\EquipajeRepository;
-use src\inventario\application\repositories\LugarRepository;
+use src\inventario\domain\contracts\EgmRepositoryInterface;
+use src\inventario\domain\contracts\EquipajeRepositoryInterface;
+use src\inventario\domain\contracts\LugarRepositoryInterface;
 use web\ContestarJson;
-
-// INICIO Cabecera global de URL de controlador *********************************
-require_once("apps/core/global_header.inc");
-// Archivos requeridos por esta url **********************************************
-
-// Crea los objetos de uso global **********************************************
-require_once("apps/core/global_object.inc");
-// FIN de  Cabecera global de URL de controlador ********************************
 
 $Qid_equipaje = (string)filter_input(INPUT_POST, 'id_equipaje');
 
@@ -23,18 +15,18 @@ $error_txt = '';
 $id_ubi = 40;
 // quitar las ya asignadas
 // equipajes coincidentes
-$EquipajeRepository = new EquipajeRepository();
+$EquipajeRepository = $GLOBALS['container']->get(EquipajeRepositoryInterface::class);
 $oEquipaje = $EquipajeRepository->findById($Qid_equipaje);
 $f_ini_iso = $oEquipaje->getF_ini()->getIso();
 $f_fin_iso = $oEquipaje->getF_fin()->getIso();
 $aEquipajes = $EquipajeRepository->getEquipajesCoincidentes($f_ini_iso, $f_fin_iso);
-$EgmRepository = new EgmRepository();
+$EgmRepository = $GLOBALS['container']->get(EgmRepositoryInterface::class);
 $aEgms = $EgmRepository->getArrayIdFromIdEquipajes($aEquipajes, 'lugar');
 
 // último id_grupo:
 $new_id_grupo = $EgmRepository->getUltimoGrupo($Qid_equipaje) + 1;
 
-$LugarRepository = new LugarRepository();
+$LugarRepository = $GLOBALS['container']->get(LugarRepositoryInterface::class);
 $cLugares = $LugarRepository->getLugares(['id_ubi' => $id_ubi]);
 $aOpciones = [];
 foreach ($cLugares as $oLugar) {

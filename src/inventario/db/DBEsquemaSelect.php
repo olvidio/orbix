@@ -116,7 +116,6 @@ class DBEsquemaSelect extends DBEsquema
         $a_sql[] = "CREATE INDEX IF NOT EXISTS {$tabla}_id_tipo_doc ON $nom_tabla USING btree (id_tipo_doc); ";
         $a_sql[] = "CREATE INDEX IF NOT EXISTS {$tabla}_id_ubi ON $nom_tabla USING btree (id_ubi); ";
 
-
         $this->executeSql($a_sql);
         $this->delPermisoGlobal('sfsv-e_select');
         // Devolver los valores al estado original
@@ -340,7 +339,6 @@ class DBEsquemaSelect extends DBEsquema
         // OJO Corresponde al esquema sf-e/sv-e, no al comun.
         $this->eliminarDeSVESelect("i_ubis");
     }
-
 
     public function create_whereis_select()
     {

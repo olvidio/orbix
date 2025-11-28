@@ -4,10 +4,10 @@
 
 use core\ConfigGlobal;
 use core\ViewTwig;
-use src\ubis\application\repositories\CentroDlRepository;
-use src\ubis\application\repositories\CentroEllasRepository;
-use src\usuarios\application\repositories\RoleRepository;
-use src\usuarios\application\repositories\UsuarioRepository;
+use src\ubis\domain\contracts\CentroDlRepositoryInterface;
+use src\ubis\domain\contracts\CentroEllasRepositoryInterface;
+use src\usuarios\domain\contracts\RoleRepositoryInterface;
+use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
 use web\DateTimeLocal;
 use web\Desplegable;
 use web\Hash;
@@ -28,11 +28,11 @@ $id_sacd='';
 $id_ubi='';
 
 
-$UsuarioRepository = new UsuarioRepository();
+$UsuarioRepository = $GLOBALS['container']->get(UsuarioRepositoryInterface::class);
 $oMiUsuario = $UsuarioRepository->findById(ConfigGlobal::mi_id_usuario());
 $id_role = $oMiUsuario->getId_role();
 
-$RoleRepository = new RoleRepository();
+$RoleRepository = $GLOBALS['container']->get(RoleRepositoryInterface::class);
 $aRoles = $RoleRepository->getArrayRoles();
 echo $aRoles[$id_role];
 
@@ -77,9 +77,9 @@ if (isset($Qid_zona)) {
     $aWhere['status'] = 't';
     $aWhere['id_zona'] = $Qid_zona;
     $aWhere['_ordre'] = 'nombre_ubi';
-    $GesCentrosDl = new CentroDlRepository();
+    $GesCentrosDl = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
     $cCentrosDl = $GesCentrosDl->getCentros($aWhere);
-    $GesCentrosSf = new CentroEllasRepository();
+    $GesCentrosSf = $GLOBALS['container']->get(CentroEllasRepositoryInterface::class);
     $cCentrosSf = $GesCentrosSf->getCentros($aWhere);
     $cCentros = array_merge($cCentrosDl, $cCentrosSf);
 

@@ -4,9 +4,9 @@ use core\ViewTwig;
 use encargossacd\model\DesplCentros;
 use encargossacd\model\entity\Encargo;
 use encargossacd\model\entity\GestorEncargoTipo;
-use src\ubis\application\repositories\CentroDlRepository;
-use src\ubis\application\repositories\CentroEllasRepository;
-use src\usuarios\application\repositories\LocalRepository;
+use src\ubis\domain\contracts\CentroDlRepositoryInterface;
+use src\ubis\domain\contracts\CentroEllasRepositoryInterface;
+use src\usuarios\domain\contracts\LocalRepositoryInterface;
 use web\Desplegable;
 use web\Hash;
 use zonassacd\model\entity\GestorZona;
@@ -45,10 +45,10 @@ function filtro($id_ubi)
 {
     $id_ubi_str = (string)$id_ubi;
     if ((int)$id_ubi_str[0] === 2) {
-        $CentroEllasRepository = new CentroEllasRepository();
+        $CentroEllasRepository = $GLOBALS['container']->get(CentroEllasRepositoryInterface::class);
         $oCentro = $CentroEllasRepository->findById($id_ubi);
     } else {
-        $CentroDlRepository = new CentroDlRepository();
+        $CentroDlRepository = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
         $oCentro = $CentroDlRepository->findById($id_ubi);
     }
     $tipo_ubi = $oCentro->getTipo_ubi();
@@ -200,7 +200,7 @@ if (!empty($Qid_ubi)) {
     $oDesplCtrs->setOpcion_sel($Qid_ubi);
 }
 
-$LocaleRepository = new LocalRepository();
+$LocaleRepository = $GLOBALS['container']->get(LocalRepositoryInterface::class);
 $a_locales = $LocaleRepository->getArrayLocales();
 $oDesplIdiomas = new Desplegable("idioma_enc", $a_locales, $idioma_enc, true);
 

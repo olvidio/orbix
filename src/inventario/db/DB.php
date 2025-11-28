@@ -72,7 +72,6 @@ class DB extends DBAbstract
         $this->delPermisoGlobal('sfsv');
     }
 
-
     public function eliminar_colecciones()
     {
         $this->addPermisoGlobal('sfsv');
@@ -123,7 +122,6 @@ class DB extends DBAbstract
         $this->delPermisoGlobal('sfsv');
     }
 
-
     public function eliminar_documentos()
     {
         $this->addPermisoGlobal('sfsv');
@@ -160,7 +158,6 @@ class DB extends DBAbstract
 
         $this->delPermisoGlobal('sfsv');
     }
-
 
     public function eliminar_egm()
     {
@@ -204,7 +201,6 @@ class DB extends DBAbstract
         $this->delPermisoGlobal('sfsv');
     }
 
-
     public function eliminar_equipajes()
     {
         $this->addPermisoGlobal('sfsv');
@@ -239,7 +235,6 @@ class DB extends DBAbstract
 
         $this->delPermisoGlobal('sfsv');
     }
-
 
     public function eliminar_lugares()
     {
@@ -281,7 +276,6 @@ class DB extends DBAbstract
         $this->delPermisoGlobal('sfsv');
     }
 
-
     public function eliminar_tipo_documento()
     {
         $this->addPermisoGlobal('sfsv');
@@ -316,7 +310,6 @@ class DB extends DBAbstract
 
         $this->delPermisoGlobal('sfsv');
     }
-
 
     public function eliminar_ubis()
     {
@@ -353,7 +346,6 @@ class DB extends DBAbstract
         $this->delPermisoGlobal('sfsv');
     }
 
-
     public function eliminar_whereis()
     {
         $this->addPermisoGlobal('sfsv');
@@ -364,6 +356,5 @@ class DB extends DBAbstract
 
         $this->delPermisoGlobal('sfsv');
     }
-
 
 }

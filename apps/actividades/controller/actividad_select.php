@@ -23,7 +23,6 @@
  *
  */
 
-use actividades\model\entity\Actividad;
 use actividades\model\entity\ActividadAll;
 use actividades\model\entity\GestorActividad;
 use actividades\model\entity\GestorActividadPub;
@@ -34,12 +33,11 @@ use core\ConfigGlobal;
 use core\ViewPhtml;
 use permisos\model\PermisosActividadesTrue;
 use procesos\model\entity\GestorActividadProcesoTarea;
-use src\ubis\application\repositories\CasaRepository;
-use src\ubis\application\repositories\CentroRepository;
-use src\usuarios\application\repositories\PreferenciaRepository;
-use src\usuarios\application\repositories\RoleRepository;
+use src\ubis\domain\contracts\CasaRepositoryInterface;
+use src\ubis\domain\contracts\CentroRepositoryInterface;
+use src\usuarios\domain\contracts\PreferenciaRepositoryInterface;
+use src\usuarios\domain\contracts\RoleRepositoryInterface;
 use src\usuarios\domain\entity\Role;
-use ubis\model\entity\GestorCentroCdc;
 use web\DateTimeLocal;
 use web\Hash;
 use web\Lista;
@@ -245,7 +243,7 @@ if (!empty($Qmodo) && $Qmodo === 'publicar') {
 $oMiUsuario = ConfigGlobal::MiUsuario();
 $id_role = $oMiUsuario->getId_role();
 
-$RoleRepository = new RoleRepository();
+$RoleRepository = $GLOBALS['container']->get(RoleRepositoryInterface::class);
 $aRoles = $RoleRepository->getArrayRoles();
 $aRolesPau = $RoleRepository->getArrayRolesPau();
 
@@ -363,10 +361,10 @@ if ($num_activ > $num_max_actividades && empty($Qcontinuar)) {
 }
 
 // casas de cv
-$CasaRepository = new CasaRepository();
+$CasaRepository = $GLOBALS['container']->get(CasaRepositoryInterface::class);
 $a_OpcionesCasas = $CasaRepository->getArrayCasas();
 // más los centros que pueden ser cdc
-$CentroRepository = new CentroRepository();
+$CentroRepository = $GLOBALS['container']->get(CentroRepositoryInterface::class);
 $a_OpcionesCentros = $CentroRepository->getArrayCentrosCdc();
 
 $a_casas = $a_OpcionesCasas + $a_OpcionesCentros;
@@ -380,7 +378,7 @@ $a_FechaIni = [];
 $sPrefs = '';
 $id_usuario = ConfigGlobal::mi_id_usuario();
 $tipo = 'tabla_presentacion';
-$PreferenciaRepository = new PreferenciaRepository();
+$PreferenciaRepository = $GLOBALS['container']->get(PreferenciaRepositoryInterface::class);
 $oPreferencia = $PreferenciaRepository->findById($id_usuario, $tipo);
 if ($oPreferencia !== null) {
     $sPrefs = $oPreferencia->getPreferencia();

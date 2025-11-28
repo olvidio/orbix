@@ -10,7 +10,6 @@ use PDOException;
 use src\ubis\domain\contracts\TelecoUbiRepositoryInterface;
 use src\ubis\domain\entity\TelecoUbi;
 
-
 /**
  * Clase que adapta la tabla d_teleco_cdc a la interfaz del repositorio
  *
@@ -30,7 +29,7 @@ abstract class PgTelecoUbiRepository extends ClaseRepository implements TelecoUb
      *
      * @param array $aWhere asociativo con los valores para cada campo de la BD.
      * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array|FALSE Una colección de objetos de tipo TelecoCdc
+     * @return array|false Una colección de objetos de tipo TelecoCdc
      */
     public function getTelecos(array $aWhere = [], array $aOperators = []): array|false
     {
@@ -80,15 +79,15 @@ abstract class PgTelecoUbiRepository extends ClaseRepository implements TelecoUb
             unset($aWhere['_limit']);
         }
         $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
-        if (($oDblSt = $oDbl->prepare($sQry)) === FALSE) {
+        if (($oDblSt = $oDbl->prepare($sQry)) === false) {
             $sClaveError = 'PgTelecoCdcRepository.listar.prepare';
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return FALSE;
+            return false;
         }
-        if (($oDblSt->execute($aWhere)) === FALSE) {
+        if (($oDblSt->execute($aWhere)) === false) {
             $sClaveError = 'PgTelecoCdcRepository.listar.execute';
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
-            return FALSE;
+            return false;
         }
 
         $filas = $oDblSt->fetchAll(PDO::FETCH_ASSOC);
@@ -107,14 +106,13 @@ abstract class PgTelecoUbiRepository extends ClaseRepository implements TelecoUb
         $id_item = $TelecoCdc->getId_item();
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        if (($oDbl->exec("DELETE FROM $nom_tabla WHERE id_item = $id_item")) === FALSE) {
+        if (($oDbl->exec("DELETE FROM $nom_tabla WHERE id_item = $id_item")) === false) {
             $sClaveError = 'PgTelecoCdcRepository.eliminar';
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return FALSE;
+            return false;
         }
         return TRUE;
     }
-
 
     /**
      * Si no existe el registro, hace un insert, si existe, se hace el update.
@@ -134,7 +132,7 @@ abstract class PgTelecoUbiRepository extends ClaseRepository implements TelecoUb
         $aDatos['observ'] = $TelecoCdc->getObserv();
         array_walk($aDatos, 'core\poner_null');
 
-        if ($bInsert === FALSE) {
+        if ($bInsert === false) {
             //UPDATE
             $update = "
 					id_ubi                   = :id_ubi,
@@ -142,10 +140,10 @@ abstract class PgTelecoUbiRepository extends ClaseRepository implements TelecoUb
 					desc_teleco              = :desc_teleco,
 					num_teleco               = :num_teleco,
 					observ                   = :observ";
-            if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_item = $id_item")) === FALSE) {
+            if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_item = $id_item")) === false) {
                 $sClaveError = 'PgTelecoCdcRepository.update.prepare';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-                return FALSE;
+                return false;
             }
 
             try {
@@ -155,17 +153,17 @@ abstract class PgTelecoUbiRepository extends ClaseRepository implements TelecoUb
                 $this->setErrorTxt($err_txt);
                 $sClaveError = 'PgTelecoCdcRepository.update.execute';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
-                return FALSE;
+                return false;
             }
         } else {
             // INSERT
             $aDatos['id_item'] = $TelecoCdc->getId_item();
             $campos = "(id_ubi,id_tipo_teleco,desc_teleco,num_teleco,observ,id_item)";
             $valores = "(:id_ubi,:id_tipo_teleco,:desc_teleco,:num_teleco,:observ,:id_item)";
-            if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === FALSE) {
+            if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {
                 $sClaveError = 'PgTelecoCdcRepository.insertar.prepare';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-                return FALSE;
+                return false;
             }
             try {
                 $oDblSt->execute($aDatos);
@@ -174,7 +172,7 @@ abstract class PgTelecoUbiRepository extends ClaseRepository implements TelecoUb
                 $this->setErrorTxt($err_txt);
                 $sClaveError = 'PgTelecoCdcRepository.insertar.execute';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
-                return FALSE;
+                return false;
             }
         }
         return TRUE;
@@ -184,15 +182,15 @@ abstract class PgTelecoUbiRepository extends ClaseRepository implements TelecoUb
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_item = $id_item")) === FALSE) {
+        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_item = $id_item")) === false) {
             $sClaveError = 'PgTelecoCdcRepository.isNew';
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return FALSE;
+            return false;
         }
         if (!$oDblSt->rowCount()) {
             return TRUE;
         }
-        return FALSE;
+        return false;
     }
 
     /**
@@ -206,15 +204,14 @@ abstract class PgTelecoUbiRepository extends ClaseRepository implements TelecoUb
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
-        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_item = $id_item")) === FALSE) {
+        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_item = $id_item")) === false) {
             $sClaveError = 'PgTelecoCdcRepository.getDatosById';
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return FALSE;
+            return false;
         }
         $aDatos = $oDblSt->fetch(PDO::FETCH_ASSOC);
         return $aDatos;
     }
-
 
     /**
      * Busca la clase con id_item en la base de datos .

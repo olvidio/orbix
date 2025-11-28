@@ -6,8 +6,8 @@ use encargossacd\model\EncargoFunciones;
 use encargossacd\model\entity\GestorEncargo;
 use encargossacd\model\entity\GestorEncargoSacd;
 use personas\model\entity\Persona;
-use src\ubis\application\repositories\CentroDlRepository;
-use src\ubis\application\repositories\CentroEllasRepository;
+use src\ubis\domain\contracts\CentroDlRepositoryInterface;
+use src\ubis\domain\contracts\CentroEllasRepositoryInterface;
 use web\DateTimeLocal;
 
 /* Listado de ateción sacd. según cr 9/05, Anexo2,9.4 a) 
@@ -79,10 +79,10 @@ foreach ($tipos_de_ctr as $tipo_ctr_que) {
     $aOperador['tipo_ctr'] = '~';
     $aWhere['_ordre'] = 'nombre_ubi';
     if ($Qsf == 1) {
-        $GesCentros = new CentroEllasRepository();
+        $GesCentros = $GLOBALS['container']->get(CentroEllasRepositoryInterface::class);
         $cCentros = $GesCentros->getCentros($aWhere, $aOperador);
     } else {
-        $GesCentros = new CentroDlRepository();
+        $GesCentros = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
         $cCentros = $GesCentros->getCentros($aWhere, $aOperador);
     }
     // Bucle por cada centro

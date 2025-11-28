@@ -2,7 +2,7 @@
 
 use core\ConfigGlobal;
 use notas\model\Resumen;
-use src\ubis\application\repositories\DelegacionRepository;
+use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 
 /**
  * Esta página sirve para comprobar las notas de la tabla e_notas.
@@ -57,7 +57,7 @@ $lista = empty($Qlista) ? false : true;
 $Resumen = new Resumen('agregados');
 if (!empty($Qdl)) {
     $region_stgr = ConfigGlobal::mi_dele();
-    $repoDelegacion = new DelegacionRepository();
+    $repoDelegacion = $GLOBALS['container']->get(DelegacionRepositoryInterface::class);
     $a_delegacionesStgr = $repoDelegacion->getArrayDlRegionStgr([$region_stgr]);
     $a_dl = [];
     foreach ($Qdl as $id_dl) {

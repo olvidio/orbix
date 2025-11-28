@@ -1,22 +1,14 @@
 <?php
 
 use personas\model\entity\Persona;
-use src\certificados\application\repositories\CertificadoEmitidoRepository;
+use src\certificados\domain\contracts\CertificadoEmitidoRepositoryInterface;
 use web\ContestarJson;
-
-// INICIO Cabecera global de URL de controlador *********************************
-require_once("apps/core/global_header.inc");
-// Archivos requeridos por esta url **********************************************
-
-// Crea los objetos de uso global **********************************************
-require_once("apps/core/global_object.inc");
-// FIN de  Cabecera global de URL de controlador ********************************
 
 $Qid_item = (int)filter_input(INPUT_POST, 'id_item');
 
 $error_txt = '';
 
-$certificadoEmitidoRepository = new CertificadoEmitidoRepository();
+$certificadoEmitidoRepository = $GLOBALS['container']->get(CertificadoEmitidoRepositoryInterface::class);
 $oCertificadoEmitido = $certificadoEmitidoRepository->findById($Qid_item);
 
 $id_nom = $oCertificadoEmitido->getId_nom();

@@ -5,16 +5,17 @@
 use core\ConfigGlobal;
 use core\ViewTwig;
 use misas\domain\entity\InicialesSacd;
-//use personas\model\entity\GestorPersona;
 use personas\model\entity\GestorPersonaSacd;
-use src\usuarios\application\repositories\RoleRepository;
-use src\usuarios\application\repositories\UsuarioRepository;
+use src\usuarios\domain\contracts\RoleRepositoryInterface;
+use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
 use web\DateTimeLocal;
 use web\Desplegable;
 use web\Hash;
 use web\PeriodoQue;
 use zonassacd\model\entity\GestorZona;
 use zonassacd\model\entity\GestorZonaSacd;
+
+//use personas\model\entity\GestorPersona;
 
 require_once("apps/core/global_header.inc");
 // Archivos requeridos por esta url **********************************************
@@ -30,7 +31,7 @@ $aPeriodo = array(
     'proximo_mes' => _("próximo mes"),
     'separador' => '---------',
     'otro' => _("otro")
-); 
+);
 
 $oDesplPeriodo = new Desplegable();
 $oDesplPeriodo->setOpciones($aPeriodo);
@@ -54,14 +55,14 @@ $oFormP->setDesplPeriodosOpcion_sel('esta_semana');
 $oFormP->setisDesplAnysVisible(FALSE);
 
 $ohoy = new DateTimeLocal(date('Y-m-d'));
-$shoy = $ohoy ->format('d/m/Y');
+$shoy = $ohoy->format('d/m/Y');
 
 $oFormP->setEmpiezaMin($shoy);
 $oFormP->setEmpiezaMax($shoy);
 
 $id_nom_jefe = '';
 
-$UsuarioRepository = new UsuarioRepository();
+$UsuarioRepository = $GLOBALS['container']->get(UsuarioRepositoryInterface::class);
 $oMiUsuario = $UsuarioRepository->findById(ConfigGlobal::mi_id_usuario());
 $id_role = $oMiUsuario->getId_role();
 //echo 'id_role: '.$id_role.'<br>';
@@ -72,7 +73,7 @@ $id_usuario = ConfigGlobal::mi_id_usuario();
 $id_sacd = $oMiUsuario->getId_pauAsString();
 //echo 'id_sacd: '.$id_sacd.'<br>';
 
-$RoleRepository = new RoleRepository();
+$RoleRepository = $GLOBALS['container']->get(RoleRepositoryInterface::class);
 $aRoles = $RoleRepository->getArrayRoles();
 
 //echo 'aRoles'.$aRoles[$id_role].'<br>';
@@ -101,27 +102,25 @@ if (is_array($cZonas) && count($cZonas) > 0) {
         foreach ($cSacds as $id_nom) {
 //            echo $id_nom.'<br>';
             $InicialesSacd = new InicialesSacd();
-            $sacd=$InicialesSacd->nombre_sacd($id_nom);
-            $iniciales=$InicialesSacd->iniciales($id_nom);
+            $sacd = $InicialesSacd->nombre_sacd($id_nom);
+            $iniciales = $InicialesSacd->iniciales($id_nom);
             $key = $id_nom . '#' . $iniciales;
             $a_sacd[$key] = $sacd ?? '?';
         }
     }
 } else { // No soy jefe de zona
-    if (!is_null($id_sacd))
-    {
+    if (!is_null($id_sacd)) {
         $InicialesSacd = new InicialesSacd();
 //        echo is_null($id_sacd).'='.($id_sacd=='').'=='.$id_sacd.'<br>';
-        $sacd=$InicialesSacd->nombre_sacd($id_sacd);
+        $sacd = $InicialesSacd->nombre_sacd($id_sacd);
 //        echo is_null($id_sacd).'-->'.$sacd.'<br>';
-        $iniciales=$InicialesSacd->iniciales($id_sacd);
+        $iniciales = $InicialesSacd->iniciales($id_sacd);
         $key = $id_sacd . '#' . $iniciales;
         $a_sacd[$key] = $sacd ?? '?';
     }
 }
 
-if ($aRoles[$id_role]==='Oficial_dl')
-{
+if ($aRoles[$id_role] === 'Oficial_dl') {
     echo 'OFICIAL DL<br>';
     $aWhere = [];
     $aOperador = [];
@@ -135,8 +134,8 @@ if ($aRoles[$id_role]==='Oficial_dl')
     foreach ($cPersonas as $oPersona) {
         $id_nom = $oPersona->getId_nom();
         $InicialesSacd = new InicialesSacd();
-        $sacd=$InicialesSacd->nombre_sacd($id_nom);
-        $iniciales=$InicialesSacd->iniciales($id_nom);
+        $sacd = $InicialesSacd->nombre_sacd($id_nom);
+        $iniciales = $InicialesSacd->iniciales($id_nom);
         $key = $id_nom . '#' . $iniciales;
         $a_sacd[$key] = $sacd ?? '?';
     }
@@ -160,6 +159,6 @@ $a_campos = ['oPosicion' => $oPosicion,
     'url_ver_plan_sacd' => $url_ver_plan_sacd,
     'h_plan_sacd' => $h_plan_sacd,
 ];
- 
+
 $oView = new ViewTwig('misas/controller');
 echo $oView->render('buscar_plan_sacd.html.twig', $a_campos);

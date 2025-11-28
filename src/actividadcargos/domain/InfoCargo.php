@@ -4,7 +4,7 @@ namespace src\actividadcargos\domain;
 
 /* No vale el underscore en el nombre */
 
-use src\actividadcargos\application\repositories\CargoRepository;
+use src\actividadcargos\domain\contracts\CargoRepositoryInterface;
 use src\shared\domain\DatosInfoRepo;
 
 class InfoCargo extends DatosInfoRepo
@@ -32,7 +32,7 @@ class InfoCargo extends DatosInfoRepo
             $aWhere = array('cargo' => $this->k_buscar);
             $aOperador = array('cargo' => 'sin_acentos');
         }
-        $oLista = new CargoRepository();
+        $oLista = $GLOBALS['container']->get(CargoRepositoryInterface::class);
         $Coleccion = $oLista->getCargos($aWhere, $aOperador);
 
         return $Coleccion;

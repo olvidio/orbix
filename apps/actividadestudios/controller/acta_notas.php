@@ -7,8 +7,9 @@ use core\ConfigGlobal;
 use core\ViewPhtml;
 use notas\model\entity\GestorActa;
 use personas\model\entity\Persona;
-use src\notas\application\repositories\NotaRepository;
+use src\notas\domain\contracts\NotaRepositoryInterface;
 use src\notas\domain\entity\Nota;
+use src\utils_database\domain\contracts\DbSchemaRepositoryInterface;
 use web\Desplegable;
 use web\Hash;
 use web\Posicion;
@@ -64,8 +65,8 @@ $GesActivAsignaturas = new GestorActividadAsignatura();
 $cActivAsignaturas = $GesActivAsignaturas->getActividadAsignaturas(array('id_activ' => $id_activ, 'id_asignatura' => $id_asignatura));
 $oActividadAsignatura = $cActivAsignaturas[0];
 $id_schema = $oActividadAsignatura->getId_schema();
-$gesDbSchemas = new GestorDbSchema();
-$cDbSchemas = $gesDbSchemas->getDbSchemas(['id' => $id_schema]);
+$DbSchemaRepository = $GLOBALS['container']->get(DbSchemaRepositoryInterface::class);
+$cDbSchemas = $DbSchemaRepository->getDbSchemas(['id' => $id_schema]);
 $a_reg = explode('-', $cDbSchemas[0]->getSchema());
 $dl_matricula = substr($a_reg[1], 0, -1); // quito la v o la f.
 if ($mi_dele === $dl_matricula) {
@@ -74,7 +75,7 @@ if ($mi_dele === $dl_matricula) {
     $permiso = 1;
 }
 
-$NotaRepository = new NotaRepository();
+$NotaRepository = $GLOBALS['container']->get(NotaRepositoryInterface::class);
 $aOpciones = $NotaRepository->getArrayNotas();
 $oDesplNotas = new Desplegable();
 $oDesplNotas->setOpciones($aOpciones);

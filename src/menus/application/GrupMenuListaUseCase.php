@@ -2,13 +2,14 @@
 
 namespace src\menus\application;
 
-use src\menus\application\repositories\GrupMenuRepository;
+
+use src\menus\domain\contracts\GrupMenuRepositoryInterface;
 
 class GrupMenuListaUseCase
 {
     public function __invoke()
     {
-        $GrupMenuRepository = new GrupMenuRepository();
+        $GrupMenuRepository = $GLOBALS['container']->get(GrupMenuRepositoryInterface::class);
         $cGrupMenus = $GrupMenuRepository->getGrupMenus(['_ordre' => 'orden']);
 
         $a_lista = [];

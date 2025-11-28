@@ -19,7 +19,7 @@ use core\ViewPhtml;
 use personas\model\entity\GestorPersonaAgd;
 use personas\model\entity\GestorPersonaDl;
 use personas\model\entity\GestorPersonaN;
-use src\ubis\application\repositories\CentroDlRepository;
+use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use web\Hash;
 use web\Lista;
 
@@ -166,7 +166,7 @@ foreach ($aFaltan as $ap_nom => $aDatos) {
     $id_ubi = $aDatos['id_ubi'];
     $nivel_stgr = $aDatos['nivel_stgr'];
 
-    $CentroDlRepository = new CentroDlRepository();
+    $CentroDlRepository = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
     $oCentroDl = $CentroDlRepository->findById($id_ubi);
     $nombre_ubi = $oCentroDl->getNombre_ubi();
 
@@ -221,7 +221,7 @@ foreach ($aFaltanOtras as $ap_nom => $aDatos) {
     $id_ubi = $aDatos['id_ubi'];
     $nivel_stgr = $aDatos['nivel_stgr'];
 
-    $CentroDlRepository = new CentroDlRepository();
+    $CentroDlRepository = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
     $oCentroDl = $CentroDlRepository->findById($id_ubi);
     $nombre_ubi = $oCentroDl->getNombre_ubi();
 

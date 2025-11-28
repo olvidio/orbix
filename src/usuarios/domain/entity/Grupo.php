@@ -82,7 +82,6 @@ class Grupo
         $this->iid_usuario = $iid_usuario;
     }
 
-
     /**
      *
      * @return Username

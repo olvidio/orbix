@@ -91,7 +91,6 @@ class DBEsquema extends DBAbstract
          *  que ya había sido instalado y se había desactivado, pero no borrado.
          */
 
-
         $a_sql = [];
         $a_sql[] = "CREATE TABLE IF NOT EXISTS $nom_tabla (
                         CONSTRAINT $nompkey PRIMARY KEY (id_item)

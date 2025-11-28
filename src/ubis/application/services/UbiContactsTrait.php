@@ -2,7 +2,27 @@
 
 namespace src\ubis\application\services;
 
-use src\ubis\application\repositories\DescTelecoRepository;
+
+use src\ubis\domain\contracts\DescTelecoRepositoryInterface;
+use src\ubis\domain\contracts\DireccionCasaDlRepositoryInterface;
+use src\ubis\domain\contracts\DireccionCasaExRepositoryInterface;
+use src\ubis\domain\contracts\DireccionCasaRepositoryInterface;
+use src\ubis\domain\contracts\DireccionCentroDlRepositoryInterface;
+use src\ubis\domain\contracts\DireccionCentroExRepositoryInterface;
+use src\ubis\domain\contracts\DireccionCentroRepositoryInterface;
+use src\ubis\domain\contracts\RelacionCasaDireccionRepositoryInterface;
+use src\ubis\domain\contracts\RelacionCasaDlDireccionRepositoryInterface;
+use src\ubis\domain\contracts\RelacionCasaExDireccionRepositoryInterface;
+use src\ubis\domain\contracts\RelacionCentroDireccionRepositoryInterface;
+use src\ubis\domain\contracts\RelacionCentroDlDireccionRepositoryInterface;
+use src\ubis\domain\contracts\RelacionCentroExDireccionRepositoryInterface;
+use src\ubis\domain\contracts\TelecoCdcDlRepositoryInterface;
+use src\ubis\domain\contracts\TelecoCdcExRepositoryInterface;
+use src\ubis\domain\contracts\TelecoCdcRepositoryInterface;
+use src\ubis\domain\contracts\TelecoCtrDlRepositoryInterface;
+use src\ubis\domain\contracts\TelecoCtrExRepositoryInterface;
+use src\ubis\domain\contracts\TelecoCtrRepositoryInterface;
+use src\ubis\domain\contracts\TelecoUbiRepositoryInterface;
 
 trait UbiContactsTrait
 {
@@ -21,32 +41,31 @@ trait UbiContactsTrait
         $childClassName = end($aClassName);
         switch ($childClassName) {
             case 'Centro':
-                $repoCasaDireccion = 'src\\ubis\\application\\repositories\\RelacionCentroDireccionRepository';
-                $repoDireccion = 'src\\ubis\\application\\repositories\\DireccionCentroRepository';
+                $repoCasaDireccion = $GLOBALS['container']->get(RelacionCentroDireccionRepositoryInterface::class);
+                $repoDireccion = $GLOBALS['container']->get(DireccionCentroRepositoryInterface::class);
                 break;
             case 'CentroDl':
-                $repoCasaDireccion = 'src\\ubis\\application\\repositories\\RelacionCentroDlDireccionRepository';
-                $repoDireccion = 'src\\ubis\\application\\repositories\\DireccionCentroDlRepository';
+                $repoCasaDireccion = $GLOBALS['container']->get(RelacionCentroDlDireccionRepositoryInterface::class);
+                $repoDireccion = $GLOBALS['container']->get(DireccionCentroDlRepositoryInterface::class);
                 break;
             case 'CentroEx':
-                $repoCasaDireccion = 'src\\ubis\\application\\repositories\\RelacionCentroExDireccionRepository';
-                $repoDireccion = 'src\\ubis\\application\\repositories\\DireccionCentroExRepository';
+                $repoCasaDireccion = $GLOBALS['container']->get(RelacionCentroExDireccionRepositoryInterface::class);
+                $repoDireccion = $GLOBALS['container']->get(DireccionCentroExRepositoryInterface::class);
                 break;
             case 'Casa':
-                $repoCasaDireccion = 'src\\ubis\\application\\repositories\\RelacionCasaDireccionRepository';
-                $repoDireccion = 'src\\ubis\\application\\repositories\\DireccionCasaRepository';
+                $repoCasaDireccion = $GLOBALS['container']->get(RelacionCasaDireccionRepositoryInterface::class);
+                $repoDireccion = $GLOBALS['container']->get(DireccionCasaRepositoryInterface::class);
                 break;
             case 'CasaDl':
-                $repoCasaDireccion = 'src\\ubis\\application\\repositories\\RelacionCasaDlDireccionRepository';
-                $repoDireccion = 'src\\ubis\\application\\repositories\\DireccionCasaDlRepository';
+                $repoCasaDireccion = $GLOBALS['container']->get(RelacionCasaDlDireccionRepositoryInterface::class);
+                $repoDireccion = $GLOBALS['container']->get(DireccionCasaDlRepositoryInterface::class);
                 break;
             case 'CasaEx':
-                $repoCasaDireccion = 'src\\ubis\\application\\repositories\\RelacionCasaExDireccionRepository';
-                $repoDireccion = 'src\\ubis\\application\\repositories\\DireccionCasaExRepository';
+                $repoCasaDireccion = $GLOBALS['container']->get(RelacionCasaExDireccionRepositoryInterface::class);
+                $repoDireccion = $GLOBALS['container']->get(DireccionCasaExRepositoryInterface::class);
                 break;
         }
-        $GesUbixDireccion = new $repoCasaDireccion();
-        $cUbixDireccion = $GesUbixDireccion->getDireccionesPorUbi($this->getId_ubi());
+        $cUbixDireccion = $repoCasaDireccion->getDireccionesPorUbi($this->getId_ubi());
         $dirs = [];
         if ($cUbixDireccion !== false) {
             foreach ($cUbixDireccion as $aUbixDireccion) {
@@ -72,22 +91,22 @@ trait UbiContactsTrait
         $childClassName = end($aClassName);
         switch ($childClassName) {
             case 'Centro':
-                $obj = 'src\ubis\application\repositories\TelecoCtrRepository';
+                $TelecoUbiRepository = $GLOBALS['container']->get(TelecoCtrRepositoryInterface::class);
                 break;
             case 'CentroDl':
-                $obj = 'src\ubis\application\repositories\TelecoCtrDlRepository';
+                $TelecoUbiRepository = $GLOBALS['container']->get(TelecoCtrDlRepositoryInterface::class);
                 break;
             case 'CentroEx':
-                $obj = 'src\ubis\application\repositories\TelecoCtrExRepository';
+                $TelecoUbiRepository = $GLOBALS['container']->get(TelecoCtrExRepositoryInterface::class);
                 break;
             case 'Casa':
-                $obj = 'src\ubis\application\repositories\TelecoCdcRepository';
+                $TelecoUbiRepository = $GLOBALS['container']->get(TelecoCdcRepositoryInterface::class);
                 break;
             case 'CasaDl':
-                $obj = 'src\ubis\application\repositories\TelecoCdcDlRepository';
+                $TelecoUbiRepository = $GLOBALS['container']->get(TelecoCdcDlRepositoryInterface::class);
                 break;
             case 'CasaEx':
-                $obj = 'src\ubis\application\repositories\TelecoCdcExRepository';
+                $TelecoUbiRepository = $GLOBALS['container']->get(TelecoCdcExRepositoryInterface::class);
                 break;
         }
         $aWhere['id_ubi'] = $this->getId_ubi();
@@ -100,8 +119,7 @@ trait UbiContactsTrait
         }
 
         $e_mail = '';
-        $GesTelecoUbis = new $obj();
-        $cTelecos = $GesTelecoUbis->getTelecos($aWhere);
+        $cTelecos = $TelecoUbiRepository->getTelecos($aWhere);
         if (!empty($cTelecos) && count($cTelecos) > 0) {
             $oTeleco = $cTelecos[0];
             $e_mail = $oTeleco->getNum_teleco();
@@ -123,22 +141,22 @@ trait UbiContactsTrait
         $childClassName = end($aClassName);
         switch ($childClassName) {
             case 'Centro':
-                $obj = 'src\ubis\application\repositories\TelecoCtrRepository';
+                $TelecoUbiRepository = $GLOBALS['container']->get(TelecoCtrRepositoryInterface::class);
                 break;
             case 'CentroDl':
-                $obj = 'src\ubis\application\repositories\TelecoCtrDlRepository';
+                $TelecoUbiRepository = $GLOBALS['container']->get(TelecoCtrDlRepositoryInterface::class);
                 break;
             case 'CentroEx':
-                $obj = 'src\ubis\application\repositories\TelecoCtrExRepository';
+                $TelecoUbiRepository = $GLOBALS['container']->get(TelecoCtrExRepositoryInterface::class);
                 break;
             case 'Casa':
-                $obj = 'src\ubis\application\repositories\TelecoCdcRepository';
+                $TelecoUbiRepository = $GLOBALS['container']->get(TelecoCdcRepositoryInterface::class);
                 break;
             case 'CasaDl':
-                $obj = 'src\ubis\application\repositories\TelecoCdcDlRepository';
+                $TelecoUbiRepository = $GLOBALS['container']->get(TelecoCdcDlRepositoryInterface::class);
                 break;
             case 'CasaEx':
-                $obj = 'src\ubis\application\repositories\TelecoCdcExRepository';
+                $TelecoUbiRepository = $GLOBALS['container']->get(TelecoCdcExRepositoryInterface::class);
                 break;
         }
         $aWhere['id_ubi'] = $this->getId_ubi();
@@ -157,12 +175,11 @@ trait UbiContactsTrait
         if ($desc_teleco !== '*' && !empty($desc_teleco)) {
             $aWhere['desc_teleco'] = $desc_teleco;
         }
-        $GesTelecoUbis = new $obj();
-        $cTelecos = $GesTelecoUbis->getTelecos($aWhere);
+        $cTelecos = $TelecoUbiRepository->getTelecos($aWhere);
         $tels = '';
         $separador = empty($separador) ? ".-<br>" : $separador;
         if ($cTelecos !== false) {
-            $DescTelecoRepository = new DescTelecoRepository();
+            $DescTelecoRepository = $GLOBALS['container']->get(DescTelecoRepositoryInterface::class);
             foreach ($cTelecos as $oTelecoUbi) {
                 $iDescTel = $oTelecoUbi->getDesc_teleco();
                 $num_teleco = trim($oTelecoUbi->getNum_teleco());

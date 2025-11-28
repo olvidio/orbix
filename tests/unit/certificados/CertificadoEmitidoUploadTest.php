@@ -7,8 +7,8 @@ use core\ConfigGlobal;
 use core\DBConnection;
 use core\DBPropiedades;
 use Faker\Factory;
-use src\certificados\application\repositories\CertificadoEmitidoRepository;
 use src\certificados\domain\CertificadoEmitidoUpload;
+use src\certificados\domain\contracts\CertificadoEmitidoRepositoryInterface;
 use src\certificados\domain\entity\CertificadoEmitido;
 use Tests\factories\certificados\CertificadosFactory;
 use Tests\myTest;
@@ -69,7 +69,7 @@ class CertificadoEmitidoUploadTest extends myTest
             $this->assertInstanceOf(CertificadoEmitido::class, $CertificadoDB2);
 
             $id_item = $CertificadoDB2->getId_item();
-            $certificadoEmitidoRepository = new CertificadoEmitidoRepository();
+            $certificadoEmitidoRepository = $GLOBALS['container']->get(CertificadoEmitidoRepositoryInterface::class);
             $certificadoEmitidoRepository->setoDbl($oDBdst);
             $CertificadoDB3 = $certificadoEmitidoRepository->findById($id_item);
 
@@ -109,7 +109,7 @@ class CertificadoEmitidoUploadTest extends myTest
             $this->assertInstanceOf(CertificadoEmitido::class, $CertificadoDB);
 
             $id_item = $CertificadoDB->getId_item();
-            $certificadoEmitidoRepository = new CertificadoEmitidoRepository();
+            $certificadoEmitidoRepository = $GLOBALS['container']->get(CertificadoEmitidoRepositoryInterface::class);
             $certificadoEmitidoRepository->setoDbl($oDBdst);
             $CertificadoDB2 = $certificadoEmitidoRepository->findById($id_item);
 

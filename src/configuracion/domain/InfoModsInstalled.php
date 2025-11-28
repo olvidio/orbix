@@ -2,10 +2,9 @@
 
 namespace src\configuracion\domain;
 
-
 /* No vale el underscore en el nombre */
 
-use src\configuracion\application\repositories\ModuloInstaladoRepository;
+use src\configuracion\domain\contracts\ModuloInstaladoRepositoryInterface;
 use src\shared\domain\DatosInfoRepo;
 
 class InfoModsInstalled extends DatosInfoRepo
@@ -33,7 +32,7 @@ class InfoModsInstalled extends DatosInfoRepo
             $aWhere = array('id_mod' => $this->k_buscar);
             $aOperador = [];
         }
-        $oLista = new ModuloInstaladoRepository();
+        $oLista = $GLOBALS['container']->get(ModuloInstaladoRepositoryInterface::class);
         $Coleccion = $oLista->getModuloInstalados($aWhere, $aOperador);
 
         return $Coleccion;

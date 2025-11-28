@@ -6,7 +6,6 @@ use PDO;
 use src\inventario\domain\entity\Whereis;
 use src\inventario\domain\value_objects\WhereisItemId;
 
-
 /**
  * Interfaz de la clase Whereis y su Repositorio
  *
@@ -28,10 +27,10 @@ interface WhereisRepositoryInterface
 	 *
 	 * @param array $aWhere asociativo con los valores para cada campo de la BD.
 	 * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-	 * @return array|FALSE Una colección de objetos de tipo Whereis
+	 * @return array|false Una colección de objetos de tipo Whereis
 	
 	 */
-	public function getWhereare(array $aWhere=[], array $aOperators=[]): array|FALSE;
+	public function getWhereare(array $aWhere=[], array $aOperators=[]): array|false;
 	
 /* -------------------- ENTIDAD --------------------------------------------- */
 

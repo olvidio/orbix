@@ -1,25 +1,15 @@
 <?php
 
 use core\ConfigGlobal;
-use src\usuarios\application\repositories\UsuarioRepository;
+use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
 use web\Hash;
-
-// INICIO Cabecera global de URL de controlador *********************************
-require_once("apps/core/global_header.inc");
-// Archivos requeridos por esta url **********************************************
-
-// Crea los objetos de uso global **********************************************
-require_once("apps/core/global_object.inc");
-// Crea los objetos por esta url  **********************************************
-
-// FIN de  Cabecera global de URL de controlador ********************************
 
 // Obtener el usuario actual
 $oMiUsuario = ConfigGlobal::MiUsuario();
 $id_usuario = $oMiUsuario->getId_usuario();
 
 // Verificar si el usuario tiene 2FA habilitado
-$UsuarioRepository = new UsuarioRepository();
+$UsuarioRepository = $GLOBALS['container']->get(UsuarioRepositoryInterface::class);
 $oUsuario = $UsuarioRepository->findById($id_usuario);
 $has_2fa = $oUsuario->has2fa();
 

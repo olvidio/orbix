@@ -5,9 +5,9 @@ use actividadescentro\model\entity\CentroEncargado;
 use actividadescentro\model\entity\GestorCentroEncargado;
 use core\ConfigGlobal;
 use permisos\model\PermisosActividadesTrue;
-use src\ubis\application\repositories\CasaRepository;
-use src\ubis\application\repositories\CentroDlRepository;
-use src\ubis\application\repositories\CentroEllasRepository;
+use src\ubis\domain\contracts\CasaRepositoryInterface;
+use src\ubis\domain\contracts\CentroDlRepositoryInterface;
+use src\ubis\domain\contracts\CentroEllasRepositoryInterface;
 use web\DateTimeLocal;
 use web\Periodo;
 
@@ -136,7 +136,7 @@ switch ($Qque) {
         $aWhere['tipo_ctr'] = '^s[^s]*';
         $aWhere['_ordre'] = 'nombre_ubi';
         $aOperador['tipo_ctr'] = '~';
-        $GesCentros = new CentroDlRepository();
+        $GesCentros = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
         $cCentros = $GesCentros->getCentros($aWhere, $aOperador);
         $periodo = "f_ini BETWEEN '" . $Qinicio . "' AND '" . $Qfin . "'";
         $txt_ctr = '';
@@ -161,7 +161,7 @@ switch ($Qque) {
         $aWhere['status'] = 't';
         $aWhere['tipo_labor'] = '512'; //sg -> 512
         $aOperador['tipo_labor'] = '&';
-        $GesCentros = new CentroDlRepository();
+        $GesCentros = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
         $cCentros = $GesCentros->getCentros($aWhere, $aOperador);
         $txt_ctr = '';
         foreach ($cCentros as $oCentro) {
@@ -177,7 +177,7 @@ switch ($Qque) {
         $aWhere['status'] = 't';
         $aWhere['tipo_ctr'] = '^[na]';
         $aOperador['tipo_ctr'] = '~';
-        $GesCentros = new CentroDlRepository();
+        $GesCentros = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
         $cCentros = $GesCentros->getCentros($aWhere, $aOperador);
         $txt_ctr = '';
         foreach ($cCentros as $oCentro) {
@@ -193,7 +193,7 @@ switch ($Qque) {
         $aWhere['status'] = 't';
         $aWhere['tipo_ctr'] = '^sss';
         $aOperador['tipo_ctr'] = '~';
-        $GesCentros = new CentroDlRepository();
+        $GesCentros = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
         $cCentros = $GesCentros->getCentros($aWhere, $aOperador);
         $txt_ctr = '';
         foreach ($cCentros as $oCentro) {
@@ -209,7 +209,7 @@ switch ($Qque) {
         $aWhere['status'] = 't';
         $aWhere['tipo_labor'] = '64'; //sg -> 64
         $aOperador['tipo_labor'] = '&';
-        $GesCentros = new CentroEllasRepository();
+        $GesCentros = $GLOBALS['container']->get(CentroEllasRepositoryInterface::class);
         $cCentros = $GesCentros->getCentros($aWhere, $aOperador);
         $txt_ctr = '';
         foreach ($cCentros as $oCentro) {
@@ -225,7 +225,7 @@ switch ($Qque) {
         $aWhere['status'] = 't';
         $aWhere['tipo_labor'] = '512'; //sg -> 512
         $aOperador['tipo_labor'] = '&';
-        $GesCentros = new CentroEllasRepository();
+        $GesCentros = $GLOBALS['container']->get(CentroEllasRepositoryInterface::class);
         $cCentros = $GesCentros->getCentros($aWhere, $aOperador);
         $txt_ctr = '';
         foreach ($cCentros as $oCentro) {
@@ -241,7 +241,7 @@ switch ($Qque) {
         $aWhere['status'] = 't';
         $aWhere['tipo_ctr'] = '^[na]';
         $aOperador['tipo_ctr'] = '~';
-        $GesCentros = new CentroEllasRepository();
+        $GesCentros = $GLOBALS['container']->get(CentroEllasRepositoryInterface::class);
         $cCentros = $GesCentros->getCentros($aWhere, $aOperador);
         $txt_ctr = '';
         foreach ($cCentros as $oCentro) {
@@ -342,7 +342,7 @@ switch ($Qque) {
         $a_cabeceras[] = ucfirst(_("actividad"));
         $a_cabeceras[] = ucfirst(_("ctr encargados"));
 
-        $CasaRepository = new CasaRepository();
+        $CasaRepository = $GLOBALS['container']->get(CasaRepositoryInterface::class);
         $a_casas = $CasaRepository->getArrayCasas();
 
         $i = 0;

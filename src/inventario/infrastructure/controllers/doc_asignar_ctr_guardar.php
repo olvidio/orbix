@@ -1,18 +1,9 @@
 <?php
 
-use src\inventario\application\repositories\DocumentoRepository;
+use src\inventario\domain\contracts\DocumentoRepositoryInterface;
 use src\inventario\domain\entity\Documento;
 use web\ContestarJson;
 use web\DateTimeLocal;
-
-// INICIO Cabecera global de URL de controlador *********************************
-require_once("apps/core/global_header.inc");
-// Archivos requeridos por esta url **********************************************
-
-// Crea los objetos de uso global **********************************************
-require_once("apps/core/global_object.inc");
-// FIN de  Cabecera global de URL de controlador ********************************
-
 
 $Qid_tipo_doc = (string)filter_input(INPUT_POST, 'id_tipo_doc');
 $Qnumerado = (string)filter_input(INPUT_POST, 'numerado');
@@ -20,19 +11,17 @@ $Qstr_selected_id = (string)filter_input(INPUT_POST, 'str_selected_id');
 $Qf_recibido = (string)filter_input(INPUT_POST, 'f_recibido');
 $Qf_asignado = (string)filter_input(INPUT_POST, 'f_asignado');
 
-
 $selected_id = json_decode(rawurldecode($Qstr_selected_id));
 $error_txt = '';
 
-
-$DocumentoRepository = new DocumentoRepository();
+$DocumentoRepository = $GLOBALS['container']->get(DocumentoRepositoryInterface::class);
 $i = 0;
 foreach ($selected_id as $id_ubi) {
     $var_num = "num_" . $id_ubi;
     $num = $_POST[$var_num];
     $cDocumentos = $DocumentoRepository->getDocumentos(['id_ubi' => $id_ubi, 'id_tipo_doc' => $Qid_tipo_doc]);
     if (empty($cDocumentos)) {
-        $DocumentoRepository = new DocumentoRepository();
+        $DocumentoRepository = $GLOBALS['container']->get(DocumentoRepositoryInterface::class);
         $id_new = $DocumentoRepository->getNewId();
         $oDocumento = new Documento();
         $oDocumento->setId_doc($id_new);

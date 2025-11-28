@@ -30,7 +30,7 @@ class ColaMailRepository implements ColaMailRepositoryInterface
 
     public function __construct()
     {
-        $this->repository = new PgColaMailRepository();
+        $this->repository = $GLOBALS['container']->get(ColaMailRepositoryInterface::class);
     }
 
 /* -------------------- GESTOR BASE ---------------------------------------- */

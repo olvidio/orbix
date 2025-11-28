@@ -1,29 +1,21 @@
 <?php
 
-use src\inventario\application\repositories\DocumentoRepository;
-use src\inventario\application\repositories\TipoDocRepository;
-use src\inventario\application\repositories\UbiInventarioRepository;
+use src\inventario\domain\contracts\DocumentoRepositoryInterface;
+use src\inventario\domain\contracts\TipoDocRepositoryInterface;
+use src\inventario\domain\contracts\UbiInventarioRepositoryInterface;
 use web\ContestarJson;
-
-// INICIO Cabecera global de URL de controlador *********************************
-require_once("apps/core/global_header.inc");
-// Archivos requeridos por esta url **********************************************
-
-// Crea los objetos de uso global **********************************************
-require_once("apps/core/global_object.inc");
-// FIN de  Cabecera global de URL de controlador ********************************
 
 $Qid_tipo_doc = (integer)filter_input(INPUT_POST, 'id_tipo_doc');
 $a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 $error_txt = '';
 
-$TipoDocRepository = new TipoDocRepository();
+$TipoDocRepository = $GLOBALS['container']->get(TipoDocRepositoryInterface::class);
 $oTipoDoc = $TipoDocRepository->findById($Qid_tipo_doc);
 $nom_doc = $oTipoDoc->getNom_doc();
 $nombreDoc = empty($nom_doc) ? $oTipoDoc->getSigla() : $oTipoDoc->getSigla() . ' (' . $nom_doc . ')';
 $isNumerado = $oTipoDoc->isNumerado();
 
-$DocumentoRepository = new DocumentoRepository();
+$DocumentoRepository = $GLOBALS['container']->get(DocumentoRepositoryInterface::class);
 if ($isNumerado) {
     //conseguir el último número.
     $ultimo = 0;
@@ -33,7 +25,7 @@ if ($isNumerado) {
     }
 }
 
-$UbiInventarioRepository = new UbiInventarioRepository();
+$UbiInventarioRepository = $GLOBALS['container']->get(UbiInventarioRepositoryInterface::class);
 $cUbisInventario = $UbiInventarioRepository->getUbisInventario(['_ordre' => 'nom_ubi']);
 $i = 0;
 $sCamposForm = '';

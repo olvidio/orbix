@@ -4,7 +4,7 @@ namespace src\certificados\db;
 
 use core\ConfigGlobal;
 use core\DBRefresh;
-use src\ubis\application\repositories\DelegacionRepository;
+use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 
 /**
  * crear las tablas necesarias para el esquema select,
@@ -17,7 +17,7 @@ class DBEsquemaSelect extends DBEsquema
     {
         $a_reg = explode('-', $this->esquema);
         $dl = $a_reg[1];
-        $gesDelegeacion = new DelegacionRepository();
+        $gesDelegeacion = $GLOBALS['container']->get(DelegacionRepositoryInterface::class);
         if ($gesDelegeacion->soy_region_stgr($dl)) {
             $this->eliminar_e_certificados_emitidos_select();
         }
@@ -35,7 +35,7 @@ class DBEsquemaSelect extends DBEsquema
     {
         $a_reg = explode('-', $this->esquema);
         $dl = $a_reg[1];
-        $gesDelegeacion = new DelegacionRepository();
+        $gesDelegeacion = $GLOBALS['container']->get(DelegacionRepositoryInterface::class);
         if ($gesDelegeacion->soy_region_stgr($dl)) {
             $this->create_e_certificados_emitidos_select();
         }

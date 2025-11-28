@@ -14,8 +14,9 @@
 use core\ConfigGlobal;
 use core\ViewPhtml;
 use core\ViewTwig;
-use src\asignaturas\application\repositories\DepartamentoRepository;
-use src\ubis\application\repositories\DelegacionRepository;
+use src\asignaturas\domain\contracts\DepartamentoRepositoryInterface;
+use src\profesores\domain\contracts\ProfesorTipoRepositoryInterface;
+use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 use web\Desplegable;
 use web\Hash;
 
@@ -39,7 +40,7 @@ if (ConfigGlobal::mi_ambito() === 'rstgr' && $Qfiltro != 1) {
 
     $aChecked = $Qdl;
     $region_stgr = ConfigGlobal::mi_dele();
-    $repoDelegacion = new DelegacionRepository();
+    $repoDelegacion = $GLOBALS['container']->get(DelegacionRepositoryInterface::class);
     $a_delegacionesStgr = $repoDelegacion->getArrayDlRegionStgr([$region_stgr]);
 
     $oCuadros = new Desplegable();
@@ -67,8 +68,8 @@ if (ConfigGlobal::mi_ambito() === 'rstgr' && $Qfiltro != 1) {
 }
 
 // tipos de profesores
-$oGesProfesorTipo = new profesores\model\entity\GestorProfesorTipo();
-$cProfesorTipo = $oGesProfesorTipo->getProfesorTipos();
+$ProfesorTipoRepository = $GLOBALS['container']->get(ProfesorTipoRepositoryInterface::class);
+$cProfesorTipo = $ProfesorTipoRepository->getProfesorTipos();
 $cTipoProfesor = [];
 foreach ($cProfesorTipo as $oProfesorTipo) {
     $id_tipo = $oProfesorTipo->getId_tipo_profesor();
@@ -76,7 +77,7 @@ foreach ($cProfesorTipo as $oProfesorTipo) {
     $cTipoProfesor[$id_tipo] = $tipo;
 }
 //lista de departamentos.
-$DepartamentoRepository = new DepartamentoRepository();
+$DepartamentoRepository = $GLOBALS['container']->get(DepartamentoRepositoryInterface::class);
 $cDepartamentos = $DepartamentoRepository->getDepartamentos(['_ordre' => 'departamento']);
 
 

@@ -1,6 +1,7 @@
 <?php
 // INICIO Cabecera global de URL de controlador *********************************
-use src\configuracion\application\repositories\ModuloRepository;
+
+use src\configuracion\domain\contracts\ModuloRepositoryInterface;
 
 require_once("apps/core/global_header.inc");
 // Archivos requeridos por esta url **********************************************
@@ -28,7 +29,7 @@ if (!empty($a_sel)) { //vengo de un checkbox (caso de eliminar)
 $Qaccion = (string)filter_input(\INPUT_POST, 'accion');
 $Qaccion = 'crear';
 
-$ModuloRepository = new ModuloRepository();
+$ModuloRepository = $GLOBALS['container']->get(ModuloRepositoryInterface::class);
 $oModulo = $ModuloRepository->findById($Qid_mod);
 $mod_nom = $oModulo->getNom();
 

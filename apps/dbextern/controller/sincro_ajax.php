@@ -6,7 +6,8 @@ use dbextern\model\entity\GestorPersonaBDU;
 use dbextern\model\entity\IdMatchPersona;
 use dbextern\model\SincroDB;
 use Illuminate\Http\JsonResponse;
-use src\ubis\application\repositories\CentroDlRepository;
+use src\ubis\domain\contracts\CentroDlRepositoryInterface;
+use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 
 // INICIO Cabecera global de URL de controlador *********************************
 require_once("apps/core/global_header.inc");
@@ -159,7 +160,7 @@ switch ($que) {
         $tipo_persona = (string)filter_input(INPUT_POST, 'tipo_persona');
 
         // prepara lista de ctr
-        $GesCentros = new CentroDlRepository();
+        $GesCentros = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
         // Hay que asegurarse que ya no se distingue entre ctr de n y agd		
         //$cCentros = $GesCentros->getCentros(array('tipo_ctr'=>'^'.$tipo_persona),array('tipo_ctr'=>'~'));
         //$cCentros = $GesCentros->getCentros(array('tipo_ctr'=>'^[na]'),array('tipo_ctr'=>'~'));
@@ -249,7 +250,7 @@ switch ($que) {
         } else {
             $dl_dst = 'cr' . $dl;
         }
-        $repoDelegacion = new \src\ubis\application\repositories\DelegacionRepository();
+        $repoDelegacion = $GLOBALS['container']->get(DelegacionRepositoryInterface::class);
         $cDl = $repoDelegacion->getDelegaciones(['dl' => $dl_dst, 'status' => 't']);
         $region_dst = $cDl[0]->getRegionVo()->value();
 

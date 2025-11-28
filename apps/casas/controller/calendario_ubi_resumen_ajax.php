@@ -4,7 +4,7 @@ use actividades\model\entity\GestorActividad;
 use actividadtarifas\model\entity\GestorTipoTarifa;
 use casas\model\entity\GestorUbiGasto;
 use casas\model\entity\Ingreso;
-use src\ubis\application\repositories\CasaDlRepository;
+use src\ubis\domain\contracts\CasaDlRepositoryInterface;
 use web\DateTimeLocal;
 use web\Hash;
 use web\TiposActividades;
@@ -37,10 +37,10 @@ switch ($Qseccion) {
 
 $any_actual = date("Y");
 //$any_actual=2009;
-$any_anterior = $any_actual - 1;
-$any_prev = $any_actual + 1;
+$any_anterior = (int)$any_actual - 1;
+$any_prev = (int)$any_actual + 1;
 
-$oCasa = (new CasaDlRepository())->findById($Qid_ubi);
+$oCasa = $GLOBALS['container']->get(CasaDlRepositoryInterface::class)->findById($Qid_ubi);
 $nombre_ubi = $oCasa->getNombre_ubi();
 $plazas_min = $oCasa->getPlazas_min();
 

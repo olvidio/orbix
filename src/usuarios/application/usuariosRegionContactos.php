@@ -5,9 +5,9 @@ namespace src\usuarios\application;
 use core\ConfigDB;
 use core\DBConnection;
 use permisos\model\PermDl;
-use src\usuarios\application\repositories\PermMenuRepository;
-use src\usuarios\application\repositories\UsuarioGrupoRepository;
-use src\usuarios\application\repositories\UsuarioRepository;
+use src\usuarios\domain\contracts\PermMenuRepositoryInterface;
+use src\usuarios\domain\contracts\UsuarioGrupoRepositoryInterface;
+use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
 use web\ContestarJson;
 
 class usuariosRegionContactos
@@ -33,9 +33,9 @@ class usuariosRegionContactos
         }
 
         // todos los usuarios de la region, y después mirar los permisos
-        $UsuarioGrupoRepository = new UsuarioGrupoRepository();
+        $UsuarioGrupoRepository = $GLOBALS['container']->get(UsuarioGrupoRepositoryInterface::class);
         $UsuarioGrupoRepository->setoDbl_Select($oDevelPC);
-        $UsuarioRepository = new UsuarioRepository();
+        $UsuarioRepository = $GLOBALS['container']->get(UsuarioRepositoryInterface::class);
         $UsuarioRepository->setoDbl_select($oDevelPC);
         $cUsuariosRegion = $UsuarioRepository->getUsuarios(['id_role' => 3],['id_role' => '>']); // quitar los admin.
 
@@ -52,7 +52,7 @@ class usuariosRegionContactos
             // tiene permiso de est?
             $cGrupos = $UsuarioGrupoRepository->getUsuariosGrupos(array('id_usuario' => $id_usuario));
             $iperm_menu = 0;
-            $PermMenuRepository = new PermMenuRepository();
+            $PermMenuRepository = $GLOBALS['container']->get(PermMenuRepositoryInterface::class);
             $PermMenuRepository->setoDbl_Select($oDevelPC);
             foreach ($cGrupos as $UsuarioGrupo) {
                 $id_grupo = $UsuarioGrupo->getId_grupo();

@@ -11,7 +11,6 @@ use PDOException;
 use src\ubis\domain\entity\TipoCasa;
 use src\ubis\domain\contracts\TipoCasaRepositoryInterface;
 
-
 /**
  * Clase que adapta la tabla xu_tipo_casa a la interfaz del repositorio
  *
@@ -31,7 +30,6 @@ class PgTipoCasaRepository extends ClaseRepository implements TipoCasaRepository
         $this->setoDbl_select($oDbl_Select); 
         $this->setNomTabla('xu_tipo_casa');
     }
-
 
     public function getArrayTiposCasa(): array
     {
@@ -61,10 +59,10 @@ class PgTipoCasaRepository extends ClaseRepository implements TipoCasaRepository
 	 *
 	 * @param array $aWhere asociativo con los valores para cada campo de la BD.
 	 * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-	 * @return array|FALSE Una colección de objetos de tipo TipoCasa
+	 * @return array|false Una colección de objetos de tipo TipoCasa
 	
 	 */
-	public function getTiposCasa(array $aWhere=[], array $aOperators=[]): array|FALSE
+	public function getTiposCasa(array $aWhere=[], array $aOperators=[]): array|false
 	{
         $oDbl = $this->getoDbl_Select();
 		$nom_tabla = $this->getNomTabla();
@@ -90,15 +88,15 @@ class PgTipoCasaRepository extends ClaseRepository implements TipoCasaRepository
 		if (isset($aWhere['_limit']) && $aWhere['_limit'] !== '') { $sLimit = ' LIMIT '.$aWhere['_limit']; }
 		if (isset($aWhere['_limit'])) { unset($aWhere['_limit']); }
 		$sQry = "SELECT * FROM $nom_tabla ".$sCondicion.$sOrdre.$sLimit;
-		if (($oDblSt = $oDbl->prepare($sQry)) === FALSE) {
+		if (($oDblSt = $oDbl->prepare($sQry)) === false) {
 			$sClaveError = 'PgTipoCasaRepository.listar.prepare';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-			return FALSE;
+			return false;
 		}
-		if (($oDblSt->execute($aWhere)) === FALSE) {
+		if (($oDblSt->execute($aWhere)) === false) {
 			$sClaveError = 'PgTipoCasaRepository.listar.execute';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
-			return FALSE;
+			return false;
 		}
 		
 		$filas = $oDblSt->fetchAll(PDO::FETCH_ASSOC);
@@ -117,10 +115,10 @@ class PgTipoCasaRepository extends ClaseRepository implements TipoCasaRepository
         $tipo_casa = $TipoCasa->getTipoCasaVo()?->value();
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        if (($oDbl->exec("DELETE FROM $nom_tabla WHERE tipo_casa = '$tipo_casa'")) === FALSE) {
+        if (($oDbl->exec("DELETE FROM $nom_tabla WHERE tipo_casa = '$tipo_casa'")) === false) {
             $sClaveError = 'PgTipoCasaRepository.eliminar';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return FALSE;
+            return false;
         }
         return TRUE;
     }
@@ -141,14 +139,14 @@ class PgTipoCasaRepository extends ClaseRepository implements TipoCasaRepository
 		$aDatos['nombre_tipo_casa'] = $TipoCasa->getNombreTipoCasaVo()?->value();
 		array_walk($aDatos, 'core\poner_null');
 
-		if ($bInsert === FALSE) {
+		if ($bInsert === false) {
 			//UPDATE
 			$update="
 					nombre_tipo_casa         = :nombre_tipo_casa";
-			if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE tipo_casa = '$tipo_casa'")) === FALSE) {
+			if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE tipo_casa = '$tipo_casa'")) === false) {
 				$sClaveError = 'PgTipoCasaRepository.update.prepare';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-				return FALSE;
+				return false;
 			}
 				
             try {
@@ -158,17 +156,17 @@ class PgTipoCasaRepository extends ClaseRepository implements TipoCasaRepository
                 $this->setErrorTxt($err_txt);
                 $sClaveError = 'PgTipoCasaRepository.update.execute';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
-                return FALSE;
+                return false;
             }
 		} else {
 			// INSERT
 			$aDatos['tipo_casa'] = $TipoCasa->getTipoCasaVo()->value();
 			$campos="(tipo_casa,nombre_tipo_casa)";
 			$valores="(:tipo_casa,:nombre_tipo_casa)";		
-			if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === FALSE) {
+			if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {
 				$sClaveError = 'PgTipoCasaRepository.insertar.prepare';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-				return FALSE;
+				return false;
 			}
             try {
                 $oDblSt->execute($aDatos);
@@ -177,7 +175,7 @@ class PgTipoCasaRepository extends ClaseRepository implements TipoCasaRepository
                 $this->setErrorTxt($err_txt);
                 $sClaveError = 'PgTipoCasaRepository.insertar.execute';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
-                return FALSE;
+                return false;
 			}
 		}
 		return TRUE;
@@ -187,15 +185,15 @@ class PgTipoCasaRepository extends ClaseRepository implements TipoCasaRepository
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE tipo_casa = '$tipo_casa'")) === FALSE) {
+        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE tipo_casa = '$tipo_casa'")) === false) {
 			$sClaveError = 'PgTipoCasaRepository.isNew';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return FALSE;
+            return false;
         }
         if (!$oDblSt->rowCount()) {
             return TRUE;
         }
-        return FALSE;
+        return false;
     }
 	
     /**
@@ -210,10 +208,10 @@ class PgTipoCasaRepository extends ClaseRepository implements TipoCasaRepository
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
-        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE tipo_casa = '$tipo_casa'")) === FALSE) {
+        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE tipo_casa = '$tipo_casa'")) === false) {
 			$sClaveError = 'PgTipoCasaRepository.getDatosById';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return FALSE;
+            return false;
         }
 		$aDatos = $oDblSt->fetch(PDO::FETCH_ASSOC);
         return $aDatos;

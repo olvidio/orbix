@@ -4,7 +4,7 @@ namespace src\configuracion\domain;
 
 /* No vale el underscore en el nombre */
 
-use src\configuracion\application\repositories\AppRepository;
+use src\configuracion\domain\contracts\AppRepositoryInterface;
 use src\shared\domain\DatosInfoRepo;
 
 class InfoApps extends DatosInfoRepo
@@ -32,7 +32,7 @@ class InfoApps extends DatosInfoRepo
             $aWhere = array('nom' => $this->k_buscar);
             $aOperador = array('nom' => 'sin_acentos');
         }
-        $oLista = new AppRepository();
+        $oLista = $GLOBALS['container']->get(AppRepositoryInterface::class);
         $Coleccion = $oLista->getApps($aWhere, $aOperador);
 
         return $Coleccion;

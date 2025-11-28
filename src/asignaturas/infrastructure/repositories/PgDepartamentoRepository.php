@@ -10,7 +10,6 @@ use PDOException;
 use src\asignaturas\domain\contracts\DepartamentoRepositoryInterface;
 use src\asignaturas\domain\entity\Departamento;
 
-
 /**
  * Clase que adapta la tabla xe_departamentos a la interfaz del repositorio
  *
@@ -59,7 +58,7 @@ class PgDepartamentoRepository extends ClaseRepository implements DepartamentoRe
      *
      * @param array $aWhere asociativo con los valores para cada campo de la BD.
      * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array|FALSE Una colección de objetos de tipo Departamento
+     * @return array|false Una colección de objetos de tipo Departamento
      */
     public function getDepartamentos(array $aWhere = [], array $aOperators = []): array|false
     {
@@ -109,15 +108,15 @@ class PgDepartamentoRepository extends ClaseRepository implements DepartamentoRe
             unset($aWhere['_limit']);
         }
         $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
-        if (($oDblSt = $oDbl->prepare($sQry)) === FALSE) {
+        if (($oDblSt = $oDbl->prepare($sQry)) === false) {
             $sClaveError = 'PgDepartamentoRepository.listar.prepare';
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return FALSE;
+            return false;
         }
-        if (($oDblSt->execute($aWhere)) === FALSE) {
+        if (($oDblSt->execute($aWhere)) === false) {
             $sClaveError = 'PgDepartamentoRepository.listar.execute';
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
-            return FALSE;
+            return false;
         }
 
         $filas = $oDblSt->fetchAll(PDO::FETCH_ASSOC);
@@ -136,14 +135,13 @@ class PgDepartamentoRepository extends ClaseRepository implements DepartamentoRe
         $id_departamento = $Departamento->getIdDepartamentoVo()->value();
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        if (($oDbl->exec("DELETE FROM $nom_tabla WHERE id_departamento = $id_departamento")) === FALSE) {
+        if (($oDbl->exec("DELETE FROM $nom_tabla WHERE id_departamento = $id_departamento")) === false) {
             $sClaveError = 'PgDepartamentoRepository.eliminar';
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return FALSE;
+            return false;
         }
         return TRUE;
     }
-
 
     /**
      * Si no existe el registro, hace un insert, si existe, se hace el update.
@@ -159,14 +157,14 @@ class PgDepartamentoRepository extends ClaseRepository implements DepartamentoRe
         $aDatos['departamento'] = $Departamento->getNombreDepartamentoVo()?->value();
         array_walk($aDatos, 'core\poner_null');
 
-        if ($bInsert === FALSE) {
+        if ($bInsert === false) {
             //UPDATE
             $update = "
 					departamento             = :departamento";
-            if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_departamento = $id_departamento")) === FALSE) {
+            if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_departamento = $id_departamento")) === false) {
                 $sClaveError = 'PgDepartamentoRepository.update.prepare';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-                return FALSE;
+                return false;
             }
 
             try {
@@ -176,17 +174,17 @@ class PgDepartamentoRepository extends ClaseRepository implements DepartamentoRe
                 $this->setErrorTxt($err_txt);
                 $sClaveError = 'PgDepartamentoRepository.update.execute';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
-                return FALSE;
+                return false;
             }
         } else {
             // INSERT
             $aDatos['id_departamento'] = $Departamento->getIdDepartamentoVo()?->value();
             $campos = "(id_departamento,departamento)";
             $valores = "(:id_departamento,:departamento)";
-            if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === FALSE) {
+            if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {
                 $sClaveError = 'PgDepartamentoRepository.insertar.prepare';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-                return FALSE;
+                return false;
             }
             try {
                 $oDblSt->execute($aDatos);
@@ -195,7 +193,7 @@ class PgDepartamentoRepository extends ClaseRepository implements DepartamentoRe
                 $this->setErrorTxt($err_txt);
                 $sClaveError = 'PgDepartamentoRepository.insertar.execute';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
-                return FALSE;
+                return false;
             }
         }
         return TRUE;
@@ -205,15 +203,15 @@ class PgDepartamentoRepository extends ClaseRepository implements DepartamentoRe
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_departamento = $id_departamento")) === FALSE) {
+        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_departamento = $id_departamento")) === false) {
             $sClaveError = 'PgDepartamentoRepository.isNew';
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return FALSE;
+            return false;
         }
         if (!$oDblSt->rowCount()) {
             return TRUE;
         }
-        return FALSE;
+        return false;
     }
 
     /**
@@ -227,15 +225,14 @@ class PgDepartamentoRepository extends ClaseRepository implements DepartamentoRe
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
-        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_departamento = $id_departamento")) === FALSE) {
+        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_departamento = $id_departamento")) === false) {
             $sClaveError = 'PgDepartamentoRepository.getDatosById';
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return FALSE;
+            return false;
         }
         $aDatos = $oDblSt->fetch(PDO::FETCH_ASSOC);
         return $aDatos;
     }
-
 
     /**
      * Busca la clase con id_departamento en la base de datos .

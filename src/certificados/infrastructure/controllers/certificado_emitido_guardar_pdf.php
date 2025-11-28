@@ -1,19 +1,8 @@
 <?php
 
-
-// INICIO Cabecera global de URL de controlador *********************************
 use notas\model\entity\GestorPersonaNotaOtraRegionStgrDB;
-use src\certificados\application\repositories\CertificadoEmitidoRepository;
+use src\certificados\domain\contracts\CertificadoEmitidoRepositoryInterface;
 use web\ContestarJson;
-
-require_once("apps/core/global_header.inc");
-// Archivos requeridos por esta url **********************************************
-
-// Crea los objetos de uso global **********************************************
-require_once("apps/core/global_object.inc");
-// Crea los objetos por esta url  **********************************************
-
-// FIN de  Cabecera global de URL de controlador ********************************
 
 $Qid_item = (integer)filter_input(INPUT_POST, 'id_item');
 $Qid_nom = (integer)filter_input(INPUT_POST, 'id_nom');
@@ -25,12 +14,12 @@ $certificado = base64_decode($Qcertificado);
 
 $error_txt = '';
 
-$certificadoEmitidoRepository = new CertificadoEmitidoRepository();
+$certificadoEmitidoRepository = $GLOBALS['container']->get(CertificadoEmitidoRepositoryInterface::class);
 
 $oCertificadoEmitido = $certificadoEmitidoRepository->findById($Qid_item);
 $oCertificadoEmitido->setId_nom($Qid_nom);
 $oCertificadoEmitido->setDocumento($pdf_content);
-if ($certificadoEmitidoRepository->Guardar($oCertificadoEmitido) === FALSE) {
+if ($certificadoEmitidoRepository->Guardar($oCertificadoEmitido) === false) {
     $error_txt .= $certificadoEmitidoRepository->getErrorTxt();
 }
 // también hay que guardarlo en las notas afectadas
@@ -43,7 +32,6 @@ try {
 } catch (\Exception $e) {
     $error_txt .= $e->getMessage();
 }
-
 
 $data['mensaje'] = 'ok';
 $data['item'] = $Qid_item;

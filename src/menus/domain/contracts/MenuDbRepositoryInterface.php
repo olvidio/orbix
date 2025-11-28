@@ -5,7 +5,6 @@ namespace src\menus\domain\contracts;
 use PDO;
 use src\menus\domain\entity\MenuDb;
 
-
 /**
  * Interfaz de la clase MenuDb y su Repositorio
  *
@@ -25,7 +24,7 @@ interface MenuDbRepositoryInterface
      *
      * @param array $aWhere asociativo con los valores para cada campo de la BD.
      * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array|FALSE Una colección de objetos de tipo MenuDb
+     * @return array|false Una colección de objetos de tipo MenuDb
      */
     public function getMenuDbs(array $aWhere = [], array $aOperators = []): array|false;
 

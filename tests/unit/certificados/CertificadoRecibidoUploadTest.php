@@ -6,8 +6,8 @@ use core\ConfigDB;
 use core\ConfigGlobal;
 use core\DBConnection;
 use core\DBPropiedades;
-use src\certificados\application\repositories\CertificadoRecibidoRepository;
 use src\certificados\domain\CertificadoRecibidoUpload;
+use src\certificados\domain\contracts\CertificadoRecibidoRepositoryInterface;
 use src\certificados\domain\entity\CertificadoRecibido;
 use Tests\factories\certificados\CertificadosFactory;
 use Tests\myTest;
@@ -64,7 +64,7 @@ class CertificadoRecibidoUploadTest extends myTest
             $this->assertInstanceOf(CertificadoRecibido::class, $CertificadoDB);
 
             $id_item = $CertificadoDB->getId_item();
-            $certificadoRecibidoRepository = new CertificadoRecibidoRepository();
+            $certificadoRecibidoRepository = $GLOBALS['container']->get(CertificadoRecibidoRepositoryInterface::class);
             $certificadoRecibidoRepository->setoDbl($oDBdst);
             $CertificadoDB2 = $certificadoRecibidoRepository->findById($id_item);
 

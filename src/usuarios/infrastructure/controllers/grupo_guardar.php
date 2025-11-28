@@ -1,19 +1,9 @@
 <?php
 
-use src\usuarios\application\repositories\GrupoRepository;
+use src\usuarios\domain\contracts\GrupoRepositoryInterface;
 use src\usuarios\domain\entity\Grupo;
 use src\usuarios\domain\value_objects\Username;
 use web\ContestarJson;
-
-// INICIO Cabecera global de URL de controlador *********************************
-require_once("apps/core/global_header.inc");
-// Archivos requeridos por esta url **********************************************
-
-// Crea los objetos de uso global **********************************************
-require_once("apps/core/global_object.inc");
-// Crea los objetos por esta url  **********************************************
-
-// FIN de  Cabecera global de URL de controlador ********************************
 
 $Qusuario = (string)filter_input(INPUT_POST, 'usuario');
 
@@ -23,7 +13,7 @@ if (empty($Qusuario)) {
 }
 $Qid_usuario = (integer)filter_input(INPUT_POST, 'id_usuario');
 
-$GrupoRepository = new GrupoRepository();
+$GrupoRepository = $GLOBALS['container']->get(GrupoRepositoryInterface::class);
 if (empty($Qid_usuario)) {
     $id_usuario_new = $GrupoRepository->getNewId();
     $oGrupo = new Grupo();

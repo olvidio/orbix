@@ -2,10 +2,9 @@
 
 namespace src\actividades\domain;
 
-
 /* No vale el underscore en el nombre */
 
-use src\actividades\application\repositories\NivelStgrRepository;
+use src\actividades\domain\contracts\NivelStgrRepositoryInterface;
 use src\shared\domain\DatosInfoRepo;
 
 class InfoNivelStgr extends DatosInfoRepo
@@ -33,7 +32,7 @@ class InfoNivelStgr extends DatosInfoRepo
             $aOperador['desc_nivel'] = 'sin_acentos';
         }
         $aWhere['_ordre'] = 'orden';
-        $oLista = new NivelStgrRepository();
+        $oLista = $GLOBALS['container']->get(NivelStgrRepositoryInterface::class);
         $Coleccion = $oLista->getNivelesStgr($aWhere, $aOperador);
 
         return $Coleccion;

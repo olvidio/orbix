@@ -3,7 +3,7 @@
 
 // INICIO Cabecera global de URL de controlador *********************************
 use devel\model\DBAlterSchema;
-use src\utils_database\application\repositories\DbSchemaRepository;
+use src\utils_database\domain\contracts\DbSchemaRepositoryInterface;
 
 require_once("apps/core/global_header.inc");
 // Archivos requeridos por esta url **********************************************
@@ -57,7 +57,7 @@ $oDBRol->renombrarUsuario($esquema_old); // reescribe el password que ya tenia.
 $oConfigDBComun->renombrarListaEsquema('comun', $esquema_old, $esquema);
 
 // Cambiar la tabla db_idschema. (pone el nombre de los tres esquemas, pero sólo en una base de datos)
-$DbSchemaRepository = new DbSchemaRepository();
+$DbSchemaRepository = $GLOBALS['container']->get(DbSchemaRepositoryInterface::class);
 $DbSchemaRepository->cambiarNombre($esquema_old, $esquema, 'comun');
 
 /////////  para comun en interior (select)
@@ -93,7 +93,7 @@ $oDBRol->renombrarUsuario($esquema_oldv); // reescribe el password que ya tenia.
 $oConfigDBSv->renombrarListaEsquema('sv', $esquema_oldv, $esquemav);
 
 // Cambiar la tabla db_idschema. (pone el nombre de los tres esquemas, pero sólo en una base de datos)
-$DbSchemaRepository = new DbSchemaRepository();
+$DbSchemaRepository = $GLOBALS['container']->get(DbSchemaRepositoryInterface::class);
 $DbSchemaRepository->cambiarNombre($esquema_old, $esquema, 'sv');
 
 //sv-e
@@ -114,7 +114,7 @@ $oDBRol->renombrarSchema($esquema_oldv); // Cambia el nombre del esquema
 $oConfigDBSve->renombrarListaEsquema('sv-e', $esquema_oldv, $esquemav);
 
 // Cambiar la tabla db_idschema. (pone el nombre de los tres esquemas, pero sólo en una base de datos)
-$DbSchemaRepository = new DbSchemaRepository();
+$DbSchemaRepository = $GLOBALS['container']->get(DbSchemaRepositoryInterface::class);
 $DbSchemaRepository->cambiarNombre($esquema_old, $esquema, 'sv-e');
 
 //////////// sv-e para db interior (select) debería servir el de sv normal
@@ -137,7 +137,7 @@ $oConfigDBSf = new core\ConfigDB('sf');
 $oConfigDBSf->renombrarListaEsquema('sf', $esquema_oldf, $esquemaf);
 
 // Cambiar la tabla db_idschema. (pone el nombre de los tres esquemas, pero sólo en una base de datos)
-$DbSchemaRepository = new DbSchemaRepository();
+$DbSchemaRepository = $GLOBALS['container']->get(DbSchemaRepositoryInterface::class);
 $DbSchemaRepository->cambiarNombre($esquema_old,$esquema,'sf');
 */
 
@@ -442,7 +442,7 @@ if (!empty($Qsf)) {
 
     // Llenar la tabla db_idschema (todos, aunque de momento no exista sv o sf).
     $schema = $RegionNew.'-'.$DlNew;
-    $DbSchemaRepository = new DbSchemaRepository();
+    $DbSchemaRepository = $GLOBALS['container']->get(DbSchemaRepositoryInterface::class);
     $DbSchemaRepository->llenarNuevo($schema,'sf');
 
 }

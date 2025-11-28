@@ -18,7 +18,7 @@ use notas\model\AsignaturasPendientes;
 use notas\model\entity\GestorPersonaNotaDB;
 use personas\model\entity\Persona;
 use personas\model\entity\PersonaGlobal;
-use src\asignaturas\application\repositories\AsignaturaRepository;
+use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 
 require_once("apps/core/global_header.inc");
 // Archivos requeridos por esta url **********************************************
@@ -106,7 +106,7 @@ $aWhereAsig = ['id_tipo' => 8,
     '_ordre' => 'id_nivel',
 ];
 $aOperadorAsig = ['id_tipo' => '!='];
-$AsignaturaRepository = new AsignaturaRepository();
+$AsignaturaRepository = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class);
 $cAsignaturas = $AsignaturaRepository->getAsignaturas($aWhereAsig, $aOperadorAsig);
 
 $aAsignaturas_alumnos = [];

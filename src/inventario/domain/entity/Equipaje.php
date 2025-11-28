@@ -184,6 +184,7 @@ class Equipaje
     /**
      *
      * @return DateTimeLocal|NullDateTimeLocal|null $df_ini
+     * @deprecated El retorno null está deprecado. Este getter aplica fallback y no devolverá null en tiempo de ejecución.
      */
     public function getF_ini(): DateTimeLocal|NullDateTimeLocal|null
     {
@@ -192,16 +193,18 @@ class Equipaje
 
     /**
      *
-     * @param DateTimeLocal|null $df_ini
+     * @param DateTimeLocal|NullDateTimeLocal|null $df_ini
+     *        Si se pasa NullDateTimeLocal o null, se almacenará null internamente.
      */
-    public function setF_ini(DateTimeLocal|null $df_ini = null): void
+    public function setF_ini(DateTimeLocal|NullDateTimeLocal|null $df_ini = null): void
     {
-        $this->df_ini = $df_ini;
+        $this->df_ini = $df_ini instanceof NullDateTimeLocal ? null : $df_ini;
     }
 
     /**
      *
      * @return DateTimeLocal|NullDateTimeLocal|null $df_fin
+     * @deprecated El retorno null está deprecado. Este getter aplica fallback y no devolverá null en tiempo de ejecución.
      */
     public function getF_fin(): DateTimeLocal|NullDateTimeLocal|null
     {
@@ -210,11 +213,12 @@ class Equipaje
 
     /**
      *
-     * @param DateTimeLocal|null $df_fin
+     * @param DateTimeLocal|NullDateTimeLocal|null $df_fin
+     *        Si se pasa NullDateTimeLocal o null, se almacenará null internamente.
      */
-    public function setF_fin(DateTimeLocal|null $df_fin = null): void
+    public function setF_fin(DateTimeLocal|NullDateTimeLocal|null $df_fin = null): void
     {
-        $this->df_fin = $df_fin;
+        $this->df_fin = $df_fin instanceof NullDateTimeLocal ? null : $df_fin;
     }
 
     /**

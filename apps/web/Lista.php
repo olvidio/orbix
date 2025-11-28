@@ -3,7 +3,7 @@
 namespace web;
 
 use core\ConfigGlobal;
-use src\usuarios\application\repositories\PreferenciaRepository;
+use src\usuarios\domain\contracts\PreferenciaRepositoryInterface;
 use function core\is_true;
 
 //require_once ("classes/personas/ext_web_preferencias.class");
@@ -105,7 +105,7 @@ class Lista
     private $formato_tabla = '';
 
 
-    private PreferenciaRepository $preferenciaRepository;
+    private $preferenciaRepository;
 
     /* CONSTRUCTOR -------------------------------------------------------------- */
 
@@ -117,7 +117,7 @@ class Lista
      */
     function __construct()
     {
-        $this->preferenciaRepository = new PreferenciaRepository();
+        $this->preferenciaRepository = $GLOBALS['container']->get(PreferenciaRepositoryInterface::class);
     }
 
     /**

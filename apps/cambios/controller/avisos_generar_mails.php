@@ -30,8 +30,8 @@ use cambios\model\entity\CambioDl;
 use cambios\model\entity\CambioUsuario;
 use cambios\model\entity\GestorCambioUsuario;
 use core\ConfigGlobal;
-use src\usuarios\application\repositories\PreferenciaRepository;
-use src\usuarios\application\repositories\UsuarioRepository;
+use src\usuarios\domain\contracts\PreferenciaRepositoryInterface;
+use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
 use web\Lista;
 
 // INICIO Cabecera global de URL de controlador *********************************
@@ -77,7 +77,7 @@ $zona_horaria = '';
 $a_datos = [];
 $a_id = [];
 $DateTimeZone = new DateTimeZone('UTC');
-$UsuarioRepository = new UsuarioRepository();
+$UsuarioRepository = $GLOBALS['container']->get(UsuarioRepositoryInterface::class);
 foreach ($cCambiosUsuario as $oCambioUsuario) {
     $id_usuario = $oCambioUsuario->getId_usuario();
 
@@ -92,7 +92,7 @@ foreach ($cCambiosUsuario as $oCambioUsuario) {
         $email = $oMiUsuario->getEmailAsString();
         $id_usuario_anterior = $id_usuario;
         // buscar la zona horaria
-        $PreferenciaRepository = new PreferenciaRepository();
+        $PreferenciaRepository = $GLOBALS['container']->get(PreferenciaRepositoryInterface::class);
         $oPreferencia = $PreferenciaRepository->findById($id_usuario, 'zona_horaria');
         if ($oPreferencia !== null) {
             $zona_horaria = $oPreferencia->getPreferencia();

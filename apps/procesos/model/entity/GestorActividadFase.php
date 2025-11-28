@@ -7,8 +7,8 @@ use core\Condicion;
 use core\ConfigGlobal;
 use core\Set;
 use permisos\model\PermDl;
-use src\usuarios\application\repositories\RoleRepository;
-use src\usuarios\application\repositories\UsuarioRepository;
+use src\usuarios\domain\contracts\RoleRepositoryInterface;
+use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
 use web\Desplegable;
 
 /**
@@ -95,12 +95,12 @@ class GestorActividadFase extends ClaseGestor
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
 
-        $UsuarioRepository = new UsuarioRepository();
+        $UsuarioRepository = $GLOBALS['container']->get(UsuarioRepositoryInterface::class);
         $oMiUsuario = $UsuarioRepository->findById(ConfigGlobal::mi_id_usuario());
         $id_role = $oMiUsuario->getId_role();
         $miSfsv = ConfigGlobal::mi_sfsv();
 
-        $RoleRepository = new RoleRepository();
+        $RoleRepository = $GLOBALS['container']->get(RoleRepositoryInterface::class);
         $aRoles = $RoleRepository->getArrayRoles();
 
         $cond = '';
@@ -246,12 +246,12 @@ class GestorActividadFase extends ClaseGestor
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
 
-        $UsuarioRepository = new UsuarioRepository();
+        $UsuarioRepository = $GLOBALS['container']->get(UsuarioRepositoryInterface::class);
         $oMiUsuario = $UsuarioRepository->findById(ConfigGlobal::mi_id_usuario());
         $id_role = $oMiUsuario->getId_role();
         $miSfsv = ConfigGlobal::mi_sfsv();
 
-        $RoleRepository = new RoleRepository();
+        $RoleRepository = $GLOBALS['container']->get(RoleRepositoryInterface::class);
         $aRoles = $RoleRepository->getArrayRoles();
 
         if ($bresp) {

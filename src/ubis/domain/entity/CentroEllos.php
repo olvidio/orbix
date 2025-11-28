@@ -120,6 +120,19 @@ class CentroEllos
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
     /**
+     * Constructor para inyectar los repositorios necesarios.
+     *
+     * $repoCasaDireccion Repositorio de relación Casa-Dirección
+     * $repoDireccion Repositorio de Direcciones
+     */
+    public function __construct()
+    {
+        /* TODO: resolver el tema de las direcciones en DB-comun */
+        $this->repoCasaDireccion = [];
+        $this->repoDireccion = [];
+    }
+
+    /**
      * Establece el valor de todos los atributos
      *
      * @param array $aDatos
@@ -305,6 +318,10 @@ class CentroEllos
      *
      * @return DateTimeLocal|NullDateTimeLocal|null $df_status
      */
+    /**
+     * @return DateTimeLocal|NullDateTimeLocal|null $df_status
+     * @deprecated El retorno null está deprecado. Este getter aplica fallback y no devolverá null en tiempo de ejecución.
+     */
     public function getF_status(): DateTimeLocal|NullDateTimeLocal|null
     {
         return $this->df_status ?? new NullDateTimeLocal;
@@ -314,9 +331,12 @@ class CentroEllos
      *
      * @param DateTimeLocal|null $df_status
      */
-    public function setF_status(DateTimeLocal|null $df_status = null): void
+    /**
+     * @param DateTimeLocal|NullDateTimeLocal|null $df_status
+     */
+    public function setF_status(DateTimeLocal|NullDateTimeLocal|null $df_status = null): void
     {
-        $this->df_status = $df_status;
+        $this->df_status = $df_status instanceof NullDateTimeLocal ? null : $df_status;
     }
 
     /**

@@ -2,8 +2,8 @@
 
 use core\ConfigGlobal;
 use core\ViewPhtml;
-use src\ubis\application\repositories\DescTelecoRepository;
-use src\ubis\application\repositories\TipoTelecoRepository;
+use src\ubis\domain\contracts\DescTelecoRepositoryInterface;
+use src\ubis\domain\contracts\TipoTelecoRepositoryInterface;
 use web\Desplegable;
 use web\Hash;
 
@@ -115,7 +115,7 @@ switch ($Qobj_pau) {
 
 $campos_chk = '';
 
-$TipoTelecoRepository = new TipoTelecoRepository();
+$TipoTelecoRepository = $GLOBALS['container']->get(TipoTelecoRepositoryInterface::class);
 $aOpciones = $TipoTelecoRepository->getArrayTiposTelecoUbi();
 $oDesplegableTiposTeleco = new Desplegable();
 $oDesplegableTiposTeleco->setNombre('id_tipo_teleco');
@@ -124,7 +124,7 @@ $oDesplegableTiposTeleco->setOpcion_sel($id_tipo_teleco);
 $oDesplegableTiposTeleco->setAction('fnjs_actualizar_descripcion()');
 $oDesplegableTiposTeleco->setBlanco(true);
 
-$oDescTeleco = new DescTelecoRepository();
+$oDescTeleco = $GLOBALS['container']->get(DescTelecoRepositoryInterface::class);
 $aOpciones = [];
 if (!empty($id_tipo_teleco)) {
     $aOpciones = $oDescTeleco->getArrayDescTelecoUbis($id_tipo_teleco);

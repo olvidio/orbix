@@ -1,24 +1,14 @@
 <?php
 
 use core\ConfigGlobal;
-use src\menus\application\repositories\GrupMenuRepository;
-use src\menus\application\repositories\GrupMenuRoleRepository;
-use src\usuarios\application\repositories\PreferenciaRepository;
+use src\menus\domain\contracts\GrupMenuRepositoryInterface;
+use src\menus\domain\contracts\GrupMenuRoleRepositoryInterface;
+use src\usuarios\domain\contracts\PreferenciaRepositoryInterface;
 use web\ContestarJson;
-
-// INICIO Cabecera global de URL de controlador *********************************
-require_once("apps/core/global_header.inc");
-// Archivos requeridos por esta url **********************************************
-
-// Crea los objetos de uso global **********************************************
-require_once("apps/core/global_object.inc");
-// Crea los objetos por esta url  **********************************************
-
-// FIN de  Cabecera global de URL de controlador ********************************
 
 $error_txt = '';
 
-$preferenciaRepository = new PreferenciaRepository();
+$preferenciaRepository = $GLOBALS['container']->get(PreferenciaRepositoryInterface::class);
 
 $id_usuario = ConfigGlobal::mi_id_usuario();
 $id_role = ConfigGlobal::mi_id_role();
@@ -51,9 +41,9 @@ if (ConfigGlobal::is_app_installed('cambios')) {
 }
 
 //oficinas posibles:
-$GrupMenuRoleRepository = new GrupMenuRoleRepository();
+$GrupMenuRoleRepository = $GLOBALS['container']->get(GrupMenuRoleRepositoryInterface::class);
 $cGMR = $GrupMenuRoleRepository->getGrupMenuRoles(array('id_role' => $id_role));
-$GrupMenuRepository = new GrupMenuRepository();
+$GrupMenuRepository = $GLOBALS['container']->get(GrupMenuRepositoryInterface::class);
 $oficinas_posibles = [];
 foreach ($cGMR as $oGMR) {
     $id_grupmenu = $oGMR->getId_grupmenu();
@@ -62,7 +52,6 @@ foreach ($cGMR as $oGMR) {
 
     $oficinas_posibles[$id_grupmenu] = $grup_menu;
 }
-
 
 // ----------- Página de estilo -------------------
 $oPreferencia = $preferenciaRepository->findById($id_usuario, 'estilo');
@@ -137,6 +126,5 @@ $data['tipo_apellidos_ap_nom'] = $tipo_apellidos_ap_nom;
 $data['tipo_apellidos_nom_ap'] = $tipo_apellidos_nom_ap;
 $data['idioma'] = $idioma;
 $data['zona_horaria'] = $zona_horaria;
-
 
 ContestarJson::enviar($error_txt, $data);

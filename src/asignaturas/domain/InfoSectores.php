@@ -4,8 +4,7 @@ namespace src\asignaturas\domain;
 
 /* No vale el underscore en el nombre */
 
-
-use src\asignaturas\application\repositories\SectorRepository;
+use src\asignaturas\domain\contracts\SectorRepositoryInterface;
 use src\shared\domain\DatosInfoRepo;
 
 class InfoSectores extends DatosInfoRepo
@@ -33,7 +32,7 @@ class InfoSectores extends DatosInfoRepo
             $aWhere = array('sector' => $this->k_buscar);
             $aOperador = array('sector' => 'sin_acentos');
         }
-        $oLista = new SectorRepository();
+        $oLista = $GLOBALS['container']->get(SectorRepositoryInterface::class);
         $Coleccion = $oLista->getSectores($aWhere, $aOperador);
 
         return $Coleccion;

@@ -5,7 +5,7 @@ namespace actividadestudios\model\entity;
 use core\ClaseGestor;
 use core\Condicion;
 use core\Set;
-use src\ubis\application\repositories\DelegacionRepository;
+use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 
 /**
  * GestorMatricula
@@ -183,7 +183,7 @@ class GestorMatricula extends ClaseGestor
         $schema = $_SESSION['session_auth']['esquema'];
         $a_reg = explode('-', $schema);
         $RegionStgr = $a_reg[0];
-        $repoDl = new DelegacionRepository();
+        $repoDl = $GLOBALS['container']->get(DelegacionRepositoryInterface::class);
         $a_id_dl_dl = $repoDl->getArrayDlRegionStgr([$RegionStgr]); // [id_dl => dl]
         // solo valores (siglas dl)
         $a_dl_vals = array_values($a_id_dl_dl);

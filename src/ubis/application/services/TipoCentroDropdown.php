@@ -2,7 +2,7 @@
 
 namespace src\ubis\application\services;
 
-use src\ubis\application\repositories\TipoCentroRepository;
+use src\ubis\domain\contracts\TipoCentroRepositoryInterface;
 use web\Desplegable;
 
 /**
@@ -20,7 +20,7 @@ final class TipoCentroDropdown
      */
     public static function listaTiposCentro(bool $conBlanco, string $nombreCampo): Desplegable
     {
-        $repo = new TipoCentroRepository();
+        $repo = $GLOBALS['container']->get(TipoCentroRepositoryInterface::class);
         $opciones = $repo->getArrayTiposCentro();
 
         $despl = new Desplegable();

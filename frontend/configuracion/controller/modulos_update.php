@@ -1,6 +1,6 @@
 <?php
 // INICIO Cabecera global de URL de controlador *********************************
-use src\configuracion\application\repositories\ModuloRepository;
+use src\configuracion\domain\contracts\ModuloRepositoryInterface;
 use src\configuracion\domain\entity\Modulo;
 use src\configuracion\domain\value_objects\AppsReq;
 use src\configuracion\domain\value_objects\ModsReq;
@@ -37,7 +37,7 @@ $Qsel_mods = filter_input(\INPUT_POST, 'sel_mods', \FILTER_VALIDATE_INT, \FILTER
 $Qsel_apps = filter_input(\INPUT_POST, 'sel_apps', \FILTER_VALIDATE_INT, \FILTER_REQUIRE_ARRAY);
 
 
-$ModuloRepository = new ModuloRepository();
+$ModuloRepository = $GLOBALS['container']->get(ModuloRepositoryInterface::class);
 switch ($Qmod) {
     case 'nuevo':
         if (!empty($Qnom)) {

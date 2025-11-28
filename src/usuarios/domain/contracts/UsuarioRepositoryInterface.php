@@ -5,7 +5,6 @@ namespace src\usuarios\domain\contracts;
 use PDO;
 use src\usuarios\domain\entity\Usuario;
 
-
 /**
  * Interfaz de la clase usuario y su Repositorio
  *
@@ -26,10 +25,10 @@ interface UsuarioRepositoryInterface
 	 *
 	 * @param array $aWhere asociativo con los valores para cada campo de la BD.
 	 * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-	 * @return array|FALSE Una colección de objetos de tipo usuario
+	 * @return array|false Una colección de objetos de tipo usuario
 	
 	 */
-	public function getUsuarios(array $aWhere=[], array $aOperators=[]): array|FALSE;
+	public function getUsuarios(array $aWhere=[], array $aOperators=[]): array|false;
 	
 /* -------------------- ENTIDAD --------------------------------------------- */
 

@@ -5,7 +5,6 @@ namespace src\notas\domain\contracts;
 use PDO;
 use src\notas\domain\entity\Nota;
 
-
 use function core\is_true;
 /**
  * Interfaz de la clase Nota y su Repositorio

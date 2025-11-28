@@ -1,15 +1,7 @@
 <?php
 
-use src\inventario\application\repositories\EgmRepository;
+use src\inventario\domain\contracts\EgmRepositoryInterface;
 use web\ContestarJson;
-
-// INICIO Cabecera global de URL de controlador *********************************
-require_once("apps/core/global_header.inc");
-// Archivos requeridos por esta url **********************************************
-
-// Crea los objetos de uso global **********************************************
-require_once("apps/core/global_object.inc");
-// FIN de  Cabecera global de URL de controlador ********************************
 
 $Qid_grupo = (integer)filter_input(INPUT_POST, 'id_grupo');
 $Qid_equipaje = (integer)filter_input(INPUT_POST, 'id_equipaje');
@@ -17,7 +9,7 @@ $Qid_equipaje = (integer)filter_input(INPUT_POST, 'id_equipaje');
 $error_txt = '';
 
 // Nuevo egm:
-$EgmRepository = new EgmRepository();
+$EgmRepository = $GLOBALS['container']->get(EgmRepositoryInterface::class);
 $aWhere = [
     'id_equipaje' => $Qid_equipaje,
     'id_grupo' => $Qid_grupo,
@@ -25,7 +17,7 @@ $aWhere = [
 $cEgm = $EgmRepository->getEgmes($aWhere);
 if (!empty($cEgm)) {
     $oEgm = $cEgm[0];
-    if ($EgmRepository->Eliminar($oEgm) === FALSE) {
+    if ($EgmRepository->Eliminar($oEgm) === false) {
         $error_txt .= _("hay un error, no se ha eliminado");
         $error_txt .= "\n" . $EgmRepository->getErrorTxt();
     }

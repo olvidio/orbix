@@ -2,11 +2,9 @@
 
 namespace devel\model;
 
-use actividadcargos\model\entity\Cargo;
-use actividadcargos\model\entity\GestorCargo;
 use core\ConfigDB;
 use core\DBConnection;
-use src\actividadcargos\application\repositories\CargoRepository;
+use src\actividadcargos\domain\contracts\CargoRepositoryInterface;
 
 class DBAlterSchema
 {
@@ -612,7 +610,7 @@ class DBAlterSchema
             return false;
         }
         // tipos de cargo:
-        $CargoRepository = new CargoRepository();
+        $CargoRepository = $GLOBALS['container']->get(CargoRepositoryInterface::class);
         foreach ($oDbl->query($sql) as $aDades) {
             $id_activ = $aDades['id_activ'];
             $id_cargo = $aDades['id_cargo'];

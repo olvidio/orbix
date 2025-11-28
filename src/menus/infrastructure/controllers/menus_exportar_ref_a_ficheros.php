@@ -3,14 +3,6 @@
 use core\ConfigGlobal;
 use core\ServerConf;
 
-// INICIO Cabecera global de URL de controlador *********************************
-require_once("apps/core/global_header.inc");
-// Archivos requeridos por esta url **********************************************
-
-// Crea los objetos de uso global **********************************************
-require_once("apps/core/global_object.inc");
-// FIN de  Cabecera global de URL de controlador ********************************
-
 /*
  * Para que no de errror al ejecutar psql. usuario root no coincide con dani
  * En el fichero /etc/postgresql/9.5/main/pg_hba.conf, hacia la line 90:
@@ -95,7 +87,6 @@ if ($Qaccion === 'importar') {
         }
     }
 }
-
 
 if ($Qaccion === 'exportar') {
     // PASSAR A FICHEROS

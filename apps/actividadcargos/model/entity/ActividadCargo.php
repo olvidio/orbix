@@ -1,7 +1,8 @@
 <?php
 
 namespace actividadcargos\model\entity;
-use src\actividadcargos\application\repositories\CargoRepository;
+
+use src\actividadcargos\domain\contracts\CargoRepositoryInterface;
 
 /**
  * Fitxer amb la Classe que accedeix a la taula d_cargos_activ_dl
@@ -35,7 +36,7 @@ class ActividadCargo extends ActividadCargoAbstract
     {
         $aDades = $this->getAllAtributes();
         $id_cargo = $this->getId_cargo();
-        $oCargo = (new CargoRepository())->findById($id_cargo);
+        $oCargo = $GLOBALS['container']->get(CargoRepositoryInterface::class)->findById($id_cargo);
         $tipo_cargo = $oCargo->getTipoCargoVo()?->value();
         switch ($tipo_cargo) {
             case 'sacd':
@@ -58,7 +59,7 @@ class ActividadCargo extends ActividadCargoAbstract
     public function DBEliminar()
     {
         $id_cargo = $this->getId_cargo();
-        $oCargo = (new CargoRepository())->findById($id_cargo);
+        $oCargo = $GLOBALS['container']->get(CargoRepositoryInterface::class)->findById($id_cargo);
         $tipo_cargo = $oCargo->getTipoCargoVo()?->value();
         switch ($tipo_cargo) {
             case 'sacd':

@@ -10,12 +10,12 @@ use core\ValueObject\Uuid;
 use personas\model\entity\PersonaDl;
 use shared\domain\ColaMailId;
 use shared\domain\entity\ColaMail;
-use shared\domain\repositories\ColaMailRepository;
-use src\actividadcargos\application\repositories\CargoRepository;
-use src\configuracion\application\repositories\ConfigSchemaRepository;
-use src\ubis\application\repositories\CentroDlRepository;
+use shared\domain\repositories\ColaMailRepositoryInterface;
+use src\actividadcargos\domain\contracts\CargoRepositoryInterface;
+use src\configuracion\domain\contracts\ConfigSchemaRepositoryInterface;
+use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use src\ubis\domain\entity\Ubi;
-use src\usuarios\application\repositories\UsuarioRepository;
+use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
 use web\DateTimeLocal;
 use web\TiposActividades;
 use function core\is_true;
@@ -68,7 +68,7 @@ class ComunicarActividadesSacd
     public function getArrayComunicacion()
     {
         // valores del id_cargo de tipo_cargo = sacd:
-        $CargoRepository = new CargoRepository();
+        $CargoRepository = $GLOBALS['container']->get(CargoRepositoryInterface::class);
         $aIdCargos_sacd = $CargoRepository->getArrayCargos('sacd');
 
         $oActividadesSacdFunciones = new ActividadesSacdFunciones();
@@ -237,7 +237,7 @@ class ComunicarActividadesSacd
         $mi_dele = ConfigGlobal::mi_dele();
 
         // e-mail jefe calendario
-        $ConfigSchemaRepository = new ConfigSchemaRepository();
+        $ConfigSchemaRepository = $GLOBALS['container']->get(ConfigSchemaRepositoryInterface::class);
         $parametro = 'jefe_calendario';
         $oConfigSchema = $ConfigSchemaRepository->findById($parametro);
         $valor = $oConfigSchema?->getValorVo()?->value();
@@ -250,7 +250,7 @@ class ComunicarActividadesSacd
         // pasar el valor de nombres separados por coma a array:
         $a_jefes_calendario = explode(',', $valor);
         $jefe_calendario = $a_jefes_calendario[0];
-        $UsuarioRepository = new UsuarioRepository();
+        $UsuarioRepository = $GLOBALS['container']->get(UsuarioRepositoryInterface::class);
         $cUsuarios = $UsuarioRepository->getUsuarios(['usuario' => $jefe_calendario]);
         $oUsuarioJefe = $cUsuarios[0];
         $e_mail_jefe = $oUsuarioJefe->getEmailAsString();
@@ -287,7 +287,7 @@ class ComunicarActividadesSacd
 
             // buscar el mail del ctr
             $id_ctr = $oPersona->getId_ctr();
-            $CentroDlRepository = new CentroDlRepository();
+            $CentroDlRepository = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
             $oCentroDl = $CentroDlRepository->findById($id_ctr);
             $e_mail_ctr = $oCentroDl->emailPrincipalOPrimero();
 
@@ -408,7 +408,7 @@ class ComunicarActividadesSacd
             $oColaMail->setMessage($cuerpo);
             $oColaMail->setSubject($asunto);
             $oColaMail->setWrited_by($write_by);
-            $ColaMailRepository = new ColaMailRepository();
+            $ColaMailRepository = $GLOBALS['container']->get(ColaMailRepositoryInterface::class);
             $ColaMailRepository->Guardar($oColaMail);
 
             // mail para el ctr. No se envía copia al jefe de calendario
@@ -422,7 +422,7 @@ class ComunicarActividadesSacd
                 $oColaMail->setMessage($cuerpo);
                 $oColaMail->setSubject($asunto);
                 $oColaMail->setWrited_by($write_by);
-                $ColaMailRepository = new ColaMailRepository();
+                $ColaMailRepository = $GLOBALS['container']->get(ColaMailRepositoryInterface::class);
                 $ColaMailRepository->Guardar($oColaMail);
             }
 

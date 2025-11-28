@@ -3,12 +3,12 @@
 use core\ConfigGlobal;
 use core\DBPropiedades;
 use core\ViewPhtml;
-use src\ubis\application\repositories\CasaDlRepository;
-use src\ubis\application\repositories\CasaExRepository;
-use src\ubis\application\repositories\CasaRepository;
-use src\ubis\application\repositories\CentroDlRepository;
-use src\ubis\application\repositories\CentroExRepository;
-use src\ubis\application\repositories\CentroRepository;
+use src\ubis\domain\contracts\CasaDlRepositoryInterface;
+use src\ubis\domain\contracts\CasaExRepositoryInterface;
+use src\ubis\domain\contracts\CasaRepositoryInterface;
+use src\ubis\domain\contracts\CentroDlRepositoryInterface;
+use src\ubis\domain\contracts\CentroExRepositoryInterface;
+use src\ubis\domain\contracts\CentroRepositoryInterface;
 use web\Desplegable;
 use web\Hash;
 use web\Lista;
@@ -213,27 +213,27 @@ if ($Qloc === 'ex') {
 
 switch ($obj) {
     case 'Centro':
-        $CentroRepository = new CentroRepository();
+        $CentroRepository = $GLOBALS['container']->get(CentroRepositoryInterface::class);
         $cUbis = $CentroRepository->getCentros($aWhere, $aOperador);
         break;
     case 'CentroDl':
-        $CentroRepository = new CentroDlRepository();
+        $CentroRepository = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
         $cUbis = $CentroRepository->getCentros($aWhere, $aOperador);
         break;
     case 'CentroEx':
-        $CentroRepository = new CentroExRepository();
+        $CentroRepository = $GLOBALS['container']->get(CentroExRepositoryInterface::class);
         $cUbis = $CentroRepository->getCentros($aWhere, $aOperador);
         break;
     case 'Casa':
-        $CasaRepository = new CasaRepository();
+        $CasaRepository = $GLOBALS['container']->get(CasaRepositoryInterface::class);
         $cUbis = $CasaRepository->getCasas($aWhere, $aOperador);
         break;
     case 'CasaDl':
-        $CasaRepository = new CasaDlRepository();
+        $CasaRepository = $GLOBALS['container']->get(CasaDlRepositoryInterface::class);
         $cUbis = $CasaRepository->getCasas($aWhere, $aOperador);
         break;
     case 'CasaEx':
-        $CasaRepository = new CasaExRepository();
+        $CasaRepository = $GLOBALS['container']->get(CasaExRepositoryInterface::class);
         $cUbis = $CasaRepository->getCasas($aWhere, $aOperador);
         break;
     case 'none':

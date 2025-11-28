@@ -9,7 +9,7 @@ use cambios\model\entity\GestorCambioUsuarioPropiedadPref;
 use cambios\model\GestorAvisoCambios;
 use core\ConfigGlobal;
 use procesos\model\entity\ActividadFase;
-use src\usuarios\application\repositories\UsuarioRepository;
+use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
 use web\ContestarJson;
 use web\TiposActividades;
 
@@ -29,7 +29,7 @@ $nombre_usuario = '';
 
 if ((ConfigGlobal::is_app_installed('cambios')) && (!empty($Qid_usuario)) && ($Qquien === 'usuario')) {
     // mando también el nombre del usuario
-    $UsuarioRepository = new UsuarioRepository();
+    $UsuarioRepository = $GLOBALS['container']->get(UsuarioRepositoryInterface::class);
     $oUsuario = $UsuarioRepository->findById($Qid_usuario);
     $nombre_usuario = $oUsuario->getUsuarioAsString();
 

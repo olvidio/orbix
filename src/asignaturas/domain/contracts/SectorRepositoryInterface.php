@@ -5,7 +5,6 @@ namespace src\asignaturas\domain\contracts;
 use PDO;
 use src\asignaturas\domain\entity\Sector;
 
-
 /**
  * Interfaz de la clase Sector y su Repositorio
  *
@@ -28,10 +27,10 @@ interface SectorRepositoryInterface
 	 *
 	 * @param array $aWhere asociativo con los valores para cada campo de la BD.
 	 * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-	 * @return array|FALSE Una colección de objetos de tipo Sector
+	 * @return array|false Una colección de objetos de tipo Sector
 	
 	 */
-	public function getSectores(array $aWhere=[], array $aOperators=[]): array|FALSE;
+	public function getSectores(array $aWhere=[], array $aOperators=[]): array|false;
 	
 /* -------------------- ENTIDAD --------------------------------------------- */
 

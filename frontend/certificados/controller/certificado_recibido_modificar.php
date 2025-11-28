@@ -2,8 +2,8 @@
 
 // INICIO Cabecera global de URL de controlador *********************************
 use frontend\shared\model\ViewNewTwig;
-use src\certificados\application\repositories\CertificadoRecibidoRepository;
-use src\usuarios\application\repositories\LocalRepository;
+use src\certificados\domain\contracts\CertificadoRecibidoRepositoryInterface;
+use src\usuarios\domain\contracts\LocalRepositoryInterface;
 use web\DateTimeLocal;
 use web\Desplegable;
 use web\Hash;
@@ -23,7 +23,7 @@ $oPosicion->addParametro('id_sel', $a_sel, 1);
 $scroll_id = (integer)filter_input(INPUT_POST, 'scroll_id');
 $oPosicion->addParametro('scroll_id', $scroll_id, 1);
 
-$certificadoRecibidoRepository = new CertificadoRecibidoRepository();
+$certificadoRecibidoRepository = $GLOBALS['container']->get(CertificadoRecibidoRepositoryInterface::class);
 $oCertificadoRecibido = $certificadoRecibidoRepository->findById($Qid_item);
 
 $id_nom = $oCertificadoRecibido->getId_nom();
@@ -56,7 +56,7 @@ $oHashCertificadoPdf->setArrayCamposHidden([
 ]);
 
 //Idiomas
-$LocalRepository = new LocalRepository();
+$LocalRepository = $GLOBALS['container']->get(LocalRepositoryInterface::class);
 $a_locales = $LocalRepository->getArrayLocales();
 $oDesplIdiomas = new Desplegable('idioma', $a_locales, $idioma, true);
 

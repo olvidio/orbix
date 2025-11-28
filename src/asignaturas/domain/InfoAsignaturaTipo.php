@@ -4,8 +4,7 @@ namespace src\asignaturas\domain;
 
 /* No vale el underscore en el nombre */
 
-
-use src\asignaturas\application\repositories\AsignaturaTipoRepository;
+use src\asignaturas\domain\contracts\AsignaturaTipoRepositoryInterface;
 use src\shared\domain\DatosInfoRepo;
 
 class InfoAsignaturaTipo extends DatosInfoRepo
@@ -33,7 +32,7 @@ class InfoAsignaturaTipo extends DatosInfoRepo
             $aWhere = array('tipo_asignatura' => $this->k_buscar);
             $aOperador = array('tipo_asignatura' => 'sin_acentos');
         }
-        $oLista = new AsignaturaTipoRepository();
+        $oLista = $GLOBALS['container']->get(AsignaturaTipoRepositoryInterface::class);
         $Coleccion = $oLista->getAsignaturaTipos($aWhere, $aOperador);
 
         return $Coleccion;

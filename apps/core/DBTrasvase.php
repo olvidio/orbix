@@ -8,22 +8,21 @@ use actividades\model\entity\GestorActividadDl;
 use actividades\model\entity\GestorActividadEx;
 use devel\model\DBAbstract;
 use PDO;
-use src\ubis\application\repositories\CasaDlRepository;
-use src\ubis\application\repositories\CasaExRepository;
-use src\ubis\application\repositories\CentroDlRepository;
-use src\ubis\application\repositories\CentroEllasRepository;
-use src\ubis\application\repositories\CentroEllosRepository;
-use src\ubis\application\repositories\CentroExRepository;
-use src\ubis\application\repositories\DireccionCasaDlRepository;
-use src\ubis\application\repositories\DireccionCasaExRepository;
-use src\ubis\application\repositories\DireccionRepository;
-use src\ubis\application\repositories\TelecoCdcDlRepository;
-use src\ubis\application\repositories\TelecoCdcExRepository;
-use src\ubis\application\repositories\TelecoCtrDlRepository;
-use src\ubis\application\repositories\TelecoCtrExRepository;
+use src\ubis\domain\contracts\CasaDlRepositoryInterface;
+use src\ubis\domain\contracts\CasaExRepositoryInterface;
+use src\ubis\domain\contracts\CentroDlRepositoryInterface;
+use src\ubis\domain\contracts\CentroEllasRepositoryInterface;
+use src\ubis\domain\contracts\CentroEllosRepositoryInterface;
+use src\ubis\domain\contracts\CentroExRepositoryInterface;
+use src\ubis\domain\contracts\DireccionCasaDlRepositoryInterface;
+use src\ubis\domain\contracts\DireccionCasaExRepositoryInterface;
+use src\ubis\domain\contracts\TelecoCdcDlRepositoryInterface;
+use src\ubis\domain\contracts\TelecoCdcExRepositoryInterface;
+use src\ubis\domain\contracts\TelecoCtrDlRepositoryInterface;
+use src\ubis\domain\contracts\TelecoCtrExRepositoryInterface;
 use src\ubis\domain\entity\CentroEllas;
 use src\ubis\domain\entity\CentroEllos;
-use src\utils_database\application\repositories\MapIdRepository;
+use src\utils_database\domain\contracts\MapIdRepositoryInterface;
 use src\utils_database\domain\value_objects\MapIdDl;
 
 class DBTrasvase extends DBAbstract
@@ -252,7 +251,7 @@ class DBTrasvase extends DBAbstract
                 $cActividades = $GesActividadesEx->getActividades(['dl_org' => $dl_org]);
                 $error = '';
                 if (!empty($cActividades)) {
-                    $MapIdRepository = new MapIdRepository();
+                    $MapIdRepository = $GLOBALS['container']->get(MapIdRepositoryInterface::class);
                     $MapIdRepository->setoDbl($oDbl);
                     foreach ($cActividades as $oActividad) {
                         $oActividad->DBCarregar();
@@ -332,7 +331,7 @@ class DBTrasvase extends DBAbstract
         $region = $this->getRegion();
         $tipoUbicacion = substr($dl, 0, 2); // puede ser: cr => comisión, dl => delegación, ci => centro interregional.
 
-        $MapIdRepository = new MapIdRepository();
+        $MapIdRepository = $GLOBALS['container']->get(MapIdRepositoryInterface::class);
         $MapIdRepository->setoDbl($oDbl);
         switch ($que) {
             case 'resto2dl':
@@ -343,10 +342,10 @@ class DBTrasvase extends DBAbstract
                     $aWhere = ['dl' => $dl, 'region' => $region];
                     $aOperador = [];
                 }
-                $CasaExRepository = new CasaExRepository();
+                $CasaExRepository = $GLOBALS['container']->get(CasaExRepositoryInterface::class);
                 $cCasasEx = $CasaExRepository->getCasas($aWhere, $aOperador);
                 $error = '';
-                $CasaDlReposiroty = new CasaDlRepository();
+                $CasaDlReposiroty = $GLOBALS['container']->get(CasaDlRepositoryInterface::class);
                 foreach ($cCasasEx as $oCasaEx) {
                     $aDades = $oCasaEx->getTot();
                     $oCasaDl = new Casa();
@@ -366,8 +365,8 @@ class DBTrasvase extends DBAbstract
                         // Buscar la dirección
                         $gesCdcExxDireccion = new GestorCdcExxDireccion();
                         $cUbixDirecciones = $gesCdcExxDireccion->getCdcxDirecciones(['id_ubi' => $id_ubi_old]);
-                        $DireccionCasaDlRepository = new DireccionCasaDlRepository();
-                        $DireccionCasaExRepository = new DireccionCasaExRepository();
+                        $DireccionCasaDlRepository = $GLOBALS['container']->get(DireccionCasaDlRepositoryInterface::class);
+                        $DireccionCasaExRepository = $GLOBALS['container']->get(DireccionCasaExRepositoryInterface::class);
                         foreach ($cUbixDirecciones as $oUbixDireccion) {
                             $id_direccion_old = $oUbixDireccion->getId_direccion();
                             $oDireccion = $DireccionCasaExRepository->findById($id_direccion_old);
@@ -391,9 +390,9 @@ class DBTrasvase extends DBAbstract
                             $oUbixDireccion->DBEliminar();
                         }
                         // Buscar las telecos
-                        $TelecoCdcExRepository = new TelecoCdcExRepository();
+                        $TelecoCdcExRepository = $GLOBALS['container']->get(TelecoCdcExRepositoryInterface::class);
                         $cTelecos = $TelecoCdcExRepository->getTelecos(['id_ubi' => $id_ubi_old]);
-                        $TelecoCdcDlRepository = new TelecoCdcDlRepository();
+                        $TelecoCdcDlRepository = $GLOBALS['container']->get(TelecoCdcDlRepositoryInterface::class);
                         foreach ($cTelecos as $oTelecoCdcEx) {
                             $newId = $TelecoCdcDlRepository->getNewId();
                             $oTelecoCdcDl = clone $oTelecoCdcEx;
@@ -461,7 +460,7 @@ class DBTrasvase extends DBAbstract
         $region = $this->getRegion();
         $tipoUbicacion = substr($dl, 0, 2); // puede ser: cr => cominsión, dl => delegacion, ci => centro interregional.
 
-        $MapIdRepository = new MapIdRepository();
+        $MapIdRepository = $GLOBALS['container']->get(MapIdRepositoryInterface::class);
         $MapIdRepository->setoDbl($oDbl);
         switch ($que) {
             case 'resto2dl':
@@ -472,11 +471,11 @@ class DBTrasvase extends DBAbstract
                     $aWhere = ['dl' => $dl, 'region' => $region];
                     $aOperador = [];
                 }
-                $gesCentroEx = new CentroExRepository();
+                $gesCentroEx = $GLOBALS['container']->get(CentroExRepositoryInterface::class);
                 $cCentroEx = $gesCentroEx->getCentros($aWhere, $aOperador);
                 $error = '';
-                $CentroEllasRepository = new CentroEllasRepository();
-                $CentroEllosRepository = new CentroEllosRepository();
+                $CentroEllasRepository = $GLOBALS['container']->get(CentroEllasRepositoryInterface::class);
+                $CentroEllosRepository = $GLOBALS['container']->get(CentroEllosRepositoryInterface::class);
                 foreach ($cCentroEx as $oCentroEx) {
                     $oCentroEx->DBCarregar();
                     $aDades = $oCentroEx->getTot();
@@ -485,7 +484,7 @@ class DBTrasvase extends DBAbstract
                     // Ahora uso la nomenclatura para dl tipo 'crA'
                     $aDades['dl'] = $dl;
 
-                    $CentroDlRepository = new CentroDlRepository();
+                    $CentroDlRepository = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
                     $CentroDlRepository->setoDbl($oDbl);
                     $oCentroDl = new CentroDl();
                     $oCentroDl->setAllAttributes($aDades, TRUE);
@@ -545,9 +544,9 @@ class DBTrasvase extends DBAbstract
                             $oUbixDireccion->DBEliminar();
                         }
                         // Buscar las telecos
-                        $TelecoCtrExRepository = new TelecoCtrExRepository();
+                        $TelecoCtrExRepository = $GLOBALS['container']->get(TelecoCtrExRepositoryInterface::class);
                         $cTelecos = $TelecoCtrExRepository->getTelecos(['id_ubi' => $id_ubi_old]);
-                        $TelecoCtrDlRepository = new TelecoCtrDlRepository();
+                        $TelecoCtrDlRepository = $GLOBALS['container']->get(TelecoCtrDlRepositoryInterface::class);
                         foreach ($cTelecos as $oTelecoCtrEx) {
                             $newId = $TelecoCtrDlRepository->getNewId();
                             $oTelecoCtrDl = clone $oTelecoCtrEx;

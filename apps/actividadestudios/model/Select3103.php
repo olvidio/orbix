@@ -6,11 +6,10 @@ use actividades\model\entity\ActividadAll;
 use actividadestudios\model\entity\GestorActividadAsignatura;
 use actividadestudios\model\entity\GestorActividadAsignaturaDl;
 use actividadestudios\model\entity\GestorMatriculaDl;
-use asignaturas\model\entity\Asignatura;
 use core\ConfigGlobal;
 use core\ViewPhtml;
 use personas\model\entity\Persona;
-use src\asignaturas\application\repositories\AsignaturaRepository;
+use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use web\Hash;
 use web\Lista;
 
@@ -125,6 +124,7 @@ class Select3103
         $a = 0;
         $msg_err = '';
         $aGrupos = [];
+        $AsignaturaRepository = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class);
         foreach ($cActividadAsignaturas as $oActividadAsignatura) {
             $a++;
             $id_asignatura = $oActividadAsignatura->getId_asignatura();
@@ -142,7 +142,7 @@ class Select3103
                 $nom_profesor = '';
             }
 
-            $oAsignatura = (new AsignaturaRepository())->findById($id_asignatura);
+            $oAsignatura = $AsignaturaRepository->findById($id_asignatura);
             if ($oAsignatura === null) {
                 throw new \Exception(sprintf(_("No se ha encontrado la asignatura con id: %s"), $id_asignatura));
             }

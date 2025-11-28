@@ -11,7 +11,6 @@ use PDOException;
 use src\usuarios\domain\entity\Local;
 use src\usuarios\domain\contracts\LocalRepositoryInterface;
 
-
 use function core\is_true;
 /**
  * Clase que adapta la tabla x_locales a la interfaz del repositorio
@@ -52,7 +51,6 @@ class PgLocalRepository extends ClaseRepository implements LocalRepositoryInterf
         return $aOpciones;
     }
 
-
 /* -------------------- GESTOR BASE ---------------------------------------- */
 
 	/**
@@ -60,10 +58,10 @@ class PgLocalRepository extends ClaseRepository implements LocalRepositoryInterf
 	 *
 	 * @param array $aWhere asociativo con los valores para cada campo de la BD.
 	 * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-	 * @return array|FALSE Una colección de objetos de tipo Local
+	 * @return array|false Una colección de objetos de tipo Local
 	
 	 */
-	public function getLocales(array $aWhere=[], array $aOperators=[]): array|FALSE
+	public function getLocales(array $aWhere=[], array $aOperators=[]): array|false
 	{
         $oDbl = $this->getoDbl_Select();
 		$nom_tabla = $this->getNomTabla();
@@ -89,15 +87,15 @@ class PgLocalRepository extends ClaseRepository implements LocalRepositoryInterf
 		if (isset($aWhere['_limit']) && $aWhere['_limit'] !== '') { $sLimit = ' LIMIT '.$aWhere['_limit']; }
 		if (isset($aWhere['_limit'])) { unset($aWhere['_limit']); }
 		$sQry = "SELECT * FROM $nom_tabla ".$sCondicion.$sOrdre.$sLimit;
-		if (($oDblSt = $oDbl->prepare($sQry)) === FALSE) {
+		if (($oDblSt = $oDbl->prepare($sQry)) === false) {
 			$sClaveError = 'PgLocalRepository.listar.prepare';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-			return FALSE;
+			return false;
 		}
-		if (($oDblSt->execute($aWhere)) === FALSE) {
+		if (($oDblSt->execute($aWhere)) === false) {
 			$sClaveError = 'PgLocalRepository.listar.execute';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
-			return FALSE;
+			return false;
 		}
 		
 		$filas = $oDblSt->fetchAll(PDO::FETCH_ASSOC);
@@ -116,10 +114,10 @@ class PgLocalRepository extends ClaseRepository implements LocalRepositoryInterf
         $id_locale = $Local->getId_locale();
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        if (($oDbl->exec("DELETE FROM $nom_tabla WHERE id_locale = '$id_locale'")) === FALSE) {
+        if (($oDbl->exec("DELETE FROM $nom_tabla WHERE id_locale = '$id_locale'")) === false) {
             $sClaveError = 'PgLocalRepository.eliminar';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return FALSE;
+            return false;
         }
         return TRUE;
     }
@@ -142,20 +140,20 @@ class PgLocalRepository extends ClaseRepository implements LocalRepositoryInterf
 		$aDatos['nom_idioma'] = $Local->getNom_idioma();
 		$aDatos['activo'] = $Local->isActivo();
 		array_walk($aDatos, 'core\poner_null');
-		//para el caso de los boolean FALSE, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
+		//para el caso de los boolean false, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
 		if ( is_true($aDatos['activo']) ) { $aDatos['activo']='true'; } else { $aDatos['activo']='false'; }
 
-		if ($bInsert === FALSE) {
+		if ($bInsert === false) {
 			//UPDATE
 			$update="
 					nom_locale               = :nom_locale,
 					idioma                   = :idioma,
 					nom_idioma               = :nom_idioma,
 					activo                   = :activo";
-			if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_locale = '$id_locale'")) === FALSE) {
+			if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_locale = '$id_locale'")) === false) {
 				$sClaveError = 'PgLocalRepository.update.prepare';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-				return FALSE;
+				return false;
 			}
 				
             try {
@@ -165,17 +163,17 @@ class PgLocalRepository extends ClaseRepository implements LocalRepositoryInterf
                 $this->setErrorTxt($err_txt);
                 $sClaveError = 'PgLocalRepository.update.execute';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
-                return FALSE;
+                return false;
             }
 		} else {
 			// INSERT
 			$aDatos['id_locale'] = $Local->getId_locale();
 			$campos="(id_locale,nom_locale,idioma,nom_idioma,activo)";
 			$valores="(:id_locale,:nom_locale,:idioma,:nom_idioma,:activo)";		
-			if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === FALSE) {
+			if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {
 				$sClaveError = 'PgLocalRepository.insertar.prepare';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-				return FALSE;
+				return false;
 			}
             try {
                 $oDblSt->execute($aDatos);
@@ -184,7 +182,7 @@ class PgLocalRepository extends ClaseRepository implements LocalRepositoryInterf
                 $this->setErrorTxt($err_txt);
                 $sClaveError = 'PgLocalRepository.insertar.execute';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
-                return FALSE;
+                return false;
 			}
 		}
 		return TRUE;
@@ -194,15 +192,15 @@ class PgLocalRepository extends ClaseRepository implements LocalRepositoryInterf
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_locale = '$id_locale'")) === FALSE) {
+        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_locale = '$id_locale'")) === false) {
 			$sClaveError = 'PgLocalRepository.isNew';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return FALSE;
+            return false;
         }
         if (!$oDblSt->rowCount()) {
             return TRUE;
         }
-        return FALSE;
+        return false;
     }
 	
     /**
@@ -217,10 +215,10 @@ class PgLocalRepository extends ClaseRepository implements LocalRepositoryInterf
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
-        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_locale = '$id_locale'")) === FALSE) {
+        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_locale = '$id_locale'")) === false) {
 			$sClaveError = 'PgLocalRepository.getDatosById';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return FALSE;
+            return false;
         }
 		$aDatos = $oDblSt->fetch(PDO::FETCH_ASSOC);
         return $aDatos;

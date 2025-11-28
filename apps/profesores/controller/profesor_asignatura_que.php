@@ -1,8 +1,7 @@
 <?php
 
-use asignaturas\model\entity\GestorAsignatura;
 use core\ConfigGlobal;
-use src\asignaturas\application\repositories\AsignaturaRepository;
+use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use web\Desplegable;
 use web\Hash;
 
@@ -15,7 +14,7 @@ require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
 
-$AsignaturaRepository = new AsignaturaRepository();
+$AsignaturaRepository = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class);
 $aOpciones = $AsignaturaRepository->getArrayAsignaturasConSeparador();
 $oDesplAsignaturas = new Desplegable('', $aOpciones, '', true);
 $oDesplAsignaturas->setNombre('id_asignatura');
@@ -48,11 +47,11 @@ $h = $oHash->linkSinVal();
 </script>
 <table>
     <tr class=tab>
-        <th class=titulo_inv colspan=5><?= ucfirst(_("profesores que pueden impartir una asignatura")); ?></th>
+        <th class=titulo_inv colspan=5><?= ucfirst(_("profesores que pueden impartir una asignatura")) ?></th>
     </tr>
     <tr>
         <td class=etiqueta><?= ucfirst(_("asignatura")) ?></td>
-        <td><?= $oDesplAsignaturas->desplegable(); ?></td>
+        <td><?= $oDesplAsignaturas->desplegable() ?></td>
     </tr>
     </tbody>
 </table>

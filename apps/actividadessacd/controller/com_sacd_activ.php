@@ -8,8 +8,8 @@ use personas\model\entity\GestorPersonaEx;
 use personas\model\entity\GestorPersonaSacd;
 use personas\model\entity\GestorPersonaSSSC;
 use personas\model\entity\PersonaSacd;
-use src\usuarios\application\repositories\RoleRepository;
-use src\usuarios\application\repositories\UsuarioRepository;
+use src\usuarios\domain\contracts\RoleRepositoryInterface;
+use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
 use web\DateTimeLocal;
 use web\Hash;
 use web\Periodo;
@@ -69,11 +69,11 @@ $oActividadesSacdFunciones = new ActividadesSacdFunciones();
 $poblacion = $oActividadesSacdFunciones->getLugar_dl();
 $lugar_fecha = "$poblacion, $hoy_local";
 
-$UsuarioRepository = new UsuarioRepository();
+$UsuarioRepository = $GLOBALS['container']->get(UsuarioRepositoryInterface::class);
 $oMiUsuario = $UsuarioRepository->findById(ConfigGlobal::mi_id_usuario());
 $id_role = $oMiUsuario->getId_role();
 
-$RoleRepository = new RoleRepository();
+$RoleRepository = $GLOBALS['container']->get(RoleRepositoryInterface::class);
 $aRoles = $RoleRepository->getArrayRoles();
 
 if (!empty($aRoles[$id_role]) && ($aRoles[$id_role] === 'p-sacd')) {

@@ -7,8 +7,8 @@ use cambios\model\entity\CambioUsuarioObjetoPref;
 use cambios\model\entity\GestorCambioUsuario;
 use core\ConfigGlobal;
 use core\ViewTwig;
-use src\usuarios\application\repositories\PreferenciaRepository;
-use src\usuarios\application\repositories\UsuarioRepository;
+use src\usuarios\domain\contracts\PreferenciaRepositoryInterface;
+use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
 use web\Desplegable;
 use web\Hash;
 use web\Lista;
@@ -37,7 +37,7 @@ $oDesplTiposAviso->setNombre('aviso_tipo');
 $oDesplTiposAviso->setBlanco('false');
 $oDesplTiposAviso->setOpciones($aTipos_aviso);
 
-$UsuarioRepository = new UsuarioRepository();
+$UsuarioRepository = $GLOBALS['container']->get(UsuarioRepositoryInterface::class);
 $aUsuarios = $UsuarioRepository->getArrayUsuarios();
 
 $oDesplUsuarios = new Desplegable();
@@ -71,7 +71,7 @@ $a_campos = [];
 
 if (!empty($Qid_usuario)) {
     // buscar la zona horaria
-    $PreferenciaRepository = new PreferenciaRepository();
+    $PreferenciaRepository = $GLOBALS['container']->get(PreferenciaRepositoryInterface::class);
     $oPreferencia = $PreferenciaRepository->findById($Qid_usuario, 'zona_horaria');
     if ($oPreferencia !== null) {
         $zona_horaria = $oPreferencia->getPreferencia();

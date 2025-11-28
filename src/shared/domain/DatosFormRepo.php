@@ -19,7 +19,6 @@ class DatosFormRepo
 {
     /* ATRIBUTOS ----------------------------------------------------------------- */
 
-
     private $camposForm;
     private $camposNo;
 
@@ -83,7 +82,7 @@ class DatosFormRepo
                     $acc = $oDatosCampo->getAccion();
                     $var_3 = $oDatosCampo->getArgument3();
 
-                    $RepoRelacionado = new $var_1();
+                    $RepoRelacionado = $GLOBALS['container']->get($var_1);
                     $a_opciones = $RepoRelacionado->$var_3();
 
                     $field['accion'] = $acc;

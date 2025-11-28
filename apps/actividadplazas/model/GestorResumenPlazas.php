@@ -6,7 +6,7 @@ use actividades\model\entity\ActividadAll;
 use actividadplazas\model\entity\GestorActividadPlazas;
 use asistentes\model\entity\GestorAsistente;
 use core\ConfigGlobal;
-use src\ubis\application\repositories\DelegacionRepository;
+use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 use src\ubis\domain\entity\Ubi;
 use web\Desplegable;
 use function core\is_true;
@@ -548,7 +548,7 @@ class GestorResumenPlazas
     protected function setArrayDl()
     {
         if (!isset($this->a_dele)) {
-            $gesDelegacion = new DelegacionRepository();
+            $gesDelegacion = $GLOBALS['container']->get(DelegacionRepositoryInterface::class);
             $cDelegaciones = $gesDelegacion->getDelegaciones(array('_ordre' => 'region,dl'));
             $this->a_dele = [];
             $this->a_id_dele = [];

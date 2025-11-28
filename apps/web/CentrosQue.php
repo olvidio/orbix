@@ -2,7 +2,8 @@
 
 namespace web;
 
-use src\ubis\application\repositories\CentroDlRepository;
+
+use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 
 /**
  * Classe que presenta un quadre per buscar diferents centres.
@@ -198,7 +199,7 @@ class CentrosQue
             $oDesplCentros->setAction('funjs_otro(1)');
             $this->oDesplCentros = $oDesplCentros;
         }
-        $oGesCentros = new CentroDlRepository();
+        $oGesCentros = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
         $oOpciones = $oGesCentros->getPosiblesCentros($sCondicion);
         $oDesplCentros->setOpciones($oOpciones);
         $this->oDesplCentros = $oDesplCentros;
@@ -212,7 +213,7 @@ class CentrosQue
     function getDesplCentros()
     {
         if (!isset($this->oDesplCentros)) {
-            $oGesCentros = new CentroDlRepository();
+            $oGesCentros = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
             $oOpciones = $oGesCentros->getPosiblesCentros();
             $oDesplCentros = new Desplegable();
             $oDesplCentros->setNombre('id_ctr');

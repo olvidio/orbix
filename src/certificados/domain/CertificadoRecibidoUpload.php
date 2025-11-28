@@ -4,7 +4,7 @@ namespace src\certificados\domain;
 
 use core\ConfigGlobal;
 use personas\model\entity\Persona;
-use src\certificados\application\repositories\CertificadoRecibidoRepository;
+use src\certificados\domain\contracts\CertificadoRecibidoRepositoryInterface;
 use src\certificados\domain\entity\CertificadoRecibido;
 use web\DateTimeLocal;
 use web\NullDateTimeLocal;
@@ -43,7 +43,7 @@ class CertificadoRecibidoUpload
             $destino = $oPersona->getDl();
         }
 
-        $certificadoRecibidoRepository = new CertificadoRecibidoRepository();
+        $certificadoRecibidoRepository = $GLOBALS['container']->get(CertificadoRecibidoRepositoryInterface::class);
         if (empty($Qid_item)) {
             $id_item = $certificadoRecibidoRepository->getNewId_item();
             $oCertificadoRecibido = new CertificadoRecibido();
@@ -62,7 +62,7 @@ class CertificadoRecibidoUpload
         $oCertificadoRecibido->setF_certificado($oF_certificado);
         $oCertificadoRecibido->setF_recibido($oF_recibido);
 
-        if ($certificadoRecibidoRepository->Guardar($oCertificadoRecibido) === FALSE) {
+        if ($certificadoRecibidoRepository->Guardar($oCertificadoRecibido) === false) {
             return $certificadoRecibidoRepository->getErrorTxt();
         }
         return $oCertificadoRecibido;

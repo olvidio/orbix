@@ -13,8 +13,9 @@ use encargossacd\model\entity\GestorEncargoTipo;
 use misas\domain\entity\EncargoDia;
 use misas\domain\entity\InicialesSacd;
 use misas\domain\repositories\EncargoDiaRepository;
+use misas\domain\repositories\EncargoDiaRepositoryInterface;
 use misas\model\EncargosZona;
-use src\usuarios\application\repositories\PreferenciaRepository;
+use src\usuarios\domain\contracts\PreferenciaRepositoryInterface;
 use src\usuarios\domain\entity\Preferencia;
 use src\usuarios\domain\value_objects\TipoPreferencia;
 use src\usuarios\domain\value_objects\ValorPreferencia;
@@ -45,7 +46,7 @@ $un_dia = new DateInterval('P1D');
 if ($QTipoPlantilla!='p')
 {
     $id_usuario = ConfigGlobal::mi_id_usuario();
-    $PreferenciaRepository = new PreferenciaRepository();
+    $PreferenciaRepository = $GLOBALS['container']->get(PreferenciaRepositoryInterface::class);
     $oPreferencia = $PreferenciaRepository->findById($id_usuario, 'ultima_plantilla');
     if ($oPreferencia === null) {
         $oPreferencia = new Preferencia();
@@ -367,7 +368,7 @@ foreach ($cEncargosZona as $oEncargo) {
         $aOperador = [
             'tstart' => 'BETWEEN',
         ];
-        $EncargoDiaRepository = new EncargoDiaRepository();
+        $EncargoDiaRepository = $GLOBALS['container']->get(EncargoDiaRepositoryInterface::class);
         $cEncargosDia = $EncargoDiaRepository->getEncargoDias($aWhere,$aOperador);
 
         if (count($cEncargosDia) > 1) {
@@ -479,7 +480,7 @@ foreach ($cEncargosZona as $oEncargo) {
                 $aOperador = [
                     'tstart' => 'BETWEEN',
                 ];
-                $EncargoDiaRepository = new EncargoDiaRepository();
+                $EncargoDiaRepository = $GLOBALS['container']->get(EncargoDiaRepositoryInterface::class);
                 $cEncargosDia = $EncargoDiaRepository->getEncargoDias($aWhere,$aOperador);
 
                 if (count($cEncargosDia) > 1) {
@@ -528,7 +529,7 @@ foreach ($cEncargosZona as $oEncargo) {
             $aOperador = [
                 'tstart' => 'BETWEEN',
             ];
-            $EncargoDiaRepository = new EncargoDiaRepository();
+            $EncargoDiaRepository = $GLOBALS['container']->get(EncargoDiaRepositoryInterface::class);
             $cEncargosDia = $EncargoDiaRepository->getEncargoDias($aWhere,$aOperador);
 
             if (count($cEncargosDia) > 1) {
@@ -791,7 +792,7 @@ foreach($lista_sacd as $key => $nombre_sacd)
         $aOperador = [
             'tstart' => 'BETWEEN',
         ];
-        $EncargoDiaRepository = new EncargoDiaRepository();
+        $EncargoDiaRepository = $GLOBALS['container']->get(EncargoDiaRepositoryInterface::class);
         $cEncargosDia = $EncargoDiaRepository->getEncargoDias($aWhere,$aOperador);
 
         $misas_dia=0;

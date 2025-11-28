@@ -1,13 +1,12 @@
 <?php
 
-use actividadcargos\model\entity\Cargo;
 use actividadcargos\model\entity\GestorActividadCargo;
 use actividades\model\entity\ActividadAll;
 use asistentes\model\entity\GestorAsistente;
 use core\ConfigGlobal;
 use core\ViewPhtml;
 use personas\model\entity\Persona;
-use src\actividadcargos\application\repositories\CargoRepository;
+use src\actividadcargos\domain\contracts\CargoRepositoryInterface;
 use function core\is_true;
 
 /**
@@ -123,13 +122,14 @@ if (ConfigGlobal::is_app_installed('actividadcargos')) {
     $GesCargosEnActividad = new GestorActividadCargo();
     $cCargosEnActividad = $GesCargosEnActividad->getActividadCargos(array('id_activ' => $id_pau));
     $mi_sfsv = ConfigGlobal::mi_sfsv();
+    $CargoRepository = $GLOBALS['container']->get(CargoRepositoryInterface::class);
     foreach ($cCargosEnActividad as $oActividadCargo) {
         $c++;
         $num++; // número total de asistentes.
         $id_nom = $oActividadCargo->getId_nom();
         $aListaCargos[] = $id_nom;
         $id_cargo = $oActividadCargo->getId_cargo();
-        $oCargo = (new CargoRepository())->findById($id_cargo);
+        $oCargo = $CargoRepository->findById($id_cargo);
         $tipo_cargo = $oCargo->getTipoCargoVo()->value();
         $cargo = $oCargo->getCargoVo()->value();
         // para los sacd en sf

@@ -10,7 +10,6 @@ use PDOException;
 use src\configuracion\domain\contracts\ConfigSchemaRepositoryInterface;
 use src\configuracion\domain\entity\ConfigSchema;
 
-
 /**
  * Clase que adapta la tabla x_config_schema a la interfaz del repositorio
  *
@@ -38,7 +37,7 @@ class PgConfigSchemaRepository extends ClaseRepository implements ConfigSchemaRe
      *
      * @param array $aWhere asociativo con los valores para cada campo de la BD.
      * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array|FALSE Una colección de objetos de tipo ConfigSchema
+     * @return array|false Una colección de objetos de tipo ConfigSchema
      */
     public function getConfigSchemas(array $aWhere = [], array $aOperators = []): array|false
     {
@@ -88,15 +87,15 @@ class PgConfigSchemaRepository extends ClaseRepository implements ConfigSchemaRe
             unset($aWhere['_limit']);
         }
         $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
-        if (($oDblSt = $oDbl->prepare($sQry)) === FALSE) {
+        if (($oDblSt = $oDbl->prepare($sQry)) === false) {
             $sClaveError = 'PgConfigSchemaRepository.listar.prepare';
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return FALSE;
+            return false;
         }
-        if (($oDblSt->execute($aWhere)) === FALSE) {
+        if (($oDblSt->execute($aWhere)) === false) {
             $sClaveError = 'PgConfigSchemaRepository.listar.execute';
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
-            return FALSE;
+            return false;
         }
 
         $filas = $oDblSt->fetchAll(PDO::FETCH_ASSOC);
@@ -115,14 +114,13 @@ class PgConfigSchemaRepository extends ClaseRepository implements ConfigSchemaRe
         $parametro = $ConfigSchema->getParametroVo()->value();
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        if (($oDbl->exec("DELETE FROM $nom_tabla WHERE parametro = '$parametro'")) === FALSE) {
+        if (($oDbl->exec("DELETE FROM $nom_tabla WHERE parametro = '$parametro'")) === false) {
             $sClaveError = 'PgConfigSchemaRepository.eliminar';
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return FALSE;
+            return false;
         }
         return TRUE;
     }
-
 
     /**
      * Si no existe el registro, hace un insert, si existe, se hace el update.
@@ -138,14 +136,14 @@ class PgConfigSchemaRepository extends ClaseRepository implements ConfigSchemaRe
         $aDatos['valor'] = $ConfigSchema->getValorVo()?->value();
         array_walk($aDatos, 'core\poner_null');
 
-        if ($bInsert === FALSE) {
+        if ($bInsert === false) {
             //UPDATE
             $update = "
 					valor                    = :valor";
-            if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE parametro = '$parametro'")) === FALSE) {
+            if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE parametro = '$parametro'")) === false) {
                 $sClaveError = 'PgConfigSchemaRepository.update.prepare';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-                return FALSE;
+                return false;
             }
 
             try {
@@ -155,17 +153,17 @@ class PgConfigSchemaRepository extends ClaseRepository implements ConfigSchemaRe
                 $this->setErrorTxt($err_txt);
                 $sClaveError = 'PgConfigSchemaRepository.update.execute';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
-                return FALSE;
+                return false;
             }
         } else {
             // INSERT
             $aDatos['parametro'] = $ConfigSchema->getParametro();
             $campos = "(parametro,valor)";
             $valores = "(:parametro,:valor)";
-            if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === FALSE) {
+            if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {
                 $sClaveError = 'PgConfigSchemaRepository.insertar.prepare';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-                return FALSE;
+                return false;
             }
             try {
                 $oDblSt->execute($aDatos);
@@ -174,7 +172,7 @@ class PgConfigSchemaRepository extends ClaseRepository implements ConfigSchemaRe
                 $this->setErrorTxt($err_txt);
                 $sClaveError = 'PgConfigSchemaRepository.insertar.execute';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
-                return FALSE;
+                return false;
             }
         }
         return TRUE;
@@ -184,15 +182,15 @@ class PgConfigSchemaRepository extends ClaseRepository implements ConfigSchemaRe
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE parametro = '$parametro'")) === FALSE) {
+        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE parametro = '$parametro'")) === false) {
             $sClaveError = 'PgConfigSchemaRepository.isNew';
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return FALSE;
+            return false;
         }
         if (!$oDblSt->rowCount()) {
             return TRUE;
         }
-        return FALSE;
+        return false;
     }
 
     /**
@@ -206,15 +204,14 @@ class PgConfigSchemaRepository extends ClaseRepository implements ConfigSchemaRe
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
-        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE parametro = '$parametro'")) === FALSE) {
+        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE parametro = '$parametro'")) === false) {
             $sClaveError = 'PgConfigSchemaRepository.getDatosById';
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return FALSE;
+            return false;
         }
         $aDatos = $oDblSt->fetch(PDO::FETCH_ASSOC);
         return $aDatos;
     }
-
 
     /**
      * Busca la clase con parametro en la base de datos .

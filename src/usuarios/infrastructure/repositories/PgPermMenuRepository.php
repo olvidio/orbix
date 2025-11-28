@@ -11,7 +11,6 @@ use PDOException;
 use src\usuarios\domain\entity\PermMenu;
 use src\usuarios\domain\contracts\PermMenuRepositoryInterface;
 
-
 /**
  * Clase que adapta la tabla aux_grupo_permmenu a la interfaz del repositorio
  *
@@ -39,10 +38,10 @@ class PgPermMenuRepository extends ClaseRepository implements PermMenuRepository
 	 *
 	 * @param array $aWhere asociativo con los valores para cada campo de la BD.
 	 * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-	 * @return array|FALSE Una colección de objetos de tipo PermMenu
+	 * @return array|false Una colección de objetos de tipo PermMenu
 	
 	 */
-	public function getPermMenus(array $aWhere=[], array $aOperators=[]): array|FALSE
+	public function getPermMenus(array $aWhere=[], array $aOperators=[]): array|false
 	{
         $oDbl = $this->getoDbl_Select();
 		$nom_tabla = $this->getNomTabla();
@@ -68,15 +67,15 @@ class PgPermMenuRepository extends ClaseRepository implements PermMenuRepository
 		if (isset($aWhere['_limit']) && $aWhere['_limit'] !== '') { $sLimit = ' LIMIT '.$aWhere['_limit']; }
 		if (isset($aWhere['_limit'])) { unset($aWhere['_limit']); }
 		$sQry = "SELECT * FROM $nom_tabla ".$sCondicion.$sOrdre.$sLimit;
-		if (($oDblSt = $oDbl->prepare($sQry)) === FALSE) {
+		if (($oDblSt = $oDbl->prepare($sQry)) === false) {
 			$sClaveError = 'PgPermMenuRepository.listar.prepare';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-			return FALSE;
+			return false;
 		}
-		if (($oDblSt->execute($aWhere)) === FALSE) {
+		if (($oDblSt->execute($aWhere)) === false) {
 			$sClaveError = 'PgPermMenuRepository.listar.execute';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
-			return FALSE;
+			return false;
 		}
 		
 		$filas = $oDblSt->fetchAll(PDO::FETCH_ASSOC);
@@ -95,10 +94,10 @@ class PgPermMenuRepository extends ClaseRepository implements PermMenuRepository
         $id_item = $PermMenu->getId_item();
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        if (($oDbl->exec("DELETE FROM $nom_tabla WHERE id_item = $id_item")) === FALSE) {
+        if (($oDbl->exec("DELETE FROM $nom_tabla WHERE id_item = $id_item")) === false) {
             $sClaveError = 'PgPermMenuRepository.eliminar';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return FALSE;
+            return false;
         }
         return TRUE;
     }
@@ -120,15 +119,15 @@ class PgPermMenuRepository extends ClaseRepository implements PermMenuRepository
 		$aDatos['menu_perm'] = $PermMenu->getMenu_perm();
 		array_walk($aDatos, 'core\poner_null');
 
-		if ($bInsert === FALSE) {
+		if ($bInsert === false) {
 			//UPDATE
 			$update="
 					id_usuario               = :id_usuario,
 					menu_perm                = :menu_perm";
-			if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_item = $id_item")) === FALSE) {
+			if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_item = $id_item")) === false) {
 				$sClaveError = 'PgPermMenuRepository.update.prepare';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-				return FALSE;
+				return false;
 			}
 				
             try {
@@ -138,17 +137,17 @@ class PgPermMenuRepository extends ClaseRepository implements PermMenuRepository
                 $this->setErrorTxt($err_txt);
                 $sClaveError = 'PgPermMenuRepository.update.execute';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
-                return FALSE;
+                return false;
             }
 		} else {
 			// INSERT
 			$aDatos['id_item'] = $PermMenu->getId_item();
 			$campos="(id_item,id_usuario,menu_perm)";
 			$valores="(:id_item,:id_usuario,:menu_perm)";		
-			if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === FALSE) {
+			if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {
 				$sClaveError = 'PgPermMenuRepository.insertar.prepare';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-				return FALSE;
+				return false;
 			}
             try {
                 $oDblSt->execute($aDatos);
@@ -157,7 +156,7 @@ class PgPermMenuRepository extends ClaseRepository implements PermMenuRepository
                 $this->setErrorTxt($err_txt);
                 $sClaveError = 'PgPermMenuRepository.insertar.execute';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
-                return FALSE;
+                return false;
 			}
 		}
 		return TRUE;
@@ -167,15 +166,15 @@ class PgPermMenuRepository extends ClaseRepository implements PermMenuRepository
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_item = $id_item")) === FALSE) {
+        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_item = $id_item")) === false) {
 			$sClaveError = 'PgPermMenuRepository.isNew';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return FALSE;
+            return false;
         }
         if (!$oDblSt->rowCount()) {
             return TRUE;
         }
-        return FALSE;
+        return false;
     }
 	
     /**
@@ -190,10 +189,10 @@ class PgPermMenuRepository extends ClaseRepository implements PermMenuRepository
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
-        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_item = $id_item")) === FALSE) {
+        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_item = $id_item")) === false) {
 			$sClaveError = 'PgPermMenuRepository.getDatosById';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return FALSE;
+            return false;
         }
 		$aDatos = $oDblSt->fetch(PDO::FETCH_ASSOC);
         return $aDatos;

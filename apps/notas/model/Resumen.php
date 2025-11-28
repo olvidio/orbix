@@ -7,10 +7,10 @@ use core\ClasePropiedades;
 use core\ConfigGlobal;
 use personas\model\entity\PersonaDl;
 use profesores\model\entity\GestorProfesorDirector;
-use src\asignaturas\application\repositories\AsignaturaRepository;
-use src\asignaturas\application\repositories\DepartamentoRepository;
-use src\asignaturas\application\repositories\SectorRepository;
-use src\notas\application\repositories\NotaRepository;
+use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
+use src\asignaturas\domain\contracts\DepartamentoRepositoryInterface;
+use src\asignaturas\domain\contracts\SectorRepositoryInterface;
+use src\notas\domain\contracts\NotaRepositoryInterface;
 use function core\is_true;
 
 /**
@@ -418,7 +418,7 @@ class Resumen extends ClasePropiedades
         $oDbl->query("CREATE INDEX IF NOT EXISTS $notas" . "_nivel" . " ON $notas (id_nivel)");
         $oDbl->query($sqlDelete);
 
-        $NotaRepository = new NotaRepository();
+        $NotaRepository = $GLOBALS['container']->get(NotaRepositoryInterface::class);
         $a_superadas = $NotaRepository->getArrayNotasSuperadas();
         $Where_superada = "AND id_situacion IN (" . implode(',', $a_superadas) . ")";
         // Tengo que acceder a publicv, porque con los traslados las notas se cambian de esquema.
@@ -458,7 +458,7 @@ class Resumen extends ClasePropiedades
         $oDbl->query("CREATE INDEX IF NOT EXISTS $asignaturas" . "_nivel" . " ON $asignaturas (id_nivel)");
         $oDbl->query("CREATE INDEX IF NOT EXISTS $asignaturas" . "_id_asignatura" . " ON $asignaturas (id_asignatura)");
 
-        $AsignaturaRepository = new AsignaturaRepository();
+        $AsignaturaRepository = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class);
         $cAsignaturas = $AsignaturaRepository->getAsignaturas(array('status' => 'true'));
 
         $prep = $oDbl->prepare("INSERT INTO $asignaturas VALUES(:id_asignatura, :id_nivel, :nombre_asignatura, :nombre_corto, :creditos, :year, :id_sector, :status, :id_tipo)");
@@ -783,7 +783,7 @@ class Resumen extends ClasePropiedades
         $any = $this->getAnyFiCurs();
         $curs = $this->getCurso();
 
-        $NotaRepository = new NotaRepository();
+        $NotaRepository = $GLOBALS['container']->get(NotaRepositoryInterface::class);
         $a_superadas = $NotaRepository->getArrayNotasSuperadas();
         $Where_superada = "AND id_situacion IN (" . implode(',', $a_superadas) . ")";
         /*
@@ -1321,7 +1321,7 @@ class Resumen extends ClasePropiedades
         $oDbl = $this->getoDbl();
         $any = $this->getAnyFiCurs();
         $curso_inicio = $any - 1;
-        $SectorRepository = new SectorRepository();
+        $SectorRepository = $GLOBALS['container']->get(SectorRepositoryInterface::class);
         $a_sectores = $SectorRepository->getArraySectoresPorDepartamento();
         $asignaturas = $this->getNomAsignaturas();
         $a_profe_dept = $this->arrayProfesorDepartamento();
@@ -1480,7 +1480,7 @@ class Resumen extends ClasePropiedades
 
         $oGesDirectores = new GestorProfesorDirector();
         $cDirectores = $oGesDirectores->getProfesoresDirectores(array('f_cese' => 1), array('f_cese' => 'IS NULL'));
-        $DepartamentoRepository = new DepartamentoRepository();
+        $DepartamentoRepository = $GLOBALS['container']->get(DepartamentoRepositoryInterface::class);
 
         $rta['num'] = count($cDirectores);
         if (is_true($this->blista) && $rta['num'] > 0) {

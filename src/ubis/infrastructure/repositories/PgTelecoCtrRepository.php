@@ -2,7 +2,6 @@
 
 namespace src\ubis\infrastructure\repositories;
 
-
 /**
  * Clase que adapta la tabla d_teleco_cdc a la interfaz del repositorio
  *

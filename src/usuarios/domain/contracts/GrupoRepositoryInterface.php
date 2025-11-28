@@ -5,7 +5,6 @@ namespace src\usuarios\domain\contracts;
 use PDO;
 use src\usuarios\domain\entity\Grupo;
 
-
 /**
  * Interfaz de la clase Grupo y su Repositorio
  *
@@ -25,10 +24,10 @@ interface GrupoRepositoryInterface
 	 *
 	 * @param array $aWhere asociativo con los valores para cada campo de la BD.
 	 * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-	 * @return array|FALSE Una colección de objetos de tipo Grupo
+	 * @return array|false Una colección de objetos de tipo Grupo
 	
 	 */
-	public function getGrupos(array $aWhere=[], array $aOperators=[]): array|FALSE;
+	public function getGrupos(array $aWhere=[], array $aOperators=[]): array|false;
 	
 /* -------------------- ENTIDAD --------------------------------------------- */
 

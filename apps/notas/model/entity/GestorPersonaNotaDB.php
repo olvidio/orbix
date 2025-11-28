@@ -5,7 +5,7 @@ namespace notas\model\entity;
 use core\ClaseGestor;
 use core\Condicion;
 use core\Set;
-use src\notas\application\repositories\NotaRepository;
+use src\notas\domain\contracts\NotaRepositoryInterface;
 use function core\is_true;
 
 /**
@@ -55,7 +55,7 @@ class GestorPersonaNotaDB extends ClaseGestor
             $cond_nivel = "AND id_nivel >= 1100 AND id_nivel <= 2500 ";
         }
 
-        $NotaRepository = new NotaRepository();
+        $NotaRepository = $GLOBALS['container']->get(NotaRepositoryInterface::class);
         $aSuperadas = $NotaRepository->getArrayNotasSuperadas();
 
         $sQry = "SELECT * FROM  $nom_tabla

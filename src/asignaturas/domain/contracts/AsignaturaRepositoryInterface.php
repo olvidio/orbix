@@ -5,7 +5,6 @@ namespace src\asignaturas\domain\contracts;
 use PDO;
 use src\asignaturas\domain\entity\Asignatura;
 
-
 use function core\is_true;
 /**
  * Interfaz de la clase Asignatura y su Repositorio
@@ -18,7 +17,6 @@ use function core\is_true;
  */
 interface AsignaturaRepositoryInterface
 {
-
 
     public function getJsonAsignaturas($aWhere): string;
     public function getArrayAsignaturasCreditos(): array;
@@ -35,10 +33,10 @@ interface AsignaturaRepositoryInterface
 	 *
 	 * @param array $aWhere asociativo con los valores para cada campo de la BD.
 	 * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-	 * @return array|FALSE Una colección de objetos de tipo Asignatura
+	 * @return array|false Una colección de objetos de tipo Asignatura
 	
 	 */
-	public function getAsignaturas(array $aWhere=[], array $aOperators=[]): array|FALSE;
+	public function getAsignaturas(array $aWhere=[], array $aOperators=[]): array|false;
 	
 /* -------------------- ENTIDAD --------------------------------------------- */
 

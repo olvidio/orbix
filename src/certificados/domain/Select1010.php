@@ -5,7 +5,7 @@ namespace src\certificados\domain;
 use core\ConfigGlobal;
 use frontend\shared\model\ViewNewPhtml;
 use personas\model\entity\Persona;
-use src\certificados\application\repositories\CertificadoRecibidoRepository;
+use src\certificados\domain\contracts\CertificadoRecibidoRepositoryInterface;
 use web\Hash;
 use web\Lista;
 use web\Posicion;
@@ -105,7 +105,7 @@ class Select1010
             '_ordre' => 'f_certificado'
         ];
 
-        $certificadoRecibidoRepository = new CertificadoRecibidoRepository();
+        $certificadoRecibidoRepository = $GLOBALS['container']->get(CertificadoRecibidoRepositoryInterface::class);
         $cCertificados = $certificadoRecibidoRepository->getCertificados($aWhere);
 
         $i = 0;
@@ -269,6 +269,5 @@ class Select1010
     {
         $this->queSel = $queSel;
     }
-
 
 }

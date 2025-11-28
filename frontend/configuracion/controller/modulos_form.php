@@ -1,7 +1,7 @@
 <?php
 
 use frontend\shared\model\ViewNewPhtml;
-use src\configuracion\application\repositories\ModuloRepository;
+use src\configuracion\domain\contracts\ModuloRepositoryInterface;
 use src\configuracion\domain\ModulosConfig;
 use web\Hash;
 
@@ -57,7 +57,7 @@ if ($Qmod !== 'nuevo') {
         }
     }
 
-    $ModuloRepository = new ModuloRepository();
+    $ModuloRepository = $GLOBALS['container']->get(ModuloRepositoryInterface::class);
     $oModulo = $ModuloRepository->findById($Qid_mod);
     if (!empty($oModulo)) {
         $nom = $oModulo->getNombreModVo()->value();

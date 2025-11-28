@@ -1,20 +1,13 @@
 <?php
 /*
  * Se queda en la capa de infraestructura porque ataca directamente a la base de datos !!!!
- *
  */
-use src\menus\application\repositories\TemplateMenuRepository;
+
+
+use src\menus\domain\contracts\TemplateMenuRepositoryInterface;
 use src\menus\domain\entity\TemplateMenu;
 use web\ContestarJson;
 use function core\is_true;
-
-// INICIO Cabecera global de URL de controlador *********************************
-require_once("apps/core/global_header.inc");
-// Archivos requeridos por esta url **********************************************
-
-// Crea los objetos de uso global **********************************************
-require_once("apps/core/global_object.inc");
-// FIN de  Cabecera global de URL de controlador ********************************
 
 $Qnombre = (string)filter_input(INPUT_POST, 'nombre');
 $Qsobreescribir = (string)filter_input(INPUT_POST, 'sobreescribir');
@@ -22,7 +15,7 @@ $Qsobreescribir = (string)filter_input(INPUT_POST, 'sobreescribir');
 $error_txt = '';
 
 // Comprobar si ya existe el nombre y si se ha se sobre-escribir
-$TemplateMenuRepository = new TemplateMenuRepository();
+$TemplateMenuRepository = $GLOBALS['container']->get(TemplateMenuRepositoryInterface::class);
 $oTemplateMenu = $TemplateMenuRepository->findByName($Qnombre);
 if (!empty($oTemplateMenu) && !is_true($Qsobreescribir)) {
     $id_template_menu = $oTemplateMenu->getId_template_menu();
@@ -129,6 +122,5 @@ foreach ($oDevel->query($sQry, PDO::FETCH_ASSOC) as $aDades) {
         $_SESSION['oGestorErrores']->addErrorAppLastError($oDevelPCSt, $sClauError, __LINE__, __FILE__);
     }
 }
-
 
 ContestarJson::enviar($error_txt, 'ok');

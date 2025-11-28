@@ -113,7 +113,6 @@ class Situacion
         return 'situacion';
     }
 
-
     function getDatosCampos()
     {
         $oSituacionSet = new Set();

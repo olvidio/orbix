@@ -1,18 +1,10 @@
 <?php
 
-use src\inventario\application\repositories\EquipajeRepository;
+use src\inventario\domain\contracts\EquipajeRepositoryInterface;
 use src\inventario\domain\entity\Equipaje;
 use web\ContestarJson;
 use web\DateTimeLocal;
 use web\NullDateTimeLocal;
-
-// INICIO Cabecera global de URL de controlador *********************************
-require_once("apps/core/global_header.inc");
-// Archivos requeridos por esta url **********************************************
-
-// Crea los objetos de uso global **********************************************
-require_once("apps/core/global_object.inc");
-// FIN de  Cabecera global de URL de controlador ********************************
 
 $Qid_ubi_activ = (integer)filter_input(INPUT_POST, 'id_ubi_activ');
 $Qnom_equipaje = (string)filter_input(INPUT_POST, 'nom_equipaje');
@@ -33,7 +25,7 @@ $Qlugar = (string)filter_input(INPUT_POST, 'lugar');
 
 $error_txt = '';
 
-$EquipajesRepository = new EquipajeRepository();
+$EquipajesRepository = $GLOBALS['container']->get(EquipajeRepositoryInterface::class);
 $newId = $EquipajesRepository->getNewId();
 
 $oEquipaje = new Equipaje();
@@ -45,7 +37,7 @@ $oEquipaje->setF_fin($oF_fin);
 $oEquipaje->setId_ubi_activ($Qid_ubi_activ);
 $oEquipaje->setNom_equipaje($Qnom_equipaje);
 
-if ($EquipajesRepository->Guardar($oEquipaje) === FALSE) {
+if ($EquipajesRepository->Guardar($oEquipaje) === false) {
     $error_txt .= _("hay un error, no se ha guardado");
     $error_txt .= "\n" . $EquipajesRepository->getErrorTxt();
 }

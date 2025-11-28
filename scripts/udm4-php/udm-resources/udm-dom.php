@@ -1,11 +1,11 @@
 <?php
 namespace core;
 
-use src\usuarios\application\repositories\PreferenciaRepository;
-use usuarios\model\entity as usuarios;
 
 /* Lo pongo como include!! en el index */
 // UDMv4.6 //
+use src\usuarios\domain\contracts\PreferenciaRepositoryInterface;
+
 /***************************************************************\
                                                                  
   ULTIMATE DROP DOWN MENU Version 4.6 by Brothercake             
@@ -23,7 +23,7 @@ require_once ("apps/core/global_header.inc");
 require_once ("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$PreferenciaRepository = new PreferenciaRepository();
+$PreferenciaRepository = $GLOBALS['container']->get(PreferenciaRepositoryInterface::class);
 
 $id_usuario= ConfigGlobal::mi_id_usuario();
 $oPreferencia = $PreferenciaRepository->findById($id_usuario,'estilo');

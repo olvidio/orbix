@@ -4,6 +4,7 @@ namespace src\menus\domain\entity;
 
 use core\DatosCampo;
 use core\Set;
+use src\configuracion\domain\contracts\ModuloRepositoryInterface;
 use src\menus\domain\value_objects\MetaMenuUrl;
 use src\menus\domain\value_objects\MetaMenuParametros;
 use src\menus\domain\value_objects\MetaMenuDescripcion;
@@ -196,7 +197,7 @@ class MetaMenu
         $oDatosCampo->setMetodoSet('setId_mod');
         $oDatosCampo->setEtiqueta(_("modulo"));
         $oDatosCampo->setTipo('opciones');
-        $oDatosCampo->setArgument('src\\configuracion\\application\\repositories\\ModuloRepository'); // nombre del objeto relacionado
+        $oDatosCampo->setArgument(ModuloRepositoryInterface::class); // nombre del objeto relacionado
         $oDatosCampo->setArgument2('getNom'); // método para obtener el valor a mostrar del objeto relacionado.
         $oDatosCampo->setArgument3('getArrayModulos'); // método con que crear la lista de opciones del Gestor objeto relacionado.
         return $oDatosCampo;

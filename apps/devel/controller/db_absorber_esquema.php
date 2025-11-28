@@ -1,10 +1,10 @@
 <?php
 
-use src\configuracion\domain\DBAlterSchema;
-use src\ubis\application\repositories\DelegacionRepository;
-use ubis\model\entity\Delegacion;
 
 // INICIO Cabecera global de URL de controlador *********************************
+use devel\model\DBAlterSchema;
+use src\ubis\domain\contracts\DelegacionRepositoryInterface;
+
 require_once("apps/core/global_header.inc");
 // Archivos requeridos por esta url **********************************************
 
@@ -234,7 +234,7 @@ $oAlterSchema->setInserts($aInserts);
 $region_old = strtok($QEsquemaDel, '-');
 $dl_old = strtok('-');
 
-$gesDelegaciones = new DelegacionRepository();
+$gesDelegaciones = $GLOBALS['container']->get(DelegacionRepositoryInterface::class);
 $cDelegaciones = $gesDelegaciones->getDelegaciones(['dl' => $dl_old, 'region' => $region_old]);
 $id_dl_old = $cDelegaciones[0]->getIdDlVo()?->value() ?? 0;
 $cDelegaciones = $gesDelegaciones->getDelegaciones(['dl' => $dl_new, 'region' => $region_new]);
@@ -313,7 +313,7 @@ $oAlterSchema->insertarCargos();
 // De las tablas de encargos y zonas, no hago nada....
 
 // Poner la dl en inactivo:
-$DelegacionRepository = new DelegacionRepository();
+$DelegacionRepository = $GLOBALS['container']->get(DelegacionRepositoryInterface::class);
 $oDelegacion = $DelegacionRepository->findById($id_dl_old);
 $oDelegacion->setStatus(FALSE);
 if ($DelegacionRepository->Guardar($oDelegacion) === false) {

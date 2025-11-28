@@ -2,9 +2,9 @@
 
 namespace src\inventario\domain;
 
-use src\inventario\application\repositories\DocumentoRepository;
-use src\inventario\application\repositories\LugarRepository;
-use src\inventario\application\repositories\UbiInventarioRepository;
+use src\inventario\domain\contracts\DocumentoRepositoryInterface;
+use src\inventario\domain\contracts\LugarRepositoryInterface;
+use src\inventario\domain\contracts\UbiInventarioRepositoryInterface;
 use src\shared\domain\DatosInfoRepo;
 use web\Desplegable;
 
@@ -66,7 +66,7 @@ class InfoDocsxCtr extends DatosInfoRepo
                 $aOperadorUbi = array('nom_ubi' => 'sin_acentos');
             }
             //selecciono los ctrs
-            $RepoUbiInventario = new UbiInventarioRepository();
+            $RepoUbiInventario = $GLOBALS['container']->get(UbiInventarioRepositoryInterface::class);
             $cUbisInventario = $RepoUbiInventario->getUbisInventario($aWhereUbi, $aOperadorUbi);
             $lst_id_ubi = '';
             foreach ($cUbisInventario as $oUbiDoc) {
@@ -83,7 +83,7 @@ class InfoDocsxCtr extends DatosInfoRepo
             }
         }
 
-        $ColeccionRepository = new DocumentoRepository();
+        $ColeccionRepository = $GLOBALS['container']->get(DocumentoRepositoryInterface::class);
         $Coleccion = $ColeccionRepository->getDocumentos($aWhere, $aOperador);
 
         return $Coleccion;
@@ -93,7 +93,7 @@ class InfoDocsxCtr extends DatosInfoRepo
     {
         $valor_depende = empty($valor_depende) ? 0 : $valor_depende;
         //caso de actualizar el campo depende
-        $LugarRepository = new LugarRepository();
+        $LugarRepository = $GLOBALS['container']->get(LugarRepositoryInterface::class);
         $aOpciones = $LugarRepository->getArrayLugares($valor_depende);
         $oDesplegable = new Desplegable('', $aOpciones, $opcion_sel, true);
         $opciones_txt = $oDesplegable->options();

@@ -7,8 +7,8 @@ use encargossacd\model\entity\GestorEncargo;
 use encargossacd\model\entity\GestorEncargoSacd;
 use encargossacd\model\entity\GestorEncargoTexto;
 use personas\model\entity\PersonaDl;
-use src\ubis\application\repositories\CentroDlRepository;
-use src\ubis\application\repositories\CentroEllasRepository;
+use src\ubis\domain\contracts\CentroDlRepositoryInterface;
+use src\ubis\domain\contracts\CentroEllasRepositoryInterface;
 use web\DateTimeLocal;
 
 /**
@@ -57,12 +57,12 @@ $lugar_fecha = "$poblacion, $hoy_local";
 // los ctr
 switch ($Qsfsv) {
     case "sv":
-        $GesCentros = new CentroDlRepository();
+        $GesCentros = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
         $cCentros = $GesCentros->getCentros(array('status' => 't', '_ordre' => 'tipo_ctr,nombre_ubi'));
         $origen_txt = ConfigGlobal::mi_dele();
         break;
     case "sf":
-        $GesCentros = new CentroEllasRepository();
+        $GesCentros = $GLOBALS['container']->get(CentroEllasRepositoryInterface::class);
         $cCentros = $GesCentros->getCentros(array('status' => 't', '_ordre' => 'tipo_ctr,nombre_ubi'));
         $origen_txt = ConfigGlobal::mi_dele() . 'f';
         break;

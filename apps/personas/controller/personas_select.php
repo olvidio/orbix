@@ -9,9 +9,9 @@ use personas\model\entity\GestorPersonaNax;
 use personas\model\entity\GestorPersonaS;
 use personas\model\entity\GestorPersonaSSSC;
 use personas\model\entity\PersonaDl;
-use src\ubis\application\repositories\CentroDlRepository;
-use src\ubis\application\repositories\CentroRepository;
-use src\usuarios\application\repositories\PreferenciaRepository;
+use src\ubis\domain\contracts\CentroDlRepositoryInterface;
+use src\ubis\domain\contracts\CentroRepositoryInterface;
+use src\usuarios\domain\contracts\PreferenciaRepositoryInterface;
 use src\usuarios\domain\entity\Role;
 use web\Hash;
 use web\Lista;
@@ -189,7 +189,7 @@ if ($miRolePau == Role::PAU_NOM) { //persona
     }
 
     if (!empty($aWhereCtr)) {
-        $gesCentros = new CentroDlRepository();
+        $gesCentros = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
         $cCentros = $gesCentros->getCentros($aWhereCtr, $aOperadorCtr);
         $aId_ctrs = [];
         foreach ($cCentros as $oCentro) {
@@ -419,7 +419,7 @@ $a_personas = [];
 $sPrefs = '';
 $id_usuario = ConfigGlobal::mi_id_usuario();
 $tipo = 'tabla_presentacion';
-$PreferenciaRepository = new PreferenciaRepository();
+$PreferenciaRepository = $GLOBALS['container']->get(PreferenciaRepositoryInterface::class);
 $oPreferencia = $PreferenciaRepository->findById($id_usuario, $tipo);
 if ($oPreferencia !== null) {
     $sPrefs = $oPreferencia->getPreferencia();
@@ -435,9 +435,9 @@ foreach ($cPersonas as $oPersona) {
         $id_ctr = $oPersona->getId_ctr();
 
         if (ConfigGlobal::mi_ambito() === 'rstgr') {
-            $CentroDlRepository = new CentroRepository();
+            $CentroDlRepository = $GLOBALS['container']->get(CentroRepositoryInterface::class);
         } else {
-            $CentroDlRepository = new CentroDlRepository();
+            $CentroDlRepository = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
         }
         $oCentroDl = $CentroDlRepository->findById($id_ctr);
         $nombre_ubi = $oCentroDl->getNombre_ubi();

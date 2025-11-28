@@ -14,7 +14,7 @@ use personas\model\entity\GestorPersonaS;
 use personas\model\entity\GestorPersonaSSSC;
 use planning\domain\Planning;
 use planning\domain\PlanningStyle;
-use src\ubis\application\repositories\CentroDlRepository;
+use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use web\Hash;
 use web\Periodo;
 use web\TiposActividades;
@@ -145,7 +145,7 @@ $p = 0;
 $persona = [];
 $a_actividades = [];
 $a_actividades2 = [];
-$CentroDlRepository = new CentroDlRepository();
+$CentroDlRepository = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
 foreach ($cPersonas as $oPersona) {
     $aActivPersona = [];
     $id_nom = $oPersona->getId_nom();

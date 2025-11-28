@@ -19,7 +19,7 @@ $Qcolor = (string)filter_input(INPUT_POST, 'color');
 
 $error_txt = '';
 
-$InicialesSacdRepository = new InicialesSacdRepository();
+$InicialesSacdRepository = $GLOBALS['container']->get(InicialesSacdRepositoryInterface::class);
 $InicialesSacd = $InicialesSacdRepository->findById($Qid_sacd);
 if (is_null($InicialesSacd)) {
     $InicialesSacd = new InicialesSacd();

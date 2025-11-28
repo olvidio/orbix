@@ -9,6 +9,7 @@ use actividades\model\entity\Importada;
 use actividadplazas\model\entity\ActividadPlazasDl;
 use core\ConfigGlobal;
 use core\DBPropiedades;
+use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 use ubis;
 
 class ActividadNueva
@@ -169,7 +170,7 @@ class ActividadNueva
             if (!empty($Qplazas) && $Qdl_org == $mi_dele) {
                 $id_activ = $oActividad->getId_activ();
                 $id_dl = 0;
-                $repoDelegacion = new \src\ubis\application\repositories\DelegacionRepository();
+                $repoDelegacion = $GLOBALS['container']->get(DelegacionRepositoryInterface::class);
                 $cDelegaciones = $repoDelegacion->getDelegaciones(['dl' => $mi_dele]);
                 if (is_array($cDelegaciones) && count($cDelegaciones)) {
                     $id_dl = $cDelegaciones[0]->getIdDlVo()->value();

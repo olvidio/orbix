@@ -1,7 +1,7 @@
 <?php
 
 use core\ConfigGlobal;
-use src\asignaturas\application\repositories\AsignaturaRepository;
+use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\notas\domain\entity\Nota;
 use web\DateTimeLocal;
 use web\Hash;
@@ -354,11 +354,12 @@ echo "<br><p>4. $tabla_txt con asignaturas sin fecha de acta: $nf</p>";
 
 /* Para sacar una lista*/
 echo "<table>";
+$AsignaturaRepository = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class);
 foreach ($oDBSt_sql->fetchAll() as $algo) {
     $nom = $algo['apellido1'] . " " . $algo['apellido2'] . ", " . $algo['nom'];
     $fecha = $algo['f_acta'];
     $id_asignatura = $algo['id_asignatura'];
-    $oAsignatura = (new AsignaturaRepository())->findById($id_asignatura);
+    $oAsignatura = $AsignaturaRepository->findById($id_asignatura);
     if ($oAsignatura === null) {
         throw new \Exception(sprintf(_("No se ha encontrado la asignatura con id: %s"), $id_asignatura));
     }
@@ -479,11 +480,12 @@ $go = Hash::link(ConfigGlobal::getWeb() . '/apps/notas/controller/comprobar_nota
 $caduca_cursada = $_SESSION['oConfig']->getCaduca_cursada();
 
 echo "<table>";
+$AsignaturaRepository = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class);
 foreach ($oDBSt_sql->fetchAll() as $algo) {
     $nom = $algo['apellido1'] . " " . $algo['apellido2'] . ", " . $algo['nom'];
     $fecha = $algo['f_acta'];
     $id_asignatura = $algo['id_asignatura'];
-    $oAsignatura = (new AsignaturaRepository())->findById($id_asignatura);
+    $oAsignatura = $AsignaturaRepository->findById($id_asignatura);
     if ($oAsignatura === null) {
         throw new \Exception(sprintf(_("No se ha encontrado la asignatura con id: %s"), $id_asignatura));
     }

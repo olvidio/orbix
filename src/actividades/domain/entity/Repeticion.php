@@ -243,7 +243,6 @@ class Repeticion
         return $oRepeticionSet->getTot();
     }
 
-
     /**
      * Recupera les propietats de l'atribut srepeticion de Repeticion
      * en una clase del tipus DatosCampo

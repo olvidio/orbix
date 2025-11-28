@@ -2,6 +2,8 @@
 
 namespace src\ubis\infrastructure\repositories;
 
+use src\ubis\domain\contracts\DireccionCasaRepositoryInterface;
+use src\ubis\domain\contracts\PlanoOperationsTrait;
 
 /**
  * Clase que adapta la tabla u_dir_ctr a la interfaz del repositorio
@@ -12,8 +14,10 @@ namespace src\ubis\infrastructure\repositories;
  * @version 2.0
  * @created 21/11/2025
  */
-class PgDireccionCasaRepository extends PgDireccionRepository
+class PgDireccionCasaRepository extends PgDireccionRepository implements DireccionCasaRepositoryInterface
 {
+    use PlanoOperationsTrait;
+
     public function __construct()
     {
         parent::__construct();
@@ -24,4 +28,9 @@ class PgDireccionCasaRepository extends PgDireccionRepository
         $this->setNomTabla('u_dir_cdc');
     }
 
+    // Wrapper methods para mantener la interfaz simple
+    public function downloadPlano(int $id_direccion): array
+    {
+        return $this->planoDownload($id_direccion);
+    }
 }

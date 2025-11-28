@@ -600,7 +600,6 @@ class DBEsquema extends DBAbstract
         $this->delPermisoGlobal('sfsv');
     }
 
-
     /* ###################### LLENAR TABLAS ################################ */
 
     public function llenar_colecciones()

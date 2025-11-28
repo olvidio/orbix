@@ -1,17 +1,9 @@
 <?php
 
 // grabar la cabecera, pie o texto en las maletas.
-use src\inventario\application\repositories\EgmRepository;
-use src\inventario\application\repositories\EquipajeRepository;
+use src\inventario\domain\contracts\EgmRepositoryInterface;
+use src\inventario\domain\contracts\EquipajeRepositoryInterface;
 use web\ContestarJson;
-
-// INICIO Cabecera global de URL de controlador *********************************
-require_once("apps/core/global_header.inc");
-// Archivos requeridos por esta url **********************************************
-
-// Crea los objetos de uso global **********************************************
-require_once("apps/core/global_object.inc");
-// FIN de  Cabecera global de URL de controlador ********************************
 
 $error_txt = '';
 
@@ -19,7 +11,7 @@ $Qtexto = (string)filter_input(INPUT_POST, 'texto');
 $Qloc = (string)filter_input(INPUT_POST, 'loc');
 $Qid_equipaje = (int)filter_input(INPUT_POST, 'id_equipaje');
 
-$EquipajeRepository = new EquipajeRepository();
+$EquipajeRepository = $GLOBALS['container']->get(EquipajeRepositoryInterface::class);
 switch ($Qloc) {
     case 'cabecera':
         $oEquipaje = $EquipajeRepository->findById($Qid_equipaje);
@@ -49,7 +41,7 @@ switch ($Qloc) {
         preg_match('/docs_grupo_(.*)/', $Qloc, $matches);
         $id_grupo = $matches[1];
 
-        $EgmRepository = new EgmRepository();
+        $EgmRepository = $GLOBALS['container']->get(EgmRepositoryInterface::class);
         $aWhere = ['id_equipaje' => $Qid_equipaje, 'id_grupo' => $id_grupo];
         $cEgm = $EgmRepository->getEgmes($aWhere);
         $oEgm = $cEgm[0];

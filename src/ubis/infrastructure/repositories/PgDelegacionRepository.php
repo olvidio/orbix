@@ -13,7 +13,6 @@ use RuntimeException;
 use src\ubis\domain\entity\Delegacion;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 
-
 use function core\is_true;
 /**
  * Clase que adapta la tabla xu_dl a la interfaz del repositorio
@@ -34,7 +33,6 @@ class PgDelegacionRepository extends ClaseRepository implements DelegacionReposi
         $this->setoDbl_select($oDbl_Select); 
         $this->setNomTabla('xu_dl');
     }
-
 
     /* MÉTODOS PÚBLICOS -----------------------------------------------------------*/
 
@@ -66,7 +64,7 @@ class PgDelegacionRepository extends ClaseRepository implements DelegacionReposi
             return false;
         }
         $aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);
-        if ($aDades === FALSE || empty($aDades)) {
+        if ($aDades === false || empty($aDades)) {
             $message = sprintf(_("No se encuentra información de la dl: %s"), $dele);
             throw new RunTimeException($message);
         }
@@ -105,7 +103,7 @@ class PgDelegacionRepository extends ClaseRepository implements DelegacionReposi
                 return false;
             }
             $aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);
-            if ($aDades === FALSE || empty($aDades)) {
+            if ($aDades === false || empty($aDades)) {
                 $message = sprintf(_("No se encuentra información de la dl: %s"), $dele);
                 throw new RunTimeException($message);
             }
@@ -146,7 +144,7 @@ class PgDelegacionRepository extends ClaseRepository implements DelegacionReposi
             return false;
         }
         foreach ($oDbl->query($sQuery) as $aDades) {
-            if ($aDades === FALSE) {
+            if ($aDades === false) {
                 $message = sprintf(_("No se encuentra el id del esquema: %s"), $esquema_region_stgr);
                 throw new RunTimeException($message);
             }
@@ -206,7 +204,7 @@ class PgDelegacionRepository extends ClaseRepository implements DelegacionReposi
         $nom_tabla = $this->getNomTabla();
 
         $sQuery = "SELECT u.id_dl, u.region, u.dl FROM $nom_tabla u 
-                 WHERE status = 't' AND region_stgr = '$sRegionStgr'
+                 WHERE active = 't' AND region_stgr = '$sRegionStgr'
                  ORDER BY region,dl";
         //echo "query: $sQuery";
         $a_schema = [];
@@ -237,7 +235,7 @@ class PgDelegacionRepository extends ClaseRepository implements DelegacionReposi
 
         $num_regiones = count($aRegiones);
         if ($num_regiones > 0) {
-            $sCondicion = "WHERE status = 't' AND region_stgr = ";
+            $sCondicion = "WHERE active = 't' AND region_stgr = ";
             $sReg = implode("'OR region_stgr = '", $aRegiones);
             $sReg = "'" . $sReg . "'";
             $sCondicion .= $sReg;
@@ -264,10 +262,10 @@ class PgDelegacionRepository extends ClaseRepository implements DelegacionReposi
 	 *
 	 * @param array $aWhere asociativo con los valores para cada campo de la BD.
 	 * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-	 * @return array|FALSE Una colección de objetos de tipo Delegacion
+	 * @return array|false Una colección de objetos de tipo Delegacion
 	
 	 */
-	public function getDelegaciones(array $aWhere=[], array $aOperators=[]): array|FALSE
+	public function getDelegaciones(array $aWhere=[], array $aOperators=[]): array|false
 	{
         $oDbl = $this->getoDbl_Select();
 		$nom_tabla = $this->getNomTabla();
@@ -293,15 +291,15 @@ class PgDelegacionRepository extends ClaseRepository implements DelegacionReposi
 		if (isset($aWhere['_limit']) && $aWhere['_limit'] !== '') { $sLimit = ' LIMIT '.$aWhere['_limit']; }
 		if (isset($aWhere['_limit'])) { unset($aWhere['_limit']); }
 		$sQry = "SELECT * FROM $nom_tabla ".$sCondicion.$sOrdre.$sLimit;
-		if (($oDblSt = $oDbl->prepare($sQry)) === FALSE) {
+		if (($oDblSt = $oDbl->prepare($sQry)) === false) {
 			$sClaveError = 'PgDelegacionRepository.listar.prepare';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-			return FALSE;
+			return false;
 		}
-		if (($oDblSt->execute($aWhere)) === FALSE) {
+		if (($oDblSt->execute($aWhere)) === false) {
 			$sClaveError = 'PgDelegacionRepository.listar.execute';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
-			return FALSE;
+			return false;
 		}
 		
 		$filas = $oDblSt->fetchAll(PDO::FETCH_ASSOC);
@@ -320,10 +318,10 @@ class PgDelegacionRepository extends ClaseRepository implements DelegacionReposi
         $dl = $Delegacion->getDlVo()?->value() ?? '';
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        if (($oDbl->exec("DELETE FROM $nom_tabla WHERE dl = '$dl'")) === FALSE) {
+        if (($oDbl->exec("DELETE FROM $nom_tabla WHERE dl = '$dl'")) === false) {
             $sClaveError = 'PgDelegacionRepository.eliminar';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return FALSE;
+            return false;
         }
         return TRUE;
     }
@@ -344,26 +342,26 @@ class PgDelegacionRepository extends ClaseRepository implements DelegacionReposi
 		$aDatos['dl'] = $Delegacion->getDlVo()?->value();
 		$aDatos['region'] = $Delegacion->getRegionVo()?->value();
 		$aDatos['nombre_dl'] = $Delegacion->getNombreDlVo()?->value();
-		$aDatos['status'] = $Delegacion->getStatusVo()?->value();
+		$aDatos['active'] = $Delegacion->isActive();
 		$aDatos['grupo_estudios'] = $Delegacion->getGrupoEstudiosVo()?->value();
 		$aDatos['region_stgr'] = $Delegacion->getRegionStgrVo()?->value();
 		array_walk($aDatos, 'core\poner_null');
-		//para el caso de los boolean FALSE, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
-		if ( is_true($aDatos['status']) ) { $aDatos['status']='true'; } else { $aDatos['status']='false'; }
+		//para el caso de los boolean false, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
+		if ( is_true($aDatos['active']) ) { $aDatos['active']='true'; } else { $aDatos['active']='false'; }
 
-		if ($bInsert === FALSE) {
+		if ($bInsert === false) {
 			//UPDATE
 			$update="
 					dl                       = :dl,
 					region                   = :region,
 					nombre_dl                = :nombre_dl,
-					status                   = :status,
+					active                   = :active,
 					grupo_estudios           = :grupo_estudios,
 					region_stgr              = :region_stgr";
-			if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_dl = $id_dl ")) === FALSE) {
+			if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_dl = $id_dl ")) === false) {
 				$sClaveError = 'PgDelegacionRepository.update.prepare';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-				return FALSE;
+				return false;
 			}
 				
             try {
@@ -373,17 +371,17 @@ class PgDelegacionRepository extends ClaseRepository implements DelegacionReposi
                 $this->setErrorTxt($err_txt);
                 $sClaveError = 'PgDelegacionRepository.update.execute';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
-                return FALSE;
+                return false;
             }
 		} else {
 			// INSERT
 			$aDatos['id_dl'] = $Delegacion->getIdDlVo()->value();
-			$campos="(id_dl,dl,region,nombre_dl,status,grupo_estudios,region_stgr)";
-			$valores="(:id_dl,:dl,:region,:nombre_dl,:status,:grupo_estudios,:region_stgr)";		
-			if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === FALSE) {
+			$campos="(id_dl,dl,region,nombre_dl,active,grupo_estudios,region_stgr)";
+			$valores="(:id_dl,:dl,:region,:nombre_dl,:active,:grupo_estudios,:region_stgr)";
+			if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {
 				$sClaveError = 'PgDelegacionRepository.insertar.prepare';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-				return FALSE;
+				return false;
 			}
             try {
                 $oDblSt->execute($aDatos);
@@ -392,7 +390,7 @@ class PgDelegacionRepository extends ClaseRepository implements DelegacionReposi
                 $this->setErrorTxt($err_txt);
                 $sClaveError = 'PgDelegacionRepository.insertar.execute';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
-                return FALSE;
+                return false;
 			}
 		}
 		return TRUE;
@@ -402,25 +400,25 @@ class PgDelegacionRepository extends ClaseRepository implements DelegacionReposi
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_dl = $id_dl ")) === FALSE) {
+        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_dl = $id_dl ")) === false) {
 			$sClaveError = 'PgDelegacionRepository.isNew';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return FALSE;
+            return false;
         }
         if (!$oDblSt->rowCount()) {
             return TRUE;
         }
-        return FALSE;
+        return false;
     }
 	
     public function datosById(int $id_dl): array|bool
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
-        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_dl = $id_dl ")) === FALSE) {
+        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_dl = $id_dl ")) === false) {
 			$sClaveError = 'PgDelegacionRepository.getDatosById';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return FALSE;
+            return false;
         }
 		$aDatos = $oDblSt->fetch(PDO::FETCH_ASSOC);
         return $aDatos;
@@ -438,5 +436,12 @@ class PgDelegacionRepository extends ClaseRepository implements DelegacionReposi
             return null;
         }
         return (new Delegacion())->setAllAttributes($aDatos);
+    }
+
+    public function getNewId(): int
+    {
+        $oDbl = $this->getoDbl();
+        $sQuery = "select nextval('xu_dl_id_dl_seq'::regclass)";
+        return $oDbl->query($sQuery)->fetchColumn();
     }
 }

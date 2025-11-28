@@ -3,8 +3,8 @@
 namespace src\layouts;
 
 use core\ConfigGlobal;
-use src\menus\application\repositories\MenuDbRepository;
-use src\menus\application\repositories\MetaMenuRepository;
+use src\menus\domain\contracts\MenuDbRepositoryInterface;
+use src\menus\domain\contracts\MetaMenuRepositoryInterface;
 use web\Hash;
 
 /**
@@ -31,7 +31,7 @@ class BurgerLayout implements LayoutInterface
      */
     function buildMenuStructure(array $menus): array
     {
-        $MetaMenuReposiroty = new MetaMenuRepository();
+        $MetaMenuReposiroty = $GLOBALS['container']->get(MetaMenuRepositoryInterface::class);
         // Almacena todos los nodos del menú, indexados por una clave que combina 'id_grupmenu' y 'a_orden'.
         // Esto permite un acceso rápido a cualquier nodo por su "ruta" única.
         $indexedNodes = [];
@@ -116,7 +116,6 @@ class BurgerLayout implements LayoutInterface
             }
         }
 
-
         // Ensamblar el array final del menú, agrupado por 'id_grupmenu'.
         $finalMenuConfig = [];
         foreach ($groupedRootNodes as $groupKey => $rootNodesForGroup) {
@@ -130,7 +129,6 @@ class BurgerLayout implements LayoutInterface
         return $finalMenuConfig;
     }
 
-
     /**
      * Generate the HTML for the menus
      *
@@ -138,7 +136,7 @@ class BurgerLayout implements LayoutInterface
      */
     public function generateMenuHtml(array $params): array
     {
-        $MenusDbRepository = new MenuDbRepository();
+        $MenusDbRepository = $GLOBALS['container']->get(MenuDbRepositoryInterface::class);
 
         $this->oPermisoMenu = $params['oPermisoMenu'];
         $id_grupmenu = $params['id_grupmenu'] ?? '1';
@@ -317,7 +315,7 @@ class BurgerLayout implements LayoutInterface
 
     private function buildUserMenus(false|array $cMenusUtilidades)
     {
-        $MetaMenuReposiroty = new MetaMenuRepository();
+        $MetaMenuReposiroty = $GLOBALS['container']->get(MetaMenuRepositoryInterface::class);
 
         $indexedNodes = [];
         foreach ($cMenusUtilidades as $key => $itemObject) {

@@ -1,18 +1,10 @@
 <?php
 
-// INICIO Cabecera global de URL de controlador *********************************
 use procesos\model\entity\GestorPermUsuarioActividad;
 use procesos\model\entity\PermUsuarioActividad;
 use procesos\model\PermAfectados;
 use web\ContestarJson;
 use function core\is_true;
-
-require_once("apps/core/global_header.inc");
-// Archivos requeridos por esta url **********************************************
-
-// Crea los objetos de uso global **********************************************
-require_once("apps/core/global_object.inc");
-// Crea los objetos por esta url  **********************************************
 
 // FIN de  Cabecera global de URL de controlador **********
 
@@ -41,7 +33,6 @@ if (empty($Qid_tipo_activ)) {
 } else {
     $id_tipo_activ_txt = $Qid_tipo_activ;
 }
-
 
 // afecta a:
 $oCuadros = new PermAfectados();
@@ -88,7 +79,7 @@ foreach ($aAfecta_a as $afecta_a) {
                 $error_txt .= _("hay un error, no se ha guardado");
                 $error_txt .= "\n" . $oUsuarioPerm->getErrorTxt();
             }
-            $eliminar = FALSE;
+            $eliminar = false;
         }
     }
     if (is_true($eliminar)) {

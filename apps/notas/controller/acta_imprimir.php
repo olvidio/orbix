@@ -1,7 +1,5 @@
 <?php
 
-use asignaturas\model\entity\Asignatura;
-use asignaturas\model\entity\AsignaturaTipo;
 use core\ConfigGlobal;
 use core\ViewPhtml;
 use notas\model\entity\Acta;
@@ -10,8 +8,8 @@ use notas\model\entity\GestorActaTribunalDl;
 use notas\model\getDatosActa;
 use personas\model\entity\GestorNombreLatin;
 use personas\model\entity\Persona;
-use src\asignaturas\application\repositories\AsignaturaRepository;
-use src\asignaturas\application\repositories\AsignaturaTipoRepository;
+use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
+use src\asignaturas\domain\contracts\AsignaturaTipoRepositoryInterface;
 use web\Hash;
 
 /**
@@ -69,7 +67,7 @@ $linea = $oActa->getLinea();
 $lugar = $oActa->getLugar();
 $observ = $oActa->getObserv();
 
-$oAsignatura = (new AsignaturaRepository())->findById($id_asignatura);
+$oAsignatura = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class)->findById($id_asignatura);
 if ($oAsignatura === null) {
     throw new \Exception(sprintf(_("No se ha encontrado la asignatura con id: %s"), $id_asignatura));
 }
@@ -78,7 +76,7 @@ $nombre_asignatura = strtr($oAsignatura->getNombre_asignatura(), $replace);
 $any = $oAsignatura->getYear();
 
 $id_tipo = $oAsignatura->getId_tipo();
-$oAsignaturaTipo = (new AsignaturaTipoRepository())->findById($id_tipo);
+$oAsignaturaTipo = $GLOBALS['container']->get(AsignaturaTipoRepositoryInterface::class)->findById($id_tipo);
 if ($oAsignatura === null) {
     throw new \Exception(sprintf(_("No se ha encontrado el tipo de asignatura con id: %s"), $id_tipo));
 }

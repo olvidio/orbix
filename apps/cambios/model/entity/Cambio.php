@@ -3,7 +3,6 @@
 namespace cambios\model\entity;
 
 use actividades\model\entity\ActividadAll;
-use actividades\model\entity\GestorNivelStgr;
 use actividadtarifas\model\entity\GestorTipoTarifa;
 use cambios\model\GestorAvisoCambios;
 use core\ClasePropiedades;
@@ -15,7 +14,8 @@ use core\Set;
 use JsonException;
 use personas\model\entity\PersonaSacd;
 use procesos\model\entity\GestorActividadFase;
-use src\actividades\application\repositories\RepeticionRepository;
+use src\actividades\domain\contracts\NivelStgrRepositoryInterface;
+use src\actividades\domain\contracts\RepeticionRepositoryInterface;
 use src\ubis\domain\entity\Ubi;
 use stdClass;
 use web\DateTimeLocal;
@@ -467,14 +467,14 @@ class Cambio extends ClasePropiedades
                 $sValor_new = empty($sValor_new) ? $sValor_new : $aTarifas[$sValor_new];
             }
             if ($sPropiedad === 'id_repeticion') {
-                $RepeticionRepository = new RepeticionRepository();
+                $RepeticionRepository = $GLOBALS['container']->get(RepeticionRepositoryInterface::class);
                 $aRepeticion = $RepeticionRepository->getArrayRepeticion();
                 $sValor_old = empty($sValor_old) ? $sValor_old : $aRepeticion[$sValor_old];
                 $sValor_new = empty($sValor_new) ? $sValor_new : $aRepeticion[$sValor_new];
             }
             if ($sPropiedad === 'nivel_stgr') {
-                $gesNivelStgr = new GestorNivelStgr();
-                $aNivelStgr = $gesNivelStgr->getArrayNivelesStgr();
+                $NivelStgrRepository = $GLOBALS['container']->get(NivelStgrRepositoryInterface::class);
+                $aNivelStgr = $NivelStgrRepository->getArrayNivelesStgr();
                 $sValor_old = empty($sValor_old) ? $sValor_old : $aNivelStgr[$sValor_old];
                 $sValor_new = empty($sValor_new) ? $sValor_new : $aNivelStgr[$sValor_new];
             }

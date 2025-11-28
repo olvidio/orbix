@@ -33,7 +33,6 @@ class DB extends DBAbstract
         $this->create_x_config_schema();
     }
 
-
     // Global
     public function create_x_config_schema()
     {

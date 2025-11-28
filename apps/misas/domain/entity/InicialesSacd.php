@@ -11,7 +11,7 @@ class InicialesSacd extends InicialesSacdDB
 
     public function iniciales($id_nom): string
     {
-        $InicialesSacdRepository = new InicialesSacdRepository();
+        $InicialesSacdRepository = $GLOBALS['container']->get(InicialesSacdRepositoryInterface::class);
         $InicialesSacd = $InicialesSacdRepository->findById($id_nom);
         if ($InicialesSacd === null) {
 //            if ($id_nom > 0) {

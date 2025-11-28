@@ -1,6 +1,5 @@
 <?php
 
-
 use core\ConfigDB;
 use core\DBConnection;
 use core\ValueObject\Uuid;
@@ -10,21 +9,11 @@ use shared\domain\repositories\ColaMailRepository;
 use src\usuarios\domain\entity\Usuario;
 use web\ContestarJson;
 
-// INICIO Cabecera global de URL de controlador *********************************
-require_once("apps/core/global_header.inc");
-// Archivos requeridos por esta url **********************************************
-
-// Crea los objetos de uso global **********************************************
-require_once("apps/core/global_object.inc");
-// Crea los objetos por esta url  **********************************************
-
-
 $Qusername = (string)filter_input(INPUT_POST, 'username');
 $Qubicacion = (string)filter_input(INPUT_POST, 'ubicacion');
 $Qesquema = (string)filter_input(INPUT_POST, 'esquema');
 $Qesquema_web = (string)filter_input(INPUT_POST, 'esquema_web');
 $Qurl_index = (string)filter_input(INPUT_POST, 'url_index');
-
 
 $aWhere = array('usuario' => $Qusername);
 $esquema = empty($Qesquema) ? $Qesquema_web : $Qesquema;
@@ -91,7 +80,7 @@ if ($row = $oDBSt->fetch(\PDO::FETCH_ASSOC)) {
         $oConexion = new DBConnection($config);
         $oDBPC = $oConexion->getPDO();
 
-        $oColaMailRepository = new ColaMailRepository();
+        $oColaMailRepository = $GLOBALS['container']->get(ColaMailRepositoryInterface::class);
         $oColaMailRepository->setoDbl($oDBPC);
         if ($oColaMailRepository->Guardar($oColaMail)) {
             $success = true;

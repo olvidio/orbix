@@ -6,14 +6,6 @@ use src\ubis\domain\entity\Ubi;
 use web\ContestarJson;
 use web\Periodo;
 
-// INICIO Cabecera global de URL de controlador *********************************
-require_once("apps/core/global_header.inc");
-// Archivos requeridos por esta url **********************************************
-
-// Crea los objetos de uso global **********************************************
-require_once("apps/core/global_object.inc");
-// FIN de  Cabecera global de URL de controlador ********************************
-
 $Qperiodo = (string)filter_input(INPUT_POST, 'periodo');
 $Qyear = (int)filter_input(INPUT_POST, 'year');
 $Qempiezamin = (string)filter_input(INPUT_POST, 'empiezamin');

@@ -2,10 +2,9 @@
 
 namespace src\menus\domain;
 
-
 /* No vale el underscore en el nombre */
 
-use src\menus\application\repositories\GrupMenuRepository;
+use src\menus\domain\contracts\GrupMenuRepositoryInterface;
 use src\shared\domain\DatosInfoRepo;
 
 class InfoGrupMenus extends DatosInfoRepo
@@ -33,7 +32,7 @@ class InfoGrupMenus extends DatosInfoRepo
             $aWhere = ['descripcion' => $this->k_buscar];
             $aOperador = ['descripcion' => 'sin_acentos'];
         }
-        $oLista = new GrupMenuRepository();
+        $oLista = $GLOBALS['container']->get(GrupMenuRepositoryInterface::class);
         $Coleccion = $oLista->getGrupMenus($aWhere, $aOperador);
 
         return $Coleccion;

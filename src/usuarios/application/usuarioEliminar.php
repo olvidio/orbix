@@ -2,7 +2,7 @@
 
 namespace src\usuarios\application;
 
-use src\usuarios\application\repositories\UsuarioRepository;
+use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
 use web\ContestarJson;
 
 class usuarioEliminar
@@ -14,7 +14,7 @@ class usuarioEliminar
         if (!empty($a_sel)) { //vengo de un checkbox
             $id_usuario = (integer)strtok($a_sel[0], "#");
         }
-        $UsuarioRepository = new UsuarioRepository();
+        $UsuarioRepository = $GLOBALS['container']->get(UsuarioRepositoryInterface::class);
         $oUsuario = $UsuarioRepository->findById($id_usuario);
         if ($UsuarioRepository->Eliminar($oUsuario) === false) {
             $error_txt .= _("hay un error, no se ha eliminado");

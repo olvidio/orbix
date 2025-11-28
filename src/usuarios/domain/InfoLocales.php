@@ -5,7 +5,7 @@ namespace src\usuarios\domain;
 /* No vale el underscore en el nombre */
 
 use src\shared\domain\DatosInfoRepo;
-use src\usuarios\application\repositories\LocalRepository;
+use src\usuarios\domain\contracts\LocalRepositoryInterface;
 
 class InfoLocales extends DatosInfoRepo
 {
@@ -33,7 +33,7 @@ class InfoLocales extends DatosInfoRepo
             $aOperador = array('nom_idioma' => 'sin_acentos');
         }
         $aWhere['_ordre'] = 'activo DESC,nom_idioma ASC';
-        $oLista = new LocalRepository();
+        $oLista = $GLOBALS['container']->get(LocalRepositoryInterface::class);
         $Coleccion = $oLista->getLocales($aWhere, $aOperador);
 
         return $Coleccion;

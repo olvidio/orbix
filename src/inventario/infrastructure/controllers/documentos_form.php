@@ -1,15 +1,6 @@
 <?php
 
-
-// INICIO Cabecera global de URL de controlador *********************************
 use web\Hash;
-
-require_once("apps/core/global_header.inc");
-// Archivos requeridos por esta url **********************************************
-
-// Crea los objetos de uso global **********************************************
-require_once("apps/core/global_object.inc");
-// FIN de  Cabecera global de URL de controlador ********************************
 
 $Qid_tipo_doc = (integer)filter_input(INPUT_POST, 'id_tipo_doc');
 $Qdocumentos = (string)filter_input(INPUT_POST, 'documentos');

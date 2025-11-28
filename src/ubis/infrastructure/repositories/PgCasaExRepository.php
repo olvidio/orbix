@@ -3,9 +3,10 @@
 namespace src\ubis\infrastructure\repositories;
 
 use core\ConfigGlobal;
+use src\ubis\domain\contracts\CasaExRepositoryInterface;
 use src\utils_database\domain\GenerateIdGlobal;
 
-class PgCasaExRepository extends PgCasaRepository
+class PgCasaExRepository extends PgCasaRepository implements CasaExRepositoryInterface
 {
     public function __construct()
     {

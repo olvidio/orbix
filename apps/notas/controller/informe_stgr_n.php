@@ -3,7 +3,7 @@
 use core\ConfigGlobal;
 use notas\model\CentroEstudios;
 use notas\model\Resumen;
-use src\ubis\application\repositories\DelegacionRepository;
+use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 
 /**
  * Esta página sirve para comprobar las notas de la tabla e_notas.
@@ -35,7 +35,7 @@ if (!empty($Qdl)) {
     // si soy supra región stgr, todos los de las dependientes:
     // caso especial de H y M:
     if ($dele === 'H' || $dele === 'M') {
-        $repoDelegacion = new DelegacionRepository();
+        $repoDelegacion = $GLOBALS['container']->get(DelegacionRepositoryInterface::class);
         $a_delegacionesStgr = $repoDelegacion->getArrayDlRegionStgr([$dele]);
         $CentroEstudios = new CentroEstudios;
         $ce_lugar = $CentroEstudios->getFromDl(array_keys($a_delegacionesStgr));
@@ -83,7 +83,7 @@ $lista = empty($Qlista) ? false : true;
 $Resumen = new Resumen('numerarios');
 if (!empty($Qdl)) {
     $region_stgr = ConfigGlobal::mi_dele();
-    $repoDelegacion = new DelegacionRepository();
+    $repoDelegacion = $GLOBALS['container']->get(DelegacionRepositoryInterface::class);
     $a_delegacionesStgr = $repoDelegacion->getArrayDlRegionStgr([$region_stgr]);
     $a_dl = [];
     foreach ($Qdl as $id_dl) {

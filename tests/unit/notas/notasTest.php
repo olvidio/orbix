@@ -12,8 +12,8 @@ use notas\model\entity\PersonaNotaDB;
 use notas\model\entity\PersonaNotaDlDB;
 use notas\model\entity\PersonaNotaOtraRegionStgrDB;
 use RuntimeException;
-use src\ubis\application\repositories\DelegacionRepository;
 use src\ubis\application\services\DelegacionUtils;
+use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 use Tests\factories\notas\NotasFactory;
 use Tests\myTest;
 
@@ -100,7 +100,7 @@ class notasTest extends myTest
         $oPersonaNota->DBCarregar(); // Importante: El PDO al hacer execute cambia los integer a string. Con esto vuelven al tipo original.
         $oPersonaNota->getPrimary_key(); // para que tenga el mismo valor que la otra
 
-        $DelegacionRepository = new DelegacionRepository();
+        $DelegacionRepository = $GLOBALS['container']->get(DelegacionRepositoryInterface::class);
         $a_mi_region_stgr = $DelegacionRepository->mi_region_stgr();
         $esquema_region_stgr = $a_mi_region_stgr['esquema_region_stgr'];
 
@@ -151,7 +151,7 @@ class notasTest extends myTest
         $oPersonaNota->DBCarregar(); // Importante: El PDO al hacer execute cambia los integer a string. Con esto vuelven al tipo original.
         $oPersonaNota->getPrimary_key(); // para que tenga el mismo valor que la otra
 
-        $DelegacionRepository = new DelegacionRepository();
+        $DelegacionRepository = $GLOBALS['container']->get(DelegacionRepositoryInterface::class);
         $a_mi_region_stgr = $DelegacionRepository->mi_region_stgr();
         $esquema_region_stgr = $a_mi_region_stgr['esquema_region_stgr'];
 
@@ -203,7 +203,7 @@ class notasTest extends myTest
         $oPersonaNota->DBCarregar(); // Importante: El PDO al hacer execute cambia los integer a string. Con esto vuelven al tipo original.
         $oPersonaNota->getPrimary_key(); // para que tenga el mismo valor que la otra
 
-        $DelegacionRepository = new DelegacionRepository();
+        $DelegacionRepository = $GLOBALS['container']->get(DelegacionRepositoryInterface::class);
         $a_mi_region_stgr = $DelegacionRepository->mi_region_stgr();
         $esquema_region_stgr = $a_mi_region_stgr['esquema_region_stgr'];
 
@@ -290,7 +290,7 @@ class notasTest extends myTest
         $oPersonaNota->DBCarregar(); // Importante: El PDO al hacer execute cambia los integer a string. Con esto vuelven al tipo original.
         $oPersonaNota->getPrimary_key(); // para que tenga el mismo valor que la otra
 
-        $DelegacionRepository = new DelegacionRepository();
+        $DelegacionRepository = $GLOBALS['container']->get(DelegacionRepositoryInterface::class);
         $a_mi_region_stgr = $DelegacionRepository->mi_region_stgr();
         $esquema_region_stgr = $a_mi_region_stgr['esquema_region_stgr'];
 

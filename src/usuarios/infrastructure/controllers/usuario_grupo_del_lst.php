@@ -1,27 +1,19 @@
 <?php
 
 use core\ConfigGlobal;
-use src\usuarios\application\repositories\GrupoRepository;
-use src\usuarios\application\repositories\UsuarioGrupoRepository;
+use src\usuarios\domain\contracts\GrupoRepositoryInterface;
+use src\usuarios\domain\contracts\UsuarioGrupoRepositoryInterface;
 use web\ContestarJson;
 use web\Hash;
-
-// INICIO Cabecera global de URL de controlador *********************************
-require_once("apps/core/global_header.inc");
-// Archivos requeridos por esta url **********************************************
-
-// Crea los objetos de uso global **********************************************
-require_once("apps/core/global_object.inc");
-// FIN de  Cabecera global de URL de controlador ********************************
 
 $sfsv = ConfigGlobal::mi_sfsv();
 
 $Qid_usuario = (integer)filter_input(INPUT_POST, 'id_usuario');
 // listado de grupos posibles
-$GrupoRepository = new GrupoRepository();
+$GrupoRepository = $GLOBALS['container']->get(GrupoRepositoryInterface::class);
 $cGrupos = $GrupoRepository->getGrupos();
 // no pongo los que ya tengo. Los pongo en un array
-$UsuarioGrupoRepository = new UsuarioGrupoRepository();
+$UsuarioGrupoRepository = $GLOBALS['container']->get(UsuarioGrupoRepositoryInterface::class);
 $cListaGrupos = $UsuarioGrupoRepository->getUsuariosGrupos(array('id_usuario' => $Qid_usuario));
 $aGruposOn = [];
 foreach ($cListaGrupos as $oUsuarioGrupo) {

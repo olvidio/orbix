@@ -2,9 +2,8 @@
 
 use core\ViewPhtml;
 use personas\model\entity\Persona;
-use src\personas\application\repositories\SituacionRepository;
-use src\ubis\application\repositories\CentroDlRepository;
 use src\ubis\application\services\DelegacionDropdown;
+use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use web\Desplegable;
 use web\Hash;
 
@@ -51,7 +50,7 @@ if (get_class($oPersona) === 'personas\model\entity\PersonaEx'
     exit(_("con las personas de paso no tiene sentido."));
 }
 
-$gesCentroDl = new CentroDlRepository();
+$gesCentroDl = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
 $sCondicion = "WHERE tipo_ctr !~ '^[(cgi)|(igl)]'";
 $aOpciones = $gesCentroDl->getArrayCentros($sCondicion);
 $oDesplCentroDl = new Desplegable();
@@ -60,7 +59,7 @@ $oDesplCentroDl->setOpciones($aOpciones);
 
 $oDesplDlyR = DelegacionDropdown::listaRegDele(FALSE, 'new_dl'); // False para no incluir mi propia dl en la lista
 
-$SituacionRepository = new SituacionRepository();
+$SituacionRepository = $GLOBALS['container']->get(SituacionRepositoryInterface::class);
 $aOpciones = $SituacionRepository->getArraySituaciones($traslado = true);
 $oDesplSituacion = new Desplegable();
 $oDesplSituacion->setOpciones($aOpciones);
@@ -68,7 +67,7 @@ $oDesplSituacion->setNombre("situacion");
 
 
 $id_ctr = $oPersona->getId_ctr();
-$CentroDlRepository = new CentroDlRepository();
+$CentroDlRepository = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
 $oCentroDl = $CentroDlRepository->findById($id_ctr);
 $nombre_ctr = $oCentroDl->getNombre_ubi();
 $dl = $oPersona->getDl();

@@ -5,7 +5,7 @@ namespace src\ubis\domain;
 /* No vale el underscore en el nombre */
 
 use src\shared\domain\DatosInfoRepo;
-use src\ubis\application\repositories\DescTelecoRepository;
+use src\ubis\domain\contracts\DescTelecoRepositoryInterface;
 
 class InfoDescTeleco extends DatosInfoRepo
 {
@@ -32,7 +32,7 @@ class InfoDescTeleco extends DatosInfoRepo
             $aWhere = array('desc_teleco' => $this->k_buscar);
             $aOperador = array('desc_teleco' => 'sin_acentos');
         }
-        $oLista = new DescTelecoRepository();
+        $oLista = $GLOBALS['container']->get(DescTelecoRepositoryInterface::class);
         $Coleccion = $oLista->getDescsTeleco($aWhere, $aOperador);
 
         return $Coleccion;

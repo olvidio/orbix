@@ -1,19 +1,11 @@
 <?php
 
-// INICIO Cabecera global de URL de controlador *********************************
-use src\inventario\application\repositories\ColeccionRepository;
-use src\inventario\application\repositories\DocumentoRepository;
-use src\inventario\application\repositories\LugarRepository;
-use src\inventario\application\repositories\TipoDocRepository;
-use src\inventario\application\repositories\UbiInventarioRepository;
+use src\inventario\domain\contracts\ColeccionRepositoryInterface;
+use src\inventario\domain\contracts\DocumentoRepositoryInterface;
+use src\inventario\domain\contracts\LugarRepositoryInterface;
+use src\inventario\domain\contracts\TipoDocRepositoryInterface;
+use src\inventario\domain\contracts\UbiInventarioRepositoryInterface;
 use web\ContestarJson;
-
-require_once("apps/core/global_header.inc");
-// Archivos requeridos por esta url **********************************************
-
-// Crea los objetos de uso global **********************************************
-require_once("apps/core/global_object.inc");
-// FIN de  Cabecera global de URL de controlador ********************************
 
 $sel = (string)filter_input(INPUT_POST, 'sel');
 
@@ -22,11 +14,11 @@ $a_sel = json_decode($sel, true);
 $error_txt = '';
 $colTipoDoc = [];
 
-$UbiInventarioRepository = new UbiInventarioRepository();
-$DocumentoRepository = new DocumentoRepository();
-$TipoDocRepository = new TipoDocRepository();
-$ColeccionRepository = new ColeccionRepository();
-$LugarRepository = new LugarRepository();
+$UbiInventarioRepository = $GLOBALS['container']->get(UbiInventarioRepositoryInterface::class);
+$DocumentoRepository = $GLOBALS['container']->get(DocumentoRepositoryInterface::class);
+$TipoDocRepository = $GLOBALS['container']->get(TipoDocRepositoryInterface::class);
+$ColeccionRepository = $GLOBALS['container']->get(ColeccionRepositoryInterface::class);
+$LugarRepository = $GLOBALS['container']->get(LugarRepositoryInterface::class);
 
 $a_ubi_valores = [];
 $a_ubi_llave = [];

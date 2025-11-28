@@ -4,6 +4,7 @@
 
 use actividadcargos\model\entity\GestorActividadCargo;
 use actividades\model\entity\ActividadAll;
+use actividades\model\entity\GestorActividad;
 use encargossacd\model\entity\Encargo;
 use encargossacd\model\entity\EncargoTipo;
 use encargossacd\model\entity\GestorEncargoHorario;
@@ -15,6 +16,7 @@ use misas\domain\EncargoDiaTstart;
 use misas\domain\entity\EncargoDia;
 use misas\domain\entity\InicialesSacd;
 use misas\domain\repositories\EncargoDiaRepository;
+use misas\domain\repositories\EncargoDiaRepositoryInterface;
 use web\DateTimeLocal;
 use zonassacd\model\entity\GestorZonaSacd;
 
@@ -48,7 +50,7 @@ if (empty($Quuid_item)) {
 }
 $Uuid = new EncargoDiaId($Quuid_item);
 
-$EncargoDiaRepository = new EncargoDiaRepository();
+$EncargoDiaRepository = $GLOBALS['container']->get(EncargoDiaRepositoryInterface::class);
 $oEncargoDia = $EncargoDiaRepository->findById($Uuid);
 if ($oEncargoDia === null) {
     $oEncargoDia = new EncargoDia();
@@ -138,7 +140,8 @@ if ($id_sacd_anterior!='')
  
     $oGesActividadCargo = new GestorActividadCargo();
     $cAsistentes = $oGesActividadCargo->getAsistenteCargoDeActividad($aWhere, $aOperador, $aWhereAct, $aOperadorAct);
-    
+
+    $ActividadTipoRepository = $GLOBALS['container']->get(ActividadTipoRepositoryInterface::class);
     foreach ($cAsistentes as $aAsistente) {
         $id_activ = $aAsistente['id_activ'];
         $propio = $aAsistente['propio'];
@@ -322,7 +325,7 @@ if($id_sacd_anterior!=''){
         $aOperador = [
             'tstart' => 'BETWEEN',
         ];
-        $EncargoDiaRepository = new EncargoDiaRepository();
+        $EncargoDiaRepository = $GLOBALS['container']->get(EncargoDiaRepositoryInterface::class);
         $cEncargosDia = $EncargoDiaRepository->getEncargoDias($aWhere,$aOperador);
 
         $misas_dia=0;
@@ -422,7 +425,7 @@ if ($id_nom!='')
         $aOperador = [
             'tstart' => 'BETWEEN',
         ];
-        $EncargoDiaRepository = new EncargoDiaRepository();
+        $EncargoDiaRepository = $GLOBALS['container']->get(EncargoDiaRepositoryInterface::class);
         $cEncargosDia = $EncargoDiaRepository->getEncargoDias($aWhere,$aOperador);
 
         $misas_dia=0;

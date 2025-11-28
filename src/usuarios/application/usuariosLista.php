@@ -5,8 +5,8 @@ namespace src\usuarios\application;
 use core\ConfigGlobal;
 use Exception;
 use InvalidArgumentException;
-use src\usuarios\application\repositories\RoleRepository;
-use src\usuarios\application\repositories\UsuarioRepository;
+use src\usuarios\domain\contracts\RoleRepositoryInterface;
+use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
 use web\ContestarJson;
 use web\Hash;
 
@@ -21,7 +21,7 @@ class usuariosLista
     {
         $error_txt = '';
 
-        $UsuarioRepository = new UsuarioRepository();
+        $UsuarioRepository = $GLOBALS['container']->get(UsuarioRepositoryInterface::class);
         $oMiUsuario = $UsuarioRepository->findById(ConfigGlobal::mi_id_usuario());
         $miRole = $oMiUsuario->getId_role();
 
@@ -30,7 +30,6 @@ class usuariosLista
             $error_txt = _("no tiene permisos para ver esto");
             return ContestarJson::respuestaPhp($error_txt, '');
         }
-
 
         $miSfsv = ConfigGlobal::mi_sfsv();
         $aWhere = [];
@@ -46,7 +45,7 @@ class usuariosLista
         }
         $aWhere['_ordre'] = 'usuario';
 
-        $RoleRepository = new RoleRepository();
+        $RoleRepository = $GLOBALS['container']->get(RoleRepositoryInterface::class);
          try {
              $cUsuarios = $UsuarioRepository->getUsuarios($aWhere, $aOperador);
         } catch (InvalidArgumentException $e) {

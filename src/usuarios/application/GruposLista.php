@@ -3,7 +3,7 @@
 namespace src\usuarios\application;
 
 use core\ConfigGlobal;
-use src\usuarios\application\repositories\GrupoRepository;
+use src\usuarios\domain\contracts\GrupoRepositoryInterface;
 use web\Hash;
 
 class GruposLista
@@ -22,7 +22,7 @@ class GruposLista
         }
         $aWhere['_ordre'] = 'usuario';
 
-        $GrupoRepository = new GrupoRepository();
+        $GrupoRepository = $GLOBALS['container']->get(GrupoRepositoryInterface::class);
         $cGrupos = $GrupoRepository->getGrupos($aWhere, $aOperador);
 
         $a_cabeceras = [_("grupo"),

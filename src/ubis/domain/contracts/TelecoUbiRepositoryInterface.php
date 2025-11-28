@@ -5,7 +5,6 @@ namespace src\ubis\domain\contracts;
 use PDO;
 use src\ubis\domain\entity\TelecoUbi;
 
-
 /**
  * Interfaz de la clase TelecoCdc y su Repositorio
  *

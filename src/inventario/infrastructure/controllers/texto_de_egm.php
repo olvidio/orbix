@@ -1,15 +1,7 @@
 <?php
 
-use src\inventario\application\repositories\EgmRepository;
+use src\inventario\domain\contracts\EgmRepositoryInterface;
 use web\ContestarJson;
-
-// INICIO Cabecera global de URL de controlador *********************************
-require_once("apps/core/global_header.inc");
-// Archivos requeridos por esta url **********************************************
-
-// Crea los objetos de uso global **********************************************
-require_once("apps/core/global_object.inc");
-// FIN de  Cabecera global de URL de controlador ********************************
 
 $Qid_equipaje = (integer)filter_input(INPUT_POST, 'id_equipaje');
 $Qid_grupo = (integer)filter_input(INPUT_POST, 'id_grupo');
@@ -17,7 +9,7 @@ $Qid_item_egm = (integer)filter_input(INPUT_POST, 'id_item_egm');
 
 $error_txt = '';
 
-$EgmRepository = new EgmRepository();
+$EgmRepository = $GLOBALS['container']->get(EgmRepositoryInterface::class);
 if (!empty($Qid_item_egm)) {
     $oEgm = $EgmRepository->findById($Qid_item_egm);
 } else {

@@ -2,9 +2,8 @@
 
 use actividades\model\entity\ActividadAll;
 use actividadestudios\model\entity\GestorMatriculaDl;
-use asignaturas\model\entity\Asignatura;
 use personas\model\entity\Persona;
-use src\asignaturas\application\repositories\AsignaturaRepository;
+use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use web\Hash;
 use web\Lista;
 use web\Posicion;
@@ -65,6 +64,7 @@ if (isset($Qscroll_id) && !empty($Qscroll_id)) {
     $a_valores['scroll_id'] = $Qscroll_id;
 }
 $msg_err = '';
+$AsignaturaRepository = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class);
 foreach ($cMatriculasPendientes as $oMatricula) {
     $i++;
     $id_nom = $oMatricula->getId_nom();
@@ -84,7 +84,7 @@ foreach ($cMatriculasPendientes as $oMatricula) {
         continue;
     }
     $apellidos_nombre = $oPersona->getPrefApellidosNombre();
-    $oAsignatura = (new AsignaturaRepository())->findById($id_asignatura);
+    $oAsignatura = $AsignaturaRepository->findById($id_asignatura);
     if ($oAsignatura === null) {
         throw new \Exception(sprintf(_("No se ha encontrado la asignatura con id: %s"), $id_asignatura));
     }

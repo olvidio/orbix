@@ -2,7 +2,8 @@
 
 namespace src\ubis\application\services;
 
-use src\ubis\application\repositories\DelegacionRepository;
+
+use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 
 final class DelegacionQuery
 {
@@ -15,7 +16,7 @@ final class DelegacionQuery
      */
     public static function arrayDlByRegionStgr(array $regionesStgr = []): array
     {
-        $repo = new DelegacionRepository();
+        $repo = $GLOBALS['container']->get(DelegacionRepositoryInterface::class);
         $aWhere = ['status' => true, '_ordre' => 'dl'];
         $aOper = [];
         if (!empty($regionesStgr)) {

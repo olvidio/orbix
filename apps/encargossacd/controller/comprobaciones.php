@@ -2,8 +2,8 @@
 
 use encargossacd\model\entity\GestorEncargo;
 use encargossacd\model\entity\GestorEncargoSacd;
-use src\ubis\application\repositories\CentroDlRepository;
-use src\ubis\application\repositories\CentroEllasRepository;
+use src\ubis\domain\contracts\CentroDlRepositoryInterface;
+use src\ubis\domain\contracts\CentroEllasRepositoryInterface;
 
 /**
  * Esta página limpia la base de datos de los encargos.
@@ -48,7 +48,7 @@ switch ($Qque) {
             $sfsv = substr($id_ubi, 0, 1);
             if ($sfsv == 1) {
                 // Ctr sv
-                $CentroDlRepository = new CentroDlRepository();
+                $CentroDlRepository = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
                 $oCentroDl = $CentroDlRepository->findById($id_ubi);
                 $status = $oCentroDl->isStatus();
                 if ($status === FALSE || empty($status)) {
@@ -57,7 +57,7 @@ switch ($Qque) {
                 }
             } else {
                 // Ctr sf
-                $CentroEllasRepository = new CentroEllasRepository();
+                $CentroEllasRepository = $GLOBALS['container']->get(CentroEllasRepositoryInterface::class);
                 $oCentroDl = $CentroEllasRepository->findById($id_ubi);
                 $status = $oCentroDl->isStatus();
                 if ($status === FALSE || empty($status)) {

@@ -14,7 +14,6 @@ use web\Hash;
 use web\Lista;
 use web\TiposActividades;
 
-
 if ($Qquien === 'usuario') $obj = 'usuarios\\model\\entity\\Usuario';
 
 if ((ConfigGlobal::is_app_installed('cambios')) && (!empty($Qid_usuario)) && ($Qquien === 'usuario')) {

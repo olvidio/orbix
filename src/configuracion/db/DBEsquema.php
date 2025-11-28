@@ -67,7 +67,6 @@ class DBEsquema extends DBAbstract
         return $datosTabla;
     }
 
-
     /**
      * En la BD Comun.
      */
@@ -117,7 +116,6 @@ class DBEsquema extends DBAbstract
 
         $this->delPermisoGlobal('comun');
     }
-
 
     /* ###################### LLENAR TABLAS ################################ */
 

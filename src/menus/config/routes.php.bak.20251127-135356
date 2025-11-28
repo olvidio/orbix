@@ -1,0 +1,13 @@
+<?php
+// Rutas del módulo Menús
+// Convención: este archivo retorna un callable que recibe (RouteCollector $r)
+// para registrar las rutas del módulo. Así evitamos depender del ámbito.
+
+return static function ($r) {
+    // Eliminar grupmenu (legacy controller)
+    $r->addRoute('POST', '/menus/grupmenu/eliminar', function () {
+        // Compatibilidad: algunos controladores legacy esperan $container en ámbito global
+        $container = $GLOBALS['container'] ?? null;
+        require __DIR__ . '/../infrastructure/controllers/grupmenu_eliminar.php';
+    });
+};

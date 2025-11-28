@@ -2,8 +2,8 @@
 
 use core\ConfigGlobal;
 use notas\model\AsignaturasPendientes;
-use src\asignaturas\application\repositories\AsignaturaRepository;
-use src\ubis\application\repositories\CentroDlRepository;
+use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
+use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use web\Hash;
 use web\Lista;
 use web\Posicion;
@@ -92,7 +92,8 @@ if (!empty($Qpersonas_n) && !empty($Qpersonas_agd)) {
     $obj_pau = 'PersonaDl';
 }
 
-$oAsignatura = (new AsignaturaRepository())->findById($Qid_asignatura) ?? null;
+$AsignaturaRepository = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class);
+$oAsignatura = $AsignaturaRepository->findById($Qid_asignatura) ?? null;
 if ($oAsignatura === null) {
     throw new \Exception(sprintf(_("No se ha encontrado la asignatura con id: %s"), $Qid_asignatura));
 }
@@ -149,7 +150,7 @@ foreach ($aId_nom as $id_nom => $aAsignaturas) {
         $nombre_ubi = $oPersona->getDl();
     } else {
         $id_ctr = $oPersona->getId_ctr();
-        $CentroDlRepository = new CentroDlRepository();
+        $CentroDlRepository = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
         $oCentroDl = $CentroDlRepository->findById($id_ctr);
         $nombre_ubi = $oCentroDl->getNombre_ubi();
     }

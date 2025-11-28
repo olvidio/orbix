@@ -5,9 +5,8 @@
 use core\ConfigGlobal;
 use core\ViewTwig;
 use misas\domain\entity\EncargoDia;
-use src\usuarios\application\repositories\PreferenciaRepository;
-use src\usuarios\application\repositories\RoleRepository;
-use src\usuarios\application\repositories\UsuarioRepository;
+use src\usuarios\domain\contracts\RoleRepositoryInterface;
+use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
 use web\Desplegable;
 use web\Hash;
 use zonassacd\model\entity\GestorZona;
@@ -21,11 +20,11 @@ require_once("apps/core/global_object.inc");
 
 $id_nom_jefe = '';
 
-$UsuarioRepository = new UsuarioRepository();
+$UsuarioRepository = $GLOBALS['container']->get(UsuarioRepositoryInterface::class);
 $oMiUsuario = $UsuarioRepository->findById(ConfigGlobal::mi_id_usuario());
 $id_role = $oMiUsuario->getId_role();
 
-$RoleRepository = new RoleRepository();
+$RoleRepository = $GLOBALS['container']->get(RoleRepositoryInterface::class);
 $aRoles = $RoleRepository->getArrayRoles();
 
 if (!empty($aRoles[$id_role]) && ($aRoles[$id_role] === 'p-sacd')) {
@@ -66,7 +65,7 @@ $a_TiposPlantilla2 = array(
     EncargoDia::PLANTILLA_MENSUAL_TRES=>'mensual tres opciones',
 );
 
-$PreferenciaRepository = new PreferenciaRepository();
+$PreferenciaRepository = $GLOBALS['container']->get(PreferenciaRepositoryInterface::class);
 
 $id_usuario = ConfigGlobal::mi_id_usuario();
 $aPref = $PreferenciaRepository->getPreferencias(array('id_usuario' => $id_usuario, 'tipo' => 'ultima_plantilla'));

@@ -3,6 +3,7 @@
 namespace src\inventario\domain\entity;
 use core\DatosCampo;
 use core\Set;
+use src\inventario\domain\contracts\UbiInventarioRepositoryInterface;
 use src\inventario\domain\value_objects\LugarId;
 use src\inventario\domain\value_objects\UbiInventarioId;
 use src\inventario\domain\value_objects\LugarName;
@@ -168,7 +169,7 @@ class Lugar {
         $oDatosCampo->setMetodoSet('setId_ubi');
         $oDatosCampo->setEtiqueta(_("centro/casa"));
         $oDatosCampo->setTipo('opciones');
-        $oDatosCampo->setArgument('src\\inventario\\application\\repositories\\UbiInventarioRepository');
+        $oDatosCampo->setArgument(UbiInventarioRepositoryInterface::class);
         $oDatosCampo->setArgument2('getNom_ubi');
         $oDatosCampo->setArgument3('getArrayUbisInventario');
         return $oDatosCampo;

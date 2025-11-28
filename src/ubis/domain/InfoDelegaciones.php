@@ -5,7 +5,7 @@ namespace src\ubis\domain;
 /* No vale el underscore en el nombre */
 
 use src\shared\domain\DatosInfoRepo;
-use src\ubis\application\repositories\DelegacionRepository;
+use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 
 class InfoDelegaciones extends DatosInfoRepo
 {
@@ -31,7 +31,7 @@ class InfoDelegaciones extends DatosInfoRepo
             $aWhere = ['dl' => $this->k_buscar];
             $aOperador = ['dl' => 'sin_acentos'];
         }
-        $oLista = new DelegacionRepository();
+        $oLista = $GLOBALS['container']->get(DelegacionRepositoryInterface::class);
         $Coleccion = $oLista->getDelegaciones($aWhere, $aOperador);
 
         return $Coleccion;

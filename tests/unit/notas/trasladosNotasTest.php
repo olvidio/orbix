@@ -11,8 +11,8 @@ use notas\model\entity\GestorPersonaNotaDlDB;
 use notas\model\entity\GestorPersonaNotaOtraRegionStgrDB;
 use personas\model\entity\TrasladoDl;
 use src\notas\domain\entity\Nota;
-use src\ubis\application\repositories\DelegacionRepository;
 use src\ubis\application\services\DelegacionUtils;
+use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 use Tests\factories\notas\NotasFactory;
 use Tests\myTest;
 
@@ -73,7 +73,7 @@ class trasladosNotasTest extends myTest
         // trasladar del crA a dlB
         $this->trasladar_notas($esquemaB, $esquemaA);
 
-        $DelegacionRepository = new DelegacionRepository();
+        $DelegacionRepository = $GLOBALS['container']->get(DelegacionRepositoryInterface::class);
         $a_mi_region_stgr = $DelegacionRepository->mi_region_stgr($dlA);
         $esquema_region_stgrA = $a_mi_region_stgr['esquema_region_stgr'];
         $a_mi_region_stgr = $DelegacionRepository->mi_region_stgr($dlB);
@@ -170,7 +170,7 @@ class trasladosNotasTest extends myTest
         // trasladar del crA a dlB
         $this->trasladar_notas($esquemaB, $esquemaA);
 
-        $DelegacionRepository = new DelegacionRepository();
+        $DelegacionRepository = $GLOBALS['container']->get(DelegacionRepositoryInterface::class);
         $a_mi_region_stgr = $DelegacionRepository->mi_region_stgr($dlA);
         $esquema_region_stgrA = $a_mi_region_stgr['esquema_region_stgr'];
         $a_mi_region_stgr = $DelegacionRepository->mi_region_stgr($dlB);
@@ -264,7 +264,7 @@ class trasladosNotasTest extends myTest
         $this->guardar_notas($esquemaA);
         $this->trasladar_notas($esquemaA, $esquemaB);
 
-        $DelegacionRepository = new DelegacionRepository();
+        $DelegacionRepository = $GLOBALS['container']->get(DelegacionRepositoryInterface::class);
         $a_mi_region_stgr = $DelegacionRepository->mi_region_stgr($dlA);
         $esquema_region_stgr = $a_mi_region_stgr['esquema_region_stgr'];
 
@@ -611,7 +611,7 @@ class trasladosNotasTest extends myTest
     ///////////////////////////////////////////////////////////////////////
     private function guardar_notas($esquemaA)
     {
-        $DelegacionRepository = new DelegacionRepository();
+        $DelegacionRepository = $GLOBALS['container']->get(DelegacionRepositoryInterface::class);
         $dlA = DelegacionUtils::getDlFromSchema($esquemaA);
         $a_mi_region_stgr = $DelegacionRepository->mi_region_stgr($dlA);
         $id_esquemaA = $a_mi_region_stgr['mi_id_schema'];
@@ -637,7 +637,7 @@ class trasladosNotasTest extends myTest
     private function trasladar_notas($esquemaA, $esquemaB)
     {
 
-        $DelegacionRepository = new DelegacionRepository();
+        $DelegacionRepository = $GLOBALS['container']->get(DelegacionRepositoryInterface::class);
         $dlA = DelegacionUtils::getDlFromSchema($esquemaA);
         $a_mi_region_stgr = $DelegacionRepository->mi_region_stgr($dlA);
         $id_esquemaA = $a_mi_region_stgr['mi_id_schema'];

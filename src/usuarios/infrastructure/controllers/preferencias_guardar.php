@@ -1,28 +1,17 @@
 <?php
 
-
-// INICIO Cabecera global de URL de controlador *********************************
 use core\ConfigGlobal;
-use src\usuarios\application\repositories\PreferenciaRepository;
+use src\usuarios\domain\contracts\PreferenciaRepositoryInterface;
 use src\usuarios\domain\entity\Preferencia;
 use src\usuarios\domain\value_objects\TipoPreferencia;
 use src\usuarios\domain\value_objects\ValorPreferencia;
 use web\ContestarJson;
 
-require_once("apps/core/global_header.inc");
-// Archivos requeridos por esta url **********************************************
-
-// Crea los objetos de uso global **********************************************
-require_once("apps/core/global_object.inc");
-// Crea los objetos por esta url  **********************************************
-
-// FIN de  Cabecera global de URL de controlador ********************************
-
 $id_usuario = ConfigGlobal::mi_id_usuario();
 
 $Qque = (string)filter_input(INPUT_POST, 'que');
 
-$PreferenciaRepository = new PreferenciaRepository();
+$PreferenciaRepository = $GLOBALS['container']->get(PreferenciaRepositoryInterface::class);
 
 $error_txt = '';
 if ($Qque === "slickGrid") {
@@ -160,7 +149,6 @@ if ($Qque === "slickGrid") {
         $error_txt .= _("hay un error, no se ha guardado");
         $error_txt .= "\n" . $PreferenciaRepository->getErrorTxt();
     }
-
 
     ContestarJson::enviar($error_txt, 'ok');
 }

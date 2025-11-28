@@ -3,8 +3,8 @@
 use core\ViewTwig;
 use encargossacd\model\DesplCentros;
 use encargossacd\model\entity\GestorEncargoTipo;
-use src\ubis\application\repositories\CentroDlRepository;
-use src\ubis\application\repositories\CentroEllasRepository;
+use src\ubis\domain\contracts\CentroDlRepositoryInterface;
+use src\ubis\domain\contracts\CentroEllasRepositoryInterface;
 use web\Desplegable;
 use web\Hash;
 
@@ -34,10 +34,10 @@ if (!empty($Qid_ubi)) {
     // si empieza por 2 es de la sf.
     $Qid_ubi_txt = (string)$Qid_ubi;
     if ((int)$Qid_ubi_txt[0] === 2) {
-        $CentroEllasRepository = new CentroEllasRepository();
+        $CentroEllasRepository = $GLOBALS['container']->get(CentroEllasRepositoryInterface::class);
         $oCentro = $CentroEllasRepository->findById($Qid_ubi);
     } else {
-        $CentroDlRepository = new CentroDlRepository();
+        $CentroDlRepository = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
         $oCentro = $CentroDlRepository->findById($Qid_ubi);
     }
     $tipo_ubi = $oCentro->getTipo_ubi();

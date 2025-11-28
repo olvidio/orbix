@@ -1,18 +1,9 @@
 <?php
 
-use src\configuracion\application\repositories\ConfigSchemaRepository;
+use src\configuracion\domain\contracts\ConfigSchemaRepositoryInterface;
 use src\configuracion\domain\entity\ConfigSchema;
 use src\configuracion\domain\value_objects\ConfigParametroCode;
 use src\configuracion\domain\value_objects\ConfigValor;
-
-// INICIO Cabecera global de URL de controlador *********************************
-require_once("apps/core/global_header.inc");
-// Archivos requeridos por esta url **********************************************
-
-// Crea los objetos de uso global **********************************************
-require_once("apps/core/global_object.inc");
-// FIN de  Cabecera global de URL de controlador ********************************
-
 
 $Qparametro = (string)filter_input(INPUT_POST, 'parametro');
 $Qvalor = (string)filter_input(INPUT_POST, 'valor');
@@ -31,7 +22,7 @@ if ($Qparametro === 'curso_stgr' || $Qparametro === 'curso_crt') {
     $Qvalor = json_encode($aCursoStgr);
 }
 
-$ConfigSchemaRepository = new ConfigSchemaRepository();
+$ConfigSchemaRepository = $GLOBALS['container']->get(ConfigSchemaRepositoryInterface::class);
 $oConfigSchema = new ConfigSchema();
 $oConfigSchema->setParametroVo(ConfigParametroCode::fromString($Qparametro));
 $oConfigSchema->setValorVo(ConfigValor::fromString($Qvalor));

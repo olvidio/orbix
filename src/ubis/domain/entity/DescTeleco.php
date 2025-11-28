@@ -4,6 +4,7 @@ namespace src\ubis\domain\entity;
 
 use core\DatosCampo;
 use core\Set;
+use src\ubis\domain\contracts\TipoTelecoRepositoryInterface;
 use function core\is_true;
 use src\ubis\domain\value_objects\{TipoTelecoCode, DescTelecoOrder, DescTelecoText};
 
@@ -216,7 +217,6 @@ class DescTeleco
         $this->bpersona = $bpersona;
     }
 
-
     /* ------------------- PARA el mod_tabla  -------------------------------*/
     public function getPrimary_key(): string
     {
@@ -234,7 +234,6 @@ class DescTeleco
         $oDescTelecoSet->add($this->getDatosPersona());
         return $oDescTelecoSet->getTot();
     }
-
 
     /**
      * Recupera les propietats de l'atribut iorden de DescTeleco
@@ -268,7 +267,7 @@ class DescTeleco
         $oDatosCampo->setMetodoSet('setId_tipo_teleco');
         $oDatosCampo->setEtiqueta(_("nombre teleco"));
         $oDatosCampo->setTipo('opciones');
-        $oDatosCampo->setArgument('src\\ubis\\application\\repositories\\TipoTelecoRepository'); // nombre del objeto relacionado
+        $oDatosCampo->setArgument(TipoTelecoRepositoryInterface::class); // nombre del objeto relacionado
         $oDatosCampo->setArgument2('getNombreTelecoVo'); // método para obtener el valor a mostrar del objeto relacionado.
         $oDatosCampo->setArgument3('getArrayTiposTeleco'); // método con que crear la lista de opciones del Gestor objeto relacionado.
         return $oDatosCampo;
@@ -291,7 +290,6 @@ class DescTeleco
         $oDatosCampo->setArgument(20);
         return $oDatosCampo;
     }
-
 
     function getDatosUbi()
     {

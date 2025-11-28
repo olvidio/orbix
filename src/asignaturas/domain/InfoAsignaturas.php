@@ -2,7 +2,7 @@
 
 namespace src\asignaturas\domain;
 
-use src\asignaturas\application\repositories\AsignaturaRepository;
+use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\shared\domain\DatosInfoRepo;
 
 /* No vale el underscore en el nombre */
@@ -32,7 +32,7 @@ class InfoAsignaturas extends DatosInfoRepo
         $aWhere['id_asignatura'] = 3000;
         $aOperador['id_asignatura'] = '<';
         $aWhere['_ordre'] = 'id_nivel';
-        $oLista = new AsignaturaRepository();
+        $oLista = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class);
         $Coleccion = $oLista->getAsignaturas($aWhere, $aOperador);
 
         return $Coleccion;

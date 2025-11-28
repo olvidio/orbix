@@ -3,8 +3,6 @@
 use core\ConfigGlobal;
 use frontend\shared\model\ViewNewTwig;
 use frontend\shared\PostRequest;
-use personas\model\entity\Persona;
-use src\usuarios\application\repositories\LocalRepository;
 use web\DateTimeLocal;
 use web\Desplegable;
 use web\Hash;

@@ -5,7 +5,6 @@ namespace src\asignaturas\domain\contracts;
 use PDO;
 use src\asignaturas\domain\entity\Departamento;
 
-
 /**
  * Interfaz de la clase Departamento y su Repositorio
  *
@@ -18,7 +17,6 @@ use src\asignaturas\domain\entity\Departamento;
 interface DepartamentoRepositoryInterface
 {
 
-
     public function getArrayDepartamentos(): array;
 
 /* -------------------- GESTOR BASE ---------------------------------------- */
@@ -28,10 +26,10 @@ interface DepartamentoRepositoryInterface
 	 *
 	 * @param array $aWhere asociativo con los valores para cada campo de la BD.
 	 * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-	 * @return array|FALSE Una colección de objetos de tipo Departamento
+	 * @return array|false Una colección de objetos de tipo Departamento
 	
 	 */
-	public function getDepartamentos(array $aWhere=[], array $aOperators=[]): array|FALSE;
+	public function getDepartamentos(array $aWhere=[], array $aOperators=[]): array|false;
 	
 /* -------------------- ENTIDAD --------------------------------------------- */
 

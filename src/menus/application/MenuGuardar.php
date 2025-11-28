@@ -3,7 +3,7 @@
 namespace src\menus\application;
 
 use core\ConfigGlobal;
-use src\menus\application\repositories\MenuDbRepository;
+use src\menus\domain\contracts\MenuDbRepositoryInterface;
 use src\menus\domain\entity\MenuDb;
 use src\menus\domain\PermisoMenu;
 use src\usuarios\domain\entity\Role;
@@ -22,7 +22,7 @@ class MenuGuardar
     ): string
     {
 
-        $MenuDbRepository = new MenuDbRepository();
+        $MenuDbRepository = $GLOBALS['container']->get(MenuDbRepositoryInterface::class);
         $oPermisoMenu = new PermisoMenu;
 
         // si es nuevo
@@ -37,7 +37,6 @@ class MenuGuardar
         $oMiUsuario = ConfigGlobal::MiUsuario();
         $oRole = new Role();
         $oRole->setId_role($oMiUsuario->getId_role());
-
 
         //if ($oRole->isRole('SuperAdmin')) {
             $ok = is_true($ok);

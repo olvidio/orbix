@@ -5,7 +5,6 @@ namespace src\ubis\domain\contracts;
 use PDO;
 use src\ubis\domain\entity\TipoCentro;
 
-
 /**
  * Interfaz de la clase TipoCentro y su Repositorio
  *
@@ -27,10 +26,10 @@ interface TipoCentroRepositoryInterface
 	 *
 	 * @param array $aWhere asociativo con los valores para cada campo de la BD.
 	 * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-	 * @return array|FALSE Una colección de objetos de tipo TipoCentro
+	 * @return array|false Una colección de objetos de tipo TipoCentro
 	
 	 */
-	public function getTiposCentro(array $aWhere=[], array $aOperators=[]): array|FALSE;
+	public function getTiposCentro(array $aWhere=[], array $aOperators=[]): array|false;
 	
 /* -------------------- ENTIDAD --------------------------------------------- */
 

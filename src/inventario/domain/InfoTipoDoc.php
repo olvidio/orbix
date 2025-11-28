@@ -2,7 +2,7 @@
 
 namespace src\inventario\domain;
 
-use src\inventario\application\repositories\TipoDocRepository;
+use src\inventario\domain\contracts\TipoDocRepositoryInterface;
 use src\shared\domain\DatosInfoRepo;
 
 /* No vale el underscore en el nombre */
@@ -34,7 +34,7 @@ class InfoTipoDoc extends DatosInfoRepo
             $aOperador['nom_doc'] = 'sin_acentos';
         }
 
-        $ColeccionRepository = new TipoDocRepository();
+        $ColeccionRepository = $GLOBALS['container']->get(TipoDocRepositoryInterface::class);
         $Coleccion = $ColeccionRepository->getTipoDocs($aWhere, $aOperador);
 
         return $Coleccion;

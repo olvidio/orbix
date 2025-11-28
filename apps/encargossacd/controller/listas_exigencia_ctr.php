@@ -6,8 +6,8 @@ use encargossacd\model\EncargoFunciones;
 use encargossacd\model\entity\GestorEncargo;
 use encargossacd\model\entity\GestorEncargoSacd;
 use personas\model\entity\PersonaDl;
-use src\ubis\application\repositories\CentroDlRepository;
-use src\ubis\application\repositories\CentroEllasRepository;
+use src\ubis\domain\contracts\CentroDlRepositoryInterface;
+use src\ubis\domain\contracts\CentroEllasRepositoryInterface;
 use web\DateTimeLocal;
 
 /* Listado de ateción sacd. según cr 9/05, Anexo2,9.4 b) 
@@ -102,17 +102,17 @@ foreach ($tipos_de_ctr as $tipo_ctr_que) {
     $aWhere['_ordre'] = 'nombre_ubi';
     if ($Qctr_igl == 'ctr') {
         if ($Qsf == 1) {
-            $GesCentros = new CentroEllasRepository();
+            $GesCentros = $GLOBALS['container']->get(CentroEllasRepositoryInterface::class);
             $cCentros = $GesCentros->getCentros($aWhere, $aOperador);
         } else {
-            $GesCentros = new CentroDlRepository();
+            $GesCentros = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
             $cCentros = $GesCentros->getCentros($aWhere, $aOperador);
         }
     }
     if ($Qctr_igl == 'igl') {
-        $GesCentrosF = new CentroEllasRepository();
+        $GesCentrosF = $GLOBALS['container']->get(CentroEllasRepositoryInterface::class);
         $cCentrosF = $GesCentrosF->getCentros($aWhere, $aOperador);
-        $GesCentrosV = new CentroDlRepository();
+        $GesCentrosV = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
         $cCentrosV = $GesCentrosV->getCentros($aWhere, $aOperador);
         $cCentros = array_merge($cCentrosV, $cCentrosF);
     }

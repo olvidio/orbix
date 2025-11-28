@@ -2,7 +2,7 @@
 
 use core\ConfigGlobal;
 use core\ViewPhtml;
-use src\ubis\application\repositories\DelegacionRepository;
+use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 use web\TablaEditable;
 
 /**
@@ -60,12 +60,12 @@ $esquema = ConfigGlobal::mi_region_dl();
 $a_reg = explode('-', $esquema);
 $mi_dl = substr($a_reg[1], 0, -1); // quito la v o la f.
 $aWhere = array('region' => $a_reg[0], 'dl' => $mi_dl);
-$gesDelegacion = new DelegacionRepository();
+$gesDelegacion = $GLOBALS['container']->get(DelegacionRepositoryInterface::class);
 $cDelegaciones = $gesDelegacion->getDelegaciones($aWhere);
 $oMiDelegacion = $cDelegaciones[0];
 $grupo_estudios = $oMiDelegacion->getGrupoEstudiosVo()->value();
 
-$gesDelegacion = new DelegacionRepository();
+$gesDelegacion = $GLOBALS['container']->get(DelegacionRepositoryInterface::class);
 $cDelegaciones = $gesDelegacion->getDelegaciones(['grupo_estudios' => $grupo_estudios, '_ordre' => 'region,dl']);
 
 $gesActividadPlazas = new actividadplazas\model\entity\GestorActividadPlazas();

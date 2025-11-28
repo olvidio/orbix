@@ -4,11 +4,11 @@ use core\ConfigGlobal;
 use core\DBPropiedades;
 use core\ViewPhtml;
 use personas\model\entity\PersonaGlobal;
-use src\personas\application\repositories\SituacionRepository;
-use src\ubis\application\repositories\CentroDlRepository;
-use src\ubis\application\repositories\CentroRepository;
-use src\ubis\application\repositories\DelegacionRepository;
-use src\usuarios\application\repositories\LocalRepository;
+use src\personas\domain\contracts\SituacionRepositoryInterface;
+use src\ubis\domain\contracts\CentroDlRepositoryInterface;
+use src\ubis\domain\contracts\CentroRepositoryInterface;
+use src\ubis\domain\contracts\DelegacionRepositoryInterface;
+use src\usuarios\domain\contracts\LocalRepositoryInterface;
 use web\Desplegable;
 use web\Hash;
 
@@ -111,9 +111,9 @@ if (!empty($Qnuevo)) {
     // para el ctr hay que buscar el nombre
     if (!empty($id_ctr)) {
         if (ConfigGlobal::mi_ambito() === 'rstgr') {
-            $CentroDlRepository = new CentroRepository();
+            $CentroDlRepository = $GLOBALS['container']->get(CentroRepositoryInterface::class);
         } else {
-            $CentroDlRepository = new CentroDlRepository();
+            $CentroDlRepository = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
         }
         $oCentroDl = $CentroDlRepository->findById($id_ctr);
         $nom_ctr = $oCentroDl->getNombre_ubi();
@@ -124,7 +124,7 @@ if (!empty($Qnuevo)) {
 }
 
 // para la dl
-$repoDl = new DelegacionRepository();
+$repoDl = $GLOBALS['container']->get(DelegacionRepositoryInterface::class);
 $cDeleg = $repoDl->getDelegaciones(['status' => true, '_ordre' => 'dl']);
 $a_dl_todas = [];
 if (is_array($cDeleg)) {
@@ -153,7 +153,7 @@ $oDesplDl->setBlanco(TRUE);
 
 // para el ctr, si es nuevo o está vacío
 if (empty($nom_ctr)) {
-    $GesCentroDl = new CentroDlRepository();
+    $GesCentroDl = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
     $oDesplCentroDl = $GesCentroDl->getListaCentros();
     $oDesplCentroDl->setAction("fnjs_act_ctr('ctr')");
     $oDesplCentroDl->setNombre("id_ctr");
@@ -261,14 +261,14 @@ if ($ok_txt == 1) {
 
 //------------------------------------------------------------------------
 
-$SituacionRepository = new SituacionRepository();
+$SituacionRepository = $GLOBALS['container']->get(SituacionRepositoryInterface::class);
 $aOpciones = $SituacionRepository->getArraySituaciones();
 $oDesplSituacion = new Desplegable();
 $oDesplSituacion->setOpciones($aOpciones);
 $oDesplSituacion->setNombre("situacion");
 $oDesplSituacion->setOpcion_sel($oPersona->getSituacion());
 
-$Localrepository = new LocalRepository();
+$Localrepository = $GLOBALS['container']->get(LocalRepositoryInterface::class);
 $a_locales = $Localrepository->getArrayLocales();
 $oDesplLengua = new Desplegable("lengua", $a_locales, '', true);
 $oDesplLengua->setOpcion_sel($oPersona->getLengua());

@@ -6,6 +6,7 @@ use core\ClasePropiedades;
 use core\ConverterDate;
 use core\DatosCampo;
 use core\Set;
+use src\asignaturas\domain\contracts\DepartamentoRepositoryInterface;
 use web\DateTimeLocal;
 use web\NullDateTimeLocal;
 
@@ -557,7 +558,7 @@ class ProfesorDirector extends ClasePropiedades
         $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_departamento'));
         $oDatosCampo->setEtiqueta(_("departamento"));
         $oDatosCampo->setTipo('opciones');
-        $oDatosCampo->setArgument('src\\asignaturas\\application\\repositories\\DepartamentoRepository');
+        $oDatosCampo->setArgument(DepartamentoRepositoryInterface::class);
         $oDatosCampo->setArgument2('getDepartamento'); // método para obtener el valor a mostrar del objeto relacionado.
         $oDatosCampo->setArgument3('getArrayDepartamentos');
         return $oDatosCampo;

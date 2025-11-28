@@ -2,6 +2,18 @@
 
 use core\ConfigGlobal;
 use core\ViewPhtml;
+use src\ubis\domain\contracts\CasaDlRepositoryInterface;
+use src\ubis\domain\contracts\CasaExRepositoryInterface;
+use src\ubis\domain\contracts\CasaRepositoryInterface;
+use src\ubis\domain\contracts\CentroDlRepositoryInterface;
+use src\ubis\domain\contracts\CentroExRepositoryInterface;
+use src\ubis\domain\contracts\CentroRepositoryInterface;
+use src\ubis\domain\contracts\TelecoCdcDlRepositoryInterface;
+use src\ubis\domain\contracts\TelecoCdcExRepositoryInterface;
+use src\ubis\domain\contracts\TelecoCdcRepositoryInterface;
+use src\ubis\domain\contracts\TelecoCtrDlRepositoryInterface;
+use src\ubis\domain\contracts\TelecoCtrExRepositoryInterface;
+use src\ubis\domain\contracts\TelecoCtrRepositoryInterface;
 use web\Hash;
 use web\Lista;
 use function core\is_true;
@@ -41,28 +53,28 @@ if (isset($_POST['stack'])) {
 
 switch ($Qobj_pau) {
     case 'Casa': // tipo dl pero no de la mia
-        $repoTeleco = 'src\\ubis\\application\\repositories\\TelecoCdcRepository';
-        $repo_ubi = 'src\\ubis\\application\\repositories\\CasaRepository';;
+        $repoTeleco = $GLOBALS['container']->get(TelecoCdcRepositoryInterface::class);
+        $repoUbi = $GLOBALS['container']->get(CasaRepositoryInterface::class);
         break;
     case 'CasaDl':
-        $repoTeleco = 'src\\ubis\\application\\repositories\\TelecoCdcDlRepository';
-        $repo_ubi = 'src\\ubis\\application\\repositories\\CasaDlRepository';
+        $repoTeleco = $GLOBALS['container']->get(TelecoCdcDlRepositoryInterface::class);
+        $repoUbi = $GLOBALS['container']->get(CasaDlRepositoryInterface::class);
         break;
     case 'CasaEx':
-        $repoTeleco = 'src\\ubis\\application\\repositories\\TelecoCdcExRepository';
-        $repo_ubi = 'src\\ubis\\application\\repositories\\CasaExRepository';
+        $repoTeleco = $GLOBALS['container']->get(TelecoCdcExRepositoryInterface::class);
+        $repoUbi = $GLOBALS['container']->get(CasaExRepositoryInterface::class);
         break;
     case 'Centro': // tipo dl pero no de la mia
-        $repoTeleco = 'src\\ubis\\application\\repositories\\TelecoCtrRepository';
-        $repo_ubi = 'src\\ubis\\application\\repositories\\CenaRepository';
+        $repoTeleco = $GLOBALS['container']->get(TelecoCtrRepositoryInterface::class);
+        $repoUbi = $GLOBALS['container']->get(CentroRepositoryInterface::class);
         break;
     case 'CentroDl':
-        $repoTeleco = 'src\\ubis\\application\\repositories\\TelecoCtrDlRepository';
-        $repo_ubi = 'src\\ubis\\application\\repositories\\CentroDlRepository';
+        $repoTeleco = $GLOBALS['container']->get(TelecoCtrDlRepositoryInterface::class);
+        $repoUbi = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
         break;
     case 'CentroEx':
-        $repoTeleco = 'src\\ubis\\application\\repositories\\TelecoCtrExRepository';
-        $repo_ubi = 'src\ubis\application\repositories\CentroExRepository';
+        $repoTeleco = $GLOBALS['container']->get(TelecoCtrExRepositoryInterface::class);
+        $repoUbi = $GLOBALS['container']->get(CentroExRepositoryInterface::class);
         break;
 }
 
@@ -74,7 +86,7 @@ $botones = 0;
 1: modificar,eliminar,nuevo
 */
 if (strstr($Qobj_pau, 'Dl')) {
-    $oUbi = (new $repo_ubi())->findById($Qid_ubi);
+    $oUbi = $repoUbi->findById($Qid_ubi);
     $dl = $oUbi->getDl();
     if ($dl == ConfigGlobal::mi_delef()) {
         // ----- sv sólo a scl -----------------

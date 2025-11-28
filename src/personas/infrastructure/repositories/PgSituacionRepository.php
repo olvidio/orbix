@@ -10,7 +10,6 @@ use PDOException;
 use src\personas\domain\contracts\SituacionRepositoryInterface;
 use src\personas\domain\entity\Situacion;
 
-
 /**
  * Clase que adapta la tabla xp_situacion a la interfaz del repositorio
  *
@@ -31,7 +30,7 @@ class PgSituacionRepository extends ClaseRepository implements SituacionReposito
         $this->setNomTabla('xp_situacion');
     }
 
-    public function getArraySituaciones($traslado = FALSE)
+    public function getArraySituaciones($traslado = false)
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
@@ -62,7 +61,7 @@ class PgSituacionRepository extends ClaseRepository implements SituacionReposito
      *
      * @param array $aWhere asociativo con los valores para cada campo de la BD.
      * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array|FALSE Una colección de objetos de tipo Situacion
+     * @return array|false Una colección de objetos de tipo Situacion
      */
     public function getSituaciones(array $aWhere = [], array $aOperators = []): array|false
     {
@@ -112,15 +111,15 @@ class PgSituacionRepository extends ClaseRepository implements SituacionReposito
             unset($aWhere['_limit']);
         }
         $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
-        if (($oDblSt = $oDbl->prepare($sQry)) === FALSE) {
+        if (($oDblSt = $oDbl->prepare($sQry)) === false) {
             $sClaveError = 'PgSituacionRepository.listar.prepare';
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return FALSE;
+            return false;
         }
-        if (($oDblSt->execute($aWhere)) === FALSE) {
+        if (($oDblSt->execute($aWhere)) === false) {
             $sClaveError = 'PgSituacionRepository.listar.execute';
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
-            return FALSE;
+            return false;
         }
 
         $filas = $oDblSt->fetchAll(PDO::FETCH_ASSOC);
@@ -139,14 +138,13 @@ class PgSituacionRepository extends ClaseRepository implements SituacionReposito
         $situacion = $Situacion->getSituacion();
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        if (($oDbl->exec("DELETE FROM $nom_tabla WHERE situacion = '$situacion'")) === FALSE) {
+        if (($oDbl->exec("DELETE FROM $nom_tabla WHERE situacion = '$situacion'")) === false) {
             $sClaveError = 'PgSituacionRepository.eliminar';
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return FALSE;
+            return false;
         }
         return TRUE;
     }
-
 
     /**
      * Si no existe el registro, hace un insert, si existe, se hace el update.
@@ -162,14 +160,14 @@ class PgSituacionRepository extends ClaseRepository implements SituacionReposito
         $aDatos['nombre_situacion'] = $Situacion->getNombreSituacionVo()?->value();
         array_walk($aDatos, 'core\poner_null');
 
-        if ($bInsert === FALSE) {
+        if ($bInsert === false) {
             //UPDATE
             $update = "
 					nombre_situacion         = :nombre_situacion";
-            if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE situacion = '$situacion'")) === FALSE) {
+            if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE situacion = '$situacion'")) === false) {
                 $sClaveError = 'PgSituacionRepository.update.prepare';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-                return FALSE;
+                return false;
             }
 
             try {
@@ -179,17 +177,17 @@ class PgSituacionRepository extends ClaseRepository implements SituacionReposito
                 $this->setErrorTxt($err_txt);
                 $sClaveError = 'PgSituacionRepository.update.execute';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
-                return FALSE;
+                return false;
             }
         } else {
             // INSERT
             $aDatos['situacion'] = $Situacion->getSituacion();
             $campos = "(situacion,nombre_situacion)";
             $valores = "(:situacion,:nombre_situacion)";
-            if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === FALSE) {
+            if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {
                 $sClaveError = 'PgSituacionRepository.insertar.prepare';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-                return FALSE;
+                return false;
             }
             try {
                 $oDblSt->execute($aDatos);
@@ -198,7 +196,7 @@ class PgSituacionRepository extends ClaseRepository implements SituacionReposito
                 $this->setErrorTxt($err_txt);
                 $sClaveError = 'PgSituacionRepository.insertar.execute';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
-                return FALSE;
+                return false;
             }
         }
         return TRUE;
@@ -208,15 +206,15 @@ class PgSituacionRepository extends ClaseRepository implements SituacionReposito
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE situacion = '$situacion'")) === FALSE) {
+        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE situacion = '$situacion'")) === false) {
             $sClaveError = 'PgSituacionRepository.isNew';
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return FALSE;
+            return false;
         }
         if (!$oDblSt->rowCount()) {
             return TRUE;
         }
-        return FALSE;
+        return false;
     }
 
     /**
@@ -230,15 +228,14 @@ class PgSituacionRepository extends ClaseRepository implements SituacionReposito
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
-        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE situacion = '$situacion'")) === FALSE) {
+        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE situacion = '$situacion'")) === false) {
             $sClaveError = 'PgSituacionRepository.getDatosById';
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return FALSE;
+            return false;
         }
         $aDatos = $oDblSt->fetch(PDO::FETCH_ASSOC);
         return $aDatos;
     }
-
 
     /**
      * Busca la clase con situacion en la base de datos .

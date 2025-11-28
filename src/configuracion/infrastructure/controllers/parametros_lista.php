@@ -1,21 +1,11 @@
 <?php
 
-use src\configuracion\application\repositories\ConfigSchemaRepository;
-use src\usuarios\application\repositories\LocalRepository;
+use src\configuracion\domain\contracts\ConfigSchemaRepositoryInterface;
+use src\usuarios\domain\contracts\LocalRepositoryInterface;
 use web\ContestarJson;
-use web\Hash;
-
-// INICIO Cabecera global de URL de controlador *********************************
-require_once("apps/core/global_header.inc");
-// Archivos requeridos por esta url **********************************************
-//	require_once ("classes/personas/ext_web_preferencias_gestor.class");
-
-// Crea los objetos de uso global **********************************************
-require_once("apps/core/global_object.inc");
-// FIN de  Cabecera global de URL de controlador ********************************
 
 
-$ConfigRepository = new ConfigSchemaRepository();
+$ConfigRepository = $GLOBALS['container']->get(ConfigSchemaRepositoryInterface::class);
 
 // ----------- Periodo Curso crt -------------------
 $parametro = 'curso_crt';
@@ -139,7 +129,6 @@ $val_nota_corte = $valor;
 
 $a_campos['nota_corte'] = $val_nota_corte;
 
-
 // ----------- Nota máxima evaluación -------------------
 $parametro = 'nota_max';
 $oConfigSchema = $ConfigRepository->findById($parametro);
@@ -169,7 +158,7 @@ $parametro = 'idioma_default';
 $oConfigSchema = $ConfigRepository->findById($parametro);
 $valor = $oConfigSchema?->getValorVo()?->value();
 
-$LocalRepository = new LocalRepository();
+$LocalRepository = $GLOBALS['container']->get(LocalRepositoryInterface::class);
 $a_locales = $LocalRepository->getArrayLocales();
 
 $a_campos['a_locales'] = $a_locales;
@@ -211,7 +200,6 @@ $oConfigSchema = $ConfigRepository->findById($parametro);
 $valor = $oConfigSchema?->getValorVo()?->value();
 
 $a_campos['ini_contador_certificados'] = $valor;
-
 
 $error_txt = '';
 $data = $a_campos;

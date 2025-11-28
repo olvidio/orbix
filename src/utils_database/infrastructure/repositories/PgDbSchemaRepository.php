@@ -14,7 +14,6 @@ use src\utils_database\domain\entity\DbSchema;
 use src\utils_database\domain\value_objects\DbSchemaCode;
 use src\utils_database\domain\value_objects\DbSchemaId;
 
-
 /**
  * Clase que adapta la tabla db_idschema a la interfaz del repositorio
  *
@@ -36,8 +35,6 @@ class PgDbSchemaRepository extends ClaseRepository implements DbSchemaRepository
     }
 
     /* -------------------- Otras Funciones ---------------------------------------- */
-
-
 
     /**
      * cambiar el nombre de un esquema existente: mantener el número.
@@ -85,7 +82,6 @@ class PgDbSchemaRepository extends ClaseRepository implements DbSchemaRepository
         $this->Guardar($oDbSchema);
     }
 
-
     /* -------------------- GESTOR BASE ---------------------------------------- */
 
     /**
@@ -93,7 +89,7 @@ class PgDbSchemaRepository extends ClaseRepository implements DbSchemaRepository
      *
      * @param array $aWhere asociativo con los valores para cada campo de la BD.
      * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array|FALSE Una colección de objetos de tipo DbSchema
+     * @return array|false Una colección de objetos de tipo DbSchema
      */
     public function getDbSchemas(array $aWhere = [], array $aOperators = []): array|false
     {
@@ -143,15 +139,15 @@ class PgDbSchemaRepository extends ClaseRepository implements DbSchemaRepository
             unset($aWhere['_limit']);
         }
         $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
-        if (($oDblSt = $oDbl->prepare($sQry)) === FALSE) {
+        if (($oDblSt = $oDbl->prepare($sQry)) === false) {
             $sClaveError = 'PgDbSchemaRepository.listar.prepare';
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return FALSE;
+            return false;
         }
-        if (($oDblSt->execute($aWhere)) === FALSE) {
+        if (($oDblSt->execute($aWhere)) === false) {
             $sClaveError = 'PgDbSchemaRepository.listar.execute';
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
-            return FALSE;
+            return false;
         }
 
         $filas = $oDblSt->fetchAll(PDO::FETCH_ASSOC);
@@ -170,14 +166,13 @@ class PgDbSchemaRepository extends ClaseRepository implements DbSchemaRepository
         $schema = $DbSchema->getSchemaVo()->value();
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        if (($oDbl->exec("DELETE FROM $nom_tabla WHERE schema = '$schema'")) === FALSE) {
+        if (($oDbl->exec("DELETE FROM $nom_tabla WHERE schema = '$schema'")) === false) {
             $sClaveError = 'PgDbSchemaRepository.eliminar';
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return FALSE;
+            return false;
         }
         return TRUE;
     }
-
 
     /**
      * Si no existe el registro, hace un insert, si existe, se hace el update.
@@ -193,14 +188,14 @@ class PgDbSchemaRepository extends ClaseRepository implements DbSchemaRepository
         $aDatos['id'] = $DbSchema->getIdVo()->value();
         array_walk($aDatos, 'core\poner_null');
 
-        if ($bInsert === FALSE) {
+        if ($bInsert === false) {
             //UPDATE
             $update = "
 					id                       = :id";
-            if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE schema = '$schema'")) === FALSE) {
+            if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE schema = '$schema'")) === false) {
                 $sClaveError = 'PgDbSchemaRepository.update.prepare';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-                return FALSE;
+                return false;
             }
 
             try {
@@ -210,17 +205,17 @@ class PgDbSchemaRepository extends ClaseRepository implements DbSchemaRepository
                 $this->setErrorTxt($err_txt);
                 $sClaveError = 'PgDbSchemaRepository.update.execute';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
-                return FALSE;
+                return false;
             }
         } else {
             // INSERT
             $aDatos['schema'] = $DbSchema->getSchemaVo()->value();
             $campos = "(schema,id)";
             $valores = "(:schema,:id)";
-            if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === FALSE) {
+            if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {
                 $sClaveError = 'PgDbSchemaRepository.insertar.prepare';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-                return FALSE;
+                return false;
             }
             try {
                 $oDblSt->execute($aDatos);
@@ -229,7 +224,7 @@ class PgDbSchemaRepository extends ClaseRepository implements DbSchemaRepository
                 $this->setErrorTxt($err_txt);
                 $sClaveError = 'PgDbSchemaRepository.insertar.execute';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
-                return FALSE;
+                return false;
             }
         }
         return TRUE;
@@ -239,15 +234,15 @@ class PgDbSchemaRepository extends ClaseRepository implements DbSchemaRepository
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE schema = '$schema'")) === FALSE) {
+        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE schema = '$schema'")) === false) {
             $sClaveError = 'PgDbSchemaRepository.isNew';
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return FALSE;
+            return false;
         }
         if (!$oDblSt->rowCount()) {
             return TRUE;
         }
-        return FALSE;
+        return false;
     }
 
     /**
@@ -261,15 +256,14 @@ class PgDbSchemaRepository extends ClaseRepository implements DbSchemaRepository
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
-        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE schema = '$schema'")) === FALSE) {
+        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE schema = '$schema'")) === false) {
             $sClaveError = 'PgDbSchemaRepository.getDatosById';
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return FALSE;
+            return false;
         }
         $aDatos = $oDblSt->fetch(PDO::FETCH_ASSOC);
         return $aDatos;
     }
-
 
     /**
      * Busca la clase con schema en la base de datos .

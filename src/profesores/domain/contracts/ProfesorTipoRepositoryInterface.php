@@ -5,7 +5,6 @@ namespace src\profesores\domain\contracts;
 use PDO;
 use src\profesores\domain\entity\ProfesorTipo;
 
-
 /**
  * Interfaz de la clase ProfesorTipo y su Repositorio
  *
@@ -27,10 +26,10 @@ interface ProfesorTipoRepositoryInterface
 	 *
 	 * @param array $aWhere asociativo con los valores para cada campo de la BD.
 	 * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-	 * @return array|FALSE Una colección de objetos de tipo ProfesorTipo
+	 * @return array|false Una colección de objetos de tipo ProfesorTipo
 	
 	 */
-	public function getProfesorTipos(array $aWhere=[], array $aOperators=[]): array|FALSE;
+	public function getProfesorTipos(array $aWhere=[], array $aOperators=[]): array|false;
 	
 /* -------------------- ENTIDAD --------------------------------------------- */
 

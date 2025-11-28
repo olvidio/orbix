@@ -1,27 +1,19 @@
 <?php
 
-use src\inventario\application\repositories\DocumentoRepository;
-use src\inventario\application\repositories\LugarRepository;
-use src\inventario\application\repositories\TipoDocRepository;
-use src\inventario\application\repositories\UbiInventarioRepository;
+use src\inventario\domain\contracts\DocumentoRepositoryInterface;
+use src\inventario\domain\contracts\LugarRepositoryInterface;
+use src\inventario\domain\contracts\TipoDocRepositoryInterface;
+use src\inventario\domain\contracts\UbiInventarioRepositoryInterface;
 use web\ContestarJson;
-
-// INICIO Cabecera global de URL de controlador *********************************
-require_once("apps/core/global_header.inc");
-// Archivos requeridos por esta url **********************************************
-
-// Crea los objetos de uso global **********************************************
-require_once("apps/core/global_object.inc");
-// FIN de  Cabecera global de URL de controlador ********************************
 
 $error_txt = '';
 
-$DocumentoRepository = new DocumentoRepository();
+$DocumentoRepository = $GLOBALS['container']->get(DocumentoRepositoryInterface::class);
 $cDocumentos = $DocumentoRepository->getDocumentos(['en_busqueda' => 't']);
 
-$LugarRepository = new LugarRepository();
-$TipoDocRepository = new TipoDocRepository();
-$UbiInventarioRepository = new UbiInventarioRepository();
+$LugarRepository = $GLOBALS['container']->get(LugarRepositoryInterface::class);
+$TipoDocRepository = $GLOBALS['container']->get(TipoDocRepositoryInterface::class);
+$UbiInventarioRepository = $GLOBALS['container']->get(UbiInventarioRepositoryInterface::class);
 $i = 0;
 foreach ($cDocumentos as $oDocumento) {
     $i++;
@@ -49,7 +41,6 @@ foreach ($cDocumentos as $oDocumento) {
 if (!empty($a_valores)) {
     array_multisort($a_nom, SORT_ASC, $a_valores);
 }
-
 
 $data = [
     'a_valores' => $a_valores,

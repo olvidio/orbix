@@ -7,9 +7,10 @@ use asistentes\model\entity\GestorAsistente;
 use core\ConfigGlobal;
 use dossiers\model\PermisoDossier;
 use permisos\model\PermisosActividadesTrue;
-use src\ubis\application\repositories\CasaDlRepository;
-use src\ubis\application\repositories\CasaRepository;
-use src\ubis\application\repositories\CentroDlRepository;
+use src\ubis\domain\contracts\CasaDlRepositoryInterface;
+use src\ubis\domain\contracts\CasaRepositoryInterface;
+use src\ubis\domain\contracts\CentroDlRepositoryInterface;
+use src\ubis\domain\contracts\CentroRepositoryInterface;
 use web\Lista;
 use web\Periodo;
 use web\TiposActividades;
@@ -34,10 +35,10 @@ require_once("apps/core/global_object.inc");
 
 function nomUbi($id_ubi)
 {
-    $nombre_ubi  = (new CasaRepository())->findById($id_ubi)?->getNombre_ubi();
+    $nombre_ubi  = $GLOBALS['container']->get(CasaRepositoryInterface::class)->findById($id_ubi)?->getNombre_ubi();
     if (empty($nombre_ubi)) {
         // probar con los ctr.
-        $nombre_ubi  = (new CentroRepository())->findById($id_ubi)?->getNombre_ubi();
+        $nombre_ubi  = $GLOBALS['container']->get(CentroRepositoryInterface::class)->findById($id_ubi)?->getNombre_ubi();
     }
     return $nombre_ubi;
 }
@@ -143,7 +144,7 @@ $finIso = $oPeriodo->getF_fin_iso();
 
 switch ($tipo) {
     case "casa":
-        $CasaDlRepository = new CasaDlRepository();
+        $CasaDlRepository = $GLOBALS['container']->get(CasaDlRepositoryInterface::class);
         $cCasas = $CasaDlRepository->getCasas($aWhereCasa, $aOperadorCasa);
         foreach ($cCasas as $oCasa) {
             $aGrupos[$oCasa->getId_ubi()] = $oCasa->getNombre_ubi();
@@ -315,7 +316,7 @@ foreach (array_keys($aGrupos) as $key) {
                 foreach ($cCtrsEncargados as $oCentroEncargado) {
                     $i++;
                     $id_ubi = $oCentroEncargado->getId_ubi();
-                    $CentroDlRepository = new CentroDlRepository();
+                    $CentroDlRepository = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
                     $oCentroDl = $CentroDlRepository->findById($id_ubi);
                     $nombre_ctr = $oCentroDl->getNombre_ubi();
                     $txt_ctr .= empty($txt_ctr) ? $nombre_ctr : "; $nombre_ctr";

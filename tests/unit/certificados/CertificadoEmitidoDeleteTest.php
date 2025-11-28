@@ -7,9 +7,9 @@ use core\ConfigGlobal;
 use core\DBConnection;
 use core\DBPropiedades;
 use RuntimeException;
-use src\certificados\application\repositories\CertificadoEmitidoRepository;
 use src\certificados\domain\CertificadoEmitidoDelete;
 use src\certificados\domain\CertificadoEmitidoUpload;
+use src\certificados\domain\contracts\CertificadoEmitidoRepositoryInterface;
 use src\certificados\domain\entity\CertificadoEmitido;
 use Tests\factories\certificados\CertificadosFactory;
 use Tests\myTest;
@@ -71,7 +71,7 @@ class CertificadoEmitidoDeleteTest extends myTest
             $err_txt = $CertificadoDelete->delete($id_item);
             $this->assertEmpty($err_txt);
 
-            $certificadoEmitidoRepository = new CertificadoEmitidoRepository();
+            $certificadoEmitidoRepository = $GLOBALS['container']->get(CertificadoEmitidoRepositoryInterface::class);
             $certificadoEmitidoRepository->setoDbl($oDBdst);
             $this->expectException(RuntimeException::class);
             $certificadoEmitidoRepository->findById($id_item);

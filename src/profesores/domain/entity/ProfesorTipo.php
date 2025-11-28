@@ -105,7 +105,6 @@ class ProfesorTipo
         $this->tipoProfesor = ProfesorTipoName::fromNullableString($stipo_profesor);
     }
 
-
     /* ------------------- PARA el mod_tabla  -------------------------------*/
     public function getPrimary_key(): string
     {

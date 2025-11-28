@@ -7,7 +7,8 @@ use core\ConverterDate;
 use core\DatosCampo;
 use core\Set;
 use NumberFormatter;
-use src\notas\application\repositories\NotaRepository;
+use src\notas\domain\contracts\NotaRepositoryInterface;
+use src\notas\domain\entity\Nota;
 use web\DateTimeLocal;
 use web\NullDateTimeLocal;
 use function core\is_true;
@@ -469,7 +470,7 @@ class PersonaNotaDB extends ClasePropiedades
                 }
             }
         } else {
-            $NotaRepository = new NotaRepository();
+            $NotaRepository = $GLOBALS['container']->get(NotaRepositoryInterface::class);
             $aNotas = $NotaRepository->getArrayNotas();
             $this->baprobada = $aNotas[$this->iid_situacion];
         }

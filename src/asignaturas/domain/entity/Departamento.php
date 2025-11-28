@@ -106,13 +106,11 @@ class Departamento
         $this->nombreDepartamento = DepartamentoName::fromString($sdepartamento);
     }
 
-
     /* ------------------- PARA el mod_tabla  -------------------------------*/
     public function getPrimary_key(): string
     {
         return 'id_departamento';
     }
-
 
     function getDatosCampos()
     {
@@ -121,7 +119,6 @@ class Departamento
         $oDepartamentoSet->add($this->getDatosDepartamento());
         return $oDepartamentoSet->getTot();
     }
-
 
     /**
      * Recupera les propietats de l'atribut sdepartamento de Departamento

@@ -156,7 +156,7 @@ if (file_exists($filename)) {
     $replacement2 = "namespace $grupo\\legacy;";
     $new_content2 = preg_replace($pattern2, $replacement2, $new_content);
 
-    if (file_put_contents($filenameOld, $new_content2) === FALSE) {
+    if (file_put_contents($filenameOld, $new_content2) === false) {
         echo "No puedo cambiar el nombre de la clase en  ($filenameOld)";
         die();
     }
@@ -177,7 +177,7 @@ if (file_exists($filename)) {
     $replacement2 = "namespace $grupo\\legacy;";
     $new_content2 = preg_replace($pattern2, $replacement2, $new_content);
 
-    if (file_put_contents($filenameOld, $new_content2) === FALSE) {
+    if (file_put_contents($filenameOld, $new_content2) === false) {
         echo "No puedo cambiar el nombre de la clase en  ($filenameOld)";
         die();
     }
@@ -386,7 +386,7 @@ foreach ($oDbl->query($sql) as $row) {
         case 'bool':
             $tipo_db = 'bool';
             $tip = 'b';
-            $tip_val = 'FALSE';
+            $tip_val = 'false';
             break;
         case 'json':
         case 'jsonb':
@@ -422,7 +422,7 @@ foreach ($oDbl->query($sql) as $row) {
             $bytea_bind .= "\n\t\t";
             $bytea_bind .= '$aDatos = $oDblSt->fetch(PDO::FETCH_ASSOC);';
             $bytea_bind .= "\n\t\t";
-            $bytea_bind .= 'if ($aDatos !== FALSE) {';
+            $bytea_bind .= 'if ($aDatos !== false) {';
             $bytea_bind .= "\n\t\t\t";
             $bytea_bind .= '$aDatos[\'' . $nomcamp . '\'] = hex2bin($' . $tip . $nomcamp . ' ?? \'\');';
             $bytea_bind .= "\n\t\t";
@@ -771,7 +771,7 @@ if (!$handle = fopen($filename, 'w')) {
     die();
 }
 // Write $somecontent to our opened file.
-if (fwrite($handle, $txt_entidad) === FALSE) {
+if (fwrite($handle, $txt_entidad) === false) {
     echo "Cannot write to file ($filename)";
     die();
 }
@@ -949,13 +949,13 @@ $txt_repository .= '
 	 *
 	 * @param array $aWhere asociativo con los valores para cada campo de la BD.
 	 * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-	 * @return array|FALSE Una colección de objetos de tipo ' . $Q_clase;
+	 * @return array|false Una colección de objetos de tipo ' . $Q_clase;
 if (!empty($a_use_txt['JsonException'])) {
     $txt_repository .= "\n\t" . ' * @throws JsonException';
 }
 $txt_repository .= "\n\t" . '
 	 */
-	public function get' . $clase_plural . '(array $aWhere=[], array $aOperators=[]): array|FALSE
+	public function get' . $clase_plural . '(array $aWhere=[], array $aOperators=[]): array|false
 	{
 	    return $this->repository->get' . $clase_plural . '($aWhere, $aOperators);
 	}
@@ -970,13 +970,13 @@ $txt_interface .= '
 	 *
 	 * @param array $aWhere asociativo con los valores para cada campo de la BD.
 	 * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-	 * @return array|FALSE Una colección de objetos de tipo ' . $Q_clase;
+	 * @return array|false Una colección de objetos de tipo ' . $Q_clase;
 if (!empty($a_use_txt['JsonException'])) {
     $txt_interface .= "\n\t" . ' * @throws JsonException';
 }
 $txt_interface .= "\n\t" . '
 	 */
-	public function get' . $clase_plural . '(array $aWhere=[], array $aOperators=[]): array|FALSE;
+	public function get' . $clase_plural . '(array $aWhere=[], array $aOperators=[]): array|false;
 	';
 
 $txt_pgRepositorio .= "\n";
@@ -989,13 +989,13 @@ $txt_pgRepositorio .= '
 	 *
 	 * @param array $aWhere asociativo con los valores para cada campo de la BD.
 	 * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-	 * @return array|FALSE Una colección de objetos de tipo ' . $Q_clase;
+	 * @return array|false Una colección de objetos de tipo ' . $Q_clase;
 if (!empty($a_use_txt['JsonException'])) {
     $txt_pgRepositorio .= "\n\t" . ' * @throws JsonException';
 }
 $txt_pgRepositorio .= "\n\t" . '
 	 */
-	public function get' . $clase_plural . '(array $aWhere=[], array $aOperators=[]): array|FALSE
+	public function get' . $clase_plural . '(array $aWhere=[], array $aOperators=[]): array|false
 	{';
 if ($Q_db === 'sv-e' || $Q_db === 'comun') {
     $txt_pgRepositorio .= '
@@ -1030,15 +1030,15 @@ $txt_pgRepositorio .= "\n\t\t" . '$sCondicion = implode(\' AND \',$aCondicion);
 		if (isset($aWhere[\'_limit\']) && $aWhere[\'_limit\'] !== \'\') { $sLimit = \' LIMIT \'.$aWhere[\'_limit\']; }
 		if (isset($aWhere[\'_limit\'])) { unset($aWhere[\'_limit\']); }
 		$sQry = "SELECT * FROM $nom_tabla ".$sCondicion.$sOrdre.$sLimit;
-		if (($oDblSt = $oDbl->prepare($sQry)) === FALSE) {
+		if (($oDblSt = $oDbl->prepare($sQry)) === false) {
 			$sClaveError = \'' . $pg_clase . '.listar.prepare\';
 			$_SESSION[\'oGestorErrores\']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-			return FALSE;
+			return false;
 		}
-		if (($oDblSt->execute($aWhere)) === FALSE) {
+		if (($oDblSt->execute($aWhere)) === false) {
 			$sClaveError = \'' . $pg_clase . '.listar.execute\';
 			$_SESSION[\'oGestorErrores\']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
-			return FALSE;
+			return false;
 		}
 		
 		$filas = $oDblSt->fetchAll(PDO::FETCH_ASSOC);
@@ -1096,10 +1096,10 @@ $txt_pgRepositorio .= 'public function Eliminar(' . $Q_clase . ' $' . $Q_clase .
         ' . $getClau . '
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        if (($oDbl->exec("DELETE FROM $nom_tabla WHERE ' . $where . '")) === FALSE) {
+        if (($oDbl->exec("DELETE FROM $nom_tabla WHERE ' . $where . '")) === false) {
             $sClaveError = \'' . $pg_clase . '.eliminar\';
 			$_SESSION[\'oGestorErrores\']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return FALSE;
+            return false;
         }
         return TRUE;
     }
@@ -1203,19 +1203,19 @@ if ($guardar_json) {
 $txt_pgRepositorio .= '
 		array_walk($aDatos, \'core\\poner_null\');';
 if ($err_bool) {
-    $txt_pgRepositorio .= "\n\t\t//para el caso de los boolean FALSE, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:";
+    $txt_pgRepositorio .= "\n\t\t//para el caso de los boolean false, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:";
     $txt_pgRepositorio .= $err_bool;
 }
-$txt_pgRepositorio .= "\n\n\t\t" . 'if ($bInsert === FALSE) {
+$txt_pgRepositorio .= "\n\n\t\t" . 'if ($bInsert === false) {
 			//UPDATE
 			$update="
 ';
 $txt_pgRepositorio .= $update . '";';
 $txt_pgRepositorio .= '
-			if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE ' . $where . '")) === FALSE) {
+			if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE ' . $where . '")) === false) {
 				$sClaveError = \'' . $pg_clase . '.update.prepare\';
 				$_SESSION[\'oGestorErrores\']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-				return FALSE;
+				return false;
 			}
 				
             try {
@@ -1225,7 +1225,7 @@ $txt_pgRepositorio .= '
                 $this->setErrorTxt($err_txt);
                 $sClaveError = \'' . $pg_clase . '.update.execute\';
                 $_SESSION[\'oGestorErrores\']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
-                return FALSE;
+                return false;
             }
 		} else {
 			// INSERT';
@@ -1237,10 +1237,10 @@ $txt_pgRepositorio .= $campos . ')";' . "\n";
 $txt_pgRepositorio .= "\t\t\t" . '$valores="(';
 $txt_pgRepositorio .= $valores . ')";';
 $txt_pgRepositorio .= '		
-			if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === FALSE) {
+			if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {
 				$sClaveError = \'' . $pg_clase . '.insertar.prepare\';
 				$_SESSION[\'oGestorErrores\']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-				return FALSE;
+				return false;
 			}
             try {
                 $oDblSt->execute($aDatos);
@@ -1249,7 +1249,7 @@ $txt_pgRepositorio .= '
                 $this->setErrorTxt($err_txt);
                 $sClaveError = \'' . $pg_clase . '.insertar.execute\';
                 $_SESSION[\'oGestorErrores\']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
-                return FALSE;
+                return false;
 			}';
 $txt_pgRepositorio .= "\n\t\t" . '}
 		return TRUE;
@@ -1261,15 +1261,15 @@ $txt_pgRepositorio .= '
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE ' . $where . '")) === FALSE) {
+        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE ' . $where . '")) === false) {
 			$sClaveError = \'' . $pg_clase . '.isNew\';
 			$_SESSION[\'oGestorErrores\']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return FALSE;
+            return false;
         }
         if (!$oDblSt->rowCount()) {
             return TRUE;
         }
-        return FALSE;
+        return false;
     }';
 
 if ($nom_clau[0] === 'i') {
@@ -1334,10 +1334,10 @@ if ($Q_db === 'sv-e' || $Q_db === 'comun') {
 }
 $txt_pgRepositorio .= '
         $nom_tabla = $this->getNomTabla();
-        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE ' . $where . '")) === FALSE) {
+        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE ' . $where . '")) === false) {
 			$sClaveError = \'' . $pg_clase . '.getDatosById\';
 			$_SESSION[\'oGestorErrores\']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return FALSE;
+            return false;
         }';
 
 if (!empty($bytea_bind)) {
@@ -1349,21 +1349,21 @@ if (!empty($bytea_bind)) {
 
 if (!empty($array_dades)) {
     $txt_pgRepositorio .= "\n\t\t// para los array del postgres";
-    $txt_pgRepositorio .= "\n\t\t" . 'if ($aDatos !== FALSE) {';
+    $txt_pgRepositorio .= "\n\t\t" . 'if ($aDatos !== false) {';
     $txt_pgRepositorio .= $array_dades;
     $txt_pgRepositorio .= "\n\t\t}";
 }
 
 if (!empty($fechas_dades)) {
     $txt_pgRepositorio .= "\n\t\t// para las fechas del postgres (texto iso)";
-    $txt_pgRepositorio .= "\n\t\t" . 'if ($aDatos !== FALSE) {';
+    $txt_pgRepositorio .= "\n\t\t" . 'if ($aDatos !== false) {';
     $txt_pgRepositorio .= $fechas_dades;
     $txt_pgRepositorio .= "\n\t\t}";
 }
 
 if (!empty($json_dades)) {
     $txt_pgRepositorio .= "\n\t\t// para los json";
-    $txt_pgRepositorio .= "\n\t\t" . 'if ($aDatos !== FALSE) {';
+    $txt_pgRepositorio .= "\n\t\t" . 'if ($aDatos !== false) {';
     $txt_pgRepositorio .= $json_dades;
     $txt_pgRepositorio .= "\n\t\t}";
 }
@@ -1461,7 +1461,7 @@ if (!$handle = fopen($filename, 'w')) {
     die();
 }
 // Write $somecontent to our opened file.
-if (fwrite($handle, $txt_pgRepositorio) === FALSE) {
+if (fwrite($handle, $txt_pgRepositorio) === false) {
     echo "Cannot write to file ($filename)";
     die();
 }
@@ -1485,7 +1485,7 @@ if (!$handle = fopen($filename, 'w')) {
     die();
 }
 // Write $somecontent to our opened file.
-if (fwrite($handle, $txt_interface) === FALSE) {
+if (fwrite($handle, $txt_interface) === false) {
     echo "Cannot write to file ($filename)";
     die();
 }
@@ -1510,7 +1510,7 @@ if (!$handle = fopen($filename, 'w')) {
     die();
 }
 // Write $somecontent to our opened file.
-if (fwrite($handle, '<?php') === FALSE) {
+if (fwrite($handle, '<?php') === false) {
     echo "Cannot write to file ($filename)";
     die();
 }
@@ -1530,7 +1530,7 @@ if (!$handle = fopen($filename, 'w')) {
     die();
 }
 // Write $somecontent to our opened file.
-if (fwrite($handle, $txt_repository) === FALSE) {
+if (fwrite($handle, $txt_repository) === false) {
     echo "Cannot write to file ($filename)";
     die();
 }
@@ -1550,7 +1550,7 @@ if (!$handle = fopen($filename, 'w')) {
     die();
 }
 // Write $somecontent to our opened file.
-if (fwrite($handle, '<?php') === FALSE) {
+if (fwrite($handle, '<?php') === false) {
     echo "Cannot write to file ($filename)";
     die();
 }

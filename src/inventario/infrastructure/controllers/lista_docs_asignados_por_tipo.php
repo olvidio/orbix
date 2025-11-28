@@ -1,32 +1,24 @@
 <?php
 
-use src\inventario\application\repositories\DocumentoRepository;
-use src\inventario\application\repositories\LugarRepository;
-use src\inventario\application\repositories\TipoDocRepository;
-use src\inventario\application\repositories\UbiInventarioRepository;
+use src\inventario\domain\contracts\DocumentoRepositoryInterface;
+use src\inventario\domain\contracts\LugarRepositoryInterface;
+use src\inventario\domain\contracts\TipoDocRepositoryInterface;
+use src\inventario\domain\contracts\UbiInventarioRepositoryInterface;
 use web\ContestarJson;
-
-// INICIO Cabecera global de URL de controlador *********************************
-require_once("apps/core/global_header.inc");
-// Archivos requeridos por esta url **********************************************
-
-// Crea los objetos de uso global **********************************************
-require_once("apps/core/global_object.inc");
-// FIN de  Cabecera global de URL de controlador ********************************
 
 $Qid_tipo_doc = (integer)filter_input(INPUT_POST, 'id_tipo_doc');
 $error_txt = '';
 
-$TipoDocRepository = new TipoDocRepository();
+$TipoDocRepository = $GLOBALS['container']->get(TipoDocRepositoryInterface::class);
 $oTipoDoc = $TipoDocRepository->findById($Qid_tipo_doc);
 $nom_doc = $oTipoDoc->getNom_doc();
 $nombreDoc = empty($nom_doc) ? $oTipoDoc->getSigla() : $oTipoDoc->getSigla() . ' (' . $nom_doc . ')';
 
-$DocumentoRepository = new DocumentoRepository();
+$DocumentoRepository = $GLOBALS['container']->get(DocumentoRepositoryInterface::class);
 $cDocumentos = $DocumentoRepository->getDocumentos(['id_tipo_doc' => $Qid_tipo_doc]);
 
-$LugarRepository = new LugarRepository();
-$UbiInventarioRepository = new UbiInventarioRepository();
+$LugarRepository = $GLOBALS['container']->get(LugarRepositoryInterface::class);
+$UbiInventarioRepository = $GLOBALS['container']->get(UbiInventarioRepositoryInterface::class);
 $i = 0;
 foreach ($cDocumentos as $oDocumento) {
     $i++;

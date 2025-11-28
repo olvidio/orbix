@@ -1,19 +1,10 @@
 <?php
 
-use src\inventario\application\repositories\DocumentoRepository;
+use src\inventario\domain\contracts\DocumentoRepositoryInterface;
 use web\ContestarJson;
 use web\DateTimeLocal;
 use web\NullDateTimeLocal;
 use function core\is_true;
-
-// INICIO Cabecera global de URL de controlador *********************************
-require_once("apps/core/global_header.inc");
-// Archivos requeridos por esta url **********************************************
-
-// Crea los objetos de uso global **********************************************
-require_once("apps/core/global_object.inc");
-// FIN de  Cabecera global de URL de controlador ********************************
-
 
 $Qdocumentos = (string)filter_input(INPUT_POST, 'documentos');
 $Qchk_f_recibido = (string)filter_input(INPUT_POST, 'chk_f_recibido');
@@ -33,7 +24,7 @@ $error_txt = '';
 
 if (!empty($Qdocumentos)) {
     $a_documentos = explode('#', $Qdocumentos);
-    $Repository = new DocumentoRepository();
+    $Repository = $GLOBALS['container']->get(DocumentoRepositoryInterface::class);
     foreach ($a_documentos as $s_pkey) {
         $s_pkey = strtok($s_pkey, '#');
         $a_pkey = json_decode(base64_decode($s_pkey));
@@ -61,7 +52,7 @@ if (!empty($Qdocumentos)) {
             if ($Qeliminado === 1) {
                 $oDocumento->setEliminado(TRUE);
             } else if ($Qeliminado === 2) {
-                $oDocumento->setEliminado(FALSE);
+                $oDocumento->setEliminado(false);
             }
         }
         if (is_true($Qchk_f_eliminado)) {

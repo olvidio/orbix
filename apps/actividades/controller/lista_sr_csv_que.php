@@ -6,7 +6,7 @@
 
 use core\ConfigGlobal;
 use core\ViewTwig;
-use src\usuarios\application\repositories\PreferenciaRepository;
+use src\usuarios\domain\contracts\PreferenciaRepositoryInterface;
 use web\Hash;
 
 // INICIO Cabecera global de URL de controlador *********************************
@@ -40,7 +40,7 @@ $aOpciones = array(
 // por defecto
 $id_usuario = ConfigGlobal::mi_id_usuario();
 $tipo = 'busqueda_activ_sr';
-$PreferenciaRepository = new PreferenciaRepository();
+$PreferenciaRepository = $GLOBALS['container']->get(PreferenciaRepositoryInterface::class);
 $oPreferencia = $PreferenciaRepository->findById($id_usuario, $tipo);
 if ($oPreferencia !== null) {
     $json_busqueda = $oPreferencia->getPreferencia();

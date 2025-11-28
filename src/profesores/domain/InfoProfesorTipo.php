@@ -4,7 +4,7 @@ namespace src\profesores\domain;
 
 /* No vale el underscore en el nombre */
 
-use src\profesores\application\repositories\ProfesorTipoRepository;
+use src\profesores\domain\contracts\ProfesorTipoRepositoryInterface;
 use src\shared\domain\DatosInfoRepo;
 
 class InfoProfesorTipo extends DatosInfoRepo
@@ -32,7 +32,7 @@ class InfoProfesorTipo extends DatosInfoRepo
             $aWhere = array('tipo_profesor' => $this->k_buscar);
             $aOperador = array('tipo_profesor' => 'sin_acentos');
         }
-        $oLista = new ProfesorTipoRepository();
+        $oLista = $GLOBALS['container']->get(ProfesorTipoRepositoryInterface::class);
         $Coleccion = $oLista->getProfesorTipos($aWhere, $aOperador);
 
         return $Coleccion;

@@ -2,6 +2,12 @@
 
 use core\ConfigGlobal;
 use core\ViewPhtml;
+use src\ubis\domain\contracts\CasaDlRepositoryInterface;
+use src\ubis\domain\contracts\CasaExRepositoryInterface;
+use src\ubis\domain\contracts\CasaRepositoryInterface;
+use src\ubis\domain\contracts\CentroDlRepositoryInterface;
+use src\ubis\domain\contracts\CentroExRepositoryInterface;
+use src\ubis\domain\contracts\CentroRepositoryInterface;
 use web\Hash;
 use function core\is_true;
 
@@ -37,40 +43,48 @@ $Qid_direccion = urldecode($Qid_direccion);
 
 switch ($Qobj_dir) {
     case 'DireccionCdc': // tipo dl pero no de la mia
-        $obj_x = 'src\\ubis\\application\\repositories\\RelacionCasaDireccionRepository';
-        $repo_dir = 'src\ubis\application\repositories\DireccionCasaRepository';
-        $repo_ubi = 'src\\ubis\\application\\repositories\\CasaRepository';
+        $repoUbi = $GLOBALS['container']->get(CasaRepositoryInterface::class);
         break;
     case 'DireccionCdcDl':
-        $obj_x = 'src\\ubis\\application\\repositories\\RelacionCasaDlDireccionRepository';
-        $repo_dir = 'src\ubis\application\repositories\DireccionCasaDlRepository';
-        $repo_ubi = 'src\\ubis\\application\\repositories\\CasaDlRepository';
+        $repoUbi = $GLOBALS['container']->get(CasaDlRepositoryInterface::class);
         break;
     case 'DireccionCdcEx':
-        $obj_x = 'src\\ubis\\application\\repositories\\RelacionCasaExDireccionRepository';
-        $repo_dir = 'src\ubis\application\repositories\DireccionCasaExRepository';
-        $repo_ubi = 'src\\ubis\\application\\repositories\\CasaExRepository';
+        $repoUbi = $GLOBALS['container']->get(CasaExRepositoryInterface::class);
         break;
     case 'DireccionCentro': // tipo dl pero no de la mia
-        $obj_x = 'src\\ubis\\application\\repositories\\RelacionCentroDireccionRepository';
-        $repo_dir = 'src\ubis\application\repositories\DireccionCentroRepository';
-        $repo_ubi = 'src\\ubis\\application\\repositories\\CentroRepository';
+        $repoUbi = $GLOBALS['container']->get(CentroRepositoryInterface::class);
         break;
     case 'DireccionCentroDl':
-        $obj_x = 'src\\ubis\\application\\repositories\\RelacionCentroDlDireccionRepository';
-        $repo_dir = 'src\ubis\application\repositories\DireccionCentroDlRepository';
-        $repo_ubi = 'src\\ubis\\application\\repositories\\CentroDlRepository';
+        $repoUbi = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
         break;
     case 'DireccionCentroEx':
-        $obj_x = 'src\\ubis\\application\\repositories\\RelacionCentroExDireccionRepository';
-        $repo_dir = 'src\ubis\application\repositories\DireccionCentroExRepository';
-        $repo_ubi = 'src\\ubis\\application\\repositories\\CentroExRepository';
+        $repoUbi = $GLOBALS['container']->get(CentroExRepositoryInterface::class);
         break;
 }
 $obj = 'ubis\\model\\entity\\' . $Qobj_dir;
 
+$id_direccion = '';
+$golistadir = '';
+$nom_sede = '';
+$direccion = '';
+$a_p = '';
+$c_p = '';
+$poblacion = '';
+$provincia = '';
+$pais = '';
+$observ = '';
+$f_direccion = '';
+$latitud = '';
+$longitud = '';
+$id_direccion_actual = '';
+$mas = '';
+$menos = '';
+$h = '';
+$h_asignar = '';
+$go_dir = '';
+
 if ($Qmod === 'nuevo') {
-    $oUbi = (new $repo_ubi())->findById($Qid_ubi);
+    $oUbi = $repoUbi->findById($Qid_ubi);
     $sf = $oUbi->isSf();
     $dl = $oUbi->getDl();
     $tipo_ubi = $oUbi->getTipo_ubi();
@@ -85,27 +99,8 @@ if ($Qmod === 'nuevo') {
 
     }
     $idx = 'nuevo';
-    $id_direccion = '';
-    $golistadir = '';
-    $nom_sede = '';
-    $direccion = '';
-    $a_p = '';
-    $c_p = '';
-    $poblacion = '';
-    $provincia = '';
-    $pais = '';
-    $observ = '';
-    $f_direccion = '';
-    $latitud = '';
-    $longitud = '';
-    $id_direccion_actual = '';
-    $mas = '';
-    $menos = '';
-    $h = '';
-    $h_asignar = '';
-    $go_dir = '';
 } else {
-    $oUbi = (new $repo_ubi())->findById($Qid_ubi);
+    $oUbi = $repoUbi->findById($Qid_ubi);
     $sf = $oUbi->isSf();
     $dl = $oUbi->getDl();
     $tipo_ubi = $oUbi->getTipo_ubi();
@@ -121,54 +116,55 @@ if ($Qmod === 'nuevo') {
 
     $id_direccion_actual = $a_id_direccion[$idx];
 
-    $oUbi = (new $repo_ubi())->findById($Qid_ubi);
-    $oDireccionDetallada = $oUbi->getUnaDireccionDetallada($id_direccion_actual);
-    $oDireccion = $oDireccionDetallada->getDireccion();
-    $propietario = $oDireccionDetallada->isPropietario();
-    $principal = $oDireccionDetallada->isPrincipal();
+    if (!empty($id_direccion_actual)) {
+        $oDireccionDetallada = $oUbi->getUnaDireccionDetallada($id_direccion_actual);
+        $oDireccion = $oDireccionDetallada->getDireccion();
+        $propietario = $oDireccionDetallada->isPropietario();
+        $principal = $oDireccionDetallada->isPrincipal();
 
-    $nom_sede = $oDireccion->getNom_sede();
-    $direccion = $oDireccion->getDireccion();
-    $a_p = $oDireccion->getA_p();
-    $c_p = $oDireccion->getC_p();
-    $cp_dcha = $oDireccion->isCp_dcha();
-    $poblacion = $oDireccion->getPoblacion();
-    $provincia = $oDireccion->getProvincia();
-    $pais = $oDireccion->getPais();
-    $observ = $oDireccion->getObserv();
-    $f_direccion = $oDireccion->getF_direccion()->getFromLocal();
-    $latitud = $oDireccion->getLatitud();
-    $longitud = $oDireccion->getLongitud();
+        $nom_sede = $oDireccion->getNom_sede();
+        $direccion = $oDireccion->getDireccion();
+        $a_p = $oDireccion->getA_p();
+        $c_p = $oDireccion->getC_p();
+        $cp_dcha = $oDireccion->isCp_dcha();
+        $poblacion = $oDireccion->getPoblacion();
+        $provincia = $oDireccion->getProvincia();
+        $pais = $oDireccion->getPais();
+        $observ = $oDireccion->getObserv();
+        $f_direccion = $oDireccion->getF_direccion()->getFromLocal();
+        $latitud = $oDireccion->getLatitud();
+        $longitud = $oDireccion->getLongitud();
 
-    $mas = ($idx < $num_dir - 1) ? 1 : 0;
-    $menos = ($idx < 1) ? 0 : 1;
-    $id_direccion = $Qid_direccion;
-    $id_direccion_actual = $id_direccion;
+        $mas = ($idx < $num_dir - 1) ? 1 : 0;
+        $menos = ($idx < 1) ? 0 : 1;
+        $id_direccion = $Qid_direccion;
+        $id_direccion_actual = $id_direccion;
 
-    $golistadir = Hash::link('apps/ubis/controller/direcciones_que.php?' . http_build_query(array('id_ubi' => $Qid_ubi, 'id_direccion' => $Qid_direccion, 'obj_dir' => $Qobj_dir)));
+        $golistadir = Hash::link('apps/ubis/controller/direcciones_que.php?' . http_build_query(array('id_ubi' => $Qid_ubi, 'id_direccion' => $Qid_direccion, 'obj_dir' => $Qobj_dir)));
 
-    $oHashPlano = new Hash();
-    $oHashPlano->setUrl('apps/ubis/controller/direcciones_asignar.php');
-    $oHashPlano->setCamposForm('obj_dir!id_ubi!id_direccion');
-    $h_asignar = $oHashPlano->linkSinVal();
+        $oHashPlano = new Hash();
+        $oHashPlano->setUrl('apps/ubis/controller/direcciones_asignar.php');
+        $oHashPlano->setCamposForm('obj_dir!id_ubi!id_direccion');
+        $h_asignar = $oHashPlano->linkSinVal();
 
-    $oHashPlano = new Hash();
-    $oHashPlano->setUrl('apps/ubis/controller/plano_bytea.php');
-    $oHashPlano->setCamposForm('obj_dir!act!id_direccion');
-    $h = $oHashPlano->linkSinVal();
+        $oHashPlano = new Hash();
+        $oHashPlano->setUrl('apps/ubis/controller/plano_bytea.php');
+        $oHashPlano->setCamposForm('obj_dir!act!id_direccion');
+        $h = $oHashPlano->linkSinVal();
 
-    $url = 'apps/ubis/controller/direcciones_editar.php';
-    $oHashDir = new Hash();
-    $oHashDir->setUrl($url);
-    $oHashDir->setCamposNo('inc');
-    $aCamposHidden = ['id_ubi' => $Qid_ubi,
-            'id_direccion' => $Qid_direccion,
-            'obj_dir' => $Qobj_dir,
-            'idx' => $idx,
-            'refresh' => 1,
-    ];
-    $oHashDir->setArrayCamposHidden($aCamposHidden);
-    $go_dir = $url . '?' . $oHashDir->linkConVal();
+        $url = 'apps/ubis/controller/direcciones_editar.php';
+        $oHashDir = new Hash();
+        $oHashDir->setUrl($url);
+        $oHashDir->setCamposNo('inc');
+        $aCamposHidden = ['id_ubi' => $Qid_ubi,
+                'id_direccion' => $Qid_direccion,
+                'obj_dir' => $Qobj_dir,
+                'idx' => $idx,
+                'refresh' => 1,
+        ];
+        $oHashDir->setArrayCamposHidden($aCamposHidden);
+        $go_dir = $url . '?' . $oHashDir->linkConVal();
+    }
 }
 
 //----------------------------------Permisos según el usuario

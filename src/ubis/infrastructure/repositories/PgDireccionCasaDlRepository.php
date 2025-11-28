@@ -2,8 +2,8 @@
 
 namespace src\ubis\infrastructure\repositories;
 
-
 use core\ConfigGlobal;
+use src\ubis\domain\contracts\DireccionCasaDlRepositoryInterface;
 use src\ubis\domain\contracts\PlanoOperationsTrait;
 use src\utils_database\domain\GenerateIdGlobal;
 
@@ -16,7 +16,7 @@ use src\utils_database\domain\GenerateIdGlobal;
  * @version 2.0
  * @created 21/11/2025
  */
-class PgDireccionCasaDlRepository extends PgDireccionRepository
+class PgDireccionCasaDlRepository extends PgDireccionRepository implements DireccionCasaDlRepositoryInterface
 {
     use PlanoOperationsTrait;
 
@@ -33,20 +33,20 @@ class PgDireccionCasaDlRepository extends PgDireccionRepository
     // Wrapper methods para mantener la interfaz simple
     public function downloadPlano(int $id_direccion): array
     {
-        return $this->planoDownload($id_direccion, $this->getNomTabla());
+        return $this->planoDownload($id_direccion);
     }
 
     public function uploadPlano(int $id_direccion, ?string $nom, ?string $extension, $fichero): void
     {
-        $this->planoUpload($id_direccion, $this->getNomTabla(), $nom, $extension, $fichero);
+        $this->planoUpload($id_direccion, $nom, $extension, $fichero);
     }
 
     public function deletePlano(int $id_direccion): void
     {
-        $this->planoBorrar($id_direccion, $this->getNomTabla());
+        $this->planoBorrar($id_direccion);
     }
 
-    public function getNewId()
+    public function getNewId(): int
     {
         $oDbl = $this->getoDbl();
         $sQuery = "select nextval('u_dir_cdc_dl_id_item_seq'::regclass)";

@@ -5,7 +5,6 @@ namespace src\menus\domain\contracts;
 use PDO;
 use src\menus\domain\entity\GrupMenu;
 
-
 /**
  * Interfaz de la clase GrupMenu y su Repositorio
  *
@@ -27,7 +26,7 @@ interface GrupMenuRepositoryInterface
      *
      * @param array $aWhere asociativo con los valores para cada campo de la BD.
      * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array|FALSE Una colección de objetos de tipo GrupMenu
+     * @return array|false Una colección de objetos de tipo GrupMenu
      */
     public function getGrupMenus(array $aWhere = [], array $aOperators = []): array|false;
 

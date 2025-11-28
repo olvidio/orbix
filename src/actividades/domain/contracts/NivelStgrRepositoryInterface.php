@@ -6,7 +6,6 @@ use PDO;
 use src\actividades\domain\entity\NivelStgr;
 use src\actividades\domain\value_objects\NivelStgrId;
 
-
 /**
  * Interfaz de la clase NivelStgr y su Repositorio
  *
@@ -28,10 +27,10 @@ interface NivelStgrRepositoryInterface
 	 *
 	 * @param array $aWhere asociativo con los valores para cada campo de la BD.
 	 * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-	 * @return array|FALSE Una colección de objetos de tipo NivelStgr
+	 * @return array|false Una colección de objetos de tipo NivelStgr
 	
 	 */
-	public function getNivelesStgr(array $aWhere=[], array $aOperators=[]): array|FALSE;
+	public function getNivelesStgr(array $aWhere=[], array $aOperators=[]): array|false;
 	
 /* -------------------- ENTIDAD --------------------------------------------- */
 

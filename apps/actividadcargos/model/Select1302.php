@@ -2,14 +2,13 @@
 
 namespace actividadcargos\model;
 
-use actividadcargos\model\entity\Cargo;
 use actividadcargos\model\entity\GestorActividadCargo;
 use actividades\model\entity\ActividadAll;
 use core\ConfigGlobal;
 use core\ViewPhtml;
 use dossiers\model\PermDossier;
 use personas\model\entity\Persona;
-use src\actividadcargos\application\repositories\CargoRepository;
+use src\actividadcargos\domain\contracts\CargoRepositoryInterface;
 use web\BotonesCurso;
 use web\Hash;
 use web\Lista;
@@ -146,12 +145,13 @@ class Select1302
         $c = 0;
         $a_valores = [];
         $cCargosEnActividad = $oCargosEnActividad->getActividadCargosDeAsistente(array('id_nom' => $this->id_pau), $aWhere, $aOperator);
+        $CargoRepository = $GLOBALS['container']->get(CargoRepositoryInterface::class);
         foreach ($cCargosEnActividad as $oActividadCargo) {
             $c++;
             $id_item = $oActividadCargo->getId_item();
             $id_activ = $oActividadCargo->getId_activ();
             $id_cargo = $oActividadCargo->getId_cargo();
-            $oCargo = (new CargoRepository())->findById($id_cargo);
+            $oCargo = $CargoRepository->findById($id_cargo);
             $tipo_cargo = $oCargo->getTipoCargoVo()?->value();
             $cargo = $oCargo->getCargoVo()->value();
             // para los sacd en sf

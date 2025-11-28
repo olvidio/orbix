@@ -10,7 +10,6 @@ use PDOException;
 use src\ubis\domain\contracts\TipoCentroRepositoryInterface;
 use src\ubis\domain\entity\TipoCentro;
 
-
 /**
  * Clase que adapta la tabla xu_tipo_ctr a la interfaz del repositorio
  *
@@ -58,7 +57,7 @@ class PgTipoCentroRepository extends ClaseRepository implements TipoCentroReposi
      *
      * @param array $aWhere asociativo con los valores para cada campo de la BD.
      * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array|FALSE Una colección de objetos de tipo TipoCentro
+     * @return array|false Una colección de objetos de tipo TipoCentro
      */
     public function getTiposCentro(array $aWhere = [], array $aOperators = []): array|false
     {
@@ -108,15 +107,15 @@ class PgTipoCentroRepository extends ClaseRepository implements TipoCentroReposi
             unset($aWhere['_limit']);
         }
         $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
-        if (($oDblSt = $oDbl->prepare($sQry)) === FALSE) {
+        if (($oDblSt = $oDbl->prepare($sQry)) === false) {
             $sClaveError = 'PgTipoCentroRepository.listar.prepare';
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return FALSE;
+            return false;
         }
-        if (($oDblSt->execute($aWhere)) === FALSE) {
+        if (($oDblSt->execute($aWhere)) === false) {
             $sClaveError = 'PgTipoCentroRepository.listar.execute';
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
-            return FALSE;
+            return false;
         }
 
         $filas = $oDblSt->fetchAll(PDO::FETCH_ASSOC);
@@ -135,14 +134,13 @@ class PgTipoCentroRepository extends ClaseRepository implements TipoCentroReposi
         $tipo_ctr = $TipoCentro->getTipoCentroVo()->value();
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        if (($oDbl->exec("DELETE FROM $nom_tabla WHERE tipo_ctr = '$tipo_ctr'")) === FALSE) {
+        if (($oDbl->exec("DELETE FROM $nom_tabla WHERE tipo_ctr = '$tipo_ctr'")) === false) {
             $sClaveError = 'PgTipoCentroRepository.eliminar';
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return FALSE;
+            return false;
         }
         return TRUE;
     }
-
 
     /**
      * Si no existe el registro, hace un insert, si existe, se hace el update.
@@ -158,14 +156,14 @@ class PgTipoCentroRepository extends ClaseRepository implements TipoCentroReposi
         $aDatos['nombre_tipo_ctr'] = $TipoCentro->getNombreTipoCentroVo()?->value();
         array_walk($aDatos, 'core\poner_null');
 
-        if ($bInsert === FALSE) {
+        if ($bInsert === false) {
             //UPDATE
             $update = "
 					nombre_tipo_ctr          = :nombre_tipo_ctr";
-            if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE tipo_ctr = '$tipo_ctr'")) === FALSE) {
+            if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE tipo_ctr = '$tipo_ctr'")) === false) {
                 $sClaveError = 'PgTipoCentroRepository.update.prepare';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-                return FALSE;
+                return false;
             }
 
             try {
@@ -175,17 +173,17 @@ class PgTipoCentroRepository extends ClaseRepository implements TipoCentroReposi
                 $this->setErrorTxt($err_txt);
                 $sClaveError = 'PgTipoCentroRepository.update.execute';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
-                return FALSE;
+                return false;
             }
         } else {
             // INSERT
             $aDatos['tipo_ctr'] = $TipoCentro->getTipoCentroVo()->value();
             $campos = "(tipo_ctr,nombre_tipo_ctr)";
             $valores = "(:tipo_ctr,:nombre_tipo_ctr)";
-            if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === FALSE) {
+            if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {
                 $sClaveError = 'PgTipoCentroRepository.insertar.prepare';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-                return FALSE;
+                return false;
             }
             try {
                 $oDblSt->execute($aDatos);
@@ -194,7 +192,7 @@ class PgTipoCentroRepository extends ClaseRepository implements TipoCentroReposi
                 $this->setErrorTxt($err_txt);
                 $sClaveError = 'PgTipoCentroRepository.insertar.execute';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
-                return FALSE;
+                return false;
             }
         }
         return TRUE;
@@ -204,15 +202,15 @@ class PgTipoCentroRepository extends ClaseRepository implements TipoCentroReposi
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE tipo_ctr = '$tipo_ctr'")) === FALSE) {
+        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE tipo_ctr = '$tipo_ctr'")) === false) {
             $sClaveError = 'PgTipoCentroRepository.isNew';
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return FALSE;
+            return false;
         }
         if (!$oDblSt->rowCount()) {
             return TRUE;
         }
-        return FALSE;
+        return false;
     }
 
     /**
@@ -226,15 +224,14 @@ class PgTipoCentroRepository extends ClaseRepository implements TipoCentroReposi
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
-        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE tipo_ctr = '$tipo_ctr'")) === FALSE) {
+        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE tipo_ctr = '$tipo_ctr'")) === false) {
             $sClaveError = 'PgTipoCentroRepository.getDatosById';
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return FALSE;
+            return false;
         }
         $aDatos = $oDblSt->fetch(PDO::FETCH_ASSOC);
         return $aDatos;
     }
-
 
     /**
      * Busca la clase con tipo_ctr en la base de datos .

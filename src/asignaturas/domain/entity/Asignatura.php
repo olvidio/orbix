@@ -3,6 +3,8 @@
 namespace src\asignaturas\domain\entity;
 use core\DatosCampo;
 use core\Set;
+use src\asignaturas\domain\contracts\AsignaturaTipoRepositoryInterface;
+use src\asignaturas\domain\contracts\SectorRepositoryInterface;
 use function core\is_true;
 use src\asignaturas\domain\value_objects\{AsignaturaId, NivelId, AsignaturaName, AsignaturaShortName, Creditos, YearText, AsignaturaTipoId, SectorId};
 /**
@@ -290,7 +292,6 @@ class Asignatura {
         return $oAsignaturaSet->getTot();
     }
 
-
     /**
      * Recupera les propietats de l'atribut iid_asignatura de Asignatura
      * en una clase del tipus DatosCampo
@@ -413,7 +414,7 @@ class Asignatura {
         $oDatosCampo->setMetodoSet('setId_sector');
         $oDatosCampo->setEtiqueta(_("sector"));
         $oDatosCampo->setTipo('opciones');
-        $oDatosCampo->setArgument('src\\asignaturas\\application\\repositories\\SectorRepository');
+        $oDatosCampo->setArgument(SectorRepositoryInterface::class);
         $oDatosCampo->setArgument2('getSector'); // método para obtener el valor a mostrar del objeto relacionado.
         $oDatosCampo->setArgument3('getArraySectores');
         return $oDatosCampo;
@@ -450,7 +451,7 @@ class Asignatura {
         $oDatosCampo->setMetodoSet('setId_tipo');
         $oDatosCampo->setEtiqueta(_("tipo"));
         $oDatosCampo->setTipo('opciones');
-        $oDatosCampo->setArgument('src\\asignaturas\\application\\repositories\\AsignaturaTipoRepository');
+        $oDatosCampo->setArgument(AsignaturaTipoRepositoryInterface::class);
         $oDatosCampo->setArgument2('getTipo_asignatura'); // método para obtener el valor a mostrar del objeto relacionado.
         $oDatosCampo->setArgument3('getArrayAsignaturaTipos');
         return $oDatosCampo;

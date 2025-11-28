@@ -2,7 +2,7 @@
 
 use casas\model\entity\GrupoCasa;
 use core\ViewTwig;
-use src\ubis\application\repositories\CasaDlRepository;
+use src\ubis\domain\contracts\CasaDlRepositoryInterface;
 use web\Desplegable;
 use web\Hash;
 
@@ -29,7 +29,7 @@ if (!empty($Qid_item)) {
     $id_ubi_padre = '';
 }
 
-$CasaDlRepository = new CasaDlRepository();
+$CasaDlRepository = $GLOBALS['container']->get(CasaDlRepositoryInterface::class);
 $aCasas = $CasaDlRepository->getArrayCasas("WHERE status = 't'");
 
 $oDesplCasaMadre = new Desplegable('id_ubi_padre', $aCasas, $id_ubi_padre, '');

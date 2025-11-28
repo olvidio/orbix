@@ -11,7 +11,6 @@ use PDOException;
 use src\actividadcargos\domain\entity\Cargo;
 use src\actividadcargos\domain\contracts\CargoRepositoryInterface;
 
-
 use function core\is_true;
 /**
  * Clase que adapta la tabla xd_orden_cargo a la interfaz del repositorio
@@ -65,10 +64,10 @@ class PgCargoRepository extends ClaseRepository implements CargoRepositoryInterf
 	 *
 	 * @param array $aWhere asociativo con los valores para cada campo de la BD.
 	 * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-	 * @return array|FALSE Una colección de objetos de tipo Cargo
+	 * @return array|false Una colección de objetos de tipo Cargo
 	
 	 */
-	public function getCargos(array $aWhere=[], array $aOperators=[]): array|FALSE
+	public function getCargos(array $aWhere=[], array $aOperators=[]): array|false
 	{
         $oDbl = $this->getoDbl_Select();
 		$nom_tabla = $this->getNomTabla();
@@ -94,15 +93,15 @@ class PgCargoRepository extends ClaseRepository implements CargoRepositoryInterf
 		if (isset($aWhere['_limit']) && $aWhere['_limit'] !== '') { $sLimit = ' LIMIT '.$aWhere['_limit']; }
 		if (isset($aWhere['_limit'])) { unset($aWhere['_limit']); }
 		$sQry = "SELECT * FROM $nom_tabla ".$sCondicion.$sOrdre.$sLimit;
-		if (($oDblSt = $oDbl->prepare($sQry)) === FALSE) {
+		if (($oDblSt = $oDbl->prepare($sQry)) === false) {
 			$sClaveError = 'PgCargoRepository.listar.prepare';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-			return FALSE;
+			return false;
 		}
-		if (($oDblSt->execute($aWhere)) === FALSE) {
+		if (($oDblSt->execute($aWhere)) === false) {
 			$sClaveError = 'PgCargoRepository.listar.execute';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
-			return FALSE;
+			return false;
 		}
 		
 		$filas = $oDblSt->fetchAll(PDO::FETCH_ASSOC);
@@ -121,10 +120,10 @@ class PgCargoRepository extends ClaseRepository implements CargoRepositoryInterf
         $id_cargo = $Cargo->getId_cargo();
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        if (($oDbl->exec("DELETE FROM $nom_tabla WHERE id_cargo = $id_cargo")) === FALSE) {
+        if (($oDbl->exec("DELETE FROM $nom_tabla WHERE id_cargo = $id_cargo")) === false) {
             $sClaveError = 'PgCargoRepository.eliminar';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return FALSE;
+            return false;
         }
         return TRUE;
     }
@@ -148,11 +147,11 @@ class PgCargoRepository extends ClaseRepository implements CargoRepositoryInterf
 		$aDatos['sv'] = $Cargo->isSv();
 		$aDatos['tipo_cargo'] = $Cargo->getTipoCargoVo()?->value();
 		array_walk($aDatos, 'core\poner_null');
-		//para el caso de los boolean FALSE, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
+		//para el caso de los boolean false, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
 		if ( is_true($aDatos['sf']) ) { $aDatos['sf']='true'; } else { $aDatos['sf']='false'; }
 		if ( is_true($aDatos['sv']) ) { $aDatos['sv']='true'; } else { $aDatos['sv']='false'; }
 
-		if ($bInsert === FALSE) {
+		if ($bInsert === false) {
 			//UPDATE
 			$update="
 					cargo                    = :cargo,
@@ -160,10 +159,10 @@ class PgCargoRepository extends ClaseRepository implements CargoRepositoryInterf
 					sf                       = :sf,
 					sv                       = :sv,
 					tipo_cargo               = :tipo_cargo";
-			if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_cargo = $id_cargo")) === FALSE) {
+			if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_cargo = $id_cargo")) === false) {
 				$sClaveError = 'PgCargoRepository.update.prepare';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-				return FALSE;
+				return false;
 			}
 				
             try {
@@ -173,17 +172,17 @@ class PgCargoRepository extends ClaseRepository implements CargoRepositoryInterf
                 $this->setErrorTxt($err_txt);
                 $sClaveError = 'PgCargoRepository.update.execute';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
-                return FALSE;
+                return false;
             }
 		} else {
 			// INSERT
 			$aDatos['id_cargo'] = $Cargo->getId_cargo();
 			$campos="(id_cargo,cargo,orden_cargo,sf,sv,tipo_cargo)";
 			$valores="(:id_cargo,:cargo,:orden_cargo,:sf,:sv,:tipo_cargo)";		
-			if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === FALSE) {
+			if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {
 				$sClaveError = 'PgCargoRepository.insertar.prepare';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-				return FALSE;
+				return false;
 			}
             try {
                 $oDblSt->execute($aDatos);
@@ -192,7 +191,7 @@ class PgCargoRepository extends ClaseRepository implements CargoRepositoryInterf
                 $this->setErrorTxt($err_txt);
                 $sClaveError = 'PgCargoRepository.insertar.execute';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
-                return FALSE;
+                return false;
 			}
 		}
 		return TRUE;
@@ -202,15 +201,15 @@ class PgCargoRepository extends ClaseRepository implements CargoRepositoryInterf
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_cargo = $id_cargo")) === FALSE) {
+        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_cargo = $id_cargo")) === false) {
 			$sClaveError = 'PgCargoRepository.isNew';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return FALSE;
+            return false;
         }
         if (!$oDblSt->rowCount()) {
             return TRUE;
         }
-        return FALSE;
+        return false;
     }
 	
     /**
@@ -225,10 +224,10 @@ class PgCargoRepository extends ClaseRepository implements CargoRepositoryInterf
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
-        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_cargo = $id_cargo")) === FALSE) {
+        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_cargo = $id_cargo")) === false) {
 			$sClaveError = 'PgCargoRepository.getDatosById';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return FALSE;
+            return false;
         }
 		$aDatos = $oDblSt->fetch(PDO::FETCH_ASSOC);
         return $aDatos;

@@ -9,8 +9,8 @@ use procesos\model\entity\GestorActividadTarea;
 use procesos\model\entity\GestorTareaProceso;
 use procesos\model\entity\TareaProceso;
 use src\menus\domain\PermisoMenu;
-use src\usuarios\application\repositories\RoleRepository;
-use src\usuarios\application\repositories\UsuarioRepository;
+use src\usuarios\domain\contracts\RoleRepositoryInterface;
+use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
 
 // INICIO Cabecera global de URL de controlador *********************************
 require_once("apps/core/global_header.inc");
@@ -127,12 +127,12 @@ switch ($Qque) {
         $oActividad = new ActividadAll();
         $a_status = $oActividad->getArrayStatus();
 
-        $UsuarioRepository = new UsuarioRepository();
+        $UsuarioRepository = $GLOBALS['container']->get(UsuarioRepositoryInterface::class);
         $oMiUsuario = $UsuarioRepository->findById(ConfigGlobal::mi_id_usuario());
         $id_role = $oMiUsuario->getId_role();
         $miSfsv = ConfigGlobal::mi_sfsv();
 
-        $RoleRepository = new RoleRepository();
+        $RoleRepository = $GLOBALS['container']->get(RoleRepositoryInterface::class);
         $aRoles = $RoleRepository->getArrayRoles();
 
         // para crear un desplegable de oficinas. Uso los de los menus
@@ -207,12 +207,12 @@ switch ($Qque) {
         $oActividad = new ActividadAll();
         $a_status = $oActividad->getArrayStatus();
 
-        $UsuarioRepository = new UsuarioRepository();
+        $UsuarioRepository = $GLOBALS['container']->get(UsuarioRepositoryInterface::class);
         $oMiUsuario = $UsuarioRepository->findById(ConfigGlobal::mi_id_usuario());
         $id_role = $oMiUsuario->getId_role();
         $miSfsv = ConfigGlobal::mi_sfsv();
 
-        $RoleRepository = new RoleRepository();
+        $RoleRepository = $GLOBALS['container']->get(RoleRepositoryInterface::class);
         $aRoles = $RoleRepository->getArrayRoles();
 
 

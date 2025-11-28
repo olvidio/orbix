@@ -3,7 +3,7 @@
 use actividades\model\ActividadTipo;
 use core\ConfigGlobal;
 use core\ViewTwig;
-use src\ubis\application\repositories\CasaDlRepository;
+use src\ubis\domain\contracts\CasaDlRepositoryInterface;
 use web\CasasQue;
 use web\Hash;
 use web\PeriodoQue;
@@ -116,7 +116,7 @@ $oForm = new CasasQue();
 $oForm->setTitulo('');
 
 // posible selección múltiple de casas
-$CasaDlRepository = new CasaDlRepository();
+$CasaDlRepository = $GLOBALS['container']->get(CasaDlRepositoryInterface::class);
 $aCasas = $CasaDlRepository->getArrayCasas();
 $a_id_ubi = array_keys($aCasas);
 $csv_id_ubi = implode(',', $a_id_ubi);

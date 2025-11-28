@@ -1,8 +1,7 @@
 <?php
 
-use asignaturas\model\entity\GestorAsignatura;
 use core\ConfigGlobal;
-use src\asignaturas\application\repositories\AsignaturaRepository;
+use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use web\Lista;
 use profesores\model\entity\GestorProfesor;
 use profesores\model\entity\GestorProfesorDocenciaStgr;
@@ -20,7 +19,7 @@ require_once("apps/core/global_object.inc");
 
 $oPosicion->recordar();
 
-$AsignaturaRepository = new AsignaturaRepository();
+$AsignaturaRepository = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class);
 $cAsignaturas = $AsignaturaRepository->getAsignaturas();
 $a_asignaturas = [];
 foreach ($cAsignaturas as $oAsignatura) {

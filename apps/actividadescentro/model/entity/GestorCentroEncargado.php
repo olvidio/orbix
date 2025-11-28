@@ -7,7 +7,7 @@ use core\ClaseGestor;
 use core\Condicion;
 use core\ConfigGlobal;
 use core\Set;
-use src\ubis\application\repositories\CentroDlRepository;
+use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use src\ubis\domain\entity\CentroEllas;
 
 /**
@@ -119,7 +119,7 @@ class GestorCentroEncargado extends ClaseGestor
             $id_ubi = $aDades['id_ubi'];
             $sfsv = substr($id_ubi, 0, 1);
             if (ConfigGlobal::mi_sfsv() == $sfsv) {
-                $CentroDlRepository = new CentroDlRepository();
+                $CentroDlRepository = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
                 $oUbi = $CentroDlRepository->findById($id_ubi);
             } else {
                 $oUbi = new CentroEllas();

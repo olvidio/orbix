@@ -1,8 +1,8 @@
 <?php
 
 use Illuminate\Http\JsonResponse;
-use src\ubis\application\repositories\CentroDlRepository;
-use src\ubis\application\repositories\CentroEllasRepository;
+use src\ubis\domain\contracts\CentroDlRepositoryInterface;
+use src\ubis\domain\contracts\CentroEllasRepositoryInterface;
 use src\ubis\domain\entity\Ubi;
 
 // INICIO Cabecera global de URL de controlador *********************************
@@ -31,9 +31,9 @@ $aWhere = [];
 $aWhere['status'] = 't';
 $aWhere['id_zona'] = $Qid_zona;
 $aWhere['_ordre'] = 'nombre_ubi';
-$GesCentrosDl = new CentroDlRepository();
+$GesCentrosDl = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
 $cCentrosDl = $GesCentrosDl->getCentros($aWhere);
-$GesCentrosSf = new CentroEllasRepository();
+$GesCentrosSf = $GLOBALS['container']->get(CentroEllasRepositoryInterface::class);
 $cCentrosSf = $GesCentrosSf->getCentros($aWhere);
 $cCentros = array_merge($cCentrosDl, $cCentrosSf);
 

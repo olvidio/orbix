@@ -2,7 +2,7 @@
 
 use core\ConfigGlobal;
 use core\ViewPhtml;
-use src\ubis\application\repositories\CentroDlRepository;
+use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use web\Hash;
 
 /**
@@ -108,7 +108,7 @@ switch ($Qn_agd) {
         break;
 }
 
-$oGesCentros = new CentroDlRepository();
+$oGesCentros = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
 $oDesplCentros = $oGesCentros->getListaCentros("WHERE status = 't' AND tipo_ctr ~ '^a|^n' ");
 $oDesplCentros->setNombre('id_ubi');
 $oDesplCentros->setBlanco(true);

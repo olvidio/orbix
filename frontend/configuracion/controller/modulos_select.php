@@ -2,8 +2,8 @@
 
 use core\ViewPhtml;
 use frontend\shared\model\ViewNewPhtml;
-use src\configuracion\application\repositories\AppRepository;
-use src\configuracion\application\repositories\ModuloRepository;
+use src\configuracion\domain\contracts\AppRepositoryInterface;
+use src\configuracion\domain\contracts\ModuloRepositoryInterface;
 use web\Hash;
 use web\Lista;
 
@@ -58,7 +58,7 @@ $oPosicion->setParametros($aGoBack, 1);
 $aWhere = ['_ordre' => 'nom'];
 $aOperador = [];
 // por defecto no pongo valor, que lo coja de la base de datos. Sólo sirve para los de paso.
-$ModuloRepository = new ModuloRepository();
+$ModuloRepository = $GLOBALS['container']->get(ModuloRepositoryInterface::class);
 $cModulos = $ModuloRepository->getModulos($aWhere, $aOperador);
 
 $a_botones[] = array('txt' => _("modificar"),
@@ -82,7 +82,7 @@ foreach ($cMods as $oMod) {
     $a_mods_todos[$id_mod] = $nom_mod;
 }
 
-$AppRepository = new AppRepository();
+$AppRepository = $GLOBALS['container']->get(AppRepositoryInterface::class);
 $cApps = $AppRepository->getApps();
 $a_apps_todas = [];
 foreach ($cApps as $oApp) {

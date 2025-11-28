@@ -12,7 +12,6 @@ use src\ubis\domain\contracts\CentroRepositoryInterface;
 use src\ubis\domain\entity\Centro;
 use function core\is_true;
 
-
 /**
  * Clase que adapta la tabla u_centros a la interfaz del repositorio
  *
@@ -93,7 +92,7 @@ class PgCentroRepository extends ClaseRepository implements CentroRepositoryInte
      *
      * @param array $aWhere asociativo con los valores para cada campo de la BD.
      * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array|FALSE Una colección de objetos de tipo Centro
+     * @return array|false Una colección de objetos de tipo Centro
      */
     public function getCentros(array $aWhere = [], array $aOperators = []): array|false
     {
@@ -143,15 +142,15 @@ class PgCentroRepository extends ClaseRepository implements CentroRepositoryInte
             unset($aWhere['_limit']);
         }
         $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
-        if (($oDblSt = $oDbl->prepare($sQry)) === FALSE) {
+        if (($oDblSt = $oDbl->prepare($sQry)) === false) {
             $sClaveError = 'PgCentroRepository.listar.prepare';
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return FALSE;
+            return false;
         }
-        if (($oDblSt->execute($aWhere)) === FALSE) {
+        if (($oDblSt->execute($aWhere)) === false) {
             $sClaveError = 'PgCentroRepository.listar.execute';
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
-            return FALSE;
+            return false;
         }
 
         $filas = $oDblSt->fetchAll(PDO::FETCH_ASSOC);
@@ -172,14 +171,13 @@ class PgCentroRepository extends ClaseRepository implements CentroRepositoryInte
         $id_ubi = $Centro->getId_ubi();
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        if (($oDbl->exec("DELETE FROM $nom_tabla WHERE id_ubi = $id_ubi")) === FALSE) {
+        if (($oDbl->exec("DELETE FROM $nom_tabla WHERE id_ubi = $id_ubi")) === false) {
             $sClaveError = 'PgCentroRepository.eliminar';
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return FALSE;
+            return false;
         }
         return TRUE;
     }
-
 
     /**
      * Si no existe el registro, hace un insert, si existe, se hace el update.
@@ -207,7 +205,7 @@ class PgCentroRepository extends ClaseRepository implements CentroRepositoryInte
         // para las fechas
         $aDatos['f_status'] = (new ConverterDate('date', $Centro->getF_status()))->toPg();
         array_walk($aDatos, 'core\poner_null');
-        //para el caso de los boolean FALSE, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
+        //para el caso de los boolean false, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
         if (is_true($aDatos['status'])) {
             $aDatos['status'] = 'true';
         } else {
@@ -229,7 +227,7 @@ class PgCentroRepository extends ClaseRepository implements CentroRepositoryInte
             $aDatos['cdc'] = 'false';
         }
 
-        if ($bInsert === FALSE) {
+        if ($bInsert === false) {
             //UPDATE
             $update = "
 					tipo_ubi                 = :tipo_ubi,
@@ -245,10 +243,10 @@ class PgCentroRepository extends ClaseRepository implements CentroRepositoryInte
 					tipo_labor               = :tipo_labor,
 					cdc                      = :cdc,
 					id_ctr_padre             = :id_ctr_padre";
-            if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_ubi = $id_ubi")) === FALSE) {
+            if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_ubi = $id_ubi")) === false) {
                 $sClaveError = 'PgCentroRepository.update.prepare';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-                return FALSE;
+                return false;
             }
 
             try {
@@ -258,17 +256,17 @@ class PgCentroRepository extends ClaseRepository implements CentroRepositoryInte
                 $this->setErrorTxt($err_txt);
                 $sClaveError = 'PgCentroRepository.update.execute';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
-                return FALSE;
+                return false;
             }
         } else {
             // INSERT
             $aDatos['id_ubi'] = $Centro->getId_ubi();
             $campos = "(tipo_ubi,id_ubi,nombre_ubi,dl,pais,region,status,f_status,sv,sf,tipo_ctr,tipo_labor,cdc,id_ctr_padre)";
             $valores = "(:tipo_ubi,:id_ubi,:nombre_ubi,:dl,:pais,:region,:status,:f_status,:sv,:sf,:tipo_ctr,:tipo_labor,:cdc,:id_ctr_padre)";
-            if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === FALSE) {
+            if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {
                 $sClaveError = 'PgCentroRepository.insertar.prepare';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-                return FALSE;
+                return false;
             }
             try {
                 $oDblSt->execute($aDatos);
@@ -277,7 +275,7 @@ class PgCentroRepository extends ClaseRepository implements CentroRepositoryInte
                 $this->setErrorTxt($err_txt);
                 $sClaveError = 'PgCentroRepository.insertar.execute';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
-                return FALSE;
+                return false;
             }
         }
         return TRUE;
@@ -287,15 +285,15 @@ class PgCentroRepository extends ClaseRepository implements CentroRepositoryInte
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_ubi = $id_ubi")) === FALSE) {
+        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_ubi = $id_ubi")) === false) {
             $sClaveError = 'PgCentroRepository.isNew';
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return FALSE;
+            return false;
         }
         if (!$oDblSt->rowCount()) {
             return TRUE;
         }
-        return FALSE;
+        return false;
     }
 
     /**
@@ -309,19 +307,18 @@ class PgCentroRepository extends ClaseRepository implements CentroRepositoryInte
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_ubi = $id_ubi")) === FALSE) {
+        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_ubi = $id_ubi")) === false) {
             $sClaveError = 'PgCentroRepository.getDatosById';
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return FALSE;
+            return false;
         }
         $aDatos = $oDblSt->fetch(PDO::FETCH_ASSOC);
         // para las fechas del postgres (texto iso)
-        if ($aDatos !== FALSE) {
+        if ($aDatos !== false) {
             $aDatos['f_status'] = (new ConverterDate('date', $aDatos['f_status']))->fromPg();
         }
         return $aDatos;
     }
-
 
     /**
      * Busca la clase con id_ubi en la base de datos .

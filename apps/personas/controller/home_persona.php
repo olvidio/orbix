@@ -1,7 +1,7 @@
 <?php
 
 use core\ViewPhtml;
-use src\ubis\application\repositories\CentroDlRepository;
+use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use web\Hash;
 
 /**
@@ -105,7 +105,7 @@ $profesion = $oPersona->getProfesion();
 $stgr = $oPersona->getStgr();
 if ($Qobj_pau !== 'PersonaEx' && $Qobj_pau !== 'PersonaIn') {
     $id_ctr = $oPersona->getId_ctr();
-    $CentroDlRepository = new CentroDlRepository();
+    $CentroDlRepository = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
     $oCentroDl = $CentroDlRepository->findById($id_ctr);
     $ctr = $oCentroDl->getNombre_ubi();
 } else {

@@ -1,8 +1,8 @@
 <?php
 
 use permisos\model\MyCrypt;
-use src\usuarios\application\repositories\RoleRepository;
-use src\usuarios\application\repositories\UsuarioRepository;
+use src\usuarios\domain\contracts\RoleRepositoryInterface;
+use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
 use src\usuarios\domain\entity\Usuario;
 use src\usuarios\domain\value_objects\Username;
 use src\usuarios\domain\value_objects\Email;
@@ -10,16 +10,6 @@ use src\usuarios\domain\value_objects\Password;
 use src\usuarios\domain\value_objects\IdPau;
 use src\usuarios\domain\value_objects\NombreUsuario;
 use web\ContestarJson;
-
-// INICIO Cabecera global de URL de controlador *********************************
-require_once("apps/core/global_header.inc");
-// Archivos requeridos por esta url **********************************************
-
-// Crea los objetos de uso global **********************************************
-require_once("apps/core/global_object.inc");
-// Crea los objetos por esta url  **********************************************
-
-// FIN de  Cabecera global de URL de controlador ********************************
 
 $Qusuario = (string)filter_input(INPUT_POST, 'usuario');
 
@@ -43,11 +33,11 @@ $Qcasas = (array)filter_input(INPUT_POST, 'casas', FILTER_DEFAULT, FILTER_REQUIR
 $Qcambio_password = (bool)filter_input(INPUT_POST, 'cambio_password');
 $Qhas_2fa = (bool)filter_input(INPUT_POST, 'has_2fa');
 
-$RoleRepository = new RoleRepository();
-$UsuarioRepository = new UsuarioRepository();
+$RoleRepository = $GLOBALS['container']->get(RoleRepositoryInterface::class);
+$UsuarioRepository = $GLOBALS['container']->get(UsuarioRepositoryInterface::class);
 
 if (empty($Qid_usuario)) {
-    $UsuarioRepository = new UsuarioRepository();
+    $UsuarioRepository = $GLOBALS['container']->get(UsuarioRepositoryInterface::class);
     $id_new_usuario = $UsuarioRepository->getNewId();
     $oUsuario = new Usuario();
     $oUsuario->setId_usuario($id_new_usuario);

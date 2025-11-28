@@ -1,7 +1,7 @@
 <?php
 
 use core\ViewTwig;
-use src\ubis\application\repositories\DireccionCentroRepository;
+use src\ubis\domain\contracts\DireccionCentroRepositoryInterface;
 use web\Desplegable;
 use web\Hash;
 use src\ubis\application\services\DelegacionDropdown;
@@ -31,7 +31,7 @@ require_once("apps/core/global_object.inc");
 //regiones posibles
 $oDesplRegion = RegionDropdown::activasOrdenNombre('region');
 //paises posibles
-$GesPais = new DireccionCentroRepository();
+$GesPais = $GLOBALS['container']->get(DireccionCentroRepositoryInterface::class);
 $aOpciones = $GesPais->getArrayPaises();
 $oDesplPais = new Desplegable();
 $oDesplPais->setOpciones($aOpciones);

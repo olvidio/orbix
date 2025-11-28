@@ -3,10 +3,10 @@
 use core\ConfigGlobal;
 use core\ViewTwig;
 use notas\model\TablaAlumnosAsignaturas;
+use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 use web\Desplegable;
 use web\Hash;
 use web\Lista;
-use src\ubis\application\repositories\DelegacionRepository;
 
 /**
  * Esta página sirve para generar un cuadro con las asignaturas pendientes de todos los alumnos.
@@ -33,7 +33,7 @@ if (ConfigGlobal::mi_ambito() === 'rstgr') {
 
     $aChecked = $Qdl;
     $region_stgr = ConfigGlobal::mi_dele();
-    $repoDelegacion = new DelegacionRepository();
+    $repoDelegacion = $GLOBALS['container']->get(DelegacionRepositoryInterface::class);
     $a_delegacionesStgr = $repoDelegacion->getArrayDlRegionStgr([$region_stgr]);
 
     $oCuadros = new Desplegable();

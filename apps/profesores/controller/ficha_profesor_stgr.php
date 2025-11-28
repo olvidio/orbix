@@ -1,7 +1,5 @@
 <?php
 
-use asignaturas\model\entity\Asignatura;
-use asignaturas\model\entity\Departamento;
 use core\ConfigGlobal;
 use dossiers\model\entity\TipoDossier;
 use dossiers\model\PermDossier;
@@ -15,10 +13,11 @@ use profesores\model\entity\GestorProfesorPublicacion;
 use profesores\model\entity\GestorProfesorTituloEst;
 use profesores\model\entity\ProfesorJuramento;
 use profesores\model\entity\ProfesorLatin;
-use src\asignaturas\application\repositories\AsignaturaRepository;
-use src\asignaturas\application\repositories\DepartamentoRepository;
-use src\ubis\application\repositories\CentroDlRepository;
-use src\ubis\application\repositories\CentroRepository;
+use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
+use src\asignaturas\domain\contracts\DepartamentoRepositoryInterface;
+use src\profesores\domain\contracts\ProfesorTipoRepositoryInterface;
+use src\ubis\domain\contracts\CentroDlRepositoryInterface;
+use src\ubis\domain\contracts\CentroRepositoryInterface;
 use web\Hash;
 use function core\is_true;
 
@@ -167,9 +166,9 @@ $sacd = $oPersona->getSacd();
 $id_ctr = $oPersona->getid_ctr();
 
 if (ConfigGlobal::mi_ambito() === 'rstgr') {
-    $oCentroDl = (new CentroRepository())->findById($id_ctr);
+    $oCentroDl = $GLOBALS['container']->get(CentroRepositoryInterface::class)->findById($id_ctr);
 } else {
-    $oCentroDl = (new CentroDlRepository())->findById($id_ctr);
+    $oCentroDl = $GLOBALS['container']->get(CentroDlRepositoryInterface::class)->findById($id_ctr);
 }
 $nombre_ubi = $oCentroDl->getNombre_ubi();
 
@@ -198,9 +197,10 @@ if (is_true($latin)) {
 
 $gesProfesor = new GestorProfesor();
 $cProfesores = $gesProfesor->getProfesores($aWhere, $aOperador);
-$DepartamentoRepository = new DepartamentoRepository();
+$DepartamentoRepository = $GLOBALS['container']->get(DepartamentoRepositoryInterface::class);
 $a_nombramientos = [];
 $dep = '';
+$ProfesorTipoRepository = $GLOBALS['container']->get(ProfesorTipoRepositoryInterface::class);
 foreach ($cProfesores as $oProfesor) {
     $id_departamento = $oProfesor->getId_departamento();
     $escrito_nombramiento = $oProfesor->getEscrito_nombramiento();
@@ -211,7 +211,7 @@ foreach ($cProfesores as $oProfesor) {
 
     $departamento = $DepartamentoRepository->findById($id_departamento)->getNombreDepartamentoVo()->value();
 
-    $oProfesorTipo = new ProfesorTipo($id_tipo_profesor);
+    $oProfesorTipo = $ProfesorTipoRepository->findById($id_tipo_profesor);
     $tipo_profesor = $oProfesorTipo->getTipo_profesor();
 
     $a_nombramientos[] = array('departamento' => $departamento, 'tipo_profesor' => $tipo_profesor, 'f_nombramiento' => $f_nombramiento, 'escrito_nombramiento' => $escrito_nombramiento);
@@ -289,6 +289,7 @@ $gesProfesor = new GestorProfesor();
 $cProfesores = $gesProfesor->getProfesores($aWhere, $aOperador);
 $a_nombramientos = [];
 $id_departamento = '';
+$ProfesorTipoRepository = $GLOBALS['container']->get(ProfesorTipoRepositoryInterface::class);
 foreach ($cProfesores as $oProfesor) {
     $id_departamento = $oProfesor->getId_departamento();
     $escrito_nombramiento = $oProfesor->getEscrito_nombramiento();
@@ -300,7 +301,7 @@ foreach ($cProfesores as $oProfesor) {
 
     $departamento = $DepartamentoRepository->findById($id_departamento)->getNombreDepartamentoVo()->value();
 
-    $oProfesorTipo = new ProfesorTipo($id_tipo_profesor);
+    $oProfesorTipo = $ProfesorTipoRepository->findById($id_tipo_profesor);
     $tipo_profesor = $oProfesorTipo->getTipo_profesor();
 
     $a_nombramientos[] = array('departamento' => $departamento, 'tipo_profesor' => $tipo_profesor, 'f_nombramiento' => $f_nombramiento, 'escrito_nombramiento' => $escrito_nombramiento, 'f_cese' => $f_cese, 'escrito_cese' => $escrito_cese);
@@ -313,6 +314,7 @@ $gesProfesorAmpliacion = new GestorProfesorAmpliacion();
 $cProfesorAmpliaciones = $gesProfesorAmpliacion->getProfesorAmpliaciones($aWhere, $aOperador);
 $a_ampliacion = [];
 $id_departamento = '';
+$AsignaturaRepository = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class);
 foreach ($cProfesorAmpliaciones as $oProfesorAmpliacion) {
     $id_asignatura = $oProfesorAmpliacion->getId_asignatura();
     $f_nombramiento = $oProfesorAmpliacion->getF_nombramiento()->getFromLocal();
@@ -320,7 +322,7 @@ foreach ($cProfesorAmpliaciones as $oProfesorAmpliacion) {
     $f_cese = $oProfesorAmpliacion->getF_cese()->getFromLocal();
     $escrito_cese = $oProfesorAmpliacion->getEscrito_cese();
 
-    $oAsignatura = (new AsignaturaRepository())->findById($id_asignatura);
+    $oAsignatura = $AsignaturaRepository->findById($id_asignatura);
     if ($oAsignatura === null) {
         throw new \Exception(sprintf(_("No se ha encontrado la asignatura con id: %s"), $id_asignatura));
     }

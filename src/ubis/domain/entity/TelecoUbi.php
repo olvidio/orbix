@@ -2,10 +2,11 @@
 
 namespace src\ubis\domain\entity;
 
-
 use core\DatosCampo;
 use core\Set;
 use src\ubis\domain\value_objects\{DescTelecoText};
+use src\ubis\domain\contracts\DescTelecoRepositoryInterface;
+use src\ubis\domain\contracts\TipoTelecoRepositoryInterface;
 use src\ubis\domain\value_objects\{TipoTelecoId, TelecoUbiId, TelecoUbiItemId, NumTelecoText, ObservTelecoText};
 
 /**
@@ -343,7 +344,7 @@ class TelecoUbi
         $oDatosCampo->setMetodoSet('setId_tipo_teleco');
         $oDatosCampo->setEtiqueta(_("nombre teleco"));
         $oDatosCampo->setTipo('opciones');
-        $oDatosCampo->setArgument('src\\ubis\\application\\repositories\\TipoTelecoRepository'); // nombre del objeto relacionado
+        $oDatosCampo->setArgument(TipoTelecoRepositoryInterface::class); // nombre del objeto relacionado
         $oDatosCampo->setArgument2('getNombreTelecoVo'); // método para obtener el valor a mostrar del objeto relacionado.
         $oDatosCampo->setArgument3('getArrayTiposTelecoUbi'); // método con que crear la lista de opciones del Gestor objeto relacionado.
         $oDatosCampo->setAccion('desc_teleco'); // campo que hay que actualizar al cambiar este.
@@ -358,7 +359,7 @@ class TelecoUbi
         $oDatosCampo->setMetodoSet('setDec_teleco');
         $oDatosCampo->setEtiqueta(_("descripción"));
         $oDatosCampo->setTipo('depende');
-        $oDatosCampo->setArgument('src\ubis\application\repositories\DescTelecoRepository');
+        $oDatosCampo->setArgument(DescTelecoRepositoryInterface::class);
         $oDatosCampo->setArgument2('getDescTelecoVo'); // método para obtener el valor a mostrar del objeto relacionado.
         $oDatosCampo->setArgument3('getArrayDescTeleco');
         $oDatosCampo->setDepende('id_tipo_teleco');

@@ -10,7 +10,7 @@ use cambios\model\entity\GestorCambioAnotado;
 use cambios\model\entity\GestorCambioUsuario;
 use core\ConfigGlobal;
 use permisos\model\PermisosActividades;
-use src\usuarios\application\repositories\UsuarioRepository;
+use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
 use src\usuarios\domain\entity\Role;
 use web\DateTimeLocal;
 use zonassacd\model\entity\GestorZona;
@@ -230,7 +230,7 @@ class Avisos
     {
         //echo "usuario: $id_usuario, camp: $propiedad, id_activ: $id_activ <br>\n";
         // Si el usuario es una casa o un sacd, sólo ve los cambios que le afectan:
-        $UsuarioRepository = new UsuarioRepository();
+        $UsuarioRepository = $GLOBALS['container']->get(UsuarioRepositoryInterface::class);
         $oMiUsuario = $UsuarioRepository->findById($this->id_usuario);
         $oRole = new Role();
         $oRole->setId_role($oMiUsuario->getId_role());

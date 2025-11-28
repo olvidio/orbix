@@ -8,7 +8,7 @@ use actividades\model\entity\ActividadDl;
 use actividadplazas\model\entity\ActividadPlazasDl;
 use actividadplazas\model\GestorResumenPlazas;
 use core\ConfigGlobal;
-use src\ubis\application\repositories\DelegacionRepository;
+use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 
 // INICIO Cabecera global de URL de controlador *********************************
 require_once("apps/core/global_header.inc");
@@ -51,7 +51,7 @@ switch ($que) {
             }
             // buscar el id de la dl
             $id_dl = 0;
-            $repoDelegacion = new DelegacionRepository();
+            $repoDelegacion = $GLOBALS['container']->get(DelegacionRepositoryInterface::class);
             $cDelegaciones = $repoDelegacion->getDelegaciones(['dl' => $dl_sigla]);
             if (is_array($cDelegaciones) && count($cDelegaciones)) {
                 $id_dl = $cDelegaciones[0]->getIdDlVo()->value();

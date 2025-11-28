@@ -1,34 +1,25 @@
 <?php
 
-
-// INICIO Cabecera global de URL de controlador *********************************
-use src\inventario\application\repositories\ColeccionRepository;
-use src\inventario\application\repositories\DocumentoRepository;
-use src\inventario\application\repositories\EquipajeRepository;
-use src\inventario\application\repositories\LugarRepository;
-use src\inventario\application\repositories\TipoDocRepository;
-use src\inventario\application\repositories\UbiInventarioRepository;
+use src\inventario\domain\contracts\ColeccionRepositoryInterface;
+use src\inventario\domain\contracts\DocumentoRepositoryInterface;
+use src\inventario\domain\contracts\EquipajeRepositoryInterface;
+use src\inventario\domain\contracts\LugarRepositoryInterface;
+use src\inventario\domain\contracts\TipoDocRepositoryInterface;
+use src\inventario\domain\contracts\UbiInventarioRepositoryInterface;
 use web\ContestarJson;
-
-require_once("apps/core/global_header.inc");
-// Archivos requeridos por esta url **********************************************
-
-// Crea los objetos de uso global **********************************************
-require_once("apps/core/global_object.inc");
-// FIN de  Cabecera global de URL de controlador ********************************
 
 $Qid_equipaje = (integer)filter_input(INPUT_POST, 'id_equipaje');
 $error_txt = '';
 
-$EquipajeRepository = new EquipajeRepository();
+$EquipajeRepository = $GLOBALS['container']->get(EquipajeRepositoryInterface::class);
 $oEquipaje = $EquipajeRepository->findById($Qid_equipaje);
 $id_ubi_activ = $oEquipaje->getId_ubi_activ();
 $nombre_lugar = $oEquipaje->getLugar();
 
-$DocumentoRepository = new DocumentoRepository();
-$TipoDocRepository = new TipoDocRepository();
-$LugarRepository = new LugarRepository();
-$UbiInventarioRepository = new UbiInventarioRepository();
+$DocumentoRepository = $GLOBALS['container']->get(DocumentoRepositoryInterface::class);
+$TipoDocRepository = $GLOBALS['container']->get(TipoDocRepositoryInterface::class);
+$LugarRepository = $GLOBALS['container']->get(LugarRepositoryInterface::class);
+$UbiInventarioRepository = $GLOBALS['container']->get(UbiInventarioRepositoryInterface::class);
 $cUbsiInventario = $UbiInventarioRepository->getUbisInventario(['id_ubi_activ' => $id_ubi_activ]);
 $a_valores = [];
 $id_ubi = null;
@@ -36,7 +27,7 @@ if (is_array($cUbsiInventario) && !empty($cUbsiInventario)) {
 
     //para ordenar por colecciones:
     $aColeccion = [];
-    $ColeccionRepository = new ColeccionRepository();
+    $ColeccionRepository = $GLOBALS['container']->get(ColeccionRepositoryInterface::class);
     $cColecciones = $ColeccionRepository->getColecciones(array('_ordre' => 'nom_coleccion'));
     foreach ($cColecciones as $oColeccion) {
         $aColeccion[$oColeccion->getId_coleccion()] = $oColeccion->isAgrupar();
@@ -121,7 +112,6 @@ if (is_array($cUbsiInventario) && !empty($cUbsiInventario)) {
     }
 
 }
-
 
 $data = [
     'a_valores' => $a_valores,

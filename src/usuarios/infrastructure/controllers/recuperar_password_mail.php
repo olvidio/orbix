@@ -14,10 +14,6 @@ use shared\domain\entity\ColaMail;
 use shared\domain\repositories\ColaMailRepository;
 use web\ContestarJson;
 
-// INICIO Cabecera global de URL de controlador *********************************
-require_once("apps/core/global_header.inc");
-// FIN de  Cabecera global de URL de controlador ********************************
-
 $Qusername = (string)filter_input(INPUT_POST, 'username');
 $Qubicacion = (string)filter_input(INPUT_POST, 'ubicacion');
 $Qesquema = (string)filter_input(INPUT_POST, 'esquema');
@@ -107,7 +103,7 @@ if (empty($error_txt) && ($row = $oDBSt->fetch(\PDO::FETCH_ASSOC))) {
             $oConexion = new DBConnection($config);
             $oDBPC = $oConexion->getPDO();
 
-            $oColaMailRepository = new ColaMailRepository();
+            $oColaMailRepository = $GLOBALS['container']->get(ColaMailRepositoryInterface::class);
             $oColaMailRepository->setoDbl($oDBPC);
             if ($oColaMailRepository->Guardar($oColaMail)) {
                 $success = true;
@@ -142,7 +138,6 @@ function generateRandomPassword($length = 10)
     // Mezclar los caracteres para que no sigan un patrón predecible
     return str_shuffle($password);
 }
-
 
 $data['error_txt'] = $error_txt;
 $data['success'] = $success;

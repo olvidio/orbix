@@ -4,7 +4,7 @@ namespace actividadessacd\model;
 
 use actividadessacd\model\entity\GestorAtnActivSacdTexto;
 use core\ConfigGlobal;
-use src\ubis\application\repositories\CentroDlRepository;
+use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 
 class ActividadesSacdFunciones
 {
@@ -57,7 +57,7 @@ class ActividadesSacdFunciones
         if (ConfigGlobal::is_dmz()) {
             return "xxxx";
         }
-        $CentroDlRepository = new CentroDlRepository();
+        $CentroDlRepository = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
         $cCentros = $CentroDlRepository->getCentros(['tipo_ctr' => 'dl']);
         $num_dl = count($cCentros);
         switch ($num_dl) {

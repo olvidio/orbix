@@ -3,7 +3,7 @@
 use casas\model\entity\GestorGrupoCasa;
 use core\ConfigGlobal;
 use core\ViewTwig;
-use src\ubis\application\repositories\CasaDlRepository;
+use src\ubis\domain\contracts\CasaDlRepositoryInterface;
 use web\Hash;
 use web\Lista;
 
@@ -49,7 +49,7 @@ $a_botones[] = array('txt' => _("eliminar"), 'click' => "fnjs_eliminar(\"#selecc
 
 $a_valores = [];
 $i = 0;
-$CasaDlRepository = new CasaDlRepository();
+$CasaDlRepository = $GLOBALS['container']->get(CasaDlRepositoryInterface::class);
 foreach ($cGrupoCasas as $oGrupoCasa) {
     $i++;
     $id_item = $oGrupoCasa->getId_item();

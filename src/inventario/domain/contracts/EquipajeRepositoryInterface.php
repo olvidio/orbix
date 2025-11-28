@@ -6,7 +6,6 @@ use PDO;
 use src\inventario\domain\entity\Equipaje;
 use src\inventario\domain\value_objects\EquipajeId;
 
-
 /**
  * Interfaz de la clase Equipaje y su Repositorio
  *
@@ -29,10 +28,10 @@ interface EquipajeRepositoryInterface
 	 *
 	 * @param array $aWhere asociativo con los valores para cada campo de la BD.
 	 * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-	 * @return array|FALSE Una colección de objetos de tipo Equipaje
+	 * @return array|false Una colección de objetos de tipo Equipaje
 	
 	 */
-	public function getEquipajes(array $aWhere=[], array $aOperators=[]): array|FALSE;
+	public function getEquipajes(array $aWhere=[], array $aOperators=[]): array|false;
 	
 /* -------------------- ENTIDAD --------------------------------------------- */
 

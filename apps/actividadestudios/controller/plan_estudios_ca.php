@@ -1,16 +1,14 @@
 <?php
 
 use actividadcargos\model\entity\GestorActividadCargo;
-use actividadcargos\model\entity\GestorCargo;
 use actividades\model\entity\ActividadAll;
 use actividadestudios\model\entity\GestorActividadAsignaturaDl;
 use actividadestudios\model\entity\GestorMatricula;
-use asignaturas\model\entity\Asignatura;
 use asistentes\model\entity\GestorAsistente;
 use core\ViewPhtml;
 use personas\model\entity\Persona;
-use src\actividadcargos\application\repositories\CargoRepository;
-use src\asignaturas\application\repositories\AsignaturaRepository;
+use src\actividadcargos\domain\contracts\CargoRepositoryInterface;
+use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use function core\is_true;
 
 // INICIO Cabecera global de URL de controlador *********************************
@@ -40,7 +38,7 @@ $oActividad = new ActividadAll($id_activ);
 $nom_activ = $oActividad->getNom_activ();
 
 //director de estudios
-$CargoRepository = new CargoRepository();
+$CargoRepository = $GLOBALS['container']->get(CargoRepositoryInterface::class);
 $cCargos = $CargoRepository->getCargos(array('cargo' => 'd.est.'));
 $id_cargo = $cCargos[0]->getId_cargo(); // solo hay un cargo de director de estudios.
 $GesActividadCargos = new GestorActividadCargo();
@@ -71,13 +69,14 @@ $a = 0;
 $tipo_old = 0;
 $GesActividadAsignaturas = new GestorActividadAsignaturaDl();
 $cActividadAsignaturas = $GesActividadAsignaturas->getActividadAsignaturas(array('id_activ' => $id_activ, '_ordre' => 'tipo'));
+$AsignaturaRepository = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class);
 foreach ($cActividadAsignaturas as $oActividadAsignatura) {
     $a++;
     $id_asignatura = $oActividadAsignatura->getId_asignatura();
     $id_profesor = $oActividadAsignatura->getId_profesor();
     $tipo = $oActividadAsignatura->getTipo();
 
-    $oAsignatura = (new AsignaturaRepository())->findById($id_asignatura);
+    $oAsignatura = $AsignaturaRepository->findById($id_asignatura);
     if ($oAsignatura === null) {
         throw new \Exception(sprintf(_("No se ha encontrado la asignatura con id: %s"), $id_asignatura));
     }
@@ -149,12 +148,13 @@ foreach ($cAsistentes as $oAsistente) {
     } else {
         $aAsignaturas = [];
         $i = 0;
+        $AsignaturaRepository = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class);
         foreach ($cMatriculas as $oMatricula) {
             $i++;
             $id_asignatura = $oMatricula->getId_asignatura();
             $preceptor = $oMatricula->getPreceptor();
 
-            $oAsignatura = (new AsignaturaRepository())->findById($id_asignatura);
+            $oAsignatura = $AsignaturaRepository->findById($id_asignatura);
             if ($oAsignatura === null) {
                 throw new \Exception(sprintf(_("No se ha encontrado la asignatura con id: %s"), $id_asignatura));
             }

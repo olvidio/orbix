@@ -10,7 +10,6 @@ use PDOException;
 use src\inventario\domain\contracts\WhereisRepositoryInterface;
 use src\inventario\domain\entity\Whereis;
 
-
 /**
  * Clase que adapta la tabla i_whereis_dl a la interfaz del repositorio
  *
@@ -56,10 +55,10 @@ class PgWhereisRepository extends ClaseRepository implements WhereisRepositoryIn
 	 *
 	 * @param array $aWhere asociativo con los valores para cada campo de la BD.
 	 * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-	 * @return array|FALSE Una colección de objetos de tipo Whereis
+	 * @return array|false Una colección de objetos de tipo Whereis
 	
 	 */
-	public function getWhereare(array $aWhere=[], array $aOperators=[]): array|FALSE
+	public function getWhereare(array $aWhere=[], array $aOperators=[]): array|false
 	{
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
@@ -85,15 +84,15 @@ class PgWhereisRepository extends ClaseRepository implements WhereisRepositoryIn
 		if (isset($aWhere['_limit']) && $aWhere['_limit'] !== '') { $sLimit = ' LIMIT '.$aWhere['_limit']; }
 		if (isset($aWhere['_limit'])) { unset($aWhere['_limit']); }
 		$sQry = "SELECT * FROM $nom_tabla ".$sCondicion.$sOrdre.$sLimit;
-		if (($oDblSt = $oDbl->prepare($sQry)) === FALSE) {
+		if (($oDblSt = $oDbl->prepare($sQry)) === false) {
 			$sClaveError = 'PgWhereisRepository.listar.prepare';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-			return FALSE;
+			return false;
 		}
-		if (($oDblSt->execute($aWhere)) === FALSE) {
+		if (($oDblSt->execute($aWhere)) === false) {
 			$sClaveError = 'PgWhereisRepository.listar.execute';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
-			return FALSE;
+			return false;
 		}
 		
 		$filas = $oDblSt->fetchAll(PDO::FETCH_ASSOC);
@@ -112,10 +111,10 @@ class PgWhereisRepository extends ClaseRepository implements WhereisRepositoryIn
         $id_item_whereis = $Whereis->getIdItemWhereisVo()->value();
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        if (($oDbl->exec("DELETE FROM $nom_tabla WHERE id_item_whereis = $id_item_whereis")) === FALSE) {
+        if (($oDbl->exec("DELETE FROM $nom_tabla WHERE id_item_whereis = $id_item_whereis")) === false) {
             $sClaveError = 'PgWhereisRepository.eliminar';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return FALSE;
+            return false;
         }
         return TRUE;
     }
@@ -137,15 +136,15 @@ class PgWhereisRepository extends ClaseRepository implements WhereisRepositoryIn
         $aDatos['id_doc'] = $Whereis->getIdDocVo()?->value();
         array_walk($aDatos, 'core\poner_null');
 
-        if ($bInsert === FALSE) {
+        if ($bInsert === false) {
             //UPDATE
             $update="
                     id_item_egm              = :id_item_egm,
                     id_doc                   = :id_doc";
-            if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_item_whereis = $id_item_whereis")) === FALSE) {
+            if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_item_whereis = $id_item_whereis")) === false) {
                 $sClaveError = 'PgWhereisRepository.update.prepare';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-                return FALSE;
+                return false;
             }
             
             try {
@@ -155,17 +154,17 @@ class PgWhereisRepository extends ClaseRepository implements WhereisRepositoryIn
                 $this->setErrorTxt($err_txt);
                 $sClaveError = 'PgWhereisRepository.update.execute';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
-                return FALSE;
+                return false;
             }
         } else {
             // INSERT
             $aDatos['id_item_whereis'] = $Whereis->getIdItemWhereisVo()->value();
             $campos="(id_item_whereis,id_item_egm,id_doc)";
             $valores="(:id_item_whereis,:id_item_egm,:id_doc)";        
-            if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === FALSE) {
+            if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {
                 $sClaveError = 'PgWhereisRepository.insertar.prepare';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-                return FALSE;
+                return false;
             }
             try {
                 $oDblSt->execute($aDatos);
@@ -174,7 +173,7 @@ class PgWhereisRepository extends ClaseRepository implements WhereisRepositoryIn
                 $this->setErrorTxt($err_txt);
                 $sClaveError = 'PgWhereisRepository.insertar.execute';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
-                return FALSE;
+                return false;
             }
         }
         return TRUE;
@@ -184,15 +183,15 @@ class PgWhereisRepository extends ClaseRepository implements WhereisRepositoryIn
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_item_whereis = $id_item_whereis")) === FALSE) {
+        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_item_whereis = $id_item_whereis")) === false) {
 			$sClaveError = 'PgWhereisRepository.isNew';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return FALSE;
+            return false;
         }
         if (!$oDblSt->rowCount()) {
             return TRUE;
         }
-        return FALSE;
+        return false;
     }
 	
     /**
@@ -207,10 +206,10 @@ class PgWhereisRepository extends ClaseRepository implements WhereisRepositoryIn
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_item_whereis = $id_item_whereis")) === FALSE) {
+        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_item_whereis = $id_item_whereis")) === false) {
 			$sClaveError = 'PgWhereisRepository.getDatosById';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return FALSE;
+            return false;
         }
 		$aDatos = $oDblSt->fetch(PDO::FETCH_ASSOC);
         return $aDatos;

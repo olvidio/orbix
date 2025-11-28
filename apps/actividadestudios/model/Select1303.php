@@ -3,13 +3,12 @@
 namespace actividadestudios\model;
 
 use actividades\model\entity\ActividadAll;
-use asignaturas\model\entity\Asignatura;
 use asistentes\model\entity\GestorAsistente;
 use core\ConfigGlobal;
 use core\ViewPhtml;
 use personas\model\entity\Persona;
 use personas\model\entity\PersonaDl;
-use src\asignaturas\application\repositories\AsignaturaRepository;
+use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use web\Hash;
 use web\Lista;
 use function core\curso_est;
@@ -133,6 +132,7 @@ class Select1303
         $i = 0;
         $a_valores = [];
         $msg_err = '';
+        $AsignaturaRepository = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class);
         foreach ($cMatriculas as $oMatricula) {
             $i++;
             $id_asignatura = $oMatricula->getId_asignatura();
@@ -154,7 +154,7 @@ class Select1303
                 $preceptor = "";
             }
 
-            $oAsignatura = (new AsignaturaRepository())->findById($id_asignatura);
+            $oAsignatura = $AsignaturaRepository->findById($id_asignatura);
             if ($oAsignatura === null) {
                 throw new \Exception(sprintf(_("No se ha encontrado la asignatura con id: %s"), $id_asignatura));
             }

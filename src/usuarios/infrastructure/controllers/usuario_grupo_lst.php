@@ -1,25 +1,17 @@
 <?php
 
 use core\ConfigGlobal;
-use src\usuarios\application\repositories\GrupoRepository;
-use src\usuarios\application\repositories\UsuarioGrupoRepository;
-use src\usuarios\application\repositories\UsuarioRepository;
+use src\usuarios\domain\contracts\GrupoRepositoryInterface;
+use src\usuarios\domain\contracts\UsuarioGrupoRepositoryInterface;
+use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
 use web\ContestarJson;
 use web\Hash;
-
-// INICIO Cabecera global de URL de controlador *********************************
-require_once("apps/core/global_header.inc");
-// Archivos requeridos por esta url **********************************************
-
-// Crea los objetos de uso global **********************************************
-require_once("apps/core/global_object.inc");
-// FIN de  Cabecera global de URL de controlador ********************************
 
 $sfsv = ConfigGlobal::mi_sfsv();
 
 $Qid_usuario = (integer)filter_input(INPUT_POST, 'id_usuario');
 
-$UsuarioRepository = new UsuarioRepository();
+$UsuarioRepository = $GLOBALS['container']->get(UsuarioRepositoryInterface::class);
 $oUsuario = $UsuarioRepository->findById($Qid_usuario);
 $id_role = $oUsuario->getId_role();
 $aWhere = [];
@@ -30,10 +22,10 @@ $aOperador['id_usuario'] = '~';
 // Ahora mismo no sé porque hay que filtrar por role. Para añadir se tienen que ver...
 //$aWhere['id_role'] = $id_role;
 // listado de grupos posibles
-$GrupoRepository = new GrupoRepository();
+$GrupoRepository = $GLOBALS['container']->get(GrupoRepositoryInterface::class);
 $cGrupos = $GrupoRepository->getGrupos($aWhere,$aOperador);
 // no pongo los que ya tengo. Los pongo en un array
-$UsuarioGrupoRepository = new UsuarioGrupoRepository();
+$UsuarioGrupoRepository = $GLOBALS['container']->get(UsuarioGrupoRepositoryInterface::class);
 $cListaGrupos = $UsuarioGrupoRepository->getUsuariosGrupos(array('id_usuario' => $Qid_usuario));
 $aGruposOn = [];
 foreach ($cListaGrupos as $oUsuarioGrupo) {

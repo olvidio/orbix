@@ -13,10 +13,10 @@
 use actividadplazas\model\entity\GestorActividadPlazas;
 use core\ConfigGlobal;
 use core\ViewPhtml;
+use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 use src\ubis\domain\entity\Ubi;
 use web\Hash;
 use web\Periodo;
-use src\ubis\application\repositories\DelegacionRepository;
 use web\TablaEditable;
 
 require_once("apps/core/global_header.inc");
@@ -99,7 +99,7 @@ $status = \actividades\model\entity\ActividadAll::STATUS_ACTUAL; //actual
 $mi_reg = ConfigGlobal::mi_region();
 $mi_dl = ConfigGlobal::mi_delef();
 $aWhere = array('region' => $mi_reg, 'dl' => $mi_dl);
-$repoDelegacion = new DelegacionRepository();
+$repoDelegacion = $GLOBALS['container']->get(DelegacionRepositoryInterface::class);
 $cDelegaciones = $repoDelegacion->getDelegaciones($aWhere);
 if (empty($cDelegaciones)) {
     $msg = sprintf(_("No se ha definido ninguna dl='%s' en la región '%s'."),$mi_dl, $mi_reg);
@@ -112,7 +112,7 @@ $cDelegaciones = [];
 if (empty($grupo_estudios)) {
     $cDelegaciones[] = $oMiDelegacion;
 } else {
-    $repoDelegacion = new DelegacionRepository();
+    $repoDelegacion = $GLOBALS['container']->get(DelegacionRepositoryInterface::class);
     $cDelegaciones = $repoDelegacion->getDelegaciones(['grupo_estudios' => $grupo_estudios, '_ordre' => 'region,dl']);
 }
 $gesActividadPlazas = new GestorActividadPlazas();

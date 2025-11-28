@@ -2,7 +2,7 @@
 
 namespace src\inventario\domain;
 
-use src\inventario\application\repositories\ColeccionRepository;
+use src\inventario\domain\contracts\ColeccionRepositoryInterface;
 use src\shared\domain\DatosInfoRepo;
 
 /* No vale el underscore en el nombre */
@@ -34,7 +34,7 @@ class InfoColeccion extends DatosInfoRepo
             $aOperador['nom_coleccion'] = 'sin_acentos';
         }
 
-        $ColeccionRepository = new ColeccionRepository();
+        $ColeccionRepository = $GLOBALS['container']->get(ColeccionRepositoryInterface::class);
         $Coleccion = $ColeccionRepository->getColecciones($aWhere, $aOperador);
 
         return $Coleccion;

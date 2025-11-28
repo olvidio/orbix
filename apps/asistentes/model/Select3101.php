@@ -2,7 +2,6 @@
 
 namespace asistentes\model;
 
-use actividadcargos\model\entity\Cargo;
 use actividadcargos\model\entity\GestorActividadCargo;
 use actividades\model\entity\ActividadAll;
 use actividadplazas\model\GestorResumenPlazas;
@@ -12,7 +11,7 @@ use core\ConfigGlobal;
 use core\ViewPhtml;
 use dossiers\model\PermDossier;
 use personas\model\entity\Persona;
-use src\actividadcargos\application\repositories\CargoRepository;
+use src\actividadcargos\domain\contracts\CargoRepositoryInterface;
 use src\ubis\domain\entity\Ubi;
 use web\Hash;
 use web\Lista;
@@ -251,6 +250,7 @@ class Select3101
         $GesCargosEnActividad = new GestorActividadCargo();
         $cCargosEnActividad = $GesCargosEnActividad->getActividadCargos(array('id_activ' => $this->id_pau));
         $mi_sfsv = ConfigGlobal::mi_sfsv();
+        $CargoRepository = $GLOBALS['container']->get(CargoRepositoryInterface::class);
         foreach ($cCargosEnActividad as $oActividadCargo) {
             $c++;
             $num++; // número total de asistentes.
@@ -258,7 +258,7 @@ class Select3101
             $id_nom = $oActividadCargo->getId_nom();
             $this->aListaCargos[] = $id_nom;
             $id_cargo = $oActividadCargo->getId_cargo();
-            $oCargo = (new CargoRepository())->findById($id_cargo);
+            $oCargo = $CargoRepository->findById($id_cargo);
             $tipo_cargo = $oCargo->getTipoCargoVo()?->value();
             $cargo = $oCargo->getCargoVo()->value();
             // para los sacd en sf

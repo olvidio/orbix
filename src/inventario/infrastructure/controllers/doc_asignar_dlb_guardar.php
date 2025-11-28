@@ -1,18 +1,9 @@
 <?php
 
-use src\inventario\application\repositories\DocumentoRepository;
-use src\inventario\application\repositories\LugarRepository;
+use src\inventario\domain\contracts\DocumentoRepositoryInterface;
+use src\inventario\domain\contracts\LugarRepositoryInterface;
 use web\ContestarJson;
 use web\DateTimeLocal;
-
-// INICIO Cabecera global de URL de controlador *********************************
-require_once("apps/core/global_header.inc");
-// Archivos requeridos por esta url **********************************************
-
-// Crea los objetos de uso global **********************************************
-require_once("apps/core/global_object.inc");
-// FIN de  Cabecera global de URL de controlador ********************************
-
 
 $Qid_tipo_doc = (string)filter_input(INPUT_POST, 'id_tipo_doc');
 $Qnumerado = (string)filter_input(INPUT_POST, 'numerado');
@@ -20,12 +11,11 @@ $Qstr_selected_id = (string)filter_input(INPUT_POST, 'str_selected_id');
 $Qf_recibido = (string)filter_input(INPUT_POST, 'f_recibido');
 $Qf_asignado = (string)filter_input(INPUT_POST, 'f_asignado');
 
-
 $selected_id = json_decode(rawurldecode($Qstr_selected_id));
 $error_txt = '';
 
-$DocumentoRepository = new DocumentoRepository();
-$LugarRepository = new LugarRepository();
+$DocumentoRepository = $GLOBALS['container']->get(DocumentoRepositoryInterface::class);
+$LugarRepository = $GLOBALS['container']->get(LugarRepositoryInterface::class);
 $i = 0;
 foreach ($selected_id as $id_lugar) {
     $oLugar = $LugarRepository->findById($id_lugar);

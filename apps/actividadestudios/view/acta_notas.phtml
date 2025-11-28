@@ -120,7 +120,7 @@ use function core\is_true;
                 } else {
                     $oDesplActas->setOpcion_sel(0);
                 }
-            } else if ($acta == notas\model\entity\Nota::CURSADA) {
+            } else if ($acta == Nota::CURSADA) {
                 $acta_txt = Nota::$array_status_txt[Nota::CURSADA];
                 $oDesplActas->setOpcion_sel((int)$acta);
             } else {

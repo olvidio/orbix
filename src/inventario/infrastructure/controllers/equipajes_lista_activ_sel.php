@@ -1,16 +1,8 @@
 <?php
 
-// INICIO Cabecera global de URL de controlador *********************************
 use actividades\model\entity\ActividadAll;
 use src\ubis\domain\entity\Ubi;
 use web\ContestarJson;
-
-require_once("apps/core/global_header.inc");
-// Archivos requeridos por esta url **********************************************
-
-// Crea los objetos de uso global **********************************************
-require_once("apps/core/global_object.inc");
-// FIN de  Cabecera global de URL de controlador ********************************
 
 $a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 $Qid_cdc = (int)filter_input(INPUT_POST, 'id_cdc');

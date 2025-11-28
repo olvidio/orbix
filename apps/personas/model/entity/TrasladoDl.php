@@ -5,7 +5,6 @@ namespace personas\model\entity;
 use actividades\model\entity\ActividadAll;
 use actividades\model\entity\GestorActividadAll;
 use actividadestudios\model\entity\GestorMatriculaDl;
-use asignaturas\model\entity\Asignatura;
 use asistentes\model\entity\AsistenteDl;
 use asistentes\model\entity\AsistenteOut;
 use asistentes\model\entity\GestorAsistenteDl;
@@ -19,12 +18,12 @@ use dossiers\model\entity\GestorDossier;
 use dossiers\model\entity\TipoDossier;
 use notas\model\EditarPersonaNota;
 use notas\model\PersonaNota;
-use src\asignaturas\application\repositories\AsignaturaRepository;
-use src\certificados\application\repositories\CertificadoRecibidoRepository;
-use src\certificados\application\repositories\CertificadoEmitidoRepository;
+use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
+use src\certificados\domain\contracts\CertificadoEmitidoRepositoryInterface;
+use src\certificados\domain\contracts\CertificadoRecibidoRepositoryInterface;
 use src\certificados\domain\entity\CertificadoRecibido;
-use src\ubis\application\repositories\DelegacionRepository;
 use src\ubis\application\services\DelegacionUtils;
+use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 use web\DateTimeLocal;
 use web\NullDateTimeLocal;
 
@@ -439,7 +438,7 @@ class TrasladoDl
             $rta = 1;
         }
         // Que la dl destino exista:
-        $repoDelegacion = new DelegacionRepository();
+        $repoDelegacion = $GLOBALS['container']->get(DelegacionRepositoryInterface::class);
         $cDelegAll = $repoDelegacion->getDelegaciones(['status' => true]);
         $a_dl = [];
         if (is_array($cDelegAll)) {
@@ -473,12 +472,13 @@ class TrasladoDl
         $gesMatriculas->setoDbl($oDBorg);
         $cMatriculasPendientes = $gesMatriculas->getMatriculasPendientes($this->iid_nom);
         $msg = '';
+        $AsignaturaRepository = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class);
         foreach ($cMatriculasPendientes as $oMatricula) {
             $id_activ = $oMatricula->getId_activ();
             $id_asignatura = $oMatricula->getId_asignatura();
             $oActividad = new ActividadAll($id_activ);
             $nom_activ = $oActividad->getNom_activ();
-            $oAsignatura = (new AsignaturaRepository())->findById($id_asignatura);
+            $oAsignatura = $AsignaturaRepository->findById($id_asignatura);
             if ($oAsignatura === null) {
                 throw new \Exception(sprintf(_("No se ha encontrado la asignatura con id: %s"), $id_asignatura));
             }
@@ -684,7 +684,7 @@ class TrasladoDl
         if (!empty($colection)) {
             $new_dl = DelegacionUtils::getDlFromSchema($this->snew_esquema);
             // Obtener datos de región STGR de la nueva dl mediante el repositorio
-            $gesDelegacion = new \src\ubis\application\repositories\DelegacionRepository();
+            $gesDelegacion = $GLOBALS['container']->get(DelegacionRepositoryInterface::class);
             $a_mi_region_stgr = $gesDelegacion->mi_region_stgr($new_dl);
             $esquema_region_stgr = $a_mi_region_stgr['esquema_region_stgr'];
             // Para saber el nuevo id_schema de la dl destino:
@@ -948,7 +948,7 @@ class TrasladoDl
         $oDBorg = $this->conexionOrg();
         // si es una dl, hay que buscarlos en la region del stgr
 
-        $certificadoRecibidoRepository = new CertificadoRecibidoRepository();
+        $certificadoRecibidoRepository = $GLOBALS['container']->get(CertificadoRecibidoRepositoryInterface::class);
         $certificadoRecibidoRepository->setoDbl($oDBorg);
         $cCertificados = $certificadoRecibidoRepository->getCertificados(['id_nom' => $this->iid_nom]);
         foreach ($cCertificados as $Certificado) {
@@ -973,7 +973,7 @@ class TrasladoDl
         $id_item = $CertificadoRecibido->getId_item();
         // para que ponga el suyo según la DB
 
-        $certificadoRecibidoRepository = new CertificadoRecibidoRepository();
+        $certificadoRecibidoRepository = $GLOBALS['container']->get(CertificadoRecibidoRepositoryInterface::class);
         $certificadoRecibidoRepository->setoDbl($oDBdst);
         $newId_item = $certificadoRecibidoRepository->getNewId_item();
         $CertificadoRecibido->setId_item($newId_item);
@@ -982,7 +982,7 @@ class TrasladoDl
         }
 
         // eliminar el original
-        $certificadoRecibidoRepository2 = new CertificadoRecibidoRepository();
+        $certificadoRecibidoRepository2 = $GLOBALS['container']->get(CertificadoRecibidoRepositoryInterface::class);
         $oCertificadoRecibido = $certificadoRecibidoRepository2->findById($id_item);
         if (!empty($oCertificadoRecibido)) {
             $certificado = $oCertificadoRecibido->getCertificado();
@@ -1008,7 +1008,7 @@ class TrasladoDl
         // para que ponga el suyo según la DB
         $CertificadoRecibido = $this->copyCertificado2Dl($Certificado);
 
-        $certificadoRecibidoRepository = new CertificadoRecibidoRepository();
+        $certificadoRecibidoRepository = $GLOBALS['container']->get(CertificadoRecibidoRepositoryInterface::class);
         $certificadoRecibidoRepository->setoDbl($oDBdst);
         $newId_item = $certificadoRecibidoRepository->getNewId_item();
         $CertificadoRecibido->setId_item($newId_item);
@@ -1016,7 +1016,7 @@ class TrasladoDl
             $error .= $certificadoRecibidoRepository->getErrorTxt();
         }
         // pongo fecha enviado
-        $certificadoEmitidoRepository = new CertificadoEmitidoRepository();
+        $certificadoEmitidoRepository = $GLOBALS['container']->get(CertificadoEmitidoRepositoryInterface::class);
         $Certificado->setF_enviado(new DateTimeLocal());
         if ($certificadoEmitidoRepository->Guardar($Certificado) === FALSE) {
             $error .= $certificadoEmitidoRepository->getErrorTxt();

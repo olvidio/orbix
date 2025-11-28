@@ -145,7 +145,7 @@ abstract class DatosInfo
         return $key_collection;
     }
 
-    public function setObj_pau($obj_pau)
+    public function setobj_pau($obj_pau)
     {
         switch ($obj_pau) {
             case 'Centro':

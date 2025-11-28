@@ -9,8 +9,8 @@ use encargossacd\model\entity\GestorEncargoSacdHorario;
 use encargossacd\model\entity\GestorEncargoSacdObserv;
 use personas\model\entity\GestorPersonaDl;
 use personas\model\entity\PersonaDl;
-use src\ubis\application\repositories\CentroDlRepository;
-use src\ubis\application\repositories\CentroEllasRepository;
+use src\ubis\domain\contracts\CentroDlRepositoryInterface;
+use src\ubis\domain\contracts\CentroEllasRepositoryInterface;
 use web\DateTimeLocal;
 
 /**
@@ -134,10 +134,10 @@ foreach ($cPersonas as $oPersona) {
         $grupo = $array_orden[$modo];
         if (!empty($id_ubi)) { // en algunos encargos no hay ubi
             if (substr($id_ubi, 0, 1) == 2) {
-                $CentroEllasRepository = new CentroEllasRepository();
+                $CentroEllasRepository = $GLOBALS['container']->get(CentroEllasRepositoryInterface::class);
                 $oUbi = $CentroEllasRepository->findById($id_ubi);
             } else {
-                $CentroDlRepository = new CentroDlRepository();
+                $CentroDlRepository = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
                 $oUbi = $CentroDlRepository->findById($id_ubi);
             }
             $nombre_ubi = $oUbi->getNombre_ubi();

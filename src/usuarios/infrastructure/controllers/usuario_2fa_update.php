@@ -1,19 +1,9 @@
 <?php
 
-use src\usuarios\application\repositories\UsuarioRepository;
+use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
 use src\usuarios\domain\value_objects\Secret2FA;
 use src\usuarios\domain\Verify2fa;
 use web\ContestarJson;
-
-// INICIO Cabecera global de URL de controlador *********************************
-require_once("apps/core/global_header.inc");
-// Archivos requeridos por esta url **********************************************
-
-// Crea los objetos de uso global **********************************************
-require_once("apps/core/global_object.inc");
-// Crea los objetos por esta url  **********************************************
-
-// FIN de  Cabecera global de URL de controlador ********************************
 
 $error_txt = '';
 
@@ -22,7 +12,7 @@ $Qsecret_2fa = (string)filter_input(INPUT_POST, 'secret_2fa');
 $Qenable_2fa = (bool)filter_input(INPUT_POST, 'enable_2fa');
 $Qverification_code = (string)filter_input(INPUT_POST, 'verification_code');
 
-$UsuarioRepository = new UsuarioRepository();
+$UsuarioRepository = $GLOBALS['container']->get(UsuarioRepositoryInterface::class);
 $oUsuario = $UsuarioRepository->findById($Qid_usuario);
 
 // Si se está activando 2FA, verificar el código

@@ -3,7 +3,7 @@
 namespace src\certificados\domain;
 
 use notas\model\entity\GestorPersonaNotaOtraRegionStgrDB;
-use src\certificados\application\repositories\CertificadoEmitidoRepository;
+use src\certificados\domain\contracts\CertificadoEmitidoRepositoryInterface;
 
 class CertificadoEmitidoDelete
 {
@@ -33,11 +33,11 @@ class CertificadoEmitidoDelete
     {
         $error_txt = '';
         if (!empty($Qid_item)) {
-            $certificadoEmitidoRepository = new CertificadoEmitidoRepository();
+            $certificadoEmitidoRepository = $GLOBALS['container']->get(CertificadoEmitidoRepositoryInterface::class);
             $certificadoEmitidoRepository->setoDbl($this->oDbl);
             $oCertificadoEmitido = $certificadoEmitidoRepository->findById($Qid_item);
             $certificado = $oCertificadoEmitido->getCertificado();
-            if ($certificadoEmitidoRepository->Eliminar($oCertificadoEmitido) === FALSE) {
+            if ($certificadoEmitidoRepository->Eliminar($oCertificadoEmitido) === false) {
                 $error_txt .= $certificadoEmitidoRepository->getErrorTxt();
             }
             // Hay que borrar también el certificado de las notas_otra_region_stgr

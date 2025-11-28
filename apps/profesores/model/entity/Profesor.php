@@ -6,6 +6,8 @@ use core\ClasePropiedades;
 use core\ConverterDate;
 use core\DatosCampo;
 use core\Set;
+use src\asignaturas\domain\contracts\DepartamentoRepositoryInterface;
+use src\profesores\domain\contracts\ProfesorTipoRepositoryInterface;
 use web\DateTimeLocal;
 use web\NullDateTimeLocal;
 
@@ -588,7 +590,7 @@ class Profesor extends ClasePropiedades
         $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_departamento'));
         $oDatosCampo->setEtiqueta(_("departamento"));
         $oDatosCampo->setTipo('opciones');
-        $oDatosCampo->setArgument('src\\asignaturas\\application\\repositories\\DepartamentoRepository');
+        $oDatosCampo->setArgument(DepartamentoRepositoryInterface::class);
         $oDatosCampo->setArgument2('getDepartamento'); // método para obtener el valor a mostrar del objeto relacionado.
         $oDatosCampo->setArgument3('getArrayDepartamentos');
         return $oDatosCampo;
@@ -637,7 +639,7 @@ class Profesor extends ClasePropiedades
         $oDatosCampo = new DatosCampo(array('nom_tabla' => $nom_tabla, 'nom_camp' => 'id_tipo_profesor'));
         $oDatosCampo->setEtiqueta(_("id_tipo_profesor"));
         $oDatosCampo->setTipo('opciones');
-        $oDatosCampo->setArgument('profesores\model\entity\ProfesorTipo'); // nombre del objeto relacionado
+        $oDatosCampo->setArgument(ProfesorTipoRepositoryInterface::class); // nombre del objeto relacionado
         $oDatosCampo->setArgument2('getTipo_profesor'); // método para obtener el valor a mostrar del objeto relacionado.
         $oDatosCampo->setArgument3('getArrayProfesorTipos'); // método con que crear la lista de opciones del Gestor objeto relacionado.
         return $oDatosCampo;

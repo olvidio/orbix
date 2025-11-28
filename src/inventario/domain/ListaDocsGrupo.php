@@ -2,28 +2,29 @@
 
 namespace src\inventario\domain;
 
-use src\inventario\application\repositories\ColeccionRepository;
-use src\inventario\application\repositories\DocumentoRepository;
-use src\inventario\application\repositories\EgmRepository;
-use src\inventario\application\repositories\LugarRepository;
-use src\inventario\application\repositories\TipoDocRepository;
-use src\inventario\application\repositories\WhereisRepository;
+
+use src\inventario\domain\contracts\ColeccionRepositoryInterface;
+use src\inventario\domain\contracts\DocumentoRepositoryInterface;
+use src\inventario\domain\contracts\EgmRepositoryInterface;
+use src\inventario\domain\contracts\LugarRepositoryInterface;
+use src\inventario\domain\contracts\TipoDocRepositoryInterface;
+use src\inventario\domain\contracts\WhereisRepositoryInterface;
 
 class ListaDocsGrupo
 {
     static public function lista_docs_grupo(int $id_equipaje, int $id_lugar, int $id_grupo)
     {
-        $Repository = new ColeccionRepository();
+        $Repository = $GLOBALS['container']->get(ColeccionRepositoryInterface::class);
         $cColecciones = $Repository->getColecciones();
         foreach ($cColecciones as $oColeccion) {
             $aColeccion[$oColeccion->getId_coleccion()] = $oColeccion->isAgrupar();
         }
 
-        $LugarRepository = new LugarRepository();
-        $TipoDocRepository = new TipoDocRepository();
-        $DocumentoRepository = new DocumentoRepository();
-        $WhereisRepository = new WhereisRepository();
-        $EgmRepository = new EgmRepository();
+        $LugarRepository = $GLOBALS['container']->get(LugarRepositoryInterface::class);
+        $TipoDocRepository = $GLOBALS['container']->get(TipoDocRepositoryInterface::class);
+        $DocumentoRepository = $GLOBALS['container']->get(DocumentoRepositoryInterface::class);
+        $WhereisRepository = $GLOBALS['container']->get(WhereisRepositoryInterface::class);
+        $EgmRepository = $GLOBALS['container']->get(EgmRepositoryInterface::class);
         $cEgm = $EgmRepository->getEgmes(['id_equipaje' => $id_equipaje, 'id_grupo' => $id_grupo]);
         if (is_array($cEgm) && !empty($cEgm)) {
             $id_item_egm = $cEgm[0]->getId_item();
@@ -111,7 +112,6 @@ class ListaDocsGrupo
         } else {
             $a_valores = [];
         }
-
 
         $data = [
             'a_valores' => $a_valores,

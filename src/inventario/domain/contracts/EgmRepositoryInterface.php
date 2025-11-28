@@ -6,7 +6,6 @@ use PDO;
 use src\inventario\domain\entity\Egm;
 use src\inventario\domain\value_objects\EgmItemId;
 
-
 /**
  * Interfaz de la clase Egm y su Repositorio
  *
@@ -29,10 +28,10 @@ interface EgmRepositoryInterface
 	 *
 	 * @param array $aWhere asociativo con los valores para cada campo de la BD.
 	 * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-	 * @return array|FALSE Una colección de objetos de tipo Egm
+	 * @return array|false Una colección de objetos de tipo Egm
 	
 	 */
-	public function getEgmes(array $aWhere=[], array $aOperators=[]): array|FALSE;
+	public function getEgmes(array $aWhere=[], array $aOperators=[]): array|false;
 	
 /* -------------------- ENTIDAD --------------------------------------------- */
 

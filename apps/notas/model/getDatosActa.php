@@ -3,7 +3,7 @@
 namespace notas\model;
 
 use notas\model\entity\GestorPersonaNotaDB;
-use src\notas\application\repositories\NotaRepository;
+use src\notas\domain\contracts\NotaRepositoryInterface;
 
 class getDatosActa
 {
@@ -13,7 +13,7 @@ class getDatosActa
         $aWhere = [];
         $aOperador = [];
 
-        $NotaRepository = new NotaRepository();
+        $NotaRepository = $GLOBALS['container']->get(NotaRepositoryInterface::class);
         $aIdSuperadas = $NotaRepository->getArrayNotasSuperadas();
 
         $aWhere['id_situacion'] = implode(',', $aIdSuperadas);

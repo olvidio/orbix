@@ -1,8 +1,9 @@
 <?php
 
-use src\utils_database\application\repositories\DbSchemaRepository;
 
 // INICIO Cabecera global de URL de controlador *********************************
+use src\utils_database\domain\contracts\DbSchemaRepositoryInterface;
+
 require_once("apps/core/global_header.inc");
 // Archivos requeridos por esta url **********************************************
 
@@ -90,7 +91,7 @@ if (!empty($Qcomun)) {
 
     // Llenar la tabla db_idschema (todos, aunque de momento no exista sv o sf).
     $schema = $RegionNew . '-' . $DlNew;
-    $DbSchemaRepository = new DbSchemaRepository();
+    $DbSchemaRepository = $GLOBALS['container']->get(DbSchemaRepositoryInterface::class);
     $DbSchemaRepository->llenarNuevo($schema, 'comun');
 }
 
@@ -121,7 +122,7 @@ if (!empty($Qsv)) {
 
     // Llenar la tabla db_idschema (todos, aunque de momento no exista sv o sf).
     $schema = $RegionNew . '-' . $DlNew;
-    $DbSchemaRepository = new DbSchemaRepository();
+    $DbSchemaRepository = $GLOBALS['container']->get(DbSchemaRepositoryInterface::class);
     $DbSchemaRepository->llenarNuevo($schema, 'sv');
 
     // CREAR Esquema sv-e
@@ -170,7 +171,7 @@ if (!empty($Qsv)) {
 
     // Llenar la tabla db_idschema (todos, aunque de momento no exista sv o sf).
     $schema = $RegionNew . '-' . $DlNew;
-    $DbSchemaRepository = new DbSchemaRepository();
+    $DbSchemaRepository = $GLOBALS['container']->get(DbSchemaRepositoryInterface::class);
     $DbSchemaRepository->llenarNuevo($schema, 'sv-e');
 }
 // sf
@@ -201,7 +202,7 @@ if (!empty($Qsf)) {
 
     // Llenar la tabla db_idschema (todos, aunque de momento no exista sv o sf).
     $schema = $RegionNew . '-' . $DlNew;
-    $DbSchemaRepository = new DbSchemaRepository();
+    $DbSchemaRepository = $GLOBALS['container']->get(DbSchemaRepositoryInterface::class);
     $DbSchemaRepository->llenarNuevo($schema, 'sf');
 
     /*
@@ -229,7 +230,7 @@ if (!empty($Qsf)) {
 	
     // Llenar la tabla db_idschema (todos, aunque de momento no exista sv o sf).
     $schema = $RegionNew.'-'.$DlNew;
-    $DbSchemaRepository = new DbSchemaRepository();
+    $DbSchemaRepository = $GLOBALS['container']->get(DbSchemaRepositoryInterface::class);
     $DbSchemaRepository->llenarNuevo($schema,'sf-e');
     */
 }

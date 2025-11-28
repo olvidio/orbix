@@ -9,7 +9,7 @@ use encargossacd\model\entity\GestorEncargoHorario;
 use encargossacd\model\entity\GestorEncargoSacdHorario;
 use misas\model\EncargosZona;
 use personas\model\entity\PersonaSacd;
-use src\ubis\application\repositories\CentroDlRepository;
+use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use web\DateTimeLocal;
 use web\Hash;
 use web\Lista;
@@ -53,7 +53,7 @@ $a_cabeceras = [
 $a_ctr_enc_t = $EncargosZona->cuadriculaSemana();
 $i = 0;
 $a_valores = [];
-$CentroDlRepository = new CentroDlRepository();
+$CentroDlRepository = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
 foreach ($a_ctr_enc_t as $id_ubi => $a_ctr_enc) {
     $oCentroDl = $CentroDlRepository->findById($id_ubi);
     $nombre_ubi = $oCentroDl->getNombre_ubi();

@@ -15,8 +15,8 @@
 use actividades\model\entity\GestorActividad;
 use actividadescentro\model\entity\GestorCentroEncargado;
 use core\ConfigGlobal;
-use src\ubis\application\repositories\CasaRepository;
-use src\usuarios\application\repositories\PreferenciaRepository;
+use src\ubis\domain\contracts\CasaRepositoryInterface;
+use src\usuarios\domain\contracts\PreferenciaRepositoryInterface;
 use src\usuarios\domain\entity\Preferencia;
 use web\Lista;
 use web\Periodo;
@@ -65,7 +65,7 @@ $aPref = ['status' => $json_status,
 $json_busqueda = json_encode($aPref);
 $id_usuario = ConfigGlobal::mi_id_usuario();
 $tipo = 'busqueda_activ_sr';
-$PreferenciaRepository = new PreferenciaRepository();
+$PreferenciaRepository = $GLOBALS['container']->get(PreferenciaRepositoryInterface::class);
 $oPreferencia = $PreferenciaRepository->findById($id_usuario, $tipo);
 if ($oPreferencia === null) {
     $oPreferencia = new Preferencia();
@@ -205,7 +205,7 @@ foreach ($cActividades as $oActividad) {
     $f_ini = $oActividad->getF_ini()->getFromLocal();
     $f_fin = $oActividad->getF_fin()->getFromLocal();
 
-    $oUbi = (new CasaRepository())->findById($id_ubi);
+    $oUbi = $GLOBALS['container']->get(CasaRepositoryInterface::class)->findById($id_ubi);
 
     $nombre_ubi = $oUbi->getNombre_ubi();
     if (is_true($oUbi->isSv())) {

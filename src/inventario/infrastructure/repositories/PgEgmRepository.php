@@ -11,7 +11,6 @@ use src\inventario\domain\contracts\EgmRepositoryInterface;
 use src\inventario\domain\entity\Egm;
 use src\inventario\domain\value_objects\EgmItemId;
 
-
 /**
  * Clase que adapta la tabla i_egm_dl a la interfaz del repositorio
  *
@@ -68,8 +67,6 @@ class PgEgmRepository extends ClaseRepository implements EgmRepositoryInterface
         return $aOpciones;
     }
 
-
-
     /* -------------------- GESTOR BASE ---------------------------------------- */
 
     /**
@@ -77,7 +74,7 @@ class PgEgmRepository extends ClaseRepository implements EgmRepositoryInterface
      *
      * @param array $aWhere asociativo con los valores para cada campo de la BD.
      * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array|FALSE Una colección de objetos de tipo Egm
+     * @return array|false Una colección de objetos de tipo Egm
      */
     public function getEgmes(array $aWhere = [], array $aOperators = []): array|false
     {
@@ -127,15 +124,15 @@ class PgEgmRepository extends ClaseRepository implements EgmRepositoryInterface
             unset($aWhere['_limit']);
         }
         $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
-        if (($oDblSt = $oDbl->prepare($sQry)) === FALSE) {
+        if (($oDblSt = $oDbl->prepare($sQry)) === false) {
             $sClaveError = 'PgEgmRepository.listar.prepare';
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return FALSE;
+            return false;
         }
-        if (($oDblSt->execute($aWhere)) === FALSE) {
+        if (($oDblSt->execute($aWhere)) === false) {
             $sClaveError = 'PgEgmRepository.listar.execute';
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
-            return FALSE;
+            return false;
         }
 
         $filas = $oDblSt->fetchAll(PDO::FETCH_ASSOC);
@@ -154,14 +151,13 @@ class PgEgmRepository extends ClaseRepository implements EgmRepositoryInterface
         $id_item = $Egm->getIdItemVo()->value();
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        if (($oDbl->exec("DELETE FROM $nom_tabla WHERE id_item = $id_item")) === FALSE) {
+        if (($oDbl->exec("DELETE FROM $nom_tabla WHERE id_item = $id_item")) === false) {
             $sClaveError = 'PgEgmRepository.eliminar';
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return FALSE;
+            return false;
         }
         return TRUE;
     }
-
 
     /**
      * Si no existe el registro, hace un insert, si existe, se hace el update.
@@ -180,17 +176,17 @@ class PgEgmRepository extends ClaseRepository implements EgmRepositoryInterface
         $aDatos['texto'] = $Egm->getTextoVo()?->value();
         array_walk($aDatos, 'core\poner_null');
 
-        if ($bInsert === FALSE) {
+        if ($bInsert === false) {
             //UPDATE
             $update = "
                     id_equipaje              = :id_equipaje,
                     id_grupo                 = :id_grupo,
                     id_lugar                 = :id_lugar,
                     texto                    = :texto";
-            if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_item = $id_item")) === FALSE) {
+            if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_item = $id_item")) === false) {
                 $sClaveError = 'PgEgmRepository.update.prepare';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-                return FALSE;
+                return false;
             }
 
             try {
@@ -200,17 +196,17 @@ class PgEgmRepository extends ClaseRepository implements EgmRepositoryInterface
                 $this->setErrorTxt($err_txt);
                 $sClaveError = 'PgEgmRepository.update.execute';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
-                return FALSE;
+                return false;
             }
         } else {
             // INSERT
             $aDatos['id_item'] = $Egm->getIdItemVo()->value();
             $campos = "(id_item,id_equipaje,id_grupo,id_lugar,texto)";
             $valores = "(:id_item,:id_equipaje,:id_grupo,:id_lugar,:texto)";
-            if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === FALSE) {
+            if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {
                 $sClaveError = 'PgEgmRepository.insertar.prepare';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-                return FALSE;
+                return false;
             }
             try {
                 $oDblSt->execute($aDatos);
@@ -219,7 +215,7 @@ class PgEgmRepository extends ClaseRepository implements EgmRepositoryInterface
                 $this->setErrorTxt($err_txt);
                 $sClaveError = 'PgEgmRepository.insertar.execute';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
-                return FALSE;
+                return false;
             }
         }
         return TRUE;
@@ -229,15 +225,15 @@ class PgEgmRepository extends ClaseRepository implements EgmRepositoryInterface
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_item = $id_item")) === FALSE) {
+        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_item = $id_item")) === false) {
             $sClaveError = 'PgEgmRepository.isNew';
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return FALSE;
+            return false;
         }
         if (!$oDblSt->rowCount()) {
             return TRUE;
         }
-        return FALSE;
+        return false;
     }
 
     /**
@@ -252,15 +248,14 @@ class PgEgmRepository extends ClaseRepository implements EgmRepositoryInterface
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         $id = $id_item->value();
-        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_item = $id")) === FALSE) {
+        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_item = $id")) === false) {
             $sClaveError = 'PgEgmRepository.getDatosById';
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return FALSE;
+            return false;
         }
         $aDatos = $oDblSt->fetch(PDO::FETCH_ASSOC);
         return $aDatos;
     }
-
 
     /**
      * Busca la clase con id_item en la base de datos .

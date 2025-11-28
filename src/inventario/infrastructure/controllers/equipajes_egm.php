@@ -1,24 +1,15 @@
 <?php
 
-
-use src\inventario\application\repositories\EgmRepository;
-use src\inventario\application\repositories\LugarRepository;
+use src\inventario\domain\contracts\EgmRepositoryInterface;
+use src\inventario\domain\contracts\LugarRepositoryInterface;
 use src\inventario\domain\ListaDocsGrupo;
 use web\ContestarJson;
-
-// INICIO Cabecera global de URL de controlador *********************************
-require_once("apps/core/global_header.inc");
-// Archivos requeridos por esta url **********************************************
-
-// Crea los objetos de uso global **********************************************
-require_once("apps/core/global_object.inc");
-// FIN de  Cabecera global de URL de controlador ********************************
 
 $Qid_equipaje = (integer)filter_input(INPUT_POST, 'id_equipaje');
 $error_txt = '';
 
-$LugarRepository = new LugarRepository();
-$EgmRepository = new EgmRepository();
+$LugarRepository = $GLOBALS['container']->get(LugarRepositoryInterface::class);
+$EgmRepository = $GLOBALS['container']->get(EgmRepositoryInterface::class);
 $cEgm = $EgmRepository->getEgmes(['id_equipaje' => $Qid_equipaje, '_ordre' => 'id_grupo']);
 $id_grupo = 0;
 $html_g = '';
@@ -42,7 +33,6 @@ foreach ($cEgm as $oEgm) {
     $a_egm[$i]['a_valores'] = $datos['a_valores'];
     $a_egm[$i]['id_item_egm'] = $datos['id_item_egm'];
 }
-
 
 $data = [
     'a_egm' => $a_egm,

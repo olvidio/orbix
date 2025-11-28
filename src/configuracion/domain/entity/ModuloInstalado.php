@@ -4,6 +4,7 @@ namespace src\configuracion\domain\entity;
 
 use core\DatosCampo;
 use core\Set;
+use src\configuracion\domain\contracts\ModuloRepositoryInterface;
 use src\configuracion\domain\value_objects\ModuloId;
 use function core\is_true;
 
@@ -120,7 +121,7 @@ class ModuloInstalado
         $oDatosCampo->setMetodoSet('setId_mod');
         $oDatosCampo->setEtiqueta(_("nombre"));
         $oDatosCampo->setTipo('opciones');
-        $oDatosCampo->setArgument('src\\configuracion\\application\\repositories\\ModuloRepository');
+        $oDatosCampo->setArgument(ModuloRepositoryInterface::class);
         $oDatosCampo->setArgument2('getNom'); // método para obtener el valor a mostrar del objeto relacionado.
         $oDatosCampo->setArgument3('getArrayModulos');
         return $oDatosCampo;

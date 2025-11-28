@@ -3,10 +3,9 @@
 use actividades\model\entity\ActividadAll;
 use actividades\model\entity\GestorActividad;
 use actividadestudios\model\entity\GestorMatriculaDl;
-use asignaturas\model\entity\Asignatura;
 use core\ViewPhtml;
 use personas\model\entity\Persona;
-use src\asignaturas\application\repositories\AsignaturaRepository;
+use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use web\DateTimeLocal;
 use web\Hash;
 use web\Lista;
@@ -103,6 +102,7 @@ $i = 0;
 $a_valores = [];
 $msg_err = '';
 $id_nom_anterior = '';
+$AsignaturaRepository = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class);
 foreach ($cMatriculas as $oMatricula) {
     $i++;
     $id_nom = $oMatricula->getId_nom();
@@ -152,7 +152,7 @@ foreach ($cMatriculas as $oMatricula) {
         }
     }
 
-    $oAsignatura = (new AsignaturaRepository())->findById($id_asignatura);
+    $oAsignatura = $AsignaturaRepository->findById($id_asignatura);
     if ($oAsignatura === null) {
         throw new \Exception(sprintf(_("No se ha encontrado la asignatura con id: %s"), $id_asignatura));
     }

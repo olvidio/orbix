@@ -1,24 +1,16 @@
 <?php
 
-use src\inventario\application\repositories\DocumentoRepository;
-use src\inventario\application\repositories\LugarRepository;
-use src\inventario\application\repositories\TipoDocRepository;
+use src\inventario\domain\contracts\DocumentoRepositoryInterface;
+use src\inventario\domain\contracts\LugarRepositoryInterface;
+use src\inventario\domain\contracts\TipoDocRepositoryInterface;
 use web\ContestarJson;
-
-// INICIO Cabecera global de URL de controlador *********************************
-require_once("apps/core/global_header.inc");
-// Archivos requeridos por esta url **********************************************
-
-// Crea los objetos de uso global **********************************************
-require_once("apps/core/global_object.inc");
-// FIN de  Cabecera global de URL de controlador ********************************
 
 $Qid_lugar = (integer)filter_input(INPUT_POST, 'id_lugar');
 $error_txt = '';
 
-$LugarRepository = new LugarRepository();
-$TipoDocRepository = new TipoDocRepository();
-$DocumentoRepository = new DocumentoRepository();
+$LugarRepository = $GLOBALS['container']->get(LugarRepositoryInterface::class);
+$TipoDocRepository = $GLOBALS['container']->get(TipoDocRepositoryInterface::class);
+$DocumentoRepository = $GLOBALS['container']->get(DocumentoRepositoryInterface::class);
 $cDocumentos = $DocumentoRepository->getDocumentos(['id_lugar' => $Qid_lugar]);
 
 $oLugar = $LugarRepository->findById($Qid_lugar);
@@ -38,7 +30,6 @@ foreach ($cDocumentos as $oDocumento) {
     $a_valores[$d][2] = $identificador;
     $a_valores[$d][3] = $num_reg;
 }
-
 
 $data = [
     'a_valores' => $a_valores,

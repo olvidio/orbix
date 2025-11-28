@@ -11,7 +11,6 @@ use src\actividades\domain\contracts\NivelStgrRepositoryInterface;
 use src\actividades\domain\entity\NivelStgr;
 use src\actividades\domain\value_objects\NivelStgrId;
 
-
 /**
  * Clase que adapta la tabla xa_nivel_stgr a la interfaz del repositorio
  *
@@ -58,7 +57,7 @@ class PgNivelStgrRepository extends ClaseRepository implements NivelStgrReposito
      *
      * @param array $aWhere asociativo con los valores para cada campo de la BD.
      * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array|FALSE Una colección de objetos de tipo NivelStgr
+     * @return array|false Una colección de objetos de tipo NivelStgr
      */
     public function getNivelesStgr(array $aWhere = [], array $aOperators = []): array|false
     {
@@ -108,15 +107,15 @@ class PgNivelStgrRepository extends ClaseRepository implements NivelStgrReposito
             unset($aWhere['_limit']);
         }
         $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
-        if (($oDblSt = $oDbl->prepare($sQry)) === FALSE) {
+        if (($oDblSt = $oDbl->prepare($sQry)) === false) {
             $sClaveError = 'PgNivelStgrRepository.listar.prepare';
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return FALSE;
+            return false;
         }
-        if (($oDblSt->execute($aWhere)) === FALSE) {
+        if (($oDblSt->execute($aWhere)) === false) {
             $sClaveError = 'PgNivelStgrRepository.listar.execute';
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
-            return FALSE;
+            return false;
         }
 
         $filas = $oDblSt->fetchAll(PDO::FETCH_ASSOC);
@@ -135,14 +134,13 @@ class PgNivelStgrRepository extends ClaseRepository implements NivelStgrReposito
         $nivel_stgr = $NivelStgr->getNivel_stgr();
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        if (($oDbl->exec("DELETE FROM $nom_tabla WHERE nivel_stgr = $nivel_stgr")) === FALSE) {
+        if (($oDbl->exec("DELETE FROM $nom_tabla WHERE nivel_stgr = $nivel_stgr")) === false) {
             $sClaveError = 'PgNivelStgrRepository.eliminar';
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return FALSE;
+            return false;
         }
         return TRUE;
     }
-
 
     /**
      * Si no existe el registro, hace un insert, si existe, se hace el update.
@@ -160,16 +158,16 @@ class PgNivelStgrRepository extends ClaseRepository implements NivelStgrReposito
         $aDatos['orden'] = $NivelStgr->getOrden();
         array_walk($aDatos, 'core\poner_null');
 
-        if ($bInsert === FALSE) {
+        if ($bInsert === false) {
             //UPDATE
             $update = "
 					desc_nivel               = :desc_nivel,
 					desc_breve               = :desc_breve,
 					orden                    = :orden";
-            if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE nivel_stgr = $nivel_stgr")) === FALSE) {
+            if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE nivel_stgr = $nivel_stgr")) === false) {
                 $sClaveError = 'PgNivelStgrRepository.update.prepare';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-                return FALSE;
+                return false;
             }
 
             try {
@@ -179,17 +177,17 @@ class PgNivelStgrRepository extends ClaseRepository implements NivelStgrReposito
                 $this->setErrorTxt($err_txt);
                 $sClaveError = 'PgNivelStgrRepository.update.execute';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
-                return FALSE;
+                return false;
             }
         } else {
             // INSERT
             $aDatos['nivel_stgr'] = $NivelStgr->getNivel_stgr();
             $campos = "(nivel_stgr,desc_nivel,desc_breve,orden)";
             $valores = "(:nivel_stgr,:desc_nivel,:desc_breve,:orden)";
-            if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === FALSE) {
+            if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {
                 $sClaveError = 'PgNivelStgrRepository.insertar.prepare';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-                return FALSE;
+                return false;
             }
             try {
                 $oDblSt->execute($aDatos);
@@ -198,7 +196,7 @@ class PgNivelStgrRepository extends ClaseRepository implements NivelStgrReposito
                 $this->setErrorTxt($err_txt);
                 $sClaveError = 'PgNivelStgrRepository.insertar.execute';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
-                return FALSE;
+                return false;
             }
         }
         return TRUE;
@@ -208,15 +206,15 @@ class PgNivelStgrRepository extends ClaseRepository implements NivelStgrReposito
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE nivel_stgr = $nivel_stgr")) === FALSE) {
+        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE nivel_stgr = $nivel_stgr")) === false) {
             $sClaveError = 'PgNivelStgrRepository.isNew';
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return FALSE;
+            return false;
         }
         if (!$oDblSt->rowCount()) {
             return TRUE;
         }
-        return FALSE;
+        return false;
     }
 
     /**
@@ -230,10 +228,10 @@ class PgNivelStgrRepository extends ClaseRepository implements NivelStgrReposito
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
-        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE nivel_stgr = $nivel_stgr")) === FALSE) {
+        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE nivel_stgr = $nivel_stgr")) === false) {
             $sClaveError = 'PgNivelStgrRepository.getDatosById';
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return FALSE;
+            return false;
         }
         $aDatos = $oDblSt->fetch(PDO::FETCH_ASSOC);
         return $aDatos;
@@ -243,7 +241,6 @@ class PgNivelStgrRepository extends ClaseRepository implements NivelStgrReposito
     {
         return $this->datosById($id->value());
     }
-
 
     /**
      * Busca la clase con nivel_stgr en la base de datos .

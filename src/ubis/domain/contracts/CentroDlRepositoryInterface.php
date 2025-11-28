@@ -6,7 +6,6 @@ use PDO;
 use src\ubis\domain\entity\CentroDl;
 use src\ubis\domain\entity\Direccion;
 
-
 /**
  * Interfaz de la clase CentroDl y su Repositorio
  *
@@ -28,7 +27,7 @@ interface CentroDlRepositoryInterface
      *
      * @param array $aWhere asociativo con los valores para cada campo de la BD.
      * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array|FALSE Una colección de objetos de tipo CentroDl
+     * @return array|false Una colección de objetos de tipo CentroDl
      */
     public function getCentros(array $aWhere = [], array $aOperators = []): array|false;
 

@@ -5,7 +5,7 @@ use actividades\model\entity\GestorActividad;
 use actividades\model\entity\GestorActividadDl;
 use asistentes\model\entity\GestorAsistente;
 use personas\model\entity\GestorPersonaS;
-use src\ubis\application\repositories\CentroDlRepository;
+use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use web\DateTimeLocal;
 use web\Lista;
 use web\TiposActividades;
@@ -46,7 +46,7 @@ $any = date("Y");
 $aWhereP = [];
 $aOperadorP = [];
 if (!empty($Qid_ubi) && ($Qid_ubi != 999)) {
-    $CentroDlRepository = new CentroDlRepository();
+    $CentroDlRepository = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
     $oCentroDl = $CentroDlRepository->findById($Qid_ubi);
     $nombre_ubi = $oCentroDl->getNombre_ubi();
     $aWhereP['id_ctr'] = $Qid_ubi;
@@ -218,7 +218,7 @@ $cPersonas = $GesPersonasS->getPersonasDl($aWhereP, $aOperadorP);
 $i = 0;
 $falta = 0;
 $a_valores = [];
-$gesCentros = new CentroDlRepository();
+$gesCentros = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
 $GesAsistente = new GestorAsistente();
 foreach ($cPersonas as $oPersona) {
     $i++;

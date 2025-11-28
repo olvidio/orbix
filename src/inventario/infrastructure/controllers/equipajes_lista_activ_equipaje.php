@@ -1,24 +1,14 @@
 <?php
 
-
-// INICIO Cabecera global de URL de controlador *********************************
 use actividades\model\entity\ActividadAll;
-use src\inventario\application\repositories\EquipajeRepository;
+use src\inventario\domain\contracts\EquipajeRepositoryInterface;
 use web\ContestarJson;
-
-require_once("apps/core/global_header.inc");
-// Archivos requeridos por esta url **********************************************
-
-// Crea los objetos de uso global **********************************************
-require_once("apps/core/global_object.inc");
-// FIN de  Cabecera global de URL de controlador ********************************
 
 $Qid_equipaje = (int)filter_input(INPUT_POST, 'id_equipaje');
 
 $error_txt = '';
 
-
-$EquipajesRepository = new EquipajeRepository();
+$EquipajesRepository = $GLOBALS['container']->get(EquipajeRepositoryInterface::class);
 $oEquipaje = $EquipajesRepository->findById($Qid_equipaje);
 
 $ids_actividades = $oEquipaje->getIds_activ();

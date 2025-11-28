@@ -10,7 +10,6 @@ use PDOException;
 use src\utils_database\domain\contracts\MapIdRepositoryInterface;
 use src\utils_database\domain\entity\MapId;
 
-
 /**
  * Clase que adapta la tabla map_id a la interfaz del repositorio
  *
@@ -38,7 +37,7 @@ class PgMapIdRepository extends ClaseRepository implements MapIdRepositoryInterf
      *
      * @param array $aWhere asociativo con los valores para cada campo de la BD.
      * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array|FALSE Una colección de objetos de tipo MapId
+     * @return array|false Una colección de objetos de tipo MapId
      */
     public function getMapIdes(array $aWhere = [], array $aOperators = []): array|false
     {
@@ -88,15 +87,15 @@ class PgMapIdRepository extends ClaseRepository implements MapIdRepositoryInterf
             unset($aWhere['_limit']);
         }
         $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
-        if (($oDblSt = $oDbl->prepare($sQry)) === FALSE) {
+        if (($oDblSt = $oDbl->prepare($sQry)) === false) {
             $sClaveError = 'PgMapIdRepository.listar.prepare';
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return FALSE;
+            return false;
         }
-        if (($oDblSt->execute($aWhere)) === FALSE) {
+        if (($oDblSt->execute($aWhere)) === false) {
             $sClaveError = 'PgMapIdRepository.listar.execute';
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
-            return FALSE;
+            return false;
         }
 
         $filas = $oDblSt->fetchAll(PDO::FETCH_ASSOC);
@@ -116,14 +115,13 @@ class PgMapIdRepository extends ClaseRepository implements MapIdRepositoryInterf
         $id_resto = $MapId->getIdRestoVo()->value();
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        if (($oDbl->exec("DELETE FROM $nom_tabla WHERE objeto = '$objeto' AND id_resto = $id_resto ")) === FALSE) {
+        if (($oDbl->exec("DELETE FROM $nom_tabla WHERE objeto = '$objeto' AND id_resto = $id_resto ")) === false) {
             $sClaveError = 'PgMapIdRepository.eliminar';
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return FALSE;
+            return false;
         }
         return TRUE;
     }
-
 
     /**
      * Si no existe el registro, hace un insert, si existe, se hace el update.
@@ -140,14 +138,14 @@ class PgMapIdRepository extends ClaseRepository implements MapIdRepositoryInterf
         $aDatos['id_dl'] = $MapId->getIdDlVo()->value();
         array_walk($aDatos, 'core\poner_null');
 
-        if ($bInsert === FALSE) {
+        if ($bInsert === false) {
             //UPDATE
             $update = "
 					id_dl                    = :id_dl";
-            if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE objeto = '$objeto' AND id_resto = $id_resto ")) === FALSE) {
+            if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE objeto = '$objeto' AND id_resto = $id_resto ")) === false) {
                 $sClaveError = 'PgMapIdRepository.update.prepare';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-                return FALSE;
+                return false;
             }
 
             try {
@@ -157,7 +155,7 @@ class PgMapIdRepository extends ClaseRepository implements MapIdRepositoryInterf
                 $this->setErrorTxt($err_txt);
                 $sClaveError = 'PgMapIdRepository.update.execute';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
-                return FALSE;
+                return false;
             }
         } else {
             // INSERT
@@ -165,10 +163,10 @@ class PgMapIdRepository extends ClaseRepository implements MapIdRepositoryInterf
             $aDatos['id_resto'] = $MapId->getIdRestoVo()->value();
             $campos = "(objeto,id_resto,id_dl)";
             $valores = "(:objeto,:id_resto,:id_dl)";
-            if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === FALSE) {
+            if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {
                 $sClaveError = 'PgMapIdRepository.insertar.prepare';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-                return FALSE;
+                return false;
             }
             try {
                 $oDblSt->execute($aDatos);
@@ -177,7 +175,7 @@ class PgMapIdRepository extends ClaseRepository implements MapIdRepositoryInterf
                 $this->setErrorTxt($err_txt);
                 $sClaveError = 'PgMapIdRepository.insertar.execute';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
-                return FALSE;
+                return false;
             }
         }
         return TRUE;
@@ -187,15 +185,15 @@ class PgMapIdRepository extends ClaseRepository implements MapIdRepositoryInterf
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE objeto = '$objeto' AND id_resto = $id_resto")) === FALSE) {
+        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE objeto = '$objeto' AND id_resto = $id_resto")) === false) {
             $sClaveError = 'PgMapIdRepository.isNew';
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return FALSE;
+            return false;
         }
         if (!$oDblSt->rowCount()) {
             return TRUE;
         }
-        return FALSE;
+        return false;
     }
 
     /**
@@ -209,15 +207,14 @@ class PgMapIdRepository extends ClaseRepository implements MapIdRepositoryInterf
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
-        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE objeto = '$objeto' AND id_resto = $id_resto")) === FALSE) {
+        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE objeto = '$objeto' AND id_resto = $id_resto")) === false) {
             $sClaveError = 'PgMapIdRepository.getDatosById';
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return FALSE;
+            return false;
         }
         $aDatos = $oDblSt->fetch(PDO::FETCH_ASSOC);
         return $aDatos;
     }
-
 
     /**
      * Busca la clase con objeto en la base de datos .

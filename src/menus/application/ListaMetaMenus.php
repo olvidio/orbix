@@ -2,13 +2,14 @@
 
 namespace src\menus\application;
 
-use src\menus\application\repositories\MetaMenuRepository;
+
+use src\menus\domain\contracts\MetaMenuRepositoryInterface;
 
 class ListaMetaMenus
 {
     public function __invoke()
     {
-        $MetaMenuRepository = new MetaMenuRepository();
+        $MetaMenuRepository = $GLOBALS['container']->get(MetaMenuRepositoryInterface::class);
         $a_opciones = $MetaMenuRepository->getArrayMetaMenus();
 
         $data = [

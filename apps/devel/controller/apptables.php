@@ -3,7 +3,7 @@
 use core\ConfigGlobal;
 use core\DBPropiedades;
 use core\ViewPhtml;
-use src\configuracion\application\repositories\AppRepository;
+use src\configuracion\domain\contracts\AppRepositoryInterface;
 use web\Desplegable;
 use web\Hash;
 
@@ -24,7 +24,7 @@ require_once("apps/core/global_header.inc");
 require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
-$AppRepository = new AppRepository();
+$AppRepository = $GLOBALS['container']->get(AppRepositoryInterface::class);
 $cApps = $AppRepository->getApps();
 $a_apps = [];
 foreach ($cApps as $oApp) {

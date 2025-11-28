@@ -1,21 +1,13 @@
 <?php
 
-use src\inventario\application\repositories\EquipajeRepository;
+use src\inventario\domain\contracts\EquipajeRepositoryInterface;
 use web\ContestarJson;
-
-// INICIO Cabecera global de URL de controlador *********************************
-require_once("apps/core/global_header.inc");
-// Archivos requeridos por esta url **********************************************
-
-// Crea los objetos de uso global **********************************************
-require_once("apps/core/global_object.inc");
-// FIN de  Cabecera global de URL de controlador ********************************
 
 $Qf_ini_iso = (string)filter_input(INPUT_POST, 'f_ini_iso');
 
 $error_txt = '';
 
-$EquipajeRepository = new EquipajeRepository();
+$EquipajeRepository = $GLOBALS['container']->get(EquipajeRepositoryInterface::class);
 $aOpciones = $EquipajeRepository->getArrayEquipajes($Qf_ini_iso);
 
 $data = [

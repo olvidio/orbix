@@ -1,19 +1,10 @@
 <?php
 
-
-// INICIO Cabecera global de URL de controlador *********************************
 use actividades\model\entity\GestorActividad;
 use core\ConfigGlobal;
 use src\ubis\domain\entity\Ubi;
 use web\ContestarJson;
 use web\Periodo;
-
-require_once("apps/core/global_header.inc");
-// Archivos requeridos por esta url **********************************************
-
-// Crea los objetos de uso global **********************************************
-require_once("apps/core/global_object.inc");
-// FIN de  Cabecera global de URL de controlador ********************************
 
 $Qid_cdc = (int)filter_input(INPUT_POST, 'id_cdc');
 $Qperiodo = (string)filter_input(INPUT_POST, 'periodo');

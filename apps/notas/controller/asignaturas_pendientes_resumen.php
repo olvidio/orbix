@@ -1,10 +1,9 @@
 <?php
 
-use asignaturas\model\entity\GestorAsignatura;
 use notas\model\entity\GestorPersonaNotaDlDB;
-use notas\model\entity\Nota;
 use personas\model\entity\GestorPersonaDl;
-use src\asignaturas\application\repositories\AsignaturaRepository;
+use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
+use src\notas\domain\entity\Nota;
 use function core\is_true;
 
 /**
@@ -44,7 +43,7 @@ require_once("apps/core/global_object.inc");
 			
 */
 // Asignaturas posibles:
-$AsignaturaRepository = new AsignaturaRepository();
+$AsignaturaRepository = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class);
 $aWhere = [];
 $aOperador = [];
 $aWhere['status'] = 't';
@@ -142,7 +141,7 @@ foreach ($cPersonas as $oPersona) {
         }
         $n = $id_nivel_asig;
         $oNota = new Nota($id_situacion);
-        $aAprobadas[$n]['nota'] = is_true($oNota->getSuperada()) ? '' : 2;
+        $aAprobadas[$n]['nota'] = is_true($oNota->isSuperada()) ? '' : 2;
     }
 
 

@@ -7,7 +7,7 @@ use permisos\model\PermisosActividades;
 use procesos\model\entity\GestorActividadFase;
 use procesos\model\entity\GestorPermUsuarioActividad;
 use procesos\model\PermAccion;
-use src\usuarios\application\repositories\GrupoRepository;
+use src\usuarios\domain\contracts\GrupoRepositoryInterface;
 use web\Desplegable;
 use web\Hash;
 use web\TiposActividades;
@@ -46,7 +46,7 @@ $Qdl_propia = is_true($Qdl_propia) ? 't' : 'f';
 $Qquien = (string)filter_input(INPUT_POST, 'quien');
 $Qque = (string)filter_input(INPUT_POST, 'que');
 
-$GrupoRepository = new GrupoRepository();
+$GrupoRepository = $GLOBALS['container']->get(GrupoRepositoryInterface::class);
 $oUsuario = $GrupoRepository->findById($Qid_usuario); // La tabla y su heredada
 $nombre = $oUsuario->getUsuario();
 

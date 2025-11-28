@@ -1,32 +1,22 @@
 <?php
 
-// INICIO Cabecera global de URL de controlador *********************************
-use asignaturas\model\entity\Asignatura;
-use asignaturas\model\entity\GestorAsignatura;
 use core\ConfigGlobal;
 use notas\model\entity\GestorPersonaNotaDB;
 use notas\model\PersonaNota;
 use personas\model\entity\Persona;
-use src\asignaturas\application\repositories\AsignaturaRepository;
-use src\certificados\application\repositories\CertificadoEmitidoRepository;
-use src\ubis\application\repositories\DelegacionRepository;
+use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
+use src\certificados\domain\contracts\CertificadoEmitidoRepositoryInterface;
+use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 use web\ContestarJson;
 use web\DateTimeLocal;
 use function core\is_true;
-
-require_once("apps/core/global_header.inc");
-// Archivos requeridos por esta url **********************************************
-
-// Crea los objetos de uso global **********************************************
-require_once("apps/core/global_object.inc");
-// FIN de  Cabecera global de URL de controlador ********************************
 
 $id_item = (string)filter_input(INPUT_POST, 'id_item');
 
 $error_txt = '';
 $data = [];
 
-$certificadoEmitidoRepository = new CertificadoEmitidoRepository();
+$certificadoEmitidoRepository = $GLOBALS['container']->get(CertificadoEmitidoRepositoryInterface::class);
 $oCertificadoEmitido = $certificadoEmitidoRepository->findById($id_item);
 
 $id_nom = $oCertificadoEmitido->getId_nom();
@@ -112,7 +102,7 @@ $data['fidem'] = $fidem;
 $data['reg_num'] = $reg_num;
 
 // Asignaturas posibles:
-$AsignaturaRepository = new AsignaturaRepository();
+$AsignaturaRepository = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class);
 $aWhere = [];
 $aOperador = [];
 $aWhere['status'] = 't';
@@ -125,7 +115,7 @@ $data['cAsignaturas'] = $cAsignaturas;
 // Asignaturas cursadas:
 // solamente las notas de mi región_stgr. Normalmente serian las notas_dl,
 // pero para casos como H-Hv...
-$gesDelegacion = new DelegacionRepository();
+$gesDelegacion = $GLOBALS['container']->get(DelegacionRepositoryInterface::class);
 $mi_dl = ConfigGlobal::mi_dele();
 $a_mi_region_stgr = $gesDelegacion->mi_region_stgr($mi_dl);
 $region_stgr = $a_mi_region_stgr['region_stgr'];
@@ -147,11 +137,12 @@ if (empty($error_txt)) {
     $aWhere['tipo_acta'] = PersonaNota::FORMATO_ACTA;
     $cNotas = $GesNotas->getPersonaNotas($aWhere, $aOperador);
     $aAprobadas = [];
+    $AsignaturaRepository = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class);
     foreach ($cNotas as $oPersonaNota) {
         $id_asignatura = $oPersonaNota->getId_asignatura();
         $id_nivel = $oPersonaNota->getId_nivel();
 
-        $oAsignatura = (new AsignaturaRepository())->findById($id_asignatura);
+        $oAsignatura = $AsignaturaRepository->findById($id_asignatura);
         if ($oAsignatura === null) {
             throw new \Exception(sprintf(_("No se ha encontrado la asignatura con id: %s"), $id_asignatura));
         }

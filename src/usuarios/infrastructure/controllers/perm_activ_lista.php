@@ -10,16 +10,6 @@ use web\ContestarJson;
 use web\TiposActividades;
 use function core\is_true;
 
-// INICIO Cabecera global de URL de controlador *********************************
-require_once("apps/core/global_header.inc");
-// Archivos requeridos por esta url **********************************************
-
-// Crea los objetos de uso global **********************************************
-require_once("apps/core/global_object.inc");
-// Crea los objetos por esta url  **********************************************
-
-// FIN de  Cabecera global de URL de controlador ********************************
-
 $oCuadrosAfecta = new PermAfectados();
 
 $Qid_usuario = (string)filter_input(INPUT_POST, 'id_usuario');
@@ -41,7 +31,6 @@ foreach ($cUsuarioPerm as $oUsuarioPerm) {
 
     $cUsuarioPermArray[] = $a_usuario_perm;
 }
-
 
 // propios
 $i = 0;
@@ -128,7 +117,6 @@ $data = [
     'a_botones' => $a_botones,
     'a_valores' => $a_valores,
 ];
-
 
 $error_txt = '';
 

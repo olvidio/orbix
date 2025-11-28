@@ -11,7 +11,6 @@ use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
 use src\usuarios\domain\entity\Usuario;
 use function core\is_true;
 
-
 /**
  * Clase que adapta la tabla aux_usuarios a la interfaz del repositorio
  *
@@ -57,7 +56,7 @@ class PgUsuarioRepository extends ClaseRepository implements UsuarioRepositoryIn
      *
      * @param array $aWhere asociativo con los valores para cada campo de la BD.
      * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array|FALSE Una colección de objetos de tipo usuario
+     * @return array|false Una colección de objetos de tipo usuario
      */
     public function getUsuarios(array $aWhere = [], array $aOperators = []): array|false
     {
@@ -107,15 +106,15 @@ class PgUsuarioRepository extends ClaseRepository implements UsuarioRepositoryIn
             unset($aWhere['_limit']);
         }
         $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
-        if (($oDblSt = $oDbl->prepare($sQry)) === FALSE) {
+        if (($oDblSt = $oDbl->prepare($sQry)) === false) {
             $sClaveError = 'PgusuarioRepository.listar.prepare';
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return FALSE;
+            return false;
         }
-        if (($oDblSt->execute($aWhere)) === FALSE) {
+        if (($oDblSt->execute($aWhere)) === false) {
             $sClaveError = 'PgusuarioRepository.listar.execute';
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
-            return FALSE;
+            return false;
         }
 
         $filas = $oDblSt->fetchAll(PDO::FETCH_ASSOC);
@@ -142,14 +141,13 @@ class PgUsuarioRepository extends ClaseRepository implements UsuarioRepositoryIn
         $id_usuario = $usuario->getId_usuario();
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        if (($oDbl->exec("DELETE FROM $nom_tabla WHERE id_usuario = $id_usuario")) === FALSE) {
+        if (($oDbl->exec("DELETE FROM $nom_tabla WHERE id_usuario = $id_usuario")) === false) {
             $sClaveError = 'PgusuarioRepository.eliminar';
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return FALSE;
+            return false;
         }
         return TRUE;
     }
-
 
     /**
      * Si no existe el registro, hace un insert, si existe, se hace el update.
@@ -174,7 +172,7 @@ class PgUsuarioRepository extends ClaseRepository implements UsuarioRepositoryIn
         // $aDatos['password'] = bin2hex($usuario->getPassword());
         $aDatos['password'] = $usuario->getPasswordAsString();
         array_walk($aDatos, 'core\poner_null');
-        //para el caso de los boolean FALSE, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
+        //para el caso de los boolean false, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
         if (is_true($aDatos['has_2fa'])) {
             $aDatos['has_2fa'] = 'true';
         } else {
@@ -186,7 +184,7 @@ class PgUsuarioRepository extends ClaseRepository implements UsuarioRepositoryIn
             $aDatos['cambio_password'] = 'false';
         }
 
-        if ($bInsert === FALSE) {
+        if ($bInsert === false) {
             //UPDATE
             $update = "
 					usuario                  = :usuario,
@@ -198,10 +196,10 @@ class PgUsuarioRepository extends ClaseRepository implements UsuarioRepositoryIn
 					has_2fa                  = :has_2fa,
 					secret_2fa               = :secret_2fa,
                     cambio_password          = :cambio_password";
-            if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_usuario = $id_usuario")) === FALSE) {
+            if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_usuario = $id_usuario")) === false) {
                 $sClaveError = 'PgusuarioRepository.update.prepare';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-                return FALSE;
+                return false;
             }
 
             try {
@@ -211,17 +209,17 @@ class PgUsuarioRepository extends ClaseRepository implements UsuarioRepositoryIn
                 $this->setErrorTxt($err_txt);
                 $sClaveError = 'PgusuarioRepository.update.execute';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
-                return FALSE;
+                return false;
             }
         } else {
             // INSERT
             $aDatos['id_usuario'] = $usuario->getId_usuario();
             $campos = "(id_usuario,usuario,id_role,password,email,id_pau,nom_usuario,has_2fa,secret_2fa,cambio_password)";
             $valores = "(:id_usuario,:usuario,:id_role,:password,:email,:id_pau,:nom_usuario,:has_2fa,:secret_2fa,:cambio_password)";
-            if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === FALSE) {
+            if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {
                 $sClaveError = 'PgusuarioRepository.insertar.prepare';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-                return FALSE;
+                return false;
             }
             try {
                 $oDblSt->execute($aDatos);
@@ -230,7 +228,7 @@ class PgUsuarioRepository extends ClaseRepository implements UsuarioRepositoryIn
                 $this->setErrorTxt($err_txt);
                 $sClaveError = 'PgusuarioRepository.insertar.execute';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
-                return FALSE;
+                return false;
             }
         }
         return TRUE;
@@ -240,15 +238,15 @@ class PgUsuarioRepository extends ClaseRepository implements UsuarioRepositoryIn
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_usuario = $id_usuario")) === FALSE) {
+        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_usuario = $id_usuario")) === false) {
             $sClaveError = 'PgusuarioRepository.isNew';
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return FALSE;
+            return false;
         }
         if (!$oDblSt->rowCount()) {
             return TRUE;
         }
-        return FALSE;
+        return false;
     }
 
     /**
@@ -262,32 +260,24 @@ class PgUsuarioRepository extends ClaseRepository implements UsuarioRepositoryIn
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
-        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_usuario = $id_usuario")) === FALSE) {
+        $oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_usuario = $id_usuario");
+        if ($oDblSt === false) {
             $sClaveError = 'PgusuarioRepository.getDatosById';
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return FALSE;
+            return false;
         }
 
         // para los bytea, sobre escribo los valores:
         $spassword = '';
         $oDblSt->bindColumn('password', $spassword, PDO::PARAM_STR);
         $aDatos = $oDblSt->fetch(PDO::FETCH_ASSOC);
-        if ($aDatos !== FALSE) {
+        if ($aDatos !== false) {
             //$aDatos['password'] = hex2bin($spassword ?? '');
             $aDatos['password'] = $spassword ?? '';
         }
 
-        /*
-        $aDatos = $oDblSt->fetch(PDO::FETCH_ASSOC);
-        // Leo el password (la BD solamente me pasa el handler)
-        if (!empty($aDatos['password'])) {
-            $pass = $aDatos['password'];
-            $aDatos['password'] = fread($pass, 2048);
-        }
-*/
         return $aDatos;
     }
-
 
     /**
      * Busca la clase con id_usuario en la base de datos .

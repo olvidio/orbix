@@ -277,7 +277,6 @@ class Cargo
         return $ocargoSet->getTot();
     }
 
-
     /**
      * Recupera les propietats de l'atribut scargo de cargo
      * en una clase del tipus DatosCampo

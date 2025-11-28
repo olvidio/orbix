@@ -1,8 +1,9 @@
 <?php
 // para que funcione bien la seguridad
+use src\certificados\domain\contracts\CertificadoEmitidoRepositoryInterface;
+
 $_POST = $_GET;
 
-use src\certificados\application\repositories\CertificadoEmitidoRepository;
 
 // Crea los objetos de uso global **********************************************
 require_once("frontend/shared/global_header_front.inc");
@@ -13,7 +14,7 @@ require_once("frontend/shared/global_header_front.inc");
 $Qid_item = (int)filter_input(INPUT_GET, 'key');
 
 if (!empty($Qid_item)) {
-    $certificadoEmitidoRepository = new CertificadoEmitidoRepository();
+    $certificadoEmitidoRepository = $GLOBALS['container']->get(CertificadoEmitidoRepositoryInterface::class);
     $oCertificadoEmitido = $certificadoEmitidoRepository->findById($Qid_item);
     $nombre_fichero = $oCertificadoEmitido->getCertificado();
     $nombre_fichero .= '.pdf';

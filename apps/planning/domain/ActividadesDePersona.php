@@ -5,7 +5,7 @@ namespace planning\domain;
 use actividadcargos\model\GestorCargoOAsistente;
 use actividades\model\entity\GestorActividad;
 use core\ConfigGlobal;
-use src\ubis\application\repositories\CentroDlRepository;
+use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use web\DateTimeLocal;
 use web\TiposActividades;
 
@@ -34,7 +34,7 @@ class ActividadesDePersona
         $persona = [];
         $a_actividades = [];
         $a_actividades2 = [];
-        $CentroDlRepository = new CentroDlRepository();
+        $CentroDlRepository = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
         foreach ($cPersonas as $oPersona) {
             $aActivPersona = [];
             $id_nom = $oPersona->getId_nom();

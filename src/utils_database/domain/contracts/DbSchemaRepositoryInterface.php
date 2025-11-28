@@ -5,7 +5,6 @@ namespace src\utils_database\domain\contracts;
 use PDO;
 use src\utils_database\domain\entity\DbSchema;
 
-
 /**
  * Interfaz de la clase DbSchema y su Repositorio
  *
@@ -29,10 +28,10 @@ interface DbSchemaRepositoryInterface
 	 *
 	 * @param array $aWhere asociativo con los valores para cada campo de la BD.
 	 * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-	 * @return array|FALSE Una colección de objetos de tipo DbSchema
+	 * @return array|false Una colección de objetos de tipo DbSchema
 	
 	 */
-	public function getDbSchemas(array $aWhere=[], array $aOperators=[]): array|FALSE;
+	public function getDbSchemas(array $aWhere=[], array $aOperators=[]): array|false;
 	
 /* -------------------- ENTIDAD --------------------------------------------- */
 

@@ -2,16 +2,17 @@
 
 namespace core;
 
+use DI\ContainerBuilder;
 use permisos\model\PermDl;
 use permisos\model\PermisosActividades;
 use permisos\model\PermisosActividadesTrue;
 use src\configuracion\domain\entity\Config;
 use src\menus\domain\PermisoMenu;
-use src\usuarios\application\repositories\GrupoRepository;
-use src\usuarios\application\repositories\PermMenuRepository;
-use src\usuarios\application\repositories\RoleRepository;
-use src\usuarios\application\repositories\UsuarioGrupoRepository;
-use src\usuarios\application\repositories\UsuarioRepository;
+use src\usuarios\domain\contracts\GrupoRepositoryInterface;
+use src\usuarios\domain\contracts\PermMenuRepositoryInterface;
+use src\usuarios\domain\contracts\RoleRepositoryInterface;
+use src\usuarios\domain\contracts\UsuarioGrupoRepositoryInterface;
+use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
 use web\Hash;
 use web\Posicion;
 use zonassacd\model\entity\GestorZona;
@@ -230,6 +231,35 @@ if (ConfigGlobal::is_app_installed('dbextern') && !ConfigGlobal::is_dmz()) {
     }
 }
 
+// 2) Contenedor DI (si no existe ya) y exponerlo globalmente
+if (!isset($GLOBALS['container'])) {
+    $builder = new ContainerBuilder();
+
+    // Cargar rutas por módulo: cada módulo define sus rutas en src/<modulo>/config/routes.php
+    $dependenciesFiles = glob(__DIR__ . '/../../src/*/config/dependencies.php');
+    if (is_array($dependenciesFiles)) {
+        foreach ($dependenciesFiles as $dependenciesFile) {
+            $builder->addDefinitions($dependenciesFile);
+        }
+    }
+
+    // Cache de compilación en producción
+    if (class_exists(ConfigGlobal::class) && !ConfigGlobal::is_debug_mode()) {
+        $cacheDir = __DIR__ . '/../var/cache/php-di';
+        if (!is_dir($cacheDir)) {
+            if (!mkdir($cacheDir, 0775, true) && !is_dir($cacheDir)) {
+                throw new \RuntimeException(sprintf('Directory "%s" was not created', $cacheDir));
+            }
+        }
+        $builder->enableCompilation($cacheDir);
+        $builder->writeProxiesToFile(true, $cacheDir . '/proxies');
+    }
+
+    $GLOBALS['container'] = $builder->build();
+}
+$container = $GLOBALS['container'];
+
+
 /********* En el caso cr-stgr, refrescar las vistas **********************/
 if ((ConfigGlobal::mi_region() === ConfigGlobal::mi_delef()) && !isset($_SESSION['Refresh'])) {
     try {
@@ -326,15 +356,15 @@ if ((ConfigGlobal::mi_region() === ConfigGlobal::mi_delef()) && !isset($_SESSION
 if (ConfigGlobal::is_app_installed('menus')) {
     if (empty($_SESSION['iPermMenus'])) { // con hacerlo una vez basta.
         // Grupos
-        $UsuarioGrupoRepository = new UsuarioGrupoRepository();
-        $GrupoRepository = new GrupoRepository();
-        $UsuarioRepository = new UsuarioRepository();
-        $RoleRepository = new RoleRepository();
+        $UsuarioGrupoRepository = $GLOBALS['container']->get(UsuarioGrupoRepositoryInterface::class);
+        $GrupoRepository = $GLOBALS['container']->get(GrupoRepositoryInterface::class);
+        $UsuarioRepository = $GLOBALS['container']->get(UsuarioRepositoryInterface::class);
+        $RoleRepository = $GLOBALS['container']->get(RoleRepositoryInterface::class);
         $aRoles = $RoleRepository->getArrayRoles();
 
         $cGrupos = $UsuarioGrupoRepository->getUsuariosGrupos(array('id_usuario' => ConfigGlobal::mi_id_usuario()));
         $iperm_menu = 0;
-        $PermMenuRepository = new PermMenuRepository();
+        $PermMenuRepository = $GLOBALS['container']->get(PermMenuRepositoryInterface::class);
         foreach ($cGrupos as $UsuarioGrupo) {
             $id_grupo = $UsuarioGrupo->getId_grupo();
             $cPermMenu = $PermMenuRepository->getPermMenus(array('id_usuario' => $id_grupo));

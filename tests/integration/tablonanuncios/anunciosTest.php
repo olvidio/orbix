@@ -3,7 +3,7 @@
 namespace Tests\integration\tablonanuncios;
 
 use Exception;
-use tablonanuncios\domain\repositories\AnuncioRepository;
+use src\tablonanuncios\domain\contracts\AnuncioRepositoryInterface;
 use Tests\factories\tablonanuncios\AnunciosFactory;
 use Tests\myTest;
 
@@ -33,7 +33,7 @@ class anunciosTest extends myTest
         $AnunciosFactory->setCount($count);
 
         $cAnuncios = $AnunciosFactory->create();
-        $AnuncioRepository = new AnuncioRepository();
+        $AnuncioRepository = $GLOBALS['container']->get(AnuncioRepositoryInterface::class);
         foreach ($cAnuncios as $Anuncio) {
             $uuid_item = $Anuncio->getUuid_item();
 

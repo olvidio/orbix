@@ -1,21 +1,12 @@
 <?php
 
-use src\inventario\application\repositories\DocumentoRepository;
-use src\inventario\application\repositories\EgmRepository;
-use src\inventario\application\repositories\EquipajeRepository;
-use src\inventario\application\repositories\LugarRepository;
-use src\inventario\application\repositories\TipoDocRepository;
-use src\inventario\application\repositories\WhereisRepository;
+use src\inventario\domain\contracts\DocumentoRepositoryInterface;
+use src\inventario\domain\contracts\EgmRepositoryInterface;
+use src\inventario\domain\contracts\EquipajeRepositoryInterface;
+use src\inventario\domain\contracts\LugarRepositoryInterface;
+use src\inventario\domain\contracts\TipoDocRepositoryInterface;
+use src\inventario\domain\contracts\WhereisRepositoryInterface;
 use web\ContestarJson;
-
-// INICIO Cabecera global de URL de controlador *********************************
-require_once("apps/core/global_header.inc");
-// Archivos requeridos por esta url **********************************************
-
-// Crea los objetos de uso global **********************************************
-require_once("apps/core/global_object.inc");
-// FIN de  Cabecera global de URL de controlador ********************************
-
 
 $a_sel = (array)filter_input(INPUT_POST, 'sel', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 
@@ -24,12 +15,12 @@ $aCambios = [];
 $aLugaresPorEgm = [];
 $aNomEquipajes = [];
 
-$EquipajeRepository = new EquipajeRepository();
-$EgmRepository = new EgmRepository();
-$WhereisRepository = new WhereisRepository();
-$DocumentoRepository = new DocumentoRepository();
-$TipoDocRepository = new TipoDocRepository();
-$LugarRepository = new LugarRepository();
+$EquipajeRepository = $GLOBALS['container']->get(EquipajeRepositoryInterface::class);
+$EgmRepository = $GLOBALS['container']->get(EgmRepositoryInterface::class);
+$WhereisRepository = $GLOBALS['container']->get(WhereisRepositoryInterface::class);
+$DocumentoRepository = $GLOBALS['container']->get(DocumentoRepositoryInterface::class);
+$TipoDocRepository = $GLOBALS['container']->get(TipoDocRepositoryInterface::class);
+$LugarRepository = $GLOBALS['container']->get(LugarRepositoryInterface::class);
 foreach ($a_sel as $id_equipaje) {
     $oEquipaje = $EquipajeRepository->findById($id_equipaje);
     $aGrupos[$id_equipaje]= $oEquipaje->getNom_equipaje();
@@ -111,8 +102,6 @@ foreach ($a_sel as $id_equipaje) {
         }
     }
 }
-
-
 
 $data = [
     'aCambios' => $aCambios,

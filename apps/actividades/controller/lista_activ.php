@@ -32,7 +32,7 @@ use actividades\model\entity\GestorActividad;
 use actividadescentro\model\entity\GestorCentroEncargado;
 use actividadtarifas\model\entity\TipoTarifa;
 use core\ConfigGlobal;
-use src\ubis\application\repositories\CasaRepository;
+use src\ubis\domain\contracts\CasaRepositoryInterface;
 use web\Hash;
 use web\Lista;
 use web\Periodo;
@@ -307,6 +307,7 @@ if (ConfigGlobal::is_dmz() === FALSE) {
 $a_botones = [];
 $a_valores = [];
 $i = 0;
+$CasaRepository = $GLOBALS['container']->get(CasaRepositoryInterface::class);
 foreach ($cActividades as $oActividad) {
     $i++;
     $id_activ = $oActividad->getId_activ();
@@ -321,7 +322,7 @@ foreach ($cActividades as $oActividad) {
     $tarifa = $oActividad->getTarifa();
     $observ = $oActividad->getObserv();
 
-    $oCasa = (new CasaRepository())->findById($id_ubi);
+    $oCasa = $CasaRepository->findById($id_ubi);
 
     $nombre_ubi = $oCasa->getNombre_ubi();
     if (is_true($oCasa->isSv())) {

@@ -2,10 +2,9 @@
 
 namespace src\asignaturas\domain;
 
-
 /* No vale el underscore en el nombre */
 
-use src\asignaturas\application\repositories\DepartamentoRepository;
+use src\asignaturas\domain\contracts\DepartamentoRepositoryInterface;
 use src\shared\domain\DatosInfoRepo;
 
 class InfoDepartamentos extends DatosInfoRepo
@@ -33,7 +32,7 @@ class InfoDepartamentos extends DatosInfoRepo
             $aWhere = array('departamento' => $this->k_buscar);
             $aOperador = array('departamento' => 'sin_acentos');
         }
-        $oLista = new DepartamentoRepository();
+        $oLista = $GLOBALS['container']->get(DepartamentoRepositoryInterface::class);
         $Coleccion = $oLista->getDepartamentos($aWhere, $aOperador);
 
         return $Coleccion;

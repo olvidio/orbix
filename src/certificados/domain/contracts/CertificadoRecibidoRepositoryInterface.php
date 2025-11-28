@@ -5,7 +5,6 @@ namespace src\certificados\domain\contracts;
 use PDO;
 use src\certificados\domain\entity\CertificadoRecibido;
 
-
 /**
  * Interfaz de la clase Certificado y su Repositorio
  *

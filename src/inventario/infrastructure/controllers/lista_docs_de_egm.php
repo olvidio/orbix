@@ -1,33 +1,24 @@
 <?php
 
-use src\inventario\application\repositories\DocumentoRepository;
-use src\inventario\application\repositories\EgmRepository;
-use src\inventario\application\repositories\LugarRepository;
-use src\inventario\application\repositories\TipoDocRepository;
-use src\inventario\application\repositories\WhereisRepository;
+use src\inventario\domain\contracts\DocumentoRepositoryInterface;
+use src\inventario\domain\contracts\EgmRepositoryInterface;
+use src\inventario\domain\contracts\LugarRepositoryInterface;
+use src\inventario\domain\contracts\TipoDocRepositoryInterface;
+use src\inventario\domain\contracts\WhereisRepositoryInterface;
 use web\ContestarJson;
-
-// INICIO Cabecera global de URL de controlador *********************************
-require_once("apps/core/global_header.inc");
-// Archivos requeridos por esta url **********************************************
-
-// Crea los objetos de uso global **********************************************
-require_once("apps/core/global_object.inc");
-// FIN de  Cabecera global de URL de controlador ********************************
 
 $Qid_item_egm = (integer)filter_input(INPUT_POST, 'id_item_egm');
 $error_txt = '';
 
-$LugarRepository = new LugarRepository();
-$TipoDocRepository = new TipoDocRepository();
-$DocumentoRepository = new DocumentoRepository();
-$WhereisRepository = new WhereisRepository();
-$EgmRepository = new EgmRepository();
+$LugarRepository = $GLOBALS['container']->get(LugarRepositoryInterface::class);
+$TipoDocRepository = $GLOBALS['container']->get(TipoDocRepositoryInterface::class);
+$DocumentoRepository = $GLOBALS['container']->get(DocumentoRepositoryInterface::class);
+$WhereisRepository = $GLOBALS['container']->get(WhereisRepositoryInterface::class);
+$EgmRepository = $GLOBALS['container']->get(EgmRepositoryInterface::class);
 $oEgm = $EgmRepository->findById($Qid_item_egm);
 $id_lugar = $oEgm->getId_lugar();
 $oLugar = $LugarRepository->findById($id_lugar);
 $nombre_valija = $oLugar->getNom_lugar();
-
 
 $cWhereis = $WhereisRepository->getWhereare(['id_item_egm' => $Qid_item_egm]);
 

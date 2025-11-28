@@ -24,7 +24,7 @@ class EncargoDiaRepository implements EncargoDiaRepositoryInterface
 
     public function __construct()
     {
-        $this->repository = new PgEncargoDiaRepository();
+        $this->repository = $GLOBALS['container']->get(PgEncargoDiaRepositoryInterface::class);
     }
 
     /* -------------------- GESTOR BASE ---------------------------------------- */

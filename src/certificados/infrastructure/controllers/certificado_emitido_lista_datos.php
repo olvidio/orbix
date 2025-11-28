@@ -13,14 +13,6 @@
 use src\certificados\domain\CertificadoEmitidoSelect;
 use web\ContestarJson;
 
-// INICIO Cabecera global de URL de controlador *********************************
-require_once("apps/core/global_header.inc");
-// Archivos requeridos por esta url **********************************************
-
-// Crea los objetos de uso global **********************************************
-require_once("apps/core/global_object.inc");
-// FIN de  Cabecera global de URL de controlador ********************************
-
 $Qcertificado = (string)filter_input(INPUT_POST, 'certificado');
 $inicurs_ca_iso = (string)filter_input(INPUT_POST, 'inicurs_ca_iso');
 $fincurs_ca_iso = (string)filter_input(INPUT_POST, 'fincurs_ca_iso');

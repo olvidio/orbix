@@ -10,7 +10,6 @@ use PDOException;
 use src\asignaturas\domain\contracts\SectorRepositoryInterface;
 use src\asignaturas\domain\entity\Sector;
 
-
 /**
  * Clase que adapta la tabla xe_sectores a la interfaz del repositorio
  *
@@ -78,7 +77,6 @@ class PgSectorRepository extends ClaseRepository implements SectorRepositoryInte
         return $aOpciones;
     }
 
-
     /* -------------------- GESTOR BASE ---------------------------------------- */
 
     /**
@@ -86,7 +84,7 @@ class PgSectorRepository extends ClaseRepository implements SectorRepositoryInte
      *
      * @param array $aWhere asociativo con los valores para cada campo de la BD.
      * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array|FALSE Una colección de objetos de tipo Sector
+     * @return array|false Una colección de objetos de tipo Sector
      */
     public function getSectores(array $aWhere = [], array $aOperators = []): array|false
     {
@@ -136,15 +134,15 @@ class PgSectorRepository extends ClaseRepository implements SectorRepositoryInte
             unset($aWhere['_limit']);
         }
         $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
-        if (($oDblSt = $oDbl->prepare($sQry)) === FALSE) {
+        if (($oDblSt = $oDbl->prepare($sQry)) === false) {
             $sClaveError = 'PgSectorRepository.listar.prepare';
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return FALSE;
+            return false;
         }
-        if (($oDblSt->execute($aWhere)) === FALSE) {
+        if (($oDblSt->execute($aWhere)) === false) {
             $sClaveError = 'PgSectorRepository.listar.execute';
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
-            return FALSE;
+            return false;
         }
 
         $filas = $oDblSt->fetchAll(PDO::FETCH_ASSOC);
@@ -163,14 +161,13 @@ class PgSectorRepository extends ClaseRepository implements SectorRepositoryInte
         $id_sector = $Sector->getIdSectorVo()->value();
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        if (($oDbl->exec("DELETE FROM $nom_tabla WHERE id_sector = $id_sector")) === FALSE) {
+        if (($oDbl->exec("DELETE FROM $nom_tabla WHERE id_sector = $id_sector")) === false) {
             $sClaveError = 'PgSectorRepository.eliminar';
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return FALSE;
+            return false;
         }
         return TRUE;
     }
-
 
     /**
      * Si no existe el registro, hace un insert, si existe, se hace el update.
@@ -187,15 +184,15 @@ class PgSectorRepository extends ClaseRepository implements SectorRepositoryInte
         $aDatos['sector'] = $Sector->getNombreSectorVo()?->value();
         array_walk($aDatos, 'core\poner_null');
 
-        if ($bInsert === FALSE) {
+        if ($bInsert === false) {
             //UPDATE
             $update = "
 					id_departamento          = :id_departamento,
 					sector                   = :sector";
-            if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_sector = $id_sector")) === FALSE) {
+            if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_sector = $id_sector")) === false) {
                 $sClaveError = 'PgSectorRepository.update.prepare';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-                return FALSE;
+                return false;
             }
 
             try {
@@ -205,17 +202,17 @@ class PgSectorRepository extends ClaseRepository implements SectorRepositoryInte
                 $this->setErrorTxt($err_txt);
                 $sClaveError = 'PgSectorRepository.update.execute';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
-                return FALSE;
+                return false;
             }
         } else {
             // INSERT
             $aDatos['id_sector'] = $Sector->getIdSectorVo()?->value();
             $campos = "(id_sector,id_departamento,sector)";
             $valores = "(:id_sector,:id_departamento,:sector)";
-            if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === FALSE) {
+            if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {
                 $sClaveError = 'PgSectorRepository.insertar.prepare';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-                return FALSE;
+                return false;
             }
             try {
                 $oDblSt->execute($aDatos);
@@ -224,7 +221,7 @@ class PgSectorRepository extends ClaseRepository implements SectorRepositoryInte
                 $this->setErrorTxt($err_txt);
                 $sClaveError = 'PgSectorRepository.insertar.execute';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
-                return FALSE;
+                return false;
             }
         }
         return TRUE;
@@ -234,15 +231,15 @@ class PgSectorRepository extends ClaseRepository implements SectorRepositoryInte
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_sector = $id_sector")) === FALSE) {
+        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_sector = $id_sector")) === false) {
             $sClaveError = 'PgSectorRepository.isNew';
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return FALSE;
+            return false;
         }
         if (!$oDblSt->rowCount()) {
             return TRUE;
         }
-        return FALSE;
+        return false;
     }
 
     /**
@@ -256,15 +253,14 @@ class PgSectorRepository extends ClaseRepository implements SectorRepositoryInte
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
-        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_sector = $id_sector")) === FALSE) {
+        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_sector = $id_sector")) === false) {
             $sClaveError = 'PgSectorRepository.getDatosById';
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return FALSE;
+            return false;
         }
         $aDatos = $oDblSt->fetch(PDO::FETCH_ASSOC);
         return $aDatos;
     }
-
 
     /**
      * Busca la clase con id_sector en la base de datos .

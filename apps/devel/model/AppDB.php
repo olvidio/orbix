@@ -3,7 +3,7 @@
 namespace devel\model;
 
 
-use src\configuracion\application\repositories\ModuloRepository;
+use src\configuracion\domain\contracts\ModuloRepositoryInterface;
 use src\configuracion\domain\ModulosConfig;
 
 class AppDB
@@ -16,7 +16,7 @@ class AppDB
     public function __construct($id_mod)
     {
         $this->id_mod = $id_mod;
-        $ModuloRepository = new ModuloRepository();
+        $ModuloRepository = $GLOBALS['container']->get(ModuloRepositoryInterface::class);
         $oModulo = $ModuloRepository->findById($id_mod);
         $this->nom_mod = $oModulo->getNombreModVo()->value();
 

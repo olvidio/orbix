@@ -3,9 +3,9 @@
 use core\ConfigGlobal;
 use frontend\shared\model\ViewNewPhtml;
 use frontend\shared\PostRequest;
-use src\menus\application\repositories\MenuDbRepository;
-use src\usuarios\application\repositories\RoleRepository;
-use src\usuarios\application\repositories\UsuarioRepository;
+use src\menus\domain\contracts\MenuDbRepositoryInterface;
+use src\usuarios\domain\contracts\RoleRepositoryInterface;
+use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
 use frontend\shared\web\Desplegable;
 use frontend\shared\web\Hash;
 
@@ -47,11 +47,11 @@ $a_camposHidden = array(
 );
 $oHash3->setArraycamposHidden($a_camposHidden);
 
-$RoleRepository = new RoleRepository();
+$RoleRepository = $GLOBALS['container']->get(RoleRepositoryInterface::class);
 $aRoles = $RoleRepository->getArrayRoles();
-$UsuarioRepository = new UsuarioRepository();
+$UsuarioRepository = $GLOBALS['container']->get(UsuarioRepositoryInterface::class);
 
-$MenuDbRepository = new MenuDbRepository();
+$MenuDbRepository = $GLOBALS['container']->get(MenuDbRepositoryInterface::class);
 if (!empty($Qid_menu) || !empty($Qnuevo)) {
     if (!empty($Qid_menu)) {
         $oMenuDb = $MenuDbRepository->findById($Qid_menu);

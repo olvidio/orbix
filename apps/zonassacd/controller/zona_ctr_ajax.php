@@ -1,7 +1,7 @@
 <?php
 
-use src\ubis\application\repositories\CentroDlRepository;
-use src\ubis\application\repositories\CentroEllasRepository;
+use src\ubis\domain\contracts\CentroDlRepositoryInterface;
+use src\ubis\domain\contracts\CentroEllasRepositoryInterface;
 use web\Lista;
 use zonassacd\model\entity\Zona;
 
@@ -54,7 +54,7 @@ switch ($Qque) {
                 $aWhere['id_zona'] = '';
                 $aOperador['id_zona'] = 'IS NULL';
                 $aWhere['_ordre'] = 'nombre_ubi';
-                $GesCentros = new CentroDlRepository();
+                $GesCentros = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
                 $cCentros = $GesCentros->getCentros($aWhere, $aOperador);
                 break;
             case "no_sf":
@@ -62,16 +62,16 @@ switch ($Qque) {
                 $aWhere['id_zona'] = '';
                 $aOperador['id_zona'] = 'IS NULL';
                 $aWhere['_ordre'] = 'nombre_ubi';
-                $GesCentros = new CentroEllasRepository();
+                $GesCentros = $GLOBALS['container']->get(CentroEllasRepositoryInterface::class);
                 $cCentros = $GesCentros->getCentros($aWhere, $aOperador);
                 break;
             default:
                 $aWhere['status'] = 't';
                 $aWhere['id_zona'] = $Qid_zona;
                 $aWhere['_ordre'] = 'nombre_ubi';
-                $GesCentrosDl = new CentroDlRepository();
+                $GesCentrosDl = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
                 $cCentrosDl = $GesCentrosDl->getCentros($aWhere);
-                $GesCentrosSf = new CentroEllasRepository();
+                $GesCentrosSf = $GLOBALS['container']->get(CentroEllasRepositoryInterface::class);
                 $cCentrosSf = $GesCentrosSf->getCentros($aWhere);
                 $cCentros = array_merge($cCentrosDl, $cCentrosSf);
         }
@@ -116,11 +116,11 @@ switch ($Qque) {
             foreach ($QAsel as $id_ubi) {
                 $id_ubi = "{$id_ubi}"; // Para asegurarme que lo toma como string.
                 if ((int)$id_ubi[0] === 1) {
-                    $CentroDlRepository = new CentroDlRepository();
+                    $CentroDlRepository = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
                     $oCentro = $CentroDlRepository->findById($id_ubi);
                 }
                 if ((int)$id_ubi[0] === 2) {
-                    $CentroDlRepository = new CentroEllasRepository();
+                    $CentroDlRepository = $GLOBALS['container']->get(CentroEllasRepositoryInterface::class);
                     $oCentro = $CentroDlRepository->findById($id_ubi);
                 }
                 $oCentro->setId_zona($id_zona_new);
@@ -132,11 +132,11 @@ switch ($Qque) {
             foreach ($QAsel as $id_ubi) {
                 $id_ubi = "{$id_ubi}"; // Para asegurarme que lo toma como string.
                 if ((int)$id_ubi[0] === 1) {
-                    $CentroDlRepository = new CentroDlRepository();
+                    $CentroDlRepository = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
                     $oCentro = $CentroDlRepository->findById($id_ubi);
                 }
                 if ((int)$id_ubi[0] === 2) {
-                    $CentroDlRepository = new CentroEllasRepository();
+                    $CentroDlRepository = $GLOBALS['container']->get(CentroEllasRepositoryInterface::class);
                     $oCentro = $CentroDlRepository->findById($id_ubi);
                 }
                 $oCentro->setId_zona('');

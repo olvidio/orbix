@@ -6,37 +6,22 @@ use personas\model\entity\GestorPersonaAgd;
 use personas\model\entity\GestorPersonaDl;
 use personas\model\entity\GestorPersonaN;
 use procesos\model\entity\GestorPermUsuarioActividad;
-use src\ubis\application\repositories\CasaDlRepository;
-use src\ubis\application\repositories\CentroDlRepository;
-use src\ubis\application\repositories\CentroEllasRepository;
-use src\usuarios\application\repositories\RoleRepository;
-use src\usuarios\application\repositories\UsuarioRepository;
+use src\ubis\domain\contracts\CasaDlRepositoryInterface;
+use src\ubis\domain\contracts\CentroDlRepositoryInterface;
+use src\ubis\domain\contracts\CentroEllasRepositoryInterface;
+use src\usuarios\domain\contracts\RoleRepositoryInterface;
+use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
 use src\usuarios\domain\entity\Role;
 use web\Hash;
 use function core\is_true;
 
-// INICIO Cabecera global de URL de controlador *********************************
-
-require_once("apps/core/global_header.inc");
-// Archivos requeridos por esta url **********************************************
-
-// Crea los objetos de uso global **********************************************
-require_once("apps/core/global_object.inc");
-// Crea los objetos para esta url  **********************************************
-
-
-// FIN de  Cabecera global de URL de controlador ********************************
-
-
 $Qid_usuario = (integer)filter_input(INPUT_POST, 'id_usuario');
 $Qquien = (string)filter_input(INPUT_POST, 'quien');
 
-
-$UsuarioRepository = new UsuarioRepository();
+$UsuarioRepository = $GLOBALS['container']->get(UsuarioRepositoryInterface::class);
 $oMiUsuario = $UsuarioRepository->findById(ConfigGlobal::mi_id_usuario());
 $miRole = $oMiUsuario->getId_role();
 $miSfsv = ConfigGlobal::mi_sfsv();
-
 
 // a los usuarios normales (no administrador) sólo dejo ver la parte de los avisos.
 $error_txt = _("no tiene permisos para ver esto");
@@ -64,7 +49,7 @@ if ($miRole < 4) { // es administrador
         $cond_role .= "AND (pau != '" . Role::PAU_CTR . "' OR pau != '" . Role::PAU_CDC . "' OR pau IS NULL)";
     }
 
-    $RoleRepository = new RoleRepository();
+    $RoleRepository = $GLOBALS['container']->get(RoleRepositoryInterface::class);
     $aOpcionesRoles = $RoleRepository->getArrayRolesCondicion($cond_role);
 
     $oGrupoGrupoPermMenu = [];
@@ -74,7 +59,6 @@ if ($miRole < 4) { // es administrador
     $aDataDespl = [];
     if (!empty($Qid_usuario)) {
         $que_user = 'guardar';
-        $UsuarioRepository = new UsuarioRepository();
         $oUsuario = $UsuarioRepository->findById($Qid_usuario);
 
         $seccion = $miSfsv;
@@ -101,7 +85,7 @@ if ($miRole < 4) { // es administrador
                     $cond = "WHERE sf = 't'";
                     break;
             }
-            $oGCasas = new CasaDlRepository();
+            $oGCasas = $GLOBALS['container']->get(CasaDlRepositoryInterface::class);
             $aOpcionesCasas = $oGCasas->getArrayCasas($cond);
 
             $aDataDespl['tipo'] = 'array';
@@ -114,7 +98,7 @@ if ($miRole < 4) { // es administrador
         }
         if ($pau === Role::PAU_CTR && $isSv) { //centroSv
             $id_pau = $oUsuario->getId_pauAsString();
-            $CentroDlRepository = new CentroDlRepository();
+            $CentroDlRepository = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
             $aOpciones = $CentroDlRepository->getArrayCentros();
 
             $aDataDespl['tipo'] = 'simple';
@@ -126,7 +110,7 @@ if ($miRole < 4) { // es administrador
         }
         if ($pau === Role::PAU_CTR && $isSf) { //centroSf
             $id_pau = $oUsuario->getId_pauAsString();
-            $oGesCentrosDl = new CentroEllasRepository();
+            $oGesCentrosDl = $GLOBALS['container']->get(CentroEllasRepositoryInterface::class);
             $aOpciones = $oGesCentrosDl->getArrayCentros();
 
             $aDataDespl['tipo'] = 'simple';
@@ -195,7 +179,6 @@ if ($miRole < 4) { // es administrador
     );
     $oHash->setArraycamposHidden($a_camposHidden);
 
-
     $obj = 'src\\usuarios\\domain\\entity\\Usuario';
 
     $a_campos = [
@@ -220,7 +203,7 @@ if ($miRole < 4) { // es administrador
 } // fin solo administradores.
 
 if (!empty($error_txt)) {
-    $jsondata['success'] = FALSE;
+    $jsondata['success'] = false;
     $jsondata['mensaje'] = $error_txt;
 } else {
     $jsondata['success'] = TRUE;
@@ -228,5 +211,4 @@ if (!empty($error_txt)) {
 }
 
 (new JsonResponse($jsondata))->send();
-
 

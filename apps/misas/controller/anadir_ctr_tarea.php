@@ -5,6 +5,7 @@
 use Illuminate\Http\JsonResponse;
 use misas\domain\entity\Plantilla;
 use misas\domain\repositories\PlantillaRepository;
+use misas\domain\repositories\PlantillaRepositoryInterface;
 
 require_once("apps/core/global_header.inc");
 // Archivos requeridos por esta url **********************************************
@@ -18,7 +19,7 @@ $Qque = (string)filter_input(INPUT_POST, 'que');
 $Qid_ubi = (integer)filter_input(INPUT_POST, 'id_ubi');
 $Qid_tarea = (integer)filter_input(INPUT_POST, 'id_tarea');
 
-$PlantillaRepository = new PlantillaRepository();
+$PlantillaRepository = $GLOBALS['container']->get(PlantillaRepositoryInterface::class);
 
 switch ($Qque) {
 //faltaría comprobar que no está.

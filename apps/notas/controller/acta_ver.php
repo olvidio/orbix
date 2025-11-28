@@ -1,7 +1,6 @@
 <?php
 
 use actividadestudios\model\entity\ActividadAsignaturaDl;
-use asignaturas\model\entity\GestorAsignatura;
 use core\ConfigGlobal;
 use core\ViewPhtml;
 use notas\model\entity\Acta;
@@ -9,7 +8,7 @@ use notas\model\entity\GestorActa;
 use notas\model\entity\GestorActaTribunal;
 use notas\model\entity\GestorActaTribunalDl;
 use personas\model\entity\PersonaDl;
-use src\asignaturas\application\repositories\AsignaturaRepository;
+use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use web\Hash;
 use function core\urlsafe_b64encode;
 
@@ -118,7 +117,7 @@ if (empty($notas) && empty($Qnotas)) {
 }
 
 if ($notas !== 'nuevo' && $Qmod !== 'nueva' && !empty($acta_actual)) { //significa que no es nuevo
-    if (false && !empty($Qacta) && !empty($notas)) { // vengo de actualizar esta pág.
+    if (!empty($Qacta) && !empty($notas)) { // vengo de actualizar esta pág.
         // estoy actualizando la página
         $id_asignatura_actual = (integer)filter_input(INPUT_POST, 'id_asignatura_actual');
         $id_activ = (integer)filter_input(INPUT_POST, 'id_activ');
@@ -212,7 +211,7 @@ if (!empty($acta_actual)) {
 
 $nombre_asignatura = '';
 if (!empty($id_asignatura_actual)) {
-    $AsignaturaRepository = new AsignaturaRepository();
+    $AsignaturaRepository = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class);
     $cAsignatura = $AsignaturaRepository->getAsignaturas(['id_asignatura' => $id_asignatura_actual]);
     if (!empty($cAsignatura)) {
         $oAsignatura = $cAsignatura[0];

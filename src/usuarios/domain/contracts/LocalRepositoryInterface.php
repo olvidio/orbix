@@ -5,7 +5,6 @@ namespace src\usuarios\domain\contracts;
 use PDO;
 use src\usuarios\domain\entity\Local;
 
-
 /**
  * Interfaz de la clase Local y su Repositorio
  *
@@ -25,7 +24,7 @@ interface LocalRepositoryInterface
      *
      * @param array $aWhere asociativo con los valores para cada campo de la BD.
      * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array|FALSE Una colección de objetos de tipo Local
+     * @return array|false Una colección de objetos de tipo Local
      */
     public function getLocales(array $aWhere = [], array $aOperators = []): array|false;
 

@@ -3,9 +3,9 @@
 namespace src\inventario\domain;
 
 use core\ConfigGlobal;
-use src\inventario\application\repositories\DocumentoRepository;
-use src\inventario\application\repositories\LugarRepository;
-use src\inventario\application\repositories\TipoDocRepository;
+use src\inventario\domain\contracts\DocumentoRepositoryInterface;
+use src\inventario\domain\contracts\LugarRepositoryInterface;
+use src\inventario\domain\contracts\TipoDocRepositoryInterface;
 use src\shared\domain\DatosInfoRepo;
 use web\Desplegable;
 use web\Hash;
@@ -44,7 +44,7 @@ class InfoDocsxSigla extends DatosInfoRepo
 
     public function addCampos($a_campos = [])
     {
-        $Repository = new TipoDocRepository();
+        $Repository = $GLOBALS['container']->get(TipoDocRepositoryInterface::class);
         $aOpciones = $Repository->getArrayTipoDoc();
         $a_campos['aOpcionesTiposDoc'] = $aOpciones;
 
@@ -78,7 +78,7 @@ class InfoDocsxSigla extends DatosInfoRepo
             $aOperador = [];
         }
 
-        $ColeccionRepository = new DocumentoRepository();
+        $ColeccionRepository = $GLOBALS['container']->get(DocumentoRepositoryInterface::class);
         $Coleccion = $ColeccionRepository->getDocumentos($aWhere, $aOperador);
 
         return $Coleccion;
@@ -88,7 +88,7 @@ class InfoDocsxSigla extends DatosInfoRepo
     {
         $valor_depende = empty($valor_depende) ? 0 : $valor_depende;
         //caso de actualizar el campo depende
-        $LugarRepository = new LugarRepository();
+        $LugarRepository = $GLOBALS['container']->get(LugarRepositoryInterface::class);
         $aOpciones = $LugarRepository->getArrayLugares($valor_depende);
         $oDesplegable = new Desplegable('', $aOpciones, $opcion_sel, true);
         $opciones_txt = $oDesplegable->options();

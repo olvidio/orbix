@@ -2,7 +2,8 @@
 
 namespace core;
 
-use src\ubis\application\repositories\DelegacionRepository;
+
+use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 
 class DBView
 {
@@ -246,7 +247,7 @@ class DBView
     private function getIdSchemasGrupStgr()
     {
         $RegionStgr = $this->sRegionStgr;
-        $gesDl = new DelegacionRepository();
+        $gesDl = $GLOBALS['container']->get(DelegacionRepositoryInterface::class);
         $mi_sfsv = ConfigGlobal::mi_sfsv();
 
         return $gesDl->getArrayIdSchemaRegionStgr($RegionStgr, $mi_sfsv);
@@ -255,7 +256,7 @@ class DBView
     private function getSchemasGrupStgr()
     {
         $RegionStgr = $this->sRegionStgr;
-        $gesDl = new DelegacionRepository();
+        $gesDl = $GLOBALS['container']->get(DelegacionRepositoryInterface::class);
         $mi_sfsv = ConfigGlobal::mi_sfsv();
 
         return $gesDl->getArraySchemasRegionStgr($RegionStgr, $mi_sfsv);
@@ -264,7 +265,7 @@ class DBView
     private function getSchemasComunGrupStgr()
     {
         $RegionStgr = $this->sRegionStgr;
-        $gesDl = new DelegacionRepository();
+        $gesDl = $GLOBALS['container']->get(DelegacionRepositoryInterface::class);
 
         return $gesDl->getArraySchemasRegionStgr($RegionStgr, NULL);
     }

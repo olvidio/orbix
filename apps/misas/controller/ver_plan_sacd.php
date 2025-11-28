@@ -128,7 +128,7 @@ $aWhere['_ordre'] = 'tstart';
 $aOperador = [
     'tstart' => 'BETWEEN',
 ];
-$EncargoDiaRepository = new EncargoDiaRepository();
+$EncargoDiaRepository = $GLOBALS['container']->get(EncargoDiaRepositoryInterface::class);
 $cEncargosDia = $EncargoDiaRepository->getEncargoDias($aWhere,$aOperador);
 
 foreach($cEncargosDia as $oEncargoDia) {

@@ -1,8 +1,7 @@
 <?php
 
-use asignaturas\model\entity\GestorAsignatura;
 use notas\model\entity\GestorActaTribunal;
-use src\asignaturas\application\repositories\AsignaturaRepository;
+use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 
 /**
  * Esta página sirve para dar una lista de examinadores para los inputs autocomplete
@@ -33,7 +32,7 @@ switch ($Qque) {
         $json = $GesActaTribunalDl->getJsonExaminadores($sQuery);
         break;
     case 'asignaturas':
-        $AsignaturaRepository = new AsignaturaRepository();
+        $AsignaturaRepository = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class);
         $json = $AsignaturaRepository->getJsonAsignaturas(array('nombre_asignatura' => $sQuery));
         break;
 }

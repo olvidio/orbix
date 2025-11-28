@@ -2,8 +2,7 @@
 
 namespace src\ubis\application\services;
 
-use src\ubis\application\repositories\RegionRepository;
-use src\ubis\application\repositories\TipoCasaRepository;
+use src\ubis\domain\contracts\TipoCasaRepositoryInterface;
 use web\Desplegable;
 
 /**
@@ -21,7 +20,7 @@ final class TipoCasaDropdown
      */
     public static function listaTiposCasa(bool $conBlanco, string $nombreCampo): Desplegable
     {
-        $repo = new TipoCasaRepository();
+        $repo = $GLOBALS['container']->get(TipoCasaRepositoryInterface::class);
         $opciones = $repo->getArrayTiposCasa();
 
         $despl = new Desplegable();

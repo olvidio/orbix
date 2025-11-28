@@ -8,7 +8,7 @@ use cambios\model\entity\GestorCambioUsuarioPropiedadPref;
 use cambios\model\GestorAvisoCambios;
 use core\ConfigGlobal;
 use procesos\model\entity\GestorActividadFase;
-use src\ubis\application\repositories\CasaDlRepository;
+use src\ubis\domain\contracts\CasaDlRepositoryInterface;
 use src\usuarios\domain\entity\Role;
 use web\DesplegableArray;
 use web\Hash;
@@ -151,7 +151,7 @@ switch ($Qsalida) {
                     }
                 }
             }
-            $CasaDlRepository = new CasaDlRepository();
+            $CasaDlRepository = $GLOBALS['container']->get(CasaDlRepositoryInterface::class);
             $oOpciones = $CasaDlRepository->getArrayCasas($donde);
 
             $oSelects = new DesplegableArray($valor, $oOpciones, 'id_ubi');

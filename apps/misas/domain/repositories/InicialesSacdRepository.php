@@ -24,7 +24,7 @@ class InicialesSacdRepository implements InicialesSacdRepositoryInterface
 
     public function __construct()
     {
-        $this->repository = new PgInicialesSacdRepository();
+        $this->repository = $GLOBALS['container']->get(PgInicialesSacdRepositoryInterface::class);
     }
 
     /* -------------------- GESTOR BASE ---------------------------------------- */

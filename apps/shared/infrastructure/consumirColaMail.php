@@ -3,6 +3,7 @@
 namespace shared\infrastructure;
 
 use DateInterval;
+use shared\domain\repositories\ColaMailRepositoryInterface;
 use web\DateTimeLocal;
 use shared\domain\repositories\ColaMailRepository;
 
@@ -12,7 +13,7 @@ class consumirColaMail
     public function __construct()
     {
 
-        $this->ColaMailRepository = new ColaMailRepository();
+        $this->ColaMailRepository = $GLOBALS['container']->get(ColaMailRepositoryInterface::class);
     }
     public function purge()
     {

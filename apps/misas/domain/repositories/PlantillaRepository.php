@@ -26,7 +26,7 @@ class PlantillaRepository implements PlantillaRepositoryInterface
 
     public function __construct()
     {
-        $this->repository = new PgPlantillaRepository();
+        $this->repository = $GLOBALS['container']->get(PgPlantillaRepositoryInterface::class);
     }
 
 /* -------------------- GESTOR BASE ---------------------------------------- */

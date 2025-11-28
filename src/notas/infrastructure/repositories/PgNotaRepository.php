@@ -11,7 +11,6 @@ use src\notas\domain\contracts\NotaRepositoryInterface;
 use src\notas\domain\entity\Nota;
 use function core\is_true;
 
-
 /**
  * Clase que adapta la tabla e_notas_situacion a la interfaz del repositorio
  *
@@ -98,7 +97,7 @@ class PgNotaRepository extends ClaseRepository implements NotaRepositoryInterfac
      *
      * @param array $aWhere asociativo con los valores para cada campo de la BD.
      * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array|FALSE Una colección de objetos de tipo Nota
+     * @return array|false Una colección de objetos de tipo Nota
      */
     public function getNotas(array $aWhere = [], array $aOperators = []): array|false
     {
@@ -148,15 +147,15 @@ class PgNotaRepository extends ClaseRepository implements NotaRepositoryInterfac
             unset($aWhere['_limit']);
         }
         $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
-        if (($oDblSt = $oDbl->prepare($sQry)) === FALSE) {
+        if (($oDblSt = $oDbl->prepare($sQry)) === false) {
             $sClaveError = 'PgNotaRepository.listar.prepare';
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return FALSE;
+            return false;
         }
-        if (($oDblSt->execute($aWhere)) === FALSE) {
+        if (($oDblSt->execute($aWhere)) === false) {
             $sClaveError = 'PgNotaRepository.listar.execute';
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
-            return FALSE;
+            return false;
         }
 
         $filas = $oDblSt->fetchAll(PDO::FETCH_ASSOC);
@@ -175,14 +174,13 @@ class PgNotaRepository extends ClaseRepository implements NotaRepositoryInterfac
         $id_situacion = $Nota->getId_situacion();
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        if (($oDbl->exec("DELETE FROM $nom_tabla WHERE id_situacion = $id_situacion")) === FALSE) {
+        if (($oDbl->exec("DELETE FROM $nom_tabla WHERE id_situacion = $id_situacion")) === false) {
             $sClaveError = 'PgNotaRepository.eliminar';
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return FALSE;
+            return false;
         }
         return TRUE;
     }
-
 
     /**
      * Si no existe el registro, hace un insert, si existe, se hace el update.
@@ -199,23 +197,23 @@ class PgNotaRepository extends ClaseRepository implements NotaRepositoryInterfac
         $aDatos['superada'] = $Nota->isSuperada();
         $aDatos['breve'] = $Nota->getBreve();
         array_walk($aDatos, 'core\poner_null');
-        //para el caso de los boolean FALSE, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
+        //para el caso de los boolean false, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
         if (is_true($aDatos['superada'])) {
             $aDatos['superada'] = 'true';
         } else {
             $aDatos['superada'] = 'false';
         }
 
-        if ($bInsert === FALSE) {
+        if ($bInsert === false) {
             //UPDATE
             $update = "
 					descripcion              = :descripcion,
 					superada                 = :superada,
 					breve                    = :breve";
-            if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_situacion = $id_situacion")) === FALSE) {
+            if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_situacion = $id_situacion")) === false) {
                 $sClaveError = 'PgNotaRepository.update.prepare';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-                return FALSE;
+                return false;
             }
 
             try {
@@ -225,17 +223,17 @@ class PgNotaRepository extends ClaseRepository implements NotaRepositoryInterfac
                 $this->setErrorTxt($err_txt);
                 $sClaveError = 'PgNotaRepository.update.execute';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
-                return FALSE;
+                return false;
             }
         } else {
             // INSERT
             $aDatos['id_situacion'] = $Nota->getId_situacion();
             $campos = "(id_situacion,descripcion,superada,breve)";
             $valores = "(:id_situacion,:descripcion,:superada,:breve)";
-            if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === FALSE) {
+            if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {
                 $sClaveError = 'PgNotaRepository.insertar.prepare';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-                return FALSE;
+                return false;
             }
             try {
                 $oDblSt->execute($aDatos);
@@ -244,7 +242,7 @@ class PgNotaRepository extends ClaseRepository implements NotaRepositoryInterfac
                 $this->setErrorTxt($err_txt);
                 $sClaveError = 'PgNotaRepository.insertar.execute';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
-                return FALSE;
+                return false;
             }
         }
         return TRUE;
@@ -254,15 +252,15 @@ class PgNotaRepository extends ClaseRepository implements NotaRepositoryInterfac
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_situacion = $id_situacion")) === FALSE) {
+        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_situacion = $id_situacion")) === false) {
             $sClaveError = 'PgNotaRepository.isNew';
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return FALSE;
+            return false;
         }
         if (!$oDblSt->rowCount()) {
             return TRUE;
         }
-        return FALSE;
+        return false;
     }
 
     /**
@@ -276,15 +274,14 @@ class PgNotaRepository extends ClaseRepository implements NotaRepositoryInterfac
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
-        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_situacion = $id_situacion")) === FALSE) {
+        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_situacion = $id_situacion")) === false) {
             $sClaveError = 'PgNotaRepository.getDatosById';
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return FALSE;
+            return false;
         }
         $aDatos = $oDblSt->fetch(PDO::FETCH_ASSOC);
         return $aDatos;
     }
-
 
     /**
      * Busca la clase con id_situacion en la base de datos .

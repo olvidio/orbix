@@ -197,6 +197,4 @@ class PgRelacionUbiDireccionRepository extends ClaseRepository  implements Relac
         return $stmt->execute();
     }
 
-
-
 }

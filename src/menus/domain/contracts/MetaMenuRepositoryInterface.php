@@ -5,7 +5,6 @@ namespace src\menus\domain\contracts;
 use PDO;
 use src\menus\domain\entity\MetaMenu;
 
-
 /**
  * Interfaz de la clase MetaMenu y su Repositorio
  *
@@ -27,7 +26,7 @@ interface MetaMenuRepositoryInterface
      *
      * @param array $aWhere asociativo con los valores para cada campo de la BD.
      * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array|FALSE Una colección de objetos de tipo MetaMenu
+     * @return array|false Una colección de objetos de tipo MetaMenu
      */
     public function getMetaMenus(array $aWhere = [], array $aOperators = []): array|false;
 

@@ -13,8 +13,8 @@ use actividades\model\entity\ActividadAll;
 use actividadtarifas\model\entity\GestorTipoTarifa;
 use core\ConfigGlobal;
 use core\ViewTwig;
-use src\actividades\application\repositories\NivelStgrRepository;
-use src\actividades\application\repositories\RepeticionRepository;
+use src\actividades\domain\contracts\NivelStgrRepositoryInterface;
+use src\actividades\domain\contracts\RepeticionRepositoryInterface;
 use src\ubis\application\services\DelegacionDropdown;
 use src\ubis\domain\entity\Ubi;
 use web\Desplegable;
@@ -91,14 +91,14 @@ $oDesplPosiblesTipoTarifas = $oGesTipoTarifa->getListaTipoTarifas($isfsv);
 $oDesplPosiblesTipoTarifas->setNombre('id_tarifa');
 $oDesplPosiblesTipoTarifas->setOpcion_sel($tarifa);
 
-$NivelStgrRepository = new NivelStgrRepository();
+$NivelStgrRepository = $GLOBALS['container']->get(NivelStgrRepositoryInterface::class);
 $aOpciones = $NivelStgrRepository->getArrayNivelesStgr();
 $oDesplNivelStgr = new Desplegable();
 $oDesplNivelStgr->setOpciones($aOpciones);
 $oDesplNivelStgr->setNombre('nivel_stgr');
 $oDesplNivelStgr->setOpcion_sel($nivel_stgr);
 
-$RepeticionRepository = new RepeticionRepository();
+$RepeticionRepository = $GLOBALS['container']->get(RepeticionRepositoryInterface::class);
 $aOpciones = $RepeticionRepository->getArrayRepeticion();
 $oDesplRepeticion = new Desplegable();
 $oDesplDelegacionesOrg->setOpciones($aOpciones);

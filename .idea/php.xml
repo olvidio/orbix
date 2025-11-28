@@ -107,6 +107,10 @@
       <path value="$PROJECT_DIR$/libs/vendor/dasprid/enum" />
       <path value="$PROJECT_DIR$/libs/vendor/endroid/qr-code" />
       <path value="$PROJECT_DIR$/libs/vendor/bacon/bacon-qr-code" />
+      <path value="$PROJECT_DIR$/libs/vendor/laravel/serializable-closure" />
+      <path value="$PROJECT_DIR$/libs/vendor/php-di/invoker" />
+      <path value="$PROJECT_DIR$/libs/vendor/php-di/php-di" />
+      <path value="$PROJECT_DIR$/libs/vendor/nikic/fast-route" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="8.2">

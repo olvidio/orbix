@@ -22,7 +22,7 @@ class PgUsuarioRepositoryTest extends myTest
     public function setUp(): void
     {
         parent::setUp();
-        $this->repository = new PgUsuarioRepository();
+        $this->repository = $GLOBALS['container']->get(PgUsuarioRepositoryInterface::class);
     }
 
     /**

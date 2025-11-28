@@ -37,7 +37,7 @@ class PgAppRepository extends ClaseRepository implements AppRepositoryInterface
      *
      * @param array $aWhere asociativo con los valores para cada campo de la BD.
      * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array|FALSE Una colección de objetos de tipo App
+     * @return array|false Una colección de objetos de tipo App
      */
     public function getApps(array $aWhere = [], array $aOperators = []): array|false
     {
@@ -87,15 +87,15 @@ class PgAppRepository extends ClaseRepository implements AppRepositoryInterface
             unset($aWhere['_limit']);
         }
         $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
-        if (($oDblSt = $oDbl->prepare($sQry)) === FALSE) {
+        if (($oDblSt = $oDbl->prepare($sQry)) === false) {
             $sClaveError = 'PgAppRepository.listar.prepare';
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return FALSE;
+            return false;
         }
-        if (($oDblSt->execute($aWhere)) === FALSE) {
+        if (($oDblSt->execute($aWhere)) === false) {
             $sClaveError = 'PgAppRepository.listar.execute';
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
-            return FALSE;
+            return false;
         }
 
         $filas = $oDblSt->fetchAll(PDO::FETCH_ASSOC);
@@ -115,10 +115,10 @@ class PgAppRepository extends ClaseRepository implements AppRepositoryInterface
         $nom_tabla = $this->getNomTabla();
         $id_app = $App->getIdAppVo()->value();
 
-        if ($oDbl->exec("DELETE FROM $nom_tabla WHERE id_app=$id_app") === FALSE) {
+        if ($oDbl->exec("DELETE FROM $nom_tabla WHERE id_app=$id_app") === false) {
             $sClaveError = 'PgAppRepository.eliminar';
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return FALSE;
+            return false;
         }
         return TRUE;
     }
@@ -144,19 +144,19 @@ class PgAppRepository extends ClaseRepository implements AppRepositoryInterface
             $update = " nom=:nom";
             $sClau = " WHERE id_app='$id_app'";
         }
-        if ($bInsert === FALSE) {
+        if ($bInsert === false) {
             $sQry = "UPDATE $nom_tabla SET  $update $sClau";
-            if (($oDblSt = $oDbl->prepare($sQry)) === FALSE) {
+            if (($oDblSt = $oDbl->prepare($sQry)) === false) {
                 $sClaveError = 'PgAppRepository.update.prepare';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-                return FALSE;
+                return false;
             }
         } else {
             $sQry = "INSERT INTO $nom_tabla $aClauPrimaria VALUES $aClaus";
-            if (($oDblSt = $oDbl->prepare($sQry)) === FALSE) {
+            if (($oDblSt = $oDbl->prepare($sQry)) === false) {
                 $sClaveError = 'PgAppRepository.insertar.prepare';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-                return FALSE;
+                return false;
             }
         }
         try {
@@ -166,7 +166,7 @@ class PgAppRepository extends ClaseRepository implements AppRepositoryInterface
             $this->setErrorTxt($err_txt);
             $sClaveError = 'PgAppRepository.update.execute';
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
-            return FALSE;
+            return false;
         }
         return TRUE;
     }
@@ -175,15 +175,15 @@ class PgAppRepository extends ClaseRepository implements AppRepositoryInterface
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_app = $id_app")) === FALSE) {
+        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_app = $id_app")) === false) {
             $sClaveError = 'PgAppRepository.isNew';
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return FALSE;
+            return false;
         }
         if (!$oDblSt->rowCount()) {
             return TRUE;
         }
-        return FALSE;
+        return false;
     }
 
     public function datosById(int $id_app): array|bool
@@ -191,14 +191,14 @@ class PgAppRepository extends ClaseRepository implements AppRepositoryInterface
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         $sQuery = "SELECT * FROM $nom_tabla WHERE id_app = $id_app";
-        if (($oDblSt = $oDbl->query($sQuery)) === FALSE) {
+        if (($oDblSt = $oDbl->query($sQuery)) === false) {
             $sClaveError = 'PgAppRepository.getDatosById';
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return FALSE;
+            return false;
         }
         $aDades = $oDblSt->fetch(PDO::FETCH_ASSOC);
-        if ($aDades === FALSE) {
-            return FALSE;
+        if ($aDades === false) {
+            return false;
         }
         return $aDades;
     }

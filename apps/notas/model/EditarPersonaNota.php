@@ -9,15 +9,15 @@ use dossiers\model\entity\Dossier;
 use notas\model\entity\Acta;
 use notas\model\entity\GestorPersonaNotaDlDB;
 use notas\model\entity\GestorPersonaNotaOtraRegionStgrDB;
-use notas\model\entity\Nota;
 use notas\model\entity\PersonaNotaCertificadoDB;
 use notas\model\entity\PersonaNotaDB;
 use notas\model\entity\PersonaNotaDlDB;
 use notas\model\entity\PersonaNotaOtraRegionStgrDB;
 use personas\model\entity\Persona;
 use RuntimeException;
-use src\configuracion\domain\entity\GestorDbSchema;
-use src\ubis\application\repositories\DelegacionRepository;
+use src\notas\domain\entity\Nota;
+use src\ubis\domain\contracts\DelegacionRepositoryInterface;
+use src\utils_database\domain\contracts\DbSchemaRepositoryInterface;
 
 class EditarPersonaNota
 {
@@ -355,7 +355,7 @@ class EditarPersonaNota
     function getDatosRegionStgr($dele = '')
     {
 
-        $gesDelegacion = new DelegacionRepository();
+        $gesDelegacion = $GLOBALS['container']->get(DelegacionRepositoryInterface::class);
         try {
             $a_mi_region_stgr = $gesDelegacion->mi_region_stgr($dele);
         } catch (\RuntimeException $e) {
@@ -396,7 +396,7 @@ class EditarPersonaNota
         //$id_esquema_region_stgr = $a_mi_region_stgr['id_esquema_region_stgr'];
         $mi_id_schema = $a_mi_region_stgr['mi_id_schema'];
 
-        $gesSchemas = new GestorDbSchema();
+        $gesSchemas = $GLOBALS['container']->get(DbSchemaRepositoryInterface::class);
         $cSchemas = $gesSchemas->getDbSchemas(['id' => $id_schema_persona]);
         $nombre_schema_persona = $cSchemas[0]->getSchema();
         if (empty($nombre_schema_persona)) {

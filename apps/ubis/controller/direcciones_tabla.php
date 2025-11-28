@@ -2,6 +2,10 @@
 // INICIO Cabecera global de URL de controlador *********************************
 use core\ConfigGlobal;
 use core\ViewPhtml;
+use src\ubis\domain\contracts\DireccionCasaDlRepositoryInterface;
+use src\ubis\domain\contracts\DireccionCasaExRepositoryInterface;
+use src\ubis\domain\contracts\DireccionCentroDlRepositoryInterface;
+use src\ubis\domain\contracts\DireccionCentroExRepositoryInterface;
 use web\Hash;
 use web\Lista;
 
@@ -19,8 +23,20 @@ $Qc_p = (string)filter_input(INPUT_POST, 'c_p');
 $Qciudad = (string)filter_input(INPUT_POST, 'ciudad');
 $Qpais = (string)filter_input(INPUT_POST, 'pais');
 
-$DireccionRepository_name = 'src\\ubis\\application\\repositories\\' . $Qobj_dir .'Repository';
-$DireccionRepository = new $DireccionRepository_name();
+switch ($Qobj_dir) {
+    case "DireccionCentroDl":
+        $DireccionRepository = $GLOBALS['container']->get(DireccionCentroDlRepositoryInterface::class);
+        break;
+    case "DireccionCentroEx":
+        $DireccionRepository = $GLOBALS['container']->get(DireccionCentroExRepositoryInterface::class);
+        break;
+    case "DireccionCdcDl":
+        $DireccionRepository = $GLOBALS['container']->get(DireccionCasaDlRepositoryInterface::class);
+        break;
+    case "DireccionCdcEx":
+        $DireccionRepository = $GLOBALS['container']->get(DireccionCasaExRepositoryInterface::class);
+        break;
+}
 
 /*miro las condiciones. las variables son: centro,ciudad */
 if (!empty($Qc_p)) {

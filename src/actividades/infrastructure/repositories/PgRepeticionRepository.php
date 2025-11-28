@@ -11,7 +11,6 @@ use src\actividades\domain\contracts\RepeticionRepositoryInterface;
 use src\actividades\domain\entity\Repeticion;
 use src\actividades\domain\value_objects\RepeticionId;
 
-
 /**
  * Clase que adapta la tabla xa_tipo_repeticion a la interfaz del repositorio
  *
@@ -60,7 +59,7 @@ class PgRepeticionRepository extends ClaseRepository implements RepeticionReposi
      *
      * @param array $aWhere asociativo con los valores para cada campo de la BD.
      * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-     * @return array|FALSE Una colección de objetos de tipo Repeticion
+     * @return array|false Una colección de objetos de tipo Repeticion
      */
     public function getRepeticiones(array $aWhere = [], array $aOperators = []): array|false
     {
@@ -110,15 +109,15 @@ class PgRepeticionRepository extends ClaseRepository implements RepeticionReposi
             unset($aWhere['_limit']);
         }
         $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
-        if (($oDblSt = $oDbl->prepare($sQry)) === FALSE) {
+        if (($oDblSt = $oDbl->prepare($sQry)) === false) {
             $sClaveError = 'PgRepeticionRepository.listar.prepare';
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return FALSE;
+            return false;
         }
-        if (($oDblSt->execute($aWhere)) === FALSE) {
+        if (($oDblSt->execute($aWhere)) === false) {
             $sClaveError = 'PgRepeticionRepository.listar.execute';
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
-            return FALSE;
+            return false;
         }
 
         $filas = $oDblSt->fetchAll(PDO::FETCH_ASSOC);
@@ -137,14 +136,13 @@ class PgRepeticionRepository extends ClaseRepository implements RepeticionReposi
         $id_repeticion = $Repeticion->getId_repeticion();
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        if (($oDbl->exec("DELETE FROM $nom_tabla WHERE id_repeticion = $id_repeticion")) === FALSE) {
+        if (($oDbl->exec("DELETE FROM $nom_tabla WHERE id_repeticion = $id_repeticion")) === false) {
             $sClaveError = 'PgRepeticionRepository.eliminar';
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return FALSE;
+            return false;
         }
         return TRUE;
     }
-
 
     /**
      * Si no existe el registro, hace un insert, si existe, se hace el update.
@@ -162,16 +160,16 @@ class PgRepeticionRepository extends ClaseRepository implements RepeticionReposi
         $aDatos['tipo'] = $Repeticion->getTipo();
         array_walk($aDatos, 'core\poner_null');
 
-        if ($bInsert === FALSE) {
+        if ($bInsert === false) {
             //UPDATE
             $update = "
 					repeticion               = :repeticion,
 					temporada                = :temporada,
 					tipo                     = :tipo";
-            if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_repeticion = $id_repeticion")) === FALSE) {
+            if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_repeticion = $id_repeticion")) === false) {
                 $sClaveError = 'PgRepeticionRepository.update.prepare';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-                return FALSE;
+                return false;
             }
 
             try {
@@ -181,17 +179,17 @@ class PgRepeticionRepository extends ClaseRepository implements RepeticionReposi
                 $this->setErrorTxt($err_txt);
                 $sClaveError = 'PgRepeticionRepository.update.execute';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
-                return FALSE;
+                return false;
             }
         } else {
             // INSERT
             $aDatos['id_repeticion'] = $Repeticion->getId_repeticion();
             $campos = "(id_repeticion,repeticion,temporada,tipo)";
             $valores = "(:id_repeticion,:repeticion,:temporada,:tipo)";
-            if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === FALSE) {
+            if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {
                 $sClaveError = 'PgRepeticionRepository.insertar.prepare';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-                return FALSE;
+                return false;
             }
             try {
                 $oDblSt->execute($aDatos);
@@ -200,7 +198,7 @@ class PgRepeticionRepository extends ClaseRepository implements RepeticionReposi
                 $this->setErrorTxt($err_txt);
                 $sClaveError = 'PgRepeticionRepository.insertar.execute';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
-                return FALSE;
+                return false;
             }
         }
         return TRUE;
@@ -210,15 +208,15 @@ class PgRepeticionRepository extends ClaseRepository implements RepeticionReposi
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_repeticion = $id_repeticion")) === FALSE) {
+        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_repeticion = $id_repeticion")) === false) {
             $sClaveError = 'PgRepeticionRepository.isNew';
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return FALSE;
+            return false;
         }
         if (!$oDblSt->rowCount()) {
             return TRUE;
         }
-        return FALSE;
+        return false;
     }
 
     /**
@@ -232,10 +230,10 @@ class PgRepeticionRepository extends ClaseRepository implements RepeticionReposi
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
-        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_repeticion = $id_repeticion")) === FALSE) {
+        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_repeticion = $id_repeticion")) === false) {
             $sClaveError = 'PgRepeticionRepository.getDatosById';
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return FALSE;
+            return false;
         }
         $aDatos = $oDblSt->fetch(PDO::FETCH_ASSOC);
         return $aDatos;
@@ -245,7 +243,6 @@ class PgRepeticionRepository extends ClaseRepository implements RepeticionReposi
     {
         return $this->datosById($id->value());
     }
-
 
     /**
      * Busca la clase con id_repeticion en la base de datos .

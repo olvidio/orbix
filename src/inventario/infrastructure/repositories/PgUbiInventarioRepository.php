@@ -10,7 +10,6 @@ use PDOException;
 use src\inventario\domain\contracts\UbiInventarioRepositoryInterface;
 use src\inventario\domain\entity\UbiInventario;
 
-
 /**
  * Clase que adapta la tabla i_ubis_dl a la interfaz del repositorio
  *
@@ -88,10 +87,10 @@ class PgUbiInventarioRepository extends ClaseRepository implements UbiInventario
 	 *
 	 * @param array $aWhere asociativo con los valores para cada campo de la BD.
 	 * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-	 * @return array|FALSE Una colección de objetos de tipo UbiInventario
+	 * @return array|false Una colección de objetos de tipo UbiInventario
 	
 	 */
-	public function getUbisInventario(array $aWhere=[], array $aOperators=[]): array|FALSE
+	public function getUbisInventario(array $aWhere=[], array $aOperators=[]): array|false
 	{
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
@@ -117,15 +116,15 @@ class PgUbiInventarioRepository extends ClaseRepository implements UbiInventario
 		if (isset($aWhere['_limit']) && $aWhere['_limit'] !== '') { $sLimit = ' LIMIT '.$aWhere['_limit']; }
 		if (isset($aWhere['_limit'])) { unset($aWhere['_limit']); }
 		$sQry = "SELECT * FROM $nom_tabla ".$sCondicion.$sOrdre.$sLimit;
-		if (($oDblSt = $oDbl->prepare($sQry)) === FALSE) {
+		if (($oDblSt = $oDbl->prepare($sQry)) === false) {
 			$sClaveError = 'PgUbiInventarioRepository.listar.prepare';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-			return FALSE;
+			return false;
 		}
-		if (($oDblSt->execute($aWhere)) === FALSE) {
+		if (($oDblSt->execute($aWhere)) === false) {
 			$sClaveError = 'PgUbiInventarioRepository.listar.execute';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
-			return FALSE;
+			return false;
 		}
 		
 		$filas = $oDblSt->fetchAll(PDO::FETCH_ASSOC);
@@ -144,10 +143,10 @@ class PgUbiInventarioRepository extends ClaseRepository implements UbiInventario
         $id_ubi = $UbiInventario->getIdUbiVo()->value();
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        if (($oDbl->exec("DELETE FROM $nom_tabla WHERE id_ubi = $id_ubi")) === FALSE) {
+        if (($oDbl->exec("DELETE FROM $nom_tabla WHERE id_ubi = $id_ubi")) === false) {
             $sClaveError = 'PgUbiInventarioRepository.eliminar';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return FALSE;
+            return false;
         }
         return TRUE;
     }
@@ -169,15 +168,15 @@ class PgUbiInventarioRepository extends ClaseRepository implements UbiInventario
         $aDatos['id_ubi_activ'] = $UbiInventario->getIdUbiActivVo()?->value();
         array_walk($aDatos, 'core\poner_null');
 
-        if ($bInsert === FALSE) {
+        if ($bInsert === false) {
             //UPDATE
             $update="
                     nom_ubi                  = :nom_ubi,
                     id_ubi_activ             = :id_ubi_activ";
-            if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_ubi = $id_ubi")) === FALSE) {
+            if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_ubi = $id_ubi")) === false) {
                 $sClaveError = 'PgUbiInventarioRepository.update.prepare';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-                return FALSE;
+                return false;
             }
             
             try {
@@ -187,17 +186,17 @@ class PgUbiInventarioRepository extends ClaseRepository implements UbiInventario
                 $this->setErrorTxt($err_txt);
                 $sClaveError = 'PgUbiInventarioRepository.update.execute';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
-                return FALSE;
+                return false;
             }
         } else {
             // INSERT
             $aDatos['id_ubi'] = $UbiInventario->getIdUbiVo()->value();
             $campos="(id_ubi,nom_ubi,id_ubi_activ)";
             $valores="(:id_ubi,:nom_ubi,:id_ubi_activ)";        
-            if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === FALSE) {
+            if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {
                 $sClaveError = 'PgUbiInventarioRepository.insertar.prepare';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-                return FALSE;
+                return false;
             }
             try {
                 $oDblSt->execute($aDatos);
@@ -206,7 +205,7 @@ class PgUbiInventarioRepository extends ClaseRepository implements UbiInventario
                 $this->setErrorTxt($err_txt);
                 $sClaveError = 'PgUbiInventarioRepository.insertar.execute';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
-                return FALSE;
+                return false;
             }
         }
         return TRUE;
@@ -216,15 +215,15 @@ class PgUbiInventarioRepository extends ClaseRepository implements UbiInventario
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_ubi = $id_ubi")) === FALSE) {
+        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_ubi = $id_ubi")) === false) {
 			$sClaveError = 'PgUbiInventarioRepository.isNew';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return FALSE;
+            return false;
         }
         if (!$oDblSt->rowCount()) {
             return TRUE;
         }
-        return FALSE;
+        return false;
     }
 	
     /**
@@ -239,10 +238,10 @@ class PgUbiInventarioRepository extends ClaseRepository implements UbiInventario
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_ubi = $id_ubi")) === FALSE) {
+        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_ubi = $id_ubi")) === false) {
 			$sClaveError = 'PgUbiInventarioRepository.getDatosById';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return FALSE;
+            return false;
         }
 		$aDatos = $oDblSt->fetch(PDO::FETCH_ASSOC);
         return $aDatos;

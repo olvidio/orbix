@@ -3,12 +3,11 @@
 namespace actividadestudios\model;
 
 use actividades\model\entity\ActividadAll;
-use asignaturas\model\entity\Asignatura;
 use core\ConfigGlobal;
 use core\ViewPhtml;
 use personas\model\entity\Persona;
-use src\asignaturas\application\repositories\AsignaturaRepository;
-use src\configuracion\domain\entity\GestorDbSchema;
+use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
+use src\utils_database\domain\contracts\DbSchemaRepositoryInterface;
 use web\Hash;
 use web\Lista;
 
@@ -108,21 +107,22 @@ class Select3005
         $cActivAsignaturas = $GesActivAsignaturas->getActividadAsignaturas(array('id_activ' => $this->id_pau, '_ordre' => 'id_asignatura'));
 
         $mi_dele = ConfigGlobal::mi_delef();
-        $gesDbSchemas = new GestorDbSchema();
+        $DbSchemaRepository = $GLOBALS['container']->get(DbSchemaRepositoryInterface::class);
         $c = 0;
         $a_valores = [];
+        $AsignaturaRepository = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class);
         foreach ($cActivAsignaturas as $oActividadAsignatura) {
             $c++;
             $id_activ = $oActividadAsignatura->getId_activ();
             $id_asignatura = $oActividadAsignatura->getId_asignatura();
-            $oAsignatura = (new AsignaturaRepository())->findById($id_asignatura);
+            $oAsignatura = $AsignaturaRepository->findById($id_asignatura);
             if ($oAsignatura === null) {
                 throw new \Exception(sprintf(_("No se ha encontrado la asignatura con id: %s"), $id_asignatura));
             }
             $nombre_corto = $oAsignatura->getNombre_corto();
             $creditos = $oAsignatura->getCreditos();
             $id_schema = $oActividadAsignatura->getId_schema();
-            $cDbSchemas = $gesDbSchemas->getDbSchemas(['id' => $id_schema]);
+            $cDbSchemas = $DbSchemaRepository->getDbSchemas(['id' => $id_schema]);
             $a_reg = explode('-', $cDbSchemas[0]->getSchema());
             $dl_matricula = substr($a_reg[1], 0, -1); // quito la v o la f.
             if ($dl_matricula != $this->dl_org) {

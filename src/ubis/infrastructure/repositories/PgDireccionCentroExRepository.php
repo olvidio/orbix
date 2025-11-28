@@ -2,8 +2,8 @@
 
 namespace src\ubis\infrastructure\repositories;
 
-
 use core\ConfigGlobal;
+use src\ubis\domain\contracts\DireccionCentroExRepositoryInterface;
 use src\utils_database\domain\GenerateIdGlobal;
 
 /**
@@ -15,7 +15,7 @@ use src\utils_database\domain\GenerateIdGlobal;
  * @version 2.0
  * @created 21/11/2025
  */
-class PgDireccionCentroExRepository extends PgDireccionRepository
+class PgDireccionCentroExRepository extends PgDireccionRepository implements DireccionCentroExRepositoryInterface
 {
     public function __construct()
     {
@@ -27,7 +27,7 @@ class PgDireccionCentroExRepository extends PgDireccionRepository
         $this->setNomTabla('u_dir_ctr_ex');
     }
 
-    public function getNewId()
+    public function getNewId(): int
     {
         $oDbl = $this->getoDbl();
         $sQuery = "select nextval('u_dir_ctr_ex_id_item_seq'::regclass)";

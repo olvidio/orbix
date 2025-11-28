@@ -5,7 +5,6 @@ namespace src\actividadcargos\domain\contracts;
 use PDO;
 use src\actividadcargos\domain\entity\Cargo;
 
-
 use function core\is_true;
 /**
  * Interfaz de la clase Cargo y su Repositorio
@@ -28,10 +27,10 @@ interface CargoRepositoryInterface
 	 *
 	 * @param array $aWhere asociativo con los valores para cada campo de la BD.
 	 * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-	 * @return array|FALSE Una colección de objetos de tipo Cargo
+	 * @return array|false Una colección de objetos de tipo Cargo
 	
 	 */
-	public function getCargos(array $aWhere=[], array $aOperators=[]): array|FALSE;
+	public function getCargos(array $aWhere=[], array $aOperators=[]): array|false;
 	
 /* -------------------- ENTIDAD --------------------------------------------- */
 

@@ -1,13 +1,11 @@
 <?php
 
 use actividadestudios\model\entity\ActividadAsignaturaDl;
-use asignaturas\model\entity\Asignatura;
-use asignaturas\model\entity\GestorAsignatura;
 use core\ConfigGlobal;
 use core\ViewPhtml;
 use profesores\model\entity\GestorProfesor;
 use profesores\model\entity\GestorProfesorActividad;
-use src\asignaturas\application\repositories\AsignaturaRepository;
+use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use web\Desplegable;
 use web\Hash;
 
@@ -73,7 +71,7 @@ if (!empty($Qid_asignatura)) { //caso de modificar
     $f_ini = $oActividadAsignatura->getF_ini()->getFromLocal();
     $f_fin = $oActividadAsignatura->getF_fin()->getFromLocal();
 
-    $oAsignatura = (new AsignaturaRepository())->findById($Qid_asignatura);
+    $oAsignatura = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class)->findById($Qid_asignatura);
     if ($oAsignatura === null) {
         throw new \Exception(sprintf(_("No se ha encontrado la asignatura con id: %s"), $Qid_asignatura));
     }
@@ -91,7 +89,7 @@ if (!empty($Qid_asignatura)) { //caso de modificar
     $f_ini = '';
     $f_fin = '';
     if (!empty($Qid_activ)) {
-        $AsignaturaRepository = new AsignaturaRepository();;
+        $AsignaturaRepository = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class);;
         $aOpciones = $AsignaturaRepository->getArrayAsignaturasConSeparador(false);
         $oDesplAsignaturas = new Desplegable('', $aOpciones, '', true);
         $oDesplAsignaturas->setNombre('id_asignatura');

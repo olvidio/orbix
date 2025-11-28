@@ -2,7 +2,7 @@
 
 use core\ConfigGlobal;
 use notas\model\AsignaturasPendientes;
-use src\ubis\application\repositories\CentroDlRepository;
+use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use web\Hash;
 use web\Lista;
 use function core\is_true;
@@ -142,7 +142,7 @@ foreach ($aId_nom as $id_nom => $aAsignaturas) {
         $nombre_ubi = $oPersona->getDl();
     } else {
         $id_ctr = $oPersona->getId_ctr();
-        $CentroDlRepository = new CentroDlRepository();
+        $CentroDlRepository = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
         $oCentroDl = $CentroDlRepository->findById($id_ctr);
         $nombre_ubi = $oCentroDl->getNombre_ubi();
     }

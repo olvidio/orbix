@@ -8,12 +8,10 @@
 
 namespace notas\model;
 
-use asignaturas\model\entity\Asignatura;
-use asignaturas\model\entity\GestorAsignatura;
 use core\ViewPhtml;
 use personas\model\entity\Persona;
-use src\asignaturas\application\repositories\AsignaturaRepository;
-use src\notas\application\repositories\NotaRepository;
+use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
+use src\notas\domain\contracts\NotaRepositoryInterface;
 use web\DateTimeLocal;
 use web\Posicion;
 use function core\is_true;
@@ -116,7 +114,7 @@ class Tesera
     {
         $this->getCurso();
         // Asignaturas posibles:
-        $AsignaturaRepository = new AsignaturaRepository();
+        $AsignaturaRepository = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class);
         $aWhere = [];
         $aOperador = [];
         $aWhere['status'] = 't';
@@ -139,13 +137,14 @@ class Tesera
         $aOperador['id_nivel'] = 'BETWEEN';
         $cNotas = $GesNotas->getPersonaNotas($aWhere, $aOperador);
         $aAprobadas = [];
+        $AsignaturaRepository = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class);
         foreach ($cNotas as $oPersonaNota) {
             $id_asignatura = $oPersonaNota->getId_asignatura();
             $id_nivel = $oPersonaNota->getId_nivel();
             $oF_acta = $oPersonaNota->getF_acta();
             $id_situacion = $oPersonaNota->getId_situacion();
             $bAprobada = $oPersonaNota->isAprobada();
-            $oAsignatura = (new AsignaturaRepository())->findById($id_asignatura);
+            $oAsignatura = $AsignaturaRepository->findById($id_asignatura);
             if ($oAsignatura === null) {
                 throw new \Exception(sprintf(_("No se ha encontrado la asignatura con id: %s"), $id_asignatura));
             }
@@ -186,7 +185,7 @@ class Tesera
         $num_creditos_total = 0;
 
         // array con los id_situacion correspondientes a notas 'superadas'
-        $NotaRepository = new NotaRepository();
+        $NotaRepository = $GLOBALS['container']->get(NotaRepositoryInterface::class);
         $aIdSuperadas = $NotaRepository->getArrayNotasSuperadas(); // Ojo la numéricas
 
         $a = 0;

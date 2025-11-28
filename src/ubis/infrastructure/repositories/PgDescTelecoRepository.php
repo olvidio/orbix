@@ -11,7 +11,6 @@ use PDOException;
 use src\ubis\domain\entity\DescTeleco;
 use src\ubis\domain\contracts\DescTelecoRepositoryInterface;
 
-
 use function core\is_true;
 /**
  * Clase que adapta la tabla xd_desc_teleco a la interfaz del repositorio
@@ -86,10 +85,10 @@ class PgDescTelecoRepository extends ClaseRepository implements DescTelecoReposi
 	 *
 	 * @param array $aWhere asociativo con los valores para cada campo de la BD.
 	 * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-	 * @return array|FALSE Una colección de objetos de tipo DescTeleco
+	 * @return array|false Una colección de objetos de tipo DescTeleco
 	
 	 */
-	public function getDescsTeleco(array $aWhere=[], array $aOperators=[]): array|FALSE
+	public function getDescsTeleco(array $aWhere=[], array $aOperators=[]): array|false
 	{
         $oDbl = $this->getoDbl_Select();
 		$nom_tabla = $this->getNomTabla();
@@ -115,15 +114,15 @@ class PgDescTelecoRepository extends ClaseRepository implements DescTelecoReposi
 		if (isset($aWhere['_limit']) && $aWhere['_limit'] !== '') { $sLimit = ' LIMIT '.$aWhere['_limit']; }
 		if (isset($aWhere['_limit'])) { unset($aWhere['_limit']); }
 		$sQry = "SELECT * FROM $nom_tabla ".$sCondicion.$sOrdre.$sLimit;
-		if (($oDblSt = $oDbl->prepare($sQry)) === FALSE) {
+		if (($oDblSt = $oDbl->prepare($sQry)) === false) {
 			$sClaveError = 'PgDescTelecoRepository.listar.prepare';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-			return FALSE;
+			return false;
 		}
-		if (($oDblSt->execute($aWhere)) === FALSE) {
+		if (($oDblSt->execute($aWhere)) === false) {
 			$sClaveError = 'PgDescTelecoRepository.listar.execute';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
-			return FALSE;
+			return false;
 		}
 		
 		$filas = $oDblSt->fetchAll(PDO::FETCH_ASSOC);
@@ -142,10 +141,10 @@ class PgDescTelecoRepository extends ClaseRepository implements DescTelecoReposi
         $id_item = $DescTeleco->getId_item();
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        if (($oDbl->exec("DELETE FROM $nom_tabla WHERE id_item = $id_item")) === FALSE) {
+        if (($oDbl->exec("DELETE FROM $nom_tabla WHERE id_item = $id_item")) === false) {
             $sClaveError = 'PgDescTelecoRepository.eliminar';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return FALSE;
+            return false;
         }
         return TRUE;
     }
@@ -170,11 +169,11 @@ class PgDescTelecoRepository extends ClaseRepository implements DescTelecoReposi
   $aDatos['ubi'] = $DescTeleco->isUbi();
   $aDatos['persona'] = $DescTeleco->isPersona();
 		array_walk($aDatos, 'core\poner_null');
-		//para el caso de los boolean FALSE, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
+		//para el caso de los boolean false, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
 		if ( is_true($aDatos['ubi']) ) { $aDatos['ubi']='true'; } else { $aDatos['ubi']='false'; }
 		if ( is_true($aDatos['persona']) ) { $aDatos['persona']='true'; } else { $aDatos['persona']='false'; }
 
-		if ($bInsert === FALSE) {
+		if ($bInsert === false) {
 			//UPDATE
 			$update="
 					orden                    = :orden,
@@ -182,10 +181,10 @@ class PgDescTelecoRepository extends ClaseRepository implements DescTelecoReposi
 					desc_teleco              = :desc_teleco,
 					ubi                      = :ubi,
 					persona                  = :persona";
-			if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_item = $id_item")) === FALSE) {
+			if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_item = $id_item")) === false) {
 				$sClaveError = 'PgDescTelecoRepository.update.prepare';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-				return FALSE;
+				return false;
 			}
 				
             try {
@@ -195,17 +194,17 @@ class PgDescTelecoRepository extends ClaseRepository implements DescTelecoReposi
                 $this->setErrorTxt($err_txt);
                 $sClaveError = 'PgDescTelecoRepository.update.execute';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
-                return FALSE;
+                return false;
             }
 		} else {
 			// INSERT
 			$aDatos['id_item'] = $DescTeleco->getId_item();
 			$campos="(id_item,orden,id_tipo_teleco,desc_teleco,ubi,persona)";
 			$valores="(:id_item,:orden,:id_tipo_teleco,:desc_teleco,:ubi,:persona)";
-			if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === FALSE) {
+			if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {
 				$sClaveError = 'PgDescTelecoRepository.insertar.prepare';
 				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-				return FALSE;
+				return false;
 			}
             try {
                 $oDblSt->execute($aDatos);
@@ -214,7 +213,7 @@ class PgDescTelecoRepository extends ClaseRepository implements DescTelecoReposi
                 $this->setErrorTxt($err_txt);
                 $sClaveError = 'PgDescTelecoRepository.insertar.execute';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
-                return FALSE;
+                return false;
 			}
 		}
 		return TRUE;
@@ -224,15 +223,15 @@ class PgDescTelecoRepository extends ClaseRepository implements DescTelecoReposi
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_item = $id_item")) === FALSE) {
+        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_item = $id_item")) === false) {
 			$sClaveError = 'PgDescTelecoRepository.isNew';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return FALSE;
+            return false;
         }
         if (!$oDblSt->rowCount()) {
             return TRUE;
         }
-        return FALSE;
+        return false;
     }
 	
     /**
@@ -247,10 +246,10 @@ class PgDescTelecoRepository extends ClaseRepository implements DescTelecoReposi
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
-        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_item = $id_item")) === FALSE) {
+        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_item = $id_item")) === false) {
 			$sClaveError = 'PgDescTelecoRepository.getDatosById';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return FALSE;
+            return false;
         }
 		$aDatos = $oDblSt->fetch(PDO::FETCH_ASSOC);
         return $aDatos;

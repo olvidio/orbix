@@ -1,24 +1,13 @@
 <?php
 
-
-// INICIO Cabecera global de URL de controlador *********************************
 use core\ConfigGlobal;
 use core\ServerConf;
 use personas\model\entity\Persona;
-use src\certificados\application\repositories\CertificadoRecibidoRepository;
+use src\certificados\domain\contracts\CertificadoRecibidoRepositoryInterface;
 use src\certificados\domain\entity\CertificadoRecibido;
 use web\ContestarJson;
 use web\DateTimeLocal;
 use function core\is_true;
-
-require_once("apps/core/global_header.inc");
-// Archivos requeridos por esta url **********************************************
-
-// Crea los objetos de uso global **********************************************
-require_once("apps/core/global_object.inc");
-// Crea los objetos por esta url  **********************************************
-
-// FIN de  Cabecera global de URL de controlador ********************************
 
 $Qnuevo = (integer)filter_input(INPUT_POST, 'nuevo');
 $Qid_item = (integer)filter_input(INPUT_POST, 'id_item');
@@ -41,7 +30,7 @@ $oF_recibido = DateTimeLocal::createFromLocal($Qf_recibido);
 
 $error_txt = '';
 
-$certificadoRecibidoRepository = new CertificadoRecibidoRepository();
+$certificadoRecibidoRepository = $GLOBALS['container']->get(CertificadoRecibidoRepositoryInterface::class);
 
 if (is_true($Qnuevo)) {
     $Qid_item = $certificadoRecibidoRepository->getNewId_item();
@@ -68,7 +57,7 @@ $oCertificadoRecibido->setCertificado($Qcertificado);
 if (is_true($Qfirmado)) {
     $firmado = TRUE;
 } else {
-    $firmado = FALSE;
+    $firmado = false;
 }
 $oCertificadoRecibido->setFirmado($firmado);
 $oCertificadoRecibido->setEsquema_emisor(ConfigGlobal::mi_region_dl());
@@ -78,7 +67,7 @@ if (!empty($oF_recibido)) {
     $oCertificadoRecibido->setF_recibido($oF_recibido);
 }
 
-if ($certificadoRecibidoRepository->Guardar($oCertificadoRecibido) === FALSE) {
+if ($certificadoRecibidoRepository->Guardar($oCertificadoRecibido) === false) {
     $error_txt .= $certificadoRecibidoRepository->getErrorTxt();
 }
 // borrar el pdf en log

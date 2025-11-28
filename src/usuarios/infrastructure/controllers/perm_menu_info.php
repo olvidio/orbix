@@ -1,23 +1,13 @@
 <?php
 
-use src\usuarios\application\repositories\GrupoRepository;
+use src\usuarios\domain\contracts\GrupoRepositoryInterface;
 use src\usuarios\domain\entity\PermMenu;
 use web\ContestarJson;
-
-// INICIO Cabecera global de URL de controlador *********************************
-require_once("apps/core/global_header.inc");
-// Archivos requeridos por esta url **********************************************
-
-// Crea los objetos de uso global **********************************************
-require_once("apps/core/global_object.inc");
-// Crea los objetos por esta url  **********************************************
-
-// FIN de  Cabecera global de URL de controlador ********************************
 
 $Qid_usuario = (int)filter_input(INPUT_POST, 'id_usuario');
 $Qid_item = (int)filter_input(INPUT_POST, 'id_item');
 
-$GrupoRepository = new GrupoRepository();
+$GrupoRepository = $GLOBALS['container']->get(GrupoRepositoryInterface::class);
 $oUsuario = $GrupoRepository->findById($Qid_usuario); // La tabla y su heredada
 $nombre = $oUsuario->getUsuarioAsString();
 

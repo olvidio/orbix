@@ -12,7 +12,6 @@ use src\inventario\domain\entity\Coleccion;
 use src\inventario\domain\value_objects\ColeccionId;
 use function core\is_true;
 
-
 /**
  * Clase que adapta la tabla i_colecciones_dl a la interfaz del repositorio
  *
@@ -50,8 +49,6 @@ class PgColeccionRepository extends ClaseRepository implements ColeccionReposito
 		return $aOpciones;
 	}
 
-
-
 /* -------------------- GESTOR BASE ---------------------------------------- */
 
 	/**
@@ -59,10 +56,10 @@ class PgColeccionRepository extends ClaseRepository implements ColeccionReposito
 	 *
 	 * @param array $aWhere asociativo con los valores para cada campo de la BD.
 	 * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-	 * @return array|FALSE Una colección de objetos de tipo Coleccion
+	 * @return array|false Una colección de objetos de tipo Coleccion
 	
 	 */
-	public function getColecciones(array $aWhere=[], array $aOperators=[]): array|FALSE
+	public function getColecciones(array $aWhere=[], array $aOperators=[]): array|false
 	{
 		$oDbl = $this->getoDbl();
 		$nom_tabla = $this->getNomTabla();
@@ -88,15 +85,15 @@ class PgColeccionRepository extends ClaseRepository implements ColeccionReposito
 		if (isset($aWhere['_limit']) && $aWhere['_limit'] !== '') { $sLimit = ' LIMIT '.$aWhere['_limit']; }
 		if (isset($aWhere['_limit'])) { unset($aWhere['_limit']); }
 		$sQry = "SELECT * FROM $nom_tabla ".$sCondicion.$sOrdre.$sLimit;
-		if (($oDblSt = $oDbl->prepare($sQry)) === FALSE) {
+		if (($oDblSt = $oDbl->prepare($sQry)) === false) {
 			$sClaveError = 'PgColeccionRepository.listar.prepare';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-			return FALSE;
+			return false;
 		}
-		if (($oDblSt->execute($aWhere)) === FALSE) {
+		if (($oDblSt->execute($aWhere)) === false) {
 			$sClaveError = 'PgColeccionRepository.listar.execute';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
-			return FALSE;
+			return false;
 		}
 		
 		$filas = $oDblSt->fetchAll(PDO::FETCH_ASSOC);
@@ -115,10 +112,10 @@ class PgColeccionRepository extends ClaseRepository implements ColeccionReposito
         $id_coleccion = $Coleccion->getIdColeccionVo()?->value() ?? $Coleccion->getId_coleccion();
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        if (($oDbl->exec("DELETE FROM $nom_tabla WHERE id_coleccion = $id_coleccion")) === FALSE) {
+        if (($oDbl->exec("DELETE FROM $nom_tabla WHERE id_coleccion = $id_coleccion")) === false) {
             $sClaveError = 'PgColeccionRepository.eliminar';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return FALSE;
+            return false;
         }
         return TRUE;
     }
@@ -139,18 +136,18 @@ class PgColeccionRepository extends ClaseRepository implements ColeccionReposito
         $aDatos['nom_coleccion'] = $Coleccion->getNomColeccionVo()?->value();
         $aDatos['agrupar'] = $Coleccion->getAgruparVo()?->value();
         array_walk($aDatos, 'core\poner_null');
-        //para el caso de los boolean FALSE, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
+        //para el caso de los boolean false, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
         if ( is_true($aDatos['agrupar']) ) { $aDatos['agrupar']='true'; } else { $aDatos['agrupar']='false'; }
 
-        if ($bInsert === FALSE) {
+        if ($bInsert === false) {
             //UPDATE
             $update="
                     nom_coleccion            = :nom_coleccion,
                     agrupar                  = :agrupar";
-            if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_coleccion = $id_coleccion")) === FALSE) {
+            if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_coleccion = $id_coleccion")) === false) {
                 $sClaveError = 'PgColeccionRepository.update.prepare';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-                return FALSE;
+                return false;
             }
             
             try {
@@ -160,17 +157,17 @@ class PgColeccionRepository extends ClaseRepository implements ColeccionReposito
                 $this->setErrorTxt($err_txt);
                 $sClaveError = 'PgColeccionRepository.update.execute';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
-                return FALSE;
+                return false;
             }
         } else {
             // INSERT
             $aDatos['id_coleccion'] = $Coleccion->getIdColeccionVo()?->value() ?? $Coleccion->getId_coleccion();
             $campos="(id_coleccion,nom_coleccion,agrupar)";
             $valores="(:id_coleccion,:nom_coleccion,:agrupar)";        
-            if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === FALSE) {
+            if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {
                 $sClaveError = 'PgColeccionRepository.insertar.prepare';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-                return FALSE;
+                return false;
             }
             try {
                 $oDblSt->execute($aDatos);
@@ -179,7 +176,7 @@ class PgColeccionRepository extends ClaseRepository implements ColeccionReposito
                 $this->setErrorTxt($err_txt);
                 $sClaveError = 'PgColeccionRepository.insertar.execute';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
-                return FALSE;
+                return false;
             }
         }
         return TRUE;
@@ -189,15 +186,15 @@ class PgColeccionRepository extends ClaseRepository implements ColeccionReposito
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_coleccion = $id_coleccion")) === FALSE) {
+        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_coleccion = $id_coleccion")) === false) {
 			$sClaveError = 'PgColeccionRepository.isNew';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return FALSE;
+            return false;
         }
         if (!$oDblSt->rowCount()) {
             return TRUE;
         }
-        return FALSE;
+        return false;
     }
 	
     /**
@@ -213,10 +210,10 @@ class PgColeccionRepository extends ClaseRepository implements ColeccionReposito
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         $id = $id_coleccion->value();
-        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_coleccion = $id")) === FALSE) {
+        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_coleccion = $id")) === false) {
 			$sClaveError = 'PgColeccionRepository.getDatosById';
 			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return FALSE;
+            return false;
         }
 		$aDatos = $oDblSt->fetch(PDO::FETCH_ASSOC);
         return $aDatos;

@@ -35,7 +35,7 @@ use core\ConfigGlobal;
 use core\ViewPhtml;
 use permisos\model\PermisosActividadesTrue;
 use src\ubis\domain\entity\Ubi;
-use src\usuarios\application\repositories\PreferenciaRepository;
+use src\usuarios\domain\contracts\PreferenciaRepositoryInterface;
 use web\Hash;
 use web\Lista;
 use web\Periodo;
@@ -223,7 +223,7 @@ $a_valores = [];
 $sPrefs = '';
 $id_usuario = ConfigGlobal::mi_id_usuario();
 $tipo = 'tabla_presentacion';
-$PreferenciaRepository = new PreferenciaRepository();
+$PreferenciaRepository = $GLOBALS['container']->get(PreferenciaRepositoryInterface::class);
 $oPreferencia = $PreferenciaRepository->findById($id_usuario, $tipo);
 if ($oPreferencia !== null) {
     $sPrefs = $oPreferencia->getPreferencia();

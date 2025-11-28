@@ -10,6 +10,9 @@ use src\ubis\domain\value_objects\{CentroId,
     TipoCentroCode,
     TipoLaborId,
     UbiNombreText};
+use src\ubis\domain\contracts\DireccionCentroRepositoryInterface;
+use src\ubis\domain\contracts\DireccionRepositoryInterface;
+use src\ubis\domain\contracts\RelacionCentroDireccionRepositoryInterface;
 use web\DateTimeLocal;
 use web\NullDateTimeLocal;
 use function core\is_true;
@@ -103,6 +106,19 @@ class Centro
     private ?CentroId $iid_ctr_padre = null;
 
     private int $iid_auto;
+
+    /**
+     * Constructor para inyectar los repositorios necesarios.
+     *
+     * $repoCasaDireccion Repositorio de relación Casa-Dirección
+     * $repoDireccion Repositorio de Direcciones
+     */
+    public function __construct()
+    {
+        $this->repoCasaDireccion = $GLOBALS['container']->get(RelacionCentroDireccionRepositoryInterface::class);
+        $this->repoDireccion = $GLOBALS['container']->get(DireccionCentroRepositoryInterface::class);
+    }
+
     /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
     /**
@@ -421,6 +437,10 @@ class Centro
     /**
      * @deprecated Mantener por compatibilidad UI; se usa DateTimeLocal/NullDateTimeLocal.
      */
+    /**
+     * @return DateTimeLocal|NullDateTimeLocal|null $df_status
+     * @deprecated El retorno null está deprecado. Este getter aplica fallback y no devolverá null en tiempo de ejecución.
+     */
     public function getF_status(): DateTimeLocal|NullDateTimeLocal|null
     {
         return $this->df_status ?? new NullDateTimeLocal;
@@ -433,9 +453,12 @@ class Centro
     /**
      * @deprecated Mantener por compatibilidad UI; se usa DateTimeLocal/NullDateTimeLocal.
      */
-    public function setF_status(DateTimeLocal|null $df_status = null): void
+    /**
+     * @param DateTimeLocal|NullDateTimeLocal|null $df_status
+     */
+    public function setF_status(DateTimeLocal|NullDateTimeLocal|null $df_status = null): void
     {
-        $this->df_status = $df_status;
+        $this->df_status = $df_status instanceof NullDateTimeLocal ? null : $df_status;
     }
 
     /**

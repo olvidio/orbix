@@ -11,7 +11,7 @@ use core\ConfigGlobal;
 use core\Set;
 use personas\model\entity\Persona;
 use personas\model\entity\PersonaSacd;
-use src\actividadcargos\application\repositories\CargoRepository;
+use src\actividadcargos\domain\contracts\CargoRepositoryInterface;
 
 /**
  * GestorActividadCargo
@@ -52,7 +52,7 @@ class GestorActividadCargo extends ClaseGestor
     function getActividadIdSacds($iid_activ = '')
     {
         // valores del id_cargo de tipo_cargo = sacd:
-        $CargoRepository = new CargoRepository();
+        $CargoRepository = $GLOBALS['container']->get(CargoRepositoryInterface::class);
         $aIdCargos_sacd = $CargoRepository->getArrayCargos('sacd');
         $txt_where_cargos = implode(',', array_keys($aIdCargos_sacd));
 
@@ -84,7 +84,7 @@ class GestorActividadCargo extends ClaseGestor
     function getActividadSacds($iid_activ = '')
     {
         // valores del id_cargo de tipo_cargo = sacd:
-        $CargoREpository = new CargoRepository();
+        $CargoREpository = $GLOBALS['container']->get(CargoRepositoryInterface::class);
         $aIdCargos_sacd = $CargoREpository->getArrayCargos('sacd');
         $txt_where_cargos = implode(',', array_keys($aIdCargos_sacd));
 
@@ -340,7 +340,7 @@ class GestorActividadCargo extends ClaseGestor
         if (empty($aWhere['_ordre'])) {
             // Por defecto ordenar por orden_cargo:
             $aWhere['_ordre'] = 'orden_cargo';
-            $CargoRepository = new CargoRepository();
+            $CargoRepository = $GLOBALS['container']->get(CargoRepositoryInterface::class);
             $cOrdenCargo = $CargoRepository->getCargos();
             $csvNestIdCargo = '';
             $csvNestOrdenCargo = '';

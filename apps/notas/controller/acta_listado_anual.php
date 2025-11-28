@@ -5,13 +5,12 @@ Hasta ahora, yo me manejaba con Access y tenía una manera de saber qué acta ib
  */
 
 
-use asignaturas\model\entity\Asignatura;
 use core\ConfigGlobal;
 use core\ViewPhtml;
 use notas\model\entity\GestorActa;
 use notas\model\entity\GestorActaDl;
-use src\asignaturas\application\repositories\AsignaturaRepository;
-use src\ubis\application\repositories\DelegacionRepository;
+use src\asignaturas\domain\contracts\AsignaturaTipoRepositoryInterface;
+use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 use web\DateTimeLocal;
 use web\Hash;
 use web\Periodo;
@@ -55,7 +54,7 @@ $aOperador['f_acta'] = 'BETWEEN';
 $mi_dele = ConfigGlobal::mi_delef();
 $mi_region = ConfigGlobal::mi_region();
 if (ConfigGlobal::mi_ambito() === 'rstgr') {
-    $repoDelegacion = new DelegacionRepository();
+    $repoDelegacion = $GLOBALS['container']->get(DelegacionRepositoryInterface::class);
     $aDlMap = $repoDelegacion->getArrayDlRegionStgr([$mi_dele]); // [id_dl => dl]
     $aDl = array_values($aDlMap);
     $Qacta_dl = '';
@@ -75,13 +74,14 @@ $i = 0;
 $aActas = [];
 $aFecha = [];
 $aNivel = [];
+$AsignaturaTipoRepository = $GLOBALS['container']->get(AsignaturaTipoRepositoryInterface::class);
 foreach ($cActas as $oActa) {
     $i++;
     $acta = $oActa->getActa();
     $oF_acta = $oActa->getF_acta();
     $f_acta = $oF_acta->getFromLocal();
     $id_asignatura = $oActa->getId_asignatura();
-    $oAsignatura = (new AsignaturaRepository())->findById($id_asignatura);
+    $oAsignatura = $AsignaturaTipoRepository->findById($id_asignatura);
     if ($oAsignatura === null) {
         throw new \Exception(sprintf(_("No se ha encontrado la asignatura con id: %s"), $id_asignatura));
     }

@@ -1,11 +1,10 @@
 <?php
 namespace actividadestudios\model\entity;
 
-use asignaturas\model\entity\GestorAsignatura;
 use core\ClaseGestor;
 use core\Condicion;
 use core\Set;
-use src\asignaturas\application\repositories\AsignaturaRepository;
+use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 
 /**
  * GestorActividadAsignatura
@@ -50,7 +49,7 @@ class GestorActividadAsignatura extends ClaseGestor
          * para no tener que consultar cada vez a la base de datos.
          *
          */
-        $AsignaturaRepository = new AsignaturaRepository();
+        $AsignaturaRepository = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class);
         $aAsigDatos = $AsignaturaRepository->getArrayAsignaturasCreditos();
 
         // por cada ca creo un array con las asignaturas y los créditos.

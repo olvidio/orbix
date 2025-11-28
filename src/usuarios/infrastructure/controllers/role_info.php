@@ -1,28 +1,18 @@
 <?php
 
 use core\ConfigGlobal;
-use src\menus\application\repositories\GrupMenuRepository;
-use src\menus\application\repositories\GrupMenuRoleRepository;
-use src\usuarios\application\repositories\RoleRepository;
-use src\usuarios\application\repositories\UsuarioRepository;
+use src\menus\domain\contracts\GrupMenuRepositoryInterface;
+use src\menus\domain\contracts\GrupMenuRoleRepositoryInterface;
+use src\usuarios\domain\contracts\RoleRepositoryInterface;
+use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
 use src\usuarios\domain\entity\Role;
 use web\ContestarJson;
-
-// INICIO Cabecera global de URL de controlador *********************************
-require_once("apps/core/global_header.inc");
-// Archivos requeridos por esta url **********************************************
-
-// Crea los objetos de uso global **********************************************
-require_once("apps/core/global_object.inc");
-// Crea los objetos por esta url  **********************************************
-
-// FIN de  Cabecera global de URL de controlador ********************************
 
 $Qid_role = (string)filter_input(INPUT_POST, 'id_role');
 
 $error_txt = '';
 
-$UsuarioRepository = new UsuarioRepository();
+$UsuarioRepository = $GLOBALS['container']->get(UsuarioRepositoryInterface::class);
 $oMiUsuario = $UsuarioRepository->findById(ConfigGlobal::mi_id_usuario());
 $miRole = $oMiUsuario->getId_role();
 // Sólo puede manipular los roles el superadmin (id_role=1).
@@ -38,7 +28,7 @@ if ($miRole === 2) {
 
 $txt_sfsv = '';
 if (!empty($Qid_role)) {
-    $RoleRepository =  new RoleRepository();
+    $RoleRepository =  $GLOBALS['container']->get(RoleRepositoryInterface::class);
     $oRole = $RoleRepository->findById($Qid_role);
     $role = $oRole->getRoleAsString();
     $sf = $oRole->isSf();
@@ -60,7 +50,7 @@ if (!empty($Qid_role)) {
     $chk_dmz = !empty($dmz) ? 'checked' : '';
     $txt_sfsv = empty($txt_sfsv) ? '' : "($txt_sfsv)";
     //////////////////// grupmenu de role ////////////////////////////////
-    $GrupMenuRoleRepository = new GrupMenuRoleRepository();
+    $GrupMenuRoleRepository = $GLOBALS['container']->get(GrupMenuRoleRepositoryInterface::class);
     $cGMR = $GrupMenuRoleRepository->getGrupMenuRoles(array('id_role' => $Qid_role));
 
     $i = 0;
@@ -69,7 +59,7 @@ if (!empty($Qid_role)) {
         ['txt' => _("quitar"), 'click' => "fnjs_del_grupmenu(\"#form_grup_menu\")"],
     ];
     $a_valores = [];
-    $GrupMenuRepository = new GrupMenuRepository();
+    $GrupMenuRepository = $GLOBALS['container']->get(GrupMenuRepositoryInterface::class);
     foreach ($cGMR as $oGrupMenuRole) {
         $i++;
         $id_item = $oGrupMenuRole->getId_item();

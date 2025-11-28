@@ -3,7 +3,7 @@
 // INICIO Cabecera global de URL de controlador *********************************
 use frontend\shared\model\ViewNewTwig;
 use personas\model\entity\Persona;
-use src\usuarios\application\repositories\LocalRepository;
+use src\usuarios\domain\contracts\LocalRepositoryInterface;
 use web\DateTimeLocal;
 use web\Desplegable;
 use web\Hash;
@@ -42,7 +42,7 @@ $oHashCertificadoPdf->setArrayCamposHidden([
 ]);
 
 //Idiomas
-$LocalRepository = new LocalRepository();
+$LocalRepository = $GLOBALS['container']->get(LocalRepositoryInterface::class);
 $a_locales = $LocalRepository->getArrayLocales();
 $oDesplIdiomas = new Desplegable('idioma', $a_locales, '', true);
 

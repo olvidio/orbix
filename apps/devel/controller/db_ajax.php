@@ -1,7 +1,7 @@
 <?php
 
+use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 use web\Desplegable;
-use src\ubis\application\repositories\DelegacionRepository;
 
 /*
 * Devuelvo un desplegable con los valores posibles segun el valor de entrada.
@@ -24,7 +24,7 @@ switch ($Qsalida) {
 
         $region = $Qentrada;
 
-        $repoDl = new DelegacionRepository();
+        $repoDl = $GLOBALS['container']->get(DelegacionRepositoryInterface::class);
         // Filtrar delegaciones por región si se facilita
         $aWhere = ['status' => true];
         if (!empty($region)) { $aWhere['region'] = $region; }

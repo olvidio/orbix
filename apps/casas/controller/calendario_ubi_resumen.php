@@ -4,7 +4,7 @@
 
 use core\ConfigGlobal;
 use core\ViewTwig;
-use src\ubis\application\repositories\CasaDlRepository;
+use src\ubis\domain\contracts\CasaDlRepositoryInterface;
 use web\Desplegable;
 use web\Hash;
 
@@ -25,7 +25,7 @@ $Qid_ubi = (integer)filter_input(INPUT_POST, 'id_ubi');
 $oMiUsuario = ConfigGlobal::MiUsuario();
 // selecciono la lista de casas comunes: sf y sv.
 // o (ara) no:
-$CasaDlRepository = new CasaDlRepository();
+$CasaDlRepository = $GLOBALS['container']->get(CasaDlRepositoryInterface::class);
 
 if ($_SESSION['oPerm']->have_perm_oficina('des') || $_SESSION['oPerm']->have_perm_oficina('vcsd')) {
     $donde = "WHERE status='t'";

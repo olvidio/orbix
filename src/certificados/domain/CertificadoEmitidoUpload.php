@@ -4,7 +4,7 @@ namespace src\certificados\domain;
 
 use core\ConfigGlobal;
 use personas\model\entity\Persona;
-use src\certificados\application\repositories\CertificadoEmitidoRepository;
+use src\certificados\domain\contracts\CertificadoEmitidoRepositoryInterface;
 use src\certificados\domain\entity\CertificadoEmitido;
 use web\DateTimeLocal;
 use web\NullDateTimeLocal;
@@ -28,7 +28,7 @@ class CertificadoEmitidoUpload
     public function uploadTxtFirmado(int $id_item, string $contenido_doc): string|CertificadoEmitido
     {
         $error_txt = '';
-        $certificadoEmitidoRepository = new CertificadoEmitidoRepository();
+        $certificadoEmitidoRepository = $GLOBALS['container']->get(CertificadoEmitidoRepositoryInterface::class);
         if (isset($this->oDbl)) { // para los tests
             $certificadoEmitidoRepository->setoDbl($this->oDbl);
         }
@@ -37,7 +37,7 @@ class CertificadoEmitidoUpload
         $oCertificadoEmitido->setDocumento($contenido_doc);
         $oCertificadoEmitido->setFirmado(TRUE);
 
-        if ($certificadoEmitidoRepository->Guardar($oCertificadoEmitido) === FALSE) {
+        if ($certificadoEmitidoRepository->Guardar($oCertificadoEmitido) === false) {
             return $certificadoEmitidoRepository->getErrorTxt();
         }
         return $oCertificadoEmitido;
@@ -60,7 +60,7 @@ class CertificadoEmitidoUpload
             $destino = $oPersona->getDl();
         }
 
-        $certificadoEmitidoRepository = new CertificadoEmitidoRepository();
+        $certificadoEmitidoRepository = $GLOBALS['container']->get(CertificadoEmitidoRepositoryInterface::class);
         $certificadoEmitidoRepository->setoDbl($this->oDbl);
         $id_item = $certificadoEmitidoRepository->getNewId_item();
         $oCertificadoEmitido = new CertificadoEmitido();
@@ -76,7 +76,7 @@ class CertificadoEmitidoUpload
         $oCertificadoEmitido->setF_certificado($oF_certificado);
         $oCertificadoEmitido->setF_enviado($oF_enviado);
 
-        if ($certificadoEmitidoRepository->Guardar($oCertificadoEmitido) === FALSE) {
+        if ($certificadoEmitidoRepository->Guardar($oCertificadoEmitido) === false) {
             return $certificadoEmitidoRepository->getErrorTxt();
         }
         return $oCertificadoEmitido;

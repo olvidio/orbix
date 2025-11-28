@@ -6,7 +6,7 @@ use core\ConfigGlobal;
 use core\ViewPhtml;
 use personas\model\entity\GestorPersonaDl;
 use personas\model\entity\GestorPersonaSSSC;
-use src\ubis\application\repositories\CentroDlRepository;
+use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use web\Periodo;
 
 /**
@@ -148,7 +148,7 @@ switch ($Qn_agd) {
 $aWhere['status'] = 't';
 $aWhere['_ordre'] = 'nombre_ubi';
 // primero selecciono los centros y las personas que dependen de él
-$GesCentros = new CentroDlRepository();
+$GesCentros = $GLOBALS['container']->get(CentroDlRepositoryInterface::class);
 $cCentros = $GesCentros->getCentros($aWhere, $aOperador);
 
 // Bucle para poder sacar los centros de la consulta anterior

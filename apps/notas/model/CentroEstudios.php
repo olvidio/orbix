@@ -4,7 +4,7 @@ namespace notas\model;
 
 use core\ConfigDB;
 use core\DBConnection;
-use src\ubis\application\repositories\DelegacionRepository;
+use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 
 class CentroEstudios
 {
@@ -23,7 +23,7 @@ class CentroEstudios
     {
         $ce_lugar = '';
 
-        $DelegacionRepository = new DelegacionRepository();
+        $DelegacionRepository = $GLOBALS['container']->get(DelegacionRepositoryInterface::class);
         foreach ($aDl as $id_dl) {
             //conseguir nombre del esquema de cada dl
             $Delegacion = $DelegacionRepository->findById($id_dl);

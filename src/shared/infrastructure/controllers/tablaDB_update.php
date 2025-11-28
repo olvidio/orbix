@@ -1,15 +1,7 @@
 <?php
 
-// INICIO Cabecera global de URL de controlador *********************************
 use src\shared\domain\DatosUpdateRepo;
 use web\ContestarJson;
-
-require_once("apps/core/global_header.inc");
-// Archivos requeridos por esta url **********************************************
-
-// Crea los objetos de uso global **********************************************
-require_once("apps/core/global_object.inc");
-// FIN de  Cabecera global de URL de controlador ********************************
 
 $Qclase_info = (string)filter_input(INPUT_POST, 'clase_info');
 $Qs_pkey = (string)filter_input(INPUT_POST, 's_pkey');
@@ -36,15 +28,14 @@ $oInfoClase = new $obj();
 $oInfoClase->setMod($Qmod);
 $oInfoClase->setA_pkey($a_pkey); //Para eliminar y editar
 $oInfoClase->setId_pau($Qid_pau); //Para nuevo
-$oInfoClase->setObj_pau($Qobj_pau); //Imprescindible para dossiers complejos.
 $oFicha = $oInfoClase->getFicha();
 
 $clase_ficha = $oInfoClase->getClase();
-$repo = str_replace('domain\entity', 'application\repositories', $clase_ficha);
-$repository = $repo.'Repository';
+$repo = str_replace('domain\entity', 'domain\contracts', $clase_ficha);
+$repositoryInterface = $repo . 'RepositoryInterface';
 
 $oDatosUpdate = new DatosUpdateRepo();
-$oDatosUpdate->setRepository($repository);
+$oDatosUpdate->setRepositoryInterface($repositoryInterface);
 $oDatosUpdate->setFicha($oFicha);
 
 // campos del dossier (de hecho todo el $_POST, porque desconozco...)
