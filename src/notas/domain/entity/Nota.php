@@ -18,7 +18,7 @@ class Nota
     // Al final de hecho deberían ser todo constantes, porque en demasiados sitios se tiene en
     // Cuenta que es.
     /*
-    comun=# select * from e_notas_situacion order by id_situacion;;
+    comun=# select * from e_notas_situacion order by id_situacion;
     id_situacion |   descripcion   | superada | breve
     --------------+-----------------+----------+-------
     0 | desconocido     | f        | ?

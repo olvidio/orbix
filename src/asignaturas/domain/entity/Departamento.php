@@ -131,7 +131,7 @@ class Departamento
         $oDatosCampo = new DatosCampo();
         $oDatosCampo->setNom_camp('departamento');
         $oDatosCampo->setMetodoGet('getDepartamento');
-        $oDatosCampo->setMetodoSet('setDepartamento');;
+        $oDatosCampo->setMetodoSet('setDepartamento');
         $oDatosCampo->setEtiqueta(_("departamento"));
         $oDatosCampo->setTipo('texto');
         $oDatosCampo->setArgument(50);

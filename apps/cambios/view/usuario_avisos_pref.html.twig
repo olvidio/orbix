@@ -132,7 +132,7 @@ fnjs_modificar=function(objeto,propiedad,id_item){
     document.getElementById("overlay").style.display = "block";
 
 	var url='{{ url_actualizar|raw }}';
-	var parametros='salida=condicion&objeto='+objeto+'&propiedad='+propiedad+'&id_item='+id_item+'{{ h_mod|raw }}';;
+	var parametros='salida=condicion&objeto='+objeto+'&propiedad='+propiedad+'&id_item='+id_item+'{{ h_mod|raw }}';
 	fnjs_update_div('#div_modificar',url+'?'+parametros);
 }
 

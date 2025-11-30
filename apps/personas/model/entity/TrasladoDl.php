@@ -836,7 +836,7 @@ class TrasladoDl
                     $gestor = "$app\\model\\entity\\Gestor$class";
                     $ges = new $gestor();
                     $ges->setoDbl($oDBorg);
-                    $colection = $ges->getProfesores(array('id_nom' => $this->iid_nom));
+                    $colection = $ges->getProfesoresStgr(array('id_nom' => $this->iid_nom));
                     break;
                 case 'ProfesorAmpliacion':
                     $gestor = "$app\\model\\entity\\Gestor$class";
@@ -884,7 +884,7 @@ class TrasladoDl
                     $gestor = "$app\\model\\entity\\Gestor$class";
                     $ges = new $gestor();
                     $ges->setoDbl($oDBorg);
-                    $colection = $ges->getTitulosEst(array('id_nom' => $this->iid_nom));
+                    $colection = $ges->getProfesorTitulosEst(array('id_nom' => $this->iid_nom));
                     break;
                 case 'PersonaNotaDl':
                     // Lo hago a parte.

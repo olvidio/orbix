@@ -15,6 +15,8 @@ use core\ConfigGlobal;
 use core\ViewPhtml;
 use core\ViewTwig;
 use src\asignaturas\domain\contracts\DepartamentoRepositoryInterface;
+use src\profesores\domain\contracts\ProfesorDirectorRepositoryInterface;
+use src\profesores\domain\contracts\ProfesorStgrRepositoryInterface;
 use src\profesores\domain\contracts\ProfesorTipoRepositoryInterface;
 use src\ubis\domain\contracts\DelegacionRepositoryInterface;
 use web\Desplegable;
@@ -84,11 +86,11 @@ $cDepartamentos = $DepartamentoRepository->getDepartamentos(['_ordre' => 'depart
 //por cada departamento:
 // orden alfabético personas.
 $aClaustro = [];
+$ProfesorDirectorRepository = $GLOBALS['container']->get(ProfesorDirectorRepositoryInterface::class);
 foreach ($cDepartamentos as $oDepartamento) {
     $id_departamento = $oDepartamento->getId_departamento();
     $departamento = $oDepartamento->getDepartamento();
     // director.
-    $oGesProfesorDirector = new profesores\model\entity\GestorProfesorDirector();
     $aWhere = ['id_departamento' => $id_departamento,
         'f_cese' => 'NULL',
     ];
@@ -100,7 +102,7 @@ foreach ($cDepartamentos as $oDepartamento) {
         $aWhere['_ordre'] = 'id_dl';
     }
 
-    $cProfesorDirector = $oGesProfesorDirector->getProfesoresDirectores($aWhere, $aOperador);
+    $cProfesorDirector = $ProfesorTipoRepository->getProfesoresDirectores($aWhere, $aOperador);
     $aProfesores = [];
     $aDirs = [];
     foreach ($cProfesorDirector as $oProfesorDirector) {
@@ -117,7 +119,7 @@ foreach ($cDepartamentos as $oDepartamento) {
     ksort($aDirs);
     $aProfesores['director'] = $aDirs;
     // tipo de profesor: ayudante, encargado...
-    $oGesProfesor = new profesores\model\entity\GestorProfesor();
+    $ProfesorRepository = $GLOBALS['container']->get(ProfesorStgrRepositoryInterface::class);
     foreach ($cTipoProfesor as $id_tipo => $tipo) {
         $aWhere = ['id_departamento' => $id_departamento,
             'id_tipo_profesor' => $id_tipo,
@@ -131,7 +133,7 @@ foreach ($cDepartamentos as $oDepartamento) {
             $aWhere['_ordre'] = 'id_dl';
         }
 
-        $cProfesores = $oGesProfesor->getProfesores($aWhere, $aOperador);
+        $cProfesores = $ProfesorRepository->getProfesoresStgr($aWhere, $aOperador);
         $aProfes = [];
         foreach ($cProfesores as $oProfesor) {
             $id_nom = $oProfesor->getId_nom();

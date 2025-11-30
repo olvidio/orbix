@@ -61,7 +61,7 @@ $Qid_asignatura = (string)filter_input(INPUT_POST, 'id_asignatura');
 $Qlista = (string)filter_input(INPUT_POST, 'lista');
 $chk_lista = empty($Qlista) ? '' : 'checked';
 
-$AsignaturaRepository = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class);;
+$AsignaturaRepository = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class);
 $aOpciones = $AsignaturaRepository->getArrayAsignaturasConSeparador();
 $oDesplAsignaturas = new Desplegable('', $aOpciones, '', true);
 $oDesplAsignaturas->setNombre('id_asignatura');

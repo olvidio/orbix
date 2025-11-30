@@ -204,7 +204,7 @@
                 let id_zona = $('#id_zona').val();
                 let orden_select = $('#orden_select').val();
                 let url = '{{ url_ver_encargos_zona }}';
-                parametros='id_zona=' + id_zona + '&orden=' + orden_select + '{{ h_ver_encargos_zona|raw }}';;
+                parametros='id_zona=' + id_zona + '&orden=' + orden_select + '{{ h_ver_encargos_zona|raw }}';
 
                 var request = $.ajax({
                     url: url,
@@ -225,7 +225,7 @@
         var id_campo = columns[cell].field;
 
         let id_enc_selected = $('#id_enc_selected').val();
-        parametros='id_enc=' + id_enc_selected + '&que=borrar' + '{{ h_borrar_encargo_zona|raw }}';;
+        parametros='id_enc=' + id_enc_selected + '&que=borrar' + '{{ h_borrar_encargo_zona|raw }}';
 
         // guardar cambios en DB
         var request = $.ajax({
@@ -241,7 +241,7 @@
                 let id_zona = $('#id_zona').val();
                 let orden_select = $('#orden_select').val();
                 let url = '{{ url_ver_encargos_zona }}';
-                parametros='id_zona=' + id_zona + '&orden=' + orden_select + '{{ h_ver_encargos_zona|raw }}';;
+                parametros='id_zona=' + id_zona + '&orden=' + orden_select + '{{ h_ver_encargos_zona|raw }}';
 
                 var request = $.ajax({
                     url: url,

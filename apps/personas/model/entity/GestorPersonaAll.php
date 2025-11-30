@@ -6,8 +6,8 @@ use core\ClaseGestor;
 use core\ConfigDB;
 use core\ConfigGlobal;
 use core\DBConnection;
+use profesores\legacy\GestorProfesor;
 use web\DateTimeLocal;
-use profesores\model\entity\GestorProfesor;
 
 /**
  * GestorPersonaAll
@@ -145,7 +145,7 @@ class GestorPersonaAll extends ClaseGestor
         // miro si es profesor
         $gesProfesores = new GestorProfesor();
         $gesProfesores->setoDbl($oDbl);
-        $cProfesores = $gesProfesores->getProfesores(array('id_nom' => $this->id_nom, 'f_cese' => ''), array('f_cese' => 'IS NULL'));
+        $cProfesores = $gesProfesores->getProfesoresStgr(array('id_nom' => $this->id_nom, 'f_cese' => ''), array('f_cese' => 'IS NULL'));
         if (count($cProfesores) > 0) {
             $oPersonaOut->setProfesor_stgr('t');
         }

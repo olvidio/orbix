@@ -1530,14 +1530,17 @@ if (!$handle = fopen($filename, 'w')) {
     die();
 }
 // Write $somecontent to our opened file.
+/*
 if (fwrite($handle, $txt_repository) === false) {
     echo "Cannot write to file ($filename)";
     die();
 }
 echo "<br>Success, wrote (somecontent) to file ($filename)";
 fclose($handle);
+*/
 
 /* ESCRIURE UN FITXER D'EXEMPLE  --------------------------------- */
+/*
 $dir_application = ServerConf::DIR . '/src/' . $grupo . '/application';
 if (!is_dir($dir_application)) {
     if (!mkdir($dir_application, 0777, true) && !is_dir($dir_application)) {
@@ -1556,3 +1559,59 @@ if (fwrite($handle, '<?php') === false) {
 }
 echo "<br>Success, wrote (somecontent) to file ($filename)";
 fclose($handle);
+*/
+
+/*AFEGIR DEPENDENCIA  --------------------------------- */
+
+$dir_config = ServerConf::DIR . '/src/' . $grupo . '/config';
+if (!is_dir($dir_config)) {
+    if (!mkdir($dir_config, 0777, true) && !is_dir($dir_config)) {
+        throw new \RuntimeException(sprintf('Directory "%s" was not created', $dir_config));
+    }
+}
+$filename = $dir_config . '/dependencies.php';
+
+// Definir los strings a insertar
+// Asumimos una estructura estándar src\entidad\...
+$useInterface = "use src\\$grupo\\domain\\contracts\\{$clase_interface};";
+$useImplementation = "use src\\$grupo\\infrastructure\\repositories\\{$pg_clase};";
+$mappingLine = "    {$clase_interface}::class => autowire({$pg_clase}::class),";
+
+if (file_exists($filename)) {
+    $content = file_get_contents($filename);
+    // Insertar los 'use'
+    // Buscamos el último 'use' para insertar los nuevos después, o antes de la función autowire si es el final.
+    // Estrategia: Buscar la línea "use function DI\autowire;" que suele ser la última importación.
+    if (strpos($content, $useInterface) !== false) {
+        die("El repositorio para $clase_interface ya parece existir en el archivo.\n");
+    }
+    // Insertar los 'use' antes de "use function DI\autowire;"
+    $searchMarker = "use function DI\autowire;";
+    $replacement = "$useInterface\n$useImplementation\n$searchMarker";
+
+    $newContent = str_replace($searchMarker, $replacement, $content);
+
+    // Insertar el mapeo en el array
+    // Buscamos el cierre del array "];" y lo reemplazamos por la nueva línea + el cierre.
+    $arrayEndMarker = "];";
+    // Usamos strrpos para encontrar la última ocurrencia (el cierre del return array)
+    $pos = strrpos($newContent, $arrayEndMarker);
+
+    if ($pos !== false) {
+        $newContent = substr_replace($newContent, $mappingLine . "\n" . $arrayEndMarker, $pos, strlen($arrayEndMarker));
+    } else {
+        die("No se pudo encontrar el cierre del array '];' en $filename.\n");
+    }
+} else {
+    $newContent = "<?php\n\n";
+    $newContent .= $useInterface . "\n";
+    $newContent .= $useImplementation . "\n";
+    $newContent .= "use function DI\autowire;\n";
+    $newContent .= "\nreturn [\n";
+    $newContent .= "// Mapeos de Interfaces a Implementaciones\n";
+    $newContent .= $mappingLine . "\n";
+    $newContent .= "];\n";
+}
+// Guardar el archivo
+file_put_contents($filename, $newContent);
+echo "Repositorio '$clase_interface' añadido correctamente a $filename.\n";

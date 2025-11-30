@@ -40,10 +40,10 @@ class PgEgmRepository extends ClaseRepository implements EgmRepositoryInterface
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
             return false;
         }
-        return $oDblSt->fetchColumn()?? 0;
+        return $oDblSt->fetchColumn() ?? 0;
     }
 
-    public function getArrayIdFromIdEquipajes($aEquipajes, $lugar = ''): array
+    public function getArrayIdFromIdEquipajes($aEquipajes, $lugar = ''): array|false
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
@@ -243,12 +243,11 @@ class PgEgmRepository extends ClaseRepository implements EgmRepositoryInterface
      * @param EgmItemId $id_item
      * @return array|bool
      */
-    public function datosById(EgmItemId $id_item): array|bool
+    public function datosById(int $id_item): array|bool
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        $id = $id_item->value();
-        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_item = $id")) === false) {
+        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_item = $id_item")) === false) {
             $sClaveError = 'PgEgmRepository.getDatosById';
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
             return false;
@@ -260,7 +259,7 @@ class PgEgmRepository extends ClaseRepository implements EgmRepositoryInterface
     /**
      * Busca la clase con id_item en la base de datos .
      */
-    public function findById(EgmItemId $id_item): ?Egm
+    public function findById(int $id_item): ?Egm
     {
         $aDatos = $this->datosById($id_item);
         if (empty($aDatos)) {

@@ -6,9 +6,9 @@ use core\ConfigGlobal;
 use notas\model\entity\GestorActa;
 use notas\model\entity\GestorPersonaNotaDB;
 use notas\model\entity\PersonaNotaDB;
-use profesores\model\entity\GestorProfesor;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\notas\domain\contracts\NotaRepositoryInterface;
+use src\profesores\domain\contracts\ProfesorStgrRepositoryInterface;
 use src\ubis\application\services\DelegacionDropdown;
 use web\Desplegable;
 use web\Hash;
@@ -198,13 +198,15 @@ switch ($Qque) {
         break;
 
     case 'posibles_preceptores':
-        $GesProfes = new GestorProfesor();
-        $oDesplProfesores = $GesProfes->getListaProfesores();
+        $ProfesorRepository = $GLOBALS['container']->get(ProfesorStgrRepositoryInterface::class);
+        $aOpciones = $ProfesorRepository->getArrayProfesoresDl();
+        $oDesplProfesores = new Desplegable();
+        $oDesplProfesores->setOpciones($aOpciones);
         $oDesplProfesores->setBlanco(1);
         $oDesplProfesores->setNombre('id_preceptor');
         echo $oDesplProfesores->desplegable();
         /*
-        $cProfesores= $GesProfes->getProfesores();
+        $cProfesores= $GesProfes->getProfesoresStgr();
         $aProfesores=[];
         $msg_err = '';
         foreach ($cProfesores as $oProfesor) {

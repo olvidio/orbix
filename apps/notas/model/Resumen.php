@@ -6,11 +6,11 @@ use actividades\model\entity\ActividadAll;
 use core\ClasePropiedades;
 use core\ConfigGlobal;
 use personas\model\entity\PersonaDl;
-use profesores\model\entity\GestorProfesorDirector;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\asignaturas\domain\contracts\DepartamentoRepositoryInterface;
 use src\asignaturas\domain\contracts\SectorRepositoryInterface;
 use src\notas\domain\contracts\NotaRepositoryInterface;
+use src\profesores\domain\contracts\ProfesorDirectorRepositoryInterface;
 use function core\is_true;
 
 /**
@@ -1478,8 +1478,8 @@ class Resumen extends ClasePropiedades
         $oDbl = $this->getoDbl();
         $tabla = $this->getNomTabla();
 
-        $oGesDirectores = new GestorProfesorDirector();
-        $cDirectores = $oGesDirectores->getProfesoresDirectores(array('f_cese' => 1), array('f_cese' => 'IS NULL'));
+        $ProfesorDirectorRepository = $GLOBALS['container']->get(ProfesorDirectorRepositoryInterface::class);
+        $cDirectores = $ProfesorDirectorRepository->getProfesoresDirectores(array('f_cese' => 1), array('f_cese' => 'IS NULL'));
         $DepartamentoRepository = $GLOBALS['container']->get(DepartamentoRepositoryInterface::class);
 
         $rta['num'] = count($cDirectores);

@@ -1,11 +1,10 @@
 <?php
 
 namespace src\inventario\domain\entity;
+
 use core\DatosCampo;
 use core\Set;
 use src\inventario\domain\contracts\UbiInventarioRepositoryInterface;
-use src\inventario\domain\value_objects\LugarId;
-use src\inventario\domain\value_objects\UbiInventarioId;
 use src\inventario\domain\value_objects\LugarName;
 
 /**
@@ -17,142 +16,124 @@ use src\inventario\domain\value_objects\LugarName;
  * @version 2.0
  * @created 12/3/2025
  */
-class Lugar {
+class Lugar
+{
 
-	/* ATRIBUTOS ----------------------------------------------------------------- */
+    /* ATRIBUTOS ----------------------------------------------------------------- */
 
-	/**
-	 * Id_lugar de Lugar
-	 *
-	 * @var int
-	 */
-	 private int $iid_lugar;
-	/**
-	 * Id_ubi de Lugar
-	 *
-	 * @var int
-	 */
-	 private int $iid_ubi;
-	/**
-	 * Nom_lugar de Lugar
-	 *
-	 * @var string
-	 */
-	 private string $snom_lugar;
+    /**
+     * Id_lugar de Lugar
+     *
+     * @var int
+     */
+    private int $iid_lugar;
+    /**
+     * Id_ubi de Lugar
+     *
+     * @var int
+     */
+    private int $iid_ubi;
+    /**
+     * Nom_lugar de Lugar
+     *
+     * @var string
+     */
+    private string $snom_lugar;
 
-	/* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
+    /* MÉTODOS PÚBLICOS ----------------------------------------------------------*/
 
-	/**
-	 * Establece el valor de todos los atributos
-	 *
-	 * @param array $aDatos
-	 * @return Lugar
-	 */
-	public function setAllAttributes(array $aDatos): Lugar
-	{
-		if (array_key_exists('id_lugar',$aDatos))
-		{
-			$this->setId_lugar($aDatos['id_lugar']);
-		}
-		if (array_key_exists('id_ubi',$aDatos))
-		{
-			$this->setId_ubi($aDatos['id_ubi']);
-		}
-		if (array_key_exists('nom_lugar',$aDatos))
-		{
-			$this->setNom_lugar($aDatos['nom_lugar']);
-		}
-		return $this;
-	}
-	/**
-	 *
-	 * @return int $iid_lugar
-	 */
-	public function getId_lugar(): int
-	{
-		return $this->iid_lugar;
-	}
-	/**
-	 *
-	 * @param int $iid_lugar
-	 */
-	public function setId_lugar(int $iid_lugar): void
-	{
-		$this->iid_lugar = $iid_lugar;
-	}
-	/**
-	 *
-	 * @return int $iid_ubi
-	 */
-	public function getId_ubi(): int
-	{
-		return $this->iid_ubi;
-	}
-	/**
-	 *
-	 * @param int $iid_ubi
-	 */
-	public function setId_ubi(int $iid_ubi): void
-	{
-		$this->iid_ubi = $iid_ubi;
-	}
-	/**
-	 *
-	 * @return string $snom_lugar
-	 */
-	public function getNom_lugar(): string
-	{
-		return $this->snom_lugar;
-	}
-	/**
-	 *
-	 * @param string $snom_lugar
-	 */
-	public function setNom_lugar(string $snom_lugar): void
-	{
-		$this->snom_lugar = $snom_lugar;
-	}
+    /**
+     * Establece el valor de todos los atributos
+     *
+     * @param array $aDatos
+     * @return Lugar
+     */
+    public function setAllAttributes(array $aDatos): Lugar
+    {
+        if (array_key_exists('id_lugar', $aDatos)) {
+            $this->setId_lugar($aDatos['id_lugar']);
+        }
+        if (array_key_exists('id_ubi', $aDatos)) {
+            $this->setId_ubi($aDatos['id_ubi']);
+        }
+        if (array_key_exists('nom_lugar', $aDatos)) {
+            $this->setNom_lugar($aDatos['nom_lugar']);
+        }
+        return $this;
+    }
+
+    /**
+     *
+     * @return int $iid_lugar
+     */
+    public function getId_lugar(): int
+    {
+        return $this->iid_lugar;
+    }
+
+    /**
+     *
+     * @param int $iid_lugar
+     */
+    public function setId_lugar(int $iid_lugar): void
+    {
+        $this->iid_lugar = $iid_lugar;
+    }
+
+    /**
+     *
+     * @return int $iid_ubi
+     */
+    public function getId_ubi(): int
+    {
+        return $this->iid_ubi;
+    }
+
+    /**
+     *
+     * @param int $iid_ubi
+     */
+    public function setId_ubi(int $iid_ubi): void
+    {
+        $this->iid_ubi = $iid_ubi;
+    }
+
+    /**
+     *
+     * @return string $snom_lugar
+     */
+    public function getNom_lugar(): string
+    {
+        return $this->snom_lugar;
+    }
+
+    /**
+     *
+     * @param string $snom_lugar
+     */
+    public function setNom_lugar(string $snom_lugar): void
+    {
+        $this->snom_lugar = $snom_lugar;
+    }
 
     // Value Object API (duplicada con legacy)
-    public function getIdLugarVo(): ?LugarId
+    public function getNomLugarVo(): LugarName
     {
-        return isset($this->iid_lugar) ? new LugarId($this->iid_lugar) : null;
+        return new LugarName($this->snom_lugar);
     }
 
-    public function setIdLugarVo(?LugarId $id = null): void
+    public function setNomLugarVo(LugarName $name): void
     {
-        if ($id === null) { return; }
-        $this->iid_lugar = $id->value();
-    }
-
-    public function getIdUbiVo(): ?UbiInventarioId
-    {
-        return isset($this->iid_ubi) ? new UbiInventarioId($this->iid_ubi) : null;
-    }
-
-    public function setIdUbiVo(?UbiInventarioId $id = null): void
-    {
-        if ($id === null) { return; }
-        $this->iid_ubi = $id->value();
-    }
-
-    public function getNomLugarVo(): ?LugarName
-    {
-        return isset($this->snom_lugar) && $this->snom_lugar !== '' ? new LugarName($this->snom_lugar) : null;
-    }
-
-    public function setNomLugarVo(?LugarName $name = null): void
-    {
-        $this->snom_lugar = $name?->value() ?? '';
+        $this->snom_lugar = $name->value();
     }
 
     /* ------------------- PARA el mod_tabla  -------------------------------*/
-    public function getPrimary_key()
+    public function getPrimary_key(): string
     {
         return 'id_lugar';
     }
 
-    function getDatosCampos()
+    public function getDatosCampos():array
     {
         $oSet = new Set();
 
@@ -161,7 +142,7 @@ class Lugar {
         return $oSet->getTot();
     }
 
-    function getDatosId_ubi()
+    private function getDatosId_ubi(): DatosCampo
     {
         $oDatosCampo = new DatosCampo();
         $oDatosCampo->setNom_camp('id_ubi');
@@ -174,7 +155,8 @@ class Lugar {
         $oDatosCampo->setArgument3('getArrayUbisInventario');
         return $oDatosCampo;
     }
-    function getDatosNom_lugar()
+
+    private function getDatosNom_lugar(): DatosCampo
     {
         $oDatosCampo = new DatosCampo();
         $oDatosCampo->setNom_camp('nom_lugar');

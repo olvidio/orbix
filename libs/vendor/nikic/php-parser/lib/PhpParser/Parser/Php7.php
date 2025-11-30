@@ -1179,13 +1179,13 @@ class Php7 extends \PhpParser\ParserAbstract
                  $self->semValue = $self->handleNamespaces($self->semStack[$stackPos-(1-1)]);
             },
             2 => static function ($self, $stackPos) {
-                 if ($self->semStack[$stackPos-(2-2)] !== null) { $self->semStack[$stackPos-(2-1)][] = $self->semStack[$stackPos-(2-2)]; } $self->semValue = $self->semStack[$stackPos-(2-1)];;
+                 if ($self->semStack[$stackPos-(2-2)] !== null) { $self->semStack[$stackPos-(2-1)][] = $self->semStack[$stackPos-(2-2)]; } $self->semValue = $self->semStack[$stackPos-(2-1)];
             },
             3 => static function ($self, $stackPos) {
                  $self->semValue = array();
             },
             4 => static function ($self, $stackPos) {
-                 $nop = $self->maybeCreateZeroLengthNop($self->tokenPos);;
+                 $nop = $self->maybeCreateZeroLengthNop($self->tokenPos);
             if ($nop !== null) { $self->semStack[$stackPos-(1-1)][] = $nop; } $self->semValue = $self->semStack[$stackPos-(1-1)];
             },
             5 => null,
@@ -1449,13 +1449,13 @@ class Php7 extends \PhpParser\ParserAbstract
                  $self->semValue = new Node\Const_(new Node\Identifier($self->semStack[$stackPos-(3-1)], $self->getAttributes($self->tokenStartStack[$stackPos-(3-1)],  $self->tokenEndStack[$stackPos-(3-1)])), $self->semStack[$stackPos-(3-3)], $self->getAttributes($self->tokenStartStack[$stackPos-(3-1)], $self->tokenEndStack[$stackPos]));
             },
             151 => static function ($self, $stackPos) {
-                 if ($self->semStack[$stackPos-(2-2)] !== null) { $self->semStack[$stackPos-(2-1)][] = $self->semStack[$stackPos-(2-2)]; } $self->semValue = $self->semStack[$stackPos-(2-1)];;
+                 if ($self->semStack[$stackPos-(2-2)] !== null) { $self->semStack[$stackPos-(2-1)][] = $self->semStack[$stackPos-(2-2)]; } $self->semValue = $self->semStack[$stackPos-(2-1)];
             },
             152 => static function ($self, $stackPos) {
                  $self->semValue = array();
             },
             153 => static function ($self, $stackPos) {
-                 $nop = $self->maybeCreateZeroLengthNop($self->tokenPos);;
+                 $nop = $self->maybeCreateZeroLengthNop($self->tokenPos);
             if ($nop !== null) { $self->semStack[$stackPos-(1-1)][] = $nop; } $self->semValue = $self->semStack[$stackPos-(1-1)];
             },
             154 => null,
@@ -1992,7 +1992,7 @@ class Php7 extends \PhpParser\ParserAbstract
                  $self->semValue = array();
             },
             346 => static function ($self, $stackPos) {
-                 $nop = $self->maybeCreateZeroLengthNop($self->tokenPos);;
+                 $nop = $self->maybeCreateZeroLengthNop($self->tokenPos);
             if ($nop !== null) { $self->semStack[$stackPos-(1-1)][] = $nop; } $self->semValue = $self->semStack[$stackPos-(1-1)];
             },
             347 => static function ($self, $stackPos) {

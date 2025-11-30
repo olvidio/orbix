@@ -203,7 +203,7 @@ class AsignaturaTipo
         $oDatosCampo = new DatosCampo();
         $oDatosCampo->setNom_camp('tipo_asignatura');
         $oDatosCampo->setMetodoGet('getTipo_asignatura');
-        $oDatosCampo->setMetodoSet('setTipo_asignatura');;
+        $oDatosCampo->setMetodoSet('setTipo_asignatura');
         $oDatosCampo->setEtiqueta(_("tipo de asignatura"));
         return $oDatosCampo;
     }

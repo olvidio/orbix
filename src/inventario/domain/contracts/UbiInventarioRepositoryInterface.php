@@ -4,7 +4,6 @@ namespace src\inventario\domain\contracts;
 
 use PDO;
 use src\inventario\domain\entity\UbiInventario;
-use src\inventario\domain\value_objects\UbiInventarioId;
 
 /**
  * Interfaz de la clase UbiInventario y su Repositorio
@@ -19,7 +18,7 @@ interface UbiInventarioRepositoryInterface
 {
 
     public function getUbisInventarioLugar($bLugar): false|array;
-    public function getArrayUbisInventario():array;
+    public function getArrayUbisInventario():array|false;
 
 /* -------------------- GESTOR BASE ---------------------------------------- */
 
@@ -51,17 +50,17 @@ interface UbiInventarioRepositoryInterface
      * Devuelve los campos de la base de datos en un array asociativo.
      * Devuelve false si no existe la fila en la base de datos
      * 
-     * @param UbiInventarioId $id_ubi
+     * @param int $id_ubi
      * @return array|bool
 	
      */
-    public function datosById(UbiInventarioId $id_ubi): array|bool;
+    public function datosById(int $id_ubi): array|bool;
 	
     /**
      * Busca la clase con id_ubi en el repositorio.
 	
      */
-    public function findById(UbiInventarioId $id_ubi): ?UbiInventario;
+    public function findById(int $id_ubi): ?UbiInventario;
 	
     public function getNewId();
 }

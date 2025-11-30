@@ -1,10 +1,9 @@
 <?php
 
 use core\ConfigGlobal;
+use src\profesores\domain\contracts\ProfesorCongresoRepositoryInterface;
+use src\profesores\domain\contracts\ProfesorStgrRepositoryInterface;
 use web\Lista;
-use profesores\model\entity\GestorProfesor;
-use profesores\model\entity\GestorProfesorCongreso;
-use profesores\model\entity\ProfesorCongreso;
 
 /**
  * Funciones más comunes de la aplicación
@@ -28,20 +27,17 @@ $a_cabeceras[5] = _("inicio");
 $a_cabeceras[6] = _("fin");
 $a_cabeceras[7] = _("organiza");
 
-$oProfesorCongreso = new ProfesorCongreso();
-$tiposCong = $oProfesorCongreso->getDatosTipo();
-$a_tiposCong = $tiposCong->getLista();
-
-$gesProfesor = new GestorProfesor();
-$a_nomProfesor = $gesProfesor->getListaProfesoresConDl();
+$ProfesorRepository = $GLOBALS['container']->get(ProfesorStgrRepositoryInterface::class);
+$a_nomProfesor = $ProfesorRepository->getArrayProfesoresConDl();
 
 $p = 0;
-$gesProfesorCongresos = new GestorProfesorCongreso();
+$ProfesorCongresoRepository = $GLOBALS['container']->get(ProfesorCongresoRepositoryInterface::class);
+$a_tiposCong = $ProfesorCongresoRepository->getArrayTiposCongreso();
 $a_valores = [];
 foreach ($a_nomProfesor as $id_nom => $aClave) {
     $ap_nom = $aClave['ap_nom'];
     $dl = $aClave['dl'];
-    $cProfesorCongreso = $gesProfesorCongresos->getProfesorCongresos(['id_nom' => $id_nom]);
+    $cProfesorCongreso = $ProfesorCongresoRepository->getProfesorCongresos(['id_nom' => $id_nom]);
 
     foreach ($cProfesorCongreso as $oProfesorCongreso) {
         $p++;

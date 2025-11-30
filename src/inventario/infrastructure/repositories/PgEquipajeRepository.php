@@ -10,7 +10,6 @@ use PDO;
 use PDOException;
 use src\inventario\domain\contracts\EquipajeRepositoryInterface;
 use src\inventario\domain\entity\Equipaje;
-use src\inventario\domain\value_objects\EquipajeId;
 
 /**
  * Clase que adapta la tabla i_equipajes_dl a la interfaz del repositorio
@@ -30,7 +29,7 @@ class PgEquipajeRepository extends ClaseRepository implements EquipajeRepository
         $this->setNomTabla('i_equipajes_dl');
     }
 
-    function getEquipajesCoincidentes(string $f_ini_iso, string $f_fin_iso): array
+    public function getEquipajesCoincidentes(string $f_ini_iso, string $f_fin_iso): array|false
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
@@ -39,7 +38,7 @@ class PgEquipajeRepository extends ClaseRepository implements EquipajeRepository
 			WHERE (f_ini BETWEEN '$f_ini_iso' AND '$f_fin_iso')
 		   		OR (f_fin BETWEEN '$f_ini_iso' AND '$f_fin_iso')
 			ORDER BY nom_equipaje";
-        if (($oDblSt = $oDbl->query($sQuery)) === false) {
+        if ($oDbl->query($sQuery) === false) {
             $sClauError = 'GestorTipoDoc.lista';
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
             return false;
@@ -51,31 +50,7 @@ class PgEquipajeRepository extends ClaseRepository implements EquipajeRepository
         return $aOpciones;
     }
 
-    function zzgetEquipajesCoincidentes(int $id_equipaje): array
-    {
-        $oDbl = $this->getoDbl();
-        $nom_tabla = $this->getNomTabla();
-
-        $oEquipaje = new Equipaje($id_equipaje);
-        $f_ini = $oEquipaje->getF_ini();
-        $f_fin = $oEquipaje->getF_fin();
-        $sQuery = "SELECT id_equipaje,nom_equipaje FROM $nom_tabla 
-			WHERE (f_ini BETWEEN '$f_ini' AND '$f_fin')
-		   		OR (f_fin BETWEEN '$f_ini' AND '$f_fin')
-			ORDER BY nom_equipaje";
-        if (($oDblSt = $oDbl->query($sQuery)) === false) {
-            $sClauError = 'GestorTipoDoc.lista';
-            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
-            return false;
-        }
-        $aOpciones = [];
-        foreach ($oDbl->query($sQuery) as $aClave) {
-            $aOpciones[] = $aClave[0];
-        }
-        return $aOpciones;
-    }
-
-    function getArrayEquipajes(string $f_ini_iso = ''): array
+    public function getArrayEquipajes(string $f_ini_iso = ''): array|false
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
@@ -84,7 +59,7 @@ class PgEquipajeRepository extends ClaseRepository implements EquipajeRepository
         $sQuery = "SELECT id_equipaje,nom_equipaje FROM $nom_tabla 
 			$where
 			ORDER BY f_ini,nom_equipaje";
-        if (($oDblSt = $oDbl->query($sQuery)) === false) {
+        if ($oDbl->query($sQuery) === false) {
             $sClauError = 'GestorTipoDoc.lista';
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
             return false;
@@ -285,15 +260,14 @@ class PgEquipajeRepository extends ClaseRepository implements EquipajeRepository
      * Devuelve los campos de la base de datos en un array asociativo.
      * Devuelve false si no existe la fila en la base de datos
      *
-     * @param EquipajeId $id_equipaje
+     * @param int $id_equipaje
      * @return array|bool
      */
-    public function datosById(EquipajeId $id_equipaje): array|bool
+    public function datosById(int $id_equipaje): array|bool
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        $id = $id_equipaje->value();
-        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_equipaje = $id")) === false) {
+        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_equipaje = $id_equipaje")) === false) {
             $sClaveError = 'PgEquipajeRepository.getDatosById';
             $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
             return false;
@@ -310,7 +284,7 @@ class PgEquipajeRepository extends ClaseRepository implements EquipajeRepository
     /**
      * Busca la clase con id_equipaje en la base de datos .
      */
-    public function findById(EquipajeId $id_equipaje): ?Equipaje
+    public function findById(int $id_equipaje): ?Equipaje
     {
         $aDatos = $this->datosById($id_equipaje);
         if (empty($aDatos)) {

@@ -112,7 +112,7 @@ $html .= '</script>';
 if (!empty($Qdatos_buscar)) {
     include(ConfigGlobal::$directorio . '/' . $Qdatos_buscar);
 }
-$html .= "<form id=\"frm_buscar\" name=\"frm_buscar\" action=\"" . ConfigGlobal::getWeb() . "/apps/core/mod_tabla_sql.php\" method=\"post\" onkeydown=\"fnjs_enviar(event,this);\" >";
+$html .= "<form id=\"frm_buscar\" name=\"frm_buscar\" action=\"" . ConfigGlobal::getWeb() . "/frontend/shared/controller/tablaDB_lista_ver.php\" method=\"post\" onkeydown=\"fnjs_enviar(event,this);\" >";
 $html .= $oHashBuscar->getCamposHtml();
 $html .= "<table>";
 $html .= "<thead>";

@@ -18,7 +18,7 @@ use src\inventario\domain\value_objects\WhereisItemId;
 interface WhereisRepositoryInterface
 {
 
-    public function getArrayIdFromIdEgms(array $aEgms):array;
+    public function getArrayIdFromIdEgms(array $aEgms):array|false;
 
 /* -------------------- GESTOR BASE ---------------------------------------- */
 
@@ -50,17 +50,17 @@ interface WhereisRepositoryInterface
      * Devuelve los campos de la base de datos en un array asociativo.
      * Devuelve false si no existe la fila en la base de datos
      * 
-     * @param WhereisItemId $id_item_whereis
+     * @param int $id_item_whereis
      * @return array|bool
 	
      */
-    public function datosById(WhereisItemId $id_item_whereis): array|bool;
+    public function datosById(int $id_item_whereis): array|bool;
 	
     /**
      * Busca la clase con id_item_whereis en el repositorio.
 	
      */
-    public function findById(WhereisItemId $id_item_whereis): ?Whereis;
+    public function findById(int $id_item_whereis): ?Whereis;
 	
     public function getNewId();
 }

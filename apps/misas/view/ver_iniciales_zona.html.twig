@@ -145,7 +145,7 @@
         let color = $('#color').val();
 
         // añadir el hash (se puede cambiar todo menos el encargo)
-        parametros='id_sacd=' + id_sacd + '&iniciales=' + iniciales + '&color=' + color + '{{ h_iniciales|raw }}';;
+        parametros='id_sacd=' + id_sacd + '&iniciales=' + iniciales + '&color=' + color + '{{ h_iniciales|raw }}';
 
         // guardar cambios en DB
         var request = $.ajax({

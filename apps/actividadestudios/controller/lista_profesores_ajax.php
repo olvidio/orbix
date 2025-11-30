@@ -1,7 +1,7 @@
 <?php
 
-use profesores\model\entity\GestorProfesor;
 use profesores\model\entity\GestorProfesorActividad;
+use src\profesores\domain\contracts\ProfesorStgrRepositoryInterface;
 use web\Desplegable;
 
 /*
@@ -22,8 +22,10 @@ $Qsalida = (string)filter_input(INPUT_POST, 'salida');
 switch ($Qsalida) {
     case "asignatura":
         $Qid_asignatura = (integer)filter_input(INPUT_POST, 'id_asignatura');
-        $GesProfesores = new GestorProfesor();
-        $oDesplProfesores = $GesProfesores->getDesplProfesoresAsignatura($Qid_asignatura);
+        $ProfesorRepository = $GLOBALS['container']->get(ProfesorStgrRepositoryInterface::class);
+        $aOpciones = $ProfesorRepository->getArrayTodosProfesoresAsignatura($Qid_asignatura);
+        $oDesplProfesores = new Desplegable();
+        $oDesplProfesores->setOpciones($aOpciones);
 
         $oDesplProfesores->setNombre('id_profesor');
         $oDesplProfesores->setBlanco('t');
@@ -43,8 +45,8 @@ switch ($Qsalida) {
         echo $oDesplProfesores->desplegable();
         break;
     case "todos":
-        $GesProfesores = new GestorProfesor();
-        $aOpciones = $GesProfesores->getListaProfesoresPub();
+        $ProfesorRepository = $GLOBALS['container']->get(ProfesorStgrRepositoryInterface::class);
+        $aOpciones = $ProfesorRepository->getArrayProfesoresPub();
 
         $oDesplProfesores = new Desplegable('', $aOpciones, '', true);
 

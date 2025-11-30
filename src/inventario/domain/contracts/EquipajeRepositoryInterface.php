@@ -4,7 +4,6 @@ namespace src\inventario\domain\contracts;
 
 use PDO;
 use src\inventario\domain\entity\Equipaje;
-use src\inventario\domain\value_objects\EquipajeId;
 
 /**
  * Interfaz de la clase Equipaje y su Repositorio
@@ -18,50 +17,48 @@ use src\inventario\domain\value_objects\EquipajeId;
 interface EquipajeRepositoryInterface
 {
 
-    public function getEquipajesCoincidentes(string $f_ini_iso, string $f_fin_iso):array;
-	public function getArrayEquipajes(string $f_ini_iso=''):array;
+    public function getEquipajesCoincidentes(string $f_ini_iso, string $f_fin_iso): array|false;
 
-/* -------------------- GESTOR BASE ---------------------------------------- */
+    public function getArrayEquipajes(string $f_ini_iso = ''): array|false;
 
-	/**
-	 * devuelve una colección (array) de objetos de tipo Equipaje
-	 *
-	 * @param array $aWhere asociativo con los valores para cada campo de la BD.
-	 * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-	 * @return array|false Una colección de objetos de tipo Equipaje
-	
-	 */
-	public function getEquipajes(array $aWhere=[], array $aOperators=[]): array|false;
-	
-/* -------------------- ENTIDAD --------------------------------------------- */
+    /* -------------------- GESTOR BASE ---------------------------------------- */
 
-	public function Eliminar(Equipaje $Equipaje): bool;
+    /**
+     * devuelve una colección (array) de objetos de tipo Equipaje
+     *
+     * @param array $aWhere asociativo con los valores para cada campo de la BD.
+     * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
+     * @return array|false Una colección de objetos de tipo Equipaje
+     */
+    public function getEquipajes(array $aWhere = [], array $aOperators = []): array|false;
 
-	public function Guardar(Equipaje $Equipaje): bool;
+    /* -------------------- ENTIDAD --------------------------------------------- */
 
-	public function getErrorTxt(): string;
+    public function Eliminar(Equipaje $Equipaje): bool;
 
-	public function getoDbl(): PDO;
+    public function Guardar(Equipaje $Equipaje): bool;
 
-	public function setoDbl(PDO $oDbl): void;
+    public function getErrorTxt(): string;
 
-	public function getNomTabla(): string;
-	
+    public function getoDbl(): PDO;
+
+    public function setoDbl(PDO $oDbl): void;
+
+    public function getNomTabla(): string;
+
     /**
      * Devuelve los campos de la base de datos en un array asociativo.
      * Devuelve false si no existe la fila en la base de datos
-     * 
-     * @param EquipajeId $id_equipaje
+     *
+     * @param int $id_equipaje
      * @return array|bool
-	
      */
-    public function datosById(EquipajeId $id_equipaje): array|bool;
-	
+    public function datosById(int $id_equipaje): array|bool;
+
     /**
      * Busca la clase con id_equipaje en el repositorio.
-	
      */
-    public function findById(EquipajeId $id_equipaje): ?Equipaje;
-	
+    public function findById(int $id_equipaje): ?Equipaje;
+
     public function getNewId();
 }

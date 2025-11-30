@@ -4,7 +4,6 @@ namespace src\inventario\domain\contracts;
 
 use PDO;
 use src\inventario\domain\entity\Documento;
-use src\inventario\domain\value_objects\DocumentoId;
 
 /**
  * Interfaz de la clase Documento y su Repositorio
@@ -18,47 +17,44 @@ use src\inventario\domain\value_objects\DocumentoId;
 interface DocumentoRepositoryInterface
 {
 
-/* -------------------- GESTOR BASE ---------------------------------------- */
+    /* -------------------- GESTOR BASE ---------------------------------------- */
 
-	/**
-	 * devuelve una colección (array) de objetos de tipo Documento
-	 *
-	 * @param array $aWhere asociativo con los valores para cada campo de la BD.
-	 * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-	 * @return array|false Una colección de objetos de tipo Documento
-	
-	 */
-	public function getDocumentos(array $aWhere=[], array $aOperators=[]): array|false;
-	
-/* -------------------- ENTIDAD --------------------------------------------- */
+    /**
+     * devuelve una colección (array) de objetos de tipo Documento
+     *
+     * @param array $aWhere asociativo con los valores para cada campo de la BD.
+     * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
+     * @return array|false Una colección de objetos de tipo Documento
+     */
+    public function getDocumentos(array $aWhere = [], array $aOperators = []): array|false;
 
-	public function Eliminar(Documento $Documento): bool;
+    /* -------------------- ENTIDAD --------------------------------------------- */
 
-	public function Guardar(Documento $Documento): bool;
+    public function Eliminar(Documento $Documento): bool;
 
-	public function getErrorTxt(): string;
+    public function Guardar(Documento $Documento): bool;
 
-	public function getoDbl(): PDO;
+    public function getErrorTxt(): string;
 
-	public function setoDbl(PDO $oDbl): void;
+    public function getoDbl(): PDO;
 
-	public function getNomTabla(): string;
-	
+    public function setoDbl(PDO $oDbl): void;
+
+    public function getNomTabla(): string;
+
     /**
      * Devuelve los campos de la base de datos en un array asociativo.
      * Devuelve false si no existe la fila en la base de datos
-     * 
-     * @param DocumentoId $id_doc
+     *
+     * @param int $id_doc
      * @return array|bool
-	
      */
-    public function datosById(DocumentoId $id_doc): array|bool;
-	
+    public function datosById(int $id_doc): array|bool;
+
     /**
      * Busca la clase con id_doc en el repositorio.
-	
      */
-    public function findById(DocumentoId $id_doc): ?Documento;
-	
+    public function findById(int $id_doc): ?Documento;
+
     public function getNewId();
 }

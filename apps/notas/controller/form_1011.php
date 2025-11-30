@@ -29,10 +29,10 @@ use core\ViewPhtml;
 use notas\model\entity\GestorPersonaNotaDB;
 use notas\model\entity\PersonaNotaDB;
 use personas\model\entity\Persona;
-use profesores\model\entity\GestorProfesor;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\notas\domain\contracts\NotaRepositoryInterface;
 use src\notas\domain\entity\Nota;
+use src\profesores\domain\contracts\ProfesorStgrRepositoryInterface;
 use web\Desplegable;
 use web\Hash;
 
@@ -132,8 +132,8 @@ if (!empty($Qid_asignatura_real)) { //caso de modificar
         $id_nivel = $oAsignatura->getId_nivel();
     }
 
-    $GesProfes = new GestorProfesor();
-    $cProfesores = $GesProfes->getProfesores();
+    $ProfesorRepository = $GLOBALS['container']->get(ProfesorStgrRepositoryInterface::class);
+    $cProfesores = $ProfesorRepository->getProfesoresStgr();
     $aProfesores = [];
     $msg_err = '';
     foreach ($cProfesores as $oProfesor) {

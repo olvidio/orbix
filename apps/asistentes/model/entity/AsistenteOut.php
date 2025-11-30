@@ -5,7 +5,7 @@ namespace asistentes\model\entity;
 use cambios\model\GestorAvisoCambios;
 use personas\model\entity\Persona;
 use personas\model\entity\PersonaOut;
-use profesores\model\entity\GestorProfesor;
+use profesores\legacy\GestorProfesor;
 use ReflectionClass;
 use function core\is_true;
 
@@ -209,7 +209,7 @@ class AsistenteOut extends AsistentePub
                     // miro si es profesor
                     $cProfesores = [];
                     $gesProfesores = new GestorProfesor();
-                    $cProfesores = $gesProfesores->getProfesores(array('id_nom' => $this->iid_nom, 'f_cese' => ''), array('f_cese' => 'IS NULL'));
+                    $cProfesores = $gesProfesores->getProfesoresStgr(array('id_nom' => $this->iid_nom, 'f_cese' => ''), array('f_cese' => 'IS NULL'));
                     if (count($cProfesores) > 0) {
                         $oPersonaOut->setProfesor_stgr('t');
                         $oPersonaOut->DBGuardar();

@@ -2,6 +2,7 @@
 
 namespace src\shared\domain;
 
+use src\profesores\domain\entity\ProfesorLatin;
 use web\DateTimeLocal;
 use web\NullDateTimeLocal;
 use function core\is_true;
@@ -56,8 +57,8 @@ class DatosUpdateRepo
 
             $metodo = $oDatosCampo->getMetodoSet();
             // uso el método legacy
-            if (substr($metodo,-2) === 'Vo') {
-                $metodo = substr($metodo,0,-2);
+            if (substr($metodo, -2) === 'Vo') {
+                $metodo = substr($metodo, 0, -2);
             }
             try {
                 $oFicha->$metodo($aCampos[$nom_camp]);
@@ -68,7 +69,17 @@ class DatosUpdateRepo
         }
 
         $oRepository = $GLOBALS['container']->get($this->RepositoryInterface);
-        $new_id = $oRepository->getNewId();
+        // Casos especiales que no tienen getNewId
+        $NoNewId = false;
+        if ($oFicha instanceof ProfesorLatin) {
+            $new_id = $this->Campos['id_pau'];
+            $NoNewId = true;
+        }
+
+        if ($NoNewId === false) {
+            $new_id = $oRepository->getNewId();
+        }
+
         $pks1 = 'set' . ucfirst($oFicha->getPrimary_key());
         $oFicha->$pks1($new_id);
 
@@ -108,8 +119,8 @@ class DatosUpdateRepo
 
             $metodo = $oDatosCampo->getMetodoSet();
             // uso el método legacy
-            if (substr($metodo,-2) === 'Vo') {
-                $metodo = substr($metodo,0,-2);
+            if (substr($metodo, -2) === 'Vo') {
+                $metodo = substr($metodo, 0, -2);
             }
 
             // cambiar las cadenas vacías por null (va bien cuando el dato que se espera en un integer)

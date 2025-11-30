@@ -7,8 +7,8 @@ use actividadestudios\model\entity\GestorActividadAsignatura;
 use core\ConfigGlobal;
 use core\ViewPhtml;
 use notas\model\entity\GestorActa;
-use profesores\model\entity\GestorProfesorDocenciaStgr;
-use profesores\model\entity\ProfesorDocenciaStgr;
+use src\profesores\domain\contracts\ProfesorDocenciaStgrRepositoryInterface;
+use src\profesores\domain\entity\ProfesorDocenciaStgr;
 use web\Hash;
 use web\Periodo;
 
@@ -105,7 +105,7 @@ if (empty($continuar)) {
     $ini_d = $_SESSION['oConfig']->getDiaIniStgr();
     $ini_m = $_SESSION['oConfig']->getMesIniStgr();
     // busco los profesores que han dado alguna asignatura en actividad.
-    $GesProfesorDocencia = new GestorProfesorDocenciaStgr();
+    $ProfesorDocenciaStgrRepository = $GLOBALS['container']->get(ProfesorDocenciaStgrRepositoryInterface::class);
     foreach ($cActividades as $oActividad) {
         $id_activ = $oActividad->getId_activ();
         $id_tipo_activ = $oActividad->getId_tipo_activ();
@@ -150,24 +150,24 @@ if (empty($continuar)) {
 
             // Puede que ya lo tenga:
             $aWhereDocencia = ['id_nom' => $id_profesor, 'id_activ' => $id_activ, 'id_asignatura' => $id_asignatura];
-            $cProfesorDocencia = $GesProfesorDocencia->getProfesorDocenciasStgr($aWhereDocencia);
+            $cProfesorDocencia = $ProfesorDocenciaStgrRepository->getProfesorDocenciasStgr($aWhereDocencia);
             if (is_array($cProfesorDocencia) && count($cProfesorDocencia) > 0) {
                 $oProfesorDocencia = $cProfesorDocencia[0];
-                $oProfesorDocencia->DBCarregar();
                 $oProfesorDocencia->setCurso_inicio($ini_a);
                 $oProfesorDocencia->setTipo($tipo);
                 $oProfesorDocencia->setActa($acta);
-                $oProfesorDocencia->DBGuardar();
             } else {
+                $newId = $ProfesorDocenciaStgrRepository->getNewId();
                 $oProfesorDocencia = new ProfesorDocenciaStgr();
+                $oProfesorDocencia->setId_item($newId);
+                $oProfesorDocencia->setId_nom($id_profesor);
                 $oProfesorDocencia->setId_activ($id_activ);
                 $oProfesorDocencia->setId_asignatura($id_asignatura);
-                $oProfesorDocencia->setId_nom($id_profesor);
                 $oProfesorDocencia->setCurso_inicio($ini_a);
                 $oProfesorDocencia->setTipo($tipo);
                 $oProfesorDocencia->setActa($acta);
-                $oProfesorDocencia->DBGuardar();
             }
+            $ProfesorDocenciaStgrRepository->DBGuardar($oProfesorDocencia);
         }
     }
 

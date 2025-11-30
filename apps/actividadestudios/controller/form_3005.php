@@ -3,9 +3,9 @@
 use actividadestudios\model\entity\ActividadAsignaturaDl;
 use core\ConfigGlobal;
 use core\ViewPhtml;
-use profesores\model\entity\GestorProfesor;
 use profesores\model\entity\GestorProfesorActividad;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
+use src\profesores\domain\contracts\ProfesorStgrRepositoryInterface;
 use web\Desplegable;
 use web\Hash;
 
@@ -52,13 +52,15 @@ if (!empty($Qid_asignatura)) { //caso de modificar
     $oActividadAsignatura->setId_asignatura($Qid_asignatura);
     $oActividadAsignatura->DBCarregar();
 
-    $GesProfesores = new GestorProfesor();
-    $oDesplProfesores = $GesProfesores->getDesplProfesoresAsignatura($Qid_asignatura);
+    $ProfesorReposiroty = $GLOBALS['container']->get(ProfesorStgrRepositoryInterface::class);
+    $aOpciones = $ProfesorReposiroty->getDesplProfesoresAsignatura($Qid_asignatura);
+    $oDesplProfesores = new Desplegable();
+    $oDesplProfesores->setOpciones($aOpciones);
 
     $id_profesor = $oActividadAsignatura->getId_profesor();
     if (!empty($id_profesor)) {
-        $GesProfesores = new GestorProfesor();
-        $aOpciones = $GesProfesores->getListaProfesoresPub();
+        $ProfesorReposiroty = $GLOBALS['container']->get(ProfesorStgrRepositoryInterface::class);
+        $aOpciones = $ProfesorReposiroty->getArrayProfesoresPub();
         $oDesplProfesores->setOpciones($aOpciones);
         $oDesplProfesores->setOpcion_sel($id_profesor);
     }
@@ -89,7 +91,7 @@ if (!empty($Qid_asignatura)) { //caso de modificar
     $f_ini = '';
     $f_fin = '';
     if (!empty($Qid_activ)) {
-        $AsignaturaRepository = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class);;
+        $AsignaturaRepository = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class);
         $aOpciones = $AsignaturaRepository->getArrayAsignaturasConSeparador(false);
         $oDesplAsignaturas = new Desplegable('', $aOpciones, '', true);
         $oDesplAsignaturas->setNombre('id_asignatura');

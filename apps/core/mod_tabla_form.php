@@ -64,7 +64,7 @@ if (!empty($Qobj_pau)) {
     $Qgo_to = Hash::link(ConfigGlobal::getWeb() . "/apps/dossiers/controller/dossiers_ver.php?$sQuery");
 } else {
     $sQuery = http_build_query($aQuery);
-    $Qgo_to = Hash::link(ConfigGlobal::getWeb() . "/apps/core/mod_tabla_sql.php?$sQuery");
+    $Qgo_to = Hash::link(ConfigGlobal::getWeb() . "/frontend/shared/controller/tablaDB_lista_ver.php?$sQuery");
 }
 
 // Tiene que ser en dos pasos.

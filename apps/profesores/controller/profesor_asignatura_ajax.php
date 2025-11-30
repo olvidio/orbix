@@ -3,8 +3,8 @@
 use core\ConfigGlobal;
 use personas\model\entity\GestorTelecoPersonaDl;
 use personas\model\entity\PersonaDl;
-use profesores\model\entity\GestorProfesor;
 use profesores\model\entity\GestorProfesorDocenciaStgr;
+use src\profesores\domain\contracts\ProfesorStgrRepositoryInterface;
 use web\Lista;
 
 // INICIO Cabecera global de URL de controlador *********************************
@@ -17,8 +17,8 @@ require_once("apps/core/global_object.inc");
 
 $Qid_asignatura = (integer)filter_input(INPUT_POST, 'id_asignatura');
 
-$GesProfesores = new GestorProfesor();
-$cProfesores = $GesProfesores->getListaProfesoresAsignatura($Qid_asignatura);
+$ProfesorRepository = $GLOBALS['container']->get(ProfesorStgrRepositoryInterface::class);
+$cProfesores = $ProfesorRepository->getArrayProfesoresAsignatura($Qid_asignatura);
 /* $cProfesores es un array amb dos llistes:
 	$Opciones['departamento']
 	$Opciones['ampliacion']

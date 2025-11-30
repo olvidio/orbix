@@ -8,6 +8,7 @@ use core\ViewPhtml;
 use notas\model\entity\GestorPersonaNotaDB;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\notas\domain\contracts\NotaRepositoryInterface;
+use src\profesores\domain\contracts\ProfesorStgrRepositoryInterface;
 use web\Desplegable;
 use web\Hash;
 
@@ -65,8 +66,10 @@ if (!empty($id_asignatura_real)) { //caso de modificar
     $aFaltan = [];
     $oDesplNiveles = [];
     if (!empty($id_preceptor)) {
-        $GesProfes = new profesores\model\entity\GestorProfesor();
-        $oDesplProfesores = $GesProfes->getListaProfesores();
+        $ProfesorRepository = $GLOBALS['container']->get(ProfesorStgrRepositoryInterface::class);
+        $aOpciones = $ProfesorRepository->getArrayProfesoresDl();
+        $oDesplProfesores = new Desplegable();
+        $oDesplProfesores->setOpciones($aOpciones);
         $oDesplProfesores->setBlanco(1);
         $oDesplProfesores->setNombre('id_preceptor');
         $oDesplProfesores->setOpcion_sel($id_preceptor);

@@ -257,7 +257,7 @@ if (empty($Qid_dossier)) { // enseña la lista de dossiers.
             }
             echo $claseSelect->getHtml();
         } else {
-            // para presentación genérica, con la info tipo Info1012.php
+            // para presentación genérica, con la info tipo InfoProfesorPublicacion.php
             // datos del dossier:
             $oTipoDossier = new TipoDossier($id_dossier);
             $clase = $oTipoDossier->getClass();

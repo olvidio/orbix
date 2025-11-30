@@ -61,7 +61,7 @@ class PgUbiInventarioRepository extends ClaseRepository implements UbiInventario
         return $UbiInventarioSet->getTot();
 	}
 
-	public function getArrayUbisInventario():array
+	public function getArrayUbisInventario():array|false
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();

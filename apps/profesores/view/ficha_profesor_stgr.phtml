@@ -280,8 +280,7 @@ include_once(ConfigGlobal::$dir_estilos . '/colores.php');
                             $f_ini = $oProfesorCongreso->getF_ini()->getFromLocal();
                             $f_fin = $oProfesorCongreso->getF_fin()->getFromLocal();
 
-                            $array_tipo_c = $oProfesorCongreso->getDatosTipo()->getLista();
-                            $tipo_congreso = empty($array_tipo_c[$tipo]) ? '' : $array_tipo_c[$tipo];
+                            $tipo_congreso = empty($a_tipos_congreso[$tipo]) ? '' : $a_tipos_congreso[$tipo];
                             echo "<tr><td>$tipo_congreso</td><td>$congreso</td><td>$lugar</td><td>$f_ini</td><td>$f_fin</td><td>$organiza</td></tr>";
                         }
                         ?>
@@ -351,13 +350,12 @@ include_once(ConfigGlobal::$dir_estilos . '/colores.php');
                                         $tipo = $oDocencia->getTipo();
                                         $curso_inicio = $oDocencia->getCurso_inicio();
                                         $acta = $oDocencia->getActa();
-                                        $array_tipo = $oDocencia->getDatosTipo()->getLista();
                                         $oAsignatura = $AsignaturaRepository->findById($id_asignatura);
                                         if ($oAsignatura === null) {
                                             throw new \Exception(sprintf(_("No se ha encontrado la asignatura con id: %s"), $id_asignatura));
                                         }
                                         $nombre_corto = $oAsignatura->getNombre_corto();
-                                        $modo = empty($tipo) ? '' : $array_tipo[$tipo];
+                                        $modo = empty($tipo) ? '' : $a_tipos_docencia[$tipo];
                                         $curso_fin = $curso_inicio + 1;
                                         echo "<tr><td>$curso_inicio - $curso_fin</td><td>$nombre_corto</td><td>$modo</td><td>$acta</td></tr>";
                                     }

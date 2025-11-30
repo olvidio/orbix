@@ -18,7 +18,7 @@ use src\inventario\domain\value_objects\TipoDocId;
 interface TipoDocRepositoryInterface
 {
 
-    public function getArrayTipoDoc(): array;
+    public function getArrayTipoDoc(): array|false;
 
     /* -------------------- GESTOR BASE ---------------------------------------- */
 
@@ -49,15 +49,15 @@ interface TipoDocRepositoryInterface
      * Devuelve los campos de la base de datos en un array asociativo.
      * Devuelve false si no existe la fila en la base de datos
      *
-     * @param TipoDocId $id_tipo_doc
+     * @param int $id_tipo_doc
      * @return array|bool
      */
-    public function datosById(TipoDocId $id_tipo_doc): array|bool;
+    public function datosById(int $id_tipo_doc): array|bool;
 
     /**
      * Busca la clase con id_tipo_doc en el repositorio.
      */
-    public function findById(TipoDocId $id_tipo_doc): ?TipoDoc;
+    public function findById(int $id_tipo_doc): ?TipoDoc;
 
     public function getNewId();
 }

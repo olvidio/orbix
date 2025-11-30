@@ -210,7 +210,7 @@
         let url_update_encargos_centros = '{{ url_update_encargos_centros }}';
 
         let id_item = $('#id_item').val();
-        parametros='id_item=' + id_item + '&que=borrar' + '{{ h_borrar_encargo_centro|raw }}';;
+        parametros='id_item=' + id_item + '&que=borrar' + '{{ h_borrar_encargo_centro|raw }}';
 
         // guardar cambios en DB
         var request = $.ajax({

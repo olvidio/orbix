@@ -26,7 +26,7 @@ class InfoZonaGrupo extends DatosInfo
         // Si se quiere listar una selección, $this->k_buscar
         if (empty($this->k_buscar)) {
             $aWhere = array('_ordre' => 'nombre_grupo');
-            $aOperador = '';
+            $aOperador = [];
         } else {
             $aWhere = array('nom' => $this->k_buscar);
             $aOperador = array('nom' => 'sin_acentos');

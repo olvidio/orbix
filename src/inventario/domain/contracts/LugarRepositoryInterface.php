@@ -4,7 +4,6 @@ namespace src\inventario\domain\contracts;
 
 use PDO;
 use src\inventario\domain\entity\Lugar;
-use src\inventario\domain\value_objects\LugarId;
 
 /**
  * Interfaz de la clase Lugar y su Repositorio
@@ -18,49 +17,46 @@ use src\inventario\domain\value_objects\LugarId;
 interface LugarRepositoryInterface
 {
 
-    public function getArrayLugares(int $id_ubi):array;
+    public function getArrayLugares(int $id_ubi): array|false;
 
-/* -------------------- GESTOR BASE ---------------------------------------- */
+    /* -------------------- GESTOR BASE ---------------------------------------- */
 
-	/**
-	 * devuelve una colección (array) de objetos de tipo Lugar
-	 *
-	 * @param array $aWhere asociativo con los valores para cada campo de la BD.
-	 * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-	 * @return array|false Una colección de objetos de tipo Lugar
-	
-	 */
-	public function getLugares(array $aWhere=[], array $aOperators=[]): array|false;
-	
-/* -------------------- ENTIDAD --------------------------------------------- */
+    /**
+     * devuelve una colección (array) de objetos de tipo Lugar
+     *
+     * @param array $aWhere asociativo con los valores para cada campo de la BD.
+     * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
+     * @return array|false Una colección de objetos de tipo Lugar
+     */
+    public function getLugares(array $aWhere = [], array $aOperators = []): array|false;
 
-	public function Eliminar(Lugar $Lugar): bool;
+    /* -------------------- ENTIDAD --------------------------------------------- */
 
-	public function Guardar(Lugar $Lugar): bool;
+    public function Eliminar(Lugar $Lugar): bool;
 
-	public function getErrorTxt(): string;
+    public function Guardar(Lugar $Lugar): bool;
 
-	public function getoDbl(): PDO;
+    public function getErrorTxt(): string;
 
-	public function setoDbl(PDO $oDbl): void;
+    public function getoDbl(): PDO;
 
-	public function getNomTabla(): string;
-	
+    public function setoDbl(PDO $oDbl): void;
+
+    public function getNomTabla(): string;
+
     /**
      * Devuelve los campos de la base de datos en un array asociativo.
      * Devuelve false si no existe la fila en la base de datos
-     * 
-     * @param LugarId $id_lugar
+     *
+     * @param int $id_lugar
      * @return array|bool
-	
      */
-    public function datosById(LugarId $id_lugar): array|bool;
-	
+    public function datosById(int $id_lugar): array|bool;
+
     /**
      * Busca la clase con id_lugar en el repositorio.
-	
      */
-    public function findById(LugarId $id_lugar): ?Lugar;
-	
+    public function findById(int $id_lugar): ?Lugar;
+
     public function getNewId();
 }

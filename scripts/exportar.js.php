@@ -386,13 +386,13 @@ function fnjs_exportar(formato){
 	});
 
 	//return;
-	//var myText=$(bloque).html();;
+	//var myText=$(bloque).html();
 	
 	switch (export_modo) {
 		case "formulario":
 			var myText=txt;
 			/*
-			//var myText=$(bloque).html();;
+			//var myText=$(bloque).html();
 			//var o=new Object($(bloque));
 			oldObject = $(bloque);
 			//var o = jQuery.extend({}, oldObject);

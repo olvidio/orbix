@@ -59,7 +59,7 @@ class DesplCentros
                     $query = "WHERE id_zona = $this->id_zona AND status='t' ";
                     $oDesplCtr1 = $GesCentrosDl->getListaCentros($query, 'nombre_ubi');
                     $opciones_sv = $oDesplCtr1->getOpciones()->fetchAll(\PDO::FETCH_ASSOC); // para pasarlo a un array
-                    $GesCentrosSf = $GLOBALS['container']->get(CentroEllasRepositoryInterface::class);;
+                    $GesCentrosSf = $GLOBALS['container']->get(CentroEllasRepositoryInterface::class);
                     $oDesplCtr1 = $GesCentrosSf->getListaCentros($query, 'nombre_ubi');
                     $opciones_sf = $oDesplCtr1->getOpciones()->fetchAll(\PDO::FETCH_ASSOC);
                     $a_opciones = array_merge($opciones_sv, $opciones_sf);

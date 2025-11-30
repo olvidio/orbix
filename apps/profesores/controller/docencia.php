@@ -2,9 +2,9 @@
 
 use core\ConfigGlobal;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
+use src\profesores\domain\contracts\ProfesorDocenciaStgrRepositoryInterface;
+use src\profesores\domain\contracts\ProfesorStgrRepositoryInterface;
 use web\Lista;
-use profesores\model\entity\GestorProfesor;
-use profesores\model\entity\GestorProfesorDocenciaStgr;
 
 /**
  * Funciones más comunes de la aplicación
@@ -38,23 +38,23 @@ $a_cabeceras[6] = _("acta");
 
 $a_valores = [];
 
-$gesProfesor = new GestorProfesor();
-$a_nomProfesor = $gesProfesor->getListaProfesoresConDl();
+$ProfesorRepository = $GLOBALS['container']->get(ProfesorStgrRepositoryInterface::class);
+$a_nomProfesor = $ProfesorRepository->getArrayProfesoresConDl();
 
-$gesProfesorDocenciaStgr = new GestorProfesorDocenciaStgr();
+$ProfesorDocenciaStgrRepository = $GLOBALS['container']->get(ProfesorDocenciaStgrRepositoryInterface::class);
 $p = 0;
 foreach ($a_nomProfesor as $id_nom => $aClave) {
     $ap_nom = $aClave['ap_nom'];
     $dl = $aClave['dl'];
-    $cProfesorDocenciaStgr = $gesProfesorDocenciaStgr->getProfesorDocenciasStgr(['id_nom' => $id_nom]);
+    $cProfesorDocenciaStgr = $ProfesorDocenciaStgrRepository->getProfesorDocenciasStgr(['id_nom' => $id_nom]);
+    $a_tipos_docendia = $ProfesorDocenciaStgrRepository->getArrayTiposDocencia();
     foreach ($cProfesorDocenciaStgr as $oProfesorDocenciaStgr) {
         $p++;
         $id_asignatura = $oProfesorDocenciaStgr->getId_asignatura();
         $nom_asignatura = empty($a_asignaturas[$id_asignatura]) ? '?' : $a_asignaturas[$id_asignatura];
 
-        $array_tipo = $oProfesorDocenciaStgr->getDatosTipo()->getLista();
         $tipo = $oProfesorDocenciaStgr->getTipo();
-        $modo = empty($tipo) ? '' : $array_tipo[$tipo];
+        $modo = empty($tipo) ? '' : $a_tipos_docendia[$tipo];
 
         $curso_inicio = $oProfesorDocenciaStgr->getCurso_inicio();
         $acta = $oProfesorDocenciaStgr->getActa();

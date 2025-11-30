@@ -211,7 +211,7 @@ class TipoTeleco
     {
         $oAsignaturaSet = new Set();
 
-        $oAsignaturaSet->add($this->getDatosTipo_teleco());;
+        $oAsignaturaSet->add($this->getDatosTipo_teleco());
         $oAsignaturaSet->add($this->getDatosNombre_teleco());
         $oAsignaturaSet->add($this->getDatosUbi());
         $oAsignaturaSet->add($this->getDatosPersona());

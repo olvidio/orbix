@@ -4,18 +4,29 @@ use core\ConfigGlobal;
 use dossiers\model\entity\TipoDossier;
 use dossiers\model\PermDossier;
 use personas\model\entity\Persona;
-use profesores\model\entity\GestorProfesor;
-use profesores\model\entity\GestorProfesorAmpliacion;
-use profesores\model\entity\GestorProfesorCongreso;
-use profesores\model\entity\GestorProfesorDirector;
-use profesores\model\entity\GestorProfesorDocenciaStgr;
-use profesores\model\entity\GestorProfesorPublicacion;
-use profesores\model\entity\GestorProfesorTituloEst;
-use profesores\model\entity\ProfesorJuramento;
-use profesores\model\entity\ProfesorLatin;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\asignaturas\domain\contracts\DepartamentoRepositoryInterface;
+use src\profesores\domain\contracts\ProfesorAmpliacionRepositoryInterface;
+use src\profesores\domain\contracts\ProfesorCongresoRepositoryInterface;
+use src\profesores\domain\contracts\ProfesorDirectorRepositoryInterface;
+use src\profesores\domain\contracts\ProfesorDocenciaStgrRepositoryInterface;
+use src\profesores\domain\contracts\ProfesorJuramentoRepositoryInterface;
+use src\profesores\domain\contracts\ProfesorLatinRepositoryInterface;
+use src\profesores\domain\contracts\ProfesorPublicacionRepositoryInterface;
+use src\profesores\domain\contracts\ProfesorStgrRepositoryInterface;
 use src\profesores\domain\contracts\ProfesorTipoRepositoryInterface;
+use src\profesores\domain\contracts\ProfesorTituloEstRepositoryInterface;
+use src\profesores\domain\entity\ProfesorCongreso;
+use src\profesores\domain\entity\ProfesorDocenciaStgr;
+use src\profesores\domain\InfoProfesorAmpliacion;
+use src\profesores\domain\InfoProfesorCongreso;
+use src\profesores\domain\InfoProfesorDirector;
+use src\profesores\domain\InfoProfesorDocenciaStgr;
+use src\profesores\domain\InfoProfesorJuaramento;
+use src\profesores\domain\InfoProfesorLatin;
+use src\profesores\domain\InfoProfesorPublicacion;
+use src\profesores\domain\InfoProfesorStgr;
+use src\profesores\domain\InfoProfesorTituloEst;
 use src\ubis\domain\contracts\CentroDlRepositoryInterface;
 use src\ubis\domain\contracts\CentroRepositoryInterface;
 use web\Hash;
@@ -174,19 +185,18 @@ $nombre_ubi = $oCentroDl->getNombre_ubi();
 
 $go_to = Hash::link(ConfigGlobal::getWeb() . '/apps/profesores/controller/ficha_profesor_stgr.php?' . http_build_query(array('id_nom' => $id_nom, 'id_tabla' => $Qid_tabla, 'permiso' => $Qpermiso, 'depende' => $Qdepende)));
 
-$oProfesorLatin = new ProfesorLatin($id_nom);
-$latin = $oProfesorLatin->getLatin();
+$latin = $GLOBALS['container']->get(ProfesorLatinRepositoryInterface::class)->findById($id_nom)?->isLatin();
 
 $go_cosas['print'] = Hash::link(ConfigGlobal::getWeb() . '/apps/profesores/controller/ficha_profesor_stgr.php?' . http_build_query(array('id_nom' => $id_nom, 'id_tabla' => $Qid_tabla, 'print' => '1')));
 
-$a_cosas = array('clase_info' => 'profesores\model\Info1022', //latin
+$a_cosas = array('clase_info' => InfoProfesorLatin::class,
     'pau' => 'p',
     'id_pau' => $id_nom,
     'obj_pau' => $Qobj_pau,
     'permiso' => $Qpermiso,
     'depende' => $Qdepende,
     'go_to' => $go_to);
-$go_cosas['latin'] = Hash::link(ConfigGlobal::getWeb() . '/apps/core/mod_tabla_sql.php?' . http_build_query($a_cosas));
+$go_cosas['latin'] = Hash::link(ConfigGlobal::getWeb() . '/frontend/shared/controller/tablaDB_lista_ver.php?' . http_build_query($a_cosas));
 
 if (is_true($sacd)) {
     $sacd_txt = "si";
@@ -195,8 +205,8 @@ if (is_true($latin)) {
     $latin_txt = "si";
 }
 
-$gesProfesor = new GestorProfesor();
-$cProfesores = $gesProfesor->getProfesores($aWhere, $aOperador);
+$ProfesorRepository = $GLOBALS['container']->get(ProfesorStgrRepositoryInterface::class);
+$cProfesores = $ProfesorRepository->getProfesoresStgr($aWhere, $aOperador);
 $DepartamentoRepository = $GLOBALS['container']->get(DepartamentoRepositoryInterface::class);
 $a_nombramientos = [];
 $dep = '';
@@ -222,9 +232,9 @@ foreach ($cProfesores as $oProfesor) {
 }
 
 if (empty($Qprint)) { // si no es para imprimir muestro todos los datos
-    // director departamento (clase_info=1020)  //////////////////////////////////
-    $gesProfesorDirector = new GestorProfesorDirector();
-    $cDirectores = $gesProfesorDirector->getProfesoresDirectores($aWhere, $aOperador);
+    // director departamento //////////////////////////////////
+    $ProfesorDirectorRepository = $GLOBALS['container']->get(ProfesorDirectorRepositoryInterface::class);
+    $cDirectores = $ProfesorDirectorRepository->getProfesorDirectores($aWhere, $aOperador);
     $a_director = [];
     foreach ($cDirectores as $oProfesorDirector) {
         $id_departamento = $oProfesorDirector->getId_departamento();
@@ -237,19 +247,25 @@ if (empty($Qprint)) { // si no es para imprimir muestro todos los datos
 
         $a_director[] = array('departamento' => $departamento, 'f_nombramiento' => $f_nombramiento, 'escrito_nombramiento' => $escrito_nombramiento, 'f_cese' => $f_cese, 'escrito_cese' => $escrito_cese);
     }
-    $a_cosas['clase_info'] = 'profesores\model\Info1020';
-    $go_cosas['director'] = Hash::link(ConfigGlobal::getWeb() . '/apps/core/mod_tabla_sql.php?' . http_build_query($a_cosas));
+    $a_cosas['clase_info'] = InfoProfesorDirector::class;
+    $go_cosas['director'] = Hash::link(ConfigGlobal::getWeb() . '/frontend/shared/controller/tablaDB_lista_ver.php?' . http_build_query($a_cosas));
 
     // juramento //////////////////////////
-    $oJuramento = new ProfesorJuramento(array('id_nom' => $id_nom));
-    $oJuramento->DBCarregar();
-    $f_juramento = $oJuramento->getF_juramento()->getFromLocal();
-    $a_cosas['clase_info'] = 'profesores\model\Info1021';
-    $go_cosas['juramento'] = Hash::link(ConfigGlobal::getWeb() . '/apps/core/mod_tabla_sql.php?' . http_build_query($a_cosas));
+    $JuramentoRepository = $GLOBALS['container']->get(ProfesorJuramentoRepositoryInterface::class);
+    $cJuramento = $JuramentoRepository->getProfesorJuramentos(['id_nom' => $id_nom]);
+    if (!empty($cJuramento[0])) {
+        $oJuramento = $cJuramento[0];
+        $f_juramento = $oJuramento->getF_juramento()->getFromLocal();
+    } else {
+        $f_juramento = '';
+    }
 
-    //publicaciones (clase_info=1012)  ///////////////////////////////////
-    $gesProfesorPublicaciones = new GestorProfesorPublicacion();
-    $cProfesorPublicaciones = $gesProfesorPublicaciones->getProfesorPublicaciones(array('id_nom' => $id_nom, '_ordre' => 'f_publicacion'));
+    $a_cosas['clase_info'] = InfoProfesorJuaramento::class;
+    $go_cosas['juramento'] = Hash::link(ConfigGlobal::getWeb() . '/frontend/shared/controller/tablaDB_lista_ver.php?' . http_build_query($a_cosas));
+
+    //publicaciones  ///////////////////////////////////
+    $ProfesorPublicacionRepository = $GLOBALS['container']->get(ProfesorPublicacionRepositoryInterface::class);
+    $cProfesorPublicaciones = $ProfesorPublicacionRepository->getProfesorPublicaciones(array('id_nom' => $id_nom, '_ordre' => 'f_publicacion'));
     $a_publicaciones = [];
     foreach ($cProfesorPublicaciones as $oProfesorPublicacion) {
         $pendiente = $oProfesorPublicacion->getPendiente();
@@ -265,28 +281,28 @@ if (empty($Qprint)) { // si no es para imprimir muestro todos los datos
         $a_publicaciones[] = array('pendiente' => $pendiente, 'tipo_publicacion' => $tipo_publicacion, 'titulo' => $titulo, 'editorial' => $editorial, 'coleccion' => $coleccion, 'f_publicacion' => $f_publicacion, 'referencia' => $referencia, 'lugar' => $lugar, 'observ' => $observ);
 
     }
-    $a_cosas['clase_info'] = 'profesores\model\Info1012';
-    $go_cosas['publicaciones'] = Hash::link(ConfigGlobal::getWeb() . '/apps/core/mod_tabla_sql.php?' . http_build_query($a_cosas));
+    $a_cosas['clase_info'] = InfoProfesorPublicacion::class;
+    $go_cosas['publicaciones'] = Hash::link(ConfigGlobal::getWeb() . '/frontend/shared/controller/tablaDB_lista_ver.php?' . http_build_query($a_cosas));
 }
 
-// Curriculum (clase_info=1017) ///////////////////
-$gesProfesorTituloEst = new GestorProfesorTituloEst();
-$cTitulosEst = $gesProfesorTituloEst->getTitulosEst(array('id_nom' => $id_nom, '_ordre' => 'year'));
+// Curriculum  ///////////////////
+$ProfesorTituloEstRepository = $GLOBALS['container']->get(ProfesorTituloEstRepositoryInterface::class);
+$cTitulosEst = $ProfesorTituloEstRepository->getProfesorTitulosEst(array('id_nom' => $id_nom, '_ordre' => 'year'));
 $a_curriculum = [];
 foreach ($cTitulosEst as $oProfesorTituloEst) {
-    $eclesiastico = $oProfesorTituloEst->getEclesiastico();
+    $eclesiastico = $oProfesorTituloEst->isEclesiastico();
     $titulo = $oProfesorTituloEst->getTitulo();
     $centro_dnt = $oProfesorTituloEst->getCentro_dnt();
     $year = $oProfesorTituloEst->getYear();
 
     $a_curriculum[] = array('eclesiastico' => $eclesiastico, 'titulo' => $titulo, 'centro_dnt' => $centro_dnt, 'year' => $year);
 }
-$a_cosas['clase_info'] = 'profesores\model\Info1017';
-$go_cosas['curriculum'] = Hash::link(ConfigGlobal::getWeb() . '/apps/core/mod_tabla_sql.php?' . http_build_query($a_cosas));
+$a_cosas['clase_info'] = InfoProfesorTituloEst::class;
+$go_cosas['curriculum'] = Hash::link(ConfigGlobal::getWeb() . '/frontend/shared/controller/tablaDB_lista_ver.php?' . http_build_query($a_cosas));
 
-// Nombramientos (clase_info=1018) ///////////////////////////
-$gesProfesor = new GestorProfesor();
-$cProfesores = $gesProfesor->getProfesores($aWhere, $aOperador);
+// Nombramientos  ///////////////////////////
+$ProfesorRepository = $GLOBALS['container']->get(ProfesorStgrRepositoryInterface::class);
+$cProfesores = $ProfesorRepository->getProfesoresStgr($aWhere, $aOperador);
 $a_nombramientos = [];
 $id_departamento = '';
 $ProfesorTipoRepository = $GLOBALS['container']->get(ProfesorTipoRepositoryInterface::class);
@@ -306,12 +322,12 @@ foreach ($cProfesores as $oProfesor) {
 
     $a_nombramientos[] = array('departamento' => $departamento, 'tipo_profesor' => $tipo_profesor, 'f_nombramiento' => $f_nombramiento, 'escrito_nombramiento' => $escrito_nombramiento, 'f_cese' => $f_cese, 'escrito_cese' => $escrito_cese);
 }
-$a_cosas['clase_info'] = 'profesores\model\Info1018';
-$go_cosas['nombramientos'] = Hash::link(ConfigGlobal::getWeb() . '/apps/core/mod_tabla_sql.php?' . http_build_query($a_cosas));
+$a_cosas['clase_info'] = InfoProfesorStgr::class;
+$go_cosas['nombramientos'] = Hash::link(ConfigGlobal::getWeb() . '/frontend/shared/controller/tablaDB_lista_ver.php?' . http_build_query($a_cosas));
 
-// Ampliación docencia (clase_info=1019) ///////////////////
-$gesProfesorAmpliacion = new GestorProfesorAmpliacion();
-$cProfesorAmpliaciones = $gesProfesorAmpliacion->getProfesorAmpliaciones($aWhere, $aOperador);
+// Ampliación docencia  ///////////////////
+$ProfesorAmpliacionRepository = $GLOBALS['container']->get(ProfesorAmpliacionRepositoryInterface::class);
+$cProfesorAmpliaciones = $ProfesorAmpliacionRepository->getProfesorAmpliaciones($aWhere, $aOperador);
 $a_ampliacion = [];
 $id_departamento = '';
 $AsignaturaRepository = $GLOBALS['container']->get(AsignaturaRepositoryInterface::class);
@@ -331,20 +347,22 @@ foreach ($cProfesorAmpliaciones as $oProfesorAmpliacion) {
 
     $a_ampliacion[] = array('nombre_corto' => $nombre_corto, 'f_nombramiento' => $f_nombramiento, 'escrito_nombramiento' => $escrito_nombramiento, 'f_cese' => $f_cese, 'escrito_cese' => $escrito_cese);
 }
-$a_cosas['clase_info'] = 'profesores\model\Info1019';
-$go_cosas['ampliacion'] = Hash::link(ConfigGlobal::getWeb() . '/apps/core/mod_tabla_sql.php?' . http_build_query($a_cosas));
+$a_cosas['clase_info'] = InfoProfesorAmpliacion::class;
+$go_cosas['ampliacion'] = Hash::link(ConfigGlobal::getWeb() . '/frontend/shared/controller/tablaDB_lista_ver.php?' . http_build_query($a_cosas));
 
-// Convivencias y congresos (clase_info=1024) //////////////////////////////
-$GesProfesorCongresos = new GestorProfesorCongreso();
-$cProfesorCongresos = $GesProfesorCongresos->getProfesorCongresos(array('id_nom' => $id_nom, '_ordre' => 'f_ini'));
-$a_cosas['clase_info'] = 'profesores\model\Info1024';
-$go_cosas['congresos'] = Hash::link(ConfigGlobal::getWeb() . '/apps/core/mod_tabla_sql.php?' . http_build_query($a_cosas));
+// Convivencias y congresos  //////////////////////////////
+$ProfesorCongresoReposiroty = $GLOBALS['container']->get(ProfesorCongresoRepositoryInterface::class);
+$a_tipos_congreso = ProfesorCongreso::getTiposCongreso();
+$cProfesorCongresos = $ProfesorCongresoReposiroty->getProfesorCongresos(array('id_nom' => $id_nom, '_ordre' => 'f_ini'));
+$a_cosas['clase_info'] = InfoProfesorCongreso::class;
+$go_cosas['congresos'] = Hash::link(ConfigGlobal::getWeb() . '/frontend/shared/controller/tablaDB_lista_ver.php?' . http_build_query($a_cosas));
 
-// Actividad docente (clase_info=1025) ////////////////////////////////////
-$GesDocencias = new GestorProfesorDocenciaStgr();
-$cDocencias = $GesDocencias->getProfesorDocenciasStgr(array('id_nom' => $id_nom, '_ordre' => 'curso_inicio,id_asignatura'));
-$a_cosas['clase_info'] = 'profesores\model\Info1025';
-$go_cosas['docencia'] = Hash::link(ConfigGlobal::getWeb() . '/apps/core/mod_tabla_sql.php?' . http_build_query($a_cosas));
+// Actividad docente  ////////////////////////////////////
+$ProfesorDocenciaStgr = $GLOBALS['container']->get(ProfesorDocenciaStgrRepositoryInterface::class);
+$a_tipos_docencia = ProfesorDocenciaStgr::getTiposActividad();
+$cDocencias = $ProfesorDocenciaStgr->getProfesorDocenciasStgr(array('id_nom' => $id_nom, '_ordre' => 'curso_inicio,id_asignatura'));
+$a_cosas['clase_info'] = InfoProfesorDocenciaStgr::class;
+$go_cosas['docencia'] = Hash::link(ConfigGlobal::getWeb() . '/frontend/shared/controller/tablaDB_lista_ver.php?' . http_build_query($a_cosas));
 
 echo $oPosicion->mostrar_left_slide(1);
 

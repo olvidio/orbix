@@ -31,89 +31,109 @@ class PgDocumentoRepository extends ClaseRepository implements DocumentoReposito
         $this->setNomTabla('i_documentos_dl');
     }
 
-/* -------------------- GESTOR BASE ---------------------------------------- */
+    /* -------------------- GESTOR BASE ---------------------------------------- */
 
-	/**
-	 * devuelve una colección (array) de objetos de tipo Documento
-	 *
-	 * @param array $aWhere asociativo con los valores para cada campo de la BD.
-	 * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-	 * @return array|false Una colección de objetos de tipo Documento
-	
-	 */
-	public function getDocumentos(array $aWhere=[], array $aOperators=[]): array|false
-	{
-		$oDbl = $this->getoDbl();
-		$nom_tabla = $this->getNomTabla();
-		$DocumentoSet = new Set();
-		$oCondicion = new Condicion();
-		$aCondicion = [];
-		foreach ($aWhere as $camp => $val) {
-			if ($camp === '_ordre') { continue; }
-			if ($camp === '_limit') { continue; }
-			$sOperador = $aOperators[$camp] ?? '';
-			if ($a = $oCondicion->getCondicion($camp,$sOperador,$val)) { $aCondicion[]=$a; }
-			// operadores que no requieren valores
-			if ($sOperador === 'BETWEEN' || $sOperador === 'IS NULL' || $sOperador === 'IS NOT NULL' || $sOperador === 'OR') { unset($aWhere[$camp]); }
-            if ($sOperador === 'IN' || $sOperador === 'NOT IN') { unset($aWhere[$camp]); }
-            if ($sOperador === 'TXT') { unset($aWhere[$camp]); }
-		}
-		$sCondicion = implode(' AND ',$aCondicion);
-		if ($sCondicion !=='') { $sCondicion = " WHERE ".$sCondicion; }
-		$sOrdre = '';
+    /**
+     * devuelve una colección (array) de objetos de tipo Documento
+     *
+     * @param array $aWhere asociativo con los valores para cada campo de la BD.
+     * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
+     * @return array|false Una colección de objetos de tipo Documento
+     */
+    public function getDocumentos(array $aWhere = [], array $aOperators = []): array|false
+    {
+        $oDbl = $this->getoDbl();
+        $nom_tabla = $this->getNomTabla();
+        $DocumentoSet = new Set();
+        $oCondicion = new Condicion();
+        $aCondicion = [];
+        foreach ($aWhere as $camp => $val) {
+            if ($camp === '_ordre') {
+                continue;
+            }
+            if ($camp === '_limit') {
+                continue;
+            }
+            $sOperador = $aOperators[$camp] ?? '';
+            if ($a = $oCondicion->getCondicion($camp, $sOperador, $val)) {
+                $aCondicion[] = $a;
+            }
+            // operadores que no requieren valores
+            if ($sOperador === 'BETWEEN' || $sOperador === 'IS NULL' || $sOperador === 'IS NOT NULL' || $sOperador === 'OR') {
+                unset($aWhere[$camp]);
+            }
+            if ($sOperador === 'IN' || $sOperador === 'NOT IN') {
+                unset($aWhere[$camp]);
+            }
+            if ($sOperador === 'TXT') {
+                unset($aWhere[$camp]);
+            }
+        }
+        $sCondicion = implode(' AND ', $aCondicion);
+        if ($sCondicion !== '') {
+            $sCondicion = " WHERE " . $sCondicion;
+        }
+        $sOrdre = '';
         $sLimit = '';
-		if (isset($aWhere['_ordre']) && $aWhere['_ordre'] !== '') { $sOrdre = ' ORDER BY '.$aWhere['_ordre']; }
-		if (isset($aWhere['_ordre'])) { unset($aWhere['_ordre']); }
-		if (isset($aWhere['_limit']) && $aWhere['_limit'] !== '') { $sLimit = ' LIMIT '.$aWhere['_limit']; }
-		if (isset($aWhere['_limit'])) { unset($aWhere['_limit']); }
-		$sQry = "SELECT * FROM $nom_tabla ".$sCondicion.$sOrdre.$sLimit;
-		if (($oDblSt = $oDbl->prepare($sQry)) === false) {
-			$sClaveError = 'PgDocumentoRepository.listar.prepare';
-			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-			return false;
-		}
-		if (($oDblSt->execute($aWhere)) === false) {
-			$sClaveError = 'PgDocumentoRepository.listar.execute';
-			$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
-			return false;
-		}
-		
-		$filas = $oDblSt->fetchAll(PDO::FETCH_ASSOC);
+        if (isset($aWhere['_ordre']) && $aWhere['_ordre'] !== '') {
+            $sOrdre = ' ORDER BY ' . $aWhere['_ordre'];
+        }
+        if (isset($aWhere['_ordre'])) {
+            unset($aWhere['_ordre']);
+        }
+        if (isset($aWhere['_limit']) && $aWhere['_limit'] !== '') {
+            $sLimit = ' LIMIT ' . $aWhere['_limit'];
+        }
+        if (isset($aWhere['_limit'])) {
+            unset($aWhere['_limit']);
+        }
+        $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
+        if (($oDblSt = $oDbl->prepare($sQry)) === false) {
+            $sClaveError = 'PgDocumentoRepository.listar.prepare';
+            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
+            return false;
+        }
+        if (($oDblSt->execute($aWhere)) === false) {
+            $sClaveError = 'PgDocumentoRepository.listar.execute';
+            $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
+            return false;
+        }
+
+        $filas = $oDblSt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
-			// para las fechas del postgres (texto iso)
-			$aDatos['f_recibido'] = (new ConverterDate('date', $aDatos['f_recibido']))->fromPg();
-			$aDatos['f_asignado'] = (new ConverterDate('date', $aDatos['f_asignado']))->fromPg();
-			$aDatos['f_ult_comprobacion'] = (new ConverterDate('date', $aDatos['f_ult_comprobacion']))->fromPg();
-			$aDatos['f_perdido'] = (new ConverterDate('date', $aDatos['f_perdido']))->fromPg();
-			$aDatos['f_eliminado'] = (new ConverterDate('date', $aDatos['f_eliminado']))->fromPg();
+            // para las fechas del postgres (texto iso)
+            $aDatos['f_recibido'] = (new ConverterDate('date', $aDatos['f_recibido']))->fromPg();
+            $aDatos['f_asignado'] = (new ConverterDate('date', $aDatos['f_asignado']))->fromPg();
+            $aDatos['f_ult_comprobacion'] = (new ConverterDate('date', $aDatos['f_ult_comprobacion']))->fromPg();
+            $aDatos['f_perdido'] = (new ConverterDate('date', $aDatos['f_perdido']))->fromPg();
+            $aDatos['f_eliminado'] = (new ConverterDate('date', $aDatos['f_eliminado']))->fromPg();
             $Documento = new Documento();
             $Documento->setAllAttributes($aDatos);
-			$DocumentoSet->add($Documento);
-		}
-		return $DocumentoSet->getTot();
-	}
+            $DocumentoSet->add($Documento);
+        }
+        return $DocumentoSet->getTot();
+    }
 
-/* -------------------- ENTIDAD --------------------------------------------- */
+    /* -------------------- ENTIDAD --------------------------------------------- */
 
-	public function Eliminar(Documento $Documento): bool
+    public function Eliminar(Documento $Documento): bool
     {
         $id_doc = $Documento->getIdDocVo()->value();
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         if (($oDbl->exec("DELETE FROM $nom_tabla WHERE id_doc = $id_doc")) === false) {
             $sClaveError = 'PgDocumentoRepository.eliminar';
-			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
+            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
             return false;
         }
         return TRUE;
     }
 
-	
-	/**
-	 * Si no existe el registro, hace un insert, si existe, se hace el update.
-	
-	 */
- public function Guardar(Documento $Documento): bool
+
+    /**
+     * Si no existe el registro, hace un insert, si existe, se hace el update.
+     */
+    public function Guardar(Documento $Documento): bool
     {
         $id_doc = $Documento->getIdDocVo()->value();
         $oDbl = $this->getoDbl();
@@ -142,13 +162,25 @@ class PgDocumentoRepository extends ClaseRepository implements DocumentoReposito
         $aDatos['f_eliminado'] = (new ConverterDate('date', $Documento->getF_eliminado()))->toPg();
         array_walk($aDatos, 'core\poner_null');
         //para el caso de los boolean false, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
-        if ( is_true($aDatos['en_busqueda']) ) { $aDatos['en_busqueda']='true'; } else { $aDatos['en_busqueda']='false'; }
-        if ( is_true($aDatos['perdido']) ) { $aDatos['perdido']='true'; } else { $aDatos['perdido']='false'; }
-        if ( is_true($aDatos['eliminado']) ) { $aDatos['eliminado']='true'; } else { $aDatos['eliminado']='false'; }
+        if (is_true($aDatos['en_busqueda'])) {
+            $aDatos['en_busqueda'] = 'true';
+        } else {
+            $aDatos['en_busqueda'] = 'false';
+        }
+        if (is_true($aDatos['perdido'])) {
+            $aDatos['perdido'] = 'true';
+        } else {
+            $aDatos['perdido'] = 'false';
+        }
+        if (is_true($aDatos['eliminado'])) {
+            $aDatos['eliminado'] = 'true';
+        } else {
+            $aDatos['eliminado'] = 'false';
+        }
 
         if ($bInsert === false) {
             //UPDATE
-            $update="
+            $update = "
                     id_tipo_doc              = :id_tipo_doc,
                     id_ubi                   = :id_ubi,
                     id_lugar                 = :id_lugar,
@@ -172,11 +204,11 @@ class PgDocumentoRepository extends ClaseRepository implements DocumentoReposito
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
                 return false;
             }
-            
+
             try {
                 $oDblSt->execute($aDatos);
-            } catch ( PDOException $e) {
-                $err_txt=$e->errorInfo[2];
+            } catch (PDOException $e) {
+                $err_txt = $e->errorInfo[2];
                 $this->setErrorTxt($err_txt);
                 $sClaveError = 'PgDocumentoRepository.update.execute';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
@@ -185,8 +217,8 @@ class PgDocumentoRepository extends ClaseRepository implements DocumentoReposito
         } else {
             // INSERT
             $aDatos['id_doc'] = $Documento->getIdDocVo()->value();
-            $campos="(id_doc,id_tipo_doc,id_ubi,id_lugar,f_recibido,f_asignado,observ,observ_ctr,f_ult_comprobacion,en_busqueda,perdido,f_perdido,eliminado,f_eliminado,num_reg,num_ini,num_fin,identificador,num_ejemplares)";
-            $valores="(:id_doc,:id_tipo_doc,:id_ubi,:id_lugar,:f_recibido,:f_asignado,:observ,:observ_ctr,:f_ult_comprobacion,:en_busqueda,:perdido,:f_perdido,:eliminado,:f_eliminado,:num_reg,:num_ini,:num_fin,:identificador,:num_ejemplares)";        
+            $campos = "(id_doc,id_tipo_doc,id_ubi,id_lugar,f_recibido,f_asignado,observ,observ_ctr,f_ult_comprobacion,en_busqueda,perdido,f_perdido,eliminado,f_eliminado,num_reg,num_ini,num_fin,identificador,num_ejemplares)";
+            $valores = "(:id_doc,:id_tipo_doc,:id_ubi,:id_lugar,:f_recibido,:f_asignado,:observ,:observ_ctr,:f_ult_comprobacion,:en_busqueda,:perdido,:f_perdido,:eliminado,:f_eliminado,:num_reg,:num_ini,:num_fin,:identificador,:num_ejemplares)";
             if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {
                 $sClaveError = 'PgDocumentoRepository.insertar.prepare';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
@@ -194,8 +226,8 @@ class PgDocumentoRepository extends ClaseRepository implements DocumentoReposito
             }
             try {
                 $oDblSt->execute($aDatos);
-            } catch ( PDOException $e) {
-                $err_txt=$e->errorInfo[2];
+            } catch (PDOException $e) {
+                $err_txt = $e->errorInfo[2];
                 $this->setErrorTxt($err_txt);
                 $sClaveError = 'PgDocumentoRepository.insertar.execute';
                 $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
@@ -204,14 +236,14 @@ class PgDocumentoRepository extends ClaseRepository implements DocumentoReposito
         }
         return TRUE;
     }
-	
+
     private function isNew(int $id_doc): bool
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_doc = $id_doc")) === false) {
-			$sClaveError = 'PgDocumentoRepository.isNew';
-			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
+            $sClaveError = 'PgDocumentoRepository.isNew';
+            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
             return false;
         }
         if (!$oDblSt->rowCount()) {
@@ -219,43 +251,40 @@ class PgDocumentoRepository extends ClaseRepository implements DocumentoReposito
         }
         return false;
     }
-	
+
     /**
      * Devuelve los campos de la base de datos en un array asociativo.
      * Devuelve false si no existe la fila en la base de datos
-     * 
+     *
      * @param DocumentoId $id_doc
      * @return array|bool
-	
      */
-    public function datosById(DocumentoId $id_doc): array|bool
+    public function datosById(int $id_doc): array|bool
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        $id = $id_doc->value();
-        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_doc = $id")) === false) {
-			$sClaveError = 'PgDocumentoRepository.getDatosById';
-			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
+        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_doc = $id_doc")) === false) {
+            $sClaveError = 'PgDocumentoRepository.getDatosById';
+            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
             return false;
         }
-		$aDatos = $oDblSt->fetch(PDO::FETCH_ASSOC);
-		// para las fechas del postgres (texto iso)
-		if ($aDatos !== false) {
-			$aDatos['f_recibido'] = (new ConverterDate('date', $aDatos['f_recibido']))->fromPg();
-			$aDatos['f_asignado'] = (new ConverterDate('date', $aDatos['f_asignado']))->fromPg();
-			$aDatos['f_ult_comprobacion'] = (new ConverterDate('date', $aDatos['f_ult_comprobacion']))->fromPg();
-			$aDatos['f_perdido'] = (new ConverterDate('date', $aDatos['f_perdido']))->fromPg();
-			$aDatos['f_eliminado'] = (new ConverterDate('date', $aDatos['f_eliminado']))->fromPg();
-		}
+        $aDatos = $oDblSt->fetch(PDO::FETCH_ASSOC);
+        // para las fechas del postgres (texto iso)
+        if ($aDatos !== false) {
+            $aDatos['f_recibido'] = (new ConverterDate('date', $aDatos['f_recibido']))->fromPg();
+            $aDatos['f_asignado'] = (new ConverterDate('date', $aDatos['f_asignado']))->fromPg();
+            $aDatos['f_ult_comprobacion'] = (new ConverterDate('date', $aDatos['f_ult_comprobacion']))->fromPg();
+            $aDatos['f_perdido'] = (new ConverterDate('date', $aDatos['f_perdido']))->fromPg();
+            $aDatos['f_eliminado'] = (new ConverterDate('date', $aDatos['f_eliminado']))->fromPg();
+        }
         return $aDatos;
     }
-    
-    
+
+
     /**
      * Busca la clase con id_doc en la base de datos .
-	
      */
-    public function findById(DocumentoId $id_doc): ?Documento
+    public function findById(int $id_doc): ?Documento
     {
         $aDatos = $this->datosById($id_doc);
         if (empty($aDatos)) {
@@ -263,7 +292,7 @@ class PgDocumentoRepository extends ClaseRepository implements DocumentoReposito
         }
         return (new Documento())->setAllAttributes($aDatos);
     }
-	
+
     public function getNewId()
     {
         $oDbl = $this->getoDbl();
