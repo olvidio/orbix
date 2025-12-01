@@ -1,6 +1,7 @@
 <?php
 
 use core\ViewTwig;
+use web\Desplegable;
 use web\Hash;
 use zonassacd\model\entity\GestorZona;
 
@@ -27,8 +28,8 @@ require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
 
 
-$GesZonas = new GestorZona();
-$aOpciones = $oGestorZona->getArrayZonas();
+$GestorZona = new GestorZona();
+$aOpciones = $GestorZona->getArrayZonas();
 $oDesplZonas = new Desplegable();
 $oDesplZonas->setOpciones($aOpciones);
 $oDesplZonas->setBlanco(FALSE);
