@@ -7,6 +7,7 @@ use core\Condicion;
 use core\Set;
 use PDO;
 use PDOException;
+use src\shared\traits\HandlesPdoErrors;
 use src\configuracion\domain\contracts\AppRepositoryInterface;
 use src\configuracion\domain\entity\App;
 
@@ -21,6 +22,7 @@ use src\configuracion\domain\entity\App;
  */
 class PgAppRepository extends ClaseRepository implements AppRepositoryInterface
 {
+    use HandlesPdoErrors;
     public function __construct()
     {
         $oDbl = $GLOBALS['oDBPC'];
@@ -87,18 +89,10 @@ class PgAppRepository extends ClaseRepository implements AppRepositoryInterface
             unset($aWhere['_limit']);
         }
         $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
-        if (($oDblSt = $oDbl->prepare($sQry)) === false) {
-            $sClaveError = 'PgAppRepository.listar.prepare';
-            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return false;
-        }
-        if (($oDblSt->execute($aWhere)) === false) {
-            $sClaveError = 'PgAppRepository.listar.execute';
-            $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
-            return false;
-        }
+        $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
+        $stmt = $this->prepareAndExecute( $oDbl, $sQry, $aWhere,__METHOD__, __FILE__, __LINE__);
 
-        $filas = $oDblSt->fetchAll(PDO::FETCH_ASSOC);
+        $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
             $App = new App();
             $App->setAllAttributes($aDatos);
@@ -115,12 +109,8 @@ class PgAppRepository extends ClaseRepository implements AppRepositoryInterface
         $nom_tabla = $this->getNomTabla();
         $id_app = $App->getIdAppVo()->value();
 
-        if ($oDbl->exec("DELETE FROM $nom_tabla WHERE id_app=$id_app") === false) {
-            $sClaveError = 'PgAppRepository.eliminar';
-            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return false;
-        }
-        return TRUE;
+        $sql = "DELETE FROM $nom_tabla WHERE id_app=$id_app";
+        return $this->pdoExec($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
     }
 
     public function Guardar(App $App): bool
@@ -146,41 +136,27 @@ class PgAppRepository extends ClaseRepository implements AppRepositoryInterface
         }
         if ($bInsert === false) {
             $sQry = "UPDATE $nom_tabla SET  $update $sClau";
-            if (($oDblSt = $oDbl->prepare($sQry)) === false) {
-                $sClaveError = 'PgAppRepository.update.prepare';
-                $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-                return false;
-            }
+            $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
+            $stmt = $this->pdoPrepare($oDbl, $sQry, __METHOD__, __FILE__, __LINE__);
+            if ($stmt === false) { return false; }
+            if (!$this->pdoExecute($stmt, $aDades, __METHOD__, __FILE__, __LINE__)) { return false; }
         } else {
             $sQry = "INSERT INTO $nom_tabla $aClauPrimaria VALUES $aClaus";
-            if (($oDblSt = $oDbl->prepare($sQry)) === false) {
-                $sClaveError = 'PgAppRepository.insertar.prepare';
-                $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-                return false;
-            }
+            $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
+            $stmt = $this->pdoPrepare($oDbl, $sQry, __METHOD__, __FILE__, __LINE__);
+            if ($stmt === false) { return false; }
+            if (!$this->pdoExecute($stmt, $aDades, __METHOD__, __FILE__, __LINE__)) { return false; }
         }
-        try {
-            $oDblSt->execute($aDades);
-        } catch (PDOException $e) {
-            $err_txt = $e->errorInfo[2];
-            $this->setErrorTxt($err_txt);
-            $sClaveError = 'PgAppRepository.update.execute';
-            $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
-            return false;
-        }
-        return TRUE;
+        return true;
     }
 
     private function isNew(int $id_app): bool
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_app = $id_app")) === false) {
-            $sClaveError = 'PgAppRepository.isNew';
-            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return false;
-        }
-        if (!$oDblSt->rowCount()) {
+        $sql = "SELECT * FROM $nom_tabla WHERE id_app = $id_app";
+        $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        if (!$stmt->rowCount()) {
             return TRUE;
         }
         return false;

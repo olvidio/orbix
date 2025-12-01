@@ -81,7 +81,7 @@ class PgProfesorPublicacionRepository extends ClaseRepository implements Profeso
 			return false;
 		}
 		
-		$filas = $oDblSt->fetchAll(PDO::FETCH_ASSOC);
+		$filas =$stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
 			// para las fechas del postgres (texto iso)
 			$aDatos['f_publicacion'] = (new ConverterDate('date', $aDatos['f_publicacion']))->fromPg();
@@ -99,12 +99,8 @@ class PgProfesorPublicacionRepository extends ClaseRepository implements Profeso
         $id_item = $Publicacion->getId_item();
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        if (($oDbl->exec("DELETE FROM $nom_tabla WHERE id_item = $id_item")) === false) {
-            $sClaveError = 'PgProfesorPublicacionRepository.eliminar';
-			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return false;
-        }
-        return TRUE;
+        $sql = "DELETE FROM $nom_tabla WHERE id_item = $id_item";
+ return $this->pdoExec( $oDbl, $sql, __METHOD__, __FILE__, __LINE__);
     }
 
 	
@@ -148,11 +144,8 @@ class PgProfesorPublicacionRepository extends ClaseRepository implements Profeso
 					referencia               = :referencia,
 					lugar                    = :lugar,
 					observ                   = :observ";
-			if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_item = $id_item")) === false) {
-				$sClaveError = 'PgProfesorPublicacionRepository.update.prepare';
-				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-				return false;
-			}
+			$sql = "UPDATE $nom_tabla SET $update WHERE id_item = $id_item";
+			$stmt = $this->pdoPrepare( $oDbl, $sql, __METHOD__, __FILE__, __LINE__);
 				
             try {
                 $oDblSt->execute($aDatos);
@@ -168,11 +161,8 @@ class PgProfesorPublicacionRepository extends ClaseRepository implements Profeso
 			$aDatos['id_item'] = $Publicacion->getId_item();
 			$campos="(id_item,id_nom,tipo_publicacion,titulo,editorial,coleccion,f_publicacion,pendiente,referencia,lugar,observ)";
 			$valores="(:id_item,:id_nom,:tipo_publicacion,:titulo,:editorial,:coleccion,:f_publicacion,:pendiente,:referencia,:lugar,:observ)";		
-			if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {
-				$sClaveError = 'PgProfesorPublicacionRepository.insertar.prepare';
-				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-				return false;
-			}
+			$sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
+			$stmt = $this->pdoPrepare( $oDbl, $sql, __METHOD__, __FILE__, __LINE__);
             try {
                 $oDblSt->execute($aDatos);
             } catch ( PDOException $e) {
@@ -190,12 +180,9 @@ class PgProfesorPublicacionRepository extends ClaseRepository implements Profeso
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_item = $id_item")) === false) {
-			$sClaveError = 'PgProfesorPublicacionRepository.isNew';
-			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return false;
-        }
-        if (!$oDblSt->rowCount()) {
+        $sql = "SELECT * FROM $nom_tabla WHERE id_item = $id_item";
+        $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        if (!$stmt->rowCount()) {
             return TRUE;
         }
         return false;
@@ -213,11 +200,8 @@ class PgProfesorPublicacionRepository extends ClaseRepository implements Profeso
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_item = $id_item")) === false) {
-			$sClaveError = 'PgProfesorPublicacionRepository.getDatosById';
-			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return false;
-        }
+        $sql = "SELECT * FROM $nom_tabla WHERE id_item = $id_item";
+        $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
 		$aDatos = $oDblSt->fetch(PDO::FETCH_ASSOC);
 		// para las fechas del postgres (texto iso)
 		if ($aDatos !== false) {

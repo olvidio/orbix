@@ -9,6 +9,7 @@ use core\Set;
 use PDO;
 use PDOException;
 use RuntimeException;
+use src\shared\traits\HandlesPdoErrors;
 use src\certificados\domain\contracts\CertificadoEmitidoRepositoryInterface;
 use src\certificados\domain\entity\CertificadoEmitido;
 use function core\is_true;
@@ -24,6 +25,7 @@ use function core\is_true;
  */
 class PgCertificadoEmitidoRepository extends ClaseRepository implements CertificadoEmitidoRepositoryInterface
 {
+    use HandlesPdoErrors;
     public function __construct()
     {
         $oDbl = $GLOBALS['oDB'];
@@ -40,7 +42,7 @@ class PgCertificadoEmitidoRepository extends ClaseRepository implements Certific
      * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
      * @return array|false Una colección de objetos de tipo Certificado
      */
-    public function getCertificados(array $aWhere = [], array $aOperators = []): bool|array
+    public function getCertificados(array $aWhere = [], array $aOperators = []): array|false
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
@@ -88,23 +90,10 @@ class PgCertificadoEmitidoRepository extends ClaseRepository implements Certific
             unset($aWhere['_limit']);
         }
         $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
-        if (($oDblSt = $oDbl->prepare($sQry)) === false) {
-            $sClaveError = 'PgCertificadoRepository.listar.prepare';
-            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return false;
-        } else {
-            try {
-                $oDblSt->execute($aWhere);
-            } catch (\PDOException $e) {
-                $err_txt = $e->errorInfo[2];
-                $this->setErrorTxt($err_txt);
-                $sClaveError = 'PgCertificadoRepository.listar.execute';
-                $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
-                return false;
-            }
-        }
+        $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
+        $stmt = $this->prepareAndExecute( $oDbl, $sQry, $aWhere,__METHOD__, __FILE__, __LINE__);
 
-        $filas = $oDblSt->fetchAll(PDO::FETCH_ASSOC);
+        $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
             // para los bytea: (resources)
             $handle = $aDatos['documento'];
@@ -131,12 +120,8 @@ class PgCertificadoEmitidoRepository extends ClaseRepository implements Certific
         $id_item = $Certificado->getId_item();
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        if (($oDbl->exec("DELETE FROM $nom_tabla WHERE id_item = $id_item")) === false) {
-            $sClaveError = 'PgCertificadoRepository.eliminar';
-            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return false;
-        }
-        return TRUE;
+        $sql = "DELETE FROM $nom_tabla WHERE id_item = $id_item";
+        return $this->pdoExec($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
     }
 
     /**
@@ -183,40 +168,19 @@ class PgCertificadoEmitidoRepository extends ClaseRepository implements Certific
 					firmado                  = :firmado,
 					documento                = :documento,
                     f_enviado                = :f_enviado";
-            if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_item = $id_item")) === false) {
-                $sClaveError = 'PgCertificadoRepository.update.prepare';
-                $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-                return false;
-            }
-
-            try {
-                $oDblSt->execute($aDatos);
-            } catch (PDOException $e) {
-                $err_txt = $e->errorInfo[2];
-                $this->setErrorTxt($err_txt);
-                $sClaveError = 'PgCertificadoRepository.update.execute';
-                $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
-                return false;
-            }
+            $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
+            $stmt = $this->pdoPrepare($oDbl, "UPDATE $nom_tabla SET $update WHERE id_item = $id_item", __METHOD__, __FILE__, __LINE__);
+            if ($stmt === false) { return false; }
+            if (!$this->pdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__)) { return false; }
         } else {
-            // INSERT
+            //INSERT
             $aDatos['id_item'] = $Certificado->getId_item();
             $campos = "(id_item,id_nom,nom,idioma,destino,certificado,f_certificado,esquema_emisor,firmado,documento,f_enviado)";
             $valores = "(:id_item,:id_nom,:nom,:idioma,:destino,:certificado,:f_certificado,:esquema_emisor,:firmado,:documento,:f_enviado)";
-            if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {
-                $sClaveError = 'PgCertificadoRepository.insertar.prepare';
-                $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-                return false;
-            }
-            try {
-                $oDblSt->execute($aDatos);
-            } catch (PDOException $e) {
-                $err_txt = $e->errorInfo[2];
-                $this->setErrorTxt($err_txt);
-                $sClaveError = 'PgCertificadoRepository.insertar.execute';
-                $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
-                return false;
-            }
+            $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
+            $stmt = $this->pdoPrepare($oDbl, "INSERT INTO $nom_tabla $campos VALUES $valores", __METHOD__, __FILE__, __LINE__);
+            if ($stmt === false) { return false; }
+            if (!$this->pdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__)) { return false; }
         }
         return TRUE;
     }
@@ -225,12 +189,9 @@ class PgCertificadoEmitidoRepository extends ClaseRepository implements Certific
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_item = $id_item")) === false) {
-            $sClaveError = 'PgCertificadoRepository.isNew';
-            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return false;
-        }
-        if (!$oDblSt->rowCount()) {
+        $sql = "SELECT * FROM $nom_tabla WHERE id_item = $id_item";
+        $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        if (!$stmt->rowCount()) {
             return TRUE;
         }
         return false;
@@ -243,15 +204,12 @@ class PgCertificadoEmitidoRepository extends ClaseRepository implements Certific
      * @param int $id_item
      * @return array|bool
      */
-    public function datosById(int $id_item): bool|array
+    public function datosById(int $id_item): array|bool
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_item = $id_item")) === false) {
-            $sClaveError = 'PgCertificadoRepository.getDatosById';
-            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return false;
-        }
+        $sql = "SELECT * FROM $nom_tabla WHERE id_item = $id_item";
+        $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         // para los bytea, sobre escribo los valores:
         $sdocumento = '';
         $oDblSt->bindColumn('documento', $sdocumento, PDO::PARAM_STR);

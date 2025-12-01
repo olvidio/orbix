@@ -8,6 +8,7 @@ use core\ConverterDate;
 use core\Set;
 use PDO;
 use PDOException;
+use src\shared\traits\HandlesPdoErrors;
 use personas\model\entity\PersonaDl;
 use src\profesores\domain\contracts\ProfesorAmpliacionRepositoryInterface;
 use src\profesores\domain\entity\ProfesorAmpliacion;
@@ -25,6 +26,7 @@ use src\asignaturas\domain\value_objects\AsignaturaId;
  */
 class PgProfesorAmpliacionRepository extends ClaseRepository implements ProfesorAmpliacionRepositoryInterface
 {
+    use HandlesPdoErrors;
     public function __construct()
     {
         $oDbl = $GLOBALS['oDB'];
@@ -134,18 +136,10 @@ class PgProfesorAmpliacionRepository extends ClaseRepository implements Profesor
             unset($aWhere['_limit']);
         }
         $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
-        if (($oDblSt = $oDbl->prepare($sQry)) === false) {
-            $sClaveError = 'PgProfesorAmpliacionRepository.listar.prepare';
-            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return false;
-        }
-        if (($oDblSt->execute($aWhere)) === false) {
-            $sClaveError = 'PgProfesorAmpliacionRepository.listar.execute';
-            $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
-            return false;
-        }
+        $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
+        $stmt = $this->prepareAndExecute( $oDbl, $sQry, $aWhere,__METHOD__, __FILE__, __LINE__);
 
-        $filas = $oDblSt->fetchAll(PDO::FETCH_ASSOC);
+        $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
             // para las fechas del postgres (texto iso)
             $aDatos['f_nombramiento'] = (new ConverterDate('date', $aDatos['f_nombramiento']))->fromPg();
@@ -164,12 +158,8 @@ class PgProfesorAmpliacionRepository extends ClaseRepository implements Profesor
         $id_item = $ProfesorAmpliacion->getId_item();
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        if (($oDbl->exec("DELETE FROM $nom_tabla WHERE id_item = $id_item")) === false) {
-            $sClaveError = 'PgProfesorAmpliacionRepository.eliminar';
-            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return false;
-        }
-        return TRUE;
+        $sql = "DELETE FROM $nom_tabla WHERE id_item = $id_item";
+        return $this->pdoExec($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
     }
 
 
@@ -202,54 +192,27 @@ class PgProfesorAmpliacionRepository extends ClaseRepository implements Profesor
 					f_nombramiento           = :f_nombramiento,
 					escrito_cese             = :escrito_cese,
 					f_cese                   = :f_cese";
-            if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_item = $id_item")) === false) {
-                $sClaveError = 'PgProfesorAmpliacionRepository.update.prepare';
-                $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-                return false;
-            }
+            $sql = "UPDATE $nom_tabla SET $update WHERE id_item = $id_item";
+            $stmt = $this->pdoPrepare( $oDbl, $sql, __METHOD__, __FILE__, __LINE__);
 
-            try {
-                $oDblSt->execute($aDatos);
-            } catch (PDOException $e) {
-                $err_txt = $e->errorInfo[2];
-                $this->setErrorTxt($err_txt);
-                $sClaveError = 'PgProfesorAmpliacionRepository.update.execute';
-                $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
-                return false;
-            }
         } else {
-            // INSERT
+         //INSERT
             $aDatos['id_item'] = $ProfesorAmpliacion->getId_item();
             $campos = "(id_item,id_nom,id_asignatura,escrito_nombramiento,f_nombramiento,escrito_cese,f_cese)";
             $valores = "(:id_item,:id_nom,:id_asignatura,:escrito_nombramiento,:f_nombramiento,:escrito_cese,:f_cese)";
-            if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {
-                $sClaveError = 'PgProfesorAmpliacionRepository.insertar.prepare';
-                $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-                return false;
-            }
-            try {
-                $oDblSt->execute($aDatos);
-            } catch (PDOException $e) {
-                $err_txt = $e->errorInfo[2];
-                $this->setErrorTxt($err_txt);
-                $sClaveError = 'PgProfesorAmpliacionRepository.insertar.execute';
-                $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
-                return false;
-            }
-        }
-        return TRUE;
+            $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
+            $stmt = $this->pdoPrepare( $oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+		}
+		return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 
     private function isNew(int $id_item): bool
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_item = $id_item")) === false) {
-            $sClaveError = 'PgProfesorAmpliacionRepository.isNew';
-            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return false;
-        }
-        if (!$oDblSt->rowCount()) {
+        $sql = "SELECT * FROM $nom_tabla WHERE id_item = $id_item";
+        $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        if (!$stmt->rowCount()) {
             return TRUE;
         }
         return false;
@@ -266,11 +229,8 @@ class PgProfesorAmpliacionRepository extends ClaseRepository implements Profesor
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_item = $id_item")) === false) {
-            $sClaveError = 'PgProfesorAmpliacionRepository.getDatosById';
-            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return false;
-        }
+        $sql = "SELECT * FROM $nom_tabla WHERE id_item = $id_item";
+        $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         $aDatos = $oDblSt->fetch(PDO::FETCH_ASSOC);
         // para las fechas del postgres (texto iso)
         if ($aDatos !== false) {

@@ -7,6 +7,7 @@ use core\Condicion;
 use core\Set;
 use PDO;
 use PDOException;
+use src\shared\traits\HandlesPdoErrors;
 
 use src\ubis\domain\entity\Casa;
 use src\ubis\domain\contracts\CasaRepositoryInterface;
@@ -26,6 +27,7 @@ use core\ConverterDate;
  */
 class PgCasaRepository extends ClaseRepository implements CasaRepositoryInterface
 {
+    use HandlesPdoErrors;
     public function __construct()
     {
         $oDbl = $GLOBALS['oDBPC'];
@@ -39,25 +41,20 @@ class PgCasaRepository extends ClaseRepository implements CasaRepositoryInterfac
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
-        $sQuery = "SELECT id_ubi, nombre_ubi
-				FROM $nom_tabla
-				$sCondicion
-				ORDER BY nombre_ubi";
-        //echo "q: $sQuery<br>";
-        if (($oDblSt = $oDbl->query($sQuery)) === false) {
-            $sClauError = 'GestorCasa.lista';
-            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
-            return false;
-        }
+        $sQuery = "SELECT id_ubi, nombre_ubi FROM $nom_tabla $sCondicion ORDER BY nombre_ubi";
+
+        $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
+
+        $stmt = $this->pdoPrepare($oDbl, $sQuery, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) { return []; }
+        if (!$this->pdoExecute($stmt, [], __METHOD__, __FILE__, __LINE__)) { return []; }
 
         $a_casa = [];
-        foreach ($oDbl->query($sQuery) as $row) {
+        foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $row) {
             $id_ubi = $row['id_ubi'];
             $nombre_ubi = $row['nombre_ubi'];
-
             $a_casa[$id_ubi] = $nombre_ubi;
         }
-
         return $a_casa;
     }
 /* -------------------- GESTOR BASE ---------------------------------------- */
@@ -95,19 +92,13 @@ class PgCasaRepository extends ClaseRepository implements CasaRepositoryInterfac
 		if (isset($aWhere['_ordre'])) { unset($aWhere['_ordre']); }
 		if (isset($aWhere['_limit']) && $aWhere['_limit'] !== '') { $sLimit = ' LIMIT '.$aWhere['_limit']; }
 		if (isset($aWhere['_limit'])) { unset($aWhere['_limit']); }
-		$sQry = "SELECT * FROM $nom_tabla ".$sCondicion.$sOrdre.$sLimit;
-		if (($oDblSt = $oDbl->prepare($sQry)) === false) {
-			$sClaveError = 'PgCasaRepository.listar.prepare';
-			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-			return false;
-		}
-		if (($oDblSt->execute($aWhere)) === false) {
-			$sClaveError = 'PgCasaRepository.listar.execute';
-			$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
-			return false;
-		}
-		
-		$filas = $oDblSt->fetchAll(PDO::FETCH_ASSOC);
+  $sQry = "SELECT * FROM $nom_tabla ".$sCondicion.$sOrdre.$sLimit;
+  $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
+  $stmt = $this->pdoPrepare($oDbl, $sQry, __METHOD__, __FILE__, __LINE__);
+  if ($stmt === false) { return false; }
+  if (!$this->pdoExecute($stmt, $aWhere, __METHOD__, __FILE__, __LINE__)) { return false; }
+        
+  $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
 			// para las fechas del postgres (texto iso)
 			$aDatos['f_status'] = (new ConverterDate('date', $aDatos['f_status']))->fromPg();
@@ -120,17 +111,13 @@ class PgCasaRepository extends ClaseRepository implements CasaRepositoryInterfac
 
 /* -------------------- ENTIDAD --------------------------------------------- */
 
-	public function Eliminar(Casa $Casa): bool
+ public function Eliminar(Casa $Casa): bool
     {
         $id_ubi = $Casa->getId_ubi();
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        if (($oDbl->exec("DELETE FROM $nom_tabla WHERE id_ubi = $id_ubi")) === false) {
-            $sClaveError = 'PgCasaRepository.eliminar';
-			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return false;
-        }
-        return TRUE;
+        $sql = "DELETE FROM $nom_tabla WHERE id_ubi = $id_ubi";
+        return $this->pdoExec($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
     }
 
 	
@@ -168,72 +155,48 @@ class PgCasaRepository extends ClaseRepository implements CasaRepositoryInterfac
 		if ( is_true($aDatos['sv']) ) { $aDatos['sv']='true'; } else { $aDatos['sv']='false'; }
 		if ( is_true($aDatos['sf']) ) { $aDatos['sf']='true'; } else { $aDatos['sf']='false'; }
 
-		if ($bInsert === false) {
-			//UPDATE
-			$update="
-					tipo_ubi                 = :tipo_ubi,
-					nombre_ubi               = :nombre_ubi,
-					dl                       = :dl,
-					pais                     = :pais,
-					region                   = :region,
-					status                   = :status,
-					f_status                 = :f_status,
-					sv                       = :sv,
-					sf                       = :sf,
-					tipo_casa                = :tipo_casa,
-					plazas                   = :plazas,
-					plazas_min               = :plazas_min,
-					num_sacd                 = :num_sacd,
-					biblioteca               = :biblioteca,
-					observ                   = :observ";
-			if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_ubi = $id_ubi")) === false) {
-				$sClaveError = 'PgCasaRepository.update.prepare';
-				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-				return false;
-			}
-				
-            try {
-                $oDblSt->execute($aDatos);
-            } catch ( PDOException $e) {
-                $err_txt=$e->errorInfo[2];
-                $this->setErrorTxt($err_txt);
-                $sClaveError = 'PgCasaRepository.update.execute';
-                $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
-                return false;
-            }
-		} else {
-			// INSERT
-			$aDatos['id_ubi'] = $Casa->getId_ubi();
-			$campos="(tipo_ubi,id_ubi,nombre_ubi,dl,pais,region,status,f_status,sv,sf,tipo_casa,plazas,plazas_min,num_sacd,biblioteca,observ)";
-			$valores="(:tipo_ubi,:id_ubi,:nombre_ubi,:dl,:pais,:region,:status,:f_status,:sv,:sf,:tipo_casa,:plazas,:plazas_min,:num_sacd,:biblioteca,:observ)";		
-			if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {
-				$sClaveError = 'PgCasaRepository.insertar.prepare';
-				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-				return false;
-			}
-            try {
-                $oDblSt->execute($aDatos);
-            } catch ( PDOException $e) {
-                $err_txt=$e->errorInfo[2];
-                $this->setErrorTxt($err_txt);
-                $sClaveError = 'PgCasaRepository.insertar.execute';
-                $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
-                return false;
-			}
-		}
-		return TRUE;
-	}
+        if ($bInsert === false) {
+            //UPDATE
+            $update="
+                    tipo_ubi                 = :tipo_ubi,
+                    nombre_ubi               = :nombre_ubi,
+                    dl                       = :dl,
+                    pais                     = :pais,
+                    region                   = :region,
+                    status                   = :status,
+                    f_status                 = :f_status,
+                    sv                       = :sv,
+                    sf                       = :sf,
+                    tipo_casa                = :tipo_casa,
+                    plazas                   = :plazas,
+                    plazas_min               = :plazas_min,
+                    num_sacd                 = :num_sacd,
+                    biblioteca               = :biblioteca,
+                    observ                   = :observ";
+            $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
+            $stmt = $this->pdoPrepare($oDbl, "UPDATE $nom_tabla SET $update WHERE id_ubi = $id_ubi", __METHOD__, __FILE__, __LINE__);
+            if ($stmt === false) { return false; }
+            if (!$this->pdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__)) { return false; }
+        } else {
+            // INSERT
+            $aDatos['id_ubi'] = $Casa->getId_ubi();
+            $campos="(tipo_ubi,id_ubi,nombre_ubi,dl,pais,region,status,f_status,sv,sf,tipo_casa,plazas,plazas_min,num_sacd,biblioteca,observ)";
+            $valores="(:tipo_ubi,:id_ubi,:nombre_ubi,:dl,:pais,:region,:status,:f_status,:sv,:sf,:tipo_casa,:plazas,:plazas_min,:num_sacd,:biblioteca,:observ)";     
+            $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;     
+            $stmt = $this->pdoPrepare($oDbl, "INSERT INTO $nom_tabla $campos VALUES $valores", __METHOD__, __FILE__, __LINE__);
+            if ($stmt === false) { return false; }
+            if (!$this->pdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__)) { return false; }
+        }
+        return TRUE;
+    }
 	
     private function isNew(int $id_ubi): bool
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_ubi = $id_ubi")) === false) {
-			$sClaveError = 'PgCasaRepository.isNew';
-			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return false;
-        }
-        if (!$oDblSt->rowCount()) {
+        $sql = "SELECT * FROM $nom_tabla WHERE id_ubi = $id_ubi";
+        $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        if (!$stmt->rowCount()) {
             return TRUE;
         }
         return false;
@@ -251,11 +214,8 @@ class PgCasaRepository extends ClaseRepository implements CasaRepositoryInterfac
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
-        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_ubi = $id_ubi")) === false) {
-			$sClaveError = 'PgCasaRepository.getDatosById';
-			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return false;
-        }
+        $sql = "SELECT * FROM $nom_tabla WHERE id_ubi = $id_ubi";
+        $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
 		$aDatos = $oDblSt->fetch(PDO::FETCH_ASSOC);
 		// para las fechas del postgres (texto iso)
 		if ($aDatos !== false) {

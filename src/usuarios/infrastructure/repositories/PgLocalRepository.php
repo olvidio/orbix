@@ -98,7 +98,7 @@ class PgLocalRepository extends ClaseRepository implements LocalRepositoryInterf
 			return false;
 		}
 		
-		$filas = $oDblSt->fetchAll(PDO::FETCH_ASSOC);
+		$filas =$stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
             $Local = new Local();
             $Local->setAllAttributes($aDatos);
@@ -114,12 +114,8 @@ class PgLocalRepository extends ClaseRepository implements LocalRepositoryInterf
         $id_locale = $Local->getId_locale();
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        if (($oDbl->exec("DELETE FROM $nom_tabla WHERE id_locale = '$id_locale'")) === false) {
-            $sClaveError = 'PgLocalRepository.eliminar';
-			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return false;
-        }
-        return TRUE;
+        $sql = "DELETE FROM $nom_tabla WHERE id_locale = '$id_locale'";
+ return $this->pdoExec( $oDbl, $sql, __METHOD__, __FILE__, __LINE__);
     }
 
 	
@@ -150,11 +146,8 @@ class PgLocalRepository extends ClaseRepository implements LocalRepositoryInterf
 					idioma                   = :idioma,
 					nom_idioma               = :nom_idioma,
 					activo                   = :activo";
-			if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_locale = '$id_locale'")) === false) {
-				$sClaveError = 'PgLocalRepository.update.prepare';
-				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-				return false;
-			}
+			$sql = "UPDATE $nom_tabla SET $update WHERE id_locale = '$id_locale'";
+			$stmt = $this->pdoPrepare( $oDbl, $sql, __METHOD__, __FILE__, __LINE__);
 				
             try {
                 $oDblSt->execute($aDatos);
@@ -170,11 +163,8 @@ class PgLocalRepository extends ClaseRepository implements LocalRepositoryInterf
 			$aDatos['id_locale'] = $Local->getId_locale();
 			$campos="(id_locale,nom_locale,idioma,nom_idioma,activo)";
 			$valores="(:id_locale,:nom_locale,:idioma,:nom_idioma,:activo)";		
-			if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {
-				$sClaveError = 'PgLocalRepository.insertar.prepare';
-				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-				return false;
-			}
+			$sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
+			$stmt = $this->pdoPrepare( $oDbl, $sql, __METHOD__, __FILE__, __LINE__);
             try {
                 $oDblSt->execute($aDatos);
             } catch ( PDOException $e) {
@@ -192,12 +182,9 @@ class PgLocalRepository extends ClaseRepository implements LocalRepositoryInterf
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_locale = '$id_locale'")) === false) {
-			$sClaveError = 'PgLocalRepository.isNew';
-			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return false;
-        }
-        if (!$oDblSt->rowCount()) {
+        $sql = "SELECT * FROM $nom_tabla WHERE id_locale = '$id_locale'";
+        $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        if (!$stmt->rowCount()) {
             return TRUE;
         }
         return false;
@@ -215,13 +202,10 @@ class PgLocalRepository extends ClaseRepository implements LocalRepositoryInterf
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
-        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_locale = '$id_locale'")) === false) {
-			$sClaveError = 'PgLocalRepository.getDatosById';
-			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return false;
-        }
-		$aDatos = $oDblSt->fetch(PDO::FETCH_ASSOC);
-        return $aDatos;
+        $sql = "SELECT * FROM $nom_tabla WHERE id_locale = '$id_locale'";
+        $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+		return $stmt->fetch(PDO::FETCH_ASSOC);
+
     }
     
 	

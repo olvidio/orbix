@@ -13,7 +13,7 @@ class ActividadesDePersona
 {
 
     /**
-     * @param false|array $cPersonas
+     * @param array|false $cPersonas
      * @param int $multiples_ctr
      * @param string $nombre_ubi
      * @param array $aListaCtr
@@ -26,7 +26,7 @@ class ActividadesDePersona
      * @param string $inicio_local
      * @return array
      */
-    public static function actividadesPorPersona(false|array $cPersonas, string $fin_iso, string $inicio_iso, DateTimeLocal $oIniPlanning, string $inicio_local): array
+    public static function actividadesPorPersona(array|false $cPersonas, string $fin_iso, string $inicio_iso, DateTimeLocal $oIniPlanning, string $inicio_local): array
     {
         $GesActividades = new GestorActividad();
         $aListaCtr = [];

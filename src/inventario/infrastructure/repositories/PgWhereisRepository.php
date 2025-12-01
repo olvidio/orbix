@@ -9,6 +9,7 @@ use PDO;
 use PDOException;
 use src\inventario\domain\contracts\WhereisRepositoryInterface;
 use src\inventario\domain\entity\Whereis;
+use src\shared\traits\HandlesPdoErrors;
 
 /**
  * Clase que adapta la tabla i_whereis_dl a la interfaz del repositorio
@@ -21,6 +22,7 @@ use src\inventario\domain\entity\Whereis;
  */
 class PgWhereisRepository extends ClaseRepository implements WhereisRepositoryInterface
 {
+    use HandlesPdoErrors;
     public function __construct()
     {
         $oDbl = $GLOBALS['oDB'];
@@ -104,19 +106,10 @@ class PgWhereisRepository extends ClaseRepository implements WhereisRepositoryIn
         if (isset($aWhere['_limit'])) {
             unset($aWhere['_limit']);
         }
-        $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
-        if (($oDblSt = $oDbl->prepare($sQry)) === false) {
-            $sClaveError = 'PgWhereisRepository.listar.prepare';
-            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return false;
-        }
-        if (($oDblSt->execute($aWhere)) === false) {
-            $sClaveError = 'PgWhereisRepository.listar.execute';
-            $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
-            return false;
-        }
+       $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
+       $stmt = $this->prepareAndExecute( $oDbl, $sQry, $aWhere,__METHOD__, __FILE__, __LINE__);
 
-        $filas = $oDblSt->fetchAll(PDO::FETCH_ASSOC);
+        $filas =$stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
             $Whereis = new Whereis();
             $Whereis->setAllAttributes($aDatos);
@@ -132,12 +125,8 @@ class PgWhereisRepository extends ClaseRepository implements WhereisRepositoryIn
         $id_item_whereis = $Whereis->getIdItemWhereisVo()->value();
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        if (($oDbl->exec("DELETE FROM $nom_tabla WHERE id_item_whereis = $id_item_whereis")) === false) {
-            $sClaveError = 'PgWhereisRepository.eliminar';
-            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return false;
-        }
-        return TRUE;
+        $sql = "DELETE FROM $nom_tabla WHERE id_item_whereis = $id_item_whereis";
+        return $this->pdoExec( $oDbl, $sql, __METHOD__, __FILE__, __LINE__);
     }
 
 
@@ -161,54 +150,27 @@ class PgWhereisRepository extends ClaseRepository implements WhereisRepositoryIn
             $update = "
                     id_item_egm              = :id_item_egm,
                     id_doc                   = :id_doc";
-            if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_item_whereis = $id_item_whereis")) === false) {
-                $sClaveError = 'PgWhereisRepository.update.prepare';
-                $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-                return false;
-            }
+            $sql = "UPDATE $nom_tabla SET $update WHERE id_item_whereis = $id_item_whereis";
+            $stmt = $this->pdoPrepare( $oDbl, $sql, __METHOD__, __FILE__, __LINE__);
 
-            try {
-                $oDblSt->execute($aDatos);
-            } catch (PDOException $e) {
-                $err_txt = $e->errorInfo[2];
-                $this->setErrorTxt($err_txt);
-                $sClaveError = 'PgWhereisRepository.update.execute';
-                $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
-                return false;
-            }
         } else {
-            // INSERT
+         //INSERT
             $aDatos['id_item_whereis'] = $Whereis->getIdItemWhereisVo()->value();
             $campos = "(id_item_whereis,id_item_egm,id_doc)";
             $valores = "(:id_item_whereis,:id_item_egm,:id_doc)";
-            if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {
-                $sClaveError = 'PgWhereisRepository.insertar.prepare';
-                $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-                return false;
-            }
-            try {
-                $oDblSt->execute($aDatos);
-            } catch (PDOException $e) {
-                $err_txt = $e->errorInfo[2];
-                $this->setErrorTxt($err_txt);
-                $sClaveError = 'PgWhereisRepository.insertar.execute';
-                $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
-                return false;
-            }
-        }
-        return TRUE;
+            $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
+            $stmt = $this->pdoPrepare( $oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+		}
+		return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 
     private function isNew(int $id_item_whereis): bool
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_item_whereis = $id_item_whereis")) === false) {
-            $sClaveError = 'PgWhereisRepository.isNew';
-            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return false;
-        }
-        if (!$oDblSt->rowCount()) {
+        $sql = "SELECT * FROM $nom_tabla WHERE id_item_whereis = $id_item_whereis";
+        $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        if (!$stmt->rowCount()) {
             return TRUE;
         }
         return false;
@@ -225,12 +187,9 @@ class PgWhereisRepository extends ClaseRepository implements WhereisRepositoryIn
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_item_whereis = $id_item_whereis")) === false) {
-            $sClaveError = 'PgWhereisRepository.getDatosById';
-            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return false;
-        }
-        return $oDblSt->fetch(PDO::FETCH_ASSOC);
+        $sql = "SELECT * FROM $nom_tabla WHERE id_item_whereis = $id_item_whereis";
+        $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
 

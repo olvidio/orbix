@@ -125,4 +125,41 @@ class GestorErrores
         throw new \Exception($err[2]);
     }
 
+    /**
+     * Añade un error al fichero SIN lanzar excepción.
+     * Útil cuando el control de flujo (lanzar o no) se decide fuera, por ejemplo en un trait o capa de dominio.
+     *
+     * @param string $errorText Mensaje de error ya resuelto (por ejemplo, $e->errorInfo[2] o $e->getMessage())
+     * @param string $sClauError Texto de contexto para el error (método/punto de fallo)
+     * @param string $line Línea de código donde se produjo el error
+     * @param string $file Fichero donde se produjo el error
+     * @return void
+     */
+    public function addErrorAppLastErrorNoThrowText(string $errorText, string $sClauError, string $line, string $file): void
+    {
+        $ip = empty($_SERVER['REMOTE_ADDR']) ? 'localhost' : $_SERVER['REMOTE_ADDR'];
+        $user = ConfigGlobal::mi_usuario();
+        $esquema = ConfigGlobal::mi_region_dl();
+        $ahora = date("Y/m/d H:i:s");
+
+        $id_user = $user . "[$esquema]$ip ";
+        $txt = "\n# " . $ahora . " - " . $id_user;
+        $txt .= "\n\t->>  " . $errorText . "\n $sClauError en linea $line de: $file\n";
+
+        // Guardar en sesión para poder acceder desde controladores
+        $this->recordar($errorText);
+
+        $filename = $this->filename;
+        if (!$handle = fopen($filename, 'a')) {
+            echo "Cannot open file ($filename)";
+            die();
+        }
+        if (fwrite($handle, $txt) === FALSE) {
+            echo "Cannot write to file ($filename)";
+            die();
+        }
+        fclose($handle);
+        // Importante: NO lanzar excepción aquí. El llamador decide si lanzar o no.
+    }
+
 }

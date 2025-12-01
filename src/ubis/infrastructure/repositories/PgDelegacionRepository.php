@@ -8,6 +8,7 @@ use core\ConfigGlobal;
 use core\Set;
 use PDO;
 use PDOException;
+use src\shared\traits\HandlesPdoErrors;
 
 use RuntimeException;
 use src\ubis\domain\entity\Delegacion;
@@ -25,6 +26,7 @@ use function core\is_true;
  */
 class PgDelegacionRepository extends ClaseRepository implements DelegacionRepositoryInterface
 {
+    use HandlesPdoErrors;
     public function __construct()
     {
         $oDbl = $GLOBALS['oDBPC'];
@@ -54,16 +56,12 @@ class PgDelegacionRepository extends ClaseRepository implements DelegacionReposi
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
 
-        $sQuery = "SELECT region_stgr, region
-                        FROM $nom_tabla
-                        WHERE dl = '$dele'";
-
-        if (($oDblSt = $oDbl->query($sQuery)) === false) {
-            $sClauError = 'GestorDelegacion.region_stgr';
-            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
-            return false;
-        }
-        $aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);
+        $sQuery = "SELECT region_stgr, region FROM $nom_tabla WHERE dl = '$dele'";
+        $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
+        $stmt = $this->pdoPrepare($oDbl, $sQuery, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) { return false; }
+        if (!$this->pdoExecute($stmt, [], __METHOD__, __FILE__, __LINE__)) { return false; }
+        $aDades = $stmt->fetch(\PDO::FETCH_ASSOC);
         if ($aDades === false || empty($aDades)) {
             $message = sprintf(_("No se encuentra información de la dl: %s"), $dele);
             throw new RunTimeException($message);
@@ -93,16 +91,12 @@ class PgDelegacionRepository extends ClaseRepository implements DelegacionReposi
             $region_dele = $dele;
             $region_stgr = $dele;
         } else {
-            $sQuery = "SELECT region_stgr, region
-                        FROM $nom_tabla
-                        WHERE dl = '$dele'";
-
-            if (($oDblSt = $oDbl->query($sQuery)) === false) {
-                $sClauError = 'GestorDelegacion.region_stgr';
-                $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
-                return false;
-            }
-            $aDades = $oDblSt->fetch(\PDO::FETCH_ASSOC);
+            $sQuery = "SELECT region_stgr, region FROM $nom_tabla WHERE dl = '$dele'";
+            $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
+            $stmt = $this->pdoPrepare($oDbl, $sQuery, __METHOD__, __FILE__, __LINE__);
+            if ($stmt === false) { return false; }
+            if (!$this->pdoExecute($stmt, [], __METHOD__, __FILE__, __LINE__)) { return false; }
+            $aDades = $stmt->fetch(\PDO::FETCH_ASSOC);
             if ($aDades === false || empty($aDades)) {
                 $message = sprintf(_("No se encuentra información de la dl: %s"), $dele);
                 throw new RunTimeException($message);
@@ -302,7 +296,7 @@ class PgDelegacionRepository extends ClaseRepository implements DelegacionReposi
 			return false;
 		}
 		
-		$filas = $oDblSt->fetchAll(PDO::FETCH_ASSOC);
+		$filas =$stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
             $Delegacion = new Delegacion();
             $Delegacion->setAllAttributes($aDatos);
@@ -318,12 +312,8 @@ class PgDelegacionRepository extends ClaseRepository implements DelegacionReposi
         $dl = $Delegacion->getDlVo()?->value() ?? '';
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        if (($oDbl->exec("DELETE FROM $nom_tabla WHERE dl = '$dl'")) === false) {
-            $sClaveError = 'PgDelegacionRepository.eliminar';
-			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return false;
-        }
-        return TRUE;
+        $sql = "DELETE FROM $nom_tabla WHERE dl = '$dl'";
+ return $this->pdoExec( $oDbl, $sql, __METHOD__, __FILE__, __LINE__);
     }
 
 	
@@ -358,11 +348,8 @@ class PgDelegacionRepository extends ClaseRepository implements DelegacionReposi
 					active                   = :active,
 					grupo_estudios           = :grupo_estudios,
 					region_stgr              = :region_stgr";
-			if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_dl = $id_dl ")) === false) {
-				$sClaveError = 'PgDelegacionRepository.update.prepare';
-				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-				return false;
-			}
+			$sql = "UPDATE $nom_tabla SET $update WHERE id_dl = $id_dl ";
+			$stmt = $this->pdoPrepare( $oDbl, $sql, __METHOD__, __FILE__, __LINE__);
 				
             try {
                 $oDblSt->execute($aDatos);
@@ -378,11 +365,8 @@ class PgDelegacionRepository extends ClaseRepository implements DelegacionReposi
 			$aDatos['id_dl'] = $Delegacion->getIdDlVo()->value();
 			$campos="(id_dl,dl,region,nombre_dl,active,grupo_estudios,region_stgr)";
 			$valores="(:id_dl,:dl,:region,:nombre_dl,:active,:grupo_estudios,:region_stgr)";
-			if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {
-				$sClaveError = 'PgDelegacionRepository.insertar.prepare';
-				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-				return false;
-			}
+			$sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
+			$stmt = $this->pdoPrepare( $oDbl, $sql, __METHOD__, __FILE__, __LINE__);
             try {
                 $oDblSt->execute($aDatos);
             } catch ( PDOException $e) {
@@ -400,12 +384,9 @@ class PgDelegacionRepository extends ClaseRepository implements DelegacionReposi
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_dl = $id_dl ")) === false) {
-			$sClaveError = 'PgDelegacionRepository.isNew';
-			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return false;
-        }
-        if (!$oDblSt->rowCount()) {
+        $sql = "SELECT * FROM $nom_tabla WHERE id_dl = $id_dl ";
+        $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        if (!$stmt->rowCount()) {
             return TRUE;
         }
         return false;
@@ -415,13 +396,10 @@ class PgDelegacionRepository extends ClaseRepository implements DelegacionReposi
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
-        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_dl = $id_dl ")) === false) {
-			$sClaveError = 'PgDelegacionRepository.getDatosById';
-			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return false;
-        }
-		$aDatos = $oDblSt->fetch(PDO::FETCH_ASSOC);
-        return $aDatos;
+        $sql = "SELECT * FROM $nom_tabla WHERE id_dl = $id_dl ";
+        $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+		return $stmt->fetch(PDO::FETCH_ASSOC);
+
     }
     
 	

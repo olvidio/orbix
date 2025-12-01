@@ -28,7 +28,7 @@ interface AnuncioRepositoryInterface
      * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
      * @return array|FALSE Una colección de objetos de tipo Certificado
      */
-    public function getAnuncios(array $aWhere = [], array $aOperators = []): false|array;
+    public function getAnuncios(array $aWhere = [], array $aOperators = []): array|false;
 
     /* -------------------- ENTIDAD --------------------------------------------- */
 
@@ -51,7 +51,7 @@ interface AnuncioRepositoryInterface
      * @param AnuncioId $uuid_item
      * @return array|bool
      */
-    public function datosById(AnuncioId $uuid_item): bool|array;
+    public function datosById(AnuncioId $uuid_item): array|bool;
 
     /**
      * Busca la clase con uuid_item en el repositorio.

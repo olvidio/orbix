@@ -6,7 +6,7 @@ use core\ClaseRepository;
 use core\Condicion;
 use core\Set;
 use PDO;
-use PDOException;
+use src\shared\traits\HandlesPdoErrors;
 use src\usuarios\domain\contracts\UsuarioGrupoRepositoryInterface;
 use src\usuarios\domain\entity\UsuarioGrupo;
 
@@ -21,6 +21,8 @@ use src\usuarios\domain\entity\UsuarioGrupo;
  */
 class PgUsuarioGrupoRepository extends ClaseRepository implements UsuarioGrupoRepositoryInterface
 {
+    use HandlesPdoErrors;
+
     public function __construct()
     {
         $oDbl = $GLOBALS['oDBE'];
@@ -87,18 +89,9 @@ class PgUsuarioGrupoRepository extends ClaseRepository implements UsuarioGrupoRe
             unset($aWhere['_limit']);
         }
         $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
-        if (($oDblSt = $oDbl->prepare($sQry)) === false) {
-            $sClaveError = 'PgUsuarioGrupoRepository.listar.prepare';
-            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return false;
-        }
-        if (($oDblSt->execute($aWhere)) === false) {
-            $sClaveError = 'PgUsuarioGrupoRepository.listar.execute';
-            $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
-            return false;
-        }
+        $stmt = $this->prepareAndExecute($oDbl, $sQry, $aWhere, __METHOD__, __FILE__, __LINE__);
 
-        $filas = $oDblSt->fetchAll(PDO::FETCH_ASSOC);
+        $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
             $UsuarioGrupo = new UsuarioGrupo();
             $UsuarioGrupo->setAllAttributes($aDatos);
@@ -115,12 +108,8 @@ class PgUsuarioGrupoRepository extends ClaseRepository implements UsuarioGrupoRe
         $id_grupo = $UsuarioGrupo->getId_grupo();
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        if (($oDbl->exec("DELETE FROM $nom_tabla WHERE id_usuario = $id_usuario AND id_grupo = $id_grupo")) === false) {
-            $sClaveError = 'PgUsuarioGrupoRepository.eliminar';
-            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return false;
-        }
-        return TRUE;
+        $sql = "DELETE FROM $nom_tabla WHERE id_usuario = $id_usuario AND id_grupo = $id_grupo";
+        return $this->pdoExec($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
     }
 
     /**
@@ -135,25 +124,13 @@ class PgUsuarioGrupoRepository extends ClaseRepository implements UsuarioGrupoRe
         $aDatos['id_grupo'] = $UsuarioGrupo->getId_grupo();
         array_walk($aDatos, 'core\poner_null');
 
-        // INSERT
+        //INSERT
         $aDatos['id_usuario'] = $UsuarioGrupo->getId_usuario();
         $campos = "(id_usuario,id_grupo)";
         $valores = "(:id_usuario,:id_grupo)";
-        if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {
-            $sClaveError = 'PgUsuarioGrupoRepository.insertar.prepare';
-            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return false;
-        }
-        try {
-            $oDblSt->execute($aDatos);
-        } catch (PDOException $e) {
-            $err_txt = $e->errorInfo[2];
-            $this->setErrorTxt($err_txt);
-            $sClaveError = 'PgUsuarioGrupoRepository.insertar.execute';
-            $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
-            return false;
-        }
-        return TRUE;
+        $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
+        $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 
     /**
@@ -167,13 +144,9 @@ class PgUsuarioGrupoRepository extends ClaseRepository implements UsuarioGrupoRe
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
-        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_usuario = $id_usuario")) === false) {
-            $sClaveError = 'PgUsuarioGrupoRepository.getDatosById';
-            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return false;
-        }
-        $aDatos = $oDblSt->fetch(PDO::FETCH_ASSOC);
-        return $aDatos;
+        $sql = "SELECT * FROM $nom_tabla WHERE id_usuario = $id_usuario";
+        $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
     /**

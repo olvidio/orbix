@@ -7,6 +7,7 @@ use core\Condicion;
 use core\Set;
 use PDO;
 use PDOException;
+use src\shared\traits\HandlesPdoErrors;
 use src\configuracion\domain\contracts\ModuloInstaladoRepositoryInterface;
 use src\configuracion\domain\entity\ModuloInstalado;
 use function core\is_true;
@@ -22,6 +23,7 @@ use function core\is_true;
  */
 class PgModuloInstaladoRepository extends ClaseRepository implements ModuloInstaladoRepositoryInterface
 {
+    use HandlesPdoErrors;
     public function __construct()
     {
         $oDbl = $GLOBALS['oDBE'];
@@ -36,18 +38,17 @@ class PgModuloInstaladoRepository extends ClaseRepository implements ModuloInsta
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $sQuery = "SELECT id_mod, nom
-				FROM $nom_tabla
-				ORDER BY nom";
-        try {
-            $aOpciones = [];
-            foreach ($oDbl->query($sQuery) as $aClave) {
-                $clave = $aClave[0];
-                $val = $aClave[1];
-                $aOpciones[$clave] = $val;
-            }
-        } catch (PDOException $e) {
-            $sClauError = 'ModuloInstalado.lista';
-            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+                FROM $nom_tabla
+                ORDER BY nom";
+        $aOpciones = [];
+        $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
+        $stmt = $this->pdoPrepare($oDbl, $sQuery, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) { return []; }
+        if (!$this->pdoExecute($stmt, [], __METHOD__, __FILE__, __LINE__)) { return []; }
+        foreach ($stmt->fetchAll(PDO::FETCH_NUM) as $aClave) {
+            $clave = $aClave[0];
+            $val = $aClave[1];
+            $aOpciones[$clave] = $val;
         }
         return $aOpciones;
     }
@@ -109,18 +110,10 @@ class PgModuloInstaladoRepository extends ClaseRepository implements ModuloInsta
             unset($aWhere['_limit']);
         }
         $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
-        if (($oDblSt = $oDbl->prepare($sQry)) === false) {
-            $sClaveError = 'PgModuloInstaladoRepository.listar.prepare';
-            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return false;
-        }
-        if (($oDblSt->execute($aWhere)) === false) {
-            $sClaveError = 'PgModuloInstaladoRepository.listar.execute';
-            $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
-            return false;
-        }
+        $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
+        $stmt = $this->prepareAndExecute( $oDbl, $sQry, $aWhere,__METHOD__, __FILE__, __LINE__);
 
-        $filas = $oDblSt->fetchAll(PDO::FETCH_ASSOC);
+        $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
             $ModuloInstalado = new ModuloInstalado();
             $ModuloInstalado->setAllAttributes($aDatos);
@@ -136,12 +129,8 @@ class PgModuloInstaladoRepository extends ClaseRepository implements ModuloInsta
         $id_mod = $ModuloInstalado->getIdModVo()->value();
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        if (($oDbl->exec("DELETE FROM $nom_tabla WHERE id_mod = $id_mod")) === false) {
-            $sClaveError = 'PgModuloInstaladoRepository.eliminar';
-            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return false;
-        }
-        return TRUE;
+        $sql = "DELETE FROM $nom_tabla WHERE id_mod = $id_mod";
+        return $this->pdoExec($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
     }
 
     /**
@@ -168,40 +157,19 @@ class PgModuloInstaladoRepository extends ClaseRepository implements ModuloInsta
             //UPDATE
             $update = "
 					status                   = :status";
-            if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_mod = $id_mod")) === false) {
-                $sClaveError = 'PgModuloInstaladoRepository.update.prepare';
-                $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-                return false;
-            }
-
-            try {
-                $oDblSt->execute($aDatos);
-            } catch (PDOException $e) {
-                $err_txt = $e->errorInfo[2];
-                $this->setErrorTxt($err_txt);
-                $sClaveError = 'PgModuloInstaladoRepository.update.execute';
-                $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
-                return false;
-            }
+            $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
+            $stmt = $this->pdoPrepare($oDbl, "UPDATE $nom_tabla SET $update WHERE id_mod = $id_mod", __METHOD__, __FILE__, __LINE__);
+            if ($stmt === false) { return false; }
+            if (!$this->pdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__)) { return false; }
         } else {
             // INSERT
             $aDatos['id_mod'] = $ModuloInstalado->getIdModVo()->value();
             $campos = "(id_mod,status)";
             $valores = "(:id_mod,:status)";
-            if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {
-                $sClaveError = 'PgModuloInstaladoRepository.insertar.prepare';
-                $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-                return false;
-            }
-            try {
-                $oDblSt->execute($aDatos);
-            } catch (PDOException $e) {
-                $err_txt = $e->errorInfo[2];
-                $this->setErrorTxt($err_txt);
-                $sClaveError = 'PgModuloInstaladoRepository.insertar.execute';
-                $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
-                return false;
-            }
+            $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
+            $stmt = $this->pdoPrepare($oDbl, "INSERT INTO $nom_tabla $campos VALUES $valores", __METHOD__, __FILE__, __LINE__);
+            if ($stmt === false) { return false; }
+            if (!$this->pdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__)) { return false; }
         }
         return TRUE;
     }
@@ -210,12 +178,9 @@ class PgModuloInstaladoRepository extends ClaseRepository implements ModuloInsta
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_mod = $id_mod")) === false) {
-            $sClaveError = 'PgModuloInstaladoRepository.isNew';
-            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return false;
-        }
-        if (!$oDblSt->rowCount()) {
+        $sql = "SELECT * FROM $nom_tabla WHERE id_mod = $id_mod";
+        $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        if (!$stmt->rowCount()) {
             return TRUE;
         }
         return false;
@@ -232,13 +197,10 @@ class PgModuloInstaladoRepository extends ClaseRepository implements ModuloInsta
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
-        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_mod = $id_mod")) === false) {
-            $sClaveError = 'PgModuloInstaladoRepository.getDatosById';
-            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return false;
-        }
-        $aDatos = $oDblSt->fetch(PDO::FETCH_ASSOC);
-        return $aDatos;
+        $sql = "SELECT * FROM $nom_tabla WHERE id_mod = $id_mod";
+        $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+
     }
 
     /**

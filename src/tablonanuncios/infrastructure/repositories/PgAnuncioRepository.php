@@ -8,6 +8,7 @@ use core\ConverterDate;
 use core\Set;
 use PDO;
 use PDOException;
+use src\shared\traits\HandlesPdoErrors;
 use src\tablonanuncios\domain\contracts\AnuncioRepositoryInterface;
 use src\tablonanuncios\domain\entity\Anuncio;
 use src\tablonanuncios\domain\value_objects\AnuncioId;
@@ -24,6 +25,7 @@ use src\tablonanuncios\domain\value_objects\AnuncioId;
  */
 class PgAnuncioRepository extends ClaseRepository implements AnuncioRepositoryInterface
 {
+    use HandlesPdoErrors;
     public function __construct()
     {
         $oDbl = $GLOBALS['oDBPC'];
@@ -40,7 +42,7 @@ class PgAnuncioRepository extends ClaseRepository implements AnuncioRepositoryIn
      * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
      * @return array|FALSE Una colección de objetos de tipo Certificado
      */
-    public function getAnuncios(array $aWhere = [], array $aOperators = []): false|array
+    public function getAnuncios(array $aWhere = [], array $aOperators = []): array|false
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
@@ -88,18 +90,10 @@ class PgAnuncioRepository extends ClaseRepository implements AnuncioRepositoryIn
             unset($aWhere['_limit']);
         }
         $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
-        if (($oDblSt = $oDbl->prepare($sQry)) === FALSE) {
-            $sClaveError = 'PgAnuncioRepository.listar.prepare';
-            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return FALSE;
-        }
-        if (($oDblSt->execute($aWhere)) === FALSE) {
-            $sClaveError = 'PgAnuncioRepository.listar.execute';
-            $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
-            return FALSE;
-        }
+        $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
+        $stmt = $this->prepareAndExecute( $oDbl, $sQry, $aWhere,__METHOD__, __FILE__, __LINE__);
 
-        $filas = $oDblSt->fetchAll(PDO::FETCH_ASSOC);
+        $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
             // para las fechas del postgres (texto iso)
             $aDatos['tanotado'] = (new ConverterDate('timestamp', $aDatos['tanotado']))->fromPg();
@@ -118,12 +112,8 @@ class PgAnuncioRepository extends ClaseRepository implements AnuncioRepositoryIn
         $uuid_item = $Anuncio->getUuid_item();
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        if (($oDbl->exec("DELETE FROM $nom_tabla WHERE uuid_item = '$uuid_item'")) === FALSE) {
-            $sClaveError = 'PgCertificadoRepository.eliminar';
-            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return FALSE;
-        }
-        return TRUE;
+        $sql = "DELETE FROM $nom_tabla WHERE uuid_item = '$uuid_item'";
+        return $this->pdoExec($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
     }
 
 
@@ -162,54 +152,27 @@ class PgAnuncioRepository extends ClaseRepository implements AnuncioRepositoryIn
                     tanotado        = :tanotado,
                     teliminado      = :teliminado,
                     categoria        = :categoria";
-            if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE uuid_item = '$uuid_item'")) === FALSE) {
-                $sClaveError = 'PgCertificadoRepository.update.prepare';
-                $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-                return FALSE;
-            }
+            $sql = "UPDATE $nom_tabla SET $update WHERE uuid_item = '$uuid_item'";
+            $stmt = $this->pdoPrepare( $oDbl, $sql, __METHOD__, __FILE__, __LINE__);
 
-            try {
-                $oDblSt->execute($aDatos);
-            } catch (PDOException $e) {
-                $err_txt = $e->errorInfo[2];
-                $this->setErrorTxt($err_txt);
-                $sClaveError = 'PgCertificadoRepository.update.execute';
-                $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
-                return FALSE;
-            }
         } else {
-            // INSERT
+         //INSERT
             $aDatos['uuid_item'] = $Anuncio->getUuid_item();
             $campos = "(uuid_item,usuario_creador,esquema_emisor,esquema_destino,texto_anuncio,idioma,tablon,tanotado,teliminado,categoria)";
             $valores = "(:uuid_item,:usuario_creador,:esquema_emisor,:esquema_destino,:texto_anuncio,:idioma,:tablon,:tanotado,:teliminado,:categoria)";
-            if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === FALSE) {
-                $sClaveError = 'PgAnuncioRepository.insertar.prepare';
-                $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-                return FALSE;
-            }
-            try {
-                $oDblSt->execute($aDatos);
-            } catch (PDOException $e) {
-                $err_txt = $e->errorInfo[2];
-                $this->setErrorTxt($err_txt);
-                $sClaveError = 'PgAnuncioRepository.insertar.execute';
-                $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
-                return FALSE;
-            }
-        }
-        return TRUE;
+            $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
+            $stmt = $this->pdoPrepare( $oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+		}
+		return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 
     private function isNew(AnuncioId $uuid_item): bool
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE uuid_item = '$uuid_item'")) === FALSE) {
-            $sClaveError = 'PgCertificadoRepository.isNew';
-            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return FALSE;
-        }
-        if (!$oDblSt->rowCount()) {
+        $sql = "SELECT * FROM $nom_tabla WHERE uuid_item = '$uuid_item'";
+        $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        if (!$stmt->rowCount()) {
             return TRUE;
         }
         return FALSE;
@@ -222,15 +185,12 @@ class PgAnuncioRepository extends ClaseRepository implements AnuncioRepositoryIn
      * @param AnuncioId $uuid_item
      * @return array|bool
      */
-    public function datosById(AnuncioId $uuid_item): bool|array
+    public function datosById(AnuncioId $uuid_item): array|bool
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE uuid_item = '$uuid_item'")) === FALSE) {
-            $sClaveError = 'PgCertificadoRepository.getDatosById';
-            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return FALSE;
-        }
+        $sql = "SELECT * FROM $nom_tabla WHERE uuid_item = '$uuid_item'";
+        $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         $aDatos = $oDblSt->fetch(PDO::FETCH_ASSOC);
         // para las fechas del postgres (texto iso)
         if ($aDatos !== FALSE) {

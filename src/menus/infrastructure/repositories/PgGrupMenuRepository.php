@@ -9,6 +9,7 @@ use PDO;
 use PDOException;
 use src\menus\domain\entity\GrupMenu;
 use src\menus\domain\contracts\GrupMenuRepositoryInterface;
+use src\shared\traits\HandlesPdoErrors;
 
 /**
  * Clase que adapta la tabla aux_grupmenu a la interfaz del repositorio
@@ -21,6 +22,7 @@ use src\menus\domain\contracts\GrupMenuRepositoryInterface;
  */
 class PgGrupMenuRepository extends ClaseRepository implements GrupMenuRepositoryInterface
 {
+    use HandlesPdoErrors;
     public function __construct()
     {
         $oDbl = $GLOBALS['oDBE'];
@@ -96,7 +98,7 @@ class PgGrupMenuRepository extends ClaseRepository implements GrupMenuRepository
 			return false;
 		}
 		
-		$filas = $oDblSt->fetchAll(PDO::FETCH_ASSOC);
+		$filas =$stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
             $GrupMenu = new GrupMenu();
             $GrupMenu->setAllAttributes($aDatos);
@@ -112,12 +114,8 @@ class PgGrupMenuRepository extends ClaseRepository implements GrupMenuRepository
         $id_grupmenu = $GrupMenu->getId_grupmenu();
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        if (($oDbl->exec("DELETE FROM $nom_tabla WHERE id_grupmenu = $id_grupmenu")) === false) {
-            $sClaveError = 'PgGrupMenuRepository.eliminar';
-			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return false;
-        }
-        return TRUE;
+        $sql = "DELETE FROM $nom_tabla WHERE id_grupmenu = $id_grupmenu";
+ return $this->pdoExec( $oDbl, $sql, __METHOD__, __FILE__, __LINE__);
     }
 
 	
@@ -142,31 +140,15 @@ class PgGrupMenuRepository extends ClaseRepository implements GrupMenuRepository
 			$update="
 					grup_menu                = :grup_menu,
 					orden                    = :orden";
-			if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_grupmenu = $id_grupmenu")) === false) {
-				$sClaveError = 'PgGrupMenuRepository.update.prepare';
-				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-				return false;
-			}
-				
-            try {
-                $oDblSt->execute($aDatos);
-            } catch ( PDOException $e) {
-                $err_txt=$e->errorInfo[2];
-                $this->setErrorTxt($err_txt);
-                $sClaveError = 'PgGrupMenuRepository.update.execute';
-                $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
-                return false;
-            }
+			$sql = "UPDATE $nom_tabla SET $update WHERE id_grupmenu = $id_grupmenu";
+			$stmt = $this->pdoPrepare( $oDbl, $sql, __METHOD__, __FILE__, __LINE__);
 		} else {
-			// INSERT
+			//INSERT
 			$aDatos['id_grupmenu'] = $GrupMenu->getId_grupmenu();
 			$campos="(id_grupmenu,grup_menu,orden)";
 			$valores="(:id_grupmenu,:grup_menu,:orden)";		
-			if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {
-				$sClaveError = 'PgGrupMenuRepository.insertar.prepare';
-				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-				return false;
-			}
+			$sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
+			$stmt = $this->pdoPrepare( $oDbl, $sql, __METHOD__, __FILE__, __LINE__);
             try {
                 $oDblSt->execute($aDatos);
             } catch ( PDOException $e) {
@@ -184,12 +166,9 @@ class PgGrupMenuRepository extends ClaseRepository implements GrupMenuRepository
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_grupmenu = $id_grupmenu")) === false) {
-			$sClaveError = 'PgGrupMenuRepository.isNew';
-			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return false;
-        }
-        if (!$oDblSt->rowCount()) {
+        $sql = "SELECT * FROM $nom_tabla WHERE id_grupmenu = $id_grupmenu";
+        $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        if (!$stmt->rowCount()) {
             return TRUE;
         }
         return false;
@@ -207,13 +186,9 @@ class PgGrupMenuRepository extends ClaseRepository implements GrupMenuRepository
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
-        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_grupmenu = $id_grupmenu")) === false) {
-			$sClaveError = 'PgGrupMenuRepository.getDatosById';
-			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return false;
-        }
-		$aDatos = $oDblSt->fetch(PDO::FETCH_ASSOC);
-        return $aDatos;
+        $sql = "SELECT * FROM $nom_tabla WHERE id_grupmenu = $id_grupmenu";
+        $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+		return $stmt->fetch(PDO::FETCH_ASSOC);
     }
     
 	

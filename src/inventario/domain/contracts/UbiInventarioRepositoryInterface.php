@@ -17,7 +17,7 @@ use src\inventario\domain\entity\UbiInventario;
 interface UbiInventarioRepositoryInterface
 {
 
-    public function getUbisInventarioLugar($bLugar): false|array;
+    public function getUbisInventarioLugar($bLugar): array|false;
     public function getArrayUbisInventario():array|false;
 
 /* -------------------- GESTOR BASE ---------------------------------------- */

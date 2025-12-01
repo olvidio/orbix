@@ -9,6 +9,7 @@ use PDO;
 use PDOException;
 use src\inventario\domain\contracts\LugarRepositoryInterface;
 use src\inventario\domain\entity\Lugar;
+use src\shared\traits\HandlesPdoErrors;
 
 /**
  * Clase que adapta la tabla i_lugares_dl a la interfaz del repositorio
@@ -21,6 +22,7 @@ use src\inventario\domain\entity\Lugar;
  */
 class PgLugarRepository extends ClaseRepository implements LugarRepositoryInterface
 {
+    use HandlesPdoErrors;
     public function __construct()
     {
         $oDbl = $GLOBALS['oDB'];
@@ -107,18 +109,9 @@ class PgLugarRepository extends ClaseRepository implements LugarRepositoryInterf
             unset($aWhere['_limit']);
         }
         $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
-        if (($oDblSt = $oDbl->prepare($sQry)) === false) {
-            $sClaveError = 'PgLugarRepository.listar.prepare';
-            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return false;
-        }
-        if (($oDblSt->execute($aWhere)) === false) {
-            $sClaveError = 'PgLugarRepository.listar.execute';
-            $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
-            return false;
-        }
+        $stmt = $this->prepareAndExecute( $oDbl, $sQry, $aWhere,__METHOD__, __FILE__, __LINE__);
 
-        $filas = $oDblSt->fetchAll(PDO::FETCH_ASSOC);
+        $filas =$stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
             $Lugar = new Lugar();
             $Lugar->setAllAttributes($aDatos);
@@ -134,12 +127,8 @@ class PgLugarRepository extends ClaseRepository implements LugarRepositoryInterf
         $id_lugar = $Lugar->getId_lugar();
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        if (($oDbl->exec("DELETE FROM $nom_tabla WHERE id_lugar = $id_lugar")) === false) {
-            $sClaveError = 'PgLugarRepository.eliminar';
-            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return false;
-        }
-        return TRUE;
+        $sql = "DELETE FROM $nom_tabla WHERE id_lugar = $id_lugar";
+        return $this->pdoExec( $oDbl, $sql, __METHOD__, __FILE__, __LINE__);
     }
 
 
@@ -154,7 +143,7 @@ class PgLugarRepository extends ClaseRepository implements LugarRepositoryInterf
         $bInsert = $this->isNew($id_lugar);
 
         $aDatos = [];
-        $aDatos['id_ubi'] = $Lugar->getIdUbiVo()->value();
+        $aDatos['id_ubi'] = $Lugar->getId_ubi();
         $aDatos['nom_lugar'] = $Lugar->getNomLugarVo()?->value();
         array_walk($aDatos, 'core\poner_null');
 
@@ -163,54 +152,27 @@ class PgLugarRepository extends ClaseRepository implements LugarRepositoryInterf
             $update = "
                     id_ubi                   = :id_ubi,
                     nom_lugar                = :nom_lugar";
-            if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_lugar = $id_lugar")) === false) {
-                $sClaveError = 'PgLugarRepository.update.prepare';
-                $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-                return false;
-            }
+            $sql = "UPDATE $nom_tabla SET $update WHERE id_lugar = $id_lugar";
+            $stmt = $this->pdoPrepare( $oDbl, $sql, __METHOD__, __FILE__, __LINE__);
 
-            try {
-                $oDblSt->execute($aDatos);
-            } catch (PDOException $e) {
-                $err_txt = $e->errorInfo[2];
-                $this->setErrorTxt($err_txt);
-                $sClaveError = 'PgLugarRepository.update.execute';
-                $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
-                return false;
-            }
         } else {
-            // INSERT
+            //INSERT
             $aDatos['id_lugar'] = $Lugar->getId_lugar();
             $campos = "(id_lugar,id_ubi,nom_lugar)";
             $valores = "(:id_lugar,:id_ubi,:nom_lugar)";
-            if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {
-                $sClaveError = 'PgLugarRepository.insertar.prepare';
-                $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-                return false;
-            }
-            try {
-                $oDblSt->execute($aDatos);
-            } catch (PDOException $e) {
-                $err_txt = $e->errorInfo[2];
-                $this->setErrorTxt($err_txt);
-                $sClaveError = 'PgLugarRepository.insertar.execute';
-                $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
-                return false;
-            }
-        }
-        return TRUE;
+            $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
+            $stmt = $this->pdoPrepare( $oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+		}
+		return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 
     private function isNew(int $id_lugar): bool
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_lugar = $id_lugar")) === false) {
-            $sClaveError = 'PgLugarRepository.isNew';
-            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return false;
-        }
-        if (!$oDblSt->rowCount()) {
+        $sql = "SELECT * FROM $nom_tabla WHERE id_lugar = $id_lugar";
+        $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        if (!$stmt->rowCount()) {
             return TRUE;
         }
         return false;
@@ -227,12 +189,9 @@ class PgLugarRepository extends ClaseRepository implements LugarRepositoryInterf
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_lugar = $id_lugar")) === false) {
-            $sClaveError = 'PgLugarRepository.getDatosById';
-            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return false;
-        }
-        return $oDblSt->fetch(PDO::FETCH_ASSOC);
+        $sql = "SELECT * FROM $nom_tabla WHERE id_lugar = $id_lugar";
+        $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
 

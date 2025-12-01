@@ -97,7 +97,7 @@ class PgProfesorTipoRepository extends ClaseRepository implements ProfesorTipoRe
 			return false;
 		}
 		
-		$filas = $oDblSt->fetchAll(PDO::FETCH_ASSOC);
+		$filas =$stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
             $ProfesorTipo = new ProfesorTipo();
             $ProfesorTipo->setAllAttributes($aDatos);
@@ -113,12 +113,8 @@ class PgProfesorTipoRepository extends ClaseRepository implements ProfesorTipoRe
         $id_tipo_profesor = $ProfesorTipo->getIdTipoProfesorVo()->value();
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        if (($oDbl->exec("DELETE FROM $nom_tabla WHERE id_tipo_profesor = $id_tipo_profesor")) === false) {
-            $sClaveError = 'PgProfesorTipoRepository.eliminar';
-			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return false;
-        }
-        return TRUE;
+        $sql = "DELETE FROM $nom_tabla WHERE id_tipo_profesor = $id_tipo_profesor";
+ return $this->pdoExec( $oDbl, $sql, __METHOD__, __FILE__, __LINE__);
     }
 
 	
@@ -141,11 +137,8 @@ class PgProfesorTipoRepository extends ClaseRepository implements ProfesorTipoRe
 			//UPDATE
 			$update="
 					tipo_profesor            = :tipo_profesor";
-			if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_tipo_profesor = $id_tipo_profesor")) === false) {
-				$sClaveError = 'PgProfesorTipoRepository.update.prepare';
-				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-				return false;
-			}
+			$sql = "UPDATE $nom_tabla SET $update WHERE id_tipo_profesor = $id_tipo_profesor";
+			$stmt = $this->pdoPrepare( $oDbl, $sql, __METHOD__, __FILE__, __LINE__);
 				
             try {
                 $oDblSt->execute($aDatos);
@@ -161,11 +154,8 @@ class PgProfesorTipoRepository extends ClaseRepository implements ProfesorTipoRe
 			$aDatos['id_tipo_profesor'] = $ProfesorTipo->getIdTipoProfesorVo()->value();
 			$campos="(id_tipo_profesor,tipo_profesor)";
 			$valores="(:id_tipo_profesor,:tipo_profesor)";		
-			if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {
-				$sClaveError = 'PgProfesorTipoRepository.insertar.prepare';
-				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-				return false;
-			}
+			$sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
+			$stmt = $this->pdoPrepare( $oDbl, $sql, __METHOD__, __FILE__, __LINE__);
             try {
                 $oDblSt->execute($aDatos);
             } catch ( PDOException $e) {
@@ -183,12 +173,9 @@ class PgProfesorTipoRepository extends ClaseRepository implements ProfesorTipoRe
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_tipo_profesor = $id_tipo_profesor")) === false) {
-			$sClaveError = 'PgProfesorTipoRepository.isNew';
-			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return false;
-        }
-        if (!$oDblSt->rowCount()) {
+        $sql = "SELECT * FROM $nom_tabla WHERE id_tipo_profesor = $id_tipo_profesor";
+        $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        if (!$stmt->rowCount()) {
             return TRUE;
         }
         return false;
@@ -206,13 +193,10 @@ class PgProfesorTipoRepository extends ClaseRepository implements ProfesorTipoRe
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
-        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_tipo_profesor = $id_tipo_profesor")) === false) {
-			$sClaveError = 'PgProfesorTipoRepository.getDatosById';
-			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return false;
-        }
-		$aDatos = $oDblSt->fetch(PDO::FETCH_ASSOC);
-        return $aDatos;
+        $sql = "SELECT * FROM $nom_tabla WHERE id_tipo_profesor = $id_tipo_profesor";
+        $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+		return $stmt->fetch(PDO::FETCH_ASSOC);
+
     }
     
 	

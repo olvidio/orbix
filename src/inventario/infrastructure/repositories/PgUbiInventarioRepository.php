@@ -7,6 +7,7 @@ use core\Condicion;
 use core\Set;
 use PDO;
 use PDOException;
+use src\shared\traits\HandlesPdoErrors;
 use src\inventario\domain\contracts\UbiInventarioRepositoryInterface;
 use src\inventario\domain\entity\UbiInventario;
 
@@ -21,6 +22,7 @@ use src\inventario\domain\entity\UbiInventario;
  */
 class PgUbiInventarioRepository extends ClaseRepository implements UbiInventarioRepositoryInterface
 {
+    use HandlesPdoErrors;
     public function __construct()
     {
         $oDbl = $GLOBALS['oDB'];
@@ -28,7 +30,7 @@ class PgUbiInventarioRepository extends ClaseRepository implements UbiInventario
         $this->setNomTabla('i_ubis_dl');
     }
 
-    public function getUbisInventarioLugar($bLugar): false|array
+    public function getUbisInventarioLugar($bLugar): array|false
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
@@ -41,18 +43,12 @@ class PgUbiInventarioRepository extends ClaseRepository implements UbiInventario
 			$sQry="SELECT u.* FROM $nom_tabla u LEFT JOIN $nom_tabla_lugares 
 			        USING (id_ubi) WHERE id_lugar IS NULL ORDER BY nom_ubi";
 		}
-		if (($oDblSt = $oDbl->prepare($sQry)) === false) {
-			$sClauError = 'GestorUbiDoc.llistar.prepare';
-			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
-			return false;
-		}
-		if (($oDblSt->execute()) === false) {
-			$sClauError = 'GestorUbiDoc.llistar.execute';
-			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
-			return false;
-		}
+  $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
+  $stmt = $this->pdoPrepare($oDbl, $sQry, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) { return false; }
+        if (!$this->pdoExecute($stmt, [], __METHOD__, __FILE__, __LINE__)) { return false; }
 
-        $filas = $oDblSt->fetchAll(PDO::FETCH_ASSOC);
+        $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
             $UbiInventario = new UbiInventario();
             $UbiInventario->setAllAttributes($aDatos);
@@ -65,12 +61,15 @@ class PgUbiInventarioRepository extends ClaseRepository implements UbiInventario
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-		$sQuery="SELECT id_ubi,nom_ubi FROM $nom_tabla ORDER BY nom_ubi";
-		if (($oDblSt = $oDbl->query($sQuery)) === false) {
-			$sClauError = 'GestorUbiDoc.lista';
-			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
-			return false;
-		}
+  $sQuery="SELECT id_ubi,nom_ubi FROM $nom_tabla ORDER BY nom_ubi";
+  // Mantengo query directa; si falla, usaré pdoPrepare/Execute por consistencia
+  if (($oDblSt = $oDbl->query($sQuery)) === false) {
+      // fallback a prepare/execute para registrar error con más contexto
+      $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
+      $stmt = $this->pdoPrepare($oDbl, $sQuery, __METHOD__, __FILE__, __LINE__);
+      if ($stmt === false) { return false; }
+      if (!$this->pdoExecute($stmt, [], __METHOD__, __FILE__, __LINE__)) { return false; }
+  }
 		$aOpciones=[];
 		foreach ($oDbl->query($sQuery) as $aClave) {
 			$clave=$aClave[0];
@@ -127,7 +126,7 @@ class PgUbiInventarioRepository extends ClaseRepository implements UbiInventario
 			return false;
 		}
 		
-		$filas = $oDblSt->fetchAll(PDO::FETCH_ASSOC);
+		$filas =$stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
             $UbiInventario = new UbiInventario();
             $UbiInventario->setAllAttributes($aDatos);
@@ -143,12 +142,8 @@ class PgUbiInventarioRepository extends ClaseRepository implements UbiInventario
         $id_ubi = $UbiInventario->getIdUbiVo()->value();
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        if (($oDbl->exec("DELETE FROM $nom_tabla WHERE id_ubi = $id_ubi")) === false) {
-            $sClaveError = 'PgUbiInventarioRepository.eliminar';
-			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return false;
-        }
-        return TRUE;
+        $sql = "DELETE FROM $nom_tabla WHERE id_ubi = $id_ubi";
+ return $this->pdoExec( $oDbl, $sql, __METHOD__, __FILE__, __LINE__);
     }
 
 	
@@ -173,54 +168,26 @@ class PgUbiInventarioRepository extends ClaseRepository implements UbiInventario
             $update="
                     nom_ubi                  = :nom_ubi,
                     id_ubi_activ             = :id_ubi_activ";
-            if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_ubi = $id_ubi")) === false) {
-                $sClaveError = 'PgUbiInventarioRepository.update.prepare';
-                $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-                return false;
-            }
-            
-            try {
-                $oDblSt->execute($aDatos);
-            } catch ( PDOException $e) {
-                $err_txt=$e->errorInfo[2];
-                $this->setErrorTxt($err_txt);
-                $sClaveError = 'PgUbiInventarioRepository.update.execute';
-                $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
-                return false;
-            }
+            $sql = "UPDATE $nom_tabla SET $update WHERE id_ubi = $id_ubi";
+            $stmt = $this->pdoPrepare( $oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         } else {
-            // INSERT
+            //INSERT
             $aDatos['id_ubi'] = $UbiInventario->getIdUbiVo()->value();
             $campos="(id_ubi,nom_ubi,id_ubi_activ)";
-            $valores="(:id_ubi,:nom_ubi,:id_ubi_activ)";        
-            if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {
-                $sClaveError = 'PgUbiInventarioRepository.insertar.prepare';
-                $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-                return false;
-            }
-            try {
-                $oDblSt->execute($aDatos);
-            } catch ( PDOException $e) {
-                $err_txt=$e->errorInfo[2];
-                $this->setErrorTxt($err_txt);
-                $sClaveError = 'PgUbiInventarioRepository.insertar.execute';
-                $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
-                return false;
-            }
+            $valores="(:id_ubi,:nom_ubi,:id_ubi_activ)";
+            $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
+            $stmt = $this->pdoPrepare( $oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         }
-        return TRUE;
+        return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 	
     private function isNew(int $id_ubi): bool
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_ubi = $id_ubi")) === false) {
-			$sClaveError = 'PgUbiInventarioRepository.isNew';
-			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return false;
-        }
-        if (!$oDblSt->rowCount()) {
+        $sql = "SELECT * FROM $nom_tabla WHERE id_ubi = $id_ubi";
+        $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        if (!$stmt->rowCount()) {
             return TRUE;
         }
         return false;
@@ -238,13 +205,9 @@ class PgUbiInventarioRepository extends ClaseRepository implements UbiInventario
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_ubi = $id_ubi")) === false) {
-			$sClaveError = 'PgUbiInventarioRepository.getDatosById';
-			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return false;
-        }
-		$aDatos = $oDblSt->fetch(PDO::FETCH_ASSOC);
-        return $aDatos;
+        $sql = "SELECT * FROM $nom_tabla WHERE id_ubi = $id_ubi";
+        $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+		return $stmt->fetch(PDO::FETCH_ASSOC);
     }
     
 	

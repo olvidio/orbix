@@ -27,7 +27,7 @@ interface CertificadoEmitidoRepositoryInterface
 	 * @return array|false Una colección de objetos de tipo Certificado
 	
 	 */
-	public function getCertificados(array $aWhere=[], array $aOperators=[]):array|bool;
+	public function getCertificados(array $aWhere=[], array $aOperators=[]):array|false;
 	
 /* -------------------- ENTIDAD --------------------------------------------- */
 

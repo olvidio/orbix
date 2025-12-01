@@ -8,6 +8,7 @@ use core\Set;
 use PDO;
 use PDOException;
 
+use src\shared\traits\HandlesPdoErrors;
 use src\usuarios\domain\entity\PermMenu;
 use src\usuarios\domain\contracts\PermMenuRepositoryInterface;
 
@@ -22,6 +23,7 @@ use src\usuarios\domain\contracts\PermMenuRepositoryInterface;
  */
 class PgPermMenuRepository extends ClaseRepository implements PermMenuRepositoryInterface
 {
+    use HandlesPdoErrors;
     public function __construct()
     {
         $oDbl = $GLOBALS['oDBE'];
@@ -78,7 +80,7 @@ class PgPermMenuRepository extends ClaseRepository implements PermMenuRepository
 			return false;
 		}
 		
-		$filas = $oDblSt->fetchAll(PDO::FETCH_ASSOC);
+		$filas =$stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
             $PermMenu = new PermMenu();
             $PermMenu->setAllAttributes($aDatos);
@@ -94,12 +96,8 @@ class PgPermMenuRepository extends ClaseRepository implements PermMenuRepository
         $id_item = $PermMenu->getId_item();
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        if (($oDbl->exec("DELETE FROM $nom_tabla WHERE id_item = $id_item")) === false) {
-            $sClaveError = 'PgPermMenuRepository.eliminar';
-			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return false;
-        }
-        return TRUE;
+        $sql = "DELETE FROM $nom_tabla WHERE id_item = $id_item";
+ return $this->pdoExec( $oDbl, $sql, __METHOD__, __FILE__, __LINE__);
     }
 
 	
@@ -124,54 +122,26 @@ class PgPermMenuRepository extends ClaseRepository implements PermMenuRepository
 			$update="
 					id_usuario               = :id_usuario,
 					menu_perm                = :menu_perm";
-			if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_item = $id_item")) === false) {
-				$sClaveError = 'PgPermMenuRepository.update.prepare';
-				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-				return false;
-			}
-				
-            try {
-                $oDblSt->execute($aDatos);
-            } catch ( PDOException $e) {
-                $err_txt=$e->errorInfo[2];
-                $this->setErrorTxt($err_txt);
-                $sClaveError = 'PgPermMenuRepository.update.execute';
-                $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
-                return false;
-            }
+			$sql = "UPDATE $nom_tabla SET $update WHERE id_item = $id_item";
+			$stmt = $this->pdoPrepare( $oDbl, $sql, __METHOD__, __FILE__, __LINE__);
 		} else {
-			// INSERT
+			//INSERT
 			$aDatos['id_item'] = $PermMenu->getId_item();
 			$campos="(id_item,id_usuario,menu_perm)";
 			$valores="(:id_item,:id_usuario,:menu_perm)";		
-			if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {
-				$sClaveError = 'PgPermMenuRepository.insertar.prepare';
-				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-				return false;
-			}
-            try {
-                $oDblSt->execute($aDatos);
-            } catch ( PDOException $e) {
-                $err_txt=$e->errorInfo[2];
-                $this->setErrorTxt($err_txt);
-                $sClaveError = 'PgPermMenuRepository.insertar.execute';
-                $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
-                return false;
-			}
+			$sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
+			$stmt = $this->pdoPrepare( $oDbl, $sql, __METHOD__, __FILE__, __LINE__);
 		}
-		return TRUE;
+		return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
 	}
 	
     private function isNew(int $id_item): bool
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_item = $id_item")) === false) {
-			$sClaveError = 'PgPermMenuRepository.isNew';
-			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return false;
-        }
-        if (!$oDblSt->rowCount()) {
+        $sql = "SELECT * FROM $nom_tabla WHERE id_item = $id_item";
+        $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        if (!$stmt->rowCount()) {
             return TRUE;
         }
         return false;
@@ -189,13 +159,9 @@ class PgPermMenuRepository extends ClaseRepository implements PermMenuRepository
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
-        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_item = $id_item")) === false) {
-			$sClaveError = 'PgPermMenuRepository.getDatosById';
-			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return false;
-        }
-		$aDatos = $oDblSt->fetch(PDO::FETCH_ASSOC);
-        return $aDatos;
+        $sql = "SELECT * FROM $nom_tabla WHERE id_item = $id_item";
+        $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+		return $stmt->fetch(PDO::FETCH_ASSOC);
     }
     
 	

@@ -7,6 +7,7 @@ use core\Condicion;
 use core\Set;
 use PDO;
 use PDOException;
+use src\shared\traits\HandlesPdoErrors;
 use src\configuracion\domain\contracts\ModuloRepositoryInterface;
 use src\configuracion\domain\entity\Modulo;
 use function core\array_pgInteger2php;
@@ -23,6 +24,7 @@ use function core\array_php2pg;
  */
 class PgModuloRepository extends ClaseRepository implements ModuloRepositoryInterface
 {
+    use HandlesPdoErrors;
     public function __construct()
     {
         $oDbl = $GLOBALS['oDBPC'];
@@ -37,20 +39,15 @@ class PgModuloRepository extends ClaseRepository implements ModuloRepositoryInte
         $aOpciones = [];
 
         $sQuery = "SELECT id_mod, nom FROM $nom_tabla ORDER BY nom";
-        try {
-            $oDblSt = $oDbl->query($sQuery);
-            foreach ($oDbl->query($sQuery) as $aClave) {
-                $clave = $aClave[0];
-                $val = $aClave[1];
-                $aOpciones[$clave] = $val;
-            }
-        } catch (PDOException $e) {
-            $err_txt = $e->errorInfo[2];
-            $this->setErrorTxt($err_txt);
-            $sClaveError = 'PgModuloRepository.update.execute';
-            $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
+        $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
+        $stmt = $this->pdoPrepare($oDbl, $sQuery, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) { return []; }
+        if (!$this->pdoExecute($stmt, [], __METHOD__, __FILE__, __LINE__)) { return []; }
+        foreach ($stmt->fetchAll(PDO::FETCH_NUM) as $aClave) {
+            $clave = $aClave[0];
+            $val = $aClave[1];
+            $aOpciones[$clave] = $val;
         }
-
         return $aOpciones;
     }
 
@@ -111,18 +108,10 @@ class PgModuloRepository extends ClaseRepository implements ModuloRepositoryInte
             unset($aWhere['_limit']);
         }
         $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
-        if (($oDblSt = $oDbl->prepare($sQry)) === false) {
-            $sClaveError = 'PgModuloRepository.listar.prepare';
-            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return false;
-        }
-        if (($oDblSt->execute($aWhere)) === false) {
-            $sClaveError = 'PgModuloRepository.listar.execute';
-            $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
-            return false;
-        }
+        $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
+        $stmt = $this->prepareAndExecute( $oDbl, $sQry, $aWhere,__METHOD__, __FILE__, __LINE__);
 
-        $filas = $oDblSt->fetchAll(PDO::FETCH_ASSOC);
+        $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
             // para los array del postgres
             $aDatos['mods_req'] = array_pgInteger2php($aDatos['mods_req']);
@@ -141,12 +130,8 @@ class PgModuloRepository extends ClaseRepository implements ModuloRepositoryInte
         $id_mod = $Modulo->getIdModVo()->value();
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        if (($oDbl->exec("DELETE FROM $nom_tabla WHERE id_mod = $id_mod")) === false) {
-            $sClaveError = 'PgModuloRepository.eliminar';
-            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return false;
-        }
-        return TRUE;
+        $sql = "DELETE FROM $nom_tabla WHERE id_mod = $id_mod";
+        return $this->pdoExec($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
     }
 
     /**
@@ -174,40 +159,19 @@ class PgModuloRepository extends ClaseRepository implements ModuloRepositoryInte
 					descripcion              = :descripcion,
 					mods_req                 = :mods_req,
 					apps_req                 = :apps_req";
-            if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_mod = $id_mod")) === false) {
-                $sClaveError = 'PgModuloRepository.update.prepare';
-                $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-                return false;
-            }
-
-            try {
-                $oDblSt->execute($aDatos);
-            } catch (PDOException $e) {
-                $err_txt = $e->errorInfo[2];
-                $this->setErrorTxt($err_txt);
-                $sClaveError = 'PgModuloRepository.update.execute';
-                $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
-                return false;
-            }
+            $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
+            $stmt = $this->pdoPrepare($oDbl, "UPDATE $nom_tabla SET $update WHERE id_mod = $id_mod", __METHOD__, __FILE__, __LINE__);
+            if ($stmt === false) { return false; }
+            if (!$this->pdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__)) { return false; }
         } else {
             // INSERT
             $aDatos['id_mod'] = $Modulo->getIdModVo()->value();
             $campos = "(id_mod,nom,descripcion,mods_req,apps_req)";
             $valores = "(:id_mod,:nom,:descripcion,:mods_req,:apps_req)";
-            if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {
-                $sClaveError = 'PgModuloRepository.insertar.prepare';
-                $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-                return false;
-            }
-            try {
-                $oDblSt->execute($aDatos);
-            } catch (PDOException $e) {
-                $err_txt = $e->errorInfo[2];
-                $this->setErrorTxt($err_txt);
-                $sClaveError = 'PgModuloRepository.insertar.execute';
-                $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
-                return false;
-            }
+            $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
+            $stmt = $this->pdoPrepare($oDbl, "INSERT INTO $nom_tabla $campos VALUES $valores", __METHOD__, __FILE__, __LINE__);
+            if ($stmt === false) { return false; }
+            if (!$this->pdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__)) { return false; }
         }
         return TRUE;
     }
@@ -216,12 +180,9 @@ class PgModuloRepository extends ClaseRepository implements ModuloRepositoryInte
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_mod = $id_mod")) === false) {
-            $sClaveError = 'PgModuloRepository.isNew';
-            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return false;
-        }
-        if (!$oDblSt->rowCount()) {
+        $sql = "SELECT * FROM $nom_tabla WHERE id_mod = $id_mod";
+        $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        if (!$stmt->rowCount()) {
             return TRUE;
         }
         return false;
@@ -238,11 +199,8 @@ class PgModuloRepository extends ClaseRepository implements ModuloRepositoryInte
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_mod = $id_mod")) === false) {
-            $sClaveError = 'PgModuloRepository.getDatosById';
-            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return false;
-        }
+        $sql = "SELECT * FROM $nom_tabla WHERE id_mod = $id_mod";
+        $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         $aDatos = $oDblSt->fetch(PDO::FETCH_ASSOC);
         // para los array del postgres
         if ($aDatos !== false) {

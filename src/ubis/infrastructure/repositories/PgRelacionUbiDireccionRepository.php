@@ -4,6 +4,7 @@ namespace src\ubis\infrastructure\repositories;
 
 use core\ClaseRepository;
 use PDO;
+use src\shared\traits\HandlesPdoErrors;
 use src\ubis\domain\contracts\RelacionUbiDireccionRepositoryInterface;
 
 /**
@@ -12,6 +13,7 @@ use src\ubis\domain\contracts\RelacionUbiDireccionRepositoryInterface;
  */
 class PgRelacionUbiDireccionRepository extends ClaseRepository  implements RelacionUbiDireccionRepositoryInterface
 {
+    use HandlesPdoErrors;
     public function __construct()
     {
         $oDbl = $GLOBALS['oDBPC'];
@@ -33,10 +35,11 @@ class PgRelacionUbiDireccionRepository extends ClaseRepository  implements Relac
                 FROM $nom_tabla 
                 WHERE id_ubi = :id_ubi
                 ORDER BY principal DESC, propietario DESC";
-
-        $stmt = $oDbl->prepare($sql);
+        $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
+        $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) { return []; }
         $stmt->bindValue(':id_ubi', $id_ubi, \PDO::PARAM_INT);
-        $stmt->execute();
+        if (!$this->pdoExecute($stmt, [], __METHOD__, __FILE__, __LINE__)) { return []; }
 
         return $stmt->fetchAll(\PDO::FETCH_ASSOC);
     }
@@ -50,8 +53,9 @@ class PgRelacionUbiDireccionRepository extends ClaseRepository  implements Relac
                 VALUES (:id_ubi, :id_direccion, :principal)
                 ON CONFLICT (id_ubi, id_direccion)
                 DO UPDATE SET principal = :principal";
-
-        $stmt = $oDbl->prepare($sql);
+        $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
+        $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) { return false; }
         $stmt->bindValue(':id_ubi', $id_ubi, PDO::PARAM_INT);
         $stmt->bindValue(':id_direccion', $id_direccion, PDO::PARAM_INT);
         if ($principal === null) {
@@ -59,8 +63,7 @@ class PgRelacionUbiDireccionRepository extends ClaseRepository  implements Relac
         } else {
             $stmt->bindValue(':principal', $principal, PDO::PARAM_BOOL);
         }
-
-        return $stmt->execute();
+        return $this->pdoExecute($stmt, [], __METHOD__, __FILE__, __LINE__);
     }
 
     /** Desasocia una dirección de una casa */
@@ -70,12 +73,12 @@ class PgRelacionUbiDireccionRepository extends ClaseRepository  implements Relac
         $nom_tabla = $this->getNomTabla();
         $sql = "DELETE FROM $nom_tabla
                 WHERE id_ubi = :id_ubi AND id_direccion = :id_direccion";
-
-        $stmt = $oDbl->prepare($sql);
+        $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
+        $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) { return false; }
         $stmt->bindValue(':id_ubi', $id_ubi, PDO::PARAM_INT);
         $stmt->bindValue(':id_direccion', $id_direccion, PDO::PARAM_INT);
-
-        return $stmt->execute();
+        return $this->pdoExecute($stmt, [], __METHOD__, __FILE__, __LINE__);
     }
 
     /** Obtiene todos los IDs de direcciones asociadas a una casa */
@@ -87,10 +90,11 @@ class PgRelacionUbiDireccionRepository extends ClaseRepository  implements Relac
                 FROM $nom_tabla
                 WHERE id_ubi = :id_ubi
                 ORDER BY principal DESC NULLS LAST";
-
-        $stmt = $oDbl->prepare($sql);
+        $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
+        $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) { return []; }
         $stmt->bindValue(':id_ubi', $id_ubi, PDO::PARAM_INT);
-        $stmt->execute();
+        if (!$this->pdoExecute($stmt, [], __METHOD__, __FILE__, __LINE__)) { return []; }
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
@@ -103,10 +107,11 @@ class PgRelacionUbiDireccionRepository extends ClaseRepository  implements Relac
         $sql = "SELECT id_ubi, principal
                 FROM $nom_tabla
                 WHERE id_direccion = :id_direccion";
-
-        $stmt = $oDbl->prepare($sql);
+        $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
+        $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) { return []; }
         $stmt->bindValue(':id_direccion', $id_direccion, PDO::PARAM_INT);
-        $stmt->execute();
+        if (!$this->pdoExecute($stmt, [], __METHOD__, __FILE__, __LINE__)) { return []; }
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }

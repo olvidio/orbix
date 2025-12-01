@@ -8,6 +8,7 @@ use core\ConfigGlobal;
 use core\Set;
 use PDO;
 use PDOException;
+use src\shared\traits\HandlesPdoErrors;
 
 use src\ubis\domain\entity\CentroEx;
 use src\ubis\domain\contracts\CentroExRepositoryInterface;
@@ -28,6 +29,7 @@ use core\ConverterDate;
  */
 class PgCentroExRepository extends ClaseRepository implements CentroExRepositoryInterface
 {
+    use HandlesPdoErrors;
     public function __construct()
     {
         $oDbl = $GLOBALS['oDBR'];
@@ -41,17 +43,13 @@ class PgCentroExRepository extends ClaseRepository implements CentroExRepository
         $nom_tabla = $this->getNomTabla();
         $orden = 'nombre_ubi';
         if (empty($sCondicion)) $sCondicion = "WHERE status = 't'";
-        $sQuery = "SELECT id_ubi, nombre_ubi
-				FROM $nom_tabla
-				$sCondicion
-				ORDER BY $orden";
-        if (($oDblSt = $oDbl->query($sQuery)) === false) {
-            $sClauError = 'GestorCentro.lista';
-            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
-            return false;
-        }
+        $sQuery = "SELECT id_ubi, nombre_ubi FROM $nom_tabla $sCondicion ORDER BY $orden";
+        $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
+        $stmt = $this->pdoPrepare($oDbl, $sQuery, __METHOD__, __FILE__, __LINE__);
+        if ($stmt === false) { return []; }
+        if (!$this->pdoExecute($stmt, [], __METHOD__, __FILE__, __LINE__)) { return []; }
         $aCentros = [];
-        foreach ($oDbl->query($sQuery) as $row) {
+        foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $row) {
             $id_ubi = $row['id_ubi'];
             $nombre_ubi = $row['nombre_ubi'];
 
@@ -96,18 +94,12 @@ class PgCentroExRepository extends ClaseRepository implements CentroExRepository
 		if (isset($aWhere['_limit']) && $aWhere['_limit'] !== '') { $sLimit = ' LIMIT '.$aWhere['_limit']; }
 		if (isset($aWhere['_limit'])) { unset($aWhere['_limit']); }
 		$sQry = "SELECT * FROM $nom_tabla ".$sCondicion.$sOrdre.$sLimit;
-		if (($oDblSt = $oDbl->prepare($sQry)) === false) {
-			$sClaveError = 'PgCentroExRepository.listar.prepare';
-			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-			return false;
-		}
-		if (($oDblSt->execute($aWhere)) === false) {
-			$sClaveError = 'PgCentroExRepository.listar.execute';
-			$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
-			return false;
-		}
+		$sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
+		$stmt = $this->pdoPrepare($oDbl, $sQry, __METHOD__, __FILE__, __LINE__);
+		if ($stmt === false) { return false; }
+		if (!$this->pdoExecute($stmt, $aWhere, __METHOD__, __FILE__, __LINE__)) { return false; }
 		
-		$filas = $oDblSt->fetchAll(PDO::FETCH_ASSOC);
+		$filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
 			// para las fechas del postgres (texto iso)
 			$aDatos['f_status'] = (new ConverterDate('date', $aDatos['f_status']))->fromPg();
@@ -125,12 +117,8 @@ class PgCentroExRepository extends ClaseRepository implements CentroExRepository
         $id_ubi = $CentroEx->getId_ubi();
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        if (($oDbl->exec("DELETE FROM $nom_tabla WHERE id_ubi = $id_ubi")) === false) {
-            $sClaveError = 'PgCentroExRepository.eliminar';
-			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return false;
-        }
-        return TRUE;
+        $sql = "DELETE FROM $nom_tabla WHERE id_ubi = $id_ubi";
+ return $this->pdoExec( $oDbl, $sql, __METHOD__, __FILE__, __LINE__);
     }
 
 	
@@ -183,11 +171,8 @@ class PgCentroExRepository extends ClaseRepository implements CentroExRepository
 					tipo_labor               = :tipo_labor,
 					cdc                      = :cdc,
 					id_ctr_padre             = :id_ctr_padre";
-			if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_ubi = $id_ubi")) === false) {
-				$sClaveError = 'PgCentroExRepository.update.prepare';
-				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-				return false;
-			}
+			$sql = "UPDATE $nom_tabla SET $update WHERE id_ubi = $id_ubi";
+			$stmt = $this->pdoPrepare( $oDbl, $sql, __METHOD__, __FILE__, __LINE__);
 				
             try {
                 $oDblSt->execute($aDatos);
@@ -203,11 +188,8 @@ class PgCentroExRepository extends ClaseRepository implements CentroExRepository
 			$aDatos['id_ubi'] = $CentroEx->getId_ubi();
 			$campos="(tipo_ubi,id_ubi,nombre_ubi,dl,pais,region,status,f_status,sv,sf,tipo_ctr,tipo_labor,cdc,id_ctr_padre,id_auto)";
 			$valores="(:tipo_ubi,:id_ubi,:nombre_ubi,:dl,:pais,:region,:status,:f_status,:sv,:sf,:tipo_ctr,:tipo_labor,:cdc,:id_ctr_padre,:id_auto)";		
-			if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {
-				$sClaveError = 'PgCentroExRepository.insertar.prepare';
-				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-				return false;
-			}
+			$sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
+			$stmt = $this->pdoPrepare( $oDbl, $sql, __METHOD__, __FILE__, __LINE__);
             try {
                 $oDblSt->execute($aDatos);
             } catch ( PDOException $e) {
@@ -225,12 +207,9 @@ class PgCentroExRepository extends ClaseRepository implements CentroExRepository
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_ubi = $id_ubi")) === false) {
-			$sClaveError = 'PgCentroExRepository.isNew';
-			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return false;
-        }
-        if (!$oDblSt->rowCount()) {
+        $sql = "SELECT * FROM $nom_tabla WHERE id_ubi = $id_ubi";
+        $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        if (!$stmt->rowCount()) {
             return TRUE;
         }
         return false;
@@ -248,11 +227,8 @@ class PgCentroExRepository extends ClaseRepository implements CentroExRepository
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_ubi = $id_ubi")) === false) {
-			$sClaveError = 'PgCentroExRepository.getDatosById';
-			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return false;
-        }
+        $sql = "SELECT * FROM $nom_tabla WHERE id_ubi = $id_ubi";
+        $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
 		$aDatos = $oDblSt->fetch(PDO::FETCH_ASSOC);
 		// para las fechas del postgres (texto iso)
 		if ($aDatos !== false) {

@@ -7,6 +7,7 @@ use core\Condicion;
 use core\Set;
 use PDO;
 use PDOException;
+use src\shared\traits\HandlesPdoErrors;
 
 use src\ubis\domain\entity\Region;
 use src\ubis\domain\contracts\RegionRepositoryInterface;
@@ -23,6 +24,7 @@ use function core\is_true;
  */
 class PgRegionRepository extends ClaseRepository implements RegionRepositoryInterface
 {
+    use HandlesPdoErrors;
     public function __construct()
     {
         $oDbl = $GLOBALS['oDBPC'];
@@ -68,18 +70,12 @@ class PgRegionRepository extends ClaseRepository implements RegionRepositoryInte
 		if (isset($aWhere['_limit']) && $aWhere['_limit'] !== '') { $sLimit = ' LIMIT '.$aWhere['_limit']; }
 		if (isset($aWhere['_limit'])) { unset($aWhere['_limit']); }
 		$sQry = "SELECT * FROM $nom_tabla ".$sCondicion.$sOrdre.$sLimit;
-		if (($oDblSt = $oDbl->prepare($sQry)) === false) {
-			$sClaveError = 'PgRegionRepository.listar.prepare';
-			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-			return false;
-		}
-		if (($oDblSt->execute($aWhere)) === false) {
-			$sClaveError = 'PgRegionRepository.listar.execute';
-			$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
-			return false;
-		}
+		$sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
+		$stmt = $this->pdoPrepare($oDbl, $sQry, __METHOD__, __FILE__, __LINE__);
+		if ($stmt === false) { return false; }
+		if (!$this->pdoExecute($stmt, $aWhere, __METHOD__, __FILE__, __LINE__)) { return false; }
 		
-		$filas = $oDblSt->fetchAll(PDO::FETCH_ASSOC);
+		$filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
             $Region = new Region();
             $Region->setAllAttributes($aDatos);
@@ -95,12 +91,8 @@ class PgRegionRepository extends ClaseRepository implements RegionRepositoryInte
         $region = $Region->getRegionVo()?->value() ?? '';
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        if (($oDbl->exec("DELETE FROM $nom_tabla WHERE region = '$region'")) === false) {
-            $sClaveError = 'PgRegionRepository.eliminar';
-			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return false;
-        }
-        return TRUE;
+        $sql = "DELETE FROM $nom_tabla WHERE region = '$region'";
+        return $this->pdoExec($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
     }
 
 	
@@ -129,40 +121,19 @@ class PgRegionRepository extends ClaseRepository implements RegionRepositoryInte
 					region                   = :region,
 					nombre_region            = :nombre_region,
 					status                   = :status";
-			if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE id_region = $id_region ")) === false) {
-				$sClaveError = 'PgRegionRepository.update.prepare';
-				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-				return false;
-			}
-				
-            try {
-                $oDblSt->execute($aDatos);
-            } catch ( PDOException $e) {
-                $err_txt=$e->errorInfo[2];
-                $this->setErrorTxt($err_txt);
-                $sClaveError = 'PgRegionRepository.update.execute';
-                $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
-                return false;
-            }
+			$sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
+			$stmt = $this->pdoPrepare($oDbl, "UPDATE $nom_tabla SET $update WHERE id_region = $id_region ", __METHOD__, __FILE__, __LINE__);
+			if ($stmt === false) { return false; }
+			if (!$this->pdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__)) { return false; }
 		} else {
 			// INSERT
-   $aDatos['id_region'] = $Region->getIdRegionVo()?->value();
+	  $aDatos['id_region'] = $Region->getIdRegionVo()?->value();
 			$campos="(id_region,region,nombre_region,status)";
-			$valores="(:id_region,:region,:nombre_region,:status)";		
-			if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {
-				$sClaveError = 'PgRegionRepository.insertar.prepare';
-				$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-				return false;
-			}
-            try {
-                $oDblSt->execute($aDatos);
-            } catch ( PDOException $e) {
-                $err_txt=$e->errorInfo[2];
-                $this->setErrorTxt($err_txt);
-                $sClaveError = 'PgRegionRepository.insertar.execute';
-                $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
-                return false;
-			}
+			$valores="(:id_region,:region,:nombre_region,:status)";
+			$sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
+			$stmt = $this->pdoPrepare($oDbl, "INSERT INTO $nom_tabla $campos VALUES $valores", __METHOD__, __FILE__, __LINE__);
+			if ($stmt === false) { return false; }
+			if (!$this->pdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__)) { return false; }
 		}
 		return TRUE;
 	}
@@ -171,12 +142,9 @@ class PgRegionRepository extends ClaseRepository implements RegionRepositoryInte
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_region = $id_region ")) === false) {
-			$sClaveError = 'PgRegionRepository.isNew';
-			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return false;
-        }
-        if (!$oDblSt->rowCount()) {
+        $sql = "SELECT * FROM $nom_tabla WHERE id_region = $id_region ";
+        $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        if (!$stmt->rowCount()) {
             return TRUE;
         }
         return false;
@@ -186,13 +154,10 @@ class PgRegionRepository extends ClaseRepository implements RegionRepositoryInte
     {
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
-        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE id_region = $id_region ")) === false) {
-			$sClaveError = 'PgRegionRepository.getDatosById';
-			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return false;
-        }
-		$aDatos = $oDblSt->fetch(PDO::FETCH_ASSOC);
-        return $aDatos;
+        $sql = "SELECT * FROM $nom_tabla WHERE id_region = $id_region ";
+        $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+		return $stmt->fetch(PDO::FETCH_ASSOC);
+
     }
     
 	

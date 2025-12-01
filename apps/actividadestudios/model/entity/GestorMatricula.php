@@ -169,7 +169,7 @@ class GestorMatricula extends ClaseGestor
         return $oMatriculaSet->getTot();
     }
 
-    public function getMatriculasOtroStgr(false|array $a_IdActividades)
+    public function getMatriculasOtroStgr(array|false $a_IdActividades)
     {
         $oDbl = $this->getoDbl();
         $str_actividades = implode(', ', $a_IdActividades);

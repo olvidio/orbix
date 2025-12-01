@@ -903,6 +903,7 @@ use PDOException;
 $txt_pgRepositorio .= "
 use src\\$grupo\\domain\\entity\\$Q_clase;
 use src\\$grupo\\domain\\contracts\\$clase_interface;
+use src\\shared\\traits\\HandlesPdoErrors;
 ";
 
 $use_txt = '';
@@ -925,6 +926,7 @@ class $pg_clase extends ClaseRepository implements $clase_interface
 {";
 
 $txt_pgRepositorio .= '
+    use HandlesPdoErrors;
     public function __construct()
     {
         $oDbl = $GLOBALS[\'' . $oDB_txt . '\'];
@@ -1030,18 +1032,9 @@ $txt_pgRepositorio .= "\n\t\t" . '$sCondicion = implode(\' AND \',$aCondicion);
 		if (isset($aWhere[\'_limit\']) && $aWhere[\'_limit\'] !== \'\') { $sLimit = \' LIMIT \'.$aWhere[\'_limit\']; }
 		if (isset($aWhere[\'_limit\'])) { unset($aWhere[\'_limit\']); }
 		$sQry = "SELECT * FROM $nom_tabla ".$sCondicion.$sOrdre.$sLimit;
-		if (($oDblSt = $oDbl->prepare($sQry)) === false) {
-			$sClaveError = \'' . $pg_clase . '.listar.prepare\';
-			$_SESSION[\'oGestorErrores\']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-			return false;
-		}
-		if (($oDblSt->execute($aWhere)) === false) {
-			$sClaveError = \'' . $pg_clase . '.listar.execute\';
-			$_SESSION[\'oGestorErrores\']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
-			return false;
-		}
+		$stmt = $this->prepareAndExecute( $oDbl, $sQry, $aWhere,__METHOD__, __FILE__, __LINE__);
 		
-		$filas = $oDblSt->fetchAll(PDO::FETCH_ASSOC);
+		$filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {';
 
 if (!empty($bytea_dades)) {
@@ -1096,12 +1089,8 @@ $txt_pgRepositorio .= 'public function Eliminar(' . $Q_clase . ' $' . $Q_clase .
         ' . $getClau . '
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        if (($oDbl->exec("DELETE FROM $nom_tabla WHERE ' . $where . '")) === false) {
-            $sClaveError = \'' . $pg_clase . '.eliminar\';
-			$_SESSION[\'oGestorErrores\']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return false;
-        }
-        return TRUE;
+        $sql = "DELETE FROM $nom_tabla WHERE ' . $where . '";
+        return $this->pdoExec( $oDbl, $sql, __METHOD__, __FILE__, __LINE__);
     }
 ';
 
@@ -1212,21 +1201,8 @@ $txt_pgRepositorio .= "\n\n\t\t" . 'if ($bInsert === false) {
 ';
 $txt_pgRepositorio .= $update . '";';
 $txt_pgRepositorio .= '
-			if (($oDblSt = $oDbl->prepare("UPDATE $nom_tabla SET $update WHERE ' . $where . '")) === false) {
-				$sClaveError = \'' . $pg_clase . '.update.prepare\';
-				$_SESSION[\'oGestorErrores\']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-				return false;
-			}
-				
-            try {
-                $oDblSt->execute($aDatos);
-            } catch ( PDOException $e) {
-                $err_txt=$e->errorInfo[2];
-                $this->setErrorTxt($err_txt);
-                $sClaveError = \'' . $pg_clase . '.update.execute\';
-                $_SESSION[\'oGestorErrores\']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
-                return false;
-            }
+			$sql = "UPDATE $nom_tabla SET $update WHERE ' . $where . '";
+            stmt = $this->pdoPrepare( $oDbl, $sql, __METHOD__, __FILE__, __LINE__);
 		} else {
 			// INSERT';
 foreach ($a_add_campos as $add_campo) {
@@ -1236,23 +1212,12 @@ $txt_pgRepositorio .= "\n\t\t\t" . '$campos="(';
 $txt_pgRepositorio .= $campos . ')";' . "\n";
 $txt_pgRepositorio .= "\t\t\t" . '$valores="(';
 $txt_pgRepositorio .= $valores . ')";';
-$txt_pgRepositorio .= '		
-			if (($oDblSt = $oDbl->prepare("INSERT INTO $nom_tabla $campos VALUES $valores")) === false) {
-				$sClaveError = \'' . $pg_clase . '.insertar.prepare\';
-				$_SESSION[\'oGestorErrores\']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-				return false;
-			}
-            try {
-                $oDblSt->execute($aDatos);
-            } catch ( PDOException $e) {
-                $err_txt=$e->errorInfo[2];
-                $this->setErrorTxt($err_txt);
-                $sClaveError = \'' . $pg_clase . '.insertar.execute\';
-                $_SESSION[\'oGestorErrores\']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
-                return false;
-			}';
+$txt_pgRepositorio .= '
+            $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
+            stmt = $this->pdoPrepare( $oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+            }';
 $txt_pgRepositorio .= "\n\t\t" . '}
-		return TRUE;
+        return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
 	}';
 
 $txt_pgRepositorio .= "\n\t";
@@ -1261,12 +1226,9 @@ $txt_pgRepositorio .= '
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE ' . $where . '")) === false) {
-			$sClaveError = \'' . $pg_clase . '.isNew\';
-			$_SESSION[\'oGestorErrores\']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return false;
-        }
-        if (!$oDblSt->rowCount()) {
+        $sql = "SELECT * FROM $nom_tabla WHERE ' . $where . '";
+        $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        if (!$stmt->rowCount()) { 
             return TRUE;
         }
         return false;
@@ -1334,17 +1296,15 @@ if ($Q_db === 'sv-e' || $Q_db === 'comun') {
 }
 $txt_pgRepositorio .= '
         $nom_tabla = $this->getNomTabla();
-        if (($oDblSt = $oDbl->query("SELECT * FROM $nom_tabla WHERE ' . $where . '")) === false) {
-			$sClaveError = \'' . $pg_clase . '.getDatosById\';
-			$_SESSION[\'oGestorErrores\']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return false;
-        }';
+        $sql = "SELECT * FROM $nom_tabla WHERE ' . $where . '";
+        $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        ';
 
 if (!empty($bytea_bind)) {
     $txt_pgRepositorio .= "\n\t\t" . '// para los bytea, sobre escribo los valores:';
     $txt_pgRepositorio .= $bytea_bind;
 } else {
-    $txt_pgRepositorio .= "\n\t\t" . '$aDatos = $oDblSt->fetch(PDO::FETCH_ASSOC);';
+    $txt_pgRepositorio .= "\n\t\t" . '$aDatos = $stmt->fetch(PDO::FETCH_ASSOC);';
 }
 
 if (!empty($array_dades)) {
