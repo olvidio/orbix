@@ -6,12 +6,11 @@ use core\ClaseRepository;
 use core\Condicion;
 use core\Set;
 use PDO;
-use PDOException;
-
-use src\actividadcargos\domain\entity\Cargo;
 use src\actividadcargos\domain\contracts\CargoRepositoryInterface;
-
+use src\actividadcargos\domain\entity\Cargo;
+use src\shared\traits\HandlesPdoErrors;
 use function core\is_true;
+
 /**
  * Clase que adapta la tabla xd_orden_cargo a la interfaz del repositorio
  *
@@ -23,12 +22,14 @@ use function core\is_true;
  */
 class PgCargoRepository extends ClaseRepository implements CargoRepositoryInterface
 {
+    use HandlesPdoErrors;
+
     public function __construct()
     {
         $oDbl = $GLOBALS['oDBPC'];
-        $this->setoDbl($oDbl); 
+        $this->setoDbl($oDbl);
         $oDbl_Select = $GLOBALS['oDBPC_Select'];
-        $this->setoDbl_select($oDbl_Select); 
+        $this->setoDbl_select($oDbl_Select);
         $this->setNomTabla('xd_orden_cargo');
     }
 
@@ -57,136 +58,136 @@ class PgCargoRepository extends ClaseRepository implements CargoRepositoryInterf
 
     }
 
-/* -------------------- GESTOR BASE ---------------------------------------- */
+    /* -------------------- GESTOR BASE ---------------------------------------- */
 
-	/**
-	 * devuelve una colección (array) de objetos de tipo Cargo
-	 *
-	 * @param array $aWhere asociativo con los valores para cada campo de la BD.
-	 * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-	 * @return array|false Una colección de objetos de tipo Cargo
-	
-	 */
-	public function getCargos(array $aWhere=[], array $aOperators=[]): array|false
-	{
+    /**
+     * devuelve una colección (array) de objetos de tipo Cargo
+     *
+     * @param array $aWhere asociativo con los valores para cada campo de la BD.
+     * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
+     * @return array|false Una colección de objetos de tipo Cargo
+     */
+    public function getCargos(array $aWhere = [], array $aOperators = []): array|false
+    {
         $oDbl = $this->getoDbl_Select();
-		$nom_tabla = $this->getNomTabla();
-		$CargoSet = new Set();
-		$oCondicion = new Condicion();
-		$aCondicion = [];
-		foreach ($aWhere as $camp => $val) {
-			if ($camp === '_ordre') { continue; }
-			if ($camp === '_limit') { continue; }
-			$sOperador = $aOperators[$camp] ?? '';
-			if ($a = $oCondicion->getCondicion($camp,$sOperador,$val)) { $aCondicion[]=$a; }
-			// operadores que no requieren valores
-			if ($sOperador === 'BETWEEN' || $sOperador === 'IS NULL' || $sOperador === 'IS NOT NULL' || $sOperador === 'OR') { unset($aWhere[$camp]); }
-            if ($sOperador === 'IN' || $sOperador === 'NOT IN') { unset($aWhere[$camp]); }
-            if ($sOperador === 'TXT') { unset($aWhere[$camp]); }
-		}
-		$sCondicion = implode(' AND ',$aCondicion);
-		if ($sCondicion !=='') { $sCondicion = " WHERE ".$sCondicion; }
-		$sOrdre = '';
+        $nom_tabla = $this->getNomTabla();
+        $CargoSet = new Set();
+        $oCondicion = new Condicion();
+        $aCondicion = [];
+        foreach ($aWhere as $camp => $val) {
+            if ($camp === '_ordre') {
+                continue;
+            }
+            if ($camp === '_limit') {
+                continue;
+            }
+            $sOperador = $aOperators[$camp] ?? '';
+            if ($a = $oCondicion->getCondicion($camp, $sOperador, $val)) {
+                $aCondicion[] = $a;
+            }
+            // operadores que no requieren valores
+            if ($sOperador === 'BETWEEN' || $sOperador === 'IS NULL' || $sOperador === 'IS NOT NULL' || $sOperador === 'OR') {
+                unset($aWhere[$camp]);
+            }
+            if ($sOperador === 'IN' || $sOperador === 'NOT IN') {
+                unset($aWhere[$camp]);
+            }
+            if ($sOperador === 'TXT') {
+                unset($aWhere[$camp]);
+            }
+        }
+        $sCondicion = implode(' AND ', $aCondicion);
+        if ($sCondicion !== '') {
+            $sCondicion = " WHERE " . $sCondicion;
+        }
+        $sOrdre = '';
         $sLimit = '';
-		if (isset($aWhere['_ordre']) && $aWhere['_ordre'] !== '') { $sOrdre = ' ORDER BY '.$aWhere['_ordre']; }
-		if (isset($aWhere['_ordre'])) { unset($aWhere['_ordre']); }
-		if (isset($aWhere['_limit']) && $aWhere['_limit'] !== '') { $sLimit = ' LIMIT '.$aWhere['_limit']; }
-		if (isset($aWhere['_limit'])) { unset($aWhere['_limit']); }
-		$sQry = "SELECT * FROM $nom_tabla ".$sCondicion.$sOrdre.$sLimit;
-		if (($oDblSt = $oDbl->prepare($sQry)) === false) {
-			$sClaveError = 'PgCargoRepository.listar.prepare';
-			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-			return false;
-		}
-		if (($oDblSt->execute($aWhere)) === false) {
-			$sClaveError = 'PgCargoRepository.listar.execute';
-			$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
-			return false;
-		}
-		
-		$filas =$stmt->fetchAll(PDO::FETCH_ASSOC);
+        if (isset($aWhere['_ordre']) && $aWhere['_ordre'] !== '') {
+            $sOrdre = ' ORDER BY ' . $aWhere['_ordre'];
+        }
+        if (isset($aWhere['_ordre'])) {
+            unset($aWhere['_ordre']);
+        }
+        if (isset($aWhere['_limit']) && $aWhere['_limit'] !== '') {
+            $sLimit = ' LIMIT ' . $aWhere['_limit'];
+        }
+        if (isset($aWhere['_limit'])) {
+            unset($aWhere['_limit']);
+        }
+        $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
+        $stmt = $this->prepareAndExecute($oDbl, $sQry, $aWhere,__METHOD__, __FILE__, __LINE__);
+
+        $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
             $Cargo = new Cargo();
             $Cargo->setAllAttributes($aDatos);
-			$CargoSet->add($Cargo);
-		}
-		return $CargoSet->getTot();
-	}
+            $CargoSet->add($Cargo);
+        }
+        return $CargoSet->getTot();
+    }
 
-/* -------------------- ENTIDAD --------------------------------------------- */
+    /* -------------------- ENTIDAD --------------------------------------------- */
 
-	public function Eliminar(Cargo $Cargo): bool
+    public function Eliminar(Cargo $Cargo): bool
     {
         $id_cargo = $Cargo->getId_cargo();
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         $sql = "DELETE FROM $nom_tabla WHERE id_cargo = $id_cargo";
- return $this->pdoExec( $oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        return $this->pdoExec($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
     }
 
-	
-	/**
-	 * Si no existe el registro, hace un insert, si existe, se hace el update.
-	
-	 */
-	public function Guardar(Cargo $Cargo): bool
+
+    /**
+     * Si no existe el registro, hace un insert, si existe, se hace el update.
+     */
+    public function Guardar(Cargo $Cargo): bool
     {
         $id_cargo = $Cargo->getId_cargo();
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         $bInsert = $this->isNew($id_cargo);
 
-		$aDatos = [];
-		$aDatos['cargo'] = $Cargo->getCargoVo()->value();
-		$aDatos['orden_cargo'] = $Cargo->getOrdenCargoVo()?->value();
-		$aDatos['sf'] = $Cargo->isSf();
-		$aDatos['sv'] = $Cargo->isSv();
-		$aDatos['tipo_cargo'] = $Cargo->getTipoCargoVo()?->value();
-		array_walk($aDatos, 'core\poner_null');
-		//para el caso de los boolean false, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
-		if ( is_true($aDatos['sf']) ) { $aDatos['sf']='true'; } else { $aDatos['sf']='false'; }
-		if ( is_true($aDatos['sv']) ) { $aDatos['sv']='true'; } else { $aDatos['sv']='false'; }
+        $aDatos = [];
+        $aDatos['cargo'] = $Cargo->getCargoVo()->value();
+        $aDatos['orden_cargo'] = $Cargo->getOrdenCargoVo()?->value();
+        $aDatos['sf'] = $Cargo->isSf();
+        $aDatos['sv'] = $Cargo->isSv();
+        $aDatos['tipo_cargo'] = $Cargo->getTipoCargoVo()?->value();
+        array_walk($aDatos, 'core\poner_null');
+        //para el caso de los boolean false, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
+        if (is_true($aDatos['sf'])) {
+            $aDatos['sf'] = 'true';
+        } else {
+            $aDatos['sf'] = 'false';
+        }
+        if (is_true($aDatos['sv'])) {
+            $aDatos['sv'] = 'true';
+        } else {
+            $aDatos['sv'] = 'false';
+        }
 
-		if ($bInsert === false) {
-			//UPDATE
-			$update="
+        if ($bInsert === false) {
+            //UPDATE
+            $update = "
 					cargo                    = :cargo,
 					orden_cargo              = :orden_cargo,
 					sf                       = :sf,
 					sv                       = :sv,
 					tipo_cargo               = :tipo_cargo";
-			$sql = "UPDATE $nom_tabla SET $update WHERE id_cargo = $id_cargo";
-			$stmt = $this->pdoPrepare( $oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-				
-            try {
-                $oDblSt->execute($aDatos);
-            } catch ( PDOException $e) {
-                $err_txt=$e->errorInfo[2];
-                $this->setErrorTxt($err_txt);
-                $sClaveError = 'PgCargoRepository.update.execute';
-                $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
-                return false;
-            }
-		} else {
-			// INSERT
-			$aDatos['id_cargo'] = $Cargo->getId_cargo();
-			$campos="(id_cargo,cargo,orden_cargo,sf,sv,tipo_cargo)";
-			$valores="(:id_cargo,:cargo,:orden_cargo,:sf,:sv,:tipo_cargo)";		
-			$sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
-			$stmt = $this->pdoPrepare( $oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-            try {
-                $oDblSt->execute($aDatos);
-            } catch ( PDOException $e) {
-                $err_txt=$e->errorInfo[2];
-                $this->setErrorTxt($err_txt);
-                $sClaveError = 'PgCargoRepository.insertar.execute';
-                $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
-                return false;
-			}
-		}
-		return TRUE;
-	}
-	
+            $sql = "UPDATE $nom_tabla SET $update WHERE id_cargo = $id_cargo";
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        } else {
+            //INSERT
+            $aDatos['id_cargo'] = $Cargo->getId_cargo();
+            $campos = "(id_cargo,cargo,orden_cargo,sf,sv,tipo_cargo)";
+            $valores = "(:id_cargo,:cargo,:orden_cargo,:sf,:sv,:tipo_cargo)";
+            $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        }
+        return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
+    }
+
     private function isNew(int $id_cargo): bool
     {
         $oDbl = $this->getoDbl();
@@ -198,14 +199,13 @@ class PgCargoRepository extends ClaseRepository implements CargoRepositoryInterf
         }
         return false;
     }
-	
+
     /**
      * Devuelve los campos de la base de datos en un array asociativo.
      * Devuelve false si no existe la fila en la base de datos
-     * 
+     *
      * @param int $id_cargo
      * @return array|bool
-	
      */
     public function datosById(int $id_cargo): array|bool
     {
@@ -213,14 +213,13 @@ class PgCargoRepository extends ClaseRepository implements CargoRepositoryInterf
         $nom_tabla = $this->getNomTabla();
         $sql = "SELECT * FROM $nom_tabla WHERE id_cargo = $id_cargo";
         $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-		return $stmt->fetch(PDO::FETCH_ASSOC);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
 
     }
-    
-	
+
+
     /**
      * Busca la clase con id_cargo en la base de datos .
-	
      */
     public function findById(int $id_cargo): ?Cargo
     {
@@ -230,7 +229,7 @@ class PgCargoRepository extends ClaseRepository implements CargoRepositoryInterf
         }
         return (new Cargo())->setAllAttributes($aDatos);
     }
-	
+
     public function getNewId()
     {
         $oDbl = $this->getoDbl();

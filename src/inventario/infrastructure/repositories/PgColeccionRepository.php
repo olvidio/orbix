@@ -6,11 +6,10 @@ use core\ClaseRepository;
 use core\Condicion;
 use core\Set;
 use PDO;
-use PDOException;
-use src\shared\traits\HandlesPdoErrors;
 use src\inventario\domain\contracts\ColeccionRepositoryInterface;
 use src\inventario\domain\entity\Coleccion;
 use src\inventario\domain\value_objects\ColeccionId;
+use src\shared\traits\HandlesPdoErrors;
 use function core\is_true;
 
 /**
@@ -25,6 +24,7 @@ use function core\is_true;
 class PgColeccionRepository extends ClaseRepository implements ColeccionRepositoryInterface
 {
     use HandlesPdoErrors;
+
     public function __construct()
     {
         $oDbl = $GLOBALS['oDB'];
@@ -37,13 +37,10 @@ class PgColeccionRepository extends ClaseRepository implements ColeccionReposito
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         $sQuery = "SELECT id_coleccion,nom_coleccion FROM $nom_tabla ORDER BY nom_coleccion";
-        if (($oDblSt = $oDbl->query($sQuery)) === false) {
-            $sClauError = 'GestorColeccion.lista';
-            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
-            return false;
-        }
+        $stmt = $this->pdoQuery($oDbl, $sQuery, __METHOD__, __FILE__, __LINE__);
+
         $aOpciones = [];
-        foreach ($oDbl->query($sQuery) as $aClave) {
+        foreach ($stmt as $aClave) {
             $clave = $aClave[0];
             $val = $aClave[1];
             $aOpciones[$clave] = $val;
@@ -108,8 +105,7 @@ class PgColeccionRepository extends ClaseRepository implements ColeccionReposito
             unset($aWhere['_limit']);
         }
         $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
-        $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
-        $stmt = $this->prepareAndExecute( $oDbl, $sQry, $aWhere,__METHOD__, __FILE__, __LINE__);
+        $stmt = $this->prepareAndExecute($oDbl, $sQry, $aWhere, __METHOD__, __FILE__, __LINE__);
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
@@ -159,17 +155,16 @@ class PgColeccionRepository extends ClaseRepository implements ColeccionReposito
                     nom_coleccion            = :nom_coleccion,
                     agrupar                  = :agrupar";
             $sql = "UPDATE $nom_tabla SET $update WHERE id_coleccion = $id_coleccion";
-            $stmt = $this->pdoPrepare( $oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         } else {
-         //INSERT
+            //INSERT
             $aDatos['id_coleccion'] = $Coleccion->getIdColeccionVo()?->value() ?? $Coleccion->getId_coleccion();
             $campos = "(id_coleccion,nom_coleccion,agrupar)";
             $valores = "(:id_coleccion,:nom_coleccion,:agrupar)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
-            $stmt = $this->pdoPrepare( $oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-		}
-		return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        }
+        return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 
     private function isNew(int $id_coleccion): bool

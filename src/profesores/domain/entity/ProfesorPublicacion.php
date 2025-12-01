@@ -1,3 +1,7 @@
+<?php
+
+namespace src\profesores\domain\entity;
+
 use function core\is_true;
 
 /**

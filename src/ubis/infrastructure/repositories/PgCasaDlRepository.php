@@ -6,7 +6,7 @@ use core\ConfigGlobal;
 use src\ubis\domain\contracts\CasaDlRepositoryInterface;
 use src\utils_database\domain\GenerateIdGlobal;
 
-class PgCasaDlRepository  extends PgCasaRepository implements CasaDlRepositoryInterface
+class PgCasaDlRepository extends PgCasaRepository implements CasaDlRepositoryInterface
 {
     public function __construct()
     {

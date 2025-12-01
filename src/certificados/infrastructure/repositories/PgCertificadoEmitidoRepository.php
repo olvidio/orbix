@@ -7,11 +7,10 @@ use core\Condicion;
 use core\ConverterDate;
 use core\Set;
 use PDO;
-use PDOException;
 use RuntimeException;
-use src\shared\traits\HandlesPdoErrors;
 use src\certificados\domain\contracts\CertificadoEmitidoRepositoryInterface;
 use src\certificados\domain\entity\CertificadoEmitido;
+use src\shared\traits\HandlesPdoErrors;
 use function core\is_true;
 
 /**
@@ -26,6 +25,7 @@ use function core\is_true;
 class PgCertificadoEmitidoRepository extends ClaseRepository implements CertificadoEmitidoRepositoryInterface
 {
     use HandlesPdoErrors;
+
     public function __construct()
     {
         $oDbl = $GLOBALS['oDB'];
@@ -90,8 +90,7 @@ class PgCertificadoEmitidoRepository extends ClaseRepository implements Certific
             unset($aWhere['_limit']);
         }
         $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
-        $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
-        $stmt = $this->prepareAndExecute( $oDbl, $sQry, $aWhere,__METHOD__, __FILE__, __LINE__);
+        $stmt = $this->prepareAndExecute($oDbl, $sQry, $aWhere, __METHOD__, __FILE__, __LINE__);
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
@@ -168,21 +167,17 @@ class PgCertificadoEmitidoRepository extends ClaseRepository implements Certific
 					firmado                  = :firmado,
 					documento                = :documento,
                     f_enviado                = :f_enviado";
-            $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
-            $stmt = $this->pdoPrepare($oDbl, "UPDATE $nom_tabla SET $update WHERE id_item = $id_item", __METHOD__, __FILE__, __LINE__);
-            if ($stmt === false) { return false; }
-            if (!$this->pdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__)) { return false; }
+            $sql = "UPDATE $nom_tabla SET $update WHERE id_item = $id_item";
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         } else {
             //INSERT
             $aDatos['id_item'] = $Certificado->getId_item();
             $campos = "(id_item,id_nom,nom,idioma,destino,certificado,f_certificado,esquema_emisor,firmado,documento,f_enviado)";
             $valores = "(:id_item,:id_nom,:nom,:idioma,:destino,:certificado,:f_certificado,:esquema_emisor,:firmado,:documento,:f_enviado)";
-            $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
-            $stmt = $this->pdoPrepare($oDbl, "INSERT INTO $nom_tabla $campos VALUES $valores", __METHOD__, __FILE__, __LINE__);
-            if ($stmt === false) { return false; }
-            if (!$this->pdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__)) { return false; }
+            $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         }
-        return TRUE;
+        return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 
     private function isNew(int $id_item): bool
@@ -212,8 +207,8 @@ class PgCertificadoEmitidoRepository extends ClaseRepository implements Certific
         $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         // para los bytea, sobre escribo los valores:
         $sdocumento = '';
-        $oDblSt->bindColumn('documento', $sdocumento, PDO::PARAM_STR);
-        $aDatos = $oDblSt->fetch(PDO::FETCH_ASSOC);
+        $stmt->bindColumn('documento', $sdocumento, PDO::PARAM_STR);
+        $aDatos = $stmt->fetch(PDO::FETCH_ASSOC);
         if ($aDatos !== false) {
             $aDatos['documento'] = hex2bin($sdocumento ?? '');
         }
@@ -228,12 +223,11 @@ class PgCertificadoEmitidoRepository extends ClaseRepository implements Certific
     /**
      * Busca la clase con id_item en la base de datos .
      */
-    public function findById(int $id_item): CertificadoEmitido
+    public function findById(int $id_item): ?CertificadoEmitido
     {
         $aDatos = $this->datosById($id_item);
         if (empty($aDatos)) {
-            $txt_err = sprintf(_("No se ha encontrado el item %s en la base de datos"), $id_item);
-            throw new RuntimeException($txt_err);
+            return null;
         }
         return (new CertificadoEmitido())->setAllAttributes($aDatos);
     }

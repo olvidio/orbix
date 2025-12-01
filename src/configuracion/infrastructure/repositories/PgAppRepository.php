@@ -6,10 +6,9 @@ use core\ClaseRepository;
 use core\Condicion;
 use core\Set;
 use PDO;
-use PDOException;
-use src\shared\traits\HandlesPdoErrors;
 use src\configuracion\domain\contracts\AppRepositoryInterface;
 use src\configuracion\domain\entity\App;
+use src\shared\traits\HandlesPdoErrors;
 
 /**
  * Clase que adapta la tabla m0_apps a la interfaz del repositorio
@@ -23,6 +22,7 @@ use src\configuracion\domain\entity\App;
 class PgAppRepository extends ClaseRepository implements AppRepositoryInterface
 {
     use HandlesPdoErrors;
+
     public function __construct()
     {
         $oDbl = $GLOBALS['oDBPC'];
@@ -89,8 +89,7 @@ class PgAppRepository extends ClaseRepository implements AppRepositoryInterface
             unset($aWhere['_limit']);
         }
         $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
-        $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
-        $stmt = $this->prepareAndExecute( $oDbl, $sQry, $aWhere,__METHOD__, __FILE__, __LINE__);
+        $stmt = $this->prepareAndExecute($oDbl, $sQry, $aWhere, __METHOD__, __FILE__, __LINE__);
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
@@ -122,32 +121,22 @@ class PgAppRepository extends ClaseRepository implements AppRepositoryInterface
         $nom = $App->getNombreAppVo()->value();
         $bInsert = $this->isNew($id_app);
 
-        $aDades = [];
-        $aDades['nom'] = $nom;
+        $aDatos = [];
+        $aDatos['nom'] = $nom;
 
-        if ($this->isNew($id_app) === TRUE) {
-            array_unshift($aDades, $id_app);
-            $aClauPrimaria = '(id_app,nom)';
-            $aClaus = '(:id_app,:nom)';
-            $bInsert = TRUE;
-        } else {
-            $update = " nom=:nom";
-            $sClau = " WHERE id_app='$id_app'";
-        }
         if ($bInsert === false) {
-            $sQry = "UPDATE $nom_tabla SET  $update $sClau";
-            $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
-            $stmt = $this->pdoPrepare($oDbl, $sQry, __METHOD__, __FILE__, __LINE__);
-            if ($stmt === false) { return false; }
-            if (!$this->pdoExecute($stmt, $aDades, __METHOD__, __FILE__, __LINE__)) { return false; }
+            //UPDATE
+            $update = " nom=:nom";
+            $sql = "UPDATE $nom_tabla SET  $update WHERE id_app=$id_app";
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         } else {
-            $sQry = "INSERT INTO $nom_tabla $aClauPrimaria VALUES $aClaus";
-            $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
-            $stmt = $this->pdoPrepare($oDbl, $sQry, __METHOD__, __FILE__, __LINE__);
-            if ($stmt === false) { return false; }
-            if (!$this->pdoExecute($stmt, $aDades, __METHOD__, __FILE__, __LINE__)) { return false; }
+            $aDatos['id_app'] = $id_app;
+            $campos = '(id_app,nom)';
+            $valores = '(:id_app,:nom)';
+            $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         }
-        return true;
+        return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 
     private function isNew(int $id_app): bool
@@ -167,27 +156,18 @@ class PgAppRepository extends ClaseRepository implements AppRepositoryInterface
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         $sQuery = "SELECT * FROM $nom_tabla WHERE id_app = $id_app";
-        if (($oDblSt = $oDbl->query($sQuery)) === false) {
-            $sClaveError = 'PgAppRepository.getDatosById';
-            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            return false;
-        }
-        $aDades = $oDblSt->fetch(PDO::FETCH_ASSOC);
-        if ($aDades === false) {
-            return false;
-        }
-        return $aDades;
+        $stmt = $this->pdoQuery($oDbl, $sQuery, __METHOD__, __FILE__, __LINE__);
+
+        return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
     public function findById(int $id_app): ?App
     {
-        $aDades = $this->datosById($id_app);
-        if (!is_array($aDades)) {
+        $aDatos = $this->datosById($id_app);
+        if (!is_array($aDatos)) {
             return null;
         }
-        $App = new App();
-        $App->setAllAttributes($aDades);
-        return $App;
+        return (new App())->setAllAttributes($aDatos);
     }
 
     public function getNewId()

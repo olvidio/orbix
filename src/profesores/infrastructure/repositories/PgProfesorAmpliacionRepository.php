@@ -7,12 +7,11 @@ use core\Condicion;
 use core\ConverterDate;
 use core\Set;
 use PDO;
-use PDOException;
-use src\shared\traits\HandlesPdoErrors;
 use personas\model\entity\PersonaDl;
+use src\asignaturas\domain\value_objects\AsignaturaId;
 use src\profesores\domain\contracts\ProfesorAmpliacionRepositoryInterface;
 use src\profesores\domain\entity\ProfesorAmpliacion;
-use src\asignaturas\domain\value_objects\AsignaturaId;
+use src\shared\traits\HandlesPdoErrors;
 
 
 /**
@@ -27,6 +26,7 @@ use src\asignaturas\domain\value_objects\AsignaturaId;
 class PgProfesorAmpliacionRepository extends ClaseRepository implements ProfesorAmpliacionRepositoryInterface
 {
     use HandlesPdoErrors;
+
     public function __construct()
     {
         $oDbl = $GLOBALS['oDB'];
@@ -65,6 +65,7 @@ class PgProfesorAmpliacionRepository extends ClaseRepository implements Profesor
         $multisort_args[] = SORT_STRING;
         $multisort_args[] = &$aProfesores;   // finally add the source array, by reference
         call_user_func_array("array_multisort", $multisort_args);
+
         $aOpciones = [];
         foreach ($aProfesores as $aClave) {
             $clave = $aClave['id_nom'];
@@ -136,8 +137,7 @@ class PgProfesorAmpliacionRepository extends ClaseRepository implements Profesor
             unset($aWhere['_limit']);
         }
         $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
-        $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
-        $stmt = $this->prepareAndExecute( $oDbl, $sQry, $aWhere,__METHOD__, __FILE__, __LINE__);
+        $stmt = $this->prepareAndExecute($oDbl, $sQry, $aWhere, __METHOD__, __FILE__, __LINE__);
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
@@ -193,17 +193,17 @@ class PgProfesorAmpliacionRepository extends ClaseRepository implements Profesor
 					escrito_cese             = :escrito_cese,
 					f_cese                   = :f_cese";
             $sql = "UPDATE $nom_tabla SET $update WHERE id_item = $id_item";
-            $stmt = $this->pdoPrepare( $oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
 
         } else {
-         //INSERT
+            //INSERT
             $aDatos['id_item'] = $ProfesorAmpliacion->getId_item();
             $campos = "(id_item,id_nom,id_asignatura,escrito_nombramiento,f_nombramiento,escrito_cese,f_cese)";
             $valores = "(:id_item,:id_nom,:id_asignatura,:escrito_nombramiento,:f_nombramiento,:escrito_cese,:f_cese)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
-            $stmt = $this->pdoPrepare( $oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-		}
-		return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        }
+        return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 
     private function isNew(int $id_item): bool
@@ -231,7 +231,7 @@ class PgProfesorAmpliacionRepository extends ClaseRepository implements Profesor
         $nom_tabla = $this->getNomTabla();
         $sql = "SELECT * FROM $nom_tabla WHERE id_item = $id_item";
         $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-        $aDatos = $oDblSt->fetch(PDO::FETCH_ASSOC);
+        $aDatos = $stmt->fetch(PDO::FETCH_ASSOC);
         // para las fechas del postgres (texto iso)
         if ($aDatos !== false) {
             $aDatos['f_nombramiento'] = (new ConverterDate('date', $aDatos['f_nombramiento']))->fromPg();

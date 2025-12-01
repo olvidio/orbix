@@ -6,7 +6,6 @@ use core\ClaseRepository;
 use core\Condicion;
 use core\Set;
 use PDO;
-use PDOException;
 use src\inventario\domain\contracts\WhereisRepositoryInterface;
 use src\inventario\domain\entity\Whereis;
 use src\shared\traits\HandlesPdoErrors;
@@ -23,6 +22,7 @@ use src\shared\traits\HandlesPdoErrors;
 class PgWhereisRepository extends ClaseRepository implements WhereisRepositoryInterface
 {
     use HandlesPdoErrors;
+
     public function __construct()
     {
         $oDbl = $GLOBALS['oDB'];
@@ -36,13 +36,10 @@ class PgWhereisRepository extends ClaseRepository implements WhereisRepositoryIn
         $nom_tabla = $this->getNomTabla();
 
         $sQuery = "SELECT id_doc,id_item_egm FROM $nom_tabla ORDER BY id_item_egm";
-        if ($oDbl->query($sQuery) === false) {
-            $sClauError = 'GestorTipoDoc.lista';
-            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
-            return false;
-        }
+        $stmt = $this->pdoQuery($oDbl, $sQuery, __METHOD__, __FILE__, __LINE__);
+
         $aOpciones = [];
-        foreach ($oDbl->query($sQuery) as $aClave) {
+        foreach ($stmt as $aClave) {
             if (in_array($aClave[1], $aEgms, true)) {
                 $aOpciones[] = $aClave[0];
             }
@@ -106,10 +103,10 @@ class PgWhereisRepository extends ClaseRepository implements WhereisRepositoryIn
         if (isset($aWhere['_limit'])) {
             unset($aWhere['_limit']);
         }
-       $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
-       $stmt = $this->prepareAndExecute( $oDbl, $sQry, $aWhere,__METHOD__, __FILE__, __LINE__);
+        $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
+        $stmt = $this->prepareAndExecute($oDbl, $sQry, $aWhere, __METHOD__, __FILE__, __LINE__);
 
-        $filas =$stmt->fetchAll(PDO::FETCH_ASSOC);
+        $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
             $Whereis = new Whereis();
             $Whereis->setAllAttributes($aDatos);
@@ -126,7 +123,7 @@ class PgWhereisRepository extends ClaseRepository implements WhereisRepositoryIn
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         $sql = "DELETE FROM $nom_tabla WHERE id_item_whereis = $id_item_whereis";
-        return $this->pdoExec( $oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        return $this->pdoExec($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
     }
 
 
@@ -151,17 +148,16 @@ class PgWhereisRepository extends ClaseRepository implements WhereisRepositoryIn
                     id_item_egm              = :id_item_egm,
                     id_doc                   = :id_doc";
             $sql = "UPDATE $nom_tabla SET $update WHERE id_item_whereis = $id_item_whereis";
-            $stmt = $this->pdoPrepare( $oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         } else {
-         //INSERT
+            //INSERT
             $aDatos['id_item_whereis'] = $Whereis->getIdItemWhereisVo()->value();
             $campos = "(id_item_whereis,id_item_egm,id_doc)";
             $valores = "(:id_item_whereis,:id_item_egm,:id_doc)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
-            $stmt = $this->pdoPrepare( $oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-		}
-		return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        }
+        return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 
     private function isNew(int $id_item_whereis): bool

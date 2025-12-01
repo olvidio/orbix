@@ -6,9 +6,9 @@ use core\ClaseRepository;
 use core\Condicion;
 use core\Set;
 use PDO;
-use PDOException;
 use src\profesores\domain\contracts\ProfesorTituloEstRepositoryInterface;
 use src\profesores\domain\entity\ProfesorTituloEst;
+use src\shared\traits\HandlesPdoErrors;
 use function core\is_true;
 
 
@@ -23,6 +23,8 @@ use function core\is_true;
  */
 class PgProfesorTituloEstRepository extends ClaseRepository implements ProfesorTituloEstRepositoryInterface
 {
+    use HandlesPdoErrors;
+
     public function __construct()
     {
         $oDbl = $GLOBALS['oDB'];
@@ -86,10 +88,10 @@ class PgProfesorTituloEstRepository extends ClaseRepository implements ProfesorT
         if (isset($aWhere['_limit'])) {
             unset($aWhere['_limit']);
         }
-       $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
-       $stmt = $this->prepareAndExecute( $oDbl, $sQry, $aWhere,__METHOD__, __FILE__, __LINE__);
+        $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
+        $stmt = $this->prepareAndExecute($oDbl, $sQry, $aWhere, __METHOD__, __FILE__, __LINE__);
 
-        $filas =$stmt->fetchAll(PDO::FETCH_ASSOC);
+        $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
             $ProfesorTituloEst = new ProfesorTituloEst();
             $ProfesorTituloEst->setAllAttributes($aDatos);
@@ -106,7 +108,7 @@ class PgProfesorTituloEstRepository extends ClaseRepository implements ProfesorT
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         $sql = "DELETE FROM $nom_tabla WHERE id_item = $id_item";
- return $this->pdoExec( $oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        return $this->pdoExec($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
     }
 
 
@@ -143,17 +145,16 @@ class PgProfesorTituloEstRepository extends ClaseRepository implements ProfesorT
 					eclesiastico             = :eclesiastico,
 					year                     = :year";
             $sql = "UPDATE $nom_tabla SET $update WHERE id_item = $id_item";
-            $stmt = $this->pdoPrepare( $oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         } else {
-         //INSERT
+            //INSERT
             $aDatos['id_item'] = $ProfesorTituloEst->getId_item();
             $campos = "(id_item,id_nom,titulo,centro_dnt,eclesiastico,year)";
             $valores = "(:id_item,:id_nom,:titulo,:centro_dnt,:eclesiastico,:year)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
-            $stmt = $this->pdoPrepare( $oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-		}
-		return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        }
+        return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 
     private function isNew(int $id_item): bool

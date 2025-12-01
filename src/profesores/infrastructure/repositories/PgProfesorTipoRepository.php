@@ -6,10 +6,9 @@ use core\ClaseRepository;
 use core\Condicion;
 use core\Set;
 use PDO;
-use PDOException;
-
-use src\profesores\domain\entity\ProfesorTipo;
 use src\profesores\domain\contracts\ProfesorTipoRepositoryInterface;
+use src\profesores\domain\entity\ProfesorTipo;
+use src\shared\traits\HandlesPdoErrors;
 
 /**
  * Clase que adapta la tabla xe_tipo_profesor_stgr a la interfaz del repositorio
@@ -22,12 +21,14 @@ use src\profesores\domain\contracts\ProfesorTipoRepositoryInterface;
  */
 class PgProfesorTipoRepository extends ClaseRepository implements ProfesorTipoRepositoryInterface
 {
+    use HandlesPdoErrors;
+
     public function __construct()
     {
         $oDbl = $GLOBALS['oDBPC'];
-        $this->setoDbl($oDbl); 
+        $this->setoDbl($oDbl);
         $oDbl_Select = $GLOBALS['oDBPC_Select'];
-        $this->setoDbl_select($oDbl_Select); 
+        $this->setoDbl_select($oDbl_Select);
         $this->setNomTabla('xe_tipo_profesor_stgr');
     }
 
@@ -36,13 +37,10 @@ class PgProfesorTipoRepository extends ClaseRepository implements ProfesorTipoRe
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         $sQuery = "SELECT id_tipo_profesor,tipo_profesor FROM $nom_tabla ORDER BY tipo_profesor";
-        if (($oDblSt = $oDbl->query($sQuery)) === false) {
-            $sClauError = 'GestorProfesorTipo.lista';
-            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
-            return false;
-        }
+        $stmt = $this->PdoQuery($oDbl, $sQuery, __METHOD__, __FILE__, __LINE__);
+
         $aOpciones = [];
-        foreach ($oDbl->query($sQuery) as $aClave) {
+        foreach ($stmt as $aClave) {
             $clave = $aClave[0];
             $val = $aClave[1];
             $aOpciones[$clave] = $val;
@@ -50,125 +48,117 @@ class PgProfesorTipoRepository extends ClaseRepository implements ProfesorTipoRe
 
         return $aOpciones;
     }
-/* -------------------- GESTOR BASE ---------------------------------------- */
+    /* -------------------- GESTOR BASE ---------------------------------------- */
 
-	/**
-	 * devuelve una colección (array) de objetos de tipo ProfesorTipo
-	 *
-	 * @param array $aWhere asociativo con los valores para cada campo de la BD.
-	 * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-	 * @return array|false Una colección de objetos de tipo ProfesorTipo
-	
-	 */
-	public function getProfesorTipos(array $aWhere=[], array $aOperators=[]): array|false
-	{
+    /**
+     * devuelve una colección (array) de objetos de tipo ProfesorTipo
+     *
+     * @param array $aWhere asociativo con los valores para cada campo de la BD.
+     * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
+     * @return array|false Una colección de objetos de tipo ProfesorTipo
+     */
+    public function getProfesorTipos(array $aWhere = [], array $aOperators = []): array|false
+    {
         $oDbl = $this->getoDbl_Select();
-		$nom_tabla = $this->getNomTabla();
-		$ProfesorTipoSet = new Set();
-		$oCondicion = new Condicion();
-		$aCondicion = [];
-		foreach ($aWhere as $camp => $val) {
-			if ($camp === '_ordre') { continue; }
-			if ($camp === '_limit') { continue; }
-			$sOperador = $aOperators[$camp] ?? '';
-			if ($a = $oCondicion->getCondicion($camp,$sOperador,$val)) { $aCondicion[]=$a; }
-			// operadores que no requieren valores
-			if ($sOperador === 'BETWEEN' || $sOperador === 'IS NULL' || $sOperador === 'IS NOT NULL' || $sOperador === 'OR') { unset($aWhere[$camp]); }
-            if ($sOperador === 'IN' || $sOperador === 'NOT IN') { unset($aWhere[$camp]); }
-            if ($sOperador === 'TXT') { unset($aWhere[$camp]); }
-		}
-		$sCondicion = implode(' AND ',$aCondicion);
-		if ($sCondicion !=='') { $sCondicion = " WHERE ".$sCondicion; }
-		$sOrdre = '';
+        $nom_tabla = $this->getNomTabla();
+        $ProfesorTipoSet = new Set();
+        $oCondicion = new Condicion();
+        $aCondicion = [];
+        foreach ($aWhere as $camp => $val) {
+            if ($camp === '_ordre') {
+                continue;
+            }
+            if ($camp === '_limit') {
+                continue;
+            }
+            $sOperador = $aOperators[$camp] ?? '';
+            if ($a = $oCondicion->getCondicion($camp, $sOperador, $val)) {
+                $aCondicion[] = $a;
+            }
+            // operadores que no requieren valores
+            if ($sOperador === 'BETWEEN' || $sOperador === 'IS NULL' || $sOperador === 'IS NOT NULL' || $sOperador === 'OR') {
+                unset($aWhere[$camp]);
+            }
+            if ($sOperador === 'IN' || $sOperador === 'NOT IN') {
+                unset($aWhere[$camp]);
+            }
+            if ($sOperador === 'TXT') {
+                unset($aWhere[$camp]);
+            }
+        }
+        $sCondicion = implode(' AND ', $aCondicion);
+        if ($sCondicion !== '') {
+            $sCondicion = " WHERE " . $sCondicion;
+        }
+        $sOrdre = '';
         $sLimit = '';
-		if (isset($aWhere['_ordre']) && $aWhere['_ordre'] !== '') { $sOrdre = ' ORDER BY '.$aWhere['_ordre']; }
-		if (isset($aWhere['_ordre'])) { unset($aWhere['_ordre']); }
-		if (isset($aWhere['_limit']) && $aWhere['_limit'] !== '') { $sLimit = ' LIMIT '.$aWhere['_limit']; }
-		if (isset($aWhere['_limit'])) { unset($aWhere['_limit']); }
-		$sQry = "SELECT * FROM $nom_tabla ".$sCondicion.$sOrdre.$sLimit;
-		if (($oDblSt = $oDbl->prepare($sQry)) === false) {
-			$sClaveError = 'PgProfesorTipoRepository.listar.prepare';
-			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-			return false;
-		}
-		if (($oDblSt->execute($aWhere)) === false) {
-			$sClaveError = 'PgProfesorTipoRepository.listar.execute';
-			$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
-			return false;
-		}
-		
-		$filas =$stmt->fetchAll(PDO::FETCH_ASSOC);
+        if (isset($aWhere['_ordre']) && $aWhere['_ordre'] !== '') {
+            $sOrdre = ' ORDER BY ' . $aWhere['_ordre'];
+        }
+        if (isset($aWhere['_ordre'])) {
+            unset($aWhere['_ordre']);
+        }
+        if (isset($aWhere['_limit']) && $aWhere['_limit'] !== '') {
+            $sLimit = ' LIMIT ' . $aWhere['_limit'];
+        }
+        if (isset($aWhere['_limit'])) {
+            unset($aWhere['_limit']);
+        }
+        $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
+        $stmt = $this->prepareAndExecute($oDbl, $sQry, $aWhere, __METHOD__, __FILE__, __LINE__);
+
+        $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
             $ProfesorTipo = new ProfesorTipo();
             $ProfesorTipo->setAllAttributes($aDatos);
-			$ProfesorTipoSet->add($ProfesorTipo);
-		}
-		return $ProfesorTipoSet->getTot();
-	}
+            $ProfesorTipoSet->add($ProfesorTipo);
+        }
+        return $ProfesorTipoSet->getTot();
+    }
 
-/* -------------------- ENTIDAD --------------------------------------------- */
+    /* -------------------- ENTIDAD --------------------------------------------- */
 
-	public function Eliminar(ProfesorTipo $ProfesorTipo): bool
+    public function Eliminar(ProfesorTipo $ProfesorTipo): bool
     {
         $id_tipo_profesor = $ProfesorTipo->getIdTipoProfesorVo()->value();
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         $sql = "DELETE FROM $nom_tabla WHERE id_tipo_profesor = $id_tipo_profesor";
- return $this->pdoExec( $oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        return $this->pdoExec($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
     }
 
-	
-	/**
-	 * Si no existe el registro, hace un insert, si existe, se hace el update.
-	
-	 */
-	public function Guardar(ProfesorTipo $ProfesorTipo): bool
+
+    /**
+     * Si no existe el registro, hace un insert, si existe, se hace el update.
+     */
+    public function Guardar(ProfesorTipo $ProfesorTipo): bool
     {
         $id_tipo_profesor = $ProfesorTipo->getIdTipoProfesorVo()->value();
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         $bInsert = $this->isNew($id_tipo_profesor);
 
-		$aDatos = [];
-		$aDatos['tipo_profesor'] = $ProfesorTipo->getTipoProfesorVo()?->value();
-		array_walk($aDatos, 'core\poner_null');
+        $aDatos = [];
+        $aDatos['tipo_profesor'] = $ProfesorTipo->getTipoProfesorVo()?->value();
+        array_walk($aDatos, 'core\poner_null');
 
-		if ($bInsert === false) {
-			//UPDATE
-			$update="
+        if ($bInsert === false) {
+            //UPDATE
+            $update = "
 					tipo_profesor            = :tipo_profesor";
-			$sql = "UPDATE $nom_tabla SET $update WHERE id_tipo_profesor = $id_tipo_profesor";
-			$stmt = $this->pdoPrepare( $oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-				
-            try {
-                $oDblSt->execute($aDatos);
-            } catch ( PDOException $e) {
-                $err_txt=$e->errorInfo[2];
-                $this->setErrorTxt($err_txt);
-                $sClaveError = 'PgProfesorTipoRepository.update.execute';
-                $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
-                return false;
-            }
-		} else {
-			// INSERT
-			$aDatos['id_tipo_profesor'] = $ProfesorTipo->getIdTipoProfesorVo()->value();
-			$campos="(id_tipo_profesor,tipo_profesor)";
-			$valores="(:id_tipo_profesor,:tipo_profesor)";		
-			$sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
-			$stmt = $this->pdoPrepare( $oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-            try {
-                $oDblSt->execute($aDatos);
-            } catch ( PDOException $e) {
-                $err_txt=$e->errorInfo[2];
-                $this->setErrorTxt($err_txt);
-                $sClaveError = 'PgProfesorTipoRepository.insertar.execute';
-                $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
-                return false;
-			}
-		}
-		return TRUE;
-	}
-	
+            $sql = "UPDATE $nom_tabla SET $update WHERE id_tipo_profesor = $id_tipo_profesor";
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        } else {
+            //INSERT
+            $aDatos['id_tipo_profesor'] = $ProfesorTipo->getIdTipoProfesorVo()->value();
+            $campos = "(id_tipo_profesor,tipo_profesor)";
+            $valores = "(:id_tipo_profesor,:tipo_profesor)";
+            $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        }
+        return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
+    }
+
     private function isNew(int $id_tipo_profesor): bool
     {
         $oDbl = $this->getoDbl();
@@ -180,14 +170,13 @@ class PgProfesorTipoRepository extends ClaseRepository implements ProfesorTipoRe
         }
         return false;
     }
-	
+
     /**
      * Devuelve los campos de la base de datos en un array asociativo.
      * Devuelve false si no existe la fila en la base de datos
-     * 
+     *
      * @param int $id_tipo_profesor
      * @return array|bool
-	
      */
     public function datosById(int $id_tipo_profesor): array|bool
     {
@@ -195,14 +184,13 @@ class PgProfesorTipoRepository extends ClaseRepository implements ProfesorTipoRe
         $nom_tabla = $this->getNomTabla();
         $sql = "SELECT * FROM $nom_tabla WHERE id_tipo_profesor = $id_tipo_profesor";
         $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-		return $stmt->fetch(PDO::FETCH_ASSOC);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
 
     }
-    
-	
+
+
     /**
      * Busca la clase con id_tipo_profesor en la base de datos .
-	
      */
     public function findById(int $id_tipo_profesor): ?ProfesorTipo
     {
@@ -212,7 +200,7 @@ class PgProfesorTipoRepository extends ClaseRepository implements ProfesorTipoRe
         }
         return (new ProfesorTipo())->setAllAttributes($aDatos);
     }
-	
+
     public function getNewId()
     {
         $oDbl = $this->getoDbl();

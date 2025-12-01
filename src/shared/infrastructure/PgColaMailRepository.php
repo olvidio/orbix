@@ -1,15 +1,15 @@
 <?php
 
-namespace shared\infrastructure;
+namespace src\shared\infrastructure;
 
 use core\ClaseRepository;
 use core\Condicion;
 use core\ConverterDate;
 use core\Set;
 use PDO;
-use PDOException;
 use shared\domain\entity\ColaMail;
 use shared\domain\repositories\ColaMailRepositoryInterface;
+use src\shared\traits\HandlesPdoErrors;
 use web\NullDateTimeLocal;
 
 /**
@@ -23,6 +23,8 @@ use web\NullDateTimeLocal;
  */
 class PgColaMailRepository extends ClaseRepository implements ColaMailRepositoryInterface
 {
+    use HandlesPdoErrors;
+
     public function __construct()
     {
         $oDbl = $GLOBALS['oDBPC'];
@@ -86,10 +88,10 @@ class PgColaMailRepository extends ClaseRepository implements ColaMailRepository
         if (isset($aWhere['_limit'])) {
             unset($aWhere['_limit']);
         }
-       $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
-       $stmt = $this->prepareAndExecute( $oDbl, $sQry, $aWhere,__METHOD__, __FILE__, __LINE__);
+        $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
+        $stmt = $this->prepareAndExecute($oDbl, $sQry, $aWhere, __METHOD__, __FILE__, __LINE__);
 
-        $filas =$stmt->fetchAll(PDO::FETCH_ASSOC);
+        $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
             // para las fechas del postgres (texto iso)
             $aDatos['sended'] = (new ConverterDate('timestamp', $aDatos['sended']))->fromPg();
@@ -106,12 +108,7 @@ class PgColaMailRepository extends ClaseRepository implements ColaMailRepository
         $nom_tabla = $this->getNomTabla();
 
         $sQry = "DELETE FROM $nom_tabla WHERE sended < '$date_iso'";
-
-        if (($oDblSt = $oDbl->query($sQry)) === false) {
-            $sClaveError = 'PgColaMailRepository.listar.prepare';
-            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-            //return false;
-        }
+        $this->pdoExec($oDbl, $sQry, __METHOD__, __FILE__, __LINE__);
     }
 
     /* -------------------- ENTIDAD --------------------------------------------- */
@@ -122,7 +119,7 @@ class PgColaMailRepository extends ClaseRepository implements ColaMailRepository
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         $sql = "DELETE FROM $nom_tabla WHERE uuid_item = '$uuid_item'";
- return $this->pdoExec( $oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        return $this->pdoExec($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
     }
 
     /**
@@ -142,7 +139,7 @@ class PgColaMailRepository extends ClaseRepository implements ColaMailRepository
         $aDatos['headers'] = $ColaMail->getHeaders();
         $aDatos['writed_by'] = $ColaMail->getWrited_by();
         // para las fechas
-        if (is_a($ColaMail->getSended(), NullDateTimeLocal::class)){
+        if (is_a($ColaMail->getSended(), NullDateTimeLocal::class)) {
             $aDatos['sended'] = NULL;
         } else {
             $aDatos['sended'] = (new ConverterDate('timestamp', $ColaMail->getSended()))->toPg();
@@ -159,17 +156,16 @@ class PgColaMailRepository extends ClaseRepository implements ColaMailRepository
 					writed_by                 = :writed_by,
 					sended                   = :sended";
             $sql = "UPDATE $nom_tabla SET $update WHERE uuid_item = '$uuid_item'";
-            $stmt = $this->pdoPrepare( $oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         } else {
-         //INSERT
+            //INSERT
             $aDatos['uuid_item'] = $ColaMail->getUuid_item();
             $campos = "(uuid_item,mail_to,message,subject,headers,writed_by,sended)";
             $valores = "(:uuid_item,:mail_to,:message,:subject,:headers,:writed_by,:sended)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
-            $stmt = $this->pdoPrepare( $oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-		}
-		return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        }
+        return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 
     private function isNew($uuid_item): bool
@@ -197,7 +193,7 @@ class PgColaMailRepository extends ClaseRepository implements ColaMailRepository
         $nom_tabla = $this->getNomTabla();
         $sql = "SELECT * FROM $nom_tabla WHERE uuid_item = '$uuid_item'";
         $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-        $aDatos = $oDblSt->fetch(PDO::FETCH_ASSOC);
+        $aDatos = $stmt->fetch(PDO::FETCH_ASSOC);
         // para las fechas del postgres (texto iso)
         if ($aDatos !== false) {
             $aDatos['sended'] = (new ConverterDate('timestamp', $aDatos['sended']))->fromPg();

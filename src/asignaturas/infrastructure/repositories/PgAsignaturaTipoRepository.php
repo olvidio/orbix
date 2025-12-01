@@ -6,10 +6,9 @@ use core\ClaseRepository;
 use core\Condicion;
 use core\Set;
 use PDO;
-use PDOException;
-use src\shared\traits\HandlesPdoErrors;
 use src\asignaturas\domain\contracts\AsignaturaTipoRepositoryInterface;
 use src\asignaturas\domain\entity\AsignaturaTipo;
+use src\shared\traits\HandlesPdoErrors;
 
 /**
  * Clase que adapta la tabla xa_tipo_asig a la interfaz del repositorio
@@ -23,6 +22,7 @@ use src\asignaturas\domain\entity\AsignaturaTipo;
 class PgAsignaturaTipoRepository extends ClaseRepository implements AsignaturaTipoRepositoryInterface
 {
     use HandlesPdoErrors;
+
     public function __construct()
     {
         $oDbl = $GLOBALS['oDBPC'];
@@ -37,17 +37,13 @@ class PgAsignaturaTipoRepository extends ClaseRepository implements AsignaturaTi
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $sQuery = "SELECT id_tipo,tipo_asignatura FROM $nom_tabla ORDER BY tipo_asignatura";
+        $stmt = $this->pdoQuery($oDbl, $sQuery, __METHOD__, __FILE__, __LINE__);
 
-        try {
-            $aOpciones = [];
-            foreach ($oDbl->query($sQuery) as $aClave) {
-                $clave = $aClave[0];
-                $val = $aClave[1];
-                $aOpciones[$clave] = $val;
-            }
-        } catch (PDOException $e) {
-            $sClauError = 'AsignaturaTipo.lista';
-            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+        $aOpciones = [];
+        foreach ($stmt as $aClave) {
+            $clave = $aClave[0];
+            $val = $aClave[1];
+            $aOpciones[$clave] = $val;
         }
         return $aOpciones;
     }
@@ -108,8 +104,7 @@ class PgAsignaturaTipoRepository extends ClaseRepository implements AsignaturaTi
             unset($aWhere['_limit']);
         }
         $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
-        $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
-        $stmt = $this->prepareAndExecute( $oDbl, $sQry, $aWhere,__METHOD__, __FILE__, __LINE__);
+        $stmt = $this->prepareAndExecute($oDbl, $sQry, $aWhere, __METHOD__, __FILE__, __LINE__);
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
@@ -155,21 +150,17 @@ class PgAsignaturaTipoRepository extends ClaseRepository implements AsignaturaTi
 					tipo_breve               = :tipo_breve,
 					año                     = :año,
 					tipo_latin               = :tipo_latin";
-            $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
-            $stmt = $this->pdoPrepare($oDbl, "UPDATE $nom_tabla SET $update WHERE id_tipo = $id_tipo", __METHOD__, __FILE__, __LINE__);
-            if ($stmt === false) { return false; }
-            if (!$this->pdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__)) { return false; }
+            $sql = "UPDATE $nom_tabla SET $update WHERE id_tipo = $id_tipo";
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         } else {
-            // INSERT
+            //INSERT
             $aDatos['id_tipo'] = $AsignaturaTipo->getId_tipo();
             $campos = "(id_tipo,tipo_asignatura,tipo_breve,año,tipo_latin)";
             $valores = "(:id_tipo,:tipo_asignatura,:tipo_breve,:año,:tipo_latin)";
-            $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
-            $stmt = $this->pdoPrepare($oDbl, "INSERT INTO $nom_tabla $campos VALUES $valores", __METHOD__, __FILE__, __LINE__);
-            if ($stmt === false) { return false; }
-            if (!$this->pdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__)) { return false; }
+            $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         }
-        return TRUE;
+        return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 
     private function isNew(int $id_tipo): bool

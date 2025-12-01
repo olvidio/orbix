@@ -6,9 +6,9 @@ use core\ClaseRepository;
 use core\Condicion;
 use core\Set;
 use PDO;
-use PDOException;
 use src\personas\domain\contracts\SituacionRepositoryInterface;
 use src\personas\domain\entity\Situacion;
+use src\shared\traits\HandlesPdoErrors;
 
 /**
  * Clase que adapta la tabla xp_situacion a la interfaz del repositorio
@@ -21,6 +21,8 @@ use src\personas\domain\entity\Situacion;
  */
 class PgSituacionRepository extends ClaseRepository implements SituacionRepositoryInterface
 {
+    use HandlesPdoErrors;
+
     public function __construct()
     {
         $oDbl = $GLOBALS['oDBPC'];
@@ -39,13 +41,10 @@ class PgSituacionRepository extends ClaseRepository implements SituacionReposito
             $Condicion = " WHERE situacion IN ('A','D','E','L','T','X')";
         }
         $sQuery = "SELECT situacion,nombre_situacion FROM $nom_tabla $Condicion ORDER BY situacion";
-        if (($oDbl->query($sQuery)) === false) {
-            $sClauError = 'GestorSituacion.lista';
-            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
-            return false;
-        }
+        $stmt = $this->PdoQuery($oDbl, $sQuery, __METHOD__, __FILE__, __LINE__);
+
         $aOpciones = [];
-        foreach ($oDbl->query($sQuery) as $aClave) {
+        foreach ($stmt as $aClave) {
             $clave = $aClave[0];
             $val = $aClave[1];
             $aOpciones[$clave] = $val;
@@ -110,10 +109,10 @@ class PgSituacionRepository extends ClaseRepository implements SituacionReposito
         if (isset($aWhere['_limit'])) {
             unset($aWhere['_limit']);
         }
-       $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
-       $stmt = $this->prepareAndExecute( $oDbl, $sQry, $aWhere,__METHOD__, __FILE__, __LINE__);
+        $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
+        $stmt = $this->prepareAndExecute($oDbl, $sQry, $aWhere, __METHOD__, __FILE__, __LINE__);
 
-        $filas =$stmt->fetchAll(PDO::FETCH_ASSOC);
+        $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
             $Situacion = new Situacion();
             $Situacion->setAllAttributes($aDatos);
@@ -130,7 +129,7 @@ class PgSituacionRepository extends ClaseRepository implements SituacionReposito
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         $sql = "DELETE FROM $nom_tabla WHERE situacion = '$situacion'";
- return $this->pdoExec( $oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        return $this->pdoExec($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
     }
 
     /**
@@ -152,17 +151,16 @@ class PgSituacionRepository extends ClaseRepository implements SituacionReposito
             $update = "
 					nombre_situacion         = :nombre_situacion";
             $sql = "UPDATE $nom_tabla SET $update WHERE situacion = '$situacion'";
-            $stmt = $this->pdoPrepare( $oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         } else {
-         //INSERT
+            //INSERT
             $aDatos['situacion'] = $Situacion->getSituacion();
             $campos = "(situacion,nombre_situacion)";
             $valores = "(:situacion,:nombre_situacion)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
-            $stmt = $this->pdoPrepare( $oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-		}
-		return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        }
+        return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 
     private function isNew(string $situacion): bool

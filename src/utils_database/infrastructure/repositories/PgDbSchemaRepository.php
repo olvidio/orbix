@@ -8,7 +8,7 @@ use core\ConfigDB;
 use core\DBConnection;
 use core\Set;
 use PDO;
-use PDOException;
+use src\shared\traits\HandlesPdoErrors;
 use src\utils_database\domain\contracts\DbSchemaRepositoryInterface;
 use src\utils_database\domain\entity\DbSchema;
 use src\utils_database\domain\value_objects\DbSchemaCode;
@@ -25,6 +25,8 @@ use src\utils_database\domain\value_objects\DbSchemaId;
  */
 class PgDbSchemaRepository extends ClaseRepository implements DbSchemaRepositoryInterface
 {
+    use HandlesPdoErrors;
+
     public function __construct()
     {
         $oDbl = $GLOBALS['oDBPC'];
@@ -138,10 +140,10 @@ class PgDbSchemaRepository extends ClaseRepository implements DbSchemaRepository
         if (isset($aWhere['_limit'])) {
             unset($aWhere['_limit']);
         }
-       $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
-       $stmt = $this->prepareAndExecute( $oDbl, $sQry, $aWhere,__METHOD__, __FILE__, __LINE__);
+        $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
+        $stmt = $this->prepareAndExecute($oDbl, $sQry, $aWhere, __METHOD__, __FILE__, __LINE__);
 
-        $filas =$stmt->fetchAll(PDO::FETCH_ASSOC);
+        $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
             $DbSchema = new DbSchema();
             $DbSchema->setAllAttributes($aDatos);
@@ -158,7 +160,7 @@ class PgDbSchemaRepository extends ClaseRepository implements DbSchemaRepository
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         $sql = "DELETE FROM $nom_tabla WHERE schema = '$schema'";
- return $this->pdoExec( $oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        return $this->pdoExec($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
     }
 
     /**
@@ -180,17 +182,16 @@ class PgDbSchemaRepository extends ClaseRepository implements DbSchemaRepository
             $update = "
 					id                       = :id";
             $sql = "UPDATE $nom_tabla SET $update WHERE schema = '$schema'";
-            $stmt = $this->pdoPrepare( $oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         } else {
-         //INSERT
+            //INSERT
             $aDatos['schema'] = $DbSchema->getSchemaVo()->value();
             $campos = "(schema,id)";
             $valores = "(:schema,:id)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
-            $stmt = $this->pdoPrepare( $oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-		}
-		return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        }
+        return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 
     private function isNew(string $schema): bool
@@ -306,7 +307,8 @@ class PgDbSchemaRepository extends ClaseRepository implements DbSchemaRepository
             WHERE id BETWEEN 3000 AND 4000
             ORDER BY id DESC
             LIMIT 1";
-        foreach ($oDbl->query($sQry) as $aDades) {
+        $stmt = $this->pdoQuery($oDbl, $sQry, __METHOD__, __FILE__, __LINE__);
+        foreach ($stmt as $aDades) {
             $lastId = $aDades['id'];
         }
         return $lastId;
@@ -322,18 +324,7 @@ class PgDbSchemaRepository extends ClaseRepository implements DbSchemaRepository
         $nom_tabla = $this->getNomTabla();
         //UPDATE
         $update = "UPDATE $nom_tabla SET schema='$new' WHERE schema='$old'";
-
-        try {
-            $oDbl->query($update);
-        } catch (\PDOException $e) {
-            $err_txt = $e->errorInfo[2];
-            $this->setErrorTxt($err_txt);
-            $sClauError = 'DbSchema.update.execute';
-            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
-            return false;
-        }
-
-        return true;
+        return $this->pdoExec($oDbl, $update, __METHOD__, __FILE__, __LINE__);
     }
 
 }

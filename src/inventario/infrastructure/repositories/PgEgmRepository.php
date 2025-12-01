@@ -6,10 +6,10 @@ use core\ClaseRepository;
 use core\Condicion;
 use core\Set;
 use PDO;
-use PDOException;
 use src\inventario\domain\contracts\EgmRepositoryInterface;
 use src\inventario\domain\entity\Egm;
 use src\inventario\domain\value_objects\EgmItemId;
+use src\shared\traits\HandlesPdoErrors;
 
 /**
  * Clase que adapta la tabla i_egm_dl a la interfaz del repositorio
@@ -22,6 +22,7 @@ use src\inventario\domain\value_objects\EgmItemId;
  */
 class PgEgmRepository extends ClaseRepository implements EgmRepositoryInterface
 {
+    use HandlesPdoErrors;
     public function __construct()
     {
         $oDbl = $GLOBALS['oDB'];
@@ -35,12 +36,9 @@ class PgEgmRepository extends ClaseRepository implements EgmRepositoryInterface
         $nom_tabla = $this->getNomTabla();
 
         $sQuery = "SELECT MAX(id_grupo) FROM $nom_tabla WHERE id_equipaje = $id_equipaje";
-        if (($oDblSt = $oDbl->query($sQuery)) === false) {
-            $sClauError = 'GestorTipoDoc.lista';
-            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
-            return false;
-        }
-        return $oDblSt->fetchColumn() ?? 0;
+        $stmt = $this->pdoQuery($oDbl, $sQuery, __METHOD__, __FILE__, __LINE__);
+
+        return $stmt->fetchColumn() ?? 0;
     }
 
     public function getArrayIdFromIdEquipajes($aEquipajes, $lugar = ''): array|false
@@ -49,13 +47,10 @@ class PgEgmRepository extends ClaseRepository implements EgmRepositoryInterface
         $nom_tabla = $this->getNomTabla();
 
         $sQuery = "SELECT id_item,id_equipaje,id_lugar FROM $nom_tabla ORDER BY id_equipaje";
-        if (($oDblSt = $oDbl->query($sQuery)) === false) {
-            $sClauError = 'GestorTipoDoc.lista';
-            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
-            return false;
-        }
+        $stmt = $this->pdoQuery($oDbl, $sQuery, __METHOD__, __FILE__, __LINE__);
+
         $aOpciones = [];
-        foreach ($oDbl->query($sQuery) as $aClave) {
+        foreach ($stmt as $aClave) {
             if (in_array($aClave[1], $aEquipajes)) {
                 if (!empty($lugar)) {
                     $aOpciones[] = $aClave[2];
@@ -123,10 +118,10 @@ class PgEgmRepository extends ClaseRepository implements EgmRepositoryInterface
         if (isset($aWhere['_limit'])) {
             unset($aWhere['_limit']);
         }
-       $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
-       $stmt = $this->prepareAndExecute( $oDbl, $sQry, $aWhere,__METHOD__, __FILE__, __LINE__);
+        $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
+        $stmt = $this->prepareAndExecute($oDbl, $sQry, $aWhere, __METHOD__, __FILE__, __LINE__);
 
-        $filas =$stmt->fetchAll(PDO::FETCH_ASSOC);
+        $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
             $Egm = new Egm();
             $Egm->setAllAttributes($aDatos);
@@ -143,7 +138,7 @@ class PgEgmRepository extends ClaseRepository implements EgmRepositoryInterface
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         $sql = "DELETE FROM $nom_tabla WHERE id_item = $id_item";
- return $this->pdoExec( $oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        return $this->pdoExec($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
     }
 
     /**
@@ -171,17 +166,17 @@ class PgEgmRepository extends ClaseRepository implements EgmRepositoryInterface
                     id_lugar                 = :id_lugar,
                     texto                    = :texto";
             $sql = "UPDATE $nom_tabla SET $update WHERE id_item = $id_item";
-            $stmt = $this->pdoPrepare( $oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
 
         } else {
-         //INSERT
+            //INSERT
             $aDatos['id_item'] = $Egm->getIdItemVo()->value();
             $campos = "(id_item,id_equipaje,id_grupo,id_lugar,texto)";
             $valores = "(:id_item,:id_equipaje,:id_grupo,:id_lugar,:texto)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
-            $stmt = $this->pdoPrepare( $oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-		}
-		return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        }
+        return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 
     private function isNew(int $id_item): bool

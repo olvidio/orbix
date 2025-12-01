@@ -7,10 +7,9 @@ use core\Condicion;
 use core\ConverterDate;
 use core\Set;
 use PDO;
-use PDOException;
-use src\shared\traits\HandlesPdoErrors;
 use src\certificados\domain\contracts\CertificadoRecibidoRepositoryInterface;
 use src\certificados\domain\entity\CertificadoRecibido;
+use src\shared\traits\HandlesPdoErrors;
 use function core\is_true;
 
 /**
@@ -25,6 +24,7 @@ use function core\is_true;
 class PgCertificadoRecibidoRepository extends ClaseRepository implements CertificadoRecibidoRepositoryInterface
 {
     use HandlesPdoErrors;
+
     public function __construct()
     {
         $oDbl = $GLOBALS['oDB'];
@@ -88,10 +88,10 @@ class PgCertificadoRecibidoRepository extends ClaseRepository implements Certifi
         if (isset($aWhere['_limit'])) {
             unset($aWhere['_limit']);
         }
-       $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
-       $stmt = $this->prepareAndExecute( $oDbl, $sQry, $aWhere,__METHOD__, __FILE__, __LINE__);
+        $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
+        $stmt = $this->prepareAndExecute($oDbl, $sQry, $aWhere, __METHOD__, __FILE__, __LINE__);
 
-        $filas =$stmt->fetchAll(PDO::FETCH_ASSOC);
+        $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
             // para los bytea: (resources)
             $handle = $aDatos['documento'];
@@ -119,7 +119,7 @@ class PgCertificadoRecibidoRepository extends ClaseRepository implements Certifi
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         $sql = "DELETE FROM $nom_tabla WHERE id_item = $id_item";
- return $this->pdoExec( $oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        return $this->pdoExec($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
     }
 
     /**
@@ -167,17 +167,16 @@ class PgCertificadoRecibidoRepository extends ClaseRepository implements Certifi
 					documento                = :documento,
                     f_recibido                = :f_recibido";
             $sql = "UPDATE $nom_tabla SET $update WHERE id_item = $id_item";
-            $stmt = $this->pdoPrepare( $oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         } else {
-         //INSERT
+            //INSERT
             $aDatos['id_item'] = $Certificado->getId_item();
             $campos = "(id_item,id_nom,nom,idioma,destino,certificado,f_certificado,esquema_emisor,firmado,documento,f_recibido)";
             $valores = "(:id_item,:id_nom,:nom,:idioma,:destino,:certificado,:f_certificado,:esquema_emisor,:firmado,:documento,:f_recibido)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
-            $stmt = $this->pdoPrepare( $oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-		}
-		return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        }
+        return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 
     private function isNew(int $id_item): bool
@@ -207,8 +206,8 @@ class PgCertificadoRecibidoRepository extends ClaseRepository implements Certifi
         $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         // para los bytea, sobre escribo los valores:
         $sdocumento = '';
-        $oDblSt->bindColumn('documento', $sdocumento, PDO::PARAM_STR);
-        $aDatos = $oDblSt->fetch(PDO::FETCH_ASSOC);
+        $stmt->bindColumn('documento', $sdocumento, PDO::PARAM_STR);
+        $aDatos = $stmt->fetch(PDO::FETCH_ASSOC);
         if ($aDatos !== false) {
             $aDatos['documento'] = hex2bin($sdocumento ?? '');
         }
@@ -223,13 +222,11 @@ class PgCertificadoRecibidoRepository extends ClaseRepository implements Certifi
     /**
      * Busca la clase con id_item en la base de datos .
      */
-    public function findById(int $id_item): CertificadoRecibido
+    public function findById(int $id_item): ?CertificadoRecibido
     {
         $aDatos = $this->datosById($id_item);
         if (empty($aDatos)) {
-            $errorMsg = sprintf(_("Error en la linea %s de %s"), __LINE__, __FILE__) . ': ';
-            $errorMsg .= _("No se encuentra el certificado");
-            throw new RuntimeException($errorMsg);
+            return null;
         }
         return (new CertificadoRecibido())->setAllAttributes($aDatos);
     }

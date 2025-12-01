@@ -6,10 +6,9 @@ use core\ClaseRepository;
 use core\Condicion;
 use core\Set;
 use PDO;
-use PDOException;
-use src\shared\traits\HandlesPdoErrors;
-use src\menus\domain\entity\TemplateMenu;
 use src\menus\domain\contracts\TemplateMenuRepositoryInterface;
+use src\menus\domain\entity\TemplateMenu;
+use src\shared\traits\HandlesPdoErrors;
 
 /**
  * Clase que adapta la tabla aux_templates_menus a la interfaz del repositorio
@@ -23,6 +22,7 @@ use src\menus\domain\contracts\TemplateMenuRepositoryInterface;
 class PgTemplateMenuRepository extends ClaseRepository implements TemplateMenuRepositoryInterface
 {
     use HandlesPdoErrors;
+
     public function __construct()
     {
         $oDbl = $GLOBALS['oDBPC'];
@@ -35,16 +35,13 @@ class PgTemplateMenuRepository extends ClaseRepository implements TemplateMenuRe
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         $sQuery = "SELECT id_template_menu,nombre FROM $nom_tabla ORDER BY nombre";
-        try {
-            $aOpciones = [];
-            foreach ($oDbl->query($sQuery) as $aClave) {
-                $clave = $aClave[0];
-                $val = $aClave[1];
-                $aOpciones[$clave] = $val;
-            }
-        } catch (PDOException $e) {
-            $sClauError = 'Templatemenu.lista';
-            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+        $stmt = $this->PdoQuery($oDbl, $sQuery, __METHOD__, __FILE__, __LINE__);
+
+        $aOpciones = [];
+        foreach ($stmt as $aClave) {
+            $clave = $aClave[0];
+            $val = $aClave[1];
+            $aOpciones[$clave] = $val;
         }
         return $aOpciones;
     }
@@ -106,8 +103,7 @@ class PgTemplateMenuRepository extends ClaseRepository implements TemplateMenuRe
             unset($aWhere['_limit']);
         }
         $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
-        $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
-        $stmt = $this->prepareAndExecute( $oDbl, $sQry, $aWhere,__METHOD__, __FILE__, __LINE__);
+        $stmt = $this->prepareAndExecute($oDbl, $sQry, $aWhere, __METHOD__, __FILE__, __LINE__);
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
@@ -126,7 +122,7 @@ class PgTemplateMenuRepository extends ClaseRepository implements TemplateMenuRe
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         $sql = "DELETE FROM $nom_tabla WHERE id_template_menu = $id_template_menu";
- return $this->pdoExec( $oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        return $this->pdoExec($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
     }
 
     /**
@@ -148,17 +144,17 @@ class PgTemplateMenuRepository extends ClaseRepository implements TemplateMenuRe
             $update = "
 					nombre                   = :nombre";
             $sql = "UPDATE $nom_tabla SET $update WHERE id_template_menu = $id_template_menu";
-            $stmt = $this->pdoPrepare( $oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
 
         } else {
-         //INSERT
+            //INSERT
             $aDatos['id_template_menu'] = $TemplateMenu->getId_template_menu();
             $campos = "(id_template_menu,nombre)";
             $valores = "(:id_template_menu,:nombre)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
-            $stmt = $this->pdoPrepare( $oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-		}
-		return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        }
+        return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 
     private function isNew(int $id_template_menu): bool

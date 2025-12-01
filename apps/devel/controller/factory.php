@@ -418,9 +418,9 @@ foreach ($oDbl->query($sql) as $row) {
             $bytea_bind .= "\n\t\t";
             $bytea_bind .= '$' . $tip . $nomcamp . " = '';";
             $bytea_bind .= "\n\t\t";
-            $bytea_bind .= '$oDblSt->bindColumn(\'' . $nomcamp . '\', $' . $tip . $nomcamp . ', PDO::PARAM_STR);';
+            $bytea_bind .= '$stmt->bindColumn(\'' . $nomcamp . '\', $' . $tip . $nomcamp . ', PDO::PARAM_STR);';
             $bytea_bind .= "\n\t\t";
-            $bytea_bind .= '$aDatos = $oDblSt->fetch(PDO::FETCH_ASSOC);';
+            $bytea_bind .= '$aDatos = $stmt->fetch(PDO::FETCH_ASSOC);';
             $bytea_bind .= "\n\t\t";
             $bytea_bind .= 'if ($aDatos !== false) {';
             $bytea_bind .= "\n\t\t\t";

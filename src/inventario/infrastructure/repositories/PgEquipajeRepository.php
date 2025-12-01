@@ -7,9 +7,9 @@ use core\Condicion;
 use core\ConverterDate;
 use core\Set;
 use PDO;
-use PDOException;
 use src\inventario\domain\contracts\EquipajeRepositoryInterface;
 use src\inventario\domain\entity\Equipaje;
+use src\shared\traits\HandlesPdoErrors;
 
 /**
  * Clase que adapta la tabla i_equipajes_dl a la interfaz del repositorio
@@ -22,6 +22,8 @@ use src\inventario\domain\entity\Equipaje;
  */
 class PgEquipajeRepository extends ClaseRepository implements EquipajeRepositoryInterface
 {
+    use HandlesPdoErrors;
+
     public function __construct()
     {
         $oDbl = $GLOBALS['oDB'];
@@ -38,13 +40,10 @@ class PgEquipajeRepository extends ClaseRepository implements EquipajeRepository
 			WHERE (f_ini BETWEEN '$f_ini_iso' AND '$f_fin_iso')
 		   		OR (f_fin BETWEEN '$f_ini_iso' AND '$f_fin_iso')
 			ORDER BY nom_equipaje";
-        if ($oDbl->query($sQuery) === false) {
-            $sClauError = 'GestorTipoDoc.lista';
-            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
-            return false;
-        }
+        $stmt = $this->pdoQuery($oDbl, $sQuery, __METHOD__, __FILE__, __LINE__);
+
         $aOpciones = [];
-        foreach ($oDbl->query($sQuery) as $aClave) {
+        foreach ($stmt as $aClave) {
             $aOpciones[] = $aClave[0];
         }
         return $aOpciones;
@@ -59,13 +58,10 @@ class PgEquipajeRepository extends ClaseRepository implements EquipajeRepository
         $sQuery = "SELECT id_equipaje,nom_equipaje FROM $nom_tabla 
 			$where
 			ORDER BY f_ini,nom_equipaje";
-        if ($oDbl->query($sQuery) === false) {
-            $sClauError = 'GestorTipoDoc.lista';
-            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
-            return false;
-        }
+        $stmt = $this->pdoQuery($oDbl, $sQuery, __METHOD__, __FILE__, __LINE__);
+
         $aOpciones = [];
-        foreach ($oDbl->query($sQuery) as $aClave) {
+        foreach ($stmt as $aClave) {
             $clave = $aClave[0];
             $val = $aClave[1];
             $aOpciones[$clave] = $val;
@@ -129,10 +125,10 @@ class PgEquipajeRepository extends ClaseRepository implements EquipajeRepository
         if (isset($aWhere['_limit'])) {
             unset($aWhere['_limit']);
         }
-       $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
-       $stmt = $this->prepareAndExecute( $oDbl, $sQry, $aWhere,__METHOD__, __FILE__, __LINE__);
+        $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
+        $stmt = $this->prepareAndExecute($oDbl, $sQry, $aWhere, __METHOD__, __FILE__, __LINE__);
 
-        $filas =$stmt->fetchAll(PDO::FETCH_ASSOC);
+        $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
             // para las fechas del postgres (texto iso)
             $aDatos['f_ini'] = (new ConverterDate('date', $aDatos['f_ini']))->fromPg();
@@ -152,7 +148,7 @@ class PgEquipajeRepository extends ClaseRepository implements EquipajeRepository
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         $sql = "DELETE FROM $nom_tabla WHERE id_equipaje = $id_equipaje";
- return $this->pdoExec( $oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        return $this->pdoExec($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
     }
 
     /**
@@ -191,17 +187,16 @@ class PgEquipajeRepository extends ClaseRepository implements EquipajeRepository
                     pie                      = :pie,
                     cabecerab                = :cabecerab";
             $sql = "UPDATE $nom_tabla SET $update WHERE id_equipaje = $id_equipaje";
-            $stmt = $this->pdoPrepare( $oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         } else {
-         //INSERT
+            //INSERT
             $aDatos['id_equipaje'] = $Equipaje->getIdEquipajeVo()->value();
             $campos = "(id_equipaje,ids_activ,lugar,f_ini,f_fin,id_ubi_activ,nom_equipaje,cabecera,pie,cabecerab)";
             $valores = "(:id_equipaje,:ids_activ,:lugar,:f_ini,:f_fin,:id_ubi_activ,:nom_equipaje,:cabecera,:pie,:cabecerab)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
-            $stmt = $this->pdoPrepare( $oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-		}
-		return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        }
+        return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 
     private function isNew(int $id_equipaje): bool
@@ -229,7 +224,7 @@ class PgEquipajeRepository extends ClaseRepository implements EquipajeRepository
         $nom_tabla = $this->getNomTabla();
         $sql = "SELECT * FROM $nom_tabla WHERE id_equipaje = $id_equipaje";
         $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-        $aDatos = $oDblSt->fetch(PDO::FETCH_ASSOC);
+        $aDatos = $stmt->fetch(PDO::FETCH_ASSOC);
         // para las fechas del postgres (texto iso)
         if ($aDatos !== false) {
             $aDatos['f_ini'] = (new ConverterDate('date', $aDatos['f_ini']))->fromPg();

@@ -7,9 +7,9 @@ use core\Condicion;
 use core\ConverterDate;
 use core\Set;
 use PDO;
-use PDOException;
 use src\profesores\domain\contracts\ProfesorJuramentoRepositoryInterface;
 use src\profesores\domain\entity\ProfesorJuramento;
+use src\shared\traits\HandlesPdoErrors;
 
 
 /**
@@ -23,6 +23,8 @@ use src\profesores\domain\entity\ProfesorJuramento;
  */
 class PgProfesorJuramentoRepository extends ClaseRepository implements ProfesorJuramentoRepositoryInterface
 {
+    use HandlesPdoErrors;
+
     public function __construct()
     {
         $oDbl = $GLOBALS['oDB'];
@@ -86,10 +88,10 @@ class PgProfesorJuramentoRepository extends ClaseRepository implements ProfesorJ
         if (isset($aWhere['_limit'])) {
             unset($aWhere['_limit']);
         }
-       $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
-       $stmt = $this->prepareAndExecute( $oDbl, $sQry, $aWhere,__METHOD__, __FILE__, __LINE__);
+        $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
+        $stmt = $this->prepareAndExecute($oDbl, $sQry, $aWhere, __METHOD__, __FILE__, __LINE__);
 
-        $filas =$stmt->fetchAll(PDO::FETCH_ASSOC);
+        $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
             // para las fechas del postgres (texto iso)
             $aDatos['f_juramento'] = (new ConverterDate('date', $aDatos['f_juramento']))->fromPg();
@@ -108,7 +110,7 @@ class PgProfesorJuramentoRepository extends ClaseRepository implements ProfesorJ
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         $sql = "DELETE FROM $nom_tabla WHERE id_item = $id_item";
- return $this->pdoExec( $oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        return $this->pdoExec($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
     }
 
 
@@ -134,17 +136,16 @@ class PgProfesorJuramentoRepository extends ClaseRepository implements ProfesorJ
 					id_nom                   = :id_nom,
 					f_juramento              = :f_juramento";
             $sql = "UPDATE $nom_tabla SET $update WHERE id_item = $id_item";
-            $stmt = $this->pdoPrepare( $oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         } else {
-         //INSERT
+            //INSERT
             $aDatos['id_item'] = $ProfesorJuramento->getId_item();
             $campos = "(id_item,id_nom,f_juramento)";
             $valores = "(:id_item,:id_nom,:f_juramento)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
-            $stmt = $this->pdoPrepare( $oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-		}
-		return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        }
+        return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 
     private function isNew(int $id_item): bool
@@ -172,7 +173,7 @@ class PgProfesorJuramentoRepository extends ClaseRepository implements ProfesorJ
         $nom_tabla = $this->getNomTabla();
         $sql = "SELECT * FROM $nom_tabla WHERE id_item = $id_item";
         $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-        $aDatos = $oDblSt->fetch(PDO::FETCH_ASSOC);
+        $aDatos = $stmt->fetch(PDO::FETCH_ASSOC);
         // para las fechas del postgres (texto iso)
         if ($aDatos !== false) {
             $aDatos['f_juramento'] = (new ConverterDate('date', $aDatos['f_juramento']))->fromPg();

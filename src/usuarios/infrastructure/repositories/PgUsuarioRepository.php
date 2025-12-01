@@ -6,7 +6,7 @@ use core\ClaseRepository;
 use core\Condicion;
 use core\Set;
 use PDO;
-use PDOException;
+use src\shared\traits\HandlesPdoErrors;
 use src\usuarios\domain\contracts\UsuarioRepositoryInterface;
 use src\usuarios\domain\entity\Usuario;
 use function core\is_true;
@@ -22,6 +22,8 @@ use function core\is_true;
  */
 class PgUsuarioRepository extends ClaseRepository implements UsuarioRepositoryInterface
 {
+    use HandlesPdoErrors;
+
     public function __construct()
     {
         $oDbl = $GLOBALS['oDBE'];
@@ -36,16 +38,13 @@ class PgUsuarioRepository extends ClaseRepository implements UsuarioRepositoryIn
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $sQuery = "SELECT id_usuario, usuario FROM $nom_tabla ORDER BY usuario";
-        try {
-            $aOpciones = [];
-            foreach ($oDbl->query($sQuery) as $aClave) {
-                $clave = $aClave[0];
-                $val = $aClave[1];
-                $aOpciones[$clave] = $val;
-            }
-        } catch (PDOException $e) {
-            $sClauError = 'Usuario.lista';
-            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+        $stmt = $this->pdoQuery($oDbl, $sQuery, __METHOD__, __FILE__, __LINE__);
+
+        $aOpciones = [];
+        foreach ($stmt as $aClave) {
+            $clave = $aClave[0];
+            $val = $aClave[1];
+            $aOpciones[$clave] = $val;
         }
         return $aOpciones;
     }
@@ -105,10 +104,10 @@ class PgUsuarioRepository extends ClaseRepository implements UsuarioRepositoryIn
         if (isset($aWhere['_limit'])) {
             unset($aWhere['_limit']);
         }
-               $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
-               $stmt = $this->prepareAndExecute( $oDbl, $sQry, $aWhere,__METHOD__, __FILE__, __LINE__);
+        $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
+        $stmt = $this->prepareAndExecute($oDbl, $sQry, $aWhere, __METHOD__, __FILE__, __LINE__);
 
-        $filas =$stmt->fetchAll(PDO::FETCH_ASSOC);
+        $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
             // para los bytea: (resources)
             $handle = $aDatos['password'];
@@ -133,7 +132,7 @@ class PgUsuarioRepository extends ClaseRepository implements UsuarioRepositoryIn
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         $sql = "DELETE FROM $nom_tabla WHERE id_usuario = $id_usuario";
- return $this->pdoExec( $oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        return $this->pdoExec($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
     }
 
     /**
@@ -184,17 +183,16 @@ class PgUsuarioRepository extends ClaseRepository implements UsuarioRepositoryIn
 					secret_2fa               = :secret_2fa,
                     cambio_password          = :cambio_password";
             $sql = "UPDATE $nom_tabla SET $update WHERE id_usuario = $id_usuario";
-            $stmt = $this->pdoPrepare( $oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         } else {
-         //INSERT
+            //INSERT
             $aDatos['id_usuario'] = $usuario->getId_usuario();
             $campos = "(id_usuario,usuario,id_role,password,email,id_pau,nom_usuario,has_2fa,secret_2fa,cambio_password)";
             $valores = "(:id_usuario,:usuario,:id_role,:password,:email,:id_pau,:nom_usuario,:has_2fa,:secret_2fa,:cambio_password)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
-            $stmt = $this->pdoPrepare( $oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-		}
-		return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        }
+        return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 
     private function isNew(int $id_usuario): bool

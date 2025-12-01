@@ -7,15 +7,15 @@ use core\Condicion;
 use core\ConverterDate;
 use core\Set;
 use PDO;
-use PDOException;
 use personas\model\entity\GestorPersonaPub;
 use personas\model\entity\PersonaDl;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\asignaturas\domain\contracts\SectorRepositoryInterface;
+use src\asignaturas\domain\value_objects\AsignaturaId;
 use src\profesores\domain\contracts\ProfesorAmpliacionRepositoryInterface;
 use src\profesores\domain\contracts\ProfesorStgrRepositoryInterface;
 use src\profesores\domain\entity\ProfesorStgr;
-use src\asignaturas\domain\value_objects\AsignaturaId;
+use src\shared\traits\HandlesPdoErrors;
 
 
 /**
@@ -29,6 +29,9 @@ use src\asignaturas\domain\value_objects\AsignaturaId;
  */
 class PgProfesorStgrRepository extends ClaseRepository implements ProfesorStgrRepositoryInterface
 {
+
+    use HandlesPdoErrors;
+
     public function __construct()
     {
         $oDbl = $GLOBALS['oDB'];
@@ -126,6 +129,7 @@ class PgProfesorStgrRepository extends ClaseRepository implements ProfesorStgrRe
         $multisort_args[] = SORT_STRING;
         $multisort_args[] = &$aProfesores;   // finally add the source array, by reference
         call_user_func_array("array_multisort", $multisort_args);
+
         $aOpciones = [];
         foreach ($aProfesores as $aClave) {
             $clave = $aClave['id_nom'];
@@ -137,7 +141,6 @@ class PgProfesorStgrRepository extends ClaseRepository implements ProfesorStgrRe
 
     public function getArrayProfesoresConDl(): array
     {
-
         $gesProfesores = $this->getProfesoresStgr(array('f_cese' => ''), array('f_cese' => 'IS NULL'));
         $aProfesores = [];
         $aAp1 = [];
@@ -170,6 +173,7 @@ class PgProfesorStgrRepository extends ClaseRepository implements ProfesorStgrRe
         $multisort_args[] = SORT_STRING;
         $multisort_args[] = &$aProfesores;   // finally add the source array, by reference
         call_user_func_array("array_multisort", $multisort_args);
+
         $aOpciones = [];
         foreach ($aProfesores as $aClave) {
             $clave = $aClave['id_nom'];
@@ -256,10 +260,10 @@ class PgProfesorStgrRepository extends ClaseRepository implements ProfesorStgrRe
         if (isset($aWhere['_limit'])) {
             unset($aWhere['_limit']);
         }
-       $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
-       $stmt = $this->prepareAndExecute( $oDbl, $sQry, $aWhere,__METHOD__, __FILE__, __LINE__);
+        $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
+        $stmt = $this->prepareAndExecute($oDbl, $sQry, $aWhere, __METHOD__, __FILE__, __LINE__);
 
-        $filas =$stmt->fetchAll(PDO::FETCH_ASSOC);
+        $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
             // para las fechas del postgres (texto iso)
             $aDatos['f_nombramiento'] = (new ConverterDate('date', $aDatos['f_nombramiento']))->fromPg();
@@ -279,7 +283,7 @@ class PgProfesorStgrRepository extends ClaseRepository implements ProfesorStgrRe
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         $sql = "DELETE FROM $nom_tabla WHERE id_item = $id_item";
- return $this->pdoExec( $oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        return $this->pdoExec($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
     }
 
 
@@ -315,17 +319,16 @@ class PgProfesorStgrRepository extends ClaseRepository implements ProfesorStgrRe
 					escrito_cese             = :escrito_cese,
 					f_cese                   = :f_cese";
             $sql = "UPDATE $nom_tabla SET $update WHERE id_item = $id_item";
-            $stmt = $this->pdoPrepare( $oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         } else {
-         //INSERT
+            //INSERT
             $aDatos['id_item'] = $ProfesorStgr->getId_item();
             $campos = "(id_item,id_nom,id_departamento,escrito_nombramiento,f_nombramiento,id_tipo_profesor,escrito_cese,f_cese)";
             $valores = "(:id_item,:id_nom,:id_departamento,:escrito_nombramiento,:f_nombramiento,:id_tipo_profesor,:escrito_cese,:f_cese)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
-            $stmt = $this->pdoPrepare( $oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-		}
-		return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        }
+        return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 
     private function isNew(int $id_item): bool
@@ -353,7 +356,7 @@ class PgProfesorStgrRepository extends ClaseRepository implements ProfesorStgrRe
         $nom_tabla = $this->getNomTabla();
         $sql = "SELECT * FROM $nom_tabla WHERE id_item = $id_item";
         $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-        $aDatos = $oDblSt->fetch(PDO::FETCH_ASSOC);
+        $aDatos = $stmt->fetch(PDO::FETCH_ASSOC);
         // para las fechas del postgres (texto iso)
         if ($aDatos !== false) {
             $aDatos['f_nombramiento'] = (new ConverterDate('date', $aDatos['f_nombramiento']))->fromPg();
@@ -415,6 +418,7 @@ class PgProfesorStgrRepository extends ClaseRepository implements ProfesorStgrRe
         $multisort_args[] = SORT_STRING;
         $multisort_args[] = &$aProfesores;   // finally add the source array, by reference
         call_user_func_array("array_multisort", $multisort_args);
+
         $aOpciones = [];
         foreach ($aProfesores as $aClave) {
             $clave = $aClave['id_nom'];

@@ -6,7 +6,7 @@ use core\ClaseRepository;
 use core\Condicion;
 use core\Set;
 use PDO;
-use PDOException;
+use src\shared\traits\HandlesPdoErrors;
 use src\ubis\domain\contracts\TipoTelecoRepositoryInterface;
 use src\ubis\domain\entity\TipoTeleco;
 use function core\is_true;
@@ -22,6 +22,8 @@ use function core\is_true;
  */
 class PgTipoTelecoRepository extends ClaseRepository implements TipoTelecoRepositoryInterface
 {
+    use HandlesPdoErrors;
+
     public function __construct()
     {
         $oDbl = $GLOBALS['oDBPC'];
@@ -40,14 +42,10 @@ class PgTipoTelecoRepository extends ClaseRepository implements TipoTelecoReposi
 				FROM $nom_tabla
 				WHERE persona='t'
 				ORDER BY nombre_teleco";
+        $stmt = $this->pdoQuery($oDbl, $sQuery, __METHOD__, __FILE__, __LINE__);
 
-       if (($oDbl->query($sQuery)) === false) {
-            $sClauError = 'GestorTipoTeleco.lista';
-            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
-            return false;
-        }
         $aOpciones = [];
-        foreach ($oDbl->query($sQuery) as $aClave) {
+        foreach ($stmt as $aClave) {
             $clave = $aClave[0];
             $val = $aClave[1];
             $aOpciones[$clave] = $val;
@@ -65,14 +63,10 @@ class PgTipoTelecoRepository extends ClaseRepository implements TipoTelecoReposi
 				FROM $nom_tabla
 				WHERE ubi='t'
 				ORDER BY nombre_teleco";
+        $stmt = $this->pdoQuery($oDbl, $sQuery, __METHOD__, __FILE__, __LINE__);
 
-        if (($oDbl->query($sQuery)) === false) {
-            $sClauError = 'GestorTipoTeleco.lista';
-            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
-            return false;
-        }
         $aOpciones = [];
-        foreach ($oDbl->query($sQuery) as $aClave) {
+        foreach ($stmt as $aClave) {
             $clave = $aClave[0];
             $val = $aClave[1];
             $aOpciones[$clave] = $val;
@@ -89,14 +83,10 @@ class PgTipoTelecoRepository extends ClaseRepository implements TipoTelecoReposi
         $sQuery = "SELECT id, nombre_teleco
 				FROM $nom_tabla
 				ORDER BY nombre_teleco";
+        $stmt = $this->pdoQuery($oDbl, $sQuery, __METHOD__, __FILE__, __LINE__);
 
-        if (($oDbl->query($sQuery)) === false) {
-            $sClauError = 'GestorTipoTeleco.lista';
-            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
-            return false;
-        }
         $aOpciones = [];
-        foreach ($oDbl->query($sQuery) as $aClave) {
+        foreach ($stmt as $aClave) {
             $clave = $aClave[0];
             $val = $aClave[1];
             $aOpciones[$clave] = $val;
@@ -161,10 +151,10 @@ class PgTipoTelecoRepository extends ClaseRepository implements TipoTelecoReposi
         if (isset($aWhere['_limit'])) {
             unset($aWhere['_limit']);
         }
-       $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
-       $stmt = $this->prepareAndExecute( $oDbl, $sQry, $aWhere,__METHOD__, __FILE__, __LINE__);
+        $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
+        $stmt = $this->prepareAndExecute($oDbl, $sQry, $aWhere, __METHOD__, __FILE__, __LINE__);
 
-        $filas =$stmt->fetchAll(PDO::FETCH_ASSOC);
+        $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
             $TipoTeleco = new TipoTeleco();
             $TipoTeleco->setAllAttributes($aDatos);
@@ -181,7 +171,7 @@ class PgTipoTelecoRepository extends ClaseRepository implements TipoTelecoReposi
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         $sql = "DELETE FROM $nom_tabla WHERE id = $id";
- return $this->pdoExec( $oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        return $this->pdoExec($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
     }
 
     /**
@@ -220,17 +210,16 @@ class PgTipoTelecoRepository extends ClaseRepository implements TipoTelecoReposi
 					ubi                      = :ubi,
 					persona                  = :persona";
             $sql = "UPDATE $nom_tabla SET $update WHERE id = $id";
-            $stmt = $this->pdoPrepare( $oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         } else {
-         //INSERT
+            //INSERT
             $aDatos['id'] = $TipoTeleco->getId();
             $campos = "(tipo_teleco,nombre_teleco,ubi,persona,id)";
             $valores = "(:tipo_teleco,:nombre_teleco,:ubi,:persona,:id)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
-            $stmt = $this->pdoPrepare( $oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-		}
-		return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        }
+        return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 
     private function isNew(int $id): bool

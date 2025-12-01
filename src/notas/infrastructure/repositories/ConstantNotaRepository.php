@@ -2,13 +2,10 @@
 
 namespace src\notas\infrastructure\repositories;
 
-use core\ClaseRepository;
-use core\Condicion;
-use core\Set;
 use PDO;
-use PDOException;
 use src\notas\domain\contracts\NotaRepositoryInterface;
 use src\notas\domain\entity\Nota;
+use src\shared\traits\HandlesPdoErrors;
 use function core\is_true;
 
 /**
@@ -20,8 +17,10 @@ use function core\is_true;
  * @version 2.0
  * @created 18/11/2025
  */
-class ConstantNotaRepository implements NotaRepositoryInterface
+class zzConstantNotaRepository implements NotaRepositoryInterface
 {
+    use HandlesPdoErrors;
+
     public function __construct()
     {
         Nota::traduccion_init();
@@ -45,7 +44,7 @@ class ConstantNotaRepository implements NotaRepositoryInterface
 
     public function getArrayNotasSuperadas(): array
     {
-       $aSuperadas = [
+        $aSuperadas = [
             Nota::SUPERADA,
             Nota::MAGNA,
             Nota::SUMMA,
@@ -72,7 +71,7 @@ class ConstantNotaRepository implements NotaRepositoryInterface
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         $sql = "DELETE FROM $nom_tabla WHERE id_situacion = $id_situacion";
- return $this->pdoExec( $oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        return $this->pdoExec($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
     }
 
     /**
@@ -104,17 +103,17 @@ class ConstantNotaRepository implements NotaRepositoryInterface
 					superada                 = :superada,
 					breve                    = :breve";
             $sql = "UPDATE $nom_tabla SET $update WHERE id_situacion = $id_situacion";
-            $stmt = $this->pdoPrepare( $oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
 
         } else {
-         //INSERT
+            //INSERT
             $aDatos['id_situacion'] = $Nota->getId_situacion();
             $campos = "(id_situacion,descripcion,superada,breve)";
             $valores = "(:id_situacion,:descripcion,:superada,:breve)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
-            $stmt = $this->pdoPrepare( $oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-		}
-		return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        }
+        return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 
     private function isNew(int $id_situacion): bool

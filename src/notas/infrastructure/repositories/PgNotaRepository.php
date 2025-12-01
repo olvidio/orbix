@@ -6,9 +6,9 @@ use core\ClaseRepository;
 use core\Condicion;
 use core\Set;
 use PDO;
-use PDOException;
 use src\notas\domain\contracts\NotaRepositoryInterface;
 use src\notas\domain\entity\Nota;
+use src\shared\traits\HandlesPdoErrors;
 use function core\is_true;
 
 /**
@@ -22,6 +22,8 @@ use function core\is_true;
  */
 class PgNotaRepository extends ClaseRepository implements NotaRepositoryInterface
 {
+    use HandlesPdoErrors;
+
     public function __construct()
     {
         $oDbl = $GLOBALS['oDBPC'];
@@ -39,15 +41,13 @@ class PgNotaRepository extends ClaseRepository implements NotaRepositoryInterfac
 				FROM $nom_tabla
 				WHERE superada = 'f'
 				ORDER BY id_situacion";
-        if (($oDblSt = $oDbl->query($sQuery)) === false) {
-            $sClauError = 'GestorNota.lista';
-            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
-            return false;
+        $stmt = $this->PdoQuery($oDbl, $sQuery, __METHOD__, __FILE__, __LINE__);
+
+        $aOpcinoes = [];
+        foreach ($stmt as $row) {
+            $aOpcinoes[] = $row['id_situacion'];
         }
-        foreach ($oDbl->query($sQuery) as $row) {
-            $aDades[] = $row['id_situacion'];
-        }
-        return $aDades;
+        return $aOpcinoes;
     }
 
     public function getArrayNotasSuperadas(): array
@@ -58,15 +58,13 @@ class PgNotaRepository extends ClaseRepository implements NotaRepositoryInterfac
 				FROM $nom_tabla
 				WHERE superada = 't'
 				ORDER BY id_situacion";
-        if (($oDblSt = $oDbl->query($sQuery)) === false) {
-            $sClauError = 'GestorNota.lista';
-            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
-            return false;
+        $stmt = $this->PdoQuery($oDbl, $sQuery, __METHOD__, __FILE__, __LINE__);
+
+        $aOpciones = [];
+        foreach ($stmt as $row) {
+            $aOpciones[] = $row['id_situacion'];
         }
-        foreach ($oDbl->query($sQuery) as $row) {
-            $aDades[] = $row['id_situacion'];
-        }
-        return $aDades;
+        return $aOpciones;
     }
 
     public function getArrayNotas(): array
@@ -76,13 +74,10 @@ class PgNotaRepository extends ClaseRepository implements NotaRepositoryInterfac
         $sQuery = "SELECT id_situacion, descripcion
 				FROM $nom_tabla
 				ORDER BY id_situacion";
-        if (($oDblSt = $oDbl->query($sQuery)) === false) {
-            $sClauError = 'GestorNota.lista';
-            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
-            return false;
-        }
+        $stmt = $this->PdoQuery($oDbl, $sQuery, __METHOD__, __FILE__, __LINE__);
+
         $aNotas = [];
-        foreach ($oDblSt as $aDades) {
+        foreach ($stmt as $aDades) {
             $id_situacion = $aDades['id_situacion'];
             $descripcion = $aDades['descripcion'];
             $aNotas[$id_situacion] = $descripcion;
@@ -146,10 +141,10 @@ class PgNotaRepository extends ClaseRepository implements NotaRepositoryInterfac
         if (isset($aWhere['_limit'])) {
             unset($aWhere['_limit']);
         }
-       $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
-       $stmt = $this->prepareAndExecute( $oDbl, $sQry, $aWhere,__METHOD__, __FILE__, __LINE__);
+        $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
+        $stmt = $this->prepareAndExecute($oDbl, $sQry, $aWhere, __METHOD__, __FILE__, __LINE__);
 
-        $filas =$stmt->fetchAll(PDO::FETCH_ASSOC);
+        $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
             $Nota = new Nota();
             $Nota->setAllAttributes($aDatos);
@@ -166,7 +161,7 @@ class PgNotaRepository extends ClaseRepository implements NotaRepositoryInterfac
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         $sql = "DELETE FROM $nom_tabla WHERE id_situacion = $id_situacion";
- return $this->pdoExec( $oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        return $this->pdoExec($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
     }
 
     /**
@@ -198,17 +193,16 @@ class PgNotaRepository extends ClaseRepository implements NotaRepositoryInterfac
 					superada                 = :superada,
 					breve                    = :breve";
             $sql = "UPDATE $nom_tabla SET $update WHERE id_situacion = $id_situacion";
-            $stmt = $this->pdoPrepare( $oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         } else {
-         //INSERT
+            //INSERT
             $aDatos['id_situacion'] = $Nota->getId_situacion();
             $campos = "(id_situacion,descripcion,superada,breve)";
             $valores = "(:id_situacion,:descripcion,:superada,:breve)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
-            $stmt = $this->pdoPrepare( $oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-		}
-		return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        }
+        return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 
     private function isNew(int $id_situacion): bool

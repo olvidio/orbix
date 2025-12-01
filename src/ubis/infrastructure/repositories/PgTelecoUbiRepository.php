@@ -6,7 +6,7 @@ use core\ClaseRepository;
 use core\Condicion;
 use core\Set;
 use PDO;
-use PDOException;
+use src\shared\traits\HandlesPdoErrors;
 use src\ubis\domain\contracts\TelecoUbiRepositoryInterface;
 use src\ubis\domain\entity\TelecoUbi;
 
@@ -21,6 +21,7 @@ use src\ubis\domain\entity\TelecoUbi;
  */
 abstract class PgTelecoUbiRepository extends ClaseRepository implements TelecoUbiRepositoryInterface
 {
+    use HandlesPdoErrors;
 
     /* -------------------- GESTOR BASE ---------------------------------------- */
 
@@ -78,10 +79,10 @@ abstract class PgTelecoUbiRepository extends ClaseRepository implements TelecoUb
         if (isset($aWhere['_limit'])) {
             unset($aWhere['_limit']);
         }
-       $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
-       $stmt = $this->prepareAndExecute( $oDbl, $sQry, $aWhere,__METHOD__, __FILE__, __LINE__);
+        $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
+        $stmt = $this->prepareAndExecute($oDbl, $sQry, $aWhere, __METHOD__, __FILE__, __LINE__);
 
-        $filas =$stmt->fetchAll(PDO::FETCH_ASSOC);
+        $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
             $TelecoCdc = new TelecoUbi();
             $TelecoCdc->setAllAttributes($aDatos);
@@ -98,7 +99,7 @@ abstract class PgTelecoUbiRepository extends ClaseRepository implements TelecoUb
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         $sql = "DELETE FROM $nom_tabla WHERE id_item = $id_item";
- return $this->pdoExec( $oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        return $this->pdoExec($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
     }
 
     /**
@@ -128,17 +129,17 @@ abstract class PgTelecoUbiRepository extends ClaseRepository implements TelecoUb
 					num_teleco               = :num_teleco,
 					observ                   = :observ";
             $sql = "UPDATE $nom_tabla SET $update WHERE id_item = $id_item";
-            $stmt = $this->pdoPrepare( $oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
 
         } else {
-         //INSERT
+            //INSERT
             $aDatos['id_item'] = $TelecoCdc->getId_item();
             $campos = "(id_ubi,id_tipo_teleco,desc_teleco,num_teleco,observ,id_item)";
             $valores = "(:id_ubi,:id_tipo_teleco,:desc_teleco,:num_teleco,:observ,:id_item)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
-            $stmt = $this->pdoPrepare( $oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-		}
-		return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        }
+        return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 
     private function isNew(int $id_item): bool

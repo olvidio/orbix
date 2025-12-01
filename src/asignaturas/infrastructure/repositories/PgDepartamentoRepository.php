@@ -6,9 +6,9 @@ use core\ClaseRepository;
 use core\Condicion;
 use core\Set;
 use PDO;
-use PDOException;
 use src\asignaturas\domain\contracts\DepartamentoRepositoryInterface;
 use src\asignaturas\domain\entity\Departamento;
+use src\shared\traits\HandlesPdoErrors;
 
 /**
  * Clase que adapta la tabla xe_departamentos a la interfaz del repositorio
@@ -21,6 +21,8 @@ use src\asignaturas\domain\entity\Departamento;
  */
 class PgDepartamentoRepository extends ClaseRepository implements DepartamentoRepositoryInterface
 {
+    use HandlesPdoErrors;
+
     public function __construct()
     {
         $oDbl = $GLOBALS['oDBPC'];
@@ -37,16 +39,12 @@ class PgDepartamentoRepository extends ClaseRepository implements DepartamentoRe
         $sQuery = "SELECT id_departamento,departamento 
 				FROM $nom_tabla
 				ORDER BY departamento";
-        try {
-            $aOpciones = [];
-            foreach ($oDbl->query($sQuery) as $aClave) {
-                $clave = $aClave[0];
-                $val = $aClave[1];
-                $aOpciones[$clave] = $val;
-            }
-        } catch (PDOException $e) {
-            $sClauError = 'TipoCasa.lista';
-            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+        $stmt = $this->pdoQuery($oDbl, $sQuery, __METHOD__, __FILE__, __LINE__);
+        $aOpciones = [];
+        foreach ($stmt as $aClave) {
+            $clave = $aClave[0];
+            $val = $aClave[1];
+            $aOpciones[$clave] = $val;
         }
         return $aOpciones;
     }
@@ -107,10 +105,10 @@ class PgDepartamentoRepository extends ClaseRepository implements DepartamentoRe
         if (isset($aWhere['_limit'])) {
             unset($aWhere['_limit']);
         }
-       $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
-       $stmt = $this->prepareAndExecute( $oDbl, $sQry, $aWhere,__METHOD__, __FILE__, __LINE__);
+        $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
+        $stmt = $this->prepareAndExecute($oDbl, $sQry, $aWhere, __METHOD__, __FILE__, __LINE__);
 
-        $filas =$stmt->fetchAll(PDO::FETCH_ASSOC);
+        $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
             $Departamento = new Departamento();
             $Departamento->setAllAttributes($aDatos);
@@ -127,7 +125,7 @@ class PgDepartamentoRepository extends ClaseRepository implements DepartamentoRe
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         $sql = "DELETE FROM $nom_tabla WHERE id_departamento = $id_departamento";
- return $this->pdoExec( $oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        return $this->pdoExec($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
     }
 
     /**
@@ -147,19 +145,18 @@ class PgDepartamentoRepository extends ClaseRepository implements DepartamentoRe
         if ($bInsert === false) {
             //UPDATE
             $update = "
-					departamento             = :departamento";
+                    departamento             = :departamento";
             $sql = "UPDATE $nom_tabla SET $update WHERE id_departamento = $id_departamento";
-            $stmt = $this->pdoPrepare( $oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         } else {
-         //INSERT
+            //INSERT
             $aDatos['id_departamento'] = $Departamento->getIdDepartamentoVo()?->value();
             $campos = "(id_departamento,departamento)";
             $valores = "(:id_departamento,:departamento)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
-            $stmt = $this->pdoPrepare( $oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-		}
-		return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        }
+        return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 
     private function isNew(int $id_departamento): bool

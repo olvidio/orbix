@@ -25,7 +25,7 @@ $dir_web = $_SERVER['DIRWEB'];
 $path = "$document_root/$dir_web";
 set_include_path(get_include_path() . PATH_SEPARATOR . $path);
 
-use shared\infrastructure\consumirColaMail;
+use src\shared\infrastructure\consumirColaMail;
 
 // INICIO Cabecera global de URL de controlador *********************************
 

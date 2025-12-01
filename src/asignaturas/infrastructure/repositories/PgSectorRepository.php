@@ -6,9 +6,9 @@ use core\ClaseRepository;
 use core\Condicion;
 use core\Set;
 use PDO;
-use PDOException;
 use src\asignaturas\domain\contracts\SectorRepositoryInterface;
 use src\asignaturas\domain\entity\Sector;
+use src\shared\traits\HandlesPdoErrors;
 
 /**
  * Clase que adapta la tabla xe_sectores a la interfaz del repositorio
@@ -21,6 +21,8 @@ use src\asignaturas\domain\entity\Sector;
  */
 class PgSectorRepository extends ClaseRepository implements SectorRepositoryInterface
 {
+    use HandlesPdoErrors;
+
     public function __construct()
     {
         $oDbl = $GLOBALS['oDBPC'];
@@ -34,25 +36,19 @@ class PgSectorRepository extends ClaseRepository implements SectorRepositoryInte
     {
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
-        $aOpciones = [];
 
         $sQuery = "SELECT id_sector, id_departamento FROM $nom_tabla ORDER BY id_departamento";
-        try {
-            $oDblSt = $oDbl->query($sQuery);
-            foreach ($oDbl->query($sQuery) as $aClave) {
-                $id_sector = $aClave['id_sector'];
-                $id_departamento = $aClave['id_departamento'];
-                if (!isset($aOpciones[$id_departamento])) {
-                    $aOpciones[$id_departamento] = [];
-                }
+        $stmt = $this->pdoQuery($oDbl, $sQuery, __METHOD__, __FILE__, __LINE__);
 
-                $aOpciones[$id_departamento][] = $id_sector;
+        $aOpciones = [];
+        foreach ($stmt as $aClave) {
+            $id_sector = $aClave['id_sector'];
+            $id_departamento = $aClave['id_departamento'];
+            if (!isset($aOpciones[$id_departamento])) {
+                $aOpciones[$id_departamento] = [];
             }
-        } catch (PDOException $e) {
-            $err_txt = $e->errorInfo[2];
-            $this->setErrorTxt($err_txt);
-            $sClaveError = 'PgSectorRepository.array';
-            $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
+
+            $aOpciones[$id_departamento][] = $id_sector;
         }
 
         return $aOpciones;
@@ -63,13 +59,9 @@ class PgSectorRepository extends ClaseRepository implements SectorRepositoryInte
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $sQuery = "SELECT id_sector,sector FROM $nom_tabla ORDER BY sector";
-        if (($oDblSt = $oDbl->query($sQuery)) === false) {
-            $sClauError = 'GestorSector.lista';
-            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
-            return false;
-        }
+        $stmt = $this->pdoQuery($oDbl, $sQuery, __METHOD__, __FILE__, __LINE__);
         $aOpciones = [];
-        foreach ($oDbl->query($sQuery) as $aClave) {
+        foreach ($stmt as $aClave) {
             $clave = $aClave[0];
             $val = $aClave[1];
             $aOpciones[$clave] = $val;
@@ -133,10 +125,10 @@ class PgSectorRepository extends ClaseRepository implements SectorRepositoryInte
         if (isset($aWhere['_limit'])) {
             unset($aWhere['_limit']);
         }
-       $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
-       $stmt = $this->prepareAndExecute( $oDbl, $sQry, $aWhere,__METHOD__, __FILE__, __LINE__);
+        $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
+        $stmt = $this->prepareAndExecute($oDbl, $sQry, $aWhere, __METHOD__, __FILE__, __LINE__);
 
-        $filas =$stmt->fetchAll(PDO::FETCH_ASSOC);
+        $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
             $Sector = new Sector();
             $Sector->setAllAttributes($aDatos);
@@ -153,7 +145,7 @@ class PgSectorRepository extends ClaseRepository implements SectorRepositoryInte
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         $sql = "DELETE FROM $nom_tabla WHERE id_sector = $id_sector";
- return $this->pdoExec( $oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        return $this->pdoExec($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
     }
 
     /**
@@ -177,17 +169,16 @@ class PgSectorRepository extends ClaseRepository implements SectorRepositoryInte
 					id_departamento          = :id_departamento,
 					sector                   = :sector";
             $sql = "UPDATE $nom_tabla SET $update WHERE id_sector = $id_sector";
-            $stmt = $this->pdoPrepare( $oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         } else {
-         //INSERT
+            //INSERT
             $aDatos['id_sector'] = $Sector->getIdSectorVo()?->value();
             $campos = "(id_sector,id_departamento,sector)";
             $valores = "(:id_sector,:id_departamento,:sector)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
-            $stmt = $this->pdoPrepare( $oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-		}
-		return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        }
+        return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 
     private function isNew(int $id_sector): bool

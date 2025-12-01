@@ -35,8 +35,8 @@ class PgRelacionUbiDireccionRepository extends ClaseRepository  implements Relac
                 FROM $nom_tabla 
                 WHERE id_ubi = :id_ubi
                 ORDER BY principal DESC, propietario DESC";
-        $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
-        $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        $stmt = $this->pdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+
         if ($stmt === false) { return []; }
         $stmt->bindValue(':id_ubi', $id_ubi, \PDO::PARAM_INT);
         if (!$this->pdoExecute($stmt, [], __METHOD__, __FILE__, __LINE__)) { return []; }
@@ -53,7 +53,6 @@ class PgRelacionUbiDireccionRepository extends ClaseRepository  implements Relac
                 VALUES (:id_ubi, :id_direccion, :principal)
                 ON CONFLICT (id_ubi, id_direccion)
                 DO UPDATE SET principal = :principal";
-        $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
         $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         if ($stmt === false) { return false; }
         $stmt->bindValue(':id_ubi', $id_ubi, PDO::PARAM_INT);
@@ -73,7 +72,6 @@ class PgRelacionUbiDireccionRepository extends ClaseRepository  implements Relac
         $nom_tabla = $this->getNomTabla();
         $sql = "DELETE FROM $nom_tabla
                 WHERE id_ubi = :id_ubi AND id_direccion = :id_direccion";
-        $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
         $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         if ($stmt === false) { return false; }
         $stmt->bindValue(':id_ubi', $id_ubi, PDO::PARAM_INT);
@@ -90,7 +88,6 @@ class PgRelacionUbiDireccionRepository extends ClaseRepository  implements Relac
                 FROM $nom_tabla
                 WHERE id_ubi = :id_ubi
                 ORDER BY principal DESC NULLS LAST";
-        $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
         $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         if ($stmt === false) { return []; }
         $stmt->bindValue(':id_ubi', $id_ubi, PDO::PARAM_INT);
@@ -107,7 +104,6 @@ class PgRelacionUbiDireccionRepository extends ClaseRepository  implements Relac
         $sql = "SELECT id_ubi, principal
                 FROM $nom_tabla
                 WHERE id_direccion = :id_direccion";
-        $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
         $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         if ($stmt === false) { return []; }
         $stmt->bindValue(':id_direccion', $id_direccion, PDO::PARAM_INT);

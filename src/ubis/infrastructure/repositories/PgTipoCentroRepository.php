@@ -6,7 +6,7 @@ use core\ClaseRepository;
 use core\Condicion;
 use core\Set;
 use PDO;
-use PDOException;
+use src\shared\traits\HandlesPdoErrors;
 use src\ubis\domain\contracts\TipoCentroRepositoryInterface;
 use src\ubis\domain\entity\TipoCentro;
 
@@ -21,6 +21,8 @@ use src\ubis\domain\entity\TipoCentro;
  */
 class PgTipoCentroRepository extends ClaseRepository implements TipoCentroRepositoryInterface
 {
+    use HandlesPdoErrors;
+
     public function __construct()
     {
         $oDbl = $GLOBALS['oDBPC'];
@@ -37,16 +39,13 @@ class PgTipoCentroRepository extends ClaseRepository implements TipoCentroReposi
         $sQuery = "SELECT tipo_ctr, nombre_tipo_ctr
 				FROM $nom_tabla
 				ORDER BY tipo_ctr";
-        try {
-            $aOpciones = [];
-            foreach ($oDbl->query($sQuery) as $aClave) {
-                $clave = $aClave[0];
-                $val = $aClave[1];
-                $aOpciones[$clave] = $val;
-            }
-        } catch (PDOException $e) {
-            $sClauError = 'TipoCtr.lista';
-            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+        $stmt = $this->PdoQuery($oDbl, $sQuery, __METHOD__, __FILE__, __LINE__);
+
+        $aOpciones = [];
+        foreach ($stmt as $aClave) {
+            $clave = $aClave[0];
+            $val = $aClave[1];
+            $aOpciones[$clave] = $val;
         }
         return $aOpciones;
     }
@@ -106,10 +105,10 @@ class PgTipoCentroRepository extends ClaseRepository implements TipoCentroReposi
         if (isset($aWhere['_limit'])) {
             unset($aWhere['_limit']);
         }
-       $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
-       $stmt = $this->prepareAndExecute( $oDbl, $sQry, $aWhere,__METHOD__, __FILE__, __LINE__);
+        $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
+        $stmt = $this->prepareAndExecute($oDbl, $sQry, $aWhere, __METHOD__, __FILE__, __LINE__);
 
-        $filas =$stmt->fetchAll(PDO::FETCH_ASSOC);
+        $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
             $TipoCentro = new TipoCentro();
             $TipoCentro->setAllAttributes($aDatos);
@@ -126,7 +125,7 @@ class PgTipoCentroRepository extends ClaseRepository implements TipoCentroReposi
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         $sql = "DELETE FROM $nom_tabla WHERE tipo_ctr = '$tipo_ctr'";
- return $this->pdoExec( $oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        return $this->pdoExec($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
     }
 
     /**
@@ -148,17 +147,16 @@ class PgTipoCentroRepository extends ClaseRepository implements TipoCentroReposi
             $update = "
 					nombre_tipo_ctr          = :nombre_tipo_ctr";
             $sql = "UPDATE $nom_tabla SET $update WHERE tipo_ctr = '$tipo_ctr'";
-            $stmt = $this->pdoPrepare( $oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         } else {
-         //INSERT
+            //INSERT
             $aDatos['tipo_ctr'] = $TipoCentro->getTipoCentroVo()->value();
             $campos = "(tipo_ctr,nombre_tipo_ctr)";
             $valores = "(:tipo_ctr,:nombre_tipo_ctr)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
-            $stmt = $this->pdoPrepare( $oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-		}
-		return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        }
+        return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 
     private function isNew(string $tipo_ctr): bool
@@ -187,7 +185,6 @@ class PgTipoCentroRepository extends ClaseRepository implements TipoCentroReposi
         $sql = "SELECT * FROM $nom_tabla WHERE tipo_ctr = '$tipo_ctr'";
         $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         return $stmt->fetch(PDO::FETCH_ASSOC);
-
     }
 
     /**

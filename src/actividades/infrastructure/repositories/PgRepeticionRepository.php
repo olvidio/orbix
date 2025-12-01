@@ -6,10 +6,10 @@ use core\ClaseRepository;
 use core\Condicion;
 use core\Set;
 use PDO;
-use PDOException;
 use src\actividades\domain\contracts\RepeticionRepositoryInterface;
 use src\actividades\domain\entity\Repeticion;
 use src\actividades\domain\value_objects\RepeticionId;
+use src\shared\traits\HandlesPdoErrors;
 
 /**
  * Clase que adapta la tabla xa_tipo_repeticion a la interfaz del repositorio
@@ -22,6 +22,8 @@ use src\actividades\domain\value_objects\RepeticionId;
  */
 class PgRepeticionRepository extends ClaseRepository implements RepeticionRepositoryInterface
 {
+    use HandlesPdoErrors;
+
     public function __construct()
     {
         $oDbl = $GLOBALS['oDBPC'];
@@ -38,13 +40,9 @@ class PgRepeticionRepository extends ClaseRepository implements RepeticionReposi
         $sQuery = "SELECT id_repeticion, repeticion
 				FROM $nom_tabla
 				ORDER BY repeticion";
-        if (($oDblSt = $oDbl->query($sQuery)) === false) {
-            $sClauError = 'Repeticion.lista';
-            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
-            return false;
-        }
+        $stmt = $this->pdoQuery($oDbl, $sQuery, __METHOD__, __FILE__, __LINE__);
         $aRepeticion = [];
-        foreach ($oDblSt as $aDades) {
+        foreach ($stmt as $aDades) {
             $id_repeticion = $aDades['id_repeticion'];
             $repeticion = $aDades['repeticion'];
             $aRepeticion[$id_repeticion] = $repeticion;
@@ -108,10 +106,10 @@ class PgRepeticionRepository extends ClaseRepository implements RepeticionReposi
         if (isset($aWhere['_limit'])) {
             unset($aWhere['_limit']);
         }
-       $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
-       $stmt = $this->prepareAndExecute( $oDbl, $sQry, $aWhere,__METHOD__, __FILE__, __LINE__);
+        $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
+        $stmt = $this->prepareAndExecute($oDbl, $sQry, $aWhere, __METHOD__, __FILE__, __LINE__);
 
-        $filas =$stmt->fetchAll(PDO::FETCH_ASSOC);
+        $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
             $Repeticion = new Repeticion();
             $Repeticion->setAllAttributes($aDatos);
@@ -128,7 +126,7 @@ class PgRepeticionRepository extends ClaseRepository implements RepeticionReposi
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         $sql = "DELETE FROM $nom_tabla WHERE id_repeticion = $id_repeticion";
- return $this->pdoExec( $oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        return $this->pdoExec($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
     }
 
     /**
@@ -154,17 +152,17 @@ class PgRepeticionRepository extends ClaseRepository implements RepeticionReposi
 					temporada                = :temporada,
 					tipo                     = :tipo";
             $sql = "UPDATE $nom_tabla SET $update WHERE id_repeticion = $id_repeticion";
-            $stmt = $this->pdoPrepare( $oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
 
         } else {
-         //INSERT
+            //INSERT
             $aDatos['id_repeticion'] = $Repeticion->getId_repeticion();
             $campos = "(id_repeticion,repeticion,temporada,tipo)";
             $valores = "(:id_repeticion,:repeticion,:temporada,:tipo)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
-            $stmt = $this->pdoPrepare( $oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-		}
-		return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        }
+        return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 
     private function isNew(int $id_repeticion): bool
@@ -192,6 +190,7 @@ class PgRepeticionRepository extends ClaseRepository implements RepeticionReposi
         $nom_tabla = $this->getNomTabla();
         $sql = "SELECT * FROM $nom_tabla WHERE id_repeticion = $id_repeticion";
         $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+
         return $stmt->fetch(PDO::FETCH_ASSOC);
 
     }

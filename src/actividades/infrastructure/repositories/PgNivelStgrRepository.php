@@ -6,10 +6,10 @@ use core\ClaseRepository;
 use core\Condicion;
 use core\Set;
 use PDO;
-use PDOException;
 use src\actividades\domain\contracts\NivelStgrRepositoryInterface;
 use src\actividades\domain\entity\NivelStgr;
 use src\actividades\domain\value_objects\NivelStgrId;
+use src\shared\traits\HandlesPdoErrors;
 
 /**
  * Clase que adapta la tabla xa_nivel_stgr a la interfaz del repositorio
@@ -22,6 +22,8 @@ use src\actividades\domain\value_objects\NivelStgrId;
  */
 class PgNivelStgrRepository extends ClaseRepository implements NivelStgrRepositoryInterface
 {
+    use HandlesPdoErrors;
+
     public function __construct()
     {
         $oDbl = $GLOBALS['oDBPC'];
@@ -37,13 +39,9 @@ class PgNivelStgrRepository extends ClaseRepository implements NivelStgrReposito
         $nom_tabla = $this->getNomTabla();
 
         $sQuery = "SELECT nivel_stgr,desc_breve || '(' || desc_nivel || ')' FROM $nom_tabla ORDER BY orden";
-        if (($oDbl->query($sQuery)) === false) {
-            $sClauError = 'GestorNivelStgr.lista';
-            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
-            return false;
-        }
+        $stmt = $this->pdoQuery($oDbl, $sQuery, __METHOD__, __FILE__, __LINE__);
         $aOpciones = [];
-        foreach ($oDbl->query($sQuery) as $aClave) {
+        foreach ($stmt as $aClave) {
             $clave = $aClave[0];
             $val = $aClave[1];
             $aOpciones[$clave] = $val;
@@ -106,10 +104,10 @@ class PgNivelStgrRepository extends ClaseRepository implements NivelStgrReposito
         if (isset($aWhere['_limit'])) {
             unset($aWhere['_limit']);
         }
-       $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
-       $stmt = $this->prepareAndExecute( $oDbl, $sQry, $aWhere,__METHOD__, __FILE__, __LINE__);
+        $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
+        $stmt = $this->prepareAndExecute($oDbl, $sQry, $aWhere, __METHOD__, __FILE__, __LINE__);
 
-        $filas =$stmt->fetchAll(PDO::FETCH_ASSOC);
+        $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
             $NivelStgr = new NivelStgr();
             $NivelStgr->setAllAttributes($aDatos);
@@ -126,7 +124,7 @@ class PgNivelStgrRepository extends ClaseRepository implements NivelStgrReposito
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         $sql = "DELETE FROM $nom_tabla WHERE nivel_stgr = $nivel_stgr";
- return $this->pdoExec( $oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        return $this->pdoExec($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
     }
 
     /**
@@ -152,17 +150,17 @@ class PgNivelStgrRepository extends ClaseRepository implements NivelStgrReposito
 					desc_breve               = :desc_breve,
 					orden                    = :orden";
             $sql = "UPDATE $nom_tabla SET $update WHERE nivel_stgr = $nivel_stgr";
-            $stmt = $this->pdoPrepare( $oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
 
         } else {
-         //INSERT
+            //INSERT
             $aDatos['nivel_stgr'] = $NivelStgr->getNivel_stgr();
             $campos = "(nivel_stgr,desc_nivel,desc_breve,orden)";
             $valores = "(:nivel_stgr,:desc_nivel,:desc_breve,:orden)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
-            $stmt = $this->pdoPrepare( $oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-		}
-		return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        }
+        return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 
     private function isNew(int $nivel_stgr): bool
@@ -190,6 +188,7 @@ class PgNivelStgrRepository extends ClaseRepository implements NivelStgrReposito
         $nom_tabla = $this->getNomTabla();
         $sql = "SELECT * FROM $nom_tabla WHERE nivel_stgr = $nivel_stgr";
         $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+
         return $stmt->fetch(PDO::FETCH_ASSOC);
 
     }

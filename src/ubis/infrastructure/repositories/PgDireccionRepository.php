@@ -7,7 +7,6 @@ use core\Condicion;
 use core\ConverterDate;
 use core\Set;
 use PDO;
-use PDOException;
 use src\shared\traits\HandlesPdoErrors;
 use src\ubis\domain\contracts\DireccionRepositoryInterface;
 use src\ubis\domain\entity\Direccion;
@@ -25,6 +24,7 @@ use function core\is_true;
 class PgDireccionRepository extends ClaseRepository implements DireccionRepositoryInterface
 {
     use HandlesPdoErrors;
+
     public function __construct()
     {
         $oDbl = $GLOBALS['oDBP'];
@@ -39,10 +39,8 @@ class PgDireccionRepository extends ClaseRepository implements DireccionReposito
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $sQuery = "SELECT DISTINCT initcap(poblacion) AS poblacion, initcap(poblacion) AS poblacion1 FROM $nom_tabla $sCondicion ORDER BY initcap(poblacion)";
-        $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
-        $stmt = $this->pdoPrepare($oDbl, $sQuery, __METHOD__, __FILE__, __LINE__);
-        if ($stmt === false) { return []; }
-        if (!$this->pdoExecute($stmt, [], __METHOD__, __FILE__, __LINE__)) { return []; }
+        $stmt = $this->pdoQuery($oDbl, $sQuery,__METHOD__, __FILE__, __LINE__);
+
         $aOpciones = [];
         foreach ($stmt->fetchAll(PDO::FETCH_NUM) as $row) {
             $poblacion = $row[0];
@@ -59,10 +57,8 @@ class PgDireccionRepository extends ClaseRepository implements DireccionReposito
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $sQuery = "SELECT DISTINCT initcap(pais) AS pais, initcap(pais) AS pais1 FROM $nom_tabla $sCondicion ORDER BY initcap(pais)";
-        $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
-        $stmt = $this->pdoPrepare($oDbl, $sQuery, __METHOD__, __FILE__, __LINE__);
-        if ($stmt === false) { return []; }
-        if (!$this->pdoExecute($stmt, [], __METHOD__, __FILE__, __LINE__)) { return []; }
+        $stmt = $this->pdoQuery($oDbl, $sQuery, __METHOD__, __FILE__, __LINE__);
+
         $aOpciones = [];
         foreach ($stmt->fetchAll(PDO::FETCH_NUM) as $row) {
             $pais = $row[0];
@@ -130,8 +126,7 @@ class PgDireccionRepository extends ClaseRepository implements DireccionReposito
             unset($aWhere['_limit']);
         }
         $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
-        $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
-        $stmt = $this->prepareAndExecute( $oDbl, $sQry, $aWhere,__METHOD__, __FILE__, __LINE__);
+        $stmt = $this->prepareAndExecute($oDbl, $sQry, $aWhere, __METHOD__, __FILE__, __LINE__);
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
@@ -218,21 +213,17 @@ class PgDireccionRepository extends ClaseRepository implements DireccionReposito
                     plano_extension          = :plano_extension,
                     plano_nom                = :plano_nom,
                     nom_sede                 = :nom_sede";
-            $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
-            $stmt = $this->pdoPrepare($oDbl, "UPDATE $nom_tabla SET $update WHERE id_direccion = $id_direccion", __METHOD__, __FILE__, __LINE__);
-            if ($stmt === false) { return false; }
-            if (!$this->pdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__)) { return false; }
+            $sql = "UPDATE $nom_tabla SET $update WHERE id_direccion = $id_direccion";
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         } else {
-            // INSERT
+            //INSERT
             $aDatos['id_direccion'] = $Direccion->getId_direccion();
             $campos = "(id_direccion,direccion,c_p,poblacion,provincia,a_p,pais,f_direccion,observ,cp_dcha,latitud,longitud,plano_doc,plano_extension,plano_nom,nom_sede)";
             $valores = "(:id_direccion,:direccion,:c_p,:poblacion,:provincia,:a_p,:pais,:f_direccion,:observ,:cp_dcha,:latitud,:longitud,:plano_doc,:plano_extension,:plano_nom,:nom_sede)";
-            $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
-            $stmt = $this->pdoPrepare($oDbl, "INSERT INTO $nom_tabla $campos VALUES $valores", __METHOD__, __FILE__, __LINE__);
-            if ($stmt === false) { return false; }
-            if (!$this->pdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__)) { return false; }
+            $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         }
-        return TRUE;
+        return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 
     private function isNew(int $id_direccion): bool
@@ -262,8 +253,8 @@ class PgDireccionRepository extends ClaseRepository implements DireccionReposito
         $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         // para los bytea, sobre escribo los valores:
         $splano_doc = '';
-        $oDblSt->bindColumn('plano_doc', $splano_doc, PDO::PARAM_STR);
-        $aDatos = $oDblSt->fetch(PDO::FETCH_ASSOC);
+        $stmt->bindColumn('plano_doc', $splano_doc, PDO::PARAM_STR);
+        $aDatos = $stmt->fetch(PDO::FETCH_ASSOC);
         if ($aDatos !== false) {
             $aDatos['plano_doc'] = hex2bin($splano_doc ?? '');
         }

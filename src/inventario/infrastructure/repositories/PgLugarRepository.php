@@ -6,7 +6,6 @@ use core\ClaseRepository;
 use core\Condicion;
 use core\Set;
 use PDO;
-use PDOException;
 use src\inventario\domain\contracts\LugarRepositoryInterface;
 use src\inventario\domain\entity\Lugar;
 use src\shared\traits\HandlesPdoErrors;
@@ -23,6 +22,7 @@ use src\shared\traits\HandlesPdoErrors;
 class PgLugarRepository extends ClaseRepository implements LugarRepositoryInterface
 {
     use HandlesPdoErrors;
+
     public function __construct()
     {
         $oDbl = $GLOBALS['oDB'];
@@ -38,13 +38,10 @@ class PgLugarRepository extends ClaseRepository implements LugarRepositoryInterf
 				FROM $nom_tabla
 				WHERE id_ubi='$id_ubi'
 				ORDER BY id_ubi,nom_lugar";
-        if ($oDbl->query($sQuery) === false) {
-            $sClauError = 'GestorLugar.lista';
-            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
-            return false;
-        }
+        $stmt = $this->pdoQuery($oDbl, $sQuery, __METHOD__, __FILE__, __LINE__);
+
         $aOpciones = [];
-        foreach ($oDbl->query($sQuery) as $aClave) {
+        foreach ($stmt as $aClave) {
             $clave = $aClave[0];
             $val = $aClave[1];
             $aOpciones[$clave] = $val;
@@ -109,9 +106,9 @@ class PgLugarRepository extends ClaseRepository implements LugarRepositoryInterf
             unset($aWhere['_limit']);
         }
         $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
-        $stmt = $this->prepareAndExecute( $oDbl, $sQry, $aWhere,__METHOD__, __FILE__, __LINE__);
+        $stmt = $this->prepareAndExecute($oDbl, $sQry, $aWhere, __METHOD__, __FILE__, __LINE__);
 
-        $filas =$stmt->fetchAll(PDO::FETCH_ASSOC);
+        $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
             $Lugar = new Lugar();
             $Lugar->setAllAttributes($aDatos);
@@ -128,7 +125,7 @@ class PgLugarRepository extends ClaseRepository implements LugarRepositoryInterf
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         $sql = "DELETE FROM $nom_tabla WHERE id_lugar = $id_lugar";
-        return $this->pdoExec( $oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        return $this->pdoExec($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
     }
 
 
@@ -153,17 +150,16 @@ class PgLugarRepository extends ClaseRepository implements LugarRepositoryInterf
                     id_ubi                   = :id_ubi,
                     nom_lugar                = :nom_lugar";
             $sql = "UPDATE $nom_tabla SET $update WHERE id_lugar = $id_lugar";
-            $stmt = $this->pdoPrepare( $oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         } else {
             //INSERT
             $aDatos['id_lugar'] = $Lugar->getId_lugar();
             $campos = "(id_lugar,id_ubi,nom_lugar)";
             $valores = "(:id_lugar,:id_ubi,:nom_lugar)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
-            $stmt = $this->pdoPrepare( $oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-		}
-		return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        }
+        return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 
     private function isNew(int $id_lugar): bool

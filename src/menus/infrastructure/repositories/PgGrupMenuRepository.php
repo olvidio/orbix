@@ -7,8 +7,8 @@ use core\Condicion;
 use core\Set;
 use PDO;
 use PDOException;
-use src\menus\domain\entity\GrupMenu;
 use src\menus\domain\contracts\GrupMenuRepositoryInterface;
+use src\menus\domain\entity\GrupMenu;
 use src\shared\traits\HandlesPdoErrors;
 
 /**
@@ -23,6 +23,7 @@ use src\shared\traits\HandlesPdoErrors;
 class PgGrupMenuRepository extends ClaseRepository implements GrupMenuRepositoryInterface
 {
     use HandlesPdoErrors;
+
     public function __construct()
     {
         $oDbl = $GLOBALS['oDBE'];
@@ -37,13 +38,10 @@ class PgGrupMenuRepository extends ClaseRepository implements GrupMenuRepository
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $sQuery = "SELECT id_grupmenu,grup_menu FROM $nom_tabla ORDER BY orden,grup_menu";
-        if (($oDblSt = $oDbl->query($sQuery)) === false) {
-            $sClauError = 'GestorColeccion.lista';
-            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
-            return false;
-        }
+        $stmt = $this->PdoQuery($oDbl, $sQuery, __METHOD__, __FILE__, __LINE__);
+
         $aOpciones = [];
-        foreach ($oDbl->query($sQuery) as $aClave) {
+        foreach ($stmt as $aClave) {
             $clave = $aClave[0];
             $val = $aClave[1];
             $aOpciones[$clave] = $val;
@@ -51,117 +49,119 @@ class PgGrupMenuRepository extends ClaseRepository implements GrupMenuRepository
         return $aOpciones;
     }
 
-/* -------------------- GESTOR BASE ---------------------------------------- */
+    /* -------------------- GESTOR BASE ---------------------------------------- */
 
-	/**
-	 * devuelve una colección (array) de objetos de tipo GrupMenu
-	 *
-	 * @param array $aWhere asociativo con los valores para cada campo de la BD.
-	 * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-	 * @return array|false Una colección de objetos de tipo GrupMenu
-	
-	 */
-	public function getGrupMenus(array $aWhere=[], array $aOperators=[]): array|false
-	{
-		$oDbl = $this->getoDbl_Select();
-		$nom_tabla = $this->getNomTabla();
-		$GrupMenuSet = new Set();
-		$oCondicion = new Condicion();
-		$aCondicion = [];
-		foreach ($aWhere as $camp => $val) {
-			if ($camp === '_ordre') { continue; }
-			if ($camp === '_limit') { continue; }
-			$sOperador = $aOperators[$camp] ?? '';
-			if ($a = $oCondicion->getCondicion($camp,$sOperador,$val)) { $aCondicion[]=$a; }
-			// operadores que no requieren valores
-			if ($sOperador === 'BETWEEN' || $sOperador === 'IS NULL' || $sOperador === 'IS NOT NULL' || $sOperador === 'OR') { unset($aWhere[$camp]); }
-            if ($sOperador === 'IN' || $sOperador === 'NOT IN') { unset($aWhere[$camp]); }
-            if ($sOperador === 'TXT') { unset($aWhere[$camp]); }
-		}
-		$sCondicion = implode(' AND ',$aCondicion);
-		if ($sCondicion !=='') { $sCondicion = " WHERE ".$sCondicion; }
-		$sOrdre = '';
+    /**
+     * devuelve una colección (array) de objetos de tipo GrupMenu
+     *
+     * @param array $aWhere asociativo con los valores para cada campo de la BD.
+     * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
+     * @return array|false Una colección de objetos de tipo GrupMenu
+     */
+    public function getGrupMenus(array $aWhere = [], array $aOperators = []): array|false
+    {
+        $oDbl = $this->getoDbl_Select();
+        $nom_tabla = $this->getNomTabla();
+        $GrupMenuSet = new Set();
+        $oCondicion = new Condicion();
+        $aCondicion = [];
+        foreach ($aWhere as $camp => $val) {
+            if ($camp === '_ordre') {
+                continue;
+            }
+            if ($camp === '_limit') {
+                continue;
+            }
+            $sOperador = $aOperators[$camp] ?? '';
+            if ($a = $oCondicion->getCondicion($camp, $sOperador, $val)) {
+                $aCondicion[] = $a;
+            }
+            // operadores que no requieren valores
+            if ($sOperador === 'BETWEEN' || $sOperador === 'IS NULL' || $sOperador === 'IS NOT NULL' || $sOperador === 'OR') {
+                unset($aWhere[$camp]);
+            }
+            if ($sOperador === 'IN' || $sOperador === 'NOT IN') {
+                unset($aWhere[$camp]);
+            }
+            if ($sOperador === 'TXT') {
+                unset($aWhere[$camp]);
+            }
+        }
+        $sCondicion = implode(' AND ', $aCondicion);
+        if ($sCondicion !== '') {
+            $sCondicion = " WHERE " . $sCondicion;
+        }
+        $sOrdre = '';
         $sLimit = '';
-		if (isset($aWhere['_ordre']) && $aWhere['_ordre'] !== '') { $sOrdre = ' ORDER BY '.$aWhere['_ordre']; }
-		if (isset($aWhere['_ordre'])) { unset($aWhere['_ordre']); }
-		if (isset($aWhere['_limit']) && $aWhere['_limit'] !== '') { $sLimit = ' LIMIT '.$aWhere['_limit']; }
-		if (isset($aWhere['_limit'])) { unset($aWhere['_limit']); }
-		$sQry = "SELECT * FROM $nom_tabla ".$sCondicion.$sOrdre.$sLimit;
-		if (($oDblSt = $oDbl->prepare($sQry)) === false) {
-			$sClaveError = 'PgGrupMenuRepository.listar.prepare';
-			$_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClaveError, __LINE__, __FILE__);
-			return false;
-		}
-		if (($oDblSt->execute($aWhere)) === false) {
-			$sClaveError = 'PgGrupMenuRepository.listar.execute';
-			$_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
-			return false;
-		}
-		
-		$filas =$stmt->fetchAll(PDO::FETCH_ASSOC);
+        if (isset($aWhere['_ordre']) && $aWhere['_ordre'] !== '') {
+            $sOrdre = ' ORDER BY ' . $aWhere['_ordre'];
+        }
+        if (isset($aWhere['_ordre'])) {
+            unset($aWhere['_ordre']);
+        }
+        if (isset($aWhere['_limit']) && $aWhere['_limit'] !== '') {
+            $sLimit = ' LIMIT ' . $aWhere['_limit'];
+        }
+        if (isset($aWhere['_limit'])) {
+            unset($aWhere['_limit']);
+        }
+        $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
+        $stmt = $this->prepareAndExecute( $oDbl, $sQry, $aWhere,__METHOD__, __FILE__, __LINE__);
+
+        $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
             $GrupMenu = new GrupMenu();
             $GrupMenu->setAllAttributes($aDatos);
-			$GrupMenuSet->add($GrupMenu);
-		}
-		return $GrupMenuSet->getTot();
-	}
+            $GrupMenuSet->add($GrupMenu);
+        }
+        return $GrupMenuSet->getTot();
+    }
 
-/* -------------------- ENTIDAD --------------------------------------------- */
+    /* -------------------- ENTIDAD --------------------------------------------- */
 
-	public function Eliminar(GrupMenu $GrupMenu): bool
+    public function Eliminar(GrupMenu $GrupMenu): bool
     {
         $id_grupmenu = $GrupMenu->getId_grupmenu();
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         $sql = "DELETE FROM $nom_tabla WHERE id_grupmenu = $id_grupmenu";
- return $this->pdoExec( $oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        return $this->pdoExec($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
     }
 
-	
-	/**
-	 * Si no existe el registro, hace un insert, si existe, se hace el update.
-	
-	 */
-	public function Guardar(GrupMenu $GrupMenu): bool
+
+    /**
+     * Si no existe el registro, hace un insert, si existe, se hace el update.
+     */
+    public function Guardar(GrupMenu $GrupMenu): bool
     {
         $id_grupmenu = $GrupMenu->getId_grupmenu();
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         $bInsert = $this->isNew($id_grupmenu);
 
-		$aDatos = [];
-		$aDatos['grup_menu'] = $GrupMenu->getGrup_menu();
-		$aDatos['orden'] = $GrupMenu->getOrden();
-		array_walk($aDatos, 'core\poner_null');
+        $aDatos = [];
+        $aDatos['grup_menu'] = $GrupMenu->getGrup_menu();
+        $aDatos['orden'] = $GrupMenu->getOrden();
+        array_walk($aDatos, 'core\poner_null');
 
-		if ($bInsert === false) {
-			//UPDATE
-			$update="
+        if ($bInsert === false) {
+            //UPDATE
+            $update = "
 					grup_menu                = :grup_menu,
 					orden                    = :orden";
-			$sql = "UPDATE $nom_tabla SET $update WHERE id_grupmenu = $id_grupmenu";
-			$stmt = $this->pdoPrepare( $oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-		} else {
-			//INSERT
-			$aDatos['id_grupmenu'] = $GrupMenu->getId_grupmenu();
-			$campos="(id_grupmenu,grup_menu,orden)";
-			$valores="(:id_grupmenu,:grup_menu,:orden)";		
-			$sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
-			$stmt = $this->pdoPrepare( $oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-            try {
-                $oDblSt->execute($aDatos);
-            } catch ( PDOException $e) {
-                $err_txt=$e->errorInfo[2];
-                $this->setErrorTxt($err_txt);
-                $sClaveError = 'PgGrupMenuRepository.insertar.execute';
-                $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
-                return false;
-			}
-		}
-		return TRUE;
-	}
-	
+            $sql = "UPDATE $nom_tabla SET $update WHERE id_grupmenu = $id_grupmenu";
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        } else {
+            //INSERT
+            $aDatos['id_grupmenu'] = $GrupMenu->getId_grupmenu();
+            $campos = "(id_grupmenu,grup_menu,orden)";
+            $valores = "(:id_grupmenu,:grup_menu,:orden)";
+            $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        }
+        $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
+    }
+
     private function isNew(int $id_grupmenu): bool
     {
         $oDbl = $this->getoDbl();
@@ -173,14 +173,13 @@ class PgGrupMenuRepository extends ClaseRepository implements GrupMenuRepository
         }
         return false;
     }
-	
+
     /**
      * Devuelve los campos de la base de datos en un array asociativo.
      * Devuelve false si no existe la fila en la base de datos
-     * 
+     *
      * @param int $id_grupmenu
      * @return array|bool
-	
      */
     public function datosById(int $id_grupmenu): array|bool
     {
@@ -188,13 +187,12 @@ class PgGrupMenuRepository extends ClaseRepository implements GrupMenuRepository
         $nom_tabla = $this->getNomTabla();
         $sql = "SELECT * FROM $nom_tabla WHERE id_grupmenu = $id_grupmenu";
         $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-		return $stmt->fetch(PDO::FETCH_ASSOC);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
     }
-    
-	
+
+
     /**
      * Busca la clase con id_grupmenu en la base de datos .
-	
      */
     public function findById(int $id_grupmenu): ?GrupMenu
     {
@@ -204,7 +202,7 @@ class PgGrupMenuRepository extends ClaseRepository implements GrupMenuRepository
         }
         return (new GrupMenu())->setAllAttributes($aDatos);
     }
-	
+
     public function getNewId()
     {
         $oDbl = $this->getoDbl();

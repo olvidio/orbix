@@ -6,10 +6,9 @@ use core\ClaseRepository;
 use core\Condicion;
 use core\Set;
 use PDO;
-use PDOException;
-use src\shared\traits\HandlesPdoErrors;
 use src\configuracion\domain\contracts\ModuloRepositoryInterface;
 use src\configuracion\domain\entity\Modulo;
+use src\shared\traits\HandlesPdoErrors;
 use function core\array_pgInteger2php;
 use function core\array_php2pg;
 
@@ -25,6 +24,7 @@ use function core\array_php2pg;
 class PgModuloRepository extends ClaseRepository implements ModuloRepositoryInterface
 {
     use HandlesPdoErrors;
+
     public function __construct()
     {
         $oDbl = $GLOBALS['oDBPC'];
@@ -39,10 +39,7 @@ class PgModuloRepository extends ClaseRepository implements ModuloRepositoryInte
         $aOpciones = [];
 
         $sQuery = "SELECT id_mod, nom FROM $nom_tabla ORDER BY nom";
-        $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
-        $stmt = $this->pdoPrepare($oDbl, $sQuery, __METHOD__, __FILE__, __LINE__);
-        if ($stmt === false) { return []; }
-        if (!$this->pdoExecute($stmt, [], __METHOD__, __FILE__, __LINE__)) { return []; }
+        $stmt = $this->pdoQuery($oDbl, $sQuery, __METHOD__, __FILE__, __LINE__);
         foreach ($stmt->fetchAll(PDO::FETCH_NUM) as $aClave) {
             $clave = $aClave[0];
             $val = $aClave[1];
@@ -108,8 +105,7 @@ class PgModuloRepository extends ClaseRepository implements ModuloRepositoryInte
             unset($aWhere['_limit']);
         }
         $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
-        $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
-        $stmt = $this->prepareAndExecute( $oDbl, $sQry, $aWhere,__METHOD__, __FILE__, __LINE__);
+        $stmt = $this->prepareAndExecute($oDbl, $sQry, $aWhere, __METHOD__, __FILE__, __LINE__);
 
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
@@ -159,21 +155,17 @@ class PgModuloRepository extends ClaseRepository implements ModuloRepositoryInte
 					descripcion              = :descripcion,
 					mods_req                 = :mods_req,
 					apps_req                 = :apps_req";
-            $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
-            $stmt = $this->pdoPrepare($oDbl, "UPDATE $nom_tabla SET $update WHERE id_mod = $id_mod", __METHOD__, __FILE__, __LINE__);
-            if ($stmt === false) { return false; }
-            if (!$this->pdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__)) { return false; }
+            $sql = "UPDATE $nom_tabla SET $update WHERE id_mod = $id_mod";
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         } else {
-            // INSERT
+            //INSERT
             $aDatos['id_mod'] = $Modulo->getIdModVo()->value();
             $campos = "(id_mod,nom,descripcion,mods_req,apps_req)";
             $valores = "(:id_mod,:nom,:descripcion,:mods_req,:apps_req)";
-            $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
-            $stmt = $this->pdoPrepare($oDbl, "INSERT INTO $nom_tabla $campos VALUES $valores", __METHOD__, __FILE__, __LINE__);
-            if ($stmt === false) { return false; }
-            if (!$this->pdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__)) { return false; }
+            $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         }
-        return TRUE;
+        return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 
     private function isNew(int $id_mod): bool
@@ -201,7 +193,7 @@ class PgModuloRepository extends ClaseRepository implements ModuloRepositoryInte
         $nom_tabla = $this->getNomTabla();
         $sql = "SELECT * FROM $nom_tabla WHERE id_mod = $id_mod";
         $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-        $aDatos = $oDblSt->fetch(PDO::FETCH_ASSOC);
+        $aDatos = $stmt->fetch(PDO::FETCH_ASSOC);
         // para los array del postgres
         if ($aDatos !== false) {
             $aDatos['mods_req'] = array_pgInteger2php($aDatos['mods_req']);

@@ -6,10 +6,9 @@ use core\ClaseRepository;
 use core\Condicion;
 use core\Set;
 use PDO;
-use PDOException;
-use src\shared\traits\HandlesPdoErrors;
 use src\asignaturas\domain\contracts\AsignaturaRepositoryInterface;
 use src\asignaturas\domain\entity\Asignatura;
+use src\shared\traits\HandlesPdoErrors;
 use stdClass;
 use function core\is_true;
 
@@ -25,6 +24,7 @@ use function core\is_true;
 class PgAsignaturaRepository extends ClaseRepository implements AsignaturaRepositoryInterface
 {
     use HandlesPdoErrors;
+
     public function __construct()
     {
         $oDbl = $GLOBALS['oDBPC'];
@@ -60,14 +60,10 @@ class PgAsignaturaRepository extends ClaseRepository implements AsignaturaReposi
         $sOrdre = " ORDER BY id_nivel";
         $sLimit = " LIMIT 25";
         $sQuery = "SELECT DISTINCT id_asignatura,nombre_asignatura,id_nivel FROM $nom_tabla " . $sCondi . $sOrdre . $sLimit;
-        if (($oDblSt = $oDbl->query($sQuery)) === false) {
-            $sClauError = 'GestorAsignatura.lista';
-            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
-            return false;
-        }
+        $stmt = $this->pdoQuery($oDbl, $sQuery, __METHOD__, __FILE__, __LINE__);
         $json = '[';
         $i = 0;
-        foreach ($oDbl->query($sQuery) as $aClave) {
+        foreach ($stmt as $aClave) {
             $i++;
             $id_asignatura = $aClave[0];
             $nombre_asignatura = $aClave[1];
@@ -77,6 +73,7 @@ class PgAsignaturaRepository extends ClaseRepository implements AsignaturaReposi
             $json .= "{\"value\":\"$id_asignatura\",\"label\":\"$nombre_asignatura\"}";
         }
         $json .= ']';
+
         return $json;
     }
 
@@ -90,13 +87,9 @@ class PgAsignaturaRepository extends ClaseRepository implements AsignaturaReposi
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $sQuery = "SELECT id_asignatura, nombre_asignatura, creditos FROM $nom_tabla ORDER BY id_nivel";
-        if (($oDbl->query($sQuery)) === false) {
-            $sClauError = 'GestorAsignatura.lista';
-            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
-            return false;
-        }
+        $stmt = $this->pdoQuery($oDbl, $sQuery, __METHOD__, __FILE__, __LINE__);
         $aOpciones = [];
-        foreach ($oDbl->query($sQuery) as $row) {
+        foreach ($stmt as $row) {
             $id_asignatrura = $row[0];
             $nombre_asignatura = $row[1];
             $creditos = $row[2];
@@ -122,16 +115,11 @@ class PgAsignaturaRepository extends ClaseRepository implements AsignaturaReposi
             $sWhere .= " AND id_nivel NOT IN ($genericas)";
         }
         //para hacer listados que primero salgan las normales y después las opcionales:
-        //$sQuery="SELECT id_asignatura, nombre_asignatura FROM $nom_tabla $sWhere ORDER BY nombre_asignatura";
         $sQuery = "SELECT id_asignatura, nombre_asignatura, CASE WHEN id_nivel < 3000 THEN xa_asignaturas.id_nivel ELSE 3001 END AS op FROM $nom_tabla $sWhere ORDER BY op,nombre_asignatura;";
-        if (($oDbl->query($sQuery)) === false) {
-            $sClauError = 'GestorAsignatura.lista';
-            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
-            return false;
-        }
+        $stmt = $this->pdoQuery($oDbl, $sQuery, __METHOD__, __FILE__, __LINE__);
         $aOpciones = [];
         $c = 0;
-        foreach ($oDbl->query($sQuery) as $aClave) {
+        foreach ($stmt as $aClave) {
             $clave = $aClave[0];
             $val = $aClave[1];
             $id_op = $aClave[2];
@@ -169,19 +157,14 @@ class PgAsignaturaRepository extends ClaseRepository implements AsignaturaReposi
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $sQuery = "SELECT id_asignatura,nombre_corto FROM $nom_tabla ORDER BY id_asignatura";
-        try {
-            $oDblSt = $oDbl->query($sQuery);
-            foreach ($oDbl->query($sQuery) as $aClave) {
-                $id_sector = $aClave[0];
-                $id_departamento = $aClave[1];
-                $a_1 = isset($aOpciones[$id_departamento]) ? $aOpciones[$id_departamento] : [];
-                $aOpciones[$id_departamento] = array_merge($a_1, array($id_sector));
-            }
-        } catch (PDOException $e) {
-            $err_txt = $e->errorInfo[2];
-            $this->setErrorTxt($err_txt);
-            $sClaveError = 'PgAsignaturasRepository.array';
-            $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClaveError, __LINE__, __FILE__);
+        $stmt = $this->pdoQuery($oDbl, $sQuery, __METHOD__, __FILE__, __LINE__);
+
+        $aOpciones = [];
+        foreach ($stmt as $aClave) {
+            $id_sector = $aClave[0];
+            $id_departamento = $aClave[1];
+            $a_1 = isset($aOpciones[$id_departamento]) ? $aOpciones[$id_departamento] : [];
+            $aOpciones[$id_departamento] = array_merge($a_1, array($id_sector));
         }
 
         return $aOpciones;
@@ -222,18 +205,9 @@ class PgAsignaturaRepository extends ClaseRepository implements AsignaturaReposi
             unset($aWhere['_limit']);
         }
         $sQry = "SELECT * FROM $nom_tabla " . $sCondi . $sOrdre . $sLimit;
-        if (($oDblSt = $oDbl->prepare($sQry)) === false) {
-            $sClauError = 'GestorAsignatura.llistar.prepare';
-            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
-            return false;
-        }
-        if (($oDblSt->execute($aWhere)) === false) {
-            $sClauError = 'GestorAsignatura.llistar.execute';
-            $_SESSION['oGestorErrores']->addErrorAppLastError($oDblSt, $sClauError, __LINE__, __FILE__);
-            return false;
-        }
+        $stmt = $this->prepareAndExecute($oDbl, $sQry, $aWhere, __METHOD__, __FILE__, __LINE__);
 
-        foreach ($oDblSt as $aDatos) {
+        foreach ($stmt as $aDatos) {
             $oAsignatura = new Asignatura();
             $oAsignatura->setAllAttributes($aDatos);
             $oMin = new stdClass();
@@ -302,10 +276,10 @@ class PgAsignaturaRepository extends ClaseRepository implements AsignaturaReposi
         if (isset($aWhere['_limit'])) {
             unset($aWhere['_limit']);
         }
-       $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
-       $stmt = $this->prepareAndExecute( $oDbl, $sQry, $aWhere,__METHOD__, __FILE__, __LINE__);
+        $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
+        $stmt = $this->prepareAndExecute($oDbl, $sQry, $aWhere, __METHOD__, __FILE__, __LINE__);
 
-        $filas =$stmt->fetchAll(PDO::FETCH_ASSOC);
+        $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
             $Asignatura = new Asignatura();
             $Asignatura->setAllAttributes($aDatos);
@@ -322,7 +296,7 @@ class PgAsignaturaRepository extends ClaseRepository implements AsignaturaReposi
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         $sql = "DELETE FROM $nom_tabla WHERE id_asignatura = $id_asignatura";
- return $this->pdoExec( $oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        return $this->pdoExec($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
     }
 
     /**
@@ -364,17 +338,16 @@ class PgAsignaturaRepository extends ClaseRepository implements AsignaturaReposi
 					status                   = :status,
 					id_tipo                  = :id_tipo";
             $sql = "UPDATE $nom_tabla SET $update WHERE id_asignatura = $id_asignatura";
-            $stmt = $this->pdoPrepare( $oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         } else {
-         //INSERT
+            //INSERT
             $aDatos['id_asignatura'] = $Asignatura->getId_asignatura();
             $campos = "(id_asignatura,id_nivel,nombre_asignatura,nombre_corto,creditos,year,id_sector,status,id_tipo)";
             $valores = "(:id_asignatura,:id_nivel,:nombre_asignatura,:nombre_corto,:creditos,:year,:id_sector,:status,:id_tipo)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
-            $stmt = $this->pdoPrepare( $oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-		}
-		return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        }
+        return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 
     private function isNew(int $id_asignatura): bool
@@ -402,6 +375,7 @@ class PgAsignaturaRepository extends ClaseRepository implements AsignaturaReposi
         $nom_tabla = $this->getNomTabla();
         $sql = "SELECT * FROM $nom_tabla WHERE id_asignatura = $id_asignatura";
         $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+
         return $stmt->fetch(PDO::FETCH_ASSOC);
 
     }

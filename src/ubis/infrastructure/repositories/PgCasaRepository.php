@@ -4,18 +4,14 @@ namespace src\ubis\infrastructure\repositories;
 
 use core\ClaseRepository;
 use core\Condicion;
+use core\ConverterDate;
 use core\Set;
 use PDO;
-use PDOException;
 use src\shared\traits\HandlesPdoErrors;
-
-use src\ubis\domain\entity\Casa;
 use src\ubis\domain\contracts\CasaRepositoryInterface;
-
+use src\ubis\domain\entity\Casa;
 use function core\is_true;
-use web\DateTimeLocal;
-use web\NullDateTimeLocal;
-use core\ConverterDate;
+
 /**
  * Clase que adapta la tabla u_cdc a la interfaz del repositorio
  *
@@ -28,12 +24,13 @@ use core\ConverterDate;
 class PgCasaRepository extends ClaseRepository implements CasaRepositoryInterface
 {
     use HandlesPdoErrors;
+
     public function __construct()
     {
         $oDbl = $GLOBALS['oDBPC'];
-        $this->setoDbl($oDbl); 
+        $this->setoDbl($oDbl);
         $oDbl_Select = $GLOBALS['oDBPC_Select'];
-        $this->setoDbl_select($oDbl_Select); 
+        $this->setoDbl_select($oDbl_Select);
         $this->setNomTabla('u_cdc');
     }
 
@@ -42,12 +39,7 @@ class PgCasaRepository extends ClaseRepository implements CasaRepositoryInterfac
         $oDbl = $this->getoDbl_Select();
         $nom_tabla = $this->getNomTabla();
         $sQuery = "SELECT id_ubi, nombre_ubi FROM $nom_tabla $sCondicion ORDER BY nombre_ubi";
-
-        $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
-
-        $stmt = $this->pdoPrepare($oDbl, $sQuery, __METHOD__, __FILE__, __LINE__);
-        if ($stmt === false) { return []; }
-        if (!$this->pdoExecute($stmt, [], __METHOD__, __FILE__, __LINE__)) { return []; }
+        $stmt = $this->pdoQuery($oDbl, $sQuery, __METHOD__, __FILE__, __LINE__);
 
         $a_casa = [];
         foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $row) {
@@ -57,61 +49,79 @@ class PgCasaRepository extends ClaseRepository implements CasaRepositoryInterfac
         }
         return $a_casa;
     }
-/* -------------------- GESTOR BASE ---------------------------------------- */
+    /* -------------------- GESTOR BASE ---------------------------------------- */
 
-	/**
-	 * devuelve una colección (array) de objetos de tipo Casa
-	 *
-	 * @param array $aWhere asociativo con los valores para cada campo de la BD.
-	 * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
-	 * @return array|false Una colección de objetos de tipo Casa
-	
-	 */
-	public function getCasas(array $aWhere=[], array $aOperators=[]): array|false
-	{
+    /**
+     * devuelve una colección (array) de objetos de tipo Casa
+     *
+     * @param array $aWhere asociativo con los valores para cada campo de la BD.
+     * @param array $aOperators asociativo con los operadores que hay que aplicar a cada campo
+     * @return array|false Una colección de objetos de tipo Casa
+     */
+    public function getCasas(array $aWhere = [], array $aOperators = []): array|false
+    {
         $oDbl = $this->getoDbl_Select();
-		$nom_tabla = $this->getNomTabla();
-		$CasaSet = new Set();
-		$oCondicion = new Condicion();
-		$aCondicion = [];
-		foreach ($aWhere as $camp => $val) {
-			if ($camp === '_ordre') { continue; }
-			if ($camp === '_limit') { continue; }
-			$sOperador = $aOperators[$camp] ?? '';
-			if ($a = $oCondicion->getCondicion($camp,$sOperador,$val)) { $aCondicion[]=$a; }
-			// operadores que no requieren valores
-			if ($sOperador === 'BETWEEN' || $sOperador === 'IS NULL' || $sOperador === 'IS NOT NULL' || $sOperador === 'OR') { unset($aWhere[$camp]); }
-            if ($sOperador === 'IN' || $sOperador === 'NOT IN') { unset($aWhere[$camp]); }
-            if ($sOperador === 'TXT') { unset($aWhere[$camp]); }
-		}
-		$sCondicion = implode(' AND ',$aCondicion);
-		if ($sCondicion !=='') { $sCondicion = " WHERE ".$sCondicion; }
-		$sOrdre = '';
+        $nom_tabla = $this->getNomTabla();
+        $CasaSet = new Set();
+        $oCondicion = new Condicion();
+        $aCondicion = [];
+        foreach ($aWhere as $camp => $val) {
+            if ($camp === '_ordre') {
+                continue;
+            }
+            if ($camp === '_limit') {
+                continue;
+            }
+            $sOperador = $aOperators[$camp] ?? '';
+            if ($a = $oCondicion->getCondicion($camp, $sOperador, $val)) {
+                $aCondicion[] = $a;
+            }
+            // operadores que no requieren valores
+            if ($sOperador === 'BETWEEN' || $sOperador === 'IS NULL' || $sOperador === 'IS NOT NULL' || $sOperador === 'OR') {
+                unset($aWhere[$camp]);
+            }
+            if ($sOperador === 'IN' || $sOperador === 'NOT IN') {
+                unset($aWhere[$camp]);
+            }
+            if ($sOperador === 'TXT') {
+                unset($aWhere[$camp]);
+            }
+        }
+        $sCondicion = implode(' AND ', $aCondicion);
+        if ($sCondicion !== '') {
+            $sCondicion = " WHERE " . $sCondicion;
+        }
+        $sOrdre = '';
         $sLimit = '';
-		if (isset($aWhere['_ordre']) && $aWhere['_ordre'] !== '') { $sOrdre = ' ORDER BY '.$aWhere['_ordre']; }
-		if (isset($aWhere['_ordre'])) { unset($aWhere['_ordre']); }
-		if (isset($aWhere['_limit']) && $aWhere['_limit'] !== '') { $sLimit = ' LIMIT '.$aWhere['_limit']; }
-		if (isset($aWhere['_limit'])) { unset($aWhere['_limit']); }
-  $sQry = "SELECT * FROM $nom_tabla ".$sCondicion.$sOrdre.$sLimit;
-  $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
-  $stmt = $this->pdoPrepare($oDbl, $sQry, __METHOD__, __FILE__, __LINE__);
-  if ($stmt === false) { return false; }
-  if (!$this->pdoExecute($stmt, $aWhere, __METHOD__, __FILE__, __LINE__)) { return false; }
-        
-  $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        if (isset($aWhere['_ordre']) && $aWhere['_ordre'] !== '') {
+            $sOrdre = ' ORDER BY ' . $aWhere['_ordre'];
+        }
+        if (isset($aWhere['_ordre'])) {
+            unset($aWhere['_ordre']);
+        }
+        if (isset($aWhere['_limit']) && $aWhere['_limit'] !== '') {
+            $sLimit = ' LIMIT ' . $aWhere['_limit'];
+        }
+        if (isset($aWhere['_limit'])) {
+            unset($aWhere['_limit']);
+        }
+        $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
+        $stmt = $this->prepareAndExecute($oDbl, $sQry, $aWhere, __METHOD__, __FILE__, __LINE__);
+
+        $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
-			// para las fechas del postgres (texto iso)
-			$aDatos['f_status'] = (new ConverterDate('date', $aDatos['f_status']))->fromPg();
+            // para las fechas del postgres (texto iso)
+            $aDatos['f_status'] = (new ConverterDate('date', $aDatos['f_status']))->fromPg();
             $Casa = new Casa();
             $Casa->setAllAttributes($aDatos);
-			$CasaSet->add($Casa);
-		}
-		return $CasaSet->getTot();
-	}
+            $CasaSet->add($Casa);
+        }
+        return $CasaSet->getTot();
+    }
 
-/* -------------------- ENTIDAD --------------------------------------------- */
+    /* -------------------- ENTIDAD --------------------------------------------- */
 
- public function Eliminar(Casa $Casa): bool
+    public function Eliminar(Casa $Casa): bool
     {
         $id_ubi = $Casa->getId_ubi();
         $oDbl = $this->getoDbl();
@@ -120,44 +130,55 @@ class PgCasaRepository extends ClaseRepository implements CasaRepositoryInterfac
         return $this->pdoExec($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
     }
 
-	
-	/**
-	 * Si no existe el registro, hace un insert, si existe, se hace el update.
-	
-	 */
-	public function Guardar(Casa $Casa): bool
+
+    /**
+     * Si no existe el registro, hace un insert, si existe, se hace el update.
+     */
+    public function Guardar(Casa $Casa): bool
     {
         $id_ubi = $Casa->getId_ubi();
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         $bInsert = $this->isNew($id_ubi);
 
-		$aDatos = [];
-		$aDatos['tipo_ubi'] = $Casa->getTipo_ubi();
-		$aDatos['nombre_ubi'] = $Casa->getNombre_ubi();
-		$aDatos['dl'] = $Casa->getDl();
-		$aDatos['pais'] = $Casa->getPais();
-		$aDatos['region'] = $Casa->getRegion();
-		$aDatos['status'] = $Casa->isStatus();
-		$aDatos['sv'] = $Casa->isSv();
-		$aDatos['sf'] = $Casa->isSf();
-		$aDatos['tipo_casa'] = $Casa->getTipo_casa();
-		$aDatos['plazas'] = $Casa->getPlazas();
-		$aDatos['plazas_min'] = $Casa->getPlazas_min();
-		$aDatos['num_sacd'] = $Casa->getNum_sacd();
-		$aDatos['biblioteca'] = $Casa->getBiblioteca();
-		$aDatos['observ'] = $Casa->getObserv();
-		// para las fechas
-		$aDatos['f_status'] = (new ConverterDate('date', $Casa->getF_status()))->toPg();
-		array_walk($aDatos, 'core\poner_null');
-		//para el caso de los boolean false, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
-		if ( is_true($aDatos['status']) ) { $aDatos['status']='true'; } else { $aDatos['status']='false'; }
-		if ( is_true($aDatos['sv']) ) { $aDatos['sv']='true'; } else { $aDatos['sv']='false'; }
-		if ( is_true($aDatos['sf']) ) { $aDatos['sf']='true'; } else { $aDatos['sf']='false'; }
+        $aDatos = [];
+        $aDatos['tipo_ubi'] = $Casa->getTipo_ubi();
+        $aDatos['nombre_ubi'] = $Casa->getNombre_ubi();
+        $aDatos['dl'] = $Casa->getDl();
+        $aDatos['pais'] = $Casa->getPais();
+        $aDatos['region'] = $Casa->getRegion();
+        $aDatos['status'] = $Casa->isStatus();
+        $aDatos['sv'] = $Casa->isSv();
+        $aDatos['sf'] = $Casa->isSf();
+        $aDatos['tipo_casa'] = $Casa->getTipo_casa();
+        $aDatos['plazas'] = $Casa->getPlazas();
+        $aDatos['plazas_min'] = $Casa->getPlazas_min();
+        $aDatos['num_sacd'] = $Casa->getNum_sacd();
+        $aDatos['biblioteca'] = $Casa->getBiblioteca();
+        $aDatos['observ'] = $Casa->getObserv();
+        // para las fechas
+        $aDatos['f_status'] = (new ConverterDate('date', $Casa->getF_status()))->toPg();
+        array_walk($aDatos, 'core\poner_null');
+        //para el caso de los boolean false, el pdo(+postgresql) pone string '' en vez de 0. Lo arreglo:
+        if (is_true($aDatos['status'])) {
+            $aDatos['status'] = 'true';
+        } else {
+            $aDatos['status'] = 'false';
+        }
+        if (is_true($aDatos['sv'])) {
+            $aDatos['sv'] = 'true';
+        } else {
+            $aDatos['sv'] = 'false';
+        }
+        if (is_true($aDatos['sf'])) {
+            $aDatos['sf'] = 'true';
+        } else {
+            $aDatos['sf'] = 'false';
+        }
 
         if ($bInsert === false) {
             //UPDATE
-            $update="
+            $update = "
                     tipo_ubi                 = :tipo_ubi,
                     nombre_ubi               = :nombre_ubi,
                     dl                       = :dl,
@@ -173,23 +194,19 @@ class PgCasaRepository extends ClaseRepository implements CasaRepositoryInterfac
                     num_sacd                 = :num_sacd,
                     biblioteca               = :biblioteca,
                     observ                   = :observ";
-            $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
-            $stmt = $this->pdoPrepare($oDbl, "UPDATE $nom_tabla SET $update WHERE id_ubi = $id_ubi", __METHOD__, __FILE__, __LINE__);
-            if ($stmt === false) { return false; }
-            if (!$this->pdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__)) { return false; }
+            $sql = "UPDATE $nom_tabla SET $update WHERE id_ubi = $id_ubi";
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         } else {
-            // INSERT
+            //INSERT
             $aDatos['id_ubi'] = $Casa->getId_ubi();
-            $campos="(tipo_ubi,id_ubi,nombre_ubi,dl,pais,region,status,f_status,sv,sf,tipo_casa,plazas,plazas_min,num_sacd,biblioteca,observ)";
-            $valores="(:tipo_ubi,:id_ubi,:nombre_ubi,:dl,:pais,:region,:status,:f_status,:sv,:sf,:tipo_casa,:plazas,:plazas_min,:num_sacd,:biblioteca,:observ)";     
-            $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;     
-            $stmt = $this->pdoPrepare($oDbl, "INSERT INTO $nom_tabla $campos VALUES $valores", __METHOD__, __FILE__, __LINE__);
-            if ($stmt === false) { return false; }
-            if (!$this->pdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__)) { return false; }
+            $campos = "(tipo_ubi,id_ubi,nombre_ubi,dl,pais,region,status,f_status,sv,sf,tipo_casa,plazas,plazas_min,num_sacd,biblioteca,observ)";
+            $valores = "(:tipo_ubi,:id_ubi,:nombre_ubi,:dl,:pais,:region,:status,:f_status,:sv,:sf,:tipo_casa,:plazas,:plazas_min,:num_sacd,:biblioteca,:observ)";
+            $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         }
-        return TRUE;
+        return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
-	
+
     private function isNew(int $id_ubi): bool
     {
         $oDbl = $this->getoDbl();
@@ -201,14 +218,13 @@ class PgCasaRepository extends ClaseRepository implements CasaRepositoryInterfac
         }
         return false;
     }
-	
+
     /**
      * Devuelve los campos de la base de datos en un array asociativo.
      * Devuelve false si no existe la fila en la base de datos
-     * 
+     *
      * @param int $id_ubi
      * @return array|bool
-	
      */
     public function datosById(int $id_ubi): array|bool
     {
@@ -216,18 +232,17 @@ class PgCasaRepository extends ClaseRepository implements CasaRepositoryInterfac
         $nom_tabla = $this->getNomTabla();
         $sql = "SELECT * FROM $nom_tabla WHERE id_ubi = $id_ubi";
         $stmt = $this->PdoQuery($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-		$aDatos = $oDblSt->fetch(PDO::FETCH_ASSOC);
-		// para las fechas del postgres (texto iso)
-		if ($aDatos !== false) {
-			$aDatos['f_status'] = (new ConverterDate('date', $aDatos['f_status']))->fromPg();
-		}
+        $aDatos = $stmt->fetch(PDO::FETCH_ASSOC);
+        // para las fechas del postgres (texto iso)
+        if ($aDatos !== false) {
+            $aDatos['f_status'] = (new ConverterDate('date', $aDatos['f_status']))->fromPg();
+        }
         return $aDatos;
     }
-    
-	
+
+
     /**
      * Busca la clase con id_ubi en la base de datos .
-	
      */
     public function findById(int $id_ubi): ?Casa
     {

@@ -6,9 +6,9 @@ use core\ClaseRepository;
 use core\Condicion;
 use core\Set;
 use PDO;
-use PDOException;
-use src\menus\domain\entity\MetaMenu;
 use src\menus\domain\contracts\MetaMenuRepositoryInterface;
+use src\menus\domain\entity\MetaMenu;
+use src\shared\traits\HandlesPdoErrors;
 
 /**
  * Clase que adapta la tabla aux_metamenus a la interfaz del repositorio
@@ -21,6 +21,8 @@ use src\menus\domain\contracts\MetaMenuRepositoryInterface;
  */
 class PgMetaMenuRepository extends ClaseRepository implements MetaMenuRepositoryInterface
 {
+    use HandlesPdoErrors;
+
     public function __construct()
     {
         $oDbl = $GLOBALS['oDBPC'];
@@ -37,16 +39,13 @@ class PgMetaMenuRepository extends ClaseRepository implements MetaMenuRepository
         $Where = implode(' AND ', $a_modulos);
         if (!empty($Where)) $Where = "WHERE $Where";
         $sQuery = "SELECT id_metamenu,descripcion FROM $nom_tabla $Where ORDER BY descripcion";
-        try {
-            $aOpciones = [];
-            foreach ($oDbl->query($sQuery) as $aClave) {
-                $clave = $aClave[0];
-                $val = $aClave[1];
-                $aOpciones[$clave] = $val;
-            }
-        } catch (PDOException $e) {
-            $sClauError = 'Metamenu.lista';
-            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
+        $stmt = $this->PdoQuery($oDbl, $sQuery, __METHOD__, __FILE__, __LINE__);
+
+        $aOpciones = [];
+        foreach ($stmt as $aClave) {
+            $clave = $aClave[0];
+            $val = $aClave[1];
+            $aOpciones[$clave] = $val;
         }
         return $aOpciones;
     }
@@ -106,10 +105,10 @@ class PgMetaMenuRepository extends ClaseRepository implements MetaMenuRepository
         if (isset($aWhere['_limit'])) {
             unset($aWhere['_limit']);
         }
-       $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
-       $stmt = $this->prepareAndExecute( $oDbl, $sQry, $aWhere,__METHOD__, __FILE__, __LINE__);
+        $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
+        $stmt = $this->prepareAndExecute($oDbl, $sQry, $aWhere, __METHOD__, __FILE__, __LINE__);
 
-        $filas =$stmt->fetchAll(PDO::FETCH_ASSOC);
+        $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
             $MetaMenu = new MetaMenu();
             $MetaMenu->setAllAttributes($aDatos);
@@ -126,7 +125,7 @@ class PgMetaMenuRepository extends ClaseRepository implements MetaMenuRepository
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         $sql = "DELETE FROM $nom_tabla WHERE id_metamenu = $id_metamenu";
- return $this->pdoExec( $oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        return $this->pdoExec($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
     }
 
     /**
@@ -154,17 +153,17 @@ class PgMetaMenuRepository extends ClaseRepository implements MetaMenuRepository
 					parametros               = :parametros,
 					descripcion              = :descripcion";
             $sql = "UPDATE $nom_tabla SET $update WHERE id_metamenu = $id_metamenu";
-            $stmt = $this->pdoPrepare( $oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
 
         } else {
-         //INSERT
+            //INSERT
             $aDatos['id_metamenu'] = $MetaMenu->getId_metamenu();
             $campos = "(id_metamenu,id_mod,url,parametros,descripcion)";
             $valores = "(:id_metamenu,:id_mod,:url,:parametros,:descripcion)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
-            $stmt = $this->pdoPrepare( $oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-		}
-		return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        }
+        return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 
     private function isNew(int $id_metamenu): bool

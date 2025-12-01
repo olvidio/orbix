@@ -6,9 +6,9 @@ use core\ClaseRepository;
 use core\Condicion;
 use core\Set;
 use PDO;
-use PDOException;
 use src\inventario\domain\contracts\TipoDocRepositoryInterface;
 use src\inventario\domain\entity\TipoDoc;
+use src\shared\traits\HandlesPdoErrors;
 use function core\is_true;
 
 /**
@@ -22,6 +22,8 @@ use function core\is_true;
  */
 class PgTipoDocRepository extends ClaseRepository implements TipoDocRepositoryInterface
 {
+    use HandlesPdoErrors;
+
     public function __construct()
     {
         $oDbl = $GLOBALS['oDB'];
@@ -39,13 +41,9 @@ class PgTipoDocRepository extends ClaseRepository implements TipoDocRepositoryIn
 	   		FROM $nom_tabla
 			WHERE vigente = 't'
 			ORDER BY sigla,nom_doc ";
-        if ($oDbl->query($sQuery) === false) {
-            $sClauError = 'GestorTipoDoc.lista';
-            $_SESSION['oGestorErrores']->addErrorAppLastError($oDbl, $sClauError, __LINE__, __FILE__);
-            return false;
-        }
+        $stmt = $this->pdoQuery($oDbl, $sQuery, __METHOD__, __FILE__, __LINE__);
         $aOpciones = [];
-        foreach ($oDbl->query($sQuery) as $aClave) {
+        foreach ($stmt as $aClave) {
             $clave = $aClave[0];
             $val = $aClave[1];
             $aOpciones[$clave] = $val;
@@ -109,10 +107,10 @@ class PgTipoDocRepository extends ClaseRepository implements TipoDocRepositoryIn
         if (isset($aWhere['_limit'])) {
             unset($aWhere['_limit']);
         }
-       $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
-       $stmt = $this->prepareAndExecute( $oDbl, $sQry, $aWhere,__METHOD__, __FILE__, __LINE__);
+        $sQry = "SELECT * FROM $nom_tabla " . $sCondicion . $sOrdre . $sLimit;
+        $stmt = $this->prepareAndExecute($oDbl, $sQry, $aWhere, __METHOD__, __FILE__, __LINE__);
 
-        $filas =$stmt->fetchAll(PDO::FETCH_ASSOC);
+        $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($filas as $aDatos) {
             $TipoDoc = new TipoDoc();
             $TipoDoc->setAllAttributes($aDatos);
@@ -129,7 +127,7 @@ class PgTipoDocRepository extends ClaseRepository implements TipoDocRepositoryIn
         $oDbl = $this->getoDbl();
         $nom_tabla = $this->getNomTabla();
         $sql = "DELETE FROM $nom_tabla WHERE id_tipo_doc = $id_tipo_doc";
- return $this->pdoExec( $oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        return $this->pdoExec($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
     }
 
 
@@ -180,17 +178,16 @@ class PgTipoDocRepository extends ClaseRepository implements TipoDocRepositoryIn
                     vigente                  = :vigente,
                     numerado                 = :numerado";
             $sql = "UPDATE $nom_tabla SET $update WHERE id_tipo_doc = $id_tipo_doc";
-            $stmt = $this->pdoPrepare( $oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
         } else {
-         //INSERT
+            //INSERT
             $aDatos['id_tipo_doc'] = $TipoDoc->getIdTipoDocVo()->value();
             $campos = "(id_tipo_doc,nom_doc,sigla,observ,id_coleccion,bajo_llave,vigente,numerado)";
             $valores = "(:id_tipo_doc,:nom_doc,:sigla,:observ,:id_coleccion,:bajo_llave,:vigente,:numerado)";
             $sql = "INSERT INTO $nom_tabla $campos VALUES $valores";
-            $stmt = $this->pdoPrepare( $oDbl, $sql, __METHOD__, __FILE__, __LINE__);
-		}
-		return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
+            $stmt = $this->pdoPrepare($oDbl, $sql, __METHOD__, __FILE__, __LINE__);
+        }
+        return $this->PdoExecute($stmt, $aDatos, __METHOD__, __FILE__, __LINE__);
     }
 
     private function isNew(int $id_tipo_doc): bool
