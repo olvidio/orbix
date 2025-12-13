@@ -144,7 +144,8 @@ if ($aRoles[$id_role]==='Oficial_dl')
 $oDesplSacd = new Desplegable();
 $oDesplSacd->setNombre('id_sacd');
 $oDesplSacd->setOpciones($a_sacd);
-$oDesplSacd->setBlanco(TRUE);
+//$oDesplSacd->setBlanco(TRUE);
+$oDesplSacd->setBlanco(FALSE);
 $oDesplSacd->setAction('fnjs_ver_plan_sacd()');
 
 $url_ver_plan_sacd = 'apps/misas/controller/ver_plan_sacd.php';

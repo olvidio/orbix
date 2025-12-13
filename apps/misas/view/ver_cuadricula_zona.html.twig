@@ -192,9 +192,9 @@
     }
 
     function commitCurrentEdit(cell) {
-//        alert('edit');
         cell = $('#cell_selected').val();
         row = $('#row_selected').val();
+//        alert('edit'+cell+'.'+row);
         var id_campo = columns[cell].field;
 
         let key = $('#id_sacd').val();
@@ -284,8 +284,8 @@
                     if (i<data.length)
                     {
 //                        alert('id_sacd_anterior encontrado');
-                        data[i].meta[dia].color=respuesta.meta.color_fondo_anterior;
-                        data[i].meta[dia].texto=respuesta.meta.texto_anterior;
+                        data[i].meta[id_campo].color=respuesta.meta.color_fondo_anterior;
+                        data[i].meta[id_campo].texto=respuesta.meta.texto_anterior;
                     }
                     i=0;
                     while ((i<data.length) && (data[i]['id_nom']!=id_nom))
@@ -295,16 +295,16 @@
                     if (i<data.length)
                     {
 //                        alert('id_nom encontrado');
-                        data[i].meta[dia].color=respuesta.meta.color_fondo;
-                        data[i].meta[dia].texto=respuesta.meta.texto;
+                        data[i].meta[id_campo].color=respuesta.meta.color_fondo;
+                        data[i].meta[id_campo].texto=respuesta.meta.texto;
                     }
-                    data[row].meta[dia].color=respuesta.meta.color_misa;
-                    data[row].meta[dia].key=id_nom+'#'+iniciales;
+                    data[row].meta[id_campo].color=respuesta.meta.color_misa;
+                    data[row].meta[id_campo].key=id_nom+'#'+iniciales;
                     if (iniciales!='') {
-                        data[row][dia]=iniciales;
+                        data[row][id_campo]=iniciales;
                     }
                     else {
-                        data[row][dia]='--';
+                        data[row][id_campo]='--';
                     }
                     grid.invalidateAllRows();
                     grid.render();
