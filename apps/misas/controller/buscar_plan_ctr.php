@@ -4,6 +4,9 @@
 
 use core\ConfigGlobal;
 use core\ViewTwig;
+use encargossacd\model\entity\Encargo;
+use encargossacd\model\entity\EncargoTipo;
+use encargossacd\model\entity\GestorEncargoSacd;
 use src\usuarios\application\repositories\RoleRepository;
 use src\usuarios\application\repositories\UsuarioRepository;
 use web\DateTimeLocal;
@@ -12,6 +15,7 @@ use web\Hash;
 use web\PeriodoQue;
 use ubis\model\entity\GestorCentroDl;
 use ubis\model\entity\GestorCentroEllas;
+use ubis\model\entity\Ubi;
 use zonassacd\model\entity\GestorZona;
 
 require_once("apps/core/global_header.inc");
@@ -34,7 +38,7 @@ $id_role = $oMiUsuario->getId_role();
 
 $RoleRepository = new RoleRepository();
 $aRoles = $RoleRepository->getArrayRoles();
-echo $aRoles[$id_role];
+//echo $aRoles[$id_role];
 
 if (!empty($aRoles[$id_role]) && ($aRoles[$id_role] === 'p-sacd')) {
     $id_sacd=$oMiUsuario->getId_pauAsString();
@@ -43,8 +47,8 @@ if (!empty($aRoles[$id_role]) && ($aRoles[$id_role] === 'p-sacd')) {
 if (!empty($aRoles[$id_role]) && ($aRoles[$id_role] === 'Centro')) {
     $id_ubi=$oMiUsuario->getId_pauAsString();
 }
-echo ConfigGlobal::mi_id_usuario();
-echo '-'.$id_sacd.'='.$id_ubi;
+//echo ConfigGlobal::mi_id_usuario();
+//echo '-'.$id_sacd.'='.$id_ubi;
 
 
 if (!empty($aRoles[$id_role]) && ($aRoles[$id_role] === 'p-sacd')) {
@@ -59,11 +63,17 @@ if (!empty($aRoles[$id_role]) && ($aRoles[$id_role] === 'p-sacd')) {
 }
 
 
+
 $oGestorZona = new GestorZona();
 $aOpciones = $oGestorZona->getArrayZonas($id_nom_jefe);
 if ($Qid_zona==0) {
-    $Qid_zona=array_key_first($aOpciones);
+//    $Qid_zona=array_key_first($aOpciones);
+    $Qid_zona=-1;
 }
+$aOpciones[-1]='centros encargos';
+
+//foreach($aOpciones as $a1=>$a2)
+//    echo 'opcion: '.$a1.'-'.$a2.'<br>';
 
 $oDesplZonas = new Desplegable();
 $oDesplZonas->setOpciones($aOpciones);
@@ -74,20 +84,60 @@ $oDesplZonas->setOpcion_sel($Qid_zona);
 
 $aCentros = [];
 if (isset($Qid_zona)) {
-    $aWhere = [];
-    $aWhere['status'] = 't';
-    $aWhere['id_zona'] = $Qid_zona;
-    $aWhere['_ordre'] = 'nombre_ubi';
-    $GesCentrosDl = new GestorCentroDl();
-    $cCentrosDl = $GesCentrosDl->getCentros($aWhere);
-    $GesCentrosSf = new GestorCentroEllas();
-    $cCentrosSf = $GesCentrosSf->getCentros($aWhere);
-    $cCentros = array_merge($cCentrosDl, $cCentrosSf);
-    foreach ($cCentros as $oCentro) {
-        $id_ubi = $oCentro->getId_ubi();
-        $nombre_ubi = $oCentro->getNombre_ubi();
-        $aCentros[$id_ubi] = $nombre_ubi;
-    }    
+    if($Qid_zona>0)
+    {
+        $aWhere = [];
+        $aWhere['status'] = 't';
+        $aWhere['id_zona'] = $Qid_zona;
+        $aWhere['_ordre'] = 'nombre_ubi';
+        $GesCentrosDl = new GestorCentroDl();
+        $cCentrosDl = $GesCentrosDl->getCentros($aWhere);
+        $GesCentrosSf = new GestorCentroEllas();
+        $cCentrosSf = $GesCentrosSf->getCentros($aWhere);
+        $cCentros = array_merge($cCentrosDl, $cCentrosSf);
+        foreach ($cCentros as $oCentro) {
+            $id_ubi = $oCentro->getId_ubi();
+            $nombre_ubi = $oCentro->getNombre_ubi();
+            $aCentros[$id_ubi] = $nombre_ubi;
+        }
+    }
+    else  
+    {
+        /* busco los datos del encargo que se tengan */
+        $GesEncargosSacd = new GestorEncargoSacd();
+        // No los personales:
+        $aWhereES = [];
+        $aOperadorES = [];
+        $aWhereES['id_nom'] = $id_sacd;
+        $aWhereES['f_fin'] = 'x';
+        $aOperadorES['f_fin'] = 'IS NULL';
+        $aWhereES['_ordre'] = 'modo, f_ini DESC';
+        $cEncargosSacd1 = $GesEncargosSacd->getEncargosSacd($aWhereES, $aOperadorES);
+
+        $oF_hoy = new DateTimeLocal(date('Y-m-d')); //Hoy sólo fecha, no hora
+        $hoy = $oF_hoy->getIso();
+
+        $aWhereES['f_fin'] = "'$hoy'";
+        $aOperadorES['f_fin'] = '>';
+        $cEncargosSacd2 = $GesEncargosSacd->getEncargosSacd($aWhereES, $aOperadorES);
+
+        $cEncargosSacd = $cEncargosSacd1 + $cEncargosSacd2;
+
+        foreach ($cEncargosSacd as $oEncargoSacd) {
+            $id_enc = $oEncargoSacd->getId_enc();
+
+            $oEncargo = new Encargo(array('id_enc' => $id_enc));
+            $id_tipo_enc = $oEncargo->getId_tipo_enc();
+            // Si es un encargo personal (7 o 4) me lo salto
+            if (substr($id_tipo_enc, 0, 1) <= 3) {
+                $id_ubi = $oEncargo->getId_ubi();
+                $oCentro = Ubi::newUbi($id_ubi);
+//                $oCentro=new CentroDl($id_ubi);
+                $nombre_ubi = $oCentro->getNombre_ubi();
+                $aCentros[$id_ubi] = $nombre_ubi;
+            }
+        }
+    }
 }
 
 $oDesplCentros = new Desplegable();

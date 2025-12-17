@@ -29,7 +29,7 @@ $Qorden = (string)filter_input(INPUT_POST, 'orden');
 $Qempiezamin = (string)filter_input(INPUT_POST, 'empiezamin');
 $Qempiezamax = (string)filter_input(INPUT_POST, 'empiezamax');
 
-echo 'id_ubi: '.$Qid_ubi.'<br>';
+//echo 'id_ubi: '.$Qid_ubi.'<br>';
 switch ($Qperiodo) {
     case "esta_semana":
         $dia_week = date('N');
