@@ -122,7 +122,7 @@ if (is_array($cZonas) && count($cZonas) > 0) {
 
 if ($aRoles[$id_role]==='Oficial_dl')
 {
-    echo 'OFICIAL DL<br>';
+//    echo 'OFICIAL DL<br>';
     $aWhere = [];
     $aOperador = [];
     $aWhere['sacd'] = 't';

@@ -2,15 +2,20 @@
 
 
 // INICIO Cabecera global de URL de controlador *********************************
+use core\ConfigGlobal;
 use core\ViewTwig;
 use encargossacd\model\entity\Encargo;
 use encargossacd\model\entity\EncargoTipo;
+use misas\domain\entity\EncargoDia;
 use misas\domain\entity\InicialesSacd;
 use misas\domain\repositories\EncargoCtrRepository;
 use misas\domain\repositories\EncargoDiaRepository;
+use src\usuarios\application\repositories\RoleRepository;
+use src\usuarios\application\repositories\UsuarioRepository;
 use web\DateTimeLocal;
 use web\Hash;
 use ubis\model\entity\Ubi;
+use zonassacd\model\entity\GestorZona;
 
 //use personas\model\entity\GestorPersona;
 //use web\Desplegable;
@@ -21,6 +26,28 @@ require_once("apps/core/global_header.inc");
 // Crea los objetos de uso global **********************************************
 require_once("apps/core/global_object.inc");
 // FIN de  Cabecera global de URL de controlador ********************************
+$id_usuario = ConfigGlobal::mi_id_usuario();
+$UsuarioRepository = new UsuarioRepository();
+$oMiUsuario = $UsuarioRepository->findById(ConfigGlobal::mi_id_usuario());
+$id_sacd = $oMiUsuario->getId_pauAsString();
+$id_role = $oMiUsuario->getId_role();
+$GesZonas = new GestorZona();
+$cZonas = $GesZonas->getZonas(array('id_nom' => $id_sacd));
+$jefe_zona = (is_array($cZonas) && count($cZonas) > 0);
+
+
+$RoleRepository = new RoleRepository();
+$aRoles = $RoleRepository->getArrayRoles();
+//echo $aRoles[$id_role];
+$role='';
+
+if (!empty($aRoles[$id_role]) && ($aRoles[$id_role] === 'p-sacd')) {
+    $role='sacd';
+}
+
+if (!empty($aRoles[$id_role]) && ($aRoles[$id_role] === 'Centro')) {
+    $role='ctr';
+}
 
 $Qid_zona = (integer)filter_input(INPUT_POST, 'id_zona');
 $Qid_ubi = (integer)filter_input(INPUT_POST, 'id_ubi');
@@ -174,6 +201,7 @@ foreach ($cEncargosCtr as $oEncargoCtr) {
 
     foreach ($date_range as $date) {
         $iniciales=' -- ';
+        $status=EncargoDia::STATUS_COMUNICADO_CTR;
 
         $id_dia = $date->format('Y-m-d');
     
@@ -194,6 +222,7 @@ foreach ($cEncargosCtr as $oEncargoCtr) {
         foreach($cEncargosDia as $oEncargoDia) {
             $id_enc = $oEncargoDia->getId_enc();
             $id_nom = $oEncargoDia->getId_nom();
+            $status = $oEncargoDia->getStatus();
             $dia = $oEncargoDia->getTstart()->format('d-m-Y');
             $hora_ini = $oEncargoDia->getTstart()->format('H:i');
             $hora_fin = $oEncargoDia->getTend()->format('H:i');
@@ -228,7 +257,13 @@ foreach ($cEncargosCtr as $oEncargoCtr) {
             $iniciales .= empty($oEncargoDia->getObserv())? '' : '*';
             $data_cols["$id_dia"] = $iniciales;
         }
-        echo '<TD>'.$iniciales.'</TD>';
+
+        if (($jefe_zona) || (($role=='ctr') && ($status==EncargoDia::STATUS_COMUNICADO_CTR)) || (($role=='sacd') && (($status==EncargoDia::STATUS_COMUNICADO_SACD) || ($status==EncargoDia::STATUS_COMUNICADO_CTR)))) {
+            echo '<TD>'.$iniciales.'</TD>';
+        }
+        else {
+            echo '<TD> -- </TD>';
+        }
 
 //        $data_cols["dia"] = $dia_y_hora;
 //        $data_cols["observaciones"] = $observ;

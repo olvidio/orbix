@@ -46,10 +46,22 @@ if (!empty($aRoles[$id_role]) && ($aRoles[$id_role] === 'p-sacd')) {
 
 if (!empty($aRoles[$id_role]) && ($aRoles[$id_role] === 'Centro')) {
     $id_ubi=$oMiUsuario->getId_pauAsString();
-}
+    $oCentro = Ubi::newUbi($id_ubi);
+    $nombre_ubi = $oCentro->getNombre_ubi();
+    $aCentros[$id_ubi] = $nombre_ubi;
+    $aOpciones[-1]='centros encargos';
+    $oDesplZonas = new Desplegable();
+    $oDesplZonas->setOpciones($aOpciones);
+    $oDesplZonas->setBlanco(FALSE);
+    $oDesplZonas->setNombre('id_zona');
+    $oDesplZonas->setAction('fnjs_buscar_plan_ctr()');
+    $oDesplZonas->setOpcion_sel($Qid_zona);
+    }
 //echo ConfigGlobal::mi_id_usuario();
 //echo '-'.$id_sacd.'='.$id_ubi;
 
+else
+{
 
 if (!empty($aRoles[$id_role]) && ($aRoles[$id_role] === 'p-sacd')) {
     if ($_SESSION['oConfig']->is_jefeCalendario()) {
@@ -138,6 +150,7 @@ if (isset($Qid_zona)) {
             }
         }
     }
+}
 }
 
 $oDesplCentros = new Desplegable();
