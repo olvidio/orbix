@@ -59,8 +59,6 @@ $shoy = $ohoy ->format('d/m/Y');
 $oFormP->setEmpiezaMin($shoy);
 $oFormP->setEmpiezaMax($shoy);
 
-$id_nom_jefe = '';
-
 $UsuarioRepository = new UsuarioRepository();
 $oMiUsuario = $UsuarioRepository->findById(ConfigGlobal::mi_id_usuario());
 $id_role = $oMiUsuario->getId_role();
@@ -74,21 +72,6 @@ $id_sacd = $oMiUsuario->getId_pauAsString();
 
 $RoleRepository = new RoleRepository();
 $aRoles = $RoleRepository->getArrayRoles();
-
-//echo 'aRoles'.$aRoles[$id_role].'<br>';
-
-if (!empty($aRoles[$id_role]) && ($aRoles[$id_role] === 'p-sacd')) {
-
-    if ($_SESSION['oConfig']->is_jefeCalendario()) {
-        $id_nom_jefe = '';
-    } else {
-        $id_nom_jefe = $oMiUsuario->getId_pauAsString();
-        if (empty($id_nom_jefe)) {
-            exit(_("No tiene permiso para ver esta página"));
-        }
-    }
-}
-//echo 'jefe: '.$id_nom_jefe.'<br>';
 
 $GesZonas = new GestorZona();
 $cZonas = $GesZonas->getZonas(array('id_nom' => $id_sacd));
@@ -120,7 +103,7 @@ if (is_array($cZonas) && count($cZonas) > 0) {
     }
 }
 
-if ($aRoles[$id_role]==='Oficial_dl')
+if (($aRoles[$id_role]==='Oficial_dl') || ($_SESSION['oConfig']->is_jefeCalendario()))
 {
 //    echo 'OFICIAL DL<br>';
     $aWhere = [];

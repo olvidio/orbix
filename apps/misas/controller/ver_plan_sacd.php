@@ -27,14 +27,10 @@ $id_usuario = ConfigGlobal::mi_id_usuario();
 $UsuarioRepository = new UsuarioRepository();
 $oMiUsuario = $UsuarioRepository->findById(ConfigGlobal::mi_id_usuario());
 $id_sacd = $oMiUsuario->getId_pauAsString();
+$id_role = $oMiUsuario->getId_role();
 $GesZonas = new GestorZona();
 $cZonas = $GesZonas->getZonas(array('id_nom' => $id_sacd));
 $jefe_zona = (is_array($cZonas) && count($cZonas) > 0);
-
-if ($jefe_zona)
-    echo 'ES JEFE<br>';
-else
-    echo 'NOOOO<br>';
 
 $Qid_sacd = (integer)filter_input(INPUT_POST, 'id_sacd');
 $Qperiodo = (string)filter_input(INPUT_POST, 'periodo');
