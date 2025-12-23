@@ -9,7 +9,7 @@ use encargossacd\model\entity\GestorEncargoTipo;
 use src\usuarios\application\repositories\LocalRepository;
 use web\Desplegable;
 use web\Hash;
-use ubis\model\entity\GestorCentroDl;
+use ubis\model\entity\GestorCentroEllos;
 use ubis\model\entity\GestorCentroEllas;
 use ubis\model\entity\Ubi;
 
@@ -171,11 +171,11 @@ $aWhere = [];
 $aWhere['status'] = 't';
 $aWhere['id_zona'] = $Qid_zona;
 $aWhere['_ordre'] = 'nombre_ubi';
-$GesCentrosDl = new GestorCentroDl();
-$cCentrosDl = $GesCentrosDl->getCentros($aWhere);
+$GesCentrosEllos = new GestorCentroEllos();
+$cCentrossv = $GesCentrosEllos->getCentros($aWhere);
 $GesCentrosSf = new GestorCentroEllas();
 $cCentrosSf = $GesCentrosSf->getCentros($aWhere);
-$cCentros = array_merge($cCentrosDl, $cCentrosSf);
+$cCentros = array_merge($cCentrossv, $cCentrosSf);
 
 $aCentros = [];
 foreach ($cCentros as $oCentro) {

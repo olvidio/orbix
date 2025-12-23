@@ -13,8 +13,8 @@ use web\DateTimeLocal;
 use web\Desplegable;
 use web\Hash;
 use web\PeriodoQue;
-//use ubis\model\entity\GestorCentroDl;
-//use ubis\model\entity\GestorCentroEllas;
+use ubis\model\entity\GestorCentroEllos;
+use ubis\model\entity\GestorCentroEllas;
 use ubis\model\entity\Ubi;
 use zonassacd\model\entity\GestorZona;
 
@@ -102,11 +102,11 @@ if (isset($Qid_zona)) {
         $aWhere['status'] = 't';
         $aWhere['id_zona'] = $Qid_zona;
         $aWhere['_ordre'] = 'nombre_ubi';
-        $GesCentrosDl = new GestorCentroDl();
-        $cCentrosDl = $GesCentrosDl->getCentros($aWhere);
+        $GesCentrosEllos = new GestorCentroEllos();
+        $cCentrossv = $GesCentrosEllos->getCentros($aWhere);
         $GesCentrosSf = new GestorCentroEllas();
         $cCentrosSf = $GesCentrosSf->getCentros($aWhere);
-        $cCentros = array_merge($cCentrosDl, $cCentrosSf);
+        $cCentros = array_merge($cCentrossv, $cCentrosSf);
         foreach ($cCentros as $oCentro) {
             $id_ubi = $oCentro->getId_ubi();
             $oCentro = Ubi::newUbi($id_ubi);

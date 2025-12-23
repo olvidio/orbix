@@ -9,7 +9,7 @@ use encargossacd\model\entity\GestorEncargoTipo;
 use misas\domain\repositories\EncargoCtrRepository;
 use web\Desplegable;
 use web\Hash;
-use ubis\model\entity\GestorCentroDl;
+use ubis\model\entity\GestorCentroEllos;
 use ubis\model\entity\GestorCentroEllas;
 use zonassacd\model\entity\GestorZona;
 
@@ -38,11 +38,11 @@ if (isset($Qid_zona)) {
     $aWhere['status'] = 't';
     $aWhere['id_zona'] = $Qid_zona;
     $aWhere['_ordre'] = 'nombre_ubi';
-    $GesCentrosDl = new GestorCentroDl();
-    $cCentrosDl = $GesCentrosDl->getCentros($aWhere);
+    $GesCentrossv = new GestorCentroEllos();
+    $cCentrossv = $GesCentrossv->getCentros($aWhere);
     $GesCentrosSf = new GestorCentroEllas();
     $cCentrosSf = $GesCentrosSf->getCentros($aWhere);
-    $cCentros = array_merge($cCentrosDl, $cCentrosSf);
+    $cCentros = array_merge($cCentrossv, $cCentrosSf);
     
     foreach ($cCentros as $oCentro) {
         $id_ubi = $oCentro->getId_ubi();
@@ -141,11 +141,11 @@ $aWhere = [];
 $aWhere['status'] = 't';
 $aWhere['id_zona'] = $Qid_zona;
 $aWhere['_ordre'] = 'nombre_ubi';
-$GesCentrosDl = new GestorCentroDl();
-$cCentrosDl = $GesCentrosDl->getCentros($aWhere);
+$GesCentrossv = new GestorCentroEllos();
+$cCentrossv = $GesCentrossv->getCentros($aWhere);
 $GesCentrosSf = new GestorCentroEllas();
 $cCentrosSf = $GesCentrosSf->getCentros($aWhere);
-$cCentros = array_merge($cCentrosDl, $cCentrosSf);
+$cCentros = array_merge($cCentrossv, $cCentrosSf);
 
 $aCentros = [];
 foreach ($cCentros as $oCentro) {
