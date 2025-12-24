@@ -222,6 +222,9 @@ class GestorCentro extends ClaseGestor
                 case 'GestorCentroEllas':
                     $oCentro = new CentroEllas($a_pkey);
                     break;
+                case 'GestorCentroEllos':
+                    $oCentro = new CentroEllos($a_pkey);
+                    break;
                 default:
                     $oCentro = new Centro($a_pkey);
             }
