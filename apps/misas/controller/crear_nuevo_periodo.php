@@ -300,6 +300,7 @@ foreach ($date_range as $date) {
     $tiempo=strtotime($dia_completo)-strtotime($sDPascua);
     $hores=$tiempo/3600;
     $dies=$hores/24;
+    $semana=intdiv($dies,7);
     if (($dies>=-46) && ($dies<0))
         $temps='Q';
     if (($dies>=0) && ($dies<50))
@@ -312,10 +313,10 @@ foreach ($date_range as $date) {
     if (($mes==2) && ($dia==14))
         $bendicion='SI';
         // S. José
-    if ((($mes==3) && ($dia==19)) || (($mes==4) && ($dia>=1) && ($dia<=5) && ($temps=='P') && ($setmana==2) && ($dia_semana==2)) || (($temps=='Q') && ($dia_semana==1) && ($dia==20) && ($mes==3)))
+    if ((($mes==3) && ($dia==19)) || (($mes==4) && ($dia>=1) && ($dia<=5) && ($temps=='P') && ($semana==2) && ($dia_semana==2)) || (($temps=='Q') && ($dia_semana==1) && ($dia==20) && ($mes==3)))
         $bendicion='SI';
         // Anunciación
-    if ((($mes==3) && ($dia==25)) || (((($mes==4) && ($dia>=1) && ($dia<=9)) || (($mes==3) && ($dia==31))) && ($temps=='P') && ($setmana==2) && ($dia_semana==1)) || (($temps=='Q') && ($dia_semana==1) && ($dia==26) && ($mes==3)))
+    if ((($mes==3) && ($dia==25)) || (((($mes==4) && ($dia>=1) && ($dia<=9)) || (($mes==3) && ($dia==31))) && ($temps=='P') && ($semana==2) && ($dia_semana==1)) || (($temps=='Q') && ($dia_semana==1) && ($dia==26) && ($mes==3)))
         // aniversario ordenación nP
     if (($mes==3) && ($dia==28))
         $bendicion='SI';
