@@ -40,9 +40,9 @@ $RoleRepository = new RoleRepository();
 $aRoles = $RoleRepository->getArrayRoles();
 //echo $aRoles[$id_role];
 
-if (!empty($aRoles[$id_role]) && ($aRoles[$id_role] === 'p-sacd')) {
-    $id_sacd=$oMiUsuario->getId_pauAsString();
-}
+
+$aCentros = [];
+
 
 if (!empty($aRoles[$id_role]) && ($aRoles[$id_role] === 'Centro')) {
     $id_ubi=$oMiUsuario->getId_pauAsString();
@@ -56,102 +56,99 @@ if (!empty($aRoles[$id_role]) && ($aRoles[$id_role] === 'Centro')) {
     $oDesplZonas->setNombre('id_zona');
     $oDesplZonas->setAction('fnjs_buscar_plan_ctr()');
     $oDesplZonas->setOpcion_sel($Qid_zona);
-    }
+}
 //echo ConfigGlobal::mi_id_usuario();
 //echo '-'.$id_sacd.'='.$id_ubi;
 
-else
-{
+else {
 
-if (!empty($aRoles[$id_role]) && ($aRoles[$id_role] === 'p-sacd')) {
-    if ($_SESSION['oConfig']->is_jefeCalendario()) {
-        $id_nom_jefe = '';
-    } else {
-        $id_nom_jefe = $oMiUsuario->getId_pauAsString();
-        if (empty($id_nom_jefe)) {
-            exit(_("No tiene permiso para ver esta página"));
+    if (!empty($aRoles[$id_role]) && ($aRoles[$id_role] === 'p-sacd')) {
+        if ($_SESSION['oConfig']->is_jefeCalendario()) {
+            $id_nom_jefe = '';
+        } else {
+            $id_nom_jefe = $oMiUsuario->getId_pauAsString();
+            if (empty($id_nom_jefe)) {
+                exit(_("No tiene permiso para ver esta página"));
+            }
         }
-    }
-}
 
 
 
-$oGestorZona = new GestorZona();
-$aOpciones = $oGestorZona->getArrayZonas($id_nom_jefe);
-if ($Qid_zona==0) {
+        $oGestorZona = new GestorZona();
+        $aOpciones = $oGestorZona->getArrayZonas($id_nom_jefe);
+        if ($Qid_zona==0) {
 //    $Qid_zona=array_key_first($aOpciones);
-    $Qid_zona=-1;
-}
-$aOpciones[-1]='centros encargos';
-
+            $Qid_zona=-1;
+        }
+        if (!empty($aRoles[$id_role]) && ($aRoles[$id_role] === 'p-sacd')) {
+            $aOpciones[-1]='centros encargos';
+        }
 //foreach($aOpciones as $a1=>$a2)
 //    echo 'opcion: '.$a1.'-'.$a2.'<br>';
 
-$oDesplZonas = new Desplegable();
-$oDesplZonas->setOpciones($aOpciones);
-$oDesplZonas->setBlanco(FALSE);
-$oDesplZonas->setNombre('id_zona');
-$oDesplZonas->setAction('fnjs_buscar_plan_ctr()');
-$oDesplZonas->setOpcion_sel($Qid_zona);
+        $oDesplZonas = new Desplegable();
+        $oDesplZonas->setOpciones($aOpciones);
+        $oDesplZonas->setBlanco(FALSE);
+        $oDesplZonas->setNombre('id_zona');
+        $oDesplZonas->setAction('fnjs_buscar_plan_ctr()');
+        $oDesplZonas->setOpcion_sel($Qid_zona);
 
-$aCentros = [];
-if (isset($Qid_zona)) {
-    if($Qid_zona>0)
-    {
-        $aWhere = [];
-        $aWhere['status'] = 't';
-        $aWhere['id_zona'] = $Qid_zona;
-        $aWhere['_ordre'] = 'nombre_ubi';
-        $GesCentrosEllos = new GestorCentroEllos();
-        $cCentrossv = $GesCentrosEllos->getCentros($aWhere);
-        $GesCentrosSf = new GestorCentroEllas();
-        $cCentrosSf = $GesCentrosSf->getCentros($aWhere);
-        $cCentros = array_merge($cCentrossv, $cCentrosSf);
-        foreach ($cCentros as $oCentro) {
-            $id_ubi = $oCentro->getId_ubi();
-            $oCentro = Ubi::newUbi($id_ubi);
-            $nombre_ubi = $oCentro->getNombre_ubi();
-            $aCentros[$id_ubi] = $nombre_ubi;
-        }
-    }
-    else  
-    {
+        if (isset($Qid_zona)) {
+            if($Qid_zona>0) {
+                $aWhere = [];
+                $aWhere['status'] = 't';
+                $aWhere['id_zona'] = $Qid_zona;
+                $aWhere['_ordre'] = 'nombre_ubi';
+                $GesCentrosEllos = new GestorCentroEllos();
+                $cCentrossv = $GesCentrosEllos->getCentros($aWhere);
+                $GesCentrosSf = new GestorCentroEllas();
+                $cCentrosSf = $GesCentrosSf->getCentros($aWhere);
+                $cCentros = array_merge($cCentrossv, $cCentrosSf);
+                foreach ($cCentros as $oCentro) {
+                    $id_ubi = $oCentro->getId_ubi();
+                    $nombre_ubi = $oCentro->getNombre_ubi();
+                    $aCentros[$id_ubi] = $nombre_ubi;
+                }
+            }
+            else  {
+                $id_sacd=$oMiUsuario->getId_pauAsString();
         /* busco los datos del encargo que se tengan */
-        $GesEncargosSacd = new GestorEncargoSacd();
+                $GesEncargosSacd = new GestorEncargoSacd();
         // No los personales:
-        $aWhereES = [];
-        $aOperadorES = [];
-        $aWhereES['id_nom'] = $id_sacd;
-        $aWhereES['f_fin'] = 'x';
-        $aOperadorES['f_fin'] = 'IS NULL';
-        $aWhereES['_ordre'] = 'modo, f_ini DESC';
-        $cEncargosSacd1 = $GesEncargosSacd->getEncargosSacd($aWhereES, $aOperadorES);
+                $aWhereES = [];
+                $aOperadorES = [];
+                $aWhereES['id_nom'] = $id_sacd;
+                $aWhereES['f_fin'] = 'x';
+                $aOperadorES['f_fin'] = 'IS NULL';
+                $aWhereES['_ordre'] = 'modo, f_ini DESC';
+                $cEncargosSacd1 = $GesEncargosSacd->getEncargosSacd($aWhereES, $aOperadorES);
 
-        $oF_hoy = new DateTimeLocal(date('Y-m-d')); //Hoy sólo fecha, no hora
-        $hoy = $oF_hoy->getIso();
+                $oF_hoy = new DateTimeLocal(date('Y-m-d')); //Hoy sólo fecha, no hora
+                $hoy = $oF_hoy->getIso();
 
-        $aWhereES['f_fin'] = "'$hoy'";
-        $aOperadorES['f_fin'] = '>';
-        $cEncargosSacd2 = $GesEncargosSacd->getEncargosSacd($aWhereES, $aOperadorES);
+                $aWhereES['f_fin'] = "'$hoy'";
+                $aOperadorES['f_fin'] = '>';
+                $cEncargosSacd2 = $GesEncargosSacd->getEncargosSacd($aWhereES, $aOperadorES);
 
-        $cEncargosSacd = $cEncargosSacd1 + $cEncargosSacd2;
+                $cEncargosSacd = $cEncargosSacd1 + $cEncargosSacd2;
 
-        foreach ($cEncargosSacd as $oEncargoSacd) {
-            $id_enc = $oEncargoSacd->getId_enc();
-
-            $oEncargo = new Encargo(array('id_enc' => $id_enc));
-            $id_tipo_enc = $oEncargo->getId_tipo_enc();
+                foreach ($cEncargosSacd as $oEncargoSacd) {
+                    $id_enc = $oEncargoSacd->getId_enc();
+                    
+                    $oEncargo = new Encargo(array('id_enc' => $id_enc));
+                    $id_tipo_enc = $oEncargo->getId_tipo_enc();
             // Si es un encargo personal (7 o 4) me lo salto
-            if (substr($id_tipo_enc, 0, 1) <= 3) {
-                $id_ubi = $oEncargo->getId_ubi();
-                $oCentro = Ubi::newUbi($id_ubi);
+                    if (substr($id_tipo_enc, 0, 1) <= 3) {
+                        $id_ubi = $oEncargo->getId_ubi();
+                        $oCentro = Ubi::newUbi($id_ubi);
 //                $oCentro=new CentroDl($id_ubi);
-                $nombre_ubi = $oCentro->getNombre_ubi();
-                $aCentros[$id_ubi] = $nombre_ubi;
+                        $nombre_ubi = $oCentro->getNombre_ubi();
+                        $aCentros[$id_ubi] = $nombre_ubi;
+                    }
+                }
             }
         }
     }
-}
 }
 
 $oDesplCentros = new Desplegable();
